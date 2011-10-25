@@ -1,0 +1,28 @@
+
+<%
+
+if(mw3.when == mw3.WHEN_EDIT){
+%>
+
+parent: <%=fields.parentMenuId.here()%><br>
+menuId: <%=fields.menuId.here()%><br>
+menuName: <%=fields.name.here()%><br>
+
+<%=methods.save.here()%>
+
+<%}else if(value!=null){
+
+  if(value.selected){%>
+<b><a onclick="<%=methods.selectMenu.caller()%>"><%=value.name%></a></b>
+<table><td width=10></td><td><%=fields.subMenu.here()%></td></table>
+
+<%}else{%>
+
+<a onclick="<%=methods.selectMenu.caller()%>"><%=value.name%></a>
+<%}
+}else{
+%>
+
+No Menu.
+
+<%}%>

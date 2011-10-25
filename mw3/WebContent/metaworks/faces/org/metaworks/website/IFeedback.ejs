@@ -1,0 +1,24 @@
+<table>
+
+	<tr>
+		<td><%=fields.writer.here()%></td> 
+		<td><%=fields.text.here()%>
+		
+<%=methods.post.here()%>
+<%=methods.delete.here()%>
+	
+<%
+  if(mw3.when != mw3.WHEN_EDIT && mw3.when != mw3.WHEN_NEW){
+%>
+		<input type=button onclick="<%=editFunction%>" value="edit">
+		
+<%
+  }
+ 
+%>
+		</td>
+
+	</tr>
+	
+</table>
+

@@ -1,0 +1,77 @@
+<%if (value != null){
+%>
+
+
+<div class="inner-north ui-layout-pane ui-layout-pane-north" style="padding-bottom: 35px; position: absolute; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; bottom: auto; width: auto; z-index: 1; top: 0px; left: 0px; right: 0px; visibility: visible; display: block; ">
+            <div class="boxtopleft">
+            	<span class="boxtopright">
+            		<div id="navigationTitle"><%=objectMetadata.displayName%></div>
+            		<div id="navigator_loadingArea" class="loadingarea" style="display: none; "><img src="/uengine-web/codi-web/images/waveStyle/ajax-loader.gif" border="0"></div>
+            	</span>
+            </div>
+            <div class="boxmiddleright">
+                <div class="boxmiddleleft">
+                    <div class="togglebtnmini" onclick="minimizeNavi()"></div>
+                    <div class="contentcontainer">                        
+                            
+<table cellpadding="0" cellspacing="0" width="100%" id="navigator">
+	<tbody>
+	
+	
+<%	
+
+  for (var i=0; i<objectMetadata.fieldDescriptors.length; i++){
+  
+  	var fd = objectMetadata.fieldDescriptors[i];
+  	
+  	if(fd.boolOptions && fd.boolOptions['HIDDEN']) continue;
+  	if(fd.name == 'metaworksContext') continue;
+  	
+  	var fieldValue = value[fd.name];
+%>
+ 
+<tr height="25" valign="middle">
+
+<td bgcolor=white> <b><%=fd.displayName%></b> </td>
+<td bgcolor=white> <%=fields[fd.name] ? fields[fd.name].here() : "XXX"%></td></tr>
+
+
+<%
+  }
+   
+%>
+
+
+			    <tr>
+			    <td colspan=2>
+			    <%
+   
+   if(objectMetadata.serviceMethodContexts)
+   for(var key in objectMetadata.serviceMethodContexts){
+   
+%><%=methods[key].here()%> <%   
+   }
+   
+   if(mw3.when != mw3.WHEN_EDIT){  
+%>
+<input type=button onclick="<%=editFunction%>" value="Edit">
+
+<%}%>
+			    </td>
+			    </tr>
+
+
+	</tbody>
+</table>
+
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="boxbottomleft"><span class="boxbottomright"></span></div>
+        </div>
+        
+        
+  <%
+     }
+   %>

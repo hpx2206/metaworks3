@@ -1,0 +1,53 @@
+<%if (value != null) {%>
+
+<table bgcolor="#eeeeee">
+
+<tr>
+<td colspan=2><b><h1><%=objectMetadata.displayName%></h1></b>
+</td>
+</tr>
+
+<%	
+
+  for (var i=0; i<objectMetadata.fieldDescriptors.length; i++){
+  
+  	var fd = objectMetadata.fieldDescriptors[i];
+  	
+  	if(fd.boolOptions && fd.boolOptions['HIDDEN']) continue;
+  	if(fd.name == 'metaworksContext') continue;
+  	
+  	var fieldValue = value[fd.name];
+%>
+ 
+
+<tr><td bgcolor=white> <b><%=fd.displayName%></b> </td>
+<td bgcolor=white> <%=fields[fd.name] ? fields[fd.name].here() : "XXX"%></td></tr>
+
+
+<%
+  }
+   
+%>
+
+<tr><td colspan=2>
+<%
+   
+   if(objectMetadata.serviceMethodContexts)
+   for(var key in objectMetadata.serviceMethodContexts){
+   
+%><%=methods[key].here()%> <%   
+   }
+   
+   if(mw3.when != mw3.WHEN_EDIT){  
+%>
+<input type=button onclick="<%=editFunction%>" value="Edit">
+
+<%}%>
+</td></tr>
+
+</table>
+<br>
+
+<%}else{%>
+null
+<%}%>
