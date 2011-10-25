@@ -1,0 +1,27 @@
+<% if(!value || value.length==0){
+
+	mw3.newBeanProperty(objectId);
+%>
+
+Empty Array
+<%}else{
+
+	mw3.newBeanProperty(objectId);
+
+
+  for (var i=0; i<value.length; i++){
+	if(!objectTypeName && value[i] && value[i].__className && value[i].__className.length > 0)
+		objectTypeName = value[i].__className;  
+		
+	
+ %>
+
+<%=mw3.locateObject(value[i], objectTypeName)%>
+
+<%
+
+	mw3.addBeanProperty(objectId, "[" + i + "]");
+
+  }
+}
+%>

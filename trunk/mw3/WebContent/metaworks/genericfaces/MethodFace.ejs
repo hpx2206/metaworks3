@@ -1,0 +1,1 @@
+<input type=button onclick="<%=(methodContext.needToConfirm ? 'if (confirm(\'Are you sure to '+displayName+' this?\'))':'')%> mw3.getObject('<%=objectId%>').<%=methodName%>()" value="<%=displayName%>">

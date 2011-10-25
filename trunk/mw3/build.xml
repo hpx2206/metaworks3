@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+
+<!-- ======================================================================= -->
+<!-- JBoss build file                                                        -->
+<!-- ======================================================================= -->
+
+<project name="metaworks3" default="apply" basedir=".">
+    <property environment="env"/>
+    <property name="was.home" value="${env.WAS_HOME}"/>
+    <property environment="env"/>
+	
+	<target name="apply">
+		<jar jarfile="./build/metaworks3.jar">
+			<fileset dir="./build/classes">
+		  		<include name="**/*.*"/>
+			</fileset>
+		</jar>
+		
+		<copy todir="${was.home}/webapps/uengine-web/WEB-INF/lib/" overwrite="yes">
+			<fileset dir="./build">
+	 			<include name="*.jar"/>
+			</fileset>
+		</copy>
+	</target>
+	
+</project>
+
+
+

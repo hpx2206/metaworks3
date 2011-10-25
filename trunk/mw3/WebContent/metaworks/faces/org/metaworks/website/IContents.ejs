@@ -1,0 +1,54 @@
+
+
+<%
+
+if(mw3.when==mw3.WHEN_EDIT){
+%>
+
+Type: <%=fields.type.here()%>
+Paragraph: <%=fields.paragraph.here()%>
+Width: <%=fields.width.here()%>
+Height: <%=fields.height.here()%>
+Url: <%=fields.url.here()%>
+File: <%=fields.file.here()%><br>
+
+<%=methods.save.here()%>
+
+
+<%
+}else
+if(value!=null){
+
+	if(value.type=="p"){ //in case of paragraph
+%>
+<p>
+<%=value.paragraph%>
+
+<% 
+	}else if(value.type=="img"){ //in case of picture
+%>
+
+<img src="<%=value.url%>" width="<%=value.width%>" height="<%=value.height%>">
+
+<% 
+	}else if(value.type=="mov"){ //in case of movie
+%>
+<iframe width="560" height="315" src="<%=value.url%>" frameborder="0" allowfullscreen></iframe>
+
+<% 
+	}else if(value.type=="src"){ //in case of source code
+%>
+
+<pre><%=value.paragraph%></pre>
+
+<%	 
+	}else if(value.type=="file"){ //in case of file
+%>
+
+<%=fields.file.here()%>
+
+<%	}
+%>
+<%=methods.delete.here()%>
+<%
+}%>
