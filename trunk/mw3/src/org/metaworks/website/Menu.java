@@ -66,6 +66,14 @@ public class Menu  extends MetaworksObject<IMenu> implements IMenu{
 		
 		return new Object[]{this, contentPanel, feedbackPanel};
 	}
+	
+	public IMenu loadSubMenu() throws Exception{
+		subMenu = (IMenu) Database.sql(IMenu.class, "select * from menu where parentMenuId = ?parentMenuId");;
+		subMenu.setParentMenuId(this.getMenuId());
+		subMenu.select();
+
+		return subMenu;
+	}
 
 	static public IMenu loadMainMenu() throws Exception{
 		IMenu mainMenu = (IMenu) Database.sql(IMenu.class, "select * from menu where parentMenuId = -1");;

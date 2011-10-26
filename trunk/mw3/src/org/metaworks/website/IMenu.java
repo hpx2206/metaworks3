@@ -1,11 +1,16 @@
 package org.metaworks.website;
 
+import org.metaworks.ServiceMethodContext;
+import org.metaworks.annotation.Children;
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Id;
+import org.metaworks.annotation.Name;
 import org.metaworks.annotation.NonLoadable;
 import org.metaworks.annotation.NonSavable;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.IDAO;
 
+@Face(ejsPath="genericfaces/spaceTree.ejs")
 public interface IMenu extends IDAO{
 
 	@Id
@@ -15,11 +20,13 @@ public interface IMenu extends IDAO{
 	public int getParentMenuId();
 	public void setParentMenuId(int parentMenu);
 	
+	@Name
 	public String getName();
 	public void setName(String name);
 	
 	@NonLoadable
 	@NonSavable
+	@Children
 	public IMenu getSubMenu();
 	public void setSubMenu(IMenu menu);
 	
@@ -33,4 +40,8 @@ public interface IMenu extends IDAO{
 	
 	@ServiceMethod(callByContent=true)
 	public Navigation save() throws Exception;
+	
+	
+	@ServiceMethod(target=ServiceMethodContext.TARGET_NONE)  //it just return object value only
+	public IMenu loadSubMenu() throws Exception;
 }

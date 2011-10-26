@@ -6,6 +6,7 @@ public class ServiceMethodContext{
 	public final static String TARGET_AUTO 		= "auto"; 
 	public final static String TARGET_SELF 		= "self"; 
 	public final static String TARGET_POPUP 	= "popup";
+	public final static String TARGET_NONE 		= "none";
 	public final static String TARGET_PAGEMOVE 	= "pagemove";
 	
 	public boolean clientSide;

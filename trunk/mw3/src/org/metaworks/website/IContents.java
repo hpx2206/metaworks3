@@ -21,13 +21,16 @@ public interface IContents extends IDAO{
 	
 	
 	@Range(
-			options={"Paragraph", "Image", "Movie", "Source Code", "File"}, 
-			values={"p","img","mov","src", "file"}
+			options={"Paragraph",	"Image",	"Movie",	"Source Code", 	"File"}, 
+			values ={"p",			"img",		"mov",		"src", 			"file"}
 	)
 	public String getType();
 	public void setType(String type);
 	
-	@Face(ejsPath="genericfaces/richText.ejs")
+	@Face(ejsPath="genericfaces/richText.ejs",
+			options={"cols",	"rows"},
+			values ={"30", 		"10"}
+	)
 	public String getParagraph();
 	public void setParagraph(String paragraph);
 	
@@ -41,8 +44,8 @@ public interface IContents extends IDAO{
 	public void setHeight(int height);
 	
 	@ORMapping(
-		databaseFields = { "url", "paragraph" }, 
-		objectFields = { "uploadedPath", "mimeType" }
+		databaseFields = { 	"url", 			"paragraph" }, 
+		objectFields = { 	"uploadedPath", "mimeType" }
 	)
 	public MetaworksFile getFile();
 	public void setFile(MetaworksFile file);

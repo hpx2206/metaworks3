@@ -4,21 +4,20 @@ import java.awt.Component;
 import java.awt.event.ActionListener;
 import java.util.Hashtable;
 
+import org.metaworks.annotation.Face;
 import org.metaworks.inputter.Inputter;
 
 public class FaceInput implements Inputter {
 
-	public String faceName;
-		public String getFaceName() {
-			return faceName;
+	public Face face;
+		public Face getFace() {
+			return face;
 		}
-		public void setFaceName(String faceName) {
-			this.faceName = faceName;
+		public void setFace(Face face) {
+			this.face = face;
 		}
-	
 	
 	////////////////////////// just place holder /////////////////////
-	
 
 	@Override
 	public Object getValue() {
