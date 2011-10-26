@@ -16,6 +16,14 @@
 			</fileset>
 		</jar>
 		
+		<!--
+		<copy todir="../ProcessCodi/WebContent/uengine-web/WEB-INF/lib/" overwrite="yes">
+			<fileset dir="./build">
+	 			<include name="*.jar"/>
+			</fileset>
+		</copy>
+		-->
+		
 		<copy todir="${was.home}/webapps/uengine-web/WEB-INF/lib/" overwrite="yes">
 			<fileset dir="./build">
 	 			<include name="*.jar"/>
