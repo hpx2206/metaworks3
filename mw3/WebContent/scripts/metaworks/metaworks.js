@@ -48,19 +48,27 @@
 				for(var objectId in this.face_ObjectIdMapping){
 					var face = this.face_ObjectIdMapping[objectId];
 					var faceHelperClass = this.loadedScripts[face];
+					
+					var thereIsHelperClass = false;
 					try{
-						var faceHelper = eval("new " + faceHelperClass + "('" + objectId + "')");
-						
-						if(faceHelper){
-							this.faceHelpers[objectId] = faceHelper;
+						eval(faceHelperClass);
+						thereIsHelperClass = true;
+					
+
+						if(thereIsHelperClass){
+							var faceHelper = eval("new " + faceHelperClass + "('" + objectId + "')");
+							
+							if(faceHelper){
+								this.faceHelpers[objectId] = faceHelper;
+							}
 						}
+						
 					}catch(e){
 						e=e;
 					}
-				
 				}
-
 			}
+
 
 
 			Metaworks3.prototype.setWhere = function(where){
@@ -98,6 +106,20 @@
 					    			//alert(webObjectType.name + "=" + dwr.util.toDescriptiveString(webObjectType, 5))
 
 									mw3.metaworksMetadata[objectTypeName] = webObjectType;
+									
+									for(var i=0; i<webObjectType.fieldDescriptors.length; i++){
+										var fd = webObjectType.fieldDescriptors[i];
+										
+										if(!fd.boolOptions) continue;
+										
+										if(fd.boolOptions['NAME']){
+											webObjectType['nameFieldDescriptor'] = fd;
+										}else
+										if(fd.boolOptions['CHILDREN']){
+											webObjectType['childrenFieldDescriptor'] = fd;
+										}
+									}
+								
 				        		},
 
 				        		async: false,
@@ -225,7 +247,19 @@
 					this.face_ObjectIdMapping[objectId] = actualFace;
 
 					var objectRef = this._createObjectRef(object, objectId);
-	 			
+					
+					var descriptor = (options ? options['descriptor']: null);
+					
+					if(descriptor!=null)
+						descriptor['getOptionValue'] = function(option){
+							if(this.options!=null && this.values!=null)
+							
+							for(var i=0; i<this.options.length && i<this.values.length; i++){
+								if(option==this.options[i])
+									return this.values[i];
+							}
+						}
+					
 					try {
 						//alert("selected face : " + actualFace);
 						
@@ -239,7 +273,7 @@
 								objectId			: objectId, 
 								fields				: (objectRef ? objectRef.fields  : null),
 								methods				: (objectRef ? objectRef.methods : null),
-								descriptor			: (options ? options['descriptor']: null),
+								descriptor			: descriptor,
 								editFunction		: editFunction
 							})
 
@@ -535,6 +569,8 @@
 						}
 					}
 					
+					var returnValue;
+					
 					this.metaworksProxy.callMetaworksService(className, object, svcNameAndMethodName, autowiredObjects,
 							{ 
 				        		callback: function( result ){
@@ -542,7 +578,11 @@
 
 				        			if(result){
 
-					        			if(serviceMethodContext.target=="self"){
+					        			if(serviceMethodContext.target=="none"){
+					        				
+					        				returnValue = result;
+					        				
+					        			}else if(serviceMethodContext.target=="self"){
 					        				
 					        				mw3.setObject(objId, result);
 					        				
@@ -598,6 +638,10 @@
 						
 				    		}
 						);
+					
+					if(serviceMethodContext.target=="none"){
+						return returnValue;
+					}
 					
 					return this._withTarget(objId);
 					

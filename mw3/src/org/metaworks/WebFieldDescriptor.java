@@ -38,7 +38,9 @@ public class WebFieldDescriptor {
 		if(oldFd.getInputter() instanceof FaceInput){
 			FaceInput faceInput = (FaceInput)oldFd.getInputter();
 			
-			setInputFace(faceInput.getFaceName());			
+			setInputFace(faceInput.getFace().ejsPath());
+			setOptions(faceInput.getFace().options());
+			setValues(faceInput.getFace().values());
 		}else
 		if(oldFd.getInputter()!=null 
 				&& !(oldFd.getInputter() instanceof TextInput)

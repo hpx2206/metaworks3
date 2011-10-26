@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.Table;
 import javax.servlet.http.HttpServletRequest;
 
 import org.metaworks.FieldDescriptor;
@@ -17,9 +16,11 @@ import org.metaworks.ObjectType;
 import org.metaworks.Type;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.AutowiredToClient;
+import org.metaworks.annotation.Children;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
+import org.metaworks.annotation.Name;
 import org.metaworks.annotation.NonEditable;
 import org.metaworks.annotation.NonLoadable;
 import org.metaworks.annotation.NonSavable;
@@ -30,6 +31,7 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.IDAO;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.inputter.SelectInput;
+
 
 public class WebObjectType{
 	
@@ -240,6 +242,12 @@ public class WebObjectType{
 			if(getAnnotationDeeply(actCls, iDAOClass, fd.getName(), NonSavable.class)!=null)
 				fd.setSavable(false);
 
+			if(getAnnotationDeeply(actCls, iDAOClass, fd.getName(), Name.class)!=null)
+				fd.setAttribute("name", new Boolean(true));
+
+			if(getAnnotationDeeply(actCls, iDAOClass, fd.getName(), Children.class)!=null)
+				fd.setAttribute("children", new Boolean(true));
+
 			if(getAnnotationDeeply(actCls, iDAOClass, fd.getName(), NonLoadable.class)!=null)
 				fd.setLoadable(false);
 
@@ -268,7 +276,7 @@ public class WebObjectType{
 					viewer.setFace(face.ejsPath());
 					
 					FaceInput faceInput = new FaceInput();
-					faceInput.setFaceName(face.ejsPath());
+					faceInput.setFace(face);
 					fd.setInputter(faceInput);
 				}else
 					viewer.setFace(getComponentLocationByEscalation(fd.getClassType(), "faces"));
