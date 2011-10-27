@@ -73,4 +73,20 @@ public class ServiceMethodContext{
 			this.displayName = displayName;
 		}
 		
+	boolean childrenGetter;
+		public boolean isChildrenGetter() {
+			return childrenGetter;
+		}
+		public void setChildrenGetter(boolean childrenGetter) {
+			this.childrenGetter = childrenGetter;
+		}
+
+	boolean nameGetter;
+		public boolean isNameGetter() {
+			return nameGetter;
+		}
+		public void setNameGetter(boolean nameGetter) {
+			this.nameGetter = nameGetter;
+		}
+		
 }

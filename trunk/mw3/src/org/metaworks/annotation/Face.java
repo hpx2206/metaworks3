@@ -7,7 +7,9 @@ import java.lang.annotation.RetentionPolicy;
 public @interface Face {
 	public String displayName() default "";
 	public String ejsPath() default "";
+	public String ejsPathForArray() default "";
 	
 	public String[] options() default {};
 	public String[] values() default {};
+	
 }

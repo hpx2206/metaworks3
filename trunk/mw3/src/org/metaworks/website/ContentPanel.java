@@ -5,7 +5,7 @@ import org.metaworks.annotation.AutowiredToClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 
-@Face(ejsPath="genericfaces/window.ejs")
+@Face(ejsPath="genericfaces/Window.ejs")
 public class ContentPanel {
 
 	IContents contents;

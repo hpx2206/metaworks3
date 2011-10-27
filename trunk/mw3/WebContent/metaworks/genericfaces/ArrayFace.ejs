@@ -1,10 +1,7 @@
 <% if(!value || value.length==0){
 
 	mw3.newBeanProperty(objectId);
-%>
-
-Empty Array
-<%}else{
+}else{
 
 	mw3.newBeanProperty(objectId);
 
@@ -23,5 +20,13 @@ Empty Array
 	mw3.addBeanProperty(objectId, "[" + i + "]");
 
   }
+}
+
+
+if(!(objectMetadata.faceOptions && objectMetadata.faceOptions['hideAddBtn'])){
+%>
+
+<input type=button value="Add" onclick="mw3.getFaceHelper('<%=objectId%>').addNew()">
+<%
 }
 %>

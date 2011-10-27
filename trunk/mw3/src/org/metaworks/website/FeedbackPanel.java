@@ -6,7 +6,7 @@ import org.metaworks.annotation.AutowiredToClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 
-@Face(ejsPath="genericfaces/window.ejs")
+@Face(ejsPath="genericfaces/Window.ejs")
 public class FeedbackPanel {
 
 	IFeedback feedback;
@@ -28,10 +28,10 @@ public class FeedbackPanel {
 	public void load(IMenu menu) throws Exception{
 		setFeedback(Feedback.loadFeedback(menu));
 		
-		newFeedback = new Feedback();
-		newFeedback.setMenuId(menu.getMenuId());
-		newFeedback.setWriter(writer);
-		newFeedback.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+//		newFeedback = new Feedback();
+//		newFeedback.setMenuId(menu.getMenuId());
+//		newFeedback.setWriter(writer);
+//		newFeedback.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 
 	}
 	
