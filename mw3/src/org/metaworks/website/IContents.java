@@ -10,6 +10,10 @@ import org.metaworks.annotation.Range;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.IDAO;
 
+@Face(
+	options={"hideAddBtn"},
+	values ={"true"}
+)
 public interface IContents extends IDAO{
 
 	@Id

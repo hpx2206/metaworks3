@@ -5,7 +5,7 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 
-@Face(ejsPath="genericfaces/window.ejs")
+@Face(ejsPath="genericfaces/Window.ejs")
 public class Navigation {
 
 	IMenu menu;

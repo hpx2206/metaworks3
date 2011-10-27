@@ -1,4 +1,4 @@
-var spaceTree = function(objectId){
+var spaceTree = function(objectId, className){
 	this.objectId = objectId;
 	
 	var originalData = mw3.getObject(objectId);
@@ -40,24 +40,30 @@ var spaceTree = function(objectId){
 	        
 		request: function(nodeId, level, onComplete) {  
 				//var node = this.getNode(nodeId);
-			    var convertedSubTree = st.spaceTreeHelper.convert(originalData.loadSubMenu());
-	            
-	            /*if(!convertedSubTree.length)
-	            	convertedSubTree = [convertedSubTree];
-	            	
-	            
-            	for(var i=0; i<convertedSubTree.length; i++){
-		            st.addSubtree(convertedSubTree[i], 'animate', {
-	            		hideLabels: false,
-	            		onComplete: function() {
-	            			alert('aadded');
-	        	    	}
-			        });
-			    }*/
-		
-		
-		      var ans = convertedSubTree;  
-		      onComplete.onComplete(nodeId, ans[0]);    
+				
+				if(originalData.fieldMapping && originalData.fieldMapping.childrenGetter){
+				
+						var subTree = eval("originalData." + originalData.fieldMapping.childrenGetter.methodName + "()");
+				
+					    var convertedSubTree = st.spaceTreeHelper.convert(subTree);
+			            
+			            /*if(!convertedSubTree.length)
+			            	convertedSubTree = [convertedSubTree];
+			            	
+			            
+		            	for(var i=0; i<convertedSubTree.length; i++){
+				            st.addSubtree(convertedSubTree[i], 'animate', {
+			            		hideLabels: false,
+			            		onComplete: function() {
+			            			alert('aadded');
+			        	    	}
+					        });
+					    }*/
+				
+				
+				      var ans = convertedSubTree;  
+				      onComplete.onComplete(nodeId, ans[0]);    
+				  }
 		    },  
 	      
 	    //This method is called on DOM label creation.  
@@ -157,8 +163,11 @@ var spaceTree = function(objectId){
 		var fieldMapping = {
 			keyFd: metadata.keyFieldDescriptor,
 			nameFd: metadata.nameFieldDescriptor,
-			childrenFd: metadata.childrenFieldDescriptor
+			childrenFd: metadata.childrenFieldDescriptor,
+			childrenGetter: metadata.childrenGetter
 		};		
+		
+		originalData['fieldMapping'] = fieldMapping;
 		
 		//build data for space tree
 		originalData['getDataForJit'] = function(fieldMapping){

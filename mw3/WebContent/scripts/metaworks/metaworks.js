@@ -43,10 +43,16 @@
 				this.base = base;
 			}
 			
-			Metaworks3.prototype.onLoad = function(base){
+			Metaworks3.prototype.onLoad = function(target){
+				if(!target)
+					target = this.face_ObjectIdMapping;
 
-				for(var objectId in this.face_ObjectIdMapping){
-					var face = this.face_ObjectIdMapping[objectId];
+				for(var objectId in target){
+//					if(this.faceHelpers[objectId])
+//						continue;
+						
+					var face = this.face_ObjectIdMapping[objectId].face;
+					var className = this.face_ObjectIdMapping[objectId].className;
 					var faceHelperClass = this.loadedScripts[face];
 					
 					var thereIsHelperClass = false;
@@ -56,7 +62,7 @@
 					
 
 						if(thereIsHelperClass){
-							var faceHelper = eval("new " + faceHelperClass + "('" + objectId + "')");
+							var faceHelper = eval("new " + faceHelperClass + "('" + objectId + "', '"+ className + "')");
 							
 							if(faceHelper){
 								this.faceHelpers[objectId] = faceHelper;
@@ -69,6 +75,21 @@
 				}
 			}
 
+			Metaworks3.prototype.getFaceHelper = function(objectId){
+				var registeredHelper = this.faceHelpers[objectId];
+				
+				if(registeredHelper!=null)
+					return registeredHelper;
+				else{
+					var target = {};
+					target[objectId] = objectId;
+					this.onLoad(target);
+					
+					return this.faceHelpers[objectId];
+				}
+				
+			}
+			
 
 
 			Metaworks3.prototype.setWhere = function(where){
@@ -117,6 +138,19 @@
 										}else
 										if(fd.boolOptions['CHILDREN']){
 											webObjectType['childrenFieldDescriptor'] = fd;
+										}
+									}
+
+									//following methods are not null, it will creates the lazy-loaded tree mechanism.
+									if(webObjectType.serviceMethodContexts)
+									for(var serviceMethodName in webObjectType.serviceMethodContexts){
+										var serviceMethod = webObjectType.serviceMethodContexts[serviceMethodName];
+										
+										if(serviceMethod.nameGetter){
+											webObjectType['nameGetter'] = serviceMethod;
+										}else
+										if(serviceMethod.childrenGetter){
+											webObjectType['childrenGetter'] = serviceMethod;
 										}
 									}
 								
@@ -176,24 +210,24 @@
 						objectTypeName = typeNameAndFace[0];
 					}
 					
+					var metadata = this.getMetadata(objectTypeName);
+					
 					if(objectTypeName.length > 2 && objectTypeName.substr(-2) == '[]'){			//if array of some object type, use ArrayFace with mapped class mapping for the object type.
 						objectTypeName = objectTypeName.substr(0, objectTypeName.length - 2);
-						actualFace = 'genericfaces/ArrayFace.ejs';
+						actualFace = metadata.faceForArray ? metadata.faceForArray : 'genericfaces/ArrayFace.ejs';
 
 					}else if(objectTypeName.length > 4 && objectTypeName.substr(0, 2) == '[L' && objectTypeName.substr(-1) == ';'){			//if array of some object type, use ArrayFace with mapped class mapping for the object type.
 						objectTypeName = objectTypeName.substr(2, objectTypeName.length - 3);
-						actualFace = 'genericfaces/ArrayFace.ejs';
+						actualFace = metadata.faceForArray ? metadata.faceForArray : 'genericfaces/ArrayFace.ejs';
 
 					}else{
 
 						if(object && object.constructor && object.constructor.toString().indexOf('Array') != -1){
-							actualFace = 'genericfaces/ArrayFace.ejs';
+							actualFace = metadata.faceForArray ? metadata.faceForArray : 'genericfaces/ArrayFace.ejs';
 						}
 
 						if(!actualFace){
-							var metadata = this.getMetadata(objectTypeName);
 							actualFace = metadata.faceComponentPath;	
-							
 						}
 						
 						
@@ -201,7 +235,7 @@
 						if(!actualFace){
 							
 							if(object.constructor.toString().indexOf('Array') != -1){
-								actualFace = 'genericfaces/ArrayFace.ejs';
+								actualFace = metadata.faceForArray ? metadata.faceForArray : 'genericfaces/ArrayFace.ejs';
 							}else
 								actualFace = 'genericfaces/ObjectFace.ejs';//even though there's no mapping, use ObjectFace
 
@@ -244,7 +278,10 @@
 					}
 					//end
 	 
-					this.face_ObjectIdMapping[objectId] = actualFace;
+					this.face_ObjectIdMapping[objectId] = {
+							face: actualFace,
+							className: objectTypeName
+					}
 
 					var objectRef = this._createObjectRef(object, objectId);
 					
@@ -517,7 +554,11 @@
 				}
 				
 				var infoDivId = "#"+this._getInfoDivId(objId);
-				$(infoDivId).html("<img src='metaworks/images/circleloading.gif'>");
+				
+				if(this.getFaceHelper(objId) && this.getFaceHelper(objId).startLoading){
+					this.getFaceHelper(objId).startLoading();
+				}else
+					$(infoDivId).html("<img src='metaworks/images/circleloading.gif'>");
 
 				var object = mw3.getObject(objId);
 				//var thisMetaworks = this;
@@ -622,18 +663,38 @@
 
 				        			}
 				        			
-									$(infoDivId).html("<font color=blue> " + svcNameAndMethodName + " DONE. </font>");
+				        			
+				        			if(mw3.getFaceHelper(objId)){
+				        				
+				        				if(mw3.getFaceHelper(objId).endLoading){
+				        					mw3.getFaceHelper(objId).endLoading();
+				        				}
+				        				
+				        				if(mw3.getFaceHelper(objId).showStatus){
+				        					mw3.getFaceHelper(objId).showStatus( svcNameAndMethodName + " DONE.");
+				        				}else
+					    					$(infoDivId).html("<font color=blue> " + svcNameAndMethodName + " DONE. </font>");
+				        				
+				    				}else
+				    					$(infoDivId).html("<font color=blue> " + svcNameAndMethodName + " DONE. </font>");
 
 				        		},
 
 				        		async: false,
 				        		
 				        		errorHandler:function(errorString, exception) {
-				        			if(!exception)
-					        			$(infoDivId).html("<font color=red>Error: "+ errorString +" [RETRY]</font> ");
-				        			else
-				        				$(infoDivId).html("<font color=red>Error: "+ (exception.targetException ? exception.targetException.message : exception.message) +" [RETRY]</font> ");
-				        		
+				        			if(mw3.getFaceHelper(objId) && mw3.getFaceHelper(objId).showError){
+					        			if(!exception)
+					        				mw3.getFaceHelper(objId).showError( errorString );
+					        			else
+					        				mw3.getFaceHelper(objId).showError( (exception.targetException ? exception.targetException.message : exception.message) );
+									
+									}else{
+										if(!exception)
+											$(infoDivId).html("<font color=red>Error: "+ errorString +" [RETRY]</font> ");
+										else
+											$(infoDivId).html("<font color=red>Error: "+ (exception.targetException ? exception.targetException.message : exception.message) +" [RETRY]</font> ");
+									}
 				        		}
 						
 				    		}

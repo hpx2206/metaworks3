@@ -36,11 +36,9 @@ import org.metaworks.inputter.SelectInput;
 public class WebObjectType{
 	
 	boolean isInterface;
-	
 		public boolean isInterface() {
 			return isInterface;
 		}
-	
 		public void setInterface(boolean isInterface) {
 			this.isInterface = isInterface;
 		}
@@ -80,15 +78,29 @@ public class WebObjectType{
 		}
 
 	String faceComponentPath;
-	
 		public String getFaceComponentPath() {
 			return faceComponentPath;
 		}
-	
 		public void setFaceComponentPath(String faceComponentPath) {
 			this.faceComponentPath = faceComponentPath;
 		}
 		
+	String faceForArray;	
+		public String getFaceForArray() {
+			return faceForArray;
+		}
+		public void setFaceForArray(String faceForArray) {
+			this.faceForArray = faceForArray;
+		}
+	
+	Map<String, String> faceOptions;
+		public Map<String, String> getFaceOptions() {
+			return faceOptions;
+		}
+		public void setFaceOptions(Map<String, String> faceOptions) {
+			this.faceOptions = faceOptions;
+		}
+
 	WebFieldDescriptor fieldDescriptors[];
 		public WebFieldDescriptor[] getFieldDescriptors() {
 			return fieldDescriptors;
@@ -156,6 +168,19 @@ public class WebObjectType{
 		Face typeFace = (Face)getAnnotationDeeply(actCls, iDAOClass, null, Face.class);
 		if(typeFace!=null && typeFace.ejsPath().length() > 0){
 			setFaceComponentPath(typeFace.ejsPath());
+			
+			if(typeFace.ejsPathForArray().length() > 0)
+				setFaceForArray(typeFace.ejsPath());
+			
+			if(typeFace.options().length > 0){
+				Map<String, String> optionMap = new HashMap<String, String>();
+				
+				for(int i=0; i<typeFace.options().length; i++){
+					optionMap.put(typeFace.options()[i], typeFace.values()[i]);
+				}
+				
+				setFaceOptions(optionMap);
+			}
 		}else
 			setFaceComponentPath(getComponentLocationByEscalation(actCls, "faces"));
 	
@@ -331,11 +356,15 @@ public class WebObjectType{
 		for(Method method : actCls.getMethods()){
 			ServiceMethod annotation = method.getAnnotation(ServiceMethod.class);
 			Face face = method.getAnnotation(Face.class);
+			Children children = method.getAnnotation(Children.class);
+			Name name = method.getAnnotation(Name.class);
 			
 			if(annotation==null && iDAOClass != null){
 				try{
 					annotation = iDAOClass.getMethod(method.getName(), new Class[]{}).getAnnotation(ServiceMethod.class);
 					face = iDAOClass.getMethod(method.getName(), new Class[]{}).getAnnotation(Face.class);
+					children = iDAOClass.getMethod(method.getName(), new Class[]{}).getAnnotation(Children.class);
+					name = iDAOClass.getMethod(method.getName(), new Class[]{}).getAnnotation(Name.class);
 				}catch(Exception e){
 					
 				}
@@ -352,6 +381,9 @@ public class WebObjectType{
 				smc.setNeedToConfirm(annotation.needToConfirm());
 				smc.setClientSide(annotation.clientSide());
 				smc.setTarget(annotation.target());
+				
+				smc.setNameGetter(name!=null? true:false);
+				smc.setChildrenGetter(children!=null? true:false);
 
 				if(face!=null){
 					smc.setDisplayName(face.displayName());

@@ -47,7 +47,7 @@ public class Menu  extends MetaworksObject<IMenu> implements IMenu{
 	}
 	
 
-	
+
 	public Object[] selectMenu() throws Exception{
 		subMenu = (IMenu) Database.sql(IMenu.class, "select * from menu where parentMenuId = ?parentMenuId");;
 		subMenu.setParentMenuId(this.getMenuId());

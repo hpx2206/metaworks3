@@ -2,7 +2,23 @@
 %>
 
 
-<div class="inner-north ui-layout-pane ui-layout-pane-north" style="padding-bottom: 35px; position: absolute; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; bottom: auto; width: auto; z-index: 1; top: 0px; left: 0px; right: 0px; visibility: visible; display: block; ">
+	<div id="sm_<%=objectId%>" style="margin-top:12px; padding:0px;  display:none; float:left; width:160px; position:relative;">
+    <div class="boxtopleft"><span class="boxtopright"><%=objectMetadata.displayName%></span></div>
+    <div class="boxmiddleright">
+        <div class="boxmiddleleft">
+            <div class="togglebtnmax" onclick="mw3.getFaceHelper('<%=objectId%>').resume()"></div>
+            <!--<div id="slidedown" class="slidedown" onclick="outerLayout.allowOverflow('north') , con03();"></div>  -->
+            <div id="slideup<%=objectId%>" class="slideup" onclick="outerLayout.resetOverflow('north'), con031();"></div>
+            <div id="con<%=objectId%>" class="topcontentcontainer">
+            </div>
+        </div>
+    </div>
+    
+    <div class="miniboxbottomleft"><span class="miniboxbottomright"></span></div>
+    </div>
+
+
+	<div class="inner-north ui-layout-pane ui-layout-pane-north" style="padding-bottom: 35px; position: absolute; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; bottom: auto; width: auto; z-index: 1; top: 0px; left: 0px; right: 0px; visibility: visible; display: block; ">
             <div class="boxtopleft">
             	<span class="boxtopright">
             		<div id="navigationTitle"><%=objectMetadata.displayName%></div>
@@ -11,7 +27,7 @@
             </div>
             <div class="boxmiddleright">
                 <div class="boxmiddleleft">
-                    <div class="togglebtnmini" onclick="minimizeNavi()"></div>
+                    <div class="togglebtnmini" onclick="mw3.getFaceHelper('<%=objectId%>').minimize()"></div>
                     <div class="contentcontainer">                        
                             
 <table cellpadding="0" cellspacing="0" width="100%" id="navigator">

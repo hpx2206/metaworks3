@@ -1,4 +1,4 @@
-<%if (value != null) {%>
+<%if (value) {%>
 
 <table bgcolor="#eeeeee">
 
@@ -49,5 +49,5 @@
 <br>
 
 <%}else{%>
-null
+<input type=button value="New" onclick="mw3.getFaceHelper('<%=objectId%>').newObject()">
 <%}%>

@@ -9,8 +9,11 @@ import org.metaworks.annotation.NonLoadable;
 import org.metaworks.annotation.NonSavable;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.IDAO;
-
-@Face(ejsPath="genericfaces/spaceTree.ejs")
+//
+//@Face(
+//		ejsPath="genericfaces/spaceTree.ejs",
+//		ejsPathForArray="genericfaces/spaceTree.ejs"
+//	)
 public interface IMenu extends IDAO{
 
 	@Id
@@ -41,7 +44,7 @@ public interface IMenu extends IDAO{
 	@ServiceMethod(callByContent=true)
 	public Navigation save() throws Exception;
 	
-	
+	@Children
 	@ServiceMethod(target=ServiceMethodContext.TARGET_NONE)  //it just return object value only
 	public IMenu loadSubMenu() throws Exception;
 }
