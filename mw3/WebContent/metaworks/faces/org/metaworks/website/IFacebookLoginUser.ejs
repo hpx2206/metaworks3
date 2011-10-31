@@ -1,10 +1,17 @@
-<%if(value==null){%>
+<%
+
+// mw3.debugPoint(mw3.when);
+
+
+if(value==null){%>
 
   <div id="fb-root"></div>
   <div class="fb-login-button" data-perms="email,user_checkins" onlogin="mw3.getFaceHelper('<%=objectId%>').setUserInfo()">
     Login with Facebook
   </div>
  <%
+ 
+ 
 }else if (mw3.when == "login"){
 %>
 	Hello, <%=value.name%>

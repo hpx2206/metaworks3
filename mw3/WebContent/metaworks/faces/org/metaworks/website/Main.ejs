@@ -11,17 +11,9 @@
             <div id="search_right_outer"><div id="search_line"></div><div style="clear:both"></div><div id="clear_search" onclick="removeSearchItems()"></div></div>
             <div id="search_right_outer2"><div id="ping_line"></div><div style="clear:both"></div><div id="clear_search" onclick="removePingItems()"></div></div>           
 
-<% 
-var oldContextWhen = mw3.when;
-mw3.setWhen("login");
-%>
                    
-            <div class="info"> 	<%=fields.loginUser.here()%> </div>
+            <div class="info"> 	<%=fields.loginUser.here({when: 'login'})%> </div>
             
-<% 
-mw3.setWhen(oldContextWhen)
-%>
-
         </div>
     </div>
     

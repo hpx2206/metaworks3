@@ -39,6 +39,11 @@
 				this.faceHelpers = {}
 			}
 
+			Metaworks3.prototype.debugPoint = function(argument){
+				alert('debugPoint: '+ argument)
+			}
+
+			
 			Metaworks3.prototype.setBase = function(base){
 				this.base = base;
 			}
@@ -112,6 +117,10 @@
 					this.setWhen(context.when);
 				
 				this.how = context.how;
+			}
+			
+			Metaworks3.prototype.getContext = function(){
+				return {when: this.when, where: this.where, how: this.how};
 			}
 			
 			
@@ -216,12 +225,12 @@
 					//set the context if there's some desired 
 					var currentContextWhen = this.when;
 					
-					if(object && object.metaworksContext){
-						this.setContext(object.metaworksContext);
-					}else
-					
 					if(options && options['when']){
 						this.setWhen(options['when']);
+					}
+
+					if(object && object.metaworksContext){
+						this.setContext(object.metaworksContext);
 					}
 
 					
@@ -951,7 +960,7 @@
 				this.fieldDescriptor = fieldDescriptor;
 			}
 			
-			FieldRef.prototype.here = function(){
+			FieldRef.prototype.here = function(context){
 				var html;
 
 				var face;
@@ -960,13 +969,27 @@
 					face = this.fieldDescriptor.className + (this.fieldDescriptor.viewFace ? ":" +this.fieldDescriptor.viewFace : "");
 				else
 					face = this.fieldDescriptor.className + (this.fieldDescriptor.inputFace ? ":" +this.fieldDescriptor.inputFace : "");
+
+				var oldContext = mw3.getContext();
+				if(context!=null){
+					//mw3.setContext(context);
+					
+				}
 				
 				var when = mw3.when;
-				
+
+				if(context!=null && context.when){
+					when = context.when
+				}
+
 				if(this.fieldDescriptor.boolOptions && this.fieldDescriptor.boolOptions['NONEDITABLE'])
 					when = mw3.WHEN_VIEW;
+
 				
 				html = mw3.locateObject(this.object[this.fieldDescriptor.name], face, null, {when: when, descriptor: this.fieldDescriptor});
+				
+//				mw3.setContext(oldContext);
+				
 				
 				mw3.addBeanProperty(this.objectId, "." + this.fieldDescriptor.name);
 				

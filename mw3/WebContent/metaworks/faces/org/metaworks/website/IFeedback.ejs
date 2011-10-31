@@ -2,8 +2,16 @@
 
 	<tr>
 		<td><%=fields.writer.here()%></td> 
-		<td><%=fields.text.here()%>
+		<td>
+		
+<%	if(mw3.when==mw3.WHEN_NEW && value.writer==null){%>
+	
+	<== You're required to login to leave a feedback.
+<%	}else{%>
+		<%=fields.text.here()%>
 <%
+	}
+
 	var loginUser = mw3.getAutowiredObject("org.metaworks.website.IFacebookLoginUser");
 	
 	if(loginUser!=null && loginUser.admin){
