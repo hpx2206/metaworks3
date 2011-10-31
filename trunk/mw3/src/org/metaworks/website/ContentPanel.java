@@ -5,6 +5,7 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.AutowiredToClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
+import org.metaworks.annotation.Name;
 
 @Face(
 	ejsPath="genericfaces/Window.ejs",
@@ -30,6 +31,7 @@ public class ContentPanel {
 		}
 
 	IMenu menu;
+		@Name
 		@Hidden
 		@AutowiredToClient
 		public IMenu getMenu() {
@@ -42,7 +44,7 @@ public class ContentPanel {
 	public void load() throws Exception{
 		setContents(Contents.loadContents(menu));
 		
-		if(loginUser!=null && loginUser.isAdmin()){
+		if(session.loginUser!=null && session.loginUser.isAdmin()){
 			newContent = new ParagraphContents();
 			{
 				newContent.setMenuId(menu.getMenuId());
@@ -52,5 +54,5 @@ public class ContentPanel {
 	}
 	
 	@AutowiredFromClient
-	public IFacebookLoginUser loginUser;
+	public Session session;
 }

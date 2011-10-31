@@ -78,7 +78,7 @@ public class Feedback extends MetaworksObject<IFeedback> implements IFeedback {
 	
 	public FeedbackPanel post() throws Exception {
 		
-		setWriter(loginUser);
+		setWriter(session.loginUser);
 		
 		try{
 			IDAO id = Database.sql(IDAO.class, "select max(feedbackId) 'feedbackId' from feedback");
@@ -95,7 +95,7 @@ public class Feedback extends MetaworksObject<IFeedback> implements IFeedback {
 		flushDatabaseMe();
 		
 		FeedbackPanel panel = new FeedbackPanel();
-		panel.loginUser = loginUser; //TODO: it's annoying and error-prone too.
+		panel.session = session; //TODO: it's annoying and error-prone too.
 		panel.load(contentPanel.getMenu());
 		
 		return panel;
@@ -116,6 +116,6 @@ public class Feedback extends MetaworksObject<IFeedback> implements IFeedback {
 	public ContentPanel contentPanel;
 	
 	@AutowiredFromClient
-	public IFacebookLoginUser loginUser;
+	public Session session;
 
 }

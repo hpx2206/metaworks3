@@ -41,10 +41,16 @@ public class FacebookLoginUser extends MetaworksObject<IFacebookLoginUser> imple
 
 	@Override
 	public Main personalizeMain() throws Exception {
-		setAdmin(databaseMe().isAdmin());
+		try{
+			setAdmin(databaseMe().isAdmin());
+		}catch(Exception e){}
 		
 		Main main = new Main();
-		main.setLoginUser(this);
+		
+		Session session = new Session();
+		session.setLoginUser(this);
+		
+		main.setSession(session);
 		main.load();
 		
 		return main;

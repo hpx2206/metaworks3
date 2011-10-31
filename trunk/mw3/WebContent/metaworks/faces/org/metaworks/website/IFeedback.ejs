@@ -9,6 +9,8 @@
 	<== You're required to login to leave a feedback.
 <%	}else{%>
 		<%=fields.text.here()%>
+		<%=methods.post.here()%>
+		
 <%
 	}
 
@@ -17,7 +19,6 @@
 	if(loginUser!=null && loginUser.admin){
 %>
 
-<%=methods.post.here()%>
 <%=methods.delete.here()%>
 	
 <%

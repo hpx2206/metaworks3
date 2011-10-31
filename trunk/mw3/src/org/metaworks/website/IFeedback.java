@@ -2,11 +2,13 @@ package org.metaworks.website;
 
 import java.util.Date;
 
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ORMapping;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.IDAO;
 
+@Face(options={"hideAddBtn"}, values={"true"})
 public interface IFeedback extends IDAO{
 
 	

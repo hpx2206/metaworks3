@@ -9,6 +9,7 @@ import java.io.OutputStream;
 
 import org.directwebremoting.io.FileTransfer;
 import org.metaworks.annotation.Id;
+import org.metaworks.annotation.NonEditable;
 import org.metaworks.annotation.ServiceMethod;
 
 public class MetaworksFile {
@@ -25,6 +26,7 @@ public class MetaworksFile {
 		
 	String uploadedPath;
 		@Id
+		@NonEditable
 		public String getUploadedPath() {
 			return uploadedPath;
 		}
@@ -33,11 +35,10 @@ public class MetaworksFile {
 		}
 		
 	String mimeType;
-	
+		@NonEditable
 		public String getMimeType() {
 			return mimeType;
 		}
-	
 		public void setMimeType(String mimeType) {
 			this.mimeType = mimeType;
 		}
