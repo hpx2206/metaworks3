@@ -127,6 +127,9 @@ public class Database {
 		dbPrimitiveTypes.put(Calendar.class, Calendar.class);
 		dbPrimitiveTypes.put(Date.class, Date.class);
 		
+		//it is special case
+		dbPrimitiveTypes.put(MetaworksContext.class, MetaworksContext.class);
+		
 	}
 	
 	public static IDAO get(Class classType, Object key) throws Exception{

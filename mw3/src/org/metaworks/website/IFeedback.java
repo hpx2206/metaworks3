@@ -24,17 +24,20 @@ public interface IFeedback extends IDAO{
 	public void setText(String text);
 	
 	
-	public int getWriterId();
-	public void setWriterId(int writerId);
+	public String getWriterId();
+	public void setWriterId(String writerId);
 	
-	@ORMapping(objectFields = {"userId"}, databaseFields = {"writerId"})
-	public IUser getWriter();
-	public void setWriter(IUser writer);
+	public String getWriterName();
+	public void setWriterName(String writerName);
+	
+	@ORMapping(objectFields = {"userId", "name"}, databaseFields = {"writerId", "writerName"})
+	public IFacebookLoginUser getWriter();
+	public void setWriter(IFacebookLoginUser writer);
 
-	@ServiceMethod(callByContent=true)
+	@ServiceMethod(callByContent=true, when=WHEN_NEW)
 	public FeedbackPanel post() throws Exception;
 	
-	@ServiceMethod
+	@ServiceMethod(when=WHEN_VIEW)
 	public FeedbackPanel delete() throws Exception;
 	
 }

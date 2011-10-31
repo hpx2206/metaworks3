@@ -8,42 +8,51 @@ import org.metaworks.dao.Database;
 import org.metaworks.dao.IDAO;
 
 public class Feedback extends MetaworksObject<IFeedback> implements IFeedback {
+
 	int feedbackId;
+		public int getFeedbackId() {
+			return feedbackId;
+		}
+		public void setFeedbackId(int feedbackId) {
+			this.feedbackId = feedbackId;
+		}
+	
 	int menuId;
-	public int getMenuId() {
-		return menuId;
-	}
-	public void setMenuId(int menuId) {
-		this.menuId = menuId;
-	}
+		public int getMenuId() {
+			return menuId;
+		}
+		public void setMenuId(int menuId) {
+			this.menuId = menuId;
+		}
 
 	Date postdate;
 	String text;
-	int writerId;
-	IUser writer;
 
+		
+	String writerId;
+		public String getWriterId() {
+			return writerId;
+		}
+		public void setWriterId(String writerId) {
+			this.writerId = writerId;
+		}
+
+	String writerName;
+		public String getWriterName() {
+			return writerName;
+		}
+		public void setWriterName(String writerName) {
+			this.writerName = writerName;
+		}
+
+	IFacebookLoginUser writer;
+		public IFacebookLoginUser getWriter() {
+			return writer;
+		}
+		public void setWriter(IFacebookLoginUser writer) {
+			this.writer = writer;
+		}
 	
-	public int getWriterId() {
-		return writerId;
-	}
-	public void setWriterId(int writerId) {
-		this.writerId = writerId;
-	}
-
-	public IUser getWriter() {
-		return writer;
-	}
-	public void setWriter(IUser writer) {
-		this.writer = writer;
-	}
-	
-	public int getFeedbackId() {
-		return feedbackId;
-	}
-	public void setFeedbackId(int feedbackId) {
-		this.feedbackId = feedbackId;
-	}
-
 	public Date getPostdate() {
 		return postdate;
 	}
@@ -68,6 +77,9 @@ public class Feedback extends MetaworksObject<IFeedback> implements IFeedback {
 	}
 	
 	public FeedbackPanel post() throws Exception {
+		
+		setWriter(loginUser);
+		
 		try{
 			IDAO id = Database.sql(IDAO.class, "select max(feedbackId) 'feedbackId' from feedback");
 			id.select();
@@ -83,6 +95,7 @@ public class Feedback extends MetaworksObject<IFeedback> implements IFeedback {
 		flushDatabaseMe();
 		
 		FeedbackPanel panel = new FeedbackPanel();
+		panel.loginUser = loginUser; //TODO: it's annoying and error-prone too.
 		panel.load(contentPanel.getMenu());
 		
 		return panel;
@@ -101,5 +114,8 @@ public class Feedback extends MetaworksObject<IFeedback> implements IFeedback {
 	
 	@AutowiredFromClient
 	public ContentPanel contentPanel;
+	
+	@AutowiredFromClient
+	public IFacebookLoginUser loginUser;
 
 }

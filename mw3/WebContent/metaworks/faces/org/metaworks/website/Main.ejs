@@ -6,12 +6,22 @@
 <div id="container" class="ui-layout-container">
 	<div class="ui-layout-north">
         <div id="smline">
-            <div class="logo"><img src="/mw3/images/mw3logo.png"></div>
+            <div class="logo"><img src="/mw3/images/mw3.png"></div>
             
             <div id="search_right_outer"><div id="search_line"></div><div style="clear:both"></div><div id="clear_search" onclick="removeSearchItems()"></div></div>
             <div id="search_right_outer2"><div id="ping_line"></div><div style="clear:both"></div><div id="clear_search" onclick="removePingItems()"></div></div>           
-                        
-            <div class="info"> 	 |	Help</div>
+
+<% 
+var oldContextWhen = mw3.when;
+mw3.setWhen("login");
+%>
+                   
+            <div class="info"> 	<%=fields.loginUser.here()%> </div>
+            
+<% 
+mw3.setWhen(oldContextWhen)
+%>
+
         </div>
     </div>
     

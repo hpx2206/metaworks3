@@ -7,6 +7,7 @@ import java.io.OutputStream;
 import org.directwebremoting.io.FileTransfer;
 import org.metaworks.MetaworksObject;
 import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.Face;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.IDAO;
 
@@ -135,5 +136,36 @@ public class Contents extends MetaworksObject<IContents> implements IContents{
 	
 	@AutowiredFromClient
 	public ContentPanel contentPanel;
+	
+
+	private IContents newContents(IContents c) throws Exception{
+		c.getMetaworksContext().setWhen(WHEN_NEW);
+		c.setMenuId(contentPanel.getMenu().getMenuId());
+		
+		return c;
+		
+	}
+	
+	@Override
+	public IContents newParagraph() throws Exception {
+		return newContents(new ParagraphContents());
+	}
+
+	
+	@Override
+	public IContents newImage() throws Exception {
+		return newContents(new ImageContents());
+	}
+	
+	@Override
+	public IContents newMovie() throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public IContents newFile() throws Exception {
+		return newContents(new FileContents());
+	}
 	
 }
