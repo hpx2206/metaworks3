@@ -1,15 +1,19 @@
 package org.metaworks.website;
 
+import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 
-@Face(ejsPath="genericfaces/Window.ejs")
-public class Navigation {
+@Face(
+		ejsPath="genericfaces/Window.ejs",
+		options={"hideAddBtn", "hideLabels"},
+		values={"true", "true"}
+)
+public class Navigation implements ContextAware{
 
 	IMenu menu;
-
 		public IMenu getMenu() {
 			return menu;
 		}
@@ -30,15 +34,16 @@ public class Navigation {
 
 	public Navigation() throws Exception{
 		setMenu(Menu.loadMainMenu());
+		getMenu().getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 	}
 	
-	@ServiceMethod
+	@ServiceMethod(when=MetaworksContext.WHEN_EDIT)
 	public void addNewMenu() throws Exception{
 		newMenu = new Menu();
 		newMenu.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 	}
 	
-	@ServiceMethod(callByContent = true)
+	@ServiceMethod(callByContent = true, when=MetaworksContext.WHEN_EDIT)
 	public void addSubMenu() throws Exception{
 		newMenu = new Menu();
 		newMenu.setParentMenuId(contentPanel.getMenu().getMenuId());
@@ -47,5 +52,17 @@ public class Navigation {
 	
 	@AutowiredFromClient
 	public ContentPanel contentPanel;
+
 	
+	MetaworksContext metaworksContext;
+	
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}
+	
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
+		}
+
+		
 }

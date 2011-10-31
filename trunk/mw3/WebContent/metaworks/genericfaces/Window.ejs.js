@@ -50,9 +50,10 @@ Window.prototype.resume = function(){
 }
 
 Window.prototype.startLoading = function(){
-	
+	$("#loader_" + this.objectId).show();
 }
 
 Window.prototype.endLoading = function(){
+	$("#loader_" + this.objectId).hide();
 
 }

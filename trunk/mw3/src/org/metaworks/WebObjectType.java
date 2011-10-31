@@ -67,6 +67,15 @@ public class WebObjectType{
 		public void setSuperClasses(List<String> superClasses) {
 			this.superClasses = superClasses;
 		}
+		
+	String[] faceMappingByContext;
+	
+		public String[] getFaceMappingByContext() {
+			return faceMappingByContext;
+		}
+		public void setFaceMappingByContext(String[] faceMappingByContext) {
+			this.faceMappingByContext = faceMappingByContext;
+		}
 
 	Map<String, ServiceMethodContext> serviceMethodContexts;
 		public Map<String, ServiceMethodContext> getServiceMethodContexts() {
@@ -154,33 +163,47 @@ public class WebObjectType{
 		if(actCls.isInterface() && IDAO.class.isAssignableFrom(actCls)){
 			this.iDAOClass = actCls;
 		}else{
-			Class[] interfaces = actCls.getInterfaces();
-			for(int i=0; i<interfaces.length; i++){
-				if(IDAO.class.isAssignableFrom(interfaces[i])){
-					this.iDAOClass = interfaces[i];
-				}
+			
+			ArrayList<String> interfaceNames = new ArrayList<String>();
+			
+			for(String superClassName : superClasses){
 				
-				superClasses.add(interfaces[i].getName());
+				Class[] interfaces = Class.forName(superClassName).getInterfaces();
+				for(int i=0; i<interfaces.length; i++){
+					if(IDAO.class.isAssignableFrom(interfaces[i])){
+						this.iDAOClass = interfaces[i];
+					}
+					
+					interfaceNames.add(interfaces[i].getName());
+				}
 			}
+			
+			superClasses.addAll(interfaceNames);
 		}
 
 		//setting face
 		Face typeFace = (Face)getAnnotationDeeply(actCls, iDAOClass, null, Face.class);
+		
+		if(typeFace!=null && typeFace.ejsPathMappingByContext().length > 0){
+			setFaceMappingByContext(typeFace.ejsPathMappingByContext());
+		}
+		
+		if(typeFace!=null && typeFace.options().length > 0){
+			Map<String, String> optionMap = new HashMap<String, String>();
+			
+			for(int i=0; i<typeFace.options().length; i++){
+				optionMap.put(typeFace.options()[i], typeFace.values()[i]);
+			}
+			
+			setFaceOptions(optionMap);
+		}
+
 		if(typeFace!=null && typeFace.ejsPath().length() > 0){
 			setFaceComponentPath(typeFace.ejsPath());
 			
 			if(typeFace.ejsPathForArray().length() > 0)
 				setFaceForArray(typeFace.ejsPath());
 			
-			if(typeFace.options().length > 0){
-				Map<String, String> optionMap = new HashMap<String, String>();
-				
-				for(int i=0; i<typeFace.options().length; i++){
-					optionMap.put(typeFace.options()[i], typeFace.values()[i]);
-				}
-				
-				setFaceOptions(optionMap);
-			}
 		}else
 			setFaceComponentPath(getComponentLocationByEscalation(actCls, "faces"));
 	
@@ -276,8 +299,9 @@ public class WebObjectType{
 			if(getAnnotationDeeply(actCls, iDAOClass, fd.getName(), NonLoadable.class)!=null)
 				fd.setLoadable(false);
 
-			if(getAnnotationDeeply(actCls, iDAOClass, fd.getName(), Hidden.class)!=null)
-				fd.setAttribute("hidden", new Boolean(true));
+			Hidden hidden = (Hidden) getAnnotationDeeply(actCls, iDAOClass, fd.getName(), Hidden.class);
+			if(hidden !=null)
+				fd.setAttribute("hidden", hidden.on());
 
 			if(getAnnotationDeeply(actCls, iDAOClass, fd.getName(), AutowiredToClient.class)!=null)
 				fd.setAttribute("autowiredToClient", new Boolean(true));

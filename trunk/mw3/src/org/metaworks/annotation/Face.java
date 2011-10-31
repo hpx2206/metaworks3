@@ -12,4 +12,6 @@ public @interface Face {
 	public String[] options() default {};
 	public String[] values() default {};
 	
+	public String[] ejsPathMappingByContext() default {};
+	
 }

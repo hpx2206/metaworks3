@@ -1,0 +1,53 @@
+package org.metaworks.website;
+
+import org.metaworks.MetaworksObject;
+import org.metaworks.annotation.Id;
+
+
+public class FacebookLoginUser extends MetaworksObject<IFacebookLoginUser> implements IFacebookLoginUser{
+
+	@Id
+	String userId;
+		public String getUserId() {
+			return userId;
+		}
+		public void setUserId(String userId) {
+			this.userId = userId;
+		}
+
+	String name;
+		public String getName() {
+			return name;
+		}
+		public void setName(String name) {
+			this.name = name;
+		}
+
+	String portrait;
+		public String getPortrait() {
+			return portrait;
+		}
+		public void setPortrait(String portrait) {
+			this.portrait = portrait;
+		}
+		
+	boolean isAdmin;
+		public boolean isAdmin() {
+			return isAdmin;
+		}
+		public void setAdmin(boolean isAdmin) {
+			this.isAdmin = isAdmin;
+		}
+
+	@Override
+	public Main personalizeMain() throws Exception {
+		setAdmin(databaseMe().isAdmin());
+		
+		Main main = new Main();
+		main.setLoginUser(this);
+		main.load();
+		
+		return main;
+	}
+	
+}

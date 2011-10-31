@@ -1,6 +1,7 @@
 package org.metaworks.website;
 
 import org.metaworks.MetaworksObject;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.IDAO;
 
@@ -58,10 +59,12 @@ public class Menu  extends MetaworksObject<IMenu> implements IMenu{
 //		navigation.setSelectedMenuId(getMenuId());
 		
 		ContentPanel contentPanel = new ContentPanel();
+		contentPanel.loginUser = loginUser; //TODO: removed later by propagating autowiring
 		contentPanel.setMenu(this);
 		contentPanel.load();
 		
 		FeedbackPanel feedbackPanel = new FeedbackPanel();
+		feedbackPanel.loginUser = loginUser; //TODO: removed later by propagating autowiring
 		feedbackPanel.load(this);
 		
 		return new Object[]{this, contentPanel, feedbackPanel};
@@ -100,5 +103,9 @@ public class Menu  extends MetaworksObject<IMenu> implements IMenu{
 		
 		return new Navigation(); //let refreshes the whole navigation part.
 	}
+	
+	@AutowiredFromClient
+	public IFacebookLoginUser loginUser;
+
 
 }

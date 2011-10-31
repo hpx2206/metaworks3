@@ -110,10 +110,7 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 			return daoClass;
 		}
 
-	HashMap propertyTypes;
-		public HashMap getPropertyTypes() {
-			return propertyTypes;
-		}
+	HashMap<String, Class> propertyTypes;
 		
 	ArrayList<String> propertyNames;
 		public ArrayList<String> getPropertyNames() {
@@ -265,16 +262,24 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 		};
 		
 		this.daoClass = daoClass;
+
+		initializePropertyTypes();
+	}
+	
+	protected void initializePropertyTypes(){
 		Method[] methods = daoClass.getMethods();
-		propertyTypes = new HashMap(methods.length);
+		propertyTypes = new HashMap<String, Class>(methods.length);
+		propertyNames = new ArrayList<String>();
 		for(int i=0; i<methods.length; i++){
 			String propName = methods[i].getName();
 			
-			if(propName.startsWith("get") && methods[i].getParameterTypes().length == 0){
+			boolean getterStartsGet = propName.startsWith("get");
+			boolean getterStartsIs = (getterStartsGet ? false : propName.startsWith("is"));
+			
+			if((getterStartsGet || getterStartsIs) && methods[i].getParameterTypes().length == 0){
 				
 				try{
-					propName = propName.substring(3);
-					daoClass.getMethod("set" + propName, new Class[]{methods[i].getReturnType()});
+					propName = propName.substring((getterStartsGet ? 3 : 2));
 
 					propertyNames.add(propName.substring(0, 1).toLowerCase() + propName.substring(1));
 					
@@ -282,10 +287,19 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 					propertyTypes.put(propName, methods[i].getReturnType());
 				}catch(Exception e){
 					//ignore if there's no setter having same property naming convention.
+					e.printStackTrace();
 				}
 				
 			}
+		}		
+	}
+	
+	public Class getPropertyType(String propertyName){
+		if(propertyTypes==null){
+			initializePropertyTypes();
 		}
+		
+		return propertyTypes.get(propertyName);
 	}
 	
 	public void select() throws Exception {
@@ -960,7 +974,7 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 				if(rowSet!=null) {
 					
 					if("METAWORKSCONTEXT".equalsIgnoreCase(propertyName))
-						return null;
+						return getMetaworksContext();
 					
 //					try {
 //					if(rowSet.isClosed()) { 
@@ -1132,9 +1146,10 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 		}else
 		//if setter 
 		if(m.getName().startsWith("set")){
+			String propertyName = methodName.substring(3);
+			
 			isDirty = true;
 			
-			String propertyName = methodName.substring(3);
 			
 //			if("writer".equalsIgnoreCase(propertyName)){
 //				System.out.println();
@@ -1170,17 +1185,25 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 					String[] ORMPropNames = ormapping.objectFields();
 					for(int i=0; i<ORMPropNames.length; i++){
 						
-						try{
-							String mappingPropName = ORMPropNames[i];
-							mappingPropName = WebObjectType.toUpperStartedPropertyName(mappingPropName);
+						String mappingPropName = ORMPropNames[i];
+						mappingPropName = WebObjectType.toUpperStartedPropertyName(mappingPropName);
 
-							Object value = objInst.getFieldValue(mappingPropName);
-							
-							set(ormapping.databaseFields()[i], value);
-							modifiedFieldMap.put(ormapping.databaseFields()[i].toUpperCase(), propertyName);
+						Object value = objInst.getFieldValue(mappingPropName);
 
-						}catch(Exception ex){
+						String databaseFieldName = ormapping.databaseFields()[i];
+						
+						//mapping type check
+						if(value!=null){
+							Class propertyType = (Class) getPropertyType(databaseFieldName.toUpperCase());
+							if(propertyType!=null)
+								if(!propertyType.isAssignableFrom(value.getClass())){
+									throw new Exception("[ORMapping error] the field '" + databaseFieldName + "' cannot be mapped with object field : '" + type.getName() + "." + mappingPropName + "'.");
+								}
 						}
+						
+						set(databaseFieldName, value);
+						modifiedFieldMap.put(ormapping.databaseFields()[i].toUpperCase(), propertyName);
+
 					}
 
 					return null;
@@ -1312,7 +1335,10 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 		try {
 			propertyName = propertyName.toUpperCase();
 			
-			if(rowSet!=null && !"METAWORKSCONTEXT".equals(propertyName))
+			if("METAWORKSCONTEXT".equals(propertyName))
+				return getMetaworksContext();
+			else
+			if(rowSet!=null)
 				return rowSet.getObject(propertyName);
 			else
 				return cache.get(propertyName);
@@ -1322,6 +1348,13 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 	}
 
 	public Object set(String propertyName, Object value) throws Exception {
+		
+		if("METAWORKSCONTEXT".equalsIgnoreCase(propertyName)){
+			setMetaworksContext((MetaworksContext) value);
+			
+			return value;
+		}
+		
 		isDirty = true;
 		
 //		if("url".equalsIgnoreCase(propertyName)){
@@ -1411,15 +1444,16 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 		}
 	}
 	
-	@Override
-	public MetaworksContext getMetaworksContext() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
+	MetaworksContext metaworksContext;
+		public MetaworksContext getMetaworksContext() {
+			if(metaworksContext==null)
+				metaworksContext = new MetaworksContext();
 
-	@Override
-	public void setMetaworksContext(MetaworksContext context) {
-		// TODO Auto-generated method stub
-		
-	}
+			return metaworksContext;
+		}
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
+		}
+	
 }

@@ -1,4 +1,4 @@
-var richText = function(objectId){
+var richText = function(objectId, className){
 	this.objectId = objectId;
 }
 

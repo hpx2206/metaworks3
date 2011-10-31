@@ -1,11 +1,16 @@
 package org.metaworks.website;
 
 import org.metaworks.MetaworksContext;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.AutowiredToClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 
-@Face(ejsPath="genericfaces/Window.ejs")
+@Face(
+	ejsPath="genericfaces/Window.ejs",
+	options={"hideAddBtn", "hideLabels"},
+	values={"true", "true"}
+)
 public class ContentPanel {
 
 	IContents contents;
@@ -37,11 +42,15 @@ public class ContentPanel {
 	public void load() throws Exception{
 		setContents(Contents.loadContents(menu));
 		
-		newContent = new Contents();{
-			newContent.setMenuId(menu.getMenuId());
-			newContent.setFile(new MetaworksFile()); //TODO: later we will create button if there's no data
-			newContent.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+		if(loginUser!=null && loginUser.isAdmin()){
+			newContent = new ParagraphContents();
+			{
+				newContent.setMenuId(menu.getMenuId());
+				newContent.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);		
+			}
 		}
 	}
 	
+	@AutowiredFromClient
+	public IFacebookLoginUser loginUser;
 }

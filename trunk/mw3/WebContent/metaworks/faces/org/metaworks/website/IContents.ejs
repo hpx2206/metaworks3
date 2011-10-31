@@ -2,22 +2,7 @@
 
 <%
 
-if(mw3.when==mw3.WHEN_EDIT){
-%>
-
-Type: <%=fields.type.here()%>
-Paragraph: <%=fields.paragraph.here()%>
-Width: <%=fields.width.here()%>
-Height: <%=fields.height.here()%>
-Url: <%=fields.url.here()%>
-File: <%=fields.file.here()%><br>
-
-<%=methods.save.here()%>
-
-
-<%
-}else
-if(value!=null){
+  if(value!=null){
 
 	if(value.type=="p"){ //in case of paragraph
 %>
@@ -28,7 +13,7 @@ if(value!=null){
 	}else if(value.type=="img"){ //in case of picture
 %>
 
-<img src="<%=value.url%>" width="<%=value.width%>" height="<%=value.height%>">
+<img src="<%=value.url%>" <%=value.width >0 ? "width=" + value.width: ""%> <%=value.height >0 ? "height=" + value.height: ""%>">      
 
 <% 
 	}else if(value.type=="mov"){ //in case of movie
@@ -48,7 +33,14 @@ if(value!=null){
 <%=fields.file.here()%>
 
 <%	}
+
+
+	var loginUser = mw3.getAutowiredObject("org.metaworks.website.IFacebookLoginUser");
+	
+	if(loginUser!=null && loginUser.admin){
 %>
 <%=methods.delete.here()%>
 <%
-}%>
+	}
+}
+%>

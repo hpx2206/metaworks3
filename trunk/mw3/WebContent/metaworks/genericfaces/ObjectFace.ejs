@@ -1,13 +1,22 @@
-<%if (value) {%>
+<%if (value != null) {
+%>
 
-<table bgcolor="#eeeeee">
-
-<tr>
-<td colspan=2><b><h1><%=objectMetadata.displayName%></h1></b>
-</td>
-</tr>
-
+	<div class="view_box">
+		<div class="guide">
+			<span class="tl"></span>
+			<span class="tr"></span>
+		</div>
+		<div class="cont">
+			<p class="title" style="font-size:14px; font-weight:bolder;  position:absolute; top:-24px; left:15px; background:#fff; padding:0 10px;"><%=objectMetadata.displayName%></p>
+				
+			<table width="100%" border="0" cellspacing="0" cellpadding="0">
+			    <tbody><tr>
+			        <td style="padding:2px 12px 0 0;">
+			            <table width="*" border="0" cellspacing="0" cellpadding="0">
+						<tbody>
 <%	
+
+  var showLabel = !(objectMetadata.faceOptions && objectMetadata.faceOptions['hideLabels']);
 
   for (var i=0; i<objectMetadata.fieldDescriptors.length; i++){
   
@@ -19,18 +28,31 @@
   	var fieldValue = value[fd.name];
 %>
  
+<tr height="25" valign="middle">
+<%
+ 
+ if(showLabel){
+%>
+<td bgcolor=white> <b><%=fd.displayName%></b> </td>
 
-<tr><td bgcolor=white> <b><%=fd.displayName%></b> </td>
+<%}%>
+
 <td bgcolor=white> <%=fields[fd.name] ? fields[fd.name].here() : "XXX"%></td></tr>
 
 
 <%
   }
-   
 %>
 
-<tr><td colspan=2>
-<%
+
+			            </tbody></table>
+			        </td>
+			        
+			    </tr>
+			    
+			    <tr>
+			    <td <%=showLabel ? "colspan=2" : ""%>>
+			    <%
    
    if(objectMetadata.serviceMethodContexts)
    for(var key in objectMetadata.serviceMethodContexts){
@@ -43,10 +65,17 @@
 <input type=button onclick="<%=editFunction%>" value="Edit">
 
 <%}%>
-</td></tr>
-
-</table>
-<br>
+			    </td>
+			    </tr>
+			</tbody></table>
+			
+			
+		</div>
+		<div class="guide">
+			<span class="lb"></span>
+			<span class="rb"></span>
+		</div>
+	</div>
 
 <%}else{%>
 <input type=button value="New" onclick="mw3.getFaceHelper('<%=objectId%>').newObject()">

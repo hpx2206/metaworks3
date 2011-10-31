@@ -212,6 +212,19 @@
 					
 					var metadata = this.getMetadata(objectTypeName);
 					
+					
+					//set the context if there's some desired 
+					var currentContextWhen = this.when;
+					
+					if(object && object.metaworksContext){
+						this.setContext(object.metaworksContext);
+					}else
+					
+					if(options && options['when']){
+						this.setWhen(options['when']);
+					}
+
+					
 					if(objectTypeName.length > 2 && objectTypeName.substr(-2) == '[]'){			//if array of some object type, use ArrayFace with mapped class mapping for the object type.
 						objectTypeName = objectTypeName.substr(0, objectTypeName.length - 2);
 						actualFace = metadata.faceForArray ? metadata.faceForArray : 'genericfaces/ArrayFace.ejs';
@@ -226,6 +239,23 @@
 							actualFace = metadata.faceForArray ? metadata.faceForArray : 'genericfaces/ArrayFace.ejs';
 						}
 
+						if(!actualFace){
+							
+							var faceMappingByContext = metadata.faceMappingByContext;
+							
+							if(faceMappingByContext)
+							for(var i=0; i<faceMappingByContext.length; i++){
+								var faceMap;
+								eval("faceMap = " + faceMappingByContext[i]); //json notation in there
+								
+								if(faceMap.when == this.when){
+									actualFace = faceMap.face;
+									
+									break;
+								}
+							}
+						}
+						
 						if(!actualFace){
 							actualFace = metadata.faceComponentPath;	
 						}
@@ -243,17 +273,6 @@
 							
 					}				
 					
-
-					//set the context if there's some desired 
-					var currentContextWhen = this.when;
-					
-					if(object && object.metaworksContext){
-						this.setContext(object.metaworksContext);
-					}else
-					
-					if(options && options['when']){
-						this.setWhen(options['when']);
-					}
 
 					
 					var editFunction = "mw3.editObject('" + objectId + "', '" + objectTypeName + "')";
@@ -388,8 +407,7 @@
 				if(objKey)
 					this.objectId_KeyMapping[objKey] = objectId;
 				
-				if(value && value.__className)
-					this.objectId_ClassNameMapping[value.__className] = objectId; //TODO: may problematic due to the last instance will replace old value.
+				this._wireObject(value, objectId);
 
 				var options = arguments[3];
 				
@@ -525,6 +543,18 @@
 				return "objDiv_" + objId;
 			}
 
+			Metaworks3.prototype.getAutowiredObject = function(className){
+				var autowiredObjectId = this.objectId_ClassNameMapping[className];
+				if(autowiredObjectId){
+					if(autowiredObjectId.__isAutowiredDirectValue){ //means direct value not id pointer
+						return autowiredObjectId.value;
+					}else
+						return this.getObject(autowiredObjectId);
+				}
+				
+				return null;
+			}
+
 			Metaworks3.prototype.clientSideCall = function (objectId, methodName){
 				try{
 					var infoDivId = "#"+this._getInfoDivId(objectId);
@@ -587,26 +617,22 @@
     				
 					var autowiredObjects = {};
 					
+					////// auto wiring objects //////////
+					
+					// in case of the object is an interface, find the service class and find out autowired field in there.
 					if(objectMetadata.interface){
 						var startPosOfClassName = className.lastIndexOf(".");
 						implClassName = className.substring(startPosOfClassName+2);
 						implClassName = className.substring(0, startPosOfClassName) + "." + implClassName;
 						
-						objectMetadata = this.getMetadata(implClassName);
+						objectMetadata = this.getMetadata(implClassName); //WARN: TODO: may cause following naive reference for 'objectMetadta' have problem.
 						
 					}
+					
 					if(objectMetadata && objectMetadata.autowiredFields){
 						for(var fieldName in objectMetadata.autowiredFields){
 							var autowiredClassName =  objectMetadata.autowiredFields[fieldName];
-							
-							var autowiredObjectId = this.objectId_ClassNameMapping[autowiredClassName];
-							
-							if(autowiredObjectId){
-								if(autowiredObjectId.__isAutowiredDirectValue){ //means direct value not id pointer
-									autowiredObjects[fieldName] = autowiredObjectId.value;
-								}else
-									autowiredObjects[fieldName] = this.getObject(autowiredObjectId);
-							}
+							autowiredObjects[fieldName] = this.getAutowiredObject(autowiredClassName);
 						}
 					}
 					
@@ -739,6 +765,40 @@
 			}
 			
 
+			Metaworks3.prototype._wireObject = function(value, objectId){ //TODO: need to give someday '__objectId' to all the values?
+
+				if(value && value.__className){
+					
+					var objectMetadata = this.getMetadata(value.__className); 
+	
+					for(var i=0; i<objectMetadata.superClasses.length; i++){
+						var className = objectMetadata.superClasses[i];
+						
+						this.objectId_ClassNameMapping[className] = objectId; //TODO: may problematic due to the last instance will replace old value.
+					} 
+					
+					
+					for(var i=0; i<objectMetadata.fieldDescriptors.length; i++){
+						var fieldDescriptor = objectMetadata.fieldDescriptors[i];
+						if(fieldDescriptor.boolOptions && fieldDescriptor.boolOptions['AUTOWIREDTOCLIENT']){ //means this field never have change to registered or autowired since it is not called by ObjectFace.ejs or custom faces.
+							var fieldValue = value[fieldDescriptor.name];
+	
+							var objectMetadata = this.getMetadata(fieldValue.__className); 
+							
+							if(fieldValue && fieldValue.__className){
+								for(var i=0; i<objectMetadata.superClasses.length; i++){
+									var className = objectMetadata.superClasses[i];
+									
+									this.objectId_ClassNameMapping[className] = {value: fieldValue, __isAutowiredDirectValue: true};
+								}
+							}
+							
+						}
+					}
+				}
+			}
+			
+
 			Metaworks3.prototype.setObject = function(value/*, objectTypeName*/){
 				var objectTypeName;
 				var objectId;
@@ -778,25 +838,10 @@
 					this.objectId_KeyMapping[objKey] = objectId;
 				}
 				
-				if(value && value.__className){
-					this.objectId_ClassNameMapping[value.__className] = objectId; //TODO: may problematic due to the last instance will replace old value.
-					
-					var objectMetadata = this.getMetadata(value.__className); 
-					
-					for(var i=0; i<objectMetadata.fieldDescriptors.length; i++){
-						var fieldDescriptor = objectMetadata.fieldDescriptors[i];
-						if(fieldDescriptor.boolOptions && fieldDescriptor.boolOptions['AUTOWIREDTOCLIENT']){ //means this field never have change to registered or autowired since it is not called by ObjectFace.ejs or custom faces.
-							var fieldValue = value[fieldDescriptor.name];
-							
-							if(fieldValue && fieldValue.__className){
-								this.objectId_ClassNameMapping[fieldValue.__className] = {value: fieldValue, __isAutowiredDirectValue: true};
-							}
-							
-						}
-					}
 				
-				}
-				
+				///// auto wiring object to its class name /////
+				this._wireObject(value, objectId);
+					
 				this.newBeanProperty(objectId);
 				
 				this.showObjectWithObjectId(objectId, objectTypeName, divId);

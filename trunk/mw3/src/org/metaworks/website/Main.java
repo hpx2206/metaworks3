@@ -1,5 +1,6 @@
 package org.metaworks.website;
 
+import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.ServiceMethod;
 
 public class Main {
@@ -28,26 +29,37 @@ public class Main {
 			this.feedbackPanel = feedbackPanel;
 		}
 
-	IUser loginUser;
-		public IUser getLoginUser() {
+	IFacebookLoginUser loginUser;
+		public IFacebookLoginUser getLoginUser() {
 			return loginUser;
 		}
-		public void setLoginUser(IUser loginUser) {
+		public void setLoginUser(IFacebookLoginUser loginUser) {
 			this.loginUser = loginUser;
 		}
-	
+
 	@ServiceMethod
 	public void load() throws Exception{
-		setNavigation(new Navigation());
+		
+		Navigation navigation = new Navigation();
+		
+		if(loginUser!=null && loginUser.isAdmin()){
+			MetaworksContext context = new MetaworksContext();
+			context.setWhen(MetaworksContext.WHEN_EDIT);
+			navigation.setMetaworksContext(context);
+		}
+		
+		setNavigation(navigation);
 		
 		Menu homeMenu = new Menu();
 		homeMenu.setMenuId(-1);
 		
 		contentPanel = new ContentPanel();
 		contentPanel.setMenu(homeMenu);
+		contentPanel.loginUser = loginUser;
 		contentPanel.load();
 		
 		feedbackPanel = new FeedbackPanel();
+		feedbackPanel.loginUser = loginUser;
 		feedbackPanel.load(homeMenu);		
 	}
 	
