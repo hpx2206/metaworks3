@@ -29,20 +29,32 @@ public class Main {
 			this.feedbackPanel = feedbackPanel;
 		}
 
-	IFacebookLoginUser loginUser;
-		public IFacebookLoginUser getLoginUser() {
-			return loginUser;
+//	IFacebookLoginUser loginUser;
+//		public IFacebookLoginUser getLoginUser() {
+//			return loginUser;
+//		}
+//		public void setLoginUser(IFacebookLoginUser loginUser) {
+//			this.loginUser = loginUser;
+//		}
+		
+	Session session;
+		public Session getSession() {
+			return session;
 		}
-		public void setLoginUser(IFacebookLoginUser loginUser) {
-			this.loginUser = loginUser;
+		public void setSession(Session session) {
+			this.session = session;
 		}
-
+		
+		
 	@ServiceMethod
 	public void load() throws Exception{
 		
 		Navigation navigation = new Navigation();
 		
-		if(loginUser!=null && loginUser.isAdmin()){
+		if(session==null)
+			session = new Session();
+		
+		if(session.loginUser!=null && session.loginUser.isAdmin()){
 			MetaworksContext context = new MetaworksContext();
 			context.setWhen(MetaworksContext.WHEN_EDIT);
 			navigation.setMetaworksContext(context);
@@ -51,16 +63,20 @@ public class Main {
 		setNavigation(navigation);
 		
 		Menu homeMenu = new Menu();
+		homeMenu.setName("Home");
 		homeMenu.setMenuId(-1);
+		session.setMenu(homeMenu);
 		
 		contentPanel = new ContentPanel();
 		contentPanel.setMenu(homeMenu);
-		contentPanel.loginUser = loginUser;
+		contentPanel.session = session;
 		contentPanel.load();
 		
 		feedbackPanel = new FeedbackPanel();
-		feedbackPanel.loginUser = loginUser;
-		feedbackPanel.load(homeMenu);		
+		feedbackPanel.session = session;
+		feedbackPanel.load(homeMenu);
+
+
 	}
 	
 }

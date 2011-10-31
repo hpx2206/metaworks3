@@ -1,5 +1,17 @@
 <%if (value != null){
+
+
+	var objectName; 
+
+	if(value.__toString!=null)
+		objectName = value.__toString();
+	else{
+		objectName = objectMetadata.displayName;
+	}
+
 %>
+
+
 
 
 	<div id="sm_<%=objectId%>" style="margin-top:12px; padding:0px;  display:none; float:left; width:160px; position:relative;">
@@ -21,7 +33,7 @@
 	<div class="inner-north ui-layout-pane ui-layout-pane-north" style="padding-bottom: 35px; position: absolute; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; bottom: auto; width: auto; z-index: 1; top: 0px; left: 0px; right: 0px; visibility: visible; display: block; ">
             <div class="boxtopleft">
             	<span class="boxtopright">
-            		<div id="navigationTitle"><%=objectMetadata.displayName%></div>
+            		<div id="navigationTitle"><%=objectName%></div>
             		<div id="loader_<%=objectId%>" class="loadingarea" style="display: none; "><img src="/uengine-web/codi-web/images/waveStyle/ajax-loader.gif" border="0"></div>
             	</span>
             </div>

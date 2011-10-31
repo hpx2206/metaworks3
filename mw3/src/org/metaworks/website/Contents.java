@@ -96,9 +96,6 @@ public class Contents extends MetaworksObject<IContents> implements IContents{
 	
 	public ContentPanel save() throws Exception {
 		
-		//storing file
-		
-		
 		try{
 			IDAO contentId = Database.sql(IDAO.class, "select max(contentId) 'contentId' from contents");
 			contentId.select();
@@ -114,6 +111,7 @@ public class Contents extends MetaworksObject<IContents> implements IContents{
 		flushDatabaseMe();
 		
 		ContentPanel cp = new ContentPanel();
+		cp.session = session; //TODO: need to be removed after 'Autowired Factory' of metaworks3 :  e.g. newContentPanel = MetaworksObject.create(ContentPanel.class) will return a auto-wired content for this
 		cp.setMenu(contentPanel.getMenu());
 		
 		cp.load();
@@ -126,16 +124,19 @@ public class Contents extends MetaworksObject<IContents> implements IContents{
 		//flushDatabaseMe();
 		
 		ContentPanel newContentPanel = new ContentPanel();
-		newContentPanel.setMenu(contentPanel.getMenu());
-		
+		newContentPanel.session = session; //TODO: need to be removed after 'Autowired Factory' of metaworks3 :  e.g. newContentPanel = MetaworksObject.create(ContentPanel.class) will return a auto-wired content for this
+		newContentPanel.setMenu(contentPanel.getMenu());		
 		newContentPanel.load();
 		
-		return newContentPanel;		
+		return newContentPanel;
 	}
 
 	
 	@AutowiredFromClient
 	public ContentPanel contentPanel;
+	
+	@AutowiredFromClient
+	public Session session;
 	
 
 	private IContents newContents(IContents c) throws Exception{

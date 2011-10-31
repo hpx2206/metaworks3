@@ -754,7 +754,9 @@
 			Metaworks3.prototype._armObject = function(objId, object){
 				if(!object || !object.__className) return;
 				
-				if(object.__className=="Number" || object.__className=="String"){ return; }
+				if(object.__className=="Number" || object.__className=="String"){
+					return; 
+				}
 
 					
 				object['__objectId'] = objId;
@@ -770,7 +772,21 @@
 				   		else
 				   			eval("object['"+methodName+"'] = function(){return mw3.call(this.__objectId, '"+methodName+"');}");
 			    }
-
+			   
+			   object['__toString'] = function(){
+				   
+				   if(objectMetadata.nameFieldDescriptor!=null){
+					   var nameFieldValue = this[objectMetadata.nameFieldDescriptor.name];
+					   
+					   if(nameFieldValue.__toString){
+						   return nameFieldValue.__toString();
+					   }else{
+						   return nameFieldValue;
+					   }
+				   }else{
+					   return objectMetadata.displayName;
+				   }
+			   }
 			}
 			
 

@@ -59,12 +59,12 @@ public class Menu  extends MetaworksObject<IMenu> implements IMenu{
 //		navigation.setSelectedMenuId(getMenuId());
 		
 		ContentPanel contentPanel = new ContentPanel();
-		contentPanel.loginUser = loginUser; //TODO: removed later by propagating autowiring
+		contentPanel.session = session; //TODO: removed later by propagating autowiring
 		contentPanel.setMenu(this);
 		contentPanel.load();
 		
 		FeedbackPanel feedbackPanel = new FeedbackPanel();
-		feedbackPanel.loginUser = loginUser; //TODO: removed later by propagating autowiring
+		feedbackPanel.session = session; //TODO: removed later by propagating autowiring
 		feedbackPanel.load(this);
 		
 		return new Object[]{this, contentPanel, feedbackPanel};
@@ -105,7 +105,7 @@ public class Menu  extends MetaworksObject<IMenu> implements IMenu{
 	}
 	
 	@AutowiredFromClient
-	public IFacebookLoginUser loginUser;
+	public Session session;
 
 
 }

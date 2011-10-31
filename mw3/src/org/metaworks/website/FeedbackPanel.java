@@ -34,12 +34,12 @@ public class FeedbackPanel {
 		
 		newFeedback = new Feedback();
 		newFeedback.setMenuId(menu.getMenuId());
-		newFeedback.setWriter(loginUser);
+		newFeedback.setWriter(session.loginUser);
 		newFeedback.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 
 	}
 	
 	@AutowiredFromClient
-	public IFacebookLoginUser loginUser;
+	public Session session;
 	
 }
