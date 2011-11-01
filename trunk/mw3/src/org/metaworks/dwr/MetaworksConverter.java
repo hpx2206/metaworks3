@@ -176,11 +176,13 @@ public class MetaworksConverter extends BeanConverter{
 			                nested = iDaoConvertOutbound(dao, outctx);
 			                ovs.add(nested);
 				        }
-				        
-				        if(ovs.size()<=1){
-				        	if(nested!=null)
-				        		return nested; //return single object if there's only one object. client (Javascript) should consider object.length is undefined or not to recognize whether the data is array or not
-				        }
+
+				        //disabled since 'add' button mechanism
+				  
+//				        if(ovs.size()<=1){
+//				        	if(nested!=null)
+//				        		return nested; //return single object if there's only one object. client (Javascript) should consider object.length is undefined or not to recognize whether the data is array or not
+//				        }
 			    	}else{
 			            return iDaoConvertOutbound(dao, outctx);
 			    	}

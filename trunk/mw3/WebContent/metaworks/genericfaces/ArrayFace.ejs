@@ -23,7 +23,7 @@
 }
 
 
-if(!(objectMetadata.faceOptions && objectMetadata.faceOptions['hideAddBtn'])){
+if((mw3.when==mw3.WHEN_EDIT || mw3.when==mw3.WHEN_NEW) && !(objectMetadata.faceOptions && objectMetadata.faceOptions['hideAddBtn'])){
 %>
 
 <input type=button value="Add" onclick="mw3.getFaceHelper('<%=objectId%>').addNew()">

@@ -5,6 +5,7 @@ import java.util.Date;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ORMapping;
+import org.metaworks.annotation.Range;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.IDAO;
 
@@ -22,6 +23,7 @@ public interface IFeedback extends IDAO{
 	public Date getPostdate();
 	public void setPostdate(Date postdate);
 	
+	@Range(size=40)
 	public String getText();
 	public void setText(String text);
 	

@@ -47,8 +47,14 @@ public class Menu  extends MetaworksObject<IMenu> implements IMenu{
 		this.name = name;
 	}
 	
-
-
+	boolean enabled;
+		public boolean isEnabled() {
+			return enabled;
+		}
+		public void setEnabled(boolean enabled) {
+			this.enabled = enabled;
+		}
+	
 	public Object[] selectMenu() throws Exception{
 		subMenu = (IMenu) Database.sql(IMenu.class, "select * from menu where parentMenuId = ?parentMenuId");;
 		subMenu.setParentMenuId(this.getMenuId());
@@ -66,6 +72,9 @@ public class Menu  extends MetaworksObject<IMenu> implements IMenu{
 		FeedbackPanel feedbackPanel = new FeedbackPanel();
 		feedbackPanel.session = session; //TODO: removed later by propagating autowiring
 		feedbackPanel.load(this);
+		
+		if(session.loginUser!=null && session.loginUser.isAdmin())
+			getMetaworksContext().setWhen(WHEN_EDIT);
 		
 		return new Object[]{this, contentPanel, feedbackPanel};
 	}
@@ -85,7 +94,7 @@ public class Menu  extends MetaworksObject<IMenu> implements IMenu{
 		return mainMenu;
 	}
 	
-	public Navigation save() throws Exception {
+	public void save() throws Exception {
 		
 		try{
 			IDAO menuId = Database.sql(IDAO.class, "select max(menuId) 'menuId' from menu");
@@ -98,14 +107,43 @@ public class Menu  extends MetaworksObject<IMenu> implements IMenu{
 		}
 		
 		createDatabaseMe();
-		syncToDatabaseMe();
-		flushDatabaseMe(); //required in this case due to the following command will loads the data immediately.
+		//syncToDatabaseMe();
+		//flushDatabaseMe(); //required in this case due to the following command will loads the data immediately.
 		
-		return new Navigation(); //let refreshes the whole navigation part.
+		//return new Navigation(); //let refreshes the whole navigation part.
 	}
 	
 	@AutowiredFromClient
 	public Session session;
+
+
+	@Override
+	public void disable() throws Exception {
+		databaseMe().setEnabled(false);
+		getMetaworksContext().setWhen(WHEN_EDIT); //leave edit mode
+	}
+	
+	@Override
+	public void enable() throws Exception {
+		databaseMe().setEnabled(true);
+		getMetaworksContext().setWhen(WHEN_EDIT); //leave edit mode
+	}
+	
+	@Override
+	public void addChild() throws Exception {
+		IMenu child = new Menu();
+		child.setParentMenuId(this.getMenuId());
+		child.getMetaworksContext().setWhen(WHEN_NEW);
+		
+		getMetaworksContext().setWhen(WHEN_EDIT);
+
+		setSubMenu(child);
+		setSelected(true);
+	}
+	@Override
+	public void delete() throws Exception {
+		deleteDatabaseMe();
+	}
 
 
 }

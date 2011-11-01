@@ -53,12 +53,12 @@ public class WebFieldDescriptor {
 		if(oldFd.getAttributeTable()!=null){
 			for(Object key : oldFd.getAttributeTable().keySet()){
 				Object attr = oldFd.getAttribute((String) key);
-				if(attr instanceof Boolean && ((Boolean)attr).booleanValue() == true){
-					if(boolOptions==null)
-						boolOptions = new HashMap<String, Boolean>();
-					
-					boolOptions.put((String) key, Boolean.valueOf(true));
-				}
+				//if(attr instanceof Boolean && ((Boolean)attr).booleanValue() == true){
+				if(attributes==null)
+					attributes = new HashMap<String, Object>();
+				
+				attributes.put(((String) key).toLowerCase(), attr);//Boolean.valueOf(true));
+				//}
 			}
 		}
 	}
@@ -119,14 +119,20 @@ public class WebFieldDescriptor {
 			this.values = values;
 		}
 
-	Map<String, Boolean> boolOptions;
-		public Map<String, Boolean> getBoolOptions() {
-			return boolOptions;
-		}
-		public void setBoolOptions(Map<String, Boolean> boolOptions) {
-			this.boolOptions = boolOptions;
-		}
+//	Map<String, Boolean> boolOptions;
+//		public Map<String, Boolean> getBoolOptions() {
+//			return boolOptions;
+//		}
+//		public void setBoolOptions(Map<String, Boolean> boolOptions) {
+//			this.boolOptions = boolOptions;
+//		}
 		
-		
+	Map<String, Object> attributes;
+		public Map<String, Object> getAttributes() {
+			return attributes;
+		}
+		public void setAttributes(Map<String, Object> attributes) {
+			this.attributes = attributes;
+		}
 		
 }

@@ -20,7 +20,7 @@ import org.metaworks.dao.IDAO;
 @Face(
 		options={"hideAddBtn"},
 		values={"true"},
-		ejsPathMappingByContext={"{when: 'edit', face: 'genericfaces/ObjectFace.ejs'}"}
+		ejsPathMappingByContext={"{when: 'new', face: 'genericfaces/ObjectFace.ejs'}"}
 )
 public interface IMenu extends IDAO{
 
@@ -48,11 +48,28 @@ public interface IMenu extends IDAO{
 	public boolean isSelected();
 	public void setSelected(boolean selected);
 	
+	
+	public boolean isEnabled();
+	public void setEnabled(boolean enabled);
+
+	
 	@ServiceMethod(callByContent=true, when="never")
 	public Object[] selectMenu() throws Exception; //should avoid 'select()' since it is for IDAO sql data selection. 
 	
 	@ServiceMethod(callByContent=true)
-	public Navigation save() throws Exception;
+	public void save() throws Exception;
+	
+	@ServiceMethod(callByContent=true)
+	public void disable() throws Exception;
+	
+	@ServiceMethod(callByContent=true)
+	public void enable() throws Exception;
+	
+	@ServiceMethod(needToConfirm=true)
+	public void delete() throws Exception;
+	
+	@ServiceMethod(callByContent=true)
+	public void addChild() throws Exception;
 	
 	@Children
 	@ServiceMethod(target=ServiceMethodContext.TARGET_NONE, when="never")  //it just return object value only
