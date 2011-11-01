@@ -14,9 +14,9 @@
 <%
 	}
 
-	var loginUser = mw3.getAutowiredObject("org.metaworks.website.IFacebookLoginUser");
+	var session = mw3.getAutowiredObject("org.metaworks.website.Session");
 	
-	if(loginUser!=null && loginUser.admin){
+	if(session!=null && session.loginUser!=null && session.loginUser.admin){
 %>
 
 <%=methods.delete.here()%>

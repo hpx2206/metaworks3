@@ -22,7 +22,7 @@
   
   	var fd = objectMetadata.fieldDescriptors[i];
   	
-  	if(fd.boolOptions && fd.boolOptions['HIDDEN']) continue;
+  	if(fd.attributes && fd.attributes['hidden']) continue;
   	if(fd.name == 'metaworksContext') continue;
   	
   	var fieldValue = value[fd.name];

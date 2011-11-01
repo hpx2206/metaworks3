@@ -22,38 +22,13 @@ public class Navigation implements ContextAware{
 			this.menu = menu;
 		}
 	
-	IMenu newMenu;
-			
-		public IMenu getNewMenu() {
-			return newMenu;
-		}
-	
-		public void setNewMenu(IMenu newMenu) {
-			this.newMenu = newMenu;
-		}
 
 	public Navigation() throws Exception{
 		setMenu(Menu.loadMainMenu());
-		getMenu().getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 	}
 	
-	@ServiceMethod(when=MetaworksContext.WHEN_EDIT)
-	public void addNewMenu() throws Exception{
-		newMenu = new Menu();
-		newMenu.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
-	}
 	
-	@ServiceMethod(callByContent = true, when=MetaworksContext.WHEN_EDIT)
-	public void addSubMenu() throws Exception{
-		newMenu = new Menu();
-		newMenu.setParentMenuId(contentPanel.getMenu().getMenuId());
-		newMenu.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
-	}
-	
-	@AutowiredFromClient
-	public ContentPanel contentPanel;
 
-	
 	MetaworksContext metaworksContext;
 	
 		public MetaworksContext getMetaworksContext() {

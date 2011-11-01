@@ -1,26 +1,39 @@
 
 <%
+if(value!=null){
 
-if(mw3.when == mw3.WHEN_EDIT){
-%>
-
-parent: <%=fields.parentMenuId.here()%><br>
-menuId: <%=fields.menuId.here()%><br>
-menuName: <%=fields.name.here()%><br>
-
-<%=methods.save.here()%>
-
-<%}else if(value!=null){
-
+ if(mw3.when!=mw3.WHEN_VIEW || value.enabled){
+ 
   if(value.selected){%>
-<b><a onclick="<%=methods.selectMenu.caller()%>"><%=value.name%></a></b>
-<table><td width=10></td><td><%=fields.subMenu.here()%></td></table>
+<b><a onclick="mw3.getFaceHelper('<%=objectId%>').showSubMenu()"><%=value.name%></a></b>
+<table><td width=10></td><td><%=fields.subMenu.here({when: mw3.when})%></td></table>
 
 <%}else{%>
 
-<a onclick="<%=methods.selectMenu.caller()%>"><%=value.name%></a>
+<a onclick="mw3.getFaceHelper('<%=objectId%>').showSubMenu()"><%=value.name%></a>
+
 <%}
-}else{
+ }
+ 
+
+  if(mw3.when==mw3.WHEN_EDIT){
+  
+  	if(value.enabled){
 %>
 
-<%}%>
+<%=methods.disable.here()%>
+
+<%  }else{%>
+<%=methods.enable.here()%>
+
+<%	}
+
+%>
+<%=methods.delete.here()%>
+<%=methods.addChild.here()%>
+<%
+
+  }
+
+}
+%>

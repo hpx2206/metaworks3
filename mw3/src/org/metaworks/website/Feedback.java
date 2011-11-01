@@ -106,6 +106,7 @@ public class Feedback extends MetaworksObject<IFeedback> implements IFeedback {
 		//flushDatabaseMe();
 		
 		FeedbackPanel panel = new FeedbackPanel();
+		panel.session = session;
 		panel.load(contentPanel.getMenu());
 		
 		return panel;		

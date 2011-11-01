@@ -39,7 +39,7 @@
 				this.faceHelpers = {}
 			}
 
-			Metaworks3.prototype.debugPoint = function(argument){
+			Metaworks3.prototype.debug = function(argument){
 				alert('debugPoint: '+ argument)
 			}
 
@@ -140,12 +140,12 @@
 									for(var i=0; i<webObjectType.fieldDescriptors.length; i++){
 										var fd = webObjectType.fieldDescriptors[i];
 										
-										if(!fd.boolOptions) continue;
+										if(!fd.attributes) continue;
 										
-										if(fd.boolOptions['NAME']){
+										if(fd.attributes['namefield']){
 											webObjectType['nameFieldDescriptor'] = fd;
 										}else
-										if(fd.boolOptions['CHILDREN']){
+										if(fd.attributes['children']){
 											webObjectType['childrenFieldDescriptor'] = fd;
 										}
 									}
@@ -574,6 +574,12 @@
 					eval(functionName+"('" + objectId + "')");
 					
 					$(infoDivId).html("<font color=blue> " + methodName + " DONE. </font>");
+					$(infoDivId).slideDown(500, function(){
+						setTimeout(function() {
+							$( infoDivId ).slideUp(500);
+						}, 5000 );
+					});
+					
 				}catch(e){
 					
 					$(infoDivId).html("<font color=red>Error: "+ e.message +" [RETRY]</font> ");
@@ -707,11 +713,16 @@
 				        				
 				        				if(mw3.getFaceHelper(objId).showStatus){
 				        					mw3.getFaceHelper(objId).showStatus( svcNameAndMethodName + " DONE.");
-				        				}else
-					    					$(infoDivId).html("<font color=blue> " + svcNameAndMethodName + " DONE. </font>");
+				        				}else{
+
+					    					mw3.showInfo(objId, svcNameAndMethodName + " DONE");
+
+				        				}
 				        				
-				    				}else
-				    					$(infoDivId).html("<font color=blue> " + svcNameAndMethodName + " DONE. </font>");
+				    				}else{
+				    					mw3.showInfo(objId, svcNameAndMethodName + " DONE");
+			        					
+				    				}
 
 				        		},
 
@@ -726,9 +737,9 @@
 									
 									}else{
 										if(!exception)
-											$(infoDivId).html("<font color=red>Error: "+ errorString +" [RETRY]</font> ");
+											mw3.showError(objId, errorString, svcNameAndMethodName);
 										else
-											$(infoDivId).html("<font color=red>Error: "+ (exception.targetException ? exception.targetException.message : exception.message) +" [RETRY]</font> ");
+											mw3.showError(objId, (exception.targetException ? exception.targetException.message : exception.message), svcNameAndMethodName);
 									}
 				        		}
 						
@@ -751,6 +762,23 @@
 
 			}
 			
+			Metaworks3.prototype.showInfo = function(objId, message){
+				var infoDivId = "#"+this._getInfoDivId(objId);
+
+				$(infoDivId).html("<center><font color=blue> " + message + "</font></center>");
+				$(infoDivId).slideDown(500, function(){
+					setTimeout(function() {
+						$( infoDivId ).slideUp(500);
+					}, 5000 );
+				});
+			}
+			
+			Metaworks3.prototype.showError = function(objId, message, methodName){
+				var infoDivId = "#"+this._getInfoDivId(objId);
+
+				$(infoDivId).html("<center><font color=red> " + message + "<input type=button onclick=\"mw3.getObject('" + objId + "')."+ methodName + "()\" value='RETRY'></font></center>");
+			}
+			
 			Metaworks3.prototype._armObject = function(objId, object){
 				if(!object || !object.__className) return;
 				
@@ -765,13 +793,13 @@
 				var objectMetadata = this.getMetadata(object.__className);
     			
 			   for(var methodName in objectMetadata.serviceMethodContexts){
-				   		var methodContext = objectMetadata.serviceMethodContexts[methodName];
-				   		
-				   		if(methodContext.clientSideCall)
-				   			eval("object['"+methodName+"'] = function(){return mw3.clientSideCall(this.__objectId, '"+methodName+"');}");
-				   		else
-				   			eval("object['"+methodName+"'] = function(){return mw3.call(this.__objectId, '"+methodName+"');}");
-			    }
+			   		var methodContext = objectMetadata.serviceMethodContexts[methodName];
+			   		
+			   		if(methodContext.clientSideCall)
+			   			eval("object['"+methodName+"'] = function(){return mw3.clientSideCall(this.__objectId, '"+methodName+"');}");
+			   		else
+			   			eval("object['"+methodName+"'] = function(){return mw3.call(this.__objectId, '"+methodName+"');}");
+			   }
 			   
 			   object['__toString'] = function(){
 				   
@@ -787,6 +815,11 @@
 					   return objectMetadata.displayName;
 				   }
 			   }
+			   
+			   object['__getFaceHelper'] = function(){
+				   return mw3.getFaceHelper(this.__objectId);
+			   }
+			   
 			}
 			
 
@@ -805,7 +838,7 @@
 					
 					for(var i=0; i<objectMetadata.fieldDescriptors.length; i++){
 						var fieldDescriptor = objectMetadata.fieldDescriptors[i];
-						if(fieldDescriptor.boolOptions && fieldDescriptor.boolOptions['AUTOWIREDTOCLIENT']){ //means this field never have change to registered or autowired since it is not called by ObjectFace.ejs or custom faces.
+						if(fieldDescriptor.attributes && fieldDescriptor.attributes['autowiredtoclient']){ //means this field never have change to registered or autowired since it is not called by ObjectFace.ejs or custom faces.
 							var fieldValue = value[fieldDescriptor.name];
 	
 							var objectMetadata = this.getMetadata(fieldValue.__className); 
@@ -964,7 +997,8 @@
 				var objectRef={object: object, objectId: objectId, objectMetadata: objectMetadata, fields: fields, methods: methods};
 				return objectRef;
 			}
-						
+			
+			if(!Metaworks) alert('Metaworks DWR service looks not available. Metaworks will not work');
 			var mw3 = new Metaworks3('template_caption', 'dwr_caption', Metaworks);
 			
 
@@ -998,7 +1032,7 @@
 					when = context.when
 				}
 
-				if(this.fieldDescriptor.boolOptions && this.fieldDescriptor.boolOptions['NONEDITABLE'])
+				if(this.fieldDescriptor.attributes && this.fieldDescriptor.attributes['noneditable'])
 					when = mw3.WHEN_VIEW;
 
 				

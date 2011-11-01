@@ -291,7 +291,7 @@ public class WebObjectType{
 				fd.setSavable(false);
 
 			if(getAnnotationDeeply(actCls, iDAOClass, fd.getName(), Name.class)!=null)
-				fd.setAttribute("name", new Boolean(true));
+				fd.setAttribute("nameField", new Boolean(true));
 
 			if(getAnnotationDeeply(actCls, iDAOClass, fd.getName(), Children.class)!=null)
 				fd.setAttribute("children", new Boolean(true));
@@ -346,6 +346,10 @@ public class WebObjectType{
 					fd.setInputter(selectInput);
 					
 					viewer.setFace(getComponentLocationByEscalation( SelectInput.class, "genericfaces"));
+				}
+				
+				if(range.size() > 0){
+					fd.setAttribute("size", range.size());
 				}
 			}
 

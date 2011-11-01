@@ -5,7 +5,7 @@ var ArrayFace = function(objectId, className){
 
 ArrayFace.prototype.addNew = function(){
 	var arrayObj = mw3.getObject(this.objectId);
-	var newOne = {__className: this.className};
+	var newOne = {__className: this.className, metaworksContext: {when: mw3.WHEN_NEW}};
 	arrayObj[arrayObj.length] = newOne;
 	
 	var divId = "#objDiv_" + this.objectId; 

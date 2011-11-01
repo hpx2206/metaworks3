@@ -32,6 +32,10 @@ public interface IContents extends IDAO{
 	public void setContentId(int contentId);
 	
 	@Hidden
+	public int getOrderId();
+	public void setOrderId(int orderId);
+	
+	@Hidden
 	public int getMenuId();
 	public void setMenuId(int menuId);
 	
@@ -65,6 +69,7 @@ public interface IContents extends IDAO{
 	public void setHeight(int height);
 	
 	@Hidden
+	@NonLoadable //means don't try to MetaworksFile as a database field so that it generates a join query automatically. instead of that, just uses ORMapping hint to marshall/unmarshall relatonal data to object ones.
 	@ORMapping(
 		databaseFields = { 	"url", 			"paragraph" }, 
 		objectFields = { 	"uploadedPath", "mimeType" }
@@ -76,8 +81,15 @@ public interface IContents extends IDAO{
 	@ServiceMethod(callByContent=true, when=WHEN_NEW)
 	public ContentPanel save() throws Exception;
 	
-	@ServiceMethod(when=WHEN_VIEW)
+	@ServiceMethod(when=WHEN_VIEW, needToConfirm=true)
 	public ContentPanel delete() throws Exception;
+
+	@ServiceMethod(when=WHEN_VIEW)
+	public ContentPanel moveUp() throws Exception;
+
+	@ServiceMethod(when=WHEN_VIEW)
+	public ContentPanel moveDown() throws Exception;
+
 	
 	@ServiceMethod
 	public IContents newParagraph() throws Exception; //TODO: never use 'paragraph' as method name since it is consumed already by field name. we should create validator later
@@ -90,5 +102,8 @@ public interface IContents extends IDAO{
 
 	@ServiceMethod
 	public IContents newFile() throws Exception;
+
+	@ServiceMethod(when=WHEN_EDIT, callByContent=true)
+	public IContents edit() throws Exception;
 
 }

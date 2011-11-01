@@ -48,7 +48,7 @@ public class MetaworksFile {
 		fileTransfer = new FileTransfer(uploadedPath, getMimeType(), new FileInputStream(uploadedPath));
 	}
 
-	@ServiceMethod(callByContent=true)
+//	@ServiceMethod(callByContent=true)
 	public void upload() throws FileNotFoundException, IOException, Exception{
 		
 		if(fileTransfer==null) 

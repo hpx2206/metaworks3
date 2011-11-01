@@ -1,6 +1,7 @@
 package org.metaworks.dwr;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.Hashtable;
@@ -58,7 +59,7 @@ public class MetaworksRemoteService {
 		}
 	}
 	
-    public Object callMetaworksService(String objectTypeName, Object object, String methodName, Map<String, Object> autowiredFields) throws Exception{
+    public Object callMetaworksService(String objectTypeName, Object object, String methodName, Map<String, Object> autowiredFields) throws Throwable{
 	
     	//getBeanFactory().getBean(arg0)
     	
@@ -134,11 +135,11 @@ public class MetaworksRemoteService {
 			Object returned = m.invoke(object, new Object[]{});
 			if(m.getReturnType()!=void.class)
 				return returned;
-		} catch (Exception e) {
+		} catch (InvocationTargetException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			
-			throw e;
+			throw e.getTargetException();
 		}
 		
 		return object;
