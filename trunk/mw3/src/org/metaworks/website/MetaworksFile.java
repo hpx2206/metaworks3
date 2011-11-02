@@ -54,7 +54,7 @@ public class MetaworksFile {
 		if(fileTransfer==null) 
 			throw new Exception("No file attached");
 		
-		String uploadPath = "/Users/jyjang/Documents/" + fileTransfer.getFilename();
+		String uploadPath = "processMarket/fileSystem/" + fileTransfer.getFilename();
 		copyStream(fileTransfer.getInputStream(), new FileOutputStream(uploadPath));
 		
 		setUploadedPath(uploadPath); //only when the file has been successfully uploaded, this value is set, that means your can download later
