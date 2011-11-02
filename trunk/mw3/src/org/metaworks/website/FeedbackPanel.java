@@ -1,10 +1,12 @@
 package org.metaworks.website;
 
 import org.metaworks.MetaworksContext;
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.AutowiredToClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
+import org.metaworks.annotation.ServiceMethod;
 
 @Face(
 		ejsPath="genericfaces/Window.ejs",
@@ -38,6 +40,18 @@ public class FeedbackPanel {
 		newFeedback.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 
 	}
+	
+	@ServiceMethod
+	public void refresh() throws Exception{
+		setFeedback(Feedback.loadFeedback(session.menu));
+		
+		newFeedback = new Feedback();
+		newFeedback.setMenuId(session.menu.getMenuId());
+		newFeedback.setWriter(session.loginUser);
+		newFeedback.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+
+	}
+	
 	
 	@AutowiredFromClient
 	public Session session;

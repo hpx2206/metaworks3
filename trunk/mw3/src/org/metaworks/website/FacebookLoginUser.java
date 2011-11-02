@@ -1,10 +1,10 @@
 package org.metaworks.website;
 
-import org.metaworks.MetaworksObject;
 import org.metaworks.annotation.Id;
+import org.metaworks.dao.Database;
 
 
-public class FacebookLoginUser extends MetaworksObject<IFacebookLoginUser> implements IFacebookLoginUser{
+public class FacebookLoginUser extends Database<IFacebookLoginUser> implements IFacebookLoginUser{
 
 	@Id
 	String userId;

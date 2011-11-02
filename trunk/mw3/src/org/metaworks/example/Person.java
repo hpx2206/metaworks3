@@ -1,11 +1,10 @@
 package org.metaworks.example;
 
-import org.metaworks.MetaworksObject;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
 
-public class Person extends MetaworksObject<IPerson> implements IPerson{
+public class Person extends Database<IPerson> implements IPerson{
 
 	String name;
 

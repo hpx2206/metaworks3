@@ -539,7 +539,7 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 		//Automated join query generation: DAO interface should have keyField setting
 		WebObjectType webObjectType = MetaworksRemoteService.getMetaworksType(daoClass.getName());
 		for(FieldDescriptor fd : webObjectType.metaworks2Type().getFieldDescriptors()){
-			if(fd.isLoadable() && !Database.dbPrimitiveTypes.containsKey(fd.getClassType())){
+			if(fd.isLoadable() && !Database.dbPrimitiveTypes.containsKey(fd.getClassType()) && fd.getAttribute("ormapping")==null){
 				WebObjectType referenceFieldWOT = MetaworksRemoteService.getMetaworksType(fd.getClassType().getName());
 				
 				if(referenceFieldWOT.getKeyFieldDescriptor()==null) 
