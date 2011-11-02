@@ -1,10 +1,9 @@
 package org.metaworks.example;
 
-import org.metaworks.MetaworksObject;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
 
-public class Posting extends MetaworksObject<IPosting> implements IPosting{
+public class Posting extends Database<IPosting> implements IPosting{
 
 
 	IPerson writer;

@@ -47,6 +47,7 @@ public class ContentPanel {
 		if(session.loginUser!=null && session.loginUser.isAdmin()){
 			newContent = new ParagraphContents();
 			{
+				newContent.setContentId(-1);//means new one
 				newContent.setMenuId(menu.getMenuId());
 				newContent.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);		
 			}

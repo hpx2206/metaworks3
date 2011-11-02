@@ -1,11 +1,10 @@
 package org.metaworks.website;
 
-import org.metaworks.MetaworksObject;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.IDAO;
 
-public class Menu  extends MetaworksObject<IMenu> implements IMenu{
+public class Menu  extends Database<IMenu> implements IMenu{
 	
 	int menuId;
 	int parentMenuId;
@@ -56,7 +55,7 @@ public class Menu  extends MetaworksObject<IMenu> implements IMenu{
 		}
 	
 	public Object[] selectMenu() throws Exception{
-		subMenu = (IMenu) Database.sql(IMenu.class, "select * from menu where parentMenuId = ?parentMenuId");;
+		subMenu = (IMenu) sql(IMenu.class, "select * from menu where parentMenuId = ?parentMenuId");;
 		subMenu.setParentMenuId(this.getMenuId());
 		subMenu.select();
 		this.setSelected(true);
@@ -80,7 +79,7 @@ public class Menu  extends MetaworksObject<IMenu> implements IMenu{
 	}
 	
 	public IMenu loadSubMenu() throws Exception{
-		subMenu = (IMenu) Database.sql(IMenu.class, "select * from menu where parentMenuId = ?parentMenuId");;
+		subMenu = (IMenu) sql(IMenu.class, "select * from menu where parentMenuId = ?parentMenuId");;
 		subMenu.setParentMenuId(this.getMenuId());
 		subMenu.select();
 
@@ -88,7 +87,7 @@ public class Menu  extends MetaworksObject<IMenu> implements IMenu{
 	}
 
 	static public IMenu loadMainMenu() throws Exception{
-		IMenu mainMenu = (IMenu) Database.sql(IMenu.class, "select * from menu where parentMenuId = -1");;
+		IMenu mainMenu = (IMenu) sql(IMenu.class, "select * from menu where parentMenuId = -1");;
 		mainMenu.select();
 		
 		return mainMenu;
@@ -97,7 +96,7 @@ public class Menu  extends MetaworksObject<IMenu> implements IMenu{
 	public void save() throws Exception {
 		
 		try{
-			IDAO menuId = Database.sql(IDAO.class, "select max(menuId) 'menuId' from menu");
+			IDAO menuId = sql(IDAO.class, "select max(menuId) 'menuId' from menu");
 			menuId.select();
 			menuId.next();
 

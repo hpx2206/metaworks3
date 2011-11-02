@@ -1,10 +1,10 @@
 package org.metaworks.example;
 
 import org.metaworks.MetaworksContext;
-import org.metaworks.MetaworksObject;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.dao.Database;
 
-public class Login extends MetaworksObject<ILogin> implements ILogin{
+public class Login extends Database<ILogin> implements ILogin{
 	
 	String userId;
 		public String getUserId() {

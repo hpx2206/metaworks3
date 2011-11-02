@@ -21,6 +21,7 @@ import org.metaworks.dao.IDAO;
 	ejsPathMappingByContext=
 		{
 			"{when: 'new', face: 'genericfaces/ObjectFace.ejs'}",
+			"{when: 'edit', face: 'genericfaces/ObjectFace.ejs'}",
 		}		
 
 )
@@ -69,7 +70,7 @@ public interface IContents extends IDAO{
 	public void setHeight(int height);
 	
 	@Hidden
-	@NonLoadable //means don't try to MetaworksFile as a database field so that it generates a join query automatically. instead of that, just uses ORMapping hint to marshall/unmarshall relatonal data to object ones.
+//	@NonLoadable //TODO: need to add other annotation that means don't try to MetaworksFile as a database field so that it generates a join query automatically. instead of that, just uses ORMapping hint to marshall/unmarshall relatonal data to object ones.
 	@ORMapping(
 		databaseFields = { 	"url", 			"paragraph" }, 
 		objectFields = { 	"uploadedPath", "mimeType" }
@@ -79,6 +80,9 @@ public interface IContents extends IDAO{
 	
 
 	@ServiceMethod(callByContent=true, when=WHEN_NEW)
+	public ContentPanel add() throws Exception;
+	
+	@ServiceMethod(callByContent=true, when=WHEN_EDIT)
 	public ContentPanel save() throws Exception;
 	
 	@ServiceMethod(when=WHEN_VIEW, needToConfirm=true)
@@ -103,7 +107,7 @@ public interface IContents extends IDAO{
 	@ServiceMethod
 	public IContents newFile() throws Exception;
 
-	@ServiceMethod(when=WHEN_EDIT, callByContent=true)
+	@ServiceMethod(when=WHEN_VIEW, callByContent=true)
 	public IContents edit() throws Exception;
 
 }

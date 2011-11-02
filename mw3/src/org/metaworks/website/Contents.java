@@ -5,14 +5,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.directwebremoting.io.FileTransfer;
-import org.metaworks.MetaworksObject;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.IDAO;
 
-public class Contents extends MetaworksObject<IContents> implements IContents{
-	int contentId;
+public class Contents extends Database<IContents> implements IContents{
+	int contentId = -1;
 		public int getContentId() {
 			return contentId;
 		}
@@ -102,34 +101,44 @@ public class Contents extends MetaworksObject<IContents> implements IContents{
 		
 	}
 	
+	public ContentPanel add() throws Exception{ 
+		return save();
+	}
+	
 	public ContentPanel save() throws Exception {
 		
 		if(file!=null && file.fileTransfer!=null)
 			file.upload();
 		
-		try{
-			IDAO contentId = Database.sql(IDAO.class, "select max(contentId) 'contentId' from contents");
-			contentId.select();
-			contentId.next();
-
-			setContentId(contentId.getInt("contentId") + 1);
-		}catch(Exception e){
+		boolean isNew = (getContentId() == -1);
+		
+		if(isNew){ // -1 means new one. we have set -1 in ContentPanel.load()
+			try{
+				IDAO contentId = Database.sql(IDAO.class, "select max(contentId) 'contentId' from contents");
+				contentId.select();
+				contentId.next();
+	
+				setContentId(contentId.getInt("contentId") + 1);
+			}catch(Exception e){
+				
+			}
 			
+			int orderId = 0;
+			IMenu orderIdDAO = (IMenu) Database.sql(IMenu.class, "select max(orderId) 'orderId' from contents where menuId=?menuId");
+			orderIdDAO.setMenuId(getMenuId());
+			orderIdDAO.select();
+			
+			if(orderIdDAO.next())
+				orderId = orderIdDAO.getInt("orderId") + 1;
+			
+			setOrderId(orderId);
+	
+			createDatabaseMe();
 		}
 		
-		int orderId = 0;
-		IMenu orderIdDAO = (IMenu) Database.sql(IMenu.class, "select max(orderId) 'orderId' from contents where menuId=?menuId");
-		orderIdDAO.setMenuId(getMenuId());
-		orderIdDAO.select();
-		
-		if(orderIdDAO.next())
-			orderId = orderIdDAO.getInt("orderId") + 1;
-		
-		setOrderId(orderId);
-
-		createDatabaseMe();
 		syncToDatabaseMe();
 		flushDatabaseMe();
+		
 		
 		return refreshContent();
 	}
@@ -223,9 +232,35 @@ public class Contents extends MetaworksObject<IContents> implements IContents{
 	
 	@Override
 	public IContents edit() throws Exception {
+		type = databaseMe().getType();
+
+		IContents content;
 		
+		if("p".equals(type)){
+			content=new ParagraphContents();
+		}else if("img".equals(type)){
+			content=new ImageContents();
+		}else if("file".equals(type)){
+			content=new FileContents();
+		}else if("src".equals(type)){
+			content=new SourceCodeContents();
+		}else 
+			content=new Contents();
+
+		content.setParagraph(databaseMe().getParagraph());
+		content.setFile(databaseMe().getFile());
+		content.setUrl(databaseMe().getUrl());
+		content.setWidth(databaseMe().getWidth());
+		content.setHeight(databaseMe().getHeight());
 		
-		return null;
+		content.setType(type);
+		content.setOrderId(databaseMe().getOrderId());
+		content.setMenuId(databaseMe().getMenuId());
+		content.setContentId(databaseMe().getContentId());
+		
+		content.getMetaworksContext().setWhen(WHEN_EDIT);
+		
+		return content;
 	}
 
 	

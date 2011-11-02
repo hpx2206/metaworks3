@@ -28,6 +28,7 @@ import org.metaworks.annotation.ORMapping;
 import org.metaworks.annotation.Range;
 import org.metaworks.annotation.RepresentativeImagePath;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.dao.Database;
 import org.metaworks.dao.IDAO;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.inputter.SelectInput;
@@ -154,7 +155,7 @@ public class WebObjectType{
 		
 		superClasses = new ArrayList<String>();
 		Class superCls = actCls;
-		while(superCls!=Object.class && superCls!=null && MetaworksObject.class!=superCls){
+		while(superCls!=Object.class && superCls!=null && Database.class!=superCls){
 			superClasses.add(superCls.getName());
 			superCls = superCls.getSuperclass();
 		}

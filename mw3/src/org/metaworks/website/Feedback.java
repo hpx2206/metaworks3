@@ -1,13 +1,16 @@
 package org.metaworks.website;
 
+import java.util.Collection;
 import java.util.Date;
 
-import org.metaworks.MetaworksObject;
+import org.directwebremoting.WebContext;
+import org.directwebremoting.WebContextFactory;
+import org.directwebremoting.proxy.dwr.Util;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.IDAO;
 
-public class Feedback extends MetaworksObject<IFeedback> implements IFeedback {
+public class Feedback extends Database<IFeedback> implements IFeedback {
 
 	int feedbackId;
 		public int getFeedbackId() {
@@ -97,6 +100,20 @@ public class Feedback extends MetaworksObject<IFeedback> implements IFeedback {
 		FeedbackPanel panel = new FeedbackPanel();
 		panel.session = session; //TODO: it's annoying and error-prone too.
 		panel.load(contentPanel.getMenu());
+		
+		
+		////////// alert to other session users :  COMET //////////
+		
+		WebContext wctx = WebContextFactory.get();
+		String currentPage = wctx.getCurrentPage();
+
+		   // For all the browsers on the current page:
+		   Collection sessions = wctx.getScriptSessionsByPage(currentPage);
+
+		   //TODO: filter other topic's postings;
+		   Util utilAll = new Util(sessions);
+		   utilAll.addFunctionCall("mw3.getAutowiredObject('org.metaworks.website.FeedbackPanel').refresh");
+	
 		
 		return panel;
 	}
