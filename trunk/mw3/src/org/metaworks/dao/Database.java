@@ -332,6 +332,10 @@ public class Database<T extends IDAO> implements IDAO{
 		return dao;
 	}
 	
+	public T sql(String sql) throws Exception{
+		return (T) sql(getClass(), sql);
+	}
+	
 //		selections.select();
 //		//Collection collection = postings.getImplementationObject().toCollection();
 //		
