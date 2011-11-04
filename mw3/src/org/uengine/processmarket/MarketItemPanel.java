@@ -1,15 +1,13 @@
 package org.uengine.processmarket;
 
-import org.metaworks.ContextAware;
-import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Face;
 
 @Face(
 	ejsPath="genericfaces/Window.ejs",
 	options={"hideAddBtn", "hideLabels"},
-	values={"false", "true"}
+	values={"true", "true"}
 )
-public class MarketItemPanel implements ContextAware{
+public class MarketItemPanel {
 
     IMarketItem marketItem;
 
@@ -20,18 +18,4 @@ public class MarketItemPanel implements ContextAware{
     public void setMarketItem(IMarketItem marketItem) {
 	this.marketItem = marketItem;
     }
-
-    
-    MetaworksContext metaworksContext;
-
-        public MetaworksContext getMetaworksContext() {
-            return metaworksContext;
-        }
-    
-        public void setMetaworksContext(MetaworksContext metaworksContext) {
-            this.metaworksContext = metaworksContext;
-        }
-   
-    
-    
 }

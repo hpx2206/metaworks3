@@ -2,6 +2,8 @@ package org.uengine.processmarket;
 
 import java.sql.Timestamp;
 
+import org.metaworks.ContextAware;
+import org.metaworks.MetaworksContext;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.IDAO;
 import org.metaworks.website.MetaworksFile;

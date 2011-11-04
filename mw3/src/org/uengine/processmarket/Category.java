@@ -2,6 +2,7 @@ package org.uengine.processmarket;
 
 import java.sql.Timestamp;
 
+import org.metaworks.MetaworksContext;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.IDAO;
 
@@ -107,9 +108,10 @@ public class Category extends Database<ICategory> implements ICategory {
     }
 
     private MarketItemPanel fillMarketItemPanel() throws Exception {
-	//TODO loadCategoryItems(this);
 	MarketItemPanel mp = new MarketItemPanel();
 	IMarketItem items = MarketItem.loadCategoryItems(this);
+	items.getMetaworksContext().setHow(MetaworksContext.HOW_IN_LIST);
+	items.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 	mp.setMarketItem(items);
 	return mp;
     }
