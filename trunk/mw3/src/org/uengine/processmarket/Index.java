@@ -23,22 +23,21 @@ public class Index {
     @ServiceMethod
     public void load() throws Exception {
 	this.category = (ICategory) Category.loadRootCategory();
-	this.setMarketItemPanel(new MarketItemPanel());
+	MarketItemPanel mp = new MarketItemPanel();
+	this.setMarketItemPanel(mp);
     }
 
     @ServiceMethod
-    public MarketItemPanel upload() throws Exception {
+    public Object[] upload() throws Exception {
 	MarketItem item = new MarketItem();
 	item.setItemFile(new MetaworksFile());
+	item.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 	
 	MarketItemPanel mp = new MarketItemPanel();
-	mp.setMetaworksContext(new MetaworksContext());
-	mp.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 	mp.setMarketItem(item);
 
-	return mp;
+	return new Object[] {mp};
     }
-
     
     
     public MarketItemPanel getMarketItemPanel() {
