@@ -55,6 +55,9 @@
 				for(var objectId in target){
 //					if(this.faceHelpers[objectId])
 //						continue;
+					
+					if(!this.face_ObjectIdMapping[objectId])
+						continue;
 						
 					var face = this.face_ObjectIdMapping[objectId].face;
 					var className = this.face_ObjectIdMapping[objectId].className;
@@ -236,16 +239,24 @@
 					
 					if(objectTypeName.length > 2 && objectTypeName.substr(-2) == '[]'){			//if array of some object type, use ArrayFace with mapped class mapping for the object type.
 						objectTypeName = objectTypeName.substr(0, objectTypeName.length - 2);
+						metadata = this.getMetadata(objectTypeName);
+						
 						actualFace = metadata.faceForArray ? metadata.faceForArray : 'genericfaces/ArrayFace.ejs';
 
 					}else if(objectTypeName.length > 4 && objectTypeName.substr(0, 2) == '[L' && objectTypeName.substr(-1) == ';'){			//if array of some object type, use ArrayFace with mapped class mapping for the object type.
 						objectTypeName = objectTypeName.substr(2, objectTypeName.length - 3);
+						metadata = this.getMetadata(objectTypeName);
+						
 						actualFace = metadata.faceForArray ? metadata.faceForArray : 'genericfaces/ArrayFace.ejs';
 
 					}else{
 
 						if(object && object.constructor && object.constructor.toString().indexOf('Array') != -1){
-							actualFace = metadata.faceForArray ? metadata.faceForArray : 'genericfaces/ArrayFace.ejs';
+							try{
+								metadata = this.getMetadata(object[0].__className);
+							}catch(e){}
+							
+							actualFace = metadata && metadata.faceForArray ? metadata.faceForArray : 'genericfaces/ArrayFace.ejs';
 						}
 
 						if(!actualFace){
@@ -274,6 +285,10 @@
 						if(!actualFace){
 							
 							if(object.constructor.toString().indexOf('Array') != -1){
+								try{
+									metadata = this.getMetadata(object[0].__className);
+								}catch(e){}
+								
 								actualFace = metadata.faceForArray ? metadata.faceForArray : 'genericfaces/ArrayFace.ejs';
 							}else
 								actualFace = 'genericfaces/ObjectFace.ejs';//even though there's no mapping, use ObjectFace
