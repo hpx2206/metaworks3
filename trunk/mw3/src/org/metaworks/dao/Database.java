@@ -333,6 +333,7 @@ public class Database<T extends IDAO> implements IDAO{
 	}
 	
 	public T sql(String sql) throws Exception{
+		
 		return (T) sql(getClass(), sql);
 	}
 	

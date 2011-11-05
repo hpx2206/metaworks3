@@ -713,7 +713,7 @@
 							        				mw3.setObject(objId, result_);
 					        				}
 					        				
-					        				if(!mappedObjId)
+					        				if(neverShowed)
 					        					mw3.setObject(objId, result);
 					        			}
 

@@ -2,8 +2,6 @@ package org.uengine.processmarket;
 
 import java.sql.Timestamp;
 
-import org.metaworks.ContextAware;
-import org.metaworks.MetaworksContext;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.IDAO;
 import org.metaworks.website.MetaworksFile;
@@ -222,18 +220,23 @@ public class MarketItem extends Database<MarketItem> implements IMarketItem {
 
     @Override
     public void save() throws Exception {
-	try {
-	    IDAO itemId = sql(IDAO.class, "select max(itemId) 'itemId' from marketItem");
-	    itemId.select();
-	    if (itemId.next()) {
-		setItemId(itemId.getInt("itemId") + 1);
-	    } else {
-		setItemId(0);
-	    }
-	} catch (Exception e) {
-
-	}
-	createDatabaseMe();
+    	
+    	if(itemFile != null){
+    		itemFile.upload();
+    	}
+	    	
+		try {
+		    IDAO itemId = sql(IDAO.class, "select max(itemId) 'itemId' from marketItem");
+		    itemId.select();
+		    if (itemId.next()) {
+			setItemId(itemId.getInt("itemId") + 1);
+		    } else {
+			setItemId(0);
+		    }
+		} catch (Exception e) {
+	
+		}
+		createDatabaseMe();
     }
 
     @Override

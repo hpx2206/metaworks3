@@ -2,7 +2,6 @@ package org.uengine.processmarket;
 
 import java.sql.Timestamp;
 
-import org.metaworks.MetaworksContext;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.IDAO;
 
@@ -90,28 +89,26 @@ public class Category extends Database<ICategory> implements ICategory {
 
     @Override
     public Object[] selectCategory() throws Exception {
-	MarketItemPanel mp = fillMarketItemPanel();
-	if(isSelected())
-	{
-	    setChildrenCategories(null);
-	    setSelected(false);
-	    return new Object[]{this, mp};
-	}
+		MarketItemPanel mp = fillMarketItemPanel();
+		if(isSelected())
+		{
+		    setChildrenCategories(null);
+		    setSelected(false);
+		    return new Object[]{this, mp};
+		}
+		
+		String sql = "select * from category where parentCategoryId = ?parentCategoryId";
+		childrenCategories = (ICategory) sql(ICategory.class, sql);
+		childrenCategories.setParentCategoryId(this.categoryId);
+		childrenCategories.select();
+		this.setSelected(true);
 	
-	String sql = "select * from category where parentCategoryId = ?parentCategoryId";
-	childrenCategories = (ICategory) sql(ICategory.class, sql);
-	childrenCategories.setParentCategoryId(this.categoryId);
-	childrenCategories.select();
-	this.setSelected(true);
-
-	return new Object[] {this, mp};
+		return new Object[] {this, mp};
     }
 
     private MarketItemPanel fillMarketItemPanel() throws Exception {
 	MarketItemPanel mp = new MarketItemPanel();
 	IMarketItem items = MarketItem.loadCategoryItems(this);
-	items.getMetaworksContext().setHow(MetaworksContext.HOW_IN_LIST);
-	items.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 	mp.setMarketItem(items);
 	return mp;
     }

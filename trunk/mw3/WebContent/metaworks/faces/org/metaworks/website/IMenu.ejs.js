@@ -21,7 +21,7 @@ org_metaworks_website_IMenu.prototype.showSubMenu = function(){
 	
 	if(subMenu!=null){
 
-		var subMenuDiv = "#objDiv_" + this.__objectId;
+		var subMenuDiv = "#objDiv_" + this.objectId;
 		
 		if(subMenuDiv){
 			$(subMenuDiv).slideDown(500, function(){

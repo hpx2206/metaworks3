@@ -53,6 +53,10 @@ public interface IMenu extends IDAO{
 	public void setEnabled(boolean enabled);
 
 	
+	public int getOrderId();
+	public void setOrderId(int orderId);
+
+	
 	@ServiceMethod(callByContent=true, when="never")
 	public Object[] selectMenu() throws Exception; //should avoid 'select()' since it is for IDAO sql data selection. 
 	
@@ -75,6 +79,11 @@ public interface IMenu extends IDAO{
 	@ServiceMethod(target=ServiceMethodContext.TARGET_NONE, when="never")  //it just return object value only
 	public IMenu loadSubMenu() throws Exception;
 	
-	
+	@ServiceMethod
+	public Navigation moveUp() throws Exception;
+
+	@ServiceMethod
+	public Navigation moveDown() throws Exception;
+
 	
 }

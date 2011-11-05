@@ -1,5 +1,6 @@
 package org.metaworks.website;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -54,7 +55,11 @@ public class MetaworksFile {
 		if(fileTransfer==null) 
 			throw new Exception("No file attached");
 		
-		String uploadPath = "processMarket/fileSystem/" + fileTransfer.getFilename();
+		
+		String uploadPath = "fileSystem/" + fileTransfer.getFilename();
+		
+		new File(uploadPath).getParentFile().mkdirs();
+		
 		copyStream(fileTransfer.getInputStream(), new FileOutputStream(uploadPath));
 		
 		setUploadedPath(uploadPath); //only when the file has been successfully uploaded, this value is set, that means your can download later

@@ -191,8 +191,9 @@ public class MetaworksConverter extends BeanConverter{
 			    	throw new ConversionException(((IDAO) data).getImplementationObject().getClass(), e.getMessage());
 			    }
 
-			    // Group the list of converted objects into this OutboundVariable
-			    ov.setChildren(ovs);
+			   // if(ovs.size()>0)
+				    // Group the list of converted objects into this OutboundVariable
+				    ov.setChildren(ovs);
 			    
 			    return ov;
 			    

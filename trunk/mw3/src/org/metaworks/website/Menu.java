@@ -13,6 +13,15 @@ public class Menu  extends Database<IMenu> implements IMenu{
 	IMenu subMenu;
 	boolean selected;
 
+	int orderId;
+	
+	public int getOrderId() {
+		return orderId;
+	}
+	
+	public void setOrderId(int orderId) {
+		this.orderId = orderId;
+	}
 	
 	public int getParentMenuId() {
 		return parentMenuId;
@@ -55,7 +64,7 @@ public class Menu  extends Database<IMenu> implements IMenu{
 		}
 	
 	public Object[] selectMenu() throws Exception{
-		subMenu = (IMenu) sql(IMenu.class, "select * from menu where parentMenuId = ?parentMenuId");;
+		subMenu = (IMenu) sql(IMenu.class, "select * from menu where parentMenuId = ?parentMenuId order by orderId");;
 		subMenu.setParentMenuId(this.getMenuId());
 		subMenu.select();
 		this.setSelected(true);
@@ -79,7 +88,7 @@ public class Menu  extends Database<IMenu> implements IMenu{
 	}
 	
 	public IMenu loadSubMenu() throws Exception{
-		subMenu = (IMenu) sql(IMenu.class, "select * from menu where parentMenuId = ?parentMenuId");;
+		subMenu = (IMenu) sql(IMenu.class, "select * from menu where parentMenuId = ?parentMenuId order by orderId");;
 		subMenu.setParentMenuId(this.getMenuId());
 		subMenu.select();
 
@@ -96,7 +105,7 @@ public class Menu  extends Database<IMenu> implements IMenu{
 	public void save() throws Exception {
 		
 		try{
-			IDAO menuId = sql(IDAO.class, "select max(menuId) 'menuId' from menu");
+			IMenu menuId = sql("select max(menuId) 'menuId' from menu");
 			menuId.select();
 			menuId.next();
 
@@ -104,6 +113,17 @@ public class Menu  extends Database<IMenu> implements IMenu{
 		}catch(Exception e){
 			
 		}
+		
+		int orderId = 0;
+		IMenu orderIdDAO = sql("select max(orderId) 'orderId' from menu where parentMenuId=?parentMenuId");
+		orderIdDAO.setParentMenuId(getParentMenuId());
+		orderIdDAO.select();
+		
+		if(orderIdDAO.next())
+			orderId = orderIdDAO.getInt("orderId") + 1;
+		
+		setOrderId(orderId);
+
 		
 		createDatabaseMe();
 		//syncToDatabaseMe();
@@ -122,7 +142,7 @@ public class Menu  extends Database<IMenu> implements IMenu{
 		getMetaworksContext().setWhen(WHEN_EDIT); //leave edit mode
 	}
 	
-	@Override
+	@Override 
 	public void enable() throws Exception {
 		databaseMe().setEnabled(true);
 		getMetaworksContext().setWhen(WHEN_EDIT); //leave edit mode
@@ -141,7 +161,45 @@ public class Menu  extends Database<IMenu> implements IMenu{
 	}
 	@Override
 	public void delete() throws Exception {
+		IMenu followingMenus = sql("update menu set orderId=orderId-1 where orderId > ?orderId and parentMenuId = ?parentMenuId");
+		followingMenus.setParentMenuId(getParentMenuId());
+		followingMenus.setOrderId(getOrderId());
+		followingMenus.update();
+
 		deleteDatabaseMe();
+	}
+
+	@Override
+	public Navigation moveUp() throws Exception {
+		if(databaseMe().getOrderId() == 0)
+			throw new Exception("It's top");
+		
+		IMenu prev = sql("update menu set orderId=orderId+1 where orderId=?orderId and parentMenuId=?parentMenuId");
+		prev.setOrderId(databaseMe().getOrderId() - 1);
+		prev.setParentMenuId(databaseMe().getParentMenuId());
+		prev.update();
+		
+		databaseMe().setOrderId(databaseMe().getOrderId() - 1);
+		flushDatabaseMe();
+		
+		return new Navigation();
+	}
+	
+	@Override
+	public Navigation moveDown() throws Exception {
+
+		IMenu nextContents = sql("update menu set orderId=orderId-1 where orderId=?orderId and parentMenuId=?parentMenuId");
+		nextContents.setOrderId(databaseMe().getOrderId() + 1); //points next one
+		nextContents.setParentMenuId(databaseMe().getParentMenuId());
+		int nextWasExisted = nextContents.update();
+		
+		if(nextWasExisted == 0)
+			throw new Exception("It's bottom");
+		
+		databaseMe().setOrderId(databaseMe().getOrderId() + 1);
+		flushDatabaseMe();
+		
+		return new Navigation();
 	}
 
 
