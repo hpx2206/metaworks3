@@ -237,6 +237,8 @@ public class MarketItem extends Database<MarketItem> implements IMarketItem {
 	
 		}
 		createDatabaseMe();
+		
+		getMetaworksContext().setWhen(WHEN_VIEW);
     }
 
     @Override

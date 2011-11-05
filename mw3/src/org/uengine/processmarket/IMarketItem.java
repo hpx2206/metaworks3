@@ -12,13 +12,12 @@ import org.metaworks.dao.IDAO;
 import org.metaworks.website.MetaworksFile;
 
 
-//@Face(
-//	ejsPathMappingByContext = {
-//		"{where: 'in-list', face='faces/org/uengine/pr'}",
-//		"{where: 'in-list', face='faces/org/metaworks'}",
-//		"{where: 'in-list', face='faces/org/metaworks'}",
-//	}
-//)
+@Face(
+	ejsPathMappingByContext = {
+		"{where: 'in-list', face: 'faces/org/uengine/procesmarket/IMarketItem.ejs'}",
+		"{when: 'new', face: 'genericfaces/ObjectFace.ejs'}",
+	}
+)
 public interface IMarketItem extends IDAO {
 
     @Id
