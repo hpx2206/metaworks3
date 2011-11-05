@@ -1,5 +1,7 @@
 package org.metaworks.website;
 
+import java.awt.image.BufferedImage;
+
 import javax.persistence.Table;
 
 import org.directwebremoting.io.FileTransfer;
@@ -78,7 +80,7 @@ public interface IContents extends IDAO{
 	public MetaworksFile getFile();
 	public void setFile(MetaworksFile file);
 	
-
+	
 	@ServiceMethod(callByContent=true, when=WHEN_NEW)
 	public ContentPanel add() throws Exception;
 	

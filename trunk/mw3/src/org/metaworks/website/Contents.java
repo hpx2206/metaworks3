@@ -1,5 +1,6 @@
 package org.metaworks.website;
 
+import java.awt.image.BufferedImage;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -83,7 +84,7 @@ public class Contents extends Database<IContents> implements IContents{
 			this.file = file;
 		}
 
-
+		
 	public static IContents loadHomeContents() throws Exception{
 		Menu homeMenu = new Menu();
 		homeMenu.setMenuId(-1);
