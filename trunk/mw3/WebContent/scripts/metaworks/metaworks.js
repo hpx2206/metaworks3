@@ -39,8 +39,12 @@
 				this.faceHelpers = {}
 			}
 
-			Metaworks3.prototype.debug = function(argument){
-				alert('debugPoint: '+ argument)
+			Metaworks3.prototype.debug = function(argument, when){
+				if(when){					
+					if(eval(when))
+						alert('debugPoint: '+ argument)
+				}else
+					alert('debugPoint: '+ argument)
 			}
 
 			
@@ -266,7 +270,12 @@
 							if(faceMappingByContext)
 							for(var i=0; i<faceMappingByContext.length; i++){
 								var faceMap;
-								eval("faceMap = " + faceMappingByContext[i]); //json notation in there
+								
+								try{
+									eval("faceMap = " + faceMappingByContext[i]); //json notation in there
+								}catch(e){
+									throw new Error("Error when to map the Face.ejsPathMappingByContext expression '" + faceMappingByContext[i] + '". check the JSON expression exactly.');
+								}
 								
 								if(faceMap.when == this.when){
 									actualFace = faceMap.face;
