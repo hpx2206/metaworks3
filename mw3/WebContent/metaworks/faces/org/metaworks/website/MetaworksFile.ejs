@@ -8,6 +8,15 @@ if(mw3.when==mw3.WHEN_NEW){%>
 
 <%
 }else if(value!=null){
+
+	if(value.mimeType && value.mimeType.indexOf('image') > -1){
+	
+	//alert(value.mimeType);
+	
+%>
+<div id="image_<%=objectId%>">&nbsp;</div>
+<%
+	}
 %>
 
 <div onclick="mw3.getFaceHelper('<%=objectId%>').download()">

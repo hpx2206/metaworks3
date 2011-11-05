@@ -379,6 +379,9 @@
 						this.setWhen(currentContextWhen);
 					}
 					
+					//TODO: may cause unnecessary javascript object creation - performance & memory waste
+					this.getFaceHelper(objectId); //lets object face helper initialized
+					
 					return objectId;
 				}
 			
@@ -622,13 +625,7 @@
 					objId = this.targetObjectId;
 				}
 				
-				var infoDivId = "#"+this._getInfoDivId(objId);
 				
-				if(this.getFaceHelper(objId) && this.getFaceHelper(objId).startLoading){
-					this.getFaceHelper(objId).startLoading();
-				}else
-					$(infoDivId).html("<img src='metaworks/images/circleloading.gif'>");
-
 				var object = mw3.getObject(objId);
 				//var thisMetaworks = this;
 				
@@ -651,7 +648,16 @@
 				   				object = this._createKeyObject(object);
 						}
 					}
-						
+
+					var infoDivId = "#"+this._getInfoDivId(objId);
+					
+					if(serviceMethodContext.target!="none"){
+						if(this.getFaceHelper(objId) && this.getFaceHelper(objId).startLoading){
+							this.getFaceHelper(objId).startLoading();
+						}else
+							$(infoDivId).html("<img src='metaworks/images/circleloading.gif'>");
+					}
+
     				//alert("call.argument=" + dwr.util.toDescriptiveString(object, 5))
     				
 					var autowiredObjects = {};
@@ -728,31 +734,37 @@
 
 				        			}
 				        			
-				        			
-				        			if(mw3.getFaceHelper(objId)){
-				        				
-				        				if(mw3.getFaceHelper(objId).endLoading){
-				        					mw3.getFaceHelper(objId).endLoading();
-				        				}
-				        				
-				        				if(mw3.getFaceHelper(objId).showStatus){
-				        					mw3.getFaceHelper(objId).showStatus( svcNameAndMethodName + " DONE.");
-				        				}else{
-
+				        			if(serviceMethodContext.target!="none"){
+					        			
+					        			if(mw3.getFaceHelper(objId)){
+					        				
+					        				if(mw3.getFaceHelper(objId).endLoading){
+					        					mw3.getFaceHelper(objId).endLoading();
+					        				}
+					        				
+					        				if(mw3.getFaceHelper(objId).showStatus){
+					        					mw3.getFaceHelper(objId).showStatus( svcNameAndMethodName + " DONE.");
+					        				}else{
+	
+						    					mw3.showInfo(objId, svcNameAndMethodName + " DONE");
+	
+					        				}
+					        				
+					    				}else{
 					    					mw3.showInfo(objId, svcNameAndMethodName + " DONE");
-
-				        				}
-				        				
-				    				}else{
-				    					mw3.showInfo(objId, svcNameAndMethodName + " DONE");
-			        					
-				    				}
+				        					
+					    				}
+				        			}
 
 				        		},
 
 				        		async: false,
 				        		
 				        		errorHandler:function(errorString, exception) {
+				        			
+				        			if(serviceMethodContext.target=="none")
+				        				throw exception;
+				        			
 				        			if(mw3.getFaceHelper(objId) && mw3.getFaceHelper(objId).showError){
 					        			if(!exception)
 					        				mw3.getFaceHelper(objId).showError( errorString );
