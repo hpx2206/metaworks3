@@ -15,6 +15,7 @@ import org.metaworks.website.MetaworksFile;
 @Face(
 	ejsPathMappingByContext = {
 		"{where: 'in-list', face: 'faces/org/uengine/procesmarket/IMarketItem.ejs'}",
+		"{where: 'normal', face: 'faces/org/uengine/procesmarket/IMarketItem.ejs'}",
 		"{when: 'new', face: 'genericfaces/ObjectFace.ejs'}",
 	}
 )
@@ -55,30 +56,37 @@ public interface IMarketItem extends IDAO {
 
     public void setFilePath(String filePath);
 
+    @Hidden
     public String getLogoImageFilePath();
 
     public void setLogoImageFilePath(String logoImageFilePath);
 
-    public String getImage1FilePath();
+    @Hidden
+    public String getImageFile1Path();
 
-    public void setImage1FilePath(String image1FilePath);
+    public void setImageFile1Path(String imageFile1Path);
 
-    public String getImage2FilePath();
+    @Hidden
+    public String getImageFile2Path();
 
-    public void setImage2FilePath(String image2FilePath);
+    public void setImageFile2Path(String imageFile2Path);
 
-    public String getImage3FilePath();
+    @Hidden
+    public String getImageFile3Path();
 
-    public void setImage3FilePath(String image3FilePath);
+    public void setImageFile3Path(String imageFile3Path);
 
-    public String getImage4FilePath();
+    @Hidden
+    public String getImageFile4Path();
 
-    public void setImage4FilePath(String image4FilePath);
+    public void setImageFile4Path(String imageFile4Path);
 
-    public String getImage5FilePath();
+    @Hidden
+    public String getImageFile5Path();
 
-    public void setImage5FilePath(String image5FilePath);
-
+    public void setImageFile5Path(String imageFile5Path);
+    
+    @Hidden
     public Timestamp getRegDate();
 
     public void setRegDate(Timestamp regDate);
@@ -91,6 +99,7 @@ public interface IMarketItem extends IDAO {
 
     public void setDeleted(boolean deleted);
 
+    @Hidden
     public Timestamp getModDate();
 
     public void setModDate(Timestamp modDate);
@@ -100,9 +109,42 @@ public interface IMarketItem extends IDAO {
 
     public void setItemFile(MetaworksFile itemFile);
 
+    @ORMapping(objectFields = { "uploadedPath" }, databaseFields = { "logoImageFilePath" })
+    public MetaworksFile getLogoImageFile();
+
+    public void setLogoImageFile(MetaworksFile logoImageFile);
+
+    @ORMapping(objectFields = { "uploadedPath" }, databaseFields = { "imageFile1Path" })
+    public MetaworksFile getImageFile1();
+
+    public void setImageFile1(MetaworksFile imageFile1);
+
+    @ORMapping(objectFields = { "uploadedPath" }, databaseFields = { "imageFile2Path" })
+    public MetaworksFile getImageFile2();
+
+    public void setImageFile2(MetaworksFile imageFile2);
+
+    @ORMapping(objectFields = { "uploadedPath" }, databaseFields = { "imageFile3Path" })
+    public MetaworksFile getImageFile3();
+
+    public void setImageFile3(MetaworksFile imageFile3);
+
+    @ORMapping(objectFields = { "uploadedPath" }, databaseFields = { "imageFile4Path" })
+    public MetaworksFile getImageFile4();
+
+    public void setImageFile4(MetaworksFile imageFile4);
+
+    @ORMapping(objectFields = { "uploadedPath" }, databaseFields = { "imageFile5Path" })
+    public MetaworksFile getImageFile5();
+
+    public void setImageFile5(MetaworksFile imageFile5);
+
     @ServiceMethod(callByContent = true)
     public void save() throws Exception;
 
     @ServiceMethod(needToConfirm = true)
     public void delete() throws Exception;
+
+    @ServiceMethod
+    public IMarketItem detail() throws Exception;
 }
