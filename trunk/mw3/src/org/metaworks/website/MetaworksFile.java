@@ -74,8 +74,9 @@ public class MetaworksFile {
 		if(fileTransfer==null) 
 			throw new Exception("No file attached");
 		
+		String prefix = overrideUploadPathPrefix();
 		
-		String uploadPath = "fileSystem/" + fileTransfer.getFilename();
+		String uploadPath = prefix + fileTransfer.getFilename();
 		
 		new File(uploadPath).getParentFile().mkdirs();
 		
@@ -84,7 +85,12 @@ public class MetaworksFile {
 		setUploadedPath(uploadPath); //only when the file has been successfully uploaded, this value is set, that means your can download later
 		setMimeType(fileTransfer.getMimeType());
 	}
-	
+
+	// set parted Stored file path by MimeType
+	public String overrideUploadPathPrefix() {
+	    //TODO get webroot relativePath because web browser access only image files in webroot sub directory
+	    return "./fileSystem/";
+	}
 	
 	static public void copyStream(InputStream sourceInputStream, OutputStream targetOutputStream) throws Exception{
 		int length = 1024;

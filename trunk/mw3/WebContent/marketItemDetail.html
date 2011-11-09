@@ -24,19 +24,19 @@
 	<link rel="stylesheet" href="style/waveStyle/droppable_layout.css" type="text/css" media="screen" />
 	<link rel="stylesheet" href="style/Spacetree.css" type="text/css" media="screen" />
 		
-	
+	<link rel="stylesheet" type="text/css" href="marketPlace.css">
 		<script type="text/javascript">
 
 			var indexPage
 		 	
 			$(document).ready(function() {
 		 		mw3.setBase("/mw3");
-		 		mw3.setWhen(mw3.WHEN_EDIT);
+		 		mw3.setWhen(mw3.WHEN_VIEW);
 		 		
-				indexPage = new MetaworksObject({
-					__className:"org.uengine.processmarket.Index"
+				detail = new MetaworksObject({
+					__className:"org.uengine.processmarket.IMarketItem"
 					
-				}, '#indexPage')
+				}, '#detailPage')
 				
 				indexPage.load();
 				
@@ -46,9 +46,9 @@
 		
 		
 	</head>
-	<body onload="mw3.onLoad();">
+	<body onload="mw3.onLoad();dwr.engine.setActiveReverseAjax(true);">
 	
-		<div id="indexPage"></div>
+		<div id="detailPage"></div>
 			
 		<!-- EJS TEMPLATE DEBUG INFO : -->
 			<div id='template_caption'> 

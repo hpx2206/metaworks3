@@ -3,13 +3,64 @@
 //mw3.debug(value);
 
 if(value!=null){
-	if(mw3.when==mw3.WHEN_VIEW || !value.isDeleted){%>
-		<b><a href="marketItemDetail?itemId=<%=value.itemId%>"><img src="<%=value.logoImageFilePath%>" ><%=value.itemName%>(ver-<%=value.version%>)</a></b>
-		<div>Process By <%=value.comCode%></div>
-		<p><%=value.description%></p>
-	<%} else if (mw3.when==mw3.WHEN_NEW) {%>
-		asdfasdfasdfadsfadf
-	<%}
+	if(!value.isDeleted){
+		if(mw3.when==mw3.WHEN_VIEW){
+			if(mw3.how==mw3.HOW_IN_LIST) {%>
+				<b><a onclick="<%=methods.detail.caller()%>" ><img src="<%=value.logoImageFilePath%>" ><%=value.itemName%>(ver-<%=value.version%>)</a></b>
+				<div>Process By <%=value.comCode%></div>
+				<p><%=value.description%></p>
+				<div id="marketItemDetail_<%=value.itemId%>"></div>
+			<%} else if(mw3.how==mw3.HOW_NORMAL) {%>
+				<div style="margin-bottom:15px; border-bottom:1px solid #CCC;">
+				    <div class="markettitle">
+				        categoryId : <%=value.categoryId%>
+				    </div>
+				    <div style="clear:both;"></div>
+				</div>
+				
+				<div>
+					<div style="float:left">
+				    	<img src="<%=value.logoImageFilePath%>" alt="" width="98">
+					</div>
+					<div style="float:left">
+				        <dl class="lst_type2">
+				        <dt class="tit"><strong><%=value.itemName%></strong>   <span class="cb_star_grade" style="margin-top:-3px; margin-left:15px;"><span style="width:80%"><em>5 Stars</em></span></span> </dt>
+				        <dd><b>Price</b> : <span style="color:#09F;"> <%=value.price%></span></dd>
+				        <dd><b>Version</b> : <%=value.version%> </dd>
+				        <dd><b>Date</b> : <%=value.modDate%> </dd>
+				        </dl>
+					</div>
+				    <div style="float:right"><a href="www.google.com"><img src="images/blue_buy.png" border="0"></a></div>
+				    <div style="clear:both;"></div>
+				</div>
+				
+				<div>
+					<h5 class="cb_h_type">Pricing details</h5>
+					
+					<p>Hourly, bid, and ongoing consulting arrangements available.
+					
+					
+					At Blue Tent Marketing, our mission since our inception in 2002 has been simply stated: We help small- to medium-sized businesses 占쎌뤋in on the Web.占쏙옙Whether we're designing and developing a dynamic website, creating professional email marketing programs, or driving new traffic and conversions through search engine marketing, we're increasingly focused on one thing: Return On Investment. As a Google Analytics Authorized Consultancy specializing in the real estate, vacation rental and resort marketplace, we utilize GA to identify your most productive online marketing channels. We leverage this data to drive marketing strategy and business objectives. We help you make sense of user profiles, goal definitions, conversion paths, and key performance indicators. Whether you're running an AdWords campaign, optimizing your site for natural search, or tracking referral sources into your online booking engine 占쏙옙we help you accomplish the most with your online marketing dollars. Our Google Analytics services include comprehensive configuration, training, reporting, analysis, and ongoing strategic consulting services.
+					</p>
+					
+					<h5 class="cb_h_type">ScreenShot</h5>
+					
+					<p>
+					<div style="width:100%; height:300px; overflow:auto; border:2px solid #CCC; background:#f5f5f5;">
+					<table width="100%" border="0" cellspacing="10" cellpadding="0">
+					    <tr>
+					        <td><img src="Images/marketPlace/process_sample.gif" border="0" height="260"> </td>
+					        <td><img src="Images/marketPlace/process_sample.gif" border="0" height="260"> </td>
+					        <td><img src="Images/marketPlace/process_sample.gif" border="0" height="260"> </td>
+					    </tr>
+					</table> 
+					</div>
+					</p>
+				</div>
+			<%}
+		}
+	}
+	//isDeleted
 } else {%>
 	There is no marketItem.
 <%	

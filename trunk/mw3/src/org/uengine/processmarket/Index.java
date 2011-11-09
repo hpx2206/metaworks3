@@ -6,23 +6,24 @@ import org.metaworks.website.MetaworksFile;
 
 public class Index {
 
-    ICategory category;
+    MarketCategoryPanel marketCategoryPanel;
 
     MarketItemPanel marketItemPanel;
 
     ItemSearchBox itemSearchBox;
 
-    public ICategory getCategory() {
-	return category;
+    public MarketCategoryPanel getMarketCategoryPanel() {
+        return marketCategoryPanel;
     }
 
-    public void setCategory(ICategory category) {
-	this.category = category;
+    public void setMarketCategoryPanel(MarketCategoryPanel marketCategoryPanel) {
+        this.marketCategoryPanel = marketCategoryPanel;
     }
 
     @ServiceMethod
     public void load() throws Exception {
-	this.category = (ICategory) Category.loadRootCategory();
+	this.marketCategoryPanel = new MarketCategoryPanel();
+	this.marketCategoryPanel.setCategory(Category.loadRootCategory());
 	MarketItemPanel mp = new MarketItemPanel();
 	this.setMarketItemPanel(mp);
     }
@@ -31,6 +32,13 @@ public class Index {
     public Object[] upload() throws Exception {
 	MarketItem item = new MarketItem();
 	item.setItemFile(new MetaworksFile());
+	item.setLogoImageFile(new MetaworksFile());
+	item.setImageFile1(new MetaworksFile());
+	item.setImageFile2(new MetaworksFile());
+	item.setImageFile3(new MetaworksFile());
+	item.setImageFile4(new MetaworksFile());
+	item.setImageFile5(new MetaworksFile());
+	
 	item.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 	
 	MarketItemPanel mp = new MarketItemPanel();
