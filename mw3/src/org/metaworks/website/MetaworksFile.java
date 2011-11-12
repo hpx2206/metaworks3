@@ -89,7 +89,7 @@ public class MetaworksFile {
 	// set parted Stored file path by MimeType
 	public String overrideUploadPathPrefix() {
 	    //TODO get webroot relativePath because web browser access only image files in webroot sub directory
-	    return "./fileSystem/";
+	    return "fileSystem/";
 	}
 	
 	static public void copyStream(InputStream sourceInputStream, OutputStream targetOutputStream) throws Exception{
