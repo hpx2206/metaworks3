@@ -5,7 +5,9 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -21,6 +23,7 @@ import org.metaworks.WebObjectType;
 import org.metaworks.dao.ConnectionFactory;
 import org.metaworks.dao.IDAO;
 import org.metaworks.dao.TransactionContext;
+import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -73,7 +76,16 @@ public class MetaworksRemoteService {
 		Object springBean = null;
 		if(springAppContext!=null)
 		try{
-			springBean = getBeanFactory().getBean(serviceClass);
+			//springBean = getBeanFactory().getBean(serviceClass);
+			Map beanMap = getBeanFactory().getBeansOfType(serviceClass);
+			Set keys = beanMap.keySet();			
+			for (Object key : keys) {
+			    if(springBean != null) {
+				System.err.println("====== Warnning : MetaworksRemoteService.callMetaworksService get only one bean object of one class.");
+				break;
+			    }
+			    springBean = beanMap.get(key);
+			}
 		}catch(Exception e){
 			//TODO: check if there's any occurrance of @Autowired in the field list, it is required to check and shows some WARNING to the developer.
 		}
