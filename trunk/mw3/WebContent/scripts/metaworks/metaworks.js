@@ -30,13 +30,15 @@
 				
 				this.objectId_KeyMapping = {};
 				this.objectId_ClassNameMapping = {};
+				
 				this.face_ObjectIdMapping = {};
+				this.objectIds_FaceMapping={};
 				
 				this.loadedScripts = {};
 				
 				this.targetObjectId;
 				
-				this.faceHelpers = {}
+				this.faceHelpers = {};
 			}
 
 			Metaworks3.prototype.debug = function(argument, when){
@@ -52,38 +54,44 @@
 				this.base = base;
 			}
 			
-			Metaworks3.prototype.onLoad = function(target){
-				if(!target)
-					target = this.face_ObjectIdMapping;
-
-				for(var objectId in target){
-//					if(this.faceHelpers[objectId])
-//						continue;
+			Metaworks3.prototype.loadFaceHelper = function(objectId){
+				
+				if(!this.face_ObjectIdMapping[objectId])
+					return null;
 					
-					if(!this.face_ObjectIdMapping[objectId])
-						continue;
+				var face = this.face_ObjectIdMapping[objectId].face;
+				var className = this.face_ObjectIdMapping[objectId].className;
+				var faceHelperClass = this.loadedScripts[face];
+				
+				var thereIsHelperClass = false;
+				try{
+					eval(faceHelperClass);
+					thereIsHelperClass = true;
+				
+
+					if(thereIsHelperClass){
+						var faceHelper = eval("new " + faceHelperClass + "('" + objectId + "', '"+ className + "')");
 						
-					var face = this.face_ObjectIdMapping[objectId].face;
-					var className = this.face_ObjectIdMapping[objectId].className;
-					var faceHelperClass = this.loadedScripts[face];
-					
-					var thereIsHelperClass = false;
-					try{
-						eval(faceHelperClass);
-						thereIsHelperClass = true;
-					
-
-						if(thereIsHelperClass){
-							var faceHelper = eval("new " + faceHelperClass + "('" + objectId + "', '"+ className + "')");
-							
-							if(faceHelper){
-								this.faceHelpers[objectId] = faceHelper;
-							}
+						if(faceHelper){
+							this.faceHelpers[objectId] = faceHelper;
 						}
-						
-					}catch(e){
-						e=e;
 					}
+					
+				}catch(e){
+					e=e;
+				}		
+				
+			}
+
+			Metaworks3.prototype.onLoadFaceHelperScript = function(face){
+//				if(!target)
+//					target = this.face_ObjectIdMapping;
+				
+				objectIds = this.objectIds_FaceMapping[face];
+				
+				for(var objectId in objectIds){
+					
+					this.loadFaceHelper(objectId);
 				}
 			}
 
@@ -93,9 +101,7 @@
 				if(registeredHelper!=null)
 					return registeredHelper;
 				else{
-					var target = {};
-					target[objectId] = objectId;
-					this.onLoad(target);
+					this.loadFaceHelper(objectId);
 					
 					return this.faceHelpers[objectId];
 				}
@@ -310,30 +316,19 @@
 					
 					var editFunction = "mw3.editObject('" + objectId + "', '" + objectTypeName + "')";
 					
-					//load scripts if there is.
-					if(!this.loadedScripts[actualFace]){
-						try{
-							var head= document.getElementsByTagName('head')[0];
-							var script= document.createElement('script');
-							script.type= 'text/javascript';
-							var scriptUrl = this.base + '/metaworks/' + actualFace + ".js";
-							script.src= scriptUrl;
-							head.appendChild(script);
-							
-							var startPos = 0;
-							var faceHelper = actualFace.substr(startPos = actualFace.indexOf('/')+1, actualFace.lastIndexOf('.') - startPos).split('/').join('_');
-							
-							this.loadedScripts[actualFace] = faceHelper;
-						}catch(e){
-							e=e;
-						}
-					}
-					//end
-	 
-					this.face_ObjectIdMapping[objectId] = {
+					//create links between objectId and face bi-directionally
+					var faceInfo = {
 							face: actualFace,
 							className: objectTypeName
+					};
+					this.face_ObjectIdMapping[objectId] = faceInfo;
+					if(this.objectIds_FaceMapping [actualFace] == null){
+						this.objectIds_FaceMapping [actualFace]={};
 					}
+					
+					this.objectIds_FaceMapping [actualFace][objectId] = faceInfo;
+					
+					//end
 
 					var objectRef = this._createObjectRef(object, objectId);
 					
@@ -379,8 +374,44 @@
 						this.setWhen(currentContextWhen);
 					}
 					
-					//TODO: may cause unnecessary javascript object creation - performance & memory waste
-					this.getFaceHelper(objectId); //lets object face helper initialized
+					
+					//load scripts if there is.
+					if(!this.loadedScripts[actualFace]){
+						try{
+							var head= document.getElementsByTagName('head')[0];
+							var script= document.createElement('script');
+							script.type= 'text/javascript';
+							var scriptUrl = this.base + '/metaworks/' + actualFace + ".js";
+							script.src= scriptUrl;
+							head.appendChild(script);
+							
+							var startPos = 0;
+							var faceHelper = actualFace.substr(startPos = actualFace.indexOf('/')+1, actualFace.lastIndexOf('.') - startPos).split('/').join('_');
+							
+							this.loadedScripts[actualFace] = faceHelper;
+							
+							
+							var initializingFaceHelper = function() {
+								//TODO: may cause unnecessary javascript object creation - performance & memory waste
+								mw3.onLoadFaceHelperScript(actualFace);
+							}
+							
+							script.onload = initializingFaceHelper;
+							
+							script.onreadystatechange = function() { //for IE
+								if (this.readyState == 'complete') {
+									
+									initializingFaceHelper();
+								}
+							}
+						}catch(e){
+							e=e;
+						}
+					}else{
+						mw3.getFaceHelper(objectId);
+					}
+					
+					//end
 					
 					return objectId;
 				}
