@@ -7,7 +7,16 @@ if(mw3.when==mw3.WHEN_NEW){%>
 <%=fields.fileTransfer.here()%>
 
 <%
-}else if(value!=null){
+}else if(mw3.when==mw3.WHEN_EDIT) {
+	if(value!=null){%>
+		<div onclick="mw3.getFaceHelper('<%=objectId%>').download()">
+			Download: <%=value.uploadedPath%>
+		</div>
+	<%}%>
+	<div>
+		<%=fields.fileTransfer.here()%>
+	</div>
+<%}else if(value!=null){
 
 	if(value.mimeType && value.mimeType.indexOf('image') > -1){
 	
