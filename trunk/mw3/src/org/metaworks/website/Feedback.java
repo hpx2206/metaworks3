@@ -72,7 +72,7 @@ public class Feedback extends Database<IFeedback> implements IFeedback {
 	public static IFeedback loadFeedback(IMenu menu) throws Exception{
 		
 		IFeedback homeFeedback = (IFeedback) Database.sql(IFeedback.class, "select * from feedback where menuId = ?menuId");
-		homeFeedback.setMenuId(menu.getMenuId()); //TODO: later we will just set setMenu(IMenu menu) insteadof setMenuId
+		homeFeedback.setMenuId(menu.getMenuId()); //TODO: later we will just set setMenu(IMenu menu) instead of setMenuId
 		homeFeedback.select();
 		
 		return homeFeedback;
@@ -84,7 +84,7 @@ public class Feedback extends Database<IFeedback> implements IFeedback {
 		setWriter(session.loginUser);
 		
 		try{
-			IDAO id = Database.sql(IDAO.class, "select max(feedbackId) 'feedbackId' from feedback");
+			IDAO id = sql("select max(feedbackId) 'feedbackId' from feedback"); //cohesion is right this!
 			id.select();
 			id.next();
 
@@ -99,7 +99,7 @@ public class Feedback extends Database<IFeedback> implements IFeedback {
 		
 		FeedbackPanel panel = new FeedbackPanel();
 		panel.session = session; //TODO: it's annoying and error-prone too.
-		panel.load(contentPanel.getMenu());
+		panel.load(session.getMenu());
 		
 		
 		////////// alert to other session users :  COMET //////////
@@ -124,14 +124,14 @@ public class Feedback extends Database<IFeedback> implements IFeedback {
 		
 		FeedbackPanel panel = new FeedbackPanel();
 		panel.session = session;
-		panel.load(contentPanel.getMenu());
+		panel.load(session.getMenu());
 		
 		return panel;		
 	}
 
 	
-	@AutowiredFromClient
-	public ContentPanel contentPanel;
+//	@AutowiredFromClient
+//	public ContentPanel contentPanel;
 	
 	@AutowiredFromClient
 	public Session session;

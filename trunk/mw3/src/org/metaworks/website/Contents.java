@@ -8,8 +8,11 @@ import java.io.OutputStream;
 import org.directwebremoting.io.FileTransfer;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
+import org.metaworks.annotation.Id;
+import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.IDAO;
+import org.metaworks.example.ide.SourceCode;
 
 public class Contents extends Database<IContents> implements IContents{
 	int contentId = -1;
@@ -83,7 +86,39 @@ public class Contents extends Database<IContents> implements IContents{
 		public void setFile(MetaworksFile file) {
 			this.file = file;
 		}
+		
+	String writerId;
+		public String getWriterId() {
+			return writerId;
+		}
+		public void setWriterId(String writerId) {
+			this.writerId = writerId;
+		}
 
+	String writerName;
+		public String getWriterName() {
+			return writerName;
+		}
+		public void setWriterName(String writerName) {
+			this.writerName = writerName;
+		}
+
+	IFacebookLoginUser writer;
+		public IFacebookLoginUser getWriter() {
+			return writer;
+		}
+		public void setWriter(IFacebookLoginUser writer) {
+			this.writer = writer;
+		}
+		
+		
+	SourceCode sourceCode;
+		public SourceCode getSourceCode() {
+			return sourceCode;
+		}
+		public void setSourceCode(SourceCode sourceCode) {
+			this.sourceCode = sourceCode;
+		}
 		
 	public static IContents loadHomeContents() throws Exception{
 		Menu homeMenu = new Menu();
@@ -100,6 +135,13 @@ public class Contents extends Database<IContents> implements IContents{
 		
 		return contents;
 		
+	}
+	
+	public static IContents loadRecentContents(int page) throws Exception{
+		IContents contents = (IContents) sql(IContents.class, "select * from contents order by contentId desc limit " + page*5 + ", 5");
+		contents.select();
+		
+		return contents;
 	}
 	
 	public ContentPanel add() throws Exception{ 
@@ -136,6 +178,8 @@ public class Contents extends Database<IContents> implements IContents{
 	
 			createDatabaseMe();
 		}
+		
+		setWriter(session.getLoginUser());
 		
 		syncToDatabaseMe();
 		flushDatabaseMe();
@@ -188,14 +232,12 @@ public class Contents extends Database<IContents> implements IContents{
 	private ContentPanel refreshContent() throws Exception {
 		ContentPanel newContentPanel = new ContentPanel();
 		newContentPanel.session = session; //TODO: need to be removed after 'Autowired Factory' of metaworks3 :  e.g. newContentPanel = MetaworksObject.create(ContentPanel.class) will return a auto-wired content for this
-		newContentPanel.setMenu(contentPanel.getMenu());		
+		newContentPanel.setMenu(session.getMenu());		
 		newContentPanel.load();
 		
 		return newContentPanel;
 	}
 	
-	@AutowiredFromClient
-	public ContentPanel contentPanel;
 	
 	@AutowiredFromClient
 	public Session session;
@@ -203,7 +245,7 @@ public class Contents extends Database<IContents> implements IContents{
 
 	private IContents newContents(IContents c) throws Exception{
 		c.getMetaworksContext().setWhen(WHEN_NEW);
-		c.setMenuId(contentPanel.getMenu().getMenuId());
+		c.setMenuId(session.getMenu().getMenuId());
 		
 		return c;
 		
@@ -232,32 +274,39 @@ public class Contents extends Database<IContents> implements IContents{
 	}
 	
 	@Override
+	public IContents newSourceCode() throws Exception {
+		return newContents(new SourceCodeContents());
+	}
+	
+	@Override
 	public IContents edit() throws Exception {
-		type = databaseMe().getType();
+		//type = databaseMe().getType();
 
-		IContents content;
+		IContents content = typedDatabaseMe();//remember "typed database me" doesn't reflect the changes in it's property values to me.
 		
-		if("p".equals(type)){
-			content=new ParagraphContents();
-		}else if("img".equals(type)){
-			content=new ImageContents();
-		}else if("file".equals(type)){
-			content=new FileContents();
-		}else if("src".equals(type)){
-			content=new SourceCodeContents();
-		}else 
-			content=new Contents();
+//		if("p".equals(type)){
+//			content=new ParagraphContents();
+//		}else if("img".equals(type)){
+//			content=new ImageContents();
+//		}else if("file".equals(type)){
+//			content=new FileContents();
+//		}else if("src".equals(type)){
+//			content=new SourceCodeContents();
+//		}else 
+//			content=new Contents();
 
-		content.setParagraph(databaseMe().getParagraph());
-		content.setFile(databaseMe().getFile());
-		content.setUrl(databaseMe().getUrl());
-		content.setWidth(databaseMe().getWidth());
-		content.setHeight(databaseMe().getHeight());
+//		content.setParagraph(databaseMe().getParagraph());
+//		content.setFile(databaseMe().getFile());
+//		content.setUrl(databaseMe().getUrl());
+//		content.setWidth(databaseMe().getWidth());
+//		content.setHeight(databaseMe().getHeight());
+//		
+//		content.setType(type);
+//		content.setOrderId(databaseMe().getOrderId());
+//		content.setMenuId(databaseMe().getMenuId());
+//		content.setContentId(databaseMe().getContentId());
 		
-		content.setType(type);
-		content.setOrderId(databaseMe().getOrderId());
-		content.setMenuId(databaseMe().getMenuId());
-		content.setContentId(databaseMe().getContentId());
+		
 		
 		content.getMetaworksContext().setWhen(WHEN_EDIT);
 		

@@ -13,7 +13,9 @@ import org.metaworks.annotation.NonSavable;
 import org.metaworks.annotation.ORMapping;
 import org.metaworks.annotation.Range;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.annotation.TypeSelector;
 import org.metaworks.dao.IDAO;
+import org.metaworks.example.ide.SourceCode;
 
 @Table(name="Contents")
 @Face(
@@ -46,6 +48,10 @@ public interface IContents extends IDAO{
 	@Range(
 			options={"Paragraph",	"Image",	"Movie",	"Source Code", 	"File"}, 
 			values ={"p",			"img",		"mov",		"src", 			"file"}
+	)
+	@TypeSelector(
+			values = 		{ "p",						"img",				"mov", 				"src",						"file" }, 
+			classes = 		{ ParagraphContents.class,	ImageContents.class, Contents.class, 	SourceCodeContents.class,	FileContents.class } 
 	)
 	public String getType();
 	public void setType(String type);
@@ -81,6 +87,28 @@ public interface IContents extends IDAO{
 	public void setFile(MetaworksFile file);
 	
 	
+	@Hidden
+	@ORMapping(
+		databaseFields = { 	"paragraph" }, 
+		objectFields = { 	"code" }
+	)
+	public SourceCode getSourceCode();
+	public void setSourceCode(SourceCode sourceCode);
+	
+	@Hidden
+	public String getWriterId();
+	public void setWriterId(String writerId);
+	
+	@Hidden
+	public String getWriterName();
+	public void setWriterName(String writerName);
+	
+	@Hidden
+	@ORMapping(objectFields = {"userId", "name"}, databaseFields = {"writerId", "writerName"})
+	public IFacebookLoginUser getWriter();
+	public void setWriter(IFacebookLoginUser writer);
+
+	
 	@ServiceMethod(callByContent=true, when=WHEN_NEW)
 	public ContentPanel add() throws Exception;
 	
@@ -109,7 +137,11 @@ public interface IContents extends IDAO{
 	@ServiceMethod
 	public IContents newFile() throws Exception;
 
+	@ServiceMethod
+	public IContents newSourceCode() throws Exception;
+
 	@ServiceMethod(when=WHEN_VIEW, callByContent=true)
 	public IContents edit() throws Exception;
+
 
 }

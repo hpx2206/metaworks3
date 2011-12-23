@@ -53,6 +53,7 @@ public class FeedbackPanel {
 	}
 	
 	
+	
 	@AutowiredFromClient
 	public Session session;
 	

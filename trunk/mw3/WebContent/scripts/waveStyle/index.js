@@ -55,7 +55,7 @@ function minimizeContact() {
 	
 	if(sectionNaviDisable == 1){ 
 		outerLayout.toggle("west");
-		sectionWestDisable = 1;			
+		sectionWestDisable = 1;
 	}else{
 	oriNaviHeight = $('.inner-north').height();
 	oriContactHeight = $('.inner-center').height() + 183;

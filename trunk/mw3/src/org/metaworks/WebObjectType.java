@@ -28,6 +28,7 @@ import org.metaworks.annotation.ORMapping;
 import org.metaworks.annotation.Range;
 import org.metaworks.annotation.RepresentativeImagePath;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.annotation.TypeSelector;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.IDAO;
 import org.metaworks.dao.TransactionContext;
@@ -94,7 +95,15 @@ public class WebObjectType{
 		public void setFaceComponentPath(String faceComponentPath) {
 			this.faceComponentPath = faceComponentPath;
 		}
-		
+//		
+//	String faceHelperPath;
+//		public String getFaceHelperPath() {
+//			return faceHelperPath;
+//		}
+//		public void setFaceHelperPath(String faceHelperPath) {
+//			this.faceHelperPath = faceHelperPath;
+//		}
+
 	String faceForArray;	
 		public String getFaceForArray() {
 			return faceForArray;
@@ -211,6 +220,13 @@ public class WebObjectType{
 		if(this.iDAOClass!=null && getFaceComponentPath()==null){
 			setFaceComponentPath(getComponentLocationByEscalation(iDAOClass, "faces"));
 		}
+
+//		//setting for ejs.js
+//		setFaceHelperPath(getComponentLocationByEscalation(actCls, "faces", "ejs.js"));
+//		if(this.iDAOClass!=null && getFaceHelperPath()==null){
+//			setFaceComponentPath(getComponentLocationByEscalation(iDAOClass, "faces", "ejs.js"));
+//		}
+		
 		
 		if(getFaceComponentPath()==null)
 			setFaceComponentPath("genericfaces/ObjectFace.ejs");
@@ -319,10 +335,21 @@ public class WebObjectType{
 				fd.setAttribute("ormapping", orm);
 			}
 			
+			TypeSelector typeSelector;
+			if((typeSelector = (TypeSelector) getAnnotationDeeply(actCls, iDAOClass, fd.getName(), TypeSelector.class))!=null){
+				Map<String, String> typeSelections = new HashMap<String, String>();
+				for(int j=0; j<typeSelector.values().length; j++){
+					typeSelections.put(typeSelector.values()[j], typeSelector.classes()[j].getName());
+				}
+				
+				fd.setAttribute("typeSelector", typeSelections);
+			}
+			
+			
 			Face face = (Face) getAnnotationDeeply(actCls, iDAOClass, fd.getName(), Face.class);
 			if(face!=null){
 				
-				if(face.ejsPath().length() >0){
+				if(face.ejsPath().length() >0 || face.options().length > 0 || face.values().length > 0){
 					viewer.setFace(face.ejsPath());
 					
 					FaceInput faceInput = new FaceInput();
@@ -479,15 +506,15 @@ public class WebObjectType{
 	}
 
 
-	static public String getComponentLocation(Class cls, String compType, boolean isDefault, boolean overridesPackage){
+	static public String getComponentLocation(Class cls, String compType, boolean isDefault, boolean overridesPackage, String extName){
 		if(cls.isArray())
-			return "genericfaces/ArrayFace.ejs";
+			return "genericfaces/ArrayFace." + extName;
 		
 		String pkgName = cls.getPackage().getName();
 		String clsName = getClassNameOnly(cls);
 		
 //		return pkgName + "." + compType +(isDefault ? ".Default" : ".")+ clsName + compType.substring(0, 1).toUpperCase() + compType.substring(1, compType.length());		
-		return compType + "/" + pkgName.replaceAll("\\.", "/") + "/" + clsName + ".ejs";		
+		return compType + "/" + pkgName.replaceAll("\\.", "/") + "/" + clsName + "." + extName;		
 	}
 	
 	static public boolean tryToFindComponent(String componentName){		
@@ -513,6 +540,10 @@ public class WebObjectType{
 
 	
 	static public String getComponentLocationByEscalation(Class cls, String compType){
+		return getComponentLocationByEscalation(cls, compType, "ejs");
+	}
+	
+	static public String getComponentLocationByEscalation(Class cls, String compType, String extName){
 		Class copyOfCls = cls;
 		
 		//try to find proper component by escalation (prior to overriding package)
@@ -524,8 +555,8 @@ public class WebObjectType{
 //				if(tryToFindComponent(componentClsName)) return componentClsName;
 				
 				//try to find proper component by escalation (with original package)
-				String componentClsName = getComponentLocation(copyOfCls, compType, false, false);
-				if(tryToFindComponent(componentClsName)) return componentClsName;
+				String componentPath = getComponentLocation(copyOfCls, compType, false, false, extName);
+				if(tryToFindComponent(componentPath)) return componentPath;
 			
 				copyOfCls = copyOfCls.getSuperclass();
 			}while(copyOfCls!=Object.class && copyOfCls !=null);

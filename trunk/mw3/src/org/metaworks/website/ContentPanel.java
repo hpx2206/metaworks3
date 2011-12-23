@@ -29,6 +29,19 @@ public class ContentPanel {
 		public void setNewContent(IContents newContent) {
 			this.newContent = newContent;
 		}
+		
+	
+	RecentContentPanelContainer recentContentPanelContainer;
+	
+		public RecentContentPanelContainer getRecentContentPanelContainer() {
+			return recentContentPanelContainer;
+		}
+		public void setRecentContentPanelContainer(
+				RecentContentPanelContainer recentContentPanelContainer) {
+			this.recentContentPanelContainer = recentContentPanelContainer;
+		}
+
+		
 
 	IMenu menu;
 		@Name
@@ -49,11 +62,18 @@ public class ContentPanel {
 			{
 				newContent.setContentId(-1);//means new one
 				newContent.setMenuId(menu.getMenuId());
-				newContent.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);		
+				newContent.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 			}
 		}
+		
+		if("Home".equals(menu.getName())){
+			setRecentContentPanelContainer(new RecentContentPanelContainer());
+		}
+		
+	//	session.setMenu(menu);
 	}
 	
 	@AutowiredFromClient
+	//@AutowiredToClient //TODO: this should work later. currently property (member who has setter/getter) only work for autowiring
 	public Session session;
 }

@@ -25,4 +25,5 @@ public class SpringConnectionFactory implements ConnectionFactory {
 	public Connection getConnection() {
     	return DataSourceUtils.getConnection(dataSource);
     }
+	
 }

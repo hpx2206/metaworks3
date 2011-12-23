@@ -1,4 +1,8 @@
-<%if (value != null) {
+<%
+
+  var showNewBtn = !(objectMetadata.faceOptions && objectMetadata.faceOptions['hideNewBtn']);
+
+if (value != null) {
 %>
 
 	<div class="view_box">
@@ -17,11 +21,14 @@
 <%	
 
   var showLabel = !(objectMetadata.faceOptions && objectMetadata.faceOptions['hideLabels']);
+  var showEditBtn = !(objectMetadata.faceOptions && objectMetadata.faceOptions['hideEditBtn']);
 
   for (var i=0; i<objectMetadata.fieldDescriptors.length; i++){
   
+  
   	var fd = objectMetadata.fieldDescriptors[i];
-  	
+ //mw3.debug(fd, fd.name=='width');
+   	
   	if(fd.attributes && fd.attributes['hidden']) continue;
   	if(fd.name == 'metaworksContext') continue;
   	
@@ -60,7 +67,7 @@
 %><%=methods[key].here()%> <%   
    }
    
-   if(mw3.when != mw3.WHEN_EDIT){  
+   if(mw3.when != mw3.WHEN_EDIT && showEditBtn){  
 %>
 <input type=button onclick="<%=editFunction%>" value="Edit">
 
@@ -77,6 +84,6 @@
 		</div>
 	</div>
 
-<%}else{%>
+<%}else if(showNewBtn){%>
 <input type=button value="New" onclick="mw3.getFaceHelper('<%=objectId%>').newObject()">
 <%}%>

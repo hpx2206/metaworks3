@@ -3,6 +3,7 @@ package org.metaworks.dao;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.metaworks.FieldDescriptor;
 import org.metaworks.MetaworksContext;
@@ -32,6 +33,17 @@ public class Database<T extends IDAO> implements IDAO{
 		
 		return (T) get(getClass(), keyValue, this);
 	}
+	
+	public T typedDatabaseMe() throws Exception{
+		T dbMe = databaseMe();
+		
+		Class desiredType = getDesiredTypeByTypeSelector(dbMe);
+		
+		if(desiredType == null) throw new TypeSelectorException();
+		
+		return (T) cast(dbMe, desiredType);
+	}
+	
 	
 	public void flushDatabaseMe() throws Exception{
 		flush(getClass(), createKeyObject());
@@ -83,13 +95,15 @@ public class Database<T extends IDAO> implements IDAO{
 
 	protected Object createKeyObject() throws Exception {
 		WebObjectType wot = MetaworksRemoteService.getMetaworksType(getClass().getName());
+		if(wot.getKeyFieldDescriptor()==null)
+			return null;
+		//	throw new Exception("[WARN] Even though domain class '" + wot.metaworks2Type().getName() + "' is a database synchronizable object, it has no key field description. Give @org.metaworks.Id for the key field's GETTER[!] method NOT the SETTER.");
+		
 		ObjectType ot = (ObjectType) wot.metaworks2Type();
 		ObjectInstance oi = (ObjectInstance) ot.createInstance();
 		
 		oi.setObject(this);
 		
-		if(wot.getKeyFieldDescriptor()==null)
-			throw new Exception("[WARN] Even though domain class '" + wot.metaworks2Type().getName() + "' is a database synchronizable object, it has no key field description. Give @org.metaworks.Id for the key field's GETTER[!] method NOT the SETTER.");
 		Object keyValue = oi.getFieldValue(wot.metaworks2Type().getKeyFieldDescriptor().getName());
 
 		if(keyValue == null)
@@ -272,7 +286,7 @@ public class Database<T extends IDAO> implements IDAO{
 		// so that all the changes in the database is manipulated in memory space, and updated only the changes to the database.
 		IDAO dao = TransactionContext.getThreadLocalInstance().createSynchronizedDAO(
 			webObjectType.metaworks2Type().getName(), 
-			webObjectType.metaworks2Type().getKeyFieldDescriptor().getName(), 
+			webObjectType.metaworks2Type().getKeyFieldDescriptor()!=null ? webObjectType.metaworks2Type().getKeyFieldDescriptor().getName() : null, 
 			key, 
 			iDAOType,
 			defaultValue
@@ -317,6 +331,45 @@ public class Database<T extends IDAO> implements IDAO{
 		
 		return dao;
 
+	}
+	
+	public T castDatabaseMe(Class<T> desiredType) throws Exception{
+		return (T) cast(databaseMe(), desiredType);
+	}
+	
+	public static Class getDesiredTypeByTypeSelector(IDAO dao) throws Exception{
+//		IDAO dbMe = databaseMe();
+		
+		WebObjectType webObjectType = MetaworksRemoteService.getMetaworksType(dao.getImplementationObject().getDaoClass().getName());
+		for(FieldDescriptor fd : webObjectType.metaworks2Type().getFieldDescriptors()){
+			Map<String, String> typeSelector = (Map<String, String>) fd.getAttribute("typeSelector");
+			if(typeSelector!=null){
+				String typeName = (String) dao.get(fd.getName());
+				String selectedTypeClassName = typeSelector.get(typeName);
+				
+				if(selectedTypeClassName==null)
+					return null;
+				
+				return Class.forName(selectedTypeClassName);
+			}
+		}
+		
+		return null;
+		//throw new TypeSelectorException();
+	}
+	
+	public static IDAO cast(IDAO original, Class<?> desiredType) throws Exception{
+		
+		WebObjectType webObjectType = MetaworksRemoteService.getMetaworksType(desiredType.getName());
+		ObjectInstance desiredInstance = (ObjectInstance) webObjectType.metaworks2Type().createInstance();
+		
+		for(FieldDescriptor fd : webObjectType.metaworks2Type().getFieldDescriptors()){
+			if(fd.getAttribute("ormapping")==null)
+				desiredInstance.setFieldValue(fd.getName(), original.get(fd.getName()));
+		}
+
+		return (IDAO) desiredInstance.getObject();
+		
 	}
 	
 	public static IDAO sql(Class<?> classType, String sql) throws Exception{

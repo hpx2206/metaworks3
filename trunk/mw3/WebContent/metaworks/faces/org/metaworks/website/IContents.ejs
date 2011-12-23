@@ -3,6 +3,14 @@
 <%
 
   if(value!=null){
+  
+	if(value.writerId && value.writerName){
+%>
+<table><td><img src='http://graph.facebook.com/<%=value.writerId%>/picture' width=50px onclick="$(this).width($(this).width()==50?50:50)"></td>
+<td><%=value.writerName%></td>
+</table> 
+<%
+	}
 
 	if(value.type=="p"){ //in case of paragraph
 %>
@@ -12,17 +20,9 @@
 <% 
 	}else if(value.type=="img"){ //in case of picture
 	
-		if(value.file!=null){
 %>
-
-<% 
-		}else{
-%>
-
 <img src="<%=value.url%>" <%=value.width >0 ? "width=" + value.width: ""%> <%=value.height >0 ? "height=" + value.height: ""%>">      
-
 <%
-		}
 
 	}else if(value.type=="mov"){ //in case of movie
 %>
@@ -30,9 +30,13 @@
 
 <% 
 	}else if(value.type=="src"){ //in case of source code
+	
+		value.__className = "org.metaworks.website.SourceCodeContents";
 %>
 
-<pre><%=value.paragraph%></pre>
+<%=fields.sourceCode.here()%>
+
+<%=methods.compile.here()%>
 
 <%	 
 	}else if(value.type=="file"){ //in case of file
