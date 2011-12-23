@@ -42,9 +42,9 @@
 			}
 
 			Metaworks3.prototype.debug = function(argument, when){
-				if(when){					
+				if(arguments.length > 1){					
 					if(eval(when))
-						alert('debugPoint: '+ argument)
+						$('#'+this.errorDiv).html("debugPoint: "+ argument)
 				}else
 					alert('debugPoint: '+ argument)
 			}
@@ -74,6 +74,8 @@
 						
 						if(faceHelper){
 							this.faceHelpers[objectId] = faceHelper;
+							
+							return faceHelper;
 						}
 					}
 					
@@ -161,6 +163,11 @@
 										if(fd.attributes['children']){
 											webObjectType['childrenFieldDescriptor'] = fd;
 										}
+										
+										if(fd.attributes['typeSelector']){
+											webObjectType['typeSelector'] = fd;
+										}
+										
 									}
 
 									//following methods are not null, it will creates the lazy-loaded tree mechanism.
@@ -376,45 +383,68 @@
 					
 					
 					//load scripts if there is.
-					if(!this.loadedScripts[actualFace]){
-						try{
-							var head= document.getElementsByTagName('head')[0];
-							var script= document.createElement('script');
-							script.type= 'text/javascript';
-							var scriptUrl = this.base + '/metaworks/' + actualFace + ".js";
-							script.src= scriptUrl;
-							head.appendChild(script);
-							
-							var startPos = 0;
-							var faceHelper = actualFace.substr(startPos = actualFace.indexOf('/')+1, actualFace.lastIndexOf('.') - startPos).split('/').join('_');
-							
-							this.loadedScripts[actualFace] = faceHelper;
-							
-							
-							var initializingFaceHelper = function() {
-								//TODO: may cause unnecessary javascript object creation - performance & memory waste
-								mw3.onLoadFaceHelperScript(actualFace);
-							}
-							
-							script.onload = initializingFaceHelper;
-							
-							script.onreadystatechange = function() { //for IE
-								if (this.readyState == 'complete') {
-									
-									initializingFaceHelper();
-								}
-							}
-						}catch(e){
-							e=e;
-						}
-					}else{
-						mw3.getFaceHelper(objectId);
-					}
+					this._importFaceHelper(actualFace);
+
+					mw3.getFaceHelper(objectId);
 					
 					//end
 					
 					return objectId;
 				}
+			
+			Metaworks3.prototype._importFaceHelper = function(actualFace){
+				this.importScript(this.base + '/metaworks/' + actualFace + ".js");
+				
+				var startPos = 0;
+
+				var faceHelper = actualFace.substr(startPos = actualFace.indexOf('/')+1, actualFace.lastIndexOf('.') - startPos).split('/').join('_');
+				
+				this.loadedScripts[actualFace] = actualFace; //now the namespace may not cause any collision.
+			
+				var initializingFaceHelper = function() {
+					//TODO: may cause unnecessary javascript object creation - performance & memory waste
+					mw3.onLoadFaceHelperScript(actualFace);
+				}
+				
+				script.onload = initializingFaceHelper;
+				
+				script.onreadystatechange = function() { //for IE
+					if (this.readyState == 'complete') {
+						
+						initializingFaceHelper();
+					}
+				}
+				
+			}
+			
+			Metaworks3.prototype.importScript = function(scriptUrl){
+				if(!this.loadedScripts[scriptUrl])
+				try{
+					var head= document.getElementsByTagName('head')[0];
+					var script= document.createElement('script');
+					script.type= 'text/javascript';
+					script.src= scriptUrl;
+					head.appendChild(script);
+					this.loadedScripts[scriptUrl] = scriptUrl;
+				}catch(e){
+					e=e;
+				}
+			}
+			
+			Metaworks3.prototype.importStyle = function(url){
+				if(!this.loadedScripts[url])
+				try{
+					var head= document.getElementsByTagName('head')[0];
+					var css= document.createElement('link');
+					css.type= 'text/css';
+					css.rel = 'stylesheet';
+					css.href= url;
+					head.appendChild(css);
+					this.loadedScripts[url] = url;
+				}catch(e){
+					e=e;
+				}
+			}
 			
 			Metaworks3.prototype._createObjectKey = function(value){
 
@@ -486,7 +516,11 @@
 
 				if(arguments.length > 2 && arguments[2]){ //when locateObject method has been called for just positioning purpose not the html generation.
 					var divId = arguments[2];
-					$(divId).append(html);
+					
+					if(options && options['prepend'])
+						$(divId).prepend(html);
+					else
+						$(divId).append(html);
 					
 					this.targetObjectId = objectId; 
 					
@@ -495,6 +529,57 @@
 				
 				//#DEBUG POINT
 				return html;
+			}
+			
+			Metaworks3.prototype.setObject = function(value/*, objectTypeName*/){
+				var objectTypeName;
+				var objectId;
+
+				if(arguments.length == 2){
+					objectId = value;
+					value = arguments[1];
+				}else if(arguments.length == 1){
+					objectId = this.targetObjectId;
+				}
+				
+				if(arguments.length > 2){
+					objectTypeName = arguments[2];
+				}else if(value.__className){
+					objectTypeName = value.__className
+				}else if(value.constructor.toString().indexOf('Array') != -1){
+					objectTypeName = ":/genericfaces/ArrayFace.ejs";
+					
+					if(value.length==0){ //append class info since emptry array doesn't contain any class info
+						var existingObj = this.objects[objectId];
+						if(existingObj.__className)
+							objectTypeName = existingObj.__className + objectTypeName;
+					}
+				}else
+					objectTypeName = ":/genericfaces/ObjectFace.ejs";
+				
+				//alert( dwr.util.toDescriptiveString(value, 5))
+
+				
+				var divId =  "#objDiv_" + objectId;
+				
+    			this._armObject(objectId, value); //let the methods and some special fields available
+				this.objects[objectId] = value; //change the cached value
+				
+				var objKey = this._createObjectKey(value);
+				if(objKey!=null){
+					this.objectId_KeyMapping[objKey] = objectId;
+				}
+				
+				
+				///// auto wiring object to its class name /////
+				this._wireObject(value, objectId);
+					
+				this.newBeanProperty(objectId);
+				
+				this.showObjectWithObjectId(objectId, objectTypeName, divId);
+				
+				return this._withTarget(objectId);
+
 			}
 			
 			Metaworks3.prototype.getObjectReference = function(){
@@ -579,7 +664,7 @@
 				
 				var tagId = this.createInputId(objectId);
 				
-				var faceHelper = this.faceHelpers[objectId];
+				var faceHelper = this.getFaceHelper(objectId);
 
 				if(faceHelper && faceHelper.getValue){ //if there's face helper and there's customized getter exists, use it.
 					value = faceHelper.getValue();
@@ -659,6 +744,7 @@
 				
 				var object = mw3.getObject(objId);
 				//var thisMetaworks = this;
+				var divId = "objDiv_" + objId;
 				
 				this.setWhen(this.WHEN_VIEW);
 				
@@ -729,7 +815,7 @@
 					        				
 					        				mw3.setObject(objId, result);
 					        				
-					        			}else{ //case of target is "auto"
+					        			}else { //case of target is "auto"
 	
 					        				var results = result.length ? result: [result];
 					        				
@@ -741,26 +827,51 @@
 
 							        			var neverShowed = true;
 							        			
+							        			
 							        			if(objKeys && objKeys.length){
 						        									        				
 							        				for(var i=0; i<objKeys.length; i++){
 								        				mappedObjId = mw3.objectId_KeyMapping[objKeys[i]];
 								        				
-								        				var divId = "objDiv_" + mappedObjId;
+								        				var mappedObjdivId = "objDiv_" + mappedObjId;
 								        				
 								        				if(mappedObjId && document.getElementById(divId)){ //if there's mappedObjId exists, replace that div part.
-									        				mw3.setObject(mappedObjId, result_);
+								        					
+								        					if(serviceMethodContext.target=="append"){
+								        						mw3.locateObject(result_, null, "#"+mappedObjdivId);
+								        					}else if(serviceMethodContext.target=="prepend"){
+																mw3.locateObject(result_, null, "#"+mappedObjdivId, {prepend: true});
+															}else{
+								        						mw3.setObject(mappedObjId, result_);
+								        					}
+								        					
 									        				neverShowed = false;
 								        				}
 							        				}
 							        			}
 	
-							        			if(neverShowed)
-							        				mw3.setObject(objId, result_);
+							        			if(neverShowed){
+						        					if(serviceMethodContext.target=="append"){
+						        						mw3.locateObject(result_, null, "#"+divId);
+						        					}else if(serviceMethodContext.target=="prepend"){
+														mw3.locateObject(result_, null, "#"+divId, {prepend: true});
+													}else{
+						        						mw3.setObject(objId, result_);
+						        					}
+						        					
+						        					neverShowed = false;
+							        			}
 					        				}
 					        				
-					        				if(neverShowed)
-					        					mw3.setObject(objId, result);
+					        				if(neverShowed){
+					        					if(serviceMethodContext.target=="append"){
+					        						mw3.locateObject(result, null, "#"+divId);
+					        					}else if(serviceMethodContext.target=="prepend"){
+													mw3.locateObject(result, null, "#"+divId, {prepend: true});
+												}else{
+					        						mw3.setObject(objId, result);
+					        					}
+					        				}
 					        			}
 
 				        			}
@@ -924,57 +1035,7 @@
 			}
 			
 
-			Metaworks3.prototype.setObject = function(value/*, objectTypeName*/){
-				var objectTypeName;
-				var objectId;
 
-				if(arguments.length == 2){
-					objectId = value;
-					value = arguments[1];
-				}else if(arguments.length == 1){
-					objectId = this.targetObjectId;
-				}
-				
-				if(arguments.length > 2){
-					objectTypeName = arguments[2];
-				}else if(value.__className){
-					objectTypeName = value.__className
-				}else if(value.constructor.toString().indexOf('Array') != -1){
-					objectTypeName = ":/genericfaces/ArrayFace.ejs";
-					
-					if(value.length==0){ //append class info since emptry array doesn't contain any class info
-						var existingObj = this.objects[objectId];
-						if(existingObj.__className)
-							objectTypeName = existingObj.__className + objectTypeName;
-					}
-				}else
-					objectTypeName = ":/genericfaces/ObjectFace.ejs";
-				
-				//alert( dwr.util.toDescriptiveString(value, 5))
-
-				
-				var divId =  "#objDiv_" + objectId;
-				
-    			this._armObject(objectId, value); //let the methods and some special fields available
-				this.objects[objectId] = value; //change the cached value
-				
-				var objKey = this._createObjectKey(value);
-				if(objKey!=null){
-					this.objectId_KeyMapping[objKey] = objectId;
-				}
-				
-				
-				///// auto wiring object to its class name /////
-				this._wireObject(value, objectId);
-					
-				this.newBeanProperty(objectId);
-				
-				this.showObjectWithObjectId(objectId, objectTypeName, divId);
-				
-				return this._withTarget(objectId);
-
-			}
-			
 			Metaworks3.prototype.editObject = function(){
 				
 				

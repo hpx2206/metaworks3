@@ -136,7 +136,7 @@ public class MetaworksConverter extends BeanConverter{
 	        try {
 				return paramType.newInstance();
 			} catch(java.lang.InstantiationException e){
-				throw new ConversionException(paramType, "Service Object should have constructor with empty parameter. Add new Constructor with no argument into " + paramType.getName(), e);
+				throw new ConversionException(paramType, "Service Object should have constructor with empty parameter. Add new Constructor with no argument into " + paramType.getName() + ". 문제를 해결하려면 다음 클래스에 아규먼트가 하나도 없는 생성자를 추가해주세요--> " + paramType.getName(), e);
 			}catch (Exception e) {
 				// TODO Auto-generated catch block
 				throw new ConversionException(paramType, "Service Object should have constructor with empty parameter since it should be instantiated with no argument constructor", e);
@@ -167,7 +167,13 @@ public class MetaworksConverter extends BeanConverter{
 			    List<OutboundVariable> ovs = new ArrayList<OutboundVariable>();
 			    
 			    try{
-			    	if(dao.getImplementationObject().getRowSet()!=null){
+			    	
+			    	boolean iterative = false;
+			    	try{
+			    		iterative = dao.size() > 0;
+			    	}catch(Exception ex){}
+			    	
+			    	if(iterative){
 				        dao.beforeFirst();		        
 
 				        OutboundVariable nested = null;
@@ -194,6 +200,8 @@ public class MetaworksConverter extends BeanConverter{
 			   // if(ovs.size()>0)
 				    // Group the list of converted objects into this OutboundVariable
 				    ov.setChildren(ovs);
+				    
+				//TODO: since this part doesn't return __className property, the array type cannot recognize the dao's class type?
 			    
 			    return ov;
 			    
@@ -338,7 +346,12 @@ public class MetaworksConverter extends BeanConverter{
 		                
 		 			}
 		 			
-		 			OutboundVariable classNameOV = getConverterManager().convertOutbound(daoClass.getName(), outctx);
+		 			//if there's TypeSelector setting exist, try to give cast information as possible as desired.
+		 			Class type = Database.getDesiredTypeByTypeSelector(dao);
+		 			if(type==null)
+		 				type = daoClass;
+		 			
+		 			OutboundVariable classNameOV = getConverterManager().convertOutbound(type.getName(), outctx);
 		 			ovs.put("__className", classNameOV);
 		 			
 		 	        ov.setChildren(ovs);

@@ -20,7 +20,7 @@ if(value==null){%>
 }else{%>
 
 <center>
-<img src='http://graph.facebook.com/<%=value.userId%>/picture'> <br>
+<img src='http://graph.facebook.com/<%=value.userId%>/picture'<%=(mw3.how=="minimised" ? " width='50'":"")%>> <br>
 <%=value.name%>
 </center>
 

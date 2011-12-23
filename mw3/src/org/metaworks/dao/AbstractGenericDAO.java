@@ -52,7 +52,10 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 		}
 		
 	private boolean isDirty = false;
-	
+		public boolean isDirty() {
+			return isDirty;
+		}
+
 	private boolean isUpdateOnlyWhenDirty = true;
 		protected boolean updateOnlyWhenDirty() {
 			return isUpdateOnlyWhenDirty;
@@ -585,6 +588,8 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 		}catch(Exception e){
 			throw new Exception("Error when to try sql [" + getStatement() + "] ", e);
 		}finally{
+			isDirty = false;
+			
 			try{pstmt.close();}catch(Exception e){}
 			if ( !isConnective ) {
 				checkOkToCloseConnection();

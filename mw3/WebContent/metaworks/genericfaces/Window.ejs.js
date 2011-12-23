@@ -8,7 +8,7 @@ var Window = function(objectId, className){
 	this.width = $("#" + this.divId).width();
 	this.height = $("#" + this.divId).height();
 	
-		
+
 }
 
 Window.prototype.maximize = function(){
@@ -35,12 +35,17 @@ Window.prototype.maximize = function(){
 Window.prototype.minimize = function(){
 	$("#" + this.smallDivId).appendTo("#smline");
 	$("#" + this.smallDivId).toggle();
+//	$("#" + this.divId).width(10);
+//	outerLayout = $('#container').resizeAll(); 
 	$("#" + this.divId).toggle();
+	
 	
 //	$("#" + this.divId).closest("div").
 	
 //	$('.inner-north').height(oriNaviHeight + oriContactHeight + 183);
 	
+	
+
 }
 
 Window.prototype.resume = function(){

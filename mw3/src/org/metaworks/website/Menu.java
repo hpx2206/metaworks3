@@ -84,7 +84,9 @@ public class Menu  extends Database<IMenu> implements IMenu{
 		if(session.loginUser!=null && session.loginUser.isAdmin())
 			getMetaworksContext().setWhen(WHEN_EDIT);
 		
-		return new Object[]{this, contentPanel, feedbackPanel};
+		session.setMenu(this);
+		
+		return new Object[]{this, contentPanel, feedbackPanel, session};
 	}
 	
 	public IMenu loadSubMenu() throws Exception{
@@ -96,10 +98,17 @@ public class Menu  extends Database<IMenu> implements IMenu{
 	}
 
 	static public IMenu loadMainMenu() throws Exception{
-		IMenu mainMenu = (IMenu) sql(IMenu.class, "select * from menu where parentMenuId = -1");;
-		mainMenu.select();
+		Menu homeMenu = new Menu();
+		homeMenu.setName("src/");
+		homeMenu.setMenuId(-1);
+		homeMenu.setSubMenu(homeMenu.loadSubMenu());
+		homeMenu.setEnabled(true);
+		homeMenu.setSelected(true);
+
+//		IMenu mainMenu = (IMenu) sql(IMenu.class, "select * from menu where parentMenuId = -1");;
+//		mainMenu.select();
 		
-		return mainMenu;
+		return homeMenu;
 	}
 	
 	public void save() throws Exception {

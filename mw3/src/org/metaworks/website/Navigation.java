@@ -8,8 +8,9 @@ import org.metaworks.annotation.ServiceMethod;
 
 @Face(
 		ejsPath="genericfaces/Window.ejs",
-		options={"hideAddBtn", "hideLabels"},
-		values={"true", "true"}
+		options={"hideAddBtn", "hideLabels", "height"},
+		values={"true", "true", "400"},
+		displayName="Resources"
 )
 public class Navigation implements ContextAware{
 
@@ -24,6 +25,8 @@ public class Navigation implements ContextAware{
 	
 
 	public Navigation() throws Exception{
+		
+		
 		setMenu(Menu.loadMainMenu());
 	}
 	

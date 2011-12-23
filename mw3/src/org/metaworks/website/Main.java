@@ -1,11 +1,16 @@
 package org.metaworks.website;
 
 import org.metaworks.MetaworksContext;
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.example.addressbook.Person;
 
 public class Main {
 
 	Navigation navigation;
+		@Face(
+				options={"height"}, values={"400"}
+				)
 		public Navigation getNavigation() {
 			return navigation;
 		}
@@ -21,6 +26,7 @@ public class Main {
 			this.contentPanel = contentPanel;
 		}
 		
+
 	FeedbackPanel feedbackPanel;
 		public FeedbackPanel getFeedbackPanel() {
 			return feedbackPanel;
@@ -76,7 +82,7 @@ public class Main {
 		feedbackPanel.session = session;
 		feedbackPanel.load(homeMenu);
 
-
+	
 	}
 	
 }

@@ -145,13 +145,15 @@ public class TransactionContext implements ConnectionFactory{
 		}
 		private IDAO createSynchronizedDAO(String tableName, String keyFieldName, Object keyFieldValue, Class daoType, final boolean isNew, Object synchronizedObject) throws Exception{
 
-			if(keyFieldValue == null) 
-					throw new Exception("keyFieldValue should have value for synchronized DAO");
+			if(!isNew && keyFieldValue == null) 
+					throw new Exception("keyFieldValue should have value for synchronized DAO for finding");
 			
 			final IDAO dao = MetaworksDAO.createDAOImpl(this, null, daoType, synchronizedObject);
 			dao.getImplementationObject().setTableName(tableName);
 			dao.getImplementationObject().setKeyField(keyFieldName);
-			dao.set(keyFieldName, keyFieldValue);
+			
+			if(keyFieldName!=null && keyFieldValue!=null)
+				dao.set(keyFieldName, keyFieldValue);
 
 			if(!isNew){
 				dao.getImplementationObject().createSelectSql();
@@ -171,11 +173,15 @@ public class TransactionContext implements ConnectionFactory{
 					if(newRow){
 						dao.getImplementationObject().createInsertSql();
 						newRow = false;
+						dao.update();
 					}else{
-						dao.getImplementationObject().createUpdateSql();
+						
+						if(dao.getImplementationObject().isDirty()){ //only when the data has been updated it will be applied
+							dao.getImplementationObject().createUpdateSql();
+							dao.update();
+						}
 					}
 					
-					dao.update();
 				}
 
 				public void beforeRollback(TransactionContext tx) throws Exception {

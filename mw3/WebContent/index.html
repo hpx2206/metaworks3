@@ -3,11 +3,14 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		
-		<title>Metaworks3 sample application: FaceBook</title>
+		<title>Kalm Cloud IDE</title>
 		
 		
 		<script type="text/javascript" src="scripts/jquery.view/jquery-1.6.1.js"></script>
 		<script type="text/javascript" src="scripts/jquery.view/jquerymx-1.0.custom.js"></script>
+
+		<script type="text/javascript" src="scripts/jquery/jquery-ui-latest.js"></script>
+		<script type="text/javascript" src="scripts/jquery/jquery.layout-latest.js"></script>
 		
 		<script type="text/javascript" src="scripts/ejs/ejs_production.js"></script>
 		<script type="text/javascript" src="scripts/ejs/ejs_debugger.js"></script>
@@ -21,6 +24,13 @@
 
 	  <script type="text/javascript" src="scripts/jit-yc.js"></script>
 
+	<!--  for source code editor -->
+    <script src="metaworks/ace/build/src/ace.js" type="text/javascript" charset="utf-8"></script>
+    <script src="metaworks/ace/build/src/theme-eclipse.js" type="text/javascript" charset="utf-8"></script>
+    <script src="metaworks/ace/build/src/mode-javascript.js" type="text/javascript" charset="utf-8"></script>
+    <script src="metaworks/ace/build/src/mode-java.js" type="text/javascript" charset="utf-8"></script>
+
+	<!-- wave style -->
 	<link rel="stylesheet" href="style/waveStyle/droppable_layout.css" type="text/css" media="screen" />
 	<link rel="stylesheet" href="style/Spacetree.css" type="text/css" media="screen" />
 		
@@ -46,7 +56,7 @@
 		
 		
 	</head>
-	<body onload="mw3.onLoad(); dwr.engine.setActiveReverseAjax(true);">
+	<body onload="dwr.engine.setActiveReverseAjax(true);">
 	
 		<div id="mainPage"></div>
 			
