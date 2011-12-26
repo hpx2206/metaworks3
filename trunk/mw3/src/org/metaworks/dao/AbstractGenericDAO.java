@@ -647,7 +647,10 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 
 	int cursor = 0;
     protected List<HashMap> cachedRows;
-	
+		public List<HashMap> getCachedRows() {
+			return cachedRows;
+		}
+		 
 	public void moveToInsertRow() throws Exception{
 		moveToInsertRow(null);
 	}

@@ -6,7 +6,7 @@
 if(value==null){%>
 
   <div id="fb-root"></div>
-  <div class="fb-login-button" data-perms="email,user_checkins" onlogin="mw3.getFaceHelper('<%=objectId%>').setUserInfo()">
+  <div class="fb-login-button" data-scope="email,user_checkins" onlogin="mw3.getFaceHelper('<%=objectId%>').setUserInfo()">
     Login with Facebook
   </div>
  <%
