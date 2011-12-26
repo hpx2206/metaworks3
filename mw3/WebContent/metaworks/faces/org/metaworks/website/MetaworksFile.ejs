@@ -2,21 +2,14 @@
 
 //mw3.debug(value);
 
-if(mw3.when==mw3.WHEN_NEW){%>
+if(mw3.when==mw3.WHEN_NEW || mw3.when==mw3.WHEN_EDIT){%>
 
 <%=fields.fileTransfer.here()%>
 
 <%
-}else if(mw3.when==mw3.WHEN_EDIT) {
-	if(value!=null){%>
-		<div onclick="mw3.getFaceHelper('<%=objectId%>').download()">
-			Download: <%=value.uploadedPath%>
-		</div>
-	<%}%>
-	<div>
-		<%=fields.fileTransfer.here()%>
-	</div>
-<%}else if(value!=null){
+}
+
+if(value!=null){
 
 	if(value.mimeType && value.mimeType.indexOf('image') > -1){
 	

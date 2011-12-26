@@ -383,7 +383,13 @@
 					
 					
 					//load scripts if there is.
-					this._importFaceHelper(actualFace);
+//					var directFaceName = 'faces/' + objectTypeName.split('.').join('/') + ".ejs";
+//					this._importFaceHelper(actualFace, //try to load face helper by using the class name directly first
+//							function(){
+								mw3._importFaceHelper(actualFace)
+//							}, 
+//							directFaceName
+//					);
 
 					mw3.getFaceHelper(objectId);
 					
@@ -392,32 +398,43 @@
 					return objectId;
 				}
 			
-			Metaworks3.prototype._importFaceHelper = function(actualFace){
-				this.importScript(this.base + '/metaworks/' + actualFace + ".js");
-				
-				var startPos = 0;
+			Metaworks3.prototype._importFaceHelper = function(actualFace, onError){
 
-				var faceHelper = actualFace.substr(startPos = actualFace.indexOf('/')+1, actualFace.lastIndexOf('.') - startPos).split('/').join('_');
-				
-				this.loadedScripts[actualFace] = actualFace; //now the namespace may not cause any collision.
-			
 				var initializingFaceHelper = function() {
 					//TODO: may cause unnecessary javascript object creation - performance & memory waste
 					mw3.onLoadFaceHelperScript(actualFace);
 				}
 				
-				script.onload = initializingFaceHelper;
+					
+				var url = this.base + '/metaworks/' + actualFace + ".js";
 				
-				script.onreadystatechange = function() { //for IE
-					if (this.readyState == 'complete') {
-						
-						initializingFaceHelper();
-					}
-				}
+//				   $.ajax({
+//				        url: url,
+//				        type:'GET',
+//				        success:function(content,code)
+//				        {
+				var script = mw3.importScript(url, initializingFaceHelper);
 				
+				if(script==null)
+					return false;
+				
+				var startPos = 0;
+
+				var faceHelper = actualFace.substr(startPos = actualFace.indexOf('/')+1, actualFace.lastIndexOf('.') - startPos).split('/').join('_');
+				
+				mw3.loadedScripts[actualFace] = faceHelper; //now the namespace may not cause any collision.
+				
+				return true;
+//				        },
+//				        error:function(){
+//				            if(onError) 
+//				            	onError();
+//				        }
+//				    });        
+
 			}
 			
-			Metaworks3.prototype.importScript = function(scriptUrl){
+			Metaworks3.prototype.importScript = function(scriptUrl, afterLoadScript){
 				if(!this.loadedScripts[scriptUrl])
 				try{
 					var head= document.getElementsByTagName('head')[0];
@@ -426,6 +443,19 @@
 					script.src= scriptUrl;
 					head.appendChild(script);
 					this.loadedScripts[scriptUrl] = scriptUrl;
+
+					if(afterLoadScript){
+						script.onload = afterLoadScript;
+						
+						script.onreadystatechange = function() { //for IE
+							if (this.readyState == 'complete') {
+								
+								afterLoadScript();
+							}
+						}
+					}
+
+					return script;
 				}catch(e){
 					e=e;
 				}
@@ -468,8 +498,12 @@
 						id = "@" + this._createObjectKey(value[metadata.keyFieldDescriptor.name]);
 					
 					var returnValues=[];
+					var j=0;
 					for(var i=0; i<clsNames.length; i++){
-						returnValues[i] = clsNames[i] + id;
+						returnValues[j++] = clsNames[i] + id;
+						
+						if(metadata.keyFieldDescriptor)
+							returnValues[j++] = clsNames[i]; //add placeholder candidates without @id again 							
 					}
 
 					if(arguments.length>1){
@@ -815,7 +849,14 @@
 					        				
 					        				mw3.setObject(objId, result);
 					        				
-					        			}else { //case of target is "auto"
+					        			}else if(serviceMethodContext.target=="popup"){
+					        			
+					        				$('body').append("<div id='popup_" + objId + "' style='z-index:10;position:absolute; top:1px; left:1px'></div>");
+					        				mw3.locateObject(result, null, '#popup_' + objId);
+					    
+					        				
+					        			}else{ //case of target is "auto"
+					        			
 	
 					        				var results = result.length ? result: [result];
 					        				

@@ -52,24 +52,27 @@ public class MetaworksConverter extends BeanConverter{
     		 //when unknown object from javascript, metaworks need to get the class Information from the JSON's property value '__className'
 			if(paramType == Object.class){
 			 	String value = data.getValue();
-			    value = value.substring(1, value.length() - 1);
-
-			    Map<String, String> tokens = extractInboundTokens(paramType, value);
-			    
-			    String refName = tokens.get("__className");
-			    
-			    if(refName!=null){
-				    refName = refName.split(":")[1];
+			 	
+			 	if(value.length() >= 2){
+				    value = value.substring(1, value.length() - 1);
+	
+				    Map<String, String> tokens = extractInboundTokens(paramType, value);
 				    
-				   	String className = data.getContext().getInboundVariable(refName).getFormField().getString();
-				  
-				   	try {
-						paramType = Class.forName(className);
-					} catch (ClassNotFoundException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-			    }
+				    String refName = tokens.get("__className");
+				    
+				    if(refName!=null){
+					    refName = refName.split(":")[1];
+					    
+					   	String className = data.getContext().getInboundVariable(refName).getFormField().getString();
+					  
+					   	try {
+							paramType = Class.forName(className);
+						} catch (ClassNotFoundException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+				    }
+			 	}
 			}
 			   	
 			
@@ -167,13 +170,7 @@ public class MetaworksConverter extends BeanConverter{
 			    List<OutboundVariable> ovs = new ArrayList<OutboundVariable>();
 			    
 			    try{
-			    	
-			    	boolean iterative = false;
-			    	try{
-			    		iterative = dao.size() > 0;
-			    	}catch(Exception ex){}
-			    	
-			    	if(iterative){
+			    	if(dao.getImplementationObject().getRowSet()!=null || dao.getImplementationObject().getCachedRows()!=null){
 				        dao.beforeFirst();		        
 
 				        OutboundVariable nested = null;
