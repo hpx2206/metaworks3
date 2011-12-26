@@ -1,0 +1,61 @@
+<div class="cont">		
+	<table id="tableHidtoryContent_1" width="100%" border="0" cellspacing="0" cellpadding="0">
+		<tbody><tr>
+			<td rowspan="3" width="60" align="center" valign="top">
+				<%=fields.writer.here()%>
+			</td>
+			<td>
+				<div class="formcontexttitle" onclick="getFormContext('1','/uengine-web/codi-web/processparticipant/codiWorkitemHandler.jsp?taskId=<%=value.taskId%>&amp;tag=1&amp;appKey=5f6512d2-5f2e-4828-a7e3-a5639e6d4288')">
+					<img src="/uengine-web/images/activity_status/i_status_confirmed.png"><%=fields.title.here()%><a name="currentRunningItem"></a></div>
+			</td>			
+		</tr>			
+		<tr>				
+			<td>				
+				<div class="" style="position: relative;">					
+					<div class="good_up">
+						<span id="saidGoodUsersInfo45">
+							<div class="re_saidGood"><em>&nbsp;</em>
+							</div>
+						</span>
+						<span id="task45" class="cb_activate_up cb_first">
+							좋아요
+						</span>						
+					</div>					
+				</div>				
+				<div id="addCommentArea_tempTaskId"></div>				
+			</td>			
+		</tr>			
+		<tr>			
+			<td>				
+				<div class="" style="position: relative;">					
+					<div id="summary_area_1">
+						 <p class="readmore" onclick="getFormContext('1','/uengine-web/codi-web/processparticipant/codiWorkitemHandler.jsp?taskId=45&amp;tag=1&amp;appKey=5f6512d2-5f2e-4828-a7e3-a5639e6d4288')" title="open" id="p_prev_1">[ 더보기 ]</p>		
+					</div>				
+				</div>			
+			</td>		
+		</tr>			
+		
+	<% if (fields.workItemHandler){%>
+		<tr id="historyContentTr_1" class="" style="display: none; height: 978px; ">	
+					
+			<td colspan="2" style="padding-top:10px;">				
+				<!--iframe frameborder="0" id="historyContentArea_1" src="/uengine-web/codi-web/processparticipant/codiWorkitemHandler.jsp?taskId=<%=value.taskId%>&amp;tag=1&amp;appKey=5f6512d2-5f2e-4828-a7e3-a5639e6d4288" width="100%" height="0" scrolling="no" style="height: 978px; "></iframe-->			
+				<%=fields.workItemHandler.here()%>			
+			</td>			
+		</tr>		
+	<%}%>
+		
+	</tbody>
+</table>	
+</div>
+
+
+<table>
+
+	<tr>
+		<td><%=fields.writer.here()%></td> 
+		<td><%=fields.title.here()%>
+	</tr>
+	
+</table>
+

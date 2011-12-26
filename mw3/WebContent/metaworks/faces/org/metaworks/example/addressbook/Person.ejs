@@ -1,0 +1,24 @@
+
+<% if(value!=null){%>
+
+
+<h2><%=value.message%></h2>
+
+<% if(value.name!="Harry"){%>
+<%=methods.sayHappyNewYearToHarry.here()%>
+<% }
+   
+   if(value.name!="Sally"){%>
+<%=methods.sayHappyNewYearToSally.here()%>
+<% }
+   
+   if(value.name!="Doogie"){%>
+
+<%=methods.sayHappyNewYearToDoogie.here()%>
+
+<%  }
+  }else{%>
+
+not born yet
+
+<%}%>

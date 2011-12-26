@@ -1,0 +1,16 @@
+
+
+<%if (!value){%>
+ <img src="images/portrait/unknown_user.gif" width=50><br>
+<%}else{%>
+
+
+<center>
+<img src='http://graph.facebook.com/<%=value.userId%>/picture'<%=(mw3.how=="minimised" ? " width='50'":"")%>> <br>
+<%=value.name%>
+</center>
+
+<%=methods.addContact.here()%>
+
+
+<%}%>
