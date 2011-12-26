@@ -1,0 +1,27 @@
+
+<%
+if(value!=null){
+
+  if(value.isFolder){
+  
+  
+  	if(value.childs){
+  %>
+<b><a onclick="<%=methods.drillDown.caller()%>"><%=value.name%></a></b>
+<table><td width=10></td><td><%=fields.childs.here({when: mw3.when})%></td></table>
+
+<%	}else{%>
+
+<a onclick="<%=methods.drillDown.caller()%>"><%=value.name%></a>
+<%	}
+
+  }else{
+  
+%>
+	<a onclick="<%=methods.initiate.caller()%>"><%=value.name%></a>
+<%
+  
+  }
+}
+%>
+
