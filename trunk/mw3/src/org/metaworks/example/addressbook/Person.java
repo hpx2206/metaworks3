@@ -1,5 +1,7 @@
 package org.metaworks.example.addressbook;
 
+import org.metaworks.ContextAware;
+import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Id;
@@ -7,7 +9,7 @@ import org.metaworks.annotation.Name;
 import org.metaworks.annotation.NonEditable;
 import org.metaworks.annotation.ServiceMethod;
 
-public class Person {
+public class Person{
 
 	String name;
 	@Id
@@ -36,34 +38,65 @@ public class Person {
 			this.message = message;
 		}
 
-	public void sayHappyNewYear() throws InterruptedException{
+	public void hearHappyNewYear() throws InterruptedException{
 		age = age + 1;
 		setMessage("Happy New Year, " + getName() + ". and your age is " + age);
 	}
 
-	@ServiceMethod(callByContent=true)
-	public Person sayHappyNewYearToHarry() throws InterruptedException{
-		Person harry = addressbook.getHarry();
-		harry.sayHappyNewYear();
-		return harry;
+	public boolean tellHappyNewYear() throws InterruptedException{
+		age = age - 1;
+		setMessage("My age is " + age);
+		
+		if(age==0){
+			addressbook.gameOver(this);
+			return true;
+		}
+		
+		return false;
+			
+	}
+	
+
+	@ServiceMethod(callByContent=true, when="view")
+	public Object[] sayHappyNewYearToHarry() throws InterruptedException{
+		Person otherPerson = addressbook.getHarry();
+		otherPerson.hearHappyNewYear();
+		
+		if(tellHappyNewYear()){
+			return new Object[]{addressbook};
+		}
+		
+		return new Object[]{otherPerson, this};
 	}
 
-	@ServiceMethod(callByContent=true)
-	public Person sayHappyNewYearToSally() throws InterruptedException{
-		Person sally = addressbook.getSally();
-		sally.sayHappyNewYear();
-		return sally;
+	@ServiceMethod(callByContent=true, when="view")
+	public Object[] sayHappyNewYearToSally() throws InterruptedException{
+		Person otherPerson = addressbook.getSally();
+		otherPerson.hearHappyNewYear();
+		
+		if(tellHappyNewYear()){
+			return new Object[]{addressbook};
+		}
+		
+		return new Object[]{otherPerson, this};
 	}
 		
 
-	@ServiceMethod(callByContent=true)
-	public Person sayHappyNewYearToDoogie() throws InterruptedException{
-		Person doogie = addressbook.getDoogie();
-		doogie.sayHappyNewYear();
-		return doogie;
+	@ServiceMethod(callByContent=true, when="view")
+	public Object[] sayHappyNewYearToDoogie() throws InterruptedException{
+		Person otherPerson = addressbook.getDoogie();
+		otherPerson.hearHappyNewYear();
+		
+		if(tellHappyNewYear()){
+			return new Object[]{addressbook};
+		}
+		
+		return new Object[]{otherPerson, this};
 	}
 
 	@AutowiredFromClient
 	public Addressbook addressbook;
 
+
+	
 }
