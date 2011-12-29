@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+
+<!-- ======================================================================= -->
+<!-- JBoss build file                                                       -->
+<!-- ======================================================================= -->
+
+<project name="ProcessCodi" default="apply" basedir=".">
+    <property environment="env"/>
+	
+
+	<target name="apply">
+		
+		<jar jarfile="./build/uengine_settings.jar">
+			<fileset dir="build/classes">
+		  		<include name="**/*.*"/>
+			</fileset>
+		</jar>
+		
+		<antcall target="signjar">
+			<param name="file.name" value="uengine_settings.jar"/>
+			<param name="file.dir" value="./build"/>
+		</antcall>
+		
+		<!--
+		<antcall target="copylib"/>
+		-->
+		
+	</target>
+	
+	<target name="signjar">
+		<echo message="jarfile=${file.dir}/${file.name}"/>
+		<signjar
+			keystore="../uEngine/resources/uenginestore"
+			storepass="jinyoungj"
+			keypass="jinyoungj"
+			signedjar="WebContent/processmanager/signed${file.name}"
+			jar="${file.dir}/${file.name}" 
+			alias="uenginetools"
+		/>
+	</target>
+	
+</project>
+
+
+

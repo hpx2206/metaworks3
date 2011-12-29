@@ -1,0 +1,18 @@
+<%if (value!=null){%>
+
+<%=fields.recentContents.here()%>
+
+<%=fields.moreRecentContentPanel.here()%>
+
+<%
+
+if(value.recentContents==null){
+%>
+
+<p>
+<div onclick="<%=methods.more.caller()%>">[more...]</div>
+
+
+<%}
+
+}%>

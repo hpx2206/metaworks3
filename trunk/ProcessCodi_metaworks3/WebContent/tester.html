@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		
+		<title>Metaworks3 sample application: FaceBook</title>
+		
+		<script type="text/javascript" src="scripts/jquery.view/jquery-1.6.1.js"></script>
+		<script type="text/javascript" src="scripts/jquery.view/jquerymx-1.0.custom.js"></script>
+
+
+<script type="text/javascript" src="scripts/jquery/jquery-ui-latest.js"></script>
+<script type="text/javascript" src="scripts/jquery/jquery.layout-latest.js"></script>		
+
+		
+		<script type="text/javascript" src="scripts/ejs/ejs_production.js"></script>
+		<script type="text/javascript" src="scripts/ejs/ejs_debugger.js"></script>
+		<script type="text/javascript" src="scripts/ejs/view.js"></script>
+		
+	  <script type='text/javascript' src='dwr/engine.js'></script> 
+	  <script type='text/javascript' src='dwr/util.js'></script> 
+	  
+	  <script type='text/javascript' src='dwr/interface/Metaworks.js'></script> 
+	  <script type="text/javascript" src="scripts/metaworks/metaworks.js"></script>
+
+
+
+<link rel="stylesheet" href="scripts/jquery/jquery-ui-189custom/development-bundle/themes/base/jquery.ui.all.css" />
+
+	<!--  for source code editor -->
+    <script src="metaworks/ace/build/src/ace.js" type="text/javascript" charset="utf-8"></script>
+    <script src="metaworks/ace/build/src/theme-eclipse.js" type="text/javascript" charset="utf-8"></script>
+    <script src="metaworks/ace/build/src/mode-javascript.js" type="text/javascript" charset="utf-8"></script>
+    <script src="metaworks/ace/build/src/mode-java.js" type="text/javascript" charset="utf-8"></script>
+	
+	
+		<script type="text/javascript">
+
+			var mainPage
+		 	
+			$(document).ready(function() {
+				mw3.setBase("/ProcessCodi_metaworks3")
+		 		mw3.setWhen(mw3.WHEN_EDIT);
+			});
+			
+
+			function locateObject(){
+
+				var genericUI = document.getElementById('genericUI').value == "on";
+				
+				
+				var object = {
+					__className: document.getElementById('className').value
+					
+				};
+				
+		 		mw3.locateObject(object, object.__className + (genericUI ? ":genericfaces/ObjectFace.ejs" : ""), '#object');//.call('load');
+
+
+			}
+		  
+		</script>
+	</head>
+	<body>
+	
+	
+	<center>
+		Class Name: <input id='className' value='org.uengine.codi.mw3.model.' size=80> <input type=button onclick='locateObject()' value='create'>
+		<input type=checkbox id='genericUI'>
+		<div id="object"></div>
+	</center>
+		
+		EJS TEMPLATE DEBUG INFO :
+			<div id='template_caption'> 
+			</div> 
+		DWR DEBUG INFO :
+			<div id='dwr_caption'> 
+			</div> 
+		
+		
+
+		
+	</body>
+</html>
