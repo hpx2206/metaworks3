@@ -4,17 +4,39 @@
 <!-- JBoss build file                                                       -->
 <!-- ======================================================================= -->
 
-<project name="ProcessCodi" default="apply" basedir=".">
+<project name="ProcessCodi_metaworks3" default="apply" basedir=".">
     <property environment="env"/>
+	<property name="was.home" value="${env.WAS_HOME}"/>
 	
+    <property name="uengine.lib" value="../uEngine/lib"/>
+    <property name="was.lib" value="${was.home}/webapps/uengine-web/WEB-INF/lib" />
+    <property name="sign.path" value="${was.home}/webapps/uengine-web/processmanager/signed" />
+    <property name="sign.keystore" value="${uengine.lib}/uenginestore" />
+	
+	<property name="was.local.lib" value="${basedir}/WebContent/uengine-web/WEB-INF/lib" />
+	<property name="sign.local.path" value="${basedir}/WebContent/uengine-web/processmanager/signed" />
 
 	<target name="apply">
 		
+		<copy todir="${was.home}/webapps/uengine-web/" overwrite="no">
+			<fileset dir="WebContent">
+	 			<include name="**/*.*"/>
+			</fileset>
+		</copy>
+		
+		<copy todir="${was.home}/webapps/uengine-web/WEB-INF/classes/" overwrite="yes">
+			<fileset dir="bin">
+	 			<include name="**/*.*"/>
+			</fileset>
+		</copy>
+		
 		<jar jarfile="./build/uengine_settings.jar">
-			<fileset dir="build/classes">
+			<fileset dir="bin">
 		  		<include name="**/*.*"/>
 			</fileset>
 		</jar>
+		
+		<delete file="${was.home}/webapps/uengine-web/WEB-INF/lib/servlet.jar"/>
 		
 		<antcall target="signjar">
 			<param name="file.name" value="uengine_settings.jar"/>
@@ -25,20 +47,127 @@
 		<antcall target="copylib"/>
 		-->
 		
+		
+		
 	</target>
 	
 	<target name="signjar">
 		<echo message="jarfile=${file.dir}/${file.name}"/>
 		<signjar
-			keystore="../uEngine/resources/uenginestore"
+			keystore="../uEngine/lib/uenginestore"
 			storepass="jinyoungj"
 			keypass="jinyoungj"
-			signedjar="WebContent/processmanager/signed${file.name}"
+			signedjar="${was.home}/webapps/uengine-web/processmanager/signed${file.name}"
 			jar="${file.dir}/${file.name}" 
 			alias="uenginetools"
 		/>
 	</target>
 	
+	
+	<target name="copylib">
+		<copy todir="${was.lib}" overwrite="no">
+			<fileset file="${uengine.lib}/*.jar">
+				<exclude name="classes12.jar"/>
+				<exclude name="cul4xdk.jar"/>
+				<exclude name="jakarta-oro-2.0.5.jar"/>
+				<exclude name="jsp-api.jar"/>
+				<exclude name="saaj-api-1.3.jar"/>
+				<exclude name="saaj-impl-1.3.jar"/>
+				<exclude name="servlet.jar"/>
+				<exclude name="util-java.jar"/>
+				<exclude name="wsif-j2c.jar"/>
+				<exclude name="wsif.jar"/>
+			</fileset>
+			<fileset dir="${uengine.lib}/Drools" />
+			<fileset dir="${uengine.lib}/spring" />
+			<fileset dir="${uengine.lib}/jboss_client" />
+			<fileset dir="${uengine.lib}/form" />
+			<fileset dir="${uengine.lib}/sms" />
+			<fileset dir="${uengine.lib}/kandula" >
+			</fileset>
+		</copy>
+	</target>
+	<target name="jnlp">
+		<!-- JNLP SignedJar -->
+		<signjar keystore="${sign.keystore}" storepass="jinyoungj" keypass="jinyoungj"
+			alias="uenginetools" signedjar="${sign.path}metaworks.jar" jar="${uengine.lib}/metaworks.jar" />
+		<signjar keystore="${sign.keystore}" storepass="jinyoungj" keypass="jinyoungj"
+			alias="uenginetools" signedjar="${sign.path}cul4xdk.jar" jar="${uengine.lib}/cul4xdk.jar" />
+		<signjar keystore="${sign.keystore}" storepass="jinyoungj" keypass="jinyoungj"
+			alias="uenginetools" signedjar="${sign.path}docsoapxdk.jar" jar="${uengine.lib}/docsoapxdk.jar" />
+		<signjar keystore="${sign.keystore}" storepass="jinyoungj" keypass="jinyoungj"
+			alias="uenginetools" signedjar="${sign.path}wsdl4j.jar" jar="${uengine.lib}/wsdl4j-1.6.1.jar" />
+		<signjar keystore="${sign.keystore}" storepass="jinyoungj" keypass="jinyoungj"
+			alias="uenginetools" signedjar="${sign.path}xmlapis.jar" jar="${uengine.lib}/xml-apis-1.3.04.jar" />
+		<signjar keystore="${sign.keystore}" storepass="jinyoungj" keypass="jinyoungj"
+			alias="uenginetools" signedjar="${sign.path}xerces_dom.jar" jar="${uengine.lib}/xercesImpl-2.8.1.jar" />
+		<signjar keystore="${sign.keystore}" storepass="jinyoungj" keypass="jinyoungj"
+			alias="uenginetools" signedjar="${sign.path}dom4j.jar" jar="${uengine.lib}/dom4j-1.6.1.jar" />
+		<signjar keystore="${sign.keystore}" storepass="jinyoungj" keypass="jinyoungj"
+			alias="uenginetools" signedjar="${sign.path}jdom.jar" jar="${uengine.lib}/jdom-1.1.jar" />
+		<signjar keystore="${sign.keystore}" storepass="jinyoungj" keypass="jinyoungj"
+			alias="uenginetools" signedjar="${sign.path}twister-engine.jar" jar="${uengine.lib}/twister-engine-0.1.jar" />
+		<signjar keystore="${sign.keystore}" storepass="jinyoungj" keypass="jinyoungj"
+			alias="uenginetools" signedjar="${sign.path}bpel.jar" jar="${uengine.lib}/bpel.jar" />
+		<signjar keystore="${sign.keystore}" storepass="jinyoungj" keypass="jinyoungj"
+			alias="uenginetools" signedjar="${sign.path}tinylaf.jar" jar="${uengine.lib}/tinylaf_.jar" />
+		<signjar keystore="${sign.keystore}" storepass="jinyoungj" keypass="jinyoungj"
+			alias="uenginetools" signedjar="${sign.path}axis.jar" jar="${uengine.lib}/axis.jar" />
+		<signjar keystore="${sign.keystore}" storepass="jinyoungj" keypass="jinyoungj"
+			alias="uenginetools" signedjar="${sign.path}bsf.jar" jar="${uengine.lib}/bsf.jar" />
+		<signjar keystore="${sign.keystore}" storepass="jinyoungj" keypass="jinyoungj"
+			alias="uenginetools" signedjar="${sign.path}jakarta-regexp.jar" jar="${uengine.lib}/jakarta-regexp-1.5.jar" />
+		<signjar keystore="${sign.keystore}" storepass="jinyoungj" keypass="jinyoungj"
+			alias="uenginetools" signedjar="${sign.path}jboss-client.jar" jar="${uengine.lib}/jboss_client/jboss-client.jar" />
+		<signjar keystore="${sign.keystore}" storepass="jinyoungj" keypass="jinyoungj"
+			alias="uenginetools" signedjar="${sign.path}jboss-common-client.jar" jar="${uengine.lib}/jboss_client/jboss-common-client.jar" />
+		<signjar keystore="${sign.keystore}" storepass="jinyoungj" keypass="jinyoungj"
+			alias="uenginetools" signedjar="${sign.path}js.jar" jar="${uengine.lib}/js.jar" />
+		<signjar keystore="${sign.keystore}" storepass="jinyoungj" keypass="jinyoungj"
+			alias="uenginetools" signedjar="${sign.path}jxl.jar" jar="${uengine.lib}/jxl.jar" />
+		<signjar keystore="${sign.keystore}" storepass="jinyoungj" keypass="jinyoungj"
+			alias="uenginetools" signedjar="${sign.path}jaxrpc.jar" jar="${uengine.lib}/jaxrpc.jar" />
+		<signjar keystore="${sign.keystore}" storepass="jinyoungj" keypass="jinyoungj"
+			alias="uenginetools" signedjar="${sign.path}jboss-j2ee.jar" jar="${uengine.lib}/jboss_client/jboss-j2ee.jar" />
+		<signjar keystore="${sign.keystore}" storepass="jinyoungj" keypass="jinyoungj"
+			alias="uenginetools" signedjar="${sign.path}jboss-transaction-client.jar" jar="${uengine.lib}/jboss_client/jboss-transaction-client.jar" />
+		<signjar keystore="${sign.keystore}" storepass="jinyoungj" keypass="jinyoungj"
+			alias="uenginetools" signedjar="${sign.path}jbossall-client.jar" jar="${uengine.lib}/jboss_client/jbossall-client.jar" />
+		<signjar keystore="${sign.keystore}" storepass="jinyoungj" keypass="jinyoungj"
+			alias="uenginetools" signedjar="${sign.path}jbossmq-client.jar" jar="${uengine.lib}/jboss_client/jbossmq-client.jar" />
+		<signjar keystore="${sign.keystore}" storepass="jinyoungj" keypass="jinyoungj"
+			alias="uenginetools" signedjar="${sign.path}commons-httpclient.jar" jar="${uengine.lib}/commons-httpclient-3.1.jar" />
+		<signjar keystore="${sign.keystore}" storepass="jinyoungj" keypass="jinyoungj"
+			alias="uenginetools" signedjar="${sign.path}commons-logging.jar" jar="${uengine.lib}/commons-logging.jar" />
+		<signjar keystore="${sign.keystore}" storepass="jinyoungj" keypass="jinyoungj"
+			alias="uenginetools" signedjar="${sign.path}commons-codec.jar" jar="${uengine.lib}/commons-codec-1.4.jar" />
+		<signjar keystore="${sign.keystore}" storepass="jinyoungj" keypass="jinyoungj"
+			alias="uenginetools" signedjar="${sign.path}commons-lang.jar" jar="${uengine.lib}/commons-lang.jar" />
+		<signjar keystore="${sign.keystore}" storepass="jinyoungj" keypass="jinyoungj"
+			alias="uenginetools" signedjar="${sign.path}xpp3.jar" jar="${uengine.lib}/xpp3_min-1.1.4c.jar" />
+		<signjar keystore="${sign.keystore}" storepass="jinyoungj" keypass="jinyoungj"
+			alias="uenginetools" signedjar="${sign.path}xstream.jar" jar="${uengine.lib}/xstream-1.3.1.jar" />
+		<signjar keystore="${sign.keystore}" storepass="jinyoungj" keypass="jinyoungj"
+			alias="uenginetools" signedjar="${sign.path}drools-core.jar" jar="${uengine.lib}/Drools/drools-core.jar" />
+		<signjar keystore="${sign.keystore}" storepass="jinyoungj" keypass="jinyoungj"
+			alias="uenginetools" signedjar="${sign.path}servlet.jar" jar="${uengine.lib}/servlet.jar" />
+		<signjar keystore="${sign.keystore}" storepass="jinyoungj" keypass="jinyoungj"
+			alias="uenginetools" signedjar="${sign.path}xml-apis-ext.jar" jar="${uengine.lib}/process_designer_ui/xml-apis-ext.jar" />
+		<signjar keystore="${sign.keystore}" storepass="jinyoungj" keypass="jinyoungj"
+			alias="uenginetools" signedjar="${sign.path}batik-all.jar" jar="${uengine.lib}/process_designer_ui/batik-all.jar" />
+		<signjar keystore="${sign.keystore}" storepass="jinyoungj" keypass="jinyoungj"
+			alias="uenginetools" signedjar="${sign.path}flamingo.jar" jar="${uengine.lib}/process_designer_ui/flamingo.jar" />
+		<signjar keystore="${sign.keystore}" storepass="jinyoungj" keypass="jinyoungj"
+			alias="uenginetools" signedjar="${sign.path}substance.jar" jar="${uengine.lib}/process_designer_ui/substance.jar" />
+		<signjar keystore="${sign.keystore}" storepass="jinyoungj" keypass="jinyoungj"
+			alias="uenginetools" signedjar="${sign.path}substance-flamingo.jar" jar="${uengine.lib}/process_designer_ui/substance-flamingo.jar" />
+		<signjar keystore="${sign.keystore}" storepass="jinyoungj" keypass="jinyoungj"
+			alias="uenginetools" signedjar="${sign.path}swingx.jar" jar="${uengine.lib}/process_designer_ui/swingx.jar" />	
+		<signjar keystore="${sign.keystore}" storepass="jinyoungj" keypass="jinyoungj"
+			alias="uenginetools" signedjar="${sign.path}janino.jar" jar="${uengine.lib}/Drools/janino-2.4.3.jar" />
+		<signjar keystore="${sign.keystore}" storepass="jinyoungj" keypass="jinyoungj"
+					alias="uenginetools" signedjar="${sign.path}jl.jar" jar="${uengine.lib}/jl1.0.1.jar" />	
+	</target>
 </project>
 
 

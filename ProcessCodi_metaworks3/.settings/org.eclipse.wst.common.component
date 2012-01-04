@@ -3,7 +3,7 @@
     <wb-module deploy-name="ProcessCodi_metaworks3">
         <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
-        <property name="context-root" value="ProcessCodi_metaworks3"/>
+        <property name="context-root" value="uengine-web"/>
         <property name="java-output-path" value="/ProcessCodi_metaworks3/build/classes"/>
     </wb-module>
 </project-modules>

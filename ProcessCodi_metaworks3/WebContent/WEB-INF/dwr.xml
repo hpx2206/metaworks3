@@ -10,10 +10,11 @@
 
   <allow>
   
-  
+  	<!-- 
     <create creator="new" javascript="JavascriptChat" scope="page">
       <param name="class" value="com.okmindmap.collaboration.JavascriptChat"/>
     </create>
+    -->
 
     <create creator="spring" javascript="Metaworks" scope="page">
       <param name="beanName" value="MetaworksRemoteService"/>
