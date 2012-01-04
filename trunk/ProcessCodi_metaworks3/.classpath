@@ -32,5 +32,6 @@
 	<classpathentry kind="lib" path="/ProcessCodi/WebContent/uengine-web/WEB-INF/lib/org.springframework.web.portlet-3.0.3.RELEASE.jar"/>
 	<classpathentry kind="lib" path="/ProcessCodi/WebContent/uengine-web/WEB-INF/lib/org.springframework.web.servlet-3.0.3.RELEASE.jar"/>
 	<classpathentry kind="lib" path="/ProcessCodi/WebContent/uengine-web/WEB-INF/lib/org.springframework.web.struts-3.0.3.RELEASE.jar"/>
-	<classpathentry kind="output" path="build/classes"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/uEngine"/>
+	<classpathentry kind="output" path="bin"/>
 </classpath>
