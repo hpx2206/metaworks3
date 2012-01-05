@@ -1,25 +1,18 @@
 package org.metaworks.dwr;
 
 import java.io.IOException;
-import java.util.Hashtable;
 
 import javax.servlet.ServletConfig;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.directwebremoting.ServerContextFactory;
-import org.directwebremoting.WebContextFactory;
 import org.directwebremoting.extend.Replies;
 import org.directwebremoting.extend.Reply;
 import org.directwebremoting.servlet.DwrServlet;
-import org.metaworks.WebObjectType;
 import org.metaworks.dao.ConnectionFactory;
-import org.metaworks.dao.DataSourceConnectionFactory;
 import org.metaworks.dao.JDBCConnectionFactory;
 import org.metaworks.dao.TransactionContext;
-import org.metaworks.example.Posting;
 
 public class TransactionalDwrServlet extends DwrServlet{
 
