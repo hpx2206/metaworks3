@@ -15,14 +15,17 @@ import org.metaworks.annotation.ServiceMethod;
 )
 public class FeedbackPanel {
 
-	IFeedback feedback;
-		public IFeedback getFeedback() {
-			return feedback;
-		}
-		public void setFeedback(IFeedback feedback) {
-			this.feedback = feedback;
-		}
+	FeedbackList feedbackList;
 		
+		public FeedbackList getFeedbackList() {
+			return feedbackList;
+		}
+		public void setFeedbackList(FeedbackList feedbackList) {
+			this.feedbackList = feedbackList;
+		}
+
+
+
 	IFeedback newFeedback;
 		public IFeedback getNewFeedback() {
 			return newFeedback;

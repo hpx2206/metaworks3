@@ -1,4 +1,4 @@
-package org.metaworks.example;
+package org.metaworks.example.facebook;
 
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;

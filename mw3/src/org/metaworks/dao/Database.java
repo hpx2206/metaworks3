@@ -12,8 +12,6 @@ import org.metaworks.ObjectType;
 import org.metaworks.Type;
 import org.metaworks.WebObjectType;
 import org.metaworks.dwr.MetaworksRemoteService;
-import org.metaworks.example.IPosting;
-import org.metaworks.example.Posting;
 
 public class Database<T extends IDAO> implements IDAO{
 	

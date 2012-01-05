@@ -112,7 +112,7 @@ public class Feedback extends Database<IFeedback> implements IFeedback {
 
 		   //TODO: filter other topic's postings;
 		   Util utilAll = new Util(sessions);
-		   utilAll.addFunctionCall("mw3.getAutowiredObject('org.metaworks.website.FeedbackPanel').refresh");
+		   utilAll.addFunctionCall("mw3.getAutowiredObject('org.metaworks.website.FeedbackList').refresh");
 	
 		
 		return panel;

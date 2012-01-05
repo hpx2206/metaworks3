@@ -1,4 +1,4 @@
-package org.metaworks.example;
+package org.metaworks.example.facebook;
 
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Id;
@@ -30,7 +30,7 @@ public interface IPosting extends IDAO{
 	public void save() throws Exception;
 
 	@ServiceMethod(needToConfirm=true)
-	@Face(displayName = "»èÁ¦")
+	@Face(displayName = "ï¿½ï¿½ï¿½ï¿½")
 	public void delete() throws Exception;
 
 	@ServiceMethod(clientSide=true)

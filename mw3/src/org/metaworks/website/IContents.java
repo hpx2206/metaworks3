@@ -14,6 +14,7 @@ import org.metaworks.annotation.ORMapping;
 import org.metaworks.annotation.Range;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.TypeSelector;
+import org.metaworks.command.Move;
 import org.metaworks.dao.IDAO;
 import org.metaworks.example.ide.SourceCode;
 
