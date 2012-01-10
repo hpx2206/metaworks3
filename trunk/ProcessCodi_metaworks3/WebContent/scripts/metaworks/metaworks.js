@@ -80,6 +80,7 @@
 					}
 					
 				}catch(e){
+					//TODO :  error reporting required
 					e=e;
 				}		
 				
@@ -598,6 +599,7 @@
 				
     			this._armObject(objectId, value); //let the methods and some special fields available
 				this.objects[objectId] = value; //change the cached value
+				this.faceHelpers[objectId] = null;
 				
 				var objKey = this._createObjectKey(value);
 				if(objKey!=null){
@@ -629,6 +631,7 @@
 				$(divId).remove();
 				$(infoDivId).remove();
 				this.objects[objectId] = null;
+				this.faceHelpers[objectId] = null;
 				this.beanExpressions[objectId] = null;
 				
 				//TODO: the objectId_KeyMapping also need to clear with back mapping or key generation with value;
@@ -651,6 +654,7 @@
 				for(var propName in beanPaths){
 					var beanPath = beanPaths[propName];
 					this.objects[beanPath.valueObjectId] = null;
+					this.faceHelpers[beanPath.valueObjectId] = null;
 					
 					this.newBeanProperty(beanPath.valueObjectId);
 				}
@@ -814,10 +818,13 @@
 					var infoDivId = "#"+this._getInfoDivId(objId);
 					
 					if(serviceMethodContext.target!="none"){
+						
 						if(this.getFaceHelper(objId) && this.getFaceHelper(objId).startLoading){
 							this.getFaceHelper(objId).startLoading();
-						}else
-							$(infoDivId).html("<img src='metaworks/images/circleloading.gif'>");
+
+						}else{
+							$(infoDivId).html("<img src='metaworks/images/circleloading.gif' align=middle> LOADING ...");
+						}
 					}
 
     				//alert("call.argument=" + dwr.util.toDescriptiveString(object, 5))
@@ -959,7 +966,7 @@
 
 				        		},
 
-				        		async: false,
+				        		async: serviceMethodContext.target!="none",
 				        		
 				        		errorHandler:function(errorString, exception) {
 				        			
