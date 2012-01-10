@@ -12,6 +12,8 @@ import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Range;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.example.ide.SourceCode;
+import org.metaworks.website.MetaworksFile;
 
 @Face(
 	ejsPathMappingByContext=
@@ -49,8 +51,8 @@ public class FormField implements Cloneable, ContextAware{
 						"java.lang.Long", 
 						"java.lang.Double", 
 						"java.util.Date", 
-						"org.metaworks.FileContext", 
-						"org.metaworks.website.SourceCode"
+						"org.metaworks.website.MetaworksFile", 
+						"org.metaworks.example.ide.SourceCode"
 				}
 		)
 		public String getType() {
@@ -87,6 +89,24 @@ public class FormField implements Cloneable, ContextAware{
 			this.valueDate = valueDate;
 		}
 		
+	SourceCode valueSourceCode;
+	@Hidden	
+		public SourceCode getValueSourceCode() {
+			return valueSourceCode;
+		}
+		public void setValueSourceCode(SourceCode valueSourceCode) {
+			this.valueSourceCode = valueSourceCode;
+		}
+		
+	MetaworksFile valueFile;
+	@Hidden	
+		public MetaworksFile getValueFile() {
+			return valueFile;
+		}
+		public void setValueFile(MetaworksFile valueFile) {
+			this.valueFile = valueFile;
+		}
+				
 	@ServiceMethod(when=MetaworksContext.WHEN_EDIT, where="newEntry", callByContent=true)
 	public FormDefinition add() throws Exception{
 

@@ -13,6 +13,14 @@
 
 		%><%=fields.valueDate.here({when: context})%><%	
 
+	}else if("org.metaworks.example.ide.SourceCode"==(value.type)){
+
+		%><%=fields.valueSourceCode.here({when: context})%><%	
+
+	}else if("org.metaworks.website.MetaworksFile"==(value.type)){
+
+		%><%=fields.valueFile.here({when: context})%><%	
+
 	}
 
 %>
