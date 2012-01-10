@@ -1,5 +1,12 @@
-<% if(value!=null){%>
-  [<%=(value ? "Yes" : "No") %>]
-<%} else {%>
+<% if(value!=null){
+	if(mw3.when == mw3.WHEN_EDIT) {%>
+		<input type="radio" name="<%=objectId%>" value=true <%=(value ? "checked" : "") %> > YES
+		<input type="radio" name="<%=objectId%>" value=false <%=(!value ? "checked" : "") %> > NO
+	<%
+	} else {%>
+ 		 [<%=(value ? "Yes" : "No") %>]
+	<%
+	}
+} else {%>
   NULL
 <%}%> 
