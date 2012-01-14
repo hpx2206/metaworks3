@@ -24,15 +24,43 @@ import org.uengine.processmanager.ProcessManagerRemote;
 public class ProcessDefinition extends Database<IProcessDefinition> implements IProcessDefinition{
 
 	Long defId;
+		public Long getDefId() {
+			return defId;
+		}
+		public void setDefId(Long defId) {
+			this.defId = defId;
+		}
 	
 	String description;
+		public String getDescription() {
+			return description;
+		}
+		
+		public void setDescription(String description) {
+			this.description = description;
+		}
+		
 
 	boolean isFolder;
+		public boolean getIsFolder() {
+			return isFolder;
+		}
+		public void setIsFolder(boolean isFolder) {
+			this.isFolder = isFolder;
+		}
 	
 	boolean isAdhoc;
 
 
+
 	Long parentFolder;
+		public Long getParentFolder() {
+			return parentFolder;
+		}
+	
+		public void setParentFolder(Long parentFolder) {
+			this.parentFolder = parentFolder;
+		}
 
 	int prodVer;
 	
@@ -56,31 +84,9 @@ public class ProcessDefinition extends Database<IProcessDefinition> implements I
 	
 	
 
-	public Long getDefId() {
-		return defId;
-	}
-
-	public void setDefId(Long defId) {
-		this.defId = defId;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
 
 
 
-	public Long getParentFolder() {
-		return parentFolder;
-	}
-
-	public void setParentFolder(Long parentFolder) {
-		this.parentFolder = parentFolder;
-	}
 
 	public int getProdVer() {
 		return prodVer;
@@ -140,14 +146,6 @@ public class ProcessDefinition extends Database<IProcessDefinition> implements I
 		this.comCode = comCode;
 	}
 	
-	public boolean getIsFolder() {
-		return isFolder;
-	}
-
-	public void setIsFolder(boolean isFolder) {
-		this.isFolder = isFolder;
-	}
-
 	public boolean getIsAdhoc() {
 		return isAdhoc;
 	}
@@ -220,7 +218,42 @@ public class ProcessDefinition extends Database<IProcessDefinition> implements I
 
 		return new Object[]{instanceView, instanceList};
 	}
+	
+	@Override
+	public NewChildContentPanel newChild() throws Exception {
+		NewChildContentPanel newChild = new NewChildContentPanel();
+		newChild.setParentFolder(getDefId());
+		
+		return newChild;
+	}
+	
 
+	@Override
+	public ContentPanel design() throws Exception {
+		String objType = databaseMe().getObjType();
+		
+		if("form".equals(objType)){
+			FormDesignerContentPanel formDesigner = new FormDesignerContentPanel();
+			formDesigner.codiPmSVC = codiPmSVC; //TODO: later should be removed
+			formDesigner.load(databaseMe().getDefId().toString());
+
+			codiPmSVC.remove();
+
+			return formDesigner;
+		}else if("process".equals(objType)){
+			ProcessDesignerContentPanel processDesigner = new ProcessDesignerContentPanel();
+			processDesigner.load(databaseMe().getDefId().toString());
+			
+			return processDesigner;
+			
+		}
+		
+		
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
 	
 	@AutowiredFromClient
 	public Session session;

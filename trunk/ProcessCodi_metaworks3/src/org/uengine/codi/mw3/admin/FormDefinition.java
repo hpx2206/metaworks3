@@ -2,6 +2,7 @@
 package org.uengine.codi.mw3.admin;
 
 import java.io.FileOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import org.apache.commons.httpclient.methods.GetMethod;
@@ -97,6 +98,7 @@ public class FormDefinition implements ContextAware{
 		processManager.applyChanges();
 	}
 
+
 	public void clearNewFormField() {
 		newFormField = new FormField();
 		newFormField.metaworksContext = new MetaworksContext();
@@ -115,6 +117,6 @@ public class FormDefinition implements ContextAware{
 		} 
 		
 	@Autowired
-	transient ProcessManagerRemote processManager;
+	protected ProcessManagerRemote processManager;
 	
 }
