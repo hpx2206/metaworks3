@@ -1,5 +1,7 @@
 package org.uengine.codi.mw3.model;
 
+import javax.persistence.Table;
+
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Children;
 import org.metaworks.annotation.Hidden;
@@ -9,6 +11,7 @@ import org.metaworks.annotation.NonSavable;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.IDAO;
 
+@Table(name="bpm_procdef")
 public interface IProcessDefinition extends IDAO{
 
 	@ServiceMethod(callByContent=true)
@@ -16,6 +19,12 @@ public interface IProcessDefinition extends IDAO{
 	
 	@ServiceMethod
 	public Object[] initiate() throws Exception;
+	
+	@ServiceMethod
+	public ContentPanel design() throws Exception;
+	
+	@ServiceMethod
+	public NewChildContentPanel newChild() throws Exception;
 	
 	public IProcessDefinition findAll() throws Exception;
 

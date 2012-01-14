@@ -97,7 +97,7 @@ public class Main {
 	}
 	
 	@ServiceMethod
-	public Admin admin(){
+	public Admin admin() throws Exception{
 		return new Admin(login);
 	}
 }
