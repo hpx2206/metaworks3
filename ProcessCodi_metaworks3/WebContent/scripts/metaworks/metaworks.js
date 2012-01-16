@@ -449,11 +449,11 @@
 						script.onload = afterLoadScript;
 						
 						script.onreadystatechange = function() { //for IE
-							if (this.readyState == 'complete') {
+							if (this.readyState == 'complete' || this.readyState == 'loaded') {
 								
 								afterLoadScript();
 							}
-						}
+						};
 					}
 
 					return script;
