@@ -7,11 +7,21 @@ var Window = function(objectId, className){
 	
 	this.width = $("#" + this.divId).width();
 	this.height = $("#" + this.divId).height();
+
 	
+	
+//	$("#" + this.divId).css("height","100%");
+
+	var parent = $("#" + this.divId).parent();
+	
+	$("#" + this.divId).parent().append($("#" + this.divId).html());
+	
+	$("#" + this.divId).parent().find("#" + this.divId).remove();
 
 }
 
 Window.prototype.maximize = function(){
+	
 	
 	$("#" + this.divId).toggle();
 	$("#" + this.smallDivId).toggle();
@@ -23,7 +33,7 @@ Window.prototype.maximize = function(){
 //		oriNaviHeight = $('.inner-north').height();
 //		oriContactHeight = $('.inner-center').height() + 183;
 //	}
-//	innerLayout.toggle("north");	
+ 	innerLayout.toggle("north");	
 //	$("#sm01").toggle();
 //	sectionNaviDisable = 1;
 //	
@@ -33,12 +43,18 @@ Window.prototype.maximize = function(){
 }
 
 Window.prototype.minimize = function(){
+	
+	alert(this.layoutPanelName);
+	
 	$("#" + this.smallDivId).appendTo("#smline");
 	$("#" + this.smallDivId).toggle();
 //	$("#" + this.divId).width(10);
 //	outerLayout = $('#container').resizeAll(); 
-	$("#" + this.divId).toggle();
+//	$("#" + this.divId).toggle();
 	
+	innerLayout.toggle("north");
+	
+	innerLayout.toggle("center");
 	
 //	$("#" + this.divId).closest("div").
 	
