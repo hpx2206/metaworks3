@@ -5,7 +5,9 @@ import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 import org.uengine.codi.acl.MM_ACLManager;
 
-@Face(ejsPath="genericfaces/Window.ejs", displayName="Content")
+@Face(ejsPath="genericfaces/Window.ejs",
+      displayName="Content",
+      options={"layoutPanelName"}, values={"worklist"})
 public class ContentPanel {
 
 	
