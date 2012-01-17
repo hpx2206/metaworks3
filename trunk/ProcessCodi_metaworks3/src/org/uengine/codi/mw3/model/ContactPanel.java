@@ -2,7 +2,9 @@ package org.uengine.codi.mw3.model;
 
 import org.metaworks.annotation.Face;
 
-@Face(ejsPath="genericfaces/Window.ejs", displayName="Contact", options={"hideLabels"}, values={"true"})
+@Face(ejsPath="genericfaces/Window.ejs",
+	  displayName="Contact",
+	  options={"hideLabels", "layoutPanelName"}, values={"true", "contact"})
 public class ContactPanel {
 	
 	public ContactPanel(){}

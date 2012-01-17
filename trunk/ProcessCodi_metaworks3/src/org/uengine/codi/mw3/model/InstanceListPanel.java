@@ -3,7 +3,8 @@ package org.uengine.codi.mw3.model;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 
-@Face(ejsPath="genericfaces/Window.ejs", options={"hideLabels"}, values={"true"})
+@Face(ejsPath="genericfaces/Window.ejs",
+      options={"hideLabels", "layoutPanelName"}, values={"true", "wih"})
 
 public class InstanceListPanel {
 	
