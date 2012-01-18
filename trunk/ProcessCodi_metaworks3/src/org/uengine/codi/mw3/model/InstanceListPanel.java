@@ -4,7 +4,7 @@ import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 
 @Face(ejsPath="genericfaces/Window.ejs",
-      options={"hideLabels", "layoutPanelName"}, values={"true", "wih"})
+      options={"hideLabels", "layoutPanelName"}, values={"true", "worklist"})
 
 public class InstanceListPanel {
 	
