@@ -3,6 +3,10 @@ mw3.importScript("scripts/jquery/jquery-ui-latest.js");
 mw3.importScript("scripts/jquery/jquery.layout-latest.js");
 
 var outerLayout, middleLayout, innerLayout, inner2Layout; 
+var navigationEnable = 1;
+var contactEnable = 1;
+var worklistEnable = 1;
+var oriContactHeight = 0;
 
 $(document).ready(function () { 
 	

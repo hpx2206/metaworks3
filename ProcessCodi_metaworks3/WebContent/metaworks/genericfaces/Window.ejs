@@ -27,22 +27,42 @@ if (value != null){
 	}
 	
 	var layoutPanelName = objectMetadata.faceOptions['layoutPanelName'];
-	var className = "";
+	var outer = "";
+	var inner = "";
 	
-	if(layoutPanelName == "navigation")
-		className = "inner-north";	
-	else if(layoutPanelName == "contact")
-		className = "inner-center";
-	else if(layoutPanelName == "worklist")
-		className = "middle-west";
-	else if(layoutPanelName == "wih")
-		className = "middle-center";
+	if(layoutPanelName == "navigation"){
+		
+		outer = "innerLayout";	
+		inner = "north";
+	}else if(layoutPanelName == "contact"){
+		outer = "innerLayout";
+		inner = "center";
+	}else if(layoutPanelName == "worklist"){
+		outer = "middleLayout";
+		inner = "west";
+	}else if(layoutPanelName == "wih"){
+		outer = "middleLayout";
+		inner = "center";
+	}
 			
 %>
 
 
+			<div id="sm_<%=objectId%>" style="margin-top:12px; padding:0px;  display:none; float:left; width:160px; position:relative;">
+			    <div class="boxtopleft"><span class="boxtopright"><%=objectMetadata.displayName%></span></div>
+			    <div class="boxmiddleright">
+			        <div class="boxmiddleleft">
+			            <div class="togglebtnmax" onclick="mw3.getFaceHelper('<%=objectId%>').resume('<%=outer%>','<%=inner%>')"></div>
+			            <!--<div id="slidedown" class="slidedown" onclick="outerLayout.allowOverflow('north') , con03();"></div>  -->
+			            <div id="slideup<%=objectId%>" class="slideup" onclick="outerLayout.resetOverflow('north'), con031();"></div>
+			            <div id="con<%=objectId%>" class="topcontentcontainer">
+			            </div>
+			        </div>
+			    </div>
+			    
+			    <div class="miniboxbottomleft"><span class="miniboxbottomright"></span></div>
+		    </div>
 		
-		<div class="<%=className%>" style="padding-bottom:35px;">
             <div class="boxtopleft">
             	<span class="boxtopright">
             		<div id="navigationTitle"><%=objectName%></div>
@@ -51,7 +71,7 @@ if (value != null){
             </div>
             <div class="boxmiddleright">
                 <div class="boxmiddleleft">
-                    <div class="togglebtnmini" onclick="mw3.getFaceHelper('<%=objectId%>').minimize()"></div>
+                    <div class="togglebtnmini" onclick="mw3.getFaceHelper('<%=objectId%>').minimize('<%=outer%>','<%=inner%>')"></div>
                     <div class="worklistcontentcontainer" style="overflow-y:auto">                        
                             
 						<table cellpadding="10" cellspacing="0" width="100%" id="navigator">
@@ -116,7 +136,6 @@ if (value != null){
                 </div>
             </div>
             <div class="boxbottomleft"><span class="boxbottomright"></span></div>
-		</div>
   <%
      }
    %>
