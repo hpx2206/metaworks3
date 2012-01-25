@@ -14,12 +14,12 @@ var bodyWidth ;
 function popUp(e,w,h){
 	
 		   // alert("e.pageX: " + e.pageX + ", e.pageY: " + e.pageY);
-			
+		   //alert(w+","+h);
 		    popLayerWidth = w;
 		    popLayerHeight = h;
 		    
-		    $('#adduser-con').show();
-		    $('#adduser-con').css({top:e.pageY,left:e.pageX,width:popLayerWidth,height:popLayerHeight});
+		    $('#adduser-con').show("fast");
+		    $('#adduser-con').css({top:e.pageY,left:e.pageX,width:500,height:600});
 		    $('#adduser-con').removeClass('clue-left-rounded');
 		    $('#adduser-con').addClass('clue-right-rounded');
 		    $('.cluetip-arrows').css({top:10});
@@ -34,12 +34,35 @@ function popUp(e,w,h){
 		   	 	$('#adduser-con').css({top:e.pageY - popLayerHeight});
 		   	 	$('.cluetip-arrows').css({top:popLayerHeight-40});
 		    };
-		    
-		   
-		
 
 };
 
+function check_position(obj, e) {	
+	
+	if( $(obj).css('display') == 'block' )
+	{
+		var l_position = $(obj).offset();
+		l_position.right = parseInt(l_position.left) + ($(obj).width());
+		l_position.bottom = parseInt(l_position.top) + parseInt($(obj).height());
+
+
+		if( ( l_position.left <= e.pageX && e.pageX <= l_position.right )
+			&& ( l_position.top <= e.pageY && e.pageY <= l_position.bottom ) ){
+			//alert( 'popup in click' );
+		}else{
+			//alert( 'popup out click' );
+			$(obj).hide("fast");
+		}
+	}		
+}
+
+$(document).mousedown(function(e){		
+   
+    $('#adduser-con').each(function(){
+    	check_position(this, e);
+	});   
+    
+});
 
 $(document).ready(function () { 
 	bodyHeight = $('#container').height();
