@@ -23,18 +23,19 @@ public class ClassDesignerContentPanel extends ContentPanel{
 			this.classDefinition = classDefinition;
 		}
 
-	public void load() throws Exception{
+	public void newClass(String parentFoler) throws Exception{
 		classDefinition = new ClassDefinition();
+		classDefinition.setParentFolder(parentFoler);
 	}
 
 	public void load(String defId) throws Exception{
-		String defVerId = codiPmSVC.getProcessDefinitionProductionVersion(defId);
-		String resource = codiPmSVC.getResource(defVerId);
+		String defVerId = processManager.getProcessDefinitionProductionVersion(defId);
+		String resource = processManager.getResource(defVerId);
 		classDefinition = (ClassDefinition) GlobalContext.deserialize(resource, ClassDefinition.class);
 	}
 
 	
 	@Autowired
-	ProcessManagerRemote codiPmSVC;
+	ProcessManagerRemote processManager;
 
 }

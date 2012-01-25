@@ -56,7 +56,7 @@ public class ClassMethod implements Cloneable, ContextAware{
 		classDefinition.classMethods.add(clonedOne); 
 
 		//clear the entries for newFormField	//TODO: lesson 6 (context clearing)
-		classDefinition.clearNewFormField();
+		classDefinition.init();
 		//
 		
 		return classDefinition;

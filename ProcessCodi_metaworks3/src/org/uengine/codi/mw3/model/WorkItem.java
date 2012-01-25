@@ -137,7 +137,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			String metaworksHandler = 
 				tool.substring(4);
 			
-			workItemHandler = (WorkItemHandler) Class.forName(metaworksHandler).newInstance();
+			workItemHandler = (WorkItemHandler) Thread.currentThread().getContextClassLoader().loadClass(metaworksHandler).newInstance();
 		}else{
 			workItemHandler = new WorkItemHandler();
 		}

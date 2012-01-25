@@ -241,10 +241,16 @@ public class ProcessDefinition extends Database<IProcessDefinition> implements I
 
 			return formDesigner;
 		}else if("process".equals(objType)){
-			ProcessDesignerContentPanel processDesigner = new ProcessDesignerContentPanel();
+			ProcessDesignerContentPanel processDesigner = processDesignerContentPanel;
 			processDesigner.load(databaseMe().getDefId().toString());
 			
 			return processDesigner;
+			
+		}else if("class".equals(objType)){
+			ClassDesignerContentPanel classDesigner = classDesignerContentPanel;//new ClassDesignerContentPanel();
+			classDesigner.load(databaseMe().getDefId().toString());
+			
+			return classDesigner;
 			
 		}
 		
@@ -252,6 +258,13 @@ public class ProcessDefinition extends Database<IProcessDefinition> implements I
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Autowired
+	ClassDesignerContentPanel classDesignerContentPanel;
+	
+	@Autowired
+	ProcessDesignerContentPanel processDesignerContentPanel;
+	
 
 	
 	

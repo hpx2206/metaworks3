@@ -147,7 +147,7 @@ public class WorkItemHandler implements ContextAware{
 			ParameterValue pv = parameters[i];
 
 			String variableTypeName = parameters[i].getVariableType();
-			Class variableType = Class.forName(variableTypeName);
+			Class variableType = Thread.currentThread().getContextClassLoader().loadClass(variableTypeName);
 			Serializable processVariableValue = null;
 		
 			if(variableType == String.class){
