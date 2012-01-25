@@ -11,33 +11,35 @@ var oriContactHeight = 0;
 var bodyHeight;
 var bodyWidth ;
 
-
-
-$(document).bind('mousedown',function(e){  
-  //  alert("e.pageX: " + e.pageX + ", e.pageY: " + e.pageY);
+function popUp(e,w,h){
 	
-    popLayerWidth = 400;
-    popLayerHeight = 300;
-    
-    $('#adduser-con').show();
-    $('#adduser-con').css({top:e.pageY,left:e.pageX,width:popLayerWidth,height:popLayerHeight});
-    $('#adduser-con').removeClass('clue-left-rounded');
-    $('#adduser-con').addClass('clue-right-rounded');
-    $('.cluetip-arrows').css({top:10});
+		   // alert("e.pageX: " + e.pageX + ", e.pageY: " + e.pageY);
+			
+		    popLayerWidth = w;
+		    popLayerHeight = h;
+		    
+		    $('#adduser-con').show();
+		    $('#adduser-con').css({top:e.pageY,left:e.pageX,width:popLayerWidth,height:popLayerHeight});
+		    $('#adduser-con').removeClass('clue-left-rounded');
+		    $('#adduser-con').addClass('clue-right-rounded');
+		    $('.cluetip-arrows').css({top:10});
 
-    if(popLayerWidth + e.pageX > bodyWidth){
-    	 $('#adduser-con').css({left:e.pageX - popLayerWidth});
-    	 $('#adduser-con').removeClass('clue-right-rounded');
-    	 $('#adduser-con').addClass('clue-left-rounded');
-    };
-    
-    if(popLayerHeight + e.pageY > bodyHeight){    	
-   	 	$('#adduser-con').css({top:e.pageY - popLayerHeight});
-   	 	$('.cluetip-arrows').css({top:popLayerHeight-40});
-    };
-    
-   
-}); 
+		    if(popLayerWidth + e.pageX > bodyWidth){
+		    	 $('#adduser-con').css({left:e.pageX - popLayerWidth});
+		    	 $('#adduser-con').removeClass('clue-right-rounded');
+		    	 $('#adduser-con').addClass('clue-left-rounded');
+		    };
+		    
+		    if(popLayerHeight + e.pageY > bodyHeight){    	
+		   	 	$('#adduser-con').css({top:e.pageY - popLayerHeight});
+		   	 	$('.cluetip-arrows').css({top:popLayerHeight-40});
+		    };
+		    
+		   
+		
+
+};
+
 
 $(document).ready(function () { 
 	bodyHeight = $('#container').height();
