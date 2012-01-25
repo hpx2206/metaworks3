@@ -31,11 +31,20 @@ public class MetaworksRemoteService {
 	
 //    public static ThreadLocal<String> callingObjectTypeName = new ThreadLocal<String>();
 
-	
 	static Hashtable<String, WebObjectType> metadataStorage = new Hashtable<String, WebObjectType>();
 	
+	protected static MetaworksRemoteService instance;
+		protected static void setInstance(MetaworksRemoteService instance) {
+			MetaworksRemoteService.instance = instance;
+		}
+		public static MetaworksRemoteService getInstance() {
+			if(instance==null)
+				instance = new MetaworksRemoteService();
+			
+			return instance;
+		}
 
-	static public WebObjectType getMetaworksType(String className) throws Exception {
+	public WebObjectType getMetaworksType(String className) throws Exception {
 		try{
 			
 			//TODO: this is debug mode option
@@ -44,8 +53,9 @@ public class MetaworksRemoteService {
 			
 			
 		//	if(className.length() == 0) return null;
+			WebObjectType objType = new WebObjectType(Thread.currentThread().getContextClassLoader().loadClass(className));
+
 			
-			WebObjectType objType = new WebObjectType(Class.forName(className));
 			
 			metadataStorage.put(className, objType);
 
@@ -67,7 +77,7 @@ public class MetaworksRemoteService {
     	//getBeanFactory().getBean(arg0)
     	
 //		callingObjectTypeName.set(objectTypeName);
-		Class serviceClass = Class.forName(objectTypeName);
+		Class serviceClass = Thread.currentThread().getContextClassLoader().loadClass(objectTypeName);
 		
 		//if the requested value object is IDAO which need to be converted to implemented one so that it can be invoked by its methods
 		//Another case this required is when Spring is used since the spring base object should be auto-wiring operation
@@ -95,7 +105,7 @@ public class MetaworksRemoteService {
 			
 			if(serviceClass.isInterface()){
 				serviceClassNameOnly = serviceClassNameOnly.substring(1, serviceClassNameOnly.length());
-				serviceClass = Class.forName(serviceClass.getPackage().getName() + "." + serviceClassNameOnly);
+				serviceClass = Thread.currentThread().getContextClassLoader().loadClass(serviceClass.getPackage().getName() + "." + serviceClassNameOnly);
 			}
 			
 			if(springAppContext!=null)
@@ -157,7 +167,7 @@ public class MetaworksRemoteService {
 		return object;
 	}
 
-    private WebApplicationContext getBeanFactory()
+    public WebApplicationContext getBeanFactory()
     {
         try {
 			ServletContext srvCtx = ServerContextFactory.get().getServletContext();

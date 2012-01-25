@@ -26,7 +26,7 @@ import org.metaworks.example.ide.SourceCode;
 	ejsPathMappingByContext=
 		{
 			"{when: 'new', face: 'genericfaces/ObjectFace.ejs'}",
-			"{when: 'edit', face: 'genericfaces/ObjectFace.ejs'}",
+			"{when: 'edit', face: 'genericfaces/ObjectFace.ejs'}"
 		}		
 
 )

@@ -540,10 +540,10 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 		StringBuffer whereClauseSQL = new StringBuffer();
 		
 		//Automated join query generation: DAO interface should have keyField setting
-		WebObjectType webObjectType = MetaworksRemoteService.getMetaworksType(daoClass.getName());
+		WebObjectType webObjectType = MetaworksRemoteService.getInstance().getMetaworksType(daoClass.getName());
 		for(FieldDescriptor fd : webObjectType.metaworks2Type().getFieldDescriptors()){
 			if(fd.isLoadable() && !Database.dbPrimitiveTypes.containsKey(fd.getClassType()) && fd.getAttribute("ormapping")==null){
-				WebObjectType referenceFieldWOT = MetaworksRemoteService.getMetaworksType(fd.getClassType().getName());
+				WebObjectType referenceFieldWOT = MetaworksRemoteService.getInstance().getMetaworksType(fd.getClassType().getName());
 				
 				if(referenceFieldWOT.getKeyFieldDescriptor()==null) 
 					continue; //means it's impossible to create relation
@@ -1008,7 +1008,7 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 						} 
 						
 						try{
-							if(MetaworksRemoteService.getMetaworksType(daoClass.getName()).metaworks2Type().getFieldDescriptor(propertyNameOrg).isLoadable())
+							if(MetaworksRemoteService.getInstance().getMetaworksType(daoClass.getName()).metaworks2Type().getFieldDescriptor(propertyNameOrg).isLoadable())
 								returnValue = rowSet.getObject(propertyName);
 							else
 								returnValue = null;
@@ -1016,7 +1016,7 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 						}catch(Exception e){
 							// It is the chance to convert primitive value to desired object //
 							if(!Database.dbPrimitiveTypes.containsKey(m.getReturnType())){
-								WebObjectType type = MetaworksRemoteService.getMetaworksType(m.getReturnType().getName());
+								WebObjectType type = MetaworksRemoteService.getInstance().getMetaworksType(m.getReturnType().getName());
 								ObjectType objectType = (ObjectType) type.metaworks2Type();
 								ObjectInstance objInst = (ObjectInstance) objectType.createInstance();
 								
@@ -1182,7 +1182,7 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 					return null; //means ignore when the object
 
 				if(ormapping!=null){
-					WebObjectType type = MetaworksRemoteService.getMetaworksType(m.getParameterTypes()[0].getName());
+					WebObjectType type = MetaworksRemoteService.getInstance().getMetaworksType(m.getParameterTypes()[0].getName());
 					ObjectType objectType = (ObjectType) type.metaworks2Type();
 					ObjectInstance objInst = (ObjectInstance) objectType.createInstance();
 					
@@ -1233,7 +1233,7 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 
 			//Synchronize the original value to be set by databaseMe(). that means when you set some value to databaseMe().setXXX then your original value would be changed.
 			if(getSynchronizedObject()!=null){
-				WebObjectType wot = MetaworksRemoteService.getMetaworksType(getSynchronizedObject().getClass().getName());
+				WebObjectType wot = MetaworksRemoteService.getInstance().getMetaworksType(getSynchronizedObject().getClass().getName());
 				ObjectInstance instance = (ObjectInstance) wot.metaworks2Type().createInstance();
 				instance.setObject(getSynchronizedObject());
 				instance.setFieldValue(propertyName, value);

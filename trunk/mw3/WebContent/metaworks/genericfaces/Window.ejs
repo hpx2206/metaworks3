@@ -67,6 +67,8 @@ if (value != null){
 //alert(dwr.util.toDescriptiveString(objectMetadata.faceOptions, 5))
  	var showLabel = !(objectMetadata.faceOptions && objectMetadata.faceOptions['hideLabels']);
 
+mw3.debug(objectMetadata);
+
   for (var i=0; i<objectMetadata.fieldDescriptors.length; i++){
   
   	var fd = objectMetadata.fieldDescriptors[i];
