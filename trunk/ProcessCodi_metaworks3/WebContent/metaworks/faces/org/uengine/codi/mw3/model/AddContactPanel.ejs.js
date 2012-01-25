@@ -1,6 +1,9 @@
-
 var org_uengine_codi_mw3_model_AddContactPanel = function(objectId, className){
+	
 	this.objectId = objectId;
+	this.className = className;
+	
+	var object = mw3.objects[this.objectId];
 	
 	var friends = [];
 
@@ -11,6 +14,8 @@ var org_uengine_codi_mw3_model_AddContactPanel = function(objectId, className){
 		  },
 		  function(response) {
 			  for(var i in response){
+				  console.debug("response[i].name : " + response[i].name);
+				  
 				  friends[i] = {
 						  userId : response[i].uid,
 						  name : response[i].name,
@@ -20,15 +25,17 @@ var org_uengine_codi_mw3_model_AddContactPanel = function(objectId, className){
 				  
 			  }
 
-			  
+			  /*
+			  object.friends = friends;			  
 			  var contact = {
 					  friends: friends,
 					  __className: "org.uengine.codi.mw3.model.AddContactPanel"
 			  };
 			  
 			  mw3.setObject(objectId, contact);
-
-
+			  */
+			  
+			  mw3.setObject(object.friends.__objectId, friends);
 		  }
 	);
 	
