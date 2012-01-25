@@ -29,9 +29,17 @@ public class NewChildContentPanel extends ContentPanel{
 	@ServiceMethod
 	public ClassDesignerContentPanel newJavaClass() throws Exception{
 		ClassDesignerContentPanel classDesigner = new ClassDesignerContentPanel();
-		classDesigner.load();
+		classDesigner.newClass(getParentFolder().toString());
 		
 		return classDesigner;
+	}
+
+	@ServiceMethod
+	public ProcessDesignerContentPanel newProcess() throws Exception{
+		ProcessDesignerContentPanel processDesigner = new ProcessDesignerContentPanel();
+		processDesigner.newProcessDefinition(getParentFolder().toString());
+		
+		return processDesigner;
 	}
 
 	@ServiceMethod

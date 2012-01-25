@@ -4,16 +4,30 @@ package org.uengine.codi.mw3.admin;
 import java.io.FileOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.ServiceMethod;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.codi.mw3.model.PropertyListable;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.processmanager.ProcessManagerRemote;
 
-public class FormDefinition implements ContextAware{
+public class FormDefinition implements ContextAware, PropertyListable{
+	
+	transient MetaworksContext metaworksContext;
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
+		} 
+		
+	@Autowired
+	protected ProcessManagerRemote processManager;
+
 
 	public FormDefinition(){
 		clearNewFormField();
@@ -108,15 +122,21 @@ public class FormDefinition implements ContextAware{
 
 	}
 	
-	transient MetaworksContext metaworksContext;
-		public MetaworksContext getMetaworksContext() {
-			return metaworksContext;
-		}
-		public void setMetaworksContext(MetaworksContext metaworksContext) {
-			this.metaworksContext = metaworksContext;
-		} 
+	@Override
+	public ArrayList<String> listProperties() {
+		ArrayList<FormField> formFields = getFormFields();
 		
-	@Autowired
-	protected ProcessManagerRemote processManager;
+		//System.out.println("The document contains "+formFields.size()+" form fields:\n");
+		
+		ArrayList array = new ArrayList();
+		for (Iterator i=formFields.iterator(); i.hasNext();) {
+			FormField formField=(FormField)i.next();
+			if(formField.getFieldName()!=null)
+				array.add(formField.getFieldName());
+		}
+		
+		return array;
+	}
+	
 	
 }
