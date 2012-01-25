@@ -19,7 +19,7 @@ response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 					ProcessDefinitionRemote process = (ProcessDefinitionRemote)iter.next(); //second is the object
 					
 					//filter with object types.
-					if(!process.isFolder() && UEngineUtil.isNotEmpty(objectType) && !objectType.equals(process.getObjType())) continue;
+					if(!process.isFolder() && UEngineUtil.isNotEmpty(objectType) && objectType.indexOf(process.getObjType())==-1) continue;
 					
 					if(process.isFolder()){
 						pw.print("<folder name='" + XMLUtil.encodeXMLReservedWords(process.getName().getText()) + "'");

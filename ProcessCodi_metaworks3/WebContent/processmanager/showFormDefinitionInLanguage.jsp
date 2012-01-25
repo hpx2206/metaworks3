@@ -4,6 +4,7 @@
 	            java.util.*,
 	            org.uengine.kernel.*,
 	            org.uengine.codi.mw3.admin.*,
+	            org.uengine.codi.mw3.model.*,
 	            org.uengine.processmanager.*"
                 %>
 <%
@@ -13,12 +14,19 @@
 	response.setDateHeader("Expires", 0); //prevents caching at the proxy server
 %>
 <%! 
-	private FormDefinition readForm(String id, ProcessManagerRemote pm) throws Exception {
+	private ArrayList readForm(String id, ProcessManagerRemote pm) throws Exception {
 		String prodVerId = pm.getProcessDefinitionProductionVersion(id);
 		String strFormDef = pm.getResource(prodVerId);
+		
+		org.uengine.codi.mw3.CodiDwrServlet.initClassLoader();
 
-		FormDefinition formDefinition = (FormDefinition)GlobalContext.deserialize(strFormDef, FormDefinition.class);
-		return formDefinition;
+		Object definition = GlobalContext.deserialize(strFormDef, String.class);
+		
+		if(definition instanceof PropertyListable){
+			return ((PropertyListable)definition).listProperties();	
+		}
+		
+		return null;
     }
 %><jsp:useBean id="processManagerFactory" scope="application" class="org.uengine.processmanager.ProcessManagerFactoryBean" />
 <%
@@ -29,19 +37,9 @@
 	ProcessManagerRemote pm = null;
 	try{
 		pm = processManagerFactory.getProcessManagerForReadOnly();
-		FormDefinition formDefinition = readForm(formDefId, pm);
-		ArrayList<FormField> formFields = formDefinition.getFormFields();
-	
-		//System.out.println("The document contains "+formFields.size()+" form fields:\n");
+		ArrayList fieldList = readForm(formDefId, pm);
 		
-		ArrayList array = new ArrayList();
-		for (Iterator i=formFields.iterator(); i.hasNext();) {
-			FormField formField=(FormField)i.next();
-			if(formField.getFieldName()!=null)
-				array.add(formField.getFieldName());
-		}
-		
-		out.println(GlobalContext.serialize(array,ArrayList.class));
+		out.println(GlobalContext.serialize(fieldList,ArrayList.class));
 		
 	}finally{
 		if(pm != null) try{ pm.remove(); } catch(Exception e){}
