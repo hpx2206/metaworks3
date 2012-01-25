@@ -178,7 +178,7 @@ public class WebObjectType{
 			
 			for(String superClassName : superClasses){
 				
-				Class[] interfaces = Class.forName(superClassName).getInterfaces();
+				Class[] interfaces = Thread.currentThread().getContextClassLoader().loadClass(superClassName).getInterfaces();
 				for(int i=0; i<interfaces.length; i++){
 					if(IDAO.class.isAssignableFrom(interfaces[i])){
 						this.iDAOClass = interfaces[i];
@@ -455,7 +455,7 @@ public class WebObjectType{
 	}
 	
 	static public Annotation getAnnotationDeeply(Class cls, Class iDAOCls, String fieldName, Class annotationCls) throws Exception{
-		//		Class annotationCls = Class.forName("org.metaworks." +annotationName);
+		//		Class annotationCls = Thread.currentThread().getContextClassLoader().loadClass("org.metaworks." +annotationName);
 		Annotation annotation = null;
 		Class[] tryingClasses = {cls, iDAOCls};
 		
@@ -510,7 +510,10 @@ public class WebObjectType{
 		if(cls.isArray())
 			return "genericfaces/ArrayFace." + extName;
 		
-		String pkgName = cls.getPackage().getName();
+		//String pkgName = cls.getPackage().getName(); //not work for janino compiled classes
+		
+		String pkgName = cls.getName().substring(0, cls.getName().lastIndexOf("."));
+		
 		String clsName = getClassNameOnly(cls);
 		
 //		return pkgName + "." + compType +(isDefault ? ".Default" : ".")+ clsName + compType.substring(0, 1).toUpperCase() + compType.substring(1, compType.length());		

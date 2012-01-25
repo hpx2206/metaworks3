@@ -30,7 +30,7 @@ public class JDBCConnectionFactory  implements ConnectionFactory {
 	}
 	
 	public Connection getConnection() throws Exception{
-		Class.forName(getDriverClass());
+		Thread.currentThread().getContextClassLoader().loadClass(getDriverClass());
 		Connection con = DriverManager.getConnection(getConnectionString(), getUserId(), getPassword());		
 				
 		return con; 

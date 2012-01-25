@@ -66,7 +66,7 @@ public class MetaworksConverter extends BeanConverter{
 					   	String className = data.getContext().getInboundVariable(refName).getFormField().getString();
 					  
 					   	try {
-							paramType = Class.forName(className);
+							paramType = Thread.currentThread().getContextClassLoader().loadClass(className);
 						} catch (ClassNotFoundException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -260,7 +260,7 @@ public class MetaworksConverter extends BeanConverter{
 
 				IDAO dao = (IDAO)data;
 				
-					WebObjectType webObjectType = MetaworksRemoteService.getMetaworksType(((IDAO) data).getImplementationObject().getDaoClass().getName());
+					WebObjectType webObjectType = MetaworksRemoteService.getInstance().getMetaworksType(((IDAO) data).getImplementationObject().getDaoClass().getName());
 					Class daoClass = dao.getImplementationObject().getDaoClass();
 					
 		            Map<String, Property> properties = new HashMap<String, Property>();
@@ -297,7 +297,7 @@ public class MetaworksConverter extends BeanConverter{
 								boolean needToProhibitRecursivelyGenerateReferenceObject = dao.getImplementationObject().getDaoClass().getName().equals(property.getClassName());
 
 								if(!needToProhibitRecursivelyGenerateReferenceObject)
-									value = Database.createReferenceObject(Class.forName(property.getClassName()), dao);
+									value = Database.createReferenceObject(Thread.currentThread().getContextClassLoader().loadClass(property.getClassName()), dao);
 							}
 							
 							OutboundVariable nested = null;

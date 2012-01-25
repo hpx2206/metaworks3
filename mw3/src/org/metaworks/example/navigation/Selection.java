@@ -15,7 +15,7 @@ public class Selection {
 		
 	@ServiceMethod
 	public Content select() throws InstantiationException, IllegalAccessException, ClassNotFoundException{
-		return (Content) Class.forName("org.metaworks.example.navigation." + getContentClassName()).newInstance(); 
+		return (Content) Thread.currentThread().getContextClassLoader().loadClass("org.metaworks.example.navigation." + getContentClassName()).newInstance(); 
 	}
 	
 }
