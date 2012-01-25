@@ -17,7 +17,7 @@
 	<!-- ============================================================= -->
 	<context:property-placeholder location="classpath:*.properties" />
 	<context:component-scan
-		base-package="com.okmindmap" />
+		base-package="com.okmindmap,org.uengine.codi.mw3" />
 
 	<aop:aspectj-autoproxy />
 	
@@ -56,16 +56,28 @@
 	
 	<bean id="processManagerBean" class="org.uengine.processmanager.ProcessManagerBean"
 		scope="request">
-		<property name="managedTransaction" value="true" />
-		<property name="autoCloseConnection" value="false" />
+		<property name="managedTransaction" value="false" />
+		<property name="autoCloseConnection" value="true" />
 		<property name="connectionFactory" ref="springConnectionFactory" />
 		<aop:scoped-proxy />
 	</bean>
 
+<!-- 	<bean id="processManagerBeanReadOnly" class="org.uengine.processmanager.ProcessManagerBean"
+		scope="request">
+		<property name="managedTransaction" value="false" />
+		<property name="autoCloseConnection" value="false" />
+		<property name="connectionFactory" ref="springConnectionFactory" />
+		<aop:scoped-proxy />
+	</bean>
+ -->
 	<bean id="springConnectionFactoryForMetaworks"
 		class="org.metaworks.spring.SpringConnectionFactory">
 		<property name="dataSource" ref="dataSource"/>	
 	</bean>
+	
+	<!-- bean id="MetaworksRemoteService" class="org.uengine.codi.mw3.CodiMetaworksRemoteService">
+		<property name="connectionFactory" ref="springConnectionFactoryForMetaworks"/>
+	</bean-->
 	
 	<bean id="MetaworksRemoteService" class="org.metaworks.dwr.MetaworksRemoteService">
 		<property name="connectionFactory" ref="springConnectionFactoryForMetaworks"/>
@@ -82,6 +94,9 @@
 	<bean id="InstanceView" class="org.uengine.codi.mw3.model.InstanceView"/>
 	<bean id="Contact" class="org.uengine.codi.mw3.model.Contact"/>
 	<bean id="FormDefinition" class="org.uengine.codi.mw3.admin.FormDefinition"/>
+	<bean id="ClassDefinition" class="org.uengine.codi.mw3.admin.ClassDefinition"/>
+	<bean id="ClassDesignerContentPanel" class="org.uengine.codi.mw3.model.ClassDesignerContentPanel"/>
+	<bean id="ProcessDesignerContentPanel" class="org.uengine.codi.mw3.model.ProcessDesignerContentPanel"/>
 
 	
 </beans>
