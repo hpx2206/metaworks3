@@ -12,7 +12,8 @@ var bodyHeight;
 var bodyWidth ;
 
 
-$(document).bind('mousedown',function(e){ 
+
+$(document).bind('mousedown',function(e){  
   //  alert("e.pageX: " + e.pageX + ", e.pageY: " + e.pageY);
 	
     popLayerWidth = 400;
@@ -20,7 +21,7 @@ $(document).bind('mousedown',function(e){
     
     $('#adduser-con').show();
     $('#adduser-con').css({top:e.pageY,left:e.pageX,width:popLayerWidth,height:popLayerHeight});
-    $('#adduser-con').removeClass('clue-left-rounded');A
+    $('#adduser-con').removeClass('clue-left-rounded');
     $('#adduser-con').addClass('clue-right-rounded');
     $('.cluetip-arrows').css({top:10});
 
