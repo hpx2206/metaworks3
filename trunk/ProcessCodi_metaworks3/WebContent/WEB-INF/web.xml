@@ -116,23 +116,6 @@
 	</servlet>
 	
 
-	<servlet>
-		<servlet-name>fakejnlp</servlet-name>
-		<jsp-file>/wih/codiReplyHandler/documentInvoker/DocumentInvoker_JNLP.jsp</jsp-file>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>fakejnlp</servlet-name>
-		<url-pattern>/wih/codiReplyHandler/documentInvoker/DocumentInvoker.jnlp</url-pattern>
-	</servlet-mapping>
-
- 	<servlet>
-		<servlet-name>fakejnlp2</servlet-name>
-		<jsp-file>/wih/applicationHandler/ApplicationInvoker_JNLP.jsp</jsp-file>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>fakejnlp2</servlet-name>
-		<url-pattern>/uengine-web/wih/applicationHandler/ApplicationInvoker.jnlp</url-pattern>
-	</servlet-mapping>
 
  	<servlet>
 		<servlet-name>fakejnlp3</servlet-name>
@@ -146,7 +129,7 @@
 	<!-- metaworks3 -->
   <servlet>
     <servlet-name>dwr-invoker</servlet-name>
-    <servlet-class>org.metaworks.dwr.TransactionalDwrServlet</servlet-class>
+    <servlet-class>org.uengine.codi.mw3.CodiDwrServlet</servlet-class>
     <init-param>
       <param-name>useSpring</param-name>
       <param-value>true</param-value>
