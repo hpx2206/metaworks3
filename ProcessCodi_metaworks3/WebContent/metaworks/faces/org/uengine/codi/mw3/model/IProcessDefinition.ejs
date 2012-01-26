@@ -1,3 +1,17 @@
+<%
+
+var icon = "default";
+
+if (value.objType == "folder"){
+	icon = "folder_c.png";	
+} else if (value.objType == "form"){
+	icon = "form.png";	
+} else if (value.objType == "process"){
+	icon = "process.gif";	
+}
+
+%>
+
 
 <%
 if(value!=null){
@@ -8,14 +22,22 @@ if(value!=null){
   	if(value.childs){
 %>
 
-<b><a onclick="<%=methods.drillDown.caller()%>"><%=value.name%></a></b>
-<table><td width=10></td><td><%=fields.childs.here({when: mw3.when})%></td></table>
+<span style="background:url(images/waveStyle/folder_o.png) no-repeat 5px 0px;">
+	<a onclick="<%=methods.drillDown.caller()%>"><b><%=value.name%></b></a>
+</span>
+<ul style="padding:5px 0 15px 25px;"><li><%=fields.childs.here({when: mw3.when})%></li></ul>
 
 <%
  
 	}else{%>
 
-<a onclick="<%=methods.drillDown.caller()%>"><%=value.name%></a>
+
+
+<span style="background:url(images/waveStyle/<%=icon%>) no-repeat 5px 0px;">
+	<a onclick="<%=methods.drillDown.caller()%>"><%=value.name%></a>
+</span>
+
+
 <%	}
 
 
@@ -32,12 +54,16 @@ if(value!=null){
   	if(mw3.where=="design"){
   
 %>
-	<a onclick="<%=methods.design.caller()%>"><%=value.name%></a>
+	<span style="background:url(images/waveStyle/<%=icon%>) no-repeat 5px 0px;">
+		<a onclick="<%=methods.design.caller()%>"><%=value.name%></a>
+	</span>
 <%
   	}else{
   	  
 %>
-	<a onclick="<%=methods.initiate.caller()%>"><%=value.name%></a>
+	<span style="background:url(images/waveStyle/<%=icon%>) no-repeat 5px 0px;">
+		<a onclick="<%=methods.initiate.caller()%>"><%=value.name%></a>
+	</span>
 <%
   	}
   }
