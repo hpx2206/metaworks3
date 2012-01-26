@@ -10,7 +10,7 @@ import org.metaworks.dao.IDAO;
 
 public interface IContact extends IDAO{
 	
-	@ORMapping(databaseFields = { "friendId", "friendName" }, objectFields = { "userId", "name" })
+	@ORMapping(databaseFields = { "friendId"}, objectFields = { "userId"})
 	public IUser getFriends();
 	public void setFriends(IUser friends);
 	
