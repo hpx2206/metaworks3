@@ -2855,10 +2855,18 @@ jQuery.event = {
 			}
 
 			// Trigger an inline bound script
-			if ( ontype && jQuery.acceptData( cur ) && cur[ ontype ] && cur[ ontype ].apply( cur, data ) === false ) {
+
+			
+			//jqueryLayout. IE bug - kang tai wook
+			
+			/*
+ 			if ( ontype && jQuery.acceptData( cur ) && cur[ ontype ] && cur[ ontype ].apply( cur, data ) === false ) {
 				event.result = false;
 				event.preventDefault();
 			}
+			
+			*/
+			
 
 			// Bubble up to document, then to window
 			cur = cur.parentNode || cur.ownerDocument || cur === event.target.ownerDocument && window;
