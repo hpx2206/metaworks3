@@ -74,8 +74,8 @@ if (value != null){
                     <div class="togglebtnmini" onclick="mw3.getFaceHelper('<%=objectId%>').minimize('<%=outer%>','<%=inner%>')"></div>
                     <div class="worklistcontentcontainer" style="overflow-y:auto">                        
                             
-						<table cellpadding="10" cellspacing="0" width="100%" id="navigator">
-							<tbody>
+						<div>
+							
 							
 							
 						<%	
@@ -95,16 +95,16 @@ if (value != null){
 						  	
 						%>
 						 
-						<tr height="25" valign="middle">
+						<div>
 						
 						<%
 						 	if(showLabel){
 						%>
-						<td bgcolor=white> <b><%=fd.displayName%></b> </td>
+						<span> <b><%=fd.displayName%></b> </span>
 						<%
 							}
 						%>
-						<td bgcolor=white> <%=fields[fd.name] ? fields[fd.name].here() : "XXX"%></td></tr>
+						<span bgcolor=white> <%=fields[fd.name] ? fields[fd.name].here() : "XXX"%></span></div>
 						
 						
 						<%
@@ -113,8 +113,8 @@ if (value != null){
 						%>
 						
 						
-									    <tr>
-									    <td <%=showLabel ? "colspan=2":""%>>
+									    <div>
+									    <span <%=showLabel ? "colspan=2":""%>>
 									    <%
 						   
 						   if(objectMetadata.serviceMethodContexts)
@@ -124,12 +124,12 @@ if (value != null){
 						   }
 						   
 						%>
-									    </td>
-									    </tr>
+									    </span>
+									    </div>
 						
 						
-							</tbody>
-						</table>
+							
+						</div>
 
                         
                     </div>
