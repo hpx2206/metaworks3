@@ -8,9 +8,7 @@ import org.uengine.codi.mw3.model.IProcessDefinition;
 import org.uengine.codi.mw3.model.ProcessDefinition;
 import org.uengine.codi.mw3.model.SelectedProcessDefinition;
 
-@Face(ejsPath="genericfaces/Window.ejs", options={"hideLabels"}, values={"true"})
 public class ResourcePanel {
-	
 
 	@ServiceMethod
 	public void refresh() throws Exception {

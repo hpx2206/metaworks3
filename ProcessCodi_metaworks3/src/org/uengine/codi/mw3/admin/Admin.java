@@ -3,15 +3,20 @@ package org.uengine.codi.mw3.admin;
 import org.uengine.codi.mw3.model.ContentPanel;
 import org.uengine.codi.mw3.model.ILogin;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.codi.mw3.model.WindowPanel;
+
 
 public class Admin {
 	
 	public Admin(ILogin login) throws Exception{
 //		formDefinition = new FormDefinition();
 //		formInstance = new FormInstance();
-		
-		resourcePanel = new ResourcePanel();
+
+		ResourcePanel resourcePanel = new ResourcePanel();
 		resourcePanel.refresh();
+
+		resourceWindowPanel = new WindowPanel();
+		resourceWindowPanel.setPanel(resourcePanel);
 		
 		Session session = new Session();
 		session.setLogin(login);
@@ -22,15 +27,14 @@ public class Admin {
 
 	}
 	
-	ResourcePanel resourcePanel;
-		public ResourcePanel getResourcePanel() {
-			return resourcePanel;
+	WindowPanel resourceWindowPanel;		
+		public WindowPanel getResourceWindowPanel() {
+			return resourceWindowPanel;
 		}
-		public void setResourcePanel(ResourcePanel resourcePanel) {
-			this.resourcePanel = resourcePanel;
+		public void setResourceWindowPanel(WindowPanel resourceWindowPanel) {
+			this.resourceWindowPanel = resourceWindowPanel;
 		}
-		
-		
+
 	ContentPanel contentPanel;
 	
 		public ContentPanel getContentPanel() {
