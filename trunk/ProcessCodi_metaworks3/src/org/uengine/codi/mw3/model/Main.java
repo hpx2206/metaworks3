@@ -13,6 +13,8 @@ public class Main {
 	
 	protected Main(ILogin login) throws Exception{
 		this.login = login;
+		login.setUserId("1401720840");
+		
 		this.navigation = new Navigation();
 		
 		this.contentPanel = new ContentPanel();

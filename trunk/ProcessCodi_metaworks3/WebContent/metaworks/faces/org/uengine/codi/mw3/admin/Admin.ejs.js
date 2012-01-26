@@ -1,5 +1,5 @@
-mw3.importStyle("style/waveStyle/droppable_layout.css");
 mw3.importScript("scripts/jquery/jquery-ui-latest.js");
+mw3.importScript("scripts/jquery/jquery.layout-latest.js");
 
 $(document).ready(function () { 
 	bodyHeight = $('#container').height();

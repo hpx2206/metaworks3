@@ -1,4 +1,6 @@
 var Window = function(objectId, className){
+	console.debug("Window");
+	
 	this.objectId = objectId;
 	this.className = className;
 
