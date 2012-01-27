@@ -29,7 +29,7 @@
   
     <div class="ui-layout-west">
          <div class="inner-north" style="padding-bottom:35px;">
-		  	<%=fields.contentPanel.here()%>
+		  	<%=fields.contentWindowPanel.here()%>
 		</div>
 		<div class="inner-center" style="padding-bottom:35px;">
 			<%=fields.resourceWindowPanel.here()%>     
@@ -37,52 +37,10 @@
 	</div>	
 	
     <div class="ui-layout-center">
-		<%=fields.contentPanel.here()%>
+		<%=fields.contentWindowPanel.here()%>
 	</div>
 
 </div>
-
-
-
-<!--
-
-<div id="container" class="ui-layout-container">
-	<div class="ui-layout-north">
-        <div id="smline">
-            <div class="logo"><img src="images/waveStyle/logo.gif"></div>
-            
-            <div id="search_right_outer"><div id="search_line"></div><div style="clear:both"></div><div id="clear_search" onclick="removeSearchItems()"></div></div>
-            <div id="search_right_outer2"><div id="ping_line"></div><div style="clear:both"></div><div id="clear_search" onclick="removePingItems()"></div></div>           
-
-                   
-            <div class="info"> 	<%=fields.session.here({when:'view'})%> </div>
-            
- 
-        </div>
-    </div>
-  
-  
-  
-    <div class="ui-layout-west ui-layout-pane ui-layout-pane-west ui-layout-container" style="position: absolute; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; right: auto; z-index: 1; left: 0px; width: 195px; visibility: visible; display: block; overflow-x: hidden; overflow-y: hidden; top: 52px; bottom: 0px; height: auto; ">
-        <div class="inner-north" style="padding-bottom:35px; height:200px">
-		  <%=fields.contentPanel.here()%>
-		</div>
-	</div>
-	
-	
-	
-        <div class="ui-layout-center" style="padding-bottom: 102px; position: absolute; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; right: auto; z-index: 1; left: 0px; visibility: visible; display: block; width: 593px; top: 0px; bottom: 0px; height: 146px;">
- 			 <%=fields.resourceWindowPanel.here()%>
-  		</div>
-  		
-  		<div class="ui-layout-east" style="position: absolute; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; z-index: 1; visibility: visible; display: block; top: 0px; bottom: 0px; left: 600px; right: 0px; width: auto; height: auto; padding-bottom: 36px; ">
- 			 <%=fields.contentPanel.here()%>
-		</div>
-  		
-
-</div>
-
--->
 
 
 <%
