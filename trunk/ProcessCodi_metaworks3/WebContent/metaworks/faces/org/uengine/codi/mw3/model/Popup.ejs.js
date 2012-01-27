@@ -7,7 +7,7 @@ var org_uengine_codi_mw3_model_Popup = function(objectId, className) {
 	var object = mw3.objects[this.objectId];
 	
 	if(object.metaworksContext.when == mw3.WHEN_VIEW){
-		$("#objDiv_" + this.objectId).parent().addClass("clue-right-rounded").addClass("cluetip-rounded").css({position:'absolute','z-index':97,display:'none'});
+		$("#objDiv_" + this.objectId).parent().addClass("mw3_popup").addClass("clue-right-rounded").addClass("cluetip-rounded").css({position:'absolute','z-index':97,display:'none'});
 		popUp(this.objectId, 200, 500, object.pageX, object.pageY);
 	}
 }
