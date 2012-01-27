@@ -1,11 +1,12 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.MetaworksContext;
+import org.metaworks.ServiceMethodContext;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
+import org.metaworks.annotation.Hidden;
+import org.metaworks.annotation.ServiceMethod;
 
-@Face(ejsPath="genericfaces/Window.ejs",
-	  displayName="Contact",
-	  options={"hideLabels", "layoutPanelName"}, values={"true", "contact"})
 public class ContactPanel {
 	
 	public ContactPanel(){}
@@ -35,5 +36,38 @@ public class ContactPanel {
 		public void setContactList(ContactList contactList) {
 			this.contactList = contactList;
 		}
-	
+
+	int pageX;
+		@Hidden
+		public int getPageX() {
+			return pageX;
+		}	
+		public void setPageX(int pageX) {
+			this.pageX = pageX;
+		}
+
+	int pageY;
+		@Hidden
+		public int getPageY() {
+			return pageY;
+		}	
+		public void setPageY(int pageY) {
+			this.pageY = pageY;
+		}
+
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
+	public Popup addContact(){
+		System.out.println("this.pageX : " + this.pageX);
+		System.out.println("this.pageY : " + this.pageY);
+		
+		Popup popup = new Popup();
+		
+		popup.setPageX(this.pageX);
+		popup.setPageY(this.pageY);
+		
+		popup.setPanel(new AddContactPanel());
+		popup.setName("AddContactPanel");
+		
+		return popup;
+	}	
 }
