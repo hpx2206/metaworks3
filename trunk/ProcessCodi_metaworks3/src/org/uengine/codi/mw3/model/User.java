@@ -32,8 +32,7 @@ public class User extends Database<IUser> implements IUser{
 		contact.addContact();
 		
 		ContactList cp = new ContactList(session.login);
-		return cp;
-		
+		return cp;		
 	}
 	
 	@AutowiredFromClient

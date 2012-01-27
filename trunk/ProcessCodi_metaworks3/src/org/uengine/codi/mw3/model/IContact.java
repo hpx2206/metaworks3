@@ -2,6 +2,7 @@ package org.uengine.codi.mw3.model;
 
 import java.rmi.RemoteException;
 
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ORMapping;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.IDAO;
@@ -10,7 +11,7 @@ import org.metaworks.dao.IDAO;
 
 public interface IContact extends IDAO{
 	
-	@ORMapping(databaseFields = { "friendId"}, objectFields = { "userId"})
+	@ORMapping(databaseFields = {"friendId", "friendName"}, objectFields = {"userId", "name"})
 	public IUser getFriends();
 	public void setFriends(IUser friends);
 	
