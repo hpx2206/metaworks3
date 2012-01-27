@@ -1,12 +1,13 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
-import org.metaworks.annotation.Face;
+import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 
 public class ContactList {
-	
+
 	public ContactList(){}
 	
 	public ContactList(ILogin user) throws Exception{
@@ -15,37 +16,37 @@ public class ContactList {
 		
 		contacts = contact.loadContacts();
 		
-		searchBox = new ContactSearchBox();
-
-	}
-	
-	ContactSearchBox searchBox;
+		popup = new Popup();
+		popup.setPanel(new AddContactPanel());
+		popup.setName("AddContactPanel");
+		popup.setMetaworksContext(new MetaworksContext());
+		popup.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 		
-		public ContactSearchBox getSearchBox() {
-			return searchBox;
-		}
-	
-		public void setSearchBox(ContactSearchBox searchBox) {
-			this.searchBox = searchBox;
-		}
-
-	IContact contacts;
-	
-		public IContact getContacts() {
-			return contacts;
-		}
-	
-		public void setContacts(IContact contacts) {
-			this.contacts = contacts;
-		}
-
-	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
-	public AddContactPanel addContact(){
-		return new AddContactPanel();
+				
 	}
 	
 	@AutowiredFromClient
 	public Session session;
+		public Session getSession() {
+			return session;
+		}
+		public void setSession(Session session) {
+			this.session = session;
+		}
 
+	IContact contacts;	
+		public IContact getContacts() {
+			return contacts;
+		}	
+		public void setContacts(IContact contacts) {
+			this.contacts = contacts;
+		}
 	
+	Popup popup;
+		public Popup getPopup() {
+			return popup;
+		}	
+		public void setPopup(Popup popup) {
+			this.popup = popup;
+		}
 }
