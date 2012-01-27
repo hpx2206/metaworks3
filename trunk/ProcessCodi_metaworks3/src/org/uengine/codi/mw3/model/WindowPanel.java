@@ -3,33 +3,24 @@ package org.uengine.codi.mw3.model;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 
-@Face(ejsPath="genericfaces/Window.ejs",
+@Face(ejsPath="faces/org/uengine/codi/mw3/model/Window.ejs",
       options={"hideLabels"}, 
       values={"true"})
-public class WindowPanel {	
-	String name;		
-		@Hidden
-		public String getName() {
-			return name;
-		}
-		public void setName(String name) {
-			this.name = name;
-		}
-
+public class WindowPanel {
+	
+	public WindowPanel() {
+		
+	}
+	
+	public WindowPanel(Object panel) {
+		this.panel = panel;
+	}
+	
 	Object panel;
 		public Object getPanel() {
 			return panel;
 		}
 		public void setPanel(Object panel) {
 			this.panel = panel;
-		}
-			
-	String layoutName;
-		@Hidden
-		public String getLayoutName() {
-			return layoutName;
-		}
-		public void setLayoutName(String layoutName) {
-			this.layoutName = layoutName;
 		}
 }

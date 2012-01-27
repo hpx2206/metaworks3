@@ -25,6 +25,8 @@ public class Instance extends Database<IInstance> implements IInstance{
 		
 		instanceViewContent.load(this);
 		
+		System.out.println("detail");	
+		
 		return instanceViewContent;
 	}
 	
