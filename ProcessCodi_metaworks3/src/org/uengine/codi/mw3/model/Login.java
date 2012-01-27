@@ -4,8 +4,11 @@ import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.processmanager.ProcessManagerRemote;
 
 public class Login extends Database<ILogin> implements ILogin{
+		
 	@Id
 	String userId;
 		public String getUserId() {
@@ -51,5 +54,5 @@ public class Login extends Database<ILogin> implements ILogin{
 		return main;
 	}
 		
-
+	
 }

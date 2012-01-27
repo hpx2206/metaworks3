@@ -2,10 +2,7 @@ package org.uengine.codi.mw3.model;
 
 import javax.persistence.Id;
 
-import org.metaworks.annotation.Face;
-import org.metaworks.annotation.NonEditable;
 import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.annotation.Table;
 import org.metaworks.dao.IDAO;
 
 public interface ILogin extends IDAO{
