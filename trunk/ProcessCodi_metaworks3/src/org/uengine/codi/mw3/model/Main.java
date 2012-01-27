@@ -12,23 +12,33 @@ public class Main {
 	
 	protected Main(ILogin login) throws Exception{
 		
-		login.setUserId("1401720840");
-		
+		login.setUserId("1401720840");		
 		this.login = login;
-		
-		this.navigation = new Navigation();
-		
-		this.contentPanel = new ContentPanel();
-		
-		this.contactWindowPanel = new WindowPanel();
-		contactWindowPanel.setPanel(new ContactPanel(login));
-		
+
 		Session session = new Session();
 		session.setLogin(login);
 		this.session = session;
 		
-		instanceListPanel = new InstanceListPanel(session);
-
+		
+		this.navigationWindowPanel = new WindowPanel();
+		this.navigationWindowPanel.setPanel(new Navigation());
+		this.navigationWindowPanel.setLayoutName("navigation");
+		this.navigationWindowPanel.setName("네비게이션");
+		
+		this.contentWindowPanel = new WindowPanel();
+		this.contentWindowPanel.setPanel(new ContentPanel());
+		this.contentWindowPanel.setLayoutName("wih");
+		this.contentWindowPanel.setName("");
+		
+		this.contactWindowPanel = new WindowPanel();
+		this.contactWindowPanel.setPanel(new ContactPanel(login));
+		this.contactWindowPanel.setLayoutName("contact");
+		this.contactWindowPanel.setName("연락처");
+				
+		this.instanceListWindowPanel = new WindowPanel();
+		this.instanceListWindowPanel.setPanel(new InstanceListPanel(session));
+		this.instanceListWindowPanel.setLayoutName("worklist");
+		this.instanceListWindowPanel.setName("개인중심 - 내가 할 일");
 	}
 	
 	ILogin login;
@@ -51,35 +61,30 @@ public class Main {
 			this.session = session;
 		}
 
-	Navigation navigation;
-	
-		public Navigation getNavigation() {
-			return navigation;
+	WindowPanel navigationWindowPanel;	
+		public WindowPanel getNavigationWindowPanel() {
+			return navigationWindowPanel;
 		}
-	
-		public void setNavigation(Navigation navigation) {
-			this.navigation = navigation;
-		}
-	
-
-	InstanceListPanel instanceListPanel;
-	
-		public InstanceListPanel getInstanceListPanel() {
-			return instanceListPanel;
-		}
-	
-		public void setInstanceListPanel(InstanceListPanel instanceListPanel) {
-			this.instanceListPanel = instanceListPanel;
+		public void setNavigationWindowPanel(WindowPanel navigationWindowPanel) {
+			this.navigationWindowPanel = navigationWindowPanel;
 		}
 
-	ContentPanel contentPanel;
-		public ContentPanel getContentPanel() {
-			return contentPanel;
+	WindowPanel instanceListWindowPanel;	
+		public WindowPanel getInstanceListWindowPanel() {
+			return instanceListWindowPanel;
+		}	
+		public void setInstanceListWindowPanel(WindowPanel instanceListWindowPanel) {
+			this.instanceListWindowPanel = instanceListWindowPanel;
 		}
-		public void setContentPanel(ContentPanel contentPanel) {
-			this.contentPanel = contentPanel;
+
+	WindowPanel contentWindowPanel;
+		public WindowPanel getContentWindowPanel() {
+			return contentWindowPanel;
 		}
-		
+		public void setContentWindowPanel(WindowPanel contentWindowPanel) {
+			this.contentWindowPanel = contentWindowPanel;
+		}
+
 	WindowPanel contactWindowPanel;
 		public WindowPanel getContactWindowPanel() {
 			return contactWindowPanel;

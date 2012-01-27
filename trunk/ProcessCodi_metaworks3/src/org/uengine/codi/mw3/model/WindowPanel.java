@@ -6,7 +6,16 @@ import org.metaworks.annotation.Hidden;
 @Face(ejsPath="genericfaces/Window.ejs",
       options={"hideLabels"}, 
       values={"true"})
-public class WindowPanel {
+public class WindowPanel {	
+	String name;		
+		@Hidden
+		public String getName() {
+			return name;
+		}
+		public void setName(String name) {
+			this.name = name;
+		}
+
 	Object panel;
 		public Object getPanel() {
 			return panel;
