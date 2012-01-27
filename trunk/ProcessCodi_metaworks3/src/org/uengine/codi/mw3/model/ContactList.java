@@ -14,15 +14,7 @@ public class ContactList {
 		Contact contact = new Contact();
 		contact.setUserId(user.getUserId());
 		
-		contacts = contact.loadContacts();
-		
-		popup = new Popup();
-		popup.setPanel(new AddContactPanel());
-		popup.setName("AddContactPanel");
-		popup.setMetaworksContext(new MetaworksContext());
-		popup.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
-		
-				
+		contacts = contact.loadContacts();		
 	}
 	
 	@AutowiredFromClient
@@ -40,13 +32,5 @@ public class ContactList {
 		}	
 		public void setContacts(IContact contacts) {
 			this.contacts = contacts;
-		}
-	
-	Popup popup;
-		public Popup getPopup() {
-			return popup;
-		}	
-		public void setPopup(Popup popup) {
-			this.popup = popup;
-		}
+		}		
 }

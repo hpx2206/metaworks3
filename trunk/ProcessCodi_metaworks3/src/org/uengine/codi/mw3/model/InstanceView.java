@@ -22,12 +22,7 @@ public class InstanceView {
 	
 	public InstanceView() {
 	}		
-	
-	@Override
-	protected void finalize() throws Throwable {
-		processManager.remove();
-	}
-	
+		
 	public void load(IInstance instance) throws Exception{
 		
 		

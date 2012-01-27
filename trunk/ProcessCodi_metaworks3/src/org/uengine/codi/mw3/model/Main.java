@@ -20,7 +20,8 @@ public class Main {
 		
 		this.contentPanel = new ContentPanel();
 		
-		this.contactPanel = new ContactPanel(login);
+		this.contactWindowPanel = new WindowPanel();
+		contactWindowPanel.setPanel(new ContactPanel(login));
 		
 		Session session = new Session();
 		session.setLogin(login);
@@ -79,12 +80,12 @@ public class Main {
 			this.contentPanel = contentPanel;
 		}
 		
-	ContactPanel contactPanel;
-		public ContactPanel getContactPanel() {
-			return contactPanel;
+	WindowPanel contactWindowPanel;
+		public WindowPanel getContactWindowPanel() {
+			return contactWindowPanel;
 		}
-		public void setContactPanel(ContactPanel contactPanel) {
-			this.contactPanel = contactPanel;
+		public void setContactWindowPanel(WindowPanel contactWindowPanel) {
+			this.contactWindowPanel = contactWindowPanel;
 		}
 		
 	

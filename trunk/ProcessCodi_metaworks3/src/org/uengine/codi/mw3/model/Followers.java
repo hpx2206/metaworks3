@@ -1,8 +1,10 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
+import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
@@ -50,9 +52,38 @@ public class Followers {
 		
 	}
 	
-	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
-	public AddFollowerPanel addFollowers() throws Exception{
-		return new AddFollowerPanel(session.login, getInstanceId());
+	int pageX;
+		@Hidden
+		public int getPageX() {
+			return pageX;
+		}	
+		public void setPageX(int pageX) {
+			this.pageX = pageX;
+		}
+	
+	int pageY;
+		@Hidden
+		public int getPageY() {
+			return pageY;
+		}	
+		public void setPageY(int pageY) {
+			this.pageY = pageY;
+		}
+	
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
+	public Popup addFollowers() throws Exception{
+		System.out.println("this.pageX : " + this.pageX);
+		System.out.println("this.pageY : " + this.pageY);
+		
+		Popup popup = new Popup();
+		
+		popup.setPageX(this.pageX);
+		popup.setPageY(this.pageY);
+		
+		popup.setPanel(new AddFollowerPanel(session.login, getInstanceId()));
+		popup.setName("AddFollowerPanel");
+		
+		return popup;		
 	}
 	
 	@AutowiredFromClient
