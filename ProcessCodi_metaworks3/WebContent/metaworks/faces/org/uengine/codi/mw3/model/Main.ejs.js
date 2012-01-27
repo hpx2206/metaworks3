@@ -1,3 +1,4 @@
+mw3.importStyle("style/waveStyle/droppable_layout.css");
 mw3.importScript("scripts/jquery/jquery-ui-latest.js");
 mw3.importScript("scripts/jquery/jquery.layout-latest.js");
 
@@ -6,35 +7,6 @@ var navigationEnable = 1;
 var contactEnable = 1;
 var worklistEnable = 1;
 var oriContactHeight = 0;
-
-var bodyHeight;
-var bodyWidth ;
-
-function popUp(e,w,h){
-	
-		   // alert("e.pageX: " + e.pageX + ", e.pageY: " + e.pageY);
-		   //alert(w+","+h);
-		    popLayerWidth = w;
-		    popLayerHeight = h;
-		    
-		    $('#adduser-con').show("fast");
-		    $('#adduser-con').css({top:e.pageY,left:e.pageX,width:500,height:600});
-		    $('#adduser-con').removeClass('clue-left-rounded');
-		    $('#adduser-con').addClass('clue-right-rounded');
-		    $('.cluetip-arrows').css({top:10});
-
-		    if(popLayerWidth + e.pageX > bodyWidth){
-		    	 $('#adduser-con').css({left:e.pageX - popLayerWidth});
-		    	 $('#adduser-con').removeClass('clue-right-rounded');
-		    	 $('#adduser-con').addClass('clue-left-rounded');
-		    };
-		    
-		    if(popLayerHeight + e.pageY > bodyHeight){    	
-		   	 	$('#adduser-con').css({top:e.pageY - popLayerHeight});
-		   	 	$('.cluetip-arrows').css({top:popLayerHeight-40});
-		    };
-
-};
 
 function check_position(obj, e) {	
 	
@@ -50,14 +22,15 @@ function check_position(obj, e) {
 			//alert( 'popup in click' );
 		}else{
 			//alert( 'popup out click' );
-			$(obj).hide("fast");
+			//$(obj).hide("fast");
+			$(obj).remove();
 		}
 	}		
 }
 
 $(document).mousedown(function(e){		
    
-    $('#adduser-con').each(function(){
+    $('.mw3_popup').each(function(){
     	check_position(this, e);
 	});   
     
