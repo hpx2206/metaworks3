@@ -1,6 +1,6 @@
 <%
 	if(value!=null){
-	
+		console.debug(fields);
 %>
 
 
@@ -24,11 +24,9 @@
         </div>
     </div>
   
-  
-  
     <div class="ui-layout-west">
          <div class="inner-north" style="padding-bottom:35px;">
-		  <%=fields.navigation.here()%>
+		  <%=fields.navigationWindowPanel.here()%>
 		</div>
 		<div class="inner-center" style="padding-bottom:35px;">
 			<%=fields.contactWindowPanel.here()%>     
@@ -38,10 +36,10 @@
 	
     <div class="ui-layout-center">
         <div class="middle-west" style="padding-bottom:34px;">
-			<%=fields.instanceListPanel.here()%>
+			<%=fields.instanceListWindowPanel.here()%>
 		</div>
 		<div class="middle-center" style="padding-bottom:34px;">
-		 	<%=fields.contentPanel.here()%>
+		 	<%=fields.contentWindowPanel.here()%>
 		</div>
 	</div>
 
