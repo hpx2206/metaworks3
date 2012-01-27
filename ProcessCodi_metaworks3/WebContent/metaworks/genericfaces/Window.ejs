@@ -16,35 +16,6 @@
 
 
 if (value != null){
-
-
-	var objectName; 
-
-	if(value.__toString){
-		objectName = value.__toString();
-	}else{
-		objectName = objectMetadata.displayName;
-	}
-	
-	var layoutPanelName = objectMetadata.faceOptions['layoutPanelName'];
-	var outer = "";
-	var inner = "";
-	
-	if(layoutPanelName == "navigation"){
-		
-		outer = "innerLayout";	
-		inner = "north";
-	}else if(layoutPanelName == "contact"){
-		outer = "innerLayout";
-		inner = "center";
-	}else if(layoutPanelName == "worklist"){
-		outer = "middleLayout";
-		inner = "west";
-	}else if(layoutPanelName == "wih"){
-		outer = "middleLayout";
-		inner = "center";
-	}
-			
 %>
 
 
