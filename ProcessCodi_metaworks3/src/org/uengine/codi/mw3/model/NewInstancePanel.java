@@ -2,7 +2,6 @@ package org.uengine.codi.mw3.model;
 
 import org.metaworks.annotation.Face;
 
-@Face(ejsPath="genericfaces/Window.ejs")
 public class NewInstancePanel extends ContentPanel{
 	
 	public NewInstancePanel() throws Exception{
@@ -11,15 +10,11 @@ public class NewInstancePanel extends ContentPanel{
 		processDefinitions = processDefinitions.findAll();
 	}
 	
-	
-	IProcessDefinition processDefinitions;
-	
+	IProcessDefinition processDefinitions;	
 		public IProcessDefinition getProcessDefinitions() {
 			return processDefinitions;
-		}
-	
+		}	
 		public void setProcessDefinitions(IProcessDefinition processDefinitions) {
 			this.processDefinitions = processDefinitions;
 		}
-
 }

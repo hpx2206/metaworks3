@@ -1,6 +1,7 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.annotation.AutowiredToClient;
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
@@ -17,28 +18,15 @@ public class Main {
 
 		Session session = new Session();
 		session.setLogin(login);
-		this.session = session;
+		this.session = session;		
 		
+		this.navigationWindowPanel = new WindowPanel(new Navigation());
 		
-		this.navigationWindowPanel = new WindowPanel();
-		this.navigationWindowPanel.setPanel(new Navigation());
-		this.navigationWindowPanel.setLayoutName("navigation");
-		this.navigationWindowPanel.setName("네비게이션");
+		this.contentWindowPanel = new WindowPanel(new ContentPanel());
 		
-		this.contentWindowPanel = new WindowPanel();
-		this.contentWindowPanel.setPanel(new ContentPanel());
-		this.contentWindowPanel.setLayoutName("wih");
-		this.contentWindowPanel.setName("");
-		
-		this.contactWindowPanel = new WindowPanel();
-		this.contactWindowPanel.setPanel(new ContactPanel(login));
-		this.contactWindowPanel.setLayoutName("contact");
-		this.contactWindowPanel.setName("연락처");
+		this.contactWindowPanel = new WindowPanel(new ContactPanel(login));
 				
-		this.instanceListWindowPanel = new WindowPanel();
-		this.instanceListWindowPanel.setPanel(new InstanceListPanel(session));
-		this.instanceListWindowPanel.setLayoutName("worklist");
-		this.instanceListWindowPanel.setName("개인중심 - 내가 할 일");
+		this.instanceListWindowPanel = new WindowPanel(new InstanceListPanel(session));
 	}
 	
 	ILogin login;
@@ -60,8 +48,8 @@ public class Main {
 		public void setSession(Session session) {
 			this.session = session;
 		}
-
-	WindowPanel navigationWindowPanel;	
+		
+	WindowPanel navigationWindowPanel;
 		public WindowPanel getNavigationWindowPanel() {
 			return navigationWindowPanel;
 		}
@@ -69,7 +57,7 @@ public class Main {
 			this.navigationWindowPanel = navigationWindowPanel;
 		}
 
-	WindowPanel instanceListWindowPanel;	
+	WindowPanel instanceListWindowPanel;
 		public WindowPanel getInstanceListWindowPanel() {
 			return instanceListWindowPanel;
 		}	
