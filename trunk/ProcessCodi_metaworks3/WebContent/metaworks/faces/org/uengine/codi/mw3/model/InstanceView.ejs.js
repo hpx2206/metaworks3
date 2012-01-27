@@ -1,33 +1,45 @@
-mw3.importStyle("style/waveStyle/wih.css");
-
 var org_uengine_codi_mw3_model_InstanceView = function(objectId, className){
 	this.objectId = objectId;
+	this.className = className;
 	
-	var object = mw3.getObject(objectId);
+	var object = mw3.objects[this.objectId];
+	var posting = [];
 	
-	//overrides the function
-	object.crowdSourcing = function(){
-		FB.api( 
-				'/me', 
-				function(response) {
-					loggedUserFacebookId = response.id;
+	var postIds = object.crowdSourcer.postIds;	
+	var cnt = 0;
+	
+	for(var i=0; i<postIds.length; i++){
+		var num = 20;
+		 
+		FB.api(postIds[i], {
+			limit : num
+		}, function(response) {
+			if (!response || response.error) {
+				console.debug("error : " + response.error.message);
+			} else {
+				for(var j=0; j<response.comments.count; j++){
+					var comment = response.comments.data[j];
+					var user = {
+							userId : comment.from.id,
+							name : comment.from.name,
+							__className : "org.uengine.codi.mw3.model.IUser"
+					};
 					
-				    var facebookFeed =  loggedUserFacebookId + "/feed";
-				    
-				    FB.api(facebookFeed, 'post', { message: 'crowd sourcing test for process instance id ' + object.instanceId }, function(response) {
-				        if (!response || response.error) {
-				        	alert("failed due to " + response.error.message);
-				        } else {
-	 			        	//node.facebookId = response.id;
-	 			        	
-//	 			        	setInterval("addFacebookNode( '"+node.id+"', '" + node.facebookId +"')", "10000");
-	 			        	
-	 			        	alert("답벼락에 게시되었습니다!");
-				        }
-				    });
-
-				} 
-		);				
-	
+					posting[cnt] = {    type : "postings",
+							           title : comment.message,
+							        endpoint : comment.from.id,
+							          writer : user,
+							     __className : "org.uengine.codi.mw3.model.PostingsWorkItem"
+							  
+					  };
+					
+					cnt++;					
+				}
+				
+				if(i == postIds.length){
+					mw3.setObject(object.threadPosting.__objectId, posting);
+				}
+			}
+		});	
 	}
 }
