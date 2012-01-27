@@ -3,18 +3,29 @@ package org.uengine.codi.mw3.model;
 import java.util.Date;
 
 import org.metaworks.annotation.Id;
-import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.processmanager.ProcessManagerRemote;
 
 public class Instance extends Database<IInstance> implements IInstance{
 
+	@Autowired
+	InstanceViewContent instanceViewContent;
+	
+	//@Autowired
+	//ProcessManagerRemote processManager;	
+
+	public Instance(){
+		
+	}
+	
 	public ContentPanel detail() throws Exception{
-		InstanceViewContent instanceView = new InstanceViewContent(); 
+		//InstanceViewContent instanceViewContent = new InstanceViewContent();
+		//instanceViewContent.processManager = this.processManager;
 		
-		//TODO: passing all the argument is not that good. javascript AOP is useful?
-		instanceView.load(this);
+		instanceViewContent.load(this);
 		
-		return instanceView;
+		return instanceViewContent;
 	}
 	
 	Long instId;
