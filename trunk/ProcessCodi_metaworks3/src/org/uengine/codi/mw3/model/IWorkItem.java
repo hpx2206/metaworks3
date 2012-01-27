@@ -48,8 +48,8 @@ public interface IWorkItem extends IDAO{
 
 		@Hidden
 		@Range(
-				options={"WorkItem", "Comment",	"Image",	"Movie",	"Source Code", 	"File", "Schedule"}, 
-				values ={"wih", 	 "comment",	"img",		"mov",		"src", 			"file", "schdle"}
+				options={"WorkItem", "Comment",	"Image",	"Movie",	"Source Code", 	"File", "Schedule", "Postings"}, 
+				values ={"wih", 	 "comment",	"img",		"mov",		"src", 			"file", "schdle" , "postings"}
 		)
 		@TypeSelector(
 				values = 		{ 
@@ -59,7 +59,8 @@ public interface IWorkItem extends IDAO{
 						"mov", 				
 						"src",						
 						"file", 
-						"schdle" 
+						"schdle",
+						"postings"
 					}, 
 				classes = 		{ 
 						WorkItem.class,  	
@@ -68,7 +69,8 @@ public interface IWorkItem extends IDAO{
 						MovieWorkItem.class,
 						SourceCodeWorkItem.class,
 						FileWorkItem.class,
-						ScheduleWorkItem.class
+						ScheduleWorkItem.class,
+						PostingsWorkItem.class
 					} 
 		)
 		public String getType();

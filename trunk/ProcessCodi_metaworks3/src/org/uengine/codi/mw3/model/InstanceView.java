@@ -1,30 +1,41 @@
 package org.uengine.codi.mw3.model;
 
 import java.rmi.RemoteException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
 
-import net.sf.json.JSONObject;
+import javax.annotation.PostConstruct;
 
 import org.metaworks.MetaworksContext;
-import org.metaworks.ServiceMethodContext;
-import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.facebook.api.Facebook;
+import org.springframework.stereotype.Service;
+import org.uengine.kernel.ProcessInstance;
+import org.uengine.processmanager.ProcessManagerBean;
 import org.uengine.processmanager.ProcessManagerRemote;
 
-public class InstanceView{
-	
 
+public class InstanceView {
+
+	@Autowired
+	ProcessManagerRemote processManager;	
+	
+	public InstanceView() {
+	}		
+	
+	@Override
+	protected void finalize() throws Throwable {
+		processManager.remove();
+	}
 	
 	public void load(IInstance instance) throws Exception{
+		
 		
 		setInstanceId(instance.getInstId().toString());
 		
 		loadDefault();
 		activityStream();
+		
 	}
 	
 	protected void loadDefault() throws Exception{
@@ -36,8 +47,36 @@ public class InstanceView{
 		newItem = new CommentWorkItem();
 		newItem.setInstId(new Long(getInstanceId()));
 		newItem.setTaskId(new Long(getInstanceId()));
-		newItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+		newItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);		
 		
+		crowdSourcer = new CrowdSourcer();
+		crowdSourcer.setInstanceId(getInstanceId());
+		crowdSourcer.followers = this.followers;
+		
+		ProcessInstance instance = processManager.getProcessInstance(getInstanceId());
+		
+		if(instance.getProperty("", "facebook_postIds") != null){
+			String[] postIds = (String[])instance.getProperty("", "facebook_postIds");
+			
+			crowdSourcer.setPostIds(postIds);
+		}
+		
+		threadPosting = new PostingsWorkItem();
+		/*
+		postingsWorkItem = new ArrayList<IWorkItem>();
+		
+		if(instance.getProperty("", "facebook_postIds") != null){
+			
+			
+			for(int i=0; i<postIds.length; i++){
+				PostingsWorkItem postingWorkItem = new PostingsWorkItem();
+				postingWorkItem.setPostId(postIds[i]);
+				postingWorkItem.setType("posting");
+				
+				facebookPostings.add(postingWorkItem);
+			}			
+		}	
+		*/
 	}
 	
 	String instanceId;
@@ -58,14 +97,21 @@ public class InstanceView{
 		}
 
 	IWorkItem thread;
-		@Face(displayName=" ")
 		public IWorkItem getThread() {
 			return thread;
 		}
 		public void setThread(IWorkItem thread) {
 			this.thread = thread;
+		}	
+	
+	IWorkItem threadPosting;
+		public IWorkItem getThreadPosting() {
+			return threadPosting;
 		}
-		
+		public void setThreadPosting(IWorkItem threadPosting) {
+			this.threadPosting = threadPosting;
+		}
+
 	ProcessInstanceMonitor processInstanceMonitor;
 		public ProcessInstanceMonitor getProcessInstanceMonitor() {
 			return processInstanceMonitor;
@@ -91,6 +137,15 @@ public class InstanceView{
 			this.followers = followers;
 		}
 		
+	CrowdSourcer crowdSourcer;			
+		public CrowdSourcer getCrowdSourcer() {
+			return crowdSourcer;
+		}
+	
+		public void setCrowdSourcer(CrowdSourcer crowdSourcer) {
+			this.crowdSourcer = crowdSourcer;
+		}
+
 	@ServiceMethod
 	public void schedule() throws Exception{
 		scheduleEditor = new ScheduleEditor();
@@ -116,39 +171,5 @@ public class InstanceView{
 	public void delete() throws RemoteException{
 		processManager.stopProcessInstance(instanceId);
 		processManager.applyChanges();
-	}
-	
-	@ServiceMethod(target=ServiceMethodContext.TARGET_NONE)
-	public void crowdSourcing() throws Exception{
-		  String access_token = "d71fb40f35d4296e308bd16654269bd8";
-		  String myappkey = "296566710367686";
-		  
-		  String fb_message = "contents here";
-		  String facebookName = "crowd sourcing test";
-		  String facebookURL = "http://www.uengine.org";
-		  
-		  Map<String, String> data = new HashMap<String, String>();  
-		  data.put("message", fb_message);  
-		  data.put("name", facebookName);  
-		  data.put("link", facebookURL);   
-		  data.put("picture", "http://cfile25.uf.tistory.com/image/165BBF484E4BBD8F3402C0");   
-		  
-		  Followers followers = new Followers();
-		  followers.setInstanceId(getInstanceId());
-		  followers.load();
-		  
-		  IUser followerUsers = followers.getFollowers();
-		  while(followerUsers.next()){
-			  String friendkey = followerUsers.getUserId();
-			  Facebook graph_api = new Facebook(friendkey, access_token);  
-			  JSONObject result = graph_api.sendPostToMyFriend(data); 
-			  
-			  result.toString();
-		  }
-	}
-
-	@Autowired
-	ProcessManagerRemote processManager;
-			
-
+	}	
 }
