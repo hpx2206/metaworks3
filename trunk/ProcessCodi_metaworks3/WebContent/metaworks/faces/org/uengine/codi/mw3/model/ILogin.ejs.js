@@ -5,7 +5,7 @@ var org_uengine_codi_mw3_model_ILogin = function(objectId, className){
 	
     window.fbAsyncInit = function() {
       FB.init({
-        appId      : '175213242502173',// 296566710367686
+        appId      : '119159701538006',// 296566710367686   119159701538006
         status     : true, 
         cookie     : true,
         xfbml      : true
