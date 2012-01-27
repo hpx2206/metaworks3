@@ -1,15 +1,15 @@
-<li>
-	<div class="contactlistpic">
-		<div id="" class="my_status" style="background:url('/uengine-web/images/waveStyle/logoff.png')"></div>
-		<!-- <img src="" width='30' height='30' boder='0'> -->
-		<%=fields.friends.here()%>
-	</div>
-	
-	<div class="contactlistname">
-		<span class="fontbold"><%=value.friendName%></span><br />
-		<span class="fontgray"><%=value.friendId%></span><br />
-		<span class="fontgray"></span>
-	</div>
-	<div style="clear:left;"></div>
-</li>
+	<li>
+		<div class="contactlistpic">
+			<div id="" class="my_status" style="background:url(../../images/waveStyle/logoff.png)"></div>
+			<%=fields.friends.here({when: 'onlyFaceSmall'})%>
+		</div>
+		
+		<div class="contactlistname">
+			<span class="fontbold"><%=value.friendName%></span><br />
+			<span class="fontgray"><%=value.friendId%></span><br />
+			<span class="fontgray"></span>
+		</div>
+		<div style="clear:left;"></div>
+	</li>
+
 
