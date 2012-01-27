@@ -1,7 +1,6 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.annotation.AutowiredToClient;
-import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
@@ -12,8 +11,10 @@ public class Main {
 	public Main(){}
 	
 	protected Main(ILogin login) throws Exception{
-		this.login = login;
+		
 		login.setUserId("1401720840");
+		
+		this.login = login;
 		
 		this.navigation = new Navigation();
 		
@@ -101,5 +102,5 @@ public class Main {
 	@ServiceMethod
 	public Admin admin() throws Exception{
 		return new Admin(login);
-	}
+	}	
 }
