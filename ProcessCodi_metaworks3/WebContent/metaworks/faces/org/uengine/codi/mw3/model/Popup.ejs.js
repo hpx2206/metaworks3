@@ -5,11 +5,10 @@ var org_uengine_codi_mw3_model_Popup = function(objectId, className) {
 	this.className = className;
 	
 	var object = mw3.objects[this.objectId];
+	console.debug(object);
 	
-	if(object.metaworksContext.when == mw3.WHEN_VIEW){
-		$("#objDiv_" + this.objectId).parent().addClass("mw3_popup").addClass("clue-right-rounded").addClass("cluetip-rounded").css({position:'absolute','z-index':97,display:'none'});
-		popUp(this.objectId, 200, 500, object.pageX, object.pageY);
-	}
+	$("#objDiv_" + this.objectId).parent().addClass("mw3_popup").addClass("clue-right-rounded").addClass("cluetip-rounded").css({position:'absolute','z-index':97,display:'none'});
+	popUp(this.objectId, 200, 500, object.pageX, object.pageY);
 }
 
 function popUp(objectId, w,h,x,y){
@@ -39,11 +38,3 @@ function popUp(objectId, w,h,x,y){
 
 };
 
-function addContact(objectId, e){
-	var object = mw3.getObject(objectId);	
-	
-	object.pageX = e.pageX;
-	object.pageY = e.pageY;			
-
-	mw3.call(objectId, "openPopup");	
-}

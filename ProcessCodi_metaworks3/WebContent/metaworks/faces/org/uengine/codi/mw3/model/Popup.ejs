@@ -1,6 +1,3 @@
-<%
-	if(mw3.when == mw3.WHEN_VIEW){
-%>
 <div id="cluetip-outer">
 	<h3 id="cluetip-title"><%=value.name%></h3>
 	<div id="cluetip-inner">
@@ -14,10 +11,3 @@
 </div>
 <div id="cluetip-extra"></div>
 <div class="cluetip-arrows" style="top: 10px; display: block; z-index: 98;"></div>
-<%
-	} else {
-%>
-			<a href="#" onclick="javascript:addContact('<%=objectId%>', event);"><%=value.name%></a>
-<%
-	}
-%>

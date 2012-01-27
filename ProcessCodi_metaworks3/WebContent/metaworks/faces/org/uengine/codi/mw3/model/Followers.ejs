@@ -4,10 +4,10 @@
 		 	<div id="replyUsers">
 		 	<table>
 			 	<td>
-		 	<%=fields.followers.here({options: {alignment:'horizontal'}})%>
+		 			<%=fields.followers.here({options: {alignment:'horizontal'}})%>
 		 		</td>
 		 		<td>
-					<img src="images/waveStyle/addUser.png" title="User 추가" onclick="<%=methods.addFollowers.caller()%>">
+					<img src="images/waveStyle/addUser.png" title="User 추가" onclick="javascript:addFollowers('<%=objectId%>', event)">
 		 		</td>
 		 	</table>
 			</div>
