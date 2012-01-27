@@ -1,0 +1,28 @@
+<script>
+$(function() {
+	$( "#tabs" ).tabs();
+});
+</script>
+	
+<div id="tabs">
+	<ul>
+		<%
+			
+			for (var i=0; i<value.tabs.length; i++){
+			console.debug(value.tabs[i]);
+		%>
+			<li><a href="#tabs-<%=i%>"><%=value.tabs[i].tabTitle%></a></li>
+		<%  } %>
+		
+	</ul>
+	<%
+		for (var i=0; i<value.tabs.length; i++){
+	%>
+	
+	<div id="tabs-<%=i%>">
+		<%=value.tabs[i].tabContent%>
+	</div>
+	
+	<%  } %>	
+
+</div>
