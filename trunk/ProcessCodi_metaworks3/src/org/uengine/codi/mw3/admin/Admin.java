@@ -15,16 +15,13 @@ public class Admin {
 		ResourcePanel resourcePanel = new ResourcePanel();
 		resourcePanel.refresh();
 
-		resourceWindowPanel = new WindowPanel();
-		resourceWindowPanel.setPanel(resourcePanel);
+		resourceWindowPanel = new WindowPanel(resourcePanel);
 		
 		Session session = new Session();
 		session.setLogin(login);
 		this.session = session;
-		
-		contentPanel = new ContentPanel();
-		
 
+		contentWindowPanel = new WindowPanel(new ContentPanel());
 	}
 	
 	WindowPanel resourceWindowPanel;		
@@ -35,13 +32,13 @@ public class Admin {
 			this.resourceWindowPanel = resourceWindowPanel;
 		}
 
-	ContentPanel contentPanel;
+	WindowPanel contentWindowPanel;
 	
-		public ContentPanel getContentPanel() {
-			return contentPanel;
+		public WindowPanel getContentWindowPanel() {
+			return contentWindowPanel;
 		}
-		public void setContentPanel(ContentPanel contentPanel) {
-			this.contentPanel = contentPanel;
+		public void setContentWindowPanel(WindowPanel contentWindowPanel) {
+			this.contentWindowPanel = contentWindowPanel;
 		}
 		
 	Session session;
