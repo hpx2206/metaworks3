@@ -691,7 +691,7 @@
 					else
 						var message = "There is an error in your template ["+actualFace+"]: "+e.message;
 					
-					document.getElementById(this.errorDiv).innerHTML = "<font color=red>" + message + "</font>";
+					document.getElementById(this.errorDiv).innerHTML = "<span><font color=#FB7524>" + message + "</font></span>";
 					document.getElementById(this.errorDiv).className = 'error';
 				}
 				

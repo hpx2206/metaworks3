@@ -16,9 +16,9 @@ public class ContactPanel {
 		contactList = new ContactList(loginUser);
 
 		searchBox = new ContactSearchBox();
-		searchBox.setMetaworksContext(new MetaworksContext());
+/*		searchBox.setMetaworksContext(new MetaworksContext());
 		searchBox.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
-		
+*/		
 	}
 
 	ContactSearchBox searchBox;	

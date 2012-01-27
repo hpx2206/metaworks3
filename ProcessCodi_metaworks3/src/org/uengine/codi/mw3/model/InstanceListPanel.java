@@ -15,8 +15,8 @@ public class InstanceListPanel {
 		this.instList.load(session.login, session.navigation, null);
 		
 		this.searchBox = new SearchBox();
-		this.searchBox.setMetaworksContext(new MetaworksContext());		
-		this.searchBox.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);;		
+/*		this.searchBox.setMetaworksContext(new MetaworksContext());		
+		this.searchBox.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);;	*/	
 	}
 	
 	SearchBox searchBox;

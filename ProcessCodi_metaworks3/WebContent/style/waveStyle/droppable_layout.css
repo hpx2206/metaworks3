@@ -319,7 +319,7 @@ img {border:0;}
 	right:		5px;
 }
 .clear{ clear:both;}
-#mystatus{background:#C9E2FC; height:35px; border-left:#fff 1px solid; margin:0px 7px 0px 3px; padding:5px; padding-bottom:0px;}
+#mystatus{background:#C9E2FC; height:35px; border-left:#E4F1FE 1px solid; margin:0px; padding:5px; padding-bottom:0px;}
 #mystatus li{float:left;}
 #mystatus .name{ margin-left:10px; line-height:30px; font-size:14px; font-weight:bolder;}
 
@@ -337,18 +337,18 @@ img {border:0;}
 #addcontact li{float:left;}
 
 
-#contactsearchbox {display:block; clear:both; content:''; background:#C9E2FC; border-bottom:#999 1px solid; border-left:#E4F1FE 1px solid; margin:0px 7px 0 3px;  padding:5px 5px 5px 15px;}
+#contactsearchbox {display:block; clear:both; content:''; background:#C9E2FC; border-bottom:#999 1px solid; border-left:#E4F1FE 1px solid; margin:0px;  padding:5px 5px 5px 15px;}
 #contactsearchbox .inputleft{float:left; position:relative; left:-9px;width:9px;margin-right:-9px}
 #contactsearchbox .inputcenter{float:left;width:100%;}  
 #contactsearchbox .inputright{float:left; left:22px;width:22px;margin-left:-22px} 
-#contactsearchbox ul li input {width:100%; background:#ffffff; height:18px; padding-top:1px; border:none; border-top:1px solid #8b9fbd; border-bottom:1px solid #8b9fbd;}
+#contactsearchbox ul li input {width:100%; background:#ffffff; height:17px; padding-top:1px; border:none; border-top:1px solid #8b9fbd; border-bottom:1px solid #8b9fbd;}
 
-#searchbox {display:block; clear:both; content:''; background:#C9E2FC; border-bottom:#999 1px solid; border-left:#E4F1FE 1px solid; margin:0px 7px 0 3px;  padding:0px;}
+#searchbox {display:block; clear:both; content:''; background:#C9E2FC; border-bottom:#999 1px solid; border-left:#E4F1FE 1px solid; margin:0px;  padding:0px;}
 #searchbox .searchboxline{height:46px;  padding:0px 10px;}
 #searchbox .inputleft{float:left; position:relative; left:-9px;width:9px;margin-right:-9px}
 #searchbox .inputcenter{float:left;width:100%;}  
 #searchbox .inputright{float:left; left:22px;width:22px;margin-left:-22px} 
-#searchbox ul li input {width:100%; background:#ffffff; height:18px; padding-top:1px; border:none; border-top:1px solid #8b9fbd; border-bottom:1px solid #8b9fbd;}
+#searchbox ul li input {width:100%; background:#ffffff; height:17px; padding-top:1px; border:none; border-top:1px solid #8b9fbd; border-bottom:1px solid #8b9fbd;}
 
 .adduserline{height:46px;}
 .adduserline dd{ margin:3px 0 0 3px; height:40px; line-height:40px; float:left; display:block;}
@@ -430,8 +430,8 @@ img {border:0;}
 #wBtn2 a span{display:block; float:left; background:url('../../images/waveStyle/Btn_bg2.gif') right 0; /*line-height:210%;*/ padding-right:6px; height:18px; overflow:hidden; font:bold;}
 #wBtn2 a:hover span{background:url('../../images/waveStyle/Btn_bg2.gif') right -18px; color:#000}
 
-#top_message{display:none; margin:0 auto; width:50%; height:35px; background:url('../../images/waveStyle/alert_left.png') no-repeat; padding-left:49px; }
-#top_message span{display:block;  background:url('../../images/waveStyle/alert_right.png') right no-repeat; height:35px; line-height:25px; width:100%;  text-align:center; overflow:hidden; font-weight:bold;}
+#template_caption{display:none; margin:0 auto; width:50%; height:35px; background:url('../../images/waveStyle/alert_left.png') no-repeat; padding-left:49px; }
+#template_caption span{display:block;  background:url('../../images/waveStyle/alert_right.png') right no-repeat; height:35px; line-height:25px; width:100%;  text-align:center; overflow:hidden; font-weight:bold;}
 
 
 .view_box{margin:5px;border:2px solid #ccc}
