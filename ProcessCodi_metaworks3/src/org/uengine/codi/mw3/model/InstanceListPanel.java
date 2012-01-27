@@ -6,9 +6,6 @@ import org.metaworks.annotation.ServiceMethod;
 import org.uengine.processmanager.ProcessManagerFactoryBean;
 import org.uengine.processmanager.ProcessManagerRemote;
 
-@Face(ejsPath="genericfaces/Window.ejs",
-      options={"hideLabels", "layoutPanelName"}, values={"true", "worklist"})
-
 public class InstanceListPanel {
 	
 	public InstanceListPanel(){}

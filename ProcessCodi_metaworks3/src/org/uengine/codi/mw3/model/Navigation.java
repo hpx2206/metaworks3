@@ -3,8 +3,6 @@ package org.uengine.codi.mw3.model;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 
-@Face(ejsPath="genericfaces/Window.ejs", options={"hideLabels", "layoutPanelName"}, values={"true", "navigation"})
-
 public class Navigation {
 	
 	protected Navigation(){

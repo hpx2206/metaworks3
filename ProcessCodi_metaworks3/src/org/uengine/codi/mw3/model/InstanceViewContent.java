@@ -4,7 +4,6 @@ import org.metaworks.annotation.Face;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.processmanager.ProcessManagerRemote;
 
-@Face(ejsPath="genericfaces/Window.ejs", options="hideLabels", values="true")
 public class InstanceViewContent extends ContentPanel{
 
 	//ProcessManagerRemote processManager;	
