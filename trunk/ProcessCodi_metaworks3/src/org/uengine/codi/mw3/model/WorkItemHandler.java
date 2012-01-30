@@ -2,20 +2,15 @@ package org.uengine.codi.mw3.model;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
-import org.metaworks.WebObjectType;
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
-import org.metaworks.annotation.NonLoadable;
-import org.metaworks.annotation.NonSavable;
 import org.metaworks.annotation.ServiceMethod;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.kernel.Activity;
+import org.uengine.contexts.ComplexType;
 import org.uengine.kernel.HumanActivity;
 import org.uengine.kernel.KeyedParameter;
 import org.uengine.kernel.ParameterContext;
@@ -23,6 +18,7 @@ import org.uengine.kernel.ProcessInstance;
 import org.uengine.kernel.ResultPayload;
 import org.uengine.processmanager.ProcessManagerRemote;
 
+@Face(ejsPath="genericfaces/Window.ejs", options={"hideLabels"}, values={"true"})
 public class WorkItemHandler implements ContextAware{
 	
 	public WorkItemHandler(){} //to be spring bean without argument, this is required.
@@ -34,7 +30,7 @@ public class WorkItemHandler implements ContextAware{
 		String tracingTag = getTracingTag();
 		
 		
-		instance = codiPmSVC.getProcessInstance(instanceId.toString());
+		instance = processManager.getProcessInstance(instanceId.toString());
 
 		if(humanActivity==null && instanceId!=null && tracingTag!=null){
 			humanActivity = (HumanActivity) instance.getProcessDefinition().getActivity(tracingTag);
@@ -42,40 +38,52 @@ public class WorkItemHandler implements ContextAware{
 		
 		if(humanActivity.getParameters()!=null){
 			//creates work item handler
-			parameters = new ParameterValue[humanActivity.getParameters().length];
-			for(int i=0; i<humanActivity.getParameters().length; i++){
-				ParameterContext pc = humanActivity.getParameters()[i];
-				
-				ParameterValue pv = new ParameterValue();
-				pv.setArgument(pc.getArgument().getText());
-				
-				
-				MetaworksContext mc = new MetaworksContext();
-				
-				if(pc.getDirection() == ParameterContext.DIRECTION_OUT || pc.getDirection() == ParameterContext.DIRECTION_INOUT)
-					mc.setWhen(MetaworksContext.WHEN_EDIT);
-				else
-					mc.setWhen(MetaworksContext.WHEN_VIEW);
-				
-				pv.setMetaworksContext(mc);
-				
-				parameters[i] = new ParameterValue();
-				parameters[i].setArgument(pc.getArgument().getText());
-				
-				Serializable processVariableValue = pc.getVariable().get(instance, "");
-				Class variableType = pc.getVariable().getType();
-			
-				if(variableType == String.class){
-					parameters[i].setValueString((String) processVariableValue);
-	//			}else if(Long.class.isAssignableFrom(variableType)){
-	//				parameters[i].setValueNumber((Number) processVariableValue);
-	//			}else if(Calendar.class.isAssignableFrom(variableType)){
-	//				parameters[i].setValueCalendar((Calendar) processVariableValue);
+				parameters = new ParameterValue[humanActivity.getParameters().length];
+				for(int i=0; i<humanActivity.getParameters().length; i++){
+					ParameterContext pc = humanActivity.getParameters()[i];
+					
+					parameters[i] = new ParameterValue();
+					ParameterValue pv = parameters[i];
+					
+					pv.setArgument(pc.getArgument().getText());
+					
+					
+					MetaworksContext mc = new MetaworksContext();
+					
+					if(pc.getDirection() == ParameterContext.DIRECTION_OUT || pc.getDirection() == ParameterContext.DIRECTION_INOUT)
+						mc.setWhen(MetaworksContext.WHEN_EDIT);
+					else
+						mc.setWhen(MetaworksContext.WHEN_VIEW);
+					
+					pv.setMetaworksContext(mc);
+					
+					
+					Serializable processVariableValue = pc.getVariable().get(instance, "");
+					Class variableType = pc.getVariable().getType();
+//				
+//					if(variableType == String.class){
+//						parameters[i].setValueString((String) processVariableValue);
+////					}else if(Long.class.isAssignableFrom(variableType)){
+////						parameters[i].setValueNumber((Number) processVariableValue);
+////					}else if(Calendar.class.isAssignableFrom(variableType)){
+////						parameters[i].setValueCalendar((Calendar) processVariableValue);
+//					}else 
+					
+					if(variableType == ComplexType.class){
+						if(processVariableValue instanceof ComplexType){
+							ComplexType complexType = (ComplexType) processVariableValue;
+							processVariableValue = (Serializable) complexType.getTypeClass().newInstance();
+						}
+						
+					}else{
+						processVariableValue = (Serializable) variableType.newInstance();
+					}
+					
+					pv.setValueObject(processVariableValue);
+								
 				}
 				
-				parameters[i].setVariableType(variableType.getName());
 				
-			}
 		}
 		
 		setInstanceId(instanceId.toString());
@@ -110,6 +118,7 @@ public class WorkItemHandler implements ContextAware{
 		}
 		
 	String instanceId;
+	@Hidden
 		public String getInstanceId() {
 			return instanceId;
 		}
@@ -119,6 +128,7 @@ public class WorkItemHandler implements ContextAware{
 
 
 	String tracingTag;
+	@Hidden
 		public String getTracingTag() {
 			return tracingTag;
 		}
@@ -129,6 +139,7 @@ public class WorkItemHandler implements ContextAware{
 
 	Long taskId;
 		@Id
+		@Hidden
 		public Long getTaskId() {
 			return taskId;
 		}
@@ -147,27 +158,28 @@ public class WorkItemHandler implements ContextAware{
 			ParameterValue pv = parameters[i];
 
 			String variableTypeName = parameters[i].getVariableType();
-			Class variableType = Thread.currentThread().getContextClassLoader().loadClass(variableTypeName);
+			//Class variableType = Thread.currentThread().getContextClassLoader().loadClass(variableTypeName);
 			Serializable processVariableValue = null;
+
+			processVariableValue = (Serializable) parameters[i].getValueObject();
 		
-			if(variableType == String.class){
-				processVariableValue = parameters[i].getValueString();
+//			if(variableType == String.class){
 //			}else if(Long.class.isAssignableFrom(variableType)){
 //				processVariableValue = parameters[i].getValueNumber();
 //			}else if(Calendar.class.isAssignableFrom(variableType)){
 //				processVariableValue = parameters[i].getValueCalendar();
-			}
+//			}
 
 			
 			rp.setProcessVariableChange(new KeyedParameter(pv.getArgument(), processVariableValue));
 		}
 		
-		codiPmSVC.completeWorkitem(getInstanceId(), getTracingTag(), getTaskId().toString(), rp );
-		codiPmSVC.applyChanges(); //you may call this. since you can ensure this service method is the service itself
+		processManager.completeWorkitem(getInstanceId(), getTracingTag(), getTaskId().toString(), rp );
+		processManager.applyChanges(); //you may call this. since you can ensure this service method is the service itself
 	}
 		
 	@Autowired
-	transient protected ProcessManagerRemote codiPmSVC;
+	transient protected ProcessManagerRemote processManager;
 	
 	MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
