@@ -20,8 +20,8 @@ import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.example.ide.CompileError;
 import org.metaworks.example.ide.SourceCode;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.codi.mw3.model.PropertyListable;
 import org.uengine.kernel.GlobalContext;
+import org.uengine.kernel.PropertyListable;
 import org.uengine.processmanager.ProcessManagerRemote;
 import org.uengine.util.UEngineUtil;
 
