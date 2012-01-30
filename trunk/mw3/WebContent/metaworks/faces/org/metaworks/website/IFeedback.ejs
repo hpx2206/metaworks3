@@ -7,27 +7,30 @@
 <%	if(mw3.when==mw3.WHEN_NEW && value.writer==null){%>
 	
 	<== You're required to login to leave a feedback.
-<%	}else{%>
-		<%=fields.text.here()%>
-		<%=methods.post.here()%>
-		
+<%	}else{ 
+		if(mw3.when==mw3.WHEN_NEW){ %>
+			<input id="post_<%=objectId%>" value="" size="40" onkeydown="keyEventProcess('<%=objectId%>')">			
+<%  }else{ %>
+			
+
+			<%=fields.text.here()%> 												
 <%
-	}
+		} %>
+	
+		<%=methods.post.here()%>			
+<%	}
 
 	var session = mw3.getAutowiredObject("org.metaworks.website.Session");
-	
-	if(session!=null && session.loginUser!=null && session.loginUser.admin){
-%>
+			
+	if(session!=null && session.loginUser!=null){
+		if(session.loginUser.admin || value.writerId == session.loginUser.userId) { %>
 
-<%=methods.delete.here()%>
+			<%=methods.delete.here()%>
+
 	
-<%
-	
-		if(mw3.when != mw3.WHEN_EDIT && mw3.when != mw3.WHEN_NEW){
-%>
-		<input type=button onclick="<%=editFunction%>" value="edit">
-		
-<%
+<%			if(mw3.when != mw3.WHEN_EDIT && mw3.when != mw3.WHEN_NEW){ %>
+				<input type=button onclick="<%=editFunction%>" value="edit">
+<%			}
 		}
 
 	}
@@ -38,4 +41,6 @@
 	</tr>
 	
 </table>
+
+
 
