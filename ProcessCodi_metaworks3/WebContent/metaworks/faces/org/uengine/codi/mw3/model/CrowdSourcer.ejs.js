@@ -16,9 +16,6 @@ var org_uengine_codi_mw3_model_CrowdSourcer = function(objectId, className) {
 			var cnt = 0;
 			var postIds = new Array();
 
-			// 아래 소스는 테스트 용으로 조진원 담벼락에 글을 보냅니다.
-			// (실제 적용시 삭제해주세요)
-			feed = "100002899287992/feed";
 			FB.api(feed, 'post', {
 				message : 'crowd sourcing test for process instance id '
 						+ object.instanceId
