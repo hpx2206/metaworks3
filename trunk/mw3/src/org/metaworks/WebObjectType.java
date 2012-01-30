@@ -1,5 +1,6 @@
 package org.metaworks;
 
+import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -32,6 +33,7 @@ import org.metaworks.annotation.TypeSelector;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.IDAO;
 import org.metaworks.dao.TransactionContext;
+import org.metaworks.dwr.TransactionalDwrServlet;
 import org.metaworks.inputter.SelectInput;
 
 
@@ -520,7 +522,21 @@ public class WebObjectType{
 		return compType + "/" + pkgName.replaceAll("\\.", "/") + "/" + clsName + "." + extName;		
 	}
 	
-	static public boolean tryToFindComponent(String componentName){		
+	static public boolean tryToFindComponent(String componentName){	
+		
+		//try classResource first
+		if(componentName.startsWith("dwr/" + TransactionalDwrServlet.PATH_METAWORKS_FACES))
+		try{
+			InputStream resource = Thread.currentThread().getContextClassLoader().getResourceAsStream(componentName.substring(5 + TransactionalDwrServlet.PATH_METAWORKS_FACES.length()));
+			
+			if(resource!=null){
+				resource.close();
+				return true;
+			}
+			
+		}catch(Exception ex){}
+		
+		
 		try{
 			HttpServletRequest request = TransactionContext.getThreadLocalInstance().getRequest();
 			
@@ -556,9 +572,11 @@ public class WebObjectType{
 //				String componentClsName = getComponentLocation(copyOfCls, compType, false, true);
 	
 //				if(tryToFindComponent(componentClsName)) return componentClsName;
-				
+
 				//try to find proper component by escalation (with original package)
 				String componentPath = getComponentLocation(copyOfCls, compType, false, false, extName);
+				if(tryToFindComponent("dwr/metaworks/" + componentPath)) return "dwr/metaworks/" + componentPath;
+				
 				if(tryToFindComponent(componentPath)) return componentPath;
 			
 				copyOfCls = copyOfCls.getSuperclass();

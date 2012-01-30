@@ -1,5 +1,10 @@
 package org.metaworks.example.ide;
 
+import java.util.ArrayList;
+
+import org.metaworks.ServiceMethodContext;
+import org.metaworks.annotation.ServiceMethod;
+
 public class SourceCode {
 	String code;
 		public String getCode() {
@@ -30,6 +35,42 @@ public class SourceCode {
 		this.language = language;
 	}
 	
+	Position cursorPosition;
+		public Position getCursorPosition() {
+			return cursorPosition;
+		}	
+		public void setCursorPosition(Position cursorPosition) {
+			this.cursorPosition = cursorPosition;
+		}
+		
+	String clientObjectId;
+		public String getClientObjectId() {
+			return clientObjectId;
+		}
+		public void setClientObjectId(String clientObjectId) {
+			this.clientObjectId = clientObjectId;
+		}
 	
+	String lineAssistRequested;
+			
+		public String getLineAssistRequested() {
+			return lineAssistRequested;
+		}
+	
+		public void setLineAssistRequested(String lineAssistRequested) {
+			this.lineAssistRequested = lineAssistRequested;
+		}
+
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_STICK)
+	public CodeAssist requestAssist(){
+		CodeAssist codeAssist = new CodeAssist();
+		codeAssist.setAssistances(new ArrayList<String>());
+//		codeAssist.getAssistances().add("");
+		
+		codeAssist.setSrcCodeObjectId(clientObjectId);
+		
+		return codeAssist;
+	}
+
 	
 }
