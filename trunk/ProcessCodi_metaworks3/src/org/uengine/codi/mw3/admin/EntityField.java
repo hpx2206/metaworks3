@@ -2,18 +2,14 @@
 package org.uengine.codi.mw3.admin;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
-import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Range;
 import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.example.ide.SourceCode;
-import org.metaworks.website.MetaworksFile;
 
 @Face(
 	ejsPathMappingByContext=
@@ -28,85 +24,43 @@ public class EntityField implements Cloneable, ContextAware{
 	public EntityField(){
 	}
 	
-	String fieldName;
+	String name;
 		@Id  // TODO: lesson 1 (object addressing and correlation)
-		public String getFieldName() {
-			return fieldName;
+		public String getName() {
+			return name;
 		}
-		public void setFieldName(String fieldName) {
-			this.fieldName = fieldName;
+		public void setName(String name) {
+			this.name = name;
 		}
 	
-	String type;
+	String dataType;
 		@Range(
 				options={
-						"Text", 
-						"Number", 
-						"Money", 
-						"Date", 
-						"File", 
-						"Source Code"},
+						"INT", 
+						"DOUBLE",
+						"CHAR",
+						"VARCHAR",
+						"DATETIME",
+						"TIMESTAMP",
+						},
+						
+						
 				values ={
-						"java.lang.String", 
-						"java.lang.Long", 
-						"java.lang.Double", 
-						"java.util.Date", 
-						"org.metaworks.website.MetaworksFile", 
-						"org.metaworks.example.ide.SourceCode"
-				}
+						"java.lang.Number", 
+						"java.lang.Number",
+						"java.lang.String",
+						"java.lang.String",
+						"java.lang.Date",
+						"java.lang.Number"
+					}
 		)
-		public String getType() {
-			return type;
+		public String getDataType() {
+			return dataType;
 		}
-		public void setType(String type) {
-			this.type = type;
+		public void setDataType(String dataType) {
+			this.dataType = dataType;
 		}
-		
-	String valueString;
-	@Hidden
-		public String getValueString() {
-			return valueString;
-		}
-		public void setValueString(String valueString) {
-			this.valueString = valueString;
-		}
-
-	Long valueLong;
-	@Hidden
-		public Long getValueLong() {
-			return valueLong;
-		}
-		public void setValueLong(Long valueLong) {
-			this.valueLong = valueLong;
-		}
-
-	Date valueDate;
-	@Hidden
-		public Date getValueDate() {
-			return valueDate;
-		}
-		public void setValueDate(Date valueDate) {
-			this.valueDate = valueDate;
-		}
-		
-	SourceCode valueSourceCode;
-	@Hidden	
-		public SourceCode getValueSourceCode() {
-			return valueSourceCode;
-		}
-		public void setValueSourceCode(SourceCode valueSourceCode) {
-			this.valueSourceCode = valueSourceCode;
-		}
-		
-	MetaworksFile valueFile;
-	@Hidden	
-		public MetaworksFile getValueFile() {
-			return valueFile;
-		}
-		public void setValueFile(MetaworksFile valueFile) {
-			this.valueFile = valueFile;
-		}
-				
+						
 	@ServiceMethod(when=MetaworksContext.WHEN_EDIT, where="newEntry", callByContent=true)
 	public EntityDefinition add() throws Exception{
 
@@ -115,7 +69,7 @@ public class EntityField implements Cloneable, ContextAware{
 		
 		//TODO: lesson 3 (validation with throwing exception)
 		if(entityDefinition.entityFields.contains(this))
-			throw new Exception("There's already existing field named '" + getFieldName() + "'.");
+			throw new Exception("There's already existing field named '" + getName() + "'.");
 		EntityField clonedOne = (EntityField) this.clone(); //TODO: lesson 2 (cloning to avoid reflective problem)
 
 		clonedOne.setMetaworksContext(new MetaworksContext());  //TODO: lesson 4 (context injection)
@@ -136,7 +90,7 @@ public class EntityField implements Cloneable, ContextAware{
 		
 		int index = entityDefinition.entityFields.indexOf(this);
 		if(index==-1)
-			throw new Exception("There's no existing field named '" + getFieldName() + "'.");
+			throw new Exception("There's no existing field named '" + getName() + "'.");
 					
 		entityDefinition.entityFields.remove(this);
 		
@@ -159,7 +113,7 @@ public class EntityField implements Cloneable, ContextAware{
 	//TODO: quiz 2 (when the form field is first order, this button should be shown.
 	//              Improve 'up' method and 'down' method not to be shown when it is in the first order and in the last order.
 	
-	@ServiceMethod(when=MetaworksContext.WHEN_VIEW, where="in-container")
+	@ServiceMethod(when=MetaworksContext.WHEN_VIEW, where="newEntry")
 	public EntityDefinition up(){
 		int index = entityDefinition.entityFields.indexOf(this);
 		
@@ -172,7 +126,7 @@ public class EntityField implements Cloneable, ContextAware{
 		return entityDefinition;
 	}
 	
-	@ServiceMethod(when=MetaworksContext.WHEN_VIEW, where="in-container") 
+	@ServiceMethod(when=MetaworksContext.WHEN_VIEW, where="newEntry") 
 	public EntityDefinition down(){
 		int index = entityDefinition.entityFields.indexOf(this);
 		
@@ -191,10 +145,10 @@ public class EntityField implements Cloneable, ContextAware{
 	public boolean equals(Object obj) {
 		if(obj==null) return false;
 		
-		String thisFieldName = this.getFieldName();
-		String comparatorFieldName = ((EntityField)obj).getFieldName();
+		String thisName = this.getName();
+		String comparatorName = ((EntityField)obj).getName();
 		
-		return thisFieldName.equals(comparatorFieldName);
+		return thisName.equals(comparatorName);
 	}
 	
 	

@@ -45,6 +45,7 @@ public class EntityDefinition implements ContextAware, PropertyListable{
 	}
 	
 	String alias;
+	@NonEditable
 		public String getAlias() {
 			return alias;
 		}
@@ -61,7 +62,7 @@ public class EntityDefinition implements ContextAware, PropertyListable{
 		}
 		
 	String defId;
-	@NonEditable	
+	@NonEditable
 		public String getDefId() {
 			return defId;
 		}
@@ -85,15 +86,6 @@ public class EntityDefinition implements ContextAware, PropertyListable{
 		}
 		public void setParentFolder(String parentFolder) {
 			this.parentFolder = parentFolder;
-		}
-
-	String packageName;
-
-		public String getTableName() {
-			return packageName;
-		}
-		public void setPackageName(String packageName) {
-			this.packageName = packageName;
 		}
 
 	String entityName;
@@ -120,52 +112,13 @@ public class EntityDefinition implements ContextAware, PropertyListable{
 			this.newEntityField = newEntityField;
 		}
 		
-
-	SourceCode createSQL;
-			
-		public SourceCode getCreateSQL() {
-			return createSQL;
-		}
-		public void setCreateSQL(SourceCode sourceCode) {
-			this.createSQL = sourceCode;
-		}
-				
-
-		
-		@ServiceMethod(callByContent=true)
-		public void generateCreateSQL(){
-			
-			StringBuffer sb = new StringBuffer();
-			sb
-				.append("package ").append(getTableName()).append(";\n\n")
-				.append("public class " + getEntityName() + "{\n\n");
-			
-			for(int i=0; i<getEntityFields().size(); i++){
-				EntityField field = getEntityFields().get(i);
-				
-				String fieldNameFirstCharUpper = UEngineUtil.toOnlyFirstCharacterUpper(field.getFieldName());
-				
-				sb
-					.append("	").append(field.getType()).append(" ").append(field.getFieldName()).append(";\n")
-					.append("		public ").append(field.getType()).append(" get").append(fieldNameFirstCharUpper).append("(){ return ").append(field.getFieldName()).append("; }\n")
-					.append("		public void set").append(fieldNameFirstCharUpper).append("(").append(field.getType()).append(" ").append(field.getFieldName()).append("){ this.").append(field.getFieldName()).append(" = ").append(field.getFieldName()).append("; }\n\n")
-					;
-			}
-			
-			sb.append("}");
-			
-			
-			createSQL = new SourceCode();
-			createSQL.setCode(sb.toString());
-					
-		}
-		
-		@ServiceMethod(callByContent=true)
-		public void createTable() throws Exception{
+	@ServiceMethod(callByContent=true)
+	public void createTable() throws Exception{
 			save();
 		
-			if(getCreateSQL()==null) return;
+			//if(getCreateSQL()==null) return;
 			
+			/*
 			Connection conn = null;
 			PreparedStatement pstmt = null;
 			
@@ -195,7 +148,7 @@ public class EntityDefinition implements ContextAware, PropertyListable{
 				compileError.setColumn(1);
 				compileError.setMessage(parts != null ? parts[0] : message);
 				
-				getCreateSQL().setCompileErrors(new CompileError[]{compileError});
+				//getCreateSQL().setCompileErrors(new CompileError[]{compileError});
 			
 				e.printStackTrace();
 			}finally{
@@ -212,39 +165,33 @@ public class EntityDefinition implements ContextAware, PropertyListable{
 				} catch (SQLException sqle){						
 				}				
 			}
+			*/
 			
-		}
 		
-		@ServiceMethod(callByContent=true)
-		public Object generateDAO() throws Exception{
-			
-			ClassDefinition classDefinition = new ClassDefinition();
-			
-			classDefinition.compile();
-			
-			ResourcePanel resource = new ResourcePanel();
-			
-			return resource; // let the resource panel refreshed 
-		}
+	}
+	
+	@ServiceMethod(callByContent=true)
+	public Object generateDAO() throws Exception{
 		
-		@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
-		public Object run() throws Exception{
+		ClassDefinition classDefinition = new ClassDefinition();
+		
+		classDefinition.compile();
+		
+		ResourcePanel resource = new ResourcePanel();
+		
+		return resource; // let the resource panel refreshed 
+	}
 			
+	@ServiceMethod(callByContent=true)
+	public void save() throws Exception{
 
-			Object o = Thread.currentThread().getContextClassLoader().loadClass(getTableName() + "." + getEntityName()).newInstance();//cl.loadClass(getPackageName() + "." + getClassName()).newInstance();
-			
-			return o;
-		}
-
-		
-		@ServiceMethod(callByContent=true)
-		public void save() throws Exception{
-			
 			setAlias(getEntityName() + ".sql");
 
 			String strDef = GlobalContext.serialize(this, ClassDefinition.class);
 			
-			String fullDefId = processManager.addProcessDefinition(getEntityName(), getVersion(), "description", false, strDef, getParentFolder(), getDefId(), getAlias(), "class");
+		String fullDefId = processManager.addProcessDefinition(getEntityName(),
+				getVersion(), "description", false, strDef, getParentFolder(),
+				getDefId(), getAlias(), "entity");
 			
 			String[] definitionIdAndVersionId = org.uengine.kernel.ProcessDefinition.splitDefinitionAndVersionId(fullDefId);
 			
@@ -254,7 +201,7 @@ public class EntityDefinition implements ContextAware, PropertyListable{
 			//sourceCodeFile.createNewFile();
 			
 			FileWriter writer = new FileWriter(sourceCodeFile);
-			writer.write(getCreateSQL().getCode());
+			writer.write("abcd");
 			writer.close();
 			///
 			
@@ -275,8 +222,8 @@ public class EntityDefinition implements ContextAware, PropertyListable{
 			
 			setDefId(definitionIdAndVersionId[0]);
 			setDefVerId(definitionIdAndVersionId[1]);
-					
-		}		
+
+	}		
 
 	public void init() {
 		newEntityField = new EntityField();
@@ -290,7 +237,7 @@ public class EntityDefinition implements ContextAware, PropertyListable{
 	@Override
 	public ArrayList<String> listProperties() {
 		try {
-			WebObjectType type = MetaworksRemoteService.getInstance().getMetaworksType(getTableName() + "." + getEntityName());
+			WebObjectType type = MetaworksRemoteService.getInstance().getMetaworksType(getEntityName());
 			
 			ArrayList array = new ArrayList();
 			for (WebFieldDescriptor wfd: type.getFieldDescriptors()) {

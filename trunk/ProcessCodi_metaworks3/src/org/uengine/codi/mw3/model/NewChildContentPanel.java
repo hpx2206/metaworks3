@@ -5,9 +5,13 @@ import javax.persistence.Id;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Face(ejsPath="genericfaces/Window.ejs", displayName="New Object...", options={"hideLabels"}, values={"true"})
 public class NewChildContentPanel extends ContentWindow {
+	
+	@Autowired
+	EntityDesignerWindow entityDesignerWindow;
 	
 	Long parentFolder;
 	@Id
@@ -21,8 +25,10 @@ public class NewChildContentPanel extends ContentWindow {
 
 	@ServiceMethod
 	public EntityDesignerWindow newEntity() throws Exception{
-		EntityDesignerWindow entityDesignerWindow = new EntityDesignerWindow(getParentFolder().toString());
+		EntityDesignerWindow entityDesignerWindow = this.entityDesignerWindow;
+		entityDesignerWindow.newEntity(getParentFolder().toString());
 				
+		
 		return entityDesignerWindow;
 	}
 

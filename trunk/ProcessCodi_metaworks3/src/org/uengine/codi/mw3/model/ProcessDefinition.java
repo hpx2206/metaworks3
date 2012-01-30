@@ -7,7 +7,10 @@ import org.uengine.kernel.RoleMapping;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 public class ProcessDefinition extends Database<IProcessDefinition> implements IProcessDefinition{
-
+	
+	@Autowired
+	NewChildContentPanel newChildContentPanel;
+	
 	Long defId;
 		public Long getDefId() {
 			return defId;
@@ -210,10 +213,10 @@ public class ProcessDefinition extends Database<IProcessDefinition> implements I
 	
 	@Override
 	public NewChildContentPanel newChild() throws Exception {
-		NewChildContentPanel newChild = new NewChildContentPanel();
-		newChild.setParentFolder(getDefId());
+		NewChildContentPanel newChildContentPanel = this.newChildContentPanel; 
+		newChildContentPanel.setParentFolder(getDefId());
 		
-		return newChild;
+		return newChildContentPanel;
 	}
 	
 
@@ -241,8 +244,12 @@ public class ProcessDefinition extends Database<IProcessDefinition> implements I
 			
 			return classDesigner;
 			
-		}
-		
+		}else if("entity".equals(objType)){
+			EntityDesignerWindow entityDesigner = entityDesignerWindow;//new ClassDesignerContentPanel();
+			entityDesigner.load(databaseMe().getDefId().toString());
+			
+			return entityDesigner;		
+		}		
 		
 		// TODO Auto-generated method stub
 		return null;
@@ -254,7 +261,8 @@ public class ProcessDefinition extends Database<IProcessDefinition> implements I
 	@Autowired
 	ProcessDesignerContentPanel processDesignerContentPanel;
 	
-
+	@Autowired
+	EntityDesignerWindow entityDesignerWindow;
 	
 	
 	@AutowiredFromClient
