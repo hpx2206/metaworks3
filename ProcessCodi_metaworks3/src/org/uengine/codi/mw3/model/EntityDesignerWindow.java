@@ -1,30 +1,28 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.annotation.Face;
-import org.uengine.codi.mw3.widget.Tab;
-import org.uengine.codi.mw3.widget.TabPanel;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Face(ejsPath = "genericfaces/Window.ejs", displayName = "EntityDesigner Window", options = { "hideLabels" }, values = { "true" })
-public class EntityDesignerWindow {
-
-	public EntityDesignerWindow(String parentFolder) throws Exception {
-		EntityDesignerContentPanel entityDesigner = new EntityDesignerContentPanel();
-		entityDesigner.newEntity(parentFolder);
-
-		tabPanel = new TabPanel();
-		tabPanel.addTab(new Tab("Table", entityDesigner));
-		tabPanel.addTab(new Tab("Data", "미구현"));
-		tabPanel.addTab(new Tab("Query", "미구현"));
-
+public class EntityDesignerWindow extends ContentWindow {
+			
+	public EntityDesignerWindow(){}
+	
+	@Autowired
+	EntityDesignerContentPanel entityDesignerContentPanel;
+		public EntityDesignerContentPanel getEntityDesignerContentPanel() {
+			return entityDesignerContentPanel;
+		}
+		public void setEntityDesignerContentPanel(
+				EntityDesignerContentPanel entityDesignerContentPanel) {
+			this.entityDesignerContentPanel = entityDesignerContentPanel;
+		}
+		
+	public void newEntity(String parentFolder) throws Exception {
+		entityDesignerContentPanel.newEntity(parentFolder);
 	}
-
-	TabPanel tabPanel;
-
-	public TabPanel getTabPanel() {
-		return tabPanel;
-	}
-
-	public void setTabPanel(TabPanel tabPanel) {
-		this.tabPanel = tabPanel;
+	
+	public void load(String defId) throws Exception {
+		entityDesignerContentPanel.load(defId);		
 	}
 }

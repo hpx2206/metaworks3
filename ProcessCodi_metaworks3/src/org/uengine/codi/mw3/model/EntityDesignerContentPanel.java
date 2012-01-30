@@ -6,10 +6,13 @@ import org.uengine.codi.mw3.admin.EntityDefinition;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.processmanager.ProcessManagerRemote;
 
-
-public class EntityDesignerContentPanel extends ContentWindow{
+@Face(ejsPath="genericfaces/Tab.ejs",
+      options={"hideLabels"},
+	  values={"true"})
+public class EntityDesignerContentPanel {
 	
-	EntityDefinition entityDefinition;
+	@Autowired
+	EntityDefinition entityDefinition;		
 		public EntityDefinition getEntityDefinition() {
 			return entityDefinition;
 		}
@@ -17,9 +20,12 @@ public class EntityDesignerContentPanel extends ContentWindow{
 			this.entityDefinition = entityDefinition;
 		}
 
+	@Autowired
+	ProcessManagerRemote processManager;
+		
 	public void newEntity(String parentFoler) throws Exception{
-		entityDefinition = new EntityDefinition();
 		entityDefinition.setParentFolder(parentFoler);
+		entityDefinition.getMetaworksContext().setWhere("newEntity");
 	}
 
 	public void load(String defId) throws Exception{
@@ -29,7 +35,5 @@ public class EntityDesignerContentPanel extends ContentWindow{
 	}
 
 	
-	@Autowired
-	ProcessManagerRemote processManager;
 
 }
