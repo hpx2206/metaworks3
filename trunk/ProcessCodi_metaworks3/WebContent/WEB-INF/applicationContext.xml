@@ -93,12 +93,11 @@
 	<bean id="WorkItemHandler" class="org.uengine.codi.mw3.model.WorkItemHandler"/>
 	<bean id="FormWorkItemHandler" class="org.uengine.codi.activitytypes.wih.FormWorkItemHandler"/>
 	
-	<bean id="InstanceViewContent" class="org.uengine.codi.mw3.model.InstanceViewContent" scope="request"/>	
-	<bean id="InstanceView" class="org.uengine.codi.mw3.model.InstanceView" scope="request"/>
-	<bean id="Instance" class="org.uengine.codi.mw3.model.Instance" scope="request"/>
-	
-	
+	<bean id="InstanceViewContent" class="org.uengine.codi.mw3.model.InstanceViewContent"/>	
+	<bean id="InstanceView" class="org.uengine.codi.mw3.model.InstanceView"/>
 	<bean id="Instance" class="org.uengine.codi.mw3.model.Instance"/>
+	
+	
 	<bean id="Contact" class="org.uengine.codi.mw3.model.Contact"/>
 	<bean id="FormDefinition" class="org.uengine.codi.mw3.admin.FormDefinition"/>
 	<bean id="CrowdSourcer" class="org.uengine.codi.mw3.model.CrowdSourcer"/>	
