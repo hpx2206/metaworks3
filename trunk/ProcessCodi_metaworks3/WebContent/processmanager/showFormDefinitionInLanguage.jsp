@@ -18,8 +18,6 @@
 		String prodVerId = pm.getProcessDefinitionProductionVersion(id);
 		String strFormDef = pm.getResource(prodVerId);
 		
-		org.uengine.codi.mw3.CodiDwrServlet.initClassLoader();
-
 		Object definition = GlobalContext.deserialize(strFormDef, String.class);
 		
 		if(definition instanceof PropertyListable){
@@ -30,6 +28,8 @@
     }
 %><jsp:useBean id="processManagerFactory" scope="application" class="org.uengine.processmanager.ProcessManagerFactoryBean" />
 <%
+	org.uengine.codi.mw3.CodiDwrServlet.initClassLoader();
+
 	//load up the formfield
 	String formDefId = request.getParameter("formDefId");
 	//System.out.println("formDefId =["+formDefId+"]");
