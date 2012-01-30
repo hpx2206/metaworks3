@@ -30,8 +30,11 @@ import org.metaworks.example.ide.SourceCodeEditor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.CodiDwrServlet;
 import org.uengine.codi.mw3.CodiMetaworksRemoteService;
-import org.uengine.codi.mw3.model.PropertyListable;
+import org.uengine.codi.mw3.model.FaceSourceCode;
+import org.uengine.codi.mw3.model.JavaSourceCode;
+import org.uengine.codi.mw3.model.WindowPanel;
 import org.uengine.kernel.GlobalContext;
+import org.uengine.kernel.PropertyListable;
 import org.uengine.processmanager.ProcessManagerRemote;
 import org.uengine.util.UEngineUtil;
 
@@ -139,21 +142,21 @@ public class ClassDefinition implements ContextAware, PropertyListable{
 		}
 		
 
-	SourceCode sourceCode;
+	JavaSourceCode sourceCode;
 			
-		public SourceCode getSourceCode() {
+		public JavaSourceCode getSourceCode() {
 			return sourceCode;
 		}
-		public void setSourceCode(SourceCode sourceCode) {
+		public void setSourceCode(JavaSourceCode sourceCode) {
 			this.sourceCode = sourceCode;
 		}
 		
-	SourceCode face;
+	FaceSourceCode face;
 			
-		public SourceCode getFace() {
+		public FaceSourceCode getFace() {
 			return face;
 		}
-		public void setFace(SourceCode face) {
+		public void setFace(FaceSourceCode face) {
 			this.face = face;
 		}
 		
@@ -181,8 +184,9 @@ public class ClassDefinition implements ContextAware, PropertyListable{
 		sb.append("}");
 		
 		
-		sourceCode = new SourceCode();
+		sourceCode = new JavaSourceCode();
 		sourceCode.setCode(sb.toString());
+	
 				
 	}
 	
@@ -255,7 +259,11 @@ public class ClassDefinition implements ContextAware, PropertyListable{
 
 		Object o = Thread.currentThread().getContextClassLoader().loadClass(getPackageName() + "." + getClassName()).newInstance();//cl.loadClass(getPackageName() + "." + getClassName()).newInstance();
 		
-		return o;
+		WindowPanel outputWindow = new WindowPanel();
+		outputWindow.setPanel(o);
+//		outputWindow.
+		
+		return outputWindow;
 	}
 
 	
@@ -278,6 +286,20 @@ public class ClassDefinition implements ContextAware, PropertyListable{
 		FileWriter writer = new FileWriter(sourceCodeFile);
 		writer.write(getSourceCode().getCode());
 		writer.close();
+		
+		//if there is face code, save it.
+		if(UEngineUtil.isNotEmpty(getFace().getCode())){
+			String faceSource = "/Users/jyjang/javasources/" + getAlias();
+			faceSource = faceSource.substring(0, faceSource.indexOf(".")) + ".ejs";
+			
+			File ejsFile = new File(faceSource);
+			
+			writer = new FileWriter(ejsFile);
+			writer.write(getFace().getCode());
+			writer.close();
+
+		}
+		
 		///
 		
 		//TODO:   generate face file if exists
@@ -313,6 +335,8 @@ public class ClassDefinition implements ContextAware, PropertyListable{
 	@Override
 	public ArrayList<String> listProperties() {
 		try {
+			
+			
 			WebObjectType type = MetaworksRemoteService.getInstance().getMetaworksType(getPackageName() + "." + getClassName());
 			
 			ArrayList array = new ArrayList();

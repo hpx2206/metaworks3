@@ -46,9 +46,9 @@ public class FormWorkItemHandler extends WorkItemHandler{
 		MetaworksFormActivity formActivity = (MetaworksFormActivity) humanActivity;
 		HtmlFormContext htmlFormContext = (HtmlFormContext) formActivity.getVariableForHtmlFormContext().get(instance, "");
 		
-		String prodVerId = codiPmSVC.getProcessDefinitionProductionVersion(htmlFormContext.getFormDefId());
+		String prodVerId = processManager.getProcessDefinitionProductionVersion(htmlFormContext.getFormDefId());
 		
-		FormDefinition formDef = (FormDefinition) GlobalContext.deserialize(codiPmSVC.getResource(prodVerId));
+		FormDefinition formDef = (FormDefinition) GlobalContext.deserialize(processManager.getResource(prodVerId));
 		FormInstance formInstance = formDef.preview();
 		
 		
@@ -73,7 +73,7 @@ public class FormWorkItemHandler extends WorkItemHandler{
 		String tracingTag = getTracingTag();
 		
 		
-		instance = codiPmSVC.getProcessInstance(instanceId.toString());
+		instance = processManager.getProcessInstance(instanceId.toString());
 
 		if(humanActivity==null && instanceId!=null && tracingTag!=null){
 			humanActivity = (HumanActivity) instance.getProcessDefinition().getActivity(tracingTag);

@@ -1,9 +1,13 @@
 package org.uengine.codi.mw3;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.HashMap;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -19,6 +23,12 @@ public class CodiDwrServlet extends TransactionalDwrServlet{
 
 	public static ClassLoader codiClassLoader;
 	
+	final static String SECURITYMSG_SYSTEM_CLASS_USAGE_PROHIBITED = "Platform can't support to use this class";
+	
+	final static HashMap<String, String> securedClasses = new HashMap<String, String>();
+	static{
+		securedClasses.put(File.class.getName(), SECURITYMSG_SYSTEM_CLASS_USAGE_PROHIBITED);
+	}
 	
 
 	@Override
@@ -44,7 +54,40 @@ public class CodiDwrServlet extends TransactionalDwrServlet{
 	public static void refreshClassLoader(String resourceName){
 //		ClassLoader cl = new CodiClassLoader(CodiMetaworksRemoteService.class.getClassLoader());
 		
-		JavaSourceClassLoader cl = new JavaSourceClassLoader(CodiMetaworksRemoteService.class.getClassLoader());
+		
+		
+		
+		
+		JavaSourceClassLoader cl = new JavaSourceClassLoader(CodiMetaworksRemoteService.class.getClassLoader()){
+
+
+			@Override
+			public InputStream getResourceAsStream(String name) {
+
+				if(name.endsWith(".ejs") || name.endsWith(".ejs.js")){
+					try {
+						FileInputStream fis = new FileInputStream("/Users/jyjang/javasources/" + name);
+						return fis;
+					} catch (FileNotFoundException e) {
+					}
+					
+				}
+
+				return super.getResourceAsStream(name);
+			}
+
+			protected Class<?> findClass(String className)
+					throws ClassNotFoundException {
+
+				if(securedClasses.containsKey(className)){
+					throw new ClassNotFoundException(securedClasses.get(className));
+				}
+				
+				return super.findClass(className);
+			}
+			
+			
+		};
 		
 		
 		URLClassLoader classLoader = (URLClassLoader) CodiMetaworksRemoteService.class.getClassLoader();
@@ -67,6 +110,9 @@ public class CodiDwrServlet extends TransactionalDwrServlet{
 	public static void initClassLoader(){
 		if(codiClassLoader==null)
 			refreshClassLoader(null);
+		
+		Thread.currentThread().setContextClassLoader(codiClassLoader);
+		
 	}
 	
 }
