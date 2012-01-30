@@ -62,8 +62,8 @@ public class ContactPanel {
 		
 		Popup popup = new Popup();
 		
-		popup.setPageX(this.pageX);
-		popup.setPageY(this.pageY);
+//		popup.setPageX(this.pageX);
+//		popup.setPageY(this.pageY);
 		
 		popup.setPanel(new AddContactPanel());
 		popup.setName("AddContactPanel");
