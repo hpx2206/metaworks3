@@ -1,24 +1,17 @@
 package org.uengine.codi.mw3.model;
 
-import java.rmi.RemoteException;
-
 import javax.persistence.Id;
 
 import org.metaworks.annotation.Face;
+import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.codi.mw3.admin.ClassDefinition;
-import org.uengine.codi.mw3.admin.FormDefinition;
-import org.uengine.codi.mw3.admin.FormInstance;
-import org.uengine.codi.mw3.model.ContentPanel;
-import org.uengine.kernel.GlobalContext;
-import org.uengine.processmanager.ProcessManagerRemote;
 
 @Face(ejsPath="genericfaces/Window.ejs", displayName="New Object...", options={"hideLabels"}, values={"true"})
-public class NewChildContentPanel extends ContentPanel{
+public class NewChildContentPanel extends ContentWindow {
 	
 	Long parentFolder;
 	@Id
+	@Hidden
 		public Long getParentFolder() {
 			return parentFolder;
 		}
@@ -26,6 +19,23 @@ public class NewChildContentPanel extends ContentPanel{
 			this.parentFolder = parentFolder;
 		}
 
+	@ServiceMethod
+	public EntityDesignerWindow newEntity() throws Exception{
+		EntityDesignerWindow entityDesignerWindow = new EntityDesignerWindow(getParentFolder().toString());
+				
+		return entityDesignerWindow;
+	}
+
+	/*
+	public EntityDesignerContentPanel newEntity() throws Exception{
+		EntityDesignerContentPanel entityDesigner = new EntityDesignerContentPanel();
+		entityDesigner.newEntity(getParentFolder().toString());
+		
+		return entityDesigner;
+	}
+	*/
+
+		
 	@ServiceMethod
 	public ClassDesignerContentPanel newJavaClass() throws Exception{
 		ClassDesignerContentPanel classDesigner = new ClassDesignerContentPanel();

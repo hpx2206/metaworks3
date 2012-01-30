@@ -20,13 +20,13 @@ public class Main {
 		session.setLogin(login);
 		this.session = session;		
 		
-		this.navigationWindowPanel = new WindowPanel(new Navigation());
+		this.navigationWindow = new NavigationWindow();
 		
-		this.contentWindowPanel = new WindowPanel(new ContentPanel());
+		this.contentWindow = new ContentWindow();
 		
-		this.contactWindowPanel = new WindowPanel(new ContactPanel(login));
+		this.contactWindow = new ContactWindow(login);
 				
-		this.instanceListWindowPanel = new WindowPanel(new InstanceListPanel(session));
+		this.instanceListWindow = new InstanceListWindow(session);
 	}
 	
 	ILogin login;
@@ -49,38 +49,39 @@ public class Main {
 			this.session = session;
 		}
 		
-	WindowPanel navigationWindowPanel;
-		public WindowPanel getNavigationWindowPanel() {
-			return navigationWindowPanel;
+	NavigationWindow navigationWindow;
+		public NavigationWindow getNavigationWindow() {
+			return navigationWindow;
 		}
-		public void setNavigationWindowPanel(WindowPanel navigationWindowPanel) {
-			this.navigationWindowPanel = navigationWindowPanel;
-		}
-
-	WindowPanel instanceListWindowPanel;
-		public WindowPanel getInstanceListWindowPanel() {
-			return instanceListWindowPanel;
-		}	
-		public void setInstanceListWindowPanel(WindowPanel instanceListWindowPanel) {
-			this.instanceListWindowPanel = instanceListWindowPanel;
+		public void setNavigationWindow(NavigationWindow navigationWindow) {
+			this.navigationWindow = navigationWindow;
 		}
 
-	WindowPanel contentWindowPanel;
-		public WindowPanel getContentWindowPanel() {
-			return contentWindowPanel;
+	ContentWindow contentWindow;
+		public ContentWindow getContentWindow() {
+			return contentWindow;
 		}
-		public void setContentWindowPanel(WindowPanel contentWindowPanel) {
-			this.contentWindowPanel = contentWindowPanel;
+		public void setContentWindow(ContentWindow contentWindow) {
+			this.contentWindow = contentWindow;
 		}
 
-	WindowPanel contactWindowPanel;
-		public WindowPanel getContactWindowPanel() {
-			return contactWindowPanel;
+
+	ContactWindow contactWindow;
+		public ContactWindow getContactWindow() {
+			return contactWindow;
 		}
-		public void setContactWindowPanel(WindowPanel contactWindowPanel) {
-			this.contactWindowPanel = contactWindowPanel;
+		public void setContactWindow(ContactWindow contactWindow) {
+			this.contactWindow = contactWindow;
 		}
-		
+
+	InstanceListWindow instanceListWindow;
+		public InstanceListWindow getInstanceListWindow() {
+			return instanceListWindow;
+		}
+	
+		public void setInstanceListWindow(InstanceListWindow instanceListWindow) {
+			this.instanceListWindow = instanceListWindow;
+		}
 	
 
 	@ServiceMethod

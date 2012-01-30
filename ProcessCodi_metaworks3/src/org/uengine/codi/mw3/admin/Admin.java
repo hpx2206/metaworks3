@@ -1,9 +1,8 @@
 package org.uengine.codi.mw3.admin;
 
-import org.uengine.codi.mw3.model.ContentPanel;
+import org.uengine.codi.mw3.model.ContentWindow;
 import org.uengine.codi.mw3.model.ILogin;
 import org.uengine.codi.mw3.model.Session;
-import org.uengine.codi.mw3.model.WindowPanel;
 
 
 public class Admin {
@@ -12,35 +11,31 @@ public class Admin {
 //		formDefinition = new FormDefinition();
 //		formInstance = new FormInstance();
 
-		ResourcePanel resourcePanel = new ResourcePanel();
-		resourcePanel.refresh();
+		resourceWindow = new ResourceWindow();
 
-		resourceWindowPanel = new WindowPanel(resourcePanel);
-		
 		Session session = new Session();
 		session.setLogin(login);
 		this.session = session;
 
-		contentWindowPanel = new WindowPanel(new ContentPanel());
+		contentWindow = new ContentWindow();
 	}
 	
-	WindowPanel resourceWindowPanel;		
-		public WindowPanel getResourceWindowPanel() {
-			return resourceWindowPanel;
+	ResourceWindow resourceWindow;
+		public ResourceWindow getResourceWindow() {
+			return resourceWindow;
 		}
-		public void setResourceWindowPanel(WindowPanel resourceWindowPanel) {
-			this.resourceWindowPanel = resourceWindowPanel;
+		public void setResourceWindow(ResourceWindow resourceWindow) {
+			this.resourceWindow = resourceWindow;
 		}
 
-	WindowPanel contentWindowPanel;
-	
-		public WindowPanel getContentWindowPanel() {
-			return contentWindowPanel;
+	ContentWindow contentWindow;
+		public ContentWindow getContentWindow() {
+			return contentWindow;
 		}
-		public void setContentWindowPanel(WindowPanel contentWindowPanel) {
-			this.contentWindowPanel = contentWindowPanel;
+		public void setContentWindow(ContentWindow contentWindow) {
+			this.contentWindow = contentWindow;
 		}
-		
+
 	Session session;
 		public Session getSession() {
 			return session;

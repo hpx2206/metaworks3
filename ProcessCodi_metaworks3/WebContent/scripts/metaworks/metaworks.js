@@ -543,7 +543,7 @@
 
 				var options = arguments[3];
 				
-				html="<div id='"+divId+"'>...  LOADING PROPERTY ...</div><div id='"+infoDivId+"'></div>";
+				html="<div id='"+divId+"' className='" + className + "'>...  LOADING PROPERTY ...</div><div id='"+infoDivId+"'></div>";
 				
 				html+="<" + "script>";
 				html+="   mw3.showObjectWithObjectId('"+this.objectId+"','"+className+"', '#"+divId+"'"+(options ? ", "+ JSON.stringify(options) : "") +");"
@@ -1227,19 +1227,18 @@
 
 				var oldContext = mw3.getContext();
 				if(context!=null){
-					//mw3.setContext(context);
-					
+					//mw3.setContext(context);					
 				}
 				
 				var when = mw3.when;
 
-				if(context!=null && context.when){
-					when = context.when
-				}
+				if(context!=null && context.when)					
+					when = context.when;
+				
 
 				if(this.fieldDescriptor.attributes && this.fieldDescriptor.attributes['noneditable'])
 					when = mw3.WHEN_VIEW;
-
+				
 				
 				html = mw3.locateObject(value, face, null, {when: when, descriptor: this.fieldDescriptor});
 				

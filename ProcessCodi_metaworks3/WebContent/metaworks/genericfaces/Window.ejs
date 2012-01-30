@@ -1,8 +1,4 @@
 <%
-
-
-//mw3.debug(value);
-
 	var width = null;
 	var height = null;
 
@@ -11,11 +7,7 @@
 		height = descriptor.getOptionValue('height');
 	}
 	
-	//if(width==null) width = 500;
-	//if(height==null) height = 700;
-
-
-if (value != null){
+	if (value != null){
 %>
 
 
@@ -45,23 +37,21 @@ if (value != null){
             <div class="boxmiddleright">
                 <div class="boxmiddleleft">
                     <div class="togglebtnmini" onclick="mw3.getFaceHelper('<%=objectId%>').minimize('','')"></div>
-                    <div class="worklistcontentcontainer" style="overflow-y:auto">                        
-                            
+                    <div class="worklistcontentcontainer" style="overflow-y:auto">
 						<div style="height:100%;">
 							
 							
 							
 						<%	
 						
-						//alert(dwr.util.toDescriptiveString(objectMetadata.faceOptions, 5))
-						 	var showLabel = !(objectMetadata.faceOptions && objectMetadata.faceOptions['hideLabels']);
+						var showLabel = !(objectMetadata.faceOptions && objectMetadata.faceOptions['hideLabels']);
 						
-						  for (var i=0; i<objectMetadata.fieldDescriptors.length; i++){
-						  
-						  	var fd = objectMetadata.fieldDescriptors[i];
+						for (var i=0; i<objectMetadata.fieldDescriptors.length; i++){						  
+							var fd = objectMetadata.fieldDescriptors[i];
 						  	
 						  	if(fd.attributes && fd.attributes['hidden']) continue;
 						  	if(fd.name == 'metaworksContext') continue;
+	
 						  	
 						  	var fieldValue = value[fd.name];
 						  	

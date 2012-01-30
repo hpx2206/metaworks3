@@ -2,7 +2,8 @@ package org.uengine.codi.mw3.model;
 
 import org.metaworks.annotation.Face;
 
-public class NewInstancePanel extends ContentPanel{
+@Face(ejsPath="genericfaces/Window.ejs", displayName="New InstancePanel", options={"hideLabels"}, values={"true"})
+public class NewInstancePanel extends ContentWindow{
 	
 	public NewInstancePanel() throws Exception{
 		processDefinitions = new ProcessDefinition();

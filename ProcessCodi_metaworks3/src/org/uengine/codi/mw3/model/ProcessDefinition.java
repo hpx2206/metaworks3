@@ -1,24 +1,9 @@
 package org.uengine.codi.mw3.model;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.ejb.EJBException;
-import javax.ejb.EJBLocalHome;
-import javax.ejb.EJBLocalObject;
-import javax.ejb.RemoveException;
-
 import org.metaworks.annotation.AutowiredFromClient;
-import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
-import org.metaworks.dao.IDAO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.kernel.ActivityReference;
-import org.uengine.kernel.HumanActivity;
-import org.uengine.kernel.ParameterContext;
 import org.uengine.kernel.RoleMapping;
-import org.uengine.persistence.processdefinition.ProcessDefinitionRepositoryLocal;
-import org.uengine.processmanager.ProcessManagerBean;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 public class ProcessDefinition extends Database<IProcessDefinition> implements IProcessDefinition{
@@ -229,7 +214,7 @@ public class ProcessDefinition extends Database<IProcessDefinition> implements I
 	
 
 	@Override
-	public ContentPanel design() throws Exception {
+	public ContentWindow design() throws Exception {
 		String objType = databaseMe().getObjType();
 		
 		if("form".equals(objType)){

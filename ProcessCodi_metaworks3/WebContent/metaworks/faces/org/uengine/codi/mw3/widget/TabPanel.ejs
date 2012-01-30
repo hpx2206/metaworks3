@@ -15,12 +15,15 @@ $(function() {
 		<%  } %>
 		
 	</ul>
+	
 	<%
 		for (var i=0; i<value.tabs.length; i++){
 	%>
 	
 	<div id="tabs-<%=i%>">
-		<%=value.tabs[i].tabContent%>
+	
+	<%=mw3.locateObject(value.tabs[i], value.tabs[i].__className)%>
+	
 	</div>
 	
 	<%  } %>	
