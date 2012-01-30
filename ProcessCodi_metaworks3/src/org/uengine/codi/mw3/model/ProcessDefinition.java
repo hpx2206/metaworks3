@@ -172,13 +172,17 @@ public class ProcessDefinition extends Database<IProcessDefinition> implements I
 			child.setParentFolder(getDefId());
 			setIsFolder(true);
 			setChilds(child.findAll()); //this lets drill down
+			getChilds().setMetaworksContext(getMetaworksContext());
 		//}
 		}
 	}
 
+	@Autowired
+	InstanceViewContent instanceViewContent;
+	
 	@Override
 	public Object[] initiate() throws Exception {
-		InstanceViewContent instanceView = new InstanceViewContent();
+		InstanceViewContent instanceView = instanceViewContent;// = new InstanceViewContent();
 		
 		String prodVerId = codiPmSVC.getProcessDefinitionProductionVersion(getDefId().toString());
 		String instId = codiPmSVC.initializeProcess(prodVerId);

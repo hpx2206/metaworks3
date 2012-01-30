@@ -15,30 +15,38 @@ public class ParameterValue implements ContextAware{
 			this.argument = argument;
 		}
 		
-	String valueString;
-		public String getValueString() {
-			return valueString;
+	Object valueObject;
+		public Object getValueObject() {
+			return valueObject;
 		}
-		public void setValueString(String valueString) {
-			this.valueString = valueString;
+		public void setValueObject(Object valueObject) {
+			this.valueObject = valueObject;
 		}
-
-	Long valueLong;
-		public Long getValueLong() {
-			return valueLong;
-		}
-		public void setValueLong(Long valueLong) {
-			this.valueLong = valueLong;
-		}
-
-	Boolean valueBoolean;
-		public Boolean getValueBoolean() {
-			return valueBoolean;
-		}
-		public void setValueBoolean(Boolean valueBoolean) {
-			this.valueBoolean = valueBoolean;
-		}
-	
+//		
+//	String valueString;
+//		public String getValueString() {
+//			return valueString;
+//		}
+//		public void setValueString(String valueString) {
+//			this.valueString = valueString;
+//		}
+//
+//	Long valueLong;
+//		public Long getValueLong() {
+//			return valueLong;
+//		}
+//		public void setValueLong(Long valueLong) {
+//			this.valueLong = valueLong;
+//		}
+//
+//	Boolean valueBoolean;
+//		public Boolean getValueBoolean() {
+//			return valueBoolean;
+//		}
+//		public void setValueBoolean(Boolean valueBoolean) {
+//			this.valueBoolean = valueBoolean;
+//		}
+//	
 //	Calendar valueCalendar;
 //		public Calendar getValueCalendar() {
 //			return valueCalendar;
@@ -47,6 +55,8 @@ public class ParameterValue implements ContextAware{
 //			this.valueCalendar = valueCalendar;
 //		}
 		
+
+
 	String variableType;
 		public String getVariableType() {
 			return variableType;

@@ -142,7 +142,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			workItemHandler = new WorkItemHandler();
 		}
 		
-		workItemHandler.codiPmSVC = codiPmSVC;
+		workItemHandler.processManager = codiPmSVC;
 		workItemHandler.setInstanceId(instId.toString());
 		workItemHandler.setTaskId(getTaskId());
 		workItemHandler.setTracingTag(tracingTag);
