@@ -7,6 +7,7 @@ import org.directwebremoting.WebContext;
 import org.directwebremoting.WebContextFactory;
 import org.directwebremoting.proxy.dwr.Util;
 import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.IDAO;
 
@@ -26,12 +27,24 @@ public class Feedback extends Database<IFeedback> implements IFeedback {
 		}
 		public void setMenuId(int menuId) {
 			this.menuId = menuId;
-		}
-
-	Date postdate;
+		}	
+	
 	String text;
-
+		public String getText() {
+			return text;
+		}
+		public void setText(String text) {
+			this.text = text;
+		}
 		
+	Date postdate;
+		public Date getPostdate() {
+			return postdate;
+		}
+		public void setPostdate(Date postdate) {
+			this.postdate = postdate;
+		}
+	
 	String writerId;
 		public String getWriterId() {
 			return writerId;
@@ -56,19 +69,8 @@ public class Feedback extends Database<IFeedback> implements IFeedback {
 			this.writer = writer;
 		}
 	
-	public Date getPostdate() {
-		return postdate;
-	}
-	public void setPostdate(Date postdate) {
-		this.postdate = postdate;
-	}
-	public String getText() {
-		return text;
-	}
-	public void setText(String text) {
-		this.text = text;
-	}
-	
+
+
 	public static IFeedback loadFeedback(IMenu menu) throws Exception{
 		
 		IFeedback homeFeedback = (IFeedback) Database.sql(IFeedback.class, "select * from feedback where menuId = ?menuId");
@@ -79,7 +81,8 @@ public class Feedback extends Database<IFeedback> implements IFeedback {
 		
 	}
 	
-	public FeedbackPanel post() throws Exception {
+	@ServiceMethod(callByContent=true)
+	public FeedbackList post() throws Exception {
 		
 		setWriter(session.loginUser);
 		
@@ -97,42 +100,32 @@ public class Feedback extends Database<IFeedback> implements IFeedback {
 		syncToDatabaseMe();
 		flushDatabaseMe();
 		
-		FeedbackPanel panel = new FeedbackPanel();
-		panel.session = session; //TODO: it's annoying and error-prone too.
-		panel.load(session.getMenu());
-		
-		
-		////////// alert to other session users :  COMET //////////
+		FeedbackList feebackList = new FeedbackList();
+		feebackList.session = session; //TODO: it's annoying and error-prone too.
+		feebackList.load(session.getMenu());
 		
 		WebContext wctx = WebContextFactory.get();
 		String currentPage = wctx.getCurrentPage();
 
-		   // For all the browsers on the current page:
 		   Collection sessions = wctx.getScriptSessionsByPage(currentPage);
 
-		   //TODO: filter other topic's postings;
 		   Util utilAll = new Util(sessions);
 		   utilAll.addFunctionCall("mw3.getAutowiredObject('org.metaworks.website.FeedbackList').refresh");
 	
 		
-		return panel;
+		return feebackList;
 	}
 	
-	public FeedbackPanel delete() throws Exception{
+	public FeedbackList delete() throws Exception{
 		deleteDatabaseMe();
-		//flushDatabaseMe();
 		
-		FeedbackPanel panel = new FeedbackPanel();
-		panel.session = session;
-		panel.load(session.getMenu());
+		FeedbackList feebackList = new FeedbackList();
+		feebackList.session = session;
+		feebackList.load(session.getMenu());
 		
-		return panel;		
+		return feebackList;		
 	}
 
-	
-//	@AutowiredFromClient
-//	public ContentPanel contentPanel;
-	
 	@AutowiredFromClient
 	public Session session;
 

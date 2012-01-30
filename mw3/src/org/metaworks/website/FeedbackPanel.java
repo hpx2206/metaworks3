@@ -13,16 +13,17 @@ import org.metaworks.annotation.ServiceMethod;
 		options={"hideAddBtn", "hideLabels"},
 		values={"true", "true"}
 )
+
 public class FeedbackPanel {
 
-	IFeedback feedback;
-		public IFeedback getFeedback() {
-			return feedback;
+	FeedbackList feedbackList;
+		public FeedbackList getFeedbackList() {
+			return feedbackList;
 		}
-		public void setFeedback(IFeedback feedback) {
-			this.feedback = feedback;
+		public void setFeedbackList(FeedbackList feedbackList) {
+			this.feedbackList = feedbackList;
 		}
-		
+
 	IFeedback newFeedback;
 		public IFeedback getNewFeedback() {
 			return newFeedback;
@@ -32,29 +33,16 @@ public class FeedbackPanel {
 		}
 
 	public void load(IMenu menu) throws Exception{
-		setFeedback(Feedback.loadFeedback(menu));
+		feedbackList = new FeedbackList();
+		feedbackList.load(menu);
 		
 		newFeedback = new Feedback();
 		newFeedback.setMenuId(menu.getMenuId());
 		newFeedback.setWriter(session.loginUser);
 		newFeedback.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 
-	}
-	
-	@ServiceMethod
-	public void refresh() throws Exception{
-		setFeedback(Feedback.loadFeedback(session.menu));
-		
-		newFeedback = new Feedback();
-		newFeedback.setMenuId(session.menu.getMenuId());
-		newFeedback.setWriter(session.loginUser);
-		newFeedback.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+	}	
 
-	}
-	
-	
-	
 	@AutowiredFromClient
 	public Session session;
-	
 }
