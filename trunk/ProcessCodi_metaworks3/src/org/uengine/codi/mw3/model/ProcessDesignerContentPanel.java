@@ -9,7 +9,7 @@ import org.uengine.codi.mw3.admin.ClassDefinition;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.processmanager.ProcessManagerRemote;
 
-public class ProcessDesignerContentPanel extends ContentPanel{
+public class ProcessDesignerContentPanel extends ContentWindow{
 	
 	public void newProcessDefinition(String parentFolder) throws Exception{
 		setParentFolder(parentFolder);

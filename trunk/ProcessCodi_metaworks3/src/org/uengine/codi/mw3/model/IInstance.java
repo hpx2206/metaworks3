@@ -10,7 +10,7 @@ import org.metaworks.dao.IDAO;
 public interface IInstance extends IDAO{
 
 	@ServiceMethod
-	public ContentPanel detail() throws Exception;
+	public ContentWindow detail() throws Exception;
 
 	
 	@Id

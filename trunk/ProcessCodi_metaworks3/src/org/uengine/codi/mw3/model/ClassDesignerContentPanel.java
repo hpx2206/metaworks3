@@ -12,7 +12,7 @@ import org.uengine.kernel.GlobalContext;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 @Face(ejsPath="genericfaces/Window.ejs", displayName="Class Designer", options={"hideLabels"}, values={"true"})
-public class ClassDesignerContentPanel extends ContentPanel{
+public class ClassDesignerContentPanel extends ContentWindow {
 	
 
 	ClassDefinition classDefinition;

@@ -2,9 +2,9 @@ package org.uengine.codi.mw3.model;
 
 import org.metaworks.annotation.Face;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.processmanager.ProcessManagerRemote;
 
-public class InstanceViewContent extends ContentPanel{
+@Face(ejsPath="genericfaces/Window.ejs", displayName="InstanceViewContent", options={"hideLabels"}, values={"true"})
+public class InstanceViewContent extends ContentWindow {
 
 	//ProcessManagerRemote processManager;	
 	//InstanceView instanceView;	
@@ -24,7 +24,7 @@ public class InstanceViewContent extends ContentPanel{
 	}
 	
 	public void load(IInstance instance) throws Exception{
-		//instanceView = new InstanceView();		
+		//instanceView = new InstssanceView();		
 		//instanceView.processManager = this.processManager;
 		
 		instanceView.load(instance);

@@ -36,7 +36,7 @@ public class InstanceListPanel {
 		}
 		
 	@ServiceMethod
-	public ContentPanel newInstance() throws Exception{
+	public ContentWindow newInstance() throws Exception{
 		return new NewInstancePanel();
 	}
 		

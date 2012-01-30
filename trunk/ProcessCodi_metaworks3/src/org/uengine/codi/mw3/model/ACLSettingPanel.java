@@ -6,7 +6,7 @@ import org.metaworks.annotation.ServiceMethod;
 import org.uengine.codi.acl.MM_ACLManager;
 
 @Face(ejsPath="genericfaces/Window.ejs", displayName="ACL Setting")
-public class ACLSettingPanel extends ContentPanel{
+public class ACLSettingPanel extends ContentWindow{
 
 	MM_ACLManager aclManager;
 	

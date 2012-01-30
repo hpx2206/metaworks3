@@ -5,7 +5,6 @@ import java.util.Date;
 import org.metaworks.annotation.Id;
 import org.metaworks.dao.Database;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.processmanager.ProcessManagerRemote;
 
 public class Instance extends Database<IInstance> implements IInstance{
 
@@ -19,7 +18,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 		
 	}
 	
-	public ContentPanel detail() throws Exception{
+	public ContentWindow detail() throws Exception{
 		//InstanceViewContent instanceViewContent = new InstanceViewContent();
 		//instanceViewContent.processManager = this.processManager;
 		
