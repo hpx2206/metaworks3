@@ -4,16 +4,16 @@
 	
 %>
 	<ul>
-		<li>
 <%
 		for (var i=0; i<objectMetadata.fieldDescriptors.length; i++){
 			var fd = objectMetadata.fieldDescriptors[i];
 %>			
-			<a href="#<%=tabId%>_<%=i%>"><%=fd.displayName%></a>
+		<li>
+			<a href="#<%=tabId%>_<%=i+1%>"><%=fd.displayName%></a>
+		</li>		
 <%
 		}
 %>
-		</li>		
 	</ul>
 <%
 		var showLabel = !(objectMetadata.faceOptions && objectMetadata.faceOptions['hideLabels']);
@@ -27,7 +27,7 @@
 		  	
 		  	var fieldValue = value[fd.name];		
 %>	
-	<div id="<%=tabId%>_<%=i%>">	
+	<div id="<%=tabId%>_<%=i+1%>">	
 <%
 		 	if(showLabel){
 %>
