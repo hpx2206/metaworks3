@@ -19,6 +19,8 @@ import java.util.Map.Entry;
 import org.directwebremoting.ConversionException;
 import org.directwebremoting.convert.ArrayConverter;
 import org.directwebremoting.convert.BeanConverter;
+import org.directwebremoting.convert.ObjectConverter;
+import org.directwebremoting.convert.StringConverter;
 import org.directwebremoting.extend.ArrayOutboundVariable;
 import org.directwebremoting.extend.ConvertUtil;
 import org.directwebremoting.extend.ErrorOutboundVariable;
@@ -72,6 +74,21 @@ public class MetaworksConverter extends BeanConverter{
 							e.printStackTrace();
 						}
 				    }
+			 	}
+			 	
+			 	if(paramType == Object.class){
+			 		if("string".equals(data.getType())){
+			 			paramType = String.class;
+			 			
+			 			StringConverter stringConverter = new StringConverter();
+			 			return stringConverter.convertInbound(String.class, data);
+			 			
+			 		}else if("number".equals(data.getType())){
+			 			paramType = Number.class;
+			 			
+			 			ObjectConverter objectConverter = new ObjectConverter();
+			 			return objectConverter.convertInbound(paramType, data);
+			 		}
 			 	}
 			}
 			   	
