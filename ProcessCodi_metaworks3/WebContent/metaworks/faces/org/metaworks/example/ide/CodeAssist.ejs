@@ -1,0 +1,14 @@
+<select id="assist_<%=objectId%>" onChange="mw3.getFaceHelper('<%=objectId%>').enter(this)">
+
+<option> </option>
+
+<%
+
+	for(var i in value.assistances){
+%>
+<option> <%=value.assistances[i]%> </option>
+<%
+	}
+%>
+</select>
+

@@ -33,8 +33,11 @@
     <script src="metaworks/ace/build/src/mode-javascript.js" type="text/javascript" charset="utf-8"></script>
     <script src="metaworks/ace/build/src/mode-java.js" type="text/javascript" charset="utf-8"></script>
 	
+	    <script type='text/javascript' src='https://www.google.com/jsapi'></script>
 	
 		<script type="text/javascript">
+
+			google.load('visualization', '1', {packages:['gauge']});
 
 			var mainPage
 		 	
@@ -43,6 +46,7 @@
 		 		mw3.setWhen(mw3.WHEN_EDIT);
 			});
 			
+	 		mw3.setWhen(mw3.WHEN_EDIT);
 
 			function locateObject(){
 

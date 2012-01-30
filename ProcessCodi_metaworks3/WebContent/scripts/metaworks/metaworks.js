@@ -39,6 +39,29 @@
 				this.targetObjectId;
 				
 				this.faceHelpers = {};
+				
+				this.mouseX = 0;
+				this.mouseY = 0;
+				
+			    document.addEventListener(
+			    		"mouseup",
+
+			       		function(e) {
+			    			mw3.mouseX = e.pageX;
+			    			mw3.mouseY = e.pageY; 
+			    			
+			    			if(mw3.popupDivId!=null){
+			    				if(mw3.mouseX < 100 && mw3.mouseY < 100){
+			    					$("#" + mw3.popupDivId).remove();
+			    					mw3.popupDivId = null;
+			    				}
+			    			}
+			    		},
+			    		
+			    		false
+				);
+				
+			    this.popupDivId;
 			}
 
 			Metaworks3.prototype.debug = function(argument, when){
@@ -61,7 +84,9 @@
 					
 				var face = this.face_ObjectIdMapping[objectId].face;
 				var className = this.face_ObjectIdMapping[objectId].className;
+				
 				var faceHelperClass = this.loadedScripts[face];
+				
 				
 				var thereIsHelperClass = false;
 				try{
@@ -81,7 +106,7 @@
 					
 				}catch(e){
 					//TODO :  error reporting required
-					e=e;
+					e=e;//console.log(e)
 				}		
 				
 			}
@@ -143,7 +168,10 @@
 			
 			Metaworks3.prototype.getMetadata = function(objectTypeName, onLoadDone){
 
-					if(!this.metaworksMetadata[objectTypeName]){ //caches the metadata
+					if(!this.metaworksMetadata[objectTypeName] 
+					//|| true
+					
+					){ //caches the metadata
 						//alert('getting metadata for ' + objectTypeName);
 						
 						this.metaworksProxy.getMetaworksType(objectTypeName, 
@@ -152,6 +180,8 @@
 					    			//alert(webObjectType.name + "=" + dwr.util.toDescriptiveString(webObjectType, 5))
 
 									mw3.metaworksMetadata[objectTypeName] = webObjectType;
+									
+									//webObjectType['dontCache'] = true;
 									
 									for(var i=0; i<webObjectType.fieldDescriptors.length; i++){
 										var fd = webObjectType.fieldDescriptors[i];
@@ -355,7 +385,7 @@
 					try {
 						//alert("selected face : " + actualFace);
 						
-						var html = new EJS({url: this.base + '/metaworks/' + actualFace})
+						var html = new EJS({url: this.base + (actualFace.indexOf('dwr') == 0 ? '/':'/metaworks/') + actualFace})
 							.render({
 								value				: object, 
 								objectTypeName		: objectTypeName, 
@@ -405,9 +435,10 @@
 					//TODO: may cause unnecessary javascript object creation - performance & memory waste
 					mw3.onLoadFaceHelperScript(actualFace);
 				}
-				
+
+				var byClassLoader = actualFace.indexOf('dwr') == 0;
 					
-				var url = this.base + '/metaworks/' + actualFace + ".js";
+				var url = this.base + (byClassLoader ? '/':'/metaworks/') + actualFace + ".js";
 				
 //				   $.ajax({
 //				        url: url,
@@ -421,7 +452,12 @@
 				
 				var startPos = 0;
 
-				var faceHelper = actualFace.substr(startPos = actualFace.indexOf('/')+1, actualFace.lastIndexOf('.') - startPos).split('/').join('_');
+				var faceHelper;
+				
+				if(byClassLoader)
+					faceHelper = actualFace.substr(startPos = 'dwr/metaworks/'.length, actualFace.lastIndexOf('.') - startPos).split('/').join('_');
+				else
+					faceHelper = actualFace.substr(startPos = actualFace.indexOf('/')+1, actualFace.lastIndexOf('.') - startPos).split('/').join('_');
 				
 				mw3.loadedScripts[actualFace] = faceHelper; //now the namespace may not cause any collision.
 				
@@ -458,7 +494,7 @@
 
 					return script;
 				}catch(e){
-					e=e;
+					console.debug(e);
 				}
 			}
 			
@@ -733,6 +769,10 @@
 				if(!value)
 					value = this.objects[objectId];
 				
+				//sometimes the armed object may be unarmed by the user-defined facehelper.getValue() method
+				if(value && !value.__objectId)
+					this._armObject(objectId, value);
+				
 				return value;
 			}
 			
@@ -869,9 +909,17 @@
 					        				mw3.setObject(objId, result);
 					        				
 					        			}else if(serviceMethodContext.target=="popup"){
+						        			
+					        				mw3.popupDivId = 'popup_' + objId;
+					        				$('body').append("<div id='" + mw3.popupDivId + "' style='z-index:10;position:absolute; top:1px; left:1px'></div>");
+					        				mw3.locateObject(result, null, '#' + mw3.popupDivId);
+					    
+					        				
+					        			}else if(serviceMethodContext.target=="stick"){
 					        			
-					        				$('body').append("<div id='popup_" + objId + "' style='z-index:10;position:absolute; top:1px; left:1px'></div>");
-					        				mw3.locateObject(result, null, '#popup_' + objId);
+					        				mw3.popupDivId = 'stick_' + objId;
+					        				$('body').append("<div id='" + mw3.popupDivId + "' style='z-index:10;position:absolute; top:" + mw3.mouseY + "px; left:" + mw3.mouseX + "px'></div>");
+					        				mw3.locateObject(result, null, '#' + mw3.popupDivId);
 					    
 					        				
 					        			}else{ //case of target is "auto"
@@ -1217,6 +1265,15 @@
 				
 				var value = this.object[this.fieldDescriptor.name];
 				var className = value ? value.__className : null;
+				
+				if(value!=null && className==null){
+					if(value.split)
+						className = "java.lang.String";
+					else
+					if(typeof value == 'number')
+						className = "java.lang.Number";
+				}
+				
 				if(!className)
 					className = this.fieldDescriptor.className;
 				
@@ -1227,18 +1284,19 @@
 
 				var oldContext = mw3.getContext();
 				if(context!=null){
-					//mw3.setContext(context);					
+					//mw3.setContext(context);
+					
 				}
 				
 				var when = mw3.when;
 
-				if(context!=null && context.when)					
-					when = context.when;
-				
+				if(context!=null && context.when){
+					when = context.when
+				}
 
 				if(this.fieldDescriptor.attributes && this.fieldDescriptor.attributes['noneditable'])
 					when = mw3.WHEN_VIEW;
-				
+
 				
 				html = mw3.locateObject(value, face, null, {when: when, descriptor: this.fieldDescriptor});
 				

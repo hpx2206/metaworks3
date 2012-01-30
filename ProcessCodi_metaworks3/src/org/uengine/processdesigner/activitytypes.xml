@@ -180,10 +180,6 @@
   </org.uengine.processdesigner.ActivityTypeDescriptor>
    -->
    
-  <org.uengine.processdesigner.ActivityTypeDescriptor>
-   <group>$activitytypes.groups.messaging</group>
-   <activityTypeClass>com.defaultcompany.activities.YouTubeActivity</activityTypeClass>
-  </org.uengine.processdesigner.ActivityTypeDescriptor>
 <!-- database -->
   <!--
   <org.uengine.processdesigner.ActivityTypeDescriptor>

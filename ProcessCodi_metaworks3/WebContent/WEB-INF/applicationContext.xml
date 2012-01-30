@@ -92,6 +92,7 @@
 	<bean id="FormWorkItemHandler" class="org.uengine.codi.activitytypes.wih.FormWorkItemHandler"/>
 	<bean id="InstanceViewContent" class="org.uengine.codi.mw3.model.InstanceViewContent"/>
 	<bean id="InstanceView" class="org.uengine.codi.mw3.model.InstanceView"/>
+	<bean id="Instance" class="org.uengine.codi.mw3.model.Instance"/>
 	<bean id="Contact" class="org.uengine.codi.mw3.model.Contact"/>
 	<bean id="FormDefinition" class="org.uengine.codi.mw3.admin.FormDefinition"/>
 	<bean id="ClassDefinition" class="org.uengine.codi.mw3.admin.ClassDefinition"/>
