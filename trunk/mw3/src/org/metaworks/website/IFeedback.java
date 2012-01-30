@@ -39,9 +39,9 @@ public interface IFeedback extends IDAO{
 	public void setWriter(IFacebookLoginUser writer);
 
 	@ServiceMethod(callByContent=true, when=WHEN_NEW)
-	public FeedbackPanel post() throws Exception;
+	public FeedbackList post() throws Exception;
 	
 	@ServiceMethod(when=WHEN_VIEW)
-	public FeedbackPanel delete() throws Exception;
+	public FeedbackList delete() throws Exception;
 	
 }
