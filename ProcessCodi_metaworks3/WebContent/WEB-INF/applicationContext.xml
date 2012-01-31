@@ -105,9 +105,11 @@
 	<bean id="ProcessDesignerContentPanel" class="org.uengine.codi.mw3.model.ProcessDesignerContentPanel"/>
 	
 	<bean id="NewChildContentPanel" class="org.uengine.codi.mw3.model.NewChildContentPanel"/>	
+	<bean id="NewChildWindow" class="org.uengine.codi.mw3.model.NewChildWindow"/>
 	
 	<bean id="EntityDesignerWindow" class="org.uengine.codi.mw3.model.EntityDesignerWindow"/>
 	<bean id="EntityDesignerContentPanel" class="org.uengine.codi.mw3.model.EntityDesignerContentPanel"/>
 	<bean id="EntityDefinition" class="org.uengine.codi.mw3.admin.EntityDefinition"/>		
+	
 		
 </beans>
