@@ -24,7 +24,7 @@ public interface IProcessDefinition extends IDAO{
 	public ContentWindow design() throws Exception;
 	
 	@ServiceMethod
-	public NewChildContentPanel newChild() throws Exception;
+	public NewChildWindow newChild() throws Exception;
 	
 	public IProcessDefinition findAll() throws Exception;
 
