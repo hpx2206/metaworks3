@@ -126,9 +126,13 @@ $(document).ready(function () {
 		
 }); 
 
+var mainObjectId;
+
 org_uengine_codi_mw3_model_Main = function(objectId, className){
 	this.objectId = objectId;
 	this.className = className;
+	
+	mainObjectId = objectId;
 
 //	outerLayout = $('#container').layout(); 
 	

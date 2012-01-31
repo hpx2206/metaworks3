@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Face;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.admin.EntityDefinition;
@@ -19,11 +20,30 @@ public class EntityDesignerContentPanel {
 		public void setEntityDefinition(EntityDefinition entityDefinition) {
 			this.entityDefinition = entityDefinition;
 		}
+	
+	String a;	
+		public String getA() {
+			return a;
+		}
+		public void setA(String a) {
+			this.a = a;
+		}
+	
+	String b;
+		public String getB() {
+			return b;
+		}
+		public void setB(String b) {
+			this.b = b;
+		}
 
+	
+		
 	@Autowired
 	ProcessManagerRemote processManager;
 		
 	public void newEntity(String parentFoler) throws Exception{
+		entityDefinition.init();		
 		entityDefinition.setParentFolder(parentFoler);
 		entityDefinition.getMetaworksContext().setWhere("newEntity");
 	}
@@ -32,6 +52,10 @@ public class EntityDesignerContentPanel {
 		String defVerId = processManager.getProcessDefinitionProductionVersion(defId);
 		String resource = processManager.getResource(defVerId);
 		entityDefinition = (EntityDefinition) GlobalContext.deserialize(resource, EntityDefinition.class);
+		
+		entityDefinition.init();
+		
+
 	}
 
 	

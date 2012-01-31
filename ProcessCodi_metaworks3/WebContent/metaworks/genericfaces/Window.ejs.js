@@ -2,7 +2,7 @@ var Window = function(objectId, className){
 	this.objectId = objectId;
 	this.className = className;
 
-
+	
 
 	this.divId = "objDiv_" + objectId;
 	this.smallDivId = "sm_" + objectId;
@@ -28,7 +28,9 @@ var Window = function(objectId, className){
 
 
 Window.prototype.maximize = function(){
-	
+	alert(mainObjectId);
+
+
 	
 //	$("#" + this.divId).toggle();
 	$("#" + this.smallDivId).toggle();
@@ -52,8 +54,7 @@ Window.prototype.maximize = function(){
 }
 
 Window.prototype.minimize = function(outer , inner){
-	
-	
+
 //	$("#" + this.smallDivId).appendTo("#smline");
 	$("#" + this.smallDivId).toggle();
 //	$("#" + this.divId).width(10);
