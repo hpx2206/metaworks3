@@ -12,6 +12,7 @@
 <script type="text/javascript" src="scripts/jquery/jquery-ui-latest.js"></script>
 <script type="text/javascript" src="scripts/jquery/jquery.layout-latest.js"></script>		
 
+		<script type="text/javascript" src="scripts/phonegap/phonegap.js"></script>
 		
 		<script type="text/javascript" src="scripts/ejs/ejs_production.js"></script>
 		<script type="text/javascript" src="scripts/ejs/ejs_debugger.js"></script>
@@ -23,6 +24,8 @@
 	  <script type='text/javascript' src='dwr/interface/Metaworks.js'></script> 
 	  <script type="text/javascript" src="scripts/metaworks/metaworks.js"></script>
 
+
+<link rel="stylesheet" href="style/simulator/simulator.css" />
 
 
 <link rel="stylesheet" href="scripts/jquery/jquery-ui-189custom/development-bundle/themes/base/jquery.ui.all.css" />
@@ -44,6 +47,8 @@
 			var mainPage
 		 	
 			$(document).ready(function() {
+				navigator.notification.vibrate(100);
+				
 		 		mw3.setWhen(mw3.WHEN_EDIT);
 		 		mw3.setBase("/uengine-web");
 
