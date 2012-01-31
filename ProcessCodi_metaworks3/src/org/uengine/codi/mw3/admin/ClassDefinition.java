@@ -2,20 +2,9 @@
 package org.uengine.codi.mw3.admin;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.Serializable;
-import java.io.StringWriter;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
-import java.util.Iterator;
 
-import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.tools.ant.filters.StringInputStream;
-import org.codehaus.commons.compiler.CompileException;
-import org.codehaus.commons.compiler.jdk.SimpleCompiler;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
@@ -25,13 +14,11 @@ import org.metaworks.annotation.NonEditable;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.example.ide.CompileError;
-import org.metaworks.example.ide.SourceCode;
-import org.metaworks.example.ide.SourceCodeEditor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.CodiDwrServlet;
-import org.uengine.codi.mw3.CodiMetaworksRemoteService;
 import org.uengine.codi.mw3.model.FaceSourceCode;
 import org.uengine.codi.mw3.model.JavaSourceCode;
+import org.uengine.codi.mw3.model.MobileWindow;
 import org.uengine.codi.mw3.model.WindowPanel;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.PropertyListable;
@@ -266,6 +253,18 @@ public class ClassDefinition implements ContextAware, PropertyListable{
 		return outputWindow;
 	}
 
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
+	public Object runMobile() throws Exception{
+		
+
+		Object o = Thread.currentThread().getContextClassLoader().loadClass(getPackageName() + "." + getClassName()).newInstance();//cl.loadClass(getPackageName() + "." + getClassName()).newInstance();
+		
+		MobileWindow outputWindow = new MobileWindow();
+		outputWindow.setPanel(o);
+//		outputWindow.
+		
+		return outputWindow;
+	}	
 	
 	@ServiceMethod(callByContent=true)
 	public void save() throws Exception{
