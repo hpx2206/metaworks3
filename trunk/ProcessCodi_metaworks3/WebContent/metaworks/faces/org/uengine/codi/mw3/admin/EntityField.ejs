@@ -1,0 +1,46 @@
+<%
+if(value!=null){
+	if(mw3.where == "in-menu"){
+%>
+<div id="cluetip-outer">
+	<h3 id="cluetip-title"><%=value.name%></h3>
+	<div id="cluetip-inner">
+		<div id="cluetip-close2">
+			<a><img src="scripts/jquery/cluetip/images/cross.png" onclick="$('#adduser-con').hide()"></a>
+		</div>
+		<div id="addcontact-con" style="display: block; overflow:auto; border:1px solid #DBDBDB;">
+			aaaaa
+		</div>
+	</div>
+</div>
+<div id="cluetip-extra"></div>
+	
+<%	
+	}else{
+%>
+	<table>
+	<tr>
+		<td width="200px"><%=fields.name.here()%></td>
+		<td width="140px"><%=fields.dataType.here()%></td>
+		<td width="70px">
+			<%=fields.length.here({size:5})%>
+		</td>
+
+		<td width="60px" align="center"><%=fields.allowNull.here()%></td>
+		<td width="200px"><%=fields.defaultValue.here()%></td>
+		<td width="200px"><%=fields.comment.here()%></td>	
+		
+		<td width="300px">
+		<%=methods.add.here()%>
+		<%=methods.save.here()%>
+		<%=methods.up.here()%>
+		<%=methods.down.here()%>		
+		<%=methods.remove.here()%>
+		</td>		
+		<td width="30px"><div id="progress_<%=objectId%>"></div></td>
+	</tr>	
+	<table>		
+<%
+	}	
+}
+%>

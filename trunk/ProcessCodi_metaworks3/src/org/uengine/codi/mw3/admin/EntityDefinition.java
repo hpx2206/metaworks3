@@ -2,7 +2,6 @@
 package org.uengine.codi.mw3.admin;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -10,21 +9,23 @@ import java.util.ArrayList;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
-import org.metaworks.ServiceMethodContext;
 import org.metaworks.WebFieldDescriptor;
 import org.metaworks.WebObjectType;
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.NonEditable;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.example.ide.CompileError;
-import org.metaworks.example.ide.SourceCode;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.codi.mw3.model.ClassDesignerContentPanel;
+import org.uengine.codi.mw3.model.EntitySourceCode;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.PropertyListable;
 import org.uengine.processmanager.ProcessManagerRemote;
-import org.uengine.util.UEngineUtil;
 
+@Face(options={"hideNewBtn", "hideAddBtn"},
+	  values={"true", "true"})   
 public class EntityDefinition implements ContextAware, PropertyListable{
 
 	transient MetaworksContext metaworksContext;
@@ -38,10 +39,7 @@ public class EntityDefinition implements ContextAware, PropertyListable{
 	@Autowired
 	transient protected ProcessManagerRemote processManager;
 
-	public EntityDefinition(){
-		setMetaworksContext(new MetaworksContext());
-		getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
-		init();
+	public EntityDefinition(){						
 	}
 	
 	String alias;
@@ -95,8 +93,9 @@ public class EntityDefinition implements ContextAware, PropertyListable{
 		public void setEntityName(String entityName) {
 			this.entityName = entityName;
 		}
-		
+
 	ArrayList<EntityField> entityFields;
+		@Face(options="{hideAddBtn}", values={"true"})
 		public ArrayList<EntityField> getEntityFields() {
 			return entityFields;
 		}
@@ -112,19 +111,70 @@ public class EntityDefinition implements ContextAware, PropertyListable{
 			this.newEntityField = newEntityField;
 		}
 		
+	EntitySourceCode script;
+		public EntitySourceCode getScript() {
+			return script;
+		}
+		public void setScript(EntitySourceCode script) {
+			this.script = script;
+		}		
+	
+	boolean isCreateTable;	
+		public boolean isCreateTable() {
+			return isCreateTable;
+		}
+		public void setCreateTable(boolean isCreateTable) {
+			this.isCreateTable = isCreateTable;
+		}
+		
+	@ServiceMethod(callByContent=true)
+	public void generateDDL() {
+		StringBuffer sb = new StringBuffer();
+		
+		//if(this.getMetaworksContext().getWhen() == "newEntry"){
+			sb.append("CREATE TABLE ").append(this.entityName).append("(").append("\n");
+							
+			for(int i=0; i<this.entityFields.size(); i++){
+				EntityField entityField = this.entityFields.get(i);				
+				
+				sb
+					.append(" ").append(entityField.getName())
+					.append(" ").append(entityField.getDataType()).append("(").append(entityField.getLength()).append(")")
+					.append(" ").append((entityField.isAllowNull()?"NULL":"NOT NULL"));
+				
+				String defaultValue = entityField.getDefaultValue();
+				if(defaultValue != null && defaultValue.trim().length() > 0)
+					sb.append(" ").append("DEFAULT '").append(defaultValue.trim()).append("'");
+				
+				String comment = entityField.getComment();
+				if(comment != null && comment.trim().length() > 0)
+					sb.append(" ").append("COMMENT '").append(comment.trim()).append("'");
+				
+				if(i < this.entityFields.size()-1)
+					sb.append(",").append("\n");				
+			}
+			
+			sb.append(")");
+		//}
+		
+		
+		this.script.setCode(sb.toString());
+		
+		//return this.sourceCode;
+	}
+
 	@ServiceMethod(callByContent=true)
 	public void createTable() throws Exception{
-			save();
-		
-			//if(getCreateSQL()==null) return;
+			//save();
 			
-			/*
+			if(getScript()==null) return;
+			
 			Connection conn = null;
 			PreparedStatement pstmt = null;
 			
 			try {
 				conn = TransactionContext.getThreadLocalInstance().getConnection();				
-				pstmt = conn.prepareStatement(getCreateSQL().getCode());
+				pstmt = conn.prepareStatement(getScript().getCode());
 				pstmt.execute();
 				
 //				IDAO dao = Database.sql(IDAO.class, getCreateSQL().getCode());
@@ -164,22 +214,42 @@ public class EntityDefinition implements ContextAware, PropertyListable{
 					}
 				} catch (SQLException sqle){						
 				}				
-			}
-			*/
-			
-		
+			}			
 	}
 	
 	@ServiceMethod(callByContent=true)
 	public Object generateDAO() throws Exception{
 		
-		ClassDefinition classDefinition = new ClassDefinition();
+		ClassDefinition classDefinition = new ClassDefinition();		
+		classDefinition.setParentFolder(getParentFolder().toString());
 		
-		classDefinition.compile();
+		classDefinition.setClassName(getEntityName());
 		
-		ResourcePanel resource = new ResourcePanel();
+		for(int i=0; i<this.entityFields.size(); i++){
+			EntityField entityField = this.entityFields.get(i);
+			
+			String classType = "";
+			
+			if(entityField.getName().equals("INT"))
+				classType = "java.lang.Long";
+			else if(entityField.getName().equals("CHAR") || entityField.getName().equals("VARCHAR"))
+				classType = "java.lang.String";
+			else if(entityField.getName().equals("DATETIME"))
+				classType = "java.util.Date";
+			else if(entityField.getName().equals("TIMESTAMP"))
+				classType = "java.lang.Double";
+			
+			classDefinition.newClassField.setFieldName(entityField.getName());
+			classDefinition.newClassField.setType(classType);
+			classDefinition.newClassField.add();
+		}
 		
-		return resource; // let the resource panel refreshed 
+		classDefinition.generateSourceCode();
+		
+		ClassDesignerContentPanel classDesigner = new ClassDesignerContentPanel();
+		classDesigner.setClassDefinition(classDefinition);
+		
+		return classDesigner;
 	}
 			
 	@ServiceMethod(callByContent=true)
@@ -189,9 +259,7 @@ public class EntityDefinition implements ContextAware, PropertyListable{
 
 			String strDef = GlobalContext.serialize(this, ClassDefinition.class);
 			
-		String fullDefId = processManager.addProcessDefinition(getEntityName(),
-				getVersion(), "description", false, strDef, getParentFolder(),
-				getDefId(), getAlias(), "entity");
+			String fullDefId = processManager.addProcessDefinition(getEntityName(),getVersion(), "description", false, strDef, getParentFolder(),getDefId(), getAlias(), "entity");
 			
 			String[] definitionIdAndVersionId = org.uengine.kernel.ProcessDefinition.splitDefinitionAndVersionId(fullDefId);
 			
@@ -200,9 +268,11 @@ public class EntityDefinition implements ContextAware, PropertyListable{
 			sourceCodeFile.getParentFile().mkdirs();
 			//sourceCodeFile.createNewFile();
 			
+			/*
 			FileWriter writer = new FileWriter(sourceCodeFile);
-			writer.write("abcd");
+			writer.write(getSourceCode().getCode());
 			writer.close();
+			*/
 			///
 			
 			//TODO:   generate face file if exists
@@ -226,12 +296,16 @@ public class EntityDefinition implements ContextAware, PropertyListable{
 	}		
 
 	public void init() {
+		setMetaworksContext(new MetaworksContext());
+		getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+
+		this.script = new EntitySourceCode();
+		
 		newEntityField = new EntityField();
 		newEntityField.metaworksContext = new MetaworksContext();
 		newEntityField.metaworksContext.setWhen(MetaworksContext.WHEN_EDIT);
 		newEntityField.metaworksContext.setWhere("newEntry");//TODO: lesson 6 (if there's no overriding value, metaworks will tries to use old contxt value)
 		newEntityField.entityDefinition = this;
-
 	}
 	
 	@Override
