@@ -7,9 +7,7 @@ import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@Face(ejsPath="genericfaces/Window.ejs", displayName="New Object...", options={"hideLabels"}, values={"true"})
-public class NewChildContentPanel extends ContentWindow {
-	
+public class NewChildContentPanel  {
 	@Autowired
 	EntityDesignerWindow entityDesignerWindow;
 	

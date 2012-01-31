@@ -9,7 +9,7 @@ import org.uengine.processmanager.ProcessManagerRemote;
 public class ProcessDefinition extends Database<IProcessDefinition> implements IProcessDefinition{
 	
 	@Autowired
-	NewChildContentPanel newChildContentPanel;
+	NewChildWindow newChildWindow;
 	
 	Long defId;
 		public Long getDefId() {
@@ -212,11 +212,11 @@ public class ProcessDefinition extends Database<IProcessDefinition> implements I
 	}
 	
 	@Override
-	public NewChildContentPanel newChild() throws Exception {
-		NewChildContentPanel newChildContentPanel = this.newChildContentPanel; 
-		newChildContentPanel.setParentFolder(getDefId());
+	public NewChildWindow newChild() throws Exception {
+		NewChildWindow newChildWindow = this.newChildWindow; 
+		newChildWindow.setParentFolder(getDefId());
 		
-		return newChildContentPanel;
+		return newChildWindow;
 	}
 	
 
