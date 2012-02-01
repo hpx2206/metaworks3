@@ -9,6 +9,8 @@ public class NewInstancePanel extends ContentWindow{
 		processDefinitions = new ProcessDefinition();
 		processDefinitions.setParentFolder(new Long(-1));
 		processDefinitions = processDefinitions.findAll();
+		
+		processDefinitions.getMetaworksContext().setWhen("newInstance");
 	}
 	
 	IProcessDefinition processDefinitions;	
