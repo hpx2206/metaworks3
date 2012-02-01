@@ -9,9 +9,6 @@ var org_uengine_codi_mw3_model_CrowdSourcer = function(objectId, className) {
 		var followers = object.followers.followers;
 
 		for ( var i = 0; i < followers.length; i++) {
-			console.debug(followers[i].userId);
-			console.debug(followers[i].name);
-
 			var feed = followers[i].userId + "/feed";
 			var cnt = 0;
 			var postIds = new Array();
@@ -19,24 +16,17 @@ var org_uengine_codi_mw3_model_CrowdSourcer = function(objectId, className) {
 			FB.api(feed, 'post', {
 				message : 'crowd sourcing test for process instance id '
 						+ object.instanceId
-			}, function(response) {
-				
-				for (var i in response){
-					console.debug("obj : " + i);
-				}
-					
+			}, function(response) {				
 				cnt++;
 
 				if (!response || response.error) {
-					console.debug("error : " + response.error.message);
+					alert("error : " + response.error.message);
 				} else {
 					postIds.push(response.id);
 				}
 								
 				if (cnt == followers.length) {
 					if (postIds.length > 0) {
-						console.debug("postIds : " + postIds);
-
 						object.postIds = postIds;
 						mw3.call(objectId, 'crowdSourcing');
 					}

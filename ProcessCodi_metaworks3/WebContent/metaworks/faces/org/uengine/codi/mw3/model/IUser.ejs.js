@@ -1,6 +1,4 @@
 var org_uengine_codi_mw3_model_IUser = function(objectId, className) {
-	console.debug("org_uengine_codi_mw3_model_IUser");
-	
 	this.objectId = objectId;
 	this.className = className;
 	

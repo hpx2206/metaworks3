@@ -1,12 +1,8 @@
 var org_uengine_codi_mw3_model_AddContactPanel = function(objectId, className) {
-	console.debug("org_uengine_codi_mw3_model_AddContactPanel");
-	
 	this.objectId = objectId;
 	this.className = className;
 	
 	var object = mw3.objects[this.objectId];
-	
-	console.debug(object.friends.__objectId);
 	
 	readComment($("#AddContactPanel").val());
 }
