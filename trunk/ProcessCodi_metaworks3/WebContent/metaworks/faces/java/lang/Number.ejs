@@ -5,7 +5,7 @@
 	
 	if(mw3.when == mw3.WHEN_EDIT || mw3.when == mw3.WHEN_NEW){
 %>
-	 <input id="<%=mw3.createInputId(objectId)%>" value="<%=value%>">
+	 <input id="<%=mw3.createInputId(objectId)%>" onkeydown="mw3.getFaceHelper('<%=objectId%>').keydown();" value="<%=value%>" style="text-align:right;" <%=descriptor.attributes && descriptor.attributes.size ? " size=" + descriptor.attributes.size : ""%>>
 	
 <%
 
