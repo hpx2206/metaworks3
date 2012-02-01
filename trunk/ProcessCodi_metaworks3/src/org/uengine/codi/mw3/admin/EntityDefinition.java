@@ -110,25 +110,16 @@ public class EntityDefinition implements ContextAware, PropertyListable{
 		public void setNewEntityField(EntityField newEntityField) {
 			this.newEntityField = newEntityField;
 		}
-		
-	EntitySourceCode script;
-		public EntitySourceCode getScript() {
-			return script;
-		}
-		public void setScript(EntitySourceCode script) {
-			this.script = script;
-		}		
 	
-	boolean isCreateTable;	
-		public boolean isCreateTable() {
-			return isCreateTable;
+	boolean created;	
+		public boolean isCreated() {
+			return created;
 		}
-		public void setCreateTable(boolean isCreateTable) {
-			this.isCreateTable = isCreateTable;
+		public void setCreated(boolean created) {
+			this.created = created;
 		}
 		
-	@ServiceMethod(callByContent=true)
-	public void generateDDL() {
+	private String makeCreateQuery(){
 		StringBuffer sb = new StringBuffer();
 		
 		//if(this.getMetaworksContext().getWhen() == "newEntry"){
@@ -155,70 +146,118 @@ public class EntityDefinition implements ContextAware, PropertyListable{
 			}
 			
 			sb.append(")");
-		//}
+			
+			return sb.toString();
+	}
+	
+	private String makeDropQuery(){
+		StringBuffer sb = new StringBuffer();
 		
+		//if(this.getMetaworksContext().getWhen() == "newEntry"){
+			sb.append("DROP TABLE ").append(this.entityName).append("\n");							
+			sb.append(" ").append("CASCADE");
+			
+			return sb.toString();
+	}
+	
+	@ServiceMethod(callByContent=true)
+	public EntityQuery generateDDL() throws Exception{
+		EntityQuery entityQuery = new EntityQuery();
+		entityQuery.getMetaworksContext().setHow("select");
+		entityQuery.getQueryCode().setCode(makeCreateQuery());
 		
-		this.script.setCode(sb.toString());
-		
-		//return this.sourceCode;
+		return entityQuery;
 	}
 
 	@ServiceMethod(callByContent=true)
-	public void createTable() throws Exception{
-			//save();
+	public EntityDefinition createTable() throws Exception{
+		String query = makeCreateQuery();
+		
+		if(run(query)){
+			setCreated(true);
+		}
+		
+		//save();
+		
+		return this;
+	}
+	
+	@ServiceMethod(callByContent=true)
+	public EntityDefinition dropTable() throws Exception{
+		String query = makeDropQuery();
+		
+		if(run(query)){
+			setCreated(false);
+		}
+		
+		return this;
+	}
+	
+	
+	private boolean run(String query){
+		
+		boolean result = false;
+		
+		if(query==null) return result;
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		
+		try {
+			conn = TransactionContext.getThreadLocalInstance().getConnection();				
+			pstmt = conn.prepareStatement(query);
+			pstmt.execute();
 			
-			if(getScript()==null) return;
+			result = true;
 			
-			Connection conn = null;
-			PreparedStatement pstmt = null;
+//			IDAO dao = Database.sql(IDAO.class, getCreateSQL().getCode());
+//			dao.update();
+		} catch (Exception e) {
+			// TODO we need to report the error properly
+			String message = e.getMessage();
+			String[] parts = null;
+			int lineNumber = 0;
 			
 			try {
-				conn = TransactionContext.getThreadLocalInstance().getConnection();				
-				pstmt = conn.prepareStatement(getScript().getCode());
-				pstmt.execute();
-				
-//				IDAO dao = Database.sql(IDAO.class, getCreateSQL().getCode());
-//				dao.update();
-			} catch (Exception e) {
-				// TODO we need to report the error properly
-				String message = e.getMessage();
-				String[] parts = null;
-				int lineNumber = 0;
-				
-				try {
-					lineNumber = Integer.parseInt((parts = message.split("at line "))[1]);
-				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					parts = null;
-					//e1.printStackTrace();
-				}
-				
-				CompileError compileError = new CompileError();
-				compileError.setLine(lineNumber);
-				compileError.setColumn(1);
-				compileError.setMessage(parts != null ? parts[0] : message);
-				
-				//getCreateSQL().setCompileErrors(new CompileError[]{compileError});
+				lineNumber = Integer.parseInt((parts = message.split("at line "))[1]);
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				parts = null;
+				//e1.printStackTrace();
+			}
 			
-				e.printStackTrace();
-			}finally{
+			CompileError compileError = new CompileError();
+			compileError.setLine(lineNumber);
+			compileError.setColumn(1);
+			compileError.setMessage(parts != null ? parts[0] : message);
+			
+			//getCreateSQL().setCompileErrors(new CompileError[]{compileError});
+		
+			e.printStackTrace();
+		}finally{
+			try{
 				if(conn != null){
 					conn.close();
 					conn = null;
 				}
-				
-				try {
-					if(pstmt != null){
-						pstmt.close();
-						pstmt = null;
-					}
-				} catch (SQLException sqle){						
-				}				
-			}			
+			} catch (SQLException sqle){			
+			}
+			
+			try {
+				if(pstmt != null){
+					pstmt.close();
+					pstmt = null;
+				}
+			} catch (SQLException sqle){						
+			}				
+		}
+		
+		return result;
 	}
 	
 	@ServiceMethod(callByContent=true)
 	public Object generateDAO() throws Exception{
+		save();
 		
 		ClassDefinition classDefinition = new ClassDefinition();		
 		classDefinition.setParentFolder(getParentFolder().toString());
@@ -254,7 +293,6 @@ public class EntityDefinition implements ContextAware, PropertyListable{
 			
 	@ServiceMethod(callByContent=true)
 	public void save() throws Exception{
-
 			setAlias(getEntityName() + ".sql");
 
 			String strDef = GlobalContext.serialize(this, ClassDefinition.class);
@@ -298,8 +336,16 @@ public class EntityDefinition implements ContextAware, PropertyListable{
 	public void init() {
 		setMetaworksContext(new MetaworksContext());
 		getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
-
-		this.script = new EntitySourceCode();
+		
+		if(entityFields != null){
+			for(int i=0; i<entityFields.size();i++){
+				EntityField entityField = entityFields.get(i);
+				
+				entityField.setMetaworksContext(new MetaworksContext());
+				entityField.getMetaworksContext().setWhere("in-container");
+				entityField.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+			}
+		}
 		
 		newEntityField = new EntityField();
 		newEntityField.metaworksContext = new MetaworksContext();

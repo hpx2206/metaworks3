@@ -41,6 +41,8 @@ public class ClassDefinition implements ContextAware, PropertyListable{
 	transient protected ProcessManagerRemote processManager;
 
 	public ClassDefinition(){
+		this.sourceCode = new JavaSourceCode();
+		
 		setMetaworksContext(new MetaworksContext());
 		getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		init();

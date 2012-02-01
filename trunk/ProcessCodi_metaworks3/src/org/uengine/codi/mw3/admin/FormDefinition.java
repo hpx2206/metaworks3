@@ -1,12 +1,9 @@
 
 package org.uengine.codi.mw3.admin;
 
-import java.io.FileOutputStream;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import org.apache.commons.httpclient.methods.GetMethod;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.ServiceMethod;
@@ -30,6 +27,10 @@ public class FormDefinition implements ContextAware, PropertyListable{
 
 
 	public FormDefinition(){
+		init();
+	}
+	
+	public void init(){
 		clearNewFormField();
 	}
 	
@@ -42,7 +43,14 @@ public class FormDefinition implements ContextAware, PropertyListable{
 //		public void setFormFields(FormField[] formFields) {
 //			this.formFields = formFields;
 //		}
-	
+	String parentFolder;	
+		public String getParentFolder() {
+			return parentFolder;
+		}
+		public void setParentFolder(String parentFolder) {
+			this.parentFolder = parentFolder;
+		}
+
 	String alias;
 		public String getAlias() {
 			return alias;
@@ -119,7 +127,6 @@ public class FormDefinition implements ContextAware, PropertyListable{
 		newFormField.metaworksContext.setWhen(MetaworksContext.WHEN_EDIT);
 		newFormField.metaworksContext.setWhere("newEntry");//TODO: lesson 6 (if there's no overriding value, metaworks will tries to use old contxt value)
 		newFormField.formDefinition = this;
-
 	}
 	
 	@Override
