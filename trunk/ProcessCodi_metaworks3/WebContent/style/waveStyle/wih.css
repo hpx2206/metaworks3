@@ -86,20 +86,21 @@ legend {display:none;}
 
 #adminiconline{ height:32px; width:100%;}
 #adminicon{  float:right;height:32px; width:32px; background:url(../../images/processMap/advanced.png) no-repeat right; cursor:pointer;}
-.process_map{overflow:hidden;padding:0 0 40px 20px;border:1px solid #c2c2c2; margin-bottom:30px;}
-.process_map li{display:inline;float:left;width:66px; max-height:90px; margin:25px 25px 0 0;padding:0px;font-family:'돋움',Dotum;font-size:12px;text-align:center;list-style:none; background:url(../../images/processMap/newPrcessBgDefault.png) no-repeat; position:relative;}
-.process_map li .editicon{position:absolute; right:2px; top:2px; width:16px; height:16px; cursor:pointer; background:url(../../images/processMap/wheel.png) no-repeat; display:none;}
+.process_map{overflow:hidden;padding:0 0 40px 20px; float:left;}
+.process_map .fdiv{display:inline;float:left;width:66px; height:90px; margin:10px 10px 0 0;padding:0px;font-family:'돋움',Dotum;font-size:12px;text-align:center;list-style:none; background:url(../../images/processMap/newPrcessBgDefault.png) no-repeat; position:relative;}
+.process_map .fdiv .editicon{position:absolute; right:2px; top:2px; width:16px; height:16px; cursor:pointer; background:url(../../images/processMap/wheel.png) no-repeat; display:none;}
 .process_map .sptitle{ position:absolute; left:15px; margin-top:-10px; background:#FFF; padding:5px; font-size:14px; font-weight:bold; color:#5DA0E8;}
-.process_map .blue {background:url(../../images/processMap/newPrcessBgBlue.png) no-repeat;}
-.process_map .red {background:url(../../images/processMap/newPrcessBgRed.png) no-repeat;}
-.process_map .gray {background:url(../../images/processMap/newPrcessBgGray.png) no-repeat;}
-.process_map .green {background:url(../../images/processMap/newPrcessBgGreen.png) no-repeat;}
-.process_map .purple {background:url(../../images/processMap/newPrcessBgPurple.png) no-repeat;}
+.process_map #blue {background:url(../../images/processMap/newPrcessBgBlue.png) no-repeat;}
+.process_map #red {background:url(../../images/processMap/newPrcessBgRed.png) no-repeat;}
+.process_map #gray {background:url(../../images/processMap/newPrcessBgGray.png) no-repeat;}
+.process_map #green {background:url(../../images/processMap/newPrcessBgGreen.png) no-repeat;}
+.process_map #purple {background:url(../../images/processMap/newPrcessBgPurple.png) no-repeat;}
+.process_map #folder {background:url(../../images/processMap/folder2_64.png) no-repeat;}
 
 
-.process_map li a{color:#333;text-decoration:none; font-weight:bold; letter-spacing:-1; height:50px;}
-.process_map li a:hover{text-decoration:underline}
-.process_map li img{display:block;margin:12px; margin-bottom:20px;border:none; line-height:66px;}
+.process_map .fdiv a{color:#333;text-decoration:none; font-weight:bold; letter-spacing:-1; height:50px;}
+.process_map .fdiv a:hover{text-decoration:underline}
+.process_map .fdiv img{display:block;margin:12px; margin-bottom:20px;border:none; line-height:66px;}
 
 #editiconpop  { width:540px; background:#FFF;}
 #editiconpop dl{  overflow:hidden;width:520px;padding:0 0 10px 10px; margin-bottom:20px; border:1px solid #c2c2c2}
