@@ -156,7 +156,8 @@ public class MetaworksRemoteService {
 			
 			for(FieldDescriptor fd : wot.metaworks2Type().getFieldDescriptors()){
 				Object srcFieldValue = srcInst.getFieldValue(fd.getName());
-				
+
+				//MetaworksObject need to initialize the property MetaworksContext if there's no data.
 				if("MetaworksContext".equals(fd.getName()) && srcFieldValue==null && IDAO.class.isAssignableFrom(serviceClass)){
 					srcFieldValue = new MetaworksContext();
 				}
