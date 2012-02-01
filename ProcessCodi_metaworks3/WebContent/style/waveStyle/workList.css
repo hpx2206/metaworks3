@@ -14,7 +14,7 @@
 .tbl_type{width:100%;font-size:11px;text-align:left;}
 .tbl_type caption{display:none}
 .tbl_type th{padding:7px 0 4px;border-top:2px solid #dcdcdc;background-color:#f5f7f9;color:#666;font-size:12px;font-weight:bold;}
-.tbl_type td{padding:0px;border-top:1px solid #e5e5e5;color:#4c4c4c}
+.tbl_type td{padding:0px;border-bottom:1px solid #e5e5e5;color:#4c4c4c}
 .tbl_type .a td{padding:0px;border-top:none;color:#4c4c4c}
 /* //table */
 
@@ -34,7 +34,7 @@
 /* //UI Object */
 
 .tbl_type .first_td{width:99px;}
-.tbl_type .last_td{width:70px; padding-right:10px;}
+.tbl_type .last_td{width:90px; padding-right:10px;}
 .worklistuser {width:99px;}
 .worklistuser dd{ margin:3px 0 3px 3px; float:left; display:block;}
 

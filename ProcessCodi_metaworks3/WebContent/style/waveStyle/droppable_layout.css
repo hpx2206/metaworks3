@@ -78,7 +78,7 @@ input:focus {
  
 
 /* list */
-ul, ol , li{list-style-type:none; margin:0px; padding:0px;}
+ul, ol , li , dl ,dd ,dt{list-style-type:none; margin:0px; padding:0px;}
 
  
 
