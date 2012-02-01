@@ -43,6 +43,9 @@
 				this.mouseX = 0;
 				this.mouseY = 0;
 				
+				this._metadata_version = 0;
+
+				
 			    document.addEventListener(
 			    		"mouseup",
 
@@ -50,12 +53,12 @@
 			    			mw3.mouseX = e.pageX;
 			    			mw3.mouseY = e.pageY; 
 			    			
-			    			if(mw3.popupDivId!=null){
-			    				if(mw3.mouseX < 100 && mw3.mouseY < 100){
-			    					$("#" + mw3.popupDivId).remove();
-			    					mw3.popupDivId = null;
-			    				}
-			    			}
+//			    			if(mw3.popupDivId!=null){
+//			    				if(mw3.mouseX < 100 && mw3.mouseY < 100){
+//			    					$("#" + mw3.popupDivId).remove();
+//			    					mw3.popupDivId = null;
+//			    				}
+//			    			}
 			    		},
 			    		
 			    		false
@@ -164,8 +167,12 @@
 				return {when: this.when, where: this.where, how: this.how};
 			}
 			
-			
-			
+			Metaworks3.prototype.clearMetaworksType = function(objectTypeName){
+
+				this.metaworksMetadata[objectTypeName] = null;
+
+				return function(){}; //for dwr dummy call
+			}
 			Metaworks3.prototype.getMetadata = function(objectTypeName, onLoadDone){
 
 					if(!this.metaworksMetadata[objectTypeName] 
@@ -180,6 +187,9 @@
 					    			//alert(webObjectType.name + "=" + dwr.util.toDescriptiveString(webObjectType, 5))
 
 									mw3.metaworksMetadata[objectTypeName] = webObjectType;
+									
+									webObjectType['version'] = mw3._metadata_version ++;
+
 									
 									//webObjectType['dontCache'] = true;
 									
@@ -385,7 +395,10 @@
 					try {
 						//alert("selected face : " + actualFace);
 						
-						var html = new EJS({url: this.base + (actualFace.indexOf('dwr') == 0 ? '/':'/metaworks/') + actualFace})
+						var url = this.base + (actualFace.indexOf('dwr') == 0 ? '/':'/metaworks/') + actualFace;
+						url = url + "?ver=" + this.getMetadata(objectTypeName).version; //let it refreshed
+						
+						var html = new EJS({url: url})
 							.render({
 								value				: object, 
 								objectTypeName		: objectTypeName, 
@@ -394,6 +407,7 @@
 								mw3					: this, 
 								objectId			: objectId, 
 								fields				: (objectRef ? objectRef.fields  : null),
+								resources			: (objectRef ? objectRef.fields  : null), //TODO: later should be sent only with resources
 								methods				: (objectRef ? objectRef.methods : null),
 								descriptor			: descriptor,
 								editFunction		: editFunction
@@ -1293,10 +1307,22 @@
 				if(context!=null && context.when){
 					when = context.when
 				}
+				
+				if(this.fieldDescriptor.attributes){
+					
+					if(this.fieldDescriptor.attributes['resource']){
+						if(when == "design"){
+							when = mw3.WHEN_EDIT; //TODO: should not work for inner objects recursively.
+						}else{
+							when = mw3.WHEN_VIEW;
+						}
+						
+						value = this.fieldDescriptor.attributes['resource'];
+					}
 
-				if(this.fieldDescriptor.attributes && this.fieldDescriptor.attributes['noneditable'])
-					when = mw3.WHEN_VIEW;
-
+					if(this.fieldDescriptor.attributes['noneditable'])
+						when = mw3.WHEN_VIEW;
+				}
 				
 				html = mw3.locateObject(value, face, null, {when: when, descriptor: this.fieldDescriptor});
 				
