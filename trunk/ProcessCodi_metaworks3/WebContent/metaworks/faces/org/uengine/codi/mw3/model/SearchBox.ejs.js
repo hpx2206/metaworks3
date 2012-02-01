@@ -1,6 +1,4 @@
 var org_uengine_codi_mw3_model_SearchBox = function(objectId, className) {
-	console.debug("org_uengine_codi_mw3_model_SearchBox");
-	
 	this.objectId = objectId;
 	this.className = className;
 

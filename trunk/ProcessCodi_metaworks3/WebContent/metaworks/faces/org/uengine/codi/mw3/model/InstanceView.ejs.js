@@ -15,7 +15,7 @@ var org_uengine_codi_mw3_model_InstanceView = function(objectId, className){
 			limit : num
 		}, function(response) {
 			if (!response || response.error) {
-				console.debug("error : " + response.error.message);
+				alert("error : " + response.error.message);
 			} else {
 				for(var j=0; j<response.comments.count; j++){
 					var comment = response.comments.data[j];
