@@ -6,8 +6,10 @@ import java.util.ArrayList;
 import javax.annotation.PostConstruct;
 
 import org.metaworks.MetaworksContext;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.dao.TransactionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.uengine.kernel.ProcessInstance;
@@ -42,7 +44,17 @@ public class InstanceView {
 		newItem = new CommentWorkItem();
 		newItem.setInstId(new Long(getInstanceId()));
 		newItem.setTaskId(new Long(getInstanceId()));
-		newItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);		
+		newItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+		
+		Session session = (Session) TransactionContext.getThreadLocalInstance().getSharedContext("codi_session");
+
+		if(session!=null){
+			User loginUser = new User();
+			loginUser.setUserId(session.getLogin().getUserId());
+			loginUser.setName(session.getLogin().getName());
+			
+			newItem.setWriter(loginUser);
+		}
 		
 		crowdSourcer = new CrowdSourcer();
 		crowdSourcer.setInstanceId(getInstanceId());

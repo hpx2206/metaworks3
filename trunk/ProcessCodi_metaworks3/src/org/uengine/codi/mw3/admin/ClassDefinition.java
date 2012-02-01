@@ -18,8 +18,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.CodiDwrServlet;
 import org.uengine.codi.mw3.model.FaceSourceCode;
 import org.uengine.codi.mw3.model.JavaSourceCode;
+
+import org.uengine.codi.mw3.model.TemplateDesigner;
+import org.uengine.codi.mw3.model.Window;
 import org.uengine.codi.mw3.model.MobileWindow;
-import org.uengine.codi.mw3.model.WindowPanel;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.PropertyListable;
 import org.uengine.processmanager.ProcessManagerRemote;
@@ -213,7 +215,19 @@ public class ClassDefinition implements ContextAware, PropertyListable{
 //		} 
 		
 		try {
-			Thread.currentThread().getContextClassLoader().loadClass(getPackageName()+"."+getClassName());
+			String fullClsName = getPackageName()+"."+getClassName();
+			
+			Thread.currentThread().getContextClassLoader().loadClass(fullClsName);
+			
+			getSourceCode().setCompileErrors(null);
+			
+			MetaworksRemoteService.getInstance().clearMetaworksType(fullClsName);
+
+			
+		} catch(SecurityException e){
+			
+			throw e;
+			
 		} catch (Exception e) {
 			// TODO we need to report the error properly
 			String message = e.getMessage();
@@ -236,8 +250,7 @@ public class ClassDefinition implements ContextAware, PropertyListable{
 			getSourceCode().setCompileErrors(new CompileError[]{compileError});
 		
 			e.printStackTrace();
-		}
-		
+		} 
 	}
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
@@ -246,9 +259,21 @@ public class ClassDefinition implements ContextAware, PropertyListable{
 
 		Object o = Thread.currentThread().getContextClassLoader().loadClass(getPackageName() + "." + getClassName()).newInstance();//cl.loadClass(getPackageName() + "." + getClassName()).newInstance();
 		
-		WindowPanel outputWindow = new WindowPanel();
+		Window outputWindow = new Window();
 		outputWindow.setPanel(o);
 //		outputWindow.
+		
+		return outputWindow;
+	}
+	
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
+	public Object design() throws Exception{
+		
+		Window outputWindow = new Window();
+		
+		TemplateDesigner designer = new TemplateDesigner(getPackageName() + "." + getClassName());
+		
+		outputWindow.setPanel(designer);
 		
 		return outputWindow;
 	}

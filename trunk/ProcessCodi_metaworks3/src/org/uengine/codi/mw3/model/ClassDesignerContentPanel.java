@@ -27,6 +27,7 @@ public class ClassDesignerContentPanel extends ContentWindow {
 		String defVerId = processManager.getProcessDefinitionProductionVersion(defId);
 		String resource = processManager.getResource(defVerId);
 		classDefinition = (ClassDefinition) GlobalContext.deserialize(resource, ClassDefinition.class);
+		classDefinition.setDefId(defId);
 		
 	}
 

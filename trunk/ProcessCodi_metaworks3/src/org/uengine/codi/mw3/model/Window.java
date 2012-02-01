@@ -3,16 +3,13 @@ package org.uengine.codi.mw3.model;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 
-@Face(ejsPath="faces/org/uengine/codi/mw3/model/Window.ejs",
-      options={"hideLabels"}, 
-      values={"true"})
-public class WindowPanel {
+public class Window {
 	
-	public WindowPanel() {
+	public Window() {
 		
 	}
 	
-	public WindowPanel(Object panel) {
+	public Window(Object panel) {
 		this.panel = panel;
 	}
 	

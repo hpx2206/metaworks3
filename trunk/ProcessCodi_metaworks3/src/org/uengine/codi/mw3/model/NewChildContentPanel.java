@@ -57,6 +57,14 @@ public class NewChildContentPanel  {
 	}
 
 	@ServiceMethod
+	public RuleDesignerContentPanel newRule() throws Exception{
+		RuleDesignerContentPanel designer = new RuleDesignerContentPanel();
+		designer.newDefinition(getParentFolder().toString());
+		
+		return designer;
+	}
+
+	@ServiceMethod
 	public FormDesignerContentPanel newForm(){
 		return new FormDesignerContentPanel();
 	}

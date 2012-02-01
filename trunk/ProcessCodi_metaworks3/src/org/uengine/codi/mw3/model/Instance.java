@@ -2,8 +2,10 @@ package org.uengine.codi.mw3.model;
 
 import java.util.Date;
 
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Id;
 import org.metaworks.dao.Database;
+import org.metaworks.dao.TransactionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class Instance extends Database<IInstance> implements IInstance{
@@ -11,8 +13,8 @@ public class Instance extends Database<IInstance> implements IInstance{
 	@Autowired
 	InstanceViewContent instanceViewContent;
 	
-	//@Autowired
-	//ProcessManagerRemote processManager;	
+	@AutowiredFromClient
+	public Session session;
 
 	public Instance(){
 		
@@ -21,10 +23,12 @@ public class Instance extends Database<IInstance> implements IInstance{
 	public ContentWindow detail() throws Exception{
 		//InstanceViewContent instanceViewContent = new InstanceViewContent();
 		//instanceViewContent.processManager = this.processManager;
+		//instanceViewContent.
 		
+		TransactionContext.getThreadLocalInstance().setSharedContext("codi_session", session);
 		instanceViewContent.load(this);
 		
-		System.out.println("detail");	
+		//System.out.println("detail");	
 		
 		return instanceViewContent;
 	}
