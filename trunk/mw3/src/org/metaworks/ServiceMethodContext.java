@@ -9,6 +9,7 @@ public class ServiceMethodContext{
 	public final static String TARGET_PREPEND 	= "prepend"; 
 	public final static String TARGET_STICK 	= "stick";
 	public final static String TARGET_POPUP 	= "popup";
+//	public final static String TARGET_WINDOW 	= "window";
 	public final static String TARGET_NONE 		= "none";
 	public final static String TARGET_PAGEMOVE 	= "pagemove";
 	

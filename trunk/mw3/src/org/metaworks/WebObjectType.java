@@ -28,16 +28,22 @@ import org.metaworks.annotation.NonSavable;
 import org.metaworks.annotation.ORMapping;
 import org.metaworks.annotation.Range;
 import org.metaworks.annotation.RepresentativeImagePath;
+import org.metaworks.annotation.Resource;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.TypeSelector;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.IDAO;
 import org.metaworks.dao.TransactionContext;
+import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.dwr.TransactionalDwrServlet;
 import org.metaworks.inputter.SelectInput;
 
+import com.thoughtworks.xstream.XStream;
+
 
 public class WebObjectType{
+	
+	Object resource;
 	
 	boolean isInterface;
 		public boolean isInterface() {
@@ -46,7 +52,15 @@ public class WebObjectType{
 		public void setInterface(boolean isInterface) {
 			this.isInterface = isInterface;
 		}
-	
+		
+	boolean designable;		
+		public boolean isDesignable() {
+			return designable;
+		}
+		public void setDesignable(boolean designable) {
+			this.designable = designable;
+		}
+
 	String name;
 		public String getName() {
 			return name;
@@ -328,6 +342,34 @@ public class WebObjectType{
 			if(getAnnotationDeeply(actCls, iDAOClass, fd.getName(), NonEditable.class)!=null)
 				fd.setAttribute("nonEditable", new Boolean(true));
 			
+			if(getAnnotationDeeply(actCls, iDAOClass, fd.getName(), Resource.class)!=null){
+				
+				Object resourceForThisField = null;
+				if(resource == null){
+					InputStream is = null;
+					try{
+						is = Thread.currentThread().getContextClassLoader().getResourceAsStream(actCls.getName() + ".xml");
+						
+						XStream xstream = new XStream(/*new DomDriver()*/);
+						resource = xstream.fromXML(is);
+					
+						ObjectInstance rscInst = (ObjectInstance) objectType.createInstance();
+						rscInst.setObject(resource);
+						resourceForThisField = rscInst.getFieldValue(fd.getName());
+
+					}catch(Exception e){
+						
+					}finally{try{is.close();}catch(Exception ex){}}
+				}
+				
+				if(resourceForThisField == null)
+					resourceForThisField = fd.getDisplayName();
+				
+				
+				fd.setAttribute("resource", resourceForThisField);
+				setDesignable(true);
+			}
+			
 			if(getAnnotationDeeply(actCls, iDAOClass, fd.getName(), RepresentativeImagePath.class)!=null){
 				fd.setAttribute("representativeImagePath", new Boolean(true));
 			}
@@ -336,6 +378,7 @@ public class WebObjectType{
 			if((orm = (ORMapping) getAnnotationDeeply(actCls, iDAOClass, fd.getName(), ORMapping.class))!=null){
 				fd.setAttribute("ormapping", orm);
 			}
+			
 			
 			TypeSelector typeSelector;
 			if((typeSelector = (TypeSelector) getAnnotationDeeply(actCls, iDAOClass, fd.getName(), TypeSelector.class))!=null){
