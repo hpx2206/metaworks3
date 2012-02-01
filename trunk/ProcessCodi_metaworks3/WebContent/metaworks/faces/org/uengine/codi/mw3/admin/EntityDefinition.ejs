@@ -1,6 +1,26 @@
 <%
 if(value!=null){
+	console.debug(value);
 %>
+	<div id="actionButton">
+		<%=methods.save.here()%>
+
+<%
+	if(value.created){
+%>		
+		<%=methods.dropTable.here()%>
+<%
+	} else {
+%>
+		<%=methods.createTable.here()%>
+<%
+	}
+%>			
+		<%=methods.generateDDL.here()%>
+		<%=methods.generateDAO.here()%>
+				
+	</div>
+	
 	<div id="entityInfo">
 		<table>
 			<tr>
@@ -11,6 +31,7 @@ if(value!=null){
 	</div>
 				
 	<div id="entityField">
+		Columns<br />
 		<table>
 			<tr>
 				<td width="200px">Name</td>
@@ -24,19 +45,17 @@ if(value!=null){
 				<td width="30px">&nbsp;</td>
 			</tr>
 		</table>
-		<%=fields.entityFields.here()%>
+<%
+	if(value.entityFields != null){
+		for(var i=0; i<value.entityFields.length; i++){		
+%>
+		<%=mw3.locateObject(value.entityFields[i], value.entityFields[i].__className)%>
+<%
+		}	
+	}
+%>		
 		<%=fields.newEntityField.here()%>
-	</div>	
-	
-	<div id="actionButton">
-		<%=methods.generateDDL.here()%>
-		<%=methods.save.here()%>
-		<%=methods.createTable.here()%>
-		<%=methods.generateDAO.here()%>
-				
 	</div>
-	
-	<%=fields.script.here()%>
 <%
 }
 %>

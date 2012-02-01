@@ -1,11 +1,15 @@
 <%
-
+if(value != null){
 	if(value.formFields==null){
-		%>preview<%
+%>
+		preview
+<%
 	}else{
 %>
+	<%=fields.formFields.here({when: 'instance-mode'})%>
+	<%=methods.save.here()%>
 
-<%=fields.formFields.here({when: 'instance-mode'})%>
-<%=methods.save.here()%>
-
-<%	}%>
+<%
+	}
+}	
+%>
