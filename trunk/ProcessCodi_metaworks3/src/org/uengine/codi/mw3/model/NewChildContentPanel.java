@@ -49,8 +49,8 @@ public class NewChildContentPanel  {
 	}
 
 	@ServiceMethod
-	public ProcessDesignerContentPanel newProcess() throws Exception{
-		ProcessDesignerContentPanel processDesigner = new ProcessDesignerContentPanel();
+	public ProcessDesignerWindow newProcess() throws Exception{
+		ProcessDesignerWindow processDesigner = new ProcessDesignerWindow();
 		processDesigner.newProcessDefinition(getParentFolder().toString());
 		
 		return processDesigner;
@@ -66,7 +66,10 @@ public class NewChildContentPanel  {
 
 	@ServiceMethod
 	public FormDesignerContentPanel newForm(){
-		return new FormDesignerContentPanel();
+		FormDesignerContentPanel formDesigner = new FormDesignerContentPanel();
+		formDesigner.newForm(getParentFolder().toString());
+		
+		return formDesigner;
 	}
 
 }

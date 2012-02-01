@@ -3,16 +3,22 @@ package org.uengine.codi.mw3.model;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Face;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.codi.mw3.admin.EntityData;
 import org.uengine.codi.mw3.admin.EntityDefinition;
+import org.uengine.codi.mw3.admin.EntityQuery;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 @Face(ejsPath="genericfaces/Tab.ejs",
-      options={"hideLabels"},
+	  options={"hideLabels"},
 	  values={"true"})
 public class EntityDesignerContentPanel {
 	
-	@Autowired
+	public EntityDesignerContentPanel(){
+		setMetaworksContext(new MetaworksContext());
+		getMetaworksContext().setWhere("1");
+	}
+	
 	EntityDefinition entityDefinition;		
 		public EntityDefinition getEntityDefinition() {
 			return entityDefinition;
@@ -21,31 +27,35 @@ public class EntityDesignerContentPanel {
 			this.entityDefinition = entityDefinition;
 		}
 	
-	String a;	
-		public String getA() {
-			return a;
+	EntityQuery entityQuery;
+		public EntityQuery getEntityQuery() {
+			return entityQuery;
 		}
-		public void setA(String a) {
-			this.a = a;
+		public void setEntityQuery(EntityQuery entityQuery) {
+			this.entityQuery = entityQuery;
 		}
 	
-	String b;
-		public String getB() {
-			return b;
+	/*
+	EntityData entityData;
+		public EntityData getEntityData() {
+			return entityData;
 		}
-		public void setB(String b) {
-			this.b = b;
+		public void setEntityData(EntityData entityData) {
+			this.entityData = entityData;
 		}
-
-	
+	*/
 		
 	@Autowired
 	ProcessManagerRemote processManager;
 		
 	public void newEntity(String parentFoler) throws Exception{
+		entityDefinition = new EntityDefinition(); 
+				
 		entityDefinition.init();		
 		entityDefinition.setParentFolder(parentFoler);
 		entityDefinition.getMetaworksContext().setWhere("newEntity");
+		
+		entityQuery = new EntityQuery();
 	}
 
 	public void load(String defId) throws Exception{
@@ -55,9 +65,14 @@ public class EntityDesignerContentPanel {
 		
 		entityDefinition.init();
 		
-
+		entityQuery = new EntityQuery();
 	}
-
 	
-
+	transient MetaworksContext metaworksContext;
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
+		} 	
 }

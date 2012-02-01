@@ -19,23 +19,23 @@ import org.uengine.codi.mw3.model.ContentPanel;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.processmanager.ProcessManagerRemote;
 
-public class JavaSourceCode extends SourceCode{
+public class JavaSourceCode extends SourceCode {
 
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_STICK)
+	@ServiceMethod(callByContent = true, target = ServiceMethodContext.TARGET_STICK)
 	public CodeAssist requestAssist() {
 
 		CodeAssist codeAssist = super.requestAssist();
-				
+
 		ArrayList<ClassField> classFields = classDefinition.getClassFields();
-		
-		for(ClassField field : classFields){
+
+		for (ClassField field : classFields) {
 			codeAssist.getAssistances().add(field.getFieldName());
 		}
-		
+
 		return codeAssist;
 	}
-	
+
 	@AutowiredFromClient
 	public ClassDefinition classDefinition;
-	
+
 }

@@ -235,13 +235,10 @@ public class ProcessDefinition extends Database<IProcessDefinition> implements I
 	
 				return formDesigner;
 			}else if("process".equals(objType)){
-				ProcessDesignerContentPanel processDesigner = processDesignerContentPanel;
+				ProcessDesignerWindow processDesigner = new ProcessDesignerWindow();
 				processDesigner.load(databaseMe().getDefId().toString());
 				
-				ContentWindow contentWindow = new ContentWindow();
-				contentWindow.setPanel(processDesigner);
-				
-				return contentWindow;
+				return processDesigner;
 				
 			}else if("class".equals(objType)){
 				ClassDesignerContentPanel classDesigner = classDesignerContentPanel;//new ClassDesignerContentPanel();
@@ -267,7 +264,7 @@ public class ProcessDefinition extends Database<IProcessDefinition> implements I
 	ClassDesignerContentPanel classDesignerContentPanel;
 	
 	@Autowired
-	ProcessDesignerContentPanel processDesignerContentPanel;
+	ProcessDesignerWindow processDesigner;
 	
 	@Autowired
 	EntityDesignerWindow entityDesignerWindow;

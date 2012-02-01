@@ -4,6 +4,7 @@ import javax.persistence.Id;
 
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.IDAO;
+import org.uengine.codi.mw3.admin.Admin;
 
 public interface ILogin extends IDAO{
 
@@ -20,8 +21,10 @@ public interface ILogin extends IDAO{
 	public boolean isAdmin();
 	public void setAdmin(boolean isAdmin);
 
-	
+	/*
 	@ServiceMethod(callByContent=true)
 	public Main login() throws Exception;
-	
+	*/
+	@ServiceMethod(callByContent=true)
+	public Main login() throws Exception;	
 }

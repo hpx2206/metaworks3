@@ -27,25 +27,7 @@ public class Popup implements ContextAware {
 		public void setMetaworksContext(MetaworksContext metaworksContext) {
 			this.metaworksContext = metaworksContext;
 		}		
-//
-//	int pageX = 0;
-//		@Hidden
-//		public int getPageX() {
-//			return pageX;
-//		}
-//		public void setPageX(int pageX) {
-//			this.pageX = pageX;
-//	}
-//			
-//	int pageY = 0;
-//		@Hidden
-//		public int getPageY() {
-//			return pageY;
-//		}
-//		public void setPageY(int pageY) {
-//			this.pageY = pageY;
-//		}
-	
+
 	String name;		
 		public String getName() {
 			return name;
