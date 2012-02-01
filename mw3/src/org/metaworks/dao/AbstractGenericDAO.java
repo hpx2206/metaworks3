@@ -976,13 +976,13 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 				return get((String)args[0]);
 			}else{//from typed DAO's getter
 				
+				if("METAWORKSCONTEXT".equalsIgnoreCase(propertyName))
+					return getMetaworksContext();
 				
 				Object returnValue = null;
 				
 				if(rowSet!=null) {
 					
-					if("METAWORKSCONTEXT".equalsIgnoreCase(propertyName))
-						return getMetaworksContext();
 					
 //					try {
 //					if(rowSet.isClosed()) { 
