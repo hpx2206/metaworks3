@@ -249,15 +249,15 @@ public class ProcessDefinition extends Database<IProcessDefinition> implements I
 				
 				return classDesigner;
 				
+			}else if("entity".equals(objType)){
+				EntityDesignerWindow entityDesigner = entityDesignerWindow;//new ClassDesignerContentPanel();
+				entityDesigner.load(databaseMe().getDefId().toString());
+				
+				return entityDesigner;		
 			}
 		}finally{
 			codiPmSVC.remove();
-		}else if("entity".equals(objType)){
-			EntityDesignerWindow entityDesigner = entityDesignerWindow;//new ClassDesignerContentPanel();
-			entityDesigner.load(databaseMe().getDefId().toString());
-			
-			return entityDesigner;		
-		}		
+		}	
 		
 		// TODO Auto-generated method stub
 		return null;
