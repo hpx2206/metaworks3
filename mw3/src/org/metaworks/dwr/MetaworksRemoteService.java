@@ -1,9 +1,11 @@
 package org.metaworks.dwr;
 
 import java.io.File;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
@@ -13,7 +15,9 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import org.directwebremoting.ServerContextFactory;
+import org.directwebremoting.WebContext;
 import org.directwebremoting.WebContextFactory;
+import org.directwebremoting.proxy.dwr.Util;
 import org.metaworks.FieldDescriptor;
 import org.metaworks.MetaworksContext;
 import org.metaworks.ObjectInstance;
@@ -24,6 +28,7 @@ import org.metaworks.dao.ConnectionFactory;
 import org.metaworks.dao.IDAO;
 import org.metaworks.dao.TransactionContext;
 import org.springframework.beans.factory.ListableBeanFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -43,6 +48,28 @@ public class MetaworksRemoteService {
 			
 			return instance;
 		}
+		
+		
+	public void clearMetaworksType(String className) throws Exception {
+		if(metadataStorage.containsKey(className))
+			metadataStorage.remove(className);
+		
+		
+		
+		////////// alert to other session users :  COMET //////////
+		
+		WebContext wctx = WebContextFactory.get();
+		String currentPage = wctx.getCurrentPage();
+
+	   // For all the browsers on the current page:
+	   Collection sessions = wctx.getScriptSessionsByPage(currentPage);
+
+	   //TODO: filter other topic's postings;
+	   Util utilAll = new Util(sessions);
+	   utilAll.addFunctionCall("mw3.clearMetaworksType('"+ className +"')");
+
+	}
+
 
 	public WebObjectType getMetaworksType(String className) throws Exception {
 		try{
@@ -87,7 +114,7 @@ public class MetaworksRemoteService {
 		if(springAppContext!=null)
 		try{
 			//springBean = getBeanFactory().getBean(serviceClass);
-			Map beanMap = getBeanFactory().getBeansOfType(serviceClass);
+			Map beanMap = springAppContext.getBeansOfType(serviceClass);
 			Set keys = beanMap.keySet();			
 			for (Object key : keys) {
 			    if(springBean != null) {
@@ -180,6 +207,36 @@ public class MetaworksRemoteService {
 		}
     }
 	
+	public void autowireSpringFields(Object object) throws IllegalAccessException {
+		for(Field field: object.getClass().getFields()){
+			if(field.getAnnotation(Autowired.class)!=null){
+				
+				WebApplicationContext springAppContext = null;
+
+				if(TransactionalDwrServlet.useSpring) springAppContext = MetaworksRemoteService.getInstance().getBeanFactory();
+				Object springBean = null;
+				if(springAppContext!=null)
+				try{
+					//springBean = getBeanFactory().getBean(serviceClass);
+					Map beanMap = springAppContext.getBeansOfType(field.getType());
+					Set keys = beanMap.keySet();			
+					for (Object key : keys) {
+					    springBean = beanMap.get(key);
+					    
+					    if(springBean != null) {
+					    	break;
+					    }
+					}
+				}catch(Exception e){
+					//TODO: check if there's any occurrance of @Autowired in the field list, it is required to check and shows some WARNING to the developer.
+				}
+				
+				if(springBean!=null)
+					field.set(object, springBean);
+
+			}
+		}
+	}
 
 	ConnectionFactory connectionFactory;
 		public ConnectionFactory getConnectionFactory() {
