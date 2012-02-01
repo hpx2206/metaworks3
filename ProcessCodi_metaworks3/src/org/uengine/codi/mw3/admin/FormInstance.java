@@ -9,8 +9,7 @@ import org.uengine.kernel.GlobalContext;
 
 public class FormInstance{
 
-	ArrayList<FormField> formFields;
-	
+	ArrayList<FormField> formFields;	
 		public ArrayList<FormField> getFormFields() {
 			return formFields;
 		}

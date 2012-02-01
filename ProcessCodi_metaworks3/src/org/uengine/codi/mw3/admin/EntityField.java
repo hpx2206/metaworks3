@@ -16,9 +16,17 @@ import org.metaworks.annotation.ServiceMethod;
 	  values={"true"})   
 public class EntityField implements Cloneable, ContextAware{
 
-	public EntityField(){
+	public EntityField(){		
 	}
 	
+	boolean isKey;	
+		public boolean isKey() {
+			return isKey;
+		}
+		public void setKey(boolean isKey) {
+			this.isKey = isKey;
+		}
+
 	String name;		
 		@Id  // TODO: lesson 1 (object addressing and correlation)
 		@Face(displayName="Name")
@@ -58,6 +66,9 @@ public class EntityField implements Cloneable, ContextAware{
 
 	int length;
 		@Face(displayName="Length/Set")
+		@Range(
+				size=5
+		)
 		public int getLength() {
 			return length;
 		}
@@ -124,6 +135,7 @@ public class EntityField implements Cloneable, ContextAware{
 		EntityField clonedOne = (EntityField) this.clone(); //TODO: lesson 2 (cloning to avoid reflective problem)
 
 		clonedOne.setMetaworksContext(new MetaworksContext());  //TODO: lesson 4 (context injection)
+		clonedOne.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 		clonedOne.getMetaworksContext().setWhere("in-container");
 		
 		entityDefinition.entityFields.add(clonedOne); 
