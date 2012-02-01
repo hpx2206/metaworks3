@@ -7,6 +7,15 @@ import org.metaworks.MetaworksContext;
 
 public class ParameterValue implements ContextAware{
 
+	String variableName;
+		
+		public String getVariableName() {
+			return variableName;
+		}
+		public void setVariableName(String variableName) {
+			this.variableName = variableName;
+		}
+
 	String argument;
 		public String getArgument() {
 			return argument;

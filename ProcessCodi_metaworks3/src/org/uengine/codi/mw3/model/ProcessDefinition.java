@@ -222,28 +222,36 @@ public class ProcessDefinition extends Database<IProcessDefinition> implements I
 
 	@Override
 	public ContentWindow design() throws Exception {
-		String objType = databaseMe().getObjType();
+		try{
 		
-		if("form".equals(objType)){
-			FormDesignerContentPanel formDesigner = new FormDesignerContentPanel();
-			formDesigner.codiPmSVC = codiPmSVC; //TODO: later should be removed
-			formDesigner.load(databaseMe().getDefId().toString());
-
+			String objType = databaseMe().getObjType();
+			
+			if("form".equals(objType)){
+				FormDesignerContentPanel formDesigner = new FormDesignerContentPanel();
+				formDesigner.codiPmSVC = codiPmSVC; //TODO: later should be removed
+				formDesigner.load(databaseMe().getDefId().toString());
+	
+				codiPmSVC.remove();
+	
+				return formDesigner;
+			}else if("process".equals(objType)){
+				ProcessDesignerContentPanel processDesigner = processDesignerContentPanel;
+				processDesigner.load(databaseMe().getDefId().toString());
+				
+				ContentWindow contentWindow = new ContentWindow();
+				contentWindow.setPanel(processDesigner);
+				
+				return contentWindow;
+				
+			}else if("class".equals(objType)){
+				ClassDesignerContentPanel classDesigner = classDesignerContentPanel;//new ClassDesignerContentPanel();
+				classDesigner.load(databaseMe().getDefId().toString());
+				
+				return classDesigner;
+				
+			}
+		}finally{
 			codiPmSVC.remove();
-
-			return formDesigner;
-		}else if("process".equals(objType)){
-			ProcessDesignerContentPanel processDesigner = processDesignerContentPanel;
-			processDesigner.load(databaseMe().getDefId().toString());
-			
-			return processDesigner;
-			
-		}else if("class".equals(objType)){
-			ClassDesignerContentPanel classDesigner = classDesignerContentPanel;//new ClassDesignerContentPanel();
-			classDesigner.load(databaseMe().getDefId().toString());
-			
-			return classDesigner;
-			
 		}else if("entity".equals(objType)){
 			EntityDesignerWindow entityDesigner = entityDesignerWindow;//new ClassDesignerContentPanel();
 			entityDesigner.load(databaseMe().getDefId().toString());

@@ -15,7 +15,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.codehaus.commons.compiler.jdk.JavaSourceClassLoader;
+import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.dwr.TransactionalDwrServlet;
+
+import com.mongodb.Mongo;
 
 
 
@@ -23,18 +26,106 @@ public class CodiDwrServlet extends TransactionalDwrServlet{
 
 	public static ClassLoader codiClassLoader;
 	
-	final static String SECURITYMSG_SYSTEM_CLASS_USAGE_PROHIBITED = "Platform can't support to use this class";
+	final static String SECURITYMSG_SYSTEM_USAGE_PROHIBITED = " 패키지 이하의 클래스는 사용할 수 없습니다.".intern();///"Your App can't use any of classes under :".intern();
 	
-	final static HashMap<String, String> securedClasses = new HashMap<String, String>();
+	final static HashMap<String, String> securedPackages = new HashMap<String, String>();
+	
 	static{
-		securedClasses.put(File.class.getName(), SECURITYMSG_SYSTEM_CLASS_USAGE_PROHIBITED);
+		securedPackages.put(File.class.getPackage().getName(), SECURITYMSG_SYSTEM_USAGE_PROHIBITED);
+		securedPackages.put(Mongo.class.getPackage().getName(), SECURITYMSG_SYSTEM_USAGE_PROHIBITED);
+	}
+
+	static public boolean okIfSystem(){
+		StackTraceElement[] stackElem = Thread.currentThread().getStackTrace();
+		
+		for(int i = 0; i<stackElem.length; i++){
+			if(MetaworksRemoteService.class.getName().equals(stackElem[i].getClassName())){
+
+				return false;
+			}
+		}
+		
+		return true;
+	
 	}
 	
+	static public void checkPermission(String pkg) throws SecurityException{
+		
+		StackTraceElement[] stackElem = Thread.currentThread().getStackTrace();
+		
+		boolean needToCheck = false;
+		for(int i = stackElem.length-1; i > 4; i--){ //beyond 5 steps, they are the actual call stack.
+			if(MetaworksRemoteService.class.getName().equals(stackElem[i].getClassName())
+					&& "callMetaworksService".equals(stackElem[i].getMethodName())
+					){
+				
+				needToCheck = true;
+			
+			}else if(stackElem[i].getClassName().startsWith("org.metaworks") || stackElem[i].getClassName().startsWith("org.uengine")){
+				needToCheck = false;
+			}else if(JavaSourceClassLoader.class.getName().equals(stackElem[i].getClassName())
+					//&& !"getJavaFileForInput".equals(stackElem[i].getMethodName())
+					){
+				
+				needToCheck = true;
+			
+			}else if("FileInputJavaFileManager.java".equals(stackElem[i].getFileName())
+					//&& "getJavaFileForInput".equals(stackElem[i].getMethodName())
+					){
+				
+				needToCheck = false;
+			
+			}else if("WebappClassLoader.java".equals(stackElem[i].getFileName())
+					&& "findClass".equals(stackElem[i].getMethodName())
+					){
+				
+				needToCheck = false;
+			
+			}else if("ByteArrayJavaFileManager.java".equals(stackElem[i].getFileName())
+					&& "getJavaFileForOutput".equals(stackElem[i].getMethodName())
+					){
+				
+				needToCheck = false;
+			
+			}
+		}
+
+//		if(needToCheck && securedPackages.containsKey(pkg))
+//			throw new SecurityException("'" + pkg + "' " + securedPackages.get(pkg));
+		
+
+	}
 
 	@Override
 	public void init(ServletConfig servletConfig) throws ServletException {
 		// TODO Auto-generated method stub
 		super.init(servletConfig);
+		
+		
+		
+		
+//		System.setSecurityManager(new SecurityManager(){
+//
+//			@Override
+//			public void checkPackageAccess(String pkg){
+//				CodiDwrServlet.checkPermission(pkg);
+//				
+//				super.checkPackageAccess(pkg);
+//			}
+//
+////			@Override
+////			public void checkPermission(Permission perm, Object context) {
+////				
+////				if(okIfSystem()) return;//TODO or we need to change the security profile.
+////				
+////				super.checkPermission(perm, context);
+////			}
+////
+////			
+//			
+//			
+//			
+//		});
 		
 		refreshClassLoader(null);
 	}
@@ -57,14 +148,13 @@ public class CodiDwrServlet extends TransactionalDwrServlet{
 		
 		
 		
-		
 		JavaSourceClassLoader cl = new JavaSourceClassLoader(CodiMetaworksRemoteService.class.getClassLoader()){
 
 
 			@Override
 			public InputStream getResourceAsStream(String name) {
 
-				if(name.endsWith(".ejs") || name.endsWith(".ejs.js")){
+				if(name.endsWith(".ejs") || name.endsWith(".ejs.js") || name.endsWith("xml")){
 					try {
 						FileInputStream fis = new FileInputStream("/Users/jyjang/javasources/" + name);
 						return fis;
@@ -75,16 +165,31 @@ public class CodiDwrServlet extends TransactionalDwrServlet{
 
 				return super.getResourceAsStream(name);
 			}
+			
+			
 
-			protected Class<?> findClass(String className)
-					throws ClassNotFoundException {
-
-				if(securedClasses.containsKey(className)){
-					throw new ClassNotFoundException(securedClasses.get(className));
-				}
-				
-				return super.findClass(className);
-			}
+//			@Override
+//			protected synchronized Class<?> loadClass(String name,
+//					boolean resolve) throws ClassNotFoundException {
+//
+//				if(securedClasses.containsKey(name)){
+//                   throw new ClassNotFoundException(securedClasses.get(name), new SecurityException());
+//				}
+//				
+//				return super.loadClass(name, resolve);
+//			}
+//
+//
+//
+//			protected Class<?> findClass(String className)
+//					throws ClassNotFoundException {
+//
+//				if(securedClasses.containsKey(className)){
+//					throw new RuntimeException(securedClasses.get(className));
+//				}
+//				
+//				return super.findClass(className);
+//			}
 			
 			
 		};
@@ -94,10 +199,14 @@ public class CodiDwrServlet extends TransactionalDwrServlet{
 		URL urls[] = classLoader.getURLs();
 		StringBuffer sbClasspath = new StringBuffer();
 		for(URL url : urls){
-			sbClasspath.append(url.getFile().toString()).append(";");
+			sbClasspath.append(url.getFile().toString()).append(":");
 		}
 
-		cl.setCompilerOptions(new String[]{"-classpath", "/Users/jyjang/Documents/workspace/ProcessCodi_metaworks3/WebContent/WEB-INF/lib/metaworks3.jar"});//sbClasspath.toString()});
+		cl.setCompilerOptions(
+				new String[]{
+						"-classpath", "/Users/jyjang/Documents/workspace/ProcessCodi_metaworks3/WebContent/WEB-INF/lib/metaworks3.jar",
+						"-classpath", "/Users/jyjang/Documents/workspace/ProcessCodi_metaworks3/WebContent/WEB-INF/lib/metaworks3.jar:/Users/jyjang/Documents/workspace/ProcessCodi_metaworks3/WebContent/WEB-INF/lib/mongo-2.7.2.jar"		
+				});//sbClasspath.toString()});
 
 		
 		cl.setSourcePath(new File[]{new File("/Users/jyjang/javasources/")});

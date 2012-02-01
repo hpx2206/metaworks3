@@ -18,7 +18,7 @@ import org.uengine.kernel.ProcessInstance;
 import org.uengine.kernel.ResultPayload;
 import org.uengine.processmanager.ProcessManagerRemote;
 
-@Face(ejsPath="genericfaces/Window.ejs", options={"hideLabels"}, values={"true"})
+@Face(ejsPath="genericfaces/Window.ejs", options={"hideLabels"}, values={"true"}, displayName="업무 처리 화면")
 public class WorkItemHandler implements ContextAware{
 	
 	public WorkItemHandler(){} //to be spring bean without argument, this is required.
@@ -43,14 +43,15 @@ public class WorkItemHandler implements ContextAware{
 					ParameterContext pc = humanActivity.getParameters()[i];
 					
 					parameters[i] = new ParameterValue();
-					ParameterValue pv = parameters[i];
 					
+					ParameterValue pv = parameters[i];
+					pv.setVariableName(pc.getVariable().getName());
 					pv.setArgument(pc.getArgument().getText());
 					
 					
 					MetaworksContext mc = new MetaworksContext();
 					
-					if(pc.getDirection() == ParameterContext.DIRECTION_OUT || pc.getDirection() == ParameterContext.DIRECTION_INOUT)
+					if(ParameterContext.DIRECTION_OUT.equals(pc.getDirection()) || ParameterContext.DIRECTION_INOUT.equals(pc.getDirection()))
 						mc.setWhen(MetaworksContext.WHEN_EDIT);
 					else
 						mc.setWhen(MetaworksContext.WHEN_VIEW);
@@ -171,7 +172,7 @@ public class WorkItemHandler implements ContextAware{
 //			}
 
 			
-			rp.setProcessVariableChange(new KeyedParameter(pv.getArgument(), processVariableValue));
+			rp.setProcessVariableChange(new KeyedParameter(pv.getVariableName(), processVariableValue));
 		}
 		
 		processManager.completeWorkitem(getInstanceId(), getTracingTag(), getTaskId().toString(), rp );

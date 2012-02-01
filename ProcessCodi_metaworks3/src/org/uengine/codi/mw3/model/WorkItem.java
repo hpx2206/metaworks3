@@ -1,6 +1,9 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.Hidden;
+import org.metaworks.annotation.Range;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
 import org.metaworks.example.ide.SourceCode;
@@ -38,6 +41,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 
 
 	Long instId;
+	@Hidden
 		public Long getInstId() {
 			return instId;
 		}
@@ -56,6 +60,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 
 
 	String title;
+	@Hidden
 		public String getTitle() {
 			return title;
 		}
@@ -65,6 +70,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 
 
 	boolean like;
+	@Hidden
 		public boolean isLike() {
 			return like;
 		}
@@ -73,6 +79,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		}
 		
 	Long taskId;
+	@Hidden
 		public Long getTaskId() {
 			return taskId;
 		}
@@ -82,6 +89,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		
 	String endpoint;	
 		
+	@Hidden
 		public String getEndpoint() {
 			return endpoint;
 		}
@@ -96,6 +104,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 
 	//normally it is null, but the 'detail' button pressed, it should be activated (by value set)
 	WorkItemHandler workItemHandler;
+	@Hidden
 		public WorkItemHandler getWorkItemHandler() {
 			return workItemHandler;
 		}
@@ -120,6 +129,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		}
 		
 	String tool;
+	@Hidden
 		public String getTool() {
 			return tool;
 		}
@@ -127,8 +137,8 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			this.tool = tool;
 		}
 
-	@ServiceMethod
 	public void detail() throws Exception{
+
 		Long instId = databaseMe().getInstId(); //since it knows metaworks IDAO will load all the field members from the table beyond the listed by setter/getter.
 		String tracingTag = (String) databaseMe().get("trcTag"); //since it knows metaworks IDAO will load all the field members from the table beyond the listed by setter/getter.
 		
@@ -214,7 +224,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	}
 	
 	@Override
-	public InstanceViewContent add() throws Exception {
+	public WorkItem[] add() throws Exception {
 		Long taskId = UniqueKeyGenerator.issueWorkItemKey(((ProcessManagerBean)processManager).getTransactionContext());
 		
 		setTaskId(taskId);
@@ -224,10 +234,24 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		
 		Instance instance = new Instance();
 		instance.setInstId(getInstId());
-		InstanceViewContent instanceViewContent = new InstanceViewContent();
-		instanceViewContent.load(instance);
+		//InstanceViewContent instanceViewContent = new InstanceViewContent();
+//		instanceViewContent.load(instance);
 		
-		return instanceViewContent;
+		getMetaworksContext().setWhen(WHEN_VIEW);
+		
+		WorkItem newItem = new CommentWorkItem();
+		newItem.setInstId(new Long(getInstId()));
+		newItem.setTaskId(new Long(getInstId()));
+		newItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+		
+		User loginUser = new User();
+		loginUser.setUserId(session.getLogin().getUserId());
+		loginUser.setName(session.getLogin().getName());
+
+		newItem.setWriter(loginUser);
+
+		//makes new line and change existing div
+		return new WorkItem[]{this, newItem};
 	}
 
 	
@@ -237,5 +261,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	@Autowired
 	ProcessManagerRemote processManager;
 
+	@Autowired
+	InstanceViewContent instanceViewContent;
 
 }

@@ -23,8 +23,8 @@ import org.metaworks.website.SourceCodeContents;
 @Face(
 		ejsPathMappingByContext=
 	{
-		"{when: 'new', face: 'genericfaces/ObjectFace.ejs'}",
-		"{when: 'edit', face: 'genericfaces/ObjectFace.ejs'}",
+		"{when: 'new', face: 'faces/org/uengine/codi/mw3/model/IWorkItem_edit.ejs'}",
+		"{when: 'edit', face: 'faces/org/uengine/codi/mw3/model/IWorkItem_edit.ejs'}",
 	}		
 
 )
@@ -97,17 +97,17 @@ public interface IWorkItem extends IDAO{
 		public void setTool(String tool);
 		
 
-		@ServiceMethod
+		@ServiceMethod(when = WHEN_VIEW)
 		public void like() throws Exception;
 		
-		@ServiceMethod
+		@ServiceMethod(when = WHEN_VIEW, callByContent=true)
 		public void detail() throws Exception;
 
-		@ServiceMethod(callByContent = true)
-		public InstanceViewContent add() throws Exception;
+		@ServiceMethod(callByContent = true, target=ServiceMethodContext.TARGET_SELF)
+		public WorkItem[] add() throws Exception;
 
 		
-		@ServiceMethod(callByContent=true)
+//		@ServiceMethod(callByContent=true)
 		public IWorkItem find() throws Exception;
 		
 		@NonLoadable

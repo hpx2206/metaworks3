@@ -7,7 +7,11 @@ import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
 
+
+
 public class InstanceList {
+
+	final static int PAGE_CNT = 15;
 	
 	IInstance instances;
 			
@@ -46,7 +50,7 @@ public class InstanceList {
 		instances = (IInstance) Database.sql(IInstance.class, 
 					  "select * from bpm_procinst where initEp=?initEp "
 					+ (keyword !=null ? " and name like '%" + keyword + "'" : "") 
-					+ " order by starteddate desc limit " + page*5 + ", 5"
+					+ " order by starteddate desc limit " + page*PAGE_CNT + ", "+PAGE_CNT
 				);
 		
 		instances.setInitEp(login.getUserId());
