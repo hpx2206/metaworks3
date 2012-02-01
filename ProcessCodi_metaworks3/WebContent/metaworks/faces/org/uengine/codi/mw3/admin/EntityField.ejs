@@ -22,9 +22,7 @@ if(value!=null){
 	<tr>
 		<td width="200px"><%=fields.name.here()%></td>
 		<td width="140px"><%=fields.dataType.here()%></td>
-		<td width="70px">
-			<%=fields.length.here({size:5})%>
-		</td>
+		<td width="70px"><%=fields.length.here()%></td>
 
 		<td width="60px" align="center"><%=fields.allowNull.here()%></td>
 		<td width="200px"><%=fields.defaultValue.here()%></td>
@@ -33,6 +31,13 @@ if(value!=null){
 		<td width="300px">
 		<%=methods.add.here()%>
 		<%=methods.save.here()%>
+<%		
+		if(mw3.when != mw3.WHEN_EDIT){
+%>		 		
+		<input type=button onclick="<%=editFunction%>" value="Edit">
+<%
+		}
+%>				
 		<%=methods.up.here()%>
 		<%=methods.down.here()%>		
 		<%=methods.remove.here()%>

@@ -10,9 +10,6 @@ var org_uengine_codi_mw3_admin_EntityField = function(objectId, className){
 	   		function(e) {
 				//  mouse down - right button
 				if(e.which == 3){
-					console.debug("entityFieldObjId : " + entityFieldObjId);
-					
-					
 					var entityField = mw3.getObject(entityFieldObjId);
 					entityField.clientObjectId = entityFieldObjId;
 					
