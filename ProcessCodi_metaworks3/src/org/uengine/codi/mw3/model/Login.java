@@ -1,11 +1,8 @@
 package org.uengine.codi.mw3.model;
 
-import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Id;
-import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.processmanager.ProcessManagerRemote;
+import org.uengine.codi.mw3.admin.Admin;
 
 public class Login extends Database<ILogin> implements ILogin{
 		
@@ -42,6 +39,7 @@ public class Login extends Database<ILogin> implements ILogin{
 			this.isAdmin = isAdmin;
 		}
 
+	/*
 	@Override
 	public Main login() throws Exception {
 		try{
@@ -53,6 +51,18 @@ public class Login extends Database<ILogin> implements ILogin{
 		
 		return main;
 	}
+	*/
+		@Override
+		public Main login() throws Exception {
+			try{
+				setAdmin(databaseMe().isAdmin());
+			}catch(Exception e){}
+			
+			Main admin = new Main(this);
+			
+			
+			return admin;
+		}
 		
 	
 }

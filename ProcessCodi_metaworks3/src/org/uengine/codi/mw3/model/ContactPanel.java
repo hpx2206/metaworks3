@@ -57,9 +57,6 @@ public class ContactPanel {
 
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 	public Popup addContact(){
-		System.out.println("this.pageX : " + this.pageX);
-		System.out.println("this.pageY : " + this.pageY);
-		
 		Popup popup = new Popup();
 		
 //		popup.setPageX(this.pageX);

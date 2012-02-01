@@ -31,8 +31,6 @@ public class ClassDesignerContentPanel extends ContentWindow {
 		
 	}
 
-	
 	@Autowired
 	ProcessManagerRemote processManager;
-
 }

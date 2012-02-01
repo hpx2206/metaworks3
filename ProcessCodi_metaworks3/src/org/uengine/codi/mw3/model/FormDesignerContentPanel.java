@@ -1,12 +1,9 @@
 package org.uengine.codi.mw3.model;
 
-import java.rmi.RemoteException;
-
 import org.metaworks.annotation.Face;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.admin.FormDefinition;
 import org.uengine.codi.mw3.admin.FormInstance;
-import org.uengine.codi.mw3.model.ContentPanel;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.processmanager.ProcessManagerRemote;
 
@@ -15,7 +12,6 @@ public class FormDesignerContentPanel extends ContentWindow {
 	
 
 	FormDefinition formDefinition;
-
 		public FormDefinition getFormDefinition() {
 			return formDefinition;
 		}
@@ -24,8 +20,7 @@ public class FormDesignerContentPanel extends ContentWindow {
 			this.formDefinition = formDefinition;
 		}
 	
-	FormInstance formInstance;
-	
+	FormInstance formInstance;	
 		public FormInstance getFormInstance() {
 			return formInstance;
 		}
@@ -33,6 +28,13 @@ public class FormDesignerContentPanel extends ContentWindow {
 		public void setFormInstance(FormInstance formInstance) {
 			this.formInstance = formInstance;
 		}
+	
+	public void newForm(String parentFolder){
+		formDefinition = new FormDefinition();
+		formDefinition.setParentFolder(parentFolder);
+		
+		formInstance = new FormInstance();
+	}
 	
 	public void load(String defId) throws Exception{
 		String defVerId = codiPmSVC.getProcessDefinitionProductionVersion(defId);
