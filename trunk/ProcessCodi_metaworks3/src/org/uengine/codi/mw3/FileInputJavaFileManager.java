@@ -27,28 +27,19 @@
 package org.uengine.codi.mw3;
 
 import java.io.*;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.*;
 
-import javax.servlet.ServletContext;
 import javax.tools.*;
 import javax.tools.JavaFileManager.Location;
 import javax.tools.JavaFileObject.Kind;
 
 import org.codehaus.commons.compiler.Cookable;
-import org.directwebremoting.ServerContextFactory;
-import org.springframework.context.ApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
-import org.uengine.codi.mw3.admin.ClassDefinition;
-import org.uengine.kernel.GlobalContext;
-import org.uengine.processmanager.ProcessManagerRemote;
 
 /**
  * A {@link ForwardingJavaFileManager} that maps accesses to a particular {@link Location} and {@link Kind} to
  * a path-based search in the file system.
  */
-final class FileInputJavaFileManager extends ForwardingJavaFileManager<JavaFileManager> {
+final public class FileInputJavaFileManager extends ForwardingJavaFileManager<JavaFileManager> {
     private final Location location;
     private final Kind     kind;
     private final File[]   path;
@@ -72,33 +63,59 @@ final class FileInputJavaFileManager extends ForwardingJavaFileManager<JavaFileM
         this.optionalCharacterEncoding = optionalCharacterEncoding;
     }
 
-//    @Override
-//    public Iterable<JavaFileObject> list(
-//        Location  location,
-//        String    packageName,
-//        Set<Kind> kinds,
-//        boolean   recurse
-//    ) throws IOException {
-//
-//        if (location == this.location && kinds.contains(this.kind)) {
-//            Collection<JavaFileObject> result = new ArrayList<JavaFileObject>();
-//
-//            String rel = packageName.replace('.', File.separatorChar);
-//            for (File directory : this.path) {
-//                File packageDirectory = new File(directory, rel);
-//                result.addAll(list(
-//                    packageDirectory,
-//                    packageName.isEmpty() ? "" : packageName + ".",
-//                    this.kind,
-//                    recurse
-//                ));
-//            }
-//            return result;
-//        }
-//
-//        return super.list(location, packageName, kinds, recurse);
-//    }
+    @Override
+    public Iterable<JavaFileObject> list(
+        Location  location,
+        String    packageName,
+        Set<Kind> kinds,
+        boolean   recurse
+    ) throws IOException {
 
+        if (location == this.location && kinds.contains(this.kind)) {
+            Collection<JavaFileObject> result = new ArrayList<JavaFileObject>();
+
+            String rel = packageName.replace('.', File.separatorChar);
+            for (File directory : this.path) {
+                File packageDirectory = new File(directory, rel);
+                result.addAll(list(
+                    packageDirectory,
+                    packageName.isEmpty() ? "" : packageName + ".",
+                    this.kind,
+                    recurse
+                ));
+            }
+            return result;
+        }
+
+        return super.list(location, packageName, kinds, recurse);
+    }
+
+    /**
+     * @param qualification E.g. "", or "pkg1.pkg2."
+     * @return              All {@link JavaFileObject}s of the given {@code kind} in the given {@code directory}
+     */
+    private Collection<JavaFileObject> list(
+        File    directory,
+        String  qualification,
+        Kind    kind,
+        boolean recurse
+    ) throws IOException {
+        if (!directory.isDirectory()) return Collections.emptyList();
+
+        Collection<JavaFileObject> result = new ArrayList<JavaFileObject>();
+        for (String name : directory.list()) {
+            File file = new File(directory, name);
+            if (name.endsWith(kind.extension)) {
+                result.add(new InputFileJavaFileObject(
+                    file,
+                    qualification + name.substring(0, name.length() - kind.extension.length())
+                ));
+            } else if (recurse && file.isDirectory()) {
+                result.addAll(list(file, qualification + name + ".", kind, true));
+            }
+        }
+        return result;
+    }
 
     @Override
     public String inferBinaryName(Location location, JavaFileObject file) {
@@ -121,103 +138,57 @@ final class FileInputJavaFileManager extends ForwardingJavaFileManager<JavaFileM
     ) throws IOException {
         if (location == this.location && kind == this.kind) {
 
-//            // Find the source file through the source path.
-//            final File sourceFile;
-//            FIND_SOURCE: {
-//                String rel = className.replace('.', File.separatorChar) + kind.extension;
-//                for (File sourceDirectory : this.path) {
-//                    File f = new File(sourceDirectory, rel);
-//                    if (f.exists()) {
-//                        sourceFile = f.getCanonicalFile();
-//                        break FIND_SOURCE;
-//                    }
-//                }
-//                return null;
-//            }
-//
-//            // Create and return a JavaFileObject.
-//            return new InputFileJavaFileObject(sourceFile, className);
-        	ServletContext srvCtx = ServerContextFactory.get().getServletContext();
-        	ApplicationContext appContext = WebApplicationContextUtils.getWebApplicationContext(srvCtx);
-        	ProcessManagerRemote processManager = (ProcessManagerRemote) appContext.getBean("processManagerBean");
-        	ClassDefinition classDef;
-        	
-			try {
-				
-				String resourceName = className.replace('.', '/') + ".java";
-				
-				String defVerId = processManager.getProcessDefinitionProductionVersionByAlias(resourceName);
-				String classDefinition = processManager.getResource(defVerId);
-				classDef = (ClassDefinition) GlobalContext.deserialize(classDefinition, ClassDefinition.class);
-				
-				//TODO: should be changed to use ForReadOnly for performance enhancement
-//				try{
-//					processManager.applyChanges();
-//				}catch(Exception ex){
-//					
-//				}
-				
-            } catch (Exception e) {
-            	
-	        	try{
-					processManager.cancelChanges();
-				}catch(Exception ex){
-					
-				}
+            // Find the source file through the source path.
+            final File sourceFile;
+            FIND_SOURCE: {
+                String rel = className.replace('.', File.separatorChar) + kind.extension;
+                for (File sourceDirectory : this.path) {
+                    File f = new File(sourceDirectory, rel);
+                    if (f.exists()) {
+                        sourceFile = f.getCanonicalFile();
+                        break FIND_SOURCE;
+                    }
+                }
+                return null;
+            }
 
-	        	throw new IOException("due to: " + e.getMessage());
-            } finally{
-				try{
-					processManager.remove();
-				}catch(Exception ex){
-					
-				}
-			}
-
-        	String sourceCode = classDef.getSourceCode().getCode();
-			
-        	return new InputFileJavaFileObject(className, sourceCode);
+            // Create and return a JavaFileObject.
+            return new InputFileJavaFileObject(sourceFile, className);
         }
 
         return super.getJavaFileForInput(location, className, kind);
     }
-
-   	static URI uriFromString(String uri) {
-		try {
-		    return new URI(uri);
-		} catch (URISyntaxException e) {
-		    throw new IllegalArgumentException(e);
-		}
-	}
+    
+    public static String getBinaryName(JavaFileObject f){
+    	if(f instanceof InputFileJavaFileObject ){
+    		return ((InputFileJavaFileObject) f).getBinaryName();
+    	}
+    	
+    	return f.getName();
+    }
 
     /**
      * A {@link JavaFileObject} that reads from a {@link File}.
      */
     private class InputFileJavaFileObject extends SimpleJavaFileObject {
+        private final File   file;
+        private final String binaryName;
 
-    	String sourceCode;
-    	String binaryName;
-    	
-        public InputFileJavaFileObject(String className, String sourceCode) {
-        	
-            super(uriFromString("mfm:///" + className.replace('.','/') + Kind.SOURCE.extension), FileInputJavaFileManager.this.kind);
-            
-            this.sourceCode = sourceCode;
-            this.binaryName = className;
+        public InputFileJavaFileObject(File file, String binaryName) {
+            super(file.toURI(), FileInputJavaFileManager.this.kind);
+            this.file       = file;
+            this.binaryName = binaryName;
         }
-        
- 
+
         @Override
         public Reader openReader(boolean ignoreEncodingErrors) throws IOException {
             return (
-            		new StringReader(sourceCode)
-            		
-//                FileInputJavaFileManager.this.optionalCharacterEncoding == null
-//                ? new FileReader(this.file)
-//                : new InputStreamReader(
-//                    new FileInputStream(this.file),
-//                    FileInputJavaFileManager.this.optionalCharacterEncoding
-//                )
+                FileInputJavaFileManager.this.optionalCharacterEncoding == null
+                ? new FileReader(this.file)
+                : new InputStreamReader(
+                    new FileInputStream(this.file),
+                    FileInputJavaFileManager.this.optionalCharacterEncoding
+                )
             );
         }
 
@@ -230,8 +201,8 @@ final class FileInputJavaFileManager extends ForwardingJavaFileManager<JavaFileM
                 r.close();
             }
         }
-        
-        String getBinaryName() {
+
+        public String getBinaryName() {
             return this.binaryName;
         }
     }

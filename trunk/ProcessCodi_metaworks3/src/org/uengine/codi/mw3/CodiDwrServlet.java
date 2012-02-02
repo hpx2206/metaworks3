@@ -148,51 +148,9 @@ public class CodiDwrServlet extends TransactionalDwrServlet{
 		
 		
 		
-		JavaSourceClassLoader cl = new JavaSourceClassLoader(CodiMetaworksRemoteService.class.getClassLoader()){
+		CodiClassLoader cl = new CodiClassLoader(CodiMetaworksRemoteService.class.getClassLoader());
 
 
-			@Override
-			public InputStream getResourceAsStream(String name) {
-
-				if(name.endsWith(".ejs") || name.endsWith(".ejs.js") || name.endsWith("xml")){
-					try {
-						FileInputStream fis = new FileInputStream("/Users/jyjang/javasources/" + name);
-						return fis;
-					} catch (FileNotFoundException e) {
-					}
-					
-				}
-
-				return super.getResourceAsStream(name);
-			}
-			
-			
-
-//			@Override
-//			protected synchronized Class<?> loadClass(String name,
-//					boolean resolve) throws ClassNotFoundException {
-//
-//				if(securedClasses.containsKey(name)){
-//                   throw new ClassNotFoundException(securedClasses.get(name), new SecurityException());
-//				}
-//				
-//				return super.loadClass(name, resolve);
-//			}
-//
-//
-//
-//			protected Class<?> findClass(String className)
-//					throws ClassNotFoundException {
-//
-//				if(securedClasses.containsKey(className)){
-//					throw new RuntimeException(securedClasses.get(className));
-//				}
-//				
-//				return super.findClass(className);
-//			}
-			
-			
-		};
 		
 		
 		URLClassLoader classLoader = (URLClassLoader) CodiMetaworksRemoteService.class.getClassLoader();
@@ -204,7 +162,7 @@ public class CodiDwrServlet extends TransactionalDwrServlet{
 
 		cl.setCompilerOptions(
 				new String[]{
-						"-classpath", "/Users/jyjang/Documents/workspace/ProcessCodi_metaworks3/WebContent/WEB-INF/lib/metaworks3.jar",
+//						"-classpath", "/Users/jyjang/Documents/workspace/ProcessCodi_metaworks3/WebContent/WEB-INF/lib/metaworks3.jar",
 						"-classpath", "/Users/jyjang/Documents/workspace/ProcessCodi_metaworks3/WebContent/WEB-INF/lib/metaworks3.jar:/Users/jyjang/Documents/workspace/ProcessCodi_metaworks3/WebContent/WEB-INF/lib/mongo-2.7.2.jar"		
 				});//sbClasspath.toString()});
 

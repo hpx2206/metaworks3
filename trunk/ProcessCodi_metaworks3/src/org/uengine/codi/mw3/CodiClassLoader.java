@@ -1,6 +1,8 @@
 package org.uengine.codi.mw3;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLClassLoader;
@@ -39,7 +41,7 @@ import org.uengine.processmanager.ProcessManagerRemote;
 
 import com.sun.xml.bind.v2.runtime.Name;
 
-public class CodiClassLoader  extends AbstractJavaSourceClassLoader {
+public class CodiClassLoader extends AbstractJavaSourceClassLoader {
 
     private File[]             sourcePath;
     private String             optionalCharacterEncoding;
@@ -66,7 +68,62 @@ public class CodiClassLoader  extends AbstractJavaSourceClassLoader {
         this.init();
     }
 
+    
 
+    
+	@Override
+	public InputStream getResourceAsStream(String name) {
+
+		if(name.endsWith(".ejs") || name.endsWith(".ejs.js") || name.endsWith("xml")){
+			try {
+				FileInputStream fis = new FileInputStream("/Users/jyjang/javasources/" + name);
+				return fis;
+			} catch (FileNotFoundException e) {
+			}
+			
+		}
+
+		return super.getResourceAsStream(name);
+	}
+	
+	
+
+//	@Override
+//	protected synchronized Class<?> loadClass(String name,
+//			boolean resolve) throws ClassNotFoundException {
+//
+//		if(securedClasses.containsKey(name)){
+//           throw new ClassNotFoundException(securedClasses.get(name), new SecurityException());
+//		}
+//		
+//		return super.loadClass(name, resolve);
+//	}
+//
+//
+//
+//	protected Class<?> findClass(String className)
+//			throws ClassNotFoundException {
+//
+//		if(securedClasses.containsKey(className)){
+//			throw new RuntimeException(securedClasses.get(className));
+//		}
+//		
+//		return super.findClass(className);
+//	}
+	
+	
+	
+	
+	//----------------------------------------     from this line, the codes are just copied from JavaSourceClassLoader.java in janino ---------------------------//
+	
+	
+
+	
+	
+	
+	
+	
+	
     private void init() {
         this.compiler = ToolProvider.getSystemJavaCompiler();
         if (this.compiler == null) {
@@ -80,7 +137,7 @@ public class CodiClassLoader  extends AbstractJavaSourceClassLoader {
      * Creates the underlying {@link JavaFileManager} lazily, because {@link #setSourcePath(File[])} and consorts
      * are called <i>after</i> initialization.
      */
-    JavaFileManager getJavaFileManager() {
+    public JavaFileManager getJavaFileManager() {
         if (this.fileManager == null) {
 
             // Get the original FM, which reads class files through this JVM's BOOTCLASSPATH and
@@ -283,4 +340,7 @@ public class CodiClassLoader  extends AbstractJavaSourceClassLoader {
             super(diagnostic.toString());
         }
     }
+    
+    
+	
 }

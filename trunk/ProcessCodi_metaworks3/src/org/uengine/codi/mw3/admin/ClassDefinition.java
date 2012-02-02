@@ -10,18 +10,23 @@ import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.WebFieldDescriptor;
 import org.metaworks.WebObjectType;
+import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.NonEditable;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.example.ide.CompileError;
+import org.metaworks.example.ide.SourceCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.CodiDwrServlet;
 import org.uengine.codi.mw3.model.FaceSourceCode;
 import org.uengine.codi.mw3.model.JavaSourceCode;
 
+import org.uengine.codi.mw3.model.BrowserWindow;
+import org.uengine.codi.mw3.model.FaceHelperSourceCode;
 import org.uengine.codi.mw3.model.TemplateDesigner;
 import org.uengine.codi.mw3.model.Window;
 import org.uengine.codi.mw3.model.MobileWindow;
+import org.uengine.codi.mw3.widget.IFrame;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.PropertyListable;
 import org.uengine.processmanager.ProcessManagerRemote;
@@ -41,7 +46,7 @@ public class ClassDefinition implements ContextAware, PropertyListable{
 	transient protected ProcessManagerRemote processManager;
 
 	public ClassDefinition(){
-		this.sourceCode = new JavaSourceCode();
+		this.sourceCodes = new ClassSourceCodes();
 		
 		setMetaworksContext(new MetaworksContext());
 		getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
@@ -49,6 +54,7 @@ public class ClassDefinition implements ContextAware, PropertyListable{
 	}
 	
 	String alias;
+	@Hidden
 		public String getAlias() {
 			return alias;
 		}
@@ -66,6 +72,7 @@ public class ClassDefinition implements ContextAware, PropertyListable{
 		
 	String defId;
 	@NonEditable	
+	@Hidden
 		public String getDefId() {
 			return defId;
 		}
@@ -75,6 +82,7 @@ public class ClassDefinition implements ContextAware, PropertyListable{
 
 	String defVerId;
 	@NonEditable
+	@Hidden
 		public String getDefVerId() {
 			return defVerId;
 		}
@@ -84,6 +92,7 @@ public class ClassDefinition implements ContextAware, PropertyListable{
 		
 	String parentFolder;
 	@NonEditable		
+	@Hidden
 		public String getParentFolder() {
 			return parentFolder;
 		}
@@ -124,7 +133,7 @@ public class ClassDefinition implements ContextAware, PropertyListable{
 			this.classMethods = classMethods;
 		}
 
-	ClassField newClassField;
+	transient ClassField newClassField;
 		public ClassField getNewClassField() {
 			return newClassField;
 		}
@@ -132,24 +141,15 @@ public class ClassDefinition implements ContextAware, PropertyListable{
 			this.newClassField = newClassField;
 		}
 		
-
-	JavaSourceCode sourceCode;
-			
-		public JavaSourceCode getSourceCode() {
-			return sourceCode;
-		}
-		public void setSourceCode(JavaSourceCode sourceCode) {
-			this.sourceCode = sourceCode;
-		}
 		
-	FaceSourceCode face;
-			
-		public FaceSourceCode getFace() {
-			return face;
+	ClassSourceCodes sourceCodes;
+		public ClassSourceCodes getSourceCodes() {
+			return sourceCodes;
 		}
-		public void setFace(FaceSourceCode face) {
-			this.face = face;
+		public void setSourceCodes(ClassSourceCodes sourceCodes) {
+			this.sourceCodes = sourceCodes;
 		}
+
 		
 		
 	@ServiceMethod(callByContent=true)
@@ -160,6 +160,7 @@ public class ClassDefinition implements ContextAware, PropertyListable{
 			.append("package ").append(getPackageName()).append(";\n\n")
 			.append("public class " + getClassName() + "{\n\n");
 		
+		if(getClassFields()!=null)
 		for(int i=0; i<getClassFields().size(); i++){
 			ClassField field = getClassFields().get(i);
 			
@@ -174,18 +175,39 @@ public class ClassDefinition implements ContextAware, PropertyListable{
 		
 		sb.append("}");
 		
+		if(sourceCodes==null)
+			sourceCodes = new ClassSourceCodes();
 		
-		sourceCode = new JavaSourceCode();
-		sourceCode.setCode(sb.toString());
+		getSourceCodes().sourceCode = new JavaSourceCode();
+		getSourceCodes().sourceCode.setCode(sb.toString());
 	
+
+		///create facehelper source
+		
+		sb = new StringBuffer();
+		sb
+			.append("var ").append((getPackageName() + "_" + getClassName()).replace('.','_'))
+			.append(" = function(objectId, className){\n")
+			.append("	this.objectId = objectId;\n")
+			.append("	this.className = className;\n")
 				
+		.append("}");
+		
+		if(sourceCodes==null)
+			sourceCodes = new ClassSourceCodes();
+		
+		getSourceCodes().faceHelper = new FaceHelperSourceCode();
+		getSourceCodes().faceHelper.setCode(sb.toString());
+	
 	}
 	
 	@ServiceMethod(callByContent=true)
 	public void compile() throws Exception{
 		save();
 	
-		if(getSourceCode()==null) return;
+		//TODO: please check the package name & static code analysis as much as possible here.
+		
+		if(getSourceCodes()==null || getSourceCodes().getSourceCode()==null) return;
 		
 		CodiDwrServlet.refreshClassLoader(getAlias());
 		
@@ -221,7 +243,7 @@ public class ClassDefinition implements ContextAware, PropertyListable{
 			
 			Thread.currentThread().getContextClassLoader().loadClass(fullClsName);
 			
-			getSourceCode().setCompileErrors(null);
+			getSourceCodes().getSourceCode().setCompileErrors(null);
 			
 			MetaworksRemoteService.getInstance().clearMetaworksType(fullClsName);
 
@@ -249,7 +271,7 @@ public class ClassDefinition implements ContextAware, PropertyListable{
 			compileError.setColumn(1);
 			compileError.setMessage(parts != null ? parts[3] : message);
 			
-			getSourceCode().setCompileErrors(new CompileError[]{compileError});
+			getSourceCodes().getSourceCode().setCompileErrors(new CompileError[]{compileError});
 		
 			e.printStackTrace();
 		} 
@@ -293,6 +315,16 @@ public class ClassDefinition implements ContextAware, PropertyListable{
 		return outputWindow;
 	}	
 	
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
+	public Object runFullWindow() throws Exception{
+		
+//		BrowserWindow window = new BrowserWindow(getPackageName() + "." + getClassName());
+		
+		Window window = new Window(new IFrame("tester.html?className=" + getPackageName() + "." + getClassName()));
+		
+		return window;
+	}	
+	
 	@ServiceMethod(callByContent=true)
 	public void save() throws Exception{
 		
@@ -310,20 +342,39 @@ public class ClassDefinition implements ContextAware, PropertyListable{
 		//sourceCodeFile.createNewFile();
 		
 		FileWriter writer = new FileWriter(sourceCodeFile);
-		writer.write(getSourceCode().getCode());
+		writer.write(getSourceCodes().getSourceCode().getCode());
 		writer.close();
 		
 		//if there is face code, save it.
-		if(UEngineUtil.isNotEmpty(getFace().getCode())){
-			String faceSource = "/Users/jyjang/javasources/" + getAlias();
-			faceSource = faceSource.substring(0, faceSource.indexOf(".")) + ".ejs";
-			
-			File ejsFile = new File(faceSource);
+		String faceSource = "/Users/jyjang/javasources/" + getAlias();
+		faceSource = faceSource.substring(0, faceSource.indexOf(".")) + ".ejs";
+		
+		File ejsFile = new File(faceSource);
+
+		if(UEngineUtil.isNotEmpty(getSourceCodes().getFace().getCode())){
 			
 			writer = new FileWriter(ejsFile);
-			writer.write(getFace().getCode());
+			writer.write(getSourceCodes().getFace().getCode());
 			writer.close();
 
+		}else{
+			ejsFile.delete();
+		}
+		
+		//if there is facehelper code, save it.
+		String faceHelperSource = "/Users/jyjang/javasources/" + getAlias();
+		faceHelperSource = faceHelperSource.substring(0, faceHelperSource.indexOf(".")) + ".ejs.js";
+		
+		File ejsJsFile = new File(faceHelperSource);
+
+		if(UEngineUtil.isNotEmpty(getSourceCodes().getFaceHelper().getCode())){
+			
+			writer = new FileWriter(ejsJsFile);
+			writer.write(getSourceCodes().getFaceHelper().getCode());
+			writer.close();
+
+		}else{
+			ejsJsFile.delete();
 		}
 		
 		///
