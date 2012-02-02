@@ -27,13 +27,29 @@ public class CrowdSourcer {
 		public void setPostIds(String[] postIds) {
 			this.postIds = postIds;
 		}
-
+		
+	boolean open;
+		public boolean isOpen() {
+			return open;
+		}
+		public void setOpen(boolean open) {
+			this.open = open;
+		}
+		
 	@ServiceMethod(target=ServiceMethodContext.TARGET_NONE, callByContent=true)
-	public void crowdSourcing() throws Exception{
+	public CrowdSourcer crowdSourcing() throws Exception{
 		try{
 			ProcessInstance instance = processManager.getProcessInstance(getInstanceId());
 		
-			instance.setProperty("", "facebook_postIds", getPostIds());
+			if(isOpen()){
+				instance.setProperty("", "is_open", "close");
+				setOpen(false);
+			}else{
+				instance.setProperty("", "facebook_postIds", getPostIds());
+				instance.setProperty("", "is_open", "open");
+				setOpen(true);
+			}			
+			
 			processManager.applyChanges();
 			
 		}catch(Exception e){
@@ -42,6 +58,7 @@ public class CrowdSourcer {
 			processManager.remove();
 		}
 		
+		return this;
 	}		
 	
 	Followers followers;

@@ -8,8 +8,6 @@ import org.metaworks.annotation.ServiceMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class NewChildContentPanel  {
-	@Autowired
-	EntityDesignerWindow entityDesignerWindow;
 	
 	Long parentFolder;
 	@Id
@@ -23,22 +21,12 @@ public class NewChildContentPanel  {
 
 	@ServiceMethod
 	public EntityDesignerWindow newEntity() throws Exception{
-		EntityDesignerWindow entityDesignerWindow = this.entityDesignerWindow;
+		EntityDesignerWindow entityDesignerWindow = new EntityDesignerWindow();
 		entityDesignerWindow.newEntity(getParentFolder().toString());
 				
 		
 		return entityDesignerWindow;
 	}
-
-	/*
-	public EntityDesignerContentPanel newEntity() throws Exception{
-		EntityDesignerContentPanel entityDesigner = new EntityDesignerContentPanel();
-		entityDesigner.newEntity(getParentFolder().toString());
-		
-		return entityDesigner;
-	}
-	*/
-
 		
 	@ServiceMethod
 	public ClassDesignerContentPanel newJavaClass() throws Exception{
