@@ -109,7 +109,7 @@
 					
 				}catch(e){
 					//TODO :  error reporting required
-					e=e;//console.log(e)
+					this.debug(e, true);
 				}		
 				
 			}
@@ -396,7 +396,14 @@
 						//alert("selected face : " + actualFace);
 						
 						var url = this.base + (actualFace.indexOf('dwr') == 0 ? '/':'/metaworks/') + actualFace;
-						url = url + "?ver=" + this.getMetadata(objectTypeName).version; //let it refreshed
+						
+						var metadata = null;
+						
+						if(objectTypeName)
+							metadata = this.getMetadata(objectTypeName);
+						
+						if(metadata)
+							url = url + "?ver=" + metadata.version; //let it refreshed
 						
 						var html = new EJS({url: url})
 							.render({
@@ -469,7 +476,7 @@
 				var faceHelper;
 				
 				if(byClassLoader)
-					faceHelper = actualFace.substr(startPos = 'dwr/metaworks/'.length, actualFace.lastIndexOf('.') - startPos).split('/').join('_');
+					faceHelper = actualFace.substr(startPos = 'dwr/metaworks/faces/'.length, actualFace.lastIndexOf('.') - startPos).split('/').join('_');
 				else
 					faceHelper = actualFace.substr(startPos = actualFace.indexOf('/')+1, actualFace.lastIndexOf('.') - startPos).split('/').join('_');
 				
