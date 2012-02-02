@@ -64,9 +64,17 @@ public class InstanceView {
 		
 		if(instance.getProperty("", "facebook_postIds") != null){
 			String[] postIds = (String[])instance.getProperty("", "facebook_postIds");
-			
-			crowdSourcer.setPostIds(postIds);
+			crowdSourcer.setPostIds(postIds);			
 		}
+		
+		boolean isOpen = false;
+		if(instance.getProperty("", "is_open") != null){
+			isOpen = ((String)instance.getProperty("", "is_open")).equals("open") ? true : false;
+		}
+		
+		crowdSourcer.setOpen(isOpen);
+		
+		
 		
 		threadPosting = new PostingsWorkItem();
 		/*
