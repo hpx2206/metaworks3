@@ -5,24 +5,20 @@ if(value!=null){
 	<div id="actionButton">
 		<%=methods.save.here()%>
 
-<%
-	if(value.created){
-%>		
 		<%=methods.dropTable.here()%>
-<%
-	} else {
-%>
 		<%=methods.createTable.here()%>
-<%
-	}
-%>			
 		<%=methods.generateDDL.here()%>
-		<%=methods.generateDAO.here()%>
+		<%=methods.generateDaoInterface.here()%>
+		<%=methods.generateDaoImplementation.here()%>
 				
 	</div>
 	
 	<div id="entityInfo">
 		<table>
+			<tr>
+				<td>Package Name</td>
+				<td><%=fields.packageName.here()%></td>
+			</tr>		
 			<tr>
 				<td>Entity Name</td>
 				<td><%=fields.entityName.here()%></td>
@@ -34,6 +30,7 @@ if(value!=null){
 		Columns<br />
 		<table>
 			<tr>
+				<td width="60px">Key</td>
 				<td width="200px">Name</td>
 				<td width="140px">Datatype</td>
 				<td width="70px">Length/Set</td>
@@ -46,7 +43,7 @@ if(value!=null){
 			</tr>
 		</table>
 <%
-	if(value.entityFields != null){
+	if(value.entityFields != null){	
 		for(var i=0; i<value.entityFields.length; i++){		
 %>
 		<%=mw3.locateObject(value.entityFields[i], value.entityFields[i].__className)%>
