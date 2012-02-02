@@ -4,16 +4,6 @@ var Window = function(objectId, className){
 	this.className = className;
 
 
-
-	this.divId = "objDiv_" + objectId;
-
-
-	
-	
-	$("#" + this.divId).css("height","100%");
-
-	
-
 }
 
 function addContact(objectId, e){
@@ -23,4 +13,18 @@ function addContact(objectId, e){
 	object.pageY = e.pageY;			
 
 	mw3.call(objectId, "addContact");	
+}
+
+
+var org_uengine_codi_mw3_model_ContactPanel = function(objectId, className) {
+	this.objectId = objectId;
+	this.className = className;
+
+	this.divId = "objDiv_" + objectId;
+
+	this.divId = "objDiv_" + objectId;	
+	$("#" + this.divId).css("height","100%");
+
+	
+	
 }
