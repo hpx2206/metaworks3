@@ -39,11 +39,12 @@ public class EntityQuery {
 				pstmt = conn.prepareStatement(getQueryCode().getCode());
 				pstmt.execute();
 			} catch (Exception e) {
-				// TODO we need to report the error properly
+				// TODO we need to report the error properly				
 				String message = e.getMessage();
 				String[] parts = null;
 				int lineNumber = 0;
 				
+				System.out.println(message);
 				try {
 					lineNumber = Integer.parseInt((parts = message.split("at line "))[1]);
 				} catch (Exception e1) {
@@ -56,8 +57,7 @@ public class EntityQuery {
 				compileError.setLine(lineNumber);
 				compileError.setColumn(1);
 				compileError.setMessage(parts != null ? parts[0] : message);
-				
-				//getCreateSQL().setCompileErrors(new CompileError[]{compileError});
+				getQueryCode().setCompileErrors(new CompileError[]{compileError});
 			
 				e.printStackTrace();
 			}finally{
