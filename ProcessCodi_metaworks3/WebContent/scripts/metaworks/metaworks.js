@@ -109,7 +109,8 @@
 					
 				}catch(e){
 					//TODO :  error reporting required
-					this.debug(e, true);
+					//this.debug(e, true);
+					e=e;
 				}		
 				
 			}
@@ -515,7 +516,7 @@
 
 					return script;
 				}catch(e){
-					console.debug(e);
+					//console.debug(e);
 				}
 			}
 			
