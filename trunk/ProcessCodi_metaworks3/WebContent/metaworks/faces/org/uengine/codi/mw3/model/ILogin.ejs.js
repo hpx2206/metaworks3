@@ -17,6 +17,18 @@ var org_uengine_codi_mw3_model_ILogin = function(objectId, className){
        js.src = "//connect.facebook.net/en_US/all.js";
        d.getElementsByTagName('head')[0].appendChild(js);
      }(document));
+    
+   
+//	var tempUsr = {
+//			userId: '12345',
+//			name: '가상계정',
+//			__className: "org.uengine.codi.mw3.model.Login"
+//	}
+//	
+//
+//    mw3.objects[objectId] = tempUsr;
+//    
+//    mw3.call(objectId, 'login');
   
 }
 
