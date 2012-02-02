@@ -32,13 +32,22 @@
             	<span class="boxtopright">
             		<div id="navigationTitle"><%=objectMetadata.displayName%></div>
             		<div id="loader_<%=objectId%>" class="loadingarea" style="display: none; "><img src="/uengine-web/images/waveStyle/ajax-loader.gif" border="0"></div>
+            		<div class="togglebtnmini" onclick="mw3.getFaceHelper('<%=objectId%>').minimize('','')"></div>
             	</span>
             </div>
+            
+<%
+		var showHeader = !(objectMetadata.faceOptions && objectMetadata.faceOptions['hideHeader']);
+		
+		if(showHeader){    
+%>		        
             <div class="boxmiddleright">
-                <div class="boxmiddleleft">
-                    <div class="togglebtnmini" onclick="mw3.getFaceHelper('<%=objectId%>').minimize('','')"></div>
-                    <div class="worklistcontentcontainer" style="overflow-y:auto">
-						<div style="height:100%;">
+                <div class="boxmiddleleft">                    
+                    <div class="worklistcontentcontainer"  style="overflow:auto;">
+<%                    
+		}
+%>
+                    
 <%	
 						
 		var showLabel = !(objectMetadata.faceOptions && objectMetadata.faceOptions['hideLabels']);
@@ -57,12 +66,11 @@
 <%
 			}
 %>
-							<span bgcolor=white> <%=fields[fd.name] ? fields[fd.name].here() : "XXX"%></span>
+							<%=fields[fd.name] ? fields[fd.name].here() : "XXX"%>
 <%
 		}						   
 %>							
-							<div>
-								<span <%=showLabel ? "colspan=2":""%>>
+							
 <%						   
 		if(objectMetadata.serviceMethodContexts){
 			for(var key in objectMetadata.serviceMethodContexts){						   
@@ -70,15 +78,17 @@
 									<%=methods[key].here()%>
 <%   
 			}
-		}						   
-%>
-								</span>
-								<br><br><br>
-							</div>
-                        </div>
+		}
+								   
+		if(showHeader){
+%>		
                     </div>
                 </div>
             </div>
+<%
+		}
+%>
+                        
             <div class="boxbottomleft"><span class="boxbottomright"></span></div>
   <%
      }
