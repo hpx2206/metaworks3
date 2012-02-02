@@ -47,6 +47,12 @@ public class ClassSourceCodes{
 			this.metaworksContext = metaworksContext;
 		} 
 		
+
+	public ClassSourceCodes(){
+		this.sourceCode = new JavaSourceCode();
+		this.face = new FaceSourceCode();
+		this.faceHelper = new FaceHelperSourceCode();
+	}
 	
 	JavaSourceCode sourceCode;
 		

@@ -15,17 +15,13 @@ import org.metaworks.annotation.NonEditable;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.example.ide.CompileError;
-import org.metaworks.example.ide.SourceCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.CodiDwrServlet;
-import org.uengine.codi.mw3.model.FaceSourceCode;
-import org.uengine.codi.mw3.model.JavaSourceCode;
-
-import org.uengine.codi.mw3.model.BrowserWindow;
 import org.uengine.codi.mw3.model.FaceHelperSourceCode;
+import org.uengine.codi.mw3.model.JavaSourceCode;
+import org.uengine.codi.mw3.model.MobileWindow;
 import org.uengine.codi.mw3.model.TemplateDesigner;
 import org.uengine.codi.mw3.model.Window;
-import org.uengine.codi.mw3.model.MobileWindow;
 import org.uengine.codi.mw3.widget.IFrame;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.PropertyListable;
@@ -180,9 +176,12 @@ public class ClassDefinition implements ContextAware, PropertyListable{
 		
 		getSourceCodes().sourceCode = new JavaSourceCode();
 		getSourceCodes().sourceCode.setCode(sb.toString());
+		
+		generateFaceHelperSourceCode();	
+	}
 	
-
-		///create facehelper source
+	public void generateFaceHelperSourceCode(){
+		StringBuffer sb = new StringBuffer();
 		
 		sb = new StringBuffer();
 		sb

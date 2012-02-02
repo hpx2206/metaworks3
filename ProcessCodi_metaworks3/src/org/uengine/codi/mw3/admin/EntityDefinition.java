@@ -2,6 +2,7 @@
 package org.uengine.codi.mw3.admin;
 
 import java.io.File;
+import java.lang.reflect.Array;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -11,18 +12,23 @@ import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.WebFieldDescriptor;
 import org.metaworks.WebObjectType;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.NonEditable;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.dao.Database;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.example.ide.CompileError;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.codi.mw3.model.ClassDesignerContentPanel;
-import org.uengine.codi.mw3.model.EntitySourceCode;
+import org.uengine.codi.mw3.model.EntityDesignerContentPanel;
+import org.uengine.codi.mw3.model.IUser;
+import org.uengine.codi.mw3.model.JavaSourceCode;
+import org.uengine.codi.mw3.model.WorkItem;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.PropertyListable;
 import org.uengine.processmanager.ProcessManagerRemote;
+import org.uengine.util.UEngineUtil;
 
 @Face(options={"hideNewBtn", "hideAddBtn"},
 	  values={"true", "true"})   
@@ -38,7 +44,7 @@ public class EntityDefinition implements ContextAware, PropertyListable{
 		
 	@Autowired
 	transient protected ProcessManagerRemote processManager;
-
+		
 	public EntityDefinition(){						
 	}
 	
@@ -86,6 +92,14 @@ public class EntityDefinition implements ContextAware, PropertyListable{
 			this.parentFolder = parentFolder;
 		}
 
+	String packageName;
+		public String getPackageName() {
+			return packageName;
+		}
+		public void setPackageName(String packageName) {
+			this.packageName = packageName;
+		}
+		
 	String entityName;
 		public String getEntityName() {
 			return entityName;
@@ -121,6 +135,7 @@ public class EntityDefinition implements ContextAware, PropertyListable{
 		
 	private String makeCreateQuery(){
 		StringBuffer sb = new StringBuffer();
+		StringBuffer sbPK = new StringBuffer();
 		
 		//if(this.getMetaworksContext().getWhen() == "newEntry"){
 			sb.append("CREATE TABLE ").append(this.entityName).append("(").append("\n");
@@ -142,9 +157,21 @@ public class EntityDefinition implements ContextAware, PropertyListable{
 					sb.append(" ").append("COMMENT '").append(comment.trim()).append("'");
 				
 				if(i < this.entityFields.size()-1)
-					sb.append(",").append("\n");				
+					sb.append(",").append("\n");		
+				
+				if(entityField.isKey()){
+					if(sbPK.length()>0)
+						sbPK.append(",");
+					
+					sbPK.append(entityField.getName());
+				}
+				
+				
 			}
 			
+			if(sbPK.length()>0){
+				sb.append(",").append("\n").append(" PRIMARY KEY ").append("(").append(sbPK.toString()).append(")");
+			}
 			sb.append(")");
 			
 			return sb.toString();
@@ -162,43 +189,27 @@ public class EntityDefinition implements ContextAware, PropertyListable{
 	
 	@ServiceMethod(callByContent=true)
 	public EntityQuery generateDDL() throws Exception{
+		
 		EntityQuery entityQuery = new EntityQuery();
-		entityQuery.getMetaworksContext().setHow("select");
 		entityQuery.getQueryCode().setCode(makeCreateQuery());
 		
 		return entityQuery;
 	}
 
 	@ServiceMethod(callByContent=true)
-	public EntityDefinition createTable() throws Exception{
-		String query = makeCreateQuery();
-		
-		if(run(query)){
-			setCreated(true);
-		}
-		
-		//save();
-		
-		return this;
+	public void createTable() throws Exception{
+		run(makeCreateQuery());
 	}
 	
 	@ServiceMethod(callByContent=true)
-	public EntityDefinition dropTable() throws Exception{
-		String query = makeDropQuery();
-		
-		if(run(query)){
-			setCreated(false);
-		}
-		
-		return this;
+	public void dropTable() throws Exception{
+		run(makeDropQuery());
 	}
 	
 	
-	private boolean run(String query){
+	private void run(String query) throws Exception{
 		
-		boolean result = false;
-		
-		if(query==null) return result;
+		if(query==null) return;
 		
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -207,14 +218,11 @@ public class EntityDefinition implements ContextAware, PropertyListable{
 			conn = TransactionContext.getThreadLocalInstance().getConnection();				
 			pstmt = conn.prepareStatement(query);
 			pstmt.execute();
-			
-			result = true;
-			
-//			IDAO dao = Database.sql(IDAO.class, getCreateSQL().getCode());
-//			dao.update();
 		} catch (Exception e) {
 			// TODO we need to report the error properly
 			String message = e.getMessage();
+			
+			/*
 			String[] parts = null;
 			int lineNumber = 0;
 			
@@ -226,14 +234,18 @@ public class EntityDefinition implements ContextAware, PropertyListable{
 				//e1.printStackTrace();
 			}
 			
+			
 			CompileError compileError = new CompileError();
 			compileError.setLine(lineNumber);
 			compileError.setColumn(1);
 			compileError.setMessage(parts != null ? parts[0] : message);
+			*/
 			
-			//getCreateSQL().setCompileErrors(new CompileError[]{compileError});
+			//getQuery().setCompileErrors(new CompileError[]{compileError});
 		
 			e.printStackTrace();
+			
+			throw new Exception(message);
 		}finally{
 			try{
 				if(conn != null){
@@ -250,45 +262,125 @@ public class EntityDefinition implements ContextAware, PropertyListable{
 				}
 			} catch (SQLException sqle){						
 			}				
-		}
-		
-		return result;
+		}	
 	}
 	
 	@ServiceMethod(callByContent=true)
-	public Object generateDAO() throws Exception{
-		save();
+	public void generateDaoImplementation() throws Exception{
 		
-		ClassDefinition classDefinition = new ClassDefinition();		
+		if(getEntityName() == null)
+			return;
+
+		StringBuffer sb = new StringBuffer();
+		
+		String packageName = getPackageName();
+		String entityName = getEntityName();
+
+		
+		ClassDefinition classDefinition = new ClassDefinition();
+		classDefinition.processManager = processManager; 
 		classDefinition.setParentFolder(getParentFolder().toString());
+		classDefinition.setPackageName(packageName);
+		classDefinition.setClassName(entityName);		
+
+		if(packageName != null)
+			sb.append("package ").append(getPackageName()).append(";\n\n");
 		
-		classDefinition.setClassName(getEntityName());
+		sb.append("public class " + entityName).append(" extends Database").append("<I" +  entityName + ">").append(" implements ").append("I" +  entityName).append("{\n\n");
 		
 		for(int i=0; i<this.entityFields.size(); i++){
 			EntityField entityField = this.entityFields.get(i);
 			
+			String fieldName = entityField.getName();
+			String dataType = entityField.getDataType();
+			
 			String classType = "";
 			
-			if(entityField.getName().equals("INT"))
+			if(dataType.equals("INT"))
 				classType = "java.lang.Long";
-			else if(entityField.getName().equals("CHAR") || entityField.getName().equals("VARCHAR"))
+			else if(dataType.equals("CHAR") || dataType.equals("VARCHAR"))
 				classType = "java.lang.String";
-			else if(entityField.getName().equals("DATETIME"))
+			else if(dataType.equals("DATETIME"))
 				classType = "java.util.Date";
-			else if(entityField.getName().equals("TIMESTAMP"))
+			else if(dataType.equals("TIMESTAMP"))
 				classType = "java.lang.Double";
-			
-			classDefinition.newClassField.setFieldName(entityField.getName());
+					
+			classDefinition.newClassField.setFieldName(fieldName);
 			classDefinition.newClassField.setType(classType);
-			classDefinition.newClassField.add();
-		}
+			classDefinition.newClassField.add();	
+			
+			String fieldNameFirstCharUpper = UEngineUtil.toOnlyFirstCharacterUpper(fieldName);
+			
+			sb
+				.append("	").append(classType).append(" ").append(fieldName).append(";\n")
+				.append("		public ").append(classType).append(" get").append(fieldNameFirstCharUpper).append("(){ return ").append(fieldName).append("; }\n")
+				.append("		public void set").append(fieldNameFirstCharUpper).append("(").append(classType).append(" ").append(fieldName).append("){ this.").append(fieldName).append(" = ").append(fieldName).append("; }\n\n")
+			;
+		}		
+		sb.append("}");
 		
-		classDefinition.generateSourceCode();
+		classDefinition.generateFaceHelperSourceCode();
+		classDefinition.getSourceCodes().sourceCode = new JavaSourceCode();
+		classDefinition.getSourceCodes().sourceCode.setCode(sb.toString());
+		classDefinition.save();
+	}
+	
+	@ServiceMethod(callByContent=true)
+	public void generateDaoInterface() throws Exception{
+		if(getEntityName() == null)
+			return;
+
+		StringBuffer sb = new StringBuffer();
 		
-		ClassDesignerContentPanel classDesigner = new ClassDesignerContentPanel();
-		classDesigner.setClassDefinition(classDefinition);
+		String packageName = getPackageName();
+		String entityName = "I" + getEntityName();
+
 		
-		return classDesigner;
+		ClassDefinition classDefinition = new ClassDefinition();
+		classDefinition.processManager = processManager; 
+		classDefinition.setParentFolder(getParentFolder().toString());
+		classDefinition.setPackageName(packageName);
+		classDefinition.setClassName(entityName);		
+
+		if(packageName != null)
+			sb.append("package ").append(getPackageName()).append(";\n\n");
+		
+		sb.append("public class " + entityName).append(" extends IDAO").append("{\n\n");
+		
+		for(int i=0; i<this.entityFields.size(); i++){
+			EntityField entityField = this.entityFields.get(i);
+			
+			String fieldName = entityField.getName();
+			String dataType = entityField.getDataType();
+			
+			String classType = "";
+			
+			if(dataType.equals("INT"))
+				classType = "java.lang.Long";
+			else if(dataType.equals("CHAR") || dataType.equals("VARCHAR"))
+				classType = "java.lang.String";
+			else if(dataType.equals("DATETIME"))
+				classType = "java.util.Date";
+			else if(dataType.equals("TIMESTAMP"))
+				classType = "java.lang.Double";
+					
+			classDefinition.newClassField.setFieldName(fieldName);
+			classDefinition.newClassField.setType(classType);
+			classDefinition.newClassField.add();	
+			
+			String fieldNameFirstCharUpper = UEngineUtil.toOnlyFirstCharacterUpper(fieldName);
+			
+			sb
+				.append("		public ").append(classType).append(" get").append(fieldNameFirstCharUpper).append("();\n")
+				.append("		public void set").append(fieldNameFirstCharUpper).append("(").append(classType).append(" ").append(fieldName).append(");\n\n")
+			;
+		}		
+		sb.append("}");
+		
+		classDefinition.generateFaceHelperSourceCode();
+		classDefinition.getSourceCodes().sourceCode = new JavaSourceCode();
+		classDefinition.getSourceCodes().sourceCode.setCode(sb.toString());
+		classDefinition.save();
 	}
 			
 	@ServiceMethod(callByContent=true)
@@ -305,13 +397,10 @@ public class EntityDefinition implements ContextAware, PropertyListable{
 			File sourceCodeFile = new File("/Users/jyjang/javasources/" + getAlias());
 			sourceCodeFile.getParentFile().mkdirs();
 			//sourceCodeFile.createNewFile();
-			
-			/*
+/*			
 			FileWriter writer = new FileWriter(sourceCodeFile);
 			writer.write(getSourceCode().getCode());
-			writer.close();
-			*/
-			///
+			writer.close();*/
 			
 			//TODO:   generate face file if exists
 //			if(UEngineUtil.isNotEmpty(getFace().getCode())){
@@ -372,5 +461,4 @@ public class EntityDefinition implements ContextAware, PropertyListable{
 		
 		return null;
 	}
-	
 }

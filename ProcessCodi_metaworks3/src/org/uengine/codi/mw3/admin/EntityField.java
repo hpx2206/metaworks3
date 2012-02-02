@@ -19,15 +19,16 @@ public class EntityField implements Cloneable, ContextAware{
 	public EntityField(){		
 	}
 	
-	boolean isKey;	
+	boolean key;
+		@Face(displayName="KEY")
 		public boolean isKey() {
-			return isKey;
+			return key;
 		}
-		public void setKey(boolean isKey) {
-			this.isKey = isKey;
+		public void setKey(boolean key) {
+			this.key = key;
 		}
-
-	String name;		
+		
+	String name;	
 		@Id  // TODO: lesson 1 (object addressing and correlation)
 		@Face(displayName="Name")
 		public String getName() {
