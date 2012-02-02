@@ -114,5 +114,9 @@
 	<bean id="EntityQuery" class="org.uengine.codi.mw3.admin.EntityQuery"/>
 	<bean id="EntityData" class="org.uengine.codi.mw3.admin.EntityData"/>
 	
+	<bean id="InstanceViewPublic" class="org.uengine.codi.mw3.model.InstanceViewPublic"/>
+	
+	
+	
 		
 </beans>
