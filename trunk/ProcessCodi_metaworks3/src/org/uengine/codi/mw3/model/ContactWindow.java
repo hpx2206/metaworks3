@@ -2,7 +2,7 @@ package org.uengine.codi.mw3.model;
 
 import org.metaworks.annotation.Face;
 
-@Face(ejsPath="genericfaces/Window.ejs", displayName="연락처", options={"hideLabels"}, values={"true"})
+@Face(ejsPath="genericfaces/Window.ejs", displayName="연락처", options={"hideLabels" , "hideHeader"}, values={"true", "true"})
 public class ContactWindow {
 	public ContactWindow() {}
 	public ContactWindow(ILogin loginUser) throws Exception {
