@@ -1,18 +1,23 @@
 package org.uengine.codi.mw3.model;
-import java.util.ArrayList;
-
+import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
-import org.uengine.codi.mw3.admin.ClassField;
 import org.uengine.kernel.DefaultProcessInstance;
 import org.uengine.kernel.ProcessInstance;
 import org.uengine.kernel.ProcessVariable;
 import org.uengine.kernel.SwitchActivity;
 
+@Face(options={"hideNewBtn", "hideAddBtn"}, values={"true", "true"})   
+public class RuleDefinition implements ContextAware {
 
-public class RuleDefinition {
-
-	// private Map variables;
+	transient MetaworksContext metaworksContext;
+	public MetaworksContext getMetaworksContext() {
+		return metaworksContext;
+	}
+	public void setMetaworksContext(MetaworksContext metaworksContext) {
+		this.metaworksContext = metaworksContext;
+	} 
 	
 	private Node nodes;
 	
@@ -23,14 +28,6 @@ public class RuleDefinition {
 	public void setNodes(Node nodes) {
 		this.nodes = nodes;
 	}
-
-	RuleVariableDefinition variableDefinition;
-		public RuleVariableDefinition getVariableDefinition() {
-			return variableDefinition;
-		}
-		public void setVariableDefinition(RuleVariableDefinition variableDefinition) {
-			this.variableDefinition = variableDefinition;
-		}
 	
 //	public Map getVariables() {
 //		return variables;
@@ -41,13 +38,14 @@ public class RuleDefinition {
 //	}
 
 	public RuleDefinition() {
+				
+	}
+	
+	public void init() {
 		this.nodes = new Node("Root Node",true);
 		this.nodes.setMetaworksContext(new MetaworksContext());
 		this.nodes.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		this.nodes.setValue("");
-		
-		variableDefinition = new RuleVariableDefinition();
-				
 	}
 	
 	@ServiceMethod(callByContent=true)

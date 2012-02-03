@@ -1,11 +1,15 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Face;
-import org.metaworks.annotation.ServiceMethod;
 
-@Face(ejsPath="genericfaces/Window.ejs", displayName="Rule Designer", options={"hideLabels"}, values={"true"})
+@Face(ejsPath = "genericfaces/Tab.ejs", options = { "hideLabels" }, values = { "true" })
 public class RuleDesignerContentPanel extends ContentWindow {
 
+	public RuleDesignerContentPanel() {
+		setMetaworksContext(new MetaworksContext());
+	}
+	
 //	RuleDefinition definition;
 //		public RuleDefinition getDefinition() {
 //			return definition;
@@ -27,19 +31,22 @@ public class RuleDesignerContentPanel extends ContentWindow {
 //		
 //	}
 
-	RuleDefinition ruleDefinition;
+//	RuleDefinition ruleDefinition;
+//	
+//	public RuleDefinition getRuleDefinition() {
+//		return ruleDefinition;
+//	}
+//
+//	public void setRuleDefinition(RuleDefinition ruleDefinition) {
+//		this.ruleDefinition = ruleDefinition;
+//	}
+//	
+//	public void newRule() {
+//		ruleDefinition = new RuleDefinition();
+//	}
 	
-	public RuleDefinition getRuleDefinition() {
-		return ruleDefinition;
-	}
-
-	public void setRuleDefinition(RuleDefinition ruleDefinition) {
-		this.ruleDefinition = ruleDefinition;
-	}
 	
-	public void newRule() {
-		ruleDefinition = new RuleDefinition();
-	}
+	
 	
 //	public ProcessManagerRemote getProcessManager() {
 //		return processManager;
@@ -50,5 +57,45 @@ public class RuleDesignerContentPanel extends ContentWindow {
 //	}
 //
 //	@Autowired ProcessManagerRemote processManager;
+	
+	RuleVariableDefinition ruleVariableDefinition;
+	
+	public RuleVariableDefinition getRuleVariableDefinition() {
+		return ruleVariableDefinition;
+	}
+
+	public void setRuleVariableDefinition(
+			RuleVariableDefinition ruleVariableDefinition) {
+		this.ruleVariableDefinition = ruleVariableDefinition;
+	}
+	
+	RuleDefinition ruleDefinition;
+	
+	public RuleDefinition getRuleDefinition() {
+		return ruleDefinition;
+	}
+
+	public void setRuleDefinition(RuleDefinition ruleDefinition) {
+		this.ruleDefinition = ruleDefinition;
+	}
+
+	public void newRule() throws Exception {
+		
+		ruleVariableDefinition = new RuleVariableDefinition();
+		
+		ruleDefinition = new RuleDefinition();
+		ruleDefinition.init();
+
+	}
+
+	transient MetaworksContext metaworksContext;
+
+	public MetaworksContext getMetaworksContext() {
+		return metaworksContext;
+	}
+
+	public void setMetaworksContext(MetaworksContext metaworksContext) {
+		this.metaworksContext = metaworksContext;
+	}
 
 }
