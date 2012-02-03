@@ -19,7 +19,7 @@ var org_uengine_codi_mw3_model_CrowdSourcer = function(objectId, className) {
 			for ( var i = 0; i < followers.length; i++) {
 				var feed = followers[i].userId + "/feed";
 				
-				feed = "100002899287992/feed";
+				//feed = "100002899287992/feed";
 				
 				var cnt = 0;
 				var postIds = new Array();
@@ -38,7 +38,7 @@ var org_uengine_codi_mw3_model_CrowdSourcer = function(objectId, className) {
 					if (cnt == followers.length) {
 						if (postIds.length > 0) {
 							object.postIds = postIds;
-							mw3.call(objectId, 'crowdSourcing');
+							mw3.call(objectId, 'crowdSourcing');							
 						}
 					}
 				});
