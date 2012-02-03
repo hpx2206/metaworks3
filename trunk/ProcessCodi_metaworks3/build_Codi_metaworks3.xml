@@ -7,6 +7,7 @@
 <project name="ProcessCodi_metaworks3" default="apply" basedir=".">
     <property environment="env"/>
 	<property name="was.home" value="${env.WAS_HOME}"/>
+	<property name="processcodi.home" value="${env.PROCESSCODI_HOME}"/>
 	
     <property name="uengine.lib" value="../uEngine/lib"/>
     <property name="was.lib" value="${was.home}/webapps/uengine-web/WEB-INF/lib" />
@@ -47,7 +48,7 @@
 		<antcall target="copylib"/>
 		-->
 		
-		
+		<copy file="${was.home}/webapps/uengine-web/processmanager/signeduengine_settings.jar" todir="${processcodi.home}/WebContent/processmanager"/>
 		
 	</target>
 	
