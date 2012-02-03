@@ -1,7 +1,7 @@
 <table>
 	<tr>
 		<td colspan="3">
-			<input type="button" value="addChildNode" onclick="<%=methods.addChildNode.caller()%>" />
+			<%=fields.name.here()%><input type="button" value="addChildNode" onclick="<%=methods.addChildNode.caller()%>" />
 		</td>
 	</tr>
 				<tr>
@@ -11,7 +11,6 @@
 					<option value=""></option>
 				<%
 					var ruleVariableDefinition = mw3.getAutowiredObject("org.uengine.codi.mw3.model.RuleVariableDefinition");
-					console.debug(ruleVariableDefinition);
 					
 					if(ruleVariableDefinition.classFields != null) {
 					
@@ -27,10 +26,9 @@
 				
 				</td>
 				
-				<% if(ruleVariableDefinition.classFields != null) { %>
 				<td><%=fields.condition.here()%></td>
 				<td><%=fields.value.here()%></td>
-				<% } %>
+				<td><input type="text" id="<%=objectId%>_nodeId" value="<%=value.nodeId%>" /></td>
 				
 				</tr>
 	<% 
