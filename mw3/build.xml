@@ -1,13 +1,14 @@
 <?xml version="1.0"?>
 
-<!-- ======================================================================= -->
-<!-- JBoss build file                                                        -->
-<!-- ======================================================================= -->
+<!--
+	1. build to processcodi_metaworks3.home
+	2. build to tomcat_was	
+-->
 
 <project name="metaworks3" default="apply" basedir=".">
     <property environment="env"/>
     <property name="was.home" value="${env.WAS_HOME}"/>
-    <property environment="env"/>
+	<property name="processcodi.home" value="${env.PROCESSCODI_HOME}"/>
 	
 	<target name="apply">
 		<jar jarfile="./build/metaworks3.jar">
@@ -29,6 +30,13 @@
 	 			<include name="*.jar"/>
 			</fileset>
 		</copy>
+		
+		<copy todir="${processcodi.home}/WebContent/WEB-INF/lib/" overwrite="yes">
+			<fileset dir="./build">
+	 			<include name="*.jar"/>
+			</fileset>
+		</copy>
+		
 	</target>
 	
 </project>
