@@ -1,0 +1,17 @@
+<%	
+	if(value){
+		if(mw3.when == mw3.WHEN_VIEW){
+			if(value.open){
+%>
+	<%=fields.instanceViewContent.here()%>
+<%
+			}else{						
+%>
+	<div>
+		<span>해당 Instace(<%=value.instanceId%>) 는 접근이 제한되었습니다.</span>
+	</div>
+<%		
+			}
+		}
+	}
+%>

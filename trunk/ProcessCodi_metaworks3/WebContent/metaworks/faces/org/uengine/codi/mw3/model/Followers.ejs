@@ -2,14 +2,27 @@
 	<dl>
 		<div class="usersAdded">
 		 	<div id="replyUsers">
+		 	
+<%
+	if(value){
+%>		 	
 		 	<table>
 			 	<td>
 		 			<%=fields.followers.here({options: {alignment:'horizontal'}})%>
 		 		</td>
+<%
+		if(mw3.when != "public"){
+%>				 		
 		 		<td>
 					<img src="images/waveStyle/addUser.png" title="User 추가" onclick="javascript:addFollowers('<%=objectId%>', event)">
 		 		</td>
+<%
+		}
+%>				 		
 		 	</table>
+<%
+	}
+%>
 			</div>
 		</div>
 	</dl>
