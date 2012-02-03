@@ -30,12 +30,21 @@ public class Node implements ContextAware{
 	private boolean isRoot;
 	private Object value;
 	
+	private int nodeId;
+	
+	public int getNodeId() {
+		return nodeId;
+	}
+	public void setNodeId(int nodeId) {
+		this.nodeId = nodeId;
+	}
 	public Object getValue() {
 		return value;
 	}
 	public void setValue(Object value) {
 		this.value = value;
 	}
+	
 	@Id
 	public String getName() {
 		return name;
@@ -94,12 +103,17 @@ public class Node implements ContextAware{
 		this.name = name;
 		this.isRoot = isRoot;
 		this.child = new ArrayList<Node>();
+		
 	}
 	
+	public Node(String name,int nodeId) {
+		this.name = name;
+		this.nodeId = nodeId;
+	} 
 
 	public void addChildNode(Node newNode) {
 		this.child.add(newNode);
-	}
+	}	
 	
 	@ServiceMethod(when="new", callByContent=true)
 	public void save() {
@@ -109,7 +123,7 @@ public class Node implements ContextAware{
 	@ServiceMethod(callByContent=true)//where="parent")
 	public void addChildNode(){
 		
-		newChildNode = new Node("True Node");
+		newChildNode = new Node("True Node" + this.nodeId);
 		
 		newChildNode.setMetaworksContext(new MetaworksContext());
 		newChildNode.getMetaworksContext().setWhen("new");
@@ -117,7 +131,7 @@ public class Node implements ContextAware{
 		
 		addChildNode(newChildNode);
 		
-		newChildNode = new Node("False Node");
+		newChildNode = new Node("False Node" + this.nodeId);
 		
 		newChildNode.setMetaworksContext(new MetaworksContext());
 		newChildNode.getMetaworksContext().setWhen("new");
