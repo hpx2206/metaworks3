@@ -13,7 +13,7 @@ public class Main {
 	
 	protected Main(ILogin login) throws Exception{
 		
-		login.setUserId("1401720840");		
+		//login.setUserId("1401720840");		
 		this.login = login;
 
 		Session session = new Session();
