@@ -1,43 +1,47 @@
-<table>
+<table  width="90%" border="0" cellspacing="0" cellpadding="0"  style="margin: 0px;">
 	<tr>
 		<td colspan="3">
 			<%=fields.name.here()%><input type="button" value="addChildNode" onclick="<%=methods.addChildNode.caller()%>" />
 		</td>
 	</tr>
+	<tr>
+		<td align="center">
+			<table  width="100" border="0" cellspacing="0" cellpadding="0"  style="box-shadow:5px 5px 20px  0 #ccc; border-radius: 15px; -moz-border-radius:15px;-webkit-border-radius:15px; background:#B3CDED; border:1px solid #78ACD1; padding:5px 0 15px 0px; display:block;">
 				<tr>
-				<td>
+					<td>
+						<select name="variableName_<%=objectId%>">
+							<option value=""></option>
+						<%
+							var ruleVariableDefinition = mw3.getAutowiredObject("org.uengine.codi.mw3.model.RuleVariableDefinition");
+							
+							if(ruleVariableDefinition.classFields != null) {
+							
+							for(var i=0;i<ruleVariableDefinition.classFields.length;i++) {	
+							
+						%>
+							<option value="<%=ruleVariableDefinition.classFields[i].fieldName%>"><%=ruleVariableDefinition.classFields[i].fieldName%></option>
+						<%  
+							}
+							
+						}   %>
+						</select>
 				
-				<select name="variableName_<%=objectId%>">
-					<option value=""></option>
-				<%
-					var ruleVariableDefinition = mw3.getAutowiredObject("org.uengine.codi.mw3.model.RuleVariableDefinition");
-					
-					if(ruleVariableDefinition.classFields != null) {
-					
-					for(var i=0;i<ruleVariableDefinition.classFields.length;i++) {	
-					
-				%>
-					<option value="<%=ruleVariableDefinition.classFields[i].fieldName%>"><%=ruleVariableDefinition.classFields[i].fieldName%></option>
-				<%  
-					}
-					
-				}   %>
-				</select>
+					</td>
 				
-				</td>
-				
-				<td><%=fields.condition.here()%></td>
-				<td><%=fields.value.here()%></td>
-				<td><input type="text" id="<%=objectId%>_nodeId" value="<%=value.nodeId%>" /></td>
-				
+					<td><%=fields.condition.here()%></td>
+					<td><%=fields.value.here()%></td>
+					<td><input type="text" id="<%=objectId%>_nodeId" value="<%=value.nodeId%>" /></td>
 				</tr>
+			</table>
+		</td>
+	</tr>
 	<% 
 		//console.debug(fields.child);
 		if (value.child.length > 0) { %>
 			
 	<tr>
 		<td>
-			<table>
+			<table width="100%" border="1" cellspacing="0" cellpadding="0">
 				<tr>
 					<td><%=mw3.locateObject(value.child[0], value.child[0].__className)%></td>
 					<td><%=mw3.locateObject(value.child[1], value.child[1].__className)%></td>
