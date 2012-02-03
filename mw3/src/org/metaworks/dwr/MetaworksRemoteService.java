@@ -71,9 +71,9 @@ public class MetaworksRemoteService {
 	}
 
 
-	public WebObjectType getMetaworksType(String className) throws Exception {
-		try{
-			
+		public WebObjectType getMetaworksType(String className) throws Exception {
+			try{
+				
 			//TODO: this is debug mode option
 			if(metadataStorage.containsKey(className))
 				return metadataStorage.get(className);
@@ -162,7 +162,14 @@ public class MetaworksRemoteService {
 					srcFieldValue = new MetaworksContext();
 				}
 				
-				targetInst.setFieldValue(fd.getName(), srcFieldValue);
+				boolean isSpringAutowiredField = false;
+				try{
+					isSpringAutowiredField = ((serviceClass.getMethod( "get"+ fd.getName(), new Class[]{})).getAnnotation(Autowired.class) != null);
+				}catch(Exception e){					
+				}
+				
+				if(!isSpringAutowiredField)
+					targetInst.setFieldValue(fd.getName(), srcFieldValue);
 			}
 			
 			object = targetInst.getObject();
