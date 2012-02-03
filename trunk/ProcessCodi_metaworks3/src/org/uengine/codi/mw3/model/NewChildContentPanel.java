@@ -61,11 +61,12 @@ public class NewChildContentPanel  {
 	}
 	
 	@ServiceMethod
-	public RuleDesignerContentPanel newRule(){
-		RuleDesignerContentPanel ruleDesigner = new RuleDesignerContentPanel();
-		ruleDesigner.newRule();
+	public RuleDesignerWindow newRule() throws Exception{
 		
-		return ruleDesigner;
+		RuleDesignerWindow ruleDesignerWindow = new RuleDesignerWindow();
+		ruleDesignerWindow.newRule();
+		
+		return ruleDesignerWindow;
 	}
 	
 	

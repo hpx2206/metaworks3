@@ -97,6 +97,9 @@ public class Node implements ContextAware{
 		this.name = name;
 		this.isRoot = false;
 		this.child = new ArrayList<Node>();
+		
+		setMetaworksContext(new MetaworksContext());
+		getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 	}
 	
 	public Node(String name,boolean isRoot) {
@@ -104,11 +107,17 @@ public class Node implements ContextAware{
 		this.isRoot = isRoot;
 		this.child = new ArrayList<Node>();
 		
+		setMetaworksContext(new MetaworksContext());
+		getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+		
 	}
 	
 	public Node(String name,int nodeId) {
 		this.name = name;
 		this.nodeId = nodeId;
+		
+		setMetaworksContext(new MetaworksContext());
+		getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 	} 
 
 	public void addChildNode(Node newNode) {
