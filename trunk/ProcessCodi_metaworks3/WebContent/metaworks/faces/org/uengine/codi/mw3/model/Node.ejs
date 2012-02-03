@@ -1,0 +1,51 @@
+<table>
+	<tr>
+		<td colspan="3">
+			<input type="button" value="addChildNode" onclick="<%=methods.addChildNode.caller()%>" />
+		</td>
+	</tr>
+				<tr>
+				<td>
+				
+				<select name="variableName_<%=objectId%>">
+					<option value=""></option>
+				<%
+					var ruleVariableDefinition = mw3.getAutowiredObject("org.uengine.codi.mw3.model.RuleVariableDefinition");
+					console.debug(ruleVariableDefinition);
+					
+					if(ruleVariableDefinition.classFields != null) {
+					
+					for(var i=0;i<ruleVariableDefinition.classFields.length;i++) {	
+					
+				%>
+					<option value="<%=ruleVariableDefinition.classFields[i].fieldName%>"><%=ruleVariableDefinition.classFields[i].fieldName%></option>
+				<%  
+					}
+					
+				}   %>
+				</select>
+				
+				</td>
+				
+				<% if(ruleVariableDefinition.classFields != null) { %>
+				<td><%=fields.condition.here()%></td>
+				<td><%=fields.value.here()%></td>
+				<% } %>
+				
+				</tr>
+	<% 
+		//console.debug(fields.child);
+		if (value.child.length > 0) { %>
+			
+	<tr>
+		<td>
+			<table>
+				<tr>
+					<td><%=mw3.locateObject(value.child[0], value.child[0].__className)%></td>
+					<td><%=mw3.locateObject(value.child[1], value.child[1].__className)%></td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	<% } %>
+</table>
