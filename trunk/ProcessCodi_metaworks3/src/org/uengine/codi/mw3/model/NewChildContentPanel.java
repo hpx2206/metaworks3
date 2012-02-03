@@ -44,13 +44,13 @@ public class NewChildContentPanel  {
 		return processDesigner;
 	}
 
-	@ServiceMethod
-	public RuleDesignerContentPanel newRule() throws Exception{
-		RuleDesignerContentPanel designer = new RuleDesignerContentPanel();
-		designer.newDefinition(getParentFolder().toString());
-		
-		return designer;
-	}
+//	@ServiceMethod
+//	public RuleDesignerContentPanel newRule() throws Exception{
+//		RuleDesignerContentPanel designer = new RuleDesignerContentPanel();
+//		designer.newDefinition(getParentFolder().toString());
+//		
+//		return designer;
+//	}
 
 	@ServiceMethod
 	public FormDesignerContentPanel newForm(){
@@ -59,5 +59,15 @@ public class NewChildContentPanel  {
 		
 		return formDesigner;
 	}
+	
+	@ServiceMethod
+	public RuleDesignerContentPanel newRule(){
+		RuleDesignerContentPanel ruleDesigner = new RuleDesignerContentPanel();
+		ruleDesigner.newRule();
+		
+		return ruleDesigner;
+	}
+	
+	
 
 }
