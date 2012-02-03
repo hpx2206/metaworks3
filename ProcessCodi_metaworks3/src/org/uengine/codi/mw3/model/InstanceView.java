@@ -26,7 +26,7 @@ public class InstanceView {
 	}		
 		
 	public void load(IInstance instance) throws Exception{
-		
+		setMetaworksContext(new MetaworksContext());
 		
 		setInstanceId(instance.getInstId().toString());
 		
@@ -187,4 +187,12 @@ public class InstanceView {
 		processManager.stopProcessInstance(instanceId);
 		processManager.applyChanges();
 	}	
+	
+	transient MetaworksContext metaworksContext;
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
+		} 	
 }

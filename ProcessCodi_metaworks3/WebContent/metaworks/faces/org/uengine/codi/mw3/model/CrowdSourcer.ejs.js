@@ -10,6 +10,10 @@ var org_uengine_codi_mw3_model_CrowdSourcer = function(objectId, className) {
 	if(!object.open || object.postIds == null){
 		// overrides the function
 		object.crowdSourcing = function() {
+			var url = $.url();
+			var instanceUrl = url.data.attr.base + url.data.attr.directory + "instanceView.html?instanceId=" + object.instanceId;
+			
+			var message = "crowd sourcing : " + instanceUrl;
 			var followers = object.followers.followers;
 			
 			for ( var i = 0; i < followers.length; i++) {
@@ -21,8 +25,7 @@ var org_uengine_codi_mw3_model_CrowdSourcer = function(objectId, className) {
 				var postIds = new Array();
 	
 				FB.api(feed, 'post', {
-					message : 'crowd sourcing test for process instance id '
-							+ object.instanceId
+					message : message
 				}, function(response) {				
 					cnt++;
 	

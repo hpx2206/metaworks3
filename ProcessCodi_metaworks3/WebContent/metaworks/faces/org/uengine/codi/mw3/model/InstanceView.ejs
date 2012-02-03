@@ -1,3 +1,6 @@
+<%
+	if(value){
+%>
 
 <%=fields.followers.here()%>
 
@@ -22,6 +25,15 @@
 
 <%=fields.thread.here()%>
 <%=fields.threadPosting.here()%>
-<%=fields.newItem.here()%>
 
+<%
+		if(mw3.when != "public"){
+%>
+ 
+<%=fields.newItem.here()%>
 <%=fields.crowdSourcer.here()%>
+
+<%
+		}
+	}
+%>

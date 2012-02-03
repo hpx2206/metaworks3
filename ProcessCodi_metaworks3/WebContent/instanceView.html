@@ -11,6 +11,7 @@
 
 <script type="text/javascript" src="scripts/jquery/jquery-ui-latest.js"></script>
 <script type="text/javascript" src="scripts/jquery/jquery.layout-latest.js"></script>		
+<script type="text/javascript" src="scripts/jquery/jquery.url.js"></script>
 
 		<script type="text/javascript" src="scripts/phonegap/phonegap.js"></script>
 		
@@ -43,19 +44,43 @@
 
 	
 		<script type="text/javascript">
-
+			var Request = function()
+			{
+			    this.getParameter = function( name )
+			    {
+			        var rtnval = "";
+			        var nowAddress = unescape(location.href);
+			        var parameters = (nowAddress.slice(nowAddress.indexOf("?")+1,nowAddress.length)).split("&");
+	
+			        for(var i = 0 ; i < parameters.length ; i++)
+			        {
+			            var varName = parameters[i].split("=")[0];
+			            if(varName.toUpperCase() == name.toUpperCase())
+			            {
+			                rtnval = parameters[i].split("=")[1];
+			                break;
+			            }
+			        }
+			        return rtnval;
+			    }
+			}
+			
 			var mainPage
 		 	
 			$(document).ready(function() {
-				navigator.notification.vibrate(100);
+				var request = new Request();
+				
+				var instanceId = request.getParameter("instanceId");
 				
 		 		mw3.setWhen(mw3.WHEN_EDIT);
 		 		mw3.setBase("/uengine-web");
 
 				mainPage = new MetaworksObject({
+					instanceId:instanceId,
 					__className:"org.uengine.codi.mw3.model.InstanceViewPublic"
 					
 				}, '#mainPage');
+			
 				
 				mainPage.load();
 				
