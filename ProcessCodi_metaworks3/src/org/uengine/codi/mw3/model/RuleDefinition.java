@@ -1,6 +1,9 @@
 package org.uengine.codi.mw3.model;
+import java.util.ArrayList;
+
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.ServiceMethod;
+import org.uengine.codi.mw3.admin.ClassField;
 import org.uengine.kernel.DefaultProcessInstance;
 import org.uengine.kernel.ProcessInstance;
 import org.uengine.kernel.ProcessVariable;
@@ -52,6 +55,10 @@ public class RuleDefinition {
 		
 		org.uengine.kernel.ProcessDefinition def = new org.uengine.kernel.ProcessDefinition();
 		
+//		ArrayList<ClassField> variables = this.variableDefinition.getClassFields();
+//		for(int i=0;i<variables.size();i++) {
+//			
+//		}
 		
 		def.setProcessVariables(new ProcessVariable[]{ProcessVariable.forName("연령"), ProcessVariable.forName("성별")});
 		
