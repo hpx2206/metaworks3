@@ -1,9 +1,15 @@
 <%
 	if(value){
 %>
+<p>
+<div style="background:#eee">
 
-CrowdSourcing : <a href="#" onclick="javascript:<%=methods.crowdSourcing.caller()%>;"> <%=(value.open ? "ON" : "OFF")%> </a>
+<br>
+ <center> * <b>팔로워들의 친구들에게도 내용을 공유합니다</b> : <a href="#" onclick="javascript:<%=methods.crowdSourcing.caller()%>;"> <%=(value.open ? "ON" : "OFF")%> </a></center>
+<br>
 
+ </div>
+<p>
 <%
 	}
 %>

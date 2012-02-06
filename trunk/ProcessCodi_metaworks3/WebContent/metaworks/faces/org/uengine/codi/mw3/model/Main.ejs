@@ -1,4 +1,7 @@
 <%
+
+//mw3.debug(value);
+
 	if(value!=null){
 %>
 
@@ -11,13 +14,19 @@
 <div id="container">
 	<div class="ui-layout-north">
         <div id="smline">
-            <div class="logo" onclick="<%=methods.refresh.caller()%>"><img src="images/waveStyle/logo.gif"></div>
+            <div class="logo" onclick="<%=methods.refresh.caller()%>"><%=fields.logo.here()%></div>
             
             <div id="search_right_outer"><div id="search_line"></div><div style="clear:both"></div><div id="clear_search" onclick="removeSearchItems()"></div></div>
             <div id="search_right_outer2"><div id="ping_line"></div><div style="clear:both"></div><div id="clear_search" onclick="removePingItems()"></div></div>           
 
                    
-            <div class="info"> 	<%=fields.session.here({when:'view'})%> </div>
+            <div class="info"> 
+            <%if(mw3.when!='__design-depth2'){//TODO: later, rather use 'where' than 'when'.%>
+            	<%=fields.session.here({when:'view'})%>
+            <%}else{%>
+            	session here.
+            <%}%>	
+            	 </div>
             
  
         </div>
