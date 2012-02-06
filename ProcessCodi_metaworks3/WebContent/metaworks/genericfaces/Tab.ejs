@@ -28,13 +28,6 @@
 		  	if(fd.name == 'metaworksContext') continue;
 %>	
 	<div id="<%=tabId%>_<%=i+1%>">	
-<%
-		 	if(showLabel){
-%>
-		<span> <b><%=fd.displayName%></b> </span>
-<%
-			}
-%>
 		<span bgcolor=white> <%=fields[fd.name] ? fields[fd.name].here() : "XXX"%></span></div>
 	</div>
 <%
