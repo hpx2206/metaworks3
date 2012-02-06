@@ -10,10 +10,11 @@ var org_uengine_codi_mw3_model_CrowdSourcer = function(objectId, className) {
 	if(!object.open || object.postIds == null){
 		// overrides the function
 		object.crowdSourcing = function() {
-			var url = $.url();
-			var instanceUrl = url.data.attr.base + url.data.attr.directory + "instanceView.html?instanceId=" + object.instanceId;
+			var url = window.location;//$.url();
+//			var instanceUrl = url.data.attr.base + url.data.attr.directory + "instanceView.html?instanceId=" + object.instanceId;
+			var instanceUrl = url.origin + url.pathname + "instanceView.html?instanceId=" + object.instanceId;
 			
-			var message = "crowd sourcing : " + instanceUrl;
+			var message = object.message + "\n " + instanceUrl;
 			var followers = object.followers.followers;
 			
 			for ( var i = 0; i < followers.length; i++) {

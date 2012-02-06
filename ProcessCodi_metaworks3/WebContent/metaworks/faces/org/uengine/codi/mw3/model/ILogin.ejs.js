@@ -2,6 +2,7 @@ var org_uengine_codi_mw3_model_ILogin = function(objectId, className){
 
 	this.objectId = objectId;
 	this.className = className;
+	var theLoginHelper = this;
 	
     window.fbAsyncInit = function() {
       FB.init({
@@ -10,6 +11,15 @@ var org_uengine_codi_mw3_model_ILogin = function(objectId, className){
         cookie     : true,
         xfbml      : true
       });
+      
+  	FB.login(function(response) {
+		   if (response.authResponse) {
+			   theLoginHelper.setUserInfo();
+		   } else {
+		     console.log('User cancelled login or did not fully authorize.');
+		   }
+		 }, {scope: 'email,user_checkins,publish_stream,user_likes,export_stream'});
+	
     };
     (function(d){
        var js, id = 'facebook-jssdk'; if (d.getElementById(id)) {return;}
