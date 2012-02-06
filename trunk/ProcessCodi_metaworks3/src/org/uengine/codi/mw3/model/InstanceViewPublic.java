@@ -1,6 +1,7 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.MetaworksContext;
+import org.metaworks.annotation.AutowiredToClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
@@ -18,7 +19,6 @@ public class InstanceViewPublic {
 	}
 	
 	Session session;
-		
 		public Session getSession() {
 			return session;
 		}
@@ -65,7 +65,7 @@ public class InstanceViewPublic {
 			this.metaworksContext = metaworksContext;
 		} 
 		
-	@ServiceMethod(when="hidden")
+	@ServiceMethod(when="hidden", callByContent=true)
 	public void load() throws Exception {
 		if(getSession() == null)
 			throw new Exception("session error");
@@ -80,22 +80,15 @@ public class InstanceViewPublic {
 		setOpen(isOpen);
 		
 		if(isOpen){
-			IInstance instances = (IInstance) Database.sql(IInstance.class, 
-					  "select * from bpm_procinst where instId=?instId"
-				);
+			Instance theInstanceDAO = new Instance();
+			theInstanceDAO.setInstId(getInstanceId());
 			
-			instances.setInstId(getInstanceId());
-			instances.select();
+			instanceViewContent.load(theInstanceDAO.databaseMe());
+			instanceViewContent.getInstanceView().getMetaworksContext().setWhen("public");
 			
-			if(instances.next()){		
-				getInstanceViewContent().load(instances);
-				getInstanceViewContent().getInstanceView().getMetaworksContext().setWhen("public");
-				
-				setMetaworksContext(new MetaworksContext());
-				getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-			}else{
-				throw new Exception("Instance where ID=[" + getInstanceId() + "] is not found.");
-			}
+			setMetaworksContext(new MetaworksContext());
+			getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 		}
+		
 	}
 }

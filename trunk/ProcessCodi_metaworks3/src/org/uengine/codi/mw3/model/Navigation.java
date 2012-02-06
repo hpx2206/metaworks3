@@ -5,7 +5,7 @@ import org.metaworks.annotation.Hidden;
 
 public class Navigation {
 	
-	protected Navigation(){
+	public Navigation(){
 		personalPerspective = (new PersonalPerspective());
 		personalPerspective.setSelected(true);
 

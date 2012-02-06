@@ -16,6 +16,7 @@ import org.metaworks.example.ide.SourceCode;
 import org.metaworks.website.Contents;
 import org.metaworks.website.FileContents;
 import org.metaworks.website.ImageContents;
+import org.metaworks.website.MetaworksFile;
 import org.metaworks.website.ParagraphContents;
 import org.metaworks.website.SourceCodeContents;
 
@@ -88,6 +89,14 @@ public interface IWorkItem extends IDAO{
 		public IUser getWriter();
 		public void setWriter(IUser writer);
 		
+		
+		@Hidden
+		@ORMapping(
+			databaseFields = { 	"content", 		"tool" }, 
+			objectFields = { 	"uploadedPath", "mimeType" }
+		)
+		public MetaworksFile getFile();
+		public void setFile(MetaworksFile file);
 		
 		public Long getInstId();
 		public void setInstId(Long instId);

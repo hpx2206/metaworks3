@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.contexts.ComplexType;
 import org.uengine.kernel.HumanActivity;
 import org.uengine.kernel.KeyedParameter;
+import org.uengine.kernel.NeedArrangementToSerialize;
 import org.uengine.kernel.ParameterContext;
 import org.uengine.kernel.ProcessInstance;
 import org.uengine.kernel.ResultPayload;
@@ -74,6 +75,9 @@ public class WorkItemHandler implements ContextAware{
 						if(processVariableValue instanceof ComplexType){
 							ComplexType complexType = (ComplexType) processVariableValue;
 							processVariableValue = (Serializable) complexType.getTypeClass().newInstance();
+							if(processVariableValue instanceof NeedArrangementToSerialize){
+								((NeedArrangementToSerialize)processVariableValue).afterDeserialization();
+							}
 						}
 						
 					}else{

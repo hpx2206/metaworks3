@@ -1,9 +1,18 @@
 
 package org.uengine.codi.mw3.admin;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Iterator;
+
+import net.sourceforge.pmd.IRuleViolation;
+import net.sourceforge.pmd.PMD;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
@@ -17,6 +26,8 @@ import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.example.ide.CompileError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.CodiDwrServlet;
+import org.uengine.codi.mw3.alm.MemoryRenderer;
+import org.uengine.codi.mw3.alm.QualityOption;
 import org.uengine.codi.mw3.model.FaceHelperSourceCode;
 import org.uengine.codi.mw3.model.JavaSourceCode;
 import org.uengine.codi.mw3.model.MobileWindow;
@@ -24,11 +35,13 @@ import org.uengine.codi.mw3.model.TemplateDesigner;
 import org.uengine.codi.mw3.model.Window;
 import org.uengine.codi.mw3.widget.IFrame;
 import org.uengine.kernel.GlobalContext;
+import org.uengine.kernel.NeedArrangementToSerialize;
 import org.uengine.kernel.PropertyListable;
 import org.uengine.processmanager.ProcessManagerRemote;
 import org.uengine.util.UEngineUtil;
 
-public class ClassDefinition implements ContextAware, PropertyListable{
+
+public class ClassDefinition implements ContextAware, PropertyListable, NeedArrangementToSerialize{
 
 	transient MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
@@ -46,7 +59,9 @@ public class ClassDefinition implements ContextAware, PropertyListable{
 		
 		setMetaworksContext(new MetaworksContext());
 		getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
-		init();
+		
+		this.qualityOption = new QualityOption();
+
 	}
 	
 	String alias;
@@ -112,33 +127,8 @@ public class ClassDefinition implements ContextAware, PropertyListable{
 		public void setClassName(String className) {
 			this.className = className;
 		}
-		
-	ArrayList<ClassField> classFields;
-		public ArrayList<ClassField> getClassFields() {
-			return classFields;
-		}
-		public void setClassFields(ArrayList<ClassField> formFields) {
-			this.classFields = formFields;
-		}
 
-	ArrayList<ClassMethod> classMethods;
-		public ArrayList<ClassMethod> getClassMethods() {
-			return classMethods;
-		}
-		public void setClassMethods(ArrayList<ClassMethod> classMethods) {
-			this.classMethods = classMethods;
-		}
-
-	transient ClassField newClassField;
-		public ClassField getNewClassField() {
-			return newClassField;
-		}
-		public void setNewClassField(ClassField newClassField) {
-			this.newClassField = newClassField;
-		}
-		
-		
-	ClassSourceCodes sourceCodes;
+	transient ClassSourceCodes sourceCodes;
 		public ClassSourceCodes getSourceCodes() {
 			return sourceCodes;
 		}
@@ -146,7 +136,14 @@ public class ClassDefinition implements ContextAware, PropertyListable{
 			this.sourceCodes = sourceCodes;
 		}
 
-		
+	transient QualityOption qualityOption;
+	@Hidden
+		public QualityOption getQualityOption() {
+			return qualityOption;
+		}
+		public void setQualityOption(QualityOption qualityOption) {
+			this.qualityOption = qualityOption;
+		}
 		
 	@ServiceMethod(callByContent=true)
 	public void generateSourceCode(){
@@ -156,9 +153,9 @@ public class ClassDefinition implements ContextAware, PropertyListable{
 			.append("package ").append(getPackageName()).append(";\n\n")
 			.append("public class " + getClassName() + "{\n\n");
 		
-		if(getClassFields()!=null)
-		for(int i=0; i<getClassFields().size(); i++){
-			ClassField field = getClassFields().get(i);
+		if(getSourceCodes().getClassModeler()!=null && getSourceCodes().getClassModeler().getClassFields()!=null)
+		for(int i=0; i<getSourceCodes().getClassModeler().getClassFields().size(); i++){
+			ClassField field = getSourceCodes().getClassModeler().getClassFields().get(i);
 			
 			String fieldNameFirstCharUpper = UEngineUtil.toOnlyFirstCharacterUpper(field.getFieldName());
 			
@@ -237,6 +234,8 @@ public class ClassDefinition implements ContextAware, PropertyListable{
 //			return;
 //		} 
 		
+		ArrayList<CompileError> compileErrors = new ArrayList<CompileError>();
+		
 		try {
 			String fullClsName = getPackageName()+"."+getClassName();
 			
@@ -270,10 +269,49 @@ public class ClassDefinition implements ContextAware, PropertyListable{
 			compileError.setColumn(1);
 			compileError.setMessage(parts != null ? parts[3] : message);
 			
-			getSourceCodes().getSourceCode().setCompileErrors(new CompileError[]{compileError});
-		
+			compileErrors.add(compileError);
+			
 			e.printStackTrace();
 		} 
+		
+		
+		//// try quality options /////
+		
+		if(getQualityOption()!=null && getQualityOption().getPmdRuleOption()!=null){
+			
+			
+			
+			PMD.main(new String[]{
+					"/Users/jyjang/javasources/" + getAlias(),
+					"org.uengine.codi.mw3.alm.MemoryRenderer",
+					getQualityOption().getPmdRuleOption().generatePMDOption()
+					
+			});
+			
+			for(Iterator<IRuleViolation> violations: MemoryRenderer.recentViolations){
+		        while (violations.hasNext()) {
+		            IRuleViolation rv = violations.next();
+
+		            System.out.println(rv.getFilename());
+		            System.out.println(rv.getBeginColumn());
+		            System.out.println(rv.getDescription());
+		            
+					CompileError compileError = new CompileError();
+					compileError.setLine(rv.getBeginLine());
+					compileError.setColumn(rv.getBeginColumn());
+					compileError.setMessage(rv.getDescription());
+					
+					compileErrors.add(compileError);
+
+		        }
+		    }
+		}
+		
+		CompileError[] complieErrorInArray = new CompileError[compileErrors.size()];
+		compileErrors.toArray(complieErrorInArray);
+		
+		getSourceCodes().getSourceCode().setCompileErrors(complieErrorInArray);
+
 	}
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
@@ -399,14 +437,6 @@ public class ClassDefinition implements ContextAware, PropertyListable{
 	}
 
 
-	public void init() {
-		newClassField = new ClassField();
-		newClassField.metaworksContext = new MetaworksContext();
-		newClassField.metaworksContext.setWhen(MetaworksContext.WHEN_EDIT);
-		newClassField.metaworksContext.setWhere("newEntry");//TODO: lesson 6 (if there's no overriding value, metaworks will tries to use old contxt value)
-		newClassField.classDefinition = this;
-
-	}
 	
 	@Override
 	public ArrayList<String> listProperties() {
@@ -427,6 +457,80 @@ public class ClassDefinition implements ContextAware, PropertyListable{
 		}
 		
 		return null;
+	}
+	
+	
+	@Override
+	public void beforeSerialization() {
+	}
+	
+	
+	@Override
+	public void afterDeserialization() {
+
+		setSourceCodes(new ClassSourceCodes());
+		
+		/// read source file
+		File sourceCodeFile = new File("/Users/jyjang/javasources/" + getAlias());
+		
+		ByteArrayOutputStream bao = new ByteArrayOutputStream();
+		FileInputStream is;
+		try {
+			is = new FileInputStream(sourceCodeFile);
+			UEngineUtil.copyStream(is, bao);
+			getSourceCodes().getSourceCode().setCode(bao.toString());
+			
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		//if there is face code, read it.
+		String faceSource = "/Users/jyjang/javasources/" + getAlias();
+		faceSource = faceSource.substring(0, faceSource.indexOf(".")) + ".ejs";
+		
+		File ejsFile = new File(faceSource);
+
+		if(ejsFile.exists()){
+			
+			bao = new ByteArrayOutputStream();
+			try {
+				is = new FileInputStream(ejsFile);
+				UEngineUtil.copyStream(is, bao);
+				getSourceCodes().getFace().setCode(bao.toString());
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+		
+		//if there is facehelper code, read it.
+		String faceHelperSource = "/Users/jyjang/javasources/" + getAlias();
+		faceHelperSource = faceHelperSource.substring(0, faceHelperSource.indexOf(".")) + ".ejs.js";
+		
+		File ejsJsFile = new File(faceHelperSource);
+
+		if(ejsJsFile.exists()){
+			
+			bao = new ByteArrayOutputStream();
+			try {
+				is = new FileInputStream(ejsJsFile);
+				UEngineUtil.copyStream(is, bao);
+				getSourceCodes().getFaceHelper().setCode(bao.toString());
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+		}
+				
 	}
 	
 }

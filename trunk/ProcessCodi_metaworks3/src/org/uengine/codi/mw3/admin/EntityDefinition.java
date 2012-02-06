@@ -305,9 +305,9 @@ public class EntityDefinition implements ContextAware, PropertyListable{
 			else if(dataType.equals("TIMESTAMP"))
 				classType = "java.lang.Double";
 					
-			classDefinition.newClassField.setFieldName(fieldName);
-			classDefinition.newClassField.setType(classType);
-			classDefinition.newClassField.add();	
+			classDefinition.getSourceCodes().getClassModeler().newClassField.setFieldName(fieldName);
+			classDefinition.getSourceCodes().getClassModeler().newClassField.setType(classType);
+			classDefinition.getSourceCodes().getClassModeler().newClassField.add();	
 			
 			String fieldNameFirstCharUpper = UEngineUtil.toOnlyFirstCharacterUpper(fieldName);
 			
@@ -364,9 +364,9 @@ public class EntityDefinition implements ContextAware, PropertyListable{
 			else if(dataType.equals("TIMESTAMP"))
 				classType = "java.lang.Double";
 					
-			classDefinition.newClassField.setFieldName(fieldName);
-			classDefinition.newClassField.setType(classType);
-			classDefinition.newClassField.add();	
+			classDefinition.getSourceCodes().getClassModeler().newClassField.setFieldName(fieldName);
+			classDefinition.getSourceCodes().getClassModeler().newClassField.setType(classType);
+			classDefinition.getSourceCodes().getClassModeler().newClassField.add();	
 			
 			String fieldNameFirstCharUpper = UEngineUtil.toOnlyFirstCharacterUpper(fieldName);
 			

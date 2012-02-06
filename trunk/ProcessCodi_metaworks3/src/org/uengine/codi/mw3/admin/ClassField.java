@@ -108,81 +108,81 @@ public class ClassField implements Cloneable, ContextAware{
 		}
 				
 	@ServiceMethod(when=MetaworksContext.WHEN_EDIT, where="newEntry", callByContent=true)
-	public ClassDefinition add() throws Exception{
+	public ClassModeler add() throws Exception{
 
-		if(classDefinition.classFields==null)
-			classDefinition.classFields = new ArrayList<ClassField>();//new FormField[]{};
+		if(classModeler.classFields==null)
+			classModeler.classFields = new ArrayList<ClassField>();//new FormField[]{};
 		
 		//TODO: lesson 3 (validation with throwing exception)
-		if(classDefinition.classFields.contains(this))
+		if(classModeler.classFields.contains(this))
 			throw new Exception("There's already existing field named '" + getFieldName() + "'.");
 		ClassField clonedOne = (ClassField) this.clone(); //TODO: lesson 2 (cloning to avoid reflective problem)
 
 		clonedOne.setMetaworksContext(new MetaworksContext());  //TODO: lesson 4 (context injection)
 		clonedOne.getMetaworksContext().setWhere("in-container");
 		
-		classDefinition.classFields.add(clonedOne); 
+		classModeler.classFields.add(clonedOne); 
 
 		//clear the entries for newFormField	//TODO: lesson 6 (context clearing)
-		classDefinition.init();
+		classModeler.init();
 		//
 		
-		return classDefinition;
+		return classModeler;
 	}
 		
 	@ServiceMethod(when=MetaworksContext.WHEN_EDIT, where="in-container", callByContent=true)
-	public ClassDefinition save() throws Exception{
+	public ClassModeler save() throws Exception{
 		//TODO: lesson 3 (validation with throwing exception)
 		
-		int index = classDefinition.classFields.indexOf(this);
+		int index = classModeler.classFields.indexOf(this);
 		if(index==-1)
 			throw new Exception("There's no existing field named '" + getFieldName() + "'.");
 					
-		classDefinition.classFields.remove(this);
+		classModeler.classFields.remove(this);
 		
 		ClassField clonedOne = (ClassField) this.clone(); //TODO: lesson 2 (cloning to avoid reflective problem)
 		
-		classDefinition.classFields.add(index, clonedOne); 
+		classModeler.classFields.add(index, clonedOne); 
 		
 		clonedOne.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 		
-		return classDefinition;
+		return classModeler;
 	}
 		
 	@ServiceMethod(when=MetaworksContext.WHEN_VIEW, where="in-container")
-	public ClassDefinition remove(){
-		classDefinition.classFields.remove(this);
+	public ClassModeler remove(){
+		classModeler.classFields.remove(this);
 		
-		return classDefinition;
+		return classModeler;
 	}
 	
 	//TODO: quiz 2 (when the form field is first order, this button should be shown.
 	//              Improve 'up' method and 'down' method not to be shown when it is in the first order and in the last order.
 	
 	@ServiceMethod(when=MetaworksContext.WHEN_VIEW, where="in-container")
-	public ClassDefinition up(){
-		int index = classDefinition.classFields.indexOf(this);
+	public ClassModeler up(){
+		int index = classModeler.classFields.indexOf(this);
 		
 		if(index>0){
-			classDefinition.classFields.remove(this);
+			classModeler.classFields.remove(this);
 			//TODO: quiz 1 (below is not proper since it will clear the type information. Prove why and fix this)
-			classDefinition.classFields.add(index-1, this);
+			classModeler.classFields.add(index-1, this);
 		}
 
-		return classDefinition;
+		return classModeler;
 	}
 	
 	@ServiceMethod(when=MetaworksContext.WHEN_VIEW, where="in-container") 
-	public ClassDefinition down(){
-		int index = classDefinition.classFields.indexOf(this);
+	public ClassModeler down(){
+		int index = classModeler.classFields.indexOf(this);
 		
-		if(index<classDefinition.classFields.size()-1){
-			classDefinition.classFields.remove(this);      //TODO: lesson 1 (object addressing and correlation)
+		if(index<classModeler.classFields.size()-1){
+			classModeler.classFields.remove(this);      //TODO: lesson 1 (object addressing and correlation)
 			//TODO: quiz 1 (below is not proper since it will clear the type information. Prove why and fix this)
-			classDefinition.classFields.add(index+1, this);
+			classModeler.classFields.add(index+1, this);
 		}
 
-		return classDefinition;
+		return classModeler;
 	}
 	
 	
@@ -207,7 +207,7 @@ public class ClassField implements Cloneable, ContextAware{
 
 	
 	@AutowiredFromClient  //TODO: lesson 0 (auto-wiring client-side objects)
-	transient public ClassDefinition classDefinition;
+	transient public ClassModeler classModeler;
 	
 
 	

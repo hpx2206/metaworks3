@@ -11,6 +11,7 @@ import org.metaworks.ServiceMethodContext;
 import org.metaworks.WebFieldDescriptor;
 import org.metaworks.WebObjectType;
 import org.metaworks.annotation.Face;
+import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.NonEditable;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dwr.MetaworksRemoteService;
@@ -33,9 +34,9 @@ import org.uengine.processmanager.ProcessManagerRemote;
 import org.uengine.util.UEngineUtil;
 
 
-//@Face(ejsPath="genericfaces/Tab.ejs",
-//	options={"hideLabels"},
-//	values={"true"})
+@Face(ejsPath="genericfaces/Tab.ejs",
+	options={"hideLabels"},
+	values={"true"})
 
 public class ClassSourceCodes{
 
@@ -52,7 +53,18 @@ public class ClassSourceCodes{
 		this.sourceCode = new JavaSourceCode();
 		this.face = new FaceSourceCode();
 		this.faceHelper = new FaceHelperSourceCode();
+		this.classModeler = new ClassModeler();
 	}
+	
+	ClassModeler classModeler;
+		
+		public ClassModeler getClassModeler() {
+			return classModeler;
+		}
+		public void setClassModeler(ClassModeler classModeler) {
+			this.classModeler = classModeler;
+		}
+
 	
 	JavaSourceCode sourceCode;
 		
