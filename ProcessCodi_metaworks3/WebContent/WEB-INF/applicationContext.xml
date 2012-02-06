@@ -103,6 +103,7 @@
 	<bean id="ClassDefinition" class="org.uengine.codi.mw3.admin.ClassDefinition"/>
 	<bean id="ClassDesignerContentPanel" class="org.uengine.codi.mw3.model.ClassDesignerContentPanel"/>
 	<bean id="ProcessDesignerContentPanel" class="org.uengine.codi.mw3.model.ProcessDesignerContentPanel"/>
+	<bean id="ProcessInstanceMonitor" class="org.uengine.codi.mw3.model.ProcessInstanceMonitor"/>
 	<bean id="ProcessDesignerWindow" class="org.uengine.codi.mw3.model.ProcessDesignerWindow"/>
 	
 	<bean id="NewChildContentPanel" class="org.uengine.codi.mw3.model.NewChildContentPanel"/>	
@@ -113,6 +114,8 @@
 	<bean id="EntityDefinition" class="org.uengine.codi.mw3.admin.EntityDefinition"/>		
 	<bean id="EntityQuery" class="org.uengine.codi.mw3.admin.EntityQuery"/>
 	<bean id="EntityData" class="org.uengine.codi.mw3.admin.EntityData"/>
+
+	<bean id="FileWorkItem" class="org.uengine.codi.mw3.model.FileWorkItem"/>
 	
 	<bean id="InstanceViewPublic" class="org.uengine.codi.mw3.model.InstanceViewPublic"/>
 	
