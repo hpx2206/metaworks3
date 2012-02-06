@@ -5,13 +5,9 @@
 		
 		<title>Metaworks3 sample application: FaceBook</title>
 		
+		
 		<script type="text/javascript" src="scripts/jquery.view/jquery-1.6.1.js"></script>
 		<script type="text/javascript" src="scripts/jquery.view/jquerymx-1.0.custom.js"></script>
-
-
-<script type="text/javascript" src="scripts/jquery/jquery-ui-latest.js"></script>
-<script type="text/javascript" src="scripts/jquery/jquery.layout-latest.js"></script>		
-
 		
 		<script type="text/javascript" src="scripts/ejs/ejs_production.js"></script>
 		<script type="text/javascript" src="scripts/ejs/ejs_debugger.js"></script>
@@ -23,22 +19,45 @@
 	  <script type='text/javascript' src='dwr/interface/Metaworks.js'></script> 
 	  <script type="text/javascript" src="scripts/metaworks/metaworks.js"></script>
 
-
-
-<link rel="stylesheet" href="scripts/jquery/jquery-ui-189custom/development-bundle/themes/base/jquery.ui.all.css" />
+	  <script type="text/javascript" src="scripts/jit-yc.js"></script>
 
 	<!--  for source code editor -->
     <script src="metaworks/ace/build/src/ace.js" type="text/javascript" charset="utf-8"></script>
-    <script src="metaworks/ace/build/src/theme-eclipse.js" type="text/javascript" charset="utf-8"></script>
+    <script src="metaworks/ace/build/src/theme-twilight.js" type="text/javascript" charset="utf-8"></script>
     <script src="metaworks/ace/build/src/mode-javascript.js" type="text/javascript" charset="utf-8"></script>
-    <script src="metaworks/ace/build/src/mode-java.js" type="text/javascript" charset="utf-8"></script>
-	
-	    <script type='text/javascript' src='https://www.google.com/jsapi'></script>
-	
+
+	<!-- wave style -->
+	<link rel="stylesheet" href="style/waveStyle/droppable_layout.css" type="text/css" media="screen" />
+	<link rel="stylesheet" href="style/Spacetree.css" type="text/css" media="screen" />
+
+    <!-- for google chart -->
+	  <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+			
 		<script type="text/javascript">
+	      google.load('visualization', '1', {packages:['corechart']});
+	      google.load('visualization', '1', {packages:['gauge']});
 
-			google.load('visualization', '1', {packages:['gauge']});
-
+			var Request = function()
+			{
+			    this.getParameter = function( name )
+			    {
+			        var rtnval = "";
+			        var nowAddress = unescape(location.href);
+			        var parameters = (nowAddress.slice(nowAddress.indexOf("?")+1,nowAddress.length)).split("&");
+	
+			        for(var i = 0 ; i < parameters.length ; i++)
+			        {
+			            var varName = parameters[i].split("=")[0];
+			            if(varName.toUpperCase() == name.toUpperCase())
+			            {
+			                rtnval = parameters[i].split("=")[1];
+			                break;
+			            }
+			        }
+			        return rtnval;
+			    }
+			}
+		
 			var mainPage
 		 	
 			$(document).ready(function() {
@@ -46,7 +65,6 @@
 		 		mw3.setWhen(mw3.WHEN_EDIT);
 			});
 			
-	 		mw3.setWhen(mw3.WHEN_EDIT);
 
 			function locateObject(){
 
@@ -62,10 +80,16 @@
 
 
 			}
+			
+			function init() {
+				var request = new Request();
+				
+				$("#className").val(request.getParameter("className"));
+			}
 		  
 		</script>
 	</head>
-	<body>
+	<body onload="init();locateObject()">
 	
 	
 	<center>
