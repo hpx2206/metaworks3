@@ -103,6 +103,8 @@
 						if(faceHelper){
 							this.faceHelpers[objectId] = faceHelper;
 							
+							this.objects[objectId]['__faceHelper'] = faceHelper;
+							
 							return faceHelper;
 						}
 					}
@@ -768,18 +770,36 @@
 
 				var value = null;
 				
-				var tagId = this.createInputId(objectId);
-				
+
 				var faceHelper = this.getFaceHelper(objectId);
 
 				if(faceHelper && faceHelper.getValue){ //if there's face helper and there's customized getter exists, use it.
 					value = faceHelper.getValue();
 				}else{
-					var inputTag = document.getElementById(tagId);
-					if(inputTag) 
-						value = dwr.util.getValue(tagId); //this would prohibit File object damaged
+					value = this.getObjectFromUI(objectId);
 				}
-								
+				
+				if(!value)
+					value = this.objects[objectId];
+				
+				//sometimes the armed object may be unarmed by the user-defined facehelper.getValue() method
+				if(value && !value.__objectId)
+					this._armObject(objectId, value);
+				
+				return value;
+			}
+			
+			Metaworks3.prototype.getObjectFromUI = function(objectId){
+				var objectId;
+				
+				var value = null;
+				
+				var tagId = this.createInputId(objectId);
+				
+				var inputTag = document.getElementById(tagId);
+				if(inputTag) 
+					value = dwr.util.getValue(tagId); //this would prohibit File object damaged
+
 				var beanPaths = this.beanExpressions[objectId];
 				if(beanPaths)
 				for(var propName in beanPaths){
@@ -845,15 +865,22 @@
 
 				var objId;
 				
-				if(arguments.length == 2){
+				if(arguments.length > 1){
 					objId = svcNameAndMethodName;
 					svcNameAndMethodName = arguments[1];
 				}else if(arguments.length ==1 ){
 					objId = this.targetObjectId;
 				}
 				
+				var getAgain = (arguments.length > 2 ? arguments[2] : true);
+
+				var objectFromUI = this.getObjectFromUI(objId);
 				
-				var object = mw3.getObject(objId);
+				if(objectFromUI.__faceHelper && getAgain)				
+					object = mw3.getObject(objId);
+				else
+					object = objectFromUI;
+				
 				//var thisMetaworks = this;
 				var divId = "objDiv_" + objId;
 				
@@ -1118,7 +1145,7 @@
 			   		if(methodContext.clientSideCall)
 			   			eval("object['"+methodName+"'] = function(){return mw3.clientSideCall(this.__objectId, '"+methodName+"');}");
 			   		else
-			   			eval("object['"+methodName+"'] = function(){return mw3.call(this.__objectId, '"+methodName+"');}");
+			   			eval("object['"+methodName+"'] = function(getAgain){return mw3.call(this.__objectId, '"+methodName+"', getAgain);}");
 			   }
 			   
 			   object['__toString'] = function(){
@@ -1126,7 +1153,7 @@
 				   if(objectMetadata.nameFieldDescriptor!=null){
 					   var nameFieldValue = this[objectMetadata.nameFieldDescriptor.name];
 					   
-					   if(nameFieldValue.__toString){
+					   if(nameFieldValue && nameFieldValue.__toString){
 						   return nameFieldValue.__toString();
 					   }else{
 						   return nameFieldValue;
@@ -1160,10 +1187,10 @@
 						var fieldDescriptor = objectMetadata.fieldDescriptors[i];
 						if(fieldDescriptor.attributes && fieldDescriptor.attributes['autowiredtoclient']){ //means this field never have change to registered or autowired since it is not called by ObjectFace.ejs or custom faces.
 							var fieldValue = value[fieldDescriptor.name];
-	
-							var objectMetadata = this.getMetadata(fieldValue.__className); 
-							
+
 							if(fieldValue && fieldValue.__className){
+								var objectMetadata = this.getMetadata(fieldValue.__className); 
+								
 								for(var i=0; i<objectMetadata.superClasses.length; i++){
 									var className = objectMetadata.superClasses[i];
 									
@@ -1286,6 +1313,7 @@
 				var face;
 				
 				var value = this.object[this.fieldDescriptor.name];
+				
 				var className = value ? value.__className : null;
 				
 				if(value!=null && className==null){
@@ -1316,10 +1344,13 @@
 					when = context.when
 				}
 				
+				var designMode = (when == "__design");
+				var designModeDepth2 = (when == "__design-depth2");
+				
 				if(this.fieldDescriptor.attributes){
 					
 					if(this.fieldDescriptor.attributes['resource']){
-						if(when == "design"){
+						if(designModeDepth2){
 							when = mw3.WHEN_EDIT; //TODO: should not work for inner objects recursively.
 						}else{
 							when = mw3.WHEN_VIEW;
@@ -1332,7 +1363,12 @@
 						when = mw3.WHEN_VIEW;
 				}
 				
-				html = mw3.locateObject(value, face, null, {when: when, descriptor: this.fieldDescriptor});
+				if(!designMode) //means general mode
+					html = mw3.locateObject(value, face, null, {when: when, descriptor: this.fieldDescriptor});
+				else if(!designModeDepth2){ //means just design mode
+					html = mw3.locateObject(value, face, null, {when: "__design-depth2", descriptor: this.fieldDescriptor});
+				}else // means this fields is within the designee 
+					html = this.fieldDescriptor.displayName + " Here.";
 				
 //				mw3.setContext(oldContext);
 				
