@@ -8,9 +8,11 @@ public class NewInstancePanel extends ContentWindow{
 	public NewInstancePanel() throws Exception{
 		processDefinitions = new ProcessDefinition();
 		processDefinitions.setParentFolder(new Long(-1));
-		processDefinitions = processDefinitions.findAll();
-		
 		processDefinitions.getMetaworksContext().setWhen("newInstance");
+
+		processDefinitions = processDefinitions.findAll();
+		processDefinitions.getMetaworksContext().setWhen("newInstance");
+		
 	}
 	
 	IProcessDefinition processDefinitions;	

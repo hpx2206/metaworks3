@@ -19,7 +19,16 @@ public class CrowdSourcer {
 		public void setInstanceId(String instanceId) {
 			this.instanceId = instanceId;
 		}
+		
+	String message;
 			
+		public String getMessage() {
+			return message;
+		}
+		public void setMessage(String message) {
+			this.message = message;
+		}
+
 	String[] postIds;
 		public String[] getPostIds() {
 			return postIds;
@@ -36,8 +45,8 @@ public class CrowdSourcer {
 			this.open = open;
 		}
 		
-	@ServiceMethod(target=ServiceMethodContext.TARGET_NONE, callByContent=true)
-	public CrowdSourcer crowdSourcing() throws Exception{
+	@ServiceMethod(callByContent=true)
+	public void crowdSourcing() throws Exception{
 		try{
 			ProcessInstance instance = processManager.getProcessInstance(getInstanceId());
 		
@@ -58,16 +67,16 @@ public class CrowdSourcer {
 			processManager.remove();
 		}
 		
-		return this;
+		//return this;
 	}		
 	
 	Followers followers;
-	public Followers getFollowers() {
-		return followers;
-	}
-	public void setFollowers(Followers followers) {
-		this.followers = followers;
-	}
+		public Followers getFollowers() {
+			return followers;
+		}
+		public void setFollowers(Followers followers) {
+			this.followers = followers;
+		}
 
 	@Autowired
 	ProcessManagerRemote processManager;

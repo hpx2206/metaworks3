@@ -162,9 +162,9 @@ public class CodiDwrServlet extends TransactionalDwrServlet{
 
 		cl.setCompilerOptions(
 				new String[]{
-//						"-classpath", "/Users/jyjang/Documents/workspace/ProcessCodi_metaworks3/WebContent/WEB-INF/lib/metaworks3.jar",
-						"-classpath", "/Users/jyjang/Documents/workspace/ProcessCodi_metaworks3/WebContent/WEB-INF/lib/metaworks3.jar:/Users/jyjang/Documents/workspace/ProcessCodi_metaworks3/WebContent/WEB-INF/lib/mongo-2.7.2.jar"		
-				});//sbClasspath.toString()});
+//						"-classpath", "/Users/jyjang/Documents/workspace/ProcessCodi_metaworks3/WebContent/WEB-INF/lib/metaworks3.jar:/Users/jyjang/Documents/workspace/ProcessCodi_metaworks3/WebContent/WEB-INF/lib/mongo-2.7.2.jar"		
+						"-classpath", sbClasspath.toString()
+				});
 
 		
 		cl.setSourcePath(new File[]{new File("/Users/jyjang/javasources/")});

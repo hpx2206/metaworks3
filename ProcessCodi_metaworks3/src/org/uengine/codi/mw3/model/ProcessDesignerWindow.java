@@ -9,6 +9,7 @@ public class ProcessDesignerWindow extends ContentWindow {
 
 	@Autowired
 	ProcessDesignerContentPanel processDesignerContentPanel;	
+	@Autowired
 		public ProcessDesignerContentPanel getProcessDesignerContentPanel() {
 			return processDesignerContentPanel;
 		}
@@ -17,7 +18,7 @@ public class ProcessDesignerWindow extends ContentWindow {
 		}
 
 	public void load(String defId) throws Exception {
-		processDesignerContentPanel = new ProcessDesignerContentPanel();
+		//processDesignerContentPanel = new ProcessDesignerContentPanel();
 		processDesignerContentPanel.load(defId);
 	}
 	

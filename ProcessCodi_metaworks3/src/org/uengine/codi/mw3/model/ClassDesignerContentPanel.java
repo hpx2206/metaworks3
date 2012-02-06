@@ -18,7 +18,7 @@ public class ClassDesignerContentPanel extends ContentWindow {
 			this.classDefinition = classDefinition;
 		}
 
-	public void newClass(String parentFoler) throws Exception{
+	public void newClass(String parentFoler){
 		classDefinition = new ClassDefinition();
 		classDefinition.setParentFolder(parentFoler);
 	}

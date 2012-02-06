@@ -7,6 +7,7 @@ import org.metaworks.annotation.Range;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
 import org.metaworks.example.ide.SourceCode;
+import org.metaworks.website.MetaworksFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.persistence.dao.DAOFactory;
 import org.uengine.persistence.dao.UniqueKeyGenerator;
@@ -97,6 +98,14 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		public void setEndpoint(String endpoint) {
 			this.endpoint = endpoint;
 		}
+		
+	MetaworksFile file;
+		public MetaworksFile getFile() {
+			return file;
+		}
+		public void setFile(MetaworksFile file) {
+			this.file = file;
+		}
 
 	public void like() throws Exception{
 		
@@ -165,16 +174,14 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	ProcessManagerRemote codiPmSVC; //this is needed in order to give to WorkItemHandler due to Spring's propagated injection with Autowired is not working now
 
 	
+	String type;
+		public String getType() {
+			return type;
+		}
 	
-	@Override
-	public String getType() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setType(String type) {
-	}
+		public void setType(String type) {
+			this.type = type;
+		}
 
 	@Override
 	public IWorkItem newSchedule() {
@@ -196,7 +203,10 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	@Override
 	public IWorkItem newFile() {
 		// TODO Auto-generated method stub
-		return new FileWorkItem();
+		FileWorkItem fwi = new FileWorkItem();
+		fwi.setInstId(getInstId());
+		
+		return fwi;
 	}
 
 

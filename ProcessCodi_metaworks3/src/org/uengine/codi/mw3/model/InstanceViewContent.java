@@ -1,15 +1,17 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.annotation.Face;
-import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.dao.Database;
+import org.metaworks.annotation.Name;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.processmanager.ProcessManagerRemote;
 
 @Face(ejsPath="genericfaces/Window.ejs", displayName="InstanceViewContent", options={"hideLabels"}, values={"true"})
 public class InstanceViewContent extends ContentWindow {
 
+	//ProcessManagerRemote processManager;	
+	//InstanceView instanceView;	
+
 	@Autowired
+	@Name
 	InstanceView instanceView;			
 		public InstanceView getInstanceView() {
 			return instanceView;
@@ -19,6 +21,16 @@ public class InstanceViewContent extends ContentWindow {
 			this.instanceView = instanceView;
 		}
 	
+		
+	String instanceName;
+	@Name
+		public String getInstanceName() {
+			return instanceName;
+		}
+		public void setInstanceName(String instanceName) {
+			this.instanceName = instanceName;
+		}
+
 	public InstanceViewContent(){
 		
 	}
@@ -28,6 +40,13 @@ public class InstanceViewContent extends ContentWindow {
 		//instanceView.processManager = this.processManager;
 		
 		instanceView.load(instance);
+
+		setInstanceName(instanceView.getInstanceName());
+//		if(instance instanceof IInstance){
+//			setInstanceName(instance.getName());
+//			
+//		}else
+//			setInstanceName(((Instance)instance).databaseMe().getName());
 	}	
 
 }

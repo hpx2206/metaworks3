@@ -159,7 +159,12 @@ public class ProcessDefinition extends Database<IProcessDefinition> implements I
 	}
 
 	public IProcessDefinition findAll() throws Exception{
-		IProcessDefinition procDefs = sql("select * from bpm_procdef where isdeleted=0 and parentfolder=?parentfolder");// where comcode=?comcode");
+		
+		String whereClause = "";
+		if(getMetaworksContext()!=null && "newInstance".equals(getMetaworksContext().getWhen()))
+			whereClause = " and (objType='process' or objType='folder')";
+		
+		IProcessDefinition procDefs = sql("select * from bpm_procdef where isdeleted=0 and parentfolder=?parentfolder" + whereClause);// where comcode=?comcode");
 		//procDefs.s  //TODO: need to narrow by comcode; comcode may be obtained by MetaworksContext 'who' => multi-tenancy issue
 		procDefs.setParentFolder(getParentFolder());
 		procDefs.select();
@@ -174,6 +179,8 @@ public class ProcessDefinition extends Database<IProcessDefinition> implements I
 			ProcessDefinition child = new ProcessDefinition();
 			child.setParentFolder(getDefId());
 			setIsFolder(true);
+			child.setMetaworksContext(getMetaworksContext());
+			
 			setChilds(child.findAll()); //this lets drill down
 			getChilds().setMetaworksContext(getMetaworksContext());
 		//}
@@ -235,22 +242,19 @@ public class ProcessDefinition extends Database<IProcessDefinition> implements I
 	
 				return formDesigner;
 			}else if("process".equals(objType)){
-				ProcessDesignerWindow processDesigner = new ProcessDesignerWindow();
 				processDesigner.load(databaseMe().getDefId().toString());
 				
 				return processDesigner;
 				
 			}else if("class".equals(objType)){
-				ClassDesignerContentPanel classDesigner = classDesignerContentPanel;//new ClassDesignerContentPanel();
-				classDesigner.load(databaseMe().getDefId().toString());
+				classDesignerContentPanel.load(databaseMe().getDefId().toString());
 				
-				return classDesigner;
+				return classDesignerContentPanel;
 				
 			}else if("entity".equals(objType)){
-				EntityDesignerWindow entityDesigner = entityDesignerWindow;//new ClassDesignerContentPanel();
-				entityDesigner.load(databaseMe().getDefId().toString());
+				entityDesignerWindow.load(databaseMe().getDefId().toString());
 				
-				return entityDesigner;		
+				return entityDesignerWindow;		
 			}
 		}finally{
 			codiPmSVC.remove();

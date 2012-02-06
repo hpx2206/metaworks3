@@ -8,6 +8,7 @@ import javax.annotation.PostConstruct;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Id;
+import org.metaworks.annotation.Name;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.TransactionContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,18 @@ public class InstanceView {
 		
 	}
 	
+	String instanceName;
+		@Name
+		public String getInstanceName() {
+			return instanceName;
+		}
+		public void setInstanceName(String instanceName) {
+			this.instanceName = instanceName;
+		}
+
 	protected void loadDefault() throws Exception{
+		ProcessInstance instance = processManager.getProcessInstance(getInstanceId());
+		
 		
 		followers = new Followers();
 		followers.setInstanceId(instanceId);
@@ -55,12 +67,19 @@ public class InstanceView {
 			
 			newItem.setWriter(loginUser);
 		}
+
+		processInstanceMonitor.setInstanceId(instanceId);
+
 		
+		setInstanceName(instance.getName());
+
 		crowdSourcer = new CrowdSourcer();
 		crowdSourcer.setInstanceId(getInstanceId());
 		crowdSourcer.followers = this.followers;
+		crowdSourcer.setMessage("'" + instance.getName() + "' 프로세스에 참여자로 등록했습니다: ");
 		
-		ProcessInstance instance = processManager.getProcessInstance(getInstanceId());
+
+		
 		
 		if(instance.getProperty("", "facebook_postIds") != null){
 			String[] postIds = (String[])instance.getProperty("", "facebook_postIds");
@@ -127,7 +146,9 @@ public class InstanceView {
 			this.threadPosting = threadPosting;
 		}
 
+	@Autowired
 	ProcessInstanceMonitor processInstanceMonitor;
+	@Autowired
 		public ProcessInstanceMonitor getProcessInstanceMonitor() {
 			return processInstanceMonitor;
 		}
@@ -170,11 +191,13 @@ public class InstanceView {
 	}
 	
 	@ServiceMethod 
-	public void monitor() throws Exception{
-		processInstanceMonitor = new ProcessInstanceMonitor();
+	public ProcessInstanceMonitor monitor() throws Exception{
+		//processInstanceMonitor = new ProcessInstanceMonitor();
 		processInstanceMonitor.setInstanceId(instanceId);
-
-		loadDefault();
+		processInstanceMonitor.load();
+		//loadDefault();
+		
+		return processInstanceMonitor;
 	}
 
 	@ServiceMethod

@@ -1,14 +1,14 @@
 package org.uengine.codi.mw3.model;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import javax.tools.JavaFileObject;
@@ -17,22 +17,19 @@ import javax.tools.JavaFileObject.Kind;
 
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
-import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.example.ide.CodeAssist;
-import org.metaworks.example.ide.CodeAssister;
 import org.metaworks.example.ide.SourceCode;
 import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.CodiMetaworksRemoteService;
 import org.uengine.codi.mw3.FileInputJavaFileManager;
-import org.uengine.codi.mw3.admin.ClassDefinition;
 import org.uengine.codi.mw3.admin.ClassField;
-import org.uengine.kernel.GlobalContext;
+import org.uengine.codi.mw3.admin.ClassModeler;
 import org.uengine.util.UEngineUtil;
-import org.uengine.util.export.DefinitionArchive;
-import org.uengine.util.export.UEngineArchive;
 
 public class JavaSourceCode extends SourceCode {
+
+	static Map<String, Map> packageNames = new HashMap<String, Map>(); //cached for more faster code assistance. may need to stored separately with tenants. (may naturally done because of classloader is different with web-contexts)
 
 	@ServiceMethod(callByContent = true, target = ServiceMethodContext.TARGET_STICK)
 	public CodeAssist requestAssist() {
@@ -57,6 +54,7 @@ public class JavaSourceCode extends SourceCode {
 			String fullTypeName = null;
 			String[] lines = getCode().split("\n");
 			
+			if(getCursorPosition().getRow() > 0)
 			for(int i = getCursorPosition().getRow(); i >= 0 && fullTypeName==null; i--){
 				String line = lines[i];
 				
@@ -65,18 +63,21 @@ public class JavaSourceCode extends SourceCode {
 				if(typeName == null){ //if typeName is not set, find the expression's type first.
 					if(!line.trim().startsWith(expression) && whereExp > 0){
 			
-						line = line.trim().substring(0, whereExp - 2);
+						line = line.substring(0, whereExp).trim();
 						
-						int j = whereExp-3;
+						int j=line.length()-1;
 						for(; j>=0; j--){
 							char charAt = line.charAt(j);
 							if(!((charAt > 'A' && charAt <'z') || (charAt > '1' && charAt <'9')))
 								break;
 						}
 						
-						typeName = line.substring(j + 1);
+						typeName = line.substring(j + 1).trim();
 						
-						if(typeName.indexOf('.') > -1){
+						if(typeName.equals("return"))
+							typeName = null; //ignores 'return' is recognized as typeName
+						
+						if(typeName!=null && typeName.indexOf('.') > -1){
 							fullTypeName = typeName;
 						}
 					}
@@ -84,7 +85,8 @@ public class JavaSourceCode extends SourceCode {
 					line = line.trim();
 					if(line.startsWith("import ") && line.endsWith("." + typeName + ";")){
 						
-						fullTypeName = line.substring(line.indexOf(' '));
+						fullTypeName = line.substring(line.indexOf(' '), line.length()-1).trim();
+						
 					}
 					
 				}
@@ -109,11 +111,13 @@ public class JavaSourceCode extends SourceCode {
 					
 					StringBuffer paramStmt = new StringBuffer("(");
 					int index = 0;
+					String sep = "";
 					for(Class paramCls : method.getParameterTypes()){
 						String clsNameOnly = UEngineUtil.getClassNameOnly(paramCls);
-						clsNameOnly = clsNameOnly.substring(0, 1).toLowerCase() + clsNameOnly.substring(1, clsNameOnly.length());
+						clsNameOnly = sep + clsNameOnly.substring(0, 1).toLowerCase() + clsNameOnly.substring(1, clsNameOnly.length());
 						
 						paramStmt.append(clsNameOnly);
+						sep = ", ";
 					}
 					paramStmt.append(")");
 					
@@ -124,44 +128,63 @@ public class JavaSourceCode extends SourceCode {
 				return codeAssist;
 				
 			}catch(Exception e){
-				
+				e.printStackTrace();
 			}
+			
+			
+			//////// case that importing package name has been requested.
 			
 			if(getLineAssistRequested().trim().startsWith("import "))
 			try {
 				
-
 				
 				URLClassLoader classLoader = (URLClassLoader) CodiMetaworksRemoteService.class.getClassLoader();
 				URL urls[] = classLoader.getURLs();
 				StringBuffer sbClasspath = new StringBuffer();
 				
+		    	if(packageNames==null)
 				for(URL url : urls){
-					net.sf.jazzlib.ZipInputStream zipIn = new net.sf.jazzlib.ZipInputStream(url.openStream());
-					net.sf.jazzlib.ZipEntry zipEntry;
-
-				    try {
-				    	while((zipEntry = zipIn.getNextEntry()) != null) {
-				    		if(zipEntry.getName().startsWith(expression)){
-								String clsName = zipEntry.getName();
-								
-								if(clsName.startsWith(expression) && clsName.endsWith(".class")){
-									clsName = clsName.substring(expression.length() + 1, clsName.length() - 6);
-								}
-								
-								codeAssist.getAssistances().add(clsName);
-				    			
-				    		}
-				    	} // end while
-
-				    } catch (Exception e) {
-				    	e.printStackTrace();
-				    } finally{
-						try{zipIn.close();}catch(Exception ex){}   
-				    }
+					
+					if(url.getFile().endsWith(".jar") || url.getFile().endsWith(".zip") ){
+					
+						net.sf.jazzlib.ZipInputStream zipIn = new net.sf.jazzlib.ZipInputStream(url.openStream());
+						net.sf.jazzlib.ZipEntry zipEntry;
+	
+					    try {
+					    	
+					    	while((zipEntry = zipIn.getNextEntry()) != null) {
+					    		if(zipEntry.getName().startsWith(expression)){
+									String clsName = zipEntry.getName();
+									
+									if(clsName.endsWith(".class")){
+										clsName = clsName.substring(0, clsName.length() - 6);
+										String[] parts = clsName.split("/");
+										if(parts.length > 1){
+											if(!packageNames.containsKey(expression))
+												packageNames.put(expression, new HashMap());
+											
+											packageNames.get(expression).put(parts[0], parts[0]);
+										}
+									}
+									
+					    		}
+					    	} // end while
+	
+					    } catch (Exception e) {
+					    	new Exception(url.getFile() + ": error when to parse url ", e).printStackTrace();
+					    } finally{
+							try{zipIn.close();}catch(Exception ex){}   
+					    }
+					}
 				}
 
+		    	if(packageNames.containsKey(expression)){
+		    		Map<String, String> packagesNamePerPrefix = packageNames.get(expression);
 
+		    		for(String packageName : packagesNamePerPrefix.keySet()){
+						codeAssist.getAssistances().add(packageName);
+					}
+				}
 				
 				
 				Iterable<JavaFileObject> javaObjects;
@@ -179,16 +202,16 @@ public class JavaSourceCode extends SourceCode {
 					codeAssist.getAssistances().add(clsName);
 				}
 	
-				javaObjects = fileManager.list(StandardLocation.CLASS_PATH, expression, kinds, true);
-				for(JavaFileObject javaObject : javaObjects){
-					String clsName = javaObject.toUri().getPath().split("!")[1].replace('/', '.');
-					
-					if(clsName.startsWith(expression)){
-						clsName = clsName.substring(expression.length() + 1, clsName.length() - 6);
-					}
-					
-					codeAssist.getAssistances().add(clsName);
-				}
+//				javaObjects = fileManager.list(StandardLocation.CLASS_PATH, expression, kinds, true);
+//				for(JavaFileObject javaObject : javaObjects){
+//					String clsName = javaObject.toUri().getPath().split("!")[1].replace('/', '.');
+//					
+//					if(clsName.startsWith(expression)){
+//						clsName = clsName.substring(expression.length() + 1, clsName.length() - 6);
+//					}
+//					
+//					codeAssist.getAssistances().add(clsName);
+//				}
 				
 	//			javaObjects = ccl.getJavaFileManager().list(StandardLocation.CLASS_OUTPUT, getLineAssistRequested(), kinds, true);
 	//			for(JavaFileObject javaObject : javaObjects){
@@ -212,7 +235,7 @@ public class JavaSourceCode extends SourceCode {
 			}
 		}
 
-		ArrayList<ClassField> classFields = classDefinition.getClassFields();
+		ArrayList<ClassField> classFields = classModeler.getClassFields();
 		if(classFields!=null)
 		for (ClassField field : classFields) {
 			codeAssist.getAssistances().add(field.getFieldName());
@@ -222,6 +245,6 @@ public class JavaSourceCode extends SourceCode {
 	}
 
 	@AutowiredFromClient
-	public ClassDefinition classDefinition;
+	public ClassModeler classModeler;
 
 }

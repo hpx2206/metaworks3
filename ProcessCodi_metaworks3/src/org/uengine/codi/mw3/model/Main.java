@@ -4,7 +4,9 @@ import org.metaworks.annotation.AutowiredToClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
+import org.metaworks.annotation.Resource;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.website.MetaworksFile;
 import org.uengine.codi.mw3.admin.Admin;
 
 public class Main {
@@ -27,6 +29,8 @@ public class Main {
 		this.contactWindow = new ContactWindow(login);
 				
 		this.instanceListWindow = new InstanceListWindow(session);
+		
+		this.logo = new Logo();
 	}
 	
 	ILogin login;
@@ -82,7 +86,18 @@ public class Main {
 		public void setInstanceListWindow(InstanceListWindow instanceListWindow) {
 			this.instanceListWindow = instanceListWindow;
 		}
+		
+		
+	Logo logo;
+		
+		public Logo getLogo() {
+			return logo;
+		}
 	
+		public void setLogo(Logo logo) {
+			this.logo = logo;
+		}
+
 
 	@ServiceMethod
 	public ILogin logout(){
