@@ -17,7 +17,7 @@ import org.metaworks.annotation.ServiceMethod;
 
 public class MetaworksFile {
 	
-	FileTransfer fileTransfer;
+	transient FileTransfer fileTransfer;
 	
 		public FileTransfer getFileTransfer() {
 			return fileTransfer;
@@ -68,10 +68,18 @@ public class MetaworksFile {
 		return image;
 	}
 
-//	@ServiceMethod(callByContent=true)
+	/**
+	 * You should call this method in the container as well. Normally you may call this method just before the database insertion to 
+	 * save the file and set the properties as well when you have set the @ORMapping annotation to map the file location and mimetype
+	 * so that your DAO saves it. 
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 * @throws Exception
+	 */
+	@ServiceMethod(callByContent=true)
 	public void upload() throws FileNotFoundException, IOException, Exception{
 		
-		if(fileTransfer==null) 
+		if(fileTransfer==null && fileTransfer.getFilename()!=null && fileTransfer.getFilename().length() > 0) 
 			throw new Exception("No file attached");
 		
 		String prefix = overrideUploadPathPrefix();
@@ -84,6 +92,8 @@ public class MetaworksFile {
 		
 		setUploadedPath(uploadPath); //only when the file has been successfully uploaded, this value is set, that means your can download later
 		setMimeType(fileTransfer.getMimeType());
+		
+		fileTransfer = null; //ensure to clear the data
 	}
 
 	// set parted Stored file path by MimeType
