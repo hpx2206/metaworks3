@@ -55,7 +55,7 @@ public class MetaworksConverter extends BeanConverter{
 			if(paramType == Object.class){
 			 	String value = data.getValue();
 			 	
-			 	if(value.length() >= 2){
+			 	if(value.length() >= 2 && !("null".equals(value))){
 				    value = value.substring(1, value.length() - 1);
 	
 				    Map<String, String> tokens = extractInboundTokens(paramType, value);
