@@ -47,7 +47,7 @@
 		<!--
 		<antcall target="copylib"/>
 		-->
-		
+		<antcall target="jnlp"/>
 		<copy file="${was.home}/webapps/uengine-web/processmanager/signeduengine_settings.jar" todir="${processcodi.home}/WebContent/processmanager"/>
 		
 	</target>
