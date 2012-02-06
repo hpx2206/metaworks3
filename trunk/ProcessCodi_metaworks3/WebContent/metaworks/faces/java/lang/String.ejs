@@ -10,7 +10,7 @@
 //	if(descriptor.name=="text")
 //		mw3.debug(descriptor);
 %>
-	 <input id="<%=mw3.createInputId(objectId)%>" value="<%=value%>" <%=descriptor.attributes && descriptor.attributes.size ? " size=" + descriptor.attributes.size : ""%>>
+	 <input id="<%=mw3.createInputId(objectId)%>" value="<%=value%>" <%=descriptor.attributes && descriptor.attributes.size ? " size=" + descriptor.attributes.size : ""%> style="border:1px solid #ccd; none;background:transparent">
 	
 <%
 
