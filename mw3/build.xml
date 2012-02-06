@@ -11,6 +11,11 @@
 	<property name="processcodi.home" value="${env.PROCESSCODI_HOME}"/>
 	
 	<target name="apply">
+		<mkdir dir="${was.home}/webapps/uengine-web"/>
+		<mkdir dir="${was.home}/webapps/uengine-web/WEB-INF"/>
+		<mkdir dir="${was.home}/webapps/uengine-web/WEB-INF/lib"/>
+		<mkdir dir="${was.home}/webapps/uengine-web/processmanager"/>
+		
 		<jar jarfile="./build/metaworks3.jar">
 			<fileset dir="./build/classes">
 		  		<include name="**/*.*"/>
