@@ -342,15 +342,18 @@ public class WebObjectType{
 			if(getAnnotationDeeply(actCls, iDAOClass, fd.getName(), NonEditable.class)!=null)
 				fd.setAttribute("nonEditable", new Boolean(true));
 			
-			if(getAnnotationDeeply(actCls, iDAOClass, fd.getName(), Resource.class)!=null){
-				
+			Resource resourceAnnotation = (Resource) getAnnotationDeeply(actCls, iDAOClass, fd.getName(), Resource.class);
+			if(resourceAnnotation !=null){
+
+				XStream xstream = new XStream(/*new DomDriver()*/);
+
 				Object resourceForThisField = null;
 				if(resource == null){
 					InputStream is = null;
 					try{
 						is = Thread.currentThread().getContextClassLoader().getResourceAsStream(actCls.getName() + ".xml");
 						
-						XStream xstream = new XStream(/*new DomDriver()*/);
+//						XStream xstream = new XStream(/*new DomDriver()*/);
 						resource = xstream.fromXML(is);
 					
 						ObjectInstance rscInst = (ObjectInstance) objectType.createInstance();
@@ -360,6 +363,13 @@ public class WebObjectType{
 					}catch(Exception e){
 						
 					}finally{try{is.close();}catch(Exception ex){}}
+				}
+				
+				if(resourceForThisField == null && resourceAnnotation.def().length() > 0){
+					resourceForThisField = resourceAnnotation.def();
+					if(resourceAnnotation.def().startsWith("<") && resourceAnnotation.def().endsWith(">")){
+						resourceForThisField = xstream.fromXML(resourceAnnotation.def());
+					}
 				}
 				
 				if(resourceForThisField == null)
