@@ -8,11 +8,28 @@
 	}
 	
 	if (value != null){
+	
+		var objectName; 
+
+		if(value.__toString != null){
+			objectName = value.__toString();
+		}
+		
+		if(!objectName){
+			objectName = objectMetadata.displayName;
+		}
+		
+		var resourceName = null;
+		if(objectName.indexOf('$')==0){
+//		mw3.debug(resourceName);
+			resourceName = objectName.substring(1);
+		}
+	
 %>
 
 
 			<div id="sm_<%=objectId%>" style="margin-top:12px; padding:0px;  display:none; float:left; width:160px; position:relative;">
-			    <div class="boxtopleft"><span class="boxtopright"><%=objectMetadata.displayName%></span></div>
+			    <div class="boxtopleft"><span class="boxtopright"><%=objectName%></span></div>
 			    <div class="boxmiddleright">
 			        <div class="boxmiddleleft">
 			            <div class="togglebtnmax" onclick="mw3.getFaceHelper('<%=objectId%>').resume('','')"></div>
@@ -30,7 +47,13 @@
 		
             <div class="boxtopleft">
             	<span class="boxtopright">
-            		<div id="navigationTitle"><%=objectMetadata.displayName%></div>
+            		<div id="navigationTitle">
+            			<%if(resourceName){%>
+            				<%=resources[resourceName].here()%>
+            			<%}else{%>
+            				<%=objectName%>
+            			<%}%>
+            		</div>
             		<div id="loader_<%=objectId%>" class="loadingarea" style="display: none; "><img src="/uengine-web/images/waveStyle/ajax-loader.gif" border="0"></div>
             		<div class="togglebtnmini" onclick="mw3.getFaceHelper('<%=objectId%>').minimize('','')"></div>
             	</span>
@@ -55,7 +78,7 @@
 		for (var i=0; i<objectMetadata.fieldDescriptors.length; i++){						  
 			var fd = objectMetadata.fieldDescriptors[i];
 		  	
-		  	if(fd.attributes && fd.attributes['hidden']) continue;
+		  	if(fd.attributes && (fd.attributes['hidden'] || fd.attributes['resource'])) continue;
 		  	if(fd.name == 'metaworksContext') continue;
 		  	
 		  	var fieldValue = value[fd.name];
