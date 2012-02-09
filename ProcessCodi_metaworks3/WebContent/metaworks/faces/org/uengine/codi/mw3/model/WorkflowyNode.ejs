@@ -7,8 +7,6 @@
 		if(value.parentNode!=null){
 %>					
 		<li>
-			부모:<%=value.parentNode!=null ? value.parentNode.id : "-" %>
-			나:<%=value.id%>
 			<input type="text" id="wfnode_content_<%=objectId%>" value="<%=value.content%>" onkeydown="mw3.getFaceHelper('<%=objectId%>').press(this)">
 <%	
 		}
@@ -23,6 +21,12 @@
 %>
 		</li>
 <%		
+		}else{
+%>
+		<span style="padding-left:40px">		
+			<%=methods.newNode.here()%>
+		</span>
+<%
 		}
 %>		
 	</ul>

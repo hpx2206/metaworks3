@@ -4,8 +4,18 @@ var org_uengine_codi_mw3_model_WorkflowyNode = function(objectId, className){
 	
 	var object = mw3.objects[this.objectId];
 
-	if(object.metaworksContext.when == mw3.WHEN_EDIT)
+	if(object.metaworksContext.when == mw3.WHEN_EDIT){
 		$('#wfnode_content_' + this.objectId).focus();
+		console.debug("mw3.how : " + object.metaworksContext.how);
+		console.debug("content : " + object.content);
+		console.debug("contentNext : " + object.contentNext);
+		
+		var how = object.metaworksContext.how;
+		
+		if(how == "add"){
+			$('#wfnode_content_' + this.objectId).selectRange(0,0);
+		}
+	}
 	
 	$('#wfnode_content_' + this.objectId).blur(function() {
 		var content = $("#wfnode_content_" + object.__objectId).val();
@@ -41,10 +51,17 @@ org_uengine_codi_mw3_model_WorkflowyNode.prototype.up = function(){
 		   searchObj = searchObj.find('input:first');
 		   
 		   searchObj.focus();
-/*		   searchObj.selectionStart = 0;
-		   searchObj.selectionEnd = 0;
-		   searchObj.focus();*/
+		   searchObj.selectRange(0,0);
 	   }
+}
+
+org_uengine_codi_mw3_model_WorkflowyNode.prototype.getValue = function(){
+	
+	var object = mw3.objects[this.objectId];
+	
+	object.content = $('#wfnode_content_' + this.objectId).val();
+		
+	return object;
 }
 
 org_uengine_codi_mw3_model_WorkflowyNode.prototype.down = function(){
@@ -55,24 +72,17 @@ org_uengine_codi_mw3_model_WorkflowyNode.prototype.down = function(){
 	   }
 	   
 	   if(searchObj.attr('id').indexOf('info_') == 0){
+		   while(!searchObj.next().length)
+			   searchObj = searchObj.parent().parent().parent().parent().next();
+			   
 		   searchObj = searchObj.next();
-		   
-		   if(!searchObj.length){			   
-			   searchObj = $('#objDiv_' + this.objectId).parent().parent().parent().parent().next();
-		   }
 	   }
 	   
 	   if(searchObj.length){
-		   if(searchObj.attr('id').indexOf('info_') == 0){
-			   searchObj = searchObj.next();
-		   }
-			  
 		   searchObj = searchObj.find('input:first');
 		   
 		   searchObj.focus();
-/*		   searchObj.selectionStart = 0;
-		   searchObj.selectionEnd = 0;
-		   searchObj.focus();*/
+		   searchObj.selectRange(0,0);
 	   }		   
 }
 
@@ -81,7 +91,7 @@ org_uengine_codi_mw3_model_WorkflowyNode.prototype.press = function(inputObj){
 	var e = window.event;	
 	var object = mw3.objects[this.objectId];
 	
-	console.debug(e.keyCode);
+	//console.debug(e.keyCode);
 	switch (e.keyCode) {
 	  case 37   :   // left
 		   var t = inputObj.value, s = mw3.getFaceHelper(this.objectId).getSelectionStart(inputObj), e = mw3.getFaceHelper(this.objectId).getSelectionEnd(inputObj)
@@ -126,21 +136,47 @@ org_uengine_codi_mw3_model_WorkflowyNode.prototype.press = function(inputObj){
 	  case 13    :	// enter
 		   var t = inputObj.value, s = mw3.getFaceHelper(this.objectId).getSelectionStart(inputObj), e = mw3.getFaceHelper(this.objectId).getSelectionEnd(inputObj)
 		   
-		   console.debug(inputObj.getAttribute('maxLength'));
-		   
 		   if(s == t.length){
 			   object.content = t;
 			   object.contentNext = "";
+	       }else if(s == 0){
+	    	   object.content = "";
+	    	   object.contentNext = t.substring(s).replace(/ /g, '\xa0') || '\xa0';		    	  			   
 		   }else{
 			   object.content = t.substring(0, s).replace(/ /g, '\xa0') || '\xa0';
 			   object.contentNext = t.substring(s).replace(/ /g, '\xa0') || '\xa0';
 		   }
 		   
+		   inputObj.value = object.content;
+		   
 		   window.event.returnValue = false;
 		   		   
 		   mw3.call(this.objectId, 'add');
 		   
-		   break;		  
+		   break;
+	  case 8     :
+		  var t = inputObj.value, s = mw3.getFaceHelper(this.objectId).getSelectionStart(inputObj), e = mw3.getFaceHelper(this.objectId).getSelectionEnd(inputObj)
+		  
+		  if(s == e && s == 0){
+		      if(s == t.length){
+		    	  object.content = t;
+		    	  object.contentNext = "";
+		      }else if(s == 0){
+		    	  object.content = "";
+		    	  object.contentNext = t.substring(s).replace(/ /g, '\xa0') || '\xa0';		    	  
+		      }else{
+		    	  object.content = t.substring(0, s).replace(/ /g, '\xa0') || '\xa0';
+		    	  object.contentNext = t.substring(s).replace(/ /g, '\xa0') || '\xa0';
+		      }
+			  		      		      
+			  inputObj.value = object.content;
+	
+			  window.event.returnValue = false;
+	   		   
+			  mw3.call(this.objectId, 'remove');
+		  }
+		  
+		  break;
 	  default    :
 	        break;
 	}
@@ -161,4 +197,12 @@ org_uengine_codi_mw3_model_WorkflowyNode.prototype.getSelectionEnd = function(o)
 		r.moveStart('character', -o.value.length)
 		return r.text.length
 	} else return o.selectionEnd
+}
+
+org_uengine_codi_mw3_model_WorkflowyNode.prototype.startLoading = function(){
+	console.debug("startLoading");
+}
+
+org_uengine_codi_mw3_model_WorkflowyNode.prototype.showStatus = function(){
+	console.debug("showStatus");	
 }
