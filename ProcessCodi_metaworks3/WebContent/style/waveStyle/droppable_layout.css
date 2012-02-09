@@ -84,6 +84,10 @@ ul, ol , li , dl ,dd ,dt{list-style-type:none; margin:0px; padding:0px;}
 .workflowy ul {padding-left:40px; list-style-type: disc;}
 .workflowy li { list-style-type: disc;}
 
+.ui-state-active {border-bottom:2px dotted #ccc; background:#EFEFEF;}
+
+#moveIcon{display:inline;}
+
 /* image */
 img {border:0;}
 
