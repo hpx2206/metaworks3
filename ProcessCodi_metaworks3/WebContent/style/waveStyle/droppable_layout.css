@@ -78,9 +78,11 @@ input:focus {
  
 
 /* list */
+
 ul, ol , li , dl ,dd ,dt{list-style-type:none; margin:0px; padding:0px;}
 
- 
+.workflowy ul {padding-left:40px; list-style-type: disc;}
+.workflowy li { list-style-type: disc;}
 
 /* image */
 img {border:0;}
