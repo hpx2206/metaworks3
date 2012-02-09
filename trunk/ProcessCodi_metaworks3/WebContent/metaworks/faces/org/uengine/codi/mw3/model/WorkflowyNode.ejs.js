@@ -30,6 +30,14 @@ var org_uengine_codi_mw3_model_WorkflowyNode = function(objectId, className){
 		object.metaworksContext.when = mw3.WHEN_EDIT;
 	});	
 	
+	$('#wfnode_content_' + this.objectId).draggable();
+	$('#wfnode_content_' + this.objectId).droppable({
+		hoverClass: "ui-state-active",
+		drop: function( event, ui ) {
+
+		}
+	});
+	
 	$('#objDiv_' + this.objectId).addClass("workflowy_node");
 }
 
