@@ -17,6 +17,17 @@ var org_uengine_codi_mw3_model_WorkflowyNode = function(objectId, className){
 		}
 	}
 	
+	$('#wfnode_' + this.objectId).hover(
+			
+		function () {
+		    $(this).append($("<span> ***</span>"));
+		  }, 
+		  function () {
+		    $(this).find("span:last").remove();
+		  }
+		
+	);
+	
 	$('#wfnode_content_' + this.objectId).blur(function() {
 		var content = $("#wfnode_content_" + object.__objectId).val();
 		
@@ -29,11 +40,12 @@ var org_uengine_codi_mw3_model_WorkflowyNode = function(objectId, className){
 	$('#wfnode_content_' + this.objectId).focus(function() {
 		object.metaworksContext.when = mw3.WHEN_EDIT;
 	});	
-	
-	$('#wfnode_content_' + this.objectId).draggable();
-	$('#wfnode_content_' + this.objectId).droppable({
+		
+	$('#wfnode_' + this.objectId).droppable({
 		hoverClass: "ui-state-active",
 		drop: function( event, ui ) {
+			console.debug(this);
+			//console.debug(event);
 
 		}
 	});

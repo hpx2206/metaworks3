@@ -3,4 +3,9 @@ var org_uengine_codi_mw3_model_Workflowy = function(objectId, className){
 	this.className = className;
 	
 	$("#objDiv_" + this.objectId).addClass("workflowy");
+	
+	$(function() {
+		$( "#draggable" ).draggable();
+	});
+	
 }
