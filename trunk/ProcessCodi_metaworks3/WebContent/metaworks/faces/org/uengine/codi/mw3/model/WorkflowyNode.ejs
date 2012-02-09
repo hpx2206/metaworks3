@@ -7,7 +7,9 @@
 		if(value.parentNode!=null){
 %>					
 		<li>
-			<input type="text" id="wfnode_content_<%=objectId%>" value="<%=value.content%>" onkeydown="mw3.getFaceHelper('<%=objectId%>').press(this)">
+			<div id="wfnode_<%=objectId%>">
+				<input type="text" id="wfnode_content_<%=objectId%>" value="<%=value.content%>" onkeydown="mw3.getFaceHelper('<%=objectId%>').press(this)">
+			</div>
 <%	
 		}
 		
@@ -24,7 +26,7 @@
 		}else{
 %>
 		<span style="padding-left:40px">		
-			<%=methods.newNode.here()%>
+			
 		</span>
 <%
 		}
