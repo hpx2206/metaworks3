@@ -1,0 +1,12 @@
+<%if(value){%>
+
+<table>
+  <tr><td>*</td><td> <%=fields.text.here()%><%=methods.addSibling.here()%></td></tr>
+  
+  <% if(value.childs){%>
+  <tr><td></td><td> <%=fields.childs.here()%></td></tr>
+  <%}%>
+   
+</table>
+
+<%}%>
