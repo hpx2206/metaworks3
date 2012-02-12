@@ -1,0 +1,17 @@
+<org.uengine.codi.mw3.model.NavigationWindow>
+  <navigation>
+    <personalPerspective>
+      <label>Personal</label>
+      <selected>true</selected>
+    </personalPerspective>
+    <strategyPerspective>
+      <label>Strategic</label>
+      <selected>false</selected>
+    </strategyPerspective>
+    <processPerspective>
+      <label>Process</label>
+      <selected>false</selected>
+    </processPerspective>
+  </navigation>
+  <windowTitle>다른이름으로....</windowTitle>
+</org.uengine.codi.mw3.model.NavigationWindow>
