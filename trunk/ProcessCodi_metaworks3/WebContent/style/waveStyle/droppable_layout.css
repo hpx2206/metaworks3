@@ -86,7 +86,40 @@ ul, ol , li , dl ,dd ,dt{list-style-type:none; margin:0px; padding:0px;}
 
 .ui-state-active {border-bottom:2px dotted #ccc; background:#EFEFEF;}
 
-#moveIcon{display:inline;}
+#controls #move {
+	background: url(../../images/waveStyle/move_icon_black.png) no-repeat;
+	opacity:.6;
+	z-index:8;
+	top: 3px;
+}
+
+#controlsLeft, #controlsRight, #controlsBottom{
+	position:absolute;
+	top:0;
+	z-index:8;
+}
+
+#controls > #controlsRight{
+	top:3px;
+}
+
+#controls a{
+	z-index:1;
+	position:relative;
+	display:inline-block;
+	width:20px;
+	height:20px;
+	cursor:pointer; 
+}
+
+.controls > a{
+    margin-left:10px;
+}
+    
+#controlsRight{
+	right:0;
+	color:#ddd;
+}
 
 /* image */
 img {border:0;}
