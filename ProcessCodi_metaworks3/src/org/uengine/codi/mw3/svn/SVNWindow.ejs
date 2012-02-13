@@ -1,0 +1,9 @@
+
+<div id='log_<%=objectId%>'><%=value.log%></div>
+
+<%=(fields.commitables ? fields.commitables.here() : "")%>
+
+<%=(methods.checkout ? methods.checkout.here() : "")%>
+<%=(methods.sync ? methods.sync.here() : "")%>
+<%=(methods.commit ? methods.commit.here() : "")%>
+<%=methods.cancel.here()%>

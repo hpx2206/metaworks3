@@ -11,6 +11,8 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import javax.servlet.http.HttpSession;
+
 import net.sourceforge.pmd.IRuleViolation;
 import net.sourceforge.pmd.PMD;
 
@@ -19,20 +21,43 @@ import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.WebFieldDescriptor;
 import org.metaworks.WebObjectType;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.NonEditable;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.dao.TransactionContext;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.example.ide.CompileError;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.tmatesoft.svn.core.SVNErrorMessage;
+import org.tmatesoft.svn.core.SVNException;
+import org.tmatesoft.svn.core.SVNURL;
+import org.tmatesoft.svn.core.internal.io.dav.DAVRepositoryFactory;
+import org.tmatesoft.svn.core.internal.io.fs.FSRepositoryFactory;
+import org.tmatesoft.svn.core.internal.io.svn.SVNRepositoryFactoryImpl;
+import org.tmatesoft.svn.core.internal.wc.DefaultSVNOptions;
+import org.tmatesoft.svn.core.wc.SVNClientManager;
+import org.tmatesoft.svn.core.wc.SVNCommitClient;
+import org.tmatesoft.svn.core.wc.SVNDiffClient;
+import org.tmatesoft.svn.core.wc.SVNRevision;
+import org.tmatesoft.svn.core.wc.SVNUpdateClient;
+import org.tmatesoft.svn.core.wc.SVNWCUtil;
+import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.CodiDwrServlet;
 import org.uengine.codi.mw3.alm.MemoryRenderer;
 import org.uengine.codi.mw3.alm.QualityOption;
 import org.uengine.codi.mw3.model.FaceHelperSourceCode;
 import org.uengine.codi.mw3.model.JavaSourceCode;
 import org.uengine.codi.mw3.model.MobileWindow;
+import org.uengine.codi.mw3.model.Popup;
+import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.model.TemplateDesigner;
 import org.uengine.codi.mw3.model.Window;
+import org.uengine.codi.mw3.svn.CheckoutWindow;
+import org.uengine.codi.mw3.svn.CommitEventHandler;
+import org.uengine.codi.mw3.svn.CommitWindow;
+import org.uengine.codi.mw3.svn.UpdateEventHandler;
+import org.uengine.codi.mw3.svn.WCEventHandler;
 import org.uengine.codi.mw3.widget.IFrame;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.NeedArrangementToSerialize;
@@ -374,7 +399,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		String[] definitionIdAndVersionId = org.uengine.kernel.ProcessDefinition.splitDefinitionAndVersionId(fullDefId);
 		
 		/// generate source file
-		File sourceCodeFile = new File("/Users/jyjang/javasources/" + getAlias());
+		File sourceCodeFile = new File(CodiDwrServlet.codiClassLoader.sourceCodeBase() + "/" + getAlias());
 		sourceCodeFile.getParentFile().mkdirs();
 		//sourceCodeFile.createNewFile();
 		
@@ -383,7 +408,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		writer.close();
 		
 		//if there is face code, save it.
-		String faceSource = "/Users/jyjang/javasources/" + getAlias();
+		String faceSource = CodiDwrServlet.codiClassLoader.sourceCodeBase() + "/" + getAlias();
 		faceSource = faceSource.substring(0, faceSource.indexOf(".")) + ".ejs";
 		
 		File ejsFile = new File(faceSource);
@@ -399,7 +424,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		}
 		
 		//if there is facehelper code, save it.
-		String faceHelperSource = "/Users/jyjang/javasources/" + getAlias();
+		String faceHelperSource = CodiDwrServlet.codiClassLoader.sourceCodeBase() + "/" + getAlias();
 		faceHelperSource = faceHelperSource.substring(0, faceHelperSource.indexOf(".")) + ".ejs.js";
 		
 		File ejsJsFile = new File(faceHelperSource);
@@ -435,9 +460,27 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		setDefVerId(definitionIdAndVersionId[1]);
 				
 	}
-
-
 	
+	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
+	public Popup checkout(){
+		Popup popup = new Popup();
+		popup.setName("SVN Client");
+		popup.setPanel(new CheckoutWindow(this));
+		
+		return popup;
+	}
+
+	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
+	public Popup commit(){
+		Popup popup = new Popup();
+		popup.setName("SVN Client");
+		popup.setPanel(new CommitWindow(this));
+		
+		return popup;
+	}
+
+
+		
 	@Override
 	public ArrayList<String> listProperties() {
 		try {
@@ -471,7 +514,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		setSourceCodes(new ClassSourceCodes());
 		
 		/// read source file
-		File sourceCodeFile = new File("/Users/jyjang/javasources/" + getAlias());
+		File sourceCodeFile = new File(CodiDwrServlet.codiClassLoader.sourceCodeBase() + "/" + getAlias());
 		
 		ByteArrayOutputStream bao = new ByteArrayOutputStream();
 		FileInputStream is;
@@ -489,7 +532,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		}
 		
 		//if there is face code, read it.
-		String faceSource = "/Users/jyjang/javasources/" + getAlias();
+		String faceSource = CodiDwrServlet.codiClassLoader.sourceCodeBase() + "/" + getAlias();
 		faceSource = faceSource.substring(0, faceSource.indexOf(".")) + ".ejs";
 		
 		File ejsFile = new File(faceSource);
@@ -509,7 +552,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		}
 		
 		//if there is facehelper code, read it.
-		String faceHelperSource = "/Users/jyjang/javasources/" + getAlias();
+		String faceHelperSource = CodiDwrServlet.codiClassLoader.sourceCodeBase() + "/" + getAlias();
 		faceHelperSource = faceHelperSource.substring(0, faceHelperSource.indexOf(".")) + ".ejs.js";
 		
 		File ejsJsFile = new File(faceHelperSource);
@@ -532,5 +575,6 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		}
 				
 	}
+	
 	
 }
