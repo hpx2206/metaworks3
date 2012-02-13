@@ -4,8 +4,6 @@ var org_uengine_codi_mw3_model_CrowdSourcer = function(objectId, className) {
 	
 	var object = mw3.objects[this.objectId];
 	
-	console.debug("org_uengine_codi_mw3_model_CrowdSourcer");
-	console.debug(object);
 	
 	if(!object.open || object.postIds == null){
 		// overrides the function
