@@ -1,7 +1,13 @@
 package org.uengine.codi.mw3.model;
 
+import java.io.File;
+
+import javax.servlet.http.HttpSession;
+
 import org.metaworks.annotation.Id;
 import org.metaworks.dao.Database;
+import org.metaworks.dao.TransactionContext;
+import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.admin.Admin;
 
 public class Login extends Database<ILogin> implements ILogin{
@@ -60,6 +66,13 @@ public class Login extends Database<ILogin> implements ILogin{
 			
 			Main admin = new Main(this);
 			
+			//setting the facebook user Id into session attribute;
+			HttpSession session = TransactionContext.getThreadLocalInstance().getRequest().getSession(); 
+			session.setAttribute("userId", getUserId());
+			
+			if(new File(CodiClassLoader.sourceCodeBase()).exists()){
+				session.setAttribute("sourceCodeBase", CodiClassLoader.sourceCodeBase());
+			}
 			
 			return admin;
 		}

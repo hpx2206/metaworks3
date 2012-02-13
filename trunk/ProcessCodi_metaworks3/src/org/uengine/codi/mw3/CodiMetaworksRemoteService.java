@@ -13,6 +13,7 @@ import org.apache.tools.ant.filters.StringInputStream;
 import org.codehaus.commons.compiler.jdk.JavaSourceClassLoader;
 import org.metaworks.WebObjectType;
 import org.metaworks.dao.ConnectionFactory;
+import org.metaworks.dao.TransactionContext;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.WebApplicationContext;
@@ -125,7 +126,7 @@ public class CodiMetaworksRemoteService extends MetaworksRemoteService{
 //		};
 //		
 		
-		refreshClassLoader(null);
+//		refreshClassLoader(null);
 		
 //		metaworksServiceLocatorClass = cl.loadClass(CodiClassLoader.MetaworksServiceClassLoader);
 //		Object mrsLocator = metaworksServiceLocatorClass.newInstance();
@@ -135,42 +136,34 @@ public class CodiMetaworksRemoteService extends MetaworksRemoteService{
 
 	}
 	
-	public static void refreshClassLoader(String resourceName){
-//		ClassLoader cl = new CodiClassLoader(CodiMetaworksRemoteService.class.getClassLoader());
-		
-		JavaSourceClassLoader cl = new JavaSourceClassLoader(CodiMetaworksRemoteService.class.getClassLoader());
-		
-		
-		URLClassLoader classLoader = (URLClassLoader) CodiMetaworksRemoteService.class.getClassLoader();
-		URL urls[] = classLoader.getURLs();
-		StringBuffer sbClasspath = new StringBuffer();
-		for(URL url : urls){
-			sbClasspath.append(url.getFile().toString()).append(";");
-		}
-
-		cl.setCompilerOptions(new String[]{"-classpath", "/Users/jyjang/Documents/workspace/ProcessCodi_metaworks3/WebContent/WEB-INF/lib/metaworks3.jar"});//sbClasspath.toString()});
-
-		
-		cl.setSourcePath(new File[]{new File("/Users/jyjang/javasources/")});
-				
-		Thread.currentThread().setContextClassLoader(cl);
-		codiClassLoader = cl;
-		
-	}
 
 	@Override
 	public Object callMetaworksService(String objectTypeName, Object object,
 			String methodName, Map<String, Object> autowiredFields)
 			throws Throwable {
-		Thread.currentThread().setContextClassLoader(codiClassLoader);
+		//Thread.currentThread().setContextClassLoader(codiClassLoader);
 		// TODO Auto-generated method stub
-		return instance.callMetaworksService(objectTypeName, object, methodName,
+		
+		Class serviceClass = Thread.currentThread().getContextClassLoader().loadClass(objectTypeName);
+		
+		boolean underPlatform = (serviceClass.getClassLoader().getClass() == CodiClassLoader.class);
+		if(underPlatform)
+			TransactionContext.getThreadLocalInstance().setNeedSecurityCheck(true);
+
+		Object returnVal = instance.callMetaworksService(objectTypeName, object, methodName,
 				autowiredFields);
+		
+
+		if(underPlatform)
+			TransactionContext.getThreadLocalInstance().setNeedSecurityCheck(false);
+			
+		
+		return returnVal;
 	}
 
 	@Override
 	public WebObjectType getMetaworksType(String className) throws Exception {
-		Thread.currentThread().setContextClassLoader(codiClassLoader);
+		//Thread.currentThread().setContextClassLoader(codiClassLoader);
 		// TODO Auto-generated method stub
 		return instance.getMetaworksType(className);
 	}
@@ -180,14 +173,14 @@ public class CodiMetaworksRemoteService extends MetaworksRemoteService{
 	
 	@Override
 	public ConnectionFactory getConnectionFactory() {
-		Thread.currentThread().setContextClassLoader(codiClassLoader);
+		//Thread.currentThread().setContextClassLoader(codiClassLoader);
 		// TODO Auto-generated method stub
 		return instance.getConnectionFactory();
 	}
 
 	@Override
 	public void setConnectionFactory(ConnectionFactory connectionFactory) {
-		Thread.currentThread().setContextClassLoader(codiClassLoader);
+		//Thread.currentThread().setContextClassLoader(codiClassLoader);
 		// TODO Auto-generated method stub
 		instance.setConnectionFactory(connectionFactory);
 	}
@@ -198,17 +191,17 @@ public class CodiMetaworksRemoteService extends MetaworksRemoteService{
 	@Override
 	public WebApplicationContext getBeanFactory() {
 		// TODO Auto-generated method stub
-		if(codiClassLoader!=null)
-			Thread.currentThread().setContextClassLoader(codiClassLoader);
-		
+//		if(codiClassLoader!=null)
+//			Thread.currentThread().setContextClassLoader(codiClassLoader);
+//		
 		return instance.getBeanFactory();
 	}
 
 
 
 
-	@Autowired
-	protected ProcessManagerRemote processManager;
-	
+//	@Autowired
+//	protected ProcessManagerRemote processManager;
+//	
 
 }

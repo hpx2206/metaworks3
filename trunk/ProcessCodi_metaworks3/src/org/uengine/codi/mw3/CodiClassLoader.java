@@ -33,6 +33,7 @@ import org.codehaus.commons.compiler.jdk.JavaSourceClassLoader.DiagnosticExcepti
 import org.codehaus.commons.compiler.jdk.ByteArrayJavaFileManager;
 import org.codehaus.commons.compiler.jdk.JavaSourceClassLoader;
 import org.directwebremoting.ServerContextFactory;
+import org.metaworks.dao.TransactionContext;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.uengine.codi.mw3.admin.ClassDefinition;
@@ -69,14 +70,21 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
     }
 
     
-
+	public static String sourceCodeBase(){
+		
+		String userId = (String) TransactionContext.getThreadLocalInstance().getRequest().getSession().getAttribute("userId");
+		
+		return "/Users/jyjang/codebase/"+ userId + "/src/";
+	}
     
 	@Override
 	public InputStream getResourceAsStream(String name) {
+		
+		String firstSourcePath = sourcePath[0].getPath();
 
 		if(name.endsWith(".ejs") || name.endsWith(".ejs.js") || name.endsWith("xml")){
 			try {
-				FileInputStream fis = new FileInputStream("/Users/jyjang/javasources/" + name);
+				FileInputStream fis = new FileInputStream(firstSourcePath + name);
 				return fis;
 			} catch (FileNotFoundException e) {
 			}
