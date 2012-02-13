@@ -50,6 +50,8 @@
 	<!-- uEngine SpringConnectionFactory setDataSource(DataSource) -->
 	<!-- ============================================================= -->
 	
+	<bean class="org.uengine.codi.common.aoptx.PlatformSecurityAdvice" />
+	
 	<bean id="springConnectionFactory"
 		class="org.uengine.codi.common.aoptx.DefaultSpringConnectionFactory"></bean>
 	
@@ -74,13 +76,13 @@
 		<property name="dataSource" ref="dataSource"/>	
 	</bean>
 	
-	<!-- bean id="MetaworksRemoteService" class="org.uengine.codi.mw3.CodiMetaworksRemoteService">
-		<property name="connectionFactory" ref="springConnectionFactoryForMetaworks"/>
-	</bean-->
-	
-	<bean id="MetaworksRemoteService" class="org.metaworks.dwr.MetaworksRemoteService">
+	<bean id="MetaworksRemoteService" class="org.uengine.codi.mw3.CodiMetaworksRemoteService">
 		<property name="connectionFactory" ref="springConnectionFactoryForMetaworks"/>
 	</bean>
+	
+	<!-- bean id="MetaworksRemoteService" class="org.metaworks.dwr.MetaworksRemoteService">
+		<property name="connectionFactory" ref="springConnectionFactoryForMetaworks"/>
+	</bean-->
 	
 	<bean id="Main" class="org.uengine.codi.mw3.model.Main"/>
 	<bean id="Login" class="org.uengine.codi.mw3.model.Login"/>
@@ -120,6 +122,8 @@
 	<bean id="InstanceViewPublic" class="org.uengine.codi.mw3.model.InstanceViewPublic"/>
 	
 	
+	<bean id="MongoDB" class="org.uengine.codi.platform.MongoDB"/>
+	<bean id="FileSystem" class="org.uengine.codi.platform.FileSystem"/>
 	
 		
 </beans>
