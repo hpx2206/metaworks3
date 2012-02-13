@@ -8,7 +8,7 @@ import org.metaworks.annotation.ServiceMethod;
 
 import com.mongodb.MongoException;
 
-@Face(ejsPath="genericfaces/Window.ejs", displayName="Workflowy")
+@Face(ejsPath="genericfaces/Window.ejs", displayName="Workflowy", options={"hideLabels"}, values={"true"})
 public class WorkflowyWindow {
 	
 	public WorkflowyWindow(){		
@@ -22,8 +22,7 @@ public class WorkflowyWindow {
 			this.workflowy = workflowy;
 		}
 
-
-	@ServiceMethod
+	@ServiceMethod(when=MetaworksContext.WHEN_NEW)
 	public void load() throws UnknownHostException, MongoException{
 		setWorkflowy(new Workflowy());		
 	}

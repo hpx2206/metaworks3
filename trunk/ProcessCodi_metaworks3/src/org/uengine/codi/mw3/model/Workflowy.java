@@ -11,23 +11,15 @@ import com.mongodb.MongoException;
 
 public class Workflowy implements ContextAware {
 	
-	static int id = 0;
-	
 	public Workflowy() throws UnknownHostException, MongoException{
-		//Mongo m = new Mongo();		
-		//DB db = m.getDB( "workflowy" );
-		node = new WorkflowyNode();
-		node.setId(makeId());
-		node.setContent("ROOT");				
+		node = new WorkflowyNode(1);
+		node.setName("ROOT");				
 		node.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 		node.getMetaworksContext().setWhere("ROOT");
+		node.load();
 		
-		int newNodeId = makeId();
-		WorkflowyNode newNode = new WorkflowyNode();
-		newNode.setParentNode(node);
-		newNode.setId(newNodeId);
-		
-		node.childNode.add(newNode);
+		if(node.getChildNode().size() == 0)
+			node.newNode();
 		
 		setNode(node);
 	}
@@ -40,12 +32,6 @@ public class Workflowy implements ContextAware {
 		public void setMetaworksContext(MetaworksContext metaworksContext) {
 			this.metaworksContext = metaworksContext;
 		}
-	
-	public static int makeId(){
-		id = id +1;
-		
-		return id;		
-	}	
 
 	WorkflowyNode node;
 		public WorkflowyNode getNode() {

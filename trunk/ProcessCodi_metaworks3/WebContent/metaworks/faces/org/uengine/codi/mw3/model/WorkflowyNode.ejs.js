@@ -6,33 +6,76 @@ var org_uengine_codi_mw3_model_WorkflowyNode = function(objectId, className){
 
 	if(object.metaworksContext.when == mw3.WHEN_EDIT){
 		$('#wfnode_content_' + this.objectId).focus();
-		console.debug("mw3.how : " + object.metaworksContext.how);
-		console.debug("content : " + object.content);
-		console.debug("contentNext : " + object.contentNext);
 		
 		var how = object.metaworksContext.how;
+		var name = object.name;
+		var nameNext = object.nameNext;
+		
+		console.debug("mw3.how : " + how);
+		console.debug("name : " + name);
+		console.debug("nameNext : " + nameNext);
 		
 		if(how == "add"){
-			$('#wfnode_content_' + this.objectId).selectRange(0,0);
+			$('#wfnode_content_' + this.objectId).selectRange(0, 0);
+		}else if(how == "remove" || how == "indent" || how == "outdent"){
+			var pos = name.length - nameNext.length;
+			$('#wfnode_content_' + this.objectId).selectRange(pos, pos);
 		}
+			
 	}
 	
-	$('#wfnode_' + this.objectId).hover(
+	$('#wfnode_' + this.objectId).droppable({
+		hoverClass: "ui-state-active",
+		drop: function( event, ui ) {
+			var dragNodeId = ui.draggable.attr("nodeid");
 			
+			object.dragNode = mw3.objects[dragNodeId]; 
+			
+			mw3.call(objectId, "move");
+		}
+	});
+	
+	$('#wfnode_' + this.objectId).hover(			
 		function () {
-		    $(this).append($("<span> ***</span>"));
+			if(!$('#move').hasClass("moving")){
+				var html = '';
+				
+				html += '<div id=\"controls\">';  
+				html += '  <div id=\"controlsRight\">';
+				html += '    <a id=\"move\" title=\"Drag to move\"></a>';
+				html += '  </div>'; 
+				html += '</div>';
+				
+				$(this).append(html);
+				
+				$("#controls>#controlsRight>#move").draggable({
+				        helper: "clone",
+				        cursor: "move",
+				        distance: 1,
+				        start: function(event, ui) {
+				        	console.debug("start");
+				        	$(this).attr("nodeid", objectId);				        	
+				        	$(this).addClass("moving");
+				        },
+				        stop: function(event, ui) {
+				        	console.debug("end");
+				        	$('#controls').remove();
+				        }
+				});
+			}
 		  }, 
-		  function () {
-		    $(this).find("span:last").remove();
+		  function () {	
+			  if(!$('#move').hasClass("moving"))
+				  $(this).find('#controls').remove();			  
 		  }
 		
 	);
 	
 	$('#wfnode_content_' + this.objectId).blur(function() {
-		var content = $("#wfnode_content_" + object.__objectId).val();
+		var name = $("#wfnode_content_" + object.__objectId).val();
 		
-		if(content)
-			object.content = content;
+		if(name)
+			object.name = name;
 		
 		object.metaworksContext.when = mw3.WHEN_VIEW;
 	});
@@ -40,26 +83,19 @@ var org_uengine_codi_mw3_model_WorkflowyNode = function(objectId, className){
 	$('#wfnode_content_' + this.objectId).focus(function() {
 		object.metaworksContext.when = mw3.WHEN_EDIT;
 	});	
-		
-	$('#wfnode_' + this.objectId).droppable({
-		hoverClass: "ui-state-active",
-		drop: function( event, ui ) {
-			console.debug(this);
-			//console.debug(event);
-
-		}
-	});
 	
 	$('#objDiv_' + this.objectId).addClass("workflowy_node");
+	$('#objDiv_' + this.objectId).attr("nodeid", this.objectId);
+	$('#objDiv_' + this.objectId).css("position", "relative");
 }
 
 org_uengine_codi_mw3_model_WorkflowyNode.prototype.up = function(){
 	   var searchObj = $('#objDiv_' + this.objectId).prev();
-	   
+	  
 	   if(!searchObj.length){
 		   searchObj = $('#objDiv_' + this.objectId).parent().parent().parent().parent('div');
-	   }
-	   
+	   }	   
+	  
 	   if(searchObj.length){
 		   if(searchObj.attr('id').indexOf('info_') == 0){
 			   searchObj = searchObj.prev();
@@ -79,40 +115,63 @@ org_uengine_codi_mw3_model_WorkflowyNode.prototype.getValue = function(){
 	
 	var object = mw3.objects[this.objectId];
 	
-	object.content = $('#wfnode_content_' + this.objectId).val();
+	object.name = $('#wfnode_content_' + this.objectId).val();
 		
 	return object;
 }
 
 org_uengine_codi_mw3_model_WorkflowyNode.prototype.down = function(){
-	   var searchObj = $('#objDiv_' + this.objectId).find('.workflowy_node:first');
+	
+   // 자식 검색
+   var searchObj = $('#objDiv_' + this.objectId).find('.workflowy_node:first');
+   
+   // 자식 미존재, 동일 노드 하위 검색(존재하지 않으면 부모의 동일노드 하위 검색)
+   if(!searchObj.length){
+	   var info = false;
+	   var exist = false;   
 	   
-	   if(!searchObj.length){
-		   searchObj = $('#objDiv_' + this.objectId).nextUntil('.workflowy_node');
-	   }
+	   searchObj = $('#objDiv_' + this.objectId);
 	   
-	   if(searchObj.attr('id').indexOf('info_') == 0){
-		   while(!searchObj.next().length)
-			   searchObj = searchObj.parent().parent().parent().parent().next();
-			   
-		   searchObj = searchObj.next();
-	   }
-	   
-	   if(searchObj.length){
-		   searchObj = searchObj.find('input:first');
+	   while(!exist && searchObj.length){
+		   var temp = searchObj.nextUntil('.workflowy_node');
+		   		   
+		   if(temp.attr('id').indexOf('info_') == 0)
+			   info = true;
+		   else
+			   info = false;
 		   
-		   searchObj.focus();
-		   searchObj.selectRange(0,0);
-	   }		   
+		   if(info){
+			   exist = (temp.next().length > 0);
+			   console.debug(temp.next());
+		   }else
+			   exist = (temp.length > 0);	   
+		   
+		   if(exist){
+			   if(info)
+				   searchObj = temp.next();
+			   else
+				   searchObj = temp;
+		   }else{
+			   searchObj = temp.parent().parent().parent().parent('div');
+		   }		   
+	  }
+   } 
+   
+   if(searchObj.length){
+	   searchObj = searchObj.find('input:first');
+	   
+	   searchObj.focus();
+	   searchObj.selectRange(0,0);
+   }		   
 }
 
 
 org_uengine_codi_mw3_model_WorkflowyNode.prototype.press = function(inputObj){
-	var e = window.event;	
+	var event = window.event;	
 	var object = mw3.objects[this.objectId];
 	
-	//console.debug(e.keyCode);
-	switch (e.keyCode) {
+	//console.debug(event.keyCode);
+	switch (event.keyCode) {
 	  case 37   :   // left
 		   var t = inputObj.value, s = mw3.getFaceHelper(this.objectId).getSelectionStart(inputObj), e = mw3.getFaceHelper(this.objectId).getSelectionEnd(inputObj)
 		   
@@ -144,52 +203,61 @@ org_uengine_codi_mw3_model_WorkflowyNode.prototype.press = function(inputObj){
 		  
 		   break;
 	  case 9    :	// tab
-		   window.event.returnValue = false;
-		   
-		   if(e.shiftKey){
-			   mw3.call(this.objectId, 'outdent');
+		   var t = inputObj.value, s = mw3.getFaceHelper(this.objectId).getSelectionStart(inputObj), e = mw3.getFaceHelper(this.objectId).getSelectionEnd(inputObj)
+		  
+		   if(s == t.length){
+			   object.nameNext = "";
+	       }else if(s == 0){
+	    	   object.nameNext = t.substring(s).replace(/ /g, '\xa0') || '\xa0';		    	  			   
 		   }else{
-			   mw3.call(this.objectId, 'indent');
+			   object.nameNext = t.substring(s).replace(/ /g, '\xa0') || '\xa0';
 		   }
+		   
+		   window.event.returnValue = false;
+		 
+		   if(event.shiftKey)
+			   mw3.call(this.objectId, 'outdent');
+		   else
+			   mw3.call(this.objectId, 'indent');
 		  	
 	       break;
 	  case 13    :	// enter
 		   var t = inputObj.value, s = mw3.getFaceHelper(this.objectId).getSelectionStart(inputObj), e = mw3.getFaceHelper(this.objectId).getSelectionEnd(inputObj)
 		   
 		   if(s == t.length){
-			   object.content = t;
-			   object.contentNext = "";
+			   object.name = t;
+			   object.nameNext = "";
 	       }else if(s == 0){
-	    	   object.content = "";
-	    	   object.contentNext = t.substring(s).replace(/ /g, '\xa0') || '\xa0';		    	  			   
+	    	   object.name = "";
+	    	   object.nameNext = t.substring(s).replace(/ /g, '\xa0') || '\xa0';		    	  			   
 		   }else{
-			   object.content = t.substring(0, s).replace(/ /g, '\xa0') || '\xa0';
-			   object.contentNext = t.substring(s).replace(/ /g, '\xa0') || '\xa0';
+			   object.name = t.substring(0, s).replace(/ /g, '\xa0') || '\xa0';
+			   object.nameNext = t.substring(s).replace(/ /g, '\xa0') || '\xa0';
 		   }
 		   
-		   inputObj.value = object.content;
+		   inputObj.value = object.name;
 		   
 		   window.event.returnValue = false;
 		   		   
 		   mw3.call(this.objectId, 'add');
 		   
 		   break;
-	  case 8     :
+	  case 8     :	// back
 		  var t = inputObj.value, s = mw3.getFaceHelper(this.objectId).getSelectionStart(inputObj), e = mw3.getFaceHelper(this.objectId).getSelectionEnd(inputObj)
 		  
 		  if(s == e && s == 0){
 		      if(s == t.length){
-		    	  object.content = t;
-		    	  object.contentNext = "";
+		    	  object.name = t;
+		    	  object.nameNext = "";
 		      }else if(s == 0){
-		    	  object.content = "";
-		    	  object.contentNext = t.substring(s).replace(/ /g, '\xa0') || '\xa0';		    	  
+		    	  object.name = "";
+		    	  object.nameNext = t.substring(s).replace(/ /g, '\xa0') || '\xa0';		    	  
 		      }else{
-		    	  object.content = t.substring(0, s).replace(/ /g, '\xa0') || '\xa0';
-		    	  object.contentNext = t.substring(s).replace(/ /g, '\xa0') || '\xa0';
+		    	  object.name = t.substring(0, s).replace(/ /g, '\xa0') || '\xa0';
+		    	  object.nameNext = t.substring(s).replace(/ /g, '\xa0') || '\xa0';
 		      }
 			  		      		      
-			  inputObj.value = object.content;
+			  inputObj.value = object.name;
 	
 			  window.event.returnValue = false;
 	   		   
@@ -197,6 +265,43 @@ org_uengine_codi_mw3_model_WorkflowyNode.prototype.press = function(inputObj){
 		  }
 		  
 		  break;
+	  case 46    :	// del
+		   var info = false;
+		   var exist = false;   
+		   
+		   searchObj = $('#objDiv_' + this.objectId);
+		   
+		   var temp = searchObj.nextUntil('.workflowy_node');
+			   		   
+		   if(temp.attr('id').indexOf('info_') == 0)
+			   info = true;
+		   else
+			   info = false;
+		   
+		   if(info){
+			   exist = (temp.next().length > 0);
+			   console.debug(temp.next());
+		   }else
+			   exist = (temp.length > 0);	   
+			   
+		   if(exist){
+			   if(info)
+				   searchObj = temp.next();
+			   else
+				   searchObj = temp;
+			   
+			   object.name = $('#wfnode_content_' + this.objectId).val();
+			   
+			   targetObjectId = searchObj.attr('nodeid');			   
+			   targetObject = mw3.objects[targetObjectId];
+			   
+			   console.debug(targetObject);
+
+			   targetObject.nameNext = targetObject.name;
+					  
+			   mw3.call(targetObjectId, 'remove');
+		   }		   
+		  
 	  default    :
 	        break;
 	}
