@@ -37,7 +37,7 @@ public class Guage implements ContextAware{
 	@ServiceMethod(callByContent = true)
 	public void show(){
 		setMetaworksContext(new MetaworksContext());
-		getMetaworksContext().setWhen("view");
+		getMetaworksContext().setWhen("show");
 	}
 
 	

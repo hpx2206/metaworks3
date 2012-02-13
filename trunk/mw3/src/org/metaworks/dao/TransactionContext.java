@@ -27,7 +27,18 @@ public class TransactionContext implements ConnectionFactory{
     static ThreadLocal<TransactionContext> local = new ThreadLocal<TransactionContext>();
 
 	static Hashtable connectionPool = new Hashtable();
+
+	Thread theThread;
 	
+	boolean needSecurityCheck;
+		
+		public boolean isNeedSecurityCheck() {
+			return needSecurityCheck;
+		}
+		public void setNeedSecurityCheck(boolean needSecurityCheck) {
+			this.needSecurityCheck = needSecurityCheck;
+		}
+
 	String connectionGetterStackDump = null;
 		public String getConnectionGetterStackDump() {
 			return connectionGetterStackDump;
@@ -56,8 +67,27 @@ public class TransactionContext implements ConnectionFactory{
 		this.delegatedConnectionFactory = delegatedConnectionFactory;
 	}
 	
+	Thread threadChecker;
 	protected TransactionContext(){
+		theThread = Thread.currentThread();
+		threadChecker = new Thread(){
+			
+			@Override
+			public void run() {
+				try {
+					sleep(50000); //TODO: will occur thread full.
+					if(TransactionContext.this != null)
+						TransactionContext.this.stopRequested();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+			
+		};
 		
+//		threadChecker.start();
 	}
 	
 	public static TransactionContext getThreadLocalInstance(){
@@ -69,6 +99,17 @@ public class TransactionContext implements ConnectionFactory{
 		}
 		
 		return tc;
+	}
+	
+	public void stopRequested(){
+		try {
+			releaseResources();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally{
+			theThread.stop();
+		}
 	}
 	
 
@@ -401,7 +442,7 @@ public class TransactionContext implements ConnectionFactory{
 		}
 		
 		connection = null;
-
+		threadChecker.stop();
 	}
 	
 

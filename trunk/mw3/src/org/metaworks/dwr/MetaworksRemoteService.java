@@ -100,11 +100,12 @@ public class MetaworksRemoteService {
 	}
 	
     public Object callMetaworksService(String objectTypeName, Object object, String methodName, Map<String, Object> autowiredFields) throws Throwable{
+		Class serviceClass = Thread.currentThread().getContextClassLoader().loadClass(objectTypeName);
+		
 	
     	//getBeanFactory().getBean(arg0)
     	
 //		callingObjectTypeName.set(objectTypeName);
-		Class serviceClass = Thread.currentThread().getContextClassLoader().loadClass(objectTypeName);
 		
 		//if the requested value object is IDAO which need to be converted to implemented one so that it can be invoked by its methods
 		//Another case this required is when Spring is used since the spring base object should be auto-wiring operation
@@ -183,6 +184,8 @@ public class MetaworksRemoteService {
 			}
 		}
 		
+		autowireSpringFields(object);
+		
 		TransactionContext tx = TransactionContext.getThreadLocalInstance();
 		if(connectionFactory!=null)
 			tx.setConnectionFactory(getConnectionFactory());
@@ -216,12 +219,20 @@ public class MetaworksRemoteService {
     }
 	
 	public void autowireSpringFields(Object object) throws IllegalAccessException {
+		if(object==null)
+			return;
+		
+		WebApplicationContext springAppContext = null;
+		if(TransactionalDwrServlet.useSpring) springAppContext = MetaworksRemoteService.getInstance().getBeanFactory();
+		else return;
+		
+		if(springAppContext==null)
+			return;
+		
 		for(Field field: object.getClass().getFields()){
 			if(field.getAnnotation(Autowired.class)!=null){
 				
-				WebApplicationContext springAppContext = null;
 
-				if(TransactionalDwrServlet.useSpring) springAppContext = MetaworksRemoteService.getInstance().getBeanFactory();
 				Object springBean = null;
 				if(springAppContext!=null)
 				try{
