@@ -129,10 +129,20 @@ public class EntityField implements Cloneable, ContextAware{
 
 		if(entityDefinition.entityFields==null)
 			entityDefinition.entityFields = new ArrayList<EntityField>();//new FormField[]{};
+				
+		if(getName() == null)
+			throw new Exception("Name is required.");
+		
+		if(!(getDataType().equals("TIMESTAMP") || getDataType().equals("DATETIME"))){
+			if(getLength() == 0)
+				throw new Exception("Length/Set is required.");
+		}
+		
 		
 		//TODO: lesson 3 (validation with throwing exception)
 		if(entityDefinition.entityFields.contains(this))
 			throw new Exception("There's already existing field named '" + getName() + "'.");
+		
 		EntityField clonedOne = (EntityField) this.clone(); //TODO: lesson 2 (cloning to avoid reflective problem)
 
 		clonedOne.setMetaworksContext(new MetaworksContext());  //TODO: lesson 4 (context injection)
@@ -201,14 +211,6 @@ public class EntityField implements Cloneable, ContextAware{
 		}
 
 		return entityDefinition;
-	}
-	
-	@ServiceMethod(when=MetaworksContext.WHEN_VIEW, where="in-container", callByContent=true, target=ServiceMethodContext.TARGET_STICK)
-	public EntityField showMenu() throws Exception{
-		EntityField clonedOne = (EntityField) this.clone();
-		clonedOne.getMetaworksContext().setWhere("in-menu");
-		
-		return clonedOne;
 	}
 	
 	@Override //TODO: lesson 1 (object addressing and correlation)

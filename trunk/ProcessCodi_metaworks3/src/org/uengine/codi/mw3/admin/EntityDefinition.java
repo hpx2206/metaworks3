@@ -143,10 +143,14 @@ public class EntityDefinition implements ContextAware, PropertyListable{
 			for(int i=0; i<this.entityFields.size(); i++){
 				EntityField entityField = this.entityFields.get(i);				
 				
-				sb
-					.append(" ").append(entityField.getName())
-					.append(" ").append(entityField.getDataType()).append("(").append(entityField.getLength()).append(")")
-					.append(" ").append((entityField.isAllowNull()?"NULL":"NOT NULL"));
+				sb.append(" ").append(entityField.getName());
+				
+				if(entityField.getDataType().equals("TIMESTAMP") || entityField.getDataType().equals("DATETIME"))
+					sb.append(" ").append(entityField.getDataType());
+				else
+					sb.append(" ").append(entityField.getDataType()).append("(").append(entityField.getLength()).append(")");
+				
+				sb.append(" ").append((entityField.isAllowNull()?"NULL":"NOT NULL"));
 				
 				String defaultValue = entityField.getDefaultValue();
 				if(defaultValue != null && defaultValue.trim().length() > 0)
@@ -363,7 +367,7 @@ public class EntityDefinition implements ContextAware, PropertyListable{
 				classType = "java.util.Date";
 			else if(dataType.equals("TIMESTAMP"))
 				classType = "java.lang.Double";
-					
+			
 			classDefinition.getSourceCodes().getClassModeler().newClassField.setFieldName(fieldName);
 			classDefinition.getSourceCodes().getClassModeler().newClassField.setType(classType);
 			classDefinition.getSourceCodes().getClassModeler().newClassField.add();	
