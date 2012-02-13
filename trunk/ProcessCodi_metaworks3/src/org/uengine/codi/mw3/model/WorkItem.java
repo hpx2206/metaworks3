@@ -205,7 +205,10 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		// TODO Auto-generated method stub
 		FileWorkItem fwi = new FileWorkItem();
 		fwi.setInstId(getInstId());
-		
+		fwi.setEndpoint(session.login.getUserId());
+		fwi.setWriter(getWriter());
+		fwi.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+
 		return fwi;
 	}
 
@@ -216,7 +219,8 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		CommentWorkItem wi = new CommentWorkItem();
 		wi.setInstId(getInstId());
 		wi.setEndpoint(session.login.getUserId());
-		wi.getMetaworksContext().setWhen(WHEN_EDIT);
+		wi.setWriter(getWriter());
+		wi.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		
 		return wi;
 	}
@@ -228,7 +232,8 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		SourceCodeWorkItem wi = new SourceCodeWorkItem();
 		wi.setInstId(getInstId());
 		wi.setEndpoint(session.login.getUserId());
-		wi.getMetaworksContext().setWhen(WHEN_EDIT);
+		wi.setWriter(getWriter());
+		wi.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		
 		return wi;
 	}

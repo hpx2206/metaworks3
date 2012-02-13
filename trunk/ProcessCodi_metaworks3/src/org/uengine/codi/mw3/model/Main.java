@@ -1,12 +1,9 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.annotation.AutowiredToClient;
-import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
-import org.metaworks.annotation.Resource;
 import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.website.MetaworksFile;
 import org.uengine.codi.mw3.admin.Admin;
 
 public class Main {
@@ -30,7 +27,7 @@ public class Main {
 				
 		this.instanceListWindow = new InstanceListWindow(session);
 		
-		this.logo = new Logo();
+		//this.logo = new Logo();
 	}
 	
 	ILogin login;
