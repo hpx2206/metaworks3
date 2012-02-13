@@ -1,14 +1,8 @@
 package org.uengine.codi.mw3.model;
 
-import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
-import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.dao.Database;
 import org.metaworks.website.MetaworksFile;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.processmanager.ProcessManagerRemote;
 
-@Face(ejsPath="genericfaces/ObjectFace.ejs")
 public class FileWorkItem extends WorkItem{
 	
 	
@@ -30,8 +24,4 @@ public class FileWorkItem extends WorkItem{
 		
 		return super.add();
 	}
-	
-	
-	
-	
 }

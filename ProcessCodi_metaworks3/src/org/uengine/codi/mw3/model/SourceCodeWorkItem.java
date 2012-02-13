@@ -1,5 +1,7 @@
 package org.uengine.codi.mw3.model;
 
+import java.util.ArrayList;
+
 import org.codehaus.commons.compiler.CompileException;
 import org.codehaus.commons.compiler.jdk.SimpleCompiler;
 import org.metaworks.annotation.Hidden;
@@ -28,61 +30,37 @@ public class SourceCodeWorkItem extends WorkItem{
 		
 	    SimpleCompiler compiler = new SimpleCompiler();
 	    compiler.setParentClassLoader(this.getClass().getClassLoader());
-	    //compiler.set
+	    
+	    ArrayList<CompileError> compileErrors = new ArrayList<CompileError>();
 	    
 	    try {
 			compiler.cook(getSourceCode().getCode());
 		} catch (CompileException e) {
 			
-			if(e.getMessage().indexOf("Line") > -1 && e.getMessage().indexOf("Column") > -1){
-
-				int lineNumber = Integer.parseInt(e.getMessage().split("Line ")[1].split(",")[0]);
-				
-				String[] positionAndErrorMessagePart = e.getMessage().split("Column ")[1].split(":");
-				int columnNumber = Integer.parseInt(positionAndErrorMessagePart[0]);
-				
-				CompileError compileError = new CompileError();
-				compileError.setLine(lineNumber);
-				compileError.setColumn(columnNumber);
-				compileError.setMessage(positionAndErrorMessagePart[1]);
-				
-				getSourceCode().setCompileErrors(new CompileError[]{compileError});
-					
+			String message = e.getMessage();
+			String[] parts = null;
+			int lineNumber = 0;
+			
+			try {
+				lineNumber = Integer.parseInt((parts = message.split(":"))[2]);
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				parts = null;
+				//e1.printStackTrace();
 			}
 			
-			return;
+			CompileError compileError = new CompileError();
+			compileError.setLine(lineNumber);
+			compileError.setColumn(1);
+			compileError.setMessage(parts != null ? parts[3] : message);
+			
+			compileErrors.add(compileError);
 		}
-//		} catch (ParseException e) {
-//			// TODO Auto-generated catch block
-//			
-//			
-//
-//			if(e.getMessage().indexOf("Line") > -1 && e.getMessage().indexOf("Column") > -1){
-//
-//				int lineNumber = Integer.parseInt(e.getMessage().split("Line ")[1].split(",")[0]);
-//				
-//				String[] positionAndErrorMessagePart = e.getMessage().split("Column ")[1].split(":");
-//				int columnNumber = Integer.parseInt(positionAndErrorMessagePart[0]);
-//				
-//				CompileError compileError = new CompileError();
-//				compileError.setLine(lineNumber);
-//				compileError.setColumn(columnNumber);
-//				compileError.setMessage(positionAndErrorMessagePart[1]);
-//				
-//				getSourceCode().setCompileErrors(new CompileError[]{compileError});
-//					
-//			}
-//			
-//			return;
-//			
-//		} catch (ScanException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+	    
+		CompileError[] complieErrorInArray = new CompileError[compileErrors.size()];
+		compileErrors.toArray(complieErrorInArray);
+		
+		getSourceCode().setCompileErrors(complieErrorInArray);	    
+
 	}
-
-
-	
-	
-	
 }

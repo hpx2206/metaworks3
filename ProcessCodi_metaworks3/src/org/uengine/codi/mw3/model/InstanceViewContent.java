@@ -1,6 +1,7 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.annotation.Face;
+import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Name;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -24,6 +25,7 @@ public class InstanceViewContent extends ContentWindow {
 		
 	String instanceName;
 	@Name
+	@Hidden
 		public String getInstanceName() {
 			return instanceName;
 		}
