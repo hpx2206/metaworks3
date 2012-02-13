@@ -8,7 +8,6 @@ var worklistEnable = 1;
 var oriContactHeight = 0;
 
 function check_position(obj, e) {	
-	
 	if( $(obj).css('display') == 'block' )
 	{
 		var l_position = $(obj).offset();
@@ -18,17 +17,13 @@ function check_position(obj, e) {
 
 		if( ( l_position.left <= e.pageX && e.pageX <= l_position.right )
 			&& ( l_position.top <= e.pageY && e.pageY <= l_position.bottom ) ){
-			//alert( 'popup in click' );
 		}else{
-			//alert( 'popup out click' );
-			//$(obj).hide("fast");
 			$(obj).remove();
 		}
 	}		
 }
 
-$(document).mousedown(function(e){		
-   
+$(document).mousedown(function(e){		   
     $('.mw3_popup').each(function(){
     	check_position(this, e);
 	});   
@@ -66,21 +61,6 @@ $(document).ready(function () {
 	,	center__onresize:		function () {  $("#accordion").accordion("resize");}
 	
 	}); 
-	
-	/*
-	innerinnerLayout = $('div.inner-center').layout({ 
-		center__paneSelector:	".inner-inner-center" 
-	,	north__paneSelector:	".inner-inner-north" 
-	,	north__size:			100 
-	,	spacing_open:			0  // ALL panes
-	,	spacing_closed:			0 // ALL panes
-	,	north__spacing_open:	5	
-	,	west_togglerLength_closed: 0
-	,	togglerLength_open:		0		
-	
-	}); 
-
-	*/
 	
 	middleLayout = $('div.ui-layout-center').layout({ 		
 		center__paneSelector:	".middle-center" 												
@@ -126,16 +106,27 @@ $(document).ready(function () {
 		
 }); 
 
-var mainObjectId;
-
 org_uengine_codi_mw3_model_Main = function(objectId, className){
 	this.objectId = objectId;
 	this.className = className;
 	
-	mainObjectId = objectId;
-
-//	outerLayout = $('#container').layout(); 
+	$("#objDiv_" + objectId).addClass("mw3_layout").attr("objectid", objectId);
 	
-//	$('#right-container').layout();
+	this.layout = new HashMap();
+	this.layout.put("outer", innerLayout);
+	this.layout.put("inner", innerLayout);
+	this.layout.put("middle", middleLayout);
+	
+	this.layout.put("outer_status", 2);
+	this.layout.put("inner_status", 2);
+	this.layout.put("middle_status", 2);
+};
 
+
+org_uengine_codi_mw3_model_Main.prototype.getLayout = function(name){
+	return this.layout.get(name);
+};
+
+org_uengine_codi_mw3_model_Main.prototype.putLayout = function(name, value){
+	this.layout.put(name, value);
 };

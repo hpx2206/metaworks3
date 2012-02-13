@@ -2,28 +2,15 @@ var Window = function(objectId, className){
 	this.objectId = objectId;
 	this.className = className;
 
-	
-
 	this.divId = "objDiv_" + objectId;
 	this.smallDivId = "sm_" + objectId;
 	
 	this.width = $("#" + this.divId).width();
 	this.height = $("#" + this.divId).height();
-
-	
 	
 	$("#" + this.divId).css("height","100%");
-	
 	$("#" + this.smallDivId).appendTo("#smline");
-
-//	var parent = $("#" + this.divId).parent();
-	
-//	$("#" + this.divId).parent().append($("#" + this.divId).html());
-	
-//	$("#" + this.divId).parent().find("#" + this.divId).remove();
 	$("#" + this.divId).parent().find("#info_" + objectId).remove();
-	
-
 }
 
 
@@ -53,17 +40,41 @@ Window.prototype.maximize = function(){
 
 }
 
-Window.prototype.minimize = function(outer , inner){
+Window.prototype.minimize = function(innerLayoutName, innerLayout, outerLayoutName, outerLayout){
 
-//	$("#" + this.smallDivId).appendTo("#smline");
-	$("#" + this.smallDivId).toggle();
-//	$("#" + this.divId).width(10);
-//	outerLayout = $('#container').resizeAll(); 
-//	$("#" + this.divId).toggle();
+	console.debug("minimize");
+	console.debug("innerLayoutName : " + innerLayoutName);
+	console.debug("innerLayout : " + innerLayout);
+	console.debug("outerLayoutName : " + outerLayoutName);
+	console.debug("outerLayout : " + outerLayout);
 	
-//	alert(outer +","+ inner);
+	$("#" + this.smallDivId).show();
 	
-	if(outer == "innerLayout" && inner == "north"){
+	var layoutObjectId = $(".mw3_layout").attr("objectid")
+
+	if(innerLayoutName == "center"){
+	     $('.' + innerLayout + '-' + innerLayoutName).next('div').hide();
+		 $('.' + innerLayout + '-' + innerLayoutName).hide('clip',100);
+	}else{
+		var innerLayoutObj = mw3.getFaceHelper(layoutObjectId).getLayout(innerLayout);
+		innerLayoutObj.toggle(innerLayoutName);		
+	}
+	
+	var innerLayoutStatus = mw3.getFaceHelper(layoutObjectId).getLayout(innerLayout + "_status");
+	
+	innerLayoutStatus = innerLayoutStatus - 1;
+	
+	console.debug("innerLayoutStatus : " + innerLayoutStatus);
+	if(innerLayoutStatus == 0){
+		var outerLayoutObj = mw3.getFaceHelper(layoutObjectId).getLayout(outerLayout);
+		
+		outerLayoutObj.toggle(outerLayoutName);
+	}
+	
+	mw3.getFaceHelper(layoutObjectId).putLayout(innerLayout + "_status", innerLayoutStatus);
+	
+	
+/*	if(outer == "innerLayout" && inner == "north"){
 		innerLayout.toggle(inner);
 		navigationEnable = 0;
 	
@@ -88,7 +99,7 @@ Window.prototype.minimize = function(outer , inner){
 	}
 	else if(outer == "middleLayout" && inner == "center"){
 		middleLayout.toggle(inner);
-	}
+	}*/
 	
 //	innerLayout.toggle("north");
 
@@ -104,11 +115,39 @@ Window.prototype.minimize = function(outer , inner){
 
 }
 
-Window.prototype.resume = function(outer , inner){
-	$("#" + this.smallDivId).toggle();
-//	$("#" + this.divId).toggle();
+
+Window.prototype.resume = function(innerLayoutName, innerLayout, outerLayoutName, outerLayout){
 	
-	if(outer == "innerLayout" && inner == "north"){
+	console.debug("resume");
+	console.debug("innerLayoutName : " + innerLayoutName);
+	console.debug("innerLayout : " + innerLayout);
+	console.debug("outerLayoutName : " + outerLayoutName);
+	console.debug("outerLayout : " + outerLayout);
+	
+	$("#" + this.smallDivId).hide();
+	
+	var layoutObjectId = $(".mw3_layout").attr("objectid")
+	
+	if(innerLayoutName == "center"){
+	     $('.' + innerLayout + '-' + innerLayoutName).next('div').show();
+		 $('.' + innerLayout + '-' + innerLayoutName).show('clip',100);
+	}else{
+		var innerLayoutObj = mw3.getFaceHelper(layoutObjectId).getLayout(innerLayout);
+		innerLayoutObj.toggle(innerLayoutName);		
+	}
+
+	var innerLayoutStatus = mw3.getFaceHelper(layoutObjectId).getLayout(innerLayout + "_status");
+	if(innerLayoutStatus == 0){
+		var outerLayoutObj = mw3.getFaceHelper(layoutObjectId).getLayout(outerLayout);
+		
+		outerLayoutObj.toggle(outerLayoutName);		
+	}
+	
+	innerLayoutStatus = innerLayoutStatus + 1;
+	mw3.getFaceHelper(layoutObjectId).putLayout(innerLayout + "_status", innerLayoutStatus);
+	
+	
+/*	if(outer == "innerLayout" && inner == "north"){
 		innerLayout.toggle(inner);
 		navigationEnable = 1;
 	
@@ -127,7 +166,7 @@ Window.prototype.resume = function(outer , inner){
 		};		 
 	}else if(outer == "middleLayout" && inner == "west"){
 		middleLayout.toggle(inner);
-	}
+	}*/
 	
 	
 	
