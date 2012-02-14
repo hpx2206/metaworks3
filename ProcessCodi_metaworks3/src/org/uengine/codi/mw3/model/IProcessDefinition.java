@@ -34,6 +34,9 @@ public interface IProcessDefinition extends IDAO{
 	
 	@ServiceMethod
 	public NewChildWindow newChild() throws Exception;
+
+	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
+	public Popup contextMenu();
 	
 	public IProcessDefinition findAll() throws Exception;
 
@@ -95,5 +98,4 @@ public interface IProcessDefinition extends IDAO{
 	public IProcessDefinition getChilds();
 	public void setChilds(IProcessDefinition child);
 
-	
 }
