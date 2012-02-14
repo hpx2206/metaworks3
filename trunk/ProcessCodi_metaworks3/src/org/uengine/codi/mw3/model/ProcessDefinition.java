@@ -1,6 +1,8 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.kernel.RoleMapping;
@@ -262,6 +264,19 @@ public class ProcessDefinition extends Database<IProcessDefinition> implements I
 		
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
+	public Popup contextMenu(){
+		Popup contextMenuPopup = new Popup();
+		contextMenuPopup.setName("");
+		
+		ProcessDefinitionContextMenu contextMenu = new ProcessDefinitionContextMenu();
+		contextMenu.setDefId(getDefId());
+		
+		contextMenuPopup.setPanel(contextMenu);
+		
+		return contextMenuPopup;
 	}
 
 	@Autowired
