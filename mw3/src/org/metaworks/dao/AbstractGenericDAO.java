@@ -954,90 +954,115 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
    
     
 	public Object invoke(Object proxy, Method m, Object[] args)	throws Throwable{
-		String methodName = m.getName();
 		
-		if(m.getName().equals("getImplementationObject")){
-			return getImplementationObject();
+		boolean securityCheck = false;
+		if(TransactionContext.getThreadLocalInstance()!=null){
+			securityCheck = TransactionContext.getThreadLocalInstance().isNeedSecurityCheck();
+			TransactionContext.getThreadLocalInstance().setNeedSecurityCheck(false);
 		}
 		
-		boolean startWithGet = m.getName().startsWith("get");
-		boolean startsWithIs = m.getName().startsWith("is");
-		
-		//if getter
-		if(startWithGet || startsWithIs){
+		try{
+			String methodName = m.getName();
 			
-			String propertyNameOrg = methodName.substring(startWithGet ? 3 : 2);
-			String propertyName = propertyNameOrg.toUpperCase();
-			//propertyName = propertyName;
+			if(m.getName().equals("getImplementationObject")){
+				return getImplementationObject();
+			}
 			
+			boolean startWithGet = m.getName().startsWith("get");
+			boolean startsWithIs = m.getName().startsWith("is");
 			
-
-			if(propertyName.length()==0 && args.length==1){//from untyped DAO's getter
-				return get((String)args[0]);
-			}else{//from typed DAO's getter
+			//if getter
+			if(startWithGet || startsWithIs){
 				
-				if("METAWORKSCONTEXT".equalsIgnoreCase(propertyName))
-					return getMetaworksContext();
+				String propertyNameOrg = methodName.substring(startWithGet ? 3 : 2);
+				String propertyName = propertyNameOrg.toUpperCase();
+				//propertyName = propertyName;
 				
-				Object returnValue = null;
 				
-				if(rowSet!=null) {
+	
+				if(propertyName.length()==0 && args.length==1){//from untyped DAO's getter
+					return get((String)args[0]);
+				}else{//from typed DAO's getter
 					
+					if("METAWORKSCONTEXT".equalsIgnoreCase(propertyName))
+						return getMetaworksContext();
 					
-//					try {
-//					if(rowSet.isClosed()) { 
-//						throw new UEngineException("This DAO has been already closed. If you use TransactionContext, Use DAO during TransactionContext is alive.");
-//					}
-//					}catch (Exception ex) {
-//						ex.printStackTrace();
-//					}
+					Object returnValue = null;
 					
-					if ( Boolean.class.isAssignableFrom(m.getReturnType()) ) {
-						returnValue = Boolean.valueOf( (rowSet.getInt(propertyName)==1)?true:false );
-					} else {
-						if (m.getName().equals("getInt") ||  
-								m.getName().equals("getLong") || 
-								m.getName().equals("getBoolean") || 
-								m.getName().equals("getDate") || 
-								m.getName().equals("getString")) {
-							try{
-								return m.invoke(this, args);		
-							}catch(Exception e){
-								throw e.getCause();
-							}
-						} 
+					if(rowSet!=null) {
 						
-						try{
-							if(MetaworksRemoteService.getInstance().getMetaworksType(daoClass.getName()).metaworks2Type().getFieldDescriptor(propertyNameOrg).isLoadable())
-								returnValue = rowSet.getObject(propertyName);
-							else
-								returnValue = null;
-							
-						}catch(Exception e){
-							// It is the chance to convert primitive value to desired object //
-							if(!Database.dbPrimitiveTypes.containsKey(m.getReturnType())){
-								WebObjectType type = MetaworksRemoteService.getInstance().getMetaworksType(m.getReturnType().getName());
-								ObjectType objectType = (ObjectType) type.metaworks2Type();
-								ObjectInstance objInst = (ObjectInstance) objectType.createInstance();
-								
-								if(IDAO.class.isAssignableFrom(m.getReturnType())){
-									objInst.setObject(MetaworksDAO.createDAOImpl(m.getReturnType()));
+						
+	//					try {
+	//					if(rowSet.isClosed()) { 
+	//						throw new UEngineException("This DAO has been already closed. If you use TransactionContext, Use DAO during TransactionContext is alive.");
+	//					}
+	//					}catch (Exception ex) {
+	//						ex.printStackTrace();
+	//					}
+						
+						if ( Boolean.class.isAssignableFrom(m.getReturnType()) ) {
+							returnValue = Boolean.valueOf( (rowSet.getInt(propertyName)==1)?true:false );
+						} else {
+							if (m.getName().equals("getInt") ||  
+									m.getName().equals("getLong") || 
+									m.getName().equals("getBoolean") || 
+									m.getName().equals("getDate") || 
+									m.getName().equals("getString")) {
+								try{
+									return m.invoke(this, args);		
+								}catch(Exception e){
+									throw e.getCause();
 								}
+							} 
+							
+							try{
+								if(MetaworksRemoteService.getInstance().getMetaworksType(daoClass.getName()).metaworks2Type().getFieldDescriptor(propertyNameOrg).isLoadable())
+									returnValue = rowSet.getObject(propertyName);
+								else
+									returnValue = null;
 								
-								boolean atLeastOnceHaveValue = false;
-								
-								ORMapping ormapping = m.getAnnotation(ORMapping.class);
-								if(ormapping!=null){
-									String[] ORMPropNames = ormapping.objectFields();
-									for(int i=0; i<ORMPropNames.length; i++){
+							}catch(Exception e){
+								// It is the chance to convert primitive value to desired object //
+								if(!Database.dbPrimitiveTypes.containsKey(m.getReturnType())){
+									WebObjectType type = MetaworksRemoteService.getInstance().getMetaworksType(m.getReturnType().getName());
+									ObjectType objectType = (ObjectType) type.metaworks2Type();
+									ObjectInstance objInst = (ObjectInstance) objectType.createInstance();
+									
+									if(IDAO.class.isAssignableFrom(m.getReturnType())){
+										objInst.setObject(MetaworksDAO.createDAOImpl(m.getReturnType()));
+									}
+									
+									boolean atLeastOnceHaveValue = false;
+									
+									ORMapping ormapping = m.getAnnotation(ORMapping.class);
+									if(ormapping!=null){
+										String[] ORMPropNames = ormapping.objectFields();
+										for(int i=0; i<ORMPropNames.length; i++){
+											
+											try{
+												Object value = rowSet.getObject(ormapping.databaseFields()[i]);
+												
+												String mappingPropName = ORMPropNames[i];
+												mappingPropName = WebObjectType.toUpperStartedPropertyName(mappingPropName);
+												
+												objInst.setFieldValue(mappingPropName, value);
+												atLeastOnceHaveValue = true;
+											}catch(Exception ex){
+											}
+										}
 										
+										if(atLeastOnceHaveValue)
+											return objInst.getObject();
+									}
+									
+									for(int i=0; i<objectType.getFieldDescriptors().length; i++){
+										FieldDescriptor fd = objectType.getFieldDescriptors()[i];
+																	
+										String actualPropertyName = propertyName + "___" + fd.getName();
+	
 										try{
-											Object value = rowSet.getObject(ormapping.databaseFields()[i]);
-											
-											String mappingPropName = ORMPropNames[i];
-											mappingPropName = WebObjectType.toUpperStartedPropertyName(mappingPropName);
-											
-											objInst.setFieldValue(mappingPropName, value);
+											Object propValue = rowSet.getObject(actualPropertyName.toUpperCase());
+											objInst.setFieldValue(fd.getName(), propValue);
 											atLeastOnceHaveValue = true;
 										}catch(Exception ex){
 										}
@@ -1046,208 +1071,196 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 									if(atLeastOnceHaveValue)
 										return objInst.getObject();
 								}
-								
-								for(int i=0; i<objectType.getFieldDescriptors().length; i++){
-									FieldDescriptor fd = objectType.getFieldDescriptors()[i];
-																
-									String actualPropertyName = propertyName + "___" + fd.getName();
-
-									try{
-										Object propValue = rowSet.getObject(actualPropertyName.toUpperCase());
-										objInst.setFieldValue(fd.getName(), propValue);
-										atLeastOnceHaveValue = true;
-									}catch(Exception ex){
-									}
-								}
-								
-								if(atLeastOnceHaveValue)
-									return objInst.getObject();
+	
+								throw new Exception("failed to get property value '" + propertyName + "'", e);
 							}
-
-							throw new Exception("failed to get property value '" + propertyName + "'", e);
 						}
-					}
-				} else {
-					if (args!=null && args.length==1 && args[0] instanceof String && 
-							(m.getName().equals("getInt") ||  
-							m.getName().equals("getLong") || 
-							m.getName().equals("getBoolean") || 
-							m.getName().equals("getDate") || 
-							m.getName().equals("getString"))
-						)
-					{
-						propertyName = ((String) args[0]).toUpperCase();
+					} else {
+						if (args!=null && args.length==1 && args[0] instanceof String && 
+								(m.getName().equals("getInt") ||  
+								m.getName().equals("getLong") || 
+								m.getName().equals("getBoolean") || 
+								m.getName().equals("getDate") || 
+								m.getName().equals("getString"))
+							)
+						{
+							propertyName = ((String) args[0]).toUpperCase();
+						}
+						
+						returnValue = cache.get(propertyName);
+						
+	//					if("MetaworksContext".equals(propertyName) &&
+	//						returnValue == null){
+	//						returnValue = new MetaworksContext();
+	//						cache.put(propertyName, returnValue);
+	//					}
 					}
 					
-					returnValue = cache.get(propertyName);
-					
-//					if("MetaworksContext".equals(propertyName) &&
-//						returnValue == null){
-//						returnValue = new MetaworksContext();
-//						cache.put(propertyName, returnValue);
-//					}
-				}
-				
-				// try to convert an integer value to proper mapping values for types
-				if(returnValue instanceof Number){
-					Number returnValueInNumber = (Number)returnValue;
-					if(m.getReturnType() == Long.class || m.getReturnType() == long.class ){
-						return Long.valueOf(returnValueInNumber.longValue());
-					}
-					if(m.getReturnType() == Integer.class || m.getReturnType() == int.class ){
-						return Integer.valueOf(returnValueInNumber.intValue());
-					}
-					if(m.getReturnType() == Boolean.class || m.getReturnType() == boolean.class ){
-						return Boolean.valueOf(returnValueInNumber.intValue() == 1);
-					}
-				}
-				
-				// try to null values into proper default primitive types' values
-				if(returnValue == null){
-					if(m.getReturnType() == boolean.class){
-						return Boolean.valueOf(false);
-					}					
-					if(m.getReturnType() == int.class){
-						return Integer.valueOf(0);
-					}					
-					if(m.getReturnType() == long.class){
-						return Long.valueOf(0);
-					}					
-				}
-				
-				//	try to parse the string value into integer type.
-				if(returnValue instanceof String){ 
-					if(m.getReturnType() == int.class || Integer.class.isAssignableFrom(m.getReturnType())){
-						try{
-							return new Integer((String)returnValue);
-						}catch(Exception e){
+					// try to convert an integer value to proper mapping values for types
+					if(returnValue instanceof Number){
+						Number returnValueInNumber = (Number)returnValue;
+						if(m.getReturnType() == Long.class || m.getReturnType() == long.class ){
+							return Long.valueOf(returnValueInNumber.longValue());
 						}
-					}	
-					
-					if(m.getReturnType() == long.class || Long.class.isAssignableFrom(m.getReturnType())){
-						try{
-							return new Long((String)returnValue);
-						}catch(Exception e){
+						if(m.getReturnType() == Integer.class || m.getReturnType() == int.class ){
+							return Integer.valueOf(returnValueInNumber.intValue());
+						}
+						if(m.getReturnType() == Boolean.class || m.getReturnType() == boolean.class ){
+							return Boolean.valueOf(returnValueInNumber.intValue() == 1);
 						}
 					}
-				}
-				
-				//primitive type mappings
-				if(returnValue instanceof Boolean && m.getReturnType() == boolean.class){
+					
+					// try to null values into proper default primitive types' values
+					if(returnValue == null){
+						if(m.getReturnType() == boolean.class){
+							return Boolean.valueOf(false);
+						}					
+						if(m.getReturnType() == int.class){
+							return Integer.valueOf(0);
+						}					
+						if(m.getReturnType() == long.class){
+							return Long.valueOf(0);
+						}					
+					}
+					
+					//	try to parse the string value into integer type.
+					if(returnValue instanceof String){ 
+						if(m.getReturnType() == int.class || Integer.class.isAssignableFrom(m.getReturnType())){
+							try{
+								return new Integer((String)returnValue);
+							}catch(Exception e){
+							}
+						}	
+						
+						if(m.getReturnType() == long.class || Long.class.isAssignableFrom(m.getReturnType())){
+							try{
+								return new Long((String)returnValue);
+							}catch(Exception e){
+							}
+						}
+					}
+					
+					//primitive type mappings
+					if(returnValue instanceof Boolean && m.getReturnType() == boolean.class){
+						return returnValue;
+					}
+					
+					if(returnValue instanceof Number && (m.getReturnType() == int.class || m.getReturnType() == long.class)){
+						return returnValue;
+					}
+					//end
+	
+					
+					if(returnValue!=null && !m.getReturnType().isAssignableFrom(returnValue.getClass())){
+						throw new Exception("DAO's field type of '"+propertyName+"' is mismatch with the actual table's field.");
+					}
+					
+					
+					
 					return returnValue;
 				}
+			}else
+			//if setter 
+			if(m.getName().startsWith("set")){
+				String propertyName = methodName.substring(3);
 				
-				if(returnValue instanceof Number && (m.getReturnType() == int.class || m.getReturnType() == long.class)){
-					return returnValue;
-				}
-				//end
-
-				
-				if(returnValue!=null && !m.getReturnType().isAssignableFrom(returnValue.getClass())){
-					throw new Exception("DAO's field type of '"+propertyName+"' is mismatch with the actual table's field.");
-				}
+				isDirty = true;
 				
 				
+	//			if("writer".equalsIgnoreCase(propertyName)){
+	//				System.out.println();
+	//			}
 				
-				return returnValue;
-			}
-		}else
-		//if setter 
-		if(m.getName().startsWith("set")){
-			String propertyName = methodName.substring(3);
-			
-			isDirty = true;
-			
-			
-//			if("writer".equalsIgnoreCase(propertyName)){
-//				System.out.println();
-//			}
-			
-			// ORMapping option: Object should be mapped into relation fields //
-			if(args.length==1 && !Database.dbPrimitiveTypes.containsKey(m.getParameterTypes()[0])){
-				
-				ORMapping ormapping = m.getAnnotation(ORMapping.class);
-				
-				if(ormapping==null){
-					try{
-						Method getter = getDaoClass().getMethod("get" + propertyName, new Class[]{});
+				// ORMapping option: Object should be mapped into relation fields //
+				if(args.length==1 && !Database.dbPrimitiveTypes.containsKey(m.getParameterTypes()[0])){
 					
-						if(getter!=null)
-							ormapping = getter.getAnnotation(ORMapping.class);
-					}catch(Exception ex){
-					}
-				}
+					ORMapping ormapping = m.getAnnotation(ORMapping.class);
 					
-				if(args[0]==null) 
-					return null; //means ignore when the object
-
-				if(ormapping!=null){
-					WebObjectType type = MetaworksRemoteService.getInstance().getMetaworksType(m.getParameterTypes()[0].getName());
-					ObjectType objectType = (ObjectType) type.metaworks2Type();
-					ObjectInstance objInst = (ObjectInstance) objectType.createInstance();
-					
-					objInst.setObject(args[0]);
-					
-					boolean atLeastOnceHaveValue = false;
-					
-					String[] ORMPropNames = ormapping.objectFields();
-					for(int i=0; i<ORMPropNames.length; i++){
+					if(ormapping==null){
+						try{
+							Method getter = getDaoClass().getMethod("get" + propertyName, new Class[]{});
 						
-						String mappingPropName = ORMPropNames[i];
-						mappingPropName = WebObjectType.toUpperStartedPropertyName(mappingPropName);
-
-						Object value = objInst.getFieldValue(mappingPropName);
-
-						String databaseFieldName = ormapping.databaseFields()[i];
-						
-						//mapping type check
-						if(value!=null){
-							Class propertyType = (Class) getPropertyType(databaseFieldName.toUpperCase());
-							if(propertyType!=null)
-								if(!propertyType.isAssignableFrom(value.getClass())){
-									throw new Exception("[ORMapping error] the field '" + databaseFieldName + "' cannot be mapped with object field : '" + type.getName() + "." + mappingPropName + "'.");
-								}
+							if(getter!=null)
+								ormapping = getter.getAnnotation(ORMapping.class);
+						}catch(Exception ex){
 						}
-						
-						set(databaseFieldName, value);
-						modifiedFieldMap.put(ormapping.databaseFields()[i].toUpperCase(), propertyName);
-
 					}
-
-					return null;
+						
+					if(args[0]==null) 
+						return null; //means ignore when the object
+	
+					if(ormapping!=null){
+						WebObjectType type = MetaworksRemoteService.getInstance().getMetaworksType(m.getParameterTypes()[0].getName());
+						ObjectType objectType = (ObjectType) type.metaworks2Type();
+						ObjectInstance objInst = (ObjectInstance) objectType.createInstance();
+						
+						objInst.setObject(args[0]);
+						
+						boolean atLeastOnceHaveValue = false;
+						
+						String[] ORMPropNames = ormapping.objectFields();
+						for(int i=0; i<ORMPropNames.length; i++){
+							
+							String mappingPropName = ORMPropNames[i];
+							mappingPropName = WebObjectType.toUpperStartedPropertyName(mappingPropName);
+	
+							Object value = objInst.getFieldValue(mappingPropName);
+	
+							String databaseFieldName = ormapping.databaseFields()[i];
+							
+							//mapping type check
+							if(value!=null){
+								Class propertyType = (Class) getPropertyType(databaseFieldName.toUpperCase());
+								if(propertyType!=null)
+									if(!propertyType.isAssignableFrom(value.getClass())){
+										throw new Exception("[ORMapping error] the field '" + databaseFieldName + "' cannot be mapped with object field : '" + type.getName() + "." + mappingPropName + "'.");
+									}
+							}
+							
+							set(databaseFieldName, value);
+							modifiedFieldMap.put(ormapping.databaseFields()[i].toUpperCase(), propertyName);
+	
+						}
+	
+						return null;
+					}
+				}
+				
+				
+				Object value;
+				
+				if(propertyName.length()==0 && args.length==2){
+					propertyName = (String) args[0];
+					value = args[1];
+					
+				}else{//TODO: type check for typed DAO 	
+					value = args[0];
+				}
+				
+				set(propertyName, value);
+	
+				//Synchronize the original value to be set by databaseMe(). that means when you set some value to databaseMe().setXXX then your original value would be changed.
+				if(getSynchronizedObject()!=null){
+					WebObjectType wot = MetaworksRemoteService.getInstance().getMetaworksType(getSynchronizedObject().getClass().getName());
+					ObjectInstance instance = (ObjectInstance) wot.metaworks2Type().createInstance();
+					instance.setObject(getSynchronizedObject());
+					instance.setFieldValue(propertyName, value);
+				}
+	
+				return null;
+	
+			}else{
+				try{
+					return m.invoke(this, args);
+					
+				}catch(Exception e){
+					throw e.getCause();
 				}
 			}
-			
-			
-			Object value;
-			
-			if(propertyName.length()==0 && args.length==2){
-				propertyName = (String) args[0];
-				value = args[1];
-				
-			}else{//TODO: type check for typed DAO 	
-				value = args[0];
-			}
-			
-			set(propertyName, value);
+		}finally{
+			if(TransactionContext.getThreadLocalInstance()!=null)
+				TransactionContext.getThreadLocalInstance().setNeedSecurityCheck(securityCheck);
 
-			//Synchronize the original value to be set by databaseMe(). that means when you set some value to databaseMe().setXXX then your original value would be changed.
-			if(getSynchronizedObject()!=null){
-				WebObjectType wot = MetaworksRemoteService.getInstance().getMetaworksType(getSynchronizedObject().getClass().getName());
-				ObjectInstance instance = (ObjectInstance) wot.metaworks2Type().createInstance();
-				instance.setObject(getSynchronizedObject());
-				instance.setFieldValue(propertyName, value);
-			}
-
-			return null;
-
-		}else{
-			try{
-				return m.invoke(this, args);
-				
-			}catch(Exception e){
-				throw e.getCause();
-			}
 		}
 	}
 	
