@@ -183,11 +183,15 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 			ClassField field = getSourceCodes().getClassModeler().getClassFields().get(i);
 			
 			String fieldNameFirstCharUpper = UEngineUtil.toOnlyFirstCharacterUpper(field.getFieldName());
+			String fieldType = field.getType();
+			
+			if(fieldType.startsWith("java.lang"))
+				fieldType = fieldType.substring("java.lang".length()+1);
 			
 			sb
-				.append("	").append(field.getType()).append(" ").append(field.getFieldName()).append(";\n")
-				.append("		public ").append(field.getType()).append(" get").append(fieldNameFirstCharUpper).append("(){ return ").append(field.getFieldName()).append("; }\n")
-				.append("		public void set").append(fieldNameFirstCharUpper).append("(").append(field.getType()).append(" ").append(field.getFieldName()).append("){ this.").append(field.getFieldName()).append(" = ").append(field.getFieldName()).append("; }\n\n")
+				.append("	").append(fieldType).append(" ").append(field.getFieldName()).append(";\n")
+				.append("		public ").append(fieldType).append(" get").append(fieldNameFirstCharUpper).append("(){ return ").append(field.getFieldName()).append("; }\n")
+				.append("		public void set").append(fieldNameFirstCharUpper).append("(").append(fieldType).append(" ").append(field.getFieldName()).append("){ this.").append(field.getFieldName()).append(" = ").append(field.getFieldName()).append("; }\n\n")
 				;
 		}
 		
