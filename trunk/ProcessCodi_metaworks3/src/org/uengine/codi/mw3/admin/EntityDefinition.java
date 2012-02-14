@@ -290,7 +290,8 @@ public class EntityDefinition implements ContextAware, PropertyListable{
 		if(packageName != null)
 			sb.append("package ").append(getPackageName()).append(";\n\n");
 		
-		sb.append("public class " + entityName).append(" extends Database").append("<I" +  entityName + ">").append(" implements ").append("I" +  entityName).append("{\n\n");
+		sb	.append("import org.metaworks.dao.Database;\n\n")
+			.append("public class " + entityName).append(" extends Database").append("<I" +  entityName + ">").append(" implements ").append("I").append(entityName).append("{\n\n");
 		
 		for(int i=0; i<this.entityFields.size(); i++){
 			EntityField entityField = this.entityFields.get(i);
@@ -301,17 +302,20 @@ public class EntityDefinition implements ContextAware, PropertyListable{
 			String classType = "";
 			
 			if(dataType.equals("INT"))
-				classType = "java.lang.Long";
+				classType = "Long";
 			else if(dataType.equals("CHAR") || dataType.equals("VARCHAR"))
-				classType = "java.lang.String";
+				classType = "String";
 			else if(dataType.equals("DATETIME"))
 				classType = "java.util.Date";
 			else if(dataType.equals("TIMESTAMP"))
-				classType = "java.lang.Double";
+				classType = "Double";
 					
-			classDefinition.getSourceCodes().getClassModeler().newClassField.setFieldName(fieldName);
-			classDefinition.getSourceCodes().getClassModeler().newClassField.setType(classType);
-			classDefinition.getSourceCodes().getClassModeler().newClassField.add();	
+			ClassField cf = new ClassField();
+			cf.classModeler = classDefinition.getSourceCodes().getClassModeler();
+			cf.classModeler.setNewClassField(new ClassField());
+			cf.setFieldName(fieldName);
+			cf.setType(classType);
+			cf.add();	
 			
 			String fieldNameFirstCharUpper = UEngineUtil.toOnlyFirstCharacterUpper(fieldName);
 			
@@ -321,6 +325,30 @@ public class EntityDefinition implements ContextAware, PropertyListable{
 				.append("		public void set").append(fieldNameFirstCharUpper).append("(").append(classType).append(" ").append(fieldName).append("){ this.").append(fieldName).append(" = ").append(fieldName).append("; }\n\n")
 			;
 		}		
+		
+		sb
+//				.append("	@org.metaworks.annotations.ServiceMethod(callByContent=true)\n")
+				.append("	public void create() throws Exception{\n")
+				.append("		createDatabaseMe();\n")
+				.append("	}\n\n")
+				
+//				.append("	@org.metaworks.annotations.ServiceMethod(callByContent=true)\n")
+				.append("	public void save() throws Exception{\n")
+				.append("		syncToDatabaseMe();\n")
+				.append("	}\n\n")
+
+//				.append("	@org.metaworks.annotations.ServiceMethod\n")
+//				.append("	public ").append(entityName).append(" find() throws Exception;\n\n")
+				.append("	public Object find() throws Exception;\n\n")
+				.append("		return databaseMe();\n")
+				.append("	}\n\n")
+				
+//				.append("	@org.metaworks.annotations.ServiceMethod\n")
+				.append("	public void delete() throws Exception{\n")
+				.append("		deleteDatabaseMe();\n")
+				.append("	}\n\n")
+		;
+		
 		sb.append("}");
 		
 		classDefinition.generateFaceHelperSourceCode();
@@ -349,7 +377,11 @@ public class EntityDefinition implements ContextAware, PropertyListable{
 		if(packageName != null)
 			sb.append("package ").append(getPackageName()).append(";\n\n");
 		
-		sb.append("public class " + entityName).append(" extends IDAO").append("{\n\n");
+		sb	.append("import org.metaworks.dao.IDAO;\n")
+			.append("import org.metaworks.annotation.ServiceMethod;\n")
+			.append("import javax.persistence.Id;\n\n")
+			
+			.append("public interface ").append(entityName).append(" extends IDAO{\n\n");
 		
 		for(int i=0; i<this.entityFields.size(); i++){
 			EntityField entityField = this.entityFields.get(i);
@@ -360,25 +392,49 @@ public class EntityDefinition implements ContextAware, PropertyListable{
 			String classType = "";
 			
 			if(dataType.equals("INT"))
-				classType = "java.lang.Long";
+				classType = "Long";
 			else if(dataType.equals("CHAR") || dataType.equals("VARCHAR"))
-				classType = "java.lang.String";
+				classType = "String";
 			else if(dataType.equals("DATETIME"))
 				classType = "java.util.Date";
 			else if(dataType.equals("TIMESTAMP"))
-				classType = "java.lang.Double";
+				classType = "Double";
 			
-			classDefinition.getSourceCodes().getClassModeler().newClassField.setFieldName(fieldName);
-			classDefinition.getSourceCodes().getClassModeler().newClassField.setType(classType);
-			classDefinition.getSourceCodes().getClassModeler().newClassField.add();	
+			ClassField cf = new ClassField();
+			cf.classModeler = classDefinition.getSourceCodes().getClassModeler();
+			cf.classModeler.setNewClassField(new ClassField());
+			cf.setFieldName(fieldName);
+			cf.setType(classType);
+			cf.add();	
 			
 			String fieldNameFirstCharUpper = UEngineUtil.toOnlyFirstCharacterUpper(fieldName);
 			
+			if(entityField.isKey()){
+				sb.append("	@Id\n");
+			}
+			
 			sb
-				.append("		public ").append(classType).append(" get").append(fieldNameFirstCharUpper).append("();\n")
-				.append("		public void set").append(fieldNameFirstCharUpper).append("(").append(classType).append(" ").append(fieldName).append(");\n\n")
+				.append("	public ").append(classType).append(" get").append(fieldNameFirstCharUpper).append("();\n")
+				.append("	public void set").append(fieldNameFirstCharUpper).append("(").append(classType).append(" ").append(fieldName).append(");\n\n")
 			;
 		}		
+		
+		sb
+		.append("\n\n")
+		.append("	@ServiceMethod(callByContent=true)\n")
+		.append("	public void create() throws Exception;\n\n")
+		
+		.append("	@ServiceMethod(callByContent=true)\n")
+		.append("	public void save() throws Exception;\n\n")
+
+		.append("	@ServiceMethod\n")
+//		.append("	public ").append(entityName).append(" find() throws Exception;\n\n")
+		.append("	public Object find() throws Exception;\n\n")
+		
+		.append("	@ServiceMethod\n")
+		.append("	public void delete() throws Exception;\n\n")
+		;
+
 		sb.append("}");
 		
 		classDefinition.generateFaceHelperSourceCode();
