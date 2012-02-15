@@ -113,7 +113,8 @@ org_uengine_codi_mw3_model_Main = function(objectId, className){
 	$("#objDiv_" + objectId).addClass("mw3_layout").attr("objectid", objectId);
 	
 	this.layout = new HashMap();
-	this.layout.put("outer", innerLayout);
+	
+	this.layout.put("outer", outerLayout);
 	this.layout.put("inner", innerLayout);
 	this.layout.put("middle", middleLayout);
 	

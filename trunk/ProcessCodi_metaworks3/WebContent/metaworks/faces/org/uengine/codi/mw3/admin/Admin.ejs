@@ -28,13 +28,13 @@
   
   
     <div class="ui-layout-west">
- 		<div class="inner-center" style="padding-bottom:35px;">
+ 		<div class="inner-center" style="padding-bottom:35px; height:95%">
 			<%=fields.resourceWindow.here()%>     
 		</div>		
 	</div>	
 	
     <div class="ui-layout-center">
-    	<div class="middle-center" style="padding-bottom:35px;">
+    	<div class="middle-center" style="padding-bottom:35px; height:95%">
 			<%=fields.contentWindow.here()%>
 		</div>
 	</div>
@@ -43,6 +43,8 @@
 
 
 <%
+	console.debug("ejs");
+	
 }else{
 %>
 LOADING...
