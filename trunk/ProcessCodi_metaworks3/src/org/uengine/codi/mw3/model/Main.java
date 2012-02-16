@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredToClient;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
@@ -106,7 +107,7 @@ public class Main {
 		return new Main(login);
 	}
 	
-	@ServiceMethod
+	@ServiceMethod(target=ServiceMethodContext.TARGET_SELF)
 	public Admin admin() throws Exception{
 		return new Admin(login);
 	}	
