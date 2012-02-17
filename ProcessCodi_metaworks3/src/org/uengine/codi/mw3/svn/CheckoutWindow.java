@@ -58,12 +58,12 @@ public class CheckoutWindow extends SVNWindow{
         final SVNURL url = repositoryURL.appendPath("MyRepos", false);
 
         
-        String myWorkingCopyPath = CodiDwrServlet.codiClassLoader.sourceCodeBase();//"/Users/jyjang/MyWorkingCopy";
+        String myWorkingCopyPath = CodiClassLoader.getMyClassLoader().mySourceCodeBase();//"/Users/jyjang/MyWorkingCopy";
 
         File wcDir = new File(myWorkingCopyPath).getParentFile(); //project folder is one level parent folder than 'src'
         
         if (wcDir.exists()) {
-        	throw new Exception("Already there's checkout working copy exists.");
+        	throw new Exception("Already there's checkout working copy exists. If your working copy looks corrupt, try 'clearWorkingCopy'.");
         }
 
         
@@ -75,9 +75,37 @@ public class CheckoutWindow extends SVNWindow{
 
 		//let the session knows the source code is checked out that means classloader should use this code base 
 		HttpSession session = TransactionContext.getThreadLocalInstance().getRequest().getSession(); 
-		session.setAttribute("sourceCodeBase", CodiClassLoader.sourceCodeBase());
+		session.setAttribute("sourceCodeBase", CodiClassLoader.getMyClassLoader().mySourceCodeBase());
 
 		setLog("check out done !");
 	}
+	
+	@ServiceMethod(needToConfirm=true)
+	public void clearWorkingCopy() throws SVNException, Exception{
+
+		String myWorkingCopyPath = CodiDwrServlet.codiClassLoader.sourceCodeBase();//"/Users/jyjang/MyWorkingCopy";
+
+        File wcDir = new File(myWorkingCopyPath).getParentFile(); //project folder is one level parent folder than 'src'
+        
+                
+        deleteDir(wcDir);
+        
+	}
+	
+	public static boolean deleteDir(File dir) {
+	    if (dir.isDirectory()) {
+	        String[] children = dir.list();
+	        for (int i=0; i<children.length; i++) {
+	            boolean success = deleteDir(new File(dir, children[i]));
+	            if (!success) {
+	                return false;
+	            }
+	        }
+	    }
+
+	    // The directory is now empty so delete it
+	    return dir.delete();
+	}
+		
 
 }
