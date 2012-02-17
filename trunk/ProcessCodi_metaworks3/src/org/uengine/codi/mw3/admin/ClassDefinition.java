@@ -5,13 +5,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Iterator;
-
-import javax.servlet.http.HttpSession;
 
 import net.sourceforge.pmd.IRuleViolation;
 import net.sourceforge.pmd.PMD;
@@ -21,43 +17,24 @@ import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.WebFieldDescriptor;
 import org.metaworks.WebObjectType;
-import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.NonEditable;
 import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.dao.TransactionContext;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.example.ide.CompileError;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.tmatesoft.svn.core.SVNErrorMessage;
-import org.tmatesoft.svn.core.SVNException;
-import org.tmatesoft.svn.core.SVNURL;
-import org.tmatesoft.svn.core.internal.io.dav.DAVRepositoryFactory;
-import org.tmatesoft.svn.core.internal.io.fs.FSRepositoryFactory;
-import org.tmatesoft.svn.core.internal.io.svn.SVNRepositoryFactoryImpl;
-import org.tmatesoft.svn.core.internal.wc.DefaultSVNOptions;
-import org.tmatesoft.svn.core.wc.SVNClientManager;
-import org.tmatesoft.svn.core.wc.SVNCommitClient;
-import org.tmatesoft.svn.core.wc.SVNDiffClient;
-import org.tmatesoft.svn.core.wc.SVNRevision;
-import org.tmatesoft.svn.core.wc.SVNUpdateClient;
-import org.tmatesoft.svn.core.wc.SVNWCUtil;
-import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.CodiDwrServlet;
 import org.uengine.codi.mw3.alm.MemoryRenderer;
 import org.uengine.codi.mw3.alm.QualityOption;
 import org.uengine.codi.mw3.model.FaceHelperSourceCode;
+import org.uengine.codi.mw3.model.Feedback;
 import org.uengine.codi.mw3.model.JavaSourceCode;
 import org.uengine.codi.mw3.model.MobileWindow;
 import org.uengine.codi.mw3.model.Popup;
-import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.model.TemplateDesigner;
 import org.uengine.codi.mw3.model.Window;
 import org.uengine.codi.mw3.svn.CheckoutWindow;
-import org.uengine.codi.mw3.svn.CommitEventHandler;
 import org.uengine.codi.mw3.svn.CommitWindow;
-import org.uengine.codi.mw3.svn.UpdateEventHandler;
-import org.uengine.codi.mw3.svn.WCEventHandler;
 import org.uengine.codi.mw3.widget.IFrame;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.NeedArrangementToSerialize;
@@ -86,7 +63,8 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		
 		this.qualityOption = new QualityOption();
-
+		
+		//this.feedback = new Feedback();
 	}
 	
 	String alias;
@@ -169,6 +147,16 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		public void setQualityOption(QualityOption qualityOption) {
 			this.qualityOption = qualityOption;
 		}
+	
+	/*
+	Feedback feedback;
+		public Feedback getFeedback() {
+			return feedback;
+		}
+		public void setFeedback(Feedback feedback) {
+			this.feedback = feedback;
+		}
+	*/
 		
 	@ServiceMethod(callByContent=true)
 	public void generateSourceCode(){
@@ -404,6 +392,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		
 		/// generate source file
 		File sourceCodeFile = new File(CodiDwrServlet.codiClassLoader.sourceCodeBase() + "/" + getAlias());
+		
 		sourceCodeFile.getParentFile().mkdirs();
 		//sourceCodeFile.createNewFile();
 		
@@ -483,6 +472,14 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		return popup;
 	}
 
+	@ServiceMethod(target=ServiceMethodContext.TARGET_STICK, callByContent=true)
+	public Popup crowdSourcer(){
+		Popup popup = new Popup();
+		popup.setName("crowd Sourcer");
+		popup.setPanel(new CrowdSourcerWindow(getDefId()));
+		
+		return popup;		
+	}
 
 		
 	@Override

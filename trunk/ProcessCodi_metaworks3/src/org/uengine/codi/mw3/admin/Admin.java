@@ -4,6 +4,8 @@ import javax.servlet.http.HttpSession;
 
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.TransactionContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.codi.mw3.model.ClassDesignerContentPanel;
 import org.uengine.codi.mw3.model.ContentWindow;
 import org.uengine.codi.mw3.model.ILogin;
 import org.uengine.codi.mw3.model.Login;
@@ -26,6 +28,14 @@ public class Admin {
 
 		contentWindow = new ContentWindow();
 	}
+	
+	String defId;
+		public String getDefId() {
+			return defId;
+		}
+		public void setDefId(String defId) {
+			this.defId = defId;
+		}
 	
 	@ServiceMethod
 	public void load() throws Exception{

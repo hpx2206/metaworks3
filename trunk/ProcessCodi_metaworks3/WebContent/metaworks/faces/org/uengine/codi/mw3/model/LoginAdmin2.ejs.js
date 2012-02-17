@@ -2,6 +2,7 @@ var org_uengine_codi_mw3_model_LoginAdmin2 = function(objectId, className){
 
 	this.objectId = objectId;
 	this.className = className;
+	
 	var theLoginHelper = this;
 	
     window.fbAsyncInit = function() {
@@ -50,16 +51,13 @@ org_uengine_codi_mw3_model_LoginAdmin2.prototype.setUserInfo = function(){
 	var fluThis = this;
 	
 	FB.api('/me', function(response) {
-		  //alert('Your name is ' + response.name);
-			var convertedUserInfo = {
-					userId: response.id,
-					name: response.name,
-					__className: "org.uengine.codi.mw3.model.LoginAdmin2"
-			}
+			var object = mw3.getObject(fluThis.objectId);
 			
-			convertedUserInfo = mw3.setObject(fluThis.objectId, convertedUserInfo).getObject();
+			object.userId = response.id;
+			object.name = response.name;
+			object.defId = $("#defId").val();
 			
-			convertedUserInfo.login();
+			object.login();
 		});
 	
 }
