@@ -69,15 +69,24 @@ public class JavaSourceCode extends SourceCode {
 			expression = getLineAssistRequested();
 		
 		//System.out.println("expression = " + expression);
-			
+		
+		String code = this.getCode();
+		int lineCnt = 0;
+		for(int i = 0; i < code.length(); ++i) {
+			if((int)code.charAt(i) == 10) lineCnt++;			
+		}
+		//System.out.println("Line Count = " + lineCnt);
+		
 		if(expression.length() > 0){
 					
 			String typeName = null;
 			String fullTypeName = null;
 			String[] lines = getCode().split("\n");
 			
-			if(getCursorPosition().getRow() > 0)
-			for(int i = getCursorPosition().getRow(); i >= 0 && fullTypeName==null; i--){
+			//if(getCursorPosition().getRow() > 0)
+			if(lineCnt > 0)
+			//for(int i = getCursorPosition().getRow(); i >= 0 && fullTypeName==null; i--){
+			for(int i = lineCnt; i >= 0 && fullTypeName==null; i--){
 				String line = lines[i];
 				
 				int whereExp = line.indexOf(" " + expression);
@@ -108,7 +117,6 @@ public class JavaSourceCode extends SourceCode {
 					}
 				}else{ //if typeName found, search the import statement.
 					line = line.trim();
-					//if(line.startsWith("import ") && line.endsWith("." + typeName + ";")){
 					if((line.startsWith("import ") && line.endsWith(".*;")) || (line.startsWith("import ") && line.endsWith("." + typeName + ";"))) {
 						if(line.endsWith(".*;")) {
 							String searchClass = line.substring(line.indexOf(' '), line.length()-2).trim() + typeName;
@@ -174,11 +182,9 @@ public class JavaSourceCode extends SourceCode {
 				
 				//URLClassLoader classLoader = (URLClassLoader) CodiMetaworksRemoteService.class.getClassLoader();
 				URLClassLoader classLoader = (URLClassLoader) org.metaworks.MetaworksContext.class.getClassLoader();
-				//URLClassLoader classLoader2 = (URLClassLoader) java.lang.Object.class.getClassLoader();
 				URL urls[] = classLoader.getURLs();
-				//URL urls2[] = classLoader2.getURLs();
 				
-				StringBuffer sbClasspath = new StringBuffer();
+				//StringBuffer sbClasspath = new StringBuffer();
 				
 		    	
 				
