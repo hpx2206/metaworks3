@@ -14,7 +14,7 @@
 		if(mw3.when != "public"){
 %>				 		
 		 		<td>
-					<img src="images/waveStyle/addUser.png" title="User 추가" onclick="javascript:addFollowers('<%=objectId%>', event)">
+					<img src="images/waveStyle/addUser.png" title="User 추가" onclick="javascript:<%=methods.addFollowers.caller()%>">
 		 		</td>
 <%
 		}
