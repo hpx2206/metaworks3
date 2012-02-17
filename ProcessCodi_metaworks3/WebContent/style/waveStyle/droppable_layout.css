@@ -251,9 +251,19 @@ img {border:0;}
 	background:url(../../images/waveStyle/btToggleMini.png) no-repeat;
 	position:absolute;
 	top:7px;
+	right:30px;
+	cursor:pointer;
+}
+.windowclose {
+	width:15px;
+	height:16px;
+	background:url(../../images/waveStyle/replyDelete.png) no-repeat;
+	position:absolute;
+	top:7px;
 	right:12px;
 	cursor:pointer;
 }
+
 
 .togglebtncalendar {
 	width:15px;
