@@ -13,6 +13,7 @@ import net.sourceforge.pmd.IRuleViolation;
 import net.sourceforge.pmd.PMD;
 
 import org.metaworks.ContextAware;
+import org.metaworks.FieldDescriptor;
 import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.WebFieldDescriptor;
@@ -23,6 +24,7 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.example.ide.CompileError;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.CodiDwrServlet;
 import org.uengine.codi.mw3.alm.MemoryRenderer;
 import org.uengine.codi.mw3.alm.QualityOption;
@@ -31,7 +33,9 @@ import org.uengine.codi.mw3.model.Feedback;
 import org.uengine.codi.mw3.model.JavaSourceCode;
 import org.uengine.codi.mw3.model.MobileWindow;
 import org.uengine.codi.mw3.model.Popup;
+import org.uengine.codi.mw3.model.ProcessDefinition;
 import org.uengine.codi.mw3.model.TemplateDesigner;
+import org.uengine.codi.mw3.model.User;
 import org.uengine.codi.mw3.model.Window;
 import org.uengine.codi.mw3.svn.CheckoutWindow;
 import org.uengine.codi.mw3.svn.CommitWindow;
@@ -63,8 +67,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		
 		this.qualityOption = new QualityOption();
-		
-		//this.feedback = new Feedback();
+
 	}
 	
 	String alias;
@@ -84,6 +87,15 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 			this.version = version;
 		}
 		
+	transient User author; 
+			
+		public User getAuthor() {
+			return author;
+		}
+		public void setAuthor(User author) {
+			this.author = author;
+		}
+
 	String defId;
 	@NonEditable	
 	@Hidden
@@ -324,63 +336,45 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		    }
 		}
 		
-		CompileError[] complieErrorInArray = new CompileError[compileErrors.size()];
-		compileErrors.toArray(complieErrorInArray);
+		CompileError[] compileErrorInArray = new CompileError[compileErrors.size()];
+		compileErrors.toArray(compileErrorInArray);
 		
-		getSourceCodes().getSourceCode().setCompileErrors(complieErrorInArray);
+		getSourceCodes().getSourceCode().setCompileErrors(compileErrorInArray);
+		
+		if(compileErrorInArray.length == 0)
+			refreshClassInfo();
 
 	}
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
-	public Object run() throws Exception{
-		
+	public Popup run() throws Exception{		
 
-		Object o = Thread.currentThread().getContextClassLoader().loadClass(getPackageName() + "." + getClassName()).newInstance();//cl.loadClass(getPackageName() + "." + getClassName()).newInstance();
-		
-		Window outputWindow = new Window();
-		outputWindow.setPanel(o);
-//		outputWindow.
-		
-		return outputWindow;
-	}
+		Runner runner = new Runner();
+		runner.setFullClassName(getPackageName() + "." + getClassName());
+
+		Popup runnerPopup = new Popup();
+		runnerPopup.setName("Run...");
+		runnerPopup.setPanel(runner);
 	
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
-	public Object design() throws Exception{
-		
-		Window outputWindow = new Window();
-		
-		TemplateDesigner designer = new TemplateDesigner(getPackageName() + "." + getClassName());
-		
-		outputWindow.setPanel(designer);
-		
-		return outputWindow;
+		return runnerPopup;
 	}
 
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
-	public Object runMobile() throws Exception{
-		
-
-		Object o = Thread.currentThread().getContextClassLoader().loadClass(getPackageName() + "." + getClassName()).newInstance();//cl.loadClass(getPackageName() + "." + getClassName()).newInstance();
-		
-		MobileWindow outputWindow = new MobileWindow();
-		outputWindow.setPanel(o);
-//		outputWindow.
-		
-		return outputWindow;
-	}	
-	
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
-	public Object runFullWindow() throws Exception{
-		
-//		BrowserWindow window = new BrowserWindow(getPackageName() + "." + getClassName());
-		
-		Window window = new Window(new IFrame("tester.html?className=" + getPackageName() + "." + getClassName()));
-		
-		return window;
-	}	
 	
 	@ServiceMethod(callByContent=true)
 	public void save() throws Exception{
+		
+        CodiClassLoader contextClassLoader = CodiClassLoader.getMyClassLoader();
+		String myWorkingCopyPath = ((CodiClassLoader)contextClassLoader).mySourceCodeBase();//"/Users/jyjang/MyWorkingCopy";
+
+        if(myWorkingCopyPath==null)
+        	throw new Exception("소셜코딩을 환영합니다! 소스코드를 수정하려면 먼저 페이스북 로그인을 하신후 체크아웃(checkout)을 받으셔야 합니.");
+        	
+        File wcDir = new File(myWorkingCopyPath).getParentFile(); //project folder is one level parent folder than 'src'
+        
+        if (!wcDir.exists()) {
+        	throw new Exception("소셜코딩을 환영합니다! 소스코드를 수정하려면 체크아웃(checkout)을 먼저 하십시오.");
+        }
+
 		
 		setAlias(getPackageName().replace('.', '/') + "/" + getClassName() + ".java");
 
@@ -391,8 +385,8 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		String[] definitionIdAndVersionId = org.uengine.kernel.ProcessDefinition.splitDefinitionAndVersionId(fullDefId);
 		
 		/// generate source file
-		File sourceCodeFile = new File(CodiDwrServlet.codiClassLoader.sourceCodeBase() + "/" + getAlias());
-		
+		String sourceCodeBase = CodiClassLoader.getMyClassLoader().sourceCodeBase();
+		File sourceCodeFile = new File(sourceCodeBase + "/" + getAlias());
 		sourceCodeFile.getParentFile().mkdirs();
 		//sourceCodeFile.createNewFile();
 		
@@ -401,7 +395,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		writer.close();
 		
 		//if there is face code, save it.
-		String faceSource = CodiDwrServlet.codiClassLoader.sourceCodeBase() + "/" + getAlias();
+		String faceSource = sourceCodeBase + "/" + getAlias();
 		faceSource = faceSource.substring(0, faceSource.indexOf(".")) + ".ejs";
 		
 		File ejsFile = new File(faceSource);
@@ -417,7 +411,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		}
 		
 		//if there is facehelper code, save it.
-		String faceHelperSource = CodiDwrServlet.codiClassLoader.sourceCodeBase() + "/" + getAlias();
+		String faceHelperSource = sourceCodeBase + "/" + getAlias();
 		faceHelperSource = faceHelperSource.substring(0, faceHelperSource.indexOf(".")) + ".ejs.js";
 		
 		File ejsJsFile = new File(faceHelperSource);
@@ -447,7 +441,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		///
 		
 		processManager.setProcessDefinitionProductionVersion(definitionIdAndVersionId[1]);
-		processManager.applyChanges();
+		//processManager.applyChanges();
 		
 		setDefId(definitionIdAndVersionId[0]);
 		setDefVerId(definitionIdAndVersionId[1]);
@@ -511,11 +505,25 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 	
 	@Override
 	public void afterDeserialization() {
-
+		
+		try {
+			ProcessDefinition def = new ProcessDefinition();
+			def.setDefId(new Long(getDefId()));
+			String authorId = def.databaseMe().getAuthor();
+			
+			User author = new User();
+			author.setUserId(authorId);
+			setAuthor(author);
+			
+		} catch (Exception e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+		
 		setSourceCodes(new ClassSourceCodes());
 		
 		/// read source file
-		File sourceCodeFile = new File(CodiDwrServlet.codiClassLoader.sourceCodeBase() + "/" + getAlias());
+		File sourceCodeFile = new File(CodiClassLoader.getMyClassLoader().sourceCodeBase() + "/" + getAlias());
 		
 		ByteArrayOutputStream bao = new ByteArrayOutputStream();
 		FileInputStream is;
@@ -533,7 +541,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		}
 		
 		//if there is face code, read it.
-		String faceSource = CodiDwrServlet.codiClassLoader.sourceCodeBase() + "/" + getAlias();
+		String faceSource = CodiClassLoader.getMyClassLoader().sourceCodeBase() + "/" + getAlias();
 		faceSource = faceSource.substring(0, faceSource.indexOf(".")) + ".ejs";
 		
 		File ejsFile = new File(faceSource);
@@ -550,10 +558,10 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 				e.printStackTrace();
 			}
 
-		}
+		}else{getSourceCodes().getFace().setCode("");}
 		
 		//if there is facehelper code, read it.
-		String faceHelperSource = CodiDwrServlet.codiClassLoader.sourceCodeBase() + "/" + getAlias();
+		String faceHelperSource = CodiClassLoader.getMyClassLoader().sourceCodeBase() + "/" + getAlias();
 		faceHelperSource = faceHelperSource.substring(0, faceHelperSource.indexOf(".")) + ".ejs.js";
 		
 		File ejsJsFile = new File(faceHelperSource);
@@ -574,8 +582,35 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 			}
 
 		}
+		
+		try {
+			refreshClassInfo();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 				
 	}
 	
+	public void refreshClassInfo() throws Exception{
+		//compile();
+		
+		WebObjectType wot = MetaworksRemoteService.getInstance().getMetaworksType(getPackageName() + "." + getClassName()); 
 	
+		
+		WebFieldDescriptor wfields[] = wot.getFieldDescriptors();
+		FieldDescriptor fields[] = wot.metaworks2Type().getFieldDescriptors();
+
+		ArrayList<ClassField> classFields = new ArrayList<ClassField>();
+		for(int i=0; i<fields.length; i++){
+			WebFieldDescriptor wfd = wfields[i];
+			FieldDescriptor fd = fields[i];
+			ClassField cf = new ClassField();
+			cf.setFieldName(wfd.getName());
+			cf.setType(fd.getClassType().getName());
+			classFields.add(cf);
+		}
+		
+		getSourceCodes().getClassModeler().setClassFields(classFields);
+	}
 }
