@@ -205,7 +205,7 @@ public class CodiDwrServlet extends TransactionalDwrServlet{
 		
     	try {
 /////////////// TODO: disabled for easy testing. someday we need to find dettach with the server
-    		HotSwapper hs = new HotSwapper(8000);
+    	//	HotSwapper hs = new HotSwapper(8000);
     		
 			ClassPool pool = ClassPool.getDefault();
 			
@@ -251,7 +251,7 @@ public class CodiDwrServlet extends TransactionalDwrServlet{
 				Class.forName(className);
 	
 				////////// disabled 
-				hs.reload(className, cc.toBytecode());
+	//			hs.reload(className, cc.toBytecode());
 			}
 
 		}catch(Exception e){
