@@ -90,7 +90,7 @@ public class JavaSourceCode extends SourceCode {
 						int j=line.length()-1;
 						for(; j>=0; j--){
 							char charAt = line.charAt(j);
-							if(!((charAt > 'A' && charAt <'z') || (charAt > '1' && charAt <'9') || charAt == '.'))
+							if(!((charAt > 'A' && charAt <'z') || (charAt > '1' && charAt <'9')))
 								break;
 						}
 						
@@ -109,11 +109,19 @@ public class JavaSourceCode extends SourceCode {
 				}else{ //if typeName found, search the import statement.
 					line = line.trim();
 					//if(line.startsWith("import ") && line.endsWith("." + typeName + ";")){
-					if(line.startsWith("import ") && line.endsWith(".*;")){
+					if((line.startsWith("import ") && line.endsWith(".*;")) || (line.startsWith("import ") && line.endsWith("." + typeName + ";"))) {
+						if(line.endsWith(".*;")) {
+							String searchClass = line.substring(line.indexOf(' '), line.length()-2).trim() + typeName;
+							try {
+								Thread.currentThread().getContextClassLoader().loadClass(searchClass);
+								fullTypeName = searchClass;
+							}catch(Exception ex) {}
+						}
+						else {
+							fullTypeName = line.substring(line.indexOf(' '), line.length()-1).trim();
+						}
 						
-						fullTypeName = line.substring(line.indexOf(' '), line.length()-1).trim();
-						
-					}
+					}					
 					
 				}
 			}
