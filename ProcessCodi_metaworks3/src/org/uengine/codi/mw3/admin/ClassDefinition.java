@@ -29,7 +29,6 @@ import org.uengine.codi.mw3.CodiDwrServlet;
 import org.uengine.codi.mw3.alm.MemoryRenderer;
 import org.uengine.codi.mw3.alm.QualityOption;
 import org.uengine.codi.mw3.model.FaceHelperSourceCode;
-import org.uengine.codi.mw3.model.Feedback;
 import org.uengine.codi.mw3.model.JavaSourceCode;
 import org.uengine.codi.mw3.model.MobileWindow;
 import org.uengine.codi.mw3.model.Popup;
