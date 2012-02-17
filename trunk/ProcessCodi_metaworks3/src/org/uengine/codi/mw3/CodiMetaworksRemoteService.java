@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.metaworks.WebObjectType;
 import org.metaworks.dao.ConnectionFactory;
+import org.metaworks.dao.TransactionContext;
 import org.metaworks.dwr.InvocationContext;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.springframework.web.context.WebApplicationContext;
@@ -128,6 +129,7 @@ public class CodiMetaworksRemoteService extends MetaworksRemoteService{
 
 	}
 	
+	
 
 	@Override
 	public Object callMetaworksService(String objectTypeName, Object object,
@@ -157,6 +159,29 @@ public class CodiMetaworksRemoteService extends MetaworksRemoteService{
 		
     	Object returnVal = null;
 		
+//    	
+//    		final Thread currThread = Thread.currentThread();
+//    		Thread threadChecker = new Thread(){
+//    			Thread theThread = currThread;
+//    			
+//    			@Override
+//    			public void run() {
+//    				try {
+//    					sleep(50000); //TODO: will occur thread full.
+//    					if(theThread.isAlive())
+//    						CodiMetaworksRemoteService.this.stopRequested();
+//    				} catch (InterruptedException e) {
+//    					// TODO Auto-generated catch block
+//    					e.printStackTrace();
+//    				}
+//    				
+//    			}
+//    			
+//    		};
+//    		
+//    		threadCheck.start();
+//    	
+    	
 		try {
 			Method m = object.getClass().getMethod(methodName, new Class[]{});
 			returnVal = m.invoke(object, new Object[]{});
