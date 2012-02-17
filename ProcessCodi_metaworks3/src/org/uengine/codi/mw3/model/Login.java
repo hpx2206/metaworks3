@@ -58,24 +58,24 @@ public class Login extends Database<ILogin> implements ILogin{
 		return main;
 	}
 	*/
-		@Override
-		public Main login() throws Exception {
-			try{
-				setAdmin(databaseMe().isAdmin());
-			}catch(Exception e){}
-			
-			Main admin = new Main(this);
-			
-			//setting the facebook user Id into session attribute;
-			HttpSession session = TransactionContext.getThreadLocalInstance().getRequest().getSession(); 
-			session.setAttribute("userId", getUserId());
-			
-			if(new File(CodiClassLoader.sourceCodeBase()).exists()){
-				session.setAttribute("sourceCodeBase", CodiClassLoader.sourceCodeBase());
-			}
-			
-			return admin;
+	@Override
+	public Main login() throws Exception {
+		try{
+			setAdmin(databaseMe().isAdmin());
+		}catch(Exception e){}
+		
+		Main admin = new Main(this);
+		
+		//setting the facebook user Id into session attribute;
+		HttpSession session = TransactionContext.getThreadLocalInstance().getRequest().getSession(); 
+		session.setAttribute("userId", getUserId());
+		
+		if(new File(CodiClassLoader.mySourceCodeBase()).exists()){
+			session.setAttribute("sourceCodeBase", CodiClassLoader.mySourceCodeBase());
 		}
+		
+		return admin;
+	}
 		
 	
 }

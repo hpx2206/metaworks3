@@ -1,9 +1,1 @@
-<%
-	if(value){
-%>
-	
-<%=resources.mainLogo.here()%>
-
-<%
-	}
-%>
+<%=resources && resources.mainLogo ? resources.mainLogo.here() : "No Logo"%>

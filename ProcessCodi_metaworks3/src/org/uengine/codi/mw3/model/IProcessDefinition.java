@@ -72,6 +72,10 @@ public interface IProcessDefinition extends IDAO{
 
 	public String getName() ;
 	public void setName(String name);
+	
+	@Hidden
+	public String getAuthor();
+	public void setAuthor(String author);
 
 	@Hidden
 	public boolean getIsDeleted();

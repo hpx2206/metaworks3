@@ -13,6 +13,15 @@ public class ProcessDefinition extends Database<IProcessDefinition> implements I
 	@Autowired
 	NewChildWindow newChildWindow;
 	
+	
+	String author;
+		public String getAuthor() {
+			return author;
+		}
+		public void setAuthor(String author) {
+			this.author = author;
+		}
+
 	Long defId;
 		public Long getDefId() {
 			return defId;
