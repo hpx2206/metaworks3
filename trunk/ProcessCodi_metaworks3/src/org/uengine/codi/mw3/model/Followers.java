@@ -52,33 +52,9 @@ public class Followers {
 		
 	}
 	
-	int pageX;
-		@Hidden
-		public int getPageX() {
-			return pageX;
-		}	
-		public void setPageX(int pageX) {
-			this.pageX = pageX;
-		}
-	
-	int pageY;
-		@Hidden
-		public int getPageY() {
-			return pageY;
-		}	
-		public void setPageY(int pageY) {
-			this.pageY = pageY;
-		}
-	
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
-	public Popup addFollowers() throws Exception{
-		System.out.println("this.pageX : " + this.pageX);
-		System.out.println("this.pageY : " + this.pageY);
-		
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_STICK)
+	public Popup addFollowers() throws Exception{		
 		Popup popup = new Popup();
-		
-//		popup.setPageX(this.pageX);
-//		popup.setPageY(this.pageY);
 		
 		popup.setPanel(new AddFollowerPanel(session.login, getInstanceId()));
 		popup.setName("AddFollowerPanel");

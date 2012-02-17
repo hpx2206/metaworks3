@@ -34,7 +34,22 @@ public class EntityDesignerWindow extends ContentWindow {
 		
 		
 		EntityDefinition entityDefinition = (EntityDefinition) GlobalContext.deserialize(resource, EntityDefinition.class);
+		entityDefinition.setDefId(defId);
 		entityDefinition.init();
+		
+/*		try {
+			ProcessDefinition def = new ProcessDefinition();
+			def.setDefId(new Long(defId));
+			String authorId = def.databaseMe().getAuthor();
+			
+			User author = new User();
+			author.setUserId(authorId);
+			entityDefinition.setAuthor(author);
+			
+		} catch (Exception e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}*/
 		
 		entityDesignerContentPanel.setEntityDefinition(entityDefinition);
 		entityDesignerContentPanel.setEntityQuery(new EntityQuery());
