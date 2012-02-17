@@ -43,7 +43,7 @@ public class EntityDefinition implements ContextAware, PropertyListable{
 		} 
 		
 	@Autowired
-	transient protected ProcessManagerRemote processManager;
+	transient public ProcessManagerRemote processManager;
 		
 	public EntityDefinition(){						
 	}
