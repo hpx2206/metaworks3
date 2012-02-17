@@ -203,7 +203,7 @@
   </org.uengine.processdesigner.ActivityTypeDescriptor>
    --> 
 <!-- webService -->
-    <!--  
+     
   <org.uengine.processdesigner.ActivityTypeDescriptor>
     <group>$activitytypes.groups.webservices</group>
     <activityTypeClass>org.uengine.kernel.HTTPInvocationActivity</activityTypeClass>
@@ -228,7 +228,7 @@
     <group>$activitytypes.groups.webservices</group>
     <activityTypeClass>org.uengine.kernel.ReceiveActivity</activityTypeClass>
   </org.uengine.processdesigner.ActivityTypeDescriptor>
-  --> 
+   
 <!-- filehandling -->
 
   <org.uengine.processdesigner.ActivityTypeDescriptor>
@@ -248,7 +248,7 @@
     <activityTypeClass>org.uengine.kernel.DRoolsActivity</activityTypeClass>
   </org.uengine.processdesigner.ActivityTypeDescriptor>
  -->  
- <!-- automation 
+ <!-- automation -->
   
   <org.uengine.processdesigner.ActivityTypeDescriptor>
     <group>Automation</group>
@@ -259,7 +259,7 @@
     <group>Automation</group>
     <activityTypeClass>org.uengine.kernel.ExtSoundPlayActivity</activityTypeClass>
   </org.uengine.processdesigner.ActivityTypeDescriptor>
--->
+
 	
  	
 </list>
