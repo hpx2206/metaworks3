@@ -1,48 +1,23 @@
 package org.uengine.codi.mw3.svn;
 
-import java.io.File;
-import java.util.Collection;
-
-import javax.servlet.http.HttpSession;
-
 import org.directwebremoting.ScriptSession;
 import org.directwebremoting.WebContext;
 import org.directwebremoting.WebContextFactory;
 import org.directwebremoting.proxy.dwr.Util;
-import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.dao.TransactionContext;
-import org.tmatesoft.svn.core.SVNException;
-import org.tmatesoft.svn.core.SVNURL;
 import org.tmatesoft.svn.core.internal.io.dav.DAVRepositoryFactory;
 import org.tmatesoft.svn.core.internal.io.fs.FSRepositoryFactory;
 import org.tmatesoft.svn.core.internal.io.svn.SVNRepositoryFactoryImpl;
 import org.tmatesoft.svn.core.internal.wc.DefaultSVNOptions;
 import org.tmatesoft.svn.core.wc.SVNClientManager;
-import org.tmatesoft.svn.core.wc.SVNCommitClient;
-import org.tmatesoft.svn.core.wc.SVNDiffClient;
-import org.tmatesoft.svn.core.wc.SVNRevision;
-import org.tmatesoft.svn.core.wc.SVNUpdateClient;
 import org.tmatesoft.svn.core.wc.SVNWCUtil;
-import org.uengine.codi.mw3.CodiClassLoader;
-import org.uengine.codi.mw3.CodiDwrServlet;
-import org.uengine.codi.mw3.admin.ClassDefinition;
 
 public class SVNWindow {
 	
-//	ClassDefinition classDefinition;
-	
-	
-	
 	public SVNWindow(){
-		
-	}
-	
-	public SVNWindow(ClassDefinition classDefinition){
 		this.log = "";
 	}
 
 	String log;
-
 		public String getLog() {
 			return log;
 		}
@@ -50,12 +25,7 @@ public class SVNWindow {
 		public void setLog(String log) {
 			this.log = log;
 		}
-		
-	@ServiceMethod
-	public void cancel(){
-		
-	}
-		
+				
 	public void addLog(String log){
 		WebContext wctx = WebContextFactory.get();
 		String currentPage = wctx.getCurrentPage();
@@ -68,10 +38,7 @@ public class SVNWindow {
 	   theScriptSessionUtil.addFunctionCall("mw3.getAutowiredObject('"+ getClass().getName() +"').__getFaceHelper().addLog('" + log + "')");
 
 	}
-	
-	
-	
-	
+
 	protected SVNClientManager getSVNClientManager(){
 		//setup libraries
         DAVRepositoryFactory.setup();
@@ -79,10 +46,10 @@ public class SVNWindow {
         FSRepositoryFactory.setup();
 
         DefaultSVNOptions options = SVNWCUtil.createDefaultOptions(true);
-        String name = "jyjang@uengine.org";
-        String password = "Gx3XS6jA9hc7";
-        SVNClientManager ourClientManager = SVNClientManager.newInstance(options, name, password);
-
+        
+        String name = "mw3.tester1@gmail.com";
+        String password = "XW3ej3kq4xc7";
+        SVNClientManager ourClientManager = SVNClientManager.newInstance(options, name, password);        
         ourClientManager.getCommitClient().setEventHandler(new CommitEventHandler());
         ourClientManager.getUpdateClient().setEventHandler(new UpdateEventHandler(this));
         ourClientManager.getWCClient().setEventHandler(new WCEventHandler());
@@ -90,6 +57,7 @@ public class SVNWindow {
         return ourClientManager;
 	}
 	
+	/*
 	@ServiceMethod
 	public void update() throws SVNException, Exception{
 		
@@ -137,5 +105,6 @@ public class SVNWindow {
         );
         
 	}
+	*/
 
 }
