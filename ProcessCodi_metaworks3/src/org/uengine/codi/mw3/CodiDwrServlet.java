@@ -305,8 +305,12 @@ public class CodiDwrServlet extends TransactionalDwrServlet{
 						"-classpath", sbClasspath.toString()
 				});
 
+//		if(sourceCodeBase==null)
+//			sourceCodeBase = "/Users/jyjang/javasources/";
+
+		//TODO: need to be more cohesive  
 		if(sourceCodeBase==null)
-			sourceCodeBase = "/Users/jyjang/javasources/";
+			sourceCodeBase = cl.sourceCodeBase();
 		
 		cl.setSourcePath(new File[]{new File(sourceCodeBase)});
 				
@@ -324,6 +328,7 @@ public class CodiDwrServlet extends TransactionalDwrServlet{
 			}
 		}
 		
+		//TODO: looks sourceCodeBase is not required
 		CodiClassLoader cl = createClassLoader(sourceCodeBase);
 
 		Thread.currentThread().setContextClassLoader(cl);

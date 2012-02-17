@@ -350,6 +350,10 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 	@Face(displayName = "Run")
 	public Popup run() throws Exception{		
 
+		try{
+			save();
+		}catch(Exception e){}
+		
 		Runner runner = new Runner();
 		runner.setFullClassName(getPackageName() + "." + getClassName());
 

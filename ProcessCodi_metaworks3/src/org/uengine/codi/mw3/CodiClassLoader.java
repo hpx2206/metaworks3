@@ -82,16 +82,17 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
     }
     
     public static CodiClassLoader getMyClassLoader(){
+    	
+    	
         ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
 
         return (CodiClassLoader) contextClassLoader;
     }
     
-    String sourceCodeBase = null;
 	public String sourceCodeBase(){
 
-		if(sourceCodeBase!=null)
-			return sourceCodeBase;
+		if(sourcePath!=null)
+			return sourcePath[0].getPath();
 		
 		String mySourceCodeBase = mySourceCodeBase();
 
@@ -100,20 +101,25 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
 	        File wcDir = new File(mySourceCodeBase).getParentFile(); //project folder is one level parent folder than 'src'
 	        
 	        if (wcDir.exists()) {
-	        	sourceCodeBase = mySourceCodeBase;
+	        	setSourcePath(new File[]{new File(mySourceCodeBase)});
 	        	
 	        	return mySourceCodeBase;
 	        }
 		}
 		
-		sourceCodeBase = "/Users/jyjang/codebase/1401720840/src/"; //TODO: use main committers one for now, but it is needed to changed.
+		//TODO: use main committers one for now, but it is needed to changed.
+    	setSourcePath(new File[]{new File("/Users/jyjang/codebase/1401720840/src/")});
 		
-		return sourceCodeBase;
+		return sourcePath[0].getPath();
 	}
     
 	public static String mySourceCodeBase(){
-		
-		String userId = (String) TransactionContext.getThreadLocalInstance().getRequest().getSession().getAttribute("userId");
+		String userId = null;
+		try{
+			userId = (String) TransactionContext.getThreadLocalInstance().getRequest().getSession().getAttribute("userId");
+		}catch(Exception e){
+			
+		}
 		
 		if(UEngineUtil.isNotEmpty(userId))
 			return "/Users/jyjang/codebase/"+ userId + "/src/";

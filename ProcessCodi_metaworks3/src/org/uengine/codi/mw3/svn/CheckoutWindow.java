@@ -92,13 +92,17 @@ public class CheckoutWindow extends SVNWindow{
 	@ServiceMethod(needToConfirm=true)
 	public void clearWorkingCopy() throws SVNException, Exception{
 
-		String myWorkingCopyPath = CodiDwrServlet.codiClassLoader.sourceCodeBase();//"/Users/jyjang/MyWorkingCopy";
+		String myWorkingCopyPath = CodiClassLoader.mySourceCodeBase();//"/Users/jyjang/MyWorkingCopy";
 
         File wcDir = new File(myWorkingCopyPath).getParentFile(); //project folder is one level parent folder than 'src'
         
                 
         deleteDir(wcDir);
-        
+
+		//let the session knows the source code is no more exists. 
+		HttpSession session = TransactionContext.getThreadLocalInstance().getRequest().getSession(); 
+		session.setAttribute("sourceCodeBase", null);
+
 	}
 	
 	public static boolean deleteDir(File dir) {
