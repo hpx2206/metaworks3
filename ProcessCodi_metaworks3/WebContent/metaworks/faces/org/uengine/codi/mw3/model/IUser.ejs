@@ -6,14 +6,18 @@
 		
 		if(mw3.when == "onlyFaceSmall"){
 %>
-	<img id="userPicture_<%=objectId%>" src="images/portrait/unknown_user.gif" width="30" height="30">
+	<a target="_blank" href="http://www.facebook.com/profile.php?id=<%=value.userId%>">
+		<img id="userPicture_<%=objectId%>" src="images/portrait/unknown_user.gif" width="30" height="30">
+	</a>
 
 <% 
 		} else {
 %>
 
-	<center>
+	<a target="_blank" href="http://www.facebook.com/profile.php?id=<%=value.userId%>">
+
 		<img id="userPicture_<%=objectId%>" src="images/portrait/unknown_user.gif" width="30" height="30">		
+	</a>
 		<%=value.name%>
 	</center>
 <% 
