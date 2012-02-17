@@ -1,6 +1,7 @@
 mw3.importScript("scripts/jquery/jquery-ui-latest.js");
 mw3.importScript("scripts/jquery/jquery.layout-latest.js");
 
+/*
 function check_position(obj, e) {	
 	if( $(obj).css('display') == 'block' )
 	{
@@ -23,6 +24,7 @@ $(document).mousedown(function(e){
 	});   
     
 });
+*/
 
 $(document).ready(function () { 
 	console.debug("ready");
