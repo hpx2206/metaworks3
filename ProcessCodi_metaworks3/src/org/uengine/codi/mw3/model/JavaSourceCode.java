@@ -129,6 +129,14 @@ public class JavaSourceCode extends SourceCode {
 				}
 			}
 			
+			try{
+				String javaLangExp = "java.lang." + expression;
+				Class.forName(javaLangExp);
+				fullTypeName = javaLangExp;
+			}catch(Exception e){
+				
+			}
+			
 			//TODO:
 			//if there should be use of asterisk in the import statement. etc. import com.abc.*,
 			// we need to try to append the typeName where the asterisk and load the class, if the class successfully loaded, 
@@ -184,7 +192,7 @@ public class JavaSourceCode extends SourceCode {
 		    	
 				
 				
-				if(!packageNames.containsKey(expression)) {
+				if(packageNames.size() == 0){//{.containsKey(expression)) {
 					for(URL url : urls){
 						
 						if(url.getFile().endsWith(".jar") || url.getFile().endsWith(".zip") ){
@@ -207,12 +215,30 @@ public class JavaSourceCode extends SourceCode {
 											clsName = clsName.substring(0, clsName.length() - 6);
 											String[] parts = clsName.split("/");
 											if(parts.length > 1){
-												if(!packageNames.containsKey(expression)) 
-													packageNames.put(expression, new HashMap());
-												if(!packageNames.get(expression).containsKey(getPackagePath(expression, parts))) {
-													packageNames.get(expression).put(getPackagePath(expression, parts), getPackagePath(expression, parts));
-													//System.out.println(getPackagePath(parts));
-												}												
+												
+												StringBuffer packageName = new StringBuffer(parts[0]);
+												for(int i=1; i<parts.length; i++){
+													if(!packageNames.containsKey(packageName.toString())) 
+														packageNames.put(packageName.toString(), new HashMap());
+
+													Map <String, String> packageTokens = packageNames.get(packageName.toString());
+
+													packageTokens.put(parts[i], parts[i]);
+
+													packageName.append(".");
+													packageName.append(parts[i]);
+													
+												}
+												
+//												if(!packageNames.containsKey(expression)) 
+//													packageNames.put(expression, new HashMap());
+												
+												
+												
+//												if(!packageNames.get(expression).containsKey(getPackagePath(expression, parts))) {
+//													packageNames.get(expression).put(getPackagePath(expression, parts), getPackagePath(expression, parts));
+//													//System.out.println(getPackagePath(parts));
+//												}												
 											}
 										}
 										
