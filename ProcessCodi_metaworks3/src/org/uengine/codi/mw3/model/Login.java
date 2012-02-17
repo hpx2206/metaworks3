@@ -8,7 +8,6 @@ import org.metaworks.annotation.Id;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.TransactionContext;
 import org.uengine.codi.mw3.CodiClassLoader;
-import org.uengine.codi.mw3.admin.Admin;
 
 public class Login extends Database<ILogin> implements ILogin{
 		
