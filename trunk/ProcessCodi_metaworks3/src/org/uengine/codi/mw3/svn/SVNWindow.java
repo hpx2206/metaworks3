@@ -112,7 +112,7 @@ public class SVNWindow {
 
 		//let the session knows the source code is checked out that means classloader should use this code base 
 		HttpSession session = TransactionContext.getThreadLocalInstance().getRequest().getSession(); 
-		session.setAttribute("sourceCodeBase", CodiClassLoader.sourceCodeBase());
+		session.setAttribute("sourceCodeBase", CodiClassLoader.mySourceCodeBase());
 
 	}
 

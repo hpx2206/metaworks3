@@ -18,6 +18,7 @@ import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.WebFieldDescriptor;
 import org.metaworks.WebObjectType;
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.NonEditable;
 import org.metaworks.annotation.ServiceMethod;
@@ -346,6 +347,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 	}
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
+	@Face(displayName = "Run")
 	public Popup run() throws Exception{		
 
 		Runner runner = new Runner();
@@ -360,6 +362,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 
 	
 	@ServiceMethod(callByContent=true)
+	@Face(displayName = "Save")
 	public void save() throws Exception{
 		
         CodiClassLoader contextClassLoader = CodiClassLoader.getMyClassLoader();
@@ -466,7 +469,8 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 	}
 
 	@ServiceMethod(target=ServiceMethodContext.TARGET_STICK, callByContent=true)
-	public Popup crowdSourcer(){
+	@Face(displayName = "Post to my wall")
+	public Popup share(){
 		Popup popup = new Popup();
 		popup.setName("crowd Sourcer");
 		popup.setPanel(new CrowdSourcerWindow(getDefId()));
