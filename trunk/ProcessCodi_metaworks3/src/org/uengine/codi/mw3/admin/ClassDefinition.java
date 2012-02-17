@@ -310,30 +310,30 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 			
 			
 			
-			PMD.main(new String[]{
-					"/Users/jyjang/javasources/" + getAlias(),
-					"org.uengine.codi.mw3.alm.MemoryRenderer",
-					getQualityOption().getPmdRuleOption().generatePMDOption()
-					
-			});
-			
-			for(Iterator<IRuleViolation> violations: MemoryRenderer.recentViolations){
-		        while (violations.hasNext()) {
-		            IRuleViolation rv = violations.next();
-
-		            System.out.println(rv.getFilename());
-		            System.out.println(rv.getBeginColumn());
-		            System.out.println(rv.getDescription());
-		            
-					CompileError compileError = new CompileError();
-					compileError.setLine(rv.getBeginLine());
-					compileError.setColumn(rv.getBeginColumn());
-					compileError.setMessage(rv.getDescription());
-					
-					compileErrors.add(compileError);
-
-		        }
-		    }
+//			PMD.main(new String[]{
+//					CodiClassLoader.getMyClassLoader().sourceCodeBase() + "/" + getAlias(),
+//					"org.uengine.codi.mw3.alm.MemoryRenderer",
+//					getQualityOption().getPmdRuleOption().generatePMDOption()
+//					
+//			});
+//			
+//			for(Iterator<IRuleViolation> violations: MemoryRenderer.recentViolations){
+//		        while (violations.hasNext()) {
+//		            IRuleViolation rv = violations.next();
+//
+//		            System.out.println(rv.getFilename());
+//		            System.out.println(rv.getBeginColumn());
+//		            System.out.println(rv.getDescription());
+//		            
+//					CompileError compileError = new CompileError();
+//					compileError.setLine(rv.getBeginLine());
+//					compileError.setColumn(rv.getBeginColumn());
+//					compileError.setMessage(rv.getDescription());
+//					
+//					compileErrors.add(compileError);
+//
+//		        }
+//		    }
 		}
 		
 		CompileError[] compileErrorInArray = new CompileError[compileErrors.size()];
@@ -369,7 +369,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		String myWorkingCopyPath = ((CodiClassLoader)contextClassLoader).mySourceCodeBase();//"/Users/jyjang/MyWorkingCopy";
 
         if(myWorkingCopyPath==null)
-        	throw new Exception("소셜코딩을 환영합니다! 소스코드를 수정하려면 먼저 페이스북 로그인을 하신후 체크아웃(checkout)을 받으셔야 합니.");
+        	throw new Exception("소셜코딩을 환영합니다! 소스코드를 수정하려면 먼저 페이스북 로그인을 하신후 체크아웃(checkout)을 받으셔야 합니다.");
         	
         File wcDir = new File(myWorkingCopyPath).getParentFile(); //project folder is one level parent folder than 'src'
         
@@ -380,11 +380,6 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		
 		setAlias(getPackageName().replace('.', '/') + "/" + getClassName() + ".java");
 
-		String strDef = GlobalContext.serialize(this, ClassDefinition.class);
-		
-		String fullDefId = processManager.addProcessDefinition(getClassName(), getVersion(), "description", false, strDef, getParentFolder(), getDefId(), getAlias(), "class");
-		
-		String[] definitionIdAndVersionId = org.uengine.kernel.ProcessDefinition.splitDefinitionAndVersionId(fullDefId);
 		
 		/// generate source file
 		String sourceCodeBase = CodiClassLoader.getMyClassLoader().sourceCodeBase();
@@ -441,6 +436,13 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 //			writer.close();
 //		}
 		///
+		
+		String strDef = GlobalContext.serialize(this, ClassDefinition.class);
+		
+		String fullDefId = processManager.addProcessDefinition(getClassName(), getVersion(), "description", false, strDef, getParentFolder(), getDefId(), getAlias(), "class");
+		
+		String[] definitionIdAndVersionId = org.uengine.kernel.ProcessDefinition.splitDefinitionAndVersionId(fullDefId);
+
 		
 		processManager.setProcessDefinitionProductionVersion(definitionIdAndVersionId[1]);
 		//processManager.applyChanges();
@@ -509,19 +511,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 	@Override
 	public void afterDeserialization() {
 		
-		try {
-			ProcessDefinition def = new ProcessDefinition();
-			def.setDefId(new Long(getDefId()));
-			String authorId = def.databaseMe().getAuthor();
-			
-			User author = new User();
-			author.setUserId(authorId);
-			setAuthor(author);
-			
-		} catch (Exception e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		}
+	
 		
 		setSourceCodes(new ClassSourceCodes());
 		

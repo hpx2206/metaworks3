@@ -42,8 +42,17 @@ public class CheckoutWindow extends SVNWindow{
 		super();
 		this.log = "Press checkout button to start";
 	}
-
 	
+	boolean needToSaveAfterCheckout;
+		
+		public boolean isNeedToSaveAfterCheckout() {
+			return needToSaveAfterCheckout;
+		}
+	
+		public void setNeedToSaveAfterCheckout(boolean needToSaveAfterCheckout) {
+			this.needToSaveAfterCheckout = needToSaveAfterCheckout;
+		}
+
 	@ServiceMethod
 	public void checkout() throws SVNException, Exception{
 		SVNClientManager ourClientManager = getSVNClientManager();
