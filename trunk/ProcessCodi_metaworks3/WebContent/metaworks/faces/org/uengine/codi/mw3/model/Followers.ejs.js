@@ -1,8 +1,7 @@
-function addFollowers(objectId, e){
-	var object = mw3.getObject(objectId);	
+var org_uengine_codi_mw3_model_Followers = function(objectId, className){
 	
-	object.pageX = e.pageX;
-	object.pageY = e.pageY;			
-
-	mw3.call(objectId, "addFollowers");	
+	this.objectId = objectId;
+	this.className = className;
+	
+	
 }

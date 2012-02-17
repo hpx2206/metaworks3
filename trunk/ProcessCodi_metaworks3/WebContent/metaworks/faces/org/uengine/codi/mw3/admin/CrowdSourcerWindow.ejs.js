@@ -10,7 +10,7 @@ var org_uengine_codi_mw3_admin_CrowdSourcerWindow = function(objectId, className
 			  var object = mw3.objects[objectId];
 			  
 			  var url = window.location;
-			  var link = url.origin + "uengine-web/admin.html?defId=" + object.defId;
+			  var link = "http://apps.facebook.com/pcodipaas/admin.html?defId=" + object.defId;
 
 			  if(object.loginUser.userId == null)
 				  return;
