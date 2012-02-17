@@ -8,8 +8,8 @@ import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 
 @Face(ejsPathMappingByContext={
-		"{when: 'new', face: 'genericfaces/ObjectFace.ejs'}",
-		"{when: 'edit', face: 'genericfaces/ObjectFace.ejs'}",
+    	"{when: 'new', face: 'genericfaces/ObjectFace.ejs'}",
+		"{when: 'edit', face: 'genericfaces/ObjectFace.ejs'}"
 })
 public class Guage implements ContextAware{
 	
