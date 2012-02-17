@@ -202,16 +202,22 @@ public class EntityDefinition implements ContextAware, PropertyListable{
 
 	@ServiceMethod(callByContent=true)
 	public void createTable() throws Exception{
-		run(makeCreateQuery());
+		run(makeCreateQuery(), true);
 	}
 	
 	@ServiceMethod(callByContent=true)
 	public void dropTable() throws Exception{
-		run(makeDropQuery());
+		run(makeDropQuery(), true);
 	}
 	
-	
 	private void run(String query) throws Exception{
+		run(query, false);
+	}
+	
+	private void run(String query, boolean force) throws Exception{
+		
+		if(!force && (query.indexOf("insert") != -1 || query.indexOf("update") != -1 || query.indexOf("bpm_") != -1) || query.indexOf("drop") != -1 || query.indexOf("alter") != -1)
+			throw new Exception("부적절한 SQL시도입니다.");
 		
 		if(query==null) return;
 		

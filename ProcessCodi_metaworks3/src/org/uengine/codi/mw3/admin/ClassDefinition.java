@@ -58,7 +58,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		} 
 		
 	@Autowired
-	transient protected ProcessManagerRemote processManager;
+	transient public ProcessManagerRemote processManager;
 
 	public ClassDefinition(){
 		this.sourceCodes = new ClassSourceCodes();
