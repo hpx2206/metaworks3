@@ -102,7 +102,6 @@
 	<bean id="Contact" class="org.uengine.codi.mw3.model.Contact"/>
 	<bean id="FormDefinition" class="org.uengine.codi.mw3.admin.FormDefinition"/>
 	<bean id="CrowdSourcer" class="org.uengine.codi.mw3.model.CrowdSourcer"/>	
-	<bean id="ClassDefinition" class="org.uengine.codi.mw3.admin.ClassDefinition"/>
 	<bean id="ClassDesignerContentPanel" class="org.uengine.codi.mw3.model.ClassDesignerContentPanel"/>
 	<bean id="ProcessDesignerContentPanel" class="org.uengine.codi.mw3.model.ProcessDesignerContentPanel"/>
 	<bean id="ProcessInstanceMonitor" class="org.uengine.codi.mw3.model.ProcessInstanceMonitor"/>
