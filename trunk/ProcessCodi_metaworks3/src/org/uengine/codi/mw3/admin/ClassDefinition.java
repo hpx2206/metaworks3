@@ -7,10 +7,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.util.ArrayList;
-import java.util.Iterator;
 
-import net.sourceforge.pmd.IRuleViolation;
-import net.sourceforge.pmd.PMD;
+import javax.servlet.http.HttpSession;
 
 import org.metaworks.ContextAware;
 import org.metaworks.FieldDescriptor;
@@ -22,24 +20,20 @@ import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.NonEditable;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.dao.TransactionContext;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.example.ide.CompileError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.CodiDwrServlet;
-import org.uengine.codi.mw3.alm.MemoryRenderer;
 import org.uengine.codi.mw3.alm.QualityOption;
 import org.uengine.codi.mw3.model.FaceHelperSourceCode;
 import org.uengine.codi.mw3.model.JavaSourceCode;
-import org.uengine.codi.mw3.model.MobileWindow;
+import org.uengine.codi.mw3.model.Login;
 import org.uengine.codi.mw3.model.Popup;
-import org.uengine.codi.mw3.model.ProcessDefinition;
-import org.uengine.codi.mw3.model.TemplateDesigner;
 import org.uengine.codi.mw3.model.User;
-import org.uengine.codi.mw3.model.Window;
 import org.uengine.codi.mw3.svn.CheckoutWindow;
 import org.uengine.codi.mw3.svn.CommitWindow;
-import org.uengine.codi.mw3.widget.IFrame;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.NeedArrangementToSerialize;
 import org.uengine.kernel.PropertyListable;
@@ -477,9 +471,15 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 	@ServiceMethod(target=ServiceMethodContext.TARGET_STICK, callByContent=true)
 	@Face(displayName = "Post to my wall")
 	public Popup share(){
+		HttpSession httpSession = TransactionContext.getThreadLocalInstance().getRequest().getSession(); 
+		String userId = (String)httpSession.getAttribute("userId");
+		
+		Login login = new Login();
+		login.setUserId(userId);
+
 		Popup popup = new Popup();
 		popup.setName("crowd Sourcer");
-		popup.setPanel(new CrowdSourcerWindow(getDefId()));
+		popup.setPanel(new CrowdSourcerWindow(login, getDefId()));
 		
 		return popup;		
 	}

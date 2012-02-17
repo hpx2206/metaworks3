@@ -345,7 +345,7 @@ public class EntityDefinition implements ContextAware, PropertyListable{
 
 //				.append("	@org.metaworks.annotations.ServiceMethod\n")
 //				.append("	public ").append(entityName).append(" find() throws Exception;\n\n")
-				.append("	public Object find() throws Exception;\n\n")
+				.append("	public Object find() throws Exception{\n\n")
 				.append("		return databaseMe();\n")
 				.append("	}\n\n")
 				
@@ -481,7 +481,6 @@ public class EntityDefinition implements ContextAware, PropertyListable{
 			///
 			
 			processManager.setProcessDefinitionProductionVersion(definitionIdAndVersionId[1]);
-			processManager.applyChanges();
 			
 			setDefId(definitionIdAndVersionId[0]);
 			setDefVerId(definitionIdAndVersionId[1]);

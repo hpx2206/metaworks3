@@ -4,6 +4,7 @@ import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Range;
 import org.metaworks.annotation.ServiceMethod;
+import org.uengine.codi.mw3.model.ILogin;
 
 public class CrowdSourcerWindow implements ContextAware {
 
@@ -12,11 +13,20 @@ public class CrowdSourcerWindow implements ContextAware {
 		getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 	}
 		
-	public CrowdSourcerWindow(String defId){
+	public CrowdSourcerWindow(ILogin loginUser, String defId){
 		this();
 		
+		setLoginUser(loginUser);
 		setDefId(defId);
 	}
+	
+	ILogin loginUser;
+		public ILogin getLoginUser() {
+			return loginUser;
+		}
+		public void setLoginUser(ILogin loginUser) {
+			this.loginUser = loginUser;
+		}
 	
 	String defId;	 
 		public String getDefId() {
