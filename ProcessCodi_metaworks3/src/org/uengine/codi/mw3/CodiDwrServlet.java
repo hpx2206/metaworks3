@@ -1,10 +1,12 @@
 package org.uengine.codi.mw3;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.PrintStream;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.security.AccessControlException;
@@ -13,6 +15,15 @@ import java.security.Permission;
 import java.security.PrivilegedAction;
 import java.security.ProtectionDomain;
 import java.util.HashMap;
+
+import javassist.CannotCompileException;
+import javassist.ClassPool;
+import javassist.CtClass;
+import javassist.CtConstructor;
+import javassist.CtMethod;
+import javassist.expr.ExprEditor;
+import javassist.expr.MethodCall;
+import javassist.util.HotSwapper;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -26,9 +37,10 @@ import org.directwebremoting.WebContextFactory;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.dwr.TransactionalDwrServlet;
+import org.uengine.codi.platform.Console;
+import org.uengine.codi.platform.SecurityContext;
+import org.uengine.kernel.GlobalContext;
 
-
-import com.mongodb.Mongo;
 
 
 
@@ -40,9 +52,13 @@ public class CodiDwrServlet extends TransactionalDwrServlet{
 	
 	final static HashMap<String, String> securedPackages = new HashMap<String, String>();
 	
+	static PrintStream originalSystemOut = System.out;
+	static PrintStream originalSystemErr = System.err;
+
 	static{
-		securedPackages.put(File.class.getPackage().getName(), SECURITYMSG_SYSTEM_USAGE_PROHIBITED);
-		securedPackages.put(Mongo.class.getPackage().getName(), SECURITYMSG_SYSTEM_USAGE_PROHIBITED);
+		securedPackages.put("java.sql", SECURITYMSG_SYSTEM_USAGE_PROHIBITED);
+//		securedPackages.put(File.class.getPackage().getName(), SECURITYMSG_SYSTEM_USAGE_PROHIBITED);
+///		securedPackages.put(Mongo.class.getPackage().getName(), SECURITYMSG_SYSTEM_USAGE_PROHIBITED);
 	}
 
 	static public boolean okIfSystem(){
@@ -63,7 +79,7 @@ public class CodiDwrServlet extends TransactionalDwrServlet{
 		
 		//StackTraceElement[] stackElem = Thread.currentThread().getStackTrace();
 		
-		boolean needToCheck = TransactionContext.getThreadLocalInstance().isNeedSecurityCheck(); //false;
+		boolean needToCheck = SecurityContext.getThreadLocalInstance().isNeedSecurityCheck(); //false;
 //		for(int i = stackElem.length-1; i > 4; i--){ //beyond 5 steps, they are the actual call stack.
 //			if(MetaworksRemoteService.class.getName().equals(stackElem[i].getClassName())
 //					&& "callMetaworksService".equals(stackElem[i].getMethodName())
@@ -114,10 +130,48 @@ public class CodiDwrServlet extends TransactionalDwrServlet{
 	public void init(ServletConfig servletConfig) throws ServletException {
 		// TODO Auto-generated method stub
 		super.init(servletConfig);
+
 		
 		
+		//Security setting 1
+
+
 		
-		
+		System.setOut(new PrintStream(new ByteArrayOutputStream()){
+			public void println(String str){
+				originalSystemOut.println(str);
+				
+				if(SecurityContext.getThreadLocalInstance().isNeedSecurityCheck()){
+					Console.addLog(str);
+				}
+			}
+
+			public void println(Object x) {
+				originalSystemOut.println(x);
+
+				if(SecurityContext.getThreadLocalInstance().isNeedSecurityCheck()){
+					Console.addLog(""+x);
+				}
+			}
+			
+		});	
+
+		System.setErr(new PrintStream(new ByteArrayOutputStream()){
+			public void println(String str){
+				originalSystemErr.println(str);
+//				addDebugInfo(new StringBuilder().append(str).append("\n").toString());
+			}
+			public void print(String str){
+				originalSystemErr.println(str);
+//				addDebugInfo(str);
+			}
+			public void println(Object x) {
+				originalSystemOut.println(x);
+//				addDebugInfo(x.toString());
+			}
+		});
+
+
 		System.setSecurityManager(new SecurityManager(){
 
 			
@@ -148,6 +202,63 @@ public class CodiDwrServlet extends TransactionalDwrServlet{
 //
 			
 		});
+		
+    	try {
+/////////////// TODO: disabled for easy testing. someday we need to find dettach with the server
+//    		HotSwapper hs = new HotSwapper(8000);
+    		
+			ClassPool pool = ClassPool.getDefault();
+			
+			pool.appendClassPath("/Users/jyjang/Documents/workspace/ProcessCodi_metaworks3/WebContent/WEB-INF/lib/mongo-2.7.2.jar");
+	//		pool.appendClassPath("/Users/jyjang/Documents/workspace/ProcessCodi_metaworks3/WebContent/WEB-INF/lib/metaworks3.jar");
+				
+			
+			String[] securedClassMehtods = GlobalContext.getPropertyStringArray("secured.classmethods");
+			
+			for(String securedClassMethod : securedClassMehtods){
+				
+				securedClassMethod = securedClassMethod.trim();
+				
+				int whereLastDot = securedClassMethod.lastIndexOf('.');
+				final String className = securedClassMethod.substring(0, whereLastDot);
+				final String methodName = securedClassMethod.substring(whereLastDot+1);
+				
+				CtClass cc = pool.get(className);
+				
+				cc.defrost();
+				
+				CtMethod cm = cc.getDeclaredMethod(methodName);
+				
+				final String finalSecuredClassMethodName = securedClassMethod + "()";
+				
+				cm.instrument(
+						new ExprEditor() {
+							boolean checked = false;
+							
+							public void edit(MethodCall m)
+							throws CannotCompileException
+							{
+								
+								if(!checked){
+									m.replace("{ if(org.uengine.codi.platform.SecurityContext.getThreadLocalInstance().isNeedSecurityCheck()) throw new SecurityException(\"platform denies your request to access '" + finalSecuredClassMethodName + "' directly. Use org.uengine.codi.platform.* instead.\"); $_ = $proceed($$); }");
+//									m.replace("{ if(org.uengine.codi.platform.SecurityContext.getThreadLocalInstance().securityCheck(\""+
+//											finalSecuredClassMethodName + "\"); $_ = $proceed($$); }");
+									checked = true;
+								}
+							}
+						});
+				
+				Class.forName(className);
+	
+				////////// disabled 
+//				hs.reload(className, cc.toBytecode());
+			}
+
+		}catch(Exception e){
+			throw new RuntimeException(e);
+		}
+		
+
 		
 		refreshClassLoader(null);
 	}
