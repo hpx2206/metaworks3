@@ -27,10 +27,30 @@ import org.uengine.codi.mw3.admin.ClassField;
 import org.uengine.codi.mw3.admin.ClassModeler;
 import org.uengine.util.UEngineUtil;
 
+
+
 public class JavaSourceCode extends SourceCode {
 
 	static Map<String, Map> packageNames = new HashMap<String, Map>(); //cached for more faster code assistance. may need to stored separately with tenants. (may naturally done because of classloader is different with web-contexts)
 
+	
+	public String getPackagePath(String expression, String[] path) {
+		int index = 1;
+		for(int i = 0; i < expression.length(); ++i)
+			if(expression.charAt(i) == '.') index++;
+		//System.out.println("index = " + index);
+		
+		StringBuffer pathStr = new StringBuffer();
+		
+		//if(path.length - index == 1) return path[path.length - 1] + ";";
+		
+		for(int i = index; i < path.length - 1; ++i) {
+			pathStr.append(path[i] + ".");
+			if(i == path.length - 2) pathStr.append("*;");
+		}
+		return pathStr.toString();
+	}
+	
 	@ServiceMethod(callByContent = true, target = ServiceMethodContext.TARGET_STICK)
 	public CodeAssist requestAssist() {
 
@@ -47,6 +67,8 @@ public class JavaSourceCode extends SourceCode {
 			expression = getLineAssistRequested().substring(getLineAssistRequested().lastIndexOf(' ') + 1);
 		else
 			expression = getLineAssistRequested();
+		
+		//System.out.println("expression = " + expression);
 			
 		if(expression.length() > 0){
 					
@@ -68,11 +90,14 @@ public class JavaSourceCode extends SourceCode {
 						int j=line.length()-1;
 						for(; j>=0; j--){
 							char charAt = line.charAt(j);
-							if(!((charAt > 'A' && charAt <'z') || (charAt > '1' && charAt <'9')))
+							if(!((charAt > 'A' && charAt <'z') || (charAt > '1' && charAt <'9') || charAt == '.'))
 								break;
 						}
 						
-						typeName = line.substring(j + 1).trim();
+						if(j < 0) j = 0;
+						
+						typeName = line.substring(j).trim();
+						if(typeName.startsWith(".")) typeName = typeName.substring(1);
 						
 						if(typeName.equals("return"))
 							typeName = null; //ignores 'return' is recognized as typeName
@@ -83,7 +108,8 @@ public class JavaSourceCode extends SourceCode {
 					}
 				}else{ //if typeName found, search the import statement.
 					line = line.trim();
-					if(line.startsWith("import ") && line.endsWith("." + typeName + ";")){
+					//if(line.startsWith("import ") && line.endsWith("." + typeName + ";")){
+					if(line.startsWith("import ") && line.endsWith(".*;")){
 						
 						fullTypeName = line.substring(line.indexOf(' '), line.length()-1).trim();
 						
@@ -138,51 +164,68 @@ public class JavaSourceCode extends SourceCode {
 			try {
 				
 				
-				URLClassLoader classLoader = (URLClassLoader) CodiMetaworksRemoteService.class.getClassLoader();
+				//URLClassLoader classLoader = (URLClassLoader) CodiMetaworksRemoteService.class.getClassLoader();
+				URLClassLoader classLoader = (URLClassLoader) org.metaworks.MetaworksContext.class.getClassLoader();
+				//URLClassLoader classLoader2 = (URLClassLoader) java.lang.Object.class.getClassLoader();
 				URL urls[] = classLoader.getURLs();
+				//URL urls2[] = classLoader2.getURLs();
+				
 				StringBuffer sbClasspath = new StringBuffer();
 				
-		    	if(packageNames==null)
-				for(URL url : urls){
-					
-					if(url.getFile().endsWith(".jar") || url.getFile().endsWith(".zip") ){
-					
-						net.sf.jazzlib.ZipInputStream zipIn = new net.sf.jazzlib.ZipInputStream(url.openStream());
-						net.sf.jazzlib.ZipEntry zipEntry;
-	
-					    try {
-					    	
-					    	while((zipEntry = zipIn.getNextEntry()) != null) {
-					    		if(zipEntry.getName().startsWith(expression)){
-									String clsName = zipEntry.getName();
-									
-									if(clsName.endsWith(".class")){
-										clsName = clsName.substring(0, clsName.length() - 6);
-										String[] parts = clsName.split("/");
-										if(parts.length > 1){
-											if(!packageNames.containsKey(expression))
-												packageNames.put(expression, new HashMap());
-											
-											packageNames.get(expression).put(parts[0], parts[0]);
+		    	
+				
+				
+				if(!packageNames.containsKey(expression)) {
+					for(URL url : urls){
+						
+						if(url.getFile().endsWith(".jar") || url.getFile().endsWith(".zip") ){
+						
+							net.sf.jazzlib.ZipInputStream zipIn = new net.sf.jazzlib.ZipInputStream(url.openStream());
+							net.sf.jazzlib.ZipEntry zipEntry;
+		
+						    try {
+						    	
+						    	while((zipEntry = zipIn.getNextEntry()) != null) {
+						    		
+						    		//if(expression.indexOf(".") > -1) expression = expression.replace('.', '/');
+						    		
+						    		if(zipEntry.getName().startsWith(expression.replace('.', '/'))){
+										String clsName = zipEntry.getName();
+										
+										//expression = expression.replace('/', '.');
+										
+										if(clsName.endsWith(".class")){
+											clsName = clsName.substring(0, clsName.length() - 6);
+											String[] parts = clsName.split("/");
+											if(parts.length > 1){
+												if(!packageNames.containsKey(expression)) 
+													packageNames.put(expression, new HashMap());
+												if(!packageNames.get(expression).containsKey(getPackagePath(expression, parts))) {
+													packageNames.get(expression).put(getPackagePath(expression, parts), getPackagePath(expression, parts));
+													//System.out.println(getPackagePath(parts));
+												}												
+											}
 										}
-									}
-									
-					    		}
-					    	} // end while
-	
-					    } catch (Exception e) {
-					    	new Exception(url.getFile() + ": error when to parse url ", e).printStackTrace();
-					    } finally{
-							try{zipIn.close();}catch(Exception ex){}   
-					    }
+										
+						    		}
+						    	} // end while
+		
+						    } catch (Exception e) {
+						    	new Exception(url.getFile() + ": error when to parse url ", e).printStackTrace();
+						    } finally{
+								try{zipIn.close();}catch(Exception ex){}   
+						    }
+						}
 					}
 				}
 
+				
+				
+				
 		    	if(packageNames.containsKey(expression)){
-		    		Map<String, String> packagesNamePerPrefix = packageNames.get(expression);
-
+		    		Map<String, HashMap> packagesNamePerPrefix = packageNames.get(expression);
 		    		for(String packageName : packagesNamePerPrefix.keySet()){
-						codeAssist.getAssistances().add(packageName);
+		    			codeAssist.getAssistances().add(packageName);
 					}
 				}
 				
@@ -201,6 +244,7 @@ public class JavaSourceCode extends SourceCode {
 					
 					codeAssist.getAssistances().add(clsName);
 				}
+				
 	
 //				javaObjects = fileManager.list(StandardLocation.CLASS_PATH, expression, kinds, true);
 //				for(JavaFileObject javaObject : javaObjects){
