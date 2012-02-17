@@ -2,7 +2,7 @@
 	<h3 id="cluetip-title"><%=value.name%></h3>
 	<div id="cluetip-inner">
 		<div id="cluetip-close2">
-			<a><img src="scripts/jquery/cluetip/images/cross.png" onclick="$('#adduser-con').hide()"></a>
+			<a><img src="scripts/jquery/cluetip/images/cross.png" onclick="mw3.getFaceHelper('<%=objectId%>').destoryPopup()"></a>
 		</div>
 		<div id="addcontact-con" style="display: block; overflow:auto; border:1px solid #DBDBDB;">
 			<%=fields.panel.here()%>
