@@ -478,7 +478,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		login.setUserId(userId);
 
 		Popup popup = new Popup();
-		popup.setName("crowd Sourcer");
+		popup.setName("공유하기...");
 		popup.setPanel(new CrowdSourcerWindow(login, getDefId()));
 		
 		return popup;		
