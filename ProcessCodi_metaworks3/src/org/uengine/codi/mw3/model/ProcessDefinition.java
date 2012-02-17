@@ -240,7 +240,7 @@ public class ProcessDefinition extends Database<IProcessDefinition> implements I
 
 	@Override
 	public ContentWindow design() throws Exception {
-		try{
+//		try{
 		
 			String objType = databaseMe().getObjType();
 			
@@ -267,9 +267,9 @@ public class ProcessDefinition extends Database<IProcessDefinition> implements I
 				
 				return entityDesignerWindow;		
 			}
-		}finally{
-			codiPmSVC.remove();
-		}	
+//		}finally{
+//			codiPmSVC.remove();
+//		}	
 		
 		// TODO Auto-generated method stub
 		return null;
@@ -303,7 +303,7 @@ public class ProcessDefinition extends Database<IProcessDefinition> implements I
 	
 	
 	@Autowired
-	ProcessManagerRemote codiPmSVC;
+	public ProcessManagerRemote codiPmSVC;
 
 
 
