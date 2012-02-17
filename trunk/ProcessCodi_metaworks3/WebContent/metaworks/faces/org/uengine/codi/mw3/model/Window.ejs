@@ -1,0 +1,71 @@
+<%
+
+console.debug("window");
+console.debug(objectMetadata);
+
+	var width = null;
+	var height = null;
+
+	if(descriptor!=null){
+		width = descriptor.getOptionValue('width');
+		height = descriptor.getOptionValue('height');
+	}
+	
+
+	if (value != null){			
+	
+	
+		objectMetadata = mw3.getMetadata(value.panel.__className);
+		
+%>
+
+
+			<div id="sm_<%=objectId%>" style="margin-top:12px; padding:0px;  display:none; float:left; width:160px; position:relative;">
+			    <div class="boxtopleft">
+			    	<span class="boxtopright"><%=objectMetadata.displayName%></span>
+			    </div>
+			    <div class="boxmiddleright">
+			        <div class="boxmiddleleft">
+			            <div class="togglebtnmax" onclick="mw3.getFaceHelper('<%=objectId%>').resume('<%=value.outer%>','<%=value.inner%>')"></div>
+			            
+			            <div id="slideup<%=objectId%>" class="slideup" onclick="outerLayout.resetOverflow('north'), con031();"></div>
+			            <div id="con<%=objectId%>" class="topcontentcontainer"></div>
+			        </div>
+			    </div>
+			    
+			    <div class="miniboxbottomleft"><span class="miniboxbottomright"></span></div>
+		    </div>
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+            <div class="boxtopleft">
+            	<span class="boxtopright">
+            		<div id="navigationTitle_<%=objectId%>"><%=objectMetadata.displayName%></div>
+            		<div id="loader_<%=objectId%>" class="loadingarea" style="display: none; "><img src="/uengine-web/images/waveStyle/ajax-loader.gif" border="0"></div>
+            	</span>
+            </div>
+            <div class="boxmiddleright">
+                <div class="boxmiddleleft">
+                    <div class="togglebtnmini" onclick="mw3.getFaceHelper('<%=objectId%>').minimize('<%=value.outer%>','<%=value.inner%>')"></div>
+                    <div class="worklistcontentcontainer" style="overflow-y:auto">                        
+                            
+						<%=fields.panel.here()%>
+
+<p>
+<br><br>                        
+                    </div>
+                </div>
+            </div>
+            <div class="boxbottomleft"><span class="boxbottomright"></span></div>
+<%
+	}
+%>
+
+<%console.debug(mw3.where)%>
