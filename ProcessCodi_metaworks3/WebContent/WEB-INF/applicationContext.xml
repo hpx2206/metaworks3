@@ -125,5 +125,7 @@
 	<bean id="MongoDB" class="org.uengine.codi.platform.MongoDB"/>
 	<bean id="FileSystem" class="org.uengine.codi.platform.FileSystem"/>
 	
-		
+	<bean id="SVNRepositoryFactory" class="org.uengine.codi.mw3.svn.SVNRepositoryFactory"/>
+	
+	<bean id="LoginAdmin" class="org.uengine.codi.mw3.model.LoginAdmin"/>
 </beans>
