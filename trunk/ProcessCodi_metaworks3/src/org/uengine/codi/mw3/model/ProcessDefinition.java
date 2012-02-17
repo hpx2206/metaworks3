@@ -199,7 +199,7 @@ public class ProcessDefinition extends Database<IProcessDefinition> implements I
 	}
 
 	@Autowired
-	InstanceViewContent instanceViewContent;
+	public InstanceViewContent instanceViewContent;
 	
 	@Override
 	public Object[] initiate() throws Exception {
@@ -303,7 +303,7 @@ public class ProcessDefinition extends Database<IProcessDefinition> implements I
 	
 	
 	@Autowired
-	public ProcessManagerRemote codiPmSVC;
+	ProcessManagerRemote codiPmSVC;
 
 
 

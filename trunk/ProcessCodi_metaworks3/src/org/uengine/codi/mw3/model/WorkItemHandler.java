@@ -180,11 +180,11 @@ public class WorkItemHandler implements ContextAware{
 		}
 		
 		processManager.completeWorkitem(getInstanceId(), getTracingTag(), getTaskId().toString(), rp );
-		processManager.applyChanges(); //you may call this. since you can ensure this service method is the service itself
+//		processManager.applyChanges(); //you may call this. since you can ensure this service method is the service itself
 	}
 		
 	@Autowired
-	transient protected ProcessManagerRemote processManager;
+	transient public ProcessManagerRemote processManager;
 	
 	MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
