@@ -112,7 +112,7 @@
 	
 	<bean id="EntityDesignerWindow" class="org.uengine.codi.mw3.model.EntityDesignerWindow"/>
 	<bean id="EntityDesignerContentPanel" class="org.uengine.codi.mw3.model.EntityDesignerContentPanel"/>
-	<bean id="EntityDefinition" class="org.uengine.codi.mw3.admin.EntityDefinition"/>		
+
 	<bean id="EntityQuery" class="org.uengine.codi.mw3.admin.EntityQuery"/>
 	<bean id="EntityData" class="org.uengine.codi.mw3.admin.EntityData"/>
 
