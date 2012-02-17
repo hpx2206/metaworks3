@@ -209,7 +209,7 @@ public class CodiDwrServlet extends TransactionalDwrServlet{
     		
 			ClassPool pool = ClassPool.getDefault();
 			
-			pool.appendClassPath("/Users/jyjang/Documents/workspace/ProcessCodi_metaworks3/WebContent/WEB-INF/lib/mongo-2.7.2.jar");
+//			pool.appendClassPath("/Users/jyjang/Documents/workspace/ProcessCodi_metaworks3/WebContent/WEB-INF/lib/mongo-2.7.2.jar");
 	//		pool.appendClassPath("/Users/jyjang/Documents/workspace/ProcessCodi_metaworks3/WebContent/WEB-INF/lib/metaworks3.jar");
 				
 			
