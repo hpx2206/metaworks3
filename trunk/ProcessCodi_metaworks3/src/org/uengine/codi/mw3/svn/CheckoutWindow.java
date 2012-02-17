@@ -59,12 +59,12 @@ public class CheckoutWindow extends SVNWindow{
 
         SVNURL repositoryURL = null;
         try {
-            repositoryURL = SVNURL.parseURIEncoded("https://metaworks3.googlecode.com/svn/trunk");
+            repositoryURL = SVNURL.parseURIEncoded("https://metaworks3-test1.googlecode.com/svn/trunk/");
         } catch (SVNException e) {
             //
         }
         
-        final SVNURL url = repositoryURL.appendPath("MyRepos", false);
+        final SVNURL url = repositoryURL.appendPath("mw3_test1", false);
 
         
         String myWorkingCopyPath = CodiClassLoader.getMyClassLoader().mySourceCodeBase();//"/Users/jyjang/MyWorkingCopy";

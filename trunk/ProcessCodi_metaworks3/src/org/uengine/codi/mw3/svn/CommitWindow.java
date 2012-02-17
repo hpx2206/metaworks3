@@ -2,34 +2,16 @@ package org.uengine.codi.mw3.svn;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
-import javax.servlet.http.HttpSession;
-
-import org.directwebremoting.ScriptSession;
-import org.directwebremoting.WebContext;
-import org.directwebremoting.WebContextFactory;
-import org.directwebremoting.proxy.dwr.Util;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.dao.TransactionContext;
 import org.tmatesoft.svn.core.SVNDepth;
 import org.tmatesoft.svn.core.SVNException;
-import org.tmatesoft.svn.core.SVNURL;
-import org.tmatesoft.svn.core.internal.io.dav.DAVRepositoryFactory;
-import org.tmatesoft.svn.core.internal.io.fs.FSRepositoryFactory;
-import org.tmatesoft.svn.core.internal.io.svn.SVNRepositoryFactoryImpl;
-import org.tmatesoft.svn.core.internal.wc.DefaultSVNOptions;
 import org.tmatesoft.svn.core.wc.SVNClientManager;
 import org.tmatesoft.svn.core.wc.SVNCommitClient;
 import org.tmatesoft.svn.core.wc.SVNCommitItem;
 import org.tmatesoft.svn.core.wc.SVNCommitPacket;
-import org.tmatesoft.svn.core.wc.SVNDiffClient;
-import org.tmatesoft.svn.core.wc.SVNRevision;
-import org.tmatesoft.svn.core.wc.SVNUpdateClient;
-import org.tmatesoft.svn.core.wc.SVNWCUtil;
-import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.CodiDwrServlet;
 import org.uengine.codi.mw3.admin.ClassDefinition;
 
@@ -59,6 +41,7 @@ public class CommitWindow extends SVNWindow{
 			this.commitables = commitables;
 		}
 
+	
 	@ServiceMethod
 	public void sync() throws SVNException, Exception{
 		SVNClientManager ourClientManager = getSVNClientManager();
@@ -72,12 +55,10 @@ public class CommitWindow extends SVNWindow{
         }
         
         SVNCommitClient commitClient = ourClientManager.getCommitClient();
-
         SVNCommitPacket packet = commitClient.doCollectCommitItems(new File[]{wcDir}, false, true, SVNDepth.INFINITY, new String[]{});
-        
+                
         SVNCommitItem[] commitItems = packet.getCommitItems();
         
-        System.out.println(commitItems);
         commitables = new ArrayList<Commitable>();
         
         for(SVNCommitItem item: commitItems){
@@ -88,10 +69,8 @@ public class CommitWindow extends SVNWindow{
         	commititem.setResourceName(item.getFile().getPath());
         	commitables.add(commititem);
         }
-        
-        
-        
 	}
+	
 
 	@ServiceMethod(callByContent=true)
 	public void commit() throws SVNException, Exception{
