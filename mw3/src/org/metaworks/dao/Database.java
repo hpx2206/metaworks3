@@ -27,24 +27,24 @@ public class Database<T extends IDAO> implements IDAO{
 		}
 
 	public T databaseMe() throws Exception{
-		boolean securityCheck = false;
-		try {
-			securityCheck = TransactionContext.getThreadLocalInstance().isNeedSecurityCheck();
-			TransactionContext.getThreadLocalInstance().setNeedSecurityCheck(false);
+//		boolean securityCheck = false;
+//		try {
+//			securityCheck = TransactionContext.getThreadLocalInstance().isNeedSecurityCheck();
+//			TransactionContext.getThreadLocalInstance().setNeedSecurityCheck(false);
 
 			Object keyValue = createKeyObject();
 			
 			return (T) get(getClass(), keyValue, this);
-		} finally {
-			TransactionContext.getThreadLocalInstance().setNeedSecurityCheck(securityCheck);
-		}
+//		} finally {
+//			TransactionContext.getThreadLocalInstance().setNeedSecurityCheck(securityCheck);
+//		}
 	}
 	
 	public T typedDatabaseMe() throws Exception{
-		boolean securityCheck = false;
-		try {
-			securityCheck = TransactionContext.getThreadLocalInstance().isNeedSecurityCheck();
-			TransactionContext.getThreadLocalInstance().setNeedSecurityCheck(false);
+//		boolean securityCheck = false;
+//		try {
+//			securityCheck = TransactionContext.getThreadLocalInstance().isNeedSecurityCheck();
+//			TransactionContext.getThreadLocalInstance().setNeedSecurityCheck(false);
 
 			T dbMe = databaseMe();
 			
@@ -54,9 +54,9 @@ public class Database<T extends IDAO> implements IDAO{
 			
 			return (T) cast(dbMe, desiredType);
 		
-		} finally {
-			TransactionContext.getThreadLocalInstance().setNeedSecurityCheck(securityCheck);
-		}
+//		} finally {
+//			TransactionContext.getThreadLocalInstance().setNeedSecurityCheck(securityCheck);
+//		}
 	}
 	
 	
@@ -65,23 +65,23 @@ public class Database<T extends IDAO> implements IDAO{
 	}
 	
 	public T createDatabaseMe() throws Exception{
-		boolean securityCheck = false;
-		try {
-			securityCheck = TransactionContext.getThreadLocalInstance().isNeedSecurityCheck();
-			TransactionContext.getThreadLocalInstance().setNeedSecurityCheck(false);
-
+//		boolean securityCheck = false;
+//		try {
+//			securityCheck = TransactionContext.getThreadLocalInstance().isNeedSecurityCheck();
+//			TransactionContext.getThreadLocalInstance().setNeedSecurityCheck(false);
+//
 		
 			return (T) create(createKeyObject(), this);
-		} finally {
-			TransactionContext.getThreadLocalInstance().setNeedSecurityCheck(securityCheck);
-		}
+//		} finally {
+//			TransactionContext.getThreadLocalInstance().setNeedSecurityCheck(securityCheck);
+//		}
 	}
 	
 	public void syncToDatabaseMe() throws Exception{
-		boolean securityCheck = false;
-		try {
-			securityCheck = TransactionContext.getThreadLocalInstance().isNeedSecurityCheck();
-			TransactionContext.getThreadLocalInstance().setNeedSecurityCheck(false);
+//		boolean securityCheck = false;
+//		try {
+//			securityCheck = TransactionContext.getThreadLocalInstance().isNeedSecurityCheck();
+//			TransactionContext.getThreadLocalInstance().setNeedSecurityCheck(false);
 
 			IDAO databaseMe = databaseMe();
 			
@@ -101,18 +101,18 @@ public class Database<T extends IDAO> implements IDAO{
 			}
 		
 
-		} finally {
-			TransactionContext.getThreadLocalInstance().setNeedSecurityCheck(securityCheck);
-		}
+//		} finally {
+//			TransactionContext.getThreadLocalInstance().setNeedSecurityCheck(securityCheck);
+//		}
 
 	}
 
 	
 	public void deleteDatabaseMe() throws Exception{
-		boolean securityCheck = false;
-		try {
-			securityCheck = TransactionContext.getThreadLocalInstance().isNeedSecurityCheck();
-			TransactionContext.getThreadLocalInstance().setNeedSecurityCheck(false);
+//		boolean securityCheck = false;
+//		try {
+//			securityCheck = TransactionContext.getThreadLocalInstance().isNeedSecurityCheck();
+//			TransactionContext.getThreadLocalInstance().setNeedSecurityCheck(false);
 
 			WebObjectType wot = MetaworksRemoteService.getInstance().getMetaworksType(getClass().getName());
 			ObjectType ot = (ObjectType) wot.metaworks2Type();
@@ -131,9 +131,9 @@ public class Database<T extends IDAO> implements IDAO{
 			int i=forDelete.update();
 			
 			if(i<1) throw new Exception("No data to delete!");
-		} finally {
-			TransactionContext.getThreadLocalInstance().setNeedSecurityCheck(securityCheck);
-		}
+//		} finally {
+//			TransactionContext.getThreadLocalInstance().setNeedSecurityCheck(securityCheck);
+//		}
 	}
 
 	protected Object createKeyObject() throws Exception {
@@ -416,10 +416,10 @@ public class Database<T extends IDAO> implements IDAO{
 	}
 	
 	public static IDAO sql(Class<?> classType, String sql) throws Exception{
-		boolean securityCheck = false;
-		try {
-			securityCheck = TransactionContext.getThreadLocalInstance().isNeedSecurityCheck();
-			TransactionContext.getThreadLocalInstance().setNeedSecurityCheck(false);
+//		boolean securityCheck = false;
+//		try {
+//			securityCheck = TransactionContext.getThreadLocalInstance().isNeedSecurityCheck();
+//			TransactionContext.getThreadLocalInstance().setNeedSecurityCheck(false);
 
 		
 			WebObjectType webObjectType = MetaworksRemoteService.getInstance().getMetaworksType(classType.getName());
@@ -432,9 +432,9 @@ public class Database<T extends IDAO> implements IDAO{
 			
 			return dao;
 			
-		} finally {
-			TransactionContext.getThreadLocalInstance().setNeedSecurityCheck(securityCheck);
-		}
+//		} finally {
+//			TransactionContext.getThreadLocalInstance().setNeedSecurityCheck(securityCheck);
+//		}
 	}
 	
 	public T sql(String sql) throws Exception{

@@ -10,6 +10,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.HashMap;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -99,10 +100,11 @@ public class MetaworksRemoteService {
 		}
 	}
 	
-    public Object callMetaworksService(String objectTypeName, Object object, String methodName, Map<String, Object> autowiredFields) throws Throwable{
+	public InvocationContext prepareToCall(String objectTypeName, Object object, String methodName, Map<String, Object> autowiredFields) throws Throwable{
+
 		Class serviceClass = Thread.currentThread().getContextClassLoader().loadClass(objectTypeName);
 		
-	
+		
     	//getBeanFactory().getBean(arg0)
     	
 //		callingObjectTypeName.set(objectTypeName);
@@ -184,14 +186,26 @@ public class MetaworksRemoteService {
 			}
 		}
 		
-		autowireSpringFields(object);
+		Map autowiredObjects = autowireSpringFields(object);
 		
 		TransactionContext tx = TransactionContext.getThreadLocalInstance();
 		if(connectionFactory!=null)
 			tx.setConnectionFactory(getConnectionFactory());
 		
+		InvocationContext invocationContext = new InvocationContext();
+		invocationContext.setObject(object);
+		invocationContext.setAutowiredObjects(autowiredObjects);
+		
+		return invocationContext;
+	}
+		
+    public Object callMetaworksService(String objectTypeName, Object object, String methodName, Map<String, Object> autowiredFields) throws Throwable{
+
+    	InvocationContext invocationContext = prepareToCall(objectTypeName, object, methodName, autowiredFields);
+    	object = invocationContext.getObject();
+		
 		try {
-			Method m = serviceClass.getMethod(methodName, new Class[]{});
+			Method m = object.getClass().getMethod(methodName, new Class[]{});
 			Object returned = m.invoke(object, new Object[]{});
 			if(m.getReturnType()!=void.class)
 				return returned;
@@ -218,16 +232,20 @@ public class MetaworksRemoteService {
 		}
     }
 	
-	public void autowireSpringFields(Object object) throws IllegalAccessException {
+	public Map<Class, Object> autowireSpringFields(Object object) throws IllegalAccessException {
+		Map<Class, Object> autowiredObjects = new HashMap<Class, Object>();
+
 		if(object==null)
-			return;
+			return autowiredObjects;
 		
 		WebApplicationContext springAppContext = null;
 		if(TransactionalDwrServlet.useSpring) springAppContext = MetaworksRemoteService.getInstance().getBeanFactory();
-		else return;
+		else return autowiredObjects;
 		
 		if(springAppContext==null)
-			return;
+			return autowiredObjects;
+		
+		
 		
 		for(Field field: object.getClass().getFields()){
 			if(field.getAnnotation(Autowired.class)!=null){
@@ -250,11 +268,15 @@ public class MetaworksRemoteService {
 					//TODO: check if there's any occurrance of @Autowired in the field list, it is required to check and shows some WARNING to the developer.
 				}
 				
-				if(springBean!=null)
+				if(springBean!=null){
 					field.set(object, springBean);
+					autowiredObjects.put(springBean.getClass(), springBean);
+				}
 
 			}
 		}
+		
+		return autowiredObjects;
 	}
 
 	ConnectionFactory connectionFactory;

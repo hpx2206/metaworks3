@@ -956,10 +956,10 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 	public Object invoke(Object proxy, Method m, Object[] args)	throws Throwable{
 		
 		boolean securityCheck = false;
-		if(TransactionContext.getThreadLocalInstance()!=null){
-			securityCheck = TransactionContext.getThreadLocalInstance().isNeedSecurityCheck();
-			TransactionContext.getThreadLocalInstance().setNeedSecurityCheck(false);
-		}
+//		if(TransactionContext.getThreadLocalInstance()!=null){
+//			securityCheck = TransactionContext.getThreadLocalInstance().isNeedSecurityCheck();
+//			TransactionContext.getThreadLocalInstance().setNeedSecurityCheck(false);
+//		}
 		
 		try{
 			String methodName = m.getName();
@@ -1258,9 +1258,9 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 				}
 			}
 		}finally{
-			if(TransactionContext.getThreadLocalInstance()!=null)
-				TransactionContext.getThreadLocalInstance().setNeedSecurityCheck(securityCheck);
-
+//			if(TransactionContext.getThreadLocalInstance()!=null)
+//				TransactionContext.getThreadLocalInstance().setNeedSecurityCheck(securityCheck);
+//
 		}
 	}
 	

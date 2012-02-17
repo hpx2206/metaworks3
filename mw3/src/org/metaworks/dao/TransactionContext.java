@@ -30,14 +30,6 @@ public class TransactionContext implements ConnectionFactory{
 
 	Thread theThread;
 	
-	boolean needSecurityCheck;
-		
-		public boolean isNeedSecurityCheck() {
-			return needSecurityCheck;
-		}
-		public void setNeedSecurityCheck(boolean needSecurityCheck) {
-			this.needSecurityCheck = needSecurityCheck;
-		}
 
 	String connectionGetterStackDump = null;
 		public String getConnectionGetterStackDump() {
