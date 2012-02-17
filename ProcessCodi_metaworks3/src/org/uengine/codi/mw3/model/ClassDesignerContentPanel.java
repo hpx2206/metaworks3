@@ -29,6 +29,20 @@ public class ClassDesignerContentPanel extends ContentWindow {
 		classDefinition = (ClassDefinition) GlobalContext.deserialize(resource, ClassDefinition.class);
 		classDefinition.setDefId(defId);
 		
+		try {
+			ProcessDefinition def = new ProcessDefinition();
+			def.setDefId(new Long(defId));
+			String authorId = def.databaseMe().getAuthor();
+			
+			User author = new User();
+			author.setUserId(authorId);
+			classDefinition.setAuthor(author);
+			
+		} catch (Exception e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+		
 	}
 
 	@Autowired
