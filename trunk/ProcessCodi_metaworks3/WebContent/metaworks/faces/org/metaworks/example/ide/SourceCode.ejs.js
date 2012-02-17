@@ -10,6 +10,7 @@ var org_metaworks_example_ide_SourceCode = function(objectId, className){
 
     this.editor = ace.edit(this.divName);
     this.editor.setTheme("ace/theme/eclipse");
+//    this.editor.
 
     var JavaScriptMode = require("ace/mode/java").Mode;
     this.editor.getSession().setMode(new JavaScriptMode());
