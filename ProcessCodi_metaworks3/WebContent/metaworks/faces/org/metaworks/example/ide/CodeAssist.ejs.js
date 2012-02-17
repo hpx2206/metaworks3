@@ -7,17 +7,27 @@ var org_metaworks_example_ide_CodeAssist = function(objectId, className){
 	
 	var thisFaceHelper = this;
 	
-   document.addEventListener(
-		"keyup",
-
-   		function(e) {
-			if (e && e.keyCode==13 && sel == e.srcElement){
-				thisFaceHelper.enter(sel);
-			}
-		},
+	var object = mw3.objects[this.objectId];
+	
+	if(object==null || object.assistances.length==0){
+		var sourceCode = mw3.objects[object.srcCodeObjectId];		
+		var editor = sourceCode.__getFaceHelper().editor;
 		
-		false
-	);
+		$("#" + mw3.popupDivId).remove();
+		editor.focus();
+	}else{
+		document.addEventListener(
+			"keyup",
+	
+	   		function(e) {
+				if (e && e.keyCode==13 && sel == e.srcElement){
+					thisFaceHelper.enter(sel);
+				}
+			},
+			
+			false
+		);
+	}
 
 }
 
