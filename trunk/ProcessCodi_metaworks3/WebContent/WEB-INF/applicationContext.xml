@@ -50,8 +50,8 @@
 	<!-- uEngine SpringConnectionFactory setDataSource(DataSource) -->
 	<!-- ============================================================= -->
 	
-	<bean class="org.uengine.codi.common.aoptx.PlatformSecurityAdvice" />
-	
+	<bean class="org.uengine.codi.platform.PlatformSecurityAdvice" />
+
 	<bean id="springConnectionFactory"
 		class="org.uengine.codi.common.aoptx.DefaultSpringConnectionFactory"></bean>
 	
