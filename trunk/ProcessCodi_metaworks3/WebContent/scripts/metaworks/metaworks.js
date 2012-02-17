@@ -49,7 +49,7 @@
 			    document.addEventListener(
 			    		"mouseup",
 
-			       		function(e) {
+			       		function(e) {			    			
 			    			mw3.mouseX = e.pageX;
 			    			mw3.mouseY = e.pageY; 
 			    			
@@ -64,6 +64,24 @@
 			    		false
 				);
 				
+			    document.addEventListener(
+			    		"keyup",
+
+			       		function(e) {
+			    			//console.debug(e.keyCode);
+			    			
+			    			// ESC
+			    			if(e.keyCode == 27){
+				    			if(mw3.popupDivId!=null){
+			    					$("#" + mw3.popupDivId).remove();
+			    					mw3.popupDivId = null;
+				    			}
+			    			}
+			    		},
+			    		
+			    		false
+				);
+			    
 			    this.popupDivId;
 			}
 
@@ -965,8 +983,7 @@
 					    
 					        				
 					        			}else if(serviceMethodContext.target=="stick"){
-					        			
-					        				mw3.popupDivId = 'stick_' + objId;
+							    			mw3.popupDivId = 'stick_' + objId;
 					        				$('body').append("<div id='" + mw3.popupDivId + "' style='z-index:10;position:absolute; top:" + mw3.mouseY + "px; left:" + mw3.mouseX + "px'></div>");
 					        				mw3.locateObject(result, null, '#' + mw3.popupDivId);
 					    
