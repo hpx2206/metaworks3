@@ -1,0 +1,102 @@
+
+package org.uengine.codi.mw3.admin;
+
+
+import org.metaworks.ContextAware;
+import org.metaworks.MetaworksContext;
+import org.metaworks.ServiceMethodContext;
+import org.metaworks.annotation.Face;
+import org.metaworks.annotation.Id;
+import org.metaworks.annotation.ServiceMethod;
+import org.uengine.codi.mw3.model.MobileWindow;
+import org.uengine.codi.mw3.model.TemplateDesigner;
+import org.uengine.codi.mw3.model.Window;
+import org.uengine.codi.mw3.widget.IFrame;
+import org.uengine.codi.platform.Console;
+
+
+public class Runner implements ContextAware{
+
+	public Runner(){
+		setConsole(new Console());
+	}
+
+	transient MetaworksContext metaworksContext;
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
+		} 
+		
+		
+	Console console;
+		public Console getConsole() {
+			return console;
+		}
+		public void setConsole(Console console) {
+			this.console = console;
+		}
+	
+	String fullClassName;
+	@Id
+		public String getFullClassName() {
+			return fullClassName;
+		}
+		public void setFullClassName(String className) {
+			this.fullClassName = className;
+		}
+
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
+	@Face(displayName="Run (Normal)")
+	public Object run() throws Exception{
+
+		Object o = Thread.currentThread().getContextClassLoader().loadClass(getFullClassName()).newInstance();//cl.loadClass(getPackageName() + "." + getClassName()).newInstance();
+		
+		Window outputWindow = new Window();
+		outputWindow.setPanel(o);
+//		outputWindow.
+		
+		return outputWindow;
+	}
+	
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
+	@Face(displayName="Run for UI Design")
+	public Object design() throws Exception{
+		
+		Window outputWindow = new Window();
+		
+		TemplateDesigner designer = new TemplateDesigner(getFullClassName());
+		
+		outputWindow.setPanel(designer);
+		
+		return outputWindow;
+	}
+
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
+	@Face(displayName="Run in Mobile")
+	public Object runMobile() throws Exception{
+		
+
+		Object o = Thread.currentThread().getContextClassLoader().loadClass(getFullClassName()).newInstance();//cl.loadClass(getPackageName() + "." + getClassName()).newInstance();
+		
+		MobileWindow outputWindow = new MobileWindow();
+		outputWindow.setPanel(o);
+//		outputWindow.
+		
+		return outputWindow;
+	}	
+	
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
+	@Face(displayName="Run in New Window")
+	public Object runFullWindow() throws Exception{
+		
+//		BrowserWindow window = new BrowserWindow(getPackageName() + "." + getClassName());
+		
+		Window window = new Window(new IFrame("tester.html?className=" + getFullClassName()));
+		
+		return window;
+	}	
+	
+	
+}
