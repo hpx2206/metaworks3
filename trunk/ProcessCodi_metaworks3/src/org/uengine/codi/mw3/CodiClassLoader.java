@@ -15,6 +15,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javassist.CannotCompileException;
+import javassist.ClassPool;
+import javassist.CtClass;
+import javassist.CtConstructor;
+import javassist.CtMethod;
+import javassist.Loader;
+import javassist.NotFoundException;
+import javassist.expr.ExprEditor;
+import javassist.expr.MethodCall;
+
 import javax.servlet.ServletContext;
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticListener;
@@ -39,6 +49,8 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.uengine.codi.mw3.admin.ClassDefinition;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.processmanager.ProcessManagerRemote;
+import org.uengine.util.UEngineUtil;
+
 
 import com.sun.xml.bind.v2.runtime.Name;
 
@@ -68,13 +80,45 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
         super(parentClassLoader);
         this.init();
     }
-
     
-	public static String sourceCodeBase(){
+    public static CodiClassLoader getMyClassLoader(){
+        ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+
+        return (CodiClassLoader) contextClassLoader;
+    }
+    
+    String sourceCodeBase = null;
+	public String sourceCodeBase(){
+
+		if(sourceCodeBase!=null)
+			return sourceCodeBase;
+		
+		String mySourceCodeBase = mySourceCodeBase();
+
+		if(mySourceCodeBase!=null){
+		
+	        File wcDir = new File(mySourceCodeBase).getParentFile(); //project folder is one level parent folder than 'src'
+	        
+	        if (wcDir.exists()) {
+	        	sourceCodeBase = mySourceCodeBase;
+	        	
+	        	return mySourceCodeBase;
+	        }
+		}
+		
+		sourceCodeBase = "/Users/jyjang/codebase/1401720840/src/"; //TODO: use main committers one for now, but it is needed to changed.
+		
+		return sourceCodeBase;
+	}
+    
+	public static String mySourceCodeBase(){
 		
 		String userId = (String) TransactionContext.getThreadLocalInstance().getRequest().getSession().getAttribute("userId");
 		
-		return "/Users/jyjang/codebase/"+ userId + "/src/";
+		if(UEngineUtil.isNotEmpty(userId))
+			return "/Users/jyjang/codebase/"+ userId + "/src/";
+		
+		return null;
 	}
     
 	@Override
@@ -84,7 +128,7 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
 
 		if(name.endsWith(".ejs") || name.endsWith(".ejs.js") || name.endsWith("xml")){
 			try {
-				FileInputStream fis = new FileInputStream(firstSourcePath + name);
+				FileInputStream fis = new FileInputStream(firstSourcePath + "/" + name);
 				return fis;
 			} catch (FileNotFoundException e) {
 			}
@@ -130,9 +174,45 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
 	
 	
 	
-	
-	
     private void init() {
+   
+    	//TODO: it's too complicated to use. so we switch to use HotSwapper on behalf of this
+    	
+//    	// setting security filters for more fine-grained control
+//    	try {
+//    		pool = ClassPool.getDefault();
+//    		
+//    		pool.appendClassPath("/Users/jyjang/Documents/workspace/ProcessCodi_metaworks3/WebContent/WEB-INF/mongo-2.7.2.jar");
+//    		
+//    		CtClass cc = pool.get("com.mongodb.Mongo");
+//    		
+//    		CtConstructor cm = cc.getDeclaredConstructor(new CtClass[]{});
+//    		
+//    		cm.instrument(
+//    		    new ExprEditor() {
+//    		    	boolean checked = false;
+//    		    	
+//    		        public void edit(MethodCall m)
+//    		                      throws CannotCompileException
+//    		        {
+//    		        	
+//    		        	if(!checked){
+//    		                m.replace("{ System.out.println(\"how many test\"); throw new SecurityException(\"platform denied you\"); $_ = $proceed($$); }");
+//    		             
+//    		                checked = true;
+//    		        	}
+//    		        }
+//    		    });
+//    		
+////    	    Loader cl = new Loader(pool);
+////    	    
+////    	    SampleLoader loader = new SampleLoader(pool);
+////    	    loader.findClass("java.io.File");
+//    	}catch(Exception e){
+//    		throw new RuntimeException(e);
+//    	}
+//    	
+    	
         this.compiler = ToolProvider.getSystemJavaCompiler();
         if (this.compiler == null) {
             throw new UnsupportedOperationException(
@@ -204,6 +284,27 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
      */
     protected Class<?> findClass(String className) throws ClassNotFoundException {
 
+    	
+    	//TODO: it looks bad so, we switch to use HotSwapper in the javassist
+    	
+//    	if(className.equals("com.mongodb.Mongo")){
+//            try {
+//                CtClass cc = pool.get(className);
+//                // modify the CtClass object here
+//                byte[] b = cc.toBytecode();
+//                return defineClass(className, b, 0, b.length);
+//            } catch (NotFoundException e) {
+//                //throw new ClassNotFoundException();
+//            } catch (IOException e) {
+//                //throw new ClassNotFoundException();
+//            } catch (CannotCompileException e) {
+//                //throw new ClassNotFoundException();
+//            }
+//
+//    	}
+    	
+    	
+    	
         byte[] ba;
         int    size;
         try {

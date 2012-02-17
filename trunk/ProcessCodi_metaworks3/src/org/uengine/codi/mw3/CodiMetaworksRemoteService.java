@@ -1,24 +1,16 @@
 package org.uengine.codi.mw3;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.rmi.RemoteException;
+import java.lang.reflect.Method;
 import java.util.Map;
 
-import org.apache.tools.ant.filters.StringInputStream;
-import org.codehaus.commons.compiler.jdk.JavaSourceClassLoader;
 import org.metaworks.WebObjectType;
 import org.metaworks.dao.ConnectionFactory;
-import org.metaworks.dao.TransactionContext;
+import org.metaworks.dwr.InvocationContext;
 import org.metaworks.dwr.MetaworksRemoteService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.WebApplicationContext;
-import org.uengine.codi.mw3.admin.ClassDefinition;
-import org.uengine.kernel.GlobalContext;
+import org.uengine.codi.platform.SecurityContext;
+import org.uengine.processmanager.ProcessManagerBean;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 public class CodiMetaworksRemoteService extends MetaworksRemoteService{
@@ -148,17 +140,66 @@ public class CodiMetaworksRemoteService extends MetaworksRemoteService{
 		
 		boolean underPlatform = (serviceClass.getClassLoader().getClass() == CodiClassLoader.class);
 		if(underPlatform)
-			TransactionContext.getThreadLocalInstance().setNeedSecurityCheck(true);
+			SecurityContext.getThreadLocalInstance().setNeedSecurityCheck(true);
 
-		Object returnVal = instance.callMetaworksService(objectTypeName, object, methodName,
-				autowiredFields);
+//		Object returnVal = instance.callMetaworksService(objectTypeName, object, methodName,
+//				autowiredFields);
 		
+	
 
-		if(underPlatform)
-			TransactionContext.getThreadLocalInstance().setNeedSecurityCheck(false);
+    	InvocationContext invocationContext = instance.prepareToCall(objectTypeName, object, methodName, autowiredFields);
+    	object = invocationContext.getObject();
+    	
+    	ProcessManagerRemote processManager = null;
+		if(invocationContext.getAutowiredObjects().containsKey(ProcessManagerBean.class)){ //TODO: later this should check the hierarchy of ProcessManagerRemote 
+			processManager = (ProcessManagerRemote) invocationContext.getAutowiredObjects().get(ProcessManagerBean.class);
+		}
+		
+    	Object returnVal = null;
+		
+		try {
+			Method m = object.getClass().getMethod(methodName, new Class[]{});
+			returnVal = m.invoke(object, new Object[]{});
 			
+			if(m.getReturnType()==void.class)
+				returnVal = object;
+
+			if(processManager!=null){
+				processManager.applyChanges();				
+			}
+			
+			return returnVal;
+			
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+
+			if(processManager!=null){
+				try {
+					processManager.cancelChanges();
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}				
+			}
+			
+			throw e.getTargetException();
+
+		} finally{
+			if(processManager!=null){
+				try {
+					processManager.remove();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}				
+			}
+
+			if(underPlatform)
+				SecurityContext.getThreadLocalInstance().setNeedSecurityCheck(false);
+				
+		}
 		
-		return returnVal;
 	}
 
 	@Override
