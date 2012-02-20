@@ -17,6 +17,7 @@ import org.metaworks.ObjectType;
 import org.metaworks.Type;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.AutowiredToClient;
+import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Children;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
@@ -333,14 +334,34 @@ public class WebObjectType{
 				fd.setLoadable(false);
 
 			Hidden hidden = (Hidden) getAnnotationDeeply(actCls, iDAOClass, fd.getName(), Hidden.class);
-			if(hidden !=null)
-				fd.setAttribute("hidden", hidden.on());
+			if(hidden !=null){
+				
+				if(hidden.when().length() > 1){
+					if(hidden.on())
+						fd.setAttribute("hidden.when", hidden.when());
+					else
+						fd.setAttribute("show.when", hidden.when());
+					
+				}else
+					fd.setAttribute("hidden", hidden.on());
+			}
 
 			if(getAnnotationDeeply(actCls, iDAOClass, fd.getName(), AutowiredToClient.class)!=null)
 				fd.setAttribute("autowiredToClient", new Boolean(true));
 
 			if(getAnnotationDeeply(actCls, iDAOClass, fd.getName(), NonEditable.class)!=null)
 				fd.setAttribute("nonEditable", new Boolean(true));
+			
+			Available available = (Available) getAnnotationDeeply(actCls, iDAOClass, fd.getName(), Available.class); 
+			if(available!=null && available.when().length > 0){
+				Map whens = new HashMap();
+				for(String when : available.when()){
+					whens.put(when, when);
+				}
+				
+				fd.setAttribute("available.when", whens);
+			}
+
 			
 			Resource resourceAnnotation = (Resource) getAnnotationDeeply(actCls, iDAOClass, fd.getName(), Resource.class);
 			if(resourceAnnotation !=null){
@@ -469,6 +490,8 @@ public class WebObjectType{
 			Face face = method.getAnnotation(Face.class);
 			Children children = method.getAnnotation(Children.class);
 			Name name = method.getAnnotation(Name.class);
+			Available available =  method.getAnnotation(Available.class);
+			Hidden hidden =  method.getAnnotation(Hidden.class);
 			
 			if(annotation==null && iDAOClass != null){
 				try{
@@ -476,6 +499,9 @@ public class WebObjectType{
 					face = iDAOClass.getMethod(method.getName(), new Class[]{}).getAnnotation(Face.class);
 					children = iDAOClass.getMethod(method.getName(), new Class[]{}).getAnnotation(Children.class);
 					name = iDAOClass.getMethod(method.getName(), new Class[]{}).getAnnotation(Name.class);
+					available = iDAOClass.getMethod(method.getName(), new Class[]{}).getAnnotation(Available.class);
+					hidden = iDAOClass.getMethod(method.getName(), new Class[]{}).getAnnotation(Hidden.class);
+					
 				}catch(Exception e){
 					
 				}
@@ -500,6 +526,19 @@ public class WebObjectType{
 					smc.setDisplayName(face.displayName());
 				}else{
 					smc.setDisplayName(method.getName());
+				}
+				
+				if(available!=null && available.when().length > 0){
+					StringBuffer whens = new StringBuffer();
+					for(String when : available.when()){
+						whens.append(when).append("|");
+					}
+					
+					smc.setWhen(whens.toString());
+				}
+				
+				if(hidden!=null){
+					smc.setWhen("___hidden___");
 				}
 				
 				serviceMethodContexts.put(smc.getMethodName(), smc);
