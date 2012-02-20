@@ -1312,6 +1312,29 @@
 				return objectRef;
 			}
 			
+			
+			Metaworks3.prototype.isHidden = function(fd){
+				if(fd.attributes){
+					if(fd.attributes['hidden.when']){
+						return (fd.attributes['hidden.when'] == this.when);
+					}
+						
+					if(fd.attributes['show.when']){
+						return (fd.attributes['show.when']!= this.when);
+					} 
+					
+					if(fd.attributes['available.when']){
+						return (fd.attributes['available.when'][this.when]==null);
+					} 
+					
+					if(fd.attributes['hidden']) 
+						return true;
+										
+				} 
+				
+				return false;
+			}
+			
 			if(!Metaworks) alert('Metaworks DWR service looks not available. Metaworks will not work');
 			var mw3 = new Metaworks3('template_caption', 'dwr_caption', Metaworks);
 			
@@ -1408,8 +1431,9 @@
 			
 			MethodRef.prototype.here = function(){
 		   		if(this.methodContext.when != mw3.WHEN_EVER)
-		   			if((mw3.when && this.methodContext.when != mw3.when) || (mw3.where && this.methodContext.where != mw3.where)) return "";
+		   			if((mw3.when && this.methodContext.when != mw3.when) || (mw3.where && (this.methodContext.where!='wherever' && this.methodContext.where != mw3.where))) return "";
 
+		   			
 		   		var template;
 		   		if(arguments.length == 1){
 		   			template = arguments[0];
