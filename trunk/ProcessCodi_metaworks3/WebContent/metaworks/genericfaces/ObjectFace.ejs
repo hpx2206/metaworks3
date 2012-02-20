@@ -40,7 +40,7 @@
   	var fd = objectMetadata.fieldDescriptors[i];
  //mw3.debug(fd, fd.name=='width');
    	
-  	if(fd.attributes && fd.attributes['hidden']) continue;
+  	if(mw3.isHidden(fd)) continue;
   	if(fd.name == 'metaworksContext') continue;
   	
   	var fieldValue = value[fd.name];
