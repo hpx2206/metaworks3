@@ -16,6 +16,7 @@ import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.WebFieldDescriptor;
 import org.metaworks.WebObjectType;
+import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.NonEditable;
@@ -24,10 +25,12 @@ import org.metaworks.dao.TransactionContext;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.example.ide.CompileError;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.tmatesoft.sqljet.core.internal.lang.SqlParser.when_expr_return;
 import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.CodiDwrServlet;
 import org.uengine.codi.mw3.alm.QualityOption;
 import org.uengine.codi.mw3.model.FaceHelperSourceCode;
+import org.uengine.codi.mw3.model.FaceSourceCode;
 import org.uengine.codi.mw3.model.JavaSourceCode;
 import org.uengine.codi.mw3.model.Login;
 import org.uengine.codi.mw3.model.Popup;
@@ -40,7 +43,7 @@ import org.uengine.kernel.PropertyListable;
 import org.uengine.processmanager.ProcessManagerRemote;
 import org.uengine.util.UEngineUtil;
 
-
+@Face(options="hideEditBtn", values="true")
 public class ClassDefinition implements ContextAware, PropertyListable, NeedArrangementToSerialize{
 
 	transient MetaworksContext metaworksContext;
@@ -74,6 +77,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		}
 
 	int version;
+	@Hidden
 		public int getVersion() {
 			return version;
 		}
@@ -82,7 +86,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		}
 		
 	transient User author; 
-			
+	@Hidden(when="edit")
 		public User getAuthor() {
 			return author;
 		}
@@ -138,6 +142,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		}
 
 	transient ClassSourceCodes sourceCodes;
+	@Available(when="step1")
 		public ClassSourceCodes getSourceCodes() {
 			return sourceCodes;
 		}
@@ -164,7 +169,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		}
 	*/
 		
-	@ServiceMethod(callByContent=true)
+	//@ServiceMethod(callByContent=true)
 	public void generateSourceCode(){
 		
 		StringBuffer sb = new StringBuffer();
@@ -196,7 +201,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		
 		getSourceCodes().sourceCode = new JavaSourceCode();
 		getSourceCodes().sourceCode.setCode(sb.toString());
-		
+		getSourceCodes().face = new FaceSourceCode();
 		generateFaceHelperSourceCode();	
 	}
 	
@@ -220,7 +225,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 	
 	}
 	
-	@ServiceMethod(callByContent=true)
+//	@ServiceMethod(callByContent=true, when="view")
 	public void compile() throws Exception{
 		save();
 	
@@ -340,13 +345,13 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 
 	}
 	
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP, when="view")
 	@Face(displayName = "Run")
 	public Popup run() throws Exception{		
 
-		try{
-			save();
-		}catch(Exception e){}
+//		try{
+		compile();
+//		}catch(Exception e){}
 		
 		Runner runner = new Runner();
 		runner.setFullClassName(getPackageName() + "." + getClassName());
@@ -357,10 +362,51 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 	
 		return runnerPopup;
 	}
+	
+	
+		
+	/////// for wizard
+	
+
+//	transient ClassModeler wizardClassModeler;		
+//	@Available(when={"step2"})
+//		public ClassModeler getWizardClassModeler() {
+//			return wizardClassModeler;
+//		}
+//		public void setWizardClassModeler(ClassModeler temporalClassModeler) {
+//			this.wizardClassModeler = temporalClassModeler;
+//		}
+		
+		
+	@ServiceMethod(callByContent=true, when="edit")
+	@Face(displayName="Next (Modeling)")
+	public void next1(){
+		
+		getMetaworksContext().setWhen("step1");
+		generateSourceCode();
+//		setWizardClassModeler(new ClassModeler());
+	}
+
+	@ServiceMethod(callByContent=true, when="step1")
+	@Face(displayName="Finish")
+	public void next2() throws Exception{
+		save();
+//		getSourceCodes().setClassModeler(getWizardClassModeler());
+		getMetaworksContext().setWhen("view");
+	}
 
 	
-	@ServiceMethod(callByContent=true)
-	@Face(displayName = "Save")
+//	@ServiceMethod(callByContent=true, when="step2")
+//	public void next3(){
+//		
+//		getMetaworksContext().setWhen("view");
+//	}
+	
+//////// end for wizard
+
+	
+//	@ServiceMethod(callByContent=true)
+//	@Face(displayName = "Save")
 	public void save() throws Exception{
 		
         CodiClassLoader contextClassLoader = CodiClassLoader.getMyClassLoader();
@@ -450,8 +496,9 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 				
 	}
 	
-	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
-	public Popup checkout(){
+	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP, when="view")
+	@Face(displayName="Sync")
+	public Popup sync(){
 		Popup popup = new Popup();
 		popup.setName("SVN Client");
 		popup.setPanel(new CheckoutWindow(this));
@@ -459,7 +506,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		return popup;
 	}
 
-	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
+//	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP, when="view")
 	public Popup commit(){
 		Popup popup = new Popup();
 		popup.setName("SVN Client");
@@ -468,7 +515,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		return popup;
 	}
 
-	@ServiceMethod(target=ServiceMethodContext.TARGET_STICK, callByContent=true)
+	@ServiceMethod(target=ServiceMethodContext.TARGET_STICK, callByContent=true, when=MetaworksContext.WHEN_VIEW)
 	@Face(displayName = "Post to my wall")
 	public Popup share(){
 		HttpSession httpSession = TransactionContext.getThreadLocalInstance().getRequest().getSession(); 

@@ -317,8 +317,8 @@ public class EntityDefinition implements ContextAware, PropertyListable{
 				classType = "Double";
 					
 			ClassField cf = new ClassField();
-			cf.classModeler = classDefinition.getSourceCodes().getClassModeler();
-			cf.classModeler.setNewClassField(new ClassField());
+			cf.classSourceCodes.classModeler = classDefinition.getSourceCodes().getClassModeler();
+			cf.classSourceCodes.classModeler.setNewClassField(new ClassField());
 			cf.setFieldName(fieldName);
 			cf.setType(classType);
 			cf.add();	
@@ -407,8 +407,8 @@ public class EntityDefinition implements ContextAware, PropertyListable{
 				classType = "Double";
 			
 			ClassField cf = new ClassField();
-			cf.classModeler = classDefinition.getSourceCodes().getClassModeler();
-			cf.classModeler.setNewClassField(new ClassField());
+			cf.classSourceCodes.classModeler = classDefinition.getSourceCodes().getClassModeler();
+			cf.classSourceCodes.classModeler.setNewClassField(new ClassField());
 			cf.setFieldName(fieldName);
 			cf.setType(classType);
 			cf.add();	
