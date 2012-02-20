@@ -21,44 +21,25 @@ public class PlatformSecurityAdvice {
     @Before("execution(* org.uengine.codi.platform.*.*(..))")
     public void beforeAPICall()  {
 		SecurityContext.getThreadLocalInstance().setNeedSecurityCheck(false); 
-
     }
 
     @After("execution(* org.uengine.codi.platform.*.*(..))")
     public void afterAPICall() throws java.rmi.RemoteException {
     	SecurityContext.getThreadLocalInstance().setNeedSecurityCheck(true);
     	
-//    	TransactionContext.getThreadLocalInstance().getSharedContext(contextKey)
     	Mongo m;
 		try {
 			
 			m = new Mongo();
-			
 			DB db = m.getDB( "platform" );
 			
 			DBCollection coll = db.getCollection("apiCalls");
-
 			
-			long time = System.currentTimeMillis();// % 3600000;
+			long time = System.currentTimeMillis();
 
-//			BasicDBObject query = new BasicDBObject();
-
-//	        query.put("time", new BasicDBObject("$eq", time));  // e.g. find all where i > 50
-
-//	        DBObject info = coll.findOne(query);
-//
-//	        long count = 0;
-//	        if(info!=null){
-//	        	count = (Long) info.get("count");
-//	        }else{
-//	        	info = new BasicDBObject();
-//	        }
-			
 	        DBObject info = new BasicDBObject();
-	        
 	        info.put("time", time);
 			info.put("count", 1);
-			
 			
 			coll.insert(info);
 			
@@ -67,8 +48,5 @@ public class PlatformSecurityAdvice {
 		} catch (MongoException e) {
 			e.printStackTrace();
 		}
-    	
-
     }
-
 }
