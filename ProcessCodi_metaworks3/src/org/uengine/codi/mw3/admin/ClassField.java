@@ -14,6 +14,8 @@ import org.metaworks.annotation.Range;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.example.ide.SourceCode;
 import org.metaworks.website.MetaworksFile;
+import org.uengine.codi.mw3.model.JavaSourceCode;
+import org.uengine.util.UEngineUtil;
 
 @Face(
 	ejsPathMappingByContext=
@@ -108,52 +110,77 @@ public class ClassField implements Cloneable, ContextAware{
 		}
 				
 	@ServiceMethod(when=MetaworksContext.WHEN_EDIT, where="newEntry", callByContent=true)
-	public ClassModeler add() throws Exception{
+	public ClassSourceCodes add() throws Exception{
 
-		if(classModeler.classFields==null)
-			classModeler.classFields = new ArrayList<ClassField>();//new FormField[]{};
+		if(classSourceCodes.classModeler.classFields==null)
+			classSourceCodes.classModeler.classFields = new ArrayList<ClassField>();//new FormField[]{};
 		
 		//TODO: lesson 3 (validation with throwing exception)
-		if(classModeler.classFields.contains(this))
+		if(classSourceCodes.classModeler.classFields.contains(this))
 			throw new Exception("There's already existing field named '" + getFieldName() + "'.");
 		ClassField clonedOne = (ClassField) this.clone(); //TODO: lesson 2 (cloning to avoid reflective problem)
 
 		clonedOne.setMetaworksContext(new MetaworksContext());  //TODO: lesson 4 (context injection)
 		clonedOne.getMetaworksContext().setWhere("in-container");
 		
-		classModeler.classFields.add(clonedOne); 
+		classSourceCodes.classModeler.classFields.add(clonedOne); 
+		
+		
 
 		//clear the entries for newFormField	//TODO: lesson 6 (context clearing)
-		classModeler.init();
+		classSourceCodes.classModeler.init();
 		//
 		
-		return classModeler;
+		StringBuffer javaCode = new StringBuffer(classSourceCodes.getSourceCode().getCode());
+		int whereLastBraket = javaCode.lastIndexOf("}");
+		
+		
+		ClassField field = this;
+		
+		String fieldNameFirstCharUpper = UEngineUtil.toOnlyFirstCharacterUpper(field.getFieldName());
+		String fieldType = field.getType();
+
+		
+		StringBuffer sb = new StringBuffer();
+		sb
+			.append("\n")
+			.append("	").append(fieldType).append(" ").append(field.getFieldName()).append(";\n")
+			.append("		public ").append(fieldType).append(" get").append(fieldNameFirstCharUpper).append("(){ return ").append(field.getFieldName()).append("; }\n")
+			.append("		public void set").append(fieldNameFirstCharUpper).append("(").append(fieldType).append(" ").append(field.getFieldName()).append("){ this.").append(field.getFieldName()).append(" = ").append(field.getFieldName()).append("; }\n\n")
+			.append("\n");
+
+		
+		javaCode.insert(whereLastBraket, sb.toString());
+		
+		classSourceCodes.getSourceCode().setCode(javaCode.toString());
+		
+		return classSourceCodes;
 	}
 		
 	@ServiceMethod(when=MetaworksContext.WHEN_EDIT, where="in-container", callByContent=true)
 	public ClassModeler save() throws Exception{
 		//TODO: lesson 3 (validation with throwing exception)
 		
-		int index = classModeler.classFields.indexOf(this);
+		int index = classSourceCodes.classModeler.classFields.indexOf(this);
 		if(index==-1)
 			throw new Exception("There's no existing field named '" + getFieldName() + "'.");
 					
-		classModeler.classFields.remove(this);
+		classSourceCodes.classModeler.classFields.remove(this);
 		
 		ClassField clonedOne = (ClassField) this.clone(); //TODO: lesson 2 (cloning to avoid reflective problem)
 		
-		classModeler.classFields.add(index, clonedOne); 
+		classSourceCodes.classModeler.classFields.add(index, clonedOne); 
 		
 		clonedOne.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 		
-		return classModeler;
+		return classSourceCodes.classModeler;
 	}
 		
 	@ServiceMethod(when=MetaworksContext.WHEN_VIEW, where="in-container")
 	public ClassModeler remove(){
-		classModeler.classFields.remove(this);
+		classSourceCodes.classModeler.classFields.remove(this);
 		
-		return classModeler;
+		return classSourceCodes.classModeler;
 	}
 	
 	//TODO: quiz 2 (when the form field is first order, this button should be shown.
@@ -161,28 +188,28 @@ public class ClassField implements Cloneable, ContextAware{
 	
 	@ServiceMethod(when=MetaworksContext.WHEN_VIEW, where="in-container")
 	public ClassModeler up(){
-		int index = classModeler.classFields.indexOf(this);
+		int index = classSourceCodes.classModeler.classFields.indexOf(this);
 		
 		if(index>0){
-			classModeler.classFields.remove(this);
+			classSourceCodes.classModeler.classFields.remove(this);
 			//TODO: quiz 1 (below is not proper since it will clear the type information. Prove why and fix this)
-			classModeler.classFields.add(index-1, this);
+			classSourceCodes.classModeler.classFields.add(index-1, this);
 		}
 
-		return classModeler;
+		return classSourceCodes.classModeler;
 	}
 	
 	@ServiceMethod(when=MetaworksContext.WHEN_VIEW, where="in-container") 
 	public ClassModeler down(){
-		int index = classModeler.classFields.indexOf(this);
+		int index = classSourceCodes.classModeler.classFields.indexOf(this);
 		
-		if(index<classModeler.classFields.size()-1){
-			classModeler.classFields.remove(this);      //TODO: lesson 1 (object addressing and correlation)
+		if(index<classSourceCodes.classModeler.classFields.size()-1){
+			classSourceCodes.classModeler.classFields.remove(this);      //TODO: lesson 1 (object addressing and correlation)
 			//TODO: quiz 1 (below is not proper since it will clear the type information. Prove why and fix this)
-			classModeler.classFields.add(index+1, this);
+			classSourceCodes.classModeler.classFields.add(index+1, this);
 		}
 
-		return classModeler;
+		return classSourceCodes.classModeler;
 	}
 	
 	
@@ -207,7 +234,7 @@ public class ClassField implements Cloneable, ContextAware{
 
 	
 	@AutowiredFromClient  //TODO: lesson 0 (auto-wiring client-side objects)
-	transient public ClassModeler classModeler;
+	transient public ClassSourceCodes classSourceCodes;
 	
 
 	

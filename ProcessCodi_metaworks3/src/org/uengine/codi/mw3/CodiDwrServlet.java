@@ -205,54 +205,47 @@ public class CodiDwrServlet extends TransactionalDwrServlet{
 		
     	try {
 /////////////// TODO: disabled for easy testing. someday we need to find dettach with the server
-    	//	HotSwapper hs = new HotSwapper(8000);
+
     		
-			ClassPool pool = ClassPool.getDefault();
-			
-//			pool.appendClassPath("/Users/jyjang/Documents/workspace/ProcessCodi_metaworks3/WebContent/WEB-INF/lib/mongo-2.7.2.jar");
-	//		pool.appendClassPath("/Users/jyjang/Documents/workspace/ProcessCodi_metaworks3/WebContent/WEB-INF/lib/metaworks3.jar");
-				
-			
-			String[] securedClassMehtods = GlobalContext.getPropertyStringArray("secured.classmethods");
-			
-			for(String securedClassMethod : securedClassMehtods){
-				
-				securedClassMethod = securedClassMethod.trim();
-				
-				int whereLastDot = securedClassMethod.lastIndexOf('.');
-				final String className = securedClassMethod.substring(0, whereLastDot);
-				final String methodName = securedClassMethod.substring(whereLastDot+1);
-				
-				CtClass cc = pool.get(className);
-				
-				cc.defrost();
-				
-				CtMethod cm = cc.getDeclaredMethod(methodName);
-				
-				final String finalSecuredClassMethodName = securedClassMethod + "()";
-				
-				cm.instrument(
-						new ExprEditor() {
-							boolean checked = false;
-							
-							public void edit(MethodCall m)
-							throws CannotCompileException
-							{
-								
-								if(!checked){
-									m.replace("{ if(org.uengine.codi.platform.SecurityContext.getThreadLocalInstance().isNeedSecurityCheck()) throw new SecurityException(\"platform denies your request to access '" + finalSecuredClassMethodName + "' directly. Use org.uengine.codi.platform.* instead.\"); $_ = $proceed($$); }");
-//									m.replace("{ if(org.uengine.codi.platform.SecurityContext.getThreadLocalInstance().securityCheck(\""+
-//											finalSecuredClassMethodName + "\"); $_ = $proceed($$); }");
-									checked = true;
-								}
-							}
-						});
-				
-				Class.forName(className);
+ //   		HotSwapper hs = new HotSwapper(8000);
+    		
+//			ClassPool pool = ClassPool.getDefault();
+//			
+//			String[] securedClassMehtods = GlobalContext.getPropertyStringArray("secured.classmethods");
+//			
+//			for(String securedClassMethod : securedClassMehtods){
+//				
+//				securedClassMethod = securedClassMethod.trim();
+//				
+//				int whereLastDot = securedClassMethod.lastIndexOf('.');
+//				final String className = securedClassMethod.substring(0, whereLastDot);
+//				final String methodName = securedClassMethod.substring(whereLastDot+1);
+//				
+//				CtClass cc = pool.get(className);
+//				CtMethod cm = cc.getDeclaredMethod(methodName);
+//				
+//				cm.instrument(
+//						new ExprEditor() {
+//							boolean checked = false;
+//							
+//							public void edit(MethodCall m)
+//							throws CannotCompileException
+//							{
+//								
+//								if(!checked){
+//									m.replace("{ if(codi.platform.SecurityContext.getThreadLocalInstance().isNeedSecurityCheck())" +
+//											" throw new SecurityException(\"platform denies your request to access '" + 
+//											className + "." + methodName + "()" +
+//											"' directly. Use org.uengine.codi.platform.* instead.\"); $_ = $proceed($$); }");
+//									checked = true;
+//								}
+//							}
+//						});
+//				
+//				Class.forName(className);
 	
-				////////// disabled 
-	//			hs.reload(className, cc.toBytecode());
-			}
+//				hs.reload(className, cc.toBytecode());
+	//		}
 
 		}catch(Exception e){
 			throw new RuntimeException(e);
