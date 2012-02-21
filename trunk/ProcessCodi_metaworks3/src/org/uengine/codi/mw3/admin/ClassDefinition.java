@@ -161,6 +161,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		
 	transient Facebook facebookComments;
 		@Face(ejsPath="faces/org/uengine/codi/mw3/model/FacebookComments.ejs")
+		@Available(when="view")
 		public Facebook getFacebookComments() {
 			return facebookComments;
 		}
@@ -170,6 +171,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		
 	transient Facebook facebookLike;
 		@Face(ejsPath="faces/org/uengine/codi/mw3/model/FacebookLike.ejs")
+		@Available(when="view")
 		public Facebook getFacebookLike() {
 			return facebookLike;
 		}
