@@ -289,13 +289,13 @@ public class ProcessDefinition extends Database<IProcessDefinition> implements I
 	}
 
 	@Autowired
-	ClassDesignerContentPanel classDesignerContentPanel;
+	public ClassDesignerContentPanel classDesignerContentPanel;
 	
 	@Autowired
 	ProcessDesignerWindow processDesigner;
 	
 	@Autowired
-	EntityDesignerWindow entityDesignerWindow;
+	public EntityDesignerWindow entityDesignerWindow;
 	
 	
 	@AutowiredFromClient
