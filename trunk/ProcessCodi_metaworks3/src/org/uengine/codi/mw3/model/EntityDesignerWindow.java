@@ -9,7 +9,10 @@ import org.uengine.processmanager.ProcessManagerRemote;
 
 @Face(ejsPath = "genericfaces/Window.ejs", displayName = "EntityDesigner Window", options = { "hideLabels" }, values = { "true" })
 public class EntityDesignerWindow extends ContentWindow {
-			
+
+	@Autowired
+	public ProcessManagerRemote processManager;	
+	
 	EntityDesignerContentPanel entityDesignerContentPanel;
 		public EntityDesignerContentPanel getEntityDesignerContentPanel() {
 			return entityDesignerContentPanel;
@@ -25,36 +28,37 @@ public class EntityDesignerWindow extends ContentWindow {
 	}
 	
 	public void load(String defId) throws Exception {
-		entityDesignerContentPanel = new EntityDesignerContentPanel();
-		//entityDesignerContentPanel.load(defId);		
-		
-		
-		String defVerId = processManager.getProcessDefinitionProductionVersion(defId);
-		String resource = processManager.getResource(defVerId);
-		
-		
-		EntityDefinition entityDefinition = (EntityDefinition) GlobalContext.deserialize(resource, EntityDefinition.class);
-		entityDefinition.setDefId(defId);
-		entityDefinition.init();
-		
-/*		try {
-			ProcessDefinition def = new ProcessDefinition();
-			def.setDefId(new Long(defId));
-			String authorId = def.databaseMe().getAuthor();
+		try{
+			entityDesignerContentPanel = new EntityDesignerContentPanel();
+			//entityDesignerContentPanel.load(defId);		
 			
-			User author = new User();
-			author.setUserId(authorId);
-			entityDefinition.setAuthor(author);
 			
-		} catch (Exception e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
-		}*/
+			String defVerId = processManager.getProcessDefinitionProductionVersion(defId);
+			String resource = processManager.getResource(defVerId);
+			
+			EntityDefinition entityDefinition = (EntityDefinition) GlobalContext.deserialize(resource, EntityDefinition.class);
+			entityDefinition.setDefId(defId);
+			entityDefinition.init();
+			
+	/*		try {
+				ProcessDefinition def = new ProcessDefinition();
+				def.setDefId(new Long(defId));
+				String authorId = def.databaseMe().getAuthor();
+				
+				User author = new User();
+				author.setUserId(authorId);
+				entityDefinition.setAuthor(author);
+				
+			} catch (Exception e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}*/
+			
+			entityDesignerContentPanel.setEntityDefinition(entityDefinition);
+			entityDesignerContentPanel.setEntityQuery(new EntityQuery());
+		}finally{
+			processManager.remove();
+		}		
 		
-		entityDesignerContentPanel.setEntityDefinition(entityDefinition);
-		entityDesignerContentPanel.setEntityQuery(new EntityQuery());
 	}
-	
-	@Autowired
-	ProcessManagerRemote processManager;	
 }
