@@ -9,6 +9,8 @@ import org.uengine.processmanager.ProcessManagerRemote;
 @Face(ejsPath="genericfaces/Window.ejs", displayName="Class Designer", options={"hideLabels"}, values={"true"})
 public class ClassDesignerContentPanel extends ContentWindow {
 
+	@Autowired
+	public ProcessManagerRemote processManager;
 	
 	ClassDefinition classDefinition;
 		public ClassDefinition getClassDefinition() {
@@ -24,27 +26,35 @@ public class ClassDesignerContentPanel extends ContentWindow {
 	}
 
 	public void load(String defId) throws Exception{
-		String defVerId = processManager.getProcessDefinitionProductionVersion(defId);
-		String resource = processManager.getResource(defVerId);
-		classDefinition = (ClassDefinition) GlobalContext.deserialize(resource, ClassDefinition.class);
-		classDefinition.setDefId(defId);
 		
-		try {
-			ProcessDefinition def = new ProcessDefinition();
-			def.setDefId(new Long(defId));
-			String authorId = def.databaseMe().getAuthor();
+		try{
+			String defVerId = processManager.getProcessDefinitionProductionVersion(defId);
+			String resource = processManager.getResource(defVerId);
+			classDefinition = (ClassDefinition) GlobalContext.deserialize(resource, ClassDefinition.class);
+			classDefinition.setDefId(defId);
+			classDefinition.setFacebookComments(new Facebook());
+			classDefinition.getFacebookComments().setDefId(defId);
+			classDefinition.setFacebookLike(new Facebook());
+			classDefinition.getFacebookLike().setDefId(defId);
 			
-			User author = new User();
-			author.setUserId(authorId);
-			classDefinition.setAuthor(author);
-			
-		} catch (Exception e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
+			try {
+				ProcessDefinition def = new ProcessDefinition();
+				def.setDefId(new Long(defId));
+				String authorId = def.databaseMe().getAuthor();
+				
+				User author = new User();
+				author.setUserId(authorId);
+				classDefinition.setAuthor(author);
+				
+			} catch (Exception e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+		}finally{
+			processManager.remove();
 		}
+		
 		
 	}
 
-	@Autowired
-	ProcessManagerRemote processManager;
 }
