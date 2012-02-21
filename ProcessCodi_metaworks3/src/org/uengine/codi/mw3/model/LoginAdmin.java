@@ -53,17 +53,6 @@ public class LoginAdmin {
 		public void setDefId(String defId) {
 			this.defId = defId;
 		}
-		
-	@Autowired
-	ClassDesignerContentPanel classDesignerContentPanel;
-		@Autowired
-		public ClassDesignerContentPanel getClassDesignerContentPanel() {
-			return classDesignerContentPanel;
-		}
-		public void setClassDesignerContentPanel(
-				ClassDesignerContentPanel classDesignerContentPanel) {
-			this.classDesignerContentPanel = classDesignerContentPanel;
-		}
 
 	@ServiceMethod(callByContent=true)
 	public Admin login() throws Exception {
@@ -83,12 +72,7 @@ public class LoginAdmin {
 		loginUser.setUserId(getUserId());
 		
 		Admin admin = new Admin(loginUser);
-		
-		if(getDefId() != null && getDefId().length() > 0){
-			classDesignerContentPanel.load(getDefId());
-		
-			admin.setContentWindow(classDesignerContentPanel);
-		}
+		admin.setDefId(getDefId());
 		
 		return admin;
 	}
