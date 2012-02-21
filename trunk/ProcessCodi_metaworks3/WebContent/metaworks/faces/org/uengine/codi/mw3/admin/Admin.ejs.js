@@ -1,6 +1,25 @@
 mw3.importScript("scripts/jquery/jquery-ui-latest.js");
 mw3.importScript("scripts/jquery/jquery.layout-latest.js");
 
+var org_uengine_codi_mw3_admin_Admin = function(objectId, className){
+	console.debug("admin");
+	
+	this.objectId = objectId;
+	this.className = className;
+	
+	var object = mw3.objects[objectId];	
+	var theHelper = this;
+	
+	console.debug(object.defId);
+	
+	if(object.defId != null && object.defId.length > 0){	
+		theHelper.setClassDefinition();
+	}
+}
+
+org_uengine_codi_mw3_admin_Admin.prototype.setClassDefinition = function(){
+	mw3.call(this.objectId, "loadClassDef");
+}
 /*
 function check_position(obj, e) {	
 	if( $(obj).css('display') == 'block' )
