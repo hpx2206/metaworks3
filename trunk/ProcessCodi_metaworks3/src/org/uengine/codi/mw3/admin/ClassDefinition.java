@@ -25,12 +25,12 @@ import org.metaworks.dao.TransactionContext;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.example.ide.CompileError;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.tmatesoft.sqljet.core.internal.lang.SqlParser.when_expr_return;
 import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.CodiDwrServlet;
 import org.uengine.codi.mw3.alm.QualityOption;
 import org.uengine.codi.mw3.model.FaceHelperSourceCode;
 import org.uengine.codi.mw3.model.FaceSourceCode;
+import org.uengine.codi.mw3.model.Facebook;
 import org.uengine.codi.mw3.model.JavaSourceCode;
 import org.uengine.codi.mw3.model.Login;
 import org.uengine.codi.mw3.model.Popup;
@@ -158,7 +158,25 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		public void setQualityOption(QualityOption qualityOption) {
 			this.qualityOption = qualityOption;
 		}
-	
+		
+	transient Facebook facebookComments;
+		@Face(ejsPath="faces/org/uengine/codi/mw3/model/FacebookComments.ejs")
+		public Facebook getFacebookComments() {
+			return facebookComments;
+		}
+		public void setFacebookComments(Facebook facebookComments) {
+			this.facebookComments = facebookComments;
+		}	
+		
+	transient Facebook facebookLike;
+		@Face(ejsPath="faces/org/uengine/codi/mw3/model/FacebookLike.ejs")
+		public Facebook getFacebookLike() {
+			return facebookLike;
+		}
+		public void setFacebookLike(Facebook facebookLike) {
+			this.facebookLike = facebookLike;
+		}		
+		
 	/*
 	Feedback feedback;
 		public Feedback getFeedback() {
@@ -169,7 +187,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		}
 	*/
 		
-	//@ServiceMethod(callByContent=true)
+
 	public void generateSourceCode(){
 		
 		StringBuffer sb = new StringBuffer();
@@ -493,6 +511,12 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		
 		setDefId(definitionIdAndVersionId[0]);
 		setDefVerId(definitionIdAndVersionId[1]);
+		
+		facebookComments = new Facebook();
+		facebookComments.setDefId(definitionIdAndVersionId[0]);
+		
+		facebookLike = new Facebook();
+		facebookLike.setDefId(definitionIdAndVersionId[0]);
 				
 	}
 	
