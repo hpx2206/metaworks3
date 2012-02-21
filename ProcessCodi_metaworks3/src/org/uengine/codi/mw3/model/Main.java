@@ -8,29 +8,30 @@ import org.metaworks.annotation.ServiceMethod;
 import org.uengine.codi.mw3.admin.Admin;
 
 public class Main {
-	
-	public Main(){}
-	
-	protected Main(ILogin login) throws Exception{
-		
-		//login.setUserId("1401720840");		
+
+	public Main() {
+	}
+
+	protected Main(ILogin login) throws Exception {
+
+		// login.setUserId("1401720840");
 		this.login = login;
 
 		Session session = new Session();
 		session.setLogin(login);
-		this.session = session;		
-		
+		this.session = session;
+
 		this.navigationWindow = new NavigationWindow();
-		
+
 		this.contentWindow = new ContentWindow();
-		
+
 		this.contactWindow = new ContactWindow(login);
-				
+
 		this.instanceListWindow = new InstanceListWindow(session);
-		
-		//this.logo = new Logo();
+
+		// this.logo = new Logo();
 	}
-	
+
 	ILogin login;
 		@Hidden
 		@Id
@@ -41,7 +42,7 @@ public class Main {
 		public void setLogin(ILogin login) {
 			this.login = login;
 		}
-		
+
 	Session session;
 		@AutowiredToClient
 		public Session getSession() {
@@ -50,7 +51,7 @@ public class Main {
 		public void setSession(Session session) {
 			this.session = session;
 		}
-		
+
 	NavigationWindow navigationWindow;
 		public NavigationWindow getNavigationWindow() {
 			return navigationWindow;
@@ -80,35 +81,30 @@ public class Main {
 		public InstanceListWindow getInstanceListWindow() {
 			return instanceListWindow;
 		}
-	
 		public void setInstanceListWindow(InstanceListWindow instanceListWindow) {
 			this.instanceListWindow = instanceListWindow;
 		}
-		
-		
+
 	Logo logo;
-		
 		public Logo getLogo() {
 			return logo;
 		}
-	
 		public void setLogo(Logo logo) {
 			this.logo = logo;
 		}
 
-
 	@ServiceMethod
-	public ILogin logout(){
+	public ILogin logout() {
 		return login;
 	}
-	
+
 	@ServiceMethod
-	public Main refresh() throws Exception{
+	public Main refresh() throws Exception {
 		return new Main(login);
 	}
-	
-	@ServiceMethod(target=ServiceMethodContext.TARGET_SELF)
-	public Admin admin() throws Exception{
+
+	@ServiceMethod(target = ServiceMethodContext.TARGET_SELF)
+	public Admin admin() throws Exception {
 		return new Admin(login);
-	}	
+	}
 }
