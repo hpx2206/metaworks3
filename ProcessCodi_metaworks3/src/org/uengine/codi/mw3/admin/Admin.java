@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.admin;
 
+import javax.persistence.Id;
 import javax.servlet.http.HttpSession;
 
 import org.metaworks.annotation.ServiceMethod;
@@ -30,6 +31,7 @@ public class Admin {
 	}
 	
 	String defId;
+		@Id
 		public String getDefId() {
 			return defId;
 		}
@@ -55,6 +57,18 @@ public class Admin {
 		contentWindow = new ContentWindow();		
 	}
 	
+	@ServiceMethod
+	public ContentWindow loadClassDef() throws Exception {
+
+		classDesignerContentPanel.load(getDefId());
+	
+		return classDesignerContentPanel;
+	}	
+	
+	@Autowired
+	public ClassDesignerContentPanel classDesignerContentPanel;
+	
+		
 	ResourceWindow resourceWindow;
 		public ResourceWindow getResourceWindow() {
 			return resourceWindow;
@@ -70,7 +84,7 @@ public class Admin {
 		public void setContentWindow(ContentWindow contentWindow) {
 			this.contentWindow = contentWindow;
 		}
-
+	
 	Session session;
 		public Session getSession() {
 			return session;
@@ -78,6 +92,4 @@ public class Admin {
 		public void setSession(Session session) {
 			this.session = session;
 		}
-		
-	
 }
