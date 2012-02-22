@@ -1,4 +1,9 @@
-<select id="assist_<%=objectId%>" onChange="mw3.getFaceHelper('<%=objectId%>').enter(this)">
+<table>
+
+<tr>
+<td valign=top>
+
+<select id="assist_<%=objectId%>" onChange="mw3.getFaceHelper('<%=objectId%>').requestDoc(this)">
 
 <option> </option>
 
@@ -12,3 +17,13 @@
 %>
 </select>
 
+</td>
+</tr>
+
+<tr><td bgcolor="#ffffbb">
+
+<%=fields.document.here()%>
+
+
+</td></tr>
+</table>
