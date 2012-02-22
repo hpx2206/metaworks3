@@ -122,6 +122,7 @@
 	
 	
 	<bean id="MongoDB" class="org.uengine.codi.platform.MongoDB"/>
+	<bean id="SMS" class="org.uengine.codi.platform.SMS"/>
 	<bean id="FileSystem" class="org.uengine.codi.platform.FileSystem"/>
 		
 	<bean id="LoginAdmin" class="org.uengine.codi.mw3.model.LoginAdmin"/>
