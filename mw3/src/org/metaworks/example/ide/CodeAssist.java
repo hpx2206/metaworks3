@@ -6,7 +6,11 @@ import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.ServiceMethod;
 
 public class CodeAssist {
-
+	
+	public CodeAssist(){
+		setDocument(new CodeAssistDocument());
+	}
+	
 	ArrayList<String> assistances;
 		public ArrayList<String> getAssistances() {
 			return assistances;
@@ -22,5 +26,37 @@ public class CodeAssist {
 		public void setSrcCodeObjectId(String srcCodeObjectId) {
 			this.srcCodeObjectId = srcCodeObjectId;
 		}
+		
+	String selectedItem;
+		public String getSelectedItem() {
+			return selectedItem;
+		}
+		public void setSelectedItem(String selectedItem) {
+			this.selectedItem = selectedItem;
+		}
+		
+	String lineAssistRequested;
+			
+		public String getLineAssistRequested() {
+			return lineAssistRequested;
+		}
+		public void setLineAssistRequested(String lineAssistRequested) {
+			this.lineAssistRequested = lineAssistRequested;
+		}
+
+	CodeAssistDocument document; 
+			
+		public CodeAssistDocument getDocument() {
+			return document;
+		}
+		public void setDocument(CodeAssistDocument document) {
+			this.document = document;
+		}
+		
+		
+	@ServiceMethod(callByContent=true)
+	public CodeAssistDocument showDoc(){
+		return new CodeAssistDocument(this);
+	}
 	
 }
