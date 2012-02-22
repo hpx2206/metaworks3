@@ -57,7 +57,6 @@ public class ClassSourceCodes{
 	}
 	
 	ClassModeler classModeler;
-		
 		public ClassModeler getClassModeler() {
 			return classModeler;
 		}
@@ -67,7 +66,6 @@ public class ClassSourceCodes{
 
 	
 	JavaSourceCode sourceCode;
-		
 		public JavaSourceCode getSourceCode() {
 			return sourceCode;
 		}

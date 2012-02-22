@@ -2,12 +2,15 @@
 package org.uengine.codi.mw3.admin;
 
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.dao.TransactionContext;
 import org.uengine.codi.mw3.model.MobileWindow;
 import org.uengine.codi.mw3.model.TemplateDesigner;
 import org.uengine.codi.mw3.model.Window;
@@ -82,7 +85,10 @@ public class Runner implements ContextAware{
 		
 		MobileWindow outputWindow = new MobileWindow();
 		outputWindow.setPanel(o);
-//		outputWindow.
+		
+		HttpServletRequest request = TransactionContext.getThreadLocalInstance().getRequest();
+		
+		outputWindow.setUrl(request.getServerName() + request.getProtocol()+request.getPathInfo());
 		
 		return outputWindow;
 	}	
@@ -93,7 +99,9 @@ public class Runner implements ContextAware{
 		
 //		BrowserWindow window = new BrowserWindow(getPackageName() + "." + getClassName());
 		
-		Window window = new Window(new IFrame("tester.html?className=" + getFullClassName()));
+		String userId = (String) TransactionContext.getThreadLocalInstance().getRequest().getSession().getAttribute("userId");
+		
+		Window window = new Window(new IFrame("runner.html?className=" + getFullClassName() + "&classOwner=" + userId));
 		
 		return window;
 	}	

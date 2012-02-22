@@ -22,5 +22,14 @@ public class MobileWindow {
 		public void setPanel(Object panel) {
 			this.panel = panel;
 		}	
+		
+	String url;
+		public String getUrl() {
+			return url;
+		}
+	
+		public void setUrl(String url) {
+			this.url = url;
+		}
 
 }

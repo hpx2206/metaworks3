@@ -134,6 +134,8 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		}
 
 	String className;
+	@Face(options={"mandatory"}, values={"true"})
+//	@Test(value="Hello{@userId}")
 		public String getClassName() {
 			return className;
 		}
@@ -142,7 +144,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		}
 
 	transient ClassSourceCodes sourceCodes;
-	@Available(when="step1")
+	@Available(when={"step1", "view"})
 		public ClassSourceCodes getSourceCodes() {
 			return sourceCodes;
 		}
@@ -400,6 +402,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		
 	@ServiceMethod(callByContent=true, when="edit")
 	@Face(displayName="Next (Modeling)")
+//	@Test(target="next2", first=true, case="case1")
 	public void next1(){
 		
 		getMetaworksContext().setWhen("step1");
@@ -409,6 +412,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 
 	@ServiceMethod(callByContent=true, when="step1")
 	@Face(displayName="Finish")
+//	@Test(target="next3")
 	public void next2() throws Exception{
 		save();
 //		getSourceCodes().setClassModeler(getWizardClassModeler());
@@ -524,6 +528,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP, when="view")
 	@Face(displayName="Sync")
+	
 	public Popup sync(){
 		Popup popup = new Popup();
 		popup.setName("SVN Client");

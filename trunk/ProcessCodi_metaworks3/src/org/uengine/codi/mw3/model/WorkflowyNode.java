@@ -14,18 +14,21 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
+import com.mongodb.Mongo;
 import com.mongodb.MongoException;
 
 public class WorkflowyNode implements ContextAware {
 
-	public MongoDB mongoDB;
+//	public MongoDB mongoDB;
 
 	public WorkflowyNode() throws UnknownHostException, MongoException{		
 		this(0);
 	}
 	
 	public WorkflowyNode(int nodeId) throws UnknownHostException, MongoException{
-		mongoDB = new MongoDB();
+		Mongo m = new Mongo();
+		
+		//mongoDB = new MongoDB();
 		
 		if(nodeId == 0){
 			nodeId = makeId();
@@ -414,7 +417,9 @@ public class WorkflowyNode implements ContextAware {
 		
 		try{
 			if(getId() > 1){
-				DB db = mongoDB.getDB();
+				Mongo m = new Mongo();
+				DB db = m.getDB("testdb");
+				//DB db = mongoDB.getDB();
 				
 				
 				BasicDBObject find = new BasicDBObject();
@@ -454,7 +459,9 @@ public class WorkflowyNode implements ContextAware {
 	
 	@ServiceMethod(callByContent=true)
 	public void delete() throws UnknownHostException, MongoException {
-		DB db = mongoDB.getDB();
+		Mongo m = new Mongo();
+		DB db = m.getDB("testdb");
+		//DB db = mongoDB.getDB();
 		
 		BasicDBObject find = new BasicDBObject();
 		find.put("id", getId());
@@ -472,7 +479,9 @@ public class WorkflowyNode implements ContextAware {
 		DBCollection coll = null;
 		
 		try{					
-			db = mongoDB.getDB();			
+			Mongo m = new Mongo();
+			db = m.getDB("testdb");
+			//DB db = mongoDB.getDB();
 			coll = db.getCollection("workflowy");
 			
 			BasicDBObject find = new BasicDBObject();
@@ -541,7 +550,9 @@ public class WorkflowyNode implements ContextAware {
 	
 	private int makeId() throws UnknownHostException, MongoException {
 
-		DB db = mongoDB.getDB();
+		Mongo m = new Mongo();
+		DB db = m.getDB("testdb");
+		//DB db = mongoDB.getDB();
 		
 		DBCollection coll = db.getCollection("seq");
 		
