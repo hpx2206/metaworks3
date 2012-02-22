@@ -6,4 +6,6 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Available {
 	String[] when() default {};
+	String[] where() default {};
+	String[] how() default {};
 }
