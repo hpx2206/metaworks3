@@ -1,5 +1,6 @@
 package org.metaworks.dao;
 
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -10,10 +11,12 @@ import org.metaworks.MetaworksContext;
 import org.metaworks.ObjectInstance;
 import org.metaworks.ObjectType;
 import org.metaworks.Type;
+import org.metaworks.WebFieldDescriptor;
 import org.metaworks.WebObjectType;
 import org.metaworks.dwr.MetaworksRemoteService;
+import org.metaworks.example.roomnine.FormField;
 
-public class Database<T extends IDAO> implements IDAO{
+public class Database<T extends IDAO> implements IDAO, Serializable, Cloneable{
 	
 	MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
@@ -549,4 +552,32 @@ public class Database<T extends IDAO> implements IDAO{
 		
 		return null;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj==null) return false;
+		
+		try {
+			WebObjectType wot = MetaworksRemoteService.getInstance().getMetaworksType(getClass().getName());
+			
+			WebFieldDescriptor keyfd = wot.getKeyFieldDescriptor();
+			
+			Object keyFieldValue;
+			keyFieldValue = getClass().getField(keyfd.getName()).get(this);
+
+			Object comparatorFieldValue = obj.getClass().getField(keyfd.getName()).get(obj);
+
+			return keyFieldValue.equals(comparatorFieldValue);
+			
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
+			
+	
 }

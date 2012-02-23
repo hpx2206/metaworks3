@@ -77,5 +77,7 @@ public interface IDAO extends Serializable, ContextAware {
 	
 	
 	public void moveToInsertRow() throws Exception;
+	
+	//public void toArrayList() throws Exception;
 
 }

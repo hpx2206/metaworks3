@@ -52,6 +52,10 @@ public class MetaworksRemoteService {
 		
 		
 	public void clearMetaworksType(String className) throws Exception {
+		
+		if("*".equals(className))
+			metadataStorage.clear();
+		
 		if(metadataStorage.containsKey(className))
 			metadataStorage.remove(className);
 		
