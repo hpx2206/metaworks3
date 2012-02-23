@@ -40,11 +40,12 @@ public class ClassField implements Cloneable, ContextAware{
 		}
 	
 	String type;
-		@Range(
+	//@Hidden
+	@Range(
 				options={
-						"Text", 
-						"Number", 
-						"Money", 
+						"String", 
+						"Long", 
+						"Double", 
 						"Date", 
 						"File", 
 						"Source Code"},
@@ -64,6 +65,15 @@ public class ClassField implements Cloneable, ContextAware{
 			this.type = type;
 		}
 		
+//	JavaSourceCode typeInput;
+//	@Face(options={"width", "height"}, values={"10", "20"})
+//		public JavaSourceCode getTypeInput() {
+//			return typeInput;
+//		}
+//		public void setTypeInput(JavaSourceCode typeInput) {
+//			this.typeInput = typeInput;
+//		}
+
 	String valueString;
 	@Hidden
 		public String getValueString() {

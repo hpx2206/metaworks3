@@ -19,6 +19,7 @@ import org.metaworks.WebObjectType;
 import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
+import org.metaworks.annotation.Name;
 import org.metaworks.annotation.NonEditable;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.TransactionContext;
@@ -58,6 +59,8 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 	transient public ProcessManagerRemote processManager;
 
 	public ClassDefinition(){
+		//setClassName("클래스 명을 입력하십시오.");
+		
 		this.sourceCodes = new ClassSourceCodes();
 		
 		setMetaworksContext(new MetaworksContext());
@@ -86,7 +89,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		}
 		
 	transient User author; 
-	@Hidden(when="edit")
+	@Available(when="view")
 		public User getAuthor() {
 			return author;
 		}
@@ -135,6 +138,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 
 	String className;
 	@Face(options={"mandatory"}, values={"true"})
+	@Name
 //	@Test(value="Hello{@userId}")
 		public String getClassName() {
 			return className;
@@ -401,11 +405,11 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		
 		
 	@ServiceMethod(callByContent=true, when="edit")
-	@Face(displayName="Next (Modeling)")
+	@Face(displayName="Next > ")
 //	@Test(target="next2", first=true, case="case1")
 	public void next1(){
 		
-		getMetaworksContext().setWhen("step1");
+		getMetaworksContext().setWhen("view");
 		generateSourceCode();
 //		setWizardClassModeler(new ClassModeler());
 	}
