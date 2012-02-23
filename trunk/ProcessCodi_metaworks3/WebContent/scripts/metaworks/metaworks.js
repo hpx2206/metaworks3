@@ -189,11 +189,14 @@
 			}
 			
 			Metaworks3.prototype.clearMetaworksType = function(objectTypeName){
-
-				this.metaworksMetadata[objectTypeName] = null;
+				if(objectTypeName == "*")
+					this.metaworksMetadata = new Array();
+				else
+					this.metaworksMetadata[objectTypeName] = null;
 
 				return function(){}; //for dwr dummy call
 			}
+			
 			Metaworks3.prototype.getMetadata = function(objectTypeName, onLoadDone){
 
 					if(!this.metaworksMetadata[objectTypeName] 
@@ -797,7 +800,7 @@
 					value = this.getObjectFromUI(objectId);
 				}
 				
-				if(!value)
+				if(value==null)
 					value = this.objects[objectId];
 				
 				//sometimes the armed object may be unarmed by the user-defined facehelper.getValue() method
@@ -1327,6 +1330,10 @@
 						return (fd.attributes['available.when'][this.when]==null);
 					} 
 					
+					if(fd.attributes['available.where']){
+						return (fd.attributes['available.where'][this.where]==null);
+					} 
+					
 					if(fd.attributes['hidden']) 
 						return true;
 										
@@ -1348,8 +1355,11 @@
 			}
 			
 			FieldRef.prototype.here = function(context){
+				if(mw3.isHidden(this.fieldDescriptor))
+					return "";
+				
 				var html;
-
+				
 				var face;
 				
 				var value = this.object[this.fieldDescriptor.name];
@@ -1431,7 +1441,12 @@
 			
 			MethodRef.prototype.here = function(){
 		   		if(this.methodContext.when != mw3.WHEN_EVER)
-		   			if((mw3.when && this.methodContext.when != mw3.when) || (mw3.where && (this.methodContext.where!='wherever' && this.methodContext.where != mw3.where))) return "";
+		   			if( (mw3.when && (this.methodContext.when.indexOf(mw3.when) == -1) ) 
+		   					||
+			   				(mw3.where && (this.methodContext.where!='wherever' && this.methodContext.where.indexOf(mw3.where) == -1) )
+			   				
+		   			)
+		   				return "";
 
 		   			
 		   		var template;
