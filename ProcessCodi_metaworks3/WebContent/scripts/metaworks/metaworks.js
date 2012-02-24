@@ -62,6 +62,10 @@
 			    			mw3.mouseX = e.pageX;
 			    			mw3.mouseY = e.pageY; 
 			    			
+//			    			  $( "#instruction" ).slideUp(500, function(){
+//								  $('#instruction').remove();							  
+//							  });
+			    			
 //			    			if(mw3.popupDivId!=null){
 //			    				if(mw3.mouseX < 100 && mw3.mouseY < 100){
 //			    					$("#" + mw3.popupDivId).remove();
@@ -86,6 +90,8 @@
 			    					mw3.popupDivId = null;
 				    			}
 			    			}
+			    			
+							
 			    		},
 			    		
 			    		false
@@ -1250,18 +1256,36 @@
 //			}
 
 			
-			function showupInstruction(methodDivId, instruction){
-				   var methodDiv = $("#" + methodDivId);
+			function showupInstruction(methodDivId, instruction, options){
+				   	var methodDiv = $("#" + methodDivId);
 
-					$('body').append("<div id='instruction' style='background:#ffe;z-index:100;position:absolute; visibility: \"\"; top:"+methodDiv.offset().top +"px; left:"+ (methodDiv.offset().left + methodDiv.children()[0].offsetWidth + 10) +"px'>  <= " + instruction + "</div>");
+				   	$('body').append("<div id='instruction' style='width:281px;height:79px;background-image:url(\"images/waveStyle/instruction.png\");z-index:100;position:absolute; visibility: \"\"; top:"+ (methodDiv.offset().top - 50) +"px; left:"+ (methodDiv.offset().left + methodDiv.children()[0].offsetWidth - 10) +"px'> <table width=100% height=100% cellpadding=10><td width=10px></td><td><center><font color=white><b>" + instruction + "</b></font></center></td></table></div>");
 
-				//$("#instruction").css({"top": methodDiv.offset().top + "px", "left": (methodDiv.offset().left + methodDiv.children()[0].offsetWidth + 10) + "px" });
-				$("#instruction").slideDown(500);
+					//$("#instruction").css({"top": methodDiv.offset().top + "px", "left": (methodDiv.offset().left + methodDiv.children()[0].offsetWidth + 10) + "px" });
+//					$("#instruction").slideDown(500);
+					
+					$( "#instruction" ).effect( 'pulsate', 800 );
+					
+					if(options && options.onclick)
+						$("#instruction").onclick(function(){options.onclick();});
+					
+//					setTimeout(function(){
+//						$( "#instruction" ).effect( 'shake',300 );
+//						
+//						setTimeout(function(){
+//							$( "#instruction" ).effect( 'shake',300 );
+//						},700);				
+//					},700);		
+
 			}
 
 
 			Metaworks3.prototype.test = function(objectId, testName, options){
-				
+				  $( "#instruction" ).slideUp(500, function(){
+					  $('#instruction').remove();							  
+				  });
+				  
+
 				var guidedTour = options && options['guidedTour'];
 				
 				if(options==null)
@@ -1327,28 +1351,74 @@
 				   
 			   var testsForTheClass = this.tests[value.__className];
 			   var test = testsForTheClass[testName];
+			   
+			   if(test==null){ alert('test is null');
+			   
+			   		return;
+			   
+			   }
+			   
+			   var next = (test.next && test.next[0] ? test.next[0] : null);
 
 			   if(test.fieldName){
+
+				   if(guidedTour){
+						var beanPaths = this.beanExpressions[value.__objectId];
+						if(beanPaths){
+							var beanPath = beanPaths["."+test.fieldName];
+
+						   var fieldDivId = "objDiv_" + beanPath.valueObjectId;
+						   //var fieldDiv = $("#" + fieldDivId);
+						   
+						   var instruction = (test.instruction && test.instruction[0] ? test.instruction[0] : "Enter Here");
+							
+						   if(next)
+						   //next = "\""+next+"\"";
+							   instruction = instruction + "<input type=button value='Next' onclick=\"mw3.test(" + value.__objectId + ", '" + next + "',{guidedTour:true})\">";
+						   else{
+							   instruction = instruction + "<input type=button value='Done !' onclick=\"$('#instruction').remove()\">";
+							   
+						   }
+						   
+						   
+						   setTimeout(
+								function(){
+							   		showupInstruction(
+						   				fieldDivId, 
+						   				instruction
+//						   				, 
+//							   			{
+//									   		onclick: function(){
+//									   			mw3.test(, next, options);
+//									   		}
+//										}
+							   		);
+						   		}, 
+						   		500
+						   	);
+						   
+						}
+				   }else{
 					   value[test.fieldName] = eval(test.value[0]);
 					   this.setObject(objectId, value);
 
-					   var next = test.next[0];
 					   if(next && next.indexOf("autowiredObject.") == 0){
 						   
-						   		var posLastDot = next.lastIndexOf(".");
-						   		
-						   		var className = next.substr("autowiredObject.".length, next.length - lastDot );
-						   		var methodName = next.substr(lastDot);
+						   var posLastDot = next.lastIndexOf(".");
 						   
-							   value = this.getAutowiredObject(className);
-							   
-							   this.test(value.__objectId, methodName, options);
-						  
+						   var className = next.substr("autowiredObject.".length, next.length - lastDot );
+						   var methodName = next.substr(lastDot);
+						   
+						   value = this.getAutowiredObject(className);
+						   
+						   this.test(value.__objectId, methodName, options);
+						   
 					   } else{
 						   value = this.objects[objectId];
-					   }
+					   }					   
 					   
-					   this.test(value.__objectId, next, options);
+				   }
+
 
 					   
 			   }else{
@@ -1366,9 +1436,8 @@
 						   
 						   var instruction = (test.instruction && test.instruction[0] ? test.instruction[0] : "Click Here");
 
-						   
 							
-							setTimeout("showupInstruction('"+methodDivId+"','"+ instruction +"')", 1000);
+							setTimeout("showupInstruction('"+methodDivId+"','"+ instruction +"')", 700);
 						  
 					   }else
 						   returnValue = this.call(value.__objectId, test.methodName, true, true); //sync call
@@ -1377,15 +1446,18 @@
 						  
 						  if(methodName != test.methodName) return;
 
-						  $( "#instruction" ).slideUp(500, function(){
-							  $('#instruction').remove();							  
-						  });
-						  
 
-						   var next = test.next[0];
+						   var next = (test && test.next && test.next[0] ? test.next[0] : null);
 						   
 						   if(next==null){  // detect end!
 							   mw3.afterCall = null;
+							   
+							  $( "#instruction" ).slideUp(500, function(){
+								  $('#instruction').remove();							  
+								   //TODO: done message should be here!
+								   alert('Congratulations! Your guided Tour has been finished.');
+							  });
+
 							   return;
 						   }
 						   
@@ -1400,24 +1472,23 @@
 							   //next = next.substr("returnValue.".length);
 							   
 							   mw3.test(value.__objectId, testName, options);
-						   }else
-							   if(next && next.indexOf("autowiredObject.") == 0){
-							   		var posLastDot = next.lastIndexOf(".");
-							   		
-							   		var prefixLength = "autowiredObject.".length;
-							   		
-							   		var className = next.substr(prefixLength, posLastDot - prefixLength);
-							   		var methodName = next.substr(posLastDot + 1);
+						   }else if(next && next.indexOf("autowiredObject.") == 0){
+						   		var posLastDot = next.lastIndexOf(".");
+						   		
+						   		var prefixLength = "autowiredObject.".length;
+						   		
+						   		var className = next.substr(prefixLength, posLastDot - prefixLength);
+						   		var methodName = next.substr(posLastDot + 1);
+						   
+							   value = this.getAutowiredObject(className);
 							   
-								   value = this.getAutowiredObject(className);
-								   
-								   this.test(value.__objectId, methodName, options);
+							   mw3.test(value.__objectId, methodName, options);
 							  
 						   } else{
 							   value = mw3.objects[objectId];
+							   mw3.test(value.__objectId, next, options);
 						   }
 						   
-						   mw3.test(value.__objectId, next, options);
 						  
 						   //mw3.afterCall = null;
 					  };
