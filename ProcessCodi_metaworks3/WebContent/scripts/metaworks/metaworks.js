@@ -36,6 +36,14 @@
 				
 				this.loadedScripts = {};
 				
+				this.tests = {};
+
+				
+				this.afterCall = function(methodName, result){
+					
+				}
+
+				
 				this.targetObjectId;
 				
 				this.faceHelpers = {};
@@ -45,6 +53,7 @@
 				
 				this._metadata_version = 0;
 
+				this.recentCallMethodName = null;
 				
 			    document.addEventListener(
 			    		"mouseup",
@@ -189,9 +198,10 @@
 			}
 			
 			Metaworks3.prototype.clearMetaworksType = function(objectTypeName){
-				if(objectTypeName == "*")
+				if(objectTypeName == "*"){
 					this.metaworksMetadata = new Array();
-				else
+					this.tests ={};
+				}else
 					this.metaworksMetadata[objectTypeName] = null;
 
 				return function(){}; //for dwr dummy call
@@ -894,13 +904,19 @@
 				}
 				
 				var getAgain = (arguments.length > 2 ? arguments[2] : true);
+				var sync = (arguments.length > 3 ? arguments[3] : false);
 
-				var objectFromUI = this.getObjectFromUI(objId);
-				
-				if(objectFromUI.__faceHelper && getAgain)				
-					object = mw3.getObject(objId);
-				else
-					object = objectFromUI;
+//				if(typeof objId == 'number'){ //check if number
+	
+					var objectFromUI = this.getObjectFromUI(objId);
+					
+					if(objectFromUI.__faceHelper && getAgain)				
+						object = mw3.getObject(objId);
+					else
+						object = objectFromUI;
+//				}else{
+//					object = objId; //TODO: readability is bad.
+//				}
 				
 				//var thisMetaworks = this;
 				var divId = "objDiv_" + objId;
@@ -983,13 +999,14 @@
 					        				mw3.popupDivId = 'popup_' + objId;
 					        				$('body').append("<div id='" + mw3.popupDivId + "' style='z-index:10;position:absolute; top:1px; left:1px'></div>");
 					        				mw3.locateObject(result, null, '#' + mw3.popupDivId);
-					    
 					        				
+					        				//objId = mw3.targetObjectId;
 					        			}else if(serviceMethodContext.target=="stick"){
 							    			mw3.popupDivId = 'stick_' + objId;
 					        				$('body').append("<div id='" + mw3.popupDivId + "' style='z-index:10;position:absolute; top:" + mw3.mouseY + "px; left:" + mw3.mouseX + "px'></div>");
 					        				mw3.locateObject(result, null, '#' + mw3.popupDivId);
 					    
+					        				//objId = mw3.targetObjectId;
 					        				
 					        			}else{ //case of target is "auto"
 					        			
@@ -1081,9 +1098,13 @@
 					    				}
 				        			}
 
+				        			
+				        			mw3.recentCallMethodName = svcNameAndMethodName;
+				        			if(mw3.afterCall)
+				        				mw3.afterCall(svcNameAndMethodName, result);
 				        		},
 
-				        		async: serviceMethodContext.target!="none",
+				        		async: !sync && serviceMethodContext.target!="none",
 				        		
 				        		errorHandler:function(errorString, exception) {
 				        			
@@ -1116,6 +1137,8 @@
 					
 //					mw3.debug("call render done");
 					
+					if(serviceMethodContext.target=="popup" || serviceMethodContext.target=="stick")
+						return this;
 
 					return this._withTarget(objId);
 					
@@ -1188,7 +1211,221 @@
 			   }
 			   
 			}
+
+			//TODO: looks better than _armObject
+//			Metaworks3.prototype.armObject = function(object){
+//				if(!object || !object.__className) return;
+//				
+//				if(object.__className=="Number" || object.__className=="String"){
+//					return; 
+//				}
+//
+//					
+//				var objectMetadata = this.getMetadata(object.__className);
+//    			
+//			   for(var methodName in objectMetadata.serviceMethodContexts){
+//			   		var methodContext = objectMetadata.serviceMethodContexts[methodName];
+//			   		
+//			   		if(methodContext.clientSideCall)
+//			   			eval("object['"+methodName+"'] = function(){return mw3.clientSideCall(this, '"+methodName+"');}");
+//			   		else
+//			   			eval("object['"+methodName+"'] = function(getAgain){return mw3.call(this, '"+methodName+"', getAgain);}");
+//			   }
+//			   
+//			   object['__toString'] = function(){
+//				   
+//				   if(objectMetadata.nameFieldDescriptor!=null){
+//					   var nameFieldValue = this[objectMetadata.nameFieldDescriptor.name];
+//					   
+//					   if(nameFieldValue && nameFieldValue.__toString){
+//						   return nameFieldValue.__toString();
+//					   }else{
+//						   return nameFieldValue;
+//					   }
+//				   }else{
+//					   return objectMetadata.displayName;
+//				   }
+//			   }
+//			   
+//			}
+
 			
+			function showupInstruction(methodDivId, instruction){
+				   var methodDiv = $("#" + methodDivId);
+
+					$('body').append("<div id='instruction' style='background:#ffe;z-index:100;position:absolute; visibility: \"\"; top:"+methodDiv.offset().top +"px; left:"+ (methodDiv.offset().left + methodDiv.children()[0].offsetWidth + 10) +"px'>  <= " + instruction + "</div>");
+
+				//$("#instruction").css({"top": methodDiv.offset().top + "px", "left": (methodDiv.offset().left + methodDiv.children()[0].offsetWidth + 10) + "px" });
+				$("#instruction").slideDown(500);
+			}
+
+
+			Metaworks3.prototype.test = function(objectId, testName, options){
+				
+				var guidedTour = options && options['guidedTour'];
+				
+				if(options==null)
+					options = {};
+				
+				if(!options['scenarioName'])
+					options['scenarioName'] = testName;
+				
+				var value = this.objects[objectId];
+				
+				var objectMetadata = this.getMetadata(value.__className); 
+				
+//				var testStarter;
+				
+				
+				if(!this.tests[value.__className]){
+					
+					this.tests[value.__className] = {};
+					var testsForTheClass = this.tests[value.__className];
+				
+					for(var i=0; i<objectMetadata.fieldDescriptors.length; i++){
+						var fieldDescriptor = objectMetadata.fieldDescriptors[i];
+						if(fieldDescriptor.attributes){
+							var test = fieldDescriptor.attributes['test'];
+							
+							if(test){
+								
+								
+								test['fieldName'] = fieldDescriptor.name;
+	
+								testsForTheClass[fieldDescriptor.name] = test;
+								if(test.testName == testName){
+									testsForTheClass[testName] = test;
+								}
+							}
+							
+						}
+						
+					}
+					
+				   for(var methodName in objectMetadata.serviceMethodContexts){
+				   		var methodContext = objectMetadata.serviceMethodContexts[methodName];
+				   		
+				   		if(methodContext.attributes){
+							var test = methodContext.attributes['test'];
+							
+							if(test){
+								
+								
+								test['methodName'] = methodContext.methodName;
+								
+								testsForTheClass[methodContext.methodName + "()"] = test;
+								if(test.testName == testName){
+									testsForTheClass[testName] = test;
+								}
+							}
+							
+						}
+				   		
+				   }
+				}
+				
+				   
+			   var testsForTheClass = this.tests[value.__className];
+			   var test = testsForTheClass[testName];
+
+			   if(test.fieldName){
+					   value[test.fieldName] = eval(test.value[0]);
+					   this.setObject(objectId, value);
+
+					   var next = test.next[0];
+					   if(next && next.indexOf("autowiredObject.") == 0){
+						   
+						   		var posLastDot = next.lastIndexOf(".");
+						   		
+						   		var className = next.substr("autowiredObject.".length, next.length - lastDot );
+						   		var methodName = next.substr(lastDot);
+						   
+							   value = this.getAutowiredObject(className);
+							   
+							   this.test(value.__objectId, methodName, options);
+						  
+					   } else{
+						   value = this.objects[objectId];
+					   }
+					   
+					   this.test(value.__objectId, next, options);
+
+					   
+			   }else{
+				   
+				   
+				   var returnValue;
+				   
+				   if(test.methodName){
+
+					   if(guidedTour){
+						   
+						   var methodDivId = "method_" + value.__objectId + "_" + test.methodName;
+						   var methodDiv = $("#" + methodDivId);
+						   
+						   
+						   var instruction = (test.instruction && test.instruction[0] ? test.instruction[0] : "Click Here");
+
+						   
+							
+							setTimeout("showupInstruction('"+methodDivId+"','"+ instruction +"')", 1000);
+						  
+					   }else
+						   returnValue = this.call(value.__objectId, test.methodName, true, true); //sync call
+					   
+					  mw3.afterCall = function(methodName, result){
+						  
+						  if(methodName != test.methodName) return;
+
+						  $( "#instruction" ).slideUp(500, function(){
+							  $('#instruction').remove();							  
+						  });
+						  
+
+						   var next = test.next[0];
+						   
+						   if(next==null){  // detect end!
+							   mw3.afterCall = null;
+							   return;
+						   }
+						   
+						   if(next && next.indexOf("returnValue.") == 0){
+							   if(returnValue.metaworksMetadata){
+								   value = mw3.objects[this.targetObjectId];
+								   
+							   }else{
+								   value = returnValue;
+							   }
+							   
+							   //next = next.substr("returnValue.".length);
+							   
+							   mw3.test(value.__objectId, testName, options);
+						   }else
+							   if(next && next.indexOf("autowiredObject.") == 0){
+							   		var posLastDot = next.lastIndexOf(".");
+							   		
+							   		var prefixLength = "autowiredObject.".length;
+							   		
+							   		var className = next.substr(prefixLength, posLastDot - prefixLength);
+							   		var methodName = next.substr(posLastDot + 1);
+							   
+								   value = this.getAutowiredObject(className);
+								   
+								   this.test(value.__objectId, methodName, options);
+							  
+						   } else{
+							   value = mw3.objects[objectId];
+						   }
+						   
+						   mw3.test(value.__objectId, next, options);
+						  
+						   //mw3.afterCall = null;
+					  };
+				   }
+				   
+			   }
+				
+			}
 
 			Metaworks3.prototype._wireObject = function(value, objectId){ //TODO: need to give someday '__objectId' to all the values?
 
@@ -1466,6 +1703,8 @@
 					methodContext		: this.methodContext,
 					object				: this.object
 				})
+				
+				html = "<div id=method_" + this.objectId + "_" + this.methodContext.methodName + ">" + html + "</div>";
 				
 				return html;
 			}
