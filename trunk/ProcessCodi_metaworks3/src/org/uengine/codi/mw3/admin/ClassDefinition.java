@@ -22,6 +22,7 @@ import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Name;
 import org.metaworks.annotation.NonEditable;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.annotation.Test;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.example.ide.CompileError;
@@ -128,7 +129,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		}
 
 	String packageName;
-
+	@Test(value="'test'", next="className", testName="ClassDefinition")
 		public String getPackageName() {
 			return packageName;
 		}
@@ -139,7 +140,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 	String className;
 	@Face(options={"mandatory"}, values={"true"})
 	@Name
-//	@Test(value="Hello{@userId}")
+	@Test(value="'HelloWorld'", next="next1()")
 		public String getClassName() {
 			return className;
 		}
@@ -166,8 +167,8 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		}
 		
 	transient Facebook facebookComments;
-		@Face(ejsPath="faces/org/uengine/codi/mw3/model/FacebookComments.ejs")
-		@Available(when="view")
+	@Face(ejsPath="faces/org/uengine/codi/mw3/model/FacebookComments.ejs")
+	@Available(when="view")
 		public Facebook getFacebookComments() {
 			return facebookComments;
 		}
@@ -176,8 +177,8 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		}	
 		
 	transient Facebook facebookLike;
-		@Face(ejsPath="faces/org/uengine/codi/mw3/model/FacebookLike.ejs")
-		@Available(when="view")
+	@Face(ejsPath="faces/org/uengine/codi/mw3/model/FacebookLike.ejs")
+	@Available(when="view")
 		public Facebook getFacebookLike() {
 			return facebookLike;
 		}
@@ -373,6 +374,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP, when="view")
 	@Face(displayName = "Run")
+	@Test(next="autowiredObject.org.uengine.codi.mw3.admin.Runner.runMobile()", instruction="프로그램을 실행하기 위하여 클릭합니다.")
 	public Popup run() throws Exception{		
 
 //		try{
@@ -406,7 +408,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		
 	@ServiceMethod(callByContent=true, when="edit")
 	@Face(displayName="Next > ")
-//	@Test(target="next2", first=true, case="case1")
+	@Test(next="run()", instruction="다음단계로 넘어가기 위해 클릭합니다.")
 	public void next1(){
 		
 		getMetaworksContext().setWhen("view");
