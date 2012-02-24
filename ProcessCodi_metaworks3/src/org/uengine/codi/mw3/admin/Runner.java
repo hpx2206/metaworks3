@@ -10,6 +10,7 @@ import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.annotation.Test;
 import org.metaworks.dao.TransactionContext;
 import org.uengine.codi.mw3.model.MobileWindow;
 import org.uengine.codi.mw3.model.TemplateDesigner;
@@ -78,6 +79,7 @@ public class Runner implements ContextAware{
 
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 	@Face(displayName="Run in Mobile")
+	@Test(testName="ClassDefinition")
 	public Object runMobile() throws Exception{
 		
 
