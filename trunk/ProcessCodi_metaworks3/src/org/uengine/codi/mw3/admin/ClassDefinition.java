@@ -129,7 +129,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		}
 
 	String packageName;
-	@Test(value="'test'", next="className", testName="ClassDefinition")
+	@Test(value="'test'", next="className", testName="ClassDefinition", instruction="'test'를 입력하세요.")
 		public String getPackageName() {
 			return packageName;
 		}
@@ -140,7 +140,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 	String className;
 	@Face(options={"mandatory"}, values={"true"})
 	@Name
-	@Test(value="'HelloWorld'", next="next1()")
+	@Test(value="'HelloWorld'", next="next1()", instruction="'HelloWorld'를 입력하세요.")
 		public String getClassName() {
 			return className;
 		}
@@ -150,6 +150,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 
 	transient ClassSourceCodes sourceCodes;
 	@Available(when={"step1", "view"})
+	@Test(next="run()", instruction="소스코드를 작성하세요.")
 		public ClassSourceCodes getSourceCodes() {
 			return sourceCodes;
 		}
@@ -408,7 +409,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		
 	@ServiceMethod(callByContent=true, when="edit")
 	@Face(displayName="Next > ")
-	@Test(next="run()", instruction="다음단계로 넘어가기 위해 클릭합니다.")
+	@Test(next="sourceCodes", instruction="다음단계로 넘어가기 위해 클릭합니다.")
 	public void next1(){
 		
 		getMetaworksContext().setWhen("view");
