@@ -31,6 +31,8 @@ import org.metaworks.annotation.Range;
 import org.metaworks.annotation.RepresentativeImagePath;
 import org.metaworks.annotation.Resource;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.annotation.Test;
+import org.metaworks.annotation.TestContext;
 import org.metaworks.annotation.TypeSelector;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.IDAO;
@@ -292,6 +294,9 @@ public class WebObjectType{
 		
 		//analyzing setter/getter bean properties
 		WebFieldDescriptor[] webFieldDescriptors = new WebFieldDescriptor[objectType.getFieldDescriptors().length];
+		
+		Test testerBeginner = null;
+		Map<String, Test> tests = new HashMap<String, Test>();
 	
 		FieldDescriptor keyField = null;
 		for(int i=0; i<objectType.getFieldDescriptors().length; i++){
@@ -405,6 +410,27 @@ public class WebObjectType{
 				fd.setAttribute("representativeImagePath", new Boolean(true));
 			}
 			
+			Test test;
+			if((test = (Test) getAnnotationDeeply(actCls, iDAOClass, fd.getName(), Test.class))!=null){
+				
+				TestContext testContext = new TestContext();
+				
+				if(test.next().length > 0)
+					testContext.setNext(test.next());
+				
+				if(test.testName().length() > 0)
+					testContext.setTestName(test.testName());
+				
+				if(test.value().length > 0)
+					testContext.setValue(test.value());
+				
+				if(test.instruction().length > 0)
+					testContext.setInstruction(test.instruction());
+				
+				fd.setAttribute("test", testContext);
+			}
+			
+			
 			ORMapping orm;
 			if((orm = (ORMapping) getAnnotationDeeply(actCls, iDAOClass, fd.getName(), ORMapping.class))!=null){
 				fd.setAttribute("ormapping", orm);
@@ -472,6 +498,7 @@ public class WebObjectType{
 				setKeyFieldDescriptor(webFieldDescriptors[i]);
 		}
 		
+		
 		if(iDAOClass != null){
 			if(keyField!=null)
 				objectType.setKeyFieldDescriptor(keyField);
@@ -492,6 +519,7 @@ public class WebObjectType{
 			Name name = method.getAnnotation(Name.class);
 			Available available =  method.getAnnotation(Available.class);
 			Hidden hidden =  method.getAnnotation(Hidden.class);
+			Test test = method.getAnnotation(Test.class);
 			
 			if(annotation==null && iDAOClass != null){
 				try{
@@ -501,11 +529,14 @@ public class WebObjectType{
 					name = iDAOClass.getMethod(method.getName(), new Class[]{}).getAnnotation(Name.class);
 					available = iDAOClass.getMethod(method.getName(), new Class[]{}).getAnnotation(Available.class);
 					hidden = iDAOClass.getMethod(method.getName(), new Class[]{}).getAnnotation(Hidden.class);
+					test = iDAOClass.getMethod(method.getName(), new Class[]{}).getAnnotation(Test.class);
 					
 				}catch(Exception e){
 					
 				}
 			}
+			
+
 			
 			if(method.getParameterTypes().length == 0 && annotation!=null){
 				
@@ -548,6 +579,32 @@ public class WebObjectType{
 				
 				if(hidden!=null){
 					smc.setWhen("___hidden___");
+				}
+				
+				if(test!=null){
+						
+					TestContext testContext = new TestContext();
+					
+					if(test.next().length > 0)
+						testContext.setNext(test.next());
+					
+					if(test.testName().length() > 0)
+						testContext.setTestName(test.testName());
+					
+					if(test.value().length > 0)
+						testContext.setValue(test.value());
+
+					if(test.instruction().length > 0)
+						testContext.setInstruction(test.instruction());
+
+
+					if(smc.getAttributes()==null){
+						smc.setAttributes(new HashMap<String, Object>());
+					}
+					
+					
+					smc.getAttributes().put("test", testContext);
+
 				}
 				
 				serviceMethodContexts.put(smc.getMethodName(), smc);

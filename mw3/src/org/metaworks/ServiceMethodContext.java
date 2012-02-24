@@ -1,5 +1,7 @@
 package org.metaworks;
 
+import java.util.Map;
+
 public class ServiceMethodContext{
 	
 
@@ -94,6 +96,13 @@ public class ServiceMethodContext{
 		}
 		
 	
-	
+	Map<String, Object> attributes;
+		public Map<String, Object> getAttributes() {
+			return attributes;
+		}
+		public void setAttributes(Map<String, Object> attributes) {
+			this.attributes = attributes;
+		}
+
 		
 }
