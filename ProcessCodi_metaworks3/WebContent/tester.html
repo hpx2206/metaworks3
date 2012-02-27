@@ -9,9 +9,14 @@
 		<script type="text/javascript" src="scripts/jquery.view/jquery-1.6.1.js"></script>
 		<script type="text/javascript" src="scripts/jquery.view/jquerymx-1.0.custom.js"></script>
 		
+<script type="text/javascript" src="scripts/jquery/jquery-ui-latest.js"></script>
+<script type="text/javascript" src="scripts/jquery/jquery.layout-latest.js"></script>		
+		
 		<script type="text/javascript" src="scripts/ejs/ejs_production.js"></script>
 		<script type="text/javascript" src="scripts/ejs/ejs_debugger.js"></script>
 		<script type="text/javascript" src="scripts/ejs/view.js"></script>
+		
+		
 		
 	  <script type='text/javascript' src='dwr/engine.js'></script> 
 	  <script type='text/javascript' src='dwr/util.js'></script> 
@@ -34,16 +39,12 @@
     <script src="metaworks/ace/build/src/mode-javascript.js" type="text/javascript" charset="utf-8"></script>
 
 	<!-- wave style -->
-	<link rel="stylesheet" href="style/waveStyle/droppable_layout.css" type="text/css" media="screen" />
+	<link rel="stylesheet" href="style/waveStyle/droppable_layout.css" type="text/css" media="screen" />	
 	<link rel="stylesheet" href="style/Spacetree.css" type="text/css" media="screen" />
 
     <!-- for google chart -->
-	  <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 			
 		<script type="text/javascript">
-	      google.load('visualization', '1', {packages:['corechart']});
-	      google.load('visualization', '1', {packages:['gauge']});
-
 			var Request = function()
 			{
 			    this.getParameter = function( name )
@@ -83,8 +84,12 @@
 					
 				};
 				
-		 		mw3.locateObject(object, object.__className + (genericUI ? ":genericfaces/ObjectFace.ejs" : ""), '#object');//.call('load');
-
+		 		var mwObj = mw3.locateObject(object, object.__className + (genericUI ? ":genericfaces/ObjectFace.ejs" : ""), '#object');//.call('load');
+		 		
+		 		var locateObj = mw3.objects[mwObj.targetObjectId];
+		 		
+		 		if(typeof locateObj.load != 'undefined')
+					mw3.call(mwObj.targetObjectId, 'load');
 
 			}
 			
@@ -111,9 +116,6 @@
 		DWR DEBUG INFO :
 			<div id='dwr_caption'> 
 			</div> 
-		
-		
-
 		
 	</body>
 </html>
