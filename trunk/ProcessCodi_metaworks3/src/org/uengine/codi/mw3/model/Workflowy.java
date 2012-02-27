@@ -4,18 +4,18 @@ import java.net.UnknownHostException;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 
 import com.mongodb.MongoException;
 
 public class Workflowy implements ContextAware {
-			
+	@Available
 	MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
 			return metaworksContext;
-		}
-	
+		}	
 		public void setMetaworksContext(MetaworksContext metaworksContext) {
 			this.metaworksContext = metaworksContext;
 		}
@@ -27,7 +27,7 @@ public class Workflowy implements ContextAware {
 		public void setNode(WorkflowyNode node) {
 			this.node = node;
 		}
-		
+
 	@ServiceMethod
     @Face(displayName="시작하기")
 	public void load() throws UnknownHostException, MongoException {

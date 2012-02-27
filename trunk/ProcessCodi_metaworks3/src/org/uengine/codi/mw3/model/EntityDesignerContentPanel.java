@@ -1,85 +1,69 @@
 package org.uengine.codi.mw3.model;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Face;
+import org.metaworks.dao.TransactionContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.codi.mw3.admin.ClassDefinition;
 import org.uengine.codi.mw3.admin.EntityDefinition;
-import org.uengine.codi.mw3.admin.EntityQuery;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.processmanager.ProcessManagerRemote;
 
-//
-@Face(ejsPath = "genericfaces/Tab.ejs", options = { "hideLabels" }, values = { "true" })
-public class EntityDesignerContentPanel {
+@Face(ejsPath="genericfaces/Window.ejs", displayName="Entity Designer", options={"hideLabels"}, values={"true"})
+public class EntityDesignerContentPanel extends ContentWindow {
 
-	public EntityDesignerContentPanel() {
-		setMetaworksContext(new MetaworksContext());
-	}
+	@Autowired
+	public ProcessManagerRemote processManager;
 
 	EntityDefinition entityDefinition;
-
-	public EntityDefinition getEntityDefinition() {
-		return entityDefinition;
-	}
-
-	public void setEntityDefinition(EntityDefinition entityDefinition) {
-		this.entityDefinition = entityDefinition;
-	}
-
-	EntityQuery entityQuery;
-
-	public EntityQuery getEntityQuery() {
-		return entityQuery;
-	}
-
-	public void setEntityQuery(EntityQuery entityQuery) {
-		this.entityQuery = entityQuery;
-	}
-
-	/*
-	 * ClassDefinition daoInterface;
-	 * 
-	 * @Face(displayName="DAO Interface") public ClassDefinition
-	 * getDaoInterface() { return daoInterface; } public void
-	 * setDaoInterface(ClassDefinition daoInterface) { this.daoInterface =
-	 * daoInterface; }
-	 * 
-	 * 
-	 * 
-	 * ClassDefinition daoImplementation;
-	 * 
-	 * @Face(displayName="DAO Implementation") public ClassDefinition
-	 * getDaoImplementation() { return daoImplementation; } public void
-	 * setDaoImplementation(ClassDefinition daoImplementation) {
-	 * this.daoImplementation = daoImplementation; }
-	 */
-
-	/*
-	 * EntityData entityData; public EntityData getEntityData() { return
-	 * entityData; } public void setEntityData(EntityData entityData) {
-	 * this.entityData = entityData; }
-	 */
+		public EntityDefinition getEntityDefinition() {
+			return entityDefinition;
+		}
+		public void setEntityDefinition(EntityDefinition entityDefinition) {
+			this.entityDefinition = entityDefinition;
+		}
 
 	public void newEntity(String parentFoler) throws Exception {
 		entityDefinition = new EntityDefinition();
-		entityDefinition.init();
 		entityDefinition.setParentFolder(parentFoler);
-		entityDefinition.getMetaworksContext().setWhere("newEntity");
-
-		entityQuery = new EntityQuery();
-		// daoInterface = new ClassDefinition();
-		// daoImplementation = new ClassDefinition("daoImplementation");
-
 	}
 
-	transient MetaworksContext metaworksContext;
-
-	public MetaworksContext getMetaworksContext() {
-		return metaworksContext;
+	public void load(String defId) throws Exception {
+		try{
+			
+			String defVerId = processManager.getProcessDefinitionProductionVersion(defId);
+			String resource = processManager.getResource(defVerId);
+			
+			entityDefinition = (EntityDefinition) GlobalContext.deserialize(resource, EntityDefinition.class);
+			entityDefinition.setDefId(defId);
+			
+			entityDefinition.setMetaworksContext(new MetaworksContext());
+			entityDefinition.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+			
+			if(entityDefinition.isCreatedEntity()){
+				entityDefinition.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+			}
+			
+			try {
+				ProcessDefinition def = new ProcessDefinition();
+				def.setDefId(new Long(defId));
+				String authorId = def.databaseMe().getAuthor();
+				
+				User author = new User();
+				author.setUserId(authorId);
+				entityDefinition.setAuthor(author);
+				
+			} catch (Exception e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+		}finally{
+			//processManager.remove();
+		}	
 	}
 
-	public void setMetaworksContext(MetaworksContext metaworksContext) {
-		this.metaworksContext = metaworksContext;
-	}
 }
