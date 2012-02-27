@@ -81,6 +81,15 @@ public class NewChildContentPanel  {
 		return ruleDesignerWindow;
 	}
 	
+	@ServiceMethod
+	public WebServiceAdapterContentPanel newWebServiceAdapter() throws Exception{
+		
+		WebServiceAdapterContentPanel webServiceAdapterContentPanel = new WebServiceAdapterContentPanel();
+		webServiceAdapterContentPanel.newWebServiceAdapter(getParentFolder().toString());
+		
+		return webServiceAdapterContentPanel;
+	}
+	
 	
 
 }
