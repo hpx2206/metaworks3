@@ -18,11 +18,24 @@ var org_metaworks_example_ide_SourceCode = function(objectId, className){
     var theEditor = this.editor;
     var theSourceCodeObjId = objectId;
     
+    
+    var ctrlDown = false;	
+	var ctrlKey = 17, spaceKey = 32;
+	
+    
     document.addEventListener(
 		"keydown",
 
-   		function(e) {
-			if (e && e.keyCode==190 && theEditor.textInput.getElement() == e.srcElement){
+   		function(e) {			
+			if (e && e.keyCode == ctrlKey && !ctrlDown && theEditor.textInput.getElement() == e.srcElement) {
+				ctrlDown = true;				
+			}
+			
+			if (e && ctrlDown && e.keyCode == spaceKey && theEditor.textInput.getElement() == e.srcElement) {
+				e.returnValue = false;
+			}
+			
+			if (e && e.keyCode==190 && theEditor.textInput.getElement() == e.srcElement) {
 				var whereEnd = theEditor.getCursorPosition();
 				var whereStart = {column: 0, row: whereEnd.row};
 				
@@ -60,7 +73,64 @@ var org_metaworks_example_ide_SourceCode = function(objectId, className){
 		false
     );
 
+    document.addEventListener(
+		"keyup",
 
+   		function(e) {
+			if (e && e.keyCode == ctrlKey && ctrlDown && theEditor.textInput.getElement() == e.srcElement) {				
+				ctrlDown = false;				
+			}
+			
+			if (ctrlDown && e.keyCode == spaceKey && theEditor.textInput.getElement() == e.srcElement) {				
+				var whereEnd = theEditor.getCursorPosition();
+				var whereStart = {column: 0, row: whereEnd.row};				
+				var line = theEditor.getSession().doc.getTextRange({start: whereStart, end: whereEnd});
+				
+				var fullLine = theEditor.getSession().doc.getLine(whereEnd.row);
+				
+				//alert(fullLine);
+				
+				var sourceCode = mw3.getObject(theSourceCodeObjId);				
+				sourceCode.lineAssistRequested = fullLine;
+				sourceCode.clientObjectId = theSourceCodeObjId;
+				sourceCode = sourceCode.requestAssist();
+				
+				
+				ctrlDown = false;
+				
+				/*
+				
+				mw3.mouseX = e.srcElement.offsetLeft;
+				mw3.mouseY = e.srcElement.offsetTop - 3;
+				
+				var sourceCode = mw3.getObject(theSourceCodeObjId);
+				
+				sourceCode.lineAssistRequested = line;
+				
+				sourceCode.cursorPosition = {
+					column: whereEnd.column,
+					row: whereEnd.row,
+					__className : "org.metaworks.example.ide.Position"
+				};
+				
+				sourceCode.clientObjectId = theSourceCodeObjId;
+				
+				//TODO: maybe later the return value from NONE targeted value should be stored by mw3.objects[objectId]
+				sourceCode = sourceCode.requestAssist();
+				
+				//      that means the following code must be more comprehensive than this and also the value should be persist.
+				//		get again from the result
+				//		sourceCode = mw3.getObject(theSourceCodeObjId);
+
+				//alert(sourceCode.assistance);
+				
+				*/
+			}
+			
+		},
+		
+		false
+	);
     
     
    // var value = mw3.getObject(objectId);  //TODO: it's risky... may pose infinite loop. since this constructor may be called by mw3.getObject()
