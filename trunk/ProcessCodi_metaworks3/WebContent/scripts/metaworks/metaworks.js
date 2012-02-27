@@ -1003,7 +1003,7 @@
 					        			}else if(serviceMethodContext.target=="popup"){
 						        			
 					        				mw3.popupDivId = 'popup_' + objId;
-					        				$('body').append("<div id='" + mw3.popupDivId + "' style='z-index:10;position:absolute; top:1px; left:1px'></div>");
+					        				$('body').append("<div id='" + mw3.popupDivId + "' style='z-index:10;position:absolute; top:50px; left:10px'></div>");
 					        				mw3.locateObject(result, null, '#' + mw3.popupDivId);
 					        				
 					        				//objId = mw3.targetObjectId;
@@ -1305,20 +1305,22 @@
 					
 					this.tests[value.__className] = {};
 					var testsForTheClass = this.tests[value.__className];
-				
+					
 					for(var i=0; i<objectMetadata.fieldDescriptors.length; i++){
 						var fieldDescriptor = objectMetadata.fieldDescriptors[i];
 						if(fieldDescriptor.attributes){
-							var test = fieldDescriptor.attributes['test'];
+							var scenario = fieldDescriptor.attributes['test'];
 							
-							if(test){
-								
-								
-								test['fieldName'] = fieldDescriptor.name;
-	
-								testsForTheClass[fieldDescriptor.name] = test;
-								if(test.testName == testName){
-									testsForTheClass[testName] = test;
+							if(scenario){
+								for(var scenarioName in scenario){
+									var test = scenario[scenarioName];
+									
+									test['fieldName'] = fieldDescriptor.name;
+									
+									testsForTheClass[scenarioName + "." + fieldDescriptor.name] = test;
+									if(test.starter){
+										testsForTheClass[testName] = test;
+									}
 								}
 							}
 							
@@ -1330,17 +1332,20 @@
 				   		var methodContext = objectMetadata.serviceMethodContexts[methodName];
 				   		
 				   		if(methodContext.attributes){
-							var test = methodContext.attributes['test'];
+							var scenario = methodContext.attributes['test'];
 							
-							if(test){
+							if(scenario){
 								
+								for(var scenarioName in scenario){
+									var test = scenario[scenarioName];
 								
-								test['methodName'] = methodContext.methodName;
-								
-								testsForTheClass[methodContext.methodName + "()"] = test;
-								if(test.testName == testName){
-									testsForTheClass[testName] = test;
+									test['methodName'] = methodContext.methodName;
+									testsForTheClass[test.scenario + "." + methodContext.methodName + "()"] = test;
+									if(test.starter){
+										testsForTheClass[testName] = test;
+									}
 								}
+								
 							}
 							
 						}
@@ -1358,7 +1363,7 @@
 			   
 			   }
 			   
-			   var next = (test.next && test.next[0] ? test.next[0] : null);
+			   var next = (test.next && test.next[0] ? test.scenario + "." + test.next[0] : null);
 
 			   if(test.fieldName){
 
@@ -1402,7 +1407,7 @@
 					   value[test.fieldName] = eval(test.value[0]);
 					   this.setObject(objectId, value);
 
-					   if(next && next.indexOf("autowiredObject.") == 0){
+					   if(next && next.indexOf("autowiredObject.") >= 0){
 						   
 						   var posLastDot = next.lastIndexOf(".");
 						   
@@ -1442,12 +1447,15 @@
 					   }else
 						   returnValue = this.call(value.__objectId, test.methodName, true, true); //sync call
 					   
+					   
+					   
+					  /// installing the call handler to continue after the call 
 					  mw3.afterCall = function(methodName, result){
 						  
 						  if(methodName != test.methodName) return;
 
 
-						   var next = (test && test.next && test.next[0] ? test.next[0] : null);
+						   var next = (test && test.next && test.next[0] ? test.scenario + "." + test.next[0] : null);
 						   
 						   if(next==null){  // detect end!
 							   mw3.afterCall = null;
@@ -1461,7 +1469,7 @@
 							   return;
 						   }
 						   
-						   if(next && next.indexOf("returnValue.") == 0){
+						   if(next && next.indexOf("returnValue.") >= 0){
 							   if(returnValue.metaworksMetadata){
 								   value = mw3.objects[this.targetObjectId];
 								   
@@ -1472,7 +1480,7 @@
 							   //next = next.substr("returnValue.".length);
 							   
 							   mw3.test(value.__objectId, testName, options);
-						   }else if(next && next.indexOf("autowiredObject.") == 0){
+						   }else if(next && next.indexOf("autowiredObject.") >= 0){
 						   		var posLastDot = next.lastIndexOf(".");
 						   		
 						   		var prefixLength = "autowiredObject.".length;
