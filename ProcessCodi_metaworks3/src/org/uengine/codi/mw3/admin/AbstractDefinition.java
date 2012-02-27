@@ -19,7 +19,7 @@ public abstract class AbstractDefinition implements ContextAware{
 		} 
 		
 	@Autowired
-	transient protected ProcessManagerRemote processManager;
+	transient public ProcessManagerRemote processManager;
 
 	public AbstractDefinition(){
 		setMetaworksContext(new MetaworksContext());

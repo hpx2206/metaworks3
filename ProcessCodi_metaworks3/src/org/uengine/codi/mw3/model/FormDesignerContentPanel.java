@@ -44,6 +44,6 @@ public class FormDesignerContentPanel extends ContentWindow {
 
 	
 	@Autowired
-	ProcessManagerRemote codiPmSVC;
+	public ProcessManagerRemote codiPmSVC;
 
 }

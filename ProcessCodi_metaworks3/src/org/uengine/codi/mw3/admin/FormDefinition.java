@@ -23,7 +23,7 @@ public class FormDefinition implements ContextAware, PropertyListable{
 		} 
 		
 	@Autowired
-	protected ProcessManagerRemote processManager;
+	public ProcessManagerRemote processManager;
 
 
 	public FormDefinition(){

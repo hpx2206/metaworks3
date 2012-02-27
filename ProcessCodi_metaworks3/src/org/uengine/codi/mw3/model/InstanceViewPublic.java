@@ -27,7 +27,7 @@ public class InstanceViewPublic {
 		}
 
 	@Autowired
-	InstanceViewContent instanceViewContent;
+	public InstanceViewContent instanceViewContent;
 		@Autowired
 		public InstanceViewContent getInstanceViewContent() {
 			return instanceViewContent;
@@ -37,7 +37,7 @@ public class InstanceViewPublic {
 		}
 		
 	@Autowired
-	ProcessManagerRemote processManager;	
+	public ProcessManagerRemote processManager;	
 
 	Long instanceId;
 		@Id

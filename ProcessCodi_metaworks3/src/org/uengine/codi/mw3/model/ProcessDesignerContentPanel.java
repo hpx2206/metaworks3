@@ -90,7 +90,7 @@ public class ProcessDesignerContentPanel extends ContentWindow {
 
 
 	@Autowired
-	ProcessManagerRemote processManager;
+	public ProcessManagerRemote processManager;
 
 
 }

@@ -79,7 +79,9 @@ public class Runner implements ContextAware{
 
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 	@Face(displayName="Run in Mobile")
-	@Test(testName="ClassDefinition") 
+	@Test(
+			scenario="ClassDefinition" 
+			) 
 	public Object runMobile() throws Exception{
 		
 

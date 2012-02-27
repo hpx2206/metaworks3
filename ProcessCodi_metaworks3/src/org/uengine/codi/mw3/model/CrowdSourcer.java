@@ -79,6 +79,6 @@ public class CrowdSourcer {
 		}
 
 	@Autowired
-	ProcessManagerRemote processManager;
+	public ProcessManagerRemote processManager;
 	
 }

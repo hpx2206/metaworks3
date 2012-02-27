@@ -10,6 +10,7 @@ import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.codi.ITool;
 import org.uengine.contexts.ComplexType;
 import org.uengine.kernel.HumanActivity;
 import org.uengine.kernel.KeyedParameter;
@@ -77,6 +78,10 @@ public class WorkItemHandler implements ContextAware{
 							processVariableValue = (Serializable) complexType.getTypeClass().newInstance();
 							if(processVariableValue instanceof NeedArrangementToSerialize){
 								((NeedArrangementToSerialize)processVariableValue).afterDeserialization();
+							}
+							
+							if(processVariableValue instanceof ITool){
+								((ITool)processVariableValue).onLoad();
 							}
 						}
 						
@@ -154,7 +159,7 @@ public class WorkItemHandler implements ContextAware{
 		
 		
 	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_VIEW)
-	public void complete() throws RemoteException, ClassNotFoundException, Exception{
+	public InstanceViewContent complete() throws RemoteException, ClassNotFoundException, Exception{
 		
 		ResultPayload rp = new ResultPayload();
 		
@@ -168,21 +173,66 @@ public class WorkItemHandler implements ContextAware{
 
 			processVariableValue = (Serializable) parameters[i].getValueObject();
 		
-//			if(variableType == String.class){
-//			}else if(Long.class.isAssignableFrom(variableType)){
-//				processVariableValue = parameters[i].getValueNumber();
-//			}else if(Calendar.class.isAssignableFrom(variableType)){
-//				processVariableValue = parameters[i].getValueCalendar();
-//			}
+//				if(variableType == String.class){
+//				}else if(Long.class.isAssignableFrom(variableType)){
+//					processVariableValue = parameters[i].getValueNumber();
+//				}else if(Calendar.class.isAssignableFrom(variableType)){
+//					processVariableValue = parameters[i].getValueCalendar();
+//				}
 
+			if(processVariableValue instanceof ITool){
+				((ITool)processVariableValue).beforeComplete();
+			}
 			
 			rp.setProcessVariableChange(new KeyedParameter(pv.getVariableName(), processVariableValue));
 		}
 		
 		processManager.completeWorkitem(getInstanceId(), getTracingTag(), getTaskId().toString(), rp );
-//		processManager.applyChanges(); //you may call this. since you can ensure this service method is the service itself
-	}
 		
+		
+		//refreshes the instanceview so that the next workitem can be show up
+		Instance instance = new Instance();
+		instance.setInstId(new Long(getInstanceId()));
+		
+		instanceViewContent.load(instance);
+		
+		return instanceViewContent;
+	}
+	
+	@Autowired
+	public InstanceViewContent instanceViewContent;
+	
+			
+	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_VIEW)
+	public void save() throws RemoteException, ClassNotFoundException, Exception{
+		
+		ResultPayload rp = new ResultPayload();
+		
+		if(parameters!=null)
+		for(int i=0; i<parameters.length; i++){
+			ParameterValue pv = parameters[i];
+
+			String variableTypeName = parameters[i].getVariableType();
+			//Class variableType = Thread.currentThread().getContextClassLoader().loadClass(variableTypeName);
+			Serializable processVariableValue = null;
+
+			processVariableValue = (Serializable) parameters[i].getValueObject();
+		
+//				if(variableType == String.class){
+//				}else if(Long.class.isAssignableFrom(variableType)){
+//					processVariableValue = parameters[i].getValueNumber();
+//				}else if(Calendar.class.isAssignableFrom(variableType)){
+//					processVariableValue = parameters[i].getValueCalendar();
+//				}
+
+			
+			rp.setProcessVariableChange(new KeyedParameter(pv.getVariableName(), processVariableValue));
+		}
+		
+		processManager.saveWorkitem(getInstanceId(), getTracingTag(), getTaskId().toString(), rp );
+//			processManager.applyChanges(); //you may call this. since you can ensure this service method is the service itself
+	}
+			
 	@Autowired
 	transient public ProcessManagerRemote processManager;
 	

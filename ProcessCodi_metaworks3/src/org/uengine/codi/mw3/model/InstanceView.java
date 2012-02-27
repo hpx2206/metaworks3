@@ -21,7 +21,7 @@ import org.uengine.processmanager.ProcessManagerRemote;
 public class InstanceView {
 
 	@Autowired
-	ProcessManagerRemote processManager;	
+	public ProcessManagerRemote processManager;	
 	
 	public InstanceView() {
 	}		
@@ -69,16 +69,16 @@ public class InstanceView {
 		}
 
 		processInstanceMonitor.setInstanceId(instanceId);
-
 		
 		setInstanceName(instance.getName());
 
+		
 		crowdSourcer = new CrowdSourcer();
 		crowdSourcer.setInstanceId(getInstanceId());
 		crowdSourcer.followers = this.followers;
 		crowdSourcer.setMessage("'" + instance.getName() + "' 프로세스에 참여자로 등록했습니다: ");
 		
-
+		
 		
 		
 		if(instance.getProperty("", "facebook_postIds") != null){
@@ -111,6 +111,11 @@ public class InstanceView {
 			}			
 		}	
 		*/
+		
+		eventTriggerPanel = new EventTriggerPanel(instance);
+		
+		
+
 	}
 	
 	String instanceId;
@@ -147,7 +152,7 @@ public class InstanceView {
 		}
 
 	@Autowired
-	ProcessInstanceMonitor processInstanceMonitor;
+	public ProcessInstanceMonitor processInstanceMonitor;
 	@Autowired
 		public ProcessInstanceMonitor getProcessInstanceMonitor() {
 			return processInstanceMonitor;
@@ -156,7 +161,17 @@ public class InstanceView {
 				ProcessInstanceMonitor processInstanceMonitor) {
 			this.processInstanceMonitor = processInstanceMonitor;
 		}
-			
+		
+	EventTriggerPanel eventTriggerPanel;
+				
+		public EventTriggerPanel getEventTriggerPanel() {
+			return eventTriggerPanel;
+		}
+	
+		public void setEventTriggerPanel(EventTriggerPanel eventTrigger) {
+			this.eventTriggerPanel = eventTrigger;
+		}
+
 	ScheduleEditor scheduleEditor;
 		public ScheduleEditor getScheduleEditor() {
 			return scheduleEditor;

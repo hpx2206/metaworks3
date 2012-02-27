@@ -11,7 +11,7 @@ import org.uengine.processmanager.ProcessManagerRemote;
 public class ProcessDefinition extends Database<IProcessDefinition> implements IProcessDefinition{
 	
 	@Autowired
-	NewChildWindow newChildWindow;
+	public NewChildWindow newChildWindow;
 	
 	
 	String author;
@@ -292,7 +292,7 @@ public class ProcessDefinition extends Database<IProcessDefinition> implements I
 	public ClassDesignerContentPanel classDesignerContentPanel;
 	
 	@Autowired
-	ProcessDesignerWindow processDesigner;
+	public ProcessDesignerWindow processDesigner;
 	
 	@Autowired
 	public EntityDesignerWindow entityDesignerWindow;
@@ -303,7 +303,7 @@ public class ProcessDefinition extends Database<IProcessDefinition> implements I
 	
 	
 	@Autowired
-	ProcessManagerRemote codiPmSVC;
+	public ProcessManagerRemote codiPmSVC;
 
 
 

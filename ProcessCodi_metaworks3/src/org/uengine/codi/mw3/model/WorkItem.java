@@ -146,10 +146,12 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			this.tool = tool;
 		}
 
-	public void detail() throws Exception{
+	public Window detail() throws Exception{
 
 		Long instId = databaseMe().getInstId(); //since it knows metaworks IDAO will load all the field members from the table beyond the listed by setter/getter.
 		String tracingTag = (String) databaseMe().get("trcTag"); //since it knows metaworks IDAO will load all the field members from the table beyond the listed by setter/getter.
+		
+		WorkItemHandler workItemHandler;
 		
 		String tool = databaseMe().getTool();
 		if(tool.startsWith("mw3.")){
@@ -168,10 +170,11 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		
 		workItemHandler.load();
 		
+		return new Window(workItemHandler);
 	}
 	
 	@Autowired
-	ProcessManagerRemote codiPmSVC; //this is needed in order to give to WorkItemHandler due to Spring's propagated injection with Autowired is not working now
+	public ProcessManagerRemote codiPmSVC; //this is needed in order to give to WorkItemHandler due to Spring's propagated injection with Autowired is not working now
 
 	
 	String type;
@@ -274,9 +277,9 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	public Session session;
 	
 	@Autowired
-	ProcessManagerRemote processManager;
+	public ProcessManagerRemote processManager;
 
 	@Autowired
-	InstanceViewContent instanceViewContent;
+	public InstanceViewContent instanceViewContent;
 
 }

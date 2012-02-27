@@ -3,12 +3,14 @@ package org.uengine.codi.mw3;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
+import java.util.Set;
 
 import org.metaworks.WebObjectType;
 import org.metaworks.dao.ConnectionFactory;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.dwr.InvocationContext;
 import org.metaworks.dwr.MetaworksRemoteService;
+import org.metaworks.dwr.TransactionalDwrServlet;
 import org.springframework.web.context.WebApplicationContext;
 import org.uengine.codi.platform.SecurityContext;
 import org.uengine.processmanager.ProcessManagerBean;
@@ -153,9 +155,17 @@ public class CodiMetaworksRemoteService extends MetaworksRemoteService{
     	object = invocationContext.getObject();
     	
     	ProcessManagerRemote processManager = null;
+    	
+    	//1. try to get the processmanager which has been autowired among the properties of the service class
+    	
 		if(invocationContext.getAutowiredObjects().containsKey(ProcessManagerBean.class)){ //TODO: later this should check the hierarchy of ProcessManagerRemote 
 			processManager = (ProcessManagerRemote) invocationContext.getAutowiredObjects().get(ProcessManagerBean.class);
-		}
+		}else
+		
+System.out.println(">>>>>>>>>processManagerBeanCreated--------------------");
+
+	
+
 		
     	Object returnVal = null;
 		
@@ -199,6 +209,8 @@ public class CodiMetaworksRemoteService extends MetaworksRemoteService{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 
+			processManager = getDirtyProcessManager(processManager);
+			
 			if(processManager!=null){
 				try {
 					processManager.cancelChanges();
@@ -211,6 +223,9 @@ public class CodiMetaworksRemoteService extends MetaworksRemoteService{
 			throw e.getTargetException();
 
 		} finally{
+
+			processManager = getDirtyProcessManager(processManager);
+
 			if(processManager!=null){
 				try {
 					processManager.remove();
@@ -225,6 +240,34 @@ public class CodiMetaworksRemoteService extends MetaworksRemoteService{
 				
 		}
 		
+	}
+
+
+
+	private ProcessManagerRemote getDirtyProcessManager(
+			ProcessManagerRemote processManager) {
+		//2. try the case that the one of inner classes issued the processmanager
+		if(TransactionContext.getThreadLocalInstance().getSharedContext("processManagerBeanCreated") != null){
+System.out.println("processManagerBeanCreated--------------------");
+			if(TransactionalDwrServlet.useSpring){
+				WebApplicationContext springAppContext = getBeanFactory();
+				
+				Map beanMap = springAppContext.getBeansOfType(ProcessManagerRemote.class);
+				Set keys = beanMap.keySet();			
+
+				Object springBean = null;
+					
+				for (Object key : keys) {
+					if(springBean != null) {
+						break;
+					}
+					springBean = beanMap.get(key);
+				}
+				
+				processManager = (ProcessManagerRemote) springBean;
+			}
+		}
+		return processManager;
 	}
 
 	@Override

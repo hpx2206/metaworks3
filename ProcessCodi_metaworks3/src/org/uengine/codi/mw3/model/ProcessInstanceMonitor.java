@@ -65,5 +65,5 @@ public class ProcessInstanceMonitor {
 		);		
 	}
 		
-	@Autowired ProcessManagerRemote processManager;
+	@Autowired public ProcessManagerRemote processManager;
 }

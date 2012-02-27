@@ -19,6 +19,7 @@ import org.uengine.codi.activitytypes.MetaworksFormActivity;
 import org.uengine.codi.mw3.admin.FormDefinition;
 import org.uengine.codi.mw3.admin.FormField;
 import org.uengine.codi.mw3.admin.FormInstance;
+import org.uengine.codi.mw3.model.InstanceViewContent;
 import org.uengine.codi.mw3.model.WorkItemHandler;
 import org.uengine.contexts.HtmlFormContext;
 import org.uengine.kernel.Activity;
@@ -66,7 +67,7 @@ public class FormWorkItemHandler extends WorkItemHandler{
 
 
 	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_VIEW)
-	public void complete() throws Exception {
+	public InstanceViewContent complete() throws Exception {
 
 		Long instanceId = new Long(getInstanceId());
 		Long taskId = getTaskId();
@@ -105,7 +106,7 @@ public class FormWorkItemHandler extends WorkItemHandler{
 		getMetaworksContext().setWhen("completed");
 		//formActivity.saveWorkItem(instance, payload)
 		
-		super.complete();
+		return super.complete();
 	}
 
 
