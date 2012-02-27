@@ -263,9 +263,9 @@ public class ProcessDefinition extends Database<IProcessDefinition> implements I
 				return classDesignerContentPanel;
 				
 			}else if("entity".equals(objType)){
-				entityDesignerWindow.load(databaseMe().getDefId().toString());
+				entityDesignerContentPanel.load(databaseMe().getDefId().toString());
 				
-				return entityDesignerWindow;		
+				return entityDesignerContentPanel;		
 			}
 //		}finally{
 //			codiPmSVC.remove();
@@ -295,7 +295,7 @@ public class ProcessDefinition extends Database<IProcessDefinition> implements I
 	public ProcessDesignerWindow processDesigner;
 	
 	@Autowired
-	public EntityDesignerWindow entityDesignerWindow;
+	public EntityDesignerContentPanel entityDesignerContentPanel;
 	
 	
 	@AutowiredFromClient
