@@ -63,7 +63,7 @@ public class WebServiceDefinition  {
 	}
 	
 	@Available(where="step1")
-	@Test(value="'test'", next="name", testName="Service Name", instruction="'Web Service 명을 입력하세요.")
+	@Test(value="'test'", next="name", testName="Service Name", instruction="'WSDL URL 을 입력하세요.")
 	public String getWsdlUrl() {
 		return wsdlUrl;
 	}
@@ -120,7 +120,7 @@ public class WebServiceDefinition  {
 				rootPath,
 				// "-compile",
 				"-impl",
-				"http://localhost:9000/UsersService?wsdl"
+				getWsdlUrl()
 			});
 		
 		String inTargetPackage = getTargetPackage() + "." + name;
@@ -131,25 +131,26 @@ public class WebServiceDefinition  {
 		
 		
 		File[] arrFile = f.listFiles();
-		
-	    for(int i = 0; i < arrFile.length; i++){
-	    	ClassDefinition classDefinition = new ClassDefinition();
-	    	classDefinition.processManager = processManager; 
-			classDefinition.setParentFolder(getParentFolder().toString());
-			classDefinition.setPackageName(getTargetPackage() + "." + name);
-			classDefinition.setClassName(arrFile[i].getName().replace(".java", ""));	
-			
-			char[] c = new char[(int)arrFile[i].length()];
-			BufferedReader br = new BufferedReader(new FileReader(arrFile[i]));
-			br.read(c);
-			
-			sb.append(c);
-			
-			classDefinition.generateFaceHelperSourceCode();
-			classDefinition.getSourceCodes().setSourceCode(new JavaSourceCode());
-			classDefinition.getSourceCodes().getSourceCode().setCode(sb.toString());
-			classDefinition.save();
-	    }
+		if(arrFile.length > 0) {
+		    for(int i = 0; i < arrFile.length; i++){
+		    	ClassDefinition classDefinition = new ClassDefinition();
+		    	classDefinition.processManager = processManager; 
+				classDefinition.setParentFolder(getParentFolder().toString());
+				classDefinition.setPackageName(getTargetPackage() + "." + name);
+				classDefinition.setClassName(arrFile[i].getName().replace(".java", ""));	
+				
+				char[] c = new char[(int)arrFile[i].length()];
+				BufferedReader br = new BufferedReader(new FileReader(arrFile[i]));
+				br.read(c);
+				
+				sb.append(c);
+				
+				classDefinition.generateFaceHelperSourceCode();
+				classDefinition.getSourceCodes().setSourceCode(new JavaSourceCode());
+				classDefinition.getSourceCodes().getSourceCode().setCode(sb.toString());
+				classDefinition.save();
+		    }
+		}
 	    
 		getMetaworksContext().setWhen("view");
 		
