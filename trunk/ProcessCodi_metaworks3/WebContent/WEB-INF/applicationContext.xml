@@ -17,7 +17,7 @@
 	<!-- ============================================================= -->
 	<context:property-placeholder location="classpath:*.properties" />
 	<context:component-scan
-		base-package="com.okmindmap,org.uengine.codi.mw3" />
+		base-package="org.uengine.codi.mw3" />
 
 	<aop:aspectj-autoproxy />
 	
@@ -79,6 +79,9 @@
 	<bean id="MetaworksRemoteService" class="org.uengine.codi.mw3.CodiMetaworksRemoteService">
 		<property name="connectionFactory" ref="springConnectionFactoryForMetaworks"/>
 	</bean>
+
+	<bean id="InstanceViewContent" class="org.uengine.codi.mw3.model.InstanceViewContent"/>	
+	<bean id="ClassDesignerContentPanel" class="org.uengine.codi.mw3.model.ClassDesignerContentPanel"/>
 	
 	<!-- bean id="MetaworksRemoteService" class="org.metaworks.dwr.MetaworksRemoteService">
 		<property name="connectionFactory" ref="springConnectionFactoryForMetaworks"/>
@@ -94,7 +97,6 @@
 	<bean id="WorkItemHandler" class="org.uengine.codi.mw3.model.WorkItemHandler"/>
 	<bean id="FormWorkItemHandler" class="org.uengine.codi.activitytypes.wih.FormWorkItemHandler"/>
 	
-	<bean id="InstanceViewContent" class="org.uengine.codi.mw3.model.InstanceViewContent"/>	
 	<bean id="InstanceView" class="org.uengine.codi.mw3.model.InstanceView"/>
 	<bean id="Instance" class="org.uengine.codi.mw3.model.Instance"/>
 	
@@ -102,7 +104,6 @@
 	<bean id="Contact" class="org.uengine.codi.mw3.model.Contact"/>
 	<bean id="FormDefinition" class="org.uengine.codi.mw3.admin.FormDefinition"/>
 	<bean id="CrowdSourcer" class="org.uengine.codi.mw3.model.CrowdSourcer"/>	
-	<bean id="ClassDesignerContentPanel" class="org.uengine.codi.mw3.model.ClassDesignerContentPanel"/>
 	<bean id="ProcessDesignerContentPanel" class="org.uengine.codi.mw3.model.ProcessDesignerContentPanel"/>
 	<bean id="ProcessInstanceMonitor" class="org.uengine.codi.mw3.model.ProcessInstanceMonitor"/>
 	<bean id="ProcessDesignerWindow" class="org.uengine.codi.mw3.model.ProcessDesignerWindow"/>
@@ -121,9 +122,11 @@
 	<bean id="InstanceViewPublic" class="org.uengine.codi.mw3.model.InstanceViewPublic"/>
 	
 	
+		
+	<bean id="LoginAdmin" class="org.uengine.codi.mw3.model.LoginAdmin"/>
+
 	<bean id="MongoDB" class="org.uengine.codi.platform.MongoDB"/>
 	<bean id="SMS" class="org.uengine.codi.platform.SMS"/>
 	<bean id="FileSystem" class="org.uengine.codi.platform.FileSystem"/>
-		
-	<bean id="LoginAdmin" class="org.uengine.codi.mw3.model.LoginAdmin"/>
+	
 </beans>
