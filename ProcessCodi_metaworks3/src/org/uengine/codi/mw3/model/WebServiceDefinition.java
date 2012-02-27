@@ -124,7 +124,7 @@ public class WebServiceDefinition  {
 			});
 		
 		String inTargetPackage = getTargetPackage() + "." + name;
-		String filePath = rootPath + inTargetPackage.replace(".", "/");
+		String filePath = rootPath + "/" + inTargetPackage.replace(".", "/");
 		
 		File f = new File(filePath);
 		StringBuffer sb = new StringBuffer();
@@ -160,6 +160,12 @@ public class WebServiceDefinition  {
 	public void next() throws Exception  {
 		getMetaworksContext().setWhen("edit");
 		getMetaworksContext().setWhere("step2");
+	}
+	
+	@ServiceMethod(callByContent=true ,where="step1", when="edit") 
+	public void previous() throws Exception  {
+		getMetaworksContext().setWhen("edit");
+		getMetaworksContext().setWhere("step1");
 	}
 
 	
