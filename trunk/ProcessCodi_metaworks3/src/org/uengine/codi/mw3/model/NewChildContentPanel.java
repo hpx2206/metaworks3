@@ -3,10 +3,8 @@ package org.uengine.codi.mw3.model;
 import javax.persistence.Id;
 
 import org.metaworks.ServiceMethodContext;
-import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
-import org.springframework.beans.factory.annotation.Autowired;
 
 public class NewChildContentPanel  {
 	
@@ -21,12 +19,11 @@ public class NewChildContentPanel  {
 		}
 
 	@ServiceMethod
-	public EntityDesignerWindow newEntity() throws Exception{
-		EntityDesignerWindow entityDesignerWindow = new EntityDesignerWindow();
-		entityDesignerWindow.newEntity(getParentFolder().toString());
-				
-		
-		return entityDesignerWindow;
+	public EntityDesignerContentPanel newEntity() throws Exception{
+		EntityDesignerContentPanel entityDesignerContentPanel = new EntityDesignerContentPanel();
+		entityDesignerContentPanel.newEntity(getParentFolder().toString());
+						
+		return entityDesignerContentPanel;
 	}
 		
 	@ServiceMethod
