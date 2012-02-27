@@ -15,6 +15,8 @@ public class Grid {
 	
 	List<Map<String, String>> data;
 
+	GridCell cell;
+	
 	public String[] getColumnNames() {
 		return columnNames;
 	}
@@ -38,9 +40,19 @@ public class Grid {
 	public void setData(List<Map<String, String>> data) {
 		this.data = data;
 	}
+	
+	public GridCell getCell() {
+		return cell;
+	}
+
+	public void setCell(GridCell cell) {
+		this.cell = cell;
+	}
 
 	@ServiceMethod
 	public void init(){
+		// TODO select Data from DB
+		
 		setColumnNames(new String[]{"Inv No","Date", "Client", "Amount","Tax","Total","Notes"});
 	//	setColumnModel("");
 		
@@ -83,6 +95,13 @@ public class Grid {
 		data.add(column);
 	}
 	
-	
+	@ServiceMethod(callByContent = true, target="none")
+	public void changeCell() {
+		System.out.println("row : " + getCell().row + ", col : " + getCell().col + ", content : " + getCell().content);
+		
+		// TODO update DB and re select Data from DB and clear Cell Object 
+		getCell().setContent(data.get(getCell().getRow()).put("name", getCell().getContent()));
+		
+	}
 	
 }
