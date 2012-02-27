@@ -33,6 +33,7 @@ import org.metaworks.annotation.Resource;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Test;
 import org.metaworks.annotation.TestContext;
+import org.metaworks.annotation.Testing;
 import org.metaworks.annotation.TypeSelector;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.IDAO;
@@ -295,8 +296,8 @@ public class WebObjectType{
 		//analyzing setter/getter bean properties
 		WebFieldDescriptor[] webFieldDescriptors = new WebFieldDescriptor[objectType.getFieldDescriptors().length];
 		
-		Test testerBeginner = null;
-		Map<String, Test> tests = new HashMap<String, Test>();
+		//Test testerBeginner = null;
+		//Map<String, Test> tests = new HashMap<String, Test>();
 	
 		FieldDescriptor keyField = null;
 		for(int i=0; i<objectType.getFieldDescriptors().length; i++){
@@ -410,16 +411,40 @@ public class WebObjectType{
 				fd.setAttribute("representativeImagePath", new Boolean(true));
 			}
 			
-			Test test;
-			if((test = (Test) getAnnotationDeeply(actCls, iDAOClass, fd.getName(), Test.class))!=null){
+			Testing tests;
+			Test[] testsArr;
+			if((tests = (Testing) getAnnotationDeeply(actCls, iDAOClass, fd.getName(), Testing.class))!=null){
+				testsArr = tests.value();
+			}else{
+				
+				Test test;
+				if((test = (Test) getAnnotationDeeply(actCls, iDAOClass, fd.getName(), Test.class))!=null){
+
+					testsArr = new Test[]{test};
+				}else{
+					testsArr = new Test[]{};
+				}
+				
+			}
+			
+			for(int j=0; j<testsArr.length; j++){
+
+				Test test = testsArr[j];
+
+				
+				Map<String, TestContext> existingTestSet = (Map<String, TestContext>) fd.getAttribute("test");
+				if(existingTestSet==null){
+					existingTestSet = new HashMap<String, TestContext>();
+					fd.setAttribute("test", existingTestSet);
+				}
 				
 				TestContext testContext = new TestContext();
 				
 				if(test.next().length > 0)
 					testContext.setNext(test.next());
 				
-				if(test.testName().length() > 0)
-					testContext.setTestName(test.testName());
+				if(test.scenario().length() > 0)
+					testContext.setScenario(test.scenario());
 				
 				if(test.value().length > 0)
 					testContext.setValue(test.value());
@@ -427,7 +452,10 @@ public class WebObjectType{
 				if(test.instruction().length > 0)
 					testContext.setInstruction(test.instruction());
 				
-				fd.setAttribute("test", testContext);
+				testContext.setStarter(test.starter());
+
+				
+				existingTestSet.put(test.scenario(), testContext);
 			}
 			
 			
@@ -519,6 +547,7 @@ public class WebObjectType{
 			Name name = method.getAnnotation(Name.class);
 			Available available =  method.getAnnotation(Available.class);
 			Hidden hidden =  method.getAnnotation(Hidden.class);
+			Testing testSet = method.getAnnotation(Testing.class);
 			Test test = method.getAnnotation(Test.class);
 			
 			if(annotation==null && iDAOClass != null){
@@ -529,6 +558,7 @@ public class WebObjectType{
 					name = iDAOClass.getMethod(method.getName(), new Class[]{}).getAnnotation(Name.class);
 					available = iDAOClass.getMethod(method.getName(), new Class[]{}).getAnnotation(Available.class);
 					hidden = iDAOClass.getMethod(method.getName(), new Class[]{}).getAnnotation(Hidden.class);
+					testSet = iDAOClass.getMethod(method.getName(), new Class[]{}).getAnnotation(Testing.class);
 					test = iDAOClass.getMethod(method.getName(), new Class[]{}).getAnnotation(Test.class);
 					
 				}catch(Exception e){
@@ -581,30 +611,48 @@ public class WebObjectType{
 					smc.setWhen("___hidden___");
 				}
 				
-				if(test!=null){
+				
+				Test[] tests = null;
+				if(testSet!=null){
+					tests = testSet.value();
+				}else if(test!=null){
+					tests = new Test[]{test};
+				}
+				
+				if(tests!=null){
+					
+					for(Test theTest : tests){
 						
-					TestContext testContext = new TestContext();
-					
-					if(test.next().length > 0)
-						testContext.setNext(test.next());
-					
-					if(test.testName().length() > 0)
-						testContext.setTestName(test.testName());
-					
-					if(test.value().length > 0)
-						testContext.setValue(test.value());
-
-					if(test.instruction().length > 0)
-						testContext.setInstruction(test.instruction());
-
-
-					if(smc.getAttributes()==null){
-						smc.setAttributes(new HashMap<String, Object>());
+						TestContext testContext = new TestContext();
+						
+						if(theTest.next().length > 0)
+							testContext.setNext(theTest.next());
+						
+						if(theTest.scenario().length() > 0)
+							testContext.setScenario(theTest.scenario());
+						
+						if(theTest.value().length > 0)
+							testContext.setValue(theTest.value());
+	
+						if(theTest.instruction().length > 0)
+							testContext.setInstruction(theTest.instruction());
+	
+						testContext.setStarter(theTest.starter());
+	
+	
+						
+						if(smc.getAttributes()==null){
+							smc.setAttributes(new HashMap<String, Object>());
+						}
+						
+						if(!smc.getAttributes().containsKey("test")){
+							smc.getAttributes().put("test", new HashMap<String, TestContext>());
+						}
+						
+						HashMap<String, TestContext> testMap = (HashMap<String, TestContext>) smc.getAttributes().get("test");
+						
+						testMap.put(testContext.getScenario(), testContext);
 					}
-					
-					
-					smc.getAttributes().put("test", testContext);
-
 				}
 				
 				serviceMethodContexts.put(smc.getMethodName(), smc);

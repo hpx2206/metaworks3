@@ -21,12 +21,12 @@ public class TestContext {
 			this.next = next;
 		}
 				
-	public String testName;
-		public String getTestName() {
-			return testName;
+	public String scenario;
+		public String getScenario() {
+			return scenario;
 		}
-		public void setTestName(String testName) {
-			this.testName = testName;
+		public void setScenario(String testName) {
+			this.scenario = testName;
 		}
 		
 	public String[] instruction;
@@ -36,5 +36,13 @@ public class TestContext {
 		public void setInstruction(String[] instruction) {
 			this.instruction = instruction;
 		}
-	
+		
+	boolean starter;
+		public boolean isStarter() {
+			return starter;
+		}
+		public void setStarter(boolean starter) {
+			this.starter = starter;
+		}
+		
 }
