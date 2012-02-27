@@ -1,13 +1,28 @@
 var org_metaworks_example_ide_CodeAssist = function(objectId, className){
-	this.objectId = objectId;
 
-	var sel = document.getElementById("assist_" + objectId );
-	sel.selectedIndex = 1; 
-	sel.focus();
+	this.objectId = objectId;
+	this.className = className;
 	
-	var thisFaceHelper = this;
+	$('#tabs_assist').smartTab({autoProgress: false,transitionEffect:'none'});
+	
+	var buttons = { previous:$('#jslidernews3 .button-previous') ,
+					next:$('#jslidernews3 .button-next') };
+	$('#jslidernews3').lofJSidernews( { interval:5000,
+										 	easing:'easeOutExpo',
+											duration:200,
+											auto:false,
+											mainWidth:580,
+											mainHeight:300,
+											navigatorHeight		: 27,
+											navigatorWidth		: 100,
+											maxItemDisplay:10,
+											buttons:buttons,
+											keyNavigation:false} );
+	
+	
 	
 	var object = mw3.objects[this.objectId];
+	var thisFaceHelper = this;
 	
 	if(object==null || object.assistances.length==0){
 		var sourceCode = mw3.objects[object.srcCodeObjectId];		
@@ -16,26 +31,60 @@ var org_metaworks_example_ide_CodeAssist = function(objectId, className){
 		$("#" + mw3.popupDivId).remove();
 		editor.focus();
 	}else{
-		document.addEventListener(
-			"keyup",
-	
-	   		function(e) {
-				if (e && e.keyCode==13 && sel == e.srcElement){
-					thisFaceHelper.enter(sel);
-				}
-			},
+		$('#assist_text_' + objectId).unbind('keyup');
+		$('#assist_text_' + objectId).bind('keyup', function(e){
+			if (e && e.keyCode==13){
+				var value = $("#objDiv_" + objectId).find(".active").attr("assistname");
+				
+				//$("#objDiv_" + objectId).find(".active").click();					
+				thisFaceHelper.enter(value);					
+			}else if(e && e.keyCode==38){
+				$("#assist_up").click();
+			}else if(e && e.keyCode==40){
+				$("#assist_down").click();
+			}else{
+				var key = $('#assist_text_' + objectId).val();
+				
+				$(".navigator-content li").each(function(index) {
+					console.debug($(this));
+					
+					var value = $(this).attr("assistname");
+					
+					if(value.substring(0, key.length) == key){
+						console.debug($(this));
+						
+						var index = $(this).attr("index");
+						
+						//seft.jumping( index, true );
+						//seft.setNavActive( index, item );						
+						$('#jslidernews3').jumping(index, true);
+						
+						return false;
+					}
+				});
+			}
+		});
+		
+		$("#assist_text_" + objectId).focus();
+		
+		$("#assist_up").click(function(event){
+			var value = $("#objDiv_" + objectId).find(".active").attr("assistname");
 			
-			false
-		);
+			thisFaceHelper.requestDoc(value);
+		});
+		
+		
+		$("#assist_down").click(function(event){
+			var value = $("#objDiv_" + objectId).find(".active").attr("assistname");
+			
+			thisFaceHelper.requestDoc(value);
+		});		
 	}
-
 }
 
-org_metaworks_example_ide_CodeAssist.prototype.enter = function(sel){
+org_metaworks_example_ide_CodeAssist.prototype.enter = function(value){
 	var object = mw3.objects[this.objectId];
 	var sourceCode = mw3.objects[object.srcCodeObjectId];
-	
-	var value = sel.options[sel.selectedIndex].value;
 	
 	var editor = sourceCode.__getFaceHelper().editor;
 	editor.insert(value);
@@ -44,21 +93,8 @@ org_metaworks_example_ide_CodeAssist.prototype.enter = function(sel){
 	$("#" + mw3.popupDivId).remove();
 }
 
-var docRequestedTime = 0;
-
-org_metaworks_example_ide_CodeAssist.prototype.requestDoc = function(sel){
-	
-//TODO: please implement these commented part (reducing undesired request) later:
-//	setTimeout("realRequestDoc('" + this.objectId +"', " + sel.selectedIndex + ", sel)", 1500);
-//}
-//
-//
-//function realRequestDoc(objectId, selectedIndexThatTime, sel){
-//	if(seletedIndexThatTime != sel.selectedIndex) return;
-
+org_metaworks_example_ide_CodeAssist.prototype.requestDoc = function(value) {
 	var object = mw3.objects[this.objectId];
-
-	var value = sel.options[sel.selectedIndex].value;
 
 	var sourceCode = mw3.objects[object.srcCodeObjectId];
 	var theEditor = sourceCode.__getFaceHelper().editor;
@@ -72,6 +108,4 @@ org_metaworks_example_ide_CodeAssist.prototype.requestDoc = function(sel){
 	object.selectedItem = value;
 	object.lineAssistRequested = line; 
 	object.showDoc();
-	
-
 }

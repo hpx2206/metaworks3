@@ -13,18 +13,29 @@ if(value!=null){
 		<td width="200px"><%=fields.comment.here()%></td>	
 		
 		<td width="300px">
-		<%=methods.add.here()%>
-		<%=methods.save.here()%>
+		
+		<table><tr>
 <%		
 		if(mw3.when != mw3.WHEN_EDIT){
 %>		 		
-		<input type=button onclick="mw3.getFaceHelper('<%=objectId%>').edit();" value="edit">
+			<td><input type=button onclick="mw3.getFaceHelper('<%=objectId%>').edit();" value="edit"></td>
+			<td><%=methods.up.here()%></td>
+			<td><%=methods.down.here()%></td>		
+			<td><%=methods.remove.here()%></td>					
 <%
+		}else{
+			if(mw3.where == "newEntry"){
+%>			<td><%=methods.add.here()%></td>
+<%
+			}else{
+%>
+			<td><%=methods.save.here()%></td>
+<%
+			}
 		}
-%>				
-		<%=methods.up.here()%>
-		<%=methods.down.here()%>		
-		<%=methods.remove.here()%>
+%>			
+					
+		</tr></table>
 		</td>		
 		<td width="600px"><div id="progress_<%=objectId%>"></div></td>
 	</tr>	

@@ -25,7 +25,6 @@ var org_metaworks_example_ide_SourceCode = function(objectId, className){
     
     document.addEventListener(
 		"keydown",
-
    		function(e) {			
 			if (e && e.keyCode == ctrlKey && !ctrlDown && theEditor.textInput.getElement() == e.srcElement) {
 				ctrlDown = true;				
@@ -45,7 +44,8 @@ var org_metaworks_example_ide_SourceCode = function(objectId, className){
 				//alert(line);
 				
 				mw3.mouseX = e.srcElement.offsetLeft;
-				mw3.mouseY = e.srcElement.offsetTop - 3;
+				//mw3.mouseY = e.srcElement.offsetTop - 3;
+				mw3.mouseY = e.srcElement.offsetTop + 15;
 				
 				var sourceCode = mw3.getObject(theSourceCodeObjId);
 				
@@ -56,6 +56,7 @@ var org_metaworks_example_ide_SourceCode = function(objectId, className){
 					row: whereEnd.row,
 					__className : "org.metaworks.example.ide.Position"
 				};
+				
 				
 				sourceCode.clientObjectId = theSourceCodeObjId;
 				
