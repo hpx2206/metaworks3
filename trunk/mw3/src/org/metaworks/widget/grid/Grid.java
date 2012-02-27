@@ -29,15 +29,16 @@ public class Grid {
 		}
 
 
-	List<Map<String, String>> data;
-		public List<Map<String, String>> getData() {
+	Object data;
+	
+		public Object getData() {
 			return data;
 		}
-		
-		public void setData(List<Map<String, String>> data) {
+	
+		public void setData(Object data) {
 			this.data = data;
 		}
-		
+
 
 	GridCell cell;
 		public GridCell getCell() {
@@ -56,7 +57,7 @@ public class Grid {
 		setColumnNames(new String[]{"Inv No","Date", "Client", "Amount","Tax","Total","Notes"});
 	//	setColumnModel("");
 		
-		data = new ArrayList<Map<String, String>>();
+		ArrayList<Map<String, String>> arrListData = new ArrayList<Map<String, String>>();
 		Map column = new HashMap();
 		
 		column.put("id", "1");
@@ -66,7 +67,7 @@ public class Grid {
 		column.put("tax", "11111");
 		column.put("total", "11111");
 
-		data.add(column);
+		arrListData.add(column);
 		column = new HashMap();
 		column.put("id", "2");
 		column.put("invdate", "2007-10-02");
@@ -74,7 +75,7 @@ public class Grid {
 		column.put("note", "22222");
 		column.put("tax", "22222");
 		column.put("total", "22222");
-		data.add(column);
+		arrListData.add(column);
 
 		column = new HashMap();
 		column.put("id", "3");
@@ -83,7 +84,7 @@ public class Grid {
 		column.put("note", "33333");
 		column.put("tax", "33333");
 		column.put("total", "33333");
-		data.add(column);
+		arrListData.add(column);
 
 		column = new HashMap();
 		column.put("id", "4");
@@ -92,15 +93,18 @@ public class Grid {
 		column.put("note", "44444");
 		column.put("tax", "44444");
 		column.put("total", "4444");
-		data.add(column);
+		arrListData.add(column);
+		
+		setData(arrListData);
 	}
 	
 	@ServiceMethod(callByContent = true, target="none")
 	public void changeCell() {
 		System.out.println("row : " + getCell().row + ", col : " + getCell().col + ", content : " + getCell().content);
 		
+		ArrayList<Map<String, String>> arrListData = (ArrayList<Map<String, String>>) data;
 		// TODO update DB and re select Data from DB and clear Cell Object 
-		getCell().setContent(data.get(getCell().getRow()).put("name", getCell().getContent()));
+		getCell().setContent(arrListData.get(getCell().getRow()).put("name", getCell().getContent()));
 		
 	}
 	

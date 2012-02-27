@@ -10,8 +10,8 @@ var org_metaworks_widget_grid_Grid= function(objectId, className){
 	var colModel = [];
 	
 	var i=0; 
-	for(var columnName in grid.columnModel){
-		colModel[i++] = grid.columnModel[columnName];
+	for(var columnIndex in grid.columnNames){
+		colModel[i++] = grid.columnModel[grid.columnNames[columnIndex]];
 	}
 	
 	jQuery("#grid_" + this.objectId ).jqGrid({
