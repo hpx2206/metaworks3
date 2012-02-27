@@ -8,7 +8,9 @@ public @interface Test {
 	
 	String[] value() default {};
 	String[] next() default {};
-	String testName() default "";
+	String scenario() default "";
 
 	String[] instruction() default {};
+	
+	boolean starter() default false;
 }
