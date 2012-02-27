@@ -8,7 +8,7 @@ public class ProcessDesignerWindow extends ContentWindow {
 	
 
 	@Autowired
-	ProcessDesignerContentPanel processDesignerContentPanel;	
+	public ProcessDesignerContentPanel processDesignerContentPanel;	
 	@Autowired
 		public ProcessDesignerContentPanel getProcessDesignerContentPanel() {
 			return processDesignerContentPanel;

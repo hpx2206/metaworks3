@@ -48,6 +48,6 @@ public class Posting {
 
 	
 	@Autowired
-	ProcessManagerRemote codiPmSVC;
+	public ProcessManagerRemote codiPmSVC;
 
 }

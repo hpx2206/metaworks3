@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class Instance extends Database<IInstance> implements IInstance{
 
 	@Autowired
-	InstanceViewContent instanceViewContent;
+	public InstanceViewContent instanceViewContent;
 	
 	@AutowiredFromClient
 	public Session session;

@@ -13,7 +13,7 @@ public class InstanceViewContent extends ContentWindow {
 
 	@Autowired
 	@Name
-	InstanceView instanceView;			
+	public InstanceView instanceView;			
 		public InstanceView getInstanceView() {
 			return instanceView;
 		}

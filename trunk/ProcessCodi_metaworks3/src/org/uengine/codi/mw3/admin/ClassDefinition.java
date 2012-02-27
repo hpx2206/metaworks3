@@ -129,7 +129,13 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		}
 
 	String packageName;
-	@Test(value="'test'", next="className", testName="ClassDefinition", instruction="'test'를 입력하세요.")
+	@Test(
+			scenario="ClassDefinition", 
+			starter=true,
+			value="'test'", 
+			instruction="'test'를 입력하세요.", 
+			next="className"
+			)
 		public String getPackageName() {
 			return packageName;
 		}
@@ -140,7 +146,12 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 	String className;
 	@Face(options={"mandatory"}, values={"true"})
 	@Name
-	@Test(value="'HelloWorld'", next="next1()", instruction="'HelloWorld'를 입력하세요.")
+	@Test(
+			scenario="ClassDefinition", 
+			value="'HelloWorld'", 
+			instruction="'HelloWorld'를 입력하세요.",
+			next="next1()"
+			)
 		public String getClassName() {
 			return className;
 		}
@@ -150,7 +161,14 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 
 	transient ClassSourceCodes sourceCodes;
 	@Available(when={"step1", "view"})
-	@Test(next="run()", instruction="소스코드를 작성하세요.")
+//	@TestSet({
+		@Test(
+				scenario="ClassDefinition", 
+				instruction="소스코드를 작성하세요.",
+				next="run()"
+			)
+//		@Test(next="run()", instruction="소스코드를 작성하세요.", testName="")
+//	})
 		public ClassSourceCodes getSourceCodes() {
 			return sourceCodes;
 		}
@@ -253,7 +271,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 	
 	}
 	
-//	@ServiceMethod(callByContent=true, when="view")
+	@ServiceMethod(callByContent=true, when="view")
 	public void compile() throws Exception{
 		save();
 	
@@ -375,7 +393,11 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP, when="view")
 	@Face(displayName = "Run")
-	@Test(next="autowiredObject.org.uengine.codi.mw3.admin.Runner.runMobile()", instruction="프로그램을 실행하기 위하여 클릭합니다.")
+	@Test(
+			scenario="ClassDefinition", 
+			instruction="프로그램을 실행하기 위하여 클릭합니다.",
+			next="autowiredObject.org.uengine.codi.mw3.admin.Runner.runMobile()" 
+			)
 	public Popup run() throws Exception{		
 
 //		try{
@@ -409,7 +431,11 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		
 	@ServiceMethod(callByContent=true, when="edit")
 	@Face(displayName="Next > ")
-	@Test(next="sourceCodes", instruction="다음단계로 넘어가기 위해 클릭합니다.")
+	@Test(
+			scenario="ClassDefinition", 
+			instruction="다음단계로 넘어가기 위해 클릭합니다.",
+			next="sourceCodes"
+			)
 	public void next1(){
 		
 		getMetaworksContext().setWhen("view");
