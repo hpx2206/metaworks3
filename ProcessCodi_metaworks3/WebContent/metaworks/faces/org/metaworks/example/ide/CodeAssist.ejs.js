@@ -15,7 +15,7 @@ var org_metaworks_example_ide_CodeAssist = function(objectId, className){
 											mainHeight:300,
 											navigatorHeight		: 27,
 											navigatorWidth		: 100,
-											maxItemDisplay:10,
+											maxItemDisplay:9,
 											buttons:buttons,
 											keyNavigation:false} );
 	
@@ -50,14 +50,12 @@ var org_metaworks_example_ide_CodeAssist = function(objectId, className){
 					
 					var value = $(this).attr("assistname");
 					
-					if(value.substring(0, key.length) == key){
-						console.debug($(this));
+					if(value.substring(0, key.length) == key){						
+						var index = $(this).attr("index");						
 						
-						var index = $(this).attr("index");
-						
-						//seft.jumping( index, true );
-						//seft.setNavActive( index, item );						
-						$('#jslidernews3').jumping(index, true);
+						seft.jumping(index, true);
+						seft.setNavActive(index);
+						thisFaceHelper.requestDoc(value);
 						
 						return false;
 					}
@@ -65,9 +63,15 @@ var org_metaworks_example_ide_CodeAssist = function(objectId, className){
 			}
 		});
 		
+		$('#atabs-1').click(function(){
+			$('#assist_text_' + objectId).focus();
+		});
+			
 		$("#assist_text_" + objectId).focus();
 		
 		$("#assist_up").click(function(event){
+			$('#assist_text_' + objectId).focus();
+			
 			var value = $("#objDiv_" + objectId).find(".active").attr("assistname");
 			
 			thisFaceHelper.requestDoc(value);
@@ -75,6 +79,8 @@ var org_metaworks_example_ide_CodeAssist = function(objectId, className){
 		
 		
 		$("#assist_down").click(function(event){
+			$('#assist_text_' + objectId).focus();
+			
 			var value = $("#objDiv_" + objectId).find(".active").attr("assistname");
 			
 			thisFaceHelper.requestDoc(value);
