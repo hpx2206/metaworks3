@@ -8,6 +8,7 @@ import java.util.Map;
 import org.metaworks.FieldDescriptor;
 import org.metaworks.ObjectInstance;
 import org.metaworks.ObjectType;
+import org.metaworks.WebObjectType;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dwr.MetaworksRemoteService;
 
@@ -18,48 +19,53 @@ public class ObjectGrid extends Grid{
 		
 	}
 
-	public void setObjectData(List list) throws Exception{
-		Class dataClass = list.get(0).getClass();
-		
-		ObjectType type = (ObjectType) MetaworksRemoteService.getInstance().getMetaworksType(dataClass.getName()).metaworks2Type();
+	
+	public ObjectType setObjectType(Class dataClass) throws Exception{
+		WebObjectType wot = MetaworksRemoteService.getInstance().getMetaworksType(dataClass.getName());
+		ObjectType type = (ObjectType) wot.metaworks2Type();
+		 
 		columnModel = new HashMap<String, Column>();
 		
 		
 		List<String> columnNamesInList = new ArrayList<String>();
 //		Map<String, Method> getters = new HashMap<String, Method>();
-		for(FieldDescriptor fd : type.getFieldDescriptors()){
-			
+		
+		
+		for(int i=0; i<type.getFieldDescriptors().length; i++){
+			String displayName = wot.getFieldDescriptors()[i].getName();
+			String fieldName = wot.getFieldDescriptors()[i].getName();
+			FieldDescriptor fd = type.getFieldDescriptors()[i];
 			//if(fd.getAttribute("hidden"))
-			columnNamesInList.add(fd.getName());
+			columnNamesInList.add(fieldName);
 			
 			Column column = new Column();
-			column.setName(fd.getDisplayName());
-			column.setIndex(fd.getName());
+			column.setName(fieldName);
+			column.setIndex(displayName);
 			column.setEditable(fd.isUpdatable());
 //			column.setWidth(fd.getAttribute("size"));
-			column.setIndex(fd.getName());
+			column.setIndex(fieldName);
 			
-			columnModel.put(fd.getName(), column);
+			columnModel.put(fieldName, column);
 //			getters.put(fd.getName(), dataClass.getMethod("get" + fd.getName(), parameterTypes))
 		}
-		
+
 		columnNames = new String[columnNamesInList.size()];
 		columnNamesInList.toArray(columnNames); 
 		
-		data = new ArrayList<Map<String, String>>();
+		return type;
+	}
+	
+	public void setObjectData(List list) throws Exception{
+		Class dataClass = list.get(0).getClass();
+		
+		ObjectType type = setObjectType(dataClass);
+		
+		ArrayList<Object> arrData = new ArrayList<Object>();
 		for(int i=0; i<list.size(); i++){
-			Map<String, String> column = new HashMap<String, String>();
-
-			Object row = list.get(i);
-			ObjectInstance instance = (ObjectInstance) type.createInstance();
-			instance.setObject(row);
-			
-			for(FieldDescriptor fd : type.getFieldDescriptors()){
-				column.put(fd.getName(), instance.getFieldValue(fd.getName()).toString());
-			}
-			
-			data.add(column);
+			arrData.add(list.get(i));
 		}
+		
+		setData(arrData);
 
 	}
 
