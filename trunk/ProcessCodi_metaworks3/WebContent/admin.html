@@ -59,7 +59,13 @@
 <link rel="stylesheet" type="text/css" href="style/groupware.css" />
 <link rel="stylesheet" type="text/css" href="style/flowchart.css" />
 
-
+<script>
+	$(function() {
+		$( "input:submit, a, button", ".demo" ).button();
+		$( "a", ".demo" ).click(function() { return false; });
+	});
+</script>
+	
 <script type="text/javascript">
 	google.load('visualization', '1', {
 		packages : [ 'corechart', 'gauge' ]
@@ -85,7 +91,23 @@
 
 	var mainPage
 
+	
+	Metaworks3.prototype.showError = function(objId, message, methodName){
+		var infoDivId = "#"+this._getInfoDivId(objId);
+
+		$(infoDivId).html("<center><font color=red> " + message + "<input type=button onclick=\"mw3.getObject('" + objId + "')."+ methodName + "()\" value='RETRY'></font></center>");
+		
+		
+		alert(message);
+	}
+
+	
+	
 	$(document).ready(function() {
+		
+//		$( "input:submit, a, button", ".demo" ).button();
+//		$( "a", ".demo" ).click(function() { return false; });
+				
 		var request = new Request();
 	
 		$("#defId").val(request.getParameter("defId"));
@@ -97,6 +119,12 @@
 			__className : "org.uengine.codi.mw3.model.LoginAdmin"
 
 		}, '#mainPage');
+		
+
+		window.onbeforeunload= function(){
+		    return 'You are about to leave this page, OK?';
+		};
+		 
 	});
 </script>
 </head>
