@@ -1,4 +1,5 @@
-var lastsel;
+var lastRowId;
+var lastColId;
 
 var org _metaworks_widget_grid_Grid= function(objectId, className){
 	this.objectId = objectId;
@@ -19,13 +20,26 @@ var org _metaworks_widget_grid_Grid= function(objectId, className){
 	   	],
 	    viewrecords: true,
 	    cellEdit : true,
-	   	onSelectRow: function(id){
-			if(id && id!==lastsel){
-				jQuery('#grid_' + this.objectId).jqGrid('restoreRow', "'" + lastsel + "'");
-				jQuery('#grid_' + this.objectId).jqGrid('editRow', "'"+ id + "'", true);
-				lastsel=id;
-			}
-		},
+	    onCellSelect : function(rowid, iCol, cellcontent) {
+	    	//alert("rowid : " + rowid + ", col : " + iCol + ", content : " + cellcontent);
+	    	if(rowid && iCol && (rowid !== lastRowId || iCod !== lastColId)) {
+	    		var cell = {
+	    				__className :"org.metaworks.widget.grid.GridCell" ,
+	    				row : rowid,
+	    				col : iCol,
+	    				content : cellcontent
+	    		};
+	    		grid.cell = cell;
+	    		
+	    		grid.data = null;
+	    			
+	    		grid = grid.changeCell();
+	    		
+	    		alert(grid.cell.contents);
+	    	}
+	    	lastRowId = rowid;
+	    	lastColId = iCol;
+	    },
 		editurl: "local",
 	   	caption: "Manipulating Array Data"
 	});
