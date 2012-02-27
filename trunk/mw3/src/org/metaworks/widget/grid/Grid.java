@@ -10,44 +10,44 @@ import org.metaworks.annotation.ServiceMethod;
 public class Grid {
 	
 	String[] columnNames;
+		public String[] getColumnNames() {
+			return columnNames;
+		}
+		
+		public void setColumnNames(String[] columnNames) {
+			this.columnNames = columnNames;
+		}
+		
 	
-	String columnModel;
+	Map<String, Column> columnModel;
+		public Map<String, Column> getColumnModel() {
+			return columnModel;
+		}
 	
+		public void setColumnModel(Map<String, Column> columnModel) {
+			this.columnModel = columnModel;
+		}
+
+
 	List<Map<String, String>> data;
+		public List<Map<String, String>> getData() {
+			return data;
+		}
+		
+		public void setData(List<Map<String, String>> data) {
+			this.data = data;
+		}
+		
 
 	GridCell cell;
+		public GridCell getCell() {
+			return cell;
+		}
+		
+		public void setCell(GridCell cell) {
+			this.cell = cell;
+		}
 	
-	public String[] getColumnNames() {
-		return columnNames;
-	}
-
-	public void setColumnNames(String[] columnNames) {
-		this.columnNames = columnNames;
-	}
-
-	public String getColumnModel() {
-		return columnModel;
-	}
-
-	public void setColumnModel(String columnModel) {
-		this.columnModel = columnModel;
-	}
-
-	public List<Map<String, String>> getData() {
-		return data;
-	}
-
-	public void setData(List<Map<String, String>> data) {
-		this.data = data;
-	}
-	
-	public GridCell getCell() {
-		return cell;
-	}
-
-	public void setCell(GridCell cell) {
-		this.cell = cell;
-	}
 
 	@ServiceMethod
 	public void init(){
