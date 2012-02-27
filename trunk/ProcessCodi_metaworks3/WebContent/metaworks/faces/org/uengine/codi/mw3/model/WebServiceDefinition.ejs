@@ -1,0 +1,57 @@
+
+
+<h3>Import From Web</h3>
+
+<table>
+	
+	<%
+		var whenContext = mw3.when;
+		var whereContext = mw3.where;
+		
+		
+		if(whereContext == "step1") {
+	%>
+	<tr>
+		<td>WSDL URL:</td>
+	</tr>
+	<tr>
+		<td><%=fields.wsdlUrl.here()%></td>
+	</tr>
+	
+	<%
+		} else if(whereContext == "step2") {
+	%>
+	
+	<tr>
+		<td>Name</td>
+		<td><%=fields.name.here()%></td>
+	</tr>
+	<tr>
+		<td>Package Name</td>
+		<td><%=fields.targetPackage.here()%></td>
+	</tr>
+	<tr>
+		<td>Compile Option</td>
+		<td><%=fields.compileOption.here()%></td>
+	</tr>
+	
+	<%
+		}
+	%>
+	
+	<tr>
+		<td>
+			<table>
+				<tr>
+					<%
+						if(whereContext == "step1") {
+					%>
+					<td><%=methods.next.here()%></td>
+					<% } else if(whereContext == "step2") { %>
+					<td><%=methods.generateAdapter.here()%></td>
+					<% } %>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
