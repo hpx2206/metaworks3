@@ -1,58 +1,58 @@
 <%
-if(value!=null){
-	console.debug(value);
-%>
-	<div id="actionButton">
-		<%=methods.save.here()%>
 
+console.debug("entityDefinition");
+console.debug(value);
+
+if(value){	
+%>
+
+
+<table cellpadding = 10>
+	<tr><td width=400>
+
+		<table>
+		<tr>
+		
+			<td width=90>
+			<font color="#5599dd" face="Eurostile">
+			Package Name:
+			</font>
+			</td>			
+			<td>
+			<%=fields.packageName.here()%>
+			</td>
+		
+			<td width=80>
+			<font color="#5599dd" face="Eurostile">
+			Class Name:
+			</font>
+			</td>			
+			<td><%=fields.entityName.here()%></td>		
+		</tr>
+		<tr>
+			<td>
+				<font color="#5599dd" face="Eurostile">Author:</font>
+			</td>
+			<td colspan=3>
+				<%=fields.author.here()%>
+			</td>
+		</tr>		
+		</table>
+	</td></tr>
+	<tr><td>
+		<%=methods.next1.here()%>
+		<%=methods.next2.here()%>
+		
 		<%=methods.dropTable.here()%>
 		<%=methods.createTable.here()%>
-		<%=methods.generateDDL.here()%>
-		<%=methods.generateDaoInterface.here()%>
-		<%=methods.generateDaoImplementation.here()%>
-				
-	</div>
-	
-	<div id="entityInfo">
-		<table>
-			<tr>
-				<td>Package Name</td>
-				<td><%=fields.packageName.here()%></td>
-			</tr>		
-			<tr>
-				<td>Entity Name</td>
-				<td><%=fields.entityName.here()%></td>
-			</tr>
-		</table>
-	</div>
-				
-	<div id="entityField">
-		Columns<br />
-		<table>
-			<tr>
-				<td width="60px">Key</td>
-				<td width="200px">Name</td>
-				<td width="140px">Datatype</td>
-				<td width="70px">Length/Set</td>
+		<%=methods.generateDao.here()%>
+	</td></tr>
+	<tr><td>
+		<%=fields.entityModeler.here()%>
+		<%=fields.querySourceCode.here()%>
+	</td></tr>
+</table>
 
-				<td width="60px">Allow Null</td>
-				<td width="200px">Default</td>
-				<td width="200px">Comment</td>
-				<td width="300px">&nbsp;</td>
-				<td width="30px">&nbsp;</td>
-			</tr>
-		</table>
 <%
-	if(value.entityFields != null){	
-		for(var i=0; i<value.entityFields.length; i++){		
-%>
-		<%=mw3.locateObject(value.entityFields[i], value.entityFields[i].__className)%>
-<%
-		}	
 	}
-%>		
-		<%=fields.newEntityField.here()%>
-	</div>
-<%
-}
 %>

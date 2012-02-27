@@ -1,9 +1,11 @@
-
-
-
 <%
-	var width = descriptor.getOptionValue('width');
-	var height = descriptor.getOptionValue('height');
+	var width = null;
+	var height = null;
+
+	if(descriptor!=null){
+		width = descriptor.getOptionValue('width');
+		height = descriptor.getOptionValue('height');
+	}
 	
 	if(width==null) width = 700;
 	if(height==null) height = 600;
