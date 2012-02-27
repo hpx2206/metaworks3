@@ -14,6 +14,7 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Test;
 import org.metaworks.dao.TransactionContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.admin.ClassDefinition;
 import org.uengine.processmanager.ProcessManagerRemote;
 
@@ -63,7 +64,7 @@ public class WebServiceDefinition  {
 	}
 	
 	@Available(where="step1")
-	@Test(value="'test'", next="name", testName="Service Name", instruction="'WSDL URL 을 입력하세요.")
+	@Test(value="'test'", next="name", instruction="'WSDL URL 을 입력하세요.")
 	public String getWsdlUrl() {
 		return wsdlUrl;
 	}
@@ -109,8 +110,7 @@ public class WebServiceDefinition  {
 			
 		}
 		
-		String rootPath = "/Users/roomnine/codebase/"+ userId + "/src/";
-		
+		String rootPath = CodiClassLoader.getMyClassLoader().sourceCodeBase();		
 		
 		WSDLToJava.main(new String[] {
 				"-client",
