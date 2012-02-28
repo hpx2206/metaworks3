@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.WebFieldDescriptor;
 import org.metaworks.WebObjectType;
 import org.metaworks.annotation.Available;
@@ -354,7 +355,7 @@ public class EntityDefinition implements ContextAware, PropertyListable, NeedArr
 		
 		String packageName = getPackageName();
 		String entityName = getEntityName();
-
+		String variableName = entityName.substring(0,1).toLowerCase() + entityName.substring(1);
 		
 		ClassDefinition classDefinition = new ClassDefinition();
 		classDefinition.processManager = processManager; 
@@ -368,7 +369,10 @@ public class EntityDefinition implements ContextAware, PropertyListable, NeedArr
 		if(packageName != null)
 			sb.append("package ").append(getPackageName()).append(";\n\n");
 		
-		sb	.append("import org.metaworks.dao.Database;\n\n")
+		sb	.append("import org.metaworks.dao.Database;\n")
+			.append("import org.metaworks.widget.grid.DatabaseGrid;\n")
+			.append("import org.uengine.codi.mw3.model.Popup;\n\n")
+			
 			.append("public class " + entityName).append(" extends Database").append("<I" +  entityName + ">").append(" implements ").append("I").append(entityName).append("{\n\n");
 		
 		for(int i=0; i<entityFields.size(); i++){
@@ -427,6 +431,20 @@ public class EntityDefinition implements ContextAware, PropertyListable, NeedArr
 				.append("	public void delete() throws Exception{\n")
 				.append("		deleteDatabaseMe();\n")
 				.append("	}\n\n")
+				
+				.append("	public Popup showGrid() throws Exception{\n")
+				.append("		I" + entityName + " " + variableName + " = (I" + entityName + ")sql(I" + entityName + ".class, \"SELECT * FROM " + variableName + "\");\n")
+				.append("		" + variableName + ".select();\n")
+				.append("		\n")
+				.append("		DatabaseGrid grid = new DatabaseGrid();\n")
+				.append("		grid.setObjectData(I" + entityName + ".class, " + variableName + ");\n")
+				.append("		\n")
+				.append("		Popup popup = new Popup(1000,300);\n")
+				.append("		popup.setPanel(grid);\n")
+				.append("		\n")
+				.append("		return popup;\n")
+				.append("	}\n\n")
+				
 		;
 		
 		sb.append("}");
@@ -458,9 +476,11 @@ public class EntityDefinition implements ContextAware, PropertyListable, NeedArr
 		if(packageName != null)
 			sb.append("package ").append(getPackageName()).append(";\n\n");
 		
-		sb	.append("import org.metaworks.dao.IDAO;\n")
-			.append("import org.metaworks.annotation.ServiceMethod;\n")
-			.append("import javax.persistence.Id;\n\n")
+		sb	.append("import javax.persistence.Id;\n\n")
+			.append("import org.metaworks.ServiceMethodContext;\n")
+			.append("import org.metaworks.dao.IDAO;\n")			
+			.append("import org.metaworks.annotation.ServiceMethod;\n")			
+			.append("import org.uengine.codi.mw3.model.Popup;\n\n")
 			
 			.append("public interface ").append(entityName).append(" extends IDAO{\n\n");
 		
@@ -518,6 +538,10 @@ public class EntityDefinition implements ContextAware, PropertyListable, NeedArr
 		
 		.append("	@ServiceMethod\n")
 		.append("	public void delete() throws Exception;\n\n")
+		
+		.append("	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)\n")
+		.append("	public Popup showGrid() throws Exception;\n\n")
+		
 		;
 
 		sb.append("}");
