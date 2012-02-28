@@ -750,6 +750,13 @@
 				if(beanPaths)
 				for(var propName in beanPaths){
 					var beanPath = beanPaths[propName];
+
+					var obj = this.objects[beanPath.valueObjectId];
+
+					var objKey = this._createObjectKey(obj);
+					this.objectId_KeyMapping[objKey] = null;
+					
+
 					this.objects[beanPath.valueObjectId] = null;
 					this.faceHelpers[beanPath.valueObjectId] = null;
 					
