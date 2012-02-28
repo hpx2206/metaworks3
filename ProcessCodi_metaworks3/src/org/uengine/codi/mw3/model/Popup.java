@@ -9,8 +9,13 @@ import org.metaworks.annotation.ServiceMethod;
 public class Popup implements ContextAware {
 	
 	public Popup(){
-		
+		this(400,300);
 	}
+	
+	public Popup(int width, int height){
+		setWidth(width);
+		setHeight(height);
+	}	
 	
 	Object panel;
 		public Object getPanel() {
@@ -35,6 +40,22 @@ public class Popup implements ContextAware {
 		public void setName(String name) {
 			this.name = name;
 		}
+		
+	int width;	
+		public int getWidth() {
+			return width;
+		}
+		public void setWidth(int width) {
+			this.width = width;
+		}
+
+	int height;
+		public int getHeight() {
+			return height;
+		}
+		public void setHeight(int height) {
+			this.height = height;
+		}	
 	
 	@ServiceMethod(when=MetaworksContext.WHEN_NEW, callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 	public Popup openPopup(){
