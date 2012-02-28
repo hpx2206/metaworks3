@@ -32,20 +32,27 @@ public class ObjectGrid extends Grid{
 		
 		
 		for(int i=0; i<type.getFieldDescriptors().length; i++){
-			String displayName = wot.getFieldDescriptors()[i].getName();
+			
+			
 			String fieldName = wot.getFieldDescriptors()[i].getName();
-			FieldDescriptor fd = type.getFieldDescriptors()[i];
-			//if(fd.getAttribute("hidden"))
-			columnNamesInList.add(fieldName);
 			
-			Column column = new Column();
-			column.setName(fieldName);
-			column.setIndex(displayName);
-			column.setEditable(fd.isUpdatable());
-//			column.setWidth(fd.getAttribute("size"));
-			column.setIndex(fieldName);
-			
-			columnModel.put(fieldName, column);
+			if(!fieldName.equals("metaworksContext")){
+				String displayName = wot.getFieldDescriptors()[i].getName();
+				
+				FieldDescriptor fd = type.getFieldDescriptors()[i];
+				
+				//if(fd.getAttribute("hidden"))
+				columnNamesInList.add(fieldName);
+				
+				Column column = new Column();
+				column.setName(fieldName);
+				column.setIndex(displayName);
+				column.setEditable(fd.isUpdatable());
+	//			column.setWidth(fd.getAttribute("size"));
+				column.setIndex(fieldName);
+				
+				columnModel.put(fieldName, column);
+			}
 //			getters.put(fd.getName(), dataClass.getMethod("get" + fd.getName(), parameterTypes))
 		}
 
