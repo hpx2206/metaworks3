@@ -3,6 +3,7 @@ package org.uengine.codi.mw3.model;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.net.URL;
 
 import org.apache.cxf.tools.wsdlto.WSDLToJava;
 import org.metaworks.MetaworksContext;
@@ -64,7 +65,13 @@ public class WebServiceDefinition  {
 	}
 	
 	@Available(where="step1")
-	@Test(value="'test'", next="name", instruction="'WSDL URL 을 입력하세요.")
+	@Test(
+			scenario="WebServiceDefinition", 
+			starter=true,
+			value="'test'", 
+			instruction="'test'를 입력하세요.", 
+			next="generateAdapter()"
+			)
 	public String getWsdlUrl() {
 		return wsdlUrl;
 	}
@@ -123,6 +130,7 @@ public class WebServiceDefinition  {
 				getWsdlUrl()
 			});
 		
+		
 		String inTargetPackage = getTargetPackage() + "." + name;
 		String filePath = rootPath + "/" + inTargetPackage.replace(".", "/");
 		
@@ -135,7 +143,7 @@ public class WebServiceDefinition  {
 		    for(int i = 0; i < arrFile.length; i++){
 		    	ClassDefinition classDefinition = new ClassDefinition();
 		    	classDefinition.processManager = processManager; 
-				classDefinition.setParentFolder(getParentFolder().toString());
+				classDefinition.setParentFolder("1");
 				classDefinition.setPackageName(getTargetPackage() + "." + name);
 				classDefinition.setClassName(arrFile[i].getName().replace(".java", ""));	
 				
@@ -158,11 +166,37 @@ public class WebServiceDefinition  {
 	
 	@ServiceMethod(callByContent=true ,where="step1", when="edit") 
 	public void next() throws Exception  {
+		
 		getMetaworksContext().setWhen("edit");
 		getMetaworksContext().setWhere("step2");
+		
+		URL targetUrl = new URL(wsdlUrl);
+		setTargetPackage(targetUrl.getHost());
+		String serviceName = "";
+		
+		int slashIdx = targetUrl.getPath().lastIndexOf("/");
+		int tokenIndex = 0;
+		
+		if(targetUrl.getPath().contains(".wsdl")) {
+			tokenIndex = targetUrl.getPath().lastIndexOf(".wsdl");
+			tokenIndex -= 1;
+		} else if(targetUrl.getPath().contains("?wsdl")) {
+			tokenIndex = targetUrl.getPath().lastIndexOf("?wsdl");
+			tokenIndex -= 1;
+		} else {
+			tokenIndex = targetUrl.getPath().length();
+		}
+		
+		serviceName = targetUrl.getPath().substring(slashIdx + 1, tokenIndex);
+		setName(serviceName);
+		
+//		targetUrl.getPath().lastIndexOf("/");
+//		targetUrl.getPath().lastIndexOf(".");
+//		targetUrl.getPath().lastIndexOf("?");
+		
 	}
 	
-	@ServiceMethod(callByContent=true ,where="step1", when="edit") 
+	@ServiceMethod(callByContent=true ,where="step2", when="edit") 
 	public void previous() throws Exception  {
 		getMetaworksContext().setWhen("edit");
 		getMetaworksContext().setWhere("step1");
