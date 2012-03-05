@@ -762,7 +762,7 @@ public class WebObjectType{
 					
 					final Face face = (Face)annotation;
 					
-					if(face==null || face.ejsPath()==null){
+					if(face==null || face.ejsPath().length() == 0){
 					
 						String componentPath = getComponentLocation(clazz, "faces", false, false, "ejs");
 						

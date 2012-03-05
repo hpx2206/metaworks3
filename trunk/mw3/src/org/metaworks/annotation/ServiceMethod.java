@@ -23,7 +23,7 @@ public @interface ServiceMethod {
 	String[] payload() default {};
 	String[] except() default {};
 	
-	String[] keyBinding() default "";
+	String[] keyBinding() default {};
 	
 	String mouseBinding() default "";
 	

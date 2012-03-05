@@ -117,6 +117,10 @@ public class MetaworksConverter extends BeanConverter{
 						throw new ConversionException(paramType, e);
 					}
 				}else{
+					
+					if(!paramType.isArray())
+						paramType = Object[].class;
+					
 					return arrayConverter.convertInbound(paramType, data);
 				}
 				
@@ -159,7 +163,7 @@ public class MetaworksConverter extends BeanConverter{
 				throw new ConversionException(paramType, "Service Object should have constructor with empty parameter. Add new Constructor with no argument into " + paramType.getName() + ". 문제를 해결하려면 다음 클래스에 아규먼트가 하나도 없는 생성자를 추가해주세요--> " + paramType.getName(), e);
 			}catch (Exception e) {
 				// TODO Auto-generated catch block
-				throw new ConversionException(paramType, "Service Object should have constructor with empty parameter since it should be instantiated with no argument constructor", e);
+				throw new ConversionException(paramType, "Service Object couldn't be instantiated due to : " +  e.getClass(), e);
 			}
 		}
     	
