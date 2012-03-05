@@ -182,10 +182,13 @@ public class WebObjectType{
 		setName(objectType.getName());
 		setInterface(actCls.isInterface());
 		
+		ArrayList<Class> tryingClasses = new ArrayList<Class>();
 		superClasses = new ArrayList<String>();
 		Class superCls = actCls;
 		while(superCls!=Object.class && superCls!=null && Database.class!=superCls){
 			superClasses.add(superCls.getName());
+			tryingClasses.add(superCls);
+			
 			superCls = superCls.getSuperclass();
 		}
 
@@ -205,6 +208,7 @@ public class WebObjectType{
 					}
 					
 					interfaceNames.add(interfaces[i].getName());
+					tryingClasses.add(interfaces[i]);
 				}
 			}
 			
@@ -212,7 +216,7 @@ public class WebObjectType{
 		}
 
 		//setting face
-		Face typeFace = (Face)getAnnotationDeeply(actCls, iDAOClass, null, Face.class);
+		Face typeFace = (Face)getAnnotationDeeply(tryingClasses, null, Face.class);
 		
 		if(typeFace!=null && typeFace.ejsPathMappingByContext().length > 0){
 			setFaceMappingByContext(typeFace.ejsPathMappingByContext());
@@ -234,12 +238,14 @@ public class WebObjectType{
 			if(typeFace.ejsPathForArray().length() > 0)
 				setFaceForArray(typeFace.ejsPath());
 			
-		}else
-			setFaceComponentPath(getComponentLocationByEscalation(actCls, "faces"));
-	
-		if(this.iDAOClass!=null && getFaceComponentPath()==null){
-			setFaceComponentPath(getComponentLocationByEscalation(iDAOClass, "faces"));
 		}
+		
+//		else
+//			setFaceComponentPath(getComponentLocationByEscalation(actCls, "faces"));
+//	
+//		if(this.iDAOClass!=null && getFaceComponentPath()==null){
+//			setFaceComponentPath(getComponentLocationByEscalation(iDAOClass, "faces"));
+//		}
 
 //		//setting for ejs.js
 //		setFaceHelperPath(getComponentLocationByEscalation(actCls, "faces", "ejs.js"));
@@ -258,9 +264,9 @@ public class WebObjectType{
 		
 		try{
 			
-			javax.persistence.Table ejb3Table = (javax.persistence.Table) getAnnotationDeeply(actCls, iDAOClass, null, javax.persistence.Table.class);
+			javax.persistence.Table ejb3Table = (javax.persistence.Table) getAnnotationDeeply(tryingClasses, null, javax.persistence.Table.class);
 			
-			org.metaworks.annotation.Table metaworksTable = (org.metaworks.annotation.Table) getAnnotationDeeply(actCls, iDAOClass, null, org.metaworks.annotation.Table.class);
+			org.metaworks.annotation.Table metaworksTable = (org.metaworks.annotation.Table) getAnnotationDeeply(tryingClasses, null, org.metaworks.annotation.Table.class);
 			
 			if(metaworksTable != null && metaworksTable.name().length() > 0)
 				objectType.setName(metaworksTable.name());
@@ -269,7 +275,7 @@ public class WebObjectType{
 			else
 				objectType.setName(getClassNameOnly(actCls));
 				
-			org.metaworks.annotation.Face objectFace = (Face) getAnnotationDeeply(actCls, iDAOClass, null, Face.class);
+			org.metaworks.annotation.Face objectFace = (Face) getAnnotationDeeply(tryingClasses, null, Face.class);
 			if(objectFace != null && objectFace.displayName().length() > 0)
 				setDisplayName(objectFace.displayName());
 			else{
@@ -327,19 +333,19 @@ public class WebObjectType{
 			
 			boolean isKeyField = false;
 
-			if(getAnnotationDeeply(actCls, iDAOClass, fd.getName(), NonSavable.class)!=null)
+			if(getAnnotationDeeply( tryingClasses, fd.getName(), NonSavable.class)!=null)
 				fd.setSavable(false);
 
-			if(getAnnotationDeeply(actCls, iDAOClass, fd.getName(), Name.class)!=null)
+			if(getAnnotationDeeply(tryingClasses, fd.getName(), Name.class)!=null)
 				fd.setAttribute("nameField", new Boolean(true));
 
-			if(getAnnotationDeeply(actCls, iDAOClass, fd.getName(), Children.class)!=null)
+			if(getAnnotationDeeply(tryingClasses, fd.getName(), Children.class)!=null)
 				fd.setAttribute("children", new Boolean(true));
 
-			if(getAnnotationDeeply(actCls, iDAOClass, fd.getName(), NonLoadable.class)!=null)
+			if(getAnnotationDeeply(tryingClasses, fd.getName(), NonLoadable.class)!=null)
 				fd.setLoadable(false);
 
-			Hidden hidden = (Hidden) getAnnotationDeeply(actCls, iDAOClass, fd.getName(), Hidden.class);
+			Hidden hidden = (Hidden) getAnnotationDeeply(tryingClasses, fd.getName(), Hidden.class);
 			if(hidden !=null){
 				
 				if(hidden.when().length() > 1){
@@ -352,13 +358,13 @@ public class WebObjectType{
 					fd.setAttribute("hidden", hidden.on());
 			}
 
-			if(getAnnotationDeeply(actCls, iDAOClass, fd.getName(), AutowiredToClient.class)!=null)
+			if(getAnnotationDeeply(tryingClasses, fd.getName(), AutowiredToClient.class)!=null)
 				fd.setAttribute("autowiredToClient", new Boolean(true));
 
-			if(getAnnotationDeeply(actCls, iDAOClass, fd.getName(), NonEditable.class)!=null)
+			if(getAnnotationDeeply(tryingClasses, fd.getName(), NonEditable.class)!=null)
 				fd.setAttribute("nonEditable", new Boolean(true));
 			
-			Available available = (Available) getAnnotationDeeply(actCls, iDAOClass, fd.getName(), Available.class); 
+			Available available = (Available) getAnnotationDeeply(tryingClasses, fd.getName(), Available.class); 
 			if(available!=null && available.when().length > 0){
 				Map whens = new HashMap();
 				for(String when : available.when()){
@@ -369,7 +375,7 @@ public class WebObjectType{
 			}
 
 			
-			Resource resourceAnnotation = (Resource) getAnnotationDeeply(actCls, iDAOClass, fd.getName(), Resource.class);
+			Resource resourceAnnotation = (Resource) getAnnotationDeeply(tryingClasses, fd.getName(), Resource.class);
 			if(resourceAnnotation !=null){
 
 				XStream xstream = new XStream(/*new DomDriver()*/);
@@ -407,18 +413,18 @@ public class WebObjectType{
 				setDesignable(true);
 			}
 			
-			if(getAnnotationDeeply(actCls, iDAOClass, fd.getName(), RepresentativeImagePath.class)!=null){
+			if(getAnnotationDeeply(tryingClasses, fd.getName(), RepresentativeImagePath.class)!=null){
 				fd.setAttribute("representativeImagePath", new Boolean(true));
 			}
 			
 			Testing tests;
 			Test[] testsArr;
-			if((tests = (Testing) getAnnotationDeeply(actCls, iDAOClass, fd.getName(), Testing.class))!=null){
+			if((tests = (Testing) getAnnotationDeeply(tryingClasses, fd.getName(), Testing.class))!=null){
 				testsArr = tests.value();
 			}else{
 				
 				Test test;
-				if((test = (Test) getAnnotationDeeply(actCls, iDAOClass, fd.getName(), Test.class))!=null){
+				if((test = (Test) getAnnotationDeeply(tryingClasses, fd.getName(), Test.class))!=null){
 
 					testsArr = new Test[]{test};
 				}else{
@@ -460,13 +466,13 @@ public class WebObjectType{
 			
 			
 			ORMapping orm;
-			if((orm = (ORMapping) getAnnotationDeeply(actCls, iDAOClass, fd.getName(), ORMapping.class))!=null){
+			if((orm = (ORMapping) getAnnotationDeeply(tryingClasses, fd.getName(), ORMapping.class))!=null){
 				fd.setAttribute("ormapping", orm);
 			}
 			
 			
 			TypeSelector typeSelector;
-			if((typeSelector = (TypeSelector) getAnnotationDeeply(actCls, iDAOClass, fd.getName(), TypeSelector.class))!=null){
+			if((typeSelector = (TypeSelector) getAnnotationDeeply(tryingClasses, fd.getName(), TypeSelector.class))!=null){
 				Map<String, String> typeSelections = new HashMap<String, String>();
 				for(int j=0; j<typeSelector.values().length; j++){
 					typeSelections.put(typeSelector.values()[j], typeSelector.classes()[j].getName());
@@ -476,7 +482,7 @@ public class WebObjectType{
 			}
 			
 			
-			Face face = (Face) getAnnotationDeeply(actCls, iDAOClass, fd.getName(), Face.class);
+			Face face = (Face) getAnnotationDeeply(tryingClasses, fd.getName(), Face.class);
 			if(face!=null){
 				
 				if(face.ejsPath().length() >0 || face.options().length > 0 || face.values().length > 0){
@@ -494,7 +500,7 @@ public class WebObjectType{
 				}
 			}
 		
-			Range range = (Range) getAnnotationDeeply(actCls, iDAOClass, fd.getName(), Range.class);
+			Range range = (Range) getAnnotationDeeply(tryingClasses, fd.getName(), Range.class);
 			if(range!=null){
 				if(range.options().length > 0){
 					SelectInput selectInput = new SelectInput();
@@ -512,8 +518,8 @@ public class WebObjectType{
 			}
 
 
-			if(getAnnotationDeeply(actCls,iDAOClass, fd.getName(), Id.class)!=null 
-					|| getAnnotationDeeply(actCls,iDAOClass, fd.getName(), javax.persistence.Id.class)!=null){
+			if(getAnnotationDeeply(tryingClasses, fd.getName(), Id.class)!=null 
+					|| getAnnotationDeeply(tryingClasses, fd.getName(), javax.persistence.Id.class)!=null){
 				isKeyField = true;
 				keyField = fd;
 			}
@@ -541,31 +547,31 @@ public class WebObjectType{
 
 		serviceMethodContexts = new HashMap<String, ServiceMethodContext>();
 		for(Method method : actCls.getMethods()){
-			ServiceMethod annotation = method.getAnnotation(ServiceMethod.class);
-			Face face = method.getAnnotation(Face.class);
-			Children children = method.getAnnotation(Children.class);
-			Name name = method.getAnnotation(Name.class);
-			Available available =  method.getAnnotation(Available.class);
-			Hidden hidden =  method.getAnnotation(Hidden.class);
-			Testing testSet = method.getAnnotation(Testing.class);
-			Test test = method.getAnnotation(Test.class);
+			ServiceMethod annotation = (ServiceMethod) getAnnotationDeeply(tryingClasses, method.getName(), ServiceMethod.class, false);
+			Face face = (Face) getAnnotationDeeply(tryingClasses, method.getName(), Face.class, false);
+			Children children = (Children) getAnnotationDeeply(tryingClasses, method.getName(), Children.class, false);
+			Name name = (Name) getAnnotationDeeply(tryingClasses, method.getName(), Name.class, false);
+			Available available =  (Available) getAnnotationDeeply(tryingClasses, method.getName(), Available.class, false);
+			Hidden hidden =  (Hidden) getAnnotationDeeply(tryingClasses, method.getName(), Hidden.class, false);
+			Testing testSet = (Testing) getAnnotationDeeply(tryingClasses, method.getName(), Testing.class, false);
+			Test test = (Test) getAnnotationDeeply(tryingClasses, method.getName(), Test.class, false);
 			
-			if(annotation==null && iDAOClass != null){
-				try{
-					annotation = iDAOClass.getMethod(method.getName(), new Class[]{}).getAnnotation(ServiceMethod.class);
-					face = iDAOClass.getMethod(method.getName(), new Class[]{}).getAnnotation(Face.class);
-					children = iDAOClass.getMethod(method.getName(), new Class[]{}).getAnnotation(Children.class);
-					name = iDAOClass.getMethod(method.getName(), new Class[]{}).getAnnotation(Name.class);
-					available = iDAOClass.getMethod(method.getName(), new Class[]{}).getAnnotation(Available.class);
-					hidden = iDAOClass.getMethod(method.getName(), new Class[]{}).getAnnotation(Hidden.class);
-					testSet = iDAOClass.getMethod(method.getName(), new Class[]{}).getAnnotation(Testing.class);
-					test = iDAOClass.getMethod(method.getName(), new Class[]{}).getAnnotation(Test.class);
-					
-				}catch(Exception e){
-					
-				}
-			}
-			
+//			if(annotation==null && iDAOClass != null){
+//				try{
+//					annotation = iDAOClass.getMethod(method.getName(), new Class[]{}).getAnnotation(ServiceMethod.class);
+//					face = iDAOClass.getMethod(method.getName(), new Class[]{}).getAnnotation(Face.class);
+//					children = iDAOClass.getMethod(method.getName(), new Class[]{}).getAnnotation(Children.class);
+//					name = iDAOClass.getMethod(method.getName(), new Class[]{}).getAnnotation(Name.class);
+//					available = iDAOClass.getMethod(method.getName(), new Class[]{}).getAnnotation(Available.class);
+//					hidden = iDAOClass.getMethod(method.getName(), new Class[]{}).getAnnotation(Hidden.class);
+//					testSet = iDAOClass.getMethod(method.getName(), new Class[]{}).getAnnotation(Testing.class);
+//					test = iDAOClass.getMethod(method.getName(), new Class[]{}).getAnnotation(Test.class);
+//					
+//				}catch(Exception e){
+//					
+//				}
+//			}
+//			
 
 			
 			if(method.getParameterTypes().length == 0 && annotation!=null){
@@ -582,7 +588,40 @@ public class WebObjectType{
 				
 				smc.setNameGetter(name!=null? true:false);
 				smc.setChildrenGetter(children!=null? true:false);
+				
+				if(annotation.mouseBinding().length() > 0){
+					smc.setMouseBinding(annotation.mouseBinding());
+				}
+				
+				
+				if(annotation.except().length > 0){
+					Map<String, String> excepList = new HashMap<String, String>();
+					for(String except : annotation.except()){
+						excepList.put(except, except);
+					}
+					smc.setExcept(excepList);
+				}
 
+				if(annotation.payload().length > 0){
+					Map<String, String> payloads = new HashMap<String, String>();
+					for(String payload : annotation.payload()){
+						payloads.put(payload, payload);
+					}
+					smc.setPayload(payloads);
+				}
+				
+				if(annotation.keyBinding().length > 0){
+					
+					List<String> keyBindingList = new ArrayList<String>();
+					for(String binding : annotation.keyBinding()){
+						keyBindingList.add(binding);
+					}
+					
+					smc.setKeyBinding(keyBindingList);
+				}
+
+				smc.setInContextMenu(annotation.inContextMenu());
+				
 				if(face!=null){
 					smc.setDisplayName(face.displayName());
 				}else{
@@ -662,43 +701,123 @@ public class WebObjectType{
 		
 	}
 	
-	static public Annotation getAnnotationDeeply(Class cls, Class iDAOCls, String fieldName, Class annotationCls) throws Exception{
+	static public Annotation getAnnotationDeeply(ArrayList<Class> tryingClasses, String symbol, Class annotationCls) throws Exception{
+		return getAnnotationDeeply(tryingClasses, symbol, annotationCls, true);
+	}
+	
+	static public Annotation getAnnotationDeeply(ArrayList<Class> tryingClasses, String symbol, Class annotationCls, boolean isField) throws Exception{
 		//		Class annotationCls = Thread.currentThread().getContextClassLoader().loadClass("org.metaworks." +annotationName);
 		Annotation annotation = null;
-		Class[] tryingClasses = {cls, iDAOCls};
+		//Class[] tryingClasses = {cls, iDAOCls};
 		
-		for(int i=0; i<tryingClasses.length; i++){
-			Class clazz = tryingClasses[i];
+		for(int i=0; i<tryingClasses.size(); i++){
+			Class clazz = tryingClasses.get(i);
 			
 			if(clazz==null) return null;
 			
-			if(fieldName!=null){
-				Method getter;
-				try {
-					getter = clazz.getMethod("get" + fieldName, new Class[]{});
-					if(getter!=null)
-						annotation = getter.getAnnotation(annotationCls);
-					
-					if(annotation!=null) 
-						return annotation;
-				} catch (NoSuchMethodException e) {
-				}
+			if(symbol!=null){
 				
-				try {
-					getter = clazz.getMethod("is" + fieldName, new Class[]{});
+				if(isField){
+					Method getter;
+					try {
+						getter = clazz.getMethod("get" + symbol, new Class[]{});
+						if(getter!=null)
+							annotation = getter.getAnnotation(annotationCls);
+						
+						if(annotation!=null) 
+							return annotation;
+					} catch (NoSuchMethodException e) {
+					}
 					
-					if(getter!=null)
-						annotation = getter.getAnnotation(annotationCls);
+					try {
+						getter = clazz.getMethod("is" + symbol, new Class[]{});
+						
+						if(getter!=null)
+							annotation = getter.getAnnotation(annotationCls);
+						
+						if(annotation!=null) 
+							return annotation;
+					} catch (NoSuchMethodException e) {
+					}
+				}else{
+					try {
+						Method method = clazz.getMethod(symbol, new Class[]{});
+						
+						if(method!=null)
+							annotation = method.getAnnotation(annotationCls);
+						
+						if(annotation!=null) 
+							return annotation;
+					} catch (NoSuchMethodException e) {
+					}
 					
-					if(annotation!=null) 
-						return annotation;
-				} catch (NoSuchMethodException e) {
 				}
-			}else{
+			}else{//in case that class level's annotation
 				annotation = clazz.getAnnotation(annotationCls);
 				
 				if(annotation!=null) 
 					return annotation;
+				
+				String componentPath = getComponentLocation(clazz, "faces", false, false, "ejs");
+				if(tryToFindComponent("dwr/metaworks/" + componentPath)){
+					componentPath = "dwr/metaworks/" + componentPath;
+				}else
+				if(!tryToFindComponent(componentPath)){
+					
+					componentPath = null;
+					
+				}
+
+				if(componentPath!=null){
+					
+					final String ejsPath = componentPath;
+
+					return new Face() {
+						
+						@Override
+						public Class<? extends Annotation> annotationType() {
+							// TODO Auto-generated method stub
+							return null;
+						}
+						
+						@Override
+						public String[] values() {
+							// TODO Auto-generated method stub
+							return new String[]{};
+						}
+						
+						@Override
+						public String[] options() {
+							// TODO Auto-generated method stub
+							return new String[]{};
+						}
+						
+						@Override
+						public String[] ejsPathMappingByContext() {
+							// TODO Auto-generated method stub
+							return new String[]{};
+						}
+						
+						@Override
+						public String ejsPathForArray() {
+							// TODO Auto-generated method stub
+							return "";
+						}
+						
+						@Override
+						public String ejsPath() {
+							// TODO Auto-generated method stub
+							return ejsPath;
+						}
+						
+						@Override
+						public String displayName() {
+							// TODO Auto-generated method stub
+							return "";
+						}
+					};
+				}
+
 			}
 		}
 
