@@ -757,13 +757,15 @@ public class WebObjectType{
 				}
 			}else{//in case that class level's annotation
 				annotation = clazz.getAnnotation(annotationCls);
-				
-				if(annotation!=null) 
-					return annotation;
-				
-					if(annotationCls == Face.class){
+
+				if(annotationCls == Face.class){
+					
+					final Face face = (Face)annotation;
+					
+					if(face==null || face.ejsPath()==null){
 					
 						String componentPath = getComponentLocation(clazz, "faces", false, false, "ejs");
+						
 						if(tryToFindComponent("dwr/metaworks/" + componentPath)){
 							componentPath = "dwr/metaworks/" + componentPath;
 						}else
@@ -781,49 +783,49 @@ public class WebObjectType{
 								
 								@Override
 								public Class<? extends Annotation> annotationType() {
-									// TODO Auto-generated method stub
 									return null;
 								}
 								
 								@Override
 								public String[] values() {
-									// TODO Auto-generated method stub
-									return new String[]{};
+									return face!=null ? face.values() : new String[]{};
 								}
 								
 								@Override
 								public String[] options() {
-									// TODO Auto-generated method stub
-									return new String[]{};
+									return face!=null ? face.options() : new String[]{};
 								}
 								
 								@Override
 								public String[] ejsPathMappingByContext() {
-									// TODO Auto-generated method stub
-									return new String[]{};
+									return face!=null ? face.ejsPathMappingByContext() : new String[]{};
 								}
 								
 								@Override
 								public String ejsPathForArray() {
-									// TODO Auto-generated method stub
-									return "";
+									return face!=null ? face.ejsPathForArray() : "";
 								}
 								
 								@Override
 								public String ejsPath() {
-									// TODO Auto-generated method stub
 									return ejsPath;
 								}
 								
 								@Override
 								public String displayName() {
-									// TODO Auto-generated method stub
-									return "";
+									return face!=null ? face.displayName() : "";
 								}
 							};
 						}
-						
 					}
+					
+				}
+				
+				
+				if(annotation!=null){
+					
+					return annotation;
+				}
 					
 
 			}
