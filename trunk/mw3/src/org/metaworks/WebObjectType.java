@@ -272,8 +272,13 @@ public class WebObjectType{
 				objectType.setName(metaworksTable.name());
 			else if(ejb3Table!=null)
 				objectType.setName(ejb3Table.name());
-			else
+			else{
 				objectType.setName(getClassNameOnly(actCls));
+
+				if(IDAO.class.isAssignableFrom(actCls) && objectType.getName().startsWith("I"))
+					objectType.setName(objectType.getName().substring(1));
+
+			}
 				
 			org.metaworks.annotation.Face objectFace = (Face) getAnnotationDeeply(tryingClasses, null, Face.class);
 			if(objectFace != null && objectFace.displayName().length() > 0)
