@@ -145,8 +145,105 @@
 				}catch(e){
 					//TODO :  error reporting required
 					//this.debug(e, true);
-					e=e;
-				}		
+					if(console)
+						console.log("Failed to load face helper ("+faceHelperClass+"(ejs.js)): " + e);
+				}
+
+				//load the key bindings 
+				var objectMetadata = this.getMetadata(className);
+				
+				var contextMenuMethods = [];
+				
+				var targetDivId = this._getObjectDivId(objectId);
+				var theDiv = $("#" + targetDivId);
+				
+			   for(var methodName in objectMetadata.serviceMethodContexts){
+			   		var methodContext = objectMetadata.serviceMethodContexts[methodName];
+
+			   		var command = "mw3.call("+objectId+", '"+methodName+"')";
+	   			
+		   		
+		   			if(methodContext.keyBinding && methodContext.keyBinding.length > 0){
+		   				
+		   				for(var i=0; i<methodContext.keyBinding.length; i++){
+
+		   					var keyBinding = methodContext.keyBinding[i];
+		   					
+		   					shortcut.add(keyBinding, function() {
+		   						eval(command);
+		   					},{
+		   						target: targetDivId
+		   					});
+		   				}
+		   			}
+		   			
+		   			if(methodContext.mouseBinding){
+		   	
+		   				var which = 3;
+		   				if(methodContext.mouseBinding == "right")
+		   					which = 3;
+		   				else if(methodContext.mouseBinding == "left")
+		   					which = 1;
+		   
+		   			    theDiv[0].addEventListener(
+		   			 		"mouseup",
+
+		   			    	function(e) {
+		   			 			
+		   			 			if(e.which == which){
+			   						eval(command);
+		   			 				e.stopPropagation(); //stops to propagate to parent that means consumes the event here.
+		   			 			}
+		   			 		},
+		   			 		
+		   			 		false //event bubbling, not the capturing
+		   			 	);
+		   			}
+		   			
+		   			if(methodContext.inContextMenu){
+		   				contextMenuMethods[contextMenuMethods.length] = methodContext;
+		   			}
+
+			   }
+			   
+			   if(contextMenuMethods.length > 0){
+				   
+				   var menuItems = [];
+					
+				   for(var i=0; i<contextMenuMethods.length; i++){
+					   var serviceMethodContext = contextMenuMethods[i];
+				   		var command = "mw3.call("+objectId+", '"+serviceMethodContext.methodName+"')";
+				   		
+				   		if(serviceMethodContext.needToConfirm)
+				   			command = "if (confirm(\'Are you sure to "+serviceMethodContext.displayName+" this?\'))" + command;
+				   		
+					   var menuItem = { 
+							   text: serviceMethodContext.displayName + (serviceMethodContext.keyBinding.length>0 ? '(' + serviceMethodContext.keyBinding[0] + ')' : ''), 
+							   onclick: { fn: 
+								   function(){
+								   		eval(this._oOnclickAttributeValue.command);
+								   },
+								   command: command
+							   } 
+					   };
+					   
+					   menuItems[menuItems.length] = menuItem;
+				   }
+				   
+//				   theDiv.append("<div id='contextmenu_" + objectId + "'></div>");
+				   
+				   YAHOO.util.Event.onContentReady(targetDivId, function () {
+						new YAHOO.widget.ContextMenu(
+							"_contextmenu_" + objectId,
+							{
+								zindex: 99,
+								trigger: theDiv[0],
+								itemdata: menuItems,
+								lazyload: true
+							}
+						);
+				   });
+			   }
 				
 			}
 
@@ -949,8 +1046,41 @@
 					if(objectMetadata && objectMetadata.serviceMethodContexts && objectMetadata.serviceMethodContexts[svcNameAndMethodName]){
 						serviceMethodContext = objectMetadata.serviceMethodContexts[svcNameAndMethodName];
 						if(serviceMethodContext){
-							if(serviceMethodContext.callByContent == false)
-				   				object = this._createKeyObject(object);
+							if(serviceMethodContext.callByContent == false){
+								if(serviceMethodContext.payload){
+									var objectForCall = {__className: object.__className, metaworksContext: object.metaworksContext};
+									for(var i in objectMetadata.fieldDescriptors){
+										var fd = objectMetadata.fieldDescriptors[i];
+										
+										if(serviceMethodContext.payload[fd.name])
+											objectForCall[fd.name] = object[fd.name];
+									
+									}
+									
+									object = objectForCall;
+									
+								}else
+								
+									object = this._createKeyObject(object); //default option
+							}else
+							if(serviceMethodContext.except){
+								var objectForCall = {__className: object.__className, metaworksContext: object.metaworksContext};
+								
+								for(var i in objectMetadata.fieldDescriptors){
+									var fd = objectMetadata.fieldDescriptors[i];
+									
+									if(!serviceMethodContext.except[fd.name])
+										objectForCall[fd.name] = object[fd.name];
+//									else
+//										objectForCall[fd.name] = null;
+								
+								}
+								
+								object = objectForCall;
+
+							}
+
+
 						}
 					}
 
@@ -1200,8 +1330,9 @@
 			   		
 			   		if(methodContext.clientSideCall)
 			   			eval("object['"+methodName+"'] = function(){return mw3.clientSideCall(this.__objectId, '"+methodName+"');}");
-			   		else
-			   			eval("object['"+methodName+"'] = function(getAgain){return mw3.call(this.__objectId, '"+methodName+"', getAgain);}");
+			   		else{
+			   			eval("object['"+methodName+"'] = function(getAgain){return mw3.call(this.__objectId, '"+methodName+"', getAgain);}");			   			
+			   		}
 			   }
 			   
 			   object['__toString'] = function(){
