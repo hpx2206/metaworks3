@@ -1,5 +1,6 @@
 package org.metaworks;
 
+import java.util.List;
 import java.util.Map;
 
 public class ServiceMethodContext{
@@ -14,6 +15,12 @@ public class ServiceMethodContext{
 //	public final static String TARGET_WINDOW 	= "window";
 	public final static String TARGET_NONE 		= "none";
 	public final static String TARGET_PAGEMOVE 	= "pagemove";
+	
+	public final static String MOUSEBINDING_LEFTCLICK 	= "left";
+	public final static String MOUSEBINDING_RIGHTCLICK 	= "right";
+	public final static String MOUSEBINDING_ONOVER 	= "over";
+	public final static String MOUSEBINDING_ONOUT 	= "out";
+	
 	
 	public boolean clientSide;
 		public boolean isClientSide() {
@@ -104,5 +111,52 @@ public class ServiceMethodContext{
 			this.attributes = attributes;
 		}
 
+	Map<String, String> except;
+		public Map<String, String> getExcept() {
+			return except;
+		}
+		public void setExcept(Map<String, String> except) {
+			this.except = except;
+		}
+
+	Map<String, String> payload;
+		public Map<String, String> getPayload() {
+			return payload;
+		}
+		public void setPayload(Map<String, String> payload) {
+			this.payload = payload;
+		}
+
 		
+	List<String> keyBinding;
+		public List<String> getKeyBinding() {
+			return keyBinding;
+		}
+		public void setKeyBinding(List<String> keyMapping) {
+			this.keyBinding = keyMapping;
+		}
+		
+	boolean callByRightClick;
+		public boolean isCallByRightClick() {
+			return callByRightClick;
+		}
+		public void setCallByRightClick(boolean callByRightClick) {
+			this.callByRightClick = callByRightClick;
+		}
+
+	String mouseBinding;
+		public String getMouseBinding() {
+			return mouseBinding;
+		}
+		public void setMouseBinding(String mouseBinding) {
+			this.mouseBinding = mouseBinding;
+		}
+		
+	boolean inContextMenu;
+		public boolean isInContextMenu() {
+			return inContextMenu;
+		}
+		public void setInContextMenu(boolean inContextMenu) {
+			this.inContextMenu = inContextMenu;
+		}
 }

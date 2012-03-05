@@ -19,4 +19,13 @@ public @interface ServiceMethod {
 	boolean callByContent() default false;
 	boolean needToConfirm() default false;	//shows 'Are you sure to do this....?'
 	boolean clientSide() 	default false;	//
+	
+	String[] payload() default {};
+	String[] except() default {};
+	
+	String[] keyBinding() default "";
+	
+	String mouseBinding() default "";
+	
+	boolean inContextMenu() default false;
 }
