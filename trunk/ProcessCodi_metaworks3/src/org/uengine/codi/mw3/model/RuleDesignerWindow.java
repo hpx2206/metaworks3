@@ -1,11 +1,6 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.annotation.Face;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.codi.mw3.admin.EntityDefinition;
-import org.uengine.codi.mw3.admin.EntityQuery;
-import org.uengine.kernel.GlobalContext;
-import org.uengine.processmanager.ProcessManagerRemote;
 
 @Face(ejsPath = "genericfaces/Window.ejs", displayName = "RuleDewigner Window", options = { "hideLabels" }, values = { "true" })
 public class RuleDesignerWindow extends ContentWindow {
