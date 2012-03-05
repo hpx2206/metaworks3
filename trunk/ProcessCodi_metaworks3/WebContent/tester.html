@@ -21,7 +21,22 @@
 		<script type='text/javascript' src='dwr/engine.js'></script> 
 		<script type='text/javascript' src='dwr/util.js'></script> 
 			  
-		<script type='text/javascript' src='dwr/interface/Metaworks.js'></script> 
+		<script type='text/javascript' src='dwr/interface/Metaworks.js'></script>
+		 <!-- for keyboard mapping -->
+<script type="text/javascript" src="scripts/shortcut.js"></script>
+
+<!-- for context menu, import YUI -->
+<script type="text/javascript" src="scripts/yui-3.2.0-min.js"></script>
+<link rel="stylesheet" type="text/css" href="style/menu/reset.css">
+<link rel="stylesheet" type="text/css" href="style/menu/fonts.css">
+<link rel="stylesheet" type="text/css" href="style/menu/container.css">
+<link rel="stylesheet" type="text/css" href="style/menu/sam/menu.css">
+<script type="text/javascript" src="scripts/yui/build/utilities/utilities.js"></script>
+<script type="text/javascript" src="scripts/yui/build/container/container.js"></script>
+<script type="text/javascript" src="scripts/yui/build/menu/menu.js"></script>
+
+<!-- end -->
+
 		<script type="text/javascript" src="scripts/metaworks/metaworks.js"></script>
 		
 		<script type="text/javascript" src="scripts/jit-yc.js"></script>
@@ -75,7 +90,7 @@
 
 			function locateObject(){
 
-				var genericUI = document.getElementById('genericUI').value == "on";
+				//var genericUI = document.getElementById('genericUI').value == "on";
 				
 				
 				var object = {
