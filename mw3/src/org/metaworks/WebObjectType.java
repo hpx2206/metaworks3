@@ -282,7 +282,10 @@ public class WebObjectType{
 				setDisplayName(objectType.getName());
 			}
 			
-		}catch(Exception ex){};
+		}catch(Exception ex){
+			//ex.printStackTrace();
+			
+		};
 
 		
 		//analyzing 'autowiredFromClient' fields
@@ -758,65 +761,70 @@ public class WebObjectType{
 				if(annotation!=null) 
 					return annotation;
 				
-				String componentPath = getComponentLocation(clazz, "faces", false, false, "ejs");
-				if(tryToFindComponent("dwr/metaworks/" + componentPath)){
-					componentPath = "dwr/metaworks/" + componentPath;
-				}else
-				if(!tryToFindComponent(componentPath)){
+					if(annotationCls == Face.class){
 					
-					componentPath = null;
+						String componentPath = getComponentLocation(clazz, "faces", false, false, "ejs");
+						if(tryToFindComponent("dwr/metaworks/" + componentPath)){
+							componentPath = "dwr/metaworks/" + componentPath;
+						}else
+						if(!tryToFindComponent(componentPath)){
+							
+							componentPath = null;
+							
+						}
+		
+						if(componentPath!=null){
+							
+							final String ejsPath = componentPath;
+		
+							return new Face() {
+								
+								@Override
+								public Class<? extends Annotation> annotationType() {
+									// TODO Auto-generated method stub
+									return null;
+								}
+								
+								@Override
+								public String[] values() {
+									// TODO Auto-generated method stub
+									return new String[]{};
+								}
+								
+								@Override
+								public String[] options() {
+									// TODO Auto-generated method stub
+									return new String[]{};
+								}
+								
+								@Override
+								public String[] ejsPathMappingByContext() {
+									// TODO Auto-generated method stub
+									return new String[]{};
+								}
+								
+								@Override
+								public String ejsPathForArray() {
+									// TODO Auto-generated method stub
+									return "";
+								}
+								
+								@Override
+								public String ejsPath() {
+									// TODO Auto-generated method stub
+									return ejsPath;
+								}
+								
+								@Override
+								public String displayName() {
+									// TODO Auto-generated method stub
+									return "";
+								}
+							};
+						}
+						
+					}
 					
-				}
-
-				if(componentPath!=null){
-					
-					final String ejsPath = componentPath;
-
-					return new Face() {
-						
-						@Override
-						public Class<? extends Annotation> annotationType() {
-							// TODO Auto-generated method stub
-							return null;
-						}
-						
-						@Override
-						public String[] values() {
-							// TODO Auto-generated method stub
-							return new String[]{};
-						}
-						
-						@Override
-						public String[] options() {
-							// TODO Auto-generated method stub
-							return new String[]{};
-						}
-						
-						@Override
-						public String[] ejsPathMappingByContext() {
-							// TODO Auto-generated method stub
-							return new String[]{};
-						}
-						
-						@Override
-						public String ejsPathForArray() {
-							// TODO Auto-generated method stub
-							return "";
-						}
-						
-						@Override
-						public String ejsPath() {
-							// TODO Auto-generated method stub
-							return ejsPath;
-						}
-						
-						@Override
-						public String displayName() {
-							// TODO Auto-generated method stub
-							return "";
-						}
-					};
-				}
 
 			}
 		}
