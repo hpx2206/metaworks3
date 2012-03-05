@@ -181,8 +181,16 @@ $.jgrid.extend({
 					var vvv = $($t).triggerHandler("jqGridBeforeSaveCell", [$t.rows[iRow].id, nm, v, iRow, iCol]);
 					if (vvv) {v = vvv; v2=vvv;}
 					if ($.isFunction($t.p.beforeSaveCell)) {
-						var vv = $t.p.beforeSaveCell.call($t, $t.rows[iRow].id,nm, v, iRow,iCol);
-						if (vv) {v = vv; v2=vv;}
+						vvv = $t.p.beforeSaveCell.call($t, $t.rows[iRow].id,nm, v, iRow,iCol)
+						if(vvv){
+							$.jgrid.info_dialog($.jgrid.errors.errcap,vvv,$.jgrid.edit.bClose);
+							$($t).jqGrid("restoreCell",iRow,iCol);		
+							
+							window.setTimeout(function () { $("#"+$t.p.knv).attr("tabindex","-1").focus();},0);
+							
+							return;
+						}
+						//if (vv) {v = vv; v2=vv;}
 					}
 					var cv = $.jgrid.checkValues(v,iCol,$t);
 					if(cv[0] === true) {
@@ -192,6 +200,7 @@ $.jgrid.extend({
 							if (!addpost) {addpost={};}
 						}
 						if( $("input.hasDatepicker",cc).length >0) { $("input.hasDatepicker",cc).datepicker('hide'); }
+						
 						if ($t.p.cellsubmit == 'remote') {
 							if ($t.p.cellurl) {
 								var postdata = {};
@@ -254,9 +263,9 @@ $.jgrid.extend({
 								} catch (e) {}
 							}
 						}
-						if ($t.p.cellsubmit == 'clientArray') {
+						if ($t.p.cellsubmit == 'clientArray') {							
 							$(cc).empty();
-							$($t).jqGrid("setCell",$t.rows[iRow].id,iCol, v2, false, false, true);
+							$($t).jqGrid("setCell",$t.rows[iRow].id,iCol, v2, false, false, true);							
 							$(cc).addClass("dirty-cell");
 							$($t.rows[iRow]).addClass("edited");
 							$($t).triggerHandler("jqGridAfterSaveCell", [$t.rows[iRow].id, nm, v, iRow, iCol]);
@@ -275,6 +284,7 @@ $.jgrid.extend({
 					$($t).jqGrid("restoreCell",iRow,iCol);
 				}
 			}
+			
 			if ($.browser.opera) {
 				$("#"+$t.p.knv).attr("tabindex","-1").focus();
 			} else {
