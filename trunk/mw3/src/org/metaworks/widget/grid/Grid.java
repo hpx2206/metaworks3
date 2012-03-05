@@ -2,18 +2,30 @@ package org.metaworks.widget.grid;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
+import org.metaworks.ServiceMethodContext;
+import org.metaworks.annotation.AutowiredToClient;
 import org.metaworks.annotation.ServiceMethod;
 
 public class Grid {
+	public Grid(){
+		cell = new GridCell();
+	}
 	
+	String KeyColumn;
+		public String getKeyColumn() {
+			return KeyColumn;
+		}
+		public void setKeyColumn(String keyColumn) {
+			KeyColumn = keyColumn;
+		}
+
+
 	String[] columnNames;
 		public String[] getColumnNames() {
 			return columnNames;
-		}
-		
+		}		
 		public void setColumnNames(String[] columnNames) {
 			this.columnNames = columnNames;
 		}
@@ -22,29 +34,24 @@ public class Grid {
 	Map<String, Column> columnModel;
 		public Map<String, Column> getColumnModel() {
 			return columnModel;
-		}
-	
+		}	
 		public void setColumnModel(Map<String, Column> columnModel) {
 			this.columnModel = columnModel;
 		}
 
 
-	Object data;
-	
+	Object data;	
 		public Object getData() {
 			return data;
-		}
-	
+		}	
 		public void setData(Object data) {
 			this.data = data;
 		}
-
-
+	
 	GridCell cell;
 		public GridCell getCell() {
 			return cell;
-		}
-		
+		}		
 		public void setCell(GridCell cell) {
 			this.cell = cell;
 		}
@@ -98,13 +105,14 @@ public class Grid {
 		setData(arrListData);
 	}
 	
-	@ServiceMethod(callByContent = true, target="none")
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_NONE)
 	public void changeCell() {
-		System.out.println("row : " + getCell().row + ", col : " + getCell().col + ", content : " + getCell().content);
+		System.out.println("changeCell1()");
+		//System.out.println("row : " + getCell().row + ", col : " + getCell().col + ", content : " + getCell().value);
 		
-		ArrayList<Map<String, String>> arrListData = (ArrayList<Map<String, String>>) data;
+		//ArrayList<Map<String, String>> arrListData = (ArrayList<Map<String, String>>) data;
 		// TODO update DB and re select Data from DB and clear Cell Object 
-		getCell().setContent(arrListData.get(getCell().getRow()).put("name", getCell().getContent()));
+		//getCell().setValue(arrListData.get(getCell().getRow()).put("name", getCell().getValue()));
 		
 	}
 	

@@ -14,18 +14,31 @@ import org.metaworks.dwr.MetaworksRemoteService;
 
 
 public class ObjectGrid extends Grid{
-
-	public ObjectGrid() throws Exception{
+	Class dataClass;
+	
+	String className;
 		
-	}
+		public String getClassName() {
+			return className;
+		}
+	
+		public void setClassName(String className) {
+			this.className = className;
+		}
 
+	public ObjectGrid() throws Exception{	
+	}
 	
 	public ObjectType setObjectType(Class dataClass) throws Exception{
+		
+		setClassName(dataClass.getName());
+		
 		WebObjectType wot = MetaworksRemoteService.getInstance().getMetaworksType(dataClass.getName());
 		ObjectType type = (ObjectType) wot.metaworks2Type();
-		 
-		columnModel = new HashMap<String, Column>();
 		
+		setKeyColumn(wot.getKeyFieldDescriptor().getName());
+		
+		columnModel = new HashMap<String, Column>();
 		
 		List<String> columnNamesInList = new ArrayList<String>();
 //		Map<String, Method> getters = new HashMap<String, Method>();
@@ -46,16 +59,19 @@ public class ObjectGrid extends Grid{
 				
 				Column column = new Column();
 				column.setName(fieldName);
-				column.setIndex(displayName);
+	//			column.setIndex(displayName);
 				column.setEditable(fd.isUpdatable());
 	//			column.setWidth(fd.getAttribute("size"));
 				column.setIndex(fieldName);
 				
 				columnModel.put(fieldName, column);
 			}
+			
+			
+			
 //			getters.put(fd.getName(), dataClass.getMethod("get" + fd.getName(), parameterTypes))
 		}
-
+		
 		columnNames = new String[columnNamesInList.size()];
 		columnNamesInList.toArray(columnNames); 
 		
@@ -73,7 +89,6 @@ public class ObjectGrid extends Grid{
 		}
 		
 		setData(arrData);
-
 	}
 
 	@ServiceMethod
@@ -95,8 +110,6 @@ public class ObjectGrid extends Grid{
 			e.printStackTrace();
 		}
 	}
-	
-	
 	
 	
 }
