@@ -11,7 +11,6 @@ import java.util.ArrayList;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
-import org.metaworks.ServiceMethodContext;
 import org.metaworks.WebFieldDescriptor;
 import org.metaworks.WebObjectType;
 import org.metaworks.annotation.Available;
@@ -36,7 +35,6 @@ import org.uengine.kernel.PropertyListable;
 import org.uengine.processmanager.ProcessManagerRemote;
 import org.uengine.util.UEngineUtil;
 
-@Face(options="hideEditBtn", values="true")
 public class EntityDefinition implements ContextAware, PropertyListable, NeedArrangementToSerialize{
 
 	transient MetaworksContext metaworksContext;

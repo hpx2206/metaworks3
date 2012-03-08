@@ -45,7 +45,6 @@ import org.uengine.kernel.PropertyListable;
 import org.uengine.processmanager.ProcessManagerRemote;
 import org.uengine.util.UEngineUtil;
 
-@Face(options="hideEditBtn", values="true")
 public class ClassDefinition implements ContextAware, PropertyListable, NeedArrangementToSerialize{
 
 	transient MetaworksContext metaworksContext;
@@ -468,7 +467,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		
         CodiClassLoader contextClassLoader = CodiClassLoader.getMyClassLoader();
 		String myWorkingCopyPath = ((CodiClassLoader)contextClassLoader).mySourceCodeBase();//"/Users/jyjang/MyWorkingCopy";
-
+		
         if(myWorkingCopyPath==null)
         	throw new Exception("소셜코딩을 환영합니다! 소스코드를 수정하려면 먼저 페이스북 로그인을 하신후 체크아웃(checkout)을 받으셔야 합니다.");
         	
