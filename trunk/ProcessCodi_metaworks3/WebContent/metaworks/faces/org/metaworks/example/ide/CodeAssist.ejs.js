@@ -86,6 +86,24 @@ var org_metaworks_example_ide_CodeAssist = function(objectId, className){
 			thisFaceHelper.requestDoc(value);
 		});		
 	}
+	
+	object.ExtendImport = function(){
+		console.debug('extendImport');
+		console.debug(objectId);
+		
+		var object = mw3.objects[objectId];
+		
+		console.debug(object);
+		
+		var sourceCode = mw3.objects[object.srcCodeObjectId];
+		
+		var editor = sourceCode.__getFaceHelper().editor;
+		editor.insert(object.extendImportValue);
+		editor.focus();
+		
+		$("#" + mw3.popupDivId).remove();
+		editor.focus();		
+	}
 }
 
 org_metaworks_example_ide_CodeAssist.prototype.enter = function(value){

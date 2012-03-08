@@ -1,8 +1,4 @@
 <%
-
-console.debug("entityDefinition");
-console.debug(value);
-
 if(value){	
 %>
 
@@ -19,7 +15,9 @@ if(value){
 			</font>
 			</td>			
 			<td>
+			<div id="packageName_<%=objectId%>">
 			<%=fields.packageName.here()%>
+			</div>
 			</td>
 		
 			<td width=80>

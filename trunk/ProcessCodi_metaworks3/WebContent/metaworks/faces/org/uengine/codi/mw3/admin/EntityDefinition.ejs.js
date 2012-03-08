@@ -4,6 +4,13 @@ var org_uengine_codi_mw3_admin_EntityDefinition = function(objectId, className){
 
 	var object = mw3.objects[this.objectId];
 
+	console.debug("-----------");
+	console.debug($("#packageName_" + objectId + " > input"));
+	console.debug(object);
+	
+	//$("#packageName_" + objectId + ">input").attr("onKeyUp", "alert(1);").focus();
+	//console.debug(object);
+	
 	// overrides the function
 	object.generateDDL = function() {
 		console.debug(object);
@@ -25,10 +32,19 @@ var org_uengine_codi_mw3_admin_EntityDefinition = function(objectId, className){
 	}
 
 	object.generateDao = function() {
-		var codeAssist = mw3.getAutowiredObject("org.metaworks.example.ide.CodeAssist");
-
-		console.debug(codeAssist);
+		
+		if(object.parentFolder == null){
+			object.parentFolder = "1";
+		}
 		
 		mw3.call(objectId, 'generateDao');
+		
+		var importValue = 'import ' + object.packageName + '.' + object.entityName + ';';
+		importValue = importValue + '\n' + 'import ' + object.packageName + '.I' + object.entityName + ';';
+		
+		var codeAssist = mw3.getAutowiredObject("org.metaworks.example.ide.CodeAssist");
+		codeAssist.extendImportValue = importValue;
+		codeAssist.ExtendImport();
+		
 	}	
 }
