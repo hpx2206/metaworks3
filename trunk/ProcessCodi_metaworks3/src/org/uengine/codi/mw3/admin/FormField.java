@@ -1,4 +1,3 @@
-
 package org.uengine.codi.mw3.admin;
 
 import java.util.ArrayList;
@@ -158,7 +157,6 @@ public class FormField implements Cloneable, ContextAware{
 	
 	//TODO: quiz 2 (when the form field is first order, this button should be shown.
 	//              Improve 'up' method and 'down' method not to be shown when it is in the first order and in the last order.
-	
 	@ServiceMethod(when=MetaworksContext.WHEN_VIEW, where="in-container")
 	public FormDefinition up(){
 		int index = formDefinition.formFields.indexOf(this);

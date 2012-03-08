@@ -73,6 +73,18 @@ public class CodeAssist {
 		public void setWebServiceDefinition(WebServiceDefinition webServiceDefinition) {
 			this.webServiceDefinition = webServiceDefinition;
 		}
+		
+	String extendImportValue;	
+		public String getExtendImportValue() {
+			return extendImportValue;
+		}
+		public void setExtendImportValue(String extendImportValue) {
+			this.extendImportValue = extendImportValue;
+		}
+		
+	@ServiceMethod(callByContent=true)
+	public void ExtendImport(){		
+	}
 	
 	@ServiceMethod(callByContent=true)
 	public CodeAssistDocument showDoc(){		

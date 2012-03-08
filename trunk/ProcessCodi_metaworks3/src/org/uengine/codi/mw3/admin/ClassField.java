@@ -141,28 +141,30 @@ public class ClassField implements Cloneable, ContextAware{
 		classSourceCodes.classModeler.init();
 		//
 		
-		StringBuffer javaCode = new StringBuffer(classSourceCodes.getSourceCode().getCode());
-		int whereLastBraket = javaCode.lastIndexOf("}");
-		
-		
-		ClassField field = this;
-		
-		String fieldNameFirstCharUpper = UEngineUtil.toOnlyFirstCharacterUpper(field.getFieldName());
-		String fieldType = field.getType();
-
-		
-		StringBuffer sb = new StringBuffer();
-		sb
-			.append("\n")
-			.append("	").append(fieldType).append(" ").append(field.getFieldName()).append(";\n")
-			.append("		public ").append(fieldType).append(" get").append(fieldNameFirstCharUpper).append("(){ return ").append(field.getFieldName()).append("; }\n")
-			.append("		public void set").append(fieldNameFirstCharUpper).append("(").append(fieldType).append(" ").append(field.getFieldName()).append("){ this.").append(field.getFieldName()).append(" = ").append(field.getFieldName()).append("; }\n\n")
-			.append("\n");
-
-		
-		javaCode.insert(whereLastBraket, sb.toString());
-		
-		classSourceCodes.getSourceCode().setCode(javaCode.toString());
+		if(classSourceCodes.getSourceCode().getCode() != null){
+			StringBuffer javaCode = new StringBuffer(classSourceCodes.getSourceCode().getCode());
+			int whereLastBraket = javaCode.lastIndexOf("}");
+			
+			
+			ClassField field = this;
+			
+			String fieldNameFirstCharUpper = UEngineUtil.toOnlyFirstCharacterUpper(field.getFieldName());
+			String fieldType = field.getType();
+	
+			
+			StringBuffer sb = new StringBuffer();
+			sb
+				.append("\n")
+				.append("	").append(fieldType).append(" ").append(field.getFieldName()).append(";\n")
+				.append("		public ").append(fieldType).append(" get").append(fieldNameFirstCharUpper).append("(){ return ").append(field.getFieldName()).append("; }\n")
+				.append("		public void set").append(fieldNameFirstCharUpper).append("(").append(fieldType).append(" ").append(field.getFieldName()).append("){ this.").append(field.getFieldName()).append(" = ").append(field.getFieldName()).append("; }\n\n")
+				.append("\n");
+	
+			
+			javaCode.insert(whereLastBraket, sb.toString());
+			
+			classSourceCodes.getSourceCode().setCode(javaCode.toString());
+		}
 		
 		return classSourceCodes;
 	}
