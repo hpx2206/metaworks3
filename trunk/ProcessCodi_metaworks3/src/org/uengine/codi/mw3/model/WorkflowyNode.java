@@ -7,7 +7,6 @@ import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
-import org.uengine.codi.platform.MongoDB;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
