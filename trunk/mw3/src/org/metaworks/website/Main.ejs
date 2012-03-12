@@ -1,0 +1,51 @@
+<%
+	if(value!=null){
+	
+%>
+
+<div id="container" class="ui-layout-container">
+	<div class="ui-layout-north">
+        <div id="smline">
+            <div class="logo" onclick="<%=methods.load.caller()%>"><img src="/mw3/images/mw3.png"></div>
+            
+            <div id="search_right_outer"><div id="search_line"></div><div style="clear:both"></div><div id="clear_search" onclick="removeSearchItems()"></div></div>
+            <div id="search_right_outer2"><div id="ping_line"></div><div style="clear:both"></div><div id="clear_search" onclick="removePingItems()"></div></div>           
+
+                   
+            <div class="info"> 	<%=fields.session.here({when:'view'})%> </div>
+            
+        </div>
+    </div>
+    
+    <div class="ui-layout-west ui-layout-pane ui-layout-pane-west ui-layout-container" style="position: absolute; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; right: auto; z-index: 1; left: 0px; width: 195px; visibility: visible; display: block; overflow-x: hidden; overflow-y: hidden; top: 52px; bottom: 0px; height: auto; ">
+	  <%=fields.navigation.here()%>
+	</div>
+	
+	<div class="ui-layout-center ui-layout-pane ui-layout-pane-center ui-layout-container" style="position: absolute; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; z-index: 1; visibility: visible; display: block; overflow-x: hidden; overflow-y: hidden; top: 52px; bottom: 0px; left: 200px; right: 0px; width: auto;">
+        <div class="middle-west ui-layout-pane ui-layout-pane-west" style="padding-bottom: 102px; position: absolute; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; right: auto; z-index: 1; left: 0px; visibility: visible; display: block; width: 793px; top: 0px; bottom: 0px; height: 146px;">
+ 			 <%=fields.contentPanel.here()%>
+  		</div>
+ 
+		<div class="middle-center ui-layout-pane ui-layout-pane-center" style="position: absolute; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; z-index: 1; visibility: visible; display: block; top: 0px; bottom: 0px; left: 800px; right: 0px; width: auto; height: auto; padding-bottom: 36px; ">
+ 			 <%=fields.feedbackPanel.here()%>
+		</div>
+
+		<div id="" style="position: absolute; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; font-size: 1px; text-align: left; overflow-x: hidden; overflow-y: hidden; z-index: 2; cursor: w-resize; left: 794px; height: 248px; width: 5px; top: 0px; " class="ui-layout-resizer ui-layout-resizer-west ui-layout-resizer-open ui-layout-resizer-west-open" title="Resize" aria-disabled="false"><div id="" style="position: absolute; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; overflow-x: hidden; overflow-y: hidden; text-align: center; font-size: 1px; z-index: 1; visibility: visible; cursor: pointer; display: none; " class="ui-layout-toggler ui-layout-toggler-west ui-layout-toggler-open ui-layout-toggler-west-open" title="Close"></div></div>
+
+	</div>
+
+<div id="" style="position: absolute; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; font-size: 1px; text-align: left; overflow-x: hidden; overflow-y: hidden; z-index: 2; top: 52px; cursor: n-resize; display: none; visibility: visible; " class="ui-layout-resizer ui-layout-resizer-north ui-layout-resizer-open ui-layout-resizer-north-open" title="Resize" aria-disabled="false">
+	<div id="" style="position: absolute; display: block; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; overflow-x: hidden; overflow-y: hidden; text-align: center; font-size: 1px; z-index: 1; visibility: visible; cursor: pointer; " class="ui-layout-toggler ui-layout-toggler-north ui-layout-toggler-open ui-layout-toggler-north-open" title="Close"></div>
+</div>
+<div style="position: absolute; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; font-size: 1px; text-align: left; overflow-x: hidden; overflow-y: hidden; z-index: 2; cursor: w-resize; left: 195px; height: 895px; width: 5px; top: 52px; " class="ui-layout-resizer ui-layout-resizer-west ui-layout-resizer-open ui-layout-resizer-west-open" title="Resize" aria-disabled="false"><div id="" style="position: absolute; padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; overflow-x: hidden; overflow-y: hidden; text-align: center; font-size: 1px; z-index: 1; visibility: visible; cursor: pointer; display: none; " class="ui-layout-toggler ui-layout-toggler-west ui-layout-toggler-open ui-layout-toggler-west-open" title="Close"></div></div>
+	
+</div>
+
+
+<%
+}else{
+%>
+
+LOADING...
+
+<%}%>
