@@ -20,14 +20,31 @@ public class Login extends Database<ILogin> implements ILogin{
 			this.password = password;
 		}
 		
-	public Main login() throws Exception{
+	String message;
+		
+		public String getMessage() {
+			return message;
+		}
+		public void setMessage(String message) {
+			this.message = message;
+		}
+		
+	public Object login() throws Exception{
 		if(databaseMe().getPassword().equals(getPassword()))
 			return new Main(getUserId());
 		else
-			throw new Exception("Password is wrong. Forgot?");
+			setMessage("Password is wrong. Forgot?");
+		
+		return this;
 	}
 	
 	public void subscribe() throws Exception {
 		createDatabaseMe();
+	}
+	
+	@Override
+	public void unsubscribe() throws Exception {
+		deleteDatabaseMe();
+		
 	}
 }

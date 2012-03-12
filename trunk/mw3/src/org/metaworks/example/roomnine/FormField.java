@@ -97,7 +97,7 @@ public class FormField implements Cloneable, ContextAware {
 	}
 
 	
-	@ServiceMethod(when=MetaworksContext.WHEN_EDIT, where="newEntry", callByContent=true)
+	@ServiceMethod(when=MetaworksContext.WHEN_EDIT, where="newEntry", callByContent=true, keyBinding="enter")
 	public FormDefinition add() throws Exception {
 		if(formDefinition.formFields == null)
 			formDefinition.formFields = new ArrayList<FormField>();
@@ -116,7 +116,7 @@ public class FormField implements Cloneable, ContextAware {
 		return formDefinition;
 	}
 	
-	@ServiceMethod(when=MetaworksContext.WHEN_VIEW,where="in-container")
+	@ServiceMethod(when=MetaworksContext.WHEN_VIEW,where="in-container", keyBinding="Shift+delete", inContextMenu=true)
 	public FormDefinition remove() {
 		formDefinition.formFields.remove(this);
 		return formDefinition;
@@ -140,7 +140,7 @@ public class FormField implements Cloneable, ContextAware {
 		
 	}
 	
-	@ServiceMethod(when=MetaworksContext.WHEN_VIEW,where="in_container") 
+	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_VIEW,where="in-container", keyBinding="up") 
 	public FormDefinition up() {
 		int index = formDefinition.formFields.indexOf(this);
 		if(index > 0) {
@@ -151,7 +151,7 @@ public class FormField implements Cloneable, ContextAware {
 		return formDefinition;
 	}
 	
-	@ServiceMethod(when=MetaworksContext.WHEN_VIEW, where = "in-container") 
+	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_VIEW, where = "in-container", keyBinding="down") 
 	public FormDefinition down() {
 		int index = formDefinition.formFields.indexOf(this);
 		if(index < formDefinition.formFields.size()-1) {

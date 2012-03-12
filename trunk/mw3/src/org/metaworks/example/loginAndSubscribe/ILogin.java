@@ -16,9 +16,14 @@ public interface ILogin extends IDAO{
 	public String getPassword();
 	public void setPassword(String password);
 		
-	@ServiceMethod(callByContent=true)
-	public Main login() throws Exception;
+	@ServiceMethod(callByContent=true, keyBinding="enter", inContextMenu=true)
+	public Object login() throws Exception;
 	
-	@ServiceMethod(callByContent=true)
+	@ServiceMethod(callByContent=true, inContextMenu=true)
 	public void subscribe() throws Exception;
+	
+	@ServiceMethod(callByContent=true, inContextMenu=true, needToConfirm=true)
+	public void unsubscribe() throws Exception;
+	
+	
 }
