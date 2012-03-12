@@ -26,7 +26,7 @@
 	  <script type='text/javascript' src='dwr/util.js'></script> 
 	  
 	  <script type='text/javascript' src='dwr/interface/Metaworks.js'></script> 
-	  <script type="text/javascript" src="scripts/metaworks/metaworks.js"></script>
+	  <script type="text/javascript" src="dwr/metaworks/scripts/metaworks.js"></script>
 
 
 <link rel="stylesheet" href="style/simulator/simulator.css" />
@@ -44,10 +44,10 @@
 
 
 	<!--  for source code editor -->
- <script src="metaworks/ace/build/src/ace.js" type="text/javascript" charset="utf-8"></script>
- <script src="metaworks/ace/build/src/theme-eclipse.js" type="text/javascript" charset="utf-8"></script>
- <script src="metaworks/ace/build/src/mode-javascript.js" type="text/javascript" charset="utf-8"></script>
- <script src="metaworks/ace/build/src/mode-java.js" type="text/javascript" charset="utf-8"></script>
+ <script src="scripts/ace/build/src/ace.js" type="text/javascript" charset="utf-8"></script>
+ <script src="scripts/ace/build/src/theme-eclipse.js" type="text/javascript" charset="utf-8"></script>
+ <script src="scripts/ace/build/src/mode-javascript.js" type="text/javascript" charset="utf-8"></script>
+ <script src="scripts/ace/build/src/mode-java.js" type="text/javascript" charset="utf-8"></script>
 
 <!--  for chart -->
     <script type='text/javascript' src='https://www.google.com/jsapi'></script>
@@ -74,7 +74,6 @@
 		 	
 			$(document).ready(function() {
 		 		mw3.setWhen(mw3.WHEN_EDIT);
-		 		mw3.setBase("/uengine-web");
 
 				mainPage = new MetaworksObject({
 					__className:"org.uengine.codi.mw3.model.Login"
