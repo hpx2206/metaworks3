@@ -20,7 +20,7 @@ import org.metaworks.dao.TransactionContext;
 public class TransactionalDwrServlet extends DwrServlet{
 
 
-	public static final String PATH_METAWORKS_FACES = "metaworks/faces";
+	public static final String PATH_METAWORKS = "metaworks";
 
 	public static boolean useSpring = false;
 	
@@ -66,7 +66,7 @@ public class TransactionalDwrServlet extends DwrServlet{
 		String pathInfo = request.getPathInfo();
 		String requestContextPath = request.getContextPath();
 
-		int wherePrefixStarts = pathInfo.indexOf(PATH_METAWORKS_FACES);
+		int wherePrefixStarts = pathInfo.indexOf(PATH_METAWORKS);
         if (wherePrefixStarts != -1)
         {
         	String mimeType = (pathInfo.endsWith(".js") ? "text/javascript":"text/plain");
@@ -81,12 +81,18 @@ public class TransactionalDwrServlet extends DwrServlet{
             //response.setDateHeader(HttpConstants.HEADER_LAST_MODIFIED, lastModified);
             //response.setHeader(HttpConstants.HEADER_ETAG, "\"" + lastModified + '\"');
         	
-        	pathInfo = pathInfo.substring(wherePrefixStarts + PATH_METAWORKS_FACES.length() + 1);
+        	pathInfo = pathInfo.substring(wherePrefixStarts + PATH_METAWORKS.length() + 1);
         	InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(pathInfo);
         	
 	        if(is!=null){
 	            try {
-					copyStream(is, response.getOutputStream());
+	            	String appendix = null;
+	            	
+	            	if(pathInfo.endsWith("/metaworks.js")){
+	            		appendix = ("mw3.setBase('" + request.getContextPath() + "');");
+	            	}
+	            	
+					copyStream(is, response.getOutputStream(), appendix);
 					
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
@@ -95,6 +101,7 @@ public class TransactionalDwrServlet extends DwrServlet{
 					is.close();
 					response.flushBuffer();
 				}
+	            
 	            
 	            return;
 	        }
@@ -163,7 +170,7 @@ public class TransactionalDwrServlet extends DwrServlet{
 	}
 	
 	
-	static public void copyStream(InputStream sourceInputStream, OutputStream targetOutputStream) throws Exception{
+	static public void copyStream(InputStream sourceInputStream, OutputStream targetOutputStream, String appendix) throws Exception{
 		int length = 1024;
 		byte[] bytes = new byte[length]; 
 		int c; 
@@ -173,6 +180,10 @@ public class TransactionalDwrServlet extends DwrServlet{
 				total_bytes +=c; 
 				targetOutputStream.write(bytes,0,c); 
 		} 
+		
+		if(appendix!=null){
+			targetOutputStream.write(("\n" + appendix).getBytes());
+		}
 		
 		if (sourceInputStream != null) try { sourceInputStream.close(); } catch (Exception e) {}
 		if (targetOutputStream != null) try { targetOutputStream.close(); } catch (Exception e) {}
