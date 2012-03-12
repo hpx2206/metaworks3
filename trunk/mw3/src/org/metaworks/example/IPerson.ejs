@@ -1,0 +1,15 @@
+
+
+<%if (!value){%>
+ Writer is not specified
+<%}else{%>
+
+<img src="<%=value.portraitURL%>" width=50><br>
+<b><%=value.name%></b>
+
+<%if(!value.myFried){%>
+ <br> [<a onclick='addFriend("<%=objectId%>")'> add to friend </a>] 
+<%}%>
+
+
+<%}%>
