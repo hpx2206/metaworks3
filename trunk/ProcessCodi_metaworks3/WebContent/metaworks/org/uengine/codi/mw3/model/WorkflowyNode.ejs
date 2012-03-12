@@ -1,0 +1,38 @@
+<%
+	if(value){
+%>
+	
+	<ul>
+<%
+		if(value.parentNode!=null){
+%>					
+		<li>
+			<div id="wfnode_<%=objectId%>">
+				<input type="text" id="wfnode_content_<%=objectId%>" value="<%=value.name%>" onkeydown="mw3.getFaceHelper('<%=objectId%>').press(this)">
+			</div>
+<%	
+		}
+		
+		if(value.childNode){
+%>			
+					<%=fields.childNode.here()%>
+<%
+		}
+		
+		if(value.parentNode!=null){
+%>
+		</li>
+<%		
+		}else{
+%>
+		<span style="padding-left:40px">		
+			<%=methods.newNode.here()%>
+		</span>
+<%
+		}
+%>		
+	</ul>
+<%		
+	}
+%>	
+
