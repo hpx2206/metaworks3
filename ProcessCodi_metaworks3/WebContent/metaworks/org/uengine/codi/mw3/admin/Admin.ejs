@@ -1,0 +1,58 @@
+<%
+	if(value!=null){
+%>
+
+
+<div id="pageflip">
+	<a href="/uengine-web/login.html"><img src="images/waveStyle/page_flip.png" "="" border="0" onclick="" style="width: 42px; height: 42px; "></a>
+	<div class="msg_block" style="background-image: url(http://uengine.dyndns.org:8080/uengine-web/codi-web/images/waveStyle/subscribe_a.png); background-attachment: initial; background-origin: initial; background-clip: initial; background-color: initial; width: 42px; height: 42px; background-position: 100% 0%; background-repeat: no-repeat no-repeat; "></div>	
+</div>
+
+<div id="container">
+	<div class="ui-layout-north">
+        <div id="smline">
+            <div class="logo"><img src="images/waveStyle/logo.gif"> <font face="Eurostile" color="#5599dd" size=2>Alpha</font></div>
+            
+            <div id="search_right_outer"><div id="search_line"></div><div style="clear:both"></div><div id="clear_search" onclick="removeSearchItems()"></div></div>
+            <div id="search_right_outer2"><div id="ping_line"></div><div style="clear:both"></div><div id="clear_search" onclick="removePingItems()"></div></div>           
+
+			 	<%=fields.mainMenu.here()%>
+                   
+            <div class="info">
+
+             
+            <%if(mw3.when!='__design-depth2'){//TODO: later, rather use 'where' than 'when'.%>
+            	<%=fields.session.here({when:'view'})%>
+            <%}else{%>
+            	session here.
+            <%}%>	
+                        <font face="Eurostile" color="#aaaabb">PaaS for Business Expert (Chrome Optimized)</font>
+            	 </div>            
+ 
+        </div>
+    </div>
+  
+  
+  
+    <div class="ui-layout-west">
+ 		<div class="inner-center" style="padding-bottom:35px; height:95%">
+			<%=fields.resourceWindow.here()%>     
+		</div>		
+	</div>	
+	
+    <div class="ui-layout-center">
+    	<div class="middle-center" style="padding-bottom:35px; height:95%">
+			<%=fields.contentWindow.here()%>
+		</div>
+	</div>
+
+</div>
+
+
+<%
+}else{
+%>
+LOADING...
+
+<%}%>
+
