@@ -14,23 +14,24 @@ public class FormDefinition implements ContextAware {
 	
 	ArrayList<FormField> formFields;
 	
+		public ArrayList<FormField> getFormFields() {
+			return formFields;
+		}
+		
+		public void setFormFields(ArrayList<FormField> formFields) {
+			this.formFields = formFields;
+		}
+
 	FormField newFormField;
 	
-	public ArrayList<FormField> getFormFields() {
-		return formFields;
-	}
 
-	public void setFormFields(ArrayList<FormField> formFields) {
-		this.formFields = formFields;
-	}
-
-	public FormField getNewFormField() {
-		return newFormField;
-	}
-
-	public void setNewFormField(FormField newFormField) {
-		this.newFormField = newFormField;
-	}
+		public FormField getNewFormField() {
+			return newFormField;
+		}
+	
+		public void setNewFormField(FormField newFormField) {
+			this.newFormField = newFormField;
+		}
 
 	@ServiceMethod(callByContent=true)
 	public FormInstance preview() {

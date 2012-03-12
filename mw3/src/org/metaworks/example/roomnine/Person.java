@@ -11,12 +11,12 @@ public class Person {
 	String name;
 	int age;
 	
-	public Contact getContact() {
-		return contact;
-	}
-	public void setContact(Contact contact) {
-		this.contact = contact;
-	}
+		public Contact getContact() {
+			return contact;
+		}
+		public void setContact(Contact contact) {
+			this.contact = contact;
+		}
 	@Id
 	@Face(displayName="성명")
 	public String getName() {
