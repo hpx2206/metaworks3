@@ -1,0 +1,8 @@
+
+<%if(mw3.when==mw3.WHEN_EDIT || mw3.when == mw3.WHEN_NEW){%>
+<input type=file id="<%=mw3.createInputId(objectId)%>" name="<%=mw3.createInputId(objectId)%>">
+<%}else{%>
+<a onclick="dwr.engine.openInDownload(mw3.getObject('<%=objectId%>'))">Download</a>
+
+<input type=button onclick="org_directwebremoting_io_FileTransfer(mw3.getObject('<%=objectId%>'))">
+<%}%>

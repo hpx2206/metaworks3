@@ -255,7 +255,7 @@ public class WebObjectType{
 		
 		
 		if(getFaceComponentPath()==null)
-			setFaceComponentPath("genericfaces/ObjectFace.ejs");
+			setFaceComponentPath("dwr/metaworks/genericfaces/ObjectFace.ejs");
 		
 		System.out.println("Metaworks mapped face file : " +  getFaceComponentPath() + " to class: " + getName());
 
@@ -632,9 +632,9 @@ public class WebObjectType{
 				
 				if(face!=null){
 					smc.setDisplayName(face.displayName());
-				}else{
+				}/*else{
 					smc.setDisplayName(method.getName());
-				}
+				}*/
 				
 				if(available!=null && available.when().length > 0){
 					StringBuffer whens = new StringBuffer();
@@ -767,64 +767,75 @@ public class WebObjectType{
 					
 					final Face face = (Face)annotation;
 					
-					if(face==null || face.ejsPath().length() == 0){
-					
-						String componentPath = getComponentLocation(clazz, "faces", false, false, "ejs");
-						
-						if(tryToFindComponent("dwr/metaworks/" + componentPath)){
-							componentPath = "dwr/metaworks/" + componentPath;
-						}else
-						if(!tryToFindComponent(componentPath)){
+				
+					boolean componentPathHashBeenChanged = false;
+					String componentPath = face != null ? face.ejsPath() : ""; 
 							
-							componentPath = null;
-							
-						}
-		
-						if(componentPath!=null){
-							
-							final String ejsPath = componentPath;
-		
-							return new Face() {
-								
-								@Override
-								public Class<? extends Annotation> annotationType() {
-									return null;
-								}
-								
-								@Override
-								public String[] values() {
-									return face!=null ? face.values() : new String[]{};
-								}
-								
-								@Override
-								public String[] options() {
-									return face!=null ? face.options() : new String[]{};
-								}
-								
-								@Override
-								public String[] ejsPathMappingByContext() {
-									return face!=null ? face.ejsPathMappingByContext() : new String[]{};
-								}
-								
-								@Override
-								public String ejsPathForArray() {
-									return face!=null ? face.ejsPathForArray() : "";
-								}
-								
-								@Override
-								public String ejsPath() {
-									return ejsPath;
-								}
-								
-								@Override
-								public String displayName() {
-									return face!=null ? face.displayName() : "";
-								}
-							};
-						}
+					if(componentPath.length() == 0){
+						componentPath = getComponentLocation(clazz, "faces", false, false, "ejs");
 					}
 					
+					if(componentPath.startsWith("faces"))
+						componentPath = componentPath.substring("faces".length()+1);
+					
+					if(tryToFindComponent("dwr/metaworks/" + componentPath)){
+						componentPathHashBeenChanged = true;
+
+						componentPath = "dwr/metaworks/" + componentPath;
+					}else
+					if(!tryToFindComponent(componentPath)){
+						
+						componentPath = null;
+						
+					}
+					
+					if(!componentPathHashBeenChanged && face!=null)
+						return face;
+					
+					if(componentPath!=null){
+						
+						final String ejsPath = componentPath;
+	
+						return new Face() {
+							
+							@Override
+							public Class<? extends Annotation> annotationType() {
+								return null;
+							}
+							
+							@Override
+							public String[] values() {
+								return face!=null ? face.values() : new String[]{};
+							}
+							
+							@Override
+							public String[] options() {
+								return face!=null ? face.options() : new String[]{};
+							}
+							
+							@Override
+							public String[] ejsPathMappingByContext() {
+								return face!=null ? face.ejsPathMappingByContext() : new String[]{};
+							}
+							
+							@Override
+							public String ejsPathForArray() {
+								return face!=null ? face.ejsPathForArray() : "";
+							}
+							
+							@Override
+							public String ejsPath() {
+								return ejsPath;
+							}
+							
+							@Override
+							public String displayName() {
+								return face!=null ? face.displayName() : "";
+							}
+						};
+					}
 				}
+				
 				
 				
 				if(annotation!=null){
@@ -865,9 +876,9 @@ public class WebObjectType{
 	static public boolean tryToFindComponent(String componentName){	
 		
 		//try classResource first
-		if(componentName.startsWith("dwr/" + TransactionalDwrServlet.PATH_METAWORKS_FACES))
+		if(componentName.startsWith("dwr/" + TransactionalDwrServlet.PATH_METAWORKS))
 		try{
-			InputStream resource = Thread.currentThread().getContextClassLoader().getResourceAsStream(componentName.substring(5 + TransactionalDwrServlet.PATH_METAWORKS_FACES.length()));
+			InputStream resource = Thread.currentThread().getContextClassLoader().getResourceAsStream(componentName.substring(5 + TransactionalDwrServlet.PATH_METAWORKS.length()));
 			
 			if(resource!=null){
 				resource.close();
