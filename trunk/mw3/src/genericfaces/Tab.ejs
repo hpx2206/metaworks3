@@ -1,0 +1,50 @@
+<%
+	if(value!=null){
+		var tabId = "tab_" + objectId;
+	
+%>
+	<ul>
+<%
+		for (var i=0; i<objectMetadata.fieldDescriptors.length; i++){
+			var fd = objectMetadata.fieldDescriptors[i];
+			
+		  	if(fd.attributes && fd.attributes['hidden']) continue;
+		  	if(fd.name == 'metaworksContext') continue;			
+%>			
+		<li>
+			<a href="#<%=tabId%>_<%=i+1%>" id="title_<%=objectId%>_<%=i+1%>"><%=fd.displayName%></a>
+		</li>		
+<%
+		}
+%>
+	</ul>
+<%
+		var showLabel = !(objectMetadata.faceOptions && objectMetadata.faceOptions['hideLabels']);
+		
+		for (var i=0; i<objectMetadata.fieldDescriptors.length; i++){
+			var fd = objectMetadata.fieldDescriptors[i];
+		  	
+		  	if(fd.attributes && fd.attributes['hidden']) continue;
+		  	if(fd.name == 'metaworksContext') continue;
+%>	
+	<div id="<%=tabId%>_<%=i+1%>">	
+		<span bgcolor=white> <%=fields[fd.name] ? fields[fd.name].here() : "XXX"%></span></div>
+	</div>
+<%
+		}
+%>		
+	<div>
+		<span <%=showLabel ? "colspan=2":""%>>
+<%		   
+		if(objectMetadata.serviceMethodContexts)
+			for(var key in objectMetadata.serviceMethodContexts){	   
+%>   
+		<%=methods[key].here()%>
+<%	
+			}		   
+%>
+		</span>
+	</div>		
+<%		
+	}
+%>
