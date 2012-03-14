@@ -919,10 +919,14 @@
 				
 			Metaworks3.prototype.template_error = function(e, actualFace) {
 					document.getElementById(this.errorDiv).style.display = 'block'
-					if(e.lineNumber)
-						var message = "Face Err ["+actualFace+"] at line "+e.lineNumber+": "+e.message;
-					else
-						var message = "Face Err ["+actualFace+"]: "+e.message;
+												
+					if(e.lineNumber){
+						if(e.lineText)
+							var message = "["+actualFace+"] at line "+e.lineNumber+": "+e.lineText+": "+e.message;
+						else
+							var message = "["+actualFace+"] at line "+e.lineNumber+": "+e.message;
+					}else
+						var message = "["+actualFace+"] "+e.message;
 					
 					document.getElementById(this.errorDiv).innerHTML = "<span><font color=#FB7524>" + message + "</font></span>";
 					document.getElementById(this.errorDiv).className = 'error';
@@ -1995,8 +1999,7 @@
 		   			template = "dwr/metaworks/genericfaces/MethodFace.ejs";//"<input type=button value='<%=methodName%>' onclick=\"mw3.call(<%=objectId%>, '<%=methodName%>')\">";
 		   		}
 		   		
-				var html = new EJS({url: mw3.base + (template.indexOf('dwr') == 0 ? '/':'/metaworks/') + template})
-				.render({
+		   		var contextValues = {
 					mw3					: mw3, 
 					objectId			: this.objectId, 
 					method				: this,
@@ -2004,7 +2007,13 @@
 					displayName			: this.methodContext.displayName,
 					methodContext		: this.methodContext,
 					object				: this.object
-				})
+				}
+		   		
+		   		
+				var template = new EJS({url: mw3.base + (template.indexOf('dwr') == 0 ? '/':'/metaworks/') + template, context: contextValues});
+				template.debug_mode = true;
+				
+				var html = template.render(contextValues);
 				
 				html = "<div id=method_" + this.objectId + "_" + this.methodContext.methodName + ">" + html + "</div>";
 				
