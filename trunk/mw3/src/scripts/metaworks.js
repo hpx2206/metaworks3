@@ -317,6 +317,11 @@
 			
 			Metaworks3.prototype.getMetadata = function(objectTypeName, onLoadDone){
 
+					if(!objectTypeName && objectTypeName.trim().length == 0) return;
+					
+					if(objectTypeName.indexOf(":") != -1)
+						objectTypeName = objectTypeName.split(':')[0];
+				
 					if(!this.metaworksMetadata[objectTypeName] 
 					//|| true
 					
