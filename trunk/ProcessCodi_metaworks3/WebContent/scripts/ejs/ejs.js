@@ -1,6 +1,5 @@
 (function(){
     
-
 var rsplit = function(string, regex) {
 	var result = regex.exec(string),retArr = new Array(), first_idx, last_idx, first_bit;
 	while (result != null)
@@ -33,6 +32,9 @@ extend = function(d, s){
 
 
 EJS = function( options ){
+	
+	this.debug_mode = true;
+	
 	options = typeof options == "string" ? {view: options} : options
     this.set_options(options);
 	if(options.precompiled){
@@ -96,10 +98,10 @@ EJS.prototype = {
 			var v = new EJS.Helpers(object, extra_helpers || {});
 			return this.template.process.call(object, object,v);
     	}catch(e){
+    		e.lineNumber = object.mw3.template_line;
+    		e.lineText = this.text.split('\n')[object.mw3.template_line - 1];
     		
-    		alert(this.template.out.split("\n")[e.lineNumber]);
-    		
-    		alert(e);
+    		throw e;
     	}
 	},
     update : function(element, options){
@@ -152,7 +154,7 @@ EJS.endExt = function(path, match){
 
 
 /* @Static*/
-EJS.Scanner = function(source, left, right) {
+EJS.Scanner = function(source, left, right, compiler) {
 	
     extend(this,
         {left_delimiter: 	left +'%',
@@ -167,6 +169,7 @@ EJS.Scanner = function(source, left, right) {
 	this.source = source;
 	this.stag = null;
 	this.lines = 0;
+	this.compiler = compiler;
 };
 
 EJS.Scanner.to_text = function(input){
@@ -218,17 +221,25 @@ EJS.Buffer = function(pre_cmd, post_cmd) {
 	{
 		this.push(pre_cmd[i]);
 	}
+	
+	this.currLineNumber = 0;
 };
 EJS.Buffer.prototype = {
-	
+  getCurrLine: function(){
+	  return this.script.split('\n').length;
+  },
   push: function(cmd) {
 	this.line.push(cmd);
+	
+	//this.currLineNumber = this.currLineNumber + cmd.split('\n').length;
   },
 
   cr: function() {
 	this.script = this.script + this.line.join('; ');
 	this.line = new Array();
 	this.script = this.script + "\n";
+	
+	//this.currLineNumber++;
   },
 
   close: function() {
@@ -248,7 +259,10 @@ EJS.Buffer.prototype = {
 EJS.Compiler = function(source, left) {
     this.pre_cmd = ['var ___ViewO = [];'];
 	this.post_cmd = new Array();
-	this.source = ' ';	
+	this.source = ' ';
+	
+	this.options = null;
+	
 	if (source != null)
 	{
 		if (typeof source == 'string')
@@ -275,12 +289,34 @@ EJS.Compiler = function(source, left) {
 			throw left+' is not a supported deliminator';
 			break;
 	}
-	this.scanner = new EJS.Scanner(this.source, left, right);
+	this.scanner = new EJS.Scanner(this.source, left, right, this);
 	this.out = '';
 };
 EJS.Compiler.prototype = {
+  
+  complie_rt: function(content){
+		try{
+			var object = this.options.context;
+			if(object!=null){
+				var func;
+				var line_to_be_evaled = "func = function(_CONTEXT){ with (_CONTEXT) {" + content + "} }";
+
+				eval(line_to_be_evaled);
+				
+				func(object);				
+			}
+		}catch(ex){
+			console.debug(ex);
+			throw ex;
+		}	  
+  },
   compile: function(options, name) {
   	options = options || {};
+  	
+  	//added by jjy
+  	this.options = options;
+  	//end
+  	
 	this.out = '';
 	var put_cmd = "___ViewO.push(";
 	var insert_cmd = put_cmd;
@@ -299,7 +335,8 @@ EJS.Compiler.prototype = {
 			switch(token) {
 				case '\n':
 					content = content + "\n";
-					buff.push(put_cmd + '"' + clean(content) + '");');
+					
+					buff.push('mw3.template_line = ' + buff.getCurrLine() + ';' + put_cmd + '"' + clean(content) + '");');
 					buff.cr();
 					content = '';
 					break;
@@ -309,7 +346,7 @@ EJS.Compiler.prototype = {
 					scanner.stag = token;
 					if (content.length > 0)
 					{
-						buff.push(put_cmd + '"' + clean(content) + '")');
+						buff.push('mw3.template_line = ' + buff.getCurrLine() + ';' + put_cmd + '"' + clean(content) + '")');
 					}
 					content = '';
 					break;
@@ -337,7 +374,17 @@ EJS.Compiler.prototype = {
 							}
 							break;
 						case scanner.left_equal:
-							buff.push(insert_cmd + "(EJS.Scanner.to_text(" + content + ")))");
+							
+							//if(this.debug_mode)
+//								content = 
+//									"function(){try{return evil('" + content + "')}catch(ex){ex.message = 'in expression: "+ content + " : ' + ex.message; throw ex;}}.call()";
+								
+							
+
+						
+							//scanner.compiler.complie_rt(content);
+							
+							buff.push('mw3.template_line = ' + buff.getCurrLine() + ';' + insert_cmd + "(EJS.Scanner.to_text(" + content + ")))");
 							break;
 					}
 					scanner.stag = null;
@@ -355,17 +402,15 @@ EJS.Compiler.prototype = {
 	if (content.length > 0)
 	{
 		// Chould be content.dump in Ruby
-		buff.push(put_cmd + '"' + clean(content) + '")');
+		buff.push('mw3.template_line = ' + buff.currLineNumber + ';' + put_cmd + '"' + clean(content) + '")');
 	}
 	buff.close();
 	this.out = buff.script + ";";
-	var to_be_evaled = '/*'+name+'*/this.process = function(_CONTEXT,_VIEW) { try { with(_VIEW) { with (_CONTEXT) {'+this.out+"return ___ViewO.join('');}}}catch(e){ throw e;}};";
+	var to_be_evaled = '/*'+name+'*/this.process = function(_CONTEXT,_VIEW) { try { with(_VIEW) { with (_CONTEXT) {'+this.out+"return ___ViewO.join('');}}}catch(e){throw e;}};";
 	
 	try{
 		eval(to_be_evaled);
 	}catch(e){
-		
-		console.log(to_be_evaled);
 		
 		if(typeof JSLINT != 'undefined'){
 			JSLINT(this.out);
