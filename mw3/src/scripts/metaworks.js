@@ -564,8 +564,7 @@
 						if(metadata)
 							url = url + "?ver=" + metadata.version; //let it refreshed
 						
-						var html = new EJS({url: url})
-							.render({
+						var contextValues = {
 								value				: object, 
 								objectTypeName		: objectTypeName, 
 								targetDiv			: targetDiv, 
@@ -577,7 +576,24 @@
 								methods				: (objectRef ? objectRef.methods : null),
 								descriptor			: descriptor,
 								editFunction		: editFunction
-							})
+								
+						};
+						
+				   		contextValues['include'] = function(ejsPath){
+				   			var actualFace = ejsPath;
+				   			
+							if(actualFace.indexOf("genericfaces") == 0){ //TODO: will need to be optional
+								actualFace = "dwr/metaworks/" + actualFace;
+							}
+							
+							var url = mw3.base + (actualFace.indexOf('dwr') == 0 ? '/':'/metaworks/') + actualFace;
+							
+							var templateEngine = new EJS({url: url});
+							
+							return templateEngine.render(contextValues);
+				   		};
+				   						   		
+						var html = new EJS({url: url}).render(contextValues);
 
 
 						//alert(html);
@@ -2009,12 +2025,17 @@
 					object				: this.object
 				}
 		   		
+				var templateEngine = new EJS({url: mw3.base + (template.indexOf('dwr') == 0 ? '/':'/metaworks/') + template, context: contextValues});
+				
+				var html = templateEngine.render(contextValues);		   		
 		   		
+		   		/*
 				var template = new EJS({url: mw3.base + (template.indexOf('dwr') == 0 ? '/':'/metaworks/') + template, context: contextValues});
 				template.debug_mode = true;
 				
 				var html = template.render(contextValues);
-				
+				*/
+		   		
 				html = "<div id=method_" + this.objectId + "_" + this.methodContext.methodName + ">" + html + "</div>";
 				
 				return html;
