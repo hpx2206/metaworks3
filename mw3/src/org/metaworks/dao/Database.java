@@ -6,15 +6,15 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.persistence.GeneratedValue;
+
 import org.metaworks.FieldDescriptor;
 import org.metaworks.MetaworksContext;
 import org.metaworks.ObjectInstance;
 import org.metaworks.ObjectType;
-import org.metaworks.Type;
 import org.metaworks.WebFieldDescriptor;
 import org.metaworks.WebObjectType;
 import org.metaworks.dwr.MetaworksRemoteService;
-import org.metaworks.example.roomnine.FormField;
 
 public class Database<T extends IDAO> implements IDAO, Serializable, Cloneable{
 	
@@ -328,6 +328,16 @@ public class Database<T extends IDAO> implements IDAO, Serializable, Cloneable{
 		Class iDAOType = webObjectType.iDAOClass();
 		if(iDAOType == null) iDAOType = IDAO.class;
 		
+		GeneratedValue gv = (GeneratedValue) iDAOType.getMethod("get"+ webObjectType.metaworks2Type().getKeyFieldDescriptor().getName(), null).getAnnotation(GeneratedValue.class);
+		Long genKey = null;		
+		if(gv!=null) {			
+			if(gv.generator() != null || !gv.generator().equals("")) {
+				genKey = UniqueKeyGenerator.issueWorkItemKey(TransactionContext.getThreadLocalInstance());
+				objInst.setFieldValue(webObjectType.metaworks2Type().getKeyFieldDescriptor().getName(), genKey);
+			}
+		}		
+		//end
+		
 		//this will add the dao to cache list which would be inserted or updated when the transaction is committed
 		// so that all the changes in the database is manipulated in memory space, and updated only the changes to the database.
 		IDAO dao = TransactionContext.getThreadLocalInstance().createSynchronizedDAO(
@@ -340,6 +350,9 @@ public class Database<T extends IDAO> implements IDAO, Serializable, Cloneable{
 		
 		if(defaultValue==null) return dao;
 		
+		if(genKey != null) {
+			dao.set(webObjectType.metaworks2Type().getKeyFieldDescriptor().getName(), genKey);
+		}
 		
 		//set the object value to prepare the where clauses well. this part is not for getting relation tuple to object, is for converting object to tuple.
 		for(FieldDescriptor fd : webObjectType.metaworks2Type().getFieldDescriptors()){
@@ -350,6 +363,7 @@ public class Database<T extends IDAO> implements IDAO, Serializable, Cloneable{
 				if(MetaworksRemoteService.getInstance().getMetaworksType(webObjectType.iDAOClass().getName()).metaworks2Type().getFieldDescriptor(fd.getName()) == null) 
 					continue;
 			}
+			
 			
 			
 			ObjectInstance databaseObjInst = (ObjectInstance) MetaworksRemoteService.getInstance().getMetaworksType(dao.getImplementationObject().getDaoClass().getName()).metaworks2Type().createInstance();
