@@ -55,6 +55,10 @@
 
 				this.recentCallMethodName = null;
 				
+			    this.popupDivId;
+			    this.recentOpenerObjectId;
+
+				
 			    document.addEventListener(
 			    		"mouseup",
 
@@ -97,7 +101,6 @@
 			    		false
 				);
 			    
-			    this.popupDivId;
 			}
 
 			Metaworks3.prototype.debug = function(argument, when){
@@ -364,6 +367,9 @@
 										if(serviceMethod.childrenGetter){
 											webObjectType['childrenGetter'] = serviceMethod;
 										}
+										
+										if(serviceMethod.keyBinding)
+											webObjectType['focusable'] = true;
 									}
 								
 				        		},
@@ -756,7 +762,9 @@
 
 				var options = arguments[3];
 				
-				html="<div id='"+divId+"' tabindex='"+objectId+"' className='" + className + "'>...  LOADING PROPERTY ...</div><div id='"+infoDivId+"'></div>";
+				var metadata = this.getMetadata(className);
+				
+				html="<div id='"+divId+ "'" + (metadata.focusable ? " tabindex='"+objectId+"'" : "") + " className='" + className + "'>...  LOADING PROPERTY ...</div><div id='"+infoDivId+"'></div>";
 				
 				html+="<" + "script>";
 				html+="   mw3.showObjectWithObjectId('"+this.objectId+"','"+className+"', '#"+divId+"'"+(options ? ", "+ JSON.stringify(options) : "") +");"
@@ -835,7 +843,7 @@
 				return this._createObjectRef(this.targetObjectId, getObject());
 			}
 			
-			Metaworks3.prototype.removeObject = function(){
+			Metaworks3.prototype.removeObject = function(objectId){
 				if(arguments.length == 0)
 					objectId = this.targetObjectId;
 				
@@ -907,9 +915,9 @@
 			Metaworks3.prototype.template_error = function(e, actualFace) {
 					document.getElementById(this.errorDiv).style.display = 'block'
 					if(e.lineNumber)
-						var message = "There is an error in your template ["+actualFace+"] at line "+e.lineNumber+": "+e.message;
+						var message = "Face Err ["+actualFace+"] at line "+e.lineNumber+": "+e.message;
 					else
-						var message = "There is an error in your template ["+actualFace+"]: "+e.message;
+						var message = "Face Err ["+actualFace+"]: "+e.message;
 					
 					document.getElementById(this.errorDiv).innerHTML = "<span><font color=#FB7524>" + message + "</font></span>";
 					document.getElementById(this.errorDiv).className = 'error';
@@ -1140,7 +1148,12 @@
 					
 					var returnValue;
 					
-					var objectKey = this._createObjectKey(object, true);
+					var objectKey = this._createObjectKey(object);
+					
+					//This lets the called object doesn't have identifier, it should be focused to be set result if the result is it's type.
+					if(objectKey && objectKey.indexOf("@")==-1)
+						this.objectId_KeyMapping[objectKey] = objId;
+						
 					
 					this.metaworksProxy.callMetaworksService(className, object, svcNameAndMethodName, autowiredObjects,
 							{ 
@@ -1159,18 +1172,28 @@
 					        				mw3.setObject(objId, result);
 					        				
 					        			}else if(serviceMethodContext.target=="popup"){
-						        			
+
+					        				//store the recently added object Id for recent opener
+					        				mw3.recentOpenerObjectId = objId;
+
 					        				mw3.popupDivId = 'popup_' + objId;
 					        				$('body').append("<div id='" + mw3.popupDivId + "' style='z-index:10;position:absolute; top:50px; left:10px'></div>");
-					        				mw3.locateObject(result, null, '#' + mw3.popupDivId);
+					        				mw3.locateObject(result, null, '#' + mw3.popupDivId).targetDivId;
 					        				
 					        				//objId = mw3.targetObjectId;
 					        			}else if(serviceMethodContext.target=="stick"){
 							    			mw3.popupDivId = 'stick_' + objId;
 					        				$('body').append("<div id='" + mw3.popupDivId + "' style='z-index:10;position:absolute; top:" + mw3.mouseY + "px; left:" + mw3.mouseX + "px'></div>");
 					        				mw3.locateObject(result, null, '#' + mw3.popupDivId);
-					    
+
+					        				//store the recently added object Id for recebt opener
+					        				mw3.recentOpenerObjectId = objId;
+
 					        				//objId = mw3.targetObjectId;
+					        				
+					        			}else if(serviceMethodContext.target=="opener" && mw3.recentOpenerObjectId){
+					        				
+					        				mw3.setObject(mw3.recentOpenerObjectId, result);
 					        				
 					        			}else{ //case of target is "auto"
 					        			
@@ -1189,6 +1212,7 @@
 							        			if(objKeys && objKeys.length){
 						        									        				
 							        				for(var i=0; i<objKeys.length && neverShowed; i++){
+							        					
 								        				mappedObjId = mw3.objectId_KeyMapping[objKeys[i]];
 								        				
 								        				var mappedObjdivId = "objDiv_" + mappedObjId;
@@ -1241,7 +1265,7 @@
 				        			}
 
 				        			//after call the request, the call-originator should be focused again.
-				        			var sourceObjectIdNewlyGotten = mw3.objectId_KeyMapping[objectKey[0]];
+				        			var sourceObjectIdNewlyGotten = mw3.objectId_KeyMapping[objectKey];
 				        			if(sourceObjectIdNewlyGotten){
 				        				$("#objDiv_" + sourceObjectIdNewlyGotten).focus();
 				        				objId = sourceObjectIdNewlyGotten;
