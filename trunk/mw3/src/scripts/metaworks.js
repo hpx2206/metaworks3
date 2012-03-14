@@ -953,6 +953,20 @@
 				return "_mapped_input_for_" + objectId;
 			}
 			
+			Metaworks3.prototype.getInputElement = function(objectId, propName){
+				var beanPaths = mw3.beanExpressions[objectId];
+				if(!beanPaths) return null;
+				
+				var beanPath = beanPaths["." + propName];
+				if(!beanPath) return null;
+				
+				var inputId = mw3.createInputId(beanPath.valueObjectId); //try object.resourceName.__objectId
+				
+				var inputElement = document.getElementById(inputId); //will be "mw3.getInputElement(object.resoureceName)"
+
+				return inputElement;
+			}
+			
 			Metaworks3.prototype.getObject = function(){
 				var objectId;
 				
