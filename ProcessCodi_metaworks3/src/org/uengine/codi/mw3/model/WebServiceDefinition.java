@@ -4,11 +4,12 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.cxf.tools.wsdlto.WSDLToJava;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Available;
-import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.NonEditable;
 import org.metaworks.annotation.ServiceMethod;
@@ -19,7 +20,6 @@ import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.admin.ClassDefinition;
 import org.uengine.processmanager.ProcessManagerRemote;
 
-@Face(options="hideEditBtn", values="true")   
 public class WebServiceDefinition  {
 	
 	transient MetaworksContext metaworksContext;
@@ -37,6 +37,15 @@ public class WebServiceDefinition  {
 	private String targetPackage;
 	private String compileOption;
 	
+	private List<ClassDefinition> clsList;
+	
+	public List<ClassDefinition> getClsList() {
+		return clsList;
+	}
+	public void setClsList(List<ClassDefinition> clsList) {
+		this.clsList = clsList;
+	}
+
 	@Autowired
 	transient public ProcessManagerRemote processManager;
 	
@@ -53,6 +62,8 @@ public class WebServiceDefinition  {
 		setMetaworksContext(new MetaworksContext());
 		getMetaworksContext().setWhere("step1");
 		getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+		
+		clsList = new ArrayList<ClassDefinition>();
 	}
 
 	@Available(where="step2")
@@ -100,16 +111,6 @@ public class WebServiceDefinition  {
 	@ServiceMethod(callByContent=true, where="step1")
 	public void generateAdapter() throws Exception {
 		
-		
-//		"-client",
-//		"-p",
-//		"com.roomnine.userservice",
-//		"-d",
-//		"src",
-//		"-compile",
-//		"-impl",
-//		"http://localhost:9000/UsersService?wsdl"
-		
 		String userId = null;
 		try{
 			userId = (String) TransactionContext.getThreadLocalInstance().getRequest().getSession().getAttribute("userId");
@@ -119,10 +120,53 @@ public class WebServiceDefinition  {
 		
 		String rootPath = CodiClassLoader.getMyClassLoader().sourceCodeBase();		
 		
+		/*
+		WSDLToJava w2j = new WSDLToJava(new String[] {
+				"-client",
+				"-p",
+				getTargetPackage(),
+				"-d",
+				rootPath,
+				// "-compile",
+				"-impl",
+				getWsdlUrl()
+			});
+		
+        try {
+
+            w2j.run(new ToolContext());
+
+        } catch (ToolException ex) {
+            System.err.println();
+            System.err.println("WSDLToJava Error: " + ex.getMessage());
+            System.err.println();
+            if (w2j.isVerbose()) {
+                ex.printStackTrace();
+            }
+            if (w2j.isExitOnFinish()) {
+                System.exit(1);
+            }
+            
+        } catch (Exception ex) {
+            System.err.println("WSDLToJava Error: " + ex.getMessage());
+            System.err.println();
+            if (w2j.isVerbose()) {
+                ex.printStackTrace();
+            }
+            if (w2j.isExitOnFinish()) {
+                System.exit(1);
+            }
+            
+        }
+        if (w2j.isExitOnFinish()) {
+            System.exit(0);
+        }
+        */
+        
 		WSDLToJava.main(new String[] {
 				"-client",
 				"-p",
-				getTargetPackage()  + "." + name,
+				getTargetPackage(),
 				"-d",
 				rootPath,
 				// "-compile",
@@ -131,20 +175,24 @@ public class WebServiceDefinition  {
 			});
 		
 		
-		String inTargetPackage = getTargetPackage() + "." + name;
+		String inTargetPackage = getTargetPackage();
 		String filePath = rootPath + "/" + inTargetPackage.replace(".", "/");
 		
 		File f = new File(filePath);
-		StringBuffer sb = new StringBuffer();
 		
 		
 		File[] arrFile = f.listFiles();
 		if(arrFile.length > 0) {
 		    for(int i = 0; i < arrFile.length; i++){
+		    	
+		    	StringBuffer sb = new StringBuffer();
+		    	
 		    	ClassDefinition classDefinition = new ClassDefinition();
 		    	classDefinition.processManager = processManager; 
+		    	
 				classDefinition.setParentFolder("1");
-				classDefinition.setPackageName(getTargetPackage() + "." + name);
+				
+				classDefinition.setPackageName(getTargetPackage());
 				classDefinition.setClassName(arrFile[i].getName().replace(".java", ""));	
 				
 				char[] c = new char[(int)arrFile[i].length()];
@@ -157,6 +205,9 @@ public class WebServiceDefinition  {
 				classDefinition.getSourceCodes().setSourceCode(new JavaSourceCode());
 				classDefinition.getSourceCodes().getSourceCode().setCode(sb.toString());
 				classDefinition.save();
+				
+				clsList.add(classDefinition);
+				
 		    }
 		}
 	    
@@ -190,9 +241,6 @@ public class WebServiceDefinition  {
 		serviceName = targetUrl.getPath().substring(slashIdx + 1, tokenIndex);
 		setName(serviceName);
 		
-//		targetUrl.getPath().lastIndexOf("/");
-//		targetUrl.getPath().lastIndexOf(".");
-//		targetUrl.getPath().lastIndexOf("?");
 		
 	}
 	
