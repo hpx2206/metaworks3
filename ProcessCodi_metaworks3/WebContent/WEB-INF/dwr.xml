@@ -25,7 +25,8 @@
 	<convert converter="metaworks" match="java.lang.Class"/>
 	<convert converter="metaworks" match="java.lang.Object"/>
 	<convert converter="metaworks" match="org.uengine.codi.mw3.model.*"/>
-	<convert converter="metaworks" match="org.uengine.codi.activitytypes.wih.*"/>
+	<convert converter="metaworks" match="org.uengine.codi.activitytypes.wih.*"/>	
+	<convert converter="metaworks" match="com.defaultcompany.sample.*"/>
 	
 	<convert match="java.lang.Exception" converter="exception">
   		<param name='include' value='message,lineNumber'/>
