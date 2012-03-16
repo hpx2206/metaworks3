@@ -57,8 +57,32 @@
 				
 			    this.popupDivId;
 			    this.recentOpenerObjectId;
+			    
+			    this.browser = browserCheck();
+			    	
+			    // Netscape
+			    // 5.0 (Windows NT 6.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11
+			    // Mozilla
+			    // Win32 
+			    
+			    // Microsoft Internet Explorer
+			    // 9 : 5.0 (compatible; MSIE 9.0; Windows NT 6.1; Trident/5.0)
+			    // 8 : 4.0 (compatible; MSIE 8.0; Windows NT 6.1; Trident/4.0; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; Tablet PC 2.0; .NET4.0C)
+			    // 7 : 4.0 (compatible; MSIE 7.0; Windows NT 6.1; SLCC2; .NET CLR 2.0.50727; .NET CLR 3.5.30729; .NET CLR 3.0.30729; Media Center PC 6.0; Tablet PC 2.0; .NET4.0C)
 
-				
+			    // Mozilla
+			    // Win32 
+
+			    // ie6~ie8 : addachEvent
+			    // other   : addEventListener
+
+			    // eventListener 없을때 (ie6~ie8) 처리
+			    if(!document.addEventListener){
+			    	document.addEventListener = function(type, listener, useCapture){
+			    		document.attachEvent(type, listener, useCapture);
+			    	}
+			    }
+			    
 			    document.addEventListener(
 			    		"mouseup",
 
@@ -1086,13 +1110,14 @@
 	
 					var objectFromUI = this.getObjectFromUI(objId);
 					
-					if(objectFromUI.__faceHelper && getAgain)				
-						object = mw3.getObject(objId);
-					else
-						object = objectFromUI;
+					if(objectFromUI.__faceHelper && getAgain){				
+						var object = mw3.getObject(objId);
+					}else{
+						var object = objectFromUI;
+					}
 //				}else{
-//					object = objId; //TODO: readability is bad.
-//				}
+//				object = objId; //TODO: readability is bad.
+//			}
 				
 				//var thisMetaworks = this;
 				var divId = "objDiv_" + objId;
@@ -1101,7 +1126,7 @@
 				
 				if(svcNameAndMethodName.indexOf('.') == -1){ //if there only methodname has been provided, guess the service name
 
-					className = object.__className;
+					var className = object.__className;
 					//var serviceName = className.subtring(className.lastIndexOf('.')) + 'Service';
 					//svcNameAndMethodName = serviceName + "." + svcNameAndMethodName;
 					
@@ -1307,7 +1332,7 @@
 				        			var sourceObjectIdNewlyGotten = mw3.objectId_KeyMapping[objectKey];
 				        			if(sourceObjectIdNewlyGotten){
 				        				$("#objDiv_" + sourceObjectIdNewlyGotten).focus();
-				        				objId = sourceObjectIdNewlyGotten;
+				        				//objId = sourceObjectIdNewlyGotten;
 				        			}
 
 				        			if(serviceMethodContext.target!="none"){
@@ -2065,3 +2090,41 @@
 				
 				return mw3.locateObject(object, null, divName).getObject();
 			}
+
+
+			function getInternetVersion(ver) { 
+				var rv = -1; // Return value assumes failure.      
+				var ua = navigator.userAgent;  
+				var re = null;
+				if(ver == "MSIE"){
+					re = new RegExp("MSIE ([0-9]{1,}[\.0-9]{0,})");
+				}else{
+					re = new RegExp(ver+"/([0-9]{1,}[\.0-9]{0,})");
+				}
+				if (re.exec(ua) != null){ 
+					rv = parseFloat(RegExp.$1);
+				} 
+				return rv;  
+			} 
+
+			//브라우저 종류 및 버전확인  
+			function browserCheck(){
+				var name = "";
+				var ver = 0;
+				
+				if(navigator.appName.charAt(0) == "N"){ 
+					if(navigator.userAgent.indexOf("Chrome") != -1){
+						name = "Chrome";						
+					}else if(navigator.userAgent.indexOf("Firefox") != -1){
+						name = "Firefox";
+					}else if(navigator.userAgent.indexOf("Safari") != -1){
+						name = "Safari";
+					}
+				}else if(navigator.appName.charAt(0) == "M"){
+					name = "MSIE";
+				}
+				
+				ver = getInternetVersion(name);
+				
+				return name + ' ' + ver;
+			} 			
