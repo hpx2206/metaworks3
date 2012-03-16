@@ -1,11 +1,12 @@
 package org.metaworks.dao;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.persistence.GeneratedValue;
 
 import org.metaworks.FieldDescriptor;
 import org.metaworks.MetaworksContext;
@@ -13,8 +14,6 @@ import org.metaworks.ObjectInstance;
 import org.metaworks.ObjectType;
 import org.metaworks.WebFieldDescriptor;
 import org.metaworks.WebObjectType;
-import org.metaworks.annotation.GeneratedValue;
-import org.metaworks.annotation.Hidden;
 import org.metaworks.dwr.MetaworksRemoteService;
 
 public class Database<T extends IDAO> implements IDAO, Serializable, Cloneable{
