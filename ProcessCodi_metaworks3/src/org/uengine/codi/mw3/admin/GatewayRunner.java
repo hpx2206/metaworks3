@@ -62,8 +62,9 @@ public class GatewayRunner{
 		HttpSession session = TransactionContext.getThreadLocalInstance().getRequest().getSession(); 
 		session.setAttribute("userId", getClassOwner());
 		
-		if(new File(CodiClassLoader.mySourceCodeBase()).exists()){
-			session.setAttribute("sourceCodeBase", CodiClassLoader.mySourceCodeBase());
+		String myCodeBase = CodiClassLoader.mySourceCodeBase();
+		if(myCodeBase!=null && new File(myCodeBase).exists()){
+			session.setAttribute("sourceCodeBase", myCodeBase);
 		}
 
 
