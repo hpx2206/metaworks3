@@ -27,7 +27,7 @@ public class MySQLDAOFactory extends OracleDAOFactory{
 		
 		System.out.println("forWhat = " + forWhat);
 		
-		boolean option_useTableNameHeader = true;
+		boolean option_useTableNameHeader = false;
 		if(options!=null && options.containsKey("useTableNameHeader")){
 			option_useTableNameHeader = !"false".equals(options.get("useTableNameHeader"));
 		}
