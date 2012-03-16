@@ -569,6 +569,10 @@
 							}
 						}
 					
+					//only when the descriptor has some options, the object is given to access to it's descriptor among properties in it's parent object.
+					if(descriptor.options)
+						object['__descriptor'] = descriptor;
+					
 					try {
 						//alert("selected face : " + actualFace);
 						
@@ -1011,8 +1015,8 @@
 				}
 
 				//Since we believe getObjectFromUI is inherently getting the right data.
-//				if(value==null)
-//					value = this.objects[objectId];
+				if(value==null)
+					value = this.objects[objectId];
 				
 				//sometimes the armed object may be unarmed by the user-defined facehelper.getValue() method
 				if(value && !value.__objectId)
@@ -1039,11 +1043,11 @@
 					eval("this.objects[objectId]" + beanPath.fieldName + "=this.getObject('" + beanPath.valueObjectId + "')");
 				}
 				
-				if(!inputTag && !beanPaths){
-					
+				//if(!inputTag && !beanPaths){
+				if(value==null)
 						value = this.objects[objectId];
 					
-				}
+				//}
 				
 				//sometimes the armed object may be unarmed by the user-defined facehelper.getValue() method
 				if(value && !value.__objectId)
