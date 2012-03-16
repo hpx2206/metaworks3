@@ -1,12 +1,11 @@
 package org.metaworks.dao;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.persistence.GeneratedValue;
 
 import org.metaworks.FieldDescriptor;
 import org.metaworks.MetaworksContext;
@@ -14,6 +13,8 @@ import org.metaworks.ObjectInstance;
 import org.metaworks.ObjectType;
 import org.metaworks.WebFieldDescriptor;
 import org.metaworks.WebObjectType;
+import org.metaworks.annotation.GeneratedValue;
+import org.metaworks.annotation.Hidden;
 import org.metaworks.dwr.MetaworksRemoteService;
 
 public class Database<T extends IDAO> implements IDAO, Serializable, Cloneable{
@@ -150,9 +151,10 @@ public class Database<T extends IDAO> implements IDAO, Serializable, Cloneable{
 		
 		oi.setObject(this);
 		
-		Object keyValue = oi.getFieldValue(wot.metaworks2Type().getKeyFieldDescriptor().getName());
+		String keyName = wot.metaworks2Type().getKeyFieldDescriptor().getName();		
+		Object keyValue = oi.getFieldValue(keyName);
 
-		if(keyValue == null)
+		if(keyValue == null && wot.iDAOClass().getMethod("get"+keyName, null).getAnnotation(GeneratedValue.class) == null)
 			throw new Exception("Even though domain class '" + wot.metaworks2Type().getName() + "' is a database synchronizable object, it has no key value.");
 
 		
@@ -332,7 +334,7 @@ public class Database<T extends IDAO> implements IDAO, Serializable, Cloneable{
 		Long genKey = null;		
 		if(gv!=null) {			
 			if(gv.generator() != null || !gv.generator().equals("")) {
-				genKey = UniqueKeyGenerator.issueWorkItemKey(TransactionContext.getThreadLocalInstance());
+				genKey = UniqueKeyGenerator.issueKey(webObjectType.metaworks2Type().getName(), TransactionContext.getThreadLocalInstance());
 				objInst.setFieldValue(webObjectType.metaworks2Type().getKeyFieldDescriptor().getName(), genKey);
 			}
 		}		
