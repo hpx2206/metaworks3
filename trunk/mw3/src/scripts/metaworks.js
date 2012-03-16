@@ -1009,9 +1009,10 @@
 				}else{
 					value = this.getObjectFromUI(objectId);
 				}
-				
-				if(value==null)
-					value = this.objects[objectId];
+
+				//Since we believe getObjectFromUI is inherently getting the right data.
+//				if(value==null)
+//					value = this.objects[objectId];
 				
 				//sometimes the armed object may be unarmed by the user-defined facehelper.getValue() method
 				if(value && !value.__objectId)
@@ -1038,9 +1039,11 @@
 					eval("this.objects[objectId]" + beanPath.fieldName + "=this.getObject('" + beanPath.valueObjectId + "')");
 				}
 				
-				
-				if(!value)
-					value = this.objects[objectId];
+				if(!inputTag && !beanPaths){
+					
+						value = this.objects[objectId];
+					
+				}
 				
 				//sometimes the armed object may be unarmed by the user-defined facehelper.getValue() method
 				if(value && !value.__objectId)
