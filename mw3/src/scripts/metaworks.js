@@ -559,7 +559,7 @@
 					
 					var descriptor = (options ? options['descriptor']: null);
 					
-					if(descriptor!=null)
+					if(descriptor!=null){
 						descriptor['getOptionValue'] = function(option){
 							if(this.options!=null && this.values!=null)
 							
@@ -569,9 +569,11 @@
 							}
 						}
 					
-					//only when the descriptor has some options, the object is given to access to it's descriptor among properties in it's parent object.
-					if(descriptor.options)
-						object['__descriptor'] = descriptor;
+						//only when the descriptor has some options, the object is given to access to it's descriptor among properties in it's parent object.
+						// 2012-03-16 cjw descriptor null 오류로 위치 수정
+						if(descriptor.options)
+							object['__descriptor'] = descriptor;
+					}
 					
 					try {
 						//alert("selected face : " + actualFace);
@@ -1229,6 +1231,9 @@
 					this.metaworksProxy.callMetaworksService(className, object, svcNameAndMethodName, autowiredObjects,
 							{ 
 				        		callback: function( result ){
+				        			// 2012-03-19 cjw 기존 소스가 ejs.js 생성자 호출 보다 늦게 method 값을 할당하여 맨위로 올림
+				        			mw3.recentCallMethodName = svcNameAndMethodName;
+				        			
 				    				//alert("call.result=" + dwr.util.toDescriptiveString(result, 5))
 //				    				mw3.debug("call result");
 
@@ -1364,9 +1369,7 @@
 					    				}
 					        			
 				        			}
-
 				        			
-				        			mw3.recentCallMethodName = svcNameAndMethodName;
 				        			if(mw3.afterCall)
 				        				mw3.afterCall(svcNameAndMethodName, result);
 				        		},
