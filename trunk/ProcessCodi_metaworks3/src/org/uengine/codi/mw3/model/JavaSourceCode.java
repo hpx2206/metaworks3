@@ -69,11 +69,10 @@ public class JavaSourceCode extends SourceCode {
 		else
 			expression = getLineAssistRequested();
 		
-		//System.out.println("expression = " + expression);
-		//System.out.println("Line Count = " + lineCnt);
+		System.out.println("expression = " + expression);
 		
 		if(expression.length() > 0){
-					
+			
 			String typeName = null;
 			String fullTypeName = null;
 			String[] lines = getCode().split("\n");
@@ -85,6 +84,8 @@ public class JavaSourceCode extends SourceCode {
 				String line = lines[i];
 				
 				int whereExp = line.indexOf(" " + expression);
+								
+				System.out.println("whereExp = " + whereExp);
 
 				if(typeName == null){ //if typeName is not set, find the expression's type first.
 					if(!line.trim().startsWith(expression) && whereExp > 0){
@@ -101,10 +102,15 @@ public class JavaSourceCode extends SourceCode {
 						if(j < 0) j = 0;
 						
 						typeName = line.substring(j).trim();
-						if(typeName.startsWith(".")) typeName = typeName.substring(1);
-						
+												
 						if(typeName.equals("return"))
 							typeName = null; //ignores 'return' is recognized as typeName
+						
+						if(typeName!=null && typeName.equals("=")) 
+							typeName = null;
+						
+						if(typeName!=null && typeName.startsWith(".")) 
+							typeName = typeName.substring(1);
 						
 						if(typeName!=null && typeName.indexOf('.') > -1){
 							fullTypeName = typeName;
@@ -112,6 +118,7 @@ public class JavaSourceCode extends SourceCode {
 					}
 				}else{ //if typeName found, search the import statement.
 					line = line.trim();
+					System.out.println("typeName = " + typeName);
 					if((line.startsWith("import ") && line.endsWith(".*;")) || (line.startsWith("import ") && line.endsWith("." + typeName + ";"))) {
 						if(line.endsWith(".*;")) {
 							String searchClass = line.substring(line.indexOf(' '), line.length()-2).trim() + typeName;
@@ -124,23 +131,30 @@ public class JavaSourceCode extends SourceCode {
 							fullTypeName = line.substring(line.indexOf(' '), line.length()-1).trim();
 						}
 						
-					}					
+					} else {
+						expression = typeName;
+						typeName = null;
+					}
 					
 				}
 			}
 			
-			try{
-				String javaLangExp = "java.lang." + expression;
-				Class.forName(javaLangExp);
-				fullTypeName = javaLangExp;
-			}catch(Exception e){
-				
+			if(typeName != null) {
+				try{
+					String javaLangExp = "java.lang." + expression;
+					Class.forName(javaLangExp);
+					fullTypeName = javaLangExp;
+				}catch(Exception e){
+					
+				}
 			}
 			
 			//TODO:
 			//if there should be use of asterisk in the import statement. etc. import com.abc.*,
 			// we need to try to append the typeName where the asterisk and load the class, if the class successfully loaded, 
 			// we can get the class is right one. (sometimes, ambiguity issue can be arise)
+			
+			System.out.println("fullTypeName = " + fullTypeName);
 			
 			if(fullTypeName!=null)
 			try{
@@ -172,14 +186,14 @@ public class JavaSourceCode extends SourceCode {
 				
 				return codeAssist;
 				
-			}catch(Exception e){
+			}catch(Exception e) {
 				e.printStackTrace();
 			}
 			
 			
 			//////// case that importing package name has been requested.
 			
-			if(getLineAssistRequested().trim().startsWith("import "))
+			if(getLineAssistRequested().trim().startsWith("import ") || (fullTypeName == null && typeName == null))
 			try {
 				
 				
@@ -193,6 +207,16 @@ public class JavaSourceCode extends SourceCode {
 				
 				
 				if(packageNames.size() == 0){//{.containsKey(expression)) {
+					
+					if(fullTypeName == null && typeName == null) {
+			    		String clsName = "java.lang." + expression;
+			    		try {
+			    			Class.forName(clsName);
+			    			System.out.println(clsName.replace(".", "/") + ".class");
+			    			codeAssist.getAssistances().add(clsName);
+			    		} catch(ClassNotFoundException ex) {}
+			    	}
+					
 					for(URL url : urls){
 						
 						if(url.getFile().endsWith(".jar") || url.getFile().endsWith(".zip") ){
@@ -205,6 +229,13 @@ public class JavaSourceCode extends SourceCode {
 						    	while((zipEntry = zipIn.getNextEntry()) != null) {
 						    		
 						    		//if(expression.indexOf(".") > -1) expression = expression.replace('.', '/');
+						    		
+						    		if((fullTypeName == null && typeName == null) && zipEntry.getName().indexOf("/" + expression + ".class") > -1) {
+						    			System.out.println(zipEntry.getName());
+						    			String clsName = zipEntry.getName().replace("/", ".");
+						    			codeAssist.getAssistances().add(clsName.substring(0, clsName.lastIndexOf(".")));
+						    			continue;
+						    		}
 						    		
 						    		if(zipEntry.getName().startsWith(expression.replace('.', '/'))){
 										String clsName = zipEntry.getName();
