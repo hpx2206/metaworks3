@@ -20,17 +20,19 @@ var org_metaworks_example_ide_SourceCode = function(objectId, className){
     
     
     var ctrlDown = false;	
-	var ctrlKey = 17, spaceKey = 32;
+	var ctrlKey = 17, spaceKey = 81;//32
 	
     
     document.addEventListener(
 		"keydown",
    		function(e) {			
 			if (e && e.keyCode == ctrlKey && !ctrlDown && theEditor.textInput.getElement() == e.srcElement) {
-				ctrlDown = true;				
+				ctrlDown = true;
+				console.log("ctrlDown = " + ctrlDown);
 			}
-			
+			//console.log("space down : " + e.keyCode);
 			if (e && ctrlDown && e.keyCode == spaceKey && theEditor.textInput.getElement() == e.srcElement) {
+				//console.log("space down");
 				e.returnValue = false;
 			}
 			
@@ -79,8 +81,11 @@ var org_metaworks_example_ide_SourceCode = function(objectId, className){
 
    		function(e) {
 			if (e && e.keyCode == ctrlKey && ctrlDown && theEditor.textInput.getElement() == e.srcElement) {				
-				ctrlDown = false;				
+				ctrlDown = false;	
+				console.log("ctrlDown = " + ctrlDown);
 			}
+			
+			//console.log("keyCode = " + e.keyCode + ", " + theEditor.textInput.getElement() == e.srcElement);
 			
 			if (ctrlDown && e.keyCode == spaceKey && theEditor.textInput.getElement() == e.srcElement) {				
 				var whereEnd = theEditor.getCursorPosition();
@@ -89,7 +94,7 @@ var org_metaworks_example_ide_SourceCode = function(objectId, className){
 				
 				var fullLine = theEditor.getSession().doc.getLine(whereEnd.row);
 				
-				//alert(fullLine);
+				//alert(line + " : " + fullLine);
 				
 				var sourceCode = mw3.getObject(theSourceCodeObjId);				
 				sourceCode.lineAssistRequested = fullLine;
