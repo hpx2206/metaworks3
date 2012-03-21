@@ -1,12 +1,79 @@
-<table>
+<table cellspacing="0"  class="sub_table">
+<colgroup>  
+	<col width="7" />  
+	<col width="#"/> 
+	<col width="14" />  
+</colgroup>
+<tr class="sub_topheight">
+	<td class="sub_topleft"></td>
+	<td class="sub_top"></td>
+	<td class="sub_topright"></td>
+</tr>
+<tr>
+	<td class="sub_left"></td>
+	<td class="sub_contents_sub">
 
 <%
-   
-   if(objectMetadata.serviceMethodContexts)
-   for(var key in objectMetadata.serviceMethodContexts){
-   
-%><tr><td><%=methods[key].here()%> </td></tr> <%   
-   }
+	if(value){
+		if(objectMetadata.serviceMethodContexts){
+			for(var key in objectMetadata.serviceMethodContexts){
+			
+				var methodName = methods[key].methodContext.methodName;
+				var menuName = methodName;
+				
+				if(methods[key].methodContext.displayName)
+					menuName = methods[key].methodContext.displayName;			
+			
+				menuName = menuName.replace("\&", "");
+				
+				console.debug(methods[key]);
+				
+				
+				
+				
 %>
+		<div class="icon_b">
+			<ul>
+				<li class="icon"><img src="img/icon.png" width="20" height="16"></li>
+			</ul>
+		</div>
+		<div class="clock_no">
+			<ul>
+				<li class="text"><a href="#" onclick="mw3.getFaceHelper('<%=objectId%>').callMethod(this, '<%=methodName%>');"><span><%=menuName%></span></a>
+				<li class="ctrl"><span><%=methods[key].methodContext.keyBinding%></span></li>
+			</ul>
+		</div>
+<%
+			}
+		}
+	}
+%>
+				
+				
+				<!-- 라인들어가는 div -->
+				<!--
+			   	<div class="icon_b">
+				<ul>
+				<li class="icon"></li>
+				</ul>
+				</div>
 
+				<div class="clock">
+				<ul>
+				<li class="text"><a href="#"><span>screen</span></a></li>
+				<li class="ctrl">methods[key].methodContext.keyBinding</li>
+				</ul>
+				</div>
+				-->
+				<!-- 라인들어가는 div 끝-->
+												
+	</td>
+	<td class="sub_right"></td>
+</tr>
+<tr class="sub_bottomheight">
+	<td class="sub_bottomleft"></td>
+	<td class="sub_bottom">
+			</td>
+	<td class="sub_bottomright"></td>
+</tr>
 </table>
