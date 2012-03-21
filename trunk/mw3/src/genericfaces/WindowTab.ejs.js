@@ -1,4 +1,4 @@
-var Window = function(objectId, className){
+var WindowTab = function(objectId, className){
 	
 	this.objectId = objectId;
 	this.className = className;
@@ -13,7 +13,7 @@ var Window = function(objectId, className){
 	$("#" + this.divId).parent().find("#info_" + objectId).remove();
 }
 
-Window.prototype.minimize = function(layoutName){
+WindowTab.prototype.minimize = function(layoutName){
 
 	// 최초 입력을 위해 입력여부 확인
 	if($(".mw3_windowpanel").find("#" + this.smallDivId).length == 0)
@@ -27,7 +27,7 @@ Window.prototype.minimize = function(layoutName){
 }
 
 
-Window.prototype.resume = function(layoutName){
+WindowTab.prototype.resume = function(layoutName){
 	
 	$("#" + this.smallDivId).hide();
 	
@@ -36,11 +36,11 @@ Window.prototype.resume = function(layoutName){
 		mw3.getFaceHelper(layoutId).show(layoutName);
 }
 
-Window.prototype.startLoading = function(){
+WindowTab.prototype.startLoading = function(){
 	$("#loader_" + this.objectId).show();
 }
 
-Window.prototype.endLoading = function(){
+WindowTab.prototype.endLoading = function(){
 	$("#loader_" + this.objectId).hide();
 
 }
