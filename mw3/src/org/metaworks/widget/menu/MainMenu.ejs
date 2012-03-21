@@ -1,14 +1,29 @@
-<table>
-
+	<div id="gnb_wrap">
+		<div id="gnb_l">
+		</div>	
+		<div id="gnb">
+			<ul>
 <%
-   
-   mw3.debug(value, true)
-   
-   if(objectMetadata.serviceMethodContexts)
-   for(var key in objectMetadata.serviceMethodContexts){
-   
-%><td><%=methods[key].here()%> </td> <%   
-   }
+	if(value){
+		if(objectMetadata.serviceMethodContexts){
+			for(var key in objectMetadata.serviceMethodContexts){
+			
+				var methodName = methods[key].methodContext.methodName;
+				var menuName = methodName;
+				
+				if(methods[key].methodContext.displayName)
+					menuName = methods[key].methodContext.displayName;			
+			
+				menuName = menuName.replace("\&", "");
 %>
-
-</table>
+				<li><a href="#" onclick="mw3.getFaceHelper('<%=objectId%>').callMethod(this, '<%=methodName%>');"><span><%=menuName%></span></a></li>					
+<%
+			}
+		}
+	}
+%>
+			</ul>
+		</div>
+		<div id="gnb_r">
+		</div>
+	</div>	
