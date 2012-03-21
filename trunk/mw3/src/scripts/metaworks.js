@@ -172,8 +172,8 @@
 				}catch(e){
 					//TODO :  error reporting required
 					//this.debug(e, true);
-					if(console)
-						console.log("Failed to load face helper ("+faceHelperClass+"(ejs.js)): " + e);
+					//if(console)
+					//	console.log("Failed to load face helper ("+faceHelperClass+"(ejs.js)): " + e);
 				}
 
 				//load the key bindings 
@@ -282,10 +282,15 @@
 				
 				objectIds = this.objectIds_FaceMapping[face];
 				
-				for(var objectId in objectIds){
-					
-					this.loadFaceHelper(objectId);
-				}
+				// 2012-03-21 cjw 처음 facehelper 를 load 하여 aftercall 로 호출 될 경우와 이후에 호출 될 경우 호출 순서가 틀려 같게 수정
+				// 하위 객체에서 상위 객체 순서로
+				var temp = [];
+				
+				for(var objectId in objectIds)
+					temp.push(objectId);
+				
+				for(var i=temp.length-1; i>=0; i--)
+					this.loadFaceHelper(temp[i]);
 			}
 
 			Metaworks3.prototype.getFaceHelper = function(objectId){
@@ -571,7 +576,7 @@
 					
 						//only when the descriptor has some options, the object is given to access to it's descriptor among properties in it's parent object.
 						// 2012-03-16 cjw descriptor null 오류로 위치 수정
-						if(descriptor.options)
+						if(descriptor.options && object)
 							object['__descriptor'] = descriptor;
 					}
 					
@@ -624,12 +629,12 @@
 				   		};
 				   						   		
 						var html = new EJS({url: url}).render(contextValues);
-
+						
 
 						//alert(html);
 						//#DEBUG POINT
-		 				$(targetDiv).html(html);
-
+						$(targetDiv).html(html);
+						
 					} catch(e) {
 						this.template_error(e, actualFace)
 						return
@@ -643,12 +648,12 @@
 //					var directFaceName = 'faces/' + objectTypeName.split('.').join('/') + ".ejs";
 //					this._importFaceHelper(actualFace, //try to load face helper by using the class name directly first
 //							function(){
-								mw3._importFaceHelper(actualFace)
+							mw3._importFaceHelper(actualFace)
 //							}, 
 //							directFaceName
 //					);
 
-					mw3.getFaceHelper(objectId);
+					mw3.getFaceHelper(objectId)					
 					
 					//end
 					
@@ -715,7 +720,7 @@
 					head.appendChild(script);
 					this.loadedScripts[scriptUrl] = scriptUrl;
 
-					if(afterLoadScript){
+					if(afterLoadScript){						
 						script.onload = afterLoadScript;
 						
 						script.onreadystatechange = function() { //for IE
@@ -932,7 +937,7 @@
 					this.objectId_KeyMapping[objKey] = null;
 					
 
-					this.objects[beanPath.valueObjectId] = null;
+					this.objects[beanPath.valueObjectId] = null;					
 					this.faceHelpers[beanPath.valueObjectId] = null;
 					
 					this.newBeanProperty(beanPath.valueObjectId);
@@ -964,19 +969,19 @@
 			}
 				
 			Metaworks3.prototype.template_error = function(e, actualFace) {
-					document.getElementById(this.errorDiv).style.display = 'block'
-												
-					if(e.lineNumber){
-						if(e.lineText)
-							var message = "["+actualFace+"] at line "+e.lineNumber+": "+e.lineText+": "+e.message;
-						else
-							var message = "["+actualFace+"] at line "+e.lineNumber+": "+e.message;
-					}else
-						var message = "["+actualFace+"] "+e.message;
-					
-					document.getElementById(this.errorDiv).innerHTML = "<span><font color=#FB7524>" + message + "</font></span>";
-					document.getElementById(this.errorDiv).className = 'error';
-				}
+				document.getElementById(this.errorDiv).style.display = 'block'
+											
+				if(e.lineNumber){
+					if(e.lineText)
+						var message = "["+actualFace+"] at line "+e.lineNumber+": "+e.lineText+": "+e.message;
+					else
+						var message = "["+actualFace+"] at line "+e.lineNumber+": "+e.message;
+				}else
+					var message = "["+actualFace+"] "+e.message;
+				
+				document.getElementById(this.errorDiv).innerHTML = "<span><font color=#FB7524>" + message + "</font></span>";
+				document.getElementById(this.errorDiv).className = 'error';
+			}
 				
 			Metaworks3.prototype.createInputId = function(objectId){
 				
@@ -1101,6 +1106,8 @@
 			}
 			
 			Metaworks3.prototype.call = function (svcNameAndMethodName){
+				mw3.loaded = false;
+				
 //				mw3.debug("call start");
 
 				var objId;
@@ -1343,14 +1350,14 @@
 				        			//after call the request, the call-originator should be focused again.
 				        			var sourceObjectIdNewlyGotten = mw3.objectId_KeyMapping[objectKey];
 				        			if(sourceObjectIdNewlyGotten){
-				        				$("#objDiv_" + sourceObjectIdNewlyGotten).focus();
+				        				// 2012-03-21 cjw 자동 focus 를 하지 않기 위해 수정
+				        				//$("#objDiv_" + sourceObjectIdNewlyGotten).focus();
 				        				//objId = sourceObjectIdNewlyGotten;
 				        			}
 
 				        			if(serviceMethodContext.target!="none"){
 					        			
 					        			if(mw3.getFaceHelper(objId)){
-					        				
 					        				if(mw3.getFaceHelper(objId).endLoading){
 					        					mw3.getFaceHelper(objId).endLoading();
 					        				}
@@ -1370,6 +1377,8 @@
 					        			
 				        			}
 				        			
+				        			mw3.loaded = true;
+				        			
 				        			if(mw3.afterCall)
 				        				mw3.afterCall(svcNameAndMethodName, result);
 				        		},
@@ -1377,7 +1386,6 @@
 				        		async: !sync && serviceMethodContext.target!="none",
 				        		
 				        		errorHandler:function(errorString, exception) {
-				        			
 				        			if(serviceMethodContext.target=="none")
 				        				throw exception;
 				        			
