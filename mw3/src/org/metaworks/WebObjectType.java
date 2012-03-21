@@ -773,6 +773,7 @@ public class WebObjectType{
 							
 					if(componentPath.length() == 0){
 						componentPath = getComponentLocation(clazz, "faces", false, false, "ejs");
+						componentPathHashBeenChanged = true;
 					}
 					
 					if(componentPath.startsWith("faces"))
