@@ -1,0 +1,50 @@
+<%
+	if(value){		
+%>
+	
+<%
+		if(value.west){
+%>
+	<div class="pane ui-layout-west"><%=fields.west.here()%></div>
+<%
+		}
+%>
+
+<%
+		if(value.north){
+%>
+	<div class="pane ui-layout-north"><%=fields.north.here()%></div>
+<%
+		}
+%>
+
+
+<%
+		if(value.south){
+%>
+	<div class="pane ui-layout-south"><%=fields.south.here()%></div>
+<%
+		}
+%>
+
+
+<%
+		if(value.east){
+%>
+	<div class="pane ui-layout-east"><%=fields.east.here()%></div>
+<%
+		}
+%>
+
+<%
+		if(value.center){
+%>
+	<div class="pane ui-layout-center"><%=fields.center.here()%></div>
+<%
+		}
+%>
+<%
+	}
+%>
+
+
