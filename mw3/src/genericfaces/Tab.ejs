@@ -18,6 +18,7 @@
 		}
 %>
 	</ul>
+		
 <%
 		var showLabel = !(objectMetadata.faceOptions && objectMetadata.faceOptions['hideLabels']);
 		
@@ -28,11 +29,13 @@
 		  	if(fd.name == 'metaworksContext') continue;
 %>	
 	<div id="<%=tabId%>_<%=i+1%>">	
-		<span bgcolor=white> <%=fields[fd.name] ? fields[fd.name].here() : "XXX"%></span></div>
+		<%=fields[fd.name] ? fields[fd.name].here() : "XXX"%>
 	</div>
+	
 <%
 		}
-%>		
+%>
+			
 	<div>
 		<span <%=showLabel ? "colspan=2":""%>>
 <%		   
