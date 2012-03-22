@@ -1,31 +1,34 @@
 <%
-	if(value!=null && typeof value.userId != "undefined"){
-%>
-		<input type="hidden" id="userId_<%=objectId%>" value="<%=value.userId%>" />
-<%
+	if(value){
+		var portrait;
 		
-		if(mw3.when == "onlyFaceSmall"){
+		if(value.userId)
+			portrait = 'http://graph.facebook.com/' + value.userId + '/picture';
+		else
+			portrait = 'images/portrait/unknown_user.gif';
+
+		if(mw3.when == 'searchBox'){
+%>
+	<li><img src="<%=portrait%>" border="0" height="30" width="30" /></li>
+	<li class="name"><%=value.name%></li>
+
+<%		
+		}else{	
 %>
 	<a target="_blank" href="http://www.facebook.com/profile.php?id=<%=value.userId%>">
-		<img id="userPicture_<%=objectId%>" src="images/portrait/unknown_user.gif" width="30" height="30">
-	</a>
-
+		<img id="userPicture_<%=objectId%>" src="<%=portrait%>" width="30" height="30">
+	</a>	
 <% 
-		} else {
+			if(mw3.when != 'onlyFaceSmall'){
 %>
-
-	<a target="_blank" href="http://www.facebook.com/profile.php?id=<%=value.userId%>">
-
-		<img id="userPicture_<%=objectId%>" src="images/portrait/unknown_user.gif" width="30" height="30">		
-	</a>
+	<center>
 		<%=value.name%>
 	</center>
 <% 
-		} 
+			} 
 %>
-
 	<%=methods.addContact.here()%>
-
-<% 
+<%			
+		}
 	} 
 %>
