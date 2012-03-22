@@ -2,7 +2,7 @@ package org.uengine.codi.mw3.model;
 
 import org.metaworks.annotation.Face;
 
-@Face(ejsPath="genericfaces/Window.ejs", displayName="New InstancePanel", options={"hideLabels"}, values={"true"})
+@Face(ejsPath="genericfaces/WindowTab.ejs", displayName="New InstancePanel", options={"hideLabels"}, values={"true"})
 public class NewInstancePanel extends ContentWindow{
 	
 	public NewInstancePanel() throws Exception{
@@ -11,8 +11,7 @@ public class NewInstancePanel extends ContentWindow{
 		processDefinitions.getMetaworksContext().setWhen("newInstance");
 
 		processDefinitions = processDefinitions.findAll();
-		processDefinitions.getMetaworksContext().setWhen("newInstance");
-		
+		processDefinitions.getMetaworksContext().setWhen("newInstance");		
 	}
 	
 	IProcessDefinition processDefinitions;	

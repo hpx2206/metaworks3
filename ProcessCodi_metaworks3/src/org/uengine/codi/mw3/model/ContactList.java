@@ -1,16 +1,13 @@
 package org.uengine.codi.mw3.model;
 
-import org.metaworks.MetaworksContext;
-import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
-import org.metaworks.annotation.Hidden;
-import org.metaworks.annotation.ServiceMethod;
+import org.uengine.codi.mw3.ILogin;
 
 public class ContactList {
 
 	public ContactList(){}
 	
-	public ContactList(ILogin user) throws Exception{
+	public ContactList(IUser user) throws Exception{
 		Contact contact = new Contact();
 		contact.setUserId(user.getUserId());
 		

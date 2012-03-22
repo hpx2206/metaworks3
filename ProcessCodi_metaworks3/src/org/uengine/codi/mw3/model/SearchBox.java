@@ -1,10 +1,24 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.MetaworksContext;
-import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 
 public class SearchBox {
+	
+	public SearchBox(){		
+	}
+	public SearchBox(IUser user){
+		setUser(user);	
+	}
+	
+	public IUser user;
+		public IUser getUser() {
+			return user;
+		}
+		public void setUser(IUser user) {
+			this.user = user;
+		}
+
 	String keyword;
 		public String getKeyword() {
 			return keyword;
@@ -17,14 +31,11 @@ public class SearchBox {
 	@ServiceMethod(callByContent=true)
 	public Object search() throws Exception{
 		InstanceList instList = new InstanceList();
-		instList.load(session.login, session.navigation, keyword);
+		instList.load(getUser(), keyword);
 				
 		return instList;
 		
 	}
-	
-	@AutowiredFromClient
-	public Session session;
 	
 	MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {

@@ -208,7 +208,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		// TODO Auto-generated method stub
 		FileWorkItem fwi = new FileWorkItem();
 		fwi.setInstId(getInstId());
-		fwi.setEndpoint(session.login.getUserId());
+		fwi.setEndpoint(session.getUser().getUserId());
 		fwi.setWriter(getWriter());
 		fwi.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 
@@ -221,7 +221,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		// TODO Auto-generated method stub
 		CommentWorkItem wi = new CommentWorkItem();
 		wi.setInstId(getInstId());
-		wi.setEndpoint(session.login.getUserId());
+		wi.setEndpoint(session.getUser().getUserId());
 		wi.setWriter(getWriter());
 		wi.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		
@@ -234,7 +234,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		// TODO Auto-generated method stub
 		SourceCodeWorkItem wi = new SourceCodeWorkItem();
 		wi.setInstId(getInstId());
-		wi.setEndpoint(session.login.getUserId());
+		wi.setEndpoint(session.getUser().getUserId());
 		wi.setWriter(getWriter());
 		wi.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		
@@ -263,8 +263,8 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		newItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		
 		User loginUser = new User();
-		loginUser.setUserId(session.getLogin().getUserId());
-		loginUser.setName(session.getLogin().getName());
+		loginUser.setUserId(session.getUser().getUserId());
+		loginUser.setName(session.getUser().getName());
 
 		newItem.setWriter(loginUser);
 

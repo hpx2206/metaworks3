@@ -1,14 +1,14 @@
 package org.uengine.codi.mw3.model;
 
-import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Id;
+import org.uengine.codi.mw3.ILogin;
 
 public class AddFollowerPanel {
 	
 	public AddFollowerPanel(){}
 	
-	public AddFollowerPanel(ILogin loginUser, String instanceId) throws Exception{
-		contactList = new ContactList(loginUser);
+	public AddFollowerPanel(IUser user, String instanceId) throws Exception{
+		contactList = new ContactList(user);
 		
 		setInstanceId(instanceId);
 	}

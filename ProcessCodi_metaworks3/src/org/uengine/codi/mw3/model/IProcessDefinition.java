@@ -3,7 +3,6 @@ package org.uengine.codi.mw3.model;
 import javax.persistence.Table;
 
 import org.metaworks.ServiceMethodContext;
-import org.metaworks.annotation.Children;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
@@ -16,7 +15,7 @@ import org.metaworks.dao.IDAO;
 @Face(
 		ejsPathMappingByContext=
 			{
-				"{when: 'newInstance', face: 'faces/org/uengine/codi/mw3/model/IProcessDefinition_newInstance.ejs'}",
+				"{when: 'newInstance', face: 'org/uengine/codi/mw3/model/IProcessDefinition_newInstance.ejs'}",
 //				"{when: 'newInstance', face: 'genericFaces/ObjectFace.ejs'}",
 			}		
 

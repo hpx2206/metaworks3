@@ -1,19 +1,13 @@
 package org.uengine.codi.mw3.model;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Face;
-import org.metaworks.dao.TransactionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.admin.EntityDefinition;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.processmanager.ProcessManagerRemote;
 
-@Face(ejsPath="genericfaces/Window.ejs", displayName="Entity Designer", options={"hideLabels"}, values={"true"})
+@Face(ejsPath="genericfaces/WindowTab.ejs", displayName="Entity Designer", options={"hideLabels"}, values={"true"})
 public class EntityDesignerContentPanel extends ContentWindow {
 
 	@Autowired
@@ -27,9 +21,11 @@ public class EntityDesignerContentPanel extends ContentWindow {
 			this.entityDefinition = entityDefinition;
 		}
 
-	public void newEntity(String parentFoler) throws Exception {
+	public void newEntity(IUser user, String parentFoler) throws Exception {
 		entityDefinition = new EntityDefinition();
 		entityDefinition.setParentFolder(parentFoler);
+		
+		entityDefinition.setAuthor(user);		
 	}
 
 	public void load(String defId) throws Exception {
@@ -55,6 +51,7 @@ public class EntityDesignerContentPanel extends ContentWindow {
 				
 				User author = new User();
 				author.setUserId(authorId);
+				
 				entityDefinition.setAuthor(author);
 				
 			} catch (Exception e2) {

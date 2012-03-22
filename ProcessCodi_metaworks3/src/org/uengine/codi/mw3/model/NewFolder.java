@@ -34,7 +34,7 @@ public class NewFolder implements ContextAware{
 			this.folderName = folderName;
 		}
 
-	Long parentFolderDefId;
+		Long parentFolderDefId;
 	@Hidden
 		public Long getParentFolderDefId() {
 			return parentFolderDefId;
@@ -49,7 +49,7 @@ public class NewFolder implements ContextAware{
 		processManager.addFolder(getFolderName(), getParentFolderDefId().toString());
 		ProcessDefinition parentForRefresh = new ProcessDefinition();
 		
-		parentForRefresh.setDefId(getParentFolderDefId());
+		parentForRefresh.setDefId(Long.valueOf(getParentFolderDefId()));
 		parentForRefresh.drillDown();
 		parentForRefresh.setName(parentForRefresh.databaseMe().getName());
 		parentForRefresh.setObjType("folder");

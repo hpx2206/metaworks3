@@ -1,10 +1,6 @@
 package org.uengine.codi.mw3.model;
 
-import org.metaworks.MetaworksContext;
-import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
-import org.uengine.processmanager.ProcessManagerFactoryBean;
-import org.uengine.processmanager.ProcessManagerRemote;
 
 public class InstanceListPanel {
 	
@@ -12,9 +8,9 @@ public class InstanceListPanel {
 	
 	public InstanceListPanel(Session session) throws Exception{
 		this.instList = new InstanceList();
-		this.instList.load(session.login, session.navigation, null);
+		this.instList.load(session.getUser(), null);
 		
-		this.searchBox = new SearchBox();
+		this.searchBox = new SearchBox(session.getUser());
 /*		this.searchBox.setMetaworksContext(new MetaworksContext());		
 		this.searchBox.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);;	*/	
 	}

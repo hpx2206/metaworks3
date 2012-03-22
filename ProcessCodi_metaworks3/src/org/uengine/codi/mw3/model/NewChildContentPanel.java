@@ -3,6 +3,7 @@ package org.uengine.codi.mw3.model;
 import javax.persistence.Id;
 
 import org.metaworks.ServiceMethodContext;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 
@@ -17,11 +18,14 @@ public class NewChildContentPanel  {
 		public void setParentFolder(Long parentFolder) {
 			this.parentFolder = parentFolder;
 		}
+		
+	@AutowiredFromClient
+	public Session session;
 
 	@ServiceMethod
 	public EntityDesignerContentPanel newEntity() throws Exception{
 		EntityDesignerContentPanel entityDesignerContentPanel = new EntityDesignerContentPanel();
-		entityDesignerContentPanel.newEntity(getParentFolder().toString());
+		entityDesignerContentPanel.newEntity(session.getUser(), getParentFolder().toString());
 						
 		return entityDesignerContentPanel;
 	}

@@ -1,21 +1,20 @@
 package org.uengine.codi.mw3.model;
 
-import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
-import org.metaworks.annotation.AutowiredFromClient;
-import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
+
+import org.uengine.codi.mw3.ILogin;
 
 public class ContactPanel {
 	
 	public ContactPanel(){}
 	
-	public ContactPanel(ILogin loginUser) throws Exception{
+	public ContactPanel(IUser user) throws Exception{
 		
-		contactList = new ContactList(loginUser);
+		contactList = new ContactList(user);
 
-		searchBox = new ContactSearchBox();
+		searchBox = new ContactSearchBox(user);
 /*		searchBox.setMetaworksContext(new MetaworksContext());
 		searchBox.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 */		

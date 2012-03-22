@@ -3,10 +3,10 @@ package org.uengine.codi.mw3.model;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Resource;
 
-@Face(ejsPath="genericfaces/Window.ejs", 
+@Face(ejsPath="genericfaces/WindowTab.ejs", 
       displayName="$windowTitle", 
-      options={"hideLabels", "innerLayoutName", "innerLayout", "outerLayoutName", "outerLayout"}, 
-      values={"true", "north", "inner", "west", "outer"})
+      options={"hideLabels", "layout"}, 
+      values={"true", "north"})
 public class NavigationWindow {
 	
 	public NavigationWindow(){

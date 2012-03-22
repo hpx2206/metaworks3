@@ -1,12 +1,15 @@
 package org.uengine.codi.mw3.model;
 
+import javax.servlet.http.HttpSession;
+
 import org.metaworks.annotation.Face;
+import org.metaworks.dao.TransactionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.admin.ClassDefinition;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.processmanager.ProcessManagerRemote;
 
-@Face(ejsPath="genericfaces/Window.ejs", displayName="Class Designer", options={"hideLabels"}, values={"true"})
+@Face(ejsPath="genericfaces/WindowTab.ejs", displayName="Class Designer", options={"hideLabels"}, values={"true"})
 public class ClassDesignerContentPanel extends ContentWindow {
 
 	@Autowired
@@ -21,8 +24,16 @@ public class ClassDesignerContentPanel extends ContentWindow {
 		}
 
 	public void newClass(String parentFoler){
+		//setting the facebook user Id into session attribute;
+		HttpSession session = TransactionContext.getThreadLocalInstance().getRequest().getSession(); 
+		String userId = (String)session.getAttribute("userId");
+		
+		User user = new User();
+		user.setUserId(userId);
+		
 		classDefinition = new ClassDefinition();
 		classDefinition.setParentFolder(parentFoler);
+		classDefinition.setAuthor(user);
 	}
 
 	public void load(String defId) throws Exception{
@@ -32,10 +43,6 @@ public class ClassDesignerContentPanel extends ContentWindow {
 			String resource = processManager.getResource(defVerId);
 			classDefinition = (ClassDefinition) GlobalContext.deserialize(resource, ClassDefinition.class);
 			classDefinition.setDefId(defId);
-			classDefinition.setFacebookComments(new Facebook());
-			classDefinition.getFacebookComments().setDefId(defId);
-			classDefinition.setFacebookLike(new Facebook());
-			classDefinition.getFacebookLike().setDefId(defId);
 			
 			try {
 				ProcessDefinition def = new ProcessDefinition();

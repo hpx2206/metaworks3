@@ -1,13 +1,11 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.annotation.AutowiredFromClient;
-import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
-
-
+import org.uengine.codi.mw3.ILogin;
 
 public class InstanceList {
 
@@ -42,18 +40,18 @@ public class InstanceList {
 			this.page = page;
 		}
 		
-	protected void load(ILogin login, Navigation navigation) throws Exception{
-		load(login, navigation, null);
+	protected void load(IUser user) throws Exception{
+		load(user, null);
 	}
 
-	protected void load(ILogin login, Navigation navigation, String keyword) throws Exception{
+	protected void load(IUser user, String keyword) throws Exception{
 		instances = (IInstance) Database.sql(IInstance.class, 
 					  "select * from bpm_procinst where initEp=?initEp "
 					+ (keyword !=null ? " and name like '%" + keyword + "'" : "") 
 					+ " order by starteddate desc limit " + page*PAGE_CNT + ", "+PAGE_CNT
 				);
 		
-		instances.setInitEp(login.getUserId());
+		instances.setInitEp(user.getUserId());
 		instances.select();
 
 		moreInstanceList = new InstanceList();
@@ -64,7 +62,7 @@ public class InstanceList {
 	
 	@ServiceMethod
 	public void more() throws Exception{
-		load(session.getLogin(), session.getNavigation());
+		load(session.getUser());
 	}
 	
 	@AutowiredFromClient
