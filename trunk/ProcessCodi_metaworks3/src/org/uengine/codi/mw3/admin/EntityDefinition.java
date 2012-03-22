@@ -1,4 +1,3 @@
-
 package org.uengine.codi.mw3.admin;
 
 import java.io.File;
@@ -19,16 +18,14 @@ import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Name;
 import org.metaworks.annotation.NonEditable;
 import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.annotation.Test;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.example.ide.CompileError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.CodiClassLoader;
-import org.uengine.codi.mw3.model.Facebook;
+import org.uengine.codi.mw3.model.IUser;
 import org.uengine.codi.mw3.model.JavaSourceCode;
 import org.uengine.codi.mw3.model.QuerySourceCode;
-import org.uengine.codi.mw3.model.User;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.NeedArrangementToSerialize;
 import org.uengine.kernel.PropertyListable;
@@ -71,12 +68,12 @@ public class EntityDefinition implements ContextAware, PropertyListable, NeedArr
 			this.version = version;
 		}
 		
-	transient User author; 
-		@Available(when="view")
-		public User getAuthor() {
+	transient IUser author; 
+		@Available(when={"edit"})
+		public IUser getAuthor() {
 			return author;
 		}
-		public void setAuthor(User author) {
+		public void setAuthor(IUser author) {
 			this.author = author;
 		}		
 		
@@ -111,7 +108,7 @@ public class EntityDefinition implements ContextAware, PropertyListable, NeedArr
 		}
 		
 	String packageName;
-		@Test(value="'test'", next="entityName")
+		@Available(when={"edit"})
 		public String getPackageName() {
 			return packageName;
 		}
@@ -122,7 +119,7 @@ public class EntityDefinition implements ContextAware, PropertyListable, NeedArr
 	
 	String entityName;
 		@Name
-		@Test(value="'Test'", next="next1()")	
+		@Available(when={"edit"})	
 		public String getEntityName() {
 			return entityName;
 		}
@@ -146,27 +143,7 @@ public class EntityDefinition implements ContextAware, PropertyListable, NeedArr
 		}
 		public void setQuerySourceCode(QuerySourceCode querySourceCode) {
 			this.querySourceCode = querySourceCode;
-		}	
-		
-	transient Facebook facebookComments;
-		@Face(ejsPath="faces/org/uengine/codi/mw3/model/FacebookComments.ejs")
-		@Available(when="view")
-		public Facebook getFacebookComments() {
-			return facebookComments;
-		}
-		public void setFacebookComments(Facebook facebookComments) {
-			this.facebookComments = facebookComments;
-		}	
-		
-	transient Facebook facebookLike;
-		@Face(ejsPath="faces/org/uengine/codi/mw3/model/FacebookLike.ejs")
-		@Available(when="view")
-		public Facebook getFacebookLike() {
-			return facebookLike;
-		}
-		public void setFacebookLike(Facebook facebookLike) {
-			this.facebookLike = facebookLike;
-		}			
+		}		
 		
 	private String makeCreateQuery(){
 		StringBuffer sb = new StringBuffer();
@@ -575,12 +552,6 @@ public class EntityDefinition implements ContextAware, PropertyListable, NeedArr
 		
 		setDefId(definitionIdAndVersionId[0]);
 		setDefVerId(definitionIdAndVersionId[1]);
-		
-		facebookComments = new Facebook();
-		facebookComments.setDefId(definitionIdAndVersionId[0]);
-		
-		facebookLike = new Facebook();
-		facebookLike.setDefId(definitionIdAndVersionId[0]);			
 	}		
 	
 	public boolean isCreatedEntity() throws Exception {

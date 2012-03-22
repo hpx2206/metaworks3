@@ -1,0 +1,20 @@
+<%
+	if(value){
+%>
+
+<img src="images/waveStyle/page_flip.png" "="" border="0" onclick="" style="width: 42px; height: 42px; " usemap="#Map">
+
+<map name="Map" id="Map">
+	<area shape="rect" coords="76,12,143,79" onclick="<%=methods.goProcess.caller()%>" />		<!-- process -->
+	<area shape="rect" coords="158,87,220,147" onclick="<%=methods.goKnowledge.caller()%>" />	<!-- knowledge -->
+	<area shape="rect" coords="239,163,298,224" onclick="alert(3);" />	<!-- watch -->
+	<area shape="rect" coords="161,14,219,78" onclick="<%=methods.goIDE.caller()%>" />			<!-- learning -->
+	<area shape="rect" coords="236,13,296,75" onclick="alert(5);" />	<!-- admin -->
+	<area shape="rect" coords="233,88,297,147" onclick="alert(6);" />	<!-- 엔진학습 -->
+</map>
+
+<div class="msg_block"></div>	
+
+<%
+	}
+%>	

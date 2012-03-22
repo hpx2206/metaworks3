@@ -29,12 +29,11 @@ import org.metaworks.example.ide.CompileError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.CodiDwrServlet;
+import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.alm.QualityOption;
 import org.uengine.codi.mw3.model.FaceHelperSourceCode;
 import org.uengine.codi.mw3.model.FaceSourceCode;
-import org.uengine.codi.mw3.model.Facebook;
 import org.uengine.codi.mw3.model.JavaSourceCode;
-import org.uengine.codi.mw3.model.Login;
 import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.model.User;
 import org.uengine.codi.mw3.svn.CheckoutWindow;
@@ -89,7 +88,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		}
 		
 	transient User author; 
-	@Available(when="view")
+	@Available(when={"edit", "step1"})
 		public User getAuthor() {
 			return author;
 		}
@@ -128,6 +127,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		}
 
 	String packageName;
+	@Available(when={"edit", "step1"})
 	@Test(
 			scenario="ClassDefinition", 
 			starter=true,
@@ -143,6 +143,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		}
 
 	String className;
+	@Available(when={"edit", "step1"})
 	@Face(options={"mandatory"}, values={"true"})
 	@Name
 	@Test(
@@ -184,25 +185,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 			this.qualityOption = qualityOption;
 		}
 		
-	transient Facebook facebookComments;
-	@Face(ejsPath="faces/org/uengine/codi/mw3/model/FacebookComments.ejs")
-	@Available(when="view")
-		public Facebook getFacebookComments() {
-			return facebookComments;
-		}
-		public void setFacebookComments(Facebook facebookComments) {
-			this.facebookComments = facebookComments;
-		}	
-		
-	transient Facebook facebookLike;
-	@Face(ejsPath="faces/org/uengine/codi/mw3/model/FacebookLike.ejs")
-	@Available(when="view")
-		public Facebook getFacebookLike() {
-			return facebookLike;
-		}
-		public void setFacebookLike(Facebook facebookLike) {
-			this.facebookLike = facebookLike;
-		}		
+
 		
 	/*
 	Feedback feedback;
@@ -549,13 +532,6 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		
 		setDefId(definitionIdAndVersionId[0]);
 		setDefVerId(definitionIdAndVersionId[1]);
-		
-		facebookComments = new Facebook();
-		facebookComments.setDefId(definitionIdAndVersionId[0]);
-		
-		facebookLike = new Facebook();
-		facebookLike.setDefId(definitionIdAndVersionId[0]);
-				
 	}
 	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP, when="view")

@@ -11,8 +11,6 @@ import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Range;
 import org.metaworks.annotation.ServiceMethod;
 
-@Face(options={"hideNewBtn"},
-	  values={"true"})   
 public class EntityField implements Cloneable, ContextAware{
 
 	public EntityField(){		
