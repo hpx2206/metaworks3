@@ -55,10 +55,18 @@
 		
 		<!-- default -->
 		<link rel="stylesheet" href="style/waveStyle/droppable_layout.css" />
+			
+			
+		<!--  for chart -->
+		<script type='text/javascript' src='https://www.google.com/jsapi'></script>
 						
 		<script type="text/javascript">
 			var mainPage
-		 	
+		
+			google.load('visualization', '1', {
+				packages : [ 'corechart', 'gauge' ]
+			});
+
 			$(document).ready(function() {
 		 		mw3.setWhen(mw3.WHEN_EDIT);
 		 		mw3.template_error = function(e, actualFace) {
@@ -69,11 +77,16 @@
 							var message = "["+actualFace+"] at line "+e.lineNumber+": "+e.message;
 					}else
 						var message = "["+actualFace+"] "+e.message;
+				
+					var logger = mw3.getAutowiredObject('org.uengine.codi.platform.Console');
+					if(logger) logger.__getFaceHelper().addLog( message );
+					else
+						alert(message);
 					
-					
-					mw3.getAutowiredObject('org.uengine.codi.platform.Console').__getFaceHelper().addLog( message );
-				}
+		 		}
 		 		
+		 		
+				
 				mainPage = new MetaworksObject({
 					__className : "org.uengine.codi.mw3.Login"
 
