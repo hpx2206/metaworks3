@@ -40,8 +40,8 @@ public interface IProcessDefinition extends IDAO{
 	public IProcessDefinition findAll() throws Exception;
 
 	@Id
-	public Long getDefId();
-	public void setDefId(Long defId);
+	public String getDefId();
+	public void setDefId(String defId);
 	
 	public String getDescription();
 	public void setDescription(String description);
@@ -54,8 +54,8 @@ public interface IProcessDefinition extends IDAO{
 	public void setIsAdhoc(boolean adhoc);
 
 	@Hidden
-	public Long getParentFolder();
-	public void setParentFolder(Long parentFolder);
+	public String getParentFolder();
+	public void setParentFolder(String parentFolder);
 	
 	@Hidden
 	public int getProdVer();

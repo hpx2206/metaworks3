@@ -1,5 +1,9 @@
 package org.uengine.codi.mw3.model;
 
+import javax.annotation.Generated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
@@ -32,6 +36,7 @@ import org.metaworks.website.SourceCodeContents;
 public interface IWorkItem extends IDAO{
 		
 		@Id
+		//@GeneratedValue(strategy=GenerationType.TABLE, generator="SEQ_BPM")
 		public Long getTaskId();
 		public void setTaskId(Long taskId);
 	
