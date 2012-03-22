@@ -71,6 +71,9 @@ public class TransactionalDwrServlet extends DwrServlet{
         {
         	String mimeType = (pathInfo.endsWith(".js") ? "text/javascript":"text/plain");
         	
+        	if(pathInfo.endsWith(".png"))
+        		mimeType = "image/png";
+        	
         	
         	response.setContentType(mimeType + "; charset=UTF-8");
         	response.setHeader("Cache-Control", "no-cache"); //HTTP 1.1
