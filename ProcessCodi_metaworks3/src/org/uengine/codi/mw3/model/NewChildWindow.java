@@ -17,7 +17,7 @@ public class NewChildWindow extends ContentWindow {
 		this.newChildContentPanel = new NewChildContentPanel();
 	}
 	
-	public void setParentFolder(Long defId){
+	public void setParentFolder(String defId){
 		newChildContentPanel.setParentFolder(defId);
 	}
 	

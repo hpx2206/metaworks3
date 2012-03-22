@@ -447,5 +447,12 @@ public class JavaSourceCode extends SourceCode {
 
 	@AutowiredFromClient
 	public ClassModeler classModeler;
+	
+	
+	
+	
+	
+	
+	
 
 }
