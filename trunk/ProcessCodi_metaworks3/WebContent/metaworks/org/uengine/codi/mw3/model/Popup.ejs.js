@@ -5,11 +5,11 @@ var org_uengine_codi_mw3_model_Popup = function(objectId, className) {
 	$("#objDiv_" + this.objectId).parent().addClass("mw3_popup").attr("objectid", objectId).addClass("clue-right-rounded").addClass("cluetip-rounded").css({position:'absolute','z-index':97,display:'none'});
 	
 	
-	var openerDiv = $("#objDiv_" + mw3.recentOpenerObjectId);
-	var x = openerDiv.offset().left + methodDiv.children()[0].offsetWidth;
-	var y = openerDiv.offset().top;
+	//var openerDiv = $("#objDiv_" + mw3.recentOpenerObjectId);
+//	var x = openerDiv.offset().left + (openerDiv.children()[0].offsetWidth);
+//	var y = openerDiv.offset().top;
 	
-	this.createPopup(400, 300, x/*mw3.mouseX*/, y/*mw3.mouseY*/);	
+	this.createPopup(400, 300, mw3.mouseX, mw3.mouseY);	
 }
 
 org_uengine_codi_mw3_model_Popup.prototype.createPopup = function(w,h,x,y){
