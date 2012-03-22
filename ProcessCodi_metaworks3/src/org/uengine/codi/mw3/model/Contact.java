@@ -71,6 +71,9 @@ public class Contact extends Database<IContact> implements IContact{
 			this.friendName = friendName;
 		}
 
+	@AutowiredFromClient
+	public AddFollowerPanel addFollowerPanel;
+
 	public Followers addFollower() throws Exception {
 		processManager.putRoleMapping(addFollowerPanel.getInstanceId(), "follower_" + getFriendName(), getFriendId());
 		processManager.applyChanges();
@@ -82,11 +85,22 @@ public class Contact extends Database<IContact> implements IContact{
 		return followers;
 	}
 
-	@AutowiredFromClient
-	public AddFollowerPanel addFollowerPanel;
 	
 	@Autowired
 	ProcessManagerRemote processManager;
+	
+	
+//	@AutowiredFromClient
+//	public User user;
+
+	public User pickUp() throws RemoteException, Exception {
+		User user = new User(); //this should have error - more than the @Id, the objectId is the closest one.
+		user.setUserId(this.getFriendId());
+		user.setName(this.getFriendName());
+		user.getMetaworksContext().setWhen("pickUp"); //keep the context 
+		
+		return user;
+	}
 	
 }
 

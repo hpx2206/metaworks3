@@ -46,7 +46,7 @@ public class ClassDesignerContentPanel extends ContentWindow {
 			
 			try {
 				ProcessDefinition def = new ProcessDefinition();
-				def.setDefId(new Long(defId));
+				def.setDefId(defId);
 				String authorId = def.databaseMe().getAuthor();
 				
 				User author = new User();
