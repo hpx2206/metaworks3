@@ -14,7 +14,7 @@ public class ProcessPerspective extends Perspective{
 		if(!isSelected()){
 		
 			ProcessDefinition root = new ProcessDefinition();
-			root.setParentFolder(new Long(-1));
+			root.setParentFolder("-1");
 			processDefinitions = root.findAll();
 		}
 		

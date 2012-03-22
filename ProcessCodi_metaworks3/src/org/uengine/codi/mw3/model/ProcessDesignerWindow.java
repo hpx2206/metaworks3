@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Face;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -25,6 +26,9 @@ public class ProcessDesignerWindow extends ContentWindow {
 	public void newProcessDefinition(String parentFolder) throws Exception {
 		processDesignerContentPanel = new ProcessDesignerContentPanel();
 		processDesignerContentPanel.newProcessDefinition(parentFolder);
+		processDesignerContentPanel.setMetaworksContext(new MetaworksContext());
+		processDesignerContentPanel.getMetaworksContext().setWhen("edit");
+		
 	}
 
 }

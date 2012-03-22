@@ -246,7 +246,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		Long taskId = UniqueKeyGenerator.issueWorkItemKey(((ProcessManagerBean)processManager).getTransactionContext());
 		
 		setTaskId(taskId);
-		
+////		
 		createDatabaseMe();
 		flushDatabaseMe();
 		

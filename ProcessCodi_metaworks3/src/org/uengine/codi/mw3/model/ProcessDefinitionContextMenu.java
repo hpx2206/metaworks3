@@ -11,12 +11,12 @@ import org.uengine.processmanager.ProcessManagerRemote;
 
 public class ProcessDefinitionContextMenu {
 	
-	Long defId;
+	String defId;
 	@Id
-		public Long getDefId() {
+		public String getDefId() {
 			return defId;
 		}
-		public void setDefId(Long defId) {
+		public void setDefId(String defId) {
 			this.defId = defId;
 		}
 
@@ -26,7 +26,7 @@ public class ProcessDefinitionContextMenu {
 	
 		
 		ProcessDefinition def = new ProcessDefinition();
-		def.setDefId(Long.valueOf(getDefId()));
+		def.setDefId(getDefId());
 
 		String userId = (String) TransactionContext.getThreadLocalInstance().getRequest().getSession().getAttribute("userId");
 
