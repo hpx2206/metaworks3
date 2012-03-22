@@ -62,14 +62,85 @@ public class JavaSourceCode extends SourceCode {
 		kinds.add(Kind.CLASS);
 		kinds.add(Kind.SOURCE);
 		
-		String expression;
-		int pos = getLineAssistRequested().lastIndexOf(' ');
+		String lineAssistRequested = getLineAssistRequested(); 
+		String expression = lineAssistRequested;
+		String keyOptions = "";
+		if(expression.startsWith("-")) {
+			keyOptions = expression.substring(1, 3);
+			lineAssistRequested = expression = expression.substring(4).trim();
+		}		
+		
+		int pos = expression.lastIndexOf(' ');
 		if(pos != -1)
-			expression = getLineAssistRequested().substring(getLineAssistRequested().lastIndexOf(' ') + 1);
-		else
-			expression = getLineAssistRequested();
+			expression = expression.substring(expression.lastIndexOf(' ') + 1);
+		//else
+		//	expression = expression;		
 		
 		System.out.println("expression = " + expression);
+		
+		if(expression != null && expression.equals("@")) {
+			URLClassLoader classLoader = (URLClassLoader) org.metaworks.MetaworksContext.class.getClassLoader();
+			URL urls[] = classLoader.getURLs();
+			for(URL url : urls){
+				if(url.getFile().endsWith(".jar") || url.getFile().endsWith(".zip") ){		
+					try {
+						
+						net.sf.jazzlib.ZipInputStream zipIn = new net.sf.jazzlib.ZipInputStream(url.openStream());
+						net.sf.jazzlib.ZipEntry zipEntry;
+											
+						try {
+							
+					    	while((zipEntry = zipIn.getNextEntry()) != null) {
+					    		String clsName = zipEntry.getName().replace("/", ".");
+					    		
+					    		
+					    		if(!(clsName.startsWith("org.metaworks.annotation") 
+										|| clsName.startsWith("org.springframework.beans.factory.annotation")
+										|| clsName.startsWith("org.springframework.context.annotation")
+										|| clsName.startsWith("org.springframework.core.annotation")
+										|| clsName.startsWith("org.springframework.format.annotation")
+										|| clsName.startsWith("org.springframework.jmx.export.annotation")
+										|| clsName.startsWith("org.springframework.scheduling.annotation")
+										|| clsName.startsWith("org.springframework.test.annotation")
+										|| clsName.startsWith("org.springframework.transaction.annotation")
+										|| clsName.startsWith("org.springframework.validation.annotation")
+										|| clsName.startsWith("org.springframework.web.bind.annotation")
+										|| clsName.startsWith("org.springframework.web.portlet.bind.annotation")
+										|| clsName.startsWith("org.springframework.web.servlet.config.annotation")
+										|| clsName.startsWith("org.springframework.stereotype")
+										|| clsName.startsWith("java.lang.annotation"))) continue;
+					    		
+					    		
+					    		if(clsName.endsWith(".class")) {
+					    			//try {
+							    		//Class cls = Class.forName(clsName.substring(0, clsName.length() - 6));
+					    				Class cls = Thread.currentThread().getContextClassLoader().loadClass(clsName.substring(0, clsName.length() - 6));
+						    			if(java.lang.annotation.Annotation.class.isAssignableFrom(cls)) {
+							    			//codeAssist.getAssistances().add(clsName.substring(0, clsName.length() - 6));
+						    				clsName = clsName.substring(0, clsName.length() - 6);
+						    				codeAssist.getAssistances().add("@" + clsName.substring(clsName.lastIndexOf(".") + 1) + " " + clsName.substring(0, clsName.lastIndexOf(".")));
+							    			//System.out.println("annotation class = " + clsName.substring(0, clsName.lastIndexOf(".")));
+							    		}					    							    		
+					    			//}catch(Error ee) {}
+					    		}
+					    	}
+						} catch (Exception e) {
+					    	new Exception(url.getFile() + ": error when to parse url ", e).printStackTrace();
+					    } finally{
+							try{zipIn.close();}catch(Exception ex){}   
+					    }
+						
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+			//annotation.
+			System.out.println("annotation list count : " + codeAssist.getAssistances().size());
+			return codeAssist;
+		}
+		
 		
 		if(expression.length() > 0){
 			
@@ -193,7 +264,7 @@ public class JavaSourceCode extends SourceCode {
 			
 			//////// case that importing package name has been requested.
 			
-			if(getLineAssistRequested().trim().startsWith("import ") || (fullTypeName == null && typeName == null))
+			if(lineAssistRequested.trim().startsWith("import ") || (fullTypeName == null && typeName == null))
 			try {
 				
 				
@@ -212,8 +283,13 @@ public class JavaSourceCode extends SourceCode {
 			    		String clsName = "java.lang." + expression;
 			    		try {
 			    			Class.forName(clsName);
-			    			System.out.println(clsName.replace(".", "/") + ".class");
-			    			codeAssist.getAssistances().add(clsName);
+			    			//System.out.println(clsName.replace(".", "/") + ".class");
+			    			if(keyOptions != null && keyOptions.length() > 0) {
+			    				codeAssist.getAssistances().add(clsName + "-" + keyOptions);
+			    			}
+			    			else {
+			    				codeAssist.getAssistances().add(clsName);
+			    			}
 			    		} catch(ClassNotFoundException ex) {}
 			    	}
 					
@@ -231,9 +307,14 @@ public class JavaSourceCode extends SourceCode {
 						    		//if(expression.indexOf(".") > -1) expression = expression.replace('.', '/');
 						    		
 						    		if((fullTypeName == null && typeName == null) && zipEntry.getName().indexOf("/" + expression + ".class") > -1) {
-						    			System.out.println(zipEntry.getName());
+						    			//System.out.println(zipEntry.getName());
 						    			String clsName = zipEntry.getName().replace("/", ".");
-						    			codeAssist.getAssistances().add(clsName.substring(0, clsName.lastIndexOf(".")));
+						    			if(keyOptions != null && keyOptions.length() > 0) {
+						    				codeAssist.getAssistances().add(clsName.substring(0, clsName.lastIndexOf(".")) + "-" + keyOptions);
+						    			}
+						    			else {
+						    				codeAssist.getAssistances().add(clsName.substring(0, clsName.lastIndexOf(".")));
+						    			}
 						    			continue;
 						    		}
 						    		
@@ -285,7 +366,7 @@ public class JavaSourceCode extends SourceCode {
 					}
 				}
 
-				
+				if(fullTypeName == null && typeName == null) return codeAssist;
 				
 				
 		    	if(packageNames.containsKey(expression)){
