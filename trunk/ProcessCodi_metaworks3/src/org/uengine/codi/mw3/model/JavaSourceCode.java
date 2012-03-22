@@ -147,7 +147,7 @@ public class JavaSourceCode extends SourceCode {
 			String typeName = null;
 			String fullTypeName = null;
 			String[] lines = getCode().split("\n");
-			
+		
 			//if(getCursorPosition().getRow() > 0)
 			if(lines.length > 0)
 			//for(int i = getCursorPosition().getRow(); i >= 0 && fullTypeName==null; i--){
@@ -178,6 +178,9 @@ public class JavaSourceCode extends SourceCode {
 							typeName = null; //ignores 'return' is recognized as typeName
 						
 						if(typeName!=null && typeName.equals("=")) 
+							typeName = null;
+						
+						if(typeName!=null && typeName.equals("import")) 
 							typeName = null;
 						
 						if(typeName!=null && typeName.startsWith(".")) 
@@ -366,7 +369,7 @@ public class JavaSourceCode extends SourceCode {
 					}
 				}
 
-				if(fullTypeName == null && typeName == null) return codeAssist;
+				if(fullTypeName == null && typeName == null && codeAssist.getAssistances().size() != 0) return codeAssist;
 				
 				
 		    	if(packageNames.containsKey(expression)){
