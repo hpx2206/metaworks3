@@ -120,49 +120,6 @@ public class WebServiceDefinition  {
 		
 		String rootPath = CodiClassLoader.getMyClassLoader().sourceCodeBase();		
 		
-		/*
-		WSDLToJava w2j = new WSDLToJava(new String[] {
-				"-client",
-				"-p",
-				getTargetPackage(),
-				"-d",
-				rootPath,
-				// "-compile",
-				"-impl",
-				getWsdlUrl()
-			});
-		
-        try {
-
-            w2j.run(new ToolContext());
-
-        } catch (ToolException ex) {
-            System.err.println();
-            System.err.println("WSDLToJava Error: " + ex.getMessage());
-            System.err.println();
-            if (w2j.isVerbose()) {
-                ex.printStackTrace();
-            }
-            if (w2j.isExitOnFinish()) {
-                System.exit(1);
-            }
-            
-        } catch (Exception ex) {
-            System.err.println("WSDLToJava Error: " + ex.getMessage());
-            System.err.println();
-            if (w2j.isVerbose()) {
-                ex.printStackTrace();
-            }
-            if (w2j.isExitOnFinish()) {
-                System.exit(1);
-            }
-            
-        }
-        if (w2j.isExitOnFinish()) {
-            System.exit(0);
-        }
-        */
-        
 		WSDLToJava.main(new String[] {
 				"-client",
 				"-p",
@@ -176,7 +133,7 @@ public class WebServiceDefinition  {
 		
 		
 		String inTargetPackage = getTargetPackage();
-		String filePath = rootPath + "/" + inTargetPackage.replace(".", "/");
+		String filePath = rootPath + inTargetPackage.replace(".", "/");
 		
 		File f = new File(filePath);
 		
@@ -184,6 +141,9 @@ public class WebServiceDefinition  {
 		File[] arrFile = f.listFiles();
 		if(arrFile.length > 0) {
 		    for(int i = 0; i < arrFile.length; i++){
+		    	
+		    	if(arrFile[i].getName().equals("package-info.java"))
+		    		continue;
 		    	
 		    	StringBuffer sb = new StringBuffer();
 		    	
