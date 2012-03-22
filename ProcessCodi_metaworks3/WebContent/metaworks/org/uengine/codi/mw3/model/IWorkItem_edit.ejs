@@ -1,30 +1,32 @@
 <%
 	if(value){
 %>
-	<div id="wih_button">
-		<input type="button" value="댓글" onclick="<%=methods.newComment.caller()%>">
-		<input type="button" value="소스코드" onclick="<%=methods.newSourceCode.caller()%>">
-		<input type="button" value="파일" onclick="<%=methods.newFile.caller()%>">		
-	</div>
 	
 	<table>
 <%		
 		if(value.type == "comment"){
 %>
 		<tr>
-			<td>
-				댓글을 입력해주세요.
+		
+			<td width=16>&nbsp;
 			</td>
-		</tr> 
-		<tr>
+			
+			<td>
+				<%=fields.writer.here()%>
+			</td>
+		
+			<td width=16>&nbsp;</td>
+		
 			<td> 
-				<input id="post_<%=objectId%>" value="" size="80" onkeydown="mw3.getFaceHelper('<%=objectId%>').press()">
+				<font size=3>
+				<input id="post_<%=objectId%>" value="" size="50" onkeydown="mw3.getFaceHelper('<%=objectId%>').press()" style="border:1px solid #ccd; none;">
+				</font>
 			</td>			
 			
-		</tr>
-		<tr>
 			<td><input type="button" value="게시" onclick="<%=methods.add.caller()%>"></td>
 		</tr> 
+		
+		
 <%		
 		}else if(value.type == "src"){
 %>
@@ -76,4 +78,11 @@
 	</table>
 <%
 	}
+	
 %>
+
+	<div id="wih_button">
+		<span onclick="<%=methods.newComment.caller()%>">답글</span> | 
+		<span onclick="<%=methods.newSourceCode.caller()%>">소스코드</span> | 
+		<span onclick="<%=methods.newFile.caller()%>">파일</span>		
+	</div>

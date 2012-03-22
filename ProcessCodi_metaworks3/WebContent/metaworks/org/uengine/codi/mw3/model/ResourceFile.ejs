@@ -42,7 +42,7 @@ if(value!=null){
 
 
 
-<span style="background:url(images/waveStyle/<%=icon%>) no-repeat 5px 0px;">
+<span style="background:url(images/waveStyle/<%=icon%>) no-repeat; width: 5px; 0px;">
 <%		if(!value.isDeleted){%>
 	<a onclick="<%=methods.drillDown.caller()%>"><%=value.name%></a>
 <%		}else{%>
