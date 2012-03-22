@@ -314,7 +314,7 @@ $.fn.layout = function (opts) {
 		,	togglerContent_open:	""			// text or HTML to put INSIDE the toggler
 		,	togglerContent_closed:	""			// ditto
 		//	RESIZING OPTIONS
-		,	resizerDblClickToggle:	true		// 
+		,	resizerDblClickToggle:	false		// 
 		,	autoResize:				true		// IF size is 'auto' or a percentage, then recalc 'pixel size' whenever the layout resizes
 		,	autoReopen:				true		// IF a pane was auto-closed due to noRoom, reopen it when there is room? False = leave it closed
 		,	resizerDragOpacity:		1			// option for ui.draggable
