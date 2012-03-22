@@ -8,13 +8,11 @@ import org.metaworks.annotation.ServiceMethod;
 
 public class Console {
 	
-	
 	public Console(){
 		setLog("");
 	}
 
 	String log;
-
 		public String getLog() {
 			return log;
 		}
