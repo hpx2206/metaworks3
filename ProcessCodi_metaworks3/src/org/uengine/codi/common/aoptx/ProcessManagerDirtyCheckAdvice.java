@@ -2,13 +2,10 @@ package org.uengine.codi.common.aoptx;
 
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
 import org.metaworks.dao.TransactionContext;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.processmanager.ProcessManagerRemote;
 
 @Aspect
-// @Scope(value="request"
+// @Scope(value="request")
 public class ProcessManagerDirtyCheckAdvice {
 
    @After("execution(* org.uengine.processmanager.ProcessManagerBean.*(..))")
