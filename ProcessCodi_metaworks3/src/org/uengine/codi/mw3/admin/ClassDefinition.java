@@ -253,7 +253,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 	
 	}
 	
-	@ServiceMethod(callByContent=true, when="view")
+	@ServiceMethod(callByContent=true, when="view", keyBinding="Ctrl+S")
 	public void compile() throws Exception{
 		save();
 	
@@ -520,18 +520,18 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 //		}
 		///
 		
-		String strDef = GlobalContext.serialize(this, ClassDefinition.class);
-		
-		String fullDefId = processManager.addProcessDefinition(getClassName(), getVersion(), "description", false, strDef, getParentFolder(), getDefId(), getAlias(), "class");
-		
-		String[] definitionIdAndVersionId = org.uengine.kernel.ProcessDefinition.splitDefinitionAndVersionId(fullDefId);
-
-		
-		processManager.setProcessDefinitionProductionVersion(definitionIdAndVersionId[1]);
-		//processManager.applyChanges();
-		
-		setDefId(definitionIdAndVersionId[0]);
-		setDefVerId(definitionIdAndVersionId[1]);
+//		String strDef = GlobalContext.serialize(this, ClassDefinition.class);
+//		
+//		String fullDefId = processManager.addProcessDefinition(getClassName(), getVersion(), "description", false, strDef, getParentFolder(), getDefId(), getAlias(), "class");
+//		
+//		String[] definitionIdAndVersionId = org.uengine.kernel.ProcessDefinition.splitDefinitionAndVersionId(fullDefId);
+//
+//		
+//		processManager.setProcessDefinitionProductionVersion(definitionIdAndVersionId[1]);
+//		//processManager.applyChanges();
+//		
+//		setDefId(definitionIdAndVersionId[0]);
+//		setDefVerId(definitionIdAndVersionId[1]);
 	}
 	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP, when="view")
@@ -600,8 +600,18 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 	
 	@Override
 	public void afterDeserialization() {
-		
 	
+		String fullClassName = getAlias().substring(0, getAlias().indexOf("."));
+		
+		int whereLastSlash = fullClassName.lastIndexOf("/");
+		
+		if(whereLastSlash > -1){
+			packageName = fullClassName.substring(0, whereLastSlash).replace('/', '.');
+			className = fullClassName.substring(whereLastSlash+1);
+		}else{
+			packageName = "";
+			className = fullClassName;
+		}
 		
 		setSourceCodes(new ClassSourceCodes());
 
@@ -673,6 +683,14 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		try {
+			compile();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 				
 	}
 	

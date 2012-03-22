@@ -44,4 +44,12 @@ public class NewInstancePanel extends ContentWindow{
 			this.processDefinitions = processDefinitions;
 		}
 		
+	int knowledgeNodeId;
+		public int getKnowledgeNodeId() {
+			return knowledgeNodeId;
+		}
+		public void setKnowledgeNodeId(int knowledgeNodeId) {
+			this.knowledgeNodeId = knowledgeNodeId;
+		}
+		
 }

@@ -12,6 +12,7 @@ import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.CodiClassLoader;
+import org.uengine.codi.mw3.knowledge.WorkflowyNode;
 import org.uengine.kernel.RoleMapping;
 import org.uengine.processmanager.ProcessManagerRemote;
 import org.uengine.util.UEngineUtil;
@@ -251,10 +252,28 @@ public class ResourceFile implements ContextAware{
 		InstanceListPanel instanceList = new InstanceListPanel(session); //should return instanceListPanel not the instanceList only since there're one or more instanceList object in the client-side
 		//instanceList.load(session.login, session.navigation);
 
+		if(newInstancePanel!=null && newInstancePanel.getKnowledgeNodeId() > 0){
+			WorkflowyNode parent = new WorkflowyNode(newInstancePanel.getKnowledgeNodeId());
+			parent.load();
+			
+			WorkflowyNode child = new WorkflowyNode(WorkflowyNode.makeId());
+			child.setName(instanceView.instanceName);
+			child.setLinkedInstId(instId);
+			parent.addChildNode(child);
+			
+			child.save();
+
+			return new Object[]{instanceView, parent};
+
+		}
+		
 		return new Object[]{instanceView, instanceList};
 
 		
 	}
+	
+	@AutowiredFromClient
+	public NewInstancePanel newInstancePanel;
 	
 	@AutowiredFromClient
 	public Session session;
