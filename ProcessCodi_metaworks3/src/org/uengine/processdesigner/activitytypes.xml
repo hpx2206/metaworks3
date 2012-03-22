@@ -147,10 +147,12 @@
     <activityTypeClass>org.uengine.kernel.LocalMessengerActivity</activityTypeClass>
   </org.uengine.processdesigner.ActivityTypeDescriptor>
   
-    <org.uengine.processdesigner.ActivityTypeDescriptor>
+  <!-- 
+   <org.uengine.processdesigner.ActivityTypeDescriptor>
     <group>$activitytypes.groups.messaging</group>
     <activityTypeClass>org.uengine.kernel.LocalNateOnMessengerActivity</activityTypeClass>
   </org.uengine.processdesigner.ActivityTypeDescriptor>
+  -->
   
   <org.uengine.processdesigner.ActivityTypeDescriptor>
     <group>$activitytypes.groups.messaging</group>
@@ -172,14 +174,19 @@
     <activityTypeClass>org.uengine.facebook.activities.WriteFacebookActivity</activityTypeClass>
   </org.uengine.processdesigner.ActivityTypeDescriptor>
   
-   
-  <!-- 
+  <org.uengine.processdesigner.ActivityTypeDescriptor>
+   <group>$activitytypes.groups.messaging</group>
+   <activityTypeClass>com.defaultcompany.activities.YouTubeActivity</activityTypeClass>
+  </org.uengine.processdesigner.ActivityTypeDescriptor>
+  
   <org.uengine.processdesigner.ActivityTypeDescriptor>
    <group>$activitytypes.groups.messaging</group>
    <activityTypeClass>com.defaultcompany.activities.MetaWeblogBlogPostingActivity</activityTypeClass>
   </org.uengine.processdesigner.ActivityTypeDescriptor>
-   -->
    
+   
+  
+
 <!-- database -->
   <!--
   <org.uengine.processdesigner.ActivityTypeDescriptor>
@@ -260,6 +267,9 @@
     <activityTypeClass>org.uengine.kernel.ExtSoundPlayActivity</activityTypeClass>
   </org.uengine.processdesigner.ActivityTypeDescriptor>
 
-	
+  <org.uengine.processdesigner.ActivityTypeDescriptor>
+    <group>$activitytypes.groups.visualmashup</group>
+    <activityTypeClass>com.defaultcompany.activities.VisualMashupActivity</activityTypeClass>
+  </org.uengine.processdesigner.ActivityTypeDescriptor>
  	
 </list>
