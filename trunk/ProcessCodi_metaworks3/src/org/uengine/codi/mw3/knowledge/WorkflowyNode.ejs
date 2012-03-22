@@ -7,7 +7,8 @@
 	<ul>
 		<li>
 			<div id="wfnode_<%=objectId%>" style="height:24px">
-				<input type="text" id="wfnode_content_<%=objectId%>" style="border:0; font-family: 'Helvetica Neue', Arial, Sans-serif; font-size: 16px; font-weight: normal" value="<%=value.name%>" onkeydown="mw3.getFaceHelper('<%=objectId%>').press(this)">
+				<%  if(value.linkedInstId){%><span onclick="<%=methods.linkInstance.caller()%>">[<%=value.linkedInstId%>]</span><%}%>
+				<input type="text" id="wfnode_content_<%=objectId%>" size=100 style="border:0; font-family: 'Helvetica Neue', Arial, Sans-serif; font-size: 16px; font-weight: normal;none;background:transparent" value="<%=value.name%>" onkeydown="mw3.getFaceHelper('<%=objectId%>').press(this)">
 				<div id="wfinfo_<%=objectId%>"></div>
 			</div>
 <%	

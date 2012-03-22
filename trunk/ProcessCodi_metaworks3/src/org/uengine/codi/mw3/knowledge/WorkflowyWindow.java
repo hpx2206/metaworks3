@@ -3,7 +3,7 @@ package org.uengine.codi.mw3.knowledge;
 import org.metaworks.annotation.Face;
 
 @Face(ejsPath="genericfaces/WindowTab.ejs", 
-      displayName="Workflowy", 
+      displayName="Knowledge Mode", 
       options={"hideLabels"}, 
       values={"true"})
 public class WorkflowyWindow {

@@ -10,6 +10,11 @@ import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.codi.mw3.model.ContentWindow;
+import org.uengine.codi.mw3.model.Instance;
+import org.uengine.codi.mw3.model.InstanceViewContent;
+import org.uengine.codi.mw3.model.NewInstancePanel;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -50,6 +55,16 @@ public class WorkflowyNode implements ContextAware {
 		}
 		public void setName(String name) {
 			this.name = name;
+		}
+		
+		
+	String linkedInstId;
+	
+		public String getLinkedInstId() {
+			return linkedInstId;
+		}
+		public void setLinkedInstId(String linkedInstanceId) {
+			this.linkedInstId = linkedInstanceId;
 		}
 
 	String nameNext;
@@ -94,12 +109,13 @@ public class WorkflowyNode implements ContextAware {
 			this.metaworksContext = metaworksContext;
 		}
 	
-	private void addChildNode(WorkflowyNode newNode){
+	public void addChildNode(WorkflowyNode newNode){
 		addChildNode(childNode.size(), newNode);	
 	}
 	
 	private void addChildNode(int index, WorkflowyNode newNode){
 		childNode.add(index, newNode);
+		newNode.setParentNode(this);
 	}
 	
 	private void removeChildNode(int index){
@@ -439,6 +455,8 @@ public class WorkflowyNode implements ContextAware {
 				node = new BasicDBObject();
 				node.put("id", getId());
 				node.put("name", getName());
+				node.put("linkedInstId", getLinkedInstId());
+
 				node.put("parentId", getParentNode().getId());
 				node.put("index", getParentNode().getChildNode().indexOf(this));
 				
@@ -570,10 +588,12 @@ public class WorkflowyNode implements ContextAware {
 	        	
 	        	int id = ((Integer)result.get("id")).intValue();
 	        	String name = (String)result.get("name");
+	        	String linkedInstId = (String)result.get("linkedInstId");
 	        	
 	        	WorkflowyNode node = new WorkflowyNode(id);
 	        	node.setParentNode(this);
 	        	node.setName(name);
+	        	node.setLinkedInstId(linkedInstId);
 	        	node.load();
 	        	
 	        	addChildNode(node);
@@ -613,6 +633,28 @@ public class WorkflowyNode implements ContextAware {
 		
 		return this;
 	}	
+	
+	@ServiceMethod(inContextMenu=true, keyBinding="Ctrl+N")
+	public ContentWindow newProcessInstance() throws Exception{
+		NewInstancePanel newInstancePanel =  new NewInstancePanel();
+		newInstancePanel.setKnowledgeNodeId(id);
+		
+		return newInstancePanel;
+	}
+	
+	@ServiceMethod(callByContent=true)
+	public ContentWindow linkInstance() throws Exception{
+		Instance instance = new Instance();
+		instance.setInstId(new Long(getLinkedInstId()));
+		
+		instanceViewContent.load(instance);
+		
+		return instanceViewContent;
+
+	}
+	
+	@Autowired
+	public InstanceViewContent  instanceViewContent;
 	
 	public static int makeId() throws UnknownHostException, MongoException {
 

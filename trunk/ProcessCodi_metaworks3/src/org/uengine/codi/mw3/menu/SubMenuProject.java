@@ -1,8 +1,11 @@
 package org.uengine.codi.mw3.menu;
 
+import org.metaworks.Remover;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.menu.SubMenu;
+import org.uengine.codi.mw3.admin.ClassDefinition;
 
 public class SubMenuProject extends SubMenu {
 	@ServiceMethod
@@ -46,4 +49,18 @@ public class SubMenuProject extends SubMenu {
 	public void saveAll() throws Exception {
 		
 	}
+	
+	@ServiceMethod(keyBinding="Ctrl+S@Global")
+	@Face(displayName="Compile")
+	public Object[] compile() throws Exception {
+		classDefinition.compile();
+		
+		return new Object[]{classDefinition, new Remover(this)};
+	}
+
+	
+	@AutowiredFromClient
+	public ClassDefinition classDefinition;
+
+
 }

@@ -25,6 +25,9 @@ public class SubMenuRun extends SubMenu {
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 	@Face(displayName="Run (Normal)")
 	public Object[] run() throws Exception{
+		
+		classDefinition.compile();
+
 		System.out.println("run");
 		String fullClassName = classDefinition.getPackageName() + "." + classDefinition.getClassName();
 		
@@ -48,6 +51,9 @@ public class SubMenuRun extends SubMenu {
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 	@Face(displayName="Run for UI Design")
 	public Object[] design() throws Exception{
+		
+		classDefinition.compile();
+
 		String fullClassName = classDefinition.getPackageName() + "." + classDefinition.getClassName();
 		
 		Console.addLog("Run for UI Design -> " + fullClassName);
@@ -70,6 +76,9 @@ public class SubMenuRun extends SubMenu {
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 	@Face(displayName="Run in Mobile")
 	public Object[] runMobile() throws Exception{
+		
+		classDefinition.compile();
+		
 		String fullClassName = classDefinition.getPackageName() + "." + classDefinition.getClassName();
 
 		Console.addLog("Run in Mobile -> " + fullClassName);
@@ -95,6 +104,9 @@ public class SubMenuRun extends SubMenu {
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 	@Face(displayName="Run in New Window")
 	public Object[] runFullWindow() throws Exception{
+		
+		classDefinition.compile();
+
 		String fullClassName = classDefinition.getPackageName() + "." + classDefinition.getClassName();
 		
 		Console.addLog("Run in Mobile -> " + fullClassName);
