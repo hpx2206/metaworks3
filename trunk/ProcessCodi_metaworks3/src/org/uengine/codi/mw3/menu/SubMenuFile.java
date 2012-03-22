@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.admin.ClassDefinition;
 import org.uengine.codi.mw3.admin.NewClass;
 import org.uengine.codi.mw3.model.ContentWindow;
+import org.uengine.codi.mw3.model.Popup;
+import org.uengine.codi.mw3.svn.CheckoutWindow;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 public class SubMenuFile extends SubMenu {
@@ -40,10 +42,15 @@ public class SubMenuFile extends SubMenu {
 		return new Object[]{newClass, new Remover(this)};			
 	}
 	
-	@ServiceMethod
-	@Face(displayName="OpenFile", options={"separator"}, values={"true"})	
-	public void openFile() throws Exception {
+	@ServiceMethod(target="popup")
+	@Face(displayName="Check Out", options={"separator"}, values={"true"})	
+	public Popup checkOut() throws Exception {
+		Popup popup = new Popup();
+		popup.setName("SVN Client");
+		popup.setPanel(new CheckoutWindow(classDefinition));
 		
+		return popup;
+
 	}
 
 	@ServiceMethod
