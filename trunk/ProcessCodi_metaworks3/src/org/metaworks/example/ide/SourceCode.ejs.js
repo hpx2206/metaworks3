@@ -19,15 +19,18 @@ var org_metaworks_example_ide_SourceCode = function(objectId, className){
     
     
     var ctrlDown = false;	
-	var ctrlKey = 17, spaceKey = 81;//32
+	var ctrlKey = 17, spaceKey = 81;//32 - replace Q
+	var annotationKey = 50;
+	var f3Key = 114;
 	
     
     document.addEventListener(
 		"keydown",
-   		function(e) {			
+   		function(e) {		
+			
 			if (e && e.keyCode == ctrlKey && !ctrlDown && theEditor.textInput.getElement() == e.srcElement) {
 				ctrlDown = true;
-				console.log("ctrlDown = " + ctrlDown);
+				//console.log("ctrlDown = " + ctrlDown);
 			}
 			//console.log("space down : " + e.keyCode);
 			if (e && ctrlDown && e.keyCode == spaceKey && theEditor.textInput.getElement() == e.srcElement) {
@@ -35,7 +38,26 @@ var org_metaworks_example_ide_SourceCode = function(objectId, className){
 				e.returnValue = false;
 			}
 			
-			if (e && e.keyCode==190 && theEditor.textInput.getElement() == e.srcElement) {
+			if (e && e.keyCode == f3Key && theEditor.textInput.getElement() == e.srcElement) {
+				//console.log("f3 down");
+				
+				var whereEnd = theEditor.getCursorPosition();
+				var whereStart = {column: 0, row: whereEnd.row};				
+				var line = theEditor.getSession().doc.getTextRange({start: whereStart, end: whereEnd});
+				
+				var fullLine = theEditor.getSession().doc.getLine(whereEnd.row);
+				
+				//alert(line + " : " + fullLine);
+				
+				var sourceCode = mw3.getObject(theSourceCodeObjId);				
+				sourceCode.lineAssistRequested = "-f3 " + fullLine;
+				sourceCode.clientObjectId = theSourceCodeObjId;
+				sourceCode = sourceCode.requestAssist();
+				
+				e.returnValue = false;
+			}
+			
+			if (e && e.keyCode==190 && theEditor.textInput.getElement() == e.srcElement) {				
 				var whereEnd = theEditor.getCursorPosition();
 				var whereStart = {column: 0, row: whereEnd.row};
 				
@@ -81,10 +103,25 @@ var org_metaworks_example_ide_SourceCode = function(objectId, className){
    		function(e) {
 			if (e && e.keyCode == ctrlKey && ctrlDown && theEditor.textInput.getElement() == e.srcElement) {				
 				ctrlDown = false;	
-				console.log("ctrlDown = " + ctrlDown);
+				//console.log("ctrlDown = " + ctrlDown);
 			}
 			
-			//console.log("keyCode = " + e.keyCode + ", " + theEditor.textInput.getElement() == e.srcElement);
+			//console.log("keyCode = " + e.keyCode + ", " + theEditor.textInput.getElement() == e.srcElement);			
+			
+			if(e.keyCode == annotationKey && theEditor.textInput.getElement() == e.srcElement) {
+				
+				var whereEnd = theEditor.getCursorPosition();
+				var fullLine = theEditor.getSession().doc.getLine(whereEnd.row);
+				fullLine = fullLine.replace(/^\s*/,'');
+				fullLine = fullLine.replace(/\s*$/,'');
+				
+				if(fullLine == "@") {				
+					var sourceCode = mw3.getObject(theSourceCodeObjId);	
+					sourceCode.lineAssistRequested = fullLine;
+					sourceCode.clientObjectId = theSourceCodeObjId;
+					sourceCode = sourceCode.requestAssist();				
+				}
+			}
 			
 			if (ctrlDown && e.keyCode == spaceKey && theEditor.textInput.getElement() == e.srcElement) {				
 				var whereEnd = theEditor.getCursorPosition();
@@ -99,8 +136,7 @@ var org_metaworks_example_ide_SourceCode = function(objectId, className){
 				sourceCode.lineAssistRequested = fullLine;
 				sourceCode.clientObjectId = theSourceCodeObjId;
 				sourceCode = sourceCode.requestAssist();
-				
-				
+							
 				ctrlDown = false;
 				
 				/*
