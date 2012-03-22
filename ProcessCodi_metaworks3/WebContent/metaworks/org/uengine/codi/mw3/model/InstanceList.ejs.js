@@ -13,7 +13,7 @@ $("#scroll_div").scroll(function(e) {
 			
 	);*/
 	if($("#scroll_div").scrollTop() + 26 > $('#scroll_div>div').height() - $("#scroll_div").height()){
-		alert("last");
+		console.log("last");
 	}
 
 });
