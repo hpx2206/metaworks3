@@ -198,11 +198,19 @@
 		   					var targetDivId = this._getObjectDivId(objectId);
 		   					var command = "mw3.call("+objectId+", '"+methodName+"')";
 		   					
-		   					shortcut.add(keyBinding, command/*function() {
-		   						eval(command);
-		   					}*/,{
-		   						target: targetDivId
-		   					});
+		   					if(keyBinding.indexOf("@Global") > -1){
+		   						keyBinding = keyBinding.substr(keyBinding.length - "@Global".length);
+		   					
+		   						shortcut.remove(keyBinding);
+			   					shortcut.add(keyBinding, command);
+		   					}else{
+		   					
+			   					shortcut.add(keyBinding, command/*function() {
+			   						eval(command);
+			   					}*/,{
+			   						target: targetDivId
+			   					});
+		   					}
 		   				}
 		   			}
 		   			
@@ -1474,29 +1482,29 @@
 			   		}
 			   }
 			   
+			   
 			   object['__toString'] = function(){
 				   
-				   if(objectMetadata.nameFieldDescriptor!=null){
-					   var nameFieldValue = this[objectMetadata.nameFieldDescriptor.name];
+				   var metadata = objectMetadata;
+				   var nameFieldValue = this;
+				   
+				   while(metadata && metadata.nameFieldDescriptor!=null){
+					   nameFieldValue = nameFieldValue[metadata.nameFieldDescriptor.name];
 					   
-					   if(nameFieldValue && nameFieldValue.__toString){
-						   return nameFieldValue.__toString();
+					   if(typeof nameFieldValue == 'string'){
+						   return nameFieldValue;
+						   
 					   }else{
-						   
-						   if(typeof nameFieldValue == 'string'){
-							   return nameFieldValue;
-							   
-						   }else{
-							   var objectMetadataOfNameField = mw3.getMetadata(nameFieldValue.__className);
-							   
-							   return objectMetadataOfNameField.displayName;
-							   
-						   }
-						   
+						   if(nameFieldValue && nameFieldValue.__className){
+							   metadata = mw3.getMetadata(nameFieldValue.__className);
+						   }else
+							   metadata = null;
 					   }
-				   }else{
-					   return objectMetadata.displayName;
+					   
 				   }
+			   
+				   return objectMetadata.displayName;
+				   
 			   }
 			   
 			   object['__getFaceHelper'] = function(){
