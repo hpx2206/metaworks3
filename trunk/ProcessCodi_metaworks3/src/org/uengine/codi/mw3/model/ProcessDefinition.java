@@ -1,18 +1,17 @@
 package org.uengine.codi.mw3.model;
 
+import javax.servlet.http.HttpSession;
+
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
+import org.metaworks.dao.TransactionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.kernel.RoleMapping;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 public class ProcessDefinition extends Database<IProcessDefinition> implements IProcessDefinition{
-	
-	@Autowired
-	public NewChildWindow newChildWindow;
-	
 	
 	String author;
 		public String getAuthor() {
@@ -184,6 +183,10 @@ public class ProcessDefinition extends Database<IProcessDefinition> implements I
 	}
 	
 	public void drillDown() throws Exception{
+		//setting the facebook user Id into session attribute;
+		HttpSession session = TransactionContext.getThreadLocalInstance().getRequest().getSession(); 
+		session.setAttribute("defId", getDefId().toString());
+		
 		if(childs!=null) childs = null;
 		else{
 		//if(getIsFolder()){ //this will not tell right value since it would be called by key object not the full object. it would be set by the ejs face will not create "drillDown" button.
@@ -210,8 +213,8 @@ public class ProcessDefinition extends Database<IProcessDefinition> implements I
 		
 		
 		RoleMapping rm = RoleMapping.create();
-		if(session.login!=null)
-			rm.setEndpoint(session.login.getUserId());
+		if(session.getUser() != null)
+			rm.setEndpoint(session.getUser().getUserId());
 		
 		codiPmSVC.setLoggedRoleMapping(rm);
 		
@@ -231,7 +234,7 @@ public class ProcessDefinition extends Database<IProcessDefinition> implements I
 	
 	@Override
 	public NewChildWindow newChild() throws Exception {
-		NewChildWindow newChildWindow = this.newChildWindow; 
+		NewChildWindow newChildWindow = new NewChildWindow(); 
 		newChildWindow.setParentFolder(getDefId());
 		
 		return newChildWindow;
@@ -240,6 +243,12 @@ public class ProcessDefinition extends Database<IProcessDefinition> implements I
 
 	@Override
 	public ContentWindow design() throws Exception {
+		String defId = getDefId().toString();
+		
+		//setting the facebook user Id into session attribute;
+		HttpSession session = TransactionContext.getThreadLocalInstance().getRequest().getSession(); 
+		session.setAttribute("defId", getDefId());
+		
 //		try{
 		
 			String objType = databaseMe().getObjType();
@@ -247,23 +256,23 @@ public class ProcessDefinition extends Database<IProcessDefinition> implements I
 			if("form".equals(objType)){
 				FormDesignerContentPanel formDesigner = new FormDesignerContentPanel();
 				formDesigner.codiPmSVC = codiPmSVC; //TODO: later should be removed
-				formDesigner.load(databaseMe().getDefId().toString());
+				formDesigner.load(defId);
 	
 				codiPmSVC.remove();
 	
 				return formDesigner;
 			}else if("process".equals(objType)){
-				processDesigner.load(databaseMe().getDefId().toString());
+				processDesigner.load(defId);
 				
 				return processDesigner;
 				
 			}else if("class".equals(objType)){
-				classDesignerContentPanel.load(databaseMe().getDefId().toString());
+				classDesignerContentPanel.load(defId);
 				
 				return classDesignerContentPanel;
 				
 			}else if("entity".equals(objType)){
-				entityDesignerContentPanel.load(databaseMe().getDefId().toString());
+				entityDesignerContentPanel.load(defId);
 				
 				return entityDesignerContentPanel;		
 			}
@@ -304,8 +313,6 @@ public class ProcessDefinition extends Database<IProcessDefinition> implements I
 	
 	@Autowired
 	public ProcessManagerRemote codiPmSVC;
-
-
 
 	IProcessDefinition childs;
 		public IProcessDefinition getChilds() {

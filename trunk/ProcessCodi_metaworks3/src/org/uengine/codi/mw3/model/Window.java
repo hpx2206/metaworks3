@@ -1,8 +1,8 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.annotation.Face;
-import org.metaworks.annotation.Hidden;
 
+@Face(ejsPath="genericfaces/WindowTab.ejs")
 public class Window {
 	
 	public Window() {

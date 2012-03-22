@@ -2,9 +2,9 @@ package org.uengine.codi.mw3.model;
 
 import org.metaworks.annotation.Face;
 
-@Face(ejsPath="genericfaces/Window.ejs", displayName="개인중심 - 내가 할 일", 
-      options={"hideLabels", "hideHeader", "innerLayoutName", "innerLayout", "outerLayoutName", "outerLayout"}, 
-      values={"true", "true", "west", "middle", "center", "outer"})
+@Face(ejsPath="genericfaces/WindowTab.ejs", displayName="개인중심 - 내가 할 일", 
+      options={"hideLabels", "hideHeader", "layout"}, 
+      values={"true", "true", "west"})
 
 public class InstanceListWindow {
 	public InstanceListWindow(){}

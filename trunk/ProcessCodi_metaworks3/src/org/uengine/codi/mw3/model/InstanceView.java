@@ -62,8 +62,8 @@ public class InstanceView {
 
 		if(session!=null){
 			User loginUser = new User();
-			loginUser.setUserId(session.getLogin().getUserId());
-			loginUser.setName(session.getLogin().getName());
+			loginUser.setUserId(session.getUser().getUserId());
+			loginUser.setName(session.getUser().getName());
 			
 			newItem.setWriter(loginUser);
 		}

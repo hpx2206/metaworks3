@@ -7,7 +7,7 @@ import org.uengine.codi.mw3.admin.FormInstance;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.processmanager.ProcessManagerRemote;
 
-@Face(ejsPath="genericfaces/Window.ejs", displayName="Form Designer", options={"hideLabels"}, values={"true"})
+@Face(ejsPath="genericfaces/WindowTab.ejs", displayName="Form Designer", options={"hideLabels"}, values={"true"})
 public class FormDesignerContentPanel extends ContentWindow {
 	
 

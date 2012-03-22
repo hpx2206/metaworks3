@@ -56,7 +56,7 @@ public class Followers {
 	public Popup addFollowers() throws Exception{		
 		Popup popup = new Popup();
 		
-		popup.setPanel(new AddFollowerPanel(session.login, getInstanceId()));
+		popup.setPanel(new AddFollowerPanel(session.getUser(), getInstanceId()));
 		popup.setName("AddFollowerPanel");
 		
 		return popup;		

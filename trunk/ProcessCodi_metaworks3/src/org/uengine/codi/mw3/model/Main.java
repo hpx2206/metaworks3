@@ -1,46 +1,55 @@
 package org.uengine.codi.mw3.model;
 
-import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredToClient;
-import org.metaworks.annotation.Hidden;
-import org.metaworks.annotation.Id;
-import org.metaworks.annotation.ServiceMethod;
-import org.uengine.codi.mw3.admin.Admin;
+import org.metaworks.widget.layout.Layout;
+import org.uengine.codi.mw3.ILogin;
+import org.uengine.codi.mw3.admin.PageNavigator;
 
 public class Main {
 
-	public Main() {
+	public Main(){
+		
 	}
-
-	protected Main(ILogin login) throws Exception {
-
-		// login.setUserId("1401720840");
-		this.login = login;
-
+	
+	public Main(IUser user) throws Exception {
+		
 		Session session = new Session();
-		session.setLogin(login);
-		this.session = session;
+		session.setUser(user);
+		setSession(session);		
 
-		this.navigationWindow = new NavigationWindow();
 
-		this.contentWindow = new ContentWindow();
+		Layout westLayout = new Layout();
+		westLayout.setNorth(new  NavigationWindow());
+		westLayout.setCenter(new ContactWindow(user));
+		westLayout.setLoad(false);
+		westLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, north__spacing_open:5");
 
-		this.contactWindow = new ContactWindow(login);
-
-		this.instanceListWindow = new InstanceListWindow(session);
+		Layout eastLayout = new Layout();
+		eastLayout.setWest(new  InstanceListWindow(session));
+		eastLayout.setCenter(new ContentWindow());
+		eastLayout.setLoad(false);
+		eastLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, south__spacing_open:5, west__spacing_open:5, west__size:'40%'");
+		
+		Layout outerLayout = new Layout();
+		outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:5, north__size:52, center__onresize: 'mw3.getFaceHelper(\\''+this.objectId+'\\').resizeChild()'");
+		outerLayout.setNorth(new ProcessTopPanel());
+		outerLayout.setWest(westLayout);
+		outerLayout.setCenter(eastLayout);		
+		outerLayout.setLoadChild(true);
+		
+		setLayout(outerLayout);		
+		
+		setPageNavigator(new PageNavigator());		
 
 		// this.logo = new Logo();
 	}
 
-	ILogin login;
-		@Hidden
-		@Id
-		@AutowiredToClient
-		public ILogin getLogin() {
-			return login;
+	Layout layout;
+		public Layout getLayout() {
+			return layout;
 		}
-		public void setLogin(ILogin login) {
-			this.login = login;
+		public void setLayout(Layout layout) {
+			this.layout = layout;
 		}
 
 	Session session;
@@ -52,39 +61,14 @@ public class Main {
 			this.session = session;
 		}
 
-	NavigationWindow navigationWindow;
-		public NavigationWindow getNavigationWindow() {
-			return navigationWindow;
+	PageNavigator pageNavigator;
+		public PageNavigator getPageNavigator() {
+			return pageNavigator;
 		}
-		public void setNavigationWindow(NavigationWindow navigationWindow) {
-			this.navigationWindow = navigationWindow;
+		public void setPageNavigator(PageNavigator pageNavigator) {
+			this.pageNavigator = pageNavigator;
 		}
-
-	ContentWindow contentWindow;
-		public ContentWindow getContentWindow() {
-			return contentWindow;
-		}
-		public void setContentWindow(ContentWindow contentWindow) {
-			this.contentWindow = contentWindow;
-		}
-
-
-	ContactWindow contactWindow;
-		public ContactWindow getContactWindow() {
-			return contactWindow;
-		}
-		public void setContactWindow(ContactWindow contactWindow) {
-			this.contactWindow = contactWindow;
-		}
-
-	InstanceListWindow instanceListWindow;
-		public InstanceListWindow getInstanceListWindow() {
-			return instanceListWindow;
-		}
-		public void setInstanceListWindow(InstanceListWindow instanceListWindow) {
-			this.instanceListWindow = instanceListWindow;
-		}
-
+		
 	Logo logo;
 		public Logo getLogo() {
 			return logo;
@@ -92,19 +76,4 @@ public class Main {
 		public void setLogo(Logo logo) {
 			this.logo = logo;
 		}
-
-	@ServiceMethod
-	public ILogin logout() {
-		return login;
-	}
-
-	@ServiceMethod
-	public Main refresh() throws Exception {
-		return new Main(login);
-	}
-
-	@ServiceMethod(target = ServiceMethodContext.TARGET_SELF)
-	public Admin admin() throws Exception {
-		return new Admin(login);
-	}
 }

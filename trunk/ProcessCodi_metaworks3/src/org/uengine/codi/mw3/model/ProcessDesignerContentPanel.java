@@ -1,13 +1,6 @@
 package org.uengine.codi.mw3.model;
 
-import java.util.HashMap;
-
-import net.sf.hibernate.collection.Map;
-
-import org.metaworks.annotation.Face;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.codi.mw3.admin.ClassDefinition;
-import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.viewer.ViewerOptions;
 import org.uengine.processmanager.ProcessManagerRemote;
 

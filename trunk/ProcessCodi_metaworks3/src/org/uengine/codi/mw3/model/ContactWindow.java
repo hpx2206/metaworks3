@@ -1,15 +1,16 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.annotation.Face;
+import org.uengine.codi.mw3.ILogin;
 
-@Face(ejsPath="genericfaces/Window.ejs", displayName="연락처", 
-	  options={"hideLabels", "hideHeader",  "innerLayoutName", "innerLayout", "outerLayoutName", "outerLayout"}, 
-      values={"true", "true", "center", "inner", "west", "outer"})
+@Face(ejsPath="genericfaces/WindowTab.ejs", displayName="연락처", 
+	  options={"hideLabels", "hideHeader",  "layout"}, 
+      values={"true", "true", "center"})
 
 public class ContactWindow {
 	public ContactWindow() {}
-	public ContactWindow(ILogin loginUser) throws Exception {
-		this.contactPanel = new ContactPanel(loginUser);
+	public ContactWindow(IUser user) throws Exception {
+		this.contactPanel = new ContactPanel(user);
 	}
 	
 	ContactPanel contactPanel;

@@ -1,17 +1,15 @@
 package org.uengine.codi.mw3.model;
 
+	
 public class Session {
-	
-	ILogin login;
+	IUser user;	
+		public IUser getUser() {
+			return user;
+		}
+		public void setUser(IUser user) {
+			this.user = user;
+		}
 
-		public ILogin getLogin() {
-			return login;
-		}
-	
-		public void setLogin(ILogin login) {
-			this.login = login;
-		}
-	
 	Navigation navigation;
 
 		public Navigation getNavigation() {
