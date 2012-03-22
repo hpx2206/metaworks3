@@ -16,4 +16,8 @@ public interface IUser extends IDAO{
 	
 	@ServiceMethod(when="addContact", callByContent=true)
 	public ContactList addContact() throws Exception;
+	
+	@ServiceMethod(when="pickUp", callByContent=true, target=TARGET_POPUP)
+	public Popup pickUp() throws Exception;
+	
 }
