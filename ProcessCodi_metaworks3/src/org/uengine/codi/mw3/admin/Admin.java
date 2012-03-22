@@ -24,7 +24,7 @@ public class Admin {
 		resourceWindow = new ResourceWindow();
 
 		Session session = new Session();
-		session.setLogin(login);
+		//session.setLogin(login);
 		this.session = session;
 
 		contentWindow = new ContentWindow();
@@ -51,7 +51,7 @@ public class Admin {
 		resourceWindow = new ResourceWindow();
 
 		Session session = new Session();
-		session.setLogin(login);
+		//session.setLogin(login);
 		this.session = session;
 
 		contentWindow = new ContentWindow();		
