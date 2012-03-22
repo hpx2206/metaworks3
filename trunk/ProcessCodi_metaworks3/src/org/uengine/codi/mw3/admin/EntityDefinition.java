@@ -209,7 +209,7 @@ public class EntityDefinition implements ContextAware, PropertyListable, NeedArr
 	@ServiceMethod(callByContent=true, when="edit")
 	@Face(displayName="Next > ")
 	public void next1() throws Exception{
-		if(isCreatedEntity())
+		if(queryCreatedEntity())
 			throw new Exception("이미 테이블이 존재합니다.");
 		
 		if(getEntityModeler() == null)
@@ -528,7 +528,10 @@ public class EntityDefinition implements ContextAware, PropertyListable, NeedArr
 	}
 	
 	private void save() throws Exception{
-		setAlias(getPackageName().replace('.', '/') + "/" + getEntityName() + ".sql");
+		
+		setParentFolder(getPackageName().replace('.', '/'));
+		
+		setAlias(getParentFolder() + "/" + getEntityName() + ".sql");
 
 		/// generate source file
 		String sourceCodeBase = CodiClassLoader.getMyClassLoader().sourceCodeBase();
@@ -544,17 +547,18 @@ public class EntityDefinition implements ContextAware, PropertyListable, NeedArr
 		
 		String strDef = GlobalContext.serialize(this, ClassDefinition.class);
 		
+		
 		String fullDefId = processManager.addProcessDefinition(getEntityName(),getVersion(), "description", false, strDef, getParentFolder(),getDefId(), getAlias(), "entity");
 		
-		String[] definitionIdAndVersionId = org.uengine.kernel.ProcessDefinition.splitDefinitionAndVersionId(fullDefId);
+//		String[] definitionIdAndVersionId = org.uengine.kernel.ProcessDefinition.splitDefinitionAndVersionId(fullDefId);
+//		
+//		processManager.setProcessDefinitionProductionVersion(definitionIdAndVersionId[1]);
 		
-		processManager.setProcessDefinitionProductionVersion(definitionIdAndVersionId[1]);
-		
-		setDefId(definitionIdAndVersionId[0]);
-		setDefVerId(definitionIdAndVersionId[1]);
+//		setDefId(definitionIdAndVersionId[0]);
+//		setDefVerId(definitionIdAndVersionId[1]);
 	}		
 	
-	public boolean isCreatedEntity() throws Exception {
+	public boolean queryCreatedEntity() throws Exception {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
@@ -603,7 +607,7 @@ public class EntityDefinition implements ContextAware, PropertyListable, NeedArr
 			
 			return array;
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			// TODO Auto-generated catch bloc
 			e.printStackTrace();
 		}
 		
