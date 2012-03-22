@@ -132,7 +132,7 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
 		
 		String firstSourcePath = sourcePath[0].getPath();
 
-		if(name.endsWith(".ejs") || name.endsWith(".ejs.js") || name.endsWith("xml")){
+		if(name.endsWith(".ejs") || name.endsWith(".ejs.js") || name.endsWith("xml") || name.endsWith(".process")){
 			try {
 				FileInputStream fis = new FileInputStream(firstSourcePath + "/" + name);
 				return fis;

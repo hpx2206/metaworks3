@@ -137,7 +137,7 @@ public class CodiMetaworksRemoteService extends MetaworksRemoteService{
 	public Object callMetaworksService(String objectTypeName, Object object,
 			String methodName, Map<String, Object> autowiredFields)
 			throws Throwable {
-		//Thread.currentThread().setContextClassLoader(codiClassLoader);
+		//Thread.currencotThread().setContextClassLoader(codiClassLoader);
 		// TODO Auto-generated method stub
 		
 		Class serviceClass = Thread.currentThread().getContextClassLoader().loadClass(objectTypeName);
@@ -160,11 +160,7 @@ public class CodiMetaworksRemoteService extends MetaworksRemoteService{
     	
 		if(invocationContext.getAutowiredObjects().containsKey(ProcessManagerBean.class)){ //TODO: later this should check the hierarchy of ProcessManagerRemote 
 			processManager = (ProcessManagerRemote) invocationContext.getAutowiredObjects().get(ProcessManagerBean.class);
-		}else
-		
-System.out.println(">>>>>>>>>processManagerBeanCreated--------------------");
-
-	
+		}
 
 		
     	Object returnVal = null;
@@ -199,8 +195,12 @@ System.out.println(">>>>>>>>>processManagerBeanCreated--------------------");
 			if(m.getReturnType()==void.class)
 				returnVal = object;
 
-			if(processManager!=null){
-				processManager.applyChanges();				
+			if(TransactionContext.getThreadLocalInstance().getSharedContext("processManagerBeanChanged") != null){
+				processManager = getDirtyProcessManager(processManager);
+	
+				if(processManager!=null){
+					processManager.applyChanges();				
+				}
 			}
 			
 			return returnVal;
@@ -209,15 +209,17 @@ System.out.println(">>>>>>>>>processManagerBeanCreated--------------------");
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 
-			processManager = getDirtyProcessManager(processManager);
-			
-			if(processManager!=null){
-				try {
-					processManager.cancelChanges();
-				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}				
+			if(TransactionContext.getThreadLocalInstance().getSharedContext("processManagerBeanChanged") != null){
+				processManager = getDirtyProcessManager(processManager);
+				
+				if(processManager!=null){
+					try {
+						processManager.cancelChanges();
+					} catch (Exception e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}				
+				}
 			}
 			
 			throw e.getTargetException();
@@ -247,8 +249,7 @@ System.out.println(">>>>>>>>>processManagerBeanCreated--------------------");
 	private ProcessManagerRemote getDirtyProcessManager(
 			ProcessManagerRemote processManager) {
 		//2. try the case that the one of inner classes issued the processmanager
-		if(TransactionContext.getThreadLocalInstance().getSharedContext("processManagerBeanCreated") != null){
-System.out.println("processManagerBeanCreated--------------------");
+		if(TransactionContext.getThreadLocalInstance().getSharedContext("processManagerBeanUsed") != null){
 			if(TransactionalDwrServlet.useSpring){
 				WebApplicationContext springAppContext = getBeanFactory();
 				
@@ -266,8 +267,12 @@ System.out.println("processManagerBeanCreated--------------------");
 				
 				processManager = (ProcessManagerRemote) springBean;
 			}
+			
+			return processManager;
 		}
-		return processManager;
+
+		return null;
+		//return processManager;
 	}
 
 	@Override
