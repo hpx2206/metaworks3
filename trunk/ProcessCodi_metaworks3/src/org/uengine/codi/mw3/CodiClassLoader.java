@@ -91,8 +91,10 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
     
 	public String sourceCodeBase(){
 
-		if(sourcePath!=null)
-			return sourcePath[0].getPath();
+		//TODO. setting a collect sourcePath 
+		
+		//if(sourcePath!=null)
+		//	return sourcePath[0].getPath();
 		
 		String mySourceCodeBase = mySourceCodeBase();
 
@@ -107,8 +109,22 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
 	        }
 		}
 		
+		String userId = null;
+		try{
+			userId = (String) TransactionContext.getThreadLocalInstance().getRequest().getSession().getAttribute("userId");
+		}catch(Exception e){
+			
+		}
+		
+		String dir = "D:/uengine/definitions/" + userId;
+		File f = new File(dir);
+		if(!f.exists()) f.mkdirs();
+		
 		//TODO: use main committers one for now, but it is needed to changed.
-    	setSourcePath(new File[]{new File("/Users/jyjang/codebase/1401720840/src/")});
+		
+		setSourcePath(new File[]{new File(dir + "/src/")});
+		
+    	//setSourcePath(new File[]{new File("/Users/jyjang/codebase/1401720840/src/")});
 		
 		return sourcePath[0].getPath();
 	}
@@ -121,8 +137,12 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
 			
 		}
 		
-		if(UEngineUtil.isNotEmpty(userId))
-			return "/Users/jyjang/codebase/"+ userId + "/src/";
+		if(UEngineUtil.isNotEmpty(userId)) {
+			String dir = "D:/uengine/definitions/" + userId;
+			File f = new File(dir);
+			if(!f.exists()) f.mkdirs();
+			return dir + "/src/";
+		}
 		
 		return null;
 	}

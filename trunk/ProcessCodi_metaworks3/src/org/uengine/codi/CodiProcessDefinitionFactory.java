@@ -96,6 +96,8 @@ public class CodiProcessDefinitionFactory extends ProcessDefinitionFactory{
 		else
 			defFileName = sourceCodeBase + "/" + folder + "/" + name + "." + objectType;
 
+		System.out.println("definition path = " + defFileName);
+		
 		FileOutputStream fos = null;
 		try {
 			File classDefFile = new File(defFileName);

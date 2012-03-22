@@ -10,6 +10,7 @@ import org.metaworks.dao.TransactionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.admin.Admin;
+import org.uengine.codi.mw3.Login;
 
 public class LoginAdmin {
 
