@@ -251,7 +251,7 @@ img {border:0;}
 	background:url(../../images/waveStyle/btToggleMini.png) no-repeat;
 	position:absolute;
 	top:7px;
-	right:30px;
+	right:12px;
 	cursor:pointer;
 }
 .windowclose {
@@ -361,8 +361,8 @@ img {border:0;}
 		} 
 		.ui-layout-toggler:hover 
 			background: #FC3; 
-		} */
-	#container {
+		} 
+#container {
 	min-height:	300px;
 	min-width:	600px;
 	position:	absolute;
@@ -371,6 +371,7 @@ img {border:0;}
 	left:		10px;
 	right:		5px;
 }
+*/
 .clear{ clear:both;}
 #mystatus{background:#C9E2FC; height:35px; border-left:#E4F1FE 1px solid; margin:0px; padding:5px; padding-bottom:0px;}
 #mystatus li{float:left;}
@@ -432,20 +433,20 @@ img {border:0;}
 .toolbar span{ float:left; height:20px;}
 
 .worklistheader{height:25px;}
-#pageflip {
+.pageflip {
 	position:absolute;
 	z-index:99;
 	right: 0; top: 0;
 	float: right; 
 }
-#pageflip img {
+.pageflip img {
 	width: 42px; height: 42px;
 	z-index: 99;
 	position: absolute;
 	right: 0; top: 0;
 	-ms-interpolation-mode: bicubic;
 }
-#pageflip .msg_block {
+.pageflip .msg_block {
 	width: 42px; height: 42px;
 	overflow: hidden;
 	position: absolute;
@@ -516,3 +517,122 @@ img {border:0;}
 #search_right_outer2{display:none; background:url('../../images/waveStyle/pingLineLeft.png') no-repeat left; height:40px; margin-top:7px; padding-left:26px; width:auto; float:left;  position:relative;}
 #ping_line{background:url('../../images/waveStyle/searchLineRight.png') no-repeat right; height:40px; padding-right:15px;  }
 
+
+.mw3_mainMenu	{width:100% margin:0 auto; height:27px; clear:both;}
+#gnb_wrap	{float:center;  margin:0 auto; width:1024px;}
+#gnb_wrap ul li	{display:inline;}
+
+#gnb_l{float:left;  background:url('../../images/ide/lnb_l.png') no-repeat; width:29px; height:31px;}
+#gnb_r{float:left; background:url('../../images/ide/lnb_r.png') no-repeat;  width:29px; height:31px; }
+#gnb {padding: 6px 25px; float:left; background:url('../../images/ide/lnb_m.png') repeat-x; height:31px;}
+#gnb ul li	{}
+#gnb ul li a {float:center; margin-left:21px; margin-right:21px; text-align:center; }
+#gnb ul li a:hover	{background:url('../../images/ide/over.png') repeat-x;}			
+#gnb ul li a:link,a:visited,a:active {font:9pt 돋움, Dotum, san-serif; color:#000000; text-decoration:none; font-weight:bold;}
+#gnb ul li a:hover span{font:9pt 돋움, Dotum, san-serif; color:#ffffff; font-weight:bold;}
+
+
+
+
+
+html, body {
+	width:		100%;
+	height:		100%;					
+	padding:	0;
+	margin:		0;
+	overflow:	auto; /* when page gets too small for container min-width/height */
+}
+
+.mw3_layout {
+	min-height:	10px;
+	min-width:	10px;
+	position:	absolute;
+	top:		0px;	/* margins in pixels */
+	bottom:		0px;	/* could also use a percent */
+	left:		0px;
+	right:		0px;
+}
+
+.pane {
+	display:	none; /* will appear when layout inits */
+}		
+
+
+/*	layout	*/
+.sub_topheight	{height:7px;}
+.sub_topleft	{background:url(../../images/ide/sub_top_l.png) no-repeat 0% 0%;}
+.sub_top	{background:url(../../images/ide/sub_top_m.png) repeat-x 0% 0%;}
+.sub_topright	{background:url(../../images/ide/sub_top_r.png) no-repeat 0% 0%;}
+.sub_left	{background:url(../../images/ide/sub_middle_l.png) repeat-y 0% 0%;}
+.sub_right	{background:url(../../images/ide/sub_middle_r.png) repeat-y 0% 0%;}
+.sub_contents_sub {background:#fff;}
+.sub_bottomheight	{height:14px;}
+.sub_bottomleft	{background:url(../../images/ide/sub_buttom_l.png) no-repeat 0% 0%;}
+.sub_bottom	{background:url(../../images/ide/sub_buttom_m.png) repeat-x 0% 0%;}
+.sub_bottomright{background:url(../../images/ide/sub_buttom_r.png) no-repeat 0% 0%;}	
+/*	mypage	*/
+.sub_table{width:280px}
+.sub_table .icon {float:left; border-right:1px solid #e2e3e3; width:37px; height:22px; text-align:center; }
+.sub_table .text {float:left;  padding-left:5px; width:130px; height:22px; }
+.sub_table .ctrl {float:left; width:80px; height:22px; text-align:right; }
+.sub_table .icon_b{border:0px;}
+.sub_table .clock {float:left; border-bottom:1px solid #e3e3e3; height:22px;}
+.sub_table .clock_no {float:left;}
+.sub_table .clock ul li a	{color:#000000; text-decoration:none;}
+.sub_table .clock ul li a:hover {text-decoration:none; color:#004b9f; font-weight:bold;}
+.sub_table .clock_no li a	{color:#000000; text-decoration:none;}
+.sub_table .clock_no li a:hover {text-decoration:none; color:#004b9f; font-weight:bold;}
+
+
+/* tabs bottom */
+.tabs-bottom { position: relative; } 
+.tabs-bottom .ui-tabs-panel { height: 140px; overflow: auto; } 
+.tabs-bottom .ui-tabs-nav { position: absolute !important; left: 0; bottom: 0; right:0; padding: 0 0.2em 0.2em 0; } 
+.tabs-bottom .ui-tabs-nav li { margin-top: -2px !important; margin-bottom: 1px !important; border-top: none; border-bottom-width: 1px; }
+.ui-tabs-selected { margin-top: -3px !important; }
+
+
+
+/*	layout	*/
+.tab_layout {width:100%; height:100%;}
+.tab_boxtopleft {background:url(../../images/ide/tab_left.png) no-repeat left top; height:21px;}
+.tab_boxtopright {background:url(../../images/ide/tab_right.png) no-repeat right top; height:21px; margin-left:5px;}
+
+/* 탭활성화 */
+.tab_titleover{float:left; background:url(../../images/ide/tab_overl.png) no-repeat left top; height:21px;  }
+.tab_titleover span {font-size:12px; color:#fff; text-decoration:none; margin-left:3px; line-height:21px;}
+.tab_titlerover{float:left; background:url(../../images/ide/tab_overr.png) no-repeat right; height:21px; width:40px }
+.closeover_i{float:left; width:8px; height:9px; margin-top:6px; margin-left:10px;}
+
+/* 탭비활성화 */
+.tab_title{float:left; background:url(../../images/ide/tab_l.png) no-repeat left top; height:21px;  }
+.tab_title span {font-size:12px; color:#565656; text-decoration:none; margin-left:3px; line-height:21px;}
+.tab_titler{float:left; background:url(../../images/ide/tab_r.png) no-repeat right; height:21px; width:40px }
+.close_i{float:left; width:8px; height:9px; margin-top:6px; margin-left:10px;}
+
+/* 우측버튼 */
+.tab_ricon{float:right;  margin-left:5px; margin-right:5px;}
+.rcion{width:11px height:9px; float:left; margin-right:5px; margin-left:5px; margin-top:6px;}
+
+
+.tab_con{
+	position:absolute;
+	top:21px;
+	background:#fff;
+	color:#000;
+	margin:0;
+	width:100%;
+	height:97%;	
+}
+.tab_con2{border:2px solid #8b9fbd; height:100%;}
+.tab_con3{position:absolute; height:100%; width:100%}
+
+
+
+		.ui-layout-content {
+
+			overflow:		auto; /* add scrolling to content-divs (panel-wrappers) */
+
+			border-top:		0 !important; /* tab-buttons above this DIV already has a border-bottom */
+
+		}
