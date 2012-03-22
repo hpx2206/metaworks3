@@ -9,13 +9,13 @@ import org.metaworks.annotation.ServiceMethod;
 
 public class NewChildContentPanel  {
 	
-	Long parentFolder;
+	String parentFolder;
 	@Id
 	@Hidden
-		public Long getParentFolder() {
+		public String getParentFolder() {
 			return parentFolder;
 		}
-		public void setParentFolder(Long parentFolder) {
+		public void setParentFolder(String parentFolder) {
 			this.parentFolder = parentFolder;
 		}
 		

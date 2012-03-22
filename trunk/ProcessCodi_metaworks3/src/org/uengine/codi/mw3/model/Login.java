@@ -10,6 +10,8 @@ import org.metaworks.dao.TransactionContext;
 import org.uengine.codi.mw3.CodiClassLoader;
 
 public class Login extends Database<ILogin> implements ILogin{
+	
+
 		
 	@Id
 	String userId;
