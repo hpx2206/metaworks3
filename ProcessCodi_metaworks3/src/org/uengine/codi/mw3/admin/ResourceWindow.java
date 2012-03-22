@@ -2,10 +2,10 @@ package org.uengine.codi.mw3.admin;
 
 import org.metaworks.annotation.Face;
 
-@Face(ejsPath="genericfaces/WindowTab.ejs",
+@Face(ejsPath="genericfaces/Window.ejs",
       displayName="Navigator",
-      options={"hideLabels", "hideCloseBtn", "layout"},
-      values={"true", "true", "west"})
+      options={"hideLabels", "hideCloseBtn", "hideHeader", "layout"},
+      values={"true", "true", "true", "west"})
 public class ResourceWindow {
 
 	public ResourceWindow() throws Exception {

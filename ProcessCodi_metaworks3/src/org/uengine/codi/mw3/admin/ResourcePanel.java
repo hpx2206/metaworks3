@@ -26,10 +26,18 @@ public class ResourcePanel {
 		resourceFile.setName("/");
 		resourceFile.drillDown();
 		
+		resourceSearchBox = new ResourceSearchBox();
 		
 		MetaworksRemoteService.getInstance().clearMetaworksType("*");
 	}
 	
+	ResourceSearchBox resourceSearchBox;
+		public ResourceSearchBox getResourceSearchBox() {
+			return resourceSearchBox;
+		}
+		public void setResourceSearchBox(ResourceSearchBox resourceSearchBox) {
+			this.resourceSearchBox = resourceSearchBox;
+		}
 
 	ResourceFile resourceFile;
 
