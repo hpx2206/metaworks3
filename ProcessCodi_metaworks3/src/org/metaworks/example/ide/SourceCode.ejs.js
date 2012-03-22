@@ -2,13 +2,12 @@ var org_metaworks_example_ide_SourceCode = function(objectId, className){
 	this.objectId = objectId;
 	this.className = className;
 
-	this.divName = "sourceEditor_" + objectId;	
-
-//	$("#"+divName).width(400);
-//	$("#"+divName).height(200);
+	this.divName = "objDiv_" + objectId;	
 	
-
-    this.editor = ace.edit(this.divName);
+	$("#" + this.divName).css("width", "100%").css("height", "90%").css("overflow", "hidden");
+	
+//css("position", "absolute").
+ this.editor = ace.edit(this.divName);
     this.editor.setTheme("ace/theme/eclipse");
 //    this.editor.
 
