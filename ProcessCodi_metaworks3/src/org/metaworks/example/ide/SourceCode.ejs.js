@@ -1,4 +1,8 @@
+
+
 var org_metaworks_example_ide_SourceCode = function(objectId, className){
+	
+
 	this.objectId = objectId;
 	this.className = className;
 
@@ -173,6 +177,25 @@ var org_metaworks_example_ide_SourceCode = function(objectId, className){
 		false
 	);
     
+    
+
+	//setting break point
+	$('#objDiv_' + objectId).bind('click', 
+			function(e){
+				if(e.target.className.indexOf("ace_gutter-cell") > -1){
+					var sourceCode = mw3.getObject(theSourceCodeObjId);
+					
+					sourceCode.lineAssistRequested = eval(e.target.childNodes[0].data);
+					
+					sourceCode = sourceCode.installBreakpoint();
+
+					e.target.className="ace_gutter-cell ace_warning"; //later we use ace_breakpoint
+					
+				}
+			}
+		);
+	
+
     
    // var value = mw3.getObject(objectId);  //TODO: it's risky... may pose infinite loop. since this constructor may be called by mw3.getObject()
     var value = mw3.objects[objectId];   
