@@ -516,6 +516,10 @@
 								if(faceMap.when == this.when){
 									actualFace = faceMap.face;
 									
+									if(actualFace.indexOf('faces/') == 0){
+										actualFace = actualFace.substr('faces/'.length);
+									}
+									
 									break;
 								}
 							}
