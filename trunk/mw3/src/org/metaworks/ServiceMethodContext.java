@@ -14,7 +14,7 @@ public class ServiceMethodContext{
 	public final static String TARGET_POPUP 	= "popup";
 //	public final static String TARGET_WINDOW 	= "window";
 	public final static String TARGET_NONE 		= "none";
-	public final static String TARGET_PAGEMOVE 	= "pagemove";
+	public final static String TARGET_TOP 		= "top";
 	public final static String TARGET_OPENER 	= "opener";
 	
 	public final static String MOUSEBINDING_LEFTCLICK 	= "left";
