@@ -26,6 +26,7 @@ public class ClassSourceCodes{
 	public ClassSourceCodes(){
 		this.sourceCode = new JavaSourceCode();
 		this.face = new FaceSourceCode();
+		this.face.setCode(" ");
 		this.faceHelper = new FaceHelperSourceCode();
 		this.classModeler = new ClassModeler();
 	}
