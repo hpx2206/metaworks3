@@ -8,8 +8,8 @@ import org.metaworks.dao.TransactionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.model.ClassDesignerContentPanel;
 import org.uengine.codi.mw3.model.ContentWindow;
-import org.uengine.codi.mw3.model.ILogin;
-import org.uengine.codi.mw3.model.Login;
+import org.uengine.codi.mw3.Login;
+import org.uengine.codi.mw3.ILogin;
 import org.uengine.codi.mw3.model.Session;
 
 
