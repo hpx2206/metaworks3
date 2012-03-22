@@ -36,6 +36,14 @@ public class InstanceView {
 		
 	}
 	
+	InstanceNameChanger instanceNameChanger;
+		public InstanceNameChanger getInstanceNameChanger() {
+			return instanceNameChanger;
+		}
+		public void setInstanceNameChanger(InstanceNameChanger instanceNameChanger) {
+			this.instanceNameChanger = instanceNameChanger;
+		}
+
 	String instanceName;
 		@Name
 		public String getInstanceName() {
@@ -44,6 +52,10 @@ public class InstanceView {
 		public void setInstanceName(String instanceName) {
 			this.instanceName = instanceName;
 		}
+		
+		
+	@AutowiredFromClient
+	public Session session;
 
 	protected void loadDefault() throws Exception{
 		ProcessInstance instance = processManager.getProcessInstance(getInstanceId());
@@ -58,15 +70,15 @@ public class InstanceView {
 		newItem.setTaskId(new Long(getInstanceId()));
 		newItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		
-		Session session = (Session) TransactionContext.getThreadLocalInstance().getSharedContext("codi_session");
+		//Session session = (Session) TransactionContext.getThreadLocalInstance().getSharedContext("codi_session");
 
-		if(session!=null){
-			User loginUser = new User();
-			loginUser.setUserId(session.getUser().getUserId());
-			loginUser.setName(session.getUser().getName());
-			
-			newItem.setWriter(loginUser);
+		if(session==null){
+			session = new Session();
+			session.user = User.fromHttpSession();
 		}
+		
+		newItem.setWriter(session.user);
+		
 
 		processInstanceMonitor.setInstanceId(instanceId);
 		
@@ -114,6 +126,9 @@ public class InstanceView {
 		
 		eventTriggerPanel = new EventTriggerPanel(instance);
 		
+		instanceNameChanger = new InstanceNameChanger();
+		instanceNameChanger.setInstanceId(instanceId);
+		instanceNameChanger.setInstanceName(instanceName);
 		
 
 	}

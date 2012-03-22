@@ -40,7 +40,7 @@ public class EntityDesignerContentPanel extends ContentWindow {
 			entityDefinition.setMetaworksContext(new MetaworksContext());
 			entityDefinition.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 			
-			if(entityDefinition.isCreatedEntity()){
+			if(entityDefinition.queryCreatedEntity()){
 				entityDefinition.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 			}
 			

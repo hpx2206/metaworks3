@@ -3,7 +3,7 @@ package org.uengine.codi.mw3.model;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Resource;
 
-@Face(ejsPath="genericfaces/WindowTab.ejs", 
+@Face(ejsPath="genericfaces/Window.ejs", 
       displayName="$windowTitle", 
       options={"hideLabels", "layout"}, 
       values={"true", "north"})
