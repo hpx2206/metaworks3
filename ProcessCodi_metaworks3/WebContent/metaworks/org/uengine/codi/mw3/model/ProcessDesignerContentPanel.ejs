@@ -12,7 +12,19 @@
 if(value.parentFolder){%>
 
 
-<a href="/uengine-web/processmanager/ProcessDesigner.jnlp?folderId=<%=value.parentFolder%>">New Process</a>
+<a href="/uengine-web/processmanager/ProcessDesigner.jnlp?folderId=<%=value.parentFolder%>">Launch Process Designer</a>
+<p>
+Name:
+<%=fields.name.here()%>
+
+Description:
+<%=fields.description.here()%>
+
+Definition XML:
+<%=fields.definitionString.here()%>
+
+<%=methods.save.here()%>
+
 
 <%}else{%>
 
