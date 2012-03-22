@@ -71,6 +71,14 @@ public class SourceCode {
 		
 		return codeAssist;
 	}
+	
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_NONE)
+	public void installBreakpoint(){
+		
+		System.out.println("install breakpoint at : " + lineAssistRequested);
+	}
+	
+	
 
 	
 }

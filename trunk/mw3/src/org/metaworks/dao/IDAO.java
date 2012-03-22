@@ -37,7 +37,7 @@ public interface IDAO extends Serializable, ContextAware {
 	public final static String TARGET_SELF = ServiceMethodContext.TARGET_SELF;
 	public final static String TARGET_APPEND = ServiceMethodContext.TARGET_APPEND;
 	public final static String TARGET_POPUP = ServiceMethodContext.TARGET_POPUP;
-	public final static String TARGET_PAGEMOVE = ServiceMethodContext.TARGET_PAGEMOVE;
+	public final static String TARGET_TOP = ServiceMethodContext.TARGET_TOP;
 	
 	
 //	public int getRow() throws Exception;
