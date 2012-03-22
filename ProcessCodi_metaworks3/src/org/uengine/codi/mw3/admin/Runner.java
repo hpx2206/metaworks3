@@ -22,7 +22,6 @@ import org.uengine.codi.platform.Console;
 public class Runner implements ContextAware{
 
 	public Runner(){
-		setConsole(new Console());
 	}
 
 	transient MetaworksContext metaworksContext;
@@ -32,15 +31,6 @@ public class Runner implements ContextAware{
 		public void setMetaworksContext(MetaworksContext metaworksContext) {
 			this.metaworksContext = metaworksContext;
 		} 
-		
-		
-	Console console;
-		public Console getConsole() {
-			return console;
-		}
-		public void setConsole(Console console) {
-			this.console = console;
-		}
 	
 	String fullClassName;
 	@Id
@@ -54,14 +44,21 @@ public class Runner implements ContextAware{
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 	@Face(displayName="Run (Normal)")
 	public Object run() throws Exception{
+		Console.addLog("Run (Normal) -> " + getFullClassName());
+		
+		try{
+			Object o = Thread.currentThread().getContextClassLoader().loadClass(getFullClassName()).newInstance();//cl.loadClass(getPackageName() + "." + getClassName()).newInstance();
 
-		Object o = Thread.currentThread().getContextClassLoader().loadClass(getFullClassName()).newInstance();//cl.loadClass(getPackageName() + "." + getClassName()).newInstance();
-		
-		Window outputWindow = new Window();
-		outputWindow.setPanel(o);
-//		outputWindow.
-		
-		return outputWindow;
+			Window outputWindow = new Window();
+			outputWindow.setPanel(o);
+			
+			return outputWindow;
+
+		}catch(Exception e){
+			Console.addLog(e.getMessage());
+
+			throw e;
+		}		
 	}
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)

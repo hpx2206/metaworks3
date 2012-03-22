@@ -9,8 +9,8 @@ import org.uengine.codi.mw3.model.JavaSourceCode;
 
 
 @Face(ejsPath="genericfaces/Tab.ejs",
-	options={"hideLabels"},
-	values={"true"})
+	options={"hideLabels", "tabsBottom"},
+	values={"true", "true"})
 
 public class ClassSourceCodes{
 

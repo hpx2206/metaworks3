@@ -4,7 +4,7 @@ import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Range;
 import org.metaworks.annotation.ServiceMethod;
-import org.uengine.codi.mw3.model.ILogin;
+import org.uengine.codi.mw3.ILogin;
 
 public class CrowdSourcerWindow implements ContextAware {
 
