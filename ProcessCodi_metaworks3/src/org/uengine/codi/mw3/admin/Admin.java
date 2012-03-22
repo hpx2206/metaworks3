@@ -15,21 +15,33 @@ import org.uengine.codi.mw3.model.Session;
 
 public class Admin {
 	
-	public Admin(){}
-			
-	public Admin(ILogin login) throws Exception{
-//		formDefinition = new FormDefinition();
-//		formInstance = new FormInstance();
-
+	public Admin() throws Exception{
 		resourceWindow = new ResourceWindow();
+		contentWindow = new ContentWindow();
+		mainMenu = new UClipseMainMenu();
+		
+	}
+	
+	
+	public Admin(ILogin login) throws Exception{
+		this();
 
 		Session session = new Session();
 		//session.setLogin(login);
 		this.session = session;
 
-		contentWindow = new ContentWindow();
 	}
 	
+	UClipseMainMenu mainMenu;
+	
+		public UClipseMainMenu getMainMenu() {
+			return mainMenu;
+		}
+	
+		public void setMainMenu(UClipseMainMenu mainMenu) {
+			this.mainMenu = mainMenu;
+		}
+
 	String defId;
 		@Id
 		public String getDefId() {
@@ -41,6 +53,7 @@ public class Admin {
 	
 	@ServiceMethod
 	public void load() throws Exception{
+
 		//setting the facebook user Id into session attribute;
 		HttpSession httpSession = TransactionContext.getThreadLocalInstance().getRequest().getSession(); 
 		String userId = (String)httpSession.getAttribute("userId");

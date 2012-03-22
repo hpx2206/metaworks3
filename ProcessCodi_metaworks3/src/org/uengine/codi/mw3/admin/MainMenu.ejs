@@ -1,0 +1,14 @@
+<table>
+
+<%
+   
+   mw3.debug(value, true)
+   
+   if(objectMetadata.serviceMethodContexts)
+   for(var key in objectMetadata.serviceMethodContexts){
+   
+%><td><%=methods[key].here()%> </td> <%   
+   }
+%>
+
+</table>

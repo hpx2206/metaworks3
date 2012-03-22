@@ -604,9 +604,10 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 	
 		
 		setSourceCodes(new ClassSourceCodes());
+
 		
 		/// read source file
-		File sourceCodeFile = new File(CodiClassLoader.getMyClassLoader().sourceCodeBase() + "/" + getAlias());
+		File sourceCodeFile = new File(CodiClassLoader.getMyClassLoader().sourceCodeBase() + "/" + getAlias().substring(0, getAlias().indexOf(".")) + ".java");
 		
 		ByteArrayOutputStream bao = new ByteArrayOutputStream();
 		FileInputStream is;
