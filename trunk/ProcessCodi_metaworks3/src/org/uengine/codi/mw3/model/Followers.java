@@ -52,7 +52,7 @@ public class Followers {
 		
 	}
 	
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_STICK)
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 	public Popup addFollowers() throws Exception{		
 		Popup popup = new Popup();
 		
