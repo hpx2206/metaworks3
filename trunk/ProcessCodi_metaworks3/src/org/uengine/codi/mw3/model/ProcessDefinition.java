@@ -21,11 +21,11 @@ public class ProcessDefinition extends Database<IProcessDefinition> implements I
 			this.author = author;
 		}
 
-	Long defId;
-		public Long getDefId() {
+	String defId;
+		public String getDefId() {
 			return defId;
 		}
-		public void setDefId(Long defId) {
+		public void setDefId(String defId) {
 			this.defId = defId;
 		}
 	
@@ -51,12 +51,12 @@ public class ProcessDefinition extends Database<IProcessDefinition> implements I
 
 
 
-	Long parentFolder;
-		public Long getParentFolder() {
+	String parentFolder;
+		public String getParentFolder() {
 			return parentFolder;
 		}
 	
-		public void setParentFolder(Long parentFolder) {
+		public void setParentFolder(String parentFolder) {
 			this.parentFolder = parentFolder;
 		}
 

@@ -1,11 +1,20 @@
 package org.uengine.codi.mw3.model;
 
+import java.rmi.RemoteException;
+import java.util.HashMap;
+
+import net.sf.hibernate.collection.Map;
+
+import org.metaworks.ContextAware;
+import org.metaworks.MetaworksContext;
+import org.metaworks.annotation.Face;
+import org.metaworks.annotation.ServiceMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.kernel.viewer.ViewerOptions;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 
-public class ProcessDesignerContentPanel extends ContentWindow {
+public class ProcessDesignerContentPanel extends ContentWindow implements ContextAware {
 	
 	public void newProcessDefinition(String parentFolder) throws Exception{
 		setParentFolder(parentFolder);
@@ -46,7 +55,7 @@ public class ProcessDesignerContentPanel extends ContentWindow {
 		setDefVerId(defVerId);
 		setDefId(defId);
 		
-		processManager.remove();
+	//	processManager.remove();
 	}
 	
 	String chartHTML;
@@ -81,9 +90,47 @@ public class ProcessDesignerContentPanel extends ContentWindow {
 			this.defVerId = defVerId;
 		}
 
+	String definitionString;
+	@Face(ejsPath="genericfaces/richText.ejs")
+		public String getDefinitionString() {
+			return definitionString;
+		}
+		public void setDefinitionString(String definitionString) {
+			this.definitionString = definitionString;
+		}
+		
+	String name;
+		public String getName() {
+			return name;
+		}
+		public void setName(String name) {
+			this.name = name;
+		}
+	
+	String description;
+		public String getDescription() {
+			return description;
+		}
+		public void setDescription(String description) {
+			this.description = description;
+		}
+
+	@ServiceMethod(callByContent=true)
+	public void save() throws RemoteException{
+		defId = processManager.addProcessDefinition(name, 0, description, false, definitionString, parentFolder, defId, "process", name, null);
+
+	}
 
 	@Autowired
 	public ProcessManagerRemote processManager;
 
+	
+	MetaworksContext metaworksContext;
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
+		}
 
 }
