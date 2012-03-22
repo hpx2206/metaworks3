@@ -8,7 +8,9 @@ var Window = function(objectId, className){
 	
 	this.width = $("#" + this.divId).width();
 	this.height = $("#" + this.divId).height();
-		
+	
+	$("#" + this.divId).parent().css("padding-bottom", "35px").attr('height-margin', '35');
+	
 	$("#" + this.divId).addClass("mw3_window").css("height","100%");	
 	$("#" + this.divId).parent().find("#info_" + objectId).remove();
 }

@@ -55,6 +55,14 @@ public class Layout {
 			this.options = options;
 		}
 		
+	String name;		
+		public String getName() {
+			return name;
+		}
+		public void setName(String name) {
+			this.name = name;
+		}
+
 	boolean load;	
 		public boolean isLoad() {
 			return load;
