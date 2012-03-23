@@ -74,14 +74,7 @@ public class Node implements ContextAware{
 	public void setCondition(String condition) {
 		this.condition = condition;
 	}
-//	
-//	public boolean isMatch() {
-//		return isMatch;
-//	}
-//	public void setMatch(boolean isMatch) {
-//		this.isMatch = isMatch;
-//	}
-//	
+
 	public boolean isRoot() {
 		return isRoot;
 	}

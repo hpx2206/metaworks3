@@ -10,6 +10,7 @@ import java.util.List;
 import org.apache.cxf.tools.wsdlto.WSDLToJava;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Available;
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.NonEditable;
 import org.metaworks.annotation.ServiceMethod;
@@ -68,6 +69,7 @@ public class WebServiceDefinition  {
 
 	@Available(where="step2")
 	@Test(value="'Name'", next="package", instruction="'HelloWorld'를 입력하세요.")
+	@Face(options={"width"}, values={"250"})
 	public String getName() {
 		return name;
 	}
@@ -83,6 +85,7 @@ public class WebServiceDefinition  {
 			instruction="'test'를 입력하세요.", 
 			next="generateAdapter()"
 			)
+	@Face(options={"width"}, values={"300"})
 	public String getWsdlUrl() {
 		return wsdlUrl;
 	}
@@ -92,6 +95,7 @@ public class WebServiceDefinition  {
 	
 	@Available(where="step2")
 	@Test(value="'Package'", next="compileOpeion", instruction="'HelloWorld'를 입력하세요.")
+	@Face(options={"width"}, values={"250"})
 	public String getTargetPackage() {
 		return targetPackage;
 	}
@@ -101,6 +105,7 @@ public class WebServiceDefinition  {
 	
 	@Available(where="step2")
 	@Test(value="'generateAdapter'", next="generateAdapter()", instruction="'소스코드를 작성하세요.")
+	@Face(options={"width"}, values={"250"})
 	public String getCompileOption() {
 		return compileOption;
 	}
