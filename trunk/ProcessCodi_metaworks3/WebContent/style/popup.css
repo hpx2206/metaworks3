@@ -43,6 +43,6 @@ div.popupresult.getleave	{background:#f1f1f1;}
 .popupresult.pwchange li	{margin:5px 0;}
 .popupresult.pwchange li input	{margin:0 0px;}
 .popupresult.pwchange li.newpw span	{margin-right:13px;}
-.baro{display:inline;float:left; margin-top:-17px; margin-left:70px;}
+.baro{float:right; margin-top:-17px; margin-right:30px;}
 
 .popupresult input{background:#fff;}
