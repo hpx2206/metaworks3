@@ -116,7 +116,7 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
 			
 		}
 		
-		String dir = "D:/uengine/definitions/" + userId;
+		String dir = "/Users/jyjang/codebase/definitions/" + userId;
 		File f = new File(dir);
 		if(!f.exists()) f.mkdirs();
 		
@@ -138,7 +138,7 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
 		}
 		
 		if(UEngineUtil.isNotEmpty(userId)) {
-			String dir = "D:/uengine/definitions/" + userId;
+			String dir = "/Users/jyjang/codebase/" + userId;
 			File f = new File(dir);
 			if(!f.exists()) f.mkdirs();
 			return dir + "/src/";

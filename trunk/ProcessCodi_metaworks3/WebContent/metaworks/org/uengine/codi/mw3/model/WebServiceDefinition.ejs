@@ -1,8 +1,3 @@
-
-
-<h3>Import From Web</h3>
-
-<table>
 	
 	<%
 		var whenContext = mw3.when;
@@ -11,53 +6,94 @@
 		
 		if(whereContext == "step1") {
 	%>
-	<tr>
-		<td>WSDL URL:</td>
+	
+	<div class="mypage1">
+	<div class="popup_wrap">
+	<table cellspacing="0" class="tablep">
+	<colgroup>  
+		<col width="15" />  
+		<col /> 
+		<col width="15" />  
+	</colgroup>
+	<tr class="topheight1">
+		<td class="topleft1">&nbsp;</td>
+		<td class="top1"></td>
+		<td class="topright1">&nbsp;</td>
 	</tr>
 	<tr>
-		<td><%=fields.wsdlUrl.here()%></td>
+		<td class="left1">&nbsp;</td>
+		<td class="contents1">
+			<div class="title_t"><img src="images/ide/ico_bigcircle.gif" alt="" />Import From Web WSDL URL:</div>
+			<div class="popupresult pwchange">
+				<ul>
+					<li><span><label for=""></label></span><%=fields.wsdlUrl.here()%></li>				
+				</ul>
+			</div>
+		</td>
+		<td class="right1">&nbsp;</td>
 	</tr>
+	
+	</table>
+		<div class="bottoml">
+		<div class="bottomleftp">
+				<div class="baro"><image src="images/ide/next.png" alt="" onclick="<%=methods.next.caller()%>"/></div>
+			<div class="bottomright">
+			</div>
+			</div>
+		</div>
+	
+	</div>
+	</div>
+
 	
 	<%
 		} else if(whereContext == "step2") {
 	%>
 	
-	<tr>
-		<td>Name</td>
-		<td><%=fields.name.here()%></td>
+	
+	<div class="mypage1">
+	<div class="popup_wrap">
+	<table cellspacing="0" class="tablep">
+	<colgroup>  
+		<col width="15" />  
+		<col /> 
+		<col width="15" />  
+	</colgroup>
+	<tr class="topheight1">
+		<td class="topleft1">&nbsp;</td>
+		<td class="top1"></td>
+		<td class="topright1">&nbsp;</td>
 	</tr>
 	<tr>
-		<td>Package Name</td>
-		<td><%=fields.targetPackage.here()%></td>
+		<td class="left1">&nbsp;</td>
+		<td class="contents1">
+			<div class="title_t"><img src="images/ide/ico_bigcircle.gif" alt="" />Import From Web WSDL URL:</div>
+			<div class="popupresult pwchange">
+				<ul>
+					<li><span><label for="">Service Name</label></span><%=fields.name.here()%></li>
+					<li><span><label for="">Package Name</label></span><%=fields.targetPackage.here()%></li>
+					<li><span><label for="">Compilation Option</label></span><%=fields.compileOption.here()%></li>				
+				</ul>
+			</div>
+		</td>
+		<td class="right1">&nbsp;</td>
 	</tr>
-	<tr>
-		<td>Compile Option</td>
-		<td><%=fields.compileOption.here()%></td>
-	</tr>
+	
+	</table>
+		<div class="bottoml">
+		<div class="bottomleftp">
+				<div class="baro"><image src="images/ide/next.png" alt="" onclick="<%=methods.generateAdapter.caller()%>"/></div>
+			<div class="bottomright">
+			</div>
+			</div>
+		</div>
+	
+	</div>
+	</div>
+	
 	
 	<%
 		}
 	%>
 	
-	<tr>
-		<td>
-			<table>
-				<tr>
-					<%
-						if(whereContext == "step1") {
-					%>
-					<td><%=methods.next.here()%></td>
-					<% } else if(whereContext == "step2") { %>
-					<td><%=methods.generateAdapter.here()%></td>
-					<% } %>
-				</tr>
-				
-				<tr>
-					<td>
-						<%=fields.clsList.here()%>
-					</td>
-				</tr>
-			</table>
-		</td>
-	</tr>
-</table>
+	
