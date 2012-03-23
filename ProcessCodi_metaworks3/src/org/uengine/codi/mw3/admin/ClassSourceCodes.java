@@ -3,6 +3,7 @@ package org.uengine.codi.mw3.admin;
 
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Face;
+import org.metaworks.example.ide.FormDesigner;
 import org.uengine.codi.mw3.model.FaceHelperSourceCode;
 import org.uengine.codi.mw3.model.FaceSourceCode;
 import org.uengine.codi.mw3.model.JavaSourceCode;
@@ -29,6 +30,8 @@ public class ClassSourceCodes{
 		this.face.setCode(" ");
 		this.faceHelper = new FaceHelperSourceCode();
 		this.classModeler = new ClassModeler();
+		this.formDesigner = new FormDesigner();
+		
 	}
 	
 	ClassModeler classModeler;
@@ -38,7 +41,6 @@ public class ClassSourceCodes{
 		public void setClassModeler(ClassModeler classModeler) {
 			this.classModeler = classModeler;
 		}
-
 	
 	JavaSourceCode sourceCode;
 		public JavaSourceCode getSourceCode() {
@@ -48,8 +50,7 @@ public class ClassSourceCodes{
 			this.sourceCode = sourceCode;
 		}
 		
-	FaceSourceCode face;
-			
+	FaceSourceCode face;			
 		public FaceSourceCode getFace() {
 			return face;
 		}
@@ -57,6 +58,14 @@ public class ClassSourceCodes{
 			this.face = face;
 		}
 		
+	FormDesigner formDesigner;
+		public FormDesigner getFormDesigner() {
+			return formDesigner;
+		}
+		public void setFormDesigner(FormDesigner formDesigner) {
+			this.formDesigner = formDesigner;
+		}
+
 	FaceHelperSourceCode faceHelper;
 		public FaceHelperSourceCode getFaceHelper() {
 			return faceHelper;
