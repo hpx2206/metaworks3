@@ -10,6 +10,14 @@ public class Session {
 			this.user = user;
 		}
 
+	String defId;	
+		public String getDefId() {
+			return defId;
+		}
+		public void setDefId(String defId) {
+			this.defId = defId;
+		}
+
 	Navigation navigation;
 
 		public Navigation getNavigation() {

@@ -3,7 +3,7 @@ package org.uengine.codi.mw3.model;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Face;
 
-@Face(ejsPath="genericfaces/WindowTab.ejs", displayName="New InstancePanel", options={"hideLabels"}, values={"true"})
+@Face(ejsPath="genericfaces/Window.ejs", displayName="New InstancePanel", options={"hideLabels"}, values={"true"})
 public class NewInstancePanel extends ContentWindow{
 	
 	public NewInstancePanel() throws Exception{
@@ -44,11 +44,11 @@ public class NewInstancePanel extends ContentWindow{
 			this.processDefinitions = processDefinitions;
 		}
 		
-	int knowledgeNodeId;
-		public int getKnowledgeNodeId() {
+	String knowledgeNodeId;
+		public String getKnowledgeNodeId() {
 			return knowledgeNodeId;
 		}
-		public void setKnowledgeNodeId(int knowledgeNodeId) {
+		public void setKnowledgeNodeId(String knowledgeNodeId) {
 			this.knowledgeNodeId = knowledgeNodeId;
 		}
 		

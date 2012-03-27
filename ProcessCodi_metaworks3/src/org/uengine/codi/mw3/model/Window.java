@@ -2,7 +2,7 @@ package org.uengine.codi.mw3.model;
 
 import org.metaworks.annotation.Face;
 
-@Face(ejsPath="genericfaces/WindowTab.ejs")
+@Face(ejsPath="genericfaces/Window.ejs")
 public class Window {
 	
 	public Window() {

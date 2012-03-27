@@ -1,7 +1,6 @@
 package org.uengine.codi.mw3.model;
 
 import java.io.File;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 
 import org.metaworks.ContextAware;
@@ -12,6 +11,7 @@ import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.CodiClassLoader;
+import org.uengine.codi.mw3.common.FacebookComments;
 import org.uengine.codi.mw3.knowledge.WorkflowyNode;
 import org.uengine.kernel.RoleMapping;
 import org.uengine.processmanager.ProcessManagerRemote;
@@ -194,6 +194,7 @@ public class ResourceFile implements ContextAware{
 //				return processDesigner;
 				
 //			}else
+		
 			if("class".equals(objType)){
 				ClassDesignerContentPanel classDesignerContentPanel = new ClassDesignerContentPanel();
 				classDesignerContentPanel.load(getAlias());
@@ -252,7 +253,7 @@ public class ResourceFile implements ContextAware{
 		InstanceListPanel instanceList = new InstanceListPanel(session); //should return instanceListPanel not the instanceList only since there're one or more instanceList object in the client-side
 		//instanceList.load(session.login, session.navigation);
 
-		if(newInstancePanel!=null && newInstancePanel.getKnowledgeNodeId() > 0){
+		if(newInstancePanel!=null && newInstancePanel.getKnowledgeNodeId() == ""){
 			WorkflowyNode parent = new WorkflowyNode(newInstancePanel.getKnowledgeNodeId());
 			parent.load();
 			

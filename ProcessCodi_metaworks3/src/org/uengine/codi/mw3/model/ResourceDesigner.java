@@ -1,12 +1,14 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 
 public abstract class ResourceDesigner extends ContentWindow{
 	
 	String alias;
-	@Id
+		@Id
+		@Hidden
 		public String getAlias() {
 			return alias;
 		}
@@ -17,6 +19,7 @@ public abstract class ResourceDesigner extends ContentWindow{
 		
 	
 	@ServiceMethod
+	@Hidden
 	abstract public void load();
 
 }
