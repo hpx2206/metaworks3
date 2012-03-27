@@ -7,7 +7,7 @@ import org.uengine.codi.mw3.admin.EntityDefinition;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.processmanager.ProcessManagerRemote;
 
-@Face(ejsPath="genericfaces/WindowTab.ejs", displayName="Entity Designer", options={"hideLabels"}, values={"true"})
+@Face(ejsPath="genericfaces/Window.ejs", displayName="Entity Designer", options={"hideLabels"}, values={"true"})
 public class EntityDesignerContentPanel extends ContentWindow {
 
 	@Autowired

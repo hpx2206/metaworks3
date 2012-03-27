@@ -11,31 +11,29 @@ public class Main {
 		
 	}
 	
-	public Main(IUser user) throws Exception {
+	public Main(Session session) throws Exception {
 		
-		Session session = new Session();
-		session.setUser(user);
 		setSession(session);		
 
 
 		Layout westLayout = new Layout();
 		westLayout.setNorth(new  NavigationWindow());
-		westLayout.setCenter(new ContactWindow(user));
-		westLayout.setLoad(false);
+		westLayout.setCenter(new ContactWindow(session.getUser()));
 		westLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, north__spacing_open:5");
-
+		westLayout.setName("west");
+		
 		Layout eastLayout = new Layout();
 		eastLayout.setWest(new  InstanceListWindow(session));
 		eastLayout.setCenter(new ContentWindow());
-		eastLayout.setLoad(false);
 		eastLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, south__spacing_open:5, west__spacing_open:5, west__size:'40%'");
+		eastLayout.setName("east");
 		
 		Layout outerLayout = new Layout();
-		outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:5, north__size:52, center__onresize: 'mw3.getFaceHelper(\\''+this.objectId+'\\').resizeChild()'");
+		outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:5, north__size:52");
 		outerLayout.setNorth(new ProcessTopPanel());
 		outerLayout.setWest(westLayout);
 		outerLayout.setCenter(eastLayout);		
-		outerLayout.setLoadChild(true);
+		outerLayout.setName("center");
 		
 		setLayout(outerLayout);		
 		
@@ -77,3 +75,4 @@ public class Main {
 			this.logo = logo;
 		}
 }
+

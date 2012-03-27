@@ -2,7 +2,7 @@ package org.uengine.codi.mw3.model;
 
 import org.metaworks.annotation.Face;
 
-@Face(ejsPath="genericfaces/WindowTab.ejs", displayName="개인중심 - 내가 할 일", 
+@Face(ejsPath="genericfaces/Window.ejs", displayName="개인중심 - 내가 할 일", 
       options={"hideLabels", "hideHeader", "layout"}, 
       values={"true", "true", "west"})
 
