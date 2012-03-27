@@ -11,24 +11,22 @@ import org.uengine.codi.mw3.model.Session;
 public class Knowledge {
 
 	public Knowledge() throws Exception {
+	}
+	
+	public Knowledge(Session session) throws Exception {
+		this();
+		
+		setSession(session);
 		
 		Layout outerLayout = new Layout();
 		outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:5, east__spacing_open:5,east__size:300, north__size:52");
 		outerLayout.setNorth(new KnowledgeTopPanel());
-		outerLayout.setCenter(new WorkflowyWindow());		
+		outerLayout.setCenter(new WorkflowyWindow(session.getUser()));		
 		outerLayout.setEast(new ContentWindow());
 		
 		setLayout(outerLayout);		
 		
 		setPageNavigator(new PageNavigator());		
-	}
-	
-	public Knowledge(IUser user) throws Exception {
-		this();
-		
-		Session session = new Session();
-		session.setUser(user);
-		setSession(session);		
 	}
 
 	Layout layout;

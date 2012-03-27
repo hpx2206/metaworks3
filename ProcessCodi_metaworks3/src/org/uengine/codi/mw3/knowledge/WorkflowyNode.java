@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Remover;
+import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
@@ -25,27 +26,28 @@ import com.mongodb.Mongo;
 import com.mongodb.MongoException;
 
 public class WorkflowyNode implements ContextAware {
-
-	public WorkflowyNode() {
+	
+	public WorkflowyNode() throws Exception {
+		this("");
+	}
+	
+	public WorkflowyNode(String nodeId) throws Exception {
+		setMetaworksContext(new MetaworksContext());
+		
+		setId(nodeId);
 		setName("");
 		
 		childNode = new ArrayList<WorkflowyNode>();
 		
-		setMetaworksContext(new MetaworksContext());
-		
-	}
-	public WorkflowyNode(int nodeId) throws Exception {
-		this();
-		
 		setId(nodeId);
 	}	
-		
-	int id;
+	
+	String id;
 		@Id
-		public int getId() {
+		public String getId() {
 			return id;
 		}	
-		public void setId(int id) {
+		public void setId(String id) {
 			this.id = id;
 		}
 
@@ -126,7 +128,7 @@ public class WorkflowyNode implements ContextAware {
 		
 		WorkflowyNode resultNode = null;
 		
-		if(getId() == findNode.getId()){
+		if(getId().equals(findNode.getId())){
 			resultNode = this;
 		}else{
 			for(int i =0; i<getChildNode().size(); i++){
@@ -148,7 +150,8 @@ public class WorkflowyNode implements ContextAware {
 	@ServiceMethod(callByContent=true)
 	@Hidden
 	public WorkflowyNode add() throws Exception {
-		if(getParentNode().getId() != 0 && getName().length() == 0 && getNameNext().length() == 0)
+		
+		if(getParentNode().getParentNode() != null && getName().length() == 0 && getNameNext().length() == 0)
 			return outdent();
 
 		boolean isFocusingNewNode = true;
@@ -441,30 +444,28 @@ public class WorkflowyNode implements ContextAware {
 		BasicDBObject node = null;
 		
 		try{
-			if(getId() > 0){
-				mongo = new Mongo();
-				
-				db = mongo.getDB("knowledge");				
-								
-				find = new BasicDBObject();
-				find.put("id", getId());
-				
-				coll = db.getCollection("workflowy");
-				cur = coll.find(find);
-				
-				node = new BasicDBObject();
-				node.put("id", getId());
-				node.put("name", getName());
-				node.put("linkedInstId", getLinkedInstId());
+			mongo = new Mongo();
+			
+			db = mongo.getDB("knowledge");				
+							
+			find = new BasicDBObject();
+			find.put("id", getId());
+			
+			coll = db.getCollection("workflowy");
+			cur = coll.find(find);
+			
+			node = new BasicDBObject();
+			node.put("id", getId());
+			node.put("name", getName());
+			node.put("linkedInstId", getLinkedInstId());
 
-				node.put("parentId", getParentNode().getId());
-				node.put("index", getParentNode().getChildNode().indexOf(this));
-				
-				if(cur.hasNext()){
-					coll.update(find, node);
-				}else{
-					coll.insert(node);
-				}
+			node.put("parentId", getParentNode().getId());
+			node.put("index", getParentNode().getChildNode().indexOf(this));
+			
+			if(cur.hasNext()){
+				coll.update(find, node);
+			}else{
+				coll.insert(node);
 			}
 			
 			/*
@@ -586,7 +587,7 @@ public class WorkflowyNode implements ContextAware {
 	        while(cur.hasNext()) {
 	        	result = cur.next();
 	        	
-	        	int id = ((Integer)result.get("id")).intValue();
+	        	String id = (String)result.get("id");
 	        	String name = (String)result.get("name");
 	        	String linkedInstId = (String)result.get("linkedInstId");
 	        	
@@ -595,6 +596,7 @@ public class WorkflowyNode implements ContextAware {
 	        	node.setName(name);
 	        	node.setLinkedInstId(linkedInstId);
 	        	node.load();
+	        	node.getMetaworksContext().setWhen(getMetaworksContext().getWhen());
 	        	
 	        	addChildNode(node);
 	        }
@@ -625,7 +627,8 @@ public class WorkflowyNode implements ContextAware {
 	}
 	
 	@ServiceMethod(callByContent=true)
-	public WorkflowyNode newNode() throws UnknownHostException, MongoException{		
+	@Available(when={MetaworksContext.WHEN_VIEW, MetaworksContext.WHEN_EDIT})
+	public WorkflowyNode newNode() throws Exception {		
 		WorkflowyNode newNode = new WorkflowyNode();		
 
 		newNode.setParentNode(this);
@@ -656,7 +659,7 @@ public class WorkflowyNode implements ContextAware {
 	@Autowired
 	public InstanceViewContent  instanceViewContent;
 	
-	public static int makeId() throws UnknownHostException, MongoException {
+	public static String makeId() throws UnknownHostException, MongoException {
 
 		Mongo mongo = null;
 		DB db = null;
@@ -695,9 +698,9 @@ public class WorkflowyNode implements ContextAware {
 			
 			result = coll.findAndModify(find, update);
 			
-			Integer seq = (Integer)(result.get("seq"));		    
+			String seq = String.valueOf(result.get("seq"));		    
 		    
-			return seq.intValue();
+			return seq;
 			
 		}finally{
 			if(result != null)
