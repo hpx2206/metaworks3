@@ -1,5 +1,7 @@
 var org_uengine_codi_mw3_Login = function(objectId, className){
 	
+	var object = mw3.objects[objectId];	
+	
 	this.objectId = objectId;
 	this.className = className;
 
@@ -46,9 +48,11 @@ org_uengine_codi_mw3_Login.prototype.setUserInfo = function(){
 
 		object.userId = response.id;
 		object.name = response.name;
-		object.defId = $("#defId").val();
 
-		mw3.call(fluThis.objectId, "login");
+		if(object.defId)
+			mw3.call(fluThis.objectId, "loginSocialCoding");
+		else
+			mw3.call(fluThis.objectId, "login");
 	});
 
 }

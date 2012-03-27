@@ -4,18 +4,19 @@ import java.io.File;
 
 import javax.servlet.http.HttpSession;
 
-import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Id;
-import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.TransactionContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.codi.mw3.admin.IDE;
 import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.model.IUser;
-import org.uengine.codi.mw3.model.Main;
+import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.model.User;
+import org.uengine.processmanager.ProcessManagerRemote;
 
 public class Login extends Database<ILogin> implements ILogin{
-
+	
 	@Id
 	String userId;
 		public String getUserId() {
@@ -57,14 +58,13 @@ public class Login extends Database<ILogin> implements ILogin{
 			this.defId = defId;
 		}
 
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)
 	public MainPanel login() throws Exception {
 		//setting the facebook user Id into session attribute;
-		HttpSession session = TransactionContext.getThreadLocalInstance().getRequest().getSession(); 
-		session.setAttribute("userId", getUserId());
+		HttpSession httpSession = TransactionContext.getThreadLocalInstance().getRequest().getSession(); 
+		httpSession.setAttribute("userId", getUserId());
 		
 		if(new File(CodiClassLoader.mySourceCodeBase()).exists()){
-			session.setAttribute("sourceCodeBase", CodiClassLoader.mySourceCodeBase());
+			httpSession.setAttribute("sourceCodeBase", CodiClassLoader.mySourceCodeBase());
 		}
 		
 		IUser loginUser = new User();
@@ -72,8 +72,35 @@ public class Login extends Database<ILogin> implements ILogin{
 		loginUser.setName(getName());
 		loginUser.setUserId(getUserId());
 		
+		Session session = new Session();
+		session.setUser(loginUser);
+		
+/*		
+*/		
 		//return new MainPanel(new Knowledge(loginUser));
-		//return new MainPanel(new IDE(loginUser));
-		return new MainPanel(new Main(loginUser));
+		return new MainPanel(new IDE(session));
+		//return new MainPanel(new Main(loginUser));
 	}
+
+	public MainPanel loginSocialCoding() throws Exception {
+		//setting the facebook user Id into session attribute;
+		HttpSession httpSession = TransactionContext.getThreadLocalInstance().getRequest().getSession(); 
+		httpSession.setAttribute("userId", getUserId());
+				
+		if(new File(CodiClassLoader.mySourceCodeBase()).exists()){
+			httpSession.setAttribute("sourceCodeBase", CodiClassLoader.mySourceCodeBase());
+		}
+		
+		IUser loginUser = new User();
+		
+		loginUser.setName(getName());
+		loginUser.setUserId(getUserId());
+				
+		Session session = new Session();
+		session.setUser(loginUser);
+		session.setDefId(getDefId());
+
+		return new MainPanel(new IDE(session));
+	}
+
 }

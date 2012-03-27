@@ -4,20 +4,61 @@
 
 
 	if(value==null || value.userId==null){
+	
+	console.debug("로그인");
 %>
-<div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/ko_KR/all.js#xfbml=1&appId=119159701538006";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
 
-<div id="fb-login" class="fb-login-button" data-scope="email,user_checkins,publish_stream,user_likes,export_stream" onlogin="mw3.getFaceHelper('<%=objectId%>').setUserInfo()">
-	Login with Facebook
-</div>	
+<div id="container">
+      <form action="#" method="post">
+          <!-- #first_step -->
+          <div id="first_step">
+              <h1>ProcessCodi&nbsp;&nbsp;<span>SIGN IN</span></h1>
+              <div class="form">
+               <input type="hidden" name="return_to" value="" />
+                  <input type="hidden" name="login" value="Login" />
+  <!--     <input type="text" name="userId" id="username" value="JJY" style="ime-mode:inactive"/> -->
+      <input type="text" name="userId" id="username" value="" style="ime-mode:inactive"/>
+                  <label for="username">부여받으신 아이디를 입력 하여 주십시오.</label>
+  <!--                 <input type="password" name="passWd" id="password" value="test" /> -->
+                  <input type="password" name="passWd" id="password" value="" />
+                  <label for="password">패스워드를 입력하여 주십시오.</label>
+                  <div class="clear"></div>
+              </div>
+              <!-- clearfix -->
+              <div class="clear"></div>
+              <!-- /clearfix -->
+              <div class="options" id="divCookie"  >
+                        
+					<div id="fb-root"></div>
+					<script>(function(d, s, id) {
+					  var js, fjs = d.getElementsByTagName(s)[0];
+					  if (d.getElementById(id)) {
+					    console.debug("이미 존재합니다. facebook");
+					  	return;
+					  }
+					  
+					  console.debug("스크립트 추가. facebook");
+					  
+					  js = d.createElement(s); js.id = id;
+					  js.src = "//connect.facebook.net/ko_KR/all.js#xfbml=1&appId=119159701538006";
+					  fjs.parentNode.insertBefore(js, fjs);
+					}(document, 'script', 'facebook-jssdk'));</script>
+					
+					<div id="fb-login" class="fb-login-button" data-scope="email,user_checkins,publish_stream,user_likes,export_stream" onlogin="mw3.getFaceHelper('<%=objectId%>').setUserInfo()">
+						Login with Facebook
+					</div>	
 
+              </div>
+              
+              <input class="submitTenant"  value="" title="Register Tenant" alt="Register Tenant"/>
+              <input id="signin" class="submit"  value="" title="click is login" alt="click is login" onclick="javascript:loginAction();"/>
+              
+          </div>
+          <!-- clearfix -->
+          <div class="clear"></div>
+          <!-- /clearfix -->
+      </form>
+  </div>
 
 <%
 	}else if(mw3.when == "login"){
@@ -30,7 +71,6 @@
 		<img src='http://graph.facebook.com/<%=value.userId%>/picture'<%=(mw3.how=="minimised" ? " width='50'":"")%>> <br>
 		<%=value.name%>
 	</center>
-	
 
 <%
 	}
