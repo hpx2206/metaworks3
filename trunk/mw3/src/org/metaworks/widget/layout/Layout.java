@@ -3,8 +3,6 @@ package org.metaworks.widget.layout;
 public class Layout {
 
 	public Layout() {
-		setLoad(true);
-		setLoadChild(false);		
 	}
 	
 	Object north;
@@ -61,21 +59,5 @@ public class Layout {
 		}
 		public void setName(String name) {
 			this.name = name;
-		}
-
-	boolean load;	
-		public boolean isLoad() {
-			return load;
-		}
-		public void setLoad(boolean load) {
-			this.load = load;
-		}
-		
-	boolean loadChild;
-		public boolean isLoadChild() {
-			return loadChild;
-		}
-		public void setLoadChild(boolean loadChild) {
-			this.loadChild = loadChild;
 		}
 }
