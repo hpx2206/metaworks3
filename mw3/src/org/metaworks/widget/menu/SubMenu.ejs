@@ -26,15 +26,15 @@
 			
 				menuName = menuName.replace("\&", "");
 				
-				console.debug(methods[key]);
+				var className = methods[key].object.__className;
 				
+				className = className.split('.').join('/');
 				
-				
-				
+				var imageName = className + "." + methodName + ".png";				
 %>
 		<div class="icon_b">
 			<ul>
-				<li class="icon"><img src="img/icon.png" width="20" height="16"></li>
+				<li class="icon"><img onError="javascript:this.src = '/uengine-web/images/ide/default.png';" src="/uengine-web/dwr/metaworks/<%=imageName%>"></li>
 			</ul>
 		</div>
 		<div class="clock_no">
