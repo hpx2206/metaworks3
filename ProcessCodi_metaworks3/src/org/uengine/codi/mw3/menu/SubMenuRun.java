@@ -1,5 +1,8 @@
 package org.uengine.codi.mw3.menu;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.metaworks.Remover;
@@ -15,7 +18,6 @@ import org.uengine.codi.mw3.model.TemplateDesigner;
 import org.uengine.codi.mw3.model.Window;
 import org.uengine.codi.mw3.widget.IFrame;
 import org.uengine.codi.platform.Console;
-import org.metaworks.Remover;
 
 
 public class SubMenuRun extends SubMenu {
@@ -25,15 +27,14 @@ public class SubMenuRun extends SubMenu {
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 	@Face(displayName="Run (Normal)")
 	public Object[] run() throws Exception{
-		
-		classDefinition.compile();
-
-		System.out.println("run");
-		String fullClassName = classDefinition.getPackageName() + "." + classDefinition.getClassName();
-		
-		Console.addLog("Run (Normal) -> " + fullClassName);
-		
+				
 		try{
+			classDefinition.compile();
+
+			String fullClassName = classDefinition.getPackageName() + "." + classDefinition.getClassName();
+
+			Console.addLog("Run (Normal) -> " + fullClassName);
+			
 			Object o = Thread.currentThread().getContextClassLoader().loadClass(fullClassName).newInstance();
 
 			Window outputWindow = new Window();
@@ -42,10 +43,23 @@ public class SubMenuRun extends SubMenu {
 			return new Object[]{outputWindow, new Remover(this)};
 
 		}catch(Exception e){
-			Console.addLog(e.getMessage());
-
-			throw e;
+			/*
+			StringWriter sw = new StringWriter();
+			PrintWriter pw = new PrintWriter(sw);
+			
+			e.printStackTrace(pw);
+			String stackDump = sw.toString();
+			
+			sw.close();
+			pw.close();
+			
+			Console.addLog(stackDump);
+			*/
+			
+			Console.addError(e.getMessage());
 		}		
+		
+		return new Object[]{new Remover(this)};
 	}
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
@@ -67,10 +81,10 @@ public class SubMenuRun extends SubMenu {
 			
 			return new Object[]{outputWindow, new Remover(this)};
 		}catch(Exception e){
-			Console.addLog(e.getMessage());
-
-			throw e;			
+			Console.addError(e.getMessage());
 		}
+		
+		return new Object[]{new Remover(this)};
 	}
 
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
@@ -95,10 +109,10 @@ public class SubMenuRun extends SubMenu {
 			
 			return new Object[]{outputWindow, new Remover(this)};
 		}catch(Exception e){
-			Console.addLog(e.getMessage());
-
-			throw e;			
+			Console.addError(e.getMessage());
 		}
+		
+		return new Object[]{new Remover(this)};
 	}	
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
@@ -118,9 +132,9 @@ public class SubMenuRun extends SubMenu {
 			
 			return new Object[]{outputWindow, new Remover(this)};
 		}catch(Exception e){
-			Console.addLog(e.getMessage());
-
-			throw e;			
+			Console.addError(e.getMessage());
 		}			
+		
+		return new Object[]{new Remover(this)};
 	}	
 }

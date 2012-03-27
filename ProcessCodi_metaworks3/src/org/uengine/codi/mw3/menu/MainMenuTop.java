@@ -14,40 +14,10 @@ public class MainMenuTop extends MainMenu {
 	}
 	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
-	@Face(displayName="&Edit")
-	public SubMenuEdit edit() throws Exception {
-		return new SubMenuEdit();
-	}
-	
-	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
 	@Face(displayName="&Source")
 	public SubMenuSource source() throws Exception {
 		return new SubMenuSource();
 	}
-	
-	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
-	@Face(displayName="Refac&tor")
-	public SubMenuRefactor refactor() throws Exception {
-		return new SubMenuRefactor();
-	}
-	
-	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
-	@Face(displayName="&Navigate")
-	public SubMenuNavigate navigate() throws Exception {
-		return new SubMenuNavigate();
-	}	
-
-	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
-	@Face(displayName="Se&arch")
-	public SubMenuSearch search() throws Exception {
-		return new SubMenuSearch();
-	}	
-
-	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
-	@Face(displayName="&Project")
-	public SubMenuProject project() throws Exception {
-		return new SubMenuProject();
-	}	
 
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
 	@Face(displayName="&Run")
