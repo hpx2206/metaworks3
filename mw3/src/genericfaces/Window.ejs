@@ -1,8 +1,8 @@
 <%
 
-//mw3.debug(value, true);
-
-	if (value != null){	
+	if (value != null){
+	
+		// get descriptor 
 		var width = null;
 		var height = null;
 	
@@ -11,11 +11,11 @@
 			height = descriptor.getOptionValue('height');
 		}
 		
-		
 		var layout = objectMetadata.faceOptions && objectMetadata.faceOptions['layout'];
+		var showLabel = !(objectMetadata.faceOptions && objectMetadata.faceOptions['hideLabels']);		
 		
+		// get window title (className or displayName)
 		var objectName; 
-
 		if(value.__toString != null){
 			objectName = value.__toString();
 		}		
@@ -23,59 +23,32 @@
 			objectName = objectMetadata.displayName;
 		}
 		
+		// get window title (resource) 
 		var resourceName = null;
 		if(objectName && objectName.indexOf('$')==0){
 			resourceName = objectName.substring(1);
 		}
-%>
-			<div id="sm_<%=objectId%>" style="margin-top:12px; padding:0px;  display:none; float:left; width:160px; position:relative;">	
-			    <div class="boxtopleft"><span class="boxtopright"><%if(resourceName){%><%=resources[resourceName].here()%><%}else{%><%=objectName%><%}%></span></div>
-			    <div class="boxmiddleright">
-			        <div class="boxmiddleleft">
-			            <div class="togglebtnmax" onclick="mw3.getFaceHelper('<%=objectId%>').resume('<%=layout%>')"></div>
-			            <!--<div id="slidedown" class="slidedown" onclick="outerLayout.allowOverflow('north') , con03();"></div>  -->
-			            <div id="slideup<%=objectId%>" class="slideup" onclick="outerLayout.resetOverflow('north'), con031();"></div>
-			            <div id="con<%=objectId%>" class="topcontentcontainer">
-			            </div>
-			        </div>
-			    </div>
-			    
-			    <div class="miniboxbottomleft"><span class="miniboxbottomright"></span></div>
-		    </div>
 		
+		
+%>
+		<div class="pane ui-layout-north">
             <div class="boxtopleft">
             	<span class="boxtopright">
-            		<div id="navigationTitle">
-            			<%if(resourceName){%>
-            				<%=resources[resourceName].here()%>
-            			<%}else{%>
-            				<%=objectName%>
-            			<%}%>
-            		</div>
-            		<div id="loader_<%=objectId%>" class="loadingarea" style="display: none; "><img src="/uengine-web/images/waveStyle/ajax-loader.gif" border="0"></div>
-            		
-<%
-	if(layout){            		
-%>	
-            		<div class="togglebtnmini" onclick="mw3.getFaceHelper('<%=objectId%>').minimize('<%=layout%>');"></div>
-<%
-	}
-%>
-            	</span>
-            </div>
-            
-<%
-		var showHeader = !(objectMetadata.faceOptions && objectMetadata.faceOptions['hideHeader']);
 		
-		if(showHeader){    
-%>		        
-            <div class="boxmiddleright">
-                <div class="boxmiddleleft">                    
-                    <div class="worklistcontentcontainer"  style="overflow:auto;">
-<%                    
-		}
-%>
-                    
+		    		<div id="navigationTitle">
+		    			<%if(resourceName){%>
+		    				<%=resources[resourceName].here()%>
+		    			<%}else{%>
+		    				<%=objectName%>
+		    			<%}%>
+		    		</div>
+            	</span>
+            </div>		    		
+		</div>
+		
+		<div class="pane ui-layout-center">
+			<div class="ui-layout-content">
+	                    
 <%	
 						
 		var showLabel = !(objectMetadata.faceOptions && objectMetadata.faceOptions['hideLabels']);
@@ -107,19 +80,13 @@
 <%   
 			}
 		}
-								   
-		if(showHeader){
-%>		
-                    </div>
-                </div>
-            </div>
-<%
-		}
 %>
-
-
-                        
-	<div class="boxbottomleft"><span class="boxbottomright"></span></div>
- <%
+			</div>
+		</div>
+		
+		<div class="pane ui-layout-south">
+			<div class="boxbottomleft"><span class="boxbottomright"></span></div>
+		</div>
+<%
      }
  %>
