@@ -4,13 +4,14 @@ var org_uengine_codi_mw3_admin_CrowdSourcerWindow = function(objectId, className
 	
 	var object = mw3.objects[objectId];
 	
-	object.send = function(){
+	object.send = function(){		
 		var object = mw3.objects[objectId];
 		
+		if(object.defId){
 			  var object = mw3.objects[objectId];
 			  
 			  var url = window.location;
-			  var link = "http://apps.facebook.com/pcodipaas/admin.html?defId=" + object.defId;
+			  var link = "http://localhost:8080/uengine-web/index.html?defId=" + object.defId;
 
 			  if(object.loginUser.userId == null)
 				  return;
@@ -21,13 +22,14 @@ var org_uengine_codi_mw3_admin_CrowdSourcerWindow = function(objectId, className
 				  message : object.message,
 				  link : link
 			  }, function(response) {
-				  console.debug("11111");
-				  
 				  if (!response || response.error) {
 				  } else {
 					  alert("메세지 전송에 성공하였습니다");
+					  $("#popup_" + mw3.recentOpenerObjectId).remove();
 				  }								
 			  });
-
+		}else{
+			alert("메세지 전송에 실패하였습니다. (defId = null)");
+		}
 	};
 }
