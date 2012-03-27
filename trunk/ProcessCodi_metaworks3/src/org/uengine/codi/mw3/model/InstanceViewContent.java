@@ -5,7 +5,7 @@ import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Name;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@Face(ejsPath="genericfaces/WindowTab.ejs", displayName="InstanceViewContent", options={"hideLabels"}, values={"true"})
+@Face(ejsPath="genericfaces/Window.ejs", displayName="InstanceViewContent", options={"hideLabels"}, values={"true"})
 public class InstanceViewContent extends ContentWindow {
 
 	//ProcessManagerRemote processManager;	

@@ -2,11 +2,24 @@ package org.uengine.codi.mw3.model;
 
 import org.metaworks.annotation.Face;
 
-@Face(ejsPath="genericfaces/WindowTab.ejs", 
-	  displayName="",
-	  options={"hideLabels", "hideCloseBtn"}, 
-	  values={"true", "true"})
+@Face(ejsPath="genericfaces/Window.ejs", 
+	  options={"hideLabels", "hideCloseBtn", "hideNewBtn"}, 
+	  values={"true", "true", "true"})
+
 public class ContentWindow  {
 	public ContentWindow(){
 	}
+	
+	public ContentWindow(Object panel){
+		setPanel(panel);
+	}
+
+	public Object panel;
+		public Object getPanel() {
+			return panel;
+		}	
+		public void setPanel(Object panel) {
+			this.panel = panel;
+		}
+	
 }

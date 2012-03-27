@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Name;
 import org.metaworks.annotation.ServiceMethod;
 import org.uengine.codi.mw3.admin.ClassDefinition;
@@ -7,7 +8,7 @@ import org.uengine.codi.mw3.admin.ClassDefinition;
 public class JavaDesigner extends ResourceDesigner{
 	
 	ClassDefinition classDefinition;
-	@Name
+		@Name
 		public ClassDefinition getClassDefinition() {
 			return classDefinition;
 		}
@@ -17,6 +18,7 @@ public class JavaDesigner extends ResourceDesigner{
 		}
 
 	@ServiceMethod
+	@Hidden
 	@Override
 	public void load() {
 		classDefinition = new ClassDefinition();
