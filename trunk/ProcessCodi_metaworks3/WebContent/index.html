@@ -57,7 +57,11 @@
 		<script src="scripts/jLayout/jlayout.flexgrid.js" type="text/javascript" charset="utf-8"></script>
 		<script src="scripts/jLayout/jlayout.flow.js" type="text/javascript" charset="utf-8"></script>
 		
-		
+		<!-- grid -->
+		<link rel="stylesheet" type="text/css" media="screen" href="scripts/jquery.jqGrid-4.3.1/css/ui.jqgrid.css">
+		<script src="scripts/jquery.jqGrid-4.3.1/js/i18n/grid.locale-en.js" type="text/javascript"></script>
+		<script type="text/javascript" src="scripts/jquery.jqGrid-4.3.1/jquery.jqGrid.js"></script>
+
 		<!-- popup -->
 		<link rel="stylesheet" href="scripts/jquery/cluetip/jquery.cluetip.css" />
 		
@@ -67,17 +71,48 @@
 		
 		<!-- default -->
 		<link rel="stylesheet" href="style/waveStyle/droppable_layout.css" />
+		<link href="style/waveStyle/signIn.css" type="text/css" rel="stylesheet">
+				
+
 		<!--  for chart -->
 		<script type='text/javascript' src='https://www.google.com/jsapi'></script>
-						
+
+								
 		<script type="text/javascript">
+			var Request = function() {
+				this.getParameter = function(name) {
+					var rtnval = "";
+					var nowAddress = unescape(location.href);
+					var parameters = (nowAddress.slice(nowAddress.indexOf("?") + 1,
+							nowAddress.length)).split("&");
+	
+					for ( var i = 0; i < parameters.length; i++) {
+						var varName = parameters[i].split("=")[0];
+						if (varName.toUpperCase() == name.toUpperCase()) {
+							rtnval = parameters[i].split("=")[1];
+							break;
+						}
+					}
+					return rtnval;
+				}
+			}
+
+			
 			var mainPage
 		
 			google.load('visualization', '1', {
 				packages : [ 'corechart', 'gauge' ]
 			});
 
+			google.load('visualization', '1', {
+				packages : [ 'corechart', 'gauge' ]
+			});
+			
 			$(document).ready(function() {
+				var request = new Request();
+				
+				var defId = request.getParameter("defId");
+				
 		 		mw3.setWhen(mw3.WHEN_EDIT);
 		 		mw3.template_error = function(e, actualFace) {
 					if(e.lineNumber){
@@ -94,12 +129,10 @@
 						alert(message);
 					
 		 		}
-		 		
-		 		
 				
 				mainPage = new MetaworksObject({
-					__className : "org.uengine.codi.mw3.Login"
-
+					__className : "org.uengine.codi.mw3.Login",
+					defId : defId
 				}, 'body');
 				
 
