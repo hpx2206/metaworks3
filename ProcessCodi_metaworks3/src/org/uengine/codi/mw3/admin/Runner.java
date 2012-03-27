@@ -2,6 +2,9 @@
 package org.uengine.codi.mw3.admin;
 
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.metaworks.ContextAware;
@@ -55,7 +58,16 @@ public class Runner implements ContextAware{
 			return outputWindow;
 
 		}catch(Exception e){
-			Console.addLog(e.getMessage());
+			StringWriter sw = new StringWriter();
+			PrintWriter pw = new PrintWriter(sw);
+			
+			e.printStackTrace(pw);
+			String stackDump = sw.toString();
+			
+			sw.close();
+			pw.close();
+			
+			Console.addError(stackDump);
 
 			throw e;
 		}		

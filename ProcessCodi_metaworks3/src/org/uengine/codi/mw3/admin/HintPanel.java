@@ -1,15 +1,39 @@
 package org.uengine.codi.mw3.admin;
 
-import org.metaworks.annotation.Face;
-import org.uengine.codi.mw3.common.Facebook;
+import org.uengine.codi.mw3.common.FacebookComments;
+import org.uengine.codi.mw3.knowledge.Workflowy;
+import org.uengine.codi.mw3.knowledge.WorkflowyPanel;
+import org.uengine.codi.mw3.model.IUser;
 
 public class HintPanel {
-	public HintPanel(String pageName){
-		facebookComments = new Facebook();
+	
+	public HintPanel(IUser user, String pageName) throws Exception {
+		facebookComments = new FacebookComments("ide");
 		facebookComments.setUrl(pageName);
-		facebookLike = new Facebook();		
+		
+		setWorkflowyPanel(new WorkflowyPanel(new Workflowy(user, "read")));
+		
+		//hintSearchBox = new HintSearchBox();
 	}
 	
+	/*
+	HintSearchBox hintSearchBox;
+		public HintSearchBox getHintSearchBox() {
+			return hintSearchBox;
+		}
+		public void setHintSearchBox(HintSearchBox hintSearchBox) {
+			this.hintSearchBox = hintSearchBox;
+		}
+	*/
+	
+	WorkflowyPanel workflowyPanel;
+		public WorkflowyPanel getWorkflowyPanel() {
+			return workflowyPanel;
+		}
+		public void setWorkflowyPanel(WorkflowyPanel workflowyPanel) {
+			this.workflowyPanel = workflowyPanel;
+		}
+
 	String pageName;	
 		public String getPageName() {
 			return pageName;
@@ -18,21 +42,12 @@ public class HintPanel {
 			this.pageName = pageName;
 		}
 
-	Facebook facebookComments;
-		@Face(ejsPath="org/uengine/codi/mw3/common/FacebookComments.ejs")
-		public Facebook getFacebookComments() {
+	FacebookComments facebookComments;
+		public FacebookComments getFacebookComments() {
 			return facebookComments;
 		}
-		public void setFacebookComments(Facebook facebookComments) {
+		public void setFacebookComments(FacebookComments facebookComments) {
 			this.facebookComments = facebookComments;
 		}	
-		
-	Facebook facebookLike;
-		@Face(ejsPath="org/uengine/codi/mw3/common/FacebookLike.ejs")
-		public Facebook getFacebookLike() {
-			return facebookLike;
-		}
-		public void setFacebookLike(Facebook facebookLike) {
-			this.facebookLike = facebookLike;
-		}	
+
 }

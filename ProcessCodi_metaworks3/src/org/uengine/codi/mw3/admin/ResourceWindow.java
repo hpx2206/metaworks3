@@ -1,6 +1,7 @@
 package org.uengine.codi.mw3.admin;
 
 import org.metaworks.annotation.Face;
+import org.uengine.codi.mw3.model.IUser;
 
 @Face(ejsPath="genericfaces/Window.ejs",
       displayName="Navigator",
@@ -8,9 +9,9 @@ import org.metaworks.annotation.Face;
       values={"true", "true", "true", "west"})
 public class ResourceWindow {
 
-	public ResourceWindow() throws Exception {
-		resourcePanel = new ResourcePanel();
-		resourcePanel.refresh();
+	public ResourceWindow(IUser user) throws Exception {
+		resourcePanel = new ResourcePanel(user);
+		resourcePanel.refresh();		
 	}
 	
 	ResourcePanel resourcePanel;		

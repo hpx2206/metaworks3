@@ -17,16 +17,16 @@ public class PageNavigator {
 	
 	@ServiceMethod(callByContent=true)
 	public MainPanel goIDE() throws Exception {		
-		return new MainPanel(new IDE(session.getUser()));
+		return new MainPanel(new IDE(session));
 	}
 	
 	@ServiceMethod(callByContent=true)
 	public MainPanel goProcess() throws Exception {
-		return new MainPanel(new Main(session.getUser()));
+		return new MainPanel(new Main(session));
 	}
 
 	@ServiceMethod(callByContent=true)
 	public MainPanel goKnowledge() throws Exception {
-		return new MainPanel(new Knowledge(session.getUser()));
+		return new MainPanel(new Knowledge(session));
 	}
 }

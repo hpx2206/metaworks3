@@ -3,7 +3,7 @@ package org.uengine.codi.mw3.admin;
 import org.metaworks.annotation.Face;
 import org.uengine.codi.platform.Console;
 
-@Face(ejsPath="genericfaces/WindowTab.ejs", 
+@Face(ejsPath="genericfaces/Window.ejs", 
 	  options={"hideLabels", "hideCloseBtn", "layout"}, 
 	  values={"true", "true", "south"})
 
