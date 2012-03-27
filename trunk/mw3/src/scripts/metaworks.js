@@ -34,6 +34,7 @@
 				this.face_ObjectIdMapping = {};
 				this.objectIds_FaceMapping={};
 				
+				this.loaded = false;
 				this.loadedScripts = {};
 				
 				this.tests = {};
@@ -60,6 +61,8 @@
 			    
 			    this.browser = browserCheck();
 			    	
+			    this.afterLoadFaceHelper = {};
+			    
 			    // Netscape
 			    // 5.0 (Windows NT 6.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11
 			    // Mozilla
@@ -142,9 +145,11 @@
 			
 			Metaworks3.prototype.loadFaceHelper = function(objectId){
 				
-				if(!this.face_ObjectIdMapping[objectId])
+				if(!this.face_ObjectIdMapping[objectId]){					
 					return null;
+				}
 					
+				
 				var face = this.face_ObjectIdMapping[objectId].face;
 				var className = this.face_ObjectIdMapping[objectId].className;
 				
@@ -153,6 +158,8 @@
 				
 				var thereIsHelperClass = false;
 				try{
+					//console.debug('eval faceHelper [' + objectId + '] -> ' + face);
+					
 					eval(faceHelperClass);
 					thereIsHelperClass = true;
 				
@@ -170,11 +177,14 @@
 					}
 					
 				}catch(e){
+					return null;
 					//TODO :  error reporting required
 					//this.debug(e, true);
 					//if(console)
-					//	console.log("Failed to load face helper ("+faceHelperClass+"(ejs.js)): " + e);
+						//console.log("Failed to load face helper ("+faceHelperClass+"(ejs.js)): " + e);
 				}
+				
+				//console.debug('catch after work');
 
 				//load the key bindings 
 				var objectMetadata = this.getMetadata(className);
@@ -287,23 +297,23 @@
 			Metaworks3.prototype.onLoadFaceHelperScript = function(face){
 //				if(!target)
 //					target = this.face_ObjectIdMapping;
+				if(this.afterLoadFaceHelper[face]){
+					objectIds = this.objectIds_FaceMapping[face];
+								
+					for(var objectId in objectIds)
+						this.loadFaceHelper(objectId);
+					
+					this.afterLoadFaceHelper[face] = null;
+					this.objectIds_FaceMapping[face] = null;
+				}
 				
-				objectIds = this.objectIds_FaceMapping[face];
-				
-				// 2012-03-21 cjw 처음 facehelper 를 load 하여 aftercall 로 호출 될 경우와 이후에 호출 될 경우 호출 순서가 틀려 같게 수정
-				// 하위 객체에서 상위 객체 순서로
-				var temp = [];
-				
-				for(var objectId in objectIds)
-					temp.push(objectId);
-				
-				for(var i=temp.length-1; i>=0; i--)
-					this.loadFaceHelper(temp[i]);
 			}
 
 			Metaworks3.prototype.getFaceHelper = function(objectId){
 				var registeredHelper = this.faceHelpers[objectId];
 				
+				return registeredHelper;
+				/*
 				if(registeredHelper!=null)
 					return registeredHelper;
 				else{
@@ -311,6 +321,7 @@
 					
 					return this.faceHelpers[objectId];
 				}
+				*/
 				
 			}
 			
@@ -569,7 +580,7 @@
 					}
 					
 					this.objectIds_FaceMapping [actualFace][objectId] = faceInfo;
-					
+						
 					//end
 
 					var objectRef = this._createObjectRef(object, objectId);
@@ -592,14 +603,15 @@
 							object['__descriptor'] = descriptor;
 					}
 					
+					
+					if(actualFace.indexOf("genericfaces") == 0){ //TODO: will need to be optional
+						actualFace = "dwr/metaworks/" + actualFace;
+					}					
+					mw3._importFaceHelper(actualFace)
+					
+					
 					try {
 						//alert("selected face : " + actualFace);
-						
-
-						if(actualFace.indexOf("genericfaces") == 0){ //TODO: will need to be optional
-							actualFace = "dwr/metaworks/" + actualFace;
-						}
-						
 						var url = this.base + (actualFace.indexOf('dwr') == 0 ? '/':'/metaworks/') + actualFace;
 						
 						
@@ -660,23 +672,25 @@
 //					var directFaceName = 'faces/' + objectTypeName.split('.').join('/') + ".ejs";
 //					this._importFaceHelper(actualFace, //try to load face helper by using the class name directly first
 //							function(){
-							mw3._importFaceHelper(actualFace)
+							//mw3._importFaceHelper(actualFace)
 //							}, 
 //							directFaceName
 //					);
 
-					mw3.getFaceHelper(objectId)					
-					
+//					mw3.getFaceHelper(objectId)					
 					//end
-					
+
 					return objectId;
 				}
 			
 			Metaworks3.prototype._importFaceHelper = function(actualFace, onError){
 
 				var initializingFaceHelper = function() {
+					// console.debug("initializingFaceHelper --> " + actualFace);
+					
 					//TODO: may cause unnecessary javascript object creation - performance & memory waste
 					mw3.onLoadFaceHelperScript(actualFace);
+					mw3.loaded = true;
 				}
 
 				var byClassLoader = actualFace.indexOf('dwr') == 0;
@@ -688,10 +702,15 @@
 //				        type:'GET',
 //				        success:function(content,code)
 //				        {
+				
+				this.afterLoadFaceHelper[actualFace] = url;
+				
 				var script = mw3.importScript(url, initializingFaceHelper);
 				
 				if(script==null)
 					return false;
+				
+				
 				
 				var startPos = 0;
 
@@ -723,29 +742,30 @@
 			}
 			
 			Metaworks3.prototype.importScript = function(scriptUrl, afterLoadScript){
-				if(!this.loadedScripts[scriptUrl])
-				try{
-					var head= document.getElementsByTagName('head')[0];
-					var script= document.createElement('script');
-					script.type= 'text/javascript';
-					script.src= scriptUrl;
-					head.appendChild(script);
-					this.loadedScripts[scriptUrl] = scriptUrl;
-
-					if(afterLoadScript){						
-						script.onload = afterLoadScript;
+				if(!this.loadedScripts[scriptUrl]){
+					try{
+						var head= document.getElementsByTagName('head')[0];
+						var script= document.createElement('script');
+						script.type= 'text/javascript';
+						script.src= scriptUrl;
+						head.appendChild(script);
+						this.loadedScripts[scriptUrl] = scriptUrl;
 						
-						script.onreadystatechange = function() { //for IE
-							if (this.readyState == 'complete' || this.readyState == 'loaded') {
-								
-								afterLoadScript();
-							}
-						};
+						if(afterLoadScript){						
+							script.onload = afterLoadScript;
+							
+							script.onreadystatechange = function() { //for IE
+								if (this.readyState == 'complete' || this.readyState == 'loaded') {
+									
+									afterLoadScript();
+								}
+							};
+						}
+											
+						return script;
+					}catch(e){
+						//console.debug(e);
 					}
-
-					return script;
-				}catch(e){
-					//console.debug(e);
 				}
 			}
 			
@@ -882,8 +902,13 @@
 					objectTypeName = ":dwr/metaworks/genericfaces/ObjectFace.ejs";
 				
 				//alert( dwr.util.toDescriptiveString(value, 5))
-
 				
+				
+				// 2012-03-27 cjw destory event
+    			if(this.objects[objectId] && this.getFaceHelper(objectId) && this.getFaceHelper(objectId).destory)
+        			mw3.getFaceHelper(objectId).destory();
+        			
+    			
 				var divId =  "#objDiv_" + objectId;
 				
     			this._armObject(objectId, value); //let the methods and some special fields available
@@ -1390,7 +1415,21 @@
 				        			}
 				        			
 				        			mw3.loaded = true;
-				        			
+									
+							    	for(var face in mw3.afterLoadFaceHelper){
+							    		if(mw3.afterLoadFaceHelper[face]){				    		
+								    		objectIds = mw3.objectIds_FaceMapping[face];
+								    		
+											for(var objectId in objectIds){
+												if(mw3.loadFaceHelper(objectId) != null){
+													mw3.afterLoadFaceHelper[face] = null;
+													mw3.objectIds_FaceMapping[face] = null;
+												}
+											}
+							    		}
+							    	}
+								
+									
 				        			if(mw3.afterCall)
 				        				mw3.afterCall(svcNameAndMethodName, result);
 				        		},
