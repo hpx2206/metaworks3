@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3;
 
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.IDAO;
@@ -20,6 +21,12 @@ public interface ILogin extends IDAO{
 	public boolean isAdmin();
 	public void setAdmin(boolean isAdmin);
 
-	@ServiceMethod(callByContent=true)
+	public String getDefId();
+	public void setDefId(String defId);
+		
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)
 	public MainPanel login() throws Exception;	
+	
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)
+	public MainPanel loginSocialCoding() throws Exception;
 }
