@@ -127,4 +127,10 @@
 	<bean id="FileSystem" class="org.uengine.codi.platform.FileSystem"/>
 	
 	<bean id="PageNavigator" class="org.uengine.codi.mw3.admin.PageNavigator"/>
+	<bean id="IDE" class="org.uengine.codi.mw3.admin.IDE"/>
+	<bean id="Login" class="org.uengine.codi.mw3.Login"/>
+	<bean id="MainPanel" class="org.uengine.codi.mw3.common.MainPanel"/>
+	<bean id="Workflowy" class="org.uengine.codi.mw3.knowledge.Workflowy"/>
+	
+	
 </beans>
