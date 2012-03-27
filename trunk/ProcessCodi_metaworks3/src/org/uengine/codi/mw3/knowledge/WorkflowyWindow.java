@@ -1,15 +1,16 @@
 package org.uengine.codi.mw3.knowledge;
 
 import org.metaworks.annotation.Face;
+import org.uengine.codi.mw3.model.IUser;
 
-@Face(ejsPath="genericfaces/WindowTab.ejs", 
+@Face(ejsPath="genericfaces/Window.ejs", 
       displayName="Knowledge Mode", 
       options={"hideLabels"}, 
       values={"true"})
 public class WorkflowyWindow {
 	
-	public WorkflowyWindow() throws Exception {	
-		setWorkflowy(new Workflowy());
+	public WorkflowyWindow(IUser user) throws Exception {	
+		setWorkflowy(new Workflowy(user));
 	}
 	
 	Workflowy workflowy;
