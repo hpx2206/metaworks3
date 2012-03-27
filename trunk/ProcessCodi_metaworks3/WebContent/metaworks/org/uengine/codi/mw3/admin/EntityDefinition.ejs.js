@@ -6,7 +6,7 @@ var org_uengine_codi_mw3_admin_EntityDefinition = function(objectId, className){
 	
 	if(object.entityName != null){
 		$(".mw3_window").each(function(){
-			if($(this).attr("className") == "org.uengine.codi.mw3.admin.ContentWindow")
+			if($(this).attr("className") == "org.uengine.codi.mw3.model.ContentWindow")
 				$(this).find("#navigationTitle").html(object.entityName + ".sql");
 		});
 	}
