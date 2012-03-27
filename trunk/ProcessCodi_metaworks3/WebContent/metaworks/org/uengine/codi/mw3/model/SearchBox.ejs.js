@@ -19,14 +19,13 @@ org_uengine_codi_mw3_model_SearchBox.prototype.getValue = function() {
 org_uengine_codi_mw3_model_SearchBox.prototype.keydown = function() {
 	var objectId = this.objectId;
 	
-	console.debug(this.timeout);
-	
 	if (this.timeout) {
 		clearTimeout(this.timeout);
 	}
 	
 	this.timeout = setTimeout(function() {
 		console.debug("search");
+		console.debug(objectId);
 		
 		mw3.call(objectId, 'search');
 	}, 500);

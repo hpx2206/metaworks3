@@ -16,8 +16,8 @@ org_uengine_codi_mw3_model_Popup.prototype.createPopup = function(w,h,x,y){
 	var popLayerWidth = w;
 	var popLayerHeight = h;
 	
-	var bodyHeight = $('#container').height();
-	var bodyWidth = $('#container').width();
+	var bodyHeight = $('body').height();
+	var bodyWidth = $('body').width();
 	
 	var divId = '#objDiv_' + this.objectId;
 	
