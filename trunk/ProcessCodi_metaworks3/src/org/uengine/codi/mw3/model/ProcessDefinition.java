@@ -245,6 +245,7 @@ public class ProcessDefinition extends Database<IProcessDefinition> implements I
 	public ContentWindow design() throws Exception {
 		String defId = getDefId().toString();
 		
+		
 		//setting the facebook user Id into session attribute;
 		HttpSession session = TransactionContext.getThreadLocalInstance().getRequest().getSession(); 
 		session.setAttribute("defId", getDefId());
