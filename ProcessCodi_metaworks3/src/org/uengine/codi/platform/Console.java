@@ -33,6 +33,19 @@ public class Console {
 	   theScriptSessionUtil.addFunctionCall("mw3.getAutowiredObject('"+ Console.class.getName() +"').__getFaceHelper().addLog('" + log + "')");
 	
 	}
+	
+	public static void addError(String log){
+		WebContext wctx = WebContextFactory.get();
+		String currentPage = wctx.getCurrentPage();
+	
+	   // For the session user only 
+	   ScriptSession session = wctx.getScriptSession();
+	
+	   //TODO: filter other topic's postings;
+	   Util theScriptSessionUtil = new Util(session);
+	   theScriptSessionUtil.addFunctionCall("mw3.getAutowiredObject('"+ Console.class.getName() +"').__getFaceHelper().addError('" + log + "')");
+	
+	}	
 
 	@ServiceMethod
 	public void clear(){
