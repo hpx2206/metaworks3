@@ -2,7 +2,7 @@ var org_metaworks_widget_layout_Layout = function(objectId, className){
 
 	this.objectId = objectId;
 	this.className = className;
-
+		
 	var object = mw3.objects[this.objectId];
 	var faceHelper = this;
 	
@@ -16,18 +16,10 @@ var org_metaworks_widget_layout_Layout = function(objectId, className){
 	this.south = $('#objDiv_' + objectId + '>.ui-layout-south');
 	
 	$('#objDiv_' + objectId).addClass('mw3_layout').attr('objectId', objectId);
+
+	console.debug('load');
 	
-	
-	if(object.load)
-		faceHelper.load();
-	
-	if(object.loadChild){
-		$('#objDiv_' + objectId).find('.mw3_layout').each(function(){
-			var layoutId = $(this).attr('objectId');
-			
-			mw3.getFaceHelper(layoutId).load();
-		});
-	}
+	faceHelper.load();
 }
 
 org_metaworks_widget_layout_Layout.prototype.load = function(){
@@ -44,6 +36,11 @@ org_metaworks_widget_layout_Layout.prototype.load = function(){
 			eval('options = {' + value + '}');
 		}		
 	}
+	
+	if(!options['center__onresize'])
+		options['center__onresize'] = 'mw3.getFaceHelper(\''+this.objectId+'\').resizeChild()';
+	
+	
 	
 	this.layout = $('#objDiv_' + this.objectId).layout(options);
 }
@@ -100,6 +97,8 @@ org_metaworks_widget_layout_Layout.prototype.toggle = function(target){
 
 org_metaworks_widget_layout_Layout.prototype.resize = function(){
 	if(this.layout){
+		console.debug('resize : ' + this.objectId);
+		
 		this.layout.resizeAll();
 		
 		var height = 0;
@@ -113,20 +112,27 @@ org_metaworks_widget_layout_Layout.prototype.resize = function(){
 				height += this.center.height() + this.north.height();
 				height += Number(this.center.attr('height-margin'));
 				 
-				console.debug(height);
-				
 				this.north.height(height);
 				
 				//console.debug($('#objDiv_' + this.objectId + '>.ui-layout-north').height(height));
 			}
 		}
+		
+		this.resizeChild();
+		
+		
+		//$('.mw3_editor')
+		
 	}
 }
 
 org_metaworks_widget_layout_Layout.prototype.resizeChild = function(){
+	console.debug('resizeChild');
 	
 	$('#objDiv_' + this.objectId).find('.mw3_layout').each(function(){
 		var layoutId = $(this).attr('objectId');
+		
+		console.debug('layoutId : ' + layoutId);
 		
 		if(layoutId)
 			mw3.getFaceHelper(layoutId).resize();
