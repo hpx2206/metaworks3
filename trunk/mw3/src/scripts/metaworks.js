@@ -35,7 +35,7 @@
 				this.objectIds_FaceMapping={};
 				
 				this.loaded = false;
-				this.loadedScripts = {};
+				this.loadedScripts = {};				
 				
 				this.tests = {};
 
@@ -62,6 +62,7 @@
 			    this.browser = browserCheck();
 			    	
 			    this.afterLoadFaceHelper = {};
+			    this.afterLoadFaceHelperCount = 0;
 			    
 			    // Netscape
 			    // 5.0 (Windows NT 6.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11
@@ -145,24 +146,31 @@
 			
 			Metaworks3.prototype.loadFaceHelper = function(objectId){
 				
-				if(!this.face_ObjectIdMapping[objectId]){					
+				if(!this.objects[objectId])
 					return null;
-				}
-					
+				
+				if(!this.face_ObjectIdMapping[objectId])					
+					return null;
+				
 				
 				var face = this.face_ObjectIdMapping[objectId].face;
 				var className = this.face_ObjectIdMapping[objectId].className;
 				
+
+				// load faceHelper
 				var faceHelperClass = this.loadedScripts[face];
+				if(!faceHelperClass)
+					return null;
 				
 				
 				var thereIsHelperClass = false;
 				try{
-					//console.debug('eval faceHelper [' + objectId + '] -> ' + face);
-					
+					//console.debug('eval faceHelper [' + objectId + '] -> ' + face);					
 					eval(faceHelperClass);
 					thereIsHelperClass = true;
-				
+					
+					console.debug(objectId);
+					
 
 					if(thereIsHelperClass){
 						var faceHelper = eval("new " + faceHelperClass + "('" + objectId + "', '"+ className + "')");
@@ -183,132 +191,44 @@
 					//if(console)
 						//console.log("Failed to load face helper ("+faceHelperClass+"(ejs.js)): " + e);
 				}
-				
-				//console.debug('catch after work');
-
-				//load the key bindings 
-				var objectMetadata = this.getMetadata(className);
-				
-				var contextMenuMethods = [];
-				
-				var targetDivId = this._getObjectDivId(objectId);
-				var theDiv = $("#" + targetDivId);
-				
-				if(theDiv[0])
-			    for(var methodName in objectMetadata.serviceMethodContexts){
-			   		var methodContext = objectMetadata.serviceMethodContexts[methodName];
-
-	   			
-		   		
-		   			if(methodContext.keyBinding && methodContext.keyBinding.length > 0){
-		   				
-		   				for(var i=0; i<methodContext.keyBinding.length; i++){
-
-		   					var keyBinding = methodContext.keyBinding[i];
-		   					var targetDivId = this._getObjectDivId(objectId);
-		   					var command = "mw3.call("+objectId+", '"+methodName+"')";
-		   					
-		   					if(keyBinding.indexOf("@Global") > -1){
-		   						keyBinding = keyBinding.substr(keyBinding.length - "@Global".length);
-		   					
-		   						shortcut.remove(keyBinding);
-			   					shortcut.add(keyBinding, command);
-		   					}else{
-		   					
-			   					shortcut.add(keyBinding, command/*function() {
-			   						eval(command);
-			   					}*/,{
-			   						target: targetDivId
-			   					});
-		   					}
-		   				}
-		   			}
-		   			
-		   			if(methodContext.mouseBinding){
-		   	
-		   				var which = 3;
-		   				if(methodContext.mouseBinding == "right")
-		   					which = 3;
-		   				else if(methodContext.mouseBinding == "left")
-		   					which = 1;
-		   
-		   			    theDiv[0].addEventListener(
-		   			 		"mouseup",
-
-		   			    	function(e) {
-		   			 			
-		   			 			if(e.which == which){
-			   						eval(command);
-		   			 				e.stopPropagation(); //stops to propagate to parent that means consumes the event here.
-		   			 			}
-		   			 		},
-		   			 		
-		   			 		false //event bubbling, not the capturing
-		   			 	);
-		   			}
-		   			
-		   			if(methodContext.inContextMenu){
-		   				contextMenuMethods[contextMenuMethods.length] = methodContext;
-		   			}
-
-			   }
-			   
-			   if(contextMenuMethods.length > 0){
-				   
-				   var menuItems = [];
-					
-				   for(var i=0; i<contextMenuMethods.length; i++){
-					   var serviceMethodContext = contextMenuMethods[i];
-				   		var command = "mw3.call("+objectId+", '"+serviceMethodContext.methodName+"')";
-				   		
-				   		if(serviceMethodContext.needToConfirm)
-				   			command = "if (confirm(\'Are you sure to "+serviceMethodContext.displayName+" this?\'))" + command;
-				   		
-					   var menuItem = { 
-							   text: serviceMethodContext.displayName + (serviceMethodContext.keyBinding ? '(' + serviceMethodContext.keyBinding[0] + ')' : ''), 
-							   onclick: { fn: 
-								   function(){
-								   		eval(this._oOnclickAttributeValue.command);
-								   },
-								   command: command
-							   } 
-					   };
-					   
-					   menuItems[menuItems.length] = menuItem;
-				   }
-				   
-//				   theDiv.append("<div id='contextmenu_" + objectId + "'></div>");
-				   
-				   YAHOO.util.Event.onContentReady(targetDivId, function () {
-						new YAHOO.widget.ContextMenu(
-							"_contextmenu_" + objectId,
-							{
-								zindex: 99,
-								trigger: theDiv[0],
-								itemdata: menuItems,
-								lazyload: true
-							}
-						);
-				   });
-			   }
-				
 			}
 
 			Metaworks3.prototype.onLoadFaceHelperScript = function(face){
 //				if(!target)
 //					target = this.face_ObjectIdMapping;
+				/*
+				console.debug('onLoadFaceHelperScript');
+				
 				if(this.afterLoadFaceHelper[face]){
 					objectIds = this.objectIds_FaceMapping[face];
-								
-					for(var objectId in objectIds)
+									
+					for(var objectId in objectIds){
+						console.debug(objectId);
+						
 						this.loadFaceHelper(objectId);
+					}
 					
 					this.afterLoadFaceHelper[face] = null;
 					this.objectIds_FaceMapping[face] = null;
 				}
+				*/
 				
-			}
-
+		    	for(var i in mw3.afterLoadFaceHelper){
+		    		var face = mw3.afterLoadFaceHelper[i];
+		    		
+		    		if(face != null){
+			    		objectIds = mw3.objectIds_FaceMapping[face];								    		
+						
+						for(var objectId in objectIds){
+							if(mw3.loadFaceHelper(objectId) != null){
+								mw3.afterLoadFaceHelper[i] = null;
+								mw3.objectIds_FaceMapping[face] = null;
+							}
+						}
+		    		}
+		    	}				
+			}			
+			
 			Metaworks3.prototype.getFaceHelper = function(objectId){
 				var registeredHelper = this.faceHelpers[objectId];
 				
@@ -668,6 +588,121 @@
 					}
 					
 					
+					//load the key or mouse bindings, context menu 
+					var contextMenuMethods = [];
+					
+					var targetDivId = this._getObjectDivId(objectId);
+					var theDiv = $("#" + targetDivId);
+					
+					if(theDiv[0])
+				    for(var methodName in metadata.serviceMethodContexts){
+				   		var methodContext = metadata.serviceMethodContexts[methodName];
+
+		   			
+			   		
+			   			if(methodContext.keyBinding && methodContext.keyBinding.length > 0){
+			   				
+			   				for(var i=0; i<methodContext.keyBinding.length; i++){
+
+			   					var keyBinding = methodContext.keyBinding[i];
+			   					var targetDivId = this._getObjectDivId(objectId);
+			   					var command = "mw3.call("+objectId+", '"+methodName+"')";
+			   					
+			   					if(keyBinding.indexOf("@Global") > -1){
+			   						keyBinding = keyBinding.substr(keyBinding.length - "@Global".length);
+			   					
+			   						shortcut.remove(keyBinding);
+				   					shortcut.add(keyBinding, command);
+			   					}else{
+			   					
+				   					shortcut.add(keyBinding, command/*function() {
+				   						eval(command);
+				   					}*/,{
+				   						target: targetDivId
+				   					});
+			   					}
+			   				}
+			   			}
+			   			
+			   			if(methodContext.mouseBinding){
+			   	
+			   				var which = 3;
+			   				if(methodContext.mouseBinding == "right")
+			   					which = 3;
+			   				else if(methodContext.mouseBinding == "left")
+			   					which = 1;
+			   
+			   			    theDiv[0].addEventListener(
+			   			 		"mouseup",
+
+			   			    	function(e) {
+			   			 			
+			   			 			if(e.which == which){
+				   						eval(command);
+			   			 				e.stopPropagation(); //stops to propagate to parent that means consumes the event here.
+			   			 			}
+			   			 		},
+			   			 		
+			   			 		false //event bubbling, not the capturing
+			   			 	);
+			   			}
+			   			
+			   			if(methodContext.inContextMenu){
+			   				contextMenuMethods[contextMenuMethods.length] = methodContext;
+			   			}
+
+				   }
+				   
+				   if(contextMenuMethods.length > 0){
+					   
+					   var menuItems = [];
+						
+					   for(var i=0; i<contextMenuMethods.length; i++){
+						   var serviceMethodContext = contextMenuMethods[i];
+					   		var command = "mw3.call("+objectId+", '"+serviceMethodContext.methodName+"')";
+					   		
+					   		if(serviceMethodContext.needToConfirm)
+					   			command = "if (confirm(\'Are you sure to "+serviceMethodContext.displayName+" this?\'))" + command;
+					   		
+						   var menuItem = { 
+								   text: serviceMethodContext.displayName + (serviceMethodContext.keyBinding ? '(' + serviceMethodContext.keyBinding[0] + ')' : ''), 
+								   onclick: { fn: 
+									   function(){
+									   		eval(this._oOnclickAttributeValue.command);
+									   },
+									   command: command
+								   } 
+						   };
+						   
+						   menuItems[menuItems.length] = menuItem;
+					   }
+					   
+//					   theDiv.append("<div id='contextmenu_" + objectId + "'></div>");
+					   
+					   YAHOO.util.Event.onContentReady(targetDivId, function () {
+							new YAHOO.widget.ContextMenu(
+								"_contextmenu_" + objectId,
+								{
+									zindex: 99,
+									trigger: theDiv[0],
+									itemdata: menuItems,
+									lazyload: true
+								}
+							);
+					   });
+				   }
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
 					//load scripts if there is.
 //					var directFaceName = 'faces/' + objectTypeName.split('.').join('/') + ".ejs";
 //					this._importFaceHelper(actualFace, //try to load face helper by using the class name directly first
@@ -689,7 +724,9 @@
 					// console.debug("initializingFaceHelper --> " + actualFace);
 					
 					//TODO: may cause unnecessary javascript object creation - performance & memory waste
-					mw3.onLoadFaceHelperScript(actualFace);
+					//mw3.onLoadFaceHelperScript(actualFace);
+					
+					mw3.onLoadFaceHelperScript();					
 					mw3.loaded = true;
 				}
 
@@ -702,15 +739,27 @@
 //				        type:'GET',
 //				        success:function(content,code)
 //				        {
+								
+			   	// set call order
+				var faceHelperIndex = 0;				
+				if(this.afterLoadFaceHelperCount > 0){
+					for(var i in this.afterLoadFaceHelper){
+						if(this.afterLoadFaceHelper[i] != null && this.afterLoadFaceHelper[i] == actualFace){
+							faceHelperIndex = i;
+						}
+					}
+				}
 				
-				this.afterLoadFaceHelper[actualFace] = url;
-				
-				var script = mw3.importScript(url, initializingFaceHelper);
-				
-				if(script==null)
+				if(faceHelperIndex == 0){
+					this.afterLoadFaceHelperCount++;
+					
+					faceHelperIndex = this.afterLoadFaceHelperCount;						
+				}
+				this.afterLoadFaceHelper[faceHelperIndex] = actualFace;
+
+				// import script				
+				if(!mw3.importScript(url, initializingFaceHelper))
 					return false;
-				
-				
 				
 				var startPos = 0;
 
@@ -742,30 +791,43 @@
 			}
 			
 			Metaworks3.prototype.importScript = function(scriptUrl, afterLoadScript){
+				
 				if(!this.loadedScripts[scriptUrl]){
-					try{
-						var head= document.getElementsByTagName('head')[0];
-						var script= document.createElement('script');
-						script.type= 'text/javascript';
-						script.src= scriptUrl;
-						head.appendChild(script);
-						this.loadedScripts[scriptUrl] = scriptUrl;
-						
-						if(afterLoadScript){						
-							script.onload = afterLoadScript;
+				   var result = false;
+				   
+				   mw3.loadedScripts[scriptUrl] = scriptUrl;
+				   
+				   //TODO: asynchronous processing performance issues later on
+				   $.ajax({
+					   async:false,
+					   url: scriptUrl,
+					   type:'GET',
+					   success:function(){
+						   	result = true;
 							
-							script.onreadystatechange = function() { //for IE
-								if (this.readyState == 'complete' || this.readyState == 'loaded') {
-									
-									afterLoadScript();
-								}
-							};
-						}
-											
-						return script;
-					}catch(e){
-						//console.debug(e);
-					}
+							// add script url
+							var head= document.getElementsByTagName('head')[0];
+							var script= document.createElement('script');
+							script.type= 'text/javascript';
+							script.src= scriptUrl;
+							head.appendChild(script);
+							
+							if(afterLoadScript){
+								script.onload = afterLoadScript;
+								
+								script.onreadystatechange = function() { //for IE
+									if (this.readyState == 'complete' || this.readyState == 'loaded') {
+										
+										mw3.afterLoadScript();
+									}
+								};
+							}
+					   },
+					   error:function(){
+					   }
+				   });
+				   
+				   return result;
 				}
 			}
 			
@@ -1415,21 +1477,8 @@
 				        			}
 				        			
 				        			mw3.loaded = true;
-									
-							    	for(var face in mw3.afterLoadFaceHelper){
-							    		if(mw3.afterLoadFaceHelper[face]){				    		
-								    		objectIds = mw3.objectIds_FaceMapping[face];
-								    		
-											for(var objectId in objectIds){
-												if(mw3.loadFaceHelper(objectId) != null){
-													mw3.afterLoadFaceHelper[face] = null;
-													mw3.objectIds_FaceMapping[face] = null;
-												}
-											}
-							    		}
-							    	}
-								
-									
+				        			mw3.onLoadFaceHelperScript();
+				        			
 				        			if(mw3.afterCall)
 				        				mw3.afterCall(svcNameAndMethodName, result);
 				        		},
