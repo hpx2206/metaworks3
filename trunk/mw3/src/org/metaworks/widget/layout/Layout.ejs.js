@@ -16,8 +16,6 @@ var org_metaworks_widget_layout_Layout = function(objectId, className){
 	this.south = $('#objDiv_' + objectId + '>.ui-layout-south');
 	
 	$('#objDiv_' + objectId).addClass('mw3_layout').attr('objectId', objectId);
-
-	console.debug('load');
 	
 	faceHelper.load();
 }
@@ -39,8 +37,6 @@ org_metaworks_widget_layout_Layout.prototype.load = function(){
 	
 	if(!options['center__onresize'])
 		options['center__onresize'] = 'mw3.getFaceHelper(\''+this.objectId+'\').resizeChild()';
-	
-	
 	
 	this.layout = $('#objDiv_' + this.objectId).layout(options);
 }
