@@ -7,8 +7,9 @@ var org_metaworks_example_ide_SourceCode = function(objectId, className){
 	this.className = className;
 
 	this.divName = "objDiv_" + objectId;	
-	
-	$("#" + this.divName).css("width", "100%").css("height", "90%").css("overflow", "hidden");
+			
+	$("#" + this.divName).css("width", "100%").css("height", '100%').css("overflow", "hidden");
+	$("#" + this.divName).addClass('mw3_editor').addClass('mw3_layout').attr('objectId', objectId);
 	
 //css("position", "absolute").
  this.editor = ace.edit(this.divName);
@@ -228,6 +229,15 @@ var org_metaworks_example_ide_SourceCode = function(objectId, className){
     		}
     	}
     }
+}
+
+org_metaworks_example_ide_SourceCode.prototype.resize = function(e){
+	console.debug('editor resize');
+	
+	this.editor.resize();
+	
+	console.debug('editor resize end');
+	
 }
 
 org_metaworks_example_ide_SourceCode.prototype.codeAssist = function(e){
