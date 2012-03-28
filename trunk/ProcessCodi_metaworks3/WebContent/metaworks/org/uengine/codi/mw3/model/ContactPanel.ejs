@@ -1,24 +1,17 @@
-<div class="boxmiddleright" style="height:75px">
-    <div class="boxmiddleleft">
-        <div class="worklistcontentcontainer">
+		<div class="pane ui-layout-north">
 			<%=fields.searchBox.here({when: 'contact'})%>
 		</div>
-	</div>
-</div>
-<div class="boxmiddleright">
-    <div class="boxmiddleleft">
-        <div class="worklistcontentcontainer"  style="overflow:auto;">
-			<%=fields.contactList.here()%>			
-			
+
+		<div class="pane ui-layout-center">
+			<div class="ui-layout-content">
+				<%=fields.contactList.here()%>
+			</div>
 		</div>
-	</div>
-</div>
-<div class="boxmiddleright" style="height:25px">
-    <div class="boxmiddleleft">
-    	 <div id="addcontact">
-    	 	<div id="btnAddContact" style="float:right">
-        			<a href="#" onclick="<%=methods.addContact.caller()%>"><img src="images/waveStyle/addContact_f.png" /></a>	   
-    	 	</div>
-         </div>
-	</div>
-</div>
+
+		<div class="pane ui-layout-south">
+			<div id="addcontact">
+				<div id="btnAddContact" style="float:right">
+					<a href="#" onclick="<%=methods.addContact.caller()%>"><img src="images/waveStyle/addContact_f.png" /></a>	   
+				</div>
+			</div>
+		</div>
