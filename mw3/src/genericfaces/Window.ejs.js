@@ -1,6 +1,4 @@
 var Window = function(objectId, className){
-	console.debug('window : ' + objectId);
-	
 	this.objectId = objectId;
 	this.className = className;
 
@@ -8,9 +6,6 @@ var Window = function(objectId, className){
 	this.smallDivId = '#sm_' + objectId;
 	
 	$(this.divId).addClass('mw3_window').addClass('mw3_layout').attr('objectId', objectId);
-	
-	
-	console.debug(objectId);
 	
 	
 	var faceHelper = this;
@@ -27,7 +22,6 @@ Window.prototype.load = function(){
 			spacing_closed:		0,
 			center__onresize:	'mw3.getFaceHelper('+this.objectId+').resizeChild()'
 	}
-
 
 	this.layout = $(this.divId).layout(options);
 }
