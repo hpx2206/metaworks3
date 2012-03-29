@@ -325,18 +325,21 @@ public class Database<T extends IDAO> implements IDAO, Serializable, Cloneable{
 		objInst.setObject(defaultValue);
 		//Object keyValue = objInst.getKeyFieldValue();
 		
-		
 		Class iDAOType = webObjectType.iDAOClass();
 		if(iDAOType == null) iDAOType = IDAO.class;
 		
-		GeneratedValue gv = (GeneratedValue) iDAOType.getMethod("get"+ webObjectType.metaworks2Type().getKeyFieldDescriptor().getName(), null).getAnnotation(GeneratedValue.class);
-		Long genKey = null;		
-		if(gv!=null) {			
-			if(gv.generator() != null || !gv.generator().equals("")) {
-				genKey = UniqueKeyGenerator.issueKey(webObjectType.metaworks2Type().getName(), TransactionContext.getThreadLocalInstance());
-				objInst.setFieldValue(webObjectType.metaworks2Type().getKeyFieldDescriptor().getName(), genKey);
+		Long genKey = null;
+		
+		if(webObjectType.metaworks2Type().getKeyFieldDescriptor() != null){			
+			GeneratedValue gv = (GeneratedValue) iDAOType.getMethod("get"+ webObjectType.metaworks2Type().getKeyFieldDescriptor().getName(), null).getAnnotation(GeneratedValue.class);
+					
+			if(gv!=null) {			
+				if(gv.generator() != null || !gv.generator().equals("")) {
+					genKey = UniqueKeyGenerator.issueKey(webObjectType.metaworks2Type().getName(), TransactionContext.getThreadLocalInstance());
+					objInst.setFieldValue(webObjectType.metaworks2Type().getKeyFieldDescriptor().getName(), genKey);
+				}
 			}
-		}		
+		}
 		//end
 		
 		//this will add the dao to cache list which would be inserted or updated when the transaction is committed
