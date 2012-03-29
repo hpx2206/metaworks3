@@ -40,8 +40,8 @@ Window.prototype.resize = function(){
 
 Window.prototype.resizeChild = function(){
 	
-	$(this.divId).find('.mw3_layout').each(function(){
-		var layoutId = $(this).attr('objectId');
+	$(this.divId).find('.mw3_layout:visible').each(function(index, value){
+		var layoutId = value.getAttribute('objectId');
 		
 		if(layoutId)
 			mw3.getFaceHelper(layoutId).resize();
@@ -55,8 +55,8 @@ Window.prototype.minimize = function(layoutName){
 		$(this.smallDivId).appendTo('.mw3_windowpanel');
 	
 	$(this.smallDivId).show();
-		
-	var layoutId = $(this.divId).closest('.mw3_layout').attr('objectId');
+
+	var layoutId = $(this.divId).parent().closest('.mw3_layout').attr('objectId');
 	if(layoutId)
 		mw3.getFaceHelper(layoutId).hide(layoutName);
 }
@@ -66,7 +66,7 @@ Window.prototype.resume = function(layoutName){
 	
 	$(this.smallDivId).hide();
 	
-	var layoutId = $(this.divId).closest('.mw3_layout').attr('objectId');
+	var layoutId = $(this.divId).parent().closest('.mw3_layout').attr('objectId');
 	if(layoutId)
 		mw3.getFaceHelper(layoutId).show(layoutName);
 }

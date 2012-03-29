@@ -49,8 +49,8 @@ Tab.prototype.resize = function(){
 
 Tab.prototype.resizeChild = function(){
 	
-	$('#objDiv_' + this.objectId).find('.mw3_layout').each(function(){
-		var layoutId = $(this).attr('objectId');
+	$('#objDiv_' + this.objectId).find('.mw3_layout').each(function(index, value){
+		var layoutId = value.getAttribute('objectId');
 		
 		if(layoutId)
 			mw3.getFaceHelper(layoutId).resize();
