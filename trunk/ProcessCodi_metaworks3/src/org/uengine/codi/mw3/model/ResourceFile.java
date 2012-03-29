@@ -253,7 +253,7 @@ public class ResourceFile implements ContextAware{
 		InstanceListPanel instanceList = new InstanceListPanel(session); //should return instanceListPanel not the instanceList only since there're one or more instanceList object in the client-side
 		//instanceList.load(session.login, session.navigation);
 
-		if(newInstancePanel!=null && newInstancePanel.getKnowledgeNodeId() == ""){
+		if(newInstancePanel!=null && newInstancePanel.getKnowledgeNodeId() != null){
 			WorkflowyNode parent = new WorkflowyNode(newInstancePanel.getKnowledgeNodeId());
 			parent.load();
 			
