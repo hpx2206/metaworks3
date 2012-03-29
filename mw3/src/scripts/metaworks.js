@@ -817,7 +817,7 @@
 										
 										afterLoadScript;
 									}
-								};y7
+								};
 							}
 					   },
 					   error:function(){
