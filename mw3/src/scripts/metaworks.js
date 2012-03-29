@@ -169,9 +169,6 @@
 					eval(faceHelperClass);
 					thereIsHelperClass = true;
 					
-					console.debug(objectId);
-					
-
 					if(thereIsHelperClass){
 						var faceHelper = eval("new " + faceHelperClass + "('" + objectId + "', '"+ className + "')");
 						
@@ -818,9 +815,9 @@
 								script.onreadystatechange = function() { //for IE
 									if (this.readyState == 'complete' || this.readyState == 'loaded') {
 										
-										mw3.afterLoadScript();
+										afterLoadScript;
 									}
-								};
+								};y7
 							}
 					   },
 					   error:function(){
