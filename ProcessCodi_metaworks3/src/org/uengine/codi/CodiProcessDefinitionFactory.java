@@ -8,9 +8,7 @@ import java.util.Calendar;
 import java.util.Map;
 
 import org.apache.commons.io.output.ByteArrayOutputStream;
-import org.metaworks.annotation.ServiceMethod;
 import org.uengine.codi.mw3.CodiClassLoader;
-import org.uengine.codi.mw3.admin.ClassDefinition;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.ProcessDefinition;
 import org.uengine.kernel.ProcessDefinitionFactory;
@@ -96,8 +94,6 @@ public class CodiProcessDefinitionFactory extends ProcessDefinitionFactory{
 		else
 			defFileName = sourceCodeBase + "/" + folder + "/" + name + "." + objectType;
 
-		System.out.println("definition path = " + defFileName);
-		
 		FileOutputStream fos = null;
 		try {
 			File classDefFile = new File(defFileName);
@@ -107,7 +103,7 @@ public class CodiProcessDefinitionFactory extends ProcessDefinitionFactory{
 			
 			String definitionInString = (String)definition;
 			
-			ByteArrayInputStream bai = new ByteArrayInputStream(definitionInString.getBytes());
+			ByteArrayInputStream bai = new ByteArrayInputStream(definitionInString.getBytes(GlobalContext.ENCODING));
 			UEngineUtil.copyStream(bai, fos);
 			
 			//GlobalContext.serialize(this, fos, Object.class);
