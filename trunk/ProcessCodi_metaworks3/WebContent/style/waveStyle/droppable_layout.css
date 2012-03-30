@@ -404,14 +404,14 @@ img {border:0;}
 #searchbox .inputleft{float:left; position:relative; left:-9px;width:9px;margin-right:-9px}
 #searchbox .inputcenter{float:left;width:100%;}  
 #searchbox .inputright{float:left; left:22px;width:22px;margin-left:-22px} 
-#searchbox ul li input {width:100%; background:#ffffff; height:17px; padding-top:1px; border:none; border-top:1px solid #8b9fbd; border-bottom:1px solid #8b9fbd;}
+#searchbox ul li input {width:100%; background:#ffffff; height:18px; padding-top:1px; border:none; border-top:1px solid #8b9fbd; border-bottom:1px solid #8b9fbd;}
 
 .adduserline{height:46px;}
 .adduserline dd{ margin:3px 0 0 3px; height:40px; line-height:40px; float:left; display:block;}
 
 
 
-.newprocessbtn{float:left;width:90px;margin-right:-100px; background:url(../../images/waveStyle/newProcess.gif) no-repeat; color:#fff; line-height:21px; text-align:center; font-weight:bolder;  font-size:11px; margin-right:10px; cursor:pointer;}
+.newprocessbtn{float:left;width:90px;margin-right:-100px; background:url(../../images/waveStyle/newProcess.gif) no-repeat; color:#fff; line-height:21px; height:21px; text-align:center; font-weight:bolder;  font-size:11px; margin-right:10px; cursor:pointer;}
 .searchboxarea{margin-left:110px;}
 .searchboxline2{ height:21px; padding-top:12px;}
 
