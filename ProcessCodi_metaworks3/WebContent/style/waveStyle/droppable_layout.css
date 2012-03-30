@@ -411,7 +411,8 @@ img {border:0;}
 
 
 
-.newprocessbtn{float:left;width:90px;margin-right:-100px; background:url(../../images/waveStyle/newProcess.gif) no-repeat; color:#fff; line-height:21px; height:21px; text-align:center; font-weight:bolder;  font-size:11px; margin-right:10px; cursor:pointer;}
+.newprocessbtn{float:left;width:90px;margin-right:-100px; background:url(../../images/waveStyle/newProcess.gif) no-repeat; color:#fff;  height:21px; text-align:center; font-weight:bolder;  font-size:11px; margin-right:10px; cursor:pointer;}
+#startBtn {line-height:21px;}
 .searchboxarea{margin-left:110px;}
 .searchboxline2{ height:21px; padding-top:12px;}
 
