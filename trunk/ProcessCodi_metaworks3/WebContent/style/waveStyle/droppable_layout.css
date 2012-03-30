@@ -397,7 +397,7 @@ img {border:0;}
 #contactsearchbox .inputleft{float:left; position:relative; left:-9px;width:9px;margin-right:-9px}
 #contactsearchbox .inputcenter{float:left;width:100%;}  
 #contactsearchbox .inputright{float:left; left:22px;width:22px;margin-left:-22px} 
-#contactsearchbox ul li input {width:100%; background:#ffffff; height:17px; padding-top:1px; border:none; border-top:1px solid #8b9fbd; border-bottom:1px solid #8b9fbd;}
+#contactsearchbox ul li input {width:100%; background:#ffffff; height:18px; padding-top:1px; border:none; border-top:1px solid #8b9fbd; border-bottom:1px solid #8b9fbd;}
 
 #searchbox {display:block; clear:both; content:''; background:#C9E2FC; border-bottom:#999 1px solid; border-left:#E4F1FE 1px solid; margin:0px;  padding:0px;}
 #searchbox .searchboxline{height:46px;  padding:0px 10px;}
