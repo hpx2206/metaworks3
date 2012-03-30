@@ -20,6 +20,8 @@ Window.prototype.load = function(){
 			togglerLength_open:	0, 
 			spacing_open:		0, 
 			spacing_closed:		0,
+			west__size: 3,
+			east__size: 7,
 			center__onresize:	'mw3.getFaceHelper('+this.objectId+').resizeChild()'
 	}
 
