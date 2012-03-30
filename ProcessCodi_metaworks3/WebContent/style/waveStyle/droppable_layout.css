@@ -169,7 +169,7 @@ img {border:0;}
 	background:url(../../images/waveStyle/t02_alert.png) no-repeat right top;
 }
 .boxmiddleright {
-	overflow:hidden;
+	/*overflow:hidden;*/
 	height:100%;
 	width:100%;
 	background:url(../../images/waveStyle/c02.png) right repeat-y;
@@ -232,7 +232,7 @@ img {border:0;}
 }
 .contentcontainer {
 	background:#fff;
-	margin:0 7px 0 3px;
+	/*margin:0 7px 0 3px;*/
 	height:100%;
 	overflow:auto;
 }
@@ -389,7 +389,7 @@ img {border:0;}
 #statusinput .inputbox .inputcenter input{width:100%; background:#fff; border:1px solid #7894bf;}
 #statusinput .inputbox  .inputright .statusbtn { height:18px; line-height:18px; display:block; width:44px; color:#fff; font-size:11px; background:#40577b; cursor:pointer;}
 
-#addcontact{background:#C9E2FC; height:25px; border-top:#999 1px solid; border-left:#E4F1FE 1px solid; margin:0px 7px 0px 3px; padding:5px;}
+#addcontact{background:#C9E2FC; height:25px; border-top:#999 1px solid; border-left:#E4F1FE 1px solid;  padding:5px;}
 #addcontact li{float:left;}
 
 
