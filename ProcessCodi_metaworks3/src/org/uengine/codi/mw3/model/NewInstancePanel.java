@@ -2,6 +2,7 @@ package org.uengine.codi.mw3.model;
 
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Face;
+import org.metaworks.annotation.Hidden;
 
 @Face(ejsPath="genericfaces/Window.ejs", displayName="New InstancePanel", options={"hideLabels"}, values={"true"})
 public class NewInstancePanel extends ContentWindow{
@@ -45,6 +46,7 @@ public class NewInstancePanel extends ContentWindow{
 		}
 		
 	String knowledgeNodeId;
+		@Hidden
 		public String getKnowledgeNodeId() {
 			return knowledgeNodeId;
 		}

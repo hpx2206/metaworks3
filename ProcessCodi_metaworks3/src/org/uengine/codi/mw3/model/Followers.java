@@ -35,6 +35,7 @@ public class Followers {
 		users.set("instanceId", instanceId);
 		users.select();
 		
+		/*
 		IUser users_ = (IUser) MetaworksDAO.createDAOImpl(IUser.class);
 
 		
@@ -47,8 +48,10 @@ public class Followers {
 		}
 		
 		users_.beforeFirst();
-		
 		setFollowers(users_);
+		*/
+		
+		setFollowers(users);
 		
 	}
 	
