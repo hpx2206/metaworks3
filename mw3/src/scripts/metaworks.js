@@ -146,7 +146,7 @@
 			
 			Metaworks3.prototype.loadFaceHelper = function(objectId){
 				
-				if(!this.objects[objectId])
+				if(this.objects[objectId]==null)
 					return null;
 				
 				if(!this.face_ObjectIdMapping[objectId])					
@@ -182,11 +182,11 @@
 					}
 					
 				}catch(e){
-					return null;
+					//return null;
 					//TODO :  error reporting required
 					//this.debug(e, true);
-					//if(console)
-						//console.log("Failed to load face helper ("+faceHelperClass+"(ejs.js)): " + e);
+					if(console)
+						console.log("Failed to load face helper ("+faceHelperClass+"(ejs.js)): " + e);
 				}
 			}
 
@@ -230,7 +230,8 @@
 				var registeredHelper = this.faceHelpers[objectId];
 				
 				return registeredHelper;
-				/*
+				
+				//TODO: ask cjw why
 				if(registeredHelper!=null)
 					return registeredHelper;
 				else{
@@ -238,7 +239,7 @@
 					
 					return this.faceHelpers[objectId];
 				}
-				*/
+				
 				
 			}
 			
@@ -709,7 +710,7 @@
 //							directFaceName
 //					);
 
-//					mw3.getFaceHelper(objectId)					
+					mw3.getFaceHelper(objectId);			
 					//end
 
 					return objectId;
@@ -820,7 +821,18 @@
 								};
 							}
 					   },
-					   error:function(){
+					   
+					   error:function(xhr){
+						
+						   //TODO: looks undesired validation or something is happening guessing by 
+						   //      the successful request is treated as an error. 
+						   //      It probably harmful to performance, so someday it should be fixed.
+						   
+						   if(xhr.status=='200'){
+							   this.success();
+						   }
+						   
+						   //alert(e.message);
 					   }
 				   });
 				   
@@ -967,6 +979,7 @@
     			if(this.objects[objectId] && this.getFaceHelper(objectId) && this.getFaceHelper(objectId).destory)
         			mw3.getFaceHelper(objectId).destory();
         			
+
     			
 				var divId =  "#objDiv_" + objectId;
 				
@@ -1098,6 +1111,17 @@
 				return inputElement;
 			}
 			
+			Metaworks3.prototype.getChildObjectId = function(parentObjectId, propName){
+				var beanPaths = mw3.beanExpressions[parentObjectId];
+
+				var beanPath = beanPaths["." + propName];
+				if(!beanPath) return null;
+				
+				return beanPath.valueObjectId;
+				
+			}
+			
+			
 			Metaworks3.prototype.getObject = function(){
 				var objectId;
 				
@@ -1215,8 +1239,10 @@
 					objId = this.targetObjectId;
 				}
 				
-				var getAgain = (arguments.length > 2 ? arguments[2] : true);
+				var getAgain = (arguments.length > 2 ? (arguments[2] ? arguments[2] : true) : true);
 				var sync = (arguments.length > 3 ? arguments[3] : false);
+				
+				
 
 //				if(typeof objId == 'number'){ //check if number
 	
@@ -1969,6 +1995,9 @@
 						objectTypeName,
 						"#objDiv_" + objectId
 				);
+				
+				//TODO: its kind of dummy.
+				//mw3.loadFaceHelper(objectId);
 	 			
 	 			return this._withTarget(objectId);
 			}
