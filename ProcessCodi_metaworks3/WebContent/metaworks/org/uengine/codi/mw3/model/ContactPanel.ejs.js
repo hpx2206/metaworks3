@@ -5,7 +5,7 @@ var org_uengine_codi_mw3_model_ContactPanel = function(objectId, className) {
 	this.divId = '#objDiv_' + objectId;	
 	
 	
-	$(this.divId).addClass('mw3_layout').attr('objecctId', objectId);
+	$(this.divId).addClass('mw3_layout').attr('objectId', objectId);
 	
 	var faceHelper = this;
 	
@@ -39,8 +39,8 @@ org_uengine_codi_mw3_model_ContactPanel.prototype.resize = function(){
 
 org_uengine_codi_mw3_model_ContactPanel.prototype.resizeChild = function(){
 	
-	$(this.divId).find('.mw3_layout').each(function(){
-		var layoutId = $(this).attr('objectId');
+	$(this.divId).find('.mw3_layout:visible').each(function(index, value){
+		var layoutId = value.getAttribute('objectId');
 		
 		if(layoutId)
 			mw3.getFaceHelper(layoutId).resize();
