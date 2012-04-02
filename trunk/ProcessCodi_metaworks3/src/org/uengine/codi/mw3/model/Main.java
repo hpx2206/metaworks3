@@ -15,11 +15,12 @@ public class Main {
 		
 		setSession(session);		
 
-
+		//
+		
 		Layout westLayout = new Layout();
 		westLayout.setNorth(new  NavigationWindow());
 		westLayout.setCenter(new ContactWindow(session.getUser()));
-		westLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, north__spacing_open:5");
+		westLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, north__spacing_open:5, north__size:'50%'");
 		westLayout.setName("west");
 		
 		Layout eastLayout = new Layout();
