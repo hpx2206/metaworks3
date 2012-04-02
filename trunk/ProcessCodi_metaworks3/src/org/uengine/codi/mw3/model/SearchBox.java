@@ -29,7 +29,7 @@ public class SearchBox {
 		
 
 	@ServiceMethod(callByContent=true)
-	public InstanceListPanel search() throws Exception{
+	public Object search() throws Exception{
 		System.out.println("keyword : " + getKeyword());
 		
 		InstanceListPanel instanceListPanel = new InstanceListPanel();
