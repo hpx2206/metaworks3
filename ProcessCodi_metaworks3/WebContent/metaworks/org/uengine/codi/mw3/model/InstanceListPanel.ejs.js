@@ -5,7 +5,7 @@ var org_uengine_codi_mw3_model_InstanceListPanel = function(objectId, className)
 	this.divId = "#objDiv_" + objectId;
 
 	
-	$(this.divId).addClass('mw3_layout').attr('objecctId', objectId);
+	$(this.divId).addClass('mw3_layout').attr('objectId', objectId);
 	
 	var faceHelper = this;
 	
@@ -27,11 +27,17 @@ org_uengine_codi_mw3_model_InstanceListPanel.prototype.load = function(){
 }
 
 org_uengine_codi_mw3_model_InstanceListPanel.prototype.destory = function(){
+	console.debug('instanceListPanel destory');
+	
+	console.debug($(this.divId));
+	
 	$(this.divId).layout().destroy();
 }
 
 org_uengine_codi_mw3_model_InstanceListPanel.prototype.resize = function(){
 	if(this.layout){
+		//console.debug('visible : ' + $(this.divId).visible);
+		
 		this.layout.resizeAll();
 		
 		this.resizeChild();
@@ -40,8 +46,8 @@ org_uengine_codi_mw3_model_InstanceListPanel.prototype.resize = function(){
 
 org_uengine_codi_mw3_model_InstanceListPanel.prototype.resizeChild = function(){
 	
-	$(this.divId).find('.mw3_layout').each(function(){
-		var layoutId = $(this).attr('objectId');
+	$(this.divId).find('.mw3_layout:visible').each(function(index, value){
+		var layoutId = value.getAttribute('objectId');
 		
 		if(layoutId)
 			mw3.getFaceHelper(layoutId).resize();
