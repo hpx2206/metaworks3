@@ -4,6 +4,10 @@ import org.uengine.codi.mw3.admin.WindowPanel;
 
 public class ProcessTopPanel {
 
+	public ProcessTopPanel() {
+		setWindowPanel(new WindowPanel());
+	}
+	
 	WindowPanel windowPanel;
 		public WindowPanel getWindowPanel() {
 			return windowPanel;
