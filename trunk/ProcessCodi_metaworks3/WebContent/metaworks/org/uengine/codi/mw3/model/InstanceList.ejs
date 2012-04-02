@@ -1,7 +1,17 @@
+<%if (value!=null){%>
+
+<%=fields.instances.here()%>
+
+<%=fields.moreInstanceList.here()%>
+
 <%
-	if (value){
+
+if(value.moreInstanceList==null){
 %>
-	<%=fields.instances.here()%>
-<%
-	}
-%>
+
+<div onclick="<%=methods.more.caller()%>">[more...]</div>
+
+
+<%}
+
+}%>
