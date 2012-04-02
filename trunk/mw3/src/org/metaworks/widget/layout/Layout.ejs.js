@@ -11,7 +11,7 @@ var org_metaworks_widget_layout_Layout = function(objectId, className){
 	
 	this.size = this.div.children().length;
 	this.name = object.name;
-	this.change = false;
+	//this.change = false;
 	
 	this.div.addClass('mw3_layout').attr('objectId', objectId);
 	
@@ -54,11 +54,13 @@ org_metaworks_widget_layout_Layout.prototype.show = function(target){
 		
 		mw3.getFaceHelper(parentId).show(this.name);
 	}else{
-		this.change = true;
+		//this.change = true;
 		
+		/*
 		$(this.divId + ' .mw3_layout').each(function(index, value){
 			mw3.getFaceHelper(value.getAttribute('objectId')).change = true;
-		});		
+		});
+		*/		
 	}
 	
 	if(target == 'center'){
@@ -73,7 +75,7 @@ org_metaworks_widget_layout_Layout.prototype.show = function(target){
 
 org_metaworks_widget_layout_Layout.prototype.hide = function(target){
 	
-	this.change = true;
+	//this.change = true;
 		
 	var hidden = this.div.children('.pane:hidden').length;
 	
@@ -94,10 +96,12 @@ org_metaworks_widget_layout_Layout.prototype.hide = function(target){
 		
 		mw3.getFaceHelper(parentId).hide(this.name);
 	}else{
+		/*
 		$(this.divId + ' .mw3_layout').each(function(index, value){
 			mw3.getFaceHelper(value.getAttribute('objectId')).change = true;
 		});
-
+		*/
+		
 		this.resize();	
 	}
 			
@@ -115,10 +119,10 @@ org_metaworks_widget_layout_Layout.prototype.toggle = function(target){
 
 org_metaworks_widget_layout_Layout.prototype.resize = function(){
 	
-	if(this.change && this.layout){
+	if(this.layout){
 		console.debug('resize : ' + this.objectId);
 		
-		this.change = false;		
+		// this.change = false;		
 		this.layout.resizeAll();
 		
 		console.debug(this.center.css('display'));
