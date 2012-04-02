@@ -29,12 +29,16 @@ public class SearchBox {
 		
 
 	@ServiceMethod(callByContent=true)
-	public Object search() throws Exception{
-		InstanceList instList = new InstanceList();
-		instList.load(getUser(), keyword);
-				
-		return instList;
+	public InstanceListPanel search() throws Exception{
+		System.out.println("keyword : " + getKeyword());
 		
+		InstanceListPanel instanceListPanel = new InstanceListPanel();
+		
+		instanceListPanel.setSearchBox(this);
+		instanceListPanel.setInstList(new InstanceList());
+		instanceListPanel.getInstList().load(getUser(), getKeyword());
+				
+		return instanceListPanel;		
 	}
 	
 	MetaworksContext metaworksContext;
