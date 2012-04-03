@@ -18,3 +18,11 @@ java_lang_Number.prototype.keydown = function(){
     	 return false;
      }	
 }
+
+java_lang_Number.prototype.getValue = function(){
+	
+	var strValue = mw3.getObjectFromUI(this.objectId);
+	
+	//change to number
+	return eval(strValue);
+}

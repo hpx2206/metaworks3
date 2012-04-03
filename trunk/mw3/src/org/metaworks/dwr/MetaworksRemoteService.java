@@ -44,8 +44,11 @@ public class MetaworksRemoteService {
 			MetaworksRemoteService.instance = instance;
 		}
 		public static MetaworksRemoteService getInstance() {
-			if(instance==null)
-				instance = new MetaworksRemoteService();
+
+			if(instance==null){
+
+					instance = new MetaworksRemoteService();
+			}
 			
 			return instance;
 		}

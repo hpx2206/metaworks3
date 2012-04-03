@@ -1,9 +1,11 @@
 package org.metaworks.dwr;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.util.Map;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -17,6 +19,8 @@ import org.metaworks.dao.ConnectionFactory;
 import org.metaworks.dao.JDBCConnectionFactory;
 import org.metaworks.dao.TransactionContext;
 
+import com.thoughtworks.xstream.XStream;
+
 public class TransactionalDwrServlet extends DwrServlet{
 
 
@@ -25,6 +29,10 @@ public class TransactionalDwrServlet extends DwrServlet{
 	public static boolean useSpring = false;
 	
 	public static ConnectionFactory connectionFactory;
+	
+	XStream xstream = new XStream(/*new DomDriver()*/);
+
+
 	
 	
 	@Override
@@ -74,6 +82,9 @@ public class TransactionalDwrServlet extends DwrServlet{
         	if(pathInfo.endsWith(".png"))
         		mimeType = "image/png";
         	
+        	if(pathInfo.endsWith(".css"))
+        		mimeType = "text/css";
+        	
         	
         	response.setContentType(mimeType + "; charset=UTF-8");
         	response.setHeader("Cache-Control", "no-cache"); //HTTP 1.1
@@ -112,6 +123,7 @@ public class TransactionalDwrServlet extends DwrServlet{
         }
 
         
+        
 		//end check if
 		
 		
@@ -135,16 +147,42 @@ public class TransactionalDwrServlet extends DwrServlet{
 		
 
 		try{
-			super.doPost(request, response);
 			
-			Replies replies = (Replies) tx.getSharedContext("replies");
-			
-			if(replies!=null)
-			for(Reply reply : replies){
-				if(reply.getThrowable()!=null){
-					throw reply.getThrowable();
+	        //Handles XStream-based RPC 
+	        if(pathInfo.startsWith("dwr/xstr-rpc/")){
+	        	
+	        	String className = request.getParameter("className");
+	        	String methodName = request.getParameter("methodName");
+
+	        	String objectStr = request.getParameter("object");
+	        	String autowiredFieldsStr = request.getParameter("autowiredFields");
+	        	
+				Object object = xstream.fromXML(new ByteArrayInputStream(objectStr.getBytes()));
+				Map<String, Object> autowiredFields = (Map<String, Object>) xstream.fromXML(new ByteArrayInputStream(autowiredFieldsStr.getBytes()));
+	        	
+	        	MetaworksRemoteService metaworksRemoteService = MetaworksRemoteService.getInstance();
+	        	Object rtnValue = metaworksRemoteService.callMetaworksService(className, object, methodName, autowiredFields);
+	        	
+	        	xstream.toXML(rtnValue, response.getOutputStream());
+	        	
+	        	response.flushBuffer();
+	        	
+	        	
+	        }else{
+
+				
+				//Handles DWR request
+				super.doPost(request, response);
+				
+				Replies replies = (Replies) tx.getSharedContext("replies");
+				
+				if(replies!=null)
+				for(Reply reply : replies){
+					if(reply.getThrowable()!=null){
+						throw reply.getThrowable();
+					}
 				}
-			}
+	        }
 			
 			tx.commit();
 		}catch(Throwable e){
