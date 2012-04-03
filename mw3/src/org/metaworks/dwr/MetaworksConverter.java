@@ -51,6 +51,22 @@ public class MetaworksConverter extends BeanConverter{
     {
     	
     	try {
+    		
+		 	if(paramType == Object.class){
+		 		if("string".equals(data.getType())){
+		 			paramType = String.class;
+		 			
+		 			StringConverter stringConverter = new StringConverter();
+		 			return stringConverter.convertInbound(String.class, data);
+		 			
+		 		}else if("number".equals(data.getType())){
+		 			paramType = Number.class;
+		 			
+		 			ObjectConverter objectConverter = new ObjectConverter();
+		 			return objectConverter.convertInbound(paramType, data);
+		 		}
+		 	}
+
     		 //when unknown object from javascript, metaworks need to get the class Information from the JSON's property value '__className'
 			if(paramType == Object.class){
 			 	String value = data.getValue();
@@ -76,20 +92,6 @@ public class MetaworksConverter extends BeanConverter{
 				    }
 			 	}
 			 	
-			 	if(paramType == Object.class){
-			 		if("string".equals(data.getType())){
-			 			paramType = String.class;
-			 			
-			 			StringConverter stringConverter = new StringConverter();
-			 			return stringConverter.convertInbound(String.class, data);
-			 			
-			 		}else if("number".equals(data.getType())){
-			 			paramType = Number.class;
-			 			
-			 			ObjectConverter objectConverter = new ObjectConverter();
-			 			return objectConverter.convertInbound(paramType, data);
-			 		}
-			 	}
 			}
 			   	
 			

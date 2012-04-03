@@ -592,7 +592,7 @@
 					var targetDivId = this._getObjectDivId(objectId);
 					var theDiv = $("#" + targetDivId);
 					
-					if(theDiv[0])
+					if(theDiv[0] && metadata)
 				    for(var methodName in metadata.serviceMethodContexts){
 				   		var methodContext = metadata.serviceMethodContexts[methodName];
 
@@ -923,7 +923,7 @@
 				
 				var metadata = this.getMetadata(className);
 				
-				html="<div id='"+divId+ "'" + (metadata.focusable ? " tabindex='"+objectId+"'" : "") + " className='" + className + "'>...  LOADING PROPERTY ...</div><div id='"+infoDivId+"'></div>";
+				html="<div id='"+divId+ "'" + (metadata && metadata.focusable ? " tabindex='"+objectId+"'" : "") + " className='" + className + "'>...  LOADING PROPERTY ...</div><div id='"+infoDivId+"'></div>";
 				
 				html+="<" + "script>";
 				html+="   mw3.showObjectWithObjectId('"+this.objectId+"','"+className+"', '#"+divId+"'"+(options ? ", "+ JSON.stringify(options) : "") +");"
@@ -1423,8 +1423,9 @@
 								        				var mappedObjdivId = "objDiv_" + mappedObjId;
 								        				
 //								        				mw3.debug("render start");
+								        		
 								        				
-								        				if(mappedObjId && document.getElementById(divId)){ //if there's mappedObjId exists, replace that div part.
+								        				if(mappedObjId && document.getElementById(mappedObjdivId)){ //if there's mappedObjId exists, replace that div part.
 								        					
 								        					if(serviceMethodContext.target=="append"){
 								        						mw3.locateObject(result_, null, "#"+mappedObjdivId);
