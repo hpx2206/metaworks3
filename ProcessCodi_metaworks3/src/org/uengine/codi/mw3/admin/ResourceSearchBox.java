@@ -33,7 +33,7 @@ public class ResourceSearchBox extends SearchBox {
 
 		ArrayList<ResourceFile> found = new ArrayList<ResourceFile>();
 		
-		String resourceBase = CodiClassLoader.getMyClassLoader().sourceCodeBase() + "/";
+		String resourceBase = CodiClassLoader.getMyClassLoader().sourceCodeBase();
 
 		find(resourceBase, resourceBase, found);
 	
@@ -57,8 +57,6 @@ public class ResourceSearchBox extends SearchBox {
                 find(afile[i].getPath(), base, found);
         }
     }
-    
-    
     
     protected ResourceFile convert(File file, String base){
 		ResourceFile rf = new ResourceFile();

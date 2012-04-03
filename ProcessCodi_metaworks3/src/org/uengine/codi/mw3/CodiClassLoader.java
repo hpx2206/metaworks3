@@ -351,8 +351,13 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
                     className,
                     Kind.SOURCE
                 );
+                
+                
                 if (sourceFileObject == null) {
-                    throw new DiagnosticException("Source for '" + className + "' not found");
+ //                   throw new DiagnosticException("Source for '" + className + "' not found");
+                    throw new ClassNotFoundException("Source for '" + className + "' not found");
+                	
+                	//return null;
                 }
 
                 // Compose the effective compiler options.

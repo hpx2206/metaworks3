@@ -21,11 +21,11 @@ public class ProcessDefinition extends Database<IProcessDefinition> implements I
 			this.author = author;
 		}
 
-	String defId;
-		public String getDefId() {
+	Long defId;
+		public Long getDefId() {
 			return defId;
 		}
-		public void setDefId(String defId) {
+		public void setDefId(Long defId) {
 			this.defId = defId;
 		}
 	
@@ -183,15 +183,12 @@ public class ProcessDefinition extends Database<IProcessDefinition> implements I
 	}
 	
 	public void drillDown() throws Exception{
-		//setting the facebook user Id into session attribute;
-		HttpSession session = TransactionContext.getThreadLocalInstance().getRequest().getSession(); 
-		session.setAttribute("defId", getDefId().toString());
 		
 		if(childs!=null) childs = null;
 		else{
 		//if(getIsFolder()){ //this will not tell right value since it would be called by key object not the full object. it would be set by the ejs face will not create "drillDown" button.
 			ProcessDefinition child = new ProcessDefinition();
-			child.setParentFolder(getDefId());
+			child.setParentFolder(getDefId().toString());
 			setIsFolder(true);
 			child.setMetaworksContext(getMetaworksContext());
 			
@@ -235,7 +232,7 @@ public class ProcessDefinition extends Database<IProcessDefinition> implements I
 	@Override
 	public NewChildWindow newChild() throws Exception {
 		NewChildWindow newChildWindow = new NewChildWindow(); 
-		newChildWindow.setParentFolder(getDefId());
+		newChildWindow.setParentFolder(getDefId().toString());
 		
 		return newChildWindow;
 	}
@@ -247,8 +244,8 @@ public class ProcessDefinition extends Database<IProcessDefinition> implements I
 		
 		
 		//setting the facebook user Id into session attribute;
-		HttpSession session = TransactionContext.getThreadLocalInstance().getRequest().getSession(); 
-		session.setAttribute("defId", getDefId());
+//		HttpSession session = TransactionContext.getThreadLocalInstance().getRequest().getSession(); 
+//		session.setAttribute("defId", getDefId());
 		
 //		try{
 		
@@ -291,7 +288,7 @@ public class ProcessDefinition extends Database<IProcessDefinition> implements I
 		contextMenuPopup.setName("");
 		
 		ProcessDefinitionContextMenu contextMenu = new ProcessDefinitionContextMenu();
-		contextMenu.setDefId(getDefId());
+		contextMenu.setDefId(getDefId().toString());
 		
 		contextMenuPopup.setPanel(contextMenu);
 		

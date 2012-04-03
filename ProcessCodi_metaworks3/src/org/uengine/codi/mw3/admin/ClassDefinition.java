@@ -570,13 +570,16 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		return popup;		
 	}
 
-		
-	@Override
-	public ArrayList<String> listProperties() {
+
+	public static ArrayList<String> listProperties(String className) {
 		try {
 			
+			if(className.startsWith("[")){
+				className = className.substring(1, className.length()-6);
+				className = className.replace("/", ".");
+			}
 			
-			WebObjectType type = MetaworksRemoteService.getInstance().getMetaworksType(getPackageName() + "." + getClassName());
+			WebObjectType type = MetaworksRemoteService.getInstance().getMetaworksType(className);
 			
 			ArrayList array = new ArrayList();
 			for (WebFieldDescriptor wfd: type.getFieldDescriptors()) {
@@ -590,6 +593,13 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		}
 		
 		return null;
+	}
+	
+	@Override
+	public ArrayList<String> listProperties() {
+			
+		return listProperties(getPackageName() + "." + getClassName());
+			
 	}
 	
 	

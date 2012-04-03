@@ -59,25 +59,21 @@ public class RuleDesignerContentPanel extends ContentWindow {
 //	@Autowired ProcessManagerRemote processManager;
 	
 	RuleVariableDefinition ruleVariableDefinition;
-	
-	public RuleVariableDefinition getRuleVariableDefinition() {
-		return ruleVariableDefinition;
-	}
-
-	public void setRuleVariableDefinition(
-			RuleVariableDefinition ruleVariableDefinition) {
-		this.ruleVariableDefinition = ruleVariableDefinition;
-	}
+		public RuleVariableDefinition getRuleVariableDefinition() {
+			return ruleVariableDefinition;
+		}
+		public void setRuleVariableDefinition(
+				RuleVariableDefinition ruleVariableDefinition) {
+			this.ruleVariableDefinition = ruleVariableDefinition;
+		}
 	
 	RuleDefinition ruleDefinition;
-	
-	public RuleDefinition getRuleDefinition() {
-		return ruleDefinition;
-	}
-
-	public void setRuleDefinition(RuleDefinition ruleDefinition) {
-		this.ruleDefinition = ruleDefinition;
-	}
+		public RuleDefinition getRuleDefinition() {
+			return ruleDefinition;
+		}
+		public void setRuleDefinition(RuleDefinition ruleDefinition) {
+			this.ruleDefinition = ruleDefinition;
+		}
 
 	public void newRule() throws Exception {
 		

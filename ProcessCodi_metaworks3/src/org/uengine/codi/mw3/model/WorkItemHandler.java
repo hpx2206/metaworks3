@@ -20,7 +20,7 @@ import org.uengine.kernel.ProcessInstance;
 import org.uengine.kernel.ResultPayload;
 import org.uengine.processmanager.ProcessManagerRemote;
 
-@Face(ejsPath="genericfaces/Window.ejs", options={"hideLabels"}, values={"true"}, displayName="업무 처리 화면")
+//@Face(ejsPath="faces/org/metaworks/widget/Window.ejs", options={"hideLabels"}, values={"true"}, displayName="업무 처리 화면")
 public class WorkItemHandler implements ContextAware{
 	
 	public WorkItemHandler(){} //to be spring bean without argument, this is required.
@@ -188,7 +188,7 @@ public class WorkItemHandler implements ContextAware{
 		}
 		
 		processManager.completeWorkitem(getInstanceId(), getTracingTag(), getTaskId().toString(), rp );
-		
+		processManager.applyChanges();
 		
 		//refreshes the instanceview so that the next workitem can be show up
 		Instance instance = new Instance();

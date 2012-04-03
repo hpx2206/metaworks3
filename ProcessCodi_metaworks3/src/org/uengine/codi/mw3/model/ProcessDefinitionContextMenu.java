@@ -26,7 +26,7 @@ public class ProcessDefinitionContextMenu {
 	
 		
 		ProcessDefinition def = new ProcessDefinition();
-		def.setDefId(getDefId());
+		def.setDefId(new Long(getDefId()));
 
 		String userId = (String) TransactionContext.getThreadLocalInstance().getRequest().getSession().getAttribute("userId");
 

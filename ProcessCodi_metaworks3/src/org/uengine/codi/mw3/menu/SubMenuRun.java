@@ -11,11 +11,11 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.TransactionContext;
+import org.metaworks.widget.Window;
 import org.metaworks.widget.menu.SubMenu;
 import org.uengine.codi.mw3.admin.ClassDefinition;
 import org.uengine.codi.mw3.model.MobileWindow;
 import org.uengine.codi.mw3.model.TemplateDesigner;
-import org.uengine.codi.mw3.model.Window;
 import org.uengine.codi.mw3.widget.IFrame;
 import org.uengine.codi.platform.Console;
 

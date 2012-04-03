@@ -93,6 +93,7 @@
 %>
 
 		<property name="bpm_host" value="<%=host%>"/>		
+		<property name="userId" value="<%=request.getParameter("userId")%>"/>		
 <%
 		if(port > 0){
 %>

@@ -23,6 +23,7 @@ import org.metaworks.website.ImageContents;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.website.ParagraphContents;
 import org.metaworks.website.SourceCodeContents;
+import org.metaworks.widget.Window;
 
 @Table(name = "bpm_worklist")
 @Face(
@@ -114,8 +115,8 @@ public interface IWorkItem extends IDAO{
 		@ServiceMethod(when = WHEN_VIEW)
 		public void like() throws Exception;
 		
-		@ServiceMethod(when = WHEN_VIEW, callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
-		public Window detail() throws Exception;
+		@ServiceMethod(when = WHEN_VIEW, callByContent=true)//, target=ServiceMethodContext.TARGET_POPUP)
+		public WorkItemHandler detail() throws Exception;
 
 		@ServiceMethod(callByContent = true, target=ServiceMethodContext.TARGET_SELF)
 		public WorkItem[] add() throws Exception;

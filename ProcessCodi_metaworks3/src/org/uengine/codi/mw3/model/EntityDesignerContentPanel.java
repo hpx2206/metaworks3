@@ -46,7 +46,7 @@ public class EntityDesignerContentPanel extends ContentWindow {
 			
 			try {
 				ProcessDefinition def = new ProcessDefinition();
-				def.setDefId(defId);
+				def.setDefId(new Long(defId));
 				String authorId = def.databaseMe().getAuthor();
 				
 				User author = new User();

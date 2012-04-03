@@ -15,19 +15,25 @@
 %>
 <%! 
 	private ArrayList readForm(String id, ProcessManagerRemote pm) throws Exception {
-		String prodVerId = pm.getProcessDefinitionProductionVersion(id);
+/*		String prodVerId = pm.getProcessDefinitionProductionVersion(id);
 		String strFormDef = pm.getResource(prodVerId);
 		
-		Object definition = GlobalContext.deserialize(strFormDef, String.class);
+ 		Object definition = GlobalContext.deserialize(strFormDef, String.class);
 		
 		if(definition instanceof PropertyListable){
 			return ((PropertyListable)definition).listProperties();	
 		}
-		
-		return null;
+ */
+ 		return ClassDefinition.listProperties(id);		
+ 
     }
 %><jsp:useBean id="processManagerFactory" scope="application" class="org.uengine.processmanager.ProcessManagerFactoryBean" />
 <%
+
+	String userId = request.getParameter("userId");
+
+	request.getSession().setAttribute("userId", userId);
+
 	org.uengine.codi.mw3.CodiDwrServlet.initClassLoader();
 
 	//load up the formfield

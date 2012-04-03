@@ -26,9 +26,9 @@ public class MainMenuTop extends MainMenu {
 	}	
 	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
-	@Face(displayName="&Window")
-	public SubMenuWindow window() throws Exception {
-		return new SubMenuWindow();
+	@Face(displayName="&Project")
+	public SubMenuProject project() throws Exception {
+		return new SubMenuProject();
 	}	
 
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)

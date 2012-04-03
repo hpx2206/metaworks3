@@ -15,9 +15,9 @@ import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Test;
 import org.metaworks.dao.TransactionContext;
+import org.metaworks.widget.Window;
 import org.uengine.codi.mw3.model.MobileWindow;
 import org.uengine.codi.mw3.model.TemplateDesigner;
-import org.uengine.codi.mw3.model.Window;
 import org.uengine.codi.mw3.widget.IFrame;
 import org.uengine.codi.platform.Console;
 
