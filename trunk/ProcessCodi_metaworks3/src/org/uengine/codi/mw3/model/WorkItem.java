@@ -3,13 +3,11 @@ package org.uengine.codi.mw3.model;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
-import org.metaworks.annotation.Range;
-import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
 import org.metaworks.example.ide.SourceCode;
 import org.metaworks.website.MetaworksFile;
+import org.metaworks.widget.Window;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.persistence.dao.DAOFactory;
 import org.uengine.persistence.dao.UniqueKeyGenerator;
 import org.uengine.processmanager.ProcessManagerBean;
 import org.uengine.processmanager.ProcessManagerRemote;
@@ -146,7 +144,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			this.tool = tool;
 		}
 
-	public Window detail() throws Exception{
+	public WorkItemHandler detail() throws Exception{
 
 		Long instId = databaseMe().getInstId(); //since it knows metaworks IDAO will load all the field members from the table beyond the listed by setter/getter.
 		String tracingTag = (String) databaseMe().get("trcTag"); //since it knows metaworks IDAO will load all the field members from the table beyond the listed by setter/getter.
@@ -170,7 +168,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		
 		workItemHandler.load();
 		
-		return new Window(workItemHandler);
+		return /*new Window(*/workItemHandler;//);
 	}
 	
 	@Autowired

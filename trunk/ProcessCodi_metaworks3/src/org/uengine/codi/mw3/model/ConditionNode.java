@@ -1,6 +1,6 @@
 package org.uengine.codi.mw3.model;
 
-public class ConditionNode extends Node {
+public class ConditionNode extends DecisionTreeNode {
 
 	
 }

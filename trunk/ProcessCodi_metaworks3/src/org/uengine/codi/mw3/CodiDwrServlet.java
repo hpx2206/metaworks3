@@ -301,9 +301,9 @@ public class CodiDwrServlet extends TransactionalDwrServlet{
 //		if(sourceCodeBase==null)
 //			sourceCodeBase = "/Users/jyjang/javasources/";
 
-		//TODO: need to be more cohesive  
+		//TODO: for guest users, sourceCodeBase to the main committer is right answer.
 		if(sourceCodeBase==null)
-			sourceCodeBase = cl.sourceCodeBase();
+			sourceCodeBase = "/Users/jyjang/codebase/1401720840/src/";
 		
 		cl.setSourcePath(new File[]{new File(sourceCodeBase)});
 				

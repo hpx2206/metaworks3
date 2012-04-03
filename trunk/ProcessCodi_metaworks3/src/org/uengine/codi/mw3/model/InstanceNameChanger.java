@@ -43,10 +43,12 @@ public class InstanceNameChanger {
 		}
 
 	@ServiceMethod(callByContent=true, keyBinding="enter")
-	public void change() throws Exception{
+	public IInstance change() throws Exception{
 		Instance instance = new Instance();
 		instance.setInstId(new Long(instanceId));
 		instance.databaseMe().setName(getInstanceName());
+		
+		return instance.databaseMe();
 	}
 	
 	

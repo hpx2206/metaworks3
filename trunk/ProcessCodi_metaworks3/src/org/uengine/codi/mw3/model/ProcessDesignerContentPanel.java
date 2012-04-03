@@ -55,6 +55,8 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 		setDefVerId(defVerId);
 		setDefId(defId);
 		
+	//	setDefinitionString(processManager.getProcessDefinition(defVerId, "UTF-8"));
+		
 	//	processManager.remove();
 	}
 	
@@ -120,6 +122,8 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 		defId = processManager.addProcessDefinition(name, 0, description, false, definitionString, parentFolder, defId, "process", name, null);
 
 	}
+	
+	
 
 	@Autowired
 	public ProcessManagerRemote processManager;

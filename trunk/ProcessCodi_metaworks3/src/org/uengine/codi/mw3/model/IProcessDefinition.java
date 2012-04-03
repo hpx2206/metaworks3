@@ -22,7 +22,7 @@ import org.metaworks.dao.IDAO;
 	)
 public interface IProcessDefinition extends IDAO{
 
-	@ServiceMethod(callByContent=true)
+	@ServiceMethod(callByContent=true, except="childs")
 	public void drillDown() throws Exception;
 	
 	@ServiceMethod
@@ -40,8 +40,8 @@ public interface IProcessDefinition extends IDAO{
 	public IProcessDefinition findAll() throws Exception;
 
 	@Id
-	public String getDefId();
-	public void setDefId(String defId);
+	public Long getDefId();
+	public void setDefId(Long defId);
 	
 	public String getDescription();
 	public void setDescription(String description);

@@ -12,19 +12,7 @@
 if(value.parentFolder){%>
 
 
-<a href="/uengine-web/processmanager/ProcessDesigner.jnlp?folderId=<%=value.parentFolder%>">Launch Process Designer</a>
-<p>
-Name:
-<%=fields.name.here()%>
-
-Description:
-<%=fields.description.here()%>
-
-Definition XML:
-<%=fields.definitionString.here()%>
-
-<%=methods.save.here()%>
-
+<a href="/uengine-web/processmanager/ProcessDesigner.jnlp?folderId=<%=value.parentFolder%>&userId=<%=mw3.getAutowiredObject('org.uengine.codi.mw3.model.Session').user.userId%>">New Process</a>
 
 <%}else{%>
 
@@ -34,7 +22,7 @@ FlowChart:
 <%=value.chartHTML%>
 
 
-<a href="/uengine-web/processmanager/ProcessDesigner.jnlp?defId=<%=value.defId%>&defVerId=<%=value.defVerId%>">Edit</a>
+<a href="/uengine-web/processmanager/ProcessDesigner.jnlp?defId=<%=value.defId%>&defVerId=<%=value.defVerId%>&userId=<%=mw3.getAutowiredObject('org.uengine.codi.mw3.model.Session').user.userId%>">Edit</a>
 
 <%}%>
 

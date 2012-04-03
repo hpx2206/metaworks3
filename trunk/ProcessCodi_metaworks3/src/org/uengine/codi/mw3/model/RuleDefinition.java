@@ -1,8 +1,13 @@
 package org.uengine.codi.mw3.model;
+import java.util.ArrayList;
+
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
+import org.uengine.codi.mw3.admin.ClassField;
+import org.uengine.codi.platform.Console;
 import org.uengine.kernel.DefaultProcessInstance;
 import org.uengine.kernel.ProcessInstance;
 import org.uengine.kernel.ProcessVariable;
@@ -12,37 +17,32 @@ import org.uengine.kernel.SwitchActivity;
 public class RuleDefinition implements ContextAware {
 
 	transient MetaworksContext metaworksContext;
-	public MetaworksContext getMetaworksContext() {
-		return metaworksContext;
-	}
-	public void setMetaworksContext(MetaworksContext metaworksContext) {
-		this.metaworksContext = metaworksContext;
-	} 
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
+		} 
 	
-	private Node nodes;
+	private DecisionTreeNode nodes;
+		public DecisionTreeNode getNodes() {
+			return nodes;
+		}
+		public void setNodes(DecisionTreeNode nodes) {
+			this.nodes = nodes;
+		}
 	
-	public Node getNodes() {
-		return nodes;
-	}
-
-	public void setNodes(Node nodes) {
-		this.nodes = nodes;
-	}
-	
-//	public Map getVariables() {
-//		return variables;
-//	}
-//
-//	public void setVariables(Map variables) {
-//		this.variables = variables;
-//	}
-
+		
+	@AutowiredFromClient
+	public RuleVariableDefinition ruleVariableDefinition;
+		
 	public RuleDefinition() {
 				
 	}
 	
 	public void init() {
-		this.nodes = new Node("Root Node",true);
+		this.nodes = new DecisionTreeNode();
+		this.nodes.setRoot(true);
 		this.nodes.setMetaworksContext(new MetaworksContext());
 		this.nodes.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		this.nodes.setValue("");
@@ -50,50 +50,47 @@ public class RuleDefinition implements ContextAware {
 	
 	@ServiceMethod(callByContent=true)
 	public void execute() {
-		
-		org.uengine.kernel.ProcessDefinition def = new org.uengine.kernel.ProcessDefinition();
-		
-//		ArrayList<ClassField> variables = this.variableDefinition.getClassFields();
-//		for(int i=0;i<variables.size();i++) {
-//			
-//		}
-		
-		def.setProcessVariables(new ProcessVariable[]{ProcessVariable.forName("연령"), ProcessVariable.forName("성별")});
-		
-		SwitchActivity switchAct = nodes.createSwitchActivity();
-		def.addChildActivity(switchAct);
-		def.registerToProcessDefinition(true, true);
-		
 		try {
 			
+			org.uengine.kernel.ProcessDefinition def = new org.uengine.kernel.ProcessDefinition();
+			
+			def.addChildActivity(getNodes().createActivity());
+			def.registerToProcessDefinition(true, false);
+	
 			ProcessInstance pi = new DefaultProcessInstance();
 			pi.setProcessDefinition(def);
+	
+			ArrayList<ClassField> variables = this.ruleVariableDefinition.getClassFields();
+			ProcessVariable[] pvs = new ProcessVariable[variables.size()];
+			for(int i=0;i<variables.size();i++) {
+				
+				ClassField variable = variables.get(i);
+				
+				String variableName = variable.getFieldName();
+				pvs[i] = ProcessVariable.forName(variableName);
+				
+				pi.set(variableName, variable.getDefaultValue());
+			}
 			
-			pi.set("연령", 25);
-			pi.set("성별", "남");
+			def.setProcessVariables(pvs);
+					
 			pi.execute();
 			
-			System.out.println(pi.get("보험료"));
+			for(int i=0;i<variables.size();i++) {
+				
+				ClassField variable = variables.get(i);
+				String variableName = variable.getFieldName();
+				
+				Console.addLog("<ul>");
+				Console.addLog("<li>" + variableName + "=" + pi.get(variableName) + "<br>");
+				Console.addLog("</ul>");
+			}
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-//		
-//		switchAct.setConditions(value);
-//		
-//		
-//		System.out.println("Rule Definition execute()");
-				
-//		Iterator<String> iterator = variables.keySet().iterator();
-//	    while (iterator.hasNext()) {
-//	        String key = (String) iterator.next();
-//	        System.out.print("key="+key);
-//	        System.out.println(" value="+variables.get(key));
-//	    }
-	    
-//	    nodes.execute();
 		
 	}
 

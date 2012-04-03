@@ -1,47 +1,25 @@
 package org.uengine.codi.mw3.model;
 
-import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 
-@Face(ejsPath="genericfaces/Window.ejs", displayName="New InstancePanel", options={"hideLabels"}, values={"true"})
+@Face(ejsPath="genericfaces/WindowTab.ejs", displayName="New InstancePanel", options={"hideLabels"}, values={"true"})
 public class NewInstancePanel extends ContentWindow{
 	
 	public NewInstancePanel() throws Exception{
-//		processDefinitions = new ProcessDefinition();
-//		processDefinitions.setParentFolder("");
-//		processDefinitions.getMetaworksContext().setWhen("newInstance");
-//
-//		processDefinitions = processDefinitions.findAll();
-//		processDefinitions.getMetaworksContext().setWhen("newInstance");
-
-		
-		processDefinitions = new ResourceFile();
-		
-		processDefinitions.setMetaworksContext(new MetaworksContext());	
+		processDefinitions = new ProcessDefinition();
+		processDefinitions.setParentFolder("-1");
 		processDefinitions.getMetaworksContext().setWhen("newInstance");
 
-		processDefinitions.setFolder(true);
-		processDefinitions.setAlias("");
-		processDefinitions.setName("/");
-		processDefinitions.drillDown();
-		
-
+		processDefinitions = processDefinitions.findAll();
+		processDefinitions.getMetaworksContext().setWhen("newInstance");		
 	}
 	
-//	IProcessDefinition processDefinitions;	
-//		public IProcessDefinition getProcessDefinitions() {
-//			return processDefinitions;
-//		}	
-//		public void setProcessDefinitions(IProcessDefinition processDefinitions) {
-//			this.processDefinitions = processDefinitions;
-//		}
-	
-	ResourceFile processDefinitions;
-		public ResourceFile getProcessDefinitions() {
+	IProcessDefinition processDefinitions;	
+		public IProcessDefinition getProcessDefinitions() {
 			return processDefinitions;
-		}
-		public void setProcessDefinitions(ResourceFile processDefinitions) {
+		}	
+		public void setProcessDefinitions(IProcessDefinition processDefinitions) {
 			this.processDefinitions = processDefinitions;
 		}
 		
@@ -53,5 +31,5 @@ public class NewInstancePanel extends ContentWindow{
 		public void setKnowledgeNodeId(String knowledgeNodeId) {
 			this.knowledgeNodeId = knowledgeNodeId;
 		}
-		
+
 }

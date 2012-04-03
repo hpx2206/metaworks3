@@ -179,7 +179,7 @@ shortcut = {
 						modifiers.shift.pressed == modifiers.shift.wanted &&
 						modifiers.alt.pressed == modifiers.alt.wanted &&
 						modifiers.meta.pressed == modifiers.meta.wanted) {
-				callback(e);
+				eval(callback);
 	
 				if(!opt['propagate']) { //Stop the event
 					//e.cancelBubble is supported by IE - this will kill the bubbling process.
@@ -195,7 +195,10 @@ shortcut = {
 				}
 			}
 		}
-		this.all_shortcuts[shortcut_combination] = {
+		
+		if(this.all_shortcuts[shortcut_combination + "@" + opt.target + "@" + callback]) return; //void duplicated subscription
+		
+		this.all_shortcuts[shortcut_combination + "@" + opt.target + "@" + callback] = {
 			'callback':func, 
 			'target':ele, 
 			'event': opt['type']
