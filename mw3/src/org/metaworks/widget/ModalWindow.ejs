@@ -1,0 +1,54 @@
+<%
+
+	if (value != null){	
+		var width = null;
+		var height = null;
+	
+		if(descriptor!=null){
+			width = descriptor.getOptionValue('width');
+			height = descriptor.getOptionValue('height');
+		}
+		
+		console.debug(objectMetadata);
+		
+		var objectName; 
+
+		if(value.__toString != null){
+			objectName = value.__toString();
+		}
+		
+		if(!objectName){
+			objectName = objectMetadata.displayName;
+		}
+		
+		var resourceName = null;
+		if(objectName.indexOf('$')==0){
+			objectName = objectName.substring(1);
+		}
+%>
+	
+		<input type="hidden" id="title_<%=objectId%>" value="<%=objectName%>">
+<%					
+		for (var i=0; i<objectMetadata.fieldDescriptors.length; i++){						  
+			var fd = objectMetadata.fieldDescriptors[i];
+		  	
+		  	if(fd.attributes && (fd.attributes['hidden'] || fd.attributes['resource'])) continue;
+		  	if(fd.name == 'metaworksContext') continue;
+		  	
+		  	var fieldValue = value[fd.name];
+%>
+			<%=fields[fd.name] ? fields[fd.name].here() : "XXX"%>
+<%
+		}						   
+%>							
+							
+<%						   
+		if(objectMetadata.serviceMethodContexts){
+			for(var key in objectMetadata.serviceMethodContexts){						   
+%>
+									<%=methods[key].here()%>
+<%   
+			}
+		}
+	}
+%>

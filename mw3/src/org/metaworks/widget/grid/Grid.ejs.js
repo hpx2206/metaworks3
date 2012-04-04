@@ -5,8 +5,6 @@ var org_metaworks_widget_grid_Grid= function(objectId, className){
 	
 	var grid = mw3.objects[objectId];
 	
-	console.debug(grid);
-	
 	//mw3.armObject(grid.gridCell);
 	//grid.gridCell.changeData();
 	

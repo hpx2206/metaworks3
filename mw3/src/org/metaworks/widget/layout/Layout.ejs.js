@@ -120,12 +120,12 @@ org_metaworks_widget_layout_Layout.prototype.toggle = function(target){
 org_metaworks_widget_layout_Layout.prototype.resize = function(){
 	
 	if(this.layout){
-		console.debug('resize : ' + this.objectId);
+		//console.debug('resize : ' + this.objectId);
 		
 		// this.change = false;		
 		this.layout.resizeAll();
 		
-		console.debug(this.center.css('display'));
+		//console.debug(this.center.css('display'));
 		
 		if(this.center.css('display') == 'none'){
 			if(this.north.length || this.south.length){

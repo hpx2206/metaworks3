@@ -1,11 +1,15 @@
 package org.metaworks.widget;
 
-public class Window {
+import org.metaworks.annotation.Face;
+
+@Face(displayName="ModalWindow")
+public class ModalWindow {
 	
-	public Window() {
+	public ModalWindow() {
 		
-	}	
-	public Window(Object panel) {
+	}
+	
+	public ModalWindow(Object panel) {
 		this.panel = panel;
 	}
 	
