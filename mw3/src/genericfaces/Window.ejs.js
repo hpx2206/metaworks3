@@ -28,7 +28,7 @@ Window.prototype.load = function(){
 	this.layout = $(this.divId).layout(options);
 }
 
-Window.prototype.destory = function(){
+Window.prototype.destroy = function(){
 	$(this.divId).layout().destroy();
 }
 
