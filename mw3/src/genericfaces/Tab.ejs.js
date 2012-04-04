@@ -1,13 +1,9 @@
 var Tab = function(objectId, className){
-	console.debug('tab : ' + objectId);
-	
 	this.objectId = objectId;
 	this.className = className;
 		
 	
 	$('#objDiv_' + objectId).addClass('mw3_tab').addClass('mw3_layout').attr('objectId', objectId);
-	
-	console.debug($('#tabs_' + objectId));
 	
 	$('#tabs_' + objectId).tabs();
 
