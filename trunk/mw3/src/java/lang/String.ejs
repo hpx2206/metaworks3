@@ -1,17 +1,11 @@
 <%  
- if(value == null){
- 	value = "";
-  }
+ 	if(value == null){
+		value = "";
+	}
 	
 	
 	
-	if(mw3.when == mw3.WHEN_EDIT || mw3.when == mw3.WHEN_NEW){
-	
-//	if(descriptor.getOptionValue("mandatory")=="true"){%>*<%}
-	
-//	if(descriptor.name=="text")
-//		mw3.debug(descriptor);
-
+	if(mw3.when == mw3.WHEN_EDIT || mw3.when == mw3.WHEN_NEW){	
 %>
 	 <input id="<%=mw3.createInputId(objectId)%>" value="<%=value%>" <%=descriptor.attributes && descriptor.attributes.size ? " size=" + descriptor.attributes.size : ""%> style="border:1px solid #ccd; none;background:transparent">
 	
