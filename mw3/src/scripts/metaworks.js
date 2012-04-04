@@ -231,7 +231,7 @@
 				
 				return registeredHelper;
 				
-				//TODO: ask cjw why
+				/*
 				if(registeredHelper!=null)
 					return registeredHelper;
 				else{
@@ -239,7 +239,7 @@
 					
 					return this.faceHelpers[objectId];
 				}
-				
+				*/
 				
 			}
 			
@@ -975,12 +975,10 @@
 				//alert( dwr.util.toDescriptiveString(value, 5))
 				
 				
-				// 2012-03-27 cjw destory event
-    			if(this.objects[objectId] && this.getFaceHelper(objectId) && this.getFaceHelper(objectId).destory)
-        			mw3.getFaceHelper(objectId).destory();
+				// 2012-03-27 cjw destroy event
+    			if(this.objects[objectId] && this.getFaceHelper(objectId) && this.getFaceHelper(objectId).destroy)
+        			mw3.getFaceHelper(objectId).destroy();
         			
-
-    			
 				var divId =  "#objDiv_" + objectId;
 				
     			this._armObject(objectId, value); //let the methods and some special fields available
@@ -1012,10 +1010,15 @@
 				if(arguments.length == 0)
 					objectId = this.targetObjectId;
 				
+				
 				var divId =  "#" + this._getObjectDivId(objectId);
 				var infoDivId =  "#" + this._getInfoDivId(objectId);
+				
+				this.getFaceHelper(objectId).destroy();				
+				
 				$(divId).remove();
-				$(infoDivId).remove();
+				$(infoDivId).remove();		
+				
 				this.objects[objectId] = null;
 				this.faceHelpers[objectId] = null;
 				this.beanExpressions[objectId] = null;
