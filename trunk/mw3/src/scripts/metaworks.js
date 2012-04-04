@@ -908,6 +908,10 @@
 				}else
 					className = "java.lang.Object";
 				
+				// 2012-04-04 cjw java.lang.String 일 경우 faceHelper 호출을 위해 공백으로 초기화
+				if(value == null && className == 'java.lang.String')
+					value = '';
+					
 				this.newBeanProperty(objectId);
 
 				this.objects[objectId] = value; //caches the values
@@ -1008,12 +1012,12 @@
 			
 			Metaworks3.prototype.removeObject = function(objectId){
 				if(arguments.length == 0)
-					objectId = this.targetObjectId;
-				
+					objectId = this.targetObjectId;				
 				
 				var divId =  "#" + this._getObjectDivId(objectId);
 				var infoDivId =  "#" + this._getInfoDivId(objectId);
 				
+				// 2012-04-04 cjw destory 호출 후 removeObject
 				this.getFaceHelper(objectId).destroy();				
 				
 				$(divId).remove();
@@ -2122,7 +2126,7 @@
 				
 				if(!className)
 					className = this.fieldDescriptor.className;
-				
+					
 				if(mw3.when == mw3.WHEN_VIEW)
 					face = className + (this.fieldDescriptor.viewFace ? ":" +this.fieldDescriptor.viewFace : "");
 				else
