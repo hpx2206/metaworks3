@@ -1068,8 +1068,14 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 										}
 									}
 									
-									if(atLeastOnceHaveValue)
+									if(atLeastOnceHaveValue){
+										
+										if(objInst instanceof ORMappingListener){
+											((ORMappingListener)objInst).onRelation2Object();
+										}
+										
 										return objInst.getObject();
+									}
 								}
 	
 								throw new Exception("failed to get property value '" + propertyName + "'", e);
@@ -1173,6 +1179,11 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 				
 				// ORMapping option: Object should be mapped into relation fields //
 				if(args.length==1 && !Database.dbPrimitiveTypes.containsKey(m.getParameterTypes()[0])){
+					
+
+					if(args[0] instanceof ORMappingListener){
+						((ORMappingListener)args[0]).onObject2Relation();
+					}
 					
 					ORMapping ormapping = m.getAnnotation(ORMapping.class);
 					

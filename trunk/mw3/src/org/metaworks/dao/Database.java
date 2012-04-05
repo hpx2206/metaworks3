@@ -80,6 +80,23 @@ public class Database<T extends IDAO> implements IDAO, Serializable, Cloneable{
 //		}
 	}
 	
+	
+	public void copyFrom(T fromObj) throws Exception{
+		WebObjectType wot = MetaworksRemoteService.getInstance().getMetaworksType(getClass().getName());
+		
+		ObjectInstance objInst = (ObjectInstance) wot.metaworks2Type().createInstance();
+		objInst.setObject(this);
+		
+		ObjectInstance fromObjInst = (ObjectInstance) wot.metaworks2Type().createInstance();
+		fromObjInst.setObject(fromObj);
+
+		for(int i=0; i<wot.metaworks2Type().getFieldDescriptors().length; i++){
+			FieldDescriptor fd = wot.metaworks2Type().getFieldDescriptors()[i];
+			
+			objInst.setFieldValue(fd.getName(), fromObjInst.getFieldValue(fd.getName()));
+		}
+	}
+	
 	public void syncToDatabaseMe() throws Exception{
 //		boolean securityCheck = false;
 //		try {
