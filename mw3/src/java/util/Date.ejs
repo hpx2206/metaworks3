@@ -1,26 +1,29 @@
-<select name="<%=objectId+"_year"%>">
- <option value="2011">2011</option>
- <option value="2012">2012</option>
- <option value="2013">2013</option>
- <option value="2014">2014</option>
- <option value="2015">2015</option>
-</select>
-년
+<script>
+	$(function() {
+		$( "#<%=objectId%>_datepicker" ).datepicker({
+			monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],		// 월 한글로 출력
+			dayNamesMin: ['일','월','화','수','목','금','토'],		// 요일 한글로 출력
+		  	dateFormat: 'yy-mm-dd', //데이터 포멧형식
+		  	showMonthAfterYear: true
+		});
+	});
+	
+</script>
+<%  
+ if(value != null) {
+ 	if(mw3.when == mw3.WHEN_EDIT || mw3.when == mw3.WHEN_NEW) { 
+ %>
 
-<select name="<%=objectId+"_month"%>">
- <option value="Jan">Jan</option>
- <option value="Feb">Feb</option>
- <option value="Mar">Mar</option>
- 
-</select>
-월
-
-<select>
- <option value="1">1</option>
- <option value="2">2</option>
- <option value="3">3</option>
- <option value="4">4</option>
- <option value="5">5</option>
-</select>
-일
-
+<div class="demo">
+<input type="text" id="<%=objectId%>_datepicker" />
+</div>
+		
+<%	
+		
+ 	} else {
+%>
+	<%=value.getYear()+1900%>.<%=(value.getMonth()) >=9 ? value.getMonth()+1 : '0'+(value.getMonth()+1)%>.<%=(value.getDate()) >=9 ? value.getDate()+1 : '0'+(value.getDate()+1)%>
+<%
+ 	}
+ }
+%>

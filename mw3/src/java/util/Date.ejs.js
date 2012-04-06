@@ -1,23 +1,16 @@
 
 var java_util_Date = function(objectId, objectType){
 	this.objectId = objectId;
-
-//	var value = mw3.objects[objectId];
-//	var yearElementName = this.objectId + "_year";
-//	var year = value.getYear();
-//	
-//	document.getEle
+	this.objectType = objectType;
+	
+	var value = mw3.objects[objectId];   
+	
+	$("#"+this.objectId+"_datepicker").datepicker("setDate",value);
 	
 } 
 
 java_util_Date.prototype.getValue = function(){
-	var yearElementName = this.objectId + "_year";
-	var year = document.getElementsByName(yearElementName);
+	var selDate = new Date($("#" + this.objectId + "_datepicker").datepicker("getDate"));
 	
-	alert(year);
-	
-	
-	var object = 123445;
-	
-	return object;
+	return selDate.getTime();
 }
