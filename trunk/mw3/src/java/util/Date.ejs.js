@@ -10,7 +10,17 @@ var java_util_Date = function(objectId, objectType){
 } 
 
 java_util_Date.prototype.getValue = function(){
-	var selDate = new Date($("#" + this.objectId + "_datepicker").datepicker("getDate"));
-	
-	return selDate.getTime();
+	var dateObj = mw3.getObject(this.objectId);
+	if(dateObj.metaworksContext) {
+		if(dateObj.metaworksContext.when == 'edit' || dateObj.metaworksContext.when == 'new') {
+			var selDate = new Date($("#" + this.objectId + "_datepicker").datepicker("getDate"));
+			return selDate.getTime();
+		} else if(dateObj.metaworksContext.when == 'view') {
+			return dateObj;
+		} else {
+			return dateObj;
+		}
+	} else {
+		return dateObj;
+	}
 }
