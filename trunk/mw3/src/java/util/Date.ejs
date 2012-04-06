@@ -1,29 +1,13 @@
-<script>
-	$(function() {
-		$( "#<%=objectId%>_datepicker" ).datepicker({
-			monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],		// 월 한글로 출력
-			dayNamesMin: ['일','월','화','수','목','금','토'],		// 요일 한글로 출력
-		  	dateFormat: 'yy-mm-dd', //데이터 포멧형식
-		  	showMonthAfterYear: true
-		});
-	});
-	
-</script>
-<%  
- if(value != null) {
- 	if(mw3.when == mw3.WHEN_EDIT || mw3.when == mw3.WHEN_NEW) { 
- %>
-
-<div class="demo">
-<input type="text" id="<%=objectId%>_datepicker" />
-</div>
-		
-<%	
-		
- 	} else {
-%>
-	<%=value.getYear()+1900%>.<%=(value.getMonth()) >=9 ? value.getMonth()+1 : '0'+(value.getMonth()+1)%>.<%=(value.getDate()) >=9 ? value.getDate()+1 : '0'+(value.getDate()+1)%>
 <%
- 	}
- }
+	if(value){
+	
+		var option = '';
+		
+		if(mw3.when != 'new' && mw3.when != 'edit'){
+			option = 'style=\"border:none\"';
+		} 
+%>	
+	<input type="text" id="<%=mw3.createInputId(objectId)%>" when="<%=mw3.when%>" <%=option%> readonly />
+<%
+	}
 %>
