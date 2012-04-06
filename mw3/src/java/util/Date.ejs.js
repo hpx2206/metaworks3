@@ -1,26 +1,26 @@
-
-var java_util_Date = function(objectId, objectType){
+var java_util_Date = function(objectId, className){
 	this.objectId = objectId;
-	this.objectType = objectType;
+	this.className = className;
 	
-	var value = mw3.objects[objectId];   
+	this.inputId = mw3.createInputId(objectId);
 	
-	$("#"+this.objectId+"_datepicker").datepicker("setDate",value);
+	var when = $('#' + this.inputId).attr('when');
 	
-} 
+	$('#' + this.inputId).datepicker({
+		dateFormat: 'yy-mm-dd',
+		showOn: 'button',
+		buttonImageOnly: true,
+		buttonImage :'images/waveStyle/calendar.gif'
+	});
+	
+	$('#' + this.inputId).datepicker("setDate", mw3.objects[objectId]);
+	
+	if(when != 'edit' && when != 'new')
+		$('#objDiv_' + objectId + ' .ui-datepicker-trigger').remove();	
+}
 
 java_util_Date.prototype.getValue = function(){
-	var dateObj = mw3.getObject(this.objectId);
-	if(dateObj.metaworksContext) {
-		if(dateObj.metaworksContext.when == 'edit' || dateObj.metaworksContext.when == 'new') {
-			var selDate = new Date($("#" + this.objectId + "_datepicker").datepicker("getDate"));
-			return selDate.getTime();
-		} else if(dateObj.metaworksContext.when == 'view') {
-			return dateObj;
-		} else {
-			return dateObj;
-		}
-	} else {
-		return dateObj;
-	}
+	var selDate = new Date($("#" + this.inputId).datepicker("getDate"));
+	
+	return selDate.getTime();	
 }
