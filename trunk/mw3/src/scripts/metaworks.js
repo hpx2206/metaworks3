@@ -928,13 +928,15 @@
 				
 				var metadata = this.getMetadata(className);
 				
-//				var elementTag = "div"; //(metadata.htmlTag ? metadata.htmlTag : "div");
-				//var elementClass = ""; //(" class='" + metadata.htmlClass + "'" ? metadata.htmlClass : "");
+				var elementTag = (metadata.faceOptions && metadata.faceOptions['htmlTag'] ? metadata.faceOptions['htmlTag'] : "div");
+				var elementClass = (metadata.faceOptions && metadata.faceOptions['htmlClass'] ? " class='" + metadata.faceOptions['htmlClass'] + "'": "");
 				
 				
-//				html="<" + elementTag + elementClass + " id='"+divId+ "'" + (metadata && metadata.focusable ? " tabindex='"+objectId+"'" : "") + " className='" + className + "'>...  LOADING PROPERTY ...</div><div id='"+infoDivId+"'></div>";
-				html="<div id='"+divId+ "'" + (metadata && metadata.focusable ? " tabindex='"+objectId+"'" : "") + " className='" + className + "'>...  LOADING PROPERTY ...</div><div id='"+infoDivId+"'></div>";
+				html="<" + elementTag + elementClass + " id='"+divId+ "'" + (metadata && metadata.focusable ? " tabindex='"+objectId+"'" : "") + " className='" + className + "'>...  LOADING PROPERTY ...</div><div id='"+infoDivId+"'></div>";
 				
+//				html+="<div id='"+divId+ "'" + (metadata && metadata.focusable ? " tabindex='"+objectId+"'" : "") + " className='" + className + "'>...  LOADING PROPERTY ...</div><div id='"+infoDivId+"'></div>";
+				
+				//TODO: This kind of wierd lazy invocation is required due to the EJS template should be called with cascade order. but we can change this part someday. all the childs should render themselves and just adding the id attribute after adding something 
 				html+="<" + "script>";
 				html+="   mw3.showObjectWithObjectId('"+this.objectId+"','"+className+"', '#"+divId+"'"+(options ? ", "+ JSON.stringify(options) : "") +");"
 				html+="<" + "/script>";
