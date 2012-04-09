@@ -8,9 +8,10 @@ public @interface Face {
 	public String displayName() default "";
 	public String ejsPath() default "";
 	public String ejsPathForArray() default "";
-	
-	public String htmlTag() default "";
-	public String htmlClass() default "";
+
+	//bad approach. Rejected.
+//	public String htmlTag() default "";
+//	public String htmlClass() default "";
 	
 	public String[] options() default {};
 	public String[] values() default {};
