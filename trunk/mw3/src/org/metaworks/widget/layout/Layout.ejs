@@ -39,7 +39,11 @@
 <%
 		if(value.center){
 %>
-	<div class="pane ui-layout-center"><%=fields.center.here()%></div>
+	<div class="pane ui-layout-center">
+		<div class="ui-layout-content">
+			<%=fields.center.here()%>
+		</div>
+	</div>
 <%
 		}
 %>
