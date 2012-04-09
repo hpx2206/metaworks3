@@ -49,6 +49,22 @@ public class WebObjectType{
 	
 	Object resource;
 	
+	String htmlTag;
+		public String getHtmlTag() {
+			return htmlTag;
+		}
+		public void setHtmlTag(String htmlTag) {
+			this.htmlTag = htmlTag;
+		}
+
+	String htmlClass;
+		public String getHtmlClass() {
+			return htmlClass;
+		}
+		public void setHtmlClass(String htmlClass) {
+			this.htmlClass = htmlClass;
+		}
+
 	boolean isInterface;
 		public boolean isInterface() {
 			return isInterface;
@@ -220,6 +236,14 @@ public class WebObjectType{
 		
 		if(typeFace!=null && typeFace.ejsPathMappingByContext().length > 0){
 			setFaceMappingByContext(typeFace.ejsPathMappingByContext());
+		}
+		
+		if(typeFace!=null && typeFace.htmlClass().length() > 0){
+			setHtmlClass(typeFace.htmlClass());
+		}
+		
+		if(typeFace!=null && typeFace.htmlTag().length() > 0){
+			setHtmlTag(typeFace.htmlTag());
 		}
 		
 		if(typeFace!=null && typeFace.options().length > 0){
@@ -832,6 +856,18 @@ public class WebObjectType{
 							@Override
 							public String displayName() {
 								return face!=null ? face.displayName() : "";
+							}
+
+							@Override
+							public String htmlTag() {
+								// TODO Auto-generated method stub
+								return face!=null ? face.htmlTag() : "";
+							}
+
+							@Override
+							public String htmlClass() {
+								// TODO Auto-generated method stub
+								return face!=null ? face.htmlClass() : "";
 							}
 						};
 					}
