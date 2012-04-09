@@ -29,7 +29,7 @@ public class Database<T extends IDAO> implements IDAO, Serializable, Cloneable{
 			this.metaworksContext = context;
 		}
 
-	public T databaseMe() throws Exception{
+	final public T databaseMe() throws Exception{
 //		boolean securityCheck = false;
 //		try {
 //			securityCheck = TransactionContext.getThreadLocalInstance().isNeedSecurityCheck();
@@ -43,7 +43,7 @@ public class Database<T extends IDAO> implements IDAO, Serializable, Cloneable{
 //		}
 	}
 	
-	public T typedDatabaseMe() throws Exception{
+	final public T typedDatabaseMe() throws Exception{
 //		boolean securityCheck = false;
 //		try {
 //			securityCheck = TransactionContext.getThreadLocalInstance().isNeedSecurityCheck();
@@ -63,11 +63,11 @@ public class Database<T extends IDAO> implements IDAO, Serializable, Cloneable{
 	}
 	
 	
-	public void flushDatabaseMe() throws Exception{
+	final public void flushDatabaseMe() throws Exception{
 		flush(getClass(), createKeyObject());
 	}
 	
-	public T createDatabaseMe() throws Exception{
+	final public T createDatabaseMe() throws Exception{
 //		boolean securityCheck = false;
 //		try {
 //			securityCheck = TransactionContext.getThreadLocalInstance().isNeedSecurityCheck();
@@ -97,7 +97,7 @@ public class Database<T extends IDAO> implements IDAO, Serializable, Cloneable{
 		}
 	}
 	
-	public void syncToDatabaseMe() throws Exception{
+	final public void syncToDatabaseMe() throws Exception{
 //		boolean securityCheck = false;
 //		try {
 //			securityCheck = TransactionContext.getThreadLocalInstance().isNeedSecurityCheck();
@@ -128,7 +128,7 @@ public class Database<T extends IDAO> implements IDAO, Serializable, Cloneable{
 	}
 
 	
-	public void deleteDatabaseMe() throws Exception{
+	final public void deleteDatabaseMe() throws Exception{
 //		boolean securityCheck = false;
 //		try {
 //			securityCheck = TransactionContext.getThreadLocalInstance().isNeedSecurityCheck();

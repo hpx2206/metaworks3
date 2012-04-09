@@ -1158,7 +1158,7 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 	
 					
 					if(returnValue!=null && !m.getReturnType().isAssignableFrom(returnValue.getClass())){
-						throw new Exception("DAO's field type of '"+propertyName+"' is mismatch with the actual table's field.");
+						throw new Exception(daoClass.getName() + " DAO's field type of '"+propertyName+"' is mismatch with the actual table's field.");
 					}
 					
 					

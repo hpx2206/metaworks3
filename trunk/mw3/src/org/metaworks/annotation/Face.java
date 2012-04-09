@@ -9,6 +9,9 @@ public @interface Face {
 	public String ejsPath() default "";
 	public String ejsPathForArray() default "";
 	
+	public String htmlTag() default "";
+	public String htmlClass() default "";
+	
 	public String[] options() default {};
 	public String[] values() default {};
 	
