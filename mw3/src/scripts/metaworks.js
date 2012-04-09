@@ -928,11 +928,12 @@
 				
 				var metadata = this.getMetadata(className);
 				
-				var elementTag = (metadata.htmlTag ? metadata.htmlTag : "div");
-				var elementClass = (" class='" + metadata.htmlClass + "'" ? metadata.htmlClass : "");
+//				var elementTag = "div"; //(metadata.htmlTag ? metadata.htmlTag : "div");
+				//var elementClass = ""; //(" class='" + metadata.htmlClass + "'" ? metadata.htmlClass : "");
 				
 				
-				html="<" + elementTag + elementClass + " id='"+divId+ "'" + (metadata && metadata.focusable ? " tabindex='"+objectId+"'" : "") + " className='" + className + "'>...  LOADING PROPERTY ...</div><div id='"+infoDivId+"'></div>";
+//				html="<" + elementTag + elementClass + " id='"+divId+ "'" + (metadata && metadata.focusable ? " tabindex='"+objectId+"'" : "") + " className='" + className + "'>...  LOADING PROPERTY ...</div><div id='"+infoDivId+"'></div>";
+				html="<div id='"+divId+ "'" + (metadata && metadata.focusable ? " tabindex='"+objectId+"'" : "") + " className='" + className + "'>...  LOADING PROPERTY ...</div><div id='"+infoDivId+"'></div>";
 				
 				html+="<" + "script>";
 				html+="   mw3.showObjectWithObjectId('"+this.objectId+"','"+className+"', '#"+divId+"'"+(options ? ", "+ JSON.stringify(options) : "") +");"
