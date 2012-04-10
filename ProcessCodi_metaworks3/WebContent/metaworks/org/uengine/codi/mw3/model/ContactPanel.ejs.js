@@ -25,7 +25,7 @@ org_uengine_codi_mw3_model_ContactPanel.prototype.load = function(){
 	this.layout = $(this.divId).layout(options);
 }
 
-org_uengine_codi_mw3_model_ContactPanel.prototype.destory = function(){
+org_uengine_codi_mw3_model_ContactPanel.prototype.destroy = function(){
 	$(this.divId).layout().destroy();
 }
 
