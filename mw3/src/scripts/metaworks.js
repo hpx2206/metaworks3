@@ -146,8 +146,11 @@
 			
 			Metaworks3.prototype.loadFaceHelper = function(objectId){
 				
-//				if(this.objects[objectId]==null)
-//					return null;
+				/*
+				 * 2012-04-05 cjw 임시 주석 처리
+				if(this.objects[objectId]==null)
+					return null;
+				*/
 				
 				if(!this.face_ObjectIdMapping[objectId])					
 					return null;
@@ -574,7 +577,6 @@
 						var html = new EJS({url: url}).render(contextValues);
 						
 
-						//alert(html);
 						//#DEBUG POINT
 						$(targetDiv).html(html);
 						
@@ -1492,7 +1494,9 @@
 				        				//$("#objDiv_" + sourceObjectIdNewlyGotten).focus();
 				        				//objId = sourceObjectIdNewlyGotten;
 				        			}
-
+				        			
+				        			mw3.onLoadFaceHelperScript();
+				        			
 				        			if(serviceMethodContext.target!="none"){
 					        			
 					        			if(mw3.getFaceHelper(objId)){
@@ -1515,8 +1519,7 @@
 					        			
 				        			}
 				        			
-				        			mw3.loaded = true;
-				        			mw3.onLoadFaceHelperScript();
+				        			mw3.loaded = true;				        			
 				        			
 				        			if(mw3.afterCall)
 				        				mw3.afterCall(svcNameAndMethodName, result);
