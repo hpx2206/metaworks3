@@ -397,12 +397,16 @@ public class Database<T extends IDAO> implements IDAO, Serializable, Cloneable{
 			}else if(fd.isSavable() || fd.isKey()){
 			
 				if(!dbPrimitiveTypes.containsKey(fd.getClassType())){
-					ObjectType referenceTableType = (ObjectType) MetaworksRemoteService.getInstance().getMetaworksType(fd.getClassType().getName()).metaworks2Type();
-					referenceTableType.getKeyFieldDescriptor();
-					ObjectInstance instance = (ObjectInstance) referenceTableType.createInstance();
-					instance.setObject(fieldValue);
-					
-					fieldValue = instance.getKeyFieldValue();
+					try {						
+						ObjectType referenceTableType = (ObjectType) MetaworksRemoteService.getInstance().getMetaworksType(fd.getClassType().getName()).metaworks2Type();
+						referenceTableType.getKeyFieldDescriptor();
+						ObjectInstance instance = (ObjectInstance) referenceTableType.createInstance();
+						instance.setObject(fieldValue);
+						
+						fieldValue = instance.getKeyFieldValue();
+					} catch(NullPointerException e) {						
+						throw new NullPointerException("FieldDescriptor Name : " + fd.getName());
+					}						
 				}
 				
 				dao.set(fd.getName(), fieldValue);
