@@ -41,7 +41,13 @@ org_uengine_codi_mw3_model_Popup.prototype.createPopup = function(w,h,x,y){
 
 };
 
-org_uengine_codi_mw3_model_Popup.prototype.destoryPopup = function() {
+org_uengine_codi_mw3_model_Popup.prototype.destroyPopup = function() {
+	var divId = '#objDiv_' + this.objectId;
+	
+	$(divId).parent().remove();
+}
+
+org_uengine_codi_mw3_model_Popup.prototype.destroy = function() {
 	var divId = '#objDiv_' + this.objectId;
 	
 	$(divId).parent().remove();
