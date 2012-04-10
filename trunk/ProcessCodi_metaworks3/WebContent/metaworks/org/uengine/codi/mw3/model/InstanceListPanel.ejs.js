@@ -26,11 +26,7 @@ org_uengine_codi_mw3_model_InstanceListPanel.prototype.load = function(){
 	this.layout = $(this.divId).layout(options);
 }
 
-org_uengine_codi_mw3_model_InstanceListPanel.prototype.destory = function(){
-	console.debug('instanceListPanel destory');
-	
-	console.debug($(this.divId));
-	
+org_uengine_codi_mw3_model_InstanceListPanel.prototype.destroy = function(){
 	$(this.divId).layout().destroy();
 }
 
