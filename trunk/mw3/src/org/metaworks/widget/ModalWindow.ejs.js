@@ -15,10 +15,6 @@ var org_metaworks_widget_ModalWindow = function(objectId, className){
 	});
 	
 /*	this.divId = '#objDiv_' + objectId;
-
-	console.debug('ModalWindow()');
-	console.debug();
-	
 	
 	$('#' + this.divId).parent().find('#info_' + objectId).remove();*/
 }
