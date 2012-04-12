@@ -119,6 +119,27 @@ public class MetaworksFile implements ContextAware {
 		
 		fileTransfer = null; //ensure to clear the data
 	}
+	
+	@ServiceMethod
+	public void delete() throws FileNotFoundException, IOException, Exception{
+		if(getUploadedPath().length() == 0) 
+			throw new Exception("No file attached");
+		
+		File f = new File(getUploadedPath());
+		// 확장자 없으면 폴더. 다만 폴더안에는 아무것도 없어야 한다.
+		if (f.exists()) {
+			boolean de = f.delete();
+			if (de) {	
+				setUploadedPath(null);
+				System.out.println("Successed Delete!!");
+			} else {
+				System.out.println("Failed Delete!!");
+			}
+		} else {
+			setUploadedPath(null);
+			System.out.println("File Not Found!!");
+		}
+	}
 
 	// set parted Stored file path by MimeType
 	public String overrideUploadPathPrefix() {
