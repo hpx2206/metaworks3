@@ -178,7 +178,7 @@
 						if(faceHelper){
 							this.faceHelpers[objectId] = faceHelper;
 
-							if(this.object[objectId]!=null)
+							if(this.objects[objectId]!=null)
 								this.objects[objectId]['__faceHelper'] = faceHelper;
 							
 							return faceHelper;
@@ -1028,7 +1028,8 @@
 				var infoDivId =  "#" + this._getInfoDivId(objectId);
 				
 				// 2012-04-04 cjw destory 호출 후 removeObject
-				this.getFaceHelper(objectId).destroy();				
+    			if(this.objects[objectId] && this.getFaceHelper(objectId) && this.getFaceHelper(objectId).destroy)
+    				this.getFaceHelper(objectId).destroy();
 				
 				$(divId).remove();
 				$(infoDivId).remove();		
@@ -2101,6 +2102,20 @@
 				} 
 				
 				return false;
+			}
+			
+			Metaworks3.prototype.isHiddenMethod = function(method){
+				
+				if(method.methodContext.when != mw3.WHEN_EVER){
+		   			if( (mw3.when && (method.methodContext.when.indexOf(mw3.when) == -1) ) 
+		   					||
+			   			(mw3.where && (method.methodContext.where!='wherever' && method.methodContext.where.indexOf(mw3.where) == -1) )
+			   				
+		   			)
+	   				return true;
+				}
+				
+	   			return false;
 			}
 			
 			if(!Metaworks) alert('Metaworks DWR service looks not available. Metaworks will not work');
