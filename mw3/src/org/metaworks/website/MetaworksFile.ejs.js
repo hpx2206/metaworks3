@@ -5,12 +5,28 @@ var org_metaworks_website_MetaworksFile = function(objectId, className){
 	var faceHelper = this;
 	var object = mw3.objects[this.objectId];
 		
+	console.debug(object);
+	
 	$("#objDiv_" + this.objectId).attr("objectId", this.objectId);
 
 	if(object.uploadedPath){
 		$("#filebtnadd_" + this.objectId).css('display', 'none');
 		
 		faceHelper.setFilename(faceHelper.extraFilename(object.uploadedPath));
+		
+		if(object.metaworksContext.when == 'image'){
+			var image = object.downloadImage(false);
+			var width = 0;
+			var height = 0;
+			
+			if(object.__descriptor){
+				width = object.__descriptor.getOptionValue('imageWidth');
+				height = object.__descriptor.getOptionValue('imageHeight');
+			}
+			
+			$("#image_" + this.objectId).html('<img ' + (width?'width='+width+' ':' ') + (height?'height='+height+' ':' ') + 'src=\'' + image + '\'>');
+		}
+			
 	}
 	
 	$(mw3.getInputElement(objectId, 'fileTransfer')).bind('change', function(){
