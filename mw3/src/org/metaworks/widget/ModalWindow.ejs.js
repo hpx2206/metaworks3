@@ -4,15 +4,27 @@ var org_metaworks_widget_ModalWindow = function(objectId, className){
 
 	this.divId = '#objDiv_' + objectId;
 	
-	var title = $('#title_' + objectId).val();
+	var object = mw3.objects[this.objectId];
 	
-	$(this.divId).css('height','100%');
+	
+	var title = $('#title_' + objectId).val();
+		
+	//$(this.divId).css('height','100%');
+	
+	var options = {};
+	
+	options['title'] = title;
+	options['modal'] = true;
+	
+	if(object.width)
+		options['width'] = object.width;
+	
+	if(object.height)
+		options['height'] = object.height;
+	
 	
 	$( "#dialog:ui-dialog" ).dialog( "destroy" );	
-	$(this.divId).dialog({
-		title: title,
-		modal: true
-	});
+	$(this.divId).dialog(options);
 	
 /*	this.divId = '#objDiv_' + objectId;
 	
