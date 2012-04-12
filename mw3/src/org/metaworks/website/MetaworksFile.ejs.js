@@ -7,11 +7,20 @@ var org_metaworks_website_MetaworksFile = function(objectId, className){
 		
 	$("#objDiv_" + this.objectId).attr("objectId", this.objectId);
 
-	if(object.uploadedPath)
+	if(object.uploadedPath){
+		$("#filebtnadd_" + this.objectId).css('display', 'none');
+		
 		faceHelper.setFilename(faceHelper.extraFilename(object.uploadedPath));
-
+	}
+	
 	$(mw3.getInputElement(objectId, 'fileTransfer')).bind('change', function(){
-		faceHelper.setFilename(faceHelper.extraFilename(this.value));
+		var object = mw3.objects[objectId];
+		
+		if(object.auto)
+			object.upload();
+		else
+			faceHelper.setFilename(faceHelper.extraFilename(this.value));
+			
 	});
 }
 
@@ -33,7 +42,7 @@ org_metaworks_website_MetaworksFile.prototype.setFilename = function(filename){
 
 	if(filename == null){
 		filename = '선택된 파일이 없습니다';
-		$("#filebtndel_" + this.objectId).css('display', 'none');
+		$("#filebtnadd_" + this.objectId).css('display', 'none');
 	} else {
 		$("#filebtndel_" + this.objectId).css('display', 'block');
 	}
@@ -49,10 +58,19 @@ org_metaworks_website_MetaworksFile.prototype.add = function(){
 org_metaworks_website_MetaworksFile.prototype.del = function(){
 	var object = mw3.objects[this.objectId];
 	
-	if(object.uploadedPath)
-		mw3.call(this.objectId, 'delete');
-	else
+	if(object.uploadedPath){
+		object.deletedPath = object.uploadedPath;
+		
+		if(object.auto)
+			mw3.call(this.objectId, 'remove');
+		else{
+			this.setFilename(null);
+			$("#filebtndel_" + this.objectId).css('display', 'none');
+			$("#filebtnadd_" + this.objectId).css('display', 'block');
+		}
+	}else{
 		this.setFilename(null);
+	}
 }
 
 org_metaworks_website_MetaworksFile.prototype.download = function(){		
