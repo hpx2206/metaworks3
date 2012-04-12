@@ -4,13 +4,8 @@
 	<%=fields.fileTransfer.here()%>
 <%		
 		if(mw3.when==mw3.WHEN_NEW || mw3.when==mw3.WHEN_EDIT){
-		
-			if(!value.uploadedPath){
 %>
-	<span style="float:left"><input type="button" onclick="mw3.getFaceHelper(<%=objectId%>).add()" value="파일첨부" /></span>
-<%
-			}
-%>	
+	<span id="filebtnadd_<%=objectId%>" style="float:left"><input type="button" onclick="mw3.getFaceHelper(<%=objectId%>).add()" value="파일첨부" /></span>
 	<span id="filebtndel_<%=objectId%>" style="float:left; display:none"><input type="button" onclick="mw3.getFaceHelper(<%=objectId%>).del()" value="파일삭제" /></span>
 	<span id="filename_<%=objectId%>">선택된 파일이 없습니다</span>
 <%

@@ -16,6 +16,7 @@ import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Face;
+import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.NonEditable;
 import org.metaworks.annotation.ServiceMethod;
@@ -62,8 +63,19 @@ public class MetaworksFile implements ContextAware {
 			this.uploadedPath = uploadedPath;
 		}		
 		
+	String deletedPath;
+		@NonEditable
+		@Hidden
+		public String getDeletedPath() {
+			return deletedPath;
+		}
+		public void setDeletedPath(String deletedPath) {
+			this.deletedPath = deletedPath;
+		}
+		
 	String mimeType;
 		@NonEditable
+		@Hidden
 		public String getMimeType() {
 			return mimeType;
 		}
@@ -71,14 +83,23 @@ public class MetaworksFile implements ContextAware {
 			this.mimeType = mimeType;
 		}
 		
-	String directory;	
+	String directory;
+		@Hidden	
 		public String getDirectory() {
 			return directory;
 		}
 		public void setDirectory(String directory) {
 			this.directory = directory;
 		}
-	
+		
+	boolean auto;	
+		public boolean isAuto() {
+			return auto;
+		}
+		public void setAuto(boolean auto) {
+			this.auto = auto;
+		}
+		
 	@ServiceMethod(target="append")
 	public Download download() throws FileNotFoundException, IOException, Exception{
 		return new Download(new FileTransfer(uploadedPath, getMimeType(), new FileInputStream(uploadedPath)));
@@ -120,23 +141,30 @@ public class MetaworksFile implements ContextAware {
 		fileTransfer = null; //ensure to clear the data
 	}
 	
-	@ServiceMethod
-	public void delete() throws FileNotFoundException, IOException, Exception{
-		if(getUploadedPath().length() == 0) 
+	@ServiceMethod(payload={"deletedPath", "auto"})
+	public void remove() throws FileNotFoundException, IOException, Exception{
+		if(getDeletedPath().length() == 0) 
 			throw new Exception("No file attached");
 		
-		File f = new File(getUploadedPath());
+		File f = new File(getDeletedPath());
 		// 확장자 없으면 폴더. 다만 폴더안에는 아무것도 없어야 한다.
 		if (f.exists()) {
 			boolean de = f.delete();
 			if (de) {	
 				setUploadedPath(null);
+				
+				if(!isAuto())
+					setDeletedPath(null);
 				System.out.println("Successed Delete!!");
 			} else {
 				System.out.println("Failed Delete!!");
 			}
 		} else {
 			setUploadedPath(null);
+
+			if(!isAuto())
+				setDeletedPath(null);
+			
 			System.out.println("File Not Found!!");
 		}
 	}
