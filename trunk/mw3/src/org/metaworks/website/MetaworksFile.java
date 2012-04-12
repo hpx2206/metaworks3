@@ -8,35 +8,50 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.directwebremoting.io.FileTransfer;
+import org.metaworks.ContextAware;
+import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.NonEditable;
 import org.metaworks.annotation.ServiceMethod;
 
-public class MetaworksFile {
+public class MetaworksFile implements ContextAware {
 	
+	public MetaworksFile() {
+		setMetaworksContext(new MetaworksContext());
+		getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+	}
+	
+	MetaworksContext metaworksContext;
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
+		}
+
 	transient FileTransfer fileTransfer;
-	
+		@Face(ejsPath="dwr/metaworks/org/directwebremoting/io/FileTransfer.ejs")
 		public FileTransfer getFileTransfer() {
 			return fileTransfer;
-		}
-	
+		}	
 		public void setFileTransfer(FileTransfer fileTransfer) {
 			this.fileTransfer = fileTransfer;
-		}
+		}	
 		
-	BufferedImage image;
-			
+	BufferedImage image;			
 		public BufferedImage getImage() {
 			return image;
-		}
-	
+		}	
 		public void setImage(BufferedImage image) {
 			this.image = image;
 		}
-
+			
 	String uploadedPath;
 		@Id
 		@NonEditable
@@ -45,7 +60,7 @@ public class MetaworksFile {
 		}
 		public void setUploadedPath(String uploadedPath) {
 			this.uploadedPath = uploadedPath;
-		}
+		}		
 		
 	String mimeType;
 		@NonEditable
@@ -55,10 +70,18 @@ public class MetaworksFile {
 		public void setMimeType(String mimeType) {
 			this.mimeType = mimeType;
 		}
-
-	@ServiceMethod
-	public void download() throws FileNotFoundException, IOException, Exception{
-		fileTransfer = new FileTransfer(uploadedPath, getMimeType(), new FileInputStream(uploadedPath));
+		
+	String directory;	
+		public String getDirectory() {
+			return directory;
+		}
+		public void setDirectory(String directory) {
+			this.directory = directory;
+		}
+	
+	@ServiceMethod(target="append")
+	public Download download() throws FileNotFoundException, IOException, Exception{
+		return new Download(new FileTransfer(uploadedPath, getMimeType(), new FileInputStream(uploadedPath)));
 	}
 
 	@ServiceMethod(target=ServiceMethodContext.TARGET_NONE) //it doesn't cause refresh so that the recursive call of constructor of MetaworksFile javascript object never happened
@@ -84,7 +107,8 @@ public class MetaworksFile {
 		
 		String prefix = overrideUploadPathPrefix();
 		
-		String uploadPath = prefix + fileTransfer.getFilename();
+		String uploadFileName = renameUploadFile(fileTransfer.getFilename());		
+		String uploadPath = prefix + uploadFileName;
 		
 		new File(uploadPath).getParentFile().mkdirs();
 		
@@ -98,8 +122,28 @@ public class MetaworksFile {
 
 	// set parted Stored file path by MimeType
 	public String overrideUploadPathPrefix() {
-	    //TODO get webroot relativePath because web browser access only image files in webroot sub directory
-	    return "fileSystem/";
+	    if(getDirectory() == null || "".equals(getDirectory()))
+	    	return "fileSystem/";
+	    else
+	    	return "fileSystem/" + getDirectory();
+	}
+	
+	public String renameUploadFile(String filename) {
+		String fileBody;
+		String fileExt;
+		
+		fileBody = Long.toString(System.currentTimeMillis());
+		fileExt = filename.substring(filename.lastIndexOf("."));
+		
+		return fileBody+fileExt;
+	}
+	
+	private String getDirectoryName() {
+		String path;
+		SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
+		path = df.format(new Date()); 
+		
+		return path;
 	}
 	
 	static public void copyStream(InputStream sourceInputStream, OutputStream targetOutputStream) throws Exception{
