@@ -1229,15 +1229,18 @@
 					var functionName = object.__className.replace('.', '_') + "_" + methodName;
 					eval(functionName+"('" + objectId + "')");
 					
+					// 2012-04-12 cjw showInfo 로 변경
+					this.showInfo( methodName + " DONE." );					
+					/*
 					$(infoDivId).html("<font color=blue> " + methodName + " DONE. </font>");
 					$(infoDivId).slideDown(500, function(){
 						setTimeout(function() {
 							$( infoDivId ).slideUp(500);
 						}, 5000 );
 					});
+					*/
 					
 				}catch(e){
-					
 					$(infoDivId).html("<font color=red>Error: "+ e.message +" [RETRY]</font> ");
 					
 				}
@@ -1257,7 +1260,9 @@
 					objId = this.targetObjectId;
 				}
 				
-				var getAgain = (arguments.length > 2 ? (arguments[2] ? arguments[2] : true) : true);
+				// 2012-04-14 cjw 재귀호출 막음
+				// var getAgain = (arguments.length > 2 ? (arguments[2] ? arguments[2] : true) : true);
+				var getAgain = (arguments.length > 2 ? arguments[2] : true);
 				var sync = (arguments.length > 3 ? arguments[3] : false);
 				
 				
@@ -1337,9 +1342,8 @@
 						
 						if(this.getFaceHelper(objId) && this.getFaceHelper(objId).startLoading){
 							this.getFaceHelper(objId).startLoading();
-
 						}else{
-							$(infoDivId).html("<img src='dwr/metaworks/images/circleloading.gif' align=middle> LOADING ...");
+							$(infoDivId).css('display', 'block').html("<img src='dwr/metaworks/images/circleloading.gif' align=middle> LOADING ...");
 						}
 					}
 
@@ -1496,9 +1500,8 @@
 				        				//objId = sourceObjectIdNewlyGotten;
 				        			}
 				        			
-				        			mw3.onLoadFaceHelperScript();
-				        			
-				        			if(serviceMethodContext.target!="none"){
+				        			if(serviceMethodContext.target != "none"){
+				        				mw3.onLoadFaceHelperScript();
 					        			
 					        			if(mw3.getFaceHelper(objId)){
 					        				if(mw3.getFaceHelper(objId).endLoading){
