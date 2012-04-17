@@ -24,7 +24,15 @@ var java_util_Date = function(objectId, className){
 }
 
 java_util_Date.prototype.getValue = function(){
-	var selDate = new Date($("#" + this.inputId).datepicker("getDate"));
 	
-	return selDate.getTime();	
+	var inputObj = $("#" + this.inputId);
+	
+	if(inputObj.lenght){	
+		var selDate = new Date($("#" + this.inputId).datepicker("getDate"));
+	
+		return selDate.getTime();
+	}else{
+		return null;
+	}
+		
 }
