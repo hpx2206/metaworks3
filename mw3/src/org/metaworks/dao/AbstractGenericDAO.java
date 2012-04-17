@@ -1027,7 +1027,15 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 							String actualPropertyName = propertyName + "___" + fd.getName();
 
 							try{
-								Object propValue = (rowSet!=null ? rowSet.getObject(actualPropertyName.toUpperCase()) : cache.get(actualPropertyName.toUpperCase()));
+								String propName = actualPropertyName.toUpperCase();
+								
+								//if cache doesn't contains the property name, it should be ignored since cache.get tries to return null value instead of throwing exception.
+								if(rowSet==null && !cache.containsKey(propName)) 
+									continue;
+								
+								Object
+									propValue = (rowSet!=null ? rowSet.getObject(propName) : cache.get(propName));
+								
 								objInst.setFieldValue(fd.getName(), propValue);
 								atLeastOnceHaveValue = true;
 							}catch(Exception ex){
