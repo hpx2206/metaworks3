@@ -4,8 +4,6 @@ var org_metaworks_website_MetaworksFile = function(objectId, className){
 
 	var faceHelper = this;
 	var object = mw3.objects[this.objectId];
-		
-	console.debug(object);
 	
 	$("#objDiv_" + this.objectId).attr("objectId", this.objectId);
 
