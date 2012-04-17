@@ -6,8 +6,8 @@
    
    if(objectMetadata.serviceMethodContexts)
    for(var key in objectMetadata.serviceMethodContexts){
-   
-%><td><%=methods[key].here()%> </td> <%   
+   		var serviceMethod = objectMetadata.serviceMethodContexts[key];
+%><td><%=methods[serviceMethod.methodName].here()%> </td> <%   
    }
 %>
 

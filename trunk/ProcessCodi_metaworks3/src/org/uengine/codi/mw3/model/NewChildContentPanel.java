@@ -78,7 +78,7 @@ public class NewChildContentPanel  {
 	public RuleDesignerWindow newRule() throws Exception{
 		
 		RuleDesignerWindow ruleDesignerWindow = new RuleDesignerWindow();
-		ruleDesignerWindow.newRule();
+		ruleDesignerWindow.newRule(getParentFolder().toString());
 		
 		return ruleDesignerWindow;
 	}

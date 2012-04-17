@@ -34,14 +34,6 @@ public class ClassSourceCodes{
 		
 	}
 	
-	ClassModeler classModeler;
-		public ClassModeler getClassModeler() {
-			return classModeler;
-		}
-		public void setClassModeler(ClassModeler classModeler) {
-			this.classModeler = classModeler;
-		}
-	
 	JavaSourceCode sourceCode;
 		public JavaSourceCode getSourceCode() {
 			return sourceCode;
@@ -49,7 +41,16 @@ public class ClassSourceCodes{
 		public void setSourceCode(JavaSourceCode sourceCode) {
 			this.sourceCode = sourceCode;
 		}
-		
+
+	ClassModeler classModeler;
+	public ClassModeler getClassModeler() {
+		return classModeler;
+	}
+	public void setClassModeler(ClassModeler classModeler) {
+		this.classModeler = classModeler;
+	}
+	
+
 	FaceSourceCode face;			
 		public FaceSourceCode getFace() {
 			return face;

@@ -2,7 +2,7 @@ package org.uengine.codi.mw3.model;
 
 import org.metaworks.annotation.Face;
 
-@Face(ejsPath = "genericfaces/Window.ejs", displayName = "RuleDewigner Window", options = { "hideLabels" }, values = { "true" })
+@Face(ejsPath = "genericfaces/Window.ejs", displayName = "Rule Designer", options = { "hideLabels" }, values = { "true" })
 public class RuleDesignerWindow extends ContentWindow {
 
 	RuleDesignerContentPanel ruleDesignerContentPanel;
@@ -16,13 +16,14 @@ public RuleDesignerContentPanel getRuleDesignerContentPanel() {
 		this.ruleDesignerContentPanel = ruleDesignerContentPanel;
 	}
 
-public void newRule() throws Exception {
+public void newRule(String parentFolder) throws Exception {
 	ruleDesignerContentPanel = new RuleDesignerContentPanel();
-	ruleDesignerContentPanel.newRule();
+	ruleDesignerContentPanel.newRule(parentFolder);
 }
 
 public void load(String defId) throws Exception {
 	ruleDesignerContentPanel = new RuleDesignerContentPanel();
+	//ruleDesignerContentPanel.
 	//entityDesignerContentPanel.load(defId);		
 	
 	
