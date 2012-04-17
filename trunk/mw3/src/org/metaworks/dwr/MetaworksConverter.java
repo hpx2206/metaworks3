@@ -351,6 +351,13 @@ public class MetaworksConverter extends BeanConverter{
 							if(value==null){
 								nested = null;
 							}else if(value instanceof IDAO && ((IDAO) value).getImplementationObject()!=null){
+
+								if(Thread.currentThread().getStackTrace().length > 200){
+System.out.println(" nasted value's dao type is " + value.getClass());
+								}
+
+
+								
 								nested = this.convertOutbound(value, outctx);
 							}else{
 				                nested = getConverterManager().convertOutbound(value, outctx);

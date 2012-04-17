@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javassist.CtMethod;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.metaworks.FieldDescriptor;
@@ -99,12 +101,12 @@ public class WebObjectType{
 			this.faceMappingByContext = faceMappingByContext;
 		}
 
-	Map<String, ServiceMethodContext> serviceMethodContexts;
-		public Map<String, ServiceMethodContext> getServiceMethodContexts() {
+	List<ServiceMethodContext> serviceMethodContexts;
+		public List<ServiceMethodContext> getServiceMethodContexts() {
 			return serviceMethodContexts;
 		}
 		public void setServiceMethodContexts(
-				Map<String, ServiceMethodContext> serviceMethodContexts) {
+				List<ServiceMethodContext> serviceMethodContexts) {
 			this.serviceMethodContexts = serviceMethodContexts;
 		}
 
@@ -553,16 +555,48 @@ public class WebObjectType{
 		
 		//method list
 
-		serviceMethodContexts = new HashMap<String, ServiceMethodContext>();
-		for(Method method : actCls.getMethods()){
-			ServiceMethod annotation = (ServiceMethod) getAnnotationDeeply(tryingClasses, method.getName(), ServiceMethod.class, false);
-			Face face = (Face) getAnnotationDeeply(tryingClasses, method.getName(), Face.class, false);
-			Children children = (Children) getAnnotationDeeply(tryingClasses, method.getName(), Children.class, false);
-			Name name = (Name) getAnnotationDeeply(tryingClasses, method.getName(), Name.class, false);
-			Available available =  (Available) getAnnotationDeeply(tryingClasses, method.getName(), Available.class, false);
-			Hidden hidden =  (Hidden) getAnnotationDeeply(tryingClasses, method.getName(), Hidden.class, false);
-			Testing testSet = (Testing) getAnnotationDeeply(tryingClasses, method.getName(), Testing.class, false);
-			Test test = (Test) getAnnotationDeeply(tryingClasses, method.getName(), Test.class, false);
+		serviceMethodContexts = new ArrayList<ServiceMethodContext>();
+
+		List<String> methodNameList = new ArrayList<String>();
+		try{
+			Map dupChecker = new HashMap<String, String>();
+			CtMethod[] methods1 = ObjectType.classPool.get(actCls.getName()).getDeclaredMethods();
+			CtMethod[] methods2 = ObjectType.classPool.get(actCls.getName()).getMethods();
+			CtMethod[][] methodGroup = new CtMethod[][]{methods1, methods2};
+			
+			for(int j=0; j<methodGroup.length; j++){
+				CtMethod[] methods = methodGroup[j];
+				for(int i=0; i<methods.length; i++){
+					
+					if(methods[i].getParameterTypes().length>0)
+						continue;
+					
+					String methodName = methods[i].getName();
+					if(dupChecker.containsKey(methodName)) 
+						continue;
+					
+					dupChecker.put(methodName, methodName);
+					methodNameList.add(methodName);
+				}
+			}
+		}catch(Exception e){
+			Method[] methods = actCls.getMethods();
+			for(int i=0; i<methods.length; i++){
+				if(methods[i].getParameterTypes().length>0)
+					continue;
+
+				methodNameList.add(methods[i].getName());
+			}
+		}
+		
+		for(String methodName : methodNameList){
+			
+			Method method = null;
+			try{
+				method = actCls.getMethod(methodName, new Class[]{});
+			}catch(Exception e){
+				continue;
+			}
 			
 //			if(annotation==null && iDAOClass != null){
 //				try{
@@ -581,10 +615,18 @@ public class WebObjectType{
 //			}
 //			
 
+			ServiceMethod annotation = (ServiceMethod) getAnnotationDeeply(tryingClasses, method.getName(), ServiceMethod.class, false);
 			
-			if(method.getParameterTypes().length == 0 && annotation!=null){
+			if(annotation!=null){
 				
-				
+				Face face = (Face) getAnnotationDeeply(tryingClasses, method.getName(), Face.class, false);
+				Children children = (Children) getAnnotationDeeply(tryingClasses, method.getName(), Children.class, false);
+				Name name = (Name) getAnnotationDeeply(tryingClasses, method.getName(), Name.class, false);
+				Available available =  (Available) getAnnotationDeeply(tryingClasses, method.getName(), Available.class, false);
+				Hidden hidden =  (Hidden) getAnnotationDeeply(tryingClasses, method.getName(), Hidden.class, false);
+				Testing testSet = (Testing) getAnnotationDeeply(tryingClasses, method.getName(), Testing.class, false);
+				Test test = (Test) getAnnotationDeeply(tryingClasses, method.getName(), Test.class, false);
+	
 				ServiceMethodContext smc = new ServiceMethodContext();
 				smc.setMethodName(method.getName());
 				smc.setWhen(annotation.when());
@@ -702,7 +744,7 @@ public class WebObjectType{
 					}
 				}
 				
-				serviceMethodContexts.put(smc.getMethodName(), smc);
+				serviceMethodContexts.add(smc);
 				
 			}
 		}

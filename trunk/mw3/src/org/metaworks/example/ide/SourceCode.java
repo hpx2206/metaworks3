@@ -64,7 +64,6 @@ public class SourceCode {
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_STICK)
 	public CodeAssist requestAssist(){
 		CodeAssist codeAssist = new CodeAssist();
-		codeAssist.setAssistances(new ArrayList<String>());
 //		codeAssist.getAssistances().add("");
 		
 		codeAssist.setSrcCodeObjectId(clientObjectId);

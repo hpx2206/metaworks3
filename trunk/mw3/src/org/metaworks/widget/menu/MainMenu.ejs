@@ -8,11 +8,12 @@
 		if(objectMetadata.serviceMethodContexts){
 			for(var key in objectMetadata.serviceMethodContexts){
 			
-				var methodName = methods[key].methodContext.methodName;
+				var serviceMethod = objectMetadata.serviceMethodContexts[key];
+				var methodName = serviceMethod.methodName;
 				var menuName = methodName;
 				
-				if(methods[key].methodContext.displayName)
-					menuName = methods[key].methodContext.displayName;			
+				if(serviceMethod.displayName)
+					menuName = serviceMethod.displayName;			
 			
 				menuName = menuName.replace("\&", "");
 %>

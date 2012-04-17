@@ -9,6 +9,8 @@ public class CodeAssist {
 	
 	public CodeAssist(){
 		setDocument(new CodeAssistDocument());
+		setAssistances(new ArrayList<String>());
+
 	}
 	
 	ArrayList<String> assistances;
