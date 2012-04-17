@@ -1,8 +1,13 @@
 package org.metaworks.widget.layout;
 
-public class Layout {
+import org.metaworks.ContextAware;
+import org.metaworks.MetaworksContext;
+
+public class Layout implements ContextAware {
 
 	public Layout() {
+		setMetaworksContext(new MetaworksContext());		
+		getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 	}
 	
 	Object north;
@@ -60,4 +65,13 @@ public class Layout {
 		public void setName(String name) {
 			this.name = name;
 		}
+		
+	MetaworksContext metaworksContext;
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
+		}
+		
 }
