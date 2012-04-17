@@ -18,15 +18,16 @@
 		if(objectMetadata.serviceMethodContexts){
 			for(var key in objectMetadata.serviceMethodContexts){
 			
-				var methodName = methods[key].methodContext.methodName;
+				var serviceMethod = objectMetadata.serviceMethodContexts[key];
+				var methodName = serviceMethod.methodName;
 				var menuName = methodName;
 				
-				if(methods[key].methodContext.displayName)
-					menuName = methods[key].methodContext.displayName;			
+				if(serviceMethod.displayName)
+					menuName = serviceMethod.displayName;			
 			
 				menuName = menuName.replace("\&", "");
 				
-				var className = methods[key].object.__className;
+				var className = methods[methodName].object.__className;
 				
 				className = className.split('.').join('/');
 				
@@ -40,7 +41,7 @@
 		<div class="clock_no">
 			<ul>
 				<li class="text"><a href="#" onclick="mw3.getFaceHelper('<%=objectId%>').callMethod(this, '<%=methodName%>');"><span><%=menuName%></span></a>
-				<li class="ctrl"><span><%=methods[key].methodContext.keyBinding%></span></li>
+				<li class="ctrl"><span><%=serviceMethod.keyBinding%></span></li>
 			</ul>
 		</div>
 <%
@@ -61,7 +62,7 @@
 				<div class="clock">
 				<ul>
 				<li class="text"><a href="#"><span>screen</span></a></li>
-				<li class="ctrl">methods[key].methodContext.keyBinding</li>
+				<li class="ctrl">serviceMethod.keyBinding</li>
 				</ul>
 				</div>
 				-->

@@ -74,8 +74,10 @@
    
    if(objectMetadata.serviceMethodContexts)
    for(var key in objectMetadata.serviceMethodContexts){
+   	   		var serviceMethod = objectMetadata.serviceMethodContexts[key];
+   	
    
-%><%=methods[key].here()%> <%   
+%><%=methods[serviceMethod.methodName].here()%> <%   
    }
    
    if(mw3.when != mw3.WHEN_EDIT && showEditBtn){  

@@ -329,9 +329,14 @@
 									}
 
 									//following methods are not null, it will creates the lazy-loaded tree mechanism.
+									
+									var serviceMethodMap = {};
+									
 									if(webObjectType.serviceMethodContexts)
 									for(var serviceMethodName in webObjectType.serviceMethodContexts){
 										var serviceMethod = webObjectType.serviceMethodContexts[serviceMethodName];
+										
+										serviceMethodMap[serviceMethod.methodName] = serviceMethod;
 										
 										if(!serviceMethod.displayName)
 											serviceMethod.displayName = serviceMethod.methodName.substr(0,1).toUpperCase() + serviceMethod.methodName.substr(1, serviceMethod.methodName.length-1);
@@ -346,6 +351,8 @@
 										if(serviceMethod.keyBinding)
 											webObjectType['focusable'] = true;
 									}
+									
+									webObjectType['serviceMethodContextMap'] = serviceMethodMap;
 								
 				        		},
 
@@ -596,11 +603,9 @@
 					var theDiv = $("#" + targetDivId);
 					
 					if(theDiv[0] && metadata)
-				    for(var methodName in metadata.serviceMethodContexts){
-				   		var methodContext = metadata.serviceMethodContexts[methodName];
+				    for(var methodName in metadata.serviceMethodContextMap){
+				   		var methodContext = metadata.serviceMethodContextMap[methodName];
 
-		   			
-			   		
 			   			if(methodContext.keyBinding && methodContext.keyBinding.length > 0){
 			   				
 			   				for(var i=0; i<methodContext.keyBinding.length; i++){
@@ -930,7 +935,15 @@
 				
 				var metadata = this.getMetadata(className);
 				
-				var elementTag = (metadata.faceOptions && metadata.faceOptions['htmlTag'] ? metadata.faceOptions['htmlTag'] : "div");
+				var elementTag = 
+					(options && options['htmlTag'] ? 
+						options['htmlTag'] 
+						: 
+						( metadata.faceOptions && metadata.faceOptions['htmlTag'] ? 
+								metadata.faceOptions['htmlTag'] : "div"
+						)
+					);
+				
 				var elementClass = (metadata.faceOptions && metadata.faceOptions['htmlClass'] ? " class='" + metadata.faceOptions['htmlClass'] + "'": "");
 				
 				
@@ -1295,8 +1308,8 @@
 					var objectMetadata = this.getMetadata(className);
 					var serviceMethodContext;
 					
-					if(objectMetadata && objectMetadata.serviceMethodContexts && objectMetadata.serviceMethodContexts[svcNameAndMethodName]){
-						serviceMethodContext = objectMetadata.serviceMethodContexts[svcNameAndMethodName];
+					if(objectMetadata && objectMetadata.serviceMethodContextMap && objectMetadata.serviceMethodContextMap[svcNameAndMethodName]){
+						serviceMethodContext = objectMetadata.serviceMethodContextMap[svcNameAndMethodName];
 						if(serviceMethodContext){
 							if(serviceMethodContext.callByContent == false){
 								if(serviceMethodContext.payload){
@@ -1606,8 +1619,8 @@
 				
 				var objectMetadata = this.getMetadata(object.__className);
     			
-			   for(var methodName in objectMetadata.serviceMethodContexts){
-			   		var methodContext = objectMetadata.serviceMethodContexts[methodName];
+			   for(var methodName in objectMetadata.serviceMethodContextMap){
+			   		var methodContext = objectMetadata.serviceMethodContextMap[methodName];
 			   		
 			   		if(methodContext.clientSideCall)
 			   			eval("object['"+methodName+"'] = function(){return mw3.clientSideCall(this.__objectId, '"+methodName+"');}");
@@ -2192,10 +2205,19 @@
 						when = mw3.WHEN_VIEW;
 				}
 				
-				if(!designMode) //means general mode
-					html = mw3.locateObject(value, face, null, {when: when, descriptor: this.fieldDescriptor});
-				else if(!designModeDepth2){ //means just design mode
-					html = mw3.locateObject(value, face, null, {when: "__design-depth2", descriptor: this.fieldDescriptor});
+				
+				
+				if(!designMode){ //means general mode
+					var options = {when: when, descriptor: this.fieldDescriptor};
+					if(context && context['htmlTag']) options['htmlTag'] = context['htmlTag'];
+					
+					html = mw3.locateObject(value, face, null, options);
+				}else if(!designModeDepth2){ //means just design mode
+					
+					var options = {when: "__design-depth2", descriptor: this.fieldDescriptor};
+					if(context && context['htmlTag']) options['htmlTag'] = context['htmlTag'];
+					
+					html = mw3.locateObject(value, face, null, options);
 				}else // means this fields is within the designee 
 					html = this.fieldDescriptor.displayName + " Here.";
 				
