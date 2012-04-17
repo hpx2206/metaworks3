@@ -26,6 +26,7 @@ import org.uengine.codi.mw3.FileInputJavaFileManager;
 import org.uengine.codi.mw3.admin.ClassField;
 import org.uengine.codi.mw3.admin.ClassMethod;
 import org.uengine.codi.mw3.admin.ClassModeler;
+import org.uengine.codi.mw3.admin.JavaCodeAssist;
 import org.uengine.util.UEngineUtil;
 
 
@@ -244,8 +245,10 @@ public class JavaSourceCode extends SourceCode {
 	@ServiceMethod(callByContent = true, target = ServiceMethodContext.TARGET_STICK)
 	public CodeAssist requestAssist() {
 
-		CodeAssist codeAssist = super.requestAssist();
+		CodeAssist codeAssist = new JavaCodeAssist();
 		
+		codeAssist.setSrcCodeObjectId(getClientObjectId());
+
 		CodiClassLoader ccl = ((CodiClassLoader)Thread.currentThread().getContextClassLoader());
 		Set<Kind> kinds = new HashSet<Kind>();
 		kinds.add(Kind.CLASS);

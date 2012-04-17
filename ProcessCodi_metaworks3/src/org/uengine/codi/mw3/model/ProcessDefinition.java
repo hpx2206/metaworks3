@@ -273,6 +273,10 @@ public class ProcessDefinition extends Database<IProcessDefinition> implements I
 				entityDesignerContentPanel.load(defId);
 				
 				return entityDesignerContentPanel;		
+			}else if("rule_dt".equals(objType)){
+				ruleDesignerContentPanel.load(defId);
+				
+				return ruleDesignerContentPanel;		
 			}
 //		}finally{
 //			codiPmSVC.remove();
@@ -303,6 +307,11 @@ public class ProcessDefinition extends Database<IProcessDefinition> implements I
 	
 	@Autowired
 	public EntityDesignerContentPanel entityDesignerContentPanel;
+	
+	@Autowired
+	public RuleDesignerContentPanel ruleDesignerContentPanel;
+	
+	
 	
 	
 	@AutowiredFromClient

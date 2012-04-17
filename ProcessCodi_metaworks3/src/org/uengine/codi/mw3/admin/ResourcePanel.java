@@ -10,7 +10,7 @@ public class ResourcePanel {
 	
 	public ResourcePanel(IUser user) throws Exception {
 		
-		refresh();
+		init();
 		
 		resourceSearchBox = new ResourceSearchBox(user);
 	}
@@ -18,14 +18,20 @@ public class ResourcePanel {
 	public ResourcePanel(){
 	}
 	
-	@ServiceMethod
-	public void refresh() throws Exception {
+	public void init() throws Exception {
 		
 		ProcessDefinition root = new ProcessDefinition();
 		root.setParentFolder("-1");
 		processDefinitions = root.findAll();
 		
 		processDefinitions.getMetaworksContext().setWhere("design");
+		
+	}
+
+	@ServiceMethod
+	public void refresh() throws Exception {
+		
+		init();
 		
 		MetaworksRemoteService.getInstance().clearMetaworksType("*");
 	}

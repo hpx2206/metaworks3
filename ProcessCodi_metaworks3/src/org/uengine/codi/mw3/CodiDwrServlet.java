@@ -21,6 +21,7 @@ import javassist.ClassPool;
 import javassist.CtClass;
 import javassist.CtConstructor;
 import javassist.CtMethod;
+import javassist.NotFoundException;
 import javassist.expr.ExprEditor;
 import javassist.expr.MethodCall;
 import javassist.util.HotSwapper;
@@ -34,6 +35,7 @@ import javax.servlet.http.HttpSession;
 import org.codehaus.commons.compiler.jdk.JavaSourceClassLoader;
 import org.directwebremoting.WebContext;
 import org.directwebremoting.WebContextFactory;
+import org.metaworks.ObjectType;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.dwr.TransactionalDwrServlet;
@@ -289,7 +291,14 @@ public class CodiDwrServlet extends TransactionalDwrServlet{
 		URL urls[] = classLoader.getURLs();
 		StringBuffer sbClasspath = new StringBuffer();
 		for(URL url : urls){
-			sbClasspath.append(url.getFile().toString()).append(":");
+			String urlStr = url.getFile().toString();
+			sbClasspath.append(urlStr).append(":");
+			try {
+				ObjectType.classPool.insertClassPath(urlStr);
+			} catch (NotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 		cl.setCompilerOptions(
@@ -297,6 +306,13 @@ public class CodiDwrServlet extends TransactionalDwrServlet{
 //						"-classpath", "/Users/jyjang/Documents/workspace/ProcessCodi_metaworks3/WebContent/WEB-INF/lib/metaworks3.jar:/Users/jyjang/Documents/workspace/ProcessCodi_metaworks3/WebContent/WEB-INF/lib/mongo-2.7.2.jar"		
 						"-classpath", sbClasspath.toString()
 				});
+		
+		
+		//ClassPool setting
+		
+		
+		
+
 
 //		if(sourceCodeBase==null)
 //			sourceCodeBase = "/Users/jyjang/javasources/";
