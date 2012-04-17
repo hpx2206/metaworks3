@@ -405,7 +405,7 @@ public class Database<T extends IDAO> implements IDAO, Serializable, Cloneable{
 						
 						fieldValue = instance.getKeyFieldValue();
 					} catch(NullPointerException e) {						
-						throw new NullPointerException("FieldDescriptor Name : " + fd.getName());
+						throw new NullPointerException("field descriptor is null (name : " + fd.getName() + ")");
 					}						
 				}
 				
