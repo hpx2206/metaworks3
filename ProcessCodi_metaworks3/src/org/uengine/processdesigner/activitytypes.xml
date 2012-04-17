@@ -72,6 +72,11 @@
   
   <org.uengine.processdesigner.ActivityTypeDescriptor>
     <group>$activitytypes.groups.control</group>
+    <activityTypeClass>org.uengine.kernel.RuleProcessActivity</activityTypeClass>
+  </org.uengine.processdesigner.ActivityTypeDescriptor>
+  
+  <org.uengine.processdesigner.ActivityTypeDescriptor>
+    <group>$activitytypes.groups.control</group>
     <activityTypeClass>org.uengine.kernel.EndActivity</activityTypeClass>
   </org.uengine.processdesigner.ActivityTypeDescriptor>
   
