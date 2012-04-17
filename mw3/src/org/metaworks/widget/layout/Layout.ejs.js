@@ -45,6 +45,12 @@ org_metaworks_widget_layout_Layout.prototype.load = function(){
 	this.layout = this.div.layout(options);
 }
 
+org_metaworks_widget_layout_Layout.prototype.destroy = function(){
+	console.debug('layout destroy');
+	
+	$(this.divId).layout().destroy();
+}
+
 org_metaworks_widget_layout_Layout.prototype.show = function(target){
 	
 	var pane = this.div.parent();	
