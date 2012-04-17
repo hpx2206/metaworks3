@@ -374,14 +374,35 @@ public class WebObjectType{
 			if(getAnnotationDeeply(tryingClasses, fd.getName(), NonEditable.class)!=null)
 				fd.setAttribute("nonEditable", new Boolean(true));
 			
+			// 2012-04-12 cjw where, how 정보 추가
 			Available available = (Available) getAnnotationDeeply(tryingClasses, fd.getName(), Available.class); 
-			if(available!=null && available.when().length > 0){
-				Map whens = new HashMap();
-				for(String when : available.when()){
-					whens.put(when, when);
+			if(available!=null){
+				if(available.when().length > 0){
+					Map whens = new HashMap();
+					for(String when : available.when()){
+						whens.put(when, when);
+					}
+					
+					fd.setAttribute("available.when", whens);
+				}				
+				
+				if(available.where().length > 0){
+					Map wheres = new HashMap();
+					for(String where : available.where()){
+						wheres.put(where, where);
+					}
+					
+					fd.setAttribute("available.where", wheres);				
 				}
 				
-				fd.setAttribute("available.when", whens);
+				if(available.how().length > 0){
+					Map hows = new HashMap();
+					for(String how : available.how()){
+						hows.put(how, how);
+					}
+					
+					fd.setAttribute("available.how", hows);
+				}
 			}
 
 			
