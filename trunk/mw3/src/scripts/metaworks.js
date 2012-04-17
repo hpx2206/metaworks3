@@ -290,6 +290,14 @@
 
 					if(!objectTypeName && objectTypeName.trim().length == 0) return;
 					
+					if(objectTypeName.length > 2 && objectTypeName.substr(-2) == '[]'){			//if array of some object type, use ArrayFace with mapped class mapping for the object type.
+						return;
+					}
+					
+					if(objectTypeName.length > 4 && objectTypeName.substr(0, 2) == '[L' && objectTypeName.substr(-1) == ';'){			//if array of some object type, use ArrayFace with mapped class mapping for the object type.
+						return;
+					}
+					
 					if(objectTypeName.indexOf(":") != -1)
 						objectTypeName = objectTypeName.split(':')[0];
 				
@@ -942,12 +950,12 @@
 					(options && options['htmlTag'] ? 
 						options['htmlTag'] 
 						: 
-						( metadata.faceOptions && metadata.faceOptions['htmlTag'] ? 
+						( metadata && metadata.faceOptions && metadata.faceOptions['htmlTag'] ? 
 								metadata.faceOptions['htmlTag'] : "div"
 						)
 					);
 				
-				var elementClass = (metadata.faceOptions && metadata.faceOptions['htmlClass'] ? " class='" + metadata.faceOptions['htmlClass'] + "'": "");
+				var elementClass = (metadata && metadata.faceOptions && metadata.faceOptions['htmlClass'] ? " class='" + metadata.faceOptions['htmlClass'] + "'": "");
 				
 				
 				html="<" + elementTag + elementClass + " id='"+divId+ "'" + (metadata && metadata.focusable ? " tabindex='"+objectId+"'" : "") + " className='" + className + "'>...  LOADING PROPERTY ...</div><div id='"+infoDivId+"'></div>";
