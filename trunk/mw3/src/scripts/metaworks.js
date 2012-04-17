@@ -148,9 +148,10 @@
 				
 				/*
 				 * 2012-04-05 cjw 임시 주석 처리
+				 */
 				if(this.objects[objectId]==null)
 					return null;
-				*/
+				
 				
 				if(!this.face_ObjectIdMapping[objectId])					
 					return null;
@@ -881,7 +882,9 @@
 					}
 					
 					var id ="";
-					if(metadata.keyFieldDescriptor)
+					
+					// 2012-04-16 key value null 경우 undefined 안먹게 수정
+					if(metadata.keyFieldDescriptor && value[metadata.keyFieldDescriptor.name])
 						id = "@" + this._createObjectKey(value[metadata.keyFieldDescriptor.name]);
 					
 					var returnValues=[];
@@ -1040,9 +1043,11 @@
 				var divId =  "#" + this._getObjectDivId(objectId);
 				var infoDivId =  "#" + this._getInfoDivId(objectId);
 				
-				// 2012-04-04 cjw destory 호출 후 removeObject
-    			if(this.objects[objectId] && this.getFaceHelper(objectId) && this.getFaceHelper(objectId).destroy)
-    				this.getFaceHelper(objectId).destroy();
+				// 2012-04-04 cjw destroy 호출 후 removeObject
+				var faceHelper = this.getFaceHelper(objectId);
+				
+    			if(faceHelper && faceHelper.destroy)
+    				faceHelper.destroy();
 				
 				$(divId).remove();
 				$(infoDivId).remove();		
@@ -1076,7 +1081,12 @@
 					var objKey = this._createObjectKey(obj);
 					this.objectId_KeyMapping[objKey] = null;
 					
-
+					// 2012-04-16 chlid destroy call
+					var faceHelper = this.getFaceHelper(beanPath.valueObjectId);
+					
+					if(faceHelper && faceHelper.destroy)
+						faceHelper.destroy();
+					
 					this.objects[beanPath.valueObjectId] = null;					
 					this.faceHelpers[beanPath.valueObjectId] = null;
 					
@@ -1259,6 +1269,16 @@
 				}
 			}
 			
+			Metaworks3.prototype.startLoading = function(objId){
+				var infoDivId = "#"+this._getInfoDivId(objId);
+				
+				$(infoDivId).css('display', 'block').html("<img src='dwr/metaworks/images/circleloading.gif' align=middle> LOADING ...");
+			}
+						
+			Metaworks3.prototype.endLoading = function(){
+							
+			}
+			
 			Metaworks3.prototype.call = function (svcNameAndMethodName){
 				mw3.loaded = false;
 				
@@ -1349,14 +1369,14 @@
 						}
 					}
 
-					var infoDivId = "#"+this._getInfoDivId(objId);
+					
 					
 					if(serviceMethodContext.target!="none"){
 						
 						if(this.getFaceHelper(objId) && this.getFaceHelper(objId).startLoading){
 							this.getFaceHelper(objId).startLoading();
 						}else{
-							$(infoDivId).css('display', 'block').html("<img src='dwr/metaworks/images/circleloading.gif' align=middle> LOADING ...");
+							this.startLoading(objId);
 						}
 					}
 
@@ -1513,27 +1533,22 @@
 				        				//objId = sourceObjectIdNewlyGotten;
 				        			}
 				        			
+				        			// 2012-04-16 faceHelper call change
 				        			if(serviceMethodContext.target != "none"){
 				        				mw3.onLoadFaceHelperScript();
 					        			
-					        			if(mw3.getFaceHelper(objId)){
-					        				if(mw3.getFaceHelper(objId).endLoading){
+					        			if(mw3.getFaceHelper(objId) && mw3.getFaceHelper(objId).endLoading){
 					        					mw3.getFaceHelper(objId).endLoading();
-					        				}
+					        			}else{
+					        				mw3.endLoading(objId);
+					        			}
 					        				
-					        				if(mw3.getFaceHelper(objId).showStatus){
-					        					mw3.getFaceHelper(objId).showStatus( svcNameAndMethodName + " DONE.");
-					        				}else{
+					        			if(mw3.getFaceHelper(objId) && mw3.getFaceHelper(objId).showStatus){
+					        				mw3.getFaceHelper(objId).showStatus( svcNameAndMethodName + " DONE.");
+					        			}else{
 	
-						    					mw3.showInfo(objId, svcNameAndMethodName + " DONE");
-	
-					        				}
-					        				
-					    				}else{
-					    					mw3.showInfo(objId, svcNameAndMethodName + " DONE");
-				        					
-					    				}
-					        			
+						    				mw3.showInfo(objId, svcNameAndMethodName + " DONE");	
+					        			}
 				        			}
 				        			
 				        			mw3.loaded = true;				        			
@@ -1558,7 +1573,7 @@
 										if(!exception)
 											mw3.showError(objId, errorString, svcNameAndMethodName);
 										else
-											mw3.showError(objId, (exception.targetException ? exception.targetException.message : exception.message), svcNameAndMethodName);
+											mw3.showError(objId, (exception.targetException ? exception.targetException.message : exception.message), svcNameAndMethodName, exception);
 									}
 				        		}
 						
@@ -1984,10 +1999,10 @@
 							var fieldValue = value[fieldDescriptor.name];
 
 							if(fieldValue && fieldValue.__className){
-								var objectMetadata = this.getMetadata(fieldValue.__className); 
+								var objectMetadataFD = this.getMetadata(fieldValue.__className); 
 								
-								for(var i=0; i<objectMetadata.superClasses.length; i++){
-									var className = objectMetadata.superClasses[i];
+								for(var j=0; j<objectMetadataFD.superClasses.length; j++){
+									var className = objectMetadataFD.superClasses[j];
 									
 									this.objectId_ClassNameMapping[className] = {value: fieldValue, __isAutowiredDirectValue: true};
 								}
