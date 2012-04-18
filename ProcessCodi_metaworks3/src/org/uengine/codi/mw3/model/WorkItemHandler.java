@@ -83,6 +83,9 @@ public class WorkItemHandler implements ContextAware{
 							if(processVariableValue instanceof ITool){
 								((ITool)processVariableValue).onLoad();
 							}
+						} else if (processVariableValue instanceof ITool) {
+							// for completed ComplexType Object implements ITool
+							((ITool) processVariableValue).onLoad();
 						}
 						
 					}else{
