@@ -572,7 +572,8 @@
 								resources			: (objectRef ? objectRef.fields  : null), //TODO: later should be sent only with resources
 								methods				: (objectRef ? objectRef.methods : null),
 								descriptor			: descriptor,
-								editFunction		: editFunction
+								editFunction		: editFunction,
+								options				: options
 								
 						};
 						
@@ -955,10 +956,38 @@
 						)
 					);
 				
-				var elementClass = (metadata && metadata.faceOptions && metadata.faceOptions['htmlClass'] ? " class='" + metadata.faceOptions['htmlClass'] + "'": "");
+				var elementClass = 
+					(options && options['htmlClass'] ? 
+							options['htmlClass'] 
+							: 
+							( metadata.faceOptions && metadata.faceOptions['htmlClass'] ? 
+									metadata.faceOptions['htmlClass'] : ""
+							)
+						);
+								
+				elementClass = (elementClass ? " class='" + elementClass + "'": "");
 				
+				var elementSubTag = "";
 				
-				html="<" + elementTag + elementClass + " id='"+divId+ "'" + (metadata && metadata.focusable ? " tabindex='"+objectId+"'" : "") + " className='" + className + "'>...  LOADING PROPERTY ...</div><div id='"+infoDivId+"'></div>";
+				if(elementTag == 'tr')
+					elementSubTag = 'td';
+				else if(elementTag == 'ul')
+					elementSubTag = 'li';
+				else if(elementTag == 'dl')
+					elementSubTag = 'dd';
+				
+				html="<" + elementTag + elementClass + " id='"+divId+ "'" + (metadata && metadata.focusable ? " tabindex='"+objectId+"'" : "") + " className='" + className + "'>";
+				
+				if(elementSubTag)
+					html+= '<' + elementSubTag + '>';
+				
+				html+= "...  LOADING PROPERTY ...";
+				
+				if(elementSubTag)
+					html+= '</' + elementSubTag + '>';
+				
+				html+= "</" + elementTag + ">";
+				html+= "<div id='"+infoDivId+"'></div>";
 				
 //				html+="<div id='"+divId+ "'" + (metadata && metadata.focusable ? " tabindex='"+objectId+"'" : "") + " className='" + className + "'>...  LOADING PROPERTY ...</div><div id='"+infoDivId+"'></div>";
 				
@@ -1302,8 +1331,9 @@
 				}
 				
 				// 2012-04-14 cjw 재귀호출 막음
-				// var getAgain = (arguments.length > 2 ? (arguments[2] ? arguments[2] : true) : true);
-				var getAgain = (arguments.length > 2 ? arguments[2] : true);
+				// 2012-04-18 이전 수정 버전 문제로 재수정 (undefined 일때 true 가 되여야함)
+				var getAgain = (arguments.length > 2 ? (typeof arguments[2] != 'undefined' ? arguments[2] : true) : true);
+				//var getAgain = (arguments.length > 2 ? arguments[2] : true);
 				var sync = (arguments.length > 3 ? arguments[3] : false);
 				
 				
