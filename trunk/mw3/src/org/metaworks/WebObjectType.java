@@ -238,7 +238,7 @@ public class WebObjectType{
 			setFaceComponentPath(typeFace.ejsPath());
 			
 			if(typeFace.ejsPathForArray().length() > 0)
-				setFaceForArray(typeFace.ejsPath());
+				setFaceForArray(typeFace.ejsPathForArray());
 			
 		}
 		
