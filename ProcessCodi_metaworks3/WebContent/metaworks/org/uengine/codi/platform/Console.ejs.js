@@ -15,8 +15,10 @@ org_uengine_codi_platform_Console.prototype.addError = function(log){
 	var workflowy = mw3.getAutowiredObject('org.uengine.codi.mw3.knowledge.Workflowy');
 	
 	if(workflowy){
-		var keword = log.substring(log.lastIndexOf(':')+1).trim();
-		//workflowy.keyword = log.split('$').join('');
+		//log.split('$').join('');
+		var keyword = log.substring(log.lastIndexOf(':')+1).trim();
+		console.debug('keyword : ' + keyword);
+		
 		workflowy.keyword = keyword;
 		workflowy.search();
 	}
