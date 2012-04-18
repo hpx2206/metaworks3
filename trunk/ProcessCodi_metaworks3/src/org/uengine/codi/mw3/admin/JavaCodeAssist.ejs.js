@@ -1,4 +1,4 @@
-var org_metaworks_example_ide_CodeAssist = function(objectId, className){
+var org_uengine_codi_mw3_admin_JavaCodeAssist = function(objectId, className){
 
 	this.objectId = objectId;
 	this.className = className;
@@ -113,7 +113,7 @@ var org_metaworks_example_ide_CodeAssist = function(objectId, className){
 	}
 }
 
-org_metaworks_example_ide_CodeAssist.prototype.enter = function(value){
+org_uengine_codi_mw3_admin_JavaCodeAssist.prototype.enter = function(value){
 	
 	var object = mw3.objects[this.objectId];
 	var sourceCode = mw3.objects[object.srcCodeObjectId];
@@ -195,7 +195,7 @@ org_metaworks_example_ide_CodeAssist.prototype.enter = function(value){
 	$("#" + mw3.popupDivId).remove();
 }
 
-org_metaworks_example_ide_CodeAssist.prototype.requestDoc = function(value) {
+org_uengine_codi_mw3_admin_JavaCodeAssist.prototype.requestDoc = function(value) {
 	var object = mw3.objects[this.objectId];
 
 	var sourceCode = mw3.objects[object.srcCodeObjectId];
