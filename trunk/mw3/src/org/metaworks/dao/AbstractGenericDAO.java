@@ -977,8 +977,6 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 				String propertyNameOrg = methodName.substring(startWithGet ? 3 : 2);
 				String propertyName = propertyNameOrg.toUpperCase();
 				//propertyName = propertyName;
-				
-				
 	
 				if(propertyName.length()==0 && args.length==1){//from untyped DAO's getter
 					return get((String)args[0]);
@@ -989,6 +987,74 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 					
 					Object returnValue = null;
 					
+					
+					// It is the chance to convert primitive value to desired object //
+					if(!Database.dbPrimitiveTypes.containsKey(m.getReturnType())){
+						WebObjectType type = MetaworksRemoteService.getInstance().getMetaworksType(m.getReturnType().getName());
+						ObjectType objectType = (ObjectType) type.metaworks2Type();
+						ObjectInstance objInst = (ObjectInstance) objectType.createInstance();
+						
+						if(IDAO.class.isAssignableFrom(m.getReturnType())){
+							objInst.setObject(MetaworksDAO.createDAOImpl(m.getReturnType()));
+						}
+						
+						boolean atLeastOnceHaveValue = false;
+						
+						ORMapping ormapping = m.getAnnotation(ORMapping.class);
+						if(ormapping!=null){
+							String[] ORMPropNames = ormapping.objectFields();
+							for(int i=0; i<ORMPropNames.length; i++){
+								
+								try{
+									
+									String propName = ormapping.databaseFields()[i].toUpperCase();
+									
+									Object value = (rowSet!=null ? rowSet.getObject(propName) : cache.get(propName));
+									
+									String mappingPropName = ORMPropNames[i];
+									mappingPropName = WebObjectType.toUpperStartedPropertyName(mappingPropName);
+									
+									objInst.setFieldValue(mappingPropName, value);
+									atLeastOnceHaveValue = true;
+								}catch(Exception ex){
+								}
+							}
+							
+							if(atLeastOnceHaveValue)
+								return objInst.getObject();
+						}
+						
+						for(int i=0; i<objectType.getFieldDescriptors().length; i++){
+							FieldDescriptor fd = objectType.getFieldDescriptors()[i];
+														
+							String actualPropertyName = propertyName + "___" + fd.getName();
+
+							try{
+								String propName = actualPropertyName.toUpperCase();
+								
+								//if cache doesn't contains the property name, it should be ignored since cache.get tries to return null value instead of throwing exception.
+								if(rowSet==null && !cache.containsKey(propName)) 
+									continue;
+								
+								Object
+									propValue = (rowSet!=null ? rowSet.getObject(propName) : cache.get(propName));
+								
+								objInst.setFieldValue(fd.getName(), propValue);
+								atLeastOnceHaveValue = true;
+							}catch(Exception ex){
+							}
+						}
+						
+						if(atLeastOnceHaveValue){
+							
+							if(objInst instanceof ORMappingListener){
+								((ORMappingListener)objInst).onRelation2Object();
+							}
+							
+							return objInst.getObject();
+						}
+					}
+
 					if(rowSet!=null) {
 						
 						
@@ -1022,63 +1088,8 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 									returnValue = null;
 								
 							}catch(Exception e){
-								// It is the chance to convert primitive value to desired object //
-								if(!Database.dbPrimitiveTypes.containsKey(m.getReturnType())){
-									WebObjectType type = MetaworksRemoteService.getInstance().getMetaworksType(m.getReturnType().getName());
-									ObjectType objectType = (ObjectType) type.metaworks2Type();
-									ObjectInstance objInst = (ObjectInstance) objectType.createInstance();
-									
-									if(IDAO.class.isAssignableFrom(m.getReturnType())){
-										objInst.setObject(MetaworksDAO.createDAOImpl(m.getReturnType()));
-									}
-									
-									boolean atLeastOnceHaveValue = false;
-									
-									ORMapping ormapping = m.getAnnotation(ORMapping.class);
-									if(ormapping!=null){
-										String[] ORMPropNames = ormapping.objectFields();
-										for(int i=0; i<ORMPropNames.length; i++){
-											
-											try{
-												Object value = rowSet.getObject(ormapping.databaseFields()[i]);
-												
-												String mappingPropName = ORMPropNames[i];
-												mappingPropName = WebObjectType.toUpperStartedPropertyName(mappingPropName);
-												
-												objInst.setFieldValue(mappingPropName, value);
-												atLeastOnceHaveValue = true;
-											}catch(Exception ex){
-											}
-										}
-										
-										if(atLeastOnceHaveValue)
-											return objInst.getObject();
-									}
-									
-									for(int i=0; i<objectType.getFieldDescriptors().length; i++){
-										FieldDescriptor fd = objectType.getFieldDescriptors()[i];
-																	
-										String actualPropertyName = propertyName + "___" + fd.getName();
 	
-										try{
-											Object propValue = rowSet.getObject(actualPropertyName.toUpperCase());
-											objInst.setFieldValue(fd.getName(), propValue);
-											atLeastOnceHaveValue = true;
-										}catch(Exception ex){
-										}
-									}
-									
-									if(atLeastOnceHaveValue){
-										
-										if(objInst instanceof ORMappingListener){
-											((ORMappingListener)objInst).onRelation2Object();
-										}
-										
-										return objInst.getObject();
-									}
-								}
-	
-								throw new Exception("failed to get property value '" + propertyName + "'", e);
+								throw new Exception("failed to get property value '" + daoClass.getName() + "." + propertyName + "'", e);
 							}
 						}
 					} else {
@@ -1095,11 +1106,6 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 						
 						returnValue = cache.get(propertyName);
 						
-	//					if("MetaworksContext".equals(propertyName) &&
-	//						returnValue == null){
-	//						returnValue = new MetaworksContext();
-	//						cache.put(propertyName, returnValue);
-	//					}
 					}
 					
 					// try to convert an integer value to proper mapping values for types
