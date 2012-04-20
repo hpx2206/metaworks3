@@ -10,7 +10,10 @@ var org_metaworks_website_MetaworksFile = function(objectId, className){
 	if(object.uploadedPath){
 		$("#filebtnadd_" + this.objectId).css('display', 'none');
 		
-		faceHelper.setFilename(faceHelper.extraFilename(object.filename));
+		if(object.filename)
+			faceHelper.setFilename(faceHelper.extraFilename(object.filename));
+		else
+			faceHelper.setFilename(faceHelper.extraFilename(object.uploadedPath));
 		
 		if(object.metaworksContext.when == 'image'){
 			var image = object.downloadImage(false);
