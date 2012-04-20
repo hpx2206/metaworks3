@@ -28,6 +28,7 @@ public class MetaworksFile implements ContextAware {
 		getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 	}
 	
+
 	MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
 			return metaworksContext;
