@@ -960,7 +960,7 @@
 					(options && options['htmlClass'] ? 
 							options['htmlClass'] 
 							: 
-							( metadata.faceOptions && metadata.faceOptions['htmlClass'] ? 
+							( metadata && metadata.faceOptions && metadata.faceOptions['htmlClass'] ? 
 									metadata.faceOptions['htmlClass'] : ""
 							)
 						);
@@ -1080,18 +1080,23 @@
 				var divId =  "#" + this._getObjectDivId(objectId);
 				var infoDivId =  "#" + this._getInfoDivId(objectId);
 				
+				this.newBeanProperty(objectId);
+				
+				$(divId).remove();
+				$(infoDivId).remove();		
+				
+				/*
 				// 2012-04-04 cjw destroy 호출 후 removeObject
 				var faceHelper = this.getFaceHelper(objectId);
 				
     			if(faceHelper && faceHelper.destroy)
     				faceHelper.destroy();
 				
-				$(divId).remove();
-				$(infoDivId).remove();		
 				
 				this.objects[objectId] = null;
 				this.faceHelpers[objectId] = null;
 				this.beanExpressions[objectId] = null;
+				*/
 				
 				//TODO: the objectId_KeyMapping also need to clear with back mapping or key generation with value;
 				
