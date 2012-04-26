@@ -1,14 +1,5 @@
 <%
-
-	if (value != null){	
-		var width = null;
-		var height = null;
-	
-		if(descriptor!=null){
-			width = descriptor.getOptionValue('width');
-			height = descriptor.getOptionValue('height');
-		}
-		
+	if (value){	
 		var objectName; 
 
 		if(value.__toString != null){
@@ -35,17 +26,16 @@
 		  	
 		  	var fieldValue = value[fd.name];
 %>
-			<%=fields[fd.name] ? fields[fd.name].here() : "XXX"%>
+		<%=fields[fd.name] ? fields[fd.name].here() : "XXX"%>
 <%
 		}						   
-%>							
-							
-<%						   
+
 		if(objectMetadata.serviceMethodContexts){
-			for(var key in objectMetadata.serviceMethodContexts){						   
+			for(var key in objectMetadata.serviceMethodContexts){
+   	   			var serviceMethod = objectMetadata.serviceMethodContexts[key];					   
 %>
-									<%=methods[key].here()%>
-<%   
+		<%=methods[serviceMethod.methodName].here()%>
+<%   			
 			}
 		}
 	}
