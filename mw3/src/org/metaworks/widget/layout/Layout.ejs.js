@@ -46,8 +46,6 @@ org_metaworks_widget_layout_Layout.prototype.load = function(){
 }
 
 org_metaworks_widget_layout_Layout.prototype.destroy = function(){
-	console.debug('layout destroy');
-	
 	$(this.divId).layout().destroy();
 }
 
