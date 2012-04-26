@@ -7,19 +7,48 @@ import org.metaworks.annotation.Hidden;
 public class ModalWindow {
 	
 	public ModalWindow() {
-		
+		this(null, 400, 0, null);
 	}
 	
 	public ModalWindow(Object panel) {
-		setPanel(panel);
+		this(panel, 400, 0, null);
 	}
 	
-	public ModalWindow(Object panel, int width, int height) {
+	public ModalWindow(Object panel, String title) {
+		this(panel, 400, 0, title);
+	}
+	
+	public ModalWindow(Object panel, int width, int height){
+		this(panel, width, height, null);
+	}
+			
+	public ModalWindow(Object panel, int width, int height, String title) {
 		setPanel(panel);
 		setWidth(width);
-		setHeight(height);
+		setHeight(height);		
+		setTitle(title);
+		setOpen(true);
 	}	
 	
+	boolean open;
+		@Hidden
+		public boolean isOpen() {
+			return open;
+		}
+		public void setOpen(boolean open) {
+			this.open = open;
+		}
+		
+	String title;
+		@Hidden
+		public String getTitle() {
+			return title;
+		}
+	
+		public void setTitle(String title) {
+			this.title = title;
+		}
+
 	int width;	
 		@Hidden
 		public int getWidth() {
