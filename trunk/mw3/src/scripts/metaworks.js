@@ -596,6 +596,17 @@
 
 						//#DEBUG POINT
 						$(targetDiv).html(html);
+
+						// object attr apply
+						var htmlAttr = (options && options['htmlAttr'] ? options['htmlAttr'] : null);
+						
+						if(htmlAttr)
+							$(targetDiv).attr(htmlAttr);
+						
+						var htmlAttrChild = (options && options['htmlAttrChild'] ? options['htmlAttrChild'] : null);
+						if(htmlAttrChild)
+							$(targetDiv).children(':first').attr(htmlAttrChild);
+						
 						
 					} catch(e) {
 						this.template_error(e, actualFace)
@@ -2169,6 +2180,11 @@
 					if(fd.attributes['available.where']){
 						return (fd.attributes['available.where'][this.where]==null);
 					} 
+
+					if(fd.attributes['available.how']){
+						return (fd.attributes['available.how'][this.how]==null);
+					} 
+
 					
 					if(fd.attributes['hidden']) 
 						return true;
@@ -2263,23 +2279,27 @@
 						when = mw3.WHEN_VIEW;
 				}
 				
-				
-				
+				var options = {descriptor: this.fieldDescriptor};
+
+				if(context){
+					if(context['htmlTag']) options['htmlTag'] = context['htmlTag'];					
+					if(context['htmlAttr']) options['htmlAttr'] = context['htmlAttr'];					
+					if(context['htmlAttrChild']) options['htmlAttrChild'] = context['htmlAttrChild'];
+				}
+			
 				if(!designMode){ //means general mode
-					var options = {when: when, descriptor: this.fieldDescriptor};
-					if(context && context['htmlTag']) options['htmlTag'] = context['htmlTag'];
+					options['when'] = when;
 					
 					html = mw3.locateObject(value, face, null, options);
 				}else if(!designModeDepth2){ //means just design mode
-					
-					var options = {when: "__design-depth2", descriptor: this.fieldDescriptor};
-					if(context && context['htmlTag']) options['htmlTag'] = context['htmlTag'];
+					options['when'] = '__design-depth2';
 					
 					html = mw3.locateObject(value, face, null, options);
 				}else // means this fields is within the designee 
 					html = this.fieldDescriptor.displayName + " Here.";
 				
 //				mw3.setContext(oldContext);
+				
 				
 				
 				mw3.addBeanProperty(this.objectId, "." + this.fieldDescriptor.name);
