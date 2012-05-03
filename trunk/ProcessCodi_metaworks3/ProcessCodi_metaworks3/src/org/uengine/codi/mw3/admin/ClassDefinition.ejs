@@ -1,0 +1,57 @@
+<table cellpadding=10>
+<%
+	if(!mw3.isHidden(fields.packageName.fieldDescriptor)){
+%>
+	<tr>		
+		<td width=90>
+			<font color="#5599dd" face="Eurostile">
+			Package Name:
+			</font>
+		</td>
+		<td>
+			<%=fields.packageName.here()%>
+		</td>
+	</tr>
+<%
+	}
+	
+	if(!mw3.isHidden(fields.className.fieldDescriptor)){
+%>	
+	<tr>	
+		<td width=80>
+			<font color="#5599dd" face="Eurostile">
+			Class Name:
+			</font>
+		</td>
+
+		<td><%=fields.className.here()%></td>
+	</tr>
+<%
+	}
+
+	if(!mw3.isHidden(fields.author.fieldDescriptor)){
+%>
+	<tr>
+		<td>
+			<font color="#5599dd" face="Eurostile">Author:</font>
+		</td>
+		<td colspan=3>
+			<%=fields.author.here()%>
+		</td>
+	</tr>
+<%
+	}
+%>
+</table>
+
+<table>
+	<tr>
+		<td><%=methods.next1.here()%></td>
+		<td><%=methods.next2.here()%></td>
+	</tr>
+</table>
+
+
+<div id="sourceCodes_<%=objectId%>" style="height:100%">
+	<%=fields.sourceCodes.here()%>
+</div>

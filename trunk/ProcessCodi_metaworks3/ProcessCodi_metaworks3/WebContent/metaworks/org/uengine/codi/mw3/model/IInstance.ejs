@@ -1,0 +1,30 @@
+<% if(value!=null){%>
+<table width="100%" border="0" cellspacing="0" cellpadding="0" class="tbl_type">						
+	<tbody>		
+	<tr  class="q" onclick="<%=methods.detail.caller()%>">
+		<td class="first_td">
+			<div class="worklistuser">
+					<dl>					                		
+						<dd><%=fields.initiator.here()%></dd>
+						<dd><%=fields.currentUser.here()%></dd>
+						<div class="clear"></div>					                	
+					</dl>	
+			</div>				
+		</td> 
+		<td width="70"></td>
+		<td>									
+			<ul class="lst_type">										
+				<li class="trigger"><span class="type_process"></span><a href="#middle-center"><%=fields.name.here()%></a></li>								
+			</ul>								
+		</td>
+		<td class="last_td">2011년 12월 27일</td>
+		<td></td>
+	</tr>
+	
+</table>
+
+
+
+
+
+<%}%>

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:lang="http://www.springframework.org/schema/lang"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd
+		http://www.springframework.org/schema/lang http://www.springframework.org/schema/lang/spring-lang.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+	<!-- ============================================================= -->
+	<!-- anotation scan -->
+	<!-- ============================================================= -->
+	<context:property-placeholder location="classpath:*.properties" />
+	<context:component-scan
+		base-package="org.uengine.codi.mw3" />
+
+	<aop:aspectj-autoproxy />
+	
+	<!-- ============================================================= -->
+	<!-- DataAccess -->
+	<!-- ============================================================= -->
+
+	
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+		destroy-method="close">
+
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://localhost:3306/uengine?useUnicode=true&amp;characterEncoding=UTF8&amp;useOldAliasMetadataBehavior=true" />
+		<property name="username" value="root" />
+		<property name="password" value="" />
+		<property name="validationQuery" value="SELECT 1" />		
+	</bean>
+	
+	
+	
+	
+	<!-- ============================================================= -->
+	<!-- Transaction -->
+	<!-- ============================================================= -->
+	<context:annotation-config />
+	<tx:annotation-driven transaction-manager="txManager" />
+
+
+	<!-- ============================================================= -->
+	<!-- uEngine SpringConnectionFactory setDataSource(DataSource) -->
+	<!-- ============================================================= -->
+	
+	<bean class="org.uengine.codi.platform.PlatformSecurityAdvice" />
+	<bean class="org.uengine.codi.common.aoptx.ProcessManagerDirtyCheckAdvice" />
+	
+
+	<bean id="springConnectionFactory"
+		class="org.uengine.codi.common.aoptx.DefaultSpringConnectionFactory"></bean>
+	
+	<bean id="processManagerBean" class="org.uengine.processmanager.ProcessManagerBean"
+		scope="request">
+		<property name="managedTransaction" value="false" />
+		<property name="autoCloseConnection" value="true" />
+		<property name="connectionFactory" ref="springConnectionFactory" />
+		<aop:scoped-proxy />
+	</bean>
+
+<!-- 	<bean id="processManagerBeanReadOnly" class="org.uengine.processmanager.ProcessManagerBean"
+		scope="request">
+		<property name="managedTransaction" value="false" />
+		<property name="autoCloseConnection" value="false" />
+		<property name="connectionFactory" ref="springConnectionFactory" />
+		<aop:scoped-proxy />
+	</bean>
+ -->
+	<bean id="springConnectionFactoryForMetaworks"
+		class="org.metaworks.spring.SpringConnectionFactory">
+		<property name="dataSource" ref="dataSource"/>	
+	</bean>
+	
+	<bean id="MetaworksRemoteService" class="org.uengine.codi.mw3.CodiMetaworksRemoteService">
+		<property name="connectionFactory" ref="springConnectionFactoryForMetaworks"/>
+	</bean>
+
+	<bean id="InstanceViewContent" class="org.uengine.codi.mw3.model.InstanceViewContent"/>	
+	<bean id="ClassDesignerContentPanel" class="org.uengine.codi.mw3.model.ClassDesignerContentPanel"/>
+	
+	<!-- bean id="MetaworksRemoteService" class="org.metaworks.dwr.MetaworksRemoteService">
+		<property name="connectionFactory" ref="springConnectionFactoryForMetaworks"/>
+	</bean-->
+	
+	<bean id="Posting" class="org.uengine.codi.mw3.model.Posting"/>
+	<bean id="ProcessDefinition" class="org.uengine.codi.mw3.model.ProcessDefinition"/>
+	<bean id="WorkItem" class="org.uengine.codi.mw3.model.WorkItem"/>
+	<bean id="CommentWorkItem" class="org.uengine.codi.mw3.model.CommentWorkItem"/>
+	<bean id="SourceCodeWorkItem" class="org.uengine.codi.mw3.model.SourceCodeWorkItem"/>
+	<bean id="WorkItemHandler" class="org.uengine.codi.mw3.model.WorkItemHandler"/>
+	<bean id="FormWorkItemHandler" class="org.uengine.codi.activitytypes.wih.FormWorkItemHandler"/>
+	
+	<bean id="InstanceView" class="org.uengine.codi.mw3.model.InstanceView"/>
+	<bean id="Instance" class="org.uengine.codi.mw3.model.Instance"/>
+	
+	
+	<bean id="Contact" class="org.uengine.codi.mw3.model.Contact"/>
+	<bean id="FormDefinition" class="org.uengine.codi.mw3.admin.FormDefinition"/>
+	<bean id="CrowdSourcer" class="org.uengine.codi.mw3.model.CrowdSourcer"/>	
+	<bean id="ProcessDesignerContentPanel" class="org.uengine.codi.mw3.model.ProcessDesignerContentPanel"/>
+	<bean id="ProcessInstanceMonitor" class="org.uengine.codi.mw3.model.ProcessInstanceMonitor"/>
+	<bean id="ProcessDesignerWindow" class="org.uengine.codi.mw3.model.ProcessDesignerWindow"/>
+	
+	<bean id="NewChildContentPanel" class="org.uengine.codi.mw3.model.NewChildContentPanel"/>	
+	<bean id="NewChildWindow" class="org.uengine.codi.mw3.model.NewChildWindow"/>
+	
+	<bean id="EntityDesignerContentPanel" class="org.uengine.codi.mw3.model.EntityDesignerContentPanel"/>
+	<bean id="RuleDesignerContentPanel" class="org.uengine.codi.mw3.model.RuleDesignerContentPanel"/>
+
+	<bean id="EntityData" class="org.uengine.codi.mw3.admin.EntityData"/>
+
+	<bean id="FileWorkItem" class="org.uengine.codi.mw3.model.FileWorkItem"/>
+	
+	<bean id="InstanceViewPublic" class="org.uengine.codi.mw3.model.InstanceViewPublic"/>
+	
+	
+		
+	<bean id="MongoDB" class="org.uengine.codi.platform.MongoDB"/>
+	<bean id="SMS" class="org.uengine.codi.platform.SMS"/>
+	<bean id="FileSystem" class="org.uengine.codi.platform.FileSystem"/>
+	
+	<bean id="PageNavigator" class="org.uengine.codi.mw3.admin.PageNavigator"/>
+	<bean id="IDE" class="org.uengine.codi.mw3.admin.IDE"/>
+	<bean id="Login" class="org.uengine.codi.mw3.Login"/>
+	<bean id="MainPanel" class="org.uengine.codi.mw3.common.MainPanel"/>
+	<bean id="Workflowy" class="org.uengine.codi.mw3.knowledge.Workflowy"/>
+	
+	
+</beans>
