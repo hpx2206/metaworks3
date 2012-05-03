@@ -38,6 +38,7 @@ import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.model.User;
 import org.uengine.codi.mw3.svn.CheckoutWindow;
 import org.uengine.codi.mw3.svn.CommitWindow;
+import org.uengine.codi.platform.Console;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.NeedArrangementToSerialize;
 import org.uengine.kernel.PropertyListable;
@@ -326,6 +327,8 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 			compileError.setMessage(parts != null ? parts[3] : message);
 			
 			compileErrors.add(compileError);
+			
+			Console.addError(message);
 			
 			e.printStackTrace();
 		} 
