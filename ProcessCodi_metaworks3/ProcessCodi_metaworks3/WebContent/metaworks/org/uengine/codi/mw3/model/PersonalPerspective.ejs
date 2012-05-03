@@ -1,0 +1,26 @@
+
+
+<%if(value.selected){%>
+
+<div id="navigator">
+	<div class="depth1">
+		<div class="depth1td_off"> <b><%=value.label%></b></div>
+	</div>	
+	<div class="depth2">
+		<ul class="fist_menu">
+			<li><span style="background:url(images/waveStyle/application_side_tree.png) no-repeat 5px 0px;"><a onClick="javascript:getWorkItemList('individual', 'received', '');" href="#middle-west" >In Box</a></span></li>
+			<li><span style="background:url(images/waveStyle/application_view_detail.png) no-repeat 5px 0px;"><a onClick="javascript:getWorkItemList('individual', 'all', '');" href="#middle-west">All</a></span></li>
+			<li><span style="background:url(images/waveStyle/user_edit.png) no-repeat 5px 0px;"><a onClick="javascript:getWorkItemList('individual', 'requested', '');" href="#middle-west">Requests</a></span></li>
+			<li><span style="background:url(images/waveStyle/exclamation.png) no-repeat 5px 0px;"><a onClick="javascript:getWorkItemList('individual', 'spam', '');" href="#middle-west">Spam</a></span></li>
+			<li><span style="background:url(images/waveStyle/bin_closed.png) no-repeat 5px 0px; "><a onClick="javascript:getWorkItemList('individual', 'deleted', '');" href="#middle-west">Trash</a></span></li>
+		</ul>
+	</div>
+</div>
+
+<%}else{%>
+<%=value.label%>
+<%=methods.select.here()%>
+
+<%}%>
+
+

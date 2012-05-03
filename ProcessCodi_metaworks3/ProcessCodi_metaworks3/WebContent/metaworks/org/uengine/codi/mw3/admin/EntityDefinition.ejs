@@ -1,0 +1,79 @@
+<%
+if(value){	
+%>
+
+<table>
+<tr>
+	<td width="10px">
+		&nbsp;
+	</td>
+	<td>	
+		<table>
+		<%
+			if(!mw3.isHidden(fields.packageName.fieldDescriptor)){
+		%>
+		<tr height="40px">
+			<td width=130>
+				<font color="#5599dd" face="Eurostile">
+				Package Name:
+				</font>
+			</td>			
+			<td><%=fields.packageName.here()%></td>		
+		</tr>
+		<%
+			}
+			if(!mw3.isHidden(fields.entityName.fieldDescriptor)){
+		%>
+		<tr height="40px">
+			<td width=130>
+				<font color="#5599dd" face="Eurostile">
+				Entity Name:
+				</font>
+			</td>			
+			<td><%=fields.entityName.here()%></td>		
+		
+		</tr>
+		<%
+			}
+			if(!mw3.isHidden(fields.author.fieldDescriptor)){
+		%>
+		<tr height="40px">
+			<td width=130>
+				<font color="#5599dd" face="Eurostile">Author:</font>
+			</td>
+			<td colspan=3>
+				<%=fields.author.here()%>
+			</td>
+		</tr>		
+		<%
+			}
+		%>
+		</table>
+	</td>
+</tr>
+<tr height="40px">
+	<td>
+	</td>
+	<td>
+		<table>		
+			<tr><td>
+				<%=methods.next1.here()%>
+				<%=methods.next2.here()%>
+				
+				<%=methods.dropTable.here()%>
+				<%=methods.createTable.here()%>
+				<%=methods.generateDao.here()%>
+			</td></tr>
+		</table>	
+	</td>
+	
+</tr>
+</table>
+		
+<%=fields.entityModeler.here()%>
+<%=fields.querySourceCode.here()%>
+
+
+<%
+	}
+%>

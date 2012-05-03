@@ -1,0 +1,37 @@
+
+<div id="canvasForLoopLines" style="position:absolute;left:0px;top:0px;z-index: -1"></div>
+
+<div align="center" id="divFlowchartArea"></div>
+
+
+
+<% 
+
+//mw3.debug(value.parentFolder);
+
+if(value.parentFolder){%>
+
+<script>
+
+<br><br><br>
+<center>
+launching Process Designer ....
+location= mw3.base + "/processmanager/ProcessDesigner.jnlp?folderId=<%=value.parentFolder%>&userId=<%=mw3.getAutowiredObject('org.uengine.codi.mw3.model.Session').user.userId%>";
+
+</script>
+
+
+<%}else{%>
+
+
+FlowChart:
+
+<%=value.chartHTML%>
+
+Please wait for launching Process Designer ....
+
+location= mw3.base + "/processmanager/ProcessDesigner.jnlp?defId=<%=value.defId%>&defVerId=<%=value.defVerId%>&userId=<%=mw3.getAutowiredObject('org.uengine.codi.mw3.model.Session').user.userId%>";
+
+<%}%>
+
+
