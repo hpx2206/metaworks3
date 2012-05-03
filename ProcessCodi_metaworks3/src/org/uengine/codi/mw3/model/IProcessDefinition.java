@@ -89,8 +89,8 @@ public interface IProcessDefinition extends IDAO{
 	public void setAlias(String alias);
 
 	@Hidden
-	public String getSuperDefId();
-	public void setSuperDefId(String superDefId);
+	public Long getSuperDefId();
+	public void setSuperDefId(Long superDefId);
 
 	@Hidden
 	public String getComCode();

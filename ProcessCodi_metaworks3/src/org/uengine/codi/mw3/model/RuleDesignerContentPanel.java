@@ -47,6 +47,8 @@ public class RuleDesignerContentPanel extends ContentWindow {
 		ruleVariableDefinition = new RuleVariableDefinition();
 		ruleDefinitionInfo = new RuleDefinitionInfo();
 		ruleDefinitionInfo.setParentFolder(parentFolder);
+		ruleDefinitionInfo.setMetaworksContext(new MetaworksContext());
+		ruleDefinitionInfo.getMetaworksContext().setWhen("edit");
 		
 		ruleDefinition = new RuleDefinition();
 		ruleDefinition.init();

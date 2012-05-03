@@ -16,6 +16,7 @@ import org.uengine.codi.mw3.model.ContentWindow;
 import org.uengine.codi.mw3.model.Instance;
 import org.uengine.codi.mw3.model.InstanceViewContent;
 import org.uengine.codi.mw3.model.NewInstancePanel;
+import org.uengine.codi.mw3.model.ProcessDefinition;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -644,6 +645,22 @@ public class WorkflowyNode implements ContextAware {
 		
 		return newInstancePanel;
 	}
+	
+	@ServiceMethod(inContextMenu=true, keyBinding="Ctrl+D")
+	public ContentWindow newDocument() throws Exception{
+//		NewInstancePanel newInstancePanel =  new NewInstancePanel();
+//		newInstancePanel.setKnowledgeNodeId(id);
+//		
+//		return newInstancePanel;
+		
+		//ProcessDefinition processDefinition = new ProcessDefinition();
+		processDefinition.setDefId(new Long(150));
+		return (ContentWindow) processDefinition.initiate()[0];
+		
+	}
+	
+	
+	@Autowired ProcessDefinition processDefinition;
 	
 	@ServiceMethod(callByContent=true)
 	public ContentWindow linkInstance() throws Exception{

@@ -76,7 +76,7 @@ public class ProcessDefinition extends Database<IProcessDefinition> implements I
 	
 	String alias;
 
-	String superDefId;
+	Long superDefId;
 
 	String comCode;
 	
@@ -128,11 +128,11 @@ public class ProcessDefinition extends Database<IProcessDefinition> implements I
 		this.alias = alias;
 	}
 
-	public String getSuperDefId() {
+	public Long getSuperDefId() {
 		return superDefId;
 	}
 
-	public void setSuperDefId(String superDefId) {
+	public void setSuperDefId(Long superDefId) {
 		this.superDefId = superDefId;
 	}
 
@@ -207,7 +207,6 @@ public class ProcessDefinition extends Database<IProcessDefinition> implements I
 		
 		String prodVerId = codiPmSVC.getProcessDefinitionProductionVersion(getDefId().toString());
 		String instId = codiPmSVC.initializeProcess(prodVerId);
-		
 		
 		RoleMapping rm = RoleMapping.create();
 		if(session.getUser() != null)

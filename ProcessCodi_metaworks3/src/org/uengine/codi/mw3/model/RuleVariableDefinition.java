@@ -2,6 +2,8 @@ package org.uengine.codi.mw3.model;
 
 import java.util.ArrayList;
 
+import org.metaworks.ContextAware;
+import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.uengine.codi.mw3.admin.ClassDefinition;
@@ -33,6 +35,7 @@ public class RuleVariableDefinition extends ClassModeler{
 		// TODO Auto-generated method stub
 		return super.getNewClassField();
 	}
+	
 
 	
 	
