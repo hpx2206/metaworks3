@@ -1,13 +1,17 @@
 package org.uengine.codi.mw3.model;
 
-public class RuleDefinitionInfo {
+import org.metaworks.ContextAware;
+import org.metaworks.MetaworksContext;
+import org.metaworks.annotation.Face;
+import org.metaworks.annotation.Hidden;
+
+public class RuleDefinitionInfo  implements ContextAware{
 
 	String defId;
-		
+	@Hidden
 		public String getDefId() {
 			return defId;
 		}
-	
 		public void setDefId(String defId) {
 			this.defId = defId;
 		}
@@ -33,7 +37,7 @@ public class RuleDefinitionInfo {
 
 		
 	String parentFolder;
-
+	@Hidden
 		public String getParentFolder() {
 			return parentFolder;
 		}
@@ -43,13 +47,23 @@ public class RuleDefinitionInfo {
 		}
 
 	String description;
-	
+	@Face(ejsPath="genericfaces/richText.ejs")
 		public String getDescription() {
 			return description;
 		}
 	
 		public void setDescription(String description) {
 			this.description = description;
+		}
+
+	MetaworksContext metaworksContext;
+
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}
+	
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
 		}
 
 }
