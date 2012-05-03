@@ -11,8 +11,15 @@
 
 if(value.parentFolder){%>
 
+<script>
 
-<a href="/uengine-web/processmanager/ProcessDesigner.jnlp?folderId=<%=value.parentFolder%>&userId=<%=mw3.getAutowiredObject('org.uengine.codi.mw3.model.Session').user.userId%>">New Process</a>
+<br><br><br>
+<center>
+launching Process Designer ....
+location= mw3.base + "/processmanager/ProcessDesigner.jnlp?folderId=<%=value.parentFolder%>&userId=<%=mw3.getAutowiredObject('org.uengine.codi.mw3.model.Session').user.userId%>";
+
+</script>
+
 
 <%}else{%>
 
@@ -21,8 +28,9 @@ FlowChart:
 
 <%=value.chartHTML%>
 
+Please wait for launching Process Designer ....
 
-<a href="/uengine-web/processmanager/ProcessDesigner.jnlp?defId=<%=value.defId%>&defVerId=<%=value.defVerId%>&userId=<%=mw3.getAutowiredObject('org.uengine.codi.mw3.model.Session').user.userId%>">Edit</a>
+location= mw3.base + "/processmanager/ProcessDesigner.jnlp?defId=<%=value.defId%>&defVerId=<%=value.defVerId%>&userId=<%=mw3.getAutowiredObject('org.uengine.codi.mw3.model.Session').user.userId%>";
 
 <%}%>
 
