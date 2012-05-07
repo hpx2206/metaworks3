@@ -30,16 +30,6 @@ var org_metaworks_widget_grid_Grid= function(objectId, className){
 	    cellEdit : true,	    
 		cellsubmit: 'clientArray',
 		beforeSaveCell : function(rowid,name,val,iRow,iCol) {
-		/*
-			jQuery("#grid_" + objectId).jqGrid("restoreCell",iRow,iCol);
-			
-			console.debug("beforeSaveCell");
-			console.debug("rowid : " + rowid);
-			console.debug("name : " + name);
-			console.debug("val : " + val);
-			console.debug("iRow : " + iRow);
-			console.debug("iCol : " + iCol);	
-		*/
 		
 			var cell = {
 					__className : "org.metaworks.widget.grid.GridCell",
@@ -59,24 +49,8 @@ var org_metaworks_widget_grid_Grid= function(objectId, className){
 			}			
 		},
 		afterEditCell : function(rowid,name,val,iRow,iCol) {
-		/*
-			console.debug("afterEditCell");
-			console.debug("rowid : " + rowid);
-			console.debug("name : " + name);
-			console.debug("val : " + val);
-			console.debug("iRow : " + iRow);
-			console.debug("iCol : " + iCol);
-		*/
 		},
 		afterSaveCell : function(rowid,name,val,iRow,iCol) {
-		/*
-			console.debug("afterSaveCell");
-			console.debug("rowid : " + rowid);
-			console.debug("name : " + name);
-			console.debug("val : " + val);
-			console.debug("iRow : " + iRow);
-			console.debug("iCol : " + iCol);
-		*/
 		}
 	});
 	

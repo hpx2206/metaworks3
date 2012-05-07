@@ -75,10 +75,8 @@ function actionFire(obj, type) {
         cursor: "move",
         distance: 1,
         start: function(event, ui) {
-        	console.debug('start');
         },
         stop: function(event, ui) {
-        	console.debug('stop');
         }
 	});
 	
