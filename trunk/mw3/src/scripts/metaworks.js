@@ -335,6 +335,15 @@
 											webObjectType['typeSelector'] = fd;
 										}
 										
+										fd['getOptionValue'] = function(option){
+											if(this.options!=null && this.values!=null)
+											
+											for(var i=0; i<this.options.length && i<this.values.length; i++){
+												if(option==this.options[i])
+													return this.values[i];
+											}
+										}
+										
 									}
 
 									//following methods are not null, it will creates the lazy-loaded tree mechanism.
@@ -622,6 +631,45 @@
 					
 					var targetDivId = this._getObjectDivId(objectId);
 					var theDiv = $("#" + targetDivId);
+					
+				    if(theDiv[0] && metadata && metadata.fieldDescriptors && metadata.fieldDescriptors.length > 0)
+					    for(var i = 0; i < metadata.fieldDescriptors.length; ++i){
+					    	var fd = metadata.fieldDescriptors[i];
+					    	
+					    	try {
+					    		if(fd.attributes.validator) {		
+						    		for(var j = 0; j < fd.attributes.validator.length; ++j) {
+						    			var validator = fd.attributes.validator[j];						    			
+						    			var inputObjectId = this.getChildObjectId(objectId, fd.name);
+						    			var inputDivId = this.createInputId(inputObjectId);
+						    			
+						    			if(validator.events){
+						    				for(var k = 0; k < validator.events.length; ++k){
+					    						$('#' + inputDivId).bind(validator.events[k], {validator: validator, inputObjectId: inputObjectId},  function(event){
+					    							var validator = event.data.validator;
+					    							var inputObjectId = event.data.inputObjectId;
+					    							var message;
+					    							
+					    							var result = mw3.validation(validator, this.value);
+					    							if(!result)
+					    								message = mw3.getValidationMessage(fd, validator)
+
+													if(mw3.getFaceHelper(inputObjectId) && mw3.getFaceHelper(inputObjectId).showValidation){
+														mw3.getFaceHelper(inputObjectId).showValidation(result, message);
+													}else{
+														mw3.showValidation(inputObjectId, result, message);
+													}					    								
+					    						});
+						    				}
+						    			}
+							    	}
+							   }
+					    	} catch(e) {
+					    		console.log('error = ' + e);
+					    	}
+					    }				
+					
+				    
 					
 					if(theDiv[0] && metadata)
 				    for(var methodName in metadata.serviceMethodContextMap){
@@ -940,8 +988,8 @@
 					className = "java.lang.Object";
 				
 				// 2012-04-04 cjw java.lang.String 일 경우 faceHelper 호출을 위해 공백으로 초기화
-				if(value == null && className == 'java.lang.String')
-					value = '';
+				//if(value == null && className == 'java.lang.String')
+				//	value = '';
 					
 				this.newBeanProperty(objectId);
 
@@ -1093,10 +1141,6 @@
 				
 				this.newBeanProperty(objectId);
 				
-				$(divId).remove();
-				$(infoDivId).remove();		
-				
-				/*
 				// 2012-04-04 cjw destroy 호출 후 removeObject
 				var faceHelper = this.getFaceHelper(objectId);
 				
@@ -1107,8 +1151,10 @@
 				this.objects[objectId] = null;
 				this.faceHelpers[objectId] = null;
 				this.beanExpressions[objectId] = null;
-				*/
 				
+				$(divId).remove();
+				$(infoDivId).remove();		
+
 				//TODO: the objectId_KeyMapping also need to clear with back mapping or key generation with value;
 				
 				return this._withTarget(objectId);
@@ -1456,7 +1502,24 @@
 							autowiredObjects[fieldName] = this.getAutowiredObject(autowiredClassName);
 						}
 					}
-					
+										
+					if(!this.validObject(object, objectMetadata)){
+						if(this.getFaceHelper(objId) && this.getFaceHelper(objId).endLoading){
+							this.getFaceHelper(objId).endLoading();
+						}else{
+							this.endLoading(objId);
+						}
+						
+	        			if(mw3.getFaceHelper(objId) && mw3.getFaceHelper(objId).showStatus){
+	        				mw3.getFaceHelper(objId).showStatus( svcNameAndMethodName + " DONE.");
+	        			}else{
+		    				mw3.showInfo(objId, svcNameAndMethodName + " DONE");	
+	        			}							
+						
+	        			return false;						
+					}
+				   
+				   
 					var returnValue;
 					
 					var objectKey = this._createObjectKey(object);
@@ -1491,13 +1554,13 @@
 					        				mw3.recentOpenerObjectId = objId;
 
 					        				mw3.popupDivId = 'popup_' + objId;
-					        				$('body').append("<div id='" + mw3.popupDivId + "' style='z-index:10;position:absolute; top:50px; left:10px'></div>");
+					        				$('body').append("<div id='" + mw3.popupDivId + "' class='target_popup' style='z-index:10;position:absolute; top:50px; left:10px'></div>");
 					        				mw3.locateObject(result, null, '#' + mw3.popupDivId).targetDivId;
 					        				
 					        				//objId = mw3.targetObjectId;
 					        			}else if(serviceMethodContext.target=="stick"){
 							    			mw3.popupDivId = 'stick_' + objId;
-					        				$('body').append("<div id='" + mw3.popupDivId + "' style='z-index:10;position:absolute; top:" + mw3.mouseY + "px; left:" + mw3.mouseX + "px'></div>");
+					        				$('body').append("<div id='" + mw3.popupDivId + "' class='target_stick' style='z-index:10;position:absolute; top:" + mw3.mouseY + "px; left:" + mw3.mouseX + "px'></div>");
 					        				mw3.locateObject(result, null, '#' + mw3.popupDivId);
 
 					        				//store the recently added object Id for recebt opener
@@ -1674,6 +1737,16 @@
 
 				$(infoDivId).html("<center><font color=red> " + message + "<input type=button onclick=\"mw3.getObject('" + objId + "')."+ methodName + "()\" value='RETRY'></font></center>");
 			}
+			
+			Metaworks3.prototype.showValidation = function(objId, isValid, message){
+				var infoDivId = "#"+this._getInfoDivId(objId);
+				
+				if(!isValid)
+					$(infoDivId).html("<center><font color=red> " + message + "</font></center>");
+				else
+					$(infoDivId).html("");
+			}
+			
 			
 			Metaworks3.prototype._armObject = function(objId, object){
 				if(!object || !object.__className) return;
@@ -2206,6 +2279,114 @@
 				}
 				
 	   			return false;
+			}
+			
+			Metaworks3.prototype.validObject = function (object, metadata){
+				var isValid = true;
+				var objId = object.__objectId;
+
+				if(metadata && metadata.fieldDescriptors && metadata.fieldDescriptors.length > 0){
+				   for(var i = 0; i < metadata.fieldDescriptors.length; ++i){					   
+					   var fd = metadata.fieldDescriptors[i];
+					   
+					   try {
+						   if(object[fd.name] instanceof Object){
+							   if(fd.name == 'metaworksContext')
+								   continue;
+							   
+							   if(!this.validObject(object[fd.name], this.getMetadata(fd.className)))
+								   isValid = false;
+						   }else{
+							   if(fd.attributes.validator) {		
+						    		for(var j = 0; j < fd.attributes.validator.length; ++j) {
+						    			var validator = fd.attributes.validator[j];						    									    									    			
+						    			var result = this.validation(validator, object[fd.name]);
+						    			var inputObjectId = this.getChildObjectId(objId, fd.name);
+						    			var message;
+						    			
+				    					if(!result)				    						
+				    						message = this.getValidationMessage(fd, validator)
+				    					
+										if(this.getFaceHelper(inputObjectId) && this.getFaceHelper(inputObjectId).showValidation)
+											this.getFaceHelper(inputObjectId).showValidation(result, message);
+										else
+											this.showValidation(inputObjectId, result, message);
+										
+										if(!result){
+											isValid = false;
+											
+											break;
+										}
+				    					
+							    	}
+							   }
+					    	}
+				    	} catch(e) {
+				    		console.log('error = ' + e);
+				    	}
+				   }
+				}
+				
+				return isValid;
+			}
+			
+			Metaworks3.prototype.validation = function(validator, value){
+			
+				if(validator.name == 'isnull'){
+					if(value == null || value == '')
+						return false;
+				}else if(validator.name == 'maxbyte' && validator.options){
+					var len = 0;
+			        for (var i = 0; i < value.length; i++) {
+			            if (value.charCodeAt(i) > 128) {
+			                len++;
+			            }
+			            len++;
+			        }			
+					if(len > Number(validator.options[0]))
+						return false;				
+					
+				}else if(validator.name == 'maxlength' && validator.options){
+					if(value.length > validator.options[0])
+						return false;					
+				}else if(validator.name == 'minlength' && validator.options){					
+					if(value.length < validator.options[0])
+						return false;					
+				}else if(validator.name == 'numberzero'){
+					if(value == 0)
+						return false;
+				}else if(validator.name == 'htmltag'){
+					
+				}else if(validator.name == 'script'){
+					
+				}
+
+				return true;
+			}
+			
+			Metaworks3.prototype.getValidationMessage = function(fd, validator){
+				var message = null;
+				
+				if(typeof validator.message != 'undefined' && validator.message != null && validator.message.length > 0)
+					message = validator.message;	
+				else{
+					if(validator.name == 'isnull')
+						message = fd.displayName + '\'s fields is null.';
+					else if(validator.name == 'maxbyte')
+						message = fd.displayName + '\'s byte is greater than ' + validator.options[0] + '.';
+					else if(validator.name == 'maxlength')
+						message = fd.displayName + '\'s length value is greater than ' + validator.options[0] + '.';
+					else if(validator.name == 'minlength' && validator.options)
+						message = fd.displayName + '\'s value is less than ' + validator.options[0] + '.';
+					else if(validator.name == 'numberzero')
+						message = fd.displayName + '\'s value is zero.';
+					else if(validator.name == 'htmltag')
+						message = fd.displayName + ' in the field will not be able to use the html tag.';
+					else if(validator.name == 'script')
+						message = fd.displayName + ' in the field will not be able to use the script.';
+				}
+				
+				return message;
 			}
 			
 			if(!Metaworks) alert('Metaworks DWR service looks not available. Metaworks will not work');
