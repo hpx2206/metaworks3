@@ -149,9 +149,10 @@
 				/*
 				 * 2012-04-05 cjw 임시 주석 처리
 				 */
+				/*
 				if(this.objects[objectId]==null)
 					return null;
-				
+				*/
 				
 				if(!this.face_ObjectIdMapping[objectId])					
 					return null;
