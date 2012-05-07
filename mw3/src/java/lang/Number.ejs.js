@@ -1,6 +1,6 @@
 var java_lang_Number = function(objectId, className){
 	this.objectId = objectId;
-	this.className = className;	
+	this.className = className;
 }
 
 java_lang_Number.prototype.keydown = function(){

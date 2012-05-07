@@ -10,10 +10,8 @@
 	var type = descriptor.getOptionValue("type");
 	
 %>
-	 <input id="<%=mw3.createInputId(objectId)%>" <%=type ? "type='" + type + "'" : "" %> value="<%=value%>" <%=descriptor.attributes && descriptor.attributes.size ? " size=" + descriptor.attributes.size : ""%> style="border:1px solid #ccd; none;background:transparent">
-	
+	 <input id="<%=mw3.createInputId(objectId)%>" <%=type ? "type='" + type + "'" : "" %> value="<%=value%>" <%=descriptor.attributes && descriptor.attributes.size ? " size=" + descriptor.attributes.size : ""%> style="border:1px solid #ccd; none;background:transparent">	 
 <%
-
 	}else{
 %>
 	 <%=value%>
