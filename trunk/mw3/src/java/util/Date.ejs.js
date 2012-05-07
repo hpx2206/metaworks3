@@ -25,7 +25,7 @@ java_util_Date.prototype.getValue = function(){
 	if(inputObj.length){	
 		var selDate = new Date($("#" + this.inputId).datepicker("getDate"));
 	
-		return selDate.getTime();
+		return new Date(selDate.getTime());
 	}else{
 		return mw3.objects[this.objectId];
 	}
