@@ -664,6 +664,25 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 		last();
 	}
 
+	
+	public void copyFrom(IDAO fromObj) throws Exception{
+		
+		if(rowSet!=null)
+			throw new RuntimeException("Selected DAO's properties cannott be changed. ");
+		
+		WebObjectType wot = MetaworksRemoteService.getInstance().getMetaworksType(daoClass.getName());
+				
+		ObjectInstance fromObjInst = (ObjectInstance) wot.metaworks2Type().createInstance();
+		fromObjInst.setObject(fromObj);
+
+		for(int i=0; i<wot.metaworks2Type().getFieldDescriptors().length; i++){
+			FieldDescriptor fd = wot.metaworks2Type().getFieldDescriptors()[i];
+			
+			cachedRows.get(cursor).put(fd.getName().toUpperCase(), fromObjInst.getFieldValue(fd.getName()));
+		}
+	}
+	
+
 
 	public void beforeFirst() throws Exception {
 		if(rowSet==null && cachedRows==null)
