@@ -101,6 +101,7 @@ public class MetaworksConverter extends BeanConverter{
 				ArrayConverter arrayConverter = new ArrayConverter();
 				arrayConverter.setConverterManager(this.getConverterManager());
 				
+				//TODO: sometimes, the element member is an IDAO but the paramType info is not supplied, in that case, it is also needed to be converted into IDAO.
 				if(!paramType.isArray() && IDAO.class.isAssignableFrom(paramType)){
 					
 					Class arrParamType = Array.newInstance(paramType, 0).getClass();
