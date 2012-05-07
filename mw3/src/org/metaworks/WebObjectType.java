@@ -14,9 +14,6 @@ import javassist.CtMethod;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.metaworks.FieldDescriptor;
-import org.metaworks.ObjectType;
-import org.metaworks.Type;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.AutowiredToClient;
 import org.metaworks.annotation.Available;
@@ -37,10 +34,12 @@ import org.metaworks.annotation.Test;
 import org.metaworks.annotation.TestContext;
 import org.metaworks.annotation.Testing;
 import org.metaworks.annotation.TypeSelector;
+import org.metaworks.annotation.Validator;
+import org.metaworks.annotation.ValidatorContext;
+import org.metaworks.annotation.ValidatorSet;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.IDAO;
 import org.metaworks.dao.TransactionContext;
-import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.dwr.TransactionalDwrServlet;
 import org.metaworks.inputter.SelectInput;
 
@@ -493,6 +492,49 @@ public class WebObjectType{
 
 				
 				existingTestSet.put(test.scenario(), testContext);
+			}
+			
+			
+			
+			ValidatorSet validators;
+			Validator[] validatorArr;
+			if((validators = (ValidatorSet) getAnnotationDeeply(tryingClasses, fd.getName(), ValidatorSet.class))!=null){
+				validatorArr = validators.value();
+			}else{				
+				Validator validator;
+				if((validator = (Validator) getAnnotationDeeply(tryingClasses, fd.getName(), Validator.class))!=null){
+					validatorArr = new Validator[]{validator};
+				}else{
+					validatorArr = new Validator[]{};
+				}				
+			}
+			
+			for(int j=0; j<validatorArr.length; j++){
+
+				Validator validator = validatorArr[j];
+				
+				ArrayList<ValidatorContext> existingValidatorSet = (ArrayList<ValidatorContext>) fd.getAttribute("validator");
+				if(existingValidatorSet == null){
+					existingValidatorSet = new ArrayList<ValidatorContext>();//new HashMap<String, ValidatorContext>();
+					fd.setAttribute("validator", existingValidatorSet);
+				}
+				
+				ValidatorContext validatorContext = new ValidatorContext();
+				
+				if(validator.name().length() > 0)
+					validatorContext.setName(validator.name());
+				
+				if(validator.message().length() > 0)
+					validatorContext.setMessage(validator.message());
+				
+				if(validator.events().length > 0)
+					validatorContext.setEvents(validator.events());
+
+				if(validator.options().length > 0)
+					validatorContext.setOptions(validator.options());
+				
+				//existingValidatorSet.put(validator.name(), validatorContext);
+				existingValidatorSet.add(validatorContext);
 			}
 			
 			
