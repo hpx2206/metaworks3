@@ -494,8 +494,6 @@ public class WebObjectType{
 				existingTestSet.put(test.scenario(), testContext);
 			}
 			
-			
-			
 			ValidatorSet validators;
 			Validator[] validatorArr;
 			if((validators = (ValidatorSet) getAnnotationDeeply(tryingClasses, fd.getName(), ValidatorSet.class))!=null){
@@ -504,11 +502,11 @@ public class WebObjectType{
 				Validator validator;
 				if((validator = (Validator) getAnnotationDeeply(tryingClasses, fd.getName(), Validator.class))!=null){
 					validatorArr = new Validator[]{validator};
-				}else{
+				}else{				
 					validatorArr = new Validator[]{};
 				}				
 			}
-			
+						
 			for(int j=0; j<validatorArr.length; j++){
 
 				Validator validator = validatorArr[j];
@@ -527,15 +525,14 @@ public class WebObjectType{
 				if(validator.message().length() > 0)
 					validatorContext.setMessage(validator.message());
 				
-				if(validator.events().length > 0)
-					validatorContext.setEvents(validator.events());
-
 				if(validator.options().length > 0)
 					validatorContext.setOptions(validator.options());
 				
 				//existingValidatorSet.put(validator.name(), validatorContext);
 				existingValidatorSet.add(validatorContext);
 			}
+			
+			
 			
 			
 			ORMapping orm;
@@ -698,6 +695,7 @@ public class WebObjectType{
 				smc.setNeedToConfirm(annotation.needToConfirm());
 				smc.setClientSide(annotation.clientSide());
 				smc.setTarget(annotation.target());
+				smc.setValidate(annotation.validate());
 				
 				smc.setNameGetter(name!=null? true:false);
 				smc.setChildrenGetter(children!=null? true:false);
@@ -869,10 +867,8 @@ public class WebObjectType{
 				annotation = clazz.getAnnotation(annotationCls);
 
 				if(annotationCls == Face.class){
-					
 					final Face face = (Face)annotation;
 					
-				
 					boolean componentPathHashBeenChanged = false;
 					String componentPath = face != null ? face.ejsPath() : ""; 
 							

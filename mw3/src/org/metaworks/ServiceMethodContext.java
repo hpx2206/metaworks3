@@ -160,4 +160,13 @@ public class ServiceMethodContext{
 		public void setInContextMenu(boolean inContextMenu) {
 			this.inContextMenu = inContextMenu;
 		}
+		
+	boolean validate;
+		public boolean isValidate() {
+			return validate;
+		}
+		public void setValidate(boolean validate) {
+			this.validate = validate;
+		}
+	
 }
