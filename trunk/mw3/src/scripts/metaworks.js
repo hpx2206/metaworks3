@@ -59,7 +59,7 @@
 			    this.popupDivId;
 			    this.recentOpenerObjectId;
 			    
-			    this.browser = browserCheck();
+			    this.browser = this.browserCheck();
 			    	
 			    this.afterLoadFaceHelper = {};
 			    this.afterLoadFaceHelperCount = 0;
@@ -80,55 +80,46 @@
 			    // ie6~ie8 : addachEvent
 			    // other   : addEventListener
 
-			    // eventListener 없을때 (ie6~ie8) 처리
-			    if(!document.addEventListener){
-			    	document.addEventListener = function(type, listener, useCapture){
-			    		document.attachEvent(type, listener, useCapture);
-			    	}
+			    var mouseUp = function(e){
+			    	mw3.mouseX = e.pageX;
+	    			mw3.mouseY = e.pageY; 
+	    			
+//	    			  $( "#instruction" ).slideUp(500, function(){
+//						  $('#instruction').remove();							  
+//					  });
+	    			
+//	    			if(mw3.popupDivId!=null){
+//	    				if(mw3.mouseX < 100 && mw3.mouseY < 100){
+//	    					$("#" + mw3.popupDivId).remove();
+//	    					mw3.popupDivId = null;
+//	    				}
+//	    			}
 			    }
 			    
-			    document.addEventListener(
-			    		"mouseup",
-
-			       		function(e) {			    			
-			    			mw3.mouseX = e.pageX;
-			    			mw3.mouseY = e.pageY; 
-			    			
-//			    			  $( "#instruction" ).slideUp(500, function(){
-//								  $('#instruction').remove();							  
-//							  });
-			    			
-//			    			if(mw3.popupDivId!=null){
-//			    				if(mw3.mouseX < 100 && mw3.mouseY < 100){
-//			    					$("#" + mw3.popupDivId).remove();
-//			    					mw3.popupDivId = null;
-//			    				}
-//			    			}
-			    		},
-			    		
-			    		false
-				);
-				
-			    document.addEventListener(
-			    		"keyup",
-
-			       		function(e) {
-			    			//console.debug(e.keyCode);
-			    			
-			    			// ESC
-			    			if(e.keyCode == 27){
-				    			if(mw3.popupDivId!=null){
-			    					$("#" + mw3.popupDivId).remove();
-			    					mw3.popupDivId = null;
-				    			}
-			    			}
-			    			
-							
-			    		},
-			    		
-			    		false
-				);
+			    var keyUp = function(e){
+	    			//console.debug(e.keyCode);
+	    			
+	    			// ESC
+	    			if(e.keyCode == 27){
+		    			if(mw3.popupDivId!=null){
+	    					$("#" + mw3.popupDivId).remove();
+	    					mw3.popupDivId = null;
+		    			}
+	    			}
+			    }
 			    
+			    // eventListener 없을때 (ie6~ie8) 처리
+			    if(document.addEventListener){
+			    	document.addEventListener("mouseup",mouseUp,false);
+			    	
+			    	document.addEventListener("keyup",keyUp,false);
+			    }
+			    
+			    if(document.attachEvent){
+			    	document.attachEvent("mouseup",mouseUp);
+			    	
+			    	document.attachEvent("keyup",keyUp);
+			    }
 			}
 
 			Metaworks3.prototype.debug = function(argument, when){
@@ -191,7 +182,7 @@
 					//return null;
 					//TODO :  error reporting required
 					//this.debug(e, true);
-					if(console)
+					if(window.console)
 						console.log("Failed to load face helper ("+faceHelperClass+"(ejs.js)): " + e);
 				}
 			}
@@ -200,13 +191,13 @@
 //				if(!target)
 //					target = this.face_ObjectIdMapping;
 				/*
-				console.debug('onLoadFaceHelperScript');
+				//console.debug('onLoadFaceHelperScript');
 				
 				if(this.afterLoadFaceHelper[face]){
 					objectIds = this.objectIds_FaceMapping[face];
 									
 					for(var objectId in objectIds){
-						console.debug(objectId);
+						//console.debug(objectId);
 						
 						this.loadFaceHelper(objectId);
 					}
@@ -633,8 +624,13 @@
 					var targetDivId = this._getObjectDivId(objectId);
 					var theDiv = $("#" + targetDivId);
 					
+
 				    if(theDiv[0] && metadata && metadata.fieldDescriptors && metadata.fieldDescriptors.length > 0)
-					    for(var i = 0; i < metadata.fieldDescriptors.length; ++i){
+						/*
+						 * validator event 제거
+						 */
+				    	/*
+						    for(var i = 0; i < metadata.fieldDescriptors.length; ++i){
 					    	var fd = metadata.fieldDescriptors[i];
 					    	
 					    	try {
@@ -669,7 +665,7 @@
 					    		console.log('error = ' + e);
 					    	}
 					    }				
-					
+						*/
 				    
 					
 					if(theDiv[0] && metadata)
@@ -1036,7 +1032,7 @@
 				else if(elementTag == 'dl')
 					elementSubTag = 'dd';
 				
-				html="<" + elementTag + elementClass + " id='"+divId+ "'" + (metadata && metadata.focusable ? " tabindex='"+objectId+"'" : "") + " className='" + className + "'>";
+				html="<" + elementTag + elementClass + " id='"+divId+ "'" + (metadata && metadata.focusable ? " tabindex='"+objectId+"' style='outline-style:none'" : "") + " className='" + className + "'>";
 				
 				if(elementSubTag)
 					html+= '<' + elementSubTag + '>';
@@ -1369,6 +1365,18 @@
 				}
 			}
 			
+			Metaworks3.prototype.startProgress = function(){				
+				$('body').prepend('<div id=\"mw3_progress\" style=\"position:absolute; width:100%; height:100%; cursor:wait; z-index:9999999\">');
+			}
+
+			Metaworks3.prototype.endProgress = function(){
+				$('#mw3_progress').css("cursor","default");
+				
+				setTimeout(function(){
+					$('#mw3_progress').remove();
+				}, 500);
+			}
+
 			Metaworks3.prototype.startLoading = function(objId){
 				var infoDivId = "#"+this._getInfoDivId(objId);
 				
@@ -1376,7 +1384,6 @@
 			}
 						
 			Metaworks3.prototype.endLoading = function(){
-							
 			}
 			
 			Metaworks3.prototype.call = function (svcNameAndMethodName){
@@ -1471,9 +1478,9 @@
 					}
 
 					
+					this.startProgress();
 					
-					if(serviceMethodContext.target!="none"){
-						
+					if(serviceMethodContext.target!="none"){						
 						if(this.getFaceHelper(objId) && this.getFaceHelper(objId).startLoading){
 							this.getFaceHelper(objId).startLoading();
 						}else{
@@ -1503,23 +1510,26 @@
 							autowiredObjects[fieldName] = this.getAutowiredObject(autowiredClassName);
 						}
 					}
-										
-					if(!this.validObject(object, objectMetadata)){
-						if(this.getFaceHelper(objId) && this.getFaceHelper(objId).endLoading){
-							this.getFaceHelper(objId).endLoading();
-						}else{
-							this.endLoading(objId);
+					
+					if(serviceMethodContext && serviceMethodContext.validate){										
+						if(!this.validObject(object, objectMetadata)){
+							this.endProgress();
+							
+							if(this.getFaceHelper(objId) && this.getFaceHelper(objId).endLoading){
+								this.getFaceHelper(objId).endLoading();
+							}else{
+								this.endLoading(objId);
+							}
+							
+		        			if(this.getFaceHelper(objId) && this.getFaceHelper(objId).showStatus){
+		        				this.getFaceHelper(objId).showStatus( svcNameAndMethodName + " DONE.");
+		        			}else{
+		        				this.showInfo(objId, svcNameAndMethodName + " DONE");	
+		        			}							
+							
+		        			return false;						
 						}
-						
-	        			if(mw3.getFaceHelper(objId) && mw3.getFaceHelper(objId).showStatus){
-	        				mw3.getFaceHelper(objId).showStatus( svcNameAndMethodName + " DONE.");
-	        			}else{
-		    				mw3.showInfo(objId, svcNameAndMethodName + " DONE");	
-	        			}							
-						
-	        			return false;						
 					}
-				   
 				   
 					var returnValue;
 					
@@ -1651,6 +1661,8 @@
 				        				//objId = sourceObjectIdNewlyGotten;
 				        			}
 				        			
+				        			mw3.endProgress();
+				        			
 				        			// 2012-04-16 faceHelper call change
 				        			if(serviceMethodContext.target != "none"){
 				        				mw3.onLoadFaceHelperScript();
@@ -1678,6 +1690,8 @@
 				        		async: !sync && serviceMethodContext.target!="none",
 				        		
 				        		errorHandler:function(errorString, exception) {
+				        			mw3.endProgress();				        			
+				        			
 				        			if(serviceMethodContext.target=="none")
 				        				throw exception;
 				        			
@@ -2323,7 +2337,8 @@
 							   }
 					    	}
 				    	} catch(e) {
-				    		console.log('error = ' + e);
+				    		if(window.console)
+				    			console.log('error = ' + e);
 				    	}
 				   }
 				}
@@ -2389,6 +2404,34 @@
 				
 				return message;
 			}
+			
+			
+			Metaworks3.prototype.log = function(object){
+				if(window.console)
+					console.log(object);				
+			}
+			
+			//브라우저 종류 및 버전확인  
+			Metaworks3.prototype.browserCheck = function(){
+				var name = "";
+				var ver = 0;
+				
+				if(navigator.appName.charAt(0) == "N"){ 
+					if(navigator.userAgent.indexOf("Chrome") != -1){
+						name = "Chrome";						
+					}else if(navigator.userAgent.indexOf("Firefox") != -1){
+						name = "Firefox";
+					}else if(navigator.userAgent.indexOf("Safari") != -1){
+						name = "Safari";
+					}
+				}else if(navigator.appName.charAt(0) == "M"){
+					name = "MSIE";
+				}
+				
+				ver = getInternetVersion(name);
+				
+				return name + ' ' + ver;
+			} 	
 			
 			if(!Metaworks) alert('Metaworks DWR service looks not available. Metaworks will not work');
 			var mw3 = new Metaworks3('template_caption', 'dwr_caption', Metaworks);
@@ -2569,25 +2612,3 @@
 				} 
 				return rv;  
 			} 
-
-			//브라우저 종류 및 버전확인  
-			function browserCheck(){
-				var name = "";
-				var ver = 0;
-				
-				if(navigator.appName.charAt(0) == "N"){ 
-					if(navigator.userAgent.indexOf("Chrome") != -1){
-						name = "Chrome";						
-					}else if(navigator.userAgent.indexOf("Firefox") != -1){
-						name = "Firefox";
-					}else if(navigator.userAgent.indexOf("Safari") != -1){
-						name = "Safari";
-					}
-				}else if(navigator.appName.charAt(0) == "M"){
-					name = "MSIE";
-				}
-				
-				ver = getInternetVersion(name);
-				
-				return name + ' ' + ver;
-			} 			
