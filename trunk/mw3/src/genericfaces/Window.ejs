@@ -1,6 +1,14 @@
 <%
 
 	if (value != null){
+		var layout = $('#objDiv_' + objectId).parent();
+		
+		if(!layout.hasClass('pane')){
+			layout = layout.parent();
+		}
+		
+		var layoutName = layout.attr('layoutName');
+		
 		// get descriptor 
 		var width = null;
 		var height = null;
@@ -10,8 +18,10 @@
 			height = descriptor.getOptionValue('height');
 		}
 		
-		var layout = objectMetadata.faceOptions && objectMetadata.faceOptions['layout'];
 		var showLabel = !(objectMetadata.faceOptions && objectMetadata.faceOptions['hideLabels']);		
+		
+		var maximize = objectMetadata.faceOptions && objectMetadata.faceOptions['maximize'];
+		var minimize = objectMetadata.faceOptions && objectMetadata.faceOptions['minimize'];
 		
 		// get window title (className or displayName)
 		var objectName; 
@@ -28,42 +38,69 @@
 			resourceName = objectName.substring(1);
 		}
 		
-		
-%>
+		var windowTitle = null;
+		for (var i=0; i<objectMetadata.fieldDescriptors.length; i++){						  
+			var fd = objectMetadata.fieldDescriptors[i];
 
+			windowTitle = fd.options && (fd.getOptionValue('windowTitle'));
+						
+			if(windowTitle){
+				windowTitle = value[fd.name];
+				
+				break;
+			}
+		}		
+%>
 		<div id="sm_<%=objectId%>" style="margin-top:12px; padding:0px;  display:none; float:left; width:160px; position:relative;">	
 		    <div class="boxtopleft"><span class="boxtopright"><%if(resourceName){%><%=resources[resourceName].here()%><%}else{%><%=objectName%><%}%></span></div>
 		    <div class="boxmiddleright">
 		        <div class="boxmiddleleft">
-		            <div class="togglebtnmax" onclick="mw3.getFaceHelper('<%=objectId%>').resume('<%=layout%>')"></div>
+
+<%
+		if(minimize){
+%>				        	
+		            <div class="togglebtnmax" onclick="mw3.getFaceHelper('<%=objectId%>').resume('<%=layoutName%>')"></div>
+<%
+		}
+%>		            
 		        </div>
 		    </div>
 		    
 		    <div class="miniboxbottomleft"><span class="miniboxbottomright"></span></div>
 	    </div>
-
-
+	    
 		<div class="pane ui-layout-north">
             <div class="boxtopleft">
             	<span class="boxtopright">
 		
 		    		<div id="navigationTitle" class="mw3_window_title">
+		    		<%if(windowTitle){%>
+		    			<%=windowTitle%>
+		    		<%}else{%>
 		    			<%if(resourceName){%>
 		    				<%=resources[resourceName].here()%>
 		    			<%}else{%>
 		    				<%=objectName%>
 		    			<%}%>
+		    		<%}%>
 		    		</div>
 		    		
             		<div id="loader_<%=objectId%>" class="loadingarea" style="display: none; "><img src="/uengine-web/images/waveStyle/ajax-loader.gif" border="0"></div>
-            		
 <%
-	if(layout){            		
+	if(maximize){
 %>	
-            		<div class="togglebtnmini" onclick="mw3.getFaceHelper('<%=objectId%>').minimize('<%=layout%>');"></div>
+					<div id="window_miximize_<%=objectId%>" class="togglebtnexp" onclick="mw3.getFaceHelper('<%=objectId%>').maximize('<%=layoutName%>');"></div>
 <%
 	}
-%>		    		
+%>            		
+            		
+<%
+	if(minimize){
+%>            		
+            		<div class="togglebtnmini" onclick="mw3.getFaceHelper('<%=objectId%>').minimize('<%=layoutName%>');"></div>
+<%
+	}
+%>            		
             	</span>
             </div>		    		
 		</div>		
@@ -74,10 +111,7 @@
 		<div class="pane ui-layout-center">
 			<div class="ui-layout-content">
 			    <div class="contentcontainer">
-			
-	                    
-<%	
-						
+<%							
 		var showLabel = !(objectMetadata.faceOptions && objectMetadata.faceOptions['hideLabels']);
 					
 		for (var i=0; i<objectMetadata.fieldDescriptors.length; i++){						  
@@ -86,17 +120,18 @@
 		  	if(fd.attributes && (fd.attributes['hidden'] || fd.attributes['resource'])) continue;
 		  	if(fd.name == 'metaworksContext') continue;
 		  	
-		  	var fieldValue = value[fd.name];
+			var fieldValue = value[fd.name];
+			
 			
 			if(showLabel){
 %>
-							<span> <b><%=fd.displayName%></b> </span>
+								<span> <b><%=fd.displayName%></b> </span>
 <%
 			}
 %>
 							<%=fields[fd.name] ? fields[fd.name].here() : "XXX"%>
-<%
-		}						   
+<%		
+		}				   
 %>							
 							
 <%						   
