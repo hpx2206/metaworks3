@@ -5,7 +5,7 @@
 <%
 		if(value.west && !mw3.isHidden(fields.west)){
 %>
-	<div class="pane ui-layout-west"><%=fields.west.here()%></div>
+	<div class="pane ui-layout-west" layoutName="west"><%=fields.west.here()%></div>
 <%
 		}
 %>
@@ -13,7 +13,7 @@
 <%
 		if(value.north && !mw3.isHidden(fields.north)){
 %>
-	<div class="pane ui-layout-north"><%=fields.north.here()%></div>
+	<div class="pane ui-layout-north" layoutName="north"><%=fields.north.here()%></div>
 <%
 		}
 %>
@@ -22,7 +22,7 @@
 <%
 		if(value.south && !mw3.isHidden(fields.south)){
 %>
-	<div class="pane ui-layout-south"><%=fields.south.here()%></div>
+	<div class="pane ui-layout-south" layoutName="south"><%=fields.south.here()%></div>
 <%
 		}
 %>
@@ -31,7 +31,7 @@
 <%
 		if(value.east && !mw3.isHidden(fields.east)){
 %>
-	<div class="pane ui-layout-east"><%=fields.east.here()%></div>
+	<div class="pane ui-layout-east" layoutName="east"><%=fields.east.here()%></div>
 <%
 		}
 %>
@@ -39,7 +39,7 @@
 <%
 		if(value.center){
 %>
-	<div class="pane ui-layout-center">
+	<div class="pane ui-layout-center" layoutName="center">
 		<div class="ui-layout-content">
 			<%=fields.center.here()%>
 		</div>
