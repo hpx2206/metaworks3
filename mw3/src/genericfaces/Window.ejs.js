@@ -1,12 +1,11 @@
 var Window = function(objectId, className){
 	this.objectId = objectId;
 	this.className = className;
-
+	
 	this.divId = '#objDiv_' + objectId;
 	this.smallDivId = '#sm_' + objectId;
 	
 	$(this.divId).addClass('mw3_window').addClass('mw3_layout').attr('objectId', objectId);
-	
 	
 	var faceHelper = this;
 	
@@ -29,6 +28,8 @@ Window.prototype.load = function(){
 }
 
 Window.prototype.destroy = function(){
+	//console.log('destroy : ' + this.objectId);
+	
 	$(this.divId).layout().destroy();
 }
 
@@ -50,27 +51,60 @@ Window.prototype.resizeChild = function(){
 	});
 }
 
+Window.prototype.maximize = function(target){
+	var miximizeBtn = $('#window_miximize_' + this.objectId);
+	
+	var layout = $(this.divId).parent().closest('.mw3_layout');
+	var layoutId = layout.attr('objectId');
+	
+	if(miximizeBtn.hasClass('togglebtnexp')){
+		// 최대화
+		miximizeBtn.removeClass('togglebtnexp').addClass('togglebtnmini');
+		
+		mw3.getFaceHelper(layoutId).maximize(target);
+		
+	}else{
+		// 이전크기로 복원
+		miximizeBtn.removeClass('togglebtnmini').addClass('togglebtnexp');
+
+		mw3.getFaceHelper(layoutId).resume(target);
+	}
+
+	
+	
+}
+
 Window.prototype.minimize = function(layoutName){
 
+	this.showSmallWindow();
+	
+	var layoutId = $(this.divId).parent().closest('.mw3_layout').attr('objectId');
+	if(layoutId)
+		mw3.getFaceHelper(layoutId).hide(layoutName);
+	
+}
+
+Window.prototype.resume = function(layoutName){
+	
+	this.hideSmallWindow();
+	
+	var layoutId = $(this.divId).parent().closest('.mw3_layout').attr('objectId');
+	if(layoutId)
+		mw3.getFaceHelper(layoutId).show(layoutName);
+}
+
+Window.prototype.showSmallWindow = function(){
+	
 	// 최초 입력을 위해 입력여부 확인
 	if($('.mw3_windowpanel').find(this.smallDivId).length == 0)
 		$(this.smallDivId).appendTo('.mw3_windowpanel');
 	
 	$(this.smallDivId).show();
-
-	var layoutId = $(this.divId).parent().closest('.mw3_layout').attr('objectId');
-	if(layoutId)
-		mw3.getFaceHelper(layoutId).hide(layoutName);
+	
 }
 
-
-Window.prototype.resume = function(layoutName){
-	
+Window.prototype.hideSmallWindow = function(){
 	$(this.smallDivId).hide();
-	
-	var layoutId = $(this.divId).parent().closest('.mw3_layout').attr('objectId');
-	if(layoutId)
-		mw3.getFaceHelper(layoutId).show(layoutName);
 }
 
 Window.prototype.startLoading = function(){
