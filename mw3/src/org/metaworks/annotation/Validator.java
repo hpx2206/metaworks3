@@ -8,6 +8,5 @@ public @interface Validator {
 	String name() default "";
 	String message() default "";
 	
-	String[] events() default {};
 	String[] options() default {};
 }

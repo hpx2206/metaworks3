@@ -2,12 +2,10 @@ package org.metaworks.annotation;
 
 public class ValidatorContext {
 
-	public final static String EVENT_KEYUP = "keyup";
-
 	public final static String VALIDATE_NULL = "isnull";
 	public final static String VALIDATE_MAXBYTE = "maxbyte";
-	public final static String VALIDATE_MAXLENGTH = "maxlength";
-	public final static String VALIDATE_MINLENGTH = "minlength";
+	public final static String VALIDATE_MAX = "maxlength";
+	public final static String VALIDATE_MIN = "minlength";
 	public final static String VALIDATE_NUMBERZERO = "numberzero";
 	public final static String VALIDATE_HTMLTAG = "htmltag";
 	public final static String VALIDATE_SCRIPT = "script";
