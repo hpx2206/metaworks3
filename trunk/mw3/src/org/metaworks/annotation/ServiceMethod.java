@@ -30,5 +30,6 @@ public @interface ServiceMethod {
 	
 	String mouseBinding() default "";
 	
+	boolean validate()		default false;	
 	boolean inContextMenu() default false;
 }
