@@ -132,6 +132,30 @@ if(value){
 		}
 	%>
 	<%
+	} else if(mw3.where == 'addLocalContactPanel'){
+	%>
+	<a onClick="<%=methods.drillDown.caller() %>" ><%=fields.partName.here() %></a>
+	<%
+		if(value.selected) {
+		%>
+			<ul>
+			<%
+			if(value.children) {
+			%>
+				<li style="border-bottom:1px solid #ccc; padding-left:15px;"><%=fields.children.here() %></li>
+			<%
+			}
+			if(value.deptEmployee) {
+			%>
+				<li style="border-bottom:1px solid #ccc; padding-left:15px;"><%=fields.deptEmployee.here() %></li>
+			<%
+			}
+			%>
+			<ul>
+		<%
+		}
+	%>
+	<%
 	} else {
 	%>
 	IDept Object where context value : <%=mw3.where %>

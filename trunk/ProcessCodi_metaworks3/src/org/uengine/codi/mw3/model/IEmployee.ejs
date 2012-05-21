@@ -129,6 +129,11 @@ if(value){
 	<a onClick="<%=methods.pickup.caller() %>" ><%=fields.empName.here() %>(<%=value.empCode %>)</a>
 	
 	<%
+	} else if(mw3.where == 'addLocalContactPanel') {
+	%>
+	<a onClick="<%=methods.addContact.caller() %>" style="cursor:pointer;" ><%=fields.empName.here() %>(<%=value.empCode %>)</a>
+	
+	<%
 	} else {
 	%>
 	IEmployee Object where context value : <%=mw3.where %> <%=fields.empCode.here() %>

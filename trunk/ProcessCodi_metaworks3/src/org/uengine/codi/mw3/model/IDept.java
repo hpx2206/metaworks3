@@ -38,9 +38,13 @@ public interface IDept extends IDAO {
 
 	public void setDescription(String description);
 
-	public String getComCode();
+//	public String getComCode();
+//
+//	public void setComCode(String comCode);
+	
+	public String getGlobalCom();
 
-	public void setComCode(String comCode);
+	public void setGlobalCom(String globalCom);
 
 	@Hidden
 	@NonSavable
@@ -64,13 +68,21 @@ public interface IDept extends IDAO {
 	// methods
 	public IDept load() throws Exception;
 
-	public IDept findByComCode(String comcode) throws Exception;
+//	public IDept findByComCode(String comcode) throws Exception;
+//
+//	public IDept findTreeByComCode(String comcode) throws Exception;
+	
+	public IDept findByGlobalCom(String globalCom) throws Exception;
 
-	public IDept findTreeByComCode(String comcode) throws Exception;
+	public IDept findTreeByGlobalCom(String globalCom) throws Exception;
+
 
 	public IDept findChildren() throws Exception;
 	
-	public IDept findRootDeptByComCode(String comcode) throws Exception;
+//	public IDept findRootDeptByComCode(String comcode) throws Exception;
+	
+	public IDept findRootDeptByGlobalCom(String globalCom) throws Exception;
+
 
 	// service methods
 	@ServiceMethod(target="self", callByContent = true, payload = { "partCode", "selected" })
