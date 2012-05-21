@@ -244,7 +244,7 @@ public class InstanceView {
 	public ProcessInstanceMonitor monitor() throws Exception{
 		//processInstanceMonitor = new ProcessInstanceMonitor();
 		processInstanceMonitor.setInstanceId(instanceId);
-		processInstanceMonitor.load();
+		processInstanceMonitor.load(processManager);
 		//loadDefault();
 		
 		return processInstanceMonitor;
