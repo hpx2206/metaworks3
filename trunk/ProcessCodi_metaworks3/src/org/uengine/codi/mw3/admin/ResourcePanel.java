@@ -1,51 +1,71 @@
 package org.uengine.codi.mw3.admin;
 
+import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dwr.MetaworksRemoteService;
+import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.model.IUser;
-import org.uengine.codi.mw3.model.IProcessDefinition;
-import org.uengine.codi.mw3.model.ProcessDefinition;
+import org.uengine.codi.mw3.model.ResourceFile;
 
 public class ResourcePanel {
 	
+	public ResourcePanel(){}
+	
 	public ResourcePanel(IUser user) throws Exception {
-		
+	
 		init();
 		
 		resourceSearchBox = new ResourceSearchBox(user);
-	}
-
-	public ResourcePanel(){
+		
 	}
 	
 	public void init() throws Exception {
+		resourceFile = new ResourceFile();
 		
-		ProcessDefinition root = new ProcessDefinition();
-		root.setParentFolder("-1");
-		processDefinitions = root.findAll();
-		
-		processDefinitions.getMetaworksContext().setWhere("design");
-		
-	}
+		resourceFile.setMetaworksContext(new MetaworksContext());	
+		resourceFile.getMetaworksContext().setWhere("design");
+		resourceFile.getMetaworksContext().setWhen("design");
 
+		resourceFile.setFolder(true);
+		resourceFile.setAlias("");
+		resourceFile.setName("classes");
+		resourceFile.drillDown();
+	
+		
+		libraryFile = new ResourceFile();
+		
+		libraryFile.setMetaworksContext(new MetaworksContext());	
+		libraryFile.getMetaworksContext().setWhere("design");
+		libraryFile.getMetaworksContext().setWhen("design");
+
+		libraryFile.setFolder(true);
+		libraryFile.setAlias("__lib");
+		libraryFile.setName("libraries");
+		libraryFile.drillDown();
+	
+
+		webResourceFile = new ResourceFile();
+
+		webResourceFile.setMetaworksContext(new MetaworksContext());	
+		webResourceFile.getMetaworksContext().setWhere("design");
+		webResourceFile.getMetaworksContext().setWhen("design");
+
+		webResourceFile.setFolder(true);
+		webResourceFile.setAlias("__web");
+		webResourceFile.setName("web");
+		webResourceFile.drillDown();
+	
+	}
+	
+	
 	@ServiceMethod
 	public void refresh() throws Exception {
-		
 		init();
 		
 		MetaworksRemoteService.getInstance().clearMetaworksType("*");
-	}
-	
-	IProcessDefinition processDefinitions;
-	
-		public IProcessDefinition getProcessDefinitions() {
-			return processDefinitions;
-		}
-	
-		public void setProcessDefinitions(IProcessDefinition processDefinitions) {
-			this.processDefinitions = processDefinitions;
-		}
 		
+		CodiClassLoader.refreshClassLoader(null);
+	}
 	
 	ResourceSearchBox resourceSearchBox;
 		public ResourceSearchBox getResourceSearchBox() {
@@ -53,6 +73,31 @@ public class ResourcePanel {
 		}
 		public void setResourceSearchBox(ResourceSearchBox resourceSearchBox) {
 			this.resourceSearchBox = resourceSearchBox;
+		}
+
+	ResourceFile resourceFile;
+		public ResourceFile getResourceFile() {
+			return resourceFile;
+		}
+		public void setResourceFile(ResourceFile resourceFile) {
+			this.resourceFile = resourceFile;
+		}
+		
+	ResourceFile libraryFile;
+		public ResourceFile getLibraryFile() {
+			return libraryFile;
+		}
+		public void setLibraryFile(ResourceFile libraryFile) {
+			this.libraryFile = libraryFile;
+		}
+		
+	ResourceFile webResourceFile;
+		public ResourceFile getWebResourceFile() {
+			return webResourceFile;
+		}
+	
+		public void setWebResourceFile(ResourceFile webResourceFile) {
+			this.webResourceFile = webResourceFile;
 		}
 
 }

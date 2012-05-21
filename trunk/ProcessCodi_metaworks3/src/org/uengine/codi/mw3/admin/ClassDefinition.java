@@ -255,14 +255,19 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 	}
 	
 	@ServiceMethod(callByContent=true, when="view", keyBinding="Ctrl+S")
-	public void compile() throws Exception{
-		save();
+	public Object compile() throws Exception{
+		
+		try{
+			save();
+		}catch(Exception e){
+			return new CheckoutWindow(); //or confirmation dialog for launching CheckoutWindow
+		}
 	
 		//TODO: please check the package name & static code analysis as much as possible here.
 		
-		if(getSourceCodes()==null || getSourceCodes().getSourceCode()==null) return;
+		if(getSourceCodes()==null || getSourceCodes().getSourceCode()==null) return this;
 		
-		CodiDwrServlet.refreshClassLoader(getAlias());
+		CodiClassLoader.refreshClassLoader(getAlias());
 		
 //	    SimpleCompiler compiler = new SimpleCompiler();
 //	    compiler.setParentClassLoader(Thread.currentThread().getContextClassLoader());
@@ -373,6 +378,9 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		
 		if(compileErrorInArray.length == 0)
 			refreshClassInfo();
+		
+		
+		return this;
 
 	}
 	

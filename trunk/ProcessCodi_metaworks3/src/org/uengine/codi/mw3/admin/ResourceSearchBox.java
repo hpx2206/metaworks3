@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.knowledge.WorkflowyNode;
 import org.uengine.codi.mw3.model.IUser;
@@ -25,6 +26,16 @@ public class ResourceSearchBox extends SearchBox {
 		setUser(user);
 	}
 	
+	IUser user;
+		
+		public IUser getUser() {
+			return user;
+		}
+	
+		public void setUser(IUser user) {
+			this.user = user;
+		}
+
 	@ServiceMethod(callByContent=true, target="popup")
 	public Object search() throws Exception{	
 		
@@ -38,7 +49,8 @@ public class ResourceSearchBox extends SearchBox {
 		find(resourceBase, resourceBase, found);
 	
 	
-		Popup searchResult = new Popup();
+		ModalWindow searchResult = new ModalWindow();
+		searchResult.setTitle("Open Resource");
 		searchResult.setPanel(found);
 		
 		return searchResult;

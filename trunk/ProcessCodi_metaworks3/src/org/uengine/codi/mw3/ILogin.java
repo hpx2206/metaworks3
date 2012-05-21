@@ -25,7 +25,7 @@ public interface ILogin extends IDAO{
 	public void setDefId(String defId);
 		
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)
-	public MainPanel login() throws Exception;	
+	public Object login() throws Exception;	
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)
 	public MainPanel loginSocialCoding() throws Exception;
