@@ -27,7 +27,9 @@
 							= request.getParameter("defId");
 		String objType 			= decode(request.getParameter("objType"));
 							
-							
+					
+		org.uengine.codi.mw3.CodiClassLoader.initClassLoader();
+
 		//ProcessDefinition sampleProc = new ProcessDefinition();
 		//sampleProc.setName("xxxxx");
 		
