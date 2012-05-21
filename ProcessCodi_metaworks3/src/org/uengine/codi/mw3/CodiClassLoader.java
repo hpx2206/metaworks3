@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.net.URLClassLoader;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -26,6 +27,7 @@ import javassist.expr.ExprEditor;
 import javassist.expr.MethodCall;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpSession;
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticListener;
 import javax.tools.JavaCompiler;
@@ -43,6 +45,7 @@ import org.codehaus.commons.compiler.jdk.JavaSourceClassLoader.DiagnosticExcepti
 import org.codehaus.commons.compiler.jdk.ByteArrayJavaFileManager;
 import org.codehaus.commons.compiler.jdk.JavaSourceClassLoader;
 import org.directwebremoting.ServerContextFactory;
+import org.metaworks.ObjectType;
 import org.metaworks.dao.TransactionContext;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -65,6 +68,9 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
 
     private JavaCompiler    compiler;
     private JavaFileManager fileManager;
+
+	public static CodiClassLoader codiClassLoader;
+	
 
     /**
      * @see ICompilerFactory#newJavaSourceClassLoader()
@@ -116,17 +122,25 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
 			
 		}
 		
-		String dir = "/Users/jyjang/codebase/definitions/" + userId;
-		File f = new File(dir);
-		if(!f.exists()) f.mkdirs();
+		if(userId==null)
+			userId = "main";
 		
-		//TODO: use main committers one for now, but it is needed to changed.
+		String codebaseRoot = getCodeBaseRoot();
+		
+		String dir = codebaseRoot + userId;
+		
+		
+		File f = new File(dir);
+		if(!f.exists()) //f.mkdirs();
+			dir = codebaseRoot + "main";
 		
 		setSourcePath(new File[]{new File(dir + "/src/")});
 		
-    	//setSourcePath(new File[]{new File("/Users/jyjang/codebase/1401720840/src/")});
-		
 		return sourcePath[0].getPath();
+	}
+
+	private static String getCodeBaseRoot() {
+		return GlobalContext.getPropertyString("codebase", "codebase/");
 	}
     
 	public static String mySourceCodeBase(){
@@ -138,9 +152,10 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
 		}
 		
 		if(UEngineUtil.isNotEmpty(userId)) {
-			String dir = "/Users/jyjang/codebase/" + userId;
-			File f = new File(dir);
-			if(!f.exists()) f.mkdirs();
+			String dir = getCodeBaseRoot() + userId;
+//			File f = new File(dir);
+//			if(!f.exists()) return null;
+			
 			return dir + "/src/";
 		}
 		
@@ -481,6 +496,92 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
         }
     }
     
-    
+	public static CodiClassLoader createClassLoader(String sourceCodeBase){
+		
+		CodiClassLoader cl = new CodiClassLoader(CodiMetaworksRemoteService.class.getClassLoader());
+		
+		URLClassLoader classLoader = (URLClassLoader) CodiMetaworksRemoteService.class.getClassLoader();
+		URL urls[] = classLoader.getURLs();
+		StringBuffer sbClasspath = new StringBuffer();
+		for(URL url : urls){
+			String urlStr = url.getFile().toString();
+			sbClasspath.append(urlStr).append(":");
+			try {
+				ObjectType.classPool.insertClassPath(urlStr);
+			} catch (NotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		//Loads user-defined library files
+		File libFileBase = new File(sourceCodeBase + "__lib");
+		if(libFileBase.exists()){
+			File[] libFiles = libFileBase.listFiles();
+
+			for(File libFile : libFiles){
+				String absLibPath = libFile.getAbsolutePath();
+				sbClasspath.append(absLibPath).append(":");
+				try {
+					ObjectType.classPool.insertClassPath(absLibPath);  //may occur some library version collision. should be separated.
+				} catch (NotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+
+		cl.setCompilerOptions(
+				new String[]{
+//						"-classpath", "/Users/jyjang/Documents/workspace/ProcessCodi_metaworks3/WebContent/WEB-INF/lib/metaworks3.jar:/Users/jyjang/Documents/workspace/ProcessCodi_metaworks3/WebContent/WEB-INF/lib/mongo-2.7.2.jar"		
+						"-classpath", sbClasspath.toString()
+				});
+		
+		
+		//ClassPool setting
+		
+		
+		
+
+
+//		if(sourceCodeBase==null)
+//			sourceCodeBase = "/Users/jyjang/javasources/";
+
+		//TODO: for guest users, sourceCodeBase to the main committer is right answer.
+		if(sourceCodeBase==null)
+			sourceCodeBase = "/Users/jyjang/codebase/1401720840/src/";
+		
+		cl.setSourcePath(new File[]{new File(sourceCodeBase)});
+				
+		return cl;
+	}  
+	
+	
+	public static void refreshClassLoader(String resourceName){
+		
+		String sourceCodeBase = null;
+		
+		if(TransactionContext.getThreadLocalInstance()!=null && TransactionContext.getThreadLocalInstance().getRequest()!=null){
+			HttpSession session = TransactionContext.getThreadLocalInstance().getRequest().getSession();
+			if(session!=null){
+				sourceCodeBase = (String) session.getAttribute("sourceCodeBase");
+			}
+		}
+		
+		//TODO: looks sourceCodeBase is not required
+		CodiClassLoader cl = CodiClassLoader.createClassLoader(sourceCodeBase);
+
+		Thread.currentThread().setContextClassLoader(cl);
+		codiClassLoader = cl;
+		
+	}
+
+	public static void initClassLoader(){
+		if(codiClassLoader==null)
+			refreshClassLoader(null);
+		
+		Thread.currentThread().setContextClassLoader(codiClassLoader);
+		
+	}
 	
 }

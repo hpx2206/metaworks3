@@ -48,8 +48,6 @@ import org.uengine.kernel.GlobalContext;
 
 public class CodiDwrServlet extends TransactionalDwrServlet{
 
-	public static CodiClassLoader codiClassLoader;
-	
 	final static String SECURITYMSG_SYSTEM_USAGE_PROHIBITED = " 패키지 이하의 클래스는 사용할 수 없습니다.".intern();///"Your App can't use any of classes under :".intern();
 	
 	final static HashMap<String, String> securedPackages = new HashMap<String, String>();
@@ -255,7 +253,7 @@ public class CodiDwrServlet extends TransactionalDwrServlet{
 		
 
 		
-		refreshClassLoader(null);
+    	CodiClassLoader.refreshClassLoader(null);
 	}
 
 
@@ -269,88 +267,22 @@ public class CodiDwrServlet extends TransactionalDwrServlet{
 			String sourceCodeBase = (String) session.getAttribute("sourceCodeBase");
 			if(sourceCodeBase!=null){
 				
-				CodiClassLoader clForSession = createClassLoader(sourceCodeBase);
+				CodiClassLoader clForSession = CodiClassLoader.createClassLoader(sourceCodeBase);
 				
 				Thread.currentThread().setContextClassLoader(clForSession);				
 			}else{
-				Thread.currentThread().setContextClassLoader(codiClassLoader);
+				Thread.currentThread().setContextClassLoader(CodiClassLoader.codiClassLoader);
 			}
 		}else{
-			Thread.currentThread().setContextClassLoader(codiClassLoader);
+			Thread.currentThread().setContextClassLoader(CodiClassLoader.codiClassLoader);
 		}
 
 		// TODO Auto-generated method stub
 		super.doPost(request, response);
 	}
 
-	public static CodiClassLoader createClassLoader(String sourceCodeBase){
-		
-		CodiClassLoader cl = new CodiClassLoader(CodiMetaworksRemoteService.class.getClassLoader());
-		
-		URLClassLoader classLoader = (URLClassLoader) CodiMetaworksRemoteService.class.getClassLoader();
-		URL urls[] = classLoader.getURLs();
-		StringBuffer sbClasspath = new StringBuffer();
-		for(URL url : urls){
-			String urlStr = url.getFile().toString();
-			sbClasspath.append(urlStr).append(":");
-			try {
-				ObjectType.classPool.insertClassPath(urlStr);
-			} catch (NotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
 
-		cl.setCompilerOptions(
-				new String[]{
-//						"-classpath", "/Users/jyjang/Documents/workspace/ProcessCodi_metaworks3/WebContent/WEB-INF/lib/metaworks3.jar:/Users/jyjang/Documents/workspace/ProcessCodi_metaworks3/WebContent/WEB-INF/lib/mongo-2.7.2.jar"		
-						"-classpath", sbClasspath.toString()
-				});
-		
-		
-		//ClassPool setting
-		
-		
-		
-
-
-//		if(sourceCodeBase==null)
-//			sourceCodeBase = "/Users/jyjang/javasources/";
-
-		//TODO: for guest users, sourceCodeBase to the main committer is right answer.
-		if(sourceCodeBase==null)
-			sourceCodeBase = "/Users/jyjang/codebase/1401720840/src/";
-		
-		cl.setSourcePath(new File[]{new File(sourceCodeBase)});
-				
-		return cl;
-	}
 	
-	public static void refreshClassLoader(String resourceName){
-		
-		String sourceCodeBase = null;
-		
-		if(TransactionContext.getThreadLocalInstance()!=null && TransactionContext.getThreadLocalInstance().getRequest()!=null){
-			HttpSession session = TransactionContext.getThreadLocalInstance().getRequest().getSession();
-			if(session!=null){
-				sourceCodeBase = (String) session.getAttribute("sourceCodeBase");
-			}
-		}
-		
-		//TODO: looks sourceCodeBase is not required
-		CodiClassLoader cl = createClassLoader(sourceCodeBase);
 
-		Thread.currentThread().setContextClassLoader(cl);
-		codiClassLoader = cl;
-		
-	}
-
-	public static void initClassLoader(){
-		if(codiClassLoader==null)
-			refreshClassLoader(null);
-		
-		Thread.currentThread().setContextClassLoader(codiClassLoader);
-		
-	}
 	
 }

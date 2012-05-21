@@ -11,7 +11,7 @@ public class HintPanel {
 		facebookComments = new FacebookComments("ide");
 		facebookComments.setUrl(pageName);
 		
-		setWorkflowyPanel(new WorkflowyPanel(new Workflowy(user, "read")));
+		setWorkflowyPanel(new WorkflowyPanel(new Workflowy(user.getUserId(), "read")));
 		
 		//hintSearchBox = new HintSearchBox();
 	}

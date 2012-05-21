@@ -16,6 +16,8 @@ import org.uengine.processmanager.ProcessTransactionContext;
 import org.uengine.util.UEngineUtil;
 
 public class CodiProcessDefinitionFactory extends ProcessDefinitionFactory{
+	
+	public final static String unstructuredProcessDefinitionLocation = "Unstructured.process";
 
 	public CodiProcessDefinitionFactory(ProcessTransactionContext tc) {
 		super(tc);
@@ -29,9 +31,21 @@ public class CodiProcessDefinitionFactory extends ProcessDefinitionFactory{
 			throws Exception {
 		// TODO Auto-generated method stub
 		
+		
+		if(unstructuredProcessDefinitionLocation.equals(location)){
+			ProcessDefinition obj = new ProcessDefinition();
+			
+			obj.setModifiedDate(Calendar.getInstance());
+
+			return obj;
+		}
+		
 		InputStream is = null;
 		try {
 			is = CodiClassLoader.getMyClassLoader().getResourceAsStream(location);
+			
+			if(is==null)
+				throw new Exception("No definition found where location = '" + location + "'");
 			
 			if(shouldBeObjectResult){
 				ProcessDefinition obj = (ProcessDefinition) GlobalContext.deserialize(is, Object.class);
@@ -88,12 +102,19 @@ public class CodiProcessDefinitionFactory extends ProcessDefinitionFactory{
 		String sourceCodeBase = CodiClassLoader.getMyClassLoader().sourceCodeBase();
 		
 		String defFileName;
+
+		String alias = (UEngineUtil.isNotEmpty(folder) ? folder + "/" : "") + name;
 		
 		if(UEngineUtil.isNotEmpty(pdvid))
 			defFileName = sourceCodeBase + "/" + pdvid;
-		else
-			defFileName = sourceCodeBase + "/" + folder + "/" + name + "." + objectType;
+		else{
+			
+			defFileName = sourceCodeBase + "/" + alias + "." + objectType;
+		}
 
+		new File(defFileName).getParentFile().mkdirs();
+		
+		
 		FileOutputStream fos = null;
 		try {
 			File classDefFile = new File(defFileName);
@@ -116,7 +137,7 @@ public class CodiProcessDefinitionFactory extends ProcessDefinitionFactory{
 				fos.close();
 		}
 
-		return new String[]{folder + "/" + name, defFileName};
+		return new String[]{alias, defFileName};
 		
 	}
 
