@@ -61,13 +61,14 @@ public interface IWorkItem extends IDAO{
 		@TypeSelector(
 				values = 		{ 
 						"wih",			
-						"comment",			
-						"img",				
+						"comment",
+						"img",		
 						"mov", 				
-						"src",						
+						"src",
 						"file", 
 						"schdle",
-						"postings"
+						"postings",
+						//"generic"
 					}, 
 				classes = 		{ 
 						WorkItem.class,  	
@@ -77,7 +78,8 @@ public interface IWorkItem extends IDAO{
 						SourceCodeWorkItem.class,
 						FileWorkItem.class,
 						ScheduleWorkItem.class,
-						PostingsWorkItem.class
+						PostingsWorkItem.class,
+						//GenericWorkItem.class
 					} 
 		)
 		public String getType();
@@ -106,6 +108,9 @@ public interface IWorkItem extends IDAO{
 		
 		public Long getInstId();
 		public void setInstId(Long instId);
+
+		public Long getRootInstId();
+		public void setRootInstId(Long rootInstId);
 
 		
 		public String getTool();

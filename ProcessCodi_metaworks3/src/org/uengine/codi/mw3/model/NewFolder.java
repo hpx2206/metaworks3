@@ -1,12 +1,15 @@
 package org.uengine.codi.mw3.model;
 
+import java.io.File;
 import java.rmi.RemoteException;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.Remover;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 public class NewFolder implements ContextAware{
@@ -46,17 +49,18 @@ public class NewFolder implements ContextAware{
 		
 	@ServiceMethod(callByContent = true)
 	public Object[] create() throws Exception{
-		processManager.addFolder(getFolderName(), getParentFolderDefId().toString());
-		ProcessDefinition parentForRefresh = new ProcessDefinition();
 		
-		parentForRefresh.setDefId(new Long(getParentFolderDefId()));
-		parentForRefresh.drillDown();
-		parentForRefresh.setName(parentForRefresh.databaseMe().getName());
-		parentForRefresh.setObjType("folder");
+		String resourceBase = CodiClassLoader.getMyClassLoader().sourceCodeBase() + "/";
+
 		
-		getMetaworksContext().setWhen("view");
+		File file = new File(resourceBase + "/" + getParentFolderDefId() + "/" + getFolderName());
+		file.mkdirs();
 		
-		return new Object[]{parentForRefresh, this};
+		ResourceFile parent = new ResourceFile();
+		parent.setAlias(getParentFolderDefId());
+		parent.drillDown();
+			
+		return new Object[]{parent, new Remover(this)};
 	}
 	
 	@Autowired

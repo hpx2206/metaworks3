@@ -642,6 +642,7 @@ public class WorkflowyNode implements ContextAware {
 	public ContentWindow newProcessInstance() throws Exception{
 		NewInstancePanel newInstancePanel =  new NewInstancePanel();
 		newInstancePanel.setKnowledgeNodeId(id);
+		newInstancePanel.load();
 		
 		return newInstancePanel;
 	}

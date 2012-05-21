@@ -12,6 +12,16 @@ public class ContactSearchBox extends SearchBox {
 		setUser(user);
 	}
 	
+	IUser user;
+		
+		public IUser getUser() {
+			return user;
+		}
+	
+		public void setUser(IUser user) {
+			this.user = user;
+		}
+
 	@ServiceMethod(callByContent=true)
 	public Object search() throws Exception{
 		ContactList contactPanel = new ContactList();
@@ -26,5 +36,6 @@ public class ContactSearchBox extends SearchBox {
 		
 		return contactPanel;
 	}
+	
 		
 }

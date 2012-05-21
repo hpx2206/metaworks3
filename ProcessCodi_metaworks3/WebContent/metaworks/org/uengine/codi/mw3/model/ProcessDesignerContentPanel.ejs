@@ -9,13 +9,15 @@
 
 //mw3.debug(value.parentFolder);
 
-if(value.parentFolder){%>
+if(value.parentFolder!=null){%>
 
-<script>
 
 <br><br><br>
 <center>
 launching Process Designer ....
+
+<script>
+
 location= mw3.base + "/processmanager/ProcessDesigner.jnlp?folderId=<%=value.parentFolder%>&userId=<%=mw3.getAutowiredObject('org.uengine.codi.mw3.model.Session').user.userId%>";
 
 </script>
@@ -23,15 +25,13 @@ location= mw3.base + "/processmanager/ProcessDesigner.jnlp?folderId=<%=value.par
 
 <%}else{%>
 
+<br><br><br>
+<center>
+launching Process Designer ....
 
-FlowChart:
-
-<%=value.chartHTML%>
-
-Please wait for launching Process Designer ....
-
+<script>
 location= mw3.base + "/processmanager/ProcessDesigner.jnlp?defId=<%=value.defId%>&defVerId=<%=value.defVerId%>&userId=<%=mw3.getAutowiredObject('org.uengine.codi.mw3.model.Session').user.userId%>";
-
+</script>
 <%}%>
 
 
