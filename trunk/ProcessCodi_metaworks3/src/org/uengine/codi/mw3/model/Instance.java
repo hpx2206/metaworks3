@@ -1,6 +1,9 @@
 package org.uengine.codi.mw3.model;
 
 import java.util.Date;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Id;
@@ -10,6 +13,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class Instance extends Database<IInstance> implements IInstance{
 
+	
+	public static final String TASK_DIRECT_APPEND_SQL_KEY = "task.";
+	public static final String INSTANCE_DIRECT_APPEND_SQL_KEY = "inst.";
+
+	
+	
 	@Autowired
 	public InstanceViewContent instanceViewContent;
 	
@@ -19,6 +28,68 @@ public class Instance extends Database<IInstance> implements IInstance{
 	public Instance(){
 		
 	}
+	
+	@Override
+	public IInstance load(Session session, Map<String, String> criteria)
+			throws Exception {
+		StringBuffer stmt = new StringBuffer();
+		stmt.append("select bottomlist.* from ");
+		
+		stmt.append("(select");
+		
+		//if(oracle)
+		//   stmt.append(" ROWNUM rindex,");
+		
+		stmt.append(" instanceList.* from ");
+		stmt.append(" (select inst.*, task.startdate from ");
+		stmt.append(" BPM_PROCINST inst, ");
+		
+		// TASK
+		stmt.append(" (select max(startdate) startdate, rootinstid ");
+		stmt.append("from bpm_worklist ");
+		stmt.append("where 1=1 ");
+		if(criteria.containsKey(TASK_DIRECT_APPEND_SQL_KEY)) {
+			stmt.append(criteria.get(TASK_DIRECT_APPEND_SQL_KEY));
+		}
+		stmt.append("group by rootinstid) task ");
+		
+		// add instance criteria
+		stmt.append("where inst.instid=task.rootinstid ");
+		stmt.append("and initcomcd=?initComCd ");
+		if(criteria.containsKey(INSTANCE_DIRECT_APPEND_SQL_KEY)) {
+			stmt.append(criteria.get(INSTANCE_DIRECT_APPEND_SQL_KEY));
+		}
+		
+		stmt.append("order by task.startdate desc) instanceList ");
+		stmt.append(") bottomlist");
+		
+//		if(oracle)
+//			stmt.append("where rindex between ?startIndex and ?lastIndex ");
+		
+		stmt.append( " limit " + criteria.get("startIndex") + ", "+InstanceList.PAGE_CNT);
+
+		
+		//TODO delete printing
+		System.out.println(stmt.toString());
+		
+		IInstance instanceContents = sql(stmt.toString());
+		instanceContents.setInitComCd(session.getEmployee().getGlobalCom());
+
+		// TODO add criteria
+		Set<String> keys = criteria.keySet();
+		for (Iterator iterator = keys.iterator(); iterator.hasNext();) {
+			String key = (String) iterator.next();
+			if(key.equals(INSTANCE_DIRECT_APPEND_SQL_KEY) || key.equals(TASK_DIRECT_APPEND_SQL_KEY)) {
+				continue;
+			} else {
+				instanceContents.set(key, criteria.get(key));
+			}
+		}
+
+		instanceContents.select();
+		return instanceContents;
+	}
+	
 	
 	public ContentWindow detail() throws Exception{
 		//InstanceViewContent instanceViewContent = new InstanceViewContent();
@@ -38,6 +109,16 @@ public class Instance extends Database<IInstance> implements IInstance{
 		}
 		public void setInstId(Long instId) {
 			this.instId = instId;
+		}
+		
+	String initComCd;
+	
+		public String getInitComCd() {
+			return initComCd;
+		}
+	
+		public void setInitComCd(String initComCd) {
+			this.initComCd = initComCd;
 		}
 
 	@Override

@@ -11,10 +11,12 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.TransactionContext;
+import org.metaworks.widget.ModalWindow;
 import org.metaworks.widget.Window;
 import org.metaworks.widget.menu.SubMenu;
 import org.uengine.codi.mw3.admin.ClassDefinition;
 import org.uengine.codi.mw3.model.MobileWindow;
+import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.model.TemplateDesigner;
 import org.uengine.codi.mw3.widget.IFrame;
 import org.uengine.codi.platform.Console;
@@ -37,7 +39,8 @@ public class SubMenuRun extends SubMenu {
 			
 			Object o = Thread.currentThread().getContextClassLoader().loadClass(fullClassName).newInstance();
 
-			Window outputWindow = new Window();
+			ModalWindow outputWindow = new ModalWindow();
+			outputWindow.setTitle("Output");
 			outputWindow.setPanel(o);
 			
 			return new Object[]{outputWindow, new Remover(this)};
@@ -72,7 +75,8 @@ public class SubMenuRun extends SubMenu {
 		
 		Console.addLog("Run for UI Design -> " + fullClassName);
 		
-		Window outputWindow = new Window();
+		ModalWindow outputWindow = new ModalWindow();
+		outputWindow.setTitle("Output");
 		
 		try{
 			TemplateDesigner designer = new TemplateDesigner(fullClassName);
@@ -128,7 +132,10 @@ public class SubMenuRun extends SubMenu {
 		try{
 			String userId = (String) TransactionContext.getThreadLocalInstance().getRequest().getSession().getAttribute("userId");
 			
-			Window outputWindow = new Window(new IFrame("runner.html?className=" + fullClassName + "&classOwner=" + userId));
+			ModalWindow outputWindow = new ModalWindow();
+			outputWindow.setTitle("Output");
+
+			outputWindow.setPanel(new IFrame("runner.html?className=" + fullClassName + "&classOwner=" + userId));
 			
 			return new Object[]{outputWindow, new Remover(this)};
 		}catch(Exception e){

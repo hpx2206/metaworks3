@@ -1,0 +1,138 @@
+<%
+if(value){
+	var portrait;
+	var onErrorImg;
+		
+	if(value.empCode)
+		portrait = 'images/portrait/' + value.empCode + '.gif';
+	else
+		portrait = 'images/portrait/unknown_user.gif';
+	
+	onErrorImg = "this.src='images/portrait/unknown_user.gif'";
+
+
+	//no use Admin
+	
+	if(mw3.where == 'admin'){
+		if(mw3.how == 'tree'){
+		
+			if(mw3.when == 'view') {
+			%>
+				<a onClick="<%=methods.showDetial.caller() %>" ><%=fields.empName.here() %>
+				<%=fields.jikName.here() %></a>
+			<%
+			} else if(mw3.when == 'new') {
+			%>
+				IEmployee Object where context value in Tree : <%=mw3.where %>
+			<%
+			} else if(mw3.when == 'edit') {
+			%>
+				IEmployee Object where context value in Tree : <%=mw3.where %>
+			<%
+			}
+		
+		} else if(mw3.how == 'detail') {
+			if(mw3.when == 'view') {
+			%>
+				<img id="userPicture_<%=objectId %>" onerror="<%=onErrorImg %>" src="<%=portrait %>" width="30" height="30"><%=fields.imageFile.here() %>
+				ID :<%=value.empCode %>
+				NAME : <%=fields.empName.here() %>
+				Dept : <%=fields.partName.here() %>(<%value.partCode %>)
+				Position : <%=fields.jikName.here() %>
+				Phone : <%=fields.mobileNo.here() %>
+				Email : <%=fields.email.here() %>
+				Locale : <%=fields.locale.here() %>
+				IPC : <%=fields.ipcCode.here() %>
+				TECH : <%=fields.techCode.here() %>
+			<%
+			} else if(mw3.when == 'new') {
+			%>
+				<img id="userPicture_<%=objectId %>" onerror="<%=onErrorImg %>" src="<%=portrait %>" width="30" height="30"><%=fields.imageFile.here() %>
+				ID :<%=value.empCode %>
+				NAME : <%=fields.empName.here() %>
+				PASSWORD : <%=fields.password.here() %>
+				Dept : <%=fields.partName.here() %> <%value.partCode %>
+				Position : <%=fields.jikName.here() %>
+				Phone : <%=fields.mobileNo.here() %>
+				Email : <%=fields.email.here() %>
+				Locale : <%=fields.locale.here() %>
+				IPC : <%=fields.ipcCode.here() %>
+				TECH : <%=fields.techCode.here() %>
+			<%
+			// } else if(mw3.when == 'edit') { }
+			%>
+				<%=methods.saveEmployeeInfo.here() %>
+			<%
+			}
+		
+		}
+		
+		//no use Admin
+		
+	} else if(mw3.where == 'navigator'){
+	%>
+	
+	<a onClick="<%=methods.loadOrganization.caller() %>" ><%=value.empName %> (<%=value.jikName %>)</a>
+	
+	<%
+	} else if(mw3.where == 'modifyEmployeeInfo') {
+	%>
+	// TODO EDIT 
+	<%
+	} else if(mw3.where == 'instanceList') {
+	%>
+	<img id="userPicture_<%=objectId %>" onerror="<%=onErrorImg %>" src="<%=portrait %>" width="30" height="30" title="<%=value.empName %>">
+	<%
+	} else if(mw3.where == 'inSession') {
+	%>
+	<a onClick="<%=methods.showDetail.caller() %>" ><b><%=value.empName %></b> (<%=value.empCode %>)</a>
+	<%
+	} else if(mw3.where == 'inWorkItem') {
+	%>
+	<img id="userPicture_<%=objectId %>" onerror="<%=onErrorImg %>" src="<%=portrait %>" width="30" height="30"><%=fields.empCode.here() %>
+	<%
+	} else if(mw3.where == 'inDetailView') {
+	%>
+	
+	<img id="userPicture_<%=objectId %>" onerror="<%=onErrorImg %>" src="<%=portrait %>" width="30" height="30"><%=fields.imageFile.here() %>
+	ID :<%=value.empCode %>
+	NAME : <%=value.empName %>
+	PASSWORD : <%=fields.password.here() %>
+	Dept : <%=value.partName %>(<%value.partCode %>)
+	Position : <%=value.jikName %>
+	Phone : <%=fields.mobileNo.here() %>
+	Email : <%=fields.email.here() %>
+	Locale : <%=fields.locale.here() %>
+	IPC : <%=value.ipcCode %>
+	TECH : <%=value.techCode %>
+	<%=methods.saveEmployeeInfo.here() %>
+	
+	<%
+	} else if(mw3.where == 'pickerCaller') {
+		if(value.empCode) {
+		%>
+		<%=value.empName %>(<%=value.empCode %>)
+		<%
+		}
+	%>
+	<form class="jqtransform">	
+		<div class="rowElem">
+			<div class="positionRight">
+			<span onclick="<%=methods.openPicker.caller() %>">
+			<input value="openPicker" type="button"></span>
+			</div>
+		</div>
+	</form>	
+	<%
+	} else if(mw3.where == 'picker') {
+	%>
+	<a onClick="<%=methods.pickup.caller() %>" ><%=fields.empName.here() %>(<%=value.empCode %>)</a>
+	
+	<%
+	} else {
+	%>
+	IEmployee Object where context value : <%=mw3.where %> <%=fields.empCode.here() %>
+	<%
+	}
+}
+%>

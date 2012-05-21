@@ -1,5 +1,11 @@
 package org.uengine.codi.mw3.model;
 
+import java.util.Collection;
+
+import org.apache.commons.digester.SetRootRule;
+import org.directwebremoting.WebContext;
+import org.directwebremoting.WebContextFactory;
+import org.directwebremoting.proxy.dwr.Util;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
@@ -19,7 +25,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	
 	protected static IWorkItem find(String instanceId) throws Exception{
 		
-		IWorkItem workitem = (IWorkItem) Database.sql(IWorkItem.class, "select * from bpm_worklist where instId=?instId");
+		IWorkItem workitem = (IWorkItem) Database.sql(IWorkItem.class, "select * from bpm_worklist where rootInstId=?instId");
 		
 		workitem.set("instId",instanceId);
 		
@@ -46,6 +52,16 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		}
 		public void setInstId(Long instId) {
 			this.instId = instId;
+		}
+
+	Long rootInstId;
+
+		public Long getRootInstId() {
+			return rootInstId;
+		}
+	
+		public void setRootInstId(Long rootInstId) {
+			this.rootInstId = rootInstId;
 		}
 
 
@@ -96,6 +112,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		public void setEndpoint(String endpoint) {
 			this.endpoint = endpoint;
 		}
+		
 		
 	MetaworksFile file;
 		public MetaworksFile getFile() {
@@ -243,6 +260,8 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	public WorkItem[] add() throws Exception {
 		Long taskId = UniqueKeyGenerator.issueWorkItemKey(((ProcessManagerBean)processManager).getTransactionContext());
 		
+		setRootInstId(getInstId());
+		
 		setTaskId(taskId);
 ////		
 		createDatabaseMe();
@@ -265,9 +284,19 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		loginUser.setName(session.getUser().getName());
 
 		newItem.setWriter(loginUser);
+		
+		//let the other's list updated
+		WebContext wctx = WebContextFactory.get();
+		String currentPage = wctx.getCurrentPage();
+
+		   Collection sessions = wctx.getScriptSessionsByPage(currentPage);
+
+		   Util utilAll = new Util(sessions);
+		   utilAll.addFunctionCall("mw3.getAutowiredObject('org.uengine.codi.mw3.model.InstanceView').activityStream");
+
 
 		//makes new line and change existing div
-		return new WorkItem[]{this, newItem};
+		return new WorkItem[]{/*this*/newItem};
 	}
 
 	
@@ -279,5 +308,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 
 	@Autowired
 	public InstanceViewContent instanceViewContent;
+	
 
 }

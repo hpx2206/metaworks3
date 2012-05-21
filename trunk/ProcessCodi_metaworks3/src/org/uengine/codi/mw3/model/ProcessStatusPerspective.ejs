@@ -1,0 +1,19 @@
+<div class="depth1" onClick="<%=methods.select.caller() %>" ><%=value.label%></div>
+<%if(value.selected){%>
+	<div class="depth2">
+		<ul class="fist_menu">
+			<li><a onClick="<%=methods.loadRunning.caller() %>" >Running</li></a>
+			<li><a onClick="<%=methods.loadCompleted.caller() %>" ><Completed/li></a>
+			
+			<li><a onClick="<%=methods.loadReady.caller() %>" >Ready</li></a>
+			<li><a onClick="<%=methods.loadRetrying.caller() %>" >Retrying</li></a>
+			<li><a onClick="<%=methods.loadSuspended.caller() %>" >Suspended</li></a>
+			
+			<li><a onClick="<%=methods.loadStopped.caller() %>" >Stopped</li></a>
+			<li><a onClick="<%=methods.loadTimeout.caller() %>" >Timeout</li></a>
+			<li><a onClick="<%=methods.loadFailed.caller() %>" >Failed</li></a>
+			<li><a onClick="<%=methods.loadCancelled.caller() %>" >Cancelled</li></a>
+		</ul>
+	</div>
+<%}else{%>
+<%}%>

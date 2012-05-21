@@ -29,7 +29,7 @@ if(value!=null){
   	if(value.childs && value.opened){
 %>
 
-<span style="background:url(images/waveStyle/folder_o.png) no-repeat 5px 0px;">
+<span style="background:url(images/waveStyle/folder_o.png) no-repeat 5px 0px; cursor:hand;">
 <%		if(!value.deleted){%>
 	<a onclick="<%=methods.drillDown.caller()%>"><b><%=value.name%></b></a>
 <%		}else{%>
@@ -44,7 +44,7 @@ if(value!=null){
 
 
 
-<span style="background:url(images/waveStyle/<%=icon%>) no-repeat; width: 5px; 0px;">
+<span style="background:url(images/waveStyle/<%=icon%>) no-repeat; width: 5px; 0px; cursor:hand;">
 <%		if(!value.isDeleted){%>
 	<a onclick="<%=methods.drillDown.caller()%>"><%=value.name%></a>
 <%		}else{%>
@@ -61,7 +61,7 @@ if(value!=null){
   	if(mw3.where=="design"){
   
 %>
-	<span style="background:url(images/waveStyle/<%=icon%>) no-repeat 5px 0px;">
+	<span style="background:url(images/waveStyle/<%=icon%>) no-repeat 5px 0px; cursor:hand;">
 		<a onclick="<%=methods.design.caller()%>"><%=value.name%></a>
 	</span>
 <%

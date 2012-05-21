@@ -9,14 +9,23 @@ import org.metaworks.annotation.ServiceMethod;
 public class Popup implements ContextAware {
 	
 	public Popup(){
-		this(400,300);
+		this(400,300, null);
+	}
+
+	public Popup(Object panel){		
+		this(400,300, panel);
 	}
 	
 	public Popup(int width, int height){
-		setWidth(width);
-		setHeight(height);
+		this(400,300, null);
 	}	
 	
+	public Popup(int width, int height, Object panel){
+		setWidth(width);
+		setHeight(height);
+		setPanel(panel);
+	}	
+
 	Object panel;
 		public Object getPanel() {
 			return panel;

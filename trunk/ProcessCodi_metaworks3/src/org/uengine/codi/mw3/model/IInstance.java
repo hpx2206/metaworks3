@@ -1,5 +1,7 @@
 package org.uengine.codi.mw3.model;
 
+import java.util.Map;
+
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ORMapping;
 import org.metaworks.annotation.ServiceMethod;
@@ -92,6 +94,10 @@ public interface IInstance extends IDAO{
 	public String getInitEp();
 	public void setInitEp(String initEp);
 	
+	public String getInitComCd();
+	public void setInitComCd(String initComCd);
+
+	
 	
 	/////// following setter/getters stands for mapping tuple data to object by bean mapping /////////
 	
@@ -110,4 +116,7 @@ public interface IInstance extends IDAO{
 	public void setCurrentUser(IUser user);
 	
 	
+	public IInstance load(Session session, Map<String, String> criteria)
+			throws Exception;
+
 }

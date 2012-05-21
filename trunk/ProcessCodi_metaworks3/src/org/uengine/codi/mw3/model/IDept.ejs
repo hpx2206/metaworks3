@@ -1,0 +1,142 @@
+<%
+if(value){
+	if(mw3.where == 'admin'){
+		if(mw3.when == 'new') {
+		%>
+		PartCode : <%=fields.partCode.here() %>
+		PartName : <%=fields.partName.here() %>
+		Description : <%=fields.description.here() %>
+		<%=methods.saveDeptInfo.here() %>
+		<%
+		} else if(mw3.when == 'view') {
+			if(value.partCode == null) {
+			%>
+			<a onClick="<%=methods.drillDown.caller() %>" ><%=fields.partName.here()%></a>
+			<%
+				if(value.selected) {
+					if(value.children) {
+					%>
+					<ul>
+					<li style="border-bottom:1px solid #ccc; padding-left:15px;"><%=fields.children.here() %></li>
+					<%
+					}
+					if(value.deptEmployee) {
+					%>
+					<li style="border-bottom:1px solid #ccc; padding-left:15px;"><%=fields.deptEmployee.here() %></li>
+					<%
+					}
+					%>
+					</ul>
+					<%=methods.addNewChildDept.here() %>
+					<%=methods.addNewEmployee.here() %>
+				<%
+				}
+			} else {
+			%>
+				<a onClick="<%=methods.drillDown.caller() %>" > Name : <%=fields.partName.here()%>  , Code : <%=fields.partCode.here()%></a>
+				<%=fields.description.here()%>
+				<%
+				if(value.selected) {
+					%>
+					<ul>
+					<%
+					if(value.children) {
+					%>
+					<li style="border-bottom:1px solid #ccc; padding-left:15px;"><%=fields.children.here() %></li>
+					<%
+					}
+					if(value.deptEmployee) {
+					%>
+					<li style="border-bottom:1px solid #ccc; padding-left:15px;"><%=fields.deptEmployee.here() %></li>
+					<%
+					}
+					%>
+					</ul>
+					<%=methods.addNewChildDept.here() %>
+					<%=methods.addNewEmployee.here() %>
+					<%=methods.editDeptInfo.here() %>
+				<%
+				}
+			}
+		} else if(mw3.when = 'edit') {
+		%>
+		PartCode : <%=value.partCode %>
+		PartName : <%=fields.partName.here() %>
+		Description : <%=fields.description.here() %>
+		
+		<%=methods.saveDeptInfo.here() %>
+		<% if(value.isDeleted == '0'){
+			%>
+			<%=methods.deleteDept.here() %>
+			<%
+		} else if(value.isDeleted == '1') {
+			%>
+			<%=methods.restoreDept.here() %>
+			<%
+		}
+		%>
+		<%
+		} else {
+		%>
+		<%=methods.addNewChildDept.here() %>
+		<%
+		}
+	} else if(mw3.where == 'navigator') {
+	%>
+	
+		<a onClick="<%=methods.drillDown.caller() %>" ><%=fields.partName.here() %></a>
+		<%
+			if(value.selected) {
+			%>
+				<ul>
+				
+				<%
+				if(value.children) {
+				%>
+					<li style="border-bottom:1px solid #ccc; padding-left:15px;"><%=fields.children.here() %></li>
+				<%
+				}
+				if(value.deptEmployee) {
+				%>
+					<li style="border-bottom:1px solid #ccc; padding-left:15px;"><%=fields.deptEmployee.here() %></li>
+				<%
+				}
+				%>
+				
+				<ul>
+			<%
+			}
+		%>
+	<%
+	} else if(mw3.where == 'picker') {
+	%>
+	<a onClick="<%=methods.drillDown.caller() %>" ><%=fields.partName.here() %></a>
+	<%
+		if(value.selected) {
+		%>
+			<ul>
+			<%
+			if(value.children) {
+			%>
+				<li style="border-bottom:1px solid #ccc; padding-left:15px;"><%=fields.children.here() %></li>
+			<%
+			}
+			if(value.deptEmployee) {
+			%>
+				<li style="border-bottom:1px solid #ccc; padding-left:15px;"><%=fields.deptEmployee.here() %></li>
+			<%
+			}
+			%>
+			<ul>
+		<%
+		}
+	%>
+	<%
+	} else {
+	%>
+	IDept Object where context value : <%=mw3.where %>
+	<%
+	}
+}
+%>
+

@@ -2,12 +2,16 @@ package org.uengine.codi.mw3.model;
 
 import javax.servlet.http.HttpSession;
 
+import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.TransactionContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.codi.mw3.knowledge.WorkflowyNode;
+import org.uengine.kernel.EJBProcessInstance;
+import org.uengine.kernel.ProcessInstance;
 import org.uengine.kernel.RoleMapping;
 import org.uengine.processmanager.ProcessManagerRemote;
 
@@ -203,30 +207,89 @@ public class ProcessDefinition extends Database<IProcessDefinition> implements I
 	
 	@Override
 	public Object[] initiate() throws Exception {
-		InstanceViewContent instanceView = instanceViewContent;// = new InstanceViewContent();
 		
-		String prodVerId = codiPmSVC.getProcessDefinitionProductionVersion(getDefId().toString());
-		String instId = codiPmSVC.initializeProcess(prodVerId);
+		String prodVerId = processManager.getProcessDefinitionProductionVersion(getDefId().toString());
+		String instId = processManager.initializeProcess(prodVerId);
 		
 		RoleMapping rm = RoleMapping.create();
 		if(session.getUser() != null)
 			rm.setEndpoint(session.getUser().getUserId());
 		
-		codiPmSVC.setLoggedRoleMapping(rm);
+		processManager.setLoggedRoleMapping(rm);
 		
-		codiPmSVC.executeProcess(instId);
-		codiPmSVC.applyChanges();
-	
-		IInstance instanceRef = new Instance();
+		Instance instanceRef = new Instance();
 		instanceRef.setInstId(new Long(instId));
 		
-		instanceView.load(instanceRef);
 		
+
+		if(newInstancePanel!=null){
+			
+			if(newInstancePanel.getKnowledgeNodeId() != null){
+
+				processManager.executeProcess(instId);
+				processManager.applyChanges();
+
+				InstanceViewContent instanceView = instanceViewContent;// = new InstanceViewContent();
+				instanceView.load(instanceRef);
+
+				
+				WorkflowyNode parent = new WorkflowyNode(newInstancePanel.getKnowledgeNodeId());
+				parent.load();
+				
+				WorkflowyNode child = new WorkflowyNode(WorkflowyNode.makeId());
+				child.setName(instanceView.instanceName);
+				child.setLinkedInstId(instId);
+				parent.addChildNode(child);
+				
+				child.save();
+
+			
+
+				return new Object[]{instanceView, parent};
+				
+				
+			}else if(newInstancePanel.getParentInstanceId() != null){ //need to attach new instance to the parent instance
+				ProcessInstance instanceObject = processManager.getProcessInstance(instId);
+				
+				//IInstance instance = instanceRef.databaseMe();
+			
+				EJBProcessInstance ejbParentInstance = (EJBProcessInstance)instanceObject;
+				ejbParentInstance.getProcessInstanceDAO().setRootInstId(new Long(newInstancePanel.getParentInstanceId()));
+				
+				Instance rootInstanceRef = new Instance();
+				rootInstanceRef.setInstId(new Long(newInstancePanel.getParentInstanceId()));
+				
+				processManager.executeProcess(instId);
+				processManager.applyChanges();
+			
+				InstanceViewContent rootInstanceView = instanceViewContent;// = new InstanceViewContent();
+				rootInstanceView.load(rootInstanceRef);
+				
+				
+
+				return new Object[]{rootInstanceView, new Remover(new Popup())};
+				
+			}
+
+		}
+
+		
+		processManager.executeProcess(instId);
+		processManager.applyChanges();
+	
+
+		InstanceViewContent instanceView = instanceViewContent;// = new InstanceViewContent();
+		instanceView.load(instanceRef);
+
 		InstanceListPanel instanceList = new InstanceListPanel(session); //should return instanceListPanel not the instanceList only since there're one or more instanceList object in the client-side
 		//instanceList.load(session.login, session.navigation);
-
 		return new Object[]{instanceView, instanceList};
+
+		
 	}
+	
+	@AutowiredFromClient
+	public NewInstancePanel newInstancePanel;
 	
 	@Override
 	public NewChildWindow newChild() throws Exception {
@@ -252,10 +315,10 @@ public class ProcessDefinition extends Database<IProcessDefinition> implements I
 			
 			if("form".equals(objType)){
 				FormDesignerContentPanel formDesigner = new FormDesignerContentPanel();
-				formDesigner.codiPmSVC = codiPmSVC; //TODO: later should be removed
+				formDesigner.codiPmSVC = processManager; //TODO: later should be removed
 				formDesigner.load(defId);
 	
-				codiPmSVC.remove();
+				processManager.remove();
 	
 				return formDesigner;
 			}else if("process".equals(objType)){
@@ -318,7 +381,7 @@ public class ProcessDefinition extends Database<IProcessDefinition> implements I
 	
 	
 	@Autowired
-	public ProcessManagerRemote codiPmSVC;
+	public ProcessManagerRemote processManager;
 
 	IProcessDefinition childs;
 		public IProcessDefinition getChilds() {

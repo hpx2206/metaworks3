@@ -19,16 +19,16 @@ public class Workflowy implements ContextAware {
 	}
 	
 	public Workflowy(IUser user) throws Exception {
-		this(user, MetaworksContext.WHEN_VIEW);
+		this(user.getUserId(), MetaworksContext.WHEN_VIEW);
 	}
 	
-	public Workflowy(IUser user, String context) throws Exception {
+	public Workflowy(String rootNodeId, String context) throws Exception {
 		setMetaworksContext(new MetaworksContext());
 		getMetaworksContext().setWhen(context);
 		
-		setUser(user);
+		//setUser(user);
 		
-		node = new WorkflowyNode(user.getUserId());
+		node = new WorkflowyNode(rootNodeId);
 		node.setName("");				
 		node.getMetaworksContext().setWhen(getMetaworksContext().getWhen());
 		node.getMetaworksContext().setWhere("ROOT");
@@ -48,13 +48,13 @@ public class Workflowy implements ContextAware {
 		setNode(node);
 	}
 	
-	IUser user;	
-		public IUser getUser() {
-			return user;
-		}	
-		public void setUser(IUser user) {
-			this.user = user;
-		}
+//	IUser user;	
+//		public IUser getUser() {
+//			return user;
+//		}	
+//		public void setUser(IUser user) {
+//			this.user = user;
+//		}
 
 	String keyword;	
 		public String getKeyword() {

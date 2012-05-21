@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import javax.annotation.PostConstruct;
 
 import org.metaworks.MetaworksContext;
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;
@@ -32,7 +33,7 @@ public class InstanceView {
 		setInstanceId(instance.getInstId().toString());
 		
 		loadDefault();
-		activityStream();
+		setInstanceViewThreadPanel(activityStream());
 		
 	}
 	
@@ -52,6 +53,8 @@ public class InstanceView {
 		public void setInstanceName(String instanceName) {
 			this.instanceName = instanceName;
 		}
+		
+		
 		
 		
 	@AutowiredFromClient
@@ -149,15 +152,32 @@ public class InstanceView {
 		public void setNewItem(IWorkItem newItem) {
 			this.newItem = newItem;
 		}
-
-	IWorkItem thread;
-		public IWorkItem getThread() {
-			return thread;
-		}
-		public void setThread(IWorkItem thread) {
-			this.thread = thread;
-		}	
+		
+//	NewInstancePanel newSubInstancePanel;
+//		public NewInstancePanel getNewSubInstancePanel() {
+//			return newSubInstancePanel;
+//		}
+//		public void setNewSubInstancePanel(NewInstancePanel newSubInstancePanel) {
+//			this.newSubInstancePanel = newSubInstancePanel;
+//		}
 	
+//	IWorkItem thread;
+//		public IWorkItem getThread() {
+//			return thread;
+//		}
+//		public void setThread(IWorkItem thread) {
+//			this.thread = thread;
+//		}	
+
+	InstanceViewThreadPanel instanceViewThreadPanel;
+		public InstanceViewThreadPanel getInstanceViewThreadPanel() {
+			return instanceViewThreadPanel;
+		}
+		public void setInstanceViewThreadPanel(
+				InstanceViewThreadPanel instanceViewThreadPanel) {
+			this.instanceViewThreadPanel = instanceViewThreadPanel;
+		}
+
 	IWorkItem threadPosting;
 		public IWorkItem getThreadPosting() {
 			return threadPosting;
@@ -229,10 +249,27 @@ public class InstanceView {
 		
 		return processInstanceMonitor;
 	}
+	
+	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
+	public Popup newSubInstancePanel() throws Exception{
+		
+		NewInstancePanel newSubInstancePanel = new NewInstancePanel();
+		newSubInstancePanel.setParentInstanceId(getInstanceId());
+		newSubInstancePanel.load();
+		
+		Popup popup = new Popup();
+		popup.setPanel(newSubInstancePanel);
+		
+		return popup;
+		
+	}
 
 	@ServiceMethod
-	public void activityStream() throws Exception{
-		setThread(WorkItem.find(instanceId));
+	public InstanceViewThreadPanel activityStream() throws Exception{
+		
+		return new InstanceViewThreadPanel(instanceId);
+		
+		
 	}
 
 	@ServiceMethod(needToConfirm = true)

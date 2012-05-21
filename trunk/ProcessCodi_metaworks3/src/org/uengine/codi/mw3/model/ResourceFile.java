@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Id;
@@ -105,7 +106,7 @@ public class ResourceFile implements ContextAware{
 		public void setChilds(ArrayList<ResourceFile> childFiles) {
 			this.childs = childFiles;
 		}
-		
+
 	@ServiceMethod(callByContent=true, except="childs")
 	public void drillDown(){
 		
@@ -113,11 +114,15 @@ public class ResourceFile implements ContextAware{
 			setOpened(false);
 			
 			return;
-		}
+		}	
 		
 		String resourceBase = CodiClassLoader.getMyClassLoader().sourceCodeBase() + "/";
 		
 		File file = new File(resourceBase + getAlias());
+		
+		if(file.getName().startsWith("__") && !file.exists()){
+			file.mkdirs();
+		}
 		
 		if(!file.isDirectory()){
 			return;
@@ -178,6 +183,20 @@ public class ResourceFile implements ContextAware{
 		return this;
 		
 	}	
+	
+	@ServiceMethod(inContextMenu=true, target=ServiceMethodContext.TARGET_POPUP)
+	public Popup importFile() throws Exception{
+		FileImporter fileImporter = new FileImporter();
+		fileImporter.setParentDirectory(getAlias());
+		
+		Popup popup = new Popup();
+		popup.setPanel(fileImporter);
+		popup.setMetaworksContext(new MetaworksContext());
+		popup.getMetaworksContext().setWhen("edit");
+		
+		return popup;
+	}
+
 	
 	@ServiceMethod(callByContent=true, except="childs")
 	public ContentWindow design() throws Exception {

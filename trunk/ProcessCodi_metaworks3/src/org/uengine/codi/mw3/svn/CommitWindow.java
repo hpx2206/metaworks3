@@ -12,6 +12,7 @@ import org.tmatesoft.svn.core.wc.SVNClientManager;
 import org.tmatesoft.svn.core.wc.SVNCommitClient;
 import org.tmatesoft.svn.core.wc.SVNCommitItem;
 import org.tmatesoft.svn.core.wc.SVNCommitPacket;
+import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.CodiDwrServlet;
 import org.uengine.codi.mw3.admin.ClassDefinition;
 
@@ -46,7 +47,7 @@ public class CommitWindow extends SVNWindow{
 	public void sync() throws SVNException, Exception{
 		SVNClientManager ourClientManager = getSVNClientManager();
 
-        String myWorkingCopyPath = CodiDwrServlet.codiClassLoader.sourceCodeBase();//"/Users/jyjang/MyWorkingCopy";
+        String myWorkingCopyPath = CodiClassLoader.codiClassLoader.sourceCodeBase();//"/Users/jyjang/MyWorkingCopy";
 
         File wcDir = new File(myWorkingCopyPath).getParentFile(); //project folder is one level parent folder than 'src'
         
@@ -77,7 +78,7 @@ public class CommitWindow extends SVNWindow{
 		
 		SVNClientManager ourClientManager = getSVNClientManager();
         
-        String myWorkingCopyPath = CodiDwrServlet.codiClassLoader.sourceCodeBase();//"/Users/jyjang/MyWorkingCopy";
+        String myWorkingCopyPath = CodiClassLoader.codiClassLoader.sourceCodeBase();//"/Users/jyjang/MyWorkingCopy";
 
         File wcDir = new File(myWorkingCopyPath).getParentFile(); //project folder is one level parent folder than 'src'
         

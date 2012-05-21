@@ -10,6 +10,7 @@ import org.tmatesoft.svn.core.internal.io.svn.SVNRepositoryFactoryImpl;
 import org.tmatesoft.svn.core.internal.wc.DefaultSVNOptions;
 import org.tmatesoft.svn.core.wc.SVNClientManager;
 import org.tmatesoft.svn.core.wc.SVNWCUtil;
+import org.uengine.codi.platform.Console;
 
 public class SVNWindow {
 	
@@ -27,15 +28,18 @@ public class SVNWindow {
 		}
 				
 	public void addLog(String log){
-		WebContext wctx = WebContextFactory.get();
-		String currentPage = wctx.getCurrentPage();
-
-	   // For all the browsers on the current page:
-	   ScriptSession session = wctx.getScriptSession();
-
-	   //TODO: filter other topic's postings;
-	   Util theScriptSessionUtil = new Util(session);
-	   theScriptSessionUtil.addFunctionCall("mw3.getAutowiredObject('"+ getClass().getName() +"').__getFaceHelper().addLog('" + log + "')");
+		
+		Console.addLog(log);
+		
+//		WebContext wctx = WebContextFactory.get();
+//		String currentPage = wctx.getCurrentPage();
+//
+//	   // For all the browsers on the current page:
+//	   ScriptSession session = wctx.getScriptSession();
+//
+//	   //TODO: filter other topic's postings;
+//	   Util theScriptSessionUtil = new Util(session);
+//	   theScriptSessionUtil.addFunctionCall("mw3.getAutowiredObject('"+ getClass().getName() +"').__getFaceHelper().addLog('" + log + "')");
 
 	}
 

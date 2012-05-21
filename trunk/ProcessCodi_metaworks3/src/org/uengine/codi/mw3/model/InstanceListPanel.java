@@ -5,17 +5,15 @@ import org.metaworks.annotation.ServiceMethod;
 public class InstanceListPanel {
 	
 	public InstanceListPanel(){}
-	
-	public InstanceListPanel(Session session) throws Exception{
-		this.instList = new InstanceList();
-		this.instList.load(session.getUser(), null);
-		
-		this.searchBox = new SearchBox(session.getUser());
-/*		this.searchBox.setMetaworksContext(new MetaworksContext());		
-		this.searchBox.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);;	*/	
+
+
+	public InstanceListPanel(Session session) {
+		super();
+		setSearchBox(new SearchBox());
 	}
 	
 	SearchBox searchBox;
+		
 		public SearchBox getSearchBox() {
 			return searchBox;
 		}
@@ -23,18 +21,20 @@ public class InstanceListPanel {
 			this.searchBox = searchBox;
 		}
 
-	InstanceList instList;
-		public InstanceList getInstList() {
-			return instList;
+	InstanceList instanceList;
+		public InstanceList getInstanceList() {
+			return instanceList;
 		}
-		public void setInstList(InstanceList instList) {
-			this.instList = instList;
+		public void setInstanceList(InstanceList instanceList) {
+			this.instanceList = instanceList;
 		}
-		
+	
+
 	@ServiceMethod
 	public ContentWindow newInstance() throws Exception{
-		return new NewInstancePanel();
-	}
+		NewInstancePanel newInstancePanel =  new NewInstancePanel();
+		newInstancePanel.load();
 		
-
+		return newInstancePanel;
+	}
 }
