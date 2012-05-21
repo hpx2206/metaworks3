@@ -418,7 +418,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		if (dept.getPartCode() != null) {
 			deptEmployee.setPartCode(dept.getPartCode());
 		}
-		deptEmployee.setGlobalCom(dept.getComCode());
+		deptEmployee.setGlobalCom(dept.getGlobalCom());
 		deptEmployee.select();
 		return deptEmployee;
 	}
@@ -488,5 +488,19 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 //			return empInfoPanel;
 //		}
 //	}
+
+	@Override
+	public ContactList addContact() throws Exception {
+		Contact contact = new Contact();
+		IUser friendUser = new User();
+		friendUser.setUserId(getEmpCode());
+		friendUser.setName(getEmpName());
+		contact.setFriends(friendUser);
+		contact.setUserId(session.getUser().getUserId());
+		contact.addContact();
+		
+		ContactList cp = new ContactList(session.getUser());
+		return cp;
+	}
 
 }

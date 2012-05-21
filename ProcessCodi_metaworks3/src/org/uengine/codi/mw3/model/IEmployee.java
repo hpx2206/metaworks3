@@ -191,4 +191,6 @@ public interface IEmployee extends IDAO {
 //	@ServiceMethod(callByContent=true)
 //	public Object showDetail() throws Exception;
 	
+	@ServiceMethod(callByContent=true)
+	public ContactList addContact() throws Exception;
 }

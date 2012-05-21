@@ -42,7 +42,7 @@ public class EmployeePicker implements ContextAware {
 	public void initialize() {
 		try {
 			IDept dept = new Dept();
-			setDept(dept.findTreeByComCode(getComCode()));
+			setDept(dept.findTreeByGlobalCom(getComCode()));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

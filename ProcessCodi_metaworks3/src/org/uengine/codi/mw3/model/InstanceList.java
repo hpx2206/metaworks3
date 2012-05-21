@@ -82,7 +82,7 @@ public class InstanceList {
 
 		// paging 
 		String tempStr = "";
-		tempStr = "" + (page * amount + 1);
+		tempStr = "" + (page * amount);
 		criteria.put("startIndex", tempStr);
 
 		tempStr = "" + (page + 1) * amount;

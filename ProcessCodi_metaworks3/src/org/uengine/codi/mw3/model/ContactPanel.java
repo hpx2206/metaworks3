@@ -1,6 +1,7 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.ServiceMethodContext;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 
@@ -65,5 +66,21 @@ public class ContactPanel {
 		popup.setName("AddContactPanel");
 		
 		return popup;
-	}	
+	}
+	
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
+	public Popup addLocalContact() throws Exception{
+		Popup popup = new Popup();
+		
+//		popup.setPageX(this.pageX);
+//		popup.setPageY(this.pageY);
+		
+		popup.setPanel(new AddLocalContactPanel(session));
+		popup.setName("AddLocalContactPanel");
+		
+		return popup;
+	}
+	
+	@AutowiredFromClient
+	public Session session;
 }

@@ -11,7 +11,7 @@ public class Dept extends Database<IDept> implements IDept {
 	String parentPartCode;
 	String isDeleted;
 	String description;
-	String comCode;
+//	String comCode;
 
 	public String getPartCode() {
 		return partCode;
@@ -53,15 +53,24 @@ public class Dept extends Database<IDept> implements IDept {
 		this.description = description;
 	}
 
-	@Override
-	public String getComCode() {
-		// TODO Auto-generated method stub
-		return this.comCode;
+//	@Override
+//	public String getComCode() {
+//		// TODO Auto-generated method stub
+//		return this.comCode;
+//	}
+//
+//	@Override
+//	public void setComCode(String comCode) {
+//		this.comCode = comCode;
+//	}
+	
+	String globalCom;
+	public String getGlobalCom() {
+		return globalCom;
 	}
 
-	@Override
-	public void setComCode(String comCode) {
-		this.comCode = comCode;
+	public void setGlobalCom(String globalCom){
+		this.globalCom = globalCom;
 	}
 
 	boolean selected;
@@ -109,20 +118,45 @@ public class Dept extends Database<IDept> implements IDept {
 		return null;
 	}
 
+//	@Override
+//	public IDept findByComCode(String comcode) throws Exception {
+//		String sql = "select * from parttable where comcode=?comCode";
+//		IDept deptList = sql(sql);
+//		deptList.setComCode(comcode);
+//		deptList.select();
+//		return deptList;
+//	}
+//
+//	@Override
+//	public IDept findTreeByComCode(String comcode) throws Exception {
+//		String sql = "select * from parttable where comcode=?comCode ";
+//		IDept deptList = sql(sql);
+//		deptList.setComCode(comcode);
+//		deptList.select();
+//		deptList.setMetaworksContext(new MetaworksContext());
+//		deptList.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+//		if (deptList.size() == 0) {
+//			deptList = new Dept();
+//			deptList.setMetaworksContext(new MetaworksContext());
+//			deptList.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+//		}
+//		return deptList;
+//	}
+	
 	@Override
-	public IDept findByComCode(String comcode) throws Exception {
-		String sql = "select * from parttable where comcode=?comCode";
+	public IDept findByGlobalCom(String globalCom) throws Exception {
+		String sql = "select * from parttable where globalcom=?globalCom";
 		IDept deptList = sql(sql);
-		deptList.setComCode(comcode);
+		deptList.setGlobalCom(globalCom);
 		deptList.select();
 		return deptList;
 	}
 
 	@Override
-	public IDept findTreeByComCode(String comcode) throws Exception {
-		String sql = "select * from parttable where comcode=?comCode ";
+	public IDept findTreeByGlobalCom(String globalCom) throws Exception {
+		String sql = "select * from parttable where globalcom=?globalCom ";
 		IDept deptList = sql(sql);
-		deptList.setComCode(comcode);
+		deptList.setGlobalCom(globalCom);
 		deptList.select();
 		deptList.setMetaworksContext(new MetaworksContext());
 		deptList.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
@@ -138,14 +172,14 @@ public class Dept extends Database<IDept> implements IDept {
 	public IDept findChildren() throws Exception {
 		StringBuffer sb = new StringBuffer();
 		sb.append("select * from parttable ");
-		sb.append("where comcode=?comCode ");
+		sb.append("where globalcom=?globalCom ");
 		if(getPartCode() != null) {
 			sb.append("and parent_partcode=?parent_PartCode ");
 		} else {
 			sb.append("and parent_partcode is null ");
 		}
 		IDept childDeptList = sql(sb.toString());
-		childDeptList.setComCode(getComCode());
+		childDeptList.setGlobalCom(getGlobalCom());
 		if(getPartCode() != null) {
 			childDeptList.setParent_PartCode(getPartCode());
 		}
@@ -153,10 +187,19 @@ public class Dept extends Database<IDept> implements IDept {
 		return childDeptList;
 	}
 	
+//	@Override
+//	public IDept findRootDeptByComCode(String comcode) throws Exception{
+//		setComCode(comcode);
+//		setPartName(comcode);
+//		setPartCode(null);
+//		drillDown();
+//		return this;
+//	}
+	
 	@Override
-	public IDept findRootDeptByComCode(String comcode) throws Exception{
-		setComCode(comcode);
-		setPartName(comcode);
+	public IDept findRootDeptByGlobalCom(String globalCom) throws Exception{
+		setGlobalCom(globalCom);
+		setPartName(globalCom);
 		setPartCode(null);
 		drillDown();
 		return this;
@@ -194,7 +237,7 @@ public class Dept extends Database<IDept> implements IDept {
 		IDept returnValueDept = null;
 
 		if (getMetaworksContext().getWhen().equals(MetaworksContext.WHEN_NEW)) {
-			this.setComCode(session.getCompany().getComCode());
+			this.setGlobalCom(session.getCompany().getComCode());
 			createDatabaseMe();
 			syncToDatabaseMe();
 
@@ -223,7 +266,7 @@ public class Dept extends Database<IDept> implements IDept {
 			parentDept.setPartCode(getParent_PartCode());
 			returnValueDept = parentDept.databaseMe();
 		} else {
-			returnValueDept = parentDept.findTreeByComCode(getComCode());
+			returnValueDept = parentDept.findRootDeptByGlobalCom(getGlobalCom());
 		}
 		returnValueDept.setMetaworksContext(getMetaworksContext());
 		return returnValueDept;
