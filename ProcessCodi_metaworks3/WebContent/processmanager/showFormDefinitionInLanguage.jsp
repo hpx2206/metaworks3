@@ -34,7 +34,7 @@
 
 	request.getSession().setAttribute("userId", userId);
 
-	org.uengine.codi.mw3.CodiDwrServlet.initClassLoader();
+	org.uengine.codi.mw3.CodiClassLoader.initClassLoader();
 
 	//load up the formfield
 	String formDefId = request.getParameter("formDefId");
