@@ -6,7 +6,7 @@
 
 <div class="toolbar">
     <ul>
-        <li id="wih_btn_item_Page"><span><img src="images/waveStyle/i_workitem_p.png" border="0"></span><span>대화이력</span></li>
+        <li id="wih_btn_item_Page"><span><img src="images/waveStyle/i_workitem_p.png" border="0"></span><span onclick="<%=methods.activityStream.caller()%>대화이력</span></li>
         <li id="wih_btn_item_Information"><span><img src="images/waveStyle/i_workitem_i.png" border="0"></span><span onclick="<%=methods.monitor.caller()%>">프로세스</span></li>
         <li id="wih_btn_item_GanttChart"><a href="javascript:openGanttChart()"><span style="color: black; "><img src="images/waveStyle/i_gantt.png" border="0"></span><span style="color: black; ">스케쥴</span></a></li>
         <li id="wih_btn_sendMail" style="display: none; "><a href="javascript:sendMail()"><span><img src="images/waveStyle/i_mail.png" border="0"></span><span>메일</span></a></li>
