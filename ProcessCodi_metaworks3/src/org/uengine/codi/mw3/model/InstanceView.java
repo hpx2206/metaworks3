@@ -82,8 +82,9 @@ public class InstanceView {
 		
 		newItem.setWriter(session.user);
 		
-
-		processInstanceMonitor.setInstanceId(instanceId);
+		ProcessInstanceMonitor flowChart = new ProcessInstanceMonitor();
+		flowChart.setInstanceId(instanceId);
+		setProcessInstanceMonitor(flowChart);
 		
 		setInstanceName(instance.getName());
 
@@ -186,16 +187,16 @@ public class InstanceView {
 			this.threadPosting = threadPosting;
 		}
 
-	@Autowired
 	public ProcessInstanceMonitor processInstanceMonitor;
-	@Autowired
-		public ProcessInstanceMonitor getProcessInstanceMonitor() {
-			return processInstanceMonitor;
-		}
-		public void setProcessInstanceMonitor(
-				ProcessInstanceMonitor processInstanceMonitor) {
-			this.processInstanceMonitor = processInstanceMonitor;
-		}
+
+	public ProcessInstanceMonitor getProcessInstanceMonitor() {
+		return processInstanceMonitor;
+	}
+
+	public void setProcessInstanceMonitor(
+			ProcessInstanceMonitor processInstanceMonitor) {
+		this.processInstanceMonitor = processInstanceMonitor;
+	}
 		
 	EventTriggerPanel eventTriggerPanel;
 				
@@ -242,7 +243,7 @@ public class InstanceView {
 	
 	@ServiceMethod 
 	public ProcessInstanceMonitor monitor() throws Exception{
-		//processInstanceMonitor = new ProcessInstanceMonitor();
+		processInstanceMonitor = new ProcessInstanceMonitor();
 		processInstanceMonitor.setInstanceId(instanceId);
 		processInstanceMonitor.load(processManager);
 		//loadDefault();
