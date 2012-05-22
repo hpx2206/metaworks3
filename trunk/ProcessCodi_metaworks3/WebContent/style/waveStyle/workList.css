@@ -36,7 +36,8 @@
 .tbl_type .first_td{width:99px;}
 .tbl_type .last_td{width:90px; padding-right:10px;}
 .worklistuser {width:99px;}
-.worklistuser dd{ margin:3px 0 3px 3px; float:left; display:block;}
+.worklistuser dd{ margin:3px 0px 0px 3px; float:left; display:block;}
+.worklistuser dd center{font-size:11px; letter-spacing:-0.1em;}
 
 .saidGoodUsersLine td{
 	border-top:none; padding-bottom:5px;  padding-left:71px; font-size:11px; color:#A7A7A7;
