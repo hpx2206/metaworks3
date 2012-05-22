@@ -105,7 +105,7 @@
 	<bean id="FormDefinition" class="org.uengine.codi.mw3.admin.FormDefinition"/>
 	<bean id="CrowdSourcer" class="org.uengine.codi.mw3.model.CrowdSourcer"/>	
 	<bean id="ProcessDesignerContentPanel" class="org.uengine.codi.mw3.model.ProcessDesignerContentPanel"/>
-	<bean id="ProcessInstanceMonitor" class="org.uengine.codi.mw3.model.ProcessInstanceMonitor"/>
+	<!-- <bean id="ProcessInstanceMonitor" class="org.uengine.codi.mw3.model.ProcessInstanceMonitor"/>  -->
 	<bean id="ProcessDesignerWindow" class="org.uengine.codi.mw3.model.ProcessDesignerWindow"/>
 	
 	<bean id="NewChildContentPanel" class="org.uengine.codi.mw3.model.NewChildContentPanel"/>	
