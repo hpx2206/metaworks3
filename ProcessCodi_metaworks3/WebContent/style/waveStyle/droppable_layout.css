@@ -462,8 +462,9 @@ img {border:0;}
 
 #navigator .depth2 .fist_menu{margin:15px;}
 #navigator .depth2 .fist_menu li span{ display:inline-block; height:20px;  padding-left:30px;}
-#navigator .depth1 .depth1td_on{ height:25px; line-height:25px; padding-left:20px; border-top:1px solid #E5E5E5; color:#7F7F7F; background:url(../../images/waveStyle/navi_icon.png)7px 7px no-repeat; }
-#navigator .depth1 .depth1td_off{ height:25px; line-height:25px; padding-left:20px; border-top:1px solid #E5E5E5; color:#7F7F7F; background:url(../../images/waveStyle/navi_icon_down.png)7px 7px no-repeat; }
+#navigator .depth1 { height:25px; line-height:25px; padding-left:20px; border-top:1px solid #E5E5E5; color:#7F7F7F; background:url(../../images/waveStyle/navi_icon.png) 7px 7px no-repeat; }
+#navigator .depth1 .depth1td_on{ height:25px; line-height:25px; padding-left:20px; border-top:1px solid #E5E5E5; color:#7F7F7F; background:url(../../images/waveStyle/navi_icon.png) 7px 7px no-repeat; }
+#navigator .depth1 .depth1td_off{ height:25px; line-height:25px; padding-left:20px; border-top:1px solid #E5E5E5; color:#7F7F7F; background:url(../../images/waveStyle/navi_icon_down.png) 7px 7px no-repeat; }
 
 
 .ie-fix{ float:right; cursor:pointer;}
@@ -666,3 +667,30 @@ html, body {
 
 .tab_ricon{float:right; margin-left:5px; margin-right:10px;}
 .rcion{width:11px height:9px; float:left; margin-right:5px; margin-left:5px; margin-top:6px;}
+
+.pageNavigator ul {
+	list-style:none;
+	float:left;
+	display:inline;
+}
+.pageNavigator ul li {
+	float:left;
+}
+.pageNavigator ul li a {
+	float:left;
+	padding:4px;
+	margin-right:3px;
+	width:15px;
+	color:#000;
+	font:bold 12px tahoma;
+	border:1px solid #eee;
+	text-align:center;
+	text-decoration:none;
+}
+
+
+.pageNavigator ul li a:hover, ul li a:focus{
+	color:#fff;
+	border:1px solid #f40;
+	background-color:#f40;
+}
