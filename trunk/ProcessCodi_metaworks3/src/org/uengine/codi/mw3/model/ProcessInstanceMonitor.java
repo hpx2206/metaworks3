@@ -34,49 +34,51 @@ public class ProcessInstanceMonitor {
 			this.chartHTML = chartHTML;
 		}
 
-	public void load(ProcessManagerRemote processManager) throws RemoteException{
-		ViewerOptions options = new ViewerOptions();
+		public void load(ProcessManagerRemote processManager)
+				throws RemoteException {
+			ViewerOptions options = new ViewerOptions();
 
-		options.put("imagePathRoot", "/uengine-web/processmanager/");
-		options.setViewType(options.SWIMLANE, options.SWIMLANE);
-		options.put("flowControl", new Boolean(true));
-		options.put("decorated", new Boolean(true));
-		options.put("show hidden activity", new Boolean(true));
-		options.put("ShowAllComplexActivities", new Boolean(true));
-		options.put("align", "center");
+			options.put("imagePathRoot", "/uengine-web/processmanager/");
+			options.setViewType(options.SWIMLANE, options.SWIMLANE);
+			options.put("flowControl", new Boolean(true));
+			options.put("decorated", new Boolean(true));
+			options.put("show hidden activity", new Boolean(true));
+			options.put("ShowAllComplexActivities", new Boolean(true));
+			options.put("align", "center");
 
-		// options.setViewType(options.HORIZONTAL, options.HORIZONTAL);
-		// options.put("dontCollapseScopes", new Boolean(true));
-		// options.put("enableEvent_onActivityClicked", new Boolean(true));
-		// options.put("locale", loggedUserLocale);
+			// options.setViewType(options.HORIZONTAL, options.HORIZONTAL);
+			// options.put("dontCollapseScopes", new Boolean(true));
+			// options.put("enableEvent_onActivityClicked", new Boolean(true));
+			// options.put("locale", loggedUserLocale);
 
-		// if (pi != null) {
-		// options.put("enableUserEvent_compensateTo", "Back to here");
-		// options.put("enableUserEvent_refreshMultipleInstances_org.uengine.kernel.SubProcessActivity",
-		// "Refresh Multiple Instances");
-		// options.put("enableUserEvent_showLog", "See Execution Log");
-		// //options.put("enableUserEvent_locateWorkItem", "Work Item Handler");
-		// options.put("enableUserEvent_locateWorkItem_org.uengine.kernel.ReceiveActivity",
-		// "Work Item Handler");
-		// }
+			// if (pi != null) {
+			// options.put("enableUserEvent_compensateTo", "Back to here");
+			// options.put("enableUserEvent_refreshMultipleInstances_org.uengine.kernel.SubProcessActivity",
+			// "Refresh Multiple Instances");
+			// options.put("enableUserEvent_showLog", "See Execution Log");
+			// //options.put("enableUserEvent_locateWorkItem", "Work Item Handler");
+			// options.put("enableUserEvent_locateWorkItem_org.uengine.kernel.ReceiveActivity",
+			// "Work Item Handler");
+			// }
 
-		options.put(
-				"enableUserEvent_viewFormDefinition_org.uengine.kernel.FormActivity",
-				"View Form Definition");
-		options.put(
-				"enableUserEvent_drillInto_org.uengine.kernel.SubProcessActivity",
-				"Drill Into");
+			options.put(
+					"enableUserEvent_viewFormDefinition_org.uengine.kernel.FormActivity",
+					"View Form Definition");
+			options.put(
+					"enableUserEvent_drillInto_org.uengine.kernel.SubProcessActivity",
+					"Drill Into");
 
-		StringBuffer htmlText = new StringBuffer();
-		htmlText.append("<script type=\"text/javascript\">");
-		htmlText.append("var WEB_CONTEXT_ROOT = \""
-				+ GlobalContext.WEB_CONTEXT_ROOT + "\";");
-		htmlText.append("formatDrawAreas();");
-		htmlText.append("</script>");
-		htmlText.append(processManager.viewProcessInstanceFlowChart(
-				getInstanceId(), options));
-		setChartHTML(htmlText.toString());
-		//System.out.println(htmlText.toString());
-	}
-//	@Autowired public ProcessManagerRemote processManager;
+			StringBuffer htmlText = new StringBuffer();
+			htmlText.append("<script type=\"text/javascript\">");
+			htmlText.append("var WEB_CONTEXT_ROOT = \""
+					+ GlobalContext.WEB_CONTEXT_ROOT + "\";");
+			htmlText.append("formatDrawAreas();");
+			htmlText.append("</script>");
+			htmlText.append(processManager.viewProcessInstanceFlowChart(
+					getInstanceId(), options));
+			setChartHTML(htmlText.toString());
+			//System.out.println(htmlText.toString());
+		}
+
+		// @Autowired public ProcessManagerRemote processManager;
 }
