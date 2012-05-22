@@ -430,7 +430,7 @@ img {border:0;}
 
 
 								
-.toolbar{height:20px; background:url(../../images/waveStyle/bt_bg.gif) repeat-x; margin:0px; width:100%; border-top:1px solid #aaaaaa; border-bottom:1px solid #AAAAAA;}
+.toolbar{height:20px; background:url(../../images/waveStyle/bt_bg.gif) repeat-x; margin:0px; width:100%; /* border-top:1px solid #aaaaaa; */ border-bottom:1px solid #AAAAAA;}
 .toolbar ul{}
 .toolbar li{ float:left; background:url(../../images/waveStyle/toolbar_bg.gif) left no-repeat; font-size:9pt; text-align:center; line-height:20px; color:#000; letter-spacing:-1px; border-right:1px solid #b5b9bf; padding:0 10px 0 3px;;  cursor:pointer;}		
 .toolbar span{ float:left; height:20px;}
@@ -492,13 +492,14 @@ img {border:0;}
 #template_caption span{display:block;  background:url('../../images/waveStyle/alert_right.png') right no-repeat; height:35px; line-height:25px; width:100%;  text-align:center; overflow:hidden; font-weight:bold;}
 
 
-.view_box{margin:5px;border:2px solid #ccc}
+.view_box{margin:5px; margin-top:15px;border:2px solid #ccc}
 .view_box .guide{position:relative;width:100%}
 .view_box .tl{display:block;position:absolute;top:-2px;left:-2px;width:7px;height:7px;background:url('../../images/waveStyle/bg_rndbox.gif') no-repeat;font-size:0}
 .view_box .tr{display:block;position:absolute;top:-2px;left:-5px;width:7px;height:7px;margin-left:100%;background:url('../../images/waveStyle/bg_rndbox.gif') 100% 0 no-repeat;font-size:0}
 .view_box .lb{display:block;position:absolute;top:-5px;left:-2px;width:7px;height:7px;background:url('../../images/waveStyle/bg_rndbox.gif') 0 100% no-repeat;font-size:0}
 .view_box .rb{display:block;position:absolute;top:-5px;left:-5px;width:7px;height:7px;margin-left:100%;background:url('../../images/waveStyle/bg_rndbox.gif') 100% 100% no-repeat;font-size:0}
-.view_box .cont{position:relative;padding:3px}
+.view_box .cont{position:relative;padding:10px; margin:10px 0px;}
+.view_box .cont .title {font-size:14px; font-weight:bolder;  position:absolute; top:-20px; left:15px; background:#fff; padding:0 10px;}
 
 .view_box2{margin:5px;border:2px solid #A8E469}
 .view_box2 .guide{position:relative;width:100%}
