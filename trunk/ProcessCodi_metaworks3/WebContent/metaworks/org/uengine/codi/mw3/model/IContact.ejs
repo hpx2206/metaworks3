@@ -10,9 +10,18 @@
 			<span class="fontgray"></span>
 		</div>
 		<div style="clear:left;"></div>
-		
+		<%
+		if(mw3.where && mw3.where =='roleUserPicker') {
+		%>
+		<%=methods.roleUserPickUp.here()%>
+		<%
+		} else {
+		%>
 		<%=methods.addFollower.here()%>
 		<%=methods.pickUp.here()%>
+		<%
+		}
+		%>
 	</li>
 
 

@@ -19,7 +19,7 @@ public class OrganizationPerspective extends Perspective {
 	@Override
 	protected void loadChildren() throws Exception {
 		IDept dept = new Dept();
-		setDept(dept.findByGlobalCom(session.getCompany().getComCode()));
+		setDept(dept.findByGlobalCom(session.getEmployee().getGlobalCom()));
 		getDept().getMetaworksContext().setWhere("navigator");
 	}
 

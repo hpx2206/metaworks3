@@ -70,5 +70,15 @@ public class User extends Database<IUser> implements IUser{
 		return null;
 	
 	}
+
+	@Override
+	public Popup openRoleUserPicker() throws Exception {
+		Popup popup = new Popup();
+		
+		RoleUserPickerPanel roleUserPicker = new RoleUserPickerPanel(session.getUser());
+		popup.setPanel(roleUserPicker);
+		popup.setName("Role User Pickup Panel");
+		return popup;
+	}
 	
 }

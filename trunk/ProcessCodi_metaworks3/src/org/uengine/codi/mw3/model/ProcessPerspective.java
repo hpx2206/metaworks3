@@ -30,5 +30,14 @@ public class ProcessPerspective extends Perspective{
 		public void setProcessDefinitions(IProcessDefinition processDefinitions) {
 			this.processDefinitions = processDefinitions;
 		}
+	
+//	@ServiceMethod
+//	public ContentWindow open() throws Exception {
+//		ContentWindow window = new ContentWindow();
+//		UserPickupTool picker = new UserPickupTool();
+//		picker.onLoad();
+//		window.setPanel(picker);
+//		return window;
+//	}
 
 }
