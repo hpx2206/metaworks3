@@ -29,5 +29,8 @@ public interface IContact extends IDAO{
 
 	@ServiceMethod(when="pickUp", callByContent=true, target="opener")
 	public User pickUp() throws RemoteException, Exception;
+	
+	@ServiceMethod(callByContent=true, target="opener")
+	public User roleUserPickUp() throws RemoteException, Exception;
 
 }

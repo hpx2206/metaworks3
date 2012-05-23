@@ -25,12 +25,18 @@
 		<%=value.name%>
 	</center>
 <% 
-			} 
+			}
+			if(mw3.where && mw3.where =='roleUserPickerCaller') {
+%>
+	<%=methods.openRoleUserPicker.here()%>
+<%
+			} else {
 %>
 	<%=methods.addContact.here()%>
-<%			
+<%			}	
 		}
 	}
 %>
+
 
 	<%=methods ? methods.pickUp.here() : ""%>

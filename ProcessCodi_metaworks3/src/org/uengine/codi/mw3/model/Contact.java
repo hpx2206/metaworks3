@@ -101,6 +101,16 @@ public class Contact extends Database<IContact> implements IContact{
 		
 		return user;
 	}
+
+	@Override
+	public User roleUserPickUp() throws RemoteException, Exception {
+		User user = new User(); //this should have error - more than the @Id, the objectId is the closest one.
+		user.setUserId(this.getFriendId());
+		user.setName(this.getFriendName());
+		user.getMetaworksContext().setWhere(IUser.MW3_WHERE_ROLEUSER_PICKER_CALLER); //keep the context 
+		
+		return user;
+	}
 	
 }
 

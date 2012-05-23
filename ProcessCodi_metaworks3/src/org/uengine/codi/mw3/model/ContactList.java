@@ -24,7 +24,7 @@ public class ContactList implements ContextAware{
 		Contact contact = new Contact();
 		contact.setUserId(user.getUserId());
 		
-		contacts = contact.loadContacts();		
+		setContacts(contact.loadContacts());		
 	}
 	
 	@AutowiredFromClient

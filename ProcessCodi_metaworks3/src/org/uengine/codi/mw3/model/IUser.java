@@ -5,6 +5,8 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.IDAO;
 
 public interface IUser extends IDAO{
+	public static final String MW3_WHERE_ROLEUSER_PICKER_CALLER = "roleUserPickerCaller";
+	public static final String MW3_WHERE_ROLEUSER_PICKER = "roleUserPicker";
 	
 	@Id
 	public String getUserId();
@@ -19,5 +21,8 @@ public interface IUser extends IDAO{
 	
 	@ServiceMethod(when="pickUp", callByContent=true, target=TARGET_POPUP)
 	public Popup pickUp() throws Exception;
+	
+	@ServiceMethod(callByContent=true, target=TARGET_POPUP)
+	public Popup openRoleUserPicker() throws Exception;
 	
 }
