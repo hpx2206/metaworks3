@@ -64,102 +64,6 @@ public interface IEmployee extends IDAO {
 
 	public void setLocale(String locale);
 	
-	public String getEmail2();
-	
-	public void setEmail2(String email2);
-	
-	public String getPostNo();
-	
-	public void setPostNo(String postNo);
-	
-	public String getAddress1();
-	
-	public void setAddress1(String address1);
-	
-	public String getAddress2();
-	
-	public void setAddress2(String address2);
-	
-	public String getOfficeName();
-	
-	public void setOfficeName(String officeName);
-	
-	public String getOfficeTel();
-	
-	public void setOfficeTel(String officeTel);
-	
-	public String getOfficeExtTel();
-	
-	public void setOfficeExtTel(String officeExtTel);
-	
-	public String getPosition();
-	
-	public void setPosition(String position);
-	
-	public String getJobtitle();
-	
-	public void setJobtitle(String jobtitle);
-	
-	public String getWebpage();
-	
-	public void setWebpage(String webpage);
-	
-	public String getMemo();
-	
-	public void setMemo(String memo);
-	
-	public String getPriority();
-	
-	public void setPriority(String priority);
-	
-	public String getSensitivity();
-	
-	public void setSensitivity(String sensitivity);
-	
-	public String getEtc1();
-	
-	public void setEtc1(String etc1);
-	
-	public String getEtc2();
-	
-	public void setEtc2(String etc2);
-	
-	public String getIpcCode();
-	
-	public void setIpcCode(String ipcCode);
-	
-	public String getTechCode();
-	
-	public void setTechCode(String techCode);
-	
-	public String getTel();
-	
-	public void setTel(String tel);
-	
-	public String getCustomComCode();
-
-	public void setCustomComCode(String customComCode);
-	
-	public String getCustomComName();
-
-	public void setCustomComName(String customComName);
-	
-	public String getIpcCode1();
-	
-	public void setIpcCode1(String ipcCode1);
-	
-	public String getIpcCode2();
-	
-	public void setIpcCode2(String ipcCode2);
-	
-	public String getIpcCode3();
-	
-	public void setIpcCode3(String ipcCode3);
-	
-	public String getCustomerType();
-
-	public void setCustomerType(String customerType);
-	
 	@NonLoadable
 	@NonSavable
 	public PortraitImageFile getImageFile();
@@ -176,8 +80,8 @@ public interface IEmployee extends IDAO {
 	
 	public IEmployee findByDept(Dept dept) throws Exception;
 	
-//	@ServiceMethod(where="navigation")
-//	public Object[] loadOrganization() throws Exception;
+	@ServiceMethod(where="navigator")
+	public Object[] loadOrganization() throws Exception;
 	
 	@ServiceMethod(target="append", where="picker")
 	public Object pickup() throws Exception;
