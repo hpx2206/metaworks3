@@ -25,31 +25,6 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	String mobileNo;
 	String email;
 	String locale;
-	String faxNo;
-	String email2;
-	String postNo;
-	String address1;
-	String address2;
-	String officeName;
-	String officeTel;
-	String officeExtTel;
-	String position;
-	String jobtitle;
-	String webpage;
-	String memo;
-	String priority;
-	String sensitivity;
-	String etc1;
-	String etc2;
-	String ipcCode;
-	String techCode;
-	String tel;
-	String customComCode;
-	String customComName;
-	String ipcCode1;
-	String ipcCode2;
-	String ipcCode3;
-	String customerType;
 	
 	public String getEmpCode() {
 		return empCode;
@@ -151,206 +126,6 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		this.locale = locale;
 	}
 
-	public String getFaxNo() {
-		return faxNo;
-	}
-
-	public void setFaxNo(String faxNo) {
-		this.faxNo = faxNo;
-	}
-
-	public String getEmail2() {
-		return email2;
-	}
-
-	public void setEmail2(String email2) {
-		this.email2 = email2;
-	}
-
-	public String getPostNo() {
-		return postNo;
-	}
-
-	public void setPostNo(String postNo) {
-		this.postNo = postNo;
-	}
-
-	public String getAddress1() {
-		return address1;
-	}
-
-	public void setAddress1(String address1) {
-		this.address1 = address1;
-	}
-
-	public String getAddress2() {
-		return address2;
-	}
-
-	public void setAddress2(String address2) {
-		this.address2 = address2;
-	}
-
-	public String getOfficeName() {
-		return officeName;
-	}
-
-	public void setOfficeName(String officeName) {
-		this.officeName = officeName;
-	}
-
-	public String getOfficeTel() {
-		return officeTel;
-	}
-
-	public void setOfficeTel(String officeTel) {
-		this.officeTel = officeTel;
-	}
-
-	public String getOfficeExtTel() {
-		return officeExtTel;
-	}
-
-	public void setOfficeExtTel(String officeExtTel) {
-		this.officeExtTel = officeExtTel;
-	}
-
-	public String getPosition() {
-		return position;
-	}
-
-	public void setPosition(String position) {
-		this.position = position;
-	}
-
-	public String getJobtitle() {
-		return jobtitle;
-	}
-
-	public void setJobtitle(String jobtitle) {
-		this.jobtitle = jobtitle;
-	}
-
-	public String getWebpage() {
-		return webpage;
-	}
-
-	public void setWebpage(String webpage) {
-		this.webpage = webpage;
-	}
-
-	public String getMemo() {
-		return memo;
-	}
-
-	public void setMemo(String memo) {
-		this.memo = memo;
-	}
-
-	public String getPriority() {
-		return priority;
-	}
-
-	public void setPriority(String priority) {
-		this.priority = priority;
-	}
-
-	public String getSensitivity() {
-		return sensitivity;
-	}
-
-	public void setSensitivity(String sensitivity) {
-		this.sensitivity = sensitivity;
-	}
-
-	public String getEtc1() {
-		return etc1;
-	}
-
-	public void setEtc1(String etc1) {
-		this.etc1 = etc1;
-	}
-
-	public String getEtc2() {
-		return etc2;
-	}
-
-	public void setEtc2(String etc2) {
-		this.etc2 = etc2;
-	}
-
-	public String getIpcCode() {
-		return ipcCode;
-	}
-
-	public void setIpcCode(String ipcCode) {
-		this.ipcCode = ipcCode;
-	}
-
-	public String getTechCode() {
-		return techCode;
-	}
-
-	public void setTechCode(String techCode) {
-		this.techCode = techCode;
-	}
-
-	public String getTel() {
-		return tel;
-	}
-
-	public void setTel(String tel) {
-		this.tel = tel;
-	}
-
-	public String getCustomComCode() {
-		return customComCode;
-	}
-
-	public void setCustomComCode(String customComCode) {
-		this.customComCode = customComCode;
-	}
-	
-	public String getCustomComName() {
-		return customComName;
-	}
-
-	public void setCustomComName(String customComName) {
-		this.customComName = customComName;
-	}
-
-	public String getIpcCode1() {
-		return ipcCode1;
-	}
-
-	public void setIpcCode1(String ipcCode1) {
-		this.ipcCode1 = ipcCode1;
-	}
-	
-	public String getIpcCode2() {
-		return ipcCode2;
-	}
-
-	public void setIpcCode2(String ipcCode2) {
-		this.ipcCode2 = ipcCode2;
-	}
-	
-	public String getIpcCode3() {
-		return ipcCode3;
-	}
-
-	public void setIpcCode3(String ipcCode3) {
-		this.ipcCode3 = ipcCode3;
-	}
-	
-	public String getCustomerType() {
-		return customerType;
-	}
-
-	public void setCustomerType(String customerType) {
-		this.customerType = customerType;
-	}
-
 	PortraitImageFile imageFile;
 	
 	public PortraitImageFile getImageFile() {
@@ -426,11 +201,11 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	@AutowiredFromClient
 	public Session session;
 
-//	@Override
-//	public Object[] loadOrganization() throws Exception {
-//		return Perspective.loadInstanceListPanel(session, "organization",
-//				getEmpCode());
-//	}
+	@Override
+	public Object[] loadOrganization() throws Exception {
+		return Perspective.loadInstanceListPanel(session, "organization",
+				getEmpCode());
+	}
 
 	@Override
 	public Object[] pickup() throws Exception {
