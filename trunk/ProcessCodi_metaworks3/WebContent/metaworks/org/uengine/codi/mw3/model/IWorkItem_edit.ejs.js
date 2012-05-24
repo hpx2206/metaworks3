@@ -4,6 +4,7 @@ var org_uengine_codi_mw3_model_IWorkItem_edit = function(objectId, className){
 
 	$("#post_" + this.objectId).focus();
 
+
 }
 
 org_uengine_codi_mw3_model_IWorkItem_edit.prototype.getValue =  function(){	
