@@ -111,3 +111,7 @@ legend {display:none;}
 .readmore{ cursor:pointer; margin-top:10px;  color:#5794D8; font-weight:bold;}
 .togglemode1{position:absolute; top:8px; right:7px; z-index:99;}
 .togglemode2{position:absolute; top:8px; right:7px; z-index:99;}
+
+.crowdSourcing{background:url(../../images/waveStyle/crowdSourcing.png) no-repeat; width:358px; color:#000; height:29px; line-height:29px; text-align:right;position:absolute; bottom:0px; right:0px;}
+.crowdSourcing .crowdSourcing_off{width:69px; height:19px; corsor:pointer; background:url(../../images/waveStyle/crowdSourcing_off.gif) no-repeat;}
+.crowdSourcing .crowdSourcing_on{width:69px; height:19px; corsor:pointer; background:url(../../images/waveStyle/crowdSourcing_on.gif) no-repeat;}
