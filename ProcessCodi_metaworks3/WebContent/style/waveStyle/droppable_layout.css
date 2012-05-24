@@ -149,7 +149,7 @@ img {border:0;}
 .boxtopright {
 	color:#FFF;
 	font-size:11px;	
-	padding-top:8px;
+	padding-top:4px;
 	margin-bottom:-8px;
 	display:block;
 	margin-left:7px;
@@ -498,16 +498,35 @@ img {border:0;}
 .view_box .tr{display:block;position:absolute;top:-2px;left:-5px;width:7px;height:7px;margin-left:100%;background:url('../../images/waveStyle/bg_rndbox.gif') 100% 0 no-repeat;font-size:0}
 .view_box .lb{display:block;position:absolute;top:-5px;left:-2px;width:7px;height:7px;background:url('../../images/waveStyle/bg_rndbox.gif') 0 100% no-repeat;font-size:0}
 .view_box .rb{display:block;position:absolute;top:-5px;left:-5px;width:7px;height:7px;margin-left:100%;background:url('../../images/waveStyle/bg_rndbox.gif') 100% 100% no-repeat;font-size:0}
-.view_box .cont{position:relative;padding:5px 0 0 5px; margin:10px 0px;}
+.view_box .cont{position:relative;padding:5px; margin:10px 0px;}
 .view_box .cont .title {font-size:14px; font-weight:bolder;  position:absolute; top:-20px; left:15px; background:#fff; padding:0 10px;}
 
-.view_box2{margin:5px;border:2px solid #A8E469}
+.view_box2{margin:5px; margin-top:15px; border:2px solid #A8E469}
 .view_box2 .guide{position:relative;width:100%}
 .view_box2 .tl{display:block;position:absolute;top:-2px;left:-2px;width:7px;height:7px;background:url('../../images/waveStyle/bg_border_corner.gif') no-repeat;font-size:0}
 .view_box2 .tr{display:block;position:absolute;top:-2px;left:-5px;width:7px;height:7px;margin-left:100%;background:url('../../images/waveStyle/bg_border_corner.gif') 100% 0 no-repeat;font-size:0}
 .view_box2 .lb{display:block;position:absolute;top:-5px;left:-2px;width:7px;height:7px;background:url('../../images/waveStyle/bg_border_corner.gif') 0 100% no-repeat;font-size:0}
 .view_box2 .rb{display:block;position:absolute;top:-5px;left:-5px;width:7px;height:7px;margin-left:100%;background:url('../../images/waveStyle/bg_border_corner.gif') 100% 100% no-repeat;font-size:0}
-.view_box2 .cont{position:relative;padding:3px;}
+.view_box2 .cont{position:relative;padding:5px; margin:10px 0px;}
+
+.view_box3{margin:5px; margin-top:15px; border:2px solid #8dd5ff}
+.view_box3 .guide{position:relative;width:100%}
+.view_box3 .tl{display:block;position:absolute;top:-2px;left:-2px;width:7px;height:7px;background:url('../../images/waveStyle/bg_border_corner2.gif') no-repeat;font-size:0}
+.view_box3 .tr{display:block;position:absolute;top:-2px;left:-5px;width:7px;height:7px;margin-left:100%;background:url('../../images/waveStyle/bg_border_corner2.gif') 100% 0 no-repeat;font-size:0}
+.view_box3 .lb{display:block;position:absolute;top:-5px;left:-2px;width:7px;height:7px;background:url('../../images/waveStyle/bg_border_corner2.gif') 0 100% no-repeat;font-size:0}
+.view_box3 .rb{display:block;position:absolute;top:-5px;left:-5px;width:7px;height:7px;margin-left:100%;background:url('../../images/waveStyle/bg_border_corner2.gif') 100% 100% no-repeat;font-size:0}
+.view_box3 .cont{position:relative;padding:0px; margin:10px 0px;}
+.view_box3 #wih_button{background:#8dd5ff;  height:30px; line-height:30px; padding:0 10px; }
+.view_box3 .comment_btn_on{margin-top:5px;background:url('../../images/waveStyle/comment_btn.gif') left 0; float:left; color:#555; padding-left:13px; text-decoration:none; line-height:20px; cursor:pointer; margin-right:10px; overflow:hidden}
+.view_box3 .comment_btn_on span {display:block; float:left; background:url('../../images/waveStyle/comment_btn.gif') right 60px; padding-right:13px; height:20px; overflow:hidden}
+.view_box3 .comment_btn_off{margin-top:5px;background:url('../../images/waveStyle/comment_btn.gif') left 40px; float:left; color:#fff; padding-left:13px; text-decoration:none; line-height:20px; cursor:pointer; margin-right:10px; overflow:hidden}
+.view_box3 .comment_btn_off span {display:block; float:left; background:url('../../images/waveStyle/comment_btn.gif') right 20px; padding-right:13px; height:20px; overflow:hidden}
+
+
+.gBtn{display:block; background:url('../../images/waveStyle/gBtn6_bg.gif') left 0; float:left; font:12px; color:#fff !important; font-weight:bold; padding-left:6px; text-decoration:none; height:22px; cursor:pointer; margin-right:3px; overflow:hidden}
+.gBtn:hover{background:url('../../images/waveStyle/gBtn6_bg.gif') left -23px}
+.gBtn span{display:block; float:left; background:url('../../images/waveStyle/gBtn6_bg.gif') right 0; line-height:200%; padding-right:6px; height:22px; overflow:hidden}
+.gBtn:hover span{background:url('../../images/waveStyle/gBtn6_bg.gif') right -23px; color:#fff}
 
 
 #navigationTitle , #contactTitle ,#wihTitle , #workListTitle, #mindmapTitle, #processTitle{ float:left;}
