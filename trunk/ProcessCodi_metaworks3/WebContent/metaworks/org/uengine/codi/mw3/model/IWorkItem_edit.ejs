@@ -33,49 +33,50 @@
 <%		
 		}else if(value.type == "src"){
 %>
+
 		<tr>
-			<td> 
-				소스코드를 입력해주세요.
+			<td width="50" height="25" style="color:#8D98AF; padding-left:15px;"> 
+				Title : 
+			</td>			
+			<td style="padding-right:15px;"> 
+				<input id="post_<%=objectId%>" value=""  style="width:99%;-webkit-border-radius:3px;  border:1px solid #ccc" onkeydown="mw3.getFaceHelper('<%=objectId%>').press()">
 			</td>			
 			
 		</tr>
 		<tr>
-			<td> 
-				<input id="post_<%=objectId%>" value="" size="80" onkeydown="mw3.getFaceHelper('<%=objectId%>').press()">
-			</td>			
-			
-		</tr>
-		<tr>
-			<td>
-				<div style="position:relative; height:300px;">
-				<%=fields.sourceCode.here()%>
+			<td colspan="2">
+				<div style="padding:15px;">
+					<div style="position:relative; height:300px; border:1px solid #ccc;">
+						<%=fields.sourceCode.here()%>
+					</div>
 				</div>
 			</td>
 		</tr>				
 		<tr>
-			<td><a class="gBtn" href="javascript:<%=methods.compile.caller()%>"><span>컴파일</span></a><a class="gBtn" href="javascript:<%=methods.add.caller()%>"><span>게시</span></a></td>
+			<td height="30" colspan="2" style="padding-left:15px;">
+				<a class="gBtn" href="javascript:<%=methods.compile.caller()%>"><span>컴파일</span></a>
+				<a class="gBtn" href="javascript:<%=methods.add.caller()%>"><span>게시</span></a>
+			</td>
 		</tr>
 <%		
 		}else if(value.type == "file"){
 %>
 		<tr>
-			<td> 
-				<input id="post_<%=objectId%>" value="" size="80">
+			<td width="50" height="25" style="color:#8D98AF; padding-left:15px;"> 
+				Title : 
+			</td>
+			<td style="padding-right:15px;"> 
+				<input id="post_<%=objectId%>" value="" style="width:99%;-webkit-border-radius:3px; border:1px solid #ccc">
 			</td>			
 			
-		</tr>
+		</tr>			
 		<tr>
-			<td>
-				컴퓨터에 있는 이미지나 동영상 파일을 선택하세요.
-			</td>
-		</tr>				
-		<tr>
-			<td>
+			<td height="30" colspan="2" style="padding-left:15px;">
 				<%=fields.file.here()%>
 			</td>
 		</tr>
 		<tr>
-			<td><a class="gBtn" href="javascript:<%=methods.add.caller()%>"><span>게시</span></a></td>
+			<td height="30" colspan="2" style="padding-left:15px;"><a class="gBtn" href="javascript:<%=methods.add.caller()%>"><span>게시</span></a></td>
 		</tr> 			
 <%		
 		}
