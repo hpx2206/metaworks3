@@ -22,7 +22,8 @@ public class Knowledge {
 		outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:5, east__spacing_open:5,east__size:300, north__size:52");
 		outerLayout.setNorth(new KnowledgeTopPanel());
 		outerLayout.setCenter(new WorkflowyWindow(session.getUser()));		
-		outerLayout.setEast(new ContentWindow());
+		ContentWindow mashup = new ContentWindow(new Mashup());
+		outerLayout.setEast(mashup);
 		
 		setLayout(outerLayout);		
 		
