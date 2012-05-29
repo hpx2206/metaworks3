@@ -1,6 +1,6 @@
 /* CSS Reset (Eric Meyer) */
 
-
+/* 
 body {
 	background:url(../../images/waveStyle/bgTop.gif) repeat-x #EAECEE;
 	height:100%;
@@ -139,21 +139,21 @@ body {
 #container label {
 	color: #666;
 	font-size: 12px;
-	/*font-weight: bold;*/
+	font-weight: bold;
 	line-height: 14px;
 	float: right;
 	margin: 23px -25px;
 	width: 270px;
 }
 #progress_bar {
-	/* background: url('../../images/signIn/progress_bar.png') no-repeat;*/
+	background: url('../../images/signIn/progress_bar.png') no-repeat;
     width: 539px;
 	height: 24px;
 	margin: 0 auto;
 	position: relative;
 }
 #progress {
-	/* background: url('../../images/signIn/progress.png') repeat-x;*/
+	background: url('../../images/signIn/progress.png') repeat-x;
     width: 0px;
 	height: 23px;
 	border-radius: 20px;
@@ -171,3 +171,75 @@ body {
 	top: -23px;
 	left: 0;
 }
+ */
+ 
+ 
+ 
+#login-box {
+	width:580px;
+	height: 352px;
+	padding: 58px 0px 0 76px;
+	color: #ebebeb;
+	font: 12px Arial, Helvetica, sans-serif;
+	background: url(../../images/signIn/login-box-backg.png) no-repeat left top;
+	margin:150px auto 0;
+}
+#login-box-inner{
+	width:470px;
+}
+#login-box img {
+	border:none;
+}
+
+#login-box h2 {
+	padding:0;
+	text-align:center;
+	margin:0;
+	color: #ebebeb;
+	font: bold 48px "Calibri", Arial;
+}
+.subscr{text-align:center; display:block}
+
+#login-box-name {
+	float: left;
+	display:inline;
+	width:80px;
+	text-align: right;
+	padding: 14px 10px 0 0;
+	margin:0 0 7px 0;
+}
+
+#login-box-field {
+	float: left;
+	display:inline;
+	width:300px;
+	margin:0;
+	margin:0 0 7px 0;
+}
+
+
+#login-box-field input  {
+	width: 355px;
+	padding: 10px 4px 6px 3px;
+	border: 1px solid #0d2c52 !important;
+	background-color:#1e4f8a !important;
+	font-size: 16px;
+	color: #ebebeb;
+}
+
+
+.login-box-options  {
+	clear:both;
+	display:block;
+	padding-left:87px;
+	margin-top:15px;
+	margin-bottom:15px;
+	font-size: 11px;
+}
+
+.login-box-options a {
+	color: #ebebeb;
+	font-size: 11px;
+}
+
+#copyright{width:550px; margin:30px auto 0; text-align:center;}
