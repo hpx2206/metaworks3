@@ -28,7 +28,7 @@ public class TrayItem {
 		}
 		
 
-	@ServiceMethod(target="popup", callByContent=true, inContextMenu=true, mouseBinding="left")
+	@ServiceMethod(target="popup", callByContent=true, inContextMenu=true)
 	public Popup open() throws Exception{
 		Popup popup = new Popup();
 		
