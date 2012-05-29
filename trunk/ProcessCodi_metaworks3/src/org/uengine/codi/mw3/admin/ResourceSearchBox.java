@@ -56,6 +56,14 @@ public class ResourceSearchBox extends SearchBox {
 		return searchResult;
 	}
 	
+	@ServiceMethod(target="popup", keyBinding="Ctrl+Shift+R@Global")
+	public ModalWindow resourceSearchBoxPopup(){
+		ModalWindow resourceSearchBoxPopup = new ModalWindow();
+		resourceSearchBoxPopup.setTitle("Open Resource");
+		resourceSearchBoxPopup.setPanel(new ResourceSearchBox());		
+		return resourceSearchBoxPopup;
+	}
+	
 
     protected void find(String s, String base, ArrayList<ResourceFile> found) throws Exception
     {

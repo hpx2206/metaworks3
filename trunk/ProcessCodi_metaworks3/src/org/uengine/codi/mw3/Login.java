@@ -1,9 +1,12 @@
 package org.uengine.codi.mw3;
 
 import java.io.File;
+import java.util.Hashtable;
 
 import javax.servlet.http.HttpSession;
 
+import org.directwebremoting.WebContext;
+import org.directwebremoting.WebContextFactory;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
@@ -13,6 +16,7 @@ import org.metaworks.annotation.NonEditable;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.TransactionContext;
+import org.mortbay.jetty.SessionIdManager;
 import org.uengine.codi.mw3.admin.IDE;
 import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.model.Company;
@@ -28,6 +32,7 @@ import org.uengine.codi.mw3.model.User;
 
 public class Login extends Database<ILogin> implements ILogin{
 	
+	protected static Hashtable<String, String> userIdSessionIdMapping = new Hashtable<String, String>();
 	
 	@Id
 	String userId;
@@ -144,6 +149,8 @@ public class Login extends Database<ILogin> implements ILogin{
 							"There is no Company info in user info.");
 				}
 				
+				
+				
 			} catch (Exception e) {
 				MetaworksContext contextWhenEdit = new MetaworksContext();
 				contextWhenEdit.setWhen(MetaworksContext.WHEN_EDIT);
@@ -157,6 +164,10 @@ public class Login extends Database<ILogin> implements ILogin{
 		}
 		setPassword(null);
 		return session;
+	}
+	
+	public static String getSessionIdWithUserId(String userId){
+		return userIdSessionIdMapping.get(userId);
 	}
 
 //	private Object createMainPageByLoginType(Session session) {
@@ -258,6 +269,10 @@ public class Login extends Database<ILogin> implements ILogin{
 		//setting the userId into session attribute;
 		HttpSession httpSession = TransactionContext.getThreadLocalInstance().getRequest().getSession(); 
 		httpSession.setAttribute("userId", getUserId());
+		
+		WebContext wctx = WebContextFactory.get();
+		
+		userIdSessionIdMapping.put(getUserId(), wctx.getScriptSession().getId()); //stores session id to find out with user Id
 		
 		String mySourceCodeBase = CodiClassLoader.mySourceCodeBase();
 		if(mySourceCodeBase!=null && new File(mySourceCodeBase).exists()){
