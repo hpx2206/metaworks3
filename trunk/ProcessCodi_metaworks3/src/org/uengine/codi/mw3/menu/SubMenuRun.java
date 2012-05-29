@@ -31,7 +31,13 @@ public class SubMenuRun extends SubMenu {
 	public Object[] run() throws Exception{
 				
 		try{
-			classDefinition.compile();
+			try{
+				classDefinition.compile();
+			}catch(Exception e){
+				//compile error will report the error by itself 
+				
+				return new Object[]{new Remover(this)};
+			}
 
 			String fullClassName = classDefinition.getPackageName() + "." + classDefinition.getClassName();
 
