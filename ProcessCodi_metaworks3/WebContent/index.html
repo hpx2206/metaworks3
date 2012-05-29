@@ -132,13 +132,20 @@
 			
 			var mainPage
 		
-			google.load('visualization', '1', {
-				packages : [ 'corechart', 'gauge' ]
-			});
-
-			google.load('visualization', '1', {
-				packages : [ 'corechart', 'gauge' ]
-			});
+			try{
+				google.load('visualization', '1', {
+					packages : [ 'corechart', 'gauge' ]
+				});
+	
+				google.load('visualization', '1', {
+					packages : [ 'corechart', 'gauge' ]
+				});
+				
+				google.load('search', '1');
+			}catch(e){
+				if (console) 
+					console.log(e);
+			}
 			
 			$(document).ready(function() {
 				var request = new Request();
