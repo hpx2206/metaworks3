@@ -3,6 +3,7 @@ package org.uengine.codi.mw3.model;
 import java.util.Collection;
 
 import org.apache.commons.digester.SetRootRule;
+import org.directwebremoting.ScriptSession;
 import org.directwebremoting.WebContext;
 import org.directwebremoting.WebContextFactory;
 import org.directwebremoting.proxy.dwr.Util;
@@ -14,6 +15,7 @@ import org.metaworks.example.ide.SourceCode;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.Window;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.codi.mw3.Login;
 import org.uengine.persistence.dao.UniqueKeyGenerator;
 import org.uengine.processmanager.ProcessManagerBean;
 import org.uengine.processmanager.ProcessManagerRemote;

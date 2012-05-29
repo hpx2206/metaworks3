@@ -6,6 +6,8 @@ public class ProcessTopPanel {
 
 	public ProcessTopPanel() {
 		setWindowPanel(new WindowPanel());
+		setTray(new Tray());
+
 	}
 	
 	WindowPanel windowPanel;
@@ -16,4 +18,12 @@ public class ProcessTopPanel {
 			this.windowPanel = windowPanel;
 		}
 	
+	Tray tray;
+		public Tray getTray() {
+			return tray;
+		}
+		public void setTray(Tray tray) {
+			this.tray = tray;
+		}
+
 }
