@@ -35,6 +35,9 @@ public class Console {
 	}
 	
 	public static void addError(String log){
+		
+		log = log.replaceAll("\\n", "<br>");
+		
 		WebContext wctx = WebContextFactory.get();
 		String currentPage = wctx.getCurrentPage();
 	
