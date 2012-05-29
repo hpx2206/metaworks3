@@ -38,7 +38,8 @@ public class Main {
 		
 		setLayout(outerLayout);		
 		
-		setPageNavigator(new PageNavigator());		
+		setPageNavigator(new PageNavigator());	
+		
 
 		// this.logo = new Logo();
 	}
@@ -75,5 +76,6 @@ public class Main {
 		public void setLogo(Logo logo) {
 			this.logo = logo;
 		}
+		
 }
 

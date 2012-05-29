@@ -1,6 +1,32 @@
+<%
+//mw3.debug(value)
 
-<div style="position:absolute; z-index:999; right:8px; top:4px;">
-<%=methods.save.here()%>
-</div>
-<div><%=fields.designee.here({when:'__design'})%>
-</div>
+%>
+
+<table>
+	<tr>
+	
+		<td>
+		<%=value.preview ? fields.preview.here() : ""%>
+		</td>
+	
+		<td>
+		
+		<%
+			mw3.setWhen("__design");
+		%>	
+			<%=mw3.locateObject(value.designee, value.designee.__className + ":genericfaces/DesignerFace.ejs")%>
+		<%
+			mw3.addBeanProperty(objectId, ".designee");
+			
+		%>
+		</td>
+	</tr>
+
+	<tr>
+		<td colspan=2>
+			<%=methods.save.here()%>
+		</td>
+	</tr>
+
+</table>
