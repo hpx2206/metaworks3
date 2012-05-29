@@ -1,5 +1,22 @@
+<%
+	if(value){
+		if(mw3.where == 'mobile'){		
+%>
+
+	<div  data-role="dialog" id="popup_<%=objectId%>">
+	
+		<div data-role="header" data-theme="d">
+			<h1>Dialog</h1>
+		</div>
+		<div data-role="content" data-theme="c">
+  			<%=fields.panel.here()%>
+		</div>
+	</div>
 
 
+<%
+		}else{
+<%
 <div id="iphone_wrap">
     <div id="view">
         <div id="iphone_status"> </div>
@@ -21,3 +38,7 @@
         <div id="home_btn" onclick="mw3.getFaceHelper('<%=objectId%>').close();"></div>
     </div>
 </div>
+%>		
+		}		
+	}		
+%>
