@@ -131,7 +131,7 @@ img {border:0;}
 .info {
 	font-size:12px;
 	float:right;
-	margin-top:20px;
+	margin-top:10px;
 	margin-right:65px;
 }
 .boxtopleft {
@@ -552,8 +552,8 @@ img {border:0;}
 #gnb ul li	{}
 #gnb ul li a {float:center; margin-left:21px; margin-right:21px; text-align:center; }
 #gnb ul li a:hover	{background:url('../../images/ide/over.png') repeat-x;}			
-#gnb ul li a:link,a:visited,a:active {font:9pt 돋움, Dotum, san-serif; color:#000000; text-decoration:none; font-weight:bold;}
-#gnb ul li a:hover span{font:9pt 돋움, Dotum, san-serif; color:#ffffff; font-weight:bold;}
+/* #gnb ul li a:link,a:visited,a:active {font:9pt 돋움, Dotum, san-serif; color:#000000; text-decoration:none; font-weight:bold;}
+#gnb ul li a:hover span{font:9pt 돋움, Dotum, san-serif; color:#ffffff; font-weight:bold;} */
 
 
 
