@@ -72,7 +72,7 @@ if(value){
 	} else if(mw3.where == 'navigator'){
 	%>
 	
-	<a onClick="<%=methods.loadOrganization.caller() %>" ><%=value.empName %> (<%=value.jikName %>)</a>
+	<a onClick="<%=methods.loadOrganization.caller() %>" style="height:23px; line-height:23px; display:block; background:url(images/waveStyle/i_user.png) no-repeat; padding-left:20px;overflow:hidden; white-space:nowrap;"><%=value.empName %> (<%=value.jikName %>)</a>
 	
 	<%
 	} else if(mw3.where == 'modifyEmployeeInfo') {

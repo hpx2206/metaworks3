@@ -84,7 +84,7 @@ if(value){
 	} else if(mw3.where == 'navigator') {
 	%>
 	
-		<a onClick="<%=methods.drillDown.caller() %>" ><%=fields.partName.here() %></a>
+		<a onClick="<%=methods.drillDown.caller() %>" style="height:23px; line-height:23px; display:block; background:url(images/waveStyle/i_company.png) no-repeat; padding-left:20px;overflow:hidden; white-space:nowrap;"><%=fields.partName.here() %></a>
 		<%
 			if(value.selected) {
 			%>
@@ -93,12 +93,12 @@ if(value){
 				<%
 				if(value.children) {
 				%>
-					<li style="border-bottom:1px solid #ccc; padding-left:15px;"><%=fields.children.here() %></li>
+					<li style=" padding-left:20px;"><%=fields.children.here() %></li>
 				<%
 				}
 				if(value.deptEmployee) {
 				%>
-					<li style="border-bottom:1px solid #ccc; padding-left:15px;"><%=fields.deptEmployee.here() %></li>
+					<li style=" padding-left:20px;"><%=fields.deptEmployee.here() %></li>
 				<%
 				}
 				%>
