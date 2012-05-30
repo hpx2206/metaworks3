@@ -11,7 +11,7 @@ body {
 .clear {
 	clear: both;
 }
-#container {
+#loginContainer {
 	background: url('../../images/signIn/container.png') no-repeat;
 	width: 754px;
 	height: 370px;
@@ -21,18 +21,18 @@ body {
 	overflow: hidden;
 	position: relative;
 }
-#container #first_step, #second_step, #third_step, #fourth_step {
+#loginContainer #first_step, #second_step, #third_step, #fourth_step {
 	display: none;
 }
-#container #first_step {
+#loginContainer #first_step {
 	display: block;
 }
-#container .form {
+#loginContainer .form {
 	margin: 36px 72px 0 72px;
 	border-bottom:1px solid #eee;
 	border-top:1px solid #eee;
 }
-#container h1, #container h2 {
+#loginContainer h1, #loginContainer h2 {
 	background: url('../../images/signIn/logo2.png') no-repeat;
 	line-height:58px;
 	font-style: "Calibri", Arial;
@@ -41,27 +41,27 @@ body {
 	font-weight:bold;
 	text-shadow: 1px 1px 2px #eee;
 }
-#container h1 span {
+#loginContainer h1 span {
 	color: #5C9EE5;
 }
-#container h2 {
+#loginContainer h2 {
 	color: #888;
 	font-size: 20px;
 	text-align: left;
 	text-shadow: none;
 }
-#container table {
+#loginContainer table {
 	margin: 20px 40px;
 	font-size: 14px;
 	font-weight: bold;
 }
-#container table td {
+#loginContainer table td {
 	padding: 5px 10px;
 }
- #container table td:nth-child(2) {
+ #loginContainer table td:nth-child(2) {
  color: #5C9EE5;
 }
-#container .form input, #container select {
+#loginContainer .form input, #loginContainer select {
 	background: url('../../images/signIn/input.png') no-repeat  !important;
 	color: #ccc;
 	border: 1px solid #E1E1E1 !important;
@@ -78,16 +78,16 @@ body {
 	-webkit-border-radius: 9px;
 }
 
-#container .options {
+#loginContainer .options {
 	margin:40px 0 0 70px;
 	width:300px;
 	display:inline-block;
 }
-#container .options span{
+#loginContainer .options span{
 	margin-right:20px;
 }
 
-#container input.submit {
+#loginContainer input.submit {
 	
 	display:inline-block;
 	background: url('../../images/signIn/button.png') no-repeat;
@@ -100,7 +100,7 @@ body {
 	left: 140px;
 }
 
-#container input.submitTenant {
+#loginContainer input.submitTenant {
 	
 	display:inline-block;
 	background: url('../../images/signIn/button2.png') no-repeat;
@@ -113,29 +113,29 @@ body {
 	left: 140px;
 }
 
-#container input.submit:focus {
+#loginContainer input.submit:focus {
 	border: none;
 }
-#container input.send {
+#loginContainer input.send {
 	background: url('../../images/signIn/send.png') no-repeat;
 }
-#container input.error {
+#loginContainer input.error {
 	border: 1px solid red;
 }
-#container input.valid {
+#loginContainer input.valid {
 	border: 1px solid #1FFF00;
 }
-#container input:focus, #container select:focus {
+#loginContainer input:focus, #loginContainer select:focus {
 	border: 1px solid #5C9EE5 !important;
 	color: #5C9EE5;
 }
-#container select {
+#loginContainer select {
 	padding: 5px 0 5px 25px;
 }
-#container option {
+#loginContainer option {
 	padding: 0 15px;
 }
-#container label {
+#loginContainer label {
 	color: #666;
 	font-size: 12px;
 	font-weight: bold;
