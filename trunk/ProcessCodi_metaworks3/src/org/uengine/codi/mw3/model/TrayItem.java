@@ -1,12 +1,19 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.ContextAware;
+import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;
 import org.metaworks.annotation.ServiceMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class TrayItem {
+public class TrayItem implements ContextAware {
+	
+	public TrayItem(){
+		setMetaworksContext(new MetaworksContext());
+	}
+	
 	String title;
 	@Name
 		public String getTitle() {
@@ -34,10 +41,19 @@ public class TrayItem {
 		public void setInstance(InstanceView instance) {
 			this.instance = instance;
 		}
+		
+	MetaworksContext metaworksContext;
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
+		}
 
-		//@ServiceMethod(target="popup", callByContent=true, inContextMenu=true)
-		@ServiceMethod(callByContent=true, inContextMenu=true)
-	public void open() throws Exception{
+	@ServiceMethod(callByContent=true, inContextMenu=true)
+	public void slideDown() throws Exception{
+		getMetaworksContext().setHow("down");
+		
 		Instance instance = new Instance();
 		instance.setInstId(new Long(getInstId()));
 
@@ -46,6 +62,11 @@ public class TrayItem {
 		setInstance(instanceView);
 	}
 	
+	@ServiceMethod(callByContent=true, inContextMenu=true)
+	public void slideUp() throws Exception{
+		getMetaworksContext().setHow("up");
+	}
+		
 	@ServiceMethod(callByContent=true, inContextMenu=true)
 	public Tray close() throws Exception{
 		tray.getTrayItems().remove(this);
