@@ -48,13 +48,18 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		}
 		
 	public Object[] create() throws Exception {
-		System.out.println(getIconColor().getValue());
-		getIconFile().setUploadedPath("");
+		if(getIconFile().getFileTransfer() != null && !getIconFile().getFileTransfer().getFilename().isEmpty())
+			getIconFile().upload();
+		else
+			getIconFile().setUploadedPath("");
 		
 		createDatabaseMe();
 		flushDatabaseMe();
 		
-		return new Object[]{new ProcessMapList(), new Remover(new Popup(this))};
+		ProcessMapList processMapList = new ProcessMapList();
+		processMapList.load();
+		
+		return new Object[]{processMapList, new Remover(new Popup(this))};
 	}
 	
 	public Remover close() throws Exception {		
