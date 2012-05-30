@@ -4,19 +4,16 @@ import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.uengine.codi.mw3.CodiClassLoader;
+import org.uengine.codi.mw3.model.IProcessDefinition;
 import org.uengine.codi.mw3.model.IUser;
+import org.uengine.codi.mw3.model.NewChildWindow;
+import org.uengine.codi.mw3.model.NewFolder;
 import org.uengine.codi.mw3.model.ResourceFile;
 
 public class ResourcePanel {
 	
-	public ResourcePanel(){}
-	
-	public ResourcePanel(IUser user) throws Exception {
-	
+	public ResourcePanel() throws Exception {
 		init();
-		
-		resourceSearchBox = new ResourceSearchBox(user);
-		
 	}
 	
 	public void init() throws Exception {
@@ -66,6 +63,27 @@ public class ResourcePanel {
 		
 		CodiClassLoader.refreshClassLoader(null);
 	}
+	
+	@ServiceMethod
+	public NewChildWindow newFolder() throws Exception {
+		NewFolder nf = new NewFolder();
+
+		NewChildWindow newChildWindow = new NewChildWindow();
+		newChildWindow.setPanel(nf);
+		newChildWindow.setNewChildContentPanel(null);
+				
+		return newChildWindow;
+
+	}
+	
+	IProcessDefinition processDefinitions;	
+		public IProcessDefinition getProcessDefinitions() {
+			return processDefinitions;
+		}
+	
+		public void setProcessDefinitions(IProcessDefinition processDefinitions) {
+			this.processDefinitions = processDefinitions;
+		}
 	
 	ResourceSearchBox resourceSearchBox;
 		public ResourceSearchBox getResourceSearchBox() {

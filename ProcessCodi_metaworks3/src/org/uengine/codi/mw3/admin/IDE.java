@@ -30,7 +30,7 @@ public class IDE {
 		Layout outerLayout = new Layout();
 		outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:5, east__spacing_open:5, west__size:300, east__size:300, north__size:52");
 		outerLayout.setNorth(new TopPanel());
-		outerLayout.setWest(new ResourceWindow(session.getUser()));
+		outerLayout.setWest(new ResourceWindow());
 		outerLayout.setEast(new HintWindow(session.getUser(), "ide"));
 		outerLayout.setCenter(innerLayout);		
 		

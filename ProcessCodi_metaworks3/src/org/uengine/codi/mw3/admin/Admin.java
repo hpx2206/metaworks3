@@ -18,7 +18,7 @@ import org.uengine.codi.mw3.model.Session;
 public class Admin {
 	
 	public Admin() throws Exception{
-		resourceWindow = new ResourceWindow(null);
+		resourceWindow = new ResourceWindow();
 		contentWindow = new ContentWindow();
 		mainMenu = new UClipseMainMenu();
 		
@@ -63,7 +63,7 @@ public class Admin {
 		IUser login = new User();
 		login.setUserId(userId);
 		
-		resourceWindow = new ResourceWindow(login);
+		resourceWindow = new ResourceWindow();
 
 		Session session = new Session();
 		//session.setLogin(login);
