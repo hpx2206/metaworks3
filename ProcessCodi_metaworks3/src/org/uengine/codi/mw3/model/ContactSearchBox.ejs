@@ -4,7 +4,7 @@
        <ul>
            <li class="inputleft"><img src="/uengine-web/images/waveStyle/searchLeft.gif" border="0" /></li>
            <li class="inputcenter">
-               <input id="search_<%=objectId%>" class="contactsinput" value="<%=value.keyword%>" onkeydown="mw3.getFaceHelper('<%=objectId%>').keydown(this);">
+               <input id="search_<%=objectId%>" class="contactsinput" value="<%=value.keyword%>" onkeyup="mw3.getFaceHelper('<%=objectId%>').keyUp(this);">
 
            </li>
            <li class="inputright"><img src="/uengine-web/images/waveStyle/searchRight.gif" border="0" /></li>
@@ -12,9 +12,4 @@
        </ul>
 <%
 	}
-%>    
-
-
-
-
-    
+%>

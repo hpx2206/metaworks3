@@ -9,7 +9,6 @@ import org.uengine.util.UEngineUtil;
 
 public class EventTriggerPanel {
 	
-	
 	public EventTriggerPanel() {
 	}
 
