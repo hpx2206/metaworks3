@@ -17,7 +17,7 @@ public class Popup implements ContextAware {
 	}
 	
 	public Popup(int width, int height){
-		this(400,300, null);
+		this(width,height, null);
 	}	
 	
 	public Popup(int width, int height, Object panel){
