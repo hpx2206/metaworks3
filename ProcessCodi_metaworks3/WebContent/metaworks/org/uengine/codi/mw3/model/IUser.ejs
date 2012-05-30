@@ -20,11 +20,14 @@
 			<span class="fontbold"><%=value.name%></span><br />
 			<span class="fontgray"><%=value.userId%></span><br />
 			<span class="fontgray"></span>
+		</div>
 <%
 			if(mw3.when == 'addContact'){
 %>
+		<div class="user_action">
 			<%=methods.addContact.here()%>
 		</div>
+
 <%
 			}
 		}else if(mw3.when == 'contact'){
@@ -36,6 +39,7 @@
 <%		
 		}
 %>
+		<div style="clear:both"></div>
 	</div>
 <%		
 	}
