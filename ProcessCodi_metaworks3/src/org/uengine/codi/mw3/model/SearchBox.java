@@ -35,8 +35,8 @@ public class SearchBox {
 		InstanceListPanel instanceListPanel = new InstanceListPanel();
 		
 		instanceListPanel.setSearchBox(this);
-		instanceListPanel.setInstList(new InstanceList());
-		instanceListPanel.getInstList().load(getUser(), getKeyword());
+		//instanceListPanel.setInstanceList(new InstanceList());
+		//instanceListPanel.getInstanceList().load(getUser(), getKeyword());
 				
 		return instanceListPanel;		
 	}

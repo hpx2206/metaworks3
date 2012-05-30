@@ -17,9 +17,10 @@ public class AddFollowerPanel implements ContextAware{
 	public AddFollowerPanel(IUser loginUser, String instanceId) throws Exception{
 		this();
 		
-		contactList = new ContactList(loginUser);
-		contactList.setMetaworksContext(getMetaworksContext());
+		ContactList contactList = new ContactList();
+		contactList.load(loginUser.getUserId());
 		
+		setContactList(contactList);
 		setInstanceId(instanceId);
 	}
 	

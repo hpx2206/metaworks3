@@ -13,13 +13,22 @@ public class ContactPanel {
 	
 	public ContactPanel(IUser user) throws Exception{
 		
-		contactList = new ContactList(user);
-
-		searchBox = new ContactSearchBox(user);
-/*		searchBox.setMetaworksContext(new MetaworksContext());
-		searchBox.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
-*/		
+		ContactList contactList = new ContactList();
+		contactList.load(user.getUserId());		
+		
+		setContactList(contactList);
+		setUser(user);
+		
+		setSearchBox(new ContactSearchBox());		
 	}
+
+	IUser user;	
+		public IUser getUser() {
+			return user;
+		}	
+		public void setUser(IUser user) {
+			this.user = user;
+		}
 
 	ContactSearchBox searchBox;	
 		public ContactSearchBox getSearchBox() {

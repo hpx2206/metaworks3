@@ -35,6 +35,8 @@ public class Followers {
 		users.set("instanceId", instanceId);
 		users.select();
 		
+		System.out.println("size : " + users.size());
+		
 		/*
 		IUser users_ = (IUser) MetaworksDAO.createDAOImpl(IUser.class);
 
