@@ -19,22 +19,22 @@ public class User extends Database<IUser> implements IUser{
 		}
 
 	String userId;
-
 		public String getUserId() {
 			return userId;
-		}
-	
+		}	
 		public void setUserId(String userId) {
 			this.userId = userId;
 		}
-
+	
 	public ContactList addContact() throws Exception {
 		Contact contact = new Contact();
-		contact.setFriends(this);
+		contact.setFriend(this);
 		contact.setUserId(session.getUser().getUserId());
 		contact.addContact();
 		
-		ContactList cp = new ContactList(session.getUser());
+		ContactList cp = new ContactList();
+		cp.load(session.getUser().getUserId());
+		
 		return cp;		
 	}
 	

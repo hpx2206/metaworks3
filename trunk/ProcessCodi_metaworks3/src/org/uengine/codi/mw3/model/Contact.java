@@ -15,6 +15,7 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.Login;
+import org.uengine.codi.mw3.knowledge.IWfNode;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 public class Contact extends Database<IContact> implements IContact{
@@ -27,8 +28,8 @@ public class Contact extends Database<IContact> implements IContact{
 		return contacts;
 	}
 
-	public IContact findContactsWithFriendName() throws Exception{
-		IContact contacts = sql("select * from contact where userId=?userId and friendName like '%" + getFriendName() + "%'");
+	public IContact findContactsWithFriendName(String keyword) throws Exception{
+		IContact contacts = sql("select * from contact where userId=?userId and friendName like '%" + keyword + "%'");
 		contacts.setUserId(getUserId());
 		contacts.select();
 		
@@ -40,18 +41,17 @@ public class Contact extends Database<IContact> implements IContact{
 		flushDatabaseMe();
 	}
 	
-	IUser friends;
-		public IUser getFriends() {
-			return friends;
+	IUser friend;
+		public IUser getFriend() {
+			return friend;
 		}
 	
-		public void setFriends(IUser friends) {
-			this.friends = friends;
+		public void setFriend(IUser friend) {
+			this.friend = friend;
 		}
 			
 		
-	String userId;
-		
+	String userId;		
 		public String getUserId() {
 			return userId;
 		}
@@ -60,30 +60,13 @@ public class Contact extends Database<IContact> implements IContact{
 			this.userId = userId;
 		}
 	
-	String friendId;
 
-		public String getFriendId() {
-			return friendId;
-		}
-	
-		public void setFriendId(String friendId) {
-			this.friendId = friendId;
-		}
-		
-	String friendName;
-		public String getFriendName() {
-			return friendName;
-		}
-	
-		public void setFriendName(String friendName) {
-			this.friendName = friendName;
-		}
 
 	@AutowiredFromClient
 	public AddFollowerPanel addFollowerPanel;
 
 	public Followers addFollower() throws Exception {
-		processManager.putRoleMapping(addFollowerPanel.getInstanceId(), "follower_" + getFriendName(), getFriendId());
+		processManager.putRoleMapping(addFollowerPanel.getInstanceId(), "follower_" + getFriend().getName(), getFriend().getUserId());
 		processManager.applyChanges();
 		
 		Followers followers = new Followers();
@@ -102,9 +85,10 @@ public class Contact extends Database<IContact> implements IContact{
 //	public User user;
 
 	public User pickUp() throws RemoteException, Exception {
-		User user = new User(); //this should have error - more than the @Id, the objectId is the closest one.
-		user.setUserId(this.getFriendId());
-		user.setName(this.getFriendName());
+		//User user = new User(); //this should have error - more than the @Id, the objectId is the closest one.
+		
+		User user = new User();
+		user.copyFrom(this.getFriend());
 		user.getMetaworksContext().setWhen("pickUp"); //keep the context 
 		
 		return user;
@@ -113,8 +97,7 @@ public class Contact extends Database<IContact> implements IContact{
 	@Override
 	public User roleUserPickUp() throws RemoteException, Exception {
 		User user = new User(); //this should have error - more than the @Id, the objectId is the closest one.
-		user.setUserId(this.getFriendId());
-		user.setName(this.getFriendName());
+		user.copyFrom(this.getFriend());
 		user.getMetaworksContext().setWhere(IUser.MW3_WHERE_ROLEUSER_PICKER_CALLER); //keep the context 
 		
 		return user;
@@ -132,7 +115,7 @@ public class Contact extends Database<IContact> implements IContact{
 		
 		Popup chatStarter = new Popup();
 		UnstructuredProcessInstanceStarter instanceStarter = new UnstructuredProcessInstanceStarter();
-		instanceStarter.setFriendId(getFriendId());
+		instanceStarter.setFriendId(getFriend().getUserId());
 		
 		chatStarter.setPanel(instanceStarter);
 		

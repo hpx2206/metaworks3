@@ -30,8 +30,7 @@ public class ContactSearchBox extends SearchBox {
 		
 		Contact contact = new Contact();
 		contact.setUserId(getUser().getUserId());
-		contact.setFriendName(getKeyword());
-		contactPanel.setContacts(contact.findContactsWithFriendName());
+		contactPanel.setContacts(contact.findContactsWithFriendName(getKeyword()));
 		
 		
 		return contactPanel;
