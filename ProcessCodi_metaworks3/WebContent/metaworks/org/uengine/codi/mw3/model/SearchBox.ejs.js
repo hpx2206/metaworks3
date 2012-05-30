@@ -4,6 +4,7 @@ var org_uengine_codi_mw3_model_SearchBox = function(objectId, className) {
 	this.objectId = objectId;
 	this.className = className;
 	this.timeout;
+	this.keyword = '';
 	
 	$("#search_" + this.objectId).focus();
 }
@@ -16,7 +17,14 @@ org_uengine_codi_mw3_model_SearchBox.prototype.getValue = function() {
 	return object;
 }
 
-org_uengine_codi_mw3_model_SearchBox.prototype.keydown = function() {
+org_uengine_codi_mw3_model_SearchBox.prototype.keyup = function(element) {
+	var keyword = $("#search_" + this.objectId).val();
+		
+	if(this.keyword == keyword)
+		return false;
+	
+	this.keyword = keyword;
+	
 	var objectId = this.objectId;
 	
 	if (this.timeout) {
@@ -24,9 +32,6 @@ org_uengine_codi_mw3_model_SearchBox.prototype.keydown = function() {
 	}
 	
 	this.timeout = setTimeout(function() {
-		console.debug("search");
-		console.debug(objectId);
-		
 		mw3.call(objectId, 'search');
 	}, 500);
 	
