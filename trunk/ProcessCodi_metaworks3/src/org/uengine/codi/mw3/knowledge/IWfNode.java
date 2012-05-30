@@ -15,7 +15,7 @@ import org.metaworks.dao.IDAO;
 import org.uengine.codi.mw3.model.ContentWindow;
 import org.uengine.codi.mw3.model.NewInstancePanel;
 
-@Table(name="workflowy")
+@Table(name="bpm_knol")
 public interface IWfNode extends IDAO {
 
 	@Id
