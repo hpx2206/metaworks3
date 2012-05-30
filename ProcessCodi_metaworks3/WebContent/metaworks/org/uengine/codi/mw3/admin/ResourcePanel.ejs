@@ -1,54 +1,43 @@
 <%
 	if(value){
 %>
-	<div class="boxmiddleright" style="height:75px">
-	    <div class="boxmiddleleft">
-	        <div class="worklistcontentcontainer">
-				<%=fields.resourceSearchBox.here({when:'resource'})%>
-			</div>
+
+		<div class="pane ui-layout-north">
+			<%=fields.resourceSearchBox.here({when:'resource'})%>
 		</div>
-	</div>
-	
 
-	
-	<div class="boxmiddleright">
-	    <div class="boxmiddleleft">
-	        <div class="worklistcontentcontainer">
-	        	<div id="scroll_div" style="overflow:auto; height:100%">
-	
-<div id="navigator">
-	
-	<%=methods.refresh.here()%>
-
-	<div class="depth2">
-		<ul class="fist_menu">			
-			<li>				
-				<%=fields.resourceFile.here()%>
-			<li>
-		</ul>		
-	</div>
-	<div class="depth2">
-		<ul class="fist_menu">			
-			<li>				
-				<%=fields.webResourceFile.here()%>
-			<li>
-		</ul>		
-	</div>
-	<div class="depth2">
-		<ul class="fist_menu">			
-			<li>				
-				<%=fields.libraryFile.here()%>
-			<li>
-		</ul>		
-	</div>
-</div>
-
-
+		<div class="pane ui-layout-center">
+			<div class="ui-layout-content">
+				
+				<div id="navigator">
+					
+					<%=methods.refresh.here()%>
+				
+					<div class="depth2">
+						<ul class="fist_menu">			
+							<li>				
+								<%=fields.resourceFile.here()%>
+							<li>
+						</ul>		
+					</div>
+					<div class="depth2">
+						<ul class="fist_menu">			
+							<li>				
+								<%=fields.webResourceFile.here()%>
+							<li>
+						</ul>		
+					</div>
+					<div class="depth2">
+						<ul class="fist_menu">			
+							<li>				
+								<%=fields.libraryFile.here()%>
+							<li>
+						</ul>		
+					</div>
 				</div>
+				
 			</div>
 		</div>
-	</div>
-
 
 <%
 	}
