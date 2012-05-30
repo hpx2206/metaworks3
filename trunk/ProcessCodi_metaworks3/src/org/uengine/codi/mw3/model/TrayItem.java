@@ -27,18 +27,23 @@ public class TrayItem {
 			this.instId = instId;
 		}
 		
+	InstanceView instance;
+		public InstanceView getInstance() {
+			return instance;
+		}
+		public void setInstance(InstanceView instance) {
+			this.instance = instance;
+		}
 
-	@ServiceMethod(target="popup", callByContent=true, inContextMenu=true)
-	public Popup open() throws Exception{
-		Popup popup = new Popup();
-		
+		//@ServiceMethod(target="popup", callByContent=true, inContextMenu=true)
+		@ServiceMethod(callByContent=true, inContextMenu=true)
+	public void open() throws Exception{
 		Instance instance = new Instance();
 		instance.setInstId(new Long(getInstId()));
 
 		instanceView.load(instance);
-		popup.setPanel(instanceView);
 		
-		return popup;
+		setInstance(instanceView);
 	}
 	
 	@ServiceMethod(callByContent=true, inContextMenu=true)
