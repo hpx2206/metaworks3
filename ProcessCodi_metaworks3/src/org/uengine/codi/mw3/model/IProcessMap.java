@@ -27,9 +27,14 @@ public interface IProcessMap extends IDAO {
 	public ProcessMapColor getIconColor();
 	public void setIconColor(ProcessMapColor color);
 	
-	@Available(when={WHEN_NEW})
-	@ServiceMethod(callByContent=true)
+	@ServiceMethod(callByContent=true, when=WHEN_NEW)
 	public Object[] create() throws Exception;
+
+	@ServiceMethod(callByContent=true, when=WHEN_VIEW, inContextMenu=true, target=TARGET_POPUP)
+	public Popup modify() throws Exception;
+
+	@ServiceMethod(callByContent=true, when=WHEN_EDIT)
+	public Object[] save() throws Exception;
 	
 	@Available(when={WHEN_NEW})
 	@ServiceMethod

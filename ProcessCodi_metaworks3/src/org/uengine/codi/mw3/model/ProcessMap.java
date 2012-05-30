@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.MetaworksContext;
 import org.metaworks.Remover;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
@@ -59,10 +60,37 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		return new Object[]{processMapList, new Remover(new Popup(this))};
 	}
 	
+	public Object[] save() throws Exception {
+		if(getIconFile().getDeletedPath() != null)
+			getIconFile().remove();
+		
+		if(getIconFile().getFileTransfer() != null && !getIconFile().getFileTransfer().getFilename().isEmpty())
+			getIconFile().upload();
+		else
+			getIconFile().setUploadedPath("");
+		
+		syncToDatabaseMe();
+		flushDatabaseMe();
+		
+		ProcessMapList processMapList = new ProcessMapList();
+		processMapList.load();
+		
+		return new Object[]{processMapList, new Remover(new Popup(this))};
+	}
+
+	public Popup modify() throws Exception {
+		getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+		
+		Popup popup = new Popup(560, 430);
+		popup.setPanel(this);
+		
+		return popup;		
+	}
+
 	public Remover close() throws Exception {		
 		return new Remover(new Popup(this));
 	}
-	
+		
 	public boolean confirmExist() {
 		try{
 			databaseMe();
