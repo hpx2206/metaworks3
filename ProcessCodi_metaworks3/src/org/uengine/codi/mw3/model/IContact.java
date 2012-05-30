@@ -28,9 +28,5 @@ public interface IContact extends IDAO{
 	
 	@ServiceMethod(callByContent=true, target="opener")
 	public User roleUserPickUp() throws RemoteException, Exception;
-	
-	@ServiceMethod(inContextMenu=true, callByContent=true, target="popup")
-	public Popup chat() throws Exception;
-
 
 }
