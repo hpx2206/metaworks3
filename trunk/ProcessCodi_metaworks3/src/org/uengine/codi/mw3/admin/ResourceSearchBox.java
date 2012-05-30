@@ -3,18 +3,11 @@ package org.uengine.codi.mw3.admin;
 import java.io.File;
 import java.util.ArrayList;
 
-import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.CodiClassLoader;
-import org.uengine.codi.mw3.knowledge.WorkflowyNode;
-import org.uengine.codi.mw3.model.IUser;
-import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.model.ResourceFile;
 import org.uengine.codi.mw3.model.SearchBox;
-import org.uengine.components.serializers.XStreamSerializer;
-
-import com.thoughtworks.xstream.XStream;
 
 public class ResourceSearchBox extends SearchBox {
 
@@ -22,26 +15,9 @@ public class ResourceSearchBox extends SearchBox {
 		super();
 	}
 	
-	public ResourceSearchBox(IUser user) {		
-		setUser(user);
-	}
-	
-	IUser user;
-		
-		public IUser getUser() {
-			return user;
-		}
-	
-		public void setUser(IUser user) {
-			this.user = user;
-		}
-
 	@ServiceMethod(callByContent=true, target="popup")
 	public Object search() throws Exception{	
 		
-		setMetaworksContext(new MetaworksContext());
-		getMetaworksContext().setWhere("design");
-
 		ArrayList<ResourceFile> found = new ArrayList<ResourceFile>();
 		
 		String resourceBase = CodiClassLoader.getMyClassLoader().sourceCodeBase();
@@ -85,7 +61,6 @@ public class ResourceSearchBox extends SearchBox {
 		
 		rf.setName("<b>" + file.getName()  + "</b> - [" + childAlias + "]");
 		rf.setAlias(childAlias);
-		rf.setMetaworksContext(getMetaworksContext());
 		
 		rf.setObjType(childAlias.substring(childAlias.lastIndexOf(".")+1));
 
