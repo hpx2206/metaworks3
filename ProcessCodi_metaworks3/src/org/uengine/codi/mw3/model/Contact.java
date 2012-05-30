@@ -3,19 +3,9 @@ package org.uengine.codi.mw3.model;
 
 import java.rmi.RemoteException;
 
-import org.directwebremoting.Browser;
-import org.directwebremoting.ScriptSession;
-import org.directwebremoting.ScriptSessions;
-import org.directwebremoting.WebContext;
-import org.directwebremoting.WebContextFactory;
-import org.directwebremoting.proxy.dwr.Util;
 import org.metaworks.annotation.AutowiredFromClient;
-import org.metaworks.annotation.ORMapping;
-import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.codi.mw3.Login;
-import org.uengine.codi.mw3.knowledge.IWfNode;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 public class Contact extends Database<IContact> implements IContact{
