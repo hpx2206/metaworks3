@@ -244,6 +244,9 @@ img {border:0;}
 	overflow:auto;
 	display:none;
 	overflow:auto;
+	position:relative;
+	border:1px solid #ccc;
+	border-top:1px solid #5793D7;
 }
 .togglebtnmini {
 	width:15px;
@@ -328,7 +331,7 @@ img {border:0;}
 	background:url(../../images/waveStyle/btSlideDown.png) no-repeat;
 	position:absolute;
 	top:7px;
-	right:30px;
+	right:45px;
 	cursor:pointer;
 	z-index:9;
 }
@@ -341,7 +344,7 @@ img {border:0;}
 	background:url(../../images/waveStyle/btSlideUp.png) no-repeat;
 	position:absolute;
 	top:7px;
-	right:30px;
+	right:45px;
 	cursor:pointer;
 	z-index:10;
 	display:none;
