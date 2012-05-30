@@ -1,4 +1,43 @@
+<div id="container">
+    <form action="#" method="post">
+        <!-- #first_step -->
+        <div id="first_step">
+            <h1>PROCESS CODI&nbsp;&nbsp;<span>LOGIN</span></h1>
+            <div class="form">           		
+				<%=fields.userId.here() %>
+                <label for="username">부여받으신 아이디를 입력 하여 주십시오.</label>
+                <%=fields.password.here() %>
+                <label for="password">패스워드를 입력하여 주십시오.</label>
+                <div class="clear"></div>
+            </div>
+            <!-- clearfix -->
+            <div class="clear"></div>
+            <!-- /clearfix -->
+            <div class="options" id="divCookie"">
+            	<!-- 
+            	<span><input type="checkbox" name="chksaveid" /> Save ID</span>
+            	-->
+                <span><input type="checkbox" name="chkautologin" /> Auto Login</span>
 
+            </div>
+            
+
+            <input id="signin" class="submit"  value="" title="click is login" alt="click is login" onclick="javascript:loginAction();"/>
+            
+        </div>
+        <!-- clearfix -->
+        <div class="clear"></div>
+        <!-- /clearfix -->
+    </form>
+</div>
+<div id="progress_bar">
+    <div id="progress"></div>
+    <div id="progress_text">© 2000-2012 OpenSource BPMS uengine.org , overseas@uengine.org</div>
+</div>
+
+
+
+<!--
 	<div id="login-box" >
 	<div id="login-box-inner" >
 		<H2>Process CODI Login</H2>
@@ -32,3 +71,4 @@
 	
 	<div id="copyright">© 2000-2012 OpenSource BPMS uengine.org , overseas@uengine.org
 	</div>
+-->

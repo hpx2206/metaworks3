@@ -24,7 +24,7 @@ public interface ILogin extends IDAO{
 	public String getDefId();
 	public void setDefId(String defId);
 		
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF, keyBinding={"enter"})
 	public Object login() throws Exception;	
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)
