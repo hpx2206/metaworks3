@@ -1,6 +1,4 @@
-/* CSS Reset (Eric Meyer) */
 
-/* 
 body {
 	background:url(../../images/waveStyle/bgTop.gif) repeat-x #EAECEE;
 	height:100%;
@@ -35,11 +33,12 @@ body {
 	border-top:1px solid #eee;
 }
 #container h1, #container h2 {
-	background: url('../../images/waveStyle/logo.gif') no-repeat;
+	background: url('../../images/signIn/logo2.png') no-repeat;
 	line-height:58px;
-	font-size: Cantarell, Verdana, sans-serif;
+	font-style: "Calibri", Arial;
 	text-align: center;
-	font-size: 24px;
+	font-size: 30px;
+	font-weight:bold;
 	text-shadow: 1px 1px 2px #eee;
 }
 #container h1 span {
@@ -63,9 +62,9 @@ body {
  color: #5C9EE5;
 }
 #container .form input, #container select {
-	background: url('../../images/signIn/input.png') no-repeat;
+	background: url('../../images/signIn/input.png') no-repeat  !important;
 	color: #ccc;
-	border: none;
+	border: 1px solid #E1E1E1 !important;
 	font-family: Cantarell, Verdana, sans-serif;
 	font-weight: bold;
 	font-size: 15px;
@@ -74,9 +73,9 @@ body {
 	padding: 0 25px;
 	margin: 20px 0;
 	float: left;
-	border-radius: 6px;
-	-moz-border-radius: 6px;
-	-webkit-border-radius: 6px;
+	border-radius: 9px;
+	-moz-border-radius: 9px;
+	-webkit-border-radius: 9px;
 }
 
 #container .options {
@@ -127,7 +126,7 @@ body {
 	border: 1px solid #1FFF00;
 }
 #container input:focus, #container select:focus {
-	border: 1px solid #5C9EE5;
+	border: 1px solid #5C9EE5 !important;
 	color: #5C9EE5;
 }
 #container select {
@@ -142,7 +141,7 @@ body {
 	font-weight: bold;
 	line-height: 14px;
 	float: right;
-	margin: 23px -25px;
+	margin: 27px -25px;
 	width: 270px;
 }
 #progress_bar {
@@ -165,16 +164,16 @@ body {
 	line-height: 21px;
 	text-align: center;
 	font-weight: bold;
-	color: #ccc;
+	color: #999999;
 	width: 539px;
 	height: 24px;
 	top: -23px;
 	left: 0;
 }
- */
+
  
  
- 
+ /* 
 #login-box {
 	width:580px;
 	height: 352px;
@@ -243,3 +242,4 @@ body {
 }
 
 #copyright{width:550px; margin:30px auto 0; text-align:center;}
+ */
