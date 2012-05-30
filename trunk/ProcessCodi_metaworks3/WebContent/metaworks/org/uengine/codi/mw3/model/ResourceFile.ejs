@@ -1,79 +1,77 @@
 <%
-
-//mw3.debug(value);
-
-var icon = "default";
-
-if (value.objType == "folder"){
-	icon = "folder_c.png";	
-} else if (value.objType == "form"){
-	icon = "form.png";	
-} else if (value.objType == "process"){
-	icon = "process.gif";	
-} else if (value.objType == "class"){
-	icon = "bean.png";	
-} else if (value.objType == "java"){
-	icon = "bean.png";	
-} else
-	icon = value.objType + ".png";
-
-%>
+if(value){
+	var icon = "default";
+	
+	if (value.objType == "folder"){
+		icon = "folder_c.png";	
+	} else if (value.objType == "form"){
+		icon = "form.png";	
+	} else if (value.objType == "process"){
+		icon = "process.gif";	
+	} else if (value.objType == "class"){
+		icon = "bean.png";	
+	} else if (value.objType == "java"){
+		icon = "bean.png";	
+	} else
+		icon = value.objType + ".png";
 
 
-<%
-if(value!=null){
-
-  if(value.folder){
+	if(value.folder){
   
   
-  	if(value.childs && value.opened){
+		if(value.childs && value.opened){
 %>
 
 <span style="background:url(images/waveStyle/folder_o.png) no-repeat 5px 0px; cursor:hand;">
-<%		if(!value.deleted){%>
+<%
+			if(!value.deleted){
+%>
 	<a onclick="<%=methods.drillDown.caller()%>"><b><%=value.name%></b></a>
-<%		}else{%>
+<%			}else{
+%>
 	<b><font color=gray><%=value.name%></font></b>
-<%		}%>
+<%			}
+%>
 </span>
 <ul style="padding:5px 0 15px 25px;"><li><%=fields.childs.here({when: mw3.when})%></li></ul>
 
 <%
  
-	}else{%>
+		}else{%>
 
 
 
 <span style="background:url(images/waveStyle/<%=icon%>) no-repeat; width: 5px; 0px; cursor:hand;">
-<%		if(!value.isDeleted){%>
+<%			if(!value.isDeleted){%>
 	<a onclick="<%=methods.drillDown.caller()%>"><%=value.name%></a>
-<%		}else{%>
+<%			}else{%>
 	<font color=gray>deleted >>> <%=value.name%></font>
-<%		}%>
+<%			}%>
 </span>
 
 
-<%	}
+<%	
+		}
 
 
-  }else{
+ 	}else{
   
-  	if(mw3.where=="design"){
+  		if(mw3.where=="design"){
   
 %>
 	<span style="background:url(images/waveStyle/<%=icon%>) no-repeat 5px 0px; cursor:hand;">
 		<a onclick="<%=methods.design.caller()%>"><%=value.name%></a>
 	</span>
 <%
-  	}else{
+  		}else{
   	  
 %>
 	<span style="background:url(images/waveStyle/<%=icon%>) no-repeat 5px 0px;">
 		<a onclick="<%=methods.initiate.caller()%>"><%=value.name%></a>
 	</span>
 <%
+  		}
   	}
-  }
 }
 %>
 
