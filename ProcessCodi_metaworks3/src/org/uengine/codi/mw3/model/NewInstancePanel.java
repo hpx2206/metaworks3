@@ -15,6 +15,9 @@ public class NewInstancePanel extends ContentWindow{
 		
 		unstructuredProcessInstanceStarter = new UnstructuredProcessInstanceStarter();
 		
+		processMapPanel = new ProcessMapPanel();
+		processMapPanel.load();
+		
 //		processDefinitions = new ProcessDefinition();
 //		processDefinitions.setParentFolder("");
 //		processDefinitions.getMetaworksContext().setWhen("newInstance");
@@ -35,6 +38,14 @@ public class NewInstancePanel extends ContentWindow{
 				
 	}
 	
+	ProcessMapPanel processMapPanel;
+		public ProcessMapPanel getProcessMapPanel() {
+			return processMapPanel;
+		}
+		public void setProcessMapPanel(ProcessMapPanel processMapPanel) {
+			this.processMapPanel = processMapPanel;
+		}
+
 	UnstructuredProcessInstanceStarter unstructuredProcessInstanceStarter;
 		
 		public UnstructuredProcessInstanceStarter getUnstructuredProcessInstanceStarter() {

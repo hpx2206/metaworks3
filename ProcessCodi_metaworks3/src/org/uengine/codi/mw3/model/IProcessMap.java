@@ -34,4 +34,6 @@ public interface IProcessMap extends IDAO {
 	@Available(when={WHEN_NEW})
 	@ServiceMethod
 	public Remover close() throws Exception;
+	
+	public boolean confirmExist();
 }

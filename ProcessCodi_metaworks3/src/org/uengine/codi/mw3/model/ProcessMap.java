@@ -7,9 +7,6 @@ import org.metaworks.website.MetaworksFile;
 
 public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 	
-	@AutowiredFromClient
-	public ProcessMapPanel processMapPanel;
-	
 	public ProcessMap(){
 		setIconFile(new MetaworksFile());		
 		setIconColor(new ProcessMapColor("배경선택"));
@@ -64,6 +61,16 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 	
 	public Remover close() throws Exception {		
 		return new Remover(new Popup(this));
+	}
+	
+	public boolean confirmExist() {
+		try{
+			databaseMe();
+		}catch(Exception e){
+			return true;
+		}
+		
+		return false;
 	}
 	
 	public static IProcessMap loadList() throws Exception {
