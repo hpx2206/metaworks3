@@ -1,6 +1,12 @@
 <div>
+<!--<div style="background:url(images/waveStyle/atvLine.gif) bottom center no-repeat; padding-bottom:40px; ">-->	
 
-	<div style="background:url(images/waveStyle/atvLine.gif) bottom center no-repeat; padding-bottom:40px; ">		
+<div class="view_box" style="background:#fff">
+	<div class="guide">
+		<span class="tl"></span>
+		<span class="tr"></span>
+	</div>
+	<div class="cont">	
 		<table id="tableHidtoryContent_1" width="100%" border="0" cellspacing="0" cellpadding="0">
 			<tbody><tr>
 				<td rowspan="3" width="60" align="center" valign="top">
@@ -24,7 +30,10 @@
 			</tr>			
 		</table>
 	</div>
-</div>
+	<div class="guide">
+		<span class="lb"></span>
+		<span class="rb"></span>
+	</div>
 <% if(value.workItemHandler && value.workItemHandler.instanceId){%>
 <%=fields.workItemHandler.here()%>
 <% }%>
