@@ -7,41 +7,64 @@
 			portrait = 'images/portrait/unknown_user.gif';
 	
 	
+		if(mw3.when == 'info'){
 %>
-	<div class="user">
-		<div class="user_picture">	
-			<img id="user_picture_<%=objectId%>" src="<%=portrait%>" width="30" height="30">
+		<ul class="lst_type">
+			<li>
+				<dl class="lst_type2">
+					<dt class="tit">
+						<div id="popupInfoNameWih"><b><%=value.name%></b></div>
+					</dt>
+					<dd class="photo">
+						<div id="popupInfoImgWih"><img id="user_picture_<%=objectId%>" src="<%=portrait%>" width="104" height="104"></div>
+					</dd>
+       			</dl>
+      		</li>    
+     	</ul>
+     	
+     	<div id="btnline" style="border-top:1px solid #E3E8F2; padding-top:8px;">
+			<ul>
+				<li id="wBtn"><a href="javascript:<%=methods.chat.caller()%>"><span>chat</span></a></li>
+			</ul>
 		</div>
+<%		
+		}else{
+%>
+		<div class="user" onclick="<%=methods.detail.caller()%>">
+			<div class="user_picture">	
+				<img id="user_picture_<%=objectId%>" src="<%=portrait%>" width="30" height="30">
+			</div>
 <%	
-		// case by user
-		if(mw3.when == 'list' || mw3.when == 'addContact'){
+			// case by user
+			if(mw3.when == 'list' || mw3.when == 'addContact'){
 %>
-		<div class="user_detail">
-			<span class="fontbold"><%=value.name%></span><br />
-			<span class="fontgray"><%=value.userId%></span><br />
-			<span class="fontgray"></span>
-		</div>
+			<div class="user_detail">
+				<span class="fontbold"><%=value.name%></span><br />
+				<span class="fontgray"><%=value.userId%></span><br />
+				<span class="fontgray"></span>
+			</div>
 <%
-			if(mw3.when == 'addContact'){
+				if(mw3.when == 'addContact'){
 %>
-		<div class="user_action">
-			<%=methods.addContact.here()%>
-		</div>
+			<div class="user_action">
+				<%=methods.addContact.here()%>
+			</div>
 
 <%
+				}
+			}else if(mw3.when == 'contact'){
+%>
+
+			<div class="user_compact">
+				<%=value.name%>
+			</div>
+<%		
 			}
-		}else if(mw3.when == 'contact'){
 %>
-
-		<div class="user_compact">
-			<%=value.name%>
+			<div style="clear:both"></div>
 		</div>
 <%		
 		}
-%>
-		<div style="clear:both"></div>
-	</div>
-<%		
 	}
 %>
 
