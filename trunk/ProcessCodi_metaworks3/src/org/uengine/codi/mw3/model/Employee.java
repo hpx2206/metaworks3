@@ -270,11 +270,13 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		IUser friendUser = new User();
 		friendUser.setUserId(getEmpCode());
 		friendUser.setName(getEmpName());
-		contact.setFriends(friendUser);
+		contact.setFriend(friendUser);
 		contact.setUserId(session.getUser().getUserId());
 		contact.addContact();
 		
-		ContactList cp = new ContactList(session.getUser());
+		ContactList cp = new ContactList();
+		cp.load(session.getUser().getUserId());
+		
 		return cp;
 	}
 

@@ -13,8 +13,10 @@ public class RoleUserPickerPanel implements ContextAware {
 	public RoleUserPickerPanel(IUser loginUser) throws Exception{
 		this();
 		
-		contactList = new ContactList(loginUser);
-		contactList.setMetaworksContext(getMetaworksContext());
+		ContactList contactList = new ContactList();
+		contactList.load(loginUser.getUserId());
+		
+		setContactList(contactList);
 	}
 	
 	
