@@ -1,8 +1,6 @@
 package org.uengine.codi.mw3.model;
 
-import org.metaworks.annotation.AutowiredToClient;
 import org.metaworks.widget.layout.Layout;
-import org.uengine.codi.mw3.ILogin;
 import org.uengine.codi.mw3.admin.PageNavigator;
 
 public class Main {
@@ -13,8 +11,6 @@ public class Main {
 	
 	public Main(Session session) throws Exception {
 		
-		setSession(session);		
-
 		//
 		
 		Layout westLayout = new Layout();
@@ -31,7 +27,7 @@ public class Main {
 		
 		Layout outerLayout = new Layout();
 		outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:5, north__size:52");
-		outerLayout.setNorth(new ProcessTopPanel());
+		outerLayout.setNorth(new ProcessTopPanel(session));
 		outerLayout.setWest(westLayout);
 		outerLayout.setCenter(eastLayout);		
 		outerLayout.setName("center");
@@ -50,15 +46,6 @@ public class Main {
 		}
 		public void setLayout(Layout layout) {
 			this.layout = layout;
-		}
-
-	Session session;
-		@AutowiredToClient
-		public Session getSession() {
-			return session;
-		}
-		public void setSession(Session session) {
-			this.session = session;
 		}
 
 	PageNavigator pageNavigator;

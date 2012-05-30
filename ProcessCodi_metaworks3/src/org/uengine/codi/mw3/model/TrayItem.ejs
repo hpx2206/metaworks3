@@ -4,13 +4,22 @@
         <div class="boxmiddleleft">
         	<div class='togglebtnx' onclick="<%=methods.close.caller() %>"></div>
             <div class="togglebtnmax" onclick="<%=methods.maximize.caller() %>" style="right:30px"></div>
-            <div id="slidedown" class="slidedown" onclick="mw3.getFaceHelper(<%=objectId%>).openChat();"style="right:45px"></div
-            <div id="slideup" class="slideup" onclick=""style="right:45px"></div>
-            <div id="con01" class="this.divId">
 <%
-	if(value.instance != null){
+	if(mw3.how == 'down'){
+%>	                        
+            <div id="slideup" class="slideup" style="display:block" onclick="<%=methods.slideUp.caller() %>" style="right:45px"></div>
+<%
+	}else{
+%>	                        
+            <div id="slidedown" class="slidedown" onclick="<%=methods.slideDown.caller() %>"style="right:45px"></div>
+<%
+	}
 %>	            
             
+            <div id="con01" class="topcontentcontainer">
+<%
+	if(mw3.how == 'down'){
+%>	            
             	<%=fields.instance.here()%>
 <%
 	}

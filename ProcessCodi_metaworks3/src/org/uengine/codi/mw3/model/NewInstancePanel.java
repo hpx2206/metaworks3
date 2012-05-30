@@ -4,7 +4,7 @@ import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 
-@Face(ejsPath="genericfaces/WindowTab.ejs", displayName="New InstancePanel", options={"hideLabels"}, values={"true"})
+@Face(ejsPath="genericfaces/Window.ejs", displayName="New InstancePanel", options={"hideLabels"}, values={"true"})
 public class NewInstancePanel extends ContentWindow{
 	
 	public NewInstancePanel() throws Exception{
