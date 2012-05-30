@@ -1,0 +1,28 @@
+<%
+	if(value){
+		if(value.processMapList){
+%>
+			<ul>		
+<%
+			for (var i=0; i<value.processMapList.length; i++){
+				if(typeof options == 'undefined') 
+					options = objectMetadata;
+			
+				options['index'] = i;
+				options['htmlTag'] =  'li';
+%>
+						<%=mw3.locateObject(value.processMapList[i], value.processMapList[i].__className, null, options)%>	
+<%
+				mw3.addBeanProperty(value.__objectId, '.processMapList[' + i + ']');
+			}
+%>
+			</ul>
+
+<%
+		}
+%>
+			
+			<%=methods.append.here()%>
+<%		
+	}
+%>	

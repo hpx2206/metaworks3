@@ -1,0 +1,10 @@
+<%
+	if(value){
+%>
+	채팅 제목 : <%=fields.title.here()%><br />
+	채팅 상대 : <%=fields.friend.here({when : 'normal'})%><br />
+	
+	<%=methods.start.here()%>
+<%
+	}
+%>
