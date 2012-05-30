@@ -118,10 +118,10 @@ public class InstanceList {
 
 		switch (findPerspectiveTypeCode(session.getLastPerspecteType())) {
 		case 0://"inbox"
-			taskSql.append("and (status=?taskStatus1 or status=?taskStatus2) ");
+			taskSql.append("and (worklist.status=?taskStatus1 or worklist.status=?taskStatus2) ");
 			criteria.put("taskStatus1", "NEW");
 			criteria.put("taskStatus2", "CONFIRMED");
-			taskSql.append("and endpoint=?taskEndpoint ");
+			taskSql.append("and rolemapping.endpoint=?taskEndpoint ");
 			criteria.put("taskEndpoint", session.getEmployee().getEmpCode());
 			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
 			criteria.put("instIsdelete", "1");
@@ -132,57 +132,91 @@ public class InstanceList {
 			// Forx Only
 			instanceSql.append("and inst.status!=?instStatus ");
 			criteria.put("instStatus", "Stopped");
+			// secureopt
+			instanceSql
+					.append("and (inst.secuopt='0' OR (inst.secuopt=1 and exists (select rootinstid from BPM_ROLEMAPPING rm where rm.endpoint=?rmEndpoint and inst.rootinstid=rm.rootinstid))) ");
+			criteria.put("rmEndpoint", session.getEmployee().getEmpCode());
 			break;
-		case 2://"request"
+		case 2:// "request"
 			instanceSql.append("and inst.initep=?instInitep ");
 			criteria.put("instInitep", session.getEmployee().getEmpCode());
 			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
 			criteria.put("instIsdelete", "1");
 			break;
-		case 3://"stopped"
+		case 3:// "stopped"
 			instanceSql.append("and inst.status=?instStatus ");
 			criteria.put("instStatus", "Stopped");
 			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
 			criteria.put("instIsdelete", "1");
+
+			// secureopt
+			instanceSql
+					.append("and (inst.secuopt='0' OR (inst.secuopt=1 and exists (select rootinstid from BPM_ROLEMAPPING rm where rm.endpoint=?rmEndpoint and inst.rootinstid=rm.rootinstid))) ");
+			criteria.put("rmEndpoint", session.getEmployee().getEmpCode());
 			break;
-		case 4://"organization"
-			taskSql.append("and endpoint=?taskEndpoint ");
+		case 4:// "organization"
+			taskSql.append("and rolemapping.endpoint=?taskEndpoint ");
 			criteria.put("taskEndpoint", session.getLastSelectedItem());
 			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
 			criteria.put("instIsdelete", "1");
+
+			// secureopt
+			instanceSql
+					.append("and (inst.secuopt='0' OR (inst.secuopt=1 and exists (select rootinstid from BPM_ROLEMAPPING rm where rm.endpoint=?rmEndpoint and inst.rootinstid=rm.rootinstid))) ");
+			criteria.put("rmEndpoint", session.getEmployee().getEmpCode());
 			break;
-		case 5://"process"
+		case 5:// "process"
 			instanceSql.append("and inst.defid=?instDefId ");
 			criteria.put("instDefId", session.getLastSelectedItem());
 			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
 			criteria.put("instIsdelete", "1");
+
+			// secureopt
+			instanceSql
+					.append("and (inst.secuopt='0' OR (inst.secuopt=1 and exists (select rootinstid from BPM_ROLEMAPPING rm where rm.endpoint=?rmEndpoint and inst.rootinstid=rm.rootinstid))) ");
+			criteria.put("rmEndpoint", session.getEmployee().getEmpCode());
 			break;
-		case 6: //"strategy"
+		case 6: // "strategy"
 			instanceSql.append("and inst.strategyid=?instStrategyId ");
 			criteria.put("instStrategyId", session.getLastSelectedItem());
 			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
 			criteria.put("instIsdelete", "1");
+
+			// secureopt
+			instanceSql
+					.append("and (inst.secuopt='0' OR (inst.secuopt=1 and exists (select rootinstid from BPM_ROLEMAPPING rm where rm.endpoint=?rmEndpoint and inst.rootinstid=rm.rootinstid))) ");
+			criteria.put("rmEndpoint", session.getEmployee().getEmpCode());
 			break;
-		case 7: //"taskExt1"
+		case 7: // "taskExt1"
 			instanceSql.append("and task.ext1=?taskExt1 ");
 			criteria.put("taskExt1", session.getLastSelectedItem());
 			instanceSql.append("and inst.status=?status ");
 			criteria.put("status", "Running");
 			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
 			criteria.put("instIsdelete", "1");
+
+			// secureopt
+			instanceSql
+					.append("and (inst.secuopt='0' OR (inst.secuopt=1 and exists (select rootinstid from BPM_ROLEMAPPING rm where rm.endpoint=?rmEndpoint and inst.rootinstid=rm.rootinstid))) ");
+			criteria.put("rmEndpoint", session.getEmployee().getEmpCode());
 			break;
-		case 8: //"status"
+		case 8: // "status"
 			instanceSql.append("and inst.status=?status ");
 			criteria.put("status", session.getLastSelectedItem());
 			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
 			criteria.put("instIsdelete", "1");
+
+			// secureopt
+			instanceSql
+					.append("and (inst.secuopt='0' OR (inst.secuopt=1 and exists (select rootinstid from BPM_ROLEMAPPING rm where rm.endpoint=?rmEndpoint and inst.rootinstid=rm.rootinstid))) ");
+			criteria.put("rmEndpoint", session.getEmployee().getEmpCode());
 			break;
 		default:
 			// personal inbox
-			taskSql.append("and (status=?taskStatus1 or status=?taskStatus2) ");
+			taskSql.append("and (worklist.status=?taskStatus1 or worklist.status=?taskStatus2) ");
 			criteria.put("taskStatus1", "NEW");
 			criteria.put("taskStatus2", "CONFIRMED");
-			taskSql.append("and endpoint in (?taskEndpoint) ");
+			taskSql.append("and rolemapping.endpoint=?taskEndpoint ");
 			criteria.put("taskEndpoint", session.getEmployee().getEmpCode());
 			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
 			criteria.put("instIsdelete", "1");

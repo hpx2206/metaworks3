@@ -45,13 +45,13 @@ public class Instance extends Database<IInstance> implements IInstance{
 		stmt.append(" BPM_PROCINST inst, ");
 		
 		// TASK
-		stmt.append(" (select max(startdate) startdate, rootinstid ");
-		stmt.append("from bpm_worklist ");
-		stmt.append("where 1=1 ");
+		stmt.append(" (select max(worklist.startdate) startdate, worklist.rootinstid ");
+		stmt.append("from bpm_worklist worklist, bpm_rolemapping rolemapping ");
+		stmt.append("where worklist.rootinstid=rolemapping.rootinstid ");
 		if(criteria.containsKey(TASK_DIRECT_APPEND_SQL_KEY)) {
 			stmt.append(criteria.get(TASK_DIRECT_APPEND_SQL_KEY));
 		}
-		stmt.append("group by rootinstid) task ");
+		stmt.append("group by worklist.rootinstid) task ");
 		
 		// add instance criteria
 		stmt.append("where inst.instid=task.rootinstid ");
@@ -120,7 +120,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 		public void setInitComCd(String initComCd) {
 			this.initComCd = initComCd;
 		}
-
+		
 	@Override
 	public Long getDefVerId() {
 		// TODO Auto-generated method stub
@@ -435,6 +435,17 @@ public class Instance extends Database<IInstance> implements IInstance{
 		}
 		public void setInitiator(IUser initiator) {
 			this.initiator = initiator;
+		}
+
+		String secuopt;
+		@Override
+		public String getSecuopt() {
+			return secuopt;
+		}
+
+		@Override
+		public void setSecuopt(String secuopt) {
+			this.secuopt = secuopt;
 		}
 
 }

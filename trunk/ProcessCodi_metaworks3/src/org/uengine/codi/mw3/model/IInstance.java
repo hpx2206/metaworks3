@@ -97,7 +97,8 @@ public interface IInstance extends IDAO{
 	public String getInitComCd();
 	public void setInitComCd(String initComCd);
 
-	
+	public String getSecuopt();
+	public void setSecuopt(String secuopt);
 	
 	/////// following setter/getters stands for mapping tuple data to object by bean mapping /////////
 	
