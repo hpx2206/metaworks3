@@ -9,9 +9,8 @@ import org.uengine.codi.mw3.model.IUser;
       values={"true", "true", "true", "west"})
 public class ResourceWindow {
 
-	public ResourceWindow(IUser user) throws Exception {
-		resourcePanel = new ResourcePanel(user);
-//		resourcePanel.refresh();		
+	public ResourceWindow() throws Exception {
+		setResourcePanel(new ResourcePanel());		
 	}
 	
 	ResourcePanel resourcePanel;		
