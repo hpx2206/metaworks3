@@ -6,6 +6,12 @@ import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.ServiceMethod;
 
 public class SourceCode {
+	
+	public SourceCode(){
+		setCode("... ");
+	}
+	
+	
 	String code;
 		public String getCode() {
 			return code;
