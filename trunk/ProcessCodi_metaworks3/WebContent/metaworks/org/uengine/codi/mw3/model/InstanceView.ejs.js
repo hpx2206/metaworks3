@@ -5,8 +5,6 @@ var org_uengine_codi_mw3_model_InstanceView = function(objectId, className){
 	
 	var object = mw3.objects[this.objectId];
 	if(object){
-		mw3.log('aaaa');
-		
 		$(this.divId).addClass('mw3_layout').attr('objectId', this.objectId);
 		
 		var faceHelper = this;	
@@ -15,45 +13,48 @@ var org_uengine_codi_mw3_model_InstanceView = function(objectId, className){
 		var posting = [];
 		
 		var postIds = object.crowdSourcer.postIds;	
-		var cnt = 0;
 		
-		for(var i=0; i<postIds.length; i++){
-			var num = 20;
-			 
-			FB.api(postIds[i], {
-				limit : num
-			}, function(response) {
-				if (!response || response.error) {
-					//console.debug(response);
-					
-					if(typeof response.error != "undefined")
-						alert("error : " + response.error.message);
-					
-				} else {
-					for(var j=0; j<response.comments.count; j++){
-						var comment = response.comments.data[j];
-						var user = {
-								userId : comment.from.id,
-								name : comment.from.name,
-								__className : "org.uengine.codi.mw3.model.IUser"
-						};
+		if(postIds != null){
+			var cnt = 0;
+			
+			for(var i=0; i<postIds.length; i++){
+				var num = 20;
+				 
+				FB.api(postIds[i], {
+					limit : num
+				}, function(response) {
+					if (!response || response.error) {
+						//console.debug(response);
 						
-						posting[cnt] = {    type : "postings",
-								           title : comment.message,
-								        endpoint : comment.from.id,
-								          writer : user,
-								     __className : "org.uengine.codi.mw3.model.PostingsWorkItem"
-								  
-						  };
+						if(typeof response.error != "undefined")
+							alert("error : " + response.error.message);
 						
-						cnt++;					
+					} else {
+						for(var j=0; j<response.comments.count; j++){
+							var comment = response.comments.data[j];
+							var user = {
+									userId : comment.from.id,
+									name : comment.from.name,
+									__className : "org.uengine.codi.mw3.model.IUser"
+							};
+							
+							posting[cnt] = {    type : "postings",
+									           title : comment.message,
+									        endpoint : comment.from.id,
+									          writer : user,
+									     __className : "org.uengine.codi.mw3.model.PostingsWorkItem"
+									  
+							  };
+							
+							cnt++;					
+						}
+						
+						if(i == postIds.length){
+							mw3.setObject(object.threadPosting.__objectId, posting);
+						}
 					}
-					
-					if(i == postIds.length){
-						mw3.setObject(object.threadPosting.__objectId, posting);
-					}
-				}
-			});	
+				});	
+			}
 		}
 	}
 	
@@ -68,7 +69,7 @@ org_uengine_codi_mw3_model_InstanceView.prototype = {
 				spacing_closed:		0,
 				center__onresize:	'mw3.getFaceHelper('+this.objectId+').resizeChild()'
 		}
-
+		
 		this.layout = $(this.divId).layout(options);
 	},
 	destroy : function(){
