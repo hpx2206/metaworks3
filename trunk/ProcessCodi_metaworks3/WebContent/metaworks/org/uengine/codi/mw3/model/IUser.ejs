@@ -1,42 +1,41 @@
-<%
+<%	
 	if(value){
-		var portrait;
-		
+		var portrait;		
 		if(value.userId)
 			portrait = 'http://graph.facebook.com/' + value.userId + '/picture';
 		else
 			portrait = 'images/portrait/unknown_user.gif';
-
-		if(mw3.when == 'searchBox'){
+	
+	
 %>
-	<li><img src="<%=portrait%>" border="0" height="30" width="30" /></li>
-	<li class="name"><%=value.name%></li>
-
-<%		
-		}else{	
+	<div class="user">
+		<div class="user_picture">	
+			<img id="user_picture_<%=objectId%>" src="<%=portrait%>" width="30" height="30">
+		</div>
+<%	
+		// case by user
+		if(mw3.when == 'list' || mw3.when == 'addContact'){
 %>
-	<a target="_blank" href="http://www.facebook.com/profile.php?id=<%=value.userId%>">
-		<img id="userPicture_<%=objectId%>" src="<%=portrait%>" width="30" height="30">
-	</a>	
-<% 
-			if(mw3.when != 'onlyFaceSmall'){
-%>
-	<center>
-		<%=value.name%>
-	</center>
-<% 
-			}
-			if(mw3.where && mw3.where =='roleUserPickerCaller') {
-%>
-	<%=methods.openRoleUserPicker.here()%>
+		<div class="user_detail">
+			<span class="fontbold"><%=value.name%></span><br />
+			<span class="fontgray"><%=value.userId%></span><br />
+			<span class="fontgray"></span>
 <%
-			} else {
+			if(mw3.when == 'addContact'){
 %>
-	<%=methods.addContact.here()%>
-<%			}	
+			<%=methods.addContact.here()%>
+		</div>
+<%
+			}
+		}else if(mw3.when == 'contact'){
+%>
+
+		<div class="user_compact">
+			<%=value.name%>
+		</div>
+<%		
 		}
 	}
 %>
 
-
-	<%=methods ? methods.pickUp.here() : ""%>
+<%=methods ? methods.pickUp.here() : ""%>
