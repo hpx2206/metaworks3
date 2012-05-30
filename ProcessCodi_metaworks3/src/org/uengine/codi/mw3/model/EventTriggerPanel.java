@@ -10,6 +10,9 @@ import org.uengine.util.UEngineUtil;
 public class EventTriggerPanel {
 	
 	
+	public EventTriggerPanel() {
+	}
+
 	public EventTriggerPanel(ProcessInstance instance) throws Exception{
 		EventHandler[] eventHandlers = instance.getEventHandlersInAction();
 		

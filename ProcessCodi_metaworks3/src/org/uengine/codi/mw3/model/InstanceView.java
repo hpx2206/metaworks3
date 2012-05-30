@@ -44,6 +44,17 @@ public class InstanceView {
 		public void setInstanceNameChanger(InstanceNameChanger instanceNameChanger) {
 			this.instanceNameChanger = instanceNameChanger;
 		}
+		
+		InstanceSecurityConfigurer instanceSecurityConfigurer;
+
+		public InstanceSecurityConfigurer getInstanceSecurityConfigurer() {
+			return instanceSecurityConfigurer;
+		}
+
+		public void setInstanceSecurityConfigurer(
+				InstanceSecurityConfigurer instanceSecurityConfigurer) {
+			this.instanceSecurityConfigurer = instanceSecurityConfigurer;
+		}
 
 	String instanceName;
 		@Name
@@ -134,6 +145,8 @@ public class InstanceView {
 		instanceNameChanger.setInstanceId(instanceId);
 		instanceNameChanger.setInstanceName(instanceName);
 		
+		setInstanceSecurityConfigurer(new InstanceSecurityConfigurer());
+		getInstanceSecurityConfigurer().setInstanceId(instanceId);
 
 	}
 	
@@ -277,7 +290,13 @@ public class InstanceView {
 	public void delete() throws RemoteException{
 		processManager.stopProcessInstance(instanceId);
 		processManager.applyChanges();
-	}	
+	}
+	
+	@ServiceMethod(callByContent=true)
+	public void toggleSecurityConversation() throws Exception{
+		getInstanceSecurityConfigurer().toggleSecureConversation();
+//		loadDefault();
+	}
 	
 	transient MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
