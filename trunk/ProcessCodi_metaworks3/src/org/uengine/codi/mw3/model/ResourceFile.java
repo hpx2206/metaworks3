@@ -106,7 +106,23 @@ public class ResourceFile implements ContextAware{
 		public void setChilds(ArrayList<ResourceFile> childFiles) {
 			this.childs = childFiles;
 		}
-
+	
+	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP, callByContent=true, inContextMenu=true, when="newInstance")
+	public Popup addProcessMap() throws Exception {
+		IProcessMap processMap = new ProcessMap();
+		processMap.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+		processMap.setDefId(this.getAlias());
+		processMap.setName(this.getName());
+		
+		if(!processMap.confirmExist())
+			throw new Exception("이미 프로세스 맵에 등록된 프로세스입니다.");
+		
+		Popup popup = new Popup(560, 430);
+		popup.setPanel(processMap);
+		
+		return popup;
+	}
+	
 	@ServiceMethod(callByContent=true, except="childs")
 	public void drillDown(){
 		
