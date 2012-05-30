@@ -1,4 +1,4 @@
-CREATE TABLE `workflowy` (
+CREATE TABLE `bpm_knol` (
 	`id` VARCHAR(20) NOT NULL,
 	`name` VARCHAR(500) NULL DEFAULT NULL,
 	`linkedInstId` INT(11) NULL DEFAULT NULL,
