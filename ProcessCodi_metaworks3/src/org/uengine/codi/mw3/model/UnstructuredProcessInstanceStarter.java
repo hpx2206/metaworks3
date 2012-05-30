@@ -55,7 +55,7 @@ public class UnstructuredProcessInstanceStarter {
 
 				@Override
 				public void run() {
-					ScriptSessions.addFunctionCall("mw3.getAutowiredObject('org.uengine.codi.mw3.model.Tray').__getFaceHelper().addTray", new Object[]{getTitle(), instanceView.getInstanceView().getInstanceId()});
+					ScriptSessions.addFunctionCall("mw3.getAutowiredObject('org.uengine.codi.mw3.model.Tray').__getFaceHelper().addTray", new Object[]{session.getUser().getName(), instanceView.getInstanceView().getInstanceId()});
 				}
 				
 			});

@@ -6,8 +6,6 @@ var org_uengine_codi_mw3_model_TrayItem = function(objectId, className){
 	
 	var object = mw3.objects[this.objectId];
 	
-	mw3.log(object);
-	
 	if(object && object.metaworksContext && object.metaworksContext.how == 'down'){
 		$(this.divId + ' .topcontentcontainer').show().width(500);
 		
