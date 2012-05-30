@@ -2,6 +2,8 @@ package org.uengine.codi.mw3.model;
 
 import org.directwebremoting.Browser;
 import org.directwebremoting.ScriptSessions;
+import org.metaworks.ContextAware;
+import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,8 +11,13 @@ import org.uengine.codi.CodiProcessDefinitionFactory;
 import org.uengine.codi.mw3.Login;
 import org.uengine.processmanager.ProcessManagerRemote;
 
-public class UnstructuredProcessInstanceStarter {
+public class UnstructuredProcessInstanceStarter implements ContextAware {
 
+	public UnstructuredProcessInstanceStarter() {
+		setMetaworksContext(new MetaworksContext());
+		getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+	}
+	
 	String title;
 		public String getTitle() {
 			return title;
@@ -18,17 +25,22 @@ public class UnstructuredProcessInstanceStarter {
 	
 		public void setTitle(String title) {
 			this.title = title;
+		}		
+
+	IUser friend;
+		public IUser getFriend() {
+			return friend;
 		}
-		
-		
-	String friendId;
-		
-		public String getFriendId() {
-			return friendId;
+		public void setFriend(IUser friend) {
+			this.friend = friend;
 		}
-	
-		public void setFriendId(String friendId) {
-			this.friendId = friendId;
+
+	MetaworksContext metaworksContext;	
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
 		}
 
 	@ServiceMethod(callByContent = true)
@@ -49,9 +61,9 @@ public class UnstructuredProcessInstanceStarter {
 		instanceView.getInstanceView().getInstanceNameChanger().setInstanceName(getTitle());
 		instanceView.getInstanceView().getInstanceNameChanger().change();
 		
-		if(friendId!=null){
+		if(getFriend() != null && getFriend().getUserId() != null){
 
-			Browser.withSession(Login.getSessionIdWithUserId(getFriendId()), new Runnable(){
+			Browser.withSession(Login.getSessionIdWithUserId(getFriend().getUserId()), new Runnable(){
 
 				@Override
 				public void run() {

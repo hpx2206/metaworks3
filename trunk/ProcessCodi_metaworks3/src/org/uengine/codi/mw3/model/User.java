@@ -6,7 +6,7 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.TransactionContext;
 
-public class User extends Database<IUser> implements IUser{
+public class User extends Database<IUser> implements IUser {
 	
 	String name;
 	
@@ -80,5 +80,27 @@ public class User extends Database<IUser> implements IUser{
 		popup.setName("Role User Pickup Panel");
 		return popup;
 	}
+	
+	@Override
+	public Popup detail() throws Exception {
+		Popup popup = new Popup();
+		
+		this.getMetaworksContext().setWhen("info");
+		
+		popup.setName("Friend Info");
+		popup.setPanel(this);
+
+		return popup;
+	}
+	
+	@Override
+	public UnstructuredProcessInstanceStarter chat() throws Exception{		
+		UnstructuredProcessInstanceStarter instanceStarter = new UnstructuredProcessInstanceStarter();
+		
+		instanceStarter.setFriend(this);
+		
+		return instanceStarter;
+	}
+	
 	
 }

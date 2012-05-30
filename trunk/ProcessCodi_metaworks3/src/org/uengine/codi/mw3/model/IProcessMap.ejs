@@ -1,0 +1,43 @@
+<%
+	if(value){
+		if(mw3.when == 'new' || mw3.when == 'edit'){
+%>
+	<div id="process">
+		<dl>
+			<dt>프로세스 선택</dt>
+			<dd>defId : <%=fields.defId.here()%></dd>
+			<dd>name : <%=fields.name.here()%></dd>
+		</dl>
+	</div>
+	
+	<div id="editiconpop">
+		<%=fields.iconColor.here()%>
+		
+		<dl>
+			<dt>아이콘선택</dt>
+			<dd style="width:230px;">        
+				<%=fields.iconFile.here()%>          
+			</dd>
+			<dd style="width:230px; padding-top:3px;">
+				<span style="color:#F60">* png 파일만 * <a href="http://www.iconfinder.com/" target="_blank"> 아이콘 다운로드 바로가기</a></span> 
+			</dd>
+		</dl>
+		<div></div>
+	</div>
+	<div id="btnline" style="border-top:1px solid #E3E8F2; padding-top:8px;">
+		<ul>			
+			<li id="wBtn"><a href="javascript:<%=methods.close.caller()%>"><span>취소</span></a></li>
+			<li id="wBtn"><a href="javascript:<%=methods.create.caller()%>"><span>등록</span></a></li>			
+		</ul>
+	</div>
+<%		
+		}else{
+%>
+	<%=value.defId%>,
+	<%=value.name%>,	
+	<%=value.iconColor.value%>,
+	<%=value.iconFile.uploadFilePath%>
+<%
+		}
+	}
+%>	
