@@ -71,7 +71,7 @@ in metaworks widget!
 <%
 			}
 %>
-							<%=fields[fd.name] ? fields[fd.name].here() : "XXX"%>
+							<%=value[fd.name] && fields[fd.name] ? fields[fd.name].here() : "Null"%>
 <%
 		}						   
 %>							

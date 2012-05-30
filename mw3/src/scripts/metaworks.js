@@ -182,8 +182,10 @@
 					//return null;
 					//TODO :  error reporting required
 					//this.debug(e, true);
-					if(window.console)
-						console.log("Failed to load face helper ("+faceHelperClass+"(ejs.js)): " + e);
+					if(window.console){
+						console.log("Failed to load face helper ("+faceHelperClass+"(ejs.js)): ");
+						console.log(e);
+					}
 				}
 			}
 
@@ -2252,6 +2254,11 @@
 			
 			
 			Metaworks3.prototype.isHidden = function(fd){
+				
+				if(this.when == "__design"){
+					return !fd.attributes['resource']; 
+				}
+
 				if(fd.attributes){
 					if(fd.attributes['hidden.when']){
 						return (fd.attributes['hidden.when'] == this.when);
@@ -2276,8 +2283,9 @@
 					
 					if(fd.attributes['hidden']) 
 						return true;
-										
+
 				} 
+				
 				
 				return false;
 			}
