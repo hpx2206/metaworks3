@@ -93,24 +93,5 @@ public class Contact extends Database<IContact> implements IContact{
 		return user;
 	}
 	
-	public Popup chat() throws Exception{
-
-
-		//ScriptSession ss = wctx.getScriptSessionById();
-
-//	   Util utilAll = new Util(ss);
-//	   utilAll.addFunctionCall("alert");
-
-		//ss.addScript(script)
-		
-		Popup chatStarter = new Popup();
-		UnstructuredProcessInstanceStarter instanceStarter = new UnstructuredProcessInstanceStarter();
-		instanceStarter.setFriendId(getFriend().getUserId());
-		
-		chatStarter.setPanel(instanceStarter);
-		
-		return chatStarter;
-	}
-	
 }
 
