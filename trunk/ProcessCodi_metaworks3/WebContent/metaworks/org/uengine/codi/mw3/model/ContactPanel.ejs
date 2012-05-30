@@ -1,5 +1,20 @@
 <div class="pane ui-layout-north">
-	<%=fields.searchBox.here({when: 'contact'})%>
+	<div class="boxmiddleright">
+		<div class="boxmiddleleft">
+			<div id="mystatus">
+				<ul>	                	 	
+					<div id="myInfo">
+						<%=fields.user.here({when:'contact'})%>            	 		
+            	 	</div>
+            	 	<div style="clear:both;"></div>
+        	 	</ul> 
+        	</div>
+        	                 	 
+            <div id="contactsearchbox">
+				<%=fields.searchBox.here({when: 'contact'})%>
+			</div>
+		</div>
+	</div>
 </div>
 
 <div class="pane ui-layout-center">
@@ -10,11 +25,11 @@
 
 <div class="pane ui-layout-south">
 	<div id="addcontact">
+		<div id="btnAddLocalContact" style="float:left">
+			<a href="#" onclick="<%=methods.addLocalContact.caller()%>"><img src="images/waveStyle/addLocalContact_f.png" /></a>	   
+		</div>
 		<div id="btnAddContact" style="float:right">
 			<a href="#" onclick="<%=methods.addContact.caller()%>"><img src="images/waveStyle/addContact_f.png" /></a>	   
-		</div>
-		<div id="btnAddLocalContact" style="float:right">
-			<a href="#" onclick="<%=methods.addLocalContact.caller()%>"><img src="images/waveStyle/addContact.png" /></a>	   
 		</div>
 	</div>
 </div>
