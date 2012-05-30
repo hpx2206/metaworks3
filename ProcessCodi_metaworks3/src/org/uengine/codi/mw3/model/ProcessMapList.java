@@ -8,14 +8,13 @@ import org.metaworks.annotation.ServiceMethod;
 public class ProcessMapList {
 
 	public ProcessMapList(){
-		try {
-			IProcessMap processMap = ProcessMap.loadList();
-			processMap.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-			
-			setProcessMapList(processMap);
-		}catch(Exception e){
-			e.printStackTrace();
-		}
+	}
+	
+	public void load() throws Exception {
+		IProcessMap processMap = ProcessMap.loadList();
+		processMap.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+		
+		setProcessMapList(processMap);		
 	}
 	
 	IProcessMap processMapList;
