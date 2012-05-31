@@ -11,6 +11,7 @@ import org.metaworks.dao.Database;
 import org.metaworks.dao.MetaworksDAO;
 
 public class Followers {
+	static final String CONTEXT_WHERE_INFOLLOWERS = "followers";
 
 	String instanceId;
 		@Id
@@ -53,6 +54,8 @@ public class Followers {
 		setFollowers(users_);
 		*/
 		
+		users.setMetaworksContext(new MetaworksContext());
+		users.getMetaworksContext().setWhere(CONTEXT_WHERE_INFOLLOWERS + ":" + getInstanceId());
 		setFollowers(users);
 		
 	}
