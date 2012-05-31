@@ -26,19 +26,19 @@
 	</div>
 	<div id="btnline" style="border-top:1px solid #E3E8F2; padding-top:8px;">
 		<ul>			
-			<li id="wBtn"><a href="javascript:<%=methods.close.caller()%>"><span>취소</span></a></li>
+			<li><a id="wBtn" href="javascript:<%=methods.close.caller()%>"><span>취소</span></a></li>
 			
 <%
 			if(!mw3.isHiddenMethod(methods.create)){
 %>						
-			<li id="wBtn"><a href="javascript:<%=methods.create.caller()%>"><span>등록</span></a></li>			
+			<li><a id="wBtn" href="javascript:<%=methods.create.caller()%>"><span>등록</span></a></li>			
 <%
 			}
 %>						
 <%
 			if(!mw3.isHiddenMethod(methods.save)){
 %>						
-			<li id="wBtn"><a href="javascript:<%=methods.save.caller()%>"><span>저장</span></a></li>			
+			<li><a id="wBtn" href="javascript:<%=methods.save.caller()%>"><span>저장</span></a></li>			
 <%
 			}
 %>						
