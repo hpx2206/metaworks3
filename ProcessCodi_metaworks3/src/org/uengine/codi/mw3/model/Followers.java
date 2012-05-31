@@ -55,7 +55,7 @@ public class Followers {
 		*/
 		
 		users.setMetaworksContext(new MetaworksContext());
-		users.getMetaworksContext().setWhere(CONTEXT_WHERE_INFOLLOWERS + ":" + getInstanceId());
+		users.getMetaworksContext().setWhen(CONTEXT_WHERE_INFOLLOWERS + ":" + getInstanceId());
 		setFollowers(users);
 		
 	}

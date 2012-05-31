@@ -134,14 +134,16 @@ public class User extends Database<IUser> implements IUser {
 				String initEp = instanceObj.databaseMe().getInitEp();
 				if(!session.getUser().getUserId().trim().equals(initEp.trim())) {
 					System.out.println("팔로워를 삭제할 권한이 없습니다. : (current logged userId :" + session.getUser().getUserId() +", initEp : " + initEp +")");
-					Popup popup = new Popup("팔로워를 삭제할 권한이 없습니다.");
-					return new Object[] {popup};
+//					Popup popup = new Popup("팔로워를 삭제할 권한이 없습니다.");
+//					return new Object[] {popup};
+					throw new Exception("팔로워를 삭제할 권한이 없습니다.");
 				}
 			}
 		} else {
-			Popup popup = new Popup("프로세스 참여자는 삭제할 수 없습니다.");
-			System.out.println("프로세스 참여자는 삭제할 수 없습니다.");
-			return new Object[] {popup};
+//			Popup popup = new Popup("프로세스 참여자는 삭제할 수 없습니다.");
+//			System.out.println("프로세스 참여자는 삭제할 수 없습니다.");
+//			return new Object[] {popup};
+			throw new Exception("프로세스 참여자는 삭제할 수 없습니다.");
 		}
 		
 		Followers followers = new Followers();
@@ -160,9 +162,10 @@ public class User extends Database<IUser> implements IUser {
 			System.out.println("delete follower done.");
 			return new Object[] {followers};
 		} else {
-			Popup popup = new Popup("프로세스 참여자는 삭제할 수 없습니다.");
-			System.out.println("프로세스 참여자는 삭제할 수 없습니다.");
-			return new Object[] {popup};
+//			Popup popup = new Popup("프로세스 참여자는 삭제할 수 없습니다.");
+//			System.out.println("프로세스 참여자는 삭제할 수 없습니다.");
+//			return new Object[] {popup};
+			throw new Exception("프로세스 참여자는 삭제할 수 없습니다.");
 		}
 		
 	}
