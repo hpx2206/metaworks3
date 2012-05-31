@@ -486,10 +486,10 @@ img {border:0;}
 #btnline{margin:8px;}
 #btnline li{float:right; height:23px; line-height:23px;}
 
-#wBtn a{display:block; background:url('../../images/waveStyle/Btn_bg.gif') left 0; float:left; font-size:11px; font-weight:bolder; color:#000; padding-left:6px; text-decoration:none; height:23px; cursor:pointer; margin-right:3px; overflow:hidden}
-#wBtn a:hover{background:url('../../images/waveStyle/Btn_bg.gif') left -23px}
-#wBtn a span{display:block; float:left; background:url('../../images/waveStyle/Btn_bg.gif') right 0; line-height:210%; padding-right:6px; height:23px; overflow:hidden; font:bold;}
-#wBtn a:hover span{background:url('../../images/waveStyle/Btn_bg.gif') right -23px; color:#000}
+#wBtn {display:block; background:url('../../images/waveStyle/Btn_bg.gif') left 0; float:left; font-size:11px; font-weight:bolder; color:#000; padding-left:6px; text-decoration:none; height:23px; cursor:pointer; margin-right:3px; overflow:hidden}
+#wBtn:hover{background:url('../../images/waveStyle/Btn_bg.gif') left -23px}
+#wBtn  span{display:block; float:left; background:url('../../images/waveStyle/Btn_bg.gif') right 0; line-height:210%; padding-right:6px; height:23px; overflow:hidden; font:bold;}
+#wBtn:hover span{background:url('../../images/waveStyle/Btn_bg.gif') right -23px; color:#000}
 
 #btnline2{margin:2px;}
 #btnline2 li{float:left; height:18px; line-height:18px;}
