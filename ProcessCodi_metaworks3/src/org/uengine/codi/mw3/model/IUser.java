@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.NonLoadable;
 import org.metaworks.annotation.NonSavable;
@@ -17,6 +18,11 @@ public interface IUser extends IDAO{
 	public String getName();
 	public void setName(String name);
 	
+//	@NonLoadable
+//	@NonSavable
+//	public String getInstanceId() ;
+//	public void setInstanceId(String instanceId);
+	
 	@ServiceMethod(when="addContact", callByContent=true)
 	public ContactList addContact() throws Exception;
 	
@@ -31,4 +37,7 @@ public interface IUser extends IDAO{
 	
 	@ServiceMethod
 	public UnstructuredProcessInstanceStarter chat() throws Exception;
+
+	@ServiceMethod(inContextMenu=true)
+	public Followers removeFollower() throws Exception;
 }
