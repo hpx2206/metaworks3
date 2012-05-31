@@ -3,7 +3,8 @@ package org.uengine.codi.mw3.model;
 import org.metaworks.dao.Database;
 
 public class RoleMapping extends Database<IRoleMapping> implements IRoleMapping {
-
+	public static final String ROLEMAPPING_FOLLOWER_ROLENAME = "follower";
+	
 	Long roleMappingId;
 	Long rootInstId;
 	String roleName;
@@ -13,9 +14,9 @@ public class RoleMapping extends Database<IRoleMapping> implements IRoleMapping 
 		super();
 	}
 
-	public RoleMapping(Long roleMappingId, String roleName, String endpoint) {
+	public RoleMapping(Long rootInstId, String roleName, String endpoint) {
 		super();
-		this.roleMappingId = roleMappingId;
+		this.rootInstId = rootInstId;
 		this.roleName = roleName;
 		this.endpoint = endpoint;
 	}
@@ -60,14 +61,13 @@ public class RoleMapping extends Database<IRoleMapping> implements IRoleMapping 
 		this.endpoint = endpoint;
 	}
 	
-	public void deleteByInfo() throws Exception {
+	public boolean deleteByInfo() throws Exception {
 		RoleMapping roleMapping = new RoleMapping();
 		StringBuffer querry = new StringBuffer();
 		querry.append("select * from bpm_rolemapping ");
 		querry.append("where rootinstid=?rootInstId ");
 		querry.append("and rolename=?roleName ");
 		querry.append("and endpoint=?endpoint ");
-		
 		IRoleMapping findRoleMapping = (IRoleMapping)sql(querry.toString());
 		findRoleMapping.setRootInstId(getRootInstId());
 		findRoleMapping.setRoleName(getRoleName());
@@ -76,6 +76,9 @@ public class RoleMapping extends Database<IRoleMapping> implements IRoleMapping 
 		if(findRoleMapping.next()) {
 			roleMapping.setRoleMappingId(findRoleMapping.getRoleMappingId());
 			roleMapping.deleteDatabaseMe();
+			return true;
+		} else {
+			return false;
 		}
 	}
 
