@@ -47,10 +47,16 @@
 <%		
 		}else{
 %>
-	<%=value.defId%>,
-	<%=value.name%>,	
-	<%=value.iconColor.value%>,
-	<%=value.iconFile.uploadFilePath%>
+
+
+   <div class="editicon"></div>
+    <a href="#"><img alt="" src="images/processMap/iconDefault.png" width="40" height="40"></a>
+    <a href="#"><%=value.name%></a>
+
+
+
+	
+	<!--<%=value.defId%>,<%=value.iconFile.uploadFilePath%>-->
 <%
 		}
 	}

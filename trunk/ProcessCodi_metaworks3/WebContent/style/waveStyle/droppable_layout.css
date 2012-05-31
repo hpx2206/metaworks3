@@ -236,7 +236,10 @@ img {border:0;}
 	height:100%;
 	/* overflow:auto; */
 }
+*+html .contentcontainer{
+	overflow:hidden;
 
+}
 .topcontentcontainer {
 	background:#fff;
 	margin:0 7px 0 3px;

@@ -9,10 +9,23 @@
 <%
 		}else{
 %>
-	<dl>
-		<dt>Share Something...</dt>
-		<dd><%=fields.title.here()%><dd>
-	</dl>
+<div class="view_box2" id="hiddenReply">
+	<div class="guide">
+		<span class="tl"></span>
+		<span class="tr"></span>
+	</div>
+	<div class="cont">
+		<p class="title" style="font-size:14px; font-weight:bolder;  position:absolute; top:-20px; left:15px; background:#fff; padding:0 10px;">Share Something</p>
+		<textarea id="1rowreply" rows="2" cols=""></textarea>
+
+	</div>
+	<div class="guide">
+		<span class="lb"></span>
+		<span class="rb"></span>
+	</div>
+</div>
+<div id="wihOrContent" style="width: 100%; text-align: center; font-size: 30px; font-weight: bold; ">or</div>
+
 <%		
 		}
 	}

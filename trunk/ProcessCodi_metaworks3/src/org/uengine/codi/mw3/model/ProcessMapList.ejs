@@ -2,7 +2,16 @@
 	if(value){
 		if(value.processMapList){
 %>
-			<ul>		
+<div class="view_box" id="hiddenReply" style="display: block; ">
+	<div class="guide">
+		<span class="tl"></span>
+		<span class="tr"></span>
+	</div>
+	<div class="cont">
+		<p class="title" style="font-size:14px; font-weight:bolder;  position:absolute; top:-20px; left:15px; background:#fff; padding:0 10px;">Process List</p>
+	
+		<ul class="process_map2">		
+						
 <%
 			for (var i=0; i<value.processMapList.length; i++){
 				if(typeof options == 'undefined') 
@@ -16,7 +25,12 @@
 				mw3.addBeanProperty(value.__objectId, '.processMapList[' + i + ']');
 			}
 %>
-			</ul>
+		</ul>
+	</div>
+	<div class="guide">
+		<span class="lb"></span>
+		<span class="rb"></span>
+	</div>
 
 <%
 		}
