@@ -98,7 +98,7 @@ public class User extends Database<IUser> implements IUser {
 	
 	@Override
 	public Popup detail() throws Exception {
-		Popup popup = new Popup();
+		Popup popup = new Popup(400,203);
 		
 		this.getMetaworksContext().setWhen("info");
 		
