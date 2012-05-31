@@ -12,7 +12,11 @@ public class NewInstancePanel extends ContentWindow{
 	}
 	
 	public void load() throws Exception{
-		
+		load(false);
+
+	}
+	
+	public void load(boolean isAdmim) throws Exception{
 		unstructuredProcessInstanceStarter = new UnstructuredProcessInstanceStarter();
 		
 		processMapPanel = new ProcessMapPanel();
@@ -26,16 +30,27 @@ public class NewInstancePanel extends ContentWindow{
 //		processDefinitions.getMetaworksContext().setWhen("newInstance");
 
 		
-		processDefinitions = new ResourceFile();
-		
-		processDefinitions.setMetaworksContext(new MetaworksContext());	
-		processDefinitions.getMetaworksContext().setWhen("newInstance");
+		if(isAdmim){
+			processDefinitions = new ResourceFile();
+			
+			processDefinitions.setMetaworksContext(new MetaworksContext());	
+			processDefinitions.getMetaworksContext().setWhen("newInstance");
+	
+			processDefinitions.setFolder(true);
+			processDefinitions.setAlias("");
+			processDefinitions.setName("/");
+			processDefinitions.drillDown();
+		}		
+	}
+	
+	UnstructuredProcessInstanceStarter unstructuredProcessInstanceStarter;		
+	public UnstructuredProcessInstanceStarter getUnstructuredProcessInstanceStarter() {
+		return unstructuredProcessInstanceStarter;
+	}
 
-		processDefinitions.setFolder(true);
-		processDefinitions.setAlias("");
-		processDefinitions.setName("/");
-		processDefinitions.drillDown();
-				
+	public void setUnstructuredProcessInstanceStarter(
+			UnstructuredProcessInstanceStarter unstructuredProcessInstanceStarter) {
+		this.unstructuredProcessInstanceStarter = unstructuredProcessInstanceStarter;
 	}
 	
 	ProcessMapPanel processMapPanel;
@@ -44,17 +59,6 @@ public class NewInstancePanel extends ContentWindow{
 		}
 		public void setProcessMapPanel(ProcessMapPanel processMapPanel) {
 			this.processMapPanel = processMapPanel;
-		}
-
-	UnstructuredProcessInstanceStarter unstructuredProcessInstanceStarter;
-		
-		public UnstructuredProcessInstanceStarter getUnstructuredProcessInstanceStarter() {
-			return unstructuredProcessInstanceStarter;
-		}
-	
-		public void setUnstructuredProcessInstanceStarter(
-				UnstructuredProcessInstanceStarter unstructuredProcessInstanceStarter) {
-			this.unstructuredProcessInstanceStarter = unstructuredProcessInstanceStarter;
 		}
 
 	ResourceFile processDefinitions;

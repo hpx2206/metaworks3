@@ -1,10 +1,19 @@
 <%
 	if(value){
+		if(mw3.how == 'chat'){
 %>
 	채팅 제목 : <%=fields.title.here()%><br />
 	채팅 상대 : <%=fields.friend.here({when : 'normal'})%><br />
 	
 	<%=methods.start.here()%>
 <%
+		}else{
+%>
+	<dl>
+		<dt>Share Something...</dt>
+		<dd><%=fields.title.here()%><dd>
+	</dl>
+<%		
+		}
 	}
 %>

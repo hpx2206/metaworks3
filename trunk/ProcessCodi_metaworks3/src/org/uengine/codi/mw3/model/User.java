@@ -96,7 +96,7 @@ public class User extends Database<IUser> implements IUser {
 	@Override
 	public UnstructuredProcessInstanceStarter chat() throws Exception{		
 		UnstructuredProcessInstanceStarter instanceStarter = new UnstructuredProcessInstanceStarter();
-		
+		instanceStarter.getMetaworksContext().setHow("chat");
 		instanceStarter.setFriend(this);
 		
 		return instanceStarter;
