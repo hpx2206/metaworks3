@@ -4,13 +4,36 @@ var org_uengine_codi_mw3_model_IProcessMap = function(objectId, className){
 	this.divId = '#objDiv_' + this.objectId;
 	
 	var object = mw3.objects[this.objectId];
-	$(this.divId).addClass(object.iconColor.value);
+	$(this.divId).addClass(object.iconColor.value).attr('objectId', this.objectId);
 	
 	$( ".process_map2" ).sortable({
 		connectWith: "ul",
-	   cancel: ".sptitle",
-	   stop:function(){
-		   alert("stop");
+		cancel: ".sptitle",
+		stop:function(){
+			var changed = false;
+			var children = $(this).children('li');
+			
+			for(var i=0; i<children.length; i++){
+				var child = children[i];				
+				var objectId = $(child).attr('objectId');
+				
+				var object = mw3.objects[objectId];
+				
+				if(object.no != i){
+					object.no = i;
+					
+					changed = true;
+				}
+				
+				console.debug(object.defId + ' : ' + object.no);
+			}
+			
+			if(changed){
+				var objectId = $(this).closest('.processMapList').attr('objectId');
+				
+				mw3.call(objectId, 'save');
+			}
+		   
 	   }
 	});
 	

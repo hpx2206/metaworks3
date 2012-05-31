@@ -1,17 +1,12 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.MetaworksContext;
-import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 
-@Face(ejsPath="genericfaces/Window.ejs",
-	  displayName="New InstancePanel",
-	  options={"hideLabels", "maximize"},
-	  values={"true", "true"})
-public class NewInstancePanel extends ContentWindow{
-	
-	public NewInstancePanel() throws Exception{
 
+public class NewInstancePanel {
+	
+	public NewInstancePanel(){
 	}
 	
 	public void load() throws Exception{

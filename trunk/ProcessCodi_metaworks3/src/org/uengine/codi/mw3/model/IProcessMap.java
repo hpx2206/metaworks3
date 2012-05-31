@@ -19,6 +19,9 @@ public interface IProcessMap extends IDAO {
 	public String getName();
 	public void setName(String name);
 
+	public int getNo();
+	public void setNo(int no);
+	
 	@ORMapping(databaseFields={"iconPath"}, objectFields={"uploadedPath"})
 	public MetaworksFile getIconFile();
 	public void setIconFile(MetaworksFile iconFile);
@@ -30,7 +33,7 @@ public interface IProcessMap extends IDAO {
 	@ServiceMethod(callByContent=true, when=WHEN_NEW)
 	public Object[] create() throws Exception;
 
-	@ServiceMethod(callByContent=true, when=WHEN_VIEW, inContextMenu=true, target=TARGET_POPUP)
+	@ServiceMethod(callByContent=true, when=WHEN_VIEW, target=TARGET_POPUP)
 	public Popup modify() throws Exception;
 
 	@ServiceMethod(callByContent=true, when=WHEN_EDIT)
@@ -39,6 +42,8 @@ public interface IProcessMap extends IDAO {
 	@Available(when={WHEN_NEW})
 	@ServiceMethod
 	public Remover close() throws Exception;
+	
+	public void saveMe() throws Exception;
 	
 	public boolean confirmExist();
 }
