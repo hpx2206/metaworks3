@@ -4,8 +4,6 @@ import java.util.ArrayList;
 
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
-import org.metaworks.annotation.Hidden;
-import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.dao.UniqueKeyGenerator;
@@ -14,6 +12,7 @@ import org.uengine.codi.mw3.model.ContentWindow;
 import org.uengine.codi.mw3.model.Instance;
 import org.uengine.codi.mw3.model.InstanceViewContent;
 import org.uengine.codi.mw3.model.NewInstancePanel;
+import org.uengine.codi.mw3.model.NewInstanceWindow;
 import org.uengine.codi.mw3.model.ProcessDefinition;
 
 public class WfNode extends Database<IWfNode> implements IWfNode {
@@ -495,7 +494,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		newInstancePanel.setKnowledgeNodeId(this.getId());
 		newInstancePanel.load();
 		
-		return newInstancePanel;
+		return new NewInstanceWindow(newInstancePanel);
 	}
 	
 	public ContentWindow newDocument() throws Exception{

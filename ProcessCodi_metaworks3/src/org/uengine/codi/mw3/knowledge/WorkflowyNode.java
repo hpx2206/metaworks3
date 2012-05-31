@@ -5,7 +5,6 @@ import java.util.ArrayList;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
-import org.metaworks.Remover;
 import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
@@ -16,6 +15,7 @@ import org.uengine.codi.mw3.model.ContentWindow;
 import org.uengine.codi.mw3.model.Instance;
 import org.uengine.codi.mw3.model.InstanceViewContent;
 import org.uengine.codi.mw3.model.NewInstancePanel;
+import org.uengine.codi.mw3.model.NewInstanceWindow;
 import org.uengine.codi.mw3.model.ProcessDefinition;
 
 import com.mongodb.BasicDBObject;
@@ -60,9 +60,7 @@ public class WorkflowyNode implements ContextAware {
 			this.name = name;
 		}
 		
-		
-	String linkedInstId;
-	
+	String linkedInstId;	
 		public String getLinkedInstId() {
 			return linkedInstId;
 		}
@@ -214,7 +212,7 @@ public class WorkflowyNode implements ContextAware {
 	@ServiceMethod(callByContent=true)
 	@Hidden
 	public WorkflowyNode remove() throws Exception {
-				
+		
 		// 부모로 부터 현재 노드의 위치를 구한다.
 		int nodeIndex = getNodeIndex();
 		
@@ -644,7 +642,7 @@ public class WorkflowyNode implements ContextAware {
 		newInstancePanel.setKnowledgeNodeId(id);
 		newInstancePanel.load();
 		
-		return newInstancePanel;
+		return new NewInstanceWindow(newInstancePanel);
 	}
 	
 	@ServiceMethod(inContextMenu=true, keyBinding="Ctrl+D")
