@@ -1,16 +1,15 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.annotation.Face;
-import org.metaworks.annotation.Resource;
 
 @Face(ejsPath="genericfaces/Window.ejs", 
-      displayName="$windowTitle", 
-      options={"hideLabels", "layout"}, 
-      values={"true", "north"})
+      displayName="네비게이션", 
+      options={"hideLabels", "minimize"}, 
+      values={"true", "true"})
 public class NavigationWindow {
 	
 	public NavigationWindow(){
-		navigation = new Navigation();
+		setNavigation(new Navigation());
 	}
 	
 	Navigation navigation;
@@ -20,14 +19,4 @@ public class NavigationWindow {
 		public void setNavigation(Navigation navigation) {
 			this.navigation = navigation;
 		}
-		
-	String windowTitle;
-	@Resource(def="네비게이션")
-		public String getWindowTitle() {
-			return windowTitle;
-		}
-		public void setWindowTitle(String windowTitle) {
-			this.windowTitle = windowTitle;
-		}
-
 }
