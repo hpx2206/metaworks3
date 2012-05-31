@@ -1,6 +1,5 @@
 package org.uengine.codi.mw3.model;
 
-import java.util.ArrayList;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.example.ide.CodeAssist;
@@ -9,8 +8,9 @@ public class FaceSourceCode extends JavaSourceCode{
 
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_STICK)
 	public CodeAssist requestAssist() {
+		return super.requestAssist();
 		
-
+		/*
 		if(getLineAssistRequested().endsWith("fields")){
 			return super.requestAssist();
 		}else{
@@ -29,6 +29,7 @@ public class FaceSourceCode extends JavaSourceCode{
 			
 			return assist;
 		}
+		*/
 	}
 	
 	
