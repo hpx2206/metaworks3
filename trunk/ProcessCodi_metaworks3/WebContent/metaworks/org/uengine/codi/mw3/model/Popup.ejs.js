@@ -26,7 +26,7 @@ org_uengine_codi_mw3_model_Popup.prototype = {
 		var divId = '#objDiv_' + this.objectId;
 		
 		$(divId).parent().show();
-		$(divId).parent().css({top:y,left:x,width:popLayerWidth,height:popLayerHeight});
+		$(divId).parent().css({top:y-28,left:x,width:popLayerWidth,height:popLayerHeight});
 		$(divId).parent().removeClass('clue-left-rounded');
 		$(divId).parent().addClass('clue-right-rounded');
 		$(divId + ' #addcontact-con').height(h-43);
@@ -39,7 +39,7 @@ org_uengine_codi_mw3_model_Popup.prototype = {
 		};
 		
 		if(bodyHeight && popLayerHeight + y > bodyHeight){    	
-		 	$(divId).parent().css({top:y - popLayerHeight});
+		 	$(divId).parent().css({top:y+28 - popLayerHeight});
 		 	$(divId + ' .cluetip-arrows').css({top:popLayerHeight-40});
 		};
 
