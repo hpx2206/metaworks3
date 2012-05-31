@@ -26,7 +26,7 @@
 				<input type="text" id="post_<%=objectId%>" value=""  onkeydown="mw3.getFaceHelper('<%=objectId%>').press()"  rows="1" style="width:99%; -webkit-border-radius:3px; outline:none;  webkit-border-radius:3px; border:1px solid #ccd; none;">
 			</td>			
 			
-			<td width=50 align="center"><a class="gBtn" href="javascript:<%=methods.add.caller()%>"><span>게시</span></a></td>
+			<td width=50 align="center"><a id="wBtn" href="javascript:<%=methods.add.caller()%>"><span>게시</span></a></td>
 		</tr> 
 		
 		
@@ -54,8 +54,8 @@
 		</tr>				
 		<tr>
 			<td height="30" colspan="2" style="padding-left:15px;">
-				<a class="gBtn" href="javascript:<%=methods.compile.caller()%>"><span>컴파일</span></a>
-				<a class="gBtn" href="javascript:<%=methods.add.caller()%>"><span>게시</span></a>
+				<a id="wBtn" href="javascript:<%=methods.compile.caller()%>"><span>컴파일</span></a>
+				<a id="wBtn" href="javascript:<%=methods.add.caller()%>"><span>게시</span></a>
 			</td>
 		</tr>
 <%		
@@ -76,7 +76,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td height="30" colspan="2" style="padding-left:15px;"><a class="gBtn" href="javascript:<%=methods.add.caller()%>"><span>게시</span></a></td>
+			<td height="30" colspan="2" style="padding-left:15px;"><a id="wBtn" href="javascript:<%=methods.add.caller()%>"><span>게시</span></a></td>
 		</tr> 			
 <%		
 		}
