@@ -128,7 +128,7 @@ public class User extends Database<IUser> implements IUser {
 		if(whereText.startsWith(Followers.CONTEXT_WHERE_INFOLLOWERS)){
 			instId = whereText.substring(whereText.indexOf(":")+1);
 			
-			if(session.getUser().getUserId().trim().equals(getUserId().trim())) {
+			if(!session.getUser().getUserId().trim().equals(getUserId().trim())) {
 				Instance instanceObj = new Instance();
 				instanceObj.setInstId(new Long(instId));
 				String initEp = instanceObj.databaseMe().getInitEp();
