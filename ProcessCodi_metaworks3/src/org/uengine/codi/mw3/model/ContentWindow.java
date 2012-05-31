@@ -1,25 +1,16 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.annotation.Face;
+import org.metaworks.widget.Window;
 
 @Face(ejsPath="genericfaces/Window.ejs", 
-	  options={"hideLabels", "hideCloseBtn", "hideNewBtn"}, 
-	  values={"true", "true", "true"})
-
-public class ContentWindow  {
+	  options={"hideLabels", "maximize"}, 
+	  values={"true", "true"})
+public class ContentWindow extends Window {
 	public ContentWindow(){
+		super();
 	}
-	
 	public ContentWindow(Object panel){
-		setPanel(panel);
-	}
-
-	public Object panel;
-		public Object getPanel() {
-			return panel;
-		}	
-		public void setPanel(Object panel) {
-			this.panel = panel;
-		}
-	
+		super(panel);
+	}	
 }

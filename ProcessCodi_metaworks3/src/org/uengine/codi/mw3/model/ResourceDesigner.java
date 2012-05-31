@@ -1,10 +1,14 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 
-public abstract class ResourceDesigner extends ContentWindow{
+@Face(ejsPath="genericfaces/Window.ejs", 
+	  options={"hideLabels", "maximize"}, 
+	  values={"true", "true"})
+public abstract class ResourceDesigner extends ContentWindow {
 	
 	String alias;
 		@Id

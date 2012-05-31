@@ -1,13 +1,14 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.annotation.Face;
+import org.metaworks.widget.Window;
 
-@Face(ejsPath="genericfaces/Window.ejs", displayName="개인중심 - 내가 할 일", 
-      options={"hideLabels", "hideHeader", "layout"}, 
-      values={"true", "true", "west"})
+@Face(ejsPath="genericfaces/Window.ejs", 
+	  displayName="개인중심 - 내가 할 일", 
+      options={"hideLabels", "minimize"}, 
+      values={"true", "true"})
 
-public class InstanceListWindow {
-	public InstanceListWindow(){}
+public class InstanceListWindow extends Window {
 	public InstanceListWindow(Session session) throws Exception {
 		this.instanceListPanel = new InstanceListPanel(session);
 	}
