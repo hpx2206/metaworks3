@@ -108,12 +108,10 @@ legend {display:none;}
 #editiconpop dl dt {background:#FFF; padding:3px; font-weight:bold; font-size:12px; margin-top:15px;}
 #editiconpop dl dd{ font-family:'돋움',Dotum;font-size:12px;text-align:center;list-style:none;  display:inline;float:left;width:66px;margin:20px 20px 0 0;padding:0px;}
 
-.process_map2{overflow:hidden;padding:0 0 40px 20px;border:1px solid #c2c2c2; width:95%; margin:0 auto; margin-bottom:30px;	border-radius: 9px;
-	-moz-border-radius: 9px;
-	-webkit-border-radius: 9px;}
+.process_map2{overflow:hidden;padding:0 0 40px 20px; }
 .process_map2 li{display:inline;float:left;width:66px; max-height:90px; margin:25px 25px 0 0;padding:0px;font-family:'돋움',Dotum;font-size:12px;text-align:center;list-style:none; background:url(../../images/processMap/newPrcessBgDefault.png) no-repeat; position:relative;}
 .process_map2 li .editicon{position:absolute; right:2px; top:2px; width:16px; height:16px; cursor:pointer; background:url(../../images/processMap/wheel.png) no-repeat; display:none;}
-.process_map2 .sptitle{ position:absolute; left:35px; margin-top:-12px; background:#FFF; padding:5px; font-size:14px; font-weight:bold; color:#5DA0E8;}
+.process_map2 .sptitle{ position:absolute; left:35px; margin-top:-12px; background:#FFF; padding:5px; font-size:14px; font-weight:bold; color:#5DA0E8; width:auto;}
 .process_map2 .blue {background:url(../../images/processMap/newPrcessBgBlue.png) no-repeat;}
 .process_map2 .red {background:url(../../images/processMap/newPrcessBgRed.png) no-repeat;}
 .process_map2 .gray {background:url(../../images/processMap/newPrcessBgGray.png) no-repeat;}
