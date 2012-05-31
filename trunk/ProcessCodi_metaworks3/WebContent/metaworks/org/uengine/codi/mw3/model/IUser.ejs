@@ -59,7 +59,9 @@
 				<%=value.name%>
 			</div>
 <%		
-			}else if(mw3.where.indexOf("followers") == 0) {
+			}
+			//alert(mw3.where);
+			if(mw3.when.indexOf("followers") == 0) {
 %>
 			<%=methods.removeFollower.here() %>
 <%
