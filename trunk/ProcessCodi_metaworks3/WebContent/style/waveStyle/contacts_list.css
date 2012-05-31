@@ -17,7 +17,7 @@
 /* UI Object */
 .lst_type{width:580px;padding:10px;border:1px solid #c2c2c2;list-style:none}
 .lst_type li{clear:both;_height:0;margin-bottom:10px;_font-size:0}
-.lst_type2{overflow:hidden;background-color:#fff;}
+.lst_type2{overflow:hidden;background-color:#fff; padding:0 8px;}
 .lst_type2 dt{padding:5px 0;font-size:16px; font-weight:bolder;}
 .lst_type2 dt.tit{margin-left:112px; margin-bottom:10px;}
 .lst_type2 dd.photo{display:inline;float:left;margin:-30px 10px 0 0;color:#fff;text-align:center}
