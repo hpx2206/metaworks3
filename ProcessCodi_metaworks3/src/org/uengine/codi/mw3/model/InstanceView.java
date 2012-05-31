@@ -247,11 +247,13 @@ public class InstanceView {
 		}
 
 	@ServiceMethod
-	public void schedule() throws Exception{
+	public ScheduleEditor schedule() throws Exception{
 		scheduleEditor = new ScheduleEditor();
 		scheduleEditor.setInstanceId(instanceId);
+		scheduleEditor.load(processManager);
+		//loadDefault();
 		
-		loadDefault();
+		return scheduleEditor;
 	}
 	
 	@ServiceMethod 
