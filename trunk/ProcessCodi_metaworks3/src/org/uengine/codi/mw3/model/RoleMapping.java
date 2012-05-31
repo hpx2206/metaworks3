@@ -3,7 +3,7 @@ package org.uengine.codi.mw3.model;
 import org.metaworks.dao.Database;
 
 public class RoleMapping extends Database<IRoleMapping> implements IRoleMapping {
-	public static final String ROLEMAPPING_FOLLOWER_ROLENAME = "follower";
+	public static final String ROLEMAPPING_FOLLOWER_ROLENAME_FREFIX = "follower_";
 	
 	Long roleMappingId;
 	Long rootInstId;
@@ -61,14 +61,18 @@ public class RoleMapping extends Database<IRoleMapping> implements IRoleMapping 
 		this.endpoint = endpoint;
 	}
 	
-	public boolean deleteByInfo() throws Exception {
+	public boolean deleteByInfo(Session session) throws Exception {
 		RoleMapping roleMapping = new RoleMapping();
 		StringBuffer querry = new StringBuffer();
 		querry.append("select * from bpm_rolemapping ");
 		querry.append("where rootinstid=?rootInstId ");
 		querry.append("and rolename=?roleName ");
 		querry.append("and endpoint=?endpoint ");
+		
+//		System.out.println(getRootInstId() + "," + getRoleName() + "," + getEndpoint());
+		
 		IRoleMapping findRoleMapping = (IRoleMapping)sql(querry.toString());
+		
 		findRoleMapping.setRootInstId(getRootInstId());
 		findRoleMapping.setRoleName(getRoleName());
 		findRoleMapping.setEndpoint(getEndpoint());

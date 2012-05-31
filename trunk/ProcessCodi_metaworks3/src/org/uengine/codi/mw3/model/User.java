@@ -84,8 +84,8 @@ public class User extends Database<IUser> implements IUser {
 		return popup;
 	}
 	
-	String  instanceId;
-	
+//	String  instanceId;
+//	
 //	@Override
 //	public String getInstanceId() {
 //		return instanceId;
@@ -120,26 +120,51 @@ public class User extends Database<IUser> implements IUser {
 //	@Autowired
 //	ProcessManagerRemote processManager;
 	
-	@ServiceMethod(inContextMenu=true)
-	public Followers removeFollower() throws Exception {
+	public Object[] removeFollower() throws Exception {
 		String whereText = getMetaworksContext().getWhere();
+		boolean isDeleted = false;
+		String instId = "";
 		
-		Followers followers = new Followers();
 		if(whereText.startsWith(Followers.CONTEXT_WHERE_INFOLLOWERS)){
-			String instId = whereText.substring(whereText.indexOf(":")+1);
+			instId = whereText.substring(whereText.indexOf(":")+1);
 			
-			//TODO delete rolemapping
-//			processManager.removeRoleMapping(instId, "follower_" + getName(), getUserId());
-//			processManager.applyChanges();
-			
-			RoleMapping roleMapping = new RoleMapping(new Long(instId), "follower_" + getName(), getUserId());
-			roleMapping.deleteByInfo();
-			
-			followers.setInstanceId(instId);
-			followers.load();
+			if(session.getUser().getUserId().trim().equals(getUserId().trim())) {
+				Instance instanceObj = new Instance();
+				instanceObj.setInstId(new Long(instId));
+				String initEp = instanceObj.databaseMe().getInitEp();
+				if(!session.getUser().getUserId().trim().equals(initEp.trim())) {
+					System.out.println("팔로워를 삭제할 권한이 없습니다. : (current logged userId :" + session.getUser().getUserId() +", initEp : " + initEp +")");
+					Popup popup = new Popup("팔로워를 삭제할 권한이 없습니다.");
+					return new Object[] {popup};
+				}
+			}
+		} else {
+			Popup popup = new Popup("프로세스 참여자는 삭제할 수 없습니다.");
+			System.out.println("프로세스 참여자는 삭제할 수 없습니다.");
+			return new Object[] {popup};
 		}
 		
-		return followers;
+		Followers followers = new Followers();
+			
+		//TODO delete rolemapping
+//		processManager.removeRoleMapping(instId, "follower_" + getName(), getUserId());
+//		processManager.applyChanges();
+
+		RoleMapping roleMapping = new RoleMapping(new Long(instId), RoleMapping.ROLEMAPPING_FOLLOWER_ROLENAME_FREFIX + getName(), getUserId());
+		isDeleted = roleMapping.deleteByInfo(session);
+			
+		followers.setInstanceId(instId);
+		followers.load();
+		
+		if(isDeleted) {
+			System.out.println("delete follower done.");
+			return new Object[] {followers};
+		} else {
+			Popup popup = new Popup("프로세스 참여자는 삭제할 수 없습니다.");
+			System.out.println("프로세스 참여자는 삭제할 수 없습니다.");
+			return new Object[] {popup};
+		}
+		
 	}
 	
 }

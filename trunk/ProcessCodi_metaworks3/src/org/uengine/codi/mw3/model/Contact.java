@@ -56,7 +56,8 @@ public class Contact extends Database<IContact> implements IContact{
 	public AddFollowerPanel addFollowerPanel;
 
 	public Followers addFollower() throws Exception {
-		processManager.putRoleMapping(addFollowerPanel.getInstanceId(), "follower_" + getFriend().getName(), getFriend().getUserId());
+//		processManager.putRoleMapping(addFollowerPanel.getInstanceId(), RoleMapping.ROLEMAPPING_FOLLOWER_ROLENAME_FREFIX + getFriend().getName(), getFriend().getUserId());
+		processManager.putRoleMapping(addFollowerPanel.getInstanceId(), RoleMapping.ROLEMAPPING_FOLLOWER_ROLENAME_FREFIX + "Sungyeol Jung", "JSY");
 		processManager.applyChanges();
 		
 		Followers followers = new Followers();
