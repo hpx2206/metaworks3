@@ -3,7 +3,8 @@
 #tabs-2 { padding:0px;}
 
 #tabs-1 ul{padding:0px;}
-#tabs-1 ul li{padding:3px; padding-bottom:0px; }
+#tabs-1 ul li{padding:3px;}
+#tabs-1 ul li:hover{background:#EBEBEB}
 .contactlistpic{float:left; width:30px; margin-right:8px; position:relative;}
 .contactlistpic .my_status {position: absolute; bottom:0px; right:0px; width: 14px; height: 14px;}
 .contactlistinterest{float:left;  margin-right:3px; margin-top:4px; }

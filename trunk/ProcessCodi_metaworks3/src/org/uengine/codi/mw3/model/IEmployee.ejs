@@ -72,7 +72,7 @@ if(value){
 	} else if(mw3.where == 'navigator'){
 	%>
 	
-	<a onClick="<%=methods.loadOrganization.caller() %>" style="height:23px; line-height:23px; display:block; background:url(images/waveStyle/i_user.png) no-repeat; padding-left:20px;overflow:hidden; white-space:nowrap;"><%=value.empName %> (<%=value.jikName %>)</a>
+	<a onClick="<%=methods.loadOrganization.caller() %>"class="iemployee"><%=value.empName %> (<%=value.jikName %>)</a>
 	
 	<%
 	} else if(mw3.where == 'modifyEmployeeInfo') {
@@ -115,23 +115,18 @@ if(value){
 		<%
 		}
 	%>
-	<form class="jqtransform">	
-		<div class="rowElem">
-			<div class="positionRight">
-			<span onclick="<%=methods.openPicker.caller() %>">
-			<input value="openPicker" type="button"></span>
-			</div>
-		</div>
-	</form>	
+	
+	<a id="wBtn" href="javascript:<%=methods.openPicker.caller() %>"><span>openPicker</span></a>
+
 	<%
 	} else if(mw3.where == 'picker') {
 	%>
-	<a onClick="<%=methods.pickup.caller() %>" ><%=fields.empName.here() %>(<%=value.empCode %>)</a>
+	<a onClick="<%=methods.pickup.caller() %>" class="iemployee"><%=fields.empName.here() %>(<%=value.empCode %>)</a>
 	
 	<%
 	} else if(mw3.where == 'addLocalContactPanel') {
 	%>
-	<a onClick="<%=methods.addContact.caller() %>" style="cursor:pointer;" ><%=fields.empName.here() %>(<%=value.empCode %>)</a>
+	<a onClick="<%=methods.addContact.caller() %>" class="iemployee" ><%=fields.empName.here() %>(<%=value.empCode %>)</a>
 	
 	<%
 	} else {

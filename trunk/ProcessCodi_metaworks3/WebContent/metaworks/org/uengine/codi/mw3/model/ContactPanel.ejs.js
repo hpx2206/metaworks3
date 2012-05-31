@@ -10,6 +10,8 @@ var org_uengine_codi_mw3_model_ContactPanel = function(objectId, className) {
 	var faceHelper = this;
 	
 	faceHelper.load();
+	
+	$("#tabs-1").accordion({ fillSpace:	true });
 }
 
 org_uengine_codi_mw3_model_ContactPanel.prototype.load = function(){
