@@ -8,8 +8,8 @@
 .contactlistpic .my_status {position: absolute; bottom:0px; right:0px; width: 14px; height: 14px;}
 .contactlistinterest{float:left;  margin-right:3px; margin-top:4px; }
 .contactlistname{float:left;cursor:pointer;font-size:11px; margin-top:3px;}
-.fontbold{font-weight:bold;}
-.fontgray{ color:#7F7F7F;}
+.fontbold{font-weight:bold; line-height:15px; display:block}
+.fontgray{ color:#7F7F7F; line-height:15px;display:block}
 #tabs-2 ul li{ padding:3px;}
 
 
