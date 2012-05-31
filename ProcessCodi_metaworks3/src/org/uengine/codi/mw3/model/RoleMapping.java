@@ -66,7 +66,7 @@ public class RoleMapping extends Database<IRoleMapping> implements IRoleMapping 
 		querry.append("select * from bpm_rolemapping ");
 		querry.append("where rootinstid=?rootInstId ");
 		querry.append("and rolename=?roleName ");
-		querry.append("and endoint=?endpoint ");
+		querry.append("and endpoint=?endpoint ");
 		
 		IRoleMapping findRoleMapping = (IRoleMapping)sql(querry.toString());
 		findRoleMapping.setRootInstId(getRootInstId());

@@ -4,7 +4,7 @@ import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Table;
 import org.metaworks.dao.IDAO;
 
-@Table(name = "BPM_ROLEMAPPING")
+@Table(name="bpm_rollmapping")
 public interface IRoleMapping extends IDAO {
 
 	@Id
