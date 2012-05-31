@@ -390,6 +390,9 @@ img {border:0;}
 .user .user_detail{float:left;}
 .user .user_compact{float:left; font-size:14px; line-height:30px; font-weight:bold;}
 
+.idept {height:23px; line-height:23px; display:block; background:url(../../images/waveStyle/i_company.png) no-repeat; padding-left:20px;overflow:hidden; white-space:nowrap;cursor:pointer;}
+.iemployee{height:23px; line-height:23px; display:block; background:url(../../images/waveStyle/i_user.png) no-repeat; padding-left:20px;overflow:hidden; white-space:nowrap;cursor:pointer;}
+
 #statusinput{ background:#C9E2FC; height:38px; border-left:#fff 1px solid; border-top:1px solid #fff; border-bottom:1px solid #9baecb; margin:0px 7px 0px 3px; padding:2px 5px;}
 #statusinput .font {font-size:11px; color:#21416e;}
 #statusinput .inputbox {*display:inline-block;_float:left;_width /**/:100%;padding-right:44px}
