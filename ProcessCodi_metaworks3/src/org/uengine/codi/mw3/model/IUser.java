@@ -38,6 +38,6 @@ public interface IUser extends IDAO{
 	@ServiceMethod
 	public UnstructuredProcessInstanceStarter chat() throws Exception;
 
-	@ServiceMethod(inContextMenu=true)
-	public Followers removeFollower() throws Exception;
+	@ServiceMethod(callByContent=true, inContextMenu=true)
+	public Object[] removeFollower() throws Exception;
 }
