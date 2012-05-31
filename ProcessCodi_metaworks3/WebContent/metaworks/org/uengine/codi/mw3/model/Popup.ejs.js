@@ -33,7 +33,7 @@ org_uengine_codi_mw3_model_Popup.prototype = {
 		$(divId + ' .cluetip-arrows').css({top:10});
 		
 		if(bodyWidth && popLayerWidth + x > bodyWidth){
-			$(divId).parent().css({left:x - popLayerWidth});
+			$(divId).parent().css({left:x-30 - popLayerWidth});
 			$(divId).parent().removeClass('clue-right-rounded');
 			$(divId).parent().addClass('clue-left-rounded');
 		};
