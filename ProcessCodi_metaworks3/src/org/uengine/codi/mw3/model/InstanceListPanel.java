@@ -38,6 +38,6 @@ public class InstanceListPanel {
 		NewInstancePanel newInstancePanel =  new NewInstancePanel();
 		newInstancePanel.load(session.getEmployee().getIsAdmin());
 		
-		return newInstancePanel;
+		return new NewInstanceWindow(newInstancePanel);
 	}
 }

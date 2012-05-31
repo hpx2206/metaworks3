@@ -29,6 +29,14 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 			this.name = name;
 		}
 
+	int no;
+		public int getNo() {
+			return no;
+		}
+		public void setNo(int no) {
+			this.no = no;
+		}
+
 	MetaworksFile iconFile;	
 		public MetaworksFile getIconFile() {
 			return iconFile;
@@ -61,6 +69,15 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 	}
 	
 	public Object[] save() throws Exception {
+		this.saveMe();
+		
+		ProcessMapList processMapList = new ProcessMapList();
+		processMapList.load();
+		
+		return new Object[]{processMapList, new Remover(new Popup(this))};
+	}
+	
+	public void saveMe() throws Exception {
 		if(getIconFile().getDeletedPath() != null)
 			getIconFile().remove();
 		
@@ -71,11 +88,6 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		
 		syncToDatabaseMe();
 		flushDatabaseMe();
-		
-		ProcessMapList processMapList = new ProcessMapList();
-		processMapList.load();
-		
-		return new Object[]{processMapList, new Remover(new Popup(this))};
 	}
 
 	public Popup modify() throws Exception {

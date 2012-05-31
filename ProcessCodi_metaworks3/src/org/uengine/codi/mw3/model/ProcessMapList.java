@@ -35,4 +35,23 @@ public class ProcessMapList {
 		
 		return popup;
 	}
+	
+	@ServiceMethod(callByContent=true)
+	public void save() throws Exception {
+		if(processMapList.size() > 0){
+			processMapList.first();
+			
+			do{
+				ProcessMap processMap = new ProcessMap();
+				processMap.copyFrom(processMapList);
+				processMap.saveMe();
+				
+			} while (processMapList.next());
+		}
+		
+		IProcessMap processMap = ProcessMap.loadList();
+		processMap.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+		
+		setProcessMapList(processMap);		
+	}
 }
