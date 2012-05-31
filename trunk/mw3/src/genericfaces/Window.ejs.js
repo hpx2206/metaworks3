@@ -2,13 +2,19 @@ var Window = function(objectId, className){
 	this.objectId = objectId;
 	this.className = className;
 	
-	this.divId = '#objDiv_' + objectId;
-	this.smallDivId = '#sm_' + objectId;
+	this.divId = '#objDiv_' + this.objectId;
+	this.smallDivId = '#sm_' + this.objectId;
+	
+	var layout = $(this.divId).parent();	
+	if(!layout.hasClass('pane')){
+		layout = layout.parent();
+	}	
+	this.layoutName = layout.attr('layoutName');
+	
 	
 	$(this.divId).addClass('mw3_window').addClass('mw3_layout').attr('objectId', objectId);
 	
-	var faceHelper = this;
-	
+	var faceHelper = this;	
 	faceHelper.load();
 }
 
@@ -51,46 +57,44 @@ Window.prototype.resizeChild = function(){
 	});
 }
 
-Window.prototype.maximize = function(target){
+Window.prototype.maximize = function(){
 	var miximizeBtn = $('#window_miximize_' + this.objectId);
 	
 	var layout = $(this.divId).parent().closest('.mw3_layout');
 	var layoutId = layout.attr('objectId');
 	
 	if(miximizeBtn.hasClass('togglebtnexp')){
+		
 		// 최대화
 		miximizeBtn.removeClass('togglebtnexp').addClass('togglebtnmini');
 		
-		mw3.getFaceHelper(layoutId).maximize(target);
+		mw3.getFaceHelper(layoutId).maximize(this.objectId);
 		
 	}else{
 		// 이전크기로 복원
 		miximizeBtn.removeClass('togglebtnmini').addClass('togglebtnexp');
 
-		mw3.getFaceHelper(layoutId).resume(target);
+		mw3.getFaceHelper(layoutId).resume();
 	}
-
-	
-	
 }
 
-Window.prototype.minimize = function(layoutName){
+Window.prototype.minimize = function(){
 
 	this.showSmallWindow();
 	
 	var layoutId = $(this.divId).parent().closest('.mw3_layout').attr('objectId');
 	if(layoutId)
-		mw3.getFaceHelper(layoutId).hide(layoutName);
+		mw3.getFaceHelper(layoutId).hide(this.layoutName);
 	
 }
 
-Window.prototype.resume = function(layoutName){
+Window.prototype.resume = function(){
 	
 	this.hideSmallWindow();
 	
 	var layoutId = $(this.divId).parent().closest('.mw3_layout').attr('objectId');
 	if(layoutId)
-		mw3.getFaceHelper(layoutId).show(layoutName);
+		mw3.getFaceHelper(layoutId).show(this.layoutName);
 }
 
 Window.prototype.showSmallWindow = function(){

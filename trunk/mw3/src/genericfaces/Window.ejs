@@ -1,14 +1,6 @@
 <%
 
 	if (value != null){
-		var layout = $('#objDiv_' + objectId).parent();
-		
-		if(!layout.hasClass('pane')){
-			layout = layout.parent();
-		}
-		
-		var layoutName = layout.attr('layoutName');
-		
 		// get descriptor 
 		var width = null;
 		var height = null;
@@ -59,7 +51,7 @@
 <%
 		if(minimize){
 %>				        	
-		            <div class="togglebtnmax" onclick="mw3.getFaceHelper('<%=objectId%>').resume('<%=layoutName%>')"></div>
+		            <div class="togglebtnmax" onclick="mw3.getFaceHelper('<%=objectId%>').resume()"></div>
 <%
 		}
 %>		            
@@ -89,7 +81,7 @@
 <%
 	if(maximize){
 %>	
-					<div id="window_miximize_<%=objectId%>" class="togglebtnexp" onclick="mw3.getFaceHelper('<%=objectId%>').maximize('<%=layoutName%>');"></div>
+					<div id="window_miximize_<%=objectId%>" class="togglebtnexp" onclick="mw3.getFaceHelper('<%=objectId%>').maximize();"></div>
 <%
 	}
 %>            		
@@ -97,7 +89,7 @@
 <%
 	if(minimize){
 %>            		
-            		<div class="togglebtnmini" onclick="mw3.getFaceHelper('<%=objectId%>').minimize('<%=layoutName%>');"></div>
+            		<div class="togglebtnmini" onclick="mw3.getFaceHelper('<%=objectId%>').minimize();"></div>
 <%
 	}
 %>            		
@@ -129,7 +121,7 @@
 <%
 			}
 %>
-							<%=value[fd.name] && fields[fd.name] ? fields[fd.name].here() : "-"%>
+							<%=fields[fd.name] ? fields[fd.name].here() : "-"%>
 <%		
 		}				   
 %>							
