@@ -1,19 +1,22 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 
 public class InstanceListPanel {
 	
-	public InstanceListPanel(){}
-
+	@AutowiredFromClient
+	public Session session;
+	
+	public InstanceListPanel(){		
+	}
 
 	public InstanceListPanel(Session session) {
 		super();
 		setSearchBox(new SearchBox());
 	}
 	
-	SearchBox searchBox;
-		
+	SearchBox searchBox;		
 		public SearchBox getSearchBox() {
 			return searchBox;
 		}
@@ -33,7 +36,7 @@ public class InstanceListPanel {
 	@ServiceMethod
 	public ContentWindow newInstance() throws Exception{
 		NewInstancePanel newInstancePanel =  new NewInstancePanel();
-		newInstancePanel.load();
+		newInstancePanel.load(session.getEmployee().getIsAdmin());
 		
 		return newInstancePanel;
 	}
