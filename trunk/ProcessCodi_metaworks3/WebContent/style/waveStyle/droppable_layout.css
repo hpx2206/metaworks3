@@ -483,7 +483,7 @@ img {border:0;}
 #fb-auth {cursor:pointer;}
 .dummy_div{ background:#ffffff; height:68px; width:100%;}
 
-#btnline{margin:8px;}
+#btnline{margin:8px; margin-right:0px;}
 #btnline li{float:right; height:23px; line-height:23px;}
 
 #wBtn {display:block; background:url('../../images/waveStyle/Btn_bg.gif') left 0; float:left; font-size:11px; font-weight:bolder; color:#000; padding-left:6px; text-decoration:none; height:23px; cursor:pointer; margin-right:3px; overflow:hidden}
@@ -518,7 +518,7 @@ img {border:0;}
 .view_box2 .tr{display:block;position:absolute;top:-2px;left:-5px;width:7px;height:7px;margin-left:100%;background:url('../../images/waveStyle/bg_border_corner.gif') 100% 0 no-repeat;font-size:0}
 .view_box2 .lb{display:block;position:absolute;top:-5px;left:-2px;width:7px;height:7px;background:url('../../images/waveStyle/bg_border_corner.gif') 0 100% no-repeat;font-size:0}
 .view_box2 .rb{display:block;position:absolute;top:-5px;left:-5px;width:7px;height:7px;margin-left:100%;background:url('../../images/waveStyle/bg_border_corner.gif') 100% 100% no-repeat;font-size:0}
-.view_box2 .cont{position:relative;padding:0 0 0 10px; margin:10px 0px;}
+.view_box2 .cont{position:relative;padding:10px; margin:10px 0px;}
 
 .view_box3{margin:5px; margin-top:15px; border:2px solid #8dd5ff}
 .view_box3 .guide{position:relative;width:100%}
@@ -533,6 +533,8 @@ img {border:0;}
 .view_box3 .comment_btn_off{margin-top:5px;background:url('../../images/waveStyle/comment_btn.gif') left 40px; float:left; color:#fff; padding-left:13px; text-decoration:none; line-height:20px; cursor:pointer; margin-right:10px; overflow:hidden}
 .view_box3 .comment_btn_off span {display:block; float:left; background:url('../../images/waveStyle/comment_btn.gif') right 20px; padding-right:13px; height:20px; overflow:hidden}
 
+#hiddenReply #text_input {width:100%;}
+#hiddenReply #text_input input {width:100%;}
 
 .gBtn{display:block; background:url('../../images/waveStyle/gBtn6_bg.gif') left 0; float:left; font:12px; color:#fff !important; font-weight:bold; padding-left:6px; text-decoration:none; height:22px; cursor:pointer; margin-right:3px; overflow:hidden}
 .gBtn:hover{background:url('../../images/waveStyle/gBtn6_bg.gif') left -23px}
