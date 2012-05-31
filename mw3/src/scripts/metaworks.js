@@ -182,10 +182,9 @@
 					//return null;
 					//TODO :  error reporting required
 					//this.debug(e, true);
-					if(window.console){
-						console.log("Failed to load face helper ("+faceHelperClass+"(ejs.js)): ");
-						console.log(e);
-					}
+					if(window.console)
+						console.log("Failed to load face helper ("+faceHelperClass+"(ejs.js)): " + e);
+						console.log(e);						
 				}
 			}
 
@@ -372,7 +371,7 @@
 						
 								timeout:10000, 
 			                    
-			                    errorHandler:function(errorString, exception) { 
+			                    errorHandler:function(errorString, exception) {
 			                        //alert(errorString);
 			  						//document.getElementById(this.dwrErrorDiv).innerHTML = errorString;
 			                    } 
@@ -1151,8 +1150,12 @@
 				this.faceHelpers[objectId] = null;
 				this.beanExpressions[objectId] = null;
 				
+				var parent = $(divId).parent();
+				if(parent.hasClass('target_stick') || parent.hasClass('target_popup'))
+					parent.remove();
+				
 				$(divId).remove();
-				$(infoDivId).remove();		
+				$(infoDivId).remove();
 
 				//TODO: the objectId_KeyMapping also need to clear with back mapping or key generation with value;
 				
@@ -1368,16 +1371,16 @@
 			}
 			
 			Metaworks3.prototype.startProgress = function(){				
-				$('body').prepend('<div id=\"mw3_progress\" style=\"position:absolute; width:100%; height:100%; cursor:wait; z-index:9999999\">');
+				//$('body').prepend('<div id=\"mw3_progress\" style=\"position:absolute; width:100%; height:100%; cursor:wait; z-index:9999999\">');
 			}
 
 			Metaworks3.prototype.endProgress = function(){
-				$('#mw3_progress').css("cursor","default");
+/*				$('#mw3_progress').css("cursor","default");
 				
 				setTimeout(function(){
 					$('#mw3_progress').remove();
 				}, 500);
-			}
+*/			}
 
 			Metaworks3.prototype.startLoading = function(objId){
 				var infoDivId = "#"+this._getInfoDivId(objId);
@@ -1484,9 +1487,9 @@
 					
 					if(serviceMethodContext.target!="none"){						
 						if(this.getFaceHelper(objId) && this.getFaceHelper(objId).startLoading){
-							this.getFaceHelper(objId).startLoading();
+							this.getFaceHelper(objId).startLoading(svcNameAndMethodName);
 						}else{
-							this.startLoading(objId);
+							this.startLoading(objId, svcNameAndMethodName);
 						}
 					}
 
@@ -1518,9 +1521,9 @@
 							this.endProgress();
 							
 							if(this.getFaceHelper(objId) && this.getFaceHelper(objId).endLoading){
-								this.getFaceHelper(objId).endLoading();
+								this.getFaceHelper(objId).endLoading(svcNameAndMethodName);
 							}else{
-								this.endLoading(objId);
+								this.endLoading(objId, svcNameAndMethodName);
 							}
 							
 		        			if(this.getFaceHelper(objId) && this.getFaceHelper(objId).showStatus){
@@ -1567,7 +1570,8 @@
 					        				mw3.recentOpenerObjectId = objId;
 
 					        				mw3.popupDivId = 'popup_' + objId;
-					        				$('body').append("<div id='" + mw3.popupDivId + "' class='target_popup' style='z-index:10;position:absolute; top:50px; left:10px'></div>");
+					        				//$('body').append("<div id='" + mw3.popupDivId + "' class='target_popup' style='z-index:10;position:absolute; top:50px; left:10px'></div>");
+					        				$('body').append("<div id='" + mw3.popupDivId + "' class='target_popup' style='z-index:10;position:absolute;'></div>");
 					        				mw3.locateObject(result, null, '#' + mw3.popupDivId).targetDivId;
 					        				
 					        				//objId = mw3.targetObjectId;
@@ -1670,9 +1674,9 @@
 				        				mw3.onLoadFaceHelperScript();
 					        			
 					        			if(mw3.getFaceHelper(objId) && mw3.getFaceHelper(objId).endLoading){
-					        					mw3.getFaceHelper(objId).endLoading();
+					        					mw3.getFaceHelper(objId).endLoading(svcNameAndMethodName);
 					        			}else{
-					        				mw3.endLoading(objId);
+					        				mw3.endLoading(objId, svcNameAndMethodName);
 					        			}
 					        				
 					        			if(mw3.getFaceHelper(objId) && mw3.getFaceHelper(objId).showStatus){
@@ -1699,9 +1703,9 @@
 				        			
 				        			if(mw3.objects[objId] && mw3.getFaceHelper(objId) && mw3.getFaceHelper(objId).showError){
 					        			if(!exception)
-					        				mw3.getFaceHelper(objId).showError( errorString );
+					        				mw3.getFaceHelper(objId).showError( errorString, svcNameAndMethodName );
 					        			else
-					        				mw3.getFaceHelper(objId).showError( (exception.targetException ? exception.targetException.message : exception.message) );
+					        				mw3.getFaceHelper(objId).showError( (exception.targetException ? exception.targetException.message : exception.message), svcNameAndMethodName );
 									
 									}else{
 										if(!exception)
@@ -2254,11 +2258,11 @@
 			
 			
 			Metaworks3.prototype.isHidden = function(fd){
-				
+
 				if(this.when == "__design"){
 					return !fd.attributes['resource']; 
 				}
-
+				
 				if(fd.attributes){
 					if(fd.attributes['hidden.when']){
 						return (fd.attributes['hidden.when'] == this.when);
@@ -2283,14 +2287,14 @@
 					
 					if(fd.attributes['hidden']) 
 						return true;
-
+										
 				} 
-				
 				
 				return false;
 			}
 			
 			Metaworks3.prototype.isHiddenMethod = function(method){
+				console.log(method);
 				
 				if(method.methodContext.when != mw3.WHEN_EVER){
 		   			if( (mw3.when && (method.methodContext.when.indexOf(mw3.when) == -1) ) 
@@ -2319,8 +2323,9 @@
 							   
 							   if(!this.validObject(object[fd.name], this.getMetadata(fd.className)))
 								   isValid = false;
-						   }else{
-							   if(fd.attributes.validator) {		
+						   }
+						   //else{						   		
+							   if(fd.attributes.validator && !mw3.isHidden(fd)) {
 						    		for(var j = 0; j < fd.attributes.validator.length; ++j) {
 						    			var validator = fd.attributes.validator[j];						    									    									    			
 						    			var result = this.validation(validator, object[fd.name]);
@@ -2343,7 +2348,7 @@
 				    					
 							    	}
 							   }
-					    	}
+					    	//}
 				    	} catch(e) {
 				    		if(window.console)
 				    			console.log('error = ' + e);
@@ -2357,8 +2362,15 @@
 			Metaworks3.prototype.validation = function(validator, value){
 			
 				if(validator.name == 'isnull'){
-					if(value == null || value == '')
-						return false;
+					if(value instanceof Object){
+						if(value[validator.options[0]] == null || value[validator.options[0]] == '')
+							return false;
+						
+						
+					}else{
+						if(value == null || value == '')
+							return false;
+					}
 				}else if(validator.name == 'maxbyte' && validator.options){
 					var len = 0;
 			        for (var i = 0; i < value.length; i++) {
