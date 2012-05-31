@@ -1,10 +1,12 @@
 package org.metaworks.widget;
 
+import org.metaworks.ContextAware;
+import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 
 @Face(displayName="ModalWindow")
-public class ModalWindow {
+public class ModalWindow implements ContextAware {
 	
 	public ModalWindow() {
 		this(null, 400, 0, null);
@@ -23,13 +25,24 @@ public class ModalWindow {
 	}
 			
 	public ModalWindow(Object panel, int width, int height, String title) {
+		setMetaworksContext(new MetaworksContext());
+
 		setPanel(panel);
 		setWidth(width);
 		setHeight(height);		
 		setTitle(title);
 		setOpen(true);
-	}	
+	}
 	
+	MetaworksContext metaworksContext;
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}
+	
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
+		}
+
 	boolean open;
 		@Hidden
 		public boolean isOpen() {
