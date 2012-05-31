@@ -3,8 +3,11 @@ package org.uengine.codi.mw3.model;
 import javax.servlet.http.HttpSession;
 
 import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.TransactionContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.processmanager.ProcessManagerRemote;
 
 public class User extends Database<IUser> implements IUser {
 	
@@ -81,6 +84,18 @@ public class User extends Database<IUser> implements IUser {
 		return popup;
 	}
 	
+	String  instanceId;
+	
+//	@Override
+//	public String getInstanceId() {
+//		return instanceId;
+//	}
+//	
+//	@Override
+//	public void setInstanceId(String instanceId) {
+//		this.instanceId = instanceId;
+//	}
+	
 	@Override
 	public Popup detail() throws Exception {
 		Popup popup = new Popup();
@@ -96,11 +111,35 @@ public class User extends Database<IUser> implements IUser {
 	@Override
 	public UnstructuredProcessInstanceStarter chat() throws Exception{		
 		UnstructuredProcessInstanceStarter instanceStarter = new UnstructuredProcessInstanceStarter();
-		instanceStarter.getMetaworksContext().setHow("chat");
+		
 		instanceStarter.setFriend(this);
 		
 		return instanceStarter;
 	}
 	
+//	@Autowired
+//	ProcessManagerRemote processManager;
+	
+	@ServiceMethod(inContextMenu=true)
+	public Followers removeFollower() throws Exception {
+		String whereText = getMetaworksContext().getWhere();
+		
+		Followers followers = new Followers();
+		if(whereText.startsWith(Followers.CONTEXT_WHERE_INFOLLOWERS)){
+			String instId = whereText.substring(whereText.indexOf(":")+1);
+			
+			//TODO delete rolemapping
+//			processManager.removeRoleMapping(instId, "follower_" + getName(), getUserId());
+//			processManager.applyChanges();
+			
+			RoleMapping roleMapping = new RoleMapping(new Long(instId), "follower_" + getName(), getUserId());
+			roleMapping.deleteByInfo();
+			
+			followers.setInstanceId(instId);
+			followers.load();
+		}
+		
+		return followers;
+	}
 	
 }
