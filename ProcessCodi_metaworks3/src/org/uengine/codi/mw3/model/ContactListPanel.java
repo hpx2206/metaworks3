@@ -7,8 +7,8 @@ import org.metaworks.annotation.Id;
 
 public class ContactListPanel implements ContextAware {
 
-	public static final String CONTACT = "contact";
-	public static final String FOLLOWER = "follower";
+	public static final String CONTACT = "contacts";
+	public static final String FOLLOWER = "followers";
 
 	
 	public ContactListPanel(){
@@ -16,16 +16,18 @@ public class ContactListPanel implements ContextAware {
 	}
 	
 	public void load(String userId) throws Exception {
-		String id = this.getId();
+		setId(getMetaworksContext().getWhen());
 		
 		ContactList localContactList = new ContactList();
-		localContactList.setId(id + "_" + ContactList.LOCAL);
+		localContactList.getMetaworksContext().setWhen(getMetaworksContext().getWhen());
+		localContactList.getMetaworksContext().setWhere(ContactList.LOCAL);
 		localContactList.load(userId);
 		
 		setLocalContactList(localContactList);
 		
 		ContactList socialContactList = new ContactList();
-		socialContactList.setId(id + "_" + ContactList.SOCIAL);
+		socialContactList.getMetaworksContext().setWhen(getMetaworksContext().getWhen());
+		socialContactList.getMetaworksContext().setWhere(ContactList.SOCIAL);
 		socialContactList.loadSocial(userId);
 		
 		setSocialContactList(socialContactList);

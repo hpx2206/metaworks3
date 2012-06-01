@@ -18,13 +18,10 @@ public class AddFollowerPanel implements ContextAware{
 		this();
 		
 		ContactListPanel contactListPanel = new ContactListPanel();
-		contactListPanel.getMetaworksContext().setWhen("addFollower");
-		contactListPanel.setId(ContactListPanel.FOLLOWER);
+		contactListPanel.getMetaworksContext().setWhen("addFollower");		
 		contactListPanel.load(loginUser.getUserId());		
 		
-		contactList.getContacts().getMetaworksContext().setWhen("addFollower");
-		
-		setContactList(contactList);
+		setContactListPanel(contactListPanel);
 		setInstanceId(instanceId);
 	}
 	
@@ -38,14 +35,14 @@ public class AddFollowerPanel implements ContextAware{
 			this.instanceId = instanceId;
 		}
 
-	ContactList contactList;
-		public ContactList getContactList() {
-			return contactList;
-		}	
-		public void setContactList(ContactList contactList) {
-			this.contactList = contactList;
-		}	
-		
+	ContactListPanel contactListPanel;
+		public ContactListPanel getContactListPanel() {
+			return contactListPanel;
+		}
+		public void setContactListPanel(ContactListPanel contactListPanel) {
+			this.contactListPanel = contactListPanel;
+		}
+
 	MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
 			return metaworksContext;

@@ -12,8 +12,7 @@ public class ContactPanel {
 	public ContactPanel(IUser user) throws Exception{
 		
 		ContactListPanel contactListPanel = new ContactListPanel();		
-		contactListPanel.setId(ContactListPanel.CONTACT);
-		contactListPanel.getMetaworksContext().setWhen("contacts");
+		contactListPanel.getMetaworksContext().setWhen(ContactListPanel.CONTACT);
 		contactListPanel.load(user.getUserId());		
 		
 		setContactListPanel(contactListPanel);

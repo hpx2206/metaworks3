@@ -8,7 +8,6 @@ import org.metaworks.dao.Database;
 public class Contact extends Database<IContact> implements IContact{
 
 	public IContact loadLocalContacts() throws Exception{
-		System.out.println(getMetaworksContext().getWhen());
 		IContact contacts = sql("select a.* from contact a where userId=?userId and exists (select empcode from emptable where a.friendId = empcode)");
 		contacts.setUserId(getUserId());
 		contacts.select();
