@@ -4,6 +4,7 @@ import org.directwebremoting.Browser;
 import org.directwebremoting.ScriptSessions;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.Remover;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +62,22 @@ public class UnstructuredProcessInstanceStarter implements ContextAware {
 		instanceView.getInstanceView().getInstanceNameChanger().setInstanceName(getTitle());
 		instanceView.getInstanceView().getInstanceNameChanger().change();
 		
+		/*
+		RoleMapping rm = RoleMapping.create();
+		if(session.user!=null){
+			rm.setName("initiator");
+			rm.setEndpoint(session.user.getUserId());
+		}
+
+		processManager.putRoleMapping(instanceView.getInstanceView().instanceId, rm);
+
+		
+		Instance instance = new Instance();
+		instance.setInstId(new Long
+				(instanceView.getInstanceView().instanceId));
+		instance.databaseMe().setInitEp(session.user.getUserId());
+		*/
+		
 		if(getFriend() != null && getFriend().getUserId() != null){
 
 			Browser.withSession(Login.getSessionIdWithUserId(getFriend().getUserId()), new Runnable(){
@@ -74,7 +91,7 @@ public class UnstructuredProcessInstanceStarter implements ContextAware {
 		}
 		
 		
-		return instanceViewAndInstanceList;
+		return new Object[]{instanceViewAndInstanceList[0], instanceViewAndInstanceList[1], new Remover(new Popup())};
 		
 	}
 	
