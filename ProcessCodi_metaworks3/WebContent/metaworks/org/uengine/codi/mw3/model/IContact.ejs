@@ -2,7 +2,7 @@
 	if(value){
 %>	
 	<li>	
-		<%=fields.friend.here({when: 'list'})%>
+		<%=fields.friend.here()%>
 		
 		<div style="clear:left;"></div>
 <%
@@ -12,7 +12,6 @@
 <%
 		} else {
 %>
-		<%=methods.addFollower.here()%>
 		<%=methods.pickUp.here()%>
 <%
 		}

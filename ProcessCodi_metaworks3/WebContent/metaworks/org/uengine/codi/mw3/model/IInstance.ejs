@@ -1,30 +1,24 @@
 <% if(value!=null){%>
 <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tbl_type">						
-	<tbody>		
-	<tr  class="q" onclick="<%=methods.detail.caller()%>">
+	<tbody>
+	<tr  class="q <%=value.firstDueTimeTerm ? (value.firstDueTimeTerm>=0 ? (value.firstDueTimeTerm>=3 ? "" : "plus" + value.firstDueTimeTerm ) : "minus" )  : "" %>" onClick="<%=methods.detail.caller()%>" style="cursor:pointer;">
 		<td class="first_td">
 			<div class="worklistuser">
 					<dl>					                		
-						<dd><%=fields.initiator.here()%></dd>
-						<dd><%=fields.currentUser.here()%></dd>
+						<dd><%=fields.initiator.here() %></dd>
+						<dd><%=fields.currentUser.here() %></dd>
 						<div class="clear"></div>					                	
 					</dl>	
 			</div>				
 		</td> 
-		<td width="10"></td>
 		<td>									
 			<ul class="lst_type">										
 				<li class="trigger"><span class="type_process"></span><a href="#middle-center"><%=fields.name.here()%></a></li>								
 			</ul>								
 		</td>
-		<td class="last_td">2011년 12월 27일</td>
-		<td></td>
+		<td class="last_td"><%=fields.startedDate.here()%></td>
+		<td class="last_td"></td>
 	</tr>
 	
 </table>
-
-
-
-
-
 <%}%>
