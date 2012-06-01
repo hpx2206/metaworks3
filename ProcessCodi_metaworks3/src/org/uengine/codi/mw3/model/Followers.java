@@ -54,8 +54,7 @@ public class Followers {
 		setFollowers(users_);
 		*/
 		
-		users.setMetaworksContext(new MetaworksContext());
-		users.getMetaworksContext().setWhen(CONTEXT_WHERE_INFOLLOWERS + ":" + getInstanceId());
+		users.getMetaworksContext().setWhen(CONTEXT_WHERE_INFOLLOWERS);
 		setFollowers(users);
 		
 	}
@@ -68,8 +67,6 @@ public class Followers {
 		panel.getMetaworksContext().setWhen("addFollower");
 
 		popup.setPanel(panel);
-		
-
 		popup.setName("AddFollowerPanel");
 		
 		return popup;		
