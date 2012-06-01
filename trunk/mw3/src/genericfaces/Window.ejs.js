@@ -36,7 +36,8 @@ Window.prototype.load = function(){
 Window.prototype.destroy = function(){
 	//console.log('destroy : ' + this.objectId);
 	
-	$(this.divId).layout().destroy();
+	if(this.layout)
+		this.layout.destroy();
 }
 
 Window.prototype.resize = function(){
@@ -49,7 +50,7 @@ Window.prototype.resize = function(){
 
 Window.prototype.resizeChild = function(){
 	
-	$(this.divId).find('.mw3_layout:visible').each(function(index, value){
+	$(this.divId).find('.mw3_layout, .mw3_resize').each(function(index, value){
 		var layoutId = value.getAttribute('objectId');
 		
 		if(layoutId)
