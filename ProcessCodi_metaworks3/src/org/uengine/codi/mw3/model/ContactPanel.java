@@ -2,6 +2,7 @@ package org.uengine.codi.mw3.model;
 
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 
@@ -28,7 +29,8 @@ public class ContactPanel {
 			this.user = user;
 		}
 
-	ContactSearchBox searchBox;	
+	ContactSearchBox searchBox;
+		@Face(options={"keyupSearch"}, values={"true"})
 		public ContactSearchBox getSearchBox() {
 			return searchBox;
 		}
