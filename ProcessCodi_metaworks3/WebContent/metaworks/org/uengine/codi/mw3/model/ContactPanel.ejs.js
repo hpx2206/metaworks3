@@ -1,50 +1,59 @@
 var org_uengine_codi_mw3_model_ContactPanel = function(objectId, className) {
 	this.objectId = objectId;
 	this.className = className;
-
-	this.divId = '#objDiv_' + objectId;	
+	this.divId = mw3._getObjectDivId(this.objectId);	
 	
+	this.windowObjectId = $('#' + this.divId).closest('.mw3_window').attr('objectId');
 	
-	$(this.divId).addClass('mw3_layout').attr('objectId', objectId);
+	$('#' + this.divId).addClass('mw3_layout').attr('objectId', objectId);
 	
-	var faceHelper = this;
-	
+	var faceHelper = this;	
 	faceHelper.load();
-	
-	$("#tabs-1").accordion({ fillSpace:	true });
 }
 
-org_uengine_codi_mw3_model_ContactPanel.prototype.load = function(){
-	
-	var object = mw3.objects[this.objectId];
-	var options = {
-			togglerLength_open:	0, 
-			spacing_open:		0, 
-			spacing_closed:		0,
-			center__onresize:	'mw3.getFaceHelper('+this.objectId+').resizeChild()'
-	}
-
-	this.layout = $(this.divId).layout(options);
-}
-
-org_uengine_codi_mw3_model_ContactPanel.prototype.destroy = function(){
-	$(this.divId).layout().destroy();
-}
-
-org_uengine_codi_mw3_model_ContactPanel.prototype.resize = function(){
-	if(this.layout){
-		this.layout.resizeAll();
+org_uengine_codi_mw3_model_ContactPanel.prototype = {
+	load : function(){
 		
-		this.resizeChild();
-	}
-}
+		var object = mw3.objects[this.objectId];
+		var options = {
+				togglerLength_open:	0, 
+				spacing_open:		0, 
+				spacing_closed:		0,
+				center__onresize:	'mw3.getFaceHelper('+this.objectId+').resizeChild()'
+		}
 
-org_uengine_codi_mw3_model_ContactPanel.prototype.resizeChild = function(){
-	
-	$(this.divId).find('.mw3_layout:visible').each(function(index, value){
-		var layoutId = value.getAttribute('objectId');
+		this.layout = $('#' + this.divId).layout(options);
+	},
+	destroy : function(){
+		if(this.layout)
+			this.layout.destroy();
+	},
+	resize : function(){
+		if(this.layout){
+			this.layout.resizeAll();
+			
+			this.resizeChild();
+		}
+	},
+	resizeChild : function(){
 		
-		if(layoutId)
-			mw3.getFaceHelper(layoutId).resize();
-	});
+		$(this.divId).find('.mw3_layout:visible').each(function(index, value){
+			var layoutId = value.getAttribute('objectId');
+			
+			if(layoutId)
+				mw3.getFaceHelper(layoutId).resize();
+		});
+	},
+	startLoading : function(){
+		if(this.windowObjectId)
+			mw3.getFaceHelper(this.windowObjectId).startLoading();
+	},
+	endLoading : function(){
+		if(this.windowObjectId)
+			mw3.getFaceHelper(this.windowObjectId).endLoading();
+	},
+	showStatus : function(message){
+		
+	}
+	
 }
