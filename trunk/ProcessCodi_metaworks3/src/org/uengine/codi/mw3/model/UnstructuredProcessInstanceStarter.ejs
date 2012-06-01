@@ -1,11 +1,15 @@
 <%
 	if(value){
-		if(mw3.how == 'chat'){
+		if(mw3.when == 'chat'){
 %>
-	채팅 제목 : <%=fields.title.here()%><br />
-	채팅 상대 : <%=fields.friend.here({when : 'contact'})%><br />
 	
-	<a id="wBtn" href="javascript:<%=methods.start.caller()%>"><span>start</span></a>
+	<%=fields.friend.here()%>
+	
+ 	<div id="btnline" style="border-top:1px solid #E3E8F2; padding-top:8px;">
+		<ul>
+			<li>제목 : <%=fields.title.here({when:'edit'})%> <a id="wBtn" href="javascript:<%=methods.start.caller()%>"><span>Start</span></a></li>
+		</ul>
+	</div>	
 <%
 		}else{
 %>
