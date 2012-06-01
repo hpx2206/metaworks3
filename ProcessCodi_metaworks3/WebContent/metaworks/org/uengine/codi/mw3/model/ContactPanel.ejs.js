@@ -36,8 +36,7 @@ org_uengine_codi_mw3_model_ContactPanel.prototype = {
 		}
 	},
 	resizeChild : function(){
-		
-		$(this.divId).find('.mw3_layout:visible').each(function(index, value){
+		$(this.divId).find('.mw3_layout, .mw3_resize').each(function(index, value){
 			var layoutId = value.getAttribute('objectId');
 			
 			if(layoutId)

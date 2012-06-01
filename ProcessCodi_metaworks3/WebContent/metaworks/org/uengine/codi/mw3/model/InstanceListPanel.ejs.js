@@ -41,7 +41,7 @@ org_uengine_codi_mw3_model_InstanceListPanel.prototype = {
 	},
 	resizeChild : function(){
 		
-		this.divElement.find('.mw3_layout:visible').each(function(index, value){
+		this.divElement.find('.mw3_layout, .mw3_resize').each(function(index, value){
 			var layoutId = value.getAttribute('objectId');
 			
 			if(layoutId)
