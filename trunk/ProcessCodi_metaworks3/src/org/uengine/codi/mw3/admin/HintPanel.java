@@ -8,16 +8,18 @@ import org.uengine.codi.mw3.model.IUser;
 
 public class HintPanel {
 	
-	public HintPanel(IUser user, String pageName) throws Exception {
-		facebookComments = new FacebookComments("ide");
+	public HintPanel() throws Exception {
+	}
+	
+	public void load(IUser user, String pageName) throws Exception {
+		facebookComments = new FacebookComments(pageName);
 		facebookComments.setUrl(pageName);
 		
 		WfPanel wfPanel = new WfPanel();
 		wfPanel.load(user.getUserId(), "read");
 		
-		setWfPanel(wfPanel);
-		//hintSearchBox = new HintSearchBox();
-	}
+		setWfPanel(wfPanel);		
+	}	
 	
 	/*
 	HintSearchBox hintSearchBox;

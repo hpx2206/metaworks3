@@ -13,25 +13,38 @@ public class IDE {
 	public IDE(Session session) throws Exception {
 		Layout innerLayout = new Layout();
 		
+		ContentWindow contentWindow = new ContentWindow();
+		contentWindow.getMetaworksContext().setHow("ide");
+		
+		ConsoleWindow consoleWindow = new ConsoleWindow();
+		consoleWindow.getMetaworksContext().setHow("ide");
+		
 		if(session.getDefId() != null){
 			ClassDefinition classDefinition = new ClassDefinition();
 			classDefinition.setAlias(session.getDefId());
 			classDefinition.afterDeserialization();
 			classDefinition.getMetaworksContext().setWhen("view");
 			
-			innerLayout.setCenter(new ContentWindow(classDefinition));
-		}else{
-			innerLayout.setCenter(new ContentWindow());	
+			contentWindow.setPanel(classDefinition);
 		}
 		
-		innerLayout.setSouth(new ConsoleWindow());
+		innerLayout.setCenter(contentWindow);		
+		innerLayout.setSouth(consoleWindow);
+		
 		innerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, south__spacing_open:5, south__size:'20%'");
+		
+		HintWindow hintWindow = new HintWindow();
+		hintWindow.getMetaworksContext().setHow("ide");
+		hintWindow.load(session.getUser(), "ide");
+		
+		ResourceWindow resourceWindow = new ResourceWindow();		
+		resourceWindow.getMetaworksContext().setHow("ide");
 		
 		Layout outerLayout = new Layout();
 		outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:5, east__spacing_open:5, west__size:300, east__size:300, north__size:52");
 		outerLayout.setNorth(new TopPanel());
-		outerLayout.setWest(new ResourceWindow());
-		outerLayout.setEast(new HintWindow(session.getUser(), "ide"));
+		outerLayout.setWest(resourceWindow);
+		outerLayout.setEast(hintWindow);
 		outerLayout.setCenter(innerLayout);		
 		
 		setLayout(outerLayout);		
