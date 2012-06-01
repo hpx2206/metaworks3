@@ -9,8 +9,8 @@ import org.metaworks.widget.Window;
       values={"true", "true"})
 
 public class InstanceListWindow extends Window {
-	public InstanceListWindow(Session session) throws Exception {
-		this.instanceListPanel = new InstanceListPanel(session);
+	public InstanceListWindow() {
+		setInstanceListPanel(new InstanceListPanel());
 	}
 	
 	InstanceListPanel instanceListPanel;
