@@ -14,37 +14,44 @@ public class InstanceList {
 	final static int PAGE_CNT = 15;
 
 	int page;
-	IInstance instances;
+		@Id
+		@Hidden		
+		public int getPage() {
+			return page;
+		}
+		public void setPage(int page) {
+			this.page = page;
+		}
+
+	IInstance instances;		
+		public IInstance getInstances() {
+			return instances;
+		}
+	
+		public void setInstances(IInstance instances) {
+			this.instances = instances;
+		}
+
 	InstanceList moreInstanceList;
-
-	@Id
-	@Hidden
-	public int getPage() {
-		return page;
-	}
-
-	public void setPage(int page) {
-		this.page = page;
-	}
-
-	public IInstance getInstances() {
-		return instances;
-	}
-
-	public void setInstances(IInstance instances) {
-		this.instances = instances;
-	}
-
-	public InstanceList getMoreInstanceList() {
-		return moreInstanceList;
-	}
-
-	public void setMoreInstanceList(InstanceList moreInstanceList) {
-		this.moreInstanceList = moreInstanceList;
-	}
+		public InstanceList getMoreInstanceList() {
+			return moreInstanceList;
+		}
+	
+		public void setMoreInstanceList(InstanceList moreInstanceList) {
+			this.moreInstanceList = moreInstanceList;
+		}
+		
+	String keyword;
+		public String getKeyword() {
+			return keyword;
+		}
+		public void setKeyword(String keyword) {
+			this.keyword = keyword;
+		}
 
 	@AutowiredFromClient
 	public Session session;
+	
 
 //	@ServiceMethod(callByContent = true, except = { "instances",
 //			"moreInstanceList" })
@@ -67,6 +74,8 @@ public class InstanceList {
 				getPage(), PAGE_CNT);
 		instanceContents.setMetaworksContext(new MetaworksContext());
 		instanceContents.getMetaworksContext().setWhere("instanceList");
+		instanceContents.getMetaworksContext().setWhen("instanceList");
+		
 		setInstances(instanceContents);
 
 		// setting moreInstanceList
