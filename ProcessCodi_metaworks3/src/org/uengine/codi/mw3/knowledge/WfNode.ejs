@@ -10,14 +10,14 @@
 %>		
 			<div id="wfnode_<%=objectId%>" style="height:24px">
 				<%  if(value.linkedInstId){%><span onclick="<%=methods.linkInstance.caller()%>">[<%=value.linkedInstId%>]</span><%}%>
-				<input type="text" id="wfnode_content_<%=objectId%>" size="100%" style="border:0; font-family: 'Helvetica Neue', Arial, Sans-serif; font-size: 16; font-weight: normal;none;background:transparent" value="<%=value.name%>" onkeydown="mw3.getFaceHelper('<%=objectId%>').press(this)">
+				<input type="text" id="wfnode_content_<%=objectId%>" style="width:100%" style="border:0; font-family: 'Helvetica Neue', Arial, Sans-serif; font-size: 16; font-weight: normal;none;background:transparent" value="" onkeydown="mw3.getFaceHelper('<%=objectId%>').press(this)">
 				<div id="wfinfo_<%=objectId%>"></div>
 			</div>	
 <%
 				}else{
 %>
 			<div id="wfnode_<%=objectId%>" style="height:24px">
-				<input type="text" id="wfnode_content_<%=objectId%>" size="100%" style="border:0; font-family: 'Helvetica Neue', Arial, Sans-serif; font-size: 12px; font-weight: normal" value="<%=value.name%>" readonly>
+				<input type="text" id="wfnode_content_<%=objectId%>" style="width:100% ; border:none;" style="border:0; font-family: 'Helvetica Neue', Arial, Sans-serif; font-size: 12px; font-weight: normal" value="<%=value.name%>" readonly>
 				<div id="wfinfo_<%=objectId%>"></div>
 			</div>
 <%
