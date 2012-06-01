@@ -1,16 +1,24 @@
 package org.uengine.codi.mw3.admin;
 
 import org.metaworks.annotation.Face;
+import org.metaworks.widget.Window;
 import org.uengine.codi.mw3.model.IUser;
 
-@Face(ejsPath="genericfaces/Window.ejs", 
+@Face(ejsPath="genericfaces/Window.ejs",
 	  displayName="Hint & Feedback",
-	  options={"hideLabels", "hideCloseBtn", "layout"}, 
-	  values={"true", "true", "east"})
-public class HintWindow {
+	  options={"hideLabels", "minimize"},
+	  values={"true", "true"})
+public class HintWindow extends Window {
 
-	public HintWindow(IUser user, String pageName) throws Exception  {
-		setHintPanel(new HintPanel(user, pageName));
+	public HintWindow()  {
+		super();
+	}
+	
+	public void load(IUser user, String pageName) throws Exception {
+		HintPanel hintPanel = new HintPanel();
+		hintPanel.load(user, pageName);
+		
+		setHintPanel(hintPanel);
 	}
 	
 	HintPanel hintPanel;

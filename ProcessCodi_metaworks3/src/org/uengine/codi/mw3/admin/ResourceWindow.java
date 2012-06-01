@@ -1,15 +1,17 @@
 package org.uengine.codi.mw3.admin;
 
 import org.metaworks.annotation.Face;
-import org.uengine.codi.mw3.model.IUser;
+import org.metaworks.widget.Window;
 
 @Face(ejsPath="genericfaces/Window.ejs",
       displayName="Navigator",
-      options={"hideLabels", "hideCloseBtn", "hideHeader", "layout"},
-      values={"true", "true", "true", "west"})
-public class ResourceWindow {
+      options={"hideLabels", "minimize"},
+      values={"true", "true"})
+public class ResourceWindow extends Window {
 
 	public ResourceWindow() throws Exception {
+		super();
+		
 		setResourcePanel(new ResourcePanel());		
 	}
 	
