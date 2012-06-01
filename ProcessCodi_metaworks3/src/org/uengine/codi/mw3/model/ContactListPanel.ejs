@@ -1,9 +1,19 @@
 <%
 	if(value){
 %>
-	<%=fields.localContactList.here()%>
+
+	<div id="accordion_<%=objectId%>" class="basic tabs-1">
+		<h3><a href="#">Company</a></h3>
+		<div>
+			<%=fields.localContactList.here()%>
+		</div>
+
+		<h3><a href="#">FaceBook</a></h3>
+		<div>
+			<%=fields.socialContactList.here()%>
+		</div>
+	</div>
 	
-	<%=fields.socialContactList.here()%>
 <%
 	}
 %>
