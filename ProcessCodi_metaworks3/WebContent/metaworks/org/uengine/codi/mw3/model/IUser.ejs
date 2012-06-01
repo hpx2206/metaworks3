@@ -1,14 +1,25 @@
+<%=mw3.when%>
+
 <%	
 	if(value){
+		var clickAction = '';
+		
+		if(mw3.when == 'addContact'){
+			clickAction = methods.addContact.caller();
+		}else if(mw3.when == 'addFollower'){
+			clickAction = methods.addFollower.caller();
+		}else{
+			clickAction = methods.detail.caller();
+		}
+	
 		var portrait;		
 		if(value.userId)
-			portrait = 'images/portrait/unknown_user.gif';
-			//portrait = 'http://graph.facebook.com/' + value.userId + '/picture';
+			portrait = 'http://graph.facebook.com/' + value.userId + '/picture';
 		else
 			portrait = 'images/portrait/unknown_user.gif';
 	
 	
-		if(mw3.when == 'info'){
+		if(mw3.how == 'info'){			
 %>
 		<ul>
 			<li>
@@ -22,37 +33,44 @@
        			</dl>
       		</li>    
      	</ul>
-     	
+
+<%
+			if(mw3.when != 'chat'){
+%>			     	
      	<div id="btnline" style="border-top:1px solid #E3E8F2; padding-top:8px;">
 			<ul>
-				<li><a id="wBtn" href="javascript:<%=methods.chat.caller()%>"><span>chat</span></a>	</li>
+<%
+				if(mw3.when == 'contacts'){
+%>							
+				<li><a id="wBtn" href="javascript:<%=methods.removeContact.caller()%>"><span>Remove</span></a></li>
+<%
+				}else if(mw3.when == 'followers'){
+%>							
+				<li><a id="wBtn" href="javascript:<%=methods.removeFollower.caller()%>"><span>UnFollower</span></a></li>
+<%
+				}
+%>				
+				<li><a id="wBtn" href="javascript:<%=methods.chat.caller()%>"><span>Chat</span></a></li>			
 			</ul>
 		</div>
-<%		
-		}else{
+<%
+			}
+		}else{			
 %>
-		<div class="user" onclick="<%=methods.detail.caller()%>">
+		<div class="user" onclick="<%=clickAction%>">		
 			<div class="user_picture">	
 				<img id="user_picture_<%=objectId%>" src="<%=portrait%>" width="30" height="30">
 			</div>
 <%	
 			// case by user
-			if(mw3.when == 'list' || mw3.when == 'addContact'){
+			if(mw3.when == 'contacts' || mw3.when == 'addContact' || mw3.when == 'addFollower'){
 %>
 			<div class="user_detail">
 				<span class="fontbold"><%=value.name%></span>
 				<span class="fontgray"><%=value.userId%></span>
 				<span class="fontgray"></span>
 			</div>
-<%
-				if(mw3.when == 'addContact'){
-%>
-			<div class="user_action">
-				<%=methods.addContact.here()%>
-			</div>
-
-<%
-				}
+<%			
 			}else if(mw3.when == 'contact'){
 %>
 
@@ -61,13 +79,7 @@
 			</div>
 <%		
 			}
-			//alert(mw3.where);
-			if(mw3.when.indexOf("followers") == 0) {
-%>
-			<%=methods.removeFollower.here() %>
-<%
-			}
-%>
+%>		
 			<div style="clear:both"></div>
 		</div>
 <%		
