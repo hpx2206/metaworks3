@@ -1,5 +1,7 @@
 package org.metaworks.widget;
 
+import org.metaworks.annotation.Hidden;
+
 public class Window {
 	
 	public Window(){
@@ -25,6 +27,7 @@ public class Window {
 		}
 
 	String title;
+		@Hidden
 		public String getTitle() {
 			return title;
 		}

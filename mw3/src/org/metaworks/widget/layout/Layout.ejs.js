@@ -69,7 +69,8 @@ org_metaworks_widget_layout_Layout.prototype.load = function(){
 }
 
 org_metaworks_widget_layout_Layout.prototype.destroy = function(){
-	$(this.divId).layout().destroy();
+	if(this.layout)
+		this.layout.destroy();
 }
 
 org_metaworks_widget_layout_Layout.prototype.show = function(target){
@@ -283,7 +284,7 @@ org_metaworks_widget_layout_Layout.prototype.resize = function(){
 }
 
 org_metaworks_widget_layout_Layout.prototype.resizeChild = function(){
-	this.div.find('.mw3_layout').each(function(index, value){
+	this.div.find('.mw3_layout, .mw3_resize').each(function(index, value){
 		var layoutId = value.getAttribute('objectId');
 		
 		mw3.getFaceHelper(layoutId).resize();
