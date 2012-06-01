@@ -115,7 +115,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 
 		StringBuffer sb = new StringBuffer();
 		sb.append("SELECT *");
-		sb.append("  FROM workflowy");
+		sb.append("  FROM bpm_knol");
 		sb.append(" WHERE parentId=?parentId");
 		sb.append(" ORDER BY no");
 		
