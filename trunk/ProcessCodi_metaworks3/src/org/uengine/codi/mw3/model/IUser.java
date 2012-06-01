@@ -35,7 +35,7 @@ public interface IUser extends IDAO{
 	@ServiceMethod(callByContent=true, target=TARGET_POPUP)
 	public Popup detail() throws Exception;
 	
-	@ServiceMethod(target=TARGET_SELF)
+	@ServiceMethod(callByContent=true, target=TARGET_SELF)
 	public UnstructuredProcessInstanceStarter chat() throws Exception;
 	
 	@ServiceMethod(callByContent=true)
