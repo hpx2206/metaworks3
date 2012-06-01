@@ -1,14 +1,14 @@
 var org_uengine_codi_mw3_model_InstanceListPanel = function(objectId, className) {
 	this.objectId = objectId;
 	this.className = className;
-
-	this.divId = "#objDiv_" + objectId;
-
+	this.divId = mw3._getObjectDivId(this.objectId);
 	
-	$(this.divId).addClass('mw3_layout').attr('objectId', objectId);
+	this.windowObjectId = $('#' + this.divId).closest('.mw3_window').attr('objectId');
 	
-	var faceHelper = this;
+	this.divElement = $('#' + this.divId); 	
+	this.divElement.addClass('mw3_layout').attr('objectId', objectId);
 	
+	var faceHelper = this;	
 	faceHelper.load();		
 }
 
@@ -24,11 +24,11 @@ org_uengine_codi_mw3_model_InstanceListPanel.prototype = {
 				center__onresize:	'mw3.getFaceHelper('+this.objectId+').resizeChild()'
 		}
 
-		this.layout = $(this.divId).layout(options);
+		this.layout = this.divElement.layout(options);
 	},
 	destroy : function(){
 		if(this.layout)
-			$(this.divId).layout().destroy();
+			this.layout.destroy();
 	},
 	resize : function(){
 		if(this.layout){
@@ -41,12 +41,23 @@ org_uengine_codi_mw3_model_InstanceListPanel.prototype = {
 	},
 	resizeChild : function(){
 		
-		$(this.divId).find('.mw3_layout:visible').each(function(index, value){
+		this.divElement.find('.mw3_layout:visible').each(function(index, value){
 			var layoutId = value.getAttribute('objectId');
 			
 			if(layoutId)
 				mw3.getFaceHelper(layoutId).resize();
 		});
-	}
+	},
+	startLoading : function(){
+		if(this.windowObjectId)
+			mw3.getFaceHelper(this.windowObjectId).startLoading();
+	},
+	endLoading : function(){
+		if(this.windowObjectId)
+			mw3.getFaceHelper(this.windowObjectId).endLoading();
+	},
+	showStatus : function(message){
+		
+	}	
 		
 }
