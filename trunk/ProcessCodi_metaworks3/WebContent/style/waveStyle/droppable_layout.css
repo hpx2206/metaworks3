@@ -84,7 +84,7 @@ ul, ol , li , dl ,dd ,dt{list-style-type:none; margin:0px; padding:0px;}
 .workflowy ul {padding-left:40px; list-style-type: disc;}
 .workflowy li { list-style-type: disc;}
 
-.ui-state-active {border-bottom:2px dotted #ccc; background:#EFEFEF;}
+.ui-state-active {/* border-bottom:2px dotted #ccc; background:#EFEFEF; */}
 
 #controls #move {
 	background: url(../../images/waveStyle/move_icon_black.png) no-repeat;
