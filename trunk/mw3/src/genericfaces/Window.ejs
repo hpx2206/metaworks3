@@ -61,12 +61,24 @@
 		    <div class="miniboxbottomleft"><span class="miniboxbottomright"></span></div>
 	    </div>
 	    
+	    
 		<div class="pane ui-layout-north">
+<%
+		if(mw3.how != null && mw3.how == 'ide'){
+%>
             <div class="boxtopleft">
             	<span class="boxtopright">
-		
-		    		<div id="navigationTitle" class="mw3_window_title">
-		    		<%if(windowTitle){%>
+            	
+            		<div id="navigationTitle" class="mw3_window_title">
+            			IDE TEST
+            		</div>
+<%
+		}else{
+%>
+            <div class="boxtopleft">
+            	<span class="boxtopright">
+            		<div id="navigationTitle" class="mw3_window_title">
+            		<%if(windowTitle){%>
 		    			<%=windowTitle%>
 		    		<%}else{%>
 		    			<%if(resourceName){%>
@@ -75,23 +87,25 @@
 		    				<%=objectName%>
 		    			<%}%>
 		    		<%}%>
-		    		</div>
-		    		
+		    		</div>            		
+<%		
+		}
+%>				
             		<div id="loader_<%=objectId%>" class="loadingarea" style="display: none; "><img src="/uengine-web/images/waveStyle/ajax-loader.gif" border="0"></div>
 <%
-	if(maximize){
+			if(maximize){
 %>	
 					<div id="window_miximize_<%=objectId%>" class="togglebtnexp" onclick="mw3.getFaceHelper('<%=objectId%>').maximize();"></div>
 <%
-	}
-%>            		
+			}
+%> 	           		
             		
 <%
-	if(minimize){
+			if(minimize){
 %>            		
             		<div class="togglebtnmini" onclick="mw3.getFaceHelper('<%=objectId%>').minimize();"></div>
 <%
-	}
+			}
 %>            		
             	</span>
             </div>		    		

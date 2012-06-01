@@ -1,10 +1,13 @@
 package org.metaworks.widget;
 
+import org.metaworks.ContextAware;
+import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Hidden;
 
-public class Window {
+public class Window implements ContextAware {
 	
-	public Window(){
+	public Window() {
+		this(null, "");
 	}
 	public Window(String title) {
 		this(null, title);
@@ -13,9 +16,12 @@ public class Window {
 		this(panel, "");
 	}
 	
-	public Window(Object panel, String title) {
+	public Window(Object panel, String title) {		
 		this.panel = panel;
 		this.title = title;
+		
+		setMetaworksContext(new MetaworksContext());
+		getMetaworksContext().setHow("normal");
 	}
 	
 	Object panel;
@@ -33,5 +39,14 @@ public class Window {
 		}
 		public void setTitle(String title) {
 			this.title = title;
-		}			
+		}		
+		
+	MetaworksContext metaworksContext;
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
+		}
+	
 }
