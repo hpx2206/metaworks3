@@ -11,8 +11,10 @@
 		}
 	
 		var portrait;		
+		var unknown = 'images/portrait/unknown_user.gif';
+		
 		if(value.userId)
-			portrait = 'http://graph.facebook.com/' + value.userId + '/picture';
+			portrait = 'http://graph.facebook.com/' + value.userId + '/picture';			
 		else
 			portrait = 'images/portrait/unknown_user.gif';
 	
@@ -26,7 +28,7 @@
 						<div id="popupInfoNameWih"><b><%=value.name%></b></div>
 					</dt>
 					<dd class="photo">
-						<div id="popupInfoImgWih"><img id="user_picture_<%=objectId%>" src="<%=portrait%>" width="104" height="104"></div>
+						<div id="popupInfoImgWih"><img id="user_picture_<%=objectId%>" src="<%=portrait%>" onerror="this.src='<%=unknown%>';" width="104" height="104"></div>
 					</dd>
        			</dl>
       		</li>    
@@ -57,7 +59,7 @@
 %>
 		<div class="user" onclick="<%=clickAction%>">		
 			<div class="user_picture">	
-				<img id="user_picture_<%=objectId%>" src="<%=portrait%>" width="30" height="30">
+				<img id="user_picture_<%=objectId%>" src="<%=portrait%>"  onerror="this.src='<%=unknown%>';" width="30" height="30">
 			</div>
 <%	
 			// case by user
