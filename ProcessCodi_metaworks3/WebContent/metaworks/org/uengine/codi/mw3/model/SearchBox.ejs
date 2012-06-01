@@ -1,30 +1,15 @@
 <%
 	if(value){
 %>	
-   <div class="boxmiddleright">
-        <div class="boxmiddleleft">
-
-            <div id="searchbox">
-                <div class="searchboxline">
-                	<div class="searchboxline2">
-                        <div class="newprocessbtn"><a href="#" onclick="mw3.getFaceHelper(<%=objectId%>).newInstance();"><div id="startBtn">NEW</div></a></div>
-                        <div class="searchboxarea">
-                            <ul>
-                                <li class="inputleft"><img src="/uengine-web/images/waveStyle/searchLeft.gif" border="0" /></li>
-                                <li class="inputcenter">
-                                     <input id="search_<%=objectId%>" class="contactsinput" value="<%=value.keyword%>" onkeyup="mw3.getFaceHelper('<%=objectId%>').keyup(this);">
-                                </li>
-                                <li class="inputright"><img src="/uengine-web/images/waveStyle/searchRight.gif" border="0" /></li>
-                                <li style="clear:left;"></li>
-                            </ul>
-                        </div>
-                        <div style="clear:both;"></div>
-                    </div>
-                </div>
-                <div style="clear:both;"></div>
-            </div>         
-        </div>
-    </div>  
+	<ul>
+	    <li class="inputleft"><img src="/uengine-web/images/waveStyle/searchLeft.gif" border="0" /></li>
+	    <li class="inputcenter">
+	    	<input id="search_<%=objectId%>" class="contactsinput" value="<%=value.keyword%>">
+	    </li>
+	    
+	    <li class="inputright"><img src="/uengine-web/images/waveStyle/searchRight.gif" border="0" /></li>
+	    <li style="clear:left;"></li>
+	</ul>
 <%
 	}
 %>    

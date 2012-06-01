@@ -9,16 +9,18 @@
 		}else{
 			clickAction = methods.detail.caller();
 		}
-	
-		var portrait;		
+					
 		var unknown = 'images/portrait/unknown_user.gif';
+		var portrait = unknown;
 		
-		if(value.userId)
-			portrait = 'http://graph.facebook.com/' + value.userId + '/picture';			
-		else
-			portrait = 'images/portrait/unknown_user.gif';
-	
-	
+		if(mw3.where == 'local'){
+			if(value.userId)
+				portrait = 'images/portrait/' + value.userId;			
+		}else if(mw3.where == 'social'){
+			if(value.userId)
+				portrait = 'http://graph.facebook.com/' + value.userId + '/picture';			
+		}
+		
 		if(mw3.how == 'info'){			
 %>
 		<ul>
@@ -44,7 +46,7 @@
 %>							
 				<li><a id="wBtn" href="javascript:<%=methods.removeContact.caller()%>"><span>Remove</span></a></li>
 <%
-				}else if(mw3.when == 'followers'){
+				}else if(mw3.when== 'followers'){
 %>							
 				<li><a id="wBtn" href="javascript:<%=methods.removeFollower.caller()%>"><span>UnFollower</span></a></li>
 <%
