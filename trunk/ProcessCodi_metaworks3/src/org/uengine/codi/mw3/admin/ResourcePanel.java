@@ -1,11 +1,11 @@
 package org.uengine.codi.mw3.admin;
 
 import org.metaworks.MetaworksContext;
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.model.IProcessDefinition;
-import org.uengine.codi.mw3.model.IUser;
 import org.uengine.codi.mw3.model.NewChildWindow;
 import org.uengine.codi.mw3.model.NewFolder;
 import org.uengine.codi.mw3.model.ResourceFile;
@@ -51,6 +51,8 @@ public class ResourcePanel {
 		webResourceFile.setAlias("__web");
 		webResourceFile.setName("web");
 		webResourceFile.drillDown();
+		
+		resourceSearchBox = new ResourceSearchBox();
 	
 	}
 	
@@ -86,6 +88,7 @@ public class ResourcePanel {
 		}
 	
 	ResourceSearchBox resourceSearchBox;
+		@Face(options={"enterSearch"}, values={"true"})
 		public ResourceSearchBox getResourceSearchBox() {
 			return resourceSearchBox;
 		}
