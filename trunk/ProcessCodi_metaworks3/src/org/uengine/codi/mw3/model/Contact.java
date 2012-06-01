@@ -3,21 +3,27 @@ package org.uengine.codi.mw3.model;
 
 import java.rmi.RemoteException;
 
-import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.processmanager.ProcessManagerRemote;
 
 public class Contact extends Database<IContact> implements IContact{
-	
-	public IContact loadContacts() throws Exception{
-		IContact contacts = sql("select * from contact where userId=?userId");
+
+	public IContact loadLocalContacts() throws Exception{
+		System.out.println(getMetaworksContext().getWhen());
+		IContact contacts = sql("select a.* from contact a where userId=?userId and exists (select empcode from emptable where a.friendId = empcode)");
 		contacts.setUserId(getUserId());
 		contacts.select();
-		
+		contacts.setMetaworksContext(getMetaworksContext());
 		return contacts;
 	}
 
+	public IContact loadSocialContacts() throws Exception{
+		IContact contacts = sql("select a.* from contact a where userId=?userId and not exists (select empcode from emptable where a.friendId = empcode)");
+		contacts.setUserId(getUserId());
+		contacts.select();
+		contacts.setMetaworksContext(getMetaworksContext());
+		return contacts;
+	}
+	
 	public IContact findContactsWithFriendName(String keyword) throws Exception{
 		IContact contacts = sql("select * from contact where userId=?userId and friendName like '%" + keyword + "%'");
 		contacts.setUserId(getUserId());
@@ -27,10 +33,32 @@ public class Contact extends Database<IContact> implements IContact{
 	}
 	
 	public void addContact() throws Exception{
-		createDatabaseMe();
-		flushDatabaseMe();
+		if(!this.getUserId().equals(getFriend().getUserId())){
+			IContact contact = sql("select * from contact where userid = ?userId and friendId = ?friendId");
+			contact.setFriend(getFriend());
+			contact.setUserId(getUserId());
+			
+			contact.select();
+			
+			if(contact.size() == 0){
+				createDatabaseMe();
+				flushDatabaseMe();
+			}else{
+				// TODO : 이미 추가된 사람이라는 오류 처리 ?
+			}
+		}else{
+			// TODO : 본인 선택 했다는 오류 처리 ?
+		}
 	}
 	
+	public void removeContact() throws Exception{
+		IContact contact = sql("delete from contact where userid = ?userId and friendId = ?friendId");
+		contact.setFriend(getFriend());
+		contact.setUserId(getUserId());
+
+		contact.update();
+	}
+
 	IUser friend;
 		public IUser getFriend() {
 			return friend;
@@ -49,30 +77,6 @@ public class Contact extends Database<IContact> implements IContact{
 		public void setUserId(String userId) {
 			this.userId = userId;
 		}
-	
-
-
-	@AutowiredFromClient
-	public AddFollowerPanel addFollowerPanel;
-
-	public Followers addFollower() throws Exception {
-		processManager.putRoleMapping(addFollowerPanel.getInstanceId(), RoleMapping.ROLEMAPPING_FOLLOWER_ROLENAME_FREFIX + getFriend().getName(), getFriend().getUserId());
-		processManager.applyChanges();
-		
-		Followers followers = new Followers();
-		followers.setInstanceId(addFollowerPanel.getInstanceId());
-		followers.load();
-		
-		return followers;
-	}
-
-	
-	@Autowired
-	ProcessManagerRemote processManager;
-	
-	
-//	@AutowiredFromClient
-//	public User user;
 
 	public User pickUp() throws RemoteException, Exception {
 		//User user = new User(); //this should have error - more than the @Id, the objectId is the closest one.

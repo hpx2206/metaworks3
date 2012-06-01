@@ -1,9 +1,6 @@
 package org.uengine.codi.mw3.model;
 
-import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Id;
-import org.metaworks.annotation.NonLoadable;
-import org.metaworks.annotation.NonSavable;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.IDAO;
 
@@ -23,9 +20,12 @@ public interface IUser extends IDAO{
 //	public String getInstanceId() ;
 //	public void setInstanceId(String instanceId);
 	
-	@ServiceMethod(when="addContact", callByContent=true)
+	@ServiceMethod(callByContent=true)
 	public ContactList addContact() throws Exception;
 	
+	@ServiceMethod(callByContent=true)
+	public Object[] addFollower() throws Exception;
+		
 	@ServiceMethod(when="pickUp", callByContent=true, target=TARGET_POPUP)
 	public Popup pickUp() throws Exception;
 	
@@ -35,9 +35,12 @@ public interface IUser extends IDAO{
 	@ServiceMethod(callByContent=true, target=TARGET_POPUP)
 	public Popup detail() throws Exception;
 	
-	@ServiceMethod
+	@ServiceMethod(target=TARGET_SELF)
 	public UnstructuredProcessInstanceStarter chat() throws Exception;
-
-	@ServiceMethod(callByContent=true, inContextMenu=true)
+	
+	@ServiceMethod(callByContent=true)
 	public Object[] removeFollower() throws Exception;
+	
+	@ServiceMethod(callByContent=true)
+	public Object[] removeContact() throws Exception;
 }

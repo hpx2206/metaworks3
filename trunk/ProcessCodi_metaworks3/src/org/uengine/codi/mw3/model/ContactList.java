@@ -2,29 +2,50 @@ package org.uengine.codi.mw3.model;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
-import org.metaworks.ServiceMethodContext;
-import org.metaworks.annotation.AutowiredFromClient;
-import org.uengine.codi.mw3.ILogin;
+import org.metaworks.annotation.Hidden;
+import org.metaworks.annotation.Id;
 
-public class ContactList {
-
+public class ContactList implements ContextAware {
+	
+	public static final String LOCAL = "local";
+	public static final String SOCIAL = "social";
+	
 	public ContactList(){
+		setMetaworksContext(new MetaworksContext());
 	}
 	
 	public void load(String userId) throws Exception{
 		Contact contact = new Contact();
+		contact.setMetaworksContext(getMetaworksContext());
 		contact.setUserId(userId);
-		
-		setContacts(contact.loadContacts());
+			
+		setContacts(contact.loadLocalContacts());
 	}
-	
-	@AutowiredFromClient
-	public Session session;
-		public Session getSession() {
-			return session;
+
+	public void loadSocial(String userId) throws Exception{
+		Contact contact = new Contact();
+		contact.setMetaworksContext(getMetaworksContext());
+		contact.setUserId(userId);
+			
+		setContacts(contact.loadSocialContacts());
+	}
+
+	String id;
+		@Id
+		@Hidden
+		public String getId() {
+			return id;
 		}
-		public void setSession(Session session) {
-			this.session = session;
+		public void setId(String id) {
+			this.id = id;
+		}
+		
+	MetaworksContext metaworksContext;
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}	
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
 		}
 
 	IContact contacts;	
