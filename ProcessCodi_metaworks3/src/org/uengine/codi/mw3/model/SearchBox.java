@@ -23,12 +23,13 @@ public class SearchBox {
 	public Object search() throws Exception{
 		System.out.println("keyword : " + getKeyword());
 		
-		InstanceListPanel instanceListPanel = new InstanceListPanel();
+		InstanceList instanceList = new InstanceList();
+		instanceList.init();
+		instanceList.setKeyword(getKeyword());
+		instanceList.load(session);
 		
-		instanceListPanel.setSearchBox(this);
-		//instanceListPanel.setInstanceList(new InstanceList());
-		//instanceListPanel.getInstanceList().load(session.getUser(), getKeyword());
+		//instanceListPanel.setSearchBox(this);
 				
-		return instanceListPanel;		
+		return instanceList;		
 	}	
 }

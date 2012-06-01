@@ -24,8 +24,6 @@ var org_uengine_codi_mw3_model_IProcessMap = function(objectId, className){
 					
 					changed = true;
 				}
-				
-				console.debug(object.defId + ' : ' + object.no);
 			}
 			
 			if(changed){

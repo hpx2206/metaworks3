@@ -61,6 +61,28 @@ public class RoleMapping extends Database<IRoleMapping> implements IRoleMapping 
 		this.endpoint = endpoint;
 	}
 	
+	public boolean confirmFollower() throws Exception {
+		StringBuffer querry = new StringBuffer();
+		querry.append("select * from bpm_rolemapping ");
+		querry.append("where rootinstid=?rootInstId ");
+		querry.append("and rolename=?roleName ");
+		querry.append("and endpoint=?endpoint ");
+		
+//		System.out.println(getRootInstId() + "," + getRoleName() + "," + getEndpoint());
+		
+		IRoleMapping findRoleMapping = (IRoleMapping)sql(querry.toString());
+		
+		findRoleMapping.setRootInstId(getRootInstId());
+		findRoleMapping.setRoleName(getRoleName());
+		findRoleMapping.setEndpoint(getEndpoint());
+		findRoleMapping.select();
+		if(findRoleMapping.next()) {
+			return true;
+		} else {
+			return false;
+		}		
+	}
+	
 	public boolean deleteByInfo(Session session) throws Exception {
 		RoleMapping roleMapping = new RoleMapping();
 		StringBuffer querry = new StringBuffer();
