@@ -3,7 +3,6 @@ package org.uengine.codi.mw3.model;
 import javax.servlet.http.HttpSession;
 
 import org.metaworks.annotation.AutowiredFromClient;
-import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.TransactionContext;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,19 +27,6 @@ public class User extends Database<IUser> implements IUser {
 		public void setUserId(String userId) {
 			this.userId = userId;
 		}
-	
-	public ContactList addContact() throws Exception {
-		Contact contact = new Contact();
-		contact.setFriend(this);
-		contact.setUserId(session.getUser().getUserId());
-		contact.addContact();
-		
-		ContactList cp = new ContactList();
-		cp.load(session.getUser().getUserId());
-		
-		return cp;		
-	}
-	
 	
 	@AutowiredFromClient
 	public Session session;
@@ -98,10 +84,20 @@ public class User extends Database<IUser> implements IUser {
 	
 	@Override
 	public Popup detail() throws Exception {
+		this.getMetaworksContext().setHow("info");
+		
+		String when = this.getMetaworksContext().getWhen();
+		
+		if(when != null && when.equals(Followers.CONTEXT_WHERE_INFOLLOWERS)){
+			String instId = follwers.getInstanceId();
+			
+			RoleMapping roleMapping = new RoleMapping(new Long(instId), RoleMapping.ROLEMAPPING_FOLLOWER_ROLENAME_FREFIX + getName(), getUserId());
+			if(!roleMapping.confirmFollower()){
+				this.getMetaworksContext().setWhen("participant");
+			}
+		}
+		
 		Popup popup = new Popup(400,203);
-		
-		this.getMetaworksContext().setWhen("info");
-		
 		popup.setName("Friend Info");
 		popup.setPanel(this);
 
@@ -109,27 +105,43 @@ public class User extends Database<IUser> implements IUser {
 	}
 	
 	@Override
-	public UnstructuredProcessInstanceStarter chat() throws Exception{		
+	public UnstructuredProcessInstanceStarter chat() throws Exception{
+		this.getMetaworksContext().setWhen("chat");
+		
 		UnstructuredProcessInstanceStarter instanceStarter = new UnstructuredProcessInstanceStarter();
 		
-		instanceStarter.getMetaworksContext().setHow("chat");
+		instanceStarter.getMetaworksContext().setWhen("chat");
 		instanceStarter.setFriend(this);
 		
 		return instanceStarter;
 	}
+
+	@Autowired
+	ProcessManagerRemote processManager;
+
+	@AutowiredFromClient
+	public Followers follwers;
 	
-//	@Autowired
-//	ProcessManagerRemote processManager;
-	
-	public Object[] removeFollower() throws Exception {
-		String whereText = getMetaworksContext().getWhere();
-		boolean isDeleted = false;
-		String instId = "";
+	public Object[] addFollower() throws Exception {
+		String instId = follwers.getInstanceId();
 		
-		if(whereText.startsWith(Followers.CONTEXT_WHERE_INFOLLOWERS)){
-			instId = whereText.substring(whereText.indexOf(":")+1);
-			
-			if(!session.getUser().getUserId().trim().equals(getUserId().trim())) {
+		processManager.putRoleMapping(instId, RoleMapping.ROLEMAPPING_FOLLOWER_ROLENAME_FREFIX + getName(), getUserId());
+		processManager.applyChanges();
+		
+		Followers followers = new Followers();
+		followers.setInstanceId(instId);
+		followers.load();
+		
+		return new Object[]{followers, new Popup()};
+	}
+
+	public Object[] removeFollower() throws Exception {
+				
+		String instId = follwers.getInstanceId();
+		
+//		if(whereText.startsWith(Followers.CONTEXT_WHERE_INFOLLOWERS)){
+			// TODO: initEp 문제 해결후 권한 체크 활성화
+/*			if(!session.getUser().getUserId().trim().equals(getUserId().trim())) {
 				Instance instanceObj = new Instance();
 				instanceObj.setInstId(new Long(instId));
 				String initEp = instanceObj.databaseMe().getInitEp();
@@ -140,12 +152,12 @@ public class User extends Database<IUser> implements IUser {
 					throw new Exception("팔로워를 삭제할 권한이 없습니다.");
 				}
 			}
-		} else {
+*///		} else {
 //			Popup popup = new Popup("프로세스 참여자는 삭제할 수 없습니다.");
 //			System.out.println("프로세스 참여자는 삭제할 수 없습니다.");
 //			return new Object[] {popup};
-			throw new Exception("프로세스 참여자는 삭제할 수 없습니다.");
-		}
+//			throw new Exception("프로세스 참여자는 삭제할 수 없습니다.");
+		//}
 		
 		Followers followers = new Followers();
 			
@@ -154,20 +166,43 @@ public class User extends Database<IUser> implements IUser {
 //		processManager.applyChanges();
 
 		RoleMapping roleMapping = new RoleMapping(new Long(instId), RoleMapping.ROLEMAPPING_FOLLOWER_ROLENAME_FREFIX + getName(), getUserId());
-		isDeleted = roleMapping.deleteByInfo(session);
-			
-		followers.setInstanceId(instId);
-		followers.load();
-		
-		if(isDeleted) {
+		if(roleMapping.deleteByInfo(session)) {
+			followers.setInstanceId(instId);
+			followers.load();
+
 			System.out.println("delete follower done.");
-			return new Object[] {followers};
+			return new Object[] {followers, new Popup()};
 		} else {
 //			Popup popup = new Popup("프로세스 참여자는 삭제할 수 없습니다.");
 //			System.out.println("프로세스 참여자는 삭제할 수 없습니다.");
 //			return new Object[] {popup};
-			throw new Exception("프로세스 참여자는 삭제할 수 없습니다.");
+			throw new Exception("삭제 실패");
 		}
+		
+	}
+	
+	public ContactList addContact() throws Exception {
+		Contact contact = new Contact();
+		contact.setFriend(this);
+		contact.setUserId(session.getUser().getUserId());
+		contact.addContact();
+		
+		ContactList cp = new ContactList();
+		cp.load(session.getUser().getUserId());
+		
+		return cp;
+	}	
+	
+	public Object[] removeContact() throws Exception {
+		Contact contact = new Contact();
+		contact.setFriend(this);
+		contact.setUserId(session.getUser().getUserId());
+		contact.removeContact();
+		
+		ContactList contactList = new ContactList();
+		contactList.load(session.getUser().getUserId());
+		
+		return new Object[] {contactList, new Popup(this)};
 		
 	}
 	
