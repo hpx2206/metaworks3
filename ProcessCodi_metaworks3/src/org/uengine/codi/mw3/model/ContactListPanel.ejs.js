@@ -3,11 +3,11 @@ var org_uengine_codi_mw3_model_ContactListPanel = function(objectId, className){
 	this.className = className;	
 	
 	$('#objDiv_' + this.objectId).height('100%').addClass('mw3_resize').attr('objectId', this.objectId);
-	$("#accordion_" + this.objectId).accordion({ fillSpace:	true });
+	$('#accordion_' + this.objectId).accordion({ fillSpace:	true });
 }
 
 org_uengine_codi_mw3_model_ContactListPanel.prototype = {
 	resize : function(){
-		$("#accordion").accordion("resize");
+		$('#accordion_' + this.objectId).accordion('resize');
 	}
 }
