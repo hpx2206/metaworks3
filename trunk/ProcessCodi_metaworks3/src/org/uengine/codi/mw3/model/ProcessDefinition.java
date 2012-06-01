@@ -281,7 +281,7 @@ public class ProcessDefinition extends Database<IProcessDefinition> implements I
 		InstanceViewContent instanceView = instanceViewContent;// = new InstanceViewContent();
 		instanceView.load(instanceRef);
 
-		InstanceListPanel instanceList = new InstanceListPanel(session); //should return instanceListPanel not the instanceList only since there're one or more instanceList object in the client-side
+		InstanceListPanel instanceList = new InstanceListPanel(); //should return instanceListPanel not the instanceList only since there're one or more instanceList object in the client-side
 		//instanceList.load(session.login, session.navigation);
 		return new Object[]{instanceView, instanceList};
 
