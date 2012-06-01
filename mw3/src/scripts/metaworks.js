@@ -687,7 +687,6 @@
 			   						shortcut.remove(keyBinding);
 				   					shortcut.add(keyBinding, command);
 			   					}else{
-			   					
 				   					shortcut.add(keyBinding, command/*function() {
 				   						eval(command);
 				   					}*/,{
@@ -727,14 +726,57 @@
 				   }
 				   
 				   if(contextMenuMethods.length > 0){
-					   
 					   var menuItems = [];
-						
+					   
 					   for(var i=0; i<contextMenuMethods.length; i++){
 						   var serviceMethodContext = contextMenuMethods[i];
-					   		var command = "mw3.call("+objectId+", '"+serviceMethodContext.methodName+"')";
+						   
+						   // 상태에 따른 visible 처리
+							if(serviceMethodContext.when != mw3.WHEN_EVER){
+					   			if( (mw3.when && ((serviceMethodContext.when.indexOf(mw3.when + ',') == -1) || (serviceMethodContext.when.indexOf(',' + mw3.when) == -1) || (serviceMethodContext.when == mw3.when))) 
+					   					||
+						   			(mw3.where && (serviceMethodContext.where!='wherever' && serviceMethodContext.where.indexOf(mw3.where) == -1) )
+						   				
+					   			)
+					   				continue;
+							}
+						   
+							if(serviceMethodContext.attributes){
+								if(serviceMethodContext.attributes['hidden.when']){
+									if(serviceMethodContext.attributes['hidden.when'] == this.when)
+										continue;
+								}
+									
+								if(serviceMethodContext.attributes['show.when']){
+									if(serviceMethodContext.attributes['show.when']!= this.when)
+										continue;
+								} 
+								
+								if(serviceMethodContext.attributes['available.when']){
+									if(serviceMethodContext.attributes['available.when'][this.when]==null)
+										continue;
+								} 
+								
+								if(serviceMethodContext.attributes['available.where']){
+									if(serviceMethodContext.attributes['available.where'][this.where]==null)
+										continue;
+								} 
+
+								if(serviceMethodContext.attributes['available.how']){
+									if(serviceMethodContext.attributes['available.how'][this.how]==null)
+										continue;
+								} 
+
+								
+								if(serviceMethodContext.attributes['hidden']) 
+									return true;										
+							} 							   
+						   
+						  
+							
+						   var command = "mw3.call("+objectId+", '"+serviceMethodContext.methodName+"')";
 					   		
-					   		if(serviceMethodContext.needToConfirm)
+						   if(serviceMethodContext.needToConfirm)
 					   			command = "if (confirm(\'Are you sure to "+serviceMethodContext.displayName+" this?\'))" + command;
 					   		
 						   var menuItem = { 
@@ -752,17 +794,22 @@
 					   
 //					   theDiv.append("<div id='contextmenu_" + objectId + "'></div>");
 					   
-					   YAHOO.util.Event.onContentReady(targetDivId, function () {
-							new YAHOO.widget.ContextMenu(
-								"_contextmenu_" + objectId,
-								{
-									zindex: 99,
-									trigger: theDiv[0],
-									itemdata: menuItems,
-									lazyload: true
-								}
-							);
-					   });
+					   if(menuItems.length){
+						   if(typeof $('#' + targetDivId).attr('contextMenu') == 'undefined'){
+							   YAHOO.util.Event.onContentReady(targetDivId, function () {
+								   new YAHOO.widget.ContextMenu(
+										"_contextmenu_" + objectId,
+										{
+											zindex: 99,
+											trigger: theDiv[0],
+											itemdata: menuItems,
+											lazyload: true
+										}
+									);
+							   });
+							   $('#' + targetDivId).attr('contextMenu', 'true');
+						   }
+					   }
 				   }
 					
 					
@@ -1100,8 +1147,9 @@
 				
 				
 				// 2012-03-27 cjw destroy event
-    			if(this.objects[objectId] && this.getFaceHelper(objectId) && this.getFaceHelper(objectId).destroy)
+    			if(this.objects[objectId] && this.getFaceHelper(objectId) && this.getFaceHelper(objectId).destroy){
         			mw3.getFaceHelper(objectId).destroy();
+    			}
         			
 				var divId =  "#objDiv_" + objectId;
 				
@@ -1150,9 +1198,14 @@
 				this.faceHelpers[objectId] = null;
 				this.beanExpressions[objectId] = null;
 				
+				/*
 				var parent = $(divId).parent();
-				if(parent.hasClass('target_stick') || parent.hasClass('target_popup'))
+				if(parent.hasClass('target_stick') || parent.hasClass('target_popup')){
+					console.debug('remove popup');
+					
 					parent.remove();
+				}
+				*/
 				
 				$(divId).remove();
 				$(infoDivId).remove();
