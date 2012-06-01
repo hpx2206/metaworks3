@@ -57,7 +57,7 @@ public class Perspective {
 		savePerspectiveToSession(session, perspectiveType, selectedItem);
 		instList.load(session);
 
-		InstanceListPanel instListPanel = new InstanceListPanel(session);
+		InstanceListPanel instListPanel = new InstanceListPanel();
 		instListPanel.setInstanceList(instList);
 
 		return new Object[] {session, instListPanel};
