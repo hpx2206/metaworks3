@@ -84,6 +84,8 @@ public class User extends Database<IUser> implements IUser {
 	
 	@Override
 	public Popup detail() throws Exception {
+		System.out.println("when : " + getMetaworksContext().getWhen());
+		
 		this.getMetaworksContext().setHow("info");
 		
 		String when = this.getMetaworksContext().getWhen();
@@ -200,6 +202,7 @@ public class User extends Database<IUser> implements IUser {
 		contact.removeContact();
 		
 		ContactList contactList = new ContactList();
+		contactList.setId(ContactListPanel.CONTACT + "_" + ContactList.LOCAL);
 		contactList.load(session.getUser().getUserId());
 		
 		return new Object[] {contactList, new Popup(this)};

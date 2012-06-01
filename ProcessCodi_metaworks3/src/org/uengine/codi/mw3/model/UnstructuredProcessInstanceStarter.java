@@ -6,6 +6,7 @@ import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Remover;
 import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.CodiProcessDefinitionFactory;
@@ -20,6 +21,7 @@ public class UnstructuredProcessInstanceStarter implements ContextAware {
 	}
 	
 	String title;
+		//@Face(ejsPath="genericfaces/richText.ejs", options={"rows"}, values={"5"})
 		public String getTitle() {
 			return title;
 		}
@@ -44,7 +46,7 @@ public class UnstructuredProcessInstanceStarter implements ContextAware {
 			this.metaworksContext = metaworksContext;
 		}
 
-	@ServiceMethod(callByContent = true)
+	@ServiceMethod(callByContent = true, keyBinding="enter")
 	public Object[] start() throws Exception{
 		
 		//good example: fully reused code are below:
