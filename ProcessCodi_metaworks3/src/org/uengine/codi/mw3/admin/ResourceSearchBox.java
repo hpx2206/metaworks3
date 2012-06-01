@@ -3,9 +3,11 @@ package org.uengine.codi.mw3.admin;
 import java.io.File;
 import java.util.ArrayList;
 
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.CodiClassLoader;
+import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.model.ResourceFile;
 import org.uengine.codi.mw3.model.SearchBox;
 
@@ -15,13 +17,13 @@ public class ResourceSearchBox extends SearchBox {
 		super();
 	}
 	
-	@ServiceMethod(callByContent=true, target="popup")
+	@Override
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 	public Object search() throws Exception{	
 		
 		ArrayList<ResourceFile> found = new ArrayList<ResourceFile>();
 		
 		String resourceBase = CodiClassLoader.getMyClassLoader().sourceCodeBase();
-
 		find(resourceBase, resourceBase, found);
 	
 	

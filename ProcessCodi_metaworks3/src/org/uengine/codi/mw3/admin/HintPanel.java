@@ -1,6 +1,7 @@
 package org.uengine.codi.mw3.admin;
 
 import org.uengine.codi.mw3.common.FacebookComments;
+import org.uengine.codi.mw3.knowledge.WfPanel;
 import org.uengine.codi.mw3.knowledge.Workflowy;
 import org.uengine.codi.mw3.knowledge.WorkflowyPanel;
 import org.uengine.codi.mw3.model.IUser;
@@ -11,8 +12,10 @@ public class HintPanel {
 		facebookComments = new FacebookComments("ide");
 		facebookComments.setUrl(pageName);
 		
-		setWorkflowyPanel(new WorkflowyPanel(new Workflowy(user.getUserId(), "read")));
+		WfPanel wfPanel = new WfPanel();
+		wfPanel.load(user.getUserId(), "read");
 		
+		setWfPanel(wfPanel);
 		//hintSearchBox = new HintSearchBox();
 	}
 	
@@ -26,12 +29,12 @@ public class HintPanel {
 		}
 	*/
 	
-	WorkflowyPanel workflowyPanel;
-		public WorkflowyPanel getWorkflowyPanel() {
-			return workflowyPanel;
+	WfPanel wfPanel;
+		public WfPanel getWfPanel() {
+			return wfPanel;
 		}
-		public void setWorkflowyPanel(WorkflowyPanel workflowyPanel) {
-			this.workflowyPanel = workflowyPanel;
+		public void setWfPanel(WfPanel wfPanel) {
+			this.wfPanel = wfPanel;
 		}
 
 	String pageName;	

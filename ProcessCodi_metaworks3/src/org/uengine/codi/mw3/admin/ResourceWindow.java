@@ -14,11 +14,11 @@ public class ResourceWindow {
 	}
 	
 	ResourcePanel resourcePanel;		
-	public ResourcePanel getResourcePanel() {
-		return resourcePanel;
-	}
-	public void setResourcePanel(ResourcePanel resourcePanel) {
-		this.resourcePanel = resourcePanel;
-	}
-	
+		public ResourcePanel getResourcePanel() {
+			return resourcePanel;
+		}
+		public void setResourcePanel(ResourcePanel resourcePanel) {
+			this.resourcePanel = resourcePanel;
+		}
+		
 }
