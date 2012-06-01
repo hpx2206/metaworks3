@@ -20,7 +20,7 @@ public class Main {
 		westLayout.setName("west");
 		
 		Layout eastLayout = new Layout();
-		eastLayout.setWest(new  InstanceListWindow(session));
+		eastLayout.setWest(new  InstanceListWindow());
 		eastLayout.setCenter(new ContentWindow());
 		eastLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, south__spacing_open:5, west__spacing_open:5, west__size:'40%'");
 		eastLayout.setName("east");
