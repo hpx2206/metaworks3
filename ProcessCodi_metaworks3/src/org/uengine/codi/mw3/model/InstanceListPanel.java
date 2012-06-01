@@ -9,13 +9,14 @@ public class InstanceListPanel {
 	public Session session;
 	
 	public InstanceListPanel(){		
+		setSearchBox(new SearchBox());
+		
+		InstanceList instanceList = new InstanceList();
+		instanceList.init();
+		
+		setInstanceList(instanceList);
 	}
 
-	public InstanceListPanel(Session session) {
-		super();
-		setSearchBox(new SearchBox());
-	}
-	
 	SearchBox searchBox;		
 		public SearchBox getSearchBox() {
 			return searchBox;
