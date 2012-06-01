@@ -15,6 +15,8 @@ public class ContactList implements ContextAware {
 	}
 	
 	public void load(String userId) throws Exception{
+		setId(getMetaworksContext().getWhen() + "_" + getMetaworksContext().getWhere());
+		
 		Contact contact = new Contact();
 		contact.setMetaworksContext(getMetaworksContext());
 		contact.setUserId(userId);
@@ -23,6 +25,8 @@ public class ContactList implements ContextAware {
 	}
 
 	public void loadSocial(String userId) throws Exception{
+		setId(getMetaworksContext().getWhen() + "_" + getMetaworksContext().getWhere());
+		
 		Contact contact = new Contact();
 		contact.setMetaworksContext(getMetaworksContext());
 		contact.setUserId(userId);

@@ -63,8 +63,7 @@ public class Followers {
 	public Popup addFollowers() throws Exception{		
 		Popup popup = new Popup();
 		
-		AddFollowerPanel panel = new AddFollowerPanel(session.user, getInstanceId());
-		panel.getMetaworksContext().setWhen("addFollower");
+		AddFollowerPanel panel = new AddFollowerPanel(session.user, getInstanceId());		
 
 		popup.setPanel(panel);
 		popup.setName("AddFollowerPanel");

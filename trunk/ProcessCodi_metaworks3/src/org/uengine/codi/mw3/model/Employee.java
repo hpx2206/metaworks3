@@ -5,7 +5,6 @@ import org.metaworks.Remover;
 import org.metaworks.ToOpener;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
-import org.uengine.codi.mw3.model.Popup;
 
 public class Employee extends Database<IEmployee> implements IEmployee {
 	
@@ -275,6 +274,9 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		contact.addContact();
 		
 		ContactList cp = new ContactList();
+		cp.getMetaworksContext().setWhen(ContactListPanel.CONTACT);
+		cp.getMetaworksContext().setWhere(ContactList.LOCAL);
+		
 		cp.load(session.getUser().getUserId());
 		
 		return cp;
