@@ -1,6 +1,7 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 
 public class InstanceListPanel {
@@ -18,6 +19,7 @@ public class InstanceListPanel {
 	}
 
 	SearchBox searchBox;		
+		@Face(options={"keyupSearch"}, values={"true"})
 		public SearchBox getSearchBox() {
 			return searchBox;
 		}
