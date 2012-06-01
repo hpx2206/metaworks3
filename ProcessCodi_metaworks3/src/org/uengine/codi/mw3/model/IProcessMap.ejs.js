@@ -5,7 +5,7 @@ var org_uengine_codi_mw3_model_IProcessMap = function(objectId, className){
 	
 	var object = mw3.objects[this.objectId];
 	$(this.divId).addClass(object.iconColor.value).attr('objectId', this.objectId);
-	
+	$(this.divId).parent().css({'border':'none'});
 	$( ".process_map2" ).sortable({
 		connectWith: "ul",
 		cancel: ".sptitle",

@@ -70,7 +70,7 @@ public class ContactPanel {
 //			popup.setPageY(this.pageY);
 		
 		popup.setPanel(new AddContactPanel());
-		popup.setName("AddContactPanel");
+		popup.setName("페이스북 연락처 추가");
 		
 		return popup;
 	}
@@ -83,7 +83,7 @@ public class ContactPanel {
 //		popup.setPageY(this.pageY);
 		
 		popup.setPanel(new AddLocalContactPanel(session));
-		popup.setName("AddLocalContactPanel");
+		popup.setName("연락처 추가");
 		
 		return popup;
 	}
