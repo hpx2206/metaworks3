@@ -4,16 +4,18 @@ var tryRunning = false;
 var org_uengine_codi_mw3_admin_ClassDefinition = function(objectId, className){
 	this.objectId = objectId;
 	this.classname = className;
+	this.divId = 'objDiv_' + this.objectId;
 	
 	var object = mw3.objects[objectId];
 	
-	$("#objDiv_" + objectId).css("height", "100%");
+	$('#' + this.divId).css("height", "100%");
 	
 	if(object.className != null){
-		$(".mw3_window").each(function(){
-			if($(this).attr("className") == "org.uengine.codi.mw3.model.ContentWindow")
-				$(this).find("#navigationTitle").html(object.className + ".java");
-		});
+		var windowObjId = $('#' + this.divId).closest('.mw3_window').attr('objectId');
+		
+		if(windowObjId){
+			mw3.getFaceHelper(windowObjId).setTitle(object.className + '.java');
+		}
 	}
 	
 
