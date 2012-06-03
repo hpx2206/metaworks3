@@ -11,9 +11,19 @@ import org.metaworks.annotation.NonSavable;
 import org.metaworks.annotation.ORMapping;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Table;
+import org.metaworks.annotation.TypeSelector;
 import org.metaworks.dao.IDAO;
+import org.uengine.codi.mw3.model.CommentWorkItem;
 import org.uengine.codi.mw3.model.ContentWindow;
+import org.uengine.codi.mw3.model.FileWorkItem;
+import org.uengine.codi.mw3.model.IUser;
+import org.uengine.codi.mw3.model.ImageWorkItem;
+import org.uengine.codi.mw3.model.MovieWorkItem;
 import org.uengine.codi.mw3.model.NewInstancePanel;
+import org.uengine.codi.mw3.model.PostingsWorkItem;
+import org.uengine.codi.mw3.model.ScheduleWorkItem;
+import org.uengine.codi.mw3.model.SourceCodeWorkItem;
+import org.uengine.codi.mw3.model.WorkItem;
 
 @Table(name="bpm_knol")
 public interface IWfNode extends IDAO {
@@ -21,9 +31,40 @@ public interface IWfNode extends IDAO {
 	@Id
 	public String getId();
 	public void setId(String id);
+	
+	
+//	@TypeSelector(
+//			values = 		{ 
+//					"text",			
+//					"img",		
+//					"mov", 				
+//					"src",
+//					"file", 
+//					"schdle",
+//					//"generic"
+//				}, 
+//			classes = 		{ 
+//					WfNode.class,  	
+//					WfImageNode.class,					
+//					WfMovieNode.class,
+//					WfSourceNode.class,
+//					WfFileNode.class,
+//					WfScheduleNode.class,
+//					//GenericWorkItem.class
+//				} 
+//	)
+	public String getType();
+	public void setType(String type);
 		
 	public Long getLinkedInstId();
 	public void setLinkedInstId(Long linkedInstanceId);
+
+	public String getAuthorId();
+	public void setAuthorId(String authorId);
+	
+	@ORMapping(databaseFields="authorId", objectFields="userId")
+	public IUser getAuthor();
+	public void setAuthor(IUser author);
 
 	@Name
 	public String getName();
@@ -74,8 +115,8 @@ public interface IWfNode extends IDAO {
 	@ServiceMethod(callByContent=true)
 	public WfNode newNode() throws Exception;
 	
-	@ServiceMethod(callByContent=true)
-	public WfNode add() throws Exception;
+	@ServiceMethod(callByContent=true, target="popup")
+	public Object[] add() throws Exception;
 	
 	@ServiceMethod(callByContent=true)
 	public WfNode outdent() throws Exception;
