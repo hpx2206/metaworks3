@@ -2,6 +2,7 @@ package org.uengine.codi.mw3.menu;
 
 import javax.servlet.http.HttpSession;
 
+import org.metaworks.MetaworksContext;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
@@ -14,6 +15,7 @@ import org.uengine.codi.mw3.admin.ClassDefinition;
 import org.uengine.codi.mw3.admin.NewClass;
 import org.uengine.codi.mw3.model.ContentWindow;
 import org.uengine.codi.mw3.model.Popup;
+import org.uengine.codi.mw3.model.ResourceFile;
 import org.uengine.codi.mw3.svn.CheckoutWindow;
 import org.uengine.processmanager.ProcessManagerRemote;
 
@@ -31,15 +33,25 @@ public class SubMenuFile extends SubMenu {
 		//setting the facebook user Id into session attribute;
 		HttpSession session = TransactionContext.getThreadLocalInstance().getRequest().getSession();
 		
-		long defId = 1;
+//		long defId = 1;
 
-		if(session.getAttribute("defId") != null)
-			defId = (Long)session.getAttribute("defId");		
+//		if(session.getAttribute("defId") != null)
+//			defId = (Long)session.getAttribute("defId");		
+//		
+//		NewClass newClass = new NewClass(); 
+//		newClass.setSourceFolder(String.valueOf(defId));
+
 		
-		NewClass newClass = new NewClass(); 
-		newClass.setSourceFolder(String.valueOf(defId));
-			
-		return new Object[]{newClass, new Remover(this)};			
+		ResourceFile resourceFile = new ResourceFile();
+		
+		resourceFile.setMetaworksContext(new MetaworksContext());	
+		resourceFile.getMetaworksContext().setWhere("design");
+		resourceFile.getMetaworksContext().setWhen("design");
+
+		resourceFile.setFolder(true);
+		resourceFile.setAlias("");
+
+		return new Object[]{resourceFile.newChild(), new Remover(this)};			
 	}
 	
 	@ServiceMethod(target="popup")
