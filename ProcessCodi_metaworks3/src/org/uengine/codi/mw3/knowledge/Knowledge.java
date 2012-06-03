@@ -21,15 +21,29 @@ public class Knowledge {
 		Layout outerLayout = new Layout();
 		outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:5, east__spacing_open:5,east__size:300, north__size:52");
 		outerLayout.setNorth(new KnowledgeTopPanel());
-		//outerLayout.setCenter(new WorkflowyWindow(session.getUser()));		
 		outerLayout.setCenter(new WfWindow(session.getUser()));
-		ContentWindow mashup = new ContentWindow(new Mashup());
-		outerLayout.setEast(mashup);
+		
+		Mashup mashup = new Mashup();
+		ContentWindow mashupContentWindow = new ContentWindow(mashup);
+		outerLayout.setEast(mashupContentWindow);
+		
+//		mashupGoogleImage = mashup.getMashupGoogleImage();
 		
 		setLayout(outerLayout);		
 		
 		setPageNavigator(new PageNavigator());		
 	}
+//	
+//	MashupGoogleImage mashupGoogleImage;
+//	@AutowiredToClient //need to explicitly wiring object
+//		public MashupGoogleImage getMashupGoogleImage() {
+//			return mashupGoogleImage;
+//		}
+//	
+//		public void setMashupGoogleImage(MashupGoogleImage mashupGoogleImage) {
+//			this.mashupGoogleImage = mashupGoogleImage;
+//		}
+//
 
 	Layout layout;
 		public Layout getLayout() {
