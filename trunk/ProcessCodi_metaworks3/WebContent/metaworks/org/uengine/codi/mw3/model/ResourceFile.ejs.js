@@ -15,6 +15,10 @@ startLoading : function(){
 		if(this.windowObjectId)
 			mw3.getFaceHelper(this.windowObjectId).endLoading();
 	},
+	destroy : function(){
+		if(this.windowObjectId)
+			mw3.getFaceHelper(this.windowObjectId).endLoading();
+	},
 	showStatus : function(message){
 		
 	}
