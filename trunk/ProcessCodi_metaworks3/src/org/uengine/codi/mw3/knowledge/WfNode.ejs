@@ -6,27 +6,41 @@
 	<ul>
 		<li>
 <%
+				var nodeStatus = "opened";
+				if(!value.close)
+					nodeStatus = "closed";
+
 				if(mw3.when != 'read'){
 %>		
 			<div id="wfnode_<%=objectId%>" style="height:24px">
-				<%  if(value.linkedInstId){%><span onclick="<%=methods.linkInstance.caller()%>">[<%=value.linkedInstId%>]</span><%}%>
-				<input type="text" id="wfnode_content_<%=objectId%>" style="width:100%; border:none;" style="border:0; font-family: 'Helvetica Neue', Arial, Sans-serif; font-size: 16; font-weight: normal;background:transparent" value="<%=value.name%>" onkeydown="mw3.getFaceHelper('<%=objectId%>').press(this)">
+				<!-- opened, closed -->
+				<span class="<%=nodeStatus%>" onclick="<%=value.close?methods.expand.caller():methods.collapse.caller()%>">-</span>
+				<span>
+					<%  if(value.linkedInstId){%><span onclick="<%=methods.linkInstance.caller()%>">[<%=value.linkedInstId%>]</span><%}%>
+					<input type="text" id="wfnode_content_<%=objectId%>" style="width:100% ; border:none;" style="border:0; font-family: 'Helvetica Neue', Arial, Sans-serif; font-size: 12px; font-weight: normal;background:transparent"" value="<%=value.name%>" onkeydown="mw3.getFaceHelper('<%=objectId%>').press(this)">
+				</span>
 				<div id="wfinfo_<%=objectId%>"></div>
-			</div>	
+			</div>			
 <%
-				}else{
+				}else{						
 %>
 			<div id="wfnode_<%=objectId%>" style="height:24px">
-				<input type="text" id="wfnode_content_<%=objectId%>" style="width:100% ; border:none;" style="border:0; font-family: 'Helvetica Neue', Arial, Sans-serif; font-size: 12px; font-weight: normal" value="<%=value.name%>" readonly>
+				<!-- opened, closed -->
+				<span class="<%=nodeStatus%>" onclick="<%=value.close?methods.expand.caller():methods.collapse.caller()%>">-</span>
+				<span>
+					<input type="text" id="wfnode_content_<%=objectId%>" style="width:100% ; border:none;" style="border:0; font-family: 'Helvetica Neue', Arial, Sans-serif; font-size: 12px; font-weight: normal" value="<%=value.name%>" readonly>
+				</span>
 				<div id="wfinfo_<%=objectId%>"></div>
 			</div>
 <%
 				}
 			}
+			
+			if(!value.close){			
 %>
 	<%=fields.childNode.here()%>
 <%			
-				
+			}
 %>
 		</li>
 	</ul>		

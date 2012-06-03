@@ -32,22 +32,31 @@ public interface IWfNode extends IDAO {
 	public String getParentId();
 	public void setParentId(String parentId);
 	
+	@Hidden
 	public int getNo();
 	public void setNo(int no);
 
 	@NonLoadable
 	@NonSavable
+	@Hidden
 	public String getNameNext();
 	public void setNameNext(String nameNext);
 	
 	@NonLoadable
 	@NonSavable
+	@Hidden
 	public boolean isFocus();
 	public void setFocus(boolean focus);
 
+	@NonLoadable
+	@NonSavable
+	@Hidden
+	public boolean isClose();
+	public void setClose(boolean close);
 	
 	@NonLoadable
 	@NonSavable
+	@Hidden
 	public WfNode getDragNode();
 	public void setDragNode(WfNode dragNode);
 	
@@ -91,6 +100,12 @@ public interface IWfNode extends IDAO {
 		
 	@ServiceMethod(inContextMenu=true, keyBinding="Ctrl+D")
 	public ContentWindow newDocument() throws Exception;	
+		
+	@ServiceMethod(callByContent=true)
+	public WfNode expand() throws Exception;	
+	
+	@ServiceMethod(callByContent=true)
+	public WfNode collapse() throws Exception;	
 	
 	/*******************************************
 	 * 

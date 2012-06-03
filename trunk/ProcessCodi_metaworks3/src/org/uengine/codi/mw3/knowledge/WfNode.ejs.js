@@ -3,7 +3,10 @@ var org_uengine_codi_mw3_knowledge_WfNode = function(objectId, className){
 	
 	this.objectId = objectId;
 	this.className = className;
+	this.divId = mw3._getObjectDivId(this.objectId);
 	this.prevName = object.name;
+	
+	this.windowObjectId = $('#' + this.divId).closest('.mw3_window').attr('objectId');
 	
 	this.wfInfoDiv = "#wfinfo_" + objectId;
 	
@@ -339,16 +342,15 @@ org_uengine_codi_mw3_knowledge_WfNode.prototype = {
 				return r.text.length
 			} else return o.selectionEnd
 		},
-		endLoading : function(){
-			//$(this.wfInfoDiv).html("");
-		},
 		startLoading : function(){
-			//$(this.wfInfoDiv).html("<img src='dwr/metaworks/images/circleloading.gif' align=middle> LOADING ...");
+			if(this.windowObjectId)
+				mw3.getFaceHelper(this.windowObjectId).startLoading();
 		},
-		showInfo : function(message){
-			mw3.log(message);
+		endLoading : function(){
+			if(this.windowObjectId)
+				mw3.getFaceHelper(this.windowObjectId).endLoading();
 		},
 		showStatus : function(message){
-			mw3.log(message);
-		}
+			
+		}	
 }

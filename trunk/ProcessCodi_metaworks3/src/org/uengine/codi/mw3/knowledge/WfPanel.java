@@ -2,6 +2,8 @@ package org.uengine.codi.mw3.knowledge;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.annotation.Hidden;
+import org.metaworks.annotation.ServiceMethod;
 
 public class WfPanel implements ContextAware {
 	
@@ -11,6 +13,15 @@ public class WfPanel implements ContextAware {
 		}
 		public void setWfNode(WfNode wfNode) {
 			this.wfNode = wfNode;
+		}
+
+	String keyword;
+		@Hidden
+		public String getKeyword() {
+			return keyword;
+		}
+		public void setKeyword(String keyword) {
+			this.keyword = keyword;
 		}
 
 	MetaworksContext metaworksContext;
@@ -65,4 +76,13 @@ public class WfPanel implements ContextAware {
 	public WfNode getNode(String nodeId){
 		return getWfNode().getNode(nodeId);
 	}
+	
+	@ServiceMethod(callByContent=true)
+	public void search() throws Exception {
+		getWfNode().getChildNode().clear();
+		
+		getWfNode().search(getKeyword());
+		
+	}
+	
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.dao.UniqueKeyGenerator;
@@ -49,6 +50,14 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		}
 		public void setFocus(boolean focus) {
 			this.focus = focus;
+		}
+		
+	boolean close;
+		public boolean isClose() {
+			return close;
+		}
+		public void setClose(boolean close) {
+			this.close = close;
 		}
 
 	Long linkedInstId;	
@@ -96,6 +105,34 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 	}
 	
+	public void search(String keyword) throws Exception {
+		
+		try {
+			StringBuffer sb = new StringBuffer();
+			sb.append("SELECT *");
+			sb.append("  FROM bpm_knol");
+			sb.append(" WHERE name like ?name");
+			sb.append(" ORDER BY no");
+			
+			IWfNode node = sql(sb.toString());
+			node.setName("%" + keyword + "%");
+			node.select();
+			
+			while(node.next()){
+				WfNode addNode = new WfNode();
+				
+				addNode.copyFrom(node);
+				addNode.getMetaworksContext().setWhen(getMetaworksContext().getWhen());
+				addNode.loadChildren();
+				
+				this.addChildNode(addNode);
+			}
+		} catch (Exception e) {
+			if(!"ROOT".equals(getMetaworksContext().getHow()))
+				getMetaworksContext().setHow("NONE");
+		}
+	}
+	
 	public void load(String nodeId) throws Exception {
 		
 		try {
@@ -113,6 +150,8 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 	
 	public void loadChildren() throws Exception {
 
+		setChildNode(new ArrayList<WfNode>());
+		
 		StringBuffer sb = new StringBuffer();
 		sb.append("SELECT *");
 		sb.append("  FROM bpm_knol");
@@ -139,7 +178,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 	}
 	
 	public void createMe() throws Exception {
-		String nodeId = String.valueOf(UniqueKeyGenerator.issueKey("workflowy", TransactionContext.getThreadLocalInstance()));
+		String nodeId = String.valueOf(UniqueKeyGenerator.issueKey("bpm_knol", TransactionContext.getThreadLocalInstance()));
 		
 		setId(nodeId);
 
@@ -500,5 +539,20 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 	public ContentWindow newDocument() throws Exception{
 		processDefinition.setDefId(new Long(150));
 		return (ContentWindow) processDefinition.initiate()[0];		
+	}	
+
+	public WfNode expand() throws Exception {
+		System.out.println("getChildNode().size() : " + getChildNode().size());
+		setClose(false);
+		
+		return this;
 	}
+	
+	public WfNode collapse() throws Exception {
+		System.out.println("getChildNode().size() : " + getChildNode().size());
+		setClose(true);
+		
+		return this;
+	}
+	
 }
