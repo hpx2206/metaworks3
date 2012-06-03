@@ -26,3 +26,25 @@ var org_uengine_codi_mw3_admin_PageNavigator = function(objectId, className){
 	});	
 	
 }
+
+org_uengine_codi_mw3_admin_PageNavigator.prototype = {
+	startLoading : function(){
+		$('body').prepend('<div id=\"mw3_progress\" style=\"position:absolute; z-index:99999; width:70px; height:70px; background:url(images/waveStyle/loadingBg.png) no-repeat; left:50%; top:45%;\"><img style=\"margin:10px 0 0 17px;\" src=\"images/waveStyle/load.gif\" /></div>');
+	},
+	endLoading : function(){
+		setTimeout(function(){
+			$('#mw3_progress').remove();
+		}, 500);		
+	},
+	destroy : function(){
+		setTimeout(function(){
+			$('#mw3_progress').remove();
+		}, 500);		
+		
+	},
+	showStatus : function(){
+		
+	}
+	
+
+}
