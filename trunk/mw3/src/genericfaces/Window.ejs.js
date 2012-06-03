@@ -18,6 +18,10 @@ var Window = function(objectId, className){
 	faceHelper.load();
 }
 
+Window.prototype.setTitle = function(title){
+	$(this.divId + " .mw3_window_title span").html(title);
+}
+
 Window.prototype.load = function(){
 	
 	var object = mw3.objects[this.objectId];

@@ -67,18 +67,19 @@
 		if(mw3.how != null && mw3.how == 'ide'){
 %>
             <div class="boxtopleftTab">
-            	<span class="boxtoprightTab">
-            	
+            	<span class="boxtoprightTab">            	
             		<div id="navigationTitle" class="tabCurrent mw3_window_title">
-            			<span>IDE TEST</span>
-            		</div>
 <%
 		}else{
 %>
             <div class="boxtopleft">
             	<span class="boxtopright">
             		<div id="navigationTitle" class="mw3_window_title">
-            		<%if(windowTitle){%>
+<%		
+		}
+%>		
+					<span>
+		            <%if(windowTitle){%>
 		    			<%=windowTitle%>
 		    		<%}else{%>
 		    			<%if(resourceName){%>
@@ -87,10 +88,9 @@
 		    				<%=objectName%>
 		    			<%}%>
 		    		<%}%>
+		    		</span>
 		    		</div>            		
-<%		
-		}
-%>				
+		
             		<div id="loader_<%=objectId%>" class="loadingarea" style="display: none; "><img src="/uengine-web/images/waveStyle/ajax-loader.gif" border="0"></div>
 <%
 			if(maximize){
