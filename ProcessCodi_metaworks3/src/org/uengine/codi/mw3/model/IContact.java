@@ -12,13 +12,18 @@ import org.metaworks.dao.IDAO;
 
 public interface IContact extends IDAO{
 	
-	@ORMapping(databaseFields = {"friendId", "friendName"}, objectFields = {"userId", "name"})
+	@ORMapping(databaseFields = {"friendId", "friendName", "network"}, objectFields = {"userId", "name", "network"})
 	public IUser getFriend();
 	public void setFriend(IUser friend);
 	
 	@Id
 	public String getUserId();
 	public void setUserId(String userId);
+	
+	
+	public String getNetwork();
+	public void setNetwork(String network);
+
 
 	@ServiceMethod(when="pickUp", callByContent=true, target="opener")
 	public User pickUp() throws RemoteException, Exception;

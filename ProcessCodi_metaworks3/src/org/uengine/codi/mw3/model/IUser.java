@@ -3,6 +3,7 @@ package org.uengine.codi.mw3.model;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.IDAO;
+import org.metaworks.widget.ModalWindow;
 
 public interface IUser extends IDAO{
 	public static final String MW3_WHERE_ROLEUSER_PICKER_CALLER = "roleUserPickerCaller";
@@ -14,6 +15,9 @@ public interface IUser extends IDAO{
 	
 	public String getName();
 	public void setName(String name);
+	
+	public String getNetwork();
+	public void setNetwork(String network);
 	
 //	@NonLoadable
 //	@NonSavable
@@ -43,4 +47,8 @@ public interface IUser extends IDAO{
 	
 	@ServiceMethod(callByContent=true)
 	public Object[] removeContact() throws Exception;
+	
+	@ServiceMethod(target="popup", payload={"userId", "network", "name"})
+	public ModalWindow info() throws Exception;
+
 }

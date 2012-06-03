@@ -44,8 +44,10 @@ public class Navigation {
 			this.processStatusPerspective = processStatusPerspective;
 		}
 
-	public Navigation() {
+	public Navigation() throws Exception {
 		personalPerspective = new PersonalPerspective();
+		personalPerspective.select();
+		
 		organizationPerspective = new OrganizationPerspective();
 		processPerspective = new ProcessPerspective();
 		processStatusPerspective = new ProcessStatusPerspective();

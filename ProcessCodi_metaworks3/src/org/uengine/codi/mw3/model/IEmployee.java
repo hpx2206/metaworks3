@@ -9,6 +9,7 @@ import org.metaworks.annotation.NonSavable;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Table;
 import org.metaworks.dao.IDAO;
+import org.metaworks.website.MetaworksFile;
 import org.uengine.codi.mw3.model.Popup;
 
 @Table(name = "EMPTABLE")
@@ -75,6 +76,12 @@ public interface IEmployee extends IDAO {
 
 	public abstract boolean getIsAdmin();
 	public abstract void setIsAdmin(boolean value);
+	
+	@NonSavable
+	@NonLoadable
+	public MetaworksFile getPortrait();
+	public void setPortrait(MetaworksFile portrait);
+
 	
 	public IEmployee findMe() throws Exception;
 	

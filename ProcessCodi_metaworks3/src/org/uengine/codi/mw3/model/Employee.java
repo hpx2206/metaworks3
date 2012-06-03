@@ -1,10 +1,14 @@
 package org.uengine.codi.mw3.model;
 
+import java.io.File;
+
 import org.metaworks.MetaworksContext;
 import org.metaworks.Remover;
 import org.metaworks.ToOpener;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
+import org.metaworks.dao.TransactionContext;
+import org.metaworks.website.MetaworksFile;
 
 public class Employee extends Database<IEmployee> implements IEmployee {
 	
@@ -25,6 +29,16 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	String email;
 	String locale;
 	
+	MetaworksFile portrait;
+	
+	public MetaworksFile getPortrait() {
+		return portrait;
+	}
+
+	public void setPortrait(MetaworksFile portrait) {
+		this.portrait = portrait;
+	}
+
 	public String getEmpCode() {
 		return empCode;
 	}
@@ -230,6 +244,14 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 			// if(getMetaworksContext().getWhen().equals(MetaworksContext.WHEN_EDIT))
 			syncToDatabaseMe();
 		}
+		
+		if(getPortrait()!=null && getPortrait().getFileTransfer()!=null){
+			getPortrait().upload();
+			
+			new File(getPortrait().getUploadedPath()).renameTo(new File(TransactionContext.getThreadLocalInstance().getRequest().getContextPath() + "/portrait/" + getEmpCode() + ".jpg"));
+
+		}
+		
 		flushDatabaseMe();
 		getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 		
