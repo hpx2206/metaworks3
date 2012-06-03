@@ -17,10 +17,18 @@ function readComment(objectId){
 		    query: 'SELECT uid, name, pic_square FROM user WHERE uid = me() OR uid IN (SELECT uid2 FROM friend WHERE uid1 = me())'
 		  },
 		  function(response) {
+			  
+			  if(!response || response.error){
+				  alert('Error!');
+
+				  return;
+			  }
+			  
 			  for(var i in response){
 				  friends[i] = {
 						  userId : response[i].uid,
 						  name : response[i].name,
+						  network: 'fb',
 						  __className : "org.uengine.codi.mw3.model.IUser",
 						  
 				  };
