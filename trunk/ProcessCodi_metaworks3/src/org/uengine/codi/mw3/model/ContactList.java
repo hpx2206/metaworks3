@@ -15,23 +15,19 @@ public class ContactList implements ContextAware {
 	}
 	
 	public void load(String userId) throws Exception{
-		setId(getMetaworksContext().getWhen() + "_" + getMetaworksContext().getWhere());
-		
-		Contact contact = new Contact();
-		contact.setMetaworksContext(getMetaworksContext());
-		contact.setUserId(userId);
-			
-		setContacts(contact.loadLocalContacts());
+		load(userId, null);
 	}
-
-	public void loadSocial(String userId) throws Exception{
+	public void load(String userId, String keyword) throws Exception{
 		setId(getMetaworksContext().getWhen() + "_" + getMetaworksContext().getWhere());
 		
 		Contact contact = new Contact();
 		contact.setMetaworksContext(getMetaworksContext());
 		contact.setUserId(userId);
 			
-		setContacts(contact.loadSocialContacts());
+		if(LOCAL.equals(this.getMetaworksContext().getWhere()))
+			setContacts(contact.loadLocalContacts(keyword));
+		else if(SOCIAL.equals(this.getMetaworksContext().getWhere()))
+		setContacts(contact.loadSocialContacts(keyword));
 	}
 
 	String id;

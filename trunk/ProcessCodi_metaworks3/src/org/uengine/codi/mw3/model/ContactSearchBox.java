@@ -9,15 +9,13 @@ public class ContactSearchBox extends SearchBox {
 	}
 
 	@ServiceMethod(callByContent=true)
-	public Object search() throws Exception{
-		ContactList contactPanel = new ContactList();
+	public Object[] search() throws Exception{
+		String userId = session.getUser().getUserId();
+
+		ContactListPanel contactListPanel = new ContactListPanel();		
+		contactListPanel.getMetaworksContext().setWhen(ContactListPanel.CONTACT);
+		contactListPanel.load(userId, getKeyword());
 		
-		Contact contact = new Contact();
-		contact.setUserId(session.getUser().getUserId());
-		contactPanel.setContacts(contact.findContactsWithFriendName(getKeyword()));
-				
-		return contactPanel;
+		return new Object[]{contactListPanel.getLocalContactList(), contactListPanel.getSocialContactList()};
 	}
-	
-		
 }
