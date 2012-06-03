@@ -25,7 +25,8 @@ public class NewChildContentPanel  {
 
 	@ServiceMethod
 	public EntityDesignerContentPanel newEntity() throws Exception{
-		EntityDesignerContentPanel entityDesignerContentPanel = new EntityDesignerContentPanel();
+		EntityDesignerContentPanel entityDesignerContentPanel = new EntityDesignerContentPanel();		
+		entityDesignerContentPanel.getMetaworksContext().setHow("ide");
 		entityDesignerContentPanel.newEntity(session.getUser(), getParentFolder().toString());
 						
 		return entityDesignerContentPanel;
@@ -34,6 +35,7 @@ public class NewChildContentPanel  {
 	@ServiceMethod
 	public ClassDesignerContentPanel newJavaClass() throws Exception{
 		ClassDesignerContentPanel classDesigner = new ClassDesignerContentPanel();
+		classDesigner.getMetaworksContext().setHow("ide");
 		classDesigner.newClass(getParentFolder().toString());
 		
 		return classDesigner;
@@ -42,6 +44,7 @@ public class NewChildContentPanel  {
 	@ServiceMethod
 	public ProcessDesignerWindow newProcess() throws Exception{
 		ProcessDesignerWindow processDesigner = new ProcessDesignerWindow();
+		processDesigner.getMetaworksContext().setHow("ide");
 		processDesigner.newProcessDefinition(getParentFolder().toString());
 		
 		return processDesigner;
@@ -58,6 +61,7 @@ public class NewChildContentPanel  {
 	@ServiceMethod
 	public FormDesignerContentPanel newForm(){
 		FormDesignerContentPanel formDesigner = new FormDesignerContentPanel();
+		formDesigner.getMetaworksContext().setHow("ide");
 		formDesigner.newForm(getParentFolder().toString());
 		
 		return formDesigner;
@@ -79,6 +83,7 @@ public class NewChildContentPanel  {
 		
 		RuleDesignerWindow ruleDesignerWindow = new RuleDesignerWindow();
 		ruleDesignerWindow.newRule(getParentFolder().toString());
+		ruleDesignerWindow.getMetaworksContext().setHow("ide");
 		
 		return ruleDesignerWindow;
 	}
@@ -88,6 +93,7 @@ public class NewChildContentPanel  {
 		
 		WebServiceAdapterContentPanel webServiceAdapterContentPanel = new WebServiceAdapterContentPanel();
 		webServiceAdapterContentPanel.newWebServiceAdapter(getParentFolder().toString());
+		webServiceAdapterContentPanel.getMetaworksContext().setHow("ide");
 		
 		return webServiceAdapterContentPanel;
 	}
