@@ -20,7 +20,7 @@ public class SearchBox {
 		}
 		
 	@ServiceMethod(callByContent=true)
-	public Object search() throws Exception{
+	public Object[] search() throws Exception{
 		System.out.println("keyword : " + getKeyword());
 		
 		InstanceList instanceList = new InstanceList();
@@ -30,6 +30,6 @@ public class SearchBox {
 		
 		//instanceListPanel.setSearchBox(this);
 				
-		return instanceList;		
+		return new Object[]{instanceList};				
 	}	
 }

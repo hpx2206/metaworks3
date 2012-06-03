@@ -1,4 +1,4 @@
-var org_forx_model_codi_IEmployee = function(objectId, className){
+var org_uengine_codi_mw3_model_IEmployee = function(objectId, className){
 	var object = mw3.objects[objectId];	
 	
 	this.objectId = objectId;

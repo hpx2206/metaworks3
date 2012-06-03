@@ -8,16 +8,56 @@ import org.metaworks.dao.Database;
 public class Contact extends Database<IContact> implements IContact{
 
 	public IContact loadLocalContacts() throws Exception{
-		IContact contacts = sql("select a.* from contact a where userId=?userId and exists (select empcode from emptable where a.friendId = empcode)");
-		contacts.setUserId(getUserId());
+		return loadLocalContacts(null);
+	}
+	public IContact loadLocalContacts(String keyword) throws Exception{
+		IUser friend = new User();
+		friend.setName(keyword + '%');
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append("select a.*");
+		sb.append("  from contact a");
+		sb.append(" where userId=?userId");
+		
+		if(keyword != null && keyword.length() > 0)
+			sb.append("   and friendName like ?friendName");
+		
+		sb.append("   and exists");
+		sb.append("   	  (select empcode");
+		sb.append("          from emptable");
+		sb.append("   	     where a.friendId = empcode)");
+		
+		IContact contacts = sql(sb.toString());
+		contacts.setUserId(getUserId());		
+		contacts.setFriend(friend);		
 		contacts.select();
 		contacts.setMetaworksContext(getMetaworksContext());
 		return contacts;
 	}
 
 	public IContact loadSocialContacts() throws Exception{
-		IContact contacts = sql("select a.* from contact a where userId=?userId and not exists (select empcode from emptable where a.friendId = empcode)");
+		return loadSocialContacts(null);
+	}
+	public IContact loadSocialContacts(String keyword) throws Exception{
+		IUser friend = new User();
+		friend.setName(keyword + '%');
+
+		StringBuffer sb = new StringBuffer();
+		sb.append("select a.*");
+		sb.append("  from contact a");
+		sb.append(" where userId=?userId");
+		
+		if(keyword != null && keyword.length() > 0)
+			sb.append("   and friendName like ?friendName");
+		
+		sb.append("   and not exists");
+		sb.append("   	  (select empcode");
+		sb.append("          from emptable");
+		sb.append("   	     where a.friendId = empcode)");
+		
+		IContact contacts = sql(sb.toString());
 		contacts.setUserId(getUserId());
+		contacts.setFriend(friend);
 		contacts.select();
 		contacts.setMetaworksContext(getMetaworksContext());
 		return contacts;

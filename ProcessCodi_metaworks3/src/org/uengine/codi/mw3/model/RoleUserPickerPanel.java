@@ -13,30 +13,26 @@ public class RoleUserPickerPanel implements ContextAware {
 	public RoleUserPickerPanel(IUser loginUser) throws Exception{
 		this();
 		
-		ContactList contactList = new ContactList();
-		contactList.load(loginUser.getUserId());
+		ContactListPanel contactListPanel = new ContactListPanel();		
+		contactListPanel.getMetaworksContext().setWhen(IUser.MW3_WHERE_ROLEUSER_PICKER);
+		contactListPanel.load(loginUser.getUserId());		
 		
-		setContactList(contactList);
+		setContactListPanel(contactListPanel);
 	}
 	
-	
-	ContactList contactList;
-	public ContactList getContactList() {
-		return contactList;
-	}	
-	public void setContactList(ContactList contactList) {
-		this.contactList = contactList;
-	}	
+	ContactListPanel contactListPanel;
+		public ContactListPanel getContactListPanel() {
+			return contactListPanel;
+		}	
+		public void setContactListPanel(ContactListPanel contactListPanel) {
+			this.contactListPanel = contactListPanel;
+		}
 
 	MetaworksContext metaworksContext;
-
-	@Override
-	public MetaworksContext getMetaworksContext() {
-		return metaworksContext;
-	}
-
-	@Override
-	public void setMetaworksContext(MetaworksContext metaworksContext) {
-		this.metaworksContext = metaworksContext;
-	}
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
+		}
 }

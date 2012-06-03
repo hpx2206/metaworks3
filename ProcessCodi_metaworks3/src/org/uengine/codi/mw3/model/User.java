@@ -184,15 +184,19 @@ public class User extends Database<IUser> implements IUser {
 	}
 	
 	public ContactList addContact() throws Exception {
+		
 		Contact contact = new Contact();
 		contact.setFriend(this);
 		contact.setUserId(session.getUser().getUserId());
 		contact.addContact();
 		
-		ContactList cp = new ContactList();
-		cp.load(session.getUser().getUserId());
+		ContactList contactList = new ContactList();
+		contactList.getMetaworksContext().setWhen(ContactListPanel.CONTACT);
+		contactList.getMetaworksContext().setWhere(this.getMetaworksContext().getWhere());
 		
-		return cp;
+		contactList.load(session.getUser().getUserId());
+		
+		return contactList;
 	}	
 	
 	public Object[] removeContact() throws Exception {
@@ -202,7 +206,8 @@ public class User extends Database<IUser> implements IUser {
 		contact.removeContact();
 		
 		ContactList contactList = new ContactList();
-		contactList.setId(ContactListPanel.CONTACT + "_" + ContactList.LOCAL);
+		contactList.getMetaworksContext().setWhen(ContactListPanel.CONTACT);
+		contactList.getMetaworksContext().setWhere(this.getMetaworksContext().getWhere());
 		contactList.load(session.getUser().getUserId());
 		
 		return new Object[] {contactList, new Popup(this)};
