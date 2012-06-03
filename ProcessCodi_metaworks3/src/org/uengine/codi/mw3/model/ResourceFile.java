@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
@@ -12,7 +13,6 @@ import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.CodiClassLoader;
-import org.uengine.codi.mw3.common.FacebookComments;
 import org.uengine.codi.mw3.knowledge.WorkflowyNode;
 import org.uengine.kernel.RoleMapping;
 import org.uengine.processmanager.ProcessManagerRemote;
@@ -27,6 +27,10 @@ import org.uengine.util.UEngineUtil;
 	)
 public class ResourceFile implements ContextAware{
 
+	public ResourceFile() {
+		setMetaworksContext(new MetaworksContext());
+	}
+	
 	String alias;
 	@Id
 		public String getAlias() {
@@ -186,7 +190,7 @@ public class ResourceFile implements ContextAware{
 	}
 	
 	@ServiceMethod(callByContent=true, except="childs", inContextMenu=true, needToConfirm=true)
-	public ResourceFile delete() throws Exception {
+	public Object delete() throws Exception {
 		
 		String resourceBase = CodiClassLoader.getMyClassLoader().sourceCodeBase() + "/";
 		
@@ -196,7 +200,7 @@ public class ResourceFile implements ContextAware{
 		
 		setDeleted(true);
 		
-		return this;
+		return new Remover(this);
 		
 	}	
 	
