@@ -125,7 +125,6 @@ public class ResourceFile implements ContextAware{
 	
 	@ServiceMethod(callByContent=true, except="childs")
 	public void drillDown(){
-		
 		if(isOpened()){
 			setOpened(false);
 			
@@ -148,7 +147,7 @@ public class ResourceFile implements ContextAware{
 		
 		String[] childFilePaths = file.list();
 		childs = new ArrayList<ResourceFile>();
-		
+				
 		for(int i=0; i<childFilePaths.length; i++){
 			ResourceFile rf = new ResourceFile();
 			
@@ -179,7 +178,8 @@ public class ResourceFile implements ContextAware{
 	
 	@ServiceMethod(callByContent=true, except="childs", inContextMenu=true, keyBinding="Ctrl+N")
 	public NewChildWindow newChild() throws Exception {
-		NewChildWindow newChildWindow = new NewChildWindow(); 
+		NewChildWindow newChildWindow = new NewChildWindow();
+		newChildWindow.getMetaworksContext().setHow("ide");
 		newChildWindow.setParentFolder(getAlias());
 		
 		return newChildWindow;
@@ -232,6 +232,7 @@ public class ResourceFile implements ContextAware{
 		
 			if("class".equals(objType)){
 				ClassDesignerContentPanel classDesignerContentPanel = new ClassDesignerContentPanel();
+				classDesignerContentPanel.getMetaworksContext().setHow("ide");
 				classDesignerContentPanel.load(getAlias());
 				
 				return classDesignerContentPanel;
@@ -239,6 +240,8 @@ public class ResourceFile implements ContextAware{
 			}else {
 				try{
 					ResourceDesigner designer = (ResourceDesigner)Class.forName("org.uengine.codi.mw3.model." + UEngineUtil.toOnlyFirstCharacterUpper(objType) + "Designer").newInstance();
+					designer.getMetaworksContext().setHow("ide");
+					
 					designer.setAlias(alias);
 					designer.load();
 					
@@ -267,6 +270,7 @@ public class ResourceFile implements ContextAware{
 	@ServiceMethod(callByContent=true, except="childs")
 	public Object[] initiate() throws Exception{
 		InstanceViewContent instanceView = instanceViewContent;// = new InstanceViewContent();
+		instanceView.getMetaworksContext().setHow("ide");
 		
 		String instId = processManager.initializeProcess(getAlias());
 		
@@ -286,6 +290,7 @@ public class ResourceFile implements ContextAware{
 		instanceView.load(instanceRef);
 		
 		InstanceListPanel instanceList = new InstanceListPanel(); //should return instanceListPanel not the instanceList only since there're one or more instanceList object in the client-side
+		
 		//instanceList.load(session.login, session.navigation);
 
 		if(newInstancePanel!=null && newInstancePanel.getKnowledgeNodeId() != null){
