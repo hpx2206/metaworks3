@@ -1,6 +1,7 @@
 package org.uengine.codi.mw3.model;
 
 import java.util.Collection;
+import java.util.Date;
 
 import org.apache.commons.digester.SetRootRule;
 import org.directwebremoting.ScriptSession;
@@ -154,6 +155,47 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			this.sourceCode = sourceCode;
 		}
 		
+	Date startDate;
+			
+		public Date getStartDate() {
+			return startDate;
+		}
+	
+		public void setStartDate(Date startDate) {
+			this.startDate = startDate;
+		}
+
+	Date endDate;
+	
+		public Date getEndDate() {
+			return endDate;
+		}
+	
+		public void setEndDate(Date endDate) {
+			this.endDate = endDate;
+		}
+		
+	Date dueDate;
+	
+		public Date getDueDate() {
+			return dueDate;
+		}
+	
+		public void setDueDate(Date dueDate) {
+			this.dueDate = dueDate;
+		}
+		
+	Date saveDate;
+
+		public Date getSaveDate() {
+			return saveDate;
+		}
+	
+		public void setSaveDate(Date saveDate) {
+			this.saveDate = saveDate;
+		}
+
+
 	String tool;
 	@Hidden
 		public String getTool() {
