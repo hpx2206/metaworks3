@@ -19,7 +19,7 @@ public class ResourceSearchBox extends SearchBox {
 	
 	@Override
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
-	public Object search() throws Exception{	
+	public Object[] search() throws Exception{	
 		
 		ArrayList<ResourceFile> found = new ArrayList<ResourceFile>();
 		
@@ -31,7 +31,7 @@ public class ResourceSearchBox extends SearchBox {
 		searchResult.setTitle("Open Resource");
 		searchResult.setPanel(found);
 		
-		return searchResult;
+		return new Object[]{searchResult};
 	}
 	
 	@ServiceMethod(target="popup", keyBinding="Ctrl+Shift+R@Global")
