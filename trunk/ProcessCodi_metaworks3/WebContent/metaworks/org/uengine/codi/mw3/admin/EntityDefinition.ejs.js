@@ -1,14 +1,16 @@
 var org_uengine_codi_mw3_admin_EntityDefinition = function(objectId, className){
 	this.objectId = objectId;
 	this.className = className;
-
+	this.divId = 'objDiv_' + this.objectId;
+	
 	var object = mw3.objects[this.objectId];
 	
 	if(object.entityName != null){
-		$(".mw3_window").each(function(){
-			if($(this).attr("className") == "org.uengine.codi.mw3.model.ContentWindow")
-				$(this).find("#navigationTitle").html(object.entityName + ".sql");
-		});
+		var windowObjId = $('#' + this.divId).closest('.mw3_window').attr('objectId');
+		
+		if(windowObjId){
+			mw3.getFaceHelper(windowObjId).setTitle(object.className + '.java');
+		}
 	}
 	
 	// overrides the function
