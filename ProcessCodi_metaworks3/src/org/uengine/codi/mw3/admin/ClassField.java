@@ -132,7 +132,7 @@ public class ClassField implements Cloneable, ContextAware{
 		
 		
 	@ServiceMethod(when=MetaworksContext.WHEN_EDIT, where="newEntry", callByContent=true)
-	public Object add() throws Exception{
+	public Object[] add() throws Exception{
 
 		
 		if(classModeler.classFields==null)
@@ -193,10 +193,10 @@ public class ClassField implements Cloneable, ContextAware{
 			classSourceCodes.getSourceCode().setCode(javaCode.toString());
 		}
 		
-		if(classSourceCodes != null)
-			return classSourceCodes;
-		else
-			return classModeler;
+		if(classSourceCodes != null){
+			return new Object[]{classSourceCodes.getSourceCode(), classModeler};			
+		}else
+			return new Object[]{classModeler};
 	}
 		
 	@ServiceMethod(when=MetaworksContext.WHEN_EDIT, where="in-container", callByContent=true)
