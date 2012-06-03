@@ -10,6 +10,7 @@ import org.metaworks.annotation.Id;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.TransactionContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.processmanager.ProcessManagerRemote;
 
 public class Instance extends Database<IInstance> implements IInstance{
 
@@ -101,6 +102,17 @@ public class Instance extends Database<IInstance> implements IInstance{
 		
 		return instanceViewContent;
 	}
+	
+	public ProcessInstanceMonitor flowchart() throws Exception{
+		ProcessInstanceMonitor processInstanceMonitor = new ProcessInstanceMonitor();
+		processInstanceMonitor.setInstanceId(getInstId().toString());
+		processInstanceMonitor.load(processManager);
+
+		return processInstanceMonitor;
+	}
+	
+	@Autowired
+	public ProcessManagerRemote processManager;
 	
 	Long instId;
 		@Id
