@@ -228,16 +228,17 @@
 				var registeredHelper = this.faceHelpers[objectId];
 				
 				return registeredHelper;
+//				
+//		TODO: 맨밖에서 부터 호출되게만 된다면 문제없음...
 				
-				/*
-				if(registeredHelper!=null)
-					return registeredHelper;
-				else{
-					this.loadFaceHelper(objectId);
-					
-					return this.faceHelpers[objectId];
-				}
-				*/
+//				if(registeredHelper!=null)
+//					return registeredHelper;
+//				else{
+//					this.loadFaceHelper(objectId);
+//					
+//					return this.faceHelpers[objectId];
+//				}
+//				
 				
 			}
 			
@@ -679,7 +680,7 @@
 
 			   					var keyBinding = methodContext.keyBinding[i];
 			   					var targetDivId = this._getObjectDivId(objectId);
-			   					var command = "mw3.call("+objectId+", '"+methodName+"')";
+			   					var command = "if(mw3.objects['"+ objectId +"']!=null) mw3.call("+objectId+", '"+methodName+"')";
 			   					
 			   					if(keyBinding.indexOf("@Global") > -1){
 			   						keyBinding = keyBinding.substr(keyBinding.length - "@Global".length);
@@ -1533,12 +1534,17 @@
 
 
 						}
+					}else{
+						if(console)
+							console.log('serviceMethodContext is not found!');
+						
+						return;
 					}
 
 					
 					this.startProgress();
 					
-					if(serviceMethodContext.target!="none"){						
+					if(serviceMethodContext && serviceMethodContext.target!="none"){						
 						if(this.getFaceHelper(objId) && this.getFaceHelper(objId).startLoading){
 							this.getFaceHelper(objId).startLoading(svcNameAndMethodName);
 						}else{
