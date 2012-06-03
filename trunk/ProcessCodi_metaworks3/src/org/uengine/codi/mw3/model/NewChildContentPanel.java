@@ -6,6 +6,7 @@ import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.widget.ModalWindow;
 import org.metaworks.widget.Window;
 
 public class NewChildContentPanel  {
@@ -68,11 +69,11 @@ public class NewChildContentPanel  {
 	}
 	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
-	public Window newFolder(){
+	public ModalWindow newFolder(){
 		NewFolder nf = new NewFolder();
 		nf.setParentFolderDefId(getParentFolder());
 
-		Window newFolderWindow = new Window(nf);
+		ModalWindow newFolderWindow = new ModalWindow(nf, 300, 200, "폴더 추가");
 		
 		
 		return newFolderWindow;
