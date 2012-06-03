@@ -12,6 +12,7 @@ import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.TransactionContext;
+import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.uengine.kernel.ProcessInstance;
@@ -93,9 +94,9 @@ public class InstanceView {
 		
 		newItem.setWriter(session.user);
 		
-		ProcessInstanceMonitor flowChart = new ProcessInstanceMonitor();
-		flowChart.setInstanceId(instanceId);
-		setProcessInstanceMonitor(flowChart);
+		//ProcessInstanceMonitor flowChart = new ProcessInstanceMonitor();
+		//flowChart.setInstanceId(instanceId);
+		//setProcessInstanceMonitor(flowChart);
 		
 		setInstanceName(instance.getName());
 
@@ -200,16 +201,16 @@ public class InstanceView {
 			this.threadPosting = threadPosting;
 		}
 
-	public ProcessInstanceMonitor processInstanceMonitor;
-
-	public ProcessInstanceMonitor getProcessInstanceMonitor() {
-		return processInstanceMonitor;
-	}
-
-	public void setProcessInstanceMonitor(
-			ProcessInstanceMonitor processInstanceMonitor) {
-		this.processInstanceMonitor = processInstanceMonitor;
-	}
+//	public ProcessInstanceMonitor processInstanceMonitor;
+//
+//	public ProcessInstanceMonitor getProcessInstanceMonitor() {
+//		return processInstanceMonitor;
+//	}
+//
+//	public void setProcessInstanceMonitor(
+//			ProcessInstanceMonitor processInstanceMonitor) {
+//		this.processInstanceMonitor = processInstanceMonitor;
+//	}
 		
 	EventTriggerPanel eventTriggerPanel;
 				
@@ -252,18 +253,24 @@ public class InstanceView {
 		scheduleEditor.setInstanceId(instanceId);
 		scheduleEditor.load(processManager);
 		//loadDefault();
-		
+
 		return scheduleEditor;
 	}
 	
-	@ServiceMethod 
-	public ProcessInstanceMonitor monitor() throws Exception{
-		processInstanceMonitor = new ProcessInstanceMonitor();
-		processInstanceMonitor.setInstanceId(instanceId);
-		processInstanceMonitor.load(processManager);
+	@ServiceMethod(target="popup")
+	public ModalWindow monitor() throws Exception{
+		
+		ModalWindow modal = new ModalWindow();
+		
+		ProcessInstanceMonitorPanel processInstanceMonitorPanel = new ProcessInstanceMonitorPanel();
+		processInstanceMonitorPanel.processManager = processManager;
+		processInstanceMonitorPanel.load(instanceId);
+		
+		modal.setPanel(processInstanceMonitorPanel);
+		
 		//loadDefault();
 		
-		return processInstanceMonitor;
+		return modal;
 	}
 	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
