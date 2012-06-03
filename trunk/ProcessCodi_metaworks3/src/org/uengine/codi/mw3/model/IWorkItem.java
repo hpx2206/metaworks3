@@ -1,5 +1,7 @@
 package org.uengine.codi.mw3.model;
 
+import java.util.Date;
+
 import javax.annotation.Generated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -112,7 +114,19 @@ public interface IWorkItem extends IDAO{
 		public Long getRootInstId();
 		public void setRootInstId(Long rootInstId);
 
-		
+		public Date getStartDate();
+		public void setStartDate(Date date);
+
+		public Date getEndDate();
+		public void setEndDate(Date date);
+
+		public Date getSaveDate();
+		public void setSaveDate(Date date);
+
+		public Date getDueDate();
+		public void setDueDate(Date date);
+
+
 		public String getTool();
 		public void setTool(String tool);
 		
