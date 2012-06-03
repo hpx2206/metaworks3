@@ -5,6 +5,7 @@ import java.rmi.RemoteException;
 
 import org.metaworks.dao.Database;
 
+
 public class Contact extends Database<IContact> implements IContact{
 
 	public IContact loadLocalContacts() throws Exception{
