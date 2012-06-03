@@ -186,9 +186,9 @@ img {border:0;}
 	background:url(../../images/ide/t02.png) no-repeat right top;
 }
 
-.boxtoprightTab .tabCurrent{display:block; background:url('../../images/ide/tCurrnetL.png') left 0; float:left;  margin-left:-4px; padding-left:10px; text-decoration:none; height:25px; cursor:pointer; margin-right:23px; overflow:hidden}
+.boxtoprightTab .tabCurrent{display:block; background:url('../../images/ide/tCurrnetL.png') left 0; float:left;  margin-left:-4px; padding-left:10px; text-decoration:none; height:20px; cursor:pointer; margin-right:23px; overflow:hidden}
 
-.boxtoprightTab .tabCurrent span{display:block; float:left; background:url('../../images/ide/tCurrnetL.png') right 0; line-height:200%; padding-right:23px; height:25px; overflow:hidden}
+.boxtoprightTab .tabCurrent span{display:block; float:left; background:url('../../images/ide/tCurrnetL.png') right 0; line-height:200%; padding-right:23px; height:20px; overflow:hidden}
 
 .boxmiddleright {
 	/*overflow:hidden;*/
