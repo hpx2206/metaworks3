@@ -13,10 +13,24 @@
 					<%=fields.writer.here()%>
 				</td>				
 				<td>					
-					<div class="formcontexttitle" id="currentRunningWorkItemHandler" onclick="getFormContext('1','/uengine-web/codi-web/processparticipant/codiWorkitemHandler.jsp?taskId=950&amp;tag=1&amp;appKey=9bf41e27-0102-48ec-8494-122ebc94232f')">
+					<div class="formcontexttitle" id="currentRunningWorkItemHandler">
 						<img src="images/activity_status/i_status_confirmed.png">
-						<a onclick="<%=methods.detail.caller()%>"><%=value.title%></a>
+						
+						<% if(value.type=='comment'){%>
+							<%=value.title%>
+						<% }else if(value.type=='file'){%>
+							<%=value.title%><%=fields.file.here()%>
+							
+						<%}else if(value.type=='src'){%>
+							<%=value.title%>
+						<%}else{%>
+							<a onclick="<%=methods.detail.caller()%>"><%=value.title%></a>
+						<%}%>
 					</div>
+					
+					<%if(value.type=='src'){%>
+						<%=fields.sourceCode.here()%>
+					<%}%>
 				</td>
 			</tr>
 			<tr>

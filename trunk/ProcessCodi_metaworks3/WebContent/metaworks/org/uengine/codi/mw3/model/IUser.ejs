@@ -13,10 +13,10 @@
 		var unknown = 'images/portrait/unknown_user.gif';
 		var portrait = unknown;
 		
-		if(mw3.where == 'local'){
+		if(value.network == 'local'){
 			if(value.userId)
 				portrait = 'images/portrait/' + value.userId;			
-		}else if(mw3.where == 'social'){
+		}else if(value.network == 'fb'){
 			if(value.userId)
 				portrait = 'http://graph.facebook.com/' + value.userId + '/picture';			
 		}
@@ -53,6 +53,7 @@
 				}
 %>				
 				<li><a id="wBtn" href="javascript:<%=methods.chat.caller()%>"><span>Chat</span></a></li>			
+				<li><a id="wBtn" href="javascript:<%=methods.info.caller()%>"><span>Info</span></a></li>			
 			</ul>
 		</div>
 <%
