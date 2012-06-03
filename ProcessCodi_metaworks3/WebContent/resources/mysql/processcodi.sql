@@ -774,6 +774,8 @@ CREATE TABLE `contact` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+
+
 --
 -- Dumping data for table `contact`
 --
@@ -2723,3 +2725,8 @@ UNLOCK TABLES;
 SET FOREIGN_KEY_CHECKS = 1;
 
 -- Dump completed on 2012-05-21 12:46:20
+
+
+ alter table contact add column network char(10);
+ 
+ 
