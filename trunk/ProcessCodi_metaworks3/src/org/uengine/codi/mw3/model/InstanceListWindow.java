@@ -17,6 +17,7 @@ public class InstanceListWindow {
 
 	public InstanceListWindow(){}
 	public InstanceListWindow(Session session) throws Exception {
+		this.session = session;
 		switchToInstanceListPanel();
 	}
 	
@@ -47,7 +48,13 @@ public class InstanceListWindow {
 	@Hidden
 	@ServiceMethod(inContextMenu=true)
 	public void switchToInstanceListPanel() throws Exception{
-		this.instanceListPanel = new InstanceListPanel();
+		//this.instanceListPanel = new InstanceListPanel();
+		PersonalPerspective personalPerspective = new PersonalPerspective();
+		personalPerspective.session = session;
+		this.instanceListPanel = (InstanceListPanel) personalPerspective.loadInbox()[1];
+		//personalPerspective.select();
+
+		
 		this.instanceListPanel.session = session;
 	}
 		

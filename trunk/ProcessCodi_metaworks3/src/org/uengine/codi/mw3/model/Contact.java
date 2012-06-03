@@ -117,7 +117,16 @@ public class Contact extends Database<IContact> implements IContact{
 		public void setUserId(String userId) {
 			this.userId = userId;
 		}
-
+		
+	String network;
+	
+		public String getNetwork() {
+			return network;
+		}
+		public void setNetwork(String network) {
+			this.network = network;
+		}
+		
 	public User pickUp() throws RemoteException, Exception {
 		//User user = new User(); //this should have error - more than the @Id, the objectId is the closest one.
 		

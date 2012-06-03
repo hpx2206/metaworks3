@@ -8,7 +8,7 @@ import org.metaworks.annotation.Face;
       values={"true", "true"})
 public class NavigationWindow {
 	
-	public NavigationWindow(){
+	public NavigationWindow() throws Exception{
 		setNavigation(new Navigation());
 	}
 	

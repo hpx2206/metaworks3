@@ -5,7 +5,9 @@ import javax.servlet.http.HttpSession;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.TransactionContext;
+import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.codi.mw3.widget.IFrame;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 public class User extends Database<IUser> implements IUser {
@@ -27,7 +29,17 @@ public class User extends Database<IUser> implements IUser {
 		public void setUserId(String userId) {
 			this.userId = userId;
 		}
+		
+	String network;
+		
+		public String getNetwork() {
+			return network;
+		}
 	
+		public void setNetwork(String network) {
+			this.network = network;
+		}
+
 	@AutowiredFromClient
 	public Session session;
 
@@ -119,7 +131,7 @@ public class User extends Database<IUser> implements IUser {
 	}
 
 	@Autowired
-	ProcessManagerRemote processManager;
+	public ProcessManagerRemote processManager;
 
 	@AutowiredFromClient
 	public Followers follwers;
@@ -212,6 +224,33 @@ public class User extends Database<IUser> implements IUser {
 		
 		return new Object[] {contactList, new Popup(this)};
 		
+	}
+	
+//	@ServiceMethod(target="popup", payload={"userId", "network"})
+	public ModalWindow info() throws Exception{
+		ModalWindow infoWindow = new ModalWindow();
+		
+		if("fb".equals(getNetwork())){
+			IFrame iframe = new IFrame();
+			iframe.setSrc("http://www.facebook.com/profile.php?id=" + getUserId());
+			
+			infoWindow.setPanel(iframe);
+		}else{
+			Employee me = new Employee();
+			me.setEmpCode(getUserId());
+			
+			IEmployee dbMe = me.databaseMe();
+			
+			if(session.getUser().getUserId().equals(getUserId()))
+				dbMe.getMetaworksContext().setWhen("edit");
+			
+			infoWindow.setPanel(dbMe);
+			
+		}
+		
+		infoWindow.setTitle("About " + getName());
+		
+		return infoWindow;
 	}
 	
 }

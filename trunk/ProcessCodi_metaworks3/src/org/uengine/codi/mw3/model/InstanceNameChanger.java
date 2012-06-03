@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.Refresh;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;
 import org.metaworks.annotation.Range;
@@ -29,13 +30,13 @@ public class InstanceNameChanger {
 		}
 
 	@ServiceMethod(callByContent=true, keyBinding="enter")
-	public /*IInstance*/ void change() throws Exception{
+	public Refresh change() throws Exception{
 		Instance instance = new Instance();
 		instance.setInstId(new Long(instanceId));
 		instance.databaseMe().setName(getInstanceName());
 		
 		
-//		return instance.databaseMe();
+		return new Refresh(instance.databaseMe());
 	}
 	
 	
