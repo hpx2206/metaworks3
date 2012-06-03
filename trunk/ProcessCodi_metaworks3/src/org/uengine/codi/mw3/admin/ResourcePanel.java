@@ -57,7 +57,7 @@ public class ResourcePanel {
 	}
 	
 	
-	@ServiceMethod
+	@ServiceMethod(inContextMenu=true)
 	public void refresh() throws Exception {
 		init();
 		
