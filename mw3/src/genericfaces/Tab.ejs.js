@@ -5,7 +5,12 @@ var Tab = function(objectId, className){
 	
 	$('#objDiv_' + objectId).addClass('mw3_tab').addClass('mw3_layout').attr('objectId', objectId);
 	
-	$('#tabs_' + objectId).tabs();
+	$('#tabs_' + objectId).tabs({
+		show: function(event, ui){
+			if(mw3.getFaceHelper(objectId))
+				mw3.getFaceHelper(objectId).resize();
+		}
+	});
 
 	/*
 	if(objectMetadata.faceOptions['tabsBottom'] == 'true'){
