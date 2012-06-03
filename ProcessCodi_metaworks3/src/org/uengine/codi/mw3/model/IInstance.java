@@ -14,6 +14,9 @@ public interface IInstance extends IDAO{
 	@ServiceMethod
 	public ContentWindow detail() throws Exception;
 
+	@ServiceMethod
+	public ProcessInstanceMonitor flowchart() throws Exception;
+
 	
 	@Id
 	public Long getInstId();
