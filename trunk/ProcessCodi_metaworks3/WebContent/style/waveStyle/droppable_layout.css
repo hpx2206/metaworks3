@@ -168,6 +168,28 @@ img {border:0;}
 	height:25px;
 	background:url(../../images/waveStyle/t02_alert.png) no-repeat right top;
 }
+.boxtopleftTab {
+	width:100%;
+	height:25px;
+	background:url(../../images/ide/t01.png) no-repeat left top;
+}
+
+.boxtoprightTab {
+	color:#FFF;
+	font-size:11px;	
+	padding-top:4px;
+	margin-bottom:-8px;
+	display:block;
+	margin-left:7px;
+	width:100%;
+	height:25px;
+	background:url(../../images/ide/t02.png) no-repeat right top;
+}
+
+.boxtoprightTab .tabCurrent{display:block; background:url('../../images/ide/tCurrnetL.png') left 0; float:left;  margin-left:-4px; padding-left:10px; text-decoration:none; height:25px; cursor:pointer; margin-right:23px; overflow:hidden}
+
+.boxtoprightTab .tabCurrent span{display:block; float:left; background:url('../../images/ide/tCurrnetL.png') right 0; line-height:200%; padding-right:23px; height:25px; overflow:hidden}
+
 .boxmiddleright {
 	/*overflow:hidden;*/
 	height:100%;
@@ -558,7 +580,7 @@ img {border:0;}
 #ping_line{background:url('../../images/waveStyle/searchLineRight.png') no-repeat right; height:40px; padding-right:15px;  }
 
 
-.mw3_mainMenu	{width:100% margin:0 auto; height:27px; clear:both;}
+.mw3_mainMenu	{width:100%; margin:0 auto; height:27px; clear:both; position:absolute;}
 #gnb_wrap	{float:center;  margin:0 auto; width:600px;}
 #gnb_wrap ul li	{display:inline;}
 
