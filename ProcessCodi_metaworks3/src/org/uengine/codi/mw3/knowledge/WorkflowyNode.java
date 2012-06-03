@@ -350,6 +350,7 @@ public class WorkflowyNode implements ContextAware {
 		// 포커스 노드 선택
 		WorkflowyNode focusNode = resultNode.getNode(this);
 		
+		focusNode.setMetaworksContext(new MetaworksContext());
 		focusNode.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		focusNode.getMetaworksContext().setHow("outdent");
 				

@@ -11,7 +11,7 @@ public class WfWindow {
 	
 	public WfWindow(IUser user) throws Exception {
 		WfPanel panel = new WfPanel();
-		panel.load(user.getUserId());
+		panel.load("-1");//user.getUserId());
 		
 		setWfPanel(panel);
 	}

@@ -1,22 +1,38 @@
 package org.uengine.codi.mw3.knowledge;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Hashtable;
 
+import org.directwebremoting.Browser;
+import org.directwebremoting.ScriptSession;
+import org.directwebremoting.ScriptSessions;
+import org.directwebremoting.WebContext;
+import org.directwebremoting.WebContextFactory;
 import org.metaworks.MetaworksContext;
+import org.metaworks.Refresh;
+import org.metaworks.ToNext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.dao.UniqueKeyGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.model.ContentWindow;
+import org.uengine.codi.mw3.model.IUser;
 import org.uengine.codi.mw3.model.Instance;
 import org.uengine.codi.mw3.model.InstanceViewContent;
 import org.uengine.codi.mw3.model.NewInstancePanel;
 import org.uengine.codi.mw3.model.NewInstanceWindow;
 import org.uengine.codi.mw3.model.ProcessDefinition;
+import org.uengine.codi.mw3.model.Session;
 
 public class WfNode extends Database<IWfNode> implements IWfNode {
+	
+	static Hashtable<Integer, ArrayList<String>> nodeListeners = new Hashtable<Integer, ArrayList<String>>();
+	
+	
 	@AutowiredFromClient
 	public WfPanel wfPanel;
 	
@@ -28,6 +44,15 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 			this.id = id;
 		}	
 		
+	String type;	
+	
+		public String getType() {
+			return type;
+		}
+		public void setType(String type) {
+			this.type = type;
+		}
+
 	String name;
 		public String getName() {
 			return name;
@@ -36,6 +61,24 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 			this.name = name;
 		}
 		
+	String authorId;
+			
+		public String getAuthorId() {
+			return authorId;
+		}
+		public void setAuthorId(String authorId) {
+			this.authorId = authorId;
+		}
+		
+	IUser author;
+
+		public IUser getAuthor() {
+			return author;
+		}
+		public void setAuthor(IUser author) {
+			this.author = author;
+		}
+
 	String nameNext;
 		public String getNameNext() {
 			return nameNext;
@@ -148,8 +191,10 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		this.loadChildren();
 	}
 	
+	private int initialLoadDepth = 0;
 	public void loadChildren() throws Exception {
 
+		
 		setChildNode(new ArrayList<WfNode>());
 		
 		StringBuffer sb = new StringBuffer();
@@ -163,14 +208,17 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		findNode.set("parentId", this.getId());
 		findNode.select();
 		
-		if(findNode.size() > 0){
+		if(findNode.size() > 0 && initialLoadDepth < 3){
+			
+			initialLoadDepth ++;
+
 			while (findNode.next()) {
 				WfNode node = new WfNode();
 				
 				node.copyFrom(findNode);
 				node.setChildNode(new ArrayList<WfNode>());
 				node.getMetaworksContext().setWhen(getMetaworksContext().getWhen());
-				node.loadChildren();
+				node.loadChildren();  //재귀호출로 하위를 갖고 오네... 기본 3 depth정도로 제한을 둬야할듯.. 
 				
 				addChildNode(node);
 			}
@@ -282,26 +330,47 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		return this;
 	}
 	
-	public WfNode add() throws Exception {
+	
+	private void addNodeListener(Integer nodeId){
+		
+		ArrayList<String> nodeListenerArray = null;
+		if(!nodeListeners.containsKey(nodeId)){
+			nodeListenerArray = new ArrayList<String>();
+			
+			nodeListeners.put(nodeId, nodeListenerArray);
+		}else{
+			nodeListenerArray = nodeListeners.get(nodeId);
+		}
+		WebContext wctx = WebContextFactory.get();
+
+		nodeListenerArray.add(wctx.getScriptSession().getId());
+
+	}
+	
+	public Object[] add() throws Exception {
+		
 		
 		// 입력 값이 없고 위치가 최상위가 아니라면 outdent
 		if(getName().length() == 0 && getNameNext().length() == 0){
 			WfNode outdentNode = this.outdent();
 			
 			if(outdentNode != null) 
-				return outdentNode;
+				return new Object[]{new Refresh(outdentNode)};
 		}
 		
 		// 현재 노드의 위치를 구한다.
 		int nodeIndex = this.getNo();	
 
+		// 근방에 있는 편집자들에게 reverse ajax로 알려주기 위해.. 현재 노드를 편집하고 있는 것을 기록해둠...  
+//		addNodeListener(Integer.parseInt(getParentId()));
+		
 		// 액션 노드의 context 변경 및 저장
 		this.saveMe();
 		
 		wfPanel.clearFocus();
 		
 		// 추가될 노드의 focus 를 위한 context 변경
-		WfNode newNode = new WfNode();
+		final WfNode newNode = new WfNode();
 		newNode.setFocus(true);
 		newNode.getMetaworksContext().setHow("add");
 		
@@ -323,9 +392,47 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 			
 			newNode.setName(getNameNext());
 		}
-		newNode.createMe();
 		
-		return wfPanel.getWfNode();
+		newNode.setAuthorId(session.getUser().getUserId());
+		
+		newNode.createMe();
+
+		WebContext wctx = WebContextFactory.get();
+		String mySessionId = wctx.getScriptSession().getId();
+
+		// 근방에 있는 노드들에게 알려줌... 여그 노드 추가됐어여~~
+		//Integer nodeIndexInteger = new Integer(parentId);
+		//if(nodeListeners.containsKey(nodeIndexInteger)){
+		//	ArrayList<String> parentNodeListeners = nodeListeners.get(nodeIndexInteger);
+		
+		//ArrayList<String> parentNodeListeners = wctx.getScriptSession();
+
+		final Object[] returnObjects = new Object[]{new Refresh(this), new ToNext(this, newNode)};
+
+		String currentPage = wctx.getCurrentPage();
+
+		   Collection<ScriptSession> sessions = wctx.getScriptSessionsByPage(currentPage);
+
+			for(ScriptSession session : sessions ){
+				String parentNodeListenerSessionId = session.getId();
+				
+				if(!parentNodeListenerSessionId.equals(mySessionId))
+				Browser.withSession(parentNodeListenerSessionId, new Runnable(){
+
+					@Override
+					public void run() {
+						ScriptSessions.addFunctionCall("mw3.locateObject", new Object[]{returnObjects, null, "body"});
+						ScriptSessions.addFunctionCall("mw3.onLoadFaceHelperScript", new Object[]{});
+
+					}
+					
+				});
+
+			}
+		//}
+
+		
+		return returnObjects;
 
 	}
 	
@@ -547,6 +654,10 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		
 		return this;
 	}
+	
+	@AutowiredFromClient
+	public Session session;
+	
 	
 	public WfNode collapse() throws Exception {
 		System.out.println("getChildNode().size() : " + getChildNode().size());
