@@ -81,8 +81,13 @@ input:focus {
 
 ul, ol , li , dl ,dd ,dt{list-style-type:none; margin:0px; padding:0px;}
 
-.workflowy ul {padding-left:40px; list-style-type: disc;}
-.workflowy li { list-style-type: disc;}
+.workflowy ul {padding-left:40px; list-style-type: none;}
+.workflowy li { list-style-type: none;}
+
+.workflowy .opened{height:18px; width:18px; line-height: 18px; background: url(../../images/waveStyle/plus.gif) no-repeat; cursor:pointer;}
+.workflowy .closed{height:18px; width:18px;  line-height: 18px; background: url(../../images/waveStyle/minus.gif) no-repeat; cursor:pointer;}
+.workflowy .wfNodeText{height:18px; line-height: 18px;}
+
 
 .ui-state-active {/* border-bottom:2px dotted #ccc; background:#EFEFEF; */}
 
@@ -468,7 +473,7 @@ img {border:0;}
 								
 .toolbar{height:20px; background:url(../../images/waveStyle/bt_bg.gif) repeat-x; margin:0px; width:100%; /* border-top:1px solid #aaaaaa; */ border-bottom:1px solid #AAAAAA;}
 .toolbar ul{}
-.toolbar li{ float:left; background:url(../../images/waveStyle/toolbar_bg.gif) left no-repeat; font-size:9pt; text-align:center; line-height:20px; color:#000; letter-spacing:-1px; border-right:1px solid #b5b9bf; padding:0 10px 0 3px;;  cursor:pointer;}		
+.toolbar li{ float:left; background:url(../../images/waveStyle/toolbar_bg.gif) left no-repeat; font-size:9pt; text-align:center; line-height:20px; color:#000; letter-spacing:-1px; border-right:1px solid #b5b9bf; padding:0 10px 0 3px;  cursor:pointer;}		
 .toolbar span{ float:left; height:20px;}
 
 .worklistheader{height:25px;}
@@ -602,7 +607,7 @@ html, body {
 	height:		100%;					
 	padding:	0;
 	margin:		0;
-	overflow:	auto; /* when page gets too small for container min-width/height */
+	overflow:	hidden; /* when page gets too small for container min-width/height */
 }
 
 .mw3_layout {
@@ -724,7 +729,7 @@ html, body {
 .middle_con{overflow:white; color:#000;padding-left:6px; }
 
 .tab_ricon{float:right; margin-left:5px; margin-right:10px;}
-.rcion{width:11px height:9px; float:left; margin-right:5px; margin-left:5px; margin-top:6px;}
+.rcion{width:11px; height:9px; float:left; margin-right:5px; margin-left:5px; margin-top:6px;}
 
 .pageNavigator ul {
 	list-style:none;
@@ -752,3 +757,4 @@ html, body {
 	border:1px solid #f40;
 	background-color:#f40;
 }
+

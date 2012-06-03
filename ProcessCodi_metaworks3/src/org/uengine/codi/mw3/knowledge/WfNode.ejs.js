@@ -110,6 +110,13 @@ var org_uengine_codi_mw3_knowledge_WfNode = function(objectId, className){
 	$('#objDiv_' + objectId).addClass("workflowy_node");
 	$('#objDiv_' + objectId).attr("nodeid", objectId);
 	$('#objDiv_' + objectId).css("position", "relative");
+	
+	if(content.length){
+		
+		console.debug(content.val());
+		content.attr('size', content.val().length);
+	}
+	
 }
 
 org_uengine_codi_mw3_knowledge_WfNode.prototype = {
@@ -200,6 +207,7 @@ org_uengine_codi_mw3_knowledge_WfNode.prototype = {
 				return;
 			}		
 			
+			inputObj.size = inputObj.value.length;
 			
 			var event = window.event;	
 			
