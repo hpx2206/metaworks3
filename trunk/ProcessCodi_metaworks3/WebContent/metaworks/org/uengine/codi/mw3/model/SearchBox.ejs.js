@@ -16,8 +16,6 @@ var org_uengine_codi_mw3_model_SearchBox = function(objectId, className) {
 	if(object && object.keyword)
 		this.keyword = object.keyword;
 
-	
-	
 	$("#search_" + this.objectId).bind('keyup', function(event){
 		mw3.getFaceHelper(objectId).keyup(event, this);
 	});
