@@ -1,5 +1,9 @@
+var workingWfNode = null;
+
 var org_uengine_codi_mw3_knowledge_WfNode = function(objectId, className){
 	var object = mw3.objects[objectId];
+	
+	var thisFaceHelper = this;
 	
 	this.objectId = objectId;
 	this.className = className;
@@ -21,6 +25,23 @@ var org_uengine_codi_mw3_knowledge_WfNode = function(objectId, className){
 				object.name = value;			
 				object.save();
 			}
+		});
+		
+		content.keyup(function(){
+			
+			workingWfNode = thisFaceHelper;
+			
+			var value = content.val();
+			var mashup = mw3.getAutowiredObject('org.uengine.codi.mw3.knowledge.MashupGoogleImage');
+			var mashupTool = null;
+			
+			if(mashup)
+				mashupTool = mashup.__getFaceHelper();
+			
+			if(mashupTool){
+				mashupTool.search(value);
+			}
+
 		});
 
 		if(object && object.focus){
@@ -171,13 +192,15 @@ org_uengine_codi_mw3_knowledge_WfNode.prototype = {
 			}		   
 		},
 		press : function(inputObj){
+			workingWfNode = this;
 
 			if(!mw3.loaded){
 				window.event.returnValue = false;
 
 				return;
 			}		
-
+			
+			
 			var event = window.event;	
 			
 
@@ -250,7 +273,7 @@ org_uengine_codi_mw3_knowledge_WfNode.prototype = {
 				}else if(s == 0){
 					object.name = "";
 					object.nameNext = t.substring(s).replace(/ /g, '\xa0') || '\xa0';		    	  			   
-				}else{
+				}else{ //커서의 위치에 따라서 글을 자르는 로직
 					object.name = t.substring(0, s).replace(/ /g, '\xa0') || '\xa0';
 					object.nameNext = t.substring(s).replace(/ /g, '\xa0') || '\xa0';
 				}
@@ -351,6 +374,41 @@ org_uengine_codi_mw3_knowledge_WfNode.prototype = {
 				mw3.getFaceHelper(this.windowObjectId).endLoading();
 		},
 		showStatus : function(message){
+			mw3.log(message);
+		},
+		
+		
+		insertNodeAfter: function(previous, newOne){
+						
+			new MetaworksObject(
+					{
+						__className:	'org.metaworks.Refresh',
+						
+						target:		previous
+					
+					},
+					
+					'body'
+					
+			);
 			
-		}	
+			new MetaworksObject(
+					{
+						__className:	'org.metaworks.ToNext',
+						
+						previous: 	previous,
+						target:		newOne
+//						target:		{
+//							__className:'org.uengine.codi.mw3.knowledge.WfNode',
+//							name: 'test',
+//							no:	 currNode + 1
+//						}
+					
+					},
+					
+					'body'
+					
+			);
+		}
+
 }
