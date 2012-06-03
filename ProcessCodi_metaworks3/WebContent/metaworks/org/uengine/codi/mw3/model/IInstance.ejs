@@ -1,4 +1,11 @@
-<% if(value!=null){%>
+<% if(value!=null){
+
+	if(mw3.where=="instanceNavigator"){%>
+	
+<div style="cursor:hand" onclick="<%=methods.flowchart.caller()%>"><%=value.defName%></div>	
+	
+	<%}else{%>
+
 <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tbl_type">						
 	<tbody>
 	<tr  class="q <%=value.firstDueTimeTerm ? (value.firstDueTimeTerm>=0 ? (value.firstDueTimeTerm>=3 ? "" : "plus" + value.firstDueTimeTerm ) : "minus" )  : "" %>" onClick="<%=methods.detail.caller()%>" style="cursor:pointer;">
@@ -21,4 +28,9 @@
 	</tr>
 	
 </table>
+
+
+	<%}%>
+
+
 <%}%>

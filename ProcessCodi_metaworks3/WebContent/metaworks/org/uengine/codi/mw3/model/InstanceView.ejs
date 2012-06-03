@@ -9,7 +9,7 @@
 			    <ul>
 			        <li id="wih_btn_item_Page"><span><img src="images/waveStyle/i_workitem_p.png" border="0"></span><span onclick="<%=methods.activityStream.caller()%>대화이력</span></li>
 			        <li id="wih_btn_item_Information"><span><img src="images/waveStyle/i_workitem_i.png" border="0"></span><span onclick="<%=methods.monitor.caller()%>">프로세스</span></li>
-			        <li id="wih_btn_item_GanttChart"><a href="#" onclick="<%=methods.schedule.caller()%>"><span style="color: black; "><img src="images/waveStyle/i_gantt.png" border="0"></span><span style="color: black; ">스케쥴</span></a></li>
+			        <li id="wih_btn_item_GanttChart"><span style="color: black; "><img src="images/waveStyle/i_gantt.png" border="0"></span><span style="color: black; " onclick="<%=methods.schedule.caller()%>">스케쥴</span></li>
 			        <li id="wih_btn_sendMail" style="display: none; "><a href="javascript:sendMail()"><span><img src="images/waveStyle/i_mail.png" border="0"></span><span>메일</span></a></li>
 			        <li id="wih_btn_reply" style="display: block; "><span style="color: black; cursor:hand " onclick="<%=methods.newSubInstancePanel.caller()%>"><img src="images/waveStyle/i_reply.png" border="0">활동추가</span></a></li>
 			        <li id="wih_btn_complete" style="display: none; "><span><img src="images/waveStyle/i_completed.png" border="0"></span><span>완료</span></li>
@@ -29,7 +29,7 @@
 			<div class="ui-layout-content">
 				<%=fields.instanceNameChanger.here({when:'edit'})%>
 				<%=fields.eventTriggerPanel.here()%>
-				<%=fields.processInstanceMonitor.here()%>
+				<%=value.scheduleEditor ? fields.scheduleEditor.here() : ""%>
 				
 				<%=fields.instanceViewThreadPanel.here()%>
 				<%=fields.threadPosting.here()%>
