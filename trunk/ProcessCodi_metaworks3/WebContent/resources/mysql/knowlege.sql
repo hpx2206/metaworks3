@@ -7,3 +7,8 @@ CREATE TABLE `bpm_knol` (
 	PRIMARY KEY (`id`),
 	INDEX `parentId` (`parentId`, `no`)
 )
+
+
+alter table bpm_knol add column authorid varchar(100);
+
+alter table bpm_knol add column type char(10);
