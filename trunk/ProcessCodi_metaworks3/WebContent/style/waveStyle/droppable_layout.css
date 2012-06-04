@@ -574,7 +574,7 @@ img {border:0;}
 
 
 #navigationTitle , #contactTitle ,#wihTitle , #workListTitle, #mindmapTitle, #processTitle{ float:left;}
-.loadingarea{float:left; margin-left:10px; margin-top:-1px;}
+.loadingarea{float:left; margin-left:10px; margin-top:2px;}
 
 #Outside_person{ position:absolute; z-index:999; top:20px; right:300px; width:265px; height:33px; background:url('../../images/waveStyle/outPerson.png') no-repeat; color:#fff; padding:5px; text-align:center; padding-left:0px; font-weight:bolder;}
 
