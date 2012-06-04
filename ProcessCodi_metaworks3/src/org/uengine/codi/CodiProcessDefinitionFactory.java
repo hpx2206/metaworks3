@@ -106,10 +106,10 @@ public class CodiProcessDefinitionFactory extends ProcessDefinitionFactory{
 		String alias = (UEngineUtil.isNotEmpty(folder) ? folder + "/" : "") + name;
 		
 		if(UEngineUtil.isNotEmpty(pdvid))
-			defFileName = sourceCodeBase + "/" + pdvid;
+			defFileName = sourceCodeBase + pdvid;
 		else{
 			
-			defFileName = sourceCodeBase + "/" + alias + "." + objectType;
+			defFileName = sourceCodeBase + alias + "." + objectType;
 		}
 
 		new File(defFileName).getParentFile().mkdirs();
