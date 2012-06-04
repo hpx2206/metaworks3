@@ -8,40 +8,46 @@
 	</div>
 	<div class="cont">	
 		<table id="tableHidtoryContent_1" width="100%" border="0" cellspacing="0" cellpadding="0">
-			<tbody><tr>
-				<td rowspan="3" width="60" align="center" valign="top">
-					<%=fields.writer.here()%>
-				</td>				
-				<td>					
-					<div class="formcontexttitle" id="currentRunningWorkItemHandler">
-						<img src="images/activity_status/i_status_confirmed.png">
-						
-						<% if(value.type=='comment'){%>
-							<%=value.title%>
-						<% }else if(value.type=='file'){%>
-							<%=value.title%><%=fields.file.here()%>
+			<tbody>
+				<tr>
+					<td rowspan="3" width="60" align="center" valign="top">
+						<%=fields.writer.here()%>
+					</td>				
+					<td>					
+						<div class="formcontexttitle" id="currentRunningWorkItemHandler">
+							<img src="images/activity_status/i_status_confirmed.png">
 							
-						<%}else if(value.type=='src'){%>
-							<%=value.title%>
-						<%}else{%>
-							<a onclick="<%=methods.detail.caller()%>"><%=value.title%></a>
-						<%}%>
-					</div>
-					
-					<%if(value.type=='src'){%>
-						<%=fields.sourceCode.here()%>
-					<%}%>
-				</td>
-			</tr>
-			<tr>
-				<td>
-					<div class="" style="position: relative;">
-					<div class="good_up"><span id="saidGoodUsersInfo950"><div class="re_saidGood"><em>&nbsp;</em></div></span><span id="task950" class="cb_activate_up cb_first"><a href="javascript:pressIsGood('task', '950')"><em>좋아요</em></a></span>						
-					</div>					
-					</div>					
-					<div id="addCommentArea_tempTaskId"></div>				
-				</td>			
-			</tr>			
+							<% if(value.type=='comment'){%>
+								<%=value.title%>
+							<% }else if(value.type=='file'){%>
+								<%=value.title%><%=fields.file.here()%>
+								
+							<%}else if(value.type=='src'){%>
+								<%=value.title%>
+							<%}else{%>
+								<a onclick="<%=methods.detail.caller()%>"><%=value.title%></a>
+							<%}%>
+						</div>
+					</td>
+				</tr>
+				<%if(value.type=='src'){%>
+				<tr>
+					<td>	
+						<div style="position:relative; height:350px;">					
+							<%=fields.sourceCode.here()%>						
+						</div>
+					</td>
+				</tr>
+				<%}%>
+				<tr>
+					<td>
+						<div class="" style="position: relative;">
+						<div class="good_up"><span id="saidGoodUsersInfo950"><div class="re_saidGood"><em>&nbsp;</em></div></span><span id="task950" class="cb_activate_up cb_first"><a href="javascript:pressIsGood('task', '950')"><em>좋아요</em></a></span>						
+						</div>					
+						</div>					
+						<div id="addCommentArea_tempTaskId"></div>				
+					</td>			
+				</tr>			
 		</table>
 	</div>
 	<div class="guide">
