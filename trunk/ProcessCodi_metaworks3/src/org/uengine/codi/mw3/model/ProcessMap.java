@@ -139,9 +139,12 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		return processMap;
 	}
 	
+	@Autowired
+	public InstanceViewContent instanceView;
 	
+
 	public Object[] initiate() throws Exception{
-		InstanceViewContent instanceView = new InstanceViewContent();
+//		InstanceViewContent instanceView// = new InstanceViewContent();
 		
 		String instId = processManager.initializeProcess(getDefId());		
 		
