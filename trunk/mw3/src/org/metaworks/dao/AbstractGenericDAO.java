@@ -545,7 +545,7 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 			if(fd.isLoadable() && !Database.dbPrimitiveTypes.containsKey(fd.getClassType()) && fd.getAttribute("ormapping")==null){
 				WebObjectType referenceFieldWOT = MetaworksRemoteService.getInstance().getMetaworksType(fd.getClassType().getName());
 				
-				if(referenceFieldWOT.getKeyFieldDescriptor()==null) 
+				if(referenceFieldWOT.getKeyFieldDescriptor()==null || referenceFieldWOT.metaworks2Type().getKeyFieldDescriptor()==null) 
 					continue; //means it's impossible to create relation
 				
 				String referenceTableName = referenceFieldWOT.metaworks2Type().getName();
