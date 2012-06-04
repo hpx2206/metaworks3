@@ -39,14 +39,13 @@ legend {display:none;}
 .good_up .cb_activate_up a em,.good_up .cb_activate_down a em,.good_up .cb_activate_cancel a em{color:#aaa}
 
 
-.form_table{margin:0;font-size:12px; 	font-family:'맑은 고딕',Malgun gothic, Dotum, '돋움',Gulim, '굴림',  Arial, Helvetica, sans-serif;
-}
+.form_table{margin:15px auto; width:95%; font-size:12px;}
 .form_table input,
 .form_table textarea,
 .form_table select,
 .form_table table,
 .form_table button{font-size:12px}
-.form_table table{width:100%;border:0;}
+.form_table table{width:100%;border:0;border-top:2px solid #999}
 .form_table caption{padding:8px 0;font-weight:bold;text-align:left}
 .form_table th,
 .form_table td{padding:8px;border:0;vertical-align:top}
@@ -64,7 +63,7 @@ legend {display:none;}
 .form_table .item .i_dsc{margin:2px 0}
 .form_table .item .i_check,
 .form_table .item .i_radio{width:13px;height:13px;margin:2px 5px 2px 0;padding:0;vertical-align:middle}
-.form_table .i_text{position:relative;padding:3px 4px;border:1px solid #b7b7b7;background:transparent}
+.form_table input {position:relative !important;padding:3px 4px !important;border:1px solid #b7b7b7;background:transparent}
 .form_table .item .hide{visibility:hidden;position:absolute;top:0;left:0;width:1px;height:1px;font-size:0;line-height:0}
 .form_table .item select{margin:2px}
 .form_table .item label{margin:0 10px 0 0;cursor:pointer}
