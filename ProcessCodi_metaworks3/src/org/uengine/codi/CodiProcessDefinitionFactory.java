@@ -81,7 +81,7 @@ public class CodiProcessDefinitionFactory extends ProcessDefinitionFactory{
 	
 	
 	
-	public String[] addDefinitionImpl(String belongingPdid, String pdvid,
+	public String[] addDefinitionImpl(String belongingPdid, String defId,
 			int version, String name, String description, boolean isAdhoc,
 			Object definition, String folder, boolean overwrite, Map options)
 			throws Exception {
@@ -103,14 +103,15 @@ public class CodiProcessDefinitionFactory extends ProcessDefinitionFactory{
 		
 		String defFileName;
 
+
 		String alias = (UEngineUtil.isNotEmpty(folder) ? folder + "/" : "") + name;
 		
-		if(UEngineUtil.isNotEmpty(pdvid))
-			defFileName = sourceCodeBase + pdvid;
-		else{
+//		if(UEngineUtil.isNotEmpty(pdvid))
+//			defFileName = sourceCodeBase + pdvid;
+//		else{
 			
 			defFileName = sourceCodeBase + alias + "." + objectType;
-		}
+//		}
 
 		new File(defFileName).getParentFile().mkdirs();
 		
