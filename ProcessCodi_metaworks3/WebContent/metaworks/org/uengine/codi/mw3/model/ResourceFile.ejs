@@ -22,7 +22,7 @@ if(value){
 		if(value.childs && value.opened){
 %>
 
-<span style="background:url(images/waveStyle/folder_o.png) no-repeat 5px 0px; cursor:pointer;">
+<span style="background:url(images/waveStyle/folder_o.png) no-repeat 0px 0px; cursor:pointer;">
 <%
 			if(!value.deleted){
 %>
@@ -41,7 +41,7 @@ if(value){
 
 
 
-<span style="background:url(images/waveStyle/<%=icon%>) no-repeat 5px 0px; cursor:pointer;">
+<span style="background:url(images/waveStyle/<%=icon%>) no-repeat 0px 0px; cursor:pointer;">
 <%			if(!value.isDeleted){%>
 	<a onclick="<%=methods.drillDown.caller()%>"><%=value.name%></a>
 <%			}else{%>
