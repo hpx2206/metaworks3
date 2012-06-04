@@ -306,7 +306,6 @@ EJS.Compiler.prototype = {
 				func(object);				
 			}
 		}catch(ex){
-			console.debug(ex);
 			throw ex;
 		}	  
   },
