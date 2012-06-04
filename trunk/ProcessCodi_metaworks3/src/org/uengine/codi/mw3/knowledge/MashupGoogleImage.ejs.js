@@ -10,7 +10,15 @@ var org_uengine_codi_mw3_knowledge_MashupGoogleImage = function(objectId, classN
 };
 
 
+org_uengine_codi_mw3_knowledge_MashupGoogleImage.prototype.clear = function(){
+	var contentDiv = document.getElementById('mashup_image');
+	contentDiv.innerHTML = '검색된 결과가 없습니다.';
+};
+
+
 org_uengine_codi_mw3_knowledge_MashupGoogleImage.prototype.search = function(keyword){
+	console.debug('search : ' + keyword);
+	
 	imageSearcher.execute(keyword);
 };
 
