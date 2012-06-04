@@ -1,22 +1,22 @@
 
-var org_metaworks_ToNext = function(objectId, className){
+var org_metaworks_ToPrepend = function(objectId, className){
 
 	var object = mw3.objects[objectId];
 	
 	if(object){
-		var objKeys = mw3._createObjectKey(object.previous, true);
+		var objKeys = mw3._createObjectKey(object.parent, true);
 			
 		if(objKeys && objKeys.length){
 						        				
 			for(var i=0; i<objKeys.length; i++){
 				
 				var mappedObjId = mw3.objectId_KeyMapping[objKeys[i]];
-	
+				
 				if(mappedObjId){
 					
 					var html = mw3.locateObject(object.target, null);//, "#"+mappedObjdivId);
 	
-					$(html).insertAfter("#objDiv_" + mappedObjId);
+					$("#objDiv_" + mappedObjId).prepend(html);
 	
 					break;
 				}	

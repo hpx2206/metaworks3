@@ -1,24 +1,25 @@
-
 var org_metaworks_Refresh = function(objectId, className){
-
+	
 	var object = mw3.objects[objectId];
 	
-	var objKeys = mw3._createObjectKey(object.target, true);
-		
-	if(objKeys && objKeys.length){
-					        				
-		for(var i=0; i<objKeys.length; i++){
+	if(object){
+		var objKeys = mw3._createObjectKey(object.target, true);
 			
-			var mappedObjId = mw3.objectId_KeyMapping[objKeys[i]];
-
-			if(mappedObjId){
-				mw3.setObject(mappedObjId, object.target);
-				break;
-			}
-			
-		}
-	}
+		if(objKeys && objKeys.length){
+						        				
+			for(var i=0; i<objKeys.length; i++){
+				
+				var mappedObjId = mw3.objectId_KeyMapping[objKeys[i]];
 	
-	mw3.removeObject(objectId);	
-
+				if(mappedObjId){
+					mw3.setObject(mappedObjId, object.target);				
+					break;
+				}
+				
+			}
+		}
+		
+		mw3.removeObject(objectId);	
+		mw3.onLoadFaceHelperScript();
+	}	
 }
