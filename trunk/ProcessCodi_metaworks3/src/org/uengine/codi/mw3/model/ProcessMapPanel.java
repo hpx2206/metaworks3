@@ -1,13 +1,20 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.ContextAware;
+import org.metaworks.MetaworksContext;
+import org.metaworks.ServiceMethodContext;
+import org.metaworks.annotation.ServiceMethod;
 
-public class ProcessMapPanel {
 
-	public ProcessMapPanel(){
+public class ProcessMapPanel implements ContextAware {
+
+	public ProcessMapPanel() {
+		setMetaworksContext(new MetaworksContext());
 	}
 	
 	public void load() throws Exception {
 		ProcessMapList processMapList = new ProcessMapList();
+		processMapList.setMetaworksContext(this.getMetaworksContext());
 		processMapList.load();
 		
 		setProcessMapList(processMapList);
@@ -20,5 +27,13 @@ public class ProcessMapPanel {
 		public void setProcessMapList(ProcessMapList processMapList) {
 			this.processMapList = processMapList;
 		}
+		
+	MetaworksContext metaworksContext;
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
+		}
 	
-}
+}		
