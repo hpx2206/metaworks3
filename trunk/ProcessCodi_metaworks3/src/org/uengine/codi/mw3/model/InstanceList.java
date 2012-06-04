@@ -111,6 +111,11 @@ public class InstanceList {
 //			instanceSql.append(" AND inst.name LIKE ?instName ");
 //			criteria.put("instName", "%" + searchKeywordBox.getKeyword() + "%");
 //		}
+		String searchKeyword = session.getSearchKeyword();
+		if(searchKeyword != null && !searchKeyword.isEmpty()) {
+			instanceSql.append(" AND inst.name LIKE ?instName ");
+			criteria.put("instName", "%" + searchKeyword + "%");
+		}
 
 		// TODO add direct append to sql
 		criteria.put(Instance.TASK_DIRECT_APPEND_SQL_KEY, taskSql.toString());
