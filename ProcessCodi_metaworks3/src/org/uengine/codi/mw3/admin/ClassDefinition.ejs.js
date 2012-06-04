@@ -13,10 +13,8 @@ var org_uengine_codi_mw3_admin_ClassDefinition = function(objectId, className){
 	$('#' + this.divId).css("height", "100%");
 	
 	if(object.className != null){
-		var windowObjId = $('#' + this.divId).closest('.mw3_window').attr('objectId');
-		
-		if(windowObjId){
-			mw3.getFaceHelper(windowObjId).setTitle(object.className + '.java');
+		if(this.windowObjectId){
+			mw3.getFaceHelper(this.windowObjectId).setTitle(object.className + '.java');
 		}
 	}
 	
@@ -38,11 +36,11 @@ var org_uengine_codi_mw3_admin_ClassDefinition = function(objectId, className){
 
 org_uengine_codi_mw3_admin_ClassDefinition.prototype = {
 		startLoading : function(){
-			if(this.windowObjectId)
+			if(this.windowObjectId && mw3.getFaceHelper(this.windowObjectId) && mw3.getFaceHelper(this.windowObjectId).startLoading)
 				mw3.getFaceHelper(this.windowObjectId).startLoading();
 		},
 		endLoading : function(){
-			if(this.windowObjectId)
+			if(this.windowObjectId && mw3.getFaceHelper(this.windowObjectId) && mw3.getFaceHelper(this.windowObjectId).endLoading)
 				mw3.getFaceHelper(this.windowObjectId).endLoading();
 		},
 		showStatus : function(message){
