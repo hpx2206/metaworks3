@@ -1,5 +1,7 @@
 package org.uengine.codi.mw3.knowledge;
 
+import java.util.ArrayList;
+
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
@@ -18,6 +20,15 @@ public class WfPanel implements ContextAware {
 			this.wfNode = wfNode;
 		}
 
+	ArrayList<IWfNode> path;
+		public void setPath(ArrayList<IWfNode> path) {
+			this.path = path;
+		}
+		public ArrayList<IWfNode> getPath() throws Exception{
+			return path; 
+		}
+
+		
 	String keyword;
 		@Hidden
 		public String getKeyword() {
@@ -78,6 +89,31 @@ public class WfPanel implements ContextAware {
 		*/
 		
 		setWfNode(node);
+		
+		
+		//setting path
+		ArrayList<IWfNode> paths = new ArrayList<IWfNode>();
+		IWfNode currNode = getWfNode();
+		
+		if(!"-1".equals(currNode.getId()))
+		do{
+			WfNode parentNode = new WfNode();
+			parentNode.setId(currNode.getParentId());
+			
+			if("-1".equals(currNode.getParentId()))
+				break;
+			
+			currNode = parentNode.databaseMe();
+			currNode.getMetaworksContext().setHow("PATH");
+			paths.add(currNode);
+		}while(!"-1".equals(currNode.getId()));
+
+		WfNode root = new WfNode();
+		root.setId("-1");
+		root.setName("/");
+		root.getMetaworksContext().setHow("PATH");
+		paths.add(root);
+
 	}		
 	
 	public void clearFocus(){

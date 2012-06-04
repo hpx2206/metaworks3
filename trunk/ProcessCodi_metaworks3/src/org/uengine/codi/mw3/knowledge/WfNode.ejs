@@ -2,6 +2,15 @@
 	if(value){
 		if(mw3.how != 'NONE'){
 			if(mw3.how != 'ROOT'){
+			
+				if(mw3.how == 'PATH'){
+		
+		
+%>
+<div style="cursor:hand" onclick="<%=methods.drillDown.caller()%>><%=value.name%>/</div>
+<%		
+					return;
+				}
 %>
 	<ul>
 		<li>

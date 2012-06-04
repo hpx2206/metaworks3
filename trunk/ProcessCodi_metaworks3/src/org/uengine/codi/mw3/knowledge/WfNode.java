@@ -676,6 +676,10 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		return new NewInstanceWindow(newInstancePanel);
 	}
 	
+	public ContentWindow mashup() throws Exception{
+		return new ContentWindow(new Mashup());
+	}
+	
 	public ContentWindow newDocument() throws Exception{
 		processDefinition.setDefId(new Long(150));
 		return (ContentWindow) processDefinition.initiate()[0];		
@@ -697,6 +701,14 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		setClose(true);
 		
 		return this;
+	}
+	
+	@Override
+	public WfPanel drillInto() throws Exception {
+		WfPanel panel = new WfPanel();
+		panel.load(getId());
+		
+		return panel;
 	}
 	
 }
