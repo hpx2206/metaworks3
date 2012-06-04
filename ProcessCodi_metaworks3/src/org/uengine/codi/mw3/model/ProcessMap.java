@@ -5,6 +5,10 @@ import org.metaworks.Remover;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
 import org.metaworks.website.MetaworksFile;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.codi.mw3.knowledge.WfNode;
+import org.uengine.kernel.RoleMapping;
+import org.uengine.processmanager.ProcessManagerRemote;
 
 public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 	
@@ -12,7 +16,16 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		setIconFile(new MetaworksFile());		
 		setIconColor(new ProcessMapColor("배경선택"));
 	}
-	
+
+	@Autowired
+	public ProcessManagerRemote processManager;
+
+	@AutowiredFromClient
+	public Session session;
+
+	@AutowiredFromClient
+	public NewInstancePanel newInstancePanel;
+
 	String defId;
 		public String getDefId() {
 			return defId;
@@ -53,7 +66,7 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 			this.iconColor = iconColor;
 		}
 		
-	public Object[] create() throws Exception {
+	public void createMe() throws Exception {
 		if(getIconFile().getFileTransfer() != null && !getIconFile().getFileTransfer().getFilename().isEmpty())
 			getIconFile().upload();
 		else
@@ -61,11 +74,6 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		
 		createDatabaseMe();
 		flushDatabaseMe();
-		
-		ProcessMapList processMapList = new ProcessMapList();
-		processMapList.load();
-		
-		return new Object[]{processMapList, new Remover(new Popup(this))};
 	}
 	
 	public Object[] save() throws Exception {
@@ -74,7 +82,13 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		ProcessMapList processMapList = new ProcessMapList();
 		processMapList.load();
 		
-		return new Object[]{processMapList, new Remover(new Popup(this))};
+		return new Object[]{processMapList, new Remover(new Popup())};
+	}
+	
+	public Object remove() throws Exception {
+		deleteDatabaseMe();
+		
+		return new Remover(this);
 	}
 	
 	public void saveMe() throws Exception {
@@ -124,6 +138,52 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		
 		return processMap;
 	}
+	
+	
+	public Object[] initiate() throws Exception{
+		InstanceViewContent instanceView = new InstanceViewContent();
+		
+		String instId = processManager.initializeProcess(getDefId());		
+		
+		RoleMapping rm = RoleMapping.create();
+		if(session.user!=null)
+			rm.setEndpoint(session.user.getUserId());
+		
+		processManager.setLoggedRoleMapping(rm);
+		
+		processManager.executeProcess(instId);
+		processManager.applyChanges();
+	
+		IInstance instanceRef = new Instance();
+		instanceRef.setInstId(new Long(instId));
+		
+		instanceView.load(instanceRef);
+		
+		InstanceListPanel instanceListPanel = new InstanceListPanel(); //should return instanceListPanel not the instanceList only since there're one or more instanceList object in the client-side
+		
+		
+		
+		if(newInstancePanel!=null && newInstancePanel.getKnowledgeNodeId() != null){
+			WfNode parent = new WfNode();
+			parent.load(newInstancePanel.getKnowledgeNodeId());
+			
+			WfNode child = new WfNode();		
+			child.setName(instanceView.instanceName);
+			child.setLinkedInstId(Long.parseLong(instId));
+			parent.addChildNode(child);
+			
+			child.createMe();
+
+			return new Object[]{instanceView, parent};
+
+		}
+		
+		
+		
+		return new Object[]{instanceView, instanceListPanel};
+
+		
+	}	
 	
 }
 
