@@ -38,9 +38,9 @@
 	
 		String defVerId = pm.addProcessDefinition(definitionName, Integer.parseInt(version), description, false, definition, savingFolder, belongingDefinitionId, alias, objType);
 		
-		if(autoProduction)
+/* 		if(autoProduction)
 			pm.setProcessDefinitionProductionVersion(defVerId);
-		
+ */		
 		pm.applyChanges();
 
 %><%@include file="../common/callback/afterSaveProcessDefinition.jsp"%>OK@<%=defVerId%><%
