@@ -88,6 +88,7 @@ ul, ol , li , dl ,dd ,dt{list-style-type:none; margin:0px; padding:0px;}
 .workflowy .closed{height:18px; width:18px;  line-height: 18px; background: url(../../images/waveStyle/minus.gif) no-repeat; cursor:pointer;}
 .workflowy .wfNodeText{height:18px; line-height: 18px;}
 
+#mashup_image .imgContainer{display: inline-block; margin: 3px;}
 
 .ui-state-active {/* border-bottom:2px dotted #ccc; background:#EFEFEF; */}
 
