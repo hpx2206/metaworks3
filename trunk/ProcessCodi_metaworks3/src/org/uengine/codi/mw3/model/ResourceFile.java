@@ -11,9 +11,11 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.CodiClassLoader;
-import org.uengine.codi.mw3.knowledge.WorkflowyNode;
+import org.uengine.codi.mw3.admin.PageNavigator;
+import org.uengine.codi.mw3.knowledge.WfNode;
 import org.uengine.kernel.RoleMapping;
 import org.uengine.processmanager.ProcessManagerRemote;
 import org.uengine.util.UEngineUtil;
@@ -22,6 +24,7 @@ import org.uengine.util.UEngineUtil;
 		ejsPathMappingByContext=
 			{
 				"{when: 'newInstance', face: 'org/uengine/codi/mw3/model/ResourceFile_newInstance.ejs'}",
+				"{when: 'appendProcessMap', face: 'org/uengine/codi/mw3/model/ResourceFile_newInstance.ejs'}",				
 			}		
 
 	)
@@ -31,12 +34,14 @@ public class ResourceFile implements ContextAware{
 		setMetaworksContext(new MetaworksContext());
 	}
 	
+	@AutowiredFromClient
+	public PageNavigator pageNavigator;
+
 	String alias;
-	@Id
+		@Id
 		public String getAlias() {
 			return alias;
-		}
-	
+		}	
 		public void setAlias(String fullPath) {
 			this.alias = fullPath;
 			
@@ -111,22 +116,6 @@ public class ResourceFile implements ContextAware{
 			this.childs = childFiles;
 		}
 	
-	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP, callByContent=true, inContextMenu=true, when="newInstance")
-	public Popup addProcessMap() throws Exception {
-		IProcessMap processMap = new ProcessMap();
-		processMap.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
-		processMap.setDefId(this.getAlias());
-		processMap.setName(this.getName());
-		
-		if(!processMap.confirmExist())
-			throw new Exception("이미 프로세스 맵에 등록된 프로세스입니다.");
-		
-		Popup popup = new Popup(560, 430);
-		popup.setPanel(processMap);
-		
-		return popup;
-	}
-	
 	@ServiceMethod(callByContent=true, except="childs", target="self")
 	public void drillDown(){
 		if(isOpened()){
@@ -169,7 +158,7 @@ public class ResourceFile implements ContextAware{
 				rf.setObjType(childAlias.substring(childAlias.lastIndexOf(".")+1));
 
 				//ignores other types except process if 'newInstance' mode
-				if("newInstance".equals(getMetaworksContext().getWhen()) && !"process".equals(rf.getObjType()))
+				if(("appendProcessMap".equals(getMetaworksContext().getWhen()) || "newInstance".equals(getMetaworksContext().getWhen())) && !"process".equals(rf.getObjType()))
 					continue;
 			}
 			
@@ -183,7 +172,7 @@ public class ResourceFile implements ContextAware{
 	@ServiceMethod(callByContent=true, except="childs", inContextMenu=true, keyBinding="Ctrl+N")
 	public NewChildWindow newChild() throws Exception {
 		NewChildWindow newChildWindow = new NewChildWindow();
-		newChildWindow.getMetaworksContext().setHow("ide");
+		newChildWindow.getMetaworksContext().setHow(pageNavigator.getPageName());
 		newChildWindow.setParentFolder(getAlias());
 		
 		return newChildWindow;
@@ -236,7 +225,7 @@ public class ResourceFile implements ContextAware{
 		
 			if("class".equals(objType)){
 				ClassDesignerContentPanel classDesignerContentPanel = new ClassDesignerContentPanel();
-				classDesignerContentPanel.getMetaworksContext().setHow("ide");
+				classDesignerContentPanel.getMetaworksContext().setHow(pageNavigator.getPageName());
 				classDesignerContentPanel.load(getAlias());
 				
 				return classDesignerContentPanel;
@@ -244,7 +233,7 @@ public class ResourceFile implements ContextAware{
 			}else {
 				try{
 					ResourceDesigner designer = (ResourceDesigner)Class.forName("org.uengine.codi.mw3.model." + UEngineUtil.toOnlyFirstCharacterUpper(objType) + "Designer").newInstance();
-					designer.getMetaworksContext().setHow("ide");
+					designer.getMetaworksContext().setHow(pageNavigator.getPageName());
 					
 					designer.setAlias(alias);
 					designer.load();
@@ -270,11 +259,32 @@ public class ResourceFile implements ContextAware{
 	}	
 	
 	
-	
+	@ServiceMethod(callByContent=true, except="childs")
+	public Object[] appendProcessMap() throws Exception {
+		String name = this.getName();
+		
+		if(name.endsWith(".process"));
+			name = name.substring(0, name.length() - 8);
+			
+		ProcessMap processMap = new ProcessMap();
+		processMap.setDefId(this.getAlias());
+		processMap.setName(name);
+		
+		if(!processMap.confirmExist())
+			throw new Exception("이미 프로세스 맵에 등록된 프로세스입니다.");
+
+		processMap.createMe();
+		
+		ProcessMapList processMapList = new ProcessMapList();
+		processMapList.load();
+		
+		return new Object[]{processMapList, new Remover(new ModalWindow())};		
+	}
+
 	@ServiceMethod(callByContent=true, except="childs")
 	public Object[] initiate() throws Exception{
 		InstanceViewContent instanceView = instanceViewContent;// = new InstanceViewContent();
-		instanceView.getMetaworksContext().setHow("ide");
+		instanceView.getMetaworksContext().setHow(pageNavigator.getPageName());
 		
 		String instId = processManager.initializeProcess(getAlias());
 		
@@ -298,15 +308,15 @@ public class ResourceFile implements ContextAware{
 		//instanceList.load(session.login, session.navigation);
 
 		if(newInstancePanel!=null && newInstancePanel.getKnowledgeNodeId() != null){
-			WorkflowyNode parent = new WorkflowyNode(newInstancePanel.getKnowledgeNodeId());
-			parent.load();
+			WfNode parent = new WfNode();
+			parent.load(newInstancePanel.getKnowledgeNodeId());
 			
-			WorkflowyNode child = new WorkflowyNode(WorkflowyNode.makeId());
+			WfNode child = new WfNode();		
 			child.setName(instanceView.instanceName);
-			child.setLinkedInstId(instId);
+			child.setLinkedInstId(Long.parseLong(instId));
 			parent.addChildNode(child);
 			
-			child.save();
+			child.createMe();
 
 			return new Object[]{instanceView, parent};
 

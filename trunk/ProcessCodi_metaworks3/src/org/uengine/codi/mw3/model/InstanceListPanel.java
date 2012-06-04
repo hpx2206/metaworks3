@@ -39,7 +39,11 @@ public class InstanceListPanel {
 	@ServiceMethod
 	public ContentWindow newInstance() throws Exception{
 		NewInstancePanel newInstancePanel =  new NewInstancePanel();
-		newInstancePanel.load(session.getEmployee().getIsAdmin());
+		
+		if(session.getEmployee().getIsAdmin())
+			newInstancePanel.getMetaworksContext().setHow("admin");
+		
+		newInstancePanel.load();
 		
 		return new NewInstanceWindow(newInstancePanel);
 	}

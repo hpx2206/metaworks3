@@ -1,45 +1,24 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Hidden;
 
 
-public class NewInstancePanel {
+public class NewInstancePanel implements ContextAware {
 	
 	public NewInstancePanel(){
+		setMetaworksContext(new MetaworksContext());
 	}
 	
 	public void load() throws Exception{
-		load(false);
-
-	}
-	
-	public void load(boolean isAdmim) throws Exception{
 		unstructuredProcessInstanceStarter = new UnstructuredProcessInstanceStarter();
 		
-		processMapPanel = new ProcessMapPanel();
+		processMapPanel = new ProcessMapPanel();		
+		processMapPanel.setMetaworksContext(this.getMetaworksContext());
 		processMapPanel.load();
-		
-//		processDefinitions = new ProcessDefinition();
-//		processDefinitions.setParentFolder("");
-//		processDefinitions.getMetaworksContext().setWhen("newInstance");
-//
-//		processDefinitions = processDefinitions.findAll();
-//		processDefinitions.getMetaworksContext().setWhen("newInstance");
-
-		
-		if(isAdmim){
-			processDefinitions = new ResourceFile();
-			
-			processDefinitions.setMetaworksContext(new MetaworksContext());	
-			processDefinitions.getMetaworksContext().setWhen("newInstance");
-	
-			processDefinitions.setFolder(true);
-			processDefinitions.setAlias("");
-			processDefinitions.setName("/");
-			processDefinitions.drillDown();
-		}		
 	}
+	
 	
 	UnstructuredProcessInstanceStarter unstructuredProcessInstanceStarter;		
 	public UnstructuredProcessInstanceStarter getUnstructuredProcessInstanceStarter() {
@@ -57,14 +36,6 @@ public class NewInstancePanel {
 		}
 		public void setProcessMapPanel(ProcessMapPanel processMapPanel) {
 			this.processMapPanel = processMapPanel;
-		}
-
-	ResourceFile processDefinitions;
-		public ResourceFile getProcessDefinitions() {
-			return processDefinitions;
-		}
-		public void setProcessDefinitions(ResourceFile processDefinitions) {
-			this.processDefinitions = processDefinitions;
 		}
 		
 	String knowledgeNodeId;
@@ -85,5 +56,14 @@ public class NewInstancePanel {
 		public void setParentInstanceId(String parentInstanceId) {
 			this.parentInstanceId = parentInstanceId;
 		}
+		
+	MetaworksContext metaworksContext;
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}	
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
+		}
+	
 
 }
