@@ -1,55 +1,69 @@
-<table cellpadding=10>
+<div class="form_table">
+		<table border="1" cellspacing="0" summary="">
+		<tbody>
 <%
 	if(!mw3.isHidden(fields.packageName.fieldDescriptor)){
 %>
-	<tr>		
-		<td width=90>
-			<font color="#5599dd" face="Eurostile">
-			Package Name:
-			</font>
-		</td>
-		<td>
-			<%=fields.packageName.here()%>
-		</td>
-	</tr>
+		<tr>
+			<th scope="row">Package Name</th>
+			<td>
+				<div class="item">
+					<%=fields.packageName.here()%>
+				</div>
+			</td>
+		</tr>
 <%
 	}
 	
 	if(!mw3.isHidden(fields.className.fieldDescriptor)){
 %>	
-	<tr>	
-		<td width=80>
-			<font color="#5599dd" face="Eurostile">
-			Class Name:
-			</font>
-		</td>
-
-		<td><%=fields.className.here()%></td>
-	</tr>
+		<tr>
+			<th scope="row">Class Name</th>
+			<td>
+				<div class="item">
+					<%=fields.className.here()%>
+				</div>
+			</td>
+		</tr>
+		
 <%
 	}
 
 	if(!mw3.isHidden(fields.author.fieldDescriptor)){
 %>
-	<tr>
-		<td>
-			<font color="#5599dd" face="Eurostile">Author:</font>
-		</td>
-		<td colspan=3>
-			<%=fields.author.here()%>
-		</td>
-	</tr>
+		<tr>
+			<th scope="row">Author</th>
+			<td>
+				<div class="item">
+					<%=fields.author.here()%>
+				</div>
+			</td>
+		</tr>
+	
 <%
 	}
 %>
-</table>
+		</tbody>
+	</table>
+	<div id="btnline" style="padding-top:8px;">
+		<ul>			
+<%
+	if(mw3.when == 'edit'){
+%>	
+			<li><a id="wBtn" href="javascript:<%=methods.next1.caller()%>"><span>next</span></a></li>
+<%
+	}if(mw3.when == 'step1'){
+%>	
+			<li><a id="wBtn" href="javascript:<%=methods.next2.caller()%>"><span>next</span></a></li>	
+<%
+	}
+%>		
+		</ul>
+	</div>
+</div>
 
-<table>
-	<tr>
-		<td><%=methods.next1.here()%></td>
-		<td><%=methods.next2.here()%></td>
-	</tr>
-</table>
+
+
 
 
 <div id="sourceCodes_<%=objectId%>" style="height:100%">

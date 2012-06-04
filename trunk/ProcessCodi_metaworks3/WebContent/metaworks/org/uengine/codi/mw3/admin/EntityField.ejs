@@ -1,48 +1,46 @@
 <%
 if(value!=null){
 %>
-	<table>
-	<tr height="40px">
-		<td width="40px" align="center"><%=fields.key.here()%></td>
-		<td width="140px"><%=fields.name.here()%></td>
-		<td width="140px"><%=fields.dataType.here()%></td>
-		<td width="70px"><%=fields.length.here()%></td>
+		<td align="center"><%=fields.key.here()%></td>
+		<td><%=fields.name.here()%></td>
+		<td><%=fields.dataType.here()%></td>
+		<td><%=fields.length.here()%></td>
 
-		<td width="100px" align="center"><%=fields.allowNull.here()%></td>
-		<td width="200px"><%=fields.defaultValue.here()%></td>
+		<td align="center"><%=fields.allowNull.here()%></td>
+		<td><%=fields.defaultValue.here()%></td>
 
 <!--
-		<td width="200px"><%=fields.comment.here()%></td>	
+		<td><%=fields.comment.here()%></td>	
 -->
 
-		<td width="300px">
+		<td>
+				<ul>
 		
-		<table><tr>
 <%		
 		if(mw3.when != mw3.WHEN_EDIT){
 %>		 		
-			<td><input type=button onclick="mw3.getFaceHelper('<%=objectId%>').edit();" value="edit"></td>
-			<td><%=methods.up.here()%></td>
-			<td><%=methods.down.here()%></td>		
-			<td><%=methods.remove.here()%></td>					
+		
+					<li><a id="wBtn" href="javascript:mw3.getFaceHelper('<%=objectId%>').edit();"><span>edit</span></a></li>
+					<li><a id="wBtn" href="javascript:<%=methods.up.caller()%>"><span>up</span></a></li>
+					<li><a id="wBtn" href="javascript:<%=methods.down.caller()%>"><span>down</span></a></li>
+					<li><a id="wBtn" href="javascript:<%=methods.remove.caller()%>"><span>remove</span></a></li>
+			
 <%
 		}else{
 			if(mw3.where == "newEntry"){
-%>			<td><%=methods.add.here()%></td>
+%>					
+					<li><a id="wBtn" href="javascript:<%=methods.add.caller()%>"><span>add</span></a></li>
 <%
 			}else{
 %>
-			<td><%=methods.save.here()%></td>
+					<li><a id="wBtn" href="javascript:<%=methods.save.caller()%>"><span>save</span></a></li>
 <%
 			}
 		}
 %>			
-					
-		</tr></table>
+				</ul>
 		</td>		
-		<td width="600px"><div id="progress_<%=objectId%>"></div></td>
-	</tr>	
-	<table>		
+		<td><div id="progress_<%=objectId%>"></div></td>
 <%
 	}	
 %>

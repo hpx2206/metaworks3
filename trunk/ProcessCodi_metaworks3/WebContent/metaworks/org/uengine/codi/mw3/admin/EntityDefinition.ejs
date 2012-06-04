@@ -2,76 +2,87 @@
 if(value){	
 %>
 
-<table>
-<tr>
-	<td width="10px">
-		&nbsp;
-	</td>
-	<td>	
-		<table>
-		<%
-			if(!mw3.isHidden(fields.packageName.fieldDescriptor)){
-		%>
-		<tr height="40px">
-			<td width=130>
-				<font color="#5599dd" face="Eurostile">
-				Package Name:
-				</font>
-			</td>			
-			<td><%=fields.packageName.here()%></td>		
-		</tr>
-		<%
-			}
-			if(!mw3.isHidden(fields.entityName.fieldDescriptor)){
-		%>
-		<tr height="40px">
-			<td width=130>
-				<font color="#5599dd" face="Eurostile">
-				Entity Name:
-				</font>
-			</td>			
-			<td><%=fields.entityName.here()%></td>		
-		
-		</tr>
-		<%
-			}
-			if(!mw3.isHidden(fields.author.fieldDescriptor)){
-		%>
-		<tr height="40px">
-			<td width=130>
-				<font color="#5599dd" face="Eurostile">Author:</font>
-			</td>
-			<td colspan=3>
-				<%=fields.author.here()%>
-			</td>
-		</tr>		
-		<%
-			}
-		%>
-		</table>
-	</td>
-</tr>
-<tr height="40px">
-	<td>
-	</td>
-	<td>
-		<table>		
-			<tr><td>
-				<%=methods.next1.here()%>
-				<%=methods.next2.here()%>
-				
-				<%=methods.dropTable.here()%>
-				<%=methods.createTable.here()%>
-				<%=methods.generateDao.here()%>
-			</td></tr>
-		</table>	
-	</td>
+<div class="form_table">
+	<table border="1" cellspacing="0" summary="">
+		<tbody>
+			<%
+				if(!mw3.isHidden(fields.packageName.fieldDescriptor)){
+			%>
+			<tr>
+				<th scope="row">Package Name</td>			
+				<td>
+					<div class="item">
+						<%=fields.packageName.here()%>
+					</div>
+				</td>		
+			</tr>
+			<%
+				}
+				if(!mw3.isHidden(fields.entityName.fieldDescriptor)){
+			%>
+			<tr>
+				<th scope="row">Entity Name</td>			
+				<td>
+					<div class="item">
+						<%=fields.entityName.here()%>
+					</div>
+				</td>		
+			
+			</tr>
+			<%
+				}
+				if(!mw3.isHidden(fields.author.fieldDescriptor)){
+			%>
+			<tr>
+				<th scope="row">Author</td>
+				<td>
+					<div class="item">
+						<%=fields.author.here()%>
+					</div>
+				</td>
+			</tr>		
+			<%
+				}
+			%>
+		</tbody>
+	</table>
+
+	<div>
+		<%=fields.entityModeler.here()%>
+		<%=fields.querySourceCode.here()%>
+	</div>
 	
-</tr>
-</table>
-		
-<%=fields.entityModeler.here()%>
-<%=fields.querySourceCode.here()%>
+	<div id="btnline" style="padding-top:8px;">
+		<ul>
+<%
+	if(mw3.when == 'edit'){
+%>	
+			<li><a id="wBtn" href="javascript:<%=methods.next1.caller()%>"><span>next</span></a></li>
+<%
+	}if(mw3.when == 'step1'){
+%>	
+			<li><a id="wBtn" href="javascript:<%=methods.next2.caller()%>"><span>next</span></a></li>
+<%
+	}if(mw3.when == 'view'){
+%>	
+			<li><a id="wBtn" href="javascript:<%=methods.dropTable.caller()%>"><span>dropTable</span></a></li>
+<%
+	}if(mw3.when == 'step2'){
+%>	
+			<li style="position:absolute; bottom:20px; right:20px; z-index:99;"><a id="wBtn" href="javascript:<%=methods.createTable.caller()%>"><span>createTable</span></a></li>
+<%
+	}if(mw3.when == 'view'){
+%>	
+			<li><a id="wBtn" href="javascript:<%=methods.generateDao.caller()%>"><span>generateDao</span></a></li>
+<%
+	}
+%>	
+
+		</ul>
+	</div>
+</div>
+
+
 
 
 <%

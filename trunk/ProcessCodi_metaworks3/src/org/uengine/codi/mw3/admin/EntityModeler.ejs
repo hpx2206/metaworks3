@@ -1,35 +1,48 @@
 <%
 	if(value){
+	console.debug(value.entityFields);
+	
 %>
-		Columns<br />
-		<table>
-			<tr>
-				<td width="40px">Key</td>
-				<td width="140px">Name</td>
-				<td width="140px">Datatype</td>
-				<td width="70px">Length/Set</td>
-
-				<td width="70px">Allow Null</td>
-				<td width="200px">Default</td>
-				<!--
-				<td width="200px">Comment</td>
-				-->
-				<td width="300px">&nbsp;</td>
-				<td width="30px">&nbsp;</td>
-			</tr>
-		</table>
-		<%=fields.newEntityField.here()%>
+		Columns<br /><br />
+			<table border="1" cellspacing="0" summary="">
+				<thead>
+					<tr>
+						<th width="40"  align="center">Key</td>
+						<th width="140">Name</td>
+						<th width="140">Datatype</td>
+						<th width="70">Length/Set</td>
 		
+						<th width="70"  align="center">Allow Null</td>
+						<th width="200">Default</td>
+						<!--
+						<th width="200">Comment</td>
+						-->
+						<th width="300">&nbsp;</td>
+						<th width="30">&nbsp;</td>
+					</tr>
+				</thead>
+				<tbody>
+					<%=fields.newEntityField.here({htmlTag: 'tr'})%>				
 <%
-		if(value.entityFields != null){	
-			for(var i=0; i<value.entityFields.length; i++){		
+		if(value.entityFields != null){
+		
+			for (var i=0; i<value.entityFields.length; i++){
+				if(typeof options == 'undefined') 
+					options = objectMetadata;
+			
+				options['index'] = i;
+				options['htmlTag'] =  'tr';
 %>
-		<%=mw3.locateObject(value.entityFields[i], value.entityFields[i].__className)%>
+					<%=mw3.locateObject(value.entityFields[i], value.entityFields[i].__className, null, options)%>	
 <%
-			}	
+				mw3.addBeanProperty(value.__objectId, '.entityFields[' + i + ']');
+			}
 		}
-%>
+%>				
+				
 
+				</tbody>
+			</table>
 <%		
 	}
 %>		
