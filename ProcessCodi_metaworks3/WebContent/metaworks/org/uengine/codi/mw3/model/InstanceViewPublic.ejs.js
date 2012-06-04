@@ -18,9 +18,6 @@ var org_uengine_codi_mw3_model_InstanceViewPublic = function(objectId, className
     	FB.login(function(response) {
 		   if (response.authResponse) {
 		    	FB.api('/me', function(response) {
-		    		console.debug("me");
-		    		console.debug(response);
-		    		  //alert('Your name is ' + response.name);
 		    			var userInfo = {
 		    					userId: response.id,
 		    					name: response.name,
