@@ -16,7 +16,7 @@ public class HintPanel {
 		facebookComments.setUrl(pageName);
 		
 		WfPanel wfPanel = new WfPanel();
-		wfPanel.load(user.getUserId(), "read");
+		wfPanel.load("-1", "read");
 		
 		setWfPanel(wfPanel);		
 	}	
