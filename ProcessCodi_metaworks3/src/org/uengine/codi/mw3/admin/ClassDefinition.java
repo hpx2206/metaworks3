@@ -28,7 +28,6 @@ import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.example.ide.CompileError;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.CodiClassLoader;
-import org.uengine.codi.mw3.CodiDwrServlet;
 import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.alm.QualityOption;
 import org.uengine.codi.mw3.model.FaceHelperSourceCode;
@@ -39,7 +38,6 @@ import org.uengine.codi.mw3.model.User;
 import org.uengine.codi.mw3.svn.CheckoutWindow;
 import org.uengine.codi.mw3.svn.CommitWindow;
 import org.uengine.codi.platform.Console;
-import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.NeedArrangementToSerialize;
 import org.uengine.kernel.PropertyListable;
 import org.uengine.processmanager.ProcessManagerRemote;
@@ -253,10 +251,9 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		getSourceCodes().faceHelper.setCode(sb.toString());
 	
 	}
-	
+
 	@ServiceMethod(callByContent=true, when="view", keyBinding="Ctrl+S")
 	public Object compile() throws Exception{
-		
 		try{
 			save();
 		}catch(Exception e){
