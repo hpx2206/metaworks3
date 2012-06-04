@@ -5,43 +5,52 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
 		<!-- jquery -->
-		<link rel="stylesheet" type="text/css" href="scripts/jquery/jquery-ui-189custom/css/ui-lightness/jquery-ui-1.8.9.custom.css" media="screen" />
+		<link rel="stylesheet" type="text/css" href="scripts/jquery/jquery-ui-189custom/css/ui-lightness/jquery-ui-1.8.9.custom.css" />
 		<link rel="stylesheet" type="text/css" href="scripts/jquery/jquery-ui-189custom/development-bundle/themes/base/jquery.ui.all.css" />
 		<script type="text/javascript" src="scripts/jquery/jquery-latest.js"></script> 
 		<script type="text/javascript" src="scripts/jquery/jquery-ui-latest.js"></script> 
 		<script type="text/javascript" src="scripts/jquery/jquery.layout-latest.js"></script> 
-		<script type="text/javascript" src="scripts/jquery.view/jquerymx-1.0.custom.js"></script>				
-
-
-		<!-- smart tab -->		
-		<link rel="stylesheet" type="text/css" href="style/smartTab.css">		
+		<script type="text/javascript" src="scripts/jquery.view/jquerymx-1.0.custom.js"></script>
+				
+		
+		<!-- smart tab -->
+		<link rel="stylesheet" type="text/css" href="style/smartTab.css">				
 		<script type="text/javascript" src="scripts/jquery/jquery.smartTab.js"></script>
+
 		
 		<!-- for keyboard mapping -->
 		<script type="text/javascript" src="scripts/shortcut.js"></script>
-
+		
+				
 		<!-- iphone -->		
 		<link rel="stylesheet" href="style/simulator/simulator.css" />
-
-
+		
 		<!-- ejs engine -->
 		<script type="text/javascript" src="scripts/ejs/ejs.js"></script>
 		<script type="text/javascript" src="scripts/ejs/ejs_debugger.js"></script>
 		<script type="text/javascript" src="scripts/ejs/view.js"></script>
-		
-	  	<script type="text/javascript" src="dwr/engine.js"></script> 
-	  	<script type="text/javascript" src="dwr/util.js"></script> 	  
-	  	<script type="text/javascript" src="dwr/interface/Metaworks.js"></script> 
+	
+	  	<script type='text/javascript' src='dwr/engine.js'></script> 
+	  	<script type='text/javascript' src='dwr/util.js'></script>	  
+	  	<script type='text/javascript' src='dwr/interface/Metaworks.js'></script> 
 	  	<script type="text/javascript" src="dwr/metaworks/scripts/metaworks.js"></script>
 	
-
-		<!-- extJS Core.. -->
-		<script type="text/javascript" src="scripts/ext.v.3.1.1/adapter/jquery/ext-jquery-adapter-debug.js"></script>
-		<!-- script type="text/javascript" src="scripts/ext.v.3.1.1/adapter/ext/ext-base-debug.js"></script -->
-		<script type="text/javascript" src="scripts/ext.v.3.1.1/ext-all-debug.js"></script>
-		<script type="text/javascript" src="scripts/ext.v.3.1.1/src/locale/ext-lang-en.js"></script>
-
-
+		<!-- for context menu, import YUI -->
+		<script type="text/javascript" src="scripts/yui-3.2.0-min.js"></script>
+		<link rel="stylesheet" type="text/css" href="style/menu/reset.css">
+		<link rel="stylesheet" type="text/css" href="style/menu/fonts.css">
+		<link rel="stylesheet" type="text/css" href="style/menu/container.css">
+		<link rel="stylesheet" type="text/css" href="style/menu/sam/menu.css">
+		<script type="text/javascript" src="scripts/yui/build/utilities/utilities.js"></script>
+		<script type="text/javascript" src="scripts/yui/build/container/container.js"></script>
+		<script type="text/javascript" src="scripts/yui/build/menu/menu.js"></script>
+	
+		<!-- for source code editor -->
+		<script src="scripts/ace/build/src/ace-uncompressed.js" type="text/javascript" charset="utf-8"></script>
+		<script src="scripts/ace/build/src/theme-eclipse.js" type="text/javascript" charset="utf-8"></script>
+		<script src="scripts/ace/build/src/mode-javascript.js" type="text/javascript" charset="utf-8"></script>
+		<script src="scripts/ace/build/src/mode-java.js" type="text/javascript" charset="utf-8"></script>
+		
 		<!-- for jLayout -->
 		<!-- 
 		<script src="scripts/jLayout/jquery.jlayout.js" type="text/javascript" charset="utf-8"></script>
@@ -50,20 +59,70 @@
 		<script src="scripts/jLayout/jlayout.flexgrid.js" type="text/javascript" charset="utf-8"></script>
 		<script src="scripts/jLayout/jlayout.flow.js" type="text/javascript" charset="utf-8"></script>
 		 -->
+		 
+		<!-- grid -->
+		<link rel="stylesheet" type="text/css" media="screen" href="scripts/jquery.jqGrid-4.3.1/css/ui.jqgrid.css">
+		<script src="scripts/jquery.jqGrid-4.3.1/js/i18n/grid.locale-en.js" type="text/javascript"></script>
+		<script type="text/javascript" src="scripts/jquery.jqGrid-4.3.1/jquery.jqGrid.js"></script>
 
 		<!-- popup -->
-		<link rel="stylesheet" type="text/css" href="style/popup.css" />
-		<link rel="stylesheet" type="text/css" href="scripts/jquery/cluetip/jquery.cluetip.css" />
+		<link rel="stylesheet" href="scripts/jquery/cluetip/jquery.cluetip.css" />
+		
+		<!-- popup -->
+		<link rel="stylesheet" href="style/popup.css" />
+		
 		
 		<!-- default -->
 		<link rel="stylesheet" href="style/waveStyle/droppable_layout.css" />
-		<link href="style/waveStyle/signIn.css" type="text/css" rel="stylesheet">				
+		<link href="style/waveStyle/signIn.css" type="text/css" rel="stylesheet">
+				
 
 		<!--  for chart -->
 		<script type='text/javascript' src='https://www.google.com/jsapi'></script>
 
+				
+				
+				
+		<!-- for process designer -->
+		
+		
+		
+		<link rel="stylesheet" type="text/css" href="dwr/metaworks/org/uengine/codi/mw3/model/PureWebProcessDesigner.ejs.css" />
+		
+		<!-- for flowchart -->
+		<!-- 
+		<script type="text/javascript" src="scripts/raphael/raphael-min.js"></script>
+		<script type="text/javascript" src="scripts/ajax/ajaxCommon.js"></script>
+		<script type="text/javascript" src="scripts/crossBrowser/elementControl.js"></script>
+		
+		<script type="text/javascript" src="scripts/flowchart/flowchartDefinition.js"></script>		
+		
+		<script type="text/javascript" src="scripts/flowchart/flowchartUtil.js"></script>		 
+		<script type="text/javascript" src="scripts/loopDrawForMW3.js"></script>
+		-->
+		
+		<script type="text/javascript" src="scripts/popupTooltip.js"></script>
+		
+		<LINK type="text/css" rel="stylesheet" href="style/popupTooltip.css">
+		<LINK type="text/css" rel="stylesheet" href="style/flowchart.css">
+		
+		<!-- for source code editor -->
+		<script src="scripts/ace/build/src/ace.js" type="text/javascript" charset="utf-8"></script>
+		<script src="scripts/ace/build/src/theme-eclipse.js" type="text/javascript" charset="utf-8"></script>
+		<script src="scripts/ace/build/src/mode-javascript.js" type="text/javascript" charset="utf-8"></script>
+		<script src="scripts/ace/build/src/mode-java.js" type="text/javascript" charset="utf-8"></script>
+		
+	<script type="text/javascript">
+		mxBasePath = 'scripts/mxgraph/src';
+	</script>
+		<script type='text/javascript' src='scripts/mxgraph/src/js/mxClient.js'></script>
+		<script type='text/javascript' src='scripts/mxgraph/examples/editors/js/mxApplication.js'></script>
+		
+		
+		<script type='text/javascript' src='scripts/format.js'></script>
+						
+						
 		<script type="text/javascript">
-			var mxBasePath = "scripts/mxgraph/src";
 			var Request = function() {
 				this.getParameter = function(name) {
 					var rtnval = "";
@@ -81,59 +140,9 @@
 					return rtnval;
 				}
 			}
-			var jsLoadCnt	= 0;
-			var jsLoader	= function(url, callback) {				
-				if (url && typeof(url) == "string") {
-					if (jQuery.browser.msie) {
-						window.setTimeout(function() { 
-							jsLoaderForIE(url, (callback && typeof(callback) == "function") ? callback : null) 
-						}, jsLoadCnt * 500);
-					} 					
-					else {
-						if (window.console) 
-							console.log("load script[other]:" + url);
-
-						jQuery.getScript(url , function(data,textStatus,xhr){
-							if (xhr.readyState == 4) {
-								if (callback && typeof(callback) == "function")
-									window.setTimeout(callback(), 500);
-							}
-						});
-					}
-				}
-				jsLoadCnt++;
-			}
-			var jsLoaderForIE = function(url, callback) {
-				if (window.console) 
-						console.log("load script[msie]:" + url);
-
-				var oHead	= document.getElementsByTagName('head')[0];
-				var oScript	= document.createElement("script");
-				oScript.setAttribute("type", "text/javascript");
-				oScript.setAttribute("language", "javascript");
-				oScript.setAttribute("src", url);
-				oScript.async= true;			
-				if (callback && typeof(callback) == "function") {
-					oScript.onload = function() {
-						callback();
-					}
-				}				
-				oHead.appendChild(oScript);
-			}
-			var cssLoader = function(url, callback) {
-				if (url && typeof(url) == "string") {
-					if (window.console) 
-						console.log("load stylesheet:" + url);
-
-					$("head").append($("<link rel='stylesheet' href='style.css' type='text/css' media='screen' />"));
-
-					if (callback && typeof(callback) == "function")
-						window.setTimeout(callback(), 500);
-				}
-			}
 
 			
-			var mainPage;
+			var mainPage
 		
 			try{
 				google.load('visualization', '1', {
@@ -181,108 +190,7 @@
 				window.onbeforeunload= function(){
 				    return 'You are about to leave this page, OK?';
 				};
-
-				window.setTimeout(fn_ResourceLoader, 1000);
 			});
-
-
-			function fn_ResourceLoader() {
-				var baseUrl	= "";
-				var loadCss	= new Array(null
-						// for process designer style.
-						,"dwr/metaworks/org/uengine/codi/mw3/model/PureWebProcessDesigner.ejs.css"
-
-						// for context menu, import YUI style.
-						,"style/menu/reset.css"
-						,"style/menu/fonts.css"
-						,"style/menu/container.css"
-						,"style/menu/sam/menu.css"
-
-						// for jqGride style.
-						,"scripts/jquery.jqGrid-4.3.1/css/ui.jqgrid.css"
-
-						// for extJS base styler.
-						,"scripts/ext.v.3.1.1/resources/css/ext-all.css"
-						,"scripts/ext.v.3.1.1/ux/css/PanelResizer.css"
-						,"scripts/ext.v.3.1.1/ux/ux.maximgb.tg/css/TreeGrid.css"
-						,"scripts/ext.v.3.1.1/ux/css/ColumnHeaderGroup.css"
-						,"scripts/ext.ux.gantt/css/Ext.ux.gantt.css"
-					);
-				var loadJSs	= new Array(null
-						// Raphael Javascript Graphic Library.
-						,"scripts/raphael/raphael.js"
-
-						// for flowchart style.
-						,"scripts/ajax/ajaxCommon.js"
-						,"scripts/crossBrowser/elementControl.js"		
-						,"scripts/flowchart/flowchartDefinition.js"		
-						,"scripts/flowchart/flowchartUtil.js"
-						,"scripts/loopDrawForMW3.js"
-						,"scripts/mxgraph/src/js/mxClient.js"
-						,"scripts/mxgraph/examples/editors/js/mxApplication.js"
-
-						// for context menu, import YUI script.
-						,"scripts/yui-3.2.0-min.js"
-						,"scripts/yui/build/utilities/utilities.js"
-						,"scripts/yui/build/container/container.js"
-						,"scripts/yui/build/menu/menu.js"
-
-						// jqGrid script.
-						,"scripts/jquery.jqGrid-4.3.1/jquery.jqGrid.js"
-						,"scripts/jquery.jqGrid-4.3.1/js/i18n/grid.locale-en.js"
-
-						// for source code editor
-						,"scripts/ace/build/src/ace.js"
-						,"scripts/ace/build/src/theme-eclipse.js"
-						,"scripts/ace/build/src/mode-javascript.js"
-						,"scripts/ace/build/src/mode-java.js"
-
-
-						// for extJS Base script. 
-						//,"scripts/ext.v.3.1.1/adapter/ext/ext-base.js"						
-						//,"scripts/ext.v.3.1.1/adapter/jquery/ext-jquery-adapter-debug.js"						
-						//,"scripts/ext.v.3.1.1/ext-all-debug.js"
-						//,"scripts/ext.v.3.1.1/src/locale/ext-lang-en.js"
-
-						,"scripts/ext.v.3.1.1/ux/Spinner.js"
-						,"scripts/ext.v.3.1.1/ux/SpinnerField.js"
-						,"scripts/ext.v.3.1.1/ux/PanelResizer.js"
-						,"scripts/ext.v.3.1.1/ux/ux.maximgb.tg/TreeGrid.js"
-						,"scripts/ext.v.3.1.1/ux/ColumnHeaderGroup.js"
-						
-						
-						// Ajax GanttChart. (extJS Plugin.)
-						,"scripts/ext.ux.gantt/Ext.ux.gantt.Common.js"
-						,"scripts/ext.ux.gantt/Ext.ux.gantt.Properties.js"
-						,"scripts/ext.ux.gantt/Ext.ux.gantt.AjaxRequest.js"
-						,"scripts/ext.ux.gantt/Ext.ux.gantt.ScheduleBar.js"
-						,"scripts/ext.ux.gantt/Ext.ux.gantt.TaskTreeGrid.js"
-						,"scripts/ext.ux.gantt/Ext.ux.gantt.ChartGrid.js"
-						,"scripts/ext.ux.gantt/Ext.ux.gantt.GanttChartPanel.js"
-						,"scripts/ext.ux.gantt/Ext.ux.codi.UserView.js"
-						,"scripts/ext.ux.gantt/locale/gantt-lang-en.js"
-					);
-
-					if (loadCss && typeof loadCss == "object") {
-						for (var x = 0; x < loadCss.length; x++) {
-							if (loadCss[x] && typeof loadCss[x] == "string")
-								cssLoader(baseUrl + loadCss[x]);
-						}
-					}
-					if (loadJSs && typeof loadJSs == "object") {
-						for (var x = 0; x < loadJSs.length; x++) {
-							if (loadJSs[x] && typeof loadJSs[x] == "string") {								
-								jsLoader(baseUrl + loadJSs[x], fn_check);
-							}
-						}
-					}
-			}
-			function fn_check() {
-				if (window.console)
-				{
-					console.log("script loaded..");
-				}
-			}
 		</script>
 	</head>
 	
