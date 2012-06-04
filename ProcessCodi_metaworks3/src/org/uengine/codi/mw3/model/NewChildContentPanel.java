@@ -8,6 +8,7 @@ import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
 import org.metaworks.widget.Window;
+import org.uengine.codi.mw3.admin.PageNavigator;
 
 public class NewChildContentPanel  {
 	
@@ -24,10 +25,13 @@ public class NewChildContentPanel  {
 	@AutowiredFromClient
 	public Session session;
 
+	@AutowiredFromClient
+	public PageNavigator pageNavigator;	
+	
 	@ServiceMethod
 	public EntityDesignerContentPanel newEntity() throws Exception{
 		EntityDesignerContentPanel entityDesignerContentPanel = new EntityDesignerContentPanel();		
-		entityDesignerContentPanel.getMetaworksContext().setHow("ide");
+		entityDesignerContentPanel.getMetaworksContext().setHow(pageNavigator.getPageName());
 		entityDesignerContentPanel.newEntity(session.getUser(), getParentFolder().toString());
 						
 		return entityDesignerContentPanel;
@@ -36,7 +40,7 @@ public class NewChildContentPanel  {
 	@ServiceMethod
 	public ClassDesignerContentPanel newJavaClass() throws Exception{
 		ClassDesignerContentPanel classDesigner = new ClassDesignerContentPanel();
-		classDesigner.getMetaworksContext().setHow("ide");
+		classDesigner.getMetaworksContext().setHow(pageNavigator.getPageName());
 		classDesigner.newClass(getParentFolder().toString());
 		
 		return classDesigner;
@@ -45,7 +49,7 @@ public class NewChildContentPanel  {
 	@ServiceMethod
 	public ProcessDesignerWindow newProcess() throws Exception{
 		ProcessDesignerWindow processDesigner = new ProcessDesignerWindow();
-		processDesigner.getMetaworksContext().setHow("ide");
+		processDesigner.getMetaworksContext().setHow(pageNavigator.getPageName());
 		processDesigner.newProcessDefinition(getParentFolder().toString());
 		
 		return processDesigner;
@@ -62,7 +66,7 @@ public class NewChildContentPanel  {
 	@ServiceMethod
 	public FormDesignerContentPanel newForm(){
 		FormDesignerContentPanel formDesigner = new FormDesignerContentPanel();
-		formDesigner.getMetaworksContext().setHow("ide");
+		formDesigner.getMetaworksContext().setHow(pageNavigator.getPageName());
 		formDesigner.newForm(getParentFolder().toString());
 		
 		return formDesigner;
@@ -84,7 +88,7 @@ public class NewChildContentPanel  {
 		
 		RuleDesignerWindow ruleDesignerWindow = new RuleDesignerWindow();
 		ruleDesignerWindow.newRule(getParentFolder().toString());
-		ruleDesignerWindow.getMetaworksContext().setHow("ide");
+		ruleDesignerWindow.getMetaworksContext().setHow(pageNavigator.getPageName());
 		
 		return ruleDesignerWindow;
 	}
@@ -94,7 +98,7 @@ public class NewChildContentPanel  {
 		
 		WebServiceAdapterContentPanel webServiceAdapterContentPanel = new WebServiceAdapterContentPanel();
 		webServiceAdapterContentPanel.newWebServiceAdapter(getParentFolder().toString());
-		webServiceAdapterContentPanel.getMetaworksContext().setHow("ide");
+		webServiceAdapterContentPanel.getMetaworksContext().setHow(pageNavigator.getPageName());
 		
 		return webServiceAdapterContentPanel;
 	}

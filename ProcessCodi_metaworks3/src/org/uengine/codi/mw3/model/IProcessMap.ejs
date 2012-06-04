@@ -26,15 +26,7 @@
 	</div>
 	<div id="btnline" style="border-top:1px solid #E3E8F2; padding-top:8px;">
 		<ul>			
-			<li><a id="wBtn" href="javascript:<%=methods.close.caller()%>"><span>취소</span></a></li>
-			
-<%
-			if(!mw3.isHiddenMethod(methods.create)){
-%>						
-			<li><a id="wBtn" href="javascript:<%=methods.create.caller()%>"><span>등록</span></a></li>			
-<%
-			}
-%>						
+			<li><a id="wBtn" href="javascript:<%=methods.close.caller()%>"><span>취소</span></a></li>			
 <%
 			if(!mw3.isHiddenMethod(methods.save)){
 %>						
@@ -49,8 +41,8 @@
 %>
 
 
-   <div class="editicon" onclick="<%=methods.modify.caller()%>"></div>
-    <a href="#"><img alt="" src="images/processMap/iconDefault.png" width="40" height="40"></a>
+   	<div class="editicon" onclick="<%=methods.modify.caller()%>"></div>
+    <a href="javascript:<%=methods.initiate.caller()%>"><img alt="" src="images/processMap/iconDefault.png" width="40" height="40"></a>
     <a href="#"><%=value.name%></a>
 
 
