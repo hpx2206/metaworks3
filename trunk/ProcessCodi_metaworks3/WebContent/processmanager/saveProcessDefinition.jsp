@@ -43,7 +43,7 @@ System.out.println(" my session user id is " + userId);
 	    //definition = GlobalContext.serialize(sampleProc, String.class);
 	
 	    
-		String defVerId = pm.addProcessDefinition(definitionName, Integer.parseInt(version), description, false, definition, savingFolder, belongingDefinitionId, alias, objType);
+		String defVerId = pm.addProcessDefinition(definitionName, Integer.parseInt(version), description, false, definition, savingFolder, alias, alias, objType);
 		
 /* 		if(autoProduction)
 			pm.setProcessDefinitionProductionVersion(defVerId);

@@ -17,6 +17,13 @@
 		String language = request.getParameter("language");
 		String instanceId = request.getParameter("instanceId");
 		
+		String userId = request.getParameter("userId");
+
+		request.getSession().setAttribute("userId", userId);
+
+		org.uengine.codi.mw3.CodiClassLoader.initClassLoader();
+
+
 		//case that find by definition id
 		if(versionId==null && pd!=null){
 			
