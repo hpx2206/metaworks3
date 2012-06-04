@@ -4,7 +4,7 @@ var org_uengine_codi_mw3_model_ScheduleEditor = function(objectId, className) {
 	
 	this.objectId = objectId;
 	this.className = className;
-	this.chartPanel = "divGanttChart_" + object.instanceId;
+	this.chartPanel = "divGanttChart_" + objectId;
 	
 	var faceHelper = this;
 
@@ -21,7 +21,7 @@ org_uengine_codi_mw3_model_ScheduleEditor.prototype.init = function() {
 		return;
 	}
 
-	if (!Ext.ux.gantt.GanttChartPanel || typeof Ext.ux.gantt.GanttChartPanel != "object") {
+	if (!Ext.ux.gantt.GanttChartPanel || typeof Ext.ux.gantt.GanttChartPanel != "function") {
 		if (window.console)
 			console.log("Not find object.!! GanttChart.. ");	
 
@@ -33,7 +33,7 @@ org_uengine_codi_mw3_model_ScheduleEditor.prototype.init = function() {
 	Ext.QuickTips.init();
 
 	// drow for gantt chart.
-	var objData = this.getChartData();	
+	var objData = this.getChartData();
     var ganttChartPanel = new Ext.ux.gantt.GanttChartPanel({
         header: true,
         width: 1000,

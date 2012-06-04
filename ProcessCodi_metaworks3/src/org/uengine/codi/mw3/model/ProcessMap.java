@@ -7,6 +7,8 @@ import org.metaworks.dao.Database;
 import org.metaworks.website.MetaworksFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.knowledge.WfNode;
+import org.uengine.kernel.EJBProcessInstance;
+import org.uengine.kernel.ProcessInstance;
 import org.uengine.kernel.RoleMapping;
 import org.uengine.processmanager.ProcessManagerRemote;
 
@@ -154,36 +156,64 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 			rm.setEndpoint(session.user.getUserId());
 		
 		processManager.setLoggedRoleMapping(rm);
-		
-		processManager.executeProcess(instId);
-		processManager.applyChanges();
 	
 		IInstance instanceRef = new Instance();
 		instanceRef.setInstId(new Long(instId));
+
+		
+		if(newInstancePanel!=null){
+			
+			if(newInstancePanel.getKnowledgeNodeId() != null){
+			
+				processManager.executeProcess(instId);
+				processManager.applyChanges();
+
+
+				WfNode parent = new WfNode();
+				parent.load(newInstancePanel.getKnowledgeNodeId());
+				
+				WfNode child = new WfNode();		
+				child.setName(instanceView.instanceName);
+				child.setLinkedInstId(Long.parseLong(instId));
+				parent.addChildNode(child);
+				
+				child.createMe();
+	
+				return new Object[]{instanceView, parent};
+	
+			}else if(newInstancePanel.getParentInstanceId() != null){ //need to attach new instance to the parent instance
+				ProcessInstance instanceObject = processManager.getProcessInstance(instId);
+				
+				//IInstance instance = instanceRef.databaseMe();
+			
+				EJBProcessInstance ejbParentInstance = (EJBProcessInstance)instanceObject;
+				ejbParentInstance.getProcessInstanceDAO().setRootInstId(new Long(newInstancePanel.getParentInstanceId()));
+				
+				Instance rootInstanceRef = new Instance();
+				rootInstanceRef.setInstId(new Long(newInstancePanel.getParentInstanceId()));
+				
+				processManager.executeProcess(instId);
+				processManager.applyChanges();
+			
+				InstanceViewContent rootInstanceView = instanceView;// = new InstanceViewContent();
+				rootInstanceView.load(rootInstanceRef);
+	
+				return new Object[]{rootInstanceView, new Remover(new Popup())};
+				
+			}
+		}
+		
+		
+		processManager.executeProcess(instId);
+		processManager.applyChanges();
+
+		
 		
 		instanceView.load(instanceRef);
 		
 		InstanceListPanel instanceListPanel = new InstanceListPanel(); //should return instanceListPanel not the instanceList only since there're one or more instanceList object in the client-side
 		
-		
-		
-		if(newInstancePanel!=null && newInstancePanel.getKnowledgeNodeId() != null){
-			WfNode parent = new WfNode();
-			parent.load(newInstancePanel.getKnowledgeNodeId());
-			
-			WfNode child = new WfNode();		
-			child.setName(instanceView.instanceName);
-			child.setLinkedInstId(Long.parseLong(instId));
-			parent.addChildNode(child);
-			
-			child.createMe();
 
-			return new Object[]{instanceView, parent};
-
-		}
-		
-		
-		
 		return new Object[]{instanceView, instanceListPanel};
 
 		

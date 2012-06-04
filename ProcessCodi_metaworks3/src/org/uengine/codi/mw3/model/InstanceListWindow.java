@@ -18,7 +18,10 @@ public class InstanceListWindow {
 	public InstanceListWindow(){}
 	public InstanceListWindow(Session session) throws Exception {
 		this.session = session;
-		switchToInstanceListPanel();
+		
+		PersonalPerspective personalPerspective = new PersonalPerspective();
+		personalPerspective.session = session;
+		this.instanceListPanel = (InstanceListPanel) personalPerspective.loadInbox()[1];
 	}
 	
 	InstanceListPanel instanceListPanel;
@@ -28,35 +31,7 @@ public class InstanceListWindow {
 		public void setInstanceListPanel(InstanceListPanel instanceListPanel) {
 			this.instanceListPanel = instanceListPanel;
 		}
-		
-	ScheduleCalendar scheduleCalendar;
-		public ScheduleCalendar getScheduleCalendar() {
-			return scheduleCalendar;
-		}
-		public void setScheduleCalendar(ScheduleCalendar scheduleCalendar) {
-			this.scheduleCalendar = scheduleCalendar;
-		}
-		
-	@Hidden
-	@ServiceMethod(inContextMenu=true)
-	public void switchToScheduleCalendar() throws Exception{
-		this.scheduleCalendar = new ScheduleCalendar();
-		this.scheduleCalendar.session = session;
-		this.scheduleCalendar.load();
-	}
 	
-	@Hidden
-	@ServiceMethod(inContextMenu=true)
-	public void switchToInstanceListPanel() throws Exception{
-		//this.instanceListPanel = new InstanceListPanel();
-		PersonalPerspective personalPerspective = new PersonalPerspective();
-		personalPerspective.session = session;
-		this.instanceListPanel = (InstanceListPanel) personalPerspective.loadInbox()[1];
-		//personalPerspective.select();
-
-		
-		this.instanceListPanel.session = session;
-	}
 		
 	@AutowiredFromClient
 	public Session session;

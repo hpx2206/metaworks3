@@ -2,7 +2,9 @@ package org.uengine.codi.mw3.model;
 
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
+import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
+import org.uengine.codi.mw3.calendar.ScheduleCalendar;
 
 public class InstanceListPanel {
 	
@@ -12,10 +14,8 @@ public class InstanceListPanel {
 	public InstanceListPanel(){		
 		setSearchBox(new SearchBox());
 		
-		InstanceList instanceList = new InstanceList();
+		instanceList = new InstanceList();
 		instanceList.init();
-		
-		setInstanceList(instanceList);
 	}
 
 	SearchBox searchBox;		
@@ -27,6 +27,30 @@ public class InstanceListPanel {
 			this.searchBox = searchBox;
 		}
 
+	ScheduleCalendar scheduleCalendar;
+		public ScheduleCalendar getScheduleCalendar() {
+			return scheduleCalendar;
+		}
+		public void setScheduleCalendar(ScheduleCalendar scheduleCalendar) {
+			this.scheduleCalendar = scheduleCalendar;
+		}
+		
+	//@Hidden
+	@ServiceMethod(inContextMenu=true)
+	public void switchToScheduleCalendar() throws Exception{
+		this.scheduleCalendar = new ScheduleCalendar();
+		this.scheduleCalendar.session = session;
+		this.scheduleCalendar.load();
+	}
+	
+	//@Hidden
+	@ServiceMethod(inContextMenu=true)
+	public void switchToInstanceList() throws Exception{
+		instanceList = new InstanceList();
+		instanceList.init();
+	}
+
+		
 	InstanceList instanceList;
 		public InstanceList getInstanceList() {
 			return instanceList;
@@ -47,4 +71,6 @@ public class InstanceListPanel {
 		
 		return new NewInstanceWindow(newInstancePanel);
 	}
+	
+	
 }
