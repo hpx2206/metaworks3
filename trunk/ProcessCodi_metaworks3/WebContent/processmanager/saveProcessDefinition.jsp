@@ -27,15 +27,22 @@
 							= request.getParameter("defId");
 		String objType 			= decode(request.getParameter("objType"));
 							
-					
+		
+		String userId 			= decode(request.getParameter("userId"));
+		
+		session.setAttribute("userId", userId);
+System.out.println(" my session user id is " + userId);	
+
+		org.metaworks.dao.TransactionContext.getThreadLocalInstance().setRequest(request);
+
 		org.uengine.codi.mw3.CodiClassLoader.initClassLoader();
 
 		//ProcessDefinition sampleProc = new ProcessDefinition();
 		//sampleProc.setName("xxxxx");
 		
 	    //definition = GlobalContext.serialize(sampleProc, String.class);
-		
 	
+	    
 		String defVerId = pm.addProcessDefinition(definitionName, Integer.parseInt(version), description, false, definition, savingFolder, belongingDefinitionId, alias, objType);
 		
 /* 		if(autoProduction)
