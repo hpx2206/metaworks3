@@ -46,7 +46,7 @@ public class InstanceView {
 			this.instanceNameChanger = instanceNameChanger;
 		}
 		
-		InstanceSecurityConfigurer instanceSecurityConfigurer;
+	InstanceSecurityConfigurer instanceSecurityConfigurer;
 
 		public InstanceSecurityConfigurer getInstanceSecurityConfigurer() {
 			return instanceSecurityConfigurer;
