@@ -25,6 +25,8 @@ public class Knowledge {
 		
 		Mashup mashup = new Mashup();
 		ContentWindow mashupContentWindow = new ContentWindow(mashup);
+		mashupContentWindow.setTitle("Mashup");
+		
 		outerLayout.setEast(mashupContentWindow);
 		
 //		mashupGoogleImage = mashup.getMashupGoogleImage();

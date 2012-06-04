@@ -112,25 +112,23 @@ public interface IWfNode extends IDAO {
 	 * Service Method
 	 *  
 	 *******************************************/
-	@ServiceMethod(callByContent=true)
-	public WfNode newNode() throws Exception;
-	
-	@ServiceMethod(callByContent=true, target="popup")
+	@ServiceMethod(callByContent=true, except={"childNode", "focus"}, target="popup")
 	public Object[] add() throws Exception;
 	
-	@ServiceMethod(callByContent=true)
-	public WfNode outdent() throws Exception;
+	@ServiceMethod(callByContent=true, except={"childNode", "focus"}, target="popup")
+	public Object[] outdent() throws Exception;
 	
-	@ServiceMethod(callByContent=true)
-	public WfNode indent() throws Exception;
+	@ServiceMethod(callByContent=true, except={"childNode", "focus"}, target="popup")
+	public Object[] indent() throws Exception;
 	
-	@ServiceMethod(callByContent=true)
-	public WfNode remove() throws Exception;
+	@ServiceMethod(callByContent=true, except={"childNode", "focus"}, target="popup")
+	public Object[] remove() throws Exception;
 	
-	@ServiceMethod(callByContent=true)
-	public WfNode move() throws Exception;
+	@ServiceMethod(callByContent=true, except={"childNode", "focus"}, target="popup")
+	public Object[] move() throws Exception;
 
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_NONE)
+	
+	@ServiceMethod(callByContent=true, except={"childNode", "focus"}, target=ServiceMethodContext.TARGET_NONE)
 	public void save() throws Exception;
 
 	@ServiceMethod(callByContent=true)

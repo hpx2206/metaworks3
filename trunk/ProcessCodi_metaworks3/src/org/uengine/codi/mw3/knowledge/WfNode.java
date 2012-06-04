@@ -11,7 +11,9 @@ import org.directwebremoting.WebContext;
 import org.directwebremoting.WebContextFactory;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
+import org.metaworks.Remover;
 import org.metaworks.ToNext;
+import org.metaworks.ToPrev;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.TransactionContext;
@@ -29,10 +31,6 @@ import org.uengine.codi.mw3.model.Session;
 public class WfNode extends Database<IWfNode> implements IWfNode {
 	
 	static Hashtable<Integer, ArrayList<String>> nodeListeners = new Hashtable<Integer, ArrayList<String>>();
-	
-	
-	@AutowiredFromClient
-	public WfPanel wfPanel;
 	
 	String id;
 		public String getId() {
@@ -140,7 +138,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		public void setChildNode(ArrayList<WfNode> childNode) {
 			this.childNode = childNode;
 		}		
-	
+		
 	public WfNode() {
 		setChildNode(new ArrayList<WfNode>());
 		getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
@@ -172,6 +170,10 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 			if(!"ROOT".equals(getMetaworksContext().getHow()))
 				getMetaworksContext().setHow("NONE");
 		}
+	}
+	
+	public void load() throws Exception {
+		load(this.getId());
 	}
 	
 	public void load(String nodeId) throws Exception {
@@ -226,7 +228,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 	public String makeId() throws Exception {
 		return String.valueOf(UniqueKeyGenerator.issueKey("bpm_knol", TransactionContext.getThreadLocalInstance()));
 	}
-	
+		
 	public void createMe() throws Exception {
 		String nodeId = this.makeId();
 		
@@ -257,7 +259,15 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 	 * 
 	 * function
 	 *  
-	 *******************************************/	
+	 *******************************************/
+	public int getNodeIndex(WfNode node){
+		for(int i=0; i<childNode.size(); i++){
+			if(((WfNode)childNode.get(i)).getId().equals(node.getId()))
+				return i;
+			
+		}
+		return -1;
+	}
 	public void addChildNode(WfNode newNode) throws Exception {
 		addChildNode(childNode.size(), newNode);	
 	}
@@ -293,12 +303,6 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		}
 	}
 	
-	private int getNodeIndex(){
-		WfNode parentNode = wfPanel.getNode(this.getParentId());
-		
-		return parentNode.getChildNode().indexOf(this);
-	}
-	
 	public WfNode getNode(String findId){
 		
 		WfNode resultNode = null;
@@ -317,22 +321,16 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		return resultNode;			
 	}
 	
+	public void copyMetaworksContext(MetaworksContext metaworksContext){
+		this.getMetaworksContext().setWhen(metaworksContext.getWhen());
+		this.getMetaworksContext().setHow(metaworksContext.getHow());
+		this.getMetaworksContext().setWhere(metaworksContext.getWhere());
+	}
 	/*******************************************
 	 * 
 	 * Service Method
 	 *  
 	 *******************************************/
-	public WfNode newNode() throws Exception {
-		WfNode newNode = new WfNode();
-		addChildNode(newNode);
-		
-		newNode.createMe();
-		newNode.setFocus(true);
-		
-		return this;
-	}
-	
-	
 	private void addNodeListener(Integer nodeId){
 		
 		ArrayList<String> nodeListenerArray = null;
@@ -354,51 +352,50 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		
 		// 입력 값이 없고 위치가 최상위가 아니라면 outdent
 		if(getName().length() == 0 && getNameNext().length() == 0){
-			WfNode outdentNode = this.outdent();
+			final Object[] returnObjects = this.outdent();
 			
-			if(outdentNode != null) 
-				return new Object[]{new Refresh(outdentNode)};
+			if(returnObjects != null)
+				return returnObjects;				
 		}
 		
-		// 현재 노드의 위치를 구한다.
-		int nodeIndex = this.getNo();	
-
-		// 근방에 있는 편집자들에게 reverse ajax로 알려주기 위해.. 현재 노드를 편집하고 있는 것을 기록해둠...  
-//		addNodeListener(Integer.parseInt(getParentId()));
+		// 반환 값
+		Object targetObject = null;
 		
-		// 액션 노드의 context 변경 및 저장
-		this.saveMe();
+		// 부모 노드를 구한다
+		WfNode parentNode = new WfNode();
+		parentNode.copyMetaworksContext(getMetaworksContext());
+		parentNode.load(this.getParentId());
 		
-		wfPanel.clearFocus();
-		
-		// 추가될 노드의 focus 를 위한 context 변경
+		// 내 노드를 구한다. -> 저장
+		final WfNode node = parentNode.getNode(this.getId());
+		node.setName(this.getName());
+		node.save();
+			
+		// 새로운 노드를 만든다.
 		final WfNode newNode = new WfNode();
 		newNode.setFocus(true);
 		newNode.getMetaworksContext().setHow("add");
 		
 		if(getNameNext().length() == 0){
-			if(getChildNode().size() > 0){
-				addChildNode(0, newNode);
+			if(node.getChildNode().size() > 0){
+				node.addChildNode(0, newNode);
+			}else{				
+				parentNode.addChildNode(node.getNo()+1, newNode);
 				
-			}else{
-				// 부모 노드를 구한다
-				WfNode parentNode = wfPanel.getNode(this.getParentId());
-				
-				parentNode.addChildNode(nodeIndex+1, newNode);
+				targetObject = new ToNext(this, newNode);
 			}
 		}else{
-			// 부모 노드를 구한다
-			WfNode parentNode = wfPanel.getNode(this.getParentId());
-			
-			parentNode.addChildNode(nodeIndex+1, newNode);
-			
 			newNode.setName(getNameNext());
+			
+			parentNode.addChildNode(node.getNo()+1, newNode);			
+						
+			targetObject = new ToNext(this, newNode);
 		}
 		
-		newNode.setAuthorId(session.getUser().getUserId());
-		
+		newNode.setAuthorId(session.getUser().getUserId());		
 		newNode.createMe();
 
+		
 		WebContext wctx = WebContextFactory.get();
 		String mySessionId = wctx.getScriptSession().getId();
 
@@ -409,8 +406,13 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		
 		//ArrayList<String> parentNodeListeners = wctx.getScriptSession();
 
-		final Object[] returnObjects = new Object[]{new Refresh(this), new ToNext(this, newNode)};
-
+		final Object[] returnObjects;
+		
+		if(targetObject == null)
+			returnObjects = new Object[]{new Refresh(node)};
+		else
+			returnObjects = new Object[]{new Refresh(node), targetObject};
+			
 		String currentPage = wctx.getCurrentPage();
 
 		   Collection<ScriptSession> sessions = wctx.getScriptSessionsByPage(currentPage);
@@ -438,184 +440,213 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 
 	}
 	
-	public WfNode indent() throws Exception {
+	public Object[] indent() throws Exception {
 
-		int nodeIndex = this.getNo();		
-		if(nodeIndex == 0){
+		// 부모 노드를 구한다
+		WfNode parentNode = new WfNode();
+		parentNode.setMetaworksContext(getMetaworksContext());
+		parentNode.load(this.getParentId());
+
+		WfNode node = parentNode.getNode(this.getId());		
+		if(node.getNo() == 0){
 			return null;			
 		}
 		
-		// 부모 노드를 구한다
-		WfNode parentNode = wfPanel.getNode(this.getParentId());		
-		
 		// 부모 노드의 마지막 자식 노드를 구한다. (변경 부모 노드)
-		WfNode appendNode = parentNode.getChildNode().get(nodeIndex - 1);
+		WfNode appendNode = parentNode.getChildNode().get(node.getNo() - 1);
 		
 		// 부모 변경 처리
-		parentNode.removeChildNode(nodeIndex);	// 이전 부모 노드에서 제거
-		appendNode.addChildNode(this);			// 변경 부모 노드에 추가
+		parentNode.removeChildNode(node.getNo());	// 이전 부모 노드에서 제거
+		appendNode.addChildNode(node);				// 변경 부모 노드에 추가
 						
-		// 저장
-		this.saveMe();
+		// 변경 정보 적용
+		node.setName(this.getName() + this.getNameNext());
+		node.setNameNext(this.getNameNext());
+		node.saveMe();
+		node.setFocus(true);
 		
-		wfPanel.clearFocus();
-		WfNode focusNode = wfPanel.getNode(this.getId());
-		focusNode.setFocus(true);
-		focusNode.getMetaworksContext().setHow("indent");
-		
-		return wfPanel.getWfNode();		
-		
-	}
-	
-	public WfNode outdent() throws Exception {
-		
-		// 부모 노드의 부모 존재여부 검사
-		if(wfPanel.getWfNode().getId().equals(this.getParentId())){
-			return null;
+		if(node.getNo() == 0){
+			return new Object[]{new Remover(this), new Refresh(appendNode)};
+		}else{
+			WfNode targetNode = appendNode.getChildNode().get(node.getNo()-1);
+			targetNode.setChildNode(null);
+			
+			return new Object[]{new Remover(this), new ToNext(targetNode, node)};			
 		}
+	}
 		
-		// 현재 노드의 위치를 구한다.
-		int nodeIndex = this.getNo();
+	
+	public Object[] outdent() throws Exception {
+
+		// 부모 존재여부 검사
+		if("-1".equals(this.getParentId()))
+			return null;
 				
 		// 부모 노드를 구한다
-		WfNode parentNode = wfPanel.getNode(this.getParentId());			
-		// 부모 노드의 부모를 구한다. (변경 부모 노드)
-		WfNode appendNode = wfPanel.getNode(parentNode.getParentId());
-
-		// 부모 변경 처리
-		parentNode.removeChildNode(nodeIndex);	// 이전 부모 노드에서 제거
-		appendNode.addChildNode(this);			// 변경 부모 노드에 추가
-				
-		// 저장
-		this.saveMe();
+		WfNode parentNode = new WfNode();
+		parentNode.setMetaworksContext(this.getMetaworksContext());
+		parentNode.setId(this.getParentId());		
 		
-		// context 정보 초기화
-		wfPanel.clearFocus();
-		WfNode focusNode = wfPanel.getNode(this.getId());
-		focusNode.getMetaworksContext().setHow("outdent");
-		focusNode.setFocus(true);		
+		String parentParentId = parentNode.databaseMe().getParentId();
+		
+		// 부모 노드의 부모를 구한다. (변경 부모 노드)
+		WfNode appendNode = new WfNode();
+		appendNode.setMetaworksContext(this.getMetaworksContext());
+		appendNode.setId(parentParentId);
+		
+		if("-1".equals(parentParentId)){			
+			appendNode.loadChildren();
+			appendNode.getMetaworksContext().setWhen("ROOT");
+		}else{
+			appendNode.load();			
+		}
+		parentNode = appendNode.getNode(parentNode.getId());		
+		
+		// 현재 노드를 구한다.
+		WfNode node = parentNode.getNode(this.getId());
+		
+		// 부모 변경 처리
+		appendNode.addChildNode(node);				// 변경 부모 노드에 추가
 				
-		return wfPanel.getWfNode();
+		// 변경 정보 적용
+		node.setName(this.getName() + this.getNameNext());
+		node.setNameNext(this.getNameNext());
+		node.saveMe();
+		node.setFocus(true);
+		
+		WfNode targetNode = appendNode.getChildNode().get(node.getNo()-1);
+		targetNode.setChildNode(null);
+		
+		return new Object[]{new Remover(this), new ToNext(targetNode, node)};
 	}	
 	
-	public WfNode remove() throws Exception {
+	public Object[] remove() throws Exception {
 		
-		// context 정보 초기화
-		wfPanel.clearFocus();
+		// 부모 노드를 구한다
+		WfNode parentNode = new WfNode();
+		parentNode.setMetaworksContext(this.getMetaworksContext());
+		parentNode.setId(this.getParentId());
+		parentNode.load();
 		
-		// 현재 노드의 위치를 구한다.
-		int nodeIndex = this.getNo();
+		if("-1".equals(parentNode.getId()) && parentNode.getChildNode().size() == 1)
+			return null;
+
+		// 현재 노드를 구한다.
+		WfNode node = parentNode.getNode(this.getId());
 		
-		if(nodeIndex == 0){
-			if(getChildNode().size() > 0){	// 처리X - 첫번째 노드, 자식 존재
-				return null;
-			}else if(wfPanel.getWfNode().getId().equals(this.getParentId())){
+		// 반환 노드
+		WfNode resultNode = null;
+		
+		if(node.getNo() == 0){
+			if(node.getChildNode().size() > 0){	// 처리X - 첫번째 노드, 자식 존재
 				return null;
 			}else{
-				if(getNameNext().length() > 0){	// 처리X - 첫번째 노드, 자식 미존재, 붙일 content 존재
+				if(this.getNameNext().length() > 0){	// 처리X - 첫번째 노드, 자식 미존재, 붙일 content 존재
 					return null;	
 				}else{	// 처리O - 첫번째 노드, 자식 미존재, 붙일 content 미존재 -> 현재 노드 제거, 부모 노드 포커싱
-					WfNode parentNode = wfPanel.getNode(this.getParentId());
-					
-					parentNode.removeChildNode(nodeIndex);
-					parentNode.setFocus(true);
-					parentNode.getMetaworksContext().setHow("remove");
-					
-					// 삭제
-					deleteMe();
+					resultNode = parentNode;
 				}
 			}
 		}else{
-			WfNode parentNode = wfPanel.getNode(this.getParentId());
-			WfNode actionNode = parentNode.getChildNode().get(nodeIndex-1);
+			WfNode actionNode = parentNode.getChildNode().get(node.getNo()-1);
 
-			if(getChildNode().size() > 0){
+			if(node.getChildNode().size() > 0){
 				if(actionNode.getChildNode().size() > 0){ // 처리X - 두번째 노드 이상, 자식 존재, 이전 노드의 자식 존재
 					return null;
 				}else{	// 처리O - 두번째 노드 이상, 자식 존재, 이전 노드의 자식 미존재 -> 현재 노드 제거, 현재 노드에 자식들을 이전 노드로 변경, 이전 노드 포커싱					
 					// 윗노드 삭제 처리
-					parentNode.removeChildNode(actionNode.getNo());
-					actionNode.deleteMe();
+					actionNode.setName(actionNode.getName() + this.getNameNext());
+					actionNode.setNameNext(this.getNameNext());
+					actionNode.saveMe();
 					
-					// 현재 노드 저장 처리
-					this.setName(actionNode.getName());
-					this.saveMe();
-					
-					WfNode focusNode = wfPanel.getNode(this.getId());
-					focusNode.setFocus(true);					
-					focusNode.getMetaworksContext().setHow("remove");
+					resultNode = actionNode;
 				}	
 			}else{
 				
 				if(actionNode.getChildNode().size() > 0 && this.getNameNext().length() > 0){ // 처리X - 두번째 노드 이상, 자식 미존재, 이전노드 자식노드 존재 and 붙일 content 존재
 					return null;
 				}else{	// 처리O - 두번째 노드 이상, 자식 미존재, 이전노드 자식노드 미존재 or 붙일 content 미존재 -> 현재 노드 제거, 이전 노드 또는 이전 노드 의 마지막 자식노드에 선택 and 붙임
-					// 현재 노드 삭제 처리
-					parentNode.removeChildNode(nodeIndex);
-					deleteMe();
-					
 					while (actionNode.getChildNode().size() > 0)					
 						actionNode = actionNode.getChildNode().get(actionNode.getChildNode().size()-1);
 						
-					if(actionNode.getName() != null)
-						actionNode.setName(actionNode.getName() + this.getNameNext());
-					else
-						actionNode.setName(this.getNameNext());
-					
+					actionNode.setName(actionNode.getName() +this.getNameNext());					
 					actionNode.setNameNext(this.getNameNext());
-					actionNode.getMetaworksContext().setHow("remove");
-					actionNode.setFocus(true);
-					
-					// 저장
 					actionNode.saveMe();
+					
+					resultNode = actionNode;
 				}
 				
-			}
-			
+			}			
 		}
 		
-		return wfPanel.getWfNode();
+		node.deleteMe();
+		
+		if(resultNode == null){
+			return new Object[]{new Remover(this)};
+		}else{
+			// reload
+			resultNode.load();
+			resultNode.getMetaworksContext().setHow("remove");
+			resultNode.setFocus(true);
+			
+			return new Object[]{new Remover(this), new Refresh(resultNode)};	
+		}
 	}
 	
-	public WfNode move() throws Exception {
+	public Object[] move() throws Exception {
 		
-		if(this.equals(getDragNode())){
+		
+		if(this.getId() == this.getDragNode().getId()){
 			return null;
 		}				
-		
-		WfNode dragNode = this.getDragNode();
-		WfNode parentNode = wfPanel.getNode(dragNode.getParentId());
-		
-		int dragIndex = dragNode.getNo();
 
+		WfNode parentNode = new WfNode();
+		parentNode.setMetaworksContext(this.getMetaworksContext());
+		parentNode.setId(this.getDragNode().getParentId());
+		parentNode.load();
+
+		WfNode dragNode = parentNode.getNode(this.getDragNode().getId());
+				
+		// 부모 노드를 구한다
+		parentNode = new WfNode();
+		parentNode.setMetaworksContext(this.getMetaworksContext());
+		parentNode.setId(this.getParentId());
+		parentNode.load();
+		
+		// 자신을 구한다.
+		WfNode node = parentNode.getNode(this.getId());
+		
+		if(node.getParentId().equals(dragNode.getParentId()) && node.getNo() == dragNode.getNo()){
+			return null;
+		}
+		
 		// 자식 존재
 		// 자식 맨 위에 붙임
-		if(getChildNode().size() > 0){
-			// 드래그된 노드의 부모에서 제거 드래그노드 제거
-			parentNode.removeChildNode(dragIndex);
-			addChildNode(0, dragNode);
+		if(node.getChildNode().size() > 0){
+			if(node.getId().equals(dragNode.getParentId()) && dragNode.getNo() == 0){
+				return null;
+			}
+			
+			node.addChildNode(0, dragNode);
 			
 			dragNode.saveMe();
+			
+			WfNode targetNode = node.getChildNode().get(1);
+			targetNode.setChildNode(null);
+			
+			return new Object[]{new Remover(dragNode), new ToPrev(targetNode, dragNode)};
 			
 		// 자식 없음
 		// 다음 노드에 붙임	
 		} else {
-			int nodeIndex = this.getNo();
-			
-			parentNode.removeChildNode(dragIndex);
-						
-			if(this.getParentId().equals(dragNode.getParentId())){
-				if(nodeIndex > dragIndex)
-					nodeIndex = nodeIndex - 1;
-			}			
-			
-			parentNode.addChildNode(nodeIndex+1, dragNode);
-			
+			parentNode.addChildNode(node.getNo()+1, dragNode);			
 			dragNode.saveMe();
+			
+			return new Object[]{new Remover(dragNode), new ToNext(this, dragNode)};
 			
 		}
 		
-		return wfPanel.getWfNode();
+		
 	}	
 	
 	public void save() throws Exception {

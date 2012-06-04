@@ -4,7 +4,7 @@ import org.metaworks.annotation.Face;
 import org.uengine.codi.mw3.model.IUser;
 
 @Face(ejsPath="genericfaces/Window.ejs", 
-      displayName="Knowledge Mode", 
+      displayName="Knowledge", 
       options={"hideLabels"}, 
       values={"true"})
 public class WfWindow {
