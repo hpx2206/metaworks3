@@ -6,10 +6,10 @@ var org_uengine_codi_mw3_admin_EntityDefinition = function(objectId, className){
 	var object = mw3.objects[this.objectId];
 	
 	if(object.entityName != null){
-		var windowObjId = $('#' + this.divId).closest('.mw3_window').attr('objectId');
+		var windowObjectId = $('#' + this.divId).closest('.mw3_window').attr('objectId');
 		
-		if(windowObjId){
-			mw3.getFaceHelper(windowObjId).setTitle(object.className + '.java');
+		if(windowObjectId){
+			mw3.getFaceHelper(windowObjectId).setTitle(object.className + '.java');
 		}
 	}
 	
