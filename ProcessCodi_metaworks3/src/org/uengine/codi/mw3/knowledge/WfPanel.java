@@ -2,6 +2,9 @@ package org.uengine.codi.mw3.knowledge;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.Refresh;
+import org.metaworks.ServiceMethodContext;
+import org.metaworks.ToNext;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 
@@ -46,6 +49,14 @@ public class WfPanel implements ContextAware {
 		node.getMetaworksContext().setHow("ROOT");
 		node.load(nodeId);
 		
+		if(node.getChildNode().size() == 0){
+			WfNode newNode = new WfNode();
+			
+			node.addChildNode(newNode);
+						
+			newNode.createMe();
+			newNode.setFocus(true);
+		}
 		
 		
 		//node.setName("");				
@@ -77,12 +88,36 @@ public class WfPanel implements ContextAware {
 		return getWfNode().getNode(nodeId);
 	}
 	
-	@ServiceMethod(callByContent=true)
+	@ServiceMethod
 	public void search() throws Exception {
 		getWfNode().getChildNode().clear();
 		
 		getWfNode().search(getKeyword());
 		
 	}
+	
+	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
+	public Object newNode() throws Exception {
+		WfNode newNode = new WfNode();
+		
+		WfNode rootNode = new WfNode();		
+		rootNode.setId("-1");
+		rootNode.loadChildren();
+		rootNode.getMetaworksContext().setHow("ROOT");
+		rootNode.addChildNode(newNode);
+		
+		newNode.createMe();
+		newNode.setFocus(true);
+		
+		if(rootNode.getChildNode().size() > 1){
+			WfNode targetNode = rootNode.getChildNode().get(newNode.getNo()-1);
+			targetNode.setChildNode(null);
+			
+			return new ToNext(targetNode, newNode);
+		}else{
+			return new Refresh(rootNode);
+		}
+	}
+	
 	
 }

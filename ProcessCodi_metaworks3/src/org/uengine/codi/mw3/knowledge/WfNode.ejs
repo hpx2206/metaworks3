@@ -14,12 +14,12 @@
 %>		
 			<div id="wfnode_<%=objectId%>" class="wfNode" style="height:24px">
 				<!-- opened, closed -->
-				<table border="0" cellspacing="0" cellpadding="0">
+				<table border="0" cellspacing="0" cellpadding="0" width="100%">
 					<tr>
 						<td class="<%=nodeStatus%>"  onclick="<%=value.close?methods.expand.caller():methods.collapse.caller()%>"><span>&nbsp;</span></td>
 						<td>
-							<span class="wfNodeText"><%  if(value.linkedInstId){%><span onclick="<%=methods.linkInstance.caller()%>">[<%=value.linkedInstId%>]</span><%}%>
-								<input type="text" id="wfnode_content_<%=objectId%>" style="width:100% ; border:none;background:transparent" style="border:0; font-family: 'Helvetica Neue', Arial, Sans-serif; font-size: 12px; font-weight: normal;background:transparent"" value="<%=value.name%>" onkeydown="mw3.getFaceHelper('<%=objectId%>').press(this)">
+							<span class="wfNodeText" style="width:100%;"><%  if(value.linkedInstId){%><span onclick="<%=methods.linkInstance.caller()%>">[<%=value.linkedInstId%>]</span><%}%>
+								<input type="text" id="wfnode_content_<%=objectId%>" style="width:100% ; border:none;background:transparent" style="border:0; font-family: 'Helvetica Neue', Arial, Sans-serif; font-size: 12px; font-weight: normal;background:transparent"" value="<%=value.name%>" onkeydown="mw3.getFaceHelper('<%=objectId%>').keydown(this)" onkeyup="mw3.getFaceHelper('<%=objectId%>').keyup(this);">
 							</span>
 						</td>
 					</tr>
@@ -57,15 +57,8 @@
 			}
 %>
 		</li>
-	</ul>		
+	</ul>
 <%			
-			if(mw3.how == 'ROOT' && mw3.when != 'read'){
-%>	
-	<span style="padding-left:40px">
-		<%=methods.newNode.here()%>
-	</span>	
-<%
-			}
 		}
 	}
 %>		

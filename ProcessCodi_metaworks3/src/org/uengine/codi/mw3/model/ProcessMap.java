@@ -109,6 +109,7 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		
 		Popup popup = new Popup(560, 430);
 		popup.setPanel(this);
+		popup.setName("프로세스 정보");
 		
 		return popup;		
 	}

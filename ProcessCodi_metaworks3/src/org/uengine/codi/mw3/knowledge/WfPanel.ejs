@@ -3,5 +3,13 @@
 %>
 	<%=fields.wfNode.here()%>
 <%
+		if(mw3.when != 'read'){
+%>		
+	<span style="padding-left:40px">
+		<%=methods.newNode.here()%>
+	</span>	
+	
+<%
+		}
 	}
 %>	
