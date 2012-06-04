@@ -81,7 +81,7 @@ input:focus {
 
 ul, ol , li , dl ,dd ,dt{list-style-type:none; margin:0px; padding:0px;}
 
-.workflowy ul {padding-left:40px; list-style-type: none;}
+.workflowy ul {padding-left:25px; list-style-type: none;}
 .workflowy li { list-style-type: none;}
 
 .workflowy .opened{height:18px; width:18px; line-height: 18px; background: url(../../images/waveStyle/plus.gif) no-repeat; cursor:pointer;}
