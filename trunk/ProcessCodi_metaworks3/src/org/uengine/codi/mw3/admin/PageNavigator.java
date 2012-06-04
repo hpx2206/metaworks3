@@ -1,6 +1,7 @@
 package org.uengine.codi.mw3.admin;
 
 import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.knowledge.Knowledge;
@@ -12,9 +13,22 @@ public class PageNavigator {
 	@AutowiredFromClient
 	public Session session;
 	
-	public PageNavigator() {
+	public PageNavigator() {		
 	}
 	
+	public PageNavigator(String pageName) {
+		setPageName(pageName);
+	}
+	
+	String pageName;
+		@Hidden
+		public String getPageName() {
+			return pageName;
+		}	
+		public void setPageName(String pageName) {
+			this.pageName = pageName;
+		}
+
 	@ServiceMethod(callByContent=true)
 	public MainPanel goIDE() throws Exception {		
 		return new MainPanel(new IDE(session));

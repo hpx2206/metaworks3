@@ -31,7 +31,7 @@ public class Knowledge {
 		
 		setLayout(outerLayout);		
 		
-		setPageNavigator(new PageNavigator());		
+		setPageNavigator(new PageNavigator("knowlege"));		
 	}
 //	
 //	MashupGoogleImage mashupGoogleImage;
