@@ -10,13 +10,15 @@ public class IDE {
 	}
 	
 	public IDE(Session session) throws Exception {
+		setPageNavigator(new PageNavigator("ide"));
+		
 		Layout innerLayout = new Layout();
 		
 		ContentWindow contentWindow = new ContentWindow();
-		contentWindow.getMetaworksContext().setHow("ide");
+		contentWindow.getMetaworksContext().setHow(getPageNavigator().getPageName());
 		
 		ConsoleWindow consoleWindow = new ConsoleWindow();
-		consoleWindow.getMetaworksContext().setHow("ide");
+		consoleWindow.getMetaworksContext().setHow(getPageNavigator().getPageName());
 		
 		if(session.getDefId() != null){
 			ClassDefinition classDefinition = new ClassDefinition();
@@ -33,11 +35,11 @@ public class IDE {
 		innerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, south__spacing_open:5, south__size:'20%'");
 		
 		HintWindow hintWindow = new HintWindow();
-		hintWindow.getMetaworksContext().setHow("ide");
-		hintWindow.load(session.getUser(), "ide");
+		hintWindow.getMetaworksContext().setHow(getPageNavigator().getPageName());
+		hintWindow.load(session.getUser(), getPageNavigator().getPageName());
 		
 		ResourceWindow resourceWindow = new ResourceWindow();		
-		resourceWindow.getMetaworksContext().setHow("ide");
+		resourceWindow.getMetaworksContext().setHow(pageNavigator.getPageName());
 		
 		Layout outerLayout = new Layout();
 		outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:5, east__spacing_open:5, west__size:300, east__size:300, north__size:52");
@@ -48,7 +50,7 @@ public class IDE {
 		
 		setLayout(outerLayout);		
 		
-		setPageNavigator(new PageNavigator());
+		
 	}
 
 	Layout layout;

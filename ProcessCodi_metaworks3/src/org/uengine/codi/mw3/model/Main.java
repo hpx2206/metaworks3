@@ -34,7 +34,7 @@ public class Main {
 		
 		setLayout(outerLayout);		
 		
-		setPageNavigator(new PageNavigator());	
+		setPageNavigator(new PageNavigator("process"));	
 		
 
 		// this.logo = new Logo();
