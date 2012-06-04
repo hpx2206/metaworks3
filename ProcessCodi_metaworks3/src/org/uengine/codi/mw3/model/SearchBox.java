@@ -22,14 +22,18 @@ public class SearchBox {
 	@ServiceMethod(callByContent=true)
 	public Object[] search() throws Exception{
 		System.out.println("keyword : " + getKeyword());
+//		
+//		InstanceList instanceList = new InstanceList();
+//		instanceList.init();
+//		instanceList.setKeyword(getKeyword());
+//		instanceList.load(session);
+//		
+//		//instanceListPanel.setSearchBox(this);
+//		
+//		return new Object[]{instanceList};
 		
-		InstanceList instanceList = new InstanceList();
-		instanceList.init();
-		instanceList.setKeyword(getKeyword());
-		instanceList.load(session);
+		session.setSearchKeyword(getKeyword());
 		
-		//instanceListPanel.setSearchBox(this);
-				
-		return new Object[]{instanceList};				
+		return Perspective.loadInstanceListPanel(session, session.getLastPerspecteType(), session.getLastSelectedItem());
 	}	
 }

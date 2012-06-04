@@ -120,7 +120,17 @@ public class Session implements ContextAware{
 //	public void setSearchKeywordBox(SearchKeywordBox searchKeywordBox) {
 //		this.searchKeywordBox = searchKeywordBox;
 //	}
-
+	
+	String searchKeyword;
+	
+	@Hidden
+	public String getSearchKeyword() {
+		return searchKeyword;
+	}
+	public void setSearchKeyword(String searchKeyword) {
+		this.searchKeyword = searchKeyword;
+	}
+	
 	@ServiceMethod
 	public Login logout() {
 		removeUserInfoFromHttpSession();
