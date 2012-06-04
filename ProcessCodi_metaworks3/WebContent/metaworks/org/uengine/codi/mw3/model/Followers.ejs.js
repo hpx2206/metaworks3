@@ -8,11 +8,11 @@ var org_uengine_codi_mw3_model_Followers = function(objectId, className){
 
 org_uengine_codi_mw3_model_Followers.prototype = {
 	startLoading : function(){
-		if(this.windowObjectId)
+		if(this.windowObjectId && mw3.getFaceHelper(this.windowObjectId) && mw3.getFaceHelper(this.windowObjectId).startLoading)
 			mw3.getFaceHelper(this.windowObjectId).startLoading();
 	},
 	endLoading : function(){
-		if(this.windowObjectId)
+		if(this.windowObjectId && mw3.getFaceHelper(this.windowObjectId) && mw3.getFaceHelper(this.windowObjectId).endLoading)
 			mw3.getFaceHelper(this.windowObjectId).endLoading();
 	},
 	showStatus : function(message){
