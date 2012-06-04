@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.ServiceMethod;
 
 public class ProcessPerspective extends Perspective{
@@ -12,22 +13,25 @@ public class ProcessPerspective extends Perspective{
 	public Object[] select() throws Exception {
 		
 		if(!isSelected()){
-		
-			ProcessDefinition root = new ProcessDefinition();
-			root.setParentFolder("-1");
-			processDefinitions = root.findAll();
+			processDefinitions = new ResourceFile();
+			processDefinitions.setMetaworksContext(new MetaworksContext());	
+			processDefinitions.getMetaworksContext().setWhere("navigation");
+			processDefinitions.setFolder(true);
+			processDefinitions.setAlias("");
+			processDefinitions.setName("/");
+			processDefinitions.drillDown();
 		}
 		
 		return super.select();
 	}
 	
-	IProcessDefinition processDefinitions;
+	ResourceFile processDefinitions;
 	
-		public IProcessDefinition getProcessDefinitions() {
+		public ResourceFile getProcessDefinitions() {
 			return processDefinitions;
 		}
 	
-		public void setProcessDefinitions(IProcessDefinition processDefinitions) {
+		public void setProcessDefinitions(ResourceFile processDefinitions) {
 			this.processDefinitions = processDefinitions;
 		}
 	

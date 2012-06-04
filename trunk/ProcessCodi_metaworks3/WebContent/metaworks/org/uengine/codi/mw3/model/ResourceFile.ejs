@@ -63,6 +63,12 @@ if(value){
 		<a onclick="<%=methods.design.caller()%>"><%=value.name%></a>
 	</span>
 <%
+  		}else if(mw3.where=="navigation"){
+%>
+	<span style="background:url(images/waveStyle/<%=icon%>) no-repeat 5px 0px;">
+		<a onclick="<%=methods.loadProcess.caller()%>"><%=value.name%></a>
+	</span>
+<%
   		}else{
   	  
 %>
