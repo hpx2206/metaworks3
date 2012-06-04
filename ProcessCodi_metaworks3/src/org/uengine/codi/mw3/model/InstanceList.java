@@ -137,9 +137,8 @@ public class InstanceList {
 		case 1://"all"
 			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
 			criteria.put("instIsdelete", "1");
-			// Forx Only
-			//instanceSql.append("and inst.status!=?instStatus ");
-			//criteria.put("instStatus", "Stopped");
+			instanceSql.append("and inst.status!=?instStatus ");
+			criteria.put("instStatus", "Stopped");
 			// secureopt
 			instanceSql
 					.append("and (inst.secuopt='0' OR (inst.secuopt=1 and exists (select rootinstid from BPM_ROLEMAPPING rm where rm.endpoint=?rmEndpoint and inst.rootinstid=rm.rootinstid))) ");
@@ -174,8 +173,8 @@ public class InstanceList {
 			criteria.put("rmEndpoint", session.getEmployee().getEmpCode());
 			break;
 		case 5:// "process"
-			instanceSql.append("and inst.defid=?instDefId ");
-			criteria.put("instDefId", session.getLastSelectedItem());
+			instanceSql.append("and inst.defverid=?instDefVerId ");
+			criteria.put("instDefVerId", session.getLastSelectedItem());
 			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
 			criteria.put("instIsdelete", "1");
 
