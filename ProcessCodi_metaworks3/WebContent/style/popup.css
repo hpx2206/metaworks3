@@ -1,15 +1,5 @@
 @charset "utf-8";
 /*	common	*/
-body,p,h1,h2,h3,h4,h5,h6,ul,ol,li,dl,dt,dd,table,th,td,form,fieldset,legend,input,textarea,button,select	{margin:0px; padding:0px;}
-body,input,textarea,select,button,table	{font-family:'돋움',Dotum,AppleGothic,sans-serif; font-size:12px; line-height:18px; color:#666;}
-img,fieldset	{border:0 none;	vertical-align:middle;}
-
-
-ul,ol,dl {list-style:none;}
-
-
-
-
 
 .tablep	{width:100%; background:white}
 .topheight1	{height:12px;}
