@@ -45,6 +45,4 @@ org_uengine_codi_mw3_admin_PageNavigator.prototype = {
 	showStatus : function(){
 		
 	}
-	
-
 }
