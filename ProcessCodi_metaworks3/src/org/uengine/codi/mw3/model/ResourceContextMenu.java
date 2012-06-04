@@ -36,7 +36,8 @@ public class ResourceContextMenu {
 	
 		
 		
-		return def.delete();
+//		return def.delete();
+		return null;
 	}
 	
 	@ServiceMethod

@@ -127,7 +127,7 @@ public class ResourceFile implements ContextAware{
 		return popup;
 	}
 	
-	@ServiceMethod(callByContent=true, except="childs")
+	@ServiceMethod(callByContent=true, except="childs", target="self")
 	public void drillDown(){
 		if(isOpened()){
 			setOpened(false);
@@ -339,6 +339,14 @@ public class ResourceFile implements ContextAware{
 	
 		public void setMetaworksContext(MetaworksContext metaworksContext) {
 			this.metaworksContext = metaworksContext;
+		}
+		
+		@ServiceMethod(callByContent=true, payload={"objType"})
+		public Object[] loadProcess() throws Exception {
+			if(getObjType().equals("process")) {
+				return Perspective.loadInstanceListPanel(session, "process", getAlias());
+			}
+			return null;
 		}
 	
 }
