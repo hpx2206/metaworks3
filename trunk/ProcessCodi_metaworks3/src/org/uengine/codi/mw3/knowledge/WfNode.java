@@ -223,8 +223,12 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		}
 	}
 	
+	public String makeId() throws Exception {
+		return String.valueOf(UniqueKeyGenerator.issueKey("bpm_knol", TransactionContext.getThreadLocalInstance()));
+	}
+	
 	public void createMe() throws Exception {
-		String nodeId = String.valueOf(UniqueKeyGenerator.issueKey("bpm_knol", TransactionContext.getThreadLocalInstance()));
+		String nodeId = this.makeId();
 		
 		setId(nodeId);
 
