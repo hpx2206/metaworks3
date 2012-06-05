@@ -20,6 +20,7 @@ import org.uengine.codi.mw3.admin.ClassField;
 import org.uengine.codi.mw3.admin.ClassMethod;
 import org.uengine.codi.mw3.admin.ClassModeler;
 import org.uengine.codi.mw3.admin.JavaCodeAssist;
+import org.uengine.codi.platform.SMS;
 import org.uengine.util.UEngineUtil;
 import org.xmlsoap.schemas.ws.n2003.n03.business_process.types.tRoles;
 
@@ -27,7 +28,6 @@ public class JavaSourceCode extends SourceCode {
 	static Map<String, Map> packageNames = new HashMap<String, Map>(); //cached for more faster code assistance. may need to stored separately with tenants. (may naturally done because of classloader is different with web-contexts)
 	static ArrayList<String> classNames = new ArrayList<String>();
 	static ArrayList<String> annotationNames = new ArrayList<String>();
-	
 	
 	public void cacheLibrary() {
 		
@@ -101,14 +101,12 @@ public class JavaSourceCode extends SourceCode {
 	
 	public boolean confirmAnnotation(String className) {
 		
-		System.out.println("confirmAnnotation : " + className);
-		
 		try {
-			Class cls = Thread.currentThread().getContextClassLoader().loadClass(className);
-			
-			if(java.lang.annotation.Annotation.class.isAssignableFrom(cls))
+			int index = annotationNames.indexOf(className);
+			if(index != -1)
 				return true;
-		} catch (Throwable ex) {			
+			
+		} catch (Exception ex) {			
 		}
 		return false;		
 	}
@@ -220,70 +218,6 @@ public class JavaSourceCode extends SourceCode {
 		return "";
 	}
 	
-	private String fullTypeName(String expression){
-		
-		String[] lines = getCode().split("\n");
-		ArrayList<String> importedList = new ArrayList<String>();
-		ArrayList<String> typeNameList = new ArrayList<String>();
-		ArrayList<String> fullTypeNameList = new ArrayList<String>();
-		
-		String fullTypeName = null;
-		
-		for(int i=0; i<lines.length; i++){
-			String[] linesDetail;
-			
-			
-			if(lines[i].indexOf(";") == -1){
-				lines[i] += ";";
-			}			
-			linesDetail = lines[i].split(";");
-			
-			
-			for(int j=0; j<linesDetail.length; j++){
-				String compareLine = linesDetail[j].trim();
-				
-				if(compareLine.startsWith("import")){
-					compareLine = extraPackageName(compareLine);
-					
-					if(!compareLine.isEmpty())
-						importedList.add(compareLine);
-				}else{
-					int whereExp = compareLine.indexOf(" " + expression);
-					String typeName = null;					
-					
-					if(!compareLine.startsWith(expression) && whereExp > 0){				
-						compareLine = compareLine.substring(0, whereExp).trim();
-						
-						int k=compareLine.length()-1;
-						for(; k>=0; k--){
-							char charAt = compareLine.charAt(k);
-							if(!((charAt > 'A' && charAt <'z') || (charAt > '1' && charAt <'9') || charAt == '.'))
-								break;
-						}							
-						if(k < 0) k = 0;							
-						
-						typeName = compareLine.substring(k).trim();
-																	
-						if(typeName!=null && typeName.indexOf('.') > -1){
-							fullTypeName = typeName;
-						}
-					}		
-					
-					if(typeName != null){
-						typeNameList.add(typeName);
-					}
-					
-					if(fullTypeName != null){
-						fullTypeNameList.add(fullTypeName);
-					}
-				}
-			}
-		}
-		
-		return "";
-
-	}
-		
 	public ArrayList<String> findPackage(String expression){
 		ArrayList<String> pkgNames = new ArrayList<String>();
 		
@@ -381,7 +315,90 @@ public class JavaSourceCode extends SourceCode {
 		return classInfo;
 	}
 	
-	public String findClassFromImported(String expression){
+	public String findClassDefine(String expression){
+		
+		ArrayList<String> importedList = new ArrayList<String>();
+		ArrayList<String> tryLoadList = new ArrayList<String>();
+		
+		String[] lines = getCode().split("\n");		
+		String typeName = null;
+		
+		for(int i=0; i<lines.length; i++){
+			String[] linesDetail;
+			
+			if(lines[i].indexOf(";") == -1){
+				lines[i] += ";";
+			}			
+			linesDetail = lines[i].split(";");
+						
+			for(int j=0; j<linesDetail.length; j++){
+				String line = linesDetail[j];
+				line = line.trim();
+				
+				int whereExp = line.indexOf(" " + expression);
+	
+				if(line.startsWith("import ")){
+					System.out.println(line);
+					importedList.add(line);
+				}else if(typeName == null){ //if typeName is not set, find the expression's type first.
+					if(!line.trim().startsWith(expression) && whereExp > 0){
+			
+						line = line.substring(0, whereExp).trim();
+						
+						int k=line.length()-1;
+						for(; k>=0; k--){
+							char charAt = line.charAt(k);
+							if(!((charAt > 'A' && charAt <'z') || (charAt > '1' && charAt <'9') || charAt == '.'))
+								break;
+						}
+						
+						typeName = line.substring(k + 1).trim();
+						
+						if(typeName.equals("return"))
+							typeName = null; //ignores 'return' is recognized as typeName							
+						if(typeName!=null && typeName.equals("=")) 
+							typeName = null; //ignores '=' is recognized as typeName
+					}
+				}else{ //if typeName found, search the import statement.
+					if(typeName!=null && typeName.indexOf('.') > -1){
+						if(tryLoadList.indexOf(typeName) == -1){	
+							tryLoadList.add(typeName);
+							
+							try {
+								Thread.currentThread().getContextClassLoader().loadClass(typeName);
+								return typeName;
+							}catch(Throwable ex) {}
+						}
+					}else{
+						for(int k=0; k<importedList.size(); k++){
+							String importedName = importedList.get(k);
+							boolean checkImport = false;
+							
+							if(importedName.endsWith(".*") || importedName.endsWith("." + typeName)){
+								String loadClass = importedName.substring(0, importedName.lastIndexOf(".")+1) + typeName;
+								
+								if(tryLoadList.indexOf(loadClass) == -1){									
+									tryLoadList.add(loadClass);
+									
+									System.out.println("loadClass" + loadClass);
+									try {
+										Thread.currentThread().getContextClassLoader().loadClass(loadClass);
+										return loadClass;
+									}catch(Throwable ex) {}
+								}																
+							}
+						}
+					}
+					
+					System.out.println("typeName : " + typeName);
+					
+					typeName = null;
+				}
+			}
+			
+			
+		}		
+		
 		
 		
 		return null;
@@ -406,8 +423,10 @@ public class JavaSourceCode extends SourceCode {
 			
 			if(clsName.toLowerCase().startsWith(expression)){
 				if(clsName.indexOf("//") == -1){
-					String[] temp = clsName.split("/");
-					String confirmClsName = temp[1] + "." + temp[0];
+					String[] temp = clsName.split("/");				
+					String confirmClsName = temp[0];
+					if(temp.length > 1)
+						confirmClsName = temp[1] + "." + confirmClsName;
 					
 					
 					if(confirmAnnotation(confirmClsName))
@@ -449,11 +468,6 @@ public class JavaSourceCode extends SourceCode {
 	@ServiceMethod(callByContent = true, target = ServiceMethodContext.TARGET_STICK)
 	public CodeAssist requestAssist() {
 		System.out.println("requestAssist");		
-		if(packageNames.size() == 0)
-			cacheLibrary();
-		
-		if(annotationNames.size() == 0)
-			cacheAnnotationNames();
 		
 		
 		CodeAssist codeAssist = new JavaCodeAssist();
@@ -491,8 +505,14 @@ public class JavaSourceCode extends SourceCode {
 		ArrayList<String> pkgNames = new ArrayList<String>();
 		ArrayList<String> clsNames = new ArrayList<String>();
 		
+		if(annotationNames.size() == 0)
+			cacheAnnotationNames();
+		if(packageNames.size() == 0)
+			cacheLibrary();
+		
 		// step 1 : isAnnotation, check options
-		if(isAnnotation){	
+		if(isAnnotation){				
+			
 			String expression = command.toLowerCase();
 			
 			for(int i = 0; i < annotationNames.size(); ++i) {
@@ -521,29 +541,27 @@ public class JavaSourceCode extends SourceCode {
 					
 					
 				}else{
-					
-					// step 3-1 : this
-					if("this".equals(expression)){
-						ArrayList<String> thisClassInfo = findThisClass();
-						for(int i=0; i<thisClassInfo.size();i++)
-							clsNames.add(thisClassInfo.get(i));
+					String classDefine = findClassDefine(expression);
+					if(classDefine != null){
+						ArrayList<String> classInfo = findClass(classDefine);
+						for(int i=0; i<classInfo.size();i++)
+							clsNames.add(classInfo.get(i));
 					}else{
-						ArrayList<String> classes = findClasses(expression);
-						if(classes.size() > 0){
-							for(int i=0; i<classes.size();i++)
-								clsNames.add(classes.get(i));
-						}else{						
-							ArrayList<String> packages = findPackage(expression);
-							if(packages.size() > 0){
-								for(int i=0; i<packages.size(); i++)
-									pkgNames.add(packages.get(i));
-							}else{
-								
-								String classFromImported = findClassFromImported(expression);
-								if(classFromImported != null){
-									ArrayList<String> classInfo = findClass(classFromImported);
-									for(int i=0; i<classInfo.size();i++)
-										clsNames.add(classInfo.get(i));
+						// step 3-1 : this
+						if("this".equals(expression)){
+							ArrayList<String> thisClassInfo = findThisClass();
+							for(int i=0; i<thisClassInfo.size();i++)
+								clsNames.add(thisClassInfo.get(i));
+						}else{
+							ArrayList<String> classes = findClasses(expression);
+							if(classes.size() > 0){
+								for(int i=0; i<classes.size();i++)
+									clsNames.add(classes.get(i));
+							}else{						
+								ArrayList<String> packages = findPackage(expression);
+								if(packages.size() > 0){
+									for(int i=0; i<packages.size(); i++)
+										pkgNames.add(packages.get(i));
 								}
 							}
 						}
@@ -568,7 +586,6 @@ public class JavaSourceCode extends SourceCode {
 			}
 		}
 		
-		
 		Collections.sort(clsNames);		
 		Collections.sort(pkgNames);
 		
@@ -580,10 +597,6 @@ public class JavaSourceCode extends SourceCode {
 		// make assistances package
 		for(int i=0; i<pkgNames.size(); i++)
 			codeAssist.getAssistances().add(pkgNames.get(i));		
-		
-		
-		
-		
 		
 		
 		

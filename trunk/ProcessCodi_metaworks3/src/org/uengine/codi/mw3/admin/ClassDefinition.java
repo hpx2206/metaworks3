@@ -228,7 +228,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		
 		getSourceCodes().sourceCode = new JavaSourceCode();
 		getSourceCodes().sourceCode.setCode(sb.toString());
-		getSourceCodes().face = new FaceSourceCode();
+		getSourceCodes().face = new WebEditor();
 		generateFaceHelperSourceCode();	
 	}
 	
@@ -488,10 +488,10 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		
 		File ejsFile = new File(faceSource);
 
-		if(UEngineUtil.isNotEmpty(getSourceCodes().getFace().getCode())){
+		if(UEngineUtil.isNotEmpty(getSourceCodes().getFace().getContents())){
 			
 			writer = new FileWriter(ejsFile);
-			writer.write(getSourceCodes().getFace().getCode());
+			writer.write(getSourceCodes().getFace().getContents());
 			writer.close();
 
 		}else{
@@ -664,13 +664,13 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 			try {
 				is = new FileInputStream(ejsFile);
 				UEngineUtil.copyStream(is, bao);
-				getSourceCodes().getFace().setCode(bao.toString());
+				getSourceCodes().getFace().setContents(bao.toString());
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
-		}else{getSourceCodes().getFace().setCode("");}
+		}else{getSourceCodes().getFace().setContents("");}
 		
 		//if there is facehelper code, read it.
 		String faceHelperSource = CodiClassLoader.getMyClassLoader().sourceCodeBase() + "/" + getAlias();

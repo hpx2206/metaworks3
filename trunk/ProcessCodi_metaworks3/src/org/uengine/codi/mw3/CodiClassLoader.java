@@ -505,7 +505,7 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
 		StringBuffer sbClasspath = new StringBuffer();
 		for(URL url : urls){
 			String urlStr = url.getFile().toString();
-			sbClasspath.append(urlStr).append(":");
+			sbClasspath.append(urlStr).append(";");
 			try {
 				ObjectType.classPool.insertClassPath(urlStr);
 			} catch (NotFoundException e) {
@@ -521,7 +521,7 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
 
 			for(File libFile : libFiles){
 				String absLibPath = libFile.getAbsolutePath();
-				sbClasspath.append(absLibPath).append(":");
+				sbClasspath.append(absLibPath).append(";");
 				try {
 					ObjectType.classPool.insertClassPath(absLibPath);  //may occur some library version collision. should be separated.
 				} catch (NotFoundException e) {
