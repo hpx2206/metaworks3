@@ -1,5 +1,3 @@
-var workingWfNode = null;
-
 var org_uengine_codi_mw3_knowledge_IWfNode = function(objectId, className){
 	console.debug(objectId);
 	
@@ -24,19 +22,23 @@ var org_uengine_codi_mw3_knowledge_IWfNode = function(objectId, className){
 	
 	if(this.mw3Obj.metaworksContext.when != 'read'){
 		content.bind('focus', {objectId: this.objectId}, function(event) {		
-			$('.wfnode_current').hide();			
-			$('#wfnode_current_' + event.data.objectId).show();			
+			$('.wfnode_current').removeClass('wfnode_current_focus').hide();			
+			$('#wfnode_current_' + event.data.objectId).addClass('wfnode_current_focus').show();			
 			
-			var value = content.val();
+			var faceHelper = mw3.getFaceHelper(objectId);			
+			if(faceHelper && faceHelper.mw3Obj.type != 'img'){
+				var value = content.val();
+							
+				if(faceHelper.change) 
+					faceHelper.change(value);			
+			}
 			
-			if(mw3.getFaceHelper(objectId) && mw3.getFaceHelper(objectId).change) 
-					mw3.getFaceHelper(objectId).change(value);			
 		});
 		content.bind('blur', {objectId: this.objectId}, function() {
-			var faceHelper = mw3.getFaceHelper(objectId);
-			
-			var value = content.val();
-			if(faceHelper){
+			var faceHelper = mw3.getFaceHelper(objectId);			
+			if(faceHelper && faceHelper.mw3Obj.type != 'img'){
+				var value = content.val();
+				
 				if (faceHelper.timeout) {
 					clearTimeout(faceHelper.timeout);
 				}	
@@ -171,7 +173,7 @@ org_uengine_codi_mw3_knowledge_IWfNode.prototype = {
 			return this.obj.find('.workflowy_node :first').parent();
 			var searchObj = mw3.getFaceHelper(this.objectId).obj;
 		},
-		getValue : function(){
+		getValue : function(){			
 			return this.mw3Obj;
 		},
 		focus : function(){
@@ -202,46 +204,20 @@ org_uengine_codi_mw3_knowledge_IWfNode.prototype = {
 		},
 		down : function(){
 
-			// 자식 검색
-			var searchObj = $('#objDiv_' + this.objectId).find('.workflowy_node:first');
+			var focus = this.getNext();
+			if(focus.length == 0){
+				focus = this.getFirstChild();
+			}
+
+			if(focus.length > 0){
+				var objectId = focus.attr('objectId');
 			
-			// 자식 미존재, 동일 노드 하위 검색(존재하지 않으면 부모의 동일노드 하위 검색)
-			if(!searchObj.length){
-				var info = false;
-				var exist = false;   
-
-				searchObj = $('#objDiv_' + this.objectId);
-
-				while(!exist && searchObj.length && searchObj.hasClass('workflowy_node')){
-					var temp = searchObj.nextUntil('.workflowy_node');
-
-					if(temp.attr('id').indexOf('info_') == 0)
-						info = true;
-					else
-						info = false;
-
-					if(info){
-						exist = (temp.next().length > 0);
-					}else
-						exist = (temp.length > 0);	   
-
-					if(exist){
-						if(info)
-							searchObj = temp.next();
-						else
-							searchObj = temp;
-					}else{
-						searchObj = temp.parent().parent().parent().parent('div');
-					}		   
-				}
-			} 
-
-			if(searchObj.length && searchObj.hasClass('workflowy_node')){
-				searchObj = searchObj.find('input:first');
-
-				searchObj.focus();
-				searchObj.selectRange(0,0);
-			}		   
+				mw3.getFaceHelper(objectId).focus();
+				
+				// 커서 위치 조정
+				var input = focus.find('#wfnode_content_' + objectId);
+				input.selectRange(0,0);
+			}
 		},
 		change : function(value){
 			this.keyword = value;
@@ -290,8 +266,6 @@ org_uengine_codi_mw3_knowledge_IWfNode.prototype = {
 			this.change(keyword);
 		},
 		keydown : function(inputObj){
-			workingWfNode = this;
-
 			if(this.process){
 				window.event.returnValue = false;
 

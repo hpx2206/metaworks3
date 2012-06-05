@@ -22,7 +22,7 @@
 				if(mw3.when != 'read'){
 %>		
 			<div id="wfnode_<%=objectId%>" class="wfNode" style="margin:3px 0; position:relative">
-				<div id="wfnode_current_<%=objectId%>" class="wfnode_current" style="display:none"><img src="images/waveStyle/navi_icon.png" ></div>
+				<div id="wfnode_current_<%=objectId%>" class="wfnode_current" objectId="<%=objectId%>" style="display:none"><img src="images/waveStyle/navi_icon.png" ></div>
 				
 				<!-- opened, closed -->
 				<table border="0" cellspacing="0" cellpadding="0" width="100%">
@@ -34,7 +34,7 @@
 					<%	if(value.type=='img'){		
 %>
 								<img src="<%=value.name%>">
-								<input type="text" id="wfnode_content_<%=objectId%>"  style="height:1px ; border:none;background:transparent" onkeydown="mw3.getFaceHelper('<%=objectId%>').keydown(this)" onkeyup="mw3.getFaceHelper('<%=objectId%>').keyup(this);">
+								<input type="text" id="wfnode_content_<%=objectId%>" style="height:1px ; border:none;background:transparent" onkeydown="mw3.getFaceHelper('<%=objectId%>').keydown(this)" onkeyup="mw3.getFaceHelper('<%=objectId%>').keyup(this);">
 <%					
 				
 				
