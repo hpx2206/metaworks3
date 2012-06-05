@@ -207,7 +207,8 @@ version: 2.8.1
     padding:0 20px;
 	color:#000;
 	text-decoration:none;
-	cursor:default;
+	cursor:pointer;
+	outline: none;
 }
 
 .yuimenuitemlabel:visited{
