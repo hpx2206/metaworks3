@@ -2,6 +2,9 @@ var org_uengine_codi_mw3_admin_JavaCodeAssist = function(objectId, className){
 
 	this.objectId = objectId;
 	this.className = className;
+
+	this.defaultScroll = 14;
+	this.scrollY = 14;
 	
 	this.list = $("#assistancesList_" + this.objectId);
 	
@@ -96,9 +99,17 @@ org_uengine_codi_mw3_admin_JavaCodeAssist.prototype.up = function(){
 	
 	if(prev.length > 0){
 		this.list.children().removeClass('selected').css('background', '');
-		prev.addClass('selected').css('background', 'yellow');		
+		prev.addClass('selected').css('background', 'yellow');
+		
+		this.defaultScroll = this.defaultScroll - 14;
+		
+		if(this.scrollY > this.defaultScroll){		
+			$("#container_content").scrollTop(this.scrollY-28);
+			this.scrollY = this.scrollY - 14
+		}				
 	}	
 }
+
 
 org_uengine_codi_mw3_admin_JavaCodeAssist.prototype.down = function(){
 	mw3.log('down');
@@ -108,6 +119,13 @@ org_uengine_codi_mw3_admin_JavaCodeAssist.prototype.down = function(){
 	if(next.length > 0){
 		this.list.children().removeClass('selected').css('background', '');
 		next.addClass('selected').css('background', 'yellow');
+		
+		this.defaultScroll = this.defaultScroll + 14;
+		
+		if($("#container_content").height() < this.defaultScroll){		
+			$("#container_content").scrollTop(this.scrollY);
+			this.scrollY = this.scrollY + 14
+		}		
 	}
 }
 
