@@ -23,6 +23,7 @@ public class ResourcePanel {
 		resourceFile.getMetaworksContext().setWhere("design");
 		resourceFile.getMetaworksContext().setWhen("design");
 
+		resourceFile.setObjType("folder");
 		resourceFile.setFolder(true);
 		resourceFile.setAlias("");
 		resourceFile.setName("classes");
@@ -35,6 +36,7 @@ public class ResourcePanel {
 		libraryFile.getMetaworksContext().setWhere("design");
 		libraryFile.getMetaworksContext().setWhen("design");
 
+		libraryFile.setObjType("folder");
 		libraryFile.setFolder(true);
 		libraryFile.setAlias("__lib");
 		libraryFile.setName("libraries");
@@ -47,6 +49,7 @@ public class ResourcePanel {
 		webResourceFile.getMetaworksContext().setWhere("design");
 		webResourceFile.getMetaworksContext().setWhen("design");
 
+		webResourceFile.setObjType("folder");
 		webResourceFile.setFolder(true);
 		webResourceFile.setAlias("__web");
 		webResourceFile.setName("web");
