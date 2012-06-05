@@ -11,10 +11,12 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.admin.PageNavigator;
+import org.uengine.codi.mw3.admin.ResourcePanel;
 import org.uengine.codi.mw3.knowledge.WfNode;
 import org.uengine.kernel.RoleMapping;
 import org.uengine.processmanager.ProcessManagerRemote;
@@ -257,6 +259,17 @@ public class ResourceFile implements ContextAware{
 		// TODO Auto-generated method stub
 		return null;
 	}	
+	
+	
+	@ServiceMethod(inContextMenu=true)
+	public ResourcePanel refresh() throws Exception {
+		ResourcePanel resourcePanel = new ResourcePanel();
+		
+		resourcePanel.refresh();
+		
+		return resourcePanel;
+	}
+
 	
 	
 	@ServiceMethod(callByContent=true, except="childs")
