@@ -287,16 +287,28 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		
 		childNode.add(index, newNode);
 		
-		if(childNode.size() > index){
-			for(int i=index; i<childNode.size(); i++){
-				IWfNode node = (WfNode)childNode.get(i);
-				
-				if(node.getNo() != i){
-					node.setNo(i);
-					node.saveMe();
-				}
-			}
+		// update
+		if(childNode.size()-1 > index){
+			StringBuffer sb = new StringBuffer();
+			sb.append("update bpm_knol");
+			sb.append("   set no=no+1");
+			sb.append(" where parentId=?parentId");
+			sb.append("   and no>=?no");
+			
+			IWfNode updateNode = sql(sb.toString());
+			updateNode.setParentId(this.getId());
+			updateNode.setNo(index);
+			
+			updateNode.update();
 		}
+		
+		// reorder
+		for(int i=index; i<childNode.size(); i++){
+			IWfNode node = (WfNode)childNode.get(i);
+			
+			node.setNo(i);
+		}
+		
 	}
 	
 	public void removeChildNode(int index) throws Exception {
@@ -307,7 +319,21 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 				IWfNode node = (WfNode)childNode.get(i);
 				
 				node.setNo(i);
-				node.saveMe();
+			}
+			
+			// update
+			if(childNode.size()-1 > index){
+				StringBuffer sb = new StringBuffer();
+				sb.append("update bpm_knol");
+				sb.append("   set no=no-1");
+				sb.append(" where parentId=?parentId");
+				sb.append("   and no>=?no");
+				
+				IWfNode updateNode = sql(sb.toString());
+				updateNode.setParentId(this.getId());
+				updateNode.setNo(index);
+				
+				updateNode.update();
 			}			
 		}
 	}
@@ -551,7 +577,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 			if(node.getChildNode().size() > 0){	// 처리X - 첫번째 노드, 자식 존재
 				return null;
 			}else{
-				if(this.getNameNext().length() > 0){	// 처리X - 첫번째 노드, 자식 미존재, 붙일 content 존재
+				if(this.getNameNext() != null && this.getNameNext().length() > 0){	// 처리X - 첫번째 노드, 자식 미존재, 붙일 content 존재
 					return null;	
 				}else{	// 처리O - 첫번째 노드, 자식 미존재, 붙일 content 미존재 -> 현재 노드 제거, 부모 노드 포커싱
 					resultNode = parentNode;
@@ -589,6 +615,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 			}			
 		}
 		
+		parentNode.removeChildNode(node.getNo());
 		node.deleteMe();
 		
 		if(resultNode == null){
@@ -615,8 +642,8 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		parentNode.setId(this.getDragNode().getParentId());
 		parentNode.load();
 
-		WfNode dragNode = parentNode.getNode(this.getDragNode().getId());
-				
+		WfNode dragNode = parentNode.getNode(this.getDragNode().getId());		
+		
 		// 부모 노드를 구한다
 		parentNode = new WfNode();
 		parentNode.setMetaworksContext(this.getMetaworksContext());
@@ -637,6 +664,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 				return null;
 			}
 			
+			parentNode.removeChildNode(dragNode.getNo());
 			node.addChildNode(0, dragNode);
 			
 			dragNode.saveMe();
@@ -649,6 +677,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		// 자식 없음
 		// 다음 노드에 붙임	
 		} else {
+			parentNode.removeChildNode(dragNode.getNo());
 			parentNode.addChildNode(node.getNo()+1, dragNode);			
 			dragNode.saveMe();
 			
@@ -661,6 +690,20 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 	
 	public void save() throws Exception {
 		this.saveMe();
+	}
+	
+	public Object[] removeNode() throws Exception {
+		
+		// 부모 노드를 구한다
+		WfNode parentNode = new WfNode();
+		parentNode.setMetaworksContext(this.getMetaworksContext());
+		parentNode.setId(this.getParentId());
+		parentNode.load();
+		
+		WfNode node = parentNode.getNode(this.getId());		
+		parentNode.removeChildNode(node.getNo());
+		
+		return new Object[]{new Remover(this)};
 	}
 	
 	@Autowired 
