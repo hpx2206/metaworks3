@@ -9,6 +9,7 @@ public class NewInstancePanel implements ContextAware {
 	
 	public NewInstancePanel(){
 		setMetaworksContext(new MetaworksContext());
+		getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 	}
 	
 	public void load() throws Exception{
