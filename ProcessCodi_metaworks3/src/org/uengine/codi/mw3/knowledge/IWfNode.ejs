@@ -7,10 +7,10 @@
 		
 		
 %>
-<div style="cursor:hand" onclick="<%=methods.drillDown.caller()%>><%=value.name%>/</div>
+<div style="cursor:hand" onclick="<%=methods.drillInto.caller()%>"><%=value.name%> - </div>
 <%		
-					return;
-				}
+				
+				}else {
 %>
 	<ul>
 		<li>
@@ -28,7 +28,16 @@
 						<td class="<%=nodeStatus%>"  onclick="<%=value.close?methods.expand.caller():methods.collapse.caller()%>"><span>&nbsp;</span></td>
 						<td>
 							<span class="wfNodeText" style="width:100%;"><%  if(value.linkedInstId){%><span onclick="<%=methods.linkInstance.caller()%>">[<%=value.linkedInstId%>]</span><%}%>
+								
+					<%	if(value.type=='img'){		
+%>
+								<img src="<%=value.name%>">
+<%					
+				
+				
+				}else{ %>
 								<input type="text" id="wfnode_content_<%=objectId%>" style="width:100% ; border:none;background:transparent" style="border:0; font-family: 'Helvetica Neue', Arial, Sans-serif; font-size: 12px; font-weight: normal;background:transparent"" value="<%=value.name%>" onkeydown="mw3.getFaceHelper('<%=objectId%>').keydown(this)" onkeyup="mw3.getFaceHelper('<%=objectId%>').keyup(this);">
+<%				}%>
 							</span>
 						</td>
 					</tr>
@@ -56,6 +65,8 @@
 				<div id="wfinfo_<%=objectId%>"></div>
 			</div>
 <%
+				}
+				
 				}
 			}
 			

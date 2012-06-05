@@ -82,7 +82,16 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		public void setNameNext(String nameNext) {
 			this.nameNext = nameNext;
 		}
+		
+	String typeNext;
 	
+		public String getTypeNext() {
+			return typeNext;
+		}
+		public void setTypeNext(String typeNext) {
+			this.typeNext = typeNext;
+		}
+
 	boolean focus;	
 		public boolean isFocus() {
 			return focus;
@@ -386,6 +395,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 			}
 		}else{
 			newNode.setName(getNameNext());
+			newNode.setType(getTypeNext());
 			
 			parentNode.addChildNode(node.getNo()+1, newNode);			
 						
