@@ -756,7 +756,7 @@ html, body {
 }
 
 
-.pageNavigator ul li a:hover, ul li a:focus{
+.pageNavigator ul li a:hover, .pageNavigator ul li a:focus{
 	color:#fff;
 	border:1px solid #f40;
 	background-color:#f40;
