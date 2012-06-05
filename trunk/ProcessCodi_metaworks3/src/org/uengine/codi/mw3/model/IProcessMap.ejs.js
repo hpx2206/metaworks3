@@ -1,11 +1,16 @@
 var org_uengine_codi_mw3_model_IProcessMap = function(objectId, className){
 	this.objectId = objectId;
 	this.className = className;	
-	this.divId = '#objDiv_' + this.objectId;
+	this.divId = 'objDiv_' + this.objectId;
+	
+	this.obj = $('#' + this.divId);
+	
+	this.windowObjectId = this.obj.closest('.mw3_window').attr('objectId');
+	
 	
 	var object = mw3.objects[this.objectId];
-	$(this.divId).addClass(object.iconColor.value).attr('objectId', this.objectId);
-	$(this.divId).parent().css({'border':'none'});
+	this.obj.addClass(object.iconColor.value).attr('objectId', this.objectId);
+	this.obj.parent().css({'border':'none'});
 	$( ".process_map2" ).sortable({
 		connectWith: "ul",
 		cancel: ".sptitle",
@@ -47,7 +52,17 @@ var org_uengine_codi_mw3_model_IProcessMap = function(objectId, className){
 }
 
 org_uengine_codi_mw3_model_IProcessMap.prototype = {
-		
+		startLoading : function(){
+			if(this.windowObjectId && mw3.getFaceHelper(this.windowObjectId) && mw3.getFaceHelper(this.windowObjectId).startLoading)
+				mw3.getFaceHelper(this.windowObjectId).startLoading();
+		},
+		endLoading : function(){
+			if(this.windowObjectId && mw3.getFaceHelper(this.windowObjectId) && mw3.getFaceHelper(this.windowObjectId).endLoading)
+				mw3.getFaceHelper(this.windowObjectId).endLoading();
+		},
+		showStatus : function(message){
+			
+		}		
 }
 
 
