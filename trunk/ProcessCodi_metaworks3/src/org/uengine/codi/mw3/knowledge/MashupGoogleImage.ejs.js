@@ -52,10 +52,17 @@ org_uengine_codi_mw3_knowledge_MashupGoogleImage.prototype.search = function(key
 //							contentSelect(this);							
 //						}
 						imgContainer.ondblclick  = function() {
+							console.debug('ondblclick');
 							
-							if(workingWfNode){
+							var focusWfNode = $('.wfnode_current_focus');
+							
+							console.debug(focusWfNode);
+							
+							if(focusWfNode.length > 0){
+								var objectId = focusWfNode.attr('objectId');
+								
 								//alert('xxxxxx');
-								workingWfNode.insertNodeAfter(this.googleData);
+								mw3.getFaceHelper(objectId).insertNodeAfter(this.googleData);
 							}
 							//mw3.getAutowiredObject('org.uengine.codi.mw3.knowledge.WfNode').
 						}

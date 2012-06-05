@@ -40,8 +40,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 			this.id = id;
 		}	
 		
-	String type;	
-	
+	String type;		
 		public String getType() {
 			return type;
 		}
@@ -408,24 +407,35 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 			
 		// 새로운 노드를 만든다.
 		final WfNode newNode = new WfNode();
-		newNode.setFocus(true);
-		newNode.getMetaworksContext().setHow("add");
 		
-		if(getNameNext().length() == 0){
-			if(node.getChildNode().size() > 0){
-				node.addChildNode(0, newNode);
-			}else{				
-				parentNode.addChildNode(node.getNo()+1, newNode);
-				
-				targetObject = new ToNext(this, newNode);
-			}
-		}else{
+		if(getTypeNext().length() > 0){
 			newNode.setName(getNameNext());
 			newNode.setType(getTypeNext());
 			
-			parentNode.addChildNode(node.getNo()+1, newNode);			
-						
-			targetObject = new ToNext(this, newNode);
+			node.addChildNode(newNode);
+			
+			node.setFocus(true);
+			node.getMetaworksContext().setHow("add");
+			
+		}else{
+			newNode.setFocus(true);
+			newNode.getMetaworksContext().setHow("add");
+			
+			if(getNameNext().length() == 0){
+				if(node.getChildNode().size() > 0){
+					node.addChildNode(0, newNode);
+				}else{				
+					parentNode.addChildNode(node.getNo()+1, newNode);
+					
+					targetObject = new ToNext(this, newNode);
+				}				
+			}else{
+				newNode.setName(getNameNext());
+				
+				parentNode.addChildNode(node.getNo()+1, newNode);			
+							
+				targetObject = new ToNext(this, newNode);				
+			}
 		}
 		
 		newNode.setAuthorId(session.getUser().getUserId());		
