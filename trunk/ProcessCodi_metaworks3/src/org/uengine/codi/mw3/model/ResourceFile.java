@@ -297,7 +297,9 @@ public class ResourceFile implements ContextAware{
 	@ServiceMethod(callByContent=true, except="childs")
 	public Object[] initiate() throws Exception{
 		InstanceViewContent instanceView = instanceViewContent;// = new InstanceViewContent();
-		instanceView.getMetaworksContext().setHow(pageNavigator.getPageName());
+		
+		if(pageNavigator!=null)
+			instanceView.getMetaworksContext().setHow(pageNavigator.getPageName());
 		
 		String instId = processManager.initializeProcess(getAlias());
 		
