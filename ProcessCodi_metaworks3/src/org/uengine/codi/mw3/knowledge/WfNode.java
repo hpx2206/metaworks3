@@ -713,6 +713,8 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		WfNode node = parentNode.getNode(this.getId());		
 		parentNode.removeChildNode(node.getNo());
 		
+		node.deleteMe();
+		
 		return new Object[]{new Remover(this)};
 	}
 	
