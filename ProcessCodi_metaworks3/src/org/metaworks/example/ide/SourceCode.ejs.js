@@ -246,9 +246,9 @@ org_metaworks_example_ide_SourceCode.prototype = {
 		
 		if(object==null){
 			object = {code: [], className: this.className};
+		}else{
+			object.code = this.editor.getSession().getValue();	
 		}
-		
-		object.code = this.editor.getSession().getValue();
 		//object.code = this.editor.getSession().doc.getAllLines();
 		
 		return object;

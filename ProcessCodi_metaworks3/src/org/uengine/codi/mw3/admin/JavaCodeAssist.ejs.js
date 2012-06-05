@@ -53,7 +53,7 @@ org_uengine_codi_mw3_admin_JavaCodeAssist.prototype.change = function(expression
 	for(var i in object.assistances){
 		var assistance = object.assistances[i].toLowerCase();
 				
-		if(assistance.indexOf(expression) == 0 || (assistance.indexOf(expressionClass) == 0 && assistance.indexOf('/'+expressionPackage+'/') != -1 )){
+		if(assistance.indexOf(expression) == 0 || (expressionClass.length > 0 && assistance.indexOf(expressionClass) == 0 && assistance.indexOf('/'+expressionPackage+'/') != -1 )){
 			assistance = object.assistances[i];
 			
 			var packageName = '';
