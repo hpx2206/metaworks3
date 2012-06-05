@@ -16,6 +16,7 @@ public class ProcessPerspective extends Perspective{
 			processDefinitions = new ResourceFile();
 			processDefinitions.setMetaworksContext(new MetaworksContext());	
 			processDefinitions.getMetaworksContext().setWhere("navigation");
+			processDefinitions.setObjType("folder");
 			processDefinitions.setFolder(true);
 			processDefinitions.setAlias("");
 			processDefinitions.setName("/");

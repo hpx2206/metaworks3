@@ -1,7 +1,6 @@
 <%
 if(value){
 	var icon = "default";
-	
 	if (value.objType == "folder"){
 		icon = "folder_c.png";	
 	} else if (value.objType == "form"){
@@ -33,7 +32,7 @@ if(value){
 <%			}
 %>
 </span>
-<ul style="padding:5px 0 15px 25px;"><li><%=fields.childs.here({when: mw3.when})%></li></ul>
+<ul style="padding:5px 0 0 25px;"><li><%=fields.childs.here({when: mw3.when})%></li></ul>
 
 <%
  
