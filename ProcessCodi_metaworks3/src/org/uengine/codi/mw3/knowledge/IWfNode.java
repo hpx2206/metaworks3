@@ -127,8 +127,8 @@ public interface IWfNode extends IDAO {
 	@ServiceMethod(callByContent=true, except={"childNode", "focus"}, target="popup")
 	public Object[] indent() throws Exception;
 	
-	@ServiceMethod(callByContent=true, except={"childNode", "focus"}, target="popup")
-	public Object[] remove() throws Exception;
+	@ServiceMethod(inContextMenu=true, keyBinding="Shift+Right")
+	public WfPanel drillInto() throws Exception;
 	
 	@ServiceMethod(callByContent=true, except={"childNode", "focus"}, target="popup")
 	public Object[] move() throws Exception;
@@ -149,10 +149,10 @@ public interface IWfNode extends IDAO {
 	@ServiceMethod(inContextMenu=true, keyBinding="Ctrl+M")
 	public ContentWindow mashup() throws Exception;
 
-	@ServiceMethod(inContextMenu=true, keyBinding="Shift+Right")
-	public WfPanel drillInto() throws Exception;
+	@ServiceMethod(callByContent=true, except={"childNode", "focus"}, target="popup", inContextMenu=true, keyBinding="del")
+	public Object[] remove() throws Exception;
+	
 
-		
 	@ServiceMethod(callByContent=true)
 	public WfNode expand() throws Exception;	
 	

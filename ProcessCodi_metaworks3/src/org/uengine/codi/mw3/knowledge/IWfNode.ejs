@@ -31,7 +31,7 @@
 								
 					<%	if(value.type=='img'){		
 %>
-								<img src="<%=value.name%>">
+								<img src="<%=value.name%>" onkeydown="mw3.getFaceHelper('<%=objectId%>').keydown(this)" onkeyup="mw3.getFaceHelper('<%=objectId%>').keyup(this);>
 <%					
 				
 				
