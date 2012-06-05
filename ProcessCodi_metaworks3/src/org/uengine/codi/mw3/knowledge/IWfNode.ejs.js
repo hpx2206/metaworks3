@@ -23,13 +23,16 @@ var org_uengine_codi_mw3_knowledge_IWfNode = function(objectId, className){
 	var content = this.content = $('#wfnode_content_' + this.objectId);
 	
 	if(this.mw3Obj.metaworksContext.when != 'read'){
-		content.focus(function() {
+		content.bind('focus', {objectId: this.objectId}, function(event) {		
+			$('.wfnode_current').hide();			
+			$('#wfnode_current_' + event.data.objectId).show();			
+			
 			var value = content.val();
 			
 			if(mw3.getFaceHelper(objectId) && mw3.getFaceHelper(objectId).change) 
 					mw3.getFaceHelper(objectId).change(value);			
 		});
-		content.blur(function() {
+		content.bind('blur', {objectId: this.objectId}, function() {
 			var faceHelper = mw3.getFaceHelper(objectId);
 			
 			var value = content.val();
