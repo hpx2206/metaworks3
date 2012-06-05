@@ -121,9 +121,9 @@ public class ScheduleCalendar implements ContextAware {
 					
 				
 				if(empCode.equals(schedule.getEndpoint()))
-					column.put("color", "#47CDD8");
+					column.put("color", "#FEE66E");
 				else
-					column.put("color", "#9AC604");
+					column.put("color", "#FFDB2F");
 					
 				
 				arrListData.add(column);

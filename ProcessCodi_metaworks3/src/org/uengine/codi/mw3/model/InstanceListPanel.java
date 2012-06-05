@@ -38,6 +38,7 @@ public class InstanceListPanel {
 	//@Hidden
 	@ServiceMethod(inContextMenu=true)
 	public void switchToScheduleCalendar() throws Exception{
+		this.setInstanceList(null);
 		this.scheduleCalendar = new ScheduleCalendar();
 		this.scheduleCalendar.session = session;
 		this.scheduleCalendar.load();
@@ -46,8 +47,13 @@ public class InstanceListPanel {
 	//@Hidden
 	@ServiceMethod(inContextMenu=true)
 	public void switchToInstanceList() throws Exception{
-		instanceList = new InstanceList();
-		instanceList.init();
+		this.setScheduleCalendar(null);
+	
+		PersonalPerspective personalPerspective = new PersonalPerspective();
+		personalPerspective.session = session;
+		InstanceListPanel instanceListPanel = (InstanceListPanel) personalPerspective.loadInbox()[1];
+		
+		setInstanceList(instanceListPanel.getInstanceList());
 	}
 
 		
