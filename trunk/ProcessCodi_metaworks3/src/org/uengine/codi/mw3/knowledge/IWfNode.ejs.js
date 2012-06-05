@@ -1,6 +1,6 @@
 var workingWfNode = null;
 
-var org_uengine_codi_mw3_knowledge_WfNode = function(objectId, className){
+var org_uengine_codi_mw3_knowledge_IWfNode = function(objectId, className){
 	console.debug(objectId);
 	
 	var thisFaceHelper = this;
@@ -122,7 +122,7 @@ var org_uengine_codi_mw3_knowledge_WfNode = function(objectId, className){
 	this.obj.addClass("workflowy_node").attr("objectId", objectId).attr("nodeId", this.mw3Obj.id).attr('parentId', this.mw3Obj.parentId).css("position", "relative");
 }
 
-org_uengine_codi_mw3_knowledge_WfNode.prototype = {
+org_uengine_codi_mw3_knowledge_IWfNode.prototype = {
 		getPrev : function(){
 			var searchObj = this.obj;
 				
@@ -450,22 +450,10 @@ org_uengine_codi_mw3_knowledge_WfNode.prototype = {
 			alert(message);
 		},
 				
-		insertNodeAfter: function(previous, newOne){						
-			new MetaworksObject(
-					{
-						__className:	'org.metaworks.Refresh',						
-						target:		previous					
-					},					
-					'body'					
-			);
-			
-			new MetaworksObject(					{
-						__className:	'org.metaworks.ToNext',						
-						previous: 	previous,
-						target:		newOne
-					},					
-					'body'
-			);
+		insertNodeAfter: function(googleData){						
+			this.mw3Obj.nameNext = googleData.tbUrl;
+			this.mw3Obj.typeNext = "img";
+			this.mw3Obj.add();
 		}
 
 }

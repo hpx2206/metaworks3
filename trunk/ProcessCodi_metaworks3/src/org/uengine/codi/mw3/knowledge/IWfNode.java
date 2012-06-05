@@ -56,6 +56,12 @@ public interface IWfNode extends IDAO {
 	public String getType();
 	public void setType(String type);
 		
+	@NonLoadable
+	@NonSavable
+	@Hidden
+	public String getTypeNext();
+	public void setTypeNext(String type);
+		
 	public Long getLinkedInstId();
 	public void setLinkedInstId(Long linkedInstanceId);
 

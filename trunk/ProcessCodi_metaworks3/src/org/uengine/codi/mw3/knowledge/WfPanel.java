@@ -7,6 +7,7 @@ import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.ToNext;
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 
@@ -21,11 +22,12 @@ public class WfPanel implements ContextAware {
 		}
 
 	ArrayList<IWfNode> path;
-		public void setPath(ArrayList<IWfNode> path) {
-			this.path = path;
-		}
+	@Face(options="alignment", values="horizontal")
 		public ArrayList<IWfNode> getPath() throws Exception{
 			return path; 
+		}
+		public void setPath(ArrayList<IWfNode> path) {
+			this.path = path;
 		}
 
 		
@@ -92,7 +94,7 @@ public class WfPanel implements ContextAware {
 		
 		
 		//setting path
-		ArrayList<IWfNode> paths = new ArrayList<IWfNode>();
+		path = new ArrayList<IWfNode>();
 		IWfNode currNode = getWfNode();
 		
 		if(!"-1".equals(currNode.getId()))
@@ -105,14 +107,14 @@ public class WfPanel implements ContextAware {
 			
 			currNode = parentNode.databaseMe();
 			currNode.getMetaworksContext().setHow("PATH");
-			paths.add(currNode);
+			path.add(0, currNode);
 		}while(!"-1".equals(currNode.getId()));
 
 		WfNode root = new WfNode();
 		root.setId("-1");
 		root.setName("/");
 		root.getMetaworksContext().setHow("PATH");
-		paths.add(root);
+		path.add(0, root);
 
 	}		
 	

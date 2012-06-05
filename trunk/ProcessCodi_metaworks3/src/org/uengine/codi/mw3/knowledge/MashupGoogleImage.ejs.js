@@ -51,9 +51,10 @@ org_uengine_codi_mw3_knowledge_MashupGoogleImage.prototype.search = function(key
 //							this.style.background = "#b2bdc1";
 //							contentSelect(this);							
 //						}
-						imgContainer.onclick  = function() {
+						imgContainer.ondblclick  = function() {
 							
 							if(workingWfNode){
+								//alert('xxxxxx');
 								workingWfNode.insertNodeAfter(this.googleData);
 							}
 							//mw3.getAutowiredObject('org.uengine.codi.mw3.knowledge.WfNode').
