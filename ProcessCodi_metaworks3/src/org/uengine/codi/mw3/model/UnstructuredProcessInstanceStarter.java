@@ -11,6 +11,7 @@ import org.metaworks.annotation.ServiceMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.CodiProcessDefinitionFactory;
 import org.uengine.codi.mw3.Login;
+import org.uengine.codi.mw3.knowledge.WfNode;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 public class UnstructuredProcessInstanceStarter implements ContextAware {
@@ -92,10 +93,28 @@ public class UnstructuredProcessInstanceStarter implements ContextAware {
 			});
 		}
 		
+		if(newInstancePanel!=null && newInstancePanel.getKnowledgeNodeId() != null){
+						
+			WfNode parent = new WfNode();
+			parent.load(newInstancePanel.getKnowledgeNodeId());
+			
+			WfNode child = new WfNode();		
+			child.setName(getTitle());
+			child.setLinkedInstId(Long.parseLong(instanceView.getInstanceView().getInstanceId()));
+			parent.addChildNode(child);
+			
+			child.createMe();
+
+			return new Object[]{instanceView, parent};
+
+		}
 		
 		return new Object[]{instanceViewAndInstanceList[0], instanceViewAndInstanceList[1], new Remover(new Popup())};
 		
 	}
+	
+	@AutowiredFromClient
+	public NewInstancePanel newInstancePanel;
 	
 	@AutowiredFromClient
 	public Session session;
