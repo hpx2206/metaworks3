@@ -7,13 +7,18 @@ import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.ToNext;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
+import org.uengine.codi.mw3.model.Session;
 
 public class WfPanel implements ContextAware {
 	
-	WfNode wfNode;	
+	@AutowiredFromClient
+	public Session session;
+	
+	WfNode wfNode;		
 		public WfNode getWfNode() {
 			return wfNode;
 		}
@@ -62,14 +67,14 @@ public class WfPanel implements ContextAware {
 		node.getMetaworksContext().setHow("ROOT");
 		node.load(nodeId);
 		
-		if(node.getChildNode().size() == 0){
+/*		if(node.getChildNode().size() == 0){
 			WfNode newNode = new WfNode();
 			
 			node.addChildNode(newNode);
 						
 			newNode.createMe();
 			newNode.setFocus(true);
-		}
+		}*/
 		
 		
 		//node.setName("");				
@@ -115,6 +120,8 @@ public class WfPanel implements ContextAware {
 		root.setName("/");
 		root.getMetaworksContext().setHow("PATH");
 		path.add(0, root);
+		
+		setPath(path);
 
 	}		
 	
@@ -137,13 +144,14 @@ public class WfPanel implements ContextAware {
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
 	public Object newNode() throws Exception {
 		WfNode newNode = new WfNode();
+		newNode.setAuthorId(session.getUser().getUserId());
 		
 		WfNode rootNode = new WfNode();		
 		rootNode.setId("-1");
 		rootNode.loadChildren();
 		rootNode.getMetaworksContext().setHow("ROOT");
 		rootNode.addChildNode(newNode);
-		
+				
 		newNode.createMe();
 		newNode.setFocus(true);
 		

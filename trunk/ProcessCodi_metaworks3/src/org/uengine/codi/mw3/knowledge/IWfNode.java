@@ -3,6 +3,7 @@ package org.uengine.codi.mw3.knowledge;
 import java.util.ArrayList;
 
 import org.metaworks.ServiceMethodContext;
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;
@@ -11,19 +12,9 @@ import org.metaworks.annotation.NonSavable;
 import org.metaworks.annotation.ORMapping;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Table;
-import org.metaworks.annotation.TypeSelector;
 import org.metaworks.dao.IDAO;
-import org.uengine.codi.mw3.model.CommentWorkItem;
 import org.uengine.codi.mw3.model.ContentWindow;
-import org.uengine.codi.mw3.model.FileWorkItem;
 import org.uengine.codi.mw3.model.IUser;
-import org.uengine.codi.mw3.model.ImageWorkItem;
-import org.uengine.codi.mw3.model.MovieWorkItem;
-import org.uengine.codi.mw3.model.NewInstancePanel;
-import org.uengine.codi.mw3.model.PostingsWorkItem;
-import org.uengine.codi.mw3.model.ScheduleWorkItem;
-import org.uengine.codi.mw3.model.SourceCodeWorkItem;
-import org.uengine.codi.mw3.model.WorkItem;
 
 @Table(name="bpm_knol")
 public interface IWfNode extends IDAO {
@@ -149,10 +140,13 @@ public interface IWfNode extends IDAO {
 	@ServiceMethod(inContextMenu=true, keyBinding="Ctrl+M")
 	public ContentWindow mashup() throws Exception;
 
-	@ServiceMethod(callByContent=true, except={"childNode", "focus"}, target="popup", inContextMenu=true, keyBinding="del")
+	@ServiceMethod(callByContent=true, except={"childNode", "focus"}, target="popup")
 	public Object[] remove() throws Exception;
 	
-
+	@Face(displayName="remove")
+	@ServiceMethod(callByContent=true, except={"childNode", "focus"}, target="popup", inContextMenu=true, keyBinding="Shift+Del")
+	public Object[] removeNode() throws Exception;
+	
 	@ServiceMethod(callByContent=true)
 	public WfNode expand() throws Exception;	
 	
