@@ -21,7 +21,13 @@ public class Main {
 		
 		Layout eastLayout = new Layout();
 		eastLayout.setWest(new  InstanceListWindow(session));
-		eastLayout.setCenter(new ContentWindow());
+		
+		ContentWindow contentWindow = new ContentWindow();
+		NewInstancePanel instancePanel = new NewInstancePanel();
+		instancePanel.load();
+		contentWindow.setPanel(instancePanel);
+		
+		eastLayout.setCenter(contentWindow);
 		eastLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, south__spacing_open:5, west__spacing_open:5, west__size:'40%'");
 		eastLayout.setName("east");
 		
