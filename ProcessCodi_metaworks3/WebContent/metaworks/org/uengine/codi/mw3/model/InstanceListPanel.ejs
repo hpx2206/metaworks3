@@ -30,6 +30,7 @@
 
 		<div class="pane ui-layout-center">
 			<div class="ui-layout-content">
-				<%=fields.instanceList.here()%>
+				<%=value.instanceList ? fields.instanceList.here() : ""%>
+				<%=value.scheduleCalendar ? fields.scheduleCalendar.here() : ""%>
 			</div>
 		</div>
