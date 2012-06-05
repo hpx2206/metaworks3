@@ -66,7 +66,7 @@ var org_uengine_codi_mw3_knowledge_IWfNode = function(objectId, className){
 
 		var object = this.mw3Obj;
 		$('#wfnode_' + this.objectId).droppable({
-			hoverClass: "ui-state-active",
+			hoverClass: "wfActive",
 			drop: function( event, ui ) {
 				var dragNodeId = ui.draggable.attr("objectId");
 				
@@ -87,6 +87,7 @@ var org_uengine_codi_mw3_knowledge_IWfNode = function(objectId, className){
 
 		$('#wfnode_' + objectId).hover(			
 				function () {
+					$(this).css("background","#F2F8FD");
 					if(!$('#move').hasClass("moving")){
 						var html = '';
 
@@ -102,6 +103,7 @@ var org_uengine_codi_mw3_knowledge_IWfNode = function(objectId, className){
 							helper: "clone",
 							cursor: "move",
 							distance: 1,
+							axis: "y",
 							start: function(event, ui) {								
 								$(this).attr("objectId", objectId);				        	
 								$(this).addClass("moving");
@@ -113,6 +115,7 @@ var org_uengine_codi_mw3_knowledge_IWfNode = function(objectId, className){
 					}
 				}, 
 				function () {	
+					$(this).css("background","none");
 					if(!$('#move').hasClass("moving"))
 						$(this).find('#controls').remove();			  
 				}
