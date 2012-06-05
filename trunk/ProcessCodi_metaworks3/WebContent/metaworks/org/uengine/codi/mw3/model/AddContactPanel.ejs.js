@@ -1,10 +1,10 @@
 var org_uengine_codi_mw3_model_AddContactPanel = function(objectId, className) {
 	this.objectId = objectId;
 	this.className = className;
+
+	var friendsObjId = mw3.getChildObjectId(this.objectId, 'friends');
 	
-	var object = mw3.objects[this.objectId];
-	
-	readComment($("#AddContactPanel").val());
+	readComment(friendsObjId);
 }
 
 function readComment(objectId){	
@@ -30,7 +30,6 @@ function readComment(objectId){
 						  name : response[i].name,
 						  network: 'fb',
 						  __className : "org.uengine.codi.mw3.model.IUser",
-						  
 				  };
 				  
 			  }
