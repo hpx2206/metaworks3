@@ -8,7 +8,7 @@ import org.metaworks.annotation.Id;
 public class ContactList implements ContextAware {
 	
 	public static final String LOCAL = "local";
-	public static final String SOCIAL = "social";
+	public static final String FACEBOOK = "fb";
 	
 	public ContactList(){
 		setMetaworksContext(new MetaworksContext());
@@ -24,10 +24,13 @@ public class ContactList implements ContextAware {
 		contact.setMetaworksContext(getMetaworksContext());
 		contact.setUserId(userId);
 			
-		if(LOCAL.equals(this.getMetaworksContext().getWhere()))
-			setContacts(contact.loadLocalContacts(keyword));
-		else if(SOCIAL.equals(this.getMetaworksContext().getWhere()))
-		setContacts(contact.loadSocialContacts(keyword));
+		if(LOCAL.equals(this.getMetaworksContext().getWhere())){
+			contact.setNetwork(LOCAL);
+			setContacts(contact.loadContacts(keyword));
+		}else if(FACEBOOK.equals(this.getMetaworksContext().getWhere())){
+			contact.setNetwork(FACEBOOK);
+			setContacts(contact.loadContacts(keyword));
+		}
 	}
 
 	String id;

@@ -31,7 +31,7 @@ public class ContactListPanel implements ContextAware {
 		
 		ContactList socialContactList = new ContactList();
 		socialContactList.getMetaworksContext().setWhen(getMetaworksContext().getWhen());
-		socialContactList.getMetaworksContext().setWhere(ContactList.SOCIAL);
+		socialContactList.getMetaworksContext().setWhere(ContactList.FACEBOOK);
 		socialContactList.load(userId, keyword);
 		
 		setSocialContactList(socialContactList);
