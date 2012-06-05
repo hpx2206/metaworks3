@@ -27,7 +27,7 @@
 					<tr>
 						<td class="<%=nodeStatus%>"  onclick="<%=value.close?methods.expand.caller():methods.collapse.caller()%>"><span>&nbsp;</span></td>
 						<td>
-							<span class="wfNodeText" style="width:100%;"><%  if(value.linkedInstId){%><span onclick="<%=methods.linkInstance.caller()%>">[<%=value.linkedInstId%>]</span><%}%>
+							<span class="wfNodeText" style="width:100%;"><%  if(value.linkedInstId){%><span class="wfLink" onclick="<%=methods.linkInstance.caller()%>">[<%=value.linkedInstId%>]</span><%}%>
 								
 					<%	if(value.type=='img'){		
 %>
