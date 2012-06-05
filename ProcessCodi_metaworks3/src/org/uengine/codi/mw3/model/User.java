@@ -204,9 +204,13 @@ public class User extends Database<IUser> implements IUser {
 		
 		ContactList contactList = new ContactList();
 		contactList.getMetaworksContext().setWhen(ContactListPanel.CONTACT);
-		contactList.getMetaworksContext().setWhere(this.getMetaworksContext().getWhere());
 		
-		contactList.load(session.getUser().getUserId());
+		if(this.getNetwork() != null && this.getNetwork().equals("fb"))
+			contactList.getMetaworksContext().setWhere(ContactList.FACEBOOK);
+		else
+			contactList.getMetaworksContext().setWhere(ContactList.LOCAL);
+		
+		contactList.load(session.getUser().getUserId());		
 		
 		return contactList;
 	}	
@@ -222,7 +226,7 @@ public class User extends Database<IUser> implements IUser {
 		contactList.getMetaworksContext().setWhere(this.getMetaworksContext().getWhere());
 		contactList.load(session.getUser().getUserId());
 		
-		return new Object[] {contactList, new Popup(this)};
+		return new Object[] {contactList, new Popup()};
 		
 	}
 	
