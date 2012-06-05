@@ -408,7 +408,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		// 새로운 노드를 만든다.
 		final WfNode newNode = new WfNode();
 		
-		if(getTypeNext().length() > 0){
+		if(getTypeNext() != null && getTypeNext().length() > 0){
 			newNode.setName(getNameNext());
 			newNode.setType(getTypeNext());
 			
