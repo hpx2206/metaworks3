@@ -90,6 +90,7 @@ ul, ol , li , dl ,dd ,dt{list-style-type:none; margin:0px; padding:0px;}
 
 .wfPath{cursor:pointer; font-weight: 700; font-size: 24px; width: 100%; line-height: normal; height: 35px; display: block; overflow: hidden;}
 .wfActive{border:1px dotted #ccc; border-bottom: 2px solid #5B9BE2;}
+.wfLink {height:16px; padding-right:25px; background: url(../../images/waveStyle/link.png) no-repeat right 0px; cursor:pointer;}
 
 #mashup_image .imgContainer{display: inline-block; margin: 3px;}
 
