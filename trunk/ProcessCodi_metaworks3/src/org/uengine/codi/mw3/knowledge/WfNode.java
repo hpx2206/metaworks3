@@ -710,6 +710,9 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		parentNode.setId(this.getParentId());
 		parentNode.load();
 		
+		if("-1".equals(parentNode.getId()) && parentNode.getChildNode().size() == 1)
+			return null;
+		
 		WfNode node = parentNode.getNode(this.getId());		
 		parentNode.removeChildNode(node.getNo());
 		
