@@ -3,104 +3,19 @@ var org_uengine_codi_mw3_admin_JavaCodeAssist = function(objectId, className){
 	this.objectId = objectId;
 	this.className = className;
 	
+	this.list = $("#assistancesList_" + this.objectId);
+	
+	// make smart tab
 	$('#tabs_assist').smartTab({autoProgress: false,transitionEffect:'none'});
-	
-	var buttons = { previous:$('#jslidernews3 .button-previous') ,
-					next:$('#jslidernews3 .button-next') };
-	$('#jslidernews3').lofJSidernews( { interval:5000,
-										 	easing:'easeOutExpo',
-											duration:200,
-											auto:false,
-											mainWidth:580,
-											mainHeight:300,
-											navigatorHeight		: 27,
-											navigatorWidth		: 100,
-											maxItemDisplay:9,
-											buttons:buttons,
-											keyNavigation:false} );
-	
-	
-	
+
+	// first item focusing
 	var object = mw3.objects[this.objectId];
-	var thisFaceHelper = this;
 	
-	if(object==null || object.assistances.length==0){
-		var sourceCode = mw3.objects[object.srcCodeObjectId];		
-		var editor = sourceCode.__getFaceHelper().editor;
-		
-		$("#" + mw3.popupDivId).remove();
-		editor.focus();
-	} else {
-		if(object.assistances.length==1 && $("#objDiv_" + objectId).find(".active").attr("assistname").indexOf(".") > 0) {		
-	
-			var value = $("#objDiv_" + objectId).find(".active").attr("assistname");
-			if(value.indexOf(".") > 0) thisFaceHelper.enter(value);
-			
-		} else {
-			$('#assist_text_' + objectId).unbind('keyup');
-			$('#assist_text_' + objectId).bind('keyup', function(e){
-				if (e && e.keyCode==13){
-					var value = $("#objDiv_" + objectId).find(".active").attr("assistname");
-					
-					//$("#objDiv_" + objectId).find(".active").click();					
-					thisFaceHelper.enter(value);					
-				}else if(e && e.keyCode==38){
-					$("#assist_up").click();
-				}else if(e && e.keyCode==40){
-					$("#assist_down").click();
-				}else{
-					var key = $('#assist_text_' + objectId).val();
-					
-					$(".navigator-content li").each(function(index) {
-						console.debug($(this));
-						
-						var value = $(this).attr("assistname");
-						
-						if(value.substring(0, key.length) == key){						
-							var index = $(this).attr("index");						
-							
-							seft.jumping(index, true);
-							seft.setNavActive(index);
-							thisFaceHelper.requestDoc(value);
-							
-							return false;
-						}
-					});
-				}
-			});
-			
-			$('#atabs-1').click(function(){
-				$('#assist_text_' + objectId).focus();
-			});
-				
-			$("#assist_text_" + objectId).focus();
-			
-			$("#assist_up").click(function(event){
-				$('#assist_text_' + objectId).focus();
-				
-				var value = $("#objDiv_" + objectId).find(".active").attr("assistname");
-				
-				thisFaceHelper.requestDoc(value);
-			});
-			
-			
-			$("#assist_down").click(function(event){
-				$('#assist_text_' + objectId).focus();
-				
-				var value = $("#objDiv_" + objectId).find(".active").attr("assistname");
-				
-				thisFaceHelper.requestDoc(value);
-			});		
-		}
-	}
+	if(object.assistances.length > 0)
+		this.list.children(':first').css('background', 'yellow').addClass('selected');	
 	
 	object.ExtendImport = function(){
-		console.debug('extendImport');
-		console.debug(objectId);
-		
 		var object = mw3.objects[objectId];
-		
-		console.debug(object);
 		
 		var sourceCode = mw3.objects[object.srcCodeObjectId];
 		
@@ -113,9 +28,116 @@ var org_uengine_codi_mw3_admin_JavaCodeAssist = function(objectId, className){
 	}
 }
 
-org_uengine_codi_mw3_admin_JavaCodeAssist.prototype.enter = function(value){
+org_uengine_codi_mw3_admin_JavaCodeAssist.prototype.change = function(expression){
+	expression = expression.toLowerCase();
+	console.debug('expression : ' + expression);
+	
+	var pos = expression.lastIndexOf('.');
+	var expressionClass = '';
+	var expressionPackage = '';
+	
+	if(pos != -1){
+		expressionClass = expression.substring(pos+1);
+		expressionPackage = expression.substring(0, pos);
+	}
+		
+	console.debug('expressionClass : ' + expressionClass);
 	
 	var object = mw3.objects[this.objectId];
+
+	var html = '';
+
+	for(var i in object.assistances){
+		var assistance = object.assistances[i].toLowerCase();
+				
+		if(assistance.indexOf(expression) == 0 || (assistance.indexOf(expressionClass) == 0 && assistance.indexOf('/'+expressionPackage+'/') != -1 )){
+			assistance = object.assistances[i];
+			
+			var packageName = '';
+			var assistType = 'package';
+			
+			if(assistance.indexOf('/') == -1){
+				assistance += '.*'; 
+			}else{
+				var temp = assistance.split('/');
+				
+				assistance = temp[0];
+				packageName = ' - ' + temp[1];
+				assistType = temp[2];
+			}
+
+			
+			html += '<li onclick=\"mw3.getFaceHelper(\'' + this.objectId + '\').select();\" index=\"' + i + '\">';
+			html += '	<span class=\"' + assistType + '\">' + assistance + '</span>';
+			if(packageName.length > 0)
+				html += '	<span>' + packageName + '</span>';
+			html += '</li>';
+		}		
+	}
+	
+	//console.debug(html);
+	//console.debug('size : ' + object.assistances.length);
+	
+	if(html == ''){
+		mw3.removeObject(this.objectId);
+		
+		return false;
+	}
+	
+	this.list.html(html);
+	
+	this.list.children(':first').addClass('selected').css('background', 'yellow');
+}
+
+org_uengine_codi_mw3_admin_JavaCodeAssist.prototype.up = function(){
+	mw3.log('up');
+	
+	var prev = this.list.children('.selected').prev();
+	
+	if(prev.length > 0){
+		this.list.children().removeClass('selected').css('background', '');
+		prev.addClass('selected').css('background', 'yellow');		
+	}	
+}
+
+org_uengine_codi_mw3_admin_JavaCodeAssist.prototype.down = function(){
+	mw3.log('down');
+	
+	var next = this.list.children('.selected').next();
+	
+	if(next.length > 0){
+		this.list.children().removeClass('selected').css('background', '');
+		next.addClass('selected').css('background', 'yellow');
+	}
+}
+
+org_uengine_codi_mw3_admin_JavaCodeAssist.prototype.select = function(){
+	
+	var selected = this.list.children('.selected');
+	var index = selected.attr('index');
+	
+	var object = mw3.objects[this.objectId];
+	
+	console.debug(object);
+	console.debug(index);
+	
+	return object.assistances[index];
+	
+/*	var selected = this.list.children('.selected');
+ *  var html = '';
+	
+	if(selected.length > 0){
+		var child = selected.children(':first');
+		
+		html = child.html();
+		
+		if(child.next().length > 0)
+			html += child.next().html().trim();
+	}
+		 
+	return html;
+*/	
+	/*var object = mw3.objects[this.objectId];
 	var sourceCode = mw3.objects[object.srcCodeObjectId];
 	
 	var editor = sourceCode.__getFaceHelper().editor;
@@ -188,11 +210,9 @@ org_uengine_codi_mw3_admin_JavaCodeAssist.prototype.enter = function(value){
 				editor.moveCursorTo(whereEnd.row + 1, whereEnd.column);
 			}
 		}
-	}
+	}*/
 	
-	editor.focus();
-	
-	$("#" + mw3.popupDivId).remove();
+	mw3.removeObject(this.objectId);
 }
 
 org_uengine_codi_mw3_admin_JavaCodeAssist.prototype.requestDoc = function(value) {
@@ -211,3 +231,4 @@ org_uengine_codi_mw3_admin_JavaCodeAssist.prototype.requestDoc = function(value)
 	object.lineAssistRequested = line; 
 	object.showDoc();
 }
+

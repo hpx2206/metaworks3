@@ -1,44 +1,41 @@
 package org.uengine.codi.mw3.model;
 
+
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
-
-import javax.tools.JavaFileObject;
-import javax.tools.StandardLocation;
-import javax.tools.JavaFileObject.Kind;
 
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.example.ide.CodeAssist;
 import org.metaworks.example.ide.SourceCode;
-import org.uengine.codi.mw3.CodiClassLoader;
-import org.uengine.codi.mw3.CodiMetaworksRemoteService;
-import org.uengine.codi.mw3.FileInputJavaFileManager;
 import org.uengine.codi.mw3.admin.ClassField;
 import org.uengine.codi.mw3.admin.ClassMethod;
 import org.uengine.codi.mw3.admin.ClassModeler;
 import org.uengine.codi.mw3.admin.JavaCodeAssist;
 import org.uengine.util.UEngineUtil;
-
-
+import org.xmlsoap.schemas.ws.n2003.n03.business_process.types.tRoles;
 
 public class JavaSourceCode extends SourceCode {
-
 	static Map<String, Map> packageNames = new HashMap<String, Map>(); //cached for more faster code assistance. may need to stored separately with tenants. (may naturally done because of classloader is different with web-contexts)
-	static Map<String, ArrayList> importNames = new HashMap<String, ArrayList>();
+	static ArrayList<String> classNames = new ArrayList<String>();
 	static ArrayList<String> annotationNames = new ArrayList<String>();
+	
+	
+	public void cacheLibrary() {
+		
+		try {
+			packageNames.clear();
+			classNames.clear();
+			//expression = expression.replace('.', '/');
 
-	public void cachePackageNames(CodeAssist codeAssist, String expression) {
-		try {			
 			//URLClassLoader classLoader = (URLClassLoader) CodiMetaworksRemoteService.class.getClassLoader();
 			URLClassLoader classLoader = (URLClassLoader) org.metaworks.MetaworksContext.class.getClassLoader();
 			URL urls[] = classLoader.getURLs();
@@ -48,31 +45,45 @@ public class JavaSourceCode extends SourceCode {
 					net.sf.jazzlib.ZipEntry zipEntry;	
 				    try {				    	
 				    	while((zipEntry = zipIn.getNextEntry()) != null) {
-				    		if(zipEntry.getName().startsWith(expression.replace('.', '/'))){
-								String clsName = zipEntry.getName();
-								
-								if(clsName.endsWith(".class")){
-									clsName = clsName.substring(0, clsName.length() - 6);
-									String[] parts = clsName.split("/");
-									if(parts.length > 1){
-										
+				    		String name = zipEntry.getName();
+				    		
+				    		//if(name.startsWith(expression)){				    			
+								if(name.endsWith(".class")){
+									name = name.substring(0, name.length() - 6);
+																		
+									String[] parts = name.split("/");
+									if(parts.length > 1){																			
 										StringBuffer packageName = new StringBuffer(parts[0]);
+										
 										for(int i=1; i<parts.length; i++){
 											if(!packageNames.containsKey(packageName.toString())) 
-												packageNames.put(packageName.toString(), new HashMap());
+												packageNames.put(packageName.toString(), new HashMap<String, String>());
+											
+											Map<String, String> packageTokens = packageNames.get(packageName.toString());
 	
-											Map <String, String> packageTokens = packageNames.get(packageName.toString());
-	
-											packageTokens.put(parts[i], parts[i]);
+											if(i == parts.length-1)
+												packageTokens.put(parts[i], "");
 	
 											packageName.append(".");
 											packageName.append(parts[i]);
 											
 										}
 									}
+									
+							    	String pkgName = "";
+							    	String clsName = "";
+							    	
+							    	clsName = name;
+							    	
+							    	int pos = clsName.lastIndexOf("/");
+							    	if(pos != -1){
+							    		pkgName = clsName.substring(0, pos).replaceAll("/", ".");
+							    		clsName = clsName.substring(pos + 1);
+							    	}
+							    	
+							    	classNames.add(clsName + "/" + pkgName);
 								}
-								
-				    		}
+				    		//}
 				    	} // end while
 	
 				    } catch (Exception e) {
@@ -88,68 +99,23 @@ public class JavaSourceCode extends SourceCode {
 		}
 	}
 	
-	public void cacheImportNames(String typeName) {
-		try {			
-			//URLClassLoader classLoader = (URLClassLoader) CodiMetaworksRemoteService.class.getClassLoader();
-			URLClassLoader classLoader = (URLClassLoader) org.metaworks.MetaworksContext.class.getClassLoader();
-			URL urls[] = classLoader.getURLs();
-			for(URL url : urls){				
-				if(url.getFile().endsWith(".jar") || url.getFile().endsWith(".zip") ){				
-					net.sf.jazzlib.ZipInputStream zipIn = new net.sf.jazzlib.ZipInputStream(url.openStream());
-					net.sf.jazzlib.ZipEntry zipEntry;	
-				    try {				    	
-				    	while((zipEntry = zipIn.getNextEntry()) != null) {
-				    		if(zipEntry.getName().endsWith(typeName.replace('.', '/') + ".class")){
-								String clsName = zipEntry.getName();
-								
-								if(clsName.endsWith(".class")){
-									clsName = clsName.substring(0, clsName.length() - 6);
-									String[] parts = clsName.split("/");
-									StringBuffer buffer = new StringBuffer(parts[0]);
-									if(parts.length > 0){
-										for(int i = 1; i < parts.length; ++i) {
-											buffer.append(".");
-											buffer.append(parts[i]);
-										}
-									}
-									
-									String clsName2 = typeName.substring(typeName.lastIndexOf(".") + 1);
-									if(!importNames.containsKey(clsName2)) { 
-										importNames.put(clsName2, new ArrayList<String>());
-									}
-									ArrayList<String> array = importNames.get(clsName2);
-									array.add(buffer.toString());
-									importNames.get(clsName2);
-								}								
-				    		}
-				    	} // end while			    	
-				    } catch (Exception e) {
-				    	new Exception(url.getFile() + ": error when to parse url ", e).printStackTrace();
-				    } finally{
-						try{zipIn.close();}catch(Exception ex){}   
-				    }
-				}
-			}		
+	public boolean confirmAnnotation(String className) {
+		
+		System.out.println("confirmAnnotation : " + className);
+		
+		try {
+			Class cls = Thread.currentThread().getContextClassLoader().loadClass(className);
 			
-			try {
-	    		String clsName2 = typeName.substring(typeName.lastIndexOf(".") + 1);
-	    		String javaLangExp = "java.lang." + clsName2;
-	    		Class.forName(javaLangExp);
-	    		if(!importNames.containsKey(clsName2)) { 
-					importNames.put(clsName2, new ArrayList<String>());
-				}
-				ArrayList<String> array = importNames.get(clsName2);
-				array.add(javaLangExp.toString());
-				importNames.get(clsName2);
-	    	}catch(Exception ee) {}
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			if(java.lang.annotation.Annotation.class.isAssignableFrom(cls))
+				return true;
+		} catch (Throwable ex) {			
 		}
+		return false;		
 	}
 	
 	public void cacheAnnotationNames() {
+		annotationNames.clear();
+		
 		URLClassLoader classLoader = (URLClassLoader) org.metaworks.MetaworksContext.class.getClassLoader();
 		URL urls[] = classLoader.getURLs();
 		for(URL url : urls){
@@ -180,7 +146,16 @@ public class JavaSourceCode extends SourceCode {
 				    			Class cls = Thread.currentThread().getContextClassLoader().loadClass(clsName.substring(0, clsName.length() - 6));
 					    		if(java.lang.annotation.Annotation.class.isAssignableFrom(cls)) {
 							    	clsName = clsName.substring(0, clsName.length() - 6);
-							    	annotationNames.add("@" + clsName.substring(clsName.lastIndexOf(".") + 1) + " " + clsName.substring(0, clsName.lastIndexOf(".")));
+							    	
+							    	String pkgName = "";
+							    	
+							    	int pos = clsName.lastIndexOf(".");
+							    	if(pos != -1){
+							    		pkgName = clsName.substring(0, pos);
+							    		clsName = clsName.substring(pos + 1);
+							    	}
+							    	
+							    	annotationNames.add(clsName + "/" + pkgName + "/annotation");
 					    		}					    							    		
 				    		}
 				    	}
@@ -197,7 +172,7 @@ public class JavaSourceCode extends SourceCode {
 			}
 		}
 		//annotation sorting
-		sortAnnotation();
+		//sortAnnotation();
 	}
 
 	public void sortAnnotation() {
@@ -239,48 +214,614 @@ public class JavaSourceCode extends SourceCode {
 			if(i == path.length - 2) pathStr.append("*;");
 		}
 		return pathStr.toString();
+	}	
+	
+	private String extraPackageName(String value){
+		return "";
 	}
 	
+	private String fullTypeName(String expression){
+		
+		String[] lines = getCode().split("\n");
+		ArrayList<String> importedList = new ArrayList<String>();
+		ArrayList<String> typeNameList = new ArrayList<String>();
+		ArrayList<String> fullTypeNameList = new ArrayList<String>();
+		
+		String fullTypeName = null;
+		
+		for(int i=0; i<lines.length; i++){
+			String[] linesDetail;
+			
+			
+			if(lines[i].indexOf(";") == -1){
+				lines[i] += ";";
+			}			
+			linesDetail = lines[i].split(";");
+			
+			
+			for(int j=0; j<linesDetail.length; j++){
+				String compareLine = linesDetail[j].trim();
+				
+				if(compareLine.startsWith("import")){
+					compareLine = extraPackageName(compareLine);
+					
+					if(!compareLine.isEmpty())
+						importedList.add(compareLine);
+				}else{
+					int whereExp = compareLine.indexOf(" " + expression);
+					String typeName = null;					
+					
+					if(!compareLine.startsWith(expression) && whereExp > 0){				
+						compareLine = compareLine.substring(0, whereExp).trim();
+						
+						int k=compareLine.length()-1;
+						for(; k>=0; k--){
+							char charAt = compareLine.charAt(k);
+							if(!((charAt > 'A' && charAt <'z') || (charAt > '1' && charAt <'9') || charAt == '.'))
+								break;
+						}							
+						if(k < 0) k = 0;							
+						
+						typeName = compareLine.substring(k).trim();
+																	
+						if(typeName!=null && typeName.indexOf('.') > -1){
+							fullTypeName = typeName;
+						}
+					}		
+					
+					if(typeName != null){
+						typeNameList.add(typeName);
+					}
+					
+					if(fullTypeName != null){
+						fullTypeNameList.add(fullTypeName);
+					}
+				}
+			}
+		}
+		
+		return "";
+
+	}
+		
+	public ArrayList<String> findPackage(String expression){
+		ArrayList<String> pkgNames = new ArrayList<String>();
+		
+		for(String packageName : packageNames.keySet()){
+			if(packageName.startsWith(expression))
+				pkgNames.add(packageName);    				
+		}
+		
+		return pkgNames;
+	}
+
+	public ArrayList<String> findPackageClass(String expression){
+		ArrayList<String> clsNames = new ArrayList<String>();		
+		Map<String, String> result = packageNames.get(expression);
+		
+		if(result != null){
+			for(String clsName : result.keySet())   {
+				if(result.get(clsName).isEmpty()){
+					if(confirmAnnotation(clsName))
+						result.put(clsName, "annotation");
+					else
+						result.put(clsName, "class");
+				}
+				
+				clsNames.add(clsName + "/" + expression + "/" + result.get(clsName)) ;
+			}    
+		}
+		
+		return clsNames;
+	}
+	
+	public ArrayList<String> findClasses(String expression){
+		if(!expression.endsWith("."))
+			expression += "/";
+		
+		ArrayList<String> clsNames = new ArrayList<String>();		
+		for(int i=0; i<classNames.size(); i++){
+			String clsName = classNames.get(i);
+			
+			if(clsName.startsWith(expression)){
+				String confirmClsName = clsName;
+				
+				if(confirmClsName.indexOf("//") == -1){
+					String[] temp = clsName.split("/");
+					confirmClsName = temp[1] + "." + temp[0];										
+					
+					if(confirmAnnotation(confirmClsName))
+						clsName = clsName + "/annotation//";
+					else
+						clsName = clsName + "/class//";
+					
+					classNames.set(i, clsName);
+				}else{
+					String[] temp = confirmClsName.split("/");
+					confirmClsName = temp[1] + "." + temp[0];					
+				}
+				
+				System.out.println("confirmClsName : " + confirmClsName);
+				
+				ArrayList<String> clsInfo = this.findClass(confirmClsName);    	
+				for(int j=0; j<clsInfo.size(); j++)
+					clsNames.add(clsInfo.get(j));
+			}
+		}  
+		
+		return clsNames;
+		
+	}
+
+	public ArrayList<String> findClass(String expression){
+		ArrayList<String> classInfo = new ArrayList<String>();
+			
+		try{
+			Class theClass = Thread.currentThread().getContextClassLoader().loadClass(expression);					
+			for(Field field : theClass.getFields()) {
+				classInfo.add(field.getName() + "/" + expression + "/field");
+			}
+		
+			for(Method method : theClass.getMethods()) {						
+				StringBuffer paramStmt = new StringBuffer("(");
+				String sep = "";
+				for(Class paramCls : method.getParameterTypes()){
+					String clsNameOnly = UEngineUtil.getClassNameOnly(paramCls);
+					clsNameOnly = sep + clsNameOnly.substring(0, 1).toLowerCase() + clsNameOnly.substring(1, clsNameOnly.length());							
+					paramStmt.append(clsNameOnly);
+					sep = ", ";
+				}
+				paramStmt.append(")");						
+				
+				classInfo.add(method.getName() + paramStmt + "/" + expression + "/method");		
+			}
+		}catch(Exception e){			
+		}
+		
+		return classInfo;
+	}
+	
+	public String findClassFromImported(String expression){
+		
+		
+		return null;
+	}
+
+	public ArrayList<String> findPackageStartWith(String expression){
+		ArrayList<String> pkgNames = new ArrayList<String>();
+		
+		for(String packageName : packageNames.keySet()){
+			if(packageName.toLowerCase().startsWith(expression))
+				pkgNames.add(packageName);    				
+		}
+		
+		return pkgNames;
+	}
+	
+	public ArrayList<String> findClassesStartWith(String expression){
+		ArrayList<String> clsNames = new ArrayList<String>();
+		
+		for(int i=0; i<classNames.size(); i++){
+			String clsName = classNames.get(i);
+			
+			if(clsName.toLowerCase().startsWith(expression)){
+				if(clsName.indexOf("//") == -1){
+					String[] temp = clsName.split("/");
+					String confirmClsName = temp[1] + "." + temp[0];
+					
+					
+					if(confirmAnnotation(confirmClsName))
+						clsName = clsName + "/annotation//";
+					else
+						clsName = clsName + "/class//";
+					
+					classNames.set(i, clsName);
+				}
+				
+				clsNames.add(clsName);    				
+			}
+
+		}
+
+		return clsNames;
+	}
+
+	public ArrayList<String> findThisClass(){
+		ArrayList<String> classInfo = new ArrayList<String>();
+		
+		ArrayList<ClassField> classFields = classModeler.getClassFields();
+		if(classFields!=null) {
+			for (ClassField field : classFields) {
+				classInfo.add(field.getFieldName() + "/" + "this" + "/field");
+			}
+		}
+
+		ArrayList<ClassMethod> classMethods = classModeler.getClassMethods();
+		if(classMethods!=null) {
+			for (ClassMethod classMethod : classMethods) {
+				classInfo.add(classMethod.getMethodName() + "/" + "this" + "/method");
+			}
+		}
+		
+		return classInfo;
+	}	
 	
 	@ServiceMethod(callByContent = true, target = ServiceMethodContext.TARGET_STICK)
 	public CodeAssist requestAssist() {
-
-		CodeAssist codeAssist = new JavaCodeAssist();
+		System.out.println("requestAssist");		
+		if(packageNames.size() == 0)
+			cacheLibrary();
 		
+		if(annotationNames.size() == 0)
+			cacheAnnotationNames();
+		
+		
+		CodeAssist codeAssist = new JavaCodeAssist();
 		codeAssist.setSrcCodeObjectId(getClientObjectId());
+		
+		
+		String command = getLineAssistRequested(); 
+		String options = "";		
+		
+		boolean isImport = false;
+		boolean isAnnotation = false;
+		
+		// get options
+		if(command.startsWith("-")) {
+			int pos = command.indexOf(' ');
+			if( pos != -1){
+				options = command.substring(1, pos);
+			}
+		}
+		System.out.println(command);
+		
+		// get import
+		if(command.startsWith("import ")) {
+			isImport = true;
+			
+			command = command.substring(7).trim();
+		}else if(command.startsWith("@")){			
+			isAnnotation = true;
+			
+			command = command.substring(1).trim();
+		}
+		System.out.println(command);
+
+		
+		ArrayList<String> pkgNames = new ArrayList<String>();
+		ArrayList<String> clsNames = new ArrayList<String>();
+		
+		// step 1 : isAnnotation, check options
+		if(isAnnotation){	
+			String expression = command.toLowerCase();
+			
+			for(int i = 0; i < annotationNames.size(); ++i) {
+				if(expression.length() == 0 || annotationNames.get(i).toLowerCase().startsWith(expression))
+					codeAssist.getAssistances().add(annotationNames.get(i));
+			}
+			
+		}else if(options.isEmpty()){
+			
+			// step 2 : check endsWith(".")
+			if(command.endsWith(".")){
+				String expression = command.substring(0, command.length() - 1);
+				
+				System.out.println("expression : " + expression);
+				System.out.println("isImport : " + isImport);
+				
+				// step 3 : check import
+				if(isImport){
+					ArrayList<String> packages = findPackage(command);
+					for(int i=0; i<packages.size();i++)
+						pkgNames.add(packages.get(i));
+					
+					ArrayList<String> classes = findPackageClass(expression);
+					for(int i=0; i<classes.size();i++)
+						clsNames.add(classes.get(i));
+					
+					
+				}else{
+					
+					// step 3-1 : this
+					if("this".equals(expression)){
+						ArrayList<String> thisClassInfo = findThisClass();
+						for(int i=0; i<thisClassInfo.size();i++)
+							clsNames.add(thisClassInfo.get(i));
+					}else{
+						ArrayList<String> classes = findClasses(expression);
+						if(classes.size() > 0){
+							for(int i=0; i<classes.size();i++)
+								clsNames.add(classes.get(i));
+						}else{						
+							ArrayList<String> packages = findPackage(expression);
+							if(packages.size() > 0){
+								for(int i=0; i<packages.size(); i++)
+									pkgNames.add(packages.get(i));
+							}else{
+								
+								String classFromImported = findClassFromImported(expression);
+								if(classFromImported != null){
+									ArrayList<String> classInfo = findClass(classFromImported);
+									for(int i=0; i<classInfo.size();i++)
+										clsNames.add(classInfo.get(i));
+								}
+							}
+						}
+					}
+				}
+			}else{
+				if(command.isEmpty()){
+					ArrayList<String> thisClassInfo = findThisClass();
+					for(int i=0; i<thisClassInfo.size();i++)
+						clsNames.add(thisClassInfo.get(i));					
+				}else{
+					String expression = command.toLowerCase();
+					
+					ArrayList<String> packages = findPackageStartWith(expression);
+					for(int i=0; i<packages.size(); i++)
+						pkgNames.add(packages.get(i));
+					
+					ArrayList<String> classes = findClassesStartWith(expression);
+					for(int i=0; i<classes.size();i++)
+						clsNames.add(classes.get(i));
+				}
+			}
+		}
+		
+		
+		Collections.sort(clsNames);		
+		Collections.sort(pkgNames);
+		
+		// make assistances class
+		for(int i=0; i<clsNames.size(); i++){
+			codeAssist.getAssistances().add(clsNames.get(i));
+		}
+			
+		// make assistances package
+		for(int i=0; i<pkgNames.size(); i++)
+			codeAssist.getAssistances().add(pkgNames.get(i));		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		/*
+		CodeAssist codeAssist = new JavaCodeAssist();
+		codeAssist.getMetaworksContext().setHow("normal");
+		codeAssist.setSrcCodeObjectId(getClientObjectId());
+		
 
 		CodiClassLoader ccl = ((CodiClassLoader)Thread.currentThread().getContextClassLoader());
 		Set<Kind> kinds = new HashSet<Kind>();
 		kinds.add(Kind.CLASS);
 		kinds.add(Kind.SOURCE);
 		
-		String lineAssistRequested = getLineAssistRequested(); 
-		String expression = lineAssistRequested;
-		String keyOptions = "";
-		if(expression.startsWith("-")) {
-			keyOptions = expression.substring(1, 3);
-			lineAssistRequested = expression = expression.substring(4).trim();
-		}		
+		String command = getLineAssistRequested(); 
 		
-		int pos = expression.lastIndexOf(' ');
-		if(pos != -1)
-			expression = expression.substring(expression.lastIndexOf(' ') + 1);
-		//else
-		//	expression = expression;
+		String expression = command.toLowerCase();
+		String options = "";
 		
-		System.out.println("expression = " + expression);
+		boolean annotationMode = false;
+		boolean importMode = false;
 		
-		//Annotation
-		if(expression != null && expression.equals("@")) {
-			if(annotationNames != null && annotationNames.size() == 0) cacheAnnotationNames();
-			for(int i = 0; i < annotationNames.size(); ++i) 
-				codeAssist.getAssistances().add(annotationNames.get(i));
-			System.out.println("annotation list count : " + codeAssist.getAssistances().size());
+		System.out.println("command : " + command);
+		// get options
+		if(command.startsWith("-")) {
+			int pos = command.indexOf(' ');
+			if( pos != -1){
+				options = command.substring(1, pos);
+			}
 			
-			return codeAssist;
+			command = command.substring(pos + 1).trim();
+			expression = command.toLowerCase();
+		}		
+		System.out.println("options : " + options);
+		
+		
+		// mode confirm
+		if(expression.startsWith("import")){
+			importMode = true;
+			
+			expression = expression.substring("import".length()).trim();
+			
+			//codeAssist.getMetaworksContext().setHow("import");
+		}else if(expression.startsWith("@")){
+			annotationMode = true;
+			
+			expression = expression.substring("@".length()).trim();
 		}
+		System.out.println("expression : " + expression);
+			
+		if(annotationMode){
+			// make annotation cache
+			//if(annotationNames != null && annotationNames.size() == 0)
+				cacheAnnotationNames();
+			
+			for(int i = 0; i < annotationNames.size(); ++i) {
+				if(expression.length() == 0 || annotationNames.get(i).toLowerCase().startsWith(expression))
+					codeAssist.getAssistances().add(annotationNames.get(i));
+			}
+		}else{
+			// expression is empty
+			if(expression.length() == 0){
+				return codeAssist;
+			}
+			
+			ArrayList<String> pkgNames = new ArrayList<String>();
+			ArrayList<String> clsNames = new ArrayList<String>();
+			
+			String expressionValue = expression;
+			
+			if(expression.endsWith(".")){
+				expressionValue = expressionValue.substring(0, expressionValue.length()-1);
+			}
+			
+			// make package cache
+			if(packageNames != null)
+				cacheLibrary();			
+
+			System.out.println("packageNames.size : " + packageNames.size());
+			System.out.println("classNames.size : " + classNames.size());
+			
+			if("oi".equals(options) == false){
+	    		for(String packageName : packageNames.keySet()){
+	    			if(packageName.startsWith(expression))
+	    				pkgNames.add(packageName);    				
+				}    		
+	    		Collections.sort(pkgNames);
+	    		System.out.println("pkgNames.size : " + pkgNames.size());
+
+	    		// find class in package
+	    		if(packageNames.containsKey(expressionValue)){
+	    			Map<String, String> result = packageNames.get(expressionValue);
+	    			
+	    			for(String clsName : result.keySet())   {
+	    				boolean annotation = false;
+	    				
+	    				if(result.get(clsName).isEmpty()){
+	    					if(confirmAnnotation(clsName))
+	    						result.put(clsName, "annotation");
+	    					else
+	    						result.put(clsName, "class");
+	    				}
+	    				
+	    				clsNames.add(clsName + "," + expressionValue + "," + result.get(clsName)) ;
+	    			}    					    			
+	    		}
+	    		System.out.println("clsNames.size 1: " + clsNames.size());	  
+	    		
+	    		try {
+	        		Iterable<JavaFileObject> javaObjects;
+	    			
+	    			FileInputJavaFileManager fileManager = (FileInputJavaFileManager) ccl.getJavaFileManager();
+
+	    			javaObjects = fileManager.list(StandardLocation.SOURCE_PATH, expression, kinds, true);
+	    			for(JavaFileObject javaObject : javaObjects){
+	    				String clsName = fileManager.getBinaryName(javaObject);
+	    	
+	    				if(clsName.startsWith(expression)){
+	    					clsName = clsName.substring(expression.length() + 1, clsName.length());
+	    				}
+	    				
+	    				System.out.println("clsName : " + clsName);
+	    				//codeAssist.getAssistances().add(clsName);
+	    			}
+	    		}catch(Exception ex) {}	    
+	    		
+	    		if(classModeler != null){
+					if("this".equals(expression) || expression.trim().length()==0 || expression.endsWith("fields")){
+						ArrayList<ClassField> classFields = classModeler.getClassFields();
+						if(classFields!=null) {
+							for (ClassField field : classFields) {
+								//codeAssist.getAssistances().add(field.getFieldName());
+								System.out.println("field.getFieldName() : " +field.getFieldName());
+							}
+						}
+					}
+	
+					if("this".equals(expression) || expression.trim().length()==0 || expression.endsWith("methods")){
+						ArrayList<ClassMethod> classMethods = classModeler.getClassMethods();
+						if(classMethods!=null) {
+							for (ClassMethod classMethod : classMethods) {
+								//codeAssist.getAssistances().add(classMethod.getMethodName());
+								System.out.println("classMethod.getMethodName() : " +classMethod.getMethodName());
+							}
+						}
+					}
+	    		}
+			}
+			
+    		
+    		// find class
+			if(!command.endsWith(".")){
+				
+				
+	    		for(int i=0; i<classNames.size(); i++){
+	    			boolean isAddClass = false;
+	    			String clsName = classNames.get(i);
+	    			
+	    			if("oi".equals(options)){
+	        			if(clsName.startsWith(command + ",")){
+	        				isAddClass = true;
+	        			}
+	    				
+	    			}else{    				
+	        			if(clsName.toLowerCase().startsWith(expression)){
+	        				isAddClass = true;
+	        			}
+	    			}
+	    			
+	    			if(isAddClass){
+	    				if(clsName.indexOf(",,") == -1){
+	    					String confirmClsName = clsName;
+	    					
+	    					int pos = clsName.indexOf(",");
+	    					if(pos != -1)
+	    						confirmClsName = clsName.substring(pos, clsName.length()) + "." + clsName.substring(0, pos - 1);
+	    					
+	    					
+	    					if(confirmAnnotation(confirmClsName))
+	    						clsName = clsName + ",annotation,,";
+	    					else
+	    						clsName = clsName + ",class,,";
+	    					classNames.set(i, clsName);
+	    				}
+	    				
+	    				clsNames.add(clsName);    				
+	    			}
+	
+	    		}
+			}
+			
+    		// sort class
+    		Collections.sort(clsNames);
+    		System.out.println("clsNames.size 2: " + clsNames.size());
+    		
+    		
+    		// make assistances class
+    		for(int i=0; i<clsNames.size(); i++){
+    			codeAssist.getAssistances().add(clsNames.get(i));
+    		}
+    			
+    		// make assistances package
+    		for(int i=0; i<pkgNames.size(); i++)
+    			codeAssist.getAssistances().add(pkgNames.get(i));
+    		
+    		System.out.println("complete");
+		}
+		*/
 		
-		
+		/*
 		if(expression.length() > 0){
 			
 			String typeName = null;
@@ -308,6 +849,16 @@ public class JavaSourceCode extends SourceCode {
 							}							
 							if(j < 0) j = 0;							
 							typeName = line.substring(j).trim();
+							
+							if(typeName.equals("import")) {
+								if(packageNames != null && !packageNames.containsKey(expression)) cachePackageNames(codeAssist, expression);
+								
+								Map<String, HashMap> packagesNamePerPrefix = packageNames.get(expression);
+					    		for(String packageName : packagesNamePerPrefix.keySet()){
+					    			codeAssist.getAssistances().add(packageName);
+								}			    		
+					    		return codeAssist;
+							}
 													
 							if(typeName.equals("return"))
 								typeName = null; //ignores 'return' is recognized as typeName							
@@ -330,6 +881,7 @@ public class JavaSourceCode extends SourceCode {
 					
 					} else { //if typeName found, search the import statement.
 						line = line.trim();
+						System.out.println("line = " + line);
 						System.out.println("typeName = " + typeName);
 						
 						if((line.startsWith("import ") && line.endsWith(".*;")) || (line.startsWith("import ") && line.endsWith("." + typeName + ";"))) {
@@ -351,6 +903,8 @@ public class JavaSourceCode extends SourceCode {
 				
 				//import 기능 수행
 				if((fullTypeName == null || fullTypeName.length() == 0) && !checkImport) {
+					System.out.println(typeName);
+					
 					if(importNames != null && !importNames.containsKey(typeName)) cacheImportNames(typeName);						
 				
 					ArrayList<String> preImport = importNames.get(typeName);
@@ -404,17 +958,6 @@ public class JavaSourceCode extends SourceCode {
 						e.printStackTrace();
 					}
 				} 
-//				else if(typeName != null){
-//					//Cache PackageNames
-//					if(packageNames != null && !packageNames.containsKey(typeName)) cachePackageNames(codeAssist, typeName);
-//					
-//					Map<String, HashMap> packagesNamePerPrefix = packageNames.get(typeName);
-//		    		for(String packageName : packagesNamePerPrefix.keySet()){
-//		    			codeAssist.getAssistances().add(packageName);
-//					}
-//					
-//				}
-			
 			}
 			
 			
@@ -454,201 +997,11 @@ public class JavaSourceCode extends SourceCode {
 			}
 			
 		}	
-			
-			
-			
-		/*			
-					
-				//////// case that importing package name has been requested.			
-				if(lineAssistRequested.trim().startsWith("import ")) {
-					try {
-						//Cache PackageNames
-						if(packageNames.containsKey(expression)) cachePackageNames(codeAssist, expression);
-						
-						
-							
-							
-							
-							
-							
-							
-							//URLClassLoader classLoader = (URLClassLoader) CodiMetaworksRemoteService.class.getClassLoader();
-							URLClassLoader classLoader = (URLClassLoader) org.metaworks.MetaworksContext.class.getClassLoader();
-							URL urls[] = classLoader.getURLs();
-						
-							//StringBuffer sbClasspath = new StringBuffer();			
-							//if(packageNames.size() == 0){//{.containsKey(expression)) {
-							if(!packageNames.containsKey(expression)) {
-								if(fullTypeName == null && typeName == null) {
-									String clsName = "java.lang." + expression;
-									try {
-										Class.forName(clsName);
-										//System.out.println(clsName.replace(".", "/") + ".class");
-										if(keyOptions != null && keyOptions.length() > 0) {
-											codeAssist.getAssistances().add(clsName + "-" + keyOptions);
-										}
-										else {
-											codeAssist.getAssistances().add(clsName);
-										}
-									} catch(ClassNotFoundException ex) {}
-								}
-							
-								for(URL url : urls){
-									if(url.getFile().endsWith(".jar") || url.getFile().endsWith(".zip") ){
-								
-										net.sf.jazzlib.ZipInputStream zipIn = new net.sf.jazzlib.ZipInputStream(url.openStream());
-										net.sf.jazzlib.ZipEntry zipEntry;
-				
-										try {
-								    	
-											while((zipEntry = zipIn.getNextEntry()) != null) {
-								    		
-												//if(expression.indexOf(".") > -1) expression = expression.replace('.', '/');
-								    		
-												if((fullTypeName == null && typeName == null) && zipEntry.getName().indexOf("/" + expression + ".class") > -1) {
-									    			//System.out.println(zipEntry.getName());
-									    			String clsName = zipEntry.getName().replace("/", ".");
-									    			if(keyOptions != null && keyOptions.length() > 0) {
-									    				codeAssist.getAssistances().add(clsName.substring(0, clsName.lastIndexOf(".")) + "-" + keyOptions);
-									    			}
-									    			else {
-									    				codeAssist.getAssistances().add(clsName.substring(0, clsName.lastIndexOf(".")));
-									    			}
-									    			continue;
-									    		}
-								    		
-									    		if(zipEntry.getName().startsWith(expression.replace('.', '/'))){
-													String clsName = zipEntry.getName();
-													
-													//expression = expression.replace('/', '.');
-													
-													if(clsName.endsWith(".class")){
-														clsName = clsName.substring(0, clsName.length() - 6);
-														String[] parts = clsName.split("/");
-														if(parts.length > 1){
-															
-															StringBuffer packageName = new StringBuffer(parts[0]);
-															for(int i=1; i<parts.length; i++){
-																if(!packageNames.containsKey(packageName.toString())) 
-																	packageNames.put(packageName.toString(), new HashMap());
-		
-																Map <String, String> packageTokens = packageNames.get(packageName.toString());
-			
-																packageTokens.put(parts[i], parts[i]);
-			
-																packageName.append(".");
-																packageName.append(parts[i]);
-															
-															}
-														
-													
-														}
-													}
-												
-									    		}
-											} // end while
-				
-									    } catch (Exception e) {
-									    	new Exception(url.getFile() + ": error when to parse url ", e).printStackTrace();
-									    } finally{
-											try{zipIn.close();}catch(Exception ex){}   
-									    }
-									}
-								}
-							}
-					
-					
-					
-					
-					
-							if(fullTypeName == null && typeName == null && codeAssist.getAssistances().size() != 0) return codeAssist;
-				
-				
-					    	if(packageNames.containsKey(expression)){
-					    		Map<String, HashMap> packagesNamePerPrefix = packageNames.get(expression);
-					    		for(String packageName : packagesNamePerPrefix.keySet()){
-					    			codeAssist.getAssistances().add(packageName);
-								}
-							}
-				
-				
-							Iterable<JavaFileObject> javaObjects;
-							
-							FileInputJavaFileManager fileManager = (FileInputJavaFileManager) ccl.getJavaFileManager();
-				
-							javaObjects = fileManager.list(StandardLocation.SOURCE_PATH, expression, kinds, true);
-							for(JavaFileObject javaObject : javaObjects){
-								String clsName = fileManager.getBinaryName(javaObject);
-					
-								if(clsName.startsWith(expression)){
-									clsName = clsName.substring(expression.length() + 1, clsName.length());
-								}
-								
-								codeAssist.getAssistances().add(clsName);
-							}
-				
-	
-			//				javaObjects = fileManager.list(StandardLocation.CLASS_PATH, expression, kinds, true);
-			//				for(JavaFileObject javaObject : javaObjects){
-			//					String clsName = javaObject.toUri().getPath().split("!")[1].replace('/', '.');
-			//					
-			//					if(clsName.startsWith(expression)){
-			//						clsName = clsName.substring(expression.length() + 1, clsName.length() - 6);
-			//					}
-			//					
-			//					codeAssist.getAssistances().add(clsName);
-			//				}
-							
-				//			javaObjects = ccl.getJavaFileManager().list(StandardLocation.CLASS_OUTPUT, getLineAssistRequested(), kinds, true);
-				//			for(JavaFileObject javaObject : javaObjects){
-				//				codeAssist.getAssistances().add(javaObject.getName());
-				//			}
-				//			javaObjects = ccl.getJavaFileManager().list(StandardLocation.ANNOTATION_PROCESSOR_PATH, getLineAssistRequested(), kinds, true);
-				//			for(JavaFileObject javaObject : javaObjects){
-				//				codeAssist.getAssistances().add(javaObject.getName());
-				//			}
-				//			javaObjects = ccl.getJavaFileManager().list(StandardLocation.SOURCE_OUTPUT, getLineAssistRequested(), kinds, true);
-				//			for(JavaFileObject javaObject : javaObjects){
-				//				codeAssist.getAssistances().add(javaObject.getName());
-				//			}
-				//			javaObjects = ccl.getJavaFileManager().list(StandardLocation.PLATFORM_CLASS_PATH, getLineAssistRequested(), kinds, true);
-				//			for(JavaFileObject javaObject : javaObjects){
-				//				codeAssist.getAssistances().add(javaObject.getName());
-				//			}
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}
-
-					if("this".equals(expression) || expression.trim().length()==0 || expression.endsWith("fields")){
-						ArrayList<ClassField> classFields = classModeler.getClassFields();
-						if(classFields!=null)
-						for (ClassField field : classFields) {
-							codeAssist.getAssistances().add(field.getFieldName());
-						}
-					}
-
-					if("this".equals(expression) || expression.trim().length()==0 || expression.endsWith("methods")){
-						ArrayList<ClassMethod> classMethods = classModeler.getClassMethods();
-						if(classMethods!=null)
-						for (ClassMethod classMethod : classMethods) {
-							codeAssist.getAssistances().add(classMethod.getMethodName());
-						}
-					}
-				*/
+		*/	
 		
 		return codeAssist;
 	}
 
 	@AutowiredFromClient
 	public ClassModeler classModeler;
-	
-	
-	
-	
-	
-	
-	
-
 }
