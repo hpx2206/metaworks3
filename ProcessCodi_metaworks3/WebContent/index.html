@@ -38,7 +38,6 @@
 		<!-- for context menu, import YUI -->
 		<script type="text/javascript" src="scripts/yui-3.2.0-min.js"></script>
 		<link rel="stylesheet" type="text/css" href="style/menu/reset.css">
-		<link rel="stylesheet" type="text/css" href="style/menu/fonts.css">
 		<link rel="stylesheet" type="text/css" href="style/menu/container.css">
 		<link rel="stylesheet" type="text/css" href="style/menu/sam/menu.css">
 		<script type="text/javascript" src="scripts/yui/build/utilities/utilities.js"></script>
@@ -182,11 +181,10 @@
 		 		}
 				
 				mainPage = new MetaworksObject({
-					__className : "org.uengine.codi.mw3.Login",
-					defId : defId
-				}, 'body');
-				
-
+                    __className : "org.uengine.codi.mw3.Login",
+                    defId : defId
+                }, 'body');
+                
 				window.onbeforeunload= function(){
 				    return 'You are about to leave this page, OK?';
 				};
