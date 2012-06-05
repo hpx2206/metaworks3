@@ -112,9 +112,9 @@
 		<script src="scripts/ace/build/src/mode-javascript.js" type="text/javascript" charset="utf-8"></script>
 		<script src="scripts/ace/build/src/mode-java.js" type="text/javascript" charset="utf-8"></script>
 		
-	<script type="text/javascript">
-		mxBasePath = 'scripts/mxgraph/src';
-	</script>
+		<script type="text/javascript">
+			mxBasePath = 'scripts/mxgraph/src';
+		</script>
 		<script type='text/javascript' src='scripts/mxgraph/src/js/mxClient.js'></script>
 		<script type='text/javascript' src='scripts/mxgraph/examples/editors/js/mxApplication.js'></script>
 		
@@ -191,6 +191,17 @@
 				    return 'You are about to leave this page, OK?';
 				};
 			});
+			
+			(function(d, s, id) {
+				  var js, fjs = d.getElementsByTagName(s)[0];
+				  if (d.getElementById(id)) {
+				  	return;
+				  }
+				  
+				  js = d.createElement(s); js.id = id;
+				  js.src = "//connect.facebook.net/ko_KR/all.js#xfbml=1&appId=119159701538006";
+				  fjs.parentNode.insertBefore(js, fjs);
+				}(document, 'script', 'facebook-jssdk'));</script>			
 		</script>
 	</head>
 	
