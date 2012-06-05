@@ -8,7 +8,7 @@ import org.metaworks.annotation.ServiceMethod;
 public class SourceCode {
 	
 	public SourceCode(){
-		setCode("... ");
+		//setCode("... ");
 	}
 	
 	
