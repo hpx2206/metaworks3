@@ -1,6 +1,11 @@
 <div>
 <!--<div style="background:url(images/waveStyle/atvLine.gif) bottom center no-repeat; padding-bottom:40px; ">-->	
 
+<%
+	var isMine = (value.endpoint == mw3.getAutowiredObject('org.uengine.codi.mw3.model.Session').user.userId);
+alert(isMine);
+%>
+
 <div class="view_box" style="background:#fff">
 	<div class="guide">
 		<span class="tl"></span>
