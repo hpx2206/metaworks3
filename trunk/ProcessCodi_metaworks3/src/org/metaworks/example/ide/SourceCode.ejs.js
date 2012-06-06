@@ -368,19 +368,13 @@ org_metaworks_example_ide_SourceCode.prototype = {
 		var pattern = /^[A-Za-z0-9]*$/;
 		var expression = '';
 		for (var i = command.length - 1; i >= 0; i--){
-			var charAt = command.charAt(i);
-		
-			console.debug(charAt + ' : ' + pattern.test(charAt));
-			
+			var charAt = command.charAt(i);			
 			if(!(pattern.test(charAt) || charAt == '.')){
 				break;
 			}
 			
 			expression = charAt + expression;
 		}	
-		
-		console.debug(expression);
-		
 		
 		if(command.indexOf('import ') == 0)			
 			expression = 'import ' + expression;
