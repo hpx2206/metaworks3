@@ -15,13 +15,19 @@
 		var unknown = 'images/portrait/unknown_user.gif';
 		var portrait = unknown;
 		
-		if(value.network == 'local'){
+		if(value.network == 'local' || value.network == null){
 			if(value.userId)
-				portrait = 'images/portrait/' + value.userId + '.gif';			
+				portrait = 'images/portrait/' + value.userId + '.jpg';			
 		}else if(value.network == 'fb'){
 			if(value.userId)
 				portrait = 'http://graph.facebook.com/' + value.userId + '/picture';			
 		}
+		
+		
+		console.debug('value.network : ' + value.network);
+		console.debug('value.userId : ' + value.userId);
+		console.debug('portrait : ' + portrait);
+		
 		
 		if(mw3.how == 'info'){			
 %>
