@@ -117,7 +117,11 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
 	}
 
 	private static String getCodeBaseRoot() {
-		return GlobalContext.getPropertyString("codebase", "codebase/");
+		String coderoot = GlobalContext.getPropertyString("codebase", "codebase/");
+		
+		if(!coderoot.endsWith("/")) coderoot=coderoot+"/";
+		
+		return coderoot;
 	}
     
 	public static String mySourceCodeBase(){
