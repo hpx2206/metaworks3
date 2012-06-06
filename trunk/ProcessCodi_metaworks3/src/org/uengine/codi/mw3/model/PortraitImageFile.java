@@ -15,7 +15,6 @@ public class PortraitImageFile extends MetaworksFile {
 	public PortraitImageFile() {
 		setMetaworksContext(new MetaworksContext());
 		getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
-		setAuto(true);
 	}
 
 	@AutowiredFromClient
@@ -41,8 +40,6 @@ public class PortraitImageFile extends MetaworksFile {
 				uploadPath));
 
 		setFileTransfer(null); // ensure to clear the data
-
-		// TODO return Employee detail page
 	}
 
 }
