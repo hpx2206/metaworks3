@@ -87,10 +87,13 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		return new Object[]{processMapList, new Remover(new Popup())};
 	}
 	
-	public Object remove() throws Exception {
+	public Object[] remove() throws Exception {
 		deleteDatabaseMe();
 		
-		return new Remover(this);
+		ProcessMapList processMapList = new ProcessMapList();
+		processMapList.load();
+
+		return new Object[]{processMapList, new Remover(new Popup())};
 	}
 	
 	public void saveMe() throws Exception {
