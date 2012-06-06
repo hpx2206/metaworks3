@@ -74,8 +74,7 @@ public class InstanceView {
 
 	protected void loadDefault() throws Exception{
 		ProcessInstance instance = processManager.getProcessInstance(getInstanceId());
-		
-		
+
 		followers = new Followers();
 		followers.setInstanceId(instanceId);
 		followers.load();
@@ -324,4 +323,6 @@ public class InstanceView {
 		public void setMetaworksContext(MetaworksContext metaworksContext) {
 			this.metaworksContext = metaworksContext;
 		} 	
+		
+	
 }

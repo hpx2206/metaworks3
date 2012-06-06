@@ -2,6 +2,10 @@ package org.uengine.codi.mw3.model;
 
 import javax.servlet.http.HttpSession;
 
+import org.metaworks.MetaworksContext;
+import org.metaworks.Refresh;
+import org.metaworks.Remover;
+import org.metaworks.ToOpener;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.TransactionContext;
@@ -49,7 +53,8 @@ public class User extends Database<IUser> implements IUser {
 		
 		
 		AddFollowerPanel userPicker = new AddFollowerPanel(fromHttpSession(), null);
-		userPicker.setMetaworksContext(getMetaworksContext()); // propagate context
+		userPicker.setMetaworksContext(new MetaworksContext()); // propagate context
+		userPicker.getMetaworksContext().setWhen("userPicker");
 		
 		popup.setPanel(userPicker);
 		popup.setName("AddFollowerPanel");
@@ -136,17 +141,28 @@ public class User extends Database<IUser> implements IUser {
 	@AutowiredFromClient
 	public Followers follwers;
 	
+	@AutowiredFromClient
+	public AddFollowerPanel addFollowerPanel;
+	
 	public Object[] addFollower() throws Exception {
-		String instId = follwers.getInstanceId();
 		
-		processManager.putRoleMapping(instId, RoleMapping.ROLEMAPPING_FOLLOWER_ROLENAME_FREFIX + getName(), getUserId());
-		processManager.applyChanges();
+		if("userPicker".equals(addFollowerPanel.getMetaworksContext().getWhen())){
+			
+			return new Object[]{new Remover(new Popup()), new ToOpener(this)};
+			
+		}else{
 		
-		Followers followers = new Followers();
-		followers.setInstanceId(instId);
-		followers.load();
-		
-		return new Object[]{followers, new Popup()};
+			String instId = follwers.getInstanceId();
+			
+			processManager.putRoleMapping(instId, RoleMapping.ROLEMAPPING_FOLLOWER_ROLENAME_FREFIX + getName(), getUserId());
+			processManager.applyChanges();
+			
+			Followers followers = new Followers();
+			followers.setInstanceId(instId);
+			followers.load();
+			
+			return new Object[]{new Refresh(followers)};
+		}
 	}
 
 	public Object[] removeFollower() throws Exception {

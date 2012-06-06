@@ -30,7 +30,7 @@ public interface IUser extends IDAO{
 	@ServiceMethod(callByContent=true)
 	public Object[] addFollower() throws Exception;
 		
-	@ServiceMethod(when="pickUp", callByContent=true, target=TARGET_POPUP)
+	@ServiceMethod(when="edit", inContextMenu=true, callByContent=true, target=TARGET_POPUP)
 	public Popup pickUp() throws Exception;
 	
 	@ServiceMethod(callByContent=true, target=TARGET_POPUP)

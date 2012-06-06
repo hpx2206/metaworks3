@@ -323,6 +323,12 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		
 		setRootInstId(getInstId());
 		
+		User loginUser = new User();
+		loginUser.setUserId(session.getUser().getUserId());
+		loginUser.setName(session.getUser().getName());
+
+
+		setWriter(loginUser);
 		setTaskId(taskId);
 		setStartDate(Calendar.getInstance().getTime());
 		setEndDate(getStartDate());
@@ -343,11 +349,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		newItem.setTaskId(new Long(getInstId()));
 		newItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		
-		User loginUser = new User();
-		loginUser.setUserId(session.getUser().getUserId());
-		loginUser.setName(session.getUser().getName());
-
-		newItem.setWriter(loginUser);
+		//newItem.setWriter(loginUser);
 
 		//OLD WAY
 //		//let the other's list updated
