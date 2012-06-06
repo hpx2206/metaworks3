@@ -242,10 +242,8 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		
 		detail();
 		
-		ModalWindow workItemHandlerModal = new ModalWindow();
-		workItemHandlerModal.setPanel(workItemHandler);
-		workItemHandlerModal.setTitle(getTitle());
-		
+		ModalWindow workItemHandlerModal = new ModalWindow(workItemHandler, 800, 0, getTitle());
+
 		return workItemHandlerModal;
 	}
 	
