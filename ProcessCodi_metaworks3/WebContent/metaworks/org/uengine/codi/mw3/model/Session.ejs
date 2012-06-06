@@ -1,9 +1,17 @@
 <%
 	if(value){
+		if(mw3.when == 'view'){
 %>
-	
-<%=value.user.name%> | <a href="http://www.slideshare.net/pongsor/110609-8326309" type="application/pdf">Help</a> | <a onclick="">Log out</a>
-
+			<span style="display:inline-block;"><%=fields.employee.here() %></span>
+				 |	
+			<a href="http://www.slideshare.net/pongsor/110609-8326309" type="application/pdf">Help</a			 
+				 |	
+			<span style="display:inline-block;"><a onClick="<%=methods.logout.caller() %>" style="cursor:pointer;">Logout</a></span>
 <%
+		} else {
+%>
+		Login Object no has face when context : <%=mw3.when %>
+<%
+		}
 	}
 %>
