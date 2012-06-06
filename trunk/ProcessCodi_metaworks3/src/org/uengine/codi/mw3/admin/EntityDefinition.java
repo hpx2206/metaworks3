@@ -207,7 +207,7 @@ public class EntityDefinition implements ContextAware, PropertyListable, NeedArr
 	}
 	
 	@ServiceMethod(callByContent=true, when="edit")
-	@Face(displayName="Next > ")
+	@Face(displayName="Next")
 	public void next1() throws Exception{
 		if(queryCreatedEntity())
 			throw new Exception("이미 테이블이 존재합니다.");
@@ -221,7 +221,7 @@ public class EntityDefinition implements ContextAware, PropertyListable, NeedArr
 	}
 	
 	@ServiceMethod(callByContent=true, when="step1")
-	@Face(displayName="Next > ")
+	@Face(displayName="Next")
 	public void next2(){
 		if(getQuerySourceCode() == null)
 			setQuerySourceCode(new QuerySourceCode());
@@ -366,15 +366,6 @@ public class EntityDefinition implements ContextAware, PropertyListable, NeedArr
 				classType = "java.util.Date";
 			else if(dataType.equals("TIMESTAMP"))
 				classType = "Double";
-					
-			ClassField cf = new ClassField();
-			
-			cf.classSourceCodes = classDefinition.getSourceCodes();
-			cf.classSourceCodes.classModeler = classDefinition.getSourceCodes().getClassModeler();
-			cf.classSourceCodes.classModeler.setNewClassField(new ClassField());
-			cf.setFieldName(fieldName);
-			cf.setType(classType);
-			cf.add();	
 			
 			String fieldNameFirstCharUpper = UEngineUtil.toOnlyFirstCharacterUpper(fieldName);
 			
@@ -468,24 +459,13 @@ public class EntityDefinition implements ContextAware, PropertyListable, NeedArr
 			String classType = "";
 			
 			if(dataType.equals("INT"))
-				classType = "Long";
+				classType = "java.lang.Long";
 			else if(dataType.equals("CHAR") || dataType.equals("VARCHAR"))
-				classType = "String";
+				classType = "java.lang.String";
 			else if(dataType.equals("DATETIME"))
 				classType = "java.util.Date";
 			else if(dataType.equals("TIMESTAMP"))
-				classType = "Double";
-			
-			
-			ClassField cf = new ClassField();
-			
-			cf.classSourceCodes = classDefinition.getSourceCodes();
-			
-			cf.classSourceCodes.classModeler = classDefinition.getSourceCodes().getClassModeler();
-			cf.classSourceCodes.classModeler.setNewClassField(new ClassField());
-			cf.setFieldName(fieldName);
-			cf.setType(classType);
-			cf.add();	
+				classType = "java.lang.Double";
 			
 			String fieldNameFirstCharUpper = UEngineUtil.toOnlyFirstCharacterUpper(fieldName);
 			
