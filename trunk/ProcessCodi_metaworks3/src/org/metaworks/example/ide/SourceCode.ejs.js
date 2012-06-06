@@ -364,17 +364,23 @@ org_metaworks_example_ide_SourceCode.prototype = {
 		if(pos > -1)
 			command = command.substring(pos + 1);
 		
-		var pattern = /[^(a-zA-Z0-9)]/;
+		//A-Z0-9
+		var pattern = /^[A-Za-z0-9]*$/;
 		var expression = '';
 		for (var i = command.length - 1; i >= 0; i--){
 			var charAt = command.charAt(i);
 		
-			if(!(pattern.test(charAt)==false || charAt == '.')){
+			console.debug(charAt + ' : ' + pattern.test(charAt));
+			
+			if(!(pattern.test(charAt) || charAt == '.')){
 				break;
 			}
 			
 			expression = charAt + expression;
 		}	
+		
+		console.debug(expression);
+		
 		
 		if(command.indexOf('import ') == 0)			
 			expression = 'import ' + expression;
