@@ -2,8 +2,11 @@
 	if(value){
 %>
 <div class="crowdSourcing">
-<b>팔로워들의 친구들에게도 내용을 공유합니다</b> : <a href="#" onclick="javascript:<%=methods.crowdSourcing.caller()%>;"> <span><img src="images/waveStyle/<%= value.open=='ON'?'crowdSourcing_on':'crowdSourcing_off' %>.gif" style="margin:-1px 10px 0 0"></span></a>
- </div>
+<span style="float:right; margin:5px 5px 0 5px;">
+	<a href="javascript:<%=methods.crowdSourcing.caller()%>;"><img src="images/waveStyle/<%=value.open=='ON'?'crowdSourcing_on':'crowdSourcing_off'%>.gif"></a>
+</span>
+<span style="float:right"><b>팔로워들의 친구들에게도 내용을 공유합니다  </b></span>
+</div>
 <%
 	}
 %>
