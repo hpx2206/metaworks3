@@ -27,18 +27,30 @@
 								From : <span><%=value.writer.name%></span>
 							</div>				
 							<div class="formcontexttitle" id="currentRunningWorkItemHandler">
-								<img src="images/activity_status/i_status_confirmed.png">
-								
+								<span>
+									<img src="images/activity_status/i_status_confirmed.png" style="margin-top:3px;">
+								</span>
 								<% if(value.type=='comment'){%>
-									<%=value.title%>
+									<span>
+										<%=value.title%>
+									</span>
 								<% }else if(value.type=='file'){%>
-									<%=value.title%><%=fields.file.here()%>
-									
+									<span>
+										<%=value.title%><%=fields.file.here()%>
+									</span>									
 								<%}else if(value.type=='src'){%>
-									<%=value.title%>
+									<span>
+										<%=value.title%>
+									</span>
 								<%}else{%>
-									<a onclick="<%=methods.detail.caller()%>"><%=value.title%></a>
+									<span>
+										<a href="javascript:<%=methods.detail.caller()%>"><%=value.title%></a>
+									</span>
+									<span>
+										<a href="javascript:<%=methods.workItemPopup.caller()%>"><img src="images/waveStyle/newWindow.png" style="margin-top:3px;" title="새창으로 열기"></a>
+									</span>									
 								<%}%>
+								<div class="clear"></div>
 							</div>
 						</td>
 					</tr>
