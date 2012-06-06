@@ -314,20 +314,28 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 			String message = e.getMessage();
 			String[] parts = null;
 			int lineNumber = 0;
+			int index = 2;
 			
+			System.out.println("complie error");			
 			try {
-				lineNumber = Integer.parseInt((parts = message.split(":"))[2]);
+				parts = message.split(":");					
+				if(parts[2].startsWith("/"))
+					index++;
+				
+				lineNumber = Integer.parseInt(parts[index]);
+				message = parts[index+1];
+				
 			} catch (Exception e1) {
-				// TODO Auto-generated catch block
 				parts = null;
-				//e1.printStackTrace();
 			}
 			
 			CompileError compileError = new CompileError();
-			compileError.setLine(lineNumber);
-			compileError.setColumn(1);
-			compileError.setMessage(parts != null ? parts[3] : message);
 			
+			if(parts != null)
+				compileError.setLine(lineNumber);
+			
+			compileError.setColumn(1);
+			compileError.setMessage(message);			
 			compileErrors.add(compileError);
 			
 			Console.addError(message);
@@ -371,8 +379,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		CompileError[] compileErrorInArray = new CompileError[compileErrors.size()];
 		compileErrors.toArray(compileErrorInArray);
 		
-		getSourceCodes().getSourceCode().setCompileErrors(compileErrorInArray);
-		
+		getSourceCodes().getSourceCode().setCompileErrors(compileErrorInArray);		
 		if(compileErrorInArray.length == 0)
 			refreshClassInfo();
 		
