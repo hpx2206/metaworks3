@@ -32,6 +32,7 @@ public class InstanceView {
 		setMetaworksContext(new MetaworksContext());
 		
 		setInstanceId(instance.getInstId().toString());
+		setSecuopt(instance.getSecuopt());
 		
 		loadDefault();
 		setInstanceViewThreadPanel(activityStream());
@@ -65,10 +66,15 @@ public class InstanceView {
 		public void setInstanceName(String instanceName) {
 			this.instanceName = instanceName;
 		}
-		
-		
-		
-		
+	
+	String secuopt;
+		public String getSecuopt() {
+			return secuopt;
+		}	
+		public void setSecuopt(String secuopt) {
+			this.secuopt = secuopt;
+		}
+
 	@AutowiredFromClient
 	public Session session;
 
@@ -313,6 +319,13 @@ public class InstanceView {
 	@ServiceMethod(callByContent=true)
 	public void toggleSecurityConversation() throws Exception{
 		getInstanceSecurityConfigurer().toggleSecureConversation();
+		
+		Instance instance = new Instance();
+		instance.setInstId(new Long(instanceId));
+		String secuopt = instance.databaseMe().getSecuopt();
+		
+		setSecuopt(secuopt);
+		
 //		loadDefault();
 	}
 	
