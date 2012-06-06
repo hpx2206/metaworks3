@@ -5,6 +5,7 @@ import java.sql.Connection;
 import javax.sql.DataSource;
 
 import org.metaworks.dao.ConnectionFactory;
+import org.metaworks.dao.TransactionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 
@@ -21,9 +22,20 @@ public class SpringConnectionFactory implements ConnectionFactory {
 		public void setDataSource(DataSource dataSource) {
 			this.dataSource = dataSource;
 		}
-
+		
 	public Connection getConnection() {
-    	return DataSourceUtils.getConnection(dataSource);
+		
+//		Connection conn = (Connection) (TransactionContext.getThreadLocalInstance().getSharedContext("__connection"));
+//		
+//		
+//		if(conn == null){
+//			conn = DataSourceUtils.getConnection(dataSource);
+//			TransactionContext.getThreadLocalInstance().setSharedContext("__connection", conn);
+//		}
+		
+		Connection	conn = DataSourceUtils.getConnection(dataSource);
+//
+		return conn; 
     }
 	
 }
