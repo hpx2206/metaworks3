@@ -7,7 +7,7 @@ var org_uengine_codi_mw3_model_IInstance = function(objectId, className){
 	
 	 $('#' + this.divId).click(function(){
 		 $(".tbl_type").parent().css("background","none");
-		 $(this).css("background","#FFF9D9");
+		 $(this).css("background","#FFF5C1");
 	 });
 }
 
