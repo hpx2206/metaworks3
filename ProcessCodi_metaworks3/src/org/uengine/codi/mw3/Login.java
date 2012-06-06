@@ -13,10 +13,8 @@ import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.NonEditable;
-import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.TransactionContext;
-import org.mortbay.jetty.SessionIdManager;
 import org.uengine.codi.mw3.admin.IDE;
 import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.model.Company;
@@ -234,12 +232,11 @@ public class Login extends Database<ILogin> implements ILogin{
 			return new MainPanel(new Main(session));
 			
 		}else{
-			
 			Session session = loginService();
-			
 			
 			IUser loginUser = new User();
 			
+			loginUser.getMetaworksContext().setWhere("local");
 			loginUser.setName(session.getEmployee().getEmpName());
 			loginUser.setUserId(getUserId());
 			
@@ -248,7 +245,11 @@ public class Login extends Database<ILogin> implements ILogin{
 			
 //			if (getMetaworksContext().getWhen().equals(MetaworksContext.WHEN_VIEW)){
 				session.setMetaworksContext(getMetaworksContext());
+				session.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+				
 				MainPanel mainPanel = new MainPanel(new Main(session));
+				//MainPanel mainPanel = new MainPanel(new IDE(session));
+				//MainPanel mainPanel = new MainPanel(new Knowledge(session));
 				
 				
 				storeIntoServerSession();
@@ -292,7 +293,10 @@ public class Login extends Database<ILogin> implements ILogin{
 		session.setUser(loginUser);
 		session.setDefId(getDefId());
 
-		return new MainPanel(new IDE(session));
+		MainPanel mainPanel = new MainPanel(new Main(session));
+		
+		return mainPanel;
+		//return new MainPanel(new Knowledge(session));
 	}
 
 }
