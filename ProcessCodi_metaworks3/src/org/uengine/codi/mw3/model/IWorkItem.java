@@ -27,7 +27,6 @@ import org.metaworks.website.ParagraphContents;
 import org.metaworks.website.SourceCodeContents;
 import org.metaworks.widget.ModalWindow;
 import org.metaworks.widget.Window;
-
 @Table(name = "bpm_worklist")
 @Face(
 		ejsPathMappingByContext=
@@ -95,8 +94,7 @@ public interface IWorkItem extends IDAO{
 		public String getEndpoint();
 		public void setEndpoint(String endpoint);
 
-		@ORMapping(databaseFields = { "endpoint" }, objectFields = { "userId" }
-				)
+		@ORMapping(databaseFields = { "endpoint", "resname" }, objectFields = { "userId", "name" }	)
 		public IUser getWriter();
 		public void setWriter(IUser writer);
 		

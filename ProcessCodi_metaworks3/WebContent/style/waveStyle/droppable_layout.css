@@ -556,6 +556,7 @@ img {border:0;}
 .view_box2 .cont{position:relative;padding:10px; margin:10px 0px;}
 .view_box2 .cont .title {font-size:14px; font-weight:bolder;  position:absolute; top:-20px; left:15px; background:#fff; padding:0 10px;}
 
+
 .view_box3{margin:5px; margin-top:15px; border:2px solid #8dd5ff}
 .view_box3 .guide{position:relative;width:100%}
 .view_box3 .tl{display:block;position:absolute;top:-2px;left:-2px;width:7px;height:7px;background:url('../../images/waveStyle/bg_border_corner2.gif') no-repeat;font-size:0}
