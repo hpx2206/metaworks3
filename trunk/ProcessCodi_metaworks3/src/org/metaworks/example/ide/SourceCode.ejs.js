@@ -165,10 +165,9 @@ var org_metaworks_example_ide_SourceCode = function(objectId, className){
     	if(object.code)
     		this.editor.getSession().setValue(object.code);
     	
-    	/*
-    	if(value.compileErrors){
-    		for(var i in value.compileErrors){
-    			var compileError = value.compileErrors[i];
+    	if(object.compileErrors){
+    		for(var i in object.compileErrors){
+    			var compileError = object.compileErrors[i];
 
     			this.editor.getSession().setAnnotations([{ 
                     row: compileError.line -1, 
@@ -178,7 +177,6 @@ var org_metaworks_example_ide_SourceCode = function(objectId, className){
                   }]); 
     		}
     	}
-    	*/
     }
 }
 
