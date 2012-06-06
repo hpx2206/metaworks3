@@ -38,13 +38,12 @@ Window.prototype.load = function(){
 }
 
 Window.prototype.destroy = function(){
-	//console.log('destroy : ' + this.objectId);
-	
 	if(this.layout)
 		this.layout.destroy();
 }
 
 Window.prototype.resize = function(){
+	
 	if(this.layout){
 		this.layout.resizeAll();
 		

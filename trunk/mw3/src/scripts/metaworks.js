@@ -188,7 +188,7 @@
 				}
 			}
 
-			Metaworks3.prototype.onLoadFaceHelperScript = function(face){
+			Metaworks3.prototype.onLoadFaceHelperScript = function(){
 //				if(!target)
 //					target = this.face_ObjectIdMapping;
 				/*
@@ -548,7 +548,7 @@
 					if(actualFace.indexOf("genericfaces") == 0){ //TODO: will need to be optional
 						actualFace = "dwr/metaworks/" + actualFace;
 					}					
-					mw3._importFaceHelper(actualFace)
+					mw3._importFaceHelper(actualFace);
 					
 					
 					try {
@@ -734,7 +734,7 @@
 						   
 						   // 상태에 따른 visible 처리
 							if(serviceMethodContext.when != mw3.WHEN_EVER){
-					   			if( (mw3.when && ((serviceMethodContext.when.indexOf(mw3.when + ',') == -1) || (serviceMethodContext.when.indexOf(',' + mw3.when) == -1) || (serviceMethodContext.when == mw3.when))) 
+					   			if( (mw3.when && !((serviceMethodContext.when.indexOf(mw3.when + ',') != -1) || (serviceMethodContext.when.indexOf(',' + mw3.when) != -1) || (serviceMethodContext.when == mw3.when))) 
 					   					||
 						   			(mw3.where && (serviceMethodContext.where!='wherever' && serviceMethodContext.where.indexOf(mw3.where) == -1) )
 						   				
@@ -1630,7 +1630,7 @@
 
 					        				mw3.popupDivId = 'popup_' + objId;
 					        				//$('body').append("<div id='" + mw3.popupDivId + "' class='target_popup' style='z-index:10;position:absolute; top:50px; left:10px'></div>");
-					        				$('body').append("<div id='" + mw3.popupDivId + "' class='target_popup' style='z-index:10;position:absolute;'></div>");
+					        				$('body').append("<div id='" + mw3.popupDivId + "' class='target_popup' style='z-index:10;position:absolute; top:0px; left:0px'></div>");
 					        				mw3.locateObject(result, null, '#' + mw3.popupDivId).targetDivId;
 					        				
 					        				//objId = mw3.targetObjectId;
@@ -1733,7 +1733,7 @@
 				        				mw3.onLoadFaceHelperScript();
 					        			
 					        			if(mw3.getFaceHelper(objId) && mw3.getFaceHelper(objId).endLoading){
-					        					mw3.getFaceHelper(objId).endLoading(svcNameAndMethodName);
+					        				mw3.getFaceHelper(objId).endLoading(svcNameAndMethodName);
 					        			}else{
 					        				mw3.endLoading(objId, svcNameAndMethodName);
 					        			}

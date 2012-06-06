@@ -90,8 +90,16 @@
 		    		<%}%>
 		    		</span>
 		    		</div>            		
-		
-            		<div id="loader_<%=objectId%>" class="loadingarea" style="display: none; "><img src="/uengine-web/images/waveStyle/ajax-loader.gif" border="0"></div>
+
+<%
+			if(mw3.how != null && mw3.how == 'ide'){
+%>
+					<div id="loader_<%=objectId%>" class="loadingarea" style="display: none; "><img src="/uengine-web/images/waveStyle/ajax-loader_a.gif" border="0"></div><%
+			}else{
+%>
+					<div id="loader_<%=objectId%>" class="loadingarea" style="display: none; "><img src="/uengine-web/images/waveStyle/ajax-loader.gif" border="0"></div><%		
+			}
+%>		
 <%
 			if(maximize){
 %>	
