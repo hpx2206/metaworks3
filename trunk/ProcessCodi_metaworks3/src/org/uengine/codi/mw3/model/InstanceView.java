@@ -272,6 +272,9 @@ public class InstanceView {
 		
 		ModalWindow modal = new ModalWindow();
 		
+		modal.setTitle("Process Monitoring");
+		modal.setWidth(700);
+		
 		ProcessInstanceMonitorPanel processInstanceMonitorPanel = new ProcessInstanceMonitorPanel();
 		processInstanceMonitorPanel.processManager = processManager;
 		processInstanceMonitorPanel.load(instanceId);

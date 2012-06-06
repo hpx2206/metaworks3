@@ -5,6 +5,8 @@ import java.rmi.RemoteException;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
@@ -19,6 +21,7 @@ import org.uengine.kernel.ParameterContext;
 import org.uengine.kernel.ProcessInstance;
 import org.uengine.kernel.ResultPayload;
 import org.uengine.processmanager.ProcessManagerRemote;
+import org.uengine.webservices.worklist.WorkList;
 
 //@Face(ejsPath="faces/org/metaworks/widget/Window.ejs", options={"hideLabels"}, values={"true"}, displayName="업무 처리 화면")
 public class WorkItemHandler implements ContextAware{
@@ -160,9 +163,48 @@ public class WorkItemHandler implements ContextAware{
 			this.taskId = taskId;
 		}
 		
+	@ServiceMethod(callByContent=true)
+	public void cancel() throws Exception{
+		instance = processManager.getProcessInstance(instanceId);
+
+		humanActivity = (HumanActivity) instance.getProcessDefinition()
+					.getActivity(tracingTag);
+
+		WorkList worklist = instance.getWorkList();
+		worklist.cancelWorkItem(getTaskId().toString(), new KeyedParameter[]{}, instance.getProcessTransactionContext());
+
+		CommentWorkItem cancelledHistory = new CommentWorkItem();
+		cancelledHistory.processManager = processManager;
+		cancelledHistory.session = session;
+		cancelledHistory.setInstId(new Long(getInstanceId()));
 		
-	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_VIEW)
+		cancelledHistory.setTitle(humanActivity.getName().getText() + " 업무를 취소했습니다.");
+		cancelledHistory.setWriter(session.getUser());
+		cancelledHistory.add();
+	}
+
+	@AutowiredFromClient
+	public Session session;
+		
+	@ServiceMethod(callByContent=true, when="COMMITABLE")
+//	@Available(when={"NEW"})
 	public InstanceViewContent complete() throws RemoteException, ClassNotFoundException, Exception{
+		
+		instance = processManager.getProcessInstance(instanceId);
+
+
+		humanActivity = null;
+		if (instanceId != null && tracingTag != null) {
+			humanActivity = (HumanActivity) instance.getProcessDefinition()
+					.getActivity(tracingTag);
+		}
+
+		if (!humanActivity.getActualMapping(instance).getEndpoint()
+				.equals(session.getUser().getUserId())) {
+			throw new Exception("본 건을 처리완료할 권한이 없네요...");
+
+		}
+
 		
 		ResultPayload rp = new ResultPayload();
 		
@@ -207,6 +249,7 @@ public class WorkItemHandler implements ContextAware{
 	
 			
 	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_VIEW)
+	@Hidden(when="COMPLETED")
 	public void save() throws RemoteException, ClassNotFoundException, Exception{
 		
 		ResultPayload rp = new ResultPayload();
