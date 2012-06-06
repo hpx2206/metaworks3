@@ -1,64 +1,80 @@
-<div>
 <!--<div style="background:url(images/waveStyle/atvLine.gif) bottom center no-repeat; padding-bottom:40px; ">-->	
 
 <%
 	var isMine = (value.endpoint == mw3.getAutowiredObject('org.uengine.codi.mw3.model.Session').user.userId);
-alert(isMine);
+	//alert(isMine + "," + value.type);
+	if(isMine == true && value.type=='comment'){
 %>
-
-<div class="view_box" style="background:#fff">
-	<div class="guide">
-		<span class="tl"></span>
-		<span class="tr"></span>
-	</div>
-	<div class="cont">	
-		<table id="tableHidtoryContent_1" width="100%" border="0" cellspacing="0" cellpadding="0">
-			<tbody>
-				<tr>
-					<td rowspan="3" width="60" align="center" valign="top">
-						<%=fields.writer.here()%>
-					</td>				
-					<td>					
-						<div class="formcontexttitle" id="currentRunningWorkItemHandler">
-							<img src="images/activity_status/i_status_confirmed.png">
-							
-							<% if(value.type=='comment'){%>
-								<%=value.title%>
-							<% }else if(value.type=='file'){%>
-								<%=value.title%><%=fields.file.here()%>
+	<div class="view_box2" style="background:#fff; float:right; width:80%;">
+<% } else if(isMine == false && value.type=='comment'){%>
+	<div class="view_box3" style="background:#fff; float:left; width:80%;">
+<% } else {%>
+	<div class="view_box">
+<% } %>
+		<div class="guide">
+			<span class="tl"></span>
+			<span class="tr"></span>
+		</div>
+		<div class="cont" style="padding:5px 10px; margin:0px">	
+			<table id="tableHidtoryContent_1" width="100%" border="0" cellspacing="0" cellpadding="0">
+				<tbody>
+					<tr>
+						<td rowspan="4" width="60" align="center" valign="top">
+							<%=fields.writer.here()%>
+						</td>				
+						<td>	
+							<div class="writerName">
+								From : <span><%=value.writer.name%></span>
+							</div>				
+							<div class="formcontexttitle" id="currentRunningWorkItemHandler">
+								<img src="images/activity_status/i_status_confirmed.png">
 								
-							<%}else if(value.type=='src'){%>
-								<%=value.title%>
-							<%}else{%>
-								<a onclick="<%=methods.detail.caller()%>"><%=value.title%></a>
-							<%}%>
-						</div>
-					</td>
-				</tr>
-				<%if(value.type=='src'){%>
-				<tr>
-					<td>	
-						<div style="position:relative; height:350px;">					
-							<%=fields.sourceCode.here()%>						
-						</div>
-					</td>
-				</tr>
-				<%}%>
-				<tr>
-					<td>
-						<div class="" style="position: relative;">
-						<div class="good_up"><span id="saidGoodUsersInfo950"><div class="re_saidGood"><em>&nbsp;</em></div></span><span id="task950" class="cb_activate_up cb_first"><a href="javascript:pressIsGood('task', '950')"><em>좋아요</em></a></span>						
-						</div>					
-						</div>					
-						<div id="addCommentArea_tempTaskId"></div>				
-					</td>			
-				</tr>			
-		</table>
+								<% if(value.type=='comment'){%>
+									<%=value.title%>
+								<% }else if(value.type=='file'){%>
+									<%=value.title%><%=fields.file.here()%>
+									
+								<%}else if(value.type=='src'){%>
+									<%=value.title%>
+								<%}else{%>
+									<a onclick="<%=methods.detail.caller()%>"><%=value.title%></a>
+								<%}%>
+							</div>
+						</td>
+					</tr>
+					<%if(value.type=='src'){%>
+					<tr>
+						<td>	
+							<div style="position:relative; height:350px;">					
+								<%=fields.sourceCode.here()%>						
+							</div>
+						</td>
+					</tr>
+					<%}%>
+					<tr>
+						<td>
+							<div class="" style="position: relative;">
+							<div class="good_up"><span id="saidGoodUsersInfo950"><div class="re_saidGood"><em>&nbsp;</em></div></span><span id="task950" class="cb_activate_up cb_first"><a href="javascript:pressIsGood('task', '950')"><em>좋아요</em></a></span>						
+							</div>					
+							</div>					
+							<div id="addCommentArea_tempTaskId"></div>				
+						</td>			
+					</tr>			
+			</table>
+		</div>
+		<div class="guide">
+			<span class="lb"></span>
+			<span class="rb"></span>
+		</div>
 	</div>
-	<div class="guide">
-		<span class="lb"></span>
-		<span class="rb"></span>
-	</div>
+	<div class="clear"></div>
+	<% if(isMine == true && value.type=='comment'){%>
+		<div class="commentTailRight"><img src="images/waveStyle/bubbleTailRight.png" ></div>	
+	<% }else if(isMine == false && value.type=='comment'){%>
+		<div class="commentTailLeft"><img src="images/waveStyle/bubbleTailLeft.png" ></div>	
+	<% } %>
+	<div class="clear"></div>
+
 <% if(value.workItemHandler && value.workItemHandler.instanceId){%>
 <%=fields.workItemHandler.here()%>
 <% }%>
