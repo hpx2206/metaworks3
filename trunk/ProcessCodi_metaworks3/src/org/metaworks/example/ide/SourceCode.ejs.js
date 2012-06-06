@@ -140,14 +140,14 @@ var org_metaworks_example_ide_SourceCode = function(objectId, className){
 	    	mw3.getFaceHelper(objectId).closeAssist();
 	    }
 	});
-	canon.addCommand({
+	
+/*	canon.addCommand({
 	    name: "run",
 	    bindKey: this.bindKey("F5", "F5"),
 	    exec: function(env, args, request) {
-	    	console.debug('run');
 	    }
 	});
-
+*/
 	/*this.editor.addEventListener(
 		"keydown",
    		function(e) {
@@ -253,12 +253,17 @@ org_metaworks_example_ide_SourceCode.prototype = {
 		
 		return object;
 	},
-	importPackage : function(packageName, className, startPosition){
-		mw3.log('importPackage');
-		mw3.log('packageName : ' + packageName);
-		mw3.log('className : ' + className);
-		mw3.log('startPosition : ' + startPosition);
+	importPackage : function(importName, startPosition){
+		var packageName = '';
+		var className = '';
 		
+		var pos = importName.lastIndexOf('.');
+		if(pos == -1){
+			className = importName;
+		}else{
+			packageName = importName.substring(0, pos); 
+			className = importName.substring(pos + 1);
+		}
 		
 		var importedList = [];
 		var lastLine = 0;
@@ -442,12 +447,20 @@ org_metaworks_example_ide_SourceCode.prototype = {
     		this.event.stopEvent(e);    		
     		
     		if(this.assistType == 'requestAssist'){
-	    		var selectedValue = mw3.getFaceHelper(assist.__objectId).select();	    		
+	    		var selectedValue = mw3.getFaceHelper(assist.__objectId).select();
+	    		var selectedValues = selectedValue.split('/');
+
+	    		// remove assist
+	    		mw3.removeObject(assist.__objectId);
+	    		
+	    		// check select value
+	    		if(selectedValue.indexOf('/') == -1 && selectedValues.length < 2){
+	    			return false;
+	    		}	    		
+	    		
 	    		var commandString = this.getCommandString();
 	    		var insertString = '';
-	    		var position = this.getSourcePosition();
-	    		
-	    		var isPackage = false;
+	    		var insertPackage = '';
 	    		
 	    		if(commandString.indexOf('@') == 0)
 	    			commandString = commandString.substring('@'.length);
@@ -455,55 +468,39 @@ org_metaworks_example_ide_SourceCode.prototype = {
 	    		if(commandString.indexOf("import ") == 0)
 	    			commandString = commandString.substring("import ".length);
 	    		
-	    		//console.log('selectedValue : ' + selectedValue);
-	    		//mw3.log(selectedValue.indexOf('-'));
-	    		
-	    		if(selectedValue.indexOf('/') == -1){
-	    			isPackage = true;
-	    			
-	    			insertString = selectedValue;
-	    		}else{	
-	    			var temp = selectedValue.split('/');
-	    			var assistType = temp[2].trim();
-	    			
-	    			if(assistType == 'field' || assistType == 'method')
-	    				position = 'normal';
-	    			
-	    			if(position == 'import'){
-	    				insertString = temp[1].trim() + '.' + temp[0].trim();
-	    			}else{
-	    				insertString = temp[0].trim();
-	    				importPackage = temp[1].trim();
-	    			}
-	    		}
-
 	    		var whereEnd = this.editor.getCursorPosition();
-	    		var whereStart;
+	    		var whereStart = {column: whereEnd.column - commandString.length, row: whereEnd.row};
 	    		
-	    		if(position == 'normal'){		    	
-	    			var pos = commandString.lastIndexOf('.');
-	    			
+	    		if(selectedValues[2] == 'package'){
+	    			insertString = selectedValues[0] + ';';
+	    		}else if(selectedValues[2] == 'class' || selectedValues[2] == 'annotation'){
+	    			insertString = selectedValues[0];
+	    			insertPackage = selectedValues[1] + '.' + insertString; 
+	    		}else{
+	    			var pos = this.getCommandString().lastIndexOf('.');
 	    			whereStart = {column: whereEnd.column - (commandString.length - (pos + 1)), row: whereEnd.row};
-	    		}else
-	    			whereStart = {column: whereEnd.column - commandString.length, row: whereEnd.row};
-	    		
-	    		var selectionRange = {start:whereStart, end:whereEnd};
+	    			
+	    			insertString = selectedValues[0];
+	    			insertPackage = selectedValues[1];	    			
+	    		}
 	    		
 	    		if(whereStart.column != whereEnd.column){
+	    			var selectionRange = {start:whereStart, end:whereEnd};
+	    			
 	    			this.editor.getSelection().setSelectionRange(selectionRange, false);
 	    			this.editor.remove('left');
 	    		}
 	    		this.editor.insert(insertString);
 	    		
-	    		if(position == 'import'){
-	    			this.editor.insert(';');
-    			}else if(position == 'normal'){
+	    		// import package
+	    		if(insertPackage.length > 0){
+	    			var position = this.getSourcePosition();
 	    			
-	    		}else{
-	    			this.importPackage(importPackage, insertString, Number(position));
+	    			if(position != 'import'){
+	    				this.importPackage(insertPackage, Number(position));
+	    			}
 	    		}
-
-	    		mw3.removeObject(assist.__objectId);
+	    		
     		}else{
     			this.organizeImports(assist.__objectId);
     		}

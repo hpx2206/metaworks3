@@ -14,8 +14,11 @@ var org_uengine_codi_mw3_admin_JavaCodeAssist = function(objectId, className){
 	// first item focusing
 	var object = mw3.objects[this.objectId];
 	
-	if(object.assistances.length > 0)
-		this.list.children(':first').css('background', 'yellow').addClass('selected');	
+	if(object.assistances.length > 0){
+		this.change('');
+		
+		this.list.children(':first').css('background', 'yellow').addClass('selected');
+	}
 	
 	object.ExtendImport = function(){
 		var object = mw3.objects[objectId];
@@ -33,7 +36,6 @@ var org_uengine_codi_mw3_admin_JavaCodeAssist = function(objectId, className){
 
 org_uengine_codi_mw3_admin_JavaCodeAssist.prototype.change = function(expression){
 	expression = expression.toLowerCase();
-	console.debug('expression : ' + expression);
 	
 	var pos = expression.lastIndexOf('.');
 	var expressionClass = '';
@@ -44,42 +46,34 @@ org_uengine_codi_mw3_admin_JavaCodeAssist.prototype.change = function(expression
 		expressionPackage = expression.substring(0, pos);
 	}
 		
-	console.debug('expressionClass : ' + expressionClass);
-	
 	var object = mw3.objects[this.objectId];
 
 	var html = '';
 
 	for(var i in object.assistances){
+		var cnt = 0;
 		var assistance = object.assistances[i].toLowerCase();
 				
 		if(assistance.indexOf(expression) == 0 || (expressionClass.length > 0 && assistance.indexOf(expressionClass) == 0 && assistance.indexOf('/'+expressionPackage+'/') != -1 )){
+			cnt++;
+			
 			assistance = object.assistances[i];
 			
-			var packageName = '';
-			var assistType = 'package';
-			
-			if(assistance.indexOf('/') == -1){
-				assistance += '.*'; 
-			}else{
-				var temp = assistance.split('/');
+			if(assistance.indexOf('/') != -1){
+				var temp = assistance.split('/');							
+				if(temp.length < 2)
+					continue;
 				
-				assistance = temp[0];
-				packageName = ' - ' + temp[1];
-				assistType = temp[2];
+				html += '<li onclick=\"mw3.getFaceHelper(\'' + this.objectId + '\').select();\" index=\"' + i + '\" order=\"' + cnt + '\">';
+				html += '	<span class=\"' + temp[2] + '\">' + temp[0] + '</span>';
+								
+				if(temp[2] != 'package')
+					html += '	<span> - ' + temp[1] + '</span>';
+				
+				html += '</li>';				
 			}
-
-			
-			html += '<li onclick=\"mw3.getFaceHelper(\'' + this.objectId + '\').select();\" index=\"' + i + '\">';
-			html += '	<span class=\"' + assistType + '\">' + assistance + '</span>';
-			if(packageName.length > 0)
-				html += '	<span>' + packageName + '</span>';
-			html += '</li>';
 		}		
 	}
-	
-	//console.debug(html);
-	//console.debug('size : ' + object.assistances.length);
 	
 	if(html == ''){
 		mw3.removeObject(this.objectId);
@@ -135,9 +129,6 @@ org_uengine_codi_mw3_admin_JavaCodeAssist.prototype.select = function(){
 	var index = selected.attr('index');
 	
 	var object = mw3.objects[this.objectId];
-	
-	console.debug(object);
-	console.debug(index);
 	
 	return object.assistances[index];
 	

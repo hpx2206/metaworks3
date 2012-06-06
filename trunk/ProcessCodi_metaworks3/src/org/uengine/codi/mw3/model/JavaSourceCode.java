@@ -223,7 +223,7 @@ public class JavaSourceCode extends SourceCode {
 		
 		for(String packageName : packageNames.keySet()){
 			if(packageName.startsWith(expression))
-				pkgNames.add(packageName);    				
+				pkgNames.add(packageName + "/" + packageName + "/package");    				
 		}
 		
 		return pkgNames;
@@ -339,7 +339,10 @@ public class JavaSourceCode extends SourceCode {
 	
 				if(line.startsWith("import ")){
 					System.out.println(line);
-					importedList.add(line);
+					
+					String importName = line.substring(line.indexOf(" ")).trim();
+					
+					importedList.add(importName);
 				}else if(typeName == null){ //if typeName is not set, find the expression's type first.
 					if(!line.trim().startsWith(expression) && whereExp > 0){
 			
@@ -370,6 +373,16 @@ public class JavaSourceCode extends SourceCode {
 							}catch(Throwable ex) {}
 						}
 					}else{
+						String javaLangExp = "java.lang." + typeName;
+						
+						if(tryLoadList.indexOf(javaLangExp) == -1){
+							tryLoadList.add(javaLangExp);							
+							try{							
+								Thread.currentThread().getContextClassLoader().loadClass(javaLangExp);
+								return javaLangExp;
+							}catch(Exception e){}
+						}
+						
 						for(int k=0; k<importedList.size(); k++){
 							String importedName = importedList.get(k);
 							boolean checkImport = false;
@@ -383,6 +396,9 @@ public class JavaSourceCode extends SourceCode {
 									System.out.println("loadClass" + loadClass);
 									try {
 										Thread.currentThread().getContextClassLoader().loadClass(loadClass);
+										
+										System.out.println("loadedClass : " + loadClass);
+										
 										return loadClass;
 									}catch(Throwable ex) {}
 								}																
@@ -542,6 +558,8 @@ public class JavaSourceCode extends SourceCode {
 					
 				}else{
 					String classDefine = findClassDefine(expression);
+					System.out.println("findClassDefine : " + classDefine);
+					
 					if(classDefine != null){
 						ArrayList<String> classInfo = findClass(classDefine);
 						for(int i=0; i<classInfo.size();i++)

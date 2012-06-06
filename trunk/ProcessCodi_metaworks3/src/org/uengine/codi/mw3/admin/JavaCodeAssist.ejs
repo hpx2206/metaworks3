@@ -18,35 +18,7 @@
 			<ul id="assistancesList_<%=objectId%>">
 		
 <%
-			if(value.assistances.length > 0){
-				for(var i in value.assistances){
-					var assistance = value.assistances[i];
-					var package = '';
-					var assistType = 'package';
-					
-					if(assistance.indexOf('/') == -1){
-						assistance += '.*'; 
-					}else{
-						var temp = assistance.split('/');
-					
-						assistance = temp[0];
-						package = ' - ' + temp[1];
-						assistType = temp[2];
-					}
-%>
-				<li onclick="mw3.getFaceHelper('<%=objectId%>').select();" index="<%=i%>">
-					<span class='<%=assistType%>'><%=assistance%></span>
-<%
-					if(package.length > 0){
-%>
-					<span><%=package%></span>
-<%				
-					}
-%>					
-				</li>			
-<%			
-				}
-			}else{
+			if(value.assistances.length == 0){
 %>
 				<li><span>No Default Proposals</span></li>
 <%			
