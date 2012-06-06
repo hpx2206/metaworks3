@@ -25,14 +25,9 @@
 	</div>
 	<div id="btnline" style="border-top:1px solid #E3E8F2; padding-top:8px;">
 		<ul>			
+			<li><a id="wBtn" href="javascript:<%=methods.remove.caller()%>"><span>삭제</span></a></li>
 			<li><a id="wBtn" href="javascript:<%=methods.close.caller()%>"><span>취소</span></a></li>			
-<%
-			if(!mw3.isHiddenMethod(methods.save)){
-%>						
 			<li><a id="wBtn" href="javascript:<%=methods.save.caller()%>"><span>저장</span></a></li>			
-<%
-			}
-%>						
 		</ul>
 	</div>
 <%		
