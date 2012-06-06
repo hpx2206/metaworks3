@@ -91,7 +91,14 @@
 			    </ul>
 			</div>
 		</div>
+<%
+		if(mw3.when != "public"){
+%>
+ 				<%=fields.crowdSourcer.here()%>				
 
+<%
+		}
+%>	
 		<div class="pane ui-layout-center">
 			<div class="ui-layout-content">
 				<%=fields.instanceNameChanger.here({when:'edit'})%>
@@ -104,9 +111,7 @@
 <%
 		if(mw3.when != "public"){
 %>
- 
-				<%=fields.newItem.here()%>
-				<%=fields.crowdSourcer.here()%>
+				<%=fields.newItem.here()%>				
 
 <%
 		}
