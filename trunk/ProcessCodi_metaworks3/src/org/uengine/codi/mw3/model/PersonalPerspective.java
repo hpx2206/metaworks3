@@ -7,6 +7,11 @@ public class PersonalPerspective extends Perspective {
 	public PersonalPerspective() {
 		setLabel("Personal");
 	}
+
+	@ServiceMethod
+	public Object[] loadAllICanSee() throws Exception{
+		return loadInstanceListPanel("allICanSee", null);
+	}
 	
 	@ServiceMethod
 	public Object[] loadAll() throws Exception{

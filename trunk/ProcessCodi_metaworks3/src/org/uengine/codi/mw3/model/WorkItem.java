@@ -1,14 +1,18 @@
 package org.uengine.codi.mw3.model;
 
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 
 import org.apache.commons.digester.SetRootRule;
+import org.directwebremoting.Browser;
 import org.directwebremoting.ScriptSession;
+import org.directwebremoting.ScriptSessions;
 import org.directwebremoting.WebContext;
 import org.directwebremoting.WebContextFactory;
 import org.directwebremoting.proxy.dwr.Util;
 import org.metaworks.MetaworksContext;
+import org.metaworks.Refresh;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.dao.Database;
@@ -307,12 +311,15 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		setRootInstId(getInstId());
 		
 		setTaskId(taskId);
+		setStartDate(Calendar.getInstance().getTime());
+		setEndDate(getStartDate());
 ////		
 		createDatabaseMe();
 		flushDatabaseMe();
 		
-		Instance instance = new Instance();
+		final Instance instance = new Instance();
 		instance.setInstId(getInstId());
+		
 		//InstanceViewContent instanceViewContent = new InstanceViewContent();
 //		instanceViewContent.load(instance);
 		
@@ -328,15 +335,38 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		loginUser.setName(session.getUser().getName());
 
 		newItem.setWriter(loginUser);
+
+		//OLD WAY
+//		//let the other's list updated
+//		WebContext wctx = WebContextFactory.get();
+//		String currentPage = wctx.getCurrentPage();
+//
+//		   Collection sessions = wctx.getScriptSessionsByPage(currentPage);
+//
+//		   Util utilAll = new Util(sessions);
+//		   utilAll.addFunctionCall("mw3.getAutowiredObject('org.uengine.codi.mw3.model.InstanceView').activityStream");
+
 		
-		//let the other's list updated
-		WebContext wctx = WebContextFactory.get();
-		String currentPage = wctx.getCurrentPage();
+		final InstanceView refreshedInstanceView = new InstanceView();
+		refreshedInstanceView.processManager = processManager;
+		refreshedInstanceView.load(instance);
+		
+		final IInstance refreshedInstance = instance.databaseMe();
+		refreshedInstance.getMetaworksContext().setHow("blinking");
+		
+		//NEW WAY IS GOOD
+		Browser.withAllSessions(new Runnable(){
 
-		   Collection sessions = wctx.getScriptSessionsByPage(currentPage);
+			@Override
+			public void run() {
+				ScriptSessions.addFunctionCall("mw3.locateObject", new Object[]{new Object[]{new Refresh(refreshedInstanceView), new Refresh(refreshedInstance)}, null, "body"});
+				ScriptSessions.addFunctionCall("mw3.onLoadFaceHelperScript", new Object[]{});
 
-		   Util utilAll = new Util(sessions);
-		   utilAll.addFunctionCall("mw3.getAutowiredObject('org.uengine.codi.mw3.model.InstanceView').activityStream");
+			}
+			
+		});
+		
+		//TODO: IF YOU CAN NARROW THE RECEIVERS TO THE FOLLOWERS ONLY IS BEST APPROACH
 
 
 		//makes new line and change existing div

@@ -21,7 +21,7 @@ public class InstanceListWindow {
 		
 		PersonalPerspective personalPerspective = new PersonalPerspective();
 		personalPerspective.session = session;
-		this.instanceListPanel = (InstanceListPanel) personalPerspective.loadInbox()[1];
+		this.instanceListPanel = (InstanceListPanel) personalPerspective.loadAllICanSee()[1];
 	}
 	
 	InstanceListPanel instanceListPanel;

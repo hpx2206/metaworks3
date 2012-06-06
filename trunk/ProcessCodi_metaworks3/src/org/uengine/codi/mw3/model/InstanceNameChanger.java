@@ -29,7 +29,8 @@ public class InstanceNameChanger {
 			this.instanceId = instanceId;
 		}
 
-	@ServiceMethod(callByContent=true, keyBinding="enter")
+	//good example for Refresh
+	@ServiceMethod(callByContent=true, keyBinding="enter", target="popup")
 	public Refresh change() throws Exception{
 		Instance instance = new Instance();
 		instance.setInstId(new Long(instanceId));

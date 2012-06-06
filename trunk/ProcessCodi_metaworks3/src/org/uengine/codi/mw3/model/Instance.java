@@ -71,7 +71,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 
 		
 		//TODO delete printing
-		System.out.println(stmt.toString());
+		System.out.println("worklist sql:" + stmt.toString());
 		
 		IInstance instanceContents = sql(stmt.toString());
 		instanceContents.setInitComCd(session.getEmployee().getGlobalCom());

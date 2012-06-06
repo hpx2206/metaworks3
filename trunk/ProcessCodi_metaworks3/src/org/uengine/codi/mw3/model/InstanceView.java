@@ -278,7 +278,17 @@ public class InstanceView {
 		
 		NewInstancePanel newSubInstancePanel = new NewInstancePanel();
 		newSubInstancePanel.setParentInstanceId(getInstanceId());
+		
 		newSubInstancePanel.load();
+
+		//Good example :   customizing for specific usage - removing some parts
+		newSubInstancePanel.setUnstructuredProcessInstanceStarter(null);
+		
+		
+//		ProcessMapPanel processMapPanel;
+//		processMapPanel = new ProcessMapPanel();		
+//		processMapPanel.setMetaworksContext(this.getMetaworksContext());
+//		processMapPanel.load();
 		
 		Popup popup = new Popup();
 		popup.setPanel(newSubInstancePanel);
