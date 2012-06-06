@@ -36,6 +36,7 @@ public class InstanceListPanel {
 		}
 		
 	//@Hidden
+	@Face(displayName="Calendar View")
 	@ServiceMethod(inContextMenu=true)
 	public void switchToScheduleCalendar() throws Exception{
 		this.setInstanceList(null);
@@ -45,6 +46,7 @@ public class InstanceListPanel {
 	}
 	
 	//@Hidden
+	@Face(displayName="List View")
 	@ServiceMethod(inContextMenu=true)
 	public void switchToInstanceList() throws Exception{
 		this.setScheduleCalendar(null);

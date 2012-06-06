@@ -303,6 +303,19 @@ public class ResourceFile implements ContextAware{
 		
 		String instId = processManager.initializeProcess(getAlias());
 		
+		org.uengine.kernel.ProcessDefinition def = processManager.getProcessDefinition(getAlias());
+		if(def.getRoles() == null || def.getRoles().length == 0){
+			
+			//// setting initiator if there's nothing to state the initiator in the definition ////
+			org.uengine.kernel.RoleMapping rm = org.uengine.kernel.RoleMapping.create();
+			if(session.user!=null){
+				rm.setName("initiator");
+				rm.setEndpoint(session.user.getUserId());
+			}
+
+			processManager.putRoleMapping(instId, rm);
+
+		}
 		
 		RoleMapping rm = RoleMapping.create();
 		if(session.user!=null)

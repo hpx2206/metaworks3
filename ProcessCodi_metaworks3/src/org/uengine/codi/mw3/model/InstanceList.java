@@ -146,7 +146,7 @@ public class InstanceList {
 			criteria.put("instStatus", "Stopped");
 			// secureopt
 			instanceSql
-					.append("and (inst.secuopt='0' OR (inst.secuopt=1 and exists (select rootinstid from BPM_ROLEMAPPING rm where rm.endpoint=?rmEndpoint and inst.rootinstid=rm.rootinstid))) ");
+					.append("and (exists (select rootinstid from BPM_ROLEMAPPING rm where rm.endpoint=?rmEndpoint and inst.rootinstid=rm.rootinstid)) ");
 			criteria.put("rmEndpoint", session.getEmployee().getEmpCode());
 			break;
 		case 2:// "request"
@@ -223,6 +223,16 @@ public class InstanceList {
 					.append("and (inst.secuopt='0' OR (inst.secuopt=1 and exists (select rootinstid from BPM_ROLEMAPPING rm where rm.endpoint=?rmEndpoint and inst.rootinstid=rm.rootinstid))) ");
 			criteria.put("rmEndpoint", session.getEmployee().getEmpCode());
 			break;
+		case 9: // "allICanSee"
+			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
+			criteria.put("instIsdelete", "1");
+			instanceSql.append("and inst.status!=?instStatus ");
+			criteria.put("instStatus", "Stopped");
+			// secureopt
+			instanceSql
+					.append("and (inst.secuopt='0' OR (inst.secuopt=1 and exists (select rootinstid from BPM_ROLEMAPPING rm where rm.endpoint=?rmEndpoint and inst.rootinstid=rm.rootinstid))) ");
+			criteria.put("rmEndpoint", session.getEmployee().getEmpCode());
+			break;
 		default:
 			// personal inbox
 			taskSql.append("and (worklist.status=?taskStatus1 or worklist.status=?taskStatus2) ");
@@ -257,8 +267,8 @@ public class InstanceList {
 			return 7;
 		} else if(typeString.equals("status")) {
 			return 8;
-		} else {
-			//return 8;
+		} else if("allICanSee".equals(typeString)){
+			return 9;
 		}
 		return -1;
 	}
