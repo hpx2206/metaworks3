@@ -4,6 +4,7 @@ import org.metaworks.MetaworksContext;
 import org.metaworks.Remover;
 import org.metaworks.ToOpener;
 import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.Available;
 import org.metaworks.dao.Database;
 
 public class Employee extends Database<IEmployee> implements IEmployee {
@@ -128,7 +129,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		this.locale = locale;
 	}
 
-	PortraitImageFile imageFile;
+	PortraitImageFile imageFile;		
 		public PortraitImageFile getImageFile() {
 			return imageFile;
 		}

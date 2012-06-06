@@ -49,6 +49,6 @@ public interface IUser extends IDAO{
 	public Object[] removeContact() throws Exception;
 	
 	@ServiceMethod(target="popup", payload={"userId", "network", "name"})
-	public ModalWindow info() throws Exception;
+	public Popup info() throws Exception;
 
 }

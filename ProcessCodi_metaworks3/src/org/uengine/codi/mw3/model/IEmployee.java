@@ -1,6 +1,7 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.MetaworksContext;
+import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
@@ -68,6 +69,7 @@ public interface IEmployee extends IDAO {
 	
 	@NonLoadable
 	@NonSavable
+	@Available(when={WHEN_EDIT})
 	public PortraitImageFile getImageFile();
 	public void setImageFile(PortraitImageFile imageFile);
 	

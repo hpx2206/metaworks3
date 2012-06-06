@@ -231,28 +231,17 @@ public class User extends Database<IUser> implements IUser {
 	}
 	
 //	@ServiceMethod(target="popup", payload={"userId", "network"})
-	public ModalWindow info() throws Exception{
-		ModalWindow infoWindow = new ModalWindow();
+	public Popup info() throws Exception{
+		Popup infoWindow = new Popup();	
+		Employee me = new Employee();
+		me.setEmpCode(getUserId());
 		
-		if("fb".equals(getNetwork())){
-			IFrame iframe = new IFrame();
-			iframe.setSrc("http://www.facebook.com/profile.php?id=" + getUserId());
-			
-			infoWindow.setPanel(iframe);
-		}else{
-			Employee me = new Employee();
-			me.setEmpCode(getUserId());
-			
-			IEmployee dbMe = me.databaseMe();
-			
-			if(session.getUser().getUserId().equals(getUserId()))
-				dbMe.getMetaworksContext().setWhen("edit");
-			
-			infoWindow.setPanel(dbMe);
-			
-		}
-		
-		infoWindow.setTitle("About " + getName());
+		IEmployee dbMe = me.databaseMe();	
+		dbMe.getMetaworksContext().setWhen("view");		
+		dbMe.getMetaworksContext().setHow("detail");
+		dbMe.getMetaworksContext().setWhere("inDetailView");
+
+		infoWindow.setPanel(dbMe);		
 		
 		return infoWindow;
 	}
