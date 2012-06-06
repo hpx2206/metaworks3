@@ -58,6 +58,9 @@ public class UnstructuredProcessInstanceStarter implements ContextAware {
 		unstructuredProcessDefinition.instanceViewContent = instanceViewContent;
 		unstructuredProcessDefinition.setAlias(CodiProcessDefinitionFactory.unstructuredProcessDefinitionLocation);
 		
+		
+		unstructuredProcessDefinition.friend = friend;
+		
 		Object[] instanceViewAndInstanceList = unstructuredProcessDefinition.initiate();
 		
 		final InstanceViewContent instanceView = (InstanceViewContent) instanceViewAndInstanceList[0];
@@ -70,7 +73,12 @@ public class UnstructuredProcessInstanceStarter implements ContextAware {
 		instance.setInstId(new Long
 				(instanceView.getInstanceView().instanceId));
 		instance.databaseMe().setInitEp(session.user.getUserId());
-		instance.databaseMe().setSecuopt("0");
+		
+		if(getFriend() != null)
+			instance.databaseMe().setSecuopt("1"); //친구가 있단건 채팅 상
+		else
+			instance.databaseMe().setSecuopt("0"); // 아니면 전체 공개  
+			
 		
 		CommentWorkItem comment = (CommentWorkItem) instanceView.getInstanceView().getNewItem();
 		comment.processManager = processManager;

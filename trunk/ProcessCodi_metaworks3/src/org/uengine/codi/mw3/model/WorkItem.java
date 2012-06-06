@@ -18,6 +18,7 @@ import org.metaworks.annotation.Hidden;
 import org.metaworks.dao.Database;
 import org.metaworks.example.ide.SourceCode;
 import org.metaworks.website.MetaworksFile;
+import org.metaworks.widget.ModalWindow;
 import org.metaworks.widget.Window;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.Login;
@@ -233,7 +234,19 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		
 		workItemHandler.load();
 		
-		return /*new Window(*/workItemHandler;//);
+		
+		return workItemHandler;
+	}
+	
+	public ModalWindow workItemPopup() throws Exception{
+		
+		detail();
+		
+		ModalWindow workItemHandlerModal = new ModalWindow();
+		workItemHandlerModal.setPanel(workItemHandler);
+		workItemHandlerModal.setTitle(getTitle());
+		
+		return workItemHandlerModal;
 	}
 	
 	@Autowired
@@ -371,6 +384,22 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 
 		//makes new line and change existing div
 		return new WorkItem[]{/*this*/newItem};
+	}
+
+	@Override
+	public Popup newActivity() throws Exception {
+		NewInstancePanel newSubInstancePanel = new NewInstancePanel();
+		newSubInstancePanel.setParentInstanceId(getInstId().toString());
+		
+		newSubInstancePanel.load();
+
+		//Good example :   customizing for specific usage - removing some parts
+		newSubInstancePanel.setUnstructuredProcessInstanceStarter(null);
+		
+		Popup popup = new Popup();
+		popup.setPanel(newSubInstancePanel);
+		
+		return popup;
 	}
 
 	
