@@ -57,7 +57,7 @@ var org_uengine_codi_mw3_model_InstanceView = function(objectId, className){
 			}
 		}
 	}
-	
+
 }
 
 org_uengine_codi_mw3_model_InstanceView.prototype = {

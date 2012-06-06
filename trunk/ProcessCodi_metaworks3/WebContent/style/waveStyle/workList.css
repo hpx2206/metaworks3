@@ -25,6 +25,8 @@
 .lst_type .type_ping{block;overflow:hidden;float:left;height:16px; width:16px; margin:0 6px 0 0;padding:0;background:url(../../images/waveStyle/ping.png) no-repeat 0 0;vertical-align:top;font-style:normal}
 .lst_type .type_mail{display:block;overflow:hidden;float:left;height:16px; width:16px;margin:0 6px 0 0;padding:0x;background:url(../../images/waveStyle/mail.png) no-repeat 0 0;vertical-align:top;font-style:normal}
 .lst_type .type_process{display:block;overflow:hidden;float:left;height:16px; width:16px;margin:0 6px 0 0;padding:0;background:url(../../images/waveStyle/process.png) no-repeat 0 0;vertical-align:top;font-style:normal}
+.lst_type .instanceLock{display:block;overflow:hidden;float:left;height:16px; width:10px;margin:3px 2px 0 0;padding:0;background:url(../../images/waveStyle/lock.png) no-repeat 0 0;vertical-align:top;font-style:normal}
+.lst_type .instanceUnLock{display:block;overflow:hidden;float:left;height:16px; width:10px;margin:3px 2px 0 0;padding:0;background:none;vertical-align:top;font-style:normal}
 /*
 .lst_type .type_ping em{display:block;float:left;height:17px;margin:-1px 0 0;padding:1px 5px 0 0;background:url(../../images/waveStyle/bu_listhead_ping.gif) no-repeat 100% 1px;color:#fff;font-size:11px;font-weight:normal;vertical-align:top}
 .lst_type .type_mail em{display:block;float:left;height:17px;margin:-1px 0 0;padding:1px 5px 0 0;background:url(../../images/waveStyle/bu_listhead_mail.gif) no-repeat 100% 1px;color:#fff;font-size:11px;font-weight:normal;vertical-align:top}
