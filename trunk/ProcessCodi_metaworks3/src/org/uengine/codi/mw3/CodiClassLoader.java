@@ -7,26 +7,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import javassist.CannotCompileException;
-import javassist.ClassPool;
-import javassist.CtClass;
-import javassist.CtConstructor;
-import javassist.CtMethod;
-import javassist.Loader;
 import javassist.NotFoundException;
-import javassist.expr.ExprEditor;
-import javassist.expr.MethodCall;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticListener;
@@ -37,25 +25,14 @@ import javax.tools.JavaFileObject.Kind;
 import javax.tools.StandardLocation;
 import javax.tools.ToolProvider;
 
-import org.apache.tools.ant.filters.StringInputStream;
 import org.codehaus.commons.compiler.AbstractJavaSourceClassLoader;
 import org.codehaus.commons.compiler.ICompilerFactory;
-import org.codehaus.commons.compiler.jdk.ByteArrayJavaFileManager.ByteArrayJavaFileObject;
-import org.codehaus.commons.compiler.jdk.JavaSourceClassLoader.DiagnosticException;
 import org.codehaus.commons.compiler.jdk.ByteArrayJavaFileManager;
-import org.codehaus.commons.compiler.jdk.JavaSourceClassLoader;
-import org.directwebremoting.ServerContextFactory;
+import org.codehaus.commons.compiler.jdk.ByteArrayJavaFileManager.ByteArrayJavaFileObject;
 import org.metaworks.ObjectType;
 import org.metaworks.dao.TransactionContext;
-import org.springframework.context.ApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
-import org.uengine.codi.mw3.admin.ClassDefinition;
 import org.uengine.kernel.GlobalContext;
-import org.uengine.processmanager.ProcessManagerRemote;
 import org.uengine.util.UEngineUtil;
-
-
-import com.sun.xml.bind.v2.runtime.Name;
 
 public class CodiClassLoader extends AbstractJavaSourceClassLoader {
 
