@@ -263,6 +263,10 @@ org_metaworks_example_ide_SourceCode.prototype = {
 			className = importName.substring(pos + 1);
 		}
 		
+		console.debug('importName : ' + importName);
+		console.debug('packageName : ' + packageName);
+		console.debug('className : ' + className);
+		
 		var importedList = [];
 		var lastLine = 0;
 		
@@ -270,36 +274,33 @@ org_metaworks_example_ide_SourceCode.prototype = {
 			var fullLine = this.editor.getSession().doc.getLine(i);
 			fullLine = fullLine.trim();
 			
-			if(fullLine.indexOf('import') != -1){
-				if(fullLine.indexOf(';') != -1){
-					var temp = fullLine.split(';');
-					
-					for(var j=0; j<temp.length; j++){
-						if(temp[j].trim().indexOf('import') == 0){
-							importedList.push(temp[j].trim().substring('import'.length).trim());
-						}
-					}
-				}else{
-					if(fullLine.indexOf('import') == 0){
-						importedList.push(fullLine.substring('import'.length).trim());    						
-					}
-				}
+			if(fullLine.indexOf(';') == -1)
+				fullLine += ';';
+			
+			var lines = fullLine.split(';');
+			for(var j=0; j<lines.length; j++){
+				var line = lines[j].trim();
 				
-				lastLine = i;
-			}else if(fullLine.indexOf('package') == 0){
-				lastLine = i;
-			}    			
-
+				if(line.indexOf('import') != -1){
+					if(fullLine.indexOf('import') == 0)
+						importedList.push(line.substring('import'.length).trim());    						
+					
+					lastLine = i;
+				}else if(fullLine.indexOf('package') == 0){
+					lastLine = i;
+				}    			
+			}
 		}
 		
-		var exist = false;
-		
+		var exist = false;		
 		if(this.getPackageName() == packageName)
 			exist = true;
 		
 		if(!exist){
+			console.debug(importedList);
+			
 			for(var i=0; i<importedList.length; i++){		
-				if(importedList[i] == packageName || importedList[i] == packageName + '.*' || importedList[i] == packageName + '.' + className){
+				if(importedList[i] == importName || importedList[i] == packageName + '.*'){
 					exist = true;
 					
 					break;
@@ -315,6 +316,8 @@ org_metaworks_example_ide_SourceCode.prototype = {
 		}
 	},
 	requestAssist : function(command){
+		console.debug('command : ' + command);
+		
 		if(!this.loadRequestAssist){
 			var assist = mw3.getAutowiredObject('org.metaworks.example.ide.CodeAssist');
 			
@@ -354,15 +357,31 @@ org_metaworks_example_ide_SourceCode.prototype = {
 						
 		var pos;
 		var command = this.editor.getSession().doc.getTextRange({start: whereStart, end: whereEnd});
-
+		command = command.trim();
+		
 		// check last command line
 		pos = command.indexOf(';');
 		if(pos > -1)
 			command = command.substring(pos + 1);
 		
-		command = command.trim();
+		var pattern = /[^(a-zA-Z0-9)]/;
+		var expression = '';
+		for (var i = command.length - 1; i >= 0; i--){
+			var charAt = command.charAt(i);
+		
+			if(!(pattern.test(charAt)==false || charAt == '.')){
+				break;
+			}
+			
+			expression = charAt + expression;
+		}	
+		
+		if(command.indexOf('import ') == 0)			
+			expression = 'import ' + expression;
+		if(command.indexOf('@') == 0)			
+			expression = '@' + expression;
 
-		return command;
+		return expression;
 		
 	},
 	closeAssist : function(){
@@ -381,7 +400,11 @@ org_metaworks_example_ide_SourceCode.prototype = {
     		if(command.indexOf("import ") == 0)
     			command = command.substring("import ".length);
     		
-			if(command != this.lastCommandString){
+    		if(command.indexOf("@") == 0)
+    			command = command.substring("@".length);
+    		
+    		command = command.trim();
+    		if(command != this.lastCommandString){
 				this.lastCommandString = command;
 				
 				mw3.getFaceHelper(assist.__objectId).change(command);

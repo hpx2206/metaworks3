@@ -37,14 +37,18 @@ var org_uengine_codi_mw3_admin_JavaCodeAssist = function(objectId, className){
 org_uengine_codi_mw3_admin_JavaCodeAssist.prototype.change = function(expression){
 	expression = expression.toLowerCase();
 	
-	var pos = expression.lastIndexOf('.');
-	var expressionClass = '';
+	var expressionClass = expression;
 	var expressionPackage = '';
 	
+	var pos = expression.lastIndexOf('.');
 	if(pos != -1){
 		expressionClass = expression.substring(pos+1);
 		expressionPackage = expression.substring(0, pos);
 	}
+	
+	console.debug('expressionPackage : ' + expression);
+	console.debug('expressionPackage : ' + expressionPackage);
+	console.debug('expressionClass : ' + expressionClass);	
 		
 	var object = mw3.objects[this.objectId];
 
@@ -53,8 +57,18 @@ org_uengine_codi_mw3_admin_JavaCodeAssist.prototype.change = function(expression
 	for(var i in object.assistances){
 		var cnt = 0;
 		var assistance = object.assistances[i].toLowerCase();
-				
-		if(assistance.indexOf(expression) == 0 || (expressionClass.length > 0 && assistance.indexOf(expressionClass) == 0 && assistance.indexOf('/'+expressionPackage+'/') != -1 )){
+		
+		var isInsert = false;
+		
+		if(assistance.indexOf('/package/') != -1){
+			if(assistance.indexOf(expression) == 0)
+				isInsert = true;
+		}else{
+			if(assistance.indexOf(expressionClass) == 0)
+				isInsert = true;
+		}
+		
+		if(isInsert){
 			cnt++;
 			
 			assistance = object.assistances[i];

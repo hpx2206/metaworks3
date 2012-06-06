@@ -223,7 +223,7 @@ public class JavaSourceCode extends SourceCode {
 		
 		for(String packageName : packageNames.keySet()){
 			if(packageName.startsWith(expression))
-				pkgNames.add(packageName + "/" + packageName + "/package");    				
+				pkgNames.add(packageName + "/" + packageName + "/package/");    				
 		}
 		
 		return pkgNames;
@@ -242,7 +242,7 @@ public class JavaSourceCode extends SourceCode {
 						result.put(clsName, "class");
 				}
 				
-				clsNames.add(clsName + "/" + expression + "/" + result.get(clsName)) ;
+				clsNames.add(clsName + "/" + expression + "/" + result.get(clsName) + "/") ;
 			}    
 		}
 		
@@ -293,7 +293,7 @@ public class JavaSourceCode extends SourceCode {
 		try{
 			Class theClass = Thread.currentThread().getContextClassLoader().loadClass(expression);					
 			for(Field field : theClass.getFields()) {
-				classInfo.add(field.getName() + "/" + expression + "/field");
+				classInfo.add(field.getName() + "/" + expression + "/field/");
 			}
 		
 			for(Method method : theClass.getMethods()) {						
@@ -307,7 +307,7 @@ public class JavaSourceCode extends SourceCode {
 				}
 				paramStmt.append(")");						
 				
-				classInfo.add(method.getName() + paramStmt + "/" + expression + "/method");		
+				classInfo.add(method.getName() + paramStmt + "/" + expression + "/method/");		
 			}
 		}catch(Exception e){			
 		}
@@ -467,14 +467,14 @@ public class JavaSourceCode extends SourceCode {
 		ArrayList<ClassField> classFields = classModeler.getClassFields();
 		if(classFields!=null) {
 			for (ClassField field : classFields) {
-				classInfo.add(field.getFieldName() + "/" + "this" + "/field");
+				classInfo.add(field.getFieldName() + "/" + "this" + "/field/");
 			}
 		}
 
 		ArrayList<ClassMethod> classMethods = classModeler.getClassMethods();
 		if(classMethods!=null) {
 			for (ClassMethod classMethod : classMethods) {
-				classInfo.add(classMethod.getMethodName() + "/" + "this" + "/method");
+				classInfo.add(classMethod.getMethodName() + "/" + "this" + "/method/");
 			}
 		}
 		
@@ -557,19 +557,20 @@ public class JavaSourceCode extends SourceCode {
 					
 					
 				}else{
-					String classDefine = findClassDefine(expression);
-					System.out.println("findClassDefine : " + classDefine);
-					
-					if(classDefine != null){
-						ArrayList<String> classInfo = findClass(classDefine);
-						for(int i=0; i<classInfo.size();i++)
-							clsNames.add(classInfo.get(i));
+					// step 3-1 : this
+					if("this".equals(expression)){
+						ArrayList<String> thisClassInfo = findThisClass();
+						for(int i=0; i<thisClassInfo.size();i++)
+							clsNames.add(thisClassInfo.get(i));
 					}else{
-						// step 3-1 : this
-						if("this".equals(expression)){
-							ArrayList<String> thisClassInfo = findThisClass();
-							for(int i=0; i<thisClassInfo.size();i++)
-								clsNames.add(thisClassInfo.get(i));
+					
+						String classDefine = findClassDefine(expression);
+						System.out.println("findClassDefine : " + classDefine);
+						
+						if(classDefine != null){
+							ArrayList<String> classInfo = findClass(classDefine);
+							for(int i=0; i<classInfo.size();i++)
+								clsNames.add(classInfo.get(i));
 						}else{
 							ArrayList<String> classes = findClasses(expression);
 							if(classes.size() > 0){
