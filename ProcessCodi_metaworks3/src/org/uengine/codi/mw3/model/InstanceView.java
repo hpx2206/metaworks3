@@ -30,9 +30,14 @@ public class InstanceView {
 		
 	public void load(IInstance instance) throws Exception{
 		setMetaworksContext(new MetaworksContext());
+
+		Instance inst = new Instance();
+		inst.setInstId(instance.getInstId());
+		String secuopt = inst.databaseMe().getSecuopt();
+
 		
 		setInstanceId(instance.getInstId().toString());
-		setSecuopt(instance.getSecuopt());
+		setSecuopt(secuopt);
 		
 		loadDefault();
 		setInstanceViewThreadPanel(activityStream());
