@@ -5,6 +5,8 @@ var org_uengine_codi_mw3_model_IEmployee = function(objectId, className){
 	this.className = className;
 
 	var theLoginHelper = this;
+	
+	$('#objDiv_' + this.objectId).parent().parent().css({'border':'none'});
 };
 
 //org_forx_model_codi_IEmployee.prototype.editInfo = function(){

@@ -90,18 +90,38 @@ if(value){
 	} else if(mw3.where == 'inDetailView') {
 	%>
 	
-	<img id="userPicture_<%=objectId %>" onerror="<%=onErrorImg %>" src="<%=portrait %>" width="30" height="30"><%=fields.imageFile.here() %>
-	ID :<%=value.empCode %>
-	NAME : <%=value.empName %>
-	PASSWORD : <%=fields.password.here() %>
-	Dept : <%=value.partName %>(<%value.partCode %>)
-	Position : <%=value.jikName %>
-	Phone : <%=fields.mobileNo.here() %>
-	Email : <%=fields.email.here() %>
-	Locale : <%=fields.locale.here() %>
+	<ul>
+		<li>
+			<dl class="lst_type2">
+				<dt class="tit">
+					<div id="popupInfoNameWih"><b><%=value.empName %></b></div>
+					<div class="infoSub"><span>ID :</span><span><%=value.empCode %></span></div>
+					<div class="infoSub"><span>PASSWORD : </span><span><%=fields.password.here() %></span></div>
+					<div class="infoSub"><span>Dept : </span><span><%=value.partName %>(<%value.partCode %>)</span></div>
+					<div class="infoSub"><span>Position : </span><span><%=value.jikName %></span></div>
+					<div class="infoSub"><span>Phone : </span><span><%=fields.mobileNo.here() %></span></div>
+					<div class="infoSub"><span>Email : </span><span><%=fields.email.here() %></span></div>
+					<div class="infoSub"><span>Locale : </span><span><%=fields.locale.here() %></span></div>
+					<div class="infoSub"><span><%=fields.imageFile.here() %>&nbsp;</span></div>
+				</dt>
+				<dd class="photo2">
+					<div id="popupInfoImgWih"><img id="userPicture_<%=objectId %>" onerror="<%=onErrorImg %>" src="<%=portrait %>" width="104" height="104"></div>
+					
+				</dd>
+   			</dl>
+  		</li>    
+ 	</ul>
+
+	<div id="btnline" style="padding-top:8px; border-top:1px solid #ccc;">
+		<ul>	
+			<% if(mw3.when == 'view') {%>
+			<li><a id="wBtn" href="javascript:<%=methods.editEmployeeInfo.caller()%>"><span>edit</span></a></li>	
+			<% }else if(mw3.when == 'edit') {%>
+			<li><a id="wBtn" href="javascript:<%=methods.saveEmployeeInfo.caller()%>"><span>save</span></a></li>
+			<%}%>
+		</ul>
+	</div>
 	
-	<%=methods.editEmployeeInfo.here() %>
-	<%=methods.saveEmployeeInfo.here() %>
 	
 	<%
 	} else if(mw3.where == 'pickerCaller') {
