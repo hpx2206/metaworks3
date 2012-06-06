@@ -15,10 +15,11 @@ import org.uengine.util.dao.DefaultConnectionFactory;
  */
 public class DefaultSpringConnectionFactory extends DefaultConnectionFactory {
     private static final long serialVersionUID = org.uengine.kernel.GlobalContext.SERIALIZATION_UID;
+    
     @Autowired
     DataSource dataSource;
 
     public Connection getConnection() {
-	return DataSourceUtils.getConnection(dataSource);
+    	return DataSourceUtils.getConnection(dataSource);
     }
 }
