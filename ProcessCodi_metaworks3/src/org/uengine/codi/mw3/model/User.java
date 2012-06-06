@@ -147,7 +147,7 @@ public class User extends Database<IUser> implements IUser {
 	public Object[] addFollower() throws Exception {
 		
 		if("userPicker".equals(addFollowerPanel.getMetaworksContext().getWhen())){
-			
+			getMetaworksContext().setWhen("edit");
 			return new Object[]{new Remover(new Popup()), new ToOpener(this)};
 			
 		}else{
