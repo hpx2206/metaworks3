@@ -53,7 +53,7 @@ public class InstanceListPanel {
 	
 		PersonalPerspective personalPerspective = new PersonalPerspective();
 		personalPerspective.session = session;
-		InstanceListPanel instanceListPanel = (InstanceListPanel) personalPerspective.loadInbox()[1];
+		InstanceListPanel instanceListPanel = (InstanceListPanel) personalPerspective.loadAllICanSee()[1];
 		
 		setInstanceList(instanceListPanel.getInstanceList());
 	}
