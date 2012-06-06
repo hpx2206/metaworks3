@@ -32,6 +32,8 @@ legend {display:none;}
 .writerName { font-size:11px; margin-bottom:3px; }
 .writerName span {color:#3B5998;}
 
+.workItemDate{float:right !important; font-size:11px; color:#969696; margin-top:2px; font-weight:normal}
+
 
 .replydelete {position:absolute; right:3px; top:3px; width:16px; height:16px;}
 
