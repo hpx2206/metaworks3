@@ -215,7 +215,7 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		instanceView.load(instanceRef);
 		
 		InstanceListPanel instanceListPanel = new InstanceListPanel(); //should return instanceListPanel not the instanceList only since there're one or more instanceList object in the client-side
-		
+		instanceListPanel.getInstanceList().load(session);
 
 		return new Object[]{instanceView, instanceListPanel};
 

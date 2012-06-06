@@ -152,7 +152,9 @@ public interface IWorkItem extends IDAO{
 		@ServiceMethod(inContextMenu=true, when = WHEN_VIEW, callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 		public ModalWindow workItemPopup() throws Exception;
 
-		
+		public String getStatus();
+		public void setStatus(String status);
+
 		////////// 
 		@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)
 		public IWorkItem newComment();

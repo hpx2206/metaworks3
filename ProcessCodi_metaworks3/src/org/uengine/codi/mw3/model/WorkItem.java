@@ -210,6 +210,15 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			this.tool = tool;
 		}
 
+	String status;	
+		public String getStatus() {
+			return status;
+		}
+	
+		public void setStatus(String status) {
+			this.status = status;
+		}
+
 	public WorkItemHandler detail() throws Exception{
 
 		Long instId = databaseMe().getInstId(); //since it knows metaworks IDAO will load all the field members from the table beyond the listed by setter/getter.
@@ -231,6 +240,9 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		workItemHandler.setInstanceId(instId.toString());
 		workItemHandler.setTaskId(getTaskId());
 		workItemHandler.setTracingTag(tracingTag);
+		
+		workItemHandler.setMetaworksContext(new MetaworksContext());
+		workItemHandler.getMetaworksContext().setWhen(getStatus());
 		
 		workItemHandler.load();
 		
