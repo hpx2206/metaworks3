@@ -79,7 +79,7 @@ public class ScheduleCalendar implements ContextAware {
 		ArrayList<Map<String, String>> arrListData = new ArrayList<Map<String, String>>();		
 		
 		WorkItem schedule = new WorkItem();
-		IWorkItem workitems = schedule.sql("select * from bpm_worklist where endpoint=?endpoint");
+		IWorkItem workitems = schedule.sql("select * from bpm_worklist where endpoint=?endpoint and type is null");
 		workitems.setEndpoint(session.getUser().getUserId());
 		workitems.select();
 		
