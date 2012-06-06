@@ -480,6 +480,7 @@ img {border:0;}
 .toolbar ul{}
 .toolbar li{ float:left; background:url(../../images/waveStyle/toolbar_bg.gif) left no-repeat; font-size:9pt; text-align:center; line-height:20px; color:#000; letter-spacing:-1px; border-right:1px solid #b5b9bf; padding:0 10px 0 3px;  cursor:pointer;}		
 .toolbar span{ float:left; height:20px;}
+.toolbar .toolbar_current {background:url(../../images/waveStyle/toolbar_bg_current.gif) repeat-x;}
 
 .worklistheader{height:25px;}
 .pageflip {

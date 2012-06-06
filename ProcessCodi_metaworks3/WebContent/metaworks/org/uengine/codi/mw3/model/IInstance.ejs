@@ -7,7 +7,17 @@
 	<%
 		mw3.where="anywhere";
 	
-	}else{%>
+	
+	}else{
+			
+		var isChat = (value.defId == null && value.secuopt == '1')
+		var isOpenCollab = (value.defId == null && value.secuopt=='0')
+		var isProcess = (value.defId != null);
+		var isSecureProcess = (value.defId != null && value.secuopt == '1');
+		
+	
+	
+	%>
 	
 <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tbl_type">						
 	<tbody>
@@ -23,7 +33,18 @@
 		</td> 
 		<td>									
 			<ul class="lst_type">										
-				<li class="trigger"><span class="<%= value.defId==null?'type_ping':'type_process' %>"></span><a href="#middle-center"><%=fields.name.here()%></a></li>								
+				<li class="trigger">
+				<% if(isChat){ %>
+					<span class="type_ping"></span><span class="instanceLock"></span>
+				<% }else if(isOpenCollab){ %>
+					<span class="type_ping"></span><span class="instanceUnLock"></span>
+				<% }else if(isProcess){ %>
+					<span class="type_process"></span><span class="instanceUnLock"></span>
+				<% }else if(isSecureProcess){ %>
+					<span class="type_process"></span><span class="instanceLock"></span>
+				<% } %>	
+						
+				<a href="#middle-center"><%=fields.name.here()%></a></li>								
 			</ul>								
 		</td>
 		<td class="last_td"><%=fields.startedDate.here()%></td>

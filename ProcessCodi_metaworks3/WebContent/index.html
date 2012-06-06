@@ -193,8 +193,12 @@
 				
 				mainPage = new MetaworksObject({
                     __className : "org.uengine.codi.mw3.Login",
+                    userId      : 'test',
+                    password    : 'test',
                     defId : defId
                 }, 'body');
+                
+                mainPage.login();
                 
 				window.onbeforeunload= function(){
 				    return 'You are about to leave this page, OK?';
