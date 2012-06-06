@@ -33,7 +33,7 @@ public class PortraitImageFile extends MetaworksFile {
 		System.out.println(prefix);
 		// prefix = "/Volumes/DATA/Projects/kipi/uengine/";
 
-		String portraitFileName = session.getEmployee().getEmpCode() + ".gif";
+		String portraitFileName = session.getEmployee().getEmpCode() + ".jpg";
 		String uploadPath = prefix + File.separator + portraitFileName;
 		new File(uploadPath).getParentFile().mkdirs();
 		copyStream(getFileTransfer().getInputStream(), new FileOutputStream(
