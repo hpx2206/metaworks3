@@ -66,7 +66,7 @@ public class Sales_ActivityCheck implements ITool , Serializable {
 	String special_contents;
 	
 	
-	@Face(displayName="내용 검토 후 승인/반려/영업중단 선택")
+	@Face(displayName="*내용 검토 후 승인/반려 선택(1:승인, 2:반려)")
 	public String getCheck_request() {
 		return check_request;
 	}
