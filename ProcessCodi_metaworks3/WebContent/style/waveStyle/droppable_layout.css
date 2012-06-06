@@ -766,3 +766,6 @@ html, body {
 	background-color:#f40;
 }
 
+#instructionL {position:absolute; z-index:999; width:321px; height:150px; background:url(../../images/waveStyle/instruction.png) no-repeat;}
+#instructionR {position:absolute; z-index:999; width:321px; height:150px; background:url(../../images/waveStyle/instructionR.png) no-repeat;}
+.instructionDisc{ width:240px; height:115px; margin-left:30px; margin-top:10px; color:#fff; font-weight: bold;}
