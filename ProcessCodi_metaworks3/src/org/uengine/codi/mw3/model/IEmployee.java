@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
@@ -68,7 +69,6 @@ public interface IEmployee extends IDAO {
 	@NonLoadable
 	@NonSavable
 	public PortraitImageFile getImageFile();
-
 	public void setImageFile(PortraitImageFile imageFile);
 	
 	@ServiceMethod(callByContent = true)
@@ -77,11 +77,9 @@ public interface IEmployee extends IDAO {
 	public abstract boolean getIsAdmin();
 	public abstract void setIsAdmin(boolean value);
 	
-	@NonSavable
-	@NonLoadable
-	public MetaworksFile getPortrait();
-	public void setPortrait(MetaworksFile portrait);
-
+	
+	
+	
 	
 	public IEmployee findMe() throws Exception;
 	
@@ -96,11 +94,14 @@ public interface IEmployee extends IDAO {
 	@ServiceMethod(target="popup")
 	public Popup openPicker();
 	
-	@ServiceMethod(callByContent=true)
+	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_VIEW)
+	public Object editEmployeeInfo() throws Exception;
+	
+	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_EDIT)
 	public Object saveEmployeeInfo() throws Exception;
 	
-//	@ServiceMethod(callByContent=true)
-//	public Object showDetail() throws Exception;
+	@ServiceMethod(target="popup", callByContent=true)
+	public Object showDetail() throws Exception;
 	
 	@ServiceMethod(callByContent=true)
 	public ContactList addContact() throws Exception;

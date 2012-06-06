@@ -26,7 +26,7 @@ public class ClassSourceCodes{
 
 	public ClassSourceCodes(){
 		this.sourceCode = new JavaSourceCode();
-		this.face = new WebEditor();
+		this.face = new FaceSourceCode();
 		this.faceHelper = new FaceHelperSourceCode();
 		this.classModeler = new ClassModeler();
 		this.formDesigner = new FormDesigner();
@@ -50,11 +50,11 @@ public class ClassSourceCodes{
 	}
 	
 
-	WebEditor face;			
-		public WebEditor getFace() {
+	FaceSourceCode face;			
+		public FaceSourceCode getFace() {
 			return face;
 		}
-		public void setFace(WebEditor face) {
+		public void setFace(FaceSourceCode face) {
 			this.face = face;
 		}
 		
