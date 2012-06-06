@@ -267,6 +267,19 @@ public class InstanceView {
 		return scheduleEditor;
 	}
 	
+	@ServiceMethod(needToConfirm=true)
+	public Object[] delete() throws Exception{
+
+		processManager.stopProcessInstance(instanceId);
+		
+		InstanceListPanel list = new InstanceListPanel();
+		list.getInstanceList().load(session);
+		
+		return new Object[]{list, new NewInstancePanel()};
+	}
+		
+	
+	
 	@ServiceMethod(target="popup")
 	public ModalWindow monitor() throws Exception{
 		
@@ -318,11 +331,6 @@ public class InstanceView {
 		
 	}
 
-	@ServiceMethod(needToConfirm = true)
-	public void delete() throws RemoteException{
-		processManager.stopProcessInstance(instanceId);
-		processManager.applyChanges();
-	}
 	
 	@ServiceMethod(callByContent=true)
 	public void toggleSecurityConversation() throws Exception{

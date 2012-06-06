@@ -4,6 +4,7 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.annotation.Test;
 import org.uengine.codi.mw3.calendar.ScheduleCalendar;
 
 public class InstanceListPanel {
@@ -68,6 +69,7 @@ public class InstanceListPanel {
 		}
 	
 
+	@Test(scenario="first", instruction="새 프로세스를 시작합니다.", next="autowiredObject.org.uengine.codi.mw3.model.NewInstancePanel.initiate()")
 	@ServiceMethod
 	public ContentWindow newInstance() throws Exception{
 		NewInstancePanel newInstancePanel =  new NewInstancePanel();
