@@ -6,6 +6,8 @@
 			clickAction = methods.addContact.caller();
 		}else if(mw3.when == 'addFollower'){
 			clickAction = methods.addFollower.caller();
+		}else if(mw3.when == 'self'){
+			clickAction = methods.info.caller();
 		}else{
 			clickAction = methods.detail.caller();
 		}
@@ -51,9 +53,14 @@
 				<li><a id="wBtn" href="javascript:<%=methods.removeFollower.caller()%>"><span>UnFollower</span></a></li>
 <%
 				}
+				
+				if(value.network == 'fb'){
+%>
+				<li><a id="wBtn" href="http://www.facebook.com/profile.php?id=<%=value.userId%>" target="_blank"><span>goFacebook</span></a></li>
+<%				
+				}
 %>				
-				<li><a id="wBtn" href="javascript:<%=methods.chat.caller()%>"><span>Chat</span></a></li>			
-				<li><a id="wBtn" href="javascript:<%=methods.info.caller()%>"><span>Info</span></a></li>			
+				<li><a id="wBtn" href="javascript:<%=methods.chat.caller()%>"><span>Chat</span></a></li>						
 			</ul>
 		</div>
 <%
@@ -74,7 +81,7 @@
 				<span class="fontgray"></span>
 			</div>
 <%			
-			}else if(mw3.when == 'contact'){
+			}else if(mw3.when == 'self'){
 %>
 
 			<div class="user_compact">
