@@ -111,7 +111,7 @@ public class Sales_Activity implements ITool , Serializable {
 		this.spent_expenses = spent_expenses;
 	}
 	
-	@Face(displayName="검토 요청")
+	@Face(displayName="*검토 요청(1:검토요청, 2:수주종료)")
 	public String getRequest_check() {
 		return request_check;
 	}
