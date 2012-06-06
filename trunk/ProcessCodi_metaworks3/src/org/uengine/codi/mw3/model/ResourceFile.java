@@ -208,6 +208,20 @@ public class ResourceFile implements ContextAware{
 		return popup;
 	}
 
+	@Face(displayName="Export to Activity App Zip")
+	@ServiceMethod(inContextMenu=true, target=ServiceMethodContext.TARGET_POPUP)
+	public Popup exportToJar() throws Exception{
+		FileImporter fileImporter = new FileImporter();
+		fileImporter.setParentDirectory(getAlias());
+		
+		Popup popup = new Popup();
+		popup.setPanel(fileImporter);
+		popup.setMetaworksContext(new MetaworksContext());
+		popup.getMetaworksContext().setWhen("edit");
+		
+		return popup;
+	}
+
 	
 	@ServiceMethod(callByContent=true, except="childs")
 	public ContentWindow design() throws Exception {
@@ -294,6 +308,9 @@ public class ResourceFile implements ContextAware{
 		return new Object[]{processMapList, new Remover(new ModalWindow())};		
 	}
 
+	
+	protected IUser friend;
+
 	@ServiceMethod(callByContent=true, except="childs")
 	public Object[] initiate() throws Exception{
 		InstanceViewContent instanceView = instanceViewContent;// = new InstanceViewContent();
@@ -317,6 +334,16 @@ public class ResourceFile implements ContextAware{
 
 		}
 		
+		if(friend!=null){
+			
+			org.uengine.kernel.RoleMapping receiver = org.uengine.kernel.RoleMapping.create();
+			receiver.setEndpoint(friend.getUserId());
+			receiver.setName("___receiver____");
+			
+			processManager.putRoleMapping(instId, receiver);
+
+		}
+		
 		RoleMapping rm = RoleMapping.create();
 		if(session.user!=null)
 			rm.setEndpoint(session.user.getUserId());
@@ -332,6 +359,7 @@ public class ResourceFile implements ContextAware{
 		instanceView.load(instanceRef);
 		
 		InstanceListPanel instanceList = new InstanceListPanel(); //should return instanceListPanel not the instanceList only since there're one or more instanceList object in the client-side
+		instanceList.getInstanceList().load(session);
 		
 		//instanceList.load(session.login, session.navigation);
 

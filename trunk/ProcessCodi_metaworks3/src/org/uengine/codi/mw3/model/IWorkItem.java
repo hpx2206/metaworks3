@@ -25,6 +25,7 @@ import org.metaworks.website.ImageContents;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.website.ParagraphContents;
 import org.metaworks.website.SourceCodeContents;
+import org.metaworks.widget.ModalWindow;
 import org.metaworks.widget.Window;
 
 @Table(name = "bpm_worklist")
@@ -134,7 +135,7 @@ public interface IWorkItem extends IDAO{
 		@ServiceMethod(when = WHEN_VIEW)
 		public void like() throws Exception;
 		
-		@ServiceMethod(when = WHEN_VIEW, callByContent=true)//, target=ServiceMethodContext.TARGET_POPUP)
+		@ServiceMethod(when = WHEN_VIEW, callByContent=true)
 		public WorkItemHandler detail() throws Exception;
 
 		@ServiceMethod(callByContent = true, target=ServiceMethodContext.TARGET_SELF)
@@ -149,6 +150,10 @@ public interface IWorkItem extends IDAO{
 		public WorkItemHandler getWorkItemHandler();
 		public void setWorkItemHandler(WorkItemHandler workItemHandler);
 
+		@Face(displayName="Open")
+		@ServiceMethod(inContextMenu=true, when = WHEN_VIEW, callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
+		public ModalWindow workItemPopup() throws Exception;
+
 		
 		////////// 
 		@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)
@@ -156,6 +161,9 @@ public interface IWorkItem extends IDAO{
 		
 		@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)
 		public IWorkItem newSourceCode();
+		
+		@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
+		public Popup newActivity() throws Exception;
 		
 		@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)
 		public IWorkItem newSchedule();
