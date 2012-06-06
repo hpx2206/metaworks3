@@ -1,14 +1,10 @@
 package org.uengine.codi.mw3.model;
 
-import java.io.File;
-
 import org.metaworks.MetaworksContext;
 import org.metaworks.Remover;
 import org.metaworks.ToOpener;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
-import org.metaworks.dao.TransactionContext;
-import org.metaworks.website.MetaworksFile;
 
 public class Employee extends Database<IEmployee> implements IEmployee {
 	
@@ -28,16 +24,9 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	String mobileNo;
 	String email;
 	String locale;
-	
-	MetaworksFile portrait;
-	
-	public MetaworksFile getPortrait() {
-		return portrait;
-	}
 
-	public void setPortrait(MetaworksFile portrait) {
-		this.portrait = portrait;
-	}
+	
+	
 
 	public String getEmpCode() {
 		return empCode;
@@ -140,14 +129,12 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	}
 
 	PortraitImageFile imageFile;
-	
-	public PortraitImageFile getImageFile() {
-		return imageFile;
-	}
-
-	public void setImageFile(PortraitImageFile imageFile) {
-		this.imageFile = imageFile;
-	}
+		public PortraitImageFile getImageFile() {
+			return imageFile;
+		}
+		public void setImageFile(PortraitImageFile imageFile) {
+			this.imageFile = imageFile;
+		}
 
 	@Override
 	public IEmployee load() throws Exception {
@@ -237,6 +224,20 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	}
 
 	@Override
+	public Object editEmployeeInfo() throws Exception {
+		IEmployee employee = findMe();
+		
+		employee.getMetaworksContext().setHow("detail");
+		employee.getMetaworksContext().setWhen(WHEN_EDIT);
+		employee.getMetaworksContext().setWhere("inDetailView");
+
+		employee.setImageFile(new PortraitImageFile());
+		employee.getImageFile().getMetaworksContext().setWhen(WHEN_EDIT);
+		
+		return new EmployeeInfo(employee);
+	}	
+	
+	@Override
 	public Object[] saveEmployeeInfo() throws Exception {
 		if (getMetaworksContext().getWhen().equals(MetaworksContext.WHEN_NEW)) {
 			createDatabaseMe();
@@ -244,47 +245,34 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 			// if(getMetaworksContext().getWhen().equals(MetaworksContext.WHEN_EDIT))
 			syncToDatabaseMe();
 		}
-		
-		if(getPortrait()!=null && getPortrait().getFileTransfer()!=null){
-			getPortrait().upload();
-			
-			new File(getPortrait().getUploadedPath()).renameTo(new File(TransactionContext.getThreadLocalInstance().getRequest().getContextPath() + "/portrait/" + getEmpCode() + ".jpg"));
-
-		}
-		
 		flushDatabaseMe();
 		getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 		
+		if(getImageFile()!=null && getImageFile().getFileTransfer()!=null){
+			getImageFile().session = session;
+			getImageFile().upload();
+
+		}
+		
 		if(session.getEmployee().getEmpCode().equals(getEmpCode())) {
 			session.setEmployee(findMe());
-			return new Object[] {findMe(), session};
+			return new Object[] {new EmployeeInfo(findMe()), session};
 		}
-		return new Object[] {findMe()};
+		return new Object[] {new EmployeeInfo(findMe())};
 	}
-//
-//	@Override
-//	public Object showDetail() throws Exception {
-//		IEmployee employee = findMe();
-//		employee.setMetaworksContext(getMetaworksContext());
-//		employee.getMetaworksContext().setHow("detail");
-//		
-//		if (getMetaworksContext().getWhere().equals("inSession")) {
-//			employee.getMetaworksContext().setWhere("inDetailView");
-//			employee.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
-//			EastRightPanel empInfoPanel = new EastRightPanel();
-//			empInfoPanel.setContent(employee);
-//			return empInfoPanel;
-//		} else if (getMetaworksContext().getWhere().equals("admin")) {
-//			AdminEastPanel newDeptPanel = new AdminEastPanel();
-//			newDeptPanel.setContent(employee);
-//			return newDeptPanel;
-//		} else {
-//			EastRightPanel empInfoPanel = new EastRightPanel();
-//			empInfoPanel.setContent(employee);
-//			return empInfoPanel;
-//		}
-//	}
-
+	
+	@Override
+	public Object showDetail() throws Exception {
+		IEmployee employee = findMe();
+		employee.setMetaworksContext(getMetaworksContext());
+		employee.getMetaworksContext().setHow("detail");
+		employee.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+		employee.getMetaworksContext().setWhere("inDetailView");
+		
+		
+		return new Popup(new EmployeeInfo(employee));
+	}
+	
 	@Override
 	public ContactList addContact() throws Exception {
 		Contact contact = new Contact();
