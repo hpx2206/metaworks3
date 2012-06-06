@@ -42,8 +42,6 @@ if(value){
 				Phone : <%=fields.mobileNo.here() %>
 				Email : <%=fields.email.here() %>
 				Locale : <%=fields.locale.here() %>
-				IPC : <%=fields.ipcCode.here() %>
-				TECH : <%=fields.techCode.here() %>
 			<%
 			} else if(mw3.when == 'new') {
 			%>
@@ -56,10 +54,8 @@ if(value){
 				Phone : <%=fields.mobileNo.here() %>
 				Email : <%=fields.email.here() %>
 				Locale : <%=fields.locale.here() %>
-				IPC : <%=fields.ipcCode.here() %>
-				TECH : <%=fields.techCode.here() %>
 			<%
-			// } else if(mw3.when == 'edit') { }
+			} else if(mw3.when == 'edit') {
 			%>
 				<%=methods.saveEmployeeInfo.here() %>
 			<%
@@ -103,8 +99,8 @@ if(value){
 	Phone : <%=fields.mobileNo.here() %>
 	Email : <%=fields.email.here() %>
 	Locale : <%=fields.locale.here() %>
-	IPC : <%=value.ipcCode %>
-	TECH : <%=value.techCode %>
+	
+	<%=methods.editEmployeeInfo.here() %>
 	<%=methods.saveEmployeeInfo.here() %>
 	
 	<%
