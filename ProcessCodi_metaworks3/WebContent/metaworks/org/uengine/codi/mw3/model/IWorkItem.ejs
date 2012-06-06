@@ -2,7 +2,7 @@
 
 <%
 	var isMine = (value.endpoint == mw3.getAutowiredObject('org.uengine.codi.mw3.model.Session').user.userId);
-	//alert(isMine + "," + value.type);
+
 	if(isMine == true && value.type=='comment'){
 %>
 	<div class="view_box3" style="background:#fff; float:right; width:80%;">
