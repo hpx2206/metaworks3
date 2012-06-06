@@ -1,20 +1,18 @@
 package org.metaworks.dwr;
 
-import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.URL;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.HashMap;
 
 import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
 
+import org.directwebremoting.Browser;
+import org.directwebremoting.ScriptSessions;
 import org.directwebremoting.ServerContextFactory;
 import org.directwebremoting.WebContext;
 import org.directwebremoting.WebContextFactory;
@@ -22,13 +20,10 @@ import org.directwebremoting.proxy.dwr.Util;
 import org.metaworks.FieldDescriptor;
 import org.metaworks.MetaworksContext;
 import org.metaworks.ObjectInstance;
-import org.metaworks.ObjectType;
-import org.metaworks.Type;
 import org.metaworks.WebObjectType;
 import org.metaworks.dao.ConnectionFactory;
 import org.metaworks.dao.IDAO;
 import org.metaworks.dao.TransactionContext;
-import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -52,7 +47,17 @@ public class MetaworksRemoteService {
 			
 			return instance;
 		}
-		
+	
+	public static void pushClientObjects(final Object[] object){
+		 Browser.withAllSessions(new Runnable(){
+			   @Override
+			   public void run() {
+			    ScriptSessions.addFunctionCall("mw3.locateObject", new Object[]{object, null, "body"});
+			    ScriptSessions.addFunctionCall("mw3.onLoadFaceHelperScript", new Object[]{});
+
+			   }			  
+		});
+	}
 		
 	public void clearMetaworksType(String className) throws Exception {
 		
