@@ -11,6 +11,8 @@ import org.metaworks.dao.TransactionContext;
 import org.metaworks.dwr.InvocationContext;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.dwr.TransactionalDwrServlet;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import org.uengine.codi.platform.SecurityContext;
 import org.uengine.processmanager.ProcessManagerBean;
@@ -134,6 +136,7 @@ public class CodiMetaworksRemoteService extends MetaworksRemoteService{
 	
 
 	@Override
+	//@Transactional(propagation=Propagation.REQUIRED)
 	public Object callMetaworksService(String objectTypeName, Object object,
 			String methodName, Map<String, Object> autowiredFields)
 			throws Throwable {

@@ -158,7 +158,7 @@ public class Login extends Database<ILogin> implements ILogin{
 				setErrorMessage(e.getMessage());
 
 				// FIXME Monitoring for login errors
-				// e.printStackTrace();
+				//throw new RuntimeException(e);//.printStackTrace();
 			}
 			getMetaworksContext().setWhen(emp.getMetaworksContext().getWhen());
 		}
