@@ -45,10 +45,6 @@ org_uengine_codi_mw3_admin_JavaCodeAssist.prototype.change = function(expression
 		expressionClass = expression.substring(pos+1);
 		expressionPackage = expression.substring(0, pos);
 	}
-	
-	console.debug('expressionPackage : ' + expression);
-	console.debug('expressionPackage : ' + expressionPackage);
-	console.debug('expressionClass : ' + expressionClass);	
 		
 	var object = mw3.objects[this.objectId];
 

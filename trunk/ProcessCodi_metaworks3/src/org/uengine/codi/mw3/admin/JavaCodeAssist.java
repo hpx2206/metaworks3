@@ -1,12 +1,8 @@
 package org.uengine.codi.mw3.admin;
 
-import java.util.ArrayList;
-
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.example.ide.CodeAssist;
 import org.metaworks.example.ide.CodeAssistDocument;
-import org.uengine.codi.mw3.admin.EntityDefinition;
-import org.uengine.codi.mw3.model.WebServiceAdapterContentPanel;
 import org.uengine.codi.mw3.model.WebServiceDefinition;
 
 public class JavaCodeAssist extends CodeAssist{
@@ -16,6 +12,7 @@ public class JavaCodeAssist extends CodeAssist{
 		
 		setEntityDefinition(new EntityDefinition());
 		setWebServiceDefinition(new WebServiceDefinition());
+		
 	}
 	
 	EntityDefinition entityDefinition;
