@@ -36,15 +36,17 @@
 		<property name="validationQuery" value="SELECT 1" />		
 	</bean>
 	
-	
-	
-	
 	<!-- ============================================================= -->
 	<!-- Transaction -->
 	<!-- ============================================================= -->
 	<context:annotation-config />
 	<tx:annotation-driven transaction-manager="txManager" />
 
+	<bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+  		<property name="dataSource" ref="dataSource"/>
+	</bean>
+	
+	
 
 	<!-- ============================================================= -->
 	<!-- uEngine SpringConnectionFactory setDataSource(DataSource) -->
@@ -55,12 +57,12 @@
 	
 
 	<bean id="springConnectionFactory"
-		class="org.uengine.codi.common.aoptx.DefaultSpringConnectionFactory"></bean>
+		class="org.uengine.codi.MetaworksUEngineSpringConnectionAdapter"></bean>
 	
 	<bean id="processManagerBean" class="org.uengine.processmanager.ProcessManagerBean"
 		scope="request">
-		<property name="managedTransaction" value="false" />
-		<property name="autoCloseConnection" value="true" />
+		<property name="managedTransaction" value="true" />
+		<property name="autoCloseConnection" value="false" />
 		<property name="connectionFactory" ref="springConnectionFactory" />
 		<aop:scoped-proxy />
 	</bean>
@@ -74,11 +76,12 @@
 	</bean>
  -->
 	<bean id="springConnectionFactoryForMetaworks"
-		class="org.metaworks.spring.SpringConnectionFactory">
+		class="org.metaworks.spring.SpringConnectionFactory"
+		>
 		<property name="dataSource" ref="dataSource"/>	
 	</bean>
 	
-	<bean id="MetaworksRemoteService" class="org.uengine.codi.mw3.CodiMetaworksRemoteService">
+	<bean id="MetaworksRemoteService" class="org.uengine.codi.mw3.CodiMetaworksRemoteService" scope="singleton">
 		<property name="connectionFactory" ref="springConnectionFactoryForMetaworks"/>
 	</bean>
 
