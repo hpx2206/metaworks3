@@ -9,7 +9,7 @@ var org_uengine_codi_mw3_model_IInstance = function(objectId, className){
 		 mw3.getFaceHelper(objectId).unBlinking();
 		 
 		 $(".tbl_type").parent().css("background","none");
-		 $(this).css("background","#FFF5C1");
+		 $(this).css("background","#C9E2FC");
 	 });
 	 
 	 var object = mw3.objects[this.objectId];
