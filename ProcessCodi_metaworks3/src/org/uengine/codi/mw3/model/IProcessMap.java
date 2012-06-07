@@ -6,6 +6,7 @@ import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;
 import org.metaworks.annotation.ORMapping;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.annotation.Test;
 import org.metaworks.dao.IDAO;
 import org.metaworks.website.MetaworksFile;
 
@@ -43,7 +44,9 @@ public interface IProcessMap extends IDAO {
 	@ServiceMethod
 	public Remover close() throws Exception;
 	
-	@ServiceMethod
+	@ServiceMethod 
+	@Test(scenario="first", starter=true, instruction="Issue Tracking 프로세스를 선택합니다.", next="autowiredObject.org.uengine.codi.mw3.model.InstanceView.monitor()")
+//	@Test(scenario="first", starter=true, instruction="Issue Tracking 프로세스를 선택합니다.", next="autowiredObject.org.uengine.codi.mw3.admin.PageNavigator.goKnowledge()")
 	public Object[] initiate() throws Exception;
 	
 	public void createMe() throws Exception;

@@ -4,6 +4,8 @@ import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
+import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.annotation.Test;
 
 public class ContactListPanel implements ContextAware {
 
@@ -13,6 +15,13 @@ public class ContactListPanel implements ContextAware {
 	
 	public ContactListPanel(){
 		setMetaworksContext(new MetaworksContext());
+	}
+	
+	//TODO: please delete after Fake
+	@ServiceMethod(target="popup")
+	@Test(scenario="first", instruction="친구중 하나와 채팅을 나눌 수 있습니다. 아무 친구나 선택하세요...", next="autowiredObject.org.metaworks.codi.mw3.admin.PageNavigator.goKnowledge()")
+	public void chat(){
+		
 	}
 	
 	public void load(String userId) throws Exception {

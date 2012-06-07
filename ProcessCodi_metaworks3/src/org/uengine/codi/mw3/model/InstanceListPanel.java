@@ -5,6 +5,7 @@ import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Test;
+import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.calendar.ScheduleCalendar;
 
 public class InstanceListPanel {
@@ -39,6 +40,8 @@ public class InstanceListPanel {
 	//@Hidden
 	@Face(displayName="Calendar View")
 	@ServiceMethod(inContextMenu=true)
+//	@Test(scenario="first", starter=true, instruction="창을 닫으시고, '우측클릭 > Calendar' 를 클릭하시면 내가 참여하고 있는 목록을 달력으로 볼 수 있습니다.", next="autowiredObject.org.uengine.codi.mw3.model.ContactListPanel.chat()")
+	@Test(scenario="first", starter=true, instruction="창을 닫으시고, '우측클릭 > Calendar' 를 클릭하시면 내가 참여하고 있는 목록을 달력으로 볼 수 있습니다.", next="autowiredObject.org.uengine.codi.mw3.admin.PageNavigator.goKnowledge()")	
 	public void switchToScheduleCalendar() throws Exception{
 		this.setInstanceList(null);
 		this.scheduleCalendar = new ScheduleCalendar();

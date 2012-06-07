@@ -15,6 +15,7 @@ import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
+import org.metaworks.annotation.Test;
 import org.metaworks.dao.Database;
 import org.metaworks.example.ide.SourceCode;
 import org.metaworks.website.MetaworksFile;
@@ -384,7 +385,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 
 			@Override
 			public void run() {
-				ScriptSessions.addFunctionCall("mw3.locateObject", new Object[]{new Object[]{new Refresh(refreshedInstanceView), new Refresh(refreshedInstance)}, null, "body"});
+				ScriptSessions.addFunctionCall("mw3.locateObject", new Object[]{new Object[]{new Refresh(refreshedInstanceView)/*, new Refresh(refreshedInstance)*/}, null, "body"});
 				ScriptSessions.addFunctionCall("mw3.onLoadFaceHelperScript", new Object[]{});
 
 			}

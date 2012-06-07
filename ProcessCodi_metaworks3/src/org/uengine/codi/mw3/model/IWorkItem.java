@@ -16,6 +16,7 @@ import org.metaworks.annotation.ORMapping;
 import org.metaworks.annotation.Range;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Table;
+import org.metaworks.annotation.Test;
 import org.metaworks.annotation.TypeSelector;
 import org.metaworks.dao.IDAO;
 import org.metaworks.example.ide.SourceCode;
@@ -137,6 +138,7 @@ public interface IWorkItem extends IDAO{
 		public WorkItemHandler detail() throws Exception;
 
 		@ServiceMethod(callByContent = true, target=ServiceMethodContext.TARGET_SELF)
+		@Test(scenario="first", starter=true, instruction="댓글을 추가합니다.", next="autowiredObject.org.uengine.codi.mw3.model.WorkItem.newSourceCode()")
 		public WorkItem[] add() throws Exception;
 
 		
@@ -160,6 +162,7 @@ public interface IWorkItem extends IDAO{
 		public IWorkItem newComment();
 		
 		@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)
+		@Test(scenario="first", starter=true, instruction="메모를 입력할 수 있습니다.", next="autowiredObject.org.uengine.codi.mw3.model.WorkItem.newFile()")	
 		public IWorkItem newSourceCode();
 		
 		@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)

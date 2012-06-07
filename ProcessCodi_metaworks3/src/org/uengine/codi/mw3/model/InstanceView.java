@@ -11,6 +11,7 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.annotation.Test;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -211,17 +212,17 @@ public class InstanceView {
 			this.threadPosting = threadPosting;
 		}
 
-//	public ProcessInstanceMonitor processInstanceMonitor;
-//
-//	public ProcessInstanceMonitor getProcessInstanceMonitor() {
-//		return processInstanceMonitor;
-//	}
-//
-//	public void setProcessInstanceMonitor(
-//			ProcessInstanceMonitor processInstanceMonitor) {
-//		this.processInstanceMonitor = processInstanceMonitor;
-//	}
-		
+	public ProcessInstanceMonitorPanel processInstanceMonitor;
+			
+		public ProcessInstanceMonitorPanel getProcessInstanceMonitor() {
+			return processInstanceMonitor;
+		}
+	
+		public void setProcessInstanceMonitor(
+				ProcessInstanceMonitorPanel processInstanceMonitor) {
+			this.processInstanceMonitor = processInstanceMonitor;
+		}
+
 	EventTriggerPanel eventTriggerPanel;
 				
 		public EventTriggerPanel getEventTriggerPanel() {
@@ -257,7 +258,13 @@ public class InstanceView {
 			this.crowdSourcer = crowdSourcer;
 		}
 
-	@ServiceMethod
+	//TODO: Please remove this method after Fake
+	@ServiceMethod 
+	@Test(scenario="first", starter=true, instruction="댓글로 메모, 파일등을 입력할 수 있고 기타 동적인 업무를 추가할 수 있습니다. 여기서 기타활동을 클릭하십시오.", next="autowiredObject.org.uengine.codi.mw3.model.IProcessMap.initiate()")
+	public void newActivity() {}
+	
+	
+	@ServiceMethod 	
 	public ScheduleEditor schedule() throws Exception{
 		scheduleEditor = new ScheduleEditor();
 		scheduleEditor.setInstanceId(instanceId);
@@ -281,6 +288,7 @@ public class InstanceView {
 	
 	
 	@ServiceMethod(target="popup")
+	@Test(scenario="first", starter=true, instruction="자유로운 대화와 정형화된 프로세스가 어우러진 프로세스를 모니터링 합니다.", next="autowiredObject.org.uengine.codi.mw3.admin.PageNavigator.goKnowledge()")
 	public ModalWindow monitor() throws Exception{
 		
 		ModalWindow modal = new ModalWindow();
@@ -291,6 +299,8 @@ public class InstanceView {
 		ProcessInstanceMonitorPanel processInstanceMonitorPanel = new ProcessInstanceMonitorPanel();
 		processInstanceMonitorPanel.processManager = processManager;
 		processInstanceMonitorPanel.load(instanceId);
+		
+		//setProcessInstanceMonitor(processInstanceMonitorPanel);
 		
 		modal.setPanel(processInstanceMonitorPanel);
 		

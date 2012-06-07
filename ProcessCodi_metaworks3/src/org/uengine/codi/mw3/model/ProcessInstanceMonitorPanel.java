@@ -45,7 +45,7 @@ public class ProcessInstanceMonitorPanel extends Layout{
 		processInstanceNavigator.load(instanceId);
 		processInstanceNavigator.processManager = processManager;
 		
-		setWest(processInstanceNavigator);
+		setNorth(processInstanceNavigator);
 		setCenter(processInstanceMonitor);
 	}
 	
