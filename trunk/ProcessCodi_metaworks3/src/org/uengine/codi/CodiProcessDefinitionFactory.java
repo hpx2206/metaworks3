@@ -87,6 +87,8 @@ public class CodiProcessDefinitionFactory extends ProcessDefinitionFactory{
 			throws Exception {
 		
 		
+		
+		
 		//ignores the version, belongingPdid, overwrite
 		// how to handle the adhoc?
 		// just delegates the version control functionalities to SVN kit
@@ -138,6 +140,8 @@ public class CodiProcessDefinitionFactory extends ProcessDefinitionFactory{
 				fos.close();
 		}
 
+		removeFromCache(alias);
+		
 		return new String[]{alias, defFileName};
 		
 	}
