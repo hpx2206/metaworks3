@@ -8,6 +8,7 @@ import org.metaworks.Remover;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.annotation.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.CodiProcessDefinitionFactory;
 import org.uengine.codi.mw3.Login;
@@ -48,6 +49,7 @@ public class UnstructuredProcessInstanceStarter implements ContextAware {
 		}
 
 	@ServiceMethod(callByContent = true, keyBinding="enter")
+	@Test(scenario="first", starter=true, instruction="지금 생각하고 계신 것을 간략히 입력하고 클릭합니다.", next="autowiredObject.org.uengine.codi.mw3.model.InstanceView.newActivity()")
 	public Object[] start() throws Exception{
 		
 		//good example: fully reused code are below:
