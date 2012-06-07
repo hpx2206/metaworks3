@@ -1923,15 +1923,15 @@
 			function showupInstruction(methodDivId, instruction, options){
 				   	var methodDiv = $("#" + methodDivId);
 
-				   	$('body').append("<div id='instruction' style='width:281px;height:79px;background-image:url(\"dwr/metaworks/images/waveStyle/instruction.png\");z-index:100;position:absolute; visibility: \"\"; top:"+ (methodDiv.offset().top - 50) +"px; left:"+ (methodDiv.offset().left + methodDiv.children()[0].offsetWidth - 10) +"px'> <table width=100% height=100% cellpadding=10><td width=10px></td><td><center><font color=white><b>" + instruction + "</b></font></center></td></table></div>");
+				   	$('body').append("<div id='instructionR' onclick=\"this.style.display='none'\"><div class='instructionDisc'>" + instruction + "</div></div>");
 
-					//$("#instruction").css({"top": methodDiv.offset().top + "px", "left": (methodDiv.offset().left + methodDiv.children()[0].offsetWidth + 10) + "px" });
+					$("#instructionR").css({"top": methodDiv.offset().top - 60 + "px", "left": (methodDiv.offset().left + methodDiv.children()[0].offsetWidth - 350) + "px" });
 //					$("#instruction").slideDown(500);
 					
-					$( "#instruction" ).effect( 'pulsate', 800 );
+					$( "#instructionR" ).effect( 'pulsate', 800 );
 					
 					if(options && options.onclick)
-						$("#instruction").onclick(function(){options.onclick();});
+						$("#instructionR").onclick(function(){options.onclick();});
 					
 //					setTimeout(function(){
 //						$( "#instruction" ).effect( 'shake',300 );
@@ -1945,8 +1945,8 @@
 
 
 			Metaworks3.prototype.test = function(objectId, testName, options){
-				  $( "#instruction" ).slideUp(500, function(){
-					  $('#instruction').remove();							  
+				  $( "#instructionR" ).slideUp(500, function(){
+					  $('#instructionR').remove();							  
 				  });
 				  
 
@@ -2026,7 +2026,7 @@
 			   
 			   var test = testsForTheClass[testName];
 			   
-			   if(test==null){ alert('test is null');
+			   if(test==null){ alert('test is null. Please check your starter @Test name is same with the scenario name or set by starter=true.');
 			   
 			   		return;
 			   
@@ -2050,7 +2050,7 @@
 						   //next = "\""+next+"\"";
 							   instruction = instruction + "<input type=button value='Next' onclick=\"mw3.test(" + value.__objectId + ", '" + next + "',{guidedTour:true})\">";
 						   else{
-							   instruction = instruction + "<input type=button value='Done !' onclick=\"$('#instruction').remove()\">";
+							   instruction = instruction + "<input type=button value='Done !' onclick=\"$('#instructionR').remove()\">";
 							   
 						   }
 						   
@@ -2109,6 +2109,58 @@
 				   var returnValue;
 				   
 				   if(test.methodName){
+					   
+						  /// installing the call handler to continue after the call 
+						  mw3.afterCall = function(methodName, result){
+							  
+							  if(methodName != test.methodName) return;
+
+
+							   var next = (test && test.next && test.next[0] ? test.scenario + "." + test.next[0] : null);
+							   
+							   if(next==null){  // detect end!
+								   mw3.afterCall = null;
+								   
+								  $( "#instructionR" ).slideUp(500, function(){
+									  $('#instructionR').remove();							  
+									   //TODO: done message should be here!
+									   alert('Congratulations! Your guided Tour has been finished.');
+								  });
+
+								   return;
+							   }
+							   
+							   if(next && next.indexOf("returnValue.") >= 0){
+								   if(returnValue.metaworksMetadata){
+									   value = mw3.objects[this.targetObjectId];
+									   
+								   }else{
+									   value = returnValue;
+								   }
+								   
+								   //next = next.substr("returnValue.".length);
+								   
+								   mw3.test(value.__objectId, testName, options);
+							   }else if(next && next.indexOf("autowiredObject.") >= 0){
+							   		var posLastDot = next.lastIndexOf(".");
+							   		
+							   		var prefixLength = "autowiredObject.".length + next.indexOf(".") + 1;
+							   		
+							   		var className = next.substr(prefixLength, posLastDot - prefixLength);
+							   		var methodName = next.substr(posLastDot + 1);
+							   
+								   value = this.getAutowiredObject(className);
+								   
+								   mw3.test(value.__objectId, methodName, options);
+								  
+							   } else{
+								   value = mw3.objects[objectId];
+								   mw3.test(value.__objectId, next, options);
+							   }
+
+						   }
+	   
+							   
 
 					   if(guidedTour){
 						   
@@ -2123,65 +2175,12 @@
 						  
 					   }else{
 						   
-							  /// installing the call handler to continue after the call 
-							  mw3.afterCall = function(methodName, result){
-								  
-								  if(methodName != test.methodName) return;
 
-
-								   var next = (test && test.next && test.next[0] ? test.scenario + "." + test.next[0] : null);
-								   
-								   if(next==null){  // detect end!
-									   mw3.afterCall = null;
-									   
-									  $( "#instruction" ).slideUp(500, function(){
-										  $('#instruction').remove();							  
-										   //TODO: done message should be here!
-										   alert('Congratulations! Your guided Tour has been finished.');
-									  });
-
-									   return;
-								   }
-								   
-								   if(next && next.indexOf("returnValue.") >= 0){
-									   if(returnValue.metaworksMetadata){
-										   value = mw3.objects[this.targetObjectId];
-										   
-									   }else{
-										   value = returnValue;
-									   }
-									   
-									   //next = next.substr("returnValue.".length);
-									   
-									   mw3.test(value.__objectId, testName, options);
-								   }else if(next && next.indexOf("autowiredObject.") >= 0){
-								   		var posLastDot = next.lastIndexOf(".");
-								   		
-								   		var prefixLength = "autowiredObject.".length + next.indexOf(".") + 1;
-								   		
-								   		var className = next.substr(prefixLength, posLastDot - prefixLength);
-								   		var methodName = next.substr(posLastDot + 1);
-								   
-									   value = this.getAutowiredObject(className);
-									   
-									   mw3.test(value.__objectId, methodName, options);
-									  
-								   } else{
-									   value = mw3.objects[objectId];
-									   mw3.test(value.__objectId, next, options);
-								   }
-								   
-								  
-								   //mw3.afterCall = null;
-							  };
-						   
 						   returnValue = this.call(value.__objectId, test.methodName, true, true); //sync call
 					   }
 					   
 					   
-					   
-
-				   }
+				   }  
 				   
 			   }
 				
