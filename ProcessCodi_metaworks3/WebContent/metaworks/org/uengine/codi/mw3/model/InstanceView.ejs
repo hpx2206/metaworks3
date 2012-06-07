@@ -11,7 +11,7 @@
 			        
 			        <li id="wih_btn_item_Information">
 			        	<a href="javascript:<%=methods.monitor.caller()%>">
-			        		<span><img src="images/waveStyle/i_workitem_i.png" border="0"></span>
+			        		<span id="method_<%=objectId%>_monitor"><img src="images/waveStyle/i_workitem_i.png" border="0"></span>
 			        		<span>프로세스</span>
 			        	</a>
 			        </li>
@@ -52,7 +52,7 @@
 			        	</a>
 			        </li>
 			        <li id="wih_btn_item_delete" style="display: block; ">
-			        	<a href="javascript:deleteProcessInstance()">
+			        	<a href="javascript:<%=methods.schedule.caller()%>">
 			        		<span><img src="images/waveStyle/i_delete.png" border="0"></span>
 			        		<span>삭제</span>
 			        	</a>
@@ -96,10 +96,14 @@
 %>
  				<%=fields.crowdSourcer.here()%>				
 
+<<<<<<< .mine
+		<div class="pane ui-layout-center" id="method_<%=objectId%>_newActivity">
+=======
 <%
 		}
 %>	
 		<div class="pane ui-layout-center">
+>>>>>>> .r1148
 			<div class="ui-layout-content">
 				<%=fields.instanceNameChanger.here({when:'edit'})%>
 				<%=fields.eventTriggerPanel.here()%>
