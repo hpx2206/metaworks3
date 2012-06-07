@@ -25,7 +25,7 @@ public interface ILogin extends IDAO{
 	public String getDefId();
 	public void setDefId(String defId);
 		
-	@Test(scenario="first", starter=true, instruction="관리자 아이디/패스워스 test/test 를 입력하고 로그인을 합니다.", next="autowiredObject.org.uengine.codi.mw3.model.InstanceListPanel.newInstance()")
+	@Test(scenario="first", starter=true, instruction="아이디/패스워스 = test/test 로 로그인을 합니다.", next="autowiredObject.org.uengine.codi.mw3.model.UnstructuredProcessInstanceStarter.start()")
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)
 	public Object login() throws Exception;	
 	
