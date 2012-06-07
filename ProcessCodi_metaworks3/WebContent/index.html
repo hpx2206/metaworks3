@@ -12,6 +12,21 @@
 		<script type="text/javascript" src="scripts/jquery/jquery.layout-latest.js"></script> 
 		<script type="text/javascript" src="scripts/jquery.view/jquerymx-1.0.custom.js"></script>
 				
+		<!-- for flowchart -->
+		<script type="text/javascript" src="scripts/raphael/raphael-min.js"></script>
+		<script type="text/javascript" src="scripts/ajax/ajaxCommon.js"></script>
+		<script type="text/javascript" src="scripts/crossBrowser/elementControl.js"></script>
+		
+		<script type="text/javascript" src="scripts/flowchart/flowchartDefinition.js"></script>		
+		
+		<script type="text/javascript" src="scripts/flowchart/flowchartUtil.js"></script>		 
+		<script type="text/javascript" src="scripts/loopDrawForMW3.js"></script>
+
+
+		<script type="text/javascript" src="scripts/popupTooltip.js"></script>
+		
+		<LINK type="text/css" rel="stylesheet" href="style/popupTooltip.css">
+		<LINK type="text/css" rel="stylesheet" href="style/flowchart.css">
 		
 		<!-- smart tab -->
 		<link rel="stylesheet" type="text/css" href="style/smartTab.css">				
@@ -99,22 +114,6 @@
 		
 		<link rel="stylesheet" type="text/css" href="dwr/metaworks/org/uengine/codi/mw3/model/PureWebProcessDesigner.ejs.css" />
 		
-		<!-- for flowchart -->
-		<!-- 
-		<script type="text/javascript" src="scripts/raphael/raphael-min.js"></script>
-		<script type="text/javascript" src="scripts/ajax/ajaxCommon.js"></script>
-		<script type="text/javascript" src="scripts/crossBrowser/elementControl.js"></script>
-		
-		<script type="text/javascript" src="scripts/flowchart/flowchartDefinition.js"></script>		
-		
-		<script type="text/javascript" src="scripts/flowchart/flowchartUtil.js"></script>		 
-		<script type="text/javascript" src="scripts/loopDrawForMW3.js"></script>
-		-->
-		
-		<script type="text/javascript" src="scripts/popupTooltip.js"></script>
-		
-		<LINK type="text/css" rel="stylesheet" href="style/popupTooltip.css">
-		<LINK type="text/css" rel="stylesheet" href="style/flowchart.css">
 		
 		<!-- for source code editor -->
 		<script src="scripts/ace/build/src/ace.js" type="text/javascript" charset="utf-8"></script>
@@ -193,12 +192,8 @@
 				
 				mainPage = new MetaworksObject({
                     __className : "org.uengine.codi.mw3.Login",
-                    userId      : 'test',
-                    password    : 'test',
                     defId : defId
                 }, 'body');
-                
-                mainPage.login();
                 
 				window.onbeforeunload= function(){
 				    return 'You are about to leave this page, OK?';
