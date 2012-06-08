@@ -28,6 +28,8 @@ legend {display:none;}
 
 .commentTailRight {float:right; margin-right:15px; margin-top:-7px;}
 .commentTailLeft {float:left; margin-left:15px; margin-top:-7px;}
+.notMePic{float:left; width:65px;padding:15px 0 0 0;}
+.notMePic .Pic { margin-left:18px;}
 
 .writerName { font-size:11px; margin-bottom:3px; }
 .writerName span {color:#3B5998;}
