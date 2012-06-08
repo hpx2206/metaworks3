@@ -8,11 +8,13 @@ import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.example.ide.CompileError;
 import org.metaworks.example.ide.SourceCode;
+import org.metaworks.website.MetaworksFile;
 
 public class SourceCodeWorkItem extends WorkItem{
 	
 	public SourceCodeWorkItem(){
 		setType("src");
+		setSourceCode(new SourceCode()); 
 	}
 	
 	
