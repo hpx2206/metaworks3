@@ -26,10 +26,12 @@ legend {display:none;}
 .formcontexttitle { position:relative; padding:0px;  font-size:10pt; padding-bottom:3px; border-bottom:1px dotted #ccc;margin:0;  font-weight:bold;}
 .formcontexttitle span{float:left; vertical-align: middle; margin-right:15px;}
 
-.commentTailRight {float:right; margin-right:15px; margin-top:-7px;}
-.commentTailLeft {float:left; margin-left:15px; margin-top:-7px;}
+.commentTailRight {position:absolute; top:28px; right:0px;}
+.commentTailLeft {position:absolute; top:28px; left:0px;}
+
 .notMePic{float:left; width:65px;padding:15px 0 0 0;}
-.notMePic .Pic { margin-left:18px;}
+.notMePic .notMePicPic { margin-left:18px;}
+.notMePic .notMePicName{text-align:center; font-size:11px;}
 
 .writerName { font-size:11px; margin-bottom:3px; }
 .writerName span {color:#3B5998;}

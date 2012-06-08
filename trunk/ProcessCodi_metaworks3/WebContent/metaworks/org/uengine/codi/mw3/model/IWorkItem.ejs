@@ -4,22 +4,26 @@
 <%
 	var isMine = (value.endpoint == mw3.getAutowiredObject('org.uengine.codi.mw3.model.Session').user.userId);
 
-	if(isMine == true && value.type=='comment'){
+	if(isMine == true && (value.type=='comment' || value.type=='src' || value.type=='file')){
 %>
-	<div class="view_box3" style="background:#fff; float:right; width:80%;">
+	<div style="position:relative;">
+		<div class="commentTailRight"><img src="images/waveStyle/bubbleTailRight.png" ></div>				
+		<div class="view_box3" style="background:#fff; margin-right:13px; width:80%;  float:right">
 	
-<% } else if(isMine == false && value.type=='comment'){%>
+<% } else if(isMine == false && (value.type=='comment' || value.type=='src' || value.type=='file')){%>
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
 	<tbody>
 		<tr>
 			<td width="65">
 				<div class="notMePic">
-					<div class="Pic"><%=fields.writer.here()%></div>
-					<div style="text-align:center;"><%=value.writer.name%></div>
+					<div class="notMePicPic"><%=fields.writer.here()%></div>
+					<div class="notMePicName"><%=value.writer.name%></div>
 				</div>
-			</td>
-			<td>	
-				<div class="view_box2" style="background:#fff; float:left; width:80%;">
+			</td>			
+			<td>
+				<div style="position:relative;">
+					<div class="commentTailLeft"><img src="images/waveStyle/bubbleTailLeft.png" ></div>				
+					<div class="view_box2" style="background:#fff; margin-left:13px; width:80%;  float:left">
 	
 <% } else {%>
 	<div class="view_box">
@@ -32,7 +36,7 @@
 			<table id="tableHidtoryContent_1" width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tbody>
 					<tr>	
-					<% if(value.type!='comment'){%>
+					<% if(value.type!='comment' && value.type!='src' && value.type!='file' ){%>
 						<td rowspan="4" width="60" align="center" valign="top">
 							<%=fields.writer.here()%>
 						</td>				
@@ -48,11 +52,7 @@
 								%>
 									<img src="images/activity_status/i_status_<%=value.status%>.png" style="margin-top:1px;" title="<%=value.status%>">										
 								<%
-								} else {
-								%>
-									<img src="images/activity_status/i_status_COMMENTED.png" style="margin-top:1px;" title="COMMENTED">		
-								<%
-								}	
+								} 
 								%>					
 								</span>
 								<% if(value.type=='comment'){%>
@@ -76,9 +76,17 @@
 									</span>				
 								<%}%>
 								<% if(value.dueDate!=null){%>
-									<span class="workItemDate">종료일 : <%=value.dueDate%></span>
+									<span class="workItemDate">
+									<% if(value.type!='comment' && value.type!='src' && value.type!='file' ){%>
+									종료일 : 
+									<%}%>
+									<%=value.dueDate%></span>
 								<%} if(value.startDate!=null){%>		
-									<span class="workItemDate">시작일 : <%=value.startDate%></span>	
+									<span class="workItemDate">
+									<% if(value.type!='comment' && value.type!='src' && value.type!='file' ){%>
+									시작일 :  
+									<%}%>
+									<%=value.startDate%></span>	
 								<%}%>										
 								<div class="clear"></div>
 							</div>
@@ -110,13 +118,17 @@
 		</div>
 	</div>
 	<div class="clear"></div>
+	
+	<!--
 	<% if(isMine == true && value.type=='comment'){%>
-		<div class="commentTailRight"><img src="images/waveStyle/bubbleTailRight.png" ></div>	
+		<div class="commentTailRight"><img src="images/waveStyle/bubbleTailRight.png" ></div>
+	</div>		
 	<% }else if(isMine == false && value.type=='comment'){%>
 		<div class="commentTailLeft"><img src="images/waveStyle/bubbleTailLeft.png" ></div>	
-		</td></tr></tbody></table>
+		</div></td></tr></tbody></table>
 	<% } %>
 	<div class="clear"></div>
+	-->
 
 <% if(value.workItemHandler && value.workItemHandler.instanceId){%>
 <%=fields.workItemHandler.here()%>
