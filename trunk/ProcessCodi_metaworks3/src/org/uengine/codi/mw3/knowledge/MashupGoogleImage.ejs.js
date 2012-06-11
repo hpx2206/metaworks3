@@ -17,8 +17,6 @@ org_uengine_codi_mw3_knowledge_MashupGoogleImage.prototype.clear = function(){
 
 
 org_uengine_codi_mw3_knowledge_MashupGoogleImage.prototype.search = function(keyword){
-	console.debug('search : ' + keyword);
-	
 	imageSearcher.execute(keyword);
 };
 
@@ -52,12 +50,7 @@ org_uengine_codi_mw3_knowledge_MashupGoogleImage.prototype.search = function(key
 //							contentSelect(this);							
 //						}
 						imgContainer.ondblclick  = function() {
-							console.debug('ondblclick');
-							
 							var focusWfNode = $('.wfnode_current_focus');
-							
-							console.debug(focusWfNode);
-							
 							if(focusWfNode.length > 0){
 								var objectId = focusWfNode.attr('objectId');
 								

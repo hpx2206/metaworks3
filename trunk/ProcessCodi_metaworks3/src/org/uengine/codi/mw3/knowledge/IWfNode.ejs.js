@@ -1,6 +1,4 @@
 var org_uengine_codi_mw3_knowledge_IWfNode = function(objectId, className){
-	console.debug(objectId);
-	
 	var thisFaceHelper = this;
 	
 	this.objectId = objectId;
@@ -422,7 +420,6 @@ org_uengine_codi_mw3_knowledge_IWfNode.prototype = {
 		showStatus : function(message){
 			this.process = false;
 			
-			console.debug(message);
 		},
 		showError : function(message){
 			this.process = false;
