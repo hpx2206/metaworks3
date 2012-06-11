@@ -4,6 +4,8 @@
 <%
 	var isMine = (value.endpoint == mw3.getAutowiredObject('org.uengine.codi.mw3.model.Session').user.userId);
 
+	mw3.setWhen('view');
+
 	if(isMine == true){
 %>
 	<div style="position:relative;">
@@ -50,7 +52,7 @@
 									<span>
 										<%=value.title%>
 									</span>								
-								<%}else{%>
+								<%}else if(value.type==null){%>
 									<span>
 										<a href="javascript:<%=methods.detail.caller()%>"><%=value.title%> [ <%=value.status%> ]</a>
 									</span>
@@ -61,7 +63,7 @@
 								<% if(value.dueDate!=null){%>
 									<span class="workItemDate">
 									<% if(value.type!='comment' && value.type!='src' && value.type!='file' ){%>
-									종료일 : 
+									납기일 : 
 									<%}%>
 									<%=value.dueDate%></span>
 								<%} if(value.startDate!=null){%>		
@@ -78,6 +80,7 @@
 					<%if(value.type=='file'){%>
 					<tr>
 						<td>	
+						<%  value.file.metaworksContext.when='view'; %>
 							<%=fields.file.here()%>
 						</td>
 					</tr>
@@ -90,6 +93,26 @@
 							</div>
 						</td>
 					</tr>
+					<%}else if(value.workItemHandler != null && value.workItemHandler.instanceId != null ){
+					
+					
+					%>
+					<tr>
+						<td>	
+								<%=fields.workItemHandler.here()%>						
+						</td>
+					</tr>
+					
+					<%}else if(value.type == 'generic' ){
+					
+					
+					%>
+					<tr>
+						<td>	
+								<%=fields.genericWorkItemHandler.here()%>						
+						</td>
+					</tr>
+					
 					<%}%>
 					<tr>
 						<td>
