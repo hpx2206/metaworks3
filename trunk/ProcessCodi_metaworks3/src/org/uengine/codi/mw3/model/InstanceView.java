@@ -38,6 +38,7 @@ public class InstanceView {
 
 		
 		setInstanceId(instance.getInstId().toString());
+		setStatus(inst.databaseMe().getStatus());
 		setSecuopt(secuopt);
 		
 		loadDefault();
@@ -45,6 +46,16 @@ public class InstanceView {
 		
 	}
 	
+	String status;
+	
+		public String getStatus() {
+			return status;
+		}
+	
+		public void setStatus(String status) {
+			this.status = status;
+		}
+
 	InstanceNameChanger instanceNameChanger;
 		public InstanceNameChanger getInstanceNameChanger() {
 			return instanceNameChanger;
@@ -278,11 +289,35 @@ public class InstanceView {
 	public Object[] delete() throws Exception{
 
 		processManager.stopProcessInstance(instanceId);
+		Instance instance = new Instance();
+		instance.setInstId(new Long(getInstanceId()));
+		instance.databaseMe().setIsDeleted(true);
+		instance.flushDatabaseMe();
 		
 		InstanceListPanel list = new InstanceListPanel();
 		list.getInstanceList().load(session);
 		
-		return new Object[]{list, new NewInstancePanel()};
+		NewInstancePanel newInstancePanel = new NewInstancePanel();
+		newInstancePanel.load();
+		
+		return new Object[]{list, newInstancePanel};
+	}
+		
+	@ServiceMethod(callByContent=true)
+	public void complete() throws Exception{
+
+		//processManager.stopProcessInstance(instanceId);
+		
+		String tobe = (getStatus().equals("Completed") ? "Running" : "Completed");
+		
+		
+		Instance instance = new Instance();
+		instance.setInstId(new Long(getInstanceId()));
+		instance.databaseMe().setStatus(tobe);
+		setStatus(tobe);
+		
+		instance.flushDatabaseMe();
+		
 	}
 		
 	
@@ -312,22 +347,27 @@ public class InstanceView {
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
 	public Popup newSubInstancePanel() throws Exception{
 		
-		NewInstancePanel newSubInstancePanel = new NewInstancePanel();
-		newSubInstancePanel.setParentInstanceId(getInstanceId());
-		
-		newSubInstancePanel.load();
+//		NewInstancePanel newSubInstancePanel = new NewInstancePanel();
+//		newSubInstancePanel.setParentInstanceId(getInstanceId());
+//		
+//		newSubInstancePanel.load();
 
 		//Good example :   customizing for specific usage - removing some parts
-		newSubInstancePanel.setUnstructuredProcessInstanceStarter(null);
+//		newSubInstancePanel.setUnstructuredProcessInstanceStarter(null);
 		
 		
 //		ProcessMapPanel processMapPanel;
 //		processMapPanel = new ProcessMapPanel();		
 //		processMapPanel.setMetaworksContext(this.getMetaworksContext());
 //		processMapPanel.load();
+
+		
+		ProcessMapList processMapList = new ProcessMapList();
+		processMapList.load();
+		processMapList.setParentInstanceId(new Long(getInstanceId()));
 		
 		Popup popup = new Popup();
-		popup.setPanel(newSubInstancePanel);
+		popup.setPanel(processMapList);
 		
 		return popup;
 		
