@@ -291,6 +291,10 @@ public class Login extends Database<ILogin> implements ILogin{
 		userIdSessionIdMapping.put(getUserId(), wctx.getScriptSession().getId()); //stores session id to find out with user Id
 		
 		String mySourceCodeBase = CodiClassLoader.mySourceCodeBase();
+		
+		if(mySourceCodeBase.endsWith("main/src/"))
+			(new File(mySourceCodeBase)).mkdirs();
+		
 		if(mySourceCodeBase!=null && new File(mySourceCodeBase).exists()){
 			httpSession.setAttribute("sourceCodeBase", mySourceCodeBase);
 		}

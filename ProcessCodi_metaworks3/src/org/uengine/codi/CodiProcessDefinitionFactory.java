@@ -51,6 +51,8 @@ public class CodiProcessDefinitionFactory extends ProcessDefinitionFactory{
 				ProcessDefinition obj = (ProcessDefinition) GlobalContext.deserialize(is, Object.class);
 				
 				obj.setModifiedDate(Calendar.getInstance());
+				obj.setAlias(location);
+				
 				return obj;
 			}else{
 				ByteArrayOutputStream bao = new ByteArrayOutputStream();
@@ -100,8 +102,10 @@ public class CodiProcessDefinitionFactory extends ProcessDefinitionFactory{
 		if (isOtherResourceType)
 			objectType = (String) options.get("objectType");
 
-		String alias
-			= (UEngineUtil.isNotEmpty(folder) ? folder + "/" : "") + (String) options.get("alias");
+		String alias = (String)options.get("alias");
+		
+		if(alias.indexOf('.') == -1)
+			alias = (UEngineUtil.isNotEmpty(folder) ? folder + "/" : "") + (String) options.get("alias")  + "." + objectType;
 	
 		
 		String sourceCodeBase = CodiClassLoader.getMyClassLoader().sourceCodeBase();
@@ -115,7 +119,7 @@ public class CodiProcessDefinitionFactory extends ProcessDefinitionFactory{
 //			defFileName = sourceCodeBase + pdvid;
 //		else{
 			
-			defFileName = sourceCodeBase + alias + "." + objectType;
+			defFileName = sourceCodeBase + alias;
 //		}
 
 		new File(defFileName).getParentFile().mkdirs();

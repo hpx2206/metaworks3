@@ -46,7 +46,7 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
     private JavaCompiler    compiler;
     private JavaFileManager fileManager;
 
-	public static CodiClassLoader codiClassLoader;
+	public static CodiClassLoader codiClassLoader; //works for default classloader. 
 	
 
     /**
@@ -534,8 +534,13 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
 //			sourceCodeBase = "/Users/jyjang/javasources/";
 
 		//TODO: for guest users, sourceCodeBase to the main committer is right answer.
-		if(sourceCodeBase==null)
-			sourceCodeBase = "/Users/jyjang/codebase/1401720840/src/";
+		if(sourceCodeBase==null) {
+			String codebase = System.getProperty("codebase","codebase/");
+			if(!codebase.endsWith("/"))
+				codebase = codebase + "/";
+			
+			sourceCodeBase = codebase + "main/src/";
+		}
 		
 		cl.setSourcePath(new File[]{new File(sourceCodeBase)});
 				
