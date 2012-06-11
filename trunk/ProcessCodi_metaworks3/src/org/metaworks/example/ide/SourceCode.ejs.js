@@ -9,159 +9,160 @@ var org_metaworks_example_ide_SourceCode = function(objectId, className){
 	this.loadRequestAssist = false;
 	this.lastCommandString = "";
 	
-	$("#" + this.divName).css("width", "100%").css("height", '100%').css("overflow", "hidden");
-	$("#" + this.divName).addClass('mw3_editor').addClass('mw3_resize').attr('objectId', objectId);
+	var object = mw3.objects[this.objectId];
 	
-	this.editor = ace.edit(this.divName);
-    this.editor.setTheme("ace/theme/eclipse");
-
-    var JavaScriptMode = require("ace/mode/java").Mode;
-    this.editor.getSession().setMode(new JavaScriptMode());
-    
-    this.editor.getSession().on('change', function(event){
-    	try{
-    		mw3.getFaceHelper(objectId).change(event);
-    	}catch(e){    		
-    	}
-    });
-      
-    this.event = require("pilot/event");
-    
-    this.editor.setKeyboardHandler(    		   
-    	{
-    		handleKeyboard : function(data, hashId, key, keyCode, e) {
-    			switch (e.keyCode) {
-    				case 13 :    				
-		    			mw3.getFaceHelper(objectId).selectAssist(e);
-		    	    	
-		    	    	break;
-    				case 32 :    	
-						if(e.ctrlKey){				
-							var faceHelper = mw3.getFaceHelper(objectId);	
-							var command = faceHelper.getCommandString();
+	if(object){
+		$("#" + this.divName).css("width", "100%").css("height", '100%').css("overflow", "hidden");
+		$("#" + this.divName).addClass('mw3_editor').addClass('mw3_resize').attr('objectId', objectId);
+		
+		this.editor = ace.edit(this.divName);
+	    this.editor.setTheme("ace/theme/eclipse");
+	
+	    var JavaScriptMode = require("ace/mode/java").Mode;
+	    this.editor.getSession().setMode(new JavaScriptMode());
+	    
+	    this.editor.getSession().on('change', function(event){
+	    	try{
+	    		mw3.getFaceHelper(objectId).change(event);
+	    	}catch(e){    		
+	    	}
+	    });
+	      
+	    this.event = require("pilot/event");
+	    
+	    this.editor.setKeyboardHandler(    		   
+	    	{
+	    		handleKeyboard : function(data, hashId, key, keyCode, e) {
+	    			switch (e.keyCode) {
+	    				case 13 :    				
+			    			mw3.getFaceHelper(objectId).selectAssist(e);
+			    	    	
+			    	    	break;
+	    				case 32 :    	
+							if(e.ctrlKey){				
+								var faceHelper = mw3.getFaceHelper(objectId);	
+								var command = faceHelper.getCommandString();
+								
+								mw3.mouseX = e.srcElement.offsetLeft + 4;
+								mw3.mouseY = e.srcElement.offsetTop + 18;
+								
+								faceHelper.lastCommandString = command;
+		    					faceHelper.assistType = 'requestAssist';
+		    					faceHelper.requestAssist(command);
+		    					
+		    					faceHelper.event.stopEvent(e);
+							}
 							
-							mw3.mouseX = e.srcElement.offsetLeft + 4;
-							mw3.mouseY = e.srcElement.offsetTop + 18;
-							
-							faceHelper.lastCommandString = command;
+							break;		    	    	
+	    				case 190:
+	    					var faceHelper = mw3.getFaceHelper(objectId);    					
+	    					var command = faceHelper.getCommandString();
+	    					
+	    					command += '.';
+	    					
+	    					mw3.mouseX = e.srcElement.offsetLeft + 4;
+	    					mw3.mouseY = e.srcElement.offsetTop + 18;
+	    					
+	    					faceHelper.lastCommandString = command;
 	    					faceHelper.assistType = 'requestAssist';
 	    					faceHelper.requestAssist(command);
 	    					
-	    					faceHelper.event.stopEvent(e);
-						}
-						
-						break;		    	    	
-    				case 190:
-    					var faceHelper = mw3.getFaceHelper(objectId);    					
-    					var command = faceHelper.getCommandString();
-    					
-    					command += '.';
-    					
-    					mw3.mouseX = e.srcElement.offsetLeft + 4;
-    					mw3.mouseY = e.srcElement.offsetTop + 18;
-    					
-    					faceHelper.lastCommandString = command;
-    					faceHelper.assistType = 'requestAssist';
-    					faceHelper.requestAssist(command);
-    					
-    					break;
-    					
-    				case 79 : // ctrl + shift + o
-    					if(e.ctrlKey && e.shiftKey){
-    						var faceHelper = mw3.getFaceHelper(objectId);
-    						var command = faceHelper.getCommandString();
-    						
-    						mw3.mouseX = e.srcElement.offsetLeft + 4;
-    						mw3.mouseY = e.srcElement.offsetTop + 18;
-
-    						faceHelper.assistType = 'showOrganizeImports';
-    						faceHelper.lastCommandString = command;
-    						faceHelper.showOrganizeImports(command);
-    						
-    						faceHelper.stopEvent(e);
-    					}
-		    	    default :
-		    	    	break;
-    					
-		    	    
-    			}
-    		}
-   	    }
-    );
-    
-    
-	var canon = require("pilot/canon"); 
-	canon.addCommand({
-	    name: "gotoleft",
-	    bindKey: this.bindKey("Left", "Left|Ctrl-B"),
-	    exec: function(env, args, request) {
-	    	mw3.getFaceHelper(objectId).closeAssist();
-	    	
-	    	env.editor.navigateLeft(args.times);
-	    }
-	});
-	canon.addCommand({
-	    name: "gotoleft",
-	    bindKey: this.bindKey("Right", "Right|Ctrl-F"),
-	    exec: function(env, args, request) {
-	    	mw3.getFaceHelper(objectId).closeAssist();
-	    	
-	    	env.editor.navigateRight(args.times);
-	    }
-	});
-	canon.addCommand({
-	    name: "golineup",
-	    bindKey: this.bindKey("Up", "Up|Ctrl-P"),
-	    exec: function(env, args, request) {
-	    	var assist = mw3.getAutowiredObject('org.metaworks.example.ide.CodeAssist');
-			
-	    	if(assist != null)
-				mw3.getFaceHelper(assist.__objectId).up();
-			else  	
-				env.editor.navigateUp(args.times);
-	    }
-	});
-	canon.addCommand({
-	    name: "golinedown",
-	    bindKey: this.bindKey("Down", "Down|Ctrl-N"),
-	    exec: function(env, args, request) {
-	    	var assist = mw3.getAutowiredObject('org.metaworks.example.ide.CodeAssist');
-			
-			if(assist != null)
-				mw3.getFaceHelper(assist.__objectId).down();
-			else  	
-				env.editor.navigateDown(args.times);
-	    }
-	});
-	canon.addCommand({
-	    name: "esckey",
-	    bindKey: this.bindKey("Esc", "Esc"),
-	    exec: function(env, args, request) {
-	    	mw3.getFaceHelper(objectId).closeAssist();
-	    }
-	});
+	    					break;
+	    					
+	    				case 79 : // ctrl + shift + o
+	    					if(e.ctrlKey && e.shiftKey){
+	    						var faceHelper = mw3.getFaceHelper(objectId);
+	    						var command = faceHelper.getCommandString();
+	    						
+	    						mw3.mouseX = e.srcElement.offsetLeft + 4;
+	    						mw3.mouseY = e.srcElement.offsetTop + 18;
 	
-/*	canon.addCommand({
-	    name: "run",
-	    bindKey: this.bindKey("F5", "F5"),
-	    exec: function(env, args, request) {
-	    }
-	});
-*/
-	/*this.editor.addEventListener(
-		"keydown",
-   		function(e) {
-			mw3.log('keydown : ' + objectId);
-			
-			//mw3.getFaceHelper(objectId).keydown(e);
-	    },
+	    						faceHelper.assistType = 'showOrganizeImports';
+	    						faceHelper.lastCommandString = command;
+	    						faceHelper.showOrganizeImports(command);
+	    						
+	    						faceHelper.stopEvent(e);
+	    					}
+			    	    default :
+			    	    	break;
+	    					
+			    	    
+	    			}
+	    		}
+	   	    }
+	    );
+	    
+	    
+		var canon = require("pilot/canon"); 
+		canon.addCommand({
+		    name: "gotoleft",
+		    bindKey: this.bindKey("Left", "Left|Ctrl-B"),
+		    exec: function(env, args, request) {
+		    	mw3.getFaceHelper(objectId).closeAssist();
+		    	
+		    	env.editor.navigateLeft(args.times);
+		    }
+		});
+		canon.addCommand({
+		    name: "gotoleft",
+		    bindKey: this.bindKey("Right", "Right|Ctrl-F"),
+		    exec: function(env, args, request) {
+		    	mw3.getFaceHelper(objectId).closeAssist();
+		    	
+		    	env.editor.navigateRight(args.times);
+		    }
+		});
+		canon.addCommand({
+		    name: "golineup",
+		    bindKey: this.bindKey("Up", "Up|Ctrl-P"),
+		    exec: function(env, args, request) {
+		    	var assist = mw3.getAutowiredObject('org.metaworks.example.ide.CodeAssist');
+				
+		    	if(assist != null)
+					mw3.getFaceHelper(assist.__objectId).up();
+				else  	
+					env.editor.navigateUp(args.times);
+		    }
+		});
+		canon.addCommand({
+		    name: "golinedown",
+		    bindKey: this.bindKey("Down", "Down|Ctrl-N"),
+		    exec: function(env, args, request) {
+		    	var assist = mw3.getAutowiredObject('org.metaworks.example.ide.CodeAssist');
+				
+				if(assist != null)
+					mw3.getFaceHelper(assist.__objectId).down();
+				else  	
+					env.editor.navigateDown(args.times);
+		    }
+		});
+		canon.addCommand({
+		    name: "esckey",
+		    bindKey: this.bindKey("Esc", "Esc"),
+		    exec: function(env, args, request) {
+		    	mw3.getFaceHelper(objectId).closeAssist();
+		    }
+		});
 		
-		false
-    );*/
-   
-    var object = mw3.objects[objectId];    
-    
-    if(object){
+	/*	canon.addCommand({
+		    name: "run",
+		    bindKey: this.bindKey("F5", "F5"),
+		    exec: function(env, args, request) {
+		    }
+		});
+	*/
+		/*this.editor.addEventListener(
+			"keydown",
+	   		function(e) {
+				mw3.log('keydown : ' + objectId);
+				
+				//mw3.getFaceHelper(objectId).keydown(e);
+		    },
+			
+			false
+	    );*/
+	          
+	    
     	if(object.code)
     		this.editor.getSession().setValue(object.code);
     	
@@ -177,7 +178,7 @@ var org_metaworks_example_ide_SourceCode = function(objectId, className){
                   }]); 
     		}
     	}
-    }
+	}
 }
 
 org_metaworks_example_ide_SourceCode.prototype = {
@@ -263,10 +264,6 @@ org_metaworks_example_ide_SourceCode.prototype = {
 			className = importName.substring(pos + 1);
 		}
 		
-		console.debug('importName : ' + importName);
-		console.debug('packageName : ' + packageName);
-		console.debug('className : ' + className);
-		
 		var importedList = [];
 		var lastLine = 0;
 		
@@ -297,8 +294,6 @@ org_metaworks_example_ide_SourceCode.prototype = {
 			exist = true;
 		
 		if(!exist){
-			console.debug(importedList);
-			
 			for(var i=0; i<importedList.length; i++){		
 				if(importedList[i] == importName || importedList[i] == packageName + '.*'){
 					exist = true;
@@ -316,8 +311,6 @@ org_metaworks_example_ide_SourceCode.prototype = {
 		}
 	},
 	requestAssist : function(command){
-		console.debug('command : ' + command);
-		
 		if(!this.loadRequestAssist){
 			var assist = mw3.getAutowiredObject('org.metaworks.example.ide.CodeAssist');
 			
