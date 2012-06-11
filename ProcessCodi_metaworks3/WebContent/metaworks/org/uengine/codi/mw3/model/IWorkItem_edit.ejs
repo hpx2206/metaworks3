@@ -88,7 +88,7 @@
 	</div>
 	
 	<div id="wih_button">
-		<a class="<%= value.type=='comment'?'comment_btn_on':'comment_btn_off' %>" onclick="<%=methods.newComment.caller()%>"><span>답글</span></a>
+		<a class="<%= value.type=='comment'?'comment_btn_on':'comment_btn_off' %>" onclick="<%=methods.newComment.caller()%>"><span>글</span></a>
 		<a class="<%= value.type=='src'?'comment_btn_on':'comment_btn_off' %>" onclick="<%=methods.newSourceCode.caller()%>"><span id="method_<%=objectId%>_newSourceCode">메모</span></a>
 		<a class="<%= value.type=='file'?'comment_btn_on':'comment_btn_off' %>" onclick="<%=methods.newFile.caller()%>"><span id="method_<%=objectId%>_newFile">파일</span></a>
 		<a class="comment_btn_off" onclick="<%=methods.newActivity.caller()%>"><span>기타활동</span></a>
