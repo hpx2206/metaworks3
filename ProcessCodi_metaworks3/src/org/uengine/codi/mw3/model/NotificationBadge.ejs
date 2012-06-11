@@ -1,19 +1,16 @@
+<div id="" style="float:left; margin-left:-38px; padding-top:17px; position:relative;">	
+	<a class="badgeMail" href="javascript:<%=methods.showList.caller()%>">
+		<img src="images/waveStyle/badgeMail.png">
 <% 
 	 if(value.newItemCount>0){
 %>
-	<div id="" style="float:left; margin-left:-35px; padding-top:17px;">	
-		<a class="badgeRed" href="javascript:<%=methods.showList.caller()%>" style="display:none">
-			<span><%=value.newItemCount%></span>
-		</a>	
-	</div>
-<% 
-	}else {
-%>
-	<div id="" style="float:left; margin-left:-30px; padding-top:17px;">	
-		<a class="badgeMail" href="javascript:<%=methods.showList.caller()%>">
-			<img src="images/waveStyle/badgeMail.png">
-		</a>	
-	</div>
+		<div id="" style="position:absolute; top:16px; right:-17px;">	
+			<a class="badgeRed" href="javascript:<%=methods.showList.caller()%>" style="display:none">
+				<span><%=value.newItemCount%></span>
+			</a>	
+		</div>
 <% 
 	}
 %>
+	</a>	
+</div>
