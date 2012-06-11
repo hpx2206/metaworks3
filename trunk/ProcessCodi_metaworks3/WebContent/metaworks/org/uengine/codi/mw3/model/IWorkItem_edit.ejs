@@ -2,6 +2,7 @@
 	if(value){
 	
 		value.writer = mw3.getAutowiredObject('org.uengine.codi.mw3.model.Session').user;
+		value.writer.metaworksContext.when = 'workitem';
 %>
 <div class="view_box3" style="background:#fff">
 	<div class="guide">
@@ -25,7 +26,7 @@
 			<td width=16>&nbsp;</td>
 		
 			<td> 
-				<input type="text" id="post_<%=objectId%>" value=""  onkeydown="mw3.getFaceHelper('<%=objectId%>').press()"  rows="1" style="width:99%; -webkit-border-radius:3px; outline:none;  webkit-border-radius:3px; border:1px solid #ccd; none;">
+				<input type="text" id="post_<%=objectId%>" value=""  onkeydown="mw3.getFaceHelper('<%=objectId%>').press()"  rows="1" style="width:99%; height:21px; -webkit-border-radius:3px; outline:none;  webkit-border-radius:3px; border:1px solid #ccd; none;">
 			</td>			
 			
 			<td width=50 align="center"><a id="wBtn" href="javascript:<%=methods.add.caller()%>"><span id="method_<%=objectId%>_add">게시</span></a></td>
