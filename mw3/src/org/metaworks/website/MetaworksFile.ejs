@@ -1,5 +1,6 @@
 <%	
 	if(value){
+
 %>
 	<%=fields.fileTransfer.here()%>
 <%		
@@ -8,6 +9,7 @@
 			<div id="image_<%=objectId%>">&nbsp;</div> 
 <%
 		}else{
+		
 			if(mw3.when == mw3.WHEN_NEW || mw3.when == mw3.WHEN_EDIT){
 %>
 	<span id="filebtnadd_<%=objectId%>" style="float:left"><input type="button" onclick="mw3.getFaceHelper(<%=objectId%>).add()" value="파일첨부" /></span>
@@ -17,7 +19,7 @@
 			}else{
 				if(value.uploadedPath){		
 %>
-	<input type="button" onclick="<%=methods.download.caller()%>" value="파일다운" />	
+	<input type="button" onclick="<%=methods.download.caller()%>" value="Download" />	
 <%		
 				}
 			
