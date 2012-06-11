@@ -39,7 +39,15 @@ public class Session implements ContextAware{
 			this.navigation = navigation;
 		}
 		
-		
+	Object clipboard;
+	@Hidden
+		public Object getClipboard() {
+			return clipboard;
+		}
+		public void setClipboard(Object clipboard) {
+			this.clipboard = clipboard;
+		}
+
 	IEmployee employee;
 		@Available(when = MetaworksContext.WHEN_VIEW)
 		@NonEditable

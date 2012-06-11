@@ -134,25 +134,25 @@ public class Instance extends Database<IInstance> implements IInstance{
 		}
 		
 	@Override
-	public Long getDefVerId() {
+	public String getDefVerId() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void setDefVerId(Long defVerId) {
+	public void setDefVerId(String defVerId) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public Long getDefId() {
+	public String getDefId() {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public void setDefId(Long defId) {
+	public void setDefId(String defId) {
 		// TODO Auto-generated method stub
 		
 	}

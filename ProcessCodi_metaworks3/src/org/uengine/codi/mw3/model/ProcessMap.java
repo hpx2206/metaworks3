@@ -6,6 +6,7 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
 import org.metaworks.website.MetaworksFile;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.codi.mw3.knowledge.KnowledgeTool;
 import org.uengine.codi.mw3.knowledge.WfNode;
 import org.uengine.kernel.EJBProcessInstance;
 import org.uengine.kernel.ProcessInstance;
@@ -171,16 +172,38 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 				processManager.executeProcess(instId);
 				processManager.applyChanges();
 
+				InstanceViewContent rootInstanceView = instanceView;// = new InstanceViewContent();
+				rootInstanceView.load(instanceRef);
+				
 
 				WfNode parent = new WfNode();
 				parent.load(newInstancePanel.getKnowledgeNodeId());
-				
+
+				instanceView.instanceView.instanceNameChanger.setInstanceName(parent.getName());
+				instanceView.instanceView.instanceNameChanger.change();
+
 				WfNode child = new WfNode();		
 				child.setName(instanceView.instanceName);
 				child.setLinkedInstId(Long.parseLong(instId));
 				parent.addChildNode(child);
-				
 				child.createMe();
+				
+				//setting the first workItem as wfNode referencer
+				GenericWorkItem genericWI = new GenericWorkItem();
+				
+				genericWI.processManager = processManager;
+				genericWI.session = session;
+				genericWI.setTitle("지식조각을 첨부합니다");//parent.getName());
+				GenericWorkItemHandler genericWIH = new GenericWorkItemHandler();
+				KnowledgeTool knolTool = new KnowledgeTool();
+				knolTool.setNodeId(parent.getId());
+				genericWIH.setTool(knolTool);
+				
+				genericWI.setGenericWorkItemHandler(genericWIH);
+				genericWI.setInstId(new Long(instId));
+				
+				instanceView.getInstanceView().setNewItem(genericWI.add()[0]);
+								
 	
 				return new Object[]{instanceView, parent};
 	
