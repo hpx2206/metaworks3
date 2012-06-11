@@ -17,8 +17,7 @@ org_uengine_codi_platform_Console.prototype.addError = function(log){
 	if(workflowy){
 		//log.split('$').join('');
 		var keyword = log.substring(log.lastIndexOf(':')+1).trim();
-		console.debug('keyword : ' + keyword);
-		
+
 		workflowy.keyword = keyword;
 		workflowy.search();
 	}
