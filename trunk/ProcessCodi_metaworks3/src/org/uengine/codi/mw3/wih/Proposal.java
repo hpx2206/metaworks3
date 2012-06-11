@@ -2,9 +2,10 @@ package org.uengine.codi.mw3.wih;
 
 import java.io.Serializable;
 
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.uengine.codi.ITool;
-
+@Face(displayName="마케팅 계획")
 public class Proposal implements ITool , Serializable {
 
 	String instanceId;
@@ -16,26 +17,63 @@ public class Proposal implements ITool , Serializable {
 			this.instanceId = instanceId;
 		}
 		
-	private String proposalClass;
-	private String proposalDescription;
-	private String proposalTitle;
-	public String getProposalClass() {
-		return proposalClass;
+	
+	private String promote;
+	private String type;
+	private String estimatedCost;
+	private String goal;
+	private String productNtype;
+	private String evaluationIndicators;
+	private String promoteGoal;
+		
+	@Face(displayName="홍보수단")
+	public String getPromote() {
+		return promote;
 	}
-	public void setProposalClass(String proposalClass) {
-		this.proposalClass = proposalClass;
+	public void setPromote(String promote) {
+		this.promote = promote;
 	}
-	public String getProposalDescription() {
-		return proposalDescription;
+	@Face(displayName="유형")
+	public String getType() {
+		return type;
 	}
-	public void setProposalDescription(String proposalDescription) {
-		this.proposalDescription = proposalDescription;
+	public void setType(String type) {
+		this.type = type;
 	}
-	public String getProposalTitle() {
-		return proposalTitle;
+	@Face(displayName="예상비용")
+	public String getEstimatedCost() {
+		return estimatedCost;
 	}
-	public void setProposalTitle(String proposalTitle) {
-		this.proposalTitle = proposalTitle;
+	public void setEstimatedCost(String estimatedCost) {
+		this.estimatedCost = estimatedCost;
+	}
+	@Face(displayName="목표")
+	public String getGoal() {
+		return goal;
+	}
+	public void setGoal(String goal) {
+		this.goal = goal;
+	}
+	@Face(displayName="마케팅대상 및 제품")
+	public String getProductNtype() {
+		return productNtype;
+	}
+	public void setProductNtype(String productNtype) {
+		this.productNtype = productNtype;
+	}
+	@Face(displayName="효과 및 평가지표")
+	public String getEvaluationIndicators() {
+		return evaluationIndicators;
+	}
+	public void setEvaluationIndicators(String evaluationIndicators) {
+		this.evaluationIndicators = evaluationIndicators;
+	}
+	@Face(displayName="광고목표")
+	public String getPromoteGoal() {
+		return promoteGoal;
+	}
+	public void setPromoteGoal(String promoteGoal) {
+		this.promoteGoal = promoteGoal;
 	}
 	@Override
 	public void onLoad() {
