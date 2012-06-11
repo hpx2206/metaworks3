@@ -16,7 +16,6 @@ import org.metaworks.annotation.NonEditable;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.widget.ModalWindow;
-import org.uengine.codi.mw3.admin.IDE;
 import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.model.Company;
 import org.uengine.codi.mw3.model.Dept;
@@ -26,6 +25,7 @@ import org.uengine.codi.mw3.model.IDept;
 import org.uengine.codi.mw3.model.IEmployee;
 import org.uengine.codi.mw3.model.IUser;
 import org.uengine.codi.mw3.model.Main;
+import org.uengine.codi.mw3.model.PortraitImageFile;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.model.User;
 
@@ -213,13 +213,17 @@ public class Login extends Database<ILogin> implements ILogin{
 	
 	
 	public ModalWindow subscribe(){
-		IEmployee emp = new Employee();
-		emp.getMetaworksContext().setWhen("new");
+		Employee emp = new Employee();
+		emp.getMetaworksContext().setHow("detail");
+		emp.getMetaworksContext().setWhen("new");				
+		emp.getMetaworksContext().setWhere("admin");
+		emp.setImageFile(new PortraitImageFile());
+		emp.getImageFile().getMetaworksContext().setWhen(WHEN_EDIT);
+		
 		emp.setEmpCode(getUserId());
 		emp.setPassword(getPassword());
 		
-		ModalWindow window = new ModalWindow();
-		window.setTitle("Subscribe");
+		ModalWindow window = new ModalWindow(emp, 400, 300, "사용자 등록");
 		
 		return window;
 	}
