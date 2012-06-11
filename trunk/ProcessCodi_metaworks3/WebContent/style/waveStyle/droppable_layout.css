@@ -582,6 +582,11 @@ img {border:0;}
 .badgeRed{display:block; background:url('../../images/waveStyle/badgeRed.png') left 0; float:left; font:12px; color:#fff !important; font-weight:bold; padding-left:6px; text-decoration:none; height:18px; cursor:pointer; margin-right:3px; overflow:hidden}
 .badgeRed span{display:block; float:left; background:url('../../images/waveStyle/badgeRed.png') right 0; line-height:150%; padding-right:6px; height:18px; overflow:hidden}
 
+.notification {border-bottom: 1px dotted #ccc; padding: 5px;}
+.notification .notiPic{float:left; width:38px;}
+.notification .notiTxt{float:left; width:300px;  cursor: pointer;}
+.notification .notiTxt .notiAbs{}
+.notification .notiTxt .notiDate{ font-size: 11px; color:#969696;}
 
 #navigationTitle , #contactTitle ,#wihTitle , #workListTitle, #mindmapTitle, #processTitle{ float:left;}
 #navigationTitle span{line-height: 21px;}
