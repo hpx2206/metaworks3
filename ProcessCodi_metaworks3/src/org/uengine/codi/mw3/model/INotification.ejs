@@ -1,17 +1,8 @@
 <%
 	if(value){
 %>
-<% 
-	if(confirm){
-%>
-<div class="notification">
-<% 
-	}else{
-%>
-<div class="notification" style="background:#EAEAEA;">
-<% 
-	}
-%>
+<div class="notification" style="<%=value.confirm?'background:#EAEAEA;':''%>">
+
 	<div class="notiPic">
 		<%=fields.actor.here()%>
 	</div>
