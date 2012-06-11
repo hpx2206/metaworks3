@@ -20,6 +20,16 @@ public class ProcessMapList implements ContextAware {
 		setProcessMapList(processMap);		
 	}
 	
+	String title;
+		
+		public String getTitle() {
+			return title;
+		}
+	
+		public void setTitle(String title) {
+			this.title = title;
+		}
+
 	IProcessMap processMapList;
 		public IProcessMap getProcessMapList() {
 			return processMapList;
@@ -72,4 +82,14 @@ public class ProcessMapList implements ContextAware {
 		return modalWindow;
 	}		
 	
+	
+	Long parentInstanceId;
+		public Long getParentInstanceId() {
+			return parentInstanceId;
+		}
+	
+		public void setParentInstanceId(Long parentInstanceId) {
+			this.parentInstanceId = parentInstanceId;
+		}
+		
 }

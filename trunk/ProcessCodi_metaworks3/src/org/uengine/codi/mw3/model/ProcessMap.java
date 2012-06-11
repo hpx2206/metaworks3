@@ -29,6 +29,9 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 	@AutowiredFromClient
 	public NewInstancePanel newInstancePanel;
 
+	@AutowiredFromClient
+	public ProcessMapList processMapList;
+
 	String defId;
 		public String getDefId() {
 			return defId;
@@ -202,48 +205,57 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 				genericWI.setGenericWorkItemHandler(genericWIH);
 				genericWI.setInstId(new Long(instId));
 				
-				instanceView.getInstanceView().setNewItem(genericWI.add()[0]);
+				instanceView.getInstanceView().setNewItem((WorkItem)genericWI.add()[0]);
 								
 	
 				return new Object[]{instanceView, parent};
 	
-			}else if(newInstancePanel.getParentInstanceId() != null){ //need to attach new instance to the parent instance
-				ProcessInstance instanceObject = processManager.getProcessInstance(instId);
-				
-				//IInstance instance = instanceRef.databaseMe();
-			
-				EJBProcessInstance ejbParentInstance = (EJBProcessInstance)instanceObject;
-				ejbParentInstance.getProcessInstanceDAO().setRootInstId(new Long(newInstancePanel.getParentInstanceId()));
-				
-				Instance rootInstanceRef = new Instance();
-				rootInstanceRef.setInstId(new Long(newInstancePanel.getParentInstanceId()));
-				
-				processManager.executeProcess(instId);
-				processManager.applyChanges();
-			
-				InstanceViewContent rootInstanceView = instanceView;// = new InstanceViewContent();
-				rootInstanceView.load(rootInstanceRef);
-	
-				return new Object[]{rootInstanceView, new Remover(new Popup())};
-				
 			}
+		}else if(processMapList!=null && processMapList.getParentInstanceId() != null){ //need to attach new instance to the parent instance
+			ProcessInstance instanceObject = processManager.getProcessInstance(instId);
+			
+			//IInstance instance = instanceRef.databaseMe();
+		
+			EJBProcessInstance ejbParentInstance = (EJBProcessInstance)instanceObject;
+			ejbParentInstance.getProcessInstanceDAO().setRootInstId(new Long(processMapList.getParentInstanceId()));
+			
+			Instance rootInstanceRef = new Instance();
+			rootInstanceRef.setInstId(processMapList.getParentInstanceId());
+			
+			processManager.executeProcess(instId);
+			processManager.applyChanges();
+		
+			InstanceViewContent rootInstanceView = instanceView;// = new InstanceViewContent();
+			rootInstanceView.load(rootInstanceRef);
+			
+
+			return new Object[]{rootInstanceView, new Remover(new Popup())};
+			
 		}
 		
 		
 		processManager.executeProcess(instId);
 		processManager.applyChanges();
 
-		
-		
 		instanceView.load(instanceRef);
 		
 		InstanceListPanel instanceListPanel = new InstanceListPanel(); //should return instanceListPanel not the instanceList only since there're one or more instanceList object in the client-side
 		instanceListPanel.getInstanceList().load(session);
 
-		return new Object[]{instanceView, instanceListPanel};
+		
+		if(processMapList!=null && processMapList.getTitle()!=null){
+			instanceView.getInstanceView().getInstanceNameChanger().setInstanceName(processMapList.getTitle());
+			instanceView.getInstanceView().getInstanceNameChanger().change();
+			instanceView.getInstanceView().setInstanceName(processMapList.getTitle());
+
+		}
+		
+		return new Object[]{instanceView, instanceListPanel, new Remover(new Popup())};
 
 		
-	}	
+	}
 	
+
+		
 }
 

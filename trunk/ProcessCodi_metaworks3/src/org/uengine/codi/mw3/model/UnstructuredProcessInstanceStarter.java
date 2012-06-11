@@ -76,6 +76,10 @@ public class UnstructuredProcessInstanceStarter implements ContextAware {
 				(instanceView.getInstanceView().instanceId));
 		instance.databaseMe().setInitEp(session.user.getUserId());
 		
+		if(session.getEmployee() != null)
+			instance.databaseMe().setInitComCd(session.getEmployee().getGlobalCom());
+		
+			
 		if(getFriend() != null)
 			instance.databaseMe().setSecuopt("1"); //친구가 있단건 채팅 상
 		else
@@ -86,12 +90,8 @@ public class UnstructuredProcessInstanceStarter implements ContextAware {
 		comment.processManager = processManager;
 		comment.session = session;
 		comment.setTitle(getTitle());
-		instanceView.getInstanceView().setNewItem(comment.add()[0]);
-		
-		if(session.getEmployee() != null)
-			instance.databaseMe().setInitComCd(session.getEmployee().getGlobalCom());
-		
-		
+		instanceView.getInstanceView().setNewItem((WorkItem)comment.add()[0]);
+	
 		if(getFriend() != null && getFriend().getUserId() != null){
 
 			Browser.withSession(Login.getSessionIdWithUserId(getFriend().getUserId()), new Runnable(){

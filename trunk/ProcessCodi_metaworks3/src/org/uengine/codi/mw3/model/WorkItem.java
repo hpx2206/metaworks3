@@ -23,6 +23,7 @@ import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
 import org.metaworks.widget.Window;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.codi.CodiProcessDefinitionFactory;
 import org.uengine.codi.mw3.Login;
 import org.uengine.persistence.dao.UniqueKeyGenerator;
 import org.uengine.processmanager.ProcessManagerBean;
@@ -305,46 +306,86 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	}
 
 	@Override
-	public IWorkItem newFile() {
+	public IWorkItem newFile() throws Exception {
 		// TODO Auto-generated method stub
 		FileWorkItem fwi = new FileWorkItem();
+
 		fwi.setInstId(getInstId());
 		fwi.setEndpoint(session.getUser().getUserId());
 		fwi.setWriter(getWriter());
 		fwi.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
-
+		fwi.setInstantiation(isInstantiation());
+		
 		return fwi;
 	}
 
 
 	@Override
-	public IWorkItem newComment() {
+	public IWorkItem newComment() throws Exception {
 		// TODO Auto-generated method stub
 		CommentWorkItem wi = new CommentWorkItem();
-		wi.setInstId(getInstId());
-		wi.setEndpoint(session.getUser().getUserId());
-		wi.setWriter(getWriter());
-		wi.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+		
+		String type = wi.getType();
+		wi.copyFrom(this);
+		wi.setType(type);
 		
 		return wi;
 	}
 	
 
 	@Override
-	public IWorkItem newSourceCode() {
+	public IWorkItem newSourceCode() throws Exception {
 		// TODO Auto-generated method stub
 		SourceCodeWorkItem wi = new SourceCodeWorkItem();
-		wi.setInstId(getInstId());
-		wi.setEndpoint(session.getUser().getUserId());
-		wi.setWriter(getWriter());
-		wi.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+		String type = wi.getType();
+		wi.copyFrom(this);
+		wi.setType(type);
 		
 		return wi;
 	}
 	
+	
+	boolean instantiation;
+		
+		public boolean isInstantiation() {
+			return instantiation;
+		}
+	
+		public void setInstantiation(boolean instantiation) {
+			this.instantiation = instantiation;
+		}
+
 	@Override
-	public WorkItem[] add() throws Exception {
+	public Object[] add() throws Exception {
 		Long taskId = UniqueKeyGenerator.issueWorkItemKey(((ProcessManagerBean)processManager).getTransactionContext());
+
+		if(instantiation){
+			ResourceFile unstructuredProcessDefinition = new ResourceFile();
+			unstructuredProcessDefinition.processManager = processManager;
+			unstructuredProcessDefinition.session = session;
+			unstructuredProcessDefinition.instanceViewContent = instanceViewContent;
+			unstructuredProcessDefinition.setAlias(CodiProcessDefinitionFactory.unstructuredProcessDefinitionLocation);
+						
+			Object[] instanceViewAndInstanceList = unstructuredProcessDefinition.initiate();
+
+			InstanceViewContent instanceViewContent2 = (InstanceViewContent)instanceViewAndInstanceList[0];
+			setInstId(new Long(instanceViewContent2.getInstanceView().getInstanceId()));
+			
+			//이름 변경  
+			instanceViewContent2.getInstanceView().getInstanceNameChanger().setInstanceName(getTitle());
+			instanceViewContent2.getInstanceView().getInstanceNameChanger().change();
+			instanceViewContent2.getInstanceView().setInstanceName(getTitle());
+
+			Instance instance = new Instance();
+			instance.setInstId(new Long
+					(instanceViewContent2.getInstanceView().instanceId));
+			instance.databaseMe().setInitEp(session.user.getUserId());
+			
+			if(session.getEmployee() != null)
+				instance.databaseMe().setInitComCd(session.getEmployee().getGlobalCom());
+			
+		
+		}
 		
 		setRootInstId(getInstId());
 		
@@ -394,6 +435,9 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		final IInstance refreshedInstance = instance.databaseMe();
 		refreshedInstance.getMetaworksContext().setHow("blinking");
 		
+		if(instantiation){
+			return new Object[]{refreshedInstanceView};
+		}
 
 		
 		//TODO: IF YOU CAN NARROW THE RECEIVERS TO THE FOLLOWERS ONLY IS BEST APPROACH
@@ -453,16 +497,22 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 
 	@Override
 	public Popup newActivity() throws Exception {
-		NewInstancePanel newSubInstancePanel = new NewInstancePanel();
-		newSubInstancePanel.setParentInstanceId(getInstId().toString());
-		
-		newSubInstancePanel.load();
+//		NewInstancePanel newSubInstancePanel = new NewInstancePanel();
+//		newSubInstancePanel.setParentInstanceId(getInstId().toString());
+//		
+//		newSubInstancePanel.load();
 
 		//Good example :   customizing for specific usage - removing some parts
-		newSubInstancePanel.setUnstructuredProcessInstanceStarter(null);
+		//newSubInstancePanel.setUnstructuredProcessInstanceStarter(null);
+
+		
+		ProcessMapList processMapList = new ProcessMapList();
+		processMapList.load();
+		processMapList.setParentInstanceId(getInstId());
+		processMapList.setTitle(getTitle());
 		
 		Popup popup = new Popup();
-		popup.setPanel(newSubInstancePanel);
+		popup.setPanel(processMapList);
 		
 		return popup;
 	}
