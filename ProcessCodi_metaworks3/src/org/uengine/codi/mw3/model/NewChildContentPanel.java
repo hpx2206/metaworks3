@@ -81,7 +81,7 @@ public class NewChildContentPanel  {
 		ModalWindow newFolderWindow = new ModalWindow(nf, 300, 200, "폴더 추가");
 		
 		
-		return new Object[]{new Remover(new ModalWindow()), newFolderWindow};
+		return new Object[]{newFolderWindow};
 	}
 	
 	@ServiceMethod
