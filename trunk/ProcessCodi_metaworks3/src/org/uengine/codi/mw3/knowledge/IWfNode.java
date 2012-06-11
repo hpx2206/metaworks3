@@ -114,6 +114,9 @@ public interface IWfNode extends IDAO {
 	@Test(scenario="first", starter=true, instruction="트리 구조의 지식을 작성합니다. 엔터키를 누르면 다음라인, 탭키를 누르면 들여쓰기, 두번 엔터는 내어쓰기 입니다. <p> * 우측 클릭을 하셔서 '프로세스 발행'을 하면 메모한 내용을 기반으로 작업지시도 가능합니다.<br> 좋아하시는 키워드를 입력해보세요...", next="autowiredObject.org.uengine.codi.mw3.knowledge.MashupGoogleImage.putImage()")
 	public Object[] add() throws Exception;
 	
+	@ServiceMethod(callByContent=true, except={"childNode", "focus"}, target="popup", inContextMenu=true)
+	public Object[] makeAsTemplate() throws Exception;
+	
 	@ServiceMethod(callByContent=true, except={"childNode", "focus"}, target="popup")
 	public Object[] outdent() throws Exception;
 	
