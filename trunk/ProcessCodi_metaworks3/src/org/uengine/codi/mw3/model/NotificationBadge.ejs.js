@@ -3,6 +3,6 @@ var org_uengine_codi_mw3_model_NotificationBadge = function(objectId, className)
 	this.className = className;	
 	this.divId = 'objDiv_' + this.objectId;
 	
-	$('.badgeRed').show( 'shake' ,  500 );
+	$('.badgeRed').show( 'pulsate' ,  500 );
 
 }
