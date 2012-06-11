@@ -18,6 +18,7 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.dao.UniqueKeyGenerator;
+import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.model.ContentWindow;
 import org.uengine.codi.mw3.model.IUser;
@@ -151,6 +152,8 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		setChildNode(new ArrayList<WfNode>());
 		getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 	}
+	
+	 
 	
 	public void search(String keyword) throws Exception {
 		
@@ -777,6 +780,12 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		panel.load(getId());
 		
 		return panel;
+	}
+	
+	@Override
+	public Object[] makeAsTemplate() throws Exception {
+		// TODO Auto-generated method stub
+		return new Object[]{new ModalWindow()};
 	}
 	
 }
