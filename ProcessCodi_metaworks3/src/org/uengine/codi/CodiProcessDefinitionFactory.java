@@ -86,8 +86,7 @@ public class CodiProcessDefinitionFactory extends ProcessDefinitionFactory{
 			Object definition, String folder, boolean overwrite, Map options)
 			throws Exception {
 		
-		
-		
+
 		
 		//ignores the version, belongingPdid, overwrite
 		// how to handle the adhoc?
@@ -97,16 +96,20 @@ public class CodiProcessDefinitionFactory extends ProcessDefinitionFactory{
 		boolean isOtherResourceType = options != null
 				&& options.containsKey("objectType");
 		String objectType = "process";
+		
 		if (isOtherResourceType)
 			objectType = (String) options.get("objectType");
 
+		String alias
+			= (UEngineUtil.isNotEmpty(folder) ? folder + "/" : "") + (String) options.get("alias");
+	
 		
 		String sourceCodeBase = CodiClassLoader.getMyClassLoader().sourceCodeBase();
 		
 		String defFileName;
 
 
-		String alias = (UEngineUtil.isNotEmpty(folder) ? folder + "/" : "") + name;
+//		String alias = (UEngineUtil.isNotEmpty(folder) ? folder + "/" : "") + name;
 		
 //		if(UEngineUtil.isNotEmpty(pdvid))
 //			defFileName = sourceCodeBase + pdvid;

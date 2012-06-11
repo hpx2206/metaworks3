@@ -132,6 +132,8 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
 			
 		}
 		
+		userId = "main"; //fixed value for now
+		
 		if(UEngineUtil.isNotEmpty(userId)) {
 			String dir = getCodeBaseRoot() + userId;
 //			File f = new File(dir);

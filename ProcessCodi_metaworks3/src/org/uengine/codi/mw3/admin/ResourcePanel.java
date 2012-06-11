@@ -1,6 +1,7 @@
 package org.uengine.codi.mw3.admin;
 
 import org.metaworks.MetaworksContext;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dwr.MetaworksRemoteService;
@@ -9,6 +10,7 @@ import org.uengine.codi.mw3.model.IProcessDefinition;
 import org.uengine.codi.mw3.model.NewChildWindow;
 import org.uengine.codi.mw3.model.NewFolder;
 import org.uengine.codi.mw3.model.ResourceFile;
+import org.uengine.codi.mw3.model.Session;
 
 public class ResourcePanel {
 	
