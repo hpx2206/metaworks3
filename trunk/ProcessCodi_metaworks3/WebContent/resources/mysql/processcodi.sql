@@ -2729,4 +2729,14 @@ SET FOREIGN_KEY_CHECKS = 1;
 
  alter table contact add column network char(10);
  
- 
+ 	create table bpm_noti(
+		notiId long,
+		userId char(100),
+		actorId char(100),
+		instId int,
+		actAbstract varchar(100),
+		taskId int,
+		type int,
+		inputdate timestamp,
+		confirm int
+	)
