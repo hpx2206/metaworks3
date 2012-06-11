@@ -291,12 +291,15 @@ public class ResourceFile implements ContextAware{
 			}else {
 				try{
 					ResourceDesigner designer = (ResourceDesigner)Class.forName("org.uengine.codi.mw3.model." + UEngineUtil.toOnlyFirstCharacterUpper(objType) + "Designer").newInstance();
-					designer.getMetaworksContext().setHow(pageNavigator.getPageName());
-					
 					designer.setAlias(alias);
 					designer.load();
 					
-					return designer;
+					ContentWindow contentWindow = new ContentWindow();
+					contentWindow.setTitle(alias);
+					contentWindow.setPanel(designer);
+					contentWindow.getMetaworksContext().setHow("ide");
+					
+					return contentWindow;
 				}catch(Exception e){
 					e.printStackTrace();
 				}

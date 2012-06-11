@@ -1,8 +1,7 @@
 package org.uengine.codi.mw3.model;
 
-import org.metaworks.annotation.Name;
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
-import org.uengine.codi.mw3.admin.ClassDefinition;
 
 public class ProcessDesigner extends ResourceDesigner{
 	

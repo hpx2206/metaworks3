@@ -332,7 +332,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		return wi;
 	}
 	
-
 	@Override
 	public IWorkItem newSourceCode() throws Exception {
 		// TODO Auto-generated method stub
@@ -340,6 +339,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		String type = wi.getType();
 		wi.copyFrom(this);
 		wi.setType(type);
+		wi.setSourceCode(new SourceCode());
 		
 		return wi;
 	}

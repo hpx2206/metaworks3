@@ -13,8 +13,7 @@ import org.metaworks.website.MetaworksFile;
 public class SourceCodeWorkItem extends WorkItem{
 	
 	public SourceCodeWorkItem(){
-		setType("src");
-		setSourceCode(new SourceCode()); 
+		setType("src");		
 	}
 	
 	

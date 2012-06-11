@@ -6,8 +6,6 @@ var org_uengine_codi_mw3_model_InstanceNameChanger = function(objectId, classNam
 	
 	this.instanceName = object.instanceName;
 	
-	console.log($('#instanceName_' + this.objectId));
-	
 	$('#instanceName_' + this.objectId).bind('focus', function(){
 		$(this).css("border","solid 1px #ccc");
 	})

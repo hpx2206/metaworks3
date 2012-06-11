@@ -19,7 +19,6 @@ public interface IEmployee extends IDAO {
 
 	@Id
 	public String getEmpCode();
-
 	public void setEmpCode(String empCode);
 
 	@Hidden(when = "view")
@@ -69,7 +68,7 @@ public interface IEmployee extends IDAO {
 	
 	@NonLoadable
 	@NonSavable
-	@Available(when={WHEN_EDIT})
+	@Available(when={WHEN_EDIT, WHEN_NEW})
 	public PortraitImageFile getImageFile();
 	public void setImageFile(PortraitImageFile imageFile);
 	

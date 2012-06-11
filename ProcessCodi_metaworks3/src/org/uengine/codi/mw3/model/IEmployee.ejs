@@ -34,7 +34,8 @@ if(value){
 		} else if(mw3.how == 'detail') {
 			if(mw3.when == 'view') {
 			%>
-				<img id="userPicture_<%=objectId %>" onerror="<%=onErrorImg %>" src="<%=portrait %>" width="30" height="30"><%=fields.imageFile.here() %>
+				<img id="userPicture_<%=objectId %>" onerror="<%=onErrorImg %>" src="<%=portrait %>" width="30" height="30">
+				<%=fields.imageFile.here() %>
 				ID :<%=value.empCode %>
 				NAME : <%=fields.empName.here() %>
 				Dept : <%=fields.partName.here() %>(<%value.partCode %>)
@@ -44,16 +45,32 @@ if(value){
 				Locale : <%=fields.locale.here() %>
 			<%
 			} else if(mw3.when == 'new') {
-			%>
-				<img id="userPicture_<%=objectId %>" onerror="<%=onErrorImg %>" src="<%=portrait %>" width="30" height="30"><%=fields.imageFile.here() %>
-				ID :<%=value.empCode %>
-				NAME : <%=fields.empName.here() %>
-				PASSWORD : <%=fields.password.here() %>
-				Dept : <%=fields.partName.here() %> <%value.partCode %>
-				Position : <%=fields.jikName.here() %>
-				Phone : <%=fields.mobileNo.here() %>
-				Email : <%=fields.email.here() %>
-				Locale : <%=fields.locale.here() %>
+			
+			%>			
+				<ul>
+					<li>
+						<dl class="lst_type2">
+							<dt class="tit">
+							<div class="infoSub"><span>ID :</span><span><%=fields.empCode.here() %></span></div>
+								<div class="infoSub"><span>Name :</span><span><%=fields.empName.here() %></span></div>								
+								<div class="infoSub"><span>PASSWORD : </span><span><%=fields.password.here() %></span></div>
+								<div class="infoSub"><span>Phone : </span><span><%=fields.mobileNo.here() %></span></div>
+								<div class="infoSub"><span>Email : </span><span><%=fields.email.here() %></span></div>
+								<div class="infoSub"><span>Locale : </span><span><%=fields.locale.here() %></span></div>
+								<div class="infoSub"><span><%=fields.imageFile.here() %>&nbsp;</span></div>
+							</dt>
+							<dd class="photo2">
+								<div id="popupInfoImgWih"><img id="userPicture_<%=objectId %>" onerror="<%=onErrorImg %>" src="<%=portrait %>" width="104" height="104"></div>								
+							</dd>
+			   			</dl>
+			  		</li>    
+			 	</ul>
+			 	
+				<div id="btnline" style="padding-top:8px; border-top:1px solid #ccc;">
+					<ul>	
+						<li><a id="wBtn" href="javascript:<%=methods.saveEmployeeInfo.caller()%>"><span>create</span></a></li>
+					</ul>
+				</div>			 	
 			<%
 			} else if(mw3.when == 'edit') {
 			%>
