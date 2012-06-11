@@ -29,7 +29,7 @@ public class NotificationBadge{
 	@ServiceMethod(target="popup")
 	public Popup showList() throws Exception{
 		Popup popup = new Popup();
-		
+		popup.setName("Notification");
 		Notification notiList = new Notification();
 		popup.setPanel(	notiList.list(session));
 		
