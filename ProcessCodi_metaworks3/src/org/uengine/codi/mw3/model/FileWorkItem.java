@@ -18,7 +18,7 @@ public class FileWorkItem extends WorkItem{
 	}
 
 	@Override
-	public WorkItem[] add() throws Exception {
+	public Object[] add() throws Exception {
 
 		getFile().upload();
 		

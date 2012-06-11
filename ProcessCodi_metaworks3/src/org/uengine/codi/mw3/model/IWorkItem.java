@@ -146,7 +146,7 @@ public interface IWorkItem extends IDAO{
 
 		@ServiceMethod(callByContent = true, target=ServiceMethodContext.TARGET_SELF)
 		@Test(scenario="first", starter=true, instruction="댓글을 추가합니다.", next="autowiredObject.org.uengine.codi.mw3.model.WorkItem.newSourceCode()")
-		public WorkItem[] add() throws Exception;
+		public Object[] add() throws Exception;
 
 		
 //		@ServiceMethod(callByContent=true)
@@ -157,6 +157,14 @@ public interface IWorkItem extends IDAO{
 		@Hidden(on=false)
 		public WorkItemHandler getWorkItemHandler();
 		public void setWorkItemHandler(WorkItemHandler workItemHandler);
+		
+
+		@NonLoadable
+		@NonSavable
+		@Hidden
+		public boolean isInstantiation();
+		public void setInstantiation(boolean instantiation);
+
 
 		@Face(displayName="Open")
 		@ServiceMethod(inContextMenu=true, when = WHEN_VIEW, callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
@@ -167,11 +175,11 @@ public interface IWorkItem extends IDAO{
 
 		////////// 
 		@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)
-		public IWorkItem newComment();
+		public IWorkItem newComment() throws Exception;
 		
 		@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)
 		@Test(scenario="first", starter=true, instruction="메모를 입력할 수 있습니다.", next="autowiredObject.org.uengine.codi.mw3.model.WorkItem.newFile()")	
-		public IWorkItem newSourceCode();
+		public IWorkItem newSourceCode() throws Exception;
 		
 		@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 		public Popup newActivity() throws Exception;
@@ -186,7 +194,7 @@ public interface IWorkItem extends IDAO{
 		public IWorkItem newMovie();
 
 		@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)
-		public IWorkItem newFile();
+		public IWorkItem newFile() throws Exception;
 		
 		
 }

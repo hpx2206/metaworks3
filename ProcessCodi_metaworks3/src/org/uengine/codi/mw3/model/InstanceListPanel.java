@@ -80,6 +80,7 @@ public class InstanceListPanel {
 		if(session.getEmployee().getIsAdmin())
 			newInstancePanel.getMetaworksContext().setHow("admin");
 		
+		newInstancePanel.session = session;
 		newInstancePanel.load();
 		
 		return new NewInstanceWindow(newInstancePanel);

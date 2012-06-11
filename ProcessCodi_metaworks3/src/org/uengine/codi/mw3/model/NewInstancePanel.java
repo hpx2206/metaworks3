@@ -2,6 +2,7 @@ package org.uengine.codi.mw3.model;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
 
 
@@ -13,24 +14,41 @@ public class NewInstancePanel implements ContextAware {
 	}
 	
 	public void load() throws Exception{
-		unstructuredProcessInstanceStarter = new UnstructuredProcessInstanceStarter();
-		
+//		unstructuredProcessInstanceStarter = new UnstructuredProcessInstanceStarter();
+//		
 		processMapPanel = new ProcessMapPanel();		
 		processMapPanel.setMetaworksContext(this.getMetaworksContext());
 		processMapPanel.load();
+		
+		newInstantiator = new CommentWorkItem();
+		newInstantiator.setWriter(session.getUser());
+		newInstantiator.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+		newInstantiator.setInstantiation(true);
 	}
 	
+	@AutowiredFromClient
+	public Session session;
 	
-	UnstructuredProcessInstanceStarter unstructuredProcessInstanceStarter;		
-	public UnstructuredProcessInstanceStarter getUnstructuredProcessInstanceStarter() {
-		return unstructuredProcessInstanceStarter;
-	}
+	WorkItem newInstantiator;
+		public WorkItem getNewInstantiator() {
+			return newInstantiator;
+		}
+	
+		public void setNewInstantiator(WorkItem newInstantiator) {
+			this.newInstantiator = newInstantiator;
+		}
 
-	public void setUnstructuredProcessInstanceStarter(
-			UnstructuredProcessInstanceStarter unstructuredProcessInstanceStarter) {
-		this.unstructuredProcessInstanceStarter = unstructuredProcessInstanceStarter;
-	}
 	
+//	UnstructuredProcessInstanceStarter unstructuredProcessInstanceStarter;		
+//	public UnstructuredProcessInstanceStarter getUnstructuredProcessInstanceStarter() {
+//		return unstructuredProcessInstanceStarter;
+//	}
+//
+//	public void setUnstructuredProcessInstanceStarter(
+//			UnstructuredProcessInstanceStarter unstructuredProcessInstanceStarter) {
+//		this.unstructuredProcessInstanceStarter = unstructuredProcessInstanceStarter;
+//	}
+//	
 	ProcessMapPanel processMapPanel;
 		public ProcessMapPanel getProcessMapPanel() {
 			return processMapPanel;
@@ -39,6 +57,7 @@ public class NewInstancePanel implements ContextAware {
 			this.processMapPanel = processMapPanel;
 		}
 		
+
 	String knowledgeNodeId;
 		@Hidden
 		public String getKnowledgeNodeId() {
