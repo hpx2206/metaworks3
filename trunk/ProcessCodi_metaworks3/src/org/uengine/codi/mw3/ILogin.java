@@ -5,6 +5,7 @@ import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Test;
 import org.metaworks.dao.IDAO;
+import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.common.MainPanel;
 
 public interface ILogin extends IDAO{
@@ -31,4 +32,9 @@ public interface ILogin extends IDAO{
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)
 	public MainPanel loginSocialCoding() throws Exception;
+	
+	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
+	public ModalWindow subscribe();
+
+	
 }

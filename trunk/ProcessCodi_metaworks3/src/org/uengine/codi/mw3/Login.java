@@ -15,6 +15,7 @@ import org.metaworks.annotation.Id;
 import org.metaworks.annotation.NonEditable;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.TransactionContext;
+import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.admin.IDE;
 import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.model.Company;
@@ -82,6 +83,7 @@ public class Login extends Database<ILogin> implements ILogin{
 			this.isFacebookSSO = isFacebookSSO;
 		}
 		
+	
 		
 
 
@@ -208,6 +210,19 @@ public class Login extends Database<ILogin> implements ILogin{
 //		}
 //		
 //	}
+	
+	
+	public ModalWindow subscribe(){
+		IEmployee emp = new Employee();
+		emp.getMetaworksContext().setWhen("new");
+		emp.setEmpCode(getUserId());
+		emp.setPassword(getPassword());
+		
+		ModalWindow window = new ModalWindow();
+		window.setTitle("Subscribe");
+		
+		return window;
+	}
 		
 	public Object login() throws Exception {
 

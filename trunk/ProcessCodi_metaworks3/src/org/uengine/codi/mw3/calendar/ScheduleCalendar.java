@@ -79,7 +79,7 @@ public class ScheduleCalendar implements ContextAware {
 		ArrayList<Map<String, String>> arrListData = new ArrayList<Map<String, String>>();		
 		
 		WorkItem schedule = new WorkItem();
-		IWorkItem workitems = schedule.sql("select * from bpm_worklist where endpoint=?endpoint and type is null");
+		IWorkItem workitems = schedule.sql("select wl.*, pi.name instnm from bpm_worklist wl, bpm_procinst pi where wl.instid = pi.instid and wl.endpoint=?endpoint and wl.type is null");
 		workitems.setEndpoint(session.getUser().getUserId());
 		workitems.select();
 		
@@ -104,7 +104,7 @@ public class ScheduleCalendar implements ContextAware {
 				
 				column = new HashMap();
 				column.put("id", schedule.getTaskId());
-				column.put("title", title);
+				column.put("title", title + "-" + schedule.get("instnm"));
 				
 //				//조사 수행건은 완료예정일 기준으로 출력함.
 //				if("INVST".equals(schedule.getSchdTypeCombo().getSelected()))
