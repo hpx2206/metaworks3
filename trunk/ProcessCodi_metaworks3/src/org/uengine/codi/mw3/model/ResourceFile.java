@@ -171,13 +171,18 @@ public class ResourceFile implements ContextAware{
 	}
 	
 	
-	@ServiceMethod(callByContent=true, except="childs", inContextMenu=true, keyBinding="Ctrl+N")
-	public NewChildWindow newChild() throws Exception {
-		NewChildWindow newChildWindow = new NewChildWindow();
-		newChildWindow.getMetaworksContext().setHow(pageNavigator.getPageName());
-		newChildWindow.setParentFolder(getAlias());
+	@ServiceMethod(callByContent=true, except="childs", inContextMenu=true, keyBinding="Ctrl+N", target="popup")
+	public ModalWindow newChild() throws Exception {
 		
-		return newChildWindow;
+		NewChildContentPanel newChildContentPanel = new NewChildContentPanel();
+		newChildContentPanel.setParentFolder(getAlias());
+
+//		NewChildWindow newChildWindow = new NewChildWindow();
+//		newChildWindow.getMetaworksContext().setHow(pageNavigator.getPageName());
+//		newChildWindow.setParentFolder(getAlias());
+		
+		
+		return new ModalWindow(newChildContentPanel, 800, 540, "New Child...");
 	}
 	
 	@ServiceMethod(callByContent=true, except="childs", inContextMenu=true, needToConfirm=true)
@@ -222,6 +227,43 @@ public class ResourceFile implements ContextAware{
 		return popup;
 	}
 
+
+	@ServiceMethod(inContextMenu=true, callByContent=true)
+	public Session cut(){
+		session.setClipboard(this);
+		return session;
+	}
+	
+	@ServiceMethod(inContextMenu=true, callByContent=true)
+	public Object[] paste(){
+		Object clipboard = session.getClipboard();
+		if(clipboard instanceof ResourceFile && isFolder()){
+			ResourceFile fileInClipboard = (ResourceFile) clipboard;
+			String resourceBase = CodiClassLoader.getMyClassLoader().sourceCodeBase();
+
+			new File(resourceBase + fileInClipboard.getAlias()).renameTo(
+					new File(resourceBase + getAlias() + "/" + fileInClipboard.getName())
+				);
+			
+			drillDown();
+			
+			return new Object[]{fileInClipboard, this};
+		}else{
+			return new Object[]{this};
+		}
+		
+		
+	}
+	
+	@ServiceMethod(inContextMenu=true, callByContent=true, target="popup")
+	public Popup rename(){
+		FileRenamer fileRenamer = new FileRenamer();
+		fileRenamer.setFile(this);
+		
+		Popup renamer = new Popup(fileRenamer);
+		
+		return renamer;
+	}
 	
 	@ServiceMethod(callByContent=true, except="childs")
 	public ContentWindow design() throws Exception {

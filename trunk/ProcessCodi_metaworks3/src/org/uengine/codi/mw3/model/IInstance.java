@@ -22,11 +22,11 @@ public interface IInstance extends IDAO{
 	public Long getInstId();
 	public void setInstId(Long id);
 
-	public Long getDefVerId();
-	public void setDefVerId(Long defVerId);
+	public String getDefVerId();
+	public void setDefVerId(String defVerId);
 
-	public Long getDefId();
-	public void setDefId(Long defId);
+	public String getDefId();
+	public void setDefId(String defId);
 
 	public String getDefPath();
 	public void setDefPath(String DefPath);

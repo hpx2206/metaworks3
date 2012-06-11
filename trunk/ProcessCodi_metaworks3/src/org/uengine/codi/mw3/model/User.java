@@ -1,7 +1,11 @@
 package org.uengine.codi.mw3.model;
 
+import java.util.Calendar;
+
 import javax.servlet.http.HttpSession;
 
+import org.directwebremoting.Browser;
+import org.directwebremoting.ScriptSessions;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
@@ -11,6 +15,7 @@ import org.metaworks.dao.Database;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.widget.IFrame;
 import org.uengine.processmanager.ProcessManagerRemote;
 
@@ -108,7 +113,7 @@ public class User extends Database<IUser> implements IUser {
 		String when = this.getMetaworksContext().getWhen();
 		
 		if(when != null && when.equals(Followers.CONTEXT_WHERE_INFOLLOWERS)){
-			String instId = follwers.getInstanceId();
+			String instId = followers.getInstanceId();
 			
 			RoleMapping roleMapping = new RoleMapping(new Long(instId), RoleMapping.ROLEMAPPING_FOLLOWER_ROLENAME_FREFIX + getName(), getUserId());
 			if(!roleMapping.confirmFollower()){
@@ -139,7 +144,7 @@ public class User extends Database<IUser> implements IUser {
 	public ProcessManagerRemote processManager;
 
 	@AutowiredFromClient
-	public Followers follwers;
+	public Followers followers;
 	
 	@AutowiredFromClient
 	public AddFollowerPanel addFollowerPanel;
@@ -152,7 +157,11 @@ public class User extends Database<IUser> implements IUser {
 			
 		}else{
 		
-			String instId = follwers.getInstanceId();
+			
+			String instId = followers.getInstanceId();
+			
+			Instance instance = new Instance();
+			instance.setInstId(new Long(instId));
 			
 			processManager.putRoleMapping(instId, RoleMapping.ROLEMAPPING_FOLLOWER_ROLENAME_FREFIX + getName(), getUserId());
 			processManager.applyChanges();
@@ -161,13 +170,49 @@ public class User extends Database<IUser> implements IUser {
 			followers.setInstanceId(instId);
 			followers.load();
 			
+			/// send notification to the follower 
+			
+			final boolean postByMe = getUserId().equals(session.getUser().getUserId());
+			if(!postByMe){ //ignore myself
+				Notification noti = new Notification();
+				
+				noti.setNotiId(System.currentTimeMillis()); //TODO: why generated is hard to use
+				noti.setUserId(getUserId());
+				noti.setActorId(session.getUser().getUserId());
+				noti.setConfirm(false);
+				noti.setInputDate(Calendar.getInstance().getTime());
+				//noti.setTaskId(getTaskId());
+				noti.setInstId(new Long(instId));
+				noti.setActAbstract(session.getUser().getName() + " 님이 '" + instance.databaseMe().getName() + "' 대화에 " + getName() + "님을 추가하였습니다.");
+	
+				noti.createDatabaseMe();
+				noti.flushDatabaseMe();
+			
+			
+				String followerSessionId = Login.getSessionIdWithUserId(getUserId());
+				
+				//NEW WAY IS GOOD
+				Browser.withSession(followerSessionId, new Runnable(){
+	
+					@Override
+					public void run() {
+						//refresh notification badge
+						if(!postByMe)
+							ScriptSessions.addFunctionCall("mw3.getAutowiredObject('" + NotificationBadge.class.getName() + "').refresh", new Object[]{});
+						
+					}
+					
+				});
+			}
+			////// end
+			
 			return new Object[]{new Refresh(followers)};
 		}
 	}
 
 	public Object[] removeFollower() throws Exception {
 				
-		String instId = follwers.getInstanceId();
+		String instId = followers.getInstanceId();
 		
 //		if(whereText.startsWith(Followers.CONTEXT_WHERE_INFOLLOWERS)){
 			// TODO: initEp 문제 해결후 권한 체크 활성화

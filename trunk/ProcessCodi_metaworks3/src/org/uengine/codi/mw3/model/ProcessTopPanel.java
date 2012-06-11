@@ -5,10 +5,14 @@ import org.uengine.codi.mw3.admin.WindowPanel;
 
 public class ProcessTopPanel {
 
-	public ProcessTopPanel(Session session) {
+	public ProcessTopPanel(Session session) throws Exception {
 		setSession(session);
 		setWindowPanel(new WindowPanel());
 		setTray(new Tray());
+		
+		notificationBadge = new NotificationBadge();
+		notificationBadge.session = session;
+		notificationBadge.refresh();
 	}
 	
 	WindowPanel windowPanel;
@@ -27,6 +31,15 @@ public class ProcessTopPanel {
 			this.tray = tray;
 		}
 		
+	NotificationBadge notificationBadge;
+			
+		public NotificationBadge getNotificationBadge() {
+			return notificationBadge;
+		}
+		public void setNotificationBadge(NotificationBadge notificationBadge) {
+			this.notificationBadge = notificationBadge;
+		}
+
 	Session session;
 		@AutowiredToClient
 		public Session getSession() {

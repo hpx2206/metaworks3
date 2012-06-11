@@ -55,6 +55,13 @@ public interface IWorkItem extends IDAO{
 		@ORMapping(databaseFields = { "content" }, objectFields = { "code" })
 		public SourceCode getSourceCode();
 		public void setSourceCode(SourceCode sourceCode);
+		
+		@Hidden
+		@ORMapping(databaseFields = { "content" }, objectFields = { "serializedTool" })
+		public GenericWorkItemHandler getGenericWorkItemHandler();
+		public void setGenericWorkItemHandler(
+				GenericWorkItemHandler genericWorkItemHandler);
+
 
 		@Hidden
 		@Range(
@@ -71,7 +78,7 @@ public interface IWorkItem extends IDAO{
 						"file", 
 						"schdle",
 						"postings",
-						//"generic"
+						"generic"
 					}, 
 				classes = 		{ 
 						WorkItem.class,  	
@@ -82,7 +89,7 @@ public interface IWorkItem extends IDAO{
 						FileWorkItem.class,
 						ScheduleWorkItem.class,
 						PostingsWorkItem.class,
-						//GenericWorkItem.class
+						GenericWorkItem.class
 					} 
 		)
 		public String getType();
@@ -135,7 +142,7 @@ public interface IWorkItem extends IDAO{
 		public void like() throws Exception;
 		
 		@ServiceMethod(when = WHEN_VIEW, callByContent=true)
-		public WorkItemHandler detail() throws Exception;
+		public void detail() throws Exception;
 
 		@ServiceMethod(callByContent = true, target=ServiceMethodContext.TARGET_SELF)
 		@Test(scenario="first", starter=true, instruction="댓글을 추가합니다.", next="autowiredObject.org.uengine.codi.mw3.model.WorkItem.newSourceCode()")
@@ -147,6 +154,7 @@ public interface IWorkItem extends IDAO{
 		
 		@NonLoadable
 		@NonSavable
+		@Hidden(on=false)
 		public WorkItemHandler getWorkItemHandler();
 		public void setWorkItemHandler(WorkItemHandler workItemHandler);
 

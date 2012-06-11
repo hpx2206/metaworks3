@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.model;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
@@ -137,7 +138,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 
 	//normally it is null, but the 'detail' button pressed, it should be activated (by value set)
 	WorkItemHandler workItemHandler;
-	@Hidden
 		public WorkItemHandler getWorkItemHandler() {
 			return workItemHandler;
 		}
@@ -145,6 +145,18 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			this.workItemHandler = workItemHandler;
 		}
 		
+	GenericWorkItemHandler genericWorkItemHandler;
+			
+		public GenericWorkItemHandler getGenericWorkItemHandler() {
+			return genericWorkItemHandler;
+		}
+	
+		public void setGenericWorkItemHandler(
+				GenericWorkItemHandler genericWorkItemHandler) {
+			this.genericWorkItemHandler = genericWorkItemHandler;
+		}
+
+
 	String content;
 		public String getContent() {
 			return content;
@@ -220,12 +232,12 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			this.status = status;
 		}
 
-	public WorkItemHandler detail() throws Exception{
+	public void detail() throws Exception{
 
 		Long instId = databaseMe().getInstId(); //since it knows metaworks IDAO will load all the field members from the table beyond the listed by setter/getter.
 		String tracingTag = (String) databaseMe().get("trcTag"); //since it knows metaworks IDAO will load all the field members from the table beyond the listed by setter/getter.
 		
-		WorkItemHandler workItemHandler;
+		//WorkItemHandler workItemHandler;
 		
 		String tool = databaseMe().getTool();
 		if(tool.startsWith("mw3.")){
@@ -247,8 +259,10 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		
 		workItemHandler.load();
 		
+		setWorkItemHandler(workItemHandler);
 		
-		return workItemHandler;
+		
+		//return workItemHandler;
 	}
 	
 	public ModalWindow workItemPopup() throws Exception{
@@ -380,23 +394,61 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		final IInstance refreshedInstance = instance.databaseMe();
 		refreshedInstance.getMetaworksContext().setHow("blinking");
 		
-		//NEW WAY IS GOOD
-		Browser.withAllSessions(new Runnable(){
 
-			@Override
-			public void run() {
-				ScriptSessions.addFunctionCall("mw3.locateObject", new Object[]{new Object[]{new Refresh(refreshedInstanceView)/*, new Refresh(refreshedInstance)*/}, null, "body"});
-				ScriptSessions.addFunctionCall("mw3.onLoadFaceHelperScript", new Object[]{});
-
-			}
-			
-		});
 		
 		//TODO: IF YOU CAN NARROW THE RECEIVERS TO THE FOLLOWERS ONLY IS BEST APPROACH
 
 
+		//Add notifications to the followers
+		IUser followers = refreshedInstanceView.getFollowers().getFollowers();
+		followers.beforeFirst();
+		
+		ArrayList<String> followerIds = new ArrayList<String>();
+		while(followers.next()){
+			followerIds.add(followers.getUserId());
+		}
+		
+		for(String followerId : followerIds){
+		
+			final boolean postByMe = followerId.equals(session.getUser().getUserId());
+			if(!postByMe){ //ignore myself
+				Notification noti = new Notification();
+				
+				noti.setNotiId(System.currentTimeMillis()); //TODO: why generated is hard to use
+				noti.setUserId(followerId);
+				noti.setActorId(session.getUser().getUserId());
+				noti.setConfirm(false);
+				noti.setInputDate(Calendar.getInstance().getTime());
+				noti.setTaskId(getTaskId());
+				noti.setInstId(getInstId());
+				noti.setActAbstract(session.getUser().getName() + "님이 댓글(활동)을 남겼습니다: " + getTitle());
+	
+				noti.createDatabaseMe();
+				noti.flushDatabaseMe();
+			}
+			
+			String followerSessionId = Login.getSessionIdWithUserId(followerId);
+			
+			//NEW WAY IS GOOD
+			Browser.withSession(followerSessionId, new Runnable(){
+
+				@Override
+				public void run() {
+					ScriptSessions.addFunctionCall("mw3.locateObject", new Object[]{new Object[]{new Refresh(refreshedInstanceView)/*, new Refresh(refreshedInstance)*/}, null, "body"});
+					
+					//refresh notification badge
+					if(!postByMe)
+						ScriptSessions.addFunctionCall("mw3.getAutowiredObject('" + NotificationBadge.class.getName() + "').refresh", new Object[]{});
+					
+					ScriptSessions.addFunctionCall("mw3.onLoadFaceHelperScript", new Object[]{});
+				}
+				
+			});
+		}
+		
+		
 		//makes new line and change existing div
-		return new WorkItem[]{/*this*/newItem};
+		return new WorkItem[]{/*this,*/ newItem};
 	}
 
 	@Override
