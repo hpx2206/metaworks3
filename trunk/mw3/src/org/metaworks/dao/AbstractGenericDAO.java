@@ -1039,8 +1039,13 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 								}
 							}
 							
-							if(atLeastOnceHaveValue)
+							if(atLeastOnceHaveValue){
+								if(objInst.getObject() instanceof ORMappingListener){
+									((ORMappingListener)objInst.getObject()).onRelation2Object();
+								}
+
 								return objInst.getObject();
+							}
 						}
 						
 						for(int i=0; i<objectType.getFieldDescriptors().length; i++){
@@ -1066,8 +1071,8 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 						
 						if(atLeastOnceHaveValue){
 							
-							if(objInst instanceof ORMappingListener){
-								((ORMappingListener)objInst).onRelation2Object();
+							if(objInst.getObject() instanceof ORMappingListener){
+								((ORMappingListener)objInst.getObject()).onRelation2Object();
 							}
 							
 							return objInst.getObject();
