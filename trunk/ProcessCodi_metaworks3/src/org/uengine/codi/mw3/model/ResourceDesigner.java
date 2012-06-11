@@ -5,10 +5,7 @@ import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 
-@Face(ejsPath="genericfaces/Window.ejs", 
-	  options={"hideLabels", "maximize"}, 
-	  values={"true", "true"})
-public abstract class ResourceDesigner extends ContentWindow {
+public abstract class ResourceDesigner {
 	
 	String alias;
 		@Id

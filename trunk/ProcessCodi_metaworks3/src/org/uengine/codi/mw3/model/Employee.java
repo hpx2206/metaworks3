@@ -4,8 +4,8 @@ import org.metaworks.MetaworksContext;
 import org.metaworks.Remover;
 import org.metaworks.ToOpener;
 import org.metaworks.annotation.AutowiredFromClient;
-import org.metaworks.annotation.Available;
 import org.metaworks.dao.Database;
+import org.metaworks.widget.ModalWindow;
 
 public class Employee extends Database<IEmployee> implements IEmployee {
 	
@@ -250,16 +250,16 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 		
 		if(getImageFile()!=null && getImageFile().getFileTransfer()!=null){
-			getImageFile().session = session;
+			getImageFile().setEmpCode(this.getEmpCode());
 			getImageFile().upload();
 
 		}
 		
-		if(session.getEmployee().getEmpCode().equals(getEmpCode())) {
+		if(session != null && session.getEmployee().getEmpCode().equals(getEmpCode())) {
 			session.setEmployee(findMe());
 			return new Object[] {new EmployeeInfo(findMe()), session};
 		}
-		return new Object[] {new EmployeeInfo(findMe())};
+		return new Object[] {new Remover(new ModalWindow())};
 	}
 	
 	@Override

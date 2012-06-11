@@ -73,15 +73,15 @@ public class NewChildContentPanel  {
 		return new Object[]{new Remover(new ModalWindow()), formDesigner};
 	}
 	
-	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
+	@ServiceMethod
 	public Object[] newFolder(){
 		NewFolder nf = new NewFolder();
 		nf.setParentFolderDefId(getParentFolder());
 
-		ModalWindow newFolderWindow = new ModalWindow(nf, 300, 200, "폴더 추가");
+		//ModalWindow newFolderWindow = new ModalWindow(nf, 300, 200, "폴더 추가");
 		
 		
-		return new Object[]{newFolderWindow};
+		return new Object[]{nf};
 	}
 	
 	@ServiceMethod
