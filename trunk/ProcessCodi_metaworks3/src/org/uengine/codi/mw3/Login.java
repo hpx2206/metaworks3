@@ -24,6 +24,7 @@ import org.uengine.codi.mw3.model.ICompany;
 import org.uengine.codi.mw3.model.IDept;
 import org.uengine.codi.mw3.model.IEmployee;
 import org.uengine.codi.mw3.model.IUser;
+import org.uengine.codi.mw3.model.Locale;
 import org.uengine.codi.mw3.model.Main;
 import org.uengine.codi.mw3.model.PortraitImageFile;
 import org.uengine.codi.mw3.model.Session;
@@ -262,9 +263,16 @@ public class Login extends Database<ILogin> implements ILogin{
 			session.setUser(loginUser);
 
 			
-//			if (getMetaworksContext().getWhen().equals(MetaworksContext.WHEN_VIEW)){
-				session.setMetaworksContext(getMetaworksContext());
-				session.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+			session.setMetaworksContext(getMetaworksContext());
+			session.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+
+//			Locale locale = new Locale();
+//			locale.setSession(session);
+//			locale.load();
+//
+//			return locale;
+			
+			if (getMetaworksContext().getWhen().equals(MetaworksContext.WHEN_VIEW)){
 				
 				MainPanel mainPanel = new MainPanel(new Main(session));
 				//MainPanel mainPanel = new MainPanel(new IDE(session));
@@ -274,9 +282,9 @@ public class Login extends Database<ILogin> implements ILogin{
 				storeIntoServerSession();
 
 				return mainPanel;
-//			} else {
-//				return this;
-//			}
+			} else {
+				return this;
+			}
 			
 		}
 
