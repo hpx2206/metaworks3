@@ -4,11 +4,12 @@ import java.io.Serializable;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.uengine.codi.ITool;
 import org.uengine.codi.mw3.model.IUser;
 import org.uengine.codi.mw3.model.User;
-
+@Face(displayName="마케팅 계획 검토")
 public class ConfirmProposal implements ContextAware, ITool , Serializable{
 
 	String instanceId;
@@ -29,7 +30,7 @@ public class ConfirmProposal implements ContextAware, ITool , Serializable{
         }
         
     boolean continueYn;
-    
+    @Face(displayName="계획안 승인여부")
 	public boolean isContinueYn() {
 		return continueYn;
 	}
@@ -38,7 +39,7 @@ public class ConfirmProposal implements ContextAware, ITool , Serializable{
 	}
 	
 	String continueYnVar;
-	
+	@Hidden
 	public String getContinueYnVar() {
 		return continueYnVar;
 	}
@@ -46,8 +47,18 @@ public class ConfirmProposal implements ContextAware, ITool , Serializable{
 		this.continueYnVar = continueYnVar;
 	}
 	
+	String comment;
+	@Face(displayName="코멘트", ejsPath="genericfaces/richText.ejs", options={"rows","cols"}, values={"5","80"})
+	public String getComment() {
+		return comment;
+	}
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+
 	IUser rightPerson;
 
+	@Face(displayName="담당자")
 	 public IUser getRightPerson() {
 		 return rightPerson;
 	 }
@@ -58,7 +69,7 @@ public class ConfirmProposal implements ContextAware, ITool , Serializable{
 	 
 	 String selRightPerson;
 	 
-	
+	@Hidden
 	public String getSelRightPerson() {
 		return selRightPerson;
 	}

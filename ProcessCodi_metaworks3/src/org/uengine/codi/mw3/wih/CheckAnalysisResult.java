@@ -3,11 +3,13 @@ package org.uengine.codi.mw3.wih;
 import java.io.Serializable;
 
 import org.metaworks.MetaworksContext;
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.uengine.codi.ITool;
 import org.uengine.codi.mw3.model.IUser;
 import org.uengine.codi.mw3.model.User;
 
+@Face(displayName="분석결과확인")
 public class CheckAnalysisResult implements ITool , Serializable{
 
 	String instanceId;
@@ -28,8 +30,8 @@ public class CheckAnalysisResult implements ITool , Serializable{
         }
         
     boolean compYn;
-    
-	public boolean isCompYn() {
+    @Face(displayName="계속 진행 여부")
+    public boolean isCompYn() {
 		return compYn;
 	}
 	public void setCompYn(boolean compYn) {
@@ -37,12 +39,21 @@ public class CheckAnalysisResult implements ITool , Serializable{
 	}
 
 	String compYnVar;
-	
+	@Hidden
 	public String getCompYnVar() {
 		return compYnVar;
 	}
 	public void setCompYnVar(String compYnVar) {
 		this.compYnVar = compYnVar;
+	}
+	
+	String comment;
+	@Face(displayName="코멘트", ejsPath="genericfaces/richText.ejs", options={"rows","cols"}, values={"5","80"})
+	public String getComment() {
+		return comment;
+	}
+	public void setComment(String comment) {
+		this.comment = comment;
 	}
 	@Override
 	public void onLoad() {

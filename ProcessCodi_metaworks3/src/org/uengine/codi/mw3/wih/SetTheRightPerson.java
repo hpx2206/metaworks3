@@ -4,11 +4,12 @@ import java.io.Serializable;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.uengine.codi.ITool;
 import org.uengine.codi.mw3.model.IUser;
 import org.uengine.codi.mw3.model.User;
-
+@Face(displayName="진행여부 확인 및 담당자 지정")
 public class SetTheRightPerson implements ContextAware, ITool , Serializable{
 
 	String instanceId;
@@ -29,7 +30,7 @@ public class SetTheRightPerson implements ContextAware, ITool , Serializable{
         }
         
     boolean continueYn;
-    
+    @Face(displayName="진행여부")
 	public boolean isContinueYn() {
 		return continueYn;
 	}
@@ -38,7 +39,7 @@ public class SetTheRightPerson implements ContextAware, ITool , Serializable{
 	}
 	
 	String continueYnVar;
-	
+	@Hidden
 	public String getContinueYnVar() {
 		return continueYnVar;
 	}
@@ -47,7 +48,7 @@ public class SetTheRightPerson implements ContextAware, ITool , Serializable{
 	}
 	
 	IUser rightPerson;
-
+	@Face(displayName="담당자")
 	 public IUser getRightPerson() {
 		 return rightPerson;
 	 }
@@ -57,8 +58,7 @@ public class SetTheRightPerson implements ContextAware, ITool , Serializable{
 	 }
 	 
 	 String selRightPerson;
-	 
-	
+	 @Hidden 
 	public String getSelRightPerson() {
 		return selRightPerson;
 	}
