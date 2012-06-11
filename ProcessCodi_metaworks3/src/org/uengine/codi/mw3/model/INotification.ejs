@@ -1,0 +1,27 @@
+<%
+	if(value){
+%>
+<% 
+	if(confirm){
+%>
+<div class="notification">
+<% 
+	}else{
+%>
+<div class="notification" style="background:#EAEAEA;">
+<% 
+	}
+%>
+	<div class="notiPic">
+		<%=fields.actor.here()%>
+	</div>
+	<div class="notiTxt"  onClick="<%=methods.see.caller()%>">
+		<div class="notiAbs"><%=fields.actAbstract.here()%></div>
+		<div class="notiDate"><%=fields.inputDate.here()%></div>
+	</div>
+	<div class="clear"></div>
+</div>
+
+<%
+	}
+%>
