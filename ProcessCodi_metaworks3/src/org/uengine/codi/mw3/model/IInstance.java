@@ -16,7 +16,6 @@ public interface IInstance extends IDAO{
 
 	@ServiceMethod
 	public ProcessInstanceMonitor flowchart() throws Exception;
-
 	
 	@Id
 	public Long getInstId();

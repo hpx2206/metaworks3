@@ -276,13 +276,15 @@ public class InstanceView {
 	
 	
 	@ServiceMethod 	
-	public ScheduleEditor schedule() throws Exception{
+	public void schedule() throws Exception{
+		
 		scheduleEditor = new ScheduleEditor();
 		scheduleEditor.setInstanceId(instanceId);
 		scheduleEditor.load(processManager);
-		//loadDefault();
+		
+		loadDefault();
 
-		return scheduleEditor;
+		//return scheduleEditor;
 	}
 	
 	@ServiceMethod(needToConfirm=true)
