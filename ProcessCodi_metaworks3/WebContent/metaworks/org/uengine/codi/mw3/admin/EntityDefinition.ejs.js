@@ -15,7 +15,6 @@ var org_uengine_codi_mw3_admin_EntityDefinition = function(objectId, className){
 	
 	// overrides the function
 	object.generateDDL = function() {
-		console.debug(object);
 		if(object.entityName == null || object.entityName.trim() == ""){
 			alert("'Entity Name' 을 먼저 입력하세요.");
 			

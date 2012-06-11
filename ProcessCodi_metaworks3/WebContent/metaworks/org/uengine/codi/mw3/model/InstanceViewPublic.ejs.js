@@ -34,7 +34,8 @@ var org_uengine_codi_mw3_model_InstanceViewPublic = function(objectId, className
 		    			object.load();
 		    		});
 		   } else {
-		     console.log('User cancelled login or did not fully authorize.');
+			   if(window.console)
+				   	console.log('User cancelled login or did not fully authorize.');
 		   }
 		 }, {scope: 'email'});
 	
