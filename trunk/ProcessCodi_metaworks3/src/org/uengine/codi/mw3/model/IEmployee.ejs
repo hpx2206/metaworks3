@@ -49,20 +49,14 @@ if(value){
 			%>			
 				<ul>
 					<li>
-						<dl class="lst_type2">
-							<dt class="tit">
-							<div class="infoSub"><span>ID :</span><span><%=fields.empCode.here() %></span></div>
+								<div class="infoSub"><span>ID :</span><span><%=fields.empCode.here() %></span><%=methods.checkEmpCode.here()%></div>						
 								<div class="infoSub"><span>Name :</span><span><%=fields.empName.here() %></span></div>								
-								<div class="infoSub"><span>PASSWORD : </span><span><%=fields.password.here() %></span></div>
+								<div class="infoSub"><span>Password : </span><span><%=fields.password.here() %></span></div>
+								<div class="infoSub"><span>Re-Password : </span><span><%=fields.confirmPassword.here() %></span></div>
 								<div class="infoSub"><span>Phone : </span><span><%=fields.mobileNo.here() %></span></div>
 								<div class="infoSub"><span>Email : </span><span><%=fields.email.here() %></span></div>
 								<div class="infoSub"><span>Locale : </span><span><%=fields.locale.here() %></span></div>
 								<div class="infoSub"><span><%=fields.imageFile.here() %>&nbsp;</span></div>
-							</dt>
-							<dd class="photo2">
-								<div id="popupInfoImgWih"><img id="userPicture_<%=objectId %>" onerror="<%=onErrorImg %>" src="<%=portrait %>" width="104" height="104"></div>								
-							</dd>
-			   			</dl>
 			  		</li>    
 			 	</ul>
 			 	
@@ -113,7 +107,14 @@ if(value){
 				<dt class="tit">
 					<div id="popupInfoNameWih"><b><%=value.empName %></b></div>
 					<div class="infoSub"><span>ID :</span><span><%=value.empCode %></span></div>
-					<div class="infoSub"><span>PASSWORD : </span><span><%=fields.password.here() %></span></div>
+<%
+		if(mw3.when == 'edit'){
+%>							
+					<div class="infoSub"><span>Password : </span><span><%=fields.password.here() %></span></div>
+					<div class="infoSub"><span>Re-Password : </span><span><%=fields.confirmPassword.here() %></span></div>
+<%
+		}
+%>							
 					<div class="infoSub"><span>Dept : </span><span><%=value.partName %>(<%value.partCode %>)</span></div>
 					<div class="infoSub"><span>Position : </span><span><%=value.jikName %></span></div>
 					<div class="infoSub"><span>Phone : </span><span><%=fields.mobileNo.here() %></span></div>
