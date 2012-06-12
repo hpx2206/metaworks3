@@ -127,9 +127,9 @@
 		<script type='text/javascript' src='scripts/mxgraph/src/js/mxClient.js'></script>
 		<script type='text/javascript' src='scripts/mxgraph/examples/editors/js/mxApplication.js'></script>
 		
-		
+		<!-- date -->
 		<script type='text/javascript' src='scripts/format.js'></script>
-						
+		<script type='text/javascript' src='scripts/jquery/timeago/jquery.timeago.js'></script>				
 						
 		<script type="text/javascript">
 			var Request = function() {
@@ -192,6 +192,7 @@
 				
 				mainPage = new MetaworksObject({
                     __className : "org.uengine.codi.mw3.Login",
+                    metaworksContext : {when: 'edit'},
                     defId : defId
                 }, 'body');
                 
@@ -200,7 +201,7 @@
 				};
 			});
 			
-			(function(d, s, id) {
+			/* (function(d, s, id) {
 				  var js, fjs = d.getElementsByTagName(s)[0];
 				  if (d.getElementById(id)) {
 				  	return;
@@ -209,7 +210,8 @@
 				  js = d.createElement(s); js.id = id;
 				  js.src = "//connect.facebook.net/ko_KR/all.js#xfbml=1&appId=119159701538006";
 				  fjs.parentNode.insertBefore(js, fjs);
-				}(document, 'script', 'facebook-jssdk'));</script>			
+				}(document, 'script', 'facebook-jssdk')); */			
+			
 		</script>
 	</head>
 	
