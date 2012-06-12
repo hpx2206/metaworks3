@@ -5,13 +5,15 @@
 	
 	<%=fields.friend.here()%>
 	
+	<div id="chat_<%=objectId%>" style="<%=value.friend.network=='fb'?'display:none':''%>">
  	<div id="btnline" style="border-top:1px solid #E3E8F2; padding-top:8px;">
 		<ul>
 			<li style="float:left">제목 : </li>
 			<li style="float:left"> <%=fields.title.here({when:'edit'})%></li>
 			<li><a id="wBtn" href="javascript:<%=methods.start.caller()%>"><span>Start</span></a></li>
 		</ul>
-	</div>	
+	</div>
+	<div>	
 <%
 		}else{
 %>
