@@ -204,8 +204,14 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 				
 				genericWI.setGenericWorkItemHandler(genericWIH);
 				genericWI.setInstId(new Long(instId));
+				genericWI.add();
 				
-				instanceView.getInstanceView().setNewItem((WorkItem)genericWI.add()[0]);
+				WorkItem newItem = new CommentWorkItem();
+				newItem.setInstId(new Long(instanceView.getInstanceView().getInstanceId()));
+				newItem.setTaskId(new Long(instanceView.getInstanceView().getInstanceId()));
+				newItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+				
+				instanceView.getInstanceView().setNewItem(newItem);
 								
 	
 				return new Object[]{instanceView, parent};
