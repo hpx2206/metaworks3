@@ -1002,7 +1002,7 @@ public class WebObjectType{
 	       	String contextOnly = path.substring(0, path.substring(1).indexOf("/")+1);
 			String protocol = urlURL.getProtocol();
 			
-			host = "127.0.0.1";
+			//host = "127.0.0.1";
 			
 			new URL(protocol + "://" + host + ":" + port + contextOnly + "/metaworks/" + componentName).openStream();
 			
