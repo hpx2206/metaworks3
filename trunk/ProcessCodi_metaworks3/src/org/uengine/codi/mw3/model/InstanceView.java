@@ -125,11 +125,8 @@ public class InstanceView {
 		
 		crowdSourcer = new CrowdSourcer();
 		crowdSourcer.setInstanceId(getInstanceId());
-		crowdSourcer.followers = this.followers;
+		crowdSourcer.setFollowers(this.followers);
 		crowdSourcer.setMessage("'" + instance.getName() + "' 프로세스에 참여자로 등록했습니다: ");
-		
-		
-		
 		
 		if(instance.getProperty("", "facebook_postIds") != null){
 			String[] postIds = (String[])instance.getProperty("", "facebook_postIds");
@@ -141,6 +138,7 @@ public class InstanceView {
 			isOpen = ((String)instance.getProperty("", "is_open")).equals("open") ? true : false;
 		}
 		
+		System.out.println("isOpen :" + isOpen);
 		crowdSourcer.setOpen(isOpen);
 		
 		

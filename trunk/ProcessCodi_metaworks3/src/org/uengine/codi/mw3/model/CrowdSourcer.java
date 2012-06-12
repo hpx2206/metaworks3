@@ -1,8 +1,6 @@
 package org.uengine.codi.mw3.model;
 
-
 import org.metaworks.ServiceMethodContext;
-import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +9,9 @@ import org.uengine.processmanager.ProcessManagerRemote;
 
 public class CrowdSourcer {
 	
+	@Autowired
+	public ProcessManagerRemote processManager;
+		
 	String instanceId;
 		@Id
 		public String getInstanceId() {
@@ -45,8 +46,16 @@ public class CrowdSourcer {
 			this.open = open;
 		}
 		
+	Followers followers;
+		public Followers getFollowers() {
+			return followers;
+		}
+		public void setFollowers(Followers followers) {
+			this.followers = followers;
+		}
+	
 	@ServiceMethod(callByContent=true)
-	public void crowdSourcing() throws Exception{
+	public void crowdSourcing() throws Exception {
 		try{
 			ProcessInstance instance = processManager.getProcessInstance(getInstanceId());
 		
@@ -66,19 +75,15 @@ public class CrowdSourcer {
 		}finally{		
 			processManager.remove();
 		}
+	}
+	
+	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
+	public Popup worker() throws Exception {
+		CrowdSourcerWorker crowdSourcerWorker = new CrowdSourcerWorker();
 		
-		//return this;
-	}		
-	
-	Followers followers;
-		public Followers getFollowers() {
-			return followers;
-		}
-		public void setFollowers(Followers followers) {
-			this.followers = followers;
-		}
+		Popup popup = new Popup();
+		popup.setPanel(crowdSourcerWorker);
 
-	@Autowired
-	public ProcessManagerRemote processManager;
-	
+		return popup;
+	}		
 }
