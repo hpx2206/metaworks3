@@ -24,7 +24,6 @@ import org.uengine.codi.mw3.model.ICompany;
 import org.uengine.codi.mw3.model.IDept;
 import org.uengine.codi.mw3.model.IEmployee;
 import org.uengine.codi.mw3.model.IUser;
-import org.uengine.codi.mw3.model.Locale;
 import org.uengine.codi.mw3.model.Main;
 import org.uengine.codi.mw3.model.PortraitImageFile;
 import org.uengine.codi.mw3.model.Session;
@@ -83,14 +82,8 @@ public class Login extends Database<ILogin> implements ILogin{
 		public void setFacebookSSO(boolean isFacebookSSO) {
 			this.isFacebookSSO = isFacebookSSO;
 		}
-		
-	
-		
-
 
 	String password;
-	@Hidden(when = MetaworksContext.WHEN_VIEW)
-	@Face(options = "type", values = "password")
 		public String getPassword() {
 			return password;
 		}
@@ -100,8 +93,6 @@ public class Login extends Database<ILogin> implements ILogin{
 		}
 
 	String errorMessage;
-		@Available(when = MetaworksContext.WHEN_EDIT)
-		@NonEditable
 		public String getErrorMessage() {
 			return errorMessage;
 		}
@@ -110,27 +101,15 @@ public class Login extends Database<ILogin> implements ILogin{
 			this.errorMessage = errorMessage;
 		}
 
-	private MetaworksContext context;
-
-		@Override
-		public MetaworksContext getMetaworksContext() {
-			return this.context;
-		}
-
-		@Override
-		public void setMetaworksContext(MetaworksContext paramMetaworksContext) {
-			this.context = paramMetaworksContext;
-		}
-
-
-	private Session loginService() {
+	private Session loginService() throws Exception {
+		
 		Session session = new Session();
 		if (getUserId() != null && getPassword() != null) {
 			IEmployee emp = new Employee();
 			emp.setEmpCode(getUserId());
 			emp.setPassword(getPassword());
 			setMetaworksContext(new MetaworksContext());
-			try {
+			//try {
 				session.setEmployee(emp.load());
 				if (session.getEmployee() != null
 						&& session.getEmployee().getGlobalCom() != null) {
@@ -152,15 +131,15 @@ public class Login extends Database<ILogin> implements ILogin{
 				
 				
 				
-			} catch (Exception e) {
+/*			} catch (Exception e) {
 				MetaworksContext contextWhenEdit = new MetaworksContext();
 				contextWhenEdit.setWhen(MetaworksContext.WHEN_EDIT);
 				emp.setMetaworksContext(contextWhenEdit);
 				setErrorMessage(e.getMessage());
-
+*/
 				// FIXME Monitoring for login errors
 				//throw new RuntimeException(e);//.printStackTrace();
-			}
+			//}
 			getMetaworksContext().setWhen(emp.getMetaworksContext().getWhen());
 		}
 		setPassword(null);
