@@ -191,18 +191,22 @@ public class User extends Database<IUser> implements IUser {
 			
 				String followerSessionId = Login.getSessionIdWithUserId(getUserId());
 				
-				//NEW WAY IS GOOD
-				Browser.withSession(followerSessionId, new Runnable(){
-	
-					@Override
-					public void run() {
-						//refresh notification badge
-						if(!postByMe)
-							ScriptSessions.addFunctionCall("mw3.getAutowiredObject('" + NotificationBadge.class.getName() + "').refresh", new Object[]{});
+				try{
+					//NEW WAY IS GOOD
+					Browser.withSession(followerSessionId, new Runnable(){
+		
+						@Override
+						public void run() {
+							//refresh notification badge
+							if(!postByMe)
+								ScriptSessions.addFunctionCall("mw3.getAutowiredObject('" + NotificationBadge.class.getName() + "').refresh", new Object[]{});
+							
+						}
 						
-					}
-					
-				});
+					});
+				}catch(Exception e){
+					e.printStackTrace();
+				}
 			}
 			////// end
 			

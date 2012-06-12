@@ -90,7 +90,13 @@ public class UnstructuredProcessInstanceStarter implements ContextAware {
 		comment.processManager = processManager;
 		comment.session = session;
 		comment.setTitle(getTitle());
-		instanceView.getInstanceView().setNewItem((WorkItem)comment.add()[0]);
+		comment.add();
+		
+		WorkItem newItem = new CommentWorkItem();
+		newItem.setInstId(new Long(instanceView.getInstanceView().getInstanceId()));
+		newItem.setTaskId(new Long(instanceView.getInstanceView().getInstanceId()));
+		newItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+		instanceView.getInstanceView().setNewItem(newItem);
 	
 		if(getFriend() != null && getFriend().getUserId() != null){
 
