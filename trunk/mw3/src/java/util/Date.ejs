@@ -1,13 +1,14 @@
 <%
-	if(value){
+//	if(value){
 		if(mw3.when == 'new' || mw3.when == 'edit'){
 %>
 			<input type="text" id="<%=mw3.createInputId(objectId)%>" style="width:80px; color:#666;" when="<%=mw3.when%>" readonly />
+			<input type="button" onclick="mw3.getFaceHelper(<%=objectId%>).clear()" value="clear" />
 <%			
 		}else{
 %>
 	<%= value.format('yyyy-MM-dd') %>
 <%		
-		}		 
+//		}		 
 	}
 %>

@@ -8,9 +8,13 @@ import org.metaworks.dwr.MetaworksRemoteService;
 
 public class Admin {
 
+	public Admin() {
+		setTargetClassName("*");
+	}
+	
 	String targetClassName;
 	@Id
-	@Default(value="'*'")
+	@Default(value="*")
 		public String getTargetClassName() {
 			return targetClassName;
 		}
@@ -21,6 +25,9 @@ public class Admin {
 
 	@ServiceMethod
 	public void refreshMetadata() throws Exception{
+		System.out.println("targetClassName : " + getTargetClassName());
+		
+		
 		MetaworksRemoteService.getInstance().clearMetaworksType(getTargetClassName());
 	}
 	

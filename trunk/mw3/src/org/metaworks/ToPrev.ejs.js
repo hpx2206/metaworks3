@@ -11,8 +11,6 @@ var org_metaworks_ToPrev = function(objectId, className){
 			for(var i=0; i<objKeys.length; i++){
 				
 				var mappedObjId = mw3.objectId_KeyMapping[objKeys[i]];
-				console.debug('mappedObjId : '  + mappedObjId);
-				
 				if(mappedObjId){
 					
 					var html = mw3.locateObject(object.target, null);//, "#"+mappedObjdivId);
