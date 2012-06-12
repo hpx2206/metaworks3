@@ -19,8 +19,6 @@ var org_uengine_codi_mw3_model_Locale = function(objectId, className){
 			  number: []
 			};
 	
-	console.debug(jQuery.timeago.settings.strings);
-	
 };
 
 function getMessage(key, defaultValue){

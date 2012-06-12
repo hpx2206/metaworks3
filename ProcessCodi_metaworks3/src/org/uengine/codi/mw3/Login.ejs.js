@@ -3,20 +3,25 @@ var org_uengine_codi_mw3_Login = function(objectId, className){
 	this.className = className;
 	this.divId = mw3._getObjectDivId(this.objectId);
 
-	if($('#fb-root').length == 0)
+	if($('#fb-root').length == 0){
 		$('<div id="fb-root"></div>').insertBefore('#' + this.divId);
 
-	// facebook 
-	(function(d, s, id) {
-		  var js, fjs = d.getElementsByTagName(s)[0];
-		  if (d.getElementById(id)) {
-		  	return;
-		  }
-		  
-		  js = d.createElement(s); js.id = id;
-		  js.src = "//connect.facebook.net/ko_KR/all.js#xfbml=1&appId=119159701538006";
-		  fjs.parentNode.insertBefore(js, fjs);
-		}(document, 'script', 'facebook-jssdk'));			
+		// facebook 
+		(function(d, s, id) {
+			  var js, fjs = d.getElementsByTagName(s)[0];
+			  if (d.getElementById(id)) {
+			  	return;
+			  }
+			  
+			  js = d.createElement(s); js.id = id;
+			  js.src = "//connect.facebook.net/ko_KR/all.js#xfbml=1&appId=119159701538006";
+			  fjs.parentNode.insertBefore(js, fjs);
+			}(document, 'script', 'facebook-jssdk'));			
+		
+		window.fbAsyncInit = function() {
+			FB.init({appId: '119159701538006', status: true, cookie: true,xfbml: true});
+		}
+	}
 	
 	var tryGuidedTour = false;
  
