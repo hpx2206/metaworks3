@@ -742,6 +742,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 	public ContentWindow newProcessInstance() throws Exception{
 		NewInstancePanel newInstancePanel =  new NewInstancePanel();
 		newInstancePanel.setKnowledgeNodeId(this.getId());
+		newInstancePanel.session = session;
 		newInstancePanel.load();
 		
 		return new NewInstanceWindow(newInstancePanel);
