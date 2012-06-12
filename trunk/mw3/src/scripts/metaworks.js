@@ -2370,11 +2370,11 @@
 				var isValid = true;
 				var objId = object.__objectId;
 
-				if(object.metaworksContext){
+/*				if(object.metaworksContext){
 					this.how = object.metaworksContext.how;
 					this.when = object.metaworksContext.when;
 					this.where= object.metaworksContext.where;					
-				}
+				}*/
 
 				if(metadata && metadata.fieldDescriptors && metadata.fieldDescriptors.length > 0){
 				   for(var i = 0; i < metadata.fieldDescriptors.length; ++i){					   
@@ -2389,7 +2389,8 @@
 								   isValid = false;
 						   }
 						   //else{						   		
-							   if(fd.attributes.validator && !mw3.isHidden(fd)) {
+							   //if(fd.attributes.validator && !mw3.isHidden(fd)) {
+						   		if(fd.attributes.validator) {
 						    		for(var j = 0; j < fd.attributes.validator.length; ++j) {
 						    			var validator = fd.attributes.validator[j];						    									    									    			
 						    			var result = this.validation(validator, object[fd.name]);
