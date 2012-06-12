@@ -474,30 +474,37 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	
 				noti.createDatabaseMe();
 				noti.flushDatabaseMe();
-			}
-			
-			String followerSessionId = Login.getSessionIdWithUserId(followerId);
-			
-			//NEW WAY IS GOOD
-			Browser.withSession(followerSessionId, new Runnable(){
 
-				@Override
-				public void run() {
-					ScriptSessions.addFunctionCall("mw3.locateObject", new Object[]{new Object[]{new Refresh(refreshedInstanceView)/*, new Refresh(refreshedInstance)*/}, null, "body"});
-					
-					//refresh notification badge
-					if(!postByMe)
-						ScriptSessions.addFunctionCall("mw3.getAutowiredObject('" + NotificationBadge.class.getName() + "').refresh", new Object[]{});
-					
-					ScriptSessions.addFunctionCall("mw3.onLoadFaceHelperScript", new Object[]{});
+			
+				String followerSessionId = Login.getSessionIdWithUserId(followerId);
+				
+				
+				try{
+					//NEW WAY IS GOOD
+					Browser.withSession(followerSessionId, new Runnable(){
+		
+						@Override
+						public void run() {
+							ScriptSessions.addFunctionCall("mw3.locateObject", new Object[]{new Object[]{new Refresh(refreshedInstanceView)/*, new Refresh(refreshedInstance)*/}, null, "body"});
+							
+							//refresh notification badge
+							if(!postByMe)
+								ScriptSessions.addFunctionCall("mw3.getAutowiredObject('" + NotificationBadge.class.getName() + "').refresh", new Object[]{});
+							
+							ScriptSessions.addFunctionCall("mw3.onLoadFaceHelperScript", new Object[]{});
+						}
+						
+					});
+				}catch(Exception e){
+					e.printStackTrace(); //may stops due to error occurs when the follower isn't online.
 				}
 				
-			});
+			}
 		}
 		
 		
 		//makes new line and change existing div
-		return new WorkItem[]{/*this,*/ newItem};
+		return new Object[]{new Refresh(refreshedInstanceView)};
 	}
 
 	@Override
