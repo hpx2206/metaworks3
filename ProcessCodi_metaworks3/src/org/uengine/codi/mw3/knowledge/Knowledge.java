@@ -57,7 +57,7 @@ public class Knowledge {
 		
 	
 	Session session;
-		@AutowiredToClient
+	@AutowiredToClient
 		public Session getSession() {
 			return session;
 		}

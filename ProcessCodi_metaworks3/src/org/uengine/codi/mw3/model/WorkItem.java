@@ -359,6 +359,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	public Object[] add() throws Exception {
 		Long taskId = UniqueKeyGenerator.issueWorkItemKey(((ProcessManagerBean)processManager).getTransactionContext());
 
+		InstanceViewContent instantiatedViewContent = null;
 		if(instantiation){
 			ResourceFile unstructuredProcessDefinition = new ResourceFile();
 			unstructuredProcessDefinition.processManager = processManager;
@@ -368,17 +369,17 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 						
 			Object[] instanceViewAndInstanceList = unstructuredProcessDefinition.initiate();
 
-			InstanceViewContent instanceViewContent2 = (InstanceViewContent)instanceViewAndInstanceList[0];
-			setInstId(new Long(instanceViewContent2.getInstanceView().getInstanceId()));
+			instantiatedViewContent = (InstanceViewContent)instanceViewAndInstanceList[0];
+			setInstId(new Long(instantiatedViewContent.getInstanceView().getInstanceId()));
 			
 			//이름 변경  
-			instanceViewContent2.getInstanceView().getInstanceNameChanger().setInstanceName(getTitle());
-			instanceViewContent2.getInstanceView().getInstanceNameChanger().change();
-			instanceViewContent2.getInstanceView().setInstanceName(getTitle());
+			instantiatedViewContent.getInstanceView().getInstanceNameChanger().setInstanceName(getTitle());
+			instantiatedViewContent.getInstanceView().getInstanceNameChanger().change();
+			instantiatedViewContent.getInstanceView().setInstanceName(getTitle());
 
 			Instance instance = new Instance();
 			instance.setInstId(new Long
-					(instanceViewContent2.getInstanceView().instanceId));
+					(instantiatedViewContent.getInstanceView().instanceId));
 			instance.databaseMe().setInitEp(session.user.getUserId());
 			
 			if(session.getEmployee() != null)
@@ -415,6 +416,13 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		newItem.setTaskId(new Long(getInstId()));
 		newItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		
+		if(instantiation){
+			instantiatedViewContent.getInstanceView().setNewItem(newItem);
+			
+			return new Object[]{instantiatedViewContent};
+		}
+
+		
 		//newItem.setWriter(loginUser);
 
 		//OLD WAY
@@ -435,9 +443,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		final IInstance refreshedInstance = instance.databaseMe();
 		refreshedInstance.getMetaworksContext().setHow("blinking");
 		
-		if(instantiation){
-			return new Object[]{refreshedInstanceView};
-		}
 
 		
 		//TODO: IF YOU CAN NARROW THE RECEIVERS TO THE FOLLOWERS ONLY IS BEST APPROACH
