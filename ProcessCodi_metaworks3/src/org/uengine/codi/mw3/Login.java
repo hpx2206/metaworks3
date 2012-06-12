@@ -115,14 +115,22 @@ public class Login extends Database<ILogin> implements ILogin{
 						&& session.getEmployee().getGlobalCom() != null) {
 					//createContextInfoByUserType(session);
 					if (session.getEmployee().getPartCode() != null) {
-						IDept dept = new Dept();
-						dept.setPartCode(session.getEmployee().getPartCode());
-						session.setDept(dept.load());
+						try{
+							IDept dept = new Dept();
+							dept.setPartCode(session.getEmployee().getPartCode());
+							session.setDept(dept.load());
+						}catch(Throwable e){
+							
+						}
 					}
 					if (session.getEmployee().getGlobalCom() != null) {
-						ICompany company = new Company();
-						company.setComCode(session.getEmployee().getGlobalCom());
-						session.setCompany(company.load());
+						try{
+							ICompany company = new Company();
+							company.setComCode(session.getEmployee().getGlobalCom());
+							session.setCompany(company.load());
+						}catch(Throwable e){
+							
+						}
 					}
 				} else {
 					throw new Exception(

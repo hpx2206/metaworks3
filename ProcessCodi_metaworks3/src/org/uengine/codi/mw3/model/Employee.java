@@ -9,8 +9,10 @@ import org.metaworks.widget.ModalWindow;
 
 public class Employee extends Database<IEmployee> implements IEmployee {
 	
-	String empCode;
+	String empCode;	
+
 	String password;
+	String confirmPassword;
 	String empName;
 	boolean isAdmin;
 	String jikName;
@@ -32,19 +34,25 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	public String getEmpCode() {
 		return empCode;
 	}
-
 	public void setEmpCode(String empCode) {
 		this.empCode = empCode;
 	}
-
+	
 	public String getPassword() {
 		return password;
 	}
-
 	public void setPassword(String password) {
 		this.password = password;
 	}
 
+	public String getConfirmPassword() {
+		return confirmPassword;
+	}
+
+	public void setConfirmPassword(String confirmPassword) {
+		this.confirmPassword = confirmPassword;
+	}
+	
 	public String getEmpName() {
 		return empName;
 	}
@@ -144,7 +152,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 			IEmployee emp = (IEmployee) findMe();
 			if (getPassword().equals(emp.getPassword())) {
 				emp = findMe();
-
+				
 				// emp = databaseMe();
 
 				getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
@@ -240,6 +248,10 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	
 	@Override
 	public Object[] saveEmployeeInfo() throws Exception {
+		if(!getPassword().equals(getConfirmPassword())){
+			throw new Exception("재입력한 패스워드가 다릅니다.");
+		}
+		
 		if (getMetaworksContext().getWhen().equals(MetaworksContext.WHEN_NEW)) {
 			createDatabaseMe();
 		} else {
@@ -293,5 +305,12 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		
 		return cp;
 	}
-
+	
+	public void checkEmpCode() throws Exception {
+			
+		IEmployee employee = this.findMe();
+		
+		if(employee.getEmpCode() != null)
+			throw new Exception("이미 존재하는 empCode 입니다.");
+	}	
 }
