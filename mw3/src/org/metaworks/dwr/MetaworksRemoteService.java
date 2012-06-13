@@ -3,6 +3,7 @@ package org.metaworks.dwr;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -84,8 +85,8 @@ public class MetaworksRemoteService {
 	}
 
 
-		public WebObjectType getMetaworksType(String className) throws Exception {
-			try{
+	public WebObjectType getMetaworksType(String className) throws Exception {
+		try{
 				
 			//TODO: this is debug mode option
 			if(metadataStorage.containsKey(className))
@@ -110,6 +111,20 @@ public class MetaworksRemoteService {
 			e.printStackTrace();
 			throw e;
 		}
+	}
+	
+	public ArrayList<WebObjectType> getMetaworksTypes(String[] classNames) throws Exception {
+		
+		ArrayList<WebObjectType> metadataArray = new ArrayList<WebObjectType>();
+		
+		for(int i=0; i<classNames.length; i++){
+			try{
+				metadataArray.add(getMetaworksType(classNames[i]));
+			}catch(Exception e){e.printStackTrace();}
+		}
+		
+		return metadataArray;
+		
 	}
 	
 	public InvocationContext prepareToCall(String objectTypeName, Object object, String methodName, Map<String, Object> autowiredFields) throws Throwable{
