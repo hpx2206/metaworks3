@@ -445,9 +445,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			setTitle(getTitle().substring(0, 190) + "...");
 		}
 
-		if(getContent().length() > 2990){
-			setContent(getContent().substring(0, 2990) + "...");
-		}
 		
 ////		
 		createDatabaseMe();
