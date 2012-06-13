@@ -24,6 +24,23 @@ public class MemoWorkItem extends WorkItem{
 		// TODO Auto-generated method stub
 		return super.getMemo();
 	}
+
+	@Override
+	public Object[] add() throws Exception {
+		
+		if(getMemo()!=null && getMemo().getContents()!=null){
+			if(getMemo().getContents().length() > 2990){
+				
+				getMemo().setContents(getMemo().getContents().substring(0, 2990) + "...");
+				
+				
+			}
+
+		}
+		
+		return super.add();
+	}
 	
+
 	
 }
