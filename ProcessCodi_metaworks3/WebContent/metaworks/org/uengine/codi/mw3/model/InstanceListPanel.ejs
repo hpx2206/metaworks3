@@ -5,7 +5,7 @@
 		            <div id="searchbox">
 		                <div class="searchboxline">
 		                	<div class="searchboxline2">
-		                        <div class="newprocessbtn"><a href="#" onclick="<%=methods.newInstance.caller()%>"><div id="startBtn">NEW</div></a></div>
+		                        <div class="newprocessbtn"><a href="#" onclick="<%=methods.newInstance.caller()%>"><div id="startBtn"><%=getMessage("New")%></div></a></div>
 		                        <div class="searchboxarea" id="method_<%=objectId%>_newInstance">
 		                        	<%=fields.searchBox.here()%>
 		                        </div>
@@ -16,9 +16,9 @@
 		            </div>    
 		            <div class="toolbar">
 	                    <ul>
-	                        <li style="width:85px"><span></span><span>Participant</span></li>
-	                        <li style="border:none"><span></span><span>Instance</span></li>               
-	                        <li style="width:100px; float:right; border-left:1px solid #ccc;"><span></span><span>Date</span></li>
+	                        <li style="width:85px"><span></span><span><%=getMessage("Participant")%></span></li>
+	                        <li style="border:none"><span></span><span><%=getMessage("Instance")%></span></li>               
+	                        <li style="width:100px; float:right; border-left:1px solid #ccc;"><span></span><span><%=getMessage("Date")%></span></li>
 	                    </ul>
                 	</div>     
 		        </div>

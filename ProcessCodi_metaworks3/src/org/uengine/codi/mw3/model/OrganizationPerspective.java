@@ -4,6 +4,7 @@ public class OrganizationPerspective extends Perspective {
 
 	public OrganizationPerspective() {
 		setLabel("Organization");
+		
 	}
 	
 	IDept dept;
