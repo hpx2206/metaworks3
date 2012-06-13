@@ -12,49 +12,49 @@
 			        <li id="wih_btn_item_Information">
 			        	<a href="javascript:<%=methods.monitor.caller()%>">
 			        		<span id="method_<%=objectId%>_monitor"><img src="images/waveStyle/i_workitem_i.png" border="0"></span>
-			        		<span>프로세스</span>
+			        		<span><%=getMessage("process")%></span>
 			        	</a>
 			        </li>
 			        <li id="wih_btn_item_GanttChart">
 			        	<a href="javascript:<%=methods.schedule.caller()%>">
 			        		<span style="color: black; "><img src="images/waveStyle/i_gantt.png" border="0"></span>
-			        		<span style="color: black; ">스케쥴</span>
+			        		<span style="color: black; "><%=getMessage("Schedule")%></span>
 			        	</a>
 			        </li>
 			        <li id="wih_btn_sendMail" style="display: none; ">
 			        	<a href="javascript:sendMail()">
 			        		<span><img src="images/waveStyle/i_mail.png" border="0"></span>
-			        		<span>메일</span>
+			        		<span><%=getMessage("Mail")%></span>
 			        	</a>
 			        </li>
 			        <li id="wih_btn_reply" style="display: block; ">
 			        	<a href="javascript:<%=methods.newSubInstancePanel.caller()%>">
 			        		<span style="color: black; cursor:hand "><img src="images/waveStyle/i_reply.png" border="0"></span>
-			        		<span>활동추가</span>
+			        		<span><%=getMessage("activity")%></span>
 			        	</a>
 			        </li>
 			        <li id="wih_btn_edit" style="display: none; ">
 			        	<a href="">
 			        		<span><img src="images/waveStyle/i_edit.png" border="0"></span>
-			        		<span>수정</span>
+			        		<span><%=getMessage("Edit")%></span>
 			        	</a>
 			        </li>
 			        <li id="wih_btn_delete" style="display: none; ">
 			        	<a href="javascript:deleteMail()">
 			        		<span><img src="images/waveStyle/i_delete.png" border="0"></span>
-			        		<span>삭제</span>
+			        		<span><%=getMessage("Deletemail")%></span>
 			        	</a>
 			        </li>
 			        <li id="wih_btn_item_delete" style="display: block; ">
 			        	<a href="javascript:<%=methods.delete.caller()%>">
 			        		<span><img src="images/waveStyle/i_delete.png" border="0"></span>
-			        		<span>삭제</span>
+			        		<span><%=getMessage("Delete")%></span>
 			        	</a>
 			        </li>
 			        <li id="wih_btn_toInstance" style="display: none; ">
 			        	<a href="javascript:getRecommandProcessList();">
 			        		<span><img src="images/waveStyle/i_toinst.png" border="0"></span>
-			        		<span>프로세스화</span>
+			        		<span><%=getMessage("processchange")%></span>
 			        	</a>
 			        </li>			       
 <%
@@ -63,7 +63,7 @@
 			        <li id="wih_btn_sec">
 			        	<a href="javascript:<%=methods.toggleSecurityConversation.caller()%>">
 			        		<span><img src="images/waveStyle/i_unsecuopt.png" border="0"></span>
-			        		<span>보안설정</span>
+			        		<span><%=getMessage("Security")%></span>
 			        	</a>
 			        </li>
 <%
@@ -72,7 +72,7 @@
 			        <li id="wih_btn_sec" class="toolbar_current">
 			        	<a href="javascript:<%=methods.toggleSecurityConversation.caller()%>">
 			        		<span><img src="images/waveStyle/i_secuopt.png" border="0"></span>
-			        		<span>보안설정중</span>
+			        		<span><%=getMessage("Securiting")%></span>
 			        	</a>
 			        </li>
 <%
@@ -83,7 +83,7 @@
 			        <li id="wih_btn_complete">
 			        	<a href="javascript:<%=methods.complete.caller()%>">
 			        		<span><img src="images/waveStyle/i_secuopt.png" border="0"></span>
-			        		<span>완료시킴</span>
+			        		<span><%=getMessage("Completing")%></span>
 			        	</a>
 			        </li>
 
@@ -93,7 +93,7 @@
 			        <li id="wih_btn_complete" class="toolbar_current">
 			        	<a href="javascript:<%=methods.complete.caller()%>">
 			        		<span><img src="images/waveStyle/i_secuopt.png" border="0"></span>
-			        		<span>완료됨</span>
+			        		<span><%=getMessage("Complete")%></span>
 			        	</a>
 			        </li>
 <%
@@ -101,7 +101,7 @@
 %>
 			        
 			        <!-- 2011.09.05 -->
-			        <!-- li id="wih_btn_reply"><a href="javascript:openEventHandler()"><span><img src="images/waveStyle/i_reply.png" border="0" /></img></span><span>이벤트핸들러</span></a></li-->
+			        <!-- li id="wih_btn_reply"><a href="javascript:openEventHandler()"><span><img src="images/waveStyle/i_reply.png" border="0" /></img></span><span><%=getMessage("EventHandler")%></span></a></li-->
 			        
 			    </ul>
 			</div>

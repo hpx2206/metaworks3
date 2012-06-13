@@ -1,12 +1,12 @@
-<div class="depth1" onClick="<%=methods.select.caller() %>" ><%=value.label%></div>
+<div class="depth1" onClick="<%=methods.select.caller() %>" ><%=getMessage("Personal")%></div>
 <%if(value.selected){%>
 	<div class="depth2">
 		<ul class="fist_menu">
 			<li><span style="background:url(images/waveStyle/application_view_detail.png) no-repeat 5px 0px;"><a onClick="<%=methods.loadAllICanSee.caller()%>" href="#middle-west"><%=getMessage("All")%></a></span></li>
 			<li><span style="background:url(images/waveStyle/application_view_detail.png) no-repeat 5px 0px;"><a onClick="<%=methods.loadAll.caller()%>" href="#middle-west"><%=getMessage("Following")%></a></span></li>
 			<li><span style="background:url(images/waveStyle/application_side_tree.png) no-repeat 5px 0px;"><a onClick="<%=methods.loadInbox.caller()%>" href="#middle-west" ><%=getMessage("MyToDo")%></a></span></li>
-			<li><span style="background:url(images/waveStyle/user_edit.png) no-repeat 5px 0px;"><a onClick="<%=methods.loadRequest.caller()%>" href="#middle-west">Started by Me</a></span></li>
-			<li><span style="background:url(images/waveStyle/bin_closed.png) no-repeat 5px 0px; "><a onClick="<%=methods.loadStopped.caller()%>" href="#middle-west">Trash</a></span></li>
+			<li><span style="background:url(images/waveStyle/user_edit.png) no-repeat 5px 0px;"><a onClick="<%=methods.loadRequest.caller()%>" href="#middle-west"><%=getMessage("StartedbyMe")%></a></span></li>
+			<li><span style="background:url(images/waveStyle/bin_closed.png) no-repeat 5px 0px; "><a onClick="<%=methods.loadStopped.caller()%>" href="#middle-west"><%=getMessage("Trash")%></a></span></li>
 		</ul>
 	</div>
 <%}else{%>

@@ -7,6 +7,7 @@ public class ProcessPerspective extends Perspective{
 	
 	public ProcessPerspective(){
 		setLabel("Process");
+		
 	}
 
 	@ServiceMethod
