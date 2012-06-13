@@ -4,6 +4,7 @@ import javax.servlet.http.HttpSession;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.NonEditable;
@@ -151,6 +152,12 @@ public class Session implements ContextAware{
 		login.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 		login.getMetaworksContext().setWhere("user");
 		return login;
+	}
+	
+	@ServiceMethod(target=ServiceMethodContext.TARGET_NONE)
+	public void heartbeat(){
+		//nothing to do
+		//System.out.println("heartbeat:" + getUser());
 	}
 	
 	

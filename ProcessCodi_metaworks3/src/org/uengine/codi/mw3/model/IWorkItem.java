@@ -28,6 +28,7 @@ import org.metaworks.website.ParagraphContents;
 import org.metaworks.website.SourceCodeContents;
 import org.metaworks.widget.ModalWindow;
 import org.metaworks.widget.Window;
+import org.uengine.codi.mw3.admin.WebEditor;
 @Table(name = "bpm_worklist")
 @Face(
 		ejsPathMappingByContext=
@@ -51,13 +52,25 @@ public interface IWorkItem extends IDAO{
 		public String getContent();
 		public void setContent(String content);
 
+
 		@Hidden
-		@ORMapping(databaseFields = { "content" }, objectFields = { "code" })
+		public String getExtFile();
+		public void setExtFile(String extFile);
+
+		
+		@Hidden
+		@ORMapping(databaseFields = { "content" }, objectFields = { "code" },
+			objectIsNullWhenFirstDBFieldIsNull = true)
 		public SourceCode getSourceCode();
 		public void setSourceCode(SourceCode sourceCode);
 		
 		@Hidden
-		@ORMapping(databaseFields = { "content" }, objectFields = { "serializedTool" })
+		@ORMapping(
+			databaseFields = { "content" }, 
+			objectFields = { "serializedTool" },
+			objectIsNullWhenFirstDBFieldIsNull = true,
+			availableWhen= "type=='generic'"
+		)
 		public GenericWorkItemHandler getGenericWorkItemHandler();
 		public void setGenericWorkItemHandler(
 				GenericWorkItemHandler genericWorkItemHandler);
@@ -78,7 +91,8 @@ public interface IWorkItem extends IDAO{
 						"file", 
 						"schdle",
 						"postings",
-						"generic"
+						"generic",
+						"memo"
 					}, 
 				classes = 		{ 
 						WorkItem.class,  	
@@ -89,7 +103,8 @@ public interface IWorkItem extends IDAO{
 						FileWorkItem.class,
 						ScheduleWorkItem.class,
 						PostingsWorkItem.class,
-						GenericWorkItem.class
+						GenericWorkItem.class,
+						MemoWorkItem.class
 					} 
 		)
 		public String getType();
@@ -110,10 +125,23 @@ public interface IWorkItem extends IDAO{
 		@Hidden
 		@ORMapping(
 			databaseFields = { 	"content", 		"tool" }, 
-			objectFields = { 	"uploadedPath", "mimeType" }
+			objectFields = { 	"uploadedPath", "mimeType" },
+			objectIsNullWhenFirstDBFieldIsNull = true,
+			availableWhen= "type=='file'"
+		
 		)
 		public MetaworksFile getFile();
 		public void setFile(MetaworksFile file);
+		
+		@Hidden
+		@ORMapping(
+			databaseFields = { 	"content" }, 
+			objectFields = { 	"contents" },
+			objectIsNullWhenFirstDBFieldIsNull = true,
+			availableWhen= "type=='memo'"
+		)
+		public WebEditor getMemo();
+		public void setMemo(WebEditor memo);
 		
 		public Long getInstId();
 		public void setInstId(Long instId);
@@ -196,6 +224,8 @@ public interface IWorkItem extends IDAO{
 		@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)
 		public IWorkItem newFile() throws Exception;
 		
-		
+		@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)
+		public IWorkItem newMemo() throws Exception;
+
 }
 

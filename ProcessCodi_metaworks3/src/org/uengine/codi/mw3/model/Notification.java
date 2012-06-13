@@ -95,6 +95,11 @@ public class Notification extends Database<INotification> implements INotificati
 		}
 	
 		public void setActAbstract(String actAbstract) {
+			
+			if(actAbstract.length() > 97){
+				actAbstract = actAbstract.substring(0, 97) + "...";
+			}
+			
 			this.actAbstract = actAbstract;
 		}
 		
