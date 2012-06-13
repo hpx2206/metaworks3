@@ -7,4 +7,6 @@ import java.lang.annotation.RetentionPolicy;
 public @interface ORMapping {
 	String[] objectFields();
 	String[] databaseFields();
+	boolean objectIsNullWhenFirstDBFieldIsNull() default false;
+	String availableWhen() default "";
 }
