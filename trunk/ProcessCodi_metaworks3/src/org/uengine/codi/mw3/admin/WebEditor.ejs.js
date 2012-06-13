@@ -11,6 +11,10 @@ var org_uengine_codi_mw3_admin_WebEditor = function(objectId, className) {
 		htmlEncodeOutput : false,
 		entities : false
 	});
+	
+	var webEditor = mw3.objects[objectId];
+	
+	this.editor.setData(webEditor.contents);
 }
 
 org_uengine_codi_mw3_admin_WebEditor.prototype.getValue = function() {
