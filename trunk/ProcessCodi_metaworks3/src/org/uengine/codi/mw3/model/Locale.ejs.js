@@ -22,10 +22,16 @@ var org_uengine_codi_mw3_model_Locale = function(objectId, className){
 };
 
 function getMessage(key, defaultValue){
-	var message = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Locale").resourceBundle[key];
 	
-	if(message)
-		return message;
+	var localeHandler = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Locale");
+	
+	if(localeHandler!=null){
+		
+		var message = localeHandler.resourceBundle[key];
+		
+		if(message)
+			return message;
+	}
 	
 	if(defaultValue)
 		return defaultValue;
