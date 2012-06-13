@@ -465,6 +465,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		
 		if(instantiation){
 			instantiatedViewContent.getInstanceView().setNewItem(newItem);
+			instantiatedViewContent.getInstanceView().setThreadPosting(this);
 			
 			return new Object[]{instantiatedViewContent};
 		}
