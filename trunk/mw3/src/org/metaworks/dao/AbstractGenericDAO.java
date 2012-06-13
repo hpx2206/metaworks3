@@ -1021,6 +1021,33 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 						
 						ORMapping ormapping = m.getAnnotation(ORMapping.class);
 						if(ormapping!=null){
+							
+							if(ormapping.availableWhen().length() > 0){
+								try{
+									String[] propAndValue = ormapping.availableWhen().split("==");
+									String availabilityCheckPropName = propAndValue[0].trim();
+									String availabilityCheckValue = propAndValue[1].trim();
+
+									Object value = (rowSet!=null ? rowSet.getObject(availabilityCheckPropName) : cache.get(availabilityCheckPropName));
+
+									Object comparer = null;
+									
+									if(availabilityCheckValue.startsWith("'")){ 
+										availabilityCheckValue = availabilityCheckValue.substring(1, availabilityCheckValue.length() - 1);
+										comparer = availabilityCheckValue;
+									}else{
+										comparer = new Integer(availabilityCheckValue);
+									}
+																
+									boolean ormappingIsAvailable = comparer.equals(value);
+									if(!ormappingIsAvailable)
+										return null;
+									
+								}catch(Exception e){
+									
+								}
+							}
+							
 							String[] ORMPropNames = ormapping.objectFields();
 							for(int i=0; i<ORMPropNames.length; i++){
 								
@@ -1029,6 +1056,10 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 									String propName = ormapping.databaseFields()[i].toUpperCase();
 									
 									Object value = (rowSet!=null ? rowSet.getObject(propName) : cache.get(propName));
+									
+									if(i==0 && value==null && ormapping.objectIsNullWhenFirstDBFieldIsNull()){
+										return null;
+									}
 									
 									String mappingPropName = ORMPropNames[i];
 									mappingPropName = WebObjectType.toUpperStartedPropertyName(mappingPropName);
