@@ -144,7 +144,7 @@ public interface IWorkItem extends IDAO{
 		@ServiceMethod(when = WHEN_VIEW, callByContent=true)
 		public void detail() throws Exception;
 
-		@ServiceMethod(callByContent = true, target=ServiceMethodContext.TARGET_SELF)
+		@ServiceMethod(callByContent = true)
 		@Test(scenario="first", starter=true, instruction="댓글을 추가합니다.", next="autowiredObject.org.uengine.codi.mw3.model.WorkItem.newSourceCode()")
 		public Object[] add() throws Exception;
 
