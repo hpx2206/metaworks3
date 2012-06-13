@@ -280,6 +280,23 @@
 				return function(){}; //for dwr dummy call
 			}
 			
+			Metaworks3.prototype.requestMetadataBatch = function(result){
+				
+//				var classNamesInTheObject = {};
+//				
+//				var collectingProperties = function(object){
+//					for(var propName in object){
+//						if(propName=='__className')
+//							classNamesInTheObject[classNamesInTheObject.length] = object.__className;
+//							
+//						if(propName=='__objectId' || propName=='_prototype_') continue;
+//							
+//						collectingProperties(object[propName]);
+//					}
+//				}
+				
+			}
+			
 			Metaworks3.prototype.getMetadata = function(objectTypeName, onLoadDone){
 
 					if(!objectTypeName && objectTypeName.trim().length == 0) return;
@@ -1607,6 +1624,9 @@
 					this.metaworksProxy.callMetaworksService(className, object, svcNameAndMethodName, autowiredObjects,
 							{ 
 				        		callback: function( result ){
+				        			
+				        			mw3.requestMetadataBatch(result);
+				        			
 				        			// 2012-03-19 cjw 기존 소스가 ejs.js 생성자 호출 보다 늦게 method 값을 할당하여 맨위로 올림
 				        			mw3.recentCallMethodName = svcNameAndMethodName;
 				        			
