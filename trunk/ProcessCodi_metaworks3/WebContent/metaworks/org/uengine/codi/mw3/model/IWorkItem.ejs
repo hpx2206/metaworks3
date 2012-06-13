@@ -1,4 +1,3 @@
-<!--<div style="background:url(images/waveStyle/atvLine.gif) bottom center no-repeat; padding-bottom:40px; ">-->	
 
 
 <%
@@ -82,6 +81,13 @@
 						<td>	
 						<%  value.file.metaworksContext.when='view'; %>
 							<%=fields.file.here()%>
+						</td>
+					</tr>
+					<%}%>
+					<%if(value.type=='memo'){%>
+					<tr>
+						<td>
+								<%=fields.memo.here()%>						
 						</td>
 					</tr>
 					<%}%>
