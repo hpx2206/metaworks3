@@ -25,6 +25,7 @@ import org.metaworks.widget.Window;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.CodiProcessDefinitionFactory;
 import org.uengine.codi.mw3.Login;
+import org.uengine.codi.mw3.admin.WebEditor;
 import org.uengine.persistence.dao.UniqueKeyGenerator;
 import org.uengine.processmanager.ProcessManagerBean;
 import org.uengine.processmanager.ProcessManagerRemote;
@@ -158,6 +159,18 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		}
 
 
+	WebEditor memo;
+		
+		
+		public WebEditor getMemo() {
+			return memo;
+		}
+	
+		public void setMemo(WebEditor memo) {
+			this.memo = memo;
+		}
+	
+
 	String content;
 		public String getContent() {
 			return content;
@@ -166,6 +179,17 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			this.content = content;
 		}
 		
+	String extFile;
+			
+		public String getExtFile() {
+			return extFile;
+		}
+	
+		public void setExtFile(String extFile) {
+			this.extFile = extFile;
+		}
+
+
 	SourceCode sourceCode;
 		public SourceCode getSourceCode() {
 			return sourceCode;
@@ -310,13 +334,28 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		// TODO Auto-generated method stub
 		FileWorkItem fwi = new FileWorkItem();
 
-		fwi.setInstId(getInstId());
-		fwi.setEndpoint(session.getUser().getUserId());
-		fwi.setWriter(getWriter());
-		fwi.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
-		fwi.setInstantiation(isInstantiation());
+		formatWorkItem(fwi);
 		
 		return fwi;
+	}
+
+	@Override
+	public IWorkItem newMemo() throws Exception {
+		// TODO Auto-generated method stub
+		MemoWorkItem wi = new MemoWorkItem();
+
+		formatWorkItem(wi);
+
+		
+		return wi;
+	}
+
+	private void formatWorkItem(WorkItem wi) {
+		wi.setInstId(getInstId());
+		wi.setEndpoint(session.getUser().getUserId());
+		wi.setWriter(getWriter());
+		wi.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+		wi.setInstantiation(isInstantiation());
 	}
 
 
@@ -399,6 +438,17 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		setTaskId(taskId);
 		setStartDate(Calendar.getInstance().getTime());
 		setEndDate(getStartDate());
+		
+		if(getTitle().length() > 190){
+			setType(new MemoWorkItem().getType());
+			setContent(getTitle());
+			setTitle(getTitle().substring(0, 190) + "...");
+		}
+
+		if(getContent().length() > 2990){
+			setContent(getContent().substring(0, 2990) + "...");
+		}
+		
 ////		
 		createDatabaseMe();
 		flushDatabaseMe();
@@ -470,6 +520,8 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				noti.setInputDate(Calendar.getInstance().getTime());
 				noti.setTaskId(getTaskId());
 				noti.setInstId(getInstId());
+				
+				
 				noti.setActAbstract(session.getUser().getName() + "님이 댓글(활동)을 남겼습니다: " + getTitle());
 	
 				noti.createDatabaseMe();
