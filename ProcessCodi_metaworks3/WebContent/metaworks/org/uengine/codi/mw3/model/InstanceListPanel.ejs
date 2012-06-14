@@ -17,7 +17,8 @@
 		            <div class="toolbar">
 	                    <ul>
 	                        <li style="width:60px"><span></span><span onclick="<%=methods.switchToInstanceList.caller()%>"><%=getMessage("ComingUp")%></span></li>
-	                        <li style="width:60px"><span></span><span onclick="mw3.getAutowiredObject('org.uengine.codi.mw3.model.PersonalPerspective').loadAll()"><%=getMessage("Following")%></span></li>               
+	                        <li style="width:60px"><span></span><span onclick="<%=methods.switchToInstanceListFollowing.caller()%>"><%=getMessage("Following")%></span></li>               
+	                        <li style="width:60px"><span></span><span onclick="<%=methods.switchToInstanceListMyToDo.caller()%>"><%=getMessage("MyToDo")%></span></li>               
 	                        <li style="width:60px"><span></span><span onclick="<%=methods.switchToKnowledge.caller()%>"><%=getMessage("Strategic")%></span></li>               
 	                        <li style="width:60px"><span></span><span onclick="<%=methods.switchToScheduleCalendar.caller()%>"><%=getMessage("Calendar")%></span></li>
 	                    </ul>

@@ -117,7 +117,7 @@ public class WfPanel implements ContextAware {
 
 		WfNode root = new WfNode();
 		root.setId("-1");
-		root.setName("/");
+		root.setName("Home");
 		root.getMetaworksContext().setHow("PATH");
 		path.add(0, root);
 		

@@ -70,10 +70,10 @@ public class Main {
 		if(isMobile && "auto".equals(preferMob)){
 			preferMob = (pad ? "pad" : "phone");
 			
-			session.setUx(preferMob);
 		}
 		
 		if("phone".equals(preferMob)){
+			session.setUx(preferMob);
 			
 			Layout outerLayout = new Layout();
 			outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:5, north__size:52");
@@ -88,9 +88,11 @@ public class Main {
 
 			//setPageNavigator(new PageNavigator("process"));	
 			
-		}else if("pad".equals(preferUX)){
+		}else if("pad".equals(preferMob)){
+			session.setUx(preferMob);
+			
 			Layout outerLayout = new Layout();
-			outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:5, north__size:52");
+			outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:5, north__size:52, west__size:400");
 			outerLayout.setNorth(new ProcessTopPanel(session));
 			
 			outerLayout.setWest(createInstanceListWindow(session));	

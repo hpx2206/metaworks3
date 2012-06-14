@@ -123,7 +123,7 @@ public interface IWfNode extends IDAO {
 	@ServiceMethod(callByContent=true, except={"childNode", "focus"}, target="popup")
 	public Object[] indent() throws Exception;
 	
-	@ServiceMethod(inContextMenu=true, keyBinding="Shift+Right")
+	@ServiceMethod(inContextMenu=true, keyBinding="Shift+Down")
 	public WfPanel drillInto() throws Exception;
 	
 	@ServiceMethod(callByContent=true, except={"childNode", "focus"}, target="popup")
@@ -136,7 +136,7 @@ public interface IWfNode extends IDAO {
 	@ServiceMethod(callByContent=true)
 	public ContentWindow linkInstance() throws Exception;
 	
-	@ServiceMethod(inContextMenu=true, keyBinding="Ctrl+N")
+	@ServiceMethod(callByContent=true, except={"childNode", "focus"}, inContextMenu=true, keyBinding="Ctrl+N")
 	public ContentWindow newProcessInstance() throws Exception;
 		
 	@ServiceMethod(inContextMenu=true, keyBinding="Ctrl+D")
