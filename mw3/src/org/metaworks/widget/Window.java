@@ -2,8 +2,10 @@ package org.metaworks.widget;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 
+@Face(ejsPath="genericfaces/Window.ejs")
 public class Window implements ContextAware {
 	
 	public Window() {

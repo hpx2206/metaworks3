@@ -16,32 +16,41 @@
 		var minimize = objectMetadata.faceOptions && objectMetadata.faceOptions['minimize'];
 		
 		// get window title (className or displayName)
+		
 		var objectName; 
-		if(value.__toString != null){
-			objectName = value.__toString();
-		}		
-		if(!objectName){
-			objectName = objectMetadata.displayName;
-		}
-		
-		// get window title (resource) 
-		var resourceName = null;
-		if(objectName && objectName.indexOf('$')==0){
-			resourceName = objectName.substring(1);
-		}
-		
 		var windowTitle = null;
-		for (var i=0; i<objectMetadata.fieldDescriptors.length; i++){						  
-			var fd = objectMetadata.fieldDescriptors[i];
 
-			windowTitle = fd.options && (fd.getOptionValue('windowTitle'));
-						
-			if(windowTitle){
-				windowTitle = value[fd.name];
-				
-				break;
+		if(value.__className=='org.metaworks.widget.Window'){
+			windowTitle = value.title 
+		
+		}else{
+			if(value.__toString != null){
+				objectName = value.__toString();
+			}		
+			if(!objectName){
+				objectName = objectMetadata.displayName;
 			}
-		}		
+			
+			// get window title (resource) 
+			var resourceName = null;
+			if(objectName && objectName.indexOf('$')==0){
+				resourceName = objectName.substring(1);
+			}
+			
+			for (var i=0; i<objectMetadata.fieldDescriptors.length; i++){						  
+				var fd = objectMetadata.fieldDescriptors[i];
+	
+				windowTitle = fd.options && (fd.getOptionValue('windowTitle'));
+							
+				if(windowTitle){
+					windowTitle = value[fd.name];
+					
+					break;
+				}
+			}
+		}
+		
+		
 %>
 		<div id="sm_<%=objectId%>" style="margin-top:12px; padding:0px;  display:none; float:left; width:160px; position:relative;">	
 		    <div class="boxtopleft"><span class="boxtopright"><div id="navigationTitle"><span><%if(resourceName){%><%=resources[resourceName].here()%><%}else{%><%=objectName%><%}%></span></div></span></div>
