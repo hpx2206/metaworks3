@@ -1,5 +1,11 @@
 <%
 	if(value){
+	
+		if(value.ux && value.ux == 'phone'){
+			%><%=methods.returnToList.here()%><%
+		}
+	
+	
 		if(mw3.when == 'view'){
 %>
 			<span style="display:inline-block;"><%=fields.employee.here() %></span>
