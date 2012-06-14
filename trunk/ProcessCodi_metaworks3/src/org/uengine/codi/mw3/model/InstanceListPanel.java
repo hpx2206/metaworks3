@@ -75,6 +75,30 @@ public class InstanceListPanel {
 		setInstanceList(instanceListPanel.getInstanceList());
 	}
 
+	@ServiceMethod(inContextMenu=true)
+	public void switchToInstanceListFollowing() throws Exception{
+		this.setScheduleCalendar(null);
+		this.setKnowledge(null);
+	
+		PersonalPerspective personalPerspective = new PersonalPerspective();
+		personalPerspective.session = session;
+		InstanceListPanel instanceListPanel = (InstanceListPanel) personalPerspective.loadAll()[1];
+		
+		setInstanceList(instanceListPanel.getInstanceList());
+	}
+
+	@ServiceMethod(inContextMenu=true)
+	public void switchToInstanceListMyToDo() throws Exception{
+		this.setScheduleCalendar(null);
+		this.setKnowledge(null);
+	
+		PersonalPerspective personalPerspective = new PersonalPerspective();
+		personalPerspective.session = session;
+		InstanceListPanel instanceListPanel = (InstanceListPanel) personalPerspective.loadInbox()[1];
+		
+		setInstanceList(instanceListPanel.getInstanceList());
+	}
+
 	@Face(displayName="Knowledge View")
 	@ServiceMethod(inContextMenu=true)
 	public void switchToKnowledge() throws Exception{

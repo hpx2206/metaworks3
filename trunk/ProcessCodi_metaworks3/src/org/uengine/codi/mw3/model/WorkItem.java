@@ -26,6 +26,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.CodiProcessDefinitionFactory;
 import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.admin.WebEditor;
+import org.uengine.codi.mw3.knowledge.KnowledgeTool;
+import org.uengine.codi.mw3.knowledge.WfNode;
 import org.uengine.persistence.dao.UniqueKeyGenerator;
 import org.uengine.processmanager.ProcessManagerBean;
 import org.uengine.processmanager.ProcessManagerRemote;
@@ -394,6 +396,10 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			this.instantiation = instantiation;
 		}
 
+		
+	@AutowiredFromClient
+	public NewInstancePanel newInstancePanel;
+		
 	@Override
 	public Object[] add() throws Exception {
 		Long taskId = UniqueKeyGenerator.issueWorkItemKey(((ProcessManagerBean)processManager).getTransactionContext());
@@ -416,15 +422,50 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			instantiatedViewContent.getInstanceView().getInstanceNameChanger().change();
 			instantiatedViewContent.getInstanceView().setInstanceName(getTitle());
 
-			Instance instance = new Instance();
-			instance.setInstId(new Long
+			Instance instanceRef = new Instance();
+			instanceRef.setInstId(new Long
 					(instantiatedViewContent.getInstanceView().instanceId));
-			instance.databaseMe().setInitEp(session.user.getUserId());
+			instanceRef.databaseMe().setInitEp(session.user.getUserId());
 			
 			if(session.getEmployee() != null)
-				instance.databaseMe().setInitComCd(session.getEmployee().getGlobalCom());
+				instanceRef.databaseMe().setInitComCd(session.getEmployee().getGlobalCom());
 			
 		
+			if(newInstancePanel!=null){
+				
+				instanceRef.databaseMe().setSecuopt(newInstancePanel.getSecurityLevel());
+				instanceRef.flushDatabaseMe();
+				
+				if(newInstancePanel.getKnowledgeNodeId() != null){
+				
+					WfNode parent = new WfNode();
+					parent.load(newInstancePanel.getKnowledgeNodeId());
+
+					instantiatedViewContent.instanceView.instanceNameChanger.setInstanceName(parent.getName());
+					instantiatedViewContent.instanceView.instanceNameChanger.change();
+
+				
+					parent.setLinkedInstId(instId);
+					parent.save();
+					
+					//setting the first workItem as wfNode referencer
+					GenericWorkItem genericWI = new GenericWorkItem();
+					
+					genericWI.processManager = processManager;
+					genericWI.session = session;
+					genericWI.setTitle("지식조각을 첨부합니다");//parent.getName());
+					GenericWorkItemHandler genericWIH = new GenericWorkItemHandler();
+					KnowledgeTool knolTool = new KnowledgeTool();
+					knolTool.setNodeId(parent.getId());
+					genericWIH.setTool(knolTool);
+					
+					genericWI.setGenericWorkItemHandler(genericWIH);
+					genericWI.setInstId(new Long(instId));
+					genericWI.add();
+							
+				}
+			}
+
 		}
 		
 		setRootInstId(getInstId());
@@ -446,7 +487,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		}
 
 		
-////		
 		createDatabaseMe();
 		flushDatabaseMe();
 		

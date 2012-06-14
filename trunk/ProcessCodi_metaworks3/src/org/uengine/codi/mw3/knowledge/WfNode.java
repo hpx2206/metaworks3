@@ -744,6 +744,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		newInstancePanel.setKnowledgeNodeId(this.getId());
 		newInstancePanel.session = session;
 		newInstancePanel.load();
+		newInstancePanel.getNewInstantiator().setTitle(getName());
 		
 		return new NewInstanceWindow(newInstancePanel);
 	}

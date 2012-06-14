@@ -170,6 +170,10 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		
 		if(newInstancePanel!=null){
 			
+			((Instance)instanceRef).databaseMe().setSecuopt("" + newInstancePanel.getSecurityLevel());
+			((Instance)instanceRef).flushDatabaseMe();
+
+			
 			if(newInstancePanel.getKnowledgeNodeId() != null){
 			
 				processManager.executeProcess(instId);
@@ -185,11 +189,15 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 				instanceView.instanceView.instanceNameChanger.setInstanceName(parent.getName());
 				instanceView.instanceView.instanceNameChanger.change();
 
-				WfNode child = new WfNode();		
-				child.setName(instanceView.instanceName);
-				child.setLinkedInstId(Long.parseLong(instId));
-				parent.addChildNode(child);
-				child.createMe();
+			
+//				WfNode child = new WfNode();		
+//				child.setName(instanceView.instanceName);
+//				child.setLinkedInstId(Long.parseLong(instId));
+//				parent.addChildNode(child);
+//				child.createMe();
+				
+				parent.setLinkedInstId(Long.parseLong(instId));
+				parent.save();
 				
 				//setting the first workItem as wfNode referencer
 				GenericWorkItem genericWI = new GenericWorkItem();
@@ -217,6 +225,8 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 				return new Object[]{instanceView, parent};
 	
 			}
+			
+			
 		}else if(processMapList!=null && processMapList.getParentInstanceId() != null){ //need to attach new instance to the parent instance
 			ProcessInstance instanceObject = processManager.getProcessInstance(instId);
 			

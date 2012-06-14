@@ -4,6 +4,7 @@ import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
+import org.metaworks.annotation.Range;
 
 
 public class NewInstancePanel implements ContextAware {
@@ -24,6 +25,8 @@ public class NewInstancePanel implements ContextAware {
 		newInstantiator.setWriter(session.getUser());
 		newInstantiator.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		newInstantiator.setInstantiation(true);
+		
+		securityLevel = "0";
 	}
 	
 	@AutowiredFromClient
@@ -38,8 +41,19 @@ public class NewInstancePanel implements ContextAware {
 			this.newInstantiator = newInstantiator;
 		}
 
+	String securityLevel;
+	@Range(options={"Open to intranet (normal)", "Open for followers only (most closed)", "Open to my public SNS (most open)"}, 
+			values={"0", "1", "2"})	
+		public String getSecurityLevel() {
+			return securityLevel;
+		}
 	
-//	UnstructuredProcessInstanceStarter unstructuredProcessInstanceStarter;		
+		public void setSecurityLevel(String securityLevel) {
+			this.securityLevel = securityLevel;
+		}
+
+
+	//	UnstructuredProcessInstanceStarter unstructuredProcessInstanceStarter;		
 //	public UnstructuredProcessInstanceStarter getUnstructuredProcessInstanceStarter() {
 //		return unstructuredProcessInstanceStarter;
 //	}
