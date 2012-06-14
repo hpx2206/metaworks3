@@ -16,9 +16,10 @@
 		            </div>    
 		            <div class="toolbar">
 	                    <ul>
-	                        <li style="width:85px"><span></span><span><%=getMessage("Participant")%></span></li>
-	                        <li style="border:none"><span></span><span><%=getMessage("Instance")%></span></li>               
-	                        <li style="width:100px; float:right; border-left:1px solid #ccc;"><span></span><span><%=getMessage("Date")%></span></li>
+	                        <li style="width:60px"><span></span><span onclick="<%=methods.switchToInstanceList.caller()%>"><%=getMessage("ComingUp")%></span></li>
+	                        <li style="width:60px"><span></span><span onclick="mw3.getAutowiredObject('org.uengine.codi.mw3.model.PersonalPerspective').loadAll()"><%=getMessage("Following")%></span></li>               
+	                        <li style="width:60px"><span></span><span onclick="<%=methods.switchToKnowledge.caller()%>"><%=getMessage("Strategic")%></span></li>               
+	                        <li style="width:60px"><span></span><span onclick="<%=methods.switchToScheduleCalendar.caller()%>"><%=getMessage("Calendar")%></span></li>
 	                    </ul>
                 	</div>     
 		        </div>
@@ -32,5 +33,6 @@
 			<div class="ui-layout-content">
 				<%=value.instanceList ? fields.instanceList.here() : ""%>
 				<%=value.scheduleCalendar ? fields.scheduleCalendar.here() : ""%>
+				<%=value.knowledge ? fields.knowledge.here() : ""%>
 			</div>
 		</div>
