@@ -2734,9 +2734,21 @@ SET FOREIGN_KEY_CHECKS = 1;
 		userId char(100),
 		actorId char(100),
 		instId int,
-		actAbstract varchar(100),
+		actAbstract varchar(300),
 		taskId int,
 		type int,
 		inputdate timestamp,
 		confirm int
 	)
+
+	
+	
+	 alter table bpm_worklist add column extfile varchar(200);   //3000자 이상의 content 가 입력되면 전체 본문을 파일로 저장할 위치를 받아놓음
+	 
+	 
+	 alter table emptable add column preferux char(10);
+	 
+	 
+	 alter table emptable add column prefermob char(10);
+	 
+	 
