@@ -8,6 +8,7 @@ import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;
 import org.metaworks.annotation.NonLoadable;
 import org.metaworks.annotation.NonSavable;
+import org.metaworks.annotation.Range;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Table;
 import org.metaworks.annotation.Validator;
@@ -77,8 +78,28 @@ public interface IEmployee extends IDAO {
 	public String getEmail();
 	public void setEmail(String email);
 
+	@Range(
+			values={"en", "ko", "jp", "cn"},
+			options={"English", "Korean", "Japanese", "Chinese"}			
+			)
 	public String getLocale();
 	public void setLocale(String locale);
+	
+	
+	@Range(
+			values={"fb", "asana", "wave"},
+			options={"I love facebook/twitter", "I love Asana or Outlook", "I love Google Wave"}			
+			)
+	public String getPreferUX();
+	public void setPreferUX(String preferUX);
+
+	@Range(
+			values={"auto", "phone", "pad", "desktop"},
+			options={"Auto Detection", "Phone (1-column)", "Pad (2-column)", "Desktop version"}			
+			)
+	public String getPreferMob();
+	public void setPreferMob(String preferMob);
+
 	
 	@NonLoadable
 	@NonSavable
