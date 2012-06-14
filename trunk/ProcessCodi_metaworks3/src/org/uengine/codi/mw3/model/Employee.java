@@ -171,10 +171,10 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 				getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 				return emp;
 			} else {
-				errorMessage = "Password not match !!!";
+				errorMessage = "&nsbp;&nsbp;&nsbp;&nsbp;Wrong Password! forgot?";
 			}
 		} else {
-			errorMessage = "There is no user id !!!";
+			errorMessage = "&nsbp;&nsbp;&nsbp;&nsbp;There's no such ID. Please subscribe.";
 		}
 
 		getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
