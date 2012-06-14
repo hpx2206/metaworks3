@@ -7,6 +7,7 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Test;
 import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.calendar.ScheduleCalendar;
+import org.uengine.codi.mw3.knowledge.WfPanel;
 
 public class InstanceListPanel {
 	
@@ -37,6 +38,16 @@ public class InstanceListPanel {
 			this.scheduleCalendar = scheduleCalendar;
 		}
 		
+	WfPanel knowledge;
+		
+		public WfPanel getKnowledge() {
+			return knowledge;
+		}
+		public void setKnowledge(WfPanel knowledge) {
+			this.knowledge = knowledge;
+		}
+		
+		
 	//@Hidden
 	@Face(displayName="Calendar View")
 	@ServiceMethod(inContextMenu=true)
@@ -44,6 +55,7 @@ public class InstanceListPanel {
 	@Test(scenario="first", starter=true, instruction="창을 닫으시고, '우측클릭 > Calendar' 를 클릭하시면 내가 참여하고 있는 목록을 달력으로 볼 수 있습니다.", next="autowiredObject.org.uengine.codi.mw3.admin.PageNavigator.goKnowledge()")	
 	public void switchToScheduleCalendar() throws Exception{
 		this.setInstanceList(null);
+		this.setKnowledge(null);
 		this.scheduleCalendar = new ScheduleCalendar();
 		this.scheduleCalendar.session = session;
 		this.scheduleCalendar.load();
@@ -54,6 +66,7 @@ public class InstanceListPanel {
 	@ServiceMethod(inContextMenu=true)
 	public void switchToInstanceList() throws Exception{
 		this.setScheduleCalendar(null);
+		this.setKnowledge(null);
 	
 		PersonalPerspective personalPerspective = new PersonalPerspective();
 		personalPerspective.session = session;
@@ -62,7 +75,17 @@ public class InstanceListPanel {
 		setInstanceList(instanceListPanel.getInstanceList());
 	}
 
+	@Face(displayName="Knowledge View")
+	@ServiceMethod(inContextMenu=true)
+	public void switchToKnowledge() throws Exception{
+		this.setInstanceList(null);
+		this.setScheduleCalendar(null);
 		
+		this.knowledge = new WfPanel();
+		this.knowledge.load("-1");
+	}
+	
+
 	InstanceList instanceList;
 		public InstanceList getInstanceList() {
 			return instanceList;

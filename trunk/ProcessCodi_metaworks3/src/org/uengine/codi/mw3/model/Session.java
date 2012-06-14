@@ -10,6 +10,7 @@ import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.NonEditable;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.TransactionContext;
+import org.metaworks.widget.Window;
 import org.uengine.codi.mw3.Login;
 
 	
@@ -28,6 +29,15 @@ public class Session implements ContextAware{
 		}
 		public void setDefId(String defId) {
 			this.defId = defId;
+		}
+		
+	String ux;
+
+		public String getUx() {
+			return ux;
+		}
+		public void setUx(String ux) {
+			this.ux = ux;
 		}
 
 	Navigation navigation;
@@ -158,6 +168,11 @@ public class Session implements ContextAware{
 	public void heartbeat(){
 		//nothing to do
 		//System.out.println("heartbeat:" + getUser());
+	}
+	
+	@ServiceMethod(callByContent=true)
+	public Window returnToList() throws Exception{
+		return Main.createInstanceListWindow(this);
 	}
 	
 	

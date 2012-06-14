@@ -33,15 +33,26 @@ public class Navigation {
 			this.processPerspective = processPerspective;
 		}
 	
-	ProcessStatusPerspective processStatusPerspective;
-	
-		public ProcessStatusPerspective getProcessStatusPerspective() {
-			return processStatusPerspective;
+//	ProcessStatusPerspective processStatusPerspective;
+//	
+//		public ProcessStatusPerspective getProcessStatusPerspective() {
+//			return processStatusPerspective;
+//		}
+//	
+//		public void setProcessStatusPerspective(
+//				ProcessStatusPerspective processStatusPerspective) {
+//			this.processStatusPerspective = processStatusPerspective;
+//		}
+
+	StrategicPerspective strategicPerspective;
+		
+			
+		public StrategicPerspective getStrategicPerspective() {
+			return strategicPerspective;
 		}
 	
-		public void setProcessStatusPerspective(
-				ProcessStatusPerspective processStatusPerspective) {
-			this.processStatusPerspective = processStatusPerspective;
+		public void setStrategicPerspective(StrategicPerspective strategicPerspective) {
+			this.strategicPerspective = strategicPerspective;
 		}
 
 	public Navigation() throws Exception {
@@ -50,6 +61,8 @@ public class Navigation {
 		
 		organizationPerspective = new OrganizationPerspective();
 		processPerspective = new ProcessPerspective();
-		processStatusPerspective = new ProcessStatusPerspective();
+		//processStatusPerspective = new ProcessStatusPerspective();
+		
+		strategicPerspective = new StrategicPerspective();
 	}
 }

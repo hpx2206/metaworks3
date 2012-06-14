@@ -27,10 +27,23 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	String mobileNo;
 	String email;
 	String locale;
-
+	String preferUX;
+	String preferMob;
 	
 	
 
+	public String getPreferMob() {
+		return preferMob;
+	}
+	public void setPreferMob(String preferMob) {
+		this.preferMob = preferMob;
+	}
+	public String getPreferUX() {
+		return preferUX;
+	}
+	public void setPreferUX(String preferUX) {
+		this.preferUX = preferUX;
+	}
 	public String getEmpCode() {
 		return empCode;
 	}
