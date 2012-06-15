@@ -49,6 +49,9 @@ var org_uengine_codi_mw3_knowledge_IWfNode = function(objectId, className){
 				}
 			}
 		});
+		content.bind('dblclick', {objectId: this.objectId}, function() {
+			mw3.call(objectId, 'drillInto');
+		});
 		
 		if(this.mw3Obj && this.mw3Obj.focus){
 			content.focus();
@@ -168,10 +171,20 @@ org_uengine_codi_mw3_knowledge_IWfNode.prototype = {
 			return searchObj;			
 		},
 		getFirstChild : function(){
-			return this.obj.find('.workflowy_node :first').parent();
+			return this.obj.find('.workflowy_node:first');
 		},
 		getLastChild : function(){
-			return this.obj.find('.workflowy_node :last').parent().parent().parent();
+			var child = this.obj.find('.workflowy_node:first');
+			while(child.length > 0){
+				var childId = child.attr('objectId');
+				
+				var next = mw3.getFaceHelper(childId).getNext();
+				if(next.length > 0)
+					child = next;
+				else
+					break;
+			}
+			return child;
 		},		
 		getValue : function(){			
 			return this.mw3Obj;

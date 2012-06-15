@@ -32,6 +32,7 @@ import org.uengine.codi.mw3.model.Session;
 public class WfNode extends Database<IWfNode> implements IWfNode {
 	
 	static Hashtable<Integer, ArrayList<String>> nodeListeners = new Hashtable<Integer, ArrayList<String>>();
+	public final static int LOAD_DEPTH = 3;
 	
 	String id;
 		public String getId() {
@@ -148,6 +149,14 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 			this.childNode = childNode;
 		}		
 		
+	public int loadDepth = 0;
+		public int getLoadDepth() {
+			return loadDepth;
+		}
+		public void setLoadDepth(int loadDepth) {
+			this.loadDepth = loadDepth;
+		}
+		
 	public WfNode() {
 		setChildNode(new ArrayList<WfNode>());
 		getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
@@ -192,6 +201,9 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		try {
 			setId(nodeId);
 			
+			if(this.getLoadDepth() > -1)
+				setLoadDepth(0);
+			
 			IWfNode dao = (IWfNode)get(getClass(), createKeyObject(), this);
 			this.copyFrom(dao);
 		} catch (Exception e) {
@@ -202,37 +214,42 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		this.loadChildren();
 	}
 	
-	private int initialLoadDepth = 0;
+	
+	
 	public void loadChildren() throws Exception {
-
 		
-		setChildNode(new ArrayList<WfNode>());
+		setChildNode(new ArrayList<WfNode>());		
 		
-		StringBuffer sb = new StringBuffer();
-		sb.append("SELECT *");
-		sb.append("  FROM bpm_knol");
-		sb.append(" WHERE parentId=?parentId");
-		sb.append(" ORDER BY no");
-		
-		IWfNode findNode = (IWfNode) sql(IWfNode.class,	sb.toString());
-		
-		findNode.set("parentId", this.getId());
-		findNode.select();
-		
-		if(findNode.size() > 0 && initialLoadDepth < 3){
+		if(this.getLoadDepth() < LOAD_DEPTH){
+			if(this.getLoadDepth() > -1)
+				setLoadDepth(getLoadDepth()+1);						
 			
-			initialLoadDepth ++;
-
-			while (findNode.next()) {
-				WfNode node = new WfNode();
-				
-				node.copyFrom(findNode);
-				node.setChildNode(new ArrayList<WfNode>());
-				node.getMetaworksContext().setWhen(getMetaworksContext().getWhen());
-				node.loadChildren();  //재귀호출로 하위를 갖고 오네... 기본 3 depth정도로 제한을 둬야할듯.. 
-				
-				addChildNode(node);
+			StringBuffer sb = new StringBuffer();
+			sb.append("SELECT *");
+			sb.append("  FROM bpm_knol");
+			sb.append(" WHERE parentId=?parentId");
+			sb.append(" ORDER BY no");
+			
+			IWfNode findNode = (IWfNode) sql(IWfNode.class,	sb.toString());
+			
+			findNode.set("parentId", this.getId());
+			findNode.select();
+			
+			if(findNode.size() > 0){
+				while (findNode.next()) {
+					WfNode node = new WfNode();
+					
+					node.copyFrom(findNode);
+					node.setChildNode(new ArrayList<WfNode>());
+					node.getMetaworksContext().setWhen(getMetaworksContext().getWhen());
+					node.setLoadDepth(this.getLoadDepth());
+					node.loadChildren();  //재귀호출로 하위를 갖고 오네... 기본 3 depth정도로 제한을 둬야할듯.. 
+					
+					addChildNode(node);
+				}
 			}
+		}else{
+			setClose(true);
 		}
 	}
 	
@@ -401,6 +418,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		// 부모 노드를 구한다
 		WfNode parentNode = new WfNode();
 		parentNode.copyMetaworksContext(getMetaworksContext());
+		parentNode.setLoadDepth(-1);
 		parentNode.load(this.getParentId());
 		
 		// 내 노드를 구한다. -> 저장
@@ -494,7 +512,8 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		// 부모 노드를 구한다
 		WfNode parentNode = new WfNode();
 		parentNode.setMetaworksContext(getMetaworksContext());
-		parentNode.load(this.getParentId());
+		parentNode.setLoadDepth(-1);
+		parentNode.load(this.getParentId());		
 
 		WfNode node = parentNode.getNode(this.getId());		
 		if(node.getNo() == 0){
@@ -541,12 +560,14 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		// 부모 노드의 부모를 구한다. (변경 부모 노드)
 		WfNode appendNode = new WfNode();
 		appendNode.setMetaworksContext(this.getMetaworksContext());
-		appendNode.setId(parentParentId);
+		appendNode.setId(parentParentId);		
 		
-		if("-1".equals(parentParentId)){			
+		if("-1".equals(parentParentId)){
+			appendNode.setLoadDepth(-1);
 			appendNode.loadChildren();
 			appendNode.getMetaworksContext().setWhen("ROOT");
 		}else{
+			appendNode.setLoadDepth(-1);
 			appendNode.load();			
 		}
 		parentNode = appendNode.getNode(parentNode.getId());		
@@ -575,6 +596,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		WfNode parentNode = new WfNode();
 		parentNode.setMetaworksContext(this.getMetaworksContext());
 		parentNode.setId(this.getParentId());
+		parentNode.setLoadDepth(-1);
 		parentNode.load();
 		
 		if("-1".equals(parentNode.getId()) && parentNode.getChildNode().size() == 1)
@@ -759,7 +781,11 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 	}	
 
 	public WfNode expand() throws Exception {
-		System.out.println("getChildNode().size() : " + getChildNode().size());
+		if(this.getLoadDepth() == LOAD_DEPTH){
+			this.setLoadDepth(this.getLoadDepth()-1);
+			this.loadChildren();
+		}
+			
 		setClose(false);
 		
 		return this;
@@ -770,7 +796,6 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 	
 	
 	public WfNode collapse() throws Exception {
-		System.out.println("getChildNode().size() : " + getChildNode().size());
 		setClose(true);
 		
 		return this;
