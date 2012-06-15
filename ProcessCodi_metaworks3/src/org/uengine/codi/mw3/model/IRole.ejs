@@ -1,0 +1,30 @@
+<%
+	if(value){
+		if(mw3.where == 'navigator'){
+%>	
+	<a onClick="<%=methods.drillDown.caller() %>" class="idept"><%=fields.roleCode.here() %></a>
+<%
+			if(value.selected) {
+%>
+	<ul>
+		<li style="padding-left:15px;">	
+			<%=fields.employeeList.here()%>
+		</li>
+	</ul>
+<%
+			}
+		}else{
+			if(mw3.when == 'new' || mw3.when == 'edit') {
+%>
+		RoleCode : <%=fields.roleCode.here((mw3.when=='edit'?{when:'view'}:{})) %>
+		Descr : <%=fields.descr.here() %>
+		
+		<%=methods.saveMe.here() %>
+
+<%			
+			}
+%>
+<%		
+		}
+	}
+%>			

@@ -115,6 +115,7 @@ public interface IEmployee extends IDAO {
 		
 	public IEmployee findMe() throws Exception;	
 	public IEmployee findByDept(Dept dept) throws Exception;
+	public IEmployee findByRole(Role role) throws Exception;
 	
 	@ServiceMethod(where="navigator")
 	public Object[] loadOrganization() throws Exception;

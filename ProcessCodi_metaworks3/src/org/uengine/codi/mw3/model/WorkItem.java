@@ -594,7 +594,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		
 		
 		//makes new line and change existing div
-		return new Object[]{new Refresh(refreshedInstanceView)};
+		return new Object[]{refreshedInstanceView};
 	}
 
 	@Override
