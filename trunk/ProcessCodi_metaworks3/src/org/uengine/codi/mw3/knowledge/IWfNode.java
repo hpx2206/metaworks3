@@ -104,6 +104,11 @@ public interface IWfNode extends IDAO {
 	public ArrayList<WfNode> getChildNode();
 	public void setChildNode(ArrayList<WfNode> childNode);
 	
+	@NonLoadable
+	@NonSavable
+	public int getLoadDepth();
+	public void setLoadDepth(int loadDepth);
+	
 	
 	/*******************************************
 	 * 
