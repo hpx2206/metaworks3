@@ -1,22 +1,23 @@
 <%
 	if(value){
 	
-		if(value.ux && value.ux == 'phone'){
-			%><%=methods.returnToList.here()%><%
-		}
-	
-	
 		if(mw3.when == 'view'){
 %>
-			<span style="display:inline-block;"><%=fields.employee.here() %></span>
+		<div style="float:left; margin-right:15px;">
+			<span style="display:inline-block; line-height:37px;"><%=fields.employee.here() %></span>
 				 |	
 			<a href="http://www.slideshare.net/pongsor/110609-8326309" type="application/pdf"><%=getMessage("Help")%></a>			 
 				 |	
-			<span style="display:inline-block;"><a onClick="<%=methods.logout.caller() %>" style="cursor:pointer;"><%=getMessage("Logout")%></a></span>
+			<span style="display:inline-block; line-height:37px;"><a onClick="<%=methods.logout.caller() %>" style="cursor:pointer;"><%=getMessage("Logout")%></a></span>
+		</div>
+
+			
 <%
-		} else {
+		} if(value.ux && value.ux == 'phone') {
 %>
-		Login Object no has face when context : <%=mw3.when %>
+		<div  style="float:left">
+			<a href="javascript:<%=methods.returnToList.caller()%>"><img src="images/waveStyle/back.gif"></a>
+		</div>
 <%
 		}
 	}
