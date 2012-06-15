@@ -135,13 +135,6 @@ public class Notification extends Database<INotification> implements INotificati
 		
 		instanceViewContent.load(instance);
 		
-		Notification notificationType = new Notification();
-		INotification notifictionsInSameInstance  = notificationType.sql("update bpm_noti set confirm=?confirm where instid = ?instid");
-		notifictionsInSameInstance.setConfirm(true);
-		notifictionsInSameInstance.setInstId(getInstId());
-		notifictionsInSameInstance.update();
-		
-		//databaseMe().setConfirm(true);
 		setConfirm(true);
 		//flushDatabaseMe();
 		
