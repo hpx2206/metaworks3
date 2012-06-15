@@ -286,7 +286,7 @@ public class InstanceView {
 	}
 	
 	@ServiceMethod(needToConfirm=true)
-	public Object[] delete() throws Exception{
+	public Object[] remove() throws Exception{
 
 		processManager.stopProcessInstance(instanceId);
 		Instance instance = new Instance();
