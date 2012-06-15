@@ -45,24 +45,77 @@ if(value){
 				Locale : <%=fields.locale.here() %>
 			<%
 			} else if(mw3.when == 'new') {
-			
 			%>			
-				<ul>
+				<ul>				STEP1. Basic Information
+				
 					<li>
 								<div class="infoSub"><span>ID :</span><span><%=fields.empCode.here() %></span><%=methods.checkEmpCode.here()%></div>						
-								<div class="infoSub"><span>Name :</span><span><%=fields.empName.here() %></span></div>								
-								<div class="infoSub"><span>Password : </span><span><%=fields.password.here() %></span></div>
-								<div class="infoSub"><span>Re-Password : </span><span><%=fields.confirmPassword.here() %></span></div>
-								<div class="infoSub"><span>Phone : </span><span><%=fields.mobileNo.here() %></span></div>
+								<div class="infoSub"><span>Your Full Name :</span><span><%=fields.empName.here() %></span></div>								
 								<div class="infoSub"><span>Email : </span><span><%=fields.email.here() %></span></div>
-								<div class="infoSub"><span>Locale : </span><span><%=fields.locale.here() %></span></div>
-								<div class="infoSub"><span><%=fields.imageFile.here() %>&nbsp;</span></div>
+								<div class="infoSub"><span>Password : </span><span><%=fields.password.here() %></span></div>
+								<div class="infoSub"><span>Re-enter Password : </span><span><%=fields.confirmPassword.here() %></span></div>
 			  		</li>    
 			 	</ul>
 			 	
 				<div id="btnline" style="padding-top:8px; border-top:1px solid #ccc;">
 					<ul>	
-						<li><a id="wBtn" href="javascript:<%=methods.saveEmployeeInfo.caller()%>"><span>create</span></a></li>
+						<li><a id="wBtn" href="javascript:<%=methods.subscribeStep1.caller()%>"><span>Next</span></a></li>
+					</ul>
+				</div>			 	
+			<%
+			} else if(mw3.when == 'new2') {
+			
+				value.metaworksContext.when='new'; //TODO: I don't know why....
+				
+			%>			
+				<ul>STEP2. Social Identity
+					<li>
+								<div class="infoSub"><span>Very nice portrait of you:<%=fields.imageFile.here() %>&nbsp;</span></div>
+								
+			  		</li>    
+			 	</ul>
+			 	
+				<div id="btnline" style="padding-top:8px; border-top:1px solid #ccc;">
+					<ul>	
+						<li><a id="wBtn" href="javascript:<%=methods.subscribeStep2.caller()%>"><span>Next</span></a></li>
+					</ul>
+				</div>			 	
+			<%
+			} else if(mw3.when == 'new3') {
+				
+			%>			
+				<ul>STEP3. Preferences
+					<li>
+								<div class="infoSub"><span>Prefer UX Style :</span></div>
+							
+							<span>	
+								<input type="radio" id="<%=mw3.createInputId(objectId)%>" name="<%=mw3.createInputId(objectId)%>" value="tw">I love Twitter (Super Simple)
+								<br>
+								<img src="http://www.crunchbase.com/assets/images/original/0000/6571/6571v1.gif" width=70>
+							</span>
+							<span>
+								<input type="radio" id="<%=mw3.createInputId(objectId)%>" name="<%=mw3.createInputId(objectId)%>" value="fb" selected>I love Facebook (Normal SNS)
+								<br>
+								<img src="http://blog.su-spectator.com/wp-content/uploads/2009/10/facebook_news_feed.jpg" width=70>								
+							</span>
+							<span>
+								<input type="radio" id="<%=mw3.createInputId(objectId)%>" name="<%=mw3.createInputId(objectId)%>" value="asana">I love Asana (Social Project Management)
+								<br>
+								<img src="http://www.crunchbase.com/assets/images/original/0000/6571/6571v1.gif" width=70>
+							</span>
+							<span>
+								<input type="radio" id="<%=mw3.createInputId(objectId)%>" name="<%=mw3.createInputId(objectId)%>" value="wave">I love GoogleWave (Super Complex)
+								<br>
+								<img src="http://www.crunchbase.com/assets/images/original/0000/6571/6571v1.gif" width=70>
+							</span>
+								
+								<div class="infoSub"><span>Language : </span><span><%=fields.locale.here({when:'new'}) %></span></div>
+			  		</li>    
+			 	</ul>
+			 	
+				<div id="btnline" style="padding-top:8px; border-top:1px solid #ccc;">
+					<ul>	
+						<li><a id="wBtn" href="javascript:<%=methods.saveEmployeeInfo.caller()%>"><span>Finish!</span></a></li>
 					</ul>
 				</div>			 	
 			<%
