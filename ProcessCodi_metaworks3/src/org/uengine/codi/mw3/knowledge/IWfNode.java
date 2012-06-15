@@ -136,7 +136,8 @@ public interface IWfNode extends IDAO {
 	@ServiceMethod(callByContent=true)
 	public ContentWindow linkInstance() throws Exception;
 	
-	@ServiceMethod(callByContent=true, except={"childNode", "focus"}, inContextMenu=true, keyBinding="Ctrl+N")
+	@ServiceMethod(callByContent=true, except={"childNode", "focus"}, inContextMenu=true, keyBinding="Shift+Right")
+	@Face(displayName="Issue Tracking")
 	public ContentWindow newProcessInstance() throws Exception;
 		
 	@ServiceMethod(inContextMenu=true, keyBinding="Ctrl+D")
