@@ -37,6 +37,11 @@ public class InstanceView {
 		inst.setInstId(instance.getInstId());
 		String secuopt = inst.databaseMe().getSecuopt();
 
+		Notification notificationType = new Notification();
+		INotification notifictionsInSameInstance  = notificationType.sql("update bpm_noti set confirm=?confirm where instid = ?instid");
+		notifictionsInSameInstance.setConfirm(true);
+		notifictionsInSameInstance.setInstId(inst.getInstId());
+		notifictionsInSameInstance.update();
 		
 		setInstanceId(instance.getInstId().toString());
 		setStatus(inst.databaseMe().getStatus());
