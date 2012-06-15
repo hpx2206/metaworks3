@@ -284,7 +284,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	@Override
 	public Object[] saveEmployeeInfo() throws Exception {
 		if(!getPassword().equals(getConfirmPassword())){
-			throw new Exception("재입력한 패스워드가 다릅니다.");
+			throw new Exception("Re-entered password doesn't match");
 		}
 		
 		if (getMetaworksContext().getWhen().equals(MetaworksContext.WHEN_NEW)) {
@@ -349,5 +349,23 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		
 		if(employee.getEmpCode() != null)
 			throw new Exception("이미 존재하는 empCode 입니다.");
+	}
+	@Override
+	public Object subscribeStep1() throws Exception {
+		getMetaworksContext().setWhen("new3");
+
+		return this;
+	}
+	@Override
+	public Object subscribeStep2() throws Exception {
+		getMetaworksContext().setWhen("new3");
+
+		return this;
+	}
+	@Override
+	public Object subscribeStep3() throws Exception {
+		getMetaworksContext().setWhen("finish");
+
+		return this;
 	}	
 }

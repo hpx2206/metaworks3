@@ -87,8 +87,8 @@ public interface IEmployee extends IDAO {
 	
 	
 	@Range(
-			values={"fb", "outlook", "asana", "wave"},
-			options={"I love facebook/twitter", "I love Outlook", "I love Asana", "I love Google Wave"}			
+			values={"tw", "fb", "outlook", "asana", "wave"},
+			options={"I love twitter", "I love facebook", "I love Outlook", "I love Asana", "I love Google Wave"}			
 			)
 	public String getPreferUX();
 	public void setPreferUX(String preferUX);
@@ -129,7 +129,16 @@ public interface IEmployee extends IDAO {
 	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_VIEW)
 	public Object editEmployeeInfo() throws Exception;
 	
-	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_EDIT, validate=true)
+	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_NEW, validate=true)
+	public Object subscribeStep1() throws Exception;
+	
+	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_NEW, validate=true)
+	public Object subscribeStep2() throws Exception;
+	
+	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_NEW, validate=true)
+	public Object subscribeStep3() throws Exception;
+	
+	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_NEW, validate=true)
 	public Object saveEmployeeInfo() throws Exception;
 	
 	@ServiceMethod(target="popup", callByContent=true)
