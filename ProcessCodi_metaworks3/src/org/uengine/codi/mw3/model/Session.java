@@ -177,7 +177,7 @@ public class Session implements ContextAware{
 	public Object heartbeat(){
 		//nothing to do
 		String sessionId = WebContextFactory.get().getScriptSession().getId();
-		System.out.println("heartbeat:" + sessionId);
+		//System.out.println("heartbeat:" + sessionId);
 		
 		if(messagesToUsers.containsKey(sessionId)){
 			ArrayList messages = messagesToUsers.get(sessionId);
@@ -192,8 +192,10 @@ public class Session implements ContextAware{
 	public static void pushMessage(String userId, Object message){
 		String sessionId = Login.getSessionIdWithUserId(userId);
 		
+		if(sessionId==null) return;
+		
 		ArrayList messages = null;
-		if(!messagesToUsers.containsKey(sessionId)){
+		if( !messagesToUsers.containsKey(sessionId)){
 			messages = new ArrayList();
 			messagesToUsers.put(sessionId, messages);
 		}else{

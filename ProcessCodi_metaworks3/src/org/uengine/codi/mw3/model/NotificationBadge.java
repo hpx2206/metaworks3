@@ -32,6 +32,7 @@ public class NotificationBadge{
 		popup.setName("Notification");
 		Notification notiList = new Notification();
 		popup.setPanel(	notiList.list(session));
+		setNewItemCount(notiList.count(session));
 		
 		return popup;
 	}
