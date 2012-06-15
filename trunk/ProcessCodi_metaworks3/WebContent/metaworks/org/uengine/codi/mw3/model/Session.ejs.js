@@ -2,6 +2,15 @@ var org_uengine_codi_mw3_model_Session = function(objectId, className){
 
 	var session = mw3.objects[objectId];
 
-	setInterval(function(){session.heartbeat();}, 10000);
+	setInterval(function(){
+		var messageFromServer = session.heartbeat();
+	
+		if(messageFromServer){
+			
+			mw3.locateObject(messageFromServer, null, "body");
+			
+		}
+		
+	}, 10000);
 
 }
