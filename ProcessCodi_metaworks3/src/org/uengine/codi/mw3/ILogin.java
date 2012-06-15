@@ -58,7 +58,7 @@ public interface ILogin extends IDAO{
 	public MainPanel loginSocialCoding() throws Exception;
 	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
-	public ModalWindow subscribe();
+	public Object subscribe();
 
 	
 }

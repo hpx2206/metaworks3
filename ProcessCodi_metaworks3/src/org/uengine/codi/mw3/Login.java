@@ -214,7 +214,7 @@ public class Login extends Database<ILogin> implements ILogin{
 //	}
 	
 	
-	public ModalWindow subscribe(){
+	public Object subscribe(){
 		Employee emp = new Employee();
 		emp.getMetaworksContext().setHow("detail");
 		emp.getMetaworksContext().setWhen("new");				
