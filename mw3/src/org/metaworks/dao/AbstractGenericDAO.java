@@ -333,7 +333,7 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 			isDirty = false;
 			
 		}catch(Exception e){
-			throw new Exception("Error when to try sql [" + getStatement() + "] ", e);
+			throw new Exception("Error when to try sql [" + getStatement() + "] :" + e.getMessage(), e);
 		}finally{
 			if (rowSet!= null && cf instanceof TransactionContext) {
 				TransactionContext tc = (TransactionContext) cf;
@@ -586,7 +586,7 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 			
 			return rowAffected;
 		}catch(Exception e){
-			throw new Exception("Error when to try sql [" + getStatement() + "] ", e);
+			throw new Exception("Error when to try sql [" + getStatement() + "] :" + e.getMessage(), e);
 		}finally{
 			isDirty = false;
 			
