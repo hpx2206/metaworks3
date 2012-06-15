@@ -14,10 +14,12 @@ import org.directwebremoting.WebContextFactory;
 import org.directwebremoting.proxy.dwr.Util;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
+import org.metaworks.ToAppend;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Test;
 import org.metaworks.dao.Database;
+import org.metaworks.dao.IDAO;
 import org.metaworks.example.ide.SourceCode;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
@@ -486,7 +488,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			setTitle(getTitle().substring(0, 190) + "...");
 		}
 
-		
 		createDatabaseMe();
 		flushDatabaseMe();
 		
@@ -500,18 +501,27 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		
 		WorkItem newItem = new CommentWorkItem();
 		newItem.setInstId(new Long(getInstId()));
-		newItem.setTaskId(new Long(getInstId()));
+		newItem.setTaskId(new Long(-1));
 		newItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		
 		if(instantiation){
 			instantiatedViewContent.getInstanceView().setNewItem(newItem);
-			instantiatedViewContent.getInstanceView().setThreadPosting(this);
+			InstanceViewThreadPanel threadPanel = new InstanceViewThreadPanel();
+			threadPanel.setInstanceId(getInstId().toString());
 			
-			return new Object[]{instantiatedViewContent};
+//			ArrayList<IDAO> workItemArr = new ArrayList<IDAO>();
+//			workItemArr.add(this);
+//			threadPanel.setThread(workItemArr);
+			
+			threadPanel.setThread(this);
+			
+			instantiatedViewContent.getInstanceView().setInstanceViewThreadPanel(threadPanel);
+			
+			return new Object[]{new Refresh(instantiatedViewContent)};
 		}
 
 		
-		//newItem.setWriter(loginUser);
+		newItem.setWriter(loginUser);
 
 		//OLD WAY
 //		//let the other's list updated
@@ -535,6 +545,15 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		
 		//TODO: IF YOU CAN NARROW THE RECEIVERS TO THE FOLLOWERS ONLY IS BEST APPROACH
 
+		//WorkItem copyMe = new WorkItem();
+		//copyMe.setTaskId(getTaskId());
+		final IWorkItem copyOfThis = this;//copyMe.databaseMe();
+
+		//final IWorkItem copyOfThis = /*new WorkItem();
+		//copyOfThis.copyFrom(*/databaseMe();//);
+		
+		final InstanceViewThreadPanel threadPanelOfThis = new InstanceViewThreadPanel();
+		threadPanelOfThis.setInstanceId(getInstId().toString());
 
 		//Add notifications to the followers
 		IUser followers = refreshedInstanceView.getFollowers().getFollowers();
@@ -545,10 +564,13 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			followerIds.add(followers.getUserId());
 		}
 		
+		boolean iAmParticipating = false;
 		for(String followerId : followerIds){
 		
 			final boolean postByMe = followerId.equals(session.getUser().getUserId());
-			if(!postByMe){ //ignore myself
+			if(postByMe){ //ignore myself
+				iAmParticipating = true;
+			}else{
 				Notification noti = new Notification();
 				
 				noti.setNotiId(System.currentTimeMillis()); //TODO: why generated is hard to use
@@ -577,7 +599,9 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			
 							@Override
 							public void run() {
-								ScriptSessions.addFunctionCall("mw3.locateObject", new Object[]{new Object[]{new Refresh(refreshedInstanceView)/*, new Refresh(refreshedInstance)*/}, null, "body"});
+								
+								
+								ScriptSessions.addFunctionCall("mw3.locateObject", new Object[]{new Object[]{new ToAppend(threadPanelOfThis, copyOfThis)/*, new Refresh(refreshedInstance)*/}, null, "body"});
 								
 								//refresh notification badge
 								if(!postByMe)
@@ -591,7 +615,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 						e.printStackTrace(); //may stops due to error occurs when the follower isn't online.
 					}
 				}else{
-					Session.pushMessage(followerId, new Refresh(refreshedInstanceView));
+					Session.pushMessage(followerId, new ToAppend(threadPanelOfThis, copyOfThis));
 					
 					NotificationBadge notiBadge = new NotificationBadge();
 					notiBadge.setNewItemCount(-1);
@@ -602,9 +626,20 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			}
 		}
 		
+		if(!iAmParticipating){
+			org.uengine.kernel.RoleMapping newFollower = org.uengine.kernel.RoleMapping.create();
+			newFollower.setName("_follower_" + session.getUser().getUserId());
+			newFollower.setEndpoint(session.getUser().getUserId());
+			
+			processManager.putRoleMapping(getInstId().toString(), newFollower);
+			
+			//refreshedInstanceView.getFollowers().getFollowers().getImplementationObject().moveToInsertRow(session.getUser());
+			//refreshedInstanceView.getFollowers().getFollowers()
+			
+		}
 		
 		//makes new line and change existing div
-		return new Object[]{refreshedInstanceView};
+		return new Object[]{new Refresh(newItem), new ToAppend(threadPanelOfThis, copyOfThis)};
 	}
 
 	@Override

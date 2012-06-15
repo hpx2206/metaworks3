@@ -16,6 +16,7 @@ import org.metaworks.dao.TransactionContext;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.uengine.kernel.EJBProcessInstance;
 import org.uengine.kernel.ProcessInstance;
 import org.uengine.processmanager.ProcessManagerBean;
 import org.uengine.processmanager.ProcessManagerRemote;
@@ -104,7 +105,7 @@ public class InstanceView {
 		
 		newItem = new CommentWorkItem();
 		newItem.setInstId(new Long(getInstanceId()));
-		newItem.setTaskId(new Long(getInstanceId()));
+		newItem.setTaskId(new Long(-1));
 		newItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		
 		//Session session = (Session) TransactionContext.getThreadLocalInstance().getSharedContext("codi_session");
@@ -120,7 +121,7 @@ public class InstanceView {
 		//flowChart.setInstanceId(instanceId);
 		//setProcessInstanceMonitor(flowChart);
 		
-		setInstanceName(instance.getName());
+		setInstanceName(((EJBProcessInstance)instance).getProcessInstanceDAO().getName());
 
 		
 		crowdSourcer = new CrowdSourcer();
@@ -143,7 +144,7 @@ public class InstanceView {
 		
 		
 		
-		threadPosting = new PostingsWorkItem();
+//		threadPosting = new PostingsWorkItem();
 		/*
 		postingsWorkItem = new ArrayList<IWorkItem>();
 		
@@ -213,13 +214,13 @@ public class InstanceView {
 			this.instanceViewThreadPanel = instanceViewThreadPanel;
 		}
 
-	IWorkItem threadPosting;
-		public IWorkItem getThreadPosting() {
-			return threadPosting;
-		}
-		public void setThreadPosting(IWorkItem threadPosting) {
-			this.threadPosting = threadPosting;
-		}
+//	IWorkItem threadPosting;
+//		public IWorkItem getThreadPosting() {
+//			return threadPosting;
+//		}
+//		public void setThreadPosting(IWorkItem threadPosting) {
+//			this.threadPosting = threadPosting;
+//		}
 
 	public ProcessInstanceMonitorPanel processInstanceMonitor;
 			

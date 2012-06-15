@@ -32,7 +32,7 @@ public class Followers {
 		}
 		
 	public void load() throws Exception{
-		IUser users = (IUser) Database.sql(IUser.class, "select a.endpoint userId, a.resname name, b.network from bpm_rolemapping a left join contact b on a.endpoint=b.friendId  where rootinstid=?instanceId");
+		IUser users = (IUser) Database.sql(IUser.class, "select a.endpoint userId, a.resname name, b.network from bpm_rolemapping a left join contact b on a.endpoint=b.friendId  where rootinstid=?instanceId group by userid");
 		users.set("instanceId", instanceId);
 		users.select();
 		

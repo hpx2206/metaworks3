@@ -317,7 +317,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		login.setGuidedTour(true);
 		login.getMetaworksContext().setWhen("edit");
 		
-		return new Object[] {new Remover(new ModalWindow()), new Refresh(login)};
+		return new Object[] {new Remover(new ModalWindow()), login};
 	}
 	
 	@Override
