@@ -1,11 +1,13 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.MetaworksContext;
+import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ToOpener;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
 import org.metaworks.widget.ModalWindow;
+import org.uengine.codi.mw3.Login;
 
 public class Employee extends Database<IEmployee> implements IEmployee {
 	
@@ -287,7 +289,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 			throw new Exception("Re-entered password doesn't match");
 		}
 		
-		if (getMetaworksContext().getWhen().indexOf(MetaworksContext.WHEN_NEW)!=-1) {
+		if (getMetaworksContext().getWhen().startsWith(MetaworksContext.WHEN_NEW)) {
 			this.setIsDeleted("0");
 			this.setGlobalCom("uEngine");
 			
@@ -309,7 +311,13 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 			session.setEmployee(findMe());
 			return new Object[] {new EmployeeInfo(findMe()), session};
 		}
-		return new Object[] {new Remover(new ModalWindow())};
+		
+		Login login = new Login();
+		login.setUserId(getEmpCode());
+		login.setGuidedTour(true);
+		login.getMetaworksContext().setWhen("edit");
+		
+		return new Object[] {new Remover(new ModalWindow()), new Refresh(login)};
 	}
 	
 	@Override
