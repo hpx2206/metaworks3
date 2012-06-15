@@ -1,6 +1,7 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.MetaworksContext;
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;
@@ -55,15 +56,13 @@ public interface IDept extends IDAO {
 
 	@NonSavable
 	@NonLoadable
-	public IDept getChildren() throws Exception;
-
-	public void setChildren(IDept children) throws Exception;
+	public DeptList getChildren() throws Exception;
+	public void setChildren(DeptList children) throws Exception;
 
 	@NonSavable
 	@NonLoadable
-	public IEmployee getDeptEmployee() throws Exception;
-
-	public void setDeptEmployee(IEmployee deptEmployee) throws Exception;
+	public EmployeeList getDeptEmployee() throws Exception;
+	public void setDeptEmployee(EmployeeList deptEmployee) throws Exception;
 
 	// methods
 	public IDept load() throws Exception;
@@ -72,7 +71,7 @@ public interface IDept extends IDAO {
 //
 //	public IDept findTreeByComCode(String comcode) throws Exception;
 	
-	public IDept findByGlobalCom(String globalCom) throws Exception;
+	public IDept findByGlobalCom() throws Exception;
 
 	public IDept findTreeByGlobalCom(String globalCom) throws Exception;
 
@@ -88,21 +87,25 @@ public interface IDept extends IDAO {
 	@ServiceMethod(target="self", callByContent = true, payload = { "partCode", "selected" })
 	public void drillDown() throws Exception;
 
-	@ServiceMethod(callByContent = true)
-	public AdminEastPanel editDeptInfo() throws Exception;
+	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP, inContextMenu=true)
+	public Object editDeptInfo() throws Exception;
 
-	@ServiceMethod(callByContent = true)
+	@ServiceMethod(callByContent = true, target=ServiceMethodContext.TARGET_POPUP)
 	public Object[] saveDeptInfo() throws Exception;
 
-	@ServiceMethod(callByContent = true)
+	@ServiceMethod(inContextMenu=true, when=MetaworksContext.WHEN_VIEW, needToConfirm=true)
 	public Object[] deleteDept() throws Exception;
 	
 	@ServiceMethod(callByContent = true)
 	public Object[] restoreDept() throws Exception;
-	
-	@ServiceMethod
-	public AdminEastPanel addNewChildDept() throws Exception;
+			
+	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP, inContextMenu=true)
+	public Object addNewChildDept() throws Exception;
 
+	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP, inContextMenu=true, needToConfirm=true)
+	public Object[] subscribe() throws Exception;
+
+	
 	@ServiceMethod
 	public AdminEastPanel addNewEmployee() throws Exception;
 }

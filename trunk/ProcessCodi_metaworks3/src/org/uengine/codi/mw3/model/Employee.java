@@ -217,9 +217,31 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		}
 		deptEmployee.setGlobalCom(dept.getGlobalCom());
 		deptEmployee.select();
+		deptEmployee.setMetaworksContext(this.getMetaworksContext());
+		
 		return deptEmployee;
 	}
 
+	@Override
+	public IEmployee findByRole(Role role) throws Exception {
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append("SELECT a.*");
+		sb.append("  FROM empTable a, roleUserTable b");
+		sb.append(" WHERE a.empCode = b.empCode");
+		sb.append("   AND a.isDeleted=?isDeleted");
+		sb.append("   AND b.roleCode=?roleCode");
+		
+		IEmployee employee = sql(sb.toString());
+		employee.setIsDeleted("0");
+		employee.set("roleCode", role.getRoleCode());
+		employee.select();
+		employee.setMetaworksContext(this.getMetaworksContext());
+		
+		return employee;
+	}
+	
+	
 	@AutowiredFromClient
 	public Session session;
 
@@ -266,6 +288,8 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		}
 		
 		if (getMetaworksContext().getWhen().equals(MetaworksContext.WHEN_NEW)) {
+			this.setIsDeleted("0");
+			
 			createDatabaseMe();
 		} else {
 			// if(getMetaworksContext().getWhen().equals(MetaworksContext.WHEN_EDIT))

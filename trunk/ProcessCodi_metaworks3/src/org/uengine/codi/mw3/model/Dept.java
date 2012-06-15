@@ -1,6 +1,9 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.MetaworksContext;
+import org.metaworks.Refresh;
+import org.metaworks.Remover;
+import org.metaworks.ToAppend;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
 import org.uengine.codi.mw3.admin.AdminEastPanel;
@@ -13,6 +16,13 @@ public class Dept extends Database<IDept> implements IDept {
 	String description;
 //	String comCode;
 
+	public Dept(){
+		setIsDeleted("0");
+		
+		setChildren(new DeptList());
+		setDeptEmployee(new EmployeeList());
+	}
+	
 	public String getPartCode() {
 		return partCode;
 	}
@@ -85,27 +95,27 @@ public class Dept extends Database<IDept> implements IDept {
 		selected = value;
 	}
 
-	IDept children;
+	DeptList children;
 
 	@Override
-	public IDept getChildren() throws Exception {
+	public DeptList getChildren() {
 		return children;
 	}
 
 	@Override
-	public void setChildren(IDept children) throws Exception {
+	public void setChildren(DeptList children) {
 		this.children = children;
 	}
 
-	IEmployee deptEmployee;
+	EmployeeList deptEmployee;
 
 	@Override
-	public IEmployee getDeptEmployee() throws Exception {
+	public EmployeeList getDeptEmployee() {
 		return deptEmployee;
 	}
 
 	@Override
-	public void setDeptEmployee(IEmployee deptEmployee) throws Exception {
+	public void setDeptEmployee(EmployeeList deptEmployee) {
 		this.deptEmployee = deptEmployee;
 	}
 
@@ -144,17 +154,19 @@ public class Dept extends Database<IDept> implements IDept {
 //	}
 	
 	@Override
-	public IDept findByGlobalCom(String globalCom) throws Exception {
-		String sql = "select * from parttable where globalcom=?globalCom";
+	public IDept findByGlobalCom() throws Exception {
+		String sql = "select * from parttable where globalcom=?globalCom and parent_partCode is null and isDeleted='0' ";
 		IDept deptList = sql(sql);
-		deptList.setGlobalCom(globalCom);
+		deptList.setGlobalCom(this.getGlobalCom());
 		deptList.select();
+		deptList.setMetaworksContext(this.getMetaworksContext());
+		
 		return deptList;
 	}
 
 	@Override
 	public IDept findTreeByGlobalCom(String globalCom) throws Exception {
-		String sql = "select * from parttable where globalcom=?globalCom ";
+		String sql = "select * from parttable where globalcom=?globalCom and isDeleted='0' ";
 		IDept deptList = sql(sql);
 		deptList.setGlobalCom(globalCom);
 		deptList.select();
@@ -173,6 +185,8 @@ public class Dept extends Database<IDept> implements IDept {
 		StringBuffer sb = new StringBuffer();
 		sb.append("select * from parttable ");
 		sb.append("where globalcom=?globalCom ");
+		sb.append("  and isDeleted='0' ");
+		
 		if(getPartCode() != null) {
 			sb.append("and parent_partcode=?parent_PartCode ");
 		} else {
@@ -180,10 +194,15 @@ public class Dept extends Database<IDept> implements IDept {
 		}
 		IDept childDeptList = sql(sb.toString());
 		childDeptList.setGlobalCom(getGlobalCom());
+		
 		if(getPartCode() != null) {
 			childDeptList.setParent_PartCode(getPartCode());
 		}
 		childDeptList.select();
+		childDeptList.setMetaworksContext(this.getMetaworksContext());
+		
+		System.out.println(sb.toString());
+		
 		return childDeptList;
 	}
 	
@@ -209,24 +228,49 @@ public class Dept extends Database<IDept> implements IDept {
 	public void drillDown() throws Exception {
 		setSelected(!getSelected());
 		if (!selected) {
-			children = null;
-			deptEmployee = null;
+			DeptList deptList = new DeptList();
+			deptList.setId(this.getPartCode());
+			
+			setChildren(deptList);
+			
+			EmployeeList employeeList = new EmployeeList();
+			employeeList.setId(this.getPartCode());
+			
+			setDeptEmployee(employeeList);
 		} else {
-			setChildren(findChildren());
-			getChildren().setMetaworksContext(getMetaworksContext());
-			IEmployee deptEmployee = new Employee();
-			setDeptEmployee(deptEmployee.findByDept(this));
-			getDeptEmployee().setMetaworksContext(getMetaworksContext());
-			getDeptEmployee().getMetaworksContext().setHow("tree");
+			DeptList deptList = new DeptList();
+			deptList.setMetaworksContext(this.getMetaworksContext());
+			deptList.setId(this.getPartCode());
+			deptList.setDept(this.findChildren());			
+			setChildren(deptList);			
+			
+			
+			IEmployee employee = new Employee();
+			employee.setMetaworksContext(this.getMetaworksContext());
+			employee.getMetaworksContext().setHow("tree");
+			
+			EmployeeList employeeList = new EmployeeList();			
+			employeeList.setMetaworksContext(this.getMetaworksContext());
+			employeeList.setId(this.getPartCode());
+			employeeList.setEmployee(employee.findByDept(this));
+			
+			setDeptEmployee(employeeList);
 		}
 	}
 
 	@Override
-	public AdminEastPanel editDeptInfo() throws Exception {
-		getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
-		AdminEastPanel newDeptPanel = new AdminEastPanel();
-		newDeptPanel.setContent(this);
-		return newDeptPanel;
+	public Popup editDeptInfo() throws Exception {
+		Dept dept = new Dept();
+		dept.setPartCode(this.getPartCode());
+		dept.copyFrom(dept.databaseMe());
+		
+		dept.getMetaworksContext().setWhere("admin");
+		dept.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+		
+		Popup popup = new Popup();
+		popup.setPanel(dept);
+		
+		return popup;		
 	}
 
 	@AutowiredFromClient
@@ -234,29 +278,46 @@ public class Dept extends Database<IDept> implements IDept {
 
 	@Override
 	public Object[] saveDeptInfo() throws Exception {
-		IDept returnValueDept = null;
 
 		if (getMetaworksContext().getWhen().equals(MetaworksContext.WHEN_NEW)) {
+			// 생성
 			this.setGlobalCom(session.getCompany().getComCode());
+			this.setIsDeleted("0");
+			this.getMetaworksContext().setWhere("navigator");
+			this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);				
+			
 			createDatabaseMe();
 			syncToDatabaseMe();
+			
 
-			returnValueDept = findRefreshableParentDept();
-		} else { // when== "edit"
+			DeptList deptList = new DeptList();			
+			if(this.getParent_PartCode() == null)				
+				deptList.setId("/ROOT/");
+			else
+				deptList.setId(this.getParent_PartCode());
+			
+			return new Object[]{new Remover(new Popup()), new ToAppend(deptList, this)};
+			
+			//drillDown
+			
+			//return new Object[] { returnValueDept, resultSaveDeptPanel };
+			
+			//returnValueDept = findRefreshableParentDept();
+		} else {
 			// if(getMetaworksContext().getWhen().equals(MetaworksContext.WHEN_EDIT))
 			syncToDatabaseMe();
 			flushDatabaseMe();
-			returnValueDept = databaseMe();
+			
+			this.getMetaworksContext().setWhere("navigator");
+			this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);				
+			
+			return new Object[]{new Remover(new Popup()), new Refresh(this)};
 		}
+		//}
 		// TODO execute drillDown()
 		// returnValueDept.drillDown();
 		
-		returnValueDept.getMetaworksContext().setWhen(
-				MetaworksContext.WHEN_VIEW);
-
-		AdminEastPanel resultSaveDeptPanel = new AdminEastPanel();
-		resultSaveDeptPanel.setContent("save successfully.");
-		return new Object[] { returnValueDept, resultSaveDeptPanel };
+		//return new Object[] { returnValueDept, resultSaveDeptPanel };
 	}
 
 	private IDept findRefreshableParentDept() throws Exception {
@@ -274,8 +335,19 @@ public class Dept extends Database<IDept> implements IDept {
 
 	@Override
 	public Object[] deleteDept() throws Exception {
-		setIsDeleted("1");
-		return saveDeleteFlag();
+		Dept dept = new Dept();
+		dept.setPartCode(this.getPartCode());		
+		dept.copyFrom(dept.databaseMe());
+		dept.setIsDeleted("1");
+		
+		
+/*		if( (this.getChildren() != null && this.getChildren().size() > 0) || (this.getDeptEmployee() != null && this.getDeptEmployee().size() > 0))
+			throw new Exception("하위 노드가 존재하면 삭제할 수 없습니다.");*/
+				
+		dept.syncToDatabaseMe();
+		dept.flushDatabaseMe();
+		
+		return new Object[]{new Remover(dept)};		
 	}
 
 	@Override
@@ -294,15 +366,16 @@ public class Dept extends Database<IDept> implements IDept {
 	}
 
 	@Override
-	public AdminEastPanel addNewChildDept() throws Exception {
+	public Object addNewChildDept() throws Exception {
 		IDept newDept = new Dept();
 		newDept.setParent_PartCode(getPartCode());
 		newDept.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 		newDept.getMetaworksContext().setWhere("admin");
 
-		AdminEastPanel newDeptPanel = new AdminEastPanel();
-		newDeptPanel.setContent(newDept);
-		return newDeptPanel;
+		Popup popup = new Popup();
+		popup.setPanel(newDept);
+		
+		return popup;
 	}
 
 	@Override
@@ -318,4 +391,34 @@ public class Dept extends Database<IDept> implements IDept {
 		return addNewEmployeePanel;
 	}
 
+	public Object[] subscribe() throws Exception {
+		
+		Employee employee = new Employee();
+		employee.setEmpCode(session.getEmployee().getEmpCode());
+		employee.copyFrom(employee.databaseMe());
+		
+		if(employee.getPartCode().equals(this.getPartCode())){
+			return null;
+		}else{
+			String prevPartCode = employee.getPartCode();
+								
+			employee.setPartCode(this.getPartCode());
+			employee.syncToDatabaseMe();
+			employee.flushDatabaseMe();
+			employee.setMetaworksContext(this.getMetaworksContext());
+			employee.getMetaworksContext().setHow("tree");
+			
+			EmployeeList employeeList = new EmployeeList();
+			employeeList.setId(this.getPartCode());
+			
+			Dept findDept = new Dept();			
+			findDept.setPartCode(prevPartCode);			
+			findDept.copyFrom(findDept.databaseMe());
+			findDept.setMetaworksContext(this.getMetaworksContext());
+			findDept.drillDown();
+			
+			return new Object[]{new Refresh(findDept), new Refresh(session), new ToAppend(employeeList, employee)};
+		}
+		
+	}
 }

@@ -3,7 +3,6 @@ package org.uengine.codi.mw3.model;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
-import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 
 public class Popup implements ContextAware {
