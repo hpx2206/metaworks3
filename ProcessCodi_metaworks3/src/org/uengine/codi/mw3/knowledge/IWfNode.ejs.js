@@ -169,8 +169,10 @@ org_uengine_codi_mw3_knowledge_IWfNode.prototype = {
 		},
 		getFirstChild : function(){
 			return this.obj.find('.workflowy_node :first').parent();
-			var searchObj = mw3.getFaceHelper(this.objectId).obj;
 		},
+		getLastChild : function(){
+			return this.obj.find('.workflowy_node :last').parent().parent().parent();
+		},		
 		getValue : function(){			
 			return this.mw3Obj;
 		},
@@ -181,6 +183,21 @@ org_uengine_codi_mw3_knowledge_IWfNode.prototype = {
 			var focus = this.getPrev();
 			if(focus.length == 0){
 				focus = this.getParent();
+			}else{
+				var objectId = focus.attr('objectId');
+				
+				var child = mw3.getFaceHelper(objectId).getLastChild();
+				console.debug(child);
+				
+				while(child.length > 0){
+					focus = child;
+					
+					var childId = child.attr('objectId');
+					console.debug('-----------');
+					console.debug(childId);
+					child = mw3.getFaceHelper(childId).getLastChild();
+					console.debug(child);					
+				}
 			}
 
 			if(focus.length > 0){
@@ -201,12 +218,23 @@ org_uengine_codi_mw3_knowledge_IWfNode.prototype = {
 
 		},
 		down : function(){
-
-			var focus = this.getNext();
+			var focus = this.getFirstChild();
 			if(focus.length == 0){
-				focus = this.getFirstChild();
+				focus = this.getNext();
 			}
-
+			
+			var parent = this.obj;			
+			while(focus.length == 0 && parent.length > 0){
+				focus = parent;
+				var objectId = focus.attr('objectId');
+				
+				parent = mw3.getFaceHelper(objectId).getParent();
+				if(parent.length > 0){
+					var parentId = parent.attr('objectId');				
+					focus = mw3.getFaceHelper(parentId).getNext();
+				}
+			}
+			
 			if(focus.length > 0){
 				var objectId = focus.attr('objectId');
 			
