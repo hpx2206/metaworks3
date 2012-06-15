@@ -16,6 +16,8 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
+
 
 /**
  * @author  <a href="mailto:ghbpark@hanwha.co.kr">Sungsoo Park</a>
@@ -145,7 +147,7 @@ public class TransactionContext implements ConnectionFactory{
 			
 			return createSynchronizedDAO(tableName, keyFieldName, keyFieldValue, daoType, false, synchronizedObject);
 		}
-		private IDAO createSynchronizedDAO(String tableName, String keyFieldName, Object keyFieldValue, Class daoType, final boolean isNew, Object synchronizedObject) throws Exception{
+		private IDAO createSynchronizedDAO(final String tableName, final String keyFieldName, final Object keyFieldValue, Class daoType, final boolean isNew, Object synchronizedObject) throws Exception{
 
 			if(!isNew && keyFieldValue == null) 
 					throw new Exception("keyFieldValue should have value for synchronized DAO for finding");
@@ -173,9 +175,14 @@ public class TransactionContext implements ConnectionFactory{
 
 				public void beforeCommit(TransactionContext tx) throws Exception {
 					if(newRow){
-						dao.getImplementationObject().createInsertSql();
-						newRow = false;
-						dao.update();
+						
+						try{
+							dao.getImplementationObject().createInsertSql();
+							newRow = false;
+							dao.update();
+						}catch(MySQLIntegrityConstraintViolationException integrityError){
+							throw new Exception("There's already existing " + dao.getImplementationObject().getTableName() + " where "+keyFieldName+" is " + keyFieldValue);
+						}
 					}else{
 						
 						if(dao.getImplementationObject().isDirty()){ //only when the data has been updated it will be applied
