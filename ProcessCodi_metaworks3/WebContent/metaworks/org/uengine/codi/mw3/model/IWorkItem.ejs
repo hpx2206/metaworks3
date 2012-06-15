@@ -47,7 +47,7 @@
 					<% }%>
 						<td>
 							<div class="formcontexttitle" id="currentRunningWorkItemHandler">
-								<% if(value.type=='comment' || value.type=='file' || value.type=='src'){%>
+								<% if(value.type=='comment' || value.type=='file' || value.type=='src' || value.type=='memo'){%>
 									<span>
 										<%=value.title%>
 									</span>								
@@ -62,15 +62,15 @@
 								<% if(value.dueDate!=null){%>
 									<span class="workItemDate">
 									<% if(value.type!='comment' && value.type!='src' && value.type!='file' ){%>
-									납기일 : 
+									<%=getMessage('Due')%> : 
 									<%}%>
-									<%=value.dueDate%></span>
+									<%=fields.dueDate.here()%></span>
 								<%} if(value.startDate!=null){%>		
 									<span class="workItemDate">
 									<% if(value.type!='comment' && value.type!='src' && value.type!='file' ){%>
-									시작일 :  
+									<%=getMessage('Started')%> :  
 									<%}%>
-									<%=value.startDate%></span>	
+									<%=fields.startDate.here()%></span>	
 								<%}%>										
 								<div class="clear"></div>
 							</div>

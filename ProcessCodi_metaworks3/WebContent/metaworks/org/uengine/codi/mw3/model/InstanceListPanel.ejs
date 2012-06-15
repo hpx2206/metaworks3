@@ -15,12 +15,17 @@
 		                <div style="clear:both;"></div>
 		            </div>    
 		            <div class="toolbar">
+		            
+		            <%
+		            	var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
+		            	
+		            %>
 	                    <ul>
-	                        <li style="width:60px"><span></span><span onclick="<%=methods.switchToInstanceList.caller()%>"><%=getMessage("ComingUp")%></span></li>
-	                        <li style="width:60px"><span></span><span onclick="<%=methods.switchToInstanceListFollowing.caller()%>"><%=getMessage("Following")%></span></li>               
-	                        <li style="width:60px"><span></span><span onclick="<%=methods.switchToInstanceListMyToDo.caller()%>"><%=getMessage("MyToDo")%></span></li>               
-	                        <li style="width:60px"><span></span><span onclick="<%=methods.switchToKnowledge.caller()%>"><%=getMessage("Strategic")%></span></li>               
-	                        <li style="width:60px"><span></span><span onclick="<%=methods.switchToScheduleCalendar.caller()%>"><%=getMessage("Calendar")%></span></li>
+	                        <li style="width:50px"<%=(value.instanceList && session.lastPerspecteType=='allICanSee') ? "class='toolbar_current'" : ""%>><span></span><span onclick="<%=methods.switchToInstanceList.caller()%>"><%=getMessage("ComingUp")%></span></li>
+	                        <li style="width:50px"<%=(value.instanceList && session.lastPerspecteType=='all') ? "class='toolbar_current'" : ""%>><span></span><span onclick="<%=methods.switchToInstanceListFollowing.caller()%>"><%=getMessage("Following")%></span></li>               
+	                        <li style="width:50px"<%=(value.instanceList && session.lastPerspecteType=='inbox') ? "class='toolbar_current'" : ""%>><span></span><span onclick="<%=methods.switchToInstanceListMyToDo.caller()%>"><%=getMessage("MyToDo")%></span></li>               
+	                        <li style="width:50px"<%=value.knowledge ? "class='toolbar_current'" : ""%>><span></span><span onclick="<%=methods.switchToKnowledge.caller()%>"><%=getMessage("Strategic")%></span></li>               
+	                        <li style="width:50px"<%=value.scheduleCalendar ? "class='toolbar_current'" : ""%>><span></span><span onclick="<%=methods.switchToScheduleCalendar.caller()%>"><%=getMessage("Calendar")%></span></li>
 	                    </ul>
                 	</div>     
 		        </div>
