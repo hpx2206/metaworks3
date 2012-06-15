@@ -678,10 +678,47 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 		for(int i=0; i<wot.metaworks2Type().getFieldDescriptors().length; i++){
 			FieldDescriptor fd = wot.metaworks2Type().getFieldDescriptors()[i];
 			
-			cachedRows.get(cursor).put(fd.getName().toUpperCase(), fromObjInst.getFieldValue(fd.getName()));
+			Object fieldValue = null;
+			
+			fieldValue = fromObjInst.getFieldValue(fd.getName());
+			
+			
+			cachedRows.get(cursor).put(fd.getName().toUpperCase(), fieldValue);
 		}
 	}
+
 	
+//	public void copyFrom(IDAO fromObj) throws Exception{
+//		
+//		if(rowSet!=null)
+//			throw new RuntimeException("Selected DAO's properties cannott be changed. ");
+//		
+//		WebObjectType wot = MetaworksRemoteService.getInstance().getMetaworksType(daoClass.getName());
+//				
+//		ObjectInstance fromObjInst = (ObjectInstance) wot.metaworks2Type().createInstance();
+//		fromObjInst.setObject(fromObj);
+//
+//		for(int i=0; i<wot.metaworks2Type().getFieldDescriptors().length; i++){
+//			FieldDescriptor fd = wot.metaworks2Type().getFieldDescriptors()[i];
+//			
+//			Object fieldValue = null;
+//			if(fromObj instanceof AbstractGenericDAO){
+//				try {
+//					Method m = daoClass.getMethod("get" + fd.getName());
+//				
+//					fieldValue = invoke(fromObj, m, new Object[]{});
+//				} catch (Throwable e) {
+//					// TODO Auto-generated catch block
+//					//throw new RuntimeException(e);
+//				}
+//			}else{
+//				fieldValue = fromObjInst.getFieldValue(fd.getName());
+//			}
+//			
+//			cachedRows.get(cursor).put(fd.getName().toUpperCase(), fieldValue);
+//		}
+//	}
+//	
 
 
 	public void beforeFirst() throws Exception {
@@ -971,6 +1008,23 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 		return realSql.toString();
     }
    
+    public ArrayList<IDAO> toArrayList() throws Exception{
+    	
+    	ArrayList<IDAO> arrayList = new ArrayList<IDAO>();
+    	
+    	
+    	beforeFirst();
+    	while(next()){
+    		IDAO copy = MetaworksDAO.createDAOImpl(getDaoClass());
+    		copy.moveToInsertRow();
+    		//copy.getImplementationObject().moveToInsertRow(this);
+    		copy.getImplementationObject().copyFrom(this);
+    		arrayList.add(copy);
+    		//copy.beforeFirst();
+    	}
+    	
+    	return arrayList;
+    }
     
 	public Object invoke(Object proxy, Method m, Object[] args)	throws Throwable{
 		
