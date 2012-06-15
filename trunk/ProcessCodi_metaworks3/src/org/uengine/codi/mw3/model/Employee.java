@@ -287,8 +287,9 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 			throw new Exception("Re-entered password doesn't match");
 		}
 		
-		if (getMetaworksContext().getWhen().equals(MetaworksContext.WHEN_NEW)) {
+		if (getMetaworksContext().getWhen().indexOf(MetaworksContext.WHEN_NEW)!=-1) {
 			this.setIsDeleted("0");
+			this.setGlobalCom("uEngine");
 			
 			createDatabaseMe();
 		} else {
