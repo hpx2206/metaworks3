@@ -66,6 +66,7 @@ public class Main {
 		boolean pad = isPad();
 		boolean phone = isPhone();
 		boolean isMobile = pad || phone;
+		
 
 		if(isMobile && (preferMob==null || "auto".equals(preferMob)) ){
 			preferMob = (pad ? "pad" : "phone");
@@ -73,7 +74,7 @@ public class Main {
 		}
 		
 		if("phone".equals(preferMob) || "tw".equals(preferUX)){
-			session.setUx(preferMob);
+			session.setUx("phone");
 			
 			Layout outerLayout = new Layout();
 			outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:5, north__size:52");
@@ -89,7 +90,7 @@ public class Main {
 			//setPageNavigator(new PageNavigator("process"));	
 			
 		}else if("pad".equals(preferMob) || "fb".equals(preferUX)  || "asana".equals(preferUX)){
-			session.setUx(preferMob);
+			session.setUx("pad");
 			
 			Layout outerLayout = new Layout();
 			outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:5, north__size:52, west__size:" + ("asana".equals(preferUX) ? "700" : "400"));

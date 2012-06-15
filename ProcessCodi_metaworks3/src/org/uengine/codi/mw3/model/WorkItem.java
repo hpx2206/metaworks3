@@ -568,25 +568,35 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			
 				String followerSessionId = Login.getSessionIdWithUserId(followerId);
 				
+				String device = Login.getDeviceWithUserId(followerId);
 				
-				try{
-					//NEW WAY IS GOOD
-					Browser.withSession(followerSessionId, new Runnable(){
-		
-						@Override
-						public void run() {
-							ScriptSessions.addFunctionCall("mw3.locateObject", new Object[]{new Object[]{new Refresh(refreshedInstanceView)/*, new Refresh(refreshedInstance)*/}, null, "body"});
+				if("desktop".equals(device)){
+					try{
+						//NEW WAY IS GOOD
+						Browser.withSession(followerSessionId, new Runnable(){
+			
+							@Override
+							public void run() {
+								ScriptSessions.addFunctionCall("mw3.locateObject", new Object[]{new Object[]{new Refresh(refreshedInstanceView)/*, new Refresh(refreshedInstance)*/}, null, "body"});
+								
+								//refresh notification badge
+								if(!postByMe)
+									ScriptSessions.addFunctionCall("mw3.getAutowiredObject('" + NotificationBadge.class.getName() + "').refresh", new Object[]{});
+								
+								ScriptSessions.addFunctionCall("mw3.onLoadFaceHelperScript", new Object[]{});
+							}
 							
-							//refresh notification badge
-							if(!postByMe)
-								ScriptSessions.addFunctionCall("mw3.getAutowiredObject('" + NotificationBadge.class.getName() + "').refresh", new Object[]{});
-							
-							ScriptSessions.addFunctionCall("mw3.onLoadFaceHelperScript", new Object[]{});
-						}
-						
-					});
-				}catch(Exception e){
-					e.printStackTrace(); //may stops due to error occurs when the follower isn't online.
+						});
+					}catch(Exception e){
+						e.printStackTrace(); //may stops due to error occurs when the follower isn't online.
+					}
+				}else{
+					Session.pushMessage(followerId, new Refresh(refreshedInstanceView));
+					
+					NotificationBadge notiBadge = new NotificationBadge();
+					notiBadge.setNewItemCount(-1);
+					
+					Session.pushMessage(followerId, new Refresh(notiBadge));
 				}
 				
 			}

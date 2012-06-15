@@ -1,7 +1,12 @@
 package org.uengine.codi.mw3.model;
 
+import java.util.ArrayList;
+import java.util.Hashtable;
+
 import javax.servlet.http.HttpSession;
 
+import org.directwebremoting.WebContext;
+import org.directwebremoting.WebContextFactory;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
@@ -15,6 +20,10 @@ import org.uengine.codi.mw3.Login;
 
 	
 public class Session implements ContextAware{
+	
+	static Hashtable<String, ArrayList> messagesToUsers = new Hashtable<String, ArrayList>(); 
+	
+	
 	IUser user;	
 		public IUser getUser() {
 			return user;
@@ -165,9 +174,33 @@ public class Session implements ContextAware{
 	}
 	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_NONE)
-	public void heartbeat(){
+	public Object heartbeat(){
 		//nothing to do
-		//System.out.println("heartbeat:" + getUser());
+		String sessionId = WebContextFactory.get().getScriptSession().getId();
+		System.out.println("heartbeat:" + sessionId);
+		
+		if(messagesToUsers.containsKey(sessionId)){
+			ArrayList messages = messagesToUsers.get(sessionId);
+			messagesToUsers.remove(sessionId);
+			
+			return messages;
+		}
+		
+		return null;
+	}
+	
+	public static void pushMessage(String userId, Object message){
+		String sessionId = Login.getSessionIdWithUserId(userId);
+		
+		ArrayList messages = null;
+		if(!messagesToUsers.containsKey(sessionId)){
+			messages = new ArrayList();
+			messagesToUsers.put(sessionId, messages);
+		}else{
+			messages = messagesToUsers.get(sessionId);
+		}
+		
+		messages.add(message);
 	}
 	
 	@ServiceMethod(callByContent=true)
