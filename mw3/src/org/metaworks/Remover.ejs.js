@@ -34,7 +34,6 @@ var org_metaworks_Remover = function(objectId, className){
 		}
 	}
 	
-	
-	mw3.removeObject(objectId);	
+	mw3.removeObject(objectId);
 
 }

@@ -14,9 +14,14 @@ var org_metaworks_ToAppend = function(objectId, className){
 				
 				if(mappedObjId){
 					
-					var html = mw3.locateObject(object.target, null);//, "#"+mappedObjdivId);
-	
-					$("#objDiv_" + mappedObjId).append(html);
+					var html = mw3.locateObject(object.target, null);//, "#"+mappedObjdivId);					
+					var faceHelper = mw3.getFaceHelper(mappedObjId);
+					
+					if(faceHelper && faceHelper.toAppend){
+						faceHelper.toAppend(html);
+					}else{
+						$("#objDiv_" + mappedObjId).append(html);	
+					}					
 					
 					break;
 				}	
