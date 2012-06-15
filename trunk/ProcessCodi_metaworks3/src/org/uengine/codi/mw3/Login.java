@@ -32,6 +32,7 @@ import org.uengine.codi.mw3.model.User;
 public class Login extends Database<ILogin> implements ILogin{
 	
 	protected static Hashtable<String, String> userIdSessionIdMapping = new Hashtable<String, String>();
+	protected static Hashtable<String, String> userIdDeviceMapping = new Hashtable<String, String>();
 	
 	@Id
 	String userId;
@@ -81,6 +82,15 @@ public class Login extends Database<ILogin> implements ILogin{
 		}
 		public void setFacebookSSO(boolean isFacebookSSO) {
 			this.isFacebookSSO = isFacebookSSO;
+		}
+		
+	boolean guidedTour;
+
+		public boolean isGuidedTour() {
+			return guidedTour;
+		}
+		public void setGuidedTour(boolean guidedTour) {
+			this.guidedTour = guidedTour;
 		}
 
 	String password;
@@ -155,7 +165,11 @@ public class Login extends Database<ILogin> implements ILogin{
 	}
 	
 	public static String getSessionIdWithUserId(String userId){
-		return userIdSessionIdMapping.get(userId);
+		return userIdSessionIdMapping.get(userId.toUpperCase());
+	}
+
+	public static String getDeviceWithUserId(String userId){
+		return userIdDeviceMapping.get(userId.toUpperCase());
 	}
 
 //	private Object createMainPageByLoginType(Session session) {
@@ -211,7 +225,7 @@ public class Login extends Database<ILogin> implements ILogin{
 		emp.setEmpCode(getUserId());
 		emp.setPassword(getPassword());
 		
-		ModalWindow window = new ModalWindow(emp, 400, 300, "사용자 등록");
+		ModalWindow window = new ModalWindow(emp, 600, 350, "Welcome!");
 		
 		return window;
 	}
@@ -287,7 +301,16 @@ public class Login extends Database<ILogin> implements ILogin{
 		
 		WebContext wctx = WebContextFactory.get();
 		
-		userIdSessionIdMapping.put(getUserId(), wctx.getScriptSession().getId()); //stores session id to find out with user Id
+		userIdSessionIdMapping.put(getUserId().toUpperCase(), wctx.getScriptSession().getId()); //stores session id to find out with user Id
+		
+		String device = "desktop";
+		if(Main.isPad()){
+			device = "pad";
+		}else if(Main.isPhone()){
+			device = "phone";
+		}
+		
+		userIdDeviceMapping.put(getUserId().toUpperCase(), device); //stores session id to find out with user Id
 		
 		String mySourceCodeBase = CodiClassLoader.mySourceCodeBase();
 		

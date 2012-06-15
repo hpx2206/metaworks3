@@ -34,7 +34,8 @@ var org_uengine_codi_mw3_Login = function(objectId, className){
  
  //object.login();
  
-	if(!tryGuidedTour && object.alias == null){
+
+	if(!tryGuidedTour && object.guidedTour){
 		setTimeout("mw3.test(" +objectId + ", 'first', {guidedTour: true})", 1000);
 
 		tryGuidedTour = true;
