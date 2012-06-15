@@ -45,19 +45,61 @@ if(value){
 				Locale : <%=fields.locale.here() %>
 			<%
 			} else if(mw3.when == 'new') {
-			%>			
-				<ul>				STEP1. Basic Information
-				
-					<li>
-								<div class="infoSub"><span>ID :</span><span><%=fields.empCode.here() %></span><%=methods.checkEmpCode.here()%></div>						
-								<div class="infoSub"><span>Your Full Name :</span><span><%=fields.empName.here() %></span></div>								
-								<div class="infoSub"><span>Email : </span><span><%=fields.email.here() %></span></div>
-								<div class="infoSub"><span>Password : </span><span><%=fields.password.here() %></span></div>
-								<div class="infoSub"><span>Re-enter Password : </span><span><%=fields.confirmPassword.here() %></span></div>
-			  		</li>    
-			 	</ul>
+			%>	
+				<ul id="green_and_orange_step_menu">
+					<li class="frist ">STEP1<em>Basic Information</em></li>
+				    <li>STEP2<em>Social Identity</em><span></span></li>
+				    <li class="last">STEP3<em>Preferences</em><span></span></li>
+				</ul>
+				<div class="form_table">
+					<table border="1" cellspacing="0" summary="">
+						<tbody>
+						<tr>
+							<th scope="row">ID</th>
+							<td>
+								<div class="item">
+									<span style="float:left;"><%=fields.empCode.here() %></span><a style="margin-left:10px;" id="wBtn" href="javascript:<%=methods.checkEmpCode.caller()%>"><span>Check ID</span></a>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<th scope="row">Your Full Name</th>
+							<td>
+								<div class="item">
+									<%=fields.empName.here() %>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<th scope="row">Email</th>
+							<td>
+								<div class="item">
+									<%=fields.email.here() %>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<th scope="row">Password</th>
+							<td>
+								<div class="item">
+									<%=fields.password.here() %>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<th scope="row">Re-enter Password</th>
+							<td>
+								<div class="item">
+									<%=fields.confirmPassword.here() %>
+								</div>
+							</td>
+						</tr>
+						</tbody>
+					</table>
+				</div>
+
 			 	
-				<div id="btnline" style="padding-top:8px; border-top:1px solid #ccc;">
+				<div id="btnline">
 					<ul>	
 						<li><a id="wBtn" href="javascript:<%=methods.subscribeStep1.caller()%>"><span>Next</span></a></li>
 					</ul>
@@ -67,8 +109,13 @@ if(value){
 			
 				value.metaworksContext.when='new'; //TODO: I don't know why....
 				
-			%>			
-				<ul>STEP2. Social Identity
+			%>	
+				<ul id="green_and_orange_step_menu">
+					<li class="frist fdone">STEP1<em>Basic Information</em></li>
+				    <li class="inprogress">STEP2 <em>Social Identity</em><span></span></li>
+				    <li class="last">STEP3<em>Preferences</em><span></span></li>
+				</ul>		
+				<ul> 
 					<li>
 								<div class="infoSub"><span>Very nice portrait of you:<%=fields.imageFile.here() %>&nbsp;</span></div>
 								
@@ -83,33 +130,37 @@ if(value){
 			<%
 			} else if(mw3.when == 'new3') {
 				
-			%>			
-				<ul>STEP3. Preferences
-					<li>
-						<div class="infoSub"><span>Prefer UX Style :</span></div>
-						
-						<span>	
-							<input type="radio" id="uxStyle_<%=objectId%>" name="uxStyle_<%=objectId%>" value="tw" checked>I love Twitter (Super Simple)
-							<br>
-							<img src="http://www.crunchbase.com/assets/images/original/0000/6571/6571v1.gif" width=70>
-						</span>
-						<span>
-							<input type="radio" id="uxStyle_<%=objectId%>" name="uxStyle_<%=objectId%>" value="fb" selected>I love Facebook (Normal SNS)
-							<br>
-							<img src="http://blog.su-spectator.com/wp-content/uploads/2009/10/facebook_news_feed.jpg" width=70>								
-						</span>
-						<span>
-							<input type="radio" id="uxStyle_<%=objectId%>" name="uxStyle_<%=objectId%>" value="asana">I love Asana (Social Project Management)
-							<br>
-							<img src="http://www.crunchbase.com/assets/images/original/0000/6571/6571v1.gif" width=70>
-						</span>
-						<span>
-							<input type="radio" id="uxStyle_<%=objectId%>" name="uxStyle_<%=objectId%>" value="wave">I love GoogleWave (Super Complex)
-							<br>
-							<img src="http://www.crunchbase.com/assets/images/original/0000/6571/6571v1.gif" width=70>
-						</span>
+			%>	
+				<ul id="green_and_orange_step_menu">
+					<li class="frist fdone">STEP1<em>Basic Informationy</em></li>
+				    <li class="done">STEP2<em>Social Identity</em><span></span></li>
+				    <li class="last lastinprogress">STEP3<em>Preferences</em><span></span></li>
+				</ul>		
+				<ul>
+					<li class="checkStyle">
+							<div class="infoSub">Prefer UX Style</div>
 							
-						<div class="infoSub"><span>Language : </span><span><%=fields.locale.here({when:'new'}) %></span></div>
+							<span>	
+								<img src="images/signIn/twitter_com.png" width="150">
+								<input type="radio" id="uxStyle_<%=objectId%>" name="uxStyle_<%=objectId%>" value="tw" checked>I love Twitter <br><b>(Super Simple)</b>
+							</span>
+							<span>
+								<img src="images/signIn/facebook_com.png" width="150">
+								<input type="radio" id="uxStyle_<%=objectId%>" name="uxStyle_<%=objectId%>" value="fb" selected>I love Facebook <br><b>(Normal SNS)</b>
+							</span>
+							<span>
+								<img src="images/signIn/asana_com.png" width="150">
+								<input type="radio" id="uxStyle_<%=objectId%>" name="uxStyle_<%=objectId%>" value="asana">I love Asana <br><b>(Social Project Management)</b>
+							</span>
+							<span>
+								<img src="images/signIn/wave_com.png" width="150">
+								<input type="radio" id="uxStyle_<%=objectId%>" name="uxStyle_<%=objectId%>" value="wave">I love GoogleWave <br><b>(Super Complex)</b>
+							</span>
+							<div style="clear"></div>
+							<div class="infoSub">Language :<%=fields.locale.here({when:'new'}) %></div>
+							
+							<div style="clear"></div>
+							
 			  		</li>    
 			 	</ul>
 			 	
