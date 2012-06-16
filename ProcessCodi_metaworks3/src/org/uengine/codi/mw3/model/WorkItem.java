@@ -14,7 +14,9 @@ import org.directwebremoting.WebContextFactory;
 import org.directwebremoting.proxy.dwr.Util;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
+import org.metaworks.Remover;
 import org.metaworks.ToAppend;
+import org.metaworks.ToPrepend;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Test;
@@ -407,6 +409,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		Long taskId = UniqueKeyGenerator.issueWorkItemKey(((ProcessManagerBean)processManager).getTransactionContext());
 
 		InstanceViewContent instantiatedViewContent = null;
+		WfNode parent = null;
 		if(instantiation){
 			ResourceFile unstructuredProcessDefinition = new ResourceFile();
 			unstructuredProcessDefinition.processManager = processManager;
@@ -440,7 +443,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				
 				if(newInstancePanel.getKnowledgeNodeId() != null){
 				
-					WfNode parent = new WfNode();
+					parent = new WfNode();
 					parent.load(newInstancePanel.getKnowledgeNodeId());
 
 					instantiatedViewContent.instanceView.instanceNameChanger.setInstanceName(parent.getName());
@@ -517,7 +520,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			
 			instantiatedViewContent.getInstanceView().setInstanceViewThreadPanel(threadPanel);
 			
-			return new Object[]{new Refresh(instantiatedViewContent)};
+			return new Object[]{new Refresh(instantiatedViewContent), new Refresh(parent)};
 		}
 
 		
@@ -537,6 +540,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		final InstanceView refreshedInstanceView = new InstanceView();
 		refreshedInstanceView.processManager = processManager;
 		refreshedInstanceView.load(instance);
+		refreshedInstanceView.session = session;
 		
 		final IInstance refreshedInstance = instance.databaseMe();
 		refreshedInstance.getMetaworksContext().setHow("blinking");
@@ -592,7 +596,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				
 				String device = Login.getDeviceWithUserId(followerId);
 				
-				if("desktop".equals(device)){
+				if("desktop".equals(device) || device==null){
 					try{
 						//NEW WAY IS GOOD
 						Browser.withSession(followerSessionId, new Runnable(){
@@ -601,7 +605,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 							public void run() {
 								
 								
-								ScriptSessions.addFunctionCall("mw3.locateObject", new Object[]{new Object[]{new ToAppend(threadPanelOfThis, copyOfThis)/*, new Refresh(refreshedInstance)*/}, null, "body"});
+								ScriptSessions.addFunctionCall("mw3.locateObject", new Object[]{new Object[]{new ToAppend(threadPanelOfThis, copyOfThis), new Remover(refreshedInstance), new Remover(refreshedInstance), new ToPrepend(new InstanceList(), refreshedInstance)}, null, "body"});
 								
 								//refresh notification badge
 								if(!postByMe)

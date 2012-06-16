@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 	  options={"hideLabels", "maximize"}, 
 	  values={"true", "true"})
 public class InstanceViewContent extends ContentWindow {
+	
+	public Session session;
 
 	//ProcessManagerRemote processManager;	
 	//InstanceView instanceView;	

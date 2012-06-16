@@ -99,6 +99,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 		
 		TransactionContext.getThreadLocalInstance().setSharedContext("codi_session", session);
 		instanceViewContent.load(this);
+		instanceViewContent.session = session;
 		
 		return instanceViewContent;
 	}
