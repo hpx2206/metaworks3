@@ -60,7 +60,7 @@
 		class="org.uengine.codi.MetaworksUEngineSpringConnectionAdapter"></bean>
 	
 	<bean id="processManagerBean" class="org.uengine.processmanager.ProcessManagerBean"
-		scope="request">
+		scope="prototype">
 		<property name="managedTransaction" value="true" />
 		<property name="autoCloseConnection" value="false" />
 		<property name="connectionFactory" ref="springConnectionFactory" />
