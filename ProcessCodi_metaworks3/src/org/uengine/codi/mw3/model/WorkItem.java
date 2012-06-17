@@ -290,7 +290,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		
 		workItemHandler.load();
 		
-		setWorkItemHandler(workItemHandler);
+		//setWorkItemHandler(workItemHandler);
 		
 		
 		//return workItemHandler;
@@ -405,6 +405,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	public NewInstancePanel newInstancePanel;
 		
 	@Override
+	@Test(scenario="first", starter=true, instruction="$Write", next="newActivity()")
 	public Object[] add() throws Exception {
 		Long taskId = UniqueKeyGenerator.issueWorkItemKey(((ProcessManagerBean)processManager).getTransactionContext());
 
@@ -596,6 +597,14 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				
 				String device = Login.getDeviceWithUserId(followerId);
 				
+				final Object[] returnObjects = new Object[]{
+						new ToAppend(threadPanelOfThis, copyOfThis), //대화목록의 맨뒤에 새로 입력한 내용만 붙여서 속도 개선  
+						new Remover(refreshedInstance), //인스턴스 목록에서 제거 
+						new Remover(refreshedInstance), //인스턴스 목록에서 제거 - 한번하니 다른게 또 있는지 안돼서 두번 지움.. ㅋㅋ 메롱  
+						new ToPrepend(new InstanceList(), refreshedInstance) // 인스턴스 리스트에 맨 꼭대기에 추가함... -- 더 새로운 소식으로 눈에 띄게하는 느낌을 줌..  
+					};
+
+				
 				if("desktop".equals(device) || device==null){
 					try{
 						//NEW WAY IS GOOD
@@ -605,7 +614,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 							public void run() {
 								
 								
-								ScriptSessions.addFunctionCall("mw3.locateObject", new Object[]{new Object[]{new ToAppend(threadPanelOfThis, copyOfThis), new Remover(refreshedInstance), new Remover(refreshedInstance), new ToPrepend(new InstanceList(), refreshedInstance)}, null, "body"});
+								ScriptSessions.addFunctionCall("mw3.locateObject", new Object[]{returnObjects, null, "body"});
 								
 								//refresh notification badge
 								if(!postByMe)
@@ -619,7 +628,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 						e.printStackTrace(); //may stops due to error occurs when the follower isn't online.
 					}
 				}else{
-					Session.pushMessage(followerId, new ToAppend(threadPanelOfThis, copyOfThis));
+					Session.pushMessage(followerId, returnObjects);
 					
 					NotificationBadge notiBadge = new NotificationBadge();
 					notiBadge.setNewItemCount(-1);

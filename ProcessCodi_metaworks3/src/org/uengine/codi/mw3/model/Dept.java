@@ -7,6 +7,7 @@ import org.metaworks.ToAppend;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
 import org.uengine.codi.mw3.admin.AdminEastPanel;
+import org.uengine.util.UEngineUtil;
 
 public class Dept extends Database<IDept> implements IDept {
 	String partCode;
@@ -410,14 +411,23 @@ public class Dept extends Database<IDept> implements IDept {
 			
 			EmployeeList employeeList = new EmployeeList();
 			employeeList.setId(this.getPartCode());
-			
-			Dept findDept = new Dept();			
-			findDept.setPartCode(prevPartCode);			
-			findDept.copyFrom(findDept.databaseMe());
-			findDept.setMetaworksContext(this.getMetaworksContext());
-			findDept.drillDown();
-			
-			return new Object[]{new Refresh(findDept), new Refresh(session), new ToAppend(employeeList, employee)};
+
+			Dept findDept = null;
+			try{
+				findDept = new Dept();			
+				findDept.setPartCode(prevPartCode);			
+				findDept.copyFrom(findDept.databaseMe());
+				findDept.setMetaworksContext(this.getMetaworksContext());
+				findDept.drillDown();
+			}catch(Exception e){}
+
+			if(findDept!=null){
+				
+				return new Object[]{new Refresh(findDept), new Refresh(session), new ToAppend(employeeList, employee)};
+			}else{
+				return new Object[]{new Refresh(session), new ToAppend(employeeList, employee)};
+				
+			}
 		}
 		
 	}

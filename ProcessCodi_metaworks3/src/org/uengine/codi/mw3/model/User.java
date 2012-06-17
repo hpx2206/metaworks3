@@ -14,10 +14,13 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.widget.ModalWindow;
+import org.metaworks.widget.Window;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.widget.IFrame;
 import org.uengine.processmanager.ProcessManagerRemote;
+
+import com.sun.tools.xjc.model.CNonElement;
 
 public class User extends Database<IUser> implements IUser {
 	
@@ -47,6 +50,16 @@ public class User extends Database<IUser> implements IUser {
 	
 		public void setNetwork(String network) {
 			this.network = network;
+		}
+		
+	String mood;
+
+		public String getMood() {
+			return mood;
+		}
+	
+		public void setMood(String mood) {
+			this.mood = mood;
 		}
 
 	@AutowiredFromClient
@@ -121,11 +134,31 @@ public class User extends Database<IUser> implements IUser {
 			}
 		}
 		
+		try{
+			Employee employee = new Employee();
+			employee.setEmpCode(getUserId());
+			setMood(employee.databaseMe().getMood());
+			setName(employee.databaseMe().getEmpName());
+			setNetwork("local");
+		}catch(Exception e){
+		//	e.printStackTrace();
+		}
+		
 		Popup popup = new Popup(400,203);
-		popup.setName("Friend Info");
+		popup.setName("Info");
 		popup.setPanel(this);
 
 		return popup;
+	}
+	
+	public Window friends() throws Exception{
+		
+		ContentWindow contactWindow = new ContentWindow();
+		contactWindow.setTitle(getName() + "'s friends");
+		ContactPanel contactPanel = new ContactPanel(this);
+		contactWindow.setPanel(contactPanel);
+		
+		return contactWindow;
 	}
 	
 	@Override
@@ -309,6 +342,20 @@ public class User extends Database<IUser> implements IUser {
 		infoWindow.setPanel(dbMe);		
 		
 		return infoWindow;
+	}
+
+	@Override
+	public void changeMood() throws Exception {
+
+		try{
+			Employee employee = new Employee();
+			employee.setEmpCode(getUserId());
+			employee.databaseMe().setMood(getMood());
+			setNetwork("local");
+		}catch(Exception e){
+		//	e.printStackTrace();
+		}
+		
 	}
 	
 }

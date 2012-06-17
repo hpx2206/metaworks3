@@ -11,9 +11,11 @@ var org_uengine_codi_mw3_model_IEmployee = function(objectId, className){
 
 org_uengine_codi_mw3_model_IEmployee.prototype = {
 	getValue : function(){
-		var object = mw3.objects[this.objectId];
+		var object = mw3.getObjectFromUI(this.objectId);//objects[this.objectId];
 		
-		object.preferUX = $('#uxStyle_'+this.objectId +':checked').val();
+		var preferUX = $('#uxStyle_'+this.objectId +':checked').val();
+		if(preferUX)
+			object.preferUX = preferUX;
 		
 		return object;
 	},

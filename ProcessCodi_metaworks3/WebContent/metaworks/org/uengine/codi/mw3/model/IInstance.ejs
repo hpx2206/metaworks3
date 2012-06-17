@@ -2,7 +2,7 @@
 
 	if(mw3.where=="instanceNavigator"){%>
 	
-<div style="cursor:pointer" onclick="<%=methods.flowchart.caller()%>"><%=value.defName%></div>	
+<div id="method_<%=objectId%>_flowchart" style="cursor:pointer" onclick="<%=methods.flowchart.caller()%>"><%=value.defName%></div>	
 	
 	<%
 		mw3.where="anywhere";

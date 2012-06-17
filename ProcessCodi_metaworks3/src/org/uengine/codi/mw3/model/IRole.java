@@ -1,6 +1,7 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.ServiceMethodContext;
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.NonLoadable;
@@ -43,6 +44,7 @@ public interface IRole extends IDAO {
 	public Object subscribe() throws Exception;
 	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP, inContextMenu=true, needToConfirm=true)
+//	@Face(displayName="Unsubscribe")
 	public Object[] removeMe() throws Exception;
 
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP, inContextMenu=true)

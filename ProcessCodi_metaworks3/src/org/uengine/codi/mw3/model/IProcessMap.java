@@ -45,7 +45,7 @@ public interface IProcessMap extends IDAO {
 	public Remover close() throws Exception;
 	
 	@ServiceMethod 
-	@Test(scenario="first", starter=true, instruction="Issue Tracking 프로세스를 선택합니다.", next="autowiredObject.org.uengine.codi.mw3.model.InstanceView.monitor()")
+	@Test(scenario="first", starter=true, instruction="$first.ProcessStart", next="autowiredObject.org.uengine.codi.mw3.model.CommentWorkItem@-1.add()")
 //	@Test(scenario="first", starter=true, instruction="Issue Tracking 프로세스를 선택합니다.", next="autowiredObject.org.uengine.codi.mw3.admin.PageNavigator.goKnowledge()")
 	public Object[] initiate() throws Exception;
 	

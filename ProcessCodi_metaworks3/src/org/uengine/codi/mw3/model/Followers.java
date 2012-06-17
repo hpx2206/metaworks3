@@ -59,7 +59,7 @@ public class Followers {
 	}
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
-	public Popup addFollowers() throws Exception{		
+	public Object addFollowers() throws Exception{		
 		Popup popup = new Popup(400,400);
 		
 		AddFollowerPanel panel = new AddFollowerPanel(session.user, getInstanceId());		

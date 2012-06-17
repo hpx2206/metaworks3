@@ -31,9 +31,16 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	String locale;
 	String preferUX;
 	String preferMob;
-	
+	String mood;
 	
 
+	public String getMood() {
+		return mood;
+	}
+	public void setMood(String mood) {
+		this.mood = mood;
+	}
+	
 	public String getPreferMob() {
 		return preferMob;
 	}

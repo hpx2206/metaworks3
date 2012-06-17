@@ -16,13 +16,14 @@ public class Contact extends Database<IContact> implements IContact{
 		friend.setName(keyword + '%');
 		
 		StringBuffer sb = new StringBuffer();
-		sb.append("select a.*");
-		sb.append("  from contact a");
-		sb.append(" where userId=?userId");
-		sb.append("   and network=?network");
+		sb.append("select a.*, e.mood")
+		.append("  from contact a left outer join emptable e")
+		.append("    on a.friendid = e.empcode")
+		.append(" where a.userId=?userId")
+		.append("   and a.network=?network");
 		
 		if(keyword != null && keyword.length() > 0)
-			sb.append("   and friendName like ?friendName");
+			sb.append("   and a.friendName like ?friendName");
 		
 		IContact contacts = sql(sb.toString());
 		contacts.setUserId(getUserId());
@@ -95,6 +96,17 @@ public class Contact extends Database<IContact> implements IContact{
 		public void setNetwork(String network) {
 			this.network = network;
 		}
+		
+	String mood;
+		
+		public String getMood() {
+			return mood;
+		}
+		public void setMood(String mood) {
+			this.mood = mood;
+		}
+		
+		
 		
 	public User pickUp() throws RemoteException, Exception {
 		//User user = new User(); //this should have error - more than the @Id, the objectId is the closest one.

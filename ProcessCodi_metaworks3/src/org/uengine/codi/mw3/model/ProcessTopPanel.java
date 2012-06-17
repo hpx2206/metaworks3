@@ -13,6 +13,8 @@ public class ProcessTopPanel {
 		notificationBadge = new NotificationBadge();
 		notificationBadge.session = session;
 		notificationBadge.refresh();
+		
+		setLoginUser(session.getUser());
 	}
 	
 	WindowPanel windowPanel;
@@ -47,5 +49,13 @@ public class ProcessTopPanel {
 		}
 		public void setSession(Session session) {
 			this.session = session;
+		}
+		
+	IUser loginUser;
+		public IUser getLoginUser() {
+			return loginUser;
+		}
+		public void setLoginUser(IUser loginUser) {
+			this.loginUser = loginUser;
 		}
 }

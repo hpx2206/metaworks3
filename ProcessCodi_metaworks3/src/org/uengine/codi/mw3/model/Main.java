@@ -86,8 +86,9 @@ public class Main {
 			outerLayout.setName("center");
 			
 			setLayout(outerLayout);
-
-			//setPageNavigator(new PageNavigator("process"));	
+			
+			if(!isMobile)
+				setPageNavigator(new PageNavigator("process"));	
 			
 		}else if("pad".equals(preferMob) || "fb".equals(preferUX)  || "asana".equals(preferUX)){
 			session.setUx("pad");
@@ -103,7 +104,10 @@ public class Main {
 			outerLayout.setName("center");
 			
 			setLayout(outerLayout);
-			
+
+			if(!isMobile)
+				setPageNavigator(new PageNavigator("process"));	
+
 		}else{
 
 		

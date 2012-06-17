@@ -1,14 +1,18 @@
 <%
 	if(value){
+		value.loginUser.metaworksContext.when = 'view';
 %>
-	<div class="logo"><img src="images/waveStyle/logo.gif"></div>
+
+	<div class="logo"><table cellpadding=0 cellspacing=0 border=0><td>	<%=fields.loginUser.here({when:'view'})%>
+	</td><td><img src="images/waveStyle/logo.gif"></td></table></div>
 	
 	<%=fields.notificationBadge.here()%>
 	
 	<%=fields.windowPanel.here()%>	
 	
 	<%=fields.tray.here()%>
-		
+	
+	
     <div class="info">
     
         <%if(mw3.when!='__design-depth2'){//TODO: later, rather use 'where' than 'when'.%>

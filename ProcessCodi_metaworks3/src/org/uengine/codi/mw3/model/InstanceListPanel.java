@@ -101,6 +101,7 @@ public class InstanceListPanel {
 
 	@Face(displayName="Knowledge View")
 	@ServiceMethod(inContextMenu=true)
+	@Test(scenario="first", starter=true, instruction="$first.SwitchToKnowledge", next="autowiredObject.org.uengine.codi.mw3.knowledge.WfPanel.newNode()")
 	public void switchToKnowledge() throws Exception{
 		this.setInstanceList(null);
 		this.setScheduleCalendar(null);
@@ -119,7 +120,7 @@ public class InstanceListPanel {
 		}
 	
 
-	@Test(scenario="first", instruction="새 프로세스를 시작합니다.", next="autowiredObject.org.uengine.codi.mw3.model.NewInstancePanel.initiate()")
+	@Test(scenario="first", instruction="$first.NewInstance", next="autowiredObject.org.uengine.codi.mw3.model.IProcessMap@IssueManagement.process.initiate()")
 	@ServiceMethod
 	public ContentWindow newInstance() throws Exception{
 		NewInstancePanel newInstancePanel =  new NewInstancePanel();

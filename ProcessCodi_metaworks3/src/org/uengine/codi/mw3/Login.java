@@ -240,6 +240,8 @@ public class Login extends Database<ILogin> implements ILogin{
 			
 			loginUser.setName(getName());
 			loginUser.setUserId(getUserId());
+			loginUser.setMetaworksContext(new MetaworksContext());
+			loginUser.getMetaworksContext().setWhen("view");
 			
 			Session session = new Session();
 			session.setUser(loginUser);

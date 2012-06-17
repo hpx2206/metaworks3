@@ -106,7 +106,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td height="30" colspan="2" style="padding-left:15px;"><a id="wBtn" href="javascript:<%=methods.add.caller()%>"><span><%=getMessage("Post")%></span></a></td>
+			<td height="30" colspan="2" style="padding-left:15px;"><a id="wBtn" href="javascript:<%=methods.add.caller()%>"><span id="method_<%=objectId%>_add"><%=getMessage("Post")%></span></a></td>
 		</tr> 			
 <%		
 		}
@@ -119,7 +119,7 @@
 		<a class="<%= value.type=='memo'?'comment_btn_on':'comment_btn_off' %>" onclick="<%=methods.newMemo.caller()%>"><span id="method_<%=objectId%>_newMemo"><%=getMessage("Memo")%></span></a>
 		<a class="<%= value.type=='file'?'comment_btn_on':'comment_btn_off' %>" onclick="<%=methods.newFile.caller()%>"><span id="method_<%=objectId%>_newFile"><%=getMessage("File")%></span></a>
 		<a class="<%= value.type=='src'?'comment_btn_on':'comment_btn_off' %>" onclick="<%=methods.newSourceCode.caller()%>"><span id="method_<%=objectId%>_newSourceCode"><%=getMessage("SourceCode")%></span></a>
-		<a class="comment_btn_off" onclick="<%=methods.newActivity.caller()%>"><span><%=getMessage("etc")%></span></a>
+		<a class="comment_btn_off" onclick="<%=methods.newActivity.caller()%>"><span id="method_<%=objectId%>_newActivity"><%=getMessage("etc")%></span></a>
 	</div>
 	
 	<div class="guide">
