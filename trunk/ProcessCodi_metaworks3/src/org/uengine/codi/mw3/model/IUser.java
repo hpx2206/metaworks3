@@ -4,6 +4,7 @@ import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.IDAO;
 import org.metaworks.widget.ModalWindow;
+import org.metaworks.widget.Window;
 
 public interface IUser extends IDAO{
 	public static final String MW3_WHERE_ROLEUSER_PICKER_CALLER = "roleUserPickerCaller";
@@ -18,6 +19,10 @@ public interface IUser extends IDAO{
 	
 	public String getNetwork();
 	public void setNetwork(String network);
+	
+	public String getMood();
+	public void setMood(String mood);
+
 	
 //	@NonLoadable
 //	@NonSavable
@@ -50,5 +55,12 @@ public interface IUser extends IDAO{
 	
 	@ServiceMethod(target="popup", payload={"userId", "network", "name"})
 	public Popup info() throws Exception;
+	
+	@ServiceMethod(payload={"userId", "network", "name", "mood"})
+	public void changeMood() throws Exception;
+	
+	@ServiceMethod(payload={"userId", "name"})
+	public Window friends() throws Exception;
+
 
 }

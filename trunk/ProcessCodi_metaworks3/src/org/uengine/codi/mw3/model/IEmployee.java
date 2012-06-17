@@ -112,6 +112,10 @@ public interface IEmployee extends IDAO {
 
 	public abstract boolean getIsAdmin();
 	public abstract void setIsAdmin(boolean value);
+	
+	public String getMood();
+	public void setMood(String mood);
+
 		
 	public IEmployee findMe() throws Exception;	
 	public IEmployee findByDept(Dept dept) throws Exception;

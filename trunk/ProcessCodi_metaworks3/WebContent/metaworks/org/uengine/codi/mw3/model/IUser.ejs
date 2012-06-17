@@ -30,6 +30,18 @@
 				<dl class="lst_type2">
 					<dt class="tit">
 						<div id="popupInfoNameWih"><b><%=value.name%></b></div>
+						<%
+							var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
+							var itIsMe = (session.user.userId == value.userId);
+							
+							if(itIsMe){
+						%>
+						<%=fields.mood.here({when:'edit'})%>
+						<%=methods.changeMood.here()%>
+						
+						<%	}else{%>
+							<%=value.mood%>
+						<%	}%>
 					</dt>
 					<dd class="photo">
 						<div id="popupInfoImgWih"><img id="user_picture_<%=objectId%>" src="<%=portrait%>" onerror="this.src='<%=unknown%>';" width="104" height="104"></div>
@@ -77,7 +89,7 @@
 %>
 			<div class="user_detail">
 				<span class="fontbold"><%=value.name%></span>
-				<span class="fontgray"><%=value.userId%></span>
+				<span class="fontgray"><%=value.mood%></span>
 				<span class="fontgray"></span>
 			</div>
 <%			
@@ -87,6 +99,7 @@
 			<div class="user_compact">
 				<%=value.name%>
 			</div>
+			<%=value.mood%>
 <%		
 			}
 %>		

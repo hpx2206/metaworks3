@@ -1,6 +1,7 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.annotation.Hidden;
+import org.metaworks.annotation.Test;
 import org.metaworks.website.MetaworksFile;
 
 public class FileWorkItem extends WorkItem{
@@ -18,6 +19,7 @@ public class FileWorkItem extends WorkItem{
 	}
 
 	@Override
+	@Test(scenario="first", instruction="$first.FileWorkItem.add")
 	public Object[] add() throws Exception {
 
 		getFile().upload();

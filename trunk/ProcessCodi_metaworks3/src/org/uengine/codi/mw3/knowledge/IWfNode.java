@@ -128,7 +128,7 @@ public interface IWfNode extends IDAO {
 	@ServiceMethod(callByContent=true, except={"childNode", "focus"}, target="popup")
 	public Object[] indent() throws Exception;
 	
-	@ServiceMethod(inContextMenu=true, keyBinding="Shift+Down")
+	@ServiceMethod(inContextMenu=true, keyBinding="Ctrl+Down")
 	public WfPanel drillInto() throws Exception;
 	
 	@ServiceMethod(callByContent=true, except={"childNode", "focus"}, target="popup")
@@ -141,11 +141,12 @@ public interface IWfNode extends IDAO {
 	@ServiceMethod(callByContent=true)
 	public ContentWindow linkInstance() throws Exception;
 	
-	@ServiceMethod(callByContent=true, except={"childNode", "focus"}, inContextMenu=true, keyBinding="Shift+Right")
+	@ServiceMethod(callByContent=true, except={"childNode", "focus"}, inContextMenu=true, keyBinding="Ctrl+Right")
 	@Face(displayName="Issue Tracking")
 	public ContentWindow newProcessInstance() throws Exception;
 		
 	@ServiceMethod(inContextMenu=true, keyBinding="Ctrl+D")
+	@Test(scenario="first", instruction="$first.newDocument", next="autowiredObject.org.uengine.codi.mw3.model.FileWorkItem.add()")
 	public ContentWindow newDocument() throws Exception;	
 	
 	@ServiceMethod(inContextMenu=true, keyBinding="Ctrl+M")

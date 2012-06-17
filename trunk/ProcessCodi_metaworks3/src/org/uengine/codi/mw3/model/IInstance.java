@@ -6,6 +6,7 @@ import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ORMapping;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Table;
+import org.metaworks.annotation.Test;
 import org.metaworks.dao.IDAO;
 
 @Table(name="bpm_procinst")
@@ -14,7 +15,8 @@ public interface IInstance extends IDAO{
 	@ServiceMethod
 	public ContentWindow detail() throws Exception;
 
-	@ServiceMethod
+	@ServiceMethod	
+	@Test(scenario="first", starter=true, instruction="$first.FlowChart", next="autowiredObject.org.uengine.codi.mw3.model.InstanceListPanel.switchToKnowledge()")
 	public ProcessInstanceMonitor flowchart() throws Exception;
 	
 	@Id

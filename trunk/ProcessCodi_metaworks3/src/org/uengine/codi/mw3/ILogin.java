@@ -50,7 +50,7 @@ public interface ILogin extends IDAO{
 	
 	
 	
-	@Test(scenario="first", starter=true, instruction="아이디/패스워스 = test/test 로 로그인을 합니다.", next="autowiredObject.org.uengine.codi.mw3.model.UnstructuredProcessInstanceStarter.start()")
+	@Test(scenario="first", starter=true, instruction="Welcome! Sign in please...", next="autowiredObject.org.uengine.codi.mw3.model.InstanceListPanel.newInstance()")
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF, validate=true)
 	public Object login() throws Exception;	
 	

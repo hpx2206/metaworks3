@@ -11,6 +11,7 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.annotation.Test;
 import org.uengine.codi.mw3.model.Session;
 
 public class WfPanel implements ContextAware {
@@ -142,6 +143,7 @@ public class WfPanel implements ContextAware {
 	}
 	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
+	@Test(scenario="first", instruction="$first.wfNode.NewProcessInstance", next="autowiredObject.org.uengine.codi.mw3.knowledge.IWfNode.newDocument()")
 	public Object newNode() throws Exception {
 		WfNode newNode = new WfNode();
 		newNode.setAuthorId(session.getUser().getUserId());

@@ -4,6 +4,7 @@ import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
+import org.metaworks.annotation.ServiceMethod;
 
 public class ContactList implements ContextAware {
 	
@@ -58,4 +59,6 @@ public class ContactList implements ContextAware {
 		public void setContacts(IContact contacts) {
 			this.contacts = contacts;			
 		}		
+		
+
 }

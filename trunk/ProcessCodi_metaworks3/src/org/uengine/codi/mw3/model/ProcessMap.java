@@ -170,9 +170,6 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		
 		if(newInstancePanel!=null){
 			
-			((Instance)instanceRef).databaseMe().setSecuopt("" + newInstancePanel.getSecurityLevel());
-			((Instance)instanceRef).flushDatabaseMe();
-
 			
 			if(newInstancePanel.getKnowledgeNodeId() != null){
 			
@@ -221,6 +218,10 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 				
 				instanceView.getInstanceView().setNewItem(newItem);
 								
+				((Instance)instanceRef).databaseMe().setSecuopt("" + newInstancePanel.getSecurityLevel());
+				((Instance)instanceRef).flushDatabaseMe();
+
+
 	
 				return new Object[]{instanceView, parent};
 	
@@ -241,6 +242,7 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 			processManager.executeProcess(instId);
 			processManager.applyChanges();
 		
+			
 			InstanceViewContent rootInstanceView = instanceView;// = new InstanceViewContent();
 			rootInstanceView.load(rootInstanceRef);
 			
@@ -252,6 +254,12 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		
 		processManager.executeProcess(instId);
 		processManager.applyChanges();
+
+
+		if(newInstancePanel!=null){
+			((Instance)instanceRef).databaseMe().setSecuopt("" + newInstancePanel.getSecurityLevel());
+			((Instance)instanceRef).flushDatabaseMe();
+		}
 
 		instanceView.load(instanceRef);
 		

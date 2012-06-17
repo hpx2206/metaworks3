@@ -46,6 +46,7 @@ public class ContactListPanel implements ContextAware {
 		setSocialContactList(socialContactList);
 	}
 	
+	
 	String id;
 		@Id
 		@Hidden

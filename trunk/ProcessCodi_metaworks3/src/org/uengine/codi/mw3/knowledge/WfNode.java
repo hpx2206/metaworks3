@@ -21,6 +21,7 @@ import org.metaworks.dao.UniqueKeyGenerator;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.model.ContentWindow;
+import org.uengine.codi.mw3.model.FileWorkItem;
 import org.uengine.codi.mw3.model.IUser;
 import org.uengine.codi.mw3.model.Instance;
 import org.uengine.codi.mw3.model.InstanceViewContent;
@@ -28,6 +29,7 @@ import org.uengine.codi.mw3.model.NewInstancePanel;
 import org.uengine.codi.mw3.model.NewInstanceWindow;
 import org.uengine.codi.mw3.model.ProcessDefinition;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.codi.mw3.model.WorkItem;
 
 public class WfNode extends Database<IWfNode> implements IWfNode {
 	
@@ -776,8 +778,16 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 	}
 	
 	public ContentWindow newDocument() throws Exception{
-		processDefinition.setDefId(new Long(150));
-		return (ContentWindow) processDefinition.initiate()[0];		
+		NewInstancePanel newInstancePanel =  new NewInstancePanel();
+		newInstancePanel.setKnowledgeNodeId(this.getId());
+		newInstancePanel.session = session;
+		newInstancePanel.load();
+		
+		newInstancePanel.getNewInstantiator().session = session;
+		newInstancePanel.setNewInstantiator((WorkItem) newInstancePanel.getNewInstantiator().newFile());
+		newInstancePanel.getNewInstantiator().setTitle(getName());
+		
+		return new NewInstanceWindow(newInstancePanel);		
 	}	
 
 	public WfNode expand() throws Exception {

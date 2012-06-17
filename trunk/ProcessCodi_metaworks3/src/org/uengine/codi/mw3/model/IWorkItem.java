@@ -173,7 +173,6 @@ public interface IWorkItem extends IDAO{
 		public void detail() throws Exception;
 
 		@ServiceMethod(callByContent = true, target="popup")
-		@Test(scenario="first", starter=true, instruction="댓글을 추가합니다.", next="autowiredObject.org.uengine.codi.mw3.model.WorkItem.newSourceCode()")
 		public Object[] add() throws Exception;
 
 		

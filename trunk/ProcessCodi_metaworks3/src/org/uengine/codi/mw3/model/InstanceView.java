@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import javax.annotation.PostConstruct;
 
 import org.metaworks.MetaworksContext;
+import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Id;
@@ -301,15 +302,16 @@ public class InstanceView {
 		Instance instance = new Instance();
 		instance.setInstId(new Long(getInstanceId()));
 		instance.databaseMe().setIsDeleted(true);
-		instance.flushDatabaseMe();
+		//instance.flushDatabaseMe();
 		
-		InstanceListPanel list = new InstanceListPanel();
-		list.getInstanceList().load(session);
+//		InstanceListPanel list = new InstanceListPanel();
+//		list.getInstanceList().load(session);
 		
-		NewInstancePanel newInstancePanel = new NewInstancePanel();
-		newInstancePanel.load();
+//		NewInstancePanel newInstancePanel = new NewInstancePanel();
+//		newInstancePanel.session = session;
+//		newInstancePanel.load();
 		
-		return new Object[]{list, newInstancePanel};
+		return new Object[]{new Remover(instance.databaseMe())};
 	}
 		
 	@ServiceMethod(callByContent=true)
@@ -332,7 +334,9 @@ public class InstanceView {
 	
 	
 	@ServiceMethod(target="popup")
-	@Test(scenario="first", starter=true, instruction="자유로운 대화와 정형화된 프로세스가 어우러진 프로세스를 모니터링 합니다.", next="autowiredObject.org.uengine.codi.mw3.admin.PageNavigator.goKnowledge()")
+//	@Test(scenario="first", starter=true, instruction="자유로운 대화와 정형화된 프로세스가 어우러진 프로세스를 모니터링 합니다.", next="autowiredObject.org.uengine.codi.mw3.admin.PageNavigator.goKnowledge()")
+	@Test(scenario="first", starter=true, instruction="$first.Monitor", next="autowiredObject.org.uengine.codi.mw3.model.InstanceListPanel.switchToKnowledge()")
+
 	public ModalWindow monitor() throws Exception{
 		
 		ModalWindow modal = new ModalWindow();
