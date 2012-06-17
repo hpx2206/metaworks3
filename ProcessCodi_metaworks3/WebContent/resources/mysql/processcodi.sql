@@ -2752,3 +2752,4 @@ SET FOREIGN_KEY_CHECKS = 1;
 	 alter table emptable add column prefermob char(10);
 	 
 	 
+	 alter table emptable add column mood varchar(100);
