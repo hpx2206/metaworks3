@@ -21,8 +21,8 @@
 		var windowTitle = null;
 
 		if(value.__className=='org.metaworks.widget.Window'){
-			windowTitle = value.title 
-		
+			windowTitle = value.title; 
+			showLabel = false;		
 		}else{
 			if(value.__toString != null){
 				objectName = value.__toString();
@@ -135,7 +135,6 @@
 			<div class="ui-layout-content" style="background:#fff;">
 			    <div class="contentcontainer">
 <%							
-		var showLabel = !(objectMetadata.faceOptions && objectMetadata.faceOptions['hideLabels']);
 					
 		for (var i=0; i<objectMetadata.fieldDescriptors.length; i++){						  
 			var fd = objectMetadata.fieldDescriptors[i];

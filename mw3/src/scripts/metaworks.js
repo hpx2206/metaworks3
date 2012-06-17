@@ -1414,6 +1414,24 @@
 				
 				return null;
 			}
+			
+			Metaworks3.prototype.getBestObject = function(object){
+				var objKeys = mw3._createObjectKey(object, true);
+				
+				if(objKeys && objKeys.length){
+								        				
+					for(var i=0; i<objKeys.length; i++){
+						
+						var mappedObjId = mw3.objectId_KeyMapping[objKeys[i]];
+			
+						if(mappedObjId){
+							return this.objects[mappedObjId];				
+						}
+						
+					}
+				}
+			}
+
 
 			Metaworks3.prototype.clientSideCall = function (objectId, methodName){
 				try{
@@ -1942,10 +1960,25 @@
 			
 			function showupInstruction(methodDivId, instruction, options){
 				   	var methodDiv = $("#" + methodDivId);
+				   	
+				   	if(instruction.indexOf("$")==0 && getMessage){
+				   		instruction = getMessage(instruction);
+				   	}
+				   	
+				   	var targetObject = methodDiv.children()[0];
+				   	
+				   	if(!targetObject)
+				   		targetObject = methodDiv[0];
+				   	
+				   	if(!targetObject && console)
+				   		console.log("There's no div id with '"+methodDivId + "'");
+
+				   	if(!targetObject.offsetWidth && console)
+				   		console.log("There's no offset width with div id '"+methodDivId + "'");
 
 				   	$('body').append("<div id='instructionR' onclick=\"this.style.display='none'\"><div class='instructionDisc'>" + instruction + "</div></div>");
 
-					$("#instructionR").css({"top": methodDiv.offset().top - 60 + "px", "left": (methodDiv.offset().left + methodDiv.children()[0].offsetWidth - 350) + "px" });
+					$("#instructionR").css({"top": methodDiv.offset().top - 60 + "px", "left": (methodDiv.offset().left + targetObject.offsetWidth - 350) + "px" });
 //					$("#instruction").slideDown(500);
 					
 					$( "#instructionR" ).effect( 'pulsate', 800 );
@@ -2123,7 +2156,7 @@
 
 
 					   
-			   }else{
+			   }else{  //---- in case of method ------
 				   
 				   
 				   var returnValue;
@@ -2144,7 +2177,12 @@
 								  $( "#instructionR" ).slideUp(500, function(){
 									  $('#instructionR').remove();							  
 									   //TODO: done message should be here!
-									   alert('Congratulations! Your guided Tour has been finished.');
+									  
+									  var congratulations = "Congratulations! Your guided Tour has been finished.";
+									  if(getMessage){
+										  congratulations = getMessage("$congratulations");
+									  }
+									   alert(congratulations);
 								  });
 
 								   return;
@@ -2167,10 +2205,25 @@
 							   		var prefixLength = "autowiredObject.".length + next.indexOf(".") + 1;
 							   		
 							   		var className = next.substr(prefixLength, posLastDot - prefixLength);
+							   		
 							   		var methodName = next.substr(posLastDot + 1);
+
+							   		if(className.indexOf("@") > -1){
+							   			value = this.objects[this.objectId_KeyMapping[className]]; 
+							   		}else{
+							   			
+									    value = this.getAutowiredObject(className);
+							   			
+							   		}
+							   		
 							   
-								   value = this.getAutowiredObject(className);
 								   
+//								   var objectIdFirst = value.__objectId;
+//								   for(var i=objectIdFirst; i>0; i--){
+//									   
+//								   }
+								   
+								  // if(value)
 								   mw3.test(value.__objectId, methodName, options);
 								  
 							   } else{
