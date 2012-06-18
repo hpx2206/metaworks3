@@ -6,7 +6,7 @@ import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.uengine.codi.ITool;
-@Face(displayName="이슈등록")
+@Face(displayName="$IMGT_TITLE")
 public class ReportTrouble implements ITool , Serializable {
 
 	String instanceId;
@@ -22,21 +22,21 @@ public class ReportTrouble implements ITool , Serializable {
 	private String issueDescription;
 	private String issueTitle;
     
-	@Face(displayName="이슈 유형")
+	@Face(displayName="$IMGT_ITYPE")
 	public String getIssueClass() {
 		return issueClass;
 	}
 	public void setIssueClass(String issueClass) {
 		this.issueClass = issueClass;
 	}
-	@Face(displayName="이슈 내용", ejsPath="genericfaces/richText.ejs", options={"rows","cols"}, values={"5","80"})
+	@Face(displayName="$IMGT_IDESC", ejsPath="genericfaces/richText.ejs", options={"rows","cols"}, values={"5","80"})
 	public String getIssueDescription() {
 		return issueDescription;
 	}
 	public void setIssueDescription(String issueDescription) {
 		this.issueDescription = issueDescription;
 	}
-	@Face(displayName="이슈 제목")
+	@Face(displayName="$IMGT_ITITLE")
     public String getIssueTitle() {
         return issueTitle;
     }

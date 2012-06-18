@@ -6,7 +6,7 @@ import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.uengine.codi.ITool;
 
-@Face(displayName="결과리뷰")
+@Face(displayName="$RR_TITLE")
 public class ResultReview implements ITool , Serializable {
 	
 	String instanceId;
@@ -20,14 +20,14 @@ public class ResultReview implements ITool , Serializable {
 	
 	private String teamReview;
 	private String managerReview;
-	@Face(displayName="팀장평가의견", ejsPath="genericfaces/richText.ejs", options={"rows","cols"}, values={"5","80"})
+	@Face(displayName="$RR_TEAM_OPINION", ejsPath="genericfaces/richText.ejs", options={"rows","cols"}, values={"5","80"})
 	public String getTeamReview() {
 		return teamReview;
 	}
 	public void setTeamReview(String teamReview) {
 		this.teamReview = teamReview;
 	}
-	@Face(displayName="부서장의견", ejsPath="genericfaces/richText.ejs", options={"rows","cols"}, values={"5","80"})
+	@Face(displayName="$RR_DIRECTOR_OPINION", ejsPath="genericfaces/richText.ejs", options={"rows","cols"}, values={"5","80"})
 	public String getManagerReview() {
 		return managerReview;
 	}
@@ -36,7 +36,7 @@ public class ResultReview implements ITool , Serializable {
 	}
 	
 	boolean compYn;
-    @Face(displayName="승인여부")
+    @Face(displayName="$RR_APPROVAL")
 	public boolean isCompYn() {
 		return compYn;
 	}
