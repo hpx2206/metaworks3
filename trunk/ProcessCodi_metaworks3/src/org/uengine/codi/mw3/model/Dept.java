@@ -398,7 +398,7 @@ public class Dept extends Database<IDept> implements IDept {
 		employee.setEmpCode(session.getEmployee().getEmpCode());
 		employee.copyFrom(employee.databaseMe());
 		
-		if(employee.getPartCode().equals(this.getPartCode())){
+		if(employee.getPartCode() != null && employee.getPartCode().equals(this.getPartCode())){
 			return null;
 		}else{
 			String prevPartCode = employee.getPartCode();
@@ -421,8 +421,7 @@ public class Dept extends Database<IDept> implements IDept {
 				findDept.drillDown();
 			}catch(Exception e){}
 
-			if(findDept!=null){
-				
+			if(findDept!=null){				
 				return new Object[]{new Refresh(findDept), new Refresh(session), new ToAppend(employeeList, employee)};
 			}else{
 				return new Object[]{new Refresh(session), new ToAppend(employeeList, employee)};
