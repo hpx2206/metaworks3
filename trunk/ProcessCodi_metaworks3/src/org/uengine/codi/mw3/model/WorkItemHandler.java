@@ -2,6 +2,8 @@ package org.uengine.codi.mw3.model;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
+import java.util.List;
+import java.util.Vector;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
@@ -15,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.ITool;
 import org.uengine.contexts.ComplexType;
 import org.uengine.kernel.Activity;
+import org.uengine.kernel.ActivityInstanceContext;
 import org.uengine.kernel.HumanActivity;
 import org.uengine.kernel.KeyedParameter;
 import org.uengine.kernel.NeedArrangementToSerialize;
@@ -204,6 +207,15 @@ public class WorkItemHandler implements ContextAware{
 //		humanActivity.setStatus(instance, Activity.ACTIVITY_STOPPED)
 
 		humanActivity.skip(instance);
+
+		List activities = humanActivity.getPropagatedActivities(instance);
+		
+		//resume the process
+//		Vector activityInstances =  instance.getCurrentRunningActivitiesDeeply();
+		for(int i=0; i<activities.size(); i++){
+			Activity nextAct = (Activity) activities.get(i);
+			nextAct.resume(instance);
+		}
 		
 		processManager.applyChanges();
 		
