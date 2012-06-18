@@ -213,6 +213,18 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		public void setStartDate(Date startDate) {
 			this.startDate = startDate;
 		}
+		
+		
+	boolean contentLoaded;
+
+		public boolean isContentLoaded() {
+			return contentLoaded;
+		}
+	
+		public void setContentLoaded(boolean contentLoaded) {
+			this.contentLoaded = contentLoaded;
+		}
+
 
 	Date endDate;
 	
@@ -295,6 +307,15 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		
 		//return workItemHandler;
 	}
+	
+	@Override
+	public void loadContents() throws Exception {
+		//only lazy loading needed workitems will use this method
+		typedDatabaseMe().loadContents();
+		setContentLoaded(true);
+	}
+
+	
 	
 	public ModalWindow workItemPopup() throws Exception{
 		
@@ -686,6 +707,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 
 	@Autowired
 	public InstanceViewContent instanceViewContent;
+
 	
 
 }

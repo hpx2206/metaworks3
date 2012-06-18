@@ -176,6 +176,9 @@ public interface IWorkItem extends IDAO{
 		public Object[] add() throws Exception;
 
 		
+		@ServiceMethod(callByContent = true)
+		public void loadContents() throws Exception;
+		
 //		@ServiceMethod(callByContent=true)
 		public IWorkItem find() throws Exception;
 		
@@ -192,6 +195,12 @@ public interface IWorkItem extends IDAO{
 		public boolean isInstantiation();
 		public void setInstantiation(boolean instantiation);
 
+
+		@NonLoadable
+		@NonSavable
+		@Hidden		
+		public boolean isContentLoaded();
+		public void setContentLoaded(boolean contentLoaded);
 
 		@Face(displayName="Open")
 		@ServiceMethod(inContextMenu=true, when = WHEN_VIEW, callByContent=true, target=ServiceMethodContext.TARGET_POPUP)

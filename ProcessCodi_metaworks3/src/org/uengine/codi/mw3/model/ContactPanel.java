@@ -5,6 +5,7 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.widget.ModalWindow;
 
 public class ContactPanel {
 	
@@ -67,27 +68,30 @@ public class ContactPanel {
 		}
 
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
-	public Popup addContact(){
-		Popup popup = new Popup();
+	public Object addContact(){
+		//Popup popup = new Popup();
+		
+		ModalWindow popup = new ModalWindow();
 		
 //			popup.setPageX(this.pageX);
 //			popup.setPageY(this.pageY);
 		
 		popup.setPanel(new AddContactPanel());
-		popup.setName("페이스북 연락처 추가");
+		popup.setTitle("페이스북 연락처 추가");
 		
 		return popup;
 	}
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
-	public Popup addLocalContact() throws Exception{
-		Popup popup = new Popup();
+	public Object addLocalContact() throws Exception{
+		ModalWindow popup = new ModalWindow();
+//		Popup popup = new Popup();
 		
 //		popup.setPageX(this.pageX);
 //		popup.setPageY(this.pageY);
 		
 		popup.setPanel(new AddLocalContactPanel(session));
-		popup.setName("연락처 추가");
+		popup.setTitle("연락처 추가");
 		
 		return popup;
 	}
