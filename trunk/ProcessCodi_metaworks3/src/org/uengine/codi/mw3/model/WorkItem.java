@@ -22,6 +22,7 @@ import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Test;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.IDAO;
+import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.example.ide.SourceCode;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
@@ -542,6 +543,10 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			
 			instantiatedViewContent.getInstanceView().setInstanceViewThreadPanel(threadPanel);
 			
+			instance.databaseMe().getMetaworksContext().setHow("blinking");
+			
+			MetaworksRemoteService.getInstance().pushClientObjects(new Object[]{new ToPrepend(new InstanceList(), instance.databaseMe()) });
+			
 			return new Object[]{new Refresh(instantiatedViewContent), new Refresh(parent)};
 		}
 
@@ -666,6 +671,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			newFollower.setEndpoint(session.getUser().getUserId());
 			
 			processManager.putRoleMapping(getInstId().toString(), newFollower);
+			processManager.applyChanges();
 			
 			//refreshedInstanceView.getFollowers().getFollowers().getImplementationObject().moveToInsertRow(session.getUser());
 			//refreshedInstanceView.getFollowers().getFollowers()
