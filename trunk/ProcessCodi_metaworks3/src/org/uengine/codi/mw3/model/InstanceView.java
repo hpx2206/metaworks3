@@ -37,7 +37,7 @@ public class InstanceView {
 		Instance inst = new Instance();
 		inst.setInstId(instance.getInstId());
 		String secuopt = inst.databaseMe().getSecuopt();
-
+		
 		if(session!=null){
 			Notification notificationType = new Notification();
 			INotification notifictionsInSameInstance  = notificationType.sql("update bpm_noti set confirm=?confirm where instid = ?instid and userId=?userId");
@@ -46,7 +46,12 @@ public class InstanceView {
 			notifictionsInSameInstance.setUserId(session.getUser().getUserId());
 			notifictionsInSameInstance.update();
 		}
-		
+
+		if(inst.databaseMe().getIsDeleted()){
+			throw new Exception("Deleted Instance");
+		}
+
+
 		setInstanceId(instance.getInstId().toString());
 		setStatus(inst.databaseMe().getStatus());
 		setSecuopt(secuopt);
