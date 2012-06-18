@@ -5,7 +5,7 @@
 		            <div id="searchbox">
 		                <div class="searchboxline">
 		                	<div class="searchboxline2">
-		                        <div class="newprocessbtn"><a href="#" onclick="<%=methods.newInstance.caller()%>"><span id="method_<%=objectId%>_newInstance%>"><div id="startBtn"><%=getMessage("New")%></div></span></a></div>
+		                        <div class="newprocessbtn"><a href="#" onclick="<%=methods.newInstance.caller()%>"><span id="method_<%=objectId%>_newInstance%>"><div id="startBtn"><%=mw3.localize("$New")%></div></span></a></div>
 		                        <div class="searchboxarea" id="method_<%=objectId%>_newInstance">
 		                        	<%=fields.searchBox.here()%>
 		                        </div>
@@ -21,11 +21,11 @@
 		            	
 		            %>
 	                    <ul>
-	                        <li style="width:50px"<%=(value.instanceList && session.lastPerspecteType=='allICanSee') ? "class='toolbar_current'" : ""%>><span></span><span onclick="<%=methods.switchToInstanceList.caller()%>"><%=getMessage("ComingUp")%></span></li>
-	                        <li style="width:50px"<%=(value.instanceList && session.lastPerspecteType=='all') ? "class='toolbar_current'" : ""%>><span></span><span onclick="<%=methods.switchToInstanceListFollowing.caller()%>"><%=getMessage("Following")%></span></li>               
-	                        <li style="width:50px"<%=(value.instanceList && session.lastPerspecteType=='inbox') ? "class='toolbar_current'" : ""%>><span></span><span onclick="<%=methods.switchToInstanceListMyToDo.caller()%>"><%=getMessage("MyToDo")%></span></li>               
-	                        <li style="width:50px"<%=value.knowledge ? "class='toolbar_current'" : ""%>><span></span><span id="method_<%=objectId%>_switchToKnowledge" onclick="<%=methods.switchToKnowledge.caller()%>"><%=getMessage("Strategic")%></span></li>               
-	                        <li style="width:50px"<%=value.scheduleCalendar ? "class='toolbar_current'" : ""%>><span></span><span onclick="<%=methods.switchToScheduleCalendar.caller()%>"><%=getMessage("Calendar")%></span></li>
+	                        <li style="width:50px"<%=(value.instanceList && session.lastPerspecteType=='allICanSee') ? "class='toolbar_current'" : ""%>><span></span><span onclick="<%=methods.switchToInstanceList.caller()%>"><%=mw3.localize("$ComingUp")%></span></li>
+	                        <li style="width:50px"<%=(value.instanceList && session.lastPerspecteType=='all') ? "class='toolbar_current'" : ""%>><span></span><span onclick="<%=methods.switchToInstanceListFollowing.caller()%>"><%=mw3.localize("$Following")%></span></li>               
+	                        <li style="width:50px"<%=(value.instanceList && session.lastPerspecteType=='inbox') ? "class='toolbar_current'" : ""%>><span></span><span onclick="<%=methods.switchToInstanceListMyToDo.caller()%>"><%=mw3.localize("$MyToDo")%></span></li>               
+	                        <li style="width:50px"<%=value.knowledge ? "class='toolbar_current'" : ""%>><span></span><span id="method_<%=objectId%>_switchToKnowledge" onclick="<%=methods.switchToKnowledge.caller()%>"><%=mw3.localize("$Strategic")%></span></li>               
+	                        <li style="width:50px"<%=value.scheduleCalendar ? "class='toolbar_current'" : ""%>><span></span><span onclick="<%=methods.switchToScheduleCalendar.caller()%>"><%=mw3.localize("$Calendar")%></span></li>
 	                    </ul>
                 	</div>     
 		        </div>

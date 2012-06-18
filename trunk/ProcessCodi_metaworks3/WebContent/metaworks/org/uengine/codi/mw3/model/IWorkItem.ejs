@@ -62,13 +62,13 @@
 								<% if(value.dueDate!=null){%>
 									<span class="workItemDate">
 									<% if(value.type!='comment' && value.type!='src' && value.type!='file' ){%>
-									<%=getMessage('Due')%> : 
+									<%=mw3.localize('$Due')%> : 
 									<%}%>
 									<%=fields.dueDate.here()%></span>
 								<%} if(value.startDate!=null){%>		
 									<span class="workItemDate">
 									<% if(value.type!='comment' && value.type!='src' && value.type!='file' ){%>
-									<%=getMessage('Started')%> :  
+									<%=mw3.localize('$Started')%> :  
 									<%}%>
 									<%=fields.startDate.here()%></span>	
 								<%}%>										

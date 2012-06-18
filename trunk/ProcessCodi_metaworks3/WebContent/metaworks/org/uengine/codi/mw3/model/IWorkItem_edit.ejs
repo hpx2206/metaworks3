@@ -31,7 +31,7 @@
 				<input type="text" id="post_<%=objectId%>" value="<%=value.title%>"  onkeydown="mw3.getFaceHelper('<%=objectId%>').press()"  rows="1" style="width:99%; height:21px; -webkit-border-radius:3px; outline:none;  webkit-border-radius:3px; border:1px solid #ccd; none;">
 			</td>			
 			
-			<td width=50 align="center"><a id="wBtn" href="javascript:<%=methods.add.caller()%>"><span id="method_<%=objectId%>_add"><%=getMessage("Post")%></span></a></td>
+			<td width=50 align="center"><a id="wBtn" href="javascript:<%=methods.add.caller()%>"><span id="method_<%=objectId%>_add"><%=mw3.localize("$Post")%></span></a></td>
 		</tr> 
 		
 		
@@ -41,7 +41,7 @@
 
 		<tr>
 			<td width="50" height="25" style="color:#8D98AF; padding-left:15px;"> 
-				<%=getMessage("Title")%> 
+				<%=mw3.localize("$Title")%> 
 			</td>			
 			<td style="padding-right:15px;"> 
 				<input id="post_<%=objectId%>" value="<%=value.title%>"  style="width:99%;-webkit-border-radius:3px;  border:1px solid #ccc" onkeydown="mw3.getFaceHelper('<%=objectId%>').press()">
@@ -59,8 +59,8 @@
 		</tr>				
 		<tr>
 			<td height="30" colspan="2" style="padding-left:15px;">
-				<a id="wBtn" href="javascript:<%=methods.compile.caller()%>"><span><%=getMessage("Compile")%></span></a>
-				<a id="wBtn" href="javascript:<%=methods.add.caller()%>"><span><%=getMessage("Post")%></span></a>
+				<a id="wBtn" href="javascript:<%=methods.compile.caller()%>"><span><%=mw3.localize("$Compile")%></span></a>
+				<a id="wBtn" href="javascript:<%=methods.add.caller()%>"><span><%=mw3.localize("$Post")%></span></a>
 			</td>
 		</tr>
 <%		
@@ -106,7 +106,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td height="30" colspan="2" style="padding-left:15px;"><a id="wBtn" href="javascript:<%=methods.add.caller()%>"><span id="method_<%=objectId%>_add"><%=getMessage("Post")%></span></a></td>
+			<td height="30" colspan="2" style="padding-left:15px;"><a id="wBtn" href="javascript:<%=methods.add.caller()%>"><span id="method_<%=objectId%>_add"><%=mw3.localize("$Post")%></span></a></td>
 		</tr> 			
 <%		
 		}
@@ -115,11 +115,11 @@
 	</div>
 	
 	<div id="wih_button">
-		<a class="<%= value.type=='comment'?'comment_btn_on':'comment_btn_off' %>" onclick="<%=methods.newComment.caller()%>"><span><%=getMessage("Write")%></span></a>
-		<a class="<%= value.type=='memo'?'comment_btn_on':'comment_btn_off' %>" onclick="<%=methods.newMemo.caller()%>"><span id="method_<%=objectId%>_newMemo"><%=getMessage("Memo")%></span></a>
-		<a class="<%= value.type=='file'?'comment_btn_on':'comment_btn_off' %>" onclick="<%=methods.newFile.caller()%>"><span id="method_<%=objectId%>_newFile"><%=getMessage("File")%></span></a>
-		<a class="<%= value.type=='src'?'comment_btn_on':'comment_btn_off' %>" onclick="<%=methods.newSourceCode.caller()%>"><span id="method_<%=objectId%>_newSourceCode"><%=getMessage("SourceCode")%></span></a>
-		<a class="comment_btn_off" onclick="<%=methods.newActivity.caller()%>"><span id="method_<%=objectId%>_newActivity"><%=getMessage("etc")%></span></a>
+		<a class="<%= value.type=='comment'?'comment_btn_on':'comment_btn_off' %>" onclick="<%=methods.newComment.caller()%>"><span><%=mw3.localize("$Write")%></span></a>
+		<a class="<%= value.type=='memo'?'comment_btn_on':'comment_btn_off' %>" onclick="<%=methods.newMemo.caller()%>"><span id="method_<%=objectId%>_newMemo"><%=mw3.localize("$Memo")%></span></a>
+		<a class="<%= value.type=='file'?'comment_btn_on':'comment_btn_off' %>" onclick="<%=methods.newFile.caller()%>"><span id="method_<%=objectId%>_newFile"><%=mw3.localize("$File")%></span></a>
+		<a class="<%= value.type=='src'?'comment_btn_on':'comment_btn_off' %>" onclick="<%=methods.newSourceCode.caller()%>"><span id="method_<%=objectId%>_newSourceCode"><%=mw3.localize("$SourceCode")%></span></a>
+		<a class="comment_btn_off" onclick="<%=methods.newActivity.caller()%>"><span id="method_<%=objectId%>_newActivity"><%=mw3.localize("$etc")%></span></a>
 	</div>
 	
 	<div class="guide">
