@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.Refresh;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 
@@ -27,14 +28,14 @@ public class NotificationBadge{
 	}
 
 	@ServiceMethod(target="popup")
-	public Popup showList() throws Exception{
+	public Object[] showList() throws Exception{
 		Popup popup = new Popup();
 		popup.setName("Notification");
 		Notification notiList = new Notification();
 		popup.setPanel(	notiList.list(session));
 		setNewItemCount(notiList.count(session));
 		
-		return popup;
+		return new Object[]{popup, new Refresh(this)};
 	}
 	
 	@AutowiredFromClient
