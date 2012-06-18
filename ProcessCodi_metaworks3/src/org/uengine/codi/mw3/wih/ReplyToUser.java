@@ -8,7 +8,7 @@ import org.metaworks.annotation.Hidden;
 import org.uengine.codi.ITool;
 import org.uengine.codi.mw3.model.IUser;
 import org.uengine.codi.mw3.model.User;
-@Face(displayName="처리결과확인")
+@Face(displayName="$CRP_TITLE")
 public class ReplyToUser implements ITool , Serializable{
 
 	String instanceId;
@@ -29,7 +29,7 @@ public class ReplyToUser implements ITool , Serializable{
         }
         
     boolean compYn;
-    @Face(displayName="처리승인여부")
+    @Face(displayName="$CRP_APPROVAL")
 	public boolean isCompYn() {
 		return compYn;
 	}
@@ -47,7 +47,7 @@ public class ReplyToUser implements ITool , Serializable{
 	}
 	
 	String checkDesc;
-	@Face(displayName="확인사항")
+	@Face(displayName="$CRP_CHKLIST")
 	public String getCheckDesc() {
 		return checkDesc;
 	}

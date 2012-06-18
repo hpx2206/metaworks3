@@ -8,7 +8,7 @@ import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.uengine.codi.ITool;
 import org.uengine.codi.mw3.model.User;
-@Face(displayName="처리결과입력")
+@Face(displayName="$WR_TITLE")
 public class WriteResolution implements ITool , Serializable{
 
 	String instanceId;
@@ -23,14 +23,14 @@ public class WriteResolution implements ITool , Serializable{
     private String issueResult;
     private String completeDate;
     
-    @Face(displayName="처리결과", ejsPath="genericfaces/richText.ejs", options={"rows","cols"}, values={"5","80"})
+    @Face(displayName="$WR_HISTORY", ejsPath="genericfaces/richText.ejs", options={"rows","cols"}, values={"5","80"})
     public String getIssueResult() {
 		return issueResult;
 	}
 	public void setIssueResult(String issueResult) {
 		this.issueResult = issueResult;
 	}
-	@Face(displayName="처리일시")
+	@Face(displayName="$WR_PROCTIME")
     public String getCompleteDate() {
 		return completeDate;
 	}

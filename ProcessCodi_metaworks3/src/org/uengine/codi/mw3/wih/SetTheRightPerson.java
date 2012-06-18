@@ -9,7 +9,7 @@ import org.metaworks.annotation.Hidden;
 import org.uengine.codi.ITool;
 import org.uengine.codi.mw3.model.IUser;
 import org.uengine.codi.mw3.model.User;
-@Face(displayName="진행여부 확인 및 담당자 지정")
+@Face(displayName="$SRP_TITLE")
 public class SetTheRightPerson implements ContextAware, ITool , Serializable{
 
 	String instanceId;
@@ -30,7 +30,7 @@ public class SetTheRightPerson implements ContextAware, ITool , Serializable{
         }
         
     boolean continueYn;
-    @Face(displayName="진행여부")
+    @Face(displayName="$SRP_APPROVAL")
 	public boolean isContinueYn() {
 		return continueYn;
 	}
@@ -48,7 +48,7 @@ public class SetTheRightPerson implements ContextAware, ITool , Serializable{
 	}
 	
 	IUser rightPerson;
-	@Face(displayName="담당자")
+	@Face(displayName="$SRP_CONTRACT")
 	 public IUser getRightPerson() {
 		 return rightPerson;
 	 }
