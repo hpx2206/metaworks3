@@ -53,6 +53,7 @@ org_uengine_codi_mw3_model_AddContactPanel.prototype ={
 				  	
 				  friends.metaworksContext = {when:'addContact'};
 				  mw3.setObject(objectId, friends);
+				  mw3.onLoadFaceHelperScript();				  
 			  }
 		);	
 	}	
