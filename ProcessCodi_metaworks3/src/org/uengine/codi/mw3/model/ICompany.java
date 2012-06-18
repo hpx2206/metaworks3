@@ -11,21 +11,17 @@ import org.metaworks.dao.IDAO;
 public interface ICompany extends IDAO {
 	@Id
 	public String getComCode();
-
 	public void setComCode(String comCode);
 
 	@Name
 	public String getComName();
-
 	public void setComName(String comName);
 
 	public String getDescription();
-
 	public void setDescription(String description);
 
 	@Hidden
-	public String getIsDeleted();
-	
+	public String getIsDeleted();	
 	public void setIsDeleted(String deleted);
 
 	@ServiceMethod

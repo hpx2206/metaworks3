@@ -2,6 +2,7 @@ package org.uengine.codi.mw3.model;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.metaworks.annotation.Hidden;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.widget.Window;
 import org.metaworks.widget.layout.Layout;
@@ -210,10 +211,8 @@ public class Main {
 		public Locale getLocale() {
 			return locale;
 		}
-	
 		public void setLocale(Locale locale) {
 			this.locale = locale;
-		}
-		
+		}		
 }
 

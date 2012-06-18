@@ -1,40 +1,24 @@
 var org_uengine_codi_mw3_model_Locale = function(objectId, className){
+	
 	this.objectId = objectId;
+	this.className = className;
 	
 	jQuery.timeago.settings.strings = {
-			  suffixAgo: getMessage("suffixAgo"),
-			  suffixFromNow: getMessage("suffixFromNow"),
-			  seconds: getMessage("seconds"),
-			  minute: getMessage("minute"),
-			  minutes: getMessage("minutes"),
-			  hour: getMessage("hour"),
-			  hours: getMessage("hours"),
-			  day: getMessage("day"),
-			  days: getMessage("days"),
-			  month: getMessage("month"),
-			  months: getMessage("months"),
-			  year: getMessage("year"),
-			  years: getMessage("years"),
+			  suffixAgo: mw3.localize("$timeago.suffixAgo"),
+			  suffixFromNow: mw3.localize("$timeago.suffixFromNow"),
+			  seconds: mw3.localize("$timeago.seconds"),
+			  minute: mw3.localize("$timeago.minute"),
+			  minutes: mw3.localize("$timeago.minutes"),
+			  hour: mw3.localize("$timeago.hour"),
+			  hours: mw3.localize("$timeago.hours"),
+			  day: mw3.localize("$timeago.day"),
+			  days: mw3.localize("$timeago.days"),
+			  month: mw3.localize("$timeago.month"),
+			  months: mw3.localize("$timeago.months"),
+			  year: mw3.localize("$timeago.year"),
+			  years: mw3.localize("$timeago.years"),
 			  wordSeparator: " ",
 			  number: []
-			};
+			};	
 	
 };
-
-function getMessage(key, defaultValue){
-	
-	var localeHandler = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Locale");
-	
-	if(localeHandler!=null){
-		
-		var message = localeHandler.resourceBundle[key];
-		
-		if(message)
-			return message;
-	}
-	
-	if(defaultValue)
-		return defaultValue;
-	
-	return key;
-}
