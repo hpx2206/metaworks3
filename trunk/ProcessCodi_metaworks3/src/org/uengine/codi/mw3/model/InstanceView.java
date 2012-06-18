@@ -306,6 +306,11 @@ public class InstanceView {
 		processManager.stopProcessInstance(instanceId);
 		Instance instance = new Instance();
 		instance.setInstId(new Long(getInstanceId()));
+		
+		if(!instance.databaseMe().getInitEp().equals(session.getUser().getUserId())){
+			throw new Exception("Only initiator can delete the instance");
+		}
+		
 		instance.databaseMe().setIsDeleted(true);
 		//instance.flushDatabaseMe();
 		
