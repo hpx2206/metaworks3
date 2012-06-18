@@ -5,6 +5,7 @@ import java.util.Hashtable;
 
 import javax.persistence.Id;
 
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.kernel.GlobalContext;
@@ -33,6 +34,9 @@ public class ProcessInstanceMonitor {
 		public void setChartHTML(String chartHTML) {
 			this.chartHTML = chartHTML;
 		}
+		
+	@AutowiredFromClient
+	public Session session;
 
 		
 	public void load(ProcessManagerRemote processManager)
@@ -50,7 +54,10 @@ public class ProcessInstanceMonitor {
 		// options.setViewType(options.HORIZONTAL, options.HORIZONTAL);
 		// options.put("dontCollapseScopes", new Boolean(true));
 		// options.put("enableEvent_onActivityClicked", new Boolean(true));
-		// options.put("locale", loggedUserLocale);
+		
+		
+		if(session!=null && session.getEmployee()!=null)
+			options.put("locale", session.getEmployee().getLocale());
 
 		// if (pi != null) {
 		// options.put("enableUserEvent_compensateTo", "Back to here");
