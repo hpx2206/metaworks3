@@ -2595,6 +2595,7 @@
 				var message = original;
 				
 				if(message != null && message.indexOf('$')==0 && this.getMessage){
+					message = message.substring(1);					
 					message = this.getMessage(message);
 				}			
 				
