@@ -20,7 +20,7 @@
 <%
   if(showTitle){
 %>		
-			<p class="title"><%=objectMetadata.displayName%></p>
+			<p class="title"><%=mw3.localize(objectMetadata.displayName)%></p>
 <%
   }
 %>				
@@ -51,7 +51,7 @@
  
  if(showLabel){
 %>
-<td bgcolor=white> <b><%=fd.displayName%></b> </td>
+<td bgcolor=white> <b><%=mw3.localize(fd.displayName)%></b> </td>
 
 <%}%>
 
