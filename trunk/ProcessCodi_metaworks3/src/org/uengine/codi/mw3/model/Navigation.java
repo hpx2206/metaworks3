@@ -12,19 +12,26 @@ public class Navigation {
 			this.personalPerspective = personalPerspective;
 		}
 
-	OrganizationPerspective organizationPerspective;
-
-		public OrganizationPerspective getOrganizationPerspective() {
-			return organizationPerspective;
+	OrganizationPerspectiveDept organizationPerspectiveDept;
+		public OrganizationPerspectiveDept getOrganizationPerspectiveDept() {
+			return organizationPerspectiveDept;
+		}
+		public void setOrganizationPerspectiveDept(
+				OrganizationPerspectiveDept organizationPerspectiveDept) {
+			this.organizationPerspectiveDept = organizationPerspectiveDept;
 		}
 	
-		public void setOrganizationPerspective(
-				OrganizationPerspective organizationPerspective) {
-			this.organizationPerspective = organizationPerspective;
+	OrganizationPerspectiveRole organizationPerspectiveRole;
+		public OrganizationPerspectiveRole getOrganizationPerspectiveRole() {
+			return organizationPerspectiveRole;
+		}
+	
+		public void setOrganizationPerspectiveRole(
+				OrganizationPerspectiveRole organizationPerspectiveRole) {
+			this.organizationPerspectiveRole = organizationPerspectiveRole;
 		}
 
 	ProcessPerspective processPerspective;
-
 		public ProcessPerspective getProcessPerspective() {
 			return processPerspective;
 		}
@@ -45,8 +52,6 @@ public class Navigation {
 //		}
 
 	StrategicPerspective strategicPerspective;
-		
-			
 		public StrategicPerspective getStrategicPerspective() {
 			return strategicPerspective;
 		}
@@ -59,7 +64,8 @@ public class Navigation {
 		personalPerspective = new PersonalPerspective();
 		personalPerspective.select();
 		
-		organizationPerspective = new OrganizationPerspective();
+		organizationPerspectiveDept = new OrganizationPerspectiveDept();
+		organizationPerspectiveRole = new OrganizationPerspectiveRole();
 		processPerspective = new ProcessPerspective();
 		//processStatusPerspective = new ProcessStatusPerspective();
 		

@@ -1,0 +1,16 @@
+<%
+	if(value){
+%>	
+		<div class="depth1"><span onClick="<%=methods.select.caller() %>"><%=mw3.localize("$navigation.role")%></span> <a href="javascript:<%=methods.addRole.caller()%>">[New]</a></div>
+
+<%
+		if(value.selected){
+%>
+	<div class="depth2">		
+		<%=fields.roleList.here()%>
+	</div>
+	
+<%
+		}
+	}
+%>
