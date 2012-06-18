@@ -20,8 +20,6 @@ var org_uengine_codi_mw3_admin_WebEditor = function(objectId, className) {
 org_uengine_codi_mw3_admin_WebEditor.prototype.getValue = function() {
 	
 	if(this.editor) {
-		var editorId = $('[name="EDITOR"]').attr('id');
-		
 		var editor = {
 			__className : 'org.uengine.codi.mw3.admin.WebEditor',
 			contents : this.editor.getData()
