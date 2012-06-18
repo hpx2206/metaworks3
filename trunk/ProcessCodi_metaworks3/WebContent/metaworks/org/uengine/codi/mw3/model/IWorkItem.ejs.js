@@ -6,4 +6,8 @@ var org_uengine_codi_mw3_model_IWorkItem = function(objectId, className){
 		workItem.detail();
 	}
 
+	if(workItem.type == 'memo' && workItem.extFile!=null && workItem.memo.contents=="...loading..." && !workItem.contentLoaded){
+		workItem.loadContents();
+	}
+
 }

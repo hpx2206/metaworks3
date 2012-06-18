@@ -1,5 +1,10 @@
 package org.uengine.codi.mw3.model;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 import org.codehaus.commons.compiler.CompileException;
@@ -11,6 +16,8 @@ import org.metaworks.example.ide.CompileError;
 import org.metaworks.example.ide.SourceCode;
 import org.metaworks.website.MetaworksFile;
 import org.uengine.codi.mw3.admin.WebEditor;
+import org.uengine.kernel.FormActivity;
+import org.uengine.util.UEngineUtil;
 
 public class MemoWorkItem extends WorkItem{
 	
@@ -31,15 +38,44 @@ public class MemoWorkItem extends WorkItem{
 		if(getMemo()!=null && getMemo().getContents()!=null){
 			if(getMemo().getContents().length() > 2990){
 				
-				getMemo().setContents(getMemo().getContents().substring(0, 2990) + "...");
+				String relativeFilePath = UEngineUtil.getCalendarDir() + "/memo" + getInstId() + "_" + System.currentTimeMillis() + ".html";
+				String absoluteFilePath = FormActivity.FILE_SYSTEM_DIR + relativeFilePath;
 				
+				File contentFile = new File(absoluteFilePath);
+				contentFile.getParentFile().mkdirs();
 				
+				PrintWriter fos = new PrintWriter(contentFile);
+				fos.write(getMemo().getContents());
+				fos.close();
+				
+				setExtFile(relativeFilePath);
+
+				getMemo().setContents("...loading...");
+					
 			}
 
 		}
 		
 		return super.add();
 	}
+
+	@Override
+	public void loadContents() throws Exception {
+		if(getExtFile()!=null){
+			
+			ByteArrayOutputStream bao = new ByteArrayOutputStream();
+
+			String absoluteFilePath = FormActivity.FILE_SYSTEM_DIR + getExtFile();
+
+			UEngineUtil.copyStream(new FileInputStream(absoluteFilePath), bao);
+			
+			getMemo().setContents(bao.toString());
+			setContentLoaded(true);
+
+		}
+	}
+
+	
 	
 
 	
