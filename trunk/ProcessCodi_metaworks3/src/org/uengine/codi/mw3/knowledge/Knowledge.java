@@ -2,12 +2,14 @@ package org.uengine.codi.mw3.knowledge;
 
 import org.metaworks.Refresh;
 import org.metaworks.annotation.AutowiredToClient;
+import org.metaworks.annotation.Hidden;
 import org.metaworks.website.ContentPanel;
 import org.metaworks.widget.Window;
 import org.metaworks.widget.layout.Layout;
 import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.model.ContentWindow;
 import org.uengine.codi.mw3.model.IUser;
+import org.uengine.codi.mw3.model.Locale;
 import org.uengine.codi.mw3.model.ProcessTopPanel;
 import org.uengine.codi.mw3.model.Session;
 
@@ -43,7 +45,11 @@ public class Knowledge {
 		
 		setLayout(outerLayout);		
 		
-		setPageNavigator(new PageNavigator("knowlege"));		
+		setPageNavigator(new PageNavigator("knowlege"));
+		
+		locale = new Locale();
+		locale.setLanguage(session.getEmployee().getLocale());
+		locale.load();		
 	}
 //	
 //	MashupGoogleImage mashupGoogleImage;
@@ -81,5 +87,13 @@ public class Knowledge {
 		}
 		public void setPageNavigator(PageNavigator pageNavigator) {
 			this.pageNavigator = pageNavigator;
-		}	
+		}
+		
+	Locale locale;
+		public Locale getLocale() {
+			return locale;
+		}
+		public void setLocale(Locale locale) {
+			this.locale = locale;
+		}		
 }

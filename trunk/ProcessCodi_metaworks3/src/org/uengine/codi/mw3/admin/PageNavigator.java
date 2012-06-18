@@ -45,4 +45,6 @@ public class PageNavigator {
 	public MainPanel goKnowledge() throws Exception {
 		return new MainPanel(new Knowledge(session));
 	}
+	
+	
 }
