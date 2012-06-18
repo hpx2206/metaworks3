@@ -64,39 +64,53 @@ public class InstanceListPanel {
 	//@Hidden
 	@Face(displayName="List View")
 	@ServiceMethod(inContextMenu=true)
-	public void switchToInstanceList() throws Exception{
-		this.setScheduleCalendar(null);
+	public Object[] switchToInstanceList() throws Exception{
+		PersonalPerspective personalPerspective = new PersonalPerspective();
+		personalPerspective.session = session;
+		
+		return personalPerspective.loadInstanceListPanel("allICanSee", null);
+		
+/*		this.setScheduleCalendar(null);
 		this.setKnowledge(null);
-	
+		
 		PersonalPerspective personalPerspective = new PersonalPerspective();
 		personalPerspective.session = session;
 		InstanceListPanel instanceListPanel = (InstanceListPanel) personalPerspective.loadAllICanSee()[1];
 		
 		setInstanceList(instanceListPanel.getInstanceList());
-	}
+*/	}
 
 	@ServiceMethod(inContextMenu=true)
-	public void switchToInstanceListFollowing() throws Exception{
-		this.setScheduleCalendar(null);
+	public Object[] switchToInstanceListFollowing() throws Exception{
+		PersonalPerspective personalPerspective = new PersonalPerspective();
+		personalPerspective.session = session;
+		
+		return personalPerspective.loadInstanceListPanel("all", null);		
+/*		this.setScheduleCalendar(null);
 		this.setKnowledge(null);
 	
 		PersonalPerspective personalPerspective = new PersonalPerspective();
 		personalPerspective.session = session;
 		InstanceListPanel instanceListPanel = (InstanceListPanel) personalPerspective.loadAll()[1];
 		
-		setInstanceList(instanceListPanel.getInstanceList());
+		setInstanceList(instanceListPanel.getInstanceList());*/
 	}
 
 	@ServiceMethod(inContextMenu=true)
-	public void switchToInstanceListMyToDo() throws Exception{
-		this.setScheduleCalendar(null);
+	public Object[] switchToInstanceListMyToDo() throws Exception{
+		PersonalPerspective personalPerspective = new PersonalPerspective();
+		personalPerspective.session = session;
+		
+		return personalPerspective.loadInstanceListPanel("inbox", null);		
+		
+/*		this.setScheduleCalendar(null);
 		this.setKnowledge(null);
 	
 		PersonalPerspective personalPerspective = new PersonalPerspective();
 		personalPerspective.session = session;
 		InstanceListPanel instanceListPanel = (InstanceListPanel) personalPerspective.loadInbox()[1];
 		
-		setInstanceList(instanceListPanel.getInstanceList());
+		setInstanceList(instanceListPanel.getInstanceList());*/
 	}
 
 	@Face(displayName="Knowledge View")
