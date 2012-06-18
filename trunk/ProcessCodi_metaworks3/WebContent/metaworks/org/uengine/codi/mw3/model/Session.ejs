@@ -3,6 +3,15 @@
 	
 		if(mw3.when == 'view'){
 %>
+<%
+		if(value.ux && value.ux == 'phone') {
+%>
+		<div  style="float:left;margin-right:10px; width:96px; padding-left:45px;background:url(images/waveStyle/back.gif) no-repeat;">
+			<span style="display:inline-block; line-height:37px;">To list</span>			
+		</div>
+<%
+		}
+%>
 		<div style="float:left; margin-right:15px;">
 			<span style="display:inline-block; line-height:37px;"><%=fields.employee.here() %></span>
 				 |	
@@ -12,12 +21,8 @@
 		</div>
 
 			
-<%
-		} if(value.ux && value.ux == 'phone') {
-%>
-		<div  style="float:left">
-			<a href="javascript:<%=methods.returnToList.caller()%>"><img src="images/waveStyle/back.gif"></a>
-		</div>
+
+
 <%
 		}
 	}
