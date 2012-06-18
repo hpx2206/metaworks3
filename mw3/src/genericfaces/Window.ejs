@@ -15,8 +15,7 @@
 		var maximize = objectMetadata.faceOptions && objectMetadata.faceOptions['maximize'];
 		var minimize = objectMetadata.faceOptions && objectMetadata.faceOptions['minimize'];
 		
-		// get window title (className or displayName)
-		
+		// get window title (className or displayName)		
 		var objectName; 
 		var windowTitle = null;
 
@@ -48,12 +47,26 @@
 					break;
 				}
 			}
-		}
-		
-		
+		}		
 %>
 		<div id="sm_<%=objectId%>" style="margin-top:12px; padding:0px;  display:none; float:left; width:160px; position:relative;">	
-		    <div class="boxtopleft"><span class="boxtopright"><div id="navigationTitle"><span><%if(resourceName){%><%=resources[resourceName].here()%><%}else{%><%=objectName%><%}%></span></div></span></div>
+		    <div class="boxtopleft">
+		    	<span class="boxtopright">
+		    		<div id="navigationTitle">
+		    			<span>
+				            <%if(mw3.localize(windowTitle)){%>
+				    			<%=windowTitle%>
+				    		<%}else{%>
+				    			<%if(resourceName){%>
+				    				<%=resources[resourceName].here()%>
+				    			<%}else{%>
+				    				<%=mw3.localize(objectName)%>
+				    			<%}%>
+				    		<%}%>
+		    			</span>
+		    		</div>
+		    	</span>
+		    </div>
 		    <div class="boxmiddleright">
 		        <div class="boxmiddleleft">
 
@@ -88,13 +101,13 @@
 		}
 %>		
 					<span>
-		            <%if(windowTitle){%>
+		            <%if(mw3.localize(windowTitle)){%>
 		    			<%=windowTitle%>
 		    		<%}else{%>
 		    			<%if(resourceName){%>
 		    				<%=resources[resourceName].here()%>
 		    			<%}else{%>
-		    				<%=objectName%>
+		    				<%=mw3.localize(objectName)%>
 		    			<%}%>
 		    		<%}%>
 		    		</span>

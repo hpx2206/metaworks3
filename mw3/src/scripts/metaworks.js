@@ -795,10 +795,10 @@
 						   var command = "mw3.call("+objectId+", '"+serviceMethodContext.methodName+"')";
 					   		
 						   if(serviceMethodContext.needToConfirm)
-					   			command = "if (confirm(\'Are you sure to "+serviceMethodContext.displayName+" this?\'))" + command;
+					   			command = "if (confirm(\'Are you sure to "+mw3.localize(serviceMethodContext.displayName)+" this?\'))" + command;
 					   		
 						   var menuItem = { 
-								   text: serviceMethodContext.displayName + (serviceMethodContext.keyBinding ? '(' + serviceMethodContext.keyBinding[0] + ')' : ''), 
+								   text: mw3.localize(serviceMethodContext.displayName) + (serviceMethodContext.keyBinding ? '(' + serviceMethodContext.keyBinding[0] + ')' : ''), 
 								   onclick: { fn: 
 									   function(){
 									   		eval(this._oOnclickAttributeValue.command);
@@ -2590,6 +2590,20 @@
 				
 				return name + ' ' + ver;
 			} 	
+			
+			Metaworks3.prototype.localize = function(original){
+				var message = original;
+				
+				if(message != null && message.indexOf('$')==0 && this.getMessage){
+					message = this.getMessage(message);
+				}			
+				
+				return message;
+			}
+			
+			Metaworks3.prototype.getMessage = function(message){
+				return message;
+			}
 			
 			if(!Metaworks) alert('Metaworks DWR service looks not available. Metaworks will not work');
 			var mw3 = new Metaworks3('template_caption', 'dwr_caption', Metaworks);
