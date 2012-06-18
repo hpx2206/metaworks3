@@ -113,7 +113,7 @@ public class Notification extends Database<INotification> implements INotificati
 		}
 
 	INotification list(Session session) throws Exception{
-		INotification noti =  sql("select * from bpm_noti where userId = ?userId order by inputdate desc");
+		INotification noti =  sql("select * from bpm_noti n, bpm_procinst i where userId = ?userId and i.isdeleted != 1 order by inputdate desc ");
 		noti.setUserId(session.user.getUserId());
 		noti.select();
 		
