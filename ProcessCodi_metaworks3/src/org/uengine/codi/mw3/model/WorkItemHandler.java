@@ -14,6 +14,7 @@ import org.metaworks.annotation.ServiceMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.ITool;
 import org.uengine.contexts.ComplexType;
+import org.uengine.kernel.Activity;
 import org.uengine.kernel.HumanActivity;
 import org.uengine.kernel.KeyedParameter;
 import org.uengine.kernel.NeedArrangementToSerialize;
@@ -170,17 +171,51 @@ public class WorkItemHandler implements ContextAware{
 		humanActivity = (HumanActivity) instance.getProcessDefinition()
 					.getActivity(tracingTag);
 
-		WorkList worklist = instance.getWorkList();
-		worklist.cancelWorkItem(getTaskId().toString(), new KeyedParameter[]{}, instance.getProcessTransactionContext());
+//		WorkList worklist = instance.getWorkList();
+//		worklist.cancelWorkItem(getTaskId().toString(), new KeyedParameter[]{}, instance.getProcessTransactionContext());
+//
+//		humanActivity.setStatus(instance, Activity.ACTIVITY_STOPPED)
 
+		humanActivity.stop(instance);
+		
+		processManager.applyChanges();
+		
 		CommentWorkItem cancelledHistory = new CommentWorkItem();
 		cancelledHistory.processManager = processManager;
 		cancelledHistory.session = session;
 		cancelledHistory.setInstId(new Long(getInstanceId()));
 		
-		cancelledHistory.setTitle(humanActivity.getName().getText() + " 업무를 취소했습니다.");
+		cancelledHistory.setTitle(humanActivity.getName().getText() + " task has been cancelled by me.");
 		cancelledHistory.setWriter(session.getUser());
 		cancelledHistory.add();
+		
+	}
+
+	@ServiceMethod(callByContent=true)
+	public void skip() throws Exception{
+		instance = processManager.getProcessInstance(instanceId);
+
+		humanActivity = (HumanActivity) instance.getProcessDefinition()
+					.getActivity(tracingTag);
+
+//		WorkList worklist = instance.getWorkList();
+//		worklist.cancelWorkItem(getTaskId().toString(), new KeyedParameter[]{}, instance.getProcessTransactionContext());
+//
+//		humanActivity.setStatus(instance, Activity.ACTIVITY_STOPPED)
+
+		humanActivity.skip(instance);
+		
+		processManager.applyChanges();
+		
+		CommentWorkItem cancelledHistory = new CommentWorkItem();
+		cancelledHistory.processManager = processManager;
+		cancelledHistory.session = session;
+		cancelledHistory.setInstId(new Long(getInstanceId()));
+		
+		cancelledHistory.setTitle(humanActivity.getName().getText() + " has been skipped by me.");
+		cancelledHistory.setWriter(session.getUser());
+		cancelledHistory.add();
+		
 	}
 
 	@AutowiredFromClient
