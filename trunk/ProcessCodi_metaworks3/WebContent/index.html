@@ -4,6 +4,11 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
+<meta name="viewport" content="width=320; initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="viewport" content="width=device-height; initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0; user-scalable=0;"/>
+<meta name="viewport" content="width=device-height, target-densityDpi=medium-dpi"/>
+
+
 		<!-- jquery -->
 		<link rel="stylesheet" type="text/css" href="scripts/jquery/jquery-ui-189custom/css/ui-lightness/jquery-ui-1.8.9.custom.css" />
 		<link rel="stylesheet" type="text/css" href="scripts/jquery/jquery-ui-189custom/development-bundle/themes/base/jquery.ui.all.css" />
@@ -219,6 +224,7 @@
 				mainPage = new MetaworksObject({
                     __className : "org.uengine.codi.mw3.Login",
                     metaworksContext : {when: 'edit'},
+                    rememberMe: true,
                     defId : defId
                 }, 'body');
                 
