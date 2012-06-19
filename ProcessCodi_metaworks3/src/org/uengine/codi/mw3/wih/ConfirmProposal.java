@@ -9,7 +9,7 @@ import org.metaworks.annotation.Hidden;
 import org.uengine.codi.ITool;
 import org.uengine.codi.mw3.model.IUser;
 import org.uengine.codi.mw3.model.User;
-@Face(displayName="마케팅 계획 검토")
+@Face(displayName="$RMP_TITLE")
 public class ConfirmProposal implements ContextAware, ITool , Serializable{
 
 	String instanceId;
@@ -30,7 +30,7 @@ public class ConfirmProposal implements ContextAware, ITool , Serializable{
         }
         
     boolean continueYn;
-    @Face(displayName="계획안 승인여부")
+    @Face(displayName="$RMP_APPROVAL")
 	public boolean isContinueYn() {
 		return continueYn;
 	}
@@ -48,7 +48,7 @@ public class ConfirmProposal implements ContextAware, ITool , Serializable{
 	}
 	
 	String comment;
-	@Face(displayName="코멘트", ejsPath="genericfaces/richText.ejs", options={"rows","cols"}, values={"5","80"})
+	@Face(displayName="$RMP_COMMENT", ejsPath="genericfaces/richText.ejs", options={"rows","cols"}, values={"5","80"})
 	public String getComment() {
 		return comment;
 	}
@@ -58,7 +58,7 @@ public class ConfirmProposal implements ContextAware, ITool , Serializable{
 
 	IUser rightPerson;
 
-	@Face(displayName="담당자")
+	@Face(displayName="$RMP_CONTACT")
 	 public IUser getRightPerson() {
 		 return rightPerson;
 	 }

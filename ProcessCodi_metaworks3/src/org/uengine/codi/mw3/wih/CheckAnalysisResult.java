@@ -9,7 +9,7 @@ import org.uengine.codi.ITool;
 import org.uengine.codi.mw3.model.IUser;
 import org.uengine.codi.mw3.model.User;
 
-@Face(displayName="분석결과확인")
+@Face(displayName="$CAR_TITLE")
 public class CheckAnalysisResult implements ITool , Serializable{
 
 	String instanceId;
@@ -30,7 +30,7 @@ public class CheckAnalysisResult implements ITool , Serializable{
         }
         
     boolean compYn;
-    @Face(displayName="계속 진행 여부")
+    @Face(displayName="$CAR_APPROVAL")
     public boolean isCompYn() {
 		return compYn;
 	}
@@ -48,7 +48,7 @@ public class CheckAnalysisResult implements ITool , Serializable{
 	}
 	
 	String comment;
-	@Face(displayName="코멘트", ejsPath="genericfaces/richText.ejs", options={"rows","cols"}, values={"5","80"})
+	@Face(displayName="$CAR_COMMENT", ejsPath="genericfaces/richText.ejs", options={"rows","cols"}, values={"5","80"})
 	public String getComment() {
 		return comment;
 	}

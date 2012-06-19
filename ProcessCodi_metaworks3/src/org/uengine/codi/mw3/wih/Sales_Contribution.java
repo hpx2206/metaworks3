@@ -51,7 +51,7 @@ public class Sales_Contribution implements ITool , Serializable {
 	
 	String special_contents;
 	
-	@Face(displayName="기여도 평가")
+	@Face(displayName="$SALESCONTRIBUTION_CONTRIBUTION_EVALUATION")
 	public String getContribution_evaluation() {
 		return contribution_evaluation;
 	}
@@ -59,7 +59,7 @@ public class Sales_Contribution implements ITool , Serializable {
 		this.contribution_evaluation = contribution_evaluation;
 	}
 	
-	@Face(displayName="기타 특이사항")
+	@Face(displayName="$SALESCONTRIBUTION_SPECIAL_CONTENTS")
 	public String getSpecial_contents() {
 		return special_contents;
 	}
