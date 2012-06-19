@@ -51,7 +51,7 @@ public class Sales_TechSupportCheck implements ITool , Serializable {
 	
 	String special_contents;
 	
-	@Face(displayName="기술지원 내역")
+	@Face(displayName="$SALESTECHSUPPORTCHECK_TECCHSUPPORT_CONTENTS")
 	public String getTechSupport_contents() {
 		return techSupport_contents;
 	}
@@ -59,7 +59,7 @@ public class Sales_TechSupportCheck implements ITool , Serializable {
 		this.techSupport_contents = techSupport_contents;
 	}
 	
-	@Face(displayName="기타 특이사항")
+	@Face(displayName="$SALESTECHSUPPORTCHECK_SPECIAL_CONTENTS")
 	public String getSpecial_contents() {
 		return special_contents;
 	}

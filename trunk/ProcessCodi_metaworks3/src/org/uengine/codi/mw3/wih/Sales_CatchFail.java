@@ -49,7 +49,7 @@ public class Sales_CatchFail implements ITool , Serializable {
 	
 	String catchFail_reason;
 	
-	@Face(displayName="수주 종료 원인")
+	@Face(displayName="$SALESCATCHFAIL_CATCHFAIL_REASON")
 	public String getCatchFail_reason() {
 		return catchFail_reason;
 	}

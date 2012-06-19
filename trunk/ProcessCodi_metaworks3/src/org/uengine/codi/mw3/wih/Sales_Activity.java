@@ -63,7 +63,7 @@ public class Sales_Activity implements ITool , Serializable {
 	
 	String special_contents;
 	
-	@Face(displayName="영업활동 중 제안/견적/발주/계약에 관련된 내용")
+	@Face(displayName="$SALESACTIVITY_ACTIVITY_CONTENTS")
 	public String getActivity_contents() {
 		return activity_contents;
 	}
@@ -71,7 +71,7 @@ public class Sales_Activity implements ITool , Serializable {
 		this.activity_contents = activity_contents;
 	}
 	
-	@Face(displayName="제안 관련 문서")
+	@Face(displayName="$SALESACTIVITY_SUGESSION_FILE")
 	public String getSugession_file() {
 		return sugession_file;
 	}
@@ -79,7 +79,7 @@ public class Sales_Activity implements ITool , Serializable {
 		this.sugession_file = sugession_file;
 	}
 	
-	@Face(displayName="견적 관련 문서")
+	@Face(displayName="$SALESACTIVITY_ESTIMATE_FILE")
 	public String getEstimate_file() {
 		return estimate_file;
 	}
@@ -87,7 +87,7 @@ public class Sales_Activity implements ITool , Serializable {
 		this.estimate_file = estimate_file;
 	}
 	
-	@Face(displayName="발주서 문서")
+	@Face(displayName="$SALESACTIVITY_FAVORITE_FILE")
 	public String getFavorite_file() {
 		return favorite_file;
 	}
@@ -95,7 +95,7 @@ public class Sales_Activity implements ITool , Serializable {
 		this.favorite_file = favorite_file;
 	}
 		
-	@Face(displayName="계약 관련 문서")
+	@Face(displayName="$SALESACTIVITY_CONTACT_FILE")
 	public String getContact_file() {
 		return contact_file;
 	}
@@ -103,7 +103,7 @@ public class Sales_Activity implements ITool , Serializable {
 		this.contact_file = contact_file;
 	}
 	
-	@Face(displayName="영업활동 소요경비")
+	@Face(displayName="$SALESACTIVITY_SPENT_EXPENSES")
 	public String getSpent_expenses() {
 		return spent_expenses;
 	}
@@ -111,7 +111,7 @@ public class Sales_Activity implements ITool , Serializable {
 		this.spent_expenses = spent_expenses;
 	}
 	
-	@Face(displayName="*검토 요청(1:검토요청, 2:수주종료)")
+	@Face(displayName="$SALESACTIVITY_REQUEST_CHECK")
 	public String getRequest_check() {
 		return request_check;
 	}
@@ -119,7 +119,7 @@ public class Sales_Activity implements ITool , Serializable {
 		this.request_check = request_check;
 	}
 	
-	@Face(displayName="기타 특이사항")
+	@Face(displayName="$SALESACTIVITY_SPECIAL_CONTENTS")
 	public String getSpecial_contents() {
 		return special_contents;
 	}

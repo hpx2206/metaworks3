@@ -53,7 +53,7 @@ public class Sales_CatchSuccess implements ITool , Serializable {
 	
 	String special_contents;
 	
-	@Face(displayName="수주 성공원인")
+	@Face(displayName="$SALESCARCHSUCCESS_CATCHSUCCESS_REASON")
 	public String getCatchSuccess_reason() {
 		return catchSuccess_reason;
 	}
@@ -61,7 +61,7 @@ public class Sales_CatchSuccess implements ITool , Serializable {
 		this.catchSuccess_reason = catchSuccess_reason;
 	}
 	
-	@Face(displayName="손익 계산서")
+	@Face(displayName="$SALESCARCHSUCCESS_INCOME_STATEMENT")
 	public String getIncome_statement() {
 		return income_statement;
 	}
@@ -69,7 +69,7 @@ public class Sales_CatchSuccess implements ITool , Serializable {
 		this.income_statement = income_statement;
 	}
 	
-	@Face(displayName="기타 특이사항")
+	@Face(displayName="$SALESCARCHSUCCESS_SPECIAL_CONTENTS")
 	public String getSpecial_contents() {
 		return special_contents;
 	}

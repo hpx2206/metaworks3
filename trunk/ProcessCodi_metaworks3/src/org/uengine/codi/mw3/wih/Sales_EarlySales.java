@@ -72,7 +72,7 @@ public class Sales_EarlySales implements ITool , Serializable {
 	
 	String etc;
 	
-	@Face(displayName="제품/서비스 명")
+	@Face(displayName="$SALESEARLYSALES_SERVICENAME")
 	public String getServiceName() {
 		return serviceName;
 	}
@@ -80,7 +80,7 @@ public class Sales_EarlySales implements ITool , Serializable {
 		this.serviceName = serviceName;
 	}
 	
-	@Face(displayName="업체명")
+	@Face(displayName="$SALESEARLYSALES_BASECOMPANY_NAME")
 	public String getBase_companyName() {
 		return base_companyName;
 	}
@@ -88,7 +88,7 @@ public class Sales_EarlySales implements ITool , Serializable {
 		this.base_companyName = base_companyName;
 	}
 	
-	@Face(displayName="담당자/직위")
+	@Face(displayName="$SALESEARLYSALES_CONTACT")
 	public String getBase_position() {
 		return base_position;
 	}
@@ -96,7 +96,7 @@ public class Sales_EarlySales implements ITool , Serializable {
 		this.base_position = base_position;
 	}
 	
-	@Face(displayName="E-mail")
+	@Face(displayName="$SALESEARLYSALES_EMAIL")
 	public String getBase_email() {
 		return base_email;
 	}
@@ -104,7 +104,7 @@ public class Sales_EarlySales implements ITool , Serializable {
 		this.base_email = base_email;
 	}
 	
-	@Face(displayName="Mobile/Tel")
+	@Face(displayName="$SALESEARLYSALES_MOBILE_TEL")
 	public String getBase_mobile() {
 		return base_mobile;
 	}
@@ -112,7 +112,7 @@ public class Sales_EarlySales implements ITool , Serializable {
 		this.base_mobile = base_mobile;
 	}
 	
-	@Face(displayName="Fax")
+	@Face(displayName="$SALESEARLYSALES_FAX")
 	public String getBase_fax() {
 		return base_fax;
 	}
@@ -120,7 +120,7 @@ public class Sales_EarlySales implements ITool , Serializable {
 		this.base_fax = base_fax;
 	}
 	
-	@Face(displayName="업체분류")
+	@Face(displayName="$SALESEARLYSALES_COMPANY_TYPE")
 	public String getDist_company() {
 		return dist_company;
 	}
@@ -128,7 +128,7 @@ public class Sales_EarlySales implements ITool , Serializable {
 		this.dist_company = dist_company;
 	}
 	
-	@Face(displayName="영업 Contact Point")
+	@Face(displayName="$SALESEARLYSALES_CONTACT_POINT")
 	public String getContact_point() {
 		return contact_point;
 	}
@@ -136,7 +136,7 @@ public class Sales_EarlySales implements ITool , Serializable {
 		this.contact_point = contact_point;
 	}
 	
-	@Face(displayName="키맨 정보")
+	@Face(displayName="$SALESEARLYSALES_KEY_MAN")
 	public String getKeyman_info() {
 		return keyman_info;
 	}
@@ -144,7 +144,7 @@ public class Sales_EarlySales implements ITool , Serializable {
 		this.keyman_info = keyman_info;
 	}
 	
-	@Face(displayName="영업 담당자")
+	@Face(displayName="$SALESEARLYSALES_SALES_CONTACT")
 	public String getSales_right_person() {
 		return sales_right_person;
 	}
@@ -152,7 +152,7 @@ public class Sales_EarlySales implements ITool , Serializable {
 		this.sales_right_person = sales_right_person;
 	}
 	
-	@Face(displayName="기술지원 담당자")
+	@Face(displayName="$SALESEARLYSALES_TECHNICAL_SUPPORT")
 	public String getTech_right_person() {
 		return tech_right_person;
 	}
@@ -160,7 +160,7 @@ public class Sales_EarlySales implements ITool , Serializable {
 		this.tech_right_person = tech_right_person;
 	}
 	
-	@Face(displayName="비고")
+	@Face(displayName="$SALESEARLYSALES_COMMENT")
 	public String getEtc() {
 		return etc;
 	}
