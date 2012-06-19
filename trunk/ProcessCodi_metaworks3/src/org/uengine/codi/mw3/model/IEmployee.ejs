@@ -36,13 +36,13 @@ if(value){
 			%>
 				<img id="userPicture_<%=objectId %>" onerror="<%=onErrorImg %>" src="<%=portrait %>" width="30" height="30">
 				<%=fields.imageFile.here() %>
-				ID :<%=value.empCode %>
-				NAME : <%=fields.empName.here() %>
-				Dept : <%=fields.partName.here() %>(<%value.partCode %>)
-				Position : <%=fields.jikName.here() %>
-				Phone : <%=fields.mobileNo.here() %>
-				Email : <%=fields.email.here() %>
-				Locale : <%=fields.locale.here() %>
+				<%=mw3.localize("$Id")%> :<%=value.empCode %>
+				<%=mw3.localize("$Name")%> : <%=fields.empName.here() %>
+				<%=mw3.localize("$Dept")%> : <%=fields.partName.here() %>(<%value.partCode %>)
+				<%=mw3.localize("$Position")%> : <%=fields.jikName.here() %>
+				<%=mw3.localize("$Phone")%> : <%=fields.mobileNo.here() %>
+				<%=mw3.localize("$Email")%> : <%=fields.email.here() %>
+				<%=mw3.localize("$Language")%> : <%=fields.locale.here() %>
 			<%
 			} else if(mw3.when == 'new') {
 			%>	
@@ -210,22 +210,22 @@ if(value){
 			<dl class="lst_type2">
 				<dt class="tit">
 					<div id="popupInfoNameWih"><b><%=value.empName %></b></div>
-					<div class="infoSub"><span>ID :</span><span><%=value.empCode %></span></div>
+					<div class="infoSub"><span><%=mw3.localize("$Id")%> :</span><span><%=value.empCode %></span></div>
 <%
 		if(mw3.when == 'edit'){
 %>							
-					<div class="infoSub"><span>Password : </span><span><%=fields.password.here() %></span></div>
-					<div class="infoSub"><span>Re-Password : </span><span><%=fields.confirmPassword.here() %></span></div>
+					<div class="infoSub"><span><%=mw3.localize("$Password")%> : </span><span><%=fields.password.here() %></span></div>
+					<div class="infoSub"><span><%=mw3.localize("$Re-Password")%> : </span><span><%=fields.confirmPassword.here() %></span></div>
 <%
 		}
 %>							
-					<div class="infoSub"><span>Dept : </span><span><%=value.partName %>(<%value.partCode %>)</span></div>
-					<div class="infoSub"><span>Position : </span><span><%=value.jikName %></span></div>
-					<div class="infoSub"><span>Phone : </span><span><%=fields.mobileNo.here() %></span></div>
-					<div class="infoSub"><span>Email : </span><span><%=fields.email.here() %></span></div>
-					<div class="infoSub"><span>Locale : </span><span><%=fields.locale.here() %></span></div>
-					<div class="infoSub"><span>Prefer UX style : </span><span><%=fields.preferUX.here() %></span></div>
-					<div class="infoSub"><span>Prefer Mobile style : </span><span><%=fields.preferMob.here() %></span></div>
+					<div class="infoSub"><span><%=mw3.localize("$Dept")%> : </span><span><%=value.partName %>(<%value.partCode %>)</span></div>
+					<div class="infoSub"><span><%=mw3.localize("$Position")%> : </span><span><%=value.jikName %></span></div>
+					<div class="infoSub"><span><%=mw3.localize("$Phone")%> : </span><span><%=fields.mobileNo.here() %></span></div>
+					<div class="infoSub"><span><%=mw3.localize("$Email")%> : </span><span><%=fields.email.here() %></span></div>
+					<div class="infoSub"><span><%=mw3.localize("$Language")%> : </span><span><%=fields.locale.here() %></span></div>
+					<div class="infoSub"><span><%=mw3.localize("$PreferUX")%> : </span><span><%=fields.preferUX.here() %></span></div>
+					<div class="infoSub"><span><%=mw3.localize("$PreferMob")%> : </span><span><%=fields.preferMob.here() %></span></div>
 					<div class="infoSub"><span><%=fields.imageFile.here() %>&nbsp;</span></div>
 				</dt>
 				<dd class="photo2">

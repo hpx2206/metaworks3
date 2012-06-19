@@ -42,7 +42,7 @@ public class NewInstancePanel implements ContextAware {
 		}
 
 	String securityLevel;
-	@Range(options={"Open to intranet (normal)", "Open for followers only (most closed)", "Open to my public SNS (most open)"}, 
+	@Range(options={"$Privacy.Normal", "$Privacy.OnlyFollowers", "$Privacy.Public"}, 
 			values={"0", "1", "2"})	
 		public String getSecurityLevel() {
 			return securityLevel;
