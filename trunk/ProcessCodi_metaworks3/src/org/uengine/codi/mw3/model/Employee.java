@@ -180,14 +180,13 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 				getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 				return emp;
 			} else {
-				errorMessage = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color=blue>Wrong Password! forgot?</font>";
+				errorMessage = "<font color=blue>Wrong Password! forgot?</font>";				
 			}
 		} else {
-			errorMessage = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color=blue>There's no such ID. Please subscribe.</font>";
+			errorMessage = "<font color=blue>There's no such ID. Please subscribe.</font>";
 		}
-
-		getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
-		throw new Exception(errorMessage);
+		
+		throw new Exception(errorMessage);		
 	}
 
 	@Override
