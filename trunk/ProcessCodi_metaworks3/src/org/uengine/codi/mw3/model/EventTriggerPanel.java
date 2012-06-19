@@ -33,7 +33,7 @@ public class EventTriggerPanel {
 	}
 	
 	ArrayList<EventTrigger> eventTriggers;
-	@Face(options="horizontal", values="true")
+	@Face(options="alignment", values="horizontal")
 		public ArrayList<EventTrigger> getEventTriggers() {
 			return eventTriggers;
 		}

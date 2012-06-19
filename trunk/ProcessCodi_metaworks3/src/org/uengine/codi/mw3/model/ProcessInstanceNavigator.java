@@ -1,8 +1,12 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.annotation.AutowiredFromClient;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 public class ProcessInstanceNavigator {
+	
+	@AutowiredFromClient
+	public Session session;
 	
 	public void load(String instanceId) throws Exception{
 		Instance instance = new Instance();
