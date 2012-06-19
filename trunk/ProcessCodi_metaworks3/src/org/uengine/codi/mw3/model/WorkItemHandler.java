@@ -248,7 +248,7 @@ public class WorkItemHandler implements ContextAware{
 
 		if (!humanActivity.getActualMapping(instance).getEndpoint()
 				.equals(session.getUser().getUserId())) {
-			throw new Exception("본 건을 처리완료할 권한이 없네요...");
+			throw new Exception("$NotPermittedToComplete");
 
 		}
 

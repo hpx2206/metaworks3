@@ -52,7 +52,7 @@ public class InstanceListPanel {
 	@Face(displayName="$Calendar")
 	@ServiceMethod(inContextMenu=true)
 //	@Test(scenario="first", starter=true, instruction="창을 닫으시고, '우측클릭 > Calendar' 를 클릭하시면 내가 참여하고 있는 목록을 달력으로 볼 수 있습니다.", next="autowiredObject.org.uengine.codi.mw3.model.ContactListPanel.chat()")
-	@Test(scenario="first", starter=true, instruction="창을 닫으시고, '우측클릭 > Calendar' 를 클릭하시면 내가 참여하고 있는 목록을 달력으로 볼 수 있습니다.", next="autowiredObject.org.uengine.codi.mw3.admin.PageNavigator.goKnowledge()")	
+	@Test(scenario="first", instruction="창을 닫으시고, '우측클릭 > Calendar' 를 클릭하시면 내가 참여하고 있는 목록을 달력으로 볼 수 있습니다.", next="autowiredObject.org.uengine.codi.mw3.admin.PageNavigator.goKnowledge()")	
 	public void switchToScheduleCalendar() throws Exception{
 		this.setInstanceList(null);
 		this.setKnowledge(null);
@@ -117,7 +117,7 @@ public class InstanceListPanel {
 
 	@Face(displayName="$Strategic")
 	@ServiceMethod(inContextMenu=true)
-	@Test(scenario="first", starter=true, instruction="$first.SwitchToKnowledge", next="autowiredObject.org.uengine.codi.mw3.knowledge.WfPanel.newNode()")
+	@Test(scenario="first", instruction="$first.SwitchToKnowledge", next="autowiredObject.org.uengine.codi.mw3.knowledge.WfPanel.newNode()")
 	public void switchToKnowledge() throws Exception{
 		this.setInstanceList(null);
 		this.setScheduleCalendar(null);
@@ -136,7 +136,7 @@ public class InstanceListPanel {
 		}
 	
 
-	@Test(scenario="first", instruction="$first.NewInstance", next="autowiredObject.org.uengine.codi.mw3.model.IProcessMap@IssueManagement.process.initiate()")
+	@Test(scenario="first", starter=true, instruction="$first.NewInstance", next="autowiredObject.org.uengine.codi.mw3.model.IProcessMap@IssueManagement.process.initiate()")
 	@ServiceMethod
 	public ContentWindow newInstance() throws Exception{
 		NewInstancePanel newInstancePanel =  new NewInstancePanel();
