@@ -1460,16 +1460,10 @@
 			}
 			
 			Metaworks3.prototype.startProgress = function(){				
-				//$('body').prepend('<div id=\"mw3_progress\" style=\"position:absolute; width:100%; height:100%; cursor:wait; z-index:9999999\">');
 			}
 
 			Metaworks3.prototype.endProgress = function(){
-/*				$('#mw3_progress').css("cursor","default");
-				
-				setTimeout(function(){
-					$('#mw3_progress').remove();
-				}, 500);
-*/			}
+			}
 
 			Metaworks3.prototype.startLoading = function(objId){
 				var infoDivId = "#"+this._getInfoDivId(objId);
@@ -1851,9 +1845,17 @@
 			}
 			
 			Metaworks3.prototype.showError = function(objId, message, methodName){
-				var infoDivId = "#"+this._getInfoDivId(objId);
-
-				$(infoDivId).html("<center><font color=red> " + message + "<input type=button onclick=\"mw3.getObject('" + objId + "')."+ methodName + "()\" value='RETRY'></font></center>");
+				//var infoDivId = "#"+this._getInfoDivId(objId);				
+				//$(infoDivId).html("<center><font color=red> " + message + "<input type=button onclick=\"mw3.getObject('" + objId + "')."+ methodName + "()\" value='RETRY'></font></center>");
+				
+				if( this.getFaceHelper(objId) && this.getFaceHelper(objId).endLoading)
+					this.getFaceHelper(objId).endLoading();	
+				else
+					mw3.endLoading();
+			
+				$.msg({ bgPath : this.base + '/images/',
+					    content : "<font color=red> " + message + "<input type=button onclick=\"mw3.getObject('" + objId + "')."+ methodName + "()\" value='RETRY'></font>"	 
+				});
 			}
 			
 			Metaworks3.prototype.showValidation = function(objId, isValid, message){
