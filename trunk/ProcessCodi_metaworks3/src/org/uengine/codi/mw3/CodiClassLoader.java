@@ -535,7 +535,7 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
 
 		//TODO: for guest users, sourceCodeBase to the main committer is right answer.
 		if(sourceCodeBase==null) {
-			String codebase = System.getProperty("codebase","codebase/");
+			String codebase = GlobalContext.getPropertyString("codebase","codebase/");
 			if(!codebase.endsWith("/"))
 				codebase = codebase + "/";
 			
