@@ -8,11 +8,8 @@ import javax.servlet.http.HttpSession;
 import org.directwebremoting.WebContext;
 import org.directwebremoting.WebContextFactory;
 import org.metaworks.MetaworksContext;
-import org.metaworks.annotation.Available;
-import org.metaworks.annotation.Face;
-import org.metaworks.annotation.Hidden;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Id;
-import org.metaworks.annotation.NonEditable;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.widget.ModalWindow;
@@ -24,6 +21,7 @@ import org.uengine.codi.mw3.model.ICompany;
 import org.uengine.codi.mw3.model.IDept;
 import org.uengine.codi.mw3.model.IEmployee;
 import org.uengine.codi.mw3.model.IUser;
+import org.uengine.codi.mw3.model.Locale;
 import org.uengine.codi.mw3.model.Main;
 import org.uengine.codi.mw3.model.PortraitImageFile;
 import org.uengine.codi.mw3.model.Session;
@@ -111,7 +109,7 @@ public class Login extends Database<ILogin> implements ILogin{
 			this.errorMessage = errorMessage;
 		}
 
-	private Session loginService() throws Exception {
+	public Session loginService() throws Exception {
 		
 		Session session = new Session();
 		if (getUserId() != null && getPassword() != null) {
@@ -230,7 +228,7 @@ public class Login extends Database<ILogin> implements ILogin{
 		return window;
 	}
 		
-	public Object login() throws Exception {
+	public Object[] login() throws Exception {
 
 
 		if(isFacebookSSO){
@@ -252,7 +250,7 @@ public class Login extends Database<ILogin> implements ILogin{
 	*/		
 			//return new MainPanel(new Knowledge(loginUser));
 //			return new MainPanel(new IDE(session));
-			return new MainPanel(new Main(session));
+			return new Object[]{new MainPanel(new Main(session))};
 			
 		}else{
 			Session session = loginService();
@@ -269,11 +267,9 @@ public class Login extends Database<ILogin> implements ILogin{
 			session.setMetaworksContext(getMetaworksContext());
 			session.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 
-//			Locale locale = new Locale();
-//			locale.setSession(session);
-//			locale.load();
-//
-//			return locale;
+			Locale locale = new Locale();
+			locale.setLanguage(session.getEmployee().getLocale());
+			locale.load();
 			
 			if (getMetaworksContext().getWhen().equals(MetaworksContext.WHEN_VIEW)){
 				
@@ -284,15 +280,11 @@ public class Login extends Database<ILogin> implements ILogin{
 				
 				storeIntoServerSession();
 
-				return mainPanel;
+				return new Object[]{locale, mainPanel};
 			} else {
-				return this;
+				return new Object[]{this};
 			}
-			
 		}
-
-	
-		
 	}
 
 	

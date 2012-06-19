@@ -47,50 +47,73 @@ if(value){
 			} else if(mw3.when == 'new') {
 			%>	
 				<ul id="green_and_orange_step_menu">
-					<li class="frist ">STEP1<em>Basic Information</em></li>
-				    <li>STEP2<em>Social Identity</em><span></span></li>
+					<li class="frist">STEP1<em>Choose language</em></li>
+				    <li>STEP2<em>Basic Informationy</em><span></span></li>
+				    <li class="last">STEP3<em>Preferences</em><span></span></li>
+				</ul>		
+				<ul>
+					<li class="checkStyle">							
+						<div class="infoSub">Language :<%=fields.locale.here({when:'new'}) %></div>							
+						<div style="clear"></div>							
+			  		</li>    
+			 	</ul>
+			 	
+				<div id="btnline">
+					<ul>	
+						<li><a id="wBtn" href="javascript:<%=methods.subscribeStep1.caller()%>"><span>Next</span></a></li>
+					</ul>
+				</div>				 	
+			<%
+			} else if(mw3.when == 'new2') {
+			
+				value.metaworksContext.when='new'; //TODO: I don't know why....
+				
+			%>
+				<ul id="green_and_orange_step_menu">
+					<li class="frist fdone">STEP1<em>Basic Information</em></li>
+				    <li class="inprogress">STEP2<em>Social Identity</em><span></span></li>
 				    <li class="last">STEP3<em>Preferences</em><span></span></li>
 				</ul>
 				<div class="form_table">
 					<table border="1" cellspacing="0" summary="">
 						<tbody>
 						<tr>
-							<th scope="row">ID</th>
+							<th scope="row"><%=mw3.localize("$Id")%></th>
 							<td>
 								<div class="item">
-									<span style="float:left;"><%=fields.empCode.here() %></span><a style="margin-left:10px;" id="wBtn" href="javascript:<%=methods.checkEmpCode.caller()%>"><span>Check ID</span></a>
+									<span style="float:left;"><%=fields.empCode.here({when:'new'}) %></span><a style="margin-left:10px;" id="wBtn" href="javascript:<%=methods.checkEmpCode.caller()%>"><span>Check ID</span></a>
 								</div>
 							</td>
 						</tr>
 						<tr>
-							<th scope="row">Your Full Name</th>
+							<th scope="row"><%=mw3.localize("$Name")%></th>
 							<td>
 								<div class="item">
-									<%=fields.empName.here() %>
+									<%=fields.empName.here({when:'new'}) %>
 								</div>
 							</td>
 						</tr>
 						<tr>
-							<th scope="row">Email</th>
+							<th scope="row"><%=mw3.localize("$Email")%></th>
 							<td>
 								<div class="item">
-									<%=fields.email.here() %>
+									<%=fields.email.here({when:'new'}) %>
 								</div>
 							</td>
 						</tr>
 						<tr>
-							<th scope="row">Password</th>
+							<th scope="row"><%=mw3.localize("$Password")%></th>
 							<td>
 								<div class="item">
-									<%=fields.password.here() %>
+									<%=fields.password.here({when:'new'}) %>
 								</div>
 							</td>
 						</tr>
 						<tr>
-							<th scope="row">Re-enter Password</th>
+							<th scope="row"><%=mw3.localize("$Re-Password")%></th>
 							<td>
 								<div class="item">
-									<%=fields.confirmPassword.here() %>
+									<%=fields.confirmPassword.here({when:'new'}) %>
 								</div>
 							</td>
 						</tr>
@@ -101,32 +124,10 @@ if(value){
 			 	
 				<div id="btnline">
 					<ul>	
-						<li><a id="wBtn" href="javascript:<%=methods.subscribeStep1.caller()%>"><span>Next</span></a></li>
-					</ul>
-				</div>			 	
-			<%
-			} else if(mw3.when == 'new2') {
-			
-				value.metaworksContext.when='new'; //TODO: I don't know why....
-				
-			%>	
-				<ul id="green_and_orange_step_menu">
-					<li class="frist fdone">STEP1<em>Basic Information</em></li>
-				    <li class="inprogress">STEP2 <em>Social Identity</em><span></span></li>
-				    <li class="last">STEP3<em>Preferences</em><span></span></li>
-				</ul>		
-				<ul> 
-					<li>
-								<div class="infoSub"><span>Very nice portrait of you:<%=fields.imageFile.here() %>&nbsp;</span></div>
-								
-			  		</li>    
-			 	</ul>
-			 	
-				<div id="btnline" style="padding-top:8px; border-top:1px solid #ccc;">
-					<ul>	
 						<li><a id="wBtn" href="javascript:<%=methods.subscribeStep2.caller()%>"><span>Next</span></a></li>
 					</ul>
-				</div>			 	
+				</div>				
+		 	
 			<%
 			} else if(mw3.when == 'new3') {
 				
@@ -138,7 +139,7 @@ if(value){
 				</ul>		
 				<ul>
 					<li class="checkStyle">
-							<div class="infoSub">Prefer UX Style</div>
+							<div class="infoSub"><%=mw3.localize("$PreferUX")%></div>
 							
 							<span>	
 								<img src="images/signIn/twitter_com.png" width="150">
@@ -156,11 +157,8 @@ if(value){
 								<img src="images/signIn/wave_com.png" width="150">
 								<input type="radio" id="uxStyle_<%=objectId%>" name="uxStyle_<%=objectId%>" value="wave">I love GoogleWave <br><b>(Super Complex)</b>
 							</span>
-							<div style="clear"></div>
-							<div class="infoSub">Language :<%=fields.locale.here({when:'new'}) %></div>
 							
-							<div style="clear"></div>
-							
+							<div style="clear"></div>							
 			  		</li>    
 			 	</ul>
 			 	

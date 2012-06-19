@@ -291,11 +291,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	}	
 	
 	@Override
-	public Object[] saveEmployeeInfo() throws Exception {
-		if(!getPassword().equals(getConfirmPassword())){
-			throw new Exception("Re-entered password doesn't match");
-		}
-		
+	public Object[] saveEmployeeInfo() throws Exception {		
 		if (getMetaworksContext().getWhen().startsWith(MetaworksContext.WHEN_NEW)) {
 			this.setIsDeleted("0");
 			this.setGlobalCom("uEngine");
@@ -367,13 +363,21 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 			throw new Exception("이미 존재하는 empCode 입니다.");
 	}
 	@Override
-	public Object subscribeStep1() throws Exception {
-		getMetaworksContext().setWhen("new3");
+	public Object[] subscribeStep1() throws Exception {
+		Locale locale = new Locale();
+		locale.setLanguage(this.getLocale());
+		locale.load();
+		
+		getMetaworksContext().setWhen("new2");
 
-		return this;
+		return new Object[]{locale, this};
 	}
 	@Override
 	public Object subscribeStep2() throws Exception {
+		if(!getPassword().equals(getConfirmPassword())){
+			throw new Exception("Re-entered password doesn't match");
+		}
+
 		getMetaworksContext().setWhen("new3");
 
 		return this;
