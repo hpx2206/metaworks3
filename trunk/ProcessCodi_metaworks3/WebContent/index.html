@@ -201,6 +201,17 @@
 					
 		 		}
 		 		
+		 		mw3.showError = function(objId, message, methodName){
+					if( this.getFaceHelper(objId) && this.getFaceHelper(objId).endLoading)
+						this.getFaceHelper(objId).endLoading();	
+					else
+						mw3.endLoading();
+					
+					$.msg({ bgPath : this.base + '/images/',
+						    content : "<font color=red> " + message + "</font>"
+					});
+		 		}
+		 		
 		 		mw3.getMessage = function(key, defaultValue){
 		 			var localeHandler = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Locale");
 		 			
