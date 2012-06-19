@@ -138,13 +138,7 @@ public class Main {
 
 			setPageNavigator(new PageNavigator("process"));	
 		}
-		
-		
-		locale = new Locale();
-		locale.setLanguage(session.getEmployee().getLocale());
-		locale.load();
 
-		// this.logo = new Logo();
 	}
 
 	private ContentWindow createNewInstancePanel(Session session)
@@ -205,14 +199,6 @@ public class Main {
 		}
 		public void setLogo(Logo logo) {
 			this.logo = logo;
-		}
-		
-	Locale locale;
-		public Locale getLocale() {
-			return locale;
-		}
-		public void setLocale(Locale locale) {
-			this.locale = locale;
 		}		
 }
 

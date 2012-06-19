@@ -45,11 +45,7 @@ public class Knowledge {
 		
 		setLayout(outerLayout);		
 		
-		setPageNavigator(new PageNavigator("knowlege"));
-		
-		locale = new Locale();
-		locale.setLanguage(session.getEmployee().getLocale());
-		locale.load();		
+		setPageNavigator(new PageNavigator("knowlege"));	
 	}
 //	
 //	MashupGoogleImage mashupGoogleImage;
@@ -87,13 +83,5 @@ public class Knowledge {
 		}
 		public void setPageNavigator(PageNavigator pageNavigator) {
 			this.pageNavigator = pageNavigator;
-		}
-		
-	Locale locale;
-		public Locale getLocale() {
-			return locale;
-		}
-		public void setLocale(Locale locale) {
-			this.locale = locale;
-		}		
+		}	
 }

@@ -133,8 +133,8 @@ public interface IEmployee extends IDAO {
 	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_VIEW)
 	public Object editEmployeeInfo() throws Exception;
 	
-	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_NEW, validate=true)
-	public Object subscribeStep1() throws Exception;
+	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_NEW)
+	public Object[] subscribeStep1() throws Exception;
 	
 	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_NEW, validate=true)
 	public Object subscribeStep2() throws Exception;
