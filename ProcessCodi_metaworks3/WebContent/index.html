@@ -205,6 +205,11 @@
 		 			return key;		
 		 		}
 				
+		 		
+				var locatePage = new MetaworksObject({
+                    __className : "org.uengine.codi.mw3.model.Locale"
+                }, 'body');
+					
 				mainPage = new MetaworksObject({
                     __className : "org.uengine.codi.mw3.Login",
                     metaworksContext : {when: 'edit'},
