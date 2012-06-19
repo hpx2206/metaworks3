@@ -120,6 +120,7 @@ public interface IWfNode extends IDAO {
 	public Object[] add() throws Exception;
 	
 	@ServiceMethod(callByContent=true, except={"childNode", "focus"}, target="popup", inContextMenu=true)
+	@Face(displayName="$MakeAsTemplate")
 	public Object[] makeAsTemplate() throws Exception;
 	
 	@ServiceMethod(callByContent=true, except={"childNode", "focus"}, target="popup")
@@ -129,6 +130,7 @@ public interface IWfNode extends IDAO {
 	public Object[] indent() throws Exception;
 	
 	@ServiceMethod(inContextMenu=true, keyBinding="Ctrl+Down")
+	@Face(displayName="$DrillInto")
 	public WfPanel drillInto() throws Exception;
 	
 	@ServiceMethod(callByContent=true, except={"childNode", "focus"}, target="popup")
@@ -142,17 +144,20 @@ public interface IWfNode extends IDAO {
 	public ContentWindow linkInstance() throws Exception;
 	
 	@ServiceMethod(callByContent=true, except={"childNode", "focus"}, inContextMenu=true, keyBinding="Ctrl+Right")
-	@Face(displayName="Issue Tracking")
+	@Face(displayName="$NewProcessInstance")
 	public ContentWindow newProcessInstance() throws Exception;
 		
 	@ServiceMethod(inContextMenu=true, keyBinding="Ctrl+D")
 	@Test(scenario="first", instruction="$first.newDocument", next="autowiredObject.org.uengine.codi.mw3.model.FileWorkItem.add()")
+	@Face(displayName="$NewDocument")
 	public ContentWindow newDocument() throws Exception;	
 	
 	@ServiceMethod(inContextMenu=true, keyBinding="Ctrl+M")
+	@Face(displayName="$Mashup")
 	public ContentWindow mashup() throws Exception;
 
 	@ServiceMethod(callByContent=true, except={"childNode", "focus"}, target="popup")
+	@Face(displayName="$Remove")
 	public Object[] remove() throws Exception;
 	
 	@Face(displayName="remove")
