@@ -180,7 +180,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 				getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 				return emp;
 			} else {
-				errorMessage = "<font color=blue>Wrong Password! forgot?</font>";				
+				errorMessage = "<font color=blue>Wrong User or Password! forgot?</font>";				
 			}
 		} else {
 			errorMessage = "<font color=blue>There's no such ID. Please subscribe.</font>";
