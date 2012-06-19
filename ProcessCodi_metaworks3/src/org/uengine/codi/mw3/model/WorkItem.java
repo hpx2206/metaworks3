@@ -300,6 +300,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		
 		workItemHandler.setMetaworksContext(new MetaworksContext());
 		workItemHandler.getMetaworksContext().setWhen(getStatus());
+		workItemHandler.session = session;
 		
 		workItemHandler.load();
 		
