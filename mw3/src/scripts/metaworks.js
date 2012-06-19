@@ -2223,12 +2223,13 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 //									   
 //								   }
 								   
-								  // if(value)
-								   mw3.test(value.__objectId, methodName, options);
+								  if(value)
+									  mw3.test(value.__objectId, methodName, options);
 								  
 							   } else{
 								   value = mw3.objects[objectId];
-								   mw3.test(value.__objectId, next, options);
+								  if(value)
+									  mw3.test(value.__objectId, next, options);
 							   }
 
 						   }
