@@ -1854,6 +1854,10 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				$(infoDivId).html("<center><font color=red> " + message + "<input type=button onclick=\"mw3.getObject('" + objId + "')."+ methodName + "()\" value='RETRY'></font></center>");
 			}
 			
+			Metaworks3.prototype.alert = function(message){
+				alert(this.localize(message));
+			}
+			
 			Metaworks3.prototype.showValidation = function(objId, isValid, message){
 				var infoDivId = "#"+this._getInfoDivId(objId);
 				
@@ -1959,8 +1963,8 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			function showupInstruction(methodDivId, instruction, options){
 				   	var methodDiv = $("#" + methodDivId);
 				   	
-				   	if(instruction.indexOf("$")==0 && getMessage){
-				   		instruction = getMessage(instruction);
+				   	if(instruction.indexOf("$")==0){
+				   		instruction = mw3.localize(instruction);
 				   	}
 				   	
 				   	var targetObject = methodDiv.children()[0];
@@ -2176,11 +2180,9 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 									  $('#instructionR').remove();							  
 									   //TODO: done message should be here!
 									  
-									  var congratulations = "Congratulations! Your guided Tour has been finished.";
-									  if(getMessage){
-										  congratulations = getMessage("$congratulations");
-									  }
-									   alert(congratulations);
+									  //var congratulations = "Congratulations! Your guided Tour has been finished.";
+									  //congratulations = mw3.localize("$congratulations");
+									   mw3.alert("$congratulations");
 								  });
 
 								   return;
