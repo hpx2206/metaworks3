@@ -207,8 +207,10 @@
 					else
 						mw3.endLoading();
 					
-					$.msg({ bgPath : this.base + '/images/',
-						    content : "<font color=red> " + message + "</font>"
+					try{mw3.endLoading();}catch(x){}
+					
+					$.msg({
+						    content : "<b>" + mw3.localize(message) + "</b>"
 					});
 		 		}
 		 		
