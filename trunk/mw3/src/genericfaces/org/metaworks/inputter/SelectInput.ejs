@@ -9,7 +9,7 @@ if(mw3.when == mw3.WHEN_EDIT || mw3.when == mw3.WHEN_NEW){
 	for(var i=0; i<descriptor.options.length; i++){
 	
 	
-%><option value="<%=descriptor.values[i]%>"<%=(value == descriptor.values[i] ? " selected" : "")%>> <%=descriptor.options[i]%>
+%><option value="<%=descriptor.values[i]%>"<%=(value == descriptor.values[i] ? " selected" : "")%>> <%=mw3.localize(descriptor.options[i])%>
 <%
 	}
 
