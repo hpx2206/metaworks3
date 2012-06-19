@@ -17,7 +17,7 @@
             	<!-- 
             	<span><input type="checkbox" name="chksaveid"/> Save ID</span>
             	-->
-                <span><input type="checkbox" name="chkautologin" /> Auto Login</span>
+                <span><%=fields.rememberMe.here({when:'edit'})%> Remember Me</span>
 
             </div>
             
@@ -31,6 +31,6 @@
         <!-- /clearfix -->
         
         <div id="message_<%=objectId%>"></div>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:mw3.test(<%=objectId%>, 'first', {guidedTour: true})">Guide me!</a>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:mw3.test(<%=objectId%>, 'first', {guidedTour: true})"><b>Guide me!</b></a>
     </form>
 </div>

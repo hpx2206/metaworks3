@@ -44,7 +44,7 @@ public interface ILogin extends IDAO{
 	public void setFacebookSSO(boolean isFacebookSSO);
 		
 
-		
+	
 	
 	
 	
