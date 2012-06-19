@@ -30,12 +30,6 @@
 				objectName = objectMetadata.displayName;
 			}
 			
-			// get window title (resource) 
-			var resourceName = null;
-			if(objectName && objectName.indexOf('$')==0){
-				resourceName = objectName.substring(1);
-			}
-			
 			for (var i=0; i<objectMetadata.fieldDescriptors.length; i++){						  
 				var fd = objectMetadata.fieldDescriptors[i];
 	
@@ -57,11 +51,7 @@
 				            <%if(mw3.localize(windowTitle)){%>
 				    			<%=windowTitle%>
 				    		<%}else{%>
-				    			<%if(resourceName){%>
-				    				<%=resources[resourceName].here()%>
-				    			<%}else{%>
-				    				<%=mw3.localize(objectName)%>
-				    			<%}%>
+				    			<%=mw3.localize(objectName)%>
 				    		<%}%>
 		    			</span>
 		    		</div>
@@ -104,11 +94,7 @@
 		            <%if(mw3.localize(windowTitle)){%>
 		    			<%=windowTitle%>
 		    		<%}else{%>
-		    			<%if(resourceName){%>
-		    				<%=resources[resourceName].here()%>
-		    			<%}else{%>
-		    				<%=mw3.localize(objectName)%>
-		    			<%}%>
+						<%=mw3.localize(objectName)%>
 		    		<%}%>
 		    		</span>
 		    		</div>            		
