@@ -124,11 +124,10 @@ public interface IWorkItem extends IDAO{
 		
 		@Hidden
 		@ORMapping(
-			databaseFields = { 	"content", 		"tool" }, 
-			objectFields = { 	"uploadedPath", "mimeType" },
+			databaseFields = {"content", "extfile", "tool"}, 
+			objectFields = {"uploadedPath", "filename", "mimeType"},
 			objectIsNullWhenFirstDBFieldIsNull = true,
-			availableWhen= "type=='file'"
-		
+			availableWhen = "type=='file'"		
 		)
 		public MetaworksFile getFile();
 		public void setFile(MetaworksFile file);
