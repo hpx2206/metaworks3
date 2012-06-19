@@ -32,6 +32,11 @@ public class Login extends Database<ILogin> implements ILogin{
 	protected static Hashtable<String, String> userIdSessionIdMapping = new Hashtable<String, String>();
 	protected static Hashtable<String, String> userIdDeviceMapping = new Hashtable<String, String>();
 	
+	
+	public Login(){
+		setRememberMe(new Boolean(true));
+	}
+	
 	@Id
 	String userId;
 		public String getUserId() {
@@ -82,6 +87,16 @@ public class Login extends Database<ILogin> implements ILogin{
 			this.isFacebookSSO = isFacebookSSO;
 		}
 		
+	Boolean rememberMe;
+		
+	
+		public Boolean getRememberMe() {
+			return rememberMe;
+		}
+		public void setRememberMe(Boolean rememberMe) {
+			this.rememberMe = rememberMe;
+		}
+
 	boolean guidedTour;
 
 		public boolean isGuidedTour() {
