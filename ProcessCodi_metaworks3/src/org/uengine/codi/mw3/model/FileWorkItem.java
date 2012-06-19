@@ -21,7 +21,7 @@ public class FileWorkItem extends WorkItem{
 	@Override
 	@Test(scenario="first", instruction="$first.FileWorkItem.add")
 	public Object[] add() throws Exception {
-
+		
 		getFile().upload();
 		
 		return super.add();

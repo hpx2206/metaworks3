@@ -49,7 +49,7 @@ public class InstanceListPanel {
 		
 		
 	//@Hidden
-	@Face(displayName="Calendar View")
+	@Face(displayName="$Calendar")
 	@ServiceMethod(inContextMenu=true)
 //	@Test(scenario="first", starter=true, instruction="창을 닫으시고, '우측클릭 > Calendar' 를 클릭하시면 내가 참여하고 있는 목록을 달력으로 볼 수 있습니다.", next="autowiredObject.org.uengine.codi.mw3.model.ContactListPanel.chat()")
 	@Test(scenario="first", starter=true, instruction="창을 닫으시고, '우측클릭 > Calendar' 를 클릭하시면 내가 참여하고 있는 목록을 달력으로 볼 수 있습니다.", next="autowiredObject.org.uengine.codi.mw3.admin.PageNavigator.goKnowledge()")	
@@ -62,7 +62,7 @@ public class InstanceListPanel {
 	}
 	
 	//@Hidden
-	@Face(displayName="List View")
+	@Face(displayName="$All")
 	@ServiceMethod(inContextMenu=true)
 	public Object[] switchToInstanceList() throws Exception{
 		PersonalPerspective personalPerspective = new PersonalPerspective();
@@ -81,6 +81,7 @@ public class InstanceListPanel {
 */	}
 
 	@ServiceMethod(inContextMenu=true)
+	@Face(displayName="$Following")
 	public Object[] switchToInstanceListFollowing() throws Exception{
 		PersonalPerspective personalPerspective = new PersonalPerspective();
 		personalPerspective.session = session;
@@ -97,6 +98,7 @@ public class InstanceListPanel {
 	}
 
 	@ServiceMethod(inContextMenu=true)
+	@Face(displayName="$MyToDo")
 	public Object[] switchToInstanceListMyToDo() throws Exception{
 		PersonalPerspective personalPerspective = new PersonalPerspective();
 		personalPerspective.session = session;
@@ -113,7 +115,7 @@ public class InstanceListPanel {
 		setInstanceList(instanceListPanel.getInstanceList());*/
 	}
 
-	@Face(displayName="Knowledge View")
+	@Face(displayName="$Strategic")
 	@ServiceMethod(inContextMenu=true)
 	@Test(scenario="first", starter=true, instruction="$first.SwitchToKnowledge", next="autowiredObject.org.uengine.codi.mw3.knowledge.WfPanel.newNode()")
 	public void switchToKnowledge() throws Exception{
