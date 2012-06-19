@@ -1854,7 +1854,7 @@
 					mw3.endLoading();
 			
 				$.msg({ bgPath : this.base + '/images/',
-					    content : "<font color=red> " + message + "<input type=button onclick=\"mw3.getObject('" + objId + "')."+ methodName + "()\" value='RETRY'></font>"	 
+					    content : "<font color=red> " + message + "</font>"
 				});
 			}
 			
