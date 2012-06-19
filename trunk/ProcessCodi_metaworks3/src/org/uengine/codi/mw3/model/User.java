@@ -216,7 +216,7 @@ public class User extends Database<IUser> implements IUser {
 				noti.setInputDate(Calendar.getInstance().getTime());
 				//noti.setTaskId(getTaskId());
 				noti.setInstId(new Long(instId));
-				noti.setActAbstract(session.getUser().getName() + " 님이 '" + instance.databaseMe().getName() + "' 대화에 " + getName() + "님을 추가하였습니다.");
+				noti.setActAbstract(session.getUser().getName() + " added "  + getName()+ " to '" + instance.databaseMe().getName() + "'");
 	
 				noti.createDatabaseMe();
 				noti.flushDatabaseMe();
