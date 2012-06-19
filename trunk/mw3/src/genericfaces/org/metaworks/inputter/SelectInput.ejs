@@ -19,7 +19,7 @@ if(mw3.when == mw3.WHEN_EDIT || mw3.when == mw3.WHEN_NEW){
 		for(var i=0; i<descriptor.options.length; i++){
 		
 			if(value == descriptor.values[i]){
-	%><%=descriptor.options[i]%>
+	%><%=mw3.localize(descriptor.options[i])%>
 	<%
 			}
 		}
