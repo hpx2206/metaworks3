@@ -21,6 +21,15 @@ public class InstanceListPanel {
 		instanceList.init();
 	}
 
+	String title;
+		@Hidden
+		public String getTitle() {
+			return title;
+		}
+		public void setTitle(String title) {
+			this.title = title;
+		}
+
 	SearchBox searchBox;		
 		@Face(options={"keyupSearch"}, values={"true"})
 		public SearchBox getSearchBox() {
@@ -37,7 +46,7 @@ public class InstanceListPanel {
 		public void setScheduleCalendar(ScheduleCalendar scheduleCalendar) {
 			this.scheduleCalendar = scheduleCalendar;
 		}
-		
+	
 	WfPanel knowledge;
 		
 		public WfPanel getKnowledge() {

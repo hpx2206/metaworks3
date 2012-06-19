@@ -62,7 +62,7 @@ public class Perspective {
 		
 		// set search Keyword to searchBox
 		instListPanel.getSearchBox().setKeyword(session.getSearchKeyword());
-		
+		instListPanel.setTitle("$perspective." + perspectiveType);
 
 		return new Object[] {session, instListPanel};
 	}

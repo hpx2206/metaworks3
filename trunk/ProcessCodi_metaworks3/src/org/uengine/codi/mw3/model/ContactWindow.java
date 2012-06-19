@@ -3,7 +3,7 @@ package org.uengine.codi.mw3.model;
 import org.metaworks.annotation.Face;
 
 @Face(ejsPath="genericfaces/Window.ejs", 
-	  displayName="연락처", 
+	  displayName="$Contact",
 	  options={"hideLabels", "minimize"}, 
       values={"true", "true"})
 
