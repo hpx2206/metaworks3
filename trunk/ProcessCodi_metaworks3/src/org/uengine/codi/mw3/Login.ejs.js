@@ -72,7 +72,7 @@ org_uengine_codi_mw3_Login.prototype = {
 	getValue	:	function(){
 		var login = mw3.getObjectFromUI(this.objectId);
 		
-		if(true || login.rememberMe){
+		if (login.rememberMe){
 			Set_Cookie("codi.id", login.userId, 10, "/", "", "");
 			Set_Cookie("codi.password", login.password, 10, "/", "", "");			
 		}else{
