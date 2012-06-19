@@ -55,7 +55,7 @@ public class WorkItemHandler implements ContextAware{
 					
 					ParameterValue pv = parameters[i];
 					pv.setVariableName(pc.getVariable().getName());
-					pv.setArgument(pc.getArgument().getText());
+					pv.setArgument(pc.getArgument().getText(session!=null && session.getEmployee()!=null ? session.getEmployee().getLocale() : null));
 					
 					
 					MetaworksContext mc = new MetaworksContext();
@@ -83,6 +83,11 @@ public class WorkItemHandler implements ContextAware{
 						if(processVariableValue instanceof ComplexType){
 							ComplexType complexType = (ComplexType) processVariableValue;
 							processVariableValue = (Serializable) complexType.getTypeClass().newInstance();
+							
+							if(processVariableValue instanceof ContextAware){
+								((ContextAware)processVariableValue).setMetaworksContext(mc);
+							}
+							
 							if(processVariableValue instanceof NeedArrangementToSerialize){
 								((NeedArrangementToSerialize)processVariableValue).afterDeserialization();
 							}

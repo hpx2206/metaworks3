@@ -24,7 +24,6 @@ public class CodiProcessDefinitionFactory extends ProcessDefinitionFactory{
 	}
 
 	
-	
 	@Override
 	protected Object getDefinitionSourceImpl(String location,
 			boolean fromCompilationVersion, boolean shouldBeObjectResult)
