@@ -5,7 +5,7 @@ var org_uengine_codi_mw3_model_Locale = function(objectId, className){
 
 	var object = mw3.objects[this.objectId];
 	
-	if(object){
+	if(object && object.language && object.resourceBundle){
 		jQuery.timeago.settings.strings = {
 				  suffixAgo: mw3.localize("$timeago.suffixAgo"),
 				  suffixFromNow: mw3.localize("$timeago.suffixFromNow"),
