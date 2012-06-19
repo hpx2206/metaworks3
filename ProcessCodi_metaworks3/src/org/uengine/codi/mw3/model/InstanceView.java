@@ -308,7 +308,7 @@ public class InstanceView {
 		instance.setInstId(new Long(getInstanceId()));
 		
 		if(!instance.databaseMe().getInitEp().equals(session.getUser().getUserId())){
-			throw new Exception("Only initiator can delete the instance");
+			throw new Exception("$OnlyInitiatorCanDeleteTheInstance");
 		}
 		
 		instance.databaseMe().setIsDeleted(true);

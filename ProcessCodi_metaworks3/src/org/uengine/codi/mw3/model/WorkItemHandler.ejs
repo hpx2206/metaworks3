@@ -1,6 +1,13 @@
+<%
+
+if(mw3.when=='NEW'){
+
+%>
+
 		<div>
-			<%=fields.parameters.here()%>
+			<%=fields.parameters.here({when:'edit'})%>
 		</div>
+
 		<div id="btnline" style="padding-top:8px;">
 			<ul>	
 				<li><a id="wBtn" href="javascript:<%=methods.complete.caller()%>"><span><%=mw3.localize('$Complete')%></span></a></li>
@@ -9,3 +16,16 @@
 				<li><a id="wBtn" href="javascript:<%=methods.skip.caller()%>"><span><%=mw3.localize('$Skip')%></span></a></li>
 			</ul>
 		</div>
+		
+<%	
+}else{
+
+//	mw3.when='view';
+
+%>
+
+	
+		<div>
+			<%=fields.parameters.here({when:'view'})%>
+		</div>
+<%}%>
