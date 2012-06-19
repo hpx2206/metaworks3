@@ -50,7 +50,7 @@ public interface ILogin extends IDAO{
 	
 	
 	
-	@Test(scenario="first", starter=true, instruction="Welcome! Sign in please...", next="autowiredObject.org.uengine.codi.mw3.model.InstanceListPanel.newInstance()")
+	@Test(scenario="first", starter=true, instruction="Welcome! If you have account, sign in please... or sign up for your new account.", next="autowiredObject.org.uengine.codi.mw3.model.InstanceListPanel.newInstance()")
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF, validate=true)
 	public Object login() throws Exception;	
 	
