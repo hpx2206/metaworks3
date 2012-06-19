@@ -2,20 +2,16 @@ package org.uengine.codi.mw3.model;
 
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
-import org.metaworks.annotation.Hidden;
-import org.metaworks.annotation.ServiceMethod;
-import org.uengine.codi.mw3.calendar.ScheduleCalendar;
 import org.metaworks.widget.Window;
 
-@Face(ejsPath="genericfaces/Window.ejs", 
-	  displayName="개인중심 - 내가 할 일", 
+@Face(ejsPath="genericfaces/Window.ejs",  
       options={"hideLabels", "minimize"}, 
       values={"true", "true"})
 
-public class InstanceListWindow {
+public class InstanceListWindow extends Window {
 	
-
 	public InstanceListWindow(){}
+	
 	public InstanceListWindow(Session session) throws Exception {
 		this.session = session;
 		
