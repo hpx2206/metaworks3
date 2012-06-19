@@ -483,7 +483,7 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
 		
 		CodiClassLoader cl = new CodiClassLoader(CodiMetaworksRemoteService.class.getClassLoader());
 		
-		String sep = System.getProperty("os.name").startsWith("Mac") ? ":" : ";";
+		String sep = System.getProperty("os.name").startsWith("Windo") ? ";" : ":";
 		
 		
 		URLClassLoader classLoader = (URLClassLoader) CodiMetaworksRemoteService.class.getClassLoader();
