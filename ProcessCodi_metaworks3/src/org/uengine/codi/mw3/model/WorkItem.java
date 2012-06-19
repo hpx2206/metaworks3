@@ -482,7 +482,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 					
 					genericWI.processManager = processManager;
 					genericWI.session = session;
-					genericWI.setTitle("지식조각을 첨부합니다");//parent.getName());
+					genericWI.setTitle("Attaching Knowledge");//parent.getName());
 					GenericWorkItemHandler genericWIH = new GenericWorkItemHandler();
 					KnowledgeTool knolTool = new KnowledgeTool();
 					knolTool.setNodeId(parent.getId());
@@ -614,7 +614,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				noti.setInstId(getInstId());
 				
 				
-				noti.setActAbstract(session.getUser().getName() + "님이 댓글(활동)을 남겼습니다: " + getTitle());
+				noti.setActAbstract(session.getUser().getName() + " wrote : " + getTitle());
 	
 				noti.createDatabaseMe();
 				noti.flushDatabaseMe();
