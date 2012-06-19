@@ -53,7 +53,17 @@ public class MetaworksFile implements ContextAware {
 		public void setImage(BufferedImage image) {
 			this.image = image;
 		}
-			
+	
+	String filename;
+		@NonEditable
+		@Hidden	
+		public String getFilename() {
+			return filename;
+		}
+		public void setFilename(String filename) {
+			this.filename = filename;
+		}
+
 	String uploadedPath;
 		@Id
 		@NonEditable
@@ -101,9 +111,9 @@ public class MetaworksFile implements ContextAware {
 			this.auto = auto;
 		}
 		
-	@ServiceMethod(target="append")
+	@ServiceMethod(target="append", callByContent=true)
 	public Download download() throws FileNotFoundException, IOException, Exception{
-		return new Download(new FileTransfer(uploadedPath, getMimeType(), new FileInputStream(uploadedPath)));
+		return new Download(new FileTransfer(new String(this.getFilename().getBytes("EUC-KR"),"ISO8859_1"), getMimeType(), new FileInputStream(this.getUploadedPath())));
 	}
 
 	@ServiceMethod(target=ServiceMethodContext.TARGET_NONE) //it doesn't cause refresh so that the recursive call of constructor of MetaworksFile javascript object never happened

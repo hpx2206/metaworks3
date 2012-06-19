@@ -6,7 +6,10 @@ var org_metaworks_website_MetaworksFile = function(objectId, className){
 	var object = mw3.objects[this.objectId];
 	
 	$("#objDiv_" + this.objectId).attr("objectId", this.objectId);
-
+	
+	// rest input type='file'
+	this.reset();
+	
 	if(object.uploadedPath){
 		$("#filebtnadd_" + this.objectId).css('display', 'none');
 		
@@ -29,16 +32,6 @@ var org_metaworks_website_MetaworksFile = function(objectId, className){
 		}
 			
 	}
-	
-	$(mw3.getInputElement(objectId, 'fileTransfer')).bind('change', function(){
-		var object = mw3.objects[objectId];
-		
-		if(object.auto)
-			object.upload();
-		else
-			faceHelper.setFilename(faceHelper.extraFilename(this.value));
-			
-	});
 }
 
 org_metaworks_website_MetaworksFile.prototype.extraFilename = function(filepath){
@@ -57,16 +50,39 @@ org_metaworks_website_MetaworksFile.prototype.extraFilename = function(filepath)
 
 org_metaworks_website_MetaworksFile.prototype.setFilename = function(filename){
 
+	var object = mw3.objects[this.objectId];
+	
+	object.filename = filename;
+	
 	if(filename == null){
 		filename = '선택된 파일이 없습니다';
-		$("#filebtnadd_" + this.objectId).css('display', 'none');
+		$("#filebtnadd_" + this.objectId).css('display', 'block');
+		$("#filebtndel_" + this.objectId).css('display', 'none');
 	} else {
-		$("#filebtndel_" + this.objectId).css('display', 'block');
+		$("#filebtnadd_" + this.objectId).css('display', 'none');
+		$("#filebtndel_" + this.objectId).css('display', 'block');				
 	}
 	
 	$("#filename_" + this.objectId).html(filename);
 	
 }	
+
+org_metaworks_website_MetaworksFile.prototype.reset = function(){
+	$(mw3.getInputElement(this.objectId, 'fileTransfer')).unbind('change');
+	
+	mw3.getInputElement(this.objectId, 'fileTransfer').parentNode.innerHTML = mw3.getInputElement(this.objectId, 'fileTransfer').parentNode.innerHTML;
+
+	$(mw3.getInputElement(this.objectId, 'fileTransfer')).bind('change', {objectId: this.objectId}, function(event){
+		var object = mw3.objects[event.data.objectId];
+		var faceHelper = mw3.getFaceHelper(event.data.objectId);
+		
+		if(object.auto)
+			object.upload();
+		else
+			faceHelper.setFilename(faceHelper.extraFilename(this.value));
+			
+	});		
+}
 
 org_metaworks_website_MetaworksFile.prototype.add = function(){
 	mw3.getInputElement(this.objectId, 'fileTransfer').click();
@@ -81,12 +97,16 @@ org_metaworks_website_MetaworksFile.prototype.del = function(){
 		if(object.auto)
 			mw3.call(this.objectId, 'remove');
 		else{
-			this.setFilename(null);
 			$("#filebtndel_" + this.objectId).css('display', 'none');
 			$("#filebtnadd_" + this.objectId).css('display', 'block');
+			
+			this.reset();
+			this.setFilename(null);
 		}
 	}else{
+		this.reset();
 		this.setFilename(null);
+
 	}
 }
 
