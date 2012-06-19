@@ -356,6 +356,7 @@ public class InstanceView {
 		
 		ProcessInstanceMonitorPanel processInstanceMonitorPanel = new ProcessInstanceMonitorPanel();
 		processInstanceMonitorPanel.processManager = processManager;
+		processInstanceMonitorPanel.session = session;
 		processInstanceMonitorPanel.load(instanceId);
 		
 		//setProcessInstanceMonitor(processInstanceMonitorPanel);

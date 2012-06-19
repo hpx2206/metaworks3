@@ -75,12 +75,12 @@ public class ProcessInstanceMonitor {
 		// "Work Item Handler");
 		// }
 
-		options.put(
-				"enableUserEvent_viewFormDefinition_org.uengine.kernel.FormActivity",
-				"View Form Definition");
-		options.put(
-				"enableUserEvent_drillInto_org.uengine.kernel.SubProcessActivity",
-				"Drill Into");
+//		options.put(
+//				"enableUserEvent_viewFormDefinition_org.uengine.kernel.FormActivity",
+//				"View Form Definition");
+//		options.put(
+//				"enableUserEvent_drillInto_org.uengine.kernel.SubProcessActivity",
+//				"Drill Into");
 
 		StringBuffer htmlText = new StringBuffer();
 		htmlText.append("<script type=\"text/javascript\">");

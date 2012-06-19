@@ -5,6 +5,7 @@ import java.util.Hashtable;
 
 import javax.persistence.Id;
 
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.layout.Layout;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,10 @@ public class ProcessInstanceMonitorPanel extends Layout{
 			this.processInstanceMonitor = processInstanceMonitor;
 		}
 		
+
+	@AutowiredFromClient
+	public Session session;
+		
 		
 	public void load(String instanceId)
 			throws Exception {
@@ -39,9 +44,11 @@ public class ProcessInstanceMonitorPanel extends Layout{
 		
 		processInstanceMonitor = new ProcessInstanceMonitor();
 		processInstanceMonitor.setInstanceId(instanceId);
+		processInstanceMonitor.session = session;
 		processInstanceMonitor.load(processManager);
 		
 		processInstanceNavigator = new ProcessInstanceNavigator();
+		processInstanceNavigator.session = session;
 		processInstanceNavigator.load(instanceId);
 		processInstanceNavigator.processManager = processManager;
 		
