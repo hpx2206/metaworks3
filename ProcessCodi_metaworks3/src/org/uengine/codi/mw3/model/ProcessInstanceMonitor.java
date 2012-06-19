@@ -1,14 +1,20 @@
 package org.uengine.codi.mw3.model;
 
+import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.Hashtable;
 
 import javax.persistence.Id;
 
+import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.codi.ITool;
+import org.uengine.contexts.ComplexType;
 import org.uengine.kernel.GlobalContext;
+import org.uengine.kernel.NeedArrangementToSerialize;
+import org.uengine.kernel.ParameterContext;
 import org.uengine.kernel.viewer.ViewerOptions;
 import org.uengine.processmanager.ProcessManagerRemote;
 
@@ -86,7 +92,14 @@ public class ProcessInstanceMonitor {
 				getInstanceId(), options));
 		setChartHTML(htmlText.toString());
 		//System.out.println(htmlText.toString());
+		
+
 	}
+
+	
+	/// load the process variable values to show
+
+
 
 		// @Autowired public ProcessManagerRemote processManager;
 }
