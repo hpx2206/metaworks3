@@ -1,4 +1,4 @@
-			var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
+var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				this.metaworksMetadata = new Array();
 				this.metaworksProxy = mwProxy;
 				this.errorDiv = errorDiv;
@@ -1845,17 +1845,13 @@
 			}
 			
 			Metaworks3.prototype.showError = function(objId, message, methodName){
-				//var infoDivId = "#"+this._getInfoDivId(objId);				
-				//$(infoDivId).html("<center><font color=red> " + message + "<input type=button onclick=\"mw3.getObject('" + objId + "')."+ methodName + "()\" value='RETRY'></font></center>");
-				
 				if( this.getFaceHelper(objId) && this.getFaceHelper(objId).endLoading)
 					this.getFaceHelper(objId).endLoading();	
 				else
 					mw3.endLoading();
-			
-				$.msg({ bgPath : this.base + '/images/',
-					    content : "<font color=red> " + message + "</font>"
-				});
+				
+				var infoDivId = "#"+this._getInfoDivId(objId);				
+				$(infoDivId).html("<center><font color=red> " + message + "<input type=button onclick=\"mw3.getObject('" + objId + "')."+ methodName + "()\" value='RETRY'></font></center>");
 			}
 			
 			Metaworks3.prototype.showValidation = function(objId, isValid, message){
