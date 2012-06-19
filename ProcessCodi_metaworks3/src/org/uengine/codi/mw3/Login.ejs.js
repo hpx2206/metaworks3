@@ -27,12 +27,12 @@ var org_uengine_codi_mw3_Login = function(objectId, className){
  
 	var object = mw3.objects[this.objectId]; 
  
- //mw3.getInputElement(this.objectId, 'userId').value = 'test';
- //mw3.getInputElement(this.objectId, 'password').value = 'test';
+//mw3.getInputElement(this.objectId, 'userId').value = 'test';
+//mw3.getInputElement(this.objectId, 'password').value = 'testtest';
  
 	mw3.getInputElement(this.objectId, 'userId').focus();
  
- //object.login();
+// object.login();
  
 
 	if(!tryGuidedTour && object.guidedTour){
@@ -72,13 +72,5 @@ org_uengine_codi_mw3_Login.prototype = {
 	},
 	showStatus : function(){
 		
-	},
-	showError : function(errorMessage, svcNameAndMethodName){
-		var messageDiv = "#message_" + this.objectId;
-		$(messageDiv).html(errorMessage);
-		
-		setTimeout(function(){
-			$('#mw3_progress').remove();
-		}, 100);
 	}
 }

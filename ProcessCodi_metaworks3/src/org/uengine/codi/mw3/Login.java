@@ -100,7 +100,7 @@ public class Login extends Database<ILogin> implements ILogin{
 			this.password = password;
 		}
 
-	String errorMessage;
+/*	String errorMessage;
 		public String getErrorMessage() {
 			return errorMessage;
 		}
@@ -108,7 +108,7 @@ public class Login extends Database<ILogin> implements ILogin{
 		public void setErrorMessage(String errorMessage) {
 			this.errorMessage = errorMessage;
 		}
-
+*/
 	public Session loginService() throws Exception {
 		
 		Session session = new Session();
