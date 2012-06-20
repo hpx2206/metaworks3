@@ -12,10 +12,10 @@ var org_uengine_codi_mw3_Login = function(objectId, className){
 		mw3.getInputElement(objectId, "password").value = Get_Cookie("codi.password");
 		var object = mw3.objects[objectId];
 		
-		if(!mw3.autoLogged){
+/*		if(!mw3.autoLogged){
 			object.login();
 			mw3["autoLogged"] = true;
-		}
+		}*/
 	}
 
 	if($('#fb-root').length == 0){
@@ -38,8 +38,6 @@ var org_uengine_codi_mw3_Login = function(objectId, className){
 		}
 	}
 	
-	var tryGuidedTour = false;
- 
 	var object = mw3.objects[this.objectId]; 
  
 //mw3.getInputElement(this.objectId, 'userId').value = 'test';
@@ -49,13 +47,6 @@ var org_uengine_codi_mw3_Login = function(objectId, className){
  
 // object.login();
  
-
-	if(!tryGuidedTour && object.guidedTour){
-		setTimeout("mw3.test(" +objectId + ", 'first', {guidedTour: true})", 1000);
-
-		tryGuidedTour = true;
-	}
-	
 	$('#' + this.divId).bind('keydown', function(event){
 		mw3.getFaceHelper(objectId).keydown(event);
 	});

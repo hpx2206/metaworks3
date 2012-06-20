@@ -97,15 +97,6 @@ public class Login extends Database<ILogin> implements ILogin{
 			this.rememberMe = rememberMe;
 		}
 
-	boolean guidedTour;
-
-		public boolean isGuidedTour() {
-			return guidedTour;
-		}
-		public void setGuidedTour(boolean guidedTour) {
-			this.guidedTour = guidedTour;
-		}
-
 	String password;
 		public String getPassword() {
 			return password;
@@ -127,41 +118,20 @@ public class Login extends Database<ILogin> implements ILogin{
 	public Session loginService() throws Exception {
 		
 		Session session = new Session();
+		
 		if (getUserId() != null && getPassword() != null) {
 			IEmployee emp = new Employee();
 			emp.setEmpCode(getUserId());
 			emp.setPassword(getPassword());
+			
+			session.setEmployee(emp.load());
+			session.fillSession();
+			
 			setMetaworksContext(new MetaworksContext());
-			//try {
-				session.setEmployee(emp.load());
-				if (session.getEmployee() != null
-						&& session.getEmployee().getGlobalCom() != null) {
-					//createContextInfoByUserType(session);
-					if (session.getEmployee().getPartCode() != null) {
-						try{
-							IDept dept = new Dept();
-							dept.setPartCode(session.getEmployee().getPartCode());
-							session.setDept(dept.load());
-						}catch(Throwable e){
-							
-						}
-					}
-					if (session.getEmployee().getGlobalCom() != null) {
-						try{
-							ICompany company = new Company();
-							company.setComCode(session.getEmployee().getGlobalCom());
-							session.setCompany(company.load());
-						}catch(Throwable e){
-							
-						}
-					}
-				} else {
-					throw new Exception(
-							"There is no Company info in user info.");
-				}
+			getMetaworksContext().setWhen(emp.getMetaworksContext().getWhen());
 				
 				
-				
+				//try {				
 /*			} catch (Exception e) {
 				MetaworksContext contextWhenEdit = new MetaworksContext();
 				contextWhenEdit.setWhen(MetaworksContext.WHEN_EDIT);
@@ -171,9 +141,11 @@ public class Login extends Database<ILogin> implements ILogin{
 				// FIXME Monitoring for login errors
 				//throw new RuntimeException(e);//.printStackTrace();
 			//}
-			getMetaworksContext().setWhen(emp.getMetaworksContext().getWhen());
+			
 		}
+		
 		setPassword(null);
+		
 		return session;
 	}
 	
@@ -270,18 +242,6 @@ public class Login extends Database<ILogin> implements ILogin{
 		}else{
 			Session session = loginService();
 			
-			IUser loginUser = new User();
-			
-			loginUser.getMetaworksContext().setWhere("local");
-			loginUser.setName(session.getEmployee().getEmpName());
-			loginUser.setUserId(getUserId());
-			
-			session.setUser(loginUser);
-
-			
-			session.setMetaworksContext(getMetaworksContext());
-			session.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-
 			Locale locale = new Locale();
 			locale.setLanguage(session.getEmployee().getLocale());
 			locale.load();

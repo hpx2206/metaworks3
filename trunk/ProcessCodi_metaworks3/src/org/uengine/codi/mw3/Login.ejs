@@ -17,20 +17,19 @@
             	<!-- 
             	<span><input type="checkbox" name="chksaveid"/> Save ID</span>
             	-->
-                <span><%=fields.rememberMe.here({when:'edit'})%> Remember Me</span>
-
+                <span style="float:left; margin-right: 5px" ><%=fields.rememberMe.here({when:'edit'})%></span><span style="float:left">Remember Me</span>
+				<div class="clear"></div>
             </div>
-            
-	
-            <span id="method_<%=objectId%>_login"><input id="signin" class="submit"  value="" title="click is login" alt="click is login" onclick="<%=methods.login.caller() %>"/></span>
-            <span id="method_<%=objectId%>_subscribe"><input id="subscribe" class="submitTenant"  value="" title="click is subscribe" alt="click is subscribe" onclick="<%=methods.subscribe.caller() %>"/></span>
+			
+			<span style="padding:50px">
+				<span><a href="javascript:mw3.test(<%=objectId%>, 'first', {guidedTour: true})"><b>Guide me!</b></a></span>
+	            <span id="method_<%=objectId%>_login"><input id="signin" class="submit"  value="" title="click is login" alt="click is login" onclick="<%=methods.login.caller() %>"/></span>
+	            <span id="method_<%=objectId%>_subscribe"><input id="subscribe" class="submitTenant"  value="" title="click is subscribe" alt="click is subscribe" onclick="<%=methods.subscribe.caller() %>"/></span>
+	        </span>
             
         </div>
         <!-- clearfix -->
         <div class="clear"></div>
         <!-- /clearfix -->
-        
-        <div id="message_<%=objectId%>"></div>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:mw3.test(<%=objectId%>, 'first', {guidedTour: true})"><b>Guide me!</b></a>
     </form>
 </div>

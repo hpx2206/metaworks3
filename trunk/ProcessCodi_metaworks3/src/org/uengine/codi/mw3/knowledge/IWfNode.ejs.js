@@ -200,16 +200,12 @@ org_uengine_codi_mw3_knowledge_IWfNode.prototype = {
 				var objectId = focus.attr('objectId');
 				
 				var child = mw3.getFaceHelper(objectId).getLastChild();
-				console.debug(child);
 				
 				while(child.length > 0){
 					focus = child;
 					
 					var childId = child.attr('objectId');
-					console.debug('-----------');
-					console.debug(childId);
 					child = mw3.getFaceHelper(childId).getLastChild();
-					console.debug(child);					
 				}
 			}
 
