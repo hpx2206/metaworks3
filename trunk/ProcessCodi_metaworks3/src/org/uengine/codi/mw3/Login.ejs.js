@@ -12,10 +12,10 @@ var org_uengine_codi_mw3_Login = function(objectId, className){
 		mw3.getInputElement(objectId, "password").value = Get_Cookie("codi.password");
 		var object = mw3.objects[objectId];
 		
-/*		if(!mw3.autoLogged){
+		if(!mw3.autoLogged){
 			object.login();
 			mw3["autoLogged"] = true;
-		}*/
+		}
 	}
 
 	if($('#fb-root').length == 0){
