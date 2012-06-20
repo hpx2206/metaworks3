@@ -65,9 +65,6 @@ if(value){
 				</div>				 	
 			<%
 			} else if(mw3.when == 'new2') {
-			
-				value.metaworksContext.when='new'; //TODO: I don't know why....
-				
 			%>
 				<ul id="green_and_orange_step_menu">
 					<li class="frist fdone">STEP1<em>Choose language</em></li>
@@ -214,11 +211,11 @@ if(value){
 		if(mw3.when == 'edit'){
 %>							
 					<div class="infoSub"><span><%=mw3.localize("$Password")%> : </span><span><%=fields.password.here() %></span></div>
-					<div class="infoSub"><span><%=mw3.localize("$Re-Password")%> : </span><span><%=fields.confirmPassword.here() %></span></div>
-<%
+					<div class="infoSub"><span><%=mw3.localize("$Re-Password")%> : </span><span><%=fields.confirmPassword.here() %></span></div>								
+<%		
 		}
-%>							
-					<div class="infoSub"><span><%=mw3.localize("$Dept")%> : </span><span><%=value.partName %>(<%value.partCode %>)</span></div>
+%>
+					<div class="infoSub"><span><%=mw3.localize("$Dept")%> : </span><span><%=fields.dept.here() %></span></div>							
 					<div class="infoSub"><span><%=mw3.localize("$Position")%> : </span><span><%=value.jikName %></span></div>
 					<div class="infoSub"><span><%=mw3.localize("$Phone")%> : </span><span><%=fields.mobileNo.here() %></span></div>
 					<div class="infoSub"><span><%=mw3.localize("$Email")%> : </span><span><%=fields.email.here() %></span></div>

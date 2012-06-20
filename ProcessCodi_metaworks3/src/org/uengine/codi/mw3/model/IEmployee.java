@@ -1,6 +1,7 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.MetaworksContext;
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
@@ -40,11 +41,15 @@ public interface IEmployee extends IDAO {
 	})	
 	public String getEmpName();
 	public void setEmpName(String empName);
+
+	@Hidden
+	public String getFacebookId();
+	public void setFacebookId(String facebookId);
 	
 	@Hidden(when = "view")
 	@ValidatorSet({
 		@Validator(name=ValidatorContext.VALIDATE_NULL),
-		@Validator(name=ValidatorContext.VALIDATE_MIN, options={"5"}),
+		@Validator(name=ValidatorContext.VALIDATE_MIN, options={"4"}),
 	})
 	@Face(options="type", values="password")
 	public String getPassword();
@@ -56,7 +61,7 @@ public interface IEmployee extends IDAO {
 	@NonSavable
 	@ValidatorSet({
 		@Validator(name=ValidatorContext.VALIDATE_NULL),
-		@Validator(name=ValidatorContext.VALIDATE_MIN, options={"5"}),
+		@Validator(name=ValidatorContext.VALIDATE_MIN, options={"4"}),
 	})
 	public String getConfirmPassword();
 	public void setConfirmPassword(String confirmPassword);
@@ -64,6 +69,11 @@ public interface IEmployee extends IDAO {
 	public String getJikName();
 	public void setJikName(String jikName);
 
+	@ORMapping(databaseFields={"partCode", "partName"}, objectFields={"partCode", "partName"})
+	@NonSavable
+	public IDept getDept();
+	public void setDept(IDept dept);
+	
 	public String getPartCode();	
 	public void setPartCode(String partCode);
 	
@@ -126,6 +136,7 @@ public interface IEmployee extends IDAO {
 	public IEmployee findMe() throws Exception;	
 	public IEmployee findByDept(Dept dept) throws Exception;
 	public IEmployee findByRole(Role role) throws Exception;
+	public IEmployee findByDeptOther() throws Exception;
 	
 	@ServiceMethod(where="navigator")
 	public Object[] loadOrganization() throws Exception;
@@ -148,7 +159,7 @@ public interface IEmployee extends IDAO {
 	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_NEW, validate=true)
 	public Object subscribeStep3() throws Exception;
 	
-	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_NEW, validate=true)
+	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_NEW, validate=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object saveEmployeeInfo() throws Exception;
 	
 	@ServiceMethod(target="popup", callByContent=true)

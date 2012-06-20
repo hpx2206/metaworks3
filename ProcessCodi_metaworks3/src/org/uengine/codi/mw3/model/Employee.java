@@ -1,6 +1,7 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.MetaworksContext;
+import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ToOpener;
 import org.metaworks.annotation.AutowiredFromClient;
@@ -35,13 +36,37 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 			this.empName = empName;
 		}
 		
+	String facebookId;
+		public String getFacebookId() {
+			return facebookId;
+		}
+		public void setFacebookId(String facebookId) {
+			this.facebookId = facebookId;
+		}
+
+	IDept dept;
+		public IDept getDept() {
+			return dept;
+		}
+		public void setDept(IDept dept) {
+			this.dept = dept;
+		}
+
+	String partCode;
+		public String getPartCode() {
+			return partCode;
+		}	
+		public void setPartCode(String partCode) {
+			this.partCode = partCode;
+		}
+	
 	String password;
 	String confirmPassword;	
 	boolean isAdmin;
 	String jikName;
 	// IDept dept;
 	// ICompany company;
-	String partCode;
+	
 
 	transient String partName;
 
@@ -111,13 +136,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		this.jikName = jikName;
 	}
 
-	public String getPartCode() {
-		return partCode;
-	}
 
-	public void setPartCode(String partCode) {
-		this.partCode = partCode;
-	}
 
 	@Override
 	public String getPartName() {
@@ -241,6 +260,28 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	}
 
 	@Override
+	public IEmployee findByDeptOther() throws Exception {
+		StringBuffer sb = new StringBuffer();
+		sb.append("SELECT a.*, b.PARTNAME");
+		sb.append("  FROM empTable a");
+		sb.append("  LEFT OUTER JOIN partTable b on a.partcode=b.partcode");
+		sb.append(" WHERE a.globalCom=?globalCom");
+		sb.append("   AND NOT EXISTS");
+		sb.append(" 	(SELECT partCode");
+		sb.append(" 	   FROM partTable c");
+		sb.append(" 	  WHERE c.globalCom=?globalCom");
+		sb.append(" 	    AND a.partCode = c.partCode)");
+				
+		IEmployee deptEmployee = sql(sb.toString());
+		deptEmployee.setGlobalCom(this.getGlobalCom());
+		deptEmployee.select();
+		deptEmployee.setMetaworksContext(this.getMetaworksContext());
+		
+		return deptEmployee;
+	}
+	
+	
+	@Override
 	public IEmployee findByRole(Role role) throws Exception {
 		
 		StringBuffer sb = new StringBuffer();
@@ -307,6 +348,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 			
 			createDatabaseMe();
 		} else {
+			this.setPartCode(this.getDept().getPartCode());
 			// if(getMetaworksContext().getWhen().equals(MetaworksContext.WHEN_EDIT))
 			syncToDatabaseMe();
 		}
@@ -321,7 +363,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		
 		if(session != null && session.getEmployee().getEmpCode().equals(getEmpCode())) {
 			session.setEmployee(findMe());
-			return new Object[] {new EmployeeInfo(findMe()), session};
+			return new Object[] {new Refresh(new EmployeeInfo(findMe())), new Refresh(session)};
 		}
 		
 		Session session = new Session();
@@ -329,7 +371,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		session.fillSession();
 		session.setGuidedTour(true);
 		
-		return new Object[] {new Remover(new ModalWindow()), new MainPanel(new Main(session))};
+		return new Object[] {new Remover(new ModalWindow()), new ToOpener(new Main(session))};
 	}
 	
 	@Override
@@ -367,8 +409,6 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	public void checkEmpCode() throws Exception {
 			
 		IEmployee employee = this.findMe();
-		
-		getMetaworksContext().setWhen("new2");
 		
 		if(employee.getEmpCode() != null)
 			throw new Exception("이미 존재하는 empCode 입니다.");

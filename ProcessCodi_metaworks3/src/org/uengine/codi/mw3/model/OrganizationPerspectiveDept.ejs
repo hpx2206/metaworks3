@@ -2,12 +2,13 @@
 	if(value){
 %>	
 		<div class="depth1" onClick="<%=methods.select.caller() %>"><%=mw3.localize("$navigation.dept")%> <a href="javascript:<%=methods.addDept.caller()%>">[New]</a></div>
-
 <%
 		if(value.selected){
 %>
 	<div class="depth2">		
 		<%=fields.deptList.here()%>
+		
+		<%=fields.deptEmployee.here()%>
 	</div>	
 <%
 		}
