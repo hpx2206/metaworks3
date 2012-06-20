@@ -33,9 +33,21 @@ org_uengine_codi_mw3_model_IEmployee.prototype = {
 		}, 500);		
 		
 	},
-	showStatus : function(){
+	showStatus : function(status){
+		var arrStatus = status.split(' ');
 		
-	}		
+		if(arrStatus[1] == 'DONE.'){
+			if(arrStatus[0] == 'checkEmpCode')
+				$('#checkEmpCode_' + this.objectId).html(mw3.localize('$sucessCheckEmpCode'));
+		}		
+		
+	},
+	showError : function(message, methodName){
+		if(methodName == 'checkEmpCode'){
+			$('#checkEmpCode_' + this.objectId).html(mw3.localize('$failCheckEmpCode'));
+		}
+	}
+	
 }
 
 
