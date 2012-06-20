@@ -109,9 +109,17 @@ if(value){
 			}
 		%>
 	<%
-	} else if(mw3.where == 'picker') {
+	} else if(mw3.where == 'picker' || mw3.where == 'deptPicker') {
 	%>
 	<a onClick="<%=methods.drillDown.caller() %>" class="idept"><%=fields.partName.here() %></a>
+	<%
+	if(mw3.where=='deptPicker'){
+	%>
+		<%=methods.pickup.here()%>
+	<%
+	}
+	%>
+	
 	<%
 		if(value.selected) {
 		%>
@@ -119,7 +127,9 @@ if(value){
 			<%
 			if(value.children) {
 			%>
-				<li style=" padding-left:20px;"><%=fields.children.here() %></li>
+				<li style=" padding-left:20px;">
+					<%=fields.children.here() %>
+				</li>
 			<%
 			}
 			if(value.deptEmployee) {
@@ -157,6 +167,17 @@ if(value){
 		}
 	%>
 	<%
+	} else if(mw3.where == 'inDetailView'){
+	console.debug(value);
+	
+	%>
+		<span><%=value.partName %>(<%=value.partCode %>)</span>
+	<%
+		if(mw3.when == 'edit'){
+	%>
+		<%=methods.openPicker.here()%>
+	<%	
+		}
 	} else {
 	%>
 	IDept Object where context value : <%=mw3.where %>

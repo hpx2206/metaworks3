@@ -209,7 +209,7 @@ public class Login extends Database<ILogin> implements ILogin{
 		
 		emp.setEmpCode(getUserId());
 		emp.setPassword(getPassword());
-		
+
 		ModalWindow window = new ModalWindow(emp, 720, 450, "Sign Up");
 		
 		return window;

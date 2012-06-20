@@ -4,10 +4,10 @@ import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ToAppend;
+import org.metaworks.ToOpener;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
 import org.uengine.codi.mw3.admin.AdminEastPanel;
-import org.uengine.util.UEngineUtil;
 
 public class Dept extends Database<IDept> implements IDept {
 	String partCode;
@@ -245,17 +245,18 @@ public class Dept extends Database<IDept> implements IDept {
 			deptList.setDept(this.findChildren());			
 			setChildren(deptList);			
 			
-			
-			IEmployee employee = new Employee();
-			employee.setMetaworksContext(this.getMetaworksContext());
-			employee.getMetaworksContext().setHow("tree");
-			
-			EmployeeList employeeList = new EmployeeList();			
-			employeeList.setMetaworksContext(this.getMetaworksContext());
-			employeeList.setId(this.getPartCode());
-			employeeList.setEmployee(employee.findByDept(this));
-			
-			setDeptEmployee(employeeList);
+			if(!("deptPicker".equals(this.getMetaworksContext().getWhere()))){
+				IEmployee employee = new Employee();
+				employee.setMetaworksContext(this.getMetaworksContext());
+				employee.getMetaworksContext().setHow("tree");
+				
+				EmployeeList employeeList = new EmployeeList();			
+				employeeList.setMetaworksContext(this.getMetaworksContext());
+				employeeList.setId(this.getPartCode());
+				employeeList.setEmployee(employee.findByDept(this));
+				
+				setDeptEmployee(employeeList);
+			}
 		}
 	}
 
@@ -430,4 +431,25 @@ public class Dept extends Database<IDept> implements IDept {
 		}
 		
 	}
+
+	@Override
+	public Popup openPicker() throws Exception {
+		DeptPicker deptPicker = new DeptPicker(session.getCompany().getComCode());
+		deptPicker.load();
+		
+		return new Popup(deptPicker);
+	}
+	
+	@Override
+	public Object[] pickup() throws Exception {
+		Dept dept = new Dept();
+		dept.setPartCode(this.getPartCode());
+		dept.copyFrom(dept.databaseMe());
+		
+		dept.getMetaworksContext().setWhere("inDetailView");
+		dept.getMetaworksContext().setWhen("edit");
+		
+		return new Object[] {new ToOpener(dept), new Remover(new Popup())};
+	}
+	
 }

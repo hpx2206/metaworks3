@@ -3,16 +3,18 @@
 %>
 		<ul>
 <%
-		for (var i=0; i<value.employee.length; i++){
-			if(typeof options == 'undefined') 
-				options = objectMetadata;
-		
-			options['index'] = i;
-			options['htmlTag'] =  'li';
+		if(value.employee){
+			for (var i=0; i<value.employee.length; i++){
+				if(typeof options == 'undefined') 
+					options = objectMetadata;
+			
+				options['index'] = i;
+				options['htmlTag'] =  'li';
 %>
 	<%=mw3.locateObject(value.employee[i], value.employee[i].__className, null, options)%>	
 <%
-			mw3.addBeanProperty(value.__objectId, '.employee[' + i + ']');
+				mw3.addBeanProperty(value.__objectId, '.employee[' + i + ']');
+			}
 		}
 %>
 		</ul>

@@ -108,4 +108,10 @@ public interface IDept extends IDAO {
 	
 	@ServiceMethod
 	public AdminEastPanel addNewEmployee() throws Exception;
+	
+	@ServiceMethod(target="popup")
+	public Popup openPicker() throws Exception;
+	
+	@ServiceMethod(target="append", where="picker")
+	public Object pickup() throws Exception;	
 }
