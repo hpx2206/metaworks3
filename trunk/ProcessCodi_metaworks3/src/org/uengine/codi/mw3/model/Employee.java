@@ -358,6 +358,8 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 			
 		IEmployee employee = this.findMe();
 		
+		getMetaworksContext().setWhen("new2");
+		
 		if(employee.getEmpCode() != null)
 			throw new Exception("이미 존재하는 empCode 입니다.");
 	}

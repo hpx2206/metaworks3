@@ -77,11 +77,12 @@ if(value){
 				<div class="form_table">
 					<table border="1" cellspacing="0" summary="">
 						<tbody>
-						<tr>
+						<tr>	
 							<th scope="row"><%=mw3.localize("$Id")%></th>
 							<td>
 								<div class="item">
 									<span style="float:left;"><%=fields.empCode.here({when:'new'}) %></span><a style="margin-left:10px;" id="wBtn" href="javascript:<%=methods.checkEmpCode.caller()%>"><span>Check ID</span></a>
+									<span style="float:left;" id="checkEmpCode_<%=objectId%>"></span>
 								</div>
 							</td>
 						</tr>
