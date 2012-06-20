@@ -1,9 +1,9 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.annotation.Id;
+import org.metaworks.annotation.Name;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.IDAO;
-import org.metaworks.widget.ModalWindow;
 import org.metaworks.widget.Window;
 
 public interface IUser extends IDAO{
@@ -14,6 +14,7 @@ public interface IUser extends IDAO{
 	public String getUserId();
 	public void setUserId(String userId);
 	
+	@Name
 	public String getName();
 	public void setName(String name);
 	

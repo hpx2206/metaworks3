@@ -8,6 +8,7 @@ import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;
 import org.metaworks.annotation.NonLoadable;
 import org.metaworks.annotation.NonSavable;
+import org.metaworks.annotation.ORMapping;
 import org.metaworks.annotation.Range;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Table;
@@ -19,6 +20,12 @@ import org.metaworks.dao.IDAO;
 @Table(name = "EMPTABLE")
 public interface IEmployee extends IDAO {
 
+/*	
+    @Id
+	@ORMapping(databaseFields={"empCode", "empName"}, objectFields={"userId", "name"})
+	public IUser getUser();
+	public void setUser(IUser user);
+*/	
 	@Id
 	@ValidatorSet({
 		@Validator(name=ValidatorContext.VALIDATE_NULL),
@@ -27,6 +34,13 @@ public interface IEmployee extends IDAO {
 	public String getEmpCode();
 	public void setEmpCode(String empCode);
 
+	@Name
+	@ValidatorSet({
+		@Validator(name=ValidatorContext.VALIDATE_NULL)
+	})	
+	public String getEmpName();
+	public void setEmpName(String empName);
+	
 	@Hidden(when = "view")
 	@ValidatorSet({
 		@Validator(name=ValidatorContext.VALIDATE_NULL),
@@ -46,14 +60,6 @@ public interface IEmployee extends IDAO {
 	})
 	public String getConfirmPassword();
 	public void setConfirmPassword(String confirmPassword);
-
-	
-	@Name
-	@ValidatorSet({
-		@Validator(name=ValidatorContext.VALIDATE_NULL)
-	})	
-	public String getEmpName();
-	public void setEmpName(String empName);
 
 	public String getJikName();
 	public void setJikName(String jikName);

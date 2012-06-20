@@ -24,6 +24,13 @@ public class Session implements ContextAware{
 	static Hashtable<String, ArrayList> messagesToUsers = new Hashtable<String, ArrayList>(); 
 	
 	
+	public Session() {
+		MetaworksContext metaworkscontext = new MetaworksContext();
+		metaworkscontext.setWhen(MetaworksContext.WHEN_VIEW);
+		
+		setMetaworksContext(metaworkscontext);
+	}
+	
 	IUser user;	
 		public IUser getUser() {
 			return user;
@@ -41,7 +48,6 @@ public class Session implements ContextAware{
 		}
 		
 	String ux;
-
 		public String getUx() {
 			return ux;
 		}
@@ -49,8 +55,16 @@ public class Session implements ContextAware{
 			this.ux = ux;
 		}
 
+	boolean guidedTour;
+		@Hidden
+		public boolean isGuidedTour() {
+			return guidedTour;
+		}
+		public void setGuidedTour(boolean guidedTour) {
+			this.guidedTour = guidedTour;
+		}
+		
 	Navigation navigation;
-
 		public Navigation getNavigation() {
 			return navigation;
 		}
@@ -94,8 +108,8 @@ public class Session implements ContextAware{
 		}
 	
 	ICompany company;
-	@Hidden
-	@NonEditable
+		@Hidden
+		@NonEditable
 		public ICompany getCompany() {
 			return company;
 		}
@@ -116,26 +130,24 @@ public class Session implements ContextAware{
 		}
 
 	String lastPerspecteType;
-
-	@Hidden
-	public String getLastPerspecteType() {
-		return lastPerspecteType;
-	}
-
-	public void setLastPerspecteType(String lastPerspecteType) {
-		this.lastPerspecteType = lastPerspecteType;
-	}
+		@Hidden
+		public String getLastPerspecteType() {
+			return lastPerspecteType;
+		}
+	
+		public void setLastPerspecteType(String lastPerspecteType) {
+			this.lastPerspecteType = lastPerspecteType;
+		}
 
 	String lastSelectedItem;
-
-	@Hidden
-	public String getLastSelectedItem() {
-		return lastSelectedItem;
-	}
-
-	public void setLastSelectedItem(String lastSelectedItem) {
-		this.lastSelectedItem = lastSelectedItem;
-	}
+		@Hidden
+		public String getLastSelectedItem() {
+			return lastSelectedItem;
+		}
+	
+		public void setLastSelectedItem(String lastSelectedItem) {
+			this.lastSelectedItem = lastSelectedItem;
+		}
 
 	//disabled for merging
 //	SearchKeywordBox searchKeywordBox;
@@ -150,14 +162,13 @@ public class Session implements ContextAware{
 //	}
 	
 	String searchKeyword;
-	
-	@Hidden
-	public String getSearchKeyword() {
-		return searchKeyword;
-	}
-	public void setSearchKeyword(String searchKeyword) {
-		this.searchKeyword = searchKeyword;
-	}
+		@Hidden
+		public String getSearchKeyword() {
+			return searchKeyword;
+		}
+		public void setSearchKeyword(String searchKeyword) {
+			this.searchKeyword = searchKeyword;
+		}
 	
 	@ServiceMethod
 	public Login logout() {
@@ -231,6 +242,43 @@ public class Session implements ContextAware{
 	public void removeUserInfoFromHttpSession(){
 		HttpSession httpSession = TransactionContext.getThreadLocalInstance().getRequest().getSession(); 
 		httpSession.invalidate();
+	}
+	
+	public void fillSession() throws Exception {
+		if (this.getEmployee() != null
+				&& this.getEmployee().getGlobalCom() != null) {
+			
+			IUser user = new User();			
+			user.getMetaworksContext().setWhere("local");
+			user.setUserId(this.getEmployee().getEmpCode());
+			user.setName(this.getEmployee().getEmpName());
+							
+			this.setUser(user);
+
+			
+			if (this.getEmployee().getPartCode() != null) {
+				try{
+					IDept dept = new Dept();
+					dept.setPartCode(this.getEmployee().getPartCode());
+					this.setDept(dept.load());
+				}catch(Throwable e){
+					
+				}
+			}
+			
+			if (this.getEmployee().getGlobalCom() != null) {
+				try{
+					ICompany company = new Company();
+					company.setComCode(this.getEmployee().getGlobalCom());
+					this.setCompany(company.load());
+				}catch(Throwable e){
+					
+				}
+			}
+		} else {
+			throw new Exception(
+					"There is no Company info in user info.");
+		}
 	}
 
 }

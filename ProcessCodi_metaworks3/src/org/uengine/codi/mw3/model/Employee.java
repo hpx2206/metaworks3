@@ -1,21 +1,42 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.MetaworksContext;
-import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ToOpener;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
 import org.metaworks.widget.ModalWindow;
-import org.uengine.codi.mw3.Login;
+import org.uengine.codi.mw3.common.MainPanel;
 
 public class Employee extends Database<IEmployee> implements IEmployee {
 	
-	String empCode;	
+/*	IUser user;	
+		public IUser getUser() {
+			return user;
+		}
+		public void setUser(IUser user) {
+			this.user = user;
+		}*/
 
-	String password;
-	String confirmPassword;
+	String empCode;
+		public String getEmpCode() {
+			return empCode;
+		}
+		public void setEmpCode(String empCode) {
+			this.empCode = empCode;
+		}
+		
 	String empName;
+		public String getEmpName() {
+			return empName;
+		}
+	
+		public void setEmpName(String empName) {
+			this.empName = empName;
+		}
+		
+	String password;
+	String confirmPassword;	
 	boolean isAdmin;
 	String jikName;
 	// IDept dept;
@@ -53,12 +74,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	public void setPreferUX(String preferUX) {
 		this.preferUX = preferUX;
 	}
-	public String getEmpCode() {
-		return empCode;
-	}
-	public void setEmpCode(String empCode) {
-		this.empCode = empCode;
-	}
+
 	
 	public String getPassword() {
 		return password;
@@ -75,13 +91,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		this.confirmPassword = confirmPassword;
 	}
 	
-	public String getEmpName() {
-		return empName;
-	}
 
-	public void setEmpName(String empName) {
-		this.empName = empName;
-	}
 
 	@Override
 	public boolean getIsAdmin() {
@@ -314,12 +324,12 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 			return new Object[] {new EmployeeInfo(findMe()), session};
 		}
 		
-		Login login = new Login();
-		login.setUserId(getEmpCode());
-		login.setGuidedTour(true);
-		login.getMetaworksContext().setWhen("edit");
+		Session session = new Session();
+		session.setEmployee(this);		
+		session.fillSession();
+		session.setGuidedTour(true);
 		
-		return new Object[] {new Remover(new ModalWindow()), login};
+		return new Object[] {new Remover(new ModalWindow()), new MainPanel(new Main(session))};
 	}
 	
 	@Override
