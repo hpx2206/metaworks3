@@ -8,6 +8,13 @@ var org_uengine_codi_mw3_model_InstanceListPanel = function(objectId, className)
 	this.divElement = $('#' + this.divId); 	
 	this.divElement.addClass('mw3_layout').attr('objectId', objectId);
 	
+	var object = mw3.objects[this.objectId];
+	if(object && object.title){
+		if(this.windowObjectId){
+			mw3.getFaceHelper(this.windowObjectId).setTitle(mw3.localize(object.title));
+		}
+	}	
+	
 	var faceHelper = this;	
 	faceHelper.load();		
 }
