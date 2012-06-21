@@ -1,11 +1,13 @@
 package org.metaworks.example.facebook;
 
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 import org.metaworks.annotation.NonEditable;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.IDAO;
 
+@Table(name="login")
 public interface ILogin extends IDAO{
 
 	@Id
