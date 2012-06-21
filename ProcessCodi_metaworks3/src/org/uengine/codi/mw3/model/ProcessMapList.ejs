@@ -1,5 +1,11 @@
 <%
 	if(value){
+		var session = mw3.getAutowiredObject('org.uengine.codi.mw3.model.Session');
+		
+		var admin = false;
+		if(session && session.employee)
+			admin = session.employee.isAdmin;
+		
 		if(value.processMapList){
 %>
 <div class="view_box" id="hiddenReply" style="display: block; ">
@@ -26,12 +32,17 @@
 			}
 %>
 		</ul>
-		
+<%
+			if(admin){
+%>					
 		<div id="btnline" style="padding-top:8px;">
 			<ul>
 				<li><a id="wBtn" href="javascript:<%=methods.append.caller()%>"><span><%=mw3.localize("$add")%></span></a></li>
 			</ul>
 		</div>
+<%
+			}
+%>					
 		<div class="clear"></div>		
 	</div>
 

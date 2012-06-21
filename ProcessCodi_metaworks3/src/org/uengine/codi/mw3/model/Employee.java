@@ -232,6 +232,16 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		findEmployee.select();
 		if (findEmployee.next()) {
 			employee.copyFrom(findEmployee);
+			employee.getDept().getMetaworksContext().setHow("picker");
+			/*
+			Dept dept = new Dept();
+			
+			dept.getMetaworksContext().setHow("info");
+			dept.setPartCode(employee.getDept().getPartCode());
+			dept.setPartName(employee.getDept().getPartName());
+			
+			employee.setDept(dept);
+			*/
 		}
 		return employee;
 
@@ -363,7 +373,8 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		
 		if(session != null && session.getEmployee().getEmpCode().equals(getEmpCode())) {
 			session.setEmployee(findMe());
-			return new Object[] {new Refresh(new EmployeeInfo(findMe())), new Refresh(session)};
+			
+			return new Object[] {new Refresh(new EmployeeInfo(this)), new Refresh(session)};
 		}
 		
 		Session session = new Session();
@@ -371,7 +382,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		session.fillSession();
 		session.setGuidedTour(true);
 		
-		return new Object[] {new Remover(new ModalWindow()), new ToOpener(new Main(session))};
+		return new Object[] {new Remover(new ModalWindow()), new ToOpener(new MainPanel(new Main(session)))};
 	}
 	
 	@Override

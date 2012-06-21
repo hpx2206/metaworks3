@@ -9,8 +9,6 @@ var org_uengine_codi_mw3_model_IEmployee = function(objectId, className){
 	var object = mw3.objects[this.objectId];
 	
 	if(object && object.metaworksContext && object.metaworksContext.when == 'new'){
-		console.debug('get facebook info');
-		
 		// facebook login status
 		FB.getLoginStatus(function(response) {
 			if (response.status == 'connected'){	
@@ -18,8 +16,6 @@ var org_uengine_codi_mw3_model_IEmployee = function(objectId, className){
 			    var accessToken = response.authResponse.accessToken;
 				
 				FB.api('/' + uid, function(response) {
-					console.debug(response);
-					
 					var object = mw3.objects[objectId];
 					
 					object.facebookId = response.id;				
