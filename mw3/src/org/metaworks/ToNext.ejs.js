@@ -4,6 +4,8 @@ var org_metaworks_ToNext = function(objectId, className){
 	var object = mw3.objects[objectId];
 	
 	if(object){
+		mw3.removeObject(objectId);
+		
 		var objKeys = mw3._createObjectKey(object.previous, true);
 			
 		if(objKeys && objKeys.length){
@@ -23,7 +25,6 @@ var org_metaworks_ToNext = function(objectId, className){
 			}
 		}
 		
-		mw3.removeObject(objectId, true);
 		mw3.onLoadFaceHelperScript();
 	}
 

@@ -1203,10 +1203,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				var divId =  "#" + this._getObjectDivId(objectId);
 				var infoDivId =  "#" + this._getInfoDivId(objectId);
 				
-				if(!self){
-					console.debug('not self');
-					this.newBeanProperty(objectId);
-				}
+				this.newBeanProperty(objectId);
 				
 				// 2012-04-04 cjw destroy 호출 후 removeObject
 				var faceHelper = this.getFaceHelper(objectId);
