@@ -150,8 +150,8 @@
 		  js.src = "//connect.facebook.net/ko_KR/all.js#xfbml=1&appId=119159701538006";
 		  fjs.parentNode.insertBefore(js, fjs);
 		}(document, 'script', 'facebook-jssdk'));</script>
-						
-		<script type="text/javascript">
+		
+ 		<script type="text/javascript">
 			var Request = function() {
 				this.getParameter = function(name) {
 					var rtnval = "";
@@ -214,17 +214,19 @@
 					if( this.getFaceHelper(objId) && this.getFaceHelper(objId).endLoading)
 						this.getFaceHelper(objId).endLoading();	
 					else
-						mw3.endLoading();
+						mw3.endLoading(objId);
 					
-					try{mw3.endLoading();}catch(x){}
+					try{mw3.endLoading(objId);}catch(x){}
 					
 					$.msg({
+							bgPath : mw3.base + '/images/',
 						    content : "<b>" + mw3.localize(message) + "</b>"
 					});
 		 		}
 		 		
 		 		mw3.alert = function(message){
 					$.msg({
+							bgPath : mw3.base + '/images/',
 						    content : "<b>" + mw3.localize(message) + "</b>"
 					});
 		 		}

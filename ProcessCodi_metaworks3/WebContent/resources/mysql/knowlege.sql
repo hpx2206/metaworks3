@@ -6,7 +6,7 @@ CREATE TABLE `bpm_knol` (
 	`no` INT(11) NULL DEFAULT NULL,
 	PRIMARY KEY (`id`),
 	INDEX `parentId` (`parentId`, `no`)
-)
+);
 
 
 alter table bpm_knol add column authorid varchar(100);
