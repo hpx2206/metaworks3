@@ -5,16 +5,12 @@ var org_metaworks_widget_grid_Grid= function(objectId, className){
 	
 	var grid = mw3.objects[objectId];
 	
-	//mw3.armObject(grid.gridCell);
-	//grid.gridCell.changeData();
-	
 	var colModel = [];
 	
 	var i=0; 
 	for(var columnIndex in grid.columnNames){
 		colModel[i++] = grid.columnModel[grid.columnNames[columnIndex]];
-	}
-	
+	}	
 	
 	jQuery("#grid_" + this.objectId).jqGrid({
 		datatype: "local",
@@ -39,8 +35,7 @@ var org_metaworks_widget_grid_Grid= function(objectId, className){
 					col : iCol,
 					value : val}
 			var grid = mw3.objects[objectId];
-			
-			grid.cell = cell;	
+			grid.cell = cell;
 			
 			try{
 				grid.changeCell();
@@ -54,9 +49,7 @@ var org_metaworks_widget_grid_Grid= function(objectId, className){
 		}
 	});
 	
-	
 	var keyColmun = grid.keyColumn;
-	
 	if(grid instanceof Array){
 		for(var i=0;i<=grid.data.length;i++){
 			jQuery("#grid_" + this.objectId).jqGrid('addRowData', keyColmun, grid.data[i]);

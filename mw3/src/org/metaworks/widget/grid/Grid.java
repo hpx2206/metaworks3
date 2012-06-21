@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.metaworks.ServiceMethodContext;
-import org.metaworks.annotation.AutowiredToClient;
 import org.metaworks.annotation.ServiceMethod;
 
 public class Grid {

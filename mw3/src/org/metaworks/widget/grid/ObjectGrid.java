@@ -3,10 +3,8 @@ package org.metaworks.widget.grid;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.metaworks.FieldDescriptor;
-import org.metaworks.ObjectInstance;
 import org.metaworks.ObjectType;
 import org.metaworks.WebObjectType;
 import org.metaworks.annotation.ServiceMethod;
