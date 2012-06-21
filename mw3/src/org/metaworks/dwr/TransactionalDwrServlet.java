@@ -130,7 +130,9 @@ public class TransactionalDwrServlet extends DwrServlet{
 		//TODO: It's debugging option 
 		//MetaworksRemoteService.metadataStorage = new Hashtable<String, WebObjectType>();
 		
-		TransactionContext tx = TransactionContext.getThreadLocalInstance();
+//		TransactionContext tx = TransactionContext.getThreadLocalInstance();  //Very Risky Code since the threads are pooled. so the transactionContext will persist uninteneded.
+        TransactionContext tx = new TransactionContext(); //once a TransactionContext is created, it would be cached by ThreadLocal.set, so, we need to remove this after the request processing. 
+        
 		tx.setManagedTransaction(false);
 		tx.setAutoCloseConnection(true);
 		

@@ -60,20 +60,24 @@ public class TransactionContext implements ConnectionFactory{
 		this.delegatedConnectionFactory = delegatedConnectionFactory;
 	}
 	
-	protected TransactionContext(){
+	public TransactionContext(){
+		
+		if(getThreadLocalInstance()!=null)
+			throw new RuntimeException("There's uncommitted transactionContext remains.");
+		
+		local.set(this);
 	}
 	
 	public static TransactionContext getThreadLocalInstance(){
 		TransactionContext tc = local.get();
 		
-		if(tc==null){
-			tc = new TransactionContext();
-			local.set(tc);
-		}
+//		if(tc==null){
+//			tc = new TransactionContext();
+//			local.set(tc);
+//		}
 		
 		return tc;
 	}
-	
 	
 
 	List transactionListeners = new ArrayList();
