@@ -5,4 +5,4 @@ CREATE TABLE `processmap` (
 	`color` VARCHAR(10) NULL DEFAULT NULL,
 	`no` INT(11) NULL DEFAULT NULL,
 	PRIMARY KEY (`defId`)
-)
+);
