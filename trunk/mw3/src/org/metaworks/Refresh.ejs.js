@@ -19,7 +19,7 @@ var org_metaworks_Refresh = function(objectId, className){
 			}
 		}
 		
-		mw3.removeObject(objectId);	
+		mw3.removeObject(objectId, true);	
 		mw3.onLoadFaceHelperScript();
 	}	
 }
