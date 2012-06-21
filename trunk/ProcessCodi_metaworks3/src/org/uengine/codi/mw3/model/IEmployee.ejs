@@ -210,14 +210,15 @@ if(value){
 					<div class="infoSub"><span><%=mw3.localize("$Id")%> :</span><span><%=value.empCode %></span></div>
 <%
 		if(mw3.when == 'edit'){
-%>							
+%>					
+					<div class="infoSub"><span><%=mw3.localize("$Name")%> :</span><span><%=fields.empName.here()%></span></div>		
 					<div class="infoSub"><span><%=mw3.localize("$Password")%> : </span><span><%=fields.password.here() %></span></div>
 					<div class="infoSub"><span><%=mw3.localize("$Re-Password")%> : </span><span><%=fields.confirmPassword.here() %></span></div>								
 <%		
 		}
 %>
 					<div class="infoSub"><span><%=mw3.localize("$Dept")%> : </span><span><%=fields.dept.here() %></span></div>							
-					<div class="infoSub"><span><%=mw3.localize("$Position")%> : </span><span><%=value.jikName %></span></div>
+					<div class="infoSub"><span><%=mw3.localize("$Position")%> : </span><span><%=fields.jikName.here() %></span></div>
 					<div class="infoSub"><span><%=mw3.localize("$Phone")%> : </span><span><%=fields.mobileNo.here() %></span></div>
 					<div class="infoSub"><span><%=mw3.localize("$Email")%> : </span><span><%=fields.email.here() %></span></div>
 					<div class="infoSub"><span><%=mw3.localize("$Language")%> : </span><span><%=fields.locale.here() %></span></div>
