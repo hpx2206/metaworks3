@@ -24,8 +24,6 @@ org_uengine_codi_mw3_model_CrowdSourcer.prototype = {
 			for ( var i=0; i < facebookFriends.length; i++) {
 					var feed = facebookFriends[i].userId + "/feed";
 					
-					console.debug(feed);
-					
 					var cnt = 0;
 					var postIds = new Array();
 		
