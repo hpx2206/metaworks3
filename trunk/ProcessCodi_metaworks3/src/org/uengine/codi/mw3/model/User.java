@@ -293,7 +293,7 @@ public class User extends Database<IUser> implements IUser {
 		
 	}
 	
-	public ContactList addContact() throws Exception {
+	public Refresh addContact() throws Exception {
 		
 		Contact contact = new Contact();
 		contact.setFriend(this);
@@ -310,7 +310,7 @@ public class User extends Database<IUser> implements IUser {
 		
 		contactList.load(session.getUser().getUserId());		
 		
-		return contactList;
+		return new Refresh(contactList);
 	}	
 	
 	public Object[] removeContact() throws Exception {

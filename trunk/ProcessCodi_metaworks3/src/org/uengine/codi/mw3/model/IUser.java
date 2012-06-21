@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.Refresh;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;
 import org.metaworks.annotation.ServiceMethod;
@@ -31,7 +32,7 @@ public interface IUser extends IDAO{
 //	public void setInstanceId(String instanceId);
 	
 	@ServiceMethod(callByContent=true)
-	public ContactList addContact() throws Exception;
+	public Refresh addContact() throws Exception;
 	
 	@ServiceMethod(callByContent=true)
 	public Object[] addFollower() throws Exception;
