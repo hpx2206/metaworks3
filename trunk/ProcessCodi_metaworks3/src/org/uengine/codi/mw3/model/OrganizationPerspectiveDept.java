@@ -31,11 +31,10 @@ public class OrganizationPerspectiveDept extends Perspective {
 		System.out.println("loadChildren");
 		
 		IDept dept = new Dept();
-		dept.getMetaworksContext().setWhere("navigator");
+		dept.getMetaworksContext().setHow("tree");
 		dept.setGlobalCom(session.getEmployee().getGlobalCom());
 		
 		DeptList deptList = new DeptList();
-		deptList.getMetaworksContext().setWhen("navigator");		
 		deptList.setId("/ROOT/");		
 		deptList.setDept(dept.findByGlobalCom());
 		
@@ -68,7 +67,7 @@ public class OrganizationPerspectiveDept extends Perspective {
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
 	public Popup addDept() {
 		IDept dept = new Dept();
-		dept.getMetaworksContext().setWhere("admin");
+		dept.getMetaworksContext().setHow("info");
 		dept.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 		
 		Popup popup = new Popup();

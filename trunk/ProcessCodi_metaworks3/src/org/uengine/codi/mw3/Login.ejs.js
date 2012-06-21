@@ -5,29 +5,26 @@ var org_uengine_codi_mw3_Login = function(objectId, className){
 	this.divId = mw3._getObjectDivId(this.objectId);
 
 	// facebook init
-	if($('#fb-root').length == 0)
-		$('<div id="fb-root"></div>').insertBefore('#' + this.divId);	
 
 	var storedId = Get_Cookie("codi.id");
-	if(storedId!=null){
-		
-/*		mw3.getInputElement(objectId, "userId").value = storedId;
+	if(storedId!=null){		
+		mw3.getInputElement(objectId, "userId").value = storedId;
 		mw3.getInputElement(objectId, "password").value = Get_Cookie("codi.password");
 		var object = mw3.objects[objectId];
 		
 		if(!mw3.autoLogged){
 			object.login();
 			mw3["autoLogged"] = true;
-		}*/
+		}
 	}else{		
 			
 	}
-	
+		
 	// facebook login status
 	FB.getLoginStatus(function(response) {
 		if (response.status != 'connected')	
 			$('#method_facebook_' + objectId).show();
-	});
+	}, true);
 	
 	var object = mw3.objects[this.objectId]; 
  

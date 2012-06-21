@@ -281,16 +281,17 @@ public class Dept extends Database<IDept> implements IDept {
 	@Override
 	public Object[] saveDeptInfo() throws Exception {
 
+		this.getMetaworksContext().setHow("tree");
+				
 		if (getMetaworksContext().getWhen().equals(MetaworksContext.WHEN_NEW)) {
+			this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+			
 			// 생성
 			this.setGlobalCom(session.getCompany().getComCode());
-			this.setIsDeleted("0");
-			this.getMetaworksContext().setWhere("navigator");
-			this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);				
+			this.setIsDeleted("0");		
 			
 			createDatabaseMe();
-			syncToDatabaseMe();
-			
+			syncToDatabaseMe();			
 
 			DeptList deptList = new DeptList();			
 			if(this.getParent_PartCode() == null)				
@@ -306,12 +307,11 @@ public class Dept extends Database<IDept> implements IDept {
 			
 			//returnValueDept = findRefreshableParentDept();
 		} else {
+			this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+			
 			// if(getMetaworksContext().getWhen().equals(MetaworksContext.WHEN_EDIT))
 			syncToDatabaseMe();
 			flushDatabaseMe();
-			
-			this.getMetaworksContext().setWhere("navigator");
-			this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);				
 			
 			return new Object[]{new Remover(new Popup()), new Refresh(this)};
 		}
@@ -446,7 +446,7 @@ public class Dept extends Database<IDept> implements IDept {
 		dept.setPartCode(this.getPartCode());
 		dept.copyFrom(dept.databaseMe());
 		
-		dept.getMetaworksContext().setWhere("inDetailView");
+		dept.getMetaworksContext().setHow("picker");
 		dept.getMetaworksContext().setWhen("edit");
 		
 		return new Object[] {new ToOpener(dept), new Remover(new Popup())};

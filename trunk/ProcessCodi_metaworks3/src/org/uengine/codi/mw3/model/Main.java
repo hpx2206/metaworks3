@@ -96,11 +96,8 @@ public class Main {
 			
 			Layout outerLayout = new Layout();
 			outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:5, north__size:52, west__size:" + ("asana".equals(preferUX) ? "700" : "400"));
-			outerLayout.setNorth(new ProcessTopPanel(session));
-			
+			outerLayout.setNorth(new ProcessTopPanel(session));			
 			outerLayout.setWest(createInstanceListWindow(session));
-			
-			
 			outerLayout.setCenter(createNewInstancePanel(session));	
 			outerLayout.setName("center");
 			

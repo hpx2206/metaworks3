@@ -1,188 +1,59 @@
 <%
-if(value){
-	if(mw3.where == 'admin'){
-		if(mw3.when == 'new') {
-		%>
-		PartCode : <%=fields.partCode.here() %>
-		PartName : <%=fields.partName.here() %>
-		Description : <%=fields.description.here() %>
-		<%=methods.saveDeptInfo.here() %>
-		
-		<%
-		} else if(mw3.when == 'view') {
-			if(value.partCode == null) {
-			%>
-			<a onClick="<%=methods.drillDown.caller() %>" ><%=fields.partName.here()%></a>
-			<%
-				if(value.selected) {
-					if(value.children) {
-					%>
-					<ul>
-					<li style="border-bottom:1px solid #ccc; padding-left:15px;"><%=fields.children.here() %></li>
-					<%
-					}
-					if(value.deptEmployee) {
-					%>
-					<li style="border-bottom:1px solid #ccc; padding-left:15px;"><%=fields.deptEmployee.here() %></li>
-					<%
-					}
-					%>
-					</ul>
-					<%=methods.addNewChildDept.here() %>
-					<%=methods.addNewEmployee.here() %>
-				<%
-				}
-			} else {
-			%>
-				<a onClick="<%=methods.drillDown.caller() %>" > Name : <%=fields.partName.here()%>  , Code : <%=fields.partCode.here()%></a>
-				<%=fields.description.here()%>
-				<%
-				if(value.selected) {
-					%>
-					<ul>
-					<%
-					if(value.children) {
-					%>
-					<li style="border-bottom:1px solid #ccc; padding-left:15px;"><%=fields.children.here() %></li>
-					<%
-					}
-					if(value.deptEmployee) {
-					%>
-					<li style="border-bottom:1px solid #ccc; padding-left:15px;"><%=fields.deptEmployee.here() %></li>
-					<%
-					}
-					%>
-					</ul>
-					<%=methods.addNewChildDept.here() %>
-					<%=methods.addNewEmployee.here() %>
-					<%=methods.editDeptInfo.here() %>
-				<%
-				}
+	if(value){
+		if(mw3.how == 'tree'){
+%>
+		<div>	
+			<a onClick="<%=methods.drillDown.caller() %>" class="idept"><%=fields.partName.here() %></a>			
+<%
+			if(mw3.where=='deptPicker'){
+%>
+			<%=methods.pickup.here()%>
+<%			
 			}
-		} else if(mw3.when = 'edit') {
-		%>
-		PartCode : <%=value.partCode %>
-		PartName : <%=fields.partName.here() %>
-		Description : <%=fields.description.here() %>
+%>		
+			<div style="clear"></div>	
+		</div>
 		
-		<%=methods.saveDeptInfo.here() %>
-		<% if(value.isDeleted == '0'){
-			%>
-			<%=methods.deleteDept.here() %>
-			<%
-		} else if(value.isDeleted == '1') {
-			%>
-			<%=methods.restoreDept.here() %>
-			<%
-		}
-		%>
-		<%
-		} else {
-		%>
-		<%=methods.addNewChildDept.here() %>
-		<%
-		}
-	} else if(mw3.where == 'navigator') {
-	%>
-	
-		<a onClick="<%=methods.drillDown.caller() %>" class="idept"><%=fields.partName.here() %></a>
-		<%
+<%		
 			if(value.selected) {
-			%>
-				<ul>
-				
-				<%
+%>
+				<ul>				
+<%
 				if(value.children) {
-				%>
+%>
 					<li style=" padding-left:20px;"><%=fields.children.here() %></li>
-				<%
+<%
 				}
-				if(value.deptEmployee) {
-				%>
-					<li style=" padding-left:20px;"><%=fields.deptEmployee.here() %></li>
-				<%
-				}
-				%>
 				
+				if(value.deptEmployee) {
+%>
+					<li style=" padding-left:20px;"><%=fields.deptEmployee.here() %></li>
+<%
+				}
+%>		
 				<ul>
-			<%
+<%
 			}
-		%>
-	<%
-	} else if(mw3.where == 'picker' || mw3.where == 'deptPicker') {
-	%>
-	<a onClick="<%=methods.drillDown.caller() %>" class="idept"><%=fields.partName.here() %></a>
-	<%
-	if(mw3.where=='deptPicker'){
-	%>
-		<%=methods.pickup.here()%>
-	<%
+		} else if(mw3.how == 'picker'){
+%>
+			<span><%=value.partName %>(<%=value.partCode %>)</span>
+<%
+			if(mw3.when == 'new' || mw3.when == 'edit'){
+%>
+			<span><%=methods.openPicker.here()%></span>
+<%	
+			}
+		} else {
+			if(mw3.when == 'new' || mw3.when == 'edit'){
+%>
+			PartCode : <%=fields.partCode.here({when : mw3.when=='edit'?'view':mw3.when}) %>
+			PartName : <%=fields.partName.here() %>
+			Description : <%=fields.description.here() %>
+			
+			<%=methods.saveDeptInfo.here() %>
+<%			
+			}
+		}
 	}
-	%>
-	
-	<%
-		if(value.selected) {
-		%>
-			<ul>
-			<%
-			if(value.children) {
-			%>
-				<li style=" padding-left:20px;">
-					<%=fields.children.here() %>
-				</li>
-			<%
-			}
-			if(value.deptEmployee) {
-			%>
-				<li style=" padding-left:20px;"><%=fields.deptEmployee.here() %></li>
-			<%
-			}
-			%>
-			<ul>
-		<%
-		}
-	%>
-	<%
-	} else if(mw3.where == 'addLocalContactPanel'){
-	%>
-	<a onClick="<%=methods.drillDown.caller() %>"  class="idept"><%=fields.partName.here() %></a>
-	<%
-		if(value.selected) {
-		%>
-			<ul>
-			<%
-			if(value.children) {
-			%>
-				<li style=" padding-left:20px;"><%=fields.children.here() %></li>
-			<%
-			}
-			if(value.deptEmployee) {
-			%>
-				<li style=" padding-left:20px;"><%=fields.deptEmployee.here() %></li>
-			<%
-			}
-			%>
-			<ul>
-		<%
-		}
-	%>
-	<%
-	} else if(mw3.where == 'inDetailView'){
-	console.debug(value);
-	
-	%>
-		<span><%=value.partName %>(<%=value.partCode %>)</span>
-	<%
-		if(mw3.when == 'edit'){
-	%>
-		<%=methods.openPicker.here()%>
-	<%	
-		}
-	} else {
-	%>
-	IDept Object where context value : <%=mw3.where %>
-	<%
-	}
-}
 %>
 

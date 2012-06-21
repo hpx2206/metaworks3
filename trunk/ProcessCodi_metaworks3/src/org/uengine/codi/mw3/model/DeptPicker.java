@@ -2,6 +2,7 @@ package org.uengine.codi.mw3.model;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
@@ -35,6 +36,7 @@ public class DeptPicker {
 		
 	public void load() throws Exception {
 		IDept dept = new Dept();
+		dept.getMetaworksContext().setHow("tree");
 		dept.getMetaworksContext().setWhere("deptPicker");
 		dept.setGlobalCom(this.getGlobalCom());
 		
@@ -43,5 +45,17 @@ public class DeptPicker {
 		deptList.setDept(dept.findByGlobalCom());
 		
 		setDeptList(deptList);
+	}
+	
+	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
+	public Popup addDept() {
+		IDept dept = new Dept();
+		dept.getMetaworksContext().setWhere("admin");
+		dept.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+		
+		Popup popup = new Popup();
+		popup.setPanel(dept);
+		
+		return popup;
 	}	
 }
