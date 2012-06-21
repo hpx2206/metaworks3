@@ -1,17 +1,11 @@
 package org.metaworks.example.ide;
 
-import java.util.ArrayList;
-
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.ServiceMethod;
 
 public class SourceCode {
-	
 	public SourceCode(){
-		//setCode("... ");
 	}
-	
-	
 	String code;
 		public String getCode() {
 			return code;
@@ -22,24 +16,21 @@ public class SourceCode {
 		}
 	
 	CompileError[] compileErrors;
+		public CompileError[] getCompileErrors() {
+			return compileErrors;
+		}
+		public void setCompileErrors(CompileError[] compileErrors) {
+			this.compileErrors = compileErrors;
+		}
 	
 	String language;
-
-	public CompileError[] getCompileErrors() {
-		return compileErrors;
-	}
-
-	public void setCompileErrors(CompileError[] compileErrors) {
-		this.compileErrors = compileErrors;
-	}
-
-	public String getLanguage() {
-		return language;
-	}
-
-	public void setLanguage(String language) {
-		this.language = language;
-	}
+		public String getLanguage() {
+			return language;
+		}
+	
+		public void setLanguage(String language) {
+			this.language = language;
+		}
 	
 	Position cursorPosition;
 		public Position getCursorPosition() {
@@ -70,7 +61,6 @@ public class SourceCode {
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_STICK)
 	public CodeAssist requestAssist(){
 		CodeAssist codeAssist = new CodeAssist();
-//		codeAssist.getAssistances().add("");
 		
 		codeAssist.setSrcCodeObjectId(clientObjectId);
 		
@@ -78,12 +68,7 @@ public class SourceCode {
 	}
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_NONE)
-	public void installBreakpoint(){
-		
+	public void installBreakpoint(){		
 		System.out.println("install breakpoint at : " + lineAssistRequested);
 	}
-	
-	
-
-	
 }
