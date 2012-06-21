@@ -8,7 +8,7 @@ var org_uengine_codi_mw3_model_SearchBox = function(objectId, className) {
 	this.timeout;
 	
 	var object = mw3.objects[this.objectId];
-	if(object.__descriptor){
+	if(object && object.__descriptor){
 		this.isKeyupSearch = object.__descriptor.getOptionValue("keyupSearch");
 		this.isEnterSearch = object.__descriptor.getOptionValue("enterSearch");
 	}
