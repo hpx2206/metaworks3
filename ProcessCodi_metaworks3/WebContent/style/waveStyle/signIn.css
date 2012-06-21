@@ -109,14 +109,14 @@
 #loginContainer input.submitFacebook {
 	
 	display:inline-block;
-	background: url('../../images/signIn/button2.png') no-repeat;
+	background: url('../../images/signIn/facebook-login-button.png') no-repeat;
 	border: none;
 	cursor: pointer;
-	width: 85px;
-	height: 38px;
+	width: 210px;
+	height: 31px;
 	position: relative;
-	top: 0px;
-	left: 10px;
+	top: 10px;
+	left: 430px;
 }
 
 #loginContainer input.submit:focus {

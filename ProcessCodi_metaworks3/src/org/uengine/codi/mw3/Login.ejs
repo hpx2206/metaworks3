@@ -25,7 +25,9 @@
             <span id="method_<%=objectId%>_login"><input id="signin" class="submit"  value="" title="click is login" alt="click is login" onclick="<%=methods.login.caller() %>"/></span>
             <span id="method_<%=objectId%>_subscribe"><input id="subscribe" class="submitTenant"  value="" title="click is subscribe" alt="click is subscribe" onclick="<%=methods.subscribe.caller() %>"/></span>
             
-            <span id="method_facebook_<%=objectId%>" style="display:none"><input id="facebook" class="submitFacebook"  value="" title="click is facebook subscribe" alt="click is facebook subscribe" onclick="mw3.getFaceHelper(<%=objectId%>).loginFacebook();"/></span>
+            <div>
+            	<span id="method_facebook_<%=objectId%>" style="display:none"><input id="facebook" class="submitFacebook"  value="" title="click is facebook subscribe" alt="click is facebook subscribe" onclick="mw3.getFaceHelper(<%=objectId%>).loginFacebook();"/></span>
+            </div>
             
         </div>
         <!-- clearfix -->
