@@ -93,7 +93,7 @@ public interface IDept extends IDAO {
 	@ServiceMethod(callByContent = true, target=ServiceMethodContext.TARGET_POPUP)
 	public Object[] saveDeptInfo() throws Exception;
 
-	@ServiceMethod(inContextMenu=true, when=MetaworksContext.WHEN_VIEW, needToConfirm=true)
+	@ServiceMethod(inContextMenu=true, needToConfirm=true)
 	public Object[] deleteDept() throws Exception;
 	
 	@ServiceMethod(callByContent = true)

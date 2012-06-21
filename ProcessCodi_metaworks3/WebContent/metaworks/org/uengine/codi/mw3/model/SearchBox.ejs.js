@@ -46,7 +46,7 @@ org_uengine_codi_mw3_model_SearchBox.prototype = {
 			
 			this.timeout = setTimeout(function() {
 				mw3.call(objectId, 'search');
-			}, 500);
+			}, 1500);
 		}else if(this.isEnterSearch){
 			if(e.keyCode == 13){	// key return
 				window.event.returnValue = false;
@@ -64,6 +64,9 @@ org_uengine_codi_mw3_model_SearchBox.prototype = {
 		if(this.windowObjectId && mw3.getFaceHelper(this.windowObjectId) && mw3.getFaceHelper(this.windowObjectId).endLoading)
 			mw3.getFaceHelper(this.windowObjectId).endLoading();
 	},
+	destroy : function(){
+		this.endLoading();
+	},	
 	showStatus : function(message){
 		
 	}	
