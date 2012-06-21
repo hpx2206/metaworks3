@@ -7,44 +7,47 @@ var org_metaworks_widget_layout_Layout = function(objectId, className){
 	this.div = $(this.divId);	
 	
 	var object = mw3.objects[this.objectId];
-	var faceHelper = this;
 	
-	this.size = this.div.children().length;
-	this.hidden = 0;
-	
-	//this.change = false;
-	
-	this.div.addClass('mw3_layout').attr('objectId', objectId);
+	if(object){
+		var faceHelper = this;
 		
-	this.list = {};	
-	if(object.center)
-		this.list['center'] = this.div.children('.ui-layout-center');
-	if(object.east)
-		this.list['east'] = this.div.children('.ui-layout-east');
-	if(object.west)
-		this.list['west'] = this.div.children('.ui-layout-west');
-	if(object.north)
-		this.list['north'] = this.div.children('.ui-layout-north');
-	if(object.south)
-		this.list['south'] = this.div.children('.ui-layout-south');
-	
-	this.parent = this.div.parent().closest('.mw3_layout');
-	if(this.parent.length == 0){
-		this.parent = null;
-		this.name = null;
-	}else{
-		var layout =this.div.parent();
+		this.size = this.div.children().length;
+		this.hidden = 0;
 		
-		if(!layout.hasClass('pane')){
-			layout = layout.parent();
+		//this.change = false;
+		
+		this.div.addClass('mw3_layout').attr('objectId', objectId);
+			
+		this.list = {};	
+		if(object.center)
+			this.list['center'] = this.div.children('.ui-layout-center');
+		if(object.east)
+			this.list['east'] = this.div.children('.ui-layout-east');
+		if(object.west)
+			this.list['west'] = this.div.children('.ui-layout-west');
+		if(object.north)
+			this.list['north'] = this.div.children('.ui-layout-north');
+		if(object.south)
+			this.list['south'] = this.div.children('.ui-layout-south');
+		
+		this.parent = this.div.parent().closest('.mw3_layout');
+		if(this.parent.length == 0){
+			this.parent = null;
+			this.name = null;
+		}else{
+			var layout =this.div.parent();
+			
+			if(!layout.hasClass('pane')){
+				layout = layout.parent();
+			}
+			
+			if(layout.hasClass('pane'))
+				this.name = layout.attr('layoutName');		
 		}
 		
-		if(layout.hasClass('pane'))
-			this.name = layout.attr('layoutName');		
+		
+		faceHelper.load();
 	}
-	
-	
-	faceHelper.load();
 }
 
 org_metaworks_widget_layout_Layout.prototype.load = function(){

@@ -22,7 +22,7 @@ var org_metaworks_ToPrev = function(objectId, className){
 			}
 		}
 		
-		mw3.removeObject(objectId);
+		mw3.removeObject(objectId, true);
 		mw3.onLoadFaceHelperScript();
 	}
 

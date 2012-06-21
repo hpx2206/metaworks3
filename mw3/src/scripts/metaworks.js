@@ -1196,14 +1196,17 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				return this._createObjectRef(this.targetObjectId, getObject());
 			}
 			
-			Metaworks3.prototype.removeObject = function(objectId){
+			Metaworks3.prototype.removeObject = function(objectId, self){
 				if(arguments.length == 0)
 					objectId = this.targetObjectId;				
 				
 				var divId =  "#" + this._getObjectDivId(objectId);
 				var infoDivId =  "#" + this._getInfoDivId(objectId);
 				
-				this.newBeanProperty(objectId);
+				if(!self){
+					console.debug('not self');
+					this.newBeanProperty(objectId);
+				}
 				
 				// 2012-04-04 cjw destroy 호출 후 removeObject
 				var faceHelper = this.getFaceHelper(objectId);
