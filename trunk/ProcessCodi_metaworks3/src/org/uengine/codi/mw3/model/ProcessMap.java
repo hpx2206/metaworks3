@@ -72,6 +72,23 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 			this.iconColor = iconColor;
 		}
 		
+	String cmPhrase;
+		
+		public String getCmPhrase() {
+			return cmPhrase;
+		}
+		public void setCmPhrase(String cmPhrase) {
+			this.cmPhrase = cmPhrase;
+		}
+		
+	String cmTrgr;	
+		public String getCmTrgr() {
+			return cmTrgr;
+		}
+		public void setCmTrgr(String cmTrgr) {
+			this.cmTrgr = cmTrgr;
+		}
+
 	public void createMe() throws Exception {
 		if(getIconFile().getFileTransfer() != null && !getIconFile().getFileTransfer().getFilename().isEmpty())
 			getIconFile().upload();
@@ -156,7 +173,13 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 	public Object[] initiate() throws Exception{
 //		InstanceViewContent instanceView// = new InstanceViewContent();
 		
-		String instId = processManager.initializeProcess(getDefId());		
+		String 	instId;		
+		
+		if(newInstancePanel!=null && newInstancePanel.getNewInstantiator().getTitle()!=null){
+			instId = processManager.initializeProcess(getDefId(), newInstancePanel.getNewInstantiator().getTitle());
+		}else{
+			instId = processManager.initializeProcess(getDefId());
+		}
 		
 		RoleMapping rm = RoleMapping.create();
 		if(session.user!=null)

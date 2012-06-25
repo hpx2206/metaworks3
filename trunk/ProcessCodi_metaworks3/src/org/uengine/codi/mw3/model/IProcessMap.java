@@ -20,6 +20,14 @@ public interface IProcessMap extends IDAO {
 	public String getName();
 	public void setName(String name);
 
+
+	public String getCmPhrase();
+	public void setCmPhrase(String cmPhrase);
+	
+	public String getCmTrgr();
+	public void setCmTrgr(String cmTrgr);
+
+	
 	public int getNo();
 	public void setNo(int no);
 	

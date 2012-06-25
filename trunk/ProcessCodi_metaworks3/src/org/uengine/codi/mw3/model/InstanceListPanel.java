@@ -1,5 +1,7 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.ContextAware;
+import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
@@ -8,8 +10,14 @@ import org.metaworks.annotation.Test;
 import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.calendar.ScheduleCalendar;
 import org.uengine.codi.mw3.knowledge.WfPanel;
+@Face(
+		ejsPathMappingByContext=
+	{
+		"{where: 'pinterest', face: 'faces/org/uengine/codi/mw3/model/InstanceListPanel_pinterest.ejs'}",
+	}		
 
-public class InstanceListPanel {
+)
+public class InstanceListPanel implements ContextAware{
 	
 	@AutowiredFromClient
 	public Session session;
@@ -20,6 +28,15 @@ public class InstanceListPanel {
 		instanceList = new InstanceList();
 		instanceList.init();
 	}
+
+	MetaworksContext metaworksContext;
+		
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
+		}
 
 	String title;
 		@Hidden
