@@ -1,0 +1,52 @@
+
+
+<% if(value!=null){
+
+			
+		var isChat = (value.defId == null && value.secuopt == '1')
+		var isOpenCollab = (value.defId == null && value.secuopt=='0')
+		var isProcess = (value.defId != null);
+		var isSecureProcess = (value.defId != null && value.secuopt == '1');
+		
+		
+		var pinterest_listCount = mw3['pinterest_listCount']++;
+	
+		var column = 3;
+		
+		if(pinterest_listCount > 3){
+			column = isProcess ? 2:1;
+		}
+	
+	%>
+	
+	
+<div class="box col<%=column%>">
+
+	<img src="images/portrait/<%=value.initiator.userId%>.jpg" width="<%=(column * 20)%>" align=left onerror="$(this).remove();">
+	<b><%=value.initiator.name%></b>
+				<% if(isChat){ %>
+					<span class="type_ping"></span><span class="instanceLock"></span>
+				<% }else if(isOpenCollab){ %>
+					<span class="type_ping"></span><span class="instanceUnLock"></span>
+				<% }else if(isProcess){ %>
+					<span class="type_process"></span><span class="instanceUnLock"></span>
+				<% }else if(isSecureProcess){ %>
+					<span class="type_process"></span><span class="instanceLock"></span>
+				<% } %>	
+						
+				<a href="javascript:<%=methods.popupDetail.caller()%>"><%=fields.name.here()%></a></li>
+				
+				<% if(value.currentUser && value.currentUser.userId){%>
+			
+			<%=value.lastCmnt%>
+	
+				<%}%>
+
+		<%=fields.startedDate.here()%>
+		
+		<%if(value.status=='Completed'){%> ( <%=mw3.localize('$Complete')%> ) <%}%>
+
+</div>
+
+<%}%>
+

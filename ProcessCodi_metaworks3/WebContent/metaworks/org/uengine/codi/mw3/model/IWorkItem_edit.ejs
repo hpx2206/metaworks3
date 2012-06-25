@@ -27,8 +27,13 @@
 		
 			<td width=16>&nbsp;</td>
 		
-			<td> 
-				<input type="text" id="post_<%=objectId%>" value="<%=value.title%>"  onkeydown="mw3.getFaceHelper('<%=objectId%>').press()"  rows="1" style="width:99%; height:21px; -webkit-border-radius:3px; outline:none;  webkit-border-radius:3px; border:1px solid #ccd; none;">
+			<td>
+			
+				<div id="commandDiv_<%=objectId%>"> 
+					<input type="text" id="post_<%=objectId%>" value="<%=value.title%>"  onkeydown="mw3.getFaceHelper('<%=objectId%>').press()"  rows="1" style="width:99%; height:21px; -webkit-border-radius:3px; outline:none;  webkit-border-radius:3px; border:1px solid #ccd; none;">
+					<div id="commandRecommendDiv_<%=objectId%>"></div> 
+				</div>
+				
 			</td>			
 			
 			<td width=50 align="center"><a id="wBtn" href="javascript:<%=methods.add.caller()%>"><span id="method_<%=objectId%>_add"><%=mw3.localize("$Post")%></span></a></td>

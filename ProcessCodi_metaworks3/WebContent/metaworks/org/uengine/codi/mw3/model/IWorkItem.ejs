@@ -15,7 +15,7 @@
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
 	<tbody>
 		<tr>
-			<td width="65">
+			<td width="65" valign="top">
 				<div class="notMePic">
 					<div class="notMePicPic"><%=fields.writer.here()%></div>
 					<div class="notMePicName"><%=value.writer.name%></div>
@@ -37,7 +37,7 @@
 				<tbody>
 					<tr>	
 					<% if(value.type!='comment'){%>						
-						<td rowspan="3" width="45" align="left" >
+						<td rowspan="3" width="45" align="left" valign="top">
 							<div style="position:relative; height:38px;">
 							<img src="images/waveStyle/wih<%=value.type%>.gif">
 								<% if(value.status) { %>
@@ -49,11 +49,11 @@
 							<div class="formcontexttitle" id="currentRunningWorkItemHandler">
 								<% if(value.type=='comment' || value.type=='file' || value.type=='src' || value.type=='memo'){%>
 									<span>
-										<%=value.title%>
+										<%=value.title%> 
 									</span>								
 								<%}else if(value.type==null){%>
 									<span>
-										<a href="javascript:<%=methods.detail.caller()%>"><%=value.title%> [ <%=value.status%> ]</a>
+										<%=mw3.localize('$MyTask')%>: <a href="javascript:<%=methods.detail.caller()%>"><%=value.title%> [ <%=value.status%> ]</a>
 									</span>
 									<span>
 										<a href="javascript:<%=methods.workItemPopup.caller()%>"><img src="images/waveStyle/newWindow.png" style="margin-top:2px;" title="새창으로 열기"></a>
