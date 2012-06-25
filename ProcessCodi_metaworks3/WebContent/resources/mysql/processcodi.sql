@@ -2753,3 +2753,11 @@ SET FOREIGN_KEY_CHECKS = 1;
 	 
 	 
 	 alter table emptable add column mood varchar(100);
+	 
+	 
+	 
+	 alter table processmap add column cmphrase char(200);
+	 alter table processmap add column cmtrgr varchar(20)	 
+	 
+	 alter table bpm_procinst add column lastcmnt varchar(200);
+	 
