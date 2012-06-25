@@ -1,7 +1,7 @@
 
 
 <%
-	var isMine = (value.endpoint == mw3.getAutowiredObject('org.uengine.codi.mw3.model.Session').user.userId);
+	var isMine = (value.writer.userId == mw3.getAutowiredObject('org.uengine.codi.mw3.model.Session').user.userId);
 
 	mw3.setWhen('view');
 
