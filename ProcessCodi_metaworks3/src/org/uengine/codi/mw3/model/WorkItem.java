@@ -454,46 +454,16 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			Instance instanceRef = new Instance();
 			instanceRef.setInstId(new Long
 					(instantiatedViewContent.getInstanceView().instanceId));
-			instanceRef.databaseMe().setInitEp(session.user.getUserId());
+			instanceRef.databaseMe().setInitiator(session.user);
+			instanceRef.databaseMe().setStatus("Running");
+			//ProcessInstance processInstance = processManager.getProcessInstance(instanceRef.getInstId().toString())
 			
 			if(session.getEmployee() != null)
 				instanceRef.databaseMe().setInitComCd(session.getEmployee().getGlobalCom());
 			
 		
-			if(newInstancePanel!=null){
-				
-				instanceRef.databaseMe().setSecuopt(newInstancePanel.getSecurityLevel());
-				instanceRef.flushDatabaseMe();
-				
-				if(newInstancePanel.getKnowledgeNodeId() != null){
-				
-					parent = new WfNode();
-					parent.load(newInstancePanel.getKnowledgeNodeId());
-
-					instantiatedViewContent.instanceView.instanceNameChanger.setInstanceName(parent.getName());
-					instantiatedViewContent.instanceView.instanceNameChanger.change();
-
-				
-					parent.setLinkedInstId(instId);
-					parent.save();
-					
-					//setting the first workItem as wfNode referencer
-					GenericWorkItem genericWI = new GenericWorkItem();
-					
-					genericWI.processManager = processManager;
-					genericWI.session = session;
-					genericWI.setTitle("Attaching Knowledge");//parent.getName());
-					GenericWorkItemHandler genericWIH = new GenericWorkItemHandler();
-					KnowledgeTool knolTool = new KnowledgeTool();
-					knolTool.setNodeId(parent.getId());
-					genericWIH.setTool(knolTool);
-					
-					genericWI.setGenericWorkItemHandler(genericWIH);
-					genericWI.setInstId(new Long(instId));
-					genericWI.add();
-							
-				}
-			}
+			parent = afterInstantiation(instantiatedViewContent,
+					instanceRef);
 
 		}
 		
@@ -521,6 +491,9 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		final Instance instance = new Instance();
 		instance.setInstId(getInstId());
 		
+		instance.databaseMe().setLastCmnt(getTitle());
+		instance.databaseMe().setCurrentUser(loginUser);//may corrupt when the last actor is assigned from process execution.
+		
 		//InstanceViewContent instanceViewContent = new InstanceViewContent();
 //		instanceViewContent.load(instance);
 		
@@ -544,9 +517,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			
 			instantiatedViewContent.getInstanceView().setInstanceViewThreadPanel(threadPanel);
 			
-			instance.databaseMe().getMetaworksContext().setHow("blinking");
-			
-			MetaworksRemoteService.getInstance().pushClientObjects(new Object[]{new ToPrepend(new InstanceList(), instance.databaseMe()) });
 			
 			return new Object[]{new Refresh(instantiatedViewContent), new Refresh(parent)};
 		}
@@ -567,11 +537,12 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		
 		final InstanceView refreshedInstanceView = new InstanceView();
 		refreshedInstanceView.processManager = processManager;
-		refreshedInstanceView.load(instance);
 		refreshedInstanceView.session = session;
+		refreshedInstanceView.load(instance);
 		
 		final IInstance refreshedInstance = instance.databaseMe();
 		refreshedInstance.getMetaworksContext().setHow("blinking");
+		refreshedInstance.getMetaworksContext().setWhere("pinterest");
 		
 
 		
@@ -681,6 +652,53 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		
 		//makes new line and change existing div
 		return new Object[]{new Refresh(newItem), new ToAppend(threadPanelOfThis, copyOfThis)};
+	}
+
+	protected WfNode afterInstantiation(
+			InstanceViewContent instantiatedViewContent,
+			Instance instanceRef) throws Exception {
+		
+		WfNode parent=null;
+		if(newInstancePanel!=null){
+			
+			instanceRef.databaseMe().setSecuopt(newInstancePanel.getSecurityLevel());
+			instanceRef.flushDatabaseMe();
+			
+			if(newInstancePanel.getKnowledgeNodeId() != null){
+			
+				parent = new WfNode();
+				parent.load(newInstancePanel.getKnowledgeNodeId());
+
+				instantiatedViewContent.instanceView.instanceNameChanger.setInstanceName(parent.getName());
+				instantiatedViewContent.instanceView.instanceNameChanger.change();
+
+			
+				parent.setLinkedInstId(instId);
+				parent.save();
+				
+				//setting the first workItem as wfNode referencer
+				GenericWorkItem genericWI = new GenericWorkItem();
+				
+				genericWI.processManager = processManager;
+				genericWI.session = session;
+				genericWI.setTitle("Attaching Knowledge");//parent.getName());
+				GenericWorkItemHandler genericWIH = new GenericWorkItemHandler();
+				KnowledgeTool knolTool = new KnowledgeTool();
+				knolTool.setNodeId(parent.getId());
+				genericWIH.setTool(knolTool);
+				
+				genericWI.setGenericWorkItemHandler(genericWIH);
+				genericWI.setInstId(new Long(instId));
+				genericWI.add();
+						
+			}
+		}
+		
+		instanceRef.databaseMe().getMetaworksContext().setHow("blinking");
+		
+		MetaworksRemoteService.getInstance().pushClientObjects(new Object[]{new ToPrepend(new InstanceList(), instanceRef.databaseMe()) });
+
+		return parent;
 	}
 
 	@Override

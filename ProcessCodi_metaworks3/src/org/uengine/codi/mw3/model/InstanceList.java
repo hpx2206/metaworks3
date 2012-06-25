@@ -5,13 +5,21 @@ import java.util.Map;
 
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 
+@Face(
+		ejsPathMappingByContext=
+	{
+		"{where: 'pinterest', face: 'faces/org/uengine/codi/mw3/model/InstanceList_pinterest.ejs'}",
+	}		
+
+)
 public class InstanceList {
 
-	final static int PAGE_CNT = 15;
+	final static int PAGE_CNT = 30;
 
 	int page;
 		@Id
@@ -70,7 +78,7 @@ public class InstanceList {
 	}
 
 	public InstanceList load(Session session) throws Exception {
-		IInstance instanceContents = getInstanceContents(session,
+		IInstance instanceContents = Instance.load(session,
 				getPage(), PAGE_CNT);
 		instanceContents.setMetaworksContext(new MetaworksContext());
 		instanceContents.getMetaworksContext().setWhen("instanceList");
@@ -83,193 +91,31 @@ public class InstanceList {
 		return this;
 	}
 
-	public IInstance getInstanceContents(Session session, int page, int amount)
-			throws Exception {
-		IInstance instanceContents = new Instance();
-		Map<String, String> criteria = new HashMap<String, String>();
 
-		// paging 
-		String tempStr = "";
-		tempStr = "" + (page * amount);
-		criteria.put("startIndex", tempStr);
-
-		tempStr = "" + (page + 1) * amount;
-		criteria.put("lastIndex", tempStr);
-		
-		StringBuffer taskSql = new StringBuffer();
-		StringBuffer instanceSql = new StringBuffer();
-
-		// TODO makes all criteria
-
-		getNavigatedInstListSql(session, 
-				criteria, taskSql, instanceSql);
-
-//		// add Search keyword
-//		SearchKeywordBox searchKeywordBox = session.getSearchKeywordBox();
-//		if (searchKeywordBox != null && searchKeywordBox.getKeyword() != null
-//				&& !"".equals(searchKeywordBox.getKeyword())) {
-//			instanceSql.append(" AND inst.name LIKE ?instName ");
-//			criteria.put("instName", "%" + searchKeywordBox.getKeyword() + "%");
+//	private int findPerspectiveTypeCode(String typeString) {
+//		if(typeString == null) {
+//			return -1;
+//		} else if(typeString.equals("inbox")) {
+//			return 0;
+//		} else if(typeString.equals("all")) {
+//			return 1;
+//		} else if(typeString.equals("request")) {
+//			return 2;
+//		} else if(typeString.equals("stopped")) {
+//			return 3;
+//		} else if(typeString.equals("organization")) {
+//			return 4;
+//		} else if(typeString.equals("process")) {
+//			return 5;
+//		} else if(typeString.equals("strategy")) {
+//			return 6;
+//		} else if(typeString.equals("taskExt1")) {
+//			return 7;
+//		} else if(typeString.equals("status")) {
+//			return 8;
+//		} else if("allICanSee".equals(typeString)){
+//			return 9;
 //		}
-		String searchKeyword = session.getSearchKeyword();
-		if(searchKeyword != null && !searchKeyword.isEmpty()) {
-			instanceSql.append(" AND inst.name LIKE ?instName ");
-			criteria.put("instName", "%" + searchKeyword + "%");
-		}
-
-		// TODO add direct append to sql
-		criteria.put(Instance.TASK_DIRECT_APPEND_SQL_KEY, taskSql.toString());
-		criteria.put(Instance.INSTANCE_DIRECT_APPEND_SQL_KEY,
-				instanceSql.toString());
-
-		return instanceContents.load(session, criteria);
-	}
-
-	private void getNavigatedInstListSql(Session session,
-			Map<String, String> criteria, StringBuffer taskSql,
-			StringBuffer instanceSql) {
-
-		switch (findPerspectiveTypeCode(session.getLastPerspecteType())) {
-		case 0://"inbox"
-			taskSql.append("and (worklist.status=?taskStatus1 or worklist.status=?taskStatus2) ");
-			criteria.put("taskStatus1", "NEW");
-			criteria.put("taskStatus2", "CONFIRMED");
-			taskSql.append("and rolemapping.endpoint=?taskEndpoint ");
-			criteria.put("taskEndpoint", session.getEmployee().getEmpCode());
-			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
-			criteria.put("instIsdelete", "1");
-			break;
-		case 1://"all"
-			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
-			criteria.put("instIsdelete", "1");
-			instanceSql.append("and inst.status!=?instStatus ");
-			criteria.put("instStatus", "Stopped");
-			// secureopt
-			instanceSql
-					.append("and (exists (select rootinstid from BPM_ROLEMAPPING rm where rm.endpoint=?rmEndpoint and inst.rootinstid=rm.rootinstid)) ");
-			criteria.put("rmEndpoint", session.getEmployee().getEmpCode());
-			break;
-		case 2:// "request"
-			instanceSql.append("and inst.initep=?instInitep ");
-			criteria.put("instInitep", session.getEmployee().getEmpCode());
-			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
-			criteria.put("instIsdelete", "1");
-			break;
-		case 3:// "stopped"
-			instanceSql.append("and inst.status=?instStatus ");
-			criteria.put("instStatus", "Stopped");
-			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
-			criteria.put("instIsdelete", "1");
-
-			// secureopt
-			instanceSql
-					.append("and (inst.secuopt='0' OR (inst.secuopt=1 and exists (select rootinstid from BPM_ROLEMAPPING rm where rm.endpoint=?rmEndpoint and inst.rootinstid=rm.rootinstid))) ");
-			criteria.put("rmEndpoint", session.getEmployee().getEmpCode());
-			break;
-		case 4:// "organization"
-			taskSql.append("and rolemapping.endpoint=?taskEndpoint ");
-			criteria.put("taskEndpoint", session.getLastSelectedItem());
-			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
-			criteria.put("instIsdelete", "1");
-
-			// secureopt
-			instanceSql
-					.append("and (inst.secuopt='0' OR (inst.secuopt=1 and exists (select rootinstid from BPM_ROLEMAPPING rm where rm.endpoint=?rmEndpoint and inst.rootinstid=rm.rootinstid))) ");
-			criteria.put("rmEndpoint", session.getEmployee().getEmpCode());
-			break;
-		case 5:// "process"
-			instanceSql.append("and inst.defverid=?instDefVerId ");
-			criteria.put("instDefVerId", session.getLastSelectedItem());
-			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
-			criteria.put("instIsdelete", "1");
-
-			// secureopt
-			instanceSql
-					.append("and (inst.secuopt='0' OR (inst.secuopt=1 and exists (select rootinstid from BPM_ROLEMAPPING rm where rm.endpoint=?rmEndpoint and inst.rootinstid=rm.rootinstid))) ");
-			criteria.put("rmEndpoint", session.getEmployee().getEmpCode());
-			break;
-		case 6: // "strategy"
-			instanceSql.append("and inst.strategyid=?instStrategyId ");
-			criteria.put("instStrategyId", session.getLastSelectedItem());
-			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
-			criteria.put("instIsdelete", "1");
-
-			// secureopt
-			instanceSql
-					.append("and (inst.secuopt='0' OR (inst.secuopt=1 and exists (select rootinstid from BPM_ROLEMAPPING rm where rm.endpoint=?rmEndpoint and inst.rootinstid=rm.rootinstid))) ");
-			criteria.put("rmEndpoint", session.getEmployee().getEmpCode());
-			break;
-		case 7: // "taskExt1"
-			instanceSql.append("and task.ext1=?taskExt1 ");
-			criteria.put("taskExt1", session.getLastSelectedItem());
-			instanceSql.append("and inst.status=?status ");
-			criteria.put("status", "Running");
-			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
-			criteria.put("instIsdelete", "1");
-
-			// secureopt
-			instanceSql
-					.append("and (inst.secuopt='0' OR (inst.secuopt=1 and exists (select rootinstid from BPM_ROLEMAPPING rm where rm.endpoint=?rmEndpoint and inst.rootinstid=rm.rootinstid))) ");
-			criteria.put("rmEndpoint", session.getEmployee().getEmpCode());
-			break;
-		case 8: // "status"
-			instanceSql.append("and inst.status=?status ");
-			criteria.put("status", session.getLastSelectedItem());
-			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
-			criteria.put("instIsdelete", "1");
-
-			// secureopt
-			instanceSql
-					.append("and (inst.secuopt='0' OR (inst.secuopt=1 and exists (select rootinstid from BPM_ROLEMAPPING rm where rm.endpoint=?rmEndpoint and inst.rootinstid=rm.rootinstid))) ");
-			criteria.put("rmEndpoint", session.getEmployee().getEmpCode());
-			break;
-		case 9: // "allICanSee"
-			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
-			criteria.put("instIsdelete", "1");
-			instanceSql.append("and inst.status!=?instStatus ");
-			criteria.put("instStatus", "Stopped");
-			// secureopt
-			instanceSql
-					.append("and (inst.secuopt='0' OR (inst.secuopt=1 and exists (select rootinstid from BPM_ROLEMAPPING rm where rm.endpoint=?rmEndpoint and inst.rootinstid=rm.rootinstid))) ");
-			criteria.put("rmEndpoint", session.getEmployee().getEmpCode());
-			break;
-		default:
-			// personal inbox
-			taskSql.append("and (worklist.status=?taskStatus1 or worklist.status=?taskStatus2) ");
-			criteria.put("taskStatus1", "NEW");
-			criteria.put("taskStatus2", "CONFIRMED");
-			taskSql.append("and rolemapping.endpoint=?taskEndpoint ");
-			criteria.put("taskEndpoint", session.getEmployee().getEmpCode());
-			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
-			criteria.put("instIsdelete", "1");
-			break;
-		}
-	}
-	
-	private int findPerspectiveTypeCode(String typeString) {
-		if(typeString == null) {
-			return -1;
-		} else if(typeString.equals("inbox")) {
-			return 0;
-		} else if(typeString.equals("all")) {
-			return 1;
-		} else if(typeString.equals("request")) {
-			return 2;
-		} else if(typeString.equals("stopped")) {
-			return 3;
-		} else if(typeString.equals("organization")) {
-			return 4;
-		} else if(typeString.equals("process")) {
-			return 5;
-		} else if(typeString.equals("strategy")) {
-			return 6;
-		} else if(typeString.equals("taskExt1")) {
-			return 7;
-		} else if(typeString.equals("status")) {
-			return 8;
-		} else if("allICanSee".equals(typeString)){
-			return 9;
-		}
-		return -1;
-	}
+//		return -1;
+//	}
 }

@@ -38,14 +38,14 @@ public class InstanceView {
 		inst.setInstId(instance.getInstId());
 		String secuopt = inst.databaseMe().getSecuopt();
 		
-		if(session!=null){
+		//if(session!=null){
 			Notification notificationType = new Notification();
-			INotification notifictionsInSameInstance  = notificationType.sql("update bpm_noti set confirm=?confirm where instid = ?instid and userId=?userId");
+			INotification notifictionsInSameInstance  = notificationType.sql("update bpm_noti set confirm=1 where instid = ?instid and userId=?userId");
 			notifictionsInSameInstance.setConfirm(true);
 			notifictionsInSameInstance.setInstId(inst.getInstId());
 			notifictionsInSameInstance.setUserId(session.getUser().getUserId());
 			notifictionsInSameInstance.update();
-		}
+		//}
 
 		if(inst.databaseMe().getIsDeleted()){
 			throw new Exception("Deleted Instance");

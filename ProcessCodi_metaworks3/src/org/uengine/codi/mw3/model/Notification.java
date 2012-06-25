@@ -133,6 +133,7 @@ public class Notification extends Database<INotification> implements INotificati
 		Instance instance = new Instance();
 		instance.setInstId(getInstId());
 		
+		instanceViewContent.session = session;
 		instanceViewContent.load(instance);
 		
 		setConfirm(true);

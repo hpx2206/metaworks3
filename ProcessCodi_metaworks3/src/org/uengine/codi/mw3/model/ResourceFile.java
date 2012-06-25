@@ -338,16 +338,28 @@ public class ResourceFile implements ContextAware{
 	@ServiceMethod(callByContent=true, except="childs")
 	public Object[] appendProcessMap() throws Exception {
 		String name = this.getName();
-		
-		if(name.endsWith(".process"));
+
+		ProcessMap processMap = new ProcessMap();
+
+		if(name.endsWith(".process")){
 			name = name.substring(0, name.length() - 8);
 			
-		ProcessMap processMap = new ProcessMap();
+			org.uengine.kernel.ProcessDefinition procDef = processManager.getProcessDefinition(getAlias());
+			String fullCommandPhrase = procDef.getDescription().getText();
+			
+			int commandCotentStarts = fullCommandPhrase.indexOf(':');
+			if(-1 < commandCotentStarts){
+
+				processMap.setCmPhrase(fullCommandPhrase.substring(commandCotentStarts));
+				processMap.setCmTrgr(fullCommandPhrase);
+			}
+		}
+			
 		processMap.setDefId(this.getAlias());
 		processMap.setName(name);
 		
 		if(!processMap.confirmExist())
-			throw new Exception("이미 프로세스 맵에 등록된 프로세스입니다.");
+			throw new Exception("$AlreadyAddedApp");
 
 		processMap.createMe();
 		
@@ -360,6 +372,11 @@ public class ResourceFile implements ContextAware{
 	
 	protected IUser friend;
 
+	/**
+	 * Not used anymore ... see ProcessMap.initiate instead
+	 * @return
+	 * @throws Exception
+	 */
 	@ServiceMethod(callByContent=true, except="childs")
 	public Object[] initiate() throws Exception{
 		InstanceViewContent instanceView = instanceViewContent;// = new InstanceViewContent();
@@ -405,6 +422,7 @@ public class ResourceFile implements ContextAware{
 		IInstance instanceRef = new Instance();
 		instanceRef.setInstId(new Long(instId));
 		
+		instanceView.session = session;
 		instanceView.load(instanceRef);
 		
 		InstanceListPanel instanceList = new InstanceListPanel(); //should return instanceListPanel not the instanceList only since there're one or more instanceList object in the client-side

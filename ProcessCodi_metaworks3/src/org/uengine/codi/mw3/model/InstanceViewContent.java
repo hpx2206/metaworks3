@@ -46,6 +46,7 @@ public class InstanceViewContent extends ContentWindow {
 		//instanceView = new InstssanceView();		
 		//instanceView.processManager = this.processManager;
 		
+		instanceView.session = session;
 		instanceView.load(instance);
 
 		setInstanceName(instanceView.getInstanceName());

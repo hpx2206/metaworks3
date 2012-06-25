@@ -2,18 +2,30 @@ package org.uengine.codi.mw3.model;
 
 import java.util.Map;
 
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ORMapping;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Table;
 import org.metaworks.annotation.Test;
 import org.metaworks.dao.IDAO;
+import org.metaworks.widget.ModalWindow;
 
+@Face(
+		ejsPathMappingByContext=
+	{
+		"{where: 'pinterest', face: 'faces/org/uengine/codi/mw3/model/IInstance_pinterest.ejs'}",
+	}		
+
+)
 @Table(name="bpm_procinst")
 public interface IInstance extends IDAO{
 
 	@ServiceMethod
 	public ContentWindow detail() throws Exception;
+
+	@ServiceMethod(target="popup")
+	public ModalWindow popupDetail() throws Exception;
 
 	@ServiceMethod	
 	@Test(scenario="first", starter=true, instruction="$first.FlowChart", next="autowiredObject.org.uengine.codi.mw3.model.InstanceListPanel.switchToKnowledge()")
@@ -34,6 +46,10 @@ public interface IInstance extends IDAO{
 
 	public String getDefName();
 	public void setDefName(String defName);
+
+	
+	public String getLastCmnt();
+	public void setLastCmnt(String lastComment);
 
 	public java.util.Date getStartedDate();
 	public void setStartedDate(java.util.Date when);
@@ -121,7 +137,5 @@ public interface IInstance extends IDAO{
 	public void setCurrentUser(IUser user);
 	
 	
-	public IInstance load(Session session, Map<String, String> criteria)
-			throws Exception;
 
 }
