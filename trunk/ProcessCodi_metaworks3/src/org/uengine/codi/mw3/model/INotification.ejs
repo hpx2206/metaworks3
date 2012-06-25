@@ -2,7 +2,14 @@
 	if(value){
 %>
 <div class="notification" style="<%=value.confirm?'background:#EAEAEA;':''%>">
-
+<%
+		if(!value.confirm){
+%>
+	<img src="images/waveStyle/badgeMail.png">
+<%
+		}
+%>
+	
 	<div class="notiPic">
 		<%=fields.actor.here()%>
 	</div>
