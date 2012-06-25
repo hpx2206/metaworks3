@@ -22,11 +22,10 @@
 <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tbl_type">						
 	<tbody>
 	<tr  class="q <%=value.firstDueTimeTerm ? (value.firstDueTimeTerm>=0 ? (value.firstDueTimeTerm>=3 ? "" : "plus" + value.firstDueTimeTerm ) : "minus" )  : "" %>" onClick="<%=methods.detail.caller()%>" style="cursor:pointer;">
-		<td class="first_td">
+		<td class="first_td" valign="top">
 			<div class="worklistuser">
 					<dl>					                		
 						<dd><%=fields.initiator.here() %></dd>
-						<dd><%=fields.currentUser.here() %></dd>
 						<div class="clear"></div>					                	
 					</dl>	
 			</div>				
@@ -44,10 +43,22 @@
 					<span class="type_process"></span><span class="instanceLock"></span>
 				<% } %>	
 						
-				<a href="#middle-center"><%=fields.name.here()%></a></li>								
+				<a href="#middle-center"><%=fields.name.here()%></a></li>
+				
+				<% if(value.currentUser && value.currentUser.userId){%>
+			
+			<table><td><%=fields.currentUser.here()%></td>
+			<td colspan=2><%=value.lastCmnt%></td></table>
+	
+				<%}%>
+
+												
 			</ul>								
 		</td>
-		<td class="last_td"><%=fields.startedDate.here()%></td>
+		<td class="last_td"><%=fields.startedDate.here()%>
+		
+		<%if(value.status=='Completed'){%> ( <%=mw3.localize('$Complete')%> ) <%}%>
+		</td>
 	</tr>
 	
 </table>
