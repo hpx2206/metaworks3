@@ -7,6 +7,7 @@ import org.metaworks.annotation.Test;
 import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.knowledge.Knowledge;
 import org.uengine.codi.mw3.model.Main;
+import org.uengine.codi.mw3.model.PinterestMain;
 import org.uengine.codi.mw3.model.Session;
 
 public class PageNavigator {
@@ -38,6 +39,11 @@ public class PageNavigator {
 	@ServiceMethod(callByContent=true)
 	public MainPanel goProcess() throws Exception {
 		return new MainPanel(new Main(session));
+	}
+
+	@ServiceMethod(callByContent=true)
+	public MainPanel goPinterest() throws Exception {
+		return new MainPanel(new PinterestMain(session));
 	}
 
 	@ServiceMethod(callByContent=true)
