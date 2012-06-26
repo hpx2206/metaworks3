@@ -30,7 +30,15 @@ var org_metaworks_ToPrepend = function(objectId, className){
 						var html = mw3.locateObject(object.target, null);
 						
 						$(html).insertAfter('#objDiv_' + newInstancePanelObjectId);
-						$container.masonry( 'reload' );
+						
+					    var reload = function(){
+
+					    	$container.masonry( 'reload' );
+					    };
+					    
+					    reload();
+					    
+					    setTimeout(reload, 2000);
 						
 					}else{
 
