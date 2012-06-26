@@ -16,13 +16,17 @@
 		if(pinterest_listCount > 3){
 			column = isProcess ? 2:1;
 		}
+		
+		if(mw3.when=='newItem'){
+			column = 3;
+		}
 	
 	%>
 	
 	
-<div class="box col<%=column%>">
+<div class="box col<%=column%>"<%=mw3.when=='newItem' ? " style='background:#FFB249'":""%>>
 
-	<img src="images/portrait/<%=value.initiator.userId%>.jpg" width="<%=(column * 20)%>" align=left onerror="$(this).remove();">
+	<img src="images/portrait/<%=value.initiator.userId%>.jpg" width="100%" align=left onerror="$(this).remove();">
 	<b><%=value.initiator.name%></b>
 				<% if(isChat){ %>
 					<span class="type_ping"></span><span class="instanceLock"></span>
@@ -35,10 +39,10 @@
 				<% } %>	
 						
 				<a href="javascript:<%=methods.popupDetail.caller()%>"><%=fields.name.here()%></a></li>
-				
-				<% if(value.currentUser && value.currentUser.userId){%>
-			
-			<%=value.lastCmnt%>
+				<% if(value.currentUser && value.currentUser.userId && (value.initiator.userId!=value.currentUser.userId || value.name!=value.lastCmnt)){%>
+				<table><td width=60>
+			<%=fields.currentUser.here()%></td><td>
+			<%=value.lastCmnt%></td></table>
 	
 				<%}%>
 

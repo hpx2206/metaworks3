@@ -17,4 +17,8 @@ var org_uengine_codi_mw3_model_Main = function(objectId, className){
 			mw3.getFaceHelper(objectId).checkPosition(e);
 		});
 	});
+	
+	
+	Set_Cookie("codi.lastVisit", "process", 10, "/", "", "");
+
 }
