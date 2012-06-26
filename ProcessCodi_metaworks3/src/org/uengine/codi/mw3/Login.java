@@ -14,6 +14,7 @@ import org.metaworks.dao.Database;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.common.MainPanel;
+import org.uengine.codi.mw3.knowledge.Knowledge;
 import org.uengine.codi.mw3.model.Company;
 import org.uengine.codi.mw3.model.Dept;
 import org.uengine.codi.mw3.model.Employee;
@@ -23,6 +24,7 @@ import org.uengine.codi.mw3.model.IEmployee;
 import org.uengine.codi.mw3.model.IUser;
 import org.uengine.codi.mw3.model.Locale;
 import org.uengine.codi.mw3.model.Main;
+import org.uengine.codi.mw3.model.PinterestMain;
 import org.uengine.codi.mw3.model.PortraitImageFile;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.model.User;
@@ -95,6 +97,15 @@ public class Login extends Database<ILogin> implements ILogin{
 		}
 		public void setRememberMe(Boolean rememberMe) {
 			this.rememberMe = rememberMe;
+		}
+		
+	String lastVisitPage;
+
+		public String getLastVisitPage() {
+			return lastVisitPage;
+		}
+		public void setLastVisitPage(String lastVisitPage) {
+			this.lastVisitPage = lastVisitPage;
 		}
 
 	String password;
@@ -248,7 +259,18 @@ public class Login extends Database<ILogin> implements ILogin{
 			
 			if (getMetaworksContext().getWhen().equals(MetaworksContext.WHEN_VIEW)){
 				
-				MainPanel mainPanel = new MainPanel(new Main(session));
+				MainPanel mainPanel;
+
+				if("knowledge".equals(lastVisitPage)){
+					mainPanel = new MainPanel(new Knowledge(session));
+					
+				}else if("pinterest".equals(lastVisitPage)){
+					mainPanel = new MainPanel(new PinterestMain(session));
+					
+				}else{
+					mainPanel = new MainPanel(new Main(session));
+					
+				}
 				//MainPanel mainPanel = new MainPanel(new IDE(session));
 				//MainPanel mainPanel = new MainPanel(new Knowledge(session));
 				
