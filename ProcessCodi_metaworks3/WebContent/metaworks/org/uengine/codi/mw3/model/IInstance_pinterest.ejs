@@ -25,8 +25,9 @@
 	
 	
 <div class="box col<%=column%>"<%=mw3.when=='newItem' ? " style='background:#FFB249'":""%>>
-
+<a href="javascript:<%=methods.popupDetail.caller()%>">
 	<img src="images/portrait/<%=value.initiator.userId%>.jpg" width="100%" align=left onerror="$(this).remove();">
+</a>
 	<b><%=value.initiator.name%></b>
 				<% if(isChat){ %>
 					<span class="type_ping"></span><span class="instanceLock"></span>
@@ -38,7 +39,8 @@
 					<span class="type_process"></span><span class="instanceLock"></span>
 				<% } %>	
 						
-				<a href="javascript:<%=methods.popupDetail.caller()%>"><%=fields.name.here()%></a></li>
+<a href="javascript:<%=methods.popupDetail.caller()%>"><%=fields.name.here()%></a>
+				
 				<% if(value.currentUser && value.currentUser.userId && (value.initiator.userId!=value.currentUser.userId || value.name!=value.lastCmnt)){%>
 				<table><td width=60>
 			<%=fields.currentUser.here()%></td><td>
