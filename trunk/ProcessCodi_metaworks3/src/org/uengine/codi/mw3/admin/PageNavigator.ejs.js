@@ -24,6 +24,7 @@ var org_uengine_codi_mw3_admin_PageNavigator = function(objectId, className){
 				height: '42px'
 			}, 700);
 	});	
+
 	
 }
 
