@@ -5,6 +5,11 @@ var org_uengine_codi_mw3_Login = function(objectId, className){
 	this.divId = mw3._getObjectDivId(this.objectId);
 
 	// facebook init
+	var login = mw3.objects[objectId];
+	var lastVisitPage = Get_Cookie("codi.lastVisit");
+	if(lastVisitPage) 
+		login.lastVisitPage = lastVisitPage;
+	
 
 	var storedId = Get_Cookie("codi.id");
 	if(storedId!=null){		
@@ -58,7 +63,11 @@ org_uengine_codi_mw3_Login.prototype = {
 			Delete_Cookie("codi.id", "/","");
 			Delete_Cookie("codi.password", "/","");
 		}
-		
+
+		var lastVisitPage = Get_Cookie("codi.lastVisit");
+		if(lastVisitPage) 
+			login.lastVisitPage = lastVisitPage;
+
 		return login;
 	},
 	startLoading : function(){
