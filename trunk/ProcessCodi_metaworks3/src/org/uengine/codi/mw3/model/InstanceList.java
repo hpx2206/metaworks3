@@ -3,6 +3,7 @@ package org.uengine.codi.mw3.model;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
@@ -17,7 +18,7 @@ import org.metaworks.annotation.ServiceMethod;
 	}		
 
 )
-public class InstanceList {
+public class InstanceList implements ContextAware{
 
 	final static int PAGE_CNT = 30;
 
@@ -29,6 +30,14 @@ public class InstanceList {
 		}
 		public void setPage(int page) {
 			this.page = page;
+		}
+
+	MetaworksContext metaworksContext;
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
 		}
 
 	IInstance instances;		
