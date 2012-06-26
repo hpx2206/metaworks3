@@ -2,6 +2,7 @@ package org.uengine.codi.mw3.model;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.widget.Window;
@@ -168,6 +169,8 @@ public class Main {
 			instanceListPanel = (InstanceListPanel) personalPerspective.loadAllICanSee()[1];
 
 			instanceListPanel.session = session;
+			instanceListPanel.setMetaworksContext(new MetaworksContext());
+			instanceListPanel.getMetaworksContext().setWhere(MetaworksContext.WHERE_EVER);
 			instanceListWindow.setPanel(instanceListPanel);
 		}
 		
