@@ -1,0 +1,52 @@
+
+var org_metaworks_ToPrepend = function(objectId, className){
+
+	var object = mw3.objects[objectId];
+	
+	if(object){
+		var objKeys = mw3._createObjectKey(object.parent, true);
+			
+		if(objKeys && objKeys.length){
+						        				
+			for(var i=0; i<objKeys.length; i++){
+				
+				var mappedObjId = mw3.objectId_KeyMapping[objKeys[i]];
+				
+				
+				if(mappedObjId){
+					
+					var instanceList = mw3.getObject(mappedObjId);
+					
+					if(instanceList.metaworksContext && instanceList.metaworksContext.where=="pinterest"){
+						
+						var newInstancePanelObjectId = mw3.getAutowiredObject("org.uengine.codi.mw3.model.NewInstancePanel").__objectId;
+						
+						var $container = $('#pinterest_container');
+						var $newInstancePanel = $('#objDiv_' + newInstancePanelObjectId);
+						
+						object.target.metaworksContext = instanceList.metaworksContext;
+						object.target.metaworksContext.when='newItem';
+
+						var html = mw3.locateObject(object.target, null);
+						
+						$(html).insertAfter('#objDiv_' + newInstancePanelObjectId);
+						$container.masonry( 'reload' );
+						
+					}else{
+
+						var html = mw3.locateObject(object.target, null);//, "#"+mappedObjdivId);
+		
+						$("#objDiv_" + mappedObjId).prepend(html);
+		
+					}
+
+					break;
+				}	
+			}
+		}
+		
+		mw3.removeObject(objectId);
+		mw3.onLoadFaceHelperScript();
+	}
+
+}
