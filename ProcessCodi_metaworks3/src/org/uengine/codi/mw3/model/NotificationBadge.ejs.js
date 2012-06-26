@@ -13,3 +13,7 @@ var org_uengine_codi_mw3_model_NotificationBadge = function(objectId, className)
 	window.document.title = (badge.newItemCount > 0 ? "("+ badge.newItemCount + ")":"") + "Process Codi"; 
 
 }
+
+
+org_uengine_codi_mw3_model_NotificationBadge.prototype.startLoading=function(){}
+org_uengine_codi_mw3_model_NotificationBadge.prototype.endLoading=function(){}
