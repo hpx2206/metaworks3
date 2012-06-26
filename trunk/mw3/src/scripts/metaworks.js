@@ -490,7 +490,11 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 									throw new Error("Error when to map the Face.ejsPathMappingByContext expression '" + faceMappingByContext[i] + '". check the JSON expression exactly.');
 								}
 								
-								if(faceMap.when == this.when){
+								if(			
+											(faceMap.when == null 	|| faceMap.when == this.when)
+										&& 	(faceMap.where == null 	|| faceMap.where == this.where)
+										&& 	(faceMap.how == null 	|| faceMap.how == this.how)
+									){
 									actualFace = faceMap.face;
 									
 									if(actualFace.indexOf('faces/') == 0){
