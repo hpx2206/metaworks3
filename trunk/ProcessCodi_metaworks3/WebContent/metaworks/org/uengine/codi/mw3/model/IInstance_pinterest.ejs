@@ -42,10 +42,8 @@
 <a href="javascript:<%=methods.popupDetail.caller()%>"><%=fields.name.here()%></a>
 				
 				<% if(value.currentUser && value.currentUser.userId && (value.initiator.userId!=value.currentUser.userId || value.name!=value.lastCmnt)){%>
-				<table><td width=60>
-			<%=fields.currentUser.here()%></td><td>
-			<%=value.lastCmnt%></td></table>
-	
+			<img src="images/portrait/<%=value.currentUser.userId%>.jpg" width="30%" align=left onerror="$(this).remove();">
+			<%=value.lastCmnt%>
 				<%}%>
 
 		<%=fields.startedDate.here()%>
