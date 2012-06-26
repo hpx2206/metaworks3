@@ -45,7 +45,7 @@
 						
 				<a href="#middle-center"><%=fields.name.here()%></a></li>
 				
-				<% if(value.currentUser && value.currentUser.userId){%>
+				<% if(value.currentUser && value.currentUser.userId && (value.initiator.userId!=value.currentUser.userId || value.name!=value.lastCmnt)){%>
 			
 			<table><td><%=fields.currentUser.here()%></td>
 			<td colspan=2><%=value.lastCmnt%></td></table>

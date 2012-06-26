@@ -13,6 +13,7 @@ import org.metaworks.annotation.Id;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.widget.ModalWindow;
+import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.knowledge.Knowledge;
 import org.uengine.codi.mw3.model.Company;
@@ -260,15 +261,18 @@ public class Login extends Database<ILogin> implements ILogin{
 			if (getMetaworksContext().getWhen().equals(MetaworksContext.WHEN_VIEW)){
 				
 				MainPanel mainPanel;
+				PageNavigator pageNavigator = new PageNavigator();
+				pageNavigator.session = session;
 
 				if("knowledge".equals(lastVisitPage)){
-					mainPanel = new MainPanel(new Knowledge(session));
+					
+					mainPanel = pageNavigator.goKnowledge();
 					
 				}else if("pinterest".equals(lastVisitPage)){
-					mainPanel = new MainPanel(new PinterestMain(session));
+					mainPanel = pageNavigator.goPinterest();
 					
 				}else{
-					mainPanel = new MainPanel(new Main(session));
+					mainPanel = pageNavigator.goProcess();
 					
 				}
 				//MainPanel mainPanel = new MainPanel(new IDE(session));

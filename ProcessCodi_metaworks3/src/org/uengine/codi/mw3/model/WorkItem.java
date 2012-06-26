@@ -568,15 +568,15 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		}
 		
 		final Object[] returnObjects = new Object[]{
-				new Remover(refreshedInstance), //인스턴스 목록에서 제거 
-				new Remover(refreshedInstance), //인스턴스 목록에서 제거 - 한번하니 다른게 또 있는지 안돼서 두번 지움.. ㅋㅋ 메롱  
-				new ToPrepend(new InstanceList(), refreshedInstance) // 인스턴스 리스트에 맨 꼭대기에 추가함... -- 더 새로운 소식으로 눈에 띄게하는 느낌을 줌..  
-			};
+			new Remover(refreshedInstance), //인스턴스 목록에서 제거 
+			new Remover(refreshedInstance), //인스턴스 목록에서 제거 - 한번하니 다른게 또 있는지 안돼서 두번 지움.. ㅋㅋ 메롱  
+			new ToPrepend(new InstanceList(), refreshedInstance) // 인스턴스 리스트에 맨 꼭대기에 추가함... -- 더 새로운 소식으로 눈에 띄게하는 느낌을 줌..  
+		};
+	
+		final boolean securedConversation = "1".equals(instance.databaseMe().getSecuopt());
 		
-		
-		MetaworksRemoteService.getInstance().pushClientObjects(returnObjects);
-		
-
+		if(!securedConversation)
+			MetaworksRemoteService.getInstance().pushClientObjects(returnObjects);
 
 
 		boolean iAmParticipating = false;
@@ -612,9 +612,11 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 					try{
 						//NEW WAY IS GOOD
 						Browser.withSession(followerSessionId, new Runnable(){
-			
 							@Override
 							public void run() {
+								if(securedConversation){
+									ScriptSessions.addFunctionCall("mw3.locateObject", new Object[]{returnObjects, null, "body"});
+								}
 								//대화목록의 맨뒤에 새로 입력한 내용만 붙여서 속도 개선  
 								ScriptSessions.addFunctionCall("mw3.locateObject", new Object[]{new ToAppend(threadPanelOfThis, copyOfThis), null, "body"});
 								

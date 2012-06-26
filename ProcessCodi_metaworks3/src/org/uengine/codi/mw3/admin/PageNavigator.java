@@ -4,6 +4,7 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Test;
+import org.metaworks.widget.layout.Layout;
 import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.knowledge.Knowledge;
 import org.uengine.codi.mw3.model.Main;
@@ -43,7 +44,12 @@ public class PageNavigator {
 
 	@ServiceMethod(callByContent=true)
 	public MainPanel goPinterest() throws Exception {
-		return new MainPanel(new PinterestMain(session));
+		
+		Layout outerLayout = new Layout();
+		outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:5, north__size:52");
+		outerLayout.setCenter(new PinterestMain(session));
+		
+		return new MainPanel(outerLayout);
 	}
 
 	@ServiceMethod(callByContent=true)
