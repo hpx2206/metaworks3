@@ -568,7 +568,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		}
 		
 		final Object[] returnObjects = new Object[]{
-				new ToAppend(threadPanelOfThis, copyOfThis), //대화목록의 맨뒤에 새로 입력한 내용만 붙여서 속도 개선  
 				new Remover(refreshedInstance), //인스턴스 목록에서 제거 
 				new Remover(refreshedInstance), //인스턴스 목록에서 제거 - 한번하니 다른게 또 있는지 안돼서 두번 지움.. ㅋㅋ 메롱  
 				new ToPrepend(new InstanceList(), refreshedInstance) // 인스턴스 리스트에 맨 꼭대기에 추가함... -- 더 새로운 소식으로 눈에 띄게하는 느낌을 줌..  
@@ -616,7 +615,8 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			
 							@Override
 							public void run() {
-								
+								//대화목록의 맨뒤에 새로 입력한 내용만 붙여서 속도 개선  
+								ScriptSessions.addFunctionCall("mw3.locateObject", new Object[]{new ToAppend(threadPanelOfThis, copyOfThis), null, "body"});
 								
 								//refresh notification badge
 								if(!postByMe)
