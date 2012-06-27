@@ -632,6 +632,198 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 							$(targetDiv).children(':first').attr(htmlAttrChild);
 						
 						
+						//load the key or mouse bindings, context menu 
+						var contextMenuMethods = [];
+						
+						var targetDivId = this._getObjectDivId(objectId);
+						var theDiv = $("#" + targetDivId);
+						
+
+					    if(theDiv[0] && metadata && metadata.fieldDescriptors && metadata.fieldDescriptors.length > 0)
+							/*
+							 * validator event 제거
+							 */
+					    	/*
+							    for(var i = 0; i < metadata.fieldDescriptors.length; ++i){
+						    	var fd = metadata.fieldDescriptors[i];
+						    	
+						    	try {
+						    		if(fd.attributes.validator) {		
+							    		for(var j = 0; j < fd.attributes.validator.length; ++j) {
+							    			var validator = fd.attributes.validator[j];						    			
+							    			var inputObjectId = this.getChildObjectId(objectId, fd.name);
+							    			var inputDivId = this.createInputId(inputObjectId);
+							    			
+							    			if(validator.events){
+							    				for(var k = 0; k < validator.events.length; ++k){
+						    						$('#' + inputDivId).bind(validator.events[k], {validator: validator, inputObjectId: inputObjectId},  function(event){
+						    							var validator = event.data.validator;
+						    							var inputObjectId = event.data.inputObjectId;
+						    							var message;
+						    							
+						    							var result = mw3.validation(validator, this.value);
+						    							if(!result)
+						    								message = mw3.getValidationMessage(fd, validator)
+
+														if(mw3.getFaceHelper(inputObjectId) && mw3.getFaceHelper(inputObjectId).showValidation){
+															mw3.getFaceHelper(inputObjectId).showValidation(result, message);
+														}else{
+															mw3.showValidation(inputObjectId, result, message);
+														}					    								
+						    						});
+							    				}
+							    			}
+								    	}
+								   }
+						    	} catch(e) {
+						    		console.log('error = ' + e);
+						    	}
+						    }				
+							*/
+					    
+						
+						if(theDiv[0] && metadata)
+					    for(var methodName in metadata.serviceMethodContextMap){
+					   		var methodContext = metadata.serviceMethodContextMap[methodName];
+
+				   			if(methodContext.keyBinding && methodContext.keyBinding.length > 0){
+				   				
+				   				for(var i=0; i<methodContext.keyBinding.length; i++){
+
+				   					var keyBinding = methodContext.keyBinding[i];
+				   					var targetDivId = this._getObjectDivId(objectId);
+				   					var command = "if(mw3.objects['"+ objectId +"']!=null) mw3.call("+objectId+", '"+methodName+"')";
+				   					
+				   					if(keyBinding.indexOf("@Global") > -1){
+				   						keyBinding = keyBinding.substr(keyBinding.length - "@Global".length);
+				   					
+				   						shortcut.remove(keyBinding);
+					   					shortcut.add(keyBinding, command);
+				   					}else{
+					   					shortcut.add(keyBinding, command/*function() {
+					   						eval(command);
+					   					}*/,{
+					   						target: targetDivId
+					   					});
+				   					}
+				   				}
+				   			}
+				   			
+				   			if(methodContext.mouseBinding){
+				   	
+				   				var which = 3;
+				   				if(methodContext.mouseBinding == "right")
+				   					which = 3;
+				   				else if(methodContext.mouseBinding == "left")
+				   					which = 1;
+				   
+				   			    theDiv[0].addEventListener(
+				   			 		"mouseup",
+
+				   			    	function(e) {
+				   			 			
+				   			 			if(e.which == which){
+					   						eval(command);
+				   			 				e.stopPropagation(); //stops to propagate to parent that means consumes the event here.
+				   			 			}
+				   			 		},
+				   			 		
+				   			 		false //event bubbling, not the capturing
+				   			 	);
+				   			}
+				   			
+				   			if(methodContext.inContextMenu){
+				   				contextMenuMethods[contextMenuMethods.length] = methodContext;
+				   			}
+
+					   }
+					   
+					   if(contextMenuMethods.length > 0){
+						   var menuItems = [];
+						   
+						   for(var i=0; i<contextMenuMethods.length; i++){
+							   var serviceMethodContext = contextMenuMethods[i];
+							   
+							   // 상태에 따른 visible 처리
+								if(serviceMethodContext.when != mw3.WHEN_EVER){
+						   			if( (mw3.when && !((serviceMethodContext.when.indexOf(mw3.when + ',') != -1) || (serviceMethodContext.when.indexOf(',' + mw3.when) != -1) || (serviceMethodContext.when == mw3.when))) 
+						   					||
+							   			(mw3.where && (serviceMethodContext.where!='wherever' && serviceMethodContext.where.indexOf(mw3.where) == -1) )
+							   				
+						   			)
+						   				continue;
+								}
+							   
+								if(serviceMethodContext.attributes){
+									if(serviceMethodContext.attributes['hidden.when']){
+										if(serviceMethodContext.attributes['hidden.when'] == this.when)
+											continue;
+									}
+										
+									if(serviceMethodContext.attributes['show.when']){
+										if(serviceMethodContext.attributes['show.when']!= this.when)
+											continue;
+									} 
+									
+									if(serviceMethodContext.attributes['available.when']){
+										if(serviceMethodContext.attributes['available.when'][this.when]==null)
+											continue;
+									} 
+									
+									if(serviceMethodContext.attributes['available.where']){
+										if(serviceMethodContext.attributes['available.where'][this.where]==null)
+											continue;
+									} 
+
+									if(serviceMethodContext.attributes['available.how']){
+										if(serviceMethodContext.attributes['available.how'][this.how]==null)
+											continue;
+									} 
+
+									
+									if(serviceMethodContext.attributes['hidden']) 
+										return true;										
+								} 							   
+							   
+							  
+								
+							   var command = "mw3.call("+objectId+", '"+serviceMethodContext.methodName+"')";
+						   		
+							   if(serviceMethodContext.needToConfirm)
+						   			command = "if (confirm(\'Are you sure to "+mw3.localize(serviceMethodContext.displayName)+" this?\'))" + command;
+						   		
+							   var menuItem = { 
+									   text: mw3.localize(serviceMethodContext.displayName) + (serviceMethodContext.keyBinding ? '(' + serviceMethodContext.keyBinding[0] + ')' : ''), 
+									   onclick: { fn: 
+										   function(){
+										   		eval(this._oOnclickAttributeValue.command);
+										   },
+										   command: command
+									   } 
+							   };
+							   
+							   menuItems[menuItems.length] = menuItem;
+						   }
+						   
+//						   theDiv.append("<div id='contextmenu_" + objectId + "'></div>");
+						   
+						   if(menuItems.length){
+							   if(typeof $('#' + targetDivId).attr('contextMenu') == 'undefined'){
+								   YAHOO.util.Event.onContentReady(targetDivId, function () {
+									   new YAHOO.widget.ContextMenu(
+											"_contextmenu_" + objectId,
+											{
+												zindex: 99,
+												trigger: theDiv[0],
+												itemdata: menuItems,
+												lazyload: true
+											}
+										);
+								   });
+								   $('#' + targetDivId).attr('contextMenu', 'true');
+							   }
+						   }
+					   }						
 					} catch(e) {
 						this.template_error(e, actualFace)
 						return
@@ -641,198 +833,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					}
 					
 					
-					//load the key or mouse bindings, context menu 
-					var contextMenuMethods = [];
-					
-					var targetDivId = this._getObjectDivId(objectId);
-					var theDiv = $("#" + targetDivId);
-					
 
-				    if(theDiv[0] && metadata && metadata.fieldDescriptors && metadata.fieldDescriptors.length > 0)
-						/*
-						 * validator event 제거
-						 */
-				    	/*
-						    for(var i = 0; i < metadata.fieldDescriptors.length; ++i){
-					    	var fd = metadata.fieldDescriptors[i];
-					    	
-					    	try {
-					    		if(fd.attributes.validator) {		
-						    		for(var j = 0; j < fd.attributes.validator.length; ++j) {
-						    			var validator = fd.attributes.validator[j];						    			
-						    			var inputObjectId = this.getChildObjectId(objectId, fd.name);
-						    			var inputDivId = this.createInputId(inputObjectId);
-						    			
-						    			if(validator.events){
-						    				for(var k = 0; k < validator.events.length; ++k){
-					    						$('#' + inputDivId).bind(validator.events[k], {validator: validator, inputObjectId: inputObjectId},  function(event){
-					    							var validator = event.data.validator;
-					    							var inputObjectId = event.data.inputObjectId;
-					    							var message;
-					    							
-					    							var result = mw3.validation(validator, this.value);
-					    							if(!result)
-					    								message = mw3.getValidationMessage(fd, validator)
-
-													if(mw3.getFaceHelper(inputObjectId) && mw3.getFaceHelper(inputObjectId).showValidation){
-														mw3.getFaceHelper(inputObjectId).showValidation(result, message);
-													}else{
-														mw3.showValidation(inputObjectId, result, message);
-													}					    								
-					    						});
-						    				}
-						    			}
-							    	}
-							   }
-					    	} catch(e) {
-					    		console.log('error = ' + e);
-					    	}
-					    }				
-						*/
-				    
-					
-					if(theDiv[0] && metadata)
-				    for(var methodName in metadata.serviceMethodContextMap){
-				   		var methodContext = metadata.serviceMethodContextMap[methodName];
-
-			   			if(methodContext.keyBinding && methodContext.keyBinding.length > 0){
-			   				
-			   				for(var i=0; i<methodContext.keyBinding.length; i++){
-
-			   					var keyBinding = methodContext.keyBinding[i];
-			   					var targetDivId = this._getObjectDivId(objectId);
-			   					var command = "if(mw3.objects['"+ objectId +"']!=null) mw3.call("+objectId+", '"+methodName+"')";
-			   					
-			   					if(keyBinding.indexOf("@Global") > -1){
-			   						keyBinding = keyBinding.substr(keyBinding.length - "@Global".length);
-			   					
-			   						shortcut.remove(keyBinding);
-				   					shortcut.add(keyBinding, command);
-			   					}else{
-				   					shortcut.add(keyBinding, command/*function() {
-				   						eval(command);
-				   					}*/,{
-				   						target: targetDivId
-				   					});
-			   					}
-			   				}
-			   			}
-			   			
-			   			if(methodContext.mouseBinding){
-			   	
-			   				var which = 3;
-			   				if(methodContext.mouseBinding == "right")
-			   					which = 3;
-			   				else if(methodContext.mouseBinding == "left")
-			   					which = 1;
-			   
-			   			    theDiv[0].addEventListener(
-			   			 		"mouseup",
-
-			   			    	function(e) {
-			   			 			
-			   			 			if(e.which == which){
-				   						eval(command);
-			   			 				e.stopPropagation(); //stops to propagate to parent that means consumes the event here.
-			   			 			}
-			   			 		},
-			   			 		
-			   			 		false //event bubbling, not the capturing
-			   			 	);
-			   			}
-			   			
-			   			if(methodContext.inContextMenu){
-			   				contextMenuMethods[contextMenuMethods.length] = methodContext;
-			   			}
-
-				   }
-				   
-				   if(contextMenuMethods.length > 0){
-					   var menuItems = [];
-					   
-					   for(var i=0; i<contextMenuMethods.length; i++){
-						   var serviceMethodContext = contextMenuMethods[i];
-						   
-						   // 상태에 따른 visible 처리
-							if(serviceMethodContext.when != mw3.WHEN_EVER){
-					   			if( (mw3.when && !((serviceMethodContext.when.indexOf(mw3.when + ',') != -1) || (serviceMethodContext.when.indexOf(',' + mw3.when) != -1) || (serviceMethodContext.when == mw3.when))) 
-					   					||
-						   			(mw3.where && (serviceMethodContext.where!='wherever' && serviceMethodContext.where.indexOf(mw3.where) == -1) )
-						   				
-					   			)
-					   				continue;
-							}
-						   
-							if(serviceMethodContext.attributes){
-								if(serviceMethodContext.attributes['hidden.when']){
-									if(serviceMethodContext.attributes['hidden.when'] == this.when)
-										continue;
-								}
-									
-								if(serviceMethodContext.attributes['show.when']){
-									if(serviceMethodContext.attributes['show.when']!= this.when)
-										continue;
-								} 
-								
-								if(serviceMethodContext.attributes['available.when']){
-									if(serviceMethodContext.attributes['available.when'][this.when]==null)
-										continue;
-								} 
-								
-								if(serviceMethodContext.attributes['available.where']){
-									if(serviceMethodContext.attributes['available.where'][this.where]==null)
-										continue;
-								} 
-
-								if(serviceMethodContext.attributes['available.how']){
-									if(serviceMethodContext.attributes['available.how'][this.how]==null)
-										continue;
-								} 
-
-								
-								if(serviceMethodContext.attributes['hidden']) 
-									return true;										
-							} 							   
-						   
-						  
-							
-						   var command = "mw3.call("+objectId+", '"+serviceMethodContext.methodName+"')";
-					   		
-						   if(serviceMethodContext.needToConfirm)
-					   			command = "if (confirm(\'Are you sure to "+mw3.localize(serviceMethodContext.displayName)+" this?\'))" + command;
-					   		
-						   var menuItem = { 
-								   text: mw3.localize(serviceMethodContext.displayName) + (serviceMethodContext.keyBinding ? '(' + serviceMethodContext.keyBinding[0] + ')' : ''), 
-								   onclick: { fn: 
-									   function(){
-									   		eval(this._oOnclickAttributeValue.command);
-									   },
-									   command: command
-								   } 
-						   };
-						   
-						   menuItems[menuItems.length] = menuItem;
-					   }
-					   
-//					   theDiv.append("<div id='contextmenu_" + objectId + "'></div>");
-					   
-					   if(menuItems.length){
-						   if(typeof $('#' + targetDivId).attr('contextMenu') == 'undefined'){
-							   YAHOO.util.Event.onContentReady(targetDivId, function () {
-								   new YAHOO.widget.ContextMenu(
-										"_contextmenu_" + objectId,
-										{
-											zindex: 99,
-											trigger: theDiv[0],
-											itemdata: menuItems,
-											lazyload: true
-										}
-									);
-							   });
-							   $('#' + targetDivId).attr('contextMenu', 'true');
-						   }
-					   }
-				   }
 					
 					
 					
@@ -854,7 +855,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 //							directFaceName
 //					);
 
-					mw3.getFaceHelper(objectId);			
+//					mw3.getFaceHelper(objectId);			
 					//end
 
 					return objectId;
