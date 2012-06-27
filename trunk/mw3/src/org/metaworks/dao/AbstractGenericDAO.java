@@ -22,6 +22,7 @@ import javax.naming.InitialContext;
 import javax.sql.DataSource;
 import javax.sql.RowSet;
 
+import org.metaworks.ContextAware;
 import org.metaworks.FieldDescriptor;
 import org.metaworks.MetaworksContext;
 import org.metaworks.ObjectInstance;
@@ -362,6 +363,10 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 		final StringBuffer sql_KeyNames = new StringBuffer();
 		final StringBuffer sql_ValuePlaceHolders = new StringBuffer();
 		
+		
+		WebObjectType webObjectType = MetaworksRemoteService.getInstance().getMetaworksType(daoClass.getName());
+
+		
 		if(rowSet==null){	
 			ForLoop loopForCacheKeys = new ForLoop(){
 				String sep = "";
@@ -369,6 +374,7 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 				public void logic(Object target) {
 					String propertyName = (String)target;
 
+//					webObjectType
 					//ignores metaworks signals
 					if("METAWORKSCONTEXT".equals(propertyName)) return;
 					
@@ -1125,11 +1131,17 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 							}
 							
 							if(atLeastOnceHaveValue){
-								if(objInst.getObject() instanceof ORMappingListener){
-									((ORMappingListener)objInst.getObject()).onRelation2Object();
+								Object object = objInst.getObject();
+
+								if(object instanceof ORMappingListener){
+									((ORMappingListener)object).onRelation2Object();
+								}
+								
+								if(object instanceof ContextAware){
+									((ContextAware)object).setMetaworksContext(getMetaworksContext());
 								}
 
-								return objInst.getObject();
+								return object;
 							}
 						}
 						
@@ -1155,12 +1167,19 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 						}
 						
 						if(atLeastOnceHaveValue){
-							
-							if(objInst.getObject() instanceof ORMappingListener){
-								((ORMappingListener)objInst.getObject()).onRelation2Object();
+							Object object = objInst.getObject();
+
+							if(object instanceof ORMappingListener){
+								((ORMappingListener)object).onRelation2Object();
 							}
 							
-							return objInst.getObject();
+							if(object instanceof ContextAware){
+								((ContextAware)object).setMetaworksContext(getMetaworksContext());
+							}
+
+
+							
+							return object;
 						}
 					}
 
