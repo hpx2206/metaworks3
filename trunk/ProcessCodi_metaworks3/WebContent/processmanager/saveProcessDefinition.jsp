@@ -30,10 +30,11 @@
 		
 		String userId 			= decode(request.getParameter("userId"));
 		
-		session.setAttribute("userId", userId);
-System.out.println(" my session user id is " + userId);	
+//		session.setAttribute("userId", userId);
+//System.out.println(" my session user id is " + userId);	
 
-		org.metaworks.dao.TransactionContext.getThreadLocalInstance().setRequest(request);
+//		TransactionContext tcx = new org.metaworks.dao.TransactionContext();
+//		org.metaworks.dao.TransactionContext.getThreadLocalInstance().setRequest(request);
 
 		org.uengine.codi.mw3.CodiClassLoader.initClassLoader();
 
@@ -43,7 +44,7 @@ System.out.println(" my session user id is " + userId);
 	    //definition = GlobalContext.serialize(sampleProc, String.class);
 	
 	    
-		String defVerId = pm.addProcessDefinition(definitionName, Integer.parseInt(version), description, false, definition, savingFolder, alias, alias, objType);
+		String defVerId = pm.addProcessDefinition(definitionName, 0, description, false, definition, savingFolder, alias, alias, objType);
 		
 /* 		if(autoProduction)
 			pm.setProcessDefinitionProductionVersion(defVerId);
