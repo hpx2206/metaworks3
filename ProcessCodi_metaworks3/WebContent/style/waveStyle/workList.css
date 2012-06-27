@@ -36,9 +36,9 @@
 .lst_type li a:hover{text-decoration:underline}
 /* //UI Object */
 
-.tbl_type .first_td{width:55px;}
-.tbl_type .last_td{width:50px; padding-right:10px;}
-.worklistuser {width:55px;}
+.tbl_type .first_td{width:70px;}
+.tbl_type .last_td{width:80px; padding-right:10px;}
+.worklistuser {width:70px;}
 .worklistuser dd{ margin:3px 0px 0px 3px; float:left; display:block;}
 .worklistuser dd center{font-size:11px; letter-spacing:-0.1em;}
 
