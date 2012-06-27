@@ -22,7 +22,7 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.getValue =  function(){
 		
 		for(var i=0; i<this.commandParameters.length; i++){
 			var parameterValue = this.commandParameters[i];
-			parameterValue.valueObject = mw3.getObject(parameterValue.valueObject);
+			parameterValue.valueObject = mw3.getObject(parameterValue.objectId);
 		}
 		
 		object.parameters = this.commandParameters;
@@ -61,16 +61,24 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.press = function(){
 		var recommendDivId = "#commandRecommendDiv_" + this.objectId;
 		var recommendFirst = true;
 		var parameterIndex = 0;
-		
+
+//console.log('1');
+
 		if(text && text.length>0)
     	for(var i=0; i<processMap.processMapList.length; i++){
     		var commandTrigger = processMap.processMapList[i].cmTrgr;
+
+    		
+    		console.log('keychar:' + e.charCode)
+ //   		console.log('2:' +text + ' and commandTrigger=' + commandTrigger);
 
     		if(commandTrigger && commandTrigger.indexOf(text)==0){
         		
         		var commandPhrase = processMap.processMapList[i].cmPhrase;
         		
-        		if(e.keyCode == 59 || e.keyCode == 186) { //means ":" that user wants to command
+//console.log('enter here:'+e.keyCode);
+        		
+        		if(text==(commandTrigger+":")){//e.keyCode == 58 || e.charCode== 58 || e.keyCode == 59 || e.keyCode == 186) { //means ":" that user wants to command
 
             		$(divId).html("<b>" + fullText + ": </b>");
             		
@@ -117,16 +125,17 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.press = function(){
 	        			this.commandParameters[parameterIndex] = {
 	        					__className: 'org.uengine.codi.mw3.model.ParameterValue',
 	        					variableName: entryName,
-	        					valueObject: valueObject  
+	        					objectId: valueObject  
 	        			};
 	        			
-	        			this.commandParameters[parameterIndex].valueObject = 0+(object.object ? object.object.__objectId : object.__objectId);
+	        			this.commandParameters[parameterIndex]['objectId'] = 0+(object.object ? object.object.__objectId : object.__objectId);
 	    				
 	        			parameterIndex++;
 	        			
 	    				$(divId).append(connector);
 	        		}
 	    			
+	    			mw3.onLoadFaceHelperScript();
 	    			mw3.setWhen('view');
 	    			
 	    			break;

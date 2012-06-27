@@ -11,10 +11,10 @@
 		
 		var pinterest_listCount = mw3['pinterest_listCount']++;
 	
-		var column = 3;
+		var column = 4;
 		
 		if(pinterest_listCount > 3){
-			column = isProcess ? 2:1;
+			column = isProcess ? 3:2;
 		}
 		
 		if(mw3.when=='newItem'){
@@ -28,7 +28,7 @@
 <a href="javascript:<%=methods.popupDetail.caller()%>">
 	<img src="images/portrait/<%=value.initiator.userId%>.jpg" width="100%" align=left onerror="$(this).remove();">
 </a>
-	<b><%=value.initiator.name%></b>
+	<b><font color=204070><%=value.initiator.name%></font></b>
 				<% if(isChat){ %>
 					<span class="type_ping"></span><span class="instanceLock"></span>
 				<% }else if(isOpenCollab){ %>
@@ -39,14 +39,16 @@
 					<span class="type_process"></span><span class="instanceLock"></span>
 				<% } %>	
 						
-<a href="javascript:<%=methods.popupDetail.caller()%>"><%=fields.name.here()%></a>
+<a href="javascript:<%=methods.popupDetail.caller()%>"><b><%=value.name%></b></a>
 				
 				<% if(value.currentUser && value.currentUser.userId && (value.initiator.userId!=value.currentUser.userId || value.name!=value.lastCmnt)){%>
 			<img src="images/portrait/<%=value.currentUser.userId%>.jpg" width="30%" align=left onerror="$(this).remove();">
 			<%=value.lastCmnt%>
 				<%}%>
 
+	<font size=2 color=gray>
 		<%=fields.startedDate.here()%>
+	</font>
 		
 		<%if(value.status=='Completed'){%> ( <%=mw3.localize('$Complete')%> ) <%}%>
 
