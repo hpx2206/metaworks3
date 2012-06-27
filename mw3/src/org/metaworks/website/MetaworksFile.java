@@ -193,9 +193,14 @@ public class MetaworksFile implements ContextAware {
 		String fileExt;
 		
 		fileBody = Long.toString(System.currentTimeMillis());
-		fileExt = filename.substring(filename.lastIndexOf("."));
 		
-		return fileBody+fileExt;
+		if(filename.lastIndexOf(".") != -1){
+			fileExt = filename.substring(filename.lastIndexOf("."));
+			
+			fileBody += fileExt;
+		}
+		
+		return fileBody;
 	}
 	
 	private String getDirectoryName() {
