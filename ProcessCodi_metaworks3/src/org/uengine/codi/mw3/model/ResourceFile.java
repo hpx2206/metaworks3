@@ -350,8 +350,8 @@ public class ResourceFile implements ContextAware{
 			int commandCotentStarts = fullCommandPhrase.indexOf(':');
 			if(-1 < commandCotentStarts){
 
-				processMap.setCmPhrase(fullCommandPhrase.substring(commandCotentStarts));
-				processMap.setCmTrgr(fullCommandPhrase);
+				processMap.setCmPhrase(fullCommandPhrase);
+				processMap.setCmTrgr(fullCommandPhrase.substring(0, commandCotentStarts));
 			}
 		}
 			
