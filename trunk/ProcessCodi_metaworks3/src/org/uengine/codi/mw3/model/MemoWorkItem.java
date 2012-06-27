@@ -36,6 +36,15 @@ public class MemoWorkItem extends WorkItem{
 	public Object[] add() throws Exception {
 		
 		if(getMemo()!=null && getMemo().getContents()!=null){
+			
+			//if there is no title has been entered, use the first line of content:
+			if(title==null || title.trim().length()==0) 
+				try{
+					//TODO: since the contents contains some multiple lines of html tags, so it cannot parses real next line of the text.
+					title = getMemo().getContents().substring(0, getMemo().getContents().indexOf('\n'));
+				}
+			catch(Exception e){}
+			
 			if(getMemo().getContents().length() > 2990){
 				
 				String relativeFilePath = UEngineUtil.getCalendarDir() + "/memo" + getInstId() + "_" + System.currentTimeMillis() + ".html";

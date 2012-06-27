@@ -2,6 +2,7 @@ package org.uengine.codi.mw3.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.StringTokenizer;
 
 import org.metaworks.Refresh;
 import org.metaworks.annotation.Face;
@@ -12,6 +13,7 @@ import org.metaworks.annotation.Test;
 import org.metaworks.dao.Database;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.knowledge.WfNode;
+import org.uengine.kernel.RoleMapping;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 //@Face(displayName="답글")
@@ -29,18 +31,44 @@ public class CommentWorkItem extends WorkItem{
 	}
 
 	@Test(scenario="first", starter=true, instruction="$first.Add", next="autowiredObject.org.uengine.codi.mw3.model.InstanceView.monitor()")
+	@ServiceMethod(callByContent = true, target="popup")
 	public Object[] add() throws Exception {
 		
 		if(getActivityAppAlias()!=null){
 			//org.uengine.kernel.ProcessDefinition processDefinition = processManager.getProcessDefinition(getActivityAppAlias());
 			
+			StringTokenizer tokenizer = new StringTokenizer(title);
+			String connector = null;
 			
+			StringBuffer generatedTitle = new StringBuffer();
+
+			
+			int substringDelimiter = 0;
+			for(ParameterValue pv : getParameters()){
+				
+				connector = tokenizer.nextToken("$").substring(substringDelimiter);
+				tokenizer.nextToken(">");
+				
+				generatedTitle.append(connector).append(pv.getValueObject());
+				
+				substringDelimiter=1;
+				
+			}
+			
+			title = generatedTitle.append(tokenizer.nextElement()).toString();
 			
 			String instId = processManager.initializeProcess(getActivityAppAlias(), getTitle());
 			
 			for(ParameterValue pv : getParameters()){
 				processManager.setProcessVariable(instId, "", pv.getVariableName(), (Serializable)pv.getValueObject());
 			}
+			
+			RoleMapping rm = RoleMapping.create();
+			if(session.user!=null)
+				rm.setEndpoint(session.user.getUserId());
+			
+			processManager.setLoggedRoleMapping(rm);
+
 			
 			processManager.executeProcess(instId);
 			
@@ -59,8 +87,6 @@ public class CommentWorkItem extends WorkItem{
 			}
 			
 			
-			InstanceViewContent instanceViewContent = new InstanceViewContent();
-			
 			instanceViewContent.session = session;
 			instanceViewContent.load(instanceRef);
 			
@@ -73,6 +99,9 @@ public class CommentWorkItem extends WorkItem{
 		// TODO Auto-generated method stub
 		return super.add();
 	}
+	
+	@Autowired
+	public InstanceViewContent instanceViewContent;
 
 	@Test(scenario="first", starter=true, instruction="$first.NewActivity", next="autowiredObject.org.uengine.codi.mw3.model.IProcessMap@IssueManagement.process.initiate()")
 	public Popup newActivity() throws Exception {

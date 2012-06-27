@@ -430,6 +430,8 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	@Override
 	@Test(scenario="first", starter=true, instruction="$Write", next="newActivity()")
 	public Object[] add() throws Exception {
+		
+		
 		Long taskId = UniqueKeyGenerator.issueWorkItemKey(((ProcessManagerBean)processManager).getTransactionContext());
 
 		InstanceViewContent instantiatedViewContent = null;
