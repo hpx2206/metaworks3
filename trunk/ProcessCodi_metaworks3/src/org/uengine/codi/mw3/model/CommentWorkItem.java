@@ -13,7 +13,10 @@ import org.metaworks.annotation.Test;
 import org.metaworks.dao.Database;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.knowledge.WfNode;
+import org.uengine.kernel.EJBProcessInstance;
+import org.uengine.kernel.ProcessInstance;
 import org.uengine.kernel.RoleMapping;
+import org.uengine.persistence.processinstance.ProcessInstanceDAO;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 //@Face(displayName="답글")
@@ -57,10 +60,13 @@ public class CommentWorkItem extends WorkItem{
 			
 			title = generatedTitle.append(tokenizer.nextElement()).toString();
 			
-			String instId = processManager.initializeProcess(getActivityAppAlias(), getTitle());
+			String newInstId = processManager.initializeProcess(getActivityAppAlias(), getTitle());
 			
 			for(ParameterValue pv : getParameters()){
-				processManager.setProcessVariable(instId, "", pv.getVariableName(), (Serializable)pv.getValueObject());
+								
+				Serializable valueObject = (Serializable)pv.getValueObject();
+				
+				processManager.setProcessVariable(newInstId, "", pv.getVariableName(), valueObject);
 			}
 			
 			RoleMapping rm = RoleMapping.create();
@@ -70,30 +76,50 @@ public class CommentWorkItem extends WorkItem{
 			processManager.setLoggedRoleMapping(rm);
 
 			
-			processManager.executeProcess(instId);
 			
-			processManager.applyChanges();
+			ProcessInstance instanceObject = processManager.getProcessInstance(newInstId);
 			
-			Instance instanceRef = new Instance();
-			instanceRef.setInstId(new Long(instId));
+			EJBProcessInstance ejbParentInstance = (EJBProcessInstance)instanceObject;
+			ProcessInstanceDAO instanceDAO = ejbParentInstance.getProcessInstanceDAO();
+			
+			instanceDAO.set("initComCd", session.getCompany().getComCode());
+			//instanceDAO.setInitEp(session.getUser());
 			
 			if(!isInstantiation()){ //means sub process
-				instanceRef.setRootInstId(getInstId());
+				instanceDAO.setRootInstId(new Long(getInstId()));
+
+				processManager.executeProcess(newInstId);
 				
-				Instance rootInstance = new Instance();
-				rootInstance.setInstId(instanceRef.getRootInstId());
+				processManager.applyChanges();
+
+				//Instance rootInstance = new Instance();
+				//rootInstance.setInstId(getInstId());
 				
-				instanceRef = rootInstance;
+				//instanceRef = rootInstance;
+
+			}else{
+				setInstId(new Long(newInstId));
+				setInstantiation(false);
+
+				processManager.executeProcess(newInstId);
+				
+				processManager.applyChanges();
+
+				instanceViewContent.session = session;
+				
+				Instance instanceRef = new Instance();
+				instanceRef.setInstId(getInstId());
+				instanceViewContent.load(instanceRef);
+				
+				
+				WfNode parent = afterInstantiation(instanceViewContent, instanceRef);
+				
+				return new Object[]{ new Refresh(instanceViewContent), new Refresh(parent)};
+
 			}
 			
+//			return super.add();
 			
-			instanceViewContent.session = session;
-			instanceViewContent.load(instanceRef);
-			
-			
-			WfNode parent = afterInstantiation(instanceViewContent, instanceRef);
-			
-			return new Object[]{ new Refresh(instanceViewContent), new Refresh(parent)};
 		}
 		
 		// TODO Auto-generated method stub

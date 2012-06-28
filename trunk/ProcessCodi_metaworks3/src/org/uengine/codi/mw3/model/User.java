@@ -357,5 +357,13 @@ public class User extends Database<IUser> implements IUser {
 		}
 		
 	}
+
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return getName();
+	}
+	
+	
 	
 }

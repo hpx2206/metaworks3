@@ -174,6 +174,10 @@ public interface IWorkItem extends IDAO{
 		@ServiceMethod(callByContent = true, target="popup")
 		public Object[] add() throws Exception;
 
+		@ServiceMethod(inContextMenu=true, needToConfirm=true, callByContent=true)
+		@Face(displayName="$Delete")
+		public void remove() throws Exception;
+
 		
 		@ServiceMethod(callByContent = true)
 		public void loadContents() throws Exception;

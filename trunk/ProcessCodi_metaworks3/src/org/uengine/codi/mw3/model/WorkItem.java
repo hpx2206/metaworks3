@@ -426,6 +426,9 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		
 	@AutowiredFromClient
 	public NewInstancePanel newInstancePanel;
+	
+	
+	
 		
 	@Override
 	@Test(scenario="first", starter=true, instruction="$Write", next="newActivity()")
@@ -660,6 +663,26 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		
 		//makes new line and change existing div
 		return new Object[]{new Refresh(newItem), new ToAppend(threadPanelOfThis, copyOfThis)};
+	}
+	
+	public void remove() throws Exception{
+		
+		if(session.getUser().getUserId().equals(getWriter().getUserId())){
+			deleteDatabaseMe();
+			return;
+		}
+
+		Instance theInstance = new Instance();
+		theInstance.setInstId(getInstId());
+		
+		if(theInstance.databaseMe().getInitiator().getUserId().equals(session.getUser().getUserId())){
+			deleteDatabaseMe();
+			return;
+			
+		}
+				
+		throw new Exception("$OnlyTheWriterCanDelete");
+		
 	}
 
 	protected WfNode afterInstantiation(
