@@ -1,5 +1,9 @@
 package org.uengine.codi.mw3.model;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 
 import org.codehaus.commons.compiler.CompileException;
@@ -9,6 +13,8 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.example.ide.CompileError;
 import org.metaworks.example.ide.SourceCode;
 import org.metaworks.website.MetaworksFile;
+import org.uengine.kernel.FormActivity;
+import org.uengine.util.UEngineUtil;
 
 public class SourceCodeWorkItem extends WorkItem{
 	
@@ -23,6 +29,58 @@ public class SourceCodeWorkItem extends WorkItem{
 		return super.getSourceCode();
 	}
 	
+	@Override
+	public Object[] add() throws Exception {
+		
+		if(getSourceCode()!=null && getSourceCode().getCode()!=null){
+			
+			//if there is no title has been entered, use the first line of content:
+			if(title==null || title.trim().length()==0) 
+				try{
+					//TODO: since the contents contains some multiple lines of html tags, so it cannot parses real next line of the text.
+					title = getSourceCode().getCode().substring(0, getSourceCode().getCode().indexOf('\n'));
+				}
+			catch(Exception e){}
+			
+			if(getSourceCode().getCode().length() > 2990){
+				
+				String relativeFilePath = UEngineUtil.getCalendarDir() + "/src" + getInstId() + "_" + System.currentTimeMillis() + ".html";
+				String absoluteFilePath = FormActivity.FILE_SYSTEM_DIR + relativeFilePath;
+				
+				File contentFile = new File(absoluteFilePath);
+				contentFile.getParentFile().mkdirs();
+				
+				PrintWriter fos = new PrintWriter(contentFile);
+				fos.write(getSourceCode().getCode());
+				fos.close();
+				
+				setExtFile(relativeFilePath);
+
+				getSourceCode().setCode("...loading...");
+					
+			}
+
+		}
+		
+		return super.add();
+	}
+
+	@Override
+	public void loadContents() throws Exception {
+		if(getExtFile()!=null){
+			
+			ByteArrayOutputStream bao = new ByteArrayOutputStream();
+
+			String absoluteFilePath = FormActivity.FILE_SYSTEM_DIR + getExtFile();
+
+			UEngineUtil.copyStream(new FileInputStream(absoluteFilePath), bao);
+			
+			getSourceCode().setCode(bao.toString());
+			setContentLoaded(true);
+
+		}
+	}
+
 	
 	@ServiceMethod(callByContent=true)
 	public void compile() throws ClassNotFoundException, CompileException, InstantiationException, IllegalAccessException{

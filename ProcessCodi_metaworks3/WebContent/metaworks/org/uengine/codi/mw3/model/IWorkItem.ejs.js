@@ -10,4 +10,7 @@ var org_uengine_codi_mw3_model_IWorkItem = function(objectId, className){
 		workItem.loadContents();
 	}
 
+	if(workItem.type == 'src' && workItem.extFile!=null && !workItem.contentLoaded){
+		workItem.loadContents();
+	}
 }
