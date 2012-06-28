@@ -162,7 +162,7 @@ public class InstanceListPanel implements ContextAware{
 		}
 	
 
-	@Test(scenario="first", starter=true, instruction="$first.NewInstance", next="autowiredObject.org.uengine.codi.mw3.model.IProcessMap@IssueManagement.process.initiate()")
+	@Test(scenario="first", starter=true, instruction="$first.NewInstance", next="autowiredObject.org.uengine.codi.mw3.model.IProcessMap@examples/process/IssueManagement.process.initiate()")
 	@ServiceMethod
 	public ContentWindow newInstance() throws Exception{
 		NewInstancePanel newInstancePanel =  new NewInstancePanel();

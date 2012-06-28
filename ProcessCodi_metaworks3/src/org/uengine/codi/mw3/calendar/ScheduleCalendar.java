@@ -16,6 +16,8 @@ import org.uengine.codi.mw3.model.Instance;
 import org.uengine.codi.mw3.model.InstanceViewContent;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.model.WorkItem;
+import org.uengine.kernel.ParameterContext;
+import org.uengine.webservices.worklist.DefaultWorkList;
 
 public class ScheduleCalendar implements ContextAware {
 	@AutowiredFromClient
@@ -79,7 +81,7 @@ public class ScheduleCalendar implements ContextAware {
 		ArrayList<Map<String, String>> arrListData = new ArrayList<Map<String, String>>();		
 		
 		WorkItem schedule = new WorkItem();
-		IWorkItem workitems = schedule.sql("select wl.*, pi.name instnm from bpm_worklist wl, bpm_procinst pi where wl.instid = pi.instid and wl.endpoint=?endpoint and wl.type is null");
+		IWorkItem workitems = schedule.sql("select wl.*, pi.name instnm , pi.status instanceStatus from bpm_worklist wl, bpm_procinst pi where wl.instid = pi.instid and wl.endpoint=?endpoint and wl.type is null and pi.isdeleted != 1");
 		workitems.setEndpoint(session.getUser().getUserId());
 		workitems.select();
 		
@@ -96,7 +98,8 @@ public class ScheduleCalendar implements ContextAware {
 		try {				
 			while(schedule.next()){
 				String title = " ";
-				
+				boolean completed = "Completed".equals(schedule.get("instanceStatus"));
+
 				if(!how.equals("small") && how != null)
 					title = schedule.getTitle();
 				
@@ -104,7 +107,7 @@ public class ScheduleCalendar implements ContextAware {
 				
 				column = new HashMap();
 				column.put("id", schedule.getTaskId());
-				column.put("title", title + "-" + schedule.get("instnm"));
+				column.put("title", title + "-" + schedule.get("instnm") + (completed ? "(Completed)" : ""));
 				
 //				//조사 수행건은 완료예정일 기준으로 출력함.
 //				if("INVST".equals(schedule.getSchdTypeCombo().getSelected()))
@@ -121,10 +124,17 @@ public class ScheduleCalendar implements ContextAware {
 					
 				
 				if(empCode.equals(schedule.getEndpoint()))
-					column.put("color", "#FEE66E");
+					column.put("color", "#F5C510");
 				else
 					column.put("color", "#FFDB2F");
-					
+
+				if(DefaultWorkList.WORKITEM_STATUS_RESERVED.equals(schedule.getStatus())){
+					column.put("color", "#FE2020");
+				}
+				
+				if(completed){
+					column.put("color", "#808080");
+				}
 				
 				arrListData.add(column);
 			}

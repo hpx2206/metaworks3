@@ -7,6 +7,8 @@ var org_uengine_codi_mw3_model_IWorkItem_edit = function(objectId, className){
 
 	$("#post_" + this.objectId).focus();
 	//$("#post_" + this.objectId).keydown()
+	
+	this.sending = false;
 
 }
 
@@ -35,16 +37,26 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.getValue =  function(){
 	return object;
 }
 
+
+org_uengine_codi_mw3_model_IWorkItem_edit.prototype.send = function(){
+	var thisFaceHelper = this;
+	var value = mw3.getObject(this.objectId);
+	
+	if(!this.sending){
+		
+		this.sending = true;
+		value.add();
+
+	}
+	
+	setTimeout(function(){thisFaceHelper.sending=false;}, 1000);
+}
+
 org_uengine_codi_mw3_model_IWorkItem_edit.prototype.press = function(){
 	var e = window.event;
 	
 	if (e.keyCode == 13) {
-		var value = mw3.getObject(this.objectId);
-		
-		
-		
-		
-		value.add();
+		this.send();
     }else{
     	
     	
@@ -57,6 +69,7 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.press = function(){
     	
     	var processMap = mw3.getAutowiredObject("org.uengine.codi.mw3.model.ProcessMapList");
     	
+    	//var divIdWithoutShaf = "commandDiv_" + this.objectId; 
 		var divId = "#commandDiv_" + this.objectId;
 		var recommendDivId = "#commandRecommendDiv_" + this.objectId;
 		var recommendFirst = true;
@@ -66,21 +79,42 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.press = function(){
 
 		if(text && text.length>0)
     	for(var i=0; i<processMap.processMapList.length; i++){
-    		var commandTrigger = processMap.processMapList[i].cmTrgr;
+    		var commandTrigger = processMap.processMapList[i].cmTrgr+":";
 
     		
-    		console.log('keychar:' + e.charCode)
+//    		console.log('keychar:' + e.charCode)
  //   		console.log('2:' +text + ' and commandTrigger=' + commandTrigger);
 
+    		if(processMap.processMapList[i].name.indexOf(text)==0){
+    			var theAppDiv = "#objDiv_" + processMap.processMapList[i].__objectId;
+
+    			if(!theAppDiv['__inEffect']){
+	    			theAppDiv['__inEffect'] = true;
+	    			$(theAppDiv).effect("bounce", {times: 3}, 300);
+    			}
+
+    		}
+    		
     		if(commandTrigger && commandTrigger.indexOf(text)==0){
         		
         		var commandPhrase = processMap.processMapList[i].cmPhrase;
         		
-//console.log('enter here:'+e.keyCode);
+//        		console.log('text:'+text);
+//        		console.log('commandTrigger:'+commandTrigger);
         		
-        		if(text==(commandTrigger+":")){//e.keyCode == 58 || e.charCode== 58 || e.keyCode == 59 || e.keyCode == 186) { //means ":" that user wants to command
+        		var thisFaceHelper = this;
+        		if(text==commandTrigger){//e.keyCode == 58 || e.charCode== 58 || e.keyCode == 59 || e.keyCode == 186) { //means ":" that user wants to command
 
             		$(divId).html("<b>" + fullText + ": </b>");
+            		$(divId).keydown(function(e){
+            			if(e.keyCode==13){
+            		
+            				thisFaceHelper.send();
+
+            			}
+       
+            		});
+	   					
             		
 
         		
@@ -143,11 +177,11 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.press = function(){
         		}else{ //just recommend the command phrase;
         			
         			if(recommendFirst){
-        				$(recommendDivId).html("" + mw3.localize('$RecommendedCommand') + ": \"<b>" + commandTrigger + ":</b>\"");
+        				$(recommendDivId).html("" + mw3.localize('$RecommendedCommand') + ": \"<b>" + commandTrigger + "</b>\"");
         				recommendFirst = false;
         			}else{
         				
-        				$(recommendDivId).append(", \"<b>" + commandTrigger + ":</b>\"");
+        				$(recommendDivId).append(", \"<b>" + commandTrigger + "</b>\"");
         				
         			}
         		}
