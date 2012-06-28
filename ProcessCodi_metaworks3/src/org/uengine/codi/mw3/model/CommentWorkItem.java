@@ -83,7 +83,8 @@ public class CommentWorkItem extends WorkItem{
 			ProcessInstanceDAO instanceDAO = ejbParentInstance.getProcessInstanceDAO();
 			
 			instanceDAO.set("initComCd", session.getCompany().getComCode());
-			//instanceDAO.setInitEp(session.getUser());
+			instanceDAO.set("InitEp", session.getUser().getUserId());
+			instanceDAO.set("InitRsNm", session.getUser().getName());
 			
 			if(!isInstantiation()){ //means sub process
 				instanceDAO.setRootInstId(new Long(getInstId()));
