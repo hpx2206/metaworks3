@@ -89,8 +89,13 @@ public class InstanceList implements ContextAware{
 	public InstanceList load(Session session) throws Exception {
 		IInstance instanceContents = Instance.load(session,
 				getPage(), PAGE_CNT);
-		instanceContents.setMetaworksContext(new MetaworksContext());
-		instanceContents.getMetaworksContext().setWhen("instanceList");
+		
+		if(getMetaworksContext()==null){
+			instanceContents.setMetaworksContext(new MetaworksContext());
+			instanceContents.getMetaworksContext().setWhen("instanceList");
+		}else{
+			instanceContents.setMetaworksContext(getMetaworksContext());
+		}
 		
 		setInstances(instanceContents);
 

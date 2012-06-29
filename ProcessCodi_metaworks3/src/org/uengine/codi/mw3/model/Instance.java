@@ -11,8 +11,10 @@ import org.metaworks.annotation.Id;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.widget.ModalWindow;
+import org.metaworks.widget.Window;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.processmanager.ProcessManagerRemote;
+import org.uengine.webservices.worklist.DefaultWorkList;
 
 public class Instance extends Database<IInstance> implements IInstance{
 
@@ -138,7 +140,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 		// TASK
 		stmt.append(" (select max(worklist.startdate) startdate, worklist.rootinstid ");
 		stmt.append("from bpm_worklist worklist, bpm_rolemapping rolemapping ");
-		stmt.append("where worklist.rootinstid=rolemapping.rootinstid ");
+		stmt.append("where worklist.rootinstid=rolemapping.rootinstid and (worklist.status != '"+ DefaultWorkList.WORKITEM_STATUS_RESERVED +"' or worklist.status is null)");
 		if(taskSql!=null) {
 			stmt.append(taskSql);
 		}
@@ -312,6 +314,18 @@ public class Instance extends Database<IInstance> implements IInstance{
 		modalWindow.setWidth(800);
 		
 		return modalWindow;
+	}
+	
+	public Object replaceDetail() throws Exception{
+		PinterestBox box = new PinterestBox();
+		//Window window = new Window ();
+		InstanceView instanceView = ((InstanceViewContent)detail()).getInstanceView();
+		//window.setPanel(instanceView);
+		box.setContent(instanceView);
+		
+		//return window;
+		
+		return box;
 	}
 	
 	public ProcessInstanceMonitor flowchart() throws Exception{

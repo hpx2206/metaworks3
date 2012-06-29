@@ -306,8 +306,8 @@ public class InstanceView {
 		processManager.stopProcessInstance(instanceId);
 		Instance instance = new Instance();
 		instance.setInstId(new Long(getInstanceId()));
-		
-		if(!instance.databaseMe().getInitEp().equals(session.getUser().getUserId())){
+		 
+		if(!instance.databaseMe().getInitEp().equals(session.getUser().getUserId())  && !(session.getEmployee()!=null && session.getEmployee().getIsAdmin())){
 			throw new Exception("$OnlyInitiatorCanDeleteTheInstance");
 		}
 		

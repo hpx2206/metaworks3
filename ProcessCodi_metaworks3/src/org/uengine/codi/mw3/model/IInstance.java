@@ -27,6 +27,9 @@ public interface IInstance extends IDAO{
 	@ServiceMethod(target="popup")
 	public ModalWindow popupDetail() throws Exception;
 
+	@ServiceMethod(target="self")
+	public Object replaceDetail() throws Exception;
+
 	@ServiceMethod	
 	@Test(scenario="first", starter=true, instruction="$first.FlowChart", next="autowiredObject.org.uengine.codi.mw3.model.InstanceListPanel.switchToKnowledge()")
 	public ProcessInstanceMonitor flowchart() throws Exception;
