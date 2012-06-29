@@ -1,4 +1,5 @@
 
+	<font size=2 color=gray face='Arial,돋움'>
 
 <% if(value!=null){
 
@@ -14,7 +15,7 @@
 		var column = 4;
 		
 		if(pinterest_listCount > 3){
-			column = isProcess ? 3:2;
+			column = isProcess ? 2:1;
 		}
 		
 		if(mw3.when=='newItem'){
@@ -28,7 +29,7 @@
 <a href="javascript:<%=methods.popupDetail.caller()%>">
 	<img src="images/portrait/<%=value.initiator.userId%>.jpg" width="100%" align=left onerror="$(this).remove();">
 </a>
-	<b><font color=204070><%=value.initiator.name%></font></b>
+	<b><font color=204070 size=<%=1+column%> face='Arial,돋움'><%=value.initiator.name%></font></b>
 				<% if(isChat){ %>
 					<span class="type_ping"></span><span class="instanceLock"></span>
 				<% }else if(isOpenCollab){ %>
@@ -39,16 +40,14 @@
 					<span class="type_process"></span><span class="instanceLock"></span>
 				<% } %>	
 						
-<a href="javascript:<%=methods.popupDetail.caller()%>"><b><%=value.name%></b></a>
+<a href="javascript:<%=methods.popupDetail.caller()%>"><font color=303030 size=<%=2+column%> face='Arial,돋움'><b><%=value.name%></b></font></a>
 				
 				<% if(value.currentUser && value.currentUser.userId && (value.initiator.userId!=value.currentUser.userId || value.name!=value.lastCmnt)){%>
 			<img src="images/portrait/<%=value.currentUser.userId%>.jpg" width="30%" align=left onerror="$(this).remove();">
-			<%=value.lastCmnt%>
+			<font size=<%=column%>><%=value.lastCmnt%></font>
 				<%}%>
 
-	<font size=2 color=gray>
 		<%=fields.startedDate.here()%>
-	</font>
 		
 		<%if(value.status=='Completed'){%> ( <%=mw3.localize('$Complete')%> ) <%}%>
 

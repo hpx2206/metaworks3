@@ -6,12 +6,15 @@
 		value.writer = mw3.getAutowiredObject('org.uengine.codi.mw3.model.Session').user;
 		value.writer.metaworksContext.when = 'workitem';
 %>
-<div class="view_box3" style="background:#fff">
+
+
+<div class="view_box3" style="background:#fff;">
 	<div class="guide">
 		<span class="tl"></span>
 		<span class="tr"></span>
 	</div>
-	<div class="cont">	
+	<div class="cont">
+ 	
 	<table width="100%" border="0" cellspacing="0" cellpadding="0">
 <%		
 		if(value.type == "comment"){
@@ -30,7 +33,7 @@
 			<td>
 			
 				<div id="commandDiv_<%=objectId%>"> 
-					<input type="text" id="post_<%=objectId%>" value="<%=value.title%>"  onkeyup="mw3.getFaceHelper('<%=objectId%>').press()"  rows="1" style="width:99%; height:21px; -webkit-border-radius:3px; outline:none;  webkit-border-radius:3px; border:1px solid #ccd; none;">
+					<input type="text" id="post_<%=objectId%>" value="<%=value.title%>" tabindex=1 onkeyup="mw3.getFaceHelper('<%=objectId%>').press()"  rows="1" style="width:99%; height:21px; -webkit-border-radius:3px; outline:none;  webkit-border-radius:3px; border:1px solid #ccd; none;">
 					<div id="commandRecommendDiv_<%=objectId%>"></div> 
 				</div>
 				
@@ -131,6 +134,9 @@
 		<span class="lb"></span>
 		<span class="rb"></span>
 	</div>
+	
+
+	
 </div>
 <div style="height:35px;">&nbsp;
 </div>
