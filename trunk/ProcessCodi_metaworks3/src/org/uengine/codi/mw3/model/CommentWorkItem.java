@@ -83,15 +83,17 @@ public class CommentWorkItem extends WorkItem{
 			ProcessInstanceDAO instanceDAO = ejbParentInstance.getProcessInstanceDAO();
 			
 			instanceDAO.set("initComCd", session.getCompany().getComCode());
-			instanceDAO.set("InitEp", session.getUser().getUserId());
-			instanceDAO.set("InitRsNm", session.getUser().getName());
 			
 			if(!isInstantiation()){ //means sub process
 				instanceDAO.setRootInstId(new Long(getInstId()));
 
-				processManager.executeProcess(newInstId);
-				
-				processManager.applyChanges();
+//				processManager.executeProcess(newInstId);
+//
+//				instanceDAO.set("InitEp", session.getUser().getUserId());
+//				instanceDAO.set("InitRsNm", session.getUser().getName());
+//
+//				processManager.applyChanges();
+
 
 				//Instance rootInstance = new Instance();
 				//rootInstance.setInstId(getInstId());
@@ -102,25 +104,29 @@ public class CommentWorkItem extends WorkItem{
 				setInstId(new Long(newInstId));
 				setInstantiation(false);
 
-				processManager.executeProcess(newInstId);
-				
-				processManager.applyChanges();
-
-				instanceViewContent.session = session;
-				
-				Instance instanceRef = new Instance();
-				instanceRef.setInstId(getInstId());
-				instanceViewContent.load(instanceRef);
-				
-				
-				WfNode parent = afterInstantiation(instanceViewContent, instanceRef);
-				
-				return new Object[]{ new Refresh(instanceViewContent), new Refresh(parent)};
+//				instanceViewContent.session = session;
+//				
+//				Instance instanceRef = new Instance();
+//				instanceRef.setInstId(getInstId());
+//				instanceViewContent.load(instanceRef);
+//				
+//				
+//				WfNode parent = afterInstantiation(instanceViewContent, instanceRef);
+//				
+//				return new Object[]{ new Refresh(instanceViewContent), new Refresh(parent)};
 
 			}
 			
 //			return super.add();
 			
+
+			processManager.executeProcess(newInstId);
+
+			instanceDAO.set("InitEp", session.getUser().getUserId());
+			instanceDAO.set("InitRsNm", session.getUser().getName());
+
+			processManager.applyChanges();
+
 		}
 		
 		// TODO Auto-generated method stub

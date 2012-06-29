@@ -667,7 +667,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	
 	public void remove() throws Exception{
 		
-		if(session.getUser().getUserId().equals(getWriter().getUserId())){
+		if(session.getUser().getUserId().equals(getWriter().getUserId()) || (session.getEmployee()!=null && session.getEmployee().getIsAdmin())){
 			deleteDatabaseMe();
 			return;
 		}
