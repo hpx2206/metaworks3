@@ -1,9 +1,11 @@
 
+
+
 <%
 	if(value){
 %>
 
-		<div class="pane ui-layout-north">
+		<div class="pane ui-layout-north" style="z-index:1004">
 			<%=fields.followers.here()%>
 			
 			<div class="toolbar">
@@ -114,7 +116,7 @@
 		}
 %>	
 		<div class="pane ui-layout-center">
-			<div class="ui-layout-content">
+			<div class="ui-layout-content" style="z-index:1004">
 				<%=fields.instanceNameChanger.here({when:'edit'})%>
 				<%=fields.eventTriggerPanel.here()%>
 				<%=value.scheduleEditor ? fields.scheduleEditor.here() : ""%>
