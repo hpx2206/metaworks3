@@ -1473,7 +1473,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			Metaworks3.prototype.startLoading = function(objId){
 				var infoDivId = "#"+this._getInfoDivId(objId);
 				
-				$(infoDivId).css('display', 'block').html("<img src='dwr/metaworks/images/circleloading.gif' align=middle> LOADING ...");
+				$(infoDivId).css('display', 'block').html("<img src='dwr/metaworks/images/circleloading.gif' align=middle>");
 			}
 						
 			Metaworks3.prototype.endLoading = function(){
@@ -1841,7 +1841,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			Metaworks3.prototype.showInfo = function(objId, message){
 				var infoDivId = "#"+this._getInfoDivId(objId);
 
-				$(infoDivId).html("<center><font color=blue> " + message + "</font></center>");
+				$(infoDivId).html("<center><font color=eeeeee> " + message + "</font></center>");
 				$(infoDivId).slideDown(500, function(){
 					setTimeout(function() {
 						$( infoDivId ).slideUp(500);
