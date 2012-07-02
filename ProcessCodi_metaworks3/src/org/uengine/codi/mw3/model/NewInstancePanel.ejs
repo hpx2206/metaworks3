@@ -1,6 +1,8 @@
 <%
 	if(value){
 %>
+
+<br><br>
 	
 	<%=fields.newInstantiator.here()%>	
 	
@@ -9,7 +11,17 @@
 	<%=fields.processMapPanel.here()%>
 <br><br>
 	
-	<%=fields.securityLevel.here({when:'edit'})%>
+	<table width=100%>
+	<td width=40%><center>
+	<img src="images/waveStyle/open_level_public_sns.png"> 퍼블릭 SNS </td>
+	<td width=20%><center>
+	<img src="images/waveStyle/open_level_in_house.png"> 우리조직내부에 
+	</td>
+	<td width=40%><center>
+	<img src="images/waveStyle/open_level_follower_only.png"> 관련자만 
+	</td>
+	</table>
+	
 <%
 	}
 %>

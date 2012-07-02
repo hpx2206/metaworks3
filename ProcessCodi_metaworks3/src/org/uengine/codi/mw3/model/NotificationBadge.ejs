@@ -1,6 +1,5 @@
 <div id="" style="float:left; padding-top:17px; position:relative;">	
 	<a class="badgeMail" href="javascript:<%=methods.showList.caller()%>">
-		<img src="images/waveStyle/badgeMail.png">
 <% 
 	 if(value.newItemCount>0){
 %>
@@ -10,6 +9,11 @@
 			</a>	
 		</div>
 <% 
+	}else{
+%>
+
+		<img src="images/waveStyle/badgeMail.png" width=18>
+<%
 	}
 %>
 	</a>	

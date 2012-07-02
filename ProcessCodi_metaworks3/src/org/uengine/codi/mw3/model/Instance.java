@@ -124,6 +124,8 @@ public class Instance extends Database<IInstance> implements IInstance{
 		}
 
 		instanceContents.select();
+//		instanceContents.getCurrentUser().getMetaworksContext().setHow("small");
+		
 		return instanceContents;
 	}
 
