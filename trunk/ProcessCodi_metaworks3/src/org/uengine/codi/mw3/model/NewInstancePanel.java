@@ -52,6 +52,16 @@ public class NewInstancePanel implements ContextAware {
 			this.securityLevel = securityLevel;
 		}
 
+		
+	InstanceBackground instanceBackground; 
+
+		public InstanceBackground getInstanceBackground() {
+			return instanceBackground;
+		}
+	
+		public void setInstanceBackground(InstanceBackground instanceBackground) {
+			this.instanceBackground = instanceBackground;
+		}
 
 	//	UnstructuredProcessInstanceStarter unstructuredProcessInstanceStarter;		
 //	public UnstructuredProcessInstanceStarter getUnstructuredProcessInstanceStarter() {

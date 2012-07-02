@@ -2,11 +2,11 @@
 <%if(value.selected){%>
 	<div class="depth2">
 		<ul class="fist_menu">
-			<li><span style="background:url(images/waveStyle/application_view_detail.png) no-repeat 5px 0px;"><a onClick="<%=methods.loadAllICanSee.caller()%>" href="#middle-west"><%=mw3.localize("$All")%></a></span></li>
-			<li><span style="background:url(images/waveStyle/application_view_detail.png) no-repeat 5px 0px;"><a onClick="<%=methods.loadAll.caller()%>" href="#middle-west"><%=mw3.localize("$Following")%></a></span></li>
-			<li><span style="background:url(images/waveStyle/application_side_tree.png) no-repeat 5px 0px;"><a onClick="<%=methods.loadInbox.caller()%>" href="#middle-west" ><%=mw3.localize("$MyToDo")%></a></span></li>
-			<li><span style="background:url(images/waveStyle/user_edit.png) no-repeat 5px 0px;"><a onClick="<%=methods.loadRequest.caller()%>" href="#middle-west"><%=mw3.localize("$StartedbyMe")%></a></span></li>
-			<li><span style="background:url(images/waveStyle/bin_closed.png) no-repeat 5px 0px; "><a onClick="<%=methods.loadStopped.caller()%>" href="#middle-west"><%=mw3.localize("$Trash")%></a></span></li>
+			<li><span style="background:url(images/waveStyle/nav_newsfeed.png) no-repeat 5px 0px;"><a onClick="<%=methods.loadAllICanSee.caller()%>" href="#middle-west"><%=mw3.localize("$All")%></a></span></li>
+			<li><span style="background:url(images/waveStyle/nav_participating.png) no-repeat 5px 0px;"><a onClick="<%=methods.loadAll.caller()%>" href="#middle-west"><%=mw3.localize("$Following")%></a></span></li>
+			<li><span style="background:url(images/waveStyle/nav_my_to_do.png) no-repeat 5px 0px;"><a onClick="<%=methods.loadInbox.caller()%>" href="#middle-west" ><%=mw3.localize("$MyToDo")%></a></span></li>
+			<li><span style="background:url(images/waveStyle/nav_by_me.png) no-repeat 5px 0px;"><a onClick="<%=methods.loadRequest.caller()%>" href="#middle-west"><%=mw3.localize("$StartedbyMe")%></a></span></li>
+			<li><span style="background:url(images/waveStyle/nav_trash.png) no-repeat 5px 0px; "><a onClick="<%=methods.loadStopped.caller()%>" href="#middle-west"><%=mw3.localize("$Trash")%></a></span></li>
 		</ul>
 	</div>
 <%}else{%>
