@@ -200,6 +200,13 @@
 			}
 			
 			$(document).ready(function() {
+				
+				
+				if (navigator.appVersion.indexOf("Win")!=-1){
+					$('body').css('font-family', "'맑은 고딕', Malgun gothic, Arial");
+				}
+
+				
 				var request = new Request();
 				
 				var defId = request.getParameter("defId");
