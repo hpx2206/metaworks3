@@ -9,7 +9,9 @@ var org_uengine_codi_mw3_model_IInstance = function(objectId, className){
 		 mw3.getFaceHelper(objectId).unBlinking();
 		 
 		 $(".tbl_type").parent().css("background","none");
+		 $(".tbl_type").parent().css("box-shadow","none");
 		 $(this).css("background","#C9E2FC");
+		 $(this).css("box-shadow","0px 0px 5px 2px rgba(0, 0, 0, 0.1) inset");
 	 });
 	 
 	 var object = mw3.objects[this.objectId];
@@ -43,7 +45,8 @@ org_uengine_codi_mw3_model_IInstance.prototype = {
 				$('#' + this.divId).removeClass('blinking');
 				
 				$('#' + this.divId).animate({
-					backgroundColor: "#FED5A3"
+//					backgroundColor: "#FED5A3"
+					backgroundColor: "#FEE5A3"
 				}, 1000 );
 				
 				// 꺼짐

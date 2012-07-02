@@ -5,7 +5,7 @@
 	if(value){
 %>
 
-		<div class="pane ui-layout-north">
+		<div class="pane ui-layout-north" style="z-index:1004">
 			<%=fields.followers.here()%>
 			
 			<div class="toolbar">
@@ -19,7 +19,7 @@
 			        </li>
 			        <li id="wih_btn_item_GanttChart">
 			        	<a href="javascript:<%=methods.schedule.caller()%>">
-			        		<span style="color: black; "><img src="images/waveStyle/i_gantt.png" border="0"></span>
+			        		<span style="color: black; "><img src="images/waveStyle/i_gantt.png" border="0" valign=center></span>
 			        		<span style="color: black; "><%=mw3.localize("$Schedule")%></span>
 			        	</a>
 			        </li>
@@ -84,7 +84,7 @@
 %>						        
 			        <li id="wih_btn_complete">
 			        	<a href="javascript:<%=methods.complete.caller()%>">
-			        		<span><img src="images/waveStyle/i_secuopt.png" border="0"></span>
+			        		<span><img src="images/waveStyle/i_complete.png" border="0"></span>
 			        		<span><%=mw3.localize("$Completing")%></span>
 			        	</a>
 			        </li>
@@ -94,7 +94,7 @@
 %>						        
 			        <li id="wih_btn_complete" class="toolbar_current">
 			        	<a href="javascript:<%=methods.complete.caller()%>">
-			        		<span><img src="images/waveStyle/i_secuopt.png" border="0"></span>
+			        		<span><img src="images/waveStyle/i_complete.png" border="0"></span>
 			        		<span><%=mw3.localize("$Complete")%></span>
 			        	</a>
 			        </li>
