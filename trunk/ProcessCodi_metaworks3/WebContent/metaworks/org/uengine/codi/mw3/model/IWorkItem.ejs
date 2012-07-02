@@ -1,5 +1,4 @@
 
-
 <%
 	var isMine = (value.writer.userId == mw3.getAutowiredObject('org.uengine.codi.mw3.model.Session').user.userId);
 
@@ -8,8 +7,9 @@
 	if(isMine == true){
 %>
 	<div style="position:relative;">
-		<div class="commentTailRight"><img src="images/waveStyle/bubbleTailRight.png" ></div>				
-		<div class="view_box3" style="background:#fff; margin-right:13px; width:80%;  float:right">
+		<!--div class="commentTailRight"><img src="images/waveStyle/bubbleTailRight.png" ></div-->				
+		<div class="view_box3" style="margin-right:13px; width:80%;  float:right">
+			<!--div class="innerBox" style="position:absolute; width:80%;"></div-->
 	
 <% } else if(isMine == false){%>
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -23,15 +23,12 @@
 			</td>			
 			<td>
 				<div style="position:relative;">
-					<div class="commentTailLeft"><img src="images/waveStyle/bubbleTailLeft.png" ></div>				
-					<div class="view_box2" style="background:#fff; margin-left:13px; width:80%;  float:left">
+					<!--div class="commentTailLeft"><img src="images/waveStyle/bubbleTailLeft.png" --></div>				
+		<div class="view_box3" style="margin-right:13px; width:99%;  float:left">
+			<!--div class="innerBox" style="position:absolute; width:99%;"-->
 	
 
 <% } %>
-		<div class="guide">
-			<span class="tl"></span>
-			<span class="tr"></span>
-		</div>
 		<div class="cont" style="padding:5px 10px; margin:0px">	
 			<table id="tableHidtoryContent_1" width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tbody>
@@ -49,7 +46,7 @@
 							<div class="formcontexttitle" id="currentRunningWorkItemHandler">
 								<% if(value.type=='comment' || value.type=='file' || value.type=='src' || value.type=='memo'){%>
 									<span>
-										<%=value.title%> 
+											<%=value.title%>
 									</span>								
 								<%}else if(value.type==null){%>
 									<span>
@@ -133,10 +130,6 @@
 					</tr>			
 			</table>
 		</div>
-		<div class="guide">
-			<span class="lb"></span>
-			<span class="rb"></span>
-		</div>
 	</div>
 	<div class="clear"></div>
 	
@@ -150,3 +143,7 @@
 	<% } %>
 	<div class="clear"></div>
 	-->
+	
+	
+	<div style="height:10px"></div>
+	

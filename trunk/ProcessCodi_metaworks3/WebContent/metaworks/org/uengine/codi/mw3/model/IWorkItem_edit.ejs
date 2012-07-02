@@ -8,12 +8,12 @@
 %>
 
 
-<div class="view_box3" style="background:#fff;">
-	<div class="guide">
+<div class="view_box3">
+	<!--div class="guide">
 		<span class="tl"></span>
 		<span class="tr"></span>
-	</div>
-	<div class="cont">
+	</div-->
+	<!--div class="cont"-->
  	
 	<table width="100%" border="0" cellspacing="0" cellpadding="0">
 <%		
@@ -120,7 +120,7 @@
 		}
 %>
 	</table>
-	</div>
+	<!--/div-->
 	
 	<div id="wih_button">
 		<a class="<%= value.type=='comment'?'comment_btn_on':'comment_btn_off' %>" onclick="<%=methods.newComment.caller()%>"><span><%=mw3.localize("$Write")%></span></a>
@@ -130,10 +130,10 @@
 		<a class="comment_btn_off" onclick="<%=methods.newActivity.caller()%>"><span id="method_<%=objectId%>_newActivity"><%=mw3.localize("$etc")%></span></a>
 	</div>
 	
-	<div class="guide">
+	<!--div class="guide">
 		<span class="lb"></span>
 		<span class="rb"></span>
-	</div>
+	</div-->
 	
 
 	

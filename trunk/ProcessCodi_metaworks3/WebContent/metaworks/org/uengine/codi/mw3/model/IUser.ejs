@@ -81,8 +81,8 @@
 		}else{			
 %>
 		<div class="user" onclick="<%=clickAction%>">		
-			<div class="user_picture">	
-				<img id="user_picture_<%=objectId%>" src="<%=portrait%>"  onerror="this.src='<%=unknown%>';" width="30" height="30">
+			<div class="user_focus<%=(mw3.how=='small' ? ' small':'')%>" style="background: url('<%=portrait%>');>	
+				<img id="user_picture_<%=objectId%>" width=1 height=1 src="<%=portrait%>"  onerror="$(this).parent().css('background','url(\'<%=unknown%>\')')">
 			</div>
 <%	
 			// case by user

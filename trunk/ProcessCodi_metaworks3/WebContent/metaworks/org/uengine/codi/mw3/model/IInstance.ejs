@@ -15,11 +15,12 @@
 		var isProcess = (value.defId != null);
 		var isSecureProcess = (value.defId != null && value.secuopt == '1');
 		
-	
+		
+		value.initiator.metaworksContext.how='list';
 	
 	%>
 	
-<table width="100%" border="0" cellspacing="0" cellpadding="0" class="tbl_type">						
+<table width="100%" border="0" cellspacing="0" cellpadding="0" class="tbl_type" <%=(value.status=='Completed') ? "style='background:#eeeeee';":""%>>						
 	<tbody>
 	<tr  class="q <%=value.firstDueTimeTerm ? (value.firstDueTimeTerm>=0 ? (value.firstDueTimeTerm>=3 ? "" : "plus" + value.firstDueTimeTerm ) : "minus" )  : "" %>" onClick="<%=methods.detail.caller()%>" style="cursor:pointer;">
 		<td class="first_td" valign="top">
@@ -34,30 +35,30 @@
 			<ul class="lst_type">										
 				<li class="trigger">
 				<% if(isChat){ %>
-					<span class="type_ping"></span><span class="instanceLock"></span>
+					<!--span class="type_ping"></span--><span class="instanceLock"></span>
 				<% }else if(isOpenCollab){ %>
-					<span class="type_ping"></span><span class="instanceUnLock"></span>
+					<!--span class="type_ping"></span--><span class="instanceUnLock"></span>
 				<% }else if(isProcess){ %>
 					<span class="type_process"></span><span class="instanceUnLock"></span>
 				<% }else if(isSecureProcess){ %>
 					<span class="type_process"></span><span class="instanceLock"></span>
 				<% } %>	
 						
-				<a href="#middle-center"><%=fields.name.here()%></a></li>
+				<a href="#middle-center"><font color=#5C5C5C><b><%=fields.name.here()%></b></font></a></li>
 				
 				<% if(value.currentUser && value.currentUser.userId && (value.initiator.userId!=value.currentUser.userId || value.name!=value.lastCmnt)){%>
 			
-			<table><td><%=fields.currentUser.here()%></td>
-			<td colspan=2><%=value.lastCmnt%></td></table>
+			<table><td><%value.currentUser.metaworksContext.how='small'%><%=fields.currentUser.here()%></td>
+			<td colspan=2><font color=gray><%=value.lastCmnt%></font></td></table>
 	
 				<%}%>
 
 												
 			</ul>								
 		</td>
-		<td class="last_td"><%=fields.startedDate.here()%>
+		<td class="last_td"><font color=gray><%=fields.startedDate.here()%></font>
 		
-		<%if(value.status=='Completed'){%> ( <%=mw3.localize('$Complete')%> ) <%}%>
+		<%if(value.status=='Completed'){%> <div class="badge">&nbsp;&nbsp; <%=mw3.localize('$Complete')%> &nbsp;&nbsp;</div> <%}%>
 		</td>
 	</tr>
 	
