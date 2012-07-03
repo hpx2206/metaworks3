@@ -2,7 +2,7 @@
 	if(mw3.when == 'new' || mw3.when == 'edit'){
 %>
 		<input type="text" id="<%=mw3.createInputId(objectId)%>" style="width:80px; color:#666;" when="<%=mw3.when%>" readonly />
-		<a href="javascript:mw3.getFaceHelper(<%=objectId%>).clear()"><img src="<%=mw3.base+'/images/clear.png'%>"></a>
+		<a href="javascript:mw3.getFaceHelper(<%=objectId%>).clear()" style="float:left;padding-top:5px;"><img src="<%=mw3.base+'/images/clear.png'%>"></a>
 <%			
 	}else{
 		if(value){
