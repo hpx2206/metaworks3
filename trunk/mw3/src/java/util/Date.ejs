@@ -1,14 +1,18 @@
 <%
-//	if(value){
-		if(mw3.when == 'new' || mw3.when == 'edit'){
+	if(mw3.when == 'new' || mw3.when == 'edit'){
 %>
-			<input type="text" id="<%=mw3.createInputId(objectId)%>" style="width:80px; color:#666;" when="<%=mw3.when%>" readonly />
-			<input type="button" onclick="mw3.getFaceHelper(<%=objectId%>).clear()" value="clear" />
+		<input type="text" id="<%=mw3.createInputId(objectId)%>" style="width:80px; color:#666;" when="<%=mw3.when%>" readonly />
+		<a href="javascript:mw3.getFaceHelper(<%=objectId%>).clear()"><img src="<%=mw3.base+'/images/clear.png'%>"></a>
 <%			
-		}else{
+	}else{
+		if(value){
 %>
 	<%= value.format('yyyy-MM-dd') %>
 <%		
-//		}		 
+		}else{
+%>		
+	<%= value %>
+<%				
+		}
 	}
 %>
