@@ -64,6 +64,13 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			    this.afterLoadFaceHelper = {};
 			    this.afterLoadFaceHelperCount = 0;
 			    
+			    this.isRecordingSession = false;
+			    this.recording = [];
+			    
+			    this.recordingExceptClasses = {};
+			    
+			    this.testSet = {};
+			    
 			    // Netscape
 			    // 5.0 (Windows NT 6.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11
 			    // Mozilla
@@ -104,6 +111,21 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 		    			if(mw3.popupDivId!=null){
 	    					$("#" + mw3.popupDivId).remove();
 	    					mw3.popupDivId = null;
+		    			}
+		    			
+	    			}
+	    			
+	    			if(e.keyCode == 123){ //F12 -- let the recorder starts for testing automation 
+		    			if(mw3.isRecordingSession){
+		    				
+		    				console.log(JSON.stringify(mw3.recording));
+		    				alert('Recording Done. See the logs for recorded JSON.');
+		    				this.recording=[];
+		    				mw3.isRecordingSession = false;
+		    				
+		    			}else{
+		    				mw3.isRecordingSession = true;
+		    				alert("Recording Started.");
 		    			}
 	    			}
 			    }
@@ -1647,6 +1669,20 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				        			// 2012-03-19 cjw 기존 소스가 ejs.js 생성자 호출 보다 늦게 method 값을 할당하여 맨위로 올림
 				        			mw3.recentCallMethodName = svcNameAndMethodName;
 				        			
+				        			if(mw3.isRecordingSession && !mw3.recordingExceptClasses[object.__className]){
+				        				
+				        				var objectKey = mw3._createObjectKey(object);
+				        				var next = "autowiredObject." + objectKey + "." + svcNameAndMethodName;
+				        				
+				        				mw3.recording[mw3.recording.length] = {
+				        					//next: next,
+				        					value: object,
+				        					objectKey: objectKey,
+				        					methodName: svcNameAndMethodName,
+				        					scenario: "testScenario"
+				        				};
+				        			}
+				        			
 				    				//alert("call.result=" + dwr.util.toDescriptiveString(result, 5))
 //				    				mw3.debug("call result");
 
@@ -2003,6 +2039,9 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 
 			}
 
+			Metaworks3.prototype.startTest = function(scenarioName, options){
+				this.test(null, scenarioName + "[0]", options);
+			}
 
 			Metaworks3.prototype.test = function(objectId, testName, options){
 				  $( "#instructionR" ).slideUp(500, function(){
@@ -2018,81 +2057,110 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				if(!options['scenarioName'])
 					options['scenarioName'] = testName;
 				
-				var value = this.objects[objectId];
+				var recordedTest = false;
+				var testIndex =0;
 				
-				var objectMetadata = this.getMetadata(value.__className); 
-				
-//				var testStarter;
-				
-				
-				if(!this.tests[value.__className]){
+			   if(objectId==null && testName.indexOf("[") > -1){ // in case that the test is recorded one
+				   var scenarioNameAndIndex = testName.split("[");
+				   var scenarioname = scenarioNameAndIndex[0];
+				   testIndex = eval(scenarioNameAndIndex[1].split("]")[0]);
+
+				   test = mw3.testSet[scenarioname][testIndex];
+				   
+				   if(test==null){
+					   alert('Test ' + scenarioname + ' successfully done.');
+					   
+					   return;
+				   }
+				   
+				   recordedTest = true;
+
+			   }else{ // in case that the test is inside the annotation
+
+					var value = this.objects[objectId];
 					
-					this.tests[value.__className] = {};
-					var testsForTheClass = this.tests[value.__className];
+					var objectMetadata = this.getMetadata(value.__className); 
 					
-					for(var i=0; i<objectMetadata.fieldDescriptors.length; i++){
-						var fieldDescriptor = objectMetadata.fieldDescriptors[i];
-						if(fieldDescriptor.attributes){
-							var scenario = fieldDescriptor.attributes['test'];
-							
-							if(scenario){
-								for(var scenarioName in scenario){
-									var test = scenario[scenarioName];
-									
-									test['fieldName'] = fieldDescriptor.name;
-									
-									testsForTheClass[scenarioName + "." + fieldDescriptor.name] = test;
-									if(test.starter){
-										testsForTheClass[testName] = test;
+	//				var testStarter;
+					
+					//tests is indexed test hashmap for easily finding test by class name
+					if(!this.tests[value.__className]){
+						
+						this.tests[value.__className] = {};
+						var testsForTheClass = this.tests[value.__className];
+						
+						for(var i=0; i<objectMetadata.fieldDescriptors.length; i++){
+							var fieldDescriptor = objectMetadata.fieldDescriptors[i];
+							if(fieldDescriptor.attributes){
+								var scenario = fieldDescriptor.attributes['test'];
+								
+								if(scenario){
+									for(var scenarioName in scenario){
+										var test = scenario[scenarioName];
+										
+										test['fieldName'] = fieldDescriptor.name;
+										
+										testsForTheClass[scenarioName + "." + fieldDescriptor.name] = test;
+										if(test.starter){
+											testsForTheClass[testName] = test;
+										}
 									}
 								}
+								
 							}
 							
 						}
 						
-					}
-					
-				   for(var methodName in objectMetadata.serviceMethodContexts){
-				   		var methodContext = objectMetadata.serviceMethodContexts[methodName];
-				   		
-				   		if(methodContext.attributes){
-							var scenario = methodContext.attributes['test'];
-							
-							if(scenario){
+					   for(var methodName in objectMetadata.serviceMethodContexts){
+					   		var methodContext = objectMetadata.serviceMethodContexts[methodName];
+					   		
+					   		if(methodContext.attributes){
+								var scenario = methodContext.attributes['test'];
 								
-								for(var scenarioName in scenario){
-									var test = scenario[scenarioName];
-								
-									test['methodName'] = methodContext.methodName;
-									testsForTheClass[test.scenario + "." + methodContext.methodName + "()"] = test;
-									if(test.starter){
-										testsForTheClass[testName] = test;
+								if(scenario){
+									
+									for(var scenarioName in scenario){
+										var test = scenario[scenarioName];
+									
+										test['methodName'] = methodContext.methodName;
+										testsForTheClass[test.scenario + "." + methodContext.methodName + "()"] = test;
+										if(test.starter){
+											testsForTheClass[testName] = test;
+										}
 									}
+									
 								}
 								
 							}
-							
-						}
-				   		
-				   }
-				}
-				
+					   		
+					   }
+					}
+					
+					//해당 시작한 클래스명에 대한 테스트들을 끌어옴. 근데, 이는 recorded 된 test들에 대해서는 별 의미가 없음.
+				   var testsForTheClass = this.tests[value.__className];  
 				   
-			   var testsForTheClass = this.tests[value.__className];
+				   if(testName.indexOf(".") == -1 && options && options.scenarioName && options.scenarioName!=testName){
+					   testName = options.scenarioName + "." + testName;
+				   }
 			   
-			   if(testName.indexOf(".") == -1 && options && options.scenarioName && options.scenarioName!=testName){
-				   testName = options.scenarioName + "." + testName;
+				   test = testsForTheClass[testName];
+			   
+				   if(test==null){
+					   
+						   alert('test is null. Please check your starter @Test name is same with the scenario name or set by starter=true.');
+				   
+				   			return;
+				   }
 			   }
 			   
-			   var test = testsForTheClass[testName];
 			   
-			   if(test==null){ alert('test is null. Please check your starter @Test name is same with the scenario name or set by starter=true.');
-			   
-			   		return;
-			   
+			   var next = null;
+			   if(recordedTest){
+				   next = test.scenario + "[" + (testIndex+1) + "]";
+				   
+			   }else{
+				   next = (test.next && test.next[0] ? test.scenario + "." + test.next[0] : null);
 			   }
-			   
-			   var next = (test.next && test.next[0] ? test.scenario + "." + test.next[0] : null);
 
 			   if(test.fieldName){
 
@@ -2175,9 +2243,14 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 							  
 							  if(methodName != test.methodName) return;
 
+							  if(recordedTest){
+								  mw3.test(null, next, options);
+								  
+								  return;
+							  }
 
-							   var next = (test && test.next && test.next[0] ? test.scenario + "." + test.next[0] : null);
-							   
+							   //var next = (test && test.next && test.next[0] ? test.scenario + "." + test.next[0] : null);
+
 							   if(next==null){  // detect end!
 								   mw3.afterCall = null;
 								   
@@ -2233,6 +2306,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 								  
 							   } else{
 								   value = mw3.objects[objectId];
+								   
 								  if(value)
 									  mw3.test(value.__objectId, next, options);
 							   }
@@ -2254,6 +2328,14 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 						  
 					   }else{
 						   
+						   //in case that the recorded test...
+						   if(recordedTest && test.value!=null){
+							   
+							   objectId = this.objectId_KeyMapping[test.objectKey];
+							   
+							   this.setObject(objectId, test.value);
+							   value = this.objects[objectId];
+						   }
 
 						   returnValue = this.call(value.__objectId, test.methodName, true, true); //sync call
 					   }
