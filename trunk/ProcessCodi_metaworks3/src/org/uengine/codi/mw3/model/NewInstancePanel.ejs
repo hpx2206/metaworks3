@@ -11,7 +11,7 @@
 	<%=fields.processMapPanel.here()%>
 <br><br>
 	
-	<table width=100%>
+	<!--table width=100%>
 	<td width=40%><center>
 	<img src="images/waveStyle/open_level_public_sns.png"> 퍼블릭 SNS </td>
 	<td width=20%><center>
@@ -20,7 +20,9 @@
 	<td width=40%><center>
 	<img src="images/waveStyle/open_level_follower_only.png"> 관련자만 
 	</td>
-	</table>
+	</table-->
+	
+	<%=fields.securityLevel.here({when:'edit'})%>
 	
 <%
 	}
