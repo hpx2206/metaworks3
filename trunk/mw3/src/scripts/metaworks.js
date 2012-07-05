@@ -5,6 +5,8 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				this.objectId = 0;
 				this.dwrErrorDiv = dwr_caption;
 				
+				this.templates = {};
+				
 				this.HOW_NORMAL = "normal";
 				this.HOW_STANDALONE = "standalone";
 				this.HOW_IN_LIST = "inList";
@@ -632,12 +634,27 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 							
 							var url = mw3.base + (actualFace.indexOf('dwr') == 0 ? '/':'/metaworks/') + actualFace;
 							
-							var templateEngine = new EJS({url: url});
+							
+							var templateEngine;
+							if(mw3.templates[url]){
+								templateEngine = mw3.templates[url];
+							}else{
+								templateEngine = new EJS({url: url});
+								mw3.templates[url] = templateEngine;
+							}
 							
 							return templateEngine.render(contextValues);
 				   		};
-				   						   		
-						var html = new EJS({url: url}).render(contextValues);
+
+						var templateEngine;
+						if(mw3.templates[url]){
+							templateEngine = mw3.templates[url];
+						}else{
+							templateEngine = new EJS({url: url});
+							mw3.templates[url] = templateEngine;
+						}
+
+						var html = templateEngine.render(contextValues);
 						
 
 						//#DEBUG POINT
