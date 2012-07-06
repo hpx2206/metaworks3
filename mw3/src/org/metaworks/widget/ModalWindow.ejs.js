@@ -3,6 +3,8 @@ var org_metaworks_widget_ModalWindow = function(objectId, className) {
 	this.className = className;
 	this.divId = '#objDiv_' + objectId;
 
+	$('.mw3_layout').attr('fixed_size', true);
+	
 	var object = mw3.objects[this.objectId];
 
 	if(object){
@@ -32,9 +34,7 @@ var org_metaworks_widget_ModalWindow = function(objectId, className) {
 				options['title'] = title;
 				options['modal'] = true;
 				options['close'] = function(event, ui) {
-					if (typeof event.eventPhase != 'undefined') {
-						mw3.getFaceHelper(objectId).close();
-					}
+					mw3.getFaceHelper(objectId).close();
 				}
 		
 				if (object.width)
@@ -52,6 +52,14 @@ var org_metaworks_widget_ModalWindow = function(objectId, className) {
 			}
 		}
 	}
+}
+
+org_metaworks_widget_ModalWindow.prototype.destroy = function() {
+	$('#objDiv_' + this.objectId).parent().empty();
+	
+	setTimeout(function(){
+		$('.mw3_layout').attr('fixed_size', false);
+	},500);
 }
 
 org_metaworks_widget_ModalWindow.prototype.close = function() {
