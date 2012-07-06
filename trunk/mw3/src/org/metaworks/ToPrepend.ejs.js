@@ -17,8 +17,13 @@ var org_metaworks_ToPrepend = function(objectId, className){
 				if(mappedObjId){
 					
 					var html = mw3.locateObject(object.target, null);//, "#"+mappedObjdivId);
-	
-					$("#objDiv_" + mappedObjId).prepend(html);
+					var faceHelper = mw3.getFaceHelper(mappedObjId);
+					
+					if(faceHelper && faceHelper.toPrepend){
+						faceHelper.toPrepend(html);
+					}else{
+						$("#objDiv_" + mappedObjId).prepend(html);	
+					}
 	
 					break;
 				}	
