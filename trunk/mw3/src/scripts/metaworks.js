@@ -117,7 +117,8 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 		    			
 	    			}
 	    			
-	    			if(e.keyCode == 123){ //F12 -- let the recorder starts for testing automation 
+	    			if(e.keyCode == 123 && e.shiftKey){ //F12 -- let the recorder starts for testing automation
+	    				
 		    			if(mw3.isRecordingSession){
 		    				
 		    				console.log(JSON.stringify(mw3.recording));
@@ -129,6 +130,15 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 		    				mw3.isRecordingSession = true;
 		    				alert("Recording Started.");
 		    			}
+	    			}
+
+	    			if(e.keyCode == 122 && e.shiftKey){ //F11 -- tester prompt 
+	    				
+	    				var testJSON = prompt("Enter testing JSON:");
+	    				mw3.testSet["__test__"] = eval(testJSON);
+	    				
+	    				mw3.startTest("__test__");
+	    				
 	    			}
 			    }
 			    
@@ -1695,8 +1705,8 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				        					//next: next,
 				        					value: object,
 				        					objectKey: objectKey,
-				        					methodName: svcNameAndMethodName,
-				        					scenario: "testScenario"
+				        					methodName: svcNameAndMethodName//,
+				        					//scenario: "testScenario"
 				        				};
 				        			}
 				        			
@@ -2085,11 +2095,17 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				   test = mw3.testSet[scenarioname][testIndex];
 				   
 				   if(test==null){
-					   alert('Test ' + scenarioname + ' successfully done.');
+					   
+					   if(console)
+						   console.log('Test ' + scenarioname + ' successfully done.');
+					   else
+						   alert('Test ' + scenarioname + ' successfully done.');
 					   
 					   return;
 				   }
-				   
+
+				   test.scenario = scenarioname;
+
 				   recordedTest = true;
 
 			   }else{ // in case that the test is inside the annotation
