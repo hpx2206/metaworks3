@@ -216,9 +216,10 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					//return null;
 					//TODO :  error reporting required
 					//this.debug(e, true);
-					if(window.console)
+					if(window.console){
 						console.log("Failed to load face helper ("+faceHelperClass+"(ejs.js)): " + e);
 						console.log(e);						
+					}
 				}
 			}
 
@@ -479,14 +480,14 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					//set the context if there's some desired 
 					var currentContextWhen = this.when;
 					
-					if(options && options['when']){
-						this.setWhen(options['when']);
-					}
-
 					if(object && object.metaworksContext){
 						this.setContext(object.metaworksContext);
 					}
 
+					if(options && options['when']){
+						this.setWhen(options['when']);
+					}
+					
 					
 					if(objectTypeName.length > 2 && objectTypeName.substr(-2) == '[]'){			//if array of some object type, use ArrayFace with mapped class mapping for the object type.
 						objectTypeName = objectTypeName.substr(0, objectTypeName.length - 2);
@@ -688,49 +689,6 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 						var theDiv = $("#" + targetDivId);
 						
 
-					    if(theDiv[0] && metadata && metadata.fieldDescriptors && metadata.fieldDescriptors.length > 0)
-							/*
-							 * validator event 제거
-							 */
-					    	/*
-							    for(var i = 0; i < metadata.fieldDescriptors.length; ++i){
-						    	var fd = metadata.fieldDescriptors[i];
-						    	
-						    	try {
-						    		if(fd.attributes.validator) {		
-							    		for(var j = 0; j < fd.attributes.validator.length; ++j) {
-							    			var validator = fd.attributes.validator[j];						    			
-							    			var inputObjectId = this.getChildObjectId(objectId, fd.name);
-							    			var inputDivId = this.createInputId(inputObjectId);
-							    			
-							    			if(validator.events){
-							    				for(var k = 0; k < validator.events.length; ++k){
-						    						$('#' + inputDivId).bind(validator.events[k], {validator: validator, inputObjectId: inputObjectId},  function(event){
-						    							var validator = event.data.validator;
-						    							var inputObjectId = event.data.inputObjectId;
-						    							var message;
-						    							
-						    							var result = mw3.validation(validator, this.value);
-						    							if(!result)
-						    								message = mw3.getValidationMessage(fd, validator)
-
-														if(mw3.getFaceHelper(inputObjectId) && mw3.getFaceHelper(inputObjectId).showValidation){
-															mw3.getFaceHelper(inputObjectId).showValidation(result, message);
-														}else{
-															mw3.showValidation(inputObjectId, result, message);
-														}					    								
-						    						});
-							    				}
-							    			}
-								    	}
-								   }
-						    	} catch(e) {
-						    		console.log('error = ' + e);
-						    	}
-						    }				
-							*/
-					    
-						
 						if(theDiv[0] && metadata)
 					    for(var methodName in metadata.serviceMethodContextMap){
 					   		var methodContext = metadata.serviceMethodContextMap[methodName];
@@ -2546,8 +2504,6 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			}
 			
 			Metaworks3.prototype.isHiddenMethod = function(method){
-				console.log(method);
-				
 				if(method.methodContext.when != mw3.WHEN_EVER){
 		   			if( (mw3.when && (method.methodContext.when.indexOf(mw3.when) == -1) ) 
 		   					||
@@ -2773,7 +2729,8 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					
 				}
 				
-				var when = mw3.when;
+				var when = null;
+				//var when = mw3.when;
 
 				if(context!=null && context.when){
 					when = context.when
@@ -2807,7 +2764,8 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				}
 			
 				if(!designMode){ //means general mode
-					options['when'] = when;
+					if(when)
+						options['when'] = when;
 					
 					html = mw3.locateObject(value, face, null, options);
 				}else if(!designModeDepth2){ //means just design mode
@@ -2834,7 +2792,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			}
 
 			MethodRef.prototype.caller = function(){
-				return "mw3.getObject('" + this.objectId + "')." + this.methodContext.methodName + "()";
+				return (this.methodContext.needToConfirm ? 'if (confirm(\'Are you sure to ' + this.methodContext.displayName + ' this?\'))':'')  + 'mw3.getObject(' + this.objectId + ').' + this.methodContext.methodName + '()';
 			}
 			
 			MethodRef.prototype.here = function(){
