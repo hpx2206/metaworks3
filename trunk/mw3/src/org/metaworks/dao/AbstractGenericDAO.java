@@ -1570,7 +1570,7 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 	
 
 	public String getStatement() {
-		return sqlStmt.toUpperCase(); //
+		return sqlStmt; //
 	}
 	
 	public void setStatement(String sql) {
