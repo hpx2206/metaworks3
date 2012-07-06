@@ -17,7 +17,7 @@ var org_metaworks_widget_layout_Layout = function(objectId, className){
 		//this.change = false;
 		
 		this.div.addClass('mw3_layout').attr('objectId', objectId);
-			
+		
 		this.list = {};	
 		if(object.center)
 			this.list['center'] = this.div.children('.ui-layout-center');
@@ -244,7 +244,7 @@ org_metaworks_widget_layout_Layout.prototype.resize = function(){
 	if(this.layout){
 		// this.change = false;		
 		this.layout.resizeAll();
-			
+		
 		if(this.name != null){
 			if(this.hidden == this.size){
 				var pane = this.parent.children('.ui-layout-' + this.name);
@@ -290,6 +290,7 @@ org_metaworks_widget_layout_Layout.prototype.resizeChild = function(){
 	this.div.find('.mw3_layout, .mw3_resize').each(function(index, value){
 		var layoutId = value.getAttribute('objectId');
 		
-		mw3.getFaceHelper(layoutId).resize();
+		if(value.getAttribute('fixed_size') != 'true')
+			mw3.getFaceHelper(layoutId).resize();
 	});
 }
