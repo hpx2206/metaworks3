@@ -1,5 +1,6 @@
 package org.metaworks.dwr;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -7,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -26,6 +28,14 @@ import org.metaworks.dao.ConnectionFactory;
 import org.metaworks.dao.IDAO;
 import org.metaworks.dao.TransactionContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
+import org.springframework.core.type.classreading.CachingMetadataReaderFactory;
+import org.springframework.core.type.classreading.MetadataReader;
+import org.springframework.core.type.classreading.MetadataReaderFactory;
+import org.springframework.util.ClassUtils;
+import org.springframework.util.SystemPropertyUtils;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -118,14 +128,61 @@ public class MetaworksRemoteService {
 		ArrayList<WebObjectType> metadataArray = new ArrayList<WebObjectType>();
 		
 		for(int i=0; i<classNames.length; i++){
-			try{
-				metadataArray.add(getMetaworksType(classNames[i]));
-			}catch(Exception e){e.printStackTrace();}
+			if(classNames[i].endsWith("*")){
+				List<Class> classes = findMyTypes(classNames[i]);
+				
+				for(Class clsInPkg : classes){
+					metadataArray.add(getMetaworksType(clsInPkg.getName()));
+				}
+			}else{
+				try{
+					metadataArray.add(getMetaworksType(classNames[i]));
+				}catch(Exception e){e.printStackTrace();}
+			}
 		}
 		
 		return metadataArray;
 		
 	}
+	
+	private List<Class> findMyTypes(String basePackage) throws IOException, ClassNotFoundException
+	{
+	    ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
+	    MetadataReaderFactory metadataReaderFactory = new CachingMetadataReaderFactory(resourcePatternResolver);
+
+	    List<Class> candidates = new ArrayList<Class>();
+	    String packageSearchPath = ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX +
+	                               resolveBasePackage(basePackage) + ".class";
+	    Resource[] resources = resourcePatternResolver.getResources(packageSearchPath);
+	    for (Resource resource : resources) {
+            MetadataReader metadataReader = metadataReaderFactory.getMetadataReader(resource);
+            candidates.add(Class.forName(metadataReader.getClassMetadata().getClassName()));
+            
+//	        if (resource.isReadable()) {
+//	            if (isCandidate(metadataReader)) {
+//	                candidates.add(Class.forName(metadataReader.getClassMetadata().getClassName()));
+//	            }
+//	        }
+	    }
+	    return candidates;
+	}
+
+	private String resolveBasePackage(String basePackage) {
+	    return ClassUtils.convertClassNameToResourcePath(SystemPropertyUtils.resolvePlaceholders(basePackage));
+	}
+
+//	private boolean isCandidate(MetadataReader metadataReader) throws ClassNotFoundException
+//	{
+//	    try {
+//	        Class c = Class.forName(metadataReader.getClassMetadata().getClassName());
+//	        if (c.getAnnotation(XmlRootElement.class) != null) {
+//	            return true;
+//	        }
+//	    }
+//	    catch(Throwable e){
+//	    }
+//	    return false;
+//	}
 	
 	public InvocationContext prepareToCall(String objectTypeName, Object object, String methodName, Map<String, Object> autowiredFields) throws Throwable{
 
