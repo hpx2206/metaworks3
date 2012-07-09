@@ -75,6 +75,12 @@
 	  	<script type='text/javascript' src='dwr/interface/Metaworks.js'></script> 
 	  	<script type="text/javascript" src="dwr/metaworks/scripts/metaworks.js"></script>
 	
+		<!-- substitue for ejs engine (jQote2) -->
+		
+		<script type="text/javascript" src="scripts/jquery/jquery.jqote2.js"></script>
+		
+	
+	
 		<!-- for context menu, import YUI -->
 		<script type="text/javascript" src="scripts/yui-3.2.0-min.js"></script>
 		<link rel="stylesheet" type="text/css" href="style/menu/reset.css">
@@ -87,12 +93,12 @@
 		<!--  for ckeditor -->
 		<script type='text/javascript' src='scripts/ckeditor_3.6.3/ckeditor/ckeditor.js'></script>
 	
-		<!-- for source code editor -->
+		<!-- for source code editor 
 		<script src="scripts/ace/build/src/ace.js" type="text/javascript" charset="utf-8"></script>
 		<script src="scripts/ace/build/src/theme-eclipse.js" type="text/javascript" charset="utf-8"></script>
 		<script src="scripts/ace/build/src/mode-javascript.js" type="text/javascript" charset="utf-8"></script>
 		<script src="scripts/ace/build/src/mode-java.js" type="text/javascript" charset="utf-8"></script>
-		
+		-->
 		
 		<!-- for jLayout -->
 		<!-- 
@@ -147,12 +153,6 @@
 		<script type='text/javascript' src='scripts/jquery/timeago/jquery.timeago.js'></script>				
 						
 						
-		<!-- for source code editor -->
-		<script src="scripts/ace/build/src/ace.js" type="text/javascript" charset="utf-8"></script>
-		<script src="scripts/ace/build/src/theme-eclipse.js" type="text/javascript" charset="utf-8"></script>
-		<script src="scripts/ace/build/src/mode-javascript.js" type="text/javascript" charset="utf-8"></script>
-		<script src="scripts/ace/build/src/mode-java.js" type="text/javascript" charset="utf-8"></script>
-
 		<!-- facebook -->
 		<script>(function(d, s, id) {
 		  var js, fjs = d.getElementsByTagName(s)[0];
@@ -200,6 +200,8 @@
 			}
 			
 			$(document).ready(function() {
+				
+				mw3.importClasses(["org.uengine.codi.mw3.model.*", "org.metaworks.widget.*"]);
 				
 				mw3.recordingExceptClasses["org.uengine.codi.mw3.model.Session"] = true;
 				
