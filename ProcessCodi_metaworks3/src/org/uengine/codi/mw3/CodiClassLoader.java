@@ -492,12 +492,14 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
 		for(URL url : urls){
 			String urlStr = url.getFile().toString();
 			sbClasspath.append(urlStr).append(sep);
-			try {
-				ObjectType.classPool.insertClassPath(urlStr);
-			} catch (NotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			//needed for javassist version of metaworks2
+//			try {
+//				ObjectType.classPool.insertClassPath(urlStr);
+//			} catch (NotFoundException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+			//end of needed for
 		}
 		
 		//Loads user-defined library files
@@ -508,12 +510,15 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
 			for(File libFile : libFiles){
 				String absLibPath = libFile.getAbsolutePath();
 				sbClasspath.append(absLibPath).append(sep);
-				try {
-					ObjectType.classPool.insertClassPath(absLibPath);  //may occur some library version collision. should be separated.
-				} catch (NotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				
+				//needed for javassist version of metaworks2
+//				try {
+//					ObjectType.classPool.insertClassPath(absLibPath);  //may occur some library version collision. should be separated.
+//				} catch (NotFoundException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+				//end of needed for
 			}
 		}
 
