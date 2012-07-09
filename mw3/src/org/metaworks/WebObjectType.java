@@ -573,9 +573,7 @@ public class WebObjectType{
 			Range range = (Range) getAnnotationDeeply(tryingClasses, fd.getName(), Range.class);
 			if(range!=null){
 				if(range.options().length > 0){
-					SelectInput selectInput = new SelectInput();
-					selectInput.setSelections(range.options());
-					selectInput.setValues(range.values());
+					SelectInput selectInput = new SelectInput(range.options(), range.values());
 					
 					fd.setInputter(selectInput);
 					
