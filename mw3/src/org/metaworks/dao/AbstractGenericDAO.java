@@ -1126,6 +1126,9 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 									
 									objInst.setFieldValue(mappingPropName, value);
 									atLeastOnceHaveValue = true;
+									
+								}catch(ArrayIndexOutOfBoundsException aob){
+									throw new Exception("You have to call 'next()' before getting value of DAO", aob);
 								}catch(Exception ex){
 								}
 							}
@@ -1133,13 +1136,14 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 							if(atLeastOnceHaveValue){
 								Object object = objInst.getObject();
 
+								if(object instanceof ContextAware){
+									((ContextAware)object).setMetaworksContext(getMetaworksContext());
+								}
+
 								if(object instanceof ORMappingListener){
 									((ORMappingListener)object).onRelation2Object();
 								}
 								
-								if(object instanceof ContextAware){
-									((ContextAware)object).setMetaworksContext(getMetaworksContext());
-								}
 
 								return object;
 							}
@@ -1168,15 +1172,14 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 						
 						if(atLeastOnceHaveValue){
 							Object object = objInst.getObject();
-
-							if(object instanceof ORMappingListener){
-								((ORMappingListener)object).onRelation2Object();
-							}
 							
 							if(object instanceof ContextAware){
 								((ContextAware)object).setMetaworksContext(getMetaworksContext());
 							}
 
+							if(object instanceof ORMappingListener){
+								((ORMappingListener)object).onRelation2Object();
+							}
 
 							
 							return object;
