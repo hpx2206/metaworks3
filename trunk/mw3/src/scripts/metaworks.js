@@ -688,19 +688,18 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 							url = url + "?ver=" + metadata.version; //let it refreshed
 						
 						var contextValues = {
-								value				: object, 
-								objectTypeName		: objectTypeName, 
-								targetDiv			: targetDiv, 
-								objectMetadata		: (objectTypeName && objectTypeName.length > 0 ? this.getMetadata(objectTypeName) : null), 
-								mw3					: this, 
-								objectId			: objectId, 
-								fields				: (objectRef ? objectRef.fields  : null),
-								resources			: (objectRef ? objectRef.fields  : null), //TODO: later should be sent only with resources
-								methods				: (objectRef ? objectRef.methods : null),
-								descriptor			: descriptor,
-								editFunction		: editFunction,
-								options				: options
-								
+							value				: object, 
+							objectTypeName		: objectTypeName, 
+							targetDiv			: targetDiv, 
+							objectMetadata		: (objectTypeName && objectTypeName.length > 0 ? this.getMetadata(objectTypeName) : null), 
+							mw3					: this, 
+							objectId			: objectId, 
+							fields				: (objectRef ? objectRef.fields  : null),
+							resources			: (objectRef ? objectRef.fields  : null), //TODO: later should be sent only with resources
+							methods				: (objectRef ? objectRef.methods : null),
+							descriptor			: descriptor,
+							editFunction		: editFunction,
+							options				: options								
 						};
 						
 				   		contextValues['include'] = function(ejsPath){
