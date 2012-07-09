@@ -346,12 +346,14 @@ public class ResourceFile implements ContextAware{
 			
 			org.uengine.kernel.ProcessDefinition procDef = processManager.getProcessDefinition(getAlias());
 			String fullCommandPhrase = procDef.getDescription().getText();
-			
-			int commandCotentStarts = fullCommandPhrase.indexOf(':');
-			if(-1 < commandCotentStarts){
 
-				processMap.setCmPhrase(fullCommandPhrase);
-				processMap.setCmTrgr(fullCommandPhrase.substring(0, commandCotentStarts));
+			if(fullCommandPhrase!=null){
+				int commandCotentStarts = fullCommandPhrase.indexOf(':');
+				if(-1 < commandCotentStarts){
+	
+					processMap.setCmPhrase(fullCommandPhrase);
+					processMap.setCmTrgr(fullCommandPhrase.substring(0, commandCotentStarts));
+				}
 			}
 		}
 			
