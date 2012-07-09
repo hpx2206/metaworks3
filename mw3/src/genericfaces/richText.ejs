@@ -11,8 +11,7 @@
 	
 	if(mw3.when == mw3.WHEN_EDIT || mw3.when == mw3.WHEN_NEW){
 %>
-	 <textarea id="<%=mw3.createInputId(objectId)%>" cols=<%=cols%> rows=<%=rows%>> <%=value%> </textarea>
-	
+<textarea id="<%=mw3.createInputId(objectId)%>" cols=<%=cols%> rows=<%=rows%>><%=value%></textarea>
 <%
 
 	}else{
