@@ -345,7 +345,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 						
 		        		},
 
-		        		async: false,
+		        		async: true,
 				
 						timeout:10000, 
 	                    
