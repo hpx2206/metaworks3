@@ -615,47 +615,54 @@ public class WebObjectType{
 
 		serviceMethodContexts = new ArrayList<ServiceMethodContext>();
 
-		List<String> methodNameList = new ArrayList<String>();
-		try{
-			Map dupChecker = new HashMap<String, String>();
-			CtMethod[] methods1 = ObjectType.classPool.get(actCls.getName()).getDeclaredMethods();
-			CtMethod[] methods2 = ObjectType.classPool.get(actCls.getName()).getMethods();
-			CtMethod[][] methodGroup = new CtMethod[][]{methods1, methods2};
-			
-			for(int j=0; j<methodGroup.length; j++){
-				CtMethod[] methods = methodGroup[j];
-				for(int i=0; i<methods.length; i++){
-					
-					if(methods[i].getParameterTypes().length>0)
-						continue;
-					
-					String methodName = methods[i].getName();
-					if(dupChecker.containsKey(methodName)) 
-						continue;
-					
-					dupChecker.put(methodName, methodName);
-					methodNameList.add(methodName);
-				}
-			}
-		}catch(Exception e){
-			Method[] methods = actCls.getMethods();
-			for(int i=0; i<methods.length; i++){
-				if(methods[i].getParameterTypes().length>0)
-					continue;
-
-				methodNameList.add(methods[i].getName());
-			}
-		}
 		
-		for(String methodName : methodNameList){
-			
-			Method method = null;
-			try{
-				method = actCls.getMethod(methodName, new Class[]{});
-			}catch(Exception e){
-				continue;
-			}
-			
+		for(Method method : actCls.getMethods()){
+
+		
+//javassist version of metaworks2
+//		List<String> methodNameList = new ArrayList<String>();
+//		try{
+//			Map dupChecker = new HashMap<String, String>();
+//			CtMethod[] methods1 = ObjectType.classPool.get(actCls.getName()).getDeclaredMethods();
+//			CtMethod[] methods2 = ObjectType.classPool.get(actCls.getName()).getMethods();
+//			CtMethod[][] methodGroup = new CtMethod[][]{methods1, methods2};
+//			
+//			for(int j=0; j<methodGroup.length; j++){
+//				CtMethod[] methods = methodGroup[j];
+//				for(int i=0; i<methods.length; i++){
+//					
+//					if(methods[i].getParameterTypes().length>0)
+//						continue;
+//					
+//					String methodName = methods[i].getName();
+//					if(dupChecker.containsKey(methodName)) 
+//						continue;
+//					
+//					dupChecker.put(methodName, methodName);
+//					methodNameList.add(methodName);
+//				}
+//			}
+//		}catch(Exception e){
+//			Method[] methods = actCls.getMethods();
+//			for(int i=0; i<methods.length; i++){
+//				if(methods[i].getParameterTypes().length>0)
+//					continue;
+//
+//				methodNameList.add(methods[i].getName());
+//			}
+//		}
+//		
+//		for(String methodName : methodNameList){
+//			
+//			Method method = null;
+//			try{
+//				method = actCls.getMethod(methodName, new Class[]{});
+//			}catch(Exception e){
+//				continue;
+//			}
+//end of javassist version of metaworks2
+		
+		
 //			if(annotation==null && iDAOClass != null){
 //				try{
 //					annotation = iDAOClass.getMethod(method.getName(), new Class[]{}).getAnnotation(ServiceMethod.class);
