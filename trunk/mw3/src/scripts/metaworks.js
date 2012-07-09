@@ -132,12 +132,15 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 		    			}
 	    			}
 
-	    			if(e.keyCode == 122 && e.shiftKey){ //F11 -- tester prompt 
+	    			if((e.keyCode == 122 || e.keyCode == 121) && e.shiftKey){ //F11 -- tester prompt 
 	    				
 	    				var testJSON = prompt("Enter testing JSON:");
 	    				mw3.testSet["__test__"] = eval(testJSON);
 	    				
-	    				mw3.startTest("__test__");
+	    				if(e.keyCode == 122)
+	    					mw3.startTest("__test__");
+	    				else
+	    					mw3.startTest("__test__", {guidedTour: true});
 	    				
 	    			}
 			    }
@@ -332,112 +335,139 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				
 			}
 			
-			Metaworks3.prototype.getMetadata = function(objectTypeName, onLoadDone){
+			Metaworks3.prototype.importClasses = function(objectTypeNames){
+			
+				this.metaworksProxy.getMetaworksTypes(objectTypeNames, 
+					{ 
+		        		callback: function( webObjectTypes ){
+		        			for(var i=0; i < webObjectTypes.length; i++)
+		        				mw3._storeMetadata(webObjectTypes[i]);
+						
+		        		},
 
-					if(!objectTypeName && objectTypeName.trim().length == 0) return;
-					
-					if(objectTypeName.length > 2 && objectTypeName.substr(-2) == '[]'){			//if array of some object type, use ArrayFace with mapped class mapping for the object type.
-						return;
-					}
-					
-					if(objectTypeName.length > 4 && objectTypeName.substr(0, 2) == '[L' && objectTypeName.substr(-1) == ';'){			//if array of some object type, use ArrayFace with mapped class mapping for the object type.
-						return;
-					}
-					
-					if(objectTypeName.indexOf(":") != -1)
-						objectTypeName = objectTypeName.split(':')[0];
+		        		async: false,
 				
-					if(!this.metaworksMetadata[objectTypeName] 
-					//|| true
-					
-					){ //caches the metadata
-						//alert('getting metadata for ' + objectTypeName);
-						
-						this.metaworksProxy.getMetaworksType(objectTypeName, 
-							{ 
-				        		callback: function( webObjectType ){
-					    			//alert(webObjectType.name + "=" + dwr.util.toDescriptiveString(webObjectType, 5))
+						timeout:10000, 
+	                    
+	                    errorHandler:function(errorString, exception) {
+	                    } 
+		    		}
+				);
+				
+			}
+			
+			Metaworks3.prototype.getMetadata = function(objectTypeName){
 
-									mw3.metaworksMetadata[objectTypeName] = webObjectType;
-									
-									webObjectType['version'] = mw3._metadata_version ++;
-
-									
-									//webObjectType['dontCache'] = true;
-									
-									for(var i=0; i<webObjectType.fieldDescriptors.length; i++){
-										var fd = webObjectType.fieldDescriptors[i];
-										
-										if(!fd.attributes) continue;
-										
-										if(fd.attributes['namefield']){
-											webObjectType['nameFieldDescriptor'] = fd;
-										}else
-										if(fd.attributes['children']){
-											webObjectType['childrenFieldDescriptor'] = fd;
-										}
-										
-										if(fd.attributes['typeSelector']){
-											webObjectType['typeSelector'] = fd;
-										}
-										
-										fd['getOptionValue'] = function(option){
-											if(this.options!=null && this.values!=null)
-											
-											for(var i=0; i<this.options.length && i<this.values.length; i++){
-												if(option==this.options[i])
-													return this.values[i];
-											}
-										}
-										
-									}
-
-									//following methods are not null, it will creates the lazy-loaded tree mechanism.
-									
-									var serviceMethodMap = {};
-									
-									if(webObjectType.serviceMethodContexts)
-									for(var serviceMethodName in webObjectType.serviceMethodContexts){
-										var serviceMethod = webObjectType.serviceMethodContexts[serviceMethodName];
-										
-										serviceMethodMap[serviceMethod.methodName] = serviceMethod;
-										
-										if(!serviceMethod.displayName)
-											serviceMethod.displayName = serviceMethod.methodName.substr(0,1).toUpperCase() + serviceMethod.methodName.substr(1, serviceMethod.methodName.length-1);
-										
-										if(serviceMethod.nameGetter){
-											webObjectType['nameGetter'] = serviceMethod;
-										}else
-										if(serviceMethod.childrenGetter){
-											webObjectType['childrenGetter'] = serviceMethod;
-										}
-										
-										if(serviceMethod.keyBinding)
-											webObjectType['focusable'] = true;
-									}
-									
-									webObjectType['serviceMethodContextMap'] = serviceMethodMap;
-								
-				        		},
-
-				        		async: false,
-						
-								timeout:10000, 
-			                    
-			                    errorHandler:function(errorString, exception) {
-			                        //alert(errorString);
-			  						//document.getElementById(this.dwrErrorDiv).innerHTML = errorString;
-			                    } 
-				    		}
-						)
-						 
-					}
-					
-					var objectMetadata = this.metaworksMetadata[objectTypeName];
-					
-					return objectMetadata;
+				if(!objectTypeName && objectTypeName.trim().length == 0) return;
+				
+				if(objectTypeName.length > 2 && objectTypeName.substr(-2) == '[]'){			//if array of some object type, use ArrayFace with mapped class mapping for the object type.
+					return;
 				}
 				
+				if(objectTypeName.length > 4 && objectTypeName.substr(0, 2) == '[L' && objectTypeName.substr(-1) == ';'){			//if array of some object type, use ArrayFace with mapped class mapping for the object type.
+					return;
+				}
+				
+				if(objectTypeName.indexOf(":") != -1)
+					objectTypeName = objectTypeName.split(':')[0];
+			
+				if(!this.metaworksMetadata[objectTypeName] 
+				//|| true
+				
+				){ //caches the metadata
+					//alert('getting metadata for ' + objectTypeName);
+					
+					this.metaworksProxy.getMetaworksType(objectTypeName, 
+						{ 
+			        		callback: function( webObjectType ){
+				    			//alert(webObjectType.name + "=" + dwr.util.toDescriptiveString(webObjectType, 5))
+
+			        			mw3._storeMetadata(webObjectType);
+							
+			        		},
+
+			        		async: false,
+					
+							timeout:10000, 
+		                    
+		                    errorHandler:function(errorString, exception) {
+		                        //alert(errorString);
+		  						//document.getElementById(this.dwrErrorDiv).innerHTML = errorString;
+		                    } 
+			    		}
+					)
+					 
+				}
+				
+				var objectMetadata = this.metaworksMetadata[objectTypeName];
+				
+				return objectMetadata;
+			}
+				
+			
+			Metaworks3.prototype._storeMetadata = function(webObjectType){
+				
+				var objectTypeName = webObjectType.name;
+				mw3.metaworksMetadata[objectTypeName] = webObjectType;
+				
+				webObjectType['version'] = mw3._metadata_version ++;
+
+				
+				for(var i=0; i<webObjectType.fieldDescriptors.length; i++){
+					var fd = webObjectType.fieldDescriptors[i];
+					
+					if(!fd.attributes) continue;
+					
+					if(fd.attributes['namefield']){
+						webObjectType['nameFieldDescriptor'] = fd;
+					}else
+					if(fd.attributes['children']){
+						webObjectType['childrenFieldDescriptor'] = fd;
+					}
+					
+					if(fd.attributes['typeSelector']){
+						webObjectType['typeSelector'] = fd;
+					}
+					
+					fd['getOptionValue'] = function(option){
+						if(this.options!=null && this.values!=null)
+						
+						for(var i=0; i<this.options.length && i<this.values.length; i++){
+							if(option==this.options[i])
+								return this.values[i];
+						}
+					}
+					
+				}
+
+				//following methods are not null, it will creates the lazy-loaded tree mechanism.
+				
+				var serviceMethodMap = {};
+				
+				if(webObjectType.serviceMethodContexts)
+				for(var serviceMethodName in webObjectType.serviceMethodContexts){
+					var serviceMethod = webObjectType.serviceMethodContexts[serviceMethodName];
+					
+					serviceMethodMap[serviceMethod.methodName] = serviceMethod;
+					
+					if(!serviceMethod.displayName)
+						serviceMethod.displayName = serviceMethod.methodName.substr(0,1).toUpperCase() + serviceMethod.methodName.substr(1, serviceMethod.methodName.length-1);
+					
+					if(serviceMethod.nameGetter){
+						webObjectType['nameGetter'] = serviceMethod;
+					}else
+					if(serviceMethod.childrenGetter){
+						webObjectType['childrenGetter'] = serviceMethod;
+					}
+					
+					if(serviceMethod.keyBinding)
+						webObjectType['focusable'] = true;
+				}
+				
+				webObjectType['serviceMethodContextMap'] = serviceMethodMap;
+
+			}
+			
 			
 			Metaworks3.prototype.showObjectWithObjectId = function (objectId, objectTypeName, targetDiv){
 				var object = this.getObject(objectId);
@@ -445,6 +475,43 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				this.showObject(object, objectTypeName, {targetDiv: targetDiv, objectId: objectId, options: arguments[3]});
 			}
 				
+			
+			Metaworks3.prototype._template = function(url, contextValues){
+				var templateEngine;
+				if(mw3.templates[url]){
+					templateEngine = mw3.templates[url];
+				}else{
+
+					if(mw3.usingTemplateEngine == 'jQote'){
+						$.ajax(url, 										
+							{
+								async: false, 
+								success:function(tmpl) {
+									templateEngine = tmpl;
+								}
+							}
+						);
+						
+						
+						//templateEngine = new EJS({url: url});
+						mw3.templates[url] = templateEngine;
+						
+					}else{
+						templateEngine = new EJS({url: url});
+					}
+
+				}
+				
+				if(mw3.usingTemplateEngine == 'jQote'){
+					return $.jqote(templateEngine, contextValues);
+				}else{
+					return templateEngine.render(contextValues);	
+				}
+				
+			}
+			
+
+			
 			Metaworks3.prototype.showObject = function (object, objectTypeName, target){
 				
 					var objectId;
@@ -644,30 +711,15 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 							}
 							
 							var url = mw3.base + (actualFace.indexOf('dwr') == 0 ? '/':'/metaworks/') + actualFace;
-							
-							
-							var templateEngine;
-							if(mw3.templates[url]){
-								templateEngine = mw3.templates[url];
-							}else{
-								templateEngine = new EJS({url: url});
-								mw3.templates[url] = templateEngine;
-							}
-							
-							return templateEngine.render(contextValues);
+
+							return mw3._template(url, contextValues);
 				   		};
 
-						var templateEngine;
-						if(mw3.templates[url]){
-							templateEngine = mw3.templates[url];
-						}else{
-							templateEngine = new EJS({url: url});
-							mw3.templates[url] = templateEngine;
-						}
 
-						var html = templateEngine.render(contextValues);
+						var html = mw3._template(url, contextValues);
+
+						//$(targetDiv).jqote(templateEngine, contextValues);
 						
-
 						//#DEBUG POINT
 						$(targetDiv).html(html);
 
@@ -2304,9 +2356,49 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 
 						   }
 	   
+					   //in case that the recorded test...
+					   var enterValueContext = null;
+					   
+					   if(recordedTest && test.value!=null){
+						   
+						   objectId = this.objectId_KeyMapping[test.objectKey];
+						   
+						   if(objectId==null){
+							   
+							   var errorMsg = "[Test] During test [" + test.scenario + "], object key [" + test.objectKey + "] is not found. Quit the test.";
+							   if(console)
+								   console.log(errorMsg);
+							   else
+								   alert(errorMsg);
+							   
+							   return;
+						   }
+						   
+
+						   //setting values for only existing property value except the null property
+						   var value = this.objects[objectId];
+						   var metadata = this.getMetadata(test.value.__className);
+						   for(var idx in metadata.fieldDescriptors){
+							   
+							   var fieldDescriptor = metadata.fieldDescriptors[idx];
+							   if(test.value[fieldDescriptor.name]){
+								   enterValueContext = (enterValueContext ? enterValueContext + ", " : "") + fieldDescriptor.displayName + " : " + test.value[fieldDescriptor.name];
+								   
+								   value[fieldDescriptor.name] = test.value[fieldDescriptor.name];
+
+							   }
+							   
+						   }
+						   
+					   }
 							   
 
 					   if(guidedTour){
+						   
+						   if(recordedTest){
+							   test.instruction = [];
+							   test.instruction[0] = ((enterValueContext && false) ? "Enter " + enterValueContext + "\n and " : "") + "Click " + test.methodName + ".";
+						   }
 						   
 						   var methodDivId = "method_" + value.__objectId + "_" + test.methodName;
 						   var methodDiv = $("#" + methodDivId);
@@ -2319,14 +2411,6 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 						  
 					   }else{
 						   
-						   //in case that the recorded test...
-						   if(recordedTest && test.value!=null){
-							   
-							   objectId = this.objectId_KeyMapping[test.objectKey];
-							   
-							   this.setObject(objectId, test.value);
-							   value = this.objects[objectId];
-						   }
 
 						   returnValue = this.call(value.__objectId, test.methodName, true, true); //sync call
 					   }
