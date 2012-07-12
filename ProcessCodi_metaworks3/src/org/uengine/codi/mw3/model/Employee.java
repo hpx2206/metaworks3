@@ -394,7 +394,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		employee.getMetaworksContext().setWhere("inDetailView");
 		
 		
-		return new Popup(new EmployeeInfo(employee));
+		return new ModalWindow(new EmployeeInfo(employee), 700, 400, employee.getEmpName());
 	}
 	
 	@Override

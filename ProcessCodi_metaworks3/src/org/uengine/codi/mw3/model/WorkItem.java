@@ -604,8 +604,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				
 				noti.setActAbstract(session.getUser().getName() + " wrote : " + getTitle());
 	
-				noti.createDatabaseMe();
-				noti.flushDatabaseMe();
+				noti.add(refreshedInstance);
 
 			
 				String followerSessionId = Login.getSessionIdWithUserId(followerId);
@@ -662,14 +661,20 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		}
 		
 		//makes new line and change existing div
-		return new Object[]{new Refresh(newItem), new ToAppend(threadPanelOfThis, copyOfThis)};
+		
+		if("comment".equals(getType())){
+			return new Object[]{copyOfThis};
+			
+		}
+		else
+			return new Object[]{new Refresh(newItem), new ToAppend(threadPanelOfThis, copyOfThis)};
 	}
 	
-	public void remove() throws Exception{
+	public Object remove() throws Exception{
 		
 		if(session.getUser().getUserId().equals(getWriter().getUserId()) || (session.getEmployee()!=null && session.getEmployee().getIsAdmin())){
 			deleteDatabaseMe();
-			return;
+			return new Remover(this);
 		}
 
 		Instance theInstance = new Instance();
@@ -677,7 +682,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		
 		if(theInstance.databaseMe().getInitiator().getUserId().equals(session.getUser().getUserId())){
 			deleteDatabaseMe();
-			return;
+			return new Remover(this);
 			
 		}
 				
@@ -685,9 +690,18 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		
 	}
 
+	public void edit() throws Exception{
+		if(!session.getUser().getUserId().equals(getWriter().getUserId())){
+			throw new Exception("$OnlyTheWriterCanEdit");
+		}
+		
+		getMetaworksContext().setWhen("edit");
+		
+	}
+
 	protected WfNode afterInstantiation(
 			InstanceViewContent instantiatedViewContent,
-			Instance instanceRef) throws Exception {
+			final Instance instanceRef) throws Exception {
 		
 		WfNode parent=null;
 		if(newInstancePanel!=null){
@@ -727,7 +741,19 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		
 		instanceRef.databaseMe().getMetaworksContext().setHow("blinking");
 		
-		MetaworksRemoteService.getInstance().pushClientObjects(new Object[]{new ToPrepend(new InstanceList(), instanceRef.databaseMe()) });
+		new Thread(){
+
+			@Override
+			public void run() {
+				try {
+					MetaworksRemoteService.getInstance().pushClientObjects(new Object[]{new ToPrepend(new InstanceList(), instanceRef.databaseMe()) });
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+		}.start();
 
 		return parent;
 	}
