@@ -11,8 +11,6 @@ if(value){
 	onErrorImg = "this.src='images/portrait/unknown_user.gif'";
 
 
-	//no use Admin
-	
 	if(mw3.where == 'admin'){
 		if(mw3.how == 'tree'){
 		
@@ -38,7 +36,7 @@ if(value){
 				<%=fields.imageFile.here() %>
 				<%=mw3.localize("$Id")%> :<%=value.empCode %>
 				<%=mw3.localize("$Name")%> : <%=fields.empName.here() %>
-				<%=mw3.localize("$Dept")%> : <%=fields.partName.here() %>(<%value.partCode %>)
+				<%=mw3.localize("$Dept")%> : <%=fields.partName.here() %>(<%=value.partCode %>)
 				<%=mw3.localize("$Position")%> : <%=fields.jikName.here() %>
 				<%=mw3.localize("$Phone")%> : <%=fields.mobileNo.here() %>
 				<%=mw3.localize("$Email")%> : <%=fields.email.here() %>
@@ -175,7 +173,6 @@ if(value){
 		
 		}
 		
-		//no use Admin
 		
 	} else if(mw3.where == 'navigator'){
 	%>
@@ -185,7 +182,6 @@ if(value){
 	<%
 	} else if(mw3.where == 'modifyEmployeeInfo') {
 	%>
-	// TODO EDIT 
 	<%
 	} else if(mw3.where == 'instanceList') {
 	%>

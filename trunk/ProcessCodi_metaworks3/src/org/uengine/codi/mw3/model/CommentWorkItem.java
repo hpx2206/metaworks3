@@ -34,7 +34,7 @@ public class CommentWorkItem extends WorkItem{
 	}
 
 	@Test(scenario="first", starter=true, instruction="$first.Add", next="autowiredObject.org.uengine.codi.mw3.model.InstanceView.monitor()")
-	@ServiceMethod(callByContent = true, target="popup")
+	@ServiceMethod(callByContent = true, target="self")
 	public Object[] add() throws Exception {
 		
 		if(getActivityAppAlias()!=null){
