@@ -76,7 +76,10 @@
 					<%if(value.type=='file'){%>
 					<tr>
 						<td>	
-						<%  value.file.metaworksContext.when='view'; %>
+						<%  if(value.file.mimeType.indexOf("image")==0)
+								value.file.metaworksContext.when='image';
+							else
+								value.file.metaworksContext.when='view'; %>
 							<%=fields.file.here()%>
 						</td>
 					</tr>

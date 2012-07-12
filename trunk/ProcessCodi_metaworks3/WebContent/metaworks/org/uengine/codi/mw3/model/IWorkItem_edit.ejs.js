@@ -4,6 +4,7 @@ var org_uengine_codi_mw3_model_IWorkItem_edit = function(objectId, className){
 	this.commandTrigger = null;
 	this.commandActivityAppAlias = null;
 	this.commandParameters = null;
+	this.type = null;
 
 	$("#post_" + this.objectId).focus();
 	//$("#post_" + this.objectId).keydown()
@@ -37,15 +38,57 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.getValue =  function(){
 	return object;
 }
 
+var localTaskId = -2;
 
 org_uengine_codi_mw3_model_IWorkItem_edit.prototype.send = function(){
 	var thisFaceHelper = this;
 	var value = mw3.getObject(this.objectId);
 	
+	this.type = value.type;
+	
 	if(!this.sending){
 		
 		this.sending = true;
-		value.add();
+
+		var instanceViewThreadPanel = mw3.getAutowiredObject('org.uengine.codi.mw3.model.InstanceViewThreadPanel');
+		
+		if(value.type=='comment' && instanceViewThreadPanel){
+			var newComment = JSON.parse(JSON.stringify(value));
+			newComment.metaworksContext.when = 'view';
+			newComment.taskId = (localTaskId--);
+			newComment.__objectId = null;
+			
+			var toAppend = mw3.locateObject(
+				{
+					__className	:'org.metaworks.ToAppend',
+						target	: newComment,
+						parent	: instanceViewThreadPanel
+				}, null, 'body'
+			);
+			
+			//may problematic. TODO: 'toAppend.target' should point to the newly acquired object with the __objectId exists.
+			var newCommentObjectId = toAppend.targetObjectId + 1;
+			
+			mw3.onLoadFaceHelperScript();
+
+			newComment = mw3.objects[newCommentObjectId];
+			
+
+			try{
+				newComment.add();
+			}catch(e){
+				//handle when fail
+			}
+
+			value.title = "";
+			mw3.setObject(value.__objectId, value);
+			
+			$("#post_" + this.objectId).focus();
+
+
+		}else{
+			value.add();
+		}
 
 	}
 	
@@ -77,7 +120,7 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.press = function(){
 
 //console.log('1');
 
-		if(text && text.length>0)
+		if(text && text.length>0 && processMap)
     	for(var i=0; i<processMap.processMapList.length; i++){
     		var commandTrigger = processMap.processMapList[i].cmTrgr+":";
 
@@ -190,4 +233,7 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.press = function(){
     	}
     	
     }
+	
+	
+
 }
