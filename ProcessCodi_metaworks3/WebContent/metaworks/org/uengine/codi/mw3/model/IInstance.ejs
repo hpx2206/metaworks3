@@ -10,8 +10,8 @@
 	
 	}else{
 			
-		var isChat = (value.defId == null && value.secuopt == '1')
-		var isOpenCollab = (value.defId == null && value.secuopt=='0')
+		var isChat = (value.defId == null && value.secuopt == '1');
+		var isOpenCollab = (value.defId == null && value.secuopt=='0');
 		var isProcess = (value.defId != null);
 		var isSecureProcess = (value.defId != null && value.secuopt == '1');
 		
@@ -44,12 +44,12 @@
 					<span class="type_process"></span><span class="instanceLock"></span>
 				<% } %>	
 						
-				<a href="#middle-center"><font color=#5C5C5C><b><%=fields.name.here()%></b></font></a></li>
+				<a href="#middle-center"><b><font color=204070><%=value.initiator.name%></font> &nbsp;&nbsp; <font color=#5C5C5C><%=value.name%></font></b></a></li>
 				
 				<% if(value.currentUser && value.currentUser.userId && (value.initiator.userId!=value.currentUser.userId || value.name!=value.lastCmnt)){%>
 			
-			<table><td><%value.currentUser.metaworksContext.how='small'%><%=fields.currentUser.here()%></td>
-			<td colspan=2><font color=gray><%=value.lastCmnt%></font></td></table>
+			<table><td><%value.currentUser.metaworksContext.how='small';%><%=fields.currentUser.here()%></td>
+			<td colspan=2><font color=204070><%=value.currentUser.name%></font>&nbsp;&nbsp; <font color=gray><%=value.lastCmnt%></font></td></table>
 	
 				<%}%>
 
