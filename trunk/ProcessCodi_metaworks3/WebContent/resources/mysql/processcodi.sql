@@ -2761,3 +2761,8 @@ SET FOREIGN_KEY_CHECKS = 1;
 	 
 	 alter table bpm_procinst add column lastcmnt varchar(200);
 	 
+	 alter table bpm_worklist add prevver int(11);
+	 alter table bpm_worklist add nextver int(11);
+	 
+	 
+	 alter table contact mood varchar(100);
