@@ -608,7 +608,7 @@ img {border:0;}
   -webkit-border-radius: 5px;
      -moz-border-radius: 5px;
           border-radius: 5px;
-filter:alpha(opacity=75); -khtml-opacity: 0.75; -moz-opacity: 0.75; opacity: 0.75; 
+/*filter:alpha(opacity=75); -khtml-opacity: 0.75; -moz-opacity: 0.75; opacity: 0.75;*/ 
 	line-height: 1.4em;
 	}
 
