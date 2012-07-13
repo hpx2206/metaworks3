@@ -139,6 +139,11 @@ public interface IInstance extends IDAO{
 	public IUser getCurrentUser();
 	public void setCurrentUser(IUser user);
 	
+	@ServiceMethod(inContextMenu=true, callByContent=true)
+	public Session cut();
 	
+	@ServiceMethod(inContextMenu=true, callByContent=true, needToConfirm=true, target="popup")
+	public Object[] paste() throws Exception;
+
 
 }
