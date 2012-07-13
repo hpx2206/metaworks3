@@ -1,18 +1,22 @@
 package org.uengine.codi.mw3.model;
 
+import java.io.File;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import org.metaworks.Remover;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Id;
+import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.widget.ModalWindow;
 import org.metaworks.widget.Window;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.processmanager.ProcessManagerRemote;
 import org.uengine.webservices.worklist.DefaultWorkList;
 
@@ -129,6 +133,44 @@ public class Instance extends Database<IInstance> implements IInstance{
 		return instanceContents;
 	}
 
+	
+	public Session cut(){
+		session.setClipboard(this);
+		return session;
+	}
+	
+	public Object[] paste() throws Exception{
+		Object clipboard = session.getClipboard();
+		if(clipboard instanceof IInstance){
+			IInstance instanceInClipboard = (IInstance) clipboard;
+			
+			Instance locatorForInstanceInClipboard = new Instance();
+			locatorForInstanceInClipboard.setInstId(instanceInClipboard.getInstId());
+			
+			instanceInClipboard = locatorForInstanceInClipboard.databaseMe();
+			
+			instanceInClipboard.setRootInstId(this.getInstId());
+			instanceInClipboard.setMainInstId(this.getInstId());
+			
+			IWorkItem workItemsToUpdate = (IWorkItem) sql(IWorkItem.class, "update bpm_worklist set rootInstId=?rootInstId where rootInstId = ?oldRootInstId");
+			workItemsToUpdate.setRootInstId(this.getInstId());
+			workItemsToUpdate.set("oldRootInstId", instanceInClipboard.getInstId());
+			workItemsToUpdate.update();
+			
+			IRoleMapping roleMappingsToUpdate = (IRoleMapping) sql(IRoleMapping.class, "update bpm_rolemapping set rootInstId=?rootInstId where rootInstId = ?oldRootInstId");
+			roleMappingsToUpdate.setRootInstId(this.getInstId());
+			roleMappingsToUpdate.set("oldRootInstId", instanceInClipboard.getInstId());
+			roleMappingsToUpdate.update();
+			
+			getMetaworksContext().setWhen("instanceList");
+			
+			return new Object[]{new Remover(locatorForInstanceInClipboard)};
+		}else{
+			return new Object[]{this.databaseMe()};
+		}
+	}
+
+	
 	static private void createSQLPhase2(Map<String, String> criteria, StringBuffer stmt, StringBuffer taskSql, StringBuffer instanceSql) {
 		stmt.append("select");
 		
