@@ -257,7 +257,7 @@ public class ResourceFile implements ContextAware{
 		
 	}
 	
-	@ServiceMethod(inContextMenu=true, callByContent=true, target="popup")
+	@ServiceMethod(inContextMenu=true, callByContent=true, target="popup", keyBinding="Ctrl+R")
 	public Popup rename(){
 		FileRenamer fileRenamer = new FileRenamer();
 		fileRenamer.setFile(this);
