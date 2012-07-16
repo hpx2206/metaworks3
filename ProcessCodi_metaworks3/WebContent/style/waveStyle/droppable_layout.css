@@ -88,7 +88,7 @@ ul, ol , li , dl ,dd ,dt{list-style-type:none; margin:0px; padding:0px;}
 .workflowy .closed{height:18px; width:18px;  line-height: 18px; background: url(../../images/waveStyle/navi_icon.png) no-repeat; cursor:pointer;}
 .workflowy .wfNodeText{height:18px; line-height: 18px;}
 
-.wfPath{cursor:pointer; font-weight: 700; font-size: 24px; width: 100%; line-height: normal; height: 35px; display: block; overflow: hidden;}
+.wfPath{cursor:pointer; font-weight: 700; font-size: 15px; width: 100%; line-height: normal; height: 35px; display: block; overflow: hidden;}
 .wfActive{border:1px dotted #ccc; border-bottom: 2px solid #5B9BE2;}
 .wfLink {height:16px; padding-right:25px; background: url(../../images/waveStyle/link.png) no-repeat right 0px; cursor:pointer;}
 .wfnode_current{position:absolute; left:-15px; top:2px; width: 16px; height: 16px;}
