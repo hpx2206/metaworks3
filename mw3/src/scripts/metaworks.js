@@ -73,6 +73,8 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			    
 			    this.testSet = {};
 			    
+			    this.dragging = false;
+			    
 			    // Netscape
 			    // 5.0 (Windows NT 6.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11
 			    // Mozilla
@@ -93,17 +95,48 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			    	mw3.mouseX = e.pageX;
 	    			mw3.mouseY = e.pageY; 
 	    			
-//	    			  $( "#instruction" ).slideUp(500, function(){
-//						  $('#instruction').remove();							  
-//					  });
+   					
+   					if(mw3.dragObject && mw3.dragging){
+   						
+   						if(mw3.dragObject['dropCommand']){
+   							mw3.dragObject['dropCommand'] = null;
+   						}
+   					}
+
+ 					mw3.dragObject = null;
+ 					mw3.dragging = false;
+			    };
+			    
+			    this.dragObject = null;
+			    
+			    var mouseMove = function(e){
+			    	mw3.mouseX = e.pageX;
+	    			mw3.mouseY = e.pageY; 
 	    			
-//	    			if(mw3.popupDivId!=null){
-//	    				if(mw3.mouseX < 100 && mw3.mouseY < 100){
-//	    					$("#" + mw3.popupDivId).remove();
-//	    					mw3.popupDivId = null;
-//	    				}
-//	    			}
-			    }
+	    			
+	    			
+	    			
+ 					if(mw3.dragObject && (
+ 							mw3.dragObject.style.left > mw3.mouseX || 
+ 							mw3.dragObject.style.top > mw3.mouseY || 
+ 							mw3.dragObject.style.left + mw3.dragObject.style.width < mw3.mouseX ||
+  							mw3.dragObject.style.top + mw3.dragObject.style.height < mw3.mouseY
+ 						)){
+ 						
+ 						mw3.dragging = true;
+ 						
+ 						if(mw3.dragObject['dragCommand']){
+ 							eval(mw3.dragObject['dragCommand']);
+ 							mw3.dragObject['dragCommand'] = null;
+ 						}
+ 						
+// 						mw3.dragObject.style.position='absolute';
+// 						mw3.dragObject.style.top = mw3.mouseX; 
+// 						mw3.dragObject.style.left = mw3.mouseY;
+ 						
+ 					}
+			    };
+			    			    
 			    
 			    var keyUp = function(e){
 	    			//console.debug(e.keyCode);
@@ -113,6 +146,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 		    			if(mw3.popupDivId!=null){
 	    					$("#" + mw3.popupDivId).remove();
 	    					mw3.popupDivId = null;
+	    					mw3.dragging = false;
 		    			}
 		    			
 	    			}
@@ -148,13 +182,13 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			    // eventListener 없을때 (ie6~ie8) 처리
 			    if(document.addEventListener){
 			    	document.addEventListener("mouseup",mouseUp,false);
-			    	
+			    	document.addEventListener("mousemove",mouseMove,false);
 			    	document.addEventListener("keyup",keyUp,false);
 			    }
 			    
 			    if(document.attachEvent){
 			    	document.attachEvent("mouseup",mouseUp);
-			    	
+			    	document.attachEvent("mousemove",mouseMove);			    	
 			    	document.attachEvent("keyup",keyUp);
 			    }
 			}
@@ -734,6 +768,8 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 						
 						
 						//load the key or mouse bindings, context menu 
+						
+						
 						var contextMenuMethods = [];
 						
 						var targetDivId = this._getObjectDivId(objectId);
@@ -767,35 +803,86 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				   				}
 				   			}
 				   			
+				   			
+				   			//mouse binding installation
 				   			if(methodContext.mouseBinding){
+				   				
+				   				var command = "if(mw3.objects['"+ objectId +"']!=null) mw3.call("+objectId+", '"+methodName+"')";
+							   if(methodContext.needToConfirm)
+						   			command = "if (confirm(\'Are you sure to "+mw3.localize(methodContext.displayName)+" this?\'))" + command;
+
 				   	
 				   				var which = 3;
 				   				if(methodContext.mouseBinding == "right")
 				   					which = 3;
 				   				else if(methodContext.mouseBinding == "left")
 				   					which = 1;
-				   
-				   			    theDiv[0].addEventListener(
-				   			 		"mouseup",
 
-				   			    	function(e) {
-				   			 			
-				   			 			if(e.which == which){
-					   						eval(command);
-				   			 				e.stopPropagation(); //stops to propagate to parent that means consumes the event here.
-				   			 			}
-				   			 		},
-				   			 		
-				   			 		false //event bubbling, not the capturing
-				   			 	);
-				   			}
+
+				   				
+				   				if(methodContext.mouseBinding == "drag"){
+				   					theDiv[0]['dragCommand'] = command;
+
+				   					theDiv[0].addEventListener(
+					   			 		"mousedown",
+					   			 		function(e){
+					   			 			e.preventDefault();
+					   			 			mw3.dragObject = this;
+					   			 			e.stopPropagation();
+					   			 		}
+					   			 	);
+
+				   				}//end of case 'drag start'
+				   				else if(methodContext.mouseBinding == "drop"){
+				   					theDiv[0]['dropCommand'] = command;
+
+				   					theDiv[0].addEventListener(
+	   			 						"mouseup",
+	   			 						function(){
+	   			 							if(mw3.dragging){
+	   			 								eval(this['dropCommand']);
+
+	   			 								this['dropCommand'] = null;
+	   			 								mw3.dragging = false;
+	   			 								
+	   			 							}
+	   			 						}
+		   			 				);
+				   				}//end of case 'drop'
+				   				
+				   				//case of general mouse click
+				   				else{
+				   					theDiv[0]['mouseCommand' + which] = command;
+
+					   			    theDiv[0].addEventListener(
+					   			 		"mouseup",
+
+					   			    	function(e) {
+					   			 			
+					   			 			if(e.which == which){
+						   						eval(this['mouseCommand' + e.which]);
+					   			 				e.stopPropagation(); //stops to propagate to parent that means consumes the event here.
+					   			 			}
+					   			 		},
+					   			 		
+					   			 		false //event bubbling, not the capturing
+					   			 	);
+				   				}
+				   				
+				   				
+				   			} // end of mouse binding installation
 				   			
 				   			if(methodContext.inContextMenu){
 				   				contextMenuMethods[contextMenuMethods.length] = methodContext;
 				   			}
 
 					   }
+						
+						
+
 					   
+					//install context menu
+						
 					   if(contextMenuMethods.length > 0){
 						   var menuItems = [];
 						   
@@ -1847,6 +1934,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					        				mw3.endLoading(objId, svcNameAndMethodName);
 					        			}
 					        				
+					        			//TODO: why different method name?  showStatus and showInfo
 					        			if(mw3.getFaceHelper(objId) && mw3.getFaceHelper(objId).showStatus){
 					        				mw3.getFaceHelper(objId).showStatus( svcNameAndMethodName + " DONE.");
 					        			}else{
