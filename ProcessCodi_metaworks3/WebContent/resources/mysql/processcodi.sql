@@ -2765,4 +2765,4 @@ SET FOREIGN_KEY_CHECKS = 1;
 	 alter table bpm_worklist add nextver int(11);
 	 
 	 
-	 alter table contact mood varchar(100);
+	 alter table contact add column mood varchar(100);
