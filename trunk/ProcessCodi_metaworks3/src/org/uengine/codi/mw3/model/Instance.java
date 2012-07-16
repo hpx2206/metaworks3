@@ -144,6 +144,11 @@ public class Instance extends Database<IInstance> implements IInstance{
 		if(clipboard instanceof IInstance){
 			IInstance instanceInClipboard = (IInstance) clipboard;
 			
+			
+			if(instanceInClipboard.getInstId().equals(getInstId())){
+				return null; //ignores drag n drop same object 
+			}
+			
 			Instance locatorForInstanceInClipboard = new Instance();
 			locatorForInstanceInClipboard.setInstId(instanceInClipboard.getInstId());
 			

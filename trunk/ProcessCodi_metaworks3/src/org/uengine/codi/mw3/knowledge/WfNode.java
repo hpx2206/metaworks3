@@ -22,6 +22,7 @@ import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.model.ContentWindow;
 import org.uengine.codi.mw3.model.FileWorkItem;
+import org.uengine.codi.mw3.model.IInstance;
 import org.uengine.codi.mw3.model.IUser;
 import org.uengine.codi.mw3.model.Instance;
 import org.uengine.codi.mw3.model.InstanceViewContent;
@@ -823,6 +824,29 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 	public Object[] makeAsTemplate() throws Exception {
 		// TODO Auto-generated method stub
 		return new Object[]{new ModalWindow()};
+	}
+	
+	@Override
+	public void addChildInstance() throws Exception {
+		Object clipboard = session.getClipboard();
+		if(clipboard instanceof IInstance){
+			IInstance instanceInClipboard = (IInstance) clipboard;
+			
+			Instance locatorForInstanceInClipboard = new Instance();
+			locatorForInstanceInClipboard.setInstId(instanceInClipboard.getInstId());
+			
+			instanceInClipboard = locatorForInstanceInClipboard.databaseMe();
+
+			WfNode child = new WfNode();		
+			child.setName(instanceInClipboard.getName());
+			child.setLinkedInstId(instanceInClipboard.getInstId());
+			
+			this.addChildNode(child);
+			child.createMe();
+			
+			this.save();
+		}
+		
 	}
 	
 }

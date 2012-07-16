@@ -143,6 +143,9 @@ public interface IWfNode extends IDAO {
 	@ServiceMethod(callByContent=true)
 	public ContentWindow linkInstance() throws Exception;
 	
+	@ServiceMethod(callByContent=true, mouseBinding="drop", keyBinding="Ctrl+V")
+	public void addChildInstance() throws Exception;
+	
 	@ServiceMethod(callByContent=true, except={"childNode", "focus"}, inContextMenu=true, keyBinding="Ctrl+Right")
 	@Face(displayName="$NewProcessInstance")
 	public ContentWindow newProcessInstance() throws Exception;
