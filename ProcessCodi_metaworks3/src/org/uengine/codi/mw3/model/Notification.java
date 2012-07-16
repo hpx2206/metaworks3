@@ -179,7 +179,7 @@ public class Notification extends Database<INotification> implements INotificati
 							actorUserInfoDB.getEmpName(),
 							userInfoDB.getEmail(), 
 							"[ProcessCodi] " + instance.getName(), 
-							getActAbstract() + "<p><a href='" + url + "'>자세한 사항을 보시려면 프로세스 코디에 접속하십시오.</a>", 
+							getActAbstract() + "<p><a href='" + url + "'>Connect to Process Codi for details.</a>", 
 							null, 
 							null,
 							"UTF-8"
