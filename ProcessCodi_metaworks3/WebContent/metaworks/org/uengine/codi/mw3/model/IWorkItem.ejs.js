@@ -3,7 +3,7 @@ var org_uengine_codi_mw3_model_IWorkItem = function(objectId, className){
 	var workItem = mw3.objects[objectId];
 	this.type = workItem.type;
 	
-	if(workItem.type == null && (workItem.workItemHandler == null || workItem.workItemHandler.instanceId==null)){ //means we need to load workItemHandler
+	if(workItem.type == null && (workItem.workItemHandler == null || workItem.workItemHandler.instanceId==null) && workItem.status == 'NEW'){ //means we need to load workItemHandler
 		workItem.detail();
 	}
 
