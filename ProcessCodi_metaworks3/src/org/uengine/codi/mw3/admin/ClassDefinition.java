@@ -335,10 +335,10 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 				compileError.setLine(lineNumber);
 			
 			compileError.setColumn(1);
-			compileError.setMessage(message);			
+			compileError.setMessage(e.getMessage());			
 			compileErrors.add(compileError);
 			
-			Console.addError(message);
+			Console.addError(e.getMessage());
 			
 			e.printStackTrace();
 		} 
