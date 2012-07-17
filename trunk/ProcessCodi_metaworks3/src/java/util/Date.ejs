@@ -5,8 +5,10 @@
 		<input type="button" onclick="mw3.getFaceHelper(<%=objectId%>).clear()" value="clear" />
 <%			
 	}else{
+		if(value){
 %>
 		<abbr class="timeago" title="<%= value.ISODateString() %>"><%=value.format('yyyy-MM-dd')%></abbr>
 <%		
+		}
 	}
 %>
