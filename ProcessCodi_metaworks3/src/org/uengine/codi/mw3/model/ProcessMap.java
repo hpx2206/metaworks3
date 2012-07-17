@@ -200,6 +200,7 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 				processManager.applyChanges();
 
 				InstanceViewContent rootInstanceView = instanceView;// = new InstanceViewContent();
+				rootInstanceView.session = session;
 				rootInstanceView.load(instanceRef);
 				
 
