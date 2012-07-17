@@ -51,12 +51,33 @@ public class InstanceView {
 			throw new Exception("Deleted Instance");
 		}
 
-
 		setInstanceId(instance.getInstId().toString());
 		setStatus(inst.databaseMe().getStatus());
 		setSecuopt(secuopt);
 		
 		loadDefault();
+		
+		if("1".equals(getSecuopt())){ //means secured conversation
+			
+			IUser followers = getFollowers().getFollowers();
+			followers.beforeFirst();
+			
+			boolean iCanSee = false;
+			while(followers.next()){
+				if(session.getUser().getUserId().equals(followers.getUserId())){
+					iCanSee = true;
+					break;
+				}
+			}
+			
+			if(!iCanSee){
+				throw new Exception("$NotPermittedToSee");
+			}
+			
+			followers.beforeFirst();
+			
+		}
+		
 		setInstanceViewThreadPanel(activityStream());
 		
 	}
