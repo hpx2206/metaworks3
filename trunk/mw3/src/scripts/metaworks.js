@@ -2040,6 +2040,10 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					return; 
 				}
 
+				if(objId==null && !object.__objectId){//means needed to be stored in the objectId    //TODO: may cause dangling object and memory leak
+					mw3.objects[objId = ++mw3.objectId] = object;
+				}
+
 					
 				object['__objectId'] = objId;
     			
@@ -2148,7 +2152,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					$("#instructionR").css({"top": methodDiv.offset().top - 60 + "px", "left": (methodDiv.offset().left + targetObject.offsetWidth - 350) + "px" });
 //					$("#instruction").slideDown(500);
 					
-					$( "#instructionR" ).effect( 'pulsate', 800 );
+					$( "#instructionR" ).effect( 'pulsate', 300 );
 					
 					if(options && options.onclick)
 						$("#instructionR").onclick(function(){options.onclick();});
