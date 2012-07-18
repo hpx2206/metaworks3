@@ -64,5 +64,8 @@ public interface IUser extends IDAO{
 	@ServiceMethod(payload={"userId", "name"})
 	public Window friends() throws Exception;
 
+	@ServiceMethod(payload={"userId"}, target="none")
+	IEmployee loadEmployee() throws Exception;
+
 
 }

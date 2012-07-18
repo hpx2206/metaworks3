@@ -105,6 +105,14 @@ public class User extends Database<IUser> implements IUser {
 		return popup;
 	}
 	
+	@Override
+	public IEmployee loadEmployee() throws Exception{
+		Employee emp = new Employee();
+		emp.setEmpCode(getUserId());
+		
+		return emp.databaseMe();
+	}
+	
 //	String  instanceId;
 //	
 //	@Override
