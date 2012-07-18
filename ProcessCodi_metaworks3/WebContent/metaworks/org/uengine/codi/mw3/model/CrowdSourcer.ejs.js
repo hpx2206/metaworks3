@@ -17,6 +17,15 @@ org_uengine_codi_mw3_model_CrowdSourcer.prototype = {
 		for ( var i=0; i < followers.length; i++) {			
 			if(followers[i].network == 'fb')
 				facebookFriends.push(followers[i]);
+			else{
+				mw3._armObject(null, followers[i]);
+				var emp = followers[i].loadEmployee();
+				
+				if(emp.length>0 && emp[0].facebookId){
+					followers[i].userId = emp[0].facebookId;
+					facebookFriends.push(followers[i]);					
+				}
+			}
 		}
 		
 		if(facebookFriends.length > 0 ){
