@@ -42,7 +42,7 @@ public interface IEmployee extends IDAO {
 	public String getEmpName();
 	public void setEmpName(String empName);
 
-	@Hidden
+	//@Hidden
 	public String getFacebookId();
 	public void setFacebookId(String facebookId);
 	
