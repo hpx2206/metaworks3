@@ -466,6 +466,8 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			if(session.getEmployee() != null)
 				instanceRef.databaseMe().setInitComCd(session.getEmployee().getGlobalCom());
 			
+			instanceRef.databaseMe().setDueDate(null);
+
 		
 			parent = afterInstantiation(instantiatedViewContent,
 					instanceRef);

@@ -9,6 +9,12 @@ var org_uengine_codi_mw3_model_IWorkItem_edit = function(objectId, className){
 	$("#post_" + this.objectId).focus();
 	//$("#post_" + this.objectId).keydown()
 	
+	$("#post_" + this.objectId).live("keyup keydown",function(){
+		var h=$(this);
+		h.height(21).height(h[0].scrollHeight);//where 60 is minimum height of textarea
+		});
+
+	
 	this.sending = false;
 
 }
@@ -98,7 +104,7 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.send = function(){
 org_uengine_codi_mw3_model_IWorkItem_edit.prototype.press = function(){
 	var e = window.event;
 	
-	if (e.keyCode == 13) {
+	if (e.keyCode == 13 && !e.shiftKey) {
 		this.send();
     }else{
     	

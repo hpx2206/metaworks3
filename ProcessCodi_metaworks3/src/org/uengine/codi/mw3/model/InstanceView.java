@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import javax.annotation.PostConstruct;
 
 import org.metaworks.MetaworksContext;
+import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
@@ -14,6 +15,7 @@ import org.metaworks.annotation.Name;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Test;
 import org.metaworks.dao.TransactionContext;
+import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -309,22 +311,33 @@ public class InstanceView {
 	public void newActivity() {}
 	
 	
-	@ServiceMethod 	
-	public void schedule() throws Exception{
-		
-		scheduleEditor = new ScheduleEditor();
-		scheduleEditor.setInstanceId(instanceId);
-		scheduleEditor.load(processManager);
-		
-		loadDefault();
+	@ServiceMethod(target="popup")
+	public Popup schedule() throws Exception{
 
+		Instance instance = new Instance();
+		instance.setInstId(new Long(getInstanceId()));
+		 
+		if(!instance.databaseMe().getInitEp().equals(session.getUser().getUserId())  && !(session.getEmployee()!=null && session.getEmployee().getIsAdmin())){
+			throw new Exception("$OnlyInitiatorCanSetDueDate");
+		}
+		
+//		scheduleEditor = new ScheduleEditor();
+//		scheduleEditor.setInstanceId(instanceId);
+//		scheduleEditor.load(processManager);
+//		
+//		loadDefault();
+
+		InstanceDueSetter ids = new InstanceDueSetter();
+		ids.setInstId(new Long(getInstanceId()));
+		ids.setDueDate(instance.databaseMe().getDueDate());
+		return new Popup(ids);
+		
 		//return scheduleEditor;
 	}
 	
 	@ServiceMethod(needToConfirm=true)
 	public Object[] remove() throws Exception{
 
-		processManager.stopProcessInstance(instanceId);
 		Instance instance = new Instance();
 		instance.setInstId(new Long(getInstanceId()));
 		 
@@ -332,6 +345,8 @@ public class InstanceView {
 			throw new Exception("$OnlyInitiatorCanDeleteTheInstance");
 		}
 		
+		processManager.stopProcessInstance(instanceId);
+
 		instance.databaseMe().setIsDeleted(true);
 		//instance.flushDatabaseMe();
 		
@@ -360,6 +375,8 @@ public class InstanceView {
 		
 		instance.flushDatabaseMe();
 		
+		MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(instance.databaseMe())});
+
 	}
 		
 	

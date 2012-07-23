@@ -52,13 +52,20 @@
 			<td colspan=2><font color=204070><%=value.currentUser.name%></font>&nbsp;&nbsp; <font color=gray><%=value.lastCmnt%></font></td></table>
 	
 				<%}%>
-
 												
 			</ul>								
 		</td>
 		<td class="last_td"><font color=gray><%=fields.startedDate.here()%></font>
 		
-		<%if(value.status=='Completed'){%> <div class="badge">&nbsp;&nbsp; <%=mw3.localize('$Complete')%> &nbsp;&nbsp;</div> <%}%>
+		<%if(value.status=='Completed'){%> <div class="badge">&nbsp;&nbsp; <%=mw3.localize('$Complete')%> &nbsp;&nbsp;</div> 
+		<%}else if(value.dueDate){ 
+			if(value.dueDate < new Date()){%>
+				<div class="badge" style="background:#F52020;">&nbsp;&nbsp; <%=mw3.localize('$Delay')%> &nbsp;&nbsp;</div>
+			<%}else{%>
+					<table><td><%=mw3.localize('$Due')%> :</td><td><%=fields.dueDate.here()%></td></table>
+			<%}
+		 }%>
+			
 		</td>
 	</tr>
 	
