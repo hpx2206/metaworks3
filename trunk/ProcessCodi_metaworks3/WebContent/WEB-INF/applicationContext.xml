@@ -135,5 +135,9 @@
 	<bean id="MainPanel" class="org.uengine.codi.mw3.common.MainPanel"/>
 	<bean id="Workflowy" class="org.uengine.codi.mw3.knowledge.Workflowy"/>
 	
+	<bean id="UnstructuredProcessInstanceStarter" class="org.uengine.codi.mw3.model.UnstructuredProcessInstanceStarter"/>
+	
+	
+	
 	
 </beans>
