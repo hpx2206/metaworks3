@@ -93,6 +93,8 @@ ul, ol , li , dl ,dd ,dt{list-style-type:none; margin:0px; padding:0px;}
 .wfLink {height:16px; padding-right:25px; background: url(../../images/waveStyle/link.png) no-repeat right 0px; cursor:pointer;}
 .wfnode_current{position:absolute; left:-15px; top:2px; width: 16px; height: 16px;}
 
+.first_wfNode{background: url(../../images/waveStyle/bt_bg.gif) repeat-x; margin-left:-25px !important;  border:1px solid #ccc; border-left:none; padding-left:25px; width:30%;}
+
 #mashup_image .imgContainer{display: inline-block; margin: 3px;}
 
 

@@ -93,7 +93,7 @@ var org_uengine_codi_mw3_knowledge_IWfNode = function(objectId, className){
 
 		$('#wfnode_' + objectId).hover(			
 				function () {
-					$(this).css("background","#F2F8FD");
+					/*$(this).css("background","#F2F8FD");*/
 					if(!$('#move').hasClass("moving")){
 						var html = '';
 
@@ -121,7 +121,7 @@ var org_uengine_codi_mw3_knowledge_IWfNode = function(objectId, className){
 					}
 				}, 
 				function () {	
-					$(this).css("background","none");
+					/*$(this).css("background","none");*/
 					if(!$('#move').hasClass("moving"))
 						$(this).find('#controls').remove();			  
 				}
@@ -129,6 +129,10 @@ var org_uengine_codi_mw3_knowledge_IWfNode = function(objectId, className){
 		);	
 	}
 	this.obj.addClass("workflowy_node").attr("objectId", objectId).attr("nodeId", this.mw3Obj.id).attr('parentId', this.mw3Obj.parentId).css("position", "relative");
+	
+	if(this.mw3Obj.parentId < 0){
+		this.obj.find('.wfNode').eq(0).addClass("first_wfNode");
+	}
 }
 
 org_uengine_codi_mw3_knowledge_IWfNode.prototype = {
