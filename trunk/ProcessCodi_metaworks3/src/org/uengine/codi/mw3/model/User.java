@@ -371,6 +371,12 @@ public class User extends Database<IUser> implements IUser {
 		// TODO Auto-generated method stub
 		return getName();
 	}
+
+	@Override
+	public Session drag() {
+		session.setClipboard(this);
+		return session;
+	}
 	
 	
 	

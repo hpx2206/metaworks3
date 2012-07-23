@@ -32,7 +32,7 @@
 			<td>
 			
 				<div id="commandDiv_<%=objectId%>"> 
-					<input type="text" id="post_<%=objectId%>" value="<%=value.title%>" tabindex=1 onkeyup="mw3.getFaceHelper('<%=objectId%>').press()"  rows="1" style="width:99%; height:21px; -webkit-border-radius:3px; outline:none;  webkit-border-radius:3px; border:1px solid #ccd; none;">
+					<textarea class="newComment" id="post_<%=objectId%>" value="<%=value.title%>" tabindex=1 onkeyup="mw3.getFaceHelper('<%=objectId%>').press()"  rows="1" style="width:99%; height:21px; -webkit-border-radius:3px; outline:none;  webkit-border-radius:3px; border:1px solid #ccd; none;"><%=value.title%></textarea>
 					<div id="commandRecommendDiv_<%=objectId%>"></div> 
 				</div>
 				

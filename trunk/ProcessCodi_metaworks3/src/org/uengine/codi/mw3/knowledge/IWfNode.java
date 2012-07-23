@@ -16,6 +16,7 @@ import org.metaworks.annotation.Test;
 import org.metaworks.dao.IDAO;
 import org.uengine.codi.mw3.model.ContentWindow;
 import org.uengine.codi.mw3.model.IUser;
+import org.uengine.codi.mw3.model.Popup;
 
 @Table(name="bpm_knol")
 public interface IWfNode extends IDAO {
@@ -143,8 +144,8 @@ public interface IWfNode extends IDAO {
 	@ServiceMethod(callByContent=true)
 	public ContentWindow linkInstance() throws Exception;
 	
-	@ServiceMethod(callByContent=true, mouseBinding="drop", keyBinding="Ctrl+V")
-	public void addChildInstance() throws Exception;
+	@ServiceMethod(callByContent=true, mouseBinding="drop", keyBinding="Ctrl+V", target="popup")
+	public Object[] drop() throws Exception;
 	
 	@ServiceMethod(callByContent=true, except={"childNode", "focus"}, inContextMenu=true, keyBinding="Ctrl+Right")
 	@Face(displayName="$NewProcessInstance")

@@ -17,6 +17,8 @@
 		String language = request.getParameter("language");
 		String instanceId = request.getParameter("instanceId");
 		
+		
+System.out.println("did you call this?");
 		String userId = request.getParameter("userId");
 
 		request.getSession().setAttribute("userId", userId);

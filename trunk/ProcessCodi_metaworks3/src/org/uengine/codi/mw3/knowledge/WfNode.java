@@ -20,17 +20,23 @@ import org.metaworks.dao.TransactionContext;
 import org.metaworks.dao.UniqueKeyGenerator;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.codi.CodiProcessDefinitionFactory;
 import org.uengine.codi.mw3.model.ContentWindow;
 import org.uengine.codi.mw3.model.FileWorkItem;
 import org.uengine.codi.mw3.model.IInstance;
 import org.uengine.codi.mw3.model.IUser;
 import org.uengine.codi.mw3.model.Instance;
+import org.uengine.codi.mw3.model.InstanceView;
 import org.uengine.codi.mw3.model.InstanceViewContent;
 import org.uengine.codi.mw3.model.NewInstancePanel;
 import org.uengine.codi.mw3.model.NewInstanceWindow;
+import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.model.ProcessDefinition;
+import org.uengine.codi.mw3.model.ResourceFile;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.codi.mw3.model.UnstructuredProcessInstanceStarter;
 import org.uengine.codi.mw3.model.WorkItem;
+import org.uengine.processmanager.ProcessManagerRemote;
 
 public class WfNode extends Database<IWfNode> implements IWfNode {
 	
@@ -827,7 +833,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 	}
 	
 	@Override
-	public void addChildInstance() throws Exception {
+	public Object[] drop() throws Exception {
 		Object clipboard = session.getClipboard();
 		if(clipboard instanceof IInstance){
 			IInstance instanceInClipboard = (IInstance) clipboard;
@@ -845,8 +851,43 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 			child.createMe();
 			
 			this.save();
+			
+			return new Object[]{new Refresh(this)};
+		}else if(clipboard instanceof IUser){
+			
+			IUser user = (IUser) clipboard;
+			
+			//UnstructuredProcessInstanceStarter instanceStarter = new UnstructuredProcessInstanceStarter();
+			//instanceStarter.processManager = processManager;
+			instanceStarter.session = session;
+			instanceStarter.setTitle("[TODO] " + getName());
+			
+			instanceStarter.setFriend(user);
+			Object[] instanceViewAndInstanceList = instanceStarter.start();
+			
+			InstanceView instanceView = ((InstanceViewContent)instanceViewAndInstanceList[0]).instanceView;
+			Long instId = new Long(instanceView.getInstanceId());
+			
+			setLinkedInstId(instId);
+
+			
+			Instance instanceRef = new Instance();
+			instanceRef.setInstId(instId);
+			instanceRef.databaseMe().setStatus("Running");
+
+			save();
+			
+			return new Object[]{new Refresh(this), instanceView.schedule()};
+			
 		}
 		
+		
+		return null;
 	}
+	
+	
+	
+	@Autowired
+	public UnstructuredProcessInstanceStarter instanceStarter;
 	
 }

@@ -75,13 +75,14 @@ public class UnstructuredProcessInstanceStarter implements ContextAware {
 		instance.setInstId(new Long
 				(instanceView.getInstanceView().instanceId));
 		instance.databaseMe().setInitEp(session.user.getUserId());
+		instance.databaseMe().setDueDate(null);
 		
 		if(session.getEmployee() != null)
 			instance.databaseMe().setInitComCd(session.getEmployee().getGlobalCom());
 		
 			
-		if(getFriend() != null)
-			instance.databaseMe().setSecuopt("1"); //친구가 있단건 채팅 상
+		if("chat".equals(getMetaworksContext().getWhen()))
+			instance.databaseMe().setSecuopt("1"); //채팅이면 보안 대화로 
 		else
 			instance.databaseMe().setSecuopt("0"); // 아니면 전체 공개  
 			
