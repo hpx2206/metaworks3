@@ -97,6 +97,7 @@ legend {display:none;}
 .cb_module,.cb_input_txt,.cb_nick_name a,h5.cb_h_type,.cb_wrts_message .cb_input_txt,.cb_usr_area button,.cb_txt_area textarea,.selectbox-list ul li,td{}
 
 .instanceName{font-weight:700; font-size:24px; width:100%;line-height:105%;height:30px;display:block; border:1px solid transparent;word-wrap:break-word;resize:none; overflow:hidden; -webkit-border-radius:3px;margin-top: 0px; border:0px; outline-color:#A8C9EE; margin-bottom: 0px;}
+.newComment{font-weight:700; font-size:18px; width:100%;line-height:105%;height:21px;display:block; border:1px solid;word-wrap:break-word;resize:none; overflow:hidden; -webkit-border-radius:3px;margin-top: 0px; border:0px; outline-color:#A8C9EE; margin-bottom: 0px;}
 
 #adminiconline{ height:32px; width:100%;}
 #adminicon{  float:right;height:32px; width:32px; background:url(../../images/processMap/advanced.png) no-repeat right; cursor:pointer;}
