@@ -21,7 +21,7 @@
 
 /* UI Object */
 .lst_type{width:100%;padding:2px;padding-top:6px;border:none;list-style:none}
-.lst_type li{margin-bottom:5px;font-size:12px;font-weight:normal;line-height:14px;vertical-align:top}
+.lst_type li{margin-bottom:5px;font-size:12px;font-weight:normal;line-height:14px;vertical-align:top;padding-right:10px;}
 .lst_type .type_ping{block;overflow:hidden;float:left;height:16px; width:16px; margin:0 6px 0 0;padding:0;background:url(../../images/waveStyle/ping.png) no-repeat 0 0;vertical-align:top;font-style:normal}
 .lst_type .type_mail{display:block;overflow:hidden;float:left;height:16px; width:16px;margin:0 6px 0 0;padding:0x;background:url(../../images/waveStyle/mail.png) no-repeat 0 0;vertical-align:top;font-style:normal}
 .lst_type .type_process{display:block;overflow:hidden;float:left;height:16px; width:16px;margin:0 6px 0 0;padding:0;background:url(../../images/waveStyle/process.png) no-repeat 0 0;vertical-align:top;font-style:normal}
