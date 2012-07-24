@@ -49,13 +49,13 @@
 				<% if(value.currentUser && value.currentUser.userId && (value.initiator.userId!=value.currentUser.userId || value.name!=value.lastCmnt)){%>
 			
 			<table><td><%value.currentUser.metaworksContext.how='small';%><%=fields.currentUser.here()%></td>
-			<td colspan=2><font color=204070><%=value.currentUser.name%></font>&nbsp;&nbsp; <font color=gray><%=value.lastCmnt%></font></td></table>
+			<td colspan=2 style="border:none;"><font color=204070><%=value.currentUser.name%></font>&nbsp;&nbsp; <font color=gray><%=value.lastCmnt%></font></td></table>
 	
 				<%}%>
 												
 			</ul>								
 		</td>
-		<td class="last_td"><font color=gray><%=fields.startedDate.here()%></font>
+		<td class="last_td"><font color="gray"><div style="margin-bottom:5px;"><%=fields.startedDate.here()%></div></font>
 		
 		<%if(value.status=='Completed'){%> <div class="badge">&nbsp;&nbsp; <%=mw3.localize('$Complete')%> &nbsp;&nbsp;</div> 
 		<%}else if(value.dueDate){ 
