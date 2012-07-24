@@ -744,4 +744,14 @@ public class Instance extends Database<IInstance> implements IInstance{
 			this.secuopt = secuopt;
 		}
 
+		
+	String assignee;
+	
+		public String getAssignee() {
+			return assignee;
+		}
+	
+		public void setAssignee(String assignee) {
+			this.assignee = assignee;
+		}
 }
