@@ -123,6 +123,10 @@ public interface IInstance extends IDAO{
 	public String getSecuopt();
 	public void setSecuopt(String secuopt);
 	
+	public String getAssignee();
+	public void setAssignee(String assignee);
+
+	
 	/////// following setter/getters stands for mapping tuple data to object by bean mapping /////////
 	
 	@ORMapping(
