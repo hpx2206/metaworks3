@@ -138,13 +138,19 @@ ul, ol, li, dl, dd, dt {
 }
 
 .first_wfNode {
-    background: url(../../images/waveStyle/bt_bg.gif) repeat-x;
+    background: #F9F9F9;
     margin-left: -25px !important;
     border: 1px solid #ccc;
     border-left: none;
-    padding-left: 25px;
+    padding-left: 15px;
     width: 30%;
 }
+
+.first_wfNode .closed{
+    background: none !important;
+    
+}
+
 
 #mashup_image .imgContainer {
     display: inline-block;
@@ -541,7 +547,7 @@ img {
     -webkit-background-size: 100% 100%;
     -khtml-background-size: 100% 100%;
     -moz-background-size: 100% 100%;
-    background: url('images/portrait/unknown_user.gif');
+    background: url('../../images/portrait/unknown_user.gif');
     background-repeat: no-repeat;
     width: 33px;
     height: 33px;
