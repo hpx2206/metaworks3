@@ -1,6 +1,7 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.MetaworksContext;
+import org.metaworks.Refresh;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
@@ -165,8 +166,8 @@ public interface IEmployee extends IDAO {
 	@ServiceMethod(target="popup", callByContent=true)
 	public Object showDetail() throws Exception;
 	
-	@ServiceMethod(callByContent=true)
-	public ContactList addContact() throws Exception;
+	@ServiceMethod(callByContent=true, target="popup")
+	public Refresh addContact() throws Exception;
 	
 	@ServiceMethod(callByContent=true)
 	public void checkEmpCode() throws Exception ;

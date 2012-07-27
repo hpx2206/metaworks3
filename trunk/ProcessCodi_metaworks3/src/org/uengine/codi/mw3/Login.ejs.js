@@ -12,6 +12,7 @@ var org_uengine_codi_mw3_Login = function(objectId, className){
 	
 
 	var storedId = Get_Cookie("codi.id");
+		
 	if(storedId!=null){		
 		mw3.getInputElement(objectId, "userId").value = storedId;
 		mw3.getInputElement(objectId, "password").value = Get_Cookie("codi.password");
@@ -170,7 +171,9 @@ function Get_Cookie( check_name ) {
 	}
 	if ( !b_cookie_found ) 
 	{
-		return null;
+		return (request.getParameter(check_name));
+		
+		//return null;
 	}
 }
 

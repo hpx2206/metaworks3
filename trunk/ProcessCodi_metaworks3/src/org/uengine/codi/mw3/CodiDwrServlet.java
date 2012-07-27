@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -39,6 +40,7 @@ import org.metaworks.ObjectType;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.dwr.TransactionalDwrServlet;
+import org.uengine.codi.mw3.model.ResourceFile;
 import org.uengine.codi.platform.Console;
 import org.uengine.codi.platform.SecurityContext;
 import org.uengine.kernel.GlobalContext;
@@ -59,6 +61,28 @@ public class CodiDwrServlet extends TransactionalDwrServlet{
 		securedPackages.put("java.sql", SECURITYMSG_SYSTEM_USAGE_PROHIBITED);
 //		securedPackages.put(File.class.getPackage().getName(), SECURITYMSG_SYSTEM_USAGE_PROHIBITED);
 ///		securedPackages.put(Mongo.class.getPackage().getName(), SECURITYMSG_SYSTEM_USAGE_PROHIBITED);
+	}
+
+	@Override
+	protected Object fromXML(InputStream is) {
+		// TODO Auto-generated method stub
+		try {
+			return GlobalContext.deserialize(is, Object.class);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			throw new RuntimeException(e);
+		}
+	}
+
+	@Override
+	protected void toXML(Object obj, OutputStream out) {
+		// TODO Auto-generated method stub
+		try {
+			GlobalContext.serialize(obj, out, Object.class);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			throw new RuntimeException(e);
+		}
 	}
 
 	static public boolean okIfSystem(){
@@ -131,8 +155,12 @@ public class CodiDwrServlet extends TransactionalDwrServlet{
 		// TODO Auto-generated method stub
 		super.init(servletConfig);
 
-		
-		
+//		xstream.alias("resource", ResourceFile.class);
+//		xstream.useAttributeFor(ResourceFile.class, "name");
+//		xstream.useAttributeFor(ResourceFile.class, "alias");
+//		xstream.aliasField("id", ResourceFile.class, "alias");
+//		xstream.addImplicitCollection(ResourceFile.class, "childs");
+//		xstream.processAnnotations(ResourceFile.class);
 		//Security setting 1
 
 

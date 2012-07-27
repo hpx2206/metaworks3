@@ -1,6 +1,7 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.Refresh;
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;
 import org.metaworks.annotation.ServiceMethod;
@@ -49,10 +50,12 @@ public interface IUser extends IDAO{
 	@ServiceMethod(callByContent=true, target=TARGET_SELF)
 	public UnstructuredProcessInstanceStarter chat() throws Exception;
 	
-	@ServiceMethod(callByContent=true)
+	@ServiceMethod(callByContent=true, inContextMenu=true)
+	@Face(displayName="$RemoveFromFollowers")
 	public Object[] removeFollower() throws Exception;
 	
-	@ServiceMethod(callByContent=true)
+	@ServiceMethod(callByContent=true, inContextMenu=true)
+	@Face(displayName="$RemoveFromContact")
 	public Object[] removeContact() throws Exception;
 	
 	@ServiceMethod(target="popup", payload={"userId", "network", "name"})

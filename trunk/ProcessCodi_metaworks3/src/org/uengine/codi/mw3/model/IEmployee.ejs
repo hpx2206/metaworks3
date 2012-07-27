@@ -73,7 +73,7 @@ if(value){
 				<div class="form_table">
 					<table border="1" cellspacing="0" summary="">
 						<tbody>
-						<tr>	
+						<!--tr>	
 							<th scope="row"><%=mw3.localize("$Id")%></th>
 							<td>
 								<div class="item">
@@ -81,7 +81,7 @@ if(value){
 									<span style="float:left;" id="checkEmpCode_<%=objectId%>"></span>
 								</div>
 							</td>
-						</tr>
+						</tr-->
 						<tr>
 							<th scope="row"><%=mw3.localize("$Name")%></th>
 							<td>
@@ -95,6 +95,14 @@ if(value){
 							<td>
 								<div class="item">
 									<%=fields.email.here({when:'new'}) %>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<th scope="row"><%=mw3.localize("$CompanyName")%></th>
+							<td>
+								<div class="item">
+									<%=fields.globalCom.here({when:'new'}) %>
 								</div>
 							</td>
 						</tr>

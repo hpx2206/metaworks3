@@ -36,6 +36,8 @@ public class ContactListPanel implements ContextAware {
 		localContactList.getMetaworksContext().setWhere(ContactList.LOCAL);
 		localContactList.load(userId, keyword);
 		
+		
+		
 		setLocalContactList(localContactList);
 		
 		ContactList socialContactList = new ContactList();
@@ -44,6 +46,12 @@ public class ContactListPanel implements ContextAware {
 		socialContactList.load(userId, keyword);
 		
 		setSocialContactList(socialContactList);
+		
+		
+		if(localContactList.getContacts().size() + socialContactList.getContacts().size() == 0){
+			invitation = new Invitation();
+			invitation.setName(keyword);
+		}
 	}
 	
 	
@@ -80,4 +88,15 @@ public class ContactListPanel implements ContextAware {
 		public void setSocialContactList(ContactList socialContactList) {
 			this.socialContactList = socialContactList;
 		}	
+		
+	Invitation invitation;
+
+
+		public Invitation getInvitation() {
+			return invitation;
+		}
+	
+		public void setInvitation(Invitation invitation) {
+			this.invitation = invitation;
+		}
 }

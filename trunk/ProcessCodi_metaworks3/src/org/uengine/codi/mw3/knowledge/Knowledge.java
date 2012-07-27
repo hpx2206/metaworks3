@@ -7,6 +7,8 @@ import org.metaworks.website.ContentPanel;
 import org.metaworks.widget.Window;
 import org.metaworks.widget.layout.Layout;
 import org.uengine.codi.mw3.admin.PageNavigator;
+import org.uengine.codi.mw3.model.ContactPanel;
+import org.uengine.codi.mw3.model.ContactWindow;
 import org.uengine.codi.mw3.model.ContentWindow;
 import org.uengine.codi.mw3.model.IUser;
 import org.uengine.codi.mw3.model.Locale;
@@ -29,7 +31,15 @@ public class Knowledge {
 		
 		Window wfWindow = new Window();
 			WfPanel panel = new WfPanel();
-			panel.load("-1");//user.getUserId());
+			
+			panel.session = session;
+			
+//			if("uEngine".equals(session.getCompany().getComCode())){
+//				panel.load("-1");
+//			}else{
+				panel.load(session.getCompany().getComCode());				
+//			}
+			
 			wfWindow.setPanel(panel);
 			wfWindow.setTitle("Knowledge Map");
 		
@@ -39,13 +49,20 @@ public class Knowledge {
 		ContentWindow mashupContentWindow = new ContentWindow(mashup);
 		mashupContentWindow.setTitle("Mashup");
 		
-		outerLayout.setEast(mashupContentWindow);
-		
+
 //		mashupGoogleImage = mashup.getMashupGoogleImage();
 		
-		setLayout(outerLayout);		
 		
 		setPageNavigator(new PageNavigator("knowlege"));	
+		
+		Layout innerLayout = new Layout();
+		innerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, north__spacing_open:5, north__size:'60%'");
+		innerLayout.setCenter(new ContactWindow(session.getUser()));
+		innerLayout.setNorth(mashupContentWindow);
+		
+		outerLayout.setEast(innerLayout);
+		setLayout(outerLayout);		
+
 	}
 //	
 //	MashupGoogleImage mashupGoogleImage;

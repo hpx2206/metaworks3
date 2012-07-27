@@ -21,7 +21,8 @@ public class ContactPanel {
 		
 		setContactListPanel(contactListPanel);
 		setUser(user);		
-		setSearchBox(new ContactSearchBox());		
+		setSearchBox(new ContactSearchBox());
+		getSearchBox().setMetaworksContext(contactListPanel.getLocalContactList().getMetaworksContext());
 	}
 
 	IUser user;	
@@ -91,6 +92,20 @@ public class ContactPanel {
 //		popup.setPageY(this.pageY);
 		
 		popup.setPanel(new AddLocalContactPanel(session));
+		popup.setTitle("연락처 추가");
+		
+		return popup;
+	}
+	
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
+	public Object invite() throws Exception{
+		ModalWindow popup = new ModalWindow();
+//		Popup popup = new Popup();
+		
+//		popup.setPageX(this.pageX);
+//		popup.setPageY(this.pageY);
+		
+		popup.setPanel(new Invitation());
 		popup.setTitle("연락처 추가");
 		
 		return popup;
