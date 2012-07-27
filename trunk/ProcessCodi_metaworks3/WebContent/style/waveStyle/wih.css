@@ -29,7 +29,7 @@ legend {display:none;}
 .commentTailRight {position:absolute; top:28px; right:0px;}
 .commentTailLeft {position:absolute; top:28px; left:0px;}
 
-.notMePic{float:left; width:65px;padding:15px 0 0 0;}
+.notMePic{float:left; width:65px;padding:0px 0 0 0;}
 .notMePic .notMePicPic { margin-left:18px;}
 .notMePic .notMePicName{text-align:center; font-size:11px;}
 
