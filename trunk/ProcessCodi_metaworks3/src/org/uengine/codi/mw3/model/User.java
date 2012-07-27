@@ -152,7 +152,7 @@ public class User extends Database<IUser> implements IUser {
 		//	e.printStackTrace();
 		}
 		
-		Popup popup = new Popup(400,203);
+		Popup popup = new Popup(400,275);
 		popup.setName("Info");
 		popup.setPanel(this);
 

@@ -923,6 +923,7 @@ img {
     border-top: 1px solid #E5E5E5;
     color: #7F7F7F;
     background: url(../../images/waveStyle/navi_icon.png) 3px 5px no-repeat;
+    cursor: pointer;
 }
 #navigator .depth1 .depth1td_on {
     height: 25px;

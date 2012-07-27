@@ -29,7 +29,7 @@ org_uengine_codi_mw3_model_Popup.prototype = {
 		$(divId).parent().css({top:y-28,left:x,width:popLayerWidth,height:popLayerHeight});
 		$(divId).parent().removeClass('clue-left-rounded');
 		$(divId).parent().addClass('clue-right-rounded');
-		$(divId + ' #addcontact-con').height(h-43);
+		$(divId + ' #addcontact-con').height(h-39);
 		$(divId + ' .cluetip-arrows').css({top:10});
 		
 		if(bodyWidth && popLayerWidth + x > bodyWidth){

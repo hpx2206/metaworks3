@@ -1,13 +1,14 @@
 <%
 	if(value){
 %>	
-		<div class="depth1"><span onClick="<%=methods.select.caller() %>"><%=mw3.localize("$navigation.role")%></span> <a href="javascript:<%=methods.addRole.caller()%>">[New]</a></div>
+		<div class="depth1" onClick="<%=methods.select.caller() %>"><span><%=mw3.localize("$navigation.role")%></span></div>
 
 <%
 		if(value.selected){
 %>
 	<div class="depth2">		
 		<%=fields.roleList.here()%>
+		<div class="fist_menu"><a id="wBtn" href="javascript:<%=methods.addRole.caller()%>"><span id="method_592_add">새로운 역할</span></a><div class="clear"></div></div>
 	</div>
 	
 <%
