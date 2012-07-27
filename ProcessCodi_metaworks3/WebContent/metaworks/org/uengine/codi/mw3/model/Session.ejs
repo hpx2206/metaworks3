@@ -17,7 +17,7 @@
 
 <%	if(value.employee.isAdmin){%>
 				 |	
-			<a href="javascript:<%=methods.manager.here()%>">manager</a>
+			<a href="javascript:<%=methods.manager.caller()%>">manager</a>
 <%	}%>
 				 |	
 			<span style="display:inline-block; line-height:37px;"><a onClick="<%=methods.logout.caller() %>" style="cursor:pointer;"><%=mw3.localize("$Logout")%></a></span>
