@@ -15,6 +15,10 @@
 			<a href="javascript:mw3.test(mw3.getAutowiredObject('org.uengine.codi.mw3.model.InstanceListPanel').__objectId, 'first', {guidedTour:true})" type="application/pdf"><%=mw3.localize("$Help")%></a>			 
 
 
+<%	if(value.employee.isAdmin){%>
+				 |	
+			<a href="javascript:<%=methods.manager.here()%>">manager</a>
+<%	}%>
 				 |	
 			<span style="display:inline-block; line-height:37px;"><a onClick="<%=methods.logout.caller() %>" style="cursor:pointer;"><%=mw3.localize("$Logout")%></a></span>
 		</div>
