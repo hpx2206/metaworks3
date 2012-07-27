@@ -24,6 +24,11 @@ import org.uengine.processmanager.ProcessManagerBean;
 import org.uengine.processmanager.ProcessManagerRemote;
 import org.uengine.util.UEngineUtil;
 
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
+import com.thoughtworks.xstream.annotations.XStreamImplicit;
+import com.thoughtworks.xstream.annotations.XStreamOmitField;
+
 @Face(
 		ejsPathMappingByContext=
 			{
@@ -32,15 +37,22 @@ import org.uengine.util.UEngineUtil;
 			}		
 
 	)
+@XStreamAlias("resource")
 public class ResourceFile implements ContextAware{
+	
+//	static{
+//		CodiDwrServlet.xstream.processAnnotations(ResourceFile.class);
+//	}
 
 	public ResourceFile() {
 		setMetaworksContext(new MetaworksContext());
+		setAlias("");
 	}
 	
 	@AutowiredFromClient
 	public PageNavigator pageNavigator;
 
+	@XStreamOmitField
 	String alias;
 		@Id
 		public String getAlias() {
@@ -59,7 +71,20 @@ public class ResourceFile implements ContextAware{
 			}
 			
 		}
-	
+
+
+	@XStreamAsAttribute
+	@XStreamAlias("value")
+	String uEngineAlias;
+		
+		public String getuEngineAlias() {
+			return uEngineAlias;
+		}
+		public void setuEngineAlias(String uEngineAlias) {
+			this.uEngineAlias = uEngineAlias;
+		}
+
+	@XStreamOmitField
 	boolean isFolder;
 	
 		public boolean isFolder() {
@@ -70,8 +95,8 @@ public class ResourceFile implements ContextAware{
 			this.isFolder = isDirectory;
 		}
 
-	String objType;
-			
+	@XStreamOmitField
+	String objType;			
 		public String getObjType() {
 			return objType;
 		}
@@ -80,6 +105,7 @@ public class ResourceFile implements ContextAware{
 			this.objType = type;
 		}
 
+	@XStreamAsAttribute
 	String name;
 	
 		public String getName() {
@@ -91,6 +117,7 @@ public class ResourceFile implements ContextAware{
 		}
 		
 
+	@XStreamOmitField
 	boolean isOpened;	
 		public boolean isOpened() {
 			return isOpened;
@@ -100,6 +127,7 @@ public class ResourceFile implements ContextAware{
 			this.isOpened = isOpened;
 		}
 		
+	@XStreamOmitField
 	boolean isDeleted;
 
 		public boolean isDeleted() {
@@ -110,6 +138,7 @@ public class ResourceFile implements ContextAware{
 			this.isDeleted = isDeleted;
 		}
 
+	@XStreamImplicit
 	ArrayList<ResourceFile> childs;
 
 		public ArrayList<ResourceFile> getChilds() {
@@ -119,7 +148,16 @@ public class ResourceFile implements ContextAware{
 		public void setChilds(ArrayList<ResourceFile> childFiles) {
 			this.childs = childFiles;
 		}
-	
+		
+	@XStreamOmitField
+	String filter;
+		public String getFilter() {
+			return filter;
+		}
+		public void setFilter(String filter) {
+			this.filter = filter;
+		}
+		
 	@ServiceMethod(callByContent=true, except="childs", target="self")
 	public void drillDown(){
 		if(isOpened()){
@@ -153,6 +191,7 @@ public class ResourceFile implements ContextAware{
 			
 			rf.setName(childFilePaths[i]);
 			rf.setAlias(childAlias);
+			rf.setuEngineAlias("[" + childAlias + "]");
 			rf.setFolder(f.isDirectory());
 			rf.setMetaworksContext(getMetaworksContext());
 			
@@ -162,15 +201,29 @@ public class ResourceFile implements ContextAware{
 				rf.setObjType(childAlias.substring(childAlias.lastIndexOf(".")+1));
 
 				//ignores other types except process if 'newInstance' mode
-				if(("appendProcessMap".equals(getMetaworksContext().getWhen()) || "newInstance".equals(getMetaworksContext().getWhen())) && !"process".equals(rf.getObjType()))
+				if(getMetaworksContext()!=null && (("appendProcessMap".equals(getMetaworksContext().getWhen()) || "newInstance".equals(getMetaworksContext().getWhen())) && !"process".equals(rf.getObjType())))
 					continue;
 			}
 			
+			rf.setFilter(getFilter());
 			
-			childs.add(rf);
+			if(f.isDirectory() || getFilter()==null || (getFilter().indexOf(rf.getObjType()) > -1))
+				childs.add(rf);
 		}
 		
 	}
+	
+	@ServiceMethod
+	public void drillDownDeeply(){
+		drillDown();
+		
+		if(childs!=null)
+		for(ResourceFile child : childs){
+			if(child.isFolder())
+				child.drillDownDeeply();
+		}
+	}
+
 	
 	
 	@ServiceMethod(callByContent=true, except="childs", inContextMenu=true, keyBinding="Ctrl+N", target="popup")
@@ -374,6 +427,12 @@ public class ResourceFile implements ContextAware{
 	
 	protected IUser friend;
 
+	
+	@ServiceMethod
+	public org.uengine.kernel.ProcessDefinition loadProcessDefinition() throws Exception{
+		return processManager.getProcessDefinition(getAlias());
+	}
+
 	/**
 	 * Not used anymore ... see ProcessMap.initiate instead
 	 * @return
@@ -453,21 +512,21 @@ public class ResourceFile implements ContextAware{
 	}
 	
 	@AutowiredFromClient
-	public NewInstancePanel newInstancePanel;
+	transient public NewInstancePanel newInstancePanel;
 	
 	@AutowiredFromClient
-	public Session session;
+	transient public Session session;
 	
 
 
 	@Autowired
-	public InstanceViewContent instanceViewContent;
+	transient public InstanceViewContent instanceViewContent;
 
 	@Autowired
-	public ProcessManagerRemote processManager;
+	transient public ProcessManagerRemote processManager;
 
 	
-	MetaworksContext metaworksContext;
+	transient MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
 			return metaworksContext;
 		}

@@ -5,18 +5,22 @@ import org.uengine.codi.mw3.knowledge.WfPanel;
 import org.uengine.codi.mw3.knowledge.Workflowy;
 import org.uengine.codi.mw3.knowledge.WorkflowyPanel;
 import org.uengine.codi.mw3.model.IUser;
+import org.uengine.codi.mw3.model.Session;
 
 public class HintPanel {
 	
 	public HintPanel() throws Exception {
 	}
 	
-	public void load(IUser user, String pageName) throws Exception {
+	
+	
+	public void load(Session session, String pageName) throws Exception {
 		facebookComments = new FacebookComments(pageName);
 		facebookComments.setUrl(pageName);
 		
 		WfPanel wfPanel = new WfPanel();
-		wfPanel.load("-1", "read");
+		wfPanel.session = session;
+		wfPanel.load(session.getCompany().getComCode(), "read");
 		
 		setWfPanel(wfPanel);		
 	}	

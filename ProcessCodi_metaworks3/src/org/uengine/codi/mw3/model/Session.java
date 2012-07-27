@@ -15,6 +15,7 @@ import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.NonEditable;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.TransactionContext;
+import org.metaworks.widget.ModalWindow;
 import org.metaworks.widget.Window;
 import org.uengine.codi.mw3.Login;
 
@@ -242,6 +243,14 @@ public class Session implements ContextAware{
 	public void removeUserInfoFromHttpSession(){
 		HttpSession httpSession = TransactionContext.getThreadLocalInstance().getRequest().getSession(); 
 		httpSession.invalidate();
+	}
+	
+	@ServiceMethod
+	public ModalWindow manager() throws Exception{
+		OrganizationPerspective panel = new OrganizationPerspective();
+		panel.session = this;
+		panel.loadChildren();
+		return new ModalWindow(panel);
 	}
 	
 	public void fillSession() throws Exception {

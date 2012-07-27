@@ -23,6 +23,7 @@ public class AddFollowerPanel implements ContextAware{
 //		contactListPanel.load(loginUser.getUserId());		
 		
 		ContactPanel contactPanel = new ContactPanel(loginUser);
+		contactPanel.getContactListPanel().setId("addFollower");
 		contactPanel.getContactListPanel().getLocalContactList().getMetaworksContext().setWhen("addFollower");		
 		contactPanel.getContactListPanel().getSocialContactList().getMetaworksContext().setWhen("addFollower");
 		contactPanel.getUser().getMetaworksContext().setWhen("addFollower");

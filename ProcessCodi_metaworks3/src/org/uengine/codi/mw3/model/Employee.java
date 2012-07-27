@@ -351,10 +351,41 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	}	
 	
 	@Override
-	public Object[] saveEmployeeInfo() throws Exception {		
+	public Object[] saveEmployeeInfo() throws Exception {	
+		
+		boolean alreadyRegistered = false;
+		try{
+			
+//			if(this.getEmpCode()==null){
+			this.setEmpCode(this.getEmail());
+//			}
+			
+			this.databaseMe(); 
+			
+			alreadyRegistered = true;
+		}catch(Exception e){}
+
+		if(alreadyRegistered)	
+			throw new Exception("$AlreadyExisingUser");
+
 		if (getMetaworksContext().getWhen().startsWith(MetaworksContext.WHEN_NEW)) {
 			this.setIsDeleted("0");
-			this.setGlobalCom("uEngine");
+			
+			if(this.getGlobalCom()==null){
+				this.setGlobalCom("uEngine");
+			}else{
+				
+				Company company = new Company();
+				company.setComCode(this.getGlobalCom());
+
+				try{
+					company.databaseMe();
+				}catch(Exception e){
+					company.setComName(this.getGlobalCom());
+					company.createDatabaseMe();
+					this.setIsAdmin(true);
+				}
+			}
 			
 			createDatabaseMe();
 		} else {
@@ -398,7 +429,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	}
 	
 	@Override
-	public ContactList addContact() throws Exception {
+	public Refresh addContact() throws Exception {
 		Contact contact = new Contact();
 		IUser friendUser = new User();
 		friendUser.setUserId(getEmpCode());
@@ -409,12 +440,13 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		contact.addContact();
 		
 		ContactList cp = new ContactList();
+		cp.setId(ContactList.LOCAL);
 		cp.getMetaworksContext().setWhen(ContactListPanel.CONTACT);
 		cp.getMetaworksContext().setWhere(ContactList.LOCAL);
 		
 		cp.load(session.getUser().getUserId());
 		
-		return cp;
+		return new Refresh(cp);
 	}
 	
 	public void checkEmpCode() throws Exception {

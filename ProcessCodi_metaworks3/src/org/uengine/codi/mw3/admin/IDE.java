@@ -36,7 +36,7 @@ public class IDE {
 		
 		HintWindow hintWindow = new HintWindow();
 		hintWindow.getMetaworksContext().setHow(getPageNavigator().getPageName());
-		hintWindow.load(session.getUser(), getPageNavigator().getPageName());
+		hintWindow.load(session, getPageNavigator().getPageName());
 		
 		ResourceWindow resourceWindow = new ResourceWindow();		
 		resourceWindow.getMetaworksContext().setHow(pageNavigator.getPageName());

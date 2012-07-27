@@ -1,5 +1,9 @@
 <%
 	if(value){
+	
+		if(value.invitation){
+			%><%=fields.invitation.here()%><%
+		}else{
 %>
 
 	<div id="accordion_<%=objectId%>" class="basic tabs-1">
@@ -15,5 +19,6 @@
 	</div>
 	
 <%
+		}
 	}
 %>

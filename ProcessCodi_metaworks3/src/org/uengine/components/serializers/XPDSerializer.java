@@ -6,10 +6,17 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 import org.metaworks.dwr.MetaworksRemoteService;
+import org.uengine.codi.mw3.model.ResourceFile;
 import org.uengine.kernel.NeedArrangementToSerialize;
 import org.uengine.processdesigner.ActivityTypeDescriptor;
 
 public class XPDSerializer extends XStreamSerializer{
+	
+	public XPDSerializer(){
+		xstream.processAnnotations(ResourceFile.class);
+	}
+	
+	
 	public static void main(String args[]) throws Exception{
 		
 		ArrayList list = new ArrayList();
