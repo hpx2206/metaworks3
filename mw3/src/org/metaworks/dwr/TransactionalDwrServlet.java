@@ -30,7 +30,7 @@ public class TransactionalDwrServlet extends DwrServlet{
 	
 	public static ConnectionFactory connectionFactory;
 	
-	XStream xstream = new XStream(/*new DomDriver()*/);
+	protected XStream xstream = new XStream(/*new DomDriver()*/);
 
 
 	
@@ -151,7 +151,7 @@ public class TransactionalDwrServlet extends DwrServlet{
 		try{
 			
 	        //Handles XStream-based RPC 
-	        if(pathInfo.startsWith("dwr/xstr-rpc/")){
+	        if(pathInfo.startsWith("/xstr-rpc")){
 	        	
 	        	String className = request.getParameter("className");
 	        	String methodName = request.getParameter("methodName");
@@ -159,13 +159,20 @@ public class TransactionalDwrServlet extends DwrServlet{
 	        	String objectStr = request.getParameter("object");
 	        	String autowiredFieldsStr = request.getParameter("autowiredFields");
 	        	
-				Object object = xstream.fromXML(new ByteArrayInputStream(objectStr.getBytes()));
-				Map<String, Object> autowiredFields = (Map<String, Object>) xstream.fromXML(new ByteArrayInputStream(autowiredFieldsStr.getBytes()));
+	        	Object object=null;
+	        	if(objectStr!=null)
+	        		object = fromXML(new ByteArrayInputStream(objectStr.getBytes()));
+	        	else
+	        		object = Thread.currentThread().getContextClassLoader().loadClass(className).newInstance();
+	        		
+	        	Map<String, Object> autowiredFields = null;
+	        	if(autowiredFieldsStr!=null)
+	        		autowiredFields = (Map<String, Object>) fromXML(new ByteArrayInputStream(autowiredFieldsStr.getBytes()));
 	        	
 	        	MetaworksRemoteService metaworksRemoteService = MetaworksRemoteService.getInstance();
 	        	Object rtnValue = metaworksRemoteService.callMetaworksService(className, object, methodName, autowiredFields);
 	        	
-	        	xstream.toXML(rtnValue, response.getOutputStream());
+	        	toXML(rtnValue, response.getOutputStream());
 	        	
 	        	response.flushBuffer();
 	        	
@@ -210,6 +217,14 @@ public class TransactionalDwrServlet extends DwrServlet{
 		}
 		
 		
+	}
+	
+	protected Object fromXML(InputStream xml){
+		return xstream.fromXML(xml);
+	}
+	
+	protected void toXML(Object obj, OutputStream out){
+		xstream.toXML(obj, out);
 	}
 	
 	
