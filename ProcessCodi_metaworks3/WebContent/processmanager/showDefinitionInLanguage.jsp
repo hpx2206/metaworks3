@@ -35,8 +35,7 @@ System.out.println("did you call this?");
 		if(instanceId!=null){
 			def = pm.getProcessDefinitionWithInstanceIdWithoutInheritance(instanceId, language);
 		}else if(versionId==null && pd!=null){
-			versionId = pm.getProcessDefinitionProductionVersion(pd);
-			def = pm.getProcessDefinitionWithoutInheritance(versionId, language);
+			def = pm.getProcessDefinitionWithoutInheritance(pd, language);
 		}else{
 			def = pm.getProcessDefinitionWithoutInheritance(versionId, language);
 		}	
