@@ -199,6 +199,8 @@
 					console.log(e);
 			}
 			
+			var request;
+			
 			$(document).ready(function() {
 				
 				mw3.importClasses(["org.uengine.codi.mw3.model.*", "org.metaworks.widget.*"]);
@@ -215,7 +217,7 @@
 				}
 
 				
-				var request = new Request();
+				request = new Request();
 				
 				var defId = request.getParameter("defId");
 				
