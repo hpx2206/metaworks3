@@ -101,6 +101,93 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.send = function(){
 	setTimeout(function(){thisFaceHelper.sending=false;}, 1000);
 }
 
+org_uengine_codi_mw3_model_IWorkItem_edit.prototype.showCommandForm = function(processDef){
+	var thisFaceHelper = this;
+
+	var text = $("#post_" + this.objectId).val();
+	var fullText = text;
+	
+	if(fullText==null  ||  fullText.trim().length == 0){
+		fullText = processDef.cmTrgr;
+	}
+	
+	
+	var divId = "#commandDiv_" + this.objectId;
+
+
+	$(divId).html("<b>" + fullText + ": </b>");
+	$(divId).keydown(function(e){
+		if(e.keyCode==13){
+	
+			thisFaceHelper.send();
+	
+		}
+	
+	});
+			
+	
+	
+	
+	//processMap.processMapList[i].initiate();
+	
+	//break;
+	
+	
+	//alert(processMap.processMapList[i].cmPhrase);
+	//
+
+	var entryAndPhrases = processDef.cmPhrase.split("$");
+	
+	this.commandTrigger=processDef.cmPhrase;
+	this.commandActivityAppAlias=processDef.defId;
+	
+	mw3.setWhen('edit');
+	
+	this.commandParameters = [];//{__className: 'org.uengine.codi.mw3.model.ParameterValue[]'};
+
+	var parameterIndex = 0;
+
+	if(entryAndPhrases.length>1)
+	for(var entryIndex=1; entryIndex<entryAndPhrases.length; entryIndex++){
+		var entry = entryAndPhrases[entryIndex];
+		var entryNameAndClassName = entry.split("<");
+		var entryName = entryNameAndClassName[0];
+		var classNameAndConnector = entryNameAndClassName[1].split(">");
+		var className = classNameAndConnector[0];
+		var connector = classNameAndConnector[1];
+		
+	//        			alert(entryName);
+	//        			alert(className);
+		
+		
+		var object = new MetaworksObject({
+	        __className : className//,
+	        //metaworksContext: {when:'edit'}
+	    }, divId);
+		
+	
+		var valueObject = 0+(object.object ? object.object.__objectId : object.__objectId);
+		
+		this.commandParameters[parameterIndex] = {
+				__className: 'org.uengine.codi.mw3.model.ParameterValue',
+				variableName: entryName,
+				objectId: valueObject  
+		};
+		
+		this.commandParameters[parameterIndex]['objectId'] = 0+(object.object ? object.object.__objectId : object.__objectId);
+		
+		parameterIndex++;
+		
+		$(divId).append(connector);
+	}
+	
+	mw3.onLoadFaceHelperScript();
+	mw3.setWhen('view');
+	
+}
+
+
+
 org_uengine_codi_mw3_model_IWorkItem_edit.prototype.press = function(){
 	var e = window.event;
 	
@@ -119,10 +206,8 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.press = function(){
     	var processMap = mw3.getAutowiredObject("org.uengine.codi.mw3.model.ProcessMapList");
     	
     	//var divIdWithoutShaf = "commandDiv_" + this.objectId; 
-		var divId = "#commandDiv_" + this.objectId;
 		var recommendDivId = "#commandRecommendDiv_" + this.objectId;
 		var recommendFirst = true;
-		var parameterIndex = 0;
 
 //console.log('1');
 
@@ -154,72 +239,7 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.press = function(){
         		var thisFaceHelper = this;
         		if(text==commandTrigger){//e.keyCode == 58 || e.charCode== 58 || e.keyCode == 59 || e.keyCode == 186) { //means ":" that user wants to command
 
-            		$(divId).html("<b>" + fullText + ": </b>");
-            		$(divId).keydown(function(e){
-            			if(e.keyCode==13){
-            		
-            				thisFaceHelper.send();
-
-            			}
-       
-            		});
-	   					
-            		
-
-        		
-//        		processMap.processMapList[i].initiate();
-        		
-//        		break;
-        		
-        		
-//        		alert(processMap.processMapList[i].cmPhrase);
-//        
-        		
-	        		var entryAndPhrases = commandPhrase.split("$");
-	        		
-	            	this.commandTrigger=commandPhrase;
-	            	this.commandActivityAppAlias=processMap.processMapList[i].defId;
-	        		
-	    			mw3.setWhen('edit');
-	    			
-	    			this.commandParameters = [];//{__className: 'org.uengine.codi.mw3.model.ParameterValue[]'};
-	
-	    			if(entryAndPhrases.length>1)
-	        		for(var entryIndex=1; entryIndex<entryAndPhrases.length; entryIndex++){
-	        			var entry = entryAndPhrases[entryIndex];
-	        			var entryNameAndClassName = entry.split("<");
-	        			var entryName = entryNameAndClassName[0];
-	        			var classNameAndConnector = entryNameAndClassName[1].split(">");
-	        			var className = classNameAndConnector[0];
-	        			var connector = classNameAndConnector[1];
-	        			
-	//        			alert(entryName);
-	//        			alert(className);
-	        			
-	        			
-	    				var object = new MetaworksObject({
-	                        __className : className//,
-	                        //metaworksContext: {when:'edit'}
-	                    }, divId);
-	    				
-	
-	    				var valueObject = 0+(object.object ? object.object.__objectId : object.__objectId);
-	    				
-	        			this.commandParameters[parameterIndex] = {
-	        					__className: 'org.uengine.codi.mw3.model.ParameterValue',
-	        					variableName: entryName,
-	        					objectId: valueObject  
-	        			};
-	        			
-	        			this.commandParameters[parameterIndex]['objectId'] = 0+(object.object ? object.object.__objectId : object.__objectId);
-	    				
-	        			parameterIndex++;
-	        			
-	    				$(divId).append(connector);
-	        		}
-	    			
-	    			mw3.onLoadFaceHelperScript();
-	    			mw3.setWhen('view');
+        			this.showCommandForm(processMap.processMapList[i]);
 	    			
 	    			break;
 	    			
