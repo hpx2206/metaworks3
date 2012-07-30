@@ -2,8 +2,10 @@ package org.uengine.codi.mw3.knowledge;
 
 import java.io.Serializable;
 
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
 import org.uengine.codi.ITool;
+import org.uengine.codi.mw3.model.Session;
 
 public class KnowledgeTool implements ITool, Serializable{
 	
@@ -29,6 +31,7 @@ public class KnowledgeTool implements ITool, Serializable{
 	public void onLoad() {
 		try {
 			wfPanel = new WfPanel();
+			wfPanel.session = session;
 			wfPanel.load(nodeId);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -47,5 +50,9 @@ public class KnowledgeTool implements ITool, Serializable{
 		// TODO Auto-generated method stub
 		
 	}
+	
+	
+	@AutowiredFromClient
+	public Session session;
 
 }
