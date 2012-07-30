@@ -353,20 +353,20 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	@Override
 	public Object[] saveEmployeeInfo() throws Exception {	
 		
-		boolean alreadyRegistered = false;
-		try{
-			
-//			if(this.getEmpCode()==null){
-			this.setEmpCode(this.getEmail());
-//			}
-			
-			this.databaseMe(); 
-			
-			alreadyRegistered = true;
-		}catch(Exception e){}
 
 		if (getMetaworksContext().getWhen().startsWith(MetaworksContext.WHEN_NEW)) {
-			
+			boolean alreadyRegistered = false;
+			try{
+				
+//				if(this.getEmpCode()==null){
+				this.setEmpCode(this.getEmail());
+//				}
+				
+				this.databaseMe(); 
+				
+				alreadyRegistered = true;
+			}catch(Exception e){}
+		
 			if(alreadyRegistered)	
 				throw new Exception("$AlreadyExisingUser");
 
