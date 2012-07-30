@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
@@ -17,6 +18,7 @@ import org.uengine.codi.mw3.model.InstanceViewContent;
 import org.uengine.codi.mw3.model.NewInstancePanel;
 import org.uengine.codi.mw3.model.NewInstanceWindow;
 import org.uengine.codi.mw3.model.ProcessDefinition;
+import org.uengine.codi.mw3.model.Session;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
@@ -637,11 +639,15 @@ public class WorkflowyNode implements ContextAware {
 		return this;
 	}	
 	
+	
+	@AutowiredFromClient
+	public Session session;
+	
 	@ServiceMethod(inContextMenu=true, keyBinding="Ctrl+N")
 	public ContentWindow newProcessInstance() throws Exception{
 		NewInstancePanel newInstancePanel =  new NewInstancePanel();
 		newInstancePanel.setKnowledgeNodeId(id);
-		newInstancePanel.load();
+		newInstancePanel.load(session);
 		
 		return new NewInstanceWindow(newInstancePanel);
 	}
