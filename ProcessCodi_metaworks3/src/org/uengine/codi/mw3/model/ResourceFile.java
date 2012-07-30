@@ -410,8 +410,10 @@ public class ResourceFile implements ContextAware{
 			}
 		}
 			
+		processMap.setMapId(session.getCompany().getComCode() + "." + this.getAlias());
 		processMap.setDefId(this.getAlias());
 		processMap.setName(name);
+		processMap.setComCode(session.getCompany().getComCode());
 		
 		if(!processMap.confirmExist())
 			throw new Exception("$AlreadyAddedApp");
@@ -419,7 +421,7 @@ public class ResourceFile implements ContextAware{
 		processMap.createMe();
 		
 		ProcessMapList processMapList = new ProcessMapList();
-		processMapList.load();
+		processMapList.load(session);
 		
 		return new Object[]{processMapList, new Remover(new ModalWindow())};		
 	}

@@ -772,7 +772,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 
 		
 		ProcessMapList processMapList = new ProcessMapList();
-		processMapList.load();
+		processMapList.load(session);
 		processMapList.setParentInstanceId(getInstId());
 		processMapList.setTitle(getTitle());
 		
