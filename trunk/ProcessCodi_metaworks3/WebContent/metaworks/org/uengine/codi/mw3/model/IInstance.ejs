@@ -16,7 +16,7 @@
 		var isSecureProcess = (value.defId != null && value.secuopt == '1');
 		
 		
-		value.initiator.metaworksContext.how='list';
+		//value.initiator.metaworksContext.how='list';
 	
 	%>
 	
@@ -26,7 +26,7 @@
 		<td class="first_td" valign="top">
 			<div class="worklistuser">
 					<dl>					                		
-						<dd><%value.currentUser.metaworksContext.how='small';%><%=fields.initiator.here() %></dd>
+						<dd><%=fields.initiator.here() %></dd>
 						<div class="clear"></div>					                	
 					</dl>	
 			</div>				
@@ -48,7 +48,7 @@
 				
 				<% if(value.currentUser && value.currentUser.userId && (value.initiator.userId!=value.currentUser.userId || value.name!=value.lastCmnt)){%>
 			
-			<table><td><%value.currentUser.metaworksContext.how='small';%><%=fields.currentUser.here()%></td>
+			<table><td><%value.currentUser['size']='small';%><%=fields.currentUser.here()%></td>
 			<td colspan=2 style="border:none; padding-right:10px;"><font color=204070><%=value.currentUser.name%></font>&nbsp;&nbsp; <font color=gray><%=value.lastCmnt%></font></td></table>
 	
 				<%}%>
