@@ -774,7 +774,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		NewInstancePanel newInstancePanel =  new NewInstancePanel();
 		newInstancePanel.setKnowledgeNodeId(this.getId());
 		newInstancePanel.session = session;
-		newInstancePanel.load();
+		newInstancePanel.load(session);
 		newInstancePanel.getNewInstantiator().setTitle(getName());
 		
 		return new NewInstanceWindow(newInstancePanel);
@@ -788,7 +788,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		NewInstancePanel newInstancePanel =  new NewInstancePanel();
 		newInstancePanel.setKnowledgeNodeId(this.getId());
 		newInstancePanel.session = session;
-		newInstancePanel.load();
+		newInstancePanel.load(session);
 		
 		newInstancePanel.getNewInstantiator().session = session;
 		newInstancePanel.setNewInstantiator((WorkItem) newInstancePanel.getNewInstantiator().newFile());
