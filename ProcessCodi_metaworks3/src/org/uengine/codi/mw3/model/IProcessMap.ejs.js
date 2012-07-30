@@ -66,6 +66,20 @@ var org_uengine_codi_mw3_model_IProcessMap = function(objectId, className){
 }
 
 org_uengine_codi_mw3_model_IProcessMap.prototype = {
+		
+		whenClick : function(){
+			var processMap = mw3.objects[this.objectId];
+			if(processMap.cmTrgr!=null){
+				
+				var workItemHandlerFH = mw3.getAutowiredObject("org.uengine.codi.mw3.model.CommentWorkItem@-1").getFaceHelper();
+				
+				workItemHandlerFH.showCommandForm(processMap);
+			}else{
+				processMap.initiate();
+			}
+		},
+		
+		
 		startLoading : function(){
 			if(this.windowObjectId && mw3.getFaceHelper(this.windowObjectId) && mw3.getFaceHelper(this.windowObjectId).startLoading)
 				mw3.getFaceHelper(this.windowObjectId).startLoading();
