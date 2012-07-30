@@ -498,12 +498,14 @@ CREATE TABLE `bpm_knol` (
 );
 
 CREATE TABLE `processmap` (
+	`mapId` VARCHAR(100) NOT NULL DEFAULT '',
+	
 	`defId` VARCHAR(50) NOT NULL DEFAULT '',
 	`name` VARCHAR(50) NULL DEFAULT NULL,
 	`iconPath` VARCHAR(255) NULL DEFAULT NULL,
 	`color` VARCHAR(10) NULL DEFAULT NULL,
 	`no` INT(11) NULL DEFAULT NULL,
-	PRIMARY KEY (`defId`)
+	PRIMARY KEY (`mapId`)
 );
 
 alter table bpm_knol add column authorid varchar(100);
@@ -553,3 +555,30 @@ alter table bpm_knol add column type char(10);
 	 
 	 
 	 alter table contact add column mood varchar(100);
+
+	 
+	 alter table bpm_procinst add column assignee varchar(100);
+	 
+	 
+	 
+	 create table bpm_roledef(roledefid varchar(100), defId varchar(50), roleName char(20), mappedUserId varchar(50), comCode varchar(50));
+
+	 drop table processmap;
+	 
+	 
+	CREATE TABLE `processmap` (
+		`mapId` VARCHAR(100) NOT NULL DEFAULT '',
+		`defId` VARCHAR(50) NOT NULL DEFAULT '',
+		`name` VARCHAR(50) NULL DEFAULT NULL,
+		`iconPath` VARCHAR(255) NULL DEFAULT NULL,
+		`color` VARCHAR(10) NULL DEFAULT NULL,
+		`comcode` VARCHAR(10) NULL DEFAULT NULL,
+		`no` INT(11) NULL DEFAULT NULL,
+		
+		cmphrase char(200),
+	 	cmtrgr varchar(20),
+
+		PRIMARY KEY (`mapId`)
+	);
+	 
+	 
