@@ -1,7 +1,9 @@
 package org.uengine.codi.mw3.knowledge;
 
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.uengine.codi.mw3.model.IUser;
+import org.uengine.codi.mw3.model.Session;
 
 @Face(ejsPath="genericfaces/Window.ejs", 
       displayName="Knowledge", 
@@ -11,6 +13,7 @@ public class WfWindow {
 	
 	public WfWindow(IUser user) throws Exception {
 		WfPanel panel = new WfPanel();
+		panel.session = session;
 		panel.load("-1");//user.getUserId());
 		
 		setWfPanel(panel);
@@ -23,5 +26,9 @@ public class WfWindow {
 		public void setWfPanel(WfPanel wfPanel) {
 			this.wfPanel = wfPanel;
 		}
+		
+		
+	@AutowiredFromClient
+	public Session session;
 	
 }

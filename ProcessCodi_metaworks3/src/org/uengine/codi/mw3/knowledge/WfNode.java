@@ -821,6 +821,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 	@Override
 	public WfPanel drillInto() throws Exception {
 		WfPanel panel = new WfPanel();
+		panel.session = session;
 		panel.load(getId());
 		
 		return panel;

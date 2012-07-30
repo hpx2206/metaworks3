@@ -16,7 +16,8 @@ public class StrategicPerspective extends Perspective {
 	@Override
 	protected void loadChildren() throws Exception {
 		strategyMap = new WfPanel();
-		strategyMap.load("-1");
+		strategyMap.session = session;
+		strategyMap.load(session.getCompany().getComCode());
 	}
 
 
