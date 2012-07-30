@@ -105,9 +105,13 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 
  					mw3.dragObject = null;
  					mw3.dragging = false;
+ 					
+					mw3.dragGuide.css("display", "none");
+
 			    };
 			    
 			    this.dragObject = null;
+			    this.dragGuide = $('body').append("<div id='__dragGuide' style='position:absolute;display:block;top:0px;left:0px;background=#000000;width=40px;height=20px;z-index:999999'>&nbsp; ㅌㅌㅌㅌ</div>")
 			    
 			    var mouseMove = function(e){
 			    	mw3.mouseX = e.pageX;
@@ -130,6 +134,10 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
  							mw3.dragObject['dragCommand'] = null;
  						}
  						
+ 						mw3.dragGuide.css("left", mw3.mouseX);
+ 						mw3.dragGuide.css("top", mw3.mouseY);
+ 						mw3.dragGuide.css("display", "block");
+ 						
 // 						mw3.dragObject.style.position='absolute';
 // 						mw3.dragObject.style.top = mw3.mouseX; 
 // 						mw3.dragObject.style.left = mw3.mouseY;
@@ -147,6 +155,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 	    					$("#" + mw3.popupDivId).remove();
 	    					mw3.popupDivId = null;
 	    					mw3.dragging = false;
+	 						mw3.dragGuide.css("display", "none");
 		    			}
 		    			
 	    			}
@@ -1553,7 +1562,49 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				return "objDiv_" + objId;
 			}
 
-			Metaworks3.prototype.getAutowiredObject = function(className){
+			Metaworks3.prototype.getAutowiredObject = function(className, requireExactOne){
+				
+				if(className.indexOf("@") > 0){
+					
+					
+					if(requireExactOne){
+						try{
+							return this.objects[this.objectId_KeyMapping[className]];
+							
+						}catch(e){
+							return null;
+						}
+					}else{
+						
+						var classNameAndId = className.split("@");
+						className = classNameAndId[0];
+						
+						var id = classNameAndId[1];
+						
+						var metadata = this.getMetadata(className);
+						
+						var clsNames = metadata.superClasses;
+						
+						for(var i=0; i<clsNames.length; i++){
+							var tryKey = clsNames[i] + "@" + id;
+							
+							var objectId = this.objectId_KeyMapping[tryKey];
+							if(objectId)
+								return this.objects[objectId];
+							
+							if(metadata.keyFieldDescriptor)
+								tryKey = clsNames[i] //add placeholder candidates without @id again
+							
+							var objectId = this.objectId_KeyMapping[tryKey];
+							if(objectId)
+								return this.objects[objectId];
+						}
+						
+					}
+					
+				}
+				
+				
 				var autowiredObjectId = this.objectId_ClassNameMapping[className];
 				if(autowiredObjectId){
 					if(autowiredObjectId.__isAutowiredDirectValue){ //means direct value not id pointer
@@ -2088,6 +2139,8 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			   object['__getFaceHelper'] = function(){
 				   return mw3.getFaceHelper(this.__objectId);
 			   }
+			   
+			   object['getFaceHelper'] = object['__getFaceHelper']; //TODO: the previous __getFacehelper needed to be deprecated permantly some day.
 			   
 			}
 
