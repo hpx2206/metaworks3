@@ -365,10 +365,12 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 			alreadyRegistered = true;
 		}catch(Exception e){}
 
-		if(alreadyRegistered)	
-			throw new Exception("$AlreadyExisingUser");
-
 		if (getMetaworksContext().getWhen().startsWith(MetaworksContext.WHEN_NEW)) {
+			
+			if(alreadyRegistered)	
+				throw new Exception("$AlreadyExisingUser");
+
+
 			this.setIsDeleted("0");
 			
 			if(this.getGlobalCom()==null){
