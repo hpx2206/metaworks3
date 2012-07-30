@@ -546,7 +546,7 @@ alter table bpm_knol add column type char(10);
 	 
 	 
 	 alter table processmap add column cmphrase char(200);
-	 alter table processmap add column cmtrgr varchar(20)	 
+	 alter table processmap add column cmtrgr varchar(20); 
 	 
 	 alter table bpm_procinst add column lastcmnt varchar(200);
 	 
