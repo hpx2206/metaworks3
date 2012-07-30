@@ -425,7 +425,7 @@ public class InstanceView {
 
 		
 		ProcessMapList processMapList = new ProcessMapList();
-		processMapList.load();
+		processMapList.load(session);
 		processMapList.setParentInstanceId(new Long(getInstanceId()));
 		
 		Popup popup = new Popup();

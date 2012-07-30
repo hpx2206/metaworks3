@@ -149,7 +149,8 @@ public class InstanceListPanel implements ContextAware{
 		this.setScheduleCalendar(null);
 		
 		this.knowledge = new WfPanel();
-		this.knowledge.load("-1");
+		this.knowledge.session = session;
+		this.knowledge.load(session.getCompany().getComCode());
 	}
 	
 
@@ -171,7 +172,7 @@ public class InstanceListPanel implements ContextAware{
 			newInstancePanel.getMetaworksContext().setHow("admin");
 		
 		newInstancePanel.session = session;
-		newInstancePanel.load();
+		newInstancePanel.load(session);
 		
 		return new NewInstanceWindow(newInstancePanel);
 	}

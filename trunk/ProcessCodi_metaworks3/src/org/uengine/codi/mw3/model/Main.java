@@ -144,7 +144,7 @@ public class Main {
 		ContentWindow contentWindow = new ContentWindow();
 		NewInstancePanel instancePanel = new NewInstancePanel();
 		instancePanel.session = session;
-		instancePanel.load();
+		instancePanel.load(session);
 		contentWindow.setPanel(instancePanel);
 		return contentWindow;
 	}

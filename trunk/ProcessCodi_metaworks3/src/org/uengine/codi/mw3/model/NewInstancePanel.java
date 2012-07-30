@@ -14,12 +14,12 @@ public class NewInstancePanel implements ContextAware {
 		getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 	}
 	
-	public void load() throws Exception{
+	public void load(Session session) throws Exception{
 //		unstructuredProcessInstanceStarter = new UnstructuredProcessInstanceStarter();
 //		
 		processMapPanel = new ProcessMapPanel();		
 		processMapPanel.setMetaworksContext(this.getMetaworksContext());
-		processMapPanel.load();
+		processMapPanel.load(session);
 		
 		newInstantiator = new CommentWorkItem();
 		newInstantiator.setWriter(session.getUser());

@@ -3,6 +3,7 @@ package org.uengine.codi.mw3.model;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
 
@@ -13,8 +14,8 @@ public class ProcessMapList implements ContextAware {
 		setMetaworksContext(new MetaworksContext());
 	}
 	
-	public void load() throws Exception {
-		IProcessMap processMap = ProcessMap.loadList();
+	public void load(Session session) throws Exception {
+		IProcessMap processMap = ProcessMap.loadList(session);
 		processMap.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 		
 		setProcessMapList(processMap);		
@@ -46,6 +47,10 @@ public class ProcessMapList implements ContextAware {
 			this.metaworksContext = metaworksContext;
 		}
 
+		
+	@AutowiredFromClient
+	public Session session;
+		
 	@ServiceMethod(callByContent=true)
 	public void save() throws Exception {
 		if(processMapList.size() > 0){
@@ -59,7 +64,7 @@ public class ProcessMapList implements ContextAware {
 			} while (processMapList.next());
 		}
 		
-		IProcessMap processMap = ProcessMap.loadList();
+		IProcessMap processMap = ProcessMap.loadList(session);
 		processMap.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 		
 		setProcessMapList(processMap);		

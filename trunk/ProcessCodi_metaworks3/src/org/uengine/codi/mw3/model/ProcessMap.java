@@ -32,6 +32,16 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 	@AutowiredFromClient
 	public ProcessMapList processMapList;
 
+	String mapId;
+	
+		
+		public String getMapId() {
+			return mapId;
+		}
+		public void setMapId(String mapId) {
+			this.mapId = mapId;
+		}
+
 	String defId;
 		public String getDefId() {
 			return defId;
@@ -56,6 +66,15 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 			this.no = no;
 		}
 
+	String comCode;
+			
+		public String getComCode() {
+			return comCode;
+		}
+		public void setComCode(String comCode) {
+			this.comCode = comCode;
+		}
+
 	MetaworksFile iconFile;	
 		public MetaworksFile getIconFile() {
 			return iconFile;
@@ -72,6 +91,15 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 			this.iconColor = iconColor;
 		}
 		
+	RoleMappingPanel roleMappingPanel;
+		
+		public RoleMappingPanel getRoleMappingPanel() {
+			return roleMappingPanel;
+		}
+		public void setRoleMappingPanel(RoleMappingPanel roleMappingPanel) {
+			this.roleMappingPanel = roleMappingPanel;
+		}
+
 	String cmPhrase;
 		
 		public String getCmPhrase() {
@@ -103,7 +131,7 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		this.saveMe();
 		
 		ProcessMapList processMapList = new ProcessMapList();
-		processMapList.load();
+		processMapList.load(session);
 		
 		return new Object[]{processMapList, new Remover(new Popup())};
 	}
@@ -112,7 +140,7 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		deleteDatabaseMe();
 		
 		ProcessMapList processMapList = new ProcessMapList();
-		processMapList.load();
+		processMapList.load(session);
 
 		return new Object[]{processMapList, new Remover(new Popup())};
 	}
@@ -126,12 +154,20 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		else
 			getIconFile().setUploadedPath("");
 		
+		
+		setComCode(session.getCompany().getComCode());
+		
+		getRoleMappingPanel().save();
+		
 		syncToDatabaseMe();
 		flushDatabaseMe();
 	}
 
 	public Popup modify() throws Exception {
 		getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+		
+		this.setRoleMappingPanel(new RoleMappingPanel(this, session));
+		
 		
 		Popup popup = new Popup(560, 430);
 		popup.setPanel(this);
@@ -154,13 +190,14 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		return false;
 	}
 	
-	public static IProcessMap loadList() throws Exception {
+	public static IProcessMap loadList(Session session) throws Exception {
 		StringBuffer sb = new StringBuffer();
 		sb.append("SELECT *");
-		sb.append("  FROM processMap");
+		sb.append("  FROM processMap where comCode=?comCode");
 		sb.append(" ORDER BY no");
 
-		IProcessMap processMap = (IProcessMap)sql(ProcessMap.class, sb.toString()); 
+		IProcessMap processMap = (IProcessMap)sql(ProcessMap.class, sb.toString());
+		processMap.setComCode(session.getCompany().getComCode());
 		processMap.select();
 		
 		return processMap;
@@ -277,6 +314,18 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		
 		
 		processManager.executeProcess(instId);
+		
+		//set the role mappings the administrator set.
+		
+		roleMappingPanel = new RoleMappingPanel(this, session);
+		
+		roleMappingPanel.putRoleMappings(processManager, instId);
+		
+		
+		//end
+		
+		
+		
 		processManager.applyChanges();
 
 
@@ -285,6 +334,7 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 			((Instance)instanceRef).flushDatabaseMe();
 		}
 
+		instanceView.session = session;
 		instanceView.load(instanceRef);
 		
 		InstanceListPanel instanceListPanel = new InstanceListPanel(); //should return instanceListPanel not the instanceList only since there're one or more instanceList object in the client-side

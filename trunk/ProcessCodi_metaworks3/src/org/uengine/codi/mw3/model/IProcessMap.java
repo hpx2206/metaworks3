@@ -4,6 +4,8 @@ import org.metaworks.Remover;
 import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;
+import org.metaworks.annotation.NonLoadable;
+import org.metaworks.annotation.NonSavable;
 import org.metaworks.annotation.ORMapping;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Test;
@@ -12,7 +14,11 @@ import org.metaworks.website.MetaworksFile;
 
 public interface IProcessMap extends IDAO {
 
+	
 	@Id
+	public String getMapId();
+	public void setMapId(String mapId);
+
 	public String getDefId();
 	public void setDefId(String defId);
 
@@ -30,6 +36,16 @@ public interface IProcessMap extends IDAO {
 	
 	public int getNo();
 	public void setNo(int no);
+	
+	public String getComCode();
+	public void setComCode(String comCode);
+
+	
+	@NonSavable
+	@NonLoadable
+	public RoleMappingPanel getRoleMappingPanel();
+	public void setRoleMappingPanel(RoleMappingPanel roleMappingPanel);
+
 	
 	@ORMapping(databaseFields={"iconPath"}, objectFields={"uploadedPath"})
 	public MetaworksFile getIconFile();
@@ -52,7 +68,7 @@ public interface IProcessMap extends IDAO {
 	@ServiceMethod
 	public Remover close() throws Exception;
 	
-	@ServiceMethod 
+	@ServiceMethod(payload="defId") 
 	@Test(scenario="first", starter=true, instruction="$first.ProcessStart", next="autowiredObject.org.uengine.codi.mw3.model.CommentWorkItem@-1.add()")
 //	@Test(scenario="first", starter=true, instruction="Issue Tracking 프로세스를 선택합니다.", next="autowiredObject.org.uengine.codi.mw3.admin.PageNavigator.goKnowledge()")
 	public Object[] initiate() throws Exception;

@@ -34,7 +34,7 @@ public class PinterestMain {
 		setInstanceListPanel(instanceListPanel);
 		NewInstancePanel newInstancePanel2 = new NewInstancePanel();
 		newInstancePanel2.session = session;
-		newInstancePanel2.load();
+		newInstancePanel2.load(session);
 		setNewInstancePanel(newInstancePanel2);
 		setProcessTopPanel(new ProcessTopPanel(session));
 		
