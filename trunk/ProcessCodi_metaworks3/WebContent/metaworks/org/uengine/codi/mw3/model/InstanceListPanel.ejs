@@ -20,11 +20,11 @@
 		            	var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");		
 		            %>
 	                    <ul>
-	                        <li <%=(value.instanceList && session.lastPerspecteType=='allICanSee') ? "class='toolbar_current'" : ""%>><span><img src="images/waveStyle/i_upcoming.png" border="0"></span><span onclick="<%=methods.switchToInstanceList.caller()%>"><%=mw3.localize("$ComingUp")%></span></li>
-	                        <li <%=(value.instanceList && session.lastPerspecteType=='all') ? "class='toolbar_current'" : ""%>><span><img src="images/waveStyle/i_follow.png" border="0"></span><span onclick="<%=methods.switchToInstanceListFollowing.caller()%>"><%=mw3.localize("$Following")%></span></li>               
-	                        <li <%=(value.instanceList && session.lastPerspecteType=='inbox') ? "class='toolbar_current'" : ""%>><span><img src="images/waveStyle/i_todo.png" border="0"></span><span onclick="<%=methods.switchToInstanceListMyToDo.caller()%>"><%=mw3.localize("$MyToDo")%></span></li>               
-	                        <li <%=value.knowledge ? "class='toolbar_current'" : ""%>><span><img src="images/waveStyle/i_know.png" border="0"></span><span id="method_<%=objectId%>_switchToKnowledge" onclick="<%=methods.switchToKnowledge.caller()%>"><%=mw3.localize("$Strategic")%></span></li>               
-	                        <li <%=value.scheduleCalendar ? "class='toolbar_current'" : ""%>><span><img src="images/waveStyle/i_gantt.png" border="0"></span><span onclick="<%=methods.switchToScheduleCalendar.caller()%>"><%=mw3.localize("$Calendar")%></span></li>
+	                        <li onclick="<%=methods.switchToInstanceList.caller()%>" <%=(value.instanceList && session.lastPerspecteType=='allICanSee') ? "class='toolbar_current'" : ""%>><span><img src="images/waveStyle/i_upcoming.png" border="0"></span><span><%=mw3.localize("$ComingUp")%></span></li>
+	                        <li onclick="<%=methods.switchToInstanceListFollowing.caller()%>" <%=(value.instanceList && session.lastPerspecteType=='all') ? "class='toolbar_current'" : ""%>><span><img src="images/waveStyle/i_follow.png" border="0"></span><span ><%=mw3.localize("$Following")%></span></li>               
+	                        <li onclick="<%=methods.switchToInstanceListMyToDo.caller()%>" <%=(value.instanceList && session.lastPerspecteType=='inbox') ? "class='toolbar_current'" : ""%>><span><img src="images/waveStyle/i_todo.png" border="0"></span><span><%=mw3.localize("$MyToDo")%></span></li>               
+	                        <li onclick="<%=methods.switchToKnowledge.caller()%>" <%=value.knowledge ? "class='toolbar_current'" : ""%>><span><img src="images/waveStyle/i_know.png" border="0"></span><span id="method_<%=objectId%>_switchToKnowledge"><%=mw3.localize("$Strategic")%></span></li>               
+	                        <li onclick="<%=methods.switchToScheduleCalendar.caller()%>" <%=value.scheduleCalendar ? "class='toolbar_current'" : ""%>><span><img src="images/waveStyle/i_gantt.png" border="0"></span><span><%=mw3.localize("$Calendar")%></span></li>
 	                    </ul>
                 	</div>     
 		        </div>
