@@ -62,7 +62,7 @@
 			if(value.dueDate < new Date()){%>
 				<div class="badge" style="background:#F52020;">&nbsp;&nbsp; <%=mw3.localize('$Delay')%> &nbsp;&nbsp;</div>
 			<%}else{%>
-					<table><td><%=mw3.localize('$Due')%> :</td><td><%=fields.dueDate.here()%></td></table>
+					<table><td style="border:none;"><%=mw3.localize('$Due')%> :</td><td style="border:none;"><%=fields.dueDate.here()%></td></table>
 			<%}
 		 }%>
 			
