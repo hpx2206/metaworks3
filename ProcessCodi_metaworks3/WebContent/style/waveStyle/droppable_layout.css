@@ -1266,6 +1266,7 @@ img {
     height: 30px;
     line-height: 30px;
     padding: 0 10px;
+    padding-left:63px;
 }
 .view_box3 .comment_btn_on {
     margin-top: 5px;
