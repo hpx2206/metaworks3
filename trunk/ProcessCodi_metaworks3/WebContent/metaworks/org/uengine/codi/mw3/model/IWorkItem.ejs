@@ -43,7 +43,7 @@
 						</td>
 					<% }%>
 						<td>
-							<div class="formcontexttitle" id="currentRunningWorkItemHandler">
+							<div class="formcontexttitle" id="currentRunningWorkItemHandler" <% if(value.type=='comment'){%>style="font-weight:normal;"<% }%>>
 								<% if(value.type=='comment' || value.type=='file' || value.type=='src' || value.type=='memo'){%>
 									<span>
 											<%=value.title.replace('\n','<br>')%>
