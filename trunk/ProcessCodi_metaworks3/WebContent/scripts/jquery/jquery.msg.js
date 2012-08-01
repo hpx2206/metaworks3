@@ -60,7 +60,7 @@
       timeOut : 2400,
       
       // default z-index of the overlay
-      z : 1000
+      z : 9000
 
     }, globalConfigs );
     
