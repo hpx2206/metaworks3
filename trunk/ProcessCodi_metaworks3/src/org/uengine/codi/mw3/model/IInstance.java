@@ -2,6 +2,7 @@ package org.uengine.codi.mw3.model;
 
 import java.util.Map;
 
+import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ORMapping;
@@ -126,6 +127,8 @@ public interface IInstance extends IDAO{
 	public String getAssignee();
 	public void setAssignee(String assignee);
 
+	public boolean isInitCmpl();
+	public void setInitCmpl(boolean initCmpl);
 	
 	/////// following setter/getters stands for mapping tuple data to object by bean mapping /////////
 	
@@ -146,8 +149,11 @@ public interface IInstance extends IDAO{
 	@ServiceMethod(inContextMenu=true, callByContent=true, mouseBinding="drag", keyBinding="Ctrl+X")
 	public Session cut();
 	
-	@ServiceMethod(inContextMenu=true, callByContent=true, needToConfirm=true, target="popup", mouseBinding="drop", keyBinding="Ctrl+V")
+	@ServiceMethod(inContextMenu=true, callByContent=true, needToConfirm=true, target="popup"/*, mouseBinding="drop"*/, keyBinding="Ctrl+V")
 	public Object[] paste() throws Exception;
 
-
+	@ServiceMethod(inContextMenu=true, callByContent=true, needToConfirm=true)
+	@Available(when="instanceNavigator")
+	@Face(displayName="$SplitFromRootProcess")
+	public void split() throws Exception;
 }

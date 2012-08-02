@@ -43,6 +43,16 @@ public class InstanceDueSetter implements ContextAware{
 			this.dueDate = dueDate;
 		}
 		
+	boolean onlyInitiatorCanComplete;
+	@Face(displayName="$OnlyInitiatorCanComplete")
+		public boolean isOnlyInitiatorCanComplete() {
+			return onlyInitiatorCanComplete;
+		}
+		public void setOnlyInitiatorCanComplete(boolean onlyInitiatorCanComplete) {
+			this.onlyInitiatorCanComplete = onlyInitiatorCanComplete;
+		}
+		
+		
 //	IUser assignee;
 //
 //		public IUser getAssignee() {
@@ -53,12 +63,14 @@ public class InstanceDueSetter implements ContextAware{
 //			this.assignee = assignee;
 //		}
 		
+
+
 	@ServiceMethod(callByContent=true)
 	public void apply() throws Exception{
 		Instance instance = new Instance();
 		instance.setInstId(getInstId());
 		instance.databaseMe().setDueDate(getDueDate());
-		
+		instance.databaseMe().setInitCmpl(isOnlyInitiatorCanComplete());
 		MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(instance.databaseMe())});
 		
 //		instance.databaseMe().set

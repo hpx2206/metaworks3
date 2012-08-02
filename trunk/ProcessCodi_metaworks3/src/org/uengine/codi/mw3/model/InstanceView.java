@@ -84,6 +84,18 @@ public class InstanceView {
 		
 	}
 	
+	@ServiceMethod(inContextMenu=true, callByContent=true, needToConfirm=true, target="popup", mouseBinding="drop", keyBinding="Ctrl+V")
+	public Object[] drop() throws Exception{
+		
+		Instance instance = new Instance();
+		instance.session = session;
+		instance.processManager = processManager;
+		instance.setInstId(new Long(getInstanceId()));
+		return instance.paste();
+		
+	}
+	
+	
 	String status;
 	
 		public String getStatus() {
@@ -164,7 +176,7 @@ public class InstanceView {
 		crowdSourcer = new CrowdSourcer();
 		crowdSourcer.setInstanceId(getInstanceId());
 		crowdSourcer.setFollowers(this.followers);
-		crowdSourcer.setMessage("'" + instance.getName() + "' 프로세스에 참여자로 등록했습니다: ");
+		crowdSourcer.setMessage(getInstanceName());
 		
 		if(instance.getProperty("", "facebook_postIds") != null){
 			String[] postIds = (String[])instance.getProperty("", "facebook_postIds");
@@ -181,22 +193,22 @@ public class InstanceView {
 		
 		
 		
-//		threadPosting = new PostingsWorkItem();
-		/*
-		postingsWorkItem = new ArrayList<IWorkItem>();
+		//threadPosting = new PostingsWorkItem();
+		
+		externalFeedback = new ArrayList<FacebookFeedback>();
 		
 		if(instance.getProperty("", "facebook_postIds") != null){
-			
+			String[] postIds = (String[]) instance.getProperty("", "facebook_postIds");
 			
 			for(int i=0; i<postIds.length; i++){
-				PostingsWorkItem postingWorkItem = new PostingsWorkItem();
+				FacebookFeedback postingWorkItem = new FacebookFeedback();
 				postingWorkItem.setPostId(postIds[i]);
-				postingWorkItem.setType("posting");
+				//postingWorkItem.setType("posting");
 				
-				facebookPostings.add(postingWorkItem);
+				externalFeedback.add(postingWorkItem);
 			}			
 		}	
-		*/
+		
 		
 		eventTriggerPanel = new EventTriggerPanel(instance);
 		
@@ -209,6 +221,17 @@ public class InstanceView {
 
 	}
 	
+	ArrayList<FacebookFeedback> externalFeedback;
+		
+		public ArrayList<FacebookFeedback> getExternalFeedback() {
+			return externalFeedback;
+		}
+	
+		public void setExternalFeedback(ArrayList<FacebookFeedback> externalFeedback) {
+			this.externalFeedback = externalFeedback;
+		}
+
+
 	String instanceId;
 		@Id
 		public String getInstanceId() {
@@ -330,6 +353,7 @@ public class InstanceView {
 		InstanceDueSetter ids = new InstanceDueSetter();
 		ids.setInstId(new Long(getInstanceId()));
 		ids.setDueDate(instance.databaseMe().getDueDate());
+		ids.setOnlyInitiatorCanComplete(instance.databaseMe().isInitCmpl());
 		return new Popup(ids);
 		
 		//return scheduleEditor;
@@ -370,6 +394,11 @@ public class InstanceView {
 		
 		Instance instance = new Instance();
 		instance.setInstId(new Long(getInstanceId()));
+		
+		if(instance.databaseMe().isInitCmpl() && session.getUser().getUserId() != instance.databaseMe().getInitEp()){
+			throw new Exception("$OnlyInitiatorCanComplete");
+		}
+		
 		instance.databaseMe().setStatus(tobe);
 		setStatus(tobe);
 		
