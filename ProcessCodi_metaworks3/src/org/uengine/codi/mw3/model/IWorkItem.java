@@ -102,7 +102,7 @@ public interface IWorkItem extends IDAO{
 						SourceCodeWorkItem.class,
 						FileWorkItem.class,
 						ScheduleWorkItem.class,
-						PostingsWorkItem.class,
+						FacebookFeedback.class,
 						GenericWorkItem.class,
 						MemoWorkItem.class
 					} 

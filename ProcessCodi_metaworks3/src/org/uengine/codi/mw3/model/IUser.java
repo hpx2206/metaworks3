@@ -39,6 +39,7 @@ public interface IUser extends IDAO{
 	public Object[] addFollower() throws Exception;
 		
 	@ServiceMethod(when="edit", inContextMenu=true, callByContent=true, target=TARGET_POPUP)
+	@Face(displayName="$PickUp")
 	public Popup pickUp() throws Exception;
 	
 	@ServiceMethod(callByContent=true, target=TARGET_POPUP)
@@ -72,6 +73,9 @@ public interface IUser extends IDAO{
 	
 	@ServiceMethod(mouseBinding="drag")
 	public Session drag();
+
+	@ServiceMethod(mouseBinding="drop")
+	public void drop();
 
 
 }

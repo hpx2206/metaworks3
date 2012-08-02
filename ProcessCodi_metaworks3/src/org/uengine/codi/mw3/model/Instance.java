@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Id;
@@ -171,7 +172,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 			
 			return new Object[]{new Remover(locatorForInstanceInClipboard)};
 		}else{
-			return new Object[]{this.databaseMe()};
+			return null;//new Object[]{new Refresh(this.databaseMe())};
 		}
 	}
 
@@ -754,4 +755,31 @@ public class Instance extends Database<IInstance> implements IInstance{
 		public void setAssignee(String assignee) {
 			this.assignee = assignee;
 		}
+
+	//only the initiator can complete this thread
+	boolean initCmpl;
+	
+		public boolean isInitCmpl() {
+			return initCmpl;
+		}
+	
+		public void setInitCmpl(boolean initCmpl) {
+			this.initCmpl = initCmpl;
+		}
+
+	@Override
+	public void split() throws Exception {
+		Long root = new Long(-1);
+		databaseMe().setMainInstId(root);
+		databaseMe().setRootInstId(root);
+
+		IWorkItem workItemsToUpdate = (IWorkItem) sql(IWorkItem.class, "update bpm_worklist set rootInstId=?rootInstId where rootInstId = ?oldRootInstId");
+		workItemsToUpdate.setRootInstId(root);
+		workItemsToUpdate.update();
+		
+		IRoleMapping roleMappingsToUpdate = (IRoleMapping) sql(IRoleMapping.class, "update bpm_rolemapping set rootInstId=?rootInstId where rootInstId = ?oldRootInstId");
+		roleMappingsToUpdate.setRootInstId(root);
+		roleMappingsToUpdate.update();
+
+	}
 }
