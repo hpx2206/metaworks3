@@ -587,3 +587,7 @@ alter table bpm_knol add column type char(10);
 	alter table comtable add column repmail varchar(100); -- 대표메일 주
 	alter table comtable add column repMlHst varchar(100); -- 대표메일 호스
 	alter table comtable add column repMlPwd varchar(100); -- 대표메일 패스워드 
+
+	
+alter table emptable modify column empcode varchar(100);
+alter table contact modify column friendId varchar(100);
