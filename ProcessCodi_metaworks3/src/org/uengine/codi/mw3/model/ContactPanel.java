@@ -69,7 +69,7 @@ public class ContactPanel {
 		}
 
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
-	public Object addContact(){
+	public Object addContact() throws Exception{
 		//Popup popup = new Popup();
 		
 		ModalWindow popup = new ModalWindow();
@@ -77,9 +77,8 @@ public class ContactPanel {
 //			popup.setPageX(this.pageX);
 //			popup.setPageY(this.pageY);
 		
-		popup.setPanel(new AddContactPanel());
-		popup.setTitle("페이스북 연락처 추가");
-		
+		popup.setPanel(new UnifiedAddContactPanel(session));
+		popup.setTitle("연락처 추가");
 		return popup;
 	}
 	
