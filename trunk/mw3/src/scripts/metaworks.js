@@ -127,6 +127,9 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
   							mw3.dragObject.style.top + mw3.dragObject.style.height < mw3.mouseY
  						)){
  						
+ 						if(console)
+ 							console.log('drag  start');
+ 						
  						mw3.dragging = true;
  						
  						if(mw3.dragObject['dragCommand']){
@@ -246,15 +249,23 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					thereIsHelperClass = true;
 					
 					if(thereIsHelperClass){
-						var faceHelper = eval("new " + faceHelperClass + "('" + objectId + "', '"+ className + "')");
 						
-						if(faceHelper){
-							this.faceHelpers[objectId] = faceHelper;
-
-							if(this.objects[objectId]!=null)
-								this.objects[objectId]['__faceHelper'] = faceHelper;
+						try{
+							var faceHelper = eval("new " + faceHelperClass + "('" + objectId + "', '"+ className + "')");
 							
-							return faceHelper;
+							if(faceHelper){
+								this.faceHelpers[objectId] = faceHelper;
+	
+								if(this.objects[objectId]!=null)
+									this.objects[objectId]['__faceHelper'] = faceHelper;
+								
+								return faceHelper;
+							}
+						}catch(faceHelperLoadException){
+							//TODO:
+							//mw3.showError(objectId, faceHelperLoadException.message, 'init');
+							if(console)
+								console.log(faceHelperLoadException.message)
 						}
 					}
 					
@@ -458,6 +469,29 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				
 				for(var i=0; i<webObjectType.fieldDescriptors.length; i++){
 					var fd = webObjectType.fieldDescriptors[i];
+					
+					var superClasses = webObjectType.superClasses;
+					
+					for(var superClsIdx = 0; superClsIdx<superClasses.length; superClsIdx++){
+						var className = superClasses[superClsIdx];
+
+						try{
+						
+							if(fd.displayName==null || fd.displayName.toUpperCase()==fd.name.toUpperCase()){
+								var messageKey = className + "." + fd.name;
+								var message = mw3.getMessage(messageKey);
+								
+								if(messageKey!=message){
+									
+									fd.displayName = message;
+									
+									break;
+								}
+								
+							}
+						}catch(e){}
+					}
+					
 					
 					if(!fd.attributes) continue;
 					
@@ -2091,14 +2125,17 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					return; 
 				}
 
-				if(objId==null && !object.__objectId){//means needed to be stored in the objectId    //TODO: may cause dangling object and memory leak
+
+				if(object.__objectId==null && objId==null){//means needed to be stored in the objectId    //TODO: may cause dangling object and memory leak
 					mw3.objects[objId = ++mw3.objectId] = object;
 				}
 
-					
-				object['__objectId'] = objId;
-    			
+				if(objId==null && object.__objectId!=null){
+					objId = object.__objectId;
+				}
 				
+				object['__objectId'] = objId;
+
 				var objectMetadata = this.getMetadata(object.__className);
     			
 			   for(var methodName in objectMetadata.serviceMethodContextMap){
