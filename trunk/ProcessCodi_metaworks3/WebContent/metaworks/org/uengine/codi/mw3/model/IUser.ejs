@@ -85,7 +85,7 @@
 %>
 		<div class="user" onclick="<%=clickAction%>">		
 			<div class="user_focus<%=(value.size=='small' ? ' small':'')%>" style="background: url('<%=portrait%>'); background-size:100%;">	
-				<img id="user_picture_<%=objectId%>" width=1 height=1 src="<%=portrait%>"  onerror="$(this).parent().css({'background':'url(\'<%=unknown%>\')','background-size':'100%'})">
+				<img id="user_picture_<%=objectId%>" width=1 height=1 src="<%=portrait%>"  onerror="$(this).parent().css({'background':'url(\'<%=unknown%>\') no-repeat','background-size':'100% 100%'})">
 			</div>
 <%	
 			/* case by user */
