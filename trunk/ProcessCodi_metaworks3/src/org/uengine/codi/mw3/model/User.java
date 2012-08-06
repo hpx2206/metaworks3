@@ -378,6 +378,21 @@ public class User extends Database<IUser> implements IUser {
 		return session;
 	}
 	
+	@Override
+	public void drop() {
+		Object clipboard = session.getClipboard();
+		if(clipboard instanceof IUser){
+			
+			IUser user = (IUser) clipboard;
+			
+			try {
+				copyFrom(user);
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+		}	
+	
+	}
 	
 	
 }

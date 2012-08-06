@@ -7,6 +7,35 @@ public class Company extends Database<ICompany> implements ICompany {
 	String comName;
 	String description;
 	String isDeleted;
+	String repMail;
+	
+	
+	public String getRepMail() {
+		return repMail;
+	}
+
+	public void setRepMail(String repMail) {
+		this.repMail = repMail;
+	}
+
+	public String getRepMlHst() {
+		return repMlHst;
+	}
+
+	public void setRepMlHst(String repMlHst) {
+		this.repMlHst = repMlHst;
+	}
+
+	public String getRepMlPwd() {
+		return repMlPwd;
+	}
+
+	public void setRepMlPwd(String repMlPwd) {
+		this.repMlPwd = repMlPwd;
+	}
+
+	String repMlHst;
+	String repMlPwd;
 
 	public String getComCode() {
 		return comCode;
@@ -46,5 +75,10 @@ public class Company extends Database<ICompany> implements ICompany {
 			return company;
 		}
 		return null;
+	}
+
+	@Override
+	public void save() throws Exception {
+		syncToDatabaseMe();
 	}
 }

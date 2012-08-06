@@ -245,12 +245,9 @@ public class Session implements ContextAware{
 		httpSession.invalidate();
 	}
 	
-	@ServiceMethod
+	@ServiceMethod(callByContent=true)
 	public ModalWindow manager() throws Exception{
-		OrganizationPerspective panel = new OrganizationPerspective();
-		panel.session = this;
-		panel.loadChildren();
-		return new ModalWindow(panel);
+		return new ModalWindow(new ManagerPanel(this), 600, 500);
 	}
 	
 	public void fillSession() throws Exception {
