@@ -16,22 +16,28 @@ org_uengine_codi_mw3_model_CrowdSourcer.prototype = {
 		
 		for ( var i=0; i < followers.length; i++) {			
 			if(followers[i].network == 'fb')
-				facebookFriends.push(followers[i]);
+				facebookFriends.push(followers[i].userId);
 			else{
-				mw3._armObject(null, followers[i]);
-				var emp = followers[i].loadEmployee();
 				
-				if(emp.length>0 && emp[0].facebookId){
-					followers[i].userId = emp[0].facebookId;
-					facebookFriends.push(followers[i]);					
+				if(followers[i]['fbId']==null){
+					mw3._armObject(null, followers[i]);
+					var emp = followers[i].loadEmployee();
+					
+					if(emp.length>0 && emp[0].facebookId){
+						followers[i]['fbId']=emp[0].facebookId;
+					}					
 				}
+				
+				if(followers[i]['fbId']!=null)
+					facebookFriends.push(followers[i]['fbId']);					
+
 			}
 		}
 		
 		if(facebookFriends.length > 0 ){
 				
 			for ( var i=0; i < facebookFriends.length; i++) {
-					var feed = facebookFriends[i].userId + "/feed";
+					var feed = facebookFriends[i] + "/feed";
 					
 					var cnt = 0;
 					var postIds = new Array();
@@ -43,8 +49,10 @@ org_uengine_codi_mw3_model_CrowdSourcer.prototype = {
 								cnt++;	
 				
 								if (!response || response.error) {
-									if(window.console)
-										console.log("error : " + response.error.message);
+									
+									mw3.showError(null, response.error.message, null);
+//									if(window.console)
+//										console.log("error : " + response.error.message);
 								} else {
 									postIds.push(response.id);
 								}
