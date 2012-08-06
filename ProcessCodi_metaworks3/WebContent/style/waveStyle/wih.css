@@ -31,7 +31,7 @@ legend {display:none;}
 
 .notMePic{float:left; width:65px;padding:03px 0 0 0;}
 .notMePic .notMePicPic { margin-left:18px;}
-.notMePic .notMePicName{text-align:center; font-size:11px;}
+.notMePic .notMePicName{text-align:center; font-size:11px;line-height:10px;}
 
 .writerName { font-size:11px; margin-bottom:3px; }
 .writerName span {color:#3B5998;}
