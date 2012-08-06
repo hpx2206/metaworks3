@@ -334,6 +334,7 @@ public class Database<T extends IDAO> implements IDAO, Serializable, Cloneable{
 	}
 	
 	
+	
 	/////////// static service methods ////////////
 	public static IDAO create(Object key, Object defaultValue) throws Exception{
 		
@@ -482,6 +483,25 @@ public class Database<T extends IDAO> implements IDAO, Serializable, Cloneable{
 	public T sql(String sql) throws Exception{
 		
 		return (T) sql(getClass(), sql);
+	}
+	
+	
+	public T auto() throws Exception{
+		Class classType = getClass();
+		WebObjectType webObjectType = MetaworksRemoteService.getInstance().getMetaworksType(classType.getName());
+		
+		IDAO dao = (IDAO) MetaworksDAO.createDAOImpl(
+			TransactionContext.getThreadLocalInstance(), 
+			null, 
+			webObjectType.iDAOClass() != null ? webObjectType.iDAOClass() : IDAO.class
+		);
+		
+		dao.getImplementationObject().setTableName(webObjectType.metaworks2Type().getName());
+		if(webObjectType.metaworks2Type().getKeyFieldDescriptor()!=null)
+			dao.getImplementationObject().setKeyField(webObjectType.metaworks2Type().getKeyFieldDescriptor().getName());
+		dao.getImplementationObject().setAutoSQLGeneration(true);
+		
+		return (T)dao;
 	}
 	
 //		selections.select();

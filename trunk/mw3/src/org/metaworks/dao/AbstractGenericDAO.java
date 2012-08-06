@@ -543,7 +543,9 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 //		ArrayList<String> joinTableList = new ArrayList<String>();
 		StringBuffer joinTableSQL = new StringBuffer();
 //		ArrayList<String> whereClauses = new ArrayList<String>();
-		StringBuffer whereClauseSQL = new StringBuffer();
+		final StringBuffer whereClauseSQL = new StringBuffer();
+		
+
 		
 		//Automated join query generation: DAO interface should have keyField setting
 		WebObjectType webObjectType = MetaworksRemoteService.getInstance().getMetaworksType(daoClass.getName());
@@ -562,7 +564,51 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 			}
 		}
 		
-		sqlStmt = "select * from " + getTableName() + (joinTableSQL) + " where " + getKeyField() + "=?" + getKeyField() + whereClauseSQL;
+		final String separator = " where ";
+		
+		if(rowSet==null){
+			
+			ForLoop loopForCacheKeys = new ForLoop(){
+				String sep = separator;// + " and ";
+
+				public void logic(Object target) {
+					String propertyName = (String)target;
+					
+					if(modifiedFieldMap!=null && !modifiedFieldMap.containsKey(propertyName)) return;
+
+					//ignores metaworks signals
+					if("METAWORKSCONTEXT".equals(propertyName)) return;
+
+
+					whereClauseSQL.append(sep + propertyName + "=?" + propertyName);
+					
+					sep =" and ";
+				}
+				
+			};
+			
+			loopForCacheKeys.run(cache.keySet());
+
+		}else{				
+			String sep = separator;// + " and ";
+			ResultSetMetaData rsMetaData = rowSet.getMetaData();
+			for(int i=1; i<=rsMetaData.getColumnCount(); i++){
+				String propertyName = rsMetaData.getColumnName(i);				
+				
+				if(propertyName.equalsIgnoreCase(getKeyField()) || modifiedFieldMap!=null && !modifiedFieldMap.containsKey(propertyName)) continue;
+				
+				whereClauseSQL.append(sep + propertyName + "=?" + propertyName);				
+				sep =" and ";
+			}
+
+		   	adjustMetaDataIfFetched();
+		}
+		
+		if(whereClauseSQL.length()==0 && getKeyField()!=null) 
+			whereClauseSQL.append("where " + getKeyField() + "=?" + getKeyField());
+
+		
+		sqlStmt = "select * from " + getTableName() + (joinTableSQL) + whereClauseSQL;
 	}
 	
 	public int update() throws Exception {
@@ -1573,7 +1619,8 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 	
 
 	public String getStatement() {
-		return sqlStmt; //
+		return sqlStmt;//.toUpperCase(); //
+
 	}
 	
 	public void setStatement(String sql) {
