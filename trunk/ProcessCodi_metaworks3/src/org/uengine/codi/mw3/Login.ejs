@@ -2,31 +2,31 @@
     <form action="#" method="post">
         <!-- #first_step -->
         <div id="first_step">
-            <h1>PROCESS CODI&nbsp;<span>SIGN IN</span></h1>
+            <h1>&nbsp;</h1>
             <div class="form">           		
 				<%=fields.userId.here() %>
-                <label for="username">ID</label>
                 <%=fields.password.here() %>
-                <label for="password">Password</label>
                 <div class="clear"></div>
             </div>
             <!-- clearfix -->
             <div class="clear"></div>
             <!-- /clearfix -->
-            <div class="options" id="divCookie"">
-            	<!-- 
-            	<span><input type="checkbox" name="chksaveid"/> Save ID</span>
-            	-->
-                <span style="float:left; margin-right: 5px" ><%=fields.rememberMe.here({when:'edit'})%></span><span style="float:left">Remember Me</span>
-				<div class="clear"></div>
-            </div>
+
 			
-			<span><a href="javascript:mw3.test(<%=objectId%>, 'first', {guidedTour: true})"><b>Guide me!</b></a></span>
+			
             <span id="method_<%=objectId%>_login"><input id="signin" class="submit"  value="" title="click is login" alt="click is login" onclick="<%=methods.login.caller() %>"/></span>
             <span id="method_<%=objectId%>_subscribe"><input id="subscribe" class="submitTenant"  value="" title="click is subscribe" alt="click is subscribe" onclick="<%=methods.subscribe.caller() %>"/></span>
+            <span id="method_facebook_<%=objectId%>" style="display:none"><input id="facebook" class="submitFacebook"  value="" title="click is facebook subscribe" alt="click is facebook subscribe" onclick="mw3.getFaceHelper(<%=objectId%>).loginFacebook();"/></span>
             
             <div>
-            	<span id="method_facebook_<%=objectId%>" style="display:none"><input id="facebook" class="submitFacebook"  value="" title="click is facebook subscribe" alt="click is facebook subscribe" onclick="mw3.getFaceHelper(<%=objectId%>).loginFacebook();"/></span>
+                <div class="options" id="divCookie"">
+	            	<!-- 
+	            	<span><input type="checkbox" name="chksaveid"/> Save ID</span>
+	            	-->
+	                <span style="float:left; margin-right: 5px" ><%=fields.rememberMe.here({when:'edit'})%></span><span style="float:left">Remember Me</span>
+					<div class="clear"></div>
+	            </div>
+            	<span class="guide"><a href="javascript:mw3.test(<%=objectId%>, 'first', {guidedTour: true})"><b>Guide me!</b></a></span>
             </div>
             
         </div>
