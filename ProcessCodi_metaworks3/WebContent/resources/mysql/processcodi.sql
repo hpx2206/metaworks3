@@ -581,4 +581,9 @@ alter table bpm_knol add column type char(10);
 		PRIMARY KEY (`mapId`)
 	);
 	 
+	 alter table bpm_procinst add column initcmpl int(1);
 	 
+	 
+	alter table comtable add column repmail varchar(100); -- 대표메일 주
+	alter table comtable add column repMlHst varchar(100); -- 대표메일 호스
+	alter table comtable add column repMlPwd varchar(100); -- 대표메일 패스워드 
