@@ -6,7 +6,7 @@
 }
 #loginContainer {
 	background: url('../../images/signIn/container.png') no-repeat;
-	width: 754px;
+	width: 460px;
 	height: 370px;
 	margin: 20px auto;
 	margin-top:100px;
@@ -21,12 +21,12 @@
 	display: block;
 }
 #loginContainer .form {
-	margin: 36px 72px 0 72px;
+	margin: 10px 50px 0 50px;
 	border-bottom:1px solid #eee;
 	border-top:1px solid #eee;
 }
 #loginContainer h1, #loginContainer h2 {
-	background: url('../../images/signIn/logo2.png') no-repeat;
+	background: url('../../images/signIn/logo2.png') no-repeat 160px;
 	line-height:58px;
 	font-style: "Calibri", Arial;
 	text-align: center;
@@ -72,8 +72,8 @@
 }
 
 #loginContainer .options {
-	margin:40px 0 0 70px;
-	width:300px;
+	margin:30px 0 0 55px;
+	width:165px;
 	display:inline-block;
 }
 #loginContainer .options span{
@@ -89,8 +89,8 @@
 	width: 85px;
 	height: 38px;
 	position: relative;
-	top: 0px;
-	left: 10px;
+	top: 10px;
+	left: 50px;
 }
 
 #loginContainer input.submitTenant {
@@ -102,21 +102,29 @@
 	width: 85px;
 	height: 38px;
 	position: relative;
-	top: 0px;
-	left: 10px;
+	top: 10px;
+	left: 50px;
 }
-
+#loginContainer .guide{
+    display:inline-block;
+    border: none;
+    cursor: pointer;
+    width: 165px;
+    height: 31px;
+    position: relative;
+    top: 0px;
+    left: 65px;}
 #loginContainer input.submitFacebook {
 	
 	display:inline-block;
 	background: url('../../images/signIn/facebook-login-button.png') no-repeat;
 	border: none;
 	cursor: pointer;
-	width: 210px;
-	height: 31px;
+	width: 123px;
+	height: 30px;
 	position: relative;
 	top: 10px;
-	left: 430px;
+	left: 100px;
 }
 
 #loginContainer input.submit:focus {
