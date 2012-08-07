@@ -113,7 +113,7 @@
 			if(maximize){
 %>	
 				<% if(mobile){ %>
-					<div class="toggleback" onclick=""></div>
+					<div class="toggleback" onclick=""><span>back<span></div>
 				<% }else{ %>		
 					<div id="window_miximize_<%=objectId%>" class="togglebtnexp" onclick="mw3.getFaceHelper('<%=objectId%>').maximize();"></div>
 				<% } %>	
@@ -125,7 +125,7 @@
 			if(minimize){
 %>            		
             	<% if(mobile){ %>
-					<div class="toggleback" onclick=""></div>
+					<div class="toggleback" onclick=""><span>back<span></div>
 				<% }else{ %>		
 					<div class="togglebtnmini" onclick="mw3.getFaceHelper('<%=objectId%>').minimize();"></div>
 				<% } %>	            		
