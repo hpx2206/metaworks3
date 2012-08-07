@@ -29,7 +29,7 @@ var org_metaworks_website_MetaworksFile = function(objectId, className){
 				width = object.__descriptor.getOptionValue('imageWidth');
 				height = object.__descriptor.getOptionValue('imageHeight');
 			}
-			$("#image_" + this.objectId).html('<img ' + (width?'width='+width+' ':' ') + (height?'height='+height+' ':' ') + 'src=\'' + image + '\'>');
+			$("#image_" + this.objectId).html('<img ' + (width?'width='+width+' ':' ') + (height?'height='+height+' ':' ') + 'src=\'' + image + '\'>').attr("href",image);
 			
 			
 			$("#image_" + this.objectId).find('img').load(function(){
