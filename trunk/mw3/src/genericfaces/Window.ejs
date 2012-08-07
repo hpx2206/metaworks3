@@ -62,7 +62,20 @@
 <%
 		if(minimize){
 %>				        	
-		            <div class="togglebtnmax" onclick="mw3.getFaceHelper('<%=objectId%>').resume()"></div>
+
+<%
+			if(mobile){
+%>	
+		        	<div class="toggleback" onclick=""></div>
+
+<%
+			}else{
+%>	
+
+	            	<div class="togglebtnmax" onclick="mw3.getFaceHelper('<%=objectId%>').resume()"></div>
+<%
+			}
+%>	
 <%
 		}
 %>		            
