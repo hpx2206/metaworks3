@@ -443,6 +443,13 @@ img {
     top: 1px;
     right: 1px;
     cursor: pointer;
+    
+}
+.toggleback span{
+    color:#fff;
+    font-weight:bold;
+    margin:6px 0 5px 30px;
+    display:block;
 }
 *html .togglebtnmax {
     right: 20px;
