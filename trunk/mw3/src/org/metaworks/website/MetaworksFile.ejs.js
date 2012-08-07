@@ -22,13 +22,24 @@ var org_metaworks_website_MetaworksFile = function(objectId, className){
 			var image = object.downloadImage(false);
 			var width = 0;
 			var height = 0;
+			var parentwidth = $("#image_" + this.objectId).parent().width();
+
 			
 			if(object.__descriptor){
 				width = object.__descriptor.getOptionValue('imageWidth');
 				height = object.__descriptor.getOptionValue('imageHeight');
 			}
-			
 			$("#image_" + this.objectId).html('<img ' + (width?'width='+width+' ':' ') + (height?'height='+height+' ':' ') + 'src=\'' + image + '\'>');
+			
+			
+			$("#image_" + this.objectId).find('img').load(function(){
+				if($(this).width() > parentwidth){
+					$(this).width(parentwidth);
+				}
+			})
+			
+			
+			
 		}
 			
 	}
