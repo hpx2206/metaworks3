@@ -435,6 +435,15 @@ img {
     right: 12px;
     cursor: pointer;
 }
+.toggleback {
+    width: 74px;
+    height: 24px;
+    background: url(../../images/waveStyle/btBack.png) no-repeat;
+    position: absolute;
+    top: 1px;
+    right: 1px;
+    cursor: pointer;
+}
 *html .togglebtnmax {
     right: 20px;
 }
