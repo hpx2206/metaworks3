@@ -51,6 +51,7 @@ public class ContactListPanel implements ContextAware {
 		if(localContactList.getContacts().size() + socialContactList.getContacts().size() == 0){
 			invitation = new Invitation();
 			invitation.setName(keyword);
+			//invitation.session = session;
 		}
 	}
 	

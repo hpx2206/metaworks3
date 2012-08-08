@@ -7,6 +7,7 @@ import org.metaworks.ToOpener;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
 import org.metaworks.widget.ModalWindow;
+import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.common.MainPanel;
 
 public class Employee extends Database<IEmployee> implements IEmployee {
@@ -398,7 +399,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		flushDatabaseMe();
 		getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 		
-		if(getImageFile()!=null && getImageFile().getFileTransfer()!=null){
+		if(getImageFile()!=null && getImageFile().getFileTransfer()!=null && getImageFile().getFileTransfer().getFilename()!=null){
 			getImageFile().setEmpCode(this.getEmpCode());
 			getImageFile().upload();
 
@@ -464,6 +465,22 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		locale.setLanguage(this.getLocale());
 		locale.load();
 		
+		int posAt = this.getEmpCode().indexOf("@");
+		if(posAt > -1){
+			String domain = this.getEmpCode().substring(posAt +1);
+			if(domain.indexOf("'") > -1) throw new Exception("email address is invalid");
+			
+			IEmployee exisingUserWhoInTheSameDomain = sql("select * from emptable where email like '%" + domain + "'");
+			exisingUserWhoInTheSameDomain.select();
+			
+			if(exisingUserWhoInTheSameDomain.next()){
+				String globalCom = exisingUserWhoInTheSameDomain.getGlobalCom();
+				this.setGlobalCom(globalCom);
+			}else{
+				this.setGlobalCom(domain);
+			}
+		}
+		
 		getMetaworksContext().setWhen("new2");
 
 		return new Object[]{locale, this};
@@ -483,5 +500,13 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		getMetaworksContext().setWhen("finish");
 
 		return this;
+	}
+	
+	@Override
+	public Login unsubscribe() throws Exception {
+		deleteDatabaseMe();
+		Login login = new Login();
+//		login.getMetaworksContext().setWhen("edit");
+		return login;
 	}	
 }

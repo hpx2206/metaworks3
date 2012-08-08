@@ -40,7 +40,9 @@ import org.uengine.processmanager.ProcessManagerRemote;
 public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	
 	
-	public WorkItem(){}
+	public WorkItem(){
+		instantiated = false;
+	}
 	
 	protected static IWorkItem find(String instanceId) throws Exception{
 		
@@ -428,6 +430,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	public NewInstancePanel newInstancePanel;
 	
 	
+	protected boolean instantiated;
 	
 		
 	@Override
@@ -439,7 +442,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 
 		InstanceViewContent instantiatedViewContent = null;
 		WfNode parent = null;
-		if(instantiation){
+		if(instantiation && !instantiated){
 			ResourceFile unstructuredProcessDefinition = new ResourceFile();
 			unstructuredProcessDefinition.processManager = processManager;
 			unstructuredProcessDefinition.session = session;
@@ -510,8 +513,22 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		newItem.setInstId(new Long(getInstId()));
 		newItem.setTaskId(new Long(-1));
 		newItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+
+		
+		final IInstance refreshedInstance = instance.databaseMe();
+		refreshedInstance.getMetaworksContext().setHow("blinking");
+
+		final boolean securedConversation = "1".equals(instance.databaseMe().getSecuopt());
+
 		
 		if(instantiation){
+			
+			if(instantiatedViewContent==null){
+				instantiatedViewContent = instanceViewContent;
+				instantiatedViewContent.session = session;
+				instantiatedViewContent.load(refreshedInstance);
+			}
+			
 			instantiatedViewContent.getInstanceView().setNewItem(newItem);
 			InstanceViewThreadPanel threadPanel = new InstanceViewThreadPanel();
 			threadPanel.setInstanceId(getInstId().toString());
@@ -524,8 +541,11 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			
 			instantiatedViewContent.getInstanceView().setInstanceViewThreadPanel(threadPanel);
 			
+			if(!securedConversation)
+				MetaworksRemoteService.getInstance().pushClientObjects(new Object[]{new ToPrepend(new InstanceList(), refreshedInstance)});
 			
 			return new Object[]{new Refresh(instantiatedViewContent), new Refresh(parent)};
+			
 		}
 
 		
@@ -542,14 +562,12 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 //		   utilAll.addFunctionCall("mw3.getAutowiredObject('org.uengine.codi.mw3.model.InstanceView').activityStream");
 
 		
+		//refreshedInstance.getMetaworksContext().setWhere("pinterest");
+		
 		final InstanceView refreshedInstanceView = new InstanceView();
 		refreshedInstanceView.processManager = processManager;
 		refreshedInstanceView.session = session;
 		refreshedInstanceView.load(instance);
-		
-		final IInstance refreshedInstance = instance.databaseMe();
-		refreshedInstance.getMetaworksContext().setHow("blinking");
-		//refreshedInstance.getMetaworksContext().setWhere("pinterest");
 		
 
 		
@@ -580,7 +598,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			new ToPrepend(new InstanceList(), refreshedInstance) // 인스턴스 리스트에 맨 꼭대기에 추가함... -- 더 새로운 소식으로 눈에 띄게하는 느낌을 줌..  
 		};
 	
-		final boolean securedConversation = "1".equals(instance.databaseMe().getSecuopt());
 		
 		if(!securedConversation)
 			MetaworksRemoteService.getInstance().pushClientObjects(returnObjects);

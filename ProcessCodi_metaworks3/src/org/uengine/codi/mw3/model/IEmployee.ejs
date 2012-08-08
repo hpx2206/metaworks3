@@ -228,10 +228,11 @@ if(value){
 					<div class="infoSub"><span><%=mw3.localize("$Language")%> : </span><span><%=fields.locale.here() %></span></div>
 					<div class="infoSub"><span><%=mw3.localize("$PreferUX")%> : </span><span><%=fields.preferUX.here() %></span></div>
 					<div class="infoSub"><span><%=mw3.localize("$PreferMob")%> : </span><span><%=fields.preferMob.here() %></span></div>
-					<div class="infoSub"><span><%=fields.imageFile.here() %>&nbsp;</span></div>
+					<div class="infoSub"><span><%=mw3.localize("$Portrait")%> : </span><span><%=fields.imageFile.here() %>&nbsp;</span></div>
 				</dt>
 				<dd class="photo2">
 					<div id="popupInfoImgWih"><img id="userPicture_<%=objectId %>" onerror="<%=onErrorImg %>" src="<%=portrait %>" width="104" height="104"></div>
+										
 					
 				</dd>
    			</dl>
@@ -240,6 +241,7 @@ if(value){
 
 	<div id="btnline" style="padding-top:8px; border-top:1px solid #ccc;">
 		<ul>	
+		<%=methods.unsubscribe.here()%>
 			<% if(mw3.when == 'view') {%>
 			<li><a id="wBtn" href="javascript:<%=methods.editEmployeeInfo.caller()%>"><span>edit</span></a></li>	
 			<% }else if(mw3.when == 'edit') {%>

@@ -18,6 +18,7 @@ import org.metaworks.annotation.Validator;
 import org.metaworks.annotation.ValidatorContext;
 import org.metaworks.annotation.ValidatorSet;
 import org.metaworks.dao.IDAO;
+import org.uengine.codi.mw3.Login;
 
 @Table(name = "EMPTABLE")
 public interface IEmployee extends IDAO {
@@ -171,4 +172,8 @@ public interface IEmployee extends IDAO {
 	
 	@ServiceMethod(callByContent=true)
 	public void checkEmpCode() throws Exception ;
+	
+	@ServiceMethod(needToConfirm=true, target=TARGET_TOP)
+	@Face(displayName="$Unsubscribe")
+	public Login unsubscribe() throws Exception;
 }
