@@ -104,7 +104,10 @@ public class ContactPanel {
 //		popup.setPageX(this.pageX);
 //		popup.setPageY(this.pageY);
 		
-		popup.setPanel(new Invitation());
+		Invitation invitation = new Invitation();
+		invitation.session = session;
+		
+		popup.setPanel(invitation);
 		popup.setTitle("연락처 추가");
 		
 		return popup;

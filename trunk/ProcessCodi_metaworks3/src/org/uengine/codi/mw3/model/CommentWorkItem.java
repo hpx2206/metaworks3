@@ -13,11 +13,14 @@ import org.metaworks.annotation.Test;
 import org.metaworks.dao.Database;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.knowledge.WfNode;
+import org.uengine.kernel.Activity;
 import org.uengine.kernel.EJBProcessInstance;
+import org.uengine.kernel.HumanActivity;
 import org.uengine.kernel.ProcessInstance;
 import org.uengine.kernel.RoleMapping;
 import org.uengine.persistence.processinstance.ProcessInstanceDAO;
 import org.uengine.processmanager.ProcessManagerRemote;
+import org.uengine.util.ActivityForLoop;
 
 //@Face(displayName="답글")
 public class CommentWorkItem extends WorkItem{
@@ -70,8 +73,10 @@ public class CommentWorkItem extends WorkItem{
 			}
 			
 			RoleMapping rm = RoleMapping.create();
-			if(session.user!=null)
+			if(session.user!=null){
 				rm.setEndpoint(session.user.getUserId());
+				rm.setName("initiator");
+			}
 			
 			processManager.setLoggedRoleMapping(rm);
 
@@ -102,7 +107,7 @@ public class CommentWorkItem extends WorkItem{
 
 			}else{
 				setInstId(new Long(newInstId));
-				setInstantiation(false);
+				
 
 //				instanceViewContent.session = session;
 //				
@@ -121,11 +126,31 @@ public class CommentWorkItem extends WorkItem{
 			
 
 			processManager.executeProcess(newInstId);
+			
 
 			instanceDAO.set("InitEp", session.getUser().getUserId());
 			instanceDAO.set("InitRsNm", session.getUser().getName());
 
 			processManager.applyChanges();
+
+			
+			//when newly creating process instance, there must be at least one or more rolemapping. so if there's no rolemapping has been defined by running process, add one implicitly.
+			if(isInstantiation()){
+				IRoleMapping roleMapping = new org.uengine.codi.mw3.model.RoleMapping().auto();
+				roleMapping.setRootInstId(new Long(newInstId));
+				roleMapping.select();
+				
+				if(!roleMapping.next()){
+					processManager.putRoleMapping(newInstId, rm);
+				}
+			}
+			
+
+			
+			
+			instantiated = true;
+			
+			//setInstId(new Long(newInstId));
 
 		}
 		

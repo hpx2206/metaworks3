@@ -28,6 +28,17 @@ public class Invitation implements ContextAware{
 	public Invitation(){
 		setMetaworksContext(new MetaworksContext());
 		getMetaworksContext().setWhen("edit");
+		
+		if(session!=null){
+			String emailAddress = session.getEmployee().getEmail();
+			
+			int posAt = emailAddress.indexOf("@");
+
+			if(emailAddress!=null && posAt > -1){
+				String domain = emailAddress.substring(posAt + 1);
+				setEmail(domain);
+			}
+		}
 	}
 	
 	String email;
@@ -71,6 +82,7 @@ public class Invitation implements ContextAware{
 		newUser.setEmpName(getName());
 		newUser.setPassword("generated");
 		newUser.setGlobalCom(session.getCompany().getComCode());
+		newUser.setLocale(session.getEmployee().getLocale());
 		newUser.createDatabaseMe();
 		
 		
