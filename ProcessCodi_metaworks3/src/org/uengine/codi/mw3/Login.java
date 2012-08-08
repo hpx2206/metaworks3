@@ -38,6 +38,8 @@ public class Login extends Database<ILogin> implements ILogin{
 	
 	public Login(){
 		setRememberMe(new Boolean(true));
+		setMetaworksContext(new MetaworksContext());
+		getMetaworksContext().setWhen("edit");
 	}
 	
 	@Id
@@ -220,6 +222,16 @@ public class Login extends Database<ILogin> implements ILogin{
 		emp.getImageFile().getMetaworksContext().setWhen(WHEN_EDIT);
 		
 		emp.setEmpCode(getUserId());
+		emp.setEmail(getUserId());
+		
+		String name = null;
+		try{
+			name = getUserId().substring(0, getUserId().indexOf("@"));
+		}catch(Exception e){
+			throw new RuntimeException("$InvalidMailAddress");
+		}
+		
+		emp.setEmpName(name);
 		emp.setPassword(getPassword());
 
 		ModalWindow window = new ModalWindow(emp, 720, 450, "Sign Up");
