@@ -163,6 +163,10 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 		    			
 	    			}
 	    			
+	    			if(e.keyCode == 84 && e.shiftKey && e.ctrlKey){
+	    				console.log(JSON.stringify(mw3.templates));
+	    			}
+	    			
 	    			if(e.keyCode == 123 && e.shiftKey){ //F12 -- let the recorder starts for testing automation
 	    				
 		    			if(mw3.isRecordingSession){
@@ -560,7 +564,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				}else{
 
 					if(mw3.usingTemplateEngine == 'jQote'){
-						$.ajax(url, 										
+						$.ajax(url, 							
 							{
 								async: false, 
 								success:function(tmpl) {
@@ -575,6 +579,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 						
 					}else{
 						templateEngine = new EJS({url: url});
+						mw3.templates[url] = templateEngine;
 					}
 
 				}

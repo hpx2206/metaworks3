@@ -1265,8 +1265,8 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 									returnValue = null;
 								
 							}catch(Exception e){
-	
-								throw new Exception("failed to get property value '" + daoClass.getName() + "." + propertyName + "'", e);
+								if(MetaworksRemoteService.getInstance().isDebugMode())
+									throw new Exception("failed to get property value '" + daoClass.getName() + "." + propertyName + "'", e);
 							}
 						}
 					} else {

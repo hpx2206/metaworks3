@@ -597,7 +597,8 @@ public class Database<T extends IDAO> implements IDAO, Serializable, Cloneable{
 					}
 				}catch(Exception e){
 					//e.printStackTrace();
-					System.err.println("Error to map reference dao's property from " + fd.getName() + " Automated DAO. You may add isLoadable=false annotation to the setter field 'set" + fd.getName() + "()' of class '" + classType.getName() + "'. For example Metaworks lets you expression like following SQL: select * from A, B, C and all the fields from three tables, then Metaworks tries to map all the DAO fields to the mapped class A, B, C with the retrieved selected column names. Metaworks will tryies these everytime, so if you don't want to do this, mark isLoadable = false to the getter method definition.");
+					if(MetaworksRemoteService.getInstance().isDebugMode())
+						System.err.println("Error to map reference dao's property from " + fd.getName() + " Automated DAO. You may add isLoadable=false annotation to the setter field 'set" + fd.getName() + "()' of class '" + classType.getName() + "'. For example Metaworks lets you expression like following SQL: select * from A, B, C and all the fields from three tables, then Metaworks tries to map all the DAO fields to the mapped class A, B, C with the retrieved selected column names. Metaworks will tryies these everytime, so if you don't want to do this, mark isLoadable = false to the getter method definition.");
 				}
 			}
 			
