@@ -35,9 +35,9 @@ org_uengine_codi_mw3_model_IInstance.prototype = {
 	},
 	unBlinking : function(){
 		if (this.timeout) {
-			clearTimeout(this.timeout);
-			
+			clearTimeout(this.timeout);			
 			$('#' + this.divId).removeClass('blinking');
+			return false;
 		}			
 	},
 	blinking : function(){
