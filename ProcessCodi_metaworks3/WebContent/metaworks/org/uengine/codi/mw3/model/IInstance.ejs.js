@@ -8,12 +8,20 @@ var org_uengine_codi_mw3_model_IInstance = function(objectId, className){
 	 $('#' + this.divId).bind('click', {objectId: this.objectId},function(){
 		 mw3.getFaceHelper(objectId).unBlinking();
 		 
-		 $(".tbl_type").parent().css("background","none");
+		 /*$(".tbl_type").parent().css("background","none");
 		 $(".tbl_type").parent().css("box-shadow","none");
 		 $(this).css("background","#C9E2FC");
-		 $(this).css("box-shadow","0px 0px 5px 2px rgba(0, 0, 0, 0.1) inset");
+		 $(this).css("box-shadow","0px 0px 5px 2px rgba(0, 0, 0, 0.1) inset");*/
 	 });
 	 
+	 $('#' + this.divId).hover(
+			 function(){
+				 mw3.getFaceHelper(objectId).unBlinking();
+				 $(this).css("background","#C9E2FC");
+			 },
+			 function(){
+				 $(this).css("background","none");
+			 })
 	 var object = mw3.objects[this.objectId];
 	 if(object && object.metaworksContext && object.metaworksContext.how == 'blinking'){
 		 this.blinking();
