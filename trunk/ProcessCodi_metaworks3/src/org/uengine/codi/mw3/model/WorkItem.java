@@ -33,6 +33,7 @@ import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.admin.WebEditor;
 import org.uengine.codi.mw3.knowledge.KnowledgeTool;
 import org.uengine.codi.mw3.knowledge.WfNode;
+import org.uengine.kernel.RoleMapping;
 import org.uengine.persistence.dao.UniqueKeyGenerator;
 import org.uengine.processmanager.ProcessManagerBean;
 import org.uengine.processmanager.ProcessManagerRemote;
@@ -142,7 +143,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		public void setFile(MetaworksFile file) {
 			this.file = file;
 		}
-
+		
 	public void like() throws Exception{
 		
 	}
@@ -439,6 +440,9 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		
 		
 		Long taskId = UniqueKeyGenerator.issueWorkItemKey(((ProcessManagerBean)processManager).getTransactionContext());
+		
+		
+		boolean newFollowersAreAdded = false;
 
 		InstanceViewContent instantiatedViewContent = null;
 		WfNode parent = null;
@@ -448,7 +452,25 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			unstructuredProcessDefinition.session = session;
 			unstructuredProcessDefinition.instanceViewContent = instanceViewContent;
 			unstructuredProcessDefinition.setAlias(CodiProcessDefinitionFactory.unstructuredProcessDefinitionLocation);
+
+			
+			if(this instanceof CommentWorkItem){
+				ArrayList<IUser> friends = new ArrayList<IUser>();
+				
+				ArrayList<String> initialFollowers = ((CommentWorkItem)this).initialFollowers;
+				if(initialFollowers!=null){
+					for(String userId : initialFollowers){
 						
+						User friend = new User();
+						friend.setUserId(userId);
+			
+						friends.add(friend);
+					}
+				}
+			
+				unstructuredProcessDefinition.friends = friends;
+			}
+
 			Object[] instanceViewAndInstanceList = unstructuredProcessDefinition.initiate();
 
 			instantiatedViewContent = (InstanceViewContent)instanceViewAndInstanceList[0];
@@ -475,7 +497,29 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			parent = afterInstantiation(instantiatedViewContent,
 					instanceRef);
 
+		}else{
+			if(this instanceof CommentWorkItem && getInstId()!=null){
+				
+				ArrayList<String> initialFollowers = ((CommentWorkItem)this).initialFollowers;
+				if(initialFollowers!=null){
+					for(String userId : initialFollowers){
+						RoleMapping rm = RoleMapping.create();
+						rm.setEndpoint(userId);
+						rm.setName("flw_" + userId);
+						
+						processManager.putRoleMapping(getInstId().toString(), rm);
+
+					}
+				}
+				
+				processManager.applyChanges();
+				
+				newFollowersAreAdded = true;
+			}
 		}
+		
+		
+
 		
 		setRootInstId(getInstId());
 		
@@ -514,12 +558,15 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		newItem.setTaskId(new Long(-1));
 		newItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 
+
 		
 		final IInstance refreshedInstance = instance.databaseMe();
 		refreshedInstance.getMetaworksContext().setHow("blinking");
 
 		final boolean securedConversation = "1".equals(instance.databaseMe().getSecuopt());
 
+
+		
 		
 		if(instantiation){
 			
@@ -563,6 +610,8 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 
 		
 		//refreshedInstance.getMetaworksContext().setWhere("pinterest");
+
+
 		
 		final InstanceView refreshedInstanceView = new InstanceView();
 		refreshedInstanceView.processManager = processManager;
@@ -592,16 +641,30 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			followerIds.add(followers.getUserId());
 		}
 		
-		final Object[] returnObjects = new Object[]{
-			new Remover(refreshedInstance), //인스턴스 목록에서 제거 
-			new Remover(refreshedInstance), //인스턴스 목록에서 제거 - 한번하니 다른게 또 있는지 안돼서 두번 지움.. ㅋㅋ 메롱  
-			new ToPrepend(new InstanceList(), refreshedInstance) // 인스턴스 리스트에 맨 꼭대기에 추가함... -- 더 새로운 소식으로 눈에 띄게하는 느낌을 줌..  
+		final Object[] returnObjects;
+		
+		if(newFollowersAreAdded){
+			returnObjects = new Object[]{
+					new Remover(refreshedInstance), //인스턴스 목록에서 제거 
+					new Remover(refreshedInstance), //인스턴스 목록에서 제거 - 한번하니 다른게 또 있는지 안돼서 두번 지움.. ㅋㅋ 메롱  
+					new ToPrepend(new InstanceList(), refreshedInstance), // 인스턴스 리스트에 맨 꼭대기에 추가함... -- 더 새로운 소식으로 눈에 띄게하는 느낌을 줌...
+					new Refresh (refreshedInstanceView.getFollowers())
+			};					
+		}else{
+
+			returnObjects = new Object[]{
+					new Remover(refreshedInstance), //인스턴스 목록에서 제거 
+					new Remover(refreshedInstance), //인스턴스 목록에서 제거 - 한번하니 다른게 또 있는지 안돼서 두번 지움.. ㅋㅋ 메롱  
+					new ToPrepend(new InstanceList(), refreshedInstance) // 인스턴스 리스트에 맨 꼭대기에 추가함... -- 더 새로운 소식으로 눈에 띄게하는 느낌을 줌..
+			};			
 		};
+			
 	
 		
 		if(!securedConversation)
 			MetaworksRemoteService.getInstance().pushClientObjects(returnObjects);
 
+		
 
 		boolean iAmParticipating = false;
 		for(String followerId : followerIds){

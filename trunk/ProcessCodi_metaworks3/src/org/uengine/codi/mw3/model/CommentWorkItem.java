@@ -4,23 +4,16 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.StringTokenizer;
 
-import org.metaworks.Refresh;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Range;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Test;
-import org.metaworks.dao.Database;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.codi.mw3.knowledge.WfNode;
-import org.uengine.kernel.Activity;
 import org.uengine.kernel.EJBProcessInstance;
-import org.uengine.kernel.HumanActivity;
 import org.uengine.kernel.ProcessInstance;
 import org.uengine.kernel.RoleMapping;
 import org.uengine.persistence.processinstance.ProcessInstanceDAO;
-import org.uengine.processmanager.ProcessManagerRemote;
-import org.uengine.util.ActivityForLoop;
 
 //@Face(displayName="답글")
 public class CommentWorkItem extends WorkItem{
@@ -40,6 +33,7 @@ public class CommentWorkItem extends WorkItem{
 	@ServiceMethod(callByContent = true, target="self")
 	public Object[] add() throws Exception {
 		
+
 		if(getActivityAppAlias()!=null){
 			//org.uengine.kernel.ProcessDefinition processDefinition = processManager.getProcessDefinition(getActivityAppAlias());
 			
@@ -154,8 +148,14 @@ public class CommentWorkItem extends WorkItem{
 
 		}
 		
+
 		// TODO Auto-generated method stub
-		return super.add();
+		Object[] returnObjects = super.add();
+		
+	
+		
+		return returnObjects;
+		
 	}
 	
 	@Autowired
@@ -176,6 +176,19 @@ public class CommentWorkItem extends WorkItem{
 		public void setActivityAppAlias(String activityAppAlias) {
 			this.activityAppAlias = activityAppAlias;
 		}
+		
+		
+	ArrayList<String> initialFollowers;
+
+		public ArrayList<String> getInitialFollowers() {
+			return initialFollowers;
+		}
+	
+		public void setInitialFollowers(ArrayList<String> initialFollowers) {
+			this.initialFollowers = initialFollowers;
+		}
+
+
 		
 	ArrayList<ParameterValue> parameters;
 	
