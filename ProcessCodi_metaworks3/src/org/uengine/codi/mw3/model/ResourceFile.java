@@ -427,7 +427,7 @@ public class ResourceFile implements ContextAware{
 	}
 
 	
-	protected IUser friend;
+	protected ArrayList<IUser> friends;
 
 	
 	@ServiceMethod
@@ -463,13 +463,16 @@ public class ResourceFile implements ContextAware{
 
 		}
 		
-		if(friend!=null){
+		if(friends!=null){
+			for(IUser friend : friends){
+				org.uengine.kernel.RoleMapping receiver = org.uengine.kernel.RoleMapping.create();
+				receiver.setEndpoint(friend.getUserId());
+				receiver.setName("fol_" + friend.getUserId());
+
+				processManager.putRoleMapping(instId, receiver);
+				
+			}
 			
-			org.uengine.kernel.RoleMapping receiver = org.uengine.kernel.RoleMapping.create();
-			receiver.setEndpoint(friend.getUserId());
-			receiver.setName("___receiver____");
-			
-			processManager.putRoleMapping(instId, receiver);
 
 		}
 		

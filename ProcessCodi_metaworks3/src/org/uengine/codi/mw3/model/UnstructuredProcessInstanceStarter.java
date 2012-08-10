@@ -1,5 +1,7 @@
 package org.uengine.codi.mw3.model;
 
+import java.util.ArrayList;
+
 import org.directwebremoting.Browser;
 import org.directwebremoting.ScriptSessions;
 import org.metaworks.ContextAware;
@@ -60,8 +62,9 @@ public class UnstructuredProcessInstanceStarter implements ContextAware {
 		unstructuredProcessDefinition.instanceViewContent = instanceViewContent;
 		unstructuredProcessDefinition.setAlias(CodiProcessDefinitionFactory.unstructuredProcessDefinitionLocation);
 		
-		
-		unstructuredProcessDefinition.friend = friend;
+		ArrayList<IUser> friends = new ArrayList<IUser>();
+		friends.add(friend);
+		unstructuredProcessDefinition.friends = friends;
 		
 		Object[] instanceViewAndInstanceList = unstructuredProcessDefinition.initiate();
 		

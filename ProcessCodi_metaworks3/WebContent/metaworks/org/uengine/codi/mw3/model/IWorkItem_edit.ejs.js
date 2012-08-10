@@ -16,6 +16,8 @@ var org_uengine_codi_mw3_model_IWorkItem_edit = function(objectId, className){
 
 	
 	this.sending = false;
+	
+	this.userAddCommands = {};
 
 }
 
@@ -41,6 +43,15 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.getValue =  function(){
 			object.title = text;
 	}
 	
+	var initialFollowers = [];
+	for(var idx in this.userAddCommands){
+		initialFollowers[initialFollowers.length] = idx;
+	}
+	
+	if(initialFollowers.length>0){
+		object.initialFollowers = initialFollowers;
+	}
+	
 	return object;
 }
 
@@ -58,39 +69,44 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.send = function(){
 
 		var instanceViewThreadPanel = mw3.getAutowiredObject('org.uengine.codi.mw3.model.InstanceViewThreadPanel');
 		
-		if(value.type=='comment' && instanceViewThreadPanel){
-			var newComment = JSON.parse(JSON.stringify(value));
-			newComment.metaworksContext.when = 'view';
-			newComment.taskId = (localTaskId--);
-			newComment.__objectId = null;
+		
+		if(value.type=='comment'){
 			
-			var toAppend = mw3.locateObject(
-				{
-					__className	:'org.metaworks.ToAppend',
-						target	: newComment,
-						parent	: instanceViewThreadPanel
-				}, null, 'body'
-			);
-			
-			//may problematic. TODO: 'toAppend.target' should point to the newly acquired object with the __objectId exists.
-			var newCommentObjectId = toAppend.targetObjectId + 1;
-			
-			mw3.onLoadFaceHelperScript();
-
-			newComment = mw3.objects[newCommentObjectId];
-			
-
-			try{
-				newComment.add();
-			}catch(e){
-				//handle when fail
+			if(instanceViewThreadPanel){
+				var newComment = JSON.parse(JSON.stringify(value));
+				newComment.metaworksContext.when = 'view';
+				newComment.taskId = (localTaskId--);
+				newComment.__objectId = null;
+				
+				var toAppend = mw3.locateObject(
+					{
+						__className	:'org.metaworks.ToAppend',
+							target	: newComment,
+							parent	: instanceViewThreadPanel
+					}, null, 'body'
+				);
+				
+				//may problematic. TODO: 'toAppend.target' should point to the newly acquired object with the __objectId exists.
+				var newCommentObjectId = toAppend.targetObjectId + 1;
+				
+				mw3.onLoadFaceHelperScript();
+	
+				newComment = mw3.objects[newCommentObjectId];
+				
+	
+				try{
+					newComment.add();
+				}catch(e){
+					//handle when fail
+				}
+	
+				value.title = "";
+				mw3.setObject(value.__objectId, value);
+				
+				$("#post_" + this.objectId).focus();
 			}
-
-			value.title = "";
-			mw3.setObject(value.__objectId, value);
 			
-			$("#post_" + this.objectId).focus();
-
+			
 
 		}else{
 			value.add();
@@ -203,6 +219,9 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.press = function(){
     	if(tokens.length>1)
     		text = tokens[tokens.length-1];
     	
+    	
+    	//////// assists about process initiation /////////
+    	
     	var processMap = mw3.getAutowiredObject("org.uengine.codi.mw3.model.ProcessMapList");
     	
     	//var divIdWithoutShaf = "commandDiv_" + this.objectId; 
@@ -257,9 +276,50 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.press = function(){
         	}
     		
     	}
+		
+		
+		/////// assists about user names //////
     	
+		var contactListPanel = mw3.getAutowiredObject('org.uengine.codi.mw3.model.ContactListPanel');
+		
+		if(text && text.length>0 && contactListPanel){
+			var contactList = contactListPanel.localContactList;
+
+			var exisingFollowers = {};
+			
+			
+			var value = mw3.objects[this.objectId];
+			
+			if(value.instId){
+				var instanceView = mw3.getAutowiredObject('org.uengine.codi.mw3.model.InstanceView@' + value.instId);
+				
+				for(var i=0; i<instanceView.followers.followers.length; i++){
+					exisingFollowers[instanceView.followers.followers[i].userId] = "";
+				}
+			}
+			
+			for(var i=0; i<contactList.contacts.length; i++){
+				var contact = contactList.contacts[i];
+				
+				if(contact.friend && contact.friend.userId && contact.friend.name && contact.friend.name.indexOf(text) == 0 && !this.userAddCommands[contact.friend.userId] && !exisingFollowers[contact.friend.userId]){
+    				$(recommendDivId).append("" + mw3.localize('$AddUserAsFollower') + ": \"<b>" + contact.friend.name + "</b>\"<br>");
+    				this.userAddCommands[contact.friend.userId] = contact.friend.userId;
+				}
+			}
+			
+			
+		}
+		
+		
+		//////// assists about dates ////////
+		
+		//////// assists about url ////////
+		
+		
+
     }
 	
 	
 
 }
+
