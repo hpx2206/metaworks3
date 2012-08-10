@@ -294,14 +294,14 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.press = function(){
 				var instanceView = mw3.getAutowiredObject('org.uengine.codi.mw3.model.InstanceView@' + value.instId);
 				
 				for(var i=0; i<instanceView.followers.followers.length; i++){
-					exisingFollowers[instanceView.followers.followers[i].userId] = "";
+					exisingFollowers[instanceView.followers.followers[i].userId] = true;
 				}
 			}
 			
 			for(var i=0; i<contactList.contacts.length; i++){
 				var contact = contactList.contacts[i];
 				
-				if(contact.friend && contact.friend.userId && contact.friend.name && contact.friend.name.indexOf(text) == 0 && !this.userAddCommands[contact.friend.userId] && !exisingFollowers[contact.friend.userId]){
+				if(contact.friend && contact.friend.userId && contact.friend.name && text.indexOf(contact.friend.name) > -1 && !this.userAddCommands[contact.friend.userId] && !exisingFollowers[contact.friend.userId]){
     				$(recommendDivId).append("" + mw3.localize('$AddUserAsFollower') + ": \"<b>" + contact.friend.name + "</b>\"<br>");
     				this.userAddCommands[contact.friend.userId] = contact.friend.userId;
 				}
