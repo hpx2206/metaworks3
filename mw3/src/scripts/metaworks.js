@@ -33,7 +33,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				this.objectId_KeyMapping = {};
 				this.objectId_ClassNameMapping = {};
 				
-				this.face_ObjectIdMapping = {};
+				this.face_ClassNameMapping = {};
 				this.objectIds_FaceMapping={};
 				
 				this.loaded = false;
@@ -106,12 +106,12 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
  					mw3.dragObject = null;
  					mw3.dragging = false;
  					
-					mw3.dragGuide.css("display", "none");
+ 					$("#__dragGuide").hide();
 
 			    };
 			    
 			    this.dragObject = null;
-			    this.dragGuide = $('body').append("<div id='__dragGuide' style='position:absolute;display:block;top:0px;left:0px;background=#000000;width=40px;height=20px;z-index:999999'>&nbsp; ㅌㅌㅌㅌ</div>")
+			    this.dragGuide = $("#__dragGuide");
 			    
 			    var mouseMove = function(e){
 			    	mw3.mouseX = e.pageX;
@@ -130,16 +130,29 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
  						if(console)
  							console.log('drag  start');
  						
- 						mw3.dragging = true;
+ 						if(!mw3.dragging){
+ 							
+ 							if(!$("#__dragGuide")[0]){
+ 								$('body').append("<div id='__dragGuide' style='position:absolute;top:100px;left:100px;background=#000000;width=40px;height=20px;z-index:999999'></div>");
+ 							}
+ 							
+ 	 						$("#__dragGuide").html(mw3.dragObject.innerHTML);
+ 							
+ 	 						mw3.dragging = true;
+ 							
+ 						}
+ 						
+ 						
  						
  						if(mw3.dragObject['dragCommand']){
  							eval(mw3.dragObject['dragCommand']);
  							mw3.dragObject['dragCommand'] = null;
  						}
+ 						$("#__dragGuide").css("left", mw3.mouseX+1);
+ 						$("#__dragGuide").css("top", mw3.mouseY);
+ 						$("#__dragGuide").show();
  						
- 						mw3.dragGuide.css("left", mw3.mouseX);
- 						mw3.dragGuide.css("top", mw3.mouseY);
- 						mw3.dragGuide.css("display", "block");
+ 						//mw3.dragGuide.show();
  						
 // 						mw3.dragObject.style.position='absolute';
 // 						mw3.dragObject.style.top = mw3.mouseX; 
@@ -158,7 +171,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 	    					$("#" + mw3.popupDivId).remove();
 	    					mw3.popupDivId = null;
 	    					mw3.dragging = false;
-	 						mw3.dragGuide.css("display", "none");
+	    					$("#__dragGuide").hide();
 		    			}
 		    			
 	    			}
@@ -224,6 +237,18 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			
 			Metaworks3.prototype.loadFaceHelper = function(objectId){
 				
+				if(!mw3.objects[objectId]){
+					return null;
+				}
+				
+				var clsName = mw3.objects[objectId].__className;
+//				
+//				return this.loadFaceHelperWithClsName(clsName);
+//				
+//			}
+//			
+//			Metaworks3.prototype.loadFaceHelperWithClsName = function(clsName){
+				
 				/*
 				 * 2012-04-05 cjw 임시 주석 처리
 				 */
@@ -232,12 +257,12 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					return null;
 				*/
 				
-				if(!this.face_ObjectIdMapping[objectId])					
+				if(!this.face_ClassNameMapping[clsName])					
 					return null;
 				
 				
-				var face = this.face_ObjectIdMapping[objectId].face;
-				var className = this.face_ObjectIdMapping[objectId].className;
+				var face = this.face_ClassNameMapping[clsName].face;
+				var className = this.face_ClassNameMapping[clsName].className;
 				
 
 				// load faceHelper
@@ -720,7 +745,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 							face: actualFace,
 							className: objectTypeName
 					};
-					this.face_ObjectIdMapping[objectId] = faceInfo;
+					this.face_ClassNameMapping[objectTypeName] = faceInfo;
 					if(this.objectIds_FaceMapping [actualFace] == null){
 						this.objectIds_FaceMapping [actualFace]={};
 					}
@@ -1401,28 +1426,31 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				var divId =  "#" + this._getObjectDivId(objectId);
 				var infoDivId =  "#" + this._getInfoDivId(objectId);
 				
-				this.newBeanProperty(objectId);
-				
-				// 2012-04-04 cjw destroy 호출 후 removeObject
-				var faceHelper = this.getFaceHelper(objectId);
-				
-    			if(faceHelper && faceHelper.destroy)
-    				faceHelper.destroy();
-				
-				
-				this.objects[objectId] = null;
-				this.faceHelpers[objectId] = null;
-				this.beanExpressions[objectId] = null;
-				
-				/*
-				var parent = $(divId).parent();
-				if(parent.hasClass('target_stick') || parent.hasClass('target_popup')){
-					console.debug('remove popup');
+				if(!mw3.objects[objectId]['__cached']){
+					this.newBeanProperty(objectId);
 					
-					parent.remove();
+					// 2012-04-04 cjw destroy 호출 후 removeObject
+					var faceHelper = this.getFaceHelper(objectId);
+					
+	    			if(faceHelper && faceHelper.destroy)
+	    				faceHelper.destroy();
+					
+					
+					this.objects[objectId] = null;
+					this.faceHelpers[objectId] = null;
+					this.beanExpressions[objectId] = null;
+					
+					/*
+					var parent = $(divId).parent();
+					if(parent.hasClass('target_stick') || parent.hasClass('target_popup')){
+						console.debug('remove popup');
+						
+						parent.remove();
+					}
+					*/
 				}
-				*/
 				
+
 				$(divId).remove();
 				$(infoDivId).remove();
 
@@ -1714,12 +1742,195 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			Metaworks3.prototype.endLoading = function(){
 			}
 			
+			Metaworks3.prototype.__showResult = function(object, result, objId, svcNameAndMethodName, serviceMethodContext, placeholder ){
+    			
+    			mw3.requestMetadataBatch(result);
+    			
+    			// 2012-03-19 cjw 기존 소스가 ejs.js 생성자 호출 보다 늦게 method 값을 할당하여 맨위로 올림
+    			mw3.recentCallMethodName = svcNameAndMethodName;
+    			
+    			if(mw3.isRecordingSession && !mw3.recordingExceptClasses[object.__className]){
+    				
+    				var objectKey = mw3._createObjectKey(object);
+    				var next = "autowiredObject." + objectKey + "." + svcNameAndMethodName;
+    				
+    				mw3.recording[mw3.recording.length] = {
+    					//next: next,
+    					value: object,
+    					objectKey: objectKey,
+    					methodName: svcNameAndMethodName//,
+    					//scenario: "testScenario"
+    				};
+    			}
+    			
+				//alert("call.result=" + dwr.util.toDescriptiveString(result, 5))
+//				mw3.debug("call result");
+
+    			if(result){
+
+        			if(serviceMethodContext.target=="none"){
+        				
+        				//returnValue = result;
+        				
+        			}else if(serviceMethodContext.target=="self"){
+        				
+        				mw3.setObject(objId, result);
+        				
+        			}else if(serviceMethodContext.target=="popup"){
+
+        				//store the recently added object Id for recent opener
+        				mw3.recentOpenerObjectId = objId;
+
+        				if(placeholder){
+        					mw3.removeObject(placeholder);
+        				}
+
+        				mw3.popupDivId = 'popup_' + objId;
+        				//$('body').append("<div id='" + mw3.popupDivId + "' class='target_popup' style='z-index:10;position:absolute; top:50px; left:10px'></div>");
+        				$('body').append("<div id='" + mw3.popupDivId + "' class='target_popup' style='z-index:10;position:absolute; top:0px; left:0px'></div>");
+        				mw3.locateObject(result, null, '#' + mw3.popupDivId).targetDivId;
+        					
+        				
+        				//objId = mw3.targetObjectId;
+        			}else if(serviceMethodContext.target=="stick"){
+		    			mw3.popupDivId = 'stick_' + objId;
+        				$('body').append("<div id='" + mw3.popupDivId + "' class='target_stick' style='z-index:10;position:absolute; top:" + mw3.mouseY + "px; left:" + mw3.mouseX + "px'></div>");
+        				mw3.locateObject(result, null, '#' + mw3.popupDivId);
+
+        				//store the recently added object Id for recebt opener
+        				mw3.recentOpenerObjectId = objId;
+
+        				//objId = mw3.targetObjectId;
+        				
+        			}else if(serviceMethodContext.target=="opener" && mw3.recentOpenerObjectId){
+        				
+        				mw3.setObject(mw3.recentOpenerObjectId, result);
+        				
+        			}else{ //case of target is "auto"
+        			
+        				
+
+        				var results = result.length ? result: [result];
+        				
+	        			var mappedObjId;
+        				for(var j=0; j < results.length; j++){
+        					var result_ = results[j];
+		        			var objKeys = mw3._createObjectKey(result_, true);
+		        			
+		        			
+		        			
+		        			var neverShowed = true;
+		        			
+		        			
+		        			if(objKeys && objKeys.length){
+	        									        				
+		        				for(var i=0; i<objKeys.length && neverShowed; i++){
+		        					
+			        				mappedObjId = mw3.objectId_KeyMapping[objKeys[i]];
+			        				
+			        				var mappedObjdivId = "objDiv_" + mappedObjId;
+			        				
+//			        				mw3.debug("render start");
+			        		
+			        				
+			        				if(mappedObjId && document.getElementById(mappedObjdivId)){ //if there's mappedObjId exists, replace that div part.
+			        					
+			        					if(serviceMethodContext.target=="append"){
+			        						mw3.locateObject(result_, null, "#"+mappedObjdivId);
+			        					}else if(serviceMethodContext.target=="prepend"){
+											mw3.locateObject(result_, null, "#"+mappedObjdivId, {prepend: true});
+										}else{
+			        						mw3.setObject(mappedObjId, result_);
+			        					}
+			        					
+				        				neverShowed = false;
+			        				}
+		        				}
+		        			}
+		        			
+
+		        			if(neverShowed){
+//		        				mw3.debug("render again");
+
+		        				if(serviceMethodContext.target=="append"){
+	        						mw3.locateObject(result_, null, "#"+divId);
+	        					}else if(serviceMethodContext.target=="prepend"){
+									mw3.locateObject(result_, null, "#"+divId, {prepend: true});
+								}else{
+	        						mw3.setObject(objId, result_);
+	        					}
+	        					
+	        					neverShowed = false;
+		        			}
+        				}
+        				
+        				if(neverShowed){
+//	        				mw3.debug("render again again");
+        					if(serviceMethodContext.target=="append"){
+        						mw3.locateObject(result, null, "#"+divId);
+        					}else if(serviceMethodContext.target=="prepend"){
+								mw3.locateObject(result, null, "#"+divId, {prepend: true});
+							}else{
+        						mw3.setObject(objId, result);
+        					}
+        				}
+        			}
+
+    			}
+
+    			//after call the request, the call-originator should be focused again.
+    			var sourceObjectIdNewlyGotten = mw3.objectId_KeyMapping[objectKey];
+    			if(sourceObjectIdNewlyGotten){
+    				// 2012-03-21 cjw 자동 focus 를 하지 않기 위해 수정
+    				//$("#objDiv_" + sourceObjectIdNewlyGotten).focus();
+    				//objId = sourceObjectIdNewlyGotten;
+    			}
+    			
+    			mw3.endProgress();
+    			
+    			// 2012-04-16 faceHelper call change
+    			if(serviceMethodContext.target != "none"){
+    				
+    				if(serviceMethodContext.loadOnce){
+        				result['__cached'] = true;
+        				serviceMethodContext['cachedObjectId'] = mw3.targetObjectId;
+        			}
+    				
+    				
+    				mw3.onLoadFaceHelperScript();
+        			
+        			if(mw3.getFaceHelper(objId) && mw3.getFaceHelper(objId).endLoading){
+        				mw3.getFaceHelper(objId).endLoading(svcNameAndMethodName);
+        			}else{
+        				mw3.endLoading(objId, svcNameAndMethodName);
+        			}
+        				
+        			//TODO: why different method name?  showStatus and showInfo
+        			if(mw3.getFaceHelper(objId) && mw3.getFaceHelper(objId).showStatus){
+        				mw3.getFaceHelper(objId).showStatus( svcNameAndMethodName + " DONE.");
+        			}else{
+
+	    				mw3.showInfo(objId, svcNameAndMethodName + " DONE");	
+        			}
+    			}
+    			
+    			mw3.loaded = true;				        			
+    			
+    			if(mw3.afterCall)
+    				mw3.afterCall(svcNameAndMethodName, result);
+    			
+    			
+    			return result;
+    		}
+			
 			Metaworks3.prototype.call = function (svcNameAndMethodName){
 				mw3.loaded = false;
 				
 //				mw3.debug("call start");
 
 				var objId;
+				
+
 				
 				if(arguments.length > 1){
 					objId = svcNameAndMethodName;
@@ -1810,15 +2021,42 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 						return;
 					}
 
-					
 					this.startProgress();
 					
-					if(serviceMethodContext && serviceMethodContext.target!="none"){						
-						if(this.getFaceHelper(objId) && this.getFaceHelper(objId).startLoading){
+					var placeholder = null;
+					if(serviceMethodContext && serviceMethodContext.target!="none"){
+
+						if(serviceMethodContext.loadOnce && serviceMethodContext['cachedObjectId']){
+							return this.__showResult(object, this.objects[serviceMethodContext['cachedObjectId']], objId, svcNameAndMethodName, serviceMethodContext, placeholder );
+						}
+						
+						
+						var loader = serviceMethodContext.loader;
+						
+						
+						if(loader && serviceMethodContext.target=="popup" && loader[0].indexOf("java.lang.Object")==-1){
+
+	        				try{
+		        				mw3.popupDivId = 'popup_' + objId;
+		        				$('body').append("<div id='" + mw3.popupDivId + "' class='target_popup' style='z-index:10;position:absolute; top:0px; left:0px'></div>");
+		        				placeholder = mw3.locateObject({__className: loader[0]}, null, '#' + mw3.popupDivId).targetObjectId;
+
+								mw3.onLoadFaceHelperScript();
+	        				}catch(e){if(consol) console.log(e)}
+						}
+						
+						if(placeholder && this.getFaceHelper(placeholder) && this.getFaceHelper(placeholder).startLoading){
+							this.getFaceHelper(placeholder).startLoading(svcNameAndMethodName);
+						}else if(placeholder){
+							this.startLoading(placeholder, svcNameAndMethodName);
+						}
+						else if(this.getFaceHelper(objId) && this.getFaceHelper(objId).startLoading){
 							this.getFaceHelper(objId).startLoading(svcNameAndMethodName);
 						}else{
 							this.startLoading(objId, svcNameAndMethodName);
 						}
+						
+						
 					}
 
     				//alert("call.argument=" + dwr.util.toDescriptiveString(object, 5))
@@ -1871,172 +2109,15 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					//This lets the called object doesn't have identifier, it should be focused to be set result if the result is it's type.
 					if(objectKey && objectKey.indexOf("@")==-1)
 						this.objectId_KeyMapping[objectKey] = objId;
-						
+
+					
 					
 					this.metaworksProxy.callMetaworksService(className, object, svcNameAndMethodName, autowiredObjects,
 							{ 
-				        		callback: function( result ){
+				        		callback: function(result){
 				        			
-				        			mw3.requestMetadataBatch(result);
-				        			
-				        			// 2012-03-19 cjw 기존 소스가 ejs.js 생성자 호출 보다 늦게 method 값을 할당하여 맨위로 올림
-				        			mw3.recentCallMethodName = svcNameAndMethodName;
-				        			
-				        			if(mw3.isRecordingSession && !mw3.recordingExceptClasses[object.__className]){
-				        				
-				        				var objectKey = mw3._createObjectKey(object);
-				        				var next = "autowiredObject." + objectKey + "." + svcNameAndMethodName;
-				        				
-				        				mw3.recording[mw3.recording.length] = {
-				        					//next: next,
-				        					value: object,
-				        					objectKey: objectKey,
-				        					methodName: svcNameAndMethodName//,
-				        					//scenario: "testScenario"
-				        				};
-				        			}
-				        			
-				    				//alert("call.result=" + dwr.util.toDescriptiveString(result, 5))
-//				    				mw3.debug("call result");
-
-				        			if(result){
-
-					        			if(serviceMethodContext.target=="none"){
-					        				
-					        				returnValue = result;
-					        				
-					        			}else if(serviceMethodContext.target=="self"){
-					        				
-					        				mw3.setObject(objId, result);
-					        				
-					        			}else if(serviceMethodContext.target=="popup"){
-
-					        				//store the recently added object Id for recent opener
-					        				mw3.recentOpenerObjectId = objId;
-
-					        				mw3.popupDivId = 'popup_' + objId;
-					        				//$('body').append("<div id='" + mw3.popupDivId + "' class='target_popup' style='z-index:10;position:absolute; top:50px; left:10px'></div>");
-					        				$('body').append("<div id='" + mw3.popupDivId + "' class='target_popup' style='z-index:10;position:absolute; top:0px; left:0px'></div>");
-					        				mw3.locateObject(result, null, '#' + mw3.popupDivId).targetDivId;
-					        				
-					        				//objId = mw3.targetObjectId;
-					        			}else if(serviceMethodContext.target=="stick"){
-							    			mw3.popupDivId = 'stick_' + objId;
-					        				$('body').append("<div id='" + mw3.popupDivId + "' class='target_stick' style='z-index:10;position:absolute; top:" + mw3.mouseY + "px; left:" + mw3.mouseX + "px'></div>");
-					        				mw3.locateObject(result, null, '#' + mw3.popupDivId);
-
-					        				//store the recently added object Id for recebt opener
-					        				mw3.recentOpenerObjectId = objId;
-
-					        				//objId = mw3.targetObjectId;
-					        				
-					        			}else if(serviceMethodContext.target=="opener" && mw3.recentOpenerObjectId){
-					        				
-					        				mw3.setObject(mw3.recentOpenerObjectId, result);
-					        				
-					        			}else{ //case of target is "auto"
-					        			
-	
-					        				var results = result.length ? result: [result];
-					        				
-						        			var mappedObjId;
-					        				for(var j=0; j < results.length; j++){
-					        					
-					        					var result_ = results[j];
-							        			var objKeys = mw3._createObjectKey(result_, true);
-
-							        			var neverShowed = true;
-							        			
-							        			
-							        			if(objKeys && objKeys.length){
-						        									        				
-							        				for(var i=0; i<objKeys.length && neverShowed; i++){
-							        					
-								        				mappedObjId = mw3.objectId_KeyMapping[objKeys[i]];
-								        				
-								        				var mappedObjdivId = "objDiv_" + mappedObjId;
-								        				
-//								        				mw3.debug("render start");
-								        		
-								        				
-								        				if(mappedObjId && document.getElementById(mappedObjdivId)){ //if there's mappedObjId exists, replace that div part.
-								        					
-								        					if(serviceMethodContext.target=="append"){
-								        						mw3.locateObject(result_, null, "#"+mappedObjdivId);
-								        					}else if(serviceMethodContext.target=="prepend"){
-																mw3.locateObject(result_, null, "#"+mappedObjdivId, {prepend: true});
-															}else{
-								        						mw3.setObject(mappedObjId, result_);
-								        					}
-								        					
-									        				neverShowed = false;
-								        				}
-							        				}
-							        			}
-							        			
-	
-							        			if(neverShowed){
-//							        				mw3.debug("render again");
-
-							        				if(serviceMethodContext.target=="append"){
-						        						mw3.locateObject(result_, null, "#"+divId);
-						        					}else if(serviceMethodContext.target=="prepend"){
-														mw3.locateObject(result_, null, "#"+divId, {prepend: true});
-													}else{
-						        						mw3.setObject(objId, result_);
-						        					}
-						        					
-						        					neverShowed = false;
-							        			}
-					        				}
-					        				
-					        				if(neverShowed){
-//						        				mw3.debug("render again again");
-					        					if(serviceMethodContext.target=="append"){
-					        						mw3.locateObject(result, null, "#"+divId);
-					        					}else if(serviceMethodContext.target=="prepend"){
-													mw3.locateObject(result, null, "#"+divId, {prepend: true});
-												}else{
-					        						mw3.setObject(objId, result);
-					        					}
-					        				}
-					        			}
-
-				        			}
-
-				        			//after call the request, the call-originator should be focused again.
-				        			var sourceObjectIdNewlyGotten = mw3.objectId_KeyMapping[objectKey];
-				        			if(sourceObjectIdNewlyGotten){
-				        				// 2012-03-21 cjw 자동 focus 를 하지 않기 위해 수정
-				        				//$("#objDiv_" + sourceObjectIdNewlyGotten).focus();
-				        				//objId = sourceObjectIdNewlyGotten;
-				        			}
-				        			
-				        			mw3.endProgress();
-				        			
-				        			// 2012-04-16 faceHelper call change
-				        			if(serviceMethodContext.target != "none"){
-				        				mw3.onLoadFaceHelperScript();
-					        			
-					        			if(mw3.getFaceHelper(objId) && mw3.getFaceHelper(objId).endLoading){
-					        				mw3.getFaceHelper(objId).endLoading(svcNameAndMethodName);
-					        			}else{
-					        				mw3.endLoading(objId, svcNameAndMethodName);
-					        			}
-					        				
-					        			//TODO: why different method name?  showStatus and showInfo
-					        			if(mw3.getFaceHelper(objId) && mw3.getFaceHelper(objId).showStatus){
-					        				mw3.getFaceHelper(objId).showStatus( svcNameAndMethodName + " DONE.");
-					        			}else{
-	
-						    				mw3.showInfo(objId, svcNameAndMethodName + " DONE");	
-					        			}
-				        			}
-				        			
-				        			mw3.loaded = true;				        			
-				        			
-				        			if(mw3.afterCall)
-				        				mw3.afterCall(svcNameAndMethodName, result);
+				        			returnValue = result;
+				        			mw3.__showResult(object, result, objId, svcNameAndMethodName, serviceMethodContext, placeholder );
 				        		},
 
 				        		async: !sync && serviceMethodContext.target!="none",

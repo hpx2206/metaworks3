@@ -701,7 +701,23 @@ public class WebObjectType{
 				smc.setClientSide(annotation.clientSide());
 				smc.setTarget(annotation.target());
 				smc.setValidate(annotation.validate());
+				smc.setRtnCls(method.getReturnType().getName());
 				
+				if(annotation.loader().length > 0 && annotation.loader()[0].length() > 0){
+					if("auto".equals(annotation.loader()[0])){
+						smc.setLoader(new String[]{smc.getRtnCls()});
+					}else{
+						smc.setLoader(annotation.loader());
+					}
+				}
+
+				if(annotation.cacheClasses().length > 0){
+					
+					smc.setCacheCls(annotation.cacheClasses());
+				}
+				
+				smc.setLoadOnce(annotation.loadOnce());
+
 				smc.setNameGetter(name!=null? true:false);
 				smc.setChildrenGetter(children!=null? true:false);
 				
