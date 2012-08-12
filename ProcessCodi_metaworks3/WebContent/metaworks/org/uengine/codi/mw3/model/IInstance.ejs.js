@@ -5,7 +5,7 @@ var org_uengine_codi_mw3_model_IInstance = function(objectId, className){
 	
 	this.windowObjectId = $('#' + this.divId).closest('.mw3_window').attr('objectId');
 	
-	 $('#' + this.divId).bind('click', {objectId: this.objectId},function(){
+	 $('#' + this.divId).bind('mousemove', {objectId: this.objectId},function(){
 		 mw3.getFaceHelper(objectId).unBlinking();
 		 
 		 /*$(".tbl_type").parent().css("background","none");
