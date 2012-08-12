@@ -393,6 +393,32 @@ public class User extends Database<IUser> implements IUser {
 		}	
 	
 	}
+
+	@Override
+	public Remover unsubscribe() throws Exception {
+		
+		if(getUserId().equals(session.getUser().getUserId()) || session.getEmployee().getIsAdmin()){
+		
+			Employee employeeType = new Employee();
+			employeeType.setEmpCode(getUserId());
+			employeeType.deleteDatabaseMe();
+			
+			return new Remover(this);
+		}else
+			throw new Exception("$AdminOnly");
+	}
+
+	@Override
+	public void addAsAdmin() throws Exception {
+		if(session.getEmployee().getIsAdmin()){
+			
+			Employee employeeType = new Employee();
+			employeeType.setEmpCode(getUserId());
+			employeeType.databaseMe().setIsAdmin(true);
+			
+		}else
+			throw new Exception("$AdminOnly");
+	}
 	
 	
 }

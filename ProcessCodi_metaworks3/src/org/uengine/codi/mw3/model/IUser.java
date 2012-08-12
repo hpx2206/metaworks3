@@ -1,6 +1,7 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.Refresh;
+import org.metaworks.Remover;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;
@@ -76,6 +77,12 @@ public interface IUser extends IDAO{
 
 	@ServiceMethod(mouseBinding="drop")
 	public void drop();
+	
+	@ServiceMethod(inContextMenu=true, needToConfirm=true)
+	public Remover unsubscribe() throws Exception;
+
+	@ServiceMethod(inContextMenu=true, needToConfirm=true, target="none")
+	public void addAsAdmin() throws Exception;
 
 
 }

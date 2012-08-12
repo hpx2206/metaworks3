@@ -289,7 +289,7 @@ public class ResourceFile implements ContextAware{
 		return session;
 	}
 	
-	@ServiceMethod(inContextMenu=true, callByContent=true, mouseBinding="drop", keyBinding="Ctrl+V")
+	@ServiceMethod(inContextMenu=true, callByContent=true, mouseBinding="drop", keyBinding="Ctrl+V", needToConfirm=true)
 	public Object[] paste(){
 		Object clipboard = session.getClipboard();
 		if(clipboard instanceof ResourceFile && isFolder()){

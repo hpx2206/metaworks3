@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.dao.TransactionContext;
+import org.metaworks.widget.IFrame;
 import org.metaworks.widget.Window;
 import org.metaworks.widget.layout.Layout;
 import org.uengine.codi.mw3.admin.PageNavigator;
@@ -146,6 +147,7 @@ public class Main {
 		instancePanel.session = session;
 		instancePanel.load(session);
 		contentWindow.setPanel(instancePanel);
+//		contentWindow.setPanel(new IFrame("http://www.naver.com"));
 		return contentWindow;
 	}
 
