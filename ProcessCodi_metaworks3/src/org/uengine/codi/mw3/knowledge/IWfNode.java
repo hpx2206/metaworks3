@@ -144,7 +144,7 @@ public interface IWfNode extends IDAO {
 	@ServiceMethod(callByContent=true)
 	public ContentWindow linkInstance() throws Exception;
 	
-	@ServiceMethod(callByContent=true, mouseBinding="drop", keyBinding="Ctrl+V", target="popup")
+	@ServiceMethod(callByContent=true, mouseBinding="drop", keyBinding="Ctrl+V", target="popup", loader="org.uengine.codi.mw3.model.Popup")
 	public Object[] drop() throws Exception;
 	
 	@ServiceMethod(callByContent=true, except={"childNode", "focus"}, inContextMenu=true, keyBinding="Ctrl+Right")
