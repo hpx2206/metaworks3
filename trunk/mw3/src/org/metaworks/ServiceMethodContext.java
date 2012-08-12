@@ -87,6 +87,40 @@ public class ServiceMethodContext{
 			this.displayName = displayName;
 		}
 		
+	String rtnCls;
+		
+		public String getRtnCls() {
+			return rtnCls;
+		}
+		public void setRtnCls(String rtnCls) {
+			this.rtnCls = rtnCls;
+		}
+
+	String[] loader;	
+		public String[] getLoader() {
+			return loader;
+		}
+		public void setLoader(String[] loader) {
+			this.loader = loader;
+		}
+		
+	String[] cacheCls;
+	
+		public String[] getCacheCls() {
+			return cacheCls;
+		}
+		public void setCacheCls(String[] cacheCls) {
+			this.cacheCls = cacheCls;
+		}
+		
+	boolean loadOnce;
+		public boolean isLoadOnce() {
+			return loadOnce;
+		}
+		public void setLoadOnce(boolean loadOnce) {
+			this.loadOnce = loadOnce;
+		}
+
 	boolean childrenGetter;
 		public boolean isChildrenGetter() {
 			return childrenGetter;

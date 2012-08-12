@@ -32,4 +32,10 @@ public @interface ServiceMethod {
 	
 	boolean validate()		default false;	
 	boolean inContextMenu() default false;
+	
+	String[] loader() default {};
+	
+	String[] cacheClasses() default {};
+	
+	boolean loadOnce() default false;
 }
