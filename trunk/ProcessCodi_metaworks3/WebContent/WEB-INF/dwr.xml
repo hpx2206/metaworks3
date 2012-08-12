@@ -30,7 +30,6 @@
 	<convert converter="metaworks" match="org.uengine.codi.mw3.common.*"/>
 	<convert converter="metaworks" match="org.uengine.codi.mw3.model.*"/>
 	<convert converter="metaworks" match="org.uengine.codi.mw3.admin.*"/>
-	<convert converter="metaworks" match="org.uengine.codi.mw3.menu.*"/>
 	<convert converter="metaworks" match="org.uengine.codi.mw3.knowledge.*"/>
 	<convert converter="metaworks" match="org.uengine.codi.mw3.widget.*"/>
 	<convert converter="metaworks" match="org.uengine.codi.mw3.process.*"/>
