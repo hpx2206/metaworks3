@@ -9,7 +9,11 @@
 			<a><img src="scripts/jquery/cluetip/images/cross.png" onclick="mw3.getFaceHelper(<%=objectId%>).destoryPopup()"></a>
 		</div>
 		<div id="addcontact-con" style="display: block; overflow:auto; border:1px solid #ccc; height:<%=value.height%>px">
-			<%=fields.panel.here()%>
+			<%if(value.panel){%>
+				<%=fields.panel.here()%>
+			<%}else{%>
+				<div style="width:400px;height:300px;">&nbsp;</div>
+			<%}%>
 		</div>
 	</div>
 </div>
