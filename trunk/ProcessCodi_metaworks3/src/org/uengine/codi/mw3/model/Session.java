@@ -245,7 +245,7 @@ public class Session implements ContextAware{
 		httpSession.invalidate();
 	}
 	
-	@ServiceMethod(callByContent=true)
+	@ServiceMethod(callByContent=true, target="popup")
 	public ModalWindow manager() throws Exception{
 		return new ModalWindow(new ManagerPanel(this), 600, 500);
 	}

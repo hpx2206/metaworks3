@@ -173,7 +173,7 @@ public interface IEmployee extends IDAO {
 	@ServiceMethod(callByContent=true)
 	public void checkEmpCode() throws Exception ;
 	
-	@ServiceMethod(needToConfirm=true, target=TARGET_TOP)
+	@ServiceMethod(needToConfirm=true, target=TARGET_TOP, inContextMenu=true)
 	@Face(displayName="$Unsubscribe")
 	public Login unsubscribe() throws Exception;
 }

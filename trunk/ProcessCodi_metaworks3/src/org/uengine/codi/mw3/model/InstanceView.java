@@ -334,7 +334,7 @@ public class InstanceView {
 	public void newActivity() {}
 	
 	
-	@ServiceMethod(target="popup")
+	@ServiceMethod(target="popup", loader="auto")
 	public Popup schedule() throws Exception{
 
 		Instance instance = new Instance();
@@ -410,7 +410,7 @@ public class InstanceView {
 		
 	
 	
-	@ServiceMethod(target="popup")
+	@ServiceMethod(target="popup", loader="auto")
 //	@Test(scenario="first", starter=true, instruction="자유로운 대화와 정형화된 프로세스가 어우러진 프로세스를 모니터링 합니다.", next="autowiredObject.org.uengine.codi.mw3.admin.PageNavigator.goKnowledge()")
 	@Test(scenario="first", starter=true, instruction="$first.Monitor", next="autowiredObject.org.uengine.codi.mw3.model.InstanceListPanel.switchToKnowledge()")
 
