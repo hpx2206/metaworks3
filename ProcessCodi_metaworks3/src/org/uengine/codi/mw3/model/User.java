@@ -420,5 +420,19 @@ public class User extends Database<IUser> implements IUser {
 			throw new Exception("$AdminOnly");
 	}
 	
+	@Override
+	public Object[] showWall() throws Exception{
+		PersonalPerspective pPserspective = new PersonalPerspective();
+		Session userSession = new Session();
+		userSession.setUser(this);
+		Employee employee = new Employee();
+		employee.setEmpCode(getUserId());
+		employee.setGlobalCom(session.getCompany().getComCode());
+		userSession.setEmployee(employee);
+		userSession.setCompany(session.getCompany());
+		pPserspective.session = userSession;
+		this.getMetaworksContext().setWhen("chat");
+		return new Object[]{(InstanceListPanel) pPserspective.loadRequest()[1], new Remover(new Popup())};
+	}
 	
 }
