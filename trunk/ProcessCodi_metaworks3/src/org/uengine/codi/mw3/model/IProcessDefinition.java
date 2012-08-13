@@ -15,7 +15,7 @@ import org.metaworks.dao.IDAO;
 @Face(
 		ejsPathMappingByContext=
 			{
-				"{when: 'newInstance', face: 'org/uengine/codi/mw3/model/IProcessDefinition_newInstance.ejs'}",
+				"{when: 'newInstance', face: 'dwr/metaworks/org/uengine/codi/mw3/model/IProcessDefinition_newInstance.ejs'}",
 //				"{when: 'newInstance', face: 'genericFaces/ObjectFace.ejs'}",
 			}		
 

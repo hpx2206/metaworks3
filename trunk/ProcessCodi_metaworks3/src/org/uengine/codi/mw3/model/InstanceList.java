@@ -14,7 +14,7 @@ import org.metaworks.annotation.ServiceMethod;
 @Face(
 		ejsPathMappingByContext=
 	{
-		"{where: 'pinterest', face: 'faces/org/uengine/codi/mw3/model/InstanceList_pinterest.ejs'}",
+		"{where: 'pinterest', face: 'dwr/metaworks/org/uengine/codi/mw3/model/InstanceList_pinterest.ejs'}",
 	}		
 
 )
