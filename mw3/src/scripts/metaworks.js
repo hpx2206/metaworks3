@@ -1739,10 +1739,13 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				$(infoDivId).css('display', 'block').html("<img src='dwr/metaworks/images/circleloading.gif' align=middle>");
 			}
 						
-			Metaworks3.prototype.endLoading = function(){
+			Metaworks3.prototype.endLoading = function(objId){
+				var infoDivId = "#"+this._getInfoDivId(objId);
+				
+				$(infoDivId).css('display', 'block').html("");
 			}
 			
-			Metaworks3.prototype.__showResult = function(object, result, objId, svcNameAndMethodName, serviceMethodContext, placeholder ){
+			Metaworks3.prototype.__showResult = function(object, result, objId, svcNameAndMethodName, serviceMethodContext, placeholder, divId ){
     			
     			mw3.requestMetadataBatch(result);
     			
@@ -2027,7 +2030,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					if(serviceMethodContext && serviceMethodContext.target!="none"){
 
 						if(serviceMethodContext.loadOnce && serviceMethodContext['cachedObjectId']){
-							return this.__showResult(object, this.objects[serviceMethodContext['cachedObjectId']], objId, svcNameAndMethodName, serviceMethodContext, placeholder );
+							return this.__showResult(object, this.objects[serviceMethodContext['cachedObjectId']], objId, svcNameAndMethodName, serviceMethodContext, placeholder, divId );
 						}
 						
 						
@@ -2117,7 +2120,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				        		callback: function(result){
 				        			
 				        			returnValue = result;
-				        			mw3.__showResult(object, result, objId, svcNameAndMethodName, serviceMethodContext, placeholder );
+				        			mw3.__showResult(object, result, objId, svcNameAndMethodName, serviceMethodContext, placeholder, divId );
 				        		},
 
 				        		async: !sync && serviceMethodContext.target!="none",
