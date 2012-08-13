@@ -15,7 +15,7 @@ import org.metaworks.widget.ModalWindow;
 @Face(
 		ejsPathMappingByContext=
 	{
-		"{where: 'pinterest', face: 'faces/org/uengine/codi/mw3/model/IInstance_pinterest.ejs'}",
+		"{where: 'pinterest', face: 'dwr/metaworks/org/uengine/codi/mw3/model/IInstance_pinterest.ejs'}",
 	}		
 
 )

@@ -32,8 +32,8 @@ import com.thoughtworks.xstream.annotations.XStreamOmitField;
 @Face(
 		ejsPathMappingByContext=
 			{
-				"{when: 'newInstance', face: 'org/uengine/codi/mw3/model/ResourceFile_newInstance.ejs'}",
-				"{when: 'appendProcessMap', face: 'org/uengine/codi/mw3/model/ResourceFile_newInstance.ejs'}",				
+				"{when: 'newInstance', face: 'dwr/metaworks/org/uengine/codi/mw3/model/ResourceFile_newInstance.ejs'}",
+				"{when: 'appendProcessMap', face: 'dwr/metaworks/org/uengine/codi/mw3/model/ResourceFile_newInstance.ejs'}",				
 			}		
 
 	)

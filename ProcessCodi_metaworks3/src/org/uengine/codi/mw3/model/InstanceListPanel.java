@@ -13,7 +13,7 @@ import org.uengine.codi.mw3.knowledge.WfPanel;
 @Face(
 		ejsPathMappingByContext=
 	{
-		"{where: 'pinterest', face: 'faces/org/uengine/codi/mw3/model/InstanceListPanel_pinterest.ejs'}",
+		"{where: 'pinterest', face: 'dwr/metaworks/org/uengine/codi/mw3/model/InstanceListPanel_pinterest.ejs'}",
 	}		
 
 )

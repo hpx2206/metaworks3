@@ -1,0 +1,94 @@
+<%
+if(value){	
+%>
+
+<div class="form_table">
+	<table border="1" cellspacing="0" summary="">
+		<tbody>
+			<%
+				if(!mw3.isHidden(fields.packageName.fieldDescriptor)){
+			%>
+			<tr>
+				<th scope="row">Package Name</td>			
+				<td>
+					<div class="item">
+						<%=fields.packageName.here()%>
+					</div>
+				</td>		
+			</tr>
+			<%
+				}
+				if(!mw3.isHidden(fields.entityName.fieldDescriptor)){
+			%>
+			<tr>
+				<th scope="row">Entity Name</td>			
+				<td>
+					<div class="item">
+						<%=fields.entityName.here()%>
+					</div>
+				</td>		
+			
+			</tr>
+			<%
+				}
+				if(!mw3.isHidden(fields.author.fieldDescriptor)){
+			%>
+			<tr>
+				<th scope="row">Author</td>
+				<td>
+					<div class="item">
+						<%=fields.author.here()%>
+					</div>
+				</td>
+			</tr>		
+			<%
+				}
+			%>
+		</tbody>
+	</table>
+
+	<div>
+		<%=fields.entityModeler.here()%>
+		<%=fields.querySourceCode.here()%>
+	</div>
+	
+	<div id="btnline" style="padding-top:8px;">
+		<ul>
+<%
+	if(mw3.when == 'edit'){
+%>	
+			<li><a id="wBtn" href="javascript:<%=methods.next1.caller()%>"><span>next</span></a></li>
+<%
+	}
+	if(mw3.when == 'step1'){
+%>	
+			<li><a id="wBtn" href="javascript:<%=methods.next2.caller()%>"><span>next</span></a></li>
+<%
+	}
+	if(mw3.when == 'view'){
+%>	
+			<li><a id="wBtn" href="javascript:<%=methods.dropTable.caller()%>"><span>dropTable</span></a></li>
+<%
+	}
+	if(mw3.when == 'step2'){
+%>	
+			<li style="position:absolute; bottom:20px; right:20px; z-index:99;"><a id="wBtn" href="javascript:<%=methods.createTable.caller()%>"><span>createTable</span></a></li>
+<%
+	}
+	if(mw3.when == 'view'){
+%>	
+			<li><a id="wBtn" href="javascript:<%=methods.generateDao.caller()%>"><span>generateDao</span></a></li>
+<%
+	}
+%>	
+
+		</ul>
+	</div>
+</div>
+
+
+
+
+<%
+	}
+%>

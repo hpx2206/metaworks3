@@ -22,7 +22,7 @@ import org.uengine.util.UEngineUtil;
 	{
 		"{when: 'edit', face: 'genericfaces/ObjectFace.ejs'}",
 		"{when: 'view', face: 'genericfaces/ObjectFace.ejs'}",
-		"{when: 'instance-mode', face: 'faces/org/uengine/codi/mw3/admin/FormField.ejs'}",
+		"{when: 'instance-mode', face: 'dwr/metaworks/org/uengine/codi/mw3/admin/FormField.ejs'}",
 	}		
 )
 public class ClassField implements Cloneable, ContextAware{
