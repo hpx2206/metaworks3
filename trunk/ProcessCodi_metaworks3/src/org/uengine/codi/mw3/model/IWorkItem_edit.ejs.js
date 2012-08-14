@@ -13,6 +13,27 @@ var org_uengine_codi_mw3_model_IWorkItem_edit = function(objectId, className){
 		var h=$(this);
 		h.height(21).height(h[0].scrollHeight);//where 60 is minimum height of textarea
 		});
+	
+	
+	var value = mw3.objects[objectId];
+
+	if(value.type=="file"){
+		setTimeout(function(){
+			var fileUplodaerObjectId = mw3.getChildObjectId(objectId, "file");
+			var fileUploaderFaceHelper = mw3.getFaceHelper(fileUplodaerObjectId);
+			fileUploaderFaceHelper.addFileChangeListener(function(file){
+				
+				var existingText = $("#post_" + objectId).val();
+				
+				if(existingText==null || existingText.trim().length==0){
+					//value.title = file.filename;
+					//var titleObjId = mw3.getChildObjectId(objectId, "title");
+					$("#post_" + objectId).val(file.filename);
+				}
+			});
+		}, 1000);
+	}
+	
 
 	
 	this.sending = false;
