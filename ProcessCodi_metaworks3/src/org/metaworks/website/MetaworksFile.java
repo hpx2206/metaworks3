@@ -9,12 +9,17 @@ public class MetaworksFile extends AbstractMetaworksFile{
 	@Override
 	public String overrideUploadPathPrefix() {
 		
-		String base = FormActivity.FILE_SYSTEM_DIR + UEngineUtil.getCalendarDir() + "/";
+		String base = FormActivity.FILE_SYSTEM_DIR;
 		
-	    if(getDirectory() == null || "".equals(getDirectory()))
-	    	return base;
-	    else
-	    	return base + getDirectory();
+		return base + "/";
+		
 	}
+
+	@Override
+	public String renameUploadFile(String filename) {
+		return UEngineUtil.getCalendarDir() + "/" + super.renameUploadFile(filename);
+	}
+	
+	
 
 }
