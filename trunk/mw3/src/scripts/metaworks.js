@@ -137,17 +137,18 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
  							}
  							
  	 						$("#__dragGuide").html(mw3.dragObject.innerHTML);
- 							
+ 						
+
+ 	 						if(mw3.dragObject['dragCommand']){
+ 	 							eval(mw3.dragObject['dragCommand']);
+// 	 							mw3.dragObject['dragCommand'] = null;
+ 	 						}
+ 	 						
  	 						mw3.dragging = true;
  							
  						}
  						
  						
- 						
- 						if(mw3.dragObject['dragCommand']){
- 							eval(mw3.dragObject['dragCommand']);
- 							mw3.dragObject['dragCommand'] = null;
- 						}
  						$("#__dragGuide").css("left", mw3.mouseX+1);
  						$("#__dragGuide").css("top", mw3.mouseY);
  						$("#__dragGuide").show();
