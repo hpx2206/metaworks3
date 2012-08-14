@@ -1,6 +1,7 @@
 var org_metaworks_website_MetaworksFile = function(objectId, className){
 	this.objectId = objectId;
 	this.className = className;
+	this.fileChangeListeners = [];
 
 	var faceHelper = this;
 	var object = mw3.objects[this.objectId];
@@ -76,7 +77,17 @@ org_metaworks_website_MetaworksFile.prototype.setFilename = function(filename){
 	
 	$("#filename_" + this.objectId).html(filename);
 	
+	for(var i=0; i<this.fileChangeListeners.length; i++){
+		var listner = this.fileChangeListeners[i];
+		listner(object);
+	}
+	
 }	
+
+org_metaworks_website_MetaworksFile.prototype.addFileChangeListener = function(listener){
+	this.fileChangeListeners[this.fileChangeListeners.length] = listener;
+}
+
 
 org_metaworks_website_MetaworksFile.prototype.reset = function(){
 	$(mw3.getInputElement(this.objectId, 'fileTransfer')).unbind('change');
