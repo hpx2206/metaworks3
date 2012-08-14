@@ -113,12 +113,12 @@ public abstract class AbstractMetaworksFile implements ContextAware {
 		
 	@ServiceMethod(target="append", callByContent=true)
 	public Download download() throws FileNotFoundException, IOException, Exception{
-		return new Download(new FileTransfer(new String(this.getFilename().getBytes("EUC-KR"),"ISO8859_1"), getMimeType(), new FileInputStream(this.getUploadedPath())));
+		return new Download(new FileTransfer(new String(this.getFilename().getBytes("EUC-KR"),"ISO8859_1"), getMimeType(), new FileInputStream(overrideUploadPathPrefix() + "/" + this.getUploadedPath())));
 	}
 
 	@ServiceMethod(target=ServiceMethodContext.TARGET_NONE) //it doesn't cause refresh so that the recursive call of constructor of MetaworksFile javascript object never happened
 	public BufferedImage downloadImage() throws FileNotFoundException, IOException, Exception{
-		image = javax.imageio.ImageIO.read(new File(uploadedPath));
+		image = javax.imageio.ImageIO.read(new File(overrideUploadPathPrefix() + "/" + uploadedPath));
 		
 		return image;
 	}
@@ -146,7 +146,7 @@ public abstract class AbstractMetaworksFile implements ContextAware {
 		
 		copyStream(fileTransfer.getInputStream(), new FileOutputStream(uploadPath));
 		
-		setUploadedPath(uploadPath); //only when the file has been successfully uploaded, this value is set, that means your can download later
+		setUploadedPath(uploadFileName); //only when the file has been successfully uploaded, this value is set, that means your can download later
 		setMimeType(fileTransfer.getMimeType());
 		
 		fileTransfer = null; //ensure to clear the data
