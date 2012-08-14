@@ -895,12 +895,27 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 
 				   				
 				   				if(methodContext.mouseBinding == "drag"){
+				   					
 				   					theDiv[0]['dragCommand'] = command;
 
+				   					
 				   					theDiv[0].addEventListener(
 					   			 		"mousedown",
 					   			 		function(e){
 					   			 			e.preventDefault();
+					   			 			mw3.dragObject = this;
+					   			 			e.stopPropagation();
+					   			 		}
+					   			 	);
+
+				   				}//end of case 'drag start'
+				   				else if(methodContext.mouseBinding == "drag-enableDefault"){
+				   					
+				   					theDiv[0]['dragCommand'] = command;
+				   					
+				   					theDiv[0].addEventListener(
+					   			 		"mousedown",
+					   			 		function(e){
 					   			 			mw3.dragObject = this;
 					   			 			e.stopPropagation();
 					   			 		}
