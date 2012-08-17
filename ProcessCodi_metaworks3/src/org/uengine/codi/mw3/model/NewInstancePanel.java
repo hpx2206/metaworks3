@@ -1,5 +1,7 @@
 package org.uengine.codi.mw3.model;
 
+import java.util.Date;
+
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
@@ -91,6 +93,14 @@ public class NewInstancePanel implements ContextAware {
 			this.knowledgeNodeId = knowledgeNodeId;
 		}
 		
+	Date dueDate;
+		@Hidden	
+		public Date getDueDate() {
+			return dueDate;
+		}
+		public void setDueDate(Date dueDate) {
+			this.dueDate = dueDate;
+		}
 		
 	String parentInstanceId;
 	@Hidden

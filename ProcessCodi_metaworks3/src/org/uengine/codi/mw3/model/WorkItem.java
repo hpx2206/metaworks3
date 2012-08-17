@@ -31,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.CodiProcessDefinitionFactory;
 import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.admin.WebEditor;
+import org.uengine.codi.mw3.calendar.ScheduleCalendar;
 import org.uengine.codi.mw3.knowledge.KnowledgeTool;
 import org.uengine.codi.mw3.knowledge.WfNode;
 import org.uengine.kernel.RoleMapping;
@@ -591,7 +592,17 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			if(!securedConversation)
 				MetaworksRemoteService.getInstance().pushClientObjects(new Object[]{new ToPrepend(new InstanceList(), refreshedInstance)});
 			
-			return new Object[]{new Refresh(instantiatedViewContent), new Refresh(parent)};
+			if(newInstancePanel != null  && newInstancePanel.getDueDate() != null){
+				instance.flushDatabaseMe();
+				
+				ScheduleCalendar scheduleCalendar = new ScheduleCalendar();
+				scheduleCalendar.session = session;
+				scheduleCalendar.load();
+				return new Object[]{new Refresh(scheduleCalendar), new Refresh(instantiatedViewContent)};
+	
+			}else{
+				return new Object[]{new Refresh(instantiatedViewContent), new Refresh(parent)};
+			}
 			
 		}
 
@@ -790,6 +801,10 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			
 			instanceRef.databaseMe().setSecuopt(newInstancePanel.getSecurityLevel());
 			instanceRef.flushDatabaseMe();
+			
+			if(newInstancePanel.getDueDate() != null){
+				instanceRef.databaseMe().setDueDate(newInstancePanel.getDueDate());
+			}
 			
 			if(newInstancePanel.getKnowledgeNodeId() != null){
 			

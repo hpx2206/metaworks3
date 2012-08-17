@@ -17,6 +17,7 @@ import org.metaworks.dao.IDAO;
 import org.uengine.codi.mw3.model.ContentWindow;
 import org.uengine.codi.mw3.model.IUser;
 import org.uengine.codi.mw3.model.Popup;
+import org.uengine.codi.mw3.model.Session;
 
 @Table(name="bpm_knol")
 public interface IWfNode extends IDAO {
@@ -173,6 +174,9 @@ public interface IWfNode extends IDAO {
 	
 	@ServiceMethod(callByContent=true)
 	public WfNode collapse() throws Exception;	
+	
+	@ServiceMethod(mouseBinding="drag-enableDefault")
+	public Session drag();
 	
 	/*******************************************
 	 * 

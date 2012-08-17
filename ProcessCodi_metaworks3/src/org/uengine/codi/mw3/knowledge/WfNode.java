@@ -20,9 +20,7 @@ import org.metaworks.dao.TransactionContext;
 import org.metaworks.dao.UniqueKeyGenerator;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.codi.CodiProcessDefinitionFactory;
 import org.uengine.codi.mw3.model.ContentWindow;
-import org.uengine.codi.mw3.model.FileWorkItem;
 import org.uengine.codi.mw3.model.IInstance;
 import org.uengine.codi.mw3.model.IUser;
 import org.uengine.codi.mw3.model.Instance;
@@ -30,13 +28,10 @@ import org.uengine.codi.mw3.model.InstanceView;
 import org.uengine.codi.mw3.model.InstanceViewContent;
 import org.uengine.codi.mw3.model.NewInstancePanel;
 import org.uengine.codi.mw3.model.NewInstanceWindow;
-import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.model.ProcessDefinition;
-import org.uengine.codi.mw3.model.ResourceFile;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.model.UnstructuredProcessInstanceStarter;
 import org.uengine.codi.mw3.model.WorkItem;
-import org.uengine.processmanager.ProcessManagerRemote;
 
 public class WfNode extends Database<IWfNode> implements IWfNode {
 	
@@ -885,7 +880,6 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 			save();
 			
 			return new Object[]{new Refresh(this), instanceView.schedule()};
-			
 		}
 		
 		
@@ -893,6 +887,12 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 	}
 	
 	
+	
+	@Override
+	public Session drag() {
+		session.setClipboard(this);
+		return session;
+	}
 	
 	@Autowired
 	public UnstructuredProcessInstanceStarter instanceStarter;

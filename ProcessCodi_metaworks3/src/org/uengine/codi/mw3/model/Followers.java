@@ -1,14 +1,13 @@
 package org.uengine.codi.mw3.model;
 
-import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
-import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
-import org.metaworks.dao.MetaworksDAO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.processmanager.ProcessManagerRemote;
 
 public class Followers {
 	static final String CONTEXT_WHERE_INFOLLOWERS = "followers";
@@ -70,7 +69,34 @@ public class Followers {
 		return popup;		
 	}
 	
+	@ServiceMethod(inContextMenu=true, callByContent=true, target="popup", mouseBinding="drop", keyBinding="Ctrl+V")
+	public Object[] drop() throws Exception{
+		Object clipboard = session.getClipboard();
+		if(clipboard instanceof IUser){
+			User newFollowUser = (User)clipboard;
+			if(newFollowUser.getUserId().equals(session.getUser().getUserId())){
+				return null; //ignores drag n drop same object 
+			}
+			followers.beforeFirst();
+			while(followers.next()){
+				if( newFollowUser.getUserId().equals( followers.getUserId()) ) {
+					return null; //ignores same follower
+				}
+			}
+			
+			Followers addFollower = new Followers();
+			addFollower.setInstanceId(getInstanceId());
+			newFollowUser.followers = addFollower;
+			newFollowUser.processManager = processManager;
+			newFollowUser.session = session;
+			return newFollowUser.addFollower();
+		}
+		return null;
+	}
 	@AutowiredFromClient
 	public Session session;
+	
+	@Autowired
+	public ProcessManagerRemote processManager;
 	
 }

@@ -9,6 +9,8 @@ import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
+import org.metaworks.ToAppend;
+import org.metaworks.ToPrepend;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;
@@ -19,6 +21,9 @@ import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.uengine.codi.mw3.knowledge.IWfNode;
+import org.uengine.codi.mw3.knowledge.KnowledgeTool;
+import org.uengine.codi.mw3.knowledge.WfNode;
 import org.uengine.kernel.EJBProcessInstance;
 import org.uengine.kernel.ProcessInstance;
 import org.uengine.processmanager.ProcessManagerBean;
@@ -86,12 +91,33 @@ public class InstanceView {
 	
 	@ServiceMethod(inContextMenu=true, callByContent=true, needToConfirm=true, target="popup", mouseBinding="drop", keyBinding="Ctrl+V")
 	public Object[] drop() throws Exception{
+		Object clipboard = session.getClipboard();
+		if(clipboard instanceof IWfNode){
+			WfNode draggedNode = (WfNode) clipboard;
+			
+			//setting the first workItem as wfNode referencer
+			GenericWorkItem genericWI = new GenericWorkItem();
+			
+			genericWI.processManager = processManager;
+			genericWI.session = session;
+			genericWI.setTitle("Attaching Knowledge");//parent.getName());
+			GenericWorkItemHandler genericWIH = new GenericWorkItemHandler();
+			KnowledgeTool knolTool = new KnowledgeTool();
+			knolTool.setNodeId(draggedNode.getId());
+			genericWIH.setTool(knolTool);
+			
+			genericWI.setGenericWorkItemHandler(genericWIH);
+			genericWI.setInstId(new Long(getInstanceId()));
+			// TODO attach thread 
+			return genericWI.add();
+		}else{
 		
-		Instance instance = new Instance();
-		instance.session = session;
-		instance.processManager = processManager;
-		instance.setInstId(new Long(getInstanceId()));
-		return instance.paste();
+			Instance instance = new Instance();
+			instance.session = session;
+			instance.processManager = processManager;
+			instance.setInstId(new Long(getInstanceId()));
+			return instance.paste();
+		}
 		
 	}
 	
