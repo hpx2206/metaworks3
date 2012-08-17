@@ -3,7 +3,7 @@
 	var isMine = (value.writer.userId == mw3.getAutowiredObject('org.uengine.codi.mw3.model.Session').user.userId);
 
 	mw3.setWhen('view');
-
+	
 	if(isMine == true){
 %>
 	<div style="position:relative;">
@@ -44,7 +44,7 @@
 					<% }%>
 						<td>
 							<div class="formcontexttitle" id="currentRunningWorkItemHandler" <% if(value.type=='comment'){%>style="font-weight:normal;"<% }%>>
-								<% if(value.type=='comment' || value.type=='file' || value.type=='src' || value.type=='memo'){%>
+								<% if(value.type=='comment' || value.type=='file' || value.type=='src' || value.type=='memo' || value.type=='generic'){%>
 									<span>
 											<%=value.title.replace('\n','<br>')%>
 									</span>								
@@ -53,7 +53,7 @@
 										<%=mw3.localize('$MyTask')%>: <a href="javascript:<%=methods.detail.caller()%>"><%=value.title%> [ <%=value.status%> ]</a>
 									</span>
 									<span>
-										<a href="javascript:<%=methods.workItemPopup.caller()%>"><img src="images/waveStyle/newWindow.png" style="margin-top:2px;" title="새창으로 열기"></a>
+										<a href="javascript:<%=methods.workItemPopup.caller()%>"><img src="images/waveStyle/newWindow.png" style="margin-top:2px;" title="�덉갹�쇰줈 �닿린"></a>
 									</span>				
 								<%}%>
 								<% if(value.dueDate!=null){%>

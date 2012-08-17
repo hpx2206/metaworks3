@@ -20,7 +20,7 @@ var org_uengine_codi_mw3_calendar_ScheduleCalendar = function(objectId, classNam
 					calendar.linkScheduleCalendar();
 				},
 				eventClick: function(calEvent, jsEvent, view) {	
-					mw3.getFaceHelper(objectId).eventClick(calEvent.id, view.name);
+					mw3.getFaceHelper(objectId).eventClick(calEvent.id, calEvent.callType, view.name);
 				},
 				events: object.data,
 				firstDay: 1,
@@ -45,7 +45,7 @@ var org_uengine_codi_mw3_calendar_ScheduleCalendar = function(objectId, classNam
 					mw3.getFaceHelper(objectId).dayClick(date, view.name);
 				},
 				eventClick: function(calEvent, jsEvent, view) {	
-					mw3.getFaceHelper(objectId).eventClick(calEvent.id, view.name);
+					mw3.getFaceHelper(objectId).eventClick(calEvent.id, calEvent.callType, view.name);
 				},
 				titleFormat: {
 					month: "yyyy년 MMMM",
@@ -85,10 +85,10 @@ org_uengine_codi_mw3_calendar_ScheduleCalendar.prototype.dayClick = function(sel
 	object.linkScheduleDay();
 }
 
-org_uengine_codi_mw3_calendar_ScheduleCalendar.prototype.eventClick = function(schdId, viewMode){
+org_uengine_codi_mw3_calendar_ScheduleCalendar.prototype.eventClick = function(schdId, callType, viewMode){
 	var object = mw3.getObject(this.objectId);
-	
 	object.schdId = schdId;
+	object.callType = callType;
 	object.viewMode = viewMode;
 
 	object.linkScheduleEvent();
