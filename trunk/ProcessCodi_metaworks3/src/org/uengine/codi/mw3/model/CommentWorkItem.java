@@ -125,8 +125,6 @@ public class CommentWorkItem extends WorkItem{
 			instanceDAO.set("InitEp", session.getUser().getUserId());
 			instanceDAO.set("InitRsNm", session.getUser().getName());
 
-			processManager.applyChanges();
-
 			
 			//when newly creating process instance, there must be at least one or more rolemapping. so if there's no rolemapping has been defined by running process, add one implicitly.
 			if(isInstantiation()){
@@ -139,7 +137,7 @@ public class CommentWorkItem extends WorkItem{
 				}
 			}
 			
-
+			processManager.applyChanges();
 			
 			
 			instantiated = true;

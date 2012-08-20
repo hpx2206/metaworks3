@@ -28,6 +28,12 @@ public class ContactList implements ContextAware {
 		if(LOCAL.equals(this.getMetaworksContext().getWhere())){
 			contact.setNetwork(LOCAL);
 			setContacts(contact.loadContacts(keyword));
+			
+			if(getContacts().size()==0){
+				invitation = new Invitation();
+				//invitation.session = session;
+			}
+			
 		}else if(FACEBOOK.equals(this.getMetaworksContext().getWhere())){
 			contact.setNetwork(FACEBOOK);
 			setContacts(contact.loadContacts(keyword));
@@ -59,6 +65,15 @@ public class ContactList implements ContextAware {
 		public void setContacts(IContact contacts) {
 			this.contacts = contacts;			
 		}		
-		
+	
+	Invitation invitation;
+
+		public Invitation getInvitation() {
+			return invitation;
+		}
+	
+		public void setInvitation(Invitation invitation) {
+			this.invitation = invitation;
+		}
 
 }
