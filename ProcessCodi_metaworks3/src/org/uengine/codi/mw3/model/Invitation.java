@@ -12,7 +12,7 @@ import org.metaworks.dao.Database;
 import org.metaworks.dao.TransactionContext;
 import org.uengine.webservices.emailserver.impl.EMailServerSoapBindingImpl;
 
-@Face(displayName="$InviteYourFriend")
+@Face(displayName="$InviteYourFriend", options="hideLabels", values="true")
 public class Invitation implements ContextAware{
 	
 	MetaworksContext metaworksContext;
@@ -42,7 +42,7 @@ public class Invitation implements ContextAware{
 	}
 	
 	String email;
-	
+	@Face(options="placeholder", values="$Email")
 		public String getEmail() {
 			return email;
 		}
@@ -52,6 +52,7 @@ public class Invitation implements ContextAware{
 		}
 
 	String name;
+	@Face(options="placeholder", values="$Name")
 		public String getName() {
 			return name;
 		}

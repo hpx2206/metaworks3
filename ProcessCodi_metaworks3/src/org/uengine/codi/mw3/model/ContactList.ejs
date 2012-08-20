@@ -1,9 +1,14 @@
 <%
 	if(value){
+	
+		if(value.invitation){
+			%><%=fields.invitation.here()%><%
+		}else{
 %>
 	<ul>
 		<%=fields.contacts.here()%>
 	</ul>
 <%
+		}
 	}
 %>	

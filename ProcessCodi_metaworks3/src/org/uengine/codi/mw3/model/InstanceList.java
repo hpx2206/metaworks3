@@ -20,7 +20,7 @@ import org.metaworks.annotation.ServiceMethod;
 )
 public class InstanceList implements ContextAware{
 
-	final static int PAGE_CNT = 30;
+	final static int PAGE_CNT = 15;
 
 	int page;
 		@Id
