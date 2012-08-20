@@ -23,7 +23,7 @@ legend {display:none;}
 .cb_lstcomment .cb_dsc_comment{overflow:hidden;clear:both;padding:0 0 10px 1px;color:#555;line-height:20px}
 .cb_lstcomment li li .cb_comment_area{margin-top:1px}
 
-.formcontexttitle { position:relative; padding:0px;  font-size:10pt; padding-bottom:3px; border-bottom:1px dotted #ccc;margin:3px;  font-weight:bold;}
+.formcontexttitle { position:relative; padding:0px;  font-size:10pt; padding-bottom:3px; border-bottom:1px dotted #ccc;margin-top:2px;  font-weight:bold;}
 .formcontexttitle span{float:left; vertical-align: middle; margin-right:15px;}
 
 .commentTailRight {position:absolute; top:5px; right:0px;}
