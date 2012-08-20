@@ -16,7 +16,15 @@ var org_uengine_codi_mw3_model_InstanceListPanel = function(objectId, className)
 	}	
 	
 	var faceHelper = this;	
-	faceHelper.load();		
+	faceHelper.load();	
+	
+	var scrollDiv = $('#objDiv_' + this.objectId + " .ui-layout-center .ui-layout-content")
+	
+	scrollDiv.scroll(function(e) {
+		if(scrollDiv.scrollTop() == scrollDiv.find('div').eq(0).height() - scrollDiv.height() && lastMore){
+			mw3.objects[lastMore].more();
+		}
+	});
 }
 
 

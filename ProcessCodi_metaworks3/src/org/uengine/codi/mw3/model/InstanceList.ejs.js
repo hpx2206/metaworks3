@@ -1,9 +1,15 @@
+
+var lastMore;
+
 var org_uengine_codi_mw3_model_InstanceList = function(objectId, className) {
 	this.objectId = objectId;
 	this.className = className;
 	this.divId = mw3._getObjectDivId(this.objectId);
 	
 	this.windowObjectId = $('#' + this.divId).closest('.mw3_window').attr('objectId');
+	
+	if(mw3.objects[objectId].instances == null)
+		lastMore = objectId;
 }
 
 org_uengine_codi_mw3_model_InstanceList.prototype = {
