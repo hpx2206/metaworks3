@@ -7,6 +7,7 @@ import org.metaworks.annotation.Hidden;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.widget.IFrame;
 import org.metaworks.widget.Window;
+import org.metaworks.widget.grid.Grid;
 import org.metaworks.widget.layout.Layout;
 import org.uengine.codi.mw3.admin.PageNavigator;
 
@@ -146,6 +147,13 @@ public class Main {
 		NewInstancePanel instancePanel = new NewInstancePanel();
 		instancePanel.session = session;
 		instancePanel.load(session);
+//		contentWindow.setPanel(instancePanel);
+		
+//		Grid grid = new Grid();
+//		grid.setColumnNames(new String[]{"Name", "Age", "Address"});
+		//grid.set
+		
+		
 		contentWindow.setPanel(instancePanel);
 //		contentWindow.setPanel(new IFrame("http://www.naver.com"));
 		return contentWindow;
