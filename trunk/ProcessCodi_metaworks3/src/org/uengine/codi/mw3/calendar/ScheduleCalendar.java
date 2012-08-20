@@ -97,7 +97,7 @@ public class ScheduleCalendar implements ContextAware {
 		DataConvert(arrListData, workitems, session.getUser().getUserId());
 		
 		Instance instance = new Instance();
-		String sql = 	" select inst.* "+ 
+		String sql = 	" select distinct(inst.INSTID), inst.DEFVERID, inst.DEFID, inst.DEFNAME, inst.DEFPATH, inst.DEFMODDATE, inst.STARTEDDATE, inst.FINISHEDDATE, inst.DUEDATE, inst.STATUS, inst.INFO, inst.NAME, inst.ISDELETED, inst.ISADHOC, inst.ISARCHIVE, inst.ISSUBPROCESS, inst.ISEVENTHANDLER, inst.ROOTINSTID, inst.MAININSTID, inst.MAINDEFVERID, inst.MAINACTTRCTAG, inst.MAINEXECSCOPE, inst.ABSTRCPATH, inst.DONTRETURN, inst.MODDATE, inst.EXT1, inst.INITEP, inst.INITRSNM, inst.CURREP, inst.CURRRSNM, inst.STRATEGYID, inst.PREVCURREP, inst.PREVCURRRSNM, inst.STARCNT, inst.STARRSNM, inst.STARFLAG, inst.ABSTRACTINST, inst.CURRTRCTAG, inst.PREVTRCTAG, inst.INITCOMCD, inst.SECUOPT, inst.lastcmnt, inst.initcmpl "+ 
 						" from bpm_procinst inst , bpm_rolemapping follower "+
 						" where inst.duedate is not null " +
 						" and inst.isdeleted != 1  "+
@@ -126,7 +126,8 @@ public class ScheduleCalendar implements ContextAware {
 				column.put("id", iInstance.getInstId()+"");
 				column.put("callType", "instance" );
 				column.put("title", title );
-				column.put("start", iInstance.getStartedDate());
+//				column.put("start", iInstance.getStartedDate();
+				column.put("start", iInstance.getDueDate());	// 마지막 날만 보이도록 셋팅을 함
 				
 				if(iInstance.getDueDate()!=null){
 					column.put("end", iInstance.getDueDate());
@@ -172,7 +173,8 @@ public class ScheduleCalendar implements ContextAware {
 //				if("INVST".equals(schedule.getSchdTypeCombo().getSelected()))
 //					column.put("start", schedule.get);
 //				else
-				column.put("start", schedule.getStartDate());
+//				column.put("start", schedule.getStartDate());
+				column.put("start", schedule.getDueDate());	// 마지막 날만 보이도록 셋팅함
 				
 				if(schedule.getEndDate()!=null){
 					column.put("end", schedule.getEndDate());
