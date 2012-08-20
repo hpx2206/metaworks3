@@ -151,9 +151,9 @@
 	</bean-->
 	<bean id="Posting" class="org.uengine.codi.mw3.model.Posting"/>
 	<bean id="ProcessDefinition" class="org.uengine.codi.mw3.model.ProcessDefinition"/>
-	<bean id="WorkItem" class="org.uengine.codi.mw3.model.WorkItem"/>
+	<bean id="WorkItem" class="org.uengine.codi.mw3.model.WorkItem" scope="request"/>
 	<bean id="CommentWorkItem" class="org.uengine.codi.mw3.model.CommentWorkItem" scope="request"/>
-	<bean id="SourceCodeWorkItem" class="org.uengine.codi.mw3.model.SourceCodeWorkItem"/>
+	<bean id="SourceCodeWorkItem" class="org.uengine.codi.mw3.model.SourceCodeWorkItem" scope="request"/>
 	<bean id="WorkItemHandler" class="org.uengine.codi.mw3.model.WorkItemHandler"/>
 	<bean id="FormWorkItemHandler" class="org.uengine.codi.activitytypes.wih.FormWorkItemHandler"/>
 	
