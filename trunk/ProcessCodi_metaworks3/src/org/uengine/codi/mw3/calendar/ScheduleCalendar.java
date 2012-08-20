@@ -136,9 +136,9 @@ public class ScheduleCalendar implements ContextAware {
 					column.put("end", iInstance.getFinishedDate());
 				}
 				if(empCode.equals(iInstance.getInitEp()))
-					column.put("color", "#F5C510");
+					column.put("color", "#348017");
 				else
-					column.put("color", "#FFDB2F");
+					column.put("color", "#C48189");
 	
 				if(completed){
 					column.put("color", "#808080");
@@ -185,9 +185,9 @@ public class ScheduleCalendar implements ContextAware {
 					
 				
 				if(empCode.equals(schedule.getEndpoint()))
-					column.put("color", "#F5C510");
+					column.put("color", "#348017");
 				else
-					column.put("color", "#FFDB2F");
+					column.put("color", "#C48189");
 
 				if(DefaultWorkList.WORKITEM_STATUS_RESERVED.equals(schedule.getStatus())){
 					column.put("color", "#FE2020");
