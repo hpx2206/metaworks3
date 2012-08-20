@@ -94,14 +94,14 @@ ul, ol, li, dl, dd, dt {
     height: 18px;
     width: 18px;
     line-height: 18px;
-    background: url(../../images/waveStyle/navi_icon.png) no-repeat;
+    background: url(../../images/waveStyle/plus.gif) no-repeat;
     cursor: pointer;
 }
 .workflowy .closed {
     height: 18px;
     width: 18px;
     line-height: 18px;
-    background: url(../../images/waveStyle/navi_icon.png) no-repeat;
+    background: url(../../images/waveStyle/minus.gif) no-repeat;
     cursor: pointer;
 }
 .workflowy .wfNodeText {
@@ -139,11 +139,9 @@ ul, ol, li, dl, dd, dt {
 
 .first_wfNode {
     background: #F9F9F9;
-    margin-left: -25px !important;
     border: 1px solid #ccc;
-    border-left: none;
-    padding-left: 15px;
-    width: 30%;
+    border-right: none;
+    width: 100%;
 }
 
 .first_wfNode .closed{
