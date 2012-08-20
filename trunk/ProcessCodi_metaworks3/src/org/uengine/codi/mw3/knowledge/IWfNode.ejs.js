@@ -130,7 +130,7 @@ var org_uengine_codi_mw3_knowledge_IWfNode = function(objectId, className){
 	}
 	this.obj.addClass("workflowy_node").attr("objectId", objectId).attr("nodeId", this.mw3Obj.id).attr('parentId', this.mw3Obj.parentId).css("position", "relative");
 	
-	if(this.mw3Obj.parentId < 0){
+	if(this.mw3Obj.parentId == rootNodeId){
 		this.obj.find('.wfNode').eq(0).addClass("first_wfNode");
 	}
 }
