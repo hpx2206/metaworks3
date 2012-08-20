@@ -186,4 +186,7 @@ public interface IWfNode extends IDAO {
 	public void saveMe() throws Exception;
 	
 	public void createMe() throws Exception;
+	
+	@ServiceMethod(mouseBinding="drag-enableDefault")
+	public void drag();
 }
