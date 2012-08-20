@@ -32,7 +32,7 @@
 			<td style=" padding:10px 0;">
 			
 				<div id="commandDiv_<%=objectId%>"> 
-					<textarea class="newComment" _placeholder="<%=mw3.localize('$WhatYouThinkNow')%>" id="post_<%=objectId%>" value="<%=value.title%>" tabindex=1 onkeyup="mw3.getFaceHelper('<%=objectId%>').press()"  rows="1" style="width:99%; height:21px; -webkit-border-radius:3px; outline:none;  webkit-border-radius:3px; border:1px solid #ccd; none;"><%=value.title%></textarea>
+					<textarea class="newComment" _placeholder="<%=mw3.localize('$WhatYouThinkNow')%>" id="post_<%=objectId%>" value="<%=value.title ? value.title : ''%>" tabindex=1 onkeyup="mw3.getFaceHelper('<%=objectId%>').press()"  rows="1" style="width:99%; height:21px; -webkit-border-radius:3px; outline:none;  webkit-border-radius:3px; border:1px solid #ccd; none;"><%=value.title ? value.title : ''%></textarea>
 					<div id="commandRecommendDiv_<%=objectId%>"></div> 
 				</div>
 				
@@ -51,7 +51,7 @@
 				<%=mw3.localize("$Title")%> 
 			</td>			
 			<td style="padding-right:15px;"> 
-				<input id="post_<%=objectId%>" value="<%=value.title%>"  style="width:99%;-webkit-border-radius:3px;  border:1px solid #ccc" onkeydown="mw3.getFaceHelper('<%=objectId%>').press()">
+				<input id="post_<%=objectId%>" value="<%=value.title ? value.title : ''%>"  style="width:99%;-webkit-border-radius:3px;  border:1px solid #ccc" onkeydown="mw3.getFaceHelper('<%=objectId%>').press()">
 			</td>			
 			
 		</tr>
@@ -79,7 +79,7 @@
 				Title : 
 			</td>			
 			<td style="padding-right:15px;"> 
-				<input id="post_<%=objectId%>" value="<%=value.title%>"  style="width:99%;-webkit-border-radius:3px;  border:1px solid #ccc" onkeydown="mw3.getFaceHelper('<%=objectId%>').press()">
+				<input id="post_<%=objectId%>" value="<%=value.title ? value.title : ''%>"  style="width:99%;-webkit-border-radius:3px;  border:1px solid #ccc" onkeydown="mw3.getFaceHelper('<%=objectId%>').press()">
 			</td>			
 			
 		</tr>
@@ -103,7 +103,7 @@
 				Title : 
 			</td>
 			<td style="padding-right:15px;"> 
-				<input id="post_<%=objectId%>" value="<%=value.title%>" style="width:99%;-webkit-border-radius:3px; border:1px solid #ccc">
+				<input id="post_<%=objectId%>" value="<%=value.title ? value.title:''%>" style="width:99%;-webkit-border-radius:3px; border:1px solid #ccc">
 			</td>			
 			
 		</tr>			
