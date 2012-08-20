@@ -35,8 +35,15 @@ public class WfPanel implements ContextAware {
 		public void setPath(ArrayList<IWfNode> path) {
 			this.path = path;
 		}
-
 		
+	String rootNodeId;
+		public String getRootNodeId() {
+			return rootNodeId;
+		}
+		public void setRootNodeId(String rootNodeId) {
+			this.rootNodeId = rootNodeId;
+		}
+
 	String keyword;
 		@Hidden
 		public String getKeyword() {
@@ -59,6 +66,8 @@ public class WfPanel implements ContextAware {
 	}
 	
 	public void load(String nodeId, String metaworksContext) throws Exception {
+		
+		setRootNodeId(nodeId);
 		
 		setMetaworksContext(new MetaworksContext());
 		getMetaworksContext().setWhen(metaworksContext);
