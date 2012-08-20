@@ -599,9 +599,12 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 							}
 						);
 						
+						$.jqotec(templateEngine, null, url);
 						
 						//templateEngine = new EJS({url: url});
-						mw3.templates[url] = templateEngine;
+						mw3.templates[url] = url;
+						templateEngine = url;
+						
 						
 					}else{
 						templateEngine = new EJS({url: url});
@@ -2040,43 +2043,8 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 						return;
 					}
 
-					this.startProgress();
 					
-					var placeholder = null;
-					if(serviceMethodContext && serviceMethodContext.target!="none"){
 
-						if(serviceMethodContext.loadOnce && serviceMethodContext['cachedObjectId']){
-							return this.__showResult(object, this.objects[serviceMethodContext['cachedObjectId']], objId, svcNameAndMethodName, serviceMethodContext, placeholder, divId );
-						}
-						
-						
-						var loader = serviceMethodContext.loader;
-						
-						
-						if(loader && serviceMethodContext.target=="popup" && loader[0].indexOf("java.lang.Object")==-1){
-
-	        				try{
-		        				mw3.popupDivId = 'popup_' + objId;
-		        				$('body').append("<div id='" + mw3.popupDivId + "' class='target_popup' style='z-index:10;position:absolute; top:0px; left:0px'></div>");
-		        				placeholder = mw3.locateObject({__className: loader[0]}, null, '#' + mw3.popupDivId).targetObjectId;
-
-								mw3.onLoadFaceHelperScript();
-	        				}catch(e){if(consol) console.log(e)}
-						}
-						
-						if(placeholder && this.getFaceHelper(placeholder) && this.getFaceHelper(placeholder).startLoading){
-							this.getFaceHelper(placeholder).startLoading(svcNameAndMethodName);
-						}else if(placeholder){
-							this.startLoading(placeholder, svcNameAndMethodName);
-						}
-						else if(this.getFaceHelper(objId) && this.getFaceHelper(objId).startLoading){
-							this.getFaceHelper(objId).startLoading(svcNameAndMethodName);
-						}else{
-							this.startLoading(objId, svcNameAndMethodName);
-						}
-						
-						
-					}
 
     				//alert("call.argument=" + dwr.util.toDescriptiveString(object, 5))
     				
@@ -2132,39 +2100,76 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					
 					
 					this.metaworksProxy.callMetaworksService(className, object, svcNameAndMethodName, autowiredObjects,
-							{ 
-				        		callback: function(result){
-				        			
-				        			returnValue = result;
-				        			mw3.__showResult(object, result, objId, svcNameAndMethodName, serviceMethodContext, placeholder, divId );
-				        		},
+						{ 
+			        		callback: function(result){
+			        			
+			        			returnValue = result;
+			        			mw3.__showResult(object, result, objId, svcNameAndMethodName, serviceMethodContext, placeholder, divId );
+			        		},
 
-				        		async: !sync && serviceMethodContext.target!="none",
-				        		
-				        		errorHandler:function(errorString, exception) {
-				        			mw3.endProgress();				        			
-				        			
-				        			if(serviceMethodContext.target=="none")
-				        				throw exception;
-				        			
-				        			if(mw3.objects[objId] && mw3.getFaceHelper(objId) && mw3.getFaceHelper(objId).showError){
-					        			if(!exception)
-					        				mw3.getFaceHelper(objId).showError( errorString, svcNameAndMethodName );
-					        			else
-					        				mw3.getFaceHelper(objId).showError( (exception.targetException ? exception.targetException.message : exception.message), svcNameAndMethodName );
-									
-									}else{
-										if(!exception)
-											mw3.showError(objId, errorString, svcNameAndMethodName);
-										else
-											mw3.showError(objId, (exception.targetException ? exception.targetException.message : exception.message), svcNameAndMethodName, exception);
-									}
-				        		}
-						
-				    		}
-						);
-
+			        		async: !sync && serviceMethodContext.target!="none",
+			        		
+			        		errorHandler:function(errorString, exception) {
+			        			mw3.endProgress();				        			
+			        			
+			        			if(serviceMethodContext.target=="none")
+			        				throw exception;
+			        			
+			        			if(mw3.objects[objId] && mw3.getFaceHelper(objId) && mw3.getFaceHelper(objId).showError){
+				        			if(!exception)
+				        				mw3.getFaceHelper(objId).showError( errorString, svcNameAndMethodName );
+				        			else
+				        				mw3.getFaceHelper(objId).showError( (exception.targetException ? exception.targetException.message : exception.message), svcNameAndMethodName );
+								
+								}else{
+									if(!exception)
+										mw3.showError(objId, errorString, svcNameAndMethodName);
+									else
+										mw3.showError(objId, (exception.targetException ? exception.targetException.message : exception.message), svcNameAndMethodName, exception);
+								}
+			        		}
 					
+			    		}
+					);
+
+					///// just after call, 
+					this.startProgress();
+
+					var placeholder = null;
+					if(serviceMethodContext && serviceMethodContext.target!="none"){
+
+						if(serviceMethodContext.loadOnce && serviceMethodContext['cachedObjectId']){
+							return this.__showResult(object, this.objects[serviceMethodContext['cachedObjectId']], objId, svcNameAndMethodName, serviceMethodContext, placeholder, divId );
+						}
+						
+						
+						var loader = serviceMethodContext.loader;
+						
+						
+						if(loader && serviceMethodContext.target=="popup" && loader[0].indexOf("java.lang.Object")==-1){
+
+	        				try{
+		        				mw3.popupDivId = 'popup_' + objId;
+		        				$('body').append("<div id='" + mw3.popupDivId + "' class='target_popup' style='z-index:10;position:absolute; top:0px; left:0px'></div>");
+		        				placeholder = mw3.locateObject({__className: loader[0]}, null, '#' + mw3.popupDivId).targetObjectId;
+
+								mw3.onLoadFaceHelperScript();
+	        				}catch(e){if(consol) console.log(e)}
+						}
+						
+						if(placeholder && this.getFaceHelper(placeholder) && this.getFaceHelper(placeholder).startLoading){
+							this.getFaceHelper(placeholder).startLoading(svcNameAndMethodName);
+						}else if(placeholder){
+							this.startLoading(placeholder, svcNameAndMethodName);
+						}
+						else if(this.getFaceHelper(objId) && this.getFaceHelper(objId).startLoading){
+							this.getFaceHelper(objId).startLoading(svcNameAndMethodName);
+						}else{
+							this.startLoading(objId, svcNameAndMethodName);
+						}
+						
+						
+					}
 					//CollectGarbage();
 					
 					if(serviceMethodContext.target=="none"){
@@ -2179,6 +2184,8 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					return this._withTarget(objId);
 					
 				}
+				
+
 				
 				//$(infoDivId).html("<font color=red> LOADING... </font>");
 
