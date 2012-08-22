@@ -19,6 +19,7 @@ import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.admin.ResourcePanel;
 import org.uengine.codi.mw3.knowledge.WfNode;
+import org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerWebWindow;
 import org.uengine.kernel.RoleMapping;
 import org.uengine.processmanager.ProcessManagerBean;
 import org.uengine.processmanager.ProcessManagerRemote;
@@ -238,6 +239,14 @@ public class ResourceFile implements ContextAware{
 		
 		
 		return new ModalWindow(newChildContentPanel, 800, 540, "New Child...");
+	}
+	
+	@ServiceMethod(inContextMenu=true)
+	public Object webProcess() throws Exception {
+		ProcessDesignerWebWindow processDesigner = new ProcessDesignerWebWindow();
+		processDesigner.newProcess();
+		
+		return processDesigner;
 	}
 	
 	@ServiceMethod(callByContent=true, except="childs", inContextMenu=true, needToConfirm=true)
