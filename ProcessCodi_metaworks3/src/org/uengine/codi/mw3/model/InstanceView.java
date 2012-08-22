@@ -89,7 +89,7 @@ public class InstanceView {
 		
 	}
 	
-	@ServiceMethod(inContextMenu=true, callByContent=true, needToConfirm=true, target="popup", mouseBinding="drop", keyBinding="Ctrl+V")
+	@ServiceMethod(inContextMenu=true, callByContent=true, needToConfirm=true, target="popup", mouseBinding="drop")
 	public Object[] drop() throws Exception{
 		Object clipboard = session.getClipboard();
 		if(clipboard instanceof IWfNode){
