@@ -202,6 +202,12 @@ public interface IWorkItem extends IDAO{
 		public boolean isInstantiation();
 		public void setInstantiation(boolean instantiation);
 
+		@NonLoadable
+		@NonSavable
+		@Hidden
+		public boolean isInstantiated();
+		public void setInstantiated(boolean instantiated);
+
 
 		@NonLoadable
 		@NonSavable

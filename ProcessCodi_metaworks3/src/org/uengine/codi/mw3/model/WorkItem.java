@@ -432,9 +432,15 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	public NewInstancePanel newInstancePanel;
 	
 	
-	protected boolean instantiated;
+	boolean instantiated;
+		public boolean isInstantiated() {
+			return instantiated;
+		}
 	
-		
+		public void setInstantiated(boolean instantiated) {
+			this.instantiated = instantiated;
+		}
+
 	@Override
 	@Test(scenario="first", starter=true, instruction="$Write", next="newActivity()")
 	public Object[] add() throws Exception {
