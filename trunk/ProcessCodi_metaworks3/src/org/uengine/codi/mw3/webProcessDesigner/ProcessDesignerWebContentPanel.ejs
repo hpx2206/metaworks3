@@ -1,0 +1,93 @@
+<style type="text/css">
+        .ui-layout-center {
+            padding: 0;
+            overflow: scroll;
+        }
+
+        .ui-layout-west {
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .ui-accordion .ui-accordion-content {
+            padding: 2px;
+            top: 0;
+            border-top: 0;
+            margin-top: 2px;
+            margin-bottom: -2px;
+            position: relative;
+        }
+
+        .icon_shape {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .ui-accordion-content img {
+            border: none;
+            overflow: hidden;
+        }
+
+        .ui-accordion-content img:hover {
+            border: 2px solid blue;
+            margin: -2px;
+        }
+    </style>
+<html>
+<div class="ui-layout-north">
+	<ul>
+		<li>
+			<input value="clear" type="button" onclick="mw3.getFaceHelper('<%=objectId%>').clear()"><span></span></a>
+			<input value="getJson" type="button" onclick="mw3.getFaceHelper('<%=objectId%>').jsonobject()"><span></span></a>
+		</li>
+	</ul>
+</div>
+<div>
+    <div id="accordion">
+        <h3><a href="#">BPMN</a></h3>
+
+        <div>
+            <img src="images/opengraph/cancel_end.png" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
+            <img src="images/opengraph/cancel_intermediate.png" class="icon_shape" _shape_id="OG.shape.EllipseShape"/>
+            <img src="images/opengraph/error.png" class="icon_shape" _shape_id="OG.shape.RectangleShape"/>
+            <img src="images/opengraph/event.png" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
+            <img src="images/opengraph/event_end.png" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
+            <img src="images/opengraph/event_intermediate.png" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
+            <img src="images/opengraph/fork.png" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
+            <img src="images/opengraph/inclusive.png" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
+            <img src="images/opengraph/link.png" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
+            <img src="images/opengraph/merge.png" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
+            <img src="images/opengraph/message.png" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
+            <img src="images/opengraph/message_end.png" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
+            <img src="images/opengraph/message_intermediate.png" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
+            <img src="images/opengraph/multiple.png" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
+            <img src="images/opengraph/rule.png" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
+            <img src="images/opengraph/small_cancel_end.gif" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
+            <img src="images/opengraph/small_cancel_intermediate.gif" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
+            <img src="images/opengraph/small_error.gif" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
+            <img src="images/opengraph/small_event.gif" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
+            <img src="images/opengraph/small_event_intermediate.gif" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
+            <img src="images/opengraph/small_fork.gif" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
+            <img src="images/opengraph/small_inclusive.gif" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
+            <img src="images/opengraph/small_link.gif" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
+            <img src="images/opengraph/small_merge.gif" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
+            <img src="images/opengraph/small_message.gif" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
+            <img src="images/opengraph/small_message_end.gif" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
+            <img src="images/opengraph/small_message_intermediate.gif" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
+            <img src="images/opengraph/small_multiple.gif" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
+            <img src="images/opengraph/small_rule.gif" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
+            <img src="images/opengraph/small_terminate.gif" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
+            <img src="images/opengraph/small_timer.gif" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
+            <img src="images/opengraph/terminate.png" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
+            <img src="images/opengraph/timer.png" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
+        </div>
+
+        <h3><a href="#">General</a></h3>
+
+        <div>
+        </div>
+    </div>
+</div>
+<div id="canvas" style="cursor: default; height: 400px;"/>
+</html>
