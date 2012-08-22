@@ -366,7 +366,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	public IWorkItem newFile() throws Exception {
 		// TODO Auto-generated method stub
 		FileWorkItem fwi = new FileWorkItem();
-
+		fwi.setTitle(title);
 		formatWorkItem(fwi);
 		
 		return fwi;
@@ -376,7 +376,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	public IWorkItem newMemo() throws Exception {
 		// TODO Auto-generated method stub
 		MemoWorkItem wi = new MemoWorkItem();
-
+		wi.setTitle(title);
 		formatWorkItem(wi);
 
 		
@@ -400,6 +400,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		String type = wi.getType();
 		wi.copyFrom(this);
 		wi.setType(type);
+		wi.setTitle(title);
 		
 		return wi;
 	}
@@ -411,6 +412,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		String type = wi.getType();
 		wi.copyFrom(this);
 		wi.setType(type);
+		wi.setTitle(title);
 		wi.setSourceCode(new SourceCode());
 		
 		return wi;
