@@ -2,6 +2,7 @@ package org.uengine.codi.mw3.model;
 
 import java.util.ArrayList;
 
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.AutowiredToClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
@@ -42,6 +43,20 @@ public class Tray {
 			this.targetItem = targetItem;
 		}
 			
+	@ServiceMethod(mouseBinding="drop", callByContent=true)
+	public void drop() throws Exception{
+		Object clipboard = session.getClipboard();
+		if(clipboard instanceof IInstance){
+			Instance instance = (Instance)clipboard;
+			TrayItem ti = new TrayItem();
+			ti.setInstId(instance.getInstId() + "");
+			ti.setTitle(instance.databaseMe().getName());
+			setTargetItem(ti);
+			addTrayItem();
+		}
+	}
 	
+	@AutowiredFromClient
+	public Session session;
 }
 

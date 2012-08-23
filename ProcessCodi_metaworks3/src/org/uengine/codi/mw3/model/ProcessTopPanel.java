@@ -1,6 +1,7 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.annotation.AutowiredToClient;
+import org.metaworks.annotation.ServiceMethod;
 import org.uengine.codi.mw3.admin.WindowPanel;
 
 public class ProcessTopPanel {
@@ -58,4 +59,6 @@ public class ProcessTopPanel {
 		public void setLoginUser(IUser loginUser) {
 			this.loginUser = loginUser;
 		}
+		
+
 }
