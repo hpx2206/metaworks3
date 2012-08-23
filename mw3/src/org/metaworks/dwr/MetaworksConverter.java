@@ -131,7 +131,7 @@ public class MetaworksConverter extends BeanConverter{
 			}
 			
 		} catch (ConversionException e) {
-			System.err.println("[WARN] You may need to give the primitive types'(e.g. int, boolean) default value of in the Javascript object for current Metaworks call.");
+			//System.err.println("[WARN] You may need to give the primitive types'(e.g. int, boolean) default value of in the Javascript object for current Metaworks call.");
 			e.printStackTrace();
 			
 			throw e;
