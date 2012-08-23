@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.calendar;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -231,7 +232,11 @@ public class ScheduleCalendar implements ContextAware {
 		newInstancePanel.setDueDate(getSelDate());
 		newInstancePanel.session = session;
 		newInstancePanel.load(session);
-		newInstancePanel.getNewInstantiator().setTitle("");
+		String title = "";
+		if( getSelDate() != null ){
+			title = "[일정:" + new SimpleDateFormat("yyyy/MM/dd").format(getSelDate()) + "]" ;
+		}
+		newInstancePanel.getNewInstantiator().setTitle(title);
 		
 		return new NewInstanceWindow(newInstancePanel);
 	}

@@ -19,8 +19,10 @@ public class ProcessDesignerWebWindow  extends ContentWindow{
 			this.processDesignerWebContentPanel = processDesignerWebContentPanel;
 		}
 		
-	public void load(String defId) throws Exception {
-		processDesignerWebContentPanel.load(defId);
+	public void load(String alias) throws Exception {
+		processDesignerWebContentPanel = new ProcessDesignerWebContentPanel();
+		processDesignerWebContentPanel.setAlias(alias);
+		processDesignerWebContentPanel.load();
 	}
 	
 	public void newProcess() throws Exception {

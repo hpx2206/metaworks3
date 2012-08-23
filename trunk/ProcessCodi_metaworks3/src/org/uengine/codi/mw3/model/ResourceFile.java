@@ -351,7 +351,10 @@ public class ResourceFile implements ContextAware{
 				classDesignerContentPanel.load(getAlias());
 				
 				return classDesignerContentPanel;
-				
+			}else if("process2".equals(objType)){
+				ProcessDesignerWebWindow processDesigner = new ProcessDesignerWebWindow();
+				processDesigner.load(getAlias());
+				return processDesigner;
 			}else {
 				try{
 					ResourceDesigner designer = (ResourceDesigner)Class.forName("org.uengine.codi.mw3.model." + UEngineUtil.toOnlyFirstCharacterUpper(objType) + "Designer").newInstance();

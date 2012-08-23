@@ -151,6 +151,9 @@ public interface IInstance extends IDAO{
 	
 	@ServiceMethod(inContextMenu=true, callByContent=true, needToConfirm=true, target="popup"/*, mouseBinding="drop"*/, keyBinding="Ctrl+V")
 	public Object[] paste() throws Exception;
+	
+	@ServiceMethod(inContextMenu=true, callByContent=true)
+	public void addTrayBar() throws Exception;
 
 	@ServiceMethod(inContextMenu=true, callByContent=true, needToConfirm=true)
 	@Available(when="instanceNavigator")

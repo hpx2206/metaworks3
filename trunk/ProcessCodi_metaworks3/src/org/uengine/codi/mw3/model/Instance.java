@@ -7,6 +7,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import org.directwebremoting.Browser;
+import org.directwebremoting.ScriptSessions;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.annotation.AutowiredFromClient;
@@ -18,6 +20,7 @@ import org.metaworks.widget.ModalWindow;
 import org.metaworks.widget.Window;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.CodiClassLoader;
+import org.uengine.codi.mw3.Login;
 import org.uengine.processmanager.ProcessManagerRemote;
 import org.uengine.webservices.worklist.DefaultWorkList;
 
@@ -175,7 +178,16 @@ public class Instance extends Database<IInstance> implements IInstance{
 			return null;//new Object[]{new Refresh(this.databaseMe())};
 		}
 	}
-
+	public void addTrayBar() throws Exception{
+		Browser.withSession(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Runnable(){
+			InstanceView instanceView = ((InstanceViewContent)detail()).getInstanceView();
+			@Override
+			public void run() {
+				ScriptSessions.addFunctionCall("mw3.getAutowiredObject('org.uengine.codi.mw3.model.Tray').__getFaceHelper().addTray", new Object[]{instanceView.getInstanceName(), getInstId()+""});
+			}
+			
+		});
+	}
 	
 	static private void createSQLPhase2(Map<String, String> criteria, StringBuffer stmt, StringBuffer taskSql, StringBuffer instanceSql) {
 		stmt.append("select");
