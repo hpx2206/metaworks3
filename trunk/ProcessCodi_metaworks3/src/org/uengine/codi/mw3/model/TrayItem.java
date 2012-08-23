@@ -71,7 +71,7 @@ public class TrayItem implements ContextAware {
 	@ServiceMethod(callByContent=true, inContextMenu=true)
 	public Tray close() throws Exception{
 		tray.getTrayItems().remove(this);
-		
+		tray.session = session;
 		tray.save();
 		
 		return tray;
