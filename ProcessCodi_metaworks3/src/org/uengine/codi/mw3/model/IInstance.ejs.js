@@ -5,23 +5,23 @@ var org_uengine_codi_mw3_model_IInstance = function(objectId, className){
 	
 	this.windowObjectId = $('#' + this.divId).closest('.mw3_window').attr('objectId');
 	
-	 $('#' + this.divId).bind('mousemove', {objectId: this.objectId},function(){
+	 $('#' + this.divId).bind('click', {objectId: this.objectId},function(){
 		 mw3.getFaceHelper(objectId).unBlinking();
 		 
-		 /*$(".tbl_type").parent().css("background","none");
+		 $(".tbl_type").parent().css("background","none");
 		 $(".tbl_type").parent().css("box-shadow","none");
 		 $(this).css("background","#C9E2FC");
-		 $(this).css("box-shadow","0px 0px 5px 2px rgba(0, 0, 0, 0.1) inset");*/
+		 $(this).css("box-shadow","0px 0px 5px 2px rgba(0, 0, 0, 0.1) inset");
 	 });
 	 
-	 $('#' + this.divId).hover(
+	/* $('#' + this.divId).hover(
 			 function(){
-				 mw3.getFaceHelper(objectId).unBlinking();
+				 //mw3.getFaceHelper(objectId).unBlinking();
 				 $(this).css("background","#C9E2FC");
 			 },
 			 function(){
 				 $(this).css("background","none");
-			 })
+			 })*/
 	 var object = mw3.objects[this.objectId];
 	 if(object && object.metaworksContext && object.metaworksContext.how == 'blinking'){
 		 this.blinking();
@@ -42,18 +42,54 @@ org_uengine_codi_mw3_model_IInstance.prototype = {
 		
 	},
 	unBlinking : function(){
-		if (this.timeout) {
+		
+		$('#' + this.divId + ' #newInst').css("background","none");
+		
+		/*if (this.timeout) {
 			clearTimeout(this.timeout);			
 			$('#' + this.divId).removeClass('blinking');
 			return false;
-		}			
+		}	*/		
 	},
+	
 	blinking : function(){
-			if($('#' + this.divId).hasClass('blinking')){
+		
+		
+		var blinkDiv = $('#' + this.divId + ' #newInst');
+		
+		
+		blinkDiv.animate({
+			backgroundColor: "#FEE5A3"
+		}, 500 );
+		
+		setTimeout(function(){
+			blinkDiv.animate({
+				backgroundColor: "#ffffff"
+			}, 500 );
+		},500)
+		
+		setTimeout(function(){
+			blinkDiv.animate({
+				backgroundColor: "#FEE5A3"
+			}, 500 );
+		},1000)
+			
+		setTimeout(function(){
+			blinkDiv.animate({
+				backgroundColor: "#ffffff"
+			}, 500 );
+		},1500)
+		
+		setTimeout(function(){
+			blinkDiv.animate({
+				backgroundColor: "#FEE5A3"
+			}, 500 );
+		},2000)
+		
+			/*if($('#' + this.divId).hasClass('blinking')){
 				$('#' + this.divId).removeClass('blinking');
 				
 				$('#' + this.divId).animate({
-//					backgroundColor: "#FED5A3"
 					backgroundColor: "#FEE5A3"
 				}, 1000 );
 				
@@ -70,7 +106,7 @@ org_uengine_codi_mw3_model_IInstance.prototype = {
 			var objectId = this.objectId
 			this.timeout = setTimeout(function() {
 				mw3.getFaceHelper(objectId).blinking();
-			}, 1000);
+			}, 1000);*/
 		
 	}
 }
