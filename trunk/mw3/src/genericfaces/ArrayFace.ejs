@@ -15,17 +15,20 @@ if(!value || value.length==0){
 
 	if(horizontal){
 		 %>
-		 <table>
+		 <div>
 		 <%	
 	}
 
   for (var i=0; i<value.length; i++){
-/*	if(!objectTypeName && value[i] && value[i].__className && value[i].__className.length > 0) */
 		objectTypeName = value[i].__className;  
 		
 		if(horizontal){
 			 %>
-			 <td>
+			 <span style="float:left">
+			 <%	
+ 		}else{
+			 %>
+			 <div>
 			 <%	
  		}
  %>
@@ -38,7 +41,11 @@ if(!value || value.length==0){
 
 		if(horizontal){
 			 %>
-			 </td>
+			 </span>
+			 <%	
+ 		}else{
+			 %>
+			 </div>
 			 <%	
  		}
 
@@ -47,7 +54,7 @@ if(!value || value.length==0){
 
 	if(horizontal){
 		 %>
-		 </table>
+		 </div>
 		 <%	
 	}
 
