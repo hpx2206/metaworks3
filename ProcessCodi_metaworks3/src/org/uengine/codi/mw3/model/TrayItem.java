@@ -34,7 +34,7 @@ public class TrayItem implements ContextAware {
 			this.instId = instId;
 		}
 		
-	InstanceView instance;
+	transient InstanceView instance;
 		public InstanceView getInstance() {
 			return instance;
 		}
@@ -56,7 +56,8 @@ public class TrayItem implements ContextAware {
 		
 		Instance instance = new Instance();
 		instance.setInstId(new Long(getInstId()));
-
+		
+		instanceView.session = session;
 		instanceView.load(instance);
 		
 		setInstance(instanceView);
@@ -70,6 +71,8 @@ public class TrayItem implements ContextAware {
 	@ServiceMethod(callByContent=true, inContextMenu=true)
 	public Tray close() throws Exception{
 		tray.getTrayItems().remove(this);
+		
+		tray.save();
 		
 		return tray;
 	}
@@ -93,5 +96,7 @@ public class TrayItem implements ContextAware {
 	@Autowired
 	public InstanceViewContent instanceViewContent;
 	
+	@AutowiredFromClient
+	public Session session;
 	
 }

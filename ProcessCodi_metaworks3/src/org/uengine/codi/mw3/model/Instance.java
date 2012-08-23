@@ -178,7 +178,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 			return null;//new Object[]{new Refresh(this.databaseMe())};
 		}
 	}
-	public void addTrayBar() throws Exception{
+	public Object[] addTrayBar() throws Exception{
 		Browser.withSession(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Runnable(){
 			InstanceView instanceView = ((InstanceViewContent)detail()).getInstanceView();
 			@Override
@@ -187,6 +187,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 			}
 			
 		});
+		return null;
 	}
 	
 	static private void createSQLPhase2(Map<String, String> criteria, StringBuffer stmt, StringBuffer taskSql, StringBuffer instanceSql) {
