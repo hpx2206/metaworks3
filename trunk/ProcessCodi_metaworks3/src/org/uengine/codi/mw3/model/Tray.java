@@ -1,14 +1,18 @@
 package org.uengine.codi.mw3.model;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 
 import org.metaworks.annotation.AutowiredFromClient;
-import org.metaworks.annotation.AutowiredToClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.widget.layout.Layout;
-import org.uengine.codi.mw3.ILogin;
-import org.uengine.codi.mw3.admin.PageNavigator;
+import org.uengine.kernel.FormActivity;
+import org.uengine.kernel.GlobalContext;
+import org.uengine.util.UEngineUtil;
 
 public class Tray {
 
@@ -27,13 +31,20 @@ public class Tray {
 
 		
 	@ServiceMethod(callByContent=true)
-	public void addTrayItem(){
+	public void addTrayItem() throws Exception{
 		
 		if(trayItems==null)
 			trayItems = new ArrayList<TrayItem>();
 		
 		trayItems.add(getTargetItem());
+		
+		save();
 	}
+	
+	protected void save() throws Exception, FileNotFoundException {
+		GlobalContext.serialize(getTrayItems() , new FileOutputStream( FormActivity.FILE_SYSTEM_DIR + "/Tray_" + session.getUser().getUserId() + ".xml" ) , TrayItem.class);
+	}
+	
 	
 	TrayItem targetItem;
 		public TrayItem getTargetItem() {
@@ -53,6 +64,19 @@ public class Tray {
 			ti.setTitle(instance.databaseMe().getName());
 			setTargetItem(ti);
 			addTrayItem();
+		}
+	}
+	
+	public void load() throws Exception{
+		/// read source file
+		File sourceCodeFile = new File(FormActivity.FILE_SYSTEM_DIR + "/Tray_" + session.getUser().getUserId() + ".xml");
+		ByteArrayOutputStream bao = new ByteArrayOutputStream();
+		FileInputStream is;
+		if( sourceCodeFile.exists() ){
+			is = new FileInputStream(sourceCodeFile);
+			UEngineUtil.copyStream(is, bao);
+			ArrayList<TrayItem> trayList = (ArrayList<TrayItem>) GlobalContext.deserialize(bao.toString("UTF-8"));
+			setTrayItems(trayList);
 		}
 	}
 	

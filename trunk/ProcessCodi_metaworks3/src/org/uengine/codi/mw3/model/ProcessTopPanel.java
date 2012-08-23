@@ -1,7 +1,6 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.annotation.AutowiredToClient;
-import org.metaworks.annotation.ServiceMethod;
 import org.uengine.codi.mw3.admin.WindowPanel;
 
 public class ProcessTopPanel {
@@ -9,7 +8,9 @@ public class ProcessTopPanel {
 	public ProcessTopPanel(Session session) throws Exception {
 		setSession(session);
 		setWindowPanel(new WindowPanel());
-		setTray(new Tray());
+		tray = new Tray();
+		tray.session = session;
+		tray.load();
 		
 		notificationBadge = new NotificationBadge();
 		notificationBadge.session = session;

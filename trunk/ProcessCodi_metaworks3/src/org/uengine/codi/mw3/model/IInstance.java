@@ -153,7 +153,7 @@ public interface IInstance extends IDAO{
 	public Object[] paste() throws Exception;
 	
 	@ServiceMethod(inContextMenu=true, callByContent=true)
-	public void addTrayBar() throws Exception;
+	public Object[] addTrayBar() throws Exception;
 
 	@ServiceMethod(inContextMenu=true, callByContent=true, needToConfirm=true)
 	@Available(when="instanceNavigator")
