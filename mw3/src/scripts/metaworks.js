@@ -154,7 +154,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
  	 						mw3.dragging = true;
  	 						
  	 						var objectId = mw3.dragObject['objectId'];
- 	 						if(objectId){
+ 	 						if(objectId && mw3.objects[objectId]){
  	 							var typeName = mw3.objects[objectId].__className;
  	 	 						$(".onDrop_" + typeName.split('.').join('_')).css("border-width", "1px").css("border-style", "dashed").css("border-color", "orange");		
  	 						}
@@ -189,7 +189,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 	    					mw3.dragging = false;
 	    					
  	 						var objectId = mw3.dragObject['objectId'];
- 	 						if(objectId){
+ 	 						if(objectId && mw3.objects[objectId]){
  	 							var typeName = mw3.objects[objectId].__className;
  	 	 						$(".onDrop_" + typeName.split('.').join('_')).css("border-width", "").css("border","");		
  	 						}
@@ -366,7 +366,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 
 								
 								var object = mw3.objects[objectId];
-								if(object.__className){
+								if(object!=null && object.__className){
 									var metadata = mw3.getMetadata(object.__className);
 									
 									// optimizing the object size
@@ -999,7 +999,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 	   			 								mw3.dragging = false;
 	   			 								
 		   			  	 						var objectId = mw3.dragObject['objectId'];
-		   			 	 						if(objectId){
+		   			 	 						if(objectId && mw3.objects[objectId]){
 		   			 	 							var typeName = mw3.objects[objectId].__className;
 		   			 	 	 						$(".onDrop_" + typeName.split('.').join('_')).css("border-width", "").css("border","");	
 		   			 	 	 						
