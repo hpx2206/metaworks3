@@ -114,7 +114,6 @@ public class Login extends Database<ILogin> implements ILogin{
 		}
 
 	String password;
-	@Face(options="placeholder", values="Password")
 		public String getPassword() {
 			return password;
 		}
