@@ -17,6 +17,7 @@ import org.metaworks.widget.ModalWindow;
 import org.metaworks.widget.Window;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.Login;
+import org.uengine.codi.mw3.calendar.ScheduleCalendar;
 import org.uengine.codi.mw3.widget.IFrame;
 import org.uengine.processmanager.ProcessManagerRemote;
 
@@ -433,6 +434,13 @@ public class User extends Database<IUser> implements IUser {
 		pPserspective.session = userSession;
 		this.getMetaworksContext().setWhen("chat");
 		return new Object[]{(InstanceListPanel) pPserspective.loadRequest()[1], new Remover(new Popup())};
+	}
+	@Override
+	public ModalWindow showSchedule() throws Exception{
+		ScheduleCalendar scheduleCalendar = new ScheduleCalendar();
+		scheduleCalendar.session = session;
+		scheduleCalendar.loadByUserId(getUserId());
+		return new ModalWindow(scheduleCalendar, 600, 540, getName() + " Schedule" );
 	}
 	
 }

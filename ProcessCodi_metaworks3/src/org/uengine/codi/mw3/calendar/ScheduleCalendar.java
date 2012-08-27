@@ -86,16 +86,28 @@ public class ScheduleCalendar implements ContextAware {
 		public void setSelDate(Date selDate) {
 			this.selDate = selDate;
 		}
-	
+	String showUserId;
+		@Hidden
+		public String getShowUserId() {
+			return showUserId;
+		}
+		public void setShowUserId(String showUserId) {
+			this.showUserId = showUserId;
+		}
 	
 	public void load() throws Exception {
+		String userId = session.getUser().getUserId();
+		loadByUserId(userId);
+	}	
+	
+	public void loadByUserId(String userId) throws Exception {
 		ArrayList<Map<String, String>> arrListData = new ArrayList<Map<String, String>>();		
 		
 		WorkItem schedule = new WorkItem();
 		IWorkItem workitems = schedule.sql("select wl.*, pi.name instnm , pi.status instanceStatus from bpm_worklist wl, bpm_procinst pi where wl.instid = pi.instid and wl.endpoint=?endpoint and wl.type is null and pi.isdeleted != 1");
-		workitems.setEndpoint(session.getUser().getUserId());
+		workitems.setEndpoint(userId);
 		workitems.select();
-		DataConvert(arrListData, workitems, session.getUser().getUserId());
+		DataConvert(arrListData, workitems, userId);
 		
 		Instance instance = new Instance();
 		String sql = 	" select distinct(inst.INSTID), inst.DEFVERID, inst.DEFID, inst.DEFNAME, inst.DEFPATH, inst.DEFMODDATE, inst.STARTEDDATE, inst.FINISHEDDATE, inst.DUEDATE, inst.STATUS, inst.INFO, inst.NAME, inst.ISDELETED, inst.ISADHOC, inst.ISARCHIVE, inst.ISSUBPROCESS, inst.ISEVENTHANDLER, inst.ROOTINSTID, inst.MAININSTID, inst.MAINDEFVERID, inst.MAINACTTRCTAG, inst.MAINEXECSCOPE, inst.ABSTRCPATH, inst.DONTRETURN, inst.MODDATE, inst.EXT1, inst.INITEP, inst.INITRSNM, inst.CURREP, inst.CURRRSNM, inst.STRATEGYID, inst.PREVCURREP, inst.PREVCURRRSNM, inst.STARCNT, inst.STARRSNM, inst.STARFLAG, inst.ABSTRACTINST, inst.CURRTRCTAG, inst.PREVTRCTAG, inst.INITCOMCD, inst.SECUOPT, inst.lastcmnt, inst.initcmpl "+ 
@@ -106,12 +118,13 @@ public class ScheduleCalendar implements ContextAware {
 						" and follower.endpoint in ( ?initep ) ";
 		
 		IInstance iInstance = instance.sql(sql);
-		iInstance.setInitEp(session.getUser().getUserId());
+		iInstance.setInitEp(userId);
 		iInstance.select();
-		DataConvert(arrListData, iInstance, session.getUser().getUserId());
+		DataConvert(arrListData, iInstance, userId);
 		
+		setShowUserId(userId);
 		setData(arrListData);
-	}	
+	}
 
 	public void DataConvert(ArrayList arrListData, IInstance iInstance, String empCode) {
 		Map column = new HashMap();
@@ -128,7 +141,7 @@ public class ScheduleCalendar implements ContextAware {
 				column.put("callType", "instance" );
 				column.put("title", title );
 //				column.put("start", iInstance.getStartedDate();
-				column.put("start", iInstance.getDueDate());	// 마지막 날만 보이도록 셋팅을 함
+				column.put("start", iInstance.getDueDate());	// set startDate equals endDate
 				
 				if(iInstance.getDueDate()!=null){
 					column.put("end", iInstance.getDueDate());
@@ -228,6 +241,10 @@ public class ScheduleCalendar implements ContextAware {
 	
 	@ServiceMethod(callByContent=true)
 	public NewInstanceWindow linkScheduleDay() throws Exception{
+		if( getShowUserId() != null && !getShowUserId().equalsIgnoreCase(session.getUser().getUserId())){
+			// 다른 유저의 달력을 클릭하였을 경우 새로글쓰기를 막는다.
+			return null;
+		}
 		NewInstancePanel newInstancePanel =  new NewInstancePanel();
 		newInstancePanel.setDueDate(getSelDate());
 		newInstancePanel.session = session;

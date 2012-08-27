@@ -94,6 +94,19 @@ org_uengine_codi_mw3_calendar_ScheduleCalendar.prototype.eventClick = function(s
 	object.linkScheduleEvent();
 }
 
+org_uengine_codi_mw3_calendar_ScheduleCalendar.prototype.addMyschedule = function(title, instId, dueDate){
+	var calendar = $('#scheduleCalendar_' + this.objectId);
+	var myEvent = {
+			  title: title,
+			  id: instId,
+			  allDay: true,
+			  callType: 'instance',
+			  color: '#0000cd',
+			  start: dueDate,
+			  end: dueDate
+			};
+	calendar.fullCalendar( 'renderEvent', myEvent );
+}
 org_uengine_codi_mw3_calendar_ScheduleCalendar.prototype.resize = function(){
 	var calendar = $('#scheduleCalendar_' + this.objectId);
 	

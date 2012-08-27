@@ -603,10 +603,28 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			if(newInstancePanel != null  && newInstancePanel.getDueDate() != null){
 				instance.flushDatabaseMe();
 				
-				ScheduleCalendar scheduleCalendar = new ScheduleCalendar();
-				scheduleCalendar.session = session;
-				scheduleCalendar.load();
-				return new Object[]{new Refresh(scheduleCalendar), new Refresh(instantiatedViewContent)};
+//				ScheduleCalendar scheduleCalendar = new ScheduleCalendar();
+//				scheduleCalendar.session = session;
+//				scheduleCalendar.load();
+//				return new Object[]{new Refresh(scheduleCalendar), new Refresh(instantiatedViewContent)};
+				
+				ArrayList<String> followerIds = new ArrayList<String>();
+				IUser followers = instantiatedViewContent.getInstanceView().getFollowers().getFollowers();
+				followers.beforeFirst();
+				while(followers.next()){
+					followerIds.add(followers.getUserId());
+				}
+				for(String userId : followerIds){
+					Browser.withSession(userId, new Runnable(){
+						@Override
+						public void run() {
+							ScriptSessions.addFunctionCall("mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar').__getFaceHelper().addMyschedule", new Object[]{getTitle(), getInstId()+"", newInstancePanel.getDueDate() });
+						}
+						
+					});
+				}
+				return new Object[]{ new Refresh(instantiatedViewContent)};
+				
 	
 			}else{
 				return new Object[]{new Refresh(instantiatedViewContent), new Refresh(parent)};
