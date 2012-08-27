@@ -76,6 +76,9 @@ public class Tray {
 			is = new FileInputStream(sourceCodeFile);
 			UEngineUtil.copyStream(is, bao);
 			ArrayList<TrayItem> trayList = (ArrayList<TrayItem>) GlobalContext.deserialize(bao.toString("UTF-8"));
+			for(TrayItem trayItem : trayList){
+				trayItem.getMetaworksContext().setWhen("view");
+			}
 			setTrayItems(trayList);
 		}
 	}

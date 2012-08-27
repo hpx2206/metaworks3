@@ -77,7 +77,11 @@ public class UnstructuredProcessInstanceStarter implements ContextAware {
 		Instance instance = new Instance();
 		instance.setInstId(new Long
 				(instanceView.getInstanceView().instanceId));
-		instance.databaseMe().setInitEp(session.user.getUserId());
+		User initUser = new User();
+		initUser.setUserId(session.getUser().getUserId());
+		initUser.setName(session.getUser().getName());
+		instance.databaseMe().setInitiator(initUser);
+//		instance.databaseMe().setInitEp(session.user.getUserId());
 		instance.databaseMe().setDueDate(null);
 		
 		if(session.getEmployee() != null)

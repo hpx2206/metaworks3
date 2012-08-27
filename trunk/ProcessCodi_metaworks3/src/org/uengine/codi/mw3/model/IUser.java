@@ -7,6 +7,7 @@ import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.IDAO;
+import org.metaworks.widget.ModalWindow;
 import org.metaworks.widget.Window;
 
 public interface IUser extends IDAO{
@@ -51,6 +52,9 @@ public interface IUser extends IDAO{
 	
 	@ServiceMethod(callByContent=true)
 	public Object[] showWall() throws Exception;
+	
+	@ServiceMethod(callByContent=true, target="popup")
+	public ModalWindow showSchedule() throws Exception;
 	
 	@ServiceMethod(callByContent=true, target=TARGET_SELF)
 	public UnstructuredProcessInstanceStarter chat() throws Exception;

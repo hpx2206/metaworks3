@@ -82,6 +82,7 @@ public class InstanceListPanel implements ContextAware{
 	public void switchToScheduleCalendar() throws Exception{
 		this.setInstanceList(null);
 		this.setKnowledge(null);
+		this.setTitle("$perspective.calendar");
 		this.scheduleCalendar = new ScheduleCalendar();
 		this.scheduleCalendar.session = session;
 		this.scheduleCalendar.load();
@@ -147,7 +148,7 @@ public class InstanceListPanel implements ContextAware{
 	public void switchToKnowledge() throws Exception{
 		this.setInstanceList(null);
 		this.setScheduleCalendar(null);
-		
+		this.setTitle("$perspective.strategic");
 		this.knowledge = new WfPanel();
 		this.knowledge.session = session;
 		this.knowledge.load(session.getCompany().getComCode());
