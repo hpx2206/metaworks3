@@ -69,7 +69,7 @@ public class Followers {
 		return popup;		
 	}
 	
-	@ServiceMethod(inContextMenu=true, callByContent=true, target="popup", mouseBinding="drop", keyBinding="Ctrl+V")
+	@ServiceMethod(inContextMenu=true, callByContent=true, target="popup", mouseBinding="drop")
 	public Object[] drop() throws Exception{
 		Object clipboard = session.getClipboard();
 		if(clipboard instanceof IUser){
@@ -93,10 +93,13 @@ public class Followers {
 		}
 		return null;
 	}
+	
 	@AutowiredFromClient
 	public Session session;
 	
 	@Autowired
 	public ProcessManagerRemote processManager;
 	
+	@AutowiredFromClient(onDrop=true)
+	public IUser user;
 }

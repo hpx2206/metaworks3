@@ -85,5 +85,8 @@ public class Tray {
 	
 	@AutowiredFromClient
 	public Session session;
+	
+	@AutowiredFromClient(onDrop=true)
+	public IInstance dropInstance;
 }
 

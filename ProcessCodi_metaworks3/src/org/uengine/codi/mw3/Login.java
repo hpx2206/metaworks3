@@ -9,6 +9,7 @@ import org.directwebremoting.WebContext;
 import org.directwebremoting.WebContextFactory;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Id;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.TransactionContext;
@@ -43,6 +44,7 @@ public class Login extends Database<ILogin> implements ILogin{
 	}
 	
 	@Id
+	@Face(options="placeholder", values="EMail")
 	String userId;
 		public String getUserId() {
 			return userId;
@@ -112,6 +114,7 @@ public class Login extends Database<ILogin> implements ILogin{
 		}
 
 	String password;
+	@Face(options="placeholder", values="Password")
 		public String getPassword() {
 			return password;
 		}
