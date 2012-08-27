@@ -21,6 +21,7 @@ import org.metaworks.annotation.Children;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
+import org.metaworks.annotation.KeepAtClient;
 import org.metaworks.annotation.Name;
 import org.metaworks.annotation.NonEditable;
 import org.metaworks.annotation.NonLoadable;
@@ -155,6 +156,14 @@ public class WebObjectType{
 		}
 		public void setAutowiredFields(Map<String, String> autowiredFields) {
 			this.autowiredFields = autowiredFields;
+		}
+
+	Map<String, String> onDropTypes;
+		public Map<String, String> getOnDropTypes() {
+			return onDropTypes;
+		}
+		public void setOnDropTypes(Map<String, String> onDropTypes) {
+			this.onDropTypes = onDropTypes;
 		}
 
 	Type metaworks2Type;
@@ -297,13 +306,23 @@ public class WebObjectType{
 		//analyzing 'autowiredFromClient' fields
 		Field[] fields = actCls.getFields();
 		for(int i=0; i<fields.length; i++){
-			Annotation autowiredFromClient = (Annotation) fields[i].getAnnotation(AutowiredFromClient.class);
+			AutowiredFromClient autowiredFromClient = (AutowiredFromClient) fields[i].getAnnotation(AutowiredFromClient.class);
 			
 			if(autowiredFromClient!=null){
-				if(autowiredFields == null)
-					autowiredFields = new HashMap<String, String>();
 				
-				autowiredFields.put(fields[i].getName(), fields[i].getType().getName());
+				if(autowiredFromClient.onDrop()){
+					if(onDropTypes == null)
+						onDropTypes = new HashMap<String, String>();
+					
+					onDropTypes.put(fields[i].getType().getName(), fields[i].getName());
+					
+				}else{
+					if(autowiredFields == null)
+						autowiredFields = new HashMap<String, String>();
+					
+					autowiredFields.put(fields[i].getName(), fields[i].getType().getName());
+
+				}
 			}
 		}
 		
@@ -592,6 +611,10 @@ public class WebObjectType{
 				keyField = fd;
 			}
 			
+			if(getAnnotationDeeply(tryingClasses, fd.getName(), KeepAtClient.class)!=null){
+				fd.setAttribute("keepAtClient", true);
+			}
+
 			fd.setViewer(viewer);
 	
 			webFieldDescriptors[i] = new WebFieldDescriptor(fd);
