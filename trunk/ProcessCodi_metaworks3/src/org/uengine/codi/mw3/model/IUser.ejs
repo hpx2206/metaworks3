@@ -42,7 +42,7 @@
 						<%=methods.changeMood.here()%>
 						
 						<%	}else{%>
-							<%=value.mood%>
+							<%=value.mood ? value.mood : ''%>
 						<%	}%>
 					</dt>
 					<dd class="photo">
@@ -94,7 +94,7 @@
 %>
 			<div class="user_detail">
 				<span class="fontbold"><%=value.name%></span>
-				<span class="fontgray"><%=value.mood%></span>
+				<span class="fontgray"><%=value.mood ? value.mood : ''%></span>
 				<span class="fontgray"></span>
 			</div>
 <%			
@@ -104,7 +104,7 @@
 			<div class="user_compact">
 				<%=value.name%>
 			</div>
-			<%=value.mood%>
+			<%=value.mood ? value.mood : ''%>
 <%		
 			}
 %>		

@@ -521,4 +521,6 @@ public class InstanceView {
 		} 	
 		
 	
+	@AutowiredFromClient(onDrop = true)
+	public IInstance dropInstance;
 }

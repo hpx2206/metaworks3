@@ -24,7 +24,8 @@ public class ManagerPanel {
 		public void setOrganizationChart(OrganizationPerspective organizationChart) {
 			this.organizationChart = organizationChart;
 		}
-	
+		
+		
 
 	public ManagerPanel(Session session) throws Exception{
 		organizationChart = new OrganizationPerspective();

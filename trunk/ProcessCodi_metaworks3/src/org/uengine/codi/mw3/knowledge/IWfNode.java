@@ -3,6 +3,7 @@ package org.uengine.codi.mw3.knowledge;
 import java.util.ArrayList;
 
 import org.metaworks.ServiceMethodContext;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
@@ -15,6 +16,7 @@ import org.metaworks.annotation.Table;
 import org.metaworks.annotation.Test;
 import org.metaworks.dao.IDAO;
 import org.uengine.codi.mw3.model.ContentWindow;
+import org.uengine.codi.mw3.model.IInstance;
 import org.uengine.codi.mw3.model.IUser;
 import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.model.Session;
@@ -145,7 +147,7 @@ public interface IWfNode extends IDAO {
 	@ServiceMethod(callByContent=true)
 	public ContentWindow linkInstance() throws Exception;
 	
-	@ServiceMethod(callByContent=true, mouseBinding="drop", keyBinding="Ctrl+V", target="popup", loader="org.uengine.codi.mw3.model.Popup")
+	@ServiceMethod(callByContent=true, mouseBinding="drop", target="popup"/*, loader="org.uengine.codi.mw3.model.Popup"*/)
 	public Object[] drop() throws Exception;
 	
 	@ServiceMethod(callByContent=true, except={"childNode", "focus"}, inContextMenu=true, keyBinding="Ctrl+Right")
@@ -187,6 +189,10 @@ public interface IWfNode extends IDAO {
 	
 	public void createMe() throws Exception;
 	
-	@ServiceMethod(mouseBinding="drag-enableDefault")
-	public void drag();
+	@AutowiredFromClient(onDrop=true)
+	public IInstance dropInstance = null;
+	
+	@AutowiredFromClient(onDrop=true)
+	public IUser dropUser = null;
+	
 }

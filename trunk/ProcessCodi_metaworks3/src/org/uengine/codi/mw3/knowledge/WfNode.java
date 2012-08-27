@@ -898,11 +898,4 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 	public UnstructuredProcessInstanceStarter instanceStarter;
 	
 	
-	
-	@Override
-	public void drag() {
-		// TODO Auto-generated method stub
-		System.out.println();
-	}
-	
 }

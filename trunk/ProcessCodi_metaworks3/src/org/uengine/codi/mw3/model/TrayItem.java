@@ -50,7 +50,7 @@ public class TrayItem implements ContextAware {
 			this.metaworksContext = metaworksContext;
 		}
 
-	@ServiceMethod(callByContent=true, inContextMenu=true)
+	@ServiceMethod(inContextMenu=true, payload={"title", "instId"})
 	public void slideDown() throws Exception{
 		getMetaworksContext().setHow("down");
 		
@@ -63,12 +63,12 @@ public class TrayItem implements ContextAware {
 		setInstance(instanceView);
 	}
 	
-	@ServiceMethod(callByContent=true, inContextMenu=true)
+	@ServiceMethod(inContextMenu=true, payload={"title", "instId"})
 	public void slideUp() throws Exception{
 		getMetaworksContext().setHow("up");
 	}
 		
-	@ServiceMethod(callByContent=true, inContextMenu=true)
+	@ServiceMethod(inContextMenu=true, payload={"instId"})
 	public Tray close() throws Exception{
 		tray.getTrayItems().remove(this);
 		tray.session = session;
@@ -77,7 +77,7 @@ public class TrayItem implements ContextAware {
 		return tray;
 	}
 	
-	@ServiceMethod(callByContent=true, inContextMenu=true)
+	@ServiceMethod(inContextMenu=true)
 	public ContentWindow maximize() throws Exception{
 		
 		Instance instance = new Instance();
@@ -85,6 +85,18 @@ public class TrayItem implements ContextAware {
 		instanceViewContent.load(instance);
 		
 		return instanceViewContent;
+	}
+	
+	
+
+	@Override
+	public boolean equals(Object obj) {
+		try{
+			return ((TrayItem)obj).getInstId().equals(this.getInstId());
+			
+		}catch(Exception e){}
+		
+		return false;
 	}
 
 	@AutowiredFromClient //TODO: not good for performance. some except options should work for the autowired fields.

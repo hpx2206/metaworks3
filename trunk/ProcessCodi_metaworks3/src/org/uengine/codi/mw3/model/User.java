@@ -387,7 +387,8 @@ public class User extends Database<IUser> implements IUser {
 			IUser user = (IUser) clipboard;
 			
 			try {
-				copyFrom(user);
+				if(!user.getUserId().equals(getUserId()))
+					copyFrom(user);
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
