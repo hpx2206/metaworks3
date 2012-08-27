@@ -33,7 +33,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				this.objectId_KeyMapping = {};
 				this.objectId_ClassNameMapping = {};
 				
-				this.face_ClassNameMapping = {};
+				this.face_ObjectIdMapping = {};
 				this.objectIds_FaceMapping={};
 				
 				this.loaded = false;
@@ -281,12 +281,12 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					return null;
 				*/
 				
-				if(!this.face_ClassNameMapping[clsName])					
+				if(!this.face_ObjectIdMapping[objectId])					
 					return null;
 				
 				
-				var face = this.face_ClassNameMapping[clsName].face;
-				var className = this.face_ClassNameMapping[clsName].className;
+				var face = this.face_ObjectIdMapping[objectId].face;
+				var className = this.face_ObjectIdMapping[objectId].className;
 				
 
 				// load faceHelper
@@ -794,7 +794,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 							face: actualFace,
 							className: objectTypeName
 					};
-					this.face_ClassNameMapping[objectTypeName] = faceInfo;
+					this.face_ObjectIdMapping[objectId] = faceInfo;
 					if(this.objectIds_FaceMapping [actualFace] == null){
 						this.objectIds_FaceMapping [actualFace]={};
 					}
