@@ -37,9 +37,12 @@ var org_uengine_codi_mw3_model_IWorkItem_edit = function(objectId, className){
 
 	
 	this.sending = false;
-	
+	// user names
 	this.userAddCommands = {};
-
+	// dates
+	this.initialize();
+	this.dateFirst = true;
+	this.dueDate = null;
 }
 
 org_uengine_codi_mw3_model_IWorkItem_edit.prototype.getValue =  function(){	
@@ -72,7 +75,9 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.getValue =  function(){
 	if(initialFollowers.length>0){
 		object.initialFollowers = initialFollowers;
 	}
-	
+	if( this.dueDate != null){
+		object.dueDate = this.dueDate; 
+	}
 	return object;
 }
 
@@ -241,13 +246,16 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.press = function(){
     		text = tokens[tokens.length-1];
     	
     	
+    	var recommendDivId = "#commandRecommendDiv_" + this.objectId;
+    	var processDivId 		= "commandProcessDiv_" + this.objectId;
+    	var followerDivId 	= "commandFollowerDiv_" + this.objectId;
+    	var dateDivId 			= "commandDateDiv_" + this.objectId;
+    	var recommendFirst = true;
     	//////// assists about process initiation /////////
     	
     	var processMap = mw3.getAutowiredObject("org.uengine.codi.mw3.model.ProcessMapList");
     	
     	//var divIdWithoutShaf = "commandDiv_" + this.objectId; 
-		var recommendDivId = "#commandRecommendDiv_" + this.objectId;
-		var recommendFirst = true;
 
 //console.log('1');
 
@@ -333,14 +341,133 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.press = function(){
 		
 		
 		//////// assists about dates ////////
-		
+		if(text && text.length>0){
+			date = Date.parseHangul(text) || Date.parse(text);
+	          if (date !== null && this.dateFirst ) {
+	        	  var innerHtmlStr = 	"<div id=\"" + dateDivId + "\" >";
+	        	  innerHtmlStr		+=	" " + mw3.localize('$AddDate') + ": \"<b>" ;
+	        	  innerHtmlStr		+=	"<span id=\"dateDivSpan\"> " + date.toString(Date.CultureInfo.formatPatterns.fullDateTime) + "</span> " ;
+	        	  innerHtmlStr		+=	"</b>\"";
+	        	  innerHtmlStr		+=	" <input value=\"싫어요\" type=\"button\" onclick=\"mw3.getFaceHelper('"+this.objectId+"').removeDiv('"+dateDivId+"')\" style=\"cursor:pointer;\"/> ";
+	        	  innerHtmlStr		+=	"<br>";
+	        	  innerHtmlStr		+=	"</div>";
+	        	  
+	        	  $(recommendDivId).append(innerHtmlStr);
+	        	  this.dateFirst = false;
+	        	  this.dueDate = date;
+	          }else if(date !== null && !this.dateFirst ){
+	        	  $("#dateDivSpan").html(date.toString(Date.CultureInfo.formatPatterns.fullDateTime));
+	        	  this.dueDate = date;
+	          }
+		}
 		//////// assists about url ////////
 		
 		
 
     }
-	
-	
+};
+org_uengine_codi_mw3_model_IWorkItem_edit.prototype.removeDiv = function(divId){
+	$("#" + divId ).remove();
+	if( divId.indexOf("commandDateDiv_" == 0 ) ){
+		this.dateFirst = true;
+	}
+};
+/**
+ * datejs.js using method
+ * @url       http://www.firejune.com/1343
+ * @usage:    Date.parseHangul(value); 
+ */
+org_uengine_codi_mw3_model_IWorkItem_edit.prototype.initialize = function(){
+	this.datePatterns = {
+	        '-3':/^그끄제|그끄저께/i,'-2':/^그제|그저께/i,'+2':/^모레/i,'+3':/^글피/i,'+4':/^그글피/i,
+	        '1':/^하루|일일/i,'2':/^이틀|이일/i,'3':/^사흘|삼일/i,'4':/^나흘|사일/i,'5':/^닷세|오일/i,
+	        '6':/^엿세|육일/i,'7':/^이레|칠일/i,'8':/^여드레|팔일/i,'9':/^아흐레|구일/i,
+	        '10':/^열흘|십일/i,'11':/^열하루|열하레|십일일/i,'12':/^열이틀|십이일/i,
+	        '13':/^열사흘|열산날|십삼일/i,'14':/^열나흘|열낫날|십사일/i,'15':/^보름|열닷세|십오일/i,
+	        '16':/^열엿세|십육일/i,'17':/^열이레|십칠일/i,'18':/^열여드레|십팔일/i,
+	        '19':/^열아흐레|십구일/i,'20':/^스무날|이십일/i,'21':/^스무하루|스무하레|이십일일/i,
+	        '22':/^스무이틀|이십이일/i,'23':/^스무사흘|이십삼일/i,'24':/^스무나흘|스무낫날|이십사일/i,
+	        '25':/^스무닷세|이십오일/i,'26':/^스무엿세|이십육일/i,'27':/^스무이레|이십칠일/i,
+	        '28':/^스무여드레|이십팔일/i,'29':/^스무아흐레|이십구일/i,'30':/^설흔날|서른날|삼십일/i,
+	        '31':/^서른하루|삼십일일/i
+	      };
 
-}
+	      this.regex = {
+	        time: /[0-9]+시|[0-9]+분|[0-9]+초|오후|저녁|밤/g,
+	        date: /[0-9]+년|[0-9]+월|[0-9]+일/g,
+	        years: /[0-9]+년/i,
+	        months: /[0-9]+월/i,
+	        days: /[0-9]+일/i,
+	        second: /^[0-9]+초/i,
+	        minute: /^[0-9]+분/i,
+	        hour: /^[0-9]+시(간)?/i,
+	        pm: /^오후|저녁|밤/i,
+	        am: /^오전|아침/i,
+	        after: /(이|\s)?후/i,
+	        befroe: /(이|\s)?전/i
+	      };
 
+	      Date.parseHangul = this.analyze.bind(this);
+};
+org_uengine_codi_mw3_model_IWorkItem_edit.prototype.analyze = function(value){
+    if (!value) return null;
+
+    var time = this.searchTime(value);
+    var date = this.searchDate(value);
+
+    if (time) {
+      if (!date) {
+        date = new Date();
+        date = new Date(date.getFullYear(), date.getMonth() + 1, date.getDate());
+      }
+      date = new Date(date.getTime() + time);
+    }
+
+    return isNaN(date) ? null : date;
+};
+org_uengine_codi_mw3_model_IWorkItem_edit.prototype.searchTime = function(str){
+	 var pattern = str.match(this.regex.time), times = 0;
+     if (pattern && pattern.length > 1 || 
+       (str.match(this.regex.am) || str.match(this.regex.pm)) && str.match(this.regex.time)) {
+       for (var i = 0; i < pattern.length; i++) {
+         if (pattern[i].match(this.regex.pm)) times += 43200000;
+         if (pattern[i].match(this.regex.hour)) times += parseInt(pattern[i]) * 3600000;
+         if (pattern[i].match(this.regex.minute)) times += parseInt(pattern[i]) * 60000;
+         if (pattern[i].match(this.regex.second)) times += parseInt(pattern[i]) * 1000;
+       }
+
+       return times || null;
+     } else return null;
+};
+org_uengine_codi_mw3_model_IWorkItem_edit.prototype.searchDate = function(str){
+	var pattern = str.match(this.regex.date);
+    if (pattern && pattern.length == 3)
+      for (var i = 0; i < pattern.length; i++)
+        pattern[i] = parseInt(pattern[i]);
+    else {
+      pattern = [];
+      var years = str.match(this.regex.years),
+      months = str.match(this.regex.months),
+      days = str.match(this.regex.days);
+      
+      pattern.push(years ? parseInt(years[0]) : new Date().getFullYear());
+      pattern.push(months ? parseInt(months[0]) : new Date().getMonth() + 1);
+      days = days ? parseInt(days[0]) : null;
+
+      if (!days)
+        for (var regex in this.datePatterns)
+          if (str.match(this.datePatterns[regex])) days = regex;
+
+      if (!days) return null;
+      else if (str.match(this.regex.befroe) || str.match(this.regex.after)) {
+        if (str.match(this.regex.befroe)) days = - days;
+        pattern.push(new Date().getDate() + days  * 1);
+      } else {
+        if (typeof days == 'string' && days.match(/\+|\-/))
+          days = new Date().getDate() + days * 1;
+        pattern.push(days);
+      }
+    }
+
+    return new Date(pattern[0], pattern[1] - 1, pattern[2]);
+};

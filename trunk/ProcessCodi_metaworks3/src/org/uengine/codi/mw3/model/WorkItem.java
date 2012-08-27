@@ -500,7 +500,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			if(session.getEmployee() != null)
 				instanceRef.databaseMe().setInitComCd(session.getEmployee().getGlobalCom());
 			
-			instanceRef.databaseMe().setDueDate(null);
+			instanceRef.databaseMe().setDueDate(getDueDate());
 
 		
 			parent = afterInstantiation(instantiatedViewContent,
@@ -547,7 +547,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			setContent(getTitle());
 			setTitle(getTitle().substring(0, 190) + "...");
 		}
-
 		createDatabaseMe();
 		flushDatabaseMe();
 		
