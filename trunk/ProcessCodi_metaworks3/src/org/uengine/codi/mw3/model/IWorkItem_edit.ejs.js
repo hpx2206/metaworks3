@@ -16,7 +16,6 @@ var org_uengine_codi_mw3_model_IWorkItem_edit = function(objectId, className){
 	
 	
 	var value = mw3.objects[objectId];
-
 	if(value.type=="file"){
 		setTimeout(function(){
 			var fileUplodaerObjectId = mw3.getChildObjectId(objectId, "file");
@@ -34,7 +33,10 @@ var org_uengine_codi_mw3_model_IWorkItem_edit = function(objectId, className){
 		}, 1000);
 	}
 	
-
+	this.instanceFirst = true;
+	if( value.instId != null && value.instId != 0){
+		this.instanceFirst = false;
+	}
 	
 	this.sending = false;
 	// process
@@ -256,82 +258,103 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.press = function(){
     	var followerDivId 	= "commandFollowerDiv_" + this.objectId;
     	var dateDivId 			= "commandDateDiv_" + this.objectId;
     	var recommendFirst = true;
-    	//////// assists about process initiation /////////
-    	
-    	var processMap = mw3.getAutowiredObject("org.uengine.codi.mw3.model.ProcessMapList");
-    	
-    	//var divIdWithoutShaf = "commandDiv_" + this.objectId; 
-
-//console.log('1');
-
-		if(text && text.length>0 && processMap)
-    	for(var i=0; i<processMap.processMapList.length; i++){
-    		var commandTrigger = processMap.processMapList[i].cmTrgr+":";
-    		var processName = processMap.processMapList[i].name;
-    		if( processName == null || processName == "" ){
-    			break;
-    		}
-//    		console.log('keychar:' + e.charCode)
- //   		console.log('2:' +text + ' and commandTrigger=' + commandTrigger);
-
-    		if(processName.indexOf(text)==0){
-    			var theAppDiv = "#objDiv_" + processMap.processMapList[i].__objectId;
-
-    			if(!theAppDiv['__inEffect']){
-	    			theAppDiv['__inEffect'] = true;
-	    			$(theAppDiv).effect("bounce", {times: 3}, 300);
-    			}
-
-    		}
-    		// 두글자 이상 일치시에만 프로세스 추천 목록이 보임
-    		if( text.length>1 && this.processFirst && processName.indexOf(text)==0 ){
-    			var innerHtmlStr = 	"<div id=\"" + processDivId + "\" >";
-	        	  innerHtmlStr		+=	" " + mw3.localize('$AddWithProcess') + ": \"<b>" ;
-	        	  innerHtmlStr		+=	"<span id=\"processDivSpan\">" + processName + "</span>" ;
-	        	  innerHtmlStr		+=	"</b>\"";
-	        	  innerHtmlStr		+=	" <input value=\"싫어요\" type=\"button\" onclick=\"mw3.getFaceHelper('"+this.objectId+"').removeDiv('"+processDivId+"')\" style=\"cursor:pointer;\"/> ";
-	        	  innerHtmlStr		+=	"<br>";
-	        	  innerHtmlStr		+=	"</div>";
-	        	  
-	        	  this.commandActivityAppAlias = processMap.processMapList[i].defId;
-	        	  
-	        	  $(recommendDivId).append(innerHtmlStr);
-	        	  this.processFirst = false;
-    		}else if(text.length>1 && !this.processFirst && processName.indexOf(text)==0 ){
-	        	  $("#processDivSpan").html(processName);
-	        	  this.commandActivityAppAlias = processMap.processMapList[i].defId;
-    		}
-    		
-    		if(commandTrigger && commandTrigger.indexOf(text)==0){
-        		
-        		var commandPhrase = processMap.processMapList[i].cmPhrase;
-        		
-//        		console.log('text:'+text);
-//        		console.log('commandTrigger:'+commandTrigger);
-        		
-        		var thisFaceHelper = this;
-        		if(text==commandTrigger){//e.keyCode == 58 || e.charCode== 58 || e.keyCode == 59 || e.keyCode == 186) { //means ":" that user wants to command
-
-        			this.showCommandForm(processMap.processMapList[i]);
-	    			
+    	if(  this.instanceFirst ){
+	    	//////// assists about process initiation /////////
+	    	
+	    	var processMap = mw3.getAutowiredObject("org.uengine.codi.mw3.model.ProcessMapList");
+	    	
+	    	//var divIdWithoutShaf = "commandDiv_" + this.objectId; 
+	
+	//console.log('1');
+	
+			if(text && text.length>0 && processMap)
+	    	for(var i=0; i<processMap.processMapList.length; i++){
+	    		var commandTrigger = processMap.processMapList[i].cmTrgr+":";
+	    		var processName = processMap.processMapList[i].name;
+	    		if( processName == null || processName == "" ){
 	    			break;
-	    			
-        		}else{ //just recommend the command phrase;
-        			
-        			if(recommendFirst){
-        				$(recommendDivId).html("" + mw3.localize('$RecommendedCommand') + ": \"<b>" + commandTrigger + "</b>\"");
-        				recommendFirst = false;
-        			}else{
-        				
-        				$(recommendDivId).append(", \"<b>" + commandTrigger + "</b>\"");
-        				
-        			}
-        		}
-        	}
-    		
+	    		}
+	//    		console.log('keychar:' + e.charCode)
+	 //   		console.log('2:' +text + ' and commandTrigger=' + commandTrigger);
+	
+	    		if(processName.indexOf(text)==0){
+	    			var theAppDiv = "#objDiv_" + processMap.processMapList[i].__objectId;
+	
+	    			if(!theAppDiv['__inEffect']){
+		    			theAppDiv['__inEffect'] = true;
+		    			$(theAppDiv).effect("bounce", {times: 3}, 300);
+	    			}
+	
+	    		}
+	    		// 두글자 이상 일치시에만 프로세스 추천 목록이 보임
+	    		if( text.length>1 && this.processFirst && processName.indexOf(text)==0 ){
+	    			var innerHtmlStr = 	"<div id=\"" + processDivId + "\" >";
+		        	  innerHtmlStr		+=	" " + mw3.localize('$AddWithProcess') + ": \"<b>" ;
+		        	  innerHtmlStr		+=	"<span id=\"processDivSpan\">" + processName + "</span>" ;
+		        	  innerHtmlStr		+=	"</b>\"";
+		        	  innerHtmlStr		+=	" <input value=\"싫어요\" type=\"button\" onclick=\"mw3.getFaceHelper('"+this.objectId+"').removeDiv('"+processDivId+"')\" style=\"cursor:pointer;\"/> ";
+		        	  innerHtmlStr		+=	"<br>";
+		        	  innerHtmlStr		+=	"</div>";
+		        	  
+		        	  this.commandActivityAppAlias = processMap.processMapList[i].defId;
+		        	  
+		        	  $(recommendDivId).append(innerHtmlStr);
+		        	  this.processFirst = false;
+	    		}else if(text.length>1 && !this.processFirst && processName.indexOf(text)==0 ){
+		        	  $("#processDivSpan").html(processName);
+		        	  this.commandActivityAppAlias = processMap.processMapList[i].defId;
+	    		}
+	    		
+	    		if(commandTrigger && commandTrigger.indexOf(text)==0){
+	        		
+	        		var commandPhrase = processMap.processMapList[i].cmPhrase;
+	        		
+	//        		console.log('text:'+text);
+	//        		console.log('commandTrigger:'+commandTrigger);
+	        		
+	        		var thisFaceHelper = this;
+	        		if(text==commandTrigger){//e.keyCode == 58 || e.charCode== 58 || e.keyCode == 59 || e.keyCode == 186) { //means ":" that user wants to command
+	
+	        			this.showCommandForm(processMap.processMapList[i]);
+		    			
+		    			break;
+		    			
+	        		}else{ //just recommend the command phrase;
+	        			
+	        			if(recommendFirst){
+	        				$(recommendDivId).html("" + mw3.localize('$RecommendedCommand') + ": \"<b>" + commandTrigger + "</b>\"");
+	        				recommendFirst = false;
+	        			}else{
+	        				
+	        				$(recommendDivId).append(", \"<b>" + commandTrigger + "</b>\"");
+	        				
+	        			}
+	        		}
+	        	}
+	    		
+	    	}
+	
+			//////// assists about dates ////////
+			if(text && text.length>1){
+				date = Date.parseHangul(text) || Date.parse(text);
+		          if (date !== null && this.dateFirst ) {
+		        	  var innerHtmlStr = 	"<div id=\"" + dateDivId + "\" >";
+		        	  innerHtmlStr		+=	" " + mw3.localize('$AddDate') + ": \"<b>" ;
+		        	  innerHtmlStr		+=	"<span id=\"dateDivSpan\">" + date.toString(Date.CultureInfo.formatPatterns.fullDateTime) + "</span>" ;
+		        	  innerHtmlStr		+=	"</b>\"";
+		        	  innerHtmlStr		+=	" <input value=\"싫어요\" type=\"button\" onclick=\"mw3.getFaceHelper('"+this.objectId+"').removeDiv('"+dateDivId+"')\" style=\"cursor:pointer;\"/> ";
+		        	  innerHtmlStr		+=	"<br>";
+		        	  innerHtmlStr		+=	"</div>";
+		        	  
+		        	  $(recommendDivId).append(innerHtmlStr);
+		        	  this.dateFirst = false;
+		        	  this.dueDate = date;
+		          }else if(date !== null && !this.dateFirst ){
+		        	  $("#dateDivSpan").html(date.toString(Date.CultureInfo.formatPatterns.fullDateTime));
+		        	  this.dueDate = date;
+		          }
+			}
     	}
-		
-		
 		/////// assists about user names //////
     	
 		var contactListPanel = mw3.getAutowiredObject('org.uengine.codi.mw3.model.ContactListPanel');
@@ -365,26 +388,6 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.press = function(){
 		}
 		
 		
-		//////// assists about dates ////////
-		if(text && text.length>1){
-			date = Date.parseHangul(text) || Date.parse(text);
-	          if (date !== null && this.dateFirst ) {
-	        	  var innerHtmlStr = 	"<div id=\"" + dateDivId + "\" >";
-	        	  innerHtmlStr		+=	" " + mw3.localize('$AddDate') + ": \"<b>" ;
-	        	  innerHtmlStr		+=	"<span id=\"dateDivSpan\">" + date.toString(Date.CultureInfo.formatPatterns.fullDateTime) + "</span>" ;
-	        	  innerHtmlStr		+=	"</b>\"";
-	        	  innerHtmlStr		+=	" <input value=\"싫어요\" type=\"button\" onclick=\"mw3.getFaceHelper('"+this.objectId+"').removeDiv('"+dateDivId+"')\" style=\"cursor:pointer;\"/> ";
-	        	  innerHtmlStr		+=	"<br>";
-	        	  innerHtmlStr		+=	"</div>";
-	        	  
-	        	  $(recommendDivId).append(innerHtmlStr);
-	        	  this.dateFirst = false;
-	        	  this.dueDate = date;
-	          }else if(date !== null && !this.dateFirst ){
-	        	  $("#dateDivSpan").html(date.toString(Date.CultureInfo.formatPatterns.fullDateTime));
-	        	  this.dueDate = date;
-	          }
-		}
 		//////// assists about url ////////
 		
 		
