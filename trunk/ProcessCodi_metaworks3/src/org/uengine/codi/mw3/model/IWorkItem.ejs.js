@@ -1,5 +1,16 @@
 var org_uengine_codi_mw3_model_IWorkItem = function(objectId, className){
+	this.objectId = objectId;
+	this.className = className;
+	
+	
+	
+	var container = $('#objDiv_' + this.objectId).find('.formcontexttitle span').eq(0);
+	var doc = container.html();
+	
+	var regURL = new RegExp("(http|https|ftp|telnet|news|irc)://([-/.a-zA-Z0-9_~#%$?&=:200-377()]+)","gi");	
+    container.html(doc.replace(regURL,"<a href='$1://$2' target='_blank' style='text-decoration:underline'>$1://$2</a>"));
 
+		
 	var workItem = mw3.objects[objectId];
 	this.type = workItem.type;
 	
