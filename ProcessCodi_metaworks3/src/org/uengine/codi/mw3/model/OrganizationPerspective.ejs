@@ -7,12 +7,12 @@
 		if(value.selected){
 %>
 	<div class="depth2">
-		Dept <a href="javascript:<%=methods.addDept.caller()%>">new</a>
+		Dept <a href="#" onClick="<%=methods.addDept.caller()%>">new</a>
 		<%=fields.deptList.here()%>
 	</div>
 	
 	<div class="depth2">
-		Role <a href="javascript:<%=methods.addRole.caller()%>">new</a>
+		Role <a href="#" onClick="<%=methods.addRole.caller()%>">new</a>
 		<%=fields.roleList.here()%>
 	</div>
 	

@@ -54,10 +54,10 @@
 									</span>								
 								<%}else if(value.type==null){%>
 									<span>
-										<%=mw3.localize('$MyTask')%>: <a href="javascript:<%=methods.detail.caller()%>"><%=value.title%> [ <%=value.status%> ]</a>
+										<%=mw3.localize('$MyTask')%>: <a href="#" onClick="<%=methods.detail.caller()%>"><%=value.title%> [ <%=value.status%> ]</a>
 									</span>
 									<span>
-										<a href="javascript:<%=methods.workItemPopup.caller()%>"><img src="images/waveStyle/newWindow.png" style="margin-top:2px;" title="Open new window"></a>
+										<a href="#" onClick="<%=methods.workItemPopup.caller()%>"><img src="images/waveStyle/newWindow.png" style="margin-top:2px;" title="Open new window"></a>
 									</span>				
 								<%}%>
 								<% if(value.dueDate!=null){%>

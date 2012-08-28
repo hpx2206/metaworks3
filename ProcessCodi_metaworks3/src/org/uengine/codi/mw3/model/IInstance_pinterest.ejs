@@ -26,7 +26,7 @@
 	
 	
 <div class="box col<%=column%>"<%=mw3.when=='newItem' ? " style='background:#FFB249'":""%>>
-<a href="javascript:<%=methods.popupDetail.caller()%>">
+<a href="#" onClick="<%=methods.popupDetail.caller()%>">
 	<img src="images/portrait/<%=value.initiator.userId%>.jpg" width="100%" align=left onerror="$(this).remove();">
 </a>
 	<b><font color=204070 size=<%=1+column%> face='Arial,돋움'><%=value.initiator.name%></font></b>
@@ -40,7 +40,7 @@
 					<span class="type_process"></span><span class="instanceLock"></span>
 				<% } %>	
 						
-<a href="javascript:<%=methods.popupDetail.caller()%>"><font color=303030 size=<%=2+column%> face='Arial,돋움'><b><%=value.name%></b></font></a>
+<a href="#" onClick="<%=methods.popupDetail.caller()%>"><font color=303030 size=<%=2+column%> face='Arial,돋움'><b><%=value.name%></b></font></a>
 				
 				<% if(value.currentUser && value.currentUser.userId && (value.initiator.userId!=value.currentUser.userId || value.name!=value.lastCmnt)){%>
 			<img src="images/portrait/<%=value.currentUser.userId%>.jpg" width="30%" align=left onerror="$(this).remove();">

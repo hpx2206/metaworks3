@@ -10,7 +10,7 @@
 		<ul>
 			<li style="float:left">제목 : </li>
 			<li style="float:left"> <%=fields.title.here({when:'edit'})%></li>
-			<li><a id="wBtn" href="javascript:<%=methods.start.caller()%>"><span>Start</span></a></li>
+			<li><a id="wBtn" href="#" onClick="<%=methods.start.caller()%>"><span>Start</span></a></li>
 		</ul>
 	</div>
 	<div>	
@@ -28,7 +28,7 @@
 		<div id="btnline" style="padding-top:8px;">
 		<div id="method_<%=objectId%>_start">
 			<ul>
-				<li><a id="wBtn" href="javascript:<%=methods.start.caller()%>"><span>start</span></a></li>
+				<li><a id="wBtn" href="#" onClick="<%=methods.start.caller()%>"><span>start</span></a></li>
 			</ul>
 		</div>
 		</div>

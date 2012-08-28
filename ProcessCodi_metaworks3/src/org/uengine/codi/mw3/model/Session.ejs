@@ -12,12 +12,12 @@
 		<div style="float:left; margin-right:15px;">
 			<span style="display:inline-block; line-height:37px; cursor:pointer;"><%=fields.employee.here() %></span>
 				 |	
-			<a href="javascript:mw3.test(mw3.getAutowiredObject('org.uengine.codi.mw3.model.InstanceListPanel').__objectId, 'first', {guidedTour:true})" type="application/pdf"><%=mw3.localize("$Help")%></a>			 
+			<a href="#" onClick="mw3.test(mw3.getAutowiredObject('org.uengine.codi.mw3.model.InstanceListPanel').__objectId, 'first', {guidedTour:true})" type="application/pdf"><%=mw3.localize("$Help")%></a>			 
 
 
 <%	if(value.employee.isAdmin){%>
 				 |	
-			<a href="javascript:<%=methods.manager.caller()%>"><%=mw3.localize("$Manager")%></a>
+			<a href="#" onClick="<%=methods.manager.caller()%>"><%=mw3.localize("$Manager")%></a>
 <%	}%>
 				 |	
 			<span style="display:inline-block; line-height:37px;"><a onClick="<%=methods.logout.caller() %>" style="cursor:pointer;"><%=mw3.localize("$Logout")%></a></span>
