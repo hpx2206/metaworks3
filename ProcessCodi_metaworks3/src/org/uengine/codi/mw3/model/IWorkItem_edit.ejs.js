@@ -37,6 +37,8 @@ var org_uengine_codi_mw3_model_IWorkItem_edit = function(objectId, className){
 
 	
 	this.sending = false;
+	// process
+	this.processFirst = true;
 	// user names
 	this.userAddCommands = {};
 	// dates
@@ -67,6 +69,9 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.getValue =  function(){
 			object.title = text;
 	}
 	
+	if( this.commandActivityAppAlias != null){
+		object.activityAppAlias = this.commandActivityAppAlias;
+	}
 	var initialFollowers = [];
 	for(var idx in this.userAddCommands){
 		initialFollowers[initialFollowers.length] = idx;
@@ -262,12 +267,14 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.press = function(){
 		if(text && text.length>0 && processMap)
     	for(var i=0; i<processMap.processMapList.length; i++){
     		var commandTrigger = processMap.processMapList[i].cmTrgr+":";
-
-    		
+    		var processName = processMap.processMapList[i].name;
+    		if( processName == null || processName == "" ){
+    			break;
+    		}
 //    		console.log('keychar:' + e.charCode)
  //   		console.log('2:' +text + ' and commandTrigger=' + commandTrigger);
 
-    		if(processMap.processMapList[i].name.indexOf(text)==0){
+    		if(processName.indexOf(text)==0){
     			var theAppDiv = "#objDiv_" + processMap.processMapList[i].__objectId;
 
     			if(!theAppDiv['__inEffect']){
@@ -275,6 +282,24 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.press = function(){
 	    			$(theAppDiv).effect("bounce", {times: 3}, 300);
     			}
 
+    		}
+    		// 두글자 이상 일치시에만 프로세스 추천 목록이 보임
+    		if( text.length>1 && this.processFirst && processName.indexOf(text)==0 ){
+    			var innerHtmlStr = 	"<div id=\"" + processDivId + "\" >";
+	        	  innerHtmlStr		+=	" " + mw3.localize('$AddWithProcess') + ": \"<b>" ;
+	        	  innerHtmlStr		+=	"<span id=\"processDivSpan\">" + processName + "</span>" ;
+	        	  innerHtmlStr		+=	"</b>\"";
+	        	  innerHtmlStr		+=	" <input value=\"싫어요\" type=\"button\" onclick=\"mw3.getFaceHelper('"+this.objectId+"').removeDiv('"+processDivId+"')\" style=\"cursor:pointer;\"/> ";
+	        	  innerHtmlStr		+=	"<br>";
+	        	  innerHtmlStr		+=	"</div>";
+	        	  
+	        	  this.commandActivityAppAlias = processMap.processMapList[i].defId;
+	        	  
+	        	  $(recommendDivId).append(innerHtmlStr);
+	        	  this.processFirst = false;
+    		}else if(text.length>1 && !this.processFirst && processName.indexOf(text)==0 ){
+	        	  $("#processDivSpan").html(processName);
+	        	  this.commandActivityAppAlias = processMap.processMapList[i].defId;
     		}
     		
     		if(commandTrigger && commandTrigger.indexOf(text)==0){
@@ -341,12 +366,12 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.press = function(){
 		
 		
 		//////// assists about dates ////////
-		if(text && text.length>0){
+		if(text && text.length>1){
 			date = Date.parseHangul(text) || Date.parse(text);
 	          if (date !== null && this.dateFirst ) {
 	        	  var innerHtmlStr = 	"<div id=\"" + dateDivId + "\" >";
 	        	  innerHtmlStr		+=	" " + mw3.localize('$AddDate') + ": \"<b>" ;
-	        	  innerHtmlStr		+=	"<span id=\"dateDivSpan\"> " + date.toString(Date.CultureInfo.formatPatterns.fullDateTime) + "</span> " ;
+	        	  innerHtmlStr		+=	"<span id=\"dateDivSpan\">" + date.toString(Date.CultureInfo.formatPatterns.fullDateTime) + "</span>" ;
 	        	  innerHtmlStr		+=	"</b>\"";
 	        	  innerHtmlStr		+=	" <input value=\"싫어요\" type=\"button\" onclick=\"mw3.getFaceHelper('"+this.objectId+"').removeDiv('"+dateDivId+"')\" style=\"cursor:pointer;\"/> ";
 	        	  innerHtmlStr		+=	"<br>";
@@ -370,6 +395,10 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.removeDiv = function(divId){
 	$("#" + divId ).remove();
 	if( divId.indexOf("commandDateDiv_" == 0 ) ){
 		this.dateFirst = true;
+		this.dueDate = null;
+	}else if( divId.indexOf("commandProcessDiv_" == 0 ) ){
+		this.processFirst = true;
+		this.commandActivityAppAlias = null;
 	}
 };
 /**

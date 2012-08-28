@@ -40,30 +40,35 @@ public class CommentWorkItem extends WorkItem{
 			StringTokenizer tokenizer = new StringTokenizer(title);
 			String connector = null;
 			
-			StringBuffer generatedTitle = new StringBuffer();
-
-			
-			int substringDelimiter = 0;
-			for(ParameterValue pv : getParameters()){
+			if(getParameters()!=null){
+				StringBuffer generatedTitle = new StringBuffer();
+	
 				
-				connector = tokenizer.nextToken("$").substring(substringDelimiter);
-				tokenizer.nextToken(">");
+				int substringDelimiter = 0;
+				for(ParameterValue pv : getParameters()){
+					
+					connector = tokenizer.nextToken("$").substring(substringDelimiter);
+					tokenizer.nextToken(">");
+					
+					generatedTitle.append(connector).append(pv.getValueObject());
+					
+					substringDelimiter=1;
+					
+				}
 				
-				generatedTitle.append(connector).append(pv.getValueObject());
 				
-				substringDelimiter=1;
-				
+				title = generatedTitle.append(tokenizer.nextElement()).toString();
 			}
-			
-			title = generatedTitle.append(tokenizer.nextElement()).toString();
 			
 			String newInstId = processManager.initializeProcess(getActivityAppAlias(), getTitle());
 			
-			for(ParameterValue pv : getParameters()){
-								
-				Serializable valueObject = (Serializable)pv.getValueObject();
-				
-				processManager.setProcessVariable(newInstId, "", pv.getVariableName(), valueObject);
+			if(getParameters()!=null){	
+				for(ParameterValue pv : getParameters()){
+									
+					Serializable valueObject = (Serializable)pv.getValueObject();
+					
+					processManager.setProcessVariable(newInstId, "", pv.getVariableName(), valueObject);
+				}
 			}
 			
 			RoleMapping rm = RoleMapping.create();
