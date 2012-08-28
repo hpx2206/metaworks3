@@ -1433,7 +1433,8 @@ img {
     
 }
 #navigationTitle span {
-    line-height: 21px;
+    line-height: 21px;    
+    margin-right: 80px;
     overflow:hidden;
     white-space:nowrap;
     text-overflow:ellipsis;
