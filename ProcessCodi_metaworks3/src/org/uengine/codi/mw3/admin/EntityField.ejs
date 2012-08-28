@@ -20,20 +20,20 @@ if(value!=null){
 		if(mw3.when != mw3.WHEN_EDIT){
 %>		 		
 		
-					<li><a id="wBtn" href="javascript:mw3.getFaceHelper('<%=objectId%>').edit();"><span>edit</span></a></li>
-					<li><a id="wBtn" href="javascript:<%=methods.up.caller()%>"><span>up</span></a></li>
-					<li><a id="wBtn" href="javascript:<%=methods.down.caller()%>"><span>down</span></a></li>
-					<li><a id="wBtn" href="javascript:<%=methods.remove.caller()%>"><span>remove</span></a></li>
+					<li><a id="wBtn" href="#" onClick="mw3.getFaceHelper('<%=objectId%>').edit();"><span>edit</span></a></li>
+					<li><a id="wBtn" href="#" onClick="<%=methods.up.caller()%>"><span>up</span></a></li>
+					<li><a id="wBtn" href="#" onClick="<%=methods.down.caller()%>"><span>down</span></a></li>
+					<li><a id="wBtn" href="#" onClick="<%=methods.remove.caller()%>"><span>remove</span></a></li>
 			
 <%
 		}else{
 			if(mw3.where == "newEntry"){
 %>					
-					<li><a id="wBtn" href="javascript:<%=methods.add.caller()%>"><span>add</span></a></li>
+					<li><a id="wBtn" href="#" onClick="<%=methods.add.caller()%>"><span>add</span></a></li>
 <%
 			}else{
 %>
-					<li><a id="wBtn" href="javascript:<%=methods.save.caller()%>"><span>save</span></a></li>
+					<li><a id="wBtn" href="#" onClick="<%=methods.save.caller()%>"><span>save</span></a></li>
 <%
 			}
 		}
