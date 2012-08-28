@@ -261,11 +261,11 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			
 			Metaworks3.prototype.loadFaceHelper = function(objectId){
 				
-				if(!mw3.objects[objectId]){
-					return null;
-				}
+//				if(!mw3.objects[objectId]){
+//					return null;
+//				}
 				
-				var clsName = mw3.objects[objectId].__className;
+//				var clsName = mw3.objects[objectId].__className;
 //				
 //				return this.loadFaceHelperWithClsName(clsName);
 //				
@@ -326,10 +326,10 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					//return null;
 					//TODO :  error reporting required
 					//this.debug(e, true);
-					if(window.console){
-						console.log("Failed to load face helper ("+faceHelperClass+"(ejs.js)): " + e);
-						console.log(e);						
-					}
+					//if(window.console){
+						//console.log("Failed to load face helper ("+faceHelperClass+"(ejs.js)): " + e);
+						//console.log(e);						
+					//}
 				}
 			}
 
@@ -494,7 +494,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					return;
 				}
 				
-				if(objectTypeName.length > 4 && objectTypeName.substr(0, 2) == '[L' && objectTypeName.substr(-1) == ';'){			//if array of some object type, use ArrayFace with mapped class mapping for the object type.
+				if(objectTypeName.length > 4 && objectTypeName.substr(0, 2) == '[L' && objectTypeName.substr(objectTypeName.length-1) == ';'){			//if array of some object type, use ArrayFace with mapped class mapping for the object type.
 					return;
 				}
 				
@@ -1409,7 +1409,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					
 				}
 								
-				elementClass = (elementClass ? " class='" + elementClass.trim() + "'": "");
+				elementClass = (elementClass ? " class='" + elementClass + "'": "");
 				
 				var elementSubTag = "";
 				
