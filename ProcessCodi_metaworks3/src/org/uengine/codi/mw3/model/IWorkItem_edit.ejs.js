@@ -393,10 +393,10 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.press = function(){
 };
 org_uengine_codi_mw3_model_IWorkItem_edit.prototype.removeDiv = function(divId){
 	$("#" + divId ).remove();
-	if( divId.indexOf("commandDateDiv_" == 0 ) ){
+	if( divId.indexOf("commandDateDiv_") == 0  ){
 		this.dateFirst = true;
 		this.dueDate = null;
-	}else if( divId.indexOf("commandProcessDiv_" == 0 ) ){
+	}else if( divId.indexOf("commandProcessDiv_") == 0  ){
 		this.processFirst = true;
 		this.commandActivityAppAlias = null;
 	}
