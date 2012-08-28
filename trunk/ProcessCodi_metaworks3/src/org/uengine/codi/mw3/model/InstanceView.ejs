@@ -12,25 +12,25 @@
 			    <ul>
 			        
 			        <li id="wih_btn_item_Information">
-			        	<a href="javascript:<%=methods.monitor.caller()%>">
+			        	<a href="#" onClick="<%=methods.monitor.caller()%>">
 			        		<span id="method_<%=objectId%>_monitor"><img src="images/waveStyle/i_workitem_i.png" border="0"></span>
 			        		<span><%=mw3.localize("$process")%></span>
 			        	</a>
 			        </li>
 			        <li id="wih_btn_item_GanttChart">
-			        	<a href="javascript:<%=methods.schedule.caller()%>">
+			        	<a href="#" onClick="<%=methods.schedule.caller()%>">
 			        		<span style="color: black; "><img src="images/waveStyle/i_gantt.png" border="0" valign=center></span>
 			        		<span style="color: black; "><%=mw3.localize("$Schedule")%></span>
 			        	</a>
 			        </li>
 			        <li id="wih_btn_sendMail" style="display: none; ">
-			        	<a href="javascript:sendMail()">
+			        	<a href="#" onClick="sendMail()">
 			        		<span><img src="images/waveStyle/i_mail.png" border="0"></span>
 			        		<span><%=mw3.localize("$Mail")%></span>
 			        	</a>
 			        </li>
 			        <li id="wih_btn_reply" style="display: block; ">
-			        	<a href="javascript:<%=methods.newSubInstancePanel.caller()%>">
+			        	<a href="#" onClick="<%=methods.newSubInstancePanel.caller()%>">
 			        		<span style="color: black; cursor:hand "><img src="images/waveStyle/i_reply.png" border="0"></span>
 			        		<span><%=mw3.localize("$activity")%></span>
 			        	</a>
@@ -42,19 +42,19 @@
 			        	</a>
 			        </li>
 			        <li id="wih_btn_delete" style="display: none; ">
-			        	<a href="javascript:deleteMail()">
+			        	<a href="#" onClick="deleteMail()">
 			        		<span><img src="images/waveStyle/i_delete.png" border="0"></span>
 			        		<span><%=mw3.localize("$Deletemail")%></span>
 			        	</a>
 			        </li>
 			        <li id="wih_btn_item_delete" style="display: block; ">
-			        	<a href="javascript:<%=methods.remove.caller()%>">
+			        	<a href="#" onClick="<%=methods.remove.caller()%>">
 			        		<span><img src="images/waveStyle/i_delete.png" border="0"></span>
 			        		<span><%=mw3.localize("$Delete")%></span>
 			        	</a>
 			        </li>
 			        <li id="wih_btn_toInstance" style="display: none; ">
-			        	<a href="javascript:getRecommandProcessList();">
+			        	<a href="#" onClick="getRecommandProcessList();">
 			        		<span><img src="images/waveStyle/i_toinst.png" border="0"></span>
 			        		<span><%=mw3.localize("$processchange")%></span>
 			        	</a>
@@ -63,7 +63,7 @@
 			if(value.secuopt == null || value.secuopt == '0'){
 %>						        
 			        <li id="wih_btn_sec">
-			        	<a href="javascript:<%=methods.toggleSecurityConversation.caller()%>">
+			        	<a href="#" onClick="<%=methods.toggleSecurityConversation.caller()%>">
 			        		<span><img src="images/waveStyle/i_unsecuopt.png" border="0"></span>
 			        		<span><%=mw3.localize("$Privacy")%></span>
 			        	</a>
@@ -72,7 +72,7 @@
 			}else{
 %>						        
 			        <li id="wih_btn_sec" class="toolbar_current">
-			        	<a href="javascript:<%=methods.toggleSecurityConversation.caller()%>">
+			        	<a href="#" onClick="<%=methods.toggleSecurityConversation.caller()%>">
 			        		<span><img src="images/waveStyle/i_secuopt.png" border="0"></span>
 			        		<span><%=mw3.localize("$MakeItPrivacy")%></span>
 			        	</a>
@@ -83,7 +83,7 @@
 			if(value.status != 'Stopped' && value.status != 'Completed'){
 %>						        
 			        <li id="wih_btn_complete">
-			        	<a href="javascript:<%=methods.complete.caller()%>">
+			        	<a href="#" onClick="<%=methods.complete.caller()%>">
 			        		<span><img src="images/waveStyle/i_complete.png" border="0"></span>
 			        		<span><%=mw3.localize("$Completing")%></span>
 			        	</a>
@@ -93,7 +93,7 @@
 			}else{
 %>						        
 			        <li id="wih_btn_complete" class="toolbar_current">
-			        	<a href="javascript:<%=methods.complete.caller()%>">
+			        	<a href="#" onClick="<%=methods.complete.caller()%>">
 			        		<span><img src="images/waveStyle/i_complete.png" border="0"></span>
 			        		<span><%=mw3.localize("$Complete")%></span>
 			        	</a>
@@ -103,7 +103,7 @@
 %>
 			        
 			        <!-- 2011.09.05 -->
-			        <!-- li id="wih_btn_reply"><a href="javascript:openEventHandler()"><span><img src="images/waveStyle/i_reply.png" border="0" /></img></span><span><%=mw3.localize("$EventHandler")%></span></a></li-->
+			        <!-- li id="wih_btn_reply"><a href="#" onClick="openEventHandler()"><span><img src="images/waveStyle/i_reply.png" border="0" /></img></span><span><%=mw3.localize("$EventHandler")%></span></a></li-->
 			        
 			    </ul>
 			</div>

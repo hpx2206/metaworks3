@@ -60,11 +60,11 @@
 <%
 				if(mw3.when == 'contacts'){
 %>							
-				<li><a id="wBtn" href="javascript:<%=methods.removeContact.caller()%>"><span><%=mw3.localize("$RemoveFromContact")%></span></a></li>
+				<li><a id="wBtn" href="#" onClick="<%=methods.removeContact.caller()%>"><span><%=mw3.localize("$RemoveFromContact")%></span></a></li>
 <%
 				}else if(mw3.when== 'followers'){
 %>							
-				<li><a id="wBtn" href="javascript:<%=methods.removeFollower.caller()%>"><span><%=mw3.localize("$RemoveFromFollowers")%></span></a></li>
+				<li><a id="wBtn" href="#" onClick="<%=methods.removeFollower.caller()%>"><span><%=mw3.localize("$RemoveFromFollowers")%></span></a></li>
 <%
 				}
 				
@@ -74,10 +74,10 @@
 <%				
 				}
 %>				
-				<li><a id="wBtn" href="javascript:<%=methods.addContact.caller()%>"><span><%=mw3.localize("$AddFriend")%></span></a></li>						
-				<li><a id="wBtn" href="javascript:<%=methods.chat.caller()%>"><span><%=mw3.localize("$Chat")%></span></a></li>						
-				<li><a id="wBtn" href="javascript:<%=methods.showSchedule.caller()%>"><span><%=mw3.localize("$showSchedule")%></span></a></li>
-				<li><a id="wBtn" href="javascript:<%=methods.showWall.caller()%>"><span><%=mw3.localize("$ShowWall")%></span></a></li>
+				<li><a id="wBtn" href="#" onClick="<%=methods.addContact.caller()%>"><span><%=mw3.localize("$AddFriend")%></span></a></li>						
+				<li><a id="wBtn" href="#" onClick="<%=methods.chat.caller()%>"><span><%=mw3.localize("$Chat")%></span></a></li>						
+				<li><a id="wBtn" href="#" onClick="<%=methods.showSchedule.caller()%>"><span><%=mw3.localize("$showSchedule")%></span></a></li>
+				<li><a id="wBtn" href="#" onClick="<%=methods.showWall.caller()%>"><span><%=mw3.localize("$ShowWall")%></span></a></li>
 			</ul>
 		</div>
 <%

@@ -1,10 +1,10 @@
 <div id="" style="float:left; margin-righ:20px; padding-top:17px; position:relative;">	
-	<a class="badgeMail" href="javascript:<%=methods.showList.caller()%>">
+	<a class="badgeMail" href="#" onClick="<%=methods.showList.caller()%>">
 <% 
 	 if(value.newItemCount>0){
 %>
 		<div id="" style="position:absolute; top:16px; right:-17px;">	
-			<a class="badgeRed" href="javascript:<%=methods.showList.caller()%>" style="display:none">
+			<a class="badgeRed" href="#" onClick="<%=methods.showList.caller()%>" style="display:none">
 				<span><%=value.newItemCount%></span>
 			</a>	
 		</div>
