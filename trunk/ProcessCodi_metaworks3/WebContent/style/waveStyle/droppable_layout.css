@@ -1429,11 +1429,18 @@ img {
 
 #navigationTitle, #contactTitle, #wihTitle, #workListTitle, #mindmapTitle, #processTitle {
     float: left;
+    width:100%;
+    
 }
 #navigationTitle span {
     line-height: 21px;
-    overflow: hidden;
-    white-space: nowrap;
+}
+#navigationTitle span div{
+    margin-right: 80px;
+    overflow:hidden;
+    white-space:nowrap;
+    text-overflow:ellipsis;
+    -o-text-overow: ellipsis;
 }
 .loadingarea {
     float: left;
