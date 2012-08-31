@@ -4,10 +4,6 @@ var org_uengine_codi_mw3_model_TrayItem = function(objectId, className){
 	this.className = className;	
 	this.divId = '#objDiv_' + this.objectId;
 	
-	
-	//alert($(this.divId).closest('#trayDiv').width());
-	
-	// $(this.divId+' #sm01').width();
 	var object = mw3.objects[this.objectId];
 	
 	if(object && object.metaworksContext && object.metaworksContext.how == 'down'){
