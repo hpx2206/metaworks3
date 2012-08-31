@@ -1441,7 +1441,7 @@ img {
     -o-text-overow: ellipsis;
 }
 #navigationTitle span div{
-    margin-right: 80px;
+    margin-right: 60px;
     overflow:hidden;
     white-space:nowrap;
     text-overflow:ellipsis;

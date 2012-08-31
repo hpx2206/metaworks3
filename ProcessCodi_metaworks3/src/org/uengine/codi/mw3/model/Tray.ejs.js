@@ -1,6 +1,18 @@
 var org_uengine_codi_mw3_model_Tray = function(objectId, className){
 
 	this.objectId = objectId;
+	this.className = className;	
+	this.divId = '#objDiv_' + this.objectId;
+	
+	var thisWidth = $(this.divId).width()-550;
+	var trayObject = $(this.divId).find('#sm01');
+	
+	
+	trayObject.width(thisWidth/trayObject.length);
+	
+	if(trayObject.width() > 160){
+		trayObject.width(160)
+	}
 
 }
 
