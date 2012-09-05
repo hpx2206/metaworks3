@@ -36,9 +36,19 @@
 					<div id="commandRecommendDiv_<%=objectId%>"></div> 
 				</div>
 				
-			</td>			
+			</td>		
+<%	
+			if( value.instId != null && value.instId != 0){
+%>
+				<td width=50 align="center"><a id="wBtn" href="#" onClick="mw3.getFaceHelper('<%=objectId%>').send()"><span id="method_<%=objectId%>_add"><%=mw3.localize("$Post")%></span></a></td>
 			
-			<td width=50 align="center"><a id="wBtn" href="#" onClick="<%=methods.add.caller()%>"><span id="method_<%=objectId%>_add"><%=mw3.localize("$Post")%></span></a></td>
+<%
+			} else {
+%>
+				<td width=50 align="center"><a id="wBtn" href="#" onClick="<%=methods.add.caller()%>"><span id="method_<%=objectId%>_add"><%=mw3.localize("$Post")%></span></a></td>
+<%
+			}
+%>
 		</tr> 
 		
 		
