@@ -591,3 +591,5 @@ alter table bpm_knol add column type char(10);
 	
 alter table emptable modify column empcode varchar(100);
 alter table contact modify column friendId varchar(100);
+
+alter table emptable add column APPKEY varchar(100);
