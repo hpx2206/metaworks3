@@ -388,6 +388,27 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.press = function(){
 		}
 		
 		
+
+		//////// assists about dates ////////
+		if(text && text.length>0){
+			date = Date.parseHangul(text) || Date.parse(text);
+	          if (date !== null && this.dateFirst ) {
+	        	  var innerHtmlStr = 	"<div id=\"" + dateDivId + "\" >";
+	        	  innerHtmlStr		+=	" " + mw3.localize('$AddDate') + ": \"<b>" ;
+	        	  innerHtmlStr		+=	"<span id=\"dateDivSpan\"> " + date.toString(Date.CultureInfo.formatPatterns.fullDateTime) + "</span> " ;
+	        	  innerHtmlStr		+=	"</b>\"";
+	        	  innerHtmlStr		+=	" | <a href=\"javascript:mw3.getFaceHelper('"+this.objectId+"').removeDiv('"+dateDivId+"')\" style=\"cursor:pointer;\">싫어요</a> ";
+	        	  innerHtmlStr		+=	"<br>";
+	        	  innerHtmlStr		+=	"</div>";
+	        	  
+	        	  $(recommendDivId).append(innerHtmlStr);
+	        	  this.dateFirst = false;
+	        	  this.dueDate = date;
+	          }else if(date !== null && !this.dateFirst ){
+	        	  $("#dateDivSpan").html(date.toString(Date.CultureInfo.formatPatterns.fullDateTime));
+	        	  this.dueDate = date;
+	          }
+		}
 		//////// assists about url ////////
 		
 		

@@ -22,7 +22,9 @@ var org_uengine_codi_mw3_model_IEmployee = function(objectId, className){
 					
 					object.empCode = response.email;
 					object.empName = response.name;
-					object.email = response.email;
+					
+					if(!object.email)
+						object.email = response.email;
 					
 					mw3.getInputElement(objectId, 'locale').value = response.locale.substring(0,2);
 				});				
