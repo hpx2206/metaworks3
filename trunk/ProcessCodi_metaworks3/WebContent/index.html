@@ -176,6 +176,7 @@
  		<script type="text/javascript">
  		
 			mw3.usingTemplateEngine = 'jQote';
+			//mw3.optimizeObjectMemory = true;
 			
 			
 			var Request = function() {
@@ -280,7 +281,7 @@
 		 		mw3.getMessage = function(key, defaultValue){
 		 			var localeHandler = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Locale");
 		 			
-		 			if(localeHandler!=null){		 				
+		 			if(localeHandler!=null && localeHandler.resourceBundle != null){		 				
 		 				var message = localeHandler.resourceBundle[key];		 				
 		 				if(message)
 		 					return message;
@@ -303,6 +304,8 @@
                     rememberMe: true,
                     defId : defId
                 }, 'body');
+				
+				mw3.onLoadFaceHelperScript();
                 
 				window.onbeforeunload= function(){
 				    return 'You are about to leave this page, OK?';
