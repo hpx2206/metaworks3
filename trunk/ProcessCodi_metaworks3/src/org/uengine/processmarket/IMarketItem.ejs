@@ -1,14 +1,28 @@
 <%
 
-//mw3.debug(value);
 
 if(value!=null){
+	value.logoImageFile.mimeType='image/png';
+	
 	if(mw3.when==mw3.WHEN_VIEW || !value.isDeleted){%>
-		<b><a href="marketItemDetail?itemId=<%=value.itemId%>"><img src="<%=value.logoImageFilePath%>" ><%=value.itemName%>(ver-<%=value.version%>)</a></b>
-		<div>Process By <%=value.comCode%></div>
-		<p><%=value.description%></p>
-	<%} else if (mw3.when==mw3.WHEN_NEW) {%>
-		asdfasdfasdfadsfadf
+	
+	<table>
+	<td>
+		<b><a onclick="<%=methods.detail.caller()%>"><%=fields.logoImageFile.here({when:'image'})%> <%=value.itemName%> (ver <%=value.version%>)</a></b>
+		
+	</td>
+	<td>
+		<div>제조사: <%=value.comCode%></div>
+	</td>
+	<td>
+		<p>설명: <%=value.description%></p>
+	</td>
+	<td>
+		<div style="float:left" class="badge" onclick="<%=methods.purchase.caller()%>"><%=value.price > 0 ? ' '+value.price + '원 ' : ' 무료 '%></div>
+	</td>
+	</table>
+	<%} else if (mw3.when=='detail') {%>
+		
 	<%}
 } else {%>
 	There is no marketItem.
