@@ -113,7 +113,7 @@ public abstract class AbstractMetaworksFile implements ContextAware {
 		
 	@ServiceMethod(target="append", callByContent=true)
 	public Download download() throws FileNotFoundException, IOException, Exception{
-		return new Download(new FileTransfer(new String(this.getFilename().getBytes("EUC-KR"),"ISO8859_1"), getMimeType(), new FileInputStream(overrideUploadPathPrefix() + "/" + this.getUploadedPath())));
+		return new Download(new FileTransfer(/*new String(*/this.getFilename()/*.getBytes("EUC-KR"),"ISO8859_1")*/, getMimeType(), new FileInputStream(overrideUploadPathPrefix() + "/" + this.getUploadedPath())));
 	}
 
 	@ServiceMethod(target=ServiceMethodContext.TARGET_NONE) //it doesn't cause refresh so that the recursive call of constructor of MetaworksFile javascript object never happened

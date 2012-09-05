@@ -193,7 +193,18 @@ public class TransactionalDwrServlet extends DwrServlet{
 				}
 	        }
 			
-			tx.commit();
+	        try{
+	        
+	        	tx.commit();
+	        }catch(Exception exAtCommit){
+	        	
+	        	//TODO: [before production] replacing the reply (by reply.setThrowable(exAtCommit)) to shout out the right error messages to the client.
+	        	Replies replies = (Replies) tx.getSharedContext("replies");
+//	        	replies.getReply(0).
+	        	replies.addReply(new Reply(replies.getCalls().getCall(0).getCallId(), null, exAtCommit));
+	        	
+	        	throw exAtCommit;
+	        }
 		}catch(Throwable e){
 			try {
 				tx.rollback();

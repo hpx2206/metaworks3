@@ -1,6 +1,7 @@
 package org.metaworks.dao;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -37,7 +38,11 @@ public class Database<T extends IDAO> implements IDAO, Serializable, Cloneable{
 
 			Object keyValue = createKeyObject();
 			
-			return (T) get(getClass(), keyValue, this);
+			try{
+				return (T) get(getClass(), keyValue, this);
+			}catch(ClassCastException cce){
+				throw new Exception("You probably mis-defined your database class " + getClass().getName() + " extends Database<interface name> not the implemented class name.", cce);
+			}
 //		} finally {
 //			TransactionContext.getThreadLocalInstance().setNeedSecurityCheck(securityCheck);
 //		}
@@ -406,7 +411,7 @@ public class Database<T extends IDAO> implements IDAO, Serializable, Cloneable{
 						
 						fieldValue = instance.getKeyFieldValue();
 					} catch(NullPointerException e) {						
-						throw new NullPointerException("field descriptor is null (name : " + fd.getName() + ")");
+						new NullPointerException("key field descriptor for automatic object value mapping is null (name : " + fd.getName() + ")").printStackTrace();
 					}						
 				}
 				
@@ -539,6 +544,7 @@ public class Database<T extends IDAO> implements IDAO, Serializable, Cloneable{
 		dbPrimitiveTypes.put(Long.class, Long.class);
 		dbPrimitiveTypes.put(Calendar.class, Calendar.class);
 		dbPrimitiveTypes.put(Date.class, Date.class);
+		dbPrimitiveTypes.put(Timestamp.class, Timestamp.class);
 		
 		//it is special case
 		dbPrimitiveTypes.put(MetaworksContext.class, MetaworksContext.class);
