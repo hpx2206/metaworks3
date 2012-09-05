@@ -10,6 +10,7 @@ import org.uengine.codi.mw3.knowledge.Knowledge;
 import org.uengine.codi.mw3.model.Main;
 import org.uengine.codi.mw3.model.PinterestMain;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.processmarket.Market;
 
 public class PageNavigator {
 
@@ -51,6 +52,16 @@ public class PageNavigator {
 		
 		return new MainPanel(outerLayout);
 	}
+	
+	@ServiceMethod(callByContent=true, inContextMenu=true)
+	public MainPanel goMarket() throws Exception {
+		
+		Market market = new Market();
+		market.load();
+		
+		return new MainPanel(market);
+	}
+	
 
 	@ServiceMethod(callByContent=true)
 	@Test(scenario="first", starter=true, instruction="<br><br><br><br><br><br>R&D 지식모드 (Knowledge Mode) 로 넘어갑니다..", next="autowiredObject.org.uengine.codi.mw3.knowledge.WfNode.add()")	

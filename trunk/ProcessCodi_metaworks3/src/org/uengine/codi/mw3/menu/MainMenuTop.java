@@ -4,6 +4,8 @@ import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.menu.MainMenu;
+import org.uengine.codi.mw3.common.MainPanel;
+import org.uengine.processmarket.Market;
 
 public class MainMenuTop extends MainMenu {
 	
@@ -35,6 +37,17 @@ public class MainMenuTop extends MainMenu {
 	@Face(displayName="&Help")
 	public SubMenuHelp help() throws Exception {
 		return new SubMenuHelp();
+	}	
+	
+
+	@ServiceMethod
+	@Face(displayName="&Market")
+	public MainPanel market() throws Exception {
+		Market market = new Market();
+		market.load();
+		
+		return new MainPanel(market);
+		
 	}	
 	
 }
