@@ -43,9 +43,9 @@ public class Login extends Database<ILogin> implements ILogin{
 		getMetaworksContext().setWhen("edit");
 	}
 	
-	@Id
-	@Face(options="placeholder", values="EMail")
 	String userId;
+	@Id
+	@Face(options="placeholder", values="E-Mail")
 		public String getUserId() {
 			return userId;
 		}
@@ -114,6 +114,7 @@ public class Login extends Database<ILogin> implements ILogin{
 		}
 
 	String password;
+	@Face(options={"type", "placeholder"}, values={"password", "Password"})
 		public String getPassword() {
 			return password;
 		}
@@ -215,7 +216,7 @@ public class Login extends Database<ILogin> implements ILogin{
 //	}
 	
 	
-	public Object subscribe(){
+	public Object subscribe() throws Exception{
 		Employee emp = new Employee();
 		emp.getMetaworksContext().setHow("detail");
 		emp.getMetaworksContext().setWhen("new");				
@@ -225,6 +226,8 @@ public class Login extends Database<ILogin> implements ILogin{
 		
 		emp.setEmpCode(getUserId());
 		emp.setEmail(getUserId());
+		
+		emp.checkRegistered();
 		
 		String name = null;
 		try{
