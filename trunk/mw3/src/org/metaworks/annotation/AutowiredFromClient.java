@@ -19,4 +19,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface AutowiredFromClient {
 	boolean onDrop() default false;
+	String instruction() default "";
 }

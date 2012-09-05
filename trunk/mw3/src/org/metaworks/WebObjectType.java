@@ -314,7 +314,7 @@ public class WebObjectType{
 					if(onDropTypes == null)
 						onDropTypes = new HashMap<String, String>();
 					
-					onDropTypes.put(fields[i].getType().getName(), fields[i].getName());
+					onDropTypes.put(fields[i].getType().getName(), "{field: '" + fields[i].getName() + "', instr: '" + autowiredFromClient.instruction() + "'}");
 					
 				}else{
 					if(autowiredFields == null)
