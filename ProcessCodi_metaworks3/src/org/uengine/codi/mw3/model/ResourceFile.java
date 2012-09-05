@@ -1,8 +1,15 @@
 package org.uengine.codi.mw3.model;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
+import org.directwebremoting.io.FileTransfer;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Remover;
@@ -12,6 +19,8 @@ import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dwr.MetaworksRemoteService;
+import org.metaworks.website.Download;
+import org.metaworks.widget.IFrame;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.CodiProcessDefinitionFactory;
@@ -20,9 +29,11 @@ import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.admin.ResourcePanel;
 import org.uengine.codi.mw3.knowledge.WfNode;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerWebWindow;
+import org.uengine.codi.platform.Console;
 import org.uengine.kernel.RoleMapping;
 import org.uengine.processmanager.ProcessManagerBean;
 import org.uengine.processmanager.ProcessManagerRemote;
+import org.uengine.processmarket.Market;
 import org.uengine.util.UEngineUtil;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
@@ -278,17 +289,79 @@ public class ResourceFile implements ContextAware{
 	}
 
 	@Face(displayName="Export to Activity App Zip")
-	@ServiceMethod(inContextMenu=true, target=ServiceMethodContext.TARGET_POPUP)
-	public Popup exportToJar() throws Exception{
-		FileImporter fileImporter = new FileImporter();
-		fileImporter.setParentDirectory(getAlias());
+	@ServiceMethod(callByContent=true, except="childs", inContextMenu=true, target=ServiceMethodContext.TARGET_POPUP)
+	public Download exportToJar() throws Exception{
+	   final int BUFFER = 2048;
+	      
+//	   try {
+	         BufferedInputStream origin = null;
+	         FileOutputStream dest = new 
+	           FileOutputStream(this.getName() + ".prom"); //TODO: [before production] temporal folder and concurrency safe handling is needed
+	         ZipOutputStream out = new ZipOutputStream(new 
+	           BufferedOutputStream(dest));
+	         //out.setMethod(ZipOutputStream.DEFLATED);
+	         byte data[] = new byte[BUFFER];
+	         // get a list of files from current directory
+	 		String resourceBase = CodiClassLoader.getMyClassLoader().sourceCodeBase() + "/";
+			
+			File root = new File(resourceBase + getAlias());
+
+			setOpened(false);
+			
+			drillDown();
+			
+			//out.
+			
+	        for (ResourceFile child : childs) {
+	        	
+	            Console.addLog("Adding: "+child.getAlias());
+	            File file = new 
+	  	              File(resourceBase + "/" + child.getAlias());
+	            
+	            if(file.isDirectory()){
+	            	continue; //TODO: need to recursively add the child directories' files as well.
+	            }
+
+	            FileInputStream fi = new 
+	  	              FileInputStream(file);
+	            
+	            origin = new 
+	              BufferedInputStream(fi, BUFFER);
+	            ZipEntry entry = new ZipEntry(child.getAlias());
+	            out.putNextEntry(entry);
+	            int count;
+	            while((count = origin.read(data, 0, 
+	              BUFFER)) != -1) {
+	               out.write(data, 0, count);
+	            }
+	            origin.close();
+	         }
+	         out.close();
+	         
+	        return 
+	        	new Download(
+	        		new FileTransfer(
+        				 new String(this.getName().getBytes("EUC-KR"),"ISO8859_1") + ".prom", 
+        				 "application/octet-stream", 
+        				 new FileInputStream(this.getName() + ".prom")
+	        		)
+	        	);
+//	   } catch(Exception e) {
+//		   e.printStackTrace();
+//	   }
+		//return popup;
+	}
+
+	@Face(displayName="Upload to market")
+	@ServiceMethod(inContextMenu=true, target=ServiceMethodContext.TARGET_TOP)
+	public Market uploadToMarket() throws Exception{
 		
-		Popup popup = new Popup();
-		popup.setPanel(fileImporter);
-		popup.setMetaworksContext(new MetaworksContext());
-		popup.getMetaworksContext().setWhen("edit");
+		Market market = new Market();
+		market.load();
 		
-		return popup;
+	//	ModalWindow marketPlace = new ModalWindow(new IFrame(market), 800, 600);
+		
+		return market;
 	}
 
 

@@ -2,10 +2,17 @@ package org.uengine.codi.mw3.model;
 
 import java.util.Date;
 
+import org.metaworks.annotation.Hidden;
+import org.metaworks.annotation.Name;
+import org.metaworks.annotation.Range;
+
 public class Bill {
 	
 	String billingType;
-	
+	@Range(
+			options={"$PerInstance","$PerUser"},
+			values= {"PI", "PU"}
+			)	
 		public String getBillingType() {
 			return billingType;
 		}
@@ -25,7 +32,7 @@ public class Bill {
 		
 		
 	Date issueDate;
-	
+	@Name
 		public Date getIssueDate() {
 			return issueDate;
 		}
@@ -45,7 +52,7 @@ public class Bill {
 		}
 		
 	ICompany company;
-
+	@Hidden
 		public ICompany getCompany() {
 			return company;
 		}
@@ -56,7 +63,7 @@ public class Bill {
 		
 		
 	IInstance instances;
-	
+	@Hidden
 	
 		public IInstance getInstances() {
 			return instances;

@@ -356,20 +356,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		
 
 		if (getMetaworksContext().getWhen().startsWith(MetaworksContext.WHEN_NEW)) {
-			boolean alreadyRegistered = false;
-			try{
-				
-//				if(this.getEmpCode()==null){
-				this.setEmpCode(this.getEmail());
-//				}
-				
-				this.databaseMe(); 
-				
-				alreadyRegistered = true;
-			}catch(Exception e){}
-		
-			if(alreadyRegistered)	
-				throw new Exception("$AlreadyExisingUser");
+			checkRegistered();
 
 
 			this.setIsDeleted("0");
@@ -419,6 +406,23 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		return new Object[] {new Remover(new ModalWindow()), new ToOpener(new MainPanel(new Main(session)))};
 	}
 	
+	public void checkRegistered() throws Exception {
+		boolean alreadyRegistered = false;
+		try{
+			
+//				if(this.getEmpCode()==null){
+			this.setEmpCode(this.getEmail());
+//				}
+			
+			this.databaseMe(); 
+			
+			alreadyRegistered = true;
+		}catch(Exception e){}
+
+		if(alreadyRegistered)	
+			throw new Exception("$AlreadyExisingUser");
+	}
+	
 	@Override
 	public Object showDetail() throws Exception {
 		IEmployee employee = findMe();
@@ -459,8 +463,11 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		if(employee.getEmpCode() != null)
 			throw new Exception("이미 존재하는 empCode 입니다.");
 	}
+	
 	@Override
 	public Object[] subscribeStep1() throws Exception {
+		
+		
 		Locale locale = new Locale();
 		locale.setLanguage(this.getLocale());
 		locale.load();

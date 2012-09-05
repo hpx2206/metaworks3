@@ -9,7 +9,7 @@ import org.metaworks.dao.Database;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.processmanager.ProcessManagerRemote;
 
-public class Followers {
+public class Followers{
 	static final String CONTEXT_WHERE_INFOLLOWERS = "followers";
 
 	String instanceId;
