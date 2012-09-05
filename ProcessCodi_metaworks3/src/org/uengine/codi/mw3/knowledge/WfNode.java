@@ -819,6 +819,13 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		return this;
 	}
 	
+	public ModalWindow presentation() throws Exception{
+		WfPanel_pt panel = new WfPanel_pt();
+		panel.session = session;
+		panel.load(session.getCompany().getComCode() , "presentation");
+		return new ModalWindow(panel , 1000, 800,  "Presentation" );
+	}
+	
 	@Override
 	public WfPanel drillInto() throws Exception {
 		WfPanel panel = new WfPanel();

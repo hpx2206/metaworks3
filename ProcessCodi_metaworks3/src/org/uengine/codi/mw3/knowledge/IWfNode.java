@@ -15,6 +15,7 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Table;
 import org.metaworks.annotation.Test;
 import org.metaworks.dao.IDAO;
+import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.model.ContentWindow;
 import org.uengine.codi.mw3.model.IInstance;
 import org.uengine.codi.mw3.model.IUser;
@@ -176,6 +177,10 @@ public interface IWfNode extends IDAO {
 	
 	@ServiceMethod(callByContent=true)
 	public WfNode collapse() throws Exception;	
+	
+	@ServiceMethod(callByContent=true, inContextMenu=true)
+	@Face(displayName="$presentation")
+	public ModalWindow presentation() throws Exception;
 	
 	@ServiceMethod(mouseBinding="drag-enableDefault")
 	public Session drag();
