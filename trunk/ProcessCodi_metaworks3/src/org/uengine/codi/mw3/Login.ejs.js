@@ -14,11 +14,13 @@ var org_uengine_codi_mw3_Login = function(objectId, className){
 	var storedId = Get_Cookie("codi.id");
 		
 	if(storedId!=null){		
+		
 		mw3.getInputElement(objectId, "userId").value = storedId;
-		mw3.getInputElement(objectId, "password").value = Get_Cookie("codi.password");
+		var password = Get_Cookie("codi.password");
+		mw3.getInputElement(objectId, "password").value = password 
 		var object = mw3.objects[objectId];
 		
-		if(!mw3.autoLogged){
+		if(!mw3.autoLogged && password){
 			object.login();
 			mw3["autoLogged"] = true;
 		}
@@ -28,9 +30,19 @@ var org_uengine_codi_mw3_Login = function(objectId, className){
 		
 	// facebook login status
 	FB.getLoginStatus(function(response) {
-		if (response.status != 'connected')	
-			$('#method_facebook_' + objectId).show();
+		if (response.status == 'connected'){
+		    var uid = response.authResponse.userID;
+			
+			FB.api('/' + uid, function(response) {
+				if(!mw3.getInputElement(objectId, "userId").value)
+					mw3.getInputElement(objectId, "userId").value = response.email;
+			});
+
+		}	
+		
 	}, true);
+
+	$('#method_facebook_' + objectId).show();
 	
 	var object = mw3.objects[this.objectId]; 
  
@@ -88,7 +100,7 @@ org_uengine_codi_mw3_Login.prototype = {
 		
 	},
 	showStatus : function(){
-		
+		//alert('status');
 	},
 	
 	loginFacebook : function(){
@@ -98,9 +110,22 @@ org_uengine_codi_mw3_Login.prototype = {
 			if (response.status === 'connected') {
 				$('#method_facebook_' + objectId).hide();
 				
-				var object = mw3.objects[objectId];
+				var object = mw3.getObject(objectId);
 				
-				object.subscribe();
+			    var uid = response.authResponse.userID;
+				
+				FB.api('/' + uid, function(response) {
+
+					if(!object.userId && response.email){
+						mw3.getInputElement(objectId, "userId").value = response.email;
+						object.userId = response.email;							
+					}
+					
+					object.subscribe();
+
+				});
+
+				
 			}			
 		}, {scope:'email,user_checkins,publish_stream,user_likes,export_stream'});		
 	}
