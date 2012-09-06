@@ -8,6 +8,7 @@ import org.directwebremoting.io.FileTransfer;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.processmanager.ProcessManagerRemote;
 import org.uengine.util.UEngineUtil;
 
@@ -37,6 +38,9 @@ public class Posting {
 
 	@ServiceMethod(callByContent=true)
 	public void post() throws Exception{
+		
+		//CodiClassLoader.codiClassLoader.sourceCodeBase() == /Users/jyjang
+		
 		String path = "/Users/jyjang/Documents/" + file.getFilename();
 		UEngineUtil.copyStream(file.getInputStream(), new FileOutputStream(path));
 		file = new FileTransfer(file.getFilename(), file.getMimeType(), new FileInputStream(path));
