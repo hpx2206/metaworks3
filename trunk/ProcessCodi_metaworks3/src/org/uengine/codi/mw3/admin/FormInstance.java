@@ -22,6 +22,8 @@ public class FormInstance{
 	@ServiceMethod(callByContent=true)
 	@Face(displayName = "submit")
 	public void save() throws Exception {
+		
+		//CodiClassLoader.codiClassLoader.sourceCodeBase() == /Users/jyjang
 		GlobalContext.serialize(this, new FileOutputStream("/Users/jyjang/formInst.xml"), FormDefinition.class);
 	}
 	

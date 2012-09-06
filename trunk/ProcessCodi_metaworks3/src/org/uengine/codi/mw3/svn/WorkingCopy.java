@@ -344,6 +344,10 @@ public class WorkingCopy {
         }
         String name = "jyjang@uengine.org";
         String password = "Gx3XS6jA9hc7";
+        
+        
+        //CodiClassLoader.codiClassLoader.sourceCodeBase() == /Users/jyjang
+        
         String myWorkingCopyPath = "/Users/jyjang/MyWorkingCopy";
 
         String importDir = "/Users/jyjang/importDir";
