@@ -2,6 +2,7 @@ package org.uengine.codi.mw3.calendar;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -246,7 +247,12 @@ public class ScheduleCalendar implements ContextAware {
 			return null;
 		}
 		NewInstancePanel newInstancePanel =  new NewInstancePanel();
-		newInstancePanel.setDueDate(getSelDate());
+		Calendar c = Calendar.getInstance ( );
+		c.setTime(getSelDate());
+		c.set ( c.HOUR_OF_DAY  , +23);
+		c.set ( c.MINUTE  , +59);
+		Date dueDate = c.getTime();
+		newInstancePanel.setDueDate(dueDate);
 		newInstancePanel.session = session;
 		newInstancePanel.load(session);
 		String title = "";
