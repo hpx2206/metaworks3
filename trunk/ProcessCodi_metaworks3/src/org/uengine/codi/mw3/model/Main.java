@@ -77,12 +77,13 @@ public class Main {
 			
 		}
 		
+		ProcessTopPanel processTopPanel = new ProcessTopPanel(session);
 		if("phone".equals(preferMob) || "tw".equals(preferUX)){
 			session.setUx("phone");
 			
 			Layout outerLayout = new Layout();
 			outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:5, north__size:52");
-			outerLayout.setNorth(new ProcessTopPanel(session));
+			outerLayout.setNorth(processTopPanel);
 			
 			Window instanceListWindow = createInstanceListWindow(session);
 			
@@ -99,7 +100,7 @@ public class Main {
 			
 			Layout outerLayout = new Layout();
 			outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:5, north__size:52, west__size:" + ("asana".equals(preferUX) ? "700" : "400"));
-			outerLayout.setNorth(new ProcessTopPanel(session));			
+			outerLayout.setNorth(processTopPanel);			
 			outerLayout.setWest(createInstanceListWindow(session));
 			outerLayout.setCenter(createNewInstancePanel(session));	
 			outerLayout.setName("center");
@@ -113,7 +114,12 @@ public class Main {
 
 		
 			Layout westLayout = new Layout();
-			westLayout.setNorth(new ContactWindow(session.getUser()));
+			ContactWindow contactWindow = new ContactWindow(session.getUser());
+			
+			//Since there's are too many input boxes there, it is removed.
+			contactWindow.getContactPanel().setSearchBox(null);
+			
+			westLayout.setNorth(contactWindow);
 			westLayout.setCenter(new  NavigationWindow());
 			westLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, north__spacing_open:5, north__size:'50%'");
 			westLayout.setName("west");
@@ -129,7 +135,10 @@ public class Main {
 			
 			Layout outerLayout = new Layout();
 			outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:5, north__size:52");
-			outerLayout.setNorth(new ProcessTopPanel(session));
+			outerLayout.setNorth(processTopPanel);
+			
+			//Since there's already user portrait in the navigator for this full-fledged mode, the portrait is removed.
+			processTopPanel.setLoginUser(null);
 			outerLayout.setWest(westLayout);
 			outerLayout.setCenter(eastLayout);		
 			outerLayout.setName("center");
@@ -168,7 +177,7 @@ public class Main {
 		
 		if("asana".equals(session.getEmployee().getPreferUX())){
 		
-			instanceListPanel = new InstanceListPanel();
+			instanceListPanel = new InstanceListPanel(session);
 			instanceListPanel.session = session;
 			instanceListPanel.switchToKnowledge();
 			instanceListWindow.setPanel(instanceListPanel);
