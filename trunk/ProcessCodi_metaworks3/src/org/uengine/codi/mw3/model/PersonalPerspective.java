@@ -32,4 +32,13 @@ public class PersonalPerspective extends Perspective {
 	public Object[] loadStopped() throws Exception{
 		return loadInstanceListPanel("stopped", null);
 	}
+	
+	@ServiceMethod
+	public InstanceListPanel calendar() throws Exception{
+		InstanceListPanel instanceListPanel = new InstanceListPanel(session);
+		instanceListPanel.session = session;
+		instanceListPanel.switchToScheduleCalendar();
+		
+		return instanceListPanel;
+	}
 }
