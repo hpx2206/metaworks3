@@ -2079,6 +2079,29 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					
 					if(objectMetadata && objectMetadata.serviceMethodContextMap && objectMetadata.serviceMethodContextMap[svcNameAndMethodName]){
 						serviceMethodContext = objectMetadata.serviceMethodContextMap[svcNameAndMethodName];
+						
+						
+						if(serviceMethodContext && serviceMethodContext.validate == true){										
+							if(!this.validObject(object)){
+								this.endProgress();
+								
+								if(this.getFaceHelper(objId) && this.getFaceHelper(objId).endLoading){
+									this.getFaceHelper(objId).endLoading(svcNameAndMethodName);
+								}else{
+									this.endLoading(objId, svcNameAndMethodName);
+								}
+								
+			        			if(this.getFaceHelper(objId) && this.getFaceHelper(objId).showStatus){
+			        				this.getFaceHelper(objId).showStatus( svcNameAndMethodName + " INVALID.");
+			        			}else{
+			        				this.showInfo(objId, svcNameAndMethodName + " INVALID");	
+			        			}							
+								
+			        			return false;						
+							}
+						}
+						
+						
 						if(serviceMethodContext){
 							if(serviceMethodContext.callByContent == false){
 								if(serviceMethodContext.payload){
@@ -2146,26 +2169,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 						}
 					}
 					
-					if(serviceMethodContext && serviceMethodContext.validate){										
-						if(!this.validObject(object, objectMetadata)){
-							this.endProgress();
-							
-							if(this.getFaceHelper(objId) && this.getFaceHelper(objId).endLoading){
-								this.getFaceHelper(objId).endLoading(svcNameAndMethodName);
-							}else{
-								this.endLoading(objId, svcNameAndMethodName);
-							}
-							
-		        			if(this.getFaceHelper(objId) && this.getFaceHelper(objId).showStatus){
-		        				this.getFaceHelper(objId).showStatus( svcNameAndMethodName + " DONE.");
-		        			}else{
-		        				this.showInfo(objId, svcNameAndMethodName + " DONE");	
-		        			}							
-							
-		        			return false;						
-						}
-					}
-				   
+
 					var returnValue;
 					
 					var objectKey = this._createObjectKey(object);
@@ -2971,54 +2975,122 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 	   			return false;
 			};
 			
-			Metaworks3.prototype.validObject = function (object, metadata){
+			
+			Metaworks3.prototype.validationCondition = function (validator, object){
+				var validationCondition = true;
+				
+    			var validationConditionExpression = validator.condition;    			
+    			if(validationConditionExpression != null){
+    				with(object){
+    					validationCondition = eval(validationConditionExpression);
+    				}
+    			}			
+    			
+    			return validationCondition;
+			}
+			
+			Metaworks3.prototype.validationAvailableUnder = function (validator, object){
+				var validationAvailableUnder = false;
+				
+				if(validator){
+					if(validator instanceof Array){
+						for(var i=0; i<validator.length; i++){
+			    			var validationAvailableUnderExpression = validator[i].availableUnder;    			
+			    			if(validationAvailableUnderExpression != null){
+			    				with(object){
+			    					validationAvailableUnder = eval(validationAvailableUnderExpression);
+			    				}
+			    			}								
+						}
+					}else{
+		    			var validationAvailableUnderExpression = validator.availableUnder;    			
+		    			if(validationAvailableUnderExpression != null){
+		    				with(object){
+		    					validationAvailableUnder = eval(validationAvailableUnderExpression);
+		    				}
+		    			}						
+					}
+				}
+				
+    			return validationAvailableUnder;
+			};
+			
+			Metaworks3.prototype.validField = function (objId, fieldName){
+				var object = this.getObject(objId);
+				
+				this.validObject(object, fieldName);
+			}
+			
+			Metaworks3.prototype.validObject = function(object, name){
+				var metadata = this.getMetadata(object.__className);
 				var isValid = true;
 				var objId = object.__objectId;
 
-/*				if(object.metaworksContext){
-					this.how = object.metaworksContext.how;
-					this.when = object.metaworksContext.when;
-					this.where= object.metaworksContext.where;					
-				}*/
-
 				if(metadata && metadata.fieldDescriptors && metadata.fieldDescriptors.length > 0){
-				   for(var i = 0; i < metadata.fieldDescriptors.length; ++i){					   
-					   var fd = metadata.fieldDescriptors[i];
+					for(var i = 0; i < metadata.fieldDescriptors.length; ++i){					   
+						if(!isValid)
+							continue;
+						
+						var fd = metadata.fieldDescriptors[i];
 					   
-					   try {
-						   if(object[fd.name] instanceof Object){
-							   if(fd.name == 'metaworksContext')
-								   continue;
-							   
-							   if(!this.validObject(object[fd.name], this.getMetadata(fd.className)))
-								   isValid = false;
-						   }
-						   //else{						   		
-							   //if(fd.attributes.validator && !mw3.isHidden(fd)) {
-						   		if(fd.attributes.validator) {
-						    		for(var j = 0; j < fd.attributes.validator.length; ++j) {
-						    			var validator = fd.attributes.validator[j];						    									    									    			
-						    			var result = this.validation(validator, object[fd.name]);
-						    			var inputObjectId = this.getChildObjectId(objId, fd.name);
-						    			var message;
+						if(typeof name != 'undefined' && fd.name != name)
+							continue
+							
+						try {
+							var isObject = object[fd.name] instanceof Object;
+							var isArray = Object.prototype.toString.call(object[fd.name]) == '[object Array]';
+						   
+							if(isArray){
+								for(var j=0; j<object[fd.name].length; j++){
+									if(!isValid)
+										continue;
+								   
+									if(object[fd.name][j].__className)
+										if(!this.validObject(object[fd.name][j]))
+											isValid = false;									   
+								}
+							}else{
+								if(isObject && fd.name == 'metaworksContext')						   
+									continue;
+								   
+								if(fd.attributes.validator && object.__objectId) {
+						    		for(var j = 0; j < fd.attributes.validator.length; ++j) {						    			
+						    			var validator = fd.attributes.validator[j];
 						    			
-				    					if(!result)				    						
-				    						message = this.getValidationMessage(fd, validator)
-				    					
-										if(this.getFaceHelper(inputObjectId) && this.getFaceHelper(inputObjectId).showValidation)
-											this.getFaceHelper(inputObjectId).showValidation(result, message);
-										else
-											this.showValidation(inputObjectId, result, message);
-										
-										if(!result){
-											isValid = false;
-											
-											break;
-										}
-				    					
-							    	}
+						    			if(validator.availableUnder == null || validator.availableUnder == ''){
+						    				if(this.validationCondition(validator, object)){
+								    			var result = this.validation(object, fd.name, validator);
+								    			var inputObjectId = this.getChildObjectId(object.__objectId, fd.name);
+								    			var message;
+								    			
+						    					if(!result)				    						
+						    						message = this.getValidationMessage(fd, validator)
+						    					
+												if(this.getFaceHelper(objId) && this.getFaceHelper(objId).showValidation)
+													this.getFaceHelper(objId).showValidation(inputObjectId, result, message);
+												else
+													this.showValidation(objId, inputObjectId, result, message);
+												
+												if(!result){
+													isValid = false;
+													
+													break;
+												}
+						    				}
+						    			}
+						    		}
 							   }
-					    	//}
+							   
+							   if(isObject){
+								   if(object[fd.name].__className){
+									   if(this.validationAvailableUnder(fd.attributes.validator, object)){
+										   if(!this.validObject(object[fd.name]))
+											   isValid = false;
+									   }
+								   }
+							   }   
+						   }
+
 				    	} catch(e) {
 				    		if(window.console)
 				    			console.log('error = ' + e);
@@ -3029,18 +3101,17 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				return isValid;
 			};
 			
-			Metaworks3.prototype.validation = function(validator, value){
+			Metaworks3.prototype.validation = function(object, name, validator){
 			
-				if(validator.name == 'isnull'){
-					if(value instanceof Object){
-						if(value[validator.options[0]] == null || value[validator.options[0]] == '')
-							return false;
-						
-						
-					}else{
-						if(value == null || value == '')
-							return false;
-					}
+				var validation = true;
+				var value = object[name];
+				
+				if(validator.name == 'notnull'){
+					if(value == null || value == '')
+						validation = false;
+				}else if(validator.name == 'null'){
+					if(value != null && value != '')
+						validation = false;
 				}else if(validator.name == 'maxbyte' && validator.options){
 					var len = 0;
 			        for (var i = 0; i < value.length; i++) {
@@ -3050,24 +3121,48 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			            len++;
 			        }			
 					if(len > Number(validator.options[0]))
-						return false;				
+						validation = false;				
 					
 				}else if(validator.name == 'maxlength' && validator.options){
 					if(value.length > validator.options[0])
-						return false;					
+						validation = false;					
 				}else if(validator.name == 'minlength' && validator.options){					
 					if(value.length < validator.options[0])
-						return false;					
+						validation = false;					
 				}else if(validator.name == 'numberzero'){
 					if(value == 0)
-						return false;
-				}else if(validator.name == 'htmltag'){
+						validation = false;
+				}else if(validator.name == 'regularexpression'){
+					if(validator.options){
+						for(var i=0; i<validator.options.length; i++){
+							var exp = eval(validator.options[i]);
+							if(!exp.test(value)){
+								validation = false;
+								
+								break;
+							}								
+						}
+					}
 					
-				}else if(validator.name == 'script'){
+				}else if(validator.name == 'condition'){
+					if(validator.options){
+						for(var i=0; i<validator.options.length; i++){
+							var condition = validator.options[i];					
+		    				with(object){
+		    					validation = eval(condition);
+		    				}							
+						}
+					}
+				}else if(validator.name == 'asserttrue'){
+					if(value != true)
+						validation = false;
 					
+				}else if(validator.name == 'assertfalse'){
+					if(value != false)
+						validation = false;
 				}
 
-				return true;
+				return validation;
 			};
 			
 			Metaworks3.prototype.getValidationMessage = function(fd, validator){
@@ -3086,10 +3181,8 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 						message = fd.displayName + '\'s value is less than ' + validator.options[0] + '.';
 					else if(validator.name == 'numberzero')
 						message = fd.displayName + '\'s value is zero.';
-					else if(validator.name == 'htmltag')
-						message = fd.displayName + ' in the field will not be able to use the html tag.';
-					else if(validator.name == 'script')
-						message = fd.displayName + ' in the field will not be able to use the script.';
+					else if(validator.name == 'regularexpression')
+						message = fd.displayName + '\'s Regular expression failed inspection.';
 				}
 				
 				return message;
@@ -3151,7 +3244,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			};
 			
 			FieldRef.prototype.here = function(context){
-				if(mw3.isHidden(this.fieldDescriptor))
+				if(mw3.isHidden(this.fieldDescriptor))					
 					return "";
 				
 				var html;

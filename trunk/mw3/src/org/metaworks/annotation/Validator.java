@@ -7,6 +7,9 @@ import java.lang.annotation.RetentionPolicy;
 public @interface Validator {
 	String name() default "";
 	String message() default "";
+	String condition() default "";	
+	String availableUnder() default "";
+	
 	
 	String[] options() default {};
 }
