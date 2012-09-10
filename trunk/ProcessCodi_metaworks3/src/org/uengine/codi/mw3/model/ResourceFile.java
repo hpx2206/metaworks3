@@ -576,7 +576,7 @@ public class ResourceFile implements ContextAware{
 		instanceView.session = session;
 		instanceView.load(instanceRef);
 		
-		InstanceListPanel instanceList = new InstanceListPanel(); //should return instanceListPanel not the instanceList only since there're one or more instanceList object in the client-side
+		InstanceListPanel instanceList = new InstanceListPanel(session); //should return instanceListPanel not the instanceList only since there're one or more instanceList object in the client-side
 		instanceList.getInstanceList().load(session);
 		
 		//instanceList.load(session.login, session.navigation);
