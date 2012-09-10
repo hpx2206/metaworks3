@@ -1261,17 +1261,18 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 							script.type= 'text/javascript';
 							script.src= scriptUrl;
 							head.appendChild(script);
-							
-							if(afterLoadScript){
-								script.onload = afterLoadScript;
-								
-								script.onreadystatechange = function() { //for IE
-									if (this.readyState == 'complete' || this.readyState == 'loaded') {
-										
-										afterLoadScript;
-									}
-								};
-							}
+
+							//TODO: it is disabled since all the facehelper initialization is done by onLoadFaceHelperScript() explicitly for now.
+//							if(afterLoadScript){
+//								script.onload = afterLoadScript;
+//								
+//								script.onreadystatechange = function() { //for IE
+//									if (this.readyState == 'complete' || this.readyState == 'loaded') {
+//										
+//										afterLoadScript;
+//									}
+//								};
+//							}
 					   },
 					   
 					   error:function(xhr){
