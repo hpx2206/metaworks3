@@ -18,11 +18,11 @@ import org.uengine.codi.mw3.common.MainPanel;
 public interface ILogin extends IDAO{
 
 	@Id
-	@Validator(name = ValidatorContext.VALIDATE_NULL)
+	@Validator(name = ValidatorContext.VALIDATE_NOTNULL)
 	public String getUserId();
 	public void setUserId(String userId);
 
-	@Validator(name = ValidatorContext.VALIDATE_NULL)
+	@Validator(name = ValidatorContext.VALIDATE_NOTNULL)
 	@Hidden(when = MetaworksContext.WHEN_VIEW)
 	@Face(options = "type", values = "password")	
 	public String getPassword();
