@@ -37,8 +37,13 @@ var org_metaworks_widget_ModalWindow = function(objectId, className) {
 					mw3.getFaceHelper(objectId).close();
 				}
 		
+				var width = object.width;
+				var body_width = $('body').width();
+				if(width > body_width)
+					width = body_width;
+				
 				if (object.width)
-					options['width'] = object.width;
+					options['width'] = width;
 				
 				if (object.height)
 					options['height'] = object.height;
