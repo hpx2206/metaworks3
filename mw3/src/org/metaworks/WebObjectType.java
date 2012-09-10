@@ -10,9 +10,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javassist.CtMethod;
-
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import javax.validation.constraints.AssertFalse;
+import javax.validation.constraints.AssertTrue;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.AutowiredToClient;
@@ -513,6 +520,16 @@ public class WebObjectType{
 				existingTestSet.put(test.scenario(), testContext);
 			}
 			
+			
+			/*
+			 * 2012-09-07 jinwon
+			 * validation modify
+			 */
+			ArrayList<ValidatorContext> existingValidatorSet = (ArrayList<ValidatorContext>) fd.getAttribute("validator");
+			if(existingValidatorSet == null)
+				existingValidatorSet = new ArrayList<ValidatorContext>();				
+			
+			
 			ValidatorSet validators;
 			Validator[] validatorArr;
 			if((validators = (ValidatorSet) getAnnotationDeeply(tryingClasses, fd.getName(), ValidatorSet.class))!=null){
@@ -529,13 +546,6 @@ public class WebObjectType{
 			for(int j=0; j<validatorArr.length; j++){
 
 				Validator validator = validatorArr[j];
-				
-				ArrayList<ValidatorContext> existingValidatorSet = (ArrayList<ValidatorContext>) fd.getAttribute("validator");
-				if(existingValidatorSet == null){
-					existingValidatorSet = new ArrayList<ValidatorContext>();//new HashMap<String, ValidatorContext>();
-					fd.setAttribute("validator", existingValidatorSet);
-				}
-				
 				ValidatorContext validatorContext = new ValidatorContext();
 				
 				if(validator.name().length() > 0)
@@ -544,12 +554,129 @@ public class WebObjectType{
 				if(validator.message().length() > 0)
 					validatorContext.setMessage(validator.message());
 				
+				if(validator.condition().length() > 0)
+					validatorContext.setCondition(validator.condition());
+
+				if(validator.availableUnder().length() > 0)
+					validatorContext.setAvailableUnder(validator.availableUnder());
+
 				if(validator.options().length > 0)
 					validatorContext.setOptions(validator.options());
 				
 				//existingValidatorSet.put(validator.name(), validatorContext);
 				existingValidatorSet.add(validatorContext);
 			}
+			
+			/*
+			 * 2012-09-07 jinwon
+			 * JSR-303 (Bean Validation) Basic
+			 */
+			if(getAnnotationDeeply(tryingClasses, fd.getName(), Valid.class)!=null){
+				ValidatorContext validatorContext = new ValidatorContext();
+				validatorContext.setAvailableUnder("true");
+				
+				existingValidatorSet.add(validatorContext);				
+			}
+			
+			AssertTrue assertTrue;
+			if((assertTrue = (AssertTrue) getAnnotationDeeply(tryingClasses, fd.getName(), AssertTrue.class))!=null){
+				ValidatorContext validatorContext = new ValidatorContext();
+				validatorContext.setName(ValidatorContext.VALIDATE_ASSERTTRUE) ;
+				
+				if(!"{javax.validation.constraints.AssertTrue.message}".equals(assertTrue.message()))
+					validatorContext.setMessage(assertTrue.message());
+				
+				existingValidatorSet.add(validatorContext);
+			}
+			AssertFalse assertFalse;
+			if((assertFalse = (AssertFalse) getAnnotationDeeply(tryingClasses, fd.getName(), AssertFalse.class))!=null){
+				ValidatorContext validatorContext = new ValidatorContext();
+				validatorContext.setName(ValidatorContext.VALIDATE_ASSERTFALSE) ;
+
+				if(!"{javax.validation.constraints.AssertFalse.message}".equals(assertFalse.message()))
+					validatorContext.setMessage(assertFalse.message());
+				
+				existingValidatorSet.add(validatorContext);
+			}
+			NotNull notNull;
+			if((notNull = (NotNull) getAnnotationDeeply(tryingClasses, fd.getName(), NotNull.class))!=null){
+				ValidatorContext validatorContext = new ValidatorContext();
+				validatorContext.setName(ValidatorContext.VALIDATE_NOTNULL) ;
+				
+				if(!"{javax.validation.constraints.NotNull.message}".equals(notNull.message()))
+					validatorContext.setMessage(notNull.message());
+				
+				existingValidatorSet.add(validatorContext);
+			}
+			Null isNull;
+			if((isNull = (Null) getAnnotationDeeply(tryingClasses, fd.getName(), Null.class))!=null){
+				ValidatorContext validatorContext = new ValidatorContext();
+				validatorContext.setName(ValidatorContext.VALIDATE_NULL) ;
+				
+				if(!"{javax.validation.constraints.Null.message}".equals(isNull.message()))
+					validatorContext.setMessage(isNull.message());
+				
+				existingValidatorSet.add(validatorContext);
+			}			Min min;
+			if((min = (Min) getAnnotationDeeply(tryingClasses, fd.getName(), Min.class))!=null){
+				ValidatorContext validatorContext = new ValidatorContext();
+				validatorContext.setName(ValidatorContext.VALIDATE_MIN) ;
+				validatorContext.setOptions(new String[]{String.valueOf(min.value())});
+				
+				if(!"{javax.validation.constraints.Min.message}".equals(min.message()))
+					validatorContext.setMessage(min.message());
+				
+				existingValidatorSet.add(validatorContext);
+			}
+			Max max;
+			if((max = (Max) getAnnotationDeeply(tryingClasses, fd.getName(), Max.class))!=null){
+				ValidatorContext validatorContext = new ValidatorContext();
+				validatorContext.setName(ValidatorContext.VALIDATE_MAX) ;
+				validatorContext.setOptions(new String[]{String.valueOf(max.value())});
+				
+				if(!"{javax.validation.constraints.Max.message}".equals(max.message()))
+					validatorContext.setMessage(max.message());
+				
+				existingValidatorSet.add(validatorContext);
+			}			
+			Size size;
+			if((size = (Size) getAnnotationDeeply(tryingClasses, fd.getName(), Size.class))!=null){
+				ValidatorContext validatorContext;
+				
+				// Min
+				validatorContext = new ValidatorContext();
+				validatorContext.setName(ValidatorContext.VALIDATE_MIN) ;
+				validatorContext.setOptions(new String[]{String.valueOf(size.min())});
+				
+				if(!"{javax.validation.constraints.Size.message}".equals(size.message()))
+					validatorContext.setMessage(size.message());
+				
+				existingValidatorSet.add(validatorContext);
+				
+				// Max
+				validatorContext = new ValidatorContext();
+				validatorContext.setName(ValidatorContext.VALIDATE_MIN) ;
+				validatorContext.setOptions(new String[]{String.valueOf(size.min())});
+				
+				if(!"{javax.validation.constraints.Size.message}".equals(size.message()))
+					validatorContext.setMessage(size.message());
+				
+				existingValidatorSet.add(validatorContext);
+			}
+			Pattern pattern;
+			if((pattern = (Pattern) getAnnotationDeeply(tryingClasses, fd.getName(), Pattern.class))!=null){
+				ValidatorContext validatorContext = new ValidatorContext();
+				validatorContext.setName(ValidatorContext.VALIDATE_REGULAREXPRESSION) ;
+				validatorContext.setOptions(new String[]{pattern.regexp() });
+				
+				if(!"{javax.validation.constraints.Pattern.message}".equals(pattern.message()))
+					validatorContext.setMessage(pattern.message());
+				
+				existingValidatorSet.add(validatorContext);
+			}	
+			
+			if(existingValidatorSet.size() > 0)
+				fd.setAttribute("validator", existingValidatorSet);
 			
 			
 			
