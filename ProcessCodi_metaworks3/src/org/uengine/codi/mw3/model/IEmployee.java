@@ -31,7 +31,7 @@ public interface IEmployee extends IDAO {
 */	
 	@Id
 	@ValidatorSet({
-		@Validator(name=ValidatorContext.VALIDATE_NULL),
+		@Validator(name=ValidatorContext.VALIDATE_NOTNULL),
 		@Validator(name=ValidatorContext.VALIDATE_MIN, options={"3"}),
 	})
 	public String getEmpCode();
@@ -39,7 +39,7 @@ public interface IEmployee extends IDAO {
 
 	@Name
 	@ValidatorSet({
-		@Validator(name=ValidatorContext.VALIDATE_NULL)
+		@Validator(name=ValidatorContext.VALIDATE_NOTNULL)
 	})	
 	public String getEmpName();
 	public void setEmpName(String empName);
@@ -50,7 +50,7 @@ public interface IEmployee extends IDAO {
 	
 	@Hidden(when = "view")
 	@ValidatorSet({
-		@Validator(name=ValidatorContext.VALIDATE_NULL),
+		@Validator(name=ValidatorContext.VALIDATE_NOTNULL),
 		@Validator(name=ValidatorContext.VALIDATE_MIN, options={"4"}),
 	})
 	@Face(options="type", values="password")
@@ -62,7 +62,7 @@ public interface IEmployee extends IDAO {
 	@NonLoadable
 	@NonSavable
 	@ValidatorSet({
-		@Validator(name=ValidatorContext.VALIDATE_NULL),
+		@Validator(name=ValidatorContext.VALIDATE_NOTNULL),
 		@Validator(name=ValidatorContext.VALIDATE_MIN, options={"4"}),
 	})
 	public String getConfirmPassword();
