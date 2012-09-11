@@ -29,6 +29,14 @@ public class InstanceListPanel implements ContextAware{
 		instanceList.init();
 	}
 
+	public InstanceListPanel(Session session2) {
+		// TODO 갑자기 되지를 않아서 임시로 넣어줌
+		setSearchBox(new SearchBox());
+		
+		instanceList = new InstanceList();
+		instanceList.init();
+	}
+
 	MetaworksContext metaworksContext;
 		
 		public MetaworksContext getMetaworksContext() {
