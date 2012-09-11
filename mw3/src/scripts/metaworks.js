@@ -3019,7 +3019,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			Metaworks3.prototype.validField = function (objId, fieldName){
 				var object = this.getObject(objId);
 				
-				this.validObject(object, fieldName);
+				return this.validObject(object, fieldName);
 			}
 			
 			Metaworks3.prototype.validObject = function(object, name){
