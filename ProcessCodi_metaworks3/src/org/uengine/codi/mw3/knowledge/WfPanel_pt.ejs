@@ -64,7 +64,7 @@
 								for (var l=0; l<node.length ; l++){
 %>		
 									<div id="pt_<%=node[l].id %>" class="step subStep" >
-										<ul style="float:left; width:100%; background-color: #C9E2FC; padding-bottom:10px;" >
+										<ul class="wf_first_node">
 											<li style="float:left; font-size: 40px;" >
 												<%=node[l].name %>
 											</li>
@@ -76,7 +76,7 @@
 												for (var m=0; m<depthThree.length ; m++){
 													if( depthThree[m].name != null && depthThree[m].name != "" ){
 %>		
-														<li style="float:left; font-size: 20px; padding-left:60px; width:90%;" >
+														<li style="font-size: 20px; padding-left:60px; width:90%;" >
 															<img src="images/waveStyle/navi_icon.png" /><%=depthThree[m].name %>
 														</li>
 <%
