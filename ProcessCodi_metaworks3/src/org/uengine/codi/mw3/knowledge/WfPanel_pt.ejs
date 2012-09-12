@@ -24,7 +24,7 @@
 %>
 				<div id="pt_<%=depthOne[j].id %>" class="step mainStep" >
 					<ul>
-						<li style="float:left; font-size: 40px;" >
+						<li style="font-size: 40px;" >
 							<%=depthOne[j].name %>
 						</li>
 					</ul>
@@ -39,7 +39,7 @@
 										globalIdx++;
 									}
 %>		
-									<li style="float:left; font-size: 30px; padding-left:60px;" >
+									<li style="font-size: 30px; padding-left:60px;" >
 										<%=depthTwo[k].name %>
 									</li>
 <%
@@ -59,7 +59,7 @@
 %>		
 								<div id="pt_<%=node[l].id %>" class="step subStep" >
 									<ul>
-										<li style="float:left; font-size: 40px;" >
+										<li style="font-size: 40px;" >
 											<%=node[l].name %>
 										</li>
 									</ul>
@@ -69,7 +69,7 @@
 											var depthThree = node[l].childNode;
 											for (var m=0; m<depthThree.length ; m++){
 %>		
-											<li style="float:left; font-size: 30px; padding-left:90px;" >
+											<li style="font-size: 30px; padding-left:90px;" >
 												<%=depthThree[m].name %>
 											</li>
 <%
