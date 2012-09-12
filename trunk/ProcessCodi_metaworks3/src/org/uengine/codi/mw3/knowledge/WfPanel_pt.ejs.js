@@ -3,6 +3,8 @@ var org_uengine_codi_mw3_knowledge_WfPanel_pt = function(objectId, className){
 	this.className = className;
 	this.divId = mw3._getObjectDivId(this.objectId);
 	this.windowObjectId = $('#' + this.divId).closest('.mw3_window').attr('objectId');
+	
+	$('#' + this.divId).parent().css("overflow","hidden");
 	var dataXidx = 0;
 	var dataZidx = 0;
 	var dataRotateY = 0;
