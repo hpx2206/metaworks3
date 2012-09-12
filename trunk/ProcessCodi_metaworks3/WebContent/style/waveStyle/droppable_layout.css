@@ -1091,7 +1091,7 @@ img {
 }
 .view_box2 .comment_btn_on {
     margin-top: 5px;
-    background: url('../../images/waveStyle/comment_btn.gif') left 0;
+    background: url('../../images/waveStyle/comment_btn.png') left 0;
     float: left;
     color: #555;
     padding-left: 13px;
@@ -1104,14 +1104,14 @@ img {
 .view_box2 .comment_btn_on span {
     display: block;
     float: left;
-    background: url('../../images/waveStyle/comment_btn.gif') right 60px;
+    background: url('../../images/waveStyle/comment_btn.png') right 60px;
     padding-right: 13px;
     height: 20px;
     overflow: hidden
 }
 .view_box2 .comment_btn_off {
     margin-top: 5px;
-    background: url('../../images/waveStyle/comment_btn.gif') left 40px;
+    background: url('../../images/waveStyle/comment_btn.png') left 40px;
     float: left;
     color: #fff;
     padding-left: 13px;
@@ -1124,7 +1124,7 @@ img {
 .view_box2 .comment_btn_off span {
     display: block;
     float: left;
-    background: url('../../images/waveStyle/comment_btn.gif') right 20px;
+    background: url('../../images/waveStyle/comment_btn.png') right 20px;
     padding-right: 13px;
     height: 20px;
     overflow: hidden
