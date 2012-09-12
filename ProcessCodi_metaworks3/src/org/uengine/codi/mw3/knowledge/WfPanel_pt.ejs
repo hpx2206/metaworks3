@@ -5,25 +5,24 @@
 		var globalIdx = 0;
 		var globalFlag = false;
 %>
-		<ul>
+		<div><ul>
 <%
 		if( depthOne != null ){
 			for (var i=0; i<depthOne.length ; i++){
 %>
-				<li><a href="#pt_<%=depthOne[i].id %>"><span><%=depthOne[i].name %></span></a></li>
+				<li style="list-style: disc; margin-left:15px;"><a href="#pt_<%=depthOne[i].id %>"><span><%=depthOne[i].name %></span></a></li>
 <%
 			}
 		}
 %>
-		</ul>
-		
+		</ul></div>
 		<div id="jmpress">
 <%
 			if( depthOne != null ){
 				for (var j=0; j<depthOne.length ; j++){
 %>
 				<div id="pt_<%=depthOne[j].id %>" class="step mainStep" >
-					<ul>
+					<ul class="wf_first_node">
 						<li style="font-size: 40px;" >
 							<%=depthOne[j].name %>
 						</li>
@@ -39,7 +38,7 @@
 										globalIdx++;
 									}
 %>		
-									<li style="font-size: 30px; padding-left:60px;" >
+									<li style="font-size: 30px; margin-left:60px; list-style: disc;" >
 										<%=depthTwo[k].name %>
 									</li>
 <%
@@ -90,6 +89,7 @@
 %>
 		
 		</div>
+		
 <%
 	}
 %>
