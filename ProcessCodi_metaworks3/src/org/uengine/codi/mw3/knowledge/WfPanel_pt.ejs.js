@@ -47,5 +47,18 @@ var org_uengine_codi_mw3_knowledge_WfPanel_pt = function(objectId, className){
 		dataRotateY += 90;
 		$(this).attr('data-y', 1000 );
 	});
+	$('#global-next').click(function() {
+		$('#jmpress').jmpress('next');
+		return false;
+	});
+	$('#global-prev').click(function() {
+		$('#jmpress').jmpress('prev');
+		return false;
+	});
+	$("#global-next, #global-prev").addClass("ui-state-default ui-corner-all").hover(function() {
+		$(this).addClass("ui-state-hover");
+	}, function() {
+		$(this).removeClass("ui-state-hover");
+	});
 	$('#jmpress').jmpress();
 }
