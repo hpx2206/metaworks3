@@ -36,6 +36,11 @@
     <activityTypeClass>org.uengine.kernel.HumanActivity</activityTypeClass>
   </org.uengine.processdesigner.ActivityTypeDescriptor>
   
+  <org.uengine.processdesigner.ActivityTypeDescriptor>  
+    <group>$activitytypes.groups.humanwork</group>
+    <activityTypeClass>org.uengine.codi.activitytypes.KnowledgeActivity</activityTypeClass>
+  </org.uengine.processdesigner.ActivityTypeDescriptor>
+  
   <org.uengine.processdesigner.ActivityTypeDescriptor>
     <group>$activitytypes.groups.humanwork</group>
     <activityTypeClass>org.uengine.kernel.FormActivity</activityTypeClass>
