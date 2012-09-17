@@ -125,6 +125,17 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			this.taskId = taskId;
 		}
 		
+	String trcTag;
+		
+		public String getTrcTag() {
+			return trcTag;
+		}
+	
+		public void setTrcTag(String trcTag) {
+			this.trcTag = trcTag;
+		}
+
+
 	String endpoint;	
 		
 	@Hidden
@@ -777,6 +788,17 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			//refreshedInstanceView.getFollowers().getFollowers()
 			
 		}
+		
+		//
+		Contact contact = new Contact();
+		contact.setFriend(writer);
+		contact.setFriendId(writer.getUserId());
+		writer.setMood(title);
+		contact.setMood(title);
+		
+		
+		MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(contact)});
+		//
 		
 		//makes new line and change existing div
 		

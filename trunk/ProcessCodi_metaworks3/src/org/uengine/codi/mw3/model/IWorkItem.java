@@ -44,6 +44,10 @@ public interface IWorkItem extends IDAO{
 		//@GeneratedValue(strategy=GenerationType.TABLE, generator="SEQ_BPM")
 		public Long getTaskId();
 		public void setTaskId(Long taskId);
+		
+		public String getTrcTag();
+		public void setTrcTag(String trcTag);
+
 	
 		public String getTitle();
 		public void setTitle(String title);
@@ -66,8 +70,8 @@ public interface IWorkItem extends IDAO{
 		
 		@Hidden
 		@ORMapping(
-			databaseFields = { "content" }, 
-			objectFields = { "serializedTool" },
+			databaseFields = { "content", "instId", "taskId", "trcTag" }, 
+			objectFields = { "serializedTool", "instanceId", "taskId", "tracingTag" },
 			objectIsNullWhenFirstDBFieldIsNull = true,
 			availableWhen= "type=='generic'"
 		)
