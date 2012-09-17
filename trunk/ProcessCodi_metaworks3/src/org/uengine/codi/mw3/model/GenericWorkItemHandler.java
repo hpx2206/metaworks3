@@ -1,7 +1,14 @@
 package org.uengine.codi.mw3.model;
 
+import java.rmi.RemoteException;
+
+import org.metaworks.annotation.Face;
+import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.ORMappingListener;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.ITool;
+import org.uengine.kernel.ProcessInstance;
+import org.uengine.processmanager.ProcessManagerRemote;
 
 public class GenericWorkItemHandler implements ORMappingListener{
 
@@ -53,5 +60,63 @@ public class GenericWorkItemHandler implements ORMappingListener{
 			this.tool = tool;
 		}
 	
+	Number instanceId;
+		
 	
+		
+	
+	
+		public Number getInstanceId() {
+			return instanceId;
+		}
+	
+		public void setInstanceId(Number instanceId) {
+			this.instanceId = instanceId;
+		}
+
+
+	String tracingTag;
+		public String getTracingTag() {
+			return tracingTag;
+		}
+	
+		public void setTracingTag(String tracingTag) {
+			this.tracingTag = tracingTag;
+		}
+	
+	
+	Number taskId;
+	
+		public Number getTaskId() {
+			return taskId;
+		}
+	
+		public void setTaskId(Number taskId) {
+			this.taskId = taskId;
+		}
+
+	@ServiceMethod(callByContent=true)
+	@Face(displayName="완료")
+	public InstanceViewContent complete() throws RemoteException, ClassNotFoundException, Exception{
+			
+			ProcessInstance instance = processManager.getProcessInstance(getInstanceId().toString());
+
+			processManager.completeWorkitem(getInstanceId().toString(), getTracingTag(), getTaskId().toString(), null);
+			processManager.applyChanges();
+			
+			//refreshes the instanceview so that the next workitem can be show up
+			Instance refInstance = new Instance();
+			refInstance.setInstId(getInstanceId().longValue());
+			
+			instanceViewContent.load(refInstance);
+			
+			return instanceViewContent;
+
+	}
+
+	@Autowired
+	public ProcessManagerRemote processManager;
+	
+	@Autowired
+	public InstanceViewContent instanceViewContent;
 }

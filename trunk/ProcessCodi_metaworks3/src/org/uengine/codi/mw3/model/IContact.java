@@ -14,11 +14,15 @@ import org.metaworks.dao.IDAO;
 
 public interface IContact extends IDAO{
 	
+
 	@ORMapping(databaseFields = {"friendId", "friendName", "network", "mood"}, objectFields = {"userId", "name", "network", "mood"})
 	public IUser getFriend();
 	public void setFriend(IUser friend);
-	
+
 	@Id
+	public String getFriendId();
+	public void setFriendId(String friendId);
+
 	public String getUserId();
 	public void setUserId(String userId);
 	
