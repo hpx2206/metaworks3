@@ -822,8 +822,8 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 	public ModalWindow presentation() throws Exception{
 		WfPanel_pt panel = new WfPanel_pt();
 		panel.session = session;
-		panel.load(session.getCompany().getComCode() , "presentation");
-		return new ModalWindow(panel , 1000, 800,  "Presentation" );
+		panel.load(/*session.getCompany().getComCode() */ getParentId(), "presentation");
+		return new ModalWindow(panel , 1000, 600,  "학습창" );
 	}
 	
 	@Override

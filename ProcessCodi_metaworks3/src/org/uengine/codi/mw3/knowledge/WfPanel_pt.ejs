@@ -45,7 +45,15 @@
 											}
 %>								
 											<li style="float:left; font-size: 20px; padding-left:60px; width:90%;" >
-												<img src="images/waveStyle/navi_icon.png" /><%=depthTwo[k].name %>
+												<img src="images/waveStyle/navi_icon.png" />
+												
+											<%if(depthTwo[k].type=='img'){		
+									%>
+												<img src="<%=depthTwo[k].name %>">
+								<%			}else{ %>
+												<%=depthTwo[k].name %>
+										<%	}%>
+												
 											</li>
 <%
 										}
