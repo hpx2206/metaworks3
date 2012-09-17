@@ -87,7 +87,16 @@ public class Contact extends Database<IContact> implements IContact{
 		public void setUserId(String userId) {
 			this.userId = userId;
 		}
-		
+
+	String friendId;
+	
+		public String getFriendId() {
+			return friendId;
+		}
+		public void setFriendId(String friendId) {
+			this.friendId = friendId;
+		}
+
 	String network;
 	
 		public String getNetwork() {
