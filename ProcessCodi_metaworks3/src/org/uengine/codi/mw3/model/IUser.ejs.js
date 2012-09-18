@@ -6,6 +6,34 @@ var org_uengine_codi_mw3_model_IUser = function(objectId, className){
 	this.windowObjectId = $('#' + this.divId).closest('.mw3_window').attr('objectId');
 	
 	$('#objDiv_' + this.objectId).parent().css({'border':'none'});
+	
+
+	var user = mw3.objects[objectId];
+	
+	
+	
+	if(user.metaworksContext.when=='contacts'){
+		
+			//alert(objectId);
+		var msg=$('#objDiv_' + objectId).find('.fontgray').text();
+		var comp=msg.length ;
+		var blueb = $('#objDiv_' + objectId).find('.fontgray');
+		
+		var count=0 ;
+		
+		var typing = function(){ 
+			if(count<=comp){ 
+				blueb[1].innerText = (msg.substring(0,count)) ;
+				count++ ;
+				setTimeout(typing(), 1000); 
+			}
+		};
+		
+		typing();
+		
+	}
+
+	
 }
 
 org_uengine_codi_mw3_model_IUser.prototype = {
