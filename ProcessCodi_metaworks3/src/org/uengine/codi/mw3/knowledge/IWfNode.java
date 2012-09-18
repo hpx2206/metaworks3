@@ -182,8 +182,8 @@ public interface IWfNode extends IDAO {
 	@Face(displayName="$presentation")
 	public ModalWindow presentation() throws Exception;
 	
-	@ServiceMethod(mouseBinding="drag-enableDefault")
-	public Session drag();
+	@ServiceMethod(callByContent=true, mouseBinding="drag-enableDefault")
+	public Session drag() throws Exception;
 	
 	/*******************************************
 	 * 
