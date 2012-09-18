@@ -1160,15 +1160,20 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 								try{
 									
 									String propName = ormapping.databaseFields()[i].toUpperCase();
-									
+
+									String mappingPropName = ORMPropNames[i];
+									mappingPropName = WebObjectType.toUpperStartedPropertyName(mappingPropName);
+
 									Object value = (rowSet!=null ? rowSet.getObject(propName) : cache.get(propName));
+									
+									Object converted = desireToConvert(objectType.getFieldDescriptor(mappingPropName).getClassType(), value);
+									if(!(converted instanceof NoReturn))
+										value = converted;
 									
 									if(i==0 && value==null && ormapping.objectIsNullWhenFirstDBFieldIsNull()){
 										return null;
 									}
 									
-									String mappingPropName = ORMPropNames[i];
-									mappingPropName = WebObjectType.toUpperStartedPropertyName(mappingPropName);
 									
 									objInst.setFieldValue(mappingPropName, value);
 									atLeastOnceHaveValue = true;
@@ -1286,60 +1291,10 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 						
 					}
 					
-					// try to convert an integer value to proper mapping values for types
-					if(returnValue instanceof Number){
-						Number returnValueInNumber = (Number)returnValue;
-						if(m.getReturnType() == Long.class || m.getReturnType() == long.class ){
-							return Long.valueOf(returnValueInNumber.longValue());
-						}
-						if(m.getReturnType() == Integer.class || m.getReturnType() == int.class ){
-							return Integer.valueOf(returnValueInNumber.intValue());
-						}
-						if(m.getReturnType() == Boolean.class || m.getReturnType() == boolean.class ){
-							return Boolean.valueOf(returnValueInNumber.intValue() == 1);
-						}
-					}
+					Object converted = desireToConvert(m.getReturnType(), returnValue);
 					
-					// try to null values into proper default primitive types' values
-					if(returnValue == null){
-						if(m.getReturnType() == boolean.class){
-							return Boolean.valueOf(false);
-						}					
-						if(m.getReturnType() == int.class){
-							return Integer.valueOf(0);
-						}					
-						if(m.getReturnType() == long.class){
-							return Long.valueOf(0);
-						}					
-					}
-					
-					//	try to parse the string value into integer type.
-					if(returnValue instanceof String){ 
-						if(m.getReturnType() == int.class || Integer.class.isAssignableFrom(m.getReturnType())){
-							try{
-								return new Integer((String)returnValue);
-							}catch(Exception e){
-							}
-						}	
-						
-						if(m.getReturnType() == long.class || Long.class.isAssignableFrom(m.getReturnType())){
-							try{
-								return new Long((String)returnValue);
-							}catch(Exception e){
-							}
-						}
-					}
-					
-					//primitive type mappings
-					if(returnValue instanceof Boolean && m.getReturnType() == boolean.class){
-						return returnValue;
-					}
-					
-					if(returnValue instanceof Number && (m.getReturnType() == int.class || m.getReturnType() == long.class)){
-						return returnValue;
-					}
-					//end
-	
+					if(!(converted instanceof NoReturn))
+						return converted;
 					
 					if(returnValue!=null && !m.getReturnType().isAssignableFrom(returnValue.getClass())){
 						throw new Exception(daoClass.getName() + " DAO's field type of '"+propertyName+"' is mismatch with the actual table's field.");
@@ -1457,6 +1412,64 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 //				TransactionContext.getThreadLocalInstance().setNeedSecurityCheck(securityCheck);
 //
 		}
+	}
+	
+	private Object desireToConvert(Class desiredType, Object returnValue) {
+		// try to convert an integer value to proper mapping values for types
+		if(returnValue instanceof Number){
+			Number returnValueInNumber = (Number)returnValue;
+			if(desiredType == Long.class || desiredType == long.class ){
+				return Long.valueOf(returnValueInNumber.longValue());
+			}
+			if(desiredType == Integer.class || desiredType == int.class ){
+				return Integer.valueOf(returnValueInNumber.intValue());
+			}
+			if(desiredType == Boolean.class || desiredType == boolean.class ){
+				return Boolean.valueOf(returnValueInNumber.intValue() == 1);
+			}
+		}
+		
+		// try to null values into proper default primitive types' values
+		if(returnValue == null){
+			if(desiredType == boolean.class){
+				return Boolean.valueOf(false);
+			}					
+			if(desiredType == int.class){
+				return Integer.valueOf(0);
+			}					
+			if(desiredType == long.class){
+				return Long.valueOf(0);
+			}					
+		}
+		
+		//	try to parse the string value into integer type.
+		if(returnValue instanceof String){ 
+			if(desiredType == int.class || Integer.class.isAssignableFrom(desiredType)){
+				try{
+					return new Integer((String)returnValue);
+				}catch(Exception e){
+				}
+			}	
+			
+			if(desiredType == long.class || Long.class.isAssignableFrom(desiredType)){
+				try{
+					return new Long((String)returnValue);
+				}catch(Exception e){
+				}
+			}
+		}
+		
+		//primitive type mappings
+		if(returnValue instanceof Boolean && desiredType == boolean.class){
+			return (Boolean)returnValue;
+		}
+		
+		if(returnValue instanceof Number && (desiredType == int.class || desiredType == long.class)){
+			return returnValue;
+		}
+		//end
+		
+		return new NoReturn();
 	}
 	
 	
@@ -1673,4 +1686,5 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 			this.metaworksContext = metaworksContext;
 		}
 	
+	class NoReturn{}
 }
