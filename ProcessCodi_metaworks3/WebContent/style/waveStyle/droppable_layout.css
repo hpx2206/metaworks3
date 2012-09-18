@@ -533,7 +533,7 @@ img {
     margin-right: 5px;
 }
 .user .user_detail {
-    float: left;
+   /* float: left;*/
 }
 .user .user_compact {
     float: left;
