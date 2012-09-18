@@ -3794,10 +3794,13 @@ window.Raphael.svg && function (R) {
     var xlink = "http://www.w3.org/1999/xlink",
         markers = {
             block: "M5,0 0,2.5 5,5z",
+            open_block: "M5,0 0,2.5 5,5z",
             classic: "M5,0 0,2.5 5,5 3.5,3 3.5,2z",
             diamond: "M2.5,0 5,2.5 2.5,5 0,2.5z",
+            open_diamond: "M2.5,0 5,2.5 2.5,5 0,2.5z",
             open: "M6,1 1,3.5 6,6",
-            oval: "M2.5,0A2.5,2.5,0,0,1,2.5,5 2.5,2.5,0,0,1,2.5,0z"
+            oval: "M2.5,0A2.5,2.5,0,0,1,2.5,5 2.5,2.5,0,0,1,2.5,0z",
+            open_oval: "M2.5,0A2.5,2.5,0,0,1,2.5,5 2.5,2.5,0,0,1,2.5,0z"
         },
         markerCounter = {};
     R.toString = function () {
@@ -3931,9 +3934,12 @@ window.Raphael.svg && function (R) {
             while (i--) {
                 switch (values[i]) {
                     case "block":
+                    case "open_block":
                     case "classic":
                     case "oval":
+                    case "open_oval":
                     case "diamond":
+                    case "open_diamond":
                     case "open":
                     case "none":
                         type = values[i];
@@ -3954,7 +3960,14 @@ window.Raphael.svg && function (R) {
                     fill: "none",
                     stroke: attrs.stroke
                 };
-            } else {
+            } else if(type == 'open_block' || type == 'open_diamond' || type == 'open_oval') {
+				refX = dx = w / 2;
+				attr = {
+					fill: 'white',
+					stroke: attrs.stroke,
+					'stroke-dasharray': 0
+				};
+			} else {
                 refX = dx = w / 2;
                 attr = {
                     fill: attrs.stroke,
@@ -5030,6 +5043,15 @@ window.Raphael.vml && function (R) {
                 case "open":
                 case "none":
                     type = values[i];
+                    break;
+			    case "open_block":
+					type = 'block';
+					break;
+                case "open_oval":
+                    type = 'oval';
+                    break;
+                case "open_diamond":
+                    type = 'diamond';
                     break;
                 case "wide":
                 case "narrow": h = values[i]; break;
