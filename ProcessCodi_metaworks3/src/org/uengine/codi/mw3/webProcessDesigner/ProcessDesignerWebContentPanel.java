@@ -16,6 +16,7 @@ import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.activitytypes.KnowledgeActivity;
 import org.uengine.codi.mw3.CodiClassLoader;
@@ -76,6 +77,14 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 		public void setGraphString(String graphString) {
 			this.graphString = graphString;
 		}
+	
+	@ServiceMethod(callByContent=true, target="popup")
+	public ModalWindow doSave() throws Exception{
+		ProcessDesignerTitle dTitle = new ProcessDesignerTitle();
+		dTitle.setMetaworksContext(new MetaworksContext());
+		dTitle.getMetaworksContext().setWhen("edit");
+		return new ModalWindow(dTitle , 200, 100,  "프로세스명 입력" );
+	}
 		
 	@ServiceMethod(callByContent=true)
 	public Object[] save() throws Exception{
@@ -84,7 +93,11 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 		if( cell != null){
 			Role[] roles = new Role[0];
 			Activity[] ac = new Activity[0];
-			def.setName("테스트 프로세스");
+			String title = "프로세스";
+			if( title == null ){
+				throw new Exception("please set process title");
+			}
+			def.setName(title);
 			def.setRoles(roles);
 			def.setChildActivities(ac);
 			for(int i = 0; i < cell.length; i++){
@@ -120,7 +133,8 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 			KnowledgeActivity KnowledgeActivity = null;
 			if(cv.getData() != null){
 				// escape 처리가 되어있기 때문에 decode 하여 사용 TODO 현재 한글깨짐
-				String data = URLDecoder.decode(cv.getData(), "UTF-8");
+//				String data = URLDecoder.decode(cv.getData(), "UTF-8");
+				String data = unescape(cv.getData());
 				JSONArray jsonArray = (JSONArray)JSONSerializer.toJSON(data);
 				if( jsonArray != null && jsonArray.size() > 0){
 					KnowledgeActivity = new KnowledgeActivity();
@@ -202,6 +216,37 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 		}
 	}
 	
+	public static String unescape(String src) {
+		StringBuffer tmp = new StringBuffer();
+		tmp.ensureCapacity(src.length());
+		int lastPos = 0, pos = 0;
+		char ch;
+		while (lastPos < src.length()) {
+			pos = src.indexOf("%", lastPos);
+			if (pos == lastPos) {
+				if (src.charAt(pos + 1) == 'u') {
+					ch = (char) Integer.parseInt(src
+							.substring(pos + 2, pos + 6), 16);
+					tmp.append(ch);
+					lastPos = pos + 6;
+				} else {
+					ch = (char) Integer.parseInt(src
+							.substring(pos + 1, pos + 3), 16);
+					tmp.append(ch);
+					lastPos = pos + 3;
+				}
+			} else {
+				if (pos == -1) {
+					tmp.append(src.substring(lastPos));
+					lastPos = src.length();
+				} else {
+					tmp.append(src.substring(lastPos, pos));
+					lastPos = pos;
+				}
+			}
+		}
+		return tmp.toString();
+	}
 	@Autowired
 	public ProcessManagerRemote processManager;
 }

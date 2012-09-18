@@ -178,7 +178,7 @@ public interface IWfNode extends IDAO {
 	@ServiceMethod(callByContent=true)
 	public WfNode collapse() throws Exception;	
 	
-	@ServiceMethod(callByContent=true, inContextMenu=true)
+	@ServiceMethod(callByContent=true, inContextMenu=true, target="popup")
 	@Face(displayName="$presentation")
 	public ModalWindow presentation() throws Exception;
 	
