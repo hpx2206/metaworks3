@@ -213,7 +213,7 @@ public class ResourceFile implements ContextAware{
 				rf.setObjType(childAlias.substring(childAlias.lastIndexOf(".")+1));
 
 				//ignores other types except process if 'newInstance' mode
-				if(getMetaworksContext()!=null && (("appendProcessMap".equals(getMetaworksContext().getWhen()) || "newInstance".equals(getMetaworksContext().getWhen())) && !"process".equals(rf.getObjType())))
+				if(getMetaworksContext()!=null && (("appendProcessMap".equals(getMetaworksContext().getWhen()) || "newInstance".equals(getMetaworksContext().getWhen())) && !"process".equals(rf.getObjType())  && !"process2".equals(rf.getObjType()) ))
 					continue;
 			}
 			
@@ -489,6 +489,21 @@ public class ResourceFile implements ContextAware{
 				int commandCotentStarts = fullCommandPhrase.indexOf(':');
 				if(-1 < commandCotentStarts){
 	
+					processMap.setCmPhrase(fullCommandPhrase);
+					processMap.setCmTrgr(fullCommandPhrase.substring(0, commandCotentStarts));
+				}
+			}
+		}
+		if(name.endsWith(".process2")){
+			name = name.substring(0, name.length() - 9);
+			
+			org.uengine.kernel.ProcessDefinition procDef = processManager.getProcessDefinition(getAlias());
+			String fullCommandPhrase = procDef.getDescription().getText();
+			
+			if(fullCommandPhrase!=null){
+				int commandCotentStarts = fullCommandPhrase.indexOf(':');
+				if(-1 < commandCotentStarts){
+					
 					processMap.setCmPhrase(fullCommandPhrase);
 					processMap.setCmTrgr(fullCommandPhrase.substring(0, commandCotentStarts));
 				}
