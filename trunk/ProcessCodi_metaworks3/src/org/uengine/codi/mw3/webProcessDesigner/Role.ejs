@@ -1,0 +1,27 @@
+<%
+if(value){
+%>
+
+
+<%
+		if(mw3.when == 'view'){
+%>
+			<table style="width:100%; padding-top:5px;">
+				<tr>
+					<td width="100px">ROLE : <%=fields.name.here()%></td>
+					<td><a id="wBtn" href="#" onClick="<%=methods.remove.caller()%>"><span><%=mw3.localize("$remove")%></span></a></td>
+				</tr>
+			</table>
+<%
+		}else{
+%>
+			<table style="width:100%; padding-top:5px;">
+				<tr>
+					<td width="100px"><%=fields.name.here()%></td>
+					<td><a id="wBtn" href="#" onClick="<%=methods.add.caller()%>"><span><%=mw3.localize("$add")%></span></a></td>
+				</tr>
+			</table>
+<%
+		}
+}
+%>

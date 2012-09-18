@@ -1,94 +1,70 @@
-<style type="text/css">
-        .ui-layout-center {
-            padding: 0;
-            overflow: scroll;
-        }
 
-        .ui-layout-west {
-            padding: 0;
-            overflow: hidden;
-        }
-
-        .ui-accordion .ui-accordion-content {
-            padding: 2px;
-            top: 0;
-            border-top: 0;
-            margin-top: 2px;
-            margin-bottom: -2px;
-            position: relative;
-        }
-
-        .icon_shape {
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
-        }
-
-        .ui-accordion-content img {
-            border: none;
-            overflow: hidden;
-        }
-
-        .ui-accordion-content img:hover {
-            border: 2px solid blue;
-            margin: -2px;
-        }
-    </style>
-<html>
-<div class="ui-layout-north">
-	<ul>
-		<li>
-			<input value="clear" type="button" onclick="mw3.getFaceHelper('<%=objectId%>').clear()"><span></span></a>
-			<input value="json데이터확인" type="button" onclick="mw3.getFaceHelper('<%=objectId%>').jsonobject()"><span></span></a>
-			<a id="wBtn" href="#" onClick="<%=methods.save.caller()%>"><span><%=mw3.localize("$save")%></span></a>
-		</li>
-	</ul>
-</div>
-<div>
-    <div id="accordion">
-        <h3><a href="#">BPMN</a></h3>
-
-        <div>
-            <img src="images/opengraph/cancel_end.png" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
-            <img src="images/opengraph/cancel_intermediate.png" class="icon_shape" _shape_id="OG.shape.EllipseShape"/>
-            <img src="images/opengraph/error.png" class="icon_shape" _shape_id="OG.shape.RectangleShape"/>
-            <img src="images/opengraph/event.png" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
-            <img src="images/opengraph/event_end.png" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
-            <img src="images/opengraph/event_intermediate.png" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
-            <img src="images/opengraph/fork.png" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
-            <img src="images/opengraph/inclusive.png" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
-            <img src="images/opengraph/link.png" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
-            <img src="images/opengraph/merge.png" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
-            <img src="images/opengraph/message.png" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
-            <img src="images/opengraph/message_end.png" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
-            <img src="images/opengraph/message_intermediate.png" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
-            <img src="images/opengraph/multiple.png" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
-            <img src="images/opengraph/rule.png" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
-            <img src="images/opengraph/small_cancel_end.gif" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
-            <img src="images/opengraph/small_cancel_intermediate.gif" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
-            <img src="images/opengraph/small_error.gif" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
-            <img src="images/opengraph/small_event.gif" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
-            <img src="images/opengraph/small_event_intermediate.gif" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
-            <img src="images/opengraph/small_fork.gif" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
-            <img src="images/opengraph/small_inclusive.gif" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
-            <img src="images/opengraph/small_link.gif" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
-            <img src="images/opengraph/small_merge.gif" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
-            <img src="images/opengraph/small_message.gif" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
-            <img src="images/opengraph/small_message_end.gif" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
-            <img src="images/opengraph/small_message_intermediate.gif" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
-            <img src="images/opengraph/small_multiple.gif" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
-            <img src="images/opengraph/small_rule.gif" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
-            <img src="images/opengraph/small_terminate.gif" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
-            <img src="images/opengraph/small_timer.gif" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
-            <img src="images/opengraph/terminate.png" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
-            <img src="images/opengraph/timer.png" class="icon_shape" _shape_id="OG.shape.CircleShape"/>
+<div style="width:100%;">
+    <div style="float:left;  width:150px; height:100%;">
+        <div style="min-height: 500px;">
+            <img src="images/opengraph/event_start.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_Start" _width="30" _height="30"/>
+            <!--
+            <img src="images/opengraph/event_intermediate.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_Intermediate" _width="30" _height="30"/>
+            -->
+            <img src="images/opengraph/event_end.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_End" _width="30" _height="30"/>
+            <!--
+            <img src="images/opengraph/message_start.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_Start_Message" _width="30" _height="30"/>
+            <img src="images/opengraph/message_intermediate.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_Intermediate_Message" _width="30" _height="30"/>
+            <img src="images/opengraph/message_end.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_End_Message" _width="30" _height="30"/><br/>
+            <img src="images/opengraph/link_start.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_Start_Link" _width="30" _height="30"/>
+            <img src="images/opengraph/link_intermediate.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_Intermediate_Link" _width="30" _height="30"/>
+            <img src="images/opengraph/link_end.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_End_Link" _width="30" _height="30"/>
+            <img src="images/opengraph/multiple_start.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_Start_Multiple" _width="30" _height="30"/>
+            <img src="images/opengraph/multiple_intermediate.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_Intermediate_Multiple" _width="30" _height="30"/>
+            <img src="images/opengraph/multiple_end.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_End_Multiple" _width="30" _height="30"/><br/>
+            <img src="images/opengraph/timer_start.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_Start_Timer" _width="30" _height="30"/>
+            <img src="images/opengraph/timer_intermediate.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_Intermediate_Timer" _width="30" _height="30"/>
+            <img src="images/opengraph/rule_start.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_Start_Rule" _width="30" _height="30"/>
+            <img src="images/opengraph/rule_intermediate.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_Intermediate_Rule" _width="30" _height="30"/>
+            <img src="images/opengraph/compensation_intermediate.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_Intermediate_Compensation" _width="30" _height="30"/>
+            <img src="images/opengraph/compensation_end.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_End_Compensation" _width="30" _height="30"/><br/>
+            <img src="images/opengraph/error_intermediate.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_Intermediate_Error" _width="30" _height="30"/>
+            <img src="images/opengraph/error_end.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_End_Error" _width="30" _height="30"/>
+            <img src="images/opengraph/cancel_end.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_End_Cancel" _width="30" _height="30"/>
+            <img src="images/opengraph/event_terminate.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_Terminate" _width="30" _height="30"/><br/>
+            -->
+            <img src="images/opengraph/gateway.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.G_Gateway" _width="40" _height="40"/>
+            <!--
+            <img src="images/opengraph/gateway_exclusive.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.G_Exclusive" _width="40" _height="40"/>
+            <img src="images/opengraph/gateway_parallel.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.G_Parallel" _width="40" _height="40"/>
+            <img src="images/opengraph/gateway_complex.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.G_Complex" _width="40" _height="40"/>
+            <img src="images/opengraph/gateway_inclusive.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.G_Inclusive" _width="40" _height="40"/><br/>
+             -->
+            <img src="images/opengraph/task.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.A_Task" _width="70" _height="50"/>
+            <!--
+            <img src="images/opengraph/subprocess.png" class="icon_shape" _shape_type="GROUP" _shape_id="OG.shape.bpmn.A_Subprocess" _width="200" _height="150"/>
+            <img src="images/opengraph/data_object.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.D_Data" _width="50" _height="50"/>
+            <img src="images/opengraph/data_store.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.D_Store" _width="50" _height="50"/>
+            <img src="images/opengraph/group.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.M_Group" _width="50" _height="50"/><br/>
+			-->
+            <img src="images/opengraph/connector_sequence.png" class="icon_shape" _shape_type="EDGE" _shape_id="OG.shape.bpmn.C_Sequence" _width="200" _height="150"/>
+            <!--
+            <img src="images/opengraph/connector_message.png" class="icon_shape" _shape_type="EDGE" _shape_id="OG.shape.bpmn.C_Message" _width="200" _height="150"/>
+            <img src="images/opengraph/connector_conditional.png" class="icon_shape" _shape_type="EDGE" _shape_id="OG.shape.bpmn.C_Conditional" _width="200" _height="150"/>
+            <img src="images/opengraph/connector_dataassociation.png" class="icon_shape" _shape_type="EDGE" _shape_id="OG.shape.bpmn.C_DataAssociation" _width="200" _height="150"/>
+            <img src="images/opengraph/connector_association.png" class="icon_shape" _shape_type="EDGE" _shape_id="OG.shape.bpmn.C_Association" _width="200" _height="150"/><br/>
+            <img src="images/opengraph/annotation.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.M_Annotation" _width="70" _height="30"/>
+            <img src="images/opengraph/text.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.M_Text" _width="50" _height="30"/>
+            <img src="images/opengraph/horizontal_lane.png" class="icon_shape" _shape_type="GROUP" _shape_id="OG.shape.HorizontalLaneShape" _width="200" _height="100"/>
+            <img src="images/opengraph/vertical_lane.png" class="icon_shape" _shape_type="GROUP" _shape_id="OG.shape.VerticalLaneShape" _width="100" _height="200"/>
+            -->
+			<ul style="float:left; padding-top:20px;">
+				<li><a id="wBtn" href="#" onClick="mw3.getFaceHelper('<%=objectId%>').clear()"><span>clear</span></a></li>
+				<li><a id="wBtn" href="#" onClick="mw3.getFaceHelper('<%=objectId%>').jsonobject()"><span>json데이터확인</span></a></li>
+				<li><a id="wBtn" href="#" onClick="<%=methods.save.caller()%>"><span><%=mw3.localize("$save")%></span></a></li>
+			</ul>
+			<div style="float:left; padding-top:20px;">
+				<ul>
+				<%=fields.rolePanel.here()%>
+				</ul>
+			</div>
         </div>
 
-        <h3><a href="#">General</a></h3>
-
-        <div>
-        </div>
     </div>
+	<div id="canvas" style="cursor: default; height: 500px; width:75%; float:left; "/>
 </div>
-<div id="canvas" style="cursor: default; height: 400px;"/>
-</html>
