@@ -6,7 +6,8 @@ OG.handler={};
 OG.layout={};
 OG.renderer={};
 OG.shape={};
-OG.common.Constants={CANVAS_BACKGROUND:"#f9f9f9",GEOM_TYPE:{NULL:0,POINT:1,LINE:2,POLYLINE:3,POLYGON:4,RECTANGLE:5,CIRCLE:6,ELLIPSE:7,CURVE:8,BEZIER_CURVE:9,COLLECTION:10},GEOM_NAME:["","Point","Line","PolyLine","Polygon","Rectangle","Circle","Ellipse","Curve","BezierCurve","Collection"],NUM_PRECISION:0,NODE_TYPE:{ROOT:"ROOT",SHAPE:"SHAPE"},SHAPE_TYPE:{GEOM:"GEOM",TEXT:"TEXT",IMAGE:"IMAGE",EDGE:"EDGE",GROUP:"GROUP"},EDGE_TYPE:{STRAIGHT:"straight",PLAIN:"plain",BEZIER:"bezier"},EDGE_PADDING:20,LABEL_PADDING:5,LABEL_EDITOR_WIDTH:70,LABEL_EDITOR_HEIGHT:16,LABEL_SUFFIX:"_LABEL",LABEL_EDITOR_SUFFIX:"_LABEL_EDITOR",DEFAULT_STYLE:{SHAPE:{cursor:"default"},GEOM:{stroke:"black",fill:"white","fill-opacity":0,"label-position":"center"},TEXT:{stroke:"none","text-anchor":"middle"},IMAGE:{"label-position":"bottom"},EDGE:{stroke:"black","stroke-width":2,"edge-type":"straight","edge-direction":"c c","arrow-start":"none","arrow-end":"block-wide-long","stroke-dasharray":"","label-position":"center"},EDGE_SHADOW:{stroke:"#00FF00","stroke-width":2,"arrow-start":"none","arrow-end":"none","stroke-dasharray":"- "},GROUP:{stroke:"none",fill:"white","fill-opacity":0,"label-position":"bottom","text-anchor":"middle","vertical-align":"top"},GUIDE_BBOX:{stroke:"#00FF00",fill:"none","stroke-dasharray":"- ","shape-rendering":"crispEdges"},GUIDE_UL:{stroke:"black",fill:"#00FF00",cursor:"nwse-resize","shape-rendering":"crispEdges"},GUIDE_UR:{stroke:"black",fill:"#00FF00",cursor:"nesw-resize","shape-rendering":"crispEdges"},GUIDE_LL:{stroke:"black",fill:"#00FF00",cursor:"nesw-resize","shape-rendering":"crispEdges"},GUIDE_LR:{stroke:"black",fill:"#00FF00",cursor:"nwse-resize","shape-rendering":"crispEdges"},GUIDE_LC:{stroke:"black",fill:"#00FF00",cursor:"ew-resize","shape-rendering":"crispEdges"},GUIDE_UC:{stroke:"black",fill:"#00FF00",cursor:"ns-resize","shape-rendering":"crispEdges"},GUIDE_RC:{stroke:"black",fill:"#00FF00",cursor:"ew-resize","shape-rendering":"crispEdges"},GUIDE_LWC:{stroke:"black",fill:"#00FF00",cursor:"ns-resize","shape-rendering":"crispEdges"},GUIDE_FROM:{stroke:"black",fill:"#00FF00",cursor:"move","shape-rendering":"crispEdges"},GUIDE_TO:{stroke:"black",fill:"#00FF00",cursor:"move","shape-rendering":"crispEdges"},GUIDE_CTL_H:{stroke:"black",fill:"#00FF00",cursor:"ew-resize","shape-rendering":"crispEdges"},GUIDE_CTL_V:{stroke:"black",fill:"#00FF00",cursor:"ns-resize","shape-rendering":"crispEdges"},GUIDE_SHADOW:{stroke:"black",fill:"none","stroke-dasharray":"- ","shape-rendering":"crispEdges"},RUBBER_BAND:{stroke:"#0000FF",opacity:0.2,fill:"#0077FF"},TERMINAL:{stroke:"#808080","stroke-width":1,fill:"r(0.5, 0.5)#FFFFFF-#808080","fill-opacity":0.5,cursor:"pointer"},TERMINAL_OVER:{stroke:"#0077FF","stroke-width":4,fill:"r(0.5, 0.5)#FFFFFF-#0077FF","fill-opacity":1,cursor:"pointer"},TERMINAL_BBOX:{stroke:"none",fill:"white","fill-opacity":0},DROP_OVER_BBOX:{stroke:"#0077FF",fill:"none",opacity:0.6,"shape-rendering":"crispEdges"},LABEL:{"font-size":12,"font-color":"black"},LABEL_EDITOR:{position:"absolute",overflow:"visible",resize:"none","text-align":"center",display:"block",padding:0},COLLAPSE:{stroke:"black",fill:"white","fill-opacity":0,cursor:"pointer","shape-rendering":"crispEdges"},COLLAPSE_BBOX:{stroke:"none",fill:"white","fill-opacity":0}},RUBBER_BAND_ID:"OG_R_BAND",GUIDE_SUFFIX:{GUIDE:"_GUIDE",BBOX:"_GUIDE_BBOX",UL:"_GUIDE_UL",UR:"_GUIDE_UR",LL:"_GUIDE_LL",LR:"_GUIDE_LR",LC:"_GUIDE_LC",UC:"_GUIDE_UC",RC:"_GUIDE_RC",LWC:"_GUIDE_LWC",FROM:"_GUIDE_FROM",TO:"_GUIDE_TO",CTL:"_GUIDE_CTL_",CTL_H:"_GUIDE_CTL_H_",CTL_V:"_GUIDE_CTL_V_"},GUIDE_RECT_SIZE:8,GUIDE_MIN_SIZE:18,COLLAPSE_SUFFIX:"_COLLAPSE",COLLAPSE_BBOX_SUFFIX:"_COLLAPSE_BBOX",COLLAPSE_SIZE:10,MOVE_SNAP_SIZE:5,DROP_OVER_BBOX_SUFFIX:"_DROP_OVER",TERMINAL_SUFFIX:{GROUP:"_TERMINAL",BOX:"_TERMINAL_BOX"},TERMINAL_TYPE:{C:"C",E:"E",W:"W",S:"S",N:"N",IN:"IN",OUT:"OUT",INOUT:"INOUT"},TERMINAL_SIZE:3,COPY_PASTE_PADDING:20};
+OG.shape.bpmn={};
+OG.common.Constants={CANVAS_BACKGROUND:"#f9f9f9",GEOM_TYPE:{NULL:0,POINT:1,LINE:2,POLYLINE:3,POLYGON:4,RECTANGLE:5,CIRCLE:6,ELLIPSE:7,CURVE:8,BEZIER_CURVE:9,COLLECTION:10},GEOM_NAME:["","Point","Line","PolyLine","Polygon","Rectangle","Circle","Ellipse","Curve","BezierCurve","Collection"],NUM_PRECISION:0,NODE_TYPE:{ROOT:"ROOT",SHAPE:"SHAPE"},SHAPE_TYPE:{GEOM:"GEOM",TEXT:"TEXT",IMAGE:"IMAGE",EDGE:"EDGE",GROUP:"GROUP"},EDGE_TYPE:{STRAIGHT:"straight",PLAIN:"plain",BEZIER:"bezier"},EDGE_PADDING:20,LABEL_PADDING:5,LABEL_EDITOR_WIDTH:70,LABEL_EDITOR_HEIGHT:16,LABEL_SUFFIX:"_LABEL",LABEL_EDITOR_SUFFIX:"_LABEL_EDITOR",DEFAULT_STYLE:{SHAPE:{cursor:"default"},GEOM:{stroke:"black",fill:"white","fill-opacity":0,"label-position":"center"},TEXT:{stroke:"none","text-anchor":"middle"},IMAGE:{"label-position":"bottom"},EDGE:{stroke:"black","stroke-width":2,"edge-type":"plain","edge-direction":"c c","arrow-start":"none","arrow-end":"block-wide-long","stroke-dasharray":"","label-position":"center"},EDGE_SHADOW:{stroke:"#00FF00","stroke-width":2,"arrow-start":"none","arrow-end":"none","stroke-dasharray":"- "},GROUP:{stroke:"none",fill:"white","fill-opacity":0,"label-position":"bottom","text-anchor":"middle","vertical-align":"top"},GUIDE_BBOX:{stroke:"#00FF00",fill:"none","stroke-dasharray":"- ","shape-rendering":"crispEdges"},GUIDE_UL:{stroke:"black",fill:"#00FF00",cursor:"nwse-resize","shape-rendering":"crispEdges"},GUIDE_UR:{stroke:"black",fill:"#00FF00",cursor:"nesw-resize","shape-rendering":"crispEdges"},GUIDE_LL:{stroke:"black",fill:"#00FF00",cursor:"nesw-resize","shape-rendering":"crispEdges"},GUIDE_LR:{stroke:"black",fill:"#00FF00",cursor:"nwse-resize","shape-rendering":"crispEdges"},GUIDE_LC:{stroke:"black",fill:"#00FF00",cursor:"ew-resize","shape-rendering":"crispEdges"},GUIDE_UC:{stroke:"black",fill:"#00FF00",cursor:"ns-resize","shape-rendering":"crispEdges"},GUIDE_RC:{stroke:"black",fill:"#00FF00",cursor:"ew-resize","shape-rendering":"crispEdges"},GUIDE_LWC:{stroke:"black",fill:"#00FF00",cursor:"ns-resize","shape-rendering":"crispEdges"},GUIDE_FROM:{stroke:"black",fill:"#00FF00",cursor:"move","shape-rendering":"crispEdges"},GUIDE_TO:{stroke:"black",fill:"#00FF00",cursor:"move","shape-rendering":"crispEdges"},GUIDE_CTL_H:{stroke:"black",fill:"#00FF00",cursor:"ew-resize","shape-rendering":"crispEdges"},GUIDE_CTL_V:{stroke:"black",fill:"#00FF00",cursor:"ns-resize","shape-rendering":"crispEdges"},GUIDE_SHADOW:{stroke:"black",fill:"none","stroke-dasharray":"- ","shape-rendering":"crispEdges"},RUBBER_BAND:{stroke:"#0000FF",opacity:0.2,fill:"#0077FF"},TERMINAL:{stroke:"#808080","stroke-width":1,fill:"r(0.5, 0.5)#FFFFFF-#808080","fill-opacity":0.5,cursor:"pointer"},TERMINAL_OVER:{stroke:"#0077FF","stroke-width":4,fill:"r(0.5, 0.5)#FFFFFF-#0077FF","fill-opacity":1,cursor:"pointer"},TERMINAL_BBOX:{stroke:"none",fill:"white","fill-opacity":0},DROP_OVER_BBOX:{stroke:"#0077FF",fill:"none",opacity:0.6,"shape-rendering":"crispEdges"},LABEL:{"font-size":12,"font-color":"black"},LABEL_EDITOR:{position:"absolute",overflow:"visible",resize:"none","text-align":"center",display:"block",padding:0},COLLAPSE:{stroke:"black",fill:"white","fill-opacity":0,cursor:"pointer","shape-rendering":"crispEdges"},COLLAPSE_BBOX:{stroke:"none",fill:"white","fill-opacity":0}},RUBBER_BAND_ID:"OG_R_BAND",GUIDE_SUFFIX:{GUIDE:"_GUIDE",BBOX:"_GUIDE_BBOX",UL:"_GUIDE_UL",UR:"_GUIDE_UR",LL:"_GUIDE_LL",LR:"_GUIDE_LR",LC:"_GUIDE_LC",UC:"_GUIDE_UC",RC:"_GUIDE_RC",LWC:"_GUIDE_LWC",FROM:"_GUIDE_FROM",TO:"_GUIDE_TO",CTL:"_GUIDE_CTL_",CTL_H:"_GUIDE_CTL_H_",CTL_V:"_GUIDE_CTL_V_"},GUIDE_RECT_SIZE:8,GUIDE_MIN_SIZE:18,COLLAPSE_SUFFIX:"_COLLAPSE",COLLAPSE_BBOX_SUFFIX:"_COLLAPSE_BBOX",COLLAPSE_SIZE:10,MOVE_SNAP_SIZE:5,DROP_OVER_BBOX_SUFFIX:"_DROP_OVER",TERMINAL_SUFFIX:{GROUP:"_TERMINAL",BOX:"_TERMINAL_BOX"},TERMINAL_TYPE:{C:"C",E:"E",W:"W",S:"S",N:"N",IN:"IN",OUT:"OUT",INOUT:"INOUT"},TERMINAL_SIZE:3,COPY_PASTE_PADDING:20,ENABLE_CANVAS_OFFSET:true};
 OG.Constants=OG.common.Constants;
 if(typeof KeyEvent==="undefined"){var KeyEvent={DOM_VK_CANCEL:3,DOM_VK_HELP:6,DOM_VK_BACK_SPACE:8,DOM_VK_TAB:9,DOM_VK_CLEAR:12,DOM_VK_RETURN:13,DOM_VK_ENTER:14,DOM_VK_SHIFT:16,DOM_VK_CONTROL:17,DOM_VK_ALT:18,DOM_VK_PAUSE:19,DOM_VK_CAPS_LOCK:20,DOM_VK_ESCAPE:27,DOM_VK_SPACE:32,DOM_VK_PAGE_UP:33,DOM_VK_PAGE_DOWN:34,DOM_VK_END:35,DOM_VK_HOME:36,DOM_VK_LEFT:37,DOM_VK_UP:38,DOM_VK_RIGHT:39,DOM_VK_DOWN:40,DOM_VK_PRINTSCREEN:44,DOM_VK_INSERT:45,DOM_VK_DELETE:46,DOM_VK_0:48,DOM_VK_1:49,DOM_VK_2:50,DOM_VK_3:51,DOM_VK_4:52,DOM_VK_5:53,DOM_VK_6:54,DOM_VK_7:55,DOM_VK_8:56,DOM_VK_9:57,DOM_VK_SEMICOLON:59,DOM_VK_EQUALS:61,DOM_VK_A:65,DOM_VK_B:66,DOM_VK_C:67,DOM_VK_D:68,DOM_VK_E:69,DOM_VK_F:70,DOM_VK_G:71,DOM_VK_H:72,DOM_VK_I:73,DOM_VK_J:74,DOM_VK_K:75,DOM_VK_L:76,DOM_VK_M:77,DOM_VK_N:78,DOM_VK_O:79,DOM_VK_P:80,DOM_VK_Q:81,DOM_VK_R:82,DOM_VK_S:83,DOM_VK_T:84,DOM_VK_U:85,DOM_VK_V:86,DOM_VK_W:87,DOM_VK_X:88,DOM_VK_Y:89,DOM_VK_Z:90,DOM_VK_COMMAND:91,DOM_VK_CONTEXT_MENU:93,DOM_VK_NUMPAD0:96,DOM_VK_NUMPAD1:97,DOM_VK_NUMPAD2:98,DOM_VK_NUMPAD3:99,DOM_VK_NUMPAD4:100,DOM_VK_NUMPAD5:101,DOM_VK_NUMPAD6:102,DOM_VK_NUMPAD7:103,DOM_VK_NUMPAD8:104,DOM_VK_NUMPAD9:105,DOM_VK_MULTIPLY:106,DOM_VK_ADD:107,DOM_VK_SEPARATOR:108,DOM_VK_SUBTRACT:109,DOM_VK_DECIMAL:110,DOM_VK_DIVIDE:111,DOM_VK_F1:112,DOM_VK_F2:113,DOM_VK_F3:114,DOM_VK_F4:115,DOM_VK_F5:116,DOM_VK_F6:117,DOM_VK_F7:118,DOM_VK_F8:119,DOM_VK_F9:120,DOM_VK_F10:121,DOM_VK_F11:122,DOM_VK_F12:123,DOM_VK_F13:124,DOM_VK_F14:125,DOM_VK_F15:126,DOM_VK_F16:127,DOM_VK_F17:128,DOM_VK_F18:129,DOM_VK_F19:130,DOM_VK_F20:131,DOM_VK_F21:132,DOM_VK_F22:133,DOM_VK_F23:134,DOM_VK_F24:135,DOM_VK_NUM_LOCK:144,DOM_VK_SCROLL_LOCK:145,DOM_VK_COMMA:188,DOM_VK_PERIOD:190,DOM_VK_SLASH:191,DOM_VK_BACK_QUOTE:192,DOM_VK_OPEN_BRACKET:219,DOM_VK_BACK_SLASH:220,DOM_VK_CLOSE_BRACKET:221,DOM_VK_QUOTE:222,DOM_VK_META:224}
 };OG.common.Util={isEmpty:function(b,a){return b===null||b===undefined||((OG.Util.isArray(b)&&!b.length))||(!a?b==="":false)
@@ -312,7 +313,7 @@ return function(json){if(!dc){dc=isNative()?JSON.parse:doDecode
 }
 }())
 })();
-OG.JSON=OG.common.JSON;OG.geometry.Style=function(c){var b={stroke:"black","stroke-width":1},a={};
+OG.JSON=OG.common.JSON;OG.geometry.Style=function(c){var b={},a={};
 OG.Util.apply(a,c,b);
 OG.geometry.Style.superclass.call(this,a)
 };
@@ -619,19 +620,22 @@ this.move=function(d,f){var e;
 this.getBoundary().move(d,f);
 for(e=0;
 e<this.geometries.length;
-e++){this.geometries[e].move(d,f)
+e++){this.geometries[e].move(d,f);
+this.geometries[e].reset()
 }return this
 };
 this.resize=function(n,i,g,o){var f=this.getBoundary(),j=g+o,h=n+i,e=f.getWidth()+j,p=f.getHeight()+h,m=f.getWidth()===0?1:e/f.getWidth(),l=f.getHeight()===0?1:p/f.getHeight(),d=f.getUpperLeft(),k;
 if(e<0||p<0){throw new OG.ParamError()
 }for(b=0;
 b<this.geometries.length;
-b++){k=this.geometries[b].getVertices();
+b++){k=this.geometries[b].vertices;
 for(a=0;
 a<k.length;
 a++){k[a].x=OG.Util.round((d.x-g)+(k[a].x-d.x)*m);
 k[a].y=OG.Util.round((d.y-n)+(k[a].y-d.y)*l)
-}}f.resize(n,i,g,o)
+}this.geometries[b].reset()
+}f.resize(n,i,g,o);
+return this
 };
 this.resizeBox=function(g,d){var h=this.getBoundary(),f=OG.Util.round((g-h.getWidth())/2),e=OG.Util.round((d-h.getHeight())/2);
 this.resize(e,e,f,f);
@@ -640,7 +644,8 @@ return this
 this.rotate=function(e,d){d=d||this.getCentroid();
 for(b=0;
 b<this.geometries.length;
-b++){this.geometries[b].rotate(e,d)
+b++){this.geometries[b].rotate(e,d);
+this.geometries[b].reset()
 }this.reset();
 return this
 };
@@ -976,6 +981,7 @@ return[new OG.Terminal(b.getCentroid(),OG.Constants.TERMINAL_TYPE.C,OG.Constants
 };
 this.createShape=function(){if(this.geom){return this.geom
 }this.geom=new OG.geometry.Rectangle([0,0],100,100);
+this.geom.style=new OG.geometry.Style({stroke:"none"});
 return this.geom
 };
 this.clone=function(){return new OG.shape.GroupShape(this.label)
@@ -983,7 +989,24 @@ this.clone=function(){return new OG.shape.GroupShape(this.label)
 };
 OG.shape.GroupShape.prototype=new OG.shape.IShape();
 OG.shape.GroupShape.prototype.constructor=OG.shape.GroupShape;
-OG.GroupShape=OG.shape.GroupShape;OG.shape.RectangleShape=function(a){this.SHAPE_ID="OG.shape.RectangleShape";
+OG.GroupShape=OG.shape.GroupShape;OG.shape.HorizontalLaneShape=function(a){this.TYPE=OG.Constants.SHAPE_TYPE.GROUP;
+this.SHAPE_ID="OG.shape.HorizontalLaneShape";
+this.label=a;
+this.createTerminal=function(){if(!this.geom){return[]
+}var b=this.geom.getBoundary();
+return[new OG.Terminal(b.getCentroid(),OG.Constants.TERMINAL_TYPE.C,OG.Constants.TERMINAL_TYPE.INOUT),new OG.Terminal(b.getRightCenter(),OG.Constants.TERMINAL_TYPE.E,OG.Constants.TERMINAL_TYPE.INOUT),new OG.Terminal(b.getLeftCenter(),OG.Constants.TERMINAL_TYPE.W,OG.Constants.TERMINAL_TYPE.INOUT),new OG.Terminal(b.getLowerCenter(),OG.Constants.TERMINAL_TYPE.S,OG.Constants.TERMINAL_TYPE.INOUT),new OG.Terminal(b.getUpperCenter(),OG.Constants.TERMINAL_TYPE.N,OG.Constants.TERMINAL_TYPE.INOUT)]
+};
+this.createShape=function(){if(this.geom){return this.geom
+}this.geom=new OG.geometry.Rectangle([0,0],100,100);
+this.geom.style=new OG.geometry.Style({"label-direction":"vertical","vertical-align":"top"});
+return this.geom
+};
+this.clone=function(){return new OG.shape.HorizontalLaneShape(this.label)
+}
+};
+OG.shape.HorizontalLaneShape.prototype=new OG.shape.GroupShape();
+OG.shape.HorizontalLaneShape.prototype.constructor=OG.shape.HorizontalLaneShape;
+OG.HorizontalLaneShape=OG.shape.HorizontalLaneShape;OG.shape.RectangleShape=function(a){this.SHAPE_ID="OG.shape.RectangleShape";
 this.label=a;
 this.createShape=function(){if(this.geom){return this.geom
 }this.geom=new OG.geometry.Rectangle([0,0],100,100);
@@ -994,8 +1017,8 @@ this.clone=function(){return new OG.shape.RectangleShape(this.label)
 };
 OG.shape.RectangleShape.prototype=new OG.shape.GeomShape();
 OG.shape.RectangleShape.prototype.constructor=OG.shape.RectangleShape;
-OG.RectangleShape=OG.shape.RectangleShape;OG.shape.SwimlaneShape=function(a){this.TYPE=OG.Constants.SHAPE_TYPE.GROUP;
-this.SHAPE_ID="OG.shape.SwimlaneShape";
+OG.RectangleShape=OG.shape.RectangleShape;OG.shape.VerticalLaneShape=function(a){this.TYPE=OG.Constants.SHAPE_TYPE.GROUP;
+this.SHAPE_ID="OG.shape.VerticalLaneShape";
 this.label=a;
 this.createTerminal=function(){if(!this.geom){return[]
 }var b=this.geom.getBoundary();
@@ -1003,14 +1026,686 @@ return[new OG.Terminal(b.getCentroid(),OG.Constants.TERMINAL_TYPE.C,OG.Constants
 };
 this.createShape=function(){if(this.geom){return this.geom
 }this.geom=new OG.geometry.Rectangle([0,0],100,100);
+this.geom.style=new OG.geometry.Style({"label-direction":"horizontal","vertical-align":"top"});
 return this.geom
 };
-this.clone=function(){return new OG.shape.GroupShape(this.label)
+this.clone=function(){return new OG.shape.VerticalLaneShape(this.label)
 }
 };
-OG.shape.SwimlaneShape.prototype=new OG.shape.GroupShape();
-OG.shape.SwimlaneShape.prototype.constructor=OG.shape.GroupShape;
-OG.SwimlaneShape=OG.shape.GroupShape;OG.renderer.IRenderer=function(){this.drawShape=function(a,b,c,d,e){throw new OG.NotImplementedException()
+OG.shape.VerticalLaneShape.prototype=new OG.shape.GroupShape();
+OG.shape.VerticalLaneShape.prototype.constructor=OG.shape.VerticalLaneShape;
+OG.VerticalLaneShape=OG.shape.VerticalLaneShape;OG.shape.bpmn.A_Subprocess=function(a){this.SHAPE_ID="OG.shape.bpmn.A_Subprocess";
+this.label=a;
+this.createShape=function(){if(this.geom){return this.geom
+}this.geom=new OG.geometry.Rectangle([0,0],100,100);
+this.geom.style=new OG.geometry.Style({stroke:"black"});
+return this.geom
+};
+this.clone=function(){return new OG.shape.bpmn.A_Subprocess(this.label)
+}
+};
+OG.shape.bpmn.A_Subprocess.prototype=new OG.shape.GroupShape();
+OG.shape.bpmn.A_Subprocess.prototype.constructor=OG.shape.bpmn.A_Subprocess;
+OG.A_Subprocess=OG.shape.bpmn.A_Subprocess;OG.shape.bpmn.A_Task=function(a){this.SHAPE_ID="OG.shape.bpmn.A_Task";
+this.label=a;
+this.createShape=function(){if(this.geom){return this.geom
+}this.geom=new OG.geometry.Rectangle([0,0],100,100);
+return this.geom
+};
+this.clone=function(){return new OG.shape.bpmn.A_Task(this.label)
+}
+};
+OG.shape.bpmn.A_Task.prototype=new OG.shape.GeomShape();
+OG.shape.bpmn.A_Task.prototype.constructor=OG.shape.bpmn.A_Task;
+OG.A_Task=OG.shape.bpmn.A_Task;OG.shape.bpmn.C_Association=function(c,b,a){this.SHAPE_ID="OG.shape.bpmn.C_Association";
+this.from=c;
+this.to=b;
+this.label=a;
+this.createShape=function(){if(this.geom){return this.geom
+}this.geom=new OG.Line(this.from||[0,0],this.to||[70,0]);
+this.geom.style=new OG.geometry.Style({"edge-type":"straight","arrow-start":"none","arrow-end":"none","stroke-dasharray":"."});
+return this.geom
+};
+this.clone=function(){return new OG.shape.bpmn.C_Association(this.from,this.to,this.label)
+}
+};
+OG.shape.bpmn.C_Association.prototype=new OG.shape.EdgeShape();
+OG.shape.bpmn.C_Association.prototype.constructor=OG.shape.bpmn.C_Association;
+OG.C_Association=OG.shape.bpmn.C_Association;OG.shape.bpmn.C_Conditional=function(c,b,a){this.SHAPE_ID="OG.shape.bpmn.C_Conditional";
+this.from=c;
+this.to=b;
+this.label=a;
+this.createShape=function(){if(this.geom){return this.geom
+}this.geom=new OG.Line(this.from||[0,0],this.to||[70,0]);
+this.geom.style=new OG.geometry.Style({"edge-type":"straight","arrow-start":"open_diamond-wide-long","arrow-end":"open_block-wide-long"});
+return this.geom
+};
+this.clone=function(){return new OG.shape.bpmn.C_Conditional(this.from,this.to,this.label)
+}
+};
+OG.shape.bpmn.C_Conditional.prototype=new OG.shape.EdgeShape();
+OG.shape.bpmn.C_Conditional.prototype.constructor=OG.shape.bpmn.C_Conditional;
+OG.C_Conditional=OG.shape.bpmn.C_Conditional;OG.shape.bpmn.C_DataAssociation=function(c,b,a){this.SHAPE_ID="OG.shape.bpmn.C_DataAssociation";
+this.from=c;
+this.to=b;
+this.label=a;
+this.createShape=function(){if(this.geom){return this.geom
+}this.geom=new OG.Line(this.from||[0,0],this.to||[70,0]);
+this.geom.style=new OG.geometry.Style({"edge-type":"straight","arrow-start":"none","arrow-end":"classic-wide-long","stroke-dasharray":"."});
+return this.geom
+};
+this.clone=function(){return new OG.shape.bpmn.C_DataAssociation(this.from,this.to,this.label)
+}
+};
+OG.shape.bpmn.C_DataAssociation.prototype=new OG.shape.EdgeShape();
+OG.shape.bpmn.C_DataAssociation.prototype.constructor=OG.shape.bpmn.C_DataAssociation;
+OG.C_DataAssociation=OG.shape.bpmn.C_DataAssociation;OG.shape.bpmn.C_Message=function(c,b,a){this.SHAPE_ID="OG.shape.bpmn.C_Message";
+this.from=c;
+this.to=b;
+this.label=a;
+this.createShape=function(){if(this.geom){return this.geom
+}this.geom=new OG.Line(this.from||[0,0],this.to||[80,0]);
+this.geom.style=new OG.geometry.Style({"edge-type":"straight","arrow-start":"open_oval-wide-long","arrow-end":"open_block-wide-long","stroke-dasharray":"."});
+return this.geom
+};
+this.clone=function(){return new OG.shape.bpmn.C_Message(this.from,this.to,this.label)
+}
+};
+OG.shape.bpmn.C_Message.prototype=new OG.shape.EdgeShape();
+OG.shape.bpmn.C_Message.prototype.constructor=OG.shape.bpmn.C_Message;
+OG.C_Message=OG.shape.bpmn.C_Message;OG.shape.bpmn.C_Sequence=function(c,b,a){this.SHAPE_ID="OG.shape.bpmn.C_Sequence";
+this.from=c;
+this.to=b;
+this.label=a;
+this.createShape=function(){if(this.geom){return this.geom
+}this.geom=new OG.Line(this.from||[0,0],this.to||[80,0]);
+this.geom.style=new OG.geometry.Style({"edge-type":"plain","arrow-start":"none","arrow-end":"classic-wide-long"});
+return this.geom
+};
+this.clone=function(){return new OG.shape.bpmn.C_Sequence(this.from,this.to,this.label)
+}
+};
+OG.shape.bpmn.C_Sequence.prototype=new OG.shape.EdgeShape();
+OG.shape.bpmn.C_Sequence.prototype.constructor=OG.shape.bpmn.C_Sequence;
+OG.C_Sequence=OG.shape.bpmn.C_Sequence;OG.shape.bpmn.D_Data=function(a){this.SHAPE_ID="OG.shape.bpmn.D_Data";
+this.label=a;
+this.createShape=function(){if(this.geom){return this.geom
+}this.geom=new OG.PolyLine([[0,0],[0,100],[100,100],[100,20],[80,0],[0,0],[80,0],[80,20],[100,20]]);
+return this.geom
+};
+this.clone=function(){return new OG.shape.bpmn.D_Data(this.label)
+}
+};
+OG.shape.bpmn.D_Data.prototype=new OG.shape.GeomShape();
+OG.shape.bpmn.D_Data.prototype.constructor=OG.shape.bpmn.D_Data;
+OG.D_Data=OG.shape.bpmn.D_Data;OG.shape.bpmn.D_Store=function(a){this.SHAPE_ID="OG.shape.bpmn.D_Store";
+this.label=a;
+this.createShape=function(){var g,f,e,d,b,c=[];
+if(this.geom){return this.geom
+}g=new OG.geometry.Ellipse([50,10],50,10);
+f=new OG.geometry.Line([0,10],[0,90]);
+e=new OG.geometry.Line([100,10],[100,90]);
+d=new OG.geometry.Curve([[100,90],[96,94],[85,97],[50,100],[15,97],[4,94],[0,90]]);
+b=new OG.geometry.Rectangle([0,10],100,80);
+b.style=new OG.geometry.Style({stroke:"none"});
+c.push(g);
+c.push(f);
+c.push(e);
+c.push(d);
+c.push(b);
+this.geom=new OG.geometry.GeometryCollection(c);
+return this.geom
+};
+this.clone=function(){return new OG.shape.bpmn.D_Store(this.label)
+}
+};
+OG.shape.bpmn.D_Store.prototype=new OG.shape.GeomShape();
+OG.shape.bpmn.D_Store.prototype.constructor=OG.shape.bpmn.D_Store;
+OG.D_Store=OG.shape.bpmn.D_Store;OG.shape.bpmn.E_End=function(a){this.SHAPE_ID="OG.shape.bpmn.E_End";
+this.label=a;
+this.createShape=function(){if(this.geom){return this.geom
+}this.geom=new OG.geometry.Circle([50,50],50);
+this.geom.style=new OG.geometry.Style({"stroke-width":3,"label-position":"bottom"});
+return this.geom
+};
+this.clone=function(){return new OG.shape.bpmn.E_End(this.label)
+}
+};
+OG.shape.bpmn.E_End.prototype=new OG.shape.GeomShape();
+OG.shape.bpmn.E_End.prototype.constructor=OG.shape.bpmn.E_End;
+OG.E_End=OG.shape.bpmn.E_End;OG.shape.bpmn.E_End_Cancel=function(a){this.SHAPE_ID="OG.shape.bpmn.E_End_Cancel";
+this.label=a;
+this.createShape=function(){var e,d,c,b=[];
+if(this.geom){return this.geom
+}e=new OG.geometry.Circle([50,50],50);
+e.style=new OG.geometry.Style({"stroke-width":3});
+d=new OG.geometry.Line([25,25],[75,75]);
+d.style=new OG.geometry.Style({"stroke-width":5});
+c=new OG.geometry.Line([25,75],[75,25]);
+c.style=new OG.geometry.Style({"stroke-width":5});
+b.push(e);
+b.push(d);
+b.push(c);
+this.geom=new OG.geometry.GeometryCollection(b);
+this.geom.style=new OG.geometry.Style({"label-position":"bottom"});
+return this.geom
+};
+this.clone=function(){return new OG.shape.bpmn.E_End_Cancel(this.label)
+}
+};
+OG.shape.bpmn.E_End_Cancel.prototype=new OG.shape.GeomShape();
+OG.shape.bpmn.E_End_Cancel.prototype.constructor=OG.shape.bpmn.E_End_Cancel;
+OG.E_End_Cancel=OG.shape.bpmn.E_End_Cancel;OG.shape.bpmn.E_End_Compensation=function(a){this.SHAPE_ID="OG.shape.bpmn.E_End_Compensation";
+this.label=a;
+this.createShape=function(){var e,d,c,b=[];
+if(this.geom){return this.geom
+}e=new OG.geometry.Circle([50,50],50);
+e.style=new OG.geometry.Style({"stroke-width":3});
+d=new OG.geometry.Polygon([[15,50],[45,70],[45,30]]);
+d.style=new OG.geometry.Style({fill:"black","fill-opacity":1});
+c=new OG.geometry.Polygon([[45,50],[75,70],[75,30]]);
+c.style=new OG.geometry.Style({fill:"black","fill-opacity":1});
+b.push(e);
+b.push(d);
+b.push(c);
+this.geom=new OG.geometry.GeometryCollection(b);
+this.geom.style=new OG.geometry.Style({"label-position":"bottom"});
+return this.geom
+};
+this.clone=function(){return new OG.shape.bpmn.E_End_Compensation(this.label)
+}
+};
+OG.shape.bpmn.E_End_Compensation.prototype=new OG.shape.GeomShape();
+OG.shape.bpmn.E_End_Compensation.prototype.constructor=OG.shape.bpmn.E_End_Compensation;
+OG.E_End_Compensation=OG.shape.bpmn.E_End_Compensation;OG.shape.bpmn.E_End_Error=function(a){this.SHAPE_ID="OG.shape.bpmn.E_End_Error";
+this.label=a;
+this.createShape=function(){var d,c,b=[];
+if(this.geom){return this.geom
+}d=new OG.geometry.Circle([50,50],50);
+d.style=new OG.geometry.Style({"stroke-width":3});
+c=new OG.geometry.PolyLine([[20,75],[40,40],[60,60],[80,20]]);
+c.style=new OG.geometry.Style({"stroke-width":2});
+b.push(d);
+b.push(c);
+this.geom=new OG.geometry.GeometryCollection(b);
+this.geom.style=new OG.geometry.Style({"label-position":"bottom"});
+return this.geom
+};
+this.clone=function(){return new OG.shape.bpmn.E_End_Error(this.label)
+}
+};
+OG.shape.bpmn.E_End_Error.prototype=new OG.shape.GeomShape();
+OG.shape.bpmn.E_End_Error.prototype.constructor=OG.shape.bpmn.E_End_Error;
+OG.E_End_Error=OG.shape.bpmn.E_End_Error;OG.shape.bpmn.E_End_Link=function(a){this.SHAPE_ID="OG.shape.bpmn.E_End_Link";
+this.label=a;
+this.createShape=function(){var d,c,b=[];
+if(this.geom){return this.geom
+}d=new OG.geometry.Circle([50,50],50);
+d.style=new OG.geometry.Style({"stroke-width":3});
+c=new OG.geometry.Polygon([[20,40],[20,60],[60,60],[60,80],[85,50],[60,20],[60,40]]);
+c.style=new OG.geometry.Style({fill:"black","fill-opacity":1});
+b.push(d);
+b.push(c);
+this.geom=new OG.geometry.GeometryCollection(b);
+this.geom.style=new OG.geometry.Style({"label-position":"bottom"});
+return this.geom
+};
+this.clone=function(){return new OG.shape.bpmn.E_End_Link(this.label)
+}
+};
+OG.shape.bpmn.E_End_Link.prototype=new OG.shape.GeomShape();
+OG.shape.bpmn.E_End_Link.prototype.constructor=OG.shape.bpmn.E_End_Link;
+OG.E_End_Link=OG.shape.bpmn.E_End_Link;OG.shape.bpmn.E_End_Message=function(a){this.SHAPE_ID="OG.shape.bpmn.E_End_Message";
+this.label=a;
+this.createShape=function(){var d,c,b=[];
+if(this.geom){return this.geom
+}d=new OG.geometry.Circle([50,50],50);
+d.style=new OG.geometry.Style({"stroke-width":3});
+c=new OG.geometry.PolyLine([[20,30],[20,70],[80,70],[80,30],[20,30],[50,50],[80,30]]);
+b.push(d);
+b.push(c);
+this.geom=new OG.geometry.GeometryCollection(b);
+this.geom.style=new OG.geometry.Style({"label-position":"bottom"});
+return this.geom
+};
+this.clone=function(){return new OG.shape.bpmn.E_End_Message(this.label)
+}
+};
+OG.shape.bpmn.E_End_Message.prototype=new OG.shape.GeomShape();
+OG.shape.bpmn.E_End_Message.prototype.constructor=OG.shape.bpmn.E_End_Message;
+OG.E_End_Message=OG.shape.bpmn.E_End_Message;OG.shape.bpmn.E_End_Multiple=function(a){this.SHAPE_ID="OG.shape.bpmn.E_End_Multiple";
+this.label=a;
+this.createShape=function(){var d,c,b=[];
+if(this.geom){return this.geom
+}d=new OG.geometry.Circle([50,50],50);
+d.style=new OG.geometry.Style({"stroke-width":3});
+c=new OG.geometry.Polygon([[50,15],[39,33],[20,33],[29,50],[19,67],[40,67],[50,85],[60,68],[80,68],[70,50],[79,33],[60,33]]);
+c.style=new OG.geometry.Style({fill:"black","fill-opacity":1});
+b.push(d);
+b.push(c);
+this.geom=new OG.geometry.GeometryCollection(b);
+this.geom.style=new OG.geometry.Style({"label-position":"bottom"});
+return this.geom
+};
+this.clone=function(){return new OG.shape.bpmn.E_End_Multiple(this.label)
+}
+};
+OG.shape.bpmn.E_End_Multiple.prototype=new OG.shape.GeomShape();
+OG.shape.bpmn.E_End_Multiple.prototype.constructor=OG.shape.bpmn.E_End_Multiple;
+OG.E_End_Multiple=OG.shape.bpmn.E_End_Multiple;OG.shape.bpmn.E_Intermediate=function(a){this.SHAPE_ID="OG.shape.bpmn.E_Intermediate";
+this.label=a;
+this.createShape=function(){var b=[];
+if(this.geom){return this.geom
+}b.push(new OG.geometry.Circle([50,50],50));
+b.push(new OG.geometry.Circle([50,50],42));
+this.geom=new OG.geometry.GeometryCollection(b);
+this.geom.style=new OG.geometry.Style({"label-position":"bottom"});
+return this.geom
+};
+this.clone=function(){return new OG.shape.bpmn.E_Intermediate(this.label)
+}
+};
+OG.shape.bpmn.E_Intermediate.prototype=new OG.shape.GeomShape();
+OG.shape.bpmn.E_Intermediate.prototype.constructor=OG.shape.bpmn.E_Intermediate;
+OG.E_Intermediate=OG.shape.bpmn.E_Intermediate;OG.shape.bpmn.E_Intermediate_Compensation=function(a){this.SHAPE_ID="OG.shape.bpmn.E_Intermediate_Compensation";
+this.label=a;
+this.createShape=function(){var d,c,b=[];
+if(this.geom){return this.geom
+}d=new OG.geometry.Polygon([[15,50],[45,70],[45,30]]);
+c=new OG.geometry.Polygon([[45,50],[75,70],[75,30]]);
+b.push(new OG.geometry.Circle([50,50],50));
+b.push(new OG.geometry.Circle([50,50],42));
+b.push(d);
+b.push(c);
+this.geom=new OG.geometry.GeometryCollection(b);
+this.geom.style=new OG.geometry.Style({"label-position":"bottom"});
+return this.geom
+};
+this.clone=function(){return new OG.shape.bpmn.E_Intermediate_Compensation(this.label)
+}
+};
+OG.shape.bpmn.E_Intermediate_Compensation.prototype=new OG.shape.GeomShape();
+OG.shape.bpmn.E_Intermediate_Compensation.prototype.constructor=OG.shape.bpmn.E_Intermediate_Compensation;
+OG.E_Intermediate_Compensation=OG.shape.bpmn.E_Intermediate_Compensation;OG.shape.bpmn.E_Intermediate_Error=function(a){this.SHAPE_ID="OG.shape.bpmn.E_Intermediate_Error";
+this.label=a;
+this.createShape=function(){var c,b=[];
+if(this.geom){return this.geom
+}c=new OG.geometry.PolyLine([[20,75],[40,40],[60,60],[80,20]]);
+b.push(new OG.geometry.Circle([50,50],50));
+b.push(new OG.geometry.Circle([50,50],42));
+b.push(c);
+this.geom=new OG.geometry.GeometryCollection(b);
+this.geom.style=new OG.geometry.Style({"label-position":"bottom"});
+return this.geom
+};
+this.clone=function(){return new OG.shape.bpmn.E_Intermediate_Error(this.label)
+}
+};
+OG.shape.bpmn.E_Intermediate_Error.prototype=new OG.shape.GeomShape();
+OG.shape.bpmn.E_Intermediate_Error.prototype.constructor=OG.shape.bpmn.E_Intermediate_Error;
+OG.E_Intermediate_Error=OG.shape.bpmn.E_Intermediate_Error;OG.shape.bpmn.E_Intermediate_Link=function(a){this.SHAPE_ID="OG.shape.bpmn.E_Intermediate_Link";
+this.label=a;
+this.createShape=function(){var c,b=[];
+if(this.geom){return this.geom
+}c=new OG.geometry.Polygon([[20,40],[20,60],[60,60],[60,80],[85,50],[60,20],[60,40]]);
+b.push(new OG.geometry.Circle([50,50],50));
+b.push(new OG.geometry.Circle([50,50],42));
+b.push(c);
+this.geom=new OG.geometry.GeometryCollection(b);
+this.geom.style=new OG.geometry.Style({"label-position":"bottom"});
+return this.geom
+};
+this.clone=function(){return new OG.shape.bpmn.E_Intermediate_Link(this.label)
+}
+};
+OG.shape.bpmn.E_Intermediate_Link.prototype=new OG.shape.GeomShape();
+OG.shape.bpmn.E_Intermediate_Link.prototype.constructor=OG.shape.bpmn.E_Intermediate_Link;
+OG.E_Intermediate_Link=OG.shape.bpmn.E_Intermediate_Link;OG.shape.bpmn.E_Intermediate_Message=function(a){this.SHAPE_ID="OG.shape.bpmn.E_Intermediate_Message";
+this.label=a;
+this.createShape=function(){var c,b=[];
+if(this.geom){return this.geom
+}c=new OG.geometry.PolyLine([[20,30],[20,70],[80,70],[80,30],[20,30],[50,50],[80,30]]);
+b.push(new OG.geometry.Circle([50,50],50));
+b.push(new OG.geometry.Circle([50,50],42));
+b.push(c);
+this.geom=new OG.geometry.GeometryCollection(b);
+this.geom.style=new OG.geometry.Style({"label-position":"bottom"});
+return this.geom
+};
+this.clone=function(){return new OG.shape.bpmn.E_Intermediate_Message(this.label)
+}
+};
+OG.shape.bpmn.E_Intermediate_Message.prototype=new OG.shape.GeomShape();
+OG.shape.bpmn.E_Intermediate_Message.prototype.constructor=OG.shape.bpmn.E_Intermediate_Message;
+OG.E_Intermediate_Message=OG.shape.bpmn.E_Intermediate_Message;OG.shape.bpmn.E_Intermediate_Multiple=function(a){this.SHAPE_ID="OG.shape.bpmn.E_Intermediate_Multiple";
+this.label=a;
+this.createShape=function(){var c,b=[];
+if(this.geom){return this.geom
+}c=new OG.geometry.Polygon([[50,15],[39,33],[20,33],[29,50],[19,67],[40,67],[50,85],[60,68],[80,68],[70,50],[79,33],[60,33]]);
+b.push(new OG.geometry.Circle([50,50],50));
+b.push(new OG.geometry.Circle([50,50],42));
+b.push(c);
+this.geom=new OG.geometry.GeometryCollection(b);
+this.geom.style=new OG.geometry.Style({"label-position":"bottom"});
+return this.geom
+};
+this.clone=function(){return new OG.shape.bpmn.E_Intermediate_Multiple(this.label)
+}
+};
+OG.shape.bpmn.E_Intermediate_Multiple.prototype=new OG.shape.GeomShape();
+OG.shape.bpmn.E_Intermediate_Multiple.prototype.constructor=OG.shape.bpmn.E_Intermediate_Multiple;
+OG.E_Intermediate_Multiple=OG.shape.bpmn.E_Intermediate_Multiple;OG.shape.bpmn.E_Intermediate_Rule=function(a){this.SHAPE_ID="OG.shape.bpmn.E_Intermediate_Rule";
+this.label=a;
+this.createShape=function(){var c,b=[];
+if(this.geom){return this.geom
+}c=new OG.geometry.Rectangle([25,20],50,60);
+b.push(new OG.geometry.Circle([50,50],50));
+b.push(new OG.geometry.Circle([50,50],42));
+b.push(c);
+b.push(new OG.geometry.Line([30,30],[70,30]));
+b.push(new OG.geometry.Line([30,45],[70,45]));
+b.push(new OG.geometry.Line([30,60],[70,60]));
+b.push(new OG.geometry.Line([30,70],[70,70]));
+this.geom=new OG.geometry.GeometryCollection(b);
+this.geom.style=new OG.geometry.Style({"label-position":"bottom"});
+return this.geom
+};
+this.clone=function(){return new OG.shape.bpmn.E_Intermediate_Rule(this.label)
+}
+};
+OG.shape.bpmn.E_Intermediate_Rule.prototype=new OG.shape.GeomShape();
+OG.shape.bpmn.E_Intermediate_Rule.prototype.constructor=OG.shape.bpmn.E_Intermediate_Rule;
+OG.E_Intermediate_Rule=OG.shape.bpmn.E_Intermediate_Rule;OG.shape.bpmn.E_Intermediate_Timer=function(a){this.SHAPE_ID="OG.shape.bpmn.E_Intermediate_Timer";
+this.label=a;
+this.createShape=function(){var d,c,b=[];
+if(this.geom){return this.geom
+}d=new OG.geometry.Circle([50,50],32);
+c=new OG.geometry.PolyLine([[50,30],[50,50],[70,50]]);
+b.push(new OG.geometry.Circle([50,50],50));
+b.push(new OG.geometry.Circle([50,50],42));
+b.push(d);
+b.push(new OG.geometry.Line([50,18],[50,25]));
+b.push(new OG.geometry.Line([50,82],[50,75]));
+b.push(new OG.geometry.Line([18,50],[25,50]));
+b.push(new OG.geometry.Line([82,50],[75,50]));
+b.push(c);
+this.geom=new OG.geometry.GeometryCollection(b);
+this.geom.style=new OG.geometry.Style({"label-position":"bottom"});
+return this.geom
+};
+this.clone=function(){return new OG.shape.bpmn.E_Intermediate_Timer(this.label)
+}
+};
+OG.shape.bpmn.E_Intermediate_Timer.prototype=new OG.shape.GeomShape();
+OG.shape.bpmn.E_Intermediate_Timer.prototype.constructor=OG.shape.bpmn.E_Intermediate_Timer;
+OG.E_Intermediate_Timer=OG.shape.bpmn.E_Intermediate_Timer;OG.shape.bpmn.E_Start=function(a){this.SHAPE_ID="OG.shape.bpmn.E_Start";
+this.label=a;
+this.createShape=function(){if(this.geom){return this.geom
+}this.geom=new OG.geometry.Circle([50,50],50);
+this.geom.style=new OG.geometry.Style({"label-position":"bottom"});
+return this.geom
+};
+this.clone=function(){return new OG.shape.bpmn.E_Start(this.label)
+}
+};
+OG.shape.bpmn.E_Start.prototype=new OG.shape.GeomShape();
+OG.shape.bpmn.E_Start.prototype.constructor=OG.shape.bpmn.E_Start;
+OG.E_Start=OG.shape.bpmn.E_Start;OG.shape.bpmn.E_Start_Link=function(a){this.SHAPE_ID="OG.shape.bpmn.E_Start_Link";
+this.label=a;
+this.createShape=function(){var d,c,b=[];
+if(this.geom){return this.geom
+}d=new OG.geometry.Circle([50,50],50);
+d.style=new OG.geometry.Style({"stroke-width":1});
+c=new OG.geometry.Polygon([[20,40],[20,60],[60,60],[60,80],[85,50],[60,20],[60,40]]);
+b.push(d);
+b.push(c);
+this.geom=new OG.geometry.GeometryCollection(b);
+this.geom.style=new OG.geometry.Style({"label-position":"bottom"});
+return this.geom
+};
+this.clone=function(){return new OG.shape.bpmn.E_Start_Link(this.label)
+}
+};
+OG.shape.bpmn.E_Start_Link.prototype=new OG.shape.GeomShape();
+OG.shape.bpmn.E_Start_Link.prototype.constructor=OG.shape.bpmn.E_Start_Link;
+OG.E_Start_Link=OG.shape.bpmn.E_Start_Link;OG.shape.bpmn.E_Start_Message=function(a){this.SHAPE_ID="OG.shape.bpmn.E_Start_Message";
+this.label=a;
+this.createShape=function(){var d,c,b=[];
+if(this.geom){return this.geom
+}d=new OG.geometry.Circle([50,50],50);
+c=new OG.geometry.PolyLine([[20,30],[20,70],[80,70],[80,30],[20,30],[50,50],[80,30]]);
+b.push(d);
+b.push(c);
+this.geom=new OG.geometry.GeometryCollection(b);
+this.geom.style=new OG.geometry.Style({"label-position":"bottom"});
+return this.geom
+};
+this.clone=function(){return new OG.shape.bpmn.E_Start_Message(this.label)
+}
+};
+OG.shape.bpmn.E_Start_Message.prototype=new OG.shape.GeomShape();
+OG.shape.bpmn.E_Start_Message.prototype.constructor=OG.shape.bpmn.E_Start_Message;
+OG.E_Start_Message=OG.shape.bpmn.E_Start_Message;OG.shape.bpmn.E_Start_Multiple=function(a){this.SHAPE_ID="OG.shape.bpmn.E_Start_Multiple";
+this.label=a;
+this.createShape=function(){var d,c,b=[];
+if(this.geom){return this.geom
+}d=new OG.geometry.Circle([50,50],50);
+c=new OG.geometry.Polygon([[50,15],[39,33],[20,33],[29,50],[19,67],[40,67],[50,85],[60,68],[80,68],[70,50],[79,33],[60,33]]);
+b.push(d);
+b.push(c);
+this.geom=new OG.geometry.GeometryCollection(b);
+this.geom.style=new OG.geometry.Style({"label-position":"bottom"});
+return this.geom
+};
+this.clone=function(){return new OG.shape.bpmn.E_Start_Multiple(this.label)
+}
+};
+OG.shape.bpmn.E_Start_Multiple.prototype=new OG.shape.GeomShape();
+OG.shape.bpmn.E_Start_Multiple.prototype.constructor=OG.shape.bpmn.E_Start_Multiple;
+OG.E_Start_Multiple=OG.shape.bpmn.E_Start_Multiple;OG.shape.bpmn.E_Start_Rule=function(a){this.SHAPE_ID="OG.shape.bpmn.E_Start_Rule";
+this.label=a;
+this.createShape=function(){var d,c,b=[];
+if(this.geom){return this.geom
+}d=new OG.geometry.Circle([50,50],50);
+d.style=new OG.geometry.Style({"stroke-width":1});
+c=new OG.geometry.Rectangle([25,20],50,60);
+b.push(d);
+b.push(c);
+b.push(new OG.geometry.Line([30,30],[70,30]));
+b.push(new OG.geometry.Line([30,45],[70,45]));
+b.push(new OG.geometry.Line([30,60],[70,60]));
+b.push(new OG.geometry.Line([30,70],[70,70]));
+this.geom=new OG.geometry.GeometryCollection(b);
+this.geom.style=new OG.geometry.Style({"label-position":"bottom"});
+return this.geom
+};
+this.clone=function(){return new OG.shape.bpmn.E_Start_Rule(this.label)
+}
+};
+OG.shape.bpmn.E_Start_Rule.prototype=new OG.shape.GeomShape();
+OG.shape.bpmn.E_Start_Rule.prototype.constructor=OG.shape.bpmn.E_Start_Rule;
+OG.E_Start_Rule=OG.shape.bpmn.E_Start_Rule;OG.shape.bpmn.E_Start_Timer=function(a){this.SHAPE_ID="OG.shape.bpmn.E_Start_Timer";
+this.label=a;
+this.createShape=function(){var e,d,c,b=[];
+if(this.geom){return this.geom
+}e=new OG.geometry.Circle([50,50],50);
+e.style=new OG.geometry.Style({"stroke-width":1});
+d=new OG.geometry.Circle([50,50],32);
+c=new OG.geometry.PolyLine([[50,30],[50,50],[70,50]]);
+b.push(e);
+b.push(d);
+b.push(new OG.geometry.Line([50,18],[50,25]));
+b.push(new OG.geometry.Line([50,82],[50,75]));
+b.push(new OG.geometry.Line([18,50],[25,50]));
+b.push(new OG.geometry.Line([82,50],[75,50]));
+b.push(c);
+this.geom=new OG.geometry.GeometryCollection(b);
+this.geom.style=new OG.geometry.Style({"label-position":"bottom"});
+return this.geom
+};
+this.clone=function(){return new OG.shape.bpmn.E_Start_Timer(this.label)
+}
+};
+OG.shape.bpmn.E_Start_Timer.prototype=new OG.shape.GeomShape();
+OG.shape.bpmn.E_Start_Timer.prototype.constructor=OG.shape.bpmn.E_Start_Timer;
+OG.E_Start_Timer=OG.shape.bpmn.E_Start_Timer;OG.shape.bpmn.E_Terminate=function(a){this.SHAPE_ID="OG.shape.bpmn.E_Terminate";
+this.label=a;
+this.createShape=function(){var d,c,b=[];
+if(this.geom){return this.geom
+}d=new OG.geometry.Circle([50,50],50);
+d.style=new OG.geometry.Style({"stroke-width":3});
+c=new OG.geometry.Circle([50,50],30);
+c.style=new OG.geometry.Style({fill:"black","fill-opacity":1});
+b.push(d);
+b.push(c);
+this.geom=new OG.geometry.GeometryCollection(b);
+this.geom.style=new OG.geometry.Style({"label-position":"bottom"});
+return this.geom
+};
+this.clone=function(){return new OG.shape.bpmn.E_Terminate(this.label)
+}
+};
+OG.shape.bpmn.E_Terminate.prototype=new OG.shape.GeomShape();
+OG.shape.bpmn.E_Terminate.prototype.constructor=OG.shape.bpmn.E_Terminate;
+OG.E_Terminate=OG.shape.bpmn.E_Terminate;OG.shape.bpmn.G_Complex=function(a){this.SHAPE_ID="OG.shape.bpmn.G_Complex";
+this.label=a;
+this.createShape=function(){var g,f,e,d,b,c=[];
+if(this.geom){return this.geom
+}g=new OG.geometry.Polygon([[0,50],[50,100],[100,50],[50,0]]);
+f=new OG.geometry.Line([30,30],[70,70]);
+f.style=new OG.geometry.Style({"stroke-width":3});
+e=new OG.geometry.Line([30,70],[70,30]);
+e.style=new OG.geometry.Style({"stroke-width":3});
+d=new OG.geometry.Line([20,50],[80,50]);
+d.style=new OG.geometry.Style({"stroke-width":3});
+b=new OG.geometry.Line([50,20],[50,80]);
+b.style=new OG.geometry.Style({"stroke-width":3});
+c.push(g);
+c.push(f);
+c.push(e);
+c.push(d);
+c.push(b);
+this.geom=new OG.geometry.GeometryCollection(c);
+return this.geom
+};
+this.clone=function(){return new OG.shape.bpmn.G_Complex(this.label)
+}
+};
+OG.shape.bpmn.G_Complex.prototype=new OG.shape.GeomShape();
+OG.shape.bpmn.G_Complex.prototype.constructor=OG.shape.bpmn.G_Complex;
+OG.G_Complex=OG.shape.bpmn.G_Complex;OG.shape.bpmn.G_Exclusive=function(a){this.SHAPE_ID="OG.shape.bpmn.G_Exclusive";
+this.label=a;
+this.createShape=function(){var e,d,c,b=[];
+if(this.geom){return this.geom
+}e=new OG.geometry.Polygon([[0,50],[50,100],[100,50],[50,0]]);
+d=new OG.geometry.Line([30,30],[70,70]);
+d.style=new OG.geometry.Style({"stroke-width":5});
+c=new OG.geometry.Line([30,70],[70,30]);
+c.style=new OG.geometry.Style({"stroke-width":5});
+b.push(e);
+b.push(d);
+b.push(c);
+this.geom=new OG.geometry.GeometryCollection(b);
+return this.geom
+};
+this.clone=function(){return new OG.shape.bpmn.G_Exclusive(this.label)
+}
+};
+OG.shape.bpmn.G_Exclusive.prototype=new OG.shape.GeomShape();
+OG.shape.bpmn.G_Exclusive.prototype.constructor=OG.shape.bpmn.G_Exclusive;
+OG.G_Exclusive=OG.shape.bpmn.G_Exclusive;OG.shape.bpmn.G_Gateway=function(a){this.SHAPE_ID="OG.shape.bpmn.G_Gateway";
+this.label=a;
+this.createShape=function(){if(this.geom){return this.geom
+}this.geom=new OG.geometry.Polygon([[0,50],[50,100],[100,50],[50,0]]);
+return this.geom
+};
+this.clone=function(){return new OG.shape.bpmn.G_Gateway(this.label)
+}
+};
+OG.shape.bpmn.G_Gateway.prototype=new OG.shape.GeomShape();
+OG.shape.bpmn.G_Gateway.prototype.constructor=OG.shape.bpmn.G_Gateway;
+OG.G_Gateway=OG.shape.bpmn.G_Gateway;OG.shape.bpmn.G_Inclusive=function(a){this.SHAPE_ID="OG.shape.bpmn.G_Inclusive";
+this.label=a;
+this.createShape=function(){var d,c,b=[];
+if(this.geom){return this.geom
+}d=new OG.geometry.Polygon([[0,50],[50,100],[100,50],[50,0]]);
+c=new OG.geometry.Circle([50,50],25);
+c.style=new OG.geometry.Style({"stroke-width":3});
+b.push(d);
+b.push(c);
+this.geom=new OG.geometry.GeometryCollection(b);
+return this.geom
+};
+this.clone=function(){return new OG.shape.bpmn.G_Inclusive(this.label)
+}
+};
+OG.shape.bpmn.G_Inclusive.prototype=new OG.shape.GeomShape();
+OG.shape.bpmn.G_Inclusive.prototype.constructor=OG.shape.bpmn.G_Inclusive;
+OG.G_Inclusive=OG.shape.bpmn.G_Inclusive;OG.shape.bpmn.G_Parallel=function(a){this.SHAPE_ID="OG.shape.bpmn.G_Parallel";
+this.label=a;
+this.createShape=function(){var e,d,c,b=[];
+if(this.geom){return this.geom
+}e=new OG.geometry.Polygon([[0,50],[50,100],[100,50],[50,0]]);
+d=new OG.geometry.Line([20,50],[80,50]);
+d.style=new OG.geometry.Style({"stroke-width":5});
+c=new OG.geometry.Line([50,20],[50,80]);
+c.style=new OG.geometry.Style({"stroke-width":5});
+b.push(e);
+b.push(d);
+b.push(c);
+this.geom=new OG.geometry.GeometryCollection(b);
+return this.geom
+};
+this.clone=function(){return new OG.shape.bpmn.G_Parallel(this.label)
+}
+};
+OG.shape.bpmn.G_Parallel.prototype=new OG.shape.GeomShape();
+OG.shape.bpmn.G_Parallel.prototype.constructor=OG.shape.bpmn.G_Parallel;
+OG.G_Parallel=OG.shape.bpmn.G_Parallel;OG.shape.bpmn.M_Annotation=function(a){this.SHAPE_ID="OG.shape.bpmn.M_Annotation";
+this.label=a||"Annotation";
+this.createShape=function(){if(this.geom){return this.geom
+}var d,c,b=[];
+if(this.geom){return this.geom
+}d=new OG.geometry.Rectangle([0,0],100,100);
+d.style=new OG.geometry.Style({stroke:"none"});
+c=new OG.geometry.PolyLine([[10,0],[0,0],[0,100],[10,100]]);
+c.style=new OG.geometry.Style({stroke:"black"});
+b.push(d);
+b.push(c);
+this.geom=new OG.geometry.GeometryCollection(b);
+this.geom.style=new OG.geometry.Style({});
+return this.geom
+};
+this.clone=function(){return new OG.shape.bpmn.M_Annotation(this.label)
+}
+};
+OG.shape.bpmn.M_Annotation.prototype=new OG.shape.GeomShape();
+OG.shape.bpmn.M_Annotation.prototype.constructor=OG.shape.bpmn.M_Annotation;
+OG.M_Annotation=OG.shape.bpmn.M_Annotation;OG.shape.bpmn.M_Group=function(a){this.SHAPE_ID="OG.shape.bpmn.M_Group";
+this.label=a;
+this.createShape=function(){if(this.geom){return this.geom
+}this.geom=new OG.geometry.Rectangle([0,0],100,100);
+this.geom.style=new OG.geometry.Style({"stroke-dasharray":"-"});
+return this.geom
+};
+this.clone=function(){return new OG.shape.bpmn.M_Group(this.label)
+}
+};
+OG.shape.bpmn.M_Group.prototype=new OG.shape.GeomShape();
+OG.shape.bpmn.M_Group.prototype.constructor=OG.shape.bpmn.M_Group;
+OG.M_Group=OG.shape.bpmn.M_Group;OG.shape.bpmn.M_Text=function(a){this.SHAPE_ID="OG.shape.bpmn.M_Text";
+this.label=a||"Text";
+this.createShape=function(){if(this.geom){return this.geom
+}this.geom=new OG.geometry.Rectangle([0,0],100,100);
+this.geom.style=new OG.geometry.Style({stroke:"none"});
+return this.geom
+};
+this.clone=function(){return new OG.shape.bpmn.M_Text(this.label)
+}
+};
+OG.shape.bpmn.M_Text.prototype=new OG.shape.GeomShape();
+OG.shape.bpmn.M_Text.prototype.constructor=OG.shape.bpmn.M_Text;
+OG.M_Text=OG.shape.bpmn.M_Text;OG.renderer.IRenderer=function(){this.drawShape=function(a,b,c,d,e){throw new OG.NotImplementedException()
 };
 this.drawGeom=function(b,a,c){throw new OG.NotImplementedException()
 };
@@ -1155,58 +1850,60 @@ w--){t(u(x[w].id))
 }}};
 u=function(v){return r.get(v)
 };
-d=function(C,E,w){var A=0,F="",D,B,x,y,v,z={};
-OG.Util.apply(z,(w instanceof OG.geometry.Style)?w.map:w||{},E.style.map);
-E.style.map=z;
+d=function(C,E,w,F){var A=0,G="",D,B,x,y,v,z={};
+if(F){OG.Util.apply(z,(w instanceof OG.geometry.Style)?w.map:w||{},OG.Util.apply({},E.style.map,OG.Util.apply({},F,OG.Constants.DEFAULT_STYLE.GEOM)))
+}else{OG.Util.apply(z,(w instanceof OG.geometry.Style)?w.map:w||{},OG.Util.apply({},E.style.map,OG.Constants.DEFAULT_STYLE.GEOM))
+}E.style.map=z;
 switch(E.TYPE){case OG.Constants.GEOM_TYPE.POINT:B=o.circle(E.coordinate.x,E.coordinate.y,0.5);
 B.attr(z);
 break;
-case OG.Constants.GEOM_TYPE.LINE:case OG.Constants.GEOM_TYPE.POLYLINE:case OG.Constants.GEOM_TYPE.POLYGON:case OG.Constants.GEOM_TYPE.RECTANGLE:F="";
+case OG.Constants.GEOM_TYPE.LINE:case OG.Constants.GEOM_TYPE.POLYLINE:case OG.Constants.GEOM_TYPE.POLYGON:case OG.Constants.GEOM_TYPE.RECTANGLE:G="";
 D=E.getVertices();
 for(A=0;
 A<D.length;
-A++){if(A===0){F="M"+D[A].x+" "+D[A].y
-}else{F+="L"+D[A].x+" "+D[A].y
-}}B=o.path(F);
+A++){if(A===0){G="M"+D[A].x+" "+D[A].y
+}else{G+="L"+D[A].x+" "+D[A].y
+}}B=o.path(G);
 B.attr(z);
 break;
 case OG.Constants.GEOM_TYPE.CIRCLE:x=OG.JSON.decode(E.toString());
 if(x.type===OG.Constants.GEOM_NAME[OG.Constants.GEOM_TYPE.CIRCLE]){B=o.circle(x.center[0],x.center[1],x.radius)
 }else{if(x.type===OG.Constants.GEOM_NAME[OG.Constants.GEOM_TYPE.ELLIPSE]){if(x.angle===0){B=o.ellipse(x.center[0],x.center[1],x.radiusX,x.radiusY)
-}else{F="";
+}else{G="";
 D=E.getControlPoints();
-F="M"+D[1].x+" "+D[1].y+"A"+x.radiusX+" "+x.radiusY+" "+x.angle+" 1 0 "+D[5].x+" "+D[5].y;
-F+="M"+D[1].x+" "+D[1].y+"A"+x.radiusX+" "+x.radiusY+" "+x.angle+" 1 1 "+D[5].x+" "+D[5].y;
-B=o.path(F)
+G="M"+D[1].x+" "+D[1].y+"A"+x.radiusX+" "+x.radiusY+" "+x.angle+" 1 0 "+D[5].x+" "+D[5].y;
+G+="M"+D[1].x+" "+D[1].y+"A"+x.radiusX+" "+x.radiusY+" "+x.angle+" 1 1 "+D[5].x+" "+D[5].y;
+B=o.path(G)
 }}}B.attr(z);
 break;
 case OG.Constants.GEOM_TYPE.ELLIPSE:x=OG.JSON.decode(E.toString());
 if(x.angle===0){B=o.ellipse(x.center[0],x.center[1],x.radiusX,x.radiusY)
-}else{F="";
+}else{G="";
 D=E.getControlPoints();
-F="M"+D[1].x+" "+D[1].y+"A"+x.radiusX+" "+x.radiusY+" "+x.angle+" 1 0 "+D[5].x+" "+D[5].y;
-F+="M"+D[1].x+" "+D[1].y+"A"+x.radiusX+" "+x.radiusY+" "+x.angle+" 1 1 "+D[5].x+" "+D[5].y;
-B=o.path(F)
+G="M"+D[1].x+" "+D[1].y+"A"+x.radiusX+" "+x.radiusY+" "+x.angle+" 1 0 "+D[5].x+" "+D[5].y;
+G+="M"+D[1].x+" "+D[1].y+"A"+x.radiusX+" "+x.radiusY+" "+x.angle+" 1 1 "+D[5].x+" "+D[5].y;
+B=o.path(G)
 }B.attr(z);
 break;
-case OG.Constants.GEOM_TYPE.CURVE:F="";
+case OG.Constants.GEOM_TYPE.CURVE:G="";
 D=E.getControlPoints();
 for(A=0;
 A<D.length;
-A++){if(A===0){F="M"+D[A].x+" "+D[A].y
-}else{if(A===1){F+="R"+D[A].x+" "+D[A].y
-}else{F+=" "+D[A].x+" "+D[A].y
-}}}B=o.path(F);
+A++){if(A===0){G="M"+D[A].x+" "+D[A].y
+}else{if(A===1){G+="R"+D[A].x+" "+D[A].y
+}else{G+=" "+D[A].x+" "+D[A].y
+}}}B=o.path(G);
 B.attr(z);
 break;
 case OG.Constants.GEOM_TYPE.COLLECTION:for(A=0;
 A<E.geometries.length;
-A++){d(C,E.geometries[A],w)
+A++){d(C,E.geometries[A],w,E.style.map)
 }break
 }if(B){n(B);
-C.appendChild(B.node)
-}return B.node
-};
+C.appendChild(B.node);
+return B.node
+}else{return C
+}};
 q=function(x,w,A,z){var v={x:A[0],y:A[1]},y={x:z[0],y:z[1]};
 if(x==="c"&&w==="c"){if(v.x<=y.x&&v.y<=y.y){if(Math.abs(y.x-v.x)>Math.abs(y.y-v.y)){x="e";
 w="w"
@@ -1270,42 +1967,62 @@ g=function(v){var w=OG.Util.isElement(v)?v.id:v;
 if(w){return s.getElementById(w.substring(0,w.indexOf(OG.Constants.TERMINAL_SUFFIX.GROUP)))
 }else{return null
 }};
-j=function(Q,H,J,O,L,B){var A=OG.Constants.LABEL_PADDING,M=J?J[0]-A*2:null,K=J?J[1]-A*2:null,P=J?J[2]||0:0,E,w,v,D={},N,C,z,I,G,F;
-OG.Util.apply(D,(O instanceof OG.geometry.Style)?O.map:O||{},OG.Constants.DEFAULT_STYLE.TEXT);
-if(L===0||L){E=u(L);
+j=function(R,I,K,P,M,B){var A=OG.Constants.LABEL_PADDING,N=K?K[0]-A*2:null,L=K?K[1]-A*2:null,Q=K?K[2]||0:0,E,w,v,D={},F,O,C,z,J,H,G;
+OG.Util.apply(D,(P instanceof OG.geometry.Style)?P.map:P||{},OG.Constants.DEFAULT_STYLE.TEXT);
+if(M===0||M){E=u(M);
 if(E){f(E)
 }else{E=o.group();
-n(E,L)
+n(E,M)
 }}else{E=o.group();
-n(E,L)
-}w=o.text(Q[0],Q[1],H);
+n(E,M)
+}F=D["text-anchor"]||"middle";
+D["text-anchor"]="middle";
+w=o.text(R[0],R[1],I);
 w.attr(D);
 C=w.getBBox();
-M=M?(M>C.width?M:C.width):C.width;
-K=K?(K>C.height?K:C.height):C.height;
-z=OG.Util.round(Q[0]-M/2);
-I=OG.Util.round(Q[1]-K/2);
-N=new OG.Rectangle([z,I],M,K);
-switch(D["text-anchor"]){case"start":G=N.getBoundary().getLeftCenter().x;
+N=N?(N>C.width?N:C.width):C.width;
+L=L?(L>C.height?L:C.height):C.height;
+z=OG.Util.round(R[0]-N/2);
+J=OG.Util.round(R[1]-L/2);
+O=new OG.Rectangle([z,J],N,L);
+if(D["label-direction"]==="vertical"){switch(F){case"start":G=O.getBoundary().getLowerCenter().y;
 break;
-case"end":G=N.getBoundary().getRightCenter().x;
+case"end":G=O.getBoundary().getUpperCenter().y;
 break;
-case"middle":G=N.getBoundary().getCentroid().x;
+case"middle":G=O.getBoundary().getCentroid().y;
 break;
-default:G=N.getBoundary().getCentroid().x;
+default:G=O.getBoundary().getCentroid().y;
 break
-}switch(D["vertical-align"]){case"top":F=OG.Util.round(N.getBoundary().getUpperCenter().y+C.height/2);
+}switch(D["vertical-align"]){case"top":H=OG.Util.round(O.getBoundary().getLeftCenter().x+C.height/2);
 break;
-case"bottom":F=OG.Util.round(N.getBoundary().getLowerCenter().y-C.height/2);
+case"bottom":H=OG.Util.round(O.getBoundary().getRightCenter().x-C.height/2);
 break;
-case"middle":F=N.getBoundary().getCentroid().y;
+case"middle":H=O.getBoundary().getCentroid().x;
 break;
-default:F=N.getBoundary().getCentroid().y;
+default:H=O.getBoundary().getCentroid().x;
 break
-}w.attr({x:G,y:F});
-w.attr({stroke:"none",fill:D["font-color"]||OG.Constants.DEFAULT_STYLE.LABEL["font-color"],"font-size":D["font-size"]||OG.Constants.DEFAULT_STYLE.LABEL["font-size"],"fill-opacity":1});
-if(P){w.rotate(P)
-}if(B&&H){C=w.getBBox();
+}Q=-90
+}else{switch(F){case"start":H=O.getBoundary().getLeftCenter().x;
+break;
+case"end":H=O.getBoundary().getRightCenter().x;
+break;
+case"middle":H=O.getBoundary().getCentroid().x;
+break;
+default:H=O.getBoundary().getCentroid().x;
+break
+}switch(D["vertical-align"]){case"top":G=OG.Util.round(O.getBoundary().getUpperCenter().y+C.height/2);
+break;
+case"bottom":G=OG.Util.round(O.getBoundary().getLowerCenter().y-C.height/2);
+break;
+case"middle":G=O.getBoundary().getCentroid().y;
+break;
+default:G=O.getBoundary().getCentroid().y;
+break
+}}w.attr({x:H,y:G,stroke:"none",fill:D["font-color"]||OG.Constants.DEFAULT_STYLE.LABEL["font-color"],"font-size":D["font-size"]||OG.Constants.DEFAULT_STYLE.LABEL["font-size"],"fill-opacity":1});
+if(Q||D["label-angle"]){if(Q===0){Q=parseInt(D["label-angle"],10)
+}w.rotate(Q)
+}w.attr({"text-anchor":F});
+if(B&&I){C=w.getBBox();
 v=o.rect(C.x-A/2,C.y-A/2,C.width+A,C.height+A);
 v.attr({stroke:"none",fill:c,"fill-opacity":1});
 n(v);
@@ -1343,6 +2060,7 @@ D.resizeBox(x,G);
 y=this.drawGroup(D,v,w);
 B.geom=y.geom
 }}}}}y.shape=B;
+y.shapeStyle=(v instanceof OG.geometry.Style)?v.map:v;
 $(y).attr("_shape_id",B.SHAPE_ID);
 if(!(B instanceof OG.shape.TextShape)){this.drawLabel(y)
 }if(y.geom){if(OG.Util.isIE7()){y.removeAttribute("geom")
@@ -1356,7 +2074,7 @@ if(!(B instanceof OG.shape.TextShape)){this.drawLabel(y)
 }}return y
 };
 this.drawGeom=function(y,w,z){var x,v={};
-OG.Util.apply(v,(w instanceof OG.geometry.Style)?w.map:w||{},OG.Constants.DEFAULT_STYLE.GEOM);
+OG.Util.apply(v,(w instanceof OG.geometry.Style)?w.map:w||{});
 if(z===0||z){x=u(z);
 if(x){f(x)
 }else{x=o.group();
@@ -1471,7 +2189,7 @@ this.drawEdge=function(I,v,w,z){var G,y={},A=I.getVertices(),D=A[0],C=A[A.length
 }},E=function(L,K,J){if(J){return[[L[0],L[1]],[OG.Util.round((L[0]+K[0])/2),L[1]],[OG.Util.round((L[0]+K[0])/2),K[1]],[K[0],K[1]]]
 }else{return[[L[0],L[1]],[L[0],OG.Util.round((L[1]+K[1])/2)],[K[0],OG.Util.round((L[1]+K[1])/2)],[K[0],K[1]]]
 }};
-OG.Util.apply(y,(v instanceof OG.geometry.Style)?v.map:v||{},OG.Constants.DEFAULT_STYLE.EDGE);
+OG.Util.apply(y,(v instanceof OG.geometry.Style)?v.map:v||{},OG.Util.apply({},I.style.map,OG.Constants.DEFAULT_STYLE.EDGE));
 if(w===0||w){G=u(w);
 if(G){f(G)
 }else{G=o.group();
@@ -1611,27 +2329,32 @@ if(G.node.geom){if(OG.Util.isIE7()){G.node.removeAttribute("geom")
 }else{delete G.node.geom
 }}}return G.node
 };
-this.drawGroup=function(B,y,C){var z,w,v={},A,x;
-OG.Util.apply(v,(y instanceof OG.geometry.Style)?y.map:y||{},OG.Constants.DEFAULT_STYLE.GROUP);
-if(C===0||C){z=u(C);
-if(z){A=z.node.childNodes;
-for(x=A.length-1;
-x>=0;
-x--){if($(A[x]).attr("_type")!==OG.Constants.NODE_TYPE.SHAPE){t(u(A[x].id))
-}}}else{z=o.group();
-n(z,C,OG.Constants.NODE_TYPE.SHAPE,OG.Constants.SHAPE_TYPE.GROUP);
-i.node.appendChild(z.node)
-}}else{z=o.group();
-n(z,C,OG.Constants.NODE_TYPE.SHAPE,OG.Constants.SHAPE_TYPE.GROUP);
-i.node.appendChild(z.node)
-}w=d(z.node,B,v);
-z.node.geom=B;
-z.attr(OG.Constants.DEFAULT_STYLE.SHAPE);
-if(w.id!==z.node.firstChild.id){z.node.insertBefore(w,z.node.firstChild)
-}if(z.node.shape){if(!z.node.shape.isCollapsed||z.node.shape.isCollapsed===false){z.node.shape.geom=B
-}if(z.node.geom){if(OG.Util.isIE7()){z.node.removeAttribute("geom")
-}else{delete z.node.geom
-}}}return z.node
+this.drawGroup=function(C,w,x){var D,F,z={},E,A,y,v,B={};
+OG.Util.apply(z,(w instanceof OG.geometry.Style)?w.map:w||{});
+if(x===0||x){D=u(x);
+if(D){E=D.node.childNodes;
+for(A=E.length-1;
+A>=0;
+A--){if($(E[A]).attr("_type")!==OG.Constants.NODE_TYPE.SHAPE){t(u(E[A].id))
+}}}else{D=o.group();
+n(D,x,OG.Constants.NODE_TYPE.SHAPE,OG.Constants.SHAPE_TYPE.GROUP);
+i.node.appendChild(D.node)
+}}else{D=o.group();
+n(D,x,OG.Constants.NODE_TYPE.SHAPE,OG.Constants.SHAPE_TYPE.GROUP);
+i.node.appendChild(D.node)
+}F=d(D.node,C,z);
+D.node.geom=C;
+D.attr(OG.Constants.DEFAULT_STYLE.SHAPE);
+OG.Util.apply(B,C.style.map,z);
+if(B["label-direction"]&&B["vertical-align"]==="top"){y=C.getBoundary();
+if(B["label-direction"]==="vertical"){v=new OG.geometry.Line([y.getUpperLeft().x+20,y.getUpperLeft().y],[y.getLowerLeft().x+20,y.getLowerLeft().y])
+}else{v=new OG.geometry.Line([y.getUpperLeft().x,y.getUpperLeft().y+20],[y.getUpperRight().x,y.getUpperRight().y+20])
+}d(D.node,v,z)
+}if(F.id!==D.node.firstChild.id){D.node.insertBefore(F,D.node.firstChild)
+}if(D.node.shape){if(!D.node.shape.isCollapsed||D.node.shape.isCollapsed===false){D.node.shape.geom=C
+}if(D.node.geom){if(OG.Util.isIE7()){D.node.removeAttribute("geom")
+}else{delete D.node.geom
+}}}return D.node
 };
 this.drawLabel=function(D,F,w){var A=u(OG.Util.isElement(D)?D.id:D),y,B,C,x={},z,G,E=function(L){var J,H,M=0,K,I;
 J=L.shape.geom.getVertices();
@@ -1688,7 +2411,7 @@ if(J){E=g($(J).attr("_to"));
 if($(E).parents("#"+M.id).length===0){G=true
 }}}}if(G===true){A.redrawConnectedEdge(F[K])
 }}}};
-if(z&&z.shape.geom){switch($(z).attr("_shape")){case OG.Constants.SHAPE_TYPE.GEOM:z=this.drawGeom(z.shape.geom,z.shape.geom.style,z.id);
+if(z&&z.shape.geom){switch($(z).attr("_shape")){case OG.Constants.SHAPE_TYPE.GEOM:z=this.drawGeom(z.shape.geom,{},z.id);
 this.redrawConnectedEdge(z,C);
 this.drawLabel(z);
 break;
@@ -1823,6 +2546,7 @@ if(G){H=J=N.shape.geom.getBoundary().getRightCenter()
 }y=this.drawEdge(new OG.Line(H,J),OG.Util.apply(C,{"edge-direction":M+" "+w}),y?y.id:null,G);
 this.drawLabel(y,D);
 OG.Util.apply(y.shape.geom.style.map,{"edge-direction":B+" "+K});
+y.shapeStyle=y.shape.geom.style.map;
 this.disconnect(y);
 if(OG.Util.isElement(I)){$(y).attr("_from",I.id);
 x(N,"_toedge",y.id)
@@ -2185,7 +2909,8 @@ this.clear=function(){o.clear();
 r.clear();
 i=n(o.group(),null,OG.Constants.NODE_TYPE.ROOT)
 };
-this.removeShape=function(x){var v=u(OG.Util.isElement(x)?x.id:x),y=v.node.childNodes,w;
+this.removeShape=function(x){var v=u(OG.Util.isElement(x)?x.id:x),y,w;
+y=v.node.childNodes;
 for(w=y.length-1;
 w>=0;
 w--){if($(y[w]).attr("_type")===OG.Constants.NODE_TYPE.SHAPE){this.removeShape(y[w])
@@ -2374,67 +3099,6 @@ o++){if(t&&u[o].id===t.id){r=true
 }if(n&&u[o].id===n.id){p=true
 }}return{none:!r&&!p,all:r&&p,any:r||p,either:(r&&!p)||(!r&&p),attrEither:(s&&!q)||(!s&&q)}
 };
-g=function(p,m,o){var n=b.getRootGroup();
-if(!p||!m){return
-}if(o){b.setAttr(p,{cursor:"move"});
-$(p).draggable({start:function(t){var q=t.pageX,v=t.pageY,u=[],s,r=[];
-$(this).data("start",{x:q,y:v});
-$(this).data("offset",{x:q-f(b.getAttr(m.bBox,"x")),y:v-f(b.getAttr(m.bBox,"y"))});
-$("[id$="+OG.Constants.GUIDE_SUFFIX.BBOX+"]").each(function(w,x){if(x.id){s=b.clone(x);
-b.setAttr(s,OG.Constants.DEFAULT_STYLE.GUIDE_SHADOW);
-u.push({id:x.id.replace(OG.Constants.GUIDE_SUFFIX.BBOX,""),box:s})
-}});
-$.each(u,function(x,y){var z=b.getElementById(y.id),w;
-if($(z).attr("_shape")===OG.Constants.SHAPE_TYPE.EDGE){w=c(z,u);
-if(w.all||w.none||(w.either&&w.attrEither)){r.push(y)
-}else{b.remove(y.box);
-b.removeGuide(z)
-}}});
-$.each(u,function(w,x){var y=b.getElementById(x.id);
-if($(y).attr("_shape")!==OG.Constants.SHAPE_TYPE.EDGE){r.push(x)
-}});
-$(n).data("bBoxArray",r);
-b.removeRubberBand(b.getRootElement());
-b.removeAllTerminal()
-},drag:function(t){var q=t.pageX,w=t.pageY,v=$(this).data("start"),u=$(n).data("bBoxArray"),s=a(q-v.x),r=a(w-v.y);
-$(this).css({position:"",left:"",top:""});
-$.each(u,function(x,y){b.setAttr(y.box,{transform:"t"+s+","+r})
-});
-b.removeAllTerminal()
-},stop:function(q){var z=q.pageX,v=q.pageY,r=$(this).data("start"),A=$(n).data("bBoxArray"),C=a(z-r.x),B=a(v-r.y),w=[],t=$(n).data("groupTarget"),u=[],s;
-$(this).css({position:"",left:"",top:""});
-$.each(A,function(x,y){var D=b.getElementById(y.id);
-if($(D).attr("_shape")===OG.Constants.SHAPE_TYPE.EDGE){w.push(y.id)
-}});
-$.each(A,function(y,D){var E,x;
-b.remove(D.box);
-E=b.getElementById(D.id);
-u.push(E);
-$("[id^='"+D.id+OG.Constants.GUIDE_SUFFIX.GUIDE+"_']").each(function(F,G){x=b.getElementById(G.id);
-b.setAttr(x,{x:f(b.getAttr(x,"x"))+C,y:f(b.getAttr(x,"y"))+B})
-});
-b.move(E,[C,B],w);
-if($(E).attr("_shape")===OG.Constants.SHAPE_TYPE.EDGE){if(c(E,A).none){b.disconnect(E)
-}}});
-if(t&&OG.Util.isElement(t)){b.addToGroup(t,u);
-$.each(u,function(x,y){b.removeGuide(y)
-});
-s=b.drawGuide(t);
-g(t,s,true);
-e(t,s,true);
-b.toFront(s.group);
-b.remove(t.id+OG.Constants.DROP_OVER_BBOX_SUFFIX);
-$(n).removeData("groupTarget")
-}else{b.addToGroup(n,u);
-$.each(u,function(x,y){b.removeGuide(y);
-s=b.drawGuide(y);
-e(y,s,true);
-b.toFront(s.group)
-})
-}$(n).removeData("bBoxArray")
-}})
-}else{b.setAttr(p,{cursor:OG.Constants.DEFAULT_STYLE.SHAPE.cursor})
-}};
 e=function(p,m,q){var o=b.getRootGroup(),n=b.getRootBBox();
 if(!p||!m){return
 }if(q){if($(p).attr("_shape")===OG.Constants.SHAPE_TYPE.EDGE){$(m.from).draggable({start:function(w){var u=p.shape.geom.getVertices(),r={},s=$(p).attr("_to"),x,t=[u[u.length-1].x,u[u.length-1].y],v=b.drawEdge(new OG.PolyLine(u),OG.Util.apply(r,OG.Constants.DEFAULT_STYLE.EDGE_SHADOW,p.shape.geom.style.map));
@@ -2470,7 +3134,8 @@ if(s){b.remove(s.id+OG.Constants.DROP_OVER_BBOX_SUFFIX)
 }p=b.connect(v,r,p,p.shape.geom.style);
 m=b.drawGuide(p);
 e(p,m,true);
-b.toFront(m.group)
+b.toFront(m.group);
+b.setAttr(p,{cursor:"move"})
 }});
 $(m.to).draggable({start:function(w){var t=p.shape.geom.getVertices(),s={},r=$(p).attr("_from"),u,x=[t[0].x,t[0].y],v=b.drawEdge(new OG.PolyLine(t),OG.Util.apply(s,OG.Constants.DEFAULT_STYLE.EDGE_SHADOW,p.shape.geom.style.map));
 if(r){u=k(r);
@@ -2505,7 +3170,8 @@ if(u){b.remove(u.id+OG.Constants.DROP_OVER_BBOX_SUFFIX)
 }p=b.connect(v,r,p,p.shape.geom.style);
 m=b.drawGuide(p);
 e(p,m,true);
-b.toFront(m.group)
+b.toFront(m.group);
+b.setAttr(p,{cursor:"move"})
 }});
 $.each(m.controls,function(r,s){$(s).draggable({start:function(u){var t=u.pageX,v=u.pageY;
 $(this).data("start",{x:t,y:v});
@@ -2530,7 +3196,8 @@ A[z+1].x=t
 A[z+1].y=E
 }p=b.drawEdge(new OG.PolyLine(A),p.shape.geom.style,p.id);
 b.drawGuide(p);
-b.drawLabel(p)
+b.drawLabel(p);
+b.setAttr(p,{cursor:"move"})
 }})
 })
 }else{$(m.rc).draggable({start:function(s){var r=s.pageX,t=s.pageY;
@@ -2550,7 +3217,8 @@ b.setAttr(m.bBox,{width:t})
 $(this).css({position:"absolute",left:"0px",top:"0px"});
 if(p&&p.shape.geom){if(p.shape.geom.getBoundary().getWidth()+s<OG.Constants.GUIDE_MIN_SIZE){s=OG.Constants.GUIDE_MIN_SIZE-p.shape.geom.getBoundary().getWidth()
 }b.resize(p,[0,0,0,s]);
-b.drawGuide(p)
+b.drawGuide(p);
+b.setAttr(p,{cursor:"move"})
 }}});
 $(m.lwc).draggable({start:function(s){var r=s.pageX,t=s.pageY;
 $(this).data("start",{x:r,y:t});
@@ -2569,7 +3237,8 @@ b.setAttr(m.bBox,{height:s})
 $(this).css({position:"absolute",left:"0px",top:"0px"});
 if(p&&p.shape.geom){if(p.shape.geom.getBoundary().getHeight()+s<OG.Constants.GUIDE_MIN_SIZE){s=OG.Constants.GUIDE_MIN_SIZE-p.shape.geom.getBoundary().getHeight()
 }b.resize(p,[0,s,0,0]);
-b.drawGuide(p)
+b.drawGuide(p);
+b.setAttr(p,{cursor:"move"})
 }}});
 $(m.lr).draggable({start:function(s){var r=s.pageX,t=s.pageY;
 $(this).data("start",{x:r,y:t});
@@ -2595,7 +3264,8 @@ $(this).css({position:"absolute",left:"0px",top:"0px"});
 if(p&&p.shape.geom){if(p.shape.geom.getBoundary().getWidth()+t<OG.Constants.GUIDE_MIN_SIZE){t=OG.Constants.GUIDE_MIN_SIZE-p.shape.geom.getBoundary().getWidth()
 }if(p.shape.geom.getBoundary().getHeight()+s<OG.Constants.GUIDE_MIN_SIZE){s=OG.Constants.GUIDE_MIN_SIZE-p.shape.geom.getBoundary().getHeight()
 }b.resize(p,[0,s,0,t]);
-b.drawGuide(p)
+b.drawGuide(p);
+b.setAttr(p,{cursor:"move"})
 }b.removeAllTerminal()
 }});
 $(m.lc).draggable({start:function(s){var r=s.pageX,t=s.pageY;
@@ -2615,7 +3285,8 @@ b.setAttr(m.bBox,{x:OG.Util.round(u+f(b.getAttr(m.lc,"width"))/2),width:s})
 $(this).css({position:"absolute",left:"0px",top:"0px"});
 if(p&&p.shape.geom){if(p.shape.geom.getBoundary().getWidth()+s<OG.Constants.GUIDE_MIN_SIZE){s=OG.Constants.GUIDE_MIN_SIZE-p.shape.geom.getBoundary().getWidth()
 }b.resize(p,[0,0,s,0]);
-b.drawGuide(p)
+b.drawGuide(p);
+b.setAttr(p,{cursor:"move"})
 }}});
 $(m.ll).draggable({start:function(s){var r=s.pageX,t=s.pageY;
 $(this).data("start",{x:r,y:t});
@@ -2641,7 +3312,8 @@ $(this).css({position:"absolute",left:"0px",top:"0px"});
 if(p&&p.shape.geom){if(p.shape.geom.getBoundary().getWidth()+t<OG.Constants.GUIDE_MIN_SIZE){t=OG.Constants.GUIDE_MIN_SIZE-p.shape.geom.getBoundary().getWidth()
 }if(p.shape.geom.getBoundary().getHeight()+s<OG.Constants.GUIDE_MIN_SIZE){s=OG.Constants.GUIDE_MIN_SIZE-p.shape.geom.getBoundary().getHeight()
 }b.resize(p,[0,s,t,0]);
-b.drawGuide(p)
+b.drawGuide(p);
+b.setAttr(p,{cursor:"move"})
 }}});
 $(m.uc).draggable({start:function(s){var r=s.pageX,t=s.pageY;
 $(this).data("start",{x:r,y:t});
@@ -2660,7 +3332,8 @@ b.setAttr(m.bBox,{y:OG.Util.round(u+f(b.getAttr(m.uc,"width"))/2),height:s})
 $(this).css({position:"absolute",left:"0px",top:"0px"});
 if(p&&p.shape.geom){if(p.shape.geom.getBoundary().getHeight()+s<OG.Constants.GUIDE_MIN_SIZE){s=OG.Constants.GUIDE_MIN_SIZE-p.shape.geom.getBoundary().getHeight()
 }b.resize(p,[s,0,0,0]);
-b.drawGuide(p)
+b.drawGuide(p);
+b.setAttr(p,{cursor:"move"})
 }}});
 $(m.ul).draggable({start:function(s){var r=s.pageX,t=s.pageY;
 $(this).data("start",{x:r,y:t});
@@ -2686,7 +3359,8 @@ $(this).css({position:"absolute",left:"0px",top:"0px"});
 if(p&&p.shape.geom){if(p.shape.geom.getBoundary().getWidth()+t<OG.Constants.GUIDE_MIN_SIZE){t=OG.Constants.GUIDE_MIN_SIZE-p.shape.geom.getBoundary().getWidth()
 }if(p.shape.geom.getBoundary().getHeight()+s<OG.Constants.GUIDE_MIN_SIZE){s=OG.Constants.GUIDE_MIN_SIZE-p.shape.geom.getBoundary().getHeight()
 }b.resize(p,[s,0,t,0]);
-b.drawGuide(p)
+b.drawGuide(p);
+b.setAttr(p,{cursor:"move"})
 }}});
 $(m.ur).draggable({start:function(s){var r=s.pageX,t=s.pageY;
 $(this).data("start",{x:r,y:t});
@@ -2712,7 +3386,8 @@ $(this).css({position:"absolute",left:"0px",top:"0px"});
 if(p&&p.shape.geom){if(p.shape.geom.getBoundary().getWidth()+t<OG.Constants.GUIDE_MIN_SIZE){t=OG.Constants.GUIDE_MIN_SIZE-p.shape.geom.getBoundary().getWidth()
 }if(p.shape.geom.getBoundary().getHeight()+s<OG.Constants.GUIDE_MIN_SIZE){s=OG.Constants.GUIDE_MIN_SIZE-p.shape.geom.getBoundary().getHeight()
 }b.resize(p,[s,0,0,t]);
-b.drawGuide(p)
+b.drawGuide(p);
+b.setAttr(p,{cursor:"move"})
 }}})
 }}else{if($(p).attr("_shape")===OG.Constants.SHAPE_TYPE.EDGE){b.setAttr(m.from,{cursor:"default"});
 b.setAttr(m.to,{cursor:"default"});
@@ -2742,18 +3417,19 @@ l=function(n,o){var m=n.childNodes;
 $.each(m,function(p,s){if($(s).attr("_type")===OG.Constants.NODE_TYPE.SHAPE){var u=s.shape.geom.getBoundary(),r,t,q;
 r=s.shape.clone();
 if($(s).attr("_shape")===OG.Constants.SHAPE_TYPE.EDGE){r.geom=new OG.PolyLine(s.shape.geom.getVertices());
+r.geom.style=s.shape.geom.style;
 r.geom.move(OG.Constants.COPY_PASTE_PADDING,OG.Constants.COPY_PASTE_PADDING);
-t=b.drawShape(null,r,null,s.shape.geom.style)
-}else{t=b.drawShape([u.getCentroid().x+OG.Constants.COPY_PASTE_PADDING,u.getCentroid().y+OG.Constants.COPY_PASTE_PADDING],r,[u.getWidth(),u.getHeight()],s.shape.geom.style)
+t=b.drawShape(null,r,null,s.shapeStyle)
+}else{t=b.drawShape([u.getCentroid().x+OG.Constants.COPY_PASTE_PADDING,u.getCentroid().y+OG.Constants.COPY_PASTE_PADDING],r,[u.getWidth(),u.getHeight()],s.shapeStyle)
 }o.appendChild(t);
-d.enableClickSelect(t,true,true);
+d.setClickSelectable(t,true);
 if($(t).attr("_shape")!==OG.Constants.SHAPE_TYPE.GROUP){d.enableEditLabel(t);
 d.enableConnect(t)
 }if(s.childNodes.length>0){l(s,t)
 }}})
 };
 this.enableEditLabel=function(m){var n=b.getRootElement();
-$(m).bind({dblclick:function(){var v=m.shape.geom.getBoundary(),q=v.getUpperLeft(),y=b.getRootBBox(),A,u=q.x,x=q.y,s=v.getWidth(),z=v.getHeight(),t=m.id+OG.Constants.LABEL_EDITOR_SUFFIX,p,r="center",w=function(F){var D,B,G=0,E,C;
+$(m).bind({dblclick:function(){var v=m.shape.geom.getBoundary(),q=v.getUpperLeft(),y=b.getRootBBox(),A,u=q.x+(OG.Constants.ENABLE_CANVAS_OFFSET?y.x:0)-1,x=q.y+(OG.Constants.ENABLE_CANVAS_OFFSET?y.y:0)-1,s=v.getWidth(),z=v.getHeight(),t=m.id+OG.Constants.LABEL_EDITOR_SUFFIX,p,r="center",w=function(F){var D,B,G=0,E,C;
 D=F.shape.geom.getVertices();
 B=F.shape.geom.getLength();
 for(E=0;
@@ -2783,14 +3459,14 @@ this.parentNode.removeChild(this)
 this.parentNode.removeChild(this)
 }}})
 }else{if($(m).attr("_shape")===OG.Constants.SHAPE_TYPE.EDGE){if(m.shape.label&&b.isSVG()){$(m).find("text").each(function(B,C){A=b.getBBox(C);
-u=A.x-10;
-x=A.y;
+u=A.x+(OG.Constants.ENABLE_CANVAS_OFFSET?y.x:0)-10;
+x=A.y+(OG.Constants.ENABLE_CANVAS_OFFSET?y.y:0);
 s=A.width+20;
 z=A.height
 })
 }else{o=w(m);
-u=o.x-OG.Constants.LABEL_EDITOR_WIDTH/2;
-x=o.y-OG.Constants.LABEL_EDITOR_HEIGHT/2;
+u=o.x-OG.Constants.LABEL_EDITOR_WIDTH/2+(OG.Constants.ENABLE_CANVAS_OFFSET?y.x:0);
+x=o.y-OG.Constants.LABEL_EDITOR_HEIGHT/2+(OG.Constants.ENABLE_CANVAS_OFFSET?y.y:0);
 s=OG.Constants.LABEL_EDITOR_WIDTH;
 z=OG.Constants.LABEL_EDITOR_HEIGHT
 }$(p).css(OG.Util.apply(OG.Constants.DEFAULT_STYLE.LABEL_EDITOR,{left:u,top:x,width:s,height:z,overflow:"hidden",resize:"none"}));
@@ -2842,8 +3518,8 @@ if(z){B=x=o.shape.geom.getBoundary().getRightCenter()
 },stop:function(s){var C={x:s.pageX-m.x,y:s.pageY-m.y},v=$(n).data("edge"),A=$(n).data("from_terminal"),D=$(n).data("edge_terminal")||[C.x,C.y],w=OG.Util.isElement(D)?k(D):null,u,x,B,z,t,y;
 $(this).css({position:"absolute",left:"0px",top:"0px"});
 if(!$(n).data("edge_terminal")){u=o.shape.geom.getBoundary();
-x=b.drawShape([C.x,C.y],o.shape.clone(),[u.getWidth(),u.getHeight()],o.shape.geom.style);
-d.enableClickSelect(x,true,true);
+x=b.drawShape([C.x,C.y],o.shape.clone(),[u.getWidth(),u.getHeight()],o.shapeStyle);
+d.setClickSelectable(x,true);
 d.enableConnect(x);
 d.enableEditLabel(x);
 B=b.drawTerminal(x);
@@ -2855,7 +3531,7 @@ y++){if(z[y].terminal&&z[y].terminal.direction.toLowerCase()==="c"){D=z[y];
 break
 }}}v=b.connect(A,D,v);
 t=b.drawGuide(v);
-d.enableClickSelect(v,true,true);
+d.setClickSelectable(v,true);
 d.enableEditLabel(v);
 b.toFront(t.group);
 $(n).removeData("edge");
@@ -2894,57 +3570,121 @@ if(o&&$(o).attr("_shape")===OG.Constants.SHAPE_TYPE.GROUP){$(o).bind({mouseover:
 if(n&&n.bBox&&n.collapse){m(o,n)
 }}})
 }};
-this.enableClickSelect=function(o,n,p){var m=b.getRootGroup();
-OG.Constants.DEFAULT_STYLE.SHAPE.cursor=n?"move":"pointer";
-b.setAttr(o,{cursor:n?"move":"pointer"});
-$(o).bind("click",function(r){var q;
-if(o.shape){if(!r.shiftKey&&!r.ctrlKey){$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(s,t){if(t.id){b.removeGuide(t);
-$(t).draggable("destroy")
+this.setMovable=function(o,n){var m=b.getRootGroup();
+if(!o){return
+}if(n){b.setAttr(o,{cursor:"move"});
+$(o).draggable({start:function(t){var q=t.pageX,v=t.pageY,u=[],s,r=[],p;
+if(b.getElementById(o.id+OG.Constants.GUIDE_SUFFIX.GUIDE)===null){$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(w,x){if(OG.Util.isElement(x)&&x.id){b.removeGuide(x)
+}});
+b.removeAllTerminal()
+}b.removeGuide(o);
+p=b.drawGuide(o);
+$(this).data("start",{x:q,y:v});
+$(this).data("offset",{x:q-f(b.getAttr(p.bBox,"x")),y:v-f(b.getAttr(p.bBox,"y"))});
+$("[id$="+OG.Constants.GUIDE_SUFFIX.BBOX+"]").each(function(w,x){if(x.id){s=b.clone(x);
+b.setAttr(s,OG.Constants.DEFAULT_STYLE.GUIDE_SHADOW);
+u.push({id:x.id.replace(OG.Constants.GUIDE_SUFFIX.BBOX,""),box:s})
+}});
+$.each(u,function(x,y){var z=b.getElementById(y.id),w;
+if($(z).attr("_shape")===OG.Constants.SHAPE_TYPE.EDGE){w=c(z,u);
+if(w.all||w.none||(w.either&&w.attrEither)){r.push(y)
+}else{b.remove(y.box);
+b.removeGuide(z)
+}}});
+$.each(u,function(w,x){var y=b.getElementById(x.id);
+if($(y).attr("_shape")!==OG.Constants.SHAPE_TYPE.EDGE){r.push(x)
+}});
+$(m).data("bBoxArray",r);
+b.removeRubberBand(b.getRootElement());
+b.removeAllTerminal()
+},drag:function(s){var p=s.pageX,v=s.pageY,u=$(this).data("start"),t=$(m).data("bBoxArray"),r=a(p-u.x),q=a(v-u.y);
+$(this).css({position:"",left:"",top:""});
+$.each(t,function(w,x){b.setAttr(x.box,{transform:"t"+r+","+q})
+});
+b.removeAllTerminal()
+},stop:function(p){var w=p.pageX,u=p.pageY,q=$(this).data("start"),z=$(m).data("bBoxArray"),B=a(w-q.x),A=a(u-q.y),v=[],s=$(m).data("groupTarget"),t=[],r;
+$(this).css({position:"",left:"",top:""});
+$.each(z,function(x,y){var C=b.getElementById(y.id);
+if($(C).attr("_shape")===OG.Constants.SHAPE_TYPE.EDGE){v.push(y.id)
+}});
+$.each(z,function(y,C){var D,x;
+b.remove(C.box);
+D=b.getElementById(C.id);
+t.push(D);
+$("[id^='"+C.id+OG.Constants.GUIDE_SUFFIX.GUIDE+"_']").each(function(E,F){x=b.getElementById(F.id);
+b.setAttr(x,{x:f(b.getAttr(x,"x"))+B,y:f(b.getAttr(x,"y"))+A})
+});
+b.move(D,[B,A],v);
+b.setAttr(D,{cursor:"move"});
+if($(D).attr("_shape")===OG.Constants.SHAPE_TYPE.EDGE){if(c(D,z).none){b.disconnect(D)
+}}});
+if(s&&OG.Util.isElement(s)){b.addToGroup(s,t);
+$.each(t,function(x,y){b.removeGuide(y)
+});
+r=b.drawGuide(s);
+e(s,r,true);
+b.toFront(r.group);
+b.remove(s.id+OG.Constants.DROP_OVER_BBOX_SUFFIX);
+$(m).removeData("groupTarget")
+}else{b.addToGroup(m,t);
+$.each(t,function(x,y){b.removeGuide(y);
+r=b.drawGuide(y);
+e(y,r,true);
+b.toFront(r.group)
+})
+}$(m).removeData("bBoxArray")
 }})
-}if($(o).attr("_selected")==="true"){if(r.shiftKey||r.ctrlKey){b.removeGuide(o);
-$(o).draggable("destroy")
+}else{$(o).draggable("destroy");
+b.setAttr(o,{cursor:OG.Constants.DEFAULT_STYLE.SHAPE.cursor})
+}};
+this.setClickSelectable=function(o,m){var n=b.getRootGroup();
+OG.Constants.DEFAULT_STYLE.SHAPE.cursor=m?"move":"pointer";
+b.setAttr(o,{cursor:m?"move":"pointer"});
+this.setMovable(o,m);
+if(m){$(o).bind("click",function(q){var p;
+if(o.shape){if(!q.shiftKey&&!q.ctrlKey){$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(r,s){if(s.id){b.removeGuide(s)
+}})
+}if($(o).attr("_selected")==="true"){if(q.shiftKey||q.ctrlKey){b.removeGuide(o)
 }}else{h(o);
-if(!j(o)){q=b.drawGuide(o);
-if(q){g(o,q,n);
-e(o,q,p);
+if(!j(o)){p=b.drawGuide(o);
+if(p){e(o,p,true);
 b.removeAllTerminal();
-b.toFront(q.group)
+b.toFront(p.group)
 }}}return false
 }})
-};
-this.setEnableDragSelect=function(p,n,q){var o=b.getRootElement(),m=b.getRootBBox();
-$(o).bind("click",function(s){var r=$(this).data("dragBox");
-if(r&&r.width<1&&r.height<1){$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(t,u){if(OG.Util.isElement(u)&&u.id){b.removeGuide(u);
-$(u).draggable("destroy")
+}else{$(o).click("destroy")
+}};
+this.setDragSelectable=function(m){var o=b.getRootElement(),n=b.getRootBBox();
+$(o).bind("click",function(q){var p=$(this).data("dragBox");
+if(p&&p.width<1&&p.height<1){$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(r,s){if(OG.Util.isElement(s)&&s.id){b.removeGuide(s)
 }});
 b.removeAllTerminal()
 }});
-if(p){$(o).bind("mousedown",function(r){$(this).data("dragBox_first",{x:r.pageX-m.x,y:r.pageY-m.y});
-b.drawRubberBand([r.pageX-m.x,r.pageY-m.y])
+if(m){$(o).bind("mousedown",function(p){$(this).data("dragBox_first",{x:p.pageX-n.x,y:p.pageY-n.y});
+b.drawRubberBand([p.pageX-n.x,p.pageY-n.y])
 });
-$(o).bind("mousemove",function(u){var v=$(this).data("dragBox_first"),t,s,r,w;
-if(v){t=u.pageX-m.x-v.x;
-s=u.pageY-m.y-v.y;
-r=t<=0?v.x+t:v.x;
-w=s<=0?v.y+s:v.y;
-b.drawRubberBand([r,w],[Math.abs(t),Math.abs(s)])
+$(o).bind("mousemove",function(s){var t=$(this).data("dragBox_first"),r,q,p,u;
+if(t){r=s.pageX-n.x-t.x;
+q=s.pageY-n.y-t.y;
+p=r<=0?t.x+r:t.x;
+u=q<=0?t.y+q:t.y;
+b.drawRubberBand([p,u],[Math.abs(r),Math.abs(q)])
 }});
-$(o).bind("mouseup",function(v){var z=$(this).data("dragBox_first"),u,t,s,A,w,r;
+$(o).bind("mouseup",function(t){var v=$(this).data("dragBox_first"),s,r,q,w,u,p;
 b.removeRubberBand(o);
-if(z){u=v.pageX-m.x-z.x;
-t=v.pageY-m.y-z.y;
-s=u<=0?z.x+u:z.x;
-A=t<=0?z.y+t:z.y;
-w=new OG.Envelope([s,A],Math.abs(u),Math.abs(t));
-$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"]").each(function(x,y){if(y.shape.geom&&w.isContainsAll(y.shape.geom.getVertices())){h(y);
-if(!j(y)){r=b.drawGuide(y);
-if(r){g(y,r,n);
-e(y,r,q);
+if(v){s=t.pageX-n.x-v.x;
+r=t.pageY-n.y-v.y;
+q=s<=0?v.x+s:v.x;
+w=r<=0?v.y+r:v.y;
+u=new OG.Envelope([q,w],Math.abs(s),Math.abs(r));
+$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"]").each(function(x,y){if(y.shape.geom&&u.isContainsAll(y.shape.geom.getVertices())){h(y);
+if(!j(y)){p=b.drawGuide(y);
+if(p){e(y,p,true);
 b.removeAllTerminal()
 }}}});
-$(this).data("dragBox",{width:u,height:t,x:s,y:A})
+$(this).data("dragBox",{width:s,height:r,x:q,y:w})
 }});
-$(o).bind("contextmenu",function(r){b.removeRubberBand(o)
+$(o).bind("contextmenu",function(p){b.removeRubberBand(o)
 })
 }else{$(o).unbind("mousedown");
 $(o).unbind("mousemove");
@@ -2953,11 +3693,12 @@ $(o).unbind("contextmenu")
 }};
 this.setEnableHotKey=function(n){var m=b.getRootGroup();
 if(n){$(window.document).bind("keydown",function(r){var p,t,q,o,s;
-if(r.keyCode===KeyEvent.DOM_VK_DELETE){$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(u,v){if(v.id){b.removeShape(v)
+if(r.keyCode===KeyEvent.DOM_VK_DELETE){$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_shape=EDGE][_selected=true]").each(function(u,v){if(v.id){b.removeShape(v)
+}});
+$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(u,v){if(v.id){b.removeShape(v)
 }})
 }if(r.ctrlKey&&r.keyCode===KeyEvent.DOM_VK_A){$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"]").each(function(v,w){if($(w.parentNode).attr("_shape")!==OG.Constants.SHAPE_TYPE.GROUP){var u=b.drawGuide(w);
-if(u){g(w,u,true);
-e(w,u,true);
+if(u){e(w,u,true);
 b.removeTerminal(w)
 }}})
 }if(r.ctrlKey&&r.keyCode===KeyEvent.DOM_VK_C){t=[];
@@ -2966,19 +3707,19 @@ $("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(u,v)
 $(m).data("copied",t)
 }if(r.ctrlKey&&r.keyCode===KeyEvent.DOM_VK_V){p=$(m).data("copied");
 t=[];
-if(p){$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(u,v){if(v.id){b.removeGuide(v);
-$(v).draggable("destroy")
+if(p){$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(u,v){if(v.id){b.removeGuide(v)
 }});
 $.each(p,function(u,x){var z=x.shape.geom.getBoundary(),w,y,v;
 w=x.shape.clone();
 if($(x).attr("_shape")===OG.Constants.SHAPE_TYPE.EDGE){w.geom=new OG.PolyLine(x.shape.geom.getVertices());
+w.geom.style=x.shape.geom.style;
 w.geom.move(OG.Constants.COPY_PASTE_PADDING,OG.Constants.COPY_PASTE_PADDING);
-y=b.drawShape(null,w,null,x.shape.geom.style)
-}else{y=b.drawShape([z.getCentroid().x+OG.Constants.COPY_PASTE_PADDING,z.getCentroid().y+OG.Constants.COPY_PASTE_PADDING],w,[z.getWidth(),z.getHeight()],x.shape.geom.style)
+y=b.drawShape(null,w,null,x.shapeStyle)
+}else{y=b.drawShape([z.getCentroid().x+OG.Constants.COPY_PASTE_PADDING,z.getCentroid().y+OG.Constants.COPY_PASTE_PADDING],w,[z.getWidth(),z.getHeight()],x.shapeStyle)
 }v=b.drawGuide(y);
-g(y,v,true);
+d.setMovable(y,true);
 e(y,v,true);
-d.enableClickSelect(y,true,true);
+d.setClickSelectable(y,true);
 d.enableDragAndDropGroup(y);
 d.enableCollapse(y);
 if($(y).attr("_shape")!==OG.Constants.SHAPE_TYPE.GROUP){d.enableEditLabel(y);
@@ -2988,12 +3729,11 @@ t.push(y)
 });
 $(m).data("copied",t)
 }}if(r.ctrlKey&&r.keyCode===KeyEvent.DOM_VK_G){q=b.group($("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]"));
-if(q){$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(u,v){b.removeGuide(v);
-$(v).draggable("destroy")
+if(q){$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(u,v){b.removeGuide(v)
 });
 o=b.drawGuide(q);
-if(o){d.enableClickSelect(q,true,true);
-g(q,o,true);
+if(o){d.setClickSelectable(q,true);
+d.setMovable(q,true);
 e(q,o,true);
 d.enableDragAndDropGroup(q);
 b.removeAllTerminal();
@@ -3022,14 +3762,14 @@ this.connectable=config?(config.connectable===undefined?true:config.connectable)
 this.labelEditable=config?(config.labelEditable===undefined?true:config.labelEditable):true;
 this.groupDropable=config?(config.groupDropable===undefined?true:config.groupDropable):true;
 this.collapsible=config?(config.collapsible===undefined?true:config.collapsible):true;
-if(this.selectable){_HANDLER.setEnableDragSelect(true,true,true)
+if(this.selectable){_HANDLER.setDragSelectable(true)
 }if(this.enableHotKey){_HANDLER.setEnableHotKey(true)
 }this.CONFIG_INITIALIZED=true
 };
 this.drawShape=function(position,shape,size,style,id,parentId){var element=_RENDERER.drawShape(position,shape,size,style,id);
 if(parentId&&_RENDERER.getElementById(parentId)){_RENDERER.appendChild(element,parentId)
 }if(!this.CONFIG_INITIALIZED){this.initConfig()
-}if(this.selectable){_HANDLER.enableClickSelect(element,true,true)
+}if(this.selectable){_HANDLER.setClickSelectable(element,true)
 }if(this.connectable){_HANDLER.enableConnect(element)
 }if(this.labelEditable){_HANDLER.enableEditLabel(element)
 }if(this.groupDropable){_HANDLER.enableDragAndDropGroup(element)
@@ -3045,7 +3785,7 @@ return element.data
 this.toXML=function(){return OG.Util.jsonToXml(this.toJSON())
 };
 this.toJSON=function(){var jsonObj={opengraph:{cell:[]}},childShape;
-childShape=function(node,isRoot){$(node).children("[_type=SHAPE]").each(function(idx,item){var shape=item.shape,geom=shape.geom,envelope=geom.getBoundary(),cell={},vertices,from,to;
+childShape=function(node,isRoot){$(node).children("[_type=SHAPE]").each(function(idx,item){var shape=item.shape,style=item.shapeStyle,geom=shape.geom,envelope=geom.getBoundary(),cell={},vertices,from,to;
 cell["@id"]=$(item).attr("id");
 if(!isRoot){cell["@parent"]=$(node).attr("id")
 }cell["@shapeType"]=shape.TYPE;
@@ -3054,8 +3794,8 @@ cell["@x"]=envelope.getCentroid().x;
 cell["@y"]=envelope.getCentroid().y;
 cell["@width"]=envelope.getWidth();
 cell["@height"]=envelope.getHeight();
-cell["@style"]=geom.style.toString();
-if($(item).attr("_from")){cell["@from"]=$(item).attr("_from")
+if(style){cell["@style"]=escape(OG.JSON.encode(style))
+}if($(item).attr("_from")){cell["@from"]=$(item).attr("_from")
 }if($(item).attr("_to")){cell["@to"]=$(item).attr("_to")
 }if($(item).attr("_fromedge")){cell["@fromEdge"]=$(item).attr("_fromedge")
 }if($(item).attr("_toedge")){cell["@toEdge"]=$(item).attr("_toedge")
@@ -3090,7 +3830,7 @@ x=parseInt(cell[i]["@x"],10);
 y=parseInt(cell[i]["@y"],10);
 width=parseInt(cell[i]["@width"],10);
 height=parseInt(cell[i]["@height"],10);
-style=cell[i]["@style"];
+style=unescape(cell[i]["@style"]);
 from=cell[i]["@from"];
 to=cell[i]["@to"];
 fromEdge=cell[i]["@fromEdge"];
