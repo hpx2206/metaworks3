@@ -789,15 +789,18 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			
 		}
 		
-		//
-		Contact contact = new Contact();
-		contact.setFriend(writer);
-		contact.setFriendId(writer.getUserId());
-		writer.setMood(title);
-		contact.setMood(title);
 		
-		
-		MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(contact)});
+		// 보안 대화일 경우 처리해야 함.
+		if(!securedConversation){
+			Contact contact = new Contact();
+			contact.setFriend(writer);
+			contact.setFriendId(writer.getUserId());
+			writer.setMood(title);
+			writer.getMetaworksContext().setWhen("contacts");
+			contact.setMood(title);
+			
+			MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(contact)});
+		}
 		//
 		
 		//makes new line and change existing div
