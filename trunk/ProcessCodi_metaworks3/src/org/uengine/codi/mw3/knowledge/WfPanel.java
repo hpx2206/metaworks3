@@ -107,32 +107,34 @@ public class WfPanel implements ContextAware {
 		
 		setWfNode(node);
 		
-		String rootPosition = session.getCompany().getComCode();
-		
-		//setting path
-		path = new ArrayList<IWfNode>();
-		IWfNode currNode = getWfNode();
-		
-		if(!rootPosition.equals(currNode.getId()))
-		do{
-			WfNode parentNode = new WfNode();
-			parentNode.setId(currNode.getParentId());
+		try{
+			String rootPosition = session.getCompany().getComCode();
 			
-			if(rootPosition.equals(currNode.getParentId()))
-				break;
+			//setting path
+			path = new ArrayList<IWfNode>();
+			IWfNode currNode = getWfNode();
 			
-			currNode = parentNode.databaseMe();
-			currNode.getMetaworksContext().setHow("PATH");
-			path.add(0, currNode);
-		}while(!rootPosition.equals(currNode.getId()));
-
-		WfNode root = new WfNode();
-		root.setId(rootPosition);
-		root.setName("Home");
-		root.getMetaworksContext().setHow("PATH");
-		path.add(0, root);
-		
-		setPath(path);
+			if(!rootPosition.equals(currNode.getId()))
+			do{
+				WfNode parentNode = new WfNode();
+				parentNode.setId(currNode.getParentId());
+				
+				if(rootPosition.equals(currNode.getParentId()))
+					break;
+				
+				currNode = parentNode.databaseMe();
+				currNode.getMetaworksContext().setHow("PATH");
+				path.add(0, currNode);
+			}while(!rootPosition.equals(currNode.getId()));
+	
+			WfNode root = new WfNode();
+			root.setId(rootPosition);
+			root.setName("Home");
+			root.getMetaworksContext().setHow("PATH");
+			path.add(0, root);
+			
+			setPath(path);
+		}catch(Exception e){}
 
 	}		
 	
