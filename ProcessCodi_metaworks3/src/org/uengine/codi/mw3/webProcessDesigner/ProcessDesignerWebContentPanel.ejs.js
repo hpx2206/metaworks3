@@ -5,9 +5,9 @@ var org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel = fun
 	var object = mw3.objects[this.objectId];
 	
 	var canvas = null;
-
+	$('#objDiv_' + this.objectId).css('height','100%')
     // Canvas
-    OG.common.Constants.CANVAS_BACKGROUND = "#EEEEEE";
+    OG.common.Constants.CANVAS_BACKGROUND = "#fff";
     OG.Constants.ENABLE_CANVAS_OFFSET = true; // Layout 사용하지 않을 경우 true 로 지정
     
     canvas = new OG.Canvas('canvas');

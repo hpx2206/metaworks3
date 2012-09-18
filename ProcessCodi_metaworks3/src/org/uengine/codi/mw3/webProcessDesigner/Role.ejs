@@ -6,21 +6,20 @@ if(value){
 <%
 		if(mw3.when == 'view'){
 %>
-			<table style="width:100%; padding-top:5px;">
-				<tr>
-					<td width="100px">ROLE : <%=fields.name.here()%></td>
-					<td><a id="wBtn" href="#" onClick="<%=methods.remove.caller()%>"><span><%=mw3.localize("$remove")%></span></a></td>
-				</tr>
-			</table>
+			<div class="roleBox">
+					<div style="float:left; height:35px;">ROLE : </div>
+					<div style="float:left;"> <%=fields.name.here()%></div>
+					<div class="clear"></div>
+					<div><a id="wBtn" href="#" onClick="<%=methods.remove.caller()%>"><span><%=mw3.localize("$remove")%></span></a></div>
+			</div>
 <%
 		}else{
 %>
-			<table style="width:100%; padding-top:5px;">
-				<tr>
-					<td width="100px"><%=fields.name.here()%></td>
-					<td><a id="wBtn" href="#" onClick="<%=methods.add.caller()%>"><span><%=mw3.localize("$add")%></span></a></td>
-				</tr>
-			</table>
+			<div class="addRoleBox">
+					<div style="float:left; margin-right:10px; margin-top:2px;"><%=fields.name.here()%></div>
+					<div style="float:left;"><a id="wBtn" href="#" onClick="<%=methods.add.caller()%>"><span><%=mw3.localize("$add")%></span></a></div>
+					<div class="clear"></div>
+			</div>
 <%
 		}
 }
