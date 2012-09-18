@@ -1,0 +1,16 @@
+<%
+if(value){
+%>
+	<table style="width:100%; padding-top:5px;">
+		<tr>
+			<td width="100px;">프로젝트명 입력</td>
+			<td><%=fields.title.here()%></td>
+		</tr>
+		<tr>
+			<td><a id="wBtn" href="#" onClick="<%=methods.save.caller()%>"><span><%=mw3.localize("$save")%></span></a></td>
+		</tr>
+	</table>
+
+<%
+}
+%>

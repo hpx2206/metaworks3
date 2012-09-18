@@ -20,6 +20,12 @@ group.appendChild(ele2);
 group.rotate(45, 50, 50);
 */
 
+/* foreignObject 기능 추가 (by 이승백 2012-09-18)
+@example
+var paper = new Raphael('canvas', 800, 600);
+paper.foreignObject('<div>test</div>', 100, 100, 50, 50);
+ */
+
 // ┌──────────────────────────────────────────────────────────────────────────────────────┐ \\
 // │ Eve 0.3.4 - JavaScript Events Library                                                │ \\
 // ├──────────────────────────────────────────────────────────────────────────────────────┤ \\
@@ -39,7 +45,7 @@ group.rotate(45, 50, 50);
         current_event,
         stop,
         events = {n: {}},
-    
+
         eve = function (name, scope) {
             var e = events,
                 oldstop = stop,
@@ -100,7 +106,7 @@ group.rotate(45, 50, 50);
             current_event = ce;
             return out.length ? out : null;
         };
-    
+
     eve.listeners = function (name) {
         var names = name.split(separator),
             e = events,
@@ -132,8 +138,8 @@ group.rotate(45, 50, 50);
         }
         return out;
     };
-    
-    
+
+
     eve.on = function (name, f) {
         var names = name.split(separator),
             e = events;
@@ -153,19 +159,19 @@ group.rotate(45, 50, 50);
             }
         };
     };
-    
+
     eve.stop = function () {
         stop = 1;
     };
-    
+
     eve.nt = function (subname) {
         if (subname) {
             return new RegExp("(?:\\.|\\/|^)" + subname + "(?:\\.|\\/|$)").test(current_event);
         }
         return current_event;
     };
-    
-    
+
+
     eve.off = eve.unbind = function (name, f) {
         var names = name.split(separator),
             e,
@@ -218,7 +224,7 @@ group.rotate(45, 50, 50);
             }
         }
     };
-    
+
     eve.once = function (name, f) {
         var f2 = function () {
             var res = f.apply(this, arguments);
@@ -227,7 +233,7 @@ group.rotate(45, 50, 50);
         };
         return eve.on(name, f2);
     };
-    
+
     eve.version = version;
     eve.toString = function () {
         return "You are running Eve " + version;
@@ -244,7 +250,7 @@ group.rotate(45, 50, 50);
 // │ Licensed under the MIT (http://raphaeljs.com/license.html) license. │ \\
 // └─────────────────────────────────────────────────────────────────────┘ \\
 (function () {
-    
+
     function R(first) {
         if (R.is(first, "function")) {
             return loaded ? first() : eve.on("raphael.DOMload", first);
@@ -279,8 +285,8 @@ group.rotate(45, 50, 50);
             is: g.win.Raphael
         },
         Paper = function () {
-            
-            
+
+
             this.ca = this.customAttributes = {};
         },
         paperproto,
@@ -444,9 +450,13 @@ group.rotate(45, 50, 50);
             text: function (el) {
                 var bbox = el._getBBox();
                 return rectPath(bbox.x, bbox.y, bbox.width, bbox.height);
-            }
+            },
+			foreignObject: function (el) {
+				var a = el.attrs;
+				return rectPath(a.x, a.y, a.width, a.height);
+			}
         },
-        
+
         mapPath = R.mapPath = function (path, matrix) {
             if (!matrix) {
                 return path;
@@ -466,7 +476,7 @@ group.rotate(45, 50, 50);
         };
 
     R._g = g;
-    
+
     R.type = (g.win.SVGAngle || g.doc.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#BasicStructure", "1.1") ? "SVG" : "VML");
     if (R.type == "VML") {
         var d = g.doc.createElement("div"),
@@ -479,15 +489,15 @@ group.rotate(45, 50, 50);
         }
         d = null;
     }
-    
-    
+
+
     R.svg = !(R.vml = R.type == "VML");
     R._Paper = Paper;
-    
+
     R.fn = paperproto = Paper.prototype = R.prototype;
     R._id = 0;
     R._oid = 0;
-    
+
     R.is = function (o, type) {
         type = lowerCase.call(type);
         if (type == "finite") {
@@ -514,7 +524,7 @@ group.rotate(45, 50, 50);
         return res;
     }
 
-    
+
     R.angle = function (x1, y1, x2, y2, x3, y3) {
         if (x3 == null) {
             var x = x1 - x2,
@@ -527,15 +537,15 @@ group.rotate(45, 50, 50);
             return R.angle(x1, y1, x3, y3) - R.angle(x2, y2, x3, y3);
         }
     };
-    
+
     R.rad = function (deg) {
         return deg % 360 * PI / 180;
     };
-    
+
     R.deg = function (rad) {
         return rad * 180 / PI % 360;
     };
-    
+
     R.snapTo = function (values, value, tolerance) {
         tolerance = R.is(tolerance, "finite") ? tolerance : 10;
         if (R.is(values, array)) {
@@ -555,8 +565,8 @@ group.rotate(45, 50, 50);
         }
         return value;
     };
-    
-    
+
+
     var createUUID = R.createUUID = (function (uuidRegEx, uuidReplacer) {
         return function () {
             return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(uuidRegEx, uuidReplacer).toUpperCase();
@@ -567,7 +577,7 @@ group.rotate(45, 50, 50);
         return v.toString(16);
     });
 
-    
+
     R.setWindow = function (newwin) {
         eve("raphael.setWindow", R, g.win, newwin);
         g.win = newwin;
@@ -638,7 +648,7 @@ group.rotate(45, 50, 50);
             g /= 255;
             b /= 255;
         }
-        
+
         return [r, g, b];
     },
     packageRGB = function (r, g, b, o) {
@@ -655,8 +665,8 @@ group.rotate(45, 50, 50);
         R.is(o, "finite") && (rgb.opacity = o);
         return rgb;
     };
-    
-    
+
+
     R.color = function (clr) {
         var rgb;
         if (R.is(clr, "object") && "h" in clr && "s" in clr && "b" in clr) {
@@ -690,7 +700,7 @@ group.rotate(45, 50, 50);
         clr.toString = rgbtoString;
         return clr;
     };
-    
+
     R.hsb2rgb = function (h, s, v, o) {
         if (this.is(h, "object") && "h" in h && "s" in h && "b" in h) {
             v = h.b;
@@ -711,7 +721,7 @@ group.rotate(45, 50, 50);
         B += [0, 0, X, C, C, X][h];
         return packageRGB(R, G, B, o);
     };
-    
+
     R.hsl2rgb = function (h, s, l, o) {
         if (this.is(h, "object") && "h" in h && "s" in h && "l" in h) {
             l = h.l;
@@ -736,7 +746,7 @@ group.rotate(45, 50, 50);
         B += [0, 0, X, C, C, X][h];
         return packageRGB(R, G, B, o);
     };
-    
+
     R.rgb2hsb = function (r, g, b) {
         b = prepareRGB(r, g, b);
         r = b[0];
@@ -755,7 +765,7 @@ group.rotate(45, 50, 50);
         S = C == 0 ? 0 : C / V;
         return {h: H, s: S, b: V, toString: hsbtoString};
     };
-    
+
     R.rgb2hsl = function (r, g, b) {
         b = prepareRGB(r, g, b);
         r = b[0];
@@ -817,12 +827,12 @@ group.rotate(45, 50, 50);
         g.doc.body.appendChild(img);
         img.src = src;
     };
-    
+
     function clrToString() {
         return this.hex;
     }
 
-    
+
     R.getRGB = cacher(function (colour) {
         if (!colour || !!((colour = Str(colour)).indexOf("-") + 1)) {
             return {r: -1, g: -1, b: -1, hex: "none", error: 1, toString: clrToString};
@@ -894,19 +904,19 @@ group.rotate(45, 50, 50);
         }
         return {r: -1, g: -1, b: -1, hex: "none", error: 1, toString: clrToString};
     }, R);
-    
+
     R.hsb = cacher(function (h, s, b) {
         return R.hsb2rgb(h, s, b).hex;
     });
-    
+
     R.hsl = cacher(function (h, s, l) {
         return R.hsl2rgb(h, s, l).hex;
     });
-    
+
     R.rgb = cacher(function (r, g, b) {
         return "#" + (16777216 | b | (g << 8) | (r << 16)).toString(16).slice(1);
     });
-    
+
     R.getColor = function (value) {
         var start = this.getColor.start = this.getColor.start || {h: 0, s: 1, b: value || .75},
             rgb = this.hsb2rgb(start.h, start.s, start.b);
@@ -918,7 +928,7 @@ group.rotate(45, 50, 50);
         }
         return rgb.hex;
     };
-    
+
     R.getColor.reset = function () {
         delete this.start;
     };
@@ -961,7 +971,7 @@ group.rotate(45, 50, 50);
 
         return d;
     }
-    
+
     R.parsePathString = function (pathString) {
         if (!pathString) {
             return null;
@@ -970,7 +980,7 @@ group.rotate(45, 50, 50);
         if (pth.arr) {
             return pathClone(pth.arr);
         }
-        
+
         var paramCounts = {a: 7, c: 6, h: 1, l: 2, m: 2, r: 4, q: 4, s: 4, t: 2, v: 1, z: 0},
             data = [];
         if (R.is(pathString, array) && R.is(pathString[0], array)) { // rough assumption
@@ -1002,7 +1012,7 @@ group.rotate(45, 50, 50);
         pth.arr = pathClone(data);
         return data;
     };
-    
+
     R.parseTransformString = cacher(function (TString) {
         if (!TString) {
             return null;
@@ -1043,7 +1053,7 @@ group.rotate(45, 50, 50);
         });
         return p[ps];
     };
-    
+
     R.findDotsAtSegment = function (p1x, p1y, c1x, c1y, c2x, c2y, p2x, p2y, t) {
         var t1 = 1 - t,
             t13 = pow(t1, 3),
@@ -1072,7 +1082,7 @@ group.rotate(45, 50, 50);
             alpha: alpha
         };
     };
-    
+
     R.bezierBBox = function (p1x, p1y, c1x, c1y, c2x, c2y, p2x, p2y) {
         if (!R.is(p1x, "array")) {
             p1x = [p1x, p1y, c1x, c1y, c2x, c2y, p2x, p2y];
@@ -1087,11 +1097,11 @@ group.rotate(45, 50, 50);
             height: bbox.max.y - bbox.min.y
         };
     };
-    
+
     R.isPointInsideBBox = function (bbox, x, y) {
         return x >= bbox.x && x <= bbox.x2 && y >= bbox.y && y <= bbox.y2;
     };
-    
+
     R.isBBoxIntersect = function (bbox1, bbox2) {
         var i = R.isPointInsideBBox;
         return i(bbox2, bbox1.x, bbox1.y)
@@ -1241,7 +1251,7 @@ group.rotate(45, 50, 50);
         }
         return res;
     }
-    
+
     R.pathIntersection = function (path1, path2) {
         return interPathHelper(path1, path2);
     };
@@ -1301,7 +1311,7 @@ group.rotate(45, 50, 50);
         }
         return res;
     }
-    
+
     R.isPointInsidePath = function (path, x, y) {
         var bbox = R.pathBBox(path);
         return R.isPointInsideBBox(bbox, x, y) &&
@@ -1312,7 +1322,7 @@ group.rotate(45, 50, 50);
             eve("raphael.log", null, "Rapha\xebl: you are calling to method \u201c" + methodname + "\u201d of removed object", methodname);
         };
     };
-    
+
     var pathDimensions = R.pathBBox = function (path) {
         var pth = paths(path);
         if (pth.bbox) {
@@ -1322,7 +1332,7 @@ group.rotate(45, 50, 50);
             return {x: 0, y: 0, width: 0, height: 0, x2: 0, y2: 0};
         }
         path = path2curve(path);
-        var x = 0, 
+        var x = 0,
             y = 0,
             X = [],
             Y = [],
@@ -1870,7 +1880,7 @@ group.rotate(45, 50, 50);
             el2.prev = el;
             el.next = el2;
         },
-        
+
         toMatrix = R.toMatrix = function (path, transform) {
             var bb = pathDimensions(path),
                 el = {
@@ -1884,7 +1894,7 @@ group.rotate(45, 50, 50);
             extractTransform(el, transform);
             return el.matrix;
         },
-        
+
         transformPath = R.transformPath = function (path, transform) {
             return mapPath(path, toMatrix(path, transform));
         },
@@ -1964,7 +1974,7 @@ group.rotate(45, 50, 50);
                 }
             }
 
-            
+
             el.matrix = m;
 
             _.sx = sx;
@@ -2058,12 +2068,12 @@ group.rotate(45, 50, 50);
             height: h
         };
     };
-    
+
     R.pathToRelative = pathToRelative;
     R._engine = {};
-    
+
     R.path2curve = path2curve;
-    
+
     R.matrix = function (a, b, c, d, e, f) {
         return new Matrix(a, b, c, d, e, f);
     };
@@ -2085,7 +2095,7 @@ group.rotate(45, 50, 50);
         }
     }
     (function (matrixproto) {
-        
+
         matrixproto.add = function (a, b, c, d, e, f) {
             var out = [[], [], []],
                 m = [[this.a, this.c, this.e], [this.b, this.d, this.f], [0, 0, 1]],
@@ -2112,28 +2122,28 @@ group.rotate(45, 50, 50);
             this.e = out[0][2];
             this.f = out[1][2];
         };
-        
+
         matrixproto.invert = function () {
             var me = this,
                 x = me.a * me.d - me.b * me.c;
             return new Matrix(me.d / x, -me.b / x, -me.c / x, me.a / x, (me.c * me.f - me.d * me.e) / x, (me.b * me.e - me.a * me.f) / x);
         };
-        
+
         matrixproto.clone = function () {
             return new Matrix(this.a, this.b, this.c, this.d, this.e, this.f);
         };
-        
+
         matrixproto.translate = function (x, y) {
             this.add(1, 0, 0, 1, x, y);
         };
-        
+
         matrixproto.scale = function (x, y, cx, cy) {
             y == null && (y = x);
             (cx || cy) && this.add(1, 0, 0, 1, cx, cy);
             this.add(x, 0, 0, y, 0, 0);
             (cx || cy) && this.add(1, 0, 0, 1, -cx, -cy);
         };
-        
+
         matrixproto.rotate = function (a, x, y) {
             a = R.rad(a);
             x = x || 0;
@@ -2143,11 +2153,11 @@ group.rotate(45, 50, 50);
             this.add(cos, sin, -sin, cos, x, y);
             this.add(1, 0, 0, 1, -x, -y);
         };
-        
+
         matrixproto.x = function (x, y) {
             return x * this.a + y * this.c + this.e;
         };
-        
+
         matrixproto.y = function (x, y) {
             return x * this.b + y * this.d + this.f;
         };
@@ -2175,7 +2185,7 @@ group.rotate(45, 50, 50);
             a[0] && (a[0] /= mag);
             a[1] && (a[1] /= mag);
         }
-        
+
         matrixproto.split = function () {
             var out = {};
             // translation
@@ -2211,14 +2221,14 @@ group.rotate(45, 50, 50);
             out.noRotation = !+out.shear.toFixed(9) && !out.rotate;
             return out;
         };
-        
+
         matrixproto.toTransformString = function (shorter) {
             var s = shorter || this[split]();
             if (s.isSimple) {
                 s.scalex = +s.scalex.toFixed(4);
                 s.scaley = +s.scaley.toFixed(4);
                 s.rotate = +s.rotate.toFixed(4);
-                return  (s.dx || s.dy ? "t" + [s.dx, s.dy] : E) + 
+                return  (s.dx || s.dy ? "t" + [s.dx, s.dy] : E) +
                         (s.scalex != 1 || s.scaley != 1 ? "s" + [s.scalex, s.scaley, 0, 0] : E) +
                         (s.rotate ? "r" + [s.rotate, 0, 0] : E);
             } else {
@@ -2231,7 +2241,7 @@ group.rotate(45, 50, 50);
     var version = navigator.userAgent.match(/Version\/(.*?)\s/) || navigator.userAgent.match(/Chrome\/(\d+)/);
     if ((navigator.vendor == "Apple Computer, Inc.") && (version && version[1] < 4 || navigator.platform.slice(0, 2) == "iP") ||
         (navigator.vendor == "Google Inc." && version && version[1] < 8)) {
-        
+
         paperproto.safari = function () {
             var rect = this.rect(-99, -99, this.width + 99, this.height + 99).attr({stroke: "none"});
             setTimeout(function () {rect.remove();});
@@ -2239,7 +2249,7 @@ group.rotate(45, 50, 50);
     } else {
         paperproto.safari = fun;
     }
- 
+
     var preventDefault = function () {
         this.returnValue = false;
     },
@@ -2354,40 +2364,40 @@ group.rotate(45, 50, 50);
         }
         drag = [];
     },
-    
+
     elproto = R.el = {};
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     for (var i = events.length; i--;) {
         (function (eventName) {
             R[eventName] = elproto[eventName] = function (fn, scope) {
@@ -2410,8 +2420,8 @@ group.rotate(45, 50, 50);
             };
         })(events[i]);
     }
-    
-    
+
+
     elproto.data = function (key, value) {
         var data = eldata[this.id] = eldata[this.id] || {};
         if (arguments.length == 1) {
@@ -2428,7 +2438,7 @@ group.rotate(45, 50, 50);
         eve("raphael.data.set." + this.id, this, value, key);
         return this;
     };
-    
+
     elproto.removeData = function (key) {
         if (key == null) {
             eldata[this.id] = {};
@@ -2437,16 +2447,16 @@ group.rotate(45, 50, 50);
         }
         return this;
     };
-    
+
     elproto.hover = function (f_in, f_out, scope_in, scope_out) {
         return this.mouseover(f_in, scope_in).mouseout(f_out, scope_out || scope_in);
     };
-    
+
     elproto.unhover = function (f_in, f_out) {
         return this.unmouseover(f_in).unmouseout(f_out);
     };
     var draggable = [];
-    
+
     elproto.drag = function (onmove, onstart, onend, move_scope, start_scope, end_scope) {
         function start(e) {
             (e.originalEvent || e).preventDefault();
@@ -2467,11 +2477,11 @@ group.rotate(45, 50, 50);
         this.mousedown(start);
         return this;
     };
-    
+
     elproto.onDragOver = function (f) {
         f ? eve.on("raphael.drag.over." + this.id, f) : eve.unbind("raphael.drag.over." + this.id);
     };
-    
+
     elproto.undrag = function () {
         var i = draggable.length;
         while (i--) if (draggable[i].el == this) {
@@ -2494,66 +2504,73 @@ group.rotate(45, 50, 50);
         this.__set__ && this.__set__.push(out);
         return out;
     };
-    
+
     paperproto.rect = function (x, y, w, h, r) {
         var out = R._engine.rect(this, x || 0, y || 0, w || 0, h || 0, r || 0);
         this.__set__ && this.__set__.push(out);
         return out;
     };
-    
+
     paperproto.ellipse = function (x, y, rx, ry) {
         var out = R._engine.ellipse(this, x || 0, y || 0, rx || 0, ry || 0);
         this.__set__ && this.__set__.push(out);
         return out;
     };
-    
+
     paperproto.path = function (pathString) {
         pathString && !R.is(pathString, string) && !R.is(pathString[0], array) && (pathString += E);
         var out = R._engine.path(R.format[apply](R, arguments), this);
         this.__set__ && this.__set__.push(out);
         return out;
     };
-    
+
     paperproto.image = function (src, x, y, w, h) {
         var out = R._engine.image(this, src || "about:blank", x || 0, y || 0, w || 0, h || 0);
         this.__set__ && this.__set__.push(out);
         return out;
     };
-    
+
     paperproto.text = function (x, y, text) {
         var out = R._engine.text(this, x || 0, y || 0, Str(text));
         this.__set__ && this.__set__.push(out);
         return out;
     };
-    
+
+	// 추가(for foreignObject 기능)
+	paperproto.foreignObject = function (obj, x, y, w, h) {
+		var out = R._engine.foreignObject(this, x || 0, y || 0, w || 0, h || 0, obj);
+		this.__set__ && this.__set__.push(out);
+		return out;
+	};
+
     paperproto.set = function (itemsArray) {
         !R.is(itemsArray, "array") && (itemsArray = Array.prototype.splice.call(arguments, 0, arguments.length));
         var out = new Set(itemsArray);
         this.__set__ && this.__set__.push(out);
         return out;
     };
-    
+
     paperproto.setStart = function (set) {
         this.__set__ = set || this.set();
     };
-    
+
     paperproto.setFinish = function (set) {
         var out = this.__set__;
         delete this.__set__;
         return out;
     };
-    
+
     paperproto.setSize = function (width, height) {
         return R._engine.setSize.call(this, width, height);
     };
-    
+
     paperproto.setViewBox = function (x, y, w, h, fit) {
         return R._engine.setViewBox.call(this, x, y, w, h, fit);
     };
-    
-    
+
+
     paperproto.top = paperproto.bottom = null;
-    
+
     paperproto.raphael = R;
     var getOffset = function (elem) {
         var box = elem.getBoundingClientRect(),
@@ -2568,7 +2585,7 @@ group.rotate(45, 50, 50);
             x: left
         };
     };
-    
+
     paperproto.getElementByPoint = function (x, y) {
         var paper = this,
             svg = paper.canvas,
@@ -2594,7 +2611,7 @@ group.rotate(45, 50, 50);
         target = target && target.raphael ? paper.getById(target.raphaelid) : null;
         return target;
     };
-    
+
     paperproto.getById = function (id) {
         var bot = this.bottom;
         while (bot) {
@@ -2605,7 +2622,7 @@ group.rotate(45, 50, 50);
         }
         return null;
     };
-    
+
     paperproto.forEach = function (callback, thisArg) {
         var bot = this.bottom;
         while (bot) {
@@ -2616,7 +2633,7 @@ group.rotate(45, 50, 50);
         }
         return this;
     };
-    
+
     paperproto.getElementsByPoint = function (x, y) {
         var set = this.set();
         this.forEach(function (el) {
@@ -2632,12 +2649,12 @@ group.rotate(45, 50, 50);
     function x_y_w_h() {
         return this.x + S + this.y + S + this.width + " \xd7 " + this.height;
     }
-    
+
     elproto.isPointInside = function (x, y) {
         var rp = this.realPath = this.realPath || getPath[this.type](this);
         return R.isPointInsidePath(rp, x, y);
     };
-    
+
     elproto.getBBox = function (isWithoutTransform) {
         if (this.removed) {
             return {};
@@ -2663,7 +2680,7 @@ group.rotate(45, 50, 50);
         }
         return _.bbox;
     };
-    
+
     elproto.clone = function () {
         if (this.removed) {
             return null;
@@ -2672,7 +2689,7 @@ group.rotate(45, 50, 50);
         this.__set__ && this.__set__.push(out);
         return out;
     };
-    
+
     elproto.glow = function (glow) {
         if (this.type == "text") {
             return null;
@@ -2755,11 +2772,11 @@ group.rotate(45, 50, 50);
     var getTotalLength = getLengthFactory(1),
         getPointAtLength = getLengthFactory(),
         getSubpathsAtLength = getLengthFactory(0, 1);
-    
+
     R.getTotalLength = getTotalLength;
-    
+
     R.getPointAtLength = getPointAtLength;
-    
+
     R.getSubpath = function (path, from, to) {
         if (this.getTotalLength(path) - to < 1e-6) {
             return getSubpathsAtLength(path, from).end;
@@ -2767,7 +2784,7 @@ group.rotate(45, 50, 50);
         var a = getSubpathsAtLength(path, to, 1);
         return from ? getSubpathsAtLength(a, from).end : a;
     };
-    
+
     elproto.getTotalLength = function () {
         if (this.type != "path") {return;}
         if (this.node.getTotalLength) {
@@ -2775,17 +2792,17 @@ group.rotate(45, 50, 50);
         }
         return getTotalLength(this.attrs.path);
     };
-    
+
     elproto.getPointAtLength = function (length) {
         if (this.type != "path") {return;}
         return getPointAtLength(this.attrs.path, length);
     };
-    
+
     elproto.getSubpath = function (from, to) {
         if (this.type != "path") {return;}
         return R.getSubpath(this.attrs.path, from, to);
     };
-    
+
     var ef = R.easing_formulas = {
         linear: function (n) {
             return n;
@@ -2986,7 +3003,7 @@ group.rotate(45, 50, 50);
         upto255 = function (color) {
             return color > 255 ? 255 : color < 0 ? 0 : color;
         };
-    
+
     elproto.animateWith = function (el, anim, params, ms, easing, callback) {
         var element = this;
         if (element.removed) {
@@ -3003,8 +3020,8 @@ group.rotate(45, 50, 50);
             }
         }
         return element;
-        // 
-        // 
+        //
+        //
         // var a = params ? R.animation(params, ms, easing, callback) : anim,
         //     status = element.status(anim);
         // return this.animate(a).status(a, status * anim.ms / a.ms);
@@ -3081,15 +3098,15 @@ group.rotate(45, 50, 50);
         this.top = percents[percents.length - 1];
         this.percents = percents;
     }
-    
+
     Animation.prototype.delay = function (delay) {
         var a = new Animation(this.anim, this.ms);
         a.times = this.times;
         a.del = +delay || 0;
         return a;
     };
-    
-    Animation.prototype.repeat = function (times) { 
+
+    Animation.prototype.repeat = function (times) {
         var a = new Animation(this.anim, this.ms);
         a.del = this.del;
         a.times = math.floor(mmax(times, 0)) || 1;
@@ -3301,7 +3318,7 @@ group.rotate(45, 50, 50);
         }
         eve("raphael.anim.start." + element.id, element, anim);
     }
-    
+
     R.animation = function (params, ms, easing, callback) {
         if (params instanceof Animation) {
             return params;
@@ -3327,7 +3344,7 @@ group.rotate(45, 50, 50);
             return new Animation({100: p}, ms);
         }
     };
-    
+
     elproto.animate = function (params, ms, easing, callback) {
         var element = this;
         if (element.removed) {
@@ -3338,14 +3355,14 @@ group.rotate(45, 50, 50);
         runAnimation(anim, element, anim.percents[0], null, element.attr());
         return element;
     };
-    
+
     elproto.setTime = function (anim, value) {
         if (anim && value != null) {
             this.status(anim, mmin(value, anim.ms) / anim.ms);
         }
         return this;
     };
-    
+
     elproto.status = function (anim, value) {
         var out = [],
             i = 0,
@@ -3374,7 +3391,7 @@ group.rotate(45, 50, 50);
             return out;
         }
     };
-    
+
     elproto.pause = function (anim) {
         for (var i = 0; i < animationElements.length; i++) if (animationElements[i].el.id == this.id && (!anim || animationElements[i].anim == anim)) {
             if (eve("raphael.anim.pause." + this.id, this, animationElements[i].anim) !== false) {
@@ -3383,7 +3400,7 @@ group.rotate(45, 50, 50);
         }
         return this;
     };
-    
+
     elproto.resume = function (anim) {
         for (var i = 0; i < animationElements.length; i++) if (animationElements[i].el.id == this.id && (!anim || animationElements[i].anim == anim)) {
             var e = animationElements[i];
@@ -3394,7 +3411,7 @@ group.rotate(45, 50, 50);
         }
         return this;
     };
-    
+
     elproto.stop = function (anim) {
         for (var i = 0; i < animationElements.length; i++) if (animationElements[i].el.id == this.id && (!anim || animationElements[i].anim == anim)) {
             if (eve("raphael.anim.stop." + this.id, this, animationElements[i].anim) !== false) {
@@ -3429,7 +3446,7 @@ group.rotate(45, 50, 50);
         }
     },
     setproto = Set.prototype;
-    
+
     setproto.push = function () {
         var item,
             len;
@@ -3443,12 +3460,12 @@ group.rotate(45, 50, 50);
         }
         return this;
     };
-    
+
     setproto.pop = function () {
         this.length && delete this[this.length--];
         return this.items.pop();
     };
-    
+
     setproto.forEach = function (callback, thisArg) {
         for (var i = 0, ii = this.items.length; i < ii; i++) {
             if (callback.call(thisArg, this.items[i], i) === false) {
@@ -3479,13 +3496,13 @@ group.rotate(45, 50, 50);
         }
         return this;
     };
-    
+
     setproto.clear = function () {
         while (this.length) {
             this.pop();
         }
     };
-    
+
     setproto.splice = function (index, count, insertion) {
         index = index < 0 ? mmax(this.length + index, 0) : index;
         count = mmax(0, mmin(this.length - index, count));
@@ -3512,7 +3529,7 @@ group.rotate(45, 50, 50);
         }
         return new Set(todel);
     };
-    
+
     setproto.exclude = function (el) {
         for (var i = 0, ii = this.length; i < ii; i++) if (this[i] == el) {
             this.splice(i, 1);
@@ -3583,7 +3600,7 @@ group.rotate(45, 50, 50);
         return "Rapha\xebl\u2018s set";
     };
 
-    
+
     R.registerFont = function (font) {
         if (!font.face) {
             return font;
@@ -3623,7 +3640,7 @@ group.rotate(45, 50, 50);
         }
         return font;
     };
-    
+
     paperproto.getFont = function (family, weight, style, stretch) {
         stretch = stretch || "normal";
         style = style || "normal";
@@ -3652,7 +3669,7 @@ group.rotate(45, 50, 50);
         }
         return thefont;
     };
-    
+
     paperproto.print = function (x, y, string, font, size, origin, letter_spacing) {
         origin = origin || "middle"; // baseline|middle
         letter_spacing = mmax(mmin(letter_spacing || 0, 1), -1);
@@ -3692,7 +3709,7 @@ group.rotate(45, 50, 50);
         });
     };
 
-    
+
     paperproto.add = function (json) {
         if (R.is(json, "array")) {
             var res = this.set(),
@@ -3707,7 +3724,7 @@ group.rotate(45, 50, 50);
         return res;
     };
 
-    
+
     R.format = function (token, params) {
         var args = R.is(params, array) ? [0][concat](params) : arguments;
         token && R.is(token, string) && args.length - 1 && (token = token.replace(formatrg, function (str, i) {
@@ -3715,7 +3732,7 @@ group.rotate(45, 50, 50);
         }));
         return token || E;
     };
-    
+
     R.fullfill = (function () {
         var tokenRegex = /\{([^\}]+)\}/g,
             objNotationRegex = /(?:(?:^|\.)(.+?)(?=\[|\.|$|\()|\[('|")(.+?)\2\])(\(\))?/g, // matches .xxxxx or ["xxxxx"] to run over object properties
@@ -3739,12 +3756,12 @@ group.rotate(45, 50, 50);
             });
         };
     })();
-    
+
     R.ninja = function () {
         oldRaphael.was ? (g.win.Raphael = oldRaphael.is) : delete Raphael;
         return R;
     };
-    
+
     R.st = setproto;
     // Firefox <3.6 fix: http://webreflection.blogspot.com/2009/11/195-chars-to-help-lazy-loading.html
     (function (doc, loaded, f) {
@@ -3762,7 +3779,7 @@ group.rotate(45, 50, 50);
     })(document, "DOMContentLoaded");
 
     oldRaphael.was ? (g.win.Raphael = R) : (Raphael = R);
-    
+
     eve.on("raphael.DOMload", function () {
         loaded = true;
     });
@@ -3871,7 +3888,7 @@ window.Raphael.svg && function (R) {
                 return null;
             }
             id = id.replace(/[\(\)\s,\xb0#]/g, "_");
-            
+
             if (element.gradient && id != element.gradient.id) {
                 SVG.defs.removeChild(element.gradient);
                 delete element.gradient;
@@ -4382,16 +4399,16 @@ window.Raphael.svg && function (R) {
     Element = function (node, svg) {
         var X = 0,
             Y = 0;
-        
+
         this[0] = this.node = node;
-        
+
         node.raphael = true;
-        
+
         this.id = R._oid++;
         node.raphaelid = this.id;
         this.matrix = R.matrix();
         this.realPath = null;
-        
+
         this.paper = svg;
         this.attrs = this.attrs || {};
         this._ = {
@@ -4404,11 +4421,11 @@ window.Raphael.svg && function (R) {
             dirty: 1
         };
         !svg.bottom && (svg.bottom = this);
-        
+
         this.prev = svg.top;
         svg.top && (svg.top.next = this);
         svg.top = this;
-        
+
         this.next = null;
     },
     elproto = R.el;
@@ -4428,7 +4445,7 @@ window.Raphael.svg && function (R) {
         });
         return p;
     };
-    
+
     elproto.rotate = function (deg, cx, cy) {
         if (this.removed) {
             return this;
@@ -4448,7 +4465,7 @@ window.Raphael.svg && function (R) {
         this.transform(this._.transform.concat([["r", deg, cx, cy]]));
         return this;
     };
-    
+
     elproto.scale = function (sx, sy, cx, cy) {
         if (this.removed) {
             return this;
@@ -4470,7 +4487,7 @@ window.Raphael.svg && function (R) {
         this.transform(this._.transform.concat([["s", sx, sy, cx, cy]]));
         return this;
     };
-    
+
     elproto.translate = function (dx, dy) {
         if (this.removed) {
             return this;
@@ -4484,7 +4501,7 @@ window.Raphael.svg && function (R) {
         this.transform(this._.transform.concat([["t", dx, dy]]));
         return this;
     };
-    
+
     elproto.transform = function (tstr) {
         var _ = this._;
         if (tstr == null) {
@@ -4495,7 +4512,7 @@ window.Raphael.svg && function (R) {
         this.clip && $(this.clip, {transform: this.matrix.invert()});
         this.pattern && updatePosition(this);
         this.node && $(this.node, {transform: this.matrix});
-    
+
         if (_.sx != 1 || _.sy != 1) {
             var sw = this.attrs[has]("stroke-width") ? this.attrs["stroke-width"] : 1;
             this.attr({"stroke-width": sw});
@@ -4503,17 +4520,17 @@ window.Raphael.svg && function (R) {
 
         return this;
     };
-    
+
     elproto.hide = function () {
         !this.removed && this.paper.safari(this.node.style.display = "none");
         return this;
     };
-    
+
     elproto.show = function () {
         !this.removed && this.paper.safari(this.node.style.display = "");
         return this;
     };
-    
+
     elproto.remove = function () {
         if (this.removed || !this.node.parentNode) {
             return;
@@ -4551,7 +4568,7 @@ window.Raphael.svg && function (R) {
         hide && this.hide();
         return bbox;
     };
-    
+
     elproto.attr = function (name, value) {
         if (this.removed) {
             return this;
@@ -4612,7 +4629,7 @@ window.Raphael.svg && function (R) {
         setFillAndStroke(this, params);
         return this;
     };
-    
+
     elproto.toFront = function () {
         if (this.removed) {
             return this;
@@ -4626,14 +4643,14 @@ window.Raphael.svg && function (R) {
         svg.top != this && R._tofront(this, svg);
         return this;
     };
-    
+
     elproto.toBack = function () {
         if (this.removed) {
             return this;
         }
         var parent = this.node.parentNode;
         if (parent.tagName.toLowerCase() == "a") {
-            parent.parentNode.insertBefore(this.node.parentNode, this.node.parentNode.parentNode.firstChild); 
+            parent.parentNode.insertBefore(this.node.parentNode, this.node.parentNode.parentNode.firstChild);
         } else if (parent.firstChild != this.node) {
             parent.insertBefore(this.node, this.node.parentNode.firstChild);
         }
@@ -4654,7 +4671,7 @@ window.Raphael.svg && function (R) {
 		this.node.appendChild(node);
 		return this;
 	};
-    
+
     elproto.insertAfter = function (element) {
         if (this.removed) {
             return this;
@@ -4668,7 +4685,7 @@ window.Raphael.svg && function (R) {
         R._insertafter(this, element, this.paper);
         return this;
     };
-    
+
     elproto.insertBefore = function (element) {
         if (this.removed) {
             return this;
@@ -4767,6 +4784,26 @@ window.Raphael.svg && function (R) {
         setFillAndStroke(res, res.attrs);
         return res;
     };
+	// 추가(for foreignObject 기능)
+	R._engine.foreignObject = function (svg, x, y, w, h, obj) {
+		if ((typeof w) !== 'number') {
+			obj = w;
+			w = obj.offsetWidth;
+			h = obj.offsetHeight;
+		}
+		var el = $("foreignObject");
+		svg.canvas && svg.canvas.appendChild(el);
+		var res = new Element(el, svg);
+		res.attrs = {x: x, y: y, width: w, height: h};
+		res.type = "foreignObject";
+		$(el, res.attrs);
+		if (obj) {
+			var div = document.createElement('div');
+			div.innerHTML = obj;
+			res.node.appendChild(div);
+		}
+		return res;
+	};
     R._engine.setSize = function (width, height) {
         this.width = width || this.width;
         this.height = height || this.height;
@@ -4853,7 +4890,7 @@ window.Raphael.svg && function (R) {
         this._viewBox = [x, y, w, h, !!fit];
         return this;
     };
-    
+
     R.prototype.renderfix = function () {
         var cnvs = this.canvas,
             s = cnvs.style,
@@ -4876,7 +4913,7 @@ window.Raphael.svg && function (R) {
             }
         }
     };
-    
+
     R.prototype.clear = function () {
         R.eve("raphael.clear", this);
         var c = this.canvas;
@@ -4888,7 +4925,7 @@ window.Raphael.svg && function (R) {
         c.appendChild(this.desc);
         c.appendChild(this.defs = $("defs"));
     };
-    
+
     R.prototype.remove = function () {
         eve("raphael.remove", this);
         this.canvas.parentNode && this.canvas.parentNode.removeChild(this.canvas);
@@ -5141,7 +5178,7 @@ window.Raphael.vml && function (R) {
         if ("arrow-end" in params) {
             addArrow(res, params["arrow-end"], 1);
         }
-        if (params.opacity != null || 
+        if (params.opacity != null ||
             params["stroke-width"] != null ||
             params.fill != null ||
             params.src != null ||
@@ -5220,7 +5257,7 @@ window.Raphael.vml && function (R) {
             params["stroke-width"] && (stroke.weight = width);
             width && width < 1 && (opacity *= width) && (stroke.weight = 1);
             stroke.opacity = opacity;
-        
+
             params["stroke-linejoin"] && (stroke.joinstyle = params["stroke-linejoin"] || "miter");
             stroke.miterlimit = params["stroke-miterlimit"] || 8;
             params["stroke-linecap"] && (stroke.endcap = params["stroke-linecap"] == "butt" ? "flat" : params["stroke-linecap"] == "square" ? "square" : "round");
@@ -5267,7 +5304,7 @@ window.Raphael.vml && function (R) {
                 res._.dirty = 1;
                 break;
             }
-        
+
             // text-anchor emulation
             switch (a["text-anchor"]) {
                 case "start":
@@ -5481,7 +5518,7 @@ window.Raphael.vml && function (R) {
         }
         cx = cx == null ? bbox.x + bbox.width / 2 : cx;
         cy = cy == null ? bbox.y + bbox.height / 2 : cy;
-    
+
         this.transform(this._.transform.concat([["s", sx, sy, cx, cy]]));
         this._.dirtyT = 1;
         return this;
@@ -5793,6 +5830,40 @@ window.Raphael.vml && function (R) {
         p.transform(E);
         return p;
     };
+	// 추가(for foreignObject 기능)
+	R._engine.foreignObject = function (vml, x, y, w, h, obj) {
+		if ((typeof w) !== 'number') {
+			obj = w;
+			w = obj.offsetWidth;
+			h = obj.offsetHeight;
+		}
+		var g = createNode("group");
+		g.style.cssText = [
+			"position:absolute",
+			"left:" + (x - w/2) + "px",
+			"top:" + (y - h/2) + "px",
+			"width:" + w + "px",
+			"height:" + h + "px"
+		].join(";") + ";";
+		g.coordsize = zoom + S + zoom;
+		g.coordorigin = "0 0";
+
+		var div = document.createElement('div');
+		div.innerHTML = obj;
+
+		g.appendChild(div);
+
+		var res = new Element(g, vml);
+		res.type = "foreignObject";
+		res.X = res.attrs.x = x;
+		res.Y = res.attrs.y = y;
+		res.W = res.attrs.width = w;
+		res.H = res.attrs.height = h;
+
+		vml.canvas.appendChild(g);
+
+		return res;
+	};
     R._engine.setSize = function (width, height) {
         var cs = this.canvas.style;
         this.width = width;
