@@ -1,6 +1,7 @@
 package org.uengine.codi.mw3.webProcessDesigner;
 
 import org.metaworks.annotation.Face;
+import org.metaworks.widget.layout.Layout;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.model.ContentWindow;
 
@@ -18,7 +19,7 @@ public class ProcessDesignerWebWindow  extends ContentWindow{
 				ProcessDesignerWebContentPanel processDesignerWebContentPanel) {
 			this.processDesignerWebContentPanel = processDesignerWebContentPanel;
 		}
-		
+
 	public void load(String alias) throws Exception {
 		processDesignerWebContentPanel = new ProcessDesignerWebContentPanel();
 		processDesignerWebContentPanel.setAlias(alias);
@@ -28,5 +29,4 @@ public class ProcessDesignerWebWindow  extends ContentWindow{
 	public void newProcess() throws Exception {
 		processDesignerWebContentPanel = new ProcessDesignerWebContentPanel();
 	}
-	
 }

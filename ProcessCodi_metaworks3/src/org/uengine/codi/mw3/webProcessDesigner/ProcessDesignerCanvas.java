@@ -1,6 +1,8 @@
 package org.uengine.codi.mw3.webProcessDesigner;
 
-public class ProcessDesignerCanvas {
+import java.io.Serializable;
+
+public class ProcessDesignerCanvas implements Serializable{
 	
 		
 	String id;
@@ -122,6 +124,12 @@ public class ProcessDesignerCanvas {
 		public void setData(String data) {
 			this.data = data;
 		}
-	
+	String jsonString;
+		public String getJsonString() {
+			return jsonString;
+		}
+		public void setJsonString(String jsonString) {
+			this.jsonString = jsonString;
+		}
 
 }
