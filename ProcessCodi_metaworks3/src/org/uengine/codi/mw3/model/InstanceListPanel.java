@@ -21,17 +21,23 @@ public class InstanceListPanel implements ContextAware{
 	
 	@AutowiredFromClient
 	public Session session;
-	
-	public InstanceListPanel(){		
-		setSearchBox(new SearchBox());
-		
-		instanceList = new InstanceList();
-		instanceList.init();
-	}
 
-	public InstanceListPanel(Session session2) {
-		// TODO 갑자기 되지를 않아서 임시로 넣어줌
+	public InstanceListPanel(){
+		this(null);
+	}
+	
+	
+	public InstanceListPanel(Session session){		
 		setSearchBox(new SearchBox());
+
+		if(session!=null){
+			this.session = session;
+			
+			newInstantiator = new CommentWorkItem();
+			newInstantiator.setWriter(session.getUser());
+			newInstantiator.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+			newInstantiator.setInstantiation(true);
+		}
 		
 		instanceList = new InstanceList();
 		instanceList.init();
@@ -71,6 +77,14 @@ public class InstanceListPanel implements ContextAware{
 		public void setScheduleCalendar(ScheduleCalendar scheduleCalendar) {
 			this.scheduleCalendar = scheduleCalendar;
 		}
+		
+	WorkItem newInstantiator;
+		public WorkItem getNewInstantiator() {
+			return newInstantiator;
+		}
+		public void setNewInstantiator(WorkItem newInstantiator) {
+			this.newInstantiator = newInstantiator;
+		}	
 	
 	WfPanel knowledge;
 		

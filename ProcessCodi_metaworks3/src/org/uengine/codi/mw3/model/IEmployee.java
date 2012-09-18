@@ -97,8 +97,8 @@ public interface IEmployee extends IDAO {
 	public void setEmail(String email);
 
 	@Range(
-			values={"en", "ko", "jp", "cn"},
-			options={"English", "Korean", "Japanese", "Chinese"}			
+			values={"en", "ko", "jp", "cn", "joodle"},
+			options={"English", "Korean", "Japanese", "Chinese", "joodle"}			
 			)
 	public String getLocale();
 	public void setLocale(String locale);
