@@ -259,7 +259,7 @@ img {
 
 .boxtoprightTab .tabCurrent {
     display: block;
-    background: url('../../images/ide/tCurrnetL.png') left 0;
+    background: url('../../images/ide/tCurrnetL.png') left 0 no-repeat;
     float: left;
     margin-left: -4px;
     padding-left: 10px;
@@ -272,7 +272,7 @@ img {
 .boxtoprightTab .tabCurrent span {
     display: block;
     float: left;
-    background: url('../../images/ide/tCurrnetL.png') right 0;
+    background: url('../../images/ide/tCurrnetR.png') right 0;
     line-height: 200%;
     padding-right: 23px;
     height: 20px;
@@ -1902,3 +1902,7 @@ html, body {
     color: #fff;
     font-weight: bold;
 }
+
+.roleBox{float:left; border:1px solid #C5D9E8; background:#EDF3FE; padding:5px; margin:20px 0 0 10px; cursor:move;     -moz-border-radius: 7px;
+    -webkit-border-radius: 7px;-webkit-box-shadow:0 3px 4px #ccc;}
+.addRoleBox{float:right; margin-top:40px;}
