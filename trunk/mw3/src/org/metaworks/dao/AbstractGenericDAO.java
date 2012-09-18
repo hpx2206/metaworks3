@@ -1119,7 +1119,7 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 						ObjectType objectType = (ObjectType) type.metaworks2Type();
 						ObjectInstance objInst = (ObjectInstance) objectType.createInstance();
 						
-						if(IDAO.class.isAssignableFrom(m.getReturnType())){
+						if(m.getReturnType().isInterface() && IDAO.class.isAssignableFrom(m.getReturnType())){
 							objInst.setObject(MetaworksDAO.createDAOImpl(m.getReturnType()));
 						}
 						
@@ -1195,26 +1195,27 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 							}
 						}
 						
-						for(int i=0; i<objectType.getFieldDescriptors().length; i++){
-							FieldDescriptor fd = objectType.getFieldDescriptors()[i];
-														
-							String actualPropertyName = propertyName + "___" + fd.getName();
-
-							try{
-								String propName = actualPropertyName.toUpperCase();
-								
-								//if cache doesn't contains the property name, it should be ignored since cache.get tries to return null value instead of throwing exception.
-								if(rowSet==null && !cache.containsKey(propName)) 
-									continue;
-								
-								Object
-									propValue = (rowSet!=null ? rowSet.getObject(propName) : cache.get(propName));
-								
-								objInst.setFieldValue(fd.getName(), propValue);
-								atLeastOnceHaveValue = true;
-							}catch(Exception ex){
-							}
-						}
+//						//TODO: deprecated due to poor performance
+//						for(int i=0; i<objectType.getFieldDescriptors().length; i++){
+//							FieldDescriptor fd = objectType.getFieldDescriptors()[i];
+//														
+//							String actualPropertyName = propertyName + "___" + fd.getName();
+//
+//							try{
+//								String propName = actualPropertyName.toUpperCase();
+//								
+//								//if cache doesn't contains the property name, it should be ignored since cache.get tries to return null value instead of throwing exception.
+//								if(rowSet==null && !cache.containsKey(propName)) 
+//									continue;
+//								
+//								Object
+//									propValue = (rowSet!=null ? rowSet.getObject(propName) : cache.get(propName));
+//								
+//								objInst.setFieldValue(fd.getName(), propValue);
+//								atLeastOnceHaveValue = true;
+//							}catch(Exception ex){
+//							}
+//						}
 						
 						if(atLeastOnceHaveValue){
 							Object object = objInst.getObject();

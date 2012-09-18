@@ -315,11 +315,15 @@ public class MetaworksConverter extends BeanConverter{
 							if(!propertyClass.isPrimitive() && 
 									propertyClass!=String.class &&
 									(value==null || !propertyClass.isAssignableFrom(value.getClass()))){
-								
-								boolean needToProhibitRecursivelyGenerateReferenceObject = dao.getImplementationObject().getDaoClass().getName().equals(property.getClassName());
 
-								if(!needToProhibitRecursivelyGenerateReferenceObject)
-									value = Database.createReferenceObject(Thread.currentThread().getContextClassLoader().loadClass(property.getClassName()), dao);
+								
+								Class<?> propClass = Thread.currentThread().getContextClassLoader().loadClass(property.getClassName());
+
+								boolean needToProhibitRecursivelyGenerateReferenceObject = dao.getImplementationObject().getDaoClass().isAssignableFrom(propClass);
+
+								if(!needToProhibitRecursivelyGenerateReferenceObject) {
+									value = Database.createReferenceObject(propClass, dao);
+								}
 							}
 							
 							OutboundVariable nested = null;
