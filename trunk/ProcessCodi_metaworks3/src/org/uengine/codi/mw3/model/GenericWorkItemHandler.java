@@ -60,17 +60,13 @@ public class GenericWorkItemHandler implements ORMappingListener{
 			this.tool = tool;
 		}
 	
-	Number instanceId;
-		
+	Long instanceId;
 	
-		
-	
-	
-		public Number getInstanceId() {
+		public Long getInstanceId() {
 			return instanceId;
 		}
 	
-		public void setInstanceId(Number instanceId) {
+		public void setInstanceId(Long instanceId) {
 			this.instanceId = instanceId;
 		}
 
@@ -85,13 +81,13 @@ public class GenericWorkItemHandler implements ORMappingListener{
 		}
 	
 	
-	Number taskId;
+	Long taskId;
 	
-		public Number getTaskId() {
+		public Long getTaskId() {
 			return taskId;
 		}
 	
-		public void setTaskId(Number taskId) {
+		public void setTaskId(Long taskId) {
 			this.taskId = taskId;
 		}
 

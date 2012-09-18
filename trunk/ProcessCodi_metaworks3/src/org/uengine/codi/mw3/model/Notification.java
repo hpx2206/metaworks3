@@ -8,7 +8,6 @@ import java.util.List;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.annotation.AutowiredFromClient;
-import org.metaworks.dao.AbstractGenericDAO;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.IDAO;
 import org.metaworks.dao.TransactionContext;
