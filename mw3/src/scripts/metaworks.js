@@ -250,8 +250,10 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				if(arguments.length > 1){					
 					if(eval(when))
 						$('#'+this.errorDiv).html("debugPoint: "+ argument)
-				}else
-					alert('debugPoint: '+ argument)
+				}else if(console)
+					console.log('debugPoint: '+ argument);
+				else
+					alert('debugPoint: '+ argument);
 			}
 
 			
