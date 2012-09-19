@@ -266,17 +266,32 @@ org_uengine_codi_mw3_knowledge_IWfNode.prototype = {
 			}			
 			
 			this.timeout = setTimeout(function() {
-				var mashup = mw3.getAutowiredObject('org.uengine.codi.mw3.knowledge.MashupGoogleImage');
-				var mashupTool = null;
 				
-				if(mashup)
-					mashupTool = mashup.__getFaceHelper();
+				var mashupToolNames = ["GoogleImage", "LMS", "KMS"];
 				
-				if(mashupTool){
-					if(value == '')
-						mashupTool.clear();
-					else
-						mashupTool.search(value);
+				for(var i in mashupToolNames){
+					var mashupToolName = mashupToolNames[i];
+					
+					var mashup = mw3.getAutowiredObject('org.uengine.codi.mw3.knowledge.Mashup' + mashupToolName);
+					var mashupTool = null;
+					
+					if(mashup){
+						
+						if(mashup.search){
+							mashup.search(value);
+						}else{
+							mashupTool = mashup.__getFaceHelper();
+							
+							if(mashupTool){
+								if(value == '')
+									mashupTool.clear();
+								else
+									mashupTool.search(value);
+							}					
+							
+						}
+						
+					}
 				}
 			}, 1000);
 			
