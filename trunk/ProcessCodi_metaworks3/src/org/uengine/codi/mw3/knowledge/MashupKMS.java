@@ -9,7 +9,12 @@ public class MashupKMS extends MashupTool{
 	@ServiceMethod	
 	public void search() {
 		setSearchResults(new ArrayList<SearchResult>());
-		getSearchResults().add(new SearchResult());
+		
+		SearchResult searchResult = new SearchResult();
+		searchResult.setTargetNodeId(getTargetNodeId());
+		searchResult.setTitle("XXXXX");
+		
+		getSearchResults().add(searchResult);
 		
 		setSearchResults(searchResults);
 		

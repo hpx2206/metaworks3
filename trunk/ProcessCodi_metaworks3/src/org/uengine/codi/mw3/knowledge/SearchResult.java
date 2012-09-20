@@ -1,14 +1,23 @@
 package org.uengine.codi.mw3.knowledge;
 
+import org.metaworks.annotation.ServiceMethod;
+
 public class SearchResult {
 	
 	String title;
 	String description;
 	String thumbnail;
 	String url;
+	String targetNodeId;
 
 	
 
+	public String getTargetNodeId() {
+		return targetNodeId;
+	}
+	public void setTargetNodeId(String targetNodeId) {
+		this.targetNodeId = targetNodeId;
+	}
 	public String getTitle() {
 		return title;
 	}
@@ -33,4 +42,11 @@ public class SearchResult {
 	public void setUrl(String url) {
 		this.url = url;
 	}
+	
+	
+	@ServiceMethod(callByContent=true)
+	public IWfNode choose(){
+		return null;
+	}
+	
 }

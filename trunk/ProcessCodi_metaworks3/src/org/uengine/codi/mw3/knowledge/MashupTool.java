@@ -25,6 +25,16 @@ public class MashupTool {
 		public void setKeyword(String keyword) {
 			this.keyword = keyword;
 		}
+		
+	String targetNodeId;
+	
+		public String getTargetNodeId() {
+			return targetNodeId;
+		}
+	
+		public void setTargetNodeId(String targetNodeId) {
+			this.targetNodeId = targetNodeId;
+		}
 
 	@ServiceMethod
 	public void search(){};
