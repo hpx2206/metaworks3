@@ -7225,7 +7225,7 @@ OG.renderer.IRenderer = function () {
 	};
 
 	/**
-	 * 캔버스 루트 엘리먼트의 BoundingBox 영역 정보를 반환한다.
+	 * 부모노드기준으로 캔버스 루트 엘리먼트의 BoundingBox 영역 정보를 반환한다.
 	 *
 	 * @return {Object} {width, height, x, y, x2, y2}
 	 * @override
@@ -7860,6 +7860,15 @@ OG.renderer.RaphaelRenderer = function (container, containerSize, backgroundColo
 	_PAPER.id = "OG_" + _ID_PREFIX;
 	_PAPER.canvas.id = "OG_" + _ID_PREFIX;
 	$(_PAPER.canvas).css({"background-color": _CANVAS_COLOR});
+
+	// container 의 position 을 static 인 경우 offset 이 깨지므로 relative 로 보정
+	if ($(_PAPER.canvas.parentNode).css('position') === 'static') {
+		$(_PAPER.canvas.parentNode).css({
+			position: 'relative',
+			left    : '0',
+			top     : '0'
+		});
+	}
 
 	/**
 	 * Shape 을 캔버스에 위치 및 사이즈 지정하여 드로잉한다.
@@ -10916,17 +10925,17 @@ OG.renderer.RaphaelRenderer = function (container, containerSize, backgroundColo
 	};
 
 	/**
-	 * 캔버스 루트 엘리먼트의 BoundingBox 영역 정보를 반환한다.
+	 * 부모노드기준으로 캔버스 루트 엘리먼트의 BoundingBox 영역 정보를 반환한다.
 	 *
 	 * @return {Object} {width, height, x, y, x2, y2}
 	 * @override
 	 */
 	this.getRootBBox = function () {
 		var container = _PAPER.canvas.parentNode,
-			width = _PAPER.canvas.clientWidth,
-			height = _PAPER.canvas.clientHeight,
-			x = OG.Util.isIE7() ? container.offsetLeft + container.parentNode.offsetLeft : container.offsetLeft,
-			y = OG.Util.isIE7() ? container.offsetTop + container.parentNode.offsetTop : container.offsetTop;
+			width = OG.Util.isFirefox() ? _PAPER.canvas.width.baseVal.value : _PAPER.canvas.scrollWidth,
+			height = OG.Util.isFirefox() ? _PAPER.canvas.height.baseVal.value : _PAPER.canvas.scrollHeight,
+			x = container.offsetLeft,
+			y = container.offsetTop;
 
 		return {
 			width : width,
@@ -11022,6 +11031,20 @@ OG.handler.EventHandler = function (renderer) {
 				either    : (isContainsFrom && !isContainsTo) || (!isContainsFrom && isContainsTo),
 				attrEither: (fromTerminalId && !toTerminalId) || (!fromTerminalId && toTerminalId)
 			};
+		},
+		getOffset = function (event) {
+			// fireforx 에 대한 처리
+			if (typeof event.offsetX === "undefined" || typeof event.offsetY === "undefined") {
+				var targetOffset = $(event.target).offset();
+				event.offsetX = event.pageX - targetOffset.left;
+				event.offsetY = event.pageY - targetOffset.top;
+			}
+
+			// container 로 부터 이벤트의 offset 을 리턴
+			return {
+				x: event.offsetX,
+				y: event.offsetY
+			};
 		};
 
 	/**
@@ -11032,7 +11055,7 @@ OG.handler.EventHandler = function (renderer) {
 	 * @param {Boolean} isResizable 가능여부
 	 */
 	setResizable = function (element, guide, isResizable) {
-		var container = _RENDERER.getContainer(), root = _RENDERER.getRootGroup(), rootBBox = _RENDERER.getRootBBox();
+		var root = _RENDERER.getRootGroup();
 
 		if (!element || !guide) {
 			return;
@@ -11066,13 +11089,14 @@ OG.handler.EventHandler = function (renderer) {
 						});
 					},
 					drag : function (event) {
-						var edge = $(root).data("edge"),
+						var eventOffset = getOffset(event),
+							edge = $(root).data("edge"),
 							fromTerminal = $(root).data("edge_terminal"),
 							toTerminal = $(root).data("to_terminal"),
 							fromXY = fromTerminal ?
-								[fromTerminal.terminal.position.x, fromTerminal.terminal.position.y] :
-								[container.scrollLeft + event.pageX - rootBBox.x, container.scrollTop + event.pageY - rootBBox.y],
-							toXY = OG.Util.isElement(toTerminal) ? [toTerminal.terminal.position.x, toTerminal.terminal.position.y] : toTerminal,
+								[fromTerminal.terminal.position.x, fromTerminal.terminal.position.y] : [eventOffset.x, eventOffset.y],
+							toXY = OG.Util.isElement(toTerminal) ?
+								[toTerminal.terminal.position.x, toTerminal.terminal.position.y] : toTerminal,
 							fromDrct = fromTerminal ? fromTerminal.terminal.direction.toLowerCase() : "c",
 							toDrct = OG.Util.isElement(toTerminal) ? toTerminal.terminal.direction.toLowerCase() : "c",
 							fromShape = fromTerminal ? getShapeFromTerminal(fromTerminal) : null,
@@ -11110,8 +11134,8 @@ OG.handler.EventHandler = function (renderer) {
 							OG.Util.apply(edge.geom.style.map, {"edge-direction": fromDrct + " " + toDrct}), edge.id, isSelf);
 					},
 					stop : function (event) {
-						var fromTerminal = $(root).data("edge_terminal") ||
-								[container.scrollLeft + event.pageX - rootBBox.x, container.scrollTop + event.pageY - rootBBox.y],
+						var eventOffset = getOffset(event),
+							fromTerminal = $(root).data("edge_terminal") || [eventOffset.x, eventOffset.y],
 							toTerminal = $(root).data("to_terminal"),
 							fromShape = OG.Util.isElement(fromTerminal) ? getShapeFromTerminal(fromTerminal) : null,
 							edge = $(root).data("edge");
@@ -11164,13 +11188,14 @@ OG.handler.EventHandler = function (renderer) {
 						});
 					},
 					drag : function (event) {
-						var edge = $(root).data("edge"),
+						var eventOffset = getOffset(event),
+							edge = $(root).data("edge"),
 							fromTerminal = $(root).data("from_terminal"),
 							toTerminal = $(root).data("edge_terminal"),
-							fromXY = OG.Util.isElement(fromTerminal) ? [fromTerminal.terminal.position.x, fromTerminal.terminal.position.y] : fromTerminal,
+							fromXY = OG.Util.isElement(fromTerminal) ?
+								[fromTerminal.terminal.position.x, fromTerminal.terminal.position.y] : fromTerminal,
 							toXY = toTerminal ?
-								[toTerminal.terminal.position.x, toTerminal.terminal.position.y] :
-								[container.scrollLeft + event.pageX - rootBBox.x, container.scrollTop + event.pageY - rootBBox.y],
+								[toTerminal.terminal.position.x, toTerminal.terminal.position.y] : [eventOffset.x, eventOffset.y],
 							fromDrct = OG.Util.isElement(fromTerminal) ? fromTerminal.terminal.direction.toLowerCase() : "c",
 							toDrct = toTerminal ? toTerminal.terminal.direction.toLowerCase() : "c",
 							fromShape = OG.Util.isElement(fromTerminal) ? getShapeFromTerminal(fromTerminal) : null,
@@ -11208,9 +11233,9 @@ OG.handler.EventHandler = function (renderer) {
 							OG.Util.apply(edge.geom.style.map, {"edge-direction": fromDrct + " " + toDrct}), edge.id, isSelf);
 					},
 					stop : function (event) {
-						var fromTerminal = $(root).data("from_terminal"),
-							toTerminal = $(root).data("edge_terminal") ||
-								[container.scrollLeft + event.pageX - rootBBox.x, container.scrollTop + event.pageY - rootBBox.y],
+						var eventOffset = getOffset(event),
+							fromTerminal = $(root).data("from_terminal"),
+							toTerminal = $(root).data("edge_terminal") || [eventOffset.x, eventOffset.y],
 							toShape = OG.Util.isElement(toTerminal) ? getShapeFromTerminal(toTerminal) : null,
 							edge = $(root).data("edge");
 
@@ -11240,23 +11265,21 @@ OG.handler.EventHandler = function (renderer) {
 				$.each(guide.controls, function (idx, item) {
 					$(item).draggable({
 						start: function (event) {
-							var x = container.scrollLeft + event.pageX,
-								y = container.scrollTop + event.pageY;
-							$(this).data("start", {x: x, y: y});
+							var eventOffset = getOffset(event);
+							$(this).data("start", {x: eventOffset.x, y: eventOffset.y});
 							$(this).data("offset", {
-								x: x - num(_RENDERER.getAttr(item, "x")),
-								y: y - num(_RENDERER.getAttr(item, "y"))
+								x: eventOffset.x - num(_RENDERER.getAttr(item, "x")),
+								y: eventOffset.y - num(_RENDERER.getAttr(item, "y"))
 							});
 							_RENDERER.remove(guide.bBox);
 							_RENDERER.removeRubberBand(_RENDERER.getRootElement());
 						},
 						drag : function (event) {
-							var x = container.scrollLeft + event.pageX,
-								y = container.scrollTop + event.pageY,
+							var eventOffset = getOffset(event),
 								start = $(this).data("start"),
 								offset = $(this).data("offset"),
-								newX = x - offset.x,
-								newY = y - offset.y,
+								newX = eventOffset.x - offset.x,
+								newY = eventOffset.y - offset.y,
 								vertices = element.shape.geom.getVertices(),
 								isHorizontal = item.id.indexOf(OG.Constants.GUIDE_SUFFIX.CTL_H) >= 0,
 								num = isHorizontal ?
@@ -11282,12 +11305,11 @@ OG.handler.EventHandler = function (renderer) {
 							_RENDERER.drawLabel(element);
 						},
 						stop : function (event) {
-							var x = container.scrollLeft + event.pageX,
-								y = container.scrollTop + event.pageY,
+							var eventOffset = getOffset(event),
 								start = $(this).data("start"),
 								offset = $(this).data("offset"),
-								newX = x - offset.x,
-								newY = y - offset.y,
+								newX = eventOffset.x - offset.x,
+								newY = eventOffset.y - offset.y,
 								vertices = element.shape.geom.getVertices(),
 								isHorizontal = item.id.indexOf(OG.Constants.GUIDE_SUFFIX.CTL_H) >= 0,
 								num = isHorizontal ?
@@ -11319,22 +11341,19 @@ OG.handler.EventHandler = function (renderer) {
 				// resize handle
 				$(guide.rc).draggable({
 					start: function (event) {
-						var x = container.scrollLeft + event.pageX,
-							y = container.scrollTop + event.pageY;
-						$(this).data("start", {x: x, y: y});
+						var eventOffset = getOffset(event);
+						$(this).data("start", {x: eventOffset.x, y: eventOffset.y});
 						$(this).data("offset", {
-							x: x - num(_RENDERER.getAttr(guide.rc, "x")),
-							y: y - num(_RENDERER.getAttr(guide.rc, "y"))
+							x: eventOffset.x - num(_RENDERER.getAttr(guide.rc, "x")),
+							y: eventOffset.y - num(_RENDERER.getAttr(guide.rc, "y"))
 						});
 						_RENDERER.removeRubberBand(_RENDERER.getRootElement());
 					},
 					drag : function (event) {
-						var x = container.scrollLeft + event.pageX,
-							y = container.scrollTop + event.pageY,
+						var eventOffset = getOffset(event),
 							start = $(this).data("start"),
 							offset = $(this).data("offset"),
-							dx = x - start.x,
-							newX = x - offset.x,
+							newX = eventOffset.x - offset.x,
 							newWidth = newX - num(_RENDERER.getAttr(guide.lc, "x"));
 						$(this).css({"position": "", "left": "", "top": ""});
 						if (newWidth >= OG.Constants.GUIDE_MIN_SIZE) {
@@ -11348,10 +11367,9 @@ OG.handler.EventHandler = function (renderer) {
 						_RENDERER.removeAllTerminal();
 					},
 					stop : function (event) {
-						var x = container.scrollLeft + event.pageX,
-							y = container.scrollTop + event.pageY,
+						var eventOffset = getOffset(event),
 							start = $(this).data("start"),
-							dx = x - start.x;
+							dx = eventOffset.x - start.x;
 						$(this).css({"position": "absolute", "left": "0px", "top": "0px"});
 						if (element && element.shape.geom) {
 							// resizing
@@ -11369,21 +11387,19 @@ OG.handler.EventHandler = function (renderer) {
 
 				$(guide.lwc).draggable({
 					start: function (event) {
-						var x = container.scrollLeft + event.pageX,
-							y = container.scrollTop + event.pageY;
-						$(this).data("start", {x: x, y: y});
+						var eventOffset = getOffset(event);
+						$(this).data("start", {x: eventOffset.x, y: eventOffset.y});
 						$(this).data("offset", {
-							x: x - num(_RENDERER.getAttr(guide.lwc, "x")),
-							y: y - num(_RENDERER.getAttr(guide.lwc, "y"))
+							x: eventOffset.x - num(_RENDERER.getAttr(guide.lwc, "x")),
+							y: eventOffset.y - num(_RENDERER.getAttr(guide.lwc, "y"))
 						});
 						_RENDERER.removeRubberBand(_RENDERER.getRootElement());
 					},
 					drag : function (event) {
-						var x = container.scrollLeft + event.pageX,
-							y = container.scrollTop + event.pageY,
+						var eventOffset = getOffset(event),
 							start = $(this).data("start"),
 							offset = $(this).data("offset"),
-							newY = y - offset.y,
+							newY = eventOffset.y - offset.y,
 							newHeight = newY - num(_RENDERER.getAttr(guide.uc, "y"));
 						$(this).css({"position": "", "left": "", "top": ""});
 						if (newHeight >= OG.Constants.GUIDE_MIN_SIZE) {
@@ -11397,10 +11413,9 @@ OG.handler.EventHandler = function (renderer) {
 						_RENDERER.removeAllTerminal();
 					},
 					stop : function (event) {
-						var x = container.scrollLeft + event.pageX,
-							y = container.scrollTop + event.pageY,
+						var eventOffset = getOffset(event),
 							start = $(this).data("start"),
-							dy = y - start.y;
+							dy = eventOffset.y - start.y;
 						$(this).css({"position": "absolute", "left": "0px", "top": "0px"});
 						if (element && element.shape.geom) {
 							// resizing
@@ -11418,23 +11433,21 @@ OG.handler.EventHandler = function (renderer) {
 
 				$(guide.lr).draggable({
 					start: function (event) {
-						var x = container.scrollLeft + event.pageX,
-							y = container.scrollTop + event.pageY;
-						$(this).data("start", {x: x, y: y});
+						var eventOffset = getOffset(event);
+						$(this).data("start", {x: eventOffset.x, y: eventOffset.y});
 						$(this).data("offset", {
-							x: x - num(_RENDERER.getAttr(guide.lr, "x")),
-							y: y - num(_RENDERER.getAttr(guide.lr, "y"))
+							x: eventOffset.x - num(_RENDERER.getAttr(guide.lr, "x")),
+							y: eventOffset.y - num(_RENDERER.getAttr(guide.lr, "y"))
 						});
 						_RENDERER.removeRubberBand(_RENDERER.getRootElement());
 					},
 					drag : function (event) {
-						var x = container.scrollLeft + event.pageX,
-							y = container.scrollTop + event.pageY,
+						var eventOffset = getOffset(event),
 							start = $(this).data("start"),
 							offset = $(this).data("offset"),
-							newX = x - offset.x,
+							newX = eventOffset.x - offset.x,
 							newWidth = newX - num(_RENDERER.getAttr(guide.lc, "x")),
-							newY = y - offset.y,
+							newY = eventOffset.y - offset.y,
 							newHeight = newY - num(_RENDERER.getAttr(guide.uc, "y"));
 						$(this).css({"position": "", "left": "", "top": ""});
 						if (newWidth >= OG.Constants.GUIDE_MIN_SIZE) {
@@ -11456,11 +11469,10 @@ OG.handler.EventHandler = function (renderer) {
 						_RENDERER.removeAllTerminal();
 					},
 					stop : function (event) {
-						var x = container.scrollLeft + event.pageX,
-							y = container.scrollTop + event.pageY,
+						var eventOffset = getOffset(event),
 							start = $(this).data("start"),
-							dx = x - start.x,
-							dy = y - start.y;
+							dx = eventOffset.x - start.x,
+							dy = eventOffset.y - start.y;
 						$(this).css({"position": "absolute", "left": "0px", "top": "0px"});
 						if (element && element.shape.geom) {
 							// resizing
@@ -11482,21 +11494,19 @@ OG.handler.EventHandler = function (renderer) {
 
 				$(guide.lc).draggable({
 					start: function (event) {
-						var x = container.scrollLeft + event.pageX,
-							y = container.scrollTop + event.pageY;
-						$(this).data("start", {x: x, y: y});
+						var eventOffset = getOffset(event);
+						$(this).data("start", {x: eventOffset.x, y: eventOffset.y});
 						$(this).data("offset", {
-							x: x - num(_RENDERER.getAttr(guide.lc, "x")),
-							y: y - num(_RENDERER.getAttr(guide.lc, "y"))
+							x: eventOffset.x - num(_RENDERER.getAttr(guide.lc, "x")),
+							y: eventOffset.y - num(_RENDERER.getAttr(guide.lc, "y"))
 						});
 						_RENDERER.removeRubberBand(_RENDERER.getRootElement());
 					},
 					drag : function (event) {
-						var x = container.scrollLeft + event.pageX,
-							y = container.scrollTop + event.pageY,
+						var eventOffset = getOffset(event),
 							start = $(this).data("start"),
 							offset = $(this).data("offset"),
-							newX = x - offset.x,
+							newX = eventOffset.x - offset.x,
 							newWidth = num(_RENDERER.getAttr(guide.rc, "x")) - newX;
 						$(this).css({"position": "", "left": "", "top": ""});
 						if (newWidth >= OG.Constants.GUIDE_MIN_SIZE) {
@@ -11510,10 +11520,9 @@ OG.handler.EventHandler = function (renderer) {
 						_RENDERER.removeAllTerminal();
 					},
 					stop : function (event) {
-						var x = container.scrollLeft + event.pageX,
-							y = container.scrollTop + event.pageY,
+						var eventOffset = getOffset(event),
 							start = $(this).data("start"),
-							dx = start.x - x;
+							dx = start.x - eventOffset.x;
 						$(this).css({"position": "absolute", "left": "0px", "top": "0px"});
 						if (element && element.shape.geom) {
 							// resizing
@@ -11531,23 +11540,21 @@ OG.handler.EventHandler = function (renderer) {
 
 				$(guide.ll).draggable({
 					start: function (event) {
-						var x = container.scrollLeft + event.pageX,
-							y = container.scrollTop + event.pageY;
-						$(this).data("start", {x: x, y: y});
+						var eventOffset = getOffset(event);
+						$(this).data("start", {x: eventOffset.x, y: eventOffset.y});
 						$(this).data("offset", {
-							x: x - num(_RENDERER.getAttr(guide.ll, "x")),
-							y: y - num(_RENDERER.getAttr(guide.ll, "y"))
+							x: eventOffset.x - num(_RENDERER.getAttr(guide.ll, "x")),
+							y: eventOffset.y - num(_RENDERER.getAttr(guide.ll, "y"))
 						});
 
 						_RENDERER.removeRubberBand(_RENDERER.getRootElement());
 					},
 					drag : function (event) {
-						var x = container.scrollLeft + event.pageX,
-							y = container.scrollTop + event.pageY,
+						var eventOffset = getOffset(event),
 							start = $(this).data("start"),
 							offset = $(this).data("offset"),
-							newX = x - offset.x,
-							newY = y - offset.y,
+							newX = eventOffset.x - offset.x,
+							newY = eventOffset.y - offset.y,
 							newWidth = num(_RENDERER.getAttr(guide.rc, "x")) - newX,
 							newHeight = newY - num(_RENDERER.getAttr(guide.uc, "y"));
 						$(this).css({"position": "", "left": "", "top": ""});
@@ -11570,11 +11577,10 @@ OG.handler.EventHandler = function (renderer) {
 						_RENDERER.removeAllTerminal();
 					},
 					stop : function (event) {
-						var x = container.scrollLeft + event.pageX,
-							y = container.scrollTop + event.pageY,
+						var eventOffset = getOffset(event),
 							start = $(this).data("start"),
-							dx = start.x - x,
-							dy = y - start.y;
+							dx = start.x - eventOffset.x,
+							dy = eventOffset.y - start.y;
 						$(this).css({"position": "absolute", "left": "0px", "top": "0px"});
 						if (element && element.shape.geom) {
 							// resizing
@@ -11595,22 +11601,20 @@ OG.handler.EventHandler = function (renderer) {
 
 				$(guide.uc).draggable({
 					start: function (event) {
-						var x = container.scrollLeft + event.pageX,
-							y = container.scrollTop + event.pageY;
-						$(this).data("start", {x: x, y: y});
+						var eventOffset = getOffset(event);
+						$(this).data("start", {x: eventOffset.x, y: eventOffset.y});
 						$(this).data("offset", {
-							x: x - num(_RENDERER.getAttr(guide.uc, "x")),
-							y: y - num(_RENDERER.getAttr(guide.uc, "y"))
+							x: eventOffset.x - num(_RENDERER.getAttr(guide.uc, "x")),
+							y: eventOffset.y - num(_RENDERER.getAttr(guide.uc, "y"))
 						});
 
 						_RENDERER.removeRubberBand(_RENDERER.getRootElement());
 					},
 					drag : function (event) {
-						var x = container.scrollLeft + event.pageX,
-							y = container.scrollTop + event.pageY,
+						var eventOffset = getOffset(event),
 							start = $(this).data("start"),
 							offset = $(this).data("offset"),
-							newY = y - offset.y,
+							newY = eventOffset.y - offset.y,
 							newHeight = num(_RENDERER.getAttr(guide.lwc, "y")) - newY;
 						$(this).css({"position": "", "left": "", "top": ""});
 						if (newHeight >= OG.Constants.GUIDE_MIN_SIZE) {
@@ -11624,10 +11628,9 @@ OG.handler.EventHandler = function (renderer) {
 						_RENDERER.removeAllTerminal();
 					},
 					stop : function (event) {
-						var x = container.scrollLeft + event.pageX,
-							y = container.scrollTop + event.pageY,
+						var eventOffset = getOffset(event),
 							start = $(this).data("start"),
-							dy = start.y - y;
+							dy = start.y - eventOffset.y;
 						$(this).css({"position": "absolute", "left": "0px", "top": "0px"});
 						if (element && element.shape.geom) {
 							// resizing
@@ -11645,23 +11648,21 @@ OG.handler.EventHandler = function (renderer) {
 
 				$(guide.ul).draggable({
 					start: function (event) {
-						var x = container.scrollLeft + event.pageX,
-							y = container.scrollTop + event.pageY;
-						$(this).data("start", {x: x, y: y});
+						var eventOffset = getOffset(event);
+						$(this).data("start", {x: eventOffset.x, y: eventOffset.y});
 						$(this).data("offset", {
-							x: x - num(_RENDERER.getAttr(guide.ul, "x")),
-							y: y - num(_RENDERER.getAttr(guide.ul, "y"))
+							x: eventOffset.x - num(_RENDERER.getAttr(guide.ul, "x")),
+							y: eventOffset.y - num(_RENDERER.getAttr(guide.ul, "y"))
 						});
 
 						_RENDERER.removeRubberBand(_RENDERER.getRootElement());
 					},
 					drag : function (event) {
-						var x = container.scrollLeft + event.pageX,
-							y = container.scrollTop + event.pageY,
+						var eventOffset = getOffset(event),
 							start = $(this).data("start"),
 							offset = $(this).data("offset"),
-							newX = x - offset.x,
-							newY = y - offset.y,
+							newX = eventOffset.x - offset.x,
+							newY = eventOffset.y - offset.y,
 							newWidth = num(_RENDERER.getAttr(guide.rc, "x")) - newX,
 							newHeight = num(_RENDERER.getAttr(guide.lwc, "y")) - newY;
 						$(this).css({"position": "", "left": "", "top": ""});
@@ -11684,11 +11685,10 @@ OG.handler.EventHandler = function (renderer) {
 						_RENDERER.removeAllTerminal();
 					},
 					stop : function (event) {
-						var x = container.scrollLeft + event.pageX,
-							y = container.scrollTop + event.pageY,
+						var eventOffset = getOffset(event),
 							start = $(this).data("start"),
-							dx = start.x - x,
-							dy = start.y - y;
+							dx = start.x - eventOffset.x,
+							dy = start.y - eventOffset.y;
 						$(this).css({"position": "absolute", "left": "0px", "top": "0px"});
 						if (element && element.shape.geom) {
 							// resizing
@@ -11709,23 +11709,21 @@ OG.handler.EventHandler = function (renderer) {
 
 				$(guide.ur).draggable({
 					start: function (event) {
-						var x = container.scrollLeft + event.pageX,
-							y = container.scrollTop + event.pageY;
-						$(this).data("start", {x: x, y: y});
+						var eventOffset = getOffset(event);
+						$(this).data("start", {x: eventOffset.x, y: eventOffset.y});
 						$(this).data("offset", {
-							x: x - num(_RENDERER.getAttr(guide.ur, "x")),
-							y: y - num(_RENDERER.getAttr(guide.ur, "y"))
+							x: eventOffset.x - num(_RENDERER.getAttr(guide.ur, "x")),
+							y: eventOffset.y - num(_RENDERER.getAttr(guide.ur, "y"))
 						});
 
 						_RENDERER.removeRubberBand(_RENDERER.getRootElement());
 					},
 					drag : function (event) {
-						var x = container.scrollLeft + event.pageX,
-							y = container.scrollTop + event.pageY,
+						var eventOffset = getOffset(event),
 							start = $(this).data("start"),
 							offset = $(this).data("offset"),
-							newX = x - offset.x,
-							newY = y - offset.y,
+							newX = eventOffset.x - offset.x,
+							newY = eventOffset.y - offset.y,
 							newWidth = newX - num(_RENDERER.getAttr(guide.lc, "x")),
 							newHeight = num(_RENDERER.getAttr(guide.lwc, "y")) - newY;
 						$(this).css({"position": "", "left": "", "top": ""});
@@ -11748,11 +11746,10 @@ OG.handler.EventHandler = function (renderer) {
 						_RENDERER.removeAllTerminal();
 					},
 					stop : function (event) {
-						var x = container.scrollLeft + event.pageX,
-							y = container.scrollTop + event.pageY,
+						var eventOffset = getOffset(event),
 							start = $(this).data("start"),
-							dx = x - start.x,
-							dy = start.y - y;
+							dx = eventOffset.x - start.x,
+							dy = start.y - eventOffset.y;
 						$(this).css({"position": "absolute", "left": "0px", "top": "0px"});
 						if (element && element.shape.geom) {
 							// resizing
@@ -11919,18 +11916,14 @@ OG.handler.EventHandler = function (renderer) {
 	 * @param {Element} element Shape Element
 	 */
 	this.enableEditLabel = function (element) {
-		var container = _RENDERER.getContainer(), rootEle = _RENDERER.getRootElement(),
-			isPositionAbsolute = (container.style && container.style.position) ?
-				(container.style.position.toLowerCase() === 'absolute' ? true : false) : false;
-
 		$(element).bind({
 			dblclick: function () {
-				var envelope = element.shape.geom.getBoundary(),
+				var container = _RENDERER.getContainer(),
+					envelope = element.shape.geom.getBoundary(),
 					upperLeft = envelope.getUpperLeft(),
-					rootBBox = _RENDERER.getRootBBox(),
 					bBox,
-					left = upperLeft.x + (isPositionAbsolute ? 0 : rootBBox.x) - 1,
-					top = upperLeft.y + (isPositionAbsolute ? 0 : rootBBox.y) - 1,
+					left = upperLeft.x - 1,
+					top = upperLeft.y - 1,
 					width = envelope.getWidth(),
 					height = envelope.getHeight(),
 					editorId = element.id + OG.Constants.LABEL_EDITOR_SUFFIX,
@@ -11965,7 +11958,7 @@ OG.handler.EventHandler = function (renderer) {
 					centerOfEdge;
 
 				// textarea
-				$(rootEle.parentNode).append("<textarea id='" + element.id + OG.Constants.LABEL_EDITOR_SUFFIX + "'></textarea>");
+				$(container).append("<textarea id='" + element.id + OG.Constants.LABEL_EDITOR_SUFFIX + "'></textarea>");
 				labelEditor = $("#" + editorId);
 
 				// text-align 스타일 적용
@@ -12009,15 +12002,15 @@ OG.handler.EventHandler = function (renderer) {
 					if (element.shape.label && _RENDERER.isSVG()) {
 						$(element).find("text").each(function (idx, item) {
 							bBox = _RENDERER.getBBox(item);
-							left = bBox.x + (isPositionAbsolute ? 0 : rootBBox.x) - 10;
-							top = bBox.y + (isPositionAbsolute ? 0 : rootBBox.y);
+							left = bBox.x - 10;
+							top = bBox.y;
 							width = bBox.width + 20;
 							height = bBox.height;
 						});
 					} else {
 						centerOfEdge = getCenterOfEdge(element);
-						left = centerOfEdge.x - OG.Constants.LABEL_EDITOR_WIDTH / 2 + (isPositionAbsolute ? 0 : rootBBox.x);
-						top = centerOfEdge.y - OG.Constants.LABEL_EDITOR_HEIGHT / 2 + (isPositionAbsolute ? 0 : rootBBox.y);
+						left = centerOfEdge.x - OG.Constants.LABEL_EDITOR_WIDTH / 2;
+						top = centerOfEdge.y - OG.Constants.LABEL_EDITOR_HEIGHT / 2;
 						width = OG.Constants.LABEL_EDITOR_WIDTH;
 						height = OG.Constants.LABEL_EDITOR_HEIGHT;
 					}
@@ -12058,8 +12051,7 @@ OG.handler.EventHandler = function (renderer) {
 	 * @param {Element} element Shape Element
 	 */
 	this.enableConnect = function (element) {
-		var terminalGroup, container = _RENDERER.getContainer(),
-			root = _RENDERER.getRootGroup(), rootBBox = _RENDERER.getRootBBox();
+		var terminalGroup, root = _RENDERER.getRootGroup();
 		if (element && $(element).attr("_shape") !== OG.Constants.SHAPE_TYPE.GROUP) {
 			$(element).bind({
 				mouseover: function () {
@@ -12115,13 +12107,14 @@ OG.handler.EventHandler = function (renderer) {
 										});
 									},
 									drag : function (event) {
-										var edge = $(root).data("edge"),
+										var eventOffset = getOffset(event),
+											edge = $(root).data("edge"),
 											fromTerminal = $(root).data("from_terminal"),
 											toTerminal = $(root).data("edge_terminal"),
 											fromXY = [fromTerminal.terminal.position.x, fromTerminal.terminal.position.y],
 											toXY = toTerminal ?
 												[toTerminal.terminal.position.x, toTerminal.terminal.position.y] :
-												[container.scrollLeft + event.pageX - rootBBox.x, container.scrollTop + event.pageY - rootBBox.y],
+												[eventOffset.x, eventOffset.y],
 											fromDrct = fromTerminal.terminal.direction.toLowerCase(),
 											toDrct = toTerminal ? toTerminal.terminal.direction.toLowerCase() : "c",
 											toShape = toTerminal ? getShapeFromTerminal(toTerminal) : null,
@@ -12158,10 +12151,7 @@ OG.handler.EventHandler = function (renderer) {
 											OG.Util.apply(edge.shape.geom.style.map, {"edge-direction": fromDrct + " " + toDrct}), edge.id, isSelf);
 									},
 									stop : function (event) {
-										var to = {
-												x: container.scrollLeft + event.pageX - rootBBox.x,
-												y: container.scrollTop + event.pageY - rootBBox.y
-											},
+										var to = getOffset(event),
 											edge = $(root).data("edge"),
 											fromTerminal = $(root).data("from_terminal"),
 											toTerminal = $(root).data("edge_terminal") || [to.x, to.y],
@@ -12332,7 +12322,7 @@ OG.handler.EventHandler = function (renderer) {
 	 * @param {Boolean} isMovable 가능여부
 	 */
 	this.setMovable = function (element, isMovable) {
-		var container = _RENDERER.getContainer(), root = _RENDERER.getRootGroup();
+		var root = _RENDERER.getRootGroup();
 
 		if (!element) {
 			return;
@@ -12342,9 +12332,7 @@ OG.handler.EventHandler = function (renderer) {
 			// move handle
 			$(element).draggable({
 				start: function (event) {
-					var x = container.scrollLeft + event.pageX,
-						y = container.scrollTop + event.pageY,
-						bBoxArray = [], box, newBBoxArray = [], guide;
+					var eventOffset = getOffset(event), bBoxArray = [], box, newBBoxArray = [], guide;
 
 					// 선택되지 않은 Shape 을 drag 시 다른 모든 Shape 은 deselect 처리
 					if (_RENDERER.getElementById(element.id + OG.Constants.GUIDE_SUFFIX.GUIDE) === null) {
@@ -12360,10 +12348,10 @@ OG.handler.EventHandler = function (renderer) {
 					_RENDERER.removeGuide(element);
 					guide = _RENDERER.drawGuide(element);
 
-					$(this).data("start", {x: x, y: y});
+					$(this).data("start", {x: eventOffset.x, y: eventOffset.y});
 					$(this).data("offset", {
-						x: x - num(_RENDERER.getAttr(guide.bBox, "x")),
-						y: y - num(_RENDERER.getAttr(guide.bBox, "y"))
+						x: eventOffset.x - num(_RENDERER.getAttr(guide.bBox, "x")),
+						y: eventOffset.y - num(_RENDERER.getAttr(guide.bBox, "y"))
 					});
 
 					$("[id$=" + OG.Constants.GUIDE_SUFFIX.BBOX + "]").each(function (index, item) {
@@ -12405,15 +12393,14 @@ OG.handler.EventHandler = function (renderer) {
 					_RENDERER.removeAllTerminal();
 				},
 				drag : function (event) {
-					var x = container.scrollLeft + event.pageX,
-						y = container.scrollTop + event.pageY,
+					var eventOffset = getOffset(event),
 						start = $(this).data("start"),
 						bBoxArray = $(root).data("bBoxArray"),
-						dx = grid(x - start.x),
-						dy = grid(y - start.y);
+						dx = grid(eventOffset.x - start.x),
+						dy = grid(eventOffset.y - start.y);
 
 					// Canvas 영역을 벗어나서 드래그되는 경우 Canvas 확장
-					autoExtend(x, y);
+					autoExtend(eventOffset.x, eventOffset.y);
 
 					$(this).css({"position": "", "left": "", "top": ""});
 					$.each(bBoxArray, function (k, item) {
@@ -12422,12 +12409,11 @@ OG.handler.EventHandler = function (renderer) {
 					_RENDERER.removeAllTerminal();
 				},
 				stop : function (event) {
-					var x = container.scrollLeft + event.pageX,
-						y = container.scrollTop + event.pageY,
+					var eventOffset = getOffset(event),
 						start = $(this).data("start"),
 						bBoxArray = $(root).data("bBoxArray"),
-						dx = grid(x - start.x),
-						dy = grid(y - start.y),
+						dx = grid(eventOffset.x - start.x),
+						dy = grid(eventOffset.y - start.y),
 						excludeEdgeId = [],
 						groupTarget = $(root).data("groupTarget"),
 						eleArray = [],
@@ -12568,7 +12554,7 @@ OG.handler.EventHandler = function (renderer) {
 	 * @param {Boolean} isSelectable 선택가능여부
 	 */
 	this.setDragSelectable = function (isSelectable) {
-		var container = _RENDERER.getContainer(), rootEle = _RENDERER.getRootElement();
+		var rootEle = _RENDERER.getRootElement();
 
 		// 배경클릭한 경우 deselect 하도록
 		$(rootEle).bind("click", function (event) {
@@ -12586,19 +12572,17 @@ OG.handler.EventHandler = function (renderer) {
 		if (isSelectable) {
 			// 마우스 영역 드래그하여 선택 처리
 			$(rootEle).bind("mousedown", function (event) {
-				var rootBBox = _RENDERER.getRootBBox();
-				$(this).data("dragBox_first", {
-					x: container.scrollLeft + event.pageX - rootBBox.x,
-					y: container.scrollTop + event.pageY - rootBBox.y});
-				_RENDERER.drawRubberBand([container.scrollLeft + event.pageX - rootBBox.x, container.scrollTop + event.pageY - rootBBox.y]);
+				var eventOffset = getOffset(event);
+				$(this).data("dragBox_first", { x: eventOffset.x, y: eventOffset.y});
+				_RENDERER.drawRubberBand([eventOffset.x, eventOffset.y]);
 			});
 			$(rootEle).bind("mousemove", function (event) {
 				var first = $(this).data("dragBox_first"),
-					rootBBox = _RENDERER.getRootBBox(),
+					eventOffset = getOffset(event),
 					width, height, x, y;
 				if (first) {
-					width = container.scrollLeft + event.pageX - rootBBox.x - first.x;
-					height = container.scrollTop + event.pageY - rootBBox.y - first.y;
+					width = eventOffset.x - first.x;
+					height = eventOffset.y - first.y;
 					x = width <= 0 ? first.x + width : first.x;
 					y = height <= 0 ? first.y + height : first.y;
 					_RENDERER.drawRubberBand([x, y], [Math.abs(width), Math.abs(height)]);
@@ -12606,12 +12590,12 @@ OG.handler.EventHandler = function (renderer) {
 			});
 			$(rootEle).bind("mouseup", function (event) {
 				var first = $(this).data("dragBox_first"),
-					rootBBox = _RENDERER.getRootBBox(),
+					eventOffset = getOffset(event),
 					width, height, x, y, envelope, guide;
 				_RENDERER.removeRubberBand(rootEle);
 				if (first) {
-					width = container.scrollLeft + event.pageX - rootBBox.x - first.x;
-					height = container.scrollTop + event.pageY - rootBBox.y - first.y;
+					width = eventOffset.x - first.x;
+					height = eventOffset.y - first.y;
 					x = width <= 0 ? first.x + width : first.x;
 					y = height <= 0 ? first.y + height : first.y;
 					envelope = new OG.Envelope([x, y], Math.abs(width), Math.abs(height));
@@ -12947,6 +12931,19 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor) {
 		}
 
 		return element;
+	};
+
+	/**
+	 * Shape 의 Label 을 캔버스에 위치 및 사이즈 지정하여 드로잉한다.
+	 *
+	 * @param {Element,String} shapeElement Shape DOM element or ID
+	 * @param {String} text 텍스트
+	 * @param {OG.geometry.Style,Object} style 스타일
+	 * @return {Element} DOM Element
+	 * @override
+	 */
+	this.drawLabel = function (shapeElement, text, style) {
+		return _RENDERER.drawLabel(shapeElement, text, style);
 	};
 
 	/**
@@ -13327,7 +13324,7 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor) {
 	};
 
 	/**
-	 * 캔버스 루트 엘리먼트의 BoundingBox 영역 정보를 반환한다.
+	 * 부모노드기준으로 캔버스 루트 엘리먼트의 BoundingBox 영역 정보를 반환한다.
 	 *
 	 * @return {Object} {width, height, x, y, x2, y2}
 	 */
