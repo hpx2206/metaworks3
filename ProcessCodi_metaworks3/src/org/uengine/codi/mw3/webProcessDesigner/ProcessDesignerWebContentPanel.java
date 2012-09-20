@@ -4,7 +4,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 
 import net.sf.json.JSONArray;
@@ -20,7 +19,6 @@ import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.activitytypes.KnowledgeActivity;
 import org.uengine.codi.mw3.CodiClassLoader;
-import org.uengine.codi.mw3.knowledge.WfNode;
 import org.uengine.codi.mw3.model.ContentWindow;
 import org.uengine.kernel.Activity;
 import org.uengine.kernel.GlobalContext;
@@ -83,9 +81,47 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 		ProcessDesignerTitle dTitle = new ProcessDesignerTitle();
 		dTitle.setMetaworksContext(new MetaworksContext());
 		dTitle.getMetaworksContext().setWhen("edit");
-		return new ModalWindow(dTitle , 200, 100,  "프로세스명 입력" );
+		return new ModalWindow(dTitle , 300, 200,  "프로세스명 입력" );
 	}
 		
+	@ServiceMethod(callByContent=true)
+	public Object[] save(String title) throws Exception{
+		ArrayList<ProcessDesignerCanvas> cells = new ArrayList<ProcessDesignerCanvas>();
+		ProcessDefinition def = new ProcessDefinition();
+		if( cell != null){
+			Role[] roles = new Role[0];
+			Activity[] ac = new Activity[0];
+			if( title == null ){
+				throw new Exception("please set process title");
+			}
+			def.setName(title);
+			def.setRoles(roles);
+			def.setChildActivities(ac);
+			for(int i = 0; i < cell.length; i++){
+				ProcessDesignerCanvas cv = cell[i];
+				Activity activity = addActivity(cv);
+				cells.add(cell[i]);
+				if( activity != null ){
+					if( activity instanceof HumanActivity){
+						// 롤 정의가 먼저 필요할듯
+						def.addRole(((HumanActivity)activity).getRole());
+					}
+					def.addChildActivity(activity);
+				}
+			}
+			
+			ProcessDesignerCanvas jsonString = new ProcessDesignerCanvas();
+			jsonString.setJsonString(graphString);
+			cells.add(jsonString);
+			
+			def.setExtendedAttribute( "cells", cells );
+		}
+		
+		processManager.addProcessDefinition("테스트프로세스", 0, "description", false, GlobalContext.serialize(def, ProcessDefinition.class), "", "test/p22.process2", "test/p22.process2", "process2");
+		
+		return null;
+	}
+	
 	@ServiceMethod(callByContent=true)
 	public Object[] save() throws Exception{
 		ArrayList<ProcessDesignerCanvas> cells = new ArrayList<ProcessDesignerCanvas>();
@@ -174,7 +210,7 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 		try {
 			is = new FileInputStream(sourceCodeFile);
 			UEngineUtil.copyStream(is, bao);
-			ProcessDefinition def = (ProcessDefinition) GlobalContext.deserialize(bao.toString());
+			ProcessDefinition def = (ProcessDefinition) GlobalContext.deserialize(bao.toString("UTF-8"));
 			ArrayList<ProcessDesignerCanvas> cellsList = (ArrayList<ProcessDesignerCanvas>) def.getExtendedAttributes().get("cells");
 			if( cellsList != null){
 				ProcessDesignerCanvas []cells = new ProcessDesignerCanvas[cellsList.size()];

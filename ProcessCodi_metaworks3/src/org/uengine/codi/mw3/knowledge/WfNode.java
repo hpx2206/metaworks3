@@ -196,6 +196,34 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		}
 	}
 	
+	public void searchKMS(String keyword) throws Exception {
+		
+		try {
+			StringBuffer sb = new StringBuffer();
+			sb.append("SELECT *");
+			sb.append("  FROM bpm_knol");
+			sb.append(" WHERE name REGEXP ?name");
+			sb.append(" ORDER BY no");
+			
+			IWfNode node = sql(sb.toString());
+			node.setName(keyword);
+			node.select();
+			
+			while(node.next()){
+				WfNode addNode = new WfNode();
+				
+				addNode.copyFrom(node);
+				addNode.getMetaworksContext().setWhen(getMetaworksContext().getWhen());
+				addNode.loadChildren();
+				
+				this.addChildNode(addNode);
+			}
+		} catch (Exception e) {
+			if(!"ROOT".equals(getMetaworksContext().getHow()))
+				getMetaworksContext().setHow("NONE");
+		}
+	}
+	
 	public void load() throws Exception {
 		load(this.getId());
 	}
