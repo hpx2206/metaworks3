@@ -39,5 +39,5 @@ public class MashupTool {
 		}
 
 	@ServiceMethod(callByContent=true, payload={"keyword", "targetNodeId"})
-	public void search(){};
+	public void search() throws Exception{};
 }

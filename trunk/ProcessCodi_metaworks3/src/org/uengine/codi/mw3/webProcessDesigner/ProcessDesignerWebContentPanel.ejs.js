@@ -79,16 +79,22 @@ function addEventAfterDraw(canvas, element){
     			customData = [];
     		}
     		if(node && node.__className=="org.uengine.codi.mw3.knowledge.WfNode"){
+    			canvas.drawLabel(element, node.name);
     			customData.push( {"customId": node.id , "customName" : node.name , "customType" : "wfNode"});
 //    			canvas.setCustomData(element, {"customId": node.id , "customName" : node.name , "customType" : "wfNode"});
     			session.clipboard = null;
     		}
     		if(node && node.__className=="org.uengine.codi.mw3.webProcessDesigner.Role"){
+    			var wfText = $(element).children('[id$=_LABEL]').text();
+    			wfText = wfText + '(' + node.name + ')';
+    			canvas.drawLabel(element, wfText);
     			customData.push( {"customId": "" , "customName" : node.name , "customType" : "role"});
 //    			canvas.setCustomData(element, {"customId": "" , "customName" : node.name , "customType" : "role"});
     			session.clipboard = null;
     		}
-    		canvas.setCustomData(element, customData);
+    		if(customData.length > 0){
+    			canvas.setCustomData(element, customData);
+    		}
 //    	},
 //    	"contextmenu": function (event) {
 //    		alert(element.id);
@@ -109,7 +115,7 @@ function addEventAfterDraw(canvas, element){
 //    });
 //};
 org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype.clear = function(){
-	this.icanvas.RENDERER.clear();
+	this.icanvas.clear();
 };
 org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype.jsonobject = function(){
 //	var object = mw3.getObject(this.objectId);
