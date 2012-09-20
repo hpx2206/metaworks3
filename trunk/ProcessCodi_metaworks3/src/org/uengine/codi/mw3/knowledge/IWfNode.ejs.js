@@ -265,6 +265,8 @@ org_uengine_codi_mw3_knowledge_IWfNode.prototype = {
 				clearTimeout(this.timeout);
 			}			
 			
+			var objectId = this.objectId;
+			
 			this.timeout = setTimeout(function() {
 				
 				var mashupToolNames = ["GoogleImage", "LMS", "KMS"];
@@ -279,7 +281,7 @@ org_uengine_codi_mw3_knowledge_IWfNode.prototype = {
 						
 						if(mashup.search){
 							mashup.keyword = value;
-							mashup.targetNodeId = mw3.objects[this.objectId].id;
+							mashup.targetNodeId = mw3.objects[objectId].id;
 							mashup.search(value);
 						}else{
 							mashupTool = mashup.__getFaceHelper();
