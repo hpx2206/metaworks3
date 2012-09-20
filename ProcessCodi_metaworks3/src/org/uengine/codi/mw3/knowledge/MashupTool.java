@@ -7,6 +7,8 @@ import org.metaworks.annotation.ServiceMethod;
 
 public class MashupTool {
 	
+	public MashupTool(){}
+	
 	ArrayList<SearchResult> searchResults;
 		public ArrayList<SearchResult> getSearchResults() {
 			return searchResults;
@@ -36,6 +38,6 @@ public class MashupTool {
 			this.targetNodeId = targetNodeId;
 		}
 
-	@ServiceMethod(payload={"keyword", "targetNodeId"})
+	@ServiceMethod(callByContent=true, payload={"keyword", "targetNodeId"})
 	public void search(){};
 }
