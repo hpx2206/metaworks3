@@ -282,7 +282,10 @@ org_uengine_codi_mw3_knowledge_IWfNode.prototype = {
 						if(mashup.search){
 							mashup.keyword = value;
 							mashup.targetNodeId = mw3.objects[objectId].id;
-							mashup.search(value);
+							
+							mw3.setObject(mashup.__objectId, mashup); //since mashup has it's UI
+							
+							mashup.search();
 						}else{
 							mashupTool = mashup.__getFaceHelper();
 							
