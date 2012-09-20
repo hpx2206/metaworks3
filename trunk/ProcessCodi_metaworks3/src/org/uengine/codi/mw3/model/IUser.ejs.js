@@ -14,18 +14,20 @@ var org_uengine_codi_mw3_model_IUser = function(objectId, className){
 	
 	if(user.metaworksContext.when=='contacts'){
 		
-			//alert(objectId);
+		
 		var msg=$('#objDiv_' + objectId).find('.fontgray').text();
 		var comp=msg.length ;
-		var blueb = $('#objDiv_' + objectId).find('.fontgray');
+		
 		
 		var count=0 ;
 		
 		var typing = function(){ 
 			if(count<=comp){ 
-				blueb[1].innerText = (msg.substring(0,count)) ;
+				
+				$('#objDiv_' + objectId).find('.fontgray').text(msg.substring(0,count));
 				count++ ;
-				setTimeout(typing(), 1000); 
+				setTimeout(function(){typing()}, 500); 
+				
 			}
 		};
 		
