@@ -36,6 +36,6 @@ public class MashupTool {
 			this.targetNodeId = targetNodeId;
 		}
 
-	@ServiceMethod
+	@ServiceMethod(payload={"keyword", "targetNodeId"})
 	public void search(){};
 }
