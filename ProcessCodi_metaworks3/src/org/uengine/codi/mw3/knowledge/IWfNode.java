@@ -23,6 +23,14 @@ import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.model.Session;
 
 @Table(name="bpm_knol")
+@Face(
+		ejsPathMappingByContext=
+	{
+		"{how: 'bullet', face: 'dwr/metaworks/org/uengine/codi/mw3/knowledge/IWfNode.ejs'}",
+		"{how: 'uml', face: 'dwr/metaworks/org/uengine/codi/mw3/knowledge/IWfNode_uml.ejs'}",
+		"{how: 'mindmap', face: 'dwr/metaworks/org/uengine/codi/mw3/knowledge/IWfNode_mindmap.ejs'}",
+		//"{how: 'pt', face: 'dwr/metaworks/org/uengine/codi/mw3/model/IWfNode_uml.ejs'}",
+	})
 public interface IWfNode extends IDAO {
 
 	@Id
@@ -115,6 +123,10 @@ public interface IWfNode extends IDAO {
 	public void setLoadDepth(int loadDepth);
 	
 	
+	public String getVisType();
+	public void setVisType(String visType);
+	
+	
 	/*******************************************
 	 * 
 	 * Service Method
@@ -184,6 +196,10 @@ public interface IWfNode extends IDAO {
 	
 	@ServiceMethod(callByContent=true, mouseBinding="drag-enableDefault")
 	public Session drag() throws Exception;
+	
+	@ServiceMethod(inContextMenu=true, target="popup")
+	@Face(displayName="가시화 방법")
+	public Popup visualizationType();
 	
 	/*******************************************
 	 * 
