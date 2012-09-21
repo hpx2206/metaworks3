@@ -28,6 +28,7 @@ import org.uengine.codi.mw3.model.InstanceView;
 import org.uengine.codi.mw3.model.InstanceViewContent;
 import org.uengine.codi.mw3.model.NewInstancePanel;
 import org.uengine.codi.mw3.model.NewInstanceWindow;
+import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.model.ProcessDefinition;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.model.UnstructuredProcessInstanceStarter;
@@ -52,6 +53,15 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		}
 		public void setType(String type) {
 			this.type = type;
+		}
+		
+	String visType;
+
+		public String getVisType() {
+			return visType;
+		}
+		public void setVisType(String visType) {
+			this.visType = visType;
 		}
 
 	String name;
@@ -274,6 +284,13 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 					node.copyFrom(findNode);
 					node.setChildNode(new ArrayList<WfNode>());
 					node.getMetaworksContext().setWhen(getMetaworksContext().getWhen());
+					
+					if(node.getVisType()==null && !"ROOT".equals(getMetaworksContext().getHow())){
+						node.getMetaworksContext().setHow(getMetaworksContext().getHow());
+					}else{
+						node.getMetaworksContext().setHow(node.getVisType());
+					}
+					
 					node.setLoadDepth(this.getLoadDepth());
 					node.loadChildren();  //재귀호출로 하위를 갖고 오네... 기본 3 depth정도로 제한을 둬야할듯.. 
 					
@@ -931,6 +948,13 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 	
 	@Autowired
 	public UnstructuredProcessInstanceStarter instanceStarter;
+	
+	
+	@Override
+	public Popup visualizationType() {
+		return new Popup(new VisualizationType(this));
+		
+	}
 	
 	
 }
