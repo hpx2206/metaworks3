@@ -288,12 +288,13 @@ org_uengine_codi_mw3_knowledge_IWfNode.prototype = {
 							mashup.search();
 						}else{
 							mashupTool = mashup.__getFaceHelper();
-							
+							console.log(mashupTool);
 							if(mashupTool){
-								if(value == '')
+								if(value == ''){
 									mashupTool.clear();
-								else
+								}else{
 									mashupTool.search(value);
+								}
 							}					
 							
 						}
@@ -493,6 +494,11 @@ org_uengine_codi_mw3_knowledge_IWfNode.prototype = {
 		insertNodeAfter: function(googleData){						
 			this.mw3Obj.nameNext = googleData.tbUrl;
 			this.mw3Obj.typeNext = "img";
+			this.mw3Obj.add();
+		},
+		insertNodeVideo: function(googleData){						
+			this.mw3Obj.nameNext = googleData.playUrl;
+			this.mw3Obj.typeNext = "video";
 			this.mw3Obj.add();
 		}
 
