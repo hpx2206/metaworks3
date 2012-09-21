@@ -51,6 +51,8 @@
 												<img src="<%=depthTwo[k].name %>">
 <%										}else if(depthTwo[k].type=='iframe'){		%>
 												<iframe src="<%=depthTwo[k].name%>" width="500" height="300"></iframe>
+<%										}else if(depthTwo[k].type=='video'){		%>
+												<object width="300" height="300"><param name="movie" value="<%=depthTwo[k].name%>"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="<%=depthTwo[k].name%>" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="300" height="300"></embed></object>
 <%										}else{ %>
 												<%=depthTwo[k].name %>
 <%										}%>
@@ -92,6 +94,8 @@
 															<img src="<%=depthThree[m].name %>">
 <%													}else if(depthThree[m].type=='iframe'){		%>
 															<iframe src="<%=depthThree[m].name%>" width="500" height="300"></iframe>
+<%													}else if(depthThree[m].type=='video'){		%>
+															<object width="300" height="300"><param name="movie" value="<%=depthThree[m].name%>"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="<%=depthThree[m].name%>" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="300" height="300"></embed></object>
 <%													}else{ %>
 															<%=depthThree[m].name %>
 <%													}%>

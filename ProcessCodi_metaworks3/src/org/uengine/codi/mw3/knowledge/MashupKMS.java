@@ -7,7 +7,7 @@ import org.metaworks.annotation.ServiceMethod;
 public class MashupKMS extends MashupTool{
 
 	@ServiceMethod(payload={"keyword", "targetNodeId"})
-	public void search() throws Exception {
+	public void search11() throws Exception {
 		setSearchResults(new ArrayList<SearchResult>());
 		
 		if( keyword != null){

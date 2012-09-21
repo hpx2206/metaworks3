@@ -41,6 +41,7 @@ public class Mashup {
 
 	MashupKMS mashupKMS;
 	@Face(displayName="지식맵")
+	@AutowiredToClient
 		public MashupKMS getMashupKMS() {
 			return mashupKMS;
 		}
