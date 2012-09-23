@@ -269,7 +269,7 @@ org_uengine_codi_mw3_knowledge_IWfNode.prototype = {
 			
 			this.timeout = setTimeout(function() {
 				
-				var mashupToolNames = ["GoogleImage", "LMS", "KMS"];
+				var mashupToolNames = ["GoogleImage", "LMS", "KMS", "Video"];
 				
 				for(var i in mashupToolNames){
 					var mashupToolName = mashupToolNames[i];

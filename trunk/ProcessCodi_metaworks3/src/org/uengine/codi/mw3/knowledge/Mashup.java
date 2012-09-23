@@ -14,6 +14,7 @@ public class Mashup {
 		setMashupGoogleImage(new MashupGoogleImage());
 		setMashupLMS(new MashupLMS());
 		setMashupKMS(new MashupKMS());
+		setMashupVideo(new MashupVideo());
 	}
 
 	MashupGoogleImage mashupGoogleImage;
@@ -49,5 +50,17 @@ public class Mashup {
 		public void setMashupKMS(MashupKMS mashupKMS) {
 			this.mashupKMS = mashupKMS;
 		}
+		
+	MashupVideo mashupVideo;
+	@Face(displayName="유튜브")
+	@AutowiredToClient
+		public MashupVideo getMashupVideo() {
+			return mashupVideo;
+		}
+		
+		public void setMashupVideo(MashupVideo mashupVideo) {
+			this.mashupVideo = mashupVideo;
+		}
+	
 		
 }
