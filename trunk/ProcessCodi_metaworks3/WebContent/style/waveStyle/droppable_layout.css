@@ -157,6 +157,10 @@ ul, ol, li, dl, dd, dt {
     display: inline-block;
     margin: 3px;
 }
+#mashup_slideshare .ssContainer {
+    display: inline-block;
+    margin: 3px;
+}
 
 #controls #move {
     background: url(../../images/waveStyle/move_icon_black.png) no-repeat;

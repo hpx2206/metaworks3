@@ -15,6 +15,7 @@ public class Mashup {
 		setMashupLMS(new MashupLMS());
 		setMashupKMS(new MashupKMS());
 		setMashupVideo(new MashupVideo());
+		setMashupSlideshare(new MashupSlideshare());
 	}
 
 	MashupGoogleImage mashupGoogleImage;
@@ -61,5 +62,15 @@ public class Mashup {
 			this.mashupVideo = mashupVideo;
 		}
 	
-		
+	MashupSlideshare 	mashupSlideshare;
+	@Face(displayName="SlideShare")
+	@AutowiredToClient
+	public MashupSlideshare getMashupSlideshare() {
+		return mashupSlideshare;
+	}
+	
+	public void setMashupSlideshare(MashupSlideshare mashupSlideshare) {
+		this.mashupSlideshare = mashupSlideshare;
+	}
+	
 }

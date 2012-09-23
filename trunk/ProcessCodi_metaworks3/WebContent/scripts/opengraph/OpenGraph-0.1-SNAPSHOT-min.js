@@ -2061,7 +2061,8 @@ i=n(o.group(),null,OG.Constants.NODE_TYPE.ROOT);
 o.id="OG_"+m;
 o.canvas.id="OG_"+m;
 $(o.canvas).css({"background-color":c});
-this.drawShape=function(A,B,I,v,w){var x=I?I[0]:100,H=I?I[1]:100,y,E,G,z,D,C,F;
+if($(o.canvas.parentNode).css("position")==="static"){$(o.canvas.parentNode).css({position:"relative",left:"0",top:"0"})
+}this.drawShape=function(A,B,I,v,w){var x=I?I[0]:100,H=I?I[1]:100,y,E,G,z,D,C,F;
 if(B instanceof OG.shape.GeomShape){E=B.createShape();
 E.moveCentroid(A);
 E.resizeBox(x,H);
@@ -3162,7 +3163,7 @@ return v?v.node:null
 this.getBBox=function(w){var v=u(OG.Util.isElement(w)?w.id:w);
 return v.getBBox()
 };
-this.getRootBBox=function(){var z=o.canvas.parentNode,A=o.canvas.clientWidth,w=o.canvas.clientHeight,v=OG.Util.isIE7()?z.offsetLeft+z.parentNode.offsetLeft:z.offsetLeft,B=OG.Util.isIE7()?z.offsetTop+z.parentNode.offsetTop:z.offsetTop;
+this.getRootBBox=function(){var z=o.canvas.parentNode,A=OG.Util.isFirefox()?o.canvas.width.baseVal.value:o.canvas.scrollWidth,w=OG.Util.isFirefox()?o.canvas.height.baseVal.value:o.canvas.scrollHeight,v=z.offsetLeft,B=z.offsetTop;
 return{width:A,height:w,x:v,y:B,x2:v+A,y2:B+w}
 };
 this.getContainer=function(){return o.canvas.parentNode
@@ -3174,620 +3175,623 @@ this.isVML=function(){return Raphael.vml
 };
 OG.renderer.RaphaelRenderer.prototype=new OG.renderer.IRenderer();
 OG.renderer.RaphaelRenderer.prototype.constructor=OG.renderer.RaphaelRenderer;
-OG.RaphaelRenderer=OG.renderer.RaphaelRenderer;OG.handler.EventHandler=function(i){var d=this,b=i,e,j,h,l,g,f=function(m){return parseInt(m,10)
-},a=function(m){return OG.Util.round(m/OG.Constants.MOVE_SNAP_SIZE)*5
-},k=function(m){var n=OG.Util.isElement(m)?m.id:m;
-return b.getElementById(n.substring(0,n.indexOf(OG.Constants.TERMINAL_SUFFIX.GROUP)))
-},c=function(m,u){var s,q,t,n,r=false,p=false,o;
-s=$(m).attr("_from");
-q=$(m).attr("_to");
-if(s){t=k(s)
-}if(q){n=k(q)
-}for(o=0;
-o<u.length;
-o++){if(t&&u[o].id===t.id){r=true
-}if(n&&u[o].id===n.id){p=true
-}}return{none:!r&&!p,all:r&&p,any:r||p,either:(r&&!p)||(!r&&p),attrEither:(s&&!q)||(!s&&q)}
+OG.RaphaelRenderer=OG.renderer.RaphaelRenderer;OG.handler.EventHandler=function(i){var d=this,b=i,e,j,h,l,g,f=function(n){return parseInt(n,10)
+},a=function(n){return OG.Util.round(n/OG.Constants.MOVE_SNAP_SIZE)*5
+},k=function(n){var o=OG.Util.isElement(n)?n.id:n;
+return b.getElementById(o.substring(0,o.indexOf(OG.Constants.TERMINAL_SUFFIX.GROUP)))
+},c=function(n,v){var t,r,u,o,s=false,q=false,p;
+t=$(n).attr("_from");
+r=$(n).attr("_to");
+if(t){u=k(t)
+}if(r){o=k(r)
+}for(p=0;
+p<v.length;
+p++){if(u&&v[p].id===u.id){s=true
+}if(o&&v[p].id===o.id){q=true
+}}return{none:!s&&!q,all:s&&q,any:s||q,either:(s&&!q)||(!s&&q),attrEither:(t&&!r)||(!t&&r)}
+},m=function(n){if(typeof n.offsetX==="undefined"||typeof n.offsetY==="undefined"){var o=$(n.target).offset();
+n.offsetX=n.pageX-o.left;
+n.offsetY=n.pageY-o.top
+}return{x:n.offsetX,y:n.offsetY}
 };
-e=function(q,m,r){var p=b.getContainer(),o=b.getRootGroup(),n=b.getRootBBox();
-if(!q||!m){return
-}if(r){if($(q).attr("_shape")===OG.Constants.SHAPE_TYPE.EDGE){$(m.from).draggable({start:function(x){var v=q.shape.geom.getVertices(),s={},t=$(q).attr("_to"),y,u=[v[v.length-1].x,v[v.length-1].y],w=b.drawEdge(new OG.PolyLine(v),OG.Util.apply(s,OG.Constants.DEFAULT_STYLE.EDGE_SHADOW,q.shape.geom.style.map));
-if(t){y=k(t);
-b.drawTerminal(y);
-u=b.getElementById(t)
-}$(o).data("to_terminal",u);
-$(o).data("edge",w);
+e=function(p,n,q){var o=b.getRootGroup();
+if(!p||!n){return
+}if(q){if($(p).attr("_shape")===OG.Constants.SHAPE_TYPE.EDGE){$(n.from).draggable({start:function(w){var u=p.shape.geom.getVertices(),r={},s=$(p).attr("_to"),x,t=[u[u.length-1].x,u[u.length-1].y],v=b.drawEdge(new OG.PolyLine(u),OG.Util.apply(r,OG.Constants.DEFAULT_STYLE.EDGE_SHADOW,p.shape.geom.style.map));
+if(s){x=k(s);
+b.drawTerminal(x);
+t=b.getElementById(s)
+}$(o).data("to_terminal",t);
+$(o).data("edge",v);
 b.removeRubberBand(b.getRootElement());
-$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(A,z){if(z.id&&$(z).attr("_shape")!==OG.Constants.SHAPE_TYPE.EDGE){b.removeGuide(z)
+$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(z,y){if(y.id&&$(y).attr("_shape")!==OG.Constants.SHAPE_TYPE.EDGE){b.removeGuide(y)
 }})
-},drag:function(s){var u=$(o).data("edge"),A=$(o).data("edge_terminal"),F=$(o).data("to_terminal"),B=A?[A.terminal.position.x,A.terminal.position.y]:[p.scrollLeft+s.pageX-n.x,p.scrollTop+s.pageY-n.y],x=OG.Util.isElement(F)?[F.terminal.position.x,F.terminal.position.y]:F,C=A?A.terminal.direction.toLowerCase():"c",y=OG.Util.isElement(F)?F.terminal.direction.toLowerCase():"c",D=A?k(A):null,w=OG.Util.isElement(F)?k(F):null,t,E,v,z;
+},drag:function(r){var v=m(r),t=$(o).data("edge"),A=$(o).data("edge_terminal"),F=$(o).data("to_terminal"),B=A?[A.terminal.position.x,A.terminal.position.y]:[v.x,v.y],x=OG.Util.isElement(F)?[F.terminal.position.x,F.terminal.position.y]:F,C=A?A.terminal.direction.toLowerCase():"c",y=OG.Util.isElement(F)?F.terminal.direction.toLowerCase():"c",D=A?k(A):null,w=OG.Util.isElement(F)?k(F):null,s,E,u,z;
 $(this).css({position:"",left:"",top:""});
-t=B;
+s=B;
 E=x;
-if(D&&C==="c"){v=b.intersectionEdge(u.geom.style.get("edge-type"),D,[t[0],t[1]],[E[0],E[1]],true);
-B=v.position;
-C=v.direction
-}if(w&&y==="c"){v=b.intersectionEdge(u.geom.style.get("edge-type"),w,[t[0],t[1]],[E[0],E[1]],false);
-x=v.position;
-y=v.direction
+if(D&&C==="c"){u=b.intersectionEdge(t.geom.style.get("edge-type"),D,[s[0],s[1]],[E[0],E[1]],true);
+B=u.position;
+C=u.direction
+}if(w&&y==="c"){u=b.intersectionEdge(t.geom.style.get("edge-type"),w,[s[0],s[1]],[E[0],E[1]],false);
+x=u.position;
+y=u.direction
 }z=D&&w&&D.id===w.id;
 if(z){B=x=D.shape.geom.getBoundary().getRightCenter()
-}b.drawEdge(new OG.Line(B,x),OG.Util.apply(u.geom.style.map,{"edge-direction":C+" "+y}),u.id,z)
-},stop:function(v){var w=$(o).data("edge_terminal")||[p.scrollLeft+v.pageX-n.x,p.scrollTop+v.pageY-n.y],s=$(o).data("to_terminal"),t=OG.Util.isElement(w)?k(w):null,u=$(o).data("edge");
+}b.drawEdge(new OG.Line(B,x),OG.Util.apply(t.geom.style.map,{"edge-direction":C+" "+y}),t.id,z)
+},stop:function(u){var w=m(u),v=$(o).data("edge_terminal")||[w.x,w.y],r=$(o).data("to_terminal"),s=OG.Util.isElement(v)?k(v):null,t=$(o).data("edge");
 $(this).css({position:"absolute",left:"0px",top:"0px"});
 $(o).removeData("to_terminal");
 $(o).removeData("edge");
 $(o).removeData("edge_terminal");
-b.remove(u);
-b.removeGuide(q);
-if(t){b.remove(t.id+OG.Constants.DROP_OVER_BBOX_SUFFIX)
-}q=b.connect(w,s,q,q.shape.geom.style);
-m=b.drawGuide(q);
-e(q,m,true);
-b.toFront(m.group);
-b.setAttr(q,{cursor:OG.Constants.SELECTABLE&&OG.Constants.MOVABLE?"move":(OG.Constants.SELECTABLE?"pointer":OG.Constants.DEFAULT_STYLE.SHAPE.cursor)})
+b.remove(t);
+b.removeGuide(p);
+if(s){b.remove(s.id+OG.Constants.DROP_OVER_BBOX_SUFFIX)
+}p=b.connect(v,r,p,p.shape.geom.style);
+n=b.drawGuide(p);
+e(p,n,true);
+b.toFront(n.group);
+b.setAttr(p,{cursor:OG.Constants.SELECTABLE&&OG.Constants.MOVABLE?"move":(OG.Constants.SELECTABLE?"pointer":OG.Constants.DEFAULT_STYLE.SHAPE.cursor)})
 }});
-$(m.to).draggable({start:function(x){var u=q.shape.geom.getVertices(),t={},s=$(q).attr("_from"),v,y=[u[0].x,u[0].y],w=b.drawEdge(new OG.PolyLine(u),OG.Util.apply(t,OG.Constants.DEFAULT_STYLE.EDGE_SHADOW,q.shape.geom.style.map));
-if(s){v=k(s);
-b.drawTerminal(v);
-y=b.getElementById(s)
-}$(o).data("from_terminal",y);
-$(o).data("edge",w);
+$(n.to).draggable({start:function(w){var t=p.shape.geom.getVertices(),s={},r=$(p).attr("_from"),u,x=[t[0].x,t[0].y],v=b.drawEdge(new OG.PolyLine(t),OG.Util.apply(s,OG.Constants.DEFAULT_STYLE.EDGE_SHADOW,p.shape.geom.style.map));
+if(r){u=k(r);
+b.drawTerminal(u);
+x=b.getElementById(r)
+}$(o).data("from_terminal",x);
+$(o).data("edge",v);
 b.removeRubberBand(b.getRootElement());
-$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(A,z){if(z.id&&$(z).attr("_shape")!==OG.Constants.SHAPE_TYPE.EDGE){b.removeGuide(z)
+$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(z,y){if(y.id&&$(y).attr("_shape")!==OG.Constants.SHAPE_TYPE.EDGE){b.removeGuide(y)
 }})
-},drag:function(s){var u=$(o).data("edge"),A=$(o).data("from_terminal"),F=$(o).data("edge_terminal"),B=OG.Util.isElement(A)?[A.terminal.position.x,A.terminal.position.y]:A,x=F?[F.terminal.position.x,F.terminal.position.y]:[p.scrollLeft+s.pageX-n.x,p.scrollTop+s.pageY-n.y],C=OG.Util.isElement(A)?A.terminal.direction.toLowerCase():"c",y=F?F.terminal.direction.toLowerCase():"c",D=OG.Util.isElement(A)?k(A):null,w=F?k(F):null,t,E,v,z;
+},drag:function(r){var v=m(r),t=$(o).data("edge"),A=$(o).data("from_terminal"),F=$(o).data("edge_terminal"),B=OG.Util.isElement(A)?[A.terminal.position.x,A.terminal.position.y]:A,x=F?[F.terminal.position.x,F.terminal.position.y]:[v.x,v.y],C=OG.Util.isElement(A)?A.terminal.direction.toLowerCase():"c",y=F?F.terminal.direction.toLowerCase():"c",D=OG.Util.isElement(A)?k(A):null,w=F?k(F):null,s,E,u,z;
 $(this).css({position:"",left:"",top:""});
-t=B;
+s=B;
 E=x;
-if(D&&C==="c"){v=b.intersectionEdge(u.geom.style.get("edge-type"),D,[t[0],t[1]],[E[0],E[1]],true);
-B=v.position;
-C=v.direction
-}if(w&&y==="c"){v=b.intersectionEdge(u.geom.style.get("edge-type"),w,[t[0],t[1]],[E[0],E[1]],false);
-x=v.position;
-y=v.direction
+if(D&&C==="c"){u=b.intersectionEdge(t.geom.style.get("edge-type"),D,[s[0],s[1]],[E[0],E[1]],true);
+B=u.position;
+C=u.direction
+}if(w&&y==="c"){u=b.intersectionEdge(t.geom.style.get("edge-type"),w,[s[0],s[1]],[E[0],E[1]],false);
+x=u.position;
+y=u.direction
 }z=(D!==null)&&(w!==null)&&D.id===w.id;
 if(z){B=x=w.shape.geom.getBoundary().getRightCenter()
-}b.drawEdge(new OG.Line(B,x),OG.Util.apply(u.geom.style.map,{"edge-direction":C+" "+y}),u.id,z)
-},stop:function(u){var w=$(o).data("from_terminal"),s=$(o).data("edge_terminal")||[p.scrollLeft+u.pageX-n.x,p.scrollTop+u.pageY-n.y],v=OG.Util.isElement(s)?k(s):null,t=$(o).data("edge");
+}b.drawEdge(new OG.Line(B,x),OG.Util.apply(t.geom.style.map,{"edge-direction":C+" "+y}),t.id,z)
+},stop:function(t){var w=m(t),v=$(o).data("from_terminal"),r=$(o).data("edge_terminal")||[w.x,w.y],u=OG.Util.isElement(r)?k(r):null,s=$(o).data("edge");
 $(this).css({position:"absolute",left:"0px",top:"0px"});
 $(o).removeData("from_terminal");
 $(o).removeData("edge");
 $(o).removeData("edge_terminal");
-b.remove(t);
-b.removeGuide(q);
-if(v){b.remove(v.id+OG.Constants.DROP_OVER_BBOX_SUFFIX)
-}q=b.connect(w,s,q,q.shape.geom.style);
-m=b.drawGuide(q);
-e(q,m,true);
-b.toFront(m.group);
-b.setAttr(q,{cursor:OG.Constants.SELECTABLE&&OG.Constants.MOVABLE?"move":(OG.Constants.SELECTABLE?"pointer":OG.Constants.DEFAULT_STYLE.SHAPE.cursor)})
+b.remove(s);
+b.removeGuide(p);
+if(u){b.remove(u.id+OG.Constants.DROP_OVER_BBOX_SUFFIX)
+}p=b.connect(v,r,p,p.shape.geom.style);
+n=b.drawGuide(p);
+e(p,n,true);
+b.toFront(n.group);
+b.setAttr(p,{cursor:OG.Constants.SELECTABLE&&OG.Constants.MOVABLE?"move":(OG.Constants.SELECTABLE?"pointer":OG.Constants.DEFAULT_STYLE.SHAPE.cursor)})
 }});
-$.each(m.controls,function(s,t){$(t).draggable({start:function(v){var u=p.scrollLeft+v.pageX,w=p.scrollTop+v.pageY;
-$(this).data("start",{x:u,y:w});
-$(this).data("offset",{x:u-f(b.getAttr(t,"x")),y:w-f(b.getAttr(t,"y"))});
-b.remove(m.bBox);
+$.each(n.controls,function(r,s){$(s).draggable({start:function(t){var u=m(t);
+$(this).data("start",{x:u.x,y:u.y});
+$(this).data("offset",{x:u.x-f(b.getAttr(s,"x")),y:u.y-f(b.getAttr(s,"y"))});
+b.remove(n.bBox);
 b.removeRubberBand(b.getRootElement())
-},drag:function(v){var E=p.scrollLeft+v.pageX,C=p.scrollTop+v.pageY,w=$(this).data("start"),z=$(this).data("offset"),u=E-z.x,F=C-z.y,B=q.shape.geom.getVertices(),D=t.id.indexOf(OG.Constants.GUIDE_SUFFIX.CTL_H)>=0,A=D?parseInt(t.id.replace(q.id+OG.Constants.GUIDE_SUFFIX.CTL_H,""),10):parseInt(t.id.replace(q.id+OG.Constants.GUIDE_SUFFIX.CTL_V,""),10);
+},drag:function(u){var w=m(u),v=$(this).data("start"),x=$(this).data("offset"),t=w.x-x.x,B=w.y-x.y,z=p.shape.geom.getVertices(),A=s.id.indexOf(OG.Constants.GUIDE_SUFFIX.CTL_H)>=0,y=A?parseInt(s.id.replace(p.id+OG.Constants.GUIDE_SUFFIX.CTL_H,""),10):parseInt(s.id.replace(p.id+OG.Constants.GUIDE_SUFFIX.CTL_V,""),10);
 $(this).css({position:"",left:"",top:""});
-if(D){B[A].x=u;
-B[A+1].x=u
-}else{B[A].y=F;
-B[A+1].y=F
-}q=b.drawEdge(new OG.PolyLine(B),q.shape.geom.style,q.id);
-b.drawGuide(q);
+if(A){z[y].x=t;
+z[y+1].x=t
+}else{z[y].y=B;
+z[y+1].y=B
+}p=b.drawEdge(new OG.PolyLine(z),p.shape.geom.style,p.id);
+b.drawGuide(p);
 b.removeAllTerminal();
-b.drawLabel(q)
-},stop:function(v){var E=p.scrollLeft+v.pageX,C=p.scrollTop+v.pageY,w=$(this).data("start"),z=$(this).data("offset"),u=E-z.x,F=C-z.y,B=q.shape.geom.getVertices(),D=t.id.indexOf(OG.Constants.GUIDE_SUFFIX.CTL_H)>=0,A=D?parseInt(t.id.replace(q.id+OG.Constants.GUIDE_SUFFIX.CTL_H,""),10):parseInt(t.id.replace(q.id+OG.Constants.GUIDE_SUFFIX.CTL_V,""),10);
+b.drawLabel(p)
+},stop:function(u){var w=m(u),v=$(this).data("start"),x=$(this).data("offset"),t=w.x-x.x,B=w.y-x.y,z=p.shape.geom.getVertices(),A=s.id.indexOf(OG.Constants.GUIDE_SUFFIX.CTL_H)>=0,y=A?parseInt(s.id.replace(p.id+OG.Constants.GUIDE_SUFFIX.CTL_H,""),10):parseInt(s.id.replace(p.id+OG.Constants.GUIDE_SUFFIX.CTL_V,""),10);
 $(this).css({position:"absolute",left:"0px",top:"0px"});
-if(D){B[A].x=u;
-B[A+1].x=u
-}else{B[A].y=F;
-B[A+1].y=F
-}q=b.drawEdge(new OG.PolyLine(B),q.shape.geom.style,q.id);
-b.drawGuide(q);
-b.drawLabel(q);
-b.setAttr(q,{cursor:OG.Constants.SELECTABLE&&OG.Constants.MOVABLE?"move":(OG.Constants.SELECTABLE?"pointer":OG.Constants.DEFAULT_STYLE.SHAPE.cursor)})
+if(A){z[y].x=t;
+z[y+1].x=t
+}else{z[y].y=B;
+z[y+1].y=B
+}p=b.drawEdge(new OG.PolyLine(z),p.shape.geom.style,p.id);
+b.drawGuide(p);
+b.drawLabel(p);
+b.setAttr(p,{cursor:OG.Constants.SELECTABLE&&OG.Constants.MOVABLE?"move":(OG.Constants.SELECTABLE?"pointer":OG.Constants.DEFAULT_STYLE.SHAPE.cursor)})
 }})
 })
-}else{$(m.rc).draggable({start:function(t){var s=p.scrollLeft+t.pageX,u=p.scrollTop+t.pageY;
-$(this).data("start",{x:s,y:u});
-$(this).data("offset",{x:s-f(b.getAttr(m.rc,"x")),y:u-f(b.getAttr(m.rc,"y"))});
+}else{$(n.rc).draggable({start:function(r){var s=m(r);
+$(this).data("start",{x:s.x,y:s.y});
+$(this).data("offset",{x:s.x-f(b.getAttr(n.rc,"x")),y:s.y-f(b.getAttr(n.rc,"y"))});
 b.removeRubberBand(b.getRootElement())
-},drag:function(v){var s=p.scrollLeft+v.pageX,B=p.scrollTop+v.pageY,A=$(this).data("start"),z=$(this).data("offset"),t=s-A.x,w=s-z.x,u=w-f(b.getAttr(m.lc,"x"));
+},drag:function(s){var t=m(s),w=$(this).data("start"),v=$(this).data("offset"),u=t.x-v.x,r=u-f(b.getAttr(n.lc,"x"));
 $(this).css({position:"",left:"",top:""});
-if(u>=OG.Constants.GUIDE_MIN_SIZE){b.setAttr(m.rc,{x:w});
-b.setAttr(m.ur,{x:w});
-b.setAttr(m.lr,{x:w});
-b.setAttr(m.uc,{x:OG.Util.round((f(b.getAttr(m.lc,"x"))+w)/2)});
-b.setAttr(m.lwc,{x:OG.Util.round((f(b.getAttr(m.lc,"x"))+w)/2)});
-b.setAttr(m.bBox,{width:u})
+if(r>=OG.Constants.GUIDE_MIN_SIZE){b.setAttr(n.rc,{x:u});
+b.setAttr(n.ur,{x:u});
+b.setAttr(n.lr,{x:u});
+b.setAttr(n.uc,{x:OG.Util.round((f(b.getAttr(n.lc,"x"))+u)/2)});
+b.setAttr(n.lwc,{x:OG.Util.round((f(b.getAttr(n.lc,"x"))+u)/2)});
+b.setAttr(n.bBox,{width:r})
 }b.removeAllTerminal()
-},stop:function(u){var s=p.scrollLeft+u.pageX,w=p.scrollTop+u.pageY,v=$(this).data("start"),t=s-v.x;
+},stop:function(s){var t=m(s),u=$(this).data("start"),r=t.x-u.x;
 $(this).css({position:"absolute",left:"0px",top:"0px"});
-if(q&&q.shape.geom){if(q.shape.geom.getBoundary().getWidth()+t<OG.Constants.GUIDE_MIN_SIZE){t=OG.Constants.GUIDE_MIN_SIZE-q.shape.geom.getBoundary().getWidth()
-}b.resize(q,[0,0,0,t]);
-b.drawGuide(q);
-b.setAttr(q,{cursor:OG.Constants.SELECTABLE&&OG.Constants.MOVABLE?"move":(OG.Constants.SELECTABLE?"pointer":OG.Constants.DEFAULT_STYLE.SHAPE.cursor)})
+if(p&&p.shape.geom){if(p.shape.geom.getBoundary().getWidth()+r<OG.Constants.GUIDE_MIN_SIZE){r=OG.Constants.GUIDE_MIN_SIZE-p.shape.geom.getBoundary().getWidth()
+}b.resize(p,[0,0,0,r]);
+b.drawGuide(p);
+b.setAttr(p,{cursor:OG.Constants.SELECTABLE&&OG.Constants.MOVABLE?"move":(OG.Constants.SELECTABLE?"pointer":OG.Constants.DEFAULT_STYLE.SHAPE.cursor)})
 }}});
-$(m.lwc).draggable({start:function(t){var s=p.scrollLeft+t.pageX,u=p.scrollTop+t.pageY;
-$(this).data("start",{x:s,y:u});
-$(this).data("offset",{x:s-f(b.getAttr(m.lwc,"x")),y:u-f(b.getAttr(m.lwc,"y"))});
+$(n.lwc).draggable({start:function(r){var s=m(r);
+$(this).data("start",{x:s.x,y:s.y});
+$(this).data("offset",{x:s.x-f(b.getAttr(n.lwc,"x")),y:s.y-f(b.getAttr(n.lwc,"y"))});
 b.removeRubberBand(b.getRootElement())
-},drag:function(u){var s=p.scrollLeft+u.pageX,A=p.scrollTop+u.pageY,z=$(this).data("start"),w=$(this).data("offset"),v=A-w.y,t=v-f(b.getAttr(m.uc,"y"));
+},drag:function(s){var t=m(s),w=$(this).data("start"),v=$(this).data("offset"),u=t.y-v.y,r=u-f(b.getAttr(n.uc,"y"));
 $(this).css({position:"",left:"",top:""});
-if(t>=OG.Constants.GUIDE_MIN_SIZE){b.setAttr(m.lwc,{y:v});
-b.setAttr(m.ll,{y:v});
-b.setAttr(m.lr,{y:v});
-b.setAttr(m.lc,{y:OG.Util.round((f(b.getAttr(m.uc,"y"))+v)/2)});
-b.setAttr(m.rc,{y:OG.Util.round((f(b.getAttr(m.uc,"y"))+v)/2)});
-b.setAttr(m.bBox,{height:t})
+if(r>=OG.Constants.GUIDE_MIN_SIZE){b.setAttr(n.lwc,{y:u});
+b.setAttr(n.ll,{y:u});
+b.setAttr(n.lr,{y:u});
+b.setAttr(n.lc,{y:OG.Util.round((f(b.getAttr(n.uc,"y"))+u)/2)});
+b.setAttr(n.rc,{y:OG.Util.round((f(b.getAttr(n.uc,"y"))+u)/2)});
+b.setAttr(n.bBox,{height:r})
 }b.removeAllTerminal()
-},stop:function(u){var s=p.scrollLeft+u.pageX,w=p.scrollTop+u.pageY,v=$(this).data("start"),t=w-v.y;
+},stop:function(s){var t=m(s),u=$(this).data("start"),r=t.y-u.y;
 $(this).css({position:"absolute",left:"0px",top:"0px"});
-if(q&&q.shape.geom){if(q.shape.geom.getBoundary().getHeight()+t<OG.Constants.GUIDE_MIN_SIZE){t=OG.Constants.GUIDE_MIN_SIZE-q.shape.geom.getBoundary().getHeight()
-}b.resize(q,[0,t,0,0]);
-b.drawGuide(q);
-b.setAttr(q,{cursor:OG.Constants.SELECTABLE&&OG.Constants.MOVABLE?"move":(OG.Constants.SELECTABLE?"pointer":OG.Constants.DEFAULT_STYLE.SHAPE.cursor)})
+if(p&&p.shape.geom){if(p.shape.geom.getBoundary().getHeight()+r<OG.Constants.GUIDE_MIN_SIZE){r=OG.Constants.GUIDE_MIN_SIZE-p.shape.geom.getBoundary().getHeight()
+}b.resize(p,[0,r,0,0]);
+b.drawGuide(p);
+b.setAttr(p,{cursor:OG.Constants.SELECTABLE&&OG.Constants.MOVABLE?"move":(OG.Constants.SELECTABLE?"pointer":OG.Constants.DEFAULT_STYLE.SHAPE.cursor)})
 }}});
-$(m.lr).draggable({start:function(t){var s=p.scrollLeft+t.pageX,u=p.scrollTop+t.pageY;
-$(this).data("start",{x:s,y:u});
-$(this).data("offset",{x:s-f(b.getAttr(m.lr,"x")),y:u-f(b.getAttr(m.lr,"y"))});
+$(n.lr).draggable({start:function(r){var s=m(r);
+$(this).data("start",{x:s.x,y:s.y});
+$(this).data("offset",{x:s.x-f(b.getAttr(n.lr,"x")),y:s.y-f(b.getAttr(n.lr,"y"))});
 b.removeRubberBand(b.getRootElement())
-},drag:function(u){var B=p.scrollLeft+u.pageX,A=p.scrollTop+u.pageY,v=$(this).data("start"),w=$(this).data("offset"),t=B-w.x,z=t-f(b.getAttr(m.lc,"x")),C=A-w.y,s=C-f(b.getAttr(m.uc,"y"));
+},drag:function(t){var u=m(t),y=$(this).data("start"),x=$(this).data("offset"),w=u.x-x.x,s=w-f(b.getAttr(n.lc,"x")),v=u.y-x.y,r=v-f(b.getAttr(n.uc,"y"));
 $(this).css({position:"",left:"",top:""});
-if(z>=OG.Constants.GUIDE_MIN_SIZE){b.setAttr(m.rc,{x:t});
-b.setAttr(m.ur,{x:t});
-b.setAttr(m.lr,{x:t});
-b.setAttr(m.uc,{x:OG.Util.round((f(b.getAttr(m.lc,"x"))+t)/2)});
-b.setAttr(m.lwc,{x:OG.Util.round((f(b.getAttr(m.lc,"x"))+t)/2)});
-b.setAttr(m.bBox,{width:z})
-}if(s>=OG.Constants.GUIDE_MIN_SIZE){b.setAttr(m.lwc,{y:C});
-b.setAttr(m.ll,{y:C});
-b.setAttr(m.lr,{y:C});
-b.setAttr(m.lc,{y:OG.Util.round((f(b.getAttr(m.uc,"y"))+C)/2)});
-b.setAttr(m.rc,{y:OG.Util.round((f(b.getAttr(m.uc,"y"))+C)/2)});
-b.setAttr(m.bBox,{height:s})
+if(s>=OG.Constants.GUIDE_MIN_SIZE){b.setAttr(n.rc,{x:w});
+b.setAttr(n.ur,{x:w});
+b.setAttr(n.lr,{x:w});
+b.setAttr(n.uc,{x:OG.Util.round((f(b.getAttr(n.lc,"x"))+w)/2)});
+b.setAttr(n.lwc,{x:OG.Util.round((f(b.getAttr(n.lc,"x"))+w)/2)});
+b.setAttr(n.bBox,{width:s})
+}if(r>=OG.Constants.GUIDE_MIN_SIZE){b.setAttr(n.lwc,{y:v});
+b.setAttr(n.ll,{y:v});
+b.setAttr(n.lr,{y:v});
+b.setAttr(n.lc,{y:OG.Util.round((f(b.getAttr(n.uc,"y"))+v)/2)});
+b.setAttr(n.rc,{y:OG.Util.round((f(b.getAttr(n.uc,"y"))+v)/2)});
+b.setAttr(n.bBox,{height:r})
 }b.removeAllTerminal()
-},stop:function(v){var s=p.scrollLeft+v.pageX,z=p.scrollTop+v.pageY,w=$(this).data("start"),u=s-w.x,t=z-w.y;
+},stop:function(t){var u=m(t),v=$(this).data("start"),s=u.x-v.x,r=u.y-v.y;
 $(this).css({position:"absolute",left:"0px",top:"0px"});
-if(q&&q.shape.geom){if(q.shape.geom.getBoundary().getWidth()+u<OG.Constants.GUIDE_MIN_SIZE){u=OG.Constants.GUIDE_MIN_SIZE-q.shape.geom.getBoundary().getWidth()
-}if(q.shape.geom.getBoundary().getHeight()+t<OG.Constants.GUIDE_MIN_SIZE){t=OG.Constants.GUIDE_MIN_SIZE-q.shape.geom.getBoundary().getHeight()
-}b.resize(q,[0,t,0,u]);
-b.drawGuide(q);
-b.setAttr(q,{cursor:OG.Constants.SELECTABLE&&OG.Constants.MOVABLE?"move":(OG.Constants.SELECTABLE?"pointer":OG.Constants.DEFAULT_STYLE.SHAPE.cursor)})
+if(p&&p.shape.geom){if(p.shape.geom.getBoundary().getWidth()+s<OG.Constants.GUIDE_MIN_SIZE){s=OG.Constants.GUIDE_MIN_SIZE-p.shape.geom.getBoundary().getWidth()
+}if(p.shape.geom.getBoundary().getHeight()+r<OG.Constants.GUIDE_MIN_SIZE){r=OG.Constants.GUIDE_MIN_SIZE-p.shape.geom.getBoundary().getHeight()
+}b.resize(p,[0,r,0,s]);
+b.drawGuide(p);
+b.setAttr(p,{cursor:OG.Constants.SELECTABLE&&OG.Constants.MOVABLE?"move":(OG.Constants.SELECTABLE?"pointer":OG.Constants.DEFAULT_STYLE.SHAPE.cursor)})
 }b.removeAllTerminal()
 }});
-$(m.lc).draggable({start:function(t){var s=p.scrollLeft+t.pageX,u=p.scrollTop+t.pageY;
-$(this).data("start",{x:s,y:u});
-$(this).data("offset",{x:s-f(b.getAttr(m.lc,"x")),y:u-f(b.getAttr(m.lc,"y"))});
+$(n.lc).draggable({start:function(r){var s=m(r);
+$(this).data("start",{x:s.x,y:s.y});
+$(this).data("offset",{x:s.x-f(b.getAttr(n.lc,"x")),y:s.y-f(b.getAttr(n.lc,"y"))});
 b.removeRubberBand(b.getRootElement())
-},drag:function(u){var s=p.scrollLeft+u.pageX,A=p.scrollTop+u.pageY,z=$(this).data("start"),w=$(this).data("offset"),v=s-w.x,t=f(b.getAttr(m.rc,"x"))-v;
+},drag:function(s){var t=m(s),w=$(this).data("start"),v=$(this).data("offset"),u=t.x-v.x,r=f(b.getAttr(n.rc,"x"))-u;
 $(this).css({position:"",left:"",top:""});
-if(t>=OG.Constants.GUIDE_MIN_SIZE){b.setAttr(m.lc,{x:v});
-b.setAttr(m.ul,{x:v});
-b.setAttr(m.ll,{x:v});
-b.setAttr(m.uc,{x:OG.Util.round((f(b.getAttr(m.rc,"x"))+v)/2)});
-b.setAttr(m.lwc,{x:OG.Util.round((f(b.getAttr(m.rc,"x"))+v)/2)});
-b.setAttr(m.bBox,{x:OG.Util.round(v+f(b.getAttr(m.lc,"width"))/2),width:t})
+if(r>=OG.Constants.GUIDE_MIN_SIZE){b.setAttr(n.lc,{x:u});
+b.setAttr(n.ul,{x:u});
+b.setAttr(n.ll,{x:u});
+b.setAttr(n.uc,{x:OG.Util.round((f(b.getAttr(n.rc,"x"))+u)/2)});
+b.setAttr(n.lwc,{x:OG.Util.round((f(b.getAttr(n.rc,"x"))+u)/2)});
+b.setAttr(n.bBox,{x:OG.Util.round(u+f(b.getAttr(n.lc,"width"))/2),width:r})
 }b.removeAllTerminal()
-},stop:function(u){var s=p.scrollLeft+u.pageX,w=p.scrollTop+u.pageY,v=$(this).data("start"),t=v.x-s;
+},stop:function(s){var t=m(s),u=$(this).data("start"),r=u.x-t.x;
 $(this).css({position:"absolute",left:"0px",top:"0px"});
-if(q&&q.shape.geom){if(q.shape.geom.getBoundary().getWidth()+t<OG.Constants.GUIDE_MIN_SIZE){t=OG.Constants.GUIDE_MIN_SIZE-q.shape.geom.getBoundary().getWidth()
-}b.resize(q,[0,0,t,0]);
-b.drawGuide(q);
-b.setAttr(q,{cursor:OG.Constants.SELECTABLE&&OG.Constants.MOVABLE?"move":(OG.Constants.SELECTABLE?"pointer":OG.Constants.DEFAULT_STYLE.SHAPE.cursor)})
+if(p&&p.shape.geom){if(p.shape.geom.getBoundary().getWidth()+r<OG.Constants.GUIDE_MIN_SIZE){r=OG.Constants.GUIDE_MIN_SIZE-p.shape.geom.getBoundary().getWidth()
+}b.resize(p,[0,0,r,0]);
+b.drawGuide(p);
+b.setAttr(p,{cursor:OG.Constants.SELECTABLE&&OG.Constants.MOVABLE?"move":(OG.Constants.SELECTABLE?"pointer":OG.Constants.DEFAULT_STYLE.SHAPE.cursor)})
 }}});
-$(m.ll).draggable({start:function(t){var s=p.scrollLeft+t.pageX,u=p.scrollTop+t.pageY;
-$(this).data("start",{x:s,y:u});
-$(this).data("offset",{x:s-f(b.getAttr(m.ll,"x")),y:u-f(b.getAttr(m.ll,"y"))});
+$(n.ll).draggable({start:function(r){var s=m(r);
+$(this).data("start",{x:s.x,y:s.y});
+$(this).data("offset",{x:s.x-f(b.getAttr(n.ll,"x")),y:s.y-f(b.getAttr(n.ll,"y"))});
 b.removeRubberBand(b.getRootElement())
-},drag:function(u){var B=p.scrollLeft+u.pageX,A=p.scrollTop+u.pageY,v=$(this).data("start"),w=$(this).data("offset"),t=B-w.x,C=A-w.y,z=f(b.getAttr(m.rc,"x"))-t,s=C-f(b.getAttr(m.uc,"y"));
+},drag:function(t){var u=m(t),y=$(this).data("start"),x=$(this).data("offset"),w=u.x-x.x,v=u.y-x.y,s=f(b.getAttr(n.rc,"x"))-w,r=v-f(b.getAttr(n.uc,"y"));
 $(this).css({position:"",left:"",top:""});
-if(z>=OG.Constants.GUIDE_MIN_SIZE){b.setAttr(m.lc,{x:t});
-b.setAttr(m.ul,{x:t});
-b.setAttr(m.ll,{x:t});
-b.setAttr(m.uc,{x:OG.Util.round((f(b.getAttr(m.rc,"x"))+t)/2)});
-b.setAttr(m.lwc,{x:OG.Util.round((f(b.getAttr(m.rc,"x"))+t)/2)});
-b.setAttr(m.bBox,{x:OG.Util.round(t+f(b.getAttr(m.lc,"width"))/2),width:z})
-}if(s>=OG.Constants.GUIDE_MIN_SIZE){b.setAttr(m.lwc,{y:C});
-b.setAttr(m.ll,{y:C});
-b.setAttr(m.lr,{y:C});
-b.setAttr(m.lc,{y:OG.Util.round((f(b.getAttr(m.uc,"y"))+C)/2)});
-b.setAttr(m.rc,{y:OG.Util.round((f(b.getAttr(m.uc,"y"))+C)/2)});
-b.setAttr(m.bBox,{height:s})
+if(s>=OG.Constants.GUIDE_MIN_SIZE){b.setAttr(n.lc,{x:w});
+b.setAttr(n.ul,{x:w});
+b.setAttr(n.ll,{x:w});
+b.setAttr(n.uc,{x:OG.Util.round((f(b.getAttr(n.rc,"x"))+w)/2)});
+b.setAttr(n.lwc,{x:OG.Util.round((f(b.getAttr(n.rc,"x"))+w)/2)});
+b.setAttr(n.bBox,{x:OG.Util.round(w+f(b.getAttr(n.lc,"width"))/2),width:s})
+}if(r>=OG.Constants.GUIDE_MIN_SIZE){b.setAttr(n.lwc,{y:v});
+b.setAttr(n.ll,{y:v});
+b.setAttr(n.lr,{y:v});
+b.setAttr(n.lc,{y:OG.Util.round((f(b.getAttr(n.uc,"y"))+v)/2)});
+b.setAttr(n.rc,{y:OG.Util.round((f(b.getAttr(n.uc,"y"))+v)/2)});
+b.setAttr(n.bBox,{height:r})
 }b.removeAllTerminal()
-},stop:function(v){var s=p.scrollLeft+v.pageX,z=p.scrollTop+v.pageY,w=$(this).data("start"),u=w.x-s,t=z-w.y;
+},stop:function(t){var u=m(t),v=$(this).data("start"),s=v.x-u.x,r=u.y-v.y;
 $(this).css({position:"absolute",left:"0px",top:"0px"});
-if(q&&q.shape.geom){if(q.shape.geom.getBoundary().getWidth()+u<OG.Constants.GUIDE_MIN_SIZE){u=OG.Constants.GUIDE_MIN_SIZE-q.shape.geom.getBoundary().getWidth()
-}if(q.shape.geom.getBoundary().getHeight()+t<OG.Constants.GUIDE_MIN_SIZE){t=OG.Constants.GUIDE_MIN_SIZE-q.shape.geom.getBoundary().getHeight()
-}b.resize(q,[0,t,u,0]);
-b.drawGuide(q);
-b.setAttr(q,{cursor:OG.Constants.SELECTABLE&&OG.Constants.MOVABLE?"move":(OG.Constants.SELECTABLE?"pointer":OG.Constants.DEFAULT_STYLE.SHAPE.cursor)})
+if(p&&p.shape.geom){if(p.shape.geom.getBoundary().getWidth()+s<OG.Constants.GUIDE_MIN_SIZE){s=OG.Constants.GUIDE_MIN_SIZE-p.shape.geom.getBoundary().getWidth()
+}if(p.shape.geom.getBoundary().getHeight()+r<OG.Constants.GUIDE_MIN_SIZE){r=OG.Constants.GUIDE_MIN_SIZE-p.shape.geom.getBoundary().getHeight()
+}b.resize(p,[0,r,s,0]);
+b.drawGuide(p);
+b.setAttr(p,{cursor:OG.Constants.SELECTABLE&&OG.Constants.MOVABLE?"move":(OG.Constants.SELECTABLE?"pointer":OG.Constants.DEFAULT_STYLE.SHAPE.cursor)})
 }}});
-$(m.uc).draggable({start:function(t){var s=p.scrollLeft+t.pageX,u=p.scrollTop+t.pageY;
-$(this).data("start",{x:s,y:u});
-$(this).data("offset",{x:s-f(b.getAttr(m.uc,"x")),y:u-f(b.getAttr(m.uc,"y"))});
+$(n.uc).draggable({start:function(r){var s=m(r);
+$(this).data("start",{x:s.x,y:s.y});
+$(this).data("offset",{x:s.x-f(b.getAttr(n.uc,"x")),y:s.y-f(b.getAttr(n.uc,"y"))});
 b.removeRubberBand(b.getRootElement())
-},drag:function(u){var s=p.scrollLeft+u.pageX,A=p.scrollTop+u.pageY,z=$(this).data("start"),w=$(this).data("offset"),v=A-w.y,t=f(b.getAttr(m.lwc,"y"))-v;
+},drag:function(s){var t=m(s),w=$(this).data("start"),v=$(this).data("offset"),u=t.y-v.y,r=f(b.getAttr(n.lwc,"y"))-u;
 $(this).css({position:"",left:"",top:""});
-if(t>=OG.Constants.GUIDE_MIN_SIZE){b.setAttr(m.uc,{y:v});
-b.setAttr(m.ul,{y:v});
-b.setAttr(m.ur,{y:v});
-b.setAttr(m.lc,{y:OG.Util.round((f(b.getAttr(m.lwc,"y"))+v)/2)});
-b.setAttr(m.rc,{y:OG.Util.round((f(b.getAttr(m.lwc,"y"))+v)/2)});
-b.setAttr(m.bBox,{y:OG.Util.round(v+f(b.getAttr(m.uc,"width"))/2),height:t})
+if(r>=OG.Constants.GUIDE_MIN_SIZE){b.setAttr(n.uc,{y:u});
+b.setAttr(n.ul,{y:u});
+b.setAttr(n.ur,{y:u});
+b.setAttr(n.lc,{y:OG.Util.round((f(b.getAttr(n.lwc,"y"))+u)/2)});
+b.setAttr(n.rc,{y:OG.Util.round((f(b.getAttr(n.lwc,"y"))+u)/2)});
+b.setAttr(n.bBox,{y:OG.Util.round(u+f(b.getAttr(n.uc,"width"))/2),height:r})
 }b.removeAllTerminal()
-},stop:function(u){var s=p.scrollLeft+u.pageX,w=p.scrollTop+u.pageY,v=$(this).data("start"),t=v.y-w;
+},stop:function(s){var t=m(s),u=$(this).data("start"),r=u.y-t.y;
 $(this).css({position:"absolute",left:"0px",top:"0px"});
-if(q&&q.shape.geom){if(q.shape.geom.getBoundary().getHeight()+t<OG.Constants.GUIDE_MIN_SIZE){t=OG.Constants.GUIDE_MIN_SIZE-q.shape.geom.getBoundary().getHeight()
-}b.resize(q,[t,0,0,0]);
-b.drawGuide(q);
-b.setAttr(q,{cursor:OG.Constants.SELECTABLE&&OG.Constants.MOVABLE?"move":(OG.Constants.SELECTABLE?"pointer":OG.Constants.DEFAULT_STYLE.SHAPE.cursor)})
+if(p&&p.shape.geom){if(p.shape.geom.getBoundary().getHeight()+r<OG.Constants.GUIDE_MIN_SIZE){r=OG.Constants.GUIDE_MIN_SIZE-p.shape.geom.getBoundary().getHeight()
+}b.resize(p,[r,0,0,0]);
+b.drawGuide(p);
+b.setAttr(p,{cursor:OG.Constants.SELECTABLE&&OG.Constants.MOVABLE?"move":(OG.Constants.SELECTABLE?"pointer":OG.Constants.DEFAULT_STYLE.SHAPE.cursor)})
 }}});
-$(m.ul).draggable({start:function(t){var s=p.scrollLeft+t.pageX,u=p.scrollTop+t.pageY;
-$(this).data("start",{x:s,y:u});
-$(this).data("offset",{x:s-f(b.getAttr(m.ul,"x")),y:u-f(b.getAttr(m.ul,"y"))});
+$(n.ul).draggable({start:function(r){var s=m(r);
+$(this).data("start",{x:s.x,y:s.y});
+$(this).data("offset",{x:s.x-f(b.getAttr(n.ul,"x")),y:s.y-f(b.getAttr(n.ul,"y"))});
 b.removeRubberBand(b.getRootElement())
-},drag:function(u){var B=p.scrollLeft+u.pageX,A=p.scrollTop+u.pageY,v=$(this).data("start"),w=$(this).data("offset"),t=B-w.x,C=A-w.y,z=f(b.getAttr(m.rc,"x"))-t,s=f(b.getAttr(m.lwc,"y"))-C;
+},drag:function(t){var u=m(t),y=$(this).data("start"),x=$(this).data("offset"),w=u.x-x.x,v=u.y-x.y,s=f(b.getAttr(n.rc,"x"))-w,r=f(b.getAttr(n.lwc,"y"))-v;
 $(this).css({position:"",left:"",top:""});
-if(z>=OG.Constants.GUIDE_MIN_SIZE){b.setAttr(m.lc,{x:t});
-b.setAttr(m.ul,{x:t});
-b.setAttr(m.ll,{x:t});
-b.setAttr(m.uc,{x:OG.Util.round((f(b.getAttr(m.rc,"x"))+t)/2)});
-b.setAttr(m.lwc,{x:OG.Util.round((f(b.getAttr(m.rc,"x"))+t)/2)});
-b.setAttr(m.bBox,{x:OG.Util.round(t+f(b.getAttr(m.lc,"width"))/2),width:z})
-}if(s>=OG.Constants.GUIDE_MIN_SIZE){b.setAttr(m.uc,{y:C});
-b.setAttr(m.ul,{y:C});
-b.setAttr(m.ur,{y:C});
-b.setAttr(m.lc,{y:OG.Util.round((f(b.getAttr(m.lwc,"y"))+C)/2)});
-b.setAttr(m.rc,{y:OG.Util.round((f(b.getAttr(m.lwc,"y"))+C)/2)});
-b.setAttr(m.bBox,{y:OG.Util.round(C+f(b.getAttr(m.uc,"height"))/2),height:s})
+if(s>=OG.Constants.GUIDE_MIN_SIZE){b.setAttr(n.lc,{x:w});
+b.setAttr(n.ul,{x:w});
+b.setAttr(n.ll,{x:w});
+b.setAttr(n.uc,{x:OG.Util.round((f(b.getAttr(n.rc,"x"))+w)/2)});
+b.setAttr(n.lwc,{x:OG.Util.round((f(b.getAttr(n.rc,"x"))+w)/2)});
+b.setAttr(n.bBox,{x:OG.Util.round(w+f(b.getAttr(n.lc,"width"))/2),width:s})
+}if(r>=OG.Constants.GUIDE_MIN_SIZE){b.setAttr(n.uc,{y:v});
+b.setAttr(n.ul,{y:v});
+b.setAttr(n.ur,{y:v});
+b.setAttr(n.lc,{y:OG.Util.round((f(b.getAttr(n.lwc,"y"))+v)/2)});
+b.setAttr(n.rc,{y:OG.Util.round((f(b.getAttr(n.lwc,"y"))+v)/2)});
+b.setAttr(n.bBox,{y:OG.Util.round(v+f(b.getAttr(n.uc,"height"))/2),height:r})
 }b.removeAllTerminal()
-},stop:function(v){var s=p.scrollLeft+v.pageX,z=p.scrollTop+v.pageY,w=$(this).data("start"),u=w.x-s,t=w.y-z;
+},stop:function(t){var u=m(t),v=$(this).data("start"),s=v.x-u.x,r=v.y-u.y;
 $(this).css({position:"absolute",left:"0px",top:"0px"});
-if(q&&q.shape.geom){if(q.shape.geom.getBoundary().getWidth()+u<OG.Constants.GUIDE_MIN_SIZE){u=OG.Constants.GUIDE_MIN_SIZE-q.shape.geom.getBoundary().getWidth()
-}if(q.shape.geom.getBoundary().getHeight()+t<OG.Constants.GUIDE_MIN_SIZE){t=OG.Constants.GUIDE_MIN_SIZE-q.shape.geom.getBoundary().getHeight()
-}b.resize(q,[t,0,u,0]);
-b.drawGuide(q);
-b.setAttr(q,{cursor:OG.Constants.SELECTABLE&&OG.Constants.MOVABLE?"move":(OG.Constants.SELECTABLE?"pointer":OG.Constants.DEFAULT_STYLE.SHAPE.cursor)})
+if(p&&p.shape.geom){if(p.shape.geom.getBoundary().getWidth()+s<OG.Constants.GUIDE_MIN_SIZE){s=OG.Constants.GUIDE_MIN_SIZE-p.shape.geom.getBoundary().getWidth()
+}if(p.shape.geom.getBoundary().getHeight()+r<OG.Constants.GUIDE_MIN_SIZE){r=OG.Constants.GUIDE_MIN_SIZE-p.shape.geom.getBoundary().getHeight()
+}b.resize(p,[r,0,s,0]);
+b.drawGuide(p);
+b.setAttr(p,{cursor:OG.Constants.SELECTABLE&&OG.Constants.MOVABLE?"move":(OG.Constants.SELECTABLE?"pointer":OG.Constants.DEFAULT_STYLE.SHAPE.cursor)})
 }}});
-$(m.ur).draggable({start:function(t){var s=p.scrollLeft+t.pageX,u=p.scrollTop+t.pageY;
-$(this).data("start",{x:s,y:u});
-$(this).data("offset",{x:s-f(b.getAttr(m.ur,"x")),y:u-f(b.getAttr(m.ur,"y"))});
+$(n.ur).draggable({start:function(r){var s=m(r);
+$(this).data("start",{x:s.x,y:s.y});
+$(this).data("offset",{x:s.x-f(b.getAttr(n.ur,"x")),y:s.y-f(b.getAttr(n.ur,"y"))});
 b.removeRubberBand(b.getRootElement())
-},drag:function(u){var B=p.scrollLeft+u.pageX,A=p.scrollTop+u.pageY,v=$(this).data("start"),w=$(this).data("offset"),t=B-w.x,C=A-w.y,z=t-f(b.getAttr(m.lc,"x")),s=f(b.getAttr(m.lwc,"y"))-C;
+},drag:function(t){var u=m(t),y=$(this).data("start"),x=$(this).data("offset"),w=u.x-x.x,v=u.y-x.y,s=w-f(b.getAttr(n.lc,"x")),r=f(b.getAttr(n.lwc,"y"))-v;
 $(this).css({position:"",left:"",top:""});
-if(z>=OG.Constants.GUIDE_MIN_SIZE){b.setAttr(m.rc,{x:t});
-b.setAttr(m.ur,{x:t});
-b.setAttr(m.lr,{x:t});
-b.setAttr(m.uc,{x:OG.Util.round((f(b.getAttr(m.lc,"x"))+t)/2)});
-b.setAttr(m.lwc,{x:OG.Util.round((f(b.getAttr(m.lc,"x"))+t)/2)});
-b.setAttr(m.bBox,{width:z})
-}if(s>=OG.Constants.GUIDE_MIN_SIZE){b.setAttr(m.uc,{y:C});
-b.setAttr(m.ul,{y:C});
-b.setAttr(m.ur,{y:C});
-b.setAttr(m.lc,{y:OG.Util.round((f(b.getAttr(m.lwc,"y"))+C)/2)});
-b.setAttr(m.rc,{y:OG.Util.round((f(b.getAttr(m.lwc,"y"))+C)/2)});
-b.setAttr(m.bBox,{y:OG.Util.round(C+f(b.getAttr(m.uc,"width"))/2),height:s})
+if(s>=OG.Constants.GUIDE_MIN_SIZE){b.setAttr(n.rc,{x:w});
+b.setAttr(n.ur,{x:w});
+b.setAttr(n.lr,{x:w});
+b.setAttr(n.uc,{x:OG.Util.round((f(b.getAttr(n.lc,"x"))+w)/2)});
+b.setAttr(n.lwc,{x:OG.Util.round((f(b.getAttr(n.lc,"x"))+w)/2)});
+b.setAttr(n.bBox,{width:s})
+}if(r>=OG.Constants.GUIDE_MIN_SIZE){b.setAttr(n.uc,{y:v});
+b.setAttr(n.ul,{y:v});
+b.setAttr(n.ur,{y:v});
+b.setAttr(n.lc,{y:OG.Util.round((f(b.getAttr(n.lwc,"y"))+v)/2)});
+b.setAttr(n.rc,{y:OG.Util.round((f(b.getAttr(n.lwc,"y"))+v)/2)});
+b.setAttr(n.bBox,{y:OG.Util.round(v+f(b.getAttr(n.uc,"width"))/2),height:r})
 }b.removeAllTerminal()
-},stop:function(v){var s=p.scrollLeft+v.pageX,z=p.scrollTop+v.pageY,w=$(this).data("start"),u=s-w.x,t=w.y-z;
+},stop:function(t){var u=m(t),v=$(this).data("start"),s=u.x-v.x,r=v.y-u.y;
 $(this).css({position:"absolute",left:"0px",top:"0px"});
-if(q&&q.shape.geom){if(q.shape.geom.getBoundary().getWidth()+u<OG.Constants.GUIDE_MIN_SIZE){u=OG.Constants.GUIDE_MIN_SIZE-q.shape.geom.getBoundary().getWidth()
-}if(q.shape.geom.getBoundary().getHeight()+t<OG.Constants.GUIDE_MIN_SIZE){t=OG.Constants.GUIDE_MIN_SIZE-q.shape.geom.getBoundary().getHeight()
-}b.resize(q,[t,0,0,u]);
-b.drawGuide(q);
-b.setAttr(q,{cursor:OG.Constants.SELECTABLE&&OG.Constants.MOVABLE?"move":(OG.Constants.SELECTABLE?"pointer":OG.Constants.DEFAULT_STYLE.SHAPE.cursor)})
+if(p&&p.shape.geom){if(p.shape.geom.getBoundary().getWidth()+s<OG.Constants.GUIDE_MIN_SIZE){s=OG.Constants.GUIDE_MIN_SIZE-p.shape.geom.getBoundary().getWidth()
+}if(p.shape.geom.getBoundary().getHeight()+r<OG.Constants.GUIDE_MIN_SIZE){r=OG.Constants.GUIDE_MIN_SIZE-p.shape.geom.getBoundary().getHeight()
+}b.resize(p,[r,0,0,s]);
+b.drawGuide(p);
+b.setAttr(p,{cursor:OG.Constants.SELECTABLE&&OG.Constants.MOVABLE?"move":(OG.Constants.SELECTABLE?"pointer":OG.Constants.DEFAULT_STYLE.SHAPE.cursor)})
 }}})
-}}else{if($(q).attr("_shape")===OG.Constants.SHAPE_TYPE.EDGE){b.setAttr(m.from,{cursor:"default"});
-b.setAttr(m.to,{cursor:"default"});
-$.each(m.controls,function(s,t){b.setAttr(t,{cursor:"default"})
+}}else{if($(p).attr("_shape")===OG.Constants.SHAPE_TYPE.EDGE){b.setAttr(n.from,{cursor:"default"});
+b.setAttr(n.to,{cursor:"default"});
+$.each(n.controls,function(r,s){b.setAttr(s,{cursor:"default"})
 })
-}else{b.setAttr(m.ul,{cursor:"default"});
-b.setAttr(m.ur,{cursor:"default"});
-b.setAttr(m.ll,{cursor:"default"});
-b.setAttr(m.lr,{cursor:"default"});
-b.setAttr(m.lc,{cursor:"default"});
-b.setAttr(m.uc,{cursor:"default"});
-b.setAttr(m.rc,{cursor:"default"});
-b.setAttr(m.lwc,{cursor:"default"})
+}else{b.setAttr(n.ul,{cursor:"default"});
+b.setAttr(n.ur,{cursor:"default"});
+b.setAttr(n.ll,{cursor:"default"});
+b.setAttr(n.lr,{cursor:"default"});
+b.setAttr(n.lc,{cursor:"default"});
+b.setAttr(n.uc,{cursor:"default"});
+b.setAttr(n.rc,{cursor:"default"});
+b.setAttr(n.lwc,{cursor:"default"})
 }}};
-j=function(n){var m=n.parentNode;
-if(m){if(j(m)){return true
-}if($(m).attr("_type")===OG.Constants.NODE_TYPE.SHAPE&&$(m).attr("_selected")==="true"){return true
+j=function(o){var n=o.parentNode;
+if(n){if(j(n)){return true
+}if($(n).attr("_type")===OG.Constants.NODE_TYPE.SHAPE&&$(n).attr("_selected")==="true"){return true
 }}return false
 };
-h=function(n){var m=n.childNodes;
-$.each(m,function(o,p){if($(p).attr("_type")===OG.Constants.NODE_TYPE.SHAPE){if(p.childNodes.length>0){h(p)
-}if($(p).attr("_selected")==="true"){b.removeGuide(p);
-$(p).draggable("destroy")
+h=function(o){var n=o.childNodes;
+$.each(n,function(p,q){if($(q).attr("_type")===OG.Constants.NODE_TYPE.SHAPE){if(q.childNodes.length>0){h(q)
+}if($(q).attr("_selected")==="true"){b.removeGuide(q);
+$(q).draggable("destroy")
 }}})
 };
-l=function(n,o){var m=n.childNodes;
-$.each(m,function(p,s){if($(s).attr("_type")===OG.Constants.NODE_TYPE.SHAPE){var u=s.shape.geom.getBoundary(),r,t,q;
-r=s.shape.clone();
-if($(s).attr("_shape")===OG.Constants.SHAPE_TYPE.EDGE){r.geom=new OG.PolyLine(s.shape.geom.getVertices());
-r.geom.style=s.shape.geom.style;
-r.geom.move(OG.Constants.COPY_PASTE_PADDING,OG.Constants.COPY_PASTE_PADDING);
-t=b.drawShape(null,r,null,s.shapeStyle)
-}else{t=b.drawShape([u.getCentroid().x+OG.Constants.COPY_PASTE_PADDING,u.getCentroid().y+OG.Constants.COPY_PASTE_PADDING],r,[u.getWidth(),u.getHeight()],s.shapeStyle)
-}o.appendChild(t);
-d.setClickSelectable(t,OG.Constants.SELECTABLE);
-d.setMovable(t,OG.Constants.SELECTABLE&&OG.Constants.MOVABLE);
-if(OG.Constants.GROUP_DROPABLE){d.enableDragAndDropGroup(t)
-}if(OG.Constants.GROUP_COLLAPSIBLE){d.enableCollapse(t)
-}if($(t).attr("_shape")!==OG.Constants.SHAPE_TYPE.GROUP){if(OG.Constants.CONNECTABLE){d.enableConnect(t)
-}if(OG.Constants.LABEL_EDITABLE){d.enableEditLabel(t)
-}}if(s.childNodes.length>0){l(s,t)
+l=function(o,p){var n=o.childNodes;
+$.each(n,function(q,t){if($(t).attr("_type")===OG.Constants.NODE_TYPE.SHAPE){var v=t.shape.geom.getBoundary(),s,u,r;
+s=t.shape.clone();
+if($(t).attr("_shape")===OG.Constants.SHAPE_TYPE.EDGE){s.geom=new OG.PolyLine(t.shape.geom.getVertices());
+s.geom.style=t.shape.geom.style;
+s.geom.move(OG.Constants.COPY_PASTE_PADDING,OG.Constants.COPY_PASTE_PADDING);
+u=b.drawShape(null,s,null,t.shapeStyle)
+}else{u=b.drawShape([v.getCentroid().x+OG.Constants.COPY_PASTE_PADDING,v.getCentroid().y+OG.Constants.COPY_PASTE_PADDING],s,[v.getWidth(),v.getHeight()],t.shapeStyle)
+}p.appendChild(u);
+d.setClickSelectable(u,OG.Constants.SELECTABLE);
+d.setMovable(u,OG.Constants.SELECTABLE&&OG.Constants.MOVABLE);
+if(OG.Constants.GROUP_DROPABLE){d.enableDragAndDropGroup(u)
+}if(OG.Constants.GROUP_COLLAPSIBLE){d.enableCollapse(u)
+}if($(u).attr("_shape")!==OG.Constants.SHAPE_TYPE.GROUP){if(OG.Constants.CONNECTABLE){d.enableConnect(u)
+}if(OG.Constants.LABEL_EDITABLE){d.enableEditLabel(u)
+}}if(t.childNodes.length>0){l(t,u)
 }}})
 };
-g=function(o,n){var m=b.getRootBBox();
-if(OG.Constants.AUTO_EXTENSIONAL&&m.x2<o){b.setCanvasSize([m.width+OG.Constants.AUTO_EXTENSION_SIZE,m.height])
-}if(OG.Constants.AUTO_EXTENSIONAL&&m.y2<n){b.setCanvasSize([m.width,m.height+OG.Constants.AUTO_EXTENSION_SIZE])
+g=function(p,o){var n=b.getRootBBox();
+if(OG.Constants.AUTO_EXTENSIONAL&&n.x2<p){b.setCanvasSize([n.width+OG.Constants.AUTO_EXTENSION_SIZE,n.height])
+}if(OG.Constants.AUTO_EXTENSIONAL&&n.y2<o){b.setCanvasSize([n.width,n.height+OG.Constants.AUTO_EXTENSION_SIZE])
 }};
 this.setResizable=e;
-this.enableEditLabel=function(o){var n=b.getContainer(),p=b.getRootElement(),m=(n.style&&n.style.position)?(n.style.position.toLowerCase()==="absolute"?true:false):false;
-$(o).bind({dblclick:function(){var x=o.shape.geom.getBoundary(),s=x.getUpperLeft(),A=b.getRootBBox(),C,w=s.x+(m?0:A.x)-1,z=s.y+(m?0:A.y)-1,u=x.getWidth(),B=x.getHeight(),v=o.id+OG.Constants.LABEL_EDITOR_SUFFIX,r,t="center",y=function(H){var F,D,I=0,G,E;
-F=H.shape.geom.getVertices();
-D=H.shape.geom.getLength();
-for(G=0;
-G<F.length-1;
-G++){I+=F[G].distance(F[G+1]);
-if(I>D/2){E=H.shape.geom.intersectCircleToLine(F[G+1],I-D/2,F[G+1],F[G]);
+this.enableEditLabel=function(n){$(n).bind({dblclick:function(){var r=b.getContainer(),w=n.shape.geom.getBoundary(),q=w.getUpperLeft(),A,v=q.x-1,y=q.y-1,t=w.getWidth(),z=w.getHeight(),u=n.id+OG.Constants.LABEL_EDITOR_SUFFIX,p,s="center",x=function(F){var D,B,G=0,E,C;
+D=F.shape.geom.getVertices();
+B=F.shape.geom.getLength();
+for(E=0;
+E<D.length-1;
+E++){G+=D[E].distance(D[E+1]);
+if(G>B/2){C=F.shape.geom.intersectCircleToLine(D[E+1],G-B/2,D[E+1],D[E]);
 break
-}}return E[0]
-},q;
-$(p.parentNode).append("<textarea id='"+o.id+OG.Constants.LABEL_EDITOR_SUFFIX+"'></textarea>");
-r=$("#"+v);
-switch(o.shape.geom.style.get("text-anchor")){case"start":t="left";
+}}return C[0]
+},o;
+$(r).append("<textarea id='"+n.id+OG.Constants.LABEL_EDITOR_SUFFIX+"'></textarea>");
+p=$("#"+u);
+switch(n.shape.geom.style.get("text-anchor")){case"start":s="left";
 break;
-case"middle":t="center";
+case"middle":s="center";
 break;
-case"end":t="right";
+case"end":s="right";
 break;
-default:t="center";
+default:s="center";
 break
-}if($(o).attr("_shape")===OG.Constants.SHAPE_TYPE.TEXT){$(r).css(OG.Util.apply(OG.Constants.DEFAULT_STYLE.LABEL_EDITOR,{left:w,top:z,width:u,height:B,"text-align":t,overflow:"hidden",resize:"none"}));
-$(r).focus();
-$(r).val(o.shape.text);
-$(r).bind({focusout:function(){o.shape.text=this.value;
-if(o.shape.text){b.redrawShape(o);
+}if($(n).attr("_shape")===OG.Constants.SHAPE_TYPE.TEXT){$(p).css(OG.Util.apply(OG.Constants.DEFAULT_STYLE.LABEL_EDITOR,{left:v,top:y,width:t,height:z,"text-align":s,overflow:"hidden",resize:"none"}));
+$(p).focus();
+$(p).val(n.shape.text);
+$(p).bind({focusout:function(){n.shape.text=this.value;
+if(n.shape.text){b.redrawShape(n);
 this.parentNode.removeChild(this)
-}else{b.removeShape(o);
+}else{b.removeShape(n);
 this.parentNode.removeChild(this)
 }}})
-}else{if($(o).attr("_shape")===OG.Constants.SHAPE_TYPE.EDGE){if(o.shape.label&&b.isSVG()){$(o).find("text").each(function(D,E){C=b.getBBox(E);
-w=C.x+(m?0:A.x)-10;
-z=C.y+(m?0:A.y);
-u=C.width+20;
-B=C.height
+}else{if($(n).attr("_shape")===OG.Constants.SHAPE_TYPE.EDGE){if(n.shape.label&&b.isSVG()){$(n).find("text").each(function(B,C){A=b.getBBox(C);
+v=A.x-10;
+y=A.y;
+t=A.width+20;
+z=A.height
 })
-}else{q=y(o);
-w=q.x-OG.Constants.LABEL_EDITOR_WIDTH/2+(m?0:A.x);
-z=q.y-OG.Constants.LABEL_EDITOR_HEIGHT/2+(m?0:A.y);
-u=OG.Constants.LABEL_EDITOR_WIDTH;
-B=OG.Constants.LABEL_EDITOR_HEIGHT
-}$(r).css(OG.Util.apply(OG.Constants.DEFAULT_STYLE.LABEL_EDITOR,{left:w,top:z,width:u,height:B,overflow:"hidden",resize:"none"}));
-$(r).focus();
-$(r).val(o.shape.label);
-$(r).bind({focusout:function(){b.drawLabel(o,this.value);
+}else{o=x(n);
+v=o.x-OG.Constants.LABEL_EDITOR_WIDTH/2;
+y=o.y-OG.Constants.LABEL_EDITOR_HEIGHT/2;
+t=OG.Constants.LABEL_EDITOR_WIDTH;
+z=OG.Constants.LABEL_EDITOR_HEIGHT
+}$(p).css(OG.Util.apply(OG.Constants.DEFAULT_STYLE.LABEL_EDITOR,{left:v,top:y,width:t,height:z,overflow:"hidden",resize:"none"}));
+$(p).focus();
+$(p).val(n.shape.label);
+$(p).bind({focusout:function(){b.drawLabel(n,this.value);
 this.parentNode.removeChild(this)
 }})
-}else{$(r).css(OG.Util.apply(OG.Constants.DEFAULT_STYLE.LABEL_EDITOR,{left:w,top:z,width:u,height:B,"text-align":t,overflow:"hidden",resize:"none"}));
-$(r).focus();
-$(r).val(o.shape.label);
-$(r).bind({focusout:function(){b.drawLabel(o,this.value);
+}else{$(p).css(OG.Util.apply(OG.Constants.DEFAULT_STYLE.LABEL_EDITOR,{left:v,top:y,width:t,height:z,"text-align":s,overflow:"hidden",resize:"none"}));
+$(p).focus();
+$(p).val(n.shape.label);
+$(p).bind({focusout:function(){b.drawLabel(n,this.value);
 this.parentNode.removeChild(this)
 }})
 }}}})
 };
-this.enableConnect=function(p){var q,o=b.getContainer(),n=b.getRootGroup(),m=b.getRootBBox();
-if(p&&$(p).attr("_shape")!==OG.Constants.SHAPE_TYPE.GROUP){$(p).bind({mouseover:function(){q=b.drawTerminal(p,$(n).data("from_terminal")?OG.Constants.TERMINAL_TYPE.IN:OG.Constants.TERMINAL_TYPE.OUT);
-if(q){if($(n).data("edge")){$.each(q.terminal.childNodes,function(r,s){if(s.terminal&&s.terminal.direction.toLowerCase()==="c"){b.drawDropOverGuide(p);
-$(n).data("edge_terminal",s);
+this.enableConnect=function(o){var p,n=b.getRootGroup();
+if(o&&$(o).attr("_shape")!==OG.Constants.SHAPE_TYPE.GROUP){$(o).bind({mouseover:function(){p=b.drawTerminal(o,$(n).data("from_terminal")?OG.Constants.TERMINAL_TYPE.IN:OG.Constants.TERMINAL_TYPE.OUT);
+if(p){if($(n).data("edge")){$.each(p.terminal.childNodes,function(q,r){if(r.terminal&&r.terminal.direction.toLowerCase()==="c"){b.drawDropOverGuide(o);
+$(n).data("edge_terminal",r);
 return false
 }})
-}$(q.bBox).bind({mouseout:function(){if(!$(n).data("edge")){b.removeTerminal(p)
+}$(p.bBox).bind({mouseout:function(){if(!$(n).data("edge")){b.removeTerminal(o)
 }}});
-$.each(q.terminal.childNodes,function(r,s){if(s.terminal){$(s).bind({mouseover:function(t){b.setAttr(s,OG.Constants.DEFAULT_STYLE.TERMINAL_OVER);
-$(n).data("edge_terminal",s)
-},mouseout:function(){b.setAttr(s,OG.Constants.DEFAULT_STYLE.TERMINAL);
+$.each(p.terminal.childNodes,function(q,r){if(r.terminal){$(r).bind({mouseover:function(s){b.setAttr(r,OG.Constants.DEFAULT_STYLE.TERMINAL_OVER);
+$(n).data("edge_terminal",r)
+},mouseout:function(){b.setAttr(r,OG.Constants.DEFAULT_STYLE.TERMINAL);
 $(n).removeData("edge_terminal")
 }});
-$(s).draggable({start:function(v){var t=s.terminal.position.x,w=s.terminal.position.y,u=b.drawShape(null,new OG.EdgeShape([t,w],[t,w]),null,OG.Constants.DEFAULT_STYLE.EDGE_SHADOW);
-$(n).data("edge",u);
-$(n).data("from_terminal",s);
+$(r).draggable({start:function(u){var s=r.terminal.position.x,v=r.terminal.position.y,t=b.drawShape(null,new OG.EdgeShape([s,v],[s,v]),null,OG.Constants.DEFAULT_STYLE.EDGE_SHADOW);
+$(n).data("edge",t);
+$(n).data("from_terminal",r);
 b.removeRubberBand(b.getRootElement());
-$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(y,x){if(x.id){b.removeGuide(x)
+$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(x,w){if(w.id){b.removeGuide(w)
 }})
-},drag:function(t){var v=$(n).data("edge"),B=$(n).data("from_terminal"),F=$(n).data("edge_terminal"),C=[B.terminal.position.x,B.terminal.position.y],y=F?[F.terminal.position.x,F.terminal.position.y]:[o.scrollLeft+t.pageX-m.x,o.scrollTop+t.pageY-m.y],D=B.terminal.direction.toLowerCase(),z=F?F.terminal.direction.toLowerCase():"c",x=F?k(F):null,u,E,w,A;
+},drag:function(s){var w=m(s),u=$(n).data("edge"),B=$(n).data("from_terminal"),F=$(n).data("edge_terminal"),C=[B.terminal.position.x,B.terminal.position.y],y=F?[F.terminal.position.x,F.terminal.position.y]:[w.x,w.y],D=B.terminal.direction.toLowerCase(),z=F?F.terminal.direction.toLowerCase():"c",x=F?k(F):null,t,E,v,A;
 $(this).css({position:"",left:"",top:""});
-u=C;
+t=C;
 E=y;
-if(!p.shape.geom.getBoundary().isContains(y)&&D==="c"){w=b.intersectionEdge(v.shape.geom.style.get("edge-type"),p,[u[0],u[1]],[E[0],E[1]],true);
-C=w.position;
-D=w.direction
-}if(x&&z==="c"){w=b.intersectionEdge(v.shape.geom.style.get("edge-type"),x,[u[0],u[1]],[E[0],E[1]],false);
-y=w.position;
-z=w.direction
-}A=p&&x&&p.id===x.id;
-if(A){C=y=p.shape.geom.getBoundary().getRightCenter()
-}b.drawEdge(new OG.Line(C,y),OG.Util.apply(v.shape.geom.style.map,{"edge-direction":D+" "+z}),v.id,A)
-},stop:function(t){var D={x:o.scrollLeft+t.pageX-m.x,y:o.scrollTop+t.pageY-m.y},w=$(n).data("edge"),B=$(n).data("from_terminal"),E=$(n).data("edge_terminal")||[D.x,D.y],x=OG.Util.isElement(E)?k(E):null,v,y,C,A,u,z;
+if(!o.shape.geom.getBoundary().isContains(y)&&D==="c"){v=b.intersectionEdge(u.shape.geom.style.get("edge-type"),o,[t[0],t[1]],[E[0],E[1]],true);
+C=v.position;
+D=v.direction
+}if(x&&z==="c"){v=b.intersectionEdge(u.shape.geom.style.get("edge-type"),x,[t[0],t[1]],[E[0],E[1]],false);
+y=v.position;
+z=v.direction
+}A=o&&x&&o.id===x.id;
+if(A){C=y=o.shape.geom.getBoundary().getRightCenter()
+}b.drawEdge(new OG.Line(C,y),OG.Util.apply(u.shape.geom.style.map,{"edge-direction":D+" "+z}),u.id,A)
+},stop:function(s){var C=m(s),v=$(n).data("edge"),A=$(n).data("from_terminal"),D=$(n).data("edge_terminal")||[C.x,C.y],w=OG.Util.isElement(D)?k(D):null,u,x,B,z,t,y;
 $(this).css({position:"absolute",left:"0px",top:"0px"});
-if(!$(n).data("edge_terminal")&&OG.Constants.CONNECT_CLONEABLE){v=p.shape.geom.getBoundary();
-y=b.drawShape([D.x,D.y],p.shape.clone(),[v.getWidth(),v.getHeight()],p.shapeStyle);
-d.setClickSelectable(y,OG.Constants.SELECTABLE);
-d.setMovable(y,OG.Constants.SELECTABLE&&OG.Constants.MOVABLE);
-if(OG.Constants.GROUP_DROPABLE){d.enableDragAndDropGroup(y)
-}if(OG.Constants.GROUP_COLLAPSIBLE){d.enableCollapse(y)
-}if($(y).attr("_shape")!==OG.Constants.SHAPE_TYPE.GROUP){if(OG.Constants.CONNECTABLE){d.enableConnect(y)
-}if(OG.Constants.LABEL_EDITABLE){d.enableEditLabel(y)
-}}C=b.drawTerminal(y,OG.Constants.TERMINAL_TYPE.IN);
-A=C.terminal.childNodes;
-E=A[0];
-for(z=0;
-z<A.length;
-z++){if(A[z].terminal&&A[z].terminal.direction.toLowerCase()==="c"){E=A[z];
+if(!$(n).data("edge_terminal")&&OG.Constants.CONNECT_CLONEABLE){u=o.shape.geom.getBoundary();
+x=b.drawShape([C.x,C.y],o.shape.clone(),[u.getWidth(),u.getHeight()],o.shapeStyle);
+d.setClickSelectable(x,OG.Constants.SELECTABLE);
+d.setMovable(x,OG.Constants.SELECTABLE&&OG.Constants.MOVABLE);
+if(OG.Constants.GROUP_DROPABLE){d.enableDragAndDropGroup(x)
+}if(OG.Constants.GROUP_COLLAPSIBLE){d.enableCollapse(x)
+}if($(x).attr("_shape")!==OG.Constants.SHAPE_TYPE.GROUP){if(OG.Constants.CONNECTABLE){d.enableConnect(x)
+}if(OG.Constants.LABEL_EDITABLE){d.enableEditLabel(x)
+}}B=b.drawTerminal(x,OG.Constants.TERMINAL_TYPE.IN);
+z=B.terminal.childNodes;
+D=z[0];
+for(y=0;
+y<z.length;
+y++){if(z[y].terminal&&z[y].terminal.direction.toLowerCase()==="c"){D=z[y];
 break
-}}}if(E&&(OG.Util.isElement(E)||!OG.Constants.CONNECT_REQUIRED)){w=b.connect(B,E,w);
-u=b.drawGuide(w);
-d.setClickSelectable(w,OG.Constants.SELECTABLE);
-d.setMovable(w,OG.Constants.SELECTABLE&&OG.Constants.MOVABLE);
-e(w,u,OG.Constants.SELECTABLE&&OG.Constants.RESIZABLE);
-if($(w).attr("_shape")!==OG.Constants.SHAPE_TYPE.GROUP){if(OG.Constants.LABEL_EDITABLE){d.enableEditLabel(w)
-}}b.toFront(u.group)
-}else{b.removeShape(w)
+}}}if(D&&(OG.Util.isElement(D)||!OG.Constants.CONNECT_REQUIRED)){v=b.connect(A,D,v);
+t=b.drawGuide(v);
+d.setClickSelectable(v,OG.Constants.SELECTABLE);
+d.setMovable(v,OG.Constants.SELECTABLE&&OG.Constants.MOVABLE);
+e(v,t,OG.Constants.SELECTABLE&&OG.Constants.RESIZABLE);
+if($(v).attr("_shape")!==OG.Constants.SHAPE_TYPE.GROUP){if(OG.Constants.LABEL_EDITABLE){d.enableEditLabel(v)
+}}b.toFront(t.group)
+}else{b.removeShape(v)
 }$(n).removeData("edge");
 $(n).removeData("from_terminal");
 $(n).removeData("edge_terminal");
-if(x){b.remove(x.id+OG.Constants.DROP_OVER_BBOX_SUFFIX)
+if(w){b.remove(w.id+OG.Constants.DROP_OVER_BBOX_SUFFIX)
 }}})
 }})
-}},mouseout:function(r){if($(p).attr("_shape")!==OG.Constants.SHAPE_TYPE.EDGE&&$(n).data("edge")){b.remove(p.id+OG.Constants.DROP_OVER_BBOX_SUFFIX);
+}},mouseout:function(q){if($(o).attr("_shape")!==OG.Constants.SHAPE_TYPE.EDGE&&$(n).data("edge")){b.remove(o.id+OG.Constants.DROP_OVER_BBOX_SUFFIX);
 $(n).removeData("edge_terminal")
 }}})
 }};
-this.enableDragAndDropGroup=function(o){var m=b.getRootGroup(),n;
-if(o&&$(o).attr("_shape")===OG.Constants.SHAPE_TYPE.GROUP){$(o).bind({mouseover:function(){if($(m).data("bBoxArray")){n=false;
-$.each($(m).data("bBoxArray"),function(p,q){if(o.id===q.id){n=true
+this.enableDragAndDropGroup=function(p){var n=b.getRootGroup(),o;
+if(p&&$(p).attr("_shape")===OG.Constants.SHAPE_TYPE.GROUP){$(p).bind({mouseover:function(){if($(n).data("bBoxArray")){o=false;
+$.each($(n).data("bBoxArray"),function(q,r){if(p.id===r.id){o=true
 }});
-if(!n){$(m).data("groupTarget",o);
-b.drawDropOverGuide(o)
-}}},mouseout:function(p){b.remove(o.id+OG.Constants.DROP_OVER_BBOX_SUFFIX);
-$(m).removeData("groupTarget")
+if(!o){$(n).data("groupTarget",p);
+b.drawDropOverGuide(p)
+}}},mouseout:function(q){b.remove(p.id+OG.Constants.DROP_OVER_BBOX_SUFFIX);
+$(n).removeData("groupTarget")
 }})
 }};
-this.enableCollapse=function(o){var n,m;
-m=function(p,q){if(q&&q.bBox&&q.collapse){$(q.collapse).bind("click",function(r){if(p.shape.isCollapsed===true){b.expand(p);
-q=b.drawCollapseGuide(p);
-m(p,q)
-}else{b.collapse(p);
-q=b.drawCollapseGuide(p);
-m(p,q)
+this.enableCollapse=function(p){var o,n;
+n=function(q,r){if(r&&r.bBox&&r.collapse){$(r.collapse).bind("click",function(s){if(q.shape.isCollapsed===true){b.expand(q);
+r=b.drawCollapseGuide(q);
+n(q,r)
+}else{b.collapse(q);
+r=b.drawCollapseGuide(q);
+n(q,r)
 }});
-$(q.bBox).bind("mouseout",function(r){b.remove(p.id+OG.Constants.COLLAPSE_BBOX);
-b.remove(p.id+OG.Constants.COLLAPSE_SUFFIX)
+$(r.bBox).bind("mouseout",function(s){b.remove(q.id+OG.Constants.COLLAPSE_BBOX);
+b.remove(q.id+OG.Constants.COLLAPSE_SUFFIX)
 })
 }};
-if(o&&$(o).attr("_shape")===OG.Constants.SHAPE_TYPE.GROUP){$(o).bind({mouseover:function(){n=b.drawCollapseGuide(this);
-if(n&&n.bBox&&n.collapse){m(o,n)
+if(p&&$(p).attr("_shape")===OG.Constants.SHAPE_TYPE.GROUP){$(p).bind({mouseover:function(){o=b.drawCollapseGuide(this);
+if(o&&o.bBox&&o.collapse){n(p,o)
 }}})
 }};
-this.setMovable=function(p,o){var n=b.getContainer(),m=b.getRootGroup();
+this.setMovable=function(p,o){var n=b.getRootGroup();
 if(!p){return
-}if(o){$(p).draggable({start:function(u){var r=n.scrollLeft+u.pageX,w=n.scrollTop+u.pageY,v=[],t,s=[],q;
-if(b.getElementById(p.id+OG.Constants.GUIDE_SUFFIX.GUIDE)===null){$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(x,y){if(OG.Util.isElement(y)&&y.id){b.removeGuide(y)
+}if(o){$(p).draggable({start:function(t){var u=m(t),v=[],s,r=[],q;
+if(b.getElementById(p.id+OG.Constants.GUIDE_SUFFIX.GUIDE)===null){$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(w,x){if(OG.Util.isElement(x)&&x.id){b.removeGuide(x)
 }});
 b.removeAllTerminal()
 }b.removeGuide(p);
 q=b.drawGuide(p);
-$(this).data("start",{x:r,y:w});
-$(this).data("offset",{x:r-f(b.getAttr(q.bBox,"x")),y:w-f(b.getAttr(q.bBox,"y"))});
-$("[id$="+OG.Constants.GUIDE_SUFFIX.BBOX+"]").each(function(x,y){if(y.id){t=b.clone(y);
-b.setAttr(t,OG.Constants.DEFAULT_STYLE.GUIDE_SHADOW);
-v.push({id:y.id.replace(OG.Constants.GUIDE_SUFFIX.BBOX,""),box:t})
+$(this).data("start",{x:u.x,y:u.y});
+$(this).data("offset",{x:u.x-f(b.getAttr(q.bBox,"x")),y:u.y-f(b.getAttr(q.bBox,"y"))});
+$("[id$="+OG.Constants.GUIDE_SUFFIX.BBOX+"]").each(function(w,x){if(x.id){s=b.clone(x);
+b.setAttr(s,OG.Constants.DEFAULT_STYLE.GUIDE_SHADOW);
+v.push({id:x.id.replace(OG.Constants.GUIDE_SUFFIX.BBOX,""),box:s})
 }});
-$.each(v,function(y,z){var A=b.getElementById(z.id),x;
-if($(A).attr("_shape")===OG.Constants.SHAPE_TYPE.EDGE){x=c(A,v);
-if(x.all||x.none||(x.either&&x.attrEither)){s.push(z)
-}else{b.remove(z.box);
-b.removeGuide(A)
+$.each(v,function(x,y){var z=b.getElementById(y.id),w;
+if($(z).attr("_shape")===OG.Constants.SHAPE_TYPE.EDGE){w=c(z,v);
+if(w.all||w.none||(w.either&&w.attrEither)){r.push(y)
+}else{b.remove(y.box);
+b.removeGuide(z)
 }}});
-$.each(v,function(x,y){var z=b.getElementById(y.id);
-if($(z).attr("_shape")!==OG.Constants.SHAPE_TYPE.EDGE){s.push(y)
+$.each(v,function(w,x){var y=b.getElementById(x.id);
+if($(y).attr("_shape")!==OG.Constants.SHAPE_TYPE.EDGE){r.push(x)
 }});
-$(m).data("bBoxArray",s);
+$(n).data("bBoxArray",r);
 b.removeRubberBand(b.getRootElement());
 b.removeAllTerminal()
-},drag:function(t){var q=n.scrollLeft+t.pageX,w=n.scrollTop+t.pageY,v=$(this).data("start"),u=$(m).data("bBoxArray"),s=a(q-v.x),r=a(w-v.y);
-g(q,w);
+},drag:function(s){var t=m(s),v=$(this).data("start"),u=$(n).data("bBoxArray"),r=a(t.x-v.x),q=a(t.y-v.y);
+g(t.x,t.y);
 $(this).css({position:"",left:"",top:""});
-$.each(u,function(x,y){b.setAttr(y.box,{transform:"t"+s+","+r})
+$.each(u,function(w,x){b.setAttr(x.box,{transform:"t"+r+","+q})
 });
 b.removeAllTerminal()
-},stop:function(q){var z=n.scrollLeft+q.pageX,v=n.scrollTop+q.pageY,r=$(this).data("start"),A=$(m).data("bBoxArray"),C=a(z-r.x),B=a(v-r.y),w=[],t=$(m).data("groupTarget"),u=[],s;
+},stop:function(q){var t=m(q),r=$(this).data("start"),x=$(n).data("bBoxArray"),z=a(t.x-r.x),y=a(t.y-r.y),w=[],u=$(n).data("groupTarget"),v=[],s;
 $(this).css({position:"",left:"",top:""});
-$.each(A,function(x,y){var D=b.getElementById(y.id);
-if($(D).attr("_shape")===OG.Constants.SHAPE_TYPE.EDGE){w.push(y.id)
+$.each(x,function(A,B){var C=b.getElementById(B.id);
+if($(C).attr("_shape")===OG.Constants.SHAPE_TYPE.EDGE){w.push(B.id)
 }});
-$.each(A,function(y,D){var E,x;
-b.remove(D.box);
-E=b.getElementById(D.id);
-u.push(E);
-$("[id^='"+D.id+OG.Constants.GUIDE_SUFFIX.GUIDE+"_']").each(function(F,G){x=b.getElementById(G.id);
-b.setAttr(x,{x:f(b.getAttr(x,"x"))+C,y:f(b.getAttr(x,"y"))+B})
+$.each(x,function(B,C){var D,A;
+b.remove(C.box);
+D=b.getElementById(C.id);
+v.push(D);
+$("[id^='"+C.id+OG.Constants.GUIDE_SUFFIX.GUIDE+"_']").each(function(E,F){A=b.getElementById(F.id);
+b.setAttr(A,{x:f(b.getAttr(A,"x"))+z,y:f(b.getAttr(A,"y"))+y})
 });
-b.move(E,[C,B],w);
-b.setAttr(E,{cursor:"move"});
-if($(E).attr("_shape")===OG.Constants.SHAPE_TYPE.EDGE){if(c(E,A).none){b.disconnect(E)
+b.move(D,[z,y],w);
+b.setAttr(D,{cursor:"move"});
+if($(D).attr("_shape")===OG.Constants.SHAPE_TYPE.EDGE){if(c(D,x).none){b.disconnect(D)
 }}});
-if(t&&OG.Util.isElement(t)){b.addToGroup(t,u);
-$.each(u,function(x,y){b.removeGuide(y)
+if(u&&OG.Util.isElement(u)){b.addToGroup(u,v);
+$.each(v,function(A,B){b.removeGuide(B)
 });
-s=b.drawGuide(t);
-e(t,s,OG.Constants.SELECTABLE&&OG.Constants.RESIZABLE);
+s=b.drawGuide(u);
+e(u,s,OG.Constants.SELECTABLE&&OG.Constants.RESIZABLE);
 b.toFront(s.group);
-b.remove(t.id+OG.Constants.DROP_OVER_BBOX_SUFFIX);
-$(m).removeData("groupTarget")
-}else{b.addToGroup(m,u);
-$.each(u,function(x,y){b.removeGuide(y);
-s=b.drawGuide(y);
-e(y,s,OG.Constants.SELECTABLE&&OG.Constants.RESIZABLE);
+b.remove(u.id+OG.Constants.DROP_OVER_BBOX_SUFFIX);
+$(n).removeData("groupTarget")
+}else{b.addToGroup(n,v);
+$.each(v,function(A,B){b.removeGuide(B);
+s=b.drawGuide(B);
+e(B,s,OG.Constants.SELECTABLE&&OG.Constants.RESIZABLE);
 b.toFront(s.group)
 })
-}$(m).removeData("bBoxArray")
+}$(n).removeData("bBoxArray")
 }});
 b.setAttr(p,{cursor:"move"})
 }else{$(p).draggable("destroy");
 b.setAttr(p,{cursor:OG.Constants.SELECTABLE?"pointer":OG.Constants.DEFAULT_STYLE.SHAPE.cursor})
 }};
-this.setClickSelectable=function(n,m){if(m){$(n).bind("click",function(p){var o;
-if(n.shape){if(!p.shiftKey&&!p.ctrlKey){$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(q,r){if(r.id){b.removeGuide(r)
+this.setClickSelectable=function(o,n){if(n){$(o).bind("click",function(q){var p;
+if(o.shape){if(!q.shiftKey&&!q.ctrlKey){$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(r,s){if(s.id){b.removeGuide(s)
 }})
-}if($(n).attr("_selected")==="true"){if(p.shiftKey||p.ctrlKey){b.removeGuide(n)
-}}else{h(n);
-if(!j(n)){o=b.drawGuide(n);
-if(o){e(n,o,OG.Constants.SELECTABLE&&OG.Constants.RESIZABLE);
+}if($(o).attr("_selected")==="true"){if(q.shiftKey||q.ctrlKey){b.removeGuide(o)
+}}else{h(o);
+if(!j(o)){p=b.drawGuide(o);
+if(p){e(o,p,OG.Constants.SELECTABLE&&OG.Constants.RESIZABLE);
 b.removeAllTerminal();
-b.toFront(o.group)
+b.toFront(p.group)
 }}}return false
 }});
-if(m&&OG.Constants.MOVABLE){b.setAttr(n,{cursor:"move"})
-}else{b.setAttr(n,{cursor:"pointer"})
-}}else{$(n).click("destroy");
-b.setAttr(n,{cursor:OG.Constants.DEFAULT_STYLE.SHAPE.cursor})
+if(n&&OG.Constants.MOVABLE){b.setAttr(o,{cursor:"move"})
+}else{b.setAttr(o,{cursor:"pointer"})
+}}else{$(o).click("destroy");
+b.setAttr(o,{cursor:OG.Constants.DEFAULT_STYLE.SHAPE.cursor})
 }};
-this.setDragSelectable=function(m){var n=b.getContainer(),o=b.getRootElement();
+this.setDragSelectable=function(n){var o=b.getRootElement();
 $(o).bind("click",function(q){var p=$(this).data("dragBox");
 if(!p||(p&&p.width<1&&p.height<1)){$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(r,s){if(OG.Util.isElement(s)&&s.id){b.removeGuide(s)
 }});
 b.removeAllTerminal()
 }});
-if(m){$(o).bind("mousedown",function(q){var p=b.getRootBBox();
-$(this).data("dragBox_first",{x:n.scrollLeft+q.pageX-p.x,y:n.scrollTop+q.pageY-p.y});
-b.drawRubberBand([n.scrollLeft+q.pageX-p.x,n.scrollTop+q.pageY-p.y])
+if(n){$(o).bind("mousedown",function(p){var q=m(p);
+$(this).data("dragBox_first",{x:q.x,y:q.y});
+b.drawRubberBand([q.x,q.y])
 });
-$(o).bind("mousemove",function(t){var u=$(this).data("dragBox_first"),r=b.getRootBBox(),s,q,p,v;
-if(u){s=n.scrollLeft+t.pageX-r.x-u.x;
-q=n.scrollTop+t.pageY-r.y-u.y;
-p=s<=0?u.x+s:u.x;
+$(o).bind("mousemove",function(s){var u=$(this).data("dragBox_first"),t=m(s),r,q,p,v;
+if(u){r=t.x-u.x;
+q=t.y-u.y;
+p=r<=0?u.x+r:u.x;
 v=q<=0?u.y+q:u.y;
-b.drawRubberBand([p,v],[Math.abs(s),Math.abs(q)])
+b.drawRubberBand([p,v],[Math.abs(r),Math.abs(q)])
 }});
-$(o).bind("mouseup",function(p){var s=$(this).data("dragBox_first"),w=b.getRootBBox(),q,z,v,u,t,r;
+$(o).bind("mouseup",function(p){var t=$(this).data("dragBox_first"),s=m(p),q,z,w,v,u,r;
 b.removeRubberBand(o);
-if(s){q=n.scrollLeft+p.pageX-w.x-s.x;
-z=n.scrollTop+p.pageY-w.y-s.y;
-v=q<=0?s.x+q:s.x;
-u=z<=0?s.y+z:s.y;
-t=new OG.Envelope([v,u],Math.abs(q),Math.abs(z));
-$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"]").each(function(x,y){if(y.shape.geom&&t.isContainsAll(y.shape.geom.getVertices())){h(y);
+if(t){q=s.x-t.x;
+z=s.y-t.y;
+w=q<=0?t.x+q:t.x;
+v=z<=0?t.y+z:t.y;
+u=new OG.Envelope([w,v],Math.abs(q),Math.abs(z));
+$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"]").each(function(x,y){if(y.shape.geom&&u.isContainsAll(y.shape.geom.getVertices())){h(y);
 if(!j(y)){r=b.drawGuide(y);
 if(r){e(y,r,OG.Constants.SELECTABLE&&OG.Constants.RESIZABLE);
 b.removeAllTerminal()
 }}}});
-$(this).data("dragBox",{width:q,height:z,x:v,y:u})
+$(this).data("dragBox",{width:q,height:z,x:w,y:v})
 }});
 $(o).bind("contextmenu",function(p){b.removeRubberBand(o)
 })
@@ -3796,62 +3800,62 @@ $(o).unbind("mousemove");
 $(o).unbind("mouseup");
 $(o).unbind("contextmenu")
 }};
-this.setEnableHotKey=function(n){var m=b.getRootGroup();
-if(n){$(window.document).bind("keydown",function(r){var p,t,q,o,s;
-if(r.keyCode===KeyEvent.DOM_VK_DELETE){$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_shape=EDGE][_selected=true]").each(function(u,v){if(v.id){b.removeShape(v)
+this.setEnableHotKey=function(o){var n=b.getRootGroup();
+if(o){$(window.document).bind("keydown",function(s){var q,u,r,p,t;
+if(s.keyCode===KeyEvent.DOM_VK_DELETE){$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_shape=EDGE][_selected=true]").each(function(v,w){if(w.id){b.removeShape(w)
 }});
-$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(u,v){if(v.id){b.removeShape(v)
+$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(v,w){if(w.id){b.removeShape(w)
 }})
-}if(OG.Constants.SELECTABLE&&r.ctrlKey&&r.keyCode===KeyEvent.DOM_VK_A){$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"]").each(function(v,w){if($(w.parentNode).attr("_shape")!==OG.Constants.SHAPE_TYPE.GROUP){var u=b.drawGuide(w);
-if(u){e(w,u,OG.Constants.SELECTABLE&&OG.Constants.RESIZABLE);
-b.removeTerminal(w)
+}if(OG.Constants.SELECTABLE&&s.ctrlKey&&s.keyCode===KeyEvent.DOM_VK_A){$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"]").each(function(w,x){if($(x.parentNode).attr("_shape")!==OG.Constants.SHAPE_TYPE.GROUP){var v=b.drawGuide(x);
+if(v){e(x,v,OG.Constants.SELECTABLE&&OG.Constants.RESIZABLE);
+b.removeTerminal(x)
 }}})
-}if(r.ctrlKey&&r.keyCode===KeyEvent.DOM_VK_C){t=[];
-$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(u,v){t.push(v)
+}if(s.ctrlKey&&s.keyCode===KeyEvent.DOM_VK_C){u=[];
+$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(v,w){u.push(w)
 });
-$(m).data("copied",t)
-}if(r.ctrlKey&&r.keyCode===KeyEvent.DOM_VK_V){p=$(m).data("copied");
-t=[];
-if(p){$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(u,v){if(v.id){b.removeGuide(v)
+$(n).data("copied",u)
+}if(s.ctrlKey&&s.keyCode===KeyEvent.DOM_VK_V){q=$(n).data("copied");
+u=[];
+if(q){$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(v,w){if(w.id){b.removeGuide(w)
 }});
-$.each(p,function(u,x){var z=x.shape.geom.getBoundary(),w,y,v;
-w=x.shape.clone();
-if($(x).attr("_shape")===OG.Constants.SHAPE_TYPE.EDGE){w.geom=new OG.PolyLine(x.shape.geom.getVertices());
-w.geom.style=x.shape.geom.style;
-w.geom.move(OG.Constants.COPY_PASTE_PADDING,OG.Constants.COPY_PASTE_PADDING);
-y=b.drawShape(null,w,null,x.shapeStyle)
-}else{y=b.drawShape([z.getCentroid().x+OG.Constants.COPY_PASTE_PADDING,z.getCentroid().y+OG.Constants.COPY_PASTE_PADDING],w,[z.getWidth(),z.getHeight()],x.shapeStyle)
-}v=b.drawGuide(y);
-d.setClickSelectable(y,OG.Constants.SELECTABLE);
-d.setMovable(y,OG.Constants.SELECTABLE&&OG.Constants.MOVABLE);
-e(y,v,OG.Constants.SELECTABLE&&OG.Constants.RESIZABLE);
-if(OG.Constants.GROUP_DROPABLE){d.enableDragAndDropGroup(y)
-}if(OG.Constants.GROUP_COLLAPSIBLE){d.enableCollapse(y)
-}if($(y).attr("_shape")!==OG.Constants.SHAPE_TYPE.GROUP){if(OG.Constants.CONNECTABLE){d.enableConnect(y)
-}if(OG.Constants.LABEL_EDITABLE){d.enableEditLabel(y)
-}}l(x,y);
-t.push(y)
+$.each(q,function(v,y){var A=y.shape.geom.getBoundary(),x,z,w;
+x=y.shape.clone();
+if($(y).attr("_shape")===OG.Constants.SHAPE_TYPE.EDGE){x.geom=new OG.PolyLine(y.shape.geom.getVertices());
+x.geom.style=y.shape.geom.style;
+x.geom.move(OG.Constants.COPY_PASTE_PADDING,OG.Constants.COPY_PASTE_PADDING);
+z=b.drawShape(null,x,null,y.shapeStyle)
+}else{z=b.drawShape([A.getCentroid().x+OG.Constants.COPY_PASTE_PADDING,A.getCentroid().y+OG.Constants.COPY_PASTE_PADDING],x,[A.getWidth(),A.getHeight()],y.shapeStyle)
+}w=b.drawGuide(z);
+d.setClickSelectable(z,OG.Constants.SELECTABLE);
+d.setMovable(z,OG.Constants.SELECTABLE&&OG.Constants.MOVABLE);
+e(z,w,OG.Constants.SELECTABLE&&OG.Constants.RESIZABLE);
+if(OG.Constants.GROUP_DROPABLE){d.enableDragAndDropGroup(z)
+}if(OG.Constants.GROUP_COLLAPSIBLE){d.enableCollapse(z)
+}if($(z).attr("_shape")!==OG.Constants.SHAPE_TYPE.GROUP){if(OG.Constants.CONNECTABLE){d.enableConnect(z)
+}if(OG.Constants.LABEL_EDITABLE){d.enableEditLabel(z)
+}}l(y,z);
+u.push(z)
 });
-$(m).data("copied",t)
-}}if(r.ctrlKey&&r.keyCode===KeyEvent.DOM_VK_G){q=b.group($("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]"));
-if(q){$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(u,v){b.removeGuide(v)
+$(n).data("copied",u)
+}}if(s.ctrlKey&&s.keyCode===KeyEvent.DOM_VK_G){r=b.group($("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]"));
+if(r){$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(v,w){b.removeGuide(w)
 });
-o=b.drawGuide(q);
-if(o){d.setClickSelectable(q,OG.Constants.SELECTABLE);
-d.setMovable(q,OG.Constants.SELECTABLE&&OG.Constants.MOVABLE);
-e(q,o,OG.Constants.SELECTABLE&&OG.Constants.RESIZABLE);
-if(OG.Constants.GROUP_DROPABLE){d.enableDragAndDropGroup(q)
+p=b.drawGuide(r);
+if(p){d.setClickSelectable(r,OG.Constants.SELECTABLE);
+d.setMovable(r,OG.Constants.SELECTABLE&&OG.Constants.MOVABLE);
+e(r,p,OG.Constants.SELECTABLE&&OG.Constants.RESIZABLE);
+if(OG.Constants.GROUP_DROPABLE){d.enableDragAndDropGroup(r)
 }b.removeAllTerminal();
-b.toFront(o.group)
-}}}if(r.ctrlKey&&r.keyCode===KeyEvent.DOM_VK_U){s=b.ungroup($("[_shape="+OG.Constants.SHAPE_TYPE.GROUP+"][_selected=true]"));
-$.each(s,function(u,v){o=b.drawGuide(v);
-if(o){b.removeAllTerminal();
-b.toFront(o.group)
+b.toFront(p.group)
+}}}if(s.ctrlKey&&s.keyCode===KeyEvent.DOM_VK_U){t=b.ungroup($("[_shape="+OG.Constants.SHAPE_TYPE.GROUP+"][_selected=true]"));
+$.each(t,function(v,w){p=b.drawGuide(w);
+if(p){b.removeAllTerminal();
+b.toFront(p.group)
 }})
-}if(r.shiftKey&&r.keyCode===KeyEvent.DOM_VK_LEFT){$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(u,v){})
-}if(r.shiftKey&&r.keyCode===KeyEvent.DOM_VK_RIGHT){$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(u,v){})
-}if(r.shiftKey&&r.keyCode===KeyEvent.DOM_VK_UP){$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(u,v){})
-}if(r.shiftKey&&r.keyCode===KeyEvent.DOM_VK_DOWN){$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(u,v){})
+}if(s.shiftKey&&s.keyCode===KeyEvent.DOM_VK_LEFT){$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(v,w){})
+}if(s.shiftKey&&s.keyCode===KeyEvent.DOM_VK_RIGHT){$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(v,w){})
+}if(s.shiftKey&&s.keyCode===KeyEvent.DOM_VK_UP){$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(v,w){})
+}if(s.shiftKey&&s.keyCode===KeyEvent.DOM_VK_DOWN){$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(v,w){})
 }})
 }else{$(window.document).unbind("keydown")
 }}
@@ -3891,6 +3895,8 @@ if(OG.Constants.CONNECTABLE){_HANDLER.enableConnect(element)
 }if(OG.Constants.GROUP_COLLAPSIBLE){_HANDLER.enableCollapse(element)
 }return element
 };
+this.drawLabel=function(shapeElement,text,style){return _RENDERER.drawLabel(shapeElement,text,style)
+};
 this.connect=function(fromElement,toElement,style,label){var terminalGroup,childTerminals,fromTerminal,toTerminal,i,edge,guide;
 terminalGroup=_RENDERER.drawTerminal(fromElement,OG.Constants.TERMINAL_TYPE.OUT);
 childTerminals=terminalGroup.terminal.childNodes;
@@ -3920,7 +3926,11 @@ return edge
 };
 this.disconnect=function(element){_RENDERER.disconnect(element)
 };
-this.group=function(elements){return _RENDERER.group(elements)
+this.group=function(elements){var group=_RENDERER.group(elements);
+_HANDLER.setClickSelectable(group,OG.Constants.SELECTABLE);
+_HANDLER.setMovable(group,OG.Constants.SELECTABLE&&OG.Constants.MOVABLE);
+if($(group).attr("_shape")!==OG.Constants.SHAPE_TYPE.GROUP){if(OG.Constants.LABEL_EDITABLE){_HANDLER.enableEditLabel(group)
+}}return group
 };
 this.ungroup=function(groupElements){return _RENDERER.ungroup(groupElements)
 };

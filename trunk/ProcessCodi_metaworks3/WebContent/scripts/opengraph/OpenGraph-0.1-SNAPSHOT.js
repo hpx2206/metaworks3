@@ -13020,7 +13020,18 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor) {
 	 * @return {Element} Group Shape Element
 	 */
 	this.group = function (elements) {
-		return _RENDERER.group(elements);
+		var group = _RENDERER.group(elements);
+
+		// enable event
+		_HANDLER.setClickSelectable(group, OG.Constants.SELECTABLE);
+		_HANDLER.setMovable(group, OG.Constants.SELECTABLE && OG.Constants.MOVABLE);
+		if ($(group).attr("_shape") !== OG.Constants.SHAPE_TYPE.GROUP) {
+			if (OG.Constants.LABEL_EDITABLE) {
+				_HANDLER.enableEditLabel(group);
+			}
+		}
+
+		return group;
 	};
 
 	/**

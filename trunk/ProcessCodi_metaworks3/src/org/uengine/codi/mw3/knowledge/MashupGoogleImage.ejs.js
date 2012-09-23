@@ -53,11 +53,8 @@ org_uengine_codi_mw3_knowledge_MashupGoogleImage.prototype.search = function(key
 							var focusWfNode = $('.wfnode_current_focus');
 							if(focusWfNode.length > 0){
 								var objectId = focusWfNode.attr('objectId');
-								
-								//alert('xxxxxx');
 								mw3.getFaceHelper(objectId).insertNodeAfter(this.googleData);
 							}
-							//mw3.getAutowiredObject('org.uengine.codi.mw3.knowledge.WfNode').
 						}
 						
 						var newImg = document.createElement('img');
