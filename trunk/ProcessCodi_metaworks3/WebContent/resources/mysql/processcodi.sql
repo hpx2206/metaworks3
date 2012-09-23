@@ -596,4 +596,8 @@ alter table emptable add column APPKEY varchar(100);
 
 alter table bpm_knol add column vistype char(10);
 
+alter table bpm_knol add column CONNTYPE char(20);
+alter table bpm_knol add column URL varchar(200);
+alter table bpm_knol add column THUMBNAIL varchar(200);
+
 alter table bpm_knol modify name VARCHAR(1000) ;
