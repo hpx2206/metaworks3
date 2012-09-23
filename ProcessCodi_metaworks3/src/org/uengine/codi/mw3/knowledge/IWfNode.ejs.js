@@ -269,7 +269,7 @@ org_uengine_codi_mw3_knowledge_IWfNode.prototype = {
 			
 			this.timeout = setTimeout(function() {
 				
-				var mashupToolNames = ["GoogleImage", "LMS", "KMS", "Video"];
+				var mashupToolNames = ["GoogleImage", "LMS", "KMS", "Video", "Slideshare"];
 				
 				for(var i in mashupToolNames){
 					var mashupToolName = mashupToolNames[i];
@@ -288,7 +288,6 @@ org_uengine_codi_mw3_knowledge_IWfNode.prototype = {
 							mashup.search();
 						}else{
 							mashupTool = mashup.__getFaceHelper();
-							console.log(mashupTool);
 							if(mashupTool){
 								if(value == ''){
 									mashupTool.clear();

@@ -52,7 +52,7 @@
 <%										}else if(depthTwo[k].type=='iframe'){		%>
 												<iframe src="<%=depthTwo[k].name%>" width="500" height="300"></iframe>
 <%										}else if(depthTwo[k].type=='video'){		%>
-												<object width="300" height="300"><param name="movie" value="<%=depthTwo[k].name%>"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="<%=depthTwo[k].name%>" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="300" height="300"></embed></object>
+												<object width="300" height="300"><param name="movie" value="<%=depthTwo[k].name%>"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><param name="autoplay" value="1"></param><embed src="<%=depthTwo[k].name%>" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="300" height="300"></embed></object>
 <%										}else{ %>
 												<%=depthTwo[k].name %>
 <%										}%>

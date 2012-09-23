@@ -44,11 +44,8 @@ function mashupGoogleVideo_OnLoad() {
 					var focusWfNode = $('.wfnode_current_focus');
 					if(focusWfNode.length > 0){
 						var objectId = focusWfNode.attr('objectId');
-						
-						//alert('xxxxxx');
 						mw3.getFaceHelper(objectId).insertNodeVideo(this.googleData);
 					}
-					//mw3.getAutowiredObject('org.uengine.codi.mw3
 				}
 				var newImg = document.createElement('img');
 				newImg.src = result.tbUrl;

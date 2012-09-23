@@ -46,7 +46,6 @@ public class SearchResult {
 		this.description = description;
 	}
 	
-	@ImagePath
 	@Hidden
 	public String getThumbnail() {
 		return thumbnail;
@@ -78,8 +77,13 @@ public class SearchResult {
 		WfNode wfNode = new WfNode();
 		wfNode.load(targetNodeId);
 		wfNode.session = session;
-		wfNode.setNameNext(title);
-		wfNode.setTypeNext("iframe");	// TODO 임시 - 추후에 메서드로 빼서 받아와야함
+		if( resultType != null && resultType.equals("slideshare")){
+			wfNode.setNameNext(description);
+			wfNode.setTypeNext("slideshare");	
+		}else{
+			wfNode.setNameNext(title);
+			wfNode.setTypeNext("iframe");	// TODO 임시 - 추후에 메서드로 빼서 받아와야함
+		}
 		
 		return wfNode.add();
 	}
