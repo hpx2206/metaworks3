@@ -63,14 +63,14 @@ public class Mashup {
 		}
 	
 	MashupSlideshare 	mashupSlideshare;
-	@Face(displayName="SlideShare")
+	@Face(displayName="슬라이드")
 	@AutowiredToClient
-	public MashupSlideshare getMashupSlideshare() {
-		return mashupSlideshare;
-	}
-	
-	public void setMashupSlideshare(MashupSlideshare mashupSlideshare) {
-		this.mashupSlideshare = mashupSlideshare;
-	}
+		public MashupSlideshare getMashupSlideshare() {
+			return mashupSlideshare;
+		}
+		
+		public void setMashupSlideshare(MashupSlideshare mashupSlideshare) {
+			this.mashupSlideshare = mashupSlideshare;
+		}
 	
 }

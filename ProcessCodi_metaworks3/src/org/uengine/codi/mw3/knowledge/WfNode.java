@@ -18,9 +18,11 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.dao.UniqueKeyGenerator;
+import org.metaworks.example.ide.SourceCode;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.model.ContentWindow;
+import org.uengine.codi.mw3.model.Employee;
 import org.uengine.codi.mw3.model.IInstance;
 import org.uengine.codi.mw3.model.IUser;
 import org.uengine.codi.mw3.model.Instance;
@@ -32,7 +34,9 @@ import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.model.ProcessDefinition;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.model.UnstructuredProcessInstanceStarter;
+import org.uengine.codi.mw3.model.User;
 import org.uengine.codi.mw3.model.WorkItem;
+import org.uengine.kernel.GlobalContext;
 
 public class WfNode extends Database<IWfNode> implements IWfNode {
 	
@@ -797,7 +801,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		if("-1".equals(parentNode.getId()) && parentNode.getChildNode().size() == 1)
 			return null;
 		
-		if(getAuthor().getUserId().equals(session.getUser().getUserId()) || session.getEmployee().getIsAdmin()) {
+		if(getAuthor()==null || getAuthor().getUserId().equals(session.getUser().getUserId()) || session.getEmployee().getIsAdmin()) {
 		
 			WfNode node = parentNode.getNode(this.getId());		
 			parentNode.removeChildNode(node.getNo());
@@ -941,7 +945,10 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 
 			save();
 			
-			return new Object[]{new Refresh(this), instanceView.schedule()};
+			Employee theUser = new Employee();
+			theUser.setEmpCode(user.getUserId());
+			
+			return new Object[]{new Refresh(this), new ModalWindow(instanceView.schedule().getPanel(), 400, 300, theUser.databaseMe().getEmpName() + "님에게 과제를 부여합니다.")};
 		}
 		
 		
@@ -970,6 +977,22 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		// TODO Auto-generated method stub
 		return new Popup(new ConnectionType(this));
 	}
+	@Override
+	public Popup xml() throws Exception {
+		
+		WfNodeXML wfNodeXML = new WfNodeXML();
+		
+		SourceCode sourceCode = new SourceCode();
+		sourceCode.setCode(GlobalContext.serialize(this, Object.class));
+		wfNodeXML.setXml(sourceCode);
+		wfNodeXML.setNodeId(getId());
+		
+		Popup popup = new Popup(wfNodeXML);
+		popup.setName("To/From XML");
+		
+		return popup;
+	}
+	
 	
 	
 }
