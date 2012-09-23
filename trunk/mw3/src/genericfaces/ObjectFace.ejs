@@ -19,8 +19,19 @@
 		<div class="cont" style="padding-bottom:3px;">
 <%
   if(showTitle){
+  
+  			var objectName;
+  			
+  			if(value.__toString != null){
+				objectName = value.__toString();
+			}		
+			if(!objectName){
+				objectName = objectMetadata.displayName;
+			}
+  
+  
 %>		
-			<p class="title"><%=mw3.localize(objectMetadata.displayName)%></p>
+			<p class="title"><%=mw3.localize(objectName)%></p>
 <%
   }
 %>				
@@ -52,9 +63,26 @@
 %>
 <td bgcolor=white> <b><%=mw3.localize(fd.displayName)%></b> </td>
 
-<%}%>
+<%}
+%>
 
-<td bgcolor=white> <%=fields[fd.name] ? fields[fd.name].here() : "XXX"%></td></tr>
+<td bgcolor=white>
+
+<%
+ 	if(fd.attributes && fd.attributes['imagePath'] == true){
+%>
+ <img src="<%=fieldValue%>" width=100>
+<%
+ 
+ 	}else{
+%>
+ <%=fields[fd.name] ? fields[fd.name].here() : "XXX"%>
+<%
+ 	}
+ 	
+%> 
+
+</td></tr>
 
 
 <%
