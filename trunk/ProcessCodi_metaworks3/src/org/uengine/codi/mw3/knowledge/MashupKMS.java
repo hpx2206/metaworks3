@@ -2,8 +2,10 @@ package org.uengine.codi.mw3.knowledge;
 
 import java.util.ArrayList;
 
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 
+@Face(displayName="지식맵에서 검색")
 public class MashupKMS extends MashupTool{
 
 	@ServiceMethod(payload={"keyword", "targetNodeId"})

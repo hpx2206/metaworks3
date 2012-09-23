@@ -18,7 +18,7 @@ public class Mashup {
 	}
 
 	MashupGoogleImage mashupGoogleImage;
-	@Face(displayName="Image")
+	@Face(displayName="이미지")
 	@AutowiredToClient
 	
 		public MashupGoogleImage getMashupGoogleImage() {
@@ -35,7 +35,6 @@ public class Mashup {
 		public MashupLMS getMashupLMS() {
 			return mashupLMS;
 		}
-	
 		public void setMashupLMS(MashupLMS mashupLMS) {
 			this.mashupLMS = mashupLMS;
 		}

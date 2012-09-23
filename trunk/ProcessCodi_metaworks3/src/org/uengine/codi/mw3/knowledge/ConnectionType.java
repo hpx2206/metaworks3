@@ -9,30 +9,30 @@ import org.metaworks.annotation.Range;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dwr.MetaworksRemoteService;
 
-public class VisualizationType implements ContextAware{
+public class ConnectionType implements ContextAware{
 
-	public VisualizationType() {
+	public ConnectionType() {
 	}
 	
 
-	public VisualizationType(WfNode wfNode) {
+	public ConnectionType(WfNode wfNode) {
 		setMetaworksContext(new MetaworksContext());
 		getMetaworksContext().setWhen("edit");
 		setNodeId(wfNode.getId());
 	}
 	
-	String visType;
-	@Face(displayName="가시화 방식")
-	@Range(options={"개조식", "마인드맵", "표", "UML", "프레젠테이션"},
-			values={"bullet","mindmap","table", "uml", "pt"})
-
-		public String getVisType() {
-			return visType;
+	String connType;
+	@Face(displayName="하위 연결 방식")
+	@Range(options={"관계", "포함", "상속", "구체화"},
+			values={"related","composed-of","inherit", "realize"})
+		public String getConnType() {
+			return connType;
+		}
+		public void setConnType(String connType) {
+			this.connType = connType;
 		}
 	
-		public void setVisType(String visType) {
-			this.visType = visType;
-		}
+
 
 	String nodeId;
 	@Hidden
@@ -50,7 +50,7 @@ public class VisualizationType implements ContextAware{
 	public void save() throws Exception{
 		WfNode theNode = new WfNode();
 		theNode.setId(getNodeId());
-		theNode.databaseMe().setVisType(getVisType());
+		theNode.databaseMe().setConnType(getConnType());
 		
 		MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(theNode.databaseMe())});
 	}
