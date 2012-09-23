@@ -3,6 +3,7 @@ package org.uengine.codi.mw3.knowledge;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 
 import com.benfante.jslideshare.SlideShareAPIImpl;
@@ -10,6 +11,7 @@ import com.benfante.jslideshare.SlideShareConnectorImpl;
 import com.benfante.jslideshare.messages.Slideshow;
 import com.benfante.jslideshare.messages.Tag;
 
+@Face(displayName="슬라이드 검색")
 public class MashupSlideshare extends MashupTool {
 	
 	@ServiceMethod(callByContent=true, payload={"keyword", "targetNodeId"})

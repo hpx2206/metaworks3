@@ -46,7 +46,8 @@ public class SearchResult {
 		this.description = description;
 	}
 	
-	@Hidden
+	@ImagePath
+	@Face(displayName="&nbsp;")
 	public String getThumbnail() {
 		return thumbnail;
 	}
@@ -70,7 +71,8 @@ public class SearchResult {
 		this.resultType = resultType;
 	}
 	
-	@ServiceMethod(callByContent=true)
+	@ServiceMethod(callByContent=true, mouseBinding="left")
+	@Hidden
 	@Face(displayName="선택")
 	public Object[] choose() throws Exception{
 		

@@ -6,7 +6,7 @@ import org.uengine.codi.mw3.model.IUser;
 import org.uengine.codi.mw3.model.Session;
 
 @Face(ejsPath="genericfaces/Window.ejs",
-	  displayName="Hint & Feedback",
+	  displayName="$HintWindow",
 	  options={"hideLabels", "minimize"},
 	  values={"true", "true"})
 public class HintWindow extends Window {

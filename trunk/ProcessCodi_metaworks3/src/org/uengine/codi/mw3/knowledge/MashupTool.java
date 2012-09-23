@@ -12,7 +12,7 @@ public class MashupTool {
 	public MashupTool(){}
 	
 	ArrayList<SearchResult> searchResults;
-	@Face(displayName="검색결과")
+	@Face(displayName="&nbsp;")
 		public ArrayList<SearchResult> getSearchResults() {
 			return searchResults;
 		}
@@ -23,7 +23,7 @@ public class MashupTool {
 
 	String keyword;
 	@Id
-	@Face(displayName="검색어")
+	@Face(displayName="&nbsp;")
 		public String getKeyword() {
 			return keyword;
 		}
