@@ -122,7 +122,6 @@ public interface IWfNode extends IDAO {
 	public int getLoadDepth();
 	public void setLoadDepth(int loadDepth);
 	
-	
 	public String getVisType();
 	public void setVisType(String visType);
 	

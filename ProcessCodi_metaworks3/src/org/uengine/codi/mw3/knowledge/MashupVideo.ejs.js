@@ -1,4 +1,4 @@
-var org_uengine_codi_mw3_knowledge_MashupKMS = function(objectId, className){
+var org_uengine_codi_mw3_knowledge_MashupVideo = function(objectId, className){
 	
 
 	//google.load('search', '1');
@@ -8,13 +8,13 @@ var org_uengine_codi_mw3_knowledge_MashupKMS = function(objectId, className){
     mashupGoogleVideo_OnLoad();
 };
 
-org_uengine_codi_mw3_knowledge_MashupKMS.prototype.clear = function(){
+org_uengine_codi_mw3_knowledge_MashupVideo.prototype.clear = function(){
 	var contentDiv = document.getElementById('mashup_video');
 	contentDiv.innerHTML = '검색된 결과가 없습니다.';
 };
 
 
-org_uengine_codi_mw3_knowledge_MashupKMS.prototype.search = function(keyword){
+org_uengine_codi_mw3_knowledge_MashupVideo.prototype.search = function(keyword){
 	videoSearcher.execute(keyword);
 };
 
