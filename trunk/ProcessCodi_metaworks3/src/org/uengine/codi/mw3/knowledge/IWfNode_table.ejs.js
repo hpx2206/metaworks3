@@ -95,11 +95,16 @@ var org_uengine_codi_mw3_knowledge_IWfNode_table = function(objectId, className)
 				function () {
 					/*$(this).css("background","#F2F8FD");*/
 					if(!$('#move').hasClass("moving")){
+						
+						var object = mw3.objects[objectId];
+						var authorId = object.authorId;
+						
 						var html = '';
 
-						html += '<div id=\"controls\">';  
+						html += '<div id=\"controls\">'; 						
 						html += '  <div id=\"controlsRight\">';
-						html += '    <a id=\"move\" title=\"Drag to move\"></a>';
+						html += '    <div id=\"authorId\" style=\"top:-50px\" ><img src=\"images/portrait/'+ authorId +'.jpg\" width=\"30\" height=\"30\"></div>';
+						html += '    <a id=\"move\" style=\"top:-42px\" title=\"Drag to move\"></a>';
 						html += '  </div>'; 
 						html += '</div>';
 
