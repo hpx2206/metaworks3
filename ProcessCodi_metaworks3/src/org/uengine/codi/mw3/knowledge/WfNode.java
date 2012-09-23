@@ -64,6 +64,16 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 			this.visType = visType;
 		}
 
+	String connType;
+		
+		public String getConnType() {
+			return connType;
+		}
+		public void setConnType(String connType) {
+			this.connType = connType;
+		}
+
+
 	String name;
 		public String getName() {
 			return name;
@@ -954,6 +964,11 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 	public Popup visualizationType() {
 		return new Popup(new VisualizationType(this));
 		
+	}
+	@Override
+	public Popup connectionType() {
+		// TODO Auto-generated method stub
+		return new Popup(new ConnectionType(this));
 	}
 	
 	

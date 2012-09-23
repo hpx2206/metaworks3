@@ -3,9 +3,10 @@ package org.uengine.codi.mw3.knowledge;
 import java.util.ArrayList;
 import java.util.Hashtable;
 
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 
-
+@Face(displayName="LMS에서 검색", options={"hideEditBtn"}, values= {"true"})
 public class MashupLMS extends MashupTool{
 
 	@ServiceMethod(callByContent=true, payload={"keyword", "targetNodeId"})

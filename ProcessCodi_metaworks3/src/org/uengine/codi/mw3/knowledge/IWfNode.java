@@ -180,7 +180,7 @@ public interface IWfNode extends IDAO {
 	@Face(displayName="$Remove")
 	public Object[] remove() throws Exception;
 	
-	@Face(displayName="remove")
+	@Face(displayName="$Remove")
 	@ServiceMethod(callByContent=true, except={"childNode", "focus"}, target="popup", inContextMenu=true, keyBinding="Shift+Del")
 	public Object[] removeNode() throws Exception;
 	
@@ -201,6 +201,10 @@ public interface IWfNode extends IDAO {
 	@Face(displayName="가시화 방법")
 	public Popup visualizationType();
 	
+	@ServiceMethod(inContextMenu=true, target="popup")
+	@Face(displayName="하위 연결 방식")
+	public Popup connectionType();
+	
 	/*******************************************
 	 * 
 	 * function
@@ -215,5 +219,8 @@ public interface IWfNode extends IDAO {
 	
 	@AutowiredFromClient(onDrop=true)
 	public IUser dropUser = null;
+
+	public String getConnType();
+	public void setConnType(String connType);
 	
 }

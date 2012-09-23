@@ -3,6 +3,8 @@ package org.uengine.codi.mw3.knowledge;
 import java.util.ArrayList;
 import javax.persistence.Id;
 
+import org.metaworks.annotation.Face;
+import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 
 public class MashupTool {
@@ -10,6 +12,7 @@ public class MashupTool {
 	public MashupTool(){}
 	
 	ArrayList<SearchResult> searchResults;
+	@Face(displayName="검색결과")
 		public ArrayList<SearchResult> getSearchResults() {
 			return searchResults;
 		}
@@ -20,6 +23,7 @@ public class MashupTool {
 
 	String keyword;
 	@Id
+	@Face(displayName="검색어")
 		public String getKeyword() {
 			return keyword;
 		}
@@ -29,7 +33,7 @@ public class MashupTool {
 		}
 		
 	String targetNodeId;
-	
+	@Hidden
 		public String getTargetNodeId() {
 			return targetNodeId;
 		}
@@ -39,5 +43,6 @@ public class MashupTool {
 		}
 
 	@ServiceMethod(callByContent=true, payload={"keyword", "targetNodeId"})
+	@Face(displayName="검색")
 	public void search() throws Exception{};
 }
