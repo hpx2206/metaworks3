@@ -35,7 +35,7 @@ import org.metaworks.annotation.NonLoadable;
 import org.metaworks.annotation.NonSavable;
 import org.metaworks.annotation.ORMapping;
 import org.metaworks.annotation.Range;
-import org.metaworks.annotation.RepresentativeImagePath;
+import org.metaworks.annotation.ImagePath;
 import org.metaworks.annotation.Resource;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Test;
@@ -469,8 +469,8 @@ public class WebObjectType{
 				setDesignable(true);
 			}
 			
-			if(getAnnotationDeeply(tryingClasses, fd.getName(), RepresentativeImagePath.class)!=null){
-				fd.setAttribute("representativeImagePath", new Boolean(true));
+			if(getAnnotationDeeply(tryingClasses, fd.getName(), ImagePath.class)!=null){
+				fd.setAttribute("imagePath", new Boolean(true));
 			}
 			
 			Testing tests;
