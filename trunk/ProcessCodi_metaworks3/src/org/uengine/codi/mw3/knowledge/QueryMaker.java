@@ -117,7 +117,7 @@ public class QueryMaker{
 							}
 							ht.put("size", result.getTotalSize());
 							al.add(ht);
-						}
+						} 
 						return al;
 					}
 				}
