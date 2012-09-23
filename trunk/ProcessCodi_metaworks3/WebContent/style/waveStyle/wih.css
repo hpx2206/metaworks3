@@ -433,3 +433,12 @@ legend {display:none;}
     background: url('../../images/waveStyle/mm_RightLine.gif') 0% 50% no-repeat;
     width:10px;
 }
+
+#mm_uml_LineL{
+    background: url('../../images/waveStyle/mm_uml_MiddleLine.gif') 0% 50% no-repeat;
+    width:13px;
+}
+#mm_uml_LineR{
+    background: url('../../images/waveStyle/mm_uml_RightLine.gif') 0% 50% no-repeat;
+    width:20px;
+}
