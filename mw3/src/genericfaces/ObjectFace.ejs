@@ -70,10 +70,12 @@
 
 <%
 	if(fd.attributes && fd.attributes['imagepath']){
+		if(fieldValue){
  	
 %>
  <img src="<%=fieldValue%>" width=100>
 <%
+		}
  
  	}else{
 %>
