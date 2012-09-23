@@ -19,7 +19,7 @@ public class VisualizationType implements ContextAware{
 	
 	String visType;
 	@Range(options={"개조식", "마인드맵", "표", "UML", "프레젠테이션"},
-			values={"bullet","mindmap","표", "uml", "pt"})
+			values={"bullet","mindmap","table", "uml", "pt"})
 
 		public String getVisType() {
 			return visType;
