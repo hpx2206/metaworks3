@@ -816,10 +816,10 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 	}
 	
 	@Autowired 
-	public ProcessDefinition processDefinition;
+	transient public ProcessDefinition processDefinition;
 	
 	@Autowired
-	public InstanceViewContent  instanceViewContent;
+	transient public InstanceViewContent  instanceViewContent;
 	
 	public ContentWindow linkInstance() throws Exception {
 		Instance instance = new Instance();
@@ -869,7 +869,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 	}
 	
 	@AutowiredFromClient
-	public Session session;
+	transient public Session session;
 	
 	
 	public WfNode collapse() throws Exception {
@@ -964,7 +964,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 	}
 	
 	@Autowired
-	public UnstructuredProcessInstanceStarter instanceStarter;
+	transient public UnstructuredProcessInstanceStarter instanceStarter;
 	
 	
 	@Override
