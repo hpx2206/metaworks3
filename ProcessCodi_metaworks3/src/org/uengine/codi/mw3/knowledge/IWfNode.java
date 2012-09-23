@@ -28,6 +28,7 @@ import org.uengine.codi.mw3.model.Session;
 	{
 		"{how: 'bullet', face: 'dwr/metaworks/org/uengine/codi/mw3/knowledge/IWfNode.ejs'}",
 		"{how: 'uml', face: 'dwr/metaworks/org/uengine/codi/mw3/knowledge/IWfNode_uml.ejs'}",
+		"{how: 'table', face: 'dwr/metaworks/org/uengine/codi/mw3/knowledge/IWfNode_table.ejs'}",
 		"{how: 'mindmap', face: 'dwr/metaworks/org/uengine/codi/mw3/knowledge/IWfNode_mindmap.ejs'}",
 		//"{how: 'pt', face: 'dwr/metaworks/org/uengine/codi/mw3/model/IWfNode_uml.ejs'}",
 	})
