@@ -128,7 +128,23 @@ public interface IWfNode extends IDAO {
 	public String getVisType();
 	public void setVisType(String visType);
 	
+	public String getUrl() ;
+	public void setUrl(String url) ;
 	
+	public String getThumbnail() ;
+	public void setThumbnail(String thumbnail);
+	
+	@NonLoadable
+	@NonSavable
+	@Hidden
+	public String getUrlNext() ;
+	public void setUrlNext(String urlNext) ;
+	
+	@NonLoadable
+	@NonSavable
+	@Hidden
+	public String getThumbnailNext() ;
+	public void setThumbnailNext(String thumbnailNext);
 	/*******************************************
 	 * 
 	 * Service Method
@@ -195,6 +211,10 @@ public interface IWfNode extends IDAO {
 	@ServiceMethod(callByContent=true, inContextMenu=true, target="popup")
 	@Face(displayName="$presentation")
 	public ModalWindow presentation() throws Exception;
+	
+	@ServiceMethod(callByContent=true, target="popup")
+	@Face(displayName="컨텐츠보기")
+	public ModalWindow showLms() throws Exception;
 	
 	@ServiceMethod(callByContent=true, mouseBinding="drag-enableDefault")
 	public Session drag() throws Exception;

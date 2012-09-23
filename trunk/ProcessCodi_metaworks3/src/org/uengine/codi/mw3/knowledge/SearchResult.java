@@ -82,9 +82,14 @@ public class SearchResult {
 		if( resultType != null && resultType.equals("slideshare")){
 			wfNode.setNameNext(description);
 			wfNode.setTypeNext("slideshare");	
+		}else if( resultType != null && resultType.equals("LMS")){
+			wfNode.setNameNext(title);
+			wfNode.setUrlNext(url);
+			wfNode.setThumbnailNext(thumbnail);
+			wfNode.setTypeNext("LMS");	
 		}else{
 			wfNode.setNameNext(title);
-			wfNode.setTypeNext("iframe");	// TODO 임시 - 추후에 메서드로 빼서 받아와야함
+			wfNode.setTypeNext("text");	
 		}
 		
 		return wfNode.add();

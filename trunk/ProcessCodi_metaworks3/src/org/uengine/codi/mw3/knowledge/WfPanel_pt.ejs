@@ -44,7 +44,7 @@
 												globalIdx++;
 											}
 %>								
-											<li style="float:left; font-size: 20px; padding-left:60px; width:90%;" >
+											<li style="float:left; font-size: 20px; padding-left:60px; width:90%; z-index:5;" >
 												<img src="images/waveStyle/navi_icon.png" />
 												
 <%										if(depthTwo[k].type=='img'){		%>
@@ -52,7 +52,7 @@
 <%										}else if(depthTwo[k].type=='iframe'){		%>
 												<iframe src="<%=depthTwo[k].name%>" width="500" height="300"></iframe>
 <%										}else if(depthTwo[k].type=='video'){		%>
-												<object width="300" height="300"><param name="movie" value="<%=depthTwo[k].name%>"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><param name="autoplay" value="1"></param><embed src="<%=depthTwo[k].name%>" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="300" height="300"></embed></object>
+												<object width="300" height="300"><param name="movie" value="<%=depthTwo[k].name%>"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><param name="autoplay" value="0"></param><param name="wmode" value="transparent" /><embed src="<%=depthTwo[k].name%>" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="300" height="300"></embed></object>
 <%										}else{ %>
 												<%=depthTwo[k].name %>
 <%										}%>
@@ -87,7 +87,7 @@
 												for (var m=0; m<depthThree.length ; m++){
 													if( depthThree[m].name != null && depthThree[m].name != "" ){
 %>		
-														<li style="font-size: 20px; padding-left:60px; width:90%;" >
+														<li style="font-size: 20px; padding-left:60px; width:90%; z-index:5;" >
 															<img src="images/waveStyle/navi_icon.png" />
 															
 <%													if(depthThree[m].type=='img'){		%>
@@ -95,7 +95,7 @@
 <%													}else if(depthThree[m].type=='iframe'){		%>
 															<iframe src="<%=depthThree[m].name%>" width="500" height="300"></iframe>
 <%													}else if(depthThree[m].type=='video'){		%>
-															<object width="300" height="300"><param name="movie" value="<%=depthThree[m].name%>"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="<%=depthThree[m].name%>" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="300" height="300"></embed></object>
+															<object width="300" height="300"><param name="movie" value="<%=depthThree[m].name%>"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><param name="wmode" value="transparent" /><param name="autoplay" value="0"></param><embed src="<%=depthThree[m].name%>" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="300" height="300"></embed></object>
 <%													}else{ %>
 															<%=depthThree[m].name %>
 <%													}%>
