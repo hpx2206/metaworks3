@@ -1,4 +1,4 @@
-var org_uengine_codi_mw3_knowledge_IWfNode_uml = function(objectId, className){
+var org_uengine_codi_mw3_knowledge_IWfNode_table = function(objectId, className){
 	var thisFaceHelper = this;
 	
 	this.objectId = objectId;
@@ -130,23 +130,10 @@ var org_uengine_codi_mw3_knowledge_IWfNode_uml = function(objectId, className){
 	}
 	this.obj.addClass("workflowy_node").attr("objectId", objectId).attr("nodeId", this.mw3Obj.id).attr('parentId', this.mw3Obj.parentId).css("position", "relative");
 	
-	if(this.mw3Obj.parentId == rootNodeId){
-		this.obj.find('td.#mm_uml_LineL').eq(0).remove();
-		this.obj.css('margin-left','30px')
-	}
-	if(this.obj.parent().prev().length < 1){
-		this.obj.find('td.#mm_uml_LineL').eq(0).css('background','url(images/waveStyle/mm_uml_TopLine.gif) 0% 50% no-repeat');
-	}else if(this.obj.parent().next().length < 1){
-		this.obj.find('td.#mm_uml_LineL').eq(0).css('background','url(images/waveStyle/mm_uml_BottomLine.gif) 0% 50% no-repeat');
-	}
-	
-	if(this.obj.parent().prev().length < 1 && this.obj.parent().next().length < 1){
-		this.obj.find('td.#mm_uml_LineL').eq(0).css('background','url(images/waveStyle/mm_uml_RightLine.gif) 0% 50% no-repeat')
-	}
 
 }
 
-org_uengine_codi_mw3_knowledge_IWfNode_uml.prototype = {
+org_uengine_codi_mw3_knowledge_IWfNode_table.prototype = {
 		getPrev : function(){
 			var searchObj = this.obj;
 				
