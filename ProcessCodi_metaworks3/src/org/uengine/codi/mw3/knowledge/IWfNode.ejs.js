@@ -140,7 +140,7 @@ org_uengine_codi_mw3_knowledge_IWfNode.prototype = {
 			var searchObj = this.obj;
 				
 			do{
-				searchObj = searchObj.prev();
+				searchObj = searchObj.parent().prev().children().eq(0);
 				
 				if(searchObj.hasClass('workflowy_node'))
 					break;
@@ -153,7 +153,7 @@ org_uengine_codi_mw3_knowledge_IWfNode.prototype = {
 			var searchObj = this.obj;
 				
 			do{
-				searchObj = searchObj.next();
+				searchObj = searchObj.parent().next().children().eq(0);
 				
 				if(searchObj.hasClass('workflowy_node'))
 					break;
