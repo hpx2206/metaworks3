@@ -23,8 +23,8 @@ public class VisualizationType implements ContextAware{
 	
 	String visType;
 	@Face(displayName="가시화 방식")
-	@Range(options={"개조식", "마인드맵", "표", "UML", "프레젠테이션"},
-			values={"bullet","mindmap","table", "uml", "pt"})
+	@Range(options={"개조식", "마인드맵", "표", "UML", "퀴즈", "프레젠테이션"},
+			values={"bullet","mindmap","table", "uml", "quiz", "pt"})
 
 		public String getVisType() {
 			return visType;

@@ -2,9 +2,8 @@
 <%
 	if(value){
 %>
-	<table  cellspacing="0" cellpadding="0" >
-		<tbody>
-		<tr>
+	<div class="wfQuiz">
+		<ul>
 		
 <%
 				var nodeStatus = "opened";
@@ -13,18 +12,15 @@
 
 				if(mw3.when != 'read'){
 %>			
-			<td id="mm_LineL"></td>
-			<td id="wfnode_<%=objectId%>" class="wfNode" style="margin:3px 0; position:relative">
+			<li id="wfnode_<%=objectId%>" class="wfNode" style="margin:3px 0; position:relative">
 				
 				<!-- opened, closed -->
-				<div class="view_box4" id="hiddenReply" style="display: block; margin:7px 0 7px 0;">
-					<div class="guide"><span class="tl"></span><span class="tr"></span></div>
-					<div class="cont"">
+				
 					
 						<table border="0" cellspacing="0" cellpadding="0" width="100%">
 						<tr>
-							<td class="<%=nodeStatus%>"  onclick="<%=value.close?methods.expand.caller():methods.collapse.caller()%>"><span>&nbsp;</span></td>
-							<td>
+							<td width="25" class="radioTr"><input type="radio" id="quizRadio" name="quizRadio" value="ok"></td>
+							<td  onclick="<%=value.close?methods.expand.caller():methods.collapse.caller()%>">
 								<span class="wfNodeText" style="width:100%;">
 					<%	if(value.type=='img'){		
 		%>
@@ -52,21 +48,17 @@
 						
 						</tr>
 						</table>
-					</div>
-					<div class="guide"><span class="lb"></span><span class="rb"></span></div>
-				</div>
+					
 					
 				<div id="wfinfo_<%=objectId%>"></div>
-			</td>			
+			</li>			
 <%
 				}else{						
 %>
-			<td id="mm_LineL"></td>
-			<td id="wfnode_<%=objectId%>" class="wfNode" style="margin:3px 0">
+			
+			<li id="wfnode_<%=objectId%>" class="wfNode" style="margin:3px 0">
 				<!-- opened, closed -->
-				<div class="view_box4" id="hiddenReply" style="display: block; margin:7px 0 7px 0;">
-					<div class="guide"><span class="tl"></span><span class="tr"></span></div>
-						<div class="cont"">
+				
 							<table border="0" cellspacing="0" cellpadding="0">
 								<tr>
 									<td class="<%=nodeStatus%>"  onclick="<%=value.close?methods.expand.caller():methods.collapse.caller()%>"><span>&nbsp;</span></td>
@@ -77,11 +69,8 @@
 									</td>
 								</tr>
 							</table>
-						</div>
-					<div class="guide"><span class="lb"></span><span class="rb"></span></div>
-				</div>
 				<div id="wfinfo_<%=objectId%>"></div>
-			</td>
+			</li>
 <%
 				
 				
@@ -90,17 +79,16 @@
 			
 				if(!value.close){			
 	%>
-		<td id="mm_LineR"></td>
-		<td>
+		
+		<li class="quizList">
 			<%=fields.childNode.here()%>
-		</td>
+		</li>
 	<%			
 				}
 %>
 
-		</tr>
-		</tbody>
-	</table>
+		</ul>
+	</div>
 <%			
 	}
 %>		
