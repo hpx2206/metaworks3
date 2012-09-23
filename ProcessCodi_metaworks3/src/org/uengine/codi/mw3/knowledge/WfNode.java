@@ -160,6 +160,36 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		public void setParentId(String parentId) {
 			this.parentId = parentId;
 		}
+		
+	String url;
+		public String getUrl() {
+			return url;
+		}
+		public void setUrl(String url) {
+			this.url = url;
+		}
+	String thumbnail;
+		public String getThumbnail() {
+			return thumbnail;
+		}
+		public void setThumbnail(String thumbnail) {
+			this.thumbnail = thumbnail;
+		}
+	String urlNext;
+		public String getUrlNext() {
+			return urlNext;
+		}
+		public void setUrlNext(String urlNext) {
+			this.urlNext = urlNext;
+		}
+	String thumbnailNext;
+		public String getThumbnailNext() {
+			return thumbnailNext;
+		}
+		public void setThumbnailNext(String thumbnailNext) {
+			this.thumbnailNext = thumbnailNext;
+		}
+
 
 	WfNode dragNode;
 		public WfNode getDragNode() {
@@ -495,7 +525,12 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		if(getTypeNext() != null && getTypeNext().length() > 0){
 			newNode.setName(getNameNext());
 			newNode.setType(getTypeNext());
-			
+			if( getUrlNext() != null ){
+				newNode.setUrl(getUrlNext());
+			}
+			if( getThumbnailNext() != null ){
+				newNode.setThumbnail(getThumbnailNext());
+			}
 			node.addChildNode(newNode);
 			
 			node.setFocus(true);
@@ -515,6 +550,12 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 				}				
 			}else{
 				newNode.setName(getNameNext());
+				if( getUrl() != null ){
+					newNode.setUrl(getUrl());
+				}
+				if( getThumbnail() != null ){
+					newNode.setThumbnail(getThumbnail());
+				}
 				
 				parentNode.addChildNode(node.getNo()+1, newNode);			
 							
@@ -885,6 +926,12 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		return new ModalWindow(panel , 1000, 600,  "학습창" );
 	}
 	
+	public ModalWindow showLms() throws Exception{
+		MshupLMSPopup panel = new MshupLMSPopup();
+		panel.setUrl(getUrl());
+		return new ModalWindow(panel , 1000, 700,  "학습 콘텐츠" );
+	}
+	
 	@Override
 	public WfPanel drillInto() throws Exception {
 		WfPanel panel = new WfPanel();
@@ -992,7 +1039,6 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		
 		return popup;
 	}
-	
 	
 	
 }

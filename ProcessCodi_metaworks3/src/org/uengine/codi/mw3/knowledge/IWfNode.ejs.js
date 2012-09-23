@@ -495,8 +495,15 @@ org_uengine_codi_mw3_knowledge_IWfNode.prototype = {
 			this.mw3Obj.typeNext = "img";
 			this.mw3Obj.add();
 		},
-		insertNodeVideo: function(googleData){						
-			this.mw3Obj.nameNext = googleData.playUrl;
+		insertNodeVideo: function(googleData){		
+			var playUrl = googleData.playUrl;
+			var newUrl = "";
+			if( playUrl.indexOf("&autoplay=1") != -1){
+				newUrl = playUrl.replace("&autoplay=1","");
+			}else{
+				newUrl = playUrl;
+			}
+			this.mw3Obj.nameNext = newUrl;
 			this.mw3Obj.typeNext = "video";
 			this.mw3Obj.add();
 		}

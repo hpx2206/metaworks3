@@ -117,7 +117,7 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 			def.setExtendedAttribute( "cells", cells );
 		}
 		
-		processManager.addProcessDefinition("테스트프로세스", 0, "description", false, GlobalContext.serialize(def, ProcessDefinition.class), "", "test/p22.process2", "test/p22.process2", "process2");
+		processManager.addProcessDefinition("테스트프로세스", 0, "description", false, GlobalContext.serialize(def, ProcessDefinition.class), "", "/"+title+".process2", "/"+title+".process2", "process2");
 		
 		return null;
 	}

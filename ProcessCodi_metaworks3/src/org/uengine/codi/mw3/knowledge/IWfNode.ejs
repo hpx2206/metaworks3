@@ -39,15 +39,15 @@
 <%					
 				
 				
-						}else if(value.type=='iframe'){		
+						}else if(value.type=='LMS'){		
 %>
-								<iframe src="<%=value.name%>" width="300" height="300"></iframe>
-								<input type="text" id="wfnode_content_<%=objectId%>" style="height:1px ; border:none;background:transparent" onkeydown="mw3.getFaceHelper('<%=objectId%>').keydown(this)" onkeyup="mw3.getFaceHelper('<%=objectId%>').keyup(this);">
+								<input type="text" id="wfnode_content_<%=objectId%>" style="width:100% ; border:none;background:transparent" style="border:0; font-family: 'Helvetica Neue', Arial, Sans-serif; font-size: 12px; font-weight: normal;background:transparent"" value="<%=value.name ? value.name : ''%>" onkeydown="mw3.getFaceHelper('<%=objectId%>').keydown(this)" onkeyup="mw3.getFaceHelper('<%=objectId%>').keyup(this);">
+								<img src="<%=value.thumbnail%>" width="220" height="150" onclick="<%=methods.showLms.caller()%>">
 <%					
 						}else if(value.type=='video'){		
 %>
 								<input type="text" id="wfnode_content_<%=objectId%>" style="width:100% ; border:none;background:transparent" style="border:0; font-family: 'Helvetica Neue', Arial, Sans-serif; font-size: 12px; font-weight: normal;background:transparent"" value="<%=value.name ? value.name : ''%>" onkeydown="mw3.getFaceHelper('<%=objectId%>').keydown(this)" onkeyup="mw3.getFaceHelper('<%=objectId%>').keyup(this);">
-								<object width="300" height="300"><param name="movie" value="<%=value.name%>"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><param name="autoplay" value="1"></param><embed src="<%=value.name%>" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="300" height="300"></embed></object>
+								<object width="300" height="300"><param name="movie" value="<%=value.name%>"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><param name="autoplay" value="0"></param><embed src="<%=value.name%>" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="300" height="300"></embed></object>
 <%				
 						}else if(value.type=='slideshare'){		
 %>
