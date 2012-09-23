@@ -30,7 +30,7 @@ import org.uengine.codi.mw3.model.Session;
 		"{how: 'uml', face: 'dwr/metaworks/org/uengine/codi/mw3/knowledge/IWfNode_uml.ejs'}",
 		"{how: 'table', face: 'dwr/metaworks/org/uengine/codi/mw3/knowledge/IWfNode_table.ejs'}",
 		"{how: 'mindmap', face: 'dwr/metaworks/org/uengine/codi/mw3/knowledge/IWfNode_mindmap.ejs'}",
-		"{how: 'quiz', face: 'dwr/metaworks/org/uengine/codi/mw3/knowledge/IWfNode_quiz.ejs'}"
+		"{how: 'quiz', face: 'dwr/metaworks/org/uengine/codi/mw3/knowledge/IWfNode_quiz.ejs'}",
 
 		//"{how: 'pt', face: 'dwr/metaworks/org/uengine/codi/mw3/model/IWfNode_uml.ejs'}",
 	})
