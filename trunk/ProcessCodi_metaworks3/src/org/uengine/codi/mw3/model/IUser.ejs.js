@@ -26,7 +26,7 @@ var org_uengine_codi_mw3_model_IUser = function(objectId, className){
 				
 				$('#objDiv_' + objectId).find('.fontgray').text(msg.substring(0,count));
 				count++ ;
-				setTimeout(function(){typing()}, 500); 
+				setTimeout(function(){typing()}, 100); 
 				
 			}
 		};

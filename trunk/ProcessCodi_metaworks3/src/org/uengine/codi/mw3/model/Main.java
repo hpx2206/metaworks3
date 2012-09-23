@@ -130,7 +130,7 @@ public class Main {
 			ContentWindow contentWindow = createNewInstancePanel(session);
 			
 			eastLayout.setCenter(contentWindow);
-			eastLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, south__spacing_open:5, west__spacing_open:5, west__size:'40%'");
+			eastLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, south__spacing_open:5, west__spacing_open:5, west__size:'60%'");
 			eastLayout.setName("east");
 			
 			Layout outerLayout = new Layout();
