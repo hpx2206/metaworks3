@@ -263,8 +263,8 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 			IWfNode dao = (IWfNode)get(getClass(), createKeyObject(), this);
 			this.copyFrom(dao);
 		} catch (Exception e) {
-			if(!"ROOT".equals(getMetaworksContext().getHow()))
-				getMetaworksContext().setHow("NONE");
+//			if(!"ROOT".equals(getMetaworksContext().getHow()))
+//				getMetaworksContext().setHow("NONE");
 		}
 		
 		this.loadChildren();
