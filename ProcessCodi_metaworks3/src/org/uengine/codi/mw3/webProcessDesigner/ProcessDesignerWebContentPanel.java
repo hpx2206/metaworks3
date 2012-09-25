@@ -75,17 +75,27 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 		public void setGraphString(String graphString) {
 			this.graphString = graphString;
 		}
-	
+		
+	@Hidden
+	String processName;
+		public String getProcessName() {
+			return processName;
+		}
+		public void setProcessName(String processName) {
+			this.processName = processName;
+		}
+		
 	@ServiceMethod(callByContent=true, target="popup")
 	public ModalWindow doSave() throws Exception{
 		ProcessDesignerTitle dTitle = new ProcessDesignerTitle();
 		dTitle.setMetaworksContext(new MetaworksContext());
 		dTitle.getMetaworksContext().setWhen("edit");
+		dTitle.setTitle(getProcessName());
 		return new ModalWindow(dTitle , 300, 200,  "프로세스명 입력" );
 	}
 		
 	@ServiceMethod(callByContent=true)
-	public Object[] save(String title) throws Exception{
+	public void save(String title) throws Exception{
 		ArrayList<ProcessDesignerCanvas> cells = new ArrayList<ProcessDesignerCanvas>();
 		ProcessDefinition def = new ProcessDefinition();
 		if( cell != null){
@@ -117,48 +127,8 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 			def.setExtendedAttribute( "cells", cells );
 		}
 		
-		processManager.addProcessDefinition("테스트프로세스", 0, "description", false, GlobalContext.serialize(def, ProcessDefinition.class), "", "/"+title+".process2", "/"+title+".process2", "process2");
+		processManager.addProcessDefinition( title , 0, "description", false, GlobalContext.serialize(def, ProcessDefinition.class), "", "/"+title+".process2", "/"+title+".process2", "process2");
 		
-		return null;
-	}
-	
-	@ServiceMethod(callByContent=true)
-	public Object[] save() throws Exception{
-		ArrayList<ProcessDesignerCanvas> cells = new ArrayList<ProcessDesignerCanvas>();
-		ProcessDefinition def = new ProcessDefinition();
-		if( cell != null){
-			Role[] roles = new Role[0];
-			Activity[] ac = new Activity[0];
-			String title = "프로세스";
-			if( title == null ){
-				throw new Exception("please set process title");
-			}
-			def.setName(title);
-			def.setRoles(roles);
-			def.setChildActivities(ac);
-			for(int i = 0; i < cell.length; i++){
-				ProcessDesignerCanvas cv = cell[i];
-				Activity activity = addActivity(cv);
-				cells.add(cell[i]);
-				if( activity != null ){
-					if( activity instanceof HumanActivity){
-						// 롤 정의가 먼저 필요할듯
-						def.addRole(((HumanActivity)activity).getRole());
-					}
-					def.addChildActivity(activity);
-				}
-			}
-			
-			ProcessDesignerCanvas jsonString = new ProcessDesignerCanvas();
-			jsonString.setJsonString(graphString);
-			cells.add(jsonString);
-			
-			def.setExtendedAttribute( "cells", cells );
-		}
-		
-		processManager.addProcessDefinition("테스트프로세스", 0, "description", false, GlobalContext.serialize(def, ProcessDefinition.class), "", "test/p22.process2", "test/p22.process2", "process2");
-		
-		return null;
 	}
 	
 	public Activity addActivity(ProcessDesignerCanvas cv)  throws Exception{
@@ -168,8 +138,6 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 //			HumanActivity humanActivity = null;
 			KnowledgeActivity KnowledgeActivity = null;
 			if(cv.getData() != null){
-				// escape 처리가 되어있기 때문에 decode 하여 사용 TODO 현재 한글깨짐
-//				String data = URLDecoder.decode(cv.getData(), "UTF-8");
 				String data = unescape(cv.getData());
 				JSONArray jsonArray = (JSONArray)JSONSerializer.toJSON(data);
 				if( jsonArray != null && jsonArray.size() > 0){
@@ -202,8 +170,10 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 	}
 	public void load() throws Exception{
 		
+		String processName = getAlias().substring(0, getAlias().indexOf("."));
+		setProcessName(processName);
 		/// read source file
-		File sourceCodeFile = new File(CodiClassLoader.getMyClassLoader().sourceCodeBase() + "/" + getAlias().substring(0, getAlias().indexOf(".")) + ".process2");
+		File sourceCodeFile = new File(CodiClassLoader.getMyClassLoader().sourceCodeBase() + "/" + processName + ".process2");
 		
 		ByteArrayOutputStream bao = new ByteArrayOutputStream();
 		FileInputStream is;

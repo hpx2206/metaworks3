@@ -3945,8 +3945,9 @@ window.Raphael.svg && function (R) {
                 dx,
                 refX,
                 attr,
-                w = 3,
-                h = 3,
+				marker_stroke_width = stroke / 2 ,
+                w = 7,
+                h = 7,
                 t = 5;
             while (i--) {
                 switch (values[i]) {
@@ -3961,10 +3962,10 @@ window.Raphael.svg && function (R) {
                     case "none":
                         type = values[i];
                         break;
-                    case "wide": h = 5; break;
-                    case "narrow": h = 2; break;
-                    case "long": w = 5; break;
-                    case "short": w = 2; break;
+                    case "wide": h = 10; break;
+                    case "narrow": h = 5; break;
+                    case "long": w = 10; break;
+                    case "short": w = 5; break;
                 }
             }
             if (type == "open") {
@@ -3972,15 +3973,18 @@ window.Raphael.svg && function (R) {
                 h += 2;
                 t += 2;
                 dx = 1;
-                refX = isEnd ? 4 : 1;
+                refX = isEnd ? w-2 : 1;
                 attr = {
                     fill: "none",
-                    stroke: attrs.stroke
+                    stroke: attrs.stroke,
+					'stroke-dasharray': 0
                 };
-            } else if(type == 'open_block' || type == 'open_diamond' || type == 'open_oval') {
+            } else
+			if(type == 'open_block' || type == 'open_diamond' || type == 'open_oval') {
 				refX = dx = w / 2;
 				attr = {
 					fill: 'white',
+					'fill-opacity' : 1,
 					stroke: attrs.stroke,
 					'stroke-dasharray': 0
 				};
@@ -4029,7 +4033,9 @@ window.Raphael.svg && function (R) {
                     use = $($("use"), {
                         "xlink:href": "#" + pathId,
                         transform: (isEnd ? "rotate(180 " + w / 2 + " " + h / 2 + ") " : E) + "scale(" + w / t + "," + h / t + ")",
+//                        transform: (isEnd ? "rotate(180 " + (w-marker_stroke_width) / 2 + " " + (h-marker_stroke_width) / 2 + ") " : E) + "scale(" + (w-stroke*2) / t + "," + (h-stroke*2) / t + ")" + " translate(" + marker_stroke_width + "," + marker_stroke_width +")",
                         "stroke-width": (1 / ((w / t + h / t) / 2)).toFixed(4)
+//                        "stroke-width": marker_stroke_width
                     });
                     marker.appendChild(use);
                     p.defs.appendChild(marker);
@@ -4039,7 +4045,9 @@ window.Raphael.svg && function (R) {
                     use = marker.getElementsByTagName("use")[0];
                 }
                 $(use, attr);
-                var delta = dx * (type != "diamond" && type != "oval");
+//                var delta = dx * (type != "diamond" && type != "oval" && type != "open_diamond" && type != "open_oval");
+//                var delta = dx * (type != "diamond" && type != "oval");
+                var delta = dx;
                 if (isEnd) {
                     from = o._.arrows.startdx * stroke || 0;
                     to = R.getTotalLength(attrs.path) - delta * stroke;
@@ -4791,17 +4799,42 @@ window.Raphael.svg && function (R) {
 			w = obj.offsetWidth;
 			h = obj.offsetHeight;
 		}
-		var el = $("foreignObject");
-		svg.canvas && svg.canvas.appendChild(el);
-		var res = new Element(el, svg);
-		res.attrs = {x: x, y: y, width: w, height: h};
-		res.type = "foreignObject";
-		$(el, res.attrs);
-		if (obj) {
-			var div = document.createElement('div');
-			div.innerHTML = obj;
-			res.node.appendChild(div);
+		var res;
+		if ((/msie 9/).test(navigator.userAgent.toLowerCase()) || document.documentMode === 9) {
+			// TODO : 개선필요
+			var el = $("div");
+			el.style.cssText = [
+				"position:absolute",
+				"left:" + (x - w/2) + "px",
+				"top:" + (y - h/2) + "px",
+				"width:" + w + "px",
+				"height:" + h + "px"
+			].join(";") + ";";
+
+			svg.canvas && svg.canvas.appendChild(el);
+			res = new Element(el, svg);
+			res.attrs = {x: x, y: y, width: w, height: h};
+			res.type = "foreignObject";
+			$(el, res.attrs);
+			if (obj) {
+				var div = document.createElement('div');
+				div.innerHTML = obj;
+				res.node.appendChild(div);
+			}
+		} else {
+			var el = $("foreignObject");
+			svg.canvas && svg.canvas.appendChild(el);
+			res = new Element(el, svg);
+			res.attrs = {x: x, y: y, width: w, height: h};
+			res.type = "foreignObject";
+			$(el, res.attrs);
+			if (obj) {
+				var div = document.createElement('div');
+				div.innerHTML = obj;
+				res.node.appendChild(div);
+			}
 		}
+
 		return res;
 	};
     R._engine.setSize = function (width, height) {
