@@ -635,7 +635,13 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor) {
 					cell['@toEdge'] = $(item).attr('_toedge');
 				}
 				if (shape.label) {
-					cell['@label'] = shape.label;
+					cell['@label'] = escape(shape.label);
+				}
+				if (shape.fromLabel) {
+					cell['@fromLabel'] = escape(shape.fromLabel);
+				}
+				if (shape.toLabel) {
+					cell['@toLabel'] = escape(shape.toLabel);
 				}
 				if (shape.angle && shape.angle !== 0) {
 					cell['@angle'] = shape.angle;
@@ -643,9 +649,9 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor) {
 				if (shape instanceof OG.shape.ImageShape) {
 					cell['@value'] = shape.image;
 				} else if (shape instanceof OG.shape.HtmlShape) {
-					cell['@value'] = escape(shape.htmlString);
+					cell['@value'] = escape(shape.html);
 				} else if (shape instanceof OG.shape.TextShape) {
-					cell['@value'] = shape.text;
+					cell['@value'] = escape(shape.text);
 				} else if (shape instanceof OG.shape.EdgeShape) {
 					vertices = geom.getVertices();
 					from = vertices[0];
@@ -683,7 +689,7 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor) {
 	 */
 	this.loadJSON = function (json) {
 		var i, cell, shape, id, parent, shapeType, shapeId, x, y, width, height, style, from, to,
-			fromEdge, toEdge, label, angle, value, data, element;
+			fromEdge, toEdge, label, fromLabel, toLabel, angle, value, data, element;
 
 		_RENDERER.clear();
 
@@ -705,9 +711,13 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor) {
 				fromEdge = cell[i]['@fromEdge'];
 				toEdge = cell[i]['@toEdge'];
 				label = cell[i]['@label'];
+				fromLabel = cell[i]['@fromLabel'];
+				toLabel = cell[i]['@toLabel'];
 				angle = cell[i]['@angle'];
 				value = cell[i]['@value'];
 				data = cell[i]['@data'];
+
+				label = label ? unescape(label) : label;
 
 				switch (shapeType) {
 				case OG.Constants.SHAPE_TYPE.GEOM:
@@ -724,6 +734,12 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor) {
 						shape = eval('new ' + shapeId + '(' + value + ', \'' + label + '\')');
 					} else {
 						shape = eval('new ' + shapeId + '(' + value + ')');
+					}
+					if (fromLabel) {
+						shape.fromLabel = unescape(fromLabel);
+					}
+					if (toLabel) {
+						shape.toLabel = unescape(toLabel);
 					}
 					element = this.drawShape(null, shape, null, OG.JSON.decode(style), id, parent);
 					break;
@@ -744,7 +760,7 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor) {
 					element = this.drawShape([x, y], shape, [width, height, angle], OG.JSON.decode(style), id, parent);
 					break;
 				case OG.Constants.SHAPE_TYPE.TEXT:
-					shape = eval('new ' + shapeId + '(\'' + value + '\')');
+					shape = eval('new ' + shapeId + '(\'' + unescape(value) + '\')');
 					element = this.drawShape([x, y], shape, [width, height, angle], OG.JSON.decode(style), id, parent);
 					break;
 				}

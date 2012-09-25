@@ -34,7 +34,8 @@ public class ProcessDesignerTitle implements ContextAware{
 	@ServiceMethod(callByContent=true)
 	public Object[] save() throws Exception{
 		processDesignerWebContentPanel.processManager = processManager;
-		return new Object[]{ processDesignerWebContentPanel.save( title ) , new Remover(new Popup())};
+		processDesignerWebContentPanel.save( title );
+		return new Object[]{ new Remover(this)};
 	}
 	
 	@AutowiredFromClient

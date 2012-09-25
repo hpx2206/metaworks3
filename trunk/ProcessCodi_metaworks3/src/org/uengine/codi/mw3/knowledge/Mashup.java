@@ -2,6 +2,7 @@ package org.uengine.codi.mw3.knowledge;
 
 import org.metaworks.annotation.AutowiredToClient;
 import org.metaworks.annotation.Face;
+import org.metaworks.annotation.Hidden;
 
 @Face(ejsPath="genericfaces/Tab.ejs",
 options={"hideLabels", "tabsBottom"},
@@ -12,7 +13,7 @@ public class Mashup {
 	
 	public Mashup(){
 		setMashupGoogleImage(new MashupGoogleImage());
-		setMashupLMS(new MashupLMS());
+//		setMashupLMS(new MashupLMS());
 		setMashupKMS(new MashupKMS());
 		setMashupVideo(new MashupVideo());
 		setMashupSlideshare(new MashupSlideshare());
@@ -32,6 +33,7 @@ public class Mashup {
 		
 		
 	MashupLMS mashupLMS;
+	@Hidden
 	@Face(displayName="학습 콘텐츠")
 		public MashupLMS getMashupLMS() {
 			return mashupLMS;

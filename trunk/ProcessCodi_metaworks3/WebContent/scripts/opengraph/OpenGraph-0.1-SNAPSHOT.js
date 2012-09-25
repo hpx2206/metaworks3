@@ -116,6 +116,11 @@ OG.common.Constants = {
 	LABEL_EDITOR_HEIGHT: 16,
 
 	/**
+	 * 시작, 끝점 라벨의 offsetTop 값
+	 */
+	FROMTO_LABEL_OFFSET_TOP: 15,
+
+	/**
 	 * 라벨 ID의 suffix 정의
 	 */
 	LABEL_SUFFIX: "_LABEL",
@@ -126,6 +131,16 @@ OG.common.Constants = {
 	LABEL_EDITOR_SUFFIX: "_LABEL_EDITOR",
 
 	/**
+	 * 시작점 라벨 ID의 suffix 정의
+	 */
+	FROM_LABEL_SUFFIX: '_FROMLABEL',
+
+	/**
+	 * 끝점 라벨 ID의 suffix 정의
+	 */
+	TO_LABEL_SUFFIX: '_TOLABEL',
+
+	/**
 	 * 디폴트 스타일 정의
 	 */
 	DEFAULT_STYLE: {
@@ -134,8 +149,8 @@ OG.common.Constants = {
 		TEXT          : { stroke: "none", "text-anchor": "middle" },
 		HTML          : { "label-position": "bottom", "text-anchor": "top", "vertical-align": "top" },
 		IMAGE         : { "label-position": "bottom", "text-anchor": "top", "vertical-align": "top" },
-		EDGE          : { stroke: "black", "stroke-width": 2, "edge-type": "plain", "edge-direction": "c c", "arrow-start": "none", "arrow-end": "classic-wide-long", "stroke-dasharray": "", "label-position": "center" },
-		EDGE_SHADOW   : { stroke: "#00FF00", "stroke-width": 2, "arrow-start": "none", "arrow-end": "none", "stroke-dasharray": "- " },
+		EDGE          : { stroke: "black", "stroke-width": 1, "edge-type": "plain", "edge-direction": "c c", "arrow-start": "none", "arrow-end": "classic-wide-long", "stroke-dasharray": "", "label-position": "center" },
+		EDGE_SHADOW   : { stroke: "#00FF00", "stroke-width": 1, "arrow-start": "none", "arrow-end": "none", "stroke-dasharray": "- " },
 		GROUP         : { stroke: "none", fill: "white", "fill-opacity": 0, "label-position": "bottom", "text-anchor": "middle", "vertical-align": "top" },
 		GUIDE_BBOX    : { stroke: "#00FF00", fill: "none", "stroke-dasharray": "- ", "shape-rendering": "crispEdges" },
 		GUIDE_UL      : { stroke: "black", fill: "#00FF00", cursor: "nwse-resize", "shape-rendering": "crispEdges" },
@@ -3775,9 +3790,11 @@ OG.ImageShape = OG.shape.ImageShape;
  * @param {Number[]} from 와이어 시작 좌표
  * @param {Number[]} to 와이어 끝 좌표
  * @param {String} label 라벨
+ * @param {String} fromLabel 시작점 라벨
+ * @param {String} toLabel 끝점 라벨
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
-OG.shape.EdgeShape = function (from, to, label) {
+OG.shape.EdgeShape = function (from, to, label, fromLabel, toLabel) {
 	this.TYPE = OG.Constants.SHAPE_TYPE.EDGE;
 
 	this.SHAPE_ID = 'OG.shape.EdgeShape';
@@ -3786,6 +3803,8 @@ OG.shape.EdgeShape = function (from, to, label) {
 	this.to = to;
 
 	this.label = label;
+	this.fromLabel = fromLabel;
+	this.toLabel = toLabel;
 
 	/**
 	 * 드로잉할 Shape 을 생성하여 반환한다.
@@ -3809,7 +3828,7 @@ OG.shape.EdgeShape = function (from, to, label) {
 	 * @override
 	 */
 	this.clone = function () {
-		return new OG.shape.EdgeShape(this.from, this.to, this.label);
+		return new OG.shape.EdgeShape(this.from, this.to, this.label, this.fromLabel, this.toLabel);
 	};
 };
 OG.shape.EdgeShape.prototype = new OG.shape.IShape();
@@ -4055,17 +4074,17 @@ OG.HorizontalLaneShape = OG.shape.HorizontalLaneShape;
  * @extends OG.shape.IShape
  * @requires OG.common.*, OG.geometry.*
  *
- * @param {String} htmlString 임베드 HTML String
+ * @param {String} html 임베드 HTML String
  * @param {String} label 라벨
  * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
  */
-OG.shape.HtmlShape = function (htmlString, label) {
+OG.shape.HtmlShape = function (html, label) {
 
 	this.TYPE = OG.Constants.SHAPE_TYPE.HTML;
 
 	this.SHAPE_ID = 'OG.shape.HtmlShape';
 
-	this.htmlString = htmlString || "";
+	this.html = html || "";
 
 	this.label = label;
 
@@ -4100,7 +4119,7 @@ OG.shape.HtmlShape = function (htmlString, label) {
 	 * @override
 	 */
 	this.createShape = function () {
-		return this.htmlString;
+		return this.html;
 	};
 
 	/**
@@ -4110,7 +4129,7 @@ OG.shape.HtmlShape = function (htmlString, label) {
 	 * @override
 	 */
 	this.clone = function () {
-		return new OG.shape.HtmlShape(this.htmlString, this.label);
+		return new OG.shape.HtmlShape(this.html, this.label);
 	};
 };
 OG.shape.HtmlShape.prototype = new OG.shape.IShape();
@@ -6740,9 +6759,20 @@ OG.renderer.IRenderer = function () {
 	 * @param {String} text 텍스트
 	 * @param {Object} style 스타일
 	 * @return {Element} DOM Element
-	 * @override
 	 */
 	this.drawLabel = function (shapeElement, text, style) {
+		throw new OG.NotImplementedException();
+	};
+
+	/**
+	 * Edge 의 from, to Label 을 캔버스에 위치 및 사이즈 지정하여 드로잉한다.
+	 *
+	 * @param {Element,String} shapeElement Shape DOM element or ID
+	 * @param {String} text 텍스트
+	 * @param {String} type 유형(FROM or TO)
+	 * @return {Element} DOM Element
+	 */
+	this.drawEdgeLabel = function (shapeElement, text, type) {
 		throw new OG.NotImplementedException();
 	};
 
@@ -6953,7 +6983,6 @@ OG.renderer.IRenderer = function () {
 	 * Shape 을 캔버스에서 관련된 모두를 삭제한다.
 	 *
 	 * @param {Element,String} element Element 또는 ID
-	 * @override
 	 */
 	this.removeShape = function (element) {
 		throw new OG.NotImplementedException();
@@ -7228,7 +7257,6 @@ OG.renderer.IRenderer = function () {
 	 * 부모노드기준으로 캔버스 루트 엘리먼트의 BoundingBox 영역 정보를 반환한다.
 	 *
 	 * @return {Object} {width, height, x, y, x2, y2}
-	 * @override
 	 */
 	this.getRootBBox = function () {
 		throw new OG.NotImplementedException();
@@ -7887,7 +7915,7 @@ OG.renderer.RaphaelRenderer = function (container, containerSize, backgroundColo
 	this.drawShape = function (position, shape, size, style, id) {
 		var width = size ? size[0] : 100,
 			height = size ? size[1] : 100,
-			groupNode, geometry, text, image, htmlString, envelope, label;
+			groupNode, geometry, text, image, html, envelope, label;
 
 		if (shape instanceof OG.shape.GeomShape) {
 			geometry = shape.createShape();
@@ -7913,10 +7941,10 @@ OG.renderer.RaphaelRenderer = function (container, containerSize, backgroundColo
 			shape.angle = groupNode.angle;
 			shape.geom = groupNode.geom;
 		} else if (shape instanceof OG.shape.HtmlShape) {
-			htmlString = shape.createShape();
+			html = shape.createShape();
 
-			groupNode = this.drawHtml(position, htmlString, size, style, id);
-			shape.htmlString = groupNode.htmlString;
+			groupNode = this.drawHtml(position, html, size, style, id);
+			shape.html = groupNode.html;
 			shape.angle = groupNode.angle;
 			shape.geom = groupNode.geom;
 		} else if (shape instanceof OG.shape.EdgeShape) {
@@ -7944,6 +7972,11 @@ OG.renderer.RaphaelRenderer = function (container, containerSize, backgroundColo
 		// Draw Label
 		if (!(shape instanceof OG.shape.TextShape)) {
 			this.drawLabel(groupNode);
+
+			if (shape instanceof  OG.shape.EdgeShape) {
+				this.drawEdgeLabel(groupNode, null, 'FROM');
+				this.drawEdgeLabel(groupNode, null, 'TO');
+			}
 		}
 		if (groupNode.geom) {
 			if (OG.Util.isIE7()) {
@@ -8171,14 +8204,14 @@ OG.renderer.RaphaelRenderer = function (container, containerSize, backgroundColo
 	 * 임베드 HTML String 을 캔버스에 위치 및 사이즈 지정하여 드로잉한다.
 	 *
 	 * @param {Number[]} position 드로잉할 위치 좌표(중앙 기준)
-	 * @param {String} htmlString 임베드 HTML String
+	 * @param {String} html 임베드 HTML String
 	 * @param {Number[]} size Image Width, Height, Angle
 	 * @param {OG.geometry.Style,Object} style 스타일
 	 * @param {String} id Element ID 지정
 	 * @return {Element} DOM Element
 	 * @override
 	 */
-	this.drawHtml = function (position, htmlString, size, style, id) {
+	this.drawHtml = function (position, html, size, style, id) {
 		var width = size ? size[0] : null,
 			height = size ? size[1] : null,
 			angle = size ? size[2] || 0 : 0,
@@ -8202,7 +8235,7 @@ OG.renderer.RaphaelRenderer = function (container, containerSize, backgroundColo
 		}
 
 		// Draw foreign object
-		element = _PAPER.foreignObject(htmlString, position[0], position[1], width, height);
+		element = _PAPER.foreignObject(html, position[0], position[1], width, height);
 		element.attr(_style);
 
 		// real size
@@ -8226,21 +8259,21 @@ OG.renderer.RaphaelRenderer = function (container, containerSize, backgroundColo
 		// Add to group
 		add(element);
 		group.node.appendChild(element.node);
-		group.node.htmlString = htmlString;
+		group.node.html = html;
 		group.node.angle = angle;
 		group.node.geom = geom;
 		group.attr(OG.Constants.DEFAULT_STYLE.SHAPE);
 
 		if (group.node.shape) {
-			group.node.shape.htmlString = htmlString;
+			group.node.shape.html = html;
 			group.node.shape.angle = angle;
 			group.node.shape.geom = geom;
 
-			if (group.node.htmlString) {
+			if (group.node.html) {
 				if (OG.Util.isIE7()) {
-					group.node.removeAttribute("htmlString");
+					group.node.removeAttribute("html");
 				} else {
-					delete group.node.htmlString;
+					delete group.node.html;
 				}
 			}
 			if (group.node.angle) {
@@ -9101,6 +9134,53 @@ OG.renderer.RaphaelRenderer = function (container, containerSize, backgroundColo
 	};
 
 	/**
+	 * Edge 의 from, to Label 을 캔버스에 위치 및 사이즈 지정하여 드로잉한다.
+	 *
+	 * @param {Element,String} shapeElement Shape DOM element or ID
+	 * @param {String} text 텍스트
+	 * @param {String} type 유형(FROM or TO)
+	 * @return {Element} DOM Element
+	 * @override
+	 */
+	this.drawEdgeLabel = function (shapeElement, text, type) {
+		var rElement = getREleById(OG.Util.isElement(shapeElement) ? shapeElement.id : shapeElement),
+			element, vertices, labelElement, position, edgeLabel, suffix;
+
+		if (rElement && rElement.node.shape) {
+			element = rElement.node;
+
+			if (element.shape instanceof OG.shape.EdgeShape) {
+				vertices = element.shape.geom.getVertices();
+				if (type === 'FROM') {
+					position = [vertices[0].x, vertices[0].y + OG.Constants.FROMTO_LABEL_OFFSET_TOP];
+					element.shape.fromLabel = text || element.shape.fromLabel;
+					edgeLabel = element.shape.fromLabel;
+					suffix = OG.Constants.FROM_LABEL_SUFFIX;
+				} else {
+					position = [vertices[vertices.length - 1].x, vertices[vertices.length - 1].y + OG.Constants.FROMTO_LABEL_OFFSET_TOP];
+					element.shape.toLabel = text || element.shape.toLabel;
+					edgeLabel = element.shape.toLabel;
+					suffix = OG.Constants.TO_LABEL_SUFFIX;
+				}
+
+				if (edgeLabel) {
+					labelElement = drawLabel(
+						position,
+						edgeLabel,
+						[0, 0],
+						element.shape.geom.style,
+						element.id + suffix,
+						false
+					);
+					element.appendChild(labelElement);
+				}
+			}
+		}
+
+		return labelElement;
+	};
+
+	/**
 	 * Element 에 저장된 geom, angle, image, text 정보로 shape 을 redraw 한다.
 	 *
 	 * @param {Element} element Shape 엘리먼트
@@ -9189,7 +9269,7 @@ OG.renderer.RaphaelRenderer = function (container, containerSize, backgroundColo
 				center = envelope.getCentroid();
 				width = envelope.getWidth();
 				height = envelope.getHeight();
-				element = this.drawHtml([center.x, center.y], element.shape.htmlString,
+				element = this.drawHtml([center.x, center.y], element.shape.html,
 					[width, height, element.shape.angle], element.shape.geom.style, element.id);
 				this.redrawConnectedEdge(element, excludeEdgeId);
 				this.drawLabel(element);
@@ -9197,6 +9277,8 @@ OG.renderer.RaphaelRenderer = function (container, containerSize, backgroundColo
 			case OG.Constants.SHAPE_TYPE.EDGE:
 				element = this.drawEdge(element.shape.geom, element.shape.geom.style, element.id);
 				this.drawLabel(element);
+				this.drawEdgeLabel(element, null, 'FROM');
+				this.drawEdgeLabel(element, null, 'TO');
 				break;
 			case OG.Constants.SHAPE_TYPE.GROUP:
 				if (element.shape.isCollapsed) {
@@ -9463,6 +9545,8 @@ OG.renderer.RaphaelRenderer = function (container, containerSize, backgroundColo
 
 		// Draw Label
 		this.drawLabel(edge, label);
+		this.drawEdgeLabel(edge, null, 'FROM');
+		this.drawEdgeLabel(edge, null, 'TO');
 
 		// restore edge-direction
 		OG.Util.apply(edge.shape.geom.style.map, {"edge-direction": orgFromDrct + " " + orgToDrct});
@@ -11033,17 +11117,11 @@ OG.handler.EventHandler = function (renderer) {
 			};
 		},
 		getOffset = function (event) {
-			// fireforx 에 대한 처리
-			if (typeof event.offsetX === "undefined" || typeof event.offsetY === "undefined") {
-				var targetOffset = $(event.target).offset();
-				event.offsetX = event.pageX - targetOffset.left;
-				event.offsetY = event.pageY - targetOffset.top;
-			}
+			var container = _RENDERER.getContainer();
 
-			// container 로 부터 이벤트의 offset 을 리턴
 			return {
-				x: event.offsetX,
-				y: event.offsetY
+				x: event.pageX - $(container).offset().left + container.scrollLeft,
+				y: event.pageY - $(container).offset().top + container.scrollTop
 			};
 		};
 
@@ -11303,6 +11381,8 @@ OG.handler.EventHandler = function (renderer) {
 
 							// Draw Label
 							_RENDERER.drawLabel(element);
+							_RENDERER.drawEdgeLabel(element, null, 'FROM');
+							_RENDERER.drawEdgeLabel(element, null, 'TO');
 						},
 						stop : function (event) {
 							var eventOffset = getOffset(event),
@@ -11331,6 +11411,8 @@ OG.handler.EventHandler = function (renderer) {
 
 							// Draw Label
 							_RENDERER.drawLabel(element);
+							_RENDERER.drawEdgeLabel(element, null, 'FROM');
+							_RENDERER.drawEdgeLabel(element, null, 'TO');
 
 							_RENDERER.setAttr(element, {cursor: OG.Constants.SELECTABLE && OG.Constants.MOVABLE ?
 								'move' : (OG.Constants.SELECTABLE ? 'pointer' : OG.Constants.DEFAULT_STYLE.SHAPE.cursor) });
@@ -11917,7 +11999,7 @@ OG.handler.EventHandler = function (renderer) {
 	 */
 	this.enableEditLabel = function (element) {
 		$(element).bind({
-			dblclick: function () {
+			dblclick: function (event) {
 				var container = _RENDERER.getContainer(),
 					envelope = element.shape.geom.getBoundary(),
 					upperLeft = envelope.getUpperLeft(),
@@ -11929,6 +12011,8 @@ OG.handler.EventHandler = function (renderer) {
 					editorId = element.id + OG.Constants.LABEL_EDITOR_SUFFIX,
 					labelEditor,
 					textAlign = "center",
+					fromLabel,
+					toLabel,
 					/**
 					 * 라인(꺽은선)의 중심위치를 반환한다.
 					 *
@@ -11977,7 +12061,27 @@ OG.handler.EventHandler = function (renderer) {
 					break;
 				}
 
-				if ($(element).attr("_shape") === OG.Constants.SHAPE_TYPE.TEXT) {
+				if ($(element).attr("_shape") === OG.Constants.SHAPE_TYPE.HTML) {
+					// Html Shape
+					$(labelEditor).css(OG.Util.apply(OG.Constants.DEFAULT_STYLE.LABEL_EDITOR, {
+						left: left, top: top, width: width, height: height, "text-align": 'left', overflow: "hidden", resize: "none"
+					}));
+					$(labelEditor).focus();
+					$(labelEditor).val(element.shape.html);
+
+					$(labelEditor).bind({
+						focusout: function () {
+							element.shape.html = this.value;
+							if (element.shape.html) {
+								_RENDERER.redrawShape(element);
+								this.parentNode.removeChild(this);
+							} else {
+								_RENDERER.removeShape(element);
+								this.parentNode.removeChild(this);
+							}
+						}
+					});
+				} else if ($(element).attr("_shape") === OG.Constants.SHAPE_TYPE.TEXT) {
 					// Text Shape
 					$(labelEditor).css(OG.Util.apply(OG.Constants.DEFAULT_STYLE.LABEL_EDITOR, {
 						left: left, top: top, width: width, height: height, "text-align": textAlign, overflow: "hidden", resize: "none"
@@ -12000,12 +12104,14 @@ OG.handler.EventHandler = function (renderer) {
 				} else if ($(element).attr("_shape") === OG.Constants.SHAPE_TYPE.EDGE) {
 					// Edge Shape
 					if (element.shape.label && _RENDERER.isSVG()) {
-						$(element).find("text").each(function (idx, item) {
-							bBox = _RENDERER.getBBox(item);
-							left = bBox.x - 10;
-							top = bBox.y;
-							width = bBox.width + 20;
-							height = bBox.height;
+						$(element).children('[id$=_LABEL]').each(function (idx, item) {
+							$(item).find("text").each(function (idx2, item2) {
+								bBox = _RENDERER.getBBox(item2);
+								left = bBox.x - 10;
+								top = bBox.y;
+								width = bBox.width + 20;
+								height = bBox.height;
+							});
 						});
 					} else {
 						centerOfEdge = getCenterOfEdge(element);
@@ -12015,15 +12121,51 @@ OG.handler.EventHandler = function (renderer) {
 						height = OG.Constants.LABEL_EDITOR_HEIGHT;
 					}
 
+					// 시작점 라벨인 경우
+					$(event.srcElement).parents('[id$=_FROMLABEL]').each(function (idx, item) {
+						$(item).find("text").each(function (idx2, item2) {
+							bBox = _RENDERER.getBBox(item2);
+							left = bBox.x - 10;
+							top = bBox.y;
+							width = bBox.width + 20;
+							height = bBox.height;
+							fromLabel = element.shape.fromLabel;
+						});
+					});
+
+					// 끝점 라벨인 경우
+					$(event.srcElement).parents('[id$=_TOLABEL]').each(function (idx, item) {
+						$(item).find("text").each(function (idx2, item2) {
+							bBox = _RENDERER.getBBox(item2);
+							left = bBox.x - 10;
+							top = bBox.y;
+							width = bBox.width + 20;
+							height = bBox.height;
+							toLabel = element.shape.toLabel;
+						});
+					});
+
 					$(labelEditor).css(OG.Util.apply(OG.Constants.DEFAULT_STYLE.LABEL_EDITOR, {
 						left: left, top: top, width: width, height: height, overflow: "hidden", resize: "none"
 					}));
 					$(labelEditor).focus();
-					$(labelEditor).val(element.shape.label);
+
+					if (fromLabel || toLabel) {
+						$(labelEditor).val(fromLabel ? element.shape.fromLabel : element.shape.toLabel);
+					} else {
+						$(labelEditor).val(element.shape.label);
+					}
 
 					$(labelEditor).bind({
 						focusout: function () {
-							_RENDERER.drawLabel(element, this.value);
+							if (fromLabel) {
+								_RENDERER.drawEdgeLabel(element, this.value, 'FROM');
+							} else if (toLabel) {
+								_RENDERER.drawEdgeLabel(element, this.value, 'TO');
+							} else {
+								_RENDERER.drawLabel(element, this.value);
+							}
+
 							this.parentNode.removeChild(this);
 						}
 					});
@@ -12578,9 +12720,9 @@ OG.handler.EventHandler = function (renderer) {
 			});
 			$(rootEle).bind("mousemove", function (event) {
 				var first = $(this).data("dragBox_first"),
-					eventOffset = getOffset(event),
-					width, height, x, y;
+					eventOffset, width, height, x, y;
 				if (first) {
+					eventOffset = getOffset(event);
 					width = eventOffset.x - first.x;
 					height = eventOffset.y - first.y;
 					x = width <= 0 ? first.x + width : first.x;
@@ -12590,10 +12732,10 @@ OG.handler.EventHandler = function (renderer) {
 			});
 			$(rootEle).bind("mouseup", function (event) {
 				var first = $(this).data("dragBox_first"),
-					eventOffset = getOffset(event),
-					width, height, x, y, envelope, guide;
+					eventOffset, width, height, x, y, envelope, guide;
 				_RENDERER.removeRubberBand(rootEle);
 				if (first) {
+					eventOffset = getOffset(event);
 					width = eventOffset.x - first.x;
 					height = eventOffset.y - first.y;
 					x = width <= 0 ? first.x + width : first.x;
@@ -13441,7 +13583,13 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor) {
 					cell['@toEdge'] = $(item).attr('_toedge');
 				}
 				if (shape.label) {
-					cell['@label'] = shape.label;
+					cell['@label'] = escape(shape.label);
+				}
+				if (shape.fromLabel) {
+					cell['@fromLabel'] = escape(shape.fromLabel);
+				}
+				if (shape.toLabel) {
+					cell['@toLabel'] = escape(shape.toLabel);
 				}
 				if (shape.angle && shape.angle !== 0) {
 					cell['@angle'] = shape.angle;
@@ -13449,9 +13597,9 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor) {
 				if (shape instanceof OG.shape.ImageShape) {
 					cell['@value'] = shape.image;
 				} else if (shape instanceof OG.shape.HtmlShape) {
-					cell['@value'] = escape(shape.htmlString);
+					cell['@value'] = escape(shape.html);
 				} else if (shape instanceof OG.shape.TextShape) {
-					cell['@value'] = shape.text;
+					cell['@value'] = escape(shape.text);
 				} else if (shape instanceof OG.shape.EdgeShape) {
 					vertices = geom.getVertices();
 					from = vertices[0];
@@ -13489,7 +13637,7 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor) {
 	 */
 	this.loadJSON = function (json) {
 		var i, cell, shape, id, parent, shapeType, shapeId, x, y, width, height, style, from, to,
-			fromEdge, toEdge, label, angle, value, data, element;
+			fromEdge, toEdge, label, fromLabel, toLabel, angle, value, data, element;
 
 		_RENDERER.clear();
 
@@ -13511,9 +13659,13 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor) {
 				fromEdge = cell[i]['@fromEdge'];
 				toEdge = cell[i]['@toEdge'];
 				label = cell[i]['@label'];
+				fromLabel = cell[i]['@fromLabel'];
+				toLabel = cell[i]['@toLabel'];
 				angle = cell[i]['@angle'];
 				value = cell[i]['@value'];
 				data = cell[i]['@data'];
+
+				label = label ? unescape(label) : label;
 
 				switch (shapeType) {
 				case OG.Constants.SHAPE_TYPE.GEOM:
@@ -13530,6 +13682,12 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor) {
 						shape = eval('new ' + shapeId + '(' + value + ', \'' + label + '\')');
 					} else {
 						shape = eval('new ' + shapeId + '(' + value + ')');
+					}
+					if (fromLabel) {
+						shape.fromLabel = unescape(fromLabel);
+					}
+					if (toLabel) {
+						shape.toLabel = unescape(toLabel);
 					}
 					element = this.drawShape(null, shape, null, OG.JSON.decode(style), id, parent);
 					break;
@@ -13550,7 +13708,7 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor) {
 					element = this.drawShape([x, y], shape, [width, height, angle], OG.JSON.decode(style), id, parent);
 					break;
 				case OG.Constants.SHAPE_TYPE.TEXT:
-					shape = eval('new ' + shapeId + '(\'' + value + '\')');
+					shape = eval('new ' + shapeId + '(\'' + unescape(value) + '\')');
 					element = this.drawShape([x, y], shape, [width, height, angle], OG.JSON.decode(style), id, parent);
 					break;
 				}
