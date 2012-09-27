@@ -10,4 +10,6 @@ public interface IRoleUser extends IDAO {
 
 	public String getEmpCode();
 	public void setEmpCode(String empCode);
+	
+	public int removeMe() throws Exception;
 }
