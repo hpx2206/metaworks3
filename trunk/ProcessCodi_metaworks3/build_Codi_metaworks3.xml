@@ -19,7 +19,7 @@
 
 	<target name="apply">
 		
-		<copy todir="${was.home}/webapps/uengine-web/" overwrite="no">
+		<copy todir="${was.home}/webapps/uengine-web/" overwrite="yes">
 			<fileset dir="WebContent">
 	 			<include name="**/*.*"/>
 			</fileset>
