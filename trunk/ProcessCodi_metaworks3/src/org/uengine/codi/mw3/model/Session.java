@@ -39,7 +39,7 @@ public class Session implements ContextAware{
 		public void setUser(IUser user) {
 			this.user = user;
 		}
-
+		
 	String defId;	
 		public String getDefId() {
 			return defId;

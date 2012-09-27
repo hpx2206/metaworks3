@@ -199,4 +199,20 @@ public class Role extends Database<IRole> implements IRole {
 		return popup;		
 	}
 	
+	public IRole findByEmployee(IEmployee employee) throws Exception {
+		StringBuffer sb = new StringBuffer();
+		sb.append("SELECT a.*");
+		sb.append("  FROM roleTable a, roleUserTable b");
+		sb.append(" WHERE a.rolecode = b.rolecode");
+		sb.append("   AND a.isDeleted=?isDeleted");
+		sb.append("   AND b.empCode=?empCode");
+		
+		IRole role = sql(sb.toString());
+		role.set("empCode", employee.getEmpCode());
+		role.setIsDeleted("0");
+		role.select();
+		role.setMetaworksContext(this.getMetaworksContext());
+		
+		return role;		
+	}
 }
