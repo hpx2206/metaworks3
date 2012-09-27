@@ -58,5 +58,6 @@ public interface IRole extends IDAO {
 	// function
 	public IRole findByGlobalCom() throws Exception;
 	
+	public IRole findByEmployee(IEmployee employee) throws Exception;
 		
 }
