@@ -396,8 +396,21 @@ public class WebObjectType{
 			if(getAnnotationDeeply(tryingClasses, fd.getName(), AutowiredToClient.class)!=null)
 				fd.setAttribute("autowiredToClient", new Boolean(true));
 
-			if(getAnnotationDeeply(tryingClasses, fd.getName(), NonEditable.class)!=null)
+			NonEditable nonEditable = (NonEditable)getAnnotationDeeply(tryingClasses, fd.getName(), NonEditable.class);
+			
+			// 2012-09-27 when 따른 NonEditable 처리 추가
+			if(nonEditable!=null){
 				fd.setAttribute("nonEditable", new Boolean(true));
+				
+				if(nonEditable.when().length > 0){
+					Map whens = new HashMap();
+					for(String when : nonEditable.when()){
+						whens.put(when, when);
+					}
+					
+					fd.setAttribute("nonEditable.when", whens);
+				}
+			}
 			
 			// 2012-04-12 cjw where, how 정보 추가
 			Available available = (Available) getAnnotationDeeply(tryingClasses, fd.getName(), Available.class); 
@@ -1173,6 +1186,9 @@ public class WebObjectType{
 	       	String contextOnly = path.substring(0, path.substring(1).indexOf("/")+1);
 			String protocol = urlURL.getProtocol();
 			
+			//if("/dwr".equals(contextOnly))
+			//	contextOnly = "";
+						
 			//host = "127.0.0.1";
 			
 			new URL(protocol + "://" + host + ":" + port + contextOnly + "/metaworks/" + componentName).openStream();

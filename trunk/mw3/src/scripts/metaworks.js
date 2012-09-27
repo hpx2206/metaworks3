@@ -1374,9 +1374,20 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				this.objects[objectId] = value; //caches the values
 				this._armObject(objectId, value); //empower the object !
 				
+				
+				// 2012-09-27 cjw 슈퍼클래스까지 keyMapping
 				var objKey = this._createObjectKey(value);
 				if(objKey)
 					this.objectId_KeyMapping[objKey] = objectId;
+				/*
+				var objKeys = this._createObjectKey(value, true);
+				if(objKeys && objKeys.length){
+					for(var i=0; i<objKeys.length; i++){
+						this.objectId_KeyMapping[objKeys[i]] = objectId;
+					}
+				}
+				*/
+				
 				
 				this._wireObject(value, objectId);
 
@@ -3225,7 +3236,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				if(message != null && message.indexOf('$')==0 && this.getMessage){
 					message = message.substring(1);					
 					message = this.getMessage(message);
-				}			
+				}
 				
 				return message;
 			};
@@ -3302,8 +3313,15 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 						value = this.fieldDescriptor.attributes['resource'];
 					}
 
-					if(this.fieldDescriptor.attributes['noneditable'])
-						when = mw3.WHEN_VIEW;
+					// when 에 따른 noneditable
+					if(this.fieldDescriptor.attributes['noneditable']){
+						if(this.fieldDescriptor.attributes['noneditable.when']){
+							if(this.fieldDescriptor.attributes['noneditable.when'][mw3.when] != null)
+								when = mw3.WHEN_VIEW;
+						}else{
+							when = mw3.WHEN_VIEW;
+						}
+					}					
 				}
 				
 				var options = {descriptor: this.fieldDescriptor};
