@@ -32,7 +32,13 @@ public class MySQLDAOFactory extends OracleDAOFactory{
 			option_useTableNameHeader = !"false".equals(options.get("useTableNameHeader"));
 		}
 		
+		boolean option_onlySequenceTable = false;
+		if(options!=null && options.containsKey("onlySequenceTable")){
+			option_onlySequenceTable = !"false".equals(options.get("onlySequenceTable"));
+		}
+		
 		final boolean useTableNameHeader = option_useTableNameHeader;
+		final boolean onlySequenceTable = option_onlySequenceTable;
 
 		return new KeyGeneratorDAO(){
 
@@ -71,19 +77,23 @@ public class MySQLDAOFactory extends OracleDAOFactory{
 							seq_key = new Long(1);
 						}
 					
-					Long id_key  = null;
+					Long key = null;
+					if(onlySequenceTable){
+						key = seq_key;
+					}else{
+						Long id_key  = null;
 						stmt_select_table_max_key = conn.createStatement();
 						rs_select_table_max_key = stmt_select_table_max_key.executeQuery("select ifnull(max("+forColumnName+"),0) as LASTKEY from " +(forTableName.equals("WORKITEM")? "BPM_WORKLIST" : ((useTableNameHeader)?"BPM_":"") + forTableName));
 						if (rs_select_table_max_key.next()) {
 							id_key = rs_select_table_max_key.getLong("LASTKEY");
 						}
-					
-					Long key = null;
+										
 						if (seq_key.longValue() > id_key.longValue()) {
 							key = seq_key;
 						} else {
 							key = new Long(id_key.longValue() + 1);
 						}
+					}
 					
 					pstmt_update_seq = conn.prepareStatement("update BPM_SEQ set SEQ = ? , MODDATE = now() where  TBNAME = ?");
 					pstmt_update_seq.setLong(1, key);
