@@ -941,6 +941,15 @@ public class WebObjectType{
 					smc.setWhere(wheres.toString());
 				}
 				
+				if(available!=null && available.how().length > 0){
+					StringBuffer hows = new StringBuffer();
+					for(String how : available.how()){
+						hows.append(how).append("|");
+					}
+					
+					smc.setHow(hows.toString());
+				}
+				
 				if(hidden!=null){
 					smc.setWhen("___hidden___");
 				}

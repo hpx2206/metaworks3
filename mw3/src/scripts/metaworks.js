@@ -2977,6 +2977,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			};
 			
 			Metaworks3.prototype.isHiddenMethod = function(method){
+				/*
 				if(method.methodContext.when != mw3.WHEN_EVER){
 		   			if( (mw3.when && (method.methodContext.when.indexOf(mw3.when) == -1) ) 
 		   					||
@@ -2985,8 +2986,27 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 		   			)
 	   				return true;
 				}
+				*/
 				
-	   			return false;
+				if(method.methodContext.when != null && method.methodContext.when != 'whenever'){
+					if(method.methodContext.when.indexOf(mw3.when + '|') == -1)
+						return true;						
+				}
+				
+				if(method.methodContext.where != null && method.methodContext.where != 'wherever'){
+					if(method.methodContext.where.indexOf(mw3.where + '|') == -1)
+						return true;						
+				}
+
+				if(method.methodContext.how != null){
+					if(method.methodContext.how.indexOf(mw3.how + '|') == -1)
+						return true;						
+				}
+								
+				if(method.methodContext.when == '___hidden___')
+					return true;
+
+				return false;
 			};
 			
 			
@@ -3365,14 +3385,8 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			};
 			
 			MethodRef.prototype.here = function(){
-		   		if(this.methodContext.when != mw3.WHEN_EVER)
-		   			if( (mw3.when && (this.methodContext.when.indexOf(mw3.when) == -1) ) 
-		   					||
-			   				(mw3.where && (this.methodContext.where!='wherever' && this.methodContext.where.indexOf(mw3.where) == -1) )
-			   				
-		   			)
-		   				return "";
-
+				if(mw3.isHiddenMethod(this))					
+					return "";
 		   			
 		   		var template;
 		   		if(arguments.length == 1){
