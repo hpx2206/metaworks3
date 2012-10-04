@@ -70,6 +70,14 @@ public class ServiceMethodContext{
 		public void setWhere(String where) {
 			this.where = where;
 		}
+		
+	String how;
+		public String getHow() {
+			return how;
+		}
+		public void setHow(String how) {
+			this.how = how;
+		}
 
 	String target;
 		public String getTarget() {
