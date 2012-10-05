@@ -5,7 +5,7 @@ import org.metaworks.widget.Window;
 import org.uengine.codi.platform.Console;
 
 @Face(ejsPath="genericfaces/Window.ejs",
-	  displayName="Console",
+	  displayName="$Console",
 	  options={"hideLabels", "minimize"},
 	  values={"true", "true"})
 public class ConsoleWindow extends Window {

@@ -4,7 +4,7 @@ import org.metaworks.annotation.Face;
 import org.metaworks.widget.Window;
 
 @Face(ejsPath="genericfaces/Window.ejs",
-      displayName="Navigator",
+      displayName="$Navigator",
       options={"hideLabels", "minimize"},
       values={"true", "true"})
 public class ResourceWindow extends Window {
