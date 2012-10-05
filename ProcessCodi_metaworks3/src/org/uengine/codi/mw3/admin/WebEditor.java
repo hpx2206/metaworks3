@@ -7,11 +7,15 @@ import org.metaworks.annotation.Hidden;
 public class WebEditor implements ContextAware {
 
 	public WebEditor() {
-		setMetaworksContext(new MetaworksContext());
-		getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
-		setContents("");
+		this("");
 	}
 
+	public WebEditor(String contents) {
+		setMetaworksContext(new MetaworksContext());
+		getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+		setContents(contents);		
+	}
+	
 	String contents;
 		@Hidden
 		public String getContents() {
