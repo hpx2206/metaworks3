@@ -253,6 +253,7 @@ public class ResourceFile implements ContextAware{
 	}
 	
 	@ServiceMethod(inContextMenu=true)
+	@Face(displayName="새 과정")
 	public Object webProcess() throws Exception {
 		ProcessDesignerWebWindow processDesigner = new ProcessDesignerWebWindow();
 		processDesigner.newProcess();

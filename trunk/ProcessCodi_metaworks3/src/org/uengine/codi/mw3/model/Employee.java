@@ -420,7 +420,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		}catch(Exception e){}
 
 		if(alreadyRegistered)	
-			throw new Exception("$AlreadyExisingUser");
+			throw new Exception("$AlreadyExistingUser");
 	}
 	
 	@Override
