@@ -625,7 +625,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 					followerIds.add(followers.getUserId());
 				}
 				for(String userId : followerIds){
-					Browser.withSession(userId, new Runnable(){
+					Browser.withSession(Login.getSessionIdWithUserId(userId), new Runnable(){
 						@Override
 						public void run() {
 							ScriptSessions.addFunctionCall("mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar').__getFaceHelper().addMyschedule", new Object[]{getTitle(), getInstId()+"", newInstancePanel.getDueDate() });
@@ -633,7 +633,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 						
 					});
 				}
-				return new Object[]{ new Refresh(instantiatedViewContent)};
+				return new Object[]{new Refresh(instantiatedViewContent)};
 				
 	
 			}else{
