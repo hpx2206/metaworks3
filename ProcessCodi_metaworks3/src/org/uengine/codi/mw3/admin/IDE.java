@@ -42,7 +42,7 @@ public class IDE {
 		resourceWindow.getMetaworksContext().setHow(pageNavigator.getPageName());
 		
 		Layout outerLayout = new Layout();
-		outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:5, east__spacing_open:5, west__size:300, east__size:300, north__size:52");
+		outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:5, east__spacing_open:5, west__size:300, east__size:500, north__size:52");
 		outerLayout.setNorth(new TopPanel(session));
 		outerLayout.setWest(resourceWindow);
 		outerLayout.setEast(hintWindow);
