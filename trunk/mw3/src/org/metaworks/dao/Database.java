@@ -94,7 +94,9 @@ public class Database<T extends IDAO> implements IDAO, Serializable, Cloneable{
 		
 		ObjectInstance fromObjInst = (ObjectInstance) wot.metaworks2Type().createInstance();
 		fromObjInst.setObject(fromObj);
-		fromObj.setMetaworksContext(getMetaworksContext());
+		
+		if(fromObj != null)
+			fromObj.setMetaworksContext(getMetaworksContext());
 		
 		for(int i=0; i<wot.metaworks2Type().getFieldDescriptors().length; i++){
 			FieldDescriptor fd = wot.metaworks2Type().getFieldDescriptors()[i];
@@ -397,7 +399,7 @@ public class Database<T extends IDAO> implements IDAO, Serializable, Cloneable{
 			ObjectInstance databaseObjInst = (ObjectInstance) MetaworksRemoteService.getInstance().getMetaworksType(dao.getImplementationObject().getDaoClass().getName()).metaworks2Type().createInstance();
 			databaseObjInst.setObject(dao);
 
-			if(fd.getAttribute("ormapping")!=null){
+			if(fd.isSavable() && fd.getAttribute("ormapping")!=null){
 				
 				databaseObjInst.setFieldValue(fd.getName(), fieldValue);
 				
