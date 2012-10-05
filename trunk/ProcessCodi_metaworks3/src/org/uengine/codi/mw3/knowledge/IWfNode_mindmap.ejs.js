@@ -155,7 +155,7 @@ org_uengine_codi_mw3_knowledge_IWfNode_mindmap.prototype = {
 			var searchObj = this.obj;
 				
 			do{
-				searchObj = searchObj.prev();
+				searchObj = searchObj.parent().prev().children().eq(0);
 				
 				if(searchObj.hasClass('workflowy_node'))
 					break;
