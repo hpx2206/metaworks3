@@ -96,7 +96,7 @@ public class Database<T extends IDAO> implements IDAO, Serializable, Cloneable{
 		fromObjInst.setObject(fromObj);
 		
 		if(fromObj != null)
-			fromObj.setMetaworksContext(getMetaworksContext());
+			setMetaworksContext(fromObj.getMetaworksContext());
 		
 		for(int i=0; i<wot.metaworks2Type().getFieldDescriptors().length; i++){
 			FieldDescriptor fd = wot.metaworks2Type().getFieldDescriptors()[i];
