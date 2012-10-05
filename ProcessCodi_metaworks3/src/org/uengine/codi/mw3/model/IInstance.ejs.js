@@ -43,7 +43,7 @@ org_uengine_codi_mw3_model_IInstance.prototype = {
 	},
 	unBlinking : function(){
 		
-		$('#' + this.divId + ' #newInst').css("background","none");
+		$('#' + this.divId + ' .innerNewInst').css("background","none");
 		
 		/*if (this.timeout) {
 			clearTimeout(this.timeout);			
@@ -55,7 +55,7 @@ org_uengine_codi_mw3_model_IInstance.prototype = {
 	blinking : function(){
 		
 		
-		var blinkDiv = $('#' + this.divId + ' #newInst');
+		var blinkDiv = $('#' + this.divId + ' .innerNewInst');
 		
 		
 		blinkDiv.animate({
