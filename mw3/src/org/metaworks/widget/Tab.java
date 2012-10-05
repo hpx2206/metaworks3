@@ -1,21 +1,25 @@
 package org.metaworks.widget;
 
+import org.metaworks.annotation.Id;
+
 public class Tab {
 
-	private String tabTitle;
-	private Object tabContent;
-	public String getTabTitle() {
-		return tabTitle;
-	}
-	public void setTabTitle(String tabTitle) {
-		this.tabTitle = tabTitle;
-	}
-	public Object getTabContent() {
-		return tabContent;
-	}
-	public void setTabContent(Object tabContent) {
-		this.tabContent = tabContent;
-	}
+	public String tabTitle;	
+		@Id
+		public String getTabTitle() {
+			return tabTitle;
+		}
+		public void setTabTitle(String tabTitle) {
+			this.tabTitle = tabTitle;
+		}
+	
+	public Object tabContent;		
+		public Object getTabContent() {
+			return tabContent;
+		}
+		public void setTabContent(Object tabContent) {
+			this.tabContent = tabContent;
+		}
 	
 	public Tab(String title) {
 		this.tabTitle = title;
