@@ -199,6 +199,10 @@ if(value){
 	%>
 	<a onClick="<%=methods.showDetail.caller() %>" ><b><%=value.empName %></b> (<%=value.empCode %>)</a>
 	<%
+	} else if(mw3.where == 'inSessionInfo') {
+	%>
+	<b><%=value.empName %></b> (<%=value.empCode %>)
+	<%
 	} else if(mw3.where == 'inWorkItem') {
 	%>
 	<img id="userPicture_<%=objectId %>" onerror="<%=onErrorImg %>" src="<%=portrait %>" width="30" height="30"><%=fields.empCode.here() %>
