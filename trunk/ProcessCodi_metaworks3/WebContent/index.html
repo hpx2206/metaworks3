@@ -273,8 +273,33 @@
 					else
 						alert(message);
 					
-		 		}
+		 		};
 		 		
+		 		Metaworks3.prototype.startLoading = function(objId){
+                    //var infoDivId = "#"+this._getInfoDivId(objId);
+                    
+                    var divId = mw3._getObjectDivId(objId);
+                    var offset = $('#' + divId).offset();                    
+                    
+                    var offsetRight = offset.left + $('#' + divId).width() - 20;                    
+                    var offsetMiddle = offset.top + ($('#' + divId).height()/2- 8);
+                    
+                    //console.debug(offset.left+"  ,  "+$('#' + divId + '>*:first').height());
+                    
+                    
+                    var html;
+                    html = "<div id='info_div' style='position:absolute; z-index:9999999; top:"+offsetMiddle+"px; left:"+offsetRight+"px;'><img src='dwr/metaworks/images/circleloading.gif'></div>";
+                    
+                    
+                    $('body').append(html);
+                    
+                    
+                };
+                        
+                Metaworks3.prototype.endLoading = function(objId){
+                     $('body>#info_div').remove();
+                };
+                
 		 		mw3.showError = function(objId, message, methodName){
 					if( this.getFaceHelper(objId) && this.getFaceHelper(objId).endLoading)
 						this.getFaceHelper(objId).endLoading();	
