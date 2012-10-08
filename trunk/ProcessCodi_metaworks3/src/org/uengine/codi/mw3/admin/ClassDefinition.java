@@ -92,7 +92,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		
 	transient User author; 
 		@Available(when={"edit", "step1"})
-		@Face(displayName="@author")
+		@Face(displayName="$author")
 		public User getAuthor() {
 			return author;
 		}
@@ -141,7 +141,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 	
 	String className;
 		@Available(when={"edit", "step1"})
-		@Face(displayName="@name", options={"mandatory"}, values={"true"})
+		@Face(displayName="$name", options={"mandatory"}, values={"true"})
 		@Name
 		@Test(
 				scenario="ClassDefinition", 
