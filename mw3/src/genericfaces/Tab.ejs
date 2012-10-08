@@ -9,8 +9,8 @@
 		for (var i=0; i<objectMetadata.fieldDescriptors.length; i++){
 			var fd = objectMetadata.fieldDescriptors[i];
 			
-		  	if(fd.attributes && fd.attributes['hidden']) continue;
-		  	if(fd.name == 'metaworksContext') continue;			
+		  	if(mw3.isHidden(fd)) continue;
+		  	if(fd.name == 'metaworksContext') continue;		
 %>			
 			<li>
 				<a href="#tab_<%=objectId%>_<%=i+1%>" id="title_<%=objectId%>_<%=i+1%>"><%=fd.displayName%></a>
