@@ -31,7 +31,6 @@ import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.alm.QualityOption;
 import org.uengine.codi.mw3.model.FaceHelperSourceCode;
-import org.uengine.codi.mw3.model.FaceSourceCode;
 import org.uengine.codi.mw3.model.JavaSourceCode;
 import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.model.User;
@@ -228,7 +227,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		
 		getSourceCodes().sourceCode = new JavaSourceCode();
 		getSourceCodes().sourceCode.setCode(sb.toString());
-		getSourceCodes().face = new FaceSourceCode();
+		getSourceCodes().face = new FaceEditor();
 		generateFaceHelperSourceCode();	
 	}
 	

@@ -25,8 +25,12 @@ public class ClassSourceCodes{
 		
 
 	public ClassSourceCodes(){
+		//init();
+	}
+	
+	public void init(){
 		this.sourceCode = new JavaSourceCode();
-		this.face = new FaceSourceCode();
+		this.face = new FaceEditor();
 		this.faceHelper = new FaceHelperSourceCode();
 		this.classModeler = new ClassModeler();
 		this.formDesigner = new FormDesigner();
@@ -42,6 +46,7 @@ public class ClassSourceCodes{
 		}
 
 	ClassModeler classModeler;
+	@Face(displayName="변수정의")
 	public ClassModeler getClassModeler() {
 		return classModeler;
 	}
@@ -50,11 +55,12 @@ public class ClassSourceCodes{
 	}
 	
 
-	FaceSourceCode face;			
-		public FaceSourceCode getFace() {
+	FaceEditor face;			
+	@Face(displayName="에디터편집기")
+		public FaceEditor getFace() {
 			return face;
 		}
-		public void setFace(FaceSourceCode face) {
+		public void setFace(FaceEditor face) {
 			this.face = face;
 		}
 		

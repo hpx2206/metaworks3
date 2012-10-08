@@ -17,7 +17,6 @@ import org.metaworks.annotation.ServiceMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.activitytypes.MetaworksFormActivity;
 import org.uengine.codi.mw3.admin.FormDefinition;
-import org.uengine.codi.mw3.admin.FormField;
 import org.uengine.codi.mw3.admin.FormInstance;
 import org.uengine.codi.mw3.model.InstanceViewContent;
 import org.uengine.codi.mw3.model.WorkItemHandler;
@@ -50,7 +49,7 @@ public class FormWorkItemHandler extends WorkItemHandler{
 		String prodVerId = processManager.getProcessDefinitionProductionVersion(htmlFormContext.getFormDefId());
 		
 		FormDefinition formDef = (FormDefinition) GlobalContext.deserialize(processManager.getResource(prodVerId));
-		FormInstance formInstance = formDef.preview();
+//		FormInstance formInstance = formDef.preview();
 		
 		
 		
@@ -83,15 +82,15 @@ public class FormWorkItemHandler extends WorkItemHandler{
 		MetaworksFormActivity formActivity = (MetaworksFormActivity) humanActivity;
 		
 		Map valueMap = new HashMap();
-		for(FormField field : getFormInstance().getFormFields()){
-			if("java.lang.String".equals(field.getType())){
-				valueMap.put(field.getFieldName(), field.getValueString());
-				
-			}
-			
-			field.setMetaworksContext(new MetaworksContext());
-			field.getMetaworksContext().setWhen("view");
-		}
+//		for(FormField field : getFormInstance().getFormFields()){
+//			if("java.lang.String".equals(field.getType())){
+//				valueMap.put(field.getFieldName(), field.getValueString());
+//				
+//			}
+//			
+//			field.setMetaworksContext(new MetaworksContext());
+//			field.getMetaworksContext().setWhen("view");
+//		}
 		
 		
 		String filePath = FormActivity.FILE_SYSTEM_DIR + UEngineUtil.getCalendarDir();
