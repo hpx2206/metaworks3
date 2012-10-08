@@ -30,10 +30,13 @@ public class ClassDesignerContentPanel extends ContentWindow {
 		
 		User user = new User();
 		user.setUserId(userId);
-		
+				
 		classDefinition = new ClassDefinition();
+		classDefinition.getMetaworksContext().setWhere("class");
 		classDefinition.setParentFolder(parentFoler);
+		classDefinition.setPackageName(parentFoler);
 		classDefinition.setAuthor(user);
+		classDefinition.load();
 	}
 
 	public void load(String defId) throws Exception{

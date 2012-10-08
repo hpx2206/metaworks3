@@ -22,7 +22,7 @@
 	if(!mw3.isHidden(fields.className.fieldDescriptor)){
 %>	
 		<tr>
-			<th scope="row">Class Name</th>
+			<th scope="row"><%=mw3.localize(fields.className.fieldDescriptor.displayName)%></th>
 			<td>
 				<div class="item">
 					<%=fields.className.here()%>
@@ -36,7 +36,7 @@
 	if(!mw3.isHidden(fields.author.fieldDescriptor)){
 %>
 		<tr>
-			<th scope="row">Author</th>
+			<th scope="row"><%=mw3.localize(fields.author.fieldDescriptor.displayName)%></th>
 			<td>
 				<div class="item">
 					<%=fields.author.here()%>

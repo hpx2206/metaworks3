@@ -2,10 +2,10 @@
 package org.uengine.codi.mw3.admin;
 
 import org.metaworks.MetaworksContext;
+import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.example.ide.FormDesigner;
 import org.uengine.codi.mw3.model.FaceHelperSourceCode;
-import org.uengine.codi.mw3.model.FaceSourceCode;
 import org.uengine.codi.mw3.model.JavaSourceCode;
 
 
@@ -25,10 +25,9 @@ public class ClassSourceCodes{
 		
 
 	public ClassSourceCodes(){
-		//init();
 	}
 	
-	public void init(){
+	public void load(){
 		this.sourceCode = new JavaSourceCode();
 		this.face = new FaceEditor();
 		this.faceHelper = new FaceHelperSourceCode();
@@ -38,6 +37,7 @@ public class ClassSourceCodes{
 	}
 	
 	JavaSourceCode sourceCode;
+		@Available(where={"class"})
 		public JavaSourceCode getSourceCode() {
 			return sourceCode;
 		}
@@ -46,17 +46,19 @@ public class ClassSourceCodes{
 		}
 
 	ClassModeler classModeler;
-	@Face(displayName="변수정의")
-	public ClassModeler getClassModeler() {
-		return classModeler;
-	}
-	public void setClassModeler(ClassModeler classModeler) {
-		this.classModeler = classModeler;
-	}
+		@Face(displayName="변수정의")
+		@Available(where={"class", "form"})
+		public ClassModeler getClassModeler() {
+			return classModeler;
+		}
+		public void setClassModeler(ClassModeler classModeler) {
+			this.classModeler = classModeler;
+		}
 	
 
 	FaceEditor face;			
-	@Face(displayName="에디터편집기")
+		@Face(displayName="에디터편집기")
+		@Available(where={"class", "form"})
 		public FaceEditor getFace() {
 			return face;
 		}
@@ -65,6 +67,7 @@ public class ClassSourceCodes{
 		}
 		
 	FormDesigner formDesigner;
+		@Available(where={"class"})
 		public FormDesigner getFormDesigner() {
 			return formDesigner;
 		}
@@ -73,6 +76,7 @@ public class ClassSourceCodes{
 		}
 
 	FaceHelperSourceCode faceHelper;
+		@Available(where={"class"})
 		public FaceHelperSourceCode getFaceHelper() {
 			return faceHelper;
 		}

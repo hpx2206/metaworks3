@@ -2,7 +2,7 @@ package org.uengine.codi.mw3.model;
 
 import org.metaworks.annotation.Face;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.codi.mw3.admin.FormDefinition;
+import org.uengine.codi.mw3.admin.ClassDefinition;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.processmanager.ProcessManagerRemote;
 
@@ -10,24 +10,27 @@ import org.uengine.processmanager.ProcessManagerRemote;
 public class FormDesignerContentPanel extends ContentWindow {
 	
 
-	FormDefinition formDefinition;
-		public FormDefinition getFormDefinition() {
+	ClassDefinition formDefinition;
+		public ClassDefinition getFormDefinition() {
 			return formDefinition;
 		}
 	
-		public void setFormDefinition(FormDefinition formDefinition) {
+		public void setFormDefinition(ClassDefinition formDefinition) {
 			this.formDefinition = formDefinition;
 		}
 	
 	public void newForm(String parentFolder){
-		formDefinition = new FormDefinition();
+		formDefinition = new ClassDefinition();
+		formDefinition.getMetaworksContext().setWhere("form");
 		formDefinition.setParentFolder(parentFolder);
+		formDefinition.setPackageName(parentFolder);
+		formDefinition.load();
 	}
 	
 	public void load(String defId) throws Exception{
 		String defVerId = codiPmSVC.getProcessDefinitionProductionVersion(defId);
 		String resource = codiPmSVC.getResource(defVerId);
-		formDefinition = (FormDefinition) GlobalContext.deserialize(resource, FormDefinition.class);
+		formDefinition = (ClassDefinition) GlobalContext.deserialize(resource, ClassDefinition.class);
 	}
 
 	
