@@ -56,15 +56,20 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 	transient public ProcessManagerRemote processManager;
 
 	public ClassDefinition(){
-		//setClassName("클래스 명을 입력하십시오.");
-		
-		this.sourceCodes = new ClassSourceCodes();
-		
 		setMetaworksContext(new MetaworksContext());
 		getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+	}
+	
+	public void load(){
+		//setClassName("클래스 명을 입력하십시오.");
+		// 편집탭 설정
+		ClassSourceCodes sourceCodes = new ClassSourceCodes();
+		sourceCodes.setMetaworksContext(this.getMetaworksContext());
+		sourceCodes.load();
 		
-		this.qualityOption = new QualityOption();
-
+		setSourceCodes(sourceCodes); 
+		
+		this.qualityOption = new QualityOption();		
 	}
 	
 	String alias;
@@ -86,7 +91,8 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		}
 		
 	transient User author; 
-	@Available(when={"edit", "step1"})
+		@Available(when={"edit", "step1"})
+		@Face(displayName="@author")
 		public User getAuthor() {
 			return author;
 		}
@@ -125,31 +131,24 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		}
 
 	String packageName;
-	@Available(when={"edit", "step1"})
-	@Test(
-			scenario="ClassDefinition", 
-			starter=true,
-			value="'test'", 
-			instruction="'test'를 입력하세요.", 
-			next="className"
-			)
+		@Hidden
 		public String getPackageName() {
 			return packageName;
 		}
 		public void setPackageName(String packageName) {
 			this.packageName = packageName;
 		}
-
+	
 	String className;
-	@Available(when={"edit", "step1"})
-	@Face(options={"mandatory"}, values={"true"})
-	@Name
-	@Test(
-			scenario="ClassDefinition", 
-			value="'HelloWorld'", 
-			instruction="'HelloWorld'를 입력하세요.",
-			next="next1()"
-			)
+		@Available(when={"edit", "step1"})
+		@Face(displayName="@name", options={"mandatory"}, values={"true"})
+		@Name
+		@Test(
+				scenario="ClassDefinition", 
+				value="'HelloWorld'", 
+				instruction="'HelloWorld'를 입력하세요.",
+				next="next1()"
+				)
 		public String getClassName() {
 			return className;
 		}
