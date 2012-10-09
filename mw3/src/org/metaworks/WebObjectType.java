@@ -857,8 +857,8 @@ public class WebObjectType{
 	
 				ServiceMethodContext smc = new ServiceMethodContext();
 				smc.setMethodName(method.getName());
-				smc.setWhen(annotation.when());
-				smc.setWhere(annotation.where());
+				smc.setWhen(annotation.when() + "|");
+				smc.setWhere(annotation.where() + "|");
 				smc.setCallByContent(annotation.callByContent());
 				smc.setNeedToConfirm(annotation.needToConfirm());
 				smc.setClientSide(annotation.clientSide());
