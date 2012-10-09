@@ -34,7 +34,7 @@ public class ClassDesignerContentPanel extends ContentWindow {
 		classDefinition = new ClassDefinition();
 		classDefinition.getMetaworksContext().setWhere("class");
 		classDefinition.setParentFolder(parentFoler);
-		classDefinition.setPackageName(parentFoler);
+		classDefinition.setPackageName(parentFoler.replaceAll("/", "."));
 		classDefinition.setAuthor(user);
 		classDefinition.load();
 	}

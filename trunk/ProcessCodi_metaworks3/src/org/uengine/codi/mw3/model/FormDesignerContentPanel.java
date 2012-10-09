@@ -32,7 +32,7 @@ public class FormDesignerContentPanel extends ContentWindow {
 		formDefinition = new ClassDefinition();
 		formDefinition.getMetaworksContext().setWhere("form");
 		formDefinition.setParentFolder(parentFolder);
-		formDefinition.setPackageName(parentFolder);
+		formDefinition.setPackageName(parentFolder.replaceAll("/", "."));
 		formDefinition.setAuthor(user);
 		formDefinition.load();
 	}
