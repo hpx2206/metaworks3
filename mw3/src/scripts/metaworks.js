@@ -92,7 +92,6 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 
 			    // ie6~ie8 : addachEvent
 			    // other   : addEventListener
-
 			    var mouseUp = function(e){
 			    	mw3.mouseX = e.pageX;
 	    			mw3.mouseY = e.pageY; 
@@ -125,14 +124,14 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			    this.dragGuide = $("#__dragGuide");
 			    
 			    var mouseMove = function(e){
-			    	mw3.mouseX = e.pageX;
-	    			mw3.mouseY = e.pageY; 
+			    	var mouseX = e.pageX;
+	    			var mouseY = e.pageY; 
 	    			
  					if(mw3.dragObject && (
- 							mw3.dragObject.style.left > mw3.mouseX || 
- 							mw3.dragObject.style.top > mw3.mouseY || 
- 							mw3.dragObject.style.left + mw3.dragObject.style.width < mw3.mouseX ||
-  							mw3.dragObject.style.top + mw3.dragObject.style.height < mw3.mouseY
+ 							mw3.dragObject.style.left > mouseX || 
+ 							mw3.dragObject.style.top > mouseY || 
+ 							mw3.dragObject.style.left + mw3.dragObject.style.width < mouseX ||
+  							mw3.dragObject.style.top + mw3.dragObject.style.height < mouseY
  						)){
  						
  						if(console)
@@ -162,8 +161,8 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
  						}
  						
  						
- 						$("#__dragGuide").css("left", mw3.mouseX+1);
- 						$("#__dragGuide").css("top", mw3.mouseY);
+ 						$("#__dragGuide").css("left", mouseX+1);
+ 						$("#__dragGuide").css("top",mouseY);
  						$("#__dragGuide").show();
  						
  						//mw3.dragGuide.show();
@@ -2988,12 +2987,12 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				}
 				*/
 				
-				if(method.methodContext.when != null && method.methodContext.when != 'whenever'){
+				if(method.methodContext.when != null && method.methodContext.when.indexOf('whenever|') == -1){
 					if(method.methodContext.when.indexOf(mw3.when + '|') == -1)
 						return true;						
 				}
 				
-				if(method.methodContext.where != null && method.methodContext.where != 'wherever'){
+				if(method.methodContext.where != null && method.methodContext.where.indexOf('whenever|') == -1){
 					if(method.methodContext.where.indexOf(mw3.where + '|') == -1)
 						return true;						
 				}
