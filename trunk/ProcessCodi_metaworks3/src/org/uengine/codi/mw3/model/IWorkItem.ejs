@@ -1,4 +1,54 @@
+<% 
+	if(mw3.how == 'instanceList'){
+%>
 
+	<table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-bottom:1px solid #E4E4E4">
+		<tbody>
+			<tr>
+				<td width="65" valign="top" style="padding:5px 0;">
+					
+				</td>
+				<td width="65" valign="top" style="padding:5px 0;">
+					<div class="notMePic">
+						<div class="notMePicPic"><%=fields.writer.here()%></div>						
+					</div>
+				</td>			
+				<td style="padding:5px 0;">
+					<div class="notMePicName" style="float:left; color:#5272A7"><%=value.writer.name%></div>
+					<div style="float:left; margin-left:15px; font-size:11px; color:#A4A4A4;"><%=fields.startDate.here()%></div>
+					<div class="clear" style="height:3px;"></div>
+					<div><%=value.title.replace('\n','<br>')%></div>
+					<div>
+					<%if(value.type=='file'){%>						
+						<%  if(value.file.mimeType.indexOf("image")==0){
+								value.file.metaworksContext.when='image';
+							}else{
+								value.file.metaworksContext.when='view'; 
+							}%>
+							<div style="width:150px;"><%=fields.file.here()%></div>
+					<%}%>
+					<%if(value.type=='memo'){%>
+					
+							<%  value.memo.metaworksContext.when='view'; %>						
+							<%=fields.memo.here()%>						
+						
+					<%}%>
+					<%if(value.type=='src'){%>
+						
+							<div style="position:relative; height:350px;">					
+								<%=fields.sourceCode.here()%>						
+							</div>
+					<%}%>	
+					</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	
+<%
+	}else {
+%>
+	
 <%
 	var isMine = (value.writer.userId == mw3.getAutowiredObject('org.uengine.codi.mw3.model.Session').user.userId);
 
@@ -146,7 +196,10 @@
 	<% } %>
 	<div class="clear"></div>
 	
-	
-	
 	<div style="height:10px"></div>
 	
+	
+<%
+	}
+%>
+
