@@ -21,6 +21,8 @@ public class InstanceViewThreadPanel implements ContextAware {
 		}
 
 	protected InstanceViewThreadPanel(String instanceId) throws Exception{
+		this();
+		
 		load(instanceId);		
 
 	}
@@ -49,7 +51,7 @@ public class InstanceViewThreadPanel implements ContextAware {
 				}
 			}		
 			
-			thread.getMetaworksContext().setWhere("instanceList");
+			thread.getMetaworksContext().setHow("instanceList");
 		}else{
 			thread = result;
 		}
