@@ -4,8 +4,10 @@ var org_uengine_codi_mw3_model_IInstance = function(objectId, className){
 	this.divId = mw3._getObjectDivId(this.objectId);
 	
 	this.windowObjectId = $('#' + this.divId).closest('.mw3_window').attr('objectId');
+	this.overTimer;
 	
-	 $('#' + this.divId).bind('click', {objectId: this.objectId},function(){
+	
+	$('#' + this.divId).bind('click', {objectId: this.objectId},function(){
 		 mw3.getFaceHelper(objectId).unBlinking();
 		 
 		 $(".tbl_type").parent().css("background","none");
@@ -26,10 +28,50 @@ var org_uengine_codi_mw3_model_IInstance = function(objectId, className){
 	 if(object && object.metaworksContext && object.metaworksContext.how == 'blinking'){
 		 this.blinking();
 	 }
+
+ 
+	// 
+	 
+	$('#' + this.divId).mouseleave({objectId : this.objectId}, function(event){
+		 var objectId = event.data.objectId;
+		 
+		 var faceHelper = mw3.getFaceHelper(objectId);
+		 
+		 clearTimeout(faceHelper.overTimer);
+		 
+		 
+		 /*
+		 var object = mw3.getObject(objectId);
+		 
+		 if(object.instanceViewThreadPanel && object.instanceViewThreadPanel.instanceId) 
+			 mw3.call(objectId, 'over');
+			*/
+	});
+	
+	$('#' + this.divId).mouseenter({objectId : this.objectId}, function(event){		
+		var objectId = event.data.objectId;
+		
+		var object = mw3.getObject(objectId);
+		 
+		if(object.instanceViewThreadPanel && object.instanceViewThreadPanel.instanceId){
+			
+		}else{
+			var faceHelper = mw3.getFaceHelper(objectId);
+			
+			faceHelper.overTimer = setTimeout(function(){
+				mw3.call(objectId, 'over');
+			}, 2500);			
+		}
+		
+	});
 }
 
 	
+
 org_uengine_codi_mw3_model_IInstance.prototype = {
+	destroy : function(){
+		$('#' + this.divId).unbind('mouseenter').unbind('mouseleave');
+	},
 	startLoading : function(){
 		if(this.windowObjectId && mw3.getFaceHelper(this.windowObjectId) && mw3.getFaceHelper(this.windowObjectId).startLoading)
 			mw3.getFaceHelper(this.windowObjectId).startLoading();
