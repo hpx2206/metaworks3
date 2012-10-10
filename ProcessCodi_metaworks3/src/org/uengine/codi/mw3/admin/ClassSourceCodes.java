@@ -2,6 +2,7 @@
 package org.uengine.codi.mw3.admin;
 
 import org.metaworks.MetaworksContext;
+import org.metaworks.annotation.AutowiredToClient;
 import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.example.ide.FormDesigner;
@@ -32,12 +33,12 @@ public class ClassSourceCodes{
 		this.face = new FaceEditor();
 		this.faceHelper = new FaceHelperSourceCode();
 		this.classModeler = new ClassModeler();
-		this.formDesigner = new FormDesigner();
+		//this.formDesigner = new FormDesigner();
 		
 	}
 	
 	JavaSourceCode sourceCode;
-		@Available(where={"class"})
+		@Available(where={"class","form"})
 		public JavaSourceCode getSourceCode() {
 			return sourceCode;
 		}

@@ -23,9 +23,9 @@ public class JavaDesigner extends ResourceDesigner{
 	public void load() {
 		classDefinition = new ClassDefinition();
 		classDefinition.setAlias(getAlias().substring(0, getAlias().lastIndexOf(".")) + ".clsdef");
+		classDefinition.getMetaworksContext().setWhere("class");
 		classDefinition.afterDeserialization();
 		classDefinition.getMetaworksContext().setWhen("view");
-		
 	}
 
 }

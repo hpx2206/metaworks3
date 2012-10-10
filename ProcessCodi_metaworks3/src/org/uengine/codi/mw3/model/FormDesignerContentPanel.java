@@ -41,6 +41,7 @@ public class FormDesignerContentPanel extends ContentWindow {
 		String defVerId = codiPmSVC.getProcessDefinitionProductionVersion(defId);
 		String resource = codiPmSVC.getResource(defVerId);
 		formDefinition = (ClassDefinition) GlobalContext.deserialize(resource, ClassDefinition.class);
+		formDefinition.getMetaworksContext().setWhere("form");
 	}
 
 	

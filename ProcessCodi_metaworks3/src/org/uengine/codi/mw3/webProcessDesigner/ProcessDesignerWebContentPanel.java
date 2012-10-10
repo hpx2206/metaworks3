@@ -5,6 +5,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -25,6 +28,7 @@ import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.HumanActivity;
 import org.uengine.kernel.ProcessDefinition;
 import org.uengine.kernel.Role;
+import org.uengine.kernel.graph.Transition;
 import org.uengine.processmanager.ProcessManagerRemote;
 import org.uengine.util.UEngineUtil;
 
@@ -76,6 +80,14 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 			this.graphString = graphString;
 		}
 		
+	HashMap<String, ProcessDesignerCanvas> canvasMap;
+		public HashMap<String, ProcessDesignerCanvas> getCanvasMap() {
+			return canvasMap;
+		}
+		public void setCanvasMap(HashMap<String, ProcessDesignerCanvas> canvasMap) {
+			this.canvasMap = canvasMap;
+		}
+		
 	@Hidden
 	String processName;
 		public String getProcessName() {
@@ -93,6 +105,14 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 		dTitle.setTitle(getProcessName());
 		return new ModalWindow(dTitle , 300, 200,  "프로세스명 입력" );
 	}
+	
+	@ServiceMethod(callByContent=true, target="popup")
+	public ModalWindow gateCondition() throws Exception{
+		ConditionPanel conditionPanel = new ConditionPanel();
+		conditionPanel.setMetaworksContext(new MetaworksContext());
+		conditionPanel.getMetaworksContext().setWhen("edit");
+		return new ModalWindow(conditionPanel , 600, 400,  "조건분기" );
+	}
 		
 	@ServiceMethod(callByContent=true)
 	public void save(String title) throws Exception{
@@ -102,24 +122,50 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 			Role[] roles = new Role[0];
 			Activity[] ac = new Activity[0];
 			if( title == null ){
-				throw new Exception("please set process title");
+				throw new Exception("title is null. please set process title");
 			}
 			def.setName(title);
 			def.setRoles(roles);
 			def.setChildActivities(ac);
+			
+			HashMap<String, ProcessDesignerCanvas> canvasMap = new HashMap<String, ProcessDesignerCanvas>();
+			HashMap<String, Activity> activityMap = new HashMap<String, Activity>();
 			for(int i = 0; i < cell.length; i++){
 				ProcessDesignerCanvas cv = cell[i];
+				cells.add(cv);
+				canvasMap.put(cv.getId(), cv);
+			}
+			setCanvasMap(canvasMap);
+			
+			Collection<ProcessDesignerCanvas> ct = canvasMap.values();
+            Iterator<ProcessDesignerCanvas> iterator = ct.iterator();
+            while (iterator.hasNext()) {
+				ProcessDesignerCanvas cv = iterator.next();
 				Activity activity = addActivity(cv);
-				cells.add(cell[i]);
 				if( activity != null ){
 					if( activity instanceof HumanActivity){
-						// 롤 정의가 먼저 필요할듯
 						def.addRole(((HumanActivity)activity).getRole());
 					}
+					// 엑티비티 생성
 					def.addChildActivity(activity);
+					activityMap.put(cv.getId(), activity);
 				}
 			}
-			
+            Iterator<ProcessDesignerCanvas> iterator2 = ct.iterator();
+            while (iterator2.hasNext()) {
+	            ProcessDesignerCanvas cv = iterator2.next();
+				if( cv != null && "EDGE".equalsIgnoreCase(cv.getShapeType()) ){
+					String formStr = cv.getFrom();
+					String toStr = cv.getTo();
+					String fromId = formStr.substring(0, formStr.indexOf("_TERMINAL"));
+					String toId = toStr.substring(0, toStr.indexOf("_TERMINAL"));
+					if( activityMap.get(fromId) != null && activityMap.get(toId) != null){
+						Transition ts = new Transition(activityMap.get(fromId).getTracingTag()  , activityMap.get(toId).getTracingTag());
+						// 트렌지션 생성
+						def.addTransition(ts);
+					}
+				}
+            }
 			ProcessDesignerCanvas jsonString = new ProcessDesignerCanvas();
 			jsonString.setJsonString(graphString);
 			cells.add(jsonString);
@@ -133,10 +179,9 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 	
 	public Activity addActivity(ProcessDesignerCanvas cv)  throws Exception{
 		
+		KnowledgeActivity KnowledgeActivity = null;
 		if( cv != null && "GEOM".equalsIgnoreCase(cv.getShapeType()) ){
 			// 휴먼 엑티비티 추가 TODO 여러가지 상황에 맞추어서 추후 변경됨
-//			HumanActivity humanActivity = null;
-			KnowledgeActivity KnowledgeActivity = null;
 			if(cv.getData() != null){
 				String data = unescape(cv.getData());
 				JSONArray jsonArray = (JSONArray)JSONSerializer.toJSON(data);
@@ -144,29 +189,33 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 					KnowledgeActivity = new KnowledgeActivity();
 					for( int i = 0; i < jsonArray.size() ; i++){
 						JSONObject jsonObj = (JSONObject) jsonArray.get(i);
-						
 						String customName = jsonObj.getString("customName");
 						String customType = jsonObj.getString("customType");
-						
 						if( customType != null && "wfNode".equalsIgnoreCase(customType)){
 							String customId = jsonObj.getString("customId");
 							KnowledgeActivity.setName(customName);
 							KnowledgeActivity.setKnolNodeId(customId);
-							
 						}else 	if( customType != null && "role".equalsIgnoreCase(customType) ){
 							Role role = new Role();
 							role.setName(customName);
 							KnowledgeActivity.setRole(role);
-							
 						}
-						
 					}
 				}
-				return KnowledgeActivity;
 			}
-			
+			if( cv.getParent() != null){
+				String groupId = cv.getParent();
+				ProcessDesignerCanvas groupCanvas = getCanvasMap().get(groupId);
+				if( KnowledgeActivity == null ){
+					KnowledgeActivity = new KnowledgeActivity();
+				}
+				Role role = new Role();
+				role.setName(groupCanvas.getLabel());
+				KnowledgeActivity.setRole(role);
+				
+			}
 		}
-		return null;
+		return KnowledgeActivity;
 	}
 	public void load() throws Exception{
 		
@@ -202,18 +251,6 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 				}
 				rolePanel.setRoles(role);
 			}
-			// bao.toString() xml 로 받은 데이터를 json 객체로 변환시켜줌
-//			ArrayList<ProcessDesignerCanvas> cellsList = (ArrayList<ProcessDesignerCanvas>) GlobalContext.deserialize(bao.toString());
-//			if( cellsList != null){
-//				ProcessDesignerCanvas []cells = new ProcessDesignerCanvas[cellsList.size()];
-//				for(int i = 0; i < cellsList.size(); i++){
-//					cells[i] = (ProcessDesignerCanvas)cellsList.get(i);
-//					if( cells[i] != null && cells[i].getJsonString() != null){
-//						this.setGraphString(cells[i].getJsonString());
-//					}
-//				}
-//				this.setCell(cells);
-//			}
 			
 		} catch (FileNotFoundException e1) {
 			e1.printStackTrace();

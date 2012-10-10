@@ -17,7 +17,11 @@ if(value){
 %>
 			<div class="addRoleBox">
 					<div style="float:left; margin-right:10px; margin-top:2px;"><%=fields.name.here()%></div>
-					<div style="float:left;"><a id="wBtn" href="#" onClick="<%=methods.add.caller()%>"><span><%=mw3.localize("$addRole")%></span></a></div>
+					<div style="float:left;"><a id="wBtn" href="#" onClick="<%=methods.add.caller()%>"><span><%=mw3.localize("$addRole")%></span></a></div><br/>
+					<div style="float:left; margin-right:10px; margin-top:2px;">
+						<input type="text" id="horizontalLaneShapeText" style="border:1px solid #ccd; none;background:transparent; width:130px; height: 15px;" />
+					</div>
+					<div style="float:left;"><a id="wBtn" href="#" class="horizontalLaneShapeCall"><span>레인추가</span></a></div>
 					<div class="clear"></div>
 			</div>
 <%

@@ -23,6 +23,7 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor) {
 	 * - movable            : 이동 가능여부(디폴트 true)
 	 * - resizable          : 리사이즈 가능여부(디폴트 true)
 	 * - connectable        : 연결 가능여부(디폴트 true)
+	 * - selfConnectable    : Self 연결 가능여부(디폴트 true)
 	 * - connectCloneable   : 드래그하여 연결시 대상 없을 경우 자동으로 Shape 복사하여 연결 처리 여부(디폴트 true)
 	 * - connectRequired    : 드래그하여 연결시 연결대상 있는 경우에만 Edge 드로잉 처리 여부(디폴트 true)
 	 * - labelEditable      : 라벨 수정여부(디폴트 true)
@@ -40,6 +41,7 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor) {
 			OG.Constants.MOVABLE = config.movable === undefined ? OG.Constants.MOVABLE : config.movable;
 			OG.Constants.RESIZABLE = config.resizable === undefined ? OG.Constants.RESIZABLE : config.resizable;
 			OG.Constants.CONNECTABLE = config.connectable === undefined ? OG.Constants.CONNECTABLE : config.connectable;
+			OG.Constants.SELF_CONNECTABLE = config.selfConnectable === undefined ? OG.Constants.SELF_CONNECTABLE : config.selfConnectable;
 			OG.Constants.CONNECT_CLONEABLE = config.connectCloneable === undefined ? OG.Constants.CONNECT_CLONEABLE : config.connectCloneable;
 			OG.Constants.CONNECT_REQUIRED = config.connectRequired === undefined ? OG.Constants.CONNECT_REQUIRED : config.connectRequired;
 			OG.Constants.LABEL_EDITABLE = config.labelEditable === undefined ? OG.Constants.LABEL_EDITABLE : config.labelEditable;
@@ -97,6 +99,11 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor) {
 	 */
 	this.drawShape = function (position, shape, size, style, id, parentId) {
 		var element = _RENDERER.drawShape(position, shape, size, style, id);
+
+		if (position && (shape.TYPE === OG.Constants.SHAPE_TYPE.EDGE)) {
+			element = _RENDERER.move(element, position);
+		}
+
 		if (parentId && _RENDERER.getElementById(parentId)) {
 			_RENDERER.appendChild(element, parentId);
 		}
@@ -138,6 +145,16 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor) {
 	 */
 	this.drawLabel = function (shapeElement, text, style) {
 		return _RENDERER.drawLabel(shapeElement, text, style);
+	};
+
+	/**
+	 * Shape 의 연결된 Edge 를 redraw 한다.(이동 또는 리사이즈시)
+	 *
+	 * @param {Element} element
+	 * @param {String[]} excludeEdgeId redraw 제외할 Edge ID
+	 */
+	this.redrawConnectedEdge = function (element, excludeEdgeId) {
+		_RENDERER.redrawConnectedEdge(element, excludeEdgeId);
 	};
 
 	/**
@@ -289,6 +306,22 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor) {
 	 */
 	this.removeChild = function (element) {
 		_RENDERER.removeChild(element);
+	};
+
+	/**
+	 * ID에 해당하는 Element 의 Move & Resize 용 가이드를 제거한다.
+	 *
+	 * @param {Element,String} element Element 또는 ID
+	 */
+	this.removeGuide = function (element) {
+		_RENDERER.removeGuide(element);
+	};
+
+	/**
+	 * 모든 Move & Resize 용 가이드를 제거한다.
+	 */
+	this.removeAllGuide = function () {
+		_RENDERER.removeAllGuide();
 	};
 
 	/**
@@ -592,8 +625,12 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor) {
 	 * @return {Object} JSON 포맷의 Object
 	 */
 	this.toJSON = function () {
-		var jsonObj = { opengraph: {
-				cell: []
+		var rootBBox = _RENDERER.getRootBBox(),
+			rootGroup = _RENDERER.getRootGroup(),
+			jsonObj = { opengraph: {
+				'@width' : rootBBox.width,
+				'@height': rootBBox.height,
+				cell     : []
 			}},
 			childShape;
 
@@ -658,6 +695,9 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor) {
 					to = vertices[vertices.length - 1];
 					cell['@value'] = from + ',' + to;
 				}
+				if (geom) {
+					cell['@geom'] = escape(geom.toString());
+				}
 				if (item.data) {
 					cell['@data'] = escape(OG.JSON.encode(item.data));
 				}
@@ -668,7 +708,11 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor) {
 			});
 		};
 
-		childShape(_RENDERER.getRootGroup(), true);
+		if (rootGroup.data) {
+			jsonObj.opengraph['@data'] = escape(OG.JSON.encode(rootGroup.data));
+		}
+
+		childShape(rootGroup, true);
 
 		return jsonObj;
 	};
@@ -677,23 +721,36 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor) {
 	 * OpenGraph XML 문자열로 부터 Shape 을 드로잉한다.
 	 *
 	 * @param {String} xml XML 문자열
+	 * @return {Object} {width, height, x, y, x2, y2}
 	 */
 	this.loadXML = function (xml) {
-		this.loadJSON(OG.Util.xmlToJson(xml));
+		return this.loadJSON(OG.Util.xmlToJson(xml));
 	};
 
 	/**
 	 * JSON 객체로 부터 Shape 을 드로잉한다.
 	 *
 	 * @param {Object} json JSON 포맷의 Object
+	 * @return {Object} {width, height, x, y, x2, y2}
 	 */
 	this.loadJSON = function (json) {
-		var i, cell, shape, id, parent, shapeType, shapeId, x, y, width, height, style, from, to,
+		var canvasWidth, canvasHeight, rootGroup,
+			minX = Number.MAX_VALUE, minY = Number.MAX_VALUE, maxX = Number.MIN_VALUE, maxY = Number.MIN_VALUE,
+			i, cell, shape, id, parent, shapeType, shapeId, x, y, width, height, style, geom, from, to,
 			fromEdge, toEdge, label, fromLabel, toLabel, angle, value, data, element;
 
 		_RENDERER.clear();
 
 		if (json && json.opengraph && json.opengraph.cell && OG.Util.isArray(json.opengraph.cell)) {
+			canvasWidth = json.opengraph['@width'];
+			canvasHeight = json.opengraph['@height'];
+
+			data = json.opengraph['@data'];
+			if (data) {
+				rootGroup = this.getRootGroup();
+				rootGroup.data = OG.JSON.decode(unescape(data));
+			}
+
 			cell = json.opengraph.cell;
 			for (i = 0; i < cell.length; i++) {
 				id = cell[i]['@id'];
@@ -705,6 +762,7 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor) {
 				width = parseInt(cell[i]['@width'], 10);
 				height = parseInt(cell[i]['@height'], 10);
 				style = unescape(cell[i]['@style']);
+				geom = unescape(cell[i]['@geom']);
 
 				from = cell[i]['@from'];
 				to = cell[i]['@to'];
@@ -718,6 +776,11 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor) {
 				data = cell[i]['@data'];
 
 				label = label ? unescape(label) : label;
+
+				minX = (minX > (x - width / 2)) ? (x - width / 2) : minX;
+				minY = (minY > (y - height / 2)) ? (y - height / 2) : minY;
+				maxX = (maxX < (x + width / 2)) ? (x + width / 2) : maxX;
+				maxY = (maxY < (y + height / 2)) ? (y + height / 2) : maxY;
 
 				switch (shapeType) {
 				case OG.Constants.SHAPE_TYPE.GEOM:
@@ -740,6 +803,16 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor) {
 					}
 					if (toLabel) {
 						shape.toLabel = unescape(toLabel);
+					}
+					if (geom) {
+						geom = OG.JSON.decode(geom);
+						if (geom.type === OG.Constants.GEOM_NAME[OG.Constants.GEOM_TYPE.POLYLINE]) {
+							geom = new OG.geometry.PolyLine(geom.vertices);
+							shape.geom = geom;
+						} else if (geom.type === OG.Constants.GEOM_NAME[OG.Constants.GEOM_TYPE.CURVE]) {
+							geom = new OG.geometry.Curve(geom.controlPoints);
+							shape.geom = geom;
+						}
 					}
 					element = this.drawShape(null, shape, null, OG.JSON.decode(style), id, parent);
 					break;
@@ -781,7 +854,27 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor) {
 					element.data = OG.JSON.decode(unescape(data));
 				}
 			}
+
+			this.setCanvasSize([canvasWidth, canvasHeight]);
+
+			return {
+				width : maxX - minX,
+				height: maxY - minY,
+				x     : minX,
+				y     : minY,
+				x2    : maxX,
+				y2    : maxY
+			};
 		}
+
+		return {
+			width : 0,
+			height: 0,
+			x     : 0,
+			y     : 0,
+			x2    : 0,
+			y2    : 0
+		};
 	};
 
 	/**

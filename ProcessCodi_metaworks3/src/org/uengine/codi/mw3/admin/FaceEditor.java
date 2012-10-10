@@ -1,15 +1,17 @@
 package org.uengine.codi.mw3.admin;
 
 import org.metaworks.annotation.Face;
+import org.metaworks.annotation.Hidden;
 
 public class FaceEditor {
-	WebEditor instruction;
+	
+	WebEditor editor;
 	@Face(displayName="에디터")
-	public WebEditor getInstruction() {
-		return instruction;
+	public WebEditor getEditor() {
+		return editor;
 	}
-	public void setInstruction(WebEditor instruction) {
-		this.instruction = instruction;
+	public void setEditor(WebEditor editor) {
+		this.editor = editor;
 	}
 	
 	public FaceEditor(){
@@ -17,10 +19,11 @@ public class FaceEditor {
 	}
 	
 	private void init(){
-		WebEditor editor = new WebEditor();
+		editor = new WebEditor();
 	}
 	
 	String code;
+	@Hidden
 		public String getCode() {
 			return code;
 		}
