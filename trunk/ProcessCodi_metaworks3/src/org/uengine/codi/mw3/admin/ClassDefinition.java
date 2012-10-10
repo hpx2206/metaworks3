@@ -206,23 +206,25 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		for(int i=0; i<getSourceCodes().getClassModeler().getClassFields().size(); i++){
 			ClassField field = getSourceCodes().getClassModeler().getClassFields().get(i);
 			
-			String fieldNameFirstCharUpper = UEngineUtil.toOnlyFirstCharacterUpper(field.getFieldName());
+			String fieldNameFirstCharUpper = UEngineUtil.toOnlyFirstCharacterUpper(field.getId());
 			String fieldType = field.getType();
 			
 			if(fieldType.startsWith("java.lang"))
 				fieldType = fieldType.substring("java.lang".length()+1);
 			
 			sb
-				.append("	").append(fieldType).append(" ").append(field.getFieldName()).append(";\n")
-				.append("		public ").append(fieldType).append(" get").append(fieldNameFirstCharUpper).append("(){ return ").append(field.getFieldName()).append("; }\n")
-				.append("		public void set").append(fieldNameFirstCharUpper).append("(").append(fieldType).append(" ").append(field.getFieldName()).append("){ this.").append(field.getFieldName()).append(" = ").append(field.getFieldName()).append("; }\n\n")
+				.append("	").append(fieldType).append(" ").append(field.getId()).append(";\n")
+				.append("		public ").append(fieldType).append(" get").append(fieldNameFirstCharUpper).append("(){ return ").append(field.getId()).append("; }\n")
+				.append("		public void set").append(fieldNameFirstCharUpper).append("(").append(fieldType).append(" ").append(field.getId()).append("){ this.").append(field.getId()).append(" = ").append(field.getId()).append("; }\n\n")
 				;
 		}
 		
 		sb.append("}");
 		
-		if(sourceCodes==null)
+		if(sourceCodes==null){
 			sourceCodes = new ClassSourceCodes();
+			sourceCodes.load();
+		}
 		
 		getSourceCodes().sourceCode = new JavaSourceCode();
 		getSourceCodes().sourceCode.setCode(sb.toString());
@@ -250,7 +252,8 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 	
 	}
 
-	@ServiceMethod(callByContent=true, when="view", keyBinding="Ctrl+S")
+//	@ServiceMethod(callByContent=true, when="view", keyBinding="Ctrl+S")
+	@ServiceMethod(callByContent=true, when="view")
 	public Object compile() throws Exception{
 		try{
 			save();
@@ -493,10 +496,11 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		
 		File ejsFile = new File(faceSource);
 
+//		if(UEngineUtil.isNotEmpty(getSourceCodes().getFace().getEditor().getContents())){
 		if(UEngineUtil.isNotEmpty(getSourceCodes().getFace().getCode())){
 			
 			writer = new FileWriter(ejsFile);
-			writer.write(getSourceCodes().getFace().getCode());
+			writer.write(new String(getSourceCodes().getFace().getEditor().getContents().getBytes("UTF-8"),"UTF-8"));
 			writer.close();
 
 		}else{
@@ -519,6 +523,14 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 			ejsJsFile.delete();
 		}
 		
+		if( this.getMetaworksContext().getWhere().equalsIgnoreCase("form")){
+			String formSource = sourceCodeBase + "/" + getAlias();
+			formSource = faceHelperSource.substring(0, faceHelperSource.indexOf(".")) + ".editor";
+			File formFile = new File(formSource);
+			writer = new FileWriter(formFile);
+			writer.write(getSourceCodes().getSourceCode().getCode());
+			writer.close();
+		}
 		///
 		
 		//TODO:   generate face file if exists
@@ -636,7 +648,10 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 			className = fullClassName;
 		}
 		
-		setSourceCodes(new ClassSourceCodes());
+		ClassSourceCodes newSourceCodes = new ClassSourceCodes();
+		newSourceCodes.setMetaworksContext(this.getMetaworksContext());
+		newSourceCodes.load();
+		setSourceCodes(newSourceCodes);
 
 		
 		/// read source file
@@ -670,6 +685,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 				is = new FileInputStream(ejsFile);
 				UEngineUtil.copyStream(is, bao);
 				getSourceCodes().getFace().setCode(bao.toString());
+				getSourceCodes().getFace().getEditor().setContents(bao.toString());
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -731,11 +747,128 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 			WebFieldDescriptor wfd = wfields[i];
 			FieldDescriptor fd = fields[i];
 			ClassField cf = new ClassField();
-			cf.setFieldName(wfd.getName());
+			cf.setId(wfd.getName());
 			cf.setType(fd.getClassType().getName());
+			cf.setMetaworksContext(new MetaworksContext());
+			cf.getMetaworksContext().setWhere("in-container");
+			cf.setDisplayname(fd.displayName);
+			cf.setDisable(fd.getAttribute("hidden") != null ? fd.getAttribute("hidden").toString().equals("true") : false);
+			cf.setInterface(fd.getClassType().isInterface());
 			classFields.add(cf);
 		}
 		
 		getSourceCodes().getClassModeler().setClassFields(classFields);
+	}
+	
+	@ServiceMethod(callByContent=true ,when="edit", keyBinding="Ctrl+S")
+	public void saveAsForm() throws Exception{
+		StringBuffer sb = new StringBuffer();								
+		StringBuffer importBuffer 			= new StringBuffer();		// import 생성 버퍼
+		StringBuffer methodBuffer 		= new StringBuffer();		// 메서드 생성 버퍼
+		StringBuffer constructorBuffer 	= new StringBuffer();		// 생성자 생성 버퍼
+		StringBuffer overridingBuffer 	= new StringBuffer();		// overriding 생성 버퍼
+		ArrayList<String> importList = new ArrayList<String>(); 
+		
+		constructorBuffer.append("	public " + getClassName() + "() { \n");
+		
+		importBuffer.append("import org.uengine.codi.ITool; \n");
+		importBuffer.append("import org.metaworks.annotation.Face;\n");
+		String classFaceOrderStr = "";
+		if(getSourceCodes().getClassModeler()!=null && getSourceCodes().getClassModeler().getClassFields()!=null)
+		for(int i=0; i<getSourceCodes().getClassModeler().getClassFields().size(); i++){
+			ClassField field = getSourceCodes().getClassModeler().getClassFields().get(i);
+			
+			String fieldNameFirstCharUpper = UEngineUtil.toOnlyFirstCharacterUpper(field.getId());
+			String fieldType = field.getType();
+			String importStr = "";
+			if( i == 0){
+				classFaceOrderStr = field.getId();
+			}else{
+				classFaceOrderStr += "," + field.getId();
+			}
+			
+			if(fieldType.startsWith("java.lang"))
+				fieldType = fieldType.substring("java.lang".length()+1);
+			
+			if(fieldType.startsWith("org.")){
+				String className = fieldType.substring(fieldType.lastIndexOf(".")+1);
+				importStr = "import " + fieldType + " ;\n";
+				if(!importList.contains(importStr)){
+					importList.add(importStr);
+				}
+//				importBuffer.append("import ").append(fieldType).append(" ;\n");
+				
+				if(field.isInterface()){
+					// 인터페이스인 경우, 객체 생성을 해주기 위하여 인터페이스가 아닌 클레스도 import 한다
+					importStr = "import " + fieldType.substring(0, fieldType.lastIndexOf(".")+1) + className.substring(1) + " ;\n";
+					if(!importList.contains(importStr)){
+						importList.add(importStr);
+					}
+					constructorBuffer	
+									.append("		").append("set").append(fieldNameFirstCharUpper)
+									.append("( new ").append(className.substring(1)).append("() ); \n");
+				}else{
+					constructorBuffer	
+									.append("		").append("set").append(fieldNameFirstCharUpper)
+									.append("( new ").append(className).append("() ); \n");
+				}
+				fieldType = className;
+			}
+			methodBuffer.append("	").append(fieldType).append(" ").append(field.getId()).append(";\n");
+			
+			if( field.getDisable()){
+				importStr = "import org.metaworks.annotation.Hidden;\n";
+				if(!importList.contains(importStr)){
+					importList.add(importStr);
+				}
+				methodBuffer.append("	@Hidden\n");
+			}
+			if( field.getDisplayname() != null && !field.getDisplayname().equals("")){
+				methodBuffer.append("	@Face(displayName=\""+ field.getDisplayname() +"\")\n");
+			}
+				
+			methodBuffer
+				.append("		public ").append(fieldType).append(" get").append(fieldNameFirstCharUpper).append("(){ return ").append(field.getId()).append("; }\n")
+				.append("		public void set").append(fieldNameFirstCharUpper).append("(").append(fieldType).append(" ").append(field.getId()).append("){ this.").append(field.getId()).append(" = ").append(field.getId()).append("; }\n\n")
+				;
+		}
+		
+		constructorBuffer.append("	}\n");
+		
+		overridingBuffer.append("	@Override \n");
+		overridingBuffer.append("	public void onLoad() {}	\n");
+		overridingBuffer.append("	@Override \n");
+		overridingBuffer.append("	public void beforeComplete() {}	\n");
+		overridingBuffer.append("	@Override \n");
+		overridingBuffer.append("	public void afterComplete() {}	\n");
+		
+		for(int i =0; i < importList.size(); i++){
+			importBuffer.append(importList.get(i));
+		}
+		
+		// 만들어진 소스들을 구성
+		sb.append("package ").append(getPackageName()).append(";\n\n");
+		sb.append(importBuffer.toString());
+		sb.append("@Face(options={\"fieldOrder\"},values={\""+ classFaceOrderStr +"\"})\n");
+		sb.append("public class " + getClassName() + "").append(" implements ITool ").append( "{\n\n");
+		
+		sb.append(constructorBuffer.toString());
+		sb.append(methodBuffer.toString());
+		sb.append(overridingBuffer.toString());
+		
+		sb.append("}");
+		
+		
+		
+		
+		if(sourceCodes==null){
+			sourceCodes = new ClassSourceCodes();
+			sourceCodes.load();
+		}
+		
+		getSourceCodes().sourceCode = new JavaSourceCode();
+		getSourceCodes().sourceCode.setCode(sb.toString());
+		
+		compile();
 	}
 }

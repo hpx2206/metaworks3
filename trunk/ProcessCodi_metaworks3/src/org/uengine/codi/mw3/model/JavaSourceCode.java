@@ -467,7 +467,7 @@ public class JavaSourceCode extends SourceCode {
 		ArrayList<ClassField> classFields = classModeler.getClassFields();
 		if(classFields!=null) {
 			for (ClassField field : classFields) {
-				classInfo.add(field.getFieldName() + "/" + "this" + "/field/");
+				classInfo.add(field.getId() + "/" + "this" + "/field/");
 			}
 		}
 
@@ -775,8 +775,8 @@ public class JavaSourceCode extends SourceCode {
 						ArrayList<ClassField> classFields = classModeler.getClassFields();
 						if(classFields!=null) {
 							for (ClassField field : classFields) {
-								//codeAssist.getAssistances().add(field.getFieldName());
-								System.out.println("field.getFieldName() : " +field.getFieldName());
+								//codeAssist.getAssistances().add(field.getId());
+								System.out.println("field.getId() : " +field.getId());
 							}
 						}
 					}
@@ -1014,7 +1014,7 @@ public class JavaSourceCode extends SourceCode {
 				ArrayList<ClassField> classFields = classModeler.getClassFields();
 				if(classFields!=null) {
 					for (ClassField field : classFields) {
-						codeAssist.getAssistances().add(field.getFieldName());
+						codeAssist.getAssistances().add(field.getId());
 					}
 				}
 			}

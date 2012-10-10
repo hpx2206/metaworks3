@@ -1,18 +1,13 @@
 
 package org.uengine.codi.mw3.admin;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-
-import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.ServiceMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.kernel.GlobalContext;
-import org.uengine.kernel.PropertyListable;
 import org.uengine.processmanager.ProcessManagerRemote;
 
-public class FormDefinition extends ClassDefinition {
+public class FormDefinition {
 	
 	transient MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
@@ -27,7 +22,6 @@ public class FormDefinition extends ClassDefinition {
 
 
 	public FormDefinition(){
-		sourceCodes = new FormSourceCodes();
 		setMetaworksContext(new MetaworksContext());
 		getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		
@@ -35,11 +29,11 @@ public class FormDefinition extends ClassDefinition {
 	
 	@ServiceMethod(callByContent=true)
 	public void save() throws Exception{
-		String strDef = GlobalContext.serialize(this, FormDefinition.class);
-		
-		String defVerId = processManager.addProcessDefinition(getAlias(), getVersion(), "description", false, strDef, "-1", null, "form", getAlias(), null);
-		processManager.setProcessDefinitionProductionVersion(defVerId);
-		processManager.applyChanges();
+//		String strDef = GlobalContext.serialize(this, FormDefinition.class);
+//		
+//		String defVerId = processManager.addProcessDefinition(getAlias(), getVersion(), "description", false, strDef, "-1", null, "form", getAlias(), null);
+//		processManager.setProcessDefinitionProductionVersion(defVerId);
+//		processManager.applyChanges();
 	}
 	
 //	@ServiceMethod(callByContent=true)

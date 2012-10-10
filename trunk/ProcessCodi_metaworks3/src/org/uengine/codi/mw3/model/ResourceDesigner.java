@@ -17,8 +17,7 @@ public abstract class ResourceDesigner {
 		public void setAlias(String alias) {
 			this.alias = alias;
 		}
-		
-	
+
 	@ServiceMethod
 	@Hidden
 	abstract public void load();

@@ -83,7 +83,7 @@ public class RuleDefinition implements ContextAware {
 			
 			ClassField variable = variables.get(i);
 			
-			String variableName = variable.getFieldName();
+			String variableName = variable.getId();
 			pvs[i] = ProcessVariable.forName(variableName);
 			
 		}
@@ -108,7 +108,7 @@ public class RuleDefinition implements ContextAware {
 				
 				ClassField variable = variables.get(i);
 				
-				String variableName = variable.getFieldName();
+				String variableName = variable.getId();
 				
 				pi.set(variableName, variable.getDefaultValue());
 			}
@@ -118,7 +118,7 @@ public class RuleDefinition implements ContextAware {
 			for(int i=0;i<variables.size();i++) {
 				
 				ClassField variable = variables.get(i);
-				String variableName = variable.getFieldName();
+				String variableName = variable.getId();
 				
 				Console.addLog("<ul>");
 				Console.addLog("<li>" + variableName + "=" + pi.get(variableName) + "<br>");

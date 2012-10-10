@@ -425,6 +425,13 @@ public class ResourceFile implements ContextAware{
 				classDesignerContentPanel.load(getAlias());
 				
 				return classDesignerContentPanel;
+//			}else if("form".equals(objType)){
+//				FormDesignerContentPanel formDesignerContentPanel = new FormDesignerContentPanel();
+//				formDesignerContentPanel.getMetaworksContext().setHow(pageNavigator.getPageName());
+//				formDesignerContentPanel.load(getAlias());
+//				
+//				return formDesignerContentPanel;
+				
 			}else if("process2".equals(objType)){
 				ProcessDesignerWebWindow processDesigner = new ProcessDesignerWebWindow();
 				processDesigner.load(getAlias());

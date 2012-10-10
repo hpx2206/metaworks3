@@ -14,7 +14,6 @@ import org.metaworks.annotation.Range;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.example.ide.SourceCode;
 import org.metaworks.website.MetaworksFile;
-import org.uengine.codi.mw3.model.JavaSourceCode;
 import org.uengine.util.UEngineUtil;
 
 @Face(
@@ -30,17 +29,36 @@ public class ClassField implements Cloneable, ContextAware{
 	public ClassField(){
 	}
 	
-	String fieldName;
-		@Id  // TODO: lesson 1 (object addressing and correlation)
-		public String getFieldName() {
-			return fieldName;
+	String id;	// 변수명
+		@Id 
+		@Face(displayName="$variableName")
+		public String getId() {
+			return id;
 		}
-		public void setFieldName(String fieldName) {
-			this.fieldName = fieldName;
+		public void setId(String id) {
+			this.id = id;
+		}
+	boolean disable;				// Anotation Hidden 생성
+		@Face(displayName="$disable")
+		public boolean getDisable() {
+			return disable;
+		}
+		public void setDisable(boolean disable) {
+			this.disable = disable;
+		}
+
+	String displayname;;		// Anotation dispalyname 생성
+		@Face(displayName="$displayName")
+		public String getDisplayname() {
+			return displayname;
+		}
+		public void setDisplayname(String displayname) {
+			this.displayname = displayname;
 		}
 	
 	String type;
 	//@Hidden
+	@Face(displayName="$typeName")
 	@Range(
 				options={
 						"String", 
@@ -67,6 +85,8 @@ public class ClassField implements Cloneable, ContextAware{
 			this.type = type;
 		}
 		
+
+	
 //	JavaSourceCode typeInput;
 //	@Face(options={"width", "height"}, values={"10", "20"})
 //		public JavaSourceCode getTypeInput() {
@@ -75,6 +95,8 @@ public class ClassField implements Cloneable, ContextAware{
 //		public void setTypeInput(JavaSourceCode typeInput) {
 //			this.typeInput = typeInput;
 //		}
+
+	
 
 	String valueString;
 	@Hidden
@@ -120,9 +142,19 @@ public class ClassField implements Cloneable, ContextAware{
 		public void setValueFile(MetaworksFile valueFile) {
 			this.valueFile = valueFile;
 		}
+		
+	boolean isInterface;
+		@Hidden	
+		public boolean isInterface() {
+			return isInterface;
+		}
+		public void setInterface(boolean isInterface) {
+			this.isInterface = isInterface;
+		}
 
 		
 	Object defaultValue;
+	@Face(displayName="$defaultValue")
 		public Object getDefaultValue() {
 			return defaultValue;
 		}
@@ -140,7 +172,7 @@ public class ClassField implements Cloneable, ContextAware{
 		
 		//TODO: lesson 3 (validation with throwing exception)
 		if(classModeler.classFields.contains(this))
-			throw new Exception("There's already existing field named '" + getFieldName() + "'.");
+			throw new Exception("There's already existing field named '" + getId() + "'.");
 		ClassField clonedOne = (ClassField) this.clone(); //TODO: lesson 2 (cloning to avoid reflective problem)
 		
 		if(clonedOne.getDefaultValue()==null){
@@ -151,9 +183,11 @@ public class ClassField implements Cloneable, ContextAware{
 					classType.getConstructor(new Class[]{String.class}).newInstance(new Object[]{"0"})
 				);
 				
-			}else if(!classType.isInterface())
+			}else if(!classType.isInterface()){
 				clonedOne.setDefaultValue(classType.newInstance());
-			
+			}else if(classType.isInterface()){
+				clonedOne.setInterface(true);
+			}
 			
 		}
 
@@ -175,16 +209,15 @@ public class ClassField implements Cloneable, ContextAware{
 			
 			ClassField field = this;
 			
-			String fieldNameFirstCharUpper = UEngineUtil.toOnlyFirstCharacterUpper(field.getFieldName());
+			String fieldNameFirstCharUpper = UEngineUtil.toOnlyFirstCharacterUpper(field.getId());
 			String fieldType = field.getType();
-	
 			
 			StringBuffer sb = new StringBuffer();
 			sb
 				.append("\n")
-				.append("	").append(fieldType).append(" ").append(field.getFieldName()).append(";\n")
-				.append("		public ").append(fieldType).append(" get").append(fieldNameFirstCharUpper).append("(){ return ").append(field.getFieldName()).append("; }\n")
-				.append("		public void set").append(fieldNameFirstCharUpper).append("(").append(fieldType).append(" ").append(field.getFieldName()).append("){ this.").append(field.getFieldName()).append(" = ").append(field.getFieldName()).append("; }\n\n")
+				.append("	").append(fieldType).append(" ").append(field.getId()).append(";\n")
+				.append("		public ").append(fieldType).append(" get").append(fieldNameFirstCharUpper).append("(){ return ").append(field.getId()).append("; }\n")
+				.append("		public void set").append(fieldNameFirstCharUpper).append("(").append(fieldType).append(" ").append(field.getId()).append("){ this.").append(field.getId()).append(" = ").append(field.getId()).append("; }\n\n")
 				.append("\n");
 	
 			
@@ -205,7 +238,7 @@ public class ClassField implements Cloneable, ContextAware{
 		
 		int index = classModeler.classFields.indexOf(this);
 		if(index==-1)
-			throw new Exception("There's no existing field named '" + getFieldName() + "'.");
+			throw new Exception("There's no existing field named '" + getId() + "'.");
 					
 		classModeler.classFields.remove(this);
 		
@@ -228,7 +261,7 @@ public class ClassField implements Cloneable, ContextAware{
 	//TODO: quiz 2 (when the form field is first order, this button should be shown.
 	//              Improve 'up' method and 'down' method not to be shown when it is in the first order and in the last order.
 	
-	@ServiceMethod(when=MetaworksContext.WHEN_VIEW, where="in-container")
+	@ServiceMethod(when=MetaworksContext.WHEN_VIEW, where="in-container", callByContent=true)
 	public ClassModeler up(){
 		int index = classModeler.classFields.indexOf(this);
 		
@@ -241,7 +274,7 @@ public class ClassField implements Cloneable, ContextAware{
 		return classModeler;
 	}
 	
-	@ServiceMethod(when=MetaworksContext.WHEN_VIEW, where="in-container") 
+	@ServiceMethod(when=MetaworksContext.WHEN_VIEW, where="in-container", callByContent=true) 
 	public ClassModeler down(){
 		int index = classModeler.classFields.indexOf(this);
 		
@@ -260,8 +293,8 @@ public class ClassField implements Cloneable, ContextAware{
 	public boolean equals(Object obj) {
 		if(obj==null) return false;
 		
-		String thisFieldName = this.getFieldName();
-		String comparatorFieldName = ((ClassField)obj).getFieldName();
+		String thisFieldName = this.getId();
+		String comparatorFieldName = ((ClassField)obj).getId();
 		
 		return thisFieldName.equals(comparatorFieldName);
 	}

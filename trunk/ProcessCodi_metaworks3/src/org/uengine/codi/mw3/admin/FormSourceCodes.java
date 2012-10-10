@@ -12,10 +12,9 @@ values={"true", "true"})
 public class FormSourceCodes extends ClassSourceCodes {
 	
 	public FormSourceCodes(){
-		init();
+		this.init();
 	}
 	
-	@Override
 	public void init(){
 		this.classModeler = new ClassModeler();
 		this.face = new FaceEditor();

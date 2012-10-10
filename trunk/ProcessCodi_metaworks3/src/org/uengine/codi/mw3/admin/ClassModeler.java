@@ -3,6 +3,10 @@ package org.uengine.codi.mw3.admin;
 import java.util.ArrayList;
 
 import org.metaworks.MetaworksContext;
+import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.ServiceMethod;
+import org.uengine.codi.mw3.model.JavaSourceCode;
+import org.uengine.util.UEngineUtil;
 
 public class ClassModeler {
 	public ArrayList<ClassField> classFields;
