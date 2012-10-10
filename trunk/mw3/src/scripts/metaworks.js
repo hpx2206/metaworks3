@@ -1049,10 +1049,15 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					   if(contextMenuMethods.length > 0){
 						   var menuItems = [];
 						   
-						   for(var i=0; i<contextMenuMethods.length; i++){
+						   for(var i=0; i<contextMenuMethods.length; i++){							   
+							   
 							   var serviceMethodContext = contextMenuMethods[i];
 							   
+							   if(this.isHiddenMethodContext(serviceMethodContext))
+								   continue;
+							   
 							   // 상태에 따른 visible 처리
+							   /*
 								if(serviceMethodContext.when != mw3.WHEN_EVER){
 						   			if( (mw3.when && !((serviceMethodContext.when.indexOf(mw3.when + ',') != -1) || (serviceMethodContext.when.indexOf(',' + mw3.when) != -1) || (serviceMethodContext.when == mw3.when))) 
 						   					||
@@ -1061,39 +1066,8 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 						   			)
 						   				continue;
 								}
+								*/
 							   
-								if(serviceMethodContext.attributes){
-									if(serviceMethodContext.attributes['hidden.when']){
-										if(serviceMethodContext.attributes['hidden.when'] == this.when)
-											continue;
-									}
-										
-									if(serviceMethodContext.attributes['show.when']){
-										if(serviceMethodContext.attributes['show.when']!= this.when)
-											continue;
-									} 
-									
-									if(serviceMethodContext.attributes['available.when']){
-										if(serviceMethodContext.attributes['available.when'][this.when]==null)
-											continue;
-									} 
-									
-									if(serviceMethodContext.attributes['available.where']){
-										if(serviceMethodContext.attributes['available.where'][this.where]==null)
-											continue;
-									} 
-
-									if(serviceMethodContext.attributes['available.how']){
-										if(serviceMethodContext.attributes['available.how'][this.how]==null)
-											continue;
-									} 
-
-									
-									if(serviceMethodContext.attributes['hidden']) 
-										return true;										
-								} 							   
-							   
-							  
 								
 							   var command = "mw3.call("+objectId+", '"+serviceMethodContext.methodName+"')";
 						   		
@@ -2987,27 +2961,30 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				}
 				*/
 				
-				if(method.methodContext.when != null && method.methodContext.when.indexOf('whenever|') == -1){
-					if(method.methodContext.when.indexOf(mw3.when + '|') == -1)
+				return this.isHiddenMethodContext(method.methodContext);
+			};
+			
+			Metaworks3.prototype.isHiddenMethodContext = function(methodContext){
+				if(methodContext.when != null && methodContext.when.indexOf('whenever|') == -1){
+					if(methodContext.when.indexOf(mw3.when + '|') == -1)
 						return true;						
 				}
 				
-				if(method.methodContext.where != null && method.methodContext.where.indexOf('whenever|') == -1){
-					if(method.methodContext.where.indexOf(mw3.where + '|') == -1)
+				if(methodContext.where != null && methodContext.where.indexOf('wherever|') == -1){
+					if(methodContext.where.indexOf(mw3.where + '|') == -1)
 						return true;						
 				}
 
-				if(method.methodContext.how != null){
-					if(method.methodContext.how.indexOf(mw3.how + '|') == -1)
+				if(methodContext.how != null){
+					if(methodContext.how.indexOf(mw3.how + '|') == -1)
 						return true;						
 				}
 								
-				if(method.methodContext.when == '___hidden___')
+				if(methodContext.when == '___hidden___')
 					return true;
 
-				return false;
-			};
-			
+				return false;				
+			}
 			
 			Metaworks3.prototype.validationCondition = function (validator, object){
 				var validationCondition = true;
