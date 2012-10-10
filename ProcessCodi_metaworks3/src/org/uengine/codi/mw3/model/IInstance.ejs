@@ -45,11 +45,7 @@
 					<span class="type_process"></span><span class="instanceLock"></span>
 				<% } %>	
 						
-				<a href="#middle-center"><b><font color=204070><%=value.initiator.name%></font> &nbsp;&nbsp; <font color=#5C5C5C><%=value.name%></font></b></a></li>
-				
-			    <% if(value.instanceViewThreadPanel && value.instanceViewThreadPanel.instanceId) {%>			     
-			    <% }else{%>          
-			    <% if(value.currentUser && value.currentUser.userId && (value.initiator.userId!=value.currentUser.userId || value.name!=value.lastCmnt)){%>
+	    <% if(value.currentUser && value.currentUser.userId && (value.initiator.userId!=value.currentUser.userId || value.name!=value.lastCmnt)){%>
 			   
 			   <table><td><%value.currentUser['size']='small';%><%=fields.currentUser.here()%></td>
 			   <td colspan=2 style="border:none; padding-right:10px;"><font color=204070><%=value.currentUser.name%></font>&nbsp;&nbsp; <font color=gray><%=value.lastCmnt%></font></td></table>
@@ -77,8 +73,10 @@
 
 <% if(value.instanceViewThreadPanel && value.instanceViewThreadPanel.instanceId) {%>
 <div style="background:url(images/waveStyle/topShadow.png) top repeat-x #F5F5F5; border-bottom:1px solid #E5E5E5; position:relative">
-	<div style="position:absolute; top:-10px; left:49%;"><img src="images/waveStyle/topShadowArrow.png"></div>
-	<%=fields.instanceViewThreadPanel.here()%>
+	<div style="background:url(images/waveStyle/bottomShadow.png) bottom repeat-x;">
+		<div style="position:absolute; top:-10px; left:49%;"><img src="images/waveStyle/topShadowArrow.png"></div>
+		<%=fields.instanceViewThreadPanel.here()%>
+	</div>
 </div>
 <%}%>
 
