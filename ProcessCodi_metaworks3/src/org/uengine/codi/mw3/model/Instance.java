@@ -1,6 +1,5 @@
 package org.uengine.codi.mw3.model;
 
-import java.io.File;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -9,20 +8,18 @@ import java.util.Set;
 
 import org.directwebremoting.Browser;
 import org.directwebremoting.ScriptSessions;
-import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Id;
-import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.widget.ModalWindow;
-import org.metaworks.widget.Window;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.Login;
 import org.uengine.processmanager.ProcessManagerRemote;
 import org.uengine.webservices.worklist.DefaultWorkList;
+
+
 
 public class Instance extends Database<IInstance> implements IInstance{
 
@@ -779,7 +776,23 @@ public class Instance extends Database<IInstance> implements IInstance{
 		public void setInitCmpl(boolean initCmpl) {
 			this.initCmpl = initCmpl;
 		}
+		
+	InstanceViewThreadPanel instanceViewThreadPanel;
+		public InstanceViewThreadPanel getInstanceViewThreadPanel() {
+			return instanceViewThreadPanel;
+		}
+		public void setInstanceViewThreadPanel(InstanceViewThreadPanel instanceViewThreadPanel) {
+			this.instanceViewThreadPanel = instanceViewThreadPanel;
+		}		
 
+	public void over() throws Exception{
+		InstanceViewThreadPanel panel = new InstanceViewThreadPanel();
+		panel.getMetaworksContext().setHow("instanceList");
+		panel.load(this.getInstId().toString());
+		
+		setInstanceViewThreadPanel(panel);
+	}
+	
 	@Override
 	public void split() throws Exception {
 		Long root = new Long(-1);
