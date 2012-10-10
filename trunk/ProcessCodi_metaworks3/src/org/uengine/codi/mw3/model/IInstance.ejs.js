@@ -60,7 +60,7 @@ var org_uengine_codi_mw3_model_IInstance = function(objectId, className){
 			
 			faceHelper.overTimer = setTimeout(function(){
 				mw3.call(objectId, 'over');
-			}, 2500);			
+			}, 2000);			
 		}
 		
 	});
