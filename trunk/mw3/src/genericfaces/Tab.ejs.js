@@ -40,6 +40,11 @@ Tab.prototype.load = function(){
 	this.layout = $('#objDiv_' + this.objectId).layout(options);
 }
 
+Tab.prototype.destroy = function(){
+	$('#tabs_' + this.objectId).tabs('destroy');
+}
+
+
 Tab.prototype.resize = function(){
 	if(this.layout){
 		this.layout.resizeAll();
