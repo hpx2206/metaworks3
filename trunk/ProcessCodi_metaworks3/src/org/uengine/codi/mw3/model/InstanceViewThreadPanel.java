@@ -34,9 +34,9 @@ public class InstanceViewThreadPanel implements ContextAware {
 		IWorkItem thread; 
 		
 		if("instanceList".equals(this.getMetaworksContext().getHow())){
-			thread = (IWorkItem)MetaworksDAO.createDAOImpl(IWorkItem.class);
+/*			thread = (IWorkItem)MetaworksDAO.createDAOImpl(IWorkItem.class);
 			int cnt = 1;
-			int limit = 2;
+			int limit = 5;
 			
 			while(result.next()){
 				cnt++;
@@ -49,7 +49,9 @@ public class InstanceViewThreadPanel implements ContextAware {
 					
 					break;
 				}
-			}		
+			}*/		
+			thread = result;
+			
 			
 			thread.getMetaworksContext().setHow("instanceList");
 		}else{
