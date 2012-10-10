@@ -25,6 +25,20 @@ var org_uengine_codi_mw3_model_InstanceListPanel = function(objectId, className)
 			mw3.objects[lastMore].more();
 		}
 	});
+	
+	/*		
+	 	$('#' + this.divId + ' .ui-layout-content').mCustomScrollbar({
+			callbacks:{
+				
+				onTotalScroll:function(){
+					mw3.objects[lastMore].more();
+					setTimeout(function(){$("#method_37_switchToScheduleCalendar .ui-layout-content").mCustomScrollbar("update");},2000);
+				}
+			}
+		});
+	*/
+	
+	
 }
 
 
