@@ -5,6 +5,8 @@ import java.util.Map;
 import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Id;
+import org.metaworks.annotation.NonLoadable;
+import org.metaworks.annotation.NonSavable;
 import org.metaworks.annotation.ORMapping;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Table;
@@ -130,6 +132,12 @@ public interface IInstance extends IDAO{
 	public boolean isInitCmpl();
 	public void setInitCmpl(boolean initCmpl);
 	
+	@NonLoadable
+	@NonSavable
+	public InstanceViewThreadPanel getInstanceViewThreadPanel();
+	public void setInstanceViewThreadPanel(InstanceViewThreadPanel instanceViewThreadPanel);
+
+	
 	/////// following setter/getters stands for mapping tuple data to object by bean mapping /////////
 	
 	@ORMapping(
@@ -159,4 +167,9 @@ public interface IInstance extends IDAO{
 	@Available(when="instanceNavigator")
 	@Face(displayName="$SplitFromRootProcess")
 	public void split() throws Exception;
+	
+	@ServiceMethod(inContextMenu=true, callByContent=true, target=TARGET_SELF)	
+	public void over() throws Exception;
+	
+	
 }

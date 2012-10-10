@@ -1,32 +1,60 @@
 package org.uengine.codi.mw3.model;
 
-import java.rmi.RemoteException;
-import java.util.ArrayList;
-
-import javax.annotation.PostConstruct;
-
+import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
-import org.metaworks.ServiceMethodContext;
-import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Id;
-import org.metaworks.annotation.Name;
-import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.dao.IDAO;
-import org.metaworks.dao.TransactionContext;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.uengine.kernel.ProcessInstance;
-import org.uengine.processmanager.ProcessManagerBean;
-import org.uengine.processmanager.ProcessManagerRemote;
+import org.metaworks.dao.MetaworksDAO;
 
 
-public class InstanceViewThreadPanel {
+public class InstanceViewThreadPanel implements ContextAware {
 	
-	public InstanceViewThreadPanel(){}
+	public InstanceViewThreadPanel(){
+		setMetaworksContext(new MetaworksContext());
+	}
 	
+	MetaworksContext metaworksContext;
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
+		}
+
 	protected InstanceViewThreadPanel(String instanceId) throws Exception{
+		load(instanceId);		
+
+	}
+	
+	public void load(String instanceId) throws Exception {
 		setInstanceId(instanceId);
-		setThread(WorkItem.find(instanceId));//.getImplementationObject().toArrayList());
+		
+		IWorkItem result = WorkItem.find(instanceId);
+		IWorkItem thread; 
+		
+		if("instanceList".equals(this.getMetaworksContext().getHow())){
+			thread = (IWorkItem)MetaworksDAO.createDAOImpl(IWorkItem.class);
+			int cnt = 1;
+			int limit = 2;
+			
+			while(result.next()){
+				cnt++;
+				
+				thread.moveToInsertRow();
+				thread.getImplementationObject().copyFrom(result);
+				
+				if(cnt > limit){
+					setMore(true);
+					
+					break;
+				}
+			}		
+			
+			thread.getMetaworksContext().setWhere("instanceList");
+		}else{
+			thread = result;
+		}
+		
+		setThread(thread);//.getImplementationObject().toArrayList());		
 	}
 
 	String instanceId;
@@ -56,5 +84,12 @@ public class InstanceViewThreadPanel {
 		public void setThread(IWorkItem thread) {
 			this.thread = thread;
 		}
-
+		
+	boolean more;
+		public boolean isMore() {
+			return more;
+		}
+		public void setMore(boolean more) {
+			this.more = more;
+		}
 }
