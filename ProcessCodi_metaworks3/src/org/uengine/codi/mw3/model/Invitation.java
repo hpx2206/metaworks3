@@ -121,10 +121,9 @@ public class Invitation implements ContextAware{
 		IUser newUser_ = new User();
 		newUser_.setName(newUser.getEmpName());
 		newUser_.setUserId(newUser.getEmpCode());
+		newUser_.setNetwork("local");
 		
 		newContact.setFriend(newUser_);
-		newContact.setNetwork("local");
-
 		newContact.createDatabaseMe();
 		
 		ContactList cp = new ContactList();

@@ -794,10 +794,10 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		if(!securedConversation){
 			Contact contact = new Contact();
 			contact.setFriend(writer);
-			contact.setFriendId(writer.getUserId());
+			//contact.setFriendId(writer.getUserId());
 			writer.setMood(title);
 			writer.getMetaworksContext().setWhen("contacts");
-			contact.setMood(title);
+			//contact.setMood(title);
 			
 			MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(contact)});
 		}

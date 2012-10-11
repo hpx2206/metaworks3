@@ -440,9 +440,10 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		Contact contact = new Contact();
 		IUser friendUser = new User();
 		friendUser.setUserId(getEmpCode());
-		friendUser.setName(getEmpName());
+		friendUser.setName(getEmpName());		
+		friendUser.setName(ContactList.LOCAL);		
+		
 		contact.setFriend(friendUser);
-		contact.setNetwork(ContactList.LOCAL);
 		contact.setUserId(session.getUser().getUserId());
 		contact.addContact();
 		
