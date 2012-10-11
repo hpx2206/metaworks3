@@ -441,7 +441,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		IUser friendUser = new User();
 		friendUser.setUserId(getEmpCode());
 		friendUser.setName(getEmpName());		
-		friendUser.setName(ContactList.LOCAL);		
+		friendUser.setNetwork(ContactList.LOCAL);		
 		
 		contact.setFriend(friendUser);
 		contact.setUserId(session.getUser().getUserId());
