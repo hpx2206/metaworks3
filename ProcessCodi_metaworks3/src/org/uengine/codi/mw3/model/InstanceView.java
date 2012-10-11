@@ -110,15 +110,15 @@ public class InstanceView {
 			genericWI.setInstId(new Long(getInstanceId()));
 			// TODO attach thread 
 			return genericWI.add();
-		}else{
-		
-			Instance instance = new Instance();
-			instance.session = session;
-			instance.processManager = processManager;
-			instance.setInstId(new Long(getInstanceId()));
-			return instance.paste();
+//		}else{
+//		
+//			Instance instance = new Instance();
+//			instance.session = session;
+//			instance.processManager = processManager;
+//			instance.setInstId(new Long(getInstanceId()));
+//			return instance.paste();
 		}
-		
+		return null;
 	}
 	
 	
