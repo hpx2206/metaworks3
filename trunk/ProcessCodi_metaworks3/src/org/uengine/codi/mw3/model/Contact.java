@@ -9,11 +9,7 @@ import org.metaworks.dao.Database;
 public class Contact extends Database<IContact> implements IContact{
 
 	public IContact loadContacts() throws Exception{
-		return loadContacts(null);
-	}
-	public IContact loadContacts(String keyword) throws Exception{
 		IUser friend = new User();
-		friend.setName(keyword + '%');
 		
 		StringBuffer sb = new StringBuffer();
 		sb.append("select a.*, e.mood")
@@ -22,13 +18,13 @@ public class Contact extends Database<IContact> implements IContact{
 		.append(" where a.userId=?userId")
 		.append("   and a.network=?network");
 		
-		if(keyword != null && keyword.length() > 0)
+		if(this.getFriend() != null && this.getFriend().getName() != null)
 			sb.append("   and a.friendName like ?friendName");
 		
 		IContact contacts = sql(sb.toString());
-		contacts.setUserId(getUserId());
-		contacts.setNetwork(getNetwork());
-		contacts.setFriend(friend);		
+		contacts.setUserId(getUserId());		
+		contacts.set("friendName", this.getFriend().getName());
+		contacts.set("network", this.getFriend().getNetwork());
 		contacts.select();
 		contacts.setMetaworksContext(getMetaworksContext());
 		return contacts;
@@ -36,6 +32,8 @@ public class Contact extends Database<IContact> implements IContact{
 	
 	public IContact findContactsWithFriendName(String keyword) throws Exception{
 		IContact contacts = sql("select * from contact where userId=?userId and friendName like '%" + keyword + "%'");
+		
+		contacts.set("friendName", keyword);
 		contacts.setUserId(getUserId());
 		contacts.select();
 		
@@ -45,7 +43,7 @@ public class Contact extends Database<IContact> implements IContact{
 	public void addContact() throws Exception{
 		if(!this.getUserId().equals(getFriend().getUserId())){
 			IContact contact = sql("select * from contact where userid = ?userId and friendId = ?friendId");
-			contact.setFriend(getFriend());
+			contact.set("friendId", this.getFriend().getUserId());
 			contact.setUserId(getUserId());
 			
 			contact.select();
@@ -63,13 +61,14 @@ public class Contact extends Database<IContact> implements IContact{
 	
 	public void removeContact() throws Exception{
 		IContact contact = sql("delete from contact where userid = ?userId and friendId = ?friendId");
-		contact.setFriend(getFriend());
+		contact.set("friendId", getFriend().getUserId());
 		contact.setUserId(getUserId());
 
 		contact.update();
 	}
 
 	IUser friend;
+		@Override
 		public IUser getFriend() {
 			return friend;
 		}
@@ -79,43 +78,15 @@ public class Contact extends Database<IContact> implements IContact{
 		}
 			
 		
-	String userId;		
+	String userId;
+		@Override
 		public String getUserId() {
 			return userId;
 		}
 	
 		public void setUserId(String userId) {
 			this.userId = userId;
-		}
-
-	String friendId;
-	
-		public String getFriendId() {
-			return friendId;
-		}
-		public void setFriendId(String friendId) {
-			this.friendId = friendId;
-		}
-
-	String network;
-	
-		public String getNetwork() {
-			return network;
-		}
-		public void setNetwork(String network) {
-			this.network = network;
-		}
-		
-	String mood;
-		
-		public String getMood() {
-			return mood;
-		}
-		public void setMood(String mood) {
-			this.mood = mood;
-		}
-		
-		
+		}		
 		
 	public User pickUp() throws RemoteException, Exception {
 		//User user = new User(); //this should have error - more than the @Id, the objectId is the closest one.

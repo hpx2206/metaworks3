@@ -18,16 +18,21 @@ public class ContactList implements ContextAware {
 	public void load(String userId) throws Exception{
 		load(userId, null);
 	}
-	public void load(String userId, String keyword) throws Exception{
+	public void load(String userId, String friendName) throws Exception{
 		setId(getMetaworksContext().getWhen() + "_" + getMetaworksContext().getWhere());
 		
 		Contact contact = new Contact();
 		contact.setMetaworksContext(getMetaworksContext());
 		contact.setUserId(userId);
-			
+		
+		IUser friend = new User();
+		friend.setName(friendName);
+		
 		if(LOCAL.equals(this.getMetaworksContext().getWhere())){
-			contact.setNetwork(LOCAL);
-			setContacts(contact.loadContacts(keyword));
+			friend.setNetwork(LOCAL);			
+			contact.setFriend(friend);
+			
+			setContacts(contact.loadContacts());
 			
 			if(getContacts().size()==0){
 				invitation = new Invitation();
@@ -35,8 +40,10 @@ public class ContactList implements ContextAware {
 			}
 			
 		}else if(FACEBOOK.equals(this.getMetaworksContext().getWhere())){
-			contact.setNetwork(FACEBOOK);
-			setContacts(contact.loadContacts(keyword));
+			friend.setNetwork(FACEBOOK);
+			contact.setFriend(friend);
+			
+			setContacts(contact.loadContacts());
 		}
 	}
 
