@@ -16,14 +16,6 @@ import org.metaworks.example.ide.SourceCode;
 import org.metaworks.website.MetaworksFile;
 import org.uengine.util.UEngineUtil;
 
-@Face(
-	ejsPathMappingByContext=
-	{
-		"{when: 'edit', face: 'genericfaces/ObjectFace.ejs'}",
-		"{when: 'view', face: 'genericfaces/ObjectFace.ejs'}",
-		"{when: 'instance-mode', face: 'dwr/metaworks/org/uengine/codi/mw3/admin/FormField.ejs'}",
-	}		
-)
 public class ClassField implements Cloneable, ContextAware{
 
 	public ClassField(){
