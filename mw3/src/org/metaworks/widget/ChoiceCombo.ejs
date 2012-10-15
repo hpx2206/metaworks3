@@ -28,11 +28,17 @@
 	</select>
 <%
 		} else {
-			for(var i in value.optionValues){
-				if(value.selected == value.optionValues[i]) {
+			if(value.selectedText){
+%>
+	<%=mw3.localize(value.selectedText)%>
+<%
+			}else{
+				for(var i in value.optionValues){
+					if(value.selected == value.optionValues[i]) {
 %>
 	<%=mw3.localize(value.optionNames[i])%>
 <%
+					}
 				}
 			}
 		}
