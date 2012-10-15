@@ -48,7 +48,7 @@ var org_uengine_codi_mw3_model_IInstance = function(objectId, className){
 			*/
 	});
 	
-	$('#' + this.divId).mouseenter({objectId : this.objectId}, function(event){		
+	/*$('#' + this.divId).mouseenter({objectId : this.objectId}, function(event){		
 		var objectId = event.data.objectId;
 		
 		var object = mw3.getObject(objectId);
@@ -59,11 +59,12 @@ var org_uengine_codi_mw3_model_IInstance = function(objectId, className){
 			var faceHelper = mw3.getFaceHelper(objectId);
 			
 			faceHelper.overTimer = setTimeout(function(){
-				mw3.call(objectId, 'over');
+				// mw3.call(objectId, 'over');
+				console.debug("11");
 			}, 2000);			
 		}
 		
-	});
+	});*/
 }
 
 	

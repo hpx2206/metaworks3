@@ -1,0 +1,46 @@
+<%
+	if(mw3.when == 'edit'){
+%>
+<div class="inLineSpan">
+	<div style="float:left;">
+		<ul>
+			<li><span class="firstSpan">variableName</span><span><%=fields.id.here()%></span></li>
+			<li><span class="firstSpan">type</span><span><%=fields.type.here()%></span></li>
+			<li><span class="firstSpan">disable</span><span><%=fields.disable.here()%></span></li>
+			<li><span class="firstSpan"">displayname</span><span><%=fields.displayname.here()%></span></li>
+		</ul>
+	</div>
+	<div style="float:right;">
+		<%=methods.save.here()%>
+	</div>
+	<div class="clear"></div>
+</div>
+<div>
+	<div style="float:right; margin:10px 0">
+		<a id="wBtn" href="#" onclick="<%=methods.add.caller()%>"><span>Add</span></a>
+	</div>
+</div>
+<%
+	}else if(mw3.when == 'view'){
+%>
+
+<div class="inLineSpan" style="background:#F3F3F3;">
+	<div style="float:left;">
+		<ul>
+			<li><span class="firstSpan">variableName</span><span><%=fields.id.here()%></span></li>
+			<li><span class="firstSpan">type</span><span><%=fields.type.here()%></span></li>
+			<li><span class="firstSpan">disable</span><span><%=fields.disable.here()%></span></li>
+			<li><span class="firstSpan"">displayname</span><span><%=fields.displayname.here()%></span></li>
+		</ul>
+	</div>
+	<div style="float:right;">		
+		<span style="display:inline-block; cursor:pointer" onCLick="<%=methods.up.caller()%>"><img src="images/waveStyle/navigate-up.png"></span>
+		<span style="display:inline-block; cursor:pointer" onCLick="<%=methods.down.caller()%>"><img src="images/waveStyle/navigate-down.png"></span>
+		<span style="display:inline-block; cursor:pointer" onCLick="<%=methods.remove.caller()%>"><img src="images/waveStyle/loadFailed.gif"></span>
+	</div>
+	<div class="clear"></div>
+</div>
+
+<%
+	}
+%>
