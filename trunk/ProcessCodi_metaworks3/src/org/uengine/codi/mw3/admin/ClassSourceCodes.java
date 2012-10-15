@@ -38,7 +38,7 @@ public class ClassSourceCodes{
 	}
 	
 	JavaSourceCode sourceCode;
-		@Available(where={"class","form"})
+		@Available(where={"class"})
 		public JavaSourceCode getSourceCode() {
 			return sourceCode;
 		}
