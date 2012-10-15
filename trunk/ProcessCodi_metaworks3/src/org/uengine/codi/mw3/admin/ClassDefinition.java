@@ -849,8 +849,8 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		// 만들어진 소스들을 구성
 		sb.append("package ").append(getPackageName()).append(";\n\n");
 		sb.append(importBuffer.toString());
-		sb.append("@Face(ejsPath=\"genericfaces/FormFace.ejs\" options={\"fieldOrder\"},values={\""+ classFaceOrderStr +"\"})\n");
-		sb.append("public class " + getClassName() + "").append(" implements ITool ").append( "{\n\n");
+		sb.append("@Face(ejsPath=\"genericfaces/FormFace.ejs\", options={\"fieldOrder\"},values={\""+ classFaceOrderStr +"\"})\n");
+		sb.append("public class " + getClassName() + "").append(" implements ITool").append( "{\n\n");
 		
 		sb.append(constructorBuffer.toString());
 		sb.append(methodBuffer.toString());
