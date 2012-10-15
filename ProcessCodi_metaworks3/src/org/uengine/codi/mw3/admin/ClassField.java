@@ -202,6 +202,7 @@ public class ClassField implements Cloneable, ContextAware{
 		classModeler.init();
 		//
 		
+		/*
 		if(classSourceCodes!=null && classSourceCodes.getSourceCode().getCode() != null){
 			StringBuffer javaCode = new StringBuffer(classSourceCodes.getSourceCode().getCode());
 			int whereLastBraket = javaCode.lastIndexOf("}");
@@ -225,11 +226,12 @@ public class ClassField implements Cloneable, ContextAware{
 			
 			classSourceCodes.getSourceCode().setCode(javaCode.toString());
 		}
+		*/
 		
-		if(classSourceCodes != null){
-			return new Object[]{classSourceCodes.getSourceCode(), classModeler};			
-		}else
-			return new Object[]{classModeler};
+		//if(classSourceCodes != null){
+		//	return new Object[]{classSourceCodes.getSourceCode(), classModeler};			
+		//}else
+		return new Object[]{classModeler};
 	}
 		
 	@ServiceMethod(when=MetaworksContext.WHEN_EDIT, where="in-container", callByContent=true)
