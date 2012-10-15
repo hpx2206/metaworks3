@@ -71,6 +71,8 @@ public class Choice {
 			if(value.equals(getOptionValues().get(i))) {
 				setSelected(value);
 				setSelectedText(getOptionNames().get(i));
+				
+				break;
 			}
 		}
 	}
@@ -80,6 +82,8 @@ public class Choice {
 			if(value.equals(getOptionNames().get(i))) {
 				setSelectedText(value);
 				setSelected(getOptionValues().get(i));
+				
+				break;
 			}
 		}
 	}
