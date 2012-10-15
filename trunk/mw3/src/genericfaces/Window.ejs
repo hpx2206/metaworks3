@@ -17,12 +17,18 @@
 		
 		var mobile;
 		
-		var objectName; 
+		/*
 		var windowTitle = null;
 
 		if(value.__className=='org.metaworks.widget.Window'){
 			windowTitle = value.title; 
-			showLabel = false;		
+			showLabel = false;	
+		*/
+				
+		var objectName; 
+		var windowTitle = value.title;
+
+		if(windowTitle){		
 		}else{
 			if(value.__toString != null){
 				objectName = value.__toString();
@@ -103,10 +109,12 @@
 <%
 			if(mw3.how != null && mw3.how == 'ide'){
 %>
-					<div id="loader_<%=objectId%>" class="loadingarea" style="display: none; "><img src="/uengine-web/images/waveStyle/ajax-loader_a.gif" border="0"></div><%
+					<div id="loader_<%=objectId%>" class="loadingarea" style="display: none; "><img src="/uengine-web/images/waveStyle/ajax-loader_a.gif" border="0"></div>
+<%
 			}else{
 %>
-					<div id="loader_<%=objectId%>" class="loadingarea" style="display: none; "><img src="/uengine-web/images/waveStyle/ajax-loader.gif" border="0"></div><%		
+					<div id="loader_<%=objectId%>" class="loadingarea" style="display: none; "><img src="/uengine-web/images/waveStyle/ajax-loader.gif" border="0"></div>
+<%		
 			}
 %>		
 <%
