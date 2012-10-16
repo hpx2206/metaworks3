@@ -120,7 +120,7 @@ legend {display:none;}
 .inLineSpan{padding:15px; border-bottom:1px solid #ccc;}
 .inLineSpan ul li span{display:inline-block; }
 .inLineSpan ul li span.firstSpan{width:140px; height:20px; font-weight:bold;}
-.ui-state-highlight { height: 103px;}
+.ui-state-highlight { height: 106px;}
 
 #btnline{margin:8px;}
 #btnline li{float:right; height:23px; line-height:23px; font-family:'맑은 고딕',Malgun gothic, Dotum, '돋움',Gulim, '굴림',  Arial, Helvetica, sans-serif;}
