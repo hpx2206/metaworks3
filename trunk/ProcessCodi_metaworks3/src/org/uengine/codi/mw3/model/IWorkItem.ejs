@@ -103,12 +103,22 @@
 											<%=value.title.replace('\n','<br>')%>
 									</span>								
 								<%}else if(value.type==null){%>
-									<span>
-										<%=mw3.localize('$MyTask')%>: <a href="#" onClick="<%=methods.detail.caller()%>"><%=value.title%> [ <%=value.status%> ]</a>
+									<span>							
+ 										<%=mw3.localize('$MyTask')%>: <a href="#" onClick="<%=value.tool=='formApprovalHandler'?'mw3.getFaceHelper('+objectId+').openFormApprovalHandler()':methods.detail.caller()%>"><%=value.title%> [ <%=value.status%> ]</a>
 									</span>
+									
+										<%
+											if(value.tool != 'formApprovalHandler'){
+										%>
 									<span>
 										<a href="#" onClick="<%=methods.workItemPopup.caller()%>"><img src="images/waveStyle/newWindow.png" style="margin-top:2px;" title="Open new window"></a>
 									</span>				
+										<%
+											}
+										%>									
+									
+									
+									
 								<%}%>
 								<% if(value.dueDate!=null){%>
 									<span class="workItemDate">
@@ -157,11 +167,17 @@
 						</td>
 					</tr>
 					<%}else if(value.workItemHandler != null && value.workItemHandler.instanceId != null ){
-					
-					
 					%>
 					<tr>
 						<td>	
+<%
+						if(value.dispatchOption == 1){
+%>												
+								이 업무는 경합으로 부여된 업무이므로 수락을 하셔야 처리 가능합니다.
+<%
+						}
+%>												
+							
 								<%=fields.workItemHandler.here()%>						
 						</td>
 					</tr>

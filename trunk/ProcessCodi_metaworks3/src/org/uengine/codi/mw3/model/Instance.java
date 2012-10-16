@@ -573,17 +573,16 @@ public class Instance extends Database<IInstance> implements IInstance{
 		
 	}
 
-	@Override
-	public String getName() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setName(String name) {
-		// TODO Auto-generated method stub
-		
-	}
+	String name;
+		@Override
+		public String getName() {
+			return this.name;
+		}
+		@Override
+		public void setName(String name) {
+			this.name = name;
+			
+		}
 
 	@Override
 	public boolean getIsDeleted() {

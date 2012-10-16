@@ -168,7 +168,12 @@ public interface IWorkItem extends IDAO{
 		public String getTool();
 		public void setTool(String tool);
 		
+		public int getDispatchOption();
+		public void setDispatchOption(int dispatchOption);
 
+		public String getRoleName();
+		public void setRoleName(String roleName);
+		
 		@ServiceMethod(when = WHEN_VIEW)
 		public void like() throws Exception;
 		
