@@ -14,7 +14,6 @@ import org.metaworks.annotation.Range;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.example.ide.SourceCode;
 import org.metaworks.website.MetaworksFile;
-import org.uengine.util.UEngineUtil;
 
 public class ClassField implements Cloneable, ContextAware{
 
@@ -279,6 +278,11 @@ public class ClassField implements Cloneable, ContextAware{
 		}
 
 		return classModeler;
+	}
+	
+	@ServiceMethod(callByContent=true)
+	public void edit() throws Exception {
+		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 	}
 	
 	
