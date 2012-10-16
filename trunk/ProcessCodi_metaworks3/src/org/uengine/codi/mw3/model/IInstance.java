@@ -1,6 +1,6 @@
 package org.uengine.codi.mw3.model;
 
-import java.util.Map;
+import java.util.Date;
 
 import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
@@ -57,20 +57,20 @@ public interface IInstance extends IDAO{
 	public String getLastCmnt();
 	public void setLastCmnt(String lastComment);
 
-	public java.util.Date getStartedDate();
-	public void setStartedDate(java.util.Date when);
+	public Date getStartedDate();
+	public void setStartedDate(Date when);
 
-	public abstract java.util.Date getFinishedDate();
-	public abstract void setFinishedDate(java.util.Date when);
+	public Date getFinishedDate();
+	public void setFinishedDate(Date when);
 
-	public abstract java.util.Date getDueDate();
-	public abstract void setDueDate(java.util.Date when);
+	public Date getDueDate();
+	public void setDueDate(Date when);
 
-	public abstract java.util.Date getDefModDate();
-	public abstract void setDefModDate(java.util.Date when);
+	public Date getDefModDate();
+	public void setDefModDate(Date when);
 
-	public abstract java.util.Date getModDate();
-	public abstract void setModDate(java.util.Date when);
+	public Date getModDate();
+	public void setModDate(Date when);
 
 	public String getStatus();
 	public void setStatus(String status);
@@ -78,20 +78,20 @@ public interface IInstance extends IDAO{
 	public String getInfo();
 	public void setInfo(String info);
 
-	public abstract String getName();
-	public abstract void setName(String name);
+	public String getName();
+	public void setName(String name);
 	
-	public abstract boolean getIsDeleted();
-	public abstract void setIsDeleted(boolean isDeleted);
+	public boolean getIsDeleted();
+	public void setIsDeleted(boolean isDeleted);
 	
-	public abstract boolean getIsAdhoc();
-	public abstract void setIsAdhoc(boolean isAdhoc);
+	public boolean getIsAdhoc();
+	public void setIsAdhoc(boolean isAdhoc);
 
-	public abstract boolean getIsSubProcess();
-	public abstract void setIsSubProcess(boolean isSubProcess);
+	public boolean getIsSubProcess();
+	public void setIsSubProcess(boolean isSubProcess);
 	
-	public abstract Long getRootInstId();
-	public abstract void setRootInstId(Long instanceId);
+	public Long getRootInstId();
+	public void setRootInstId(Long instanceId);
 	
 	public abstract Long getMainInstId();
 	public abstract void setMainInstId(Long instanceId);
