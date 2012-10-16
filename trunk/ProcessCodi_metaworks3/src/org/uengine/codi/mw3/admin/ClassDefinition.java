@@ -769,6 +769,8 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		StringBuffer overridingBuffer 	= new StringBuffer();		// overriding 생성 버퍼
 		ArrayList<String> importList = new ArrayList<String>(); 
 		
+		
+		
 		constructorBuffer.append("	public " + getClassName() + "() { \n");
 		
 		importBuffer.append("import org.uengine.codi.ITool; \n");
@@ -870,5 +872,8 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		getSourceCodes().sourceCode.setCode(sb.toString());
 		
 		compile();
+		
+		MetaworksRemoteService.getInstance().clearMetaworksType(getPackageName() + "." + getClassName());
+		
 	}
 }
