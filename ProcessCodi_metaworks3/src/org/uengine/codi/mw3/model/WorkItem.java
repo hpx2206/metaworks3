@@ -2,16 +2,10 @@ package org.uengine.codi.mw3.model;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
 
-import org.apache.commons.digester.SetRootRule;
 import org.directwebremoting.Browser;
-import org.directwebremoting.ScriptSession;
 import org.directwebremoting.ScriptSessions;
-import org.directwebremoting.WebContext;
-import org.directwebremoting.WebContextFactory;
-import org.directwebremoting.proxy.dwr.Util;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
@@ -22,23 +16,25 @@ import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Test;
 import org.metaworks.dao.Database;
-import org.metaworks.dao.IDAO;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.example.ide.SourceCode;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
-import org.metaworks.widget.Window;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.CodiProcessDefinitionFactory;
 import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.admin.WebEditor;
-import org.uengine.codi.mw3.calendar.ScheduleCalendar;
 import org.uengine.codi.mw3.knowledge.KnowledgeTool;
 import org.uengine.codi.mw3.knowledge.WfNode;
-import org.uengine.kernel.RoleMapping;
+import org.uengine.kernel.Activity;
+import org.uengine.kernel.HumanActivity;
+import org.uengine.kernel.ProcessInstance;
 import org.uengine.persistence.dao.UniqueKeyGenerator;
 import org.uengine.processmanager.ProcessManagerBean;
 import org.uengine.processmanager.ProcessManagerRemote;
+import org.uengine.webservices.worklist.DefaultWorkList;
+import org.uengine.kernel.RoleMapping;
+
 
 public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	
@@ -291,6 +287,22 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		public void setStatus(String status) {
 			this.status = status;
 		}
+		
+	int dispatchOption;
+		public int getDispatchOption() {
+			return dispatchOption;
+		}
+		public void setDispatchOption(int dispatchOption) {
+			this.dispatchOption = dispatchOption;
+		}
+
+	String roleName;
+		public String getRoleName() {
+			return roleName;
+		}
+		public void setRoleName(String roleName) {
+			this.roleName = roleName;
+		}
 
 	public void detail() throws Exception{
 
@@ -315,7 +327,40 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		workItemHandler.setTracingTag(tracingTag);
 		
 		workItemHandler.setMetaworksContext(new MetaworksContext());
-		workItemHandler.getMetaworksContext().setWhen(getStatus());
+		
+		boolean editable = false;
+		
+		if(this.getDispatchOption() == 1){
+			workItemHandler.getMetaworksContext().setWhen("compete");
+		}else{
+			
+			if(DefaultWorkList.WORKITEM_STATUS_NEW.equals(getStatus()) || 
+			   DefaultWorkList.WORKITEM_STATUS_DRAFT.equals(getStatus()) || 
+			   DefaultWorkList.WORKITEM_STATUS_COMPLETED.equals(getStatus())){
+				
+				ProcessInstance instance = processManager.getProcessInstance(this.getInstId().toString());			
+				HumanActivity humanActivity = (HumanActivity) instance.getProcessDefinition().getActivity(tracingTag);
+				
+				
+				RoleMapping	roleMapping = humanActivity.getRole().getMapping(instance, tracingTag);
+				roleMapping.beforeFirst();
+				
+				do{
+					if(roleMapping.getEndpoint().equals(session.getEmployee().getEmpCode())){
+						editable = true;
+						
+						break;
+					}
+				}while(roleMapping.next());
+			}
+			
+			if(editable){
+				workItemHandler.getMetaworksContext().setWhen(WHEN_EDIT);
+			}else{
+				workItemHandler.getMetaworksContext().setWhen(WHEN_VIEW);
+			}
+		}
+	
 		workItemHandler.session = session;
 		
 		workItemHandler.load();
@@ -930,8 +975,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		popup.setPanel(processMapList);
 		
 		return popup;
-	}
-
+	}	
 	
 	@AutowiredFromClient
 	public Session session;

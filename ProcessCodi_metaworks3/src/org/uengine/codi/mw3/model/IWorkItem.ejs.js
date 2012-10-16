@@ -26,3 +26,15 @@ var org_uengine_codi_mw3_model_IWorkItem = function(objectId, className){
 		workItem.loadContents();
 	}
 }
+
+org_uengine_codi_mw3_model_IWorkItem.prototype = {
+	openFormApprovalHandler : function(){
+		var object = mw3.getObject(this.objectId);
+		var location = window.location;
+				
+		var url = location.origin + '/uengine-web2/processparticipant/worklist/workitemHandler.jsp?taskId='+object.taskId+'&instanceId='+object.instId+'&tracingTag='+object.trcTag;
+		
+		window.open(url);
+	}
+}
+

@@ -24,7 +24,9 @@ import org.uengine.kernel.NeedArrangementToSerialize;
 import org.uengine.kernel.ParameterContext;
 import org.uengine.kernel.ProcessInstance;
 import org.uengine.kernel.ResultPayload;
+import org.uengine.kernel.RoleMapping;
 import org.uengine.processmanager.ProcessManagerRemote;
+import org.uengine.webservices.worklist.DefaultWorkList;
 import org.uengine.webservices.worklist.WorkList;
 
 //@Face(ejsPath="faces/org/metaworks/widget/Window.ejs", options={"hideLabels"}, values={"true"}, displayName="업무 처리 화면")
@@ -57,14 +59,14 @@ public class WorkItemHandler implements ContextAware{
 					pv.setVariableName(pc.getVariable().getName());
 					pv.setArgument(pc.getArgument().getText(session!=null && session.getEmployee()!=null ? session.getEmployee().getLocale() : null));
 					
-					
 					MetaworksContext mc = new MetaworksContext();
+										
+					if(MetaworksContext.WHEN_EDIT.equals(this.getMetaworksContext().getWhen())){
+						if(ParameterContext.DIRECTION_IN.equals(pc.getDirection()))						
+							this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+					}
 					
-					if(ParameterContext.DIRECTION_OUT.equals(pc.getDirection()) || ParameterContext.DIRECTION_INOUT.equals(pc.getDirection()))
-						mc.setWhen(MetaworksContext.WHEN_EDIT);
-					else
-						mc.setWhen(MetaworksContext.WHEN_VIEW);
-					
+					mc.setWhen(this.getMetaworksContext().getWhen());					
 					pv.setMetaworksContext(mc);
 					
 					
@@ -179,12 +181,11 @@ public class WorkItemHandler implements ContextAware{
 			this.taskId = taskId;
 		}
 		
-	@ServiceMethod(callByContent=true)
+	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_EDIT)
 	public void cancel() throws Exception{
 		instance = processManager.getProcessInstance(instanceId);
 
-		humanActivity = (HumanActivity) instance.getProcessDefinition()
-					.getActivity(tracingTag);
+		humanActivity = (HumanActivity) instance.getProcessDefinition().getActivity(tracingTag);
 
 //		WorkList worklist = instance.getWorkList();
 //		worklist.cancelWorkItem(getTaskId().toString(), new KeyedParameter[]{}, instance.getProcessTransactionContext());
@@ -206,7 +207,7 @@ public class WorkItemHandler implements ContextAware{
 		
 	}
 
-	@ServiceMethod(callByContent=true)
+	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_EDIT)
 	public void skip() throws Exception{
 		instance = processManager.getProcessInstance(instanceId);
 
@@ -245,7 +246,7 @@ public class WorkItemHandler implements ContextAware{
 	@AutowiredFromClient
 	public Session session;
 		
-	@ServiceMethod(callByContent=true, when="COMMITABLE")
+	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_EDIT)
 //	@Available(when={"NEW"})
 	public InstanceViewContent complete() throws RemoteException, ClassNotFoundException, Exception{
 		
@@ -307,8 +308,7 @@ public class WorkItemHandler implements ContextAware{
 	public InstanceViewContent instanceViewContent;
 	
 			
-	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_VIEW)
-	@Hidden(when="COMPLETED")
+	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_EDIT)
 	public void save() throws RemoteException, ClassNotFoundException, Exception{
 		
 		ResultPayload rp = new ResultPayload();
@@ -337,6 +337,21 @@ public class WorkItemHandler implements ContextAware{
 		processManager.saveWorkitem(getInstanceId(), getTracingTag(), getTaskId().toString(), rp );
 //			processManager.applyChanges(); //you may call this. since you can ensure this service method is the service itself
 	}
+	
+	@ServiceMethod(callByContent=true, when="compete")
+	public void accept() throws Exception{
+		instance = processManager.getProcessInstance(instanceId.toString());
+		
+		humanActivity = (HumanActivity) instance.getProcessDefinition().getActivity(tracingTag);
+		
+		
+		RoleMapping roleMapping = RoleMapping.create();
+		roleMapping.setName(humanActivity.getRole().getName());
+		roleMapping.setEndpoint(session.getEmployee().getEmpCode());		
+		
+		processManager.delegateWorkitem(this.getInstanceId(), this.getTracingTag(), roleMapping);
+	}
+	
 			
 	@Autowired
 	transient public ProcessManagerRemote processManager;
