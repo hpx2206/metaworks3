@@ -56,15 +56,20 @@ public class Perspective {
 		instList.init();
 		savePerspectiveToSession(session, perspectiveType, selectedItem);
 		instList.load(session);
-
+		
 		InstanceListPanel instListPanel = new InstanceListPanel(session);
 		instListPanel.session = session;
 		instListPanel.setInstanceList(instList);
 		
 		// set search Keyword to searchBox
 		instListPanel.getSearchBox().setKeyword(session.getSearchKeyword());
-		instListPanel.setTitle("$perspective." + perspectiveType);
-
+		if( session.getWindowTitle() == null ){
+			String title = "$perspective." + perspectiveType;
+			instListPanel.setTitle(title);
+			session.setWindowTitle(title);
+		}else{
+			instListPanel.setTitle(session.getWindowTitle());
+		}
 		return new Object[] {session, instListPanel};
 	}
 

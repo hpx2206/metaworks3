@@ -214,7 +214,21 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		public void setLoadDepth(int loadDepth) {
 			this.loadDepth = loadDepth;
 		}
-		
+	String secuopt;
+		public String getSecuopt() {
+			return secuopt;
+		}
+		public void setSecuopt(String secuopt) {
+			this.secuopt = secuopt;
+		}
+	String companyId;
+		public String getCompanyId() {
+			return companyId;
+		}
+		public void setCompanyId(String companyId) {
+			this.companyId = companyId;
+		}
+	
 	public WfNode() {
 		setChildNode(new ArrayList<WfNode>());
 		getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
@@ -564,6 +578,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		}
 		
 		newNode.setAuthorId(session.getUser().getUserId());		
+		newNode.setCompanyId(session.getCompany().getComCode());
 		newNode.createMe();
 
 		
@@ -771,7 +786,9 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 	
 	public Object[] move() throws Exception {
 		
-		
+		if( this.getDragNode() == null ){
+			return null;
+		}
 		if(this.getId() == this.getDragNode().getId()){
 			return null;
 		}				
@@ -1040,5 +1057,20 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		return popup;
 	}
 	
+	@Override
+	public Object[] topic() throws Exception{
+		StringBuffer sb = new StringBuffer();
+		sb.append("update bpm_knol");
+		sb.append("   set type = ?type");
+		sb.append(" where id=?id");
+		
+		IWfNode updateNode = sql(sb.toString());
+		updateNode.setType("topic");
+		updateNode.setId(this.getId());
+		
+		updateNode.update();
+		
+		return new Object[]{this};
+	}
 	
 }

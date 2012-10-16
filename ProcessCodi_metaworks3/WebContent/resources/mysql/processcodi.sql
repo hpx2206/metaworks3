@@ -601,3 +601,17 @@ alter table bpm_knol add column URL varchar(200);
 alter table bpm_knol add column THUMBNAIL varchar(200);
 
 alter table bpm_knol modify name VARCHAR(1000) ;
+
+alter table contact modify column userId varchar(100);
+
+alter table bpm_procinst add column topicId char(20);
+
+alter table bpm_knol add column SECUOPT CHAR(1) DEFAULT '0';
+alter table bpm_knol add column companyId varchar(20);
+
+CREATE TABLE BPM_TOPICMAPPING (
+  TOPICMAPPINGID INT(11) NOT NULL AUTO_INCREMENT,
+  TOPICID VARCHAR(20) NOT NULL,
+  USERID VARCHAR(255) DEFAULT NULL,
+  PRIMARY KEY (TOPICMAPPINGID)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

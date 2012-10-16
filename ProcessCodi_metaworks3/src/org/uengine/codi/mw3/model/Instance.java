@@ -338,7 +338,20 @@ public class Instance extends Database<IInstance> implements IInstance{
 			criteria.put("instStatus", "Stopped");
 			// secureopt
 			instanceSql
-					.append("and (inst.secuopt='0' OR (inst.secuopt=1 and exists (select rootinstid from BPM_ROLEMAPPING rm where rm.endpoint=?rmEndpoint and inst.rootinstid=rm.rootinstid))) ");
+			.append("and (inst.secuopt='0' OR (inst.secuopt=1 and exists (select rootinstid from BPM_ROLEMAPPING rm where rm.endpoint=?rmEndpoint and inst.rootinstid=rm.rootinstid)) ")
+			.append("		OR (inst.secuopt=3 and exists (select topicId from BPM_TOPICMAPPING tm where tm.userId=?rmEndpoint and inst.topicId=tm.topicId))) ");
+			criteria.put("rmEndpoint", session.getEmployee().getEmpCode());
+		}else if("topic".equals(session.getLastPerspecteType())) {
+			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
+			criteria.put("instIsdelete", "1");
+			instanceSql.append("and inst.status!=?instStatus ");
+			criteria.put("instStatus", "Stopped");
+			instanceSql.append("and inst.topicId =?topicId ");
+			criteria.put("topicId", session.getLastSelectedItem());
+			// secureopt
+			instanceSql
+			.append("and (inst.secuopt='0' OR (inst.secuopt=1 and exists (select rootinstid from BPM_ROLEMAPPING rm where rm.endpoint=?rmEndpoint and inst.rootinstid=rm.rootinstid)) ")
+			.append("		OR (inst.secuopt=3 and exists (select topicId from BPM_TOPICMAPPING tm where tm.userId=?rmEndpoint and inst.topicId=tm.topicId))) ");
 			criteria.put("rmEndpoint", session.getEmployee().getEmpCode());
 
 		}else{
@@ -754,10 +767,16 @@ public class Instance extends Database<IInstance> implements IInstance{
 		public void setSecuopt(String secuopt) {
 			this.secuopt = secuopt;
 		}
-
 		
-	String assignee;
+	String topicId;
+		public String getTopicId() {
+			return topicId;
+		}
+		public void setTopicId(String topicId) {
+			this.topicId = topicId;
+		}
 	
+	String assignee;
 		public String getAssignee() {
 			return assignee;
 		}

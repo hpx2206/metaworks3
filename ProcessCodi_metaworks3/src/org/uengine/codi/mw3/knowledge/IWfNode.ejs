@@ -37,8 +37,6 @@
 								<img src="<%=value.name%>">
 								<input type="text" id="wfnode_content_<%=objectId%>" style="height:1px ; border:none;background:transparent" onkeydown="mw3.getFaceHelper('<%=objectId%>').keydown(this)" onkeyup="mw3.getFaceHelper('<%=objectId%>').keyup(this);">
 <%					
-				
-				
 						}else if(value.type=='LMS'){		
 %>
 								<input type="text" id="wfnode_content_<%=objectId%>" style="width:100% ; border:none;background:transparent" style="border:0; font-family: 'Helvetica Neue', Arial, Sans-serif; font-size: 12px; font-weight: normal;background:transparent"" value="<%=value.name ? value.name : ''%>" onkeydown="mw3.getFaceHelper('<%=objectId%>').keydown(this)" onkeyup="mw3.getFaceHelper('<%=objectId%>').keyup(this);">
@@ -52,6 +50,10 @@
 						}else if(value.type=='slideshare'){		
 %>
 								<%=value.name%>
+<%				
+						}else if(value.type=='topic'){		
+%>
+								<input type="text" id="wfnode_content_<%=objectId%>" style="width:100% ; border:none;background:transparent; color:red;" style="border:0; font-family: 'Helvetica Neue', Arial, Sans-serif; font-size: 12px; font-weight: normal;background:transparent;'" value="<%=value.name ? value.name : ''%>" onkeydown="mw3.getFaceHelper('<%=objectId%>').keydown(this)" onkeyup="mw3.getFaceHelper('<%=objectId%>').keyup(this);">
 <%				
 						}else{ %>
 								<input type="text" id="wfnode_content_<%=objectId%>" style="width:100% ; border:none;background:transparent" style="border:0; font-family: 'Helvetica Neue', Arial, Sans-serif; font-size: 12px; font-weight: normal;background:transparent"" value="<%=value.name ? value.name : ''%>" onkeydown="mw3.getFaceHelper('<%=objectId%>').keydown(this)" onkeyup="mw3.getFaceHelper('<%=objectId%>').keyup(this);">
