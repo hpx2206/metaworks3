@@ -29,7 +29,11 @@
 		<ul>
 			<li>
 				<dl class="lst_type2">
-					<dt class="tit">
+
+					<dd class="photo">
+						<div id="popupInfoImgWih"><img id="user_picture_<%=objectId%>" src="<%=portrait%>" onerror="this.src='<%=unknown%>';" width="104" height="104"></div>	
+					</dd>
+					<dd class="tit">
 						<div id="popupInfoNameWih"><b><%=value.name%></b></div>
 						<%
 							var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
@@ -37,15 +41,16 @@
 							
 							if(itIsMe){
 						%>
-						<%=fields.mood.here({when:'edit'})%>
-						<%=methods.changeMood.here()%>
+						<div>
+							<%=fields.mood.here({when:'edit'})%>
+						</div>
+						<div style="margin-top:5px;">
+							<a id="wBtn" href="#" onClick="<%=methods.changeMood.caller()%>"><span style="color:#000; margin-right:0px">changeMood</span></a>
+						</div>
 						
 						<%	}else{%>
 							<%=value.mood ? value.mood : ''%>
-						<%	}%>
-					</dt>
-					<dd class="photo">
-						<div id="popupInfoImgWih"><img id="user_picture_<%=objectId%>" src="<%=portrait%>" onerror="this.src='<%=unknown%>';" width="104" height="104"></div>
+						<%	}%>			
 					</dd>
        			</dl>
       		</li>    
