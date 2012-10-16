@@ -145,14 +145,14 @@ public class ClassField implements Cloneable, ContextAware{
 		}
 
 		
-	Object defaultValue;
-	@Face(displayName="$defaultValue")
-		public Object getDefaultValue() {
-			return defaultValue;
-		}
-		public void setDefaultValue(Object defaultValue) {
-			this.defaultValue = defaultValue;
-		}
+//	Object defaultValue;
+//	@Face(displayName="$defaultValue")
+//		public Object getDefaultValue() {
+//			return defaultValue;
+//		}
+//		public void setDefaultValue(Object defaultValue) {
+//			this.defaultValue = defaultValue;
+//		}
 		
 		
 	@ServiceMethod(when=MetaworksContext.WHEN_EDIT, where="newEntry", callByContent=true)
@@ -167,21 +167,21 @@ public class ClassField implements Cloneable, ContextAware{
 			throw new Exception("There's already existing field named '" + getId() + "'.");
 		ClassField clonedOne = (ClassField) this.clone(); //TODO: lesson 2 (cloning to avoid reflective problem)
 		
-		if(clonedOne.getDefaultValue()==null){
-			Class classType = Thread.currentThread().getContextClassLoader().loadClass(clonedOne.getType());
-			
-			if(Number.class.isAssignableFrom(classType)){
-				clonedOne.setDefaultValue(
-					classType.getConstructor(new Class[]{String.class}).newInstance(new Object[]{"0"})
-				);
-				
-			}else if(!classType.isInterface()){
-				clonedOne.setDefaultValue(classType.newInstance());
-			}else if(classType.isInterface()){
-				clonedOne.setInterface(true);
-			}
-			
-		}
+//		if(clonedOne.getDefaultValue()==null){
+//			Class classType = Thread.currentThread().getContextClassLoader().loadClass(clonedOne.getType());
+//			
+//			if(Number.class.isAssignableFrom(classType)){
+//				clonedOne.setDefaultValue(
+//					classType.getConstructor(new Class[]{String.class}).newInstance(new Object[]{"0"})
+//				);
+//				
+//			}else if(!classType.isInterface()){
+//				clonedOne.setDefaultValue(classType.newInstance());
+//			}else if(classType.isInterface()){
+//				clonedOne.setInterface(true);
+//			}
+//			
+//		}
 
 		clonedOne.setMetaworksContext(new MetaworksContext());  //TODO: lesson 4 (context injection)
 		clonedOne.getMetaworksContext().setWhere("in-container");

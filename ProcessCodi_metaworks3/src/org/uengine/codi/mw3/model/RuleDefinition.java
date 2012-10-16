@@ -110,7 +110,7 @@ public class RuleDefinition implements ContextAware {
 				
 				String variableName = variable.getId();
 				
-				pi.set(variableName, variable.getDefaultValue());
+//				pi.set(variableName, variable.getDefaultValue());
 			}
 			
 			pi.execute();
