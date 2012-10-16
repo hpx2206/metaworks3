@@ -21,11 +21,12 @@
 .lst_type li{clear:both;_height:0;margin-bottom:10px;_font-size:0}
 .lst_type2{overflow:hidden;background-color:#fff; padding:0 8px;}
 .lst_type2 dt{padding:5px 0;font-size:16px; font-weight:bolder;}
-.lst_type2 dt.tit{margin-left:112px; margin-bottom:10px;}
-.lst_type2 dd.photo{display:inline;float:left;margin:-30px 10px 0 0;color:#fff;text-align:center}
-.lst_type2 dd.photo2{display:inline;float:left;margin:-197px 10px 0 0;color:#fff;text-align:center}
+.lst_type2 dd.tit{display:inline;float:left; margin-bottom:10px;}
+.lst_type2 dd.photo{display:inline;float:left;color:#fff;text-align:center}
+.lst_type2 dd.photo2{display:inline;float:left;color:#fff;text-align:center}
 .lst_type2 .infoSub{font-size:11px !important; font-weight: normal; margin:3px 0px; height: 17px;}
 .lst_type2 .infoSub span{display:inline-block;}
+.lst_type2 .infoSub span.infoSubFirstSpan{width:85px;}
 .lst_type2 dd{line-height:20px}
 .lst_type2 dd span{color:#808080; margin-right:15px;}
 .lst_type2 dd img{border:none}
