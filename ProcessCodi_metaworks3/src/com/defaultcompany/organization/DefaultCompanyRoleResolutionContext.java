@@ -11,6 +11,7 @@ import org.uengine.kernel.RoleMapping;
 import org.uengine.kernel.RoleResolutionContext;
 import org.uengine.processmanager.SimpleTransactionContext;
 import org.uengine.ui.XMLValueInput;
+import org.uengine.util.dao.ConnectiveDAO;
 import org.uengine.util.dao.GenericDAO;
 import org.uengine.util.dao.IDAO;
 
@@ -43,12 +44,11 @@ public class DefaultCompanyRoleResolutionContext extends RoleResolutionContext {
 		RoleMapping rm = RoleMapping.create();
 		
 		IDAO roleUser = null;
-		SimpleTransactionContext stc = new SimpleTransactionContext();
-		try {
+//		try {
 			if ( getRoleId() != null ) {
-				if ( getGroupId() != null ){
-					roleUser = GenericDAO.createDAOImpl(
-							stc, 
+				if ( getGroupId() != null  && !"".equals(getGroupId())){
+					roleUser = ConnectiveDAO.createDAOImpl(
+							instance.getProcessTransactionContext(), 
 							"select R.EMPCODE from EMPTABLE E, PARTTABLE P, ROLEUSERTABLE R where E.ISDELETED='0' and P.PARTCODE = ?groupCode and E.PARTCODE=P.PARTCODE and R.ROLECODE = ?roleCode and R.EMPCODE = E.EMPCODE ",
 							IDAO.class
 					);
@@ -57,8 +57,8 @@ public class DefaultCompanyRoleResolutionContext extends RoleResolutionContext {
 					roleUser.set("groupCode", getGroupId());
 					roleUser.select();
 				} else if ( getReferenceRole() != null && getReferenceRole().getMapping(instance) != null ) {
-					roleUser = GenericDAO.createDAOImpl(
-							stc, 
+					roleUser = ConnectiveDAO.createDAOImpl(
+							instance.getProcessTransactionContext(), 
 							"select R.EMPCODE from EMPTABLE E, (select PARTCODE, EMPCODE from EMPTABLE where EMPCODE= ?empCode) T, ROLEUSERTABLE R where E.ISDELETED='0' and E.PARTCODE =  T.PARTCODE and R.ROLECODE = ?roleCode and R.EMPCODE = E.EMPCODE ",
 							IDAO.class
 					);
@@ -67,8 +67,8 @@ public class DefaultCompanyRoleResolutionContext extends RoleResolutionContext {
 					roleUser.set("roleCode", getRoleId());
 					roleUser.select();
 				} else {
-					roleUser = GenericDAO.createDAOImpl(
-							stc, 
+					roleUser = ConnectiveDAO.createDAOImpl(
+							instance.getProcessTransactionContext(), 
 							" SELECT RU.EMPCODE FROM ROLEUSERTABLE RU " +
 							" 	INNER JOIN EMPTABLE EMP ON EMP.EMPCODE = RU.EMPCODE" +
 							"		AND EMP.ISDELETED='0' " +
@@ -81,8 +81,8 @@ public class DefaultCompanyRoleResolutionContext extends RoleResolutionContext {
 				}
 			} else {
 				if ( getGroupId() != null ){
-					roleUser = GenericDAO.createDAOImpl(
-							stc, 
+					roleUser = ConnectiveDAO.createDAOImpl(
+							instance.getProcessTransactionContext(), 
 							"select EMPCODE from EMPTABLE where ISDELETED='0' and PARTCODE =  ?PARTCODE ",
 							IDAO.class
 					);
@@ -90,8 +90,8 @@ public class DefaultCompanyRoleResolutionContext extends RoleResolutionContext {
 					roleUser.set("PARTCODE", getGroupId());
 					roleUser.select();
 				} else if ( getReferenceRole() != null && getReferenceRole().getMapping(instance) != null ) {
-					roleUser = GenericDAO.createDAOImpl(
-							stc, 
+					roleUser = ConnectiveDAO.createDAOImpl(
+							instance.getProcessTransactionContext(), 
 							"select E.EMPCODE from EMPTABLE E, (select PARTCODE, EMPCODE from EMPTABLE where EMPCODE= ?empCode) T where E.ISDELETED='0' and E.PARTCODE =  T.PARTCODE",
 							IDAO.class
 					);
@@ -108,15 +108,16 @@ public class DefaultCompanyRoleResolutionContext extends RoleResolutionContext {
 				while(roleUser.next()){
 					String endpoint = roleUser.getString("empCode");
 					
+					rm.setDispatchingOption(Role.DISPATCHINGOPTION_AUTO);
 					rm.setEndpoint(endpoint);
 					rm.fill(instance);
 					rm.moveToAdd();
 				}
 			}
-		} finally {
-			stc.releaseResources();
-		}
-		
+//		} finally {
+//			instance.getProcessTransactionContext().releaseResources();
+//		}
+//		
 		return rm;
 	}
 
