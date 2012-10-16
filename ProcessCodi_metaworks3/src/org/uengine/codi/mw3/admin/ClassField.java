@@ -166,8 +166,12 @@ public class ClassField implements Cloneable, ContextAware{
 			throw new Exception("There's already existing field named '" + getId() + "'.");
 		ClassField clonedOne = (ClassField) this.clone(); //TODO: lesson 2 (cloning to avoid reflective problem)
 		
+		Class classType = Thread.currentThread().getContextClassLoader().loadClass(clonedOne.getType());
+		if(classType.isInterface()){
+			clonedOne.setInterface(true);
+		}
+		
 //		if(clonedOne.getDefaultValue()==null){
-//			Class classType = Thread.currentThread().getContextClassLoader().loadClass(clonedOne.getType());
 //			
 //			if(Number.class.isAssignableFrom(classType)){
 //				clonedOne.setDefaultValue(
