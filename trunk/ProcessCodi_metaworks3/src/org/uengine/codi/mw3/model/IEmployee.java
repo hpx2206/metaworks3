@@ -170,6 +170,9 @@ public interface IEmployee extends IDAO {
 	@ServiceMethod(callByContent=true, target="popup")
 	public Refresh addContact() throws Exception;
 	
+	@ServiceMethod(callByContent=true, target="popup")
+	public void addTopicUser() throws Exception;
+	
 	@ServiceMethod(callByContent=true)
 	public void checkEmpCode() throws Exception ;
 	

@@ -1,0 +1,16 @@
+<%
+	if(value){
+%>
+<%	
+		if(value.secuopt=='1'){
+%>	
+ 			<li>비공개<span><a onClick="<%=methods.loadTopic.caller()%>" href="#middle-west"><%=value.name%></a></span></li>
+<%	
+		}else{
+%>	 
+			 <li>공개<span><a onClick="<%=methods.loadTopic.caller()%>" href="#middle-west"><%=value.name%></a></span></li>
+ 
+ <%
+ 		}
+	}
+%>

@@ -149,7 +149,14 @@ public class Session implements ContextAware{
 		public void setLastSelectedItem(String lastSelectedItem) {
 			this.lastSelectedItem = lastSelectedItem;
 		}
-
+	String windowTitle;
+		@Hidden
+		public String getWindowTitle() {
+			return windowTitle;
+		}
+		public void setWindowTitle(String windowTitle) {
+			this.windowTitle = windowTitle;
+		}
 	//disabled for merging
 //	SearchKeywordBox searchKeywordBox;
 //

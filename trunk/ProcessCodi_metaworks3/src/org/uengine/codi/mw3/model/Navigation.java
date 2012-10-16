@@ -59,6 +59,14 @@ public class Navigation {
 		public void setStrategicPerspective(StrategicPerspective strategicPerspective) {
 			this.strategicPerspective = strategicPerspective;
 		}
+	TopicPerspective topicPerspective;
+		public TopicPerspective getTopicPerspective() {
+			return topicPerspective;
+		}
+	
+		public void setTopicPerspective(TopicPerspective topicPerspective) {
+			this.topicPerspective = topicPerspective;
+		}
 
 	public Navigation() throws Exception {
 		personalPerspective = new PersonalPerspective();
@@ -70,5 +78,6 @@ public class Navigation {
 		//processStatusPerspective = new ProcessStatusPerspective();
 		
 		strategicPerspective = new StrategicPerspective();
+		topicPerspective = new TopicPerspective();
 	}
 }

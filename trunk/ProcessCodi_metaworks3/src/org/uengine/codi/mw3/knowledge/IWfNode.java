@@ -134,6 +134,12 @@ public interface IWfNode extends IDAO {
 	public String getThumbnail() ;
 	public void setThumbnail(String thumbnail);
 	
+	public String getSecuopt();
+	public void setSecuopt(String secuopt);
+	
+	public String getCompanyId();
+	public void setCompanyId(String companyId);
+	
 	@NonLoadable
 	@NonSavable
 	@Hidden
@@ -230,7 +236,10 @@ public interface IWfNode extends IDAO {
 	@ServiceMethod(inContextMenu=true, target="popup")
 	@Face(displayName="XML로 전환")
 	public Popup xml() throws Exception;
-
+	
+	@Face(displayName="공개토픽으로 지정")
+	@ServiceMethod(except={"childNode", "focus"}, inContextMenu=true)
+	public Object[] topic() throws Exception;
 	/*******************************************
 	 * 
 	 * function

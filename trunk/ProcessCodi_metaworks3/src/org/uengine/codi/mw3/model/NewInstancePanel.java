@@ -5,8 +5,12 @@ import java.util.Date;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
-import org.metaworks.annotation.Range;
+import org.metaworks.dao.MetaworksDAO;
+import org.metaworks.dao.TransactionContext;
+import org.metaworks.widget.Choice;
+import org.uengine.codi.mw3.knowledge.ITopicNode;
 
 
 public class NewInstancePanel implements ContextAware {
@@ -28,7 +32,36 @@ public class NewInstancePanel implements ContextAware {
 		newInstantiator.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		newInstantiator.setInstantiation(true);
 		
-		securityLevel = "0";
+		
+		Choice securityLevel = new Choice();
+		securityLevel.add("$Privacy.Normal","0");
+		securityLevel.add("$Privacy.OnlyFollowers","1");
+		securityLevel.add("$Privacy.Public","2");
+		
+		if("topic".equals(session.getLastPerspecteType())){
+			
+			StringBuffer sb = new StringBuffer();
+			sb.append("select * from bpm_knol knol");
+			sb.append(" where 	knol.type = ?type");
+			sb.append(" and 		knol.id = ?topicId ");
+			
+			ITopicNode dao = (ITopicNode)MetaworksDAO.createDAOImpl(TransactionContext.getThreadLocalInstance(), sb.toString(), ITopicNode.class); 
+			dao.set("type", "topic");
+			dao.set("topicId", session.getLastSelectedItem());
+			dao.select();
+			if( dao.next() ){
+				if( dao.getSecuopt() != null && dao.getSecuopt().equals("1") ){	// 비공개토픽
+					securityLevel.add("$Privacy.Topic","3");
+					securityLevel.setSelected("3");
+				}else{	// 공개 토픽
+					securityLevel.setSelected("0");
+				}
+			}
+			
+		}else{
+			securityLevel.setSelected("0");
+		}
+		setSecurityLevel(securityLevel);
 	}
 	
 	@AutowiredFromClient
@@ -43,14 +76,23 @@ public class NewInstancePanel implements ContextAware {
 			this.newInstantiator = newInstantiator;
 		}
 
-	String securityLevel;
-	@Range(options={"$Privacy.Normal", "$Privacy.OnlyFollowers", "$Privacy.Public"}, 
-			values={"0", "1", "2"})	
-		public String getSecurityLevel() {
+//	String securityLevel;
+//	@Range(options={"$Privacy.Normal", "$Privacy.OnlyFollowers", "$Privacy.Public" , "$Privacy.Topic"}, 
+//			values={"0", "1", "2", "3"})	
+//		public String getSecurityLevel() {
+//			return securityLevel;
+//		}
+//	
+//		public void setSecurityLevel(String securityLevel) {
+//			this.securityLevel = securityLevel;
+//		}
+		
+	Choice securityLevel;
+		@Face(ejsPath="dwr/metaworks/org/metaworks/widget/ChoiceCombo.ejs")
+		public Choice getSecurityLevel() {
 			return securityLevel;
 		}
-	
-		public void setSecurityLevel(String securityLevel) {
+		public void setSecurityLevel(Choice securityLevel) {
 			this.securityLevel = securityLevel;
 		}
 

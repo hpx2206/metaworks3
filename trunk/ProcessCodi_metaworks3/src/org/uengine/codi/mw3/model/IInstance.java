@@ -132,6 +132,9 @@ public interface IInstance extends IDAO{
 	public boolean isInitCmpl();
 	public void setInitCmpl(boolean initCmpl);
 	
+	public String getTopicId();
+	public void setTopicId(String topicId);
+	
 	@NonLoadable
 	@NonSavable
 	public InstanceViewThreadPanel getInstanceViewThreadPanel();

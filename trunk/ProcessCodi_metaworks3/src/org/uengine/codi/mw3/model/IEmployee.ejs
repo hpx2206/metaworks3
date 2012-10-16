@@ -278,6 +278,11 @@ if(value){
 	<a onClick="<%=methods.addContact.caller() %>" class="iemployee" ><%=fields.empName.here() %>(<%=value.empCode %>)</a>
 	
 	<%
+	} else if(mw3.where == 'addTopic') {
+	%>
+	<a onClick="<%=methods.addTopicUser.caller() %>" class="iemployee" ><%=fields.empName.here() %>(<%=value.empCode %>)</a>
+	
+	<%
 	} else {
 	%>
 	IEmployee Object where context value : <%=mw3.where %> <%=fields.empCode.here() %>

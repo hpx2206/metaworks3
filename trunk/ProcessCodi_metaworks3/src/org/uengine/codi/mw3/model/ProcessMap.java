@@ -330,7 +330,7 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 
 
 		if(newInstancePanel!=null){
-			((Instance)instanceRef).databaseMe().setSecuopt("" + newInstancePanel.getSecurityLevel());
+			((Instance)instanceRef).databaseMe().setSecuopt("" + newInstancePanel.getSecurityLevel().getSelected());
 			((Instance)instanceRef).flushDatabaseMe();
 		}
 

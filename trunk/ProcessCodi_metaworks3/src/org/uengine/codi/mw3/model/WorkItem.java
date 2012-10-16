@@ -19,6 +19,7 @@ import org.metaworks.ToAppend;
 import org.metaworks.ToPrepend;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
+import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Test;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.IDAO;
@@ -566,6 +567,9 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		
 		instance.databaseMe().setLastCmnt(getTitle());
 		instance.databaseMe().setCurrentUser(loginUser);//may corrupt when the last actor is assigned from process execution.
+		if( session != null && session.getLastPerspecteType().equalsIgnoreCase("topic")){
+			instance.databaseMe().setTopicId(session.getLastSelectedItem());
+		}
 		
 		//InstanceViewContent instanceViewContent = new InstanceViewContent();
 //		instanceViewContent.load(instance);
@@ -849,7 +853,8 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		WfNode parent=null;
 		if(newInstancePanel!=null){
 			
-			instanceRef.databaseMe().setSecuopt(newInstancePanel.getSecurityLevel());
+			//instanceRef.databaseMe().setSecuopt(newInstancePanel.getSecurityLevel());
+			instanceRef.databaseMe().setSecuopt(newInstancePanel.getSecurityLevel().getSelected());
 			instanceRef.flushDatabaseMe();
 			
 			if(newInstancePanel.getDueDate() != null){

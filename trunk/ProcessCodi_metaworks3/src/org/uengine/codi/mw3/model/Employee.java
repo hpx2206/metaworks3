@@ -456,6 +456,10 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		
 		return new Refresh(cp);
 	}
+	@Override
+	public void addTopicUser() throws Exception {
+		
+	}
 	
 	public void checkEmpCode() throws Exception {
 			
