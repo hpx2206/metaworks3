@@ -339,7 +339,7 @@ public class WorkItemHandler implements ContextAware{
 	}
 	
 	@ServiceMethod(callByContent=true, when="compete")
-	public void accept() throws Exception{
+	public InstanceViewContent accept() throws Exception{
 		instance = processManager.getProcessInstance(instanceId.toString());
 		
 		humanActivity = (HumanActivity) instance.getProcessDefinition().getActivity(tracingTag);
@@ -350,6 +350,15 @@ public class WorkItemHandler implements ContextAware{
 		roleMapping.setEndpoint(session.getEmployee().getEmpCode());		
 		
 		processManager.delegateWorkitem(this.getInstanceId(), this.getTracingTag(), roleMapping);
+		processManager.applyChanges();
+		
+		//refreshes the instanceview so that the next workitem can be show up
+		Instance instance = new Instance();
+		instance.setInstId(new Long(getInstanceId()));
+		
+		instanceViewContent.load(instance);
+		
+		return instanceViewContent;
 	}
 	
 			
