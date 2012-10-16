@@ -9,18 +9,31 @@
 			<li><span class="firstSpan"><%=mw3.localize(fields.disable.fieldDescriptor.displayName)%></span><span><%=fields.disable.here()%></span></li>
 			<li><span class="firstSpan""><%=mw3.localize(fields.displayname.fieldDescriptor.displayName)%></span><span><%=fields.displayname.here()%></span></li>
 		</ul>
-	</div>
+	</div>	
+	
+<%
+		if(mw3.where == 'in-container'){
+%>			
 	<div style="float:right;">
 		<%=methods.save.here()%>
 	</div>
 	<div class="clear"></div>
+<%
+		}
+%>			
 </div>
+
+<%
+		if(mw3.where == 'newEntry'){
+%>	
 <div>
 	<div style="float:right; margin:10px 0">
 		<a id="wBtn" href="#" onclick="<%=methods.add.caller()%>"><span>Add</span></a>
 	</div>
 </div>
+
 <%
+		}
 	}else if(mw3.when == 'view'){
 %>
 
@@ -33,7 +46,8 @@
 			<li><span class="firstSpan""><%=mw3.localize(fields.displayname.fieldDescriptor.displayName)%></span><span><%=fields.displayname.here()%></span></li>
 		</ul>
 	</div>
-	<div style="float:right;">		
+	<div style="float:right;">
+		<span style="display:inline-block; cursor:pointer" onCLick="<%=methods.edit.caller()%>"><img src="images/waveStyle/form.png"></span>
 		<span style="display:inline-block; cursor:pointer" onCLick="<%=methods.up.caller()%>"><img src="images/waveStyle/navigate-up.png"></span>
 		<span style="display:inline-block; cursor:pointer" onCLick="<%=methods.down.caller()%>"><img src="images/waveStyle/navigate-down.png"></span>
 		<span style="display:inline-block; cursor:pointer" onCLick="<%=methods.remove.caller()%>"><img src="images/waveStyle/loadFailed.gif"></span>
