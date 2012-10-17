@@ -26,6 +26,10 @@ var org_uengine_codi_mw3_model_InstanceListPanel = function(objectId, className)
 		}
 	});
 	
+	searchBarMagin = $('.newprocessbtn').width() + 20;
+	$('.searchboxarea').css("margin-left",searchBarMagin);
+	
+	
 	/*		
 	 	$('#' + this.divId + ' .ui-layout-content').mCustomScrollbar({
 			callbacks:{
