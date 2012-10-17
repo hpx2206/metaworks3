@@ -778,9 +778,7 @@ img {
 
 .newprocessbtn {
     float: left;
-    width: 90px;
-    margin-right: -100px;
-    background: url(../../images/waveStyle/newProcess.gif) no-repeat;
+    background: url(../../images/waveStyle/newProcess2.gif) no-repeat;
     color: #fff;
     height: 21px;
     text-align: center;
@@ -791,6 +789,9 @@ img {
 }
 #startBtn {
     line-height: 21px;
+    padding:0 30px 0 25px;
+    margin-left:5px;
+    background: url(../../images/waveStyle/newProcess2.gif) 100% 0% no-repeat;
 }
 .searchboxarea {
     margin-left: 110px;
