@@ -8,7 +8,7 @@ legend {display:none;}
 .cb_lstcomment .cb_section2 span.cb_nobar{margin-left:-6px;padding:0 6px;background:none}
 .cb_lstcomment .cb_section2 span.cb_first{background:none}
 .cb_lstcomment .cb_section2 a{color:#aaa}
-.cb_lstcomment .cb_section2 em{display:inline-block;padding:2px 0 2px;cursor:pointer;_cursor /**/:hand}
+.cb_lstcomment .cb_section2 em{display:inline-block;padding:2px 0 2px;cursor:pointer;}
 .cb_lstcomment .cb_section2 span span{padding:0;background:none;color:#aaa;font-family:tahoma;font-size:10px}
 .cb_lstcomment .cb_section2 .cb_activate_up .on{color:#f04a14}
 .cb_lstcomment .cb_section2 .cb_activate_down .on{color:#4666b6}
