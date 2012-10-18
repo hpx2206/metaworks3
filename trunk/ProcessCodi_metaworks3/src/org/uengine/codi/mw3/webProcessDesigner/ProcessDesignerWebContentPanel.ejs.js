@@ -160,6 +160,10 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
     			customData.push( {"customId": "" , "customName" : clipboardNode.name , "customType" : "role"});
     			session.clipboard = null;
     		}
+    		if(clipboardNode && clipboardNode.__className=="org.uengine.codi.mw3.model.ResourceFile"){
+    			canvas.drawLabel(element, clipboardNode.name);
+    			session.clipboard = null;
+    		}
     		if(customData.length > 0){
     			canvas.setCustomData(element, customData);
     		}
