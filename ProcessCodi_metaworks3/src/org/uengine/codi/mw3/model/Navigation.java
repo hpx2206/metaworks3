@@ -68,9 +68,13 @@ public class Navigation {
 			this.topicPerspective = topicPerspective;
 		}
 
-	public Navigation() throws Exception {
+	public Navigation(Session session) throws Exception {
 		personalPerspective = new PersonalPerspective();
 		personalPerspective.select();
+		
+		topicPerspective = new TopicPerspective();
+		topicPerspective.session = session;
+		topicPerspective.select();
 		
 		organizationPerspectiveDept = new OrganizationPerspectiveDept();
 		organizationPerspectiveRole = new OrganizationPerspectiveRole();
@@ -78,6 +82,6 @@ public class Navigation {
 		//processStatusPerspective = new ProcessStatusPerspective();
 		
 		strategicPerspective = new StrategicPerspective();
-		topicPerspective = new TopicPerspective();
 	}
+	
 }

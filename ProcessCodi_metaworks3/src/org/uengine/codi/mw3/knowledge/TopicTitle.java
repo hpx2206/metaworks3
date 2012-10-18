@@ -60,15 +60,11 @@ public class TopicTitle  implements ContextAware{
 		wfNode.setCompanyId(session.getCompany().getComCode());
 		wfNode.createMe();
 		
-		if( topicSecuopt ){
-			StringBuffer sb = new StringBuffer();
-			sb.append("INSERT INTO BPM_TOPICMAPPING (TOPICID, USERID ) VALUES (?topicId, ?userId) ");
-			
-			IDAO idao = MetaworksDAO.createDAOImpl(TransactionContext.getThreadLocalInstance(), sb.toString(), IDAO.class);
-			idao.set("topicId"	, wfNode.getId());
-			idao.set("userId"	, session.getUser().getUserId());
-            idao.insert();
-		}
+		TopicMapping tm = new TopicMapping();
+		tm.setTopicId(wfNode.getId());
+		tm.setUserId(session.getUser().getUserId());
+		tm.setUserName(session.getUser().getName());
+		tm.saveMe();
 		
 		TopicNode topicNode = new TopicNode();
 		topicNode.setId(wfNode.getId());

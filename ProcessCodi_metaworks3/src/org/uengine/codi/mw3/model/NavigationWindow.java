@@ -9,7 +9,11 @@ import org.metaworks.annotation.Face;
 public class NavigationWindow {
 	
 	public NavigationWindow() throws Exception{
-		setNavigation(new Navigation());
+		this(null);
+	}
+	
+	public NavigationWindow(Session session) throws Exception{
+		setNavigation(new Navigation(session));
 	}
 	
 	Navigation navigation;

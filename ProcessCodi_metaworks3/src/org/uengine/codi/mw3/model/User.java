@@ -18,10 +18,9 @@ import org.metaworks.widget.Window;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.calendar.ScheduleCalendar;
-import org.uengine.codi.mw3.widget.IFrame;
+import org.uengine.codi.mw3.knowledge.ITopicMapping;
+import org.uengine.codi.mw3.knowledge.TopicMapping;
 import org.uengine.processmanager.ProcessManagerRemote;
-
-import com.sun.tools.xjc.model.CNonElement;
 
 public class User extends Database<IUser> implements IUser {
 	
@@ -71,7 +70,7 @@ public class User extends Database<IUser> implements IUser {
 		Popup popup = new Popup();
 		
 		
-		AddFollowerPanel userPicker = new AddFollowerPanel(fromHttpSession(), null);
+		AddFollowerPanel userPicker = new AddFollowerPanel(fromHttpSession(), null , "addInstanceFollower" );
 		userPicker.setMetaworksContext(new MetaworksContext()); // propagate context
 		userPicker.getMetaworksContext().setWhen("userPicker");
 		
@@ -135,7 +134,7 @@ public class User extends Database<IUser> implements IUser {
 		String when = this.getMetaworksContext().getWhen();
 		
 		if(when != null && when.equals(Followers.CONTEXT_WHERE_INFOLLOWERS)){
-			String instId = followers.getInstanceId();
+			String instId = instanceFollowers.getInstanceId();
 			
 			RoleMapping roleMapping = new RoleMapping(new Long(instId), RoleMapping.ROLEMAPPING_FOLLOWER_ROLENAME_FREFIX + getName(), getUserId());
 			if(!roleMapping.confirmFollower()){
@@ -186,21 +185,42 @@ public class User extends Database<IUser> implements IUser {
 	public ProcessManagerRemote processManager;
 
 	@AutowiredFromClient
-	public Followers followers;
+	public TopicFollowers topicFollowers;
+	
+	@AutowiredFromClient
+	public InstanceFollowers instanceFollowers;
 	
 	@AutowiredFromClient
 	public AddFollowerPanel addFollowerPanel;
 	
+	@AutowiredFromClient
+	public InstanceListPanel instanceListPanel;
+	
+
 	public Object[] addFollower() throws Exception {
 		
 		if(addFollowerPanel!=null && "userPicker".equals(addFollowerPanel.getMetaworksContext().getWhen())){
 			getMetaworksContext().setWhen("edit");
 			return new Object[]{new Remover(new Popup()), new ToOpener(this)};
+		}else if("addTopicFollower".equals(this.getMetaworksContext().getWhen())){
 			
-		}else{
-		
+			TopicMapping tm = new TopicMapping();
+			tm.setTopicId(session.getLastSelectedItem());
+			tm.setUserId(this.getUserId());
 			
-			String instId = followers.getInstanceId();
+			if( !tm.findByUser().next() ){
+				tm.setUserName(this.getName());
+				tm.saveMe();
+				tm.flushDatabaseMe();
+			}
+			
+			TopicFollowers topicFollowers = new TopicFollowers();
+			topicFollowers.session = session;
+			topicFollowers.load();
+			
+			return new Object[]{new Refresh(topicFollowers)};
+		}else if("addInstanceFollower".equals(this.getMetaworksContext().getWhen())){
+			String instId = instanceFollowers.getInstanceId();
 			
 			Instance instance = new Instance();
 			instance.setInstId(new Long(instId));
@@ -208,7 +228,7 @@ public class User extends Database<IUser> implements IUser {
 			processManager.putRoleMapping(instId, RoleMapping.ROLEMAPPING_FOLLOWER_ROLENAME_FREFIX + getName(), getUserId());
 			processManager.applyChanges();
 			
-			Followers followers = new Followers();
+			InstanceFollowers followers = new InstanceFollowers();
 			followers.setInstanceId(instId);
 			followers.load();
 			
@@ -254,52 +274,73 @@ public class User extends Database<IUser> implements IUser {
 			
 			return new Object[]{new Refresh(followers)};
 		}
+		return null;
 	}
 
 	public Object[] removeFollower() throws Exception {
-				
-		String instId = followers.getInstanceId();
-		
-//		if(whereText.startsWith(Followers.CONTEXT_WHERE_INFOLLOWERS)){
-			// TODO: initEp 문제 해결후 권한 체크 활성화
-/*			if(!session.getUser().getUserId().trim().equals(getUserId().trim())) {
-				Instance instanceObj = new Instance();
-				instanceObj.setInstId(new Long(instId));
-				String initEp = instanceObj.databaseMe().getInitEp();
-				if(!session.getUser().getUserId().trim().equals(initEp.trim())) {
-					System.out.println("팔로워를 삭제할 권한이 없습니다. : (current logged userId :" + session.getUser().getUserId() +", initEp : " + initEp +")");
-//					Popup popup = new Popup("팔로워를 삭제할 권한이 없습니다.");
-//					return new Object[] {popup};
-					throw new Exception("팔로워를 삭제할 권한이 없습니다.");
-				}
-			}
-*///		} else {
-//			Popup popup = new Popup("프로세스 참여자는 삭제할 수 없습니다.");
-//			System.out.println("프로세스 참여자는 삭제할 수 없습니다.");
-//			return new Object[] {popup};
-//			throw new Exception("프로세스 참여자는 삭제할 수 없습니다.");
-		//}
-		
-		Followers followers = new Followers();
+		if("topicFollowers".equals(this.getMetaworksContext().getWhen())){
+			TopicMapping tm = new TopicMapping();
+			tm.setTopicId(session.getLastSelectedItem());
+			tm.setUserId(this.getUserId());
 			
-		//TODO delete rolemapping
-//		processManager.removeRoleMapping(instId, "follower_" + getName(), getUserId());
-//		processManager.applyChanges();
-
-		RoleMapping roleMapping = new RoleMapping(new Long(instId), RoleMapping.ROLEMAPPING_FOLLOWER_ROLENAME_FREFIX + getName(), getUserId());
-		if(roleMapping.deleteByInfo(session)) {
-			followers.setInstanceId(instId);
-			followers.load();
-
-			System.out.println("delete follower done.");
-			return new Object[] {followers, new Popup()};
-		} else {
-//			Popup popup = new Popup("프로세스 참여자는 삭제할 수 없습니다.");
-//			System.out.println("프로세스 참여자는 삭제할 수 없습니다.");
-//			return new Object[] {popup};
-			throw new Exception("삭제 실패");
+			ITopicMapping rs = tm.findByUser();
+			if( rs.next() ){
+				tm.setTopicMappingId(rs.getTopicMappingId());
+				tm.remove();
+				
+				TopicFollowers topicFollowers = new TopicFollowers();
+				topicFollowers.session = session;
+				topicFollowers.load();
+				
+				return new Object[]{new Refresh(topicFollowers)};
+			}else{
+				throw new Exception("삭제 실패");
+			}
+			
+		}else{
+			String instId = instanceFollowers.getInstanceId();
+			
+	//		if(whereText.startsWith(Followers.CONTEXT_WHERE_INFOLLOWERS)){
+				// TODO: initEp 문제 해결후 권한 체크 활성화
+	/*			if(!session.getUser().getUserId().trim().equals(getUserId().trim())) {
+					Instance instanceObj = new Instance();
+					instanceObj.setInstId(new Long(instId));
+					String initEp = instanceObj.databaseMe().getInitEp();
+					if(!session.getUser().getUserId().trim().equals(initEp.trim())) {
+						System.out.println("팔로워를 삭제할 권한이 없습니다. : (current logged userId :" + session.getUser().getUserId() +", initEp : " + initEp +")");
+	//					Popup popup = new Popup("팔로워를 삭제할 권한이 없습니다.");
+	//					return new Object[] {popup};
+						throw new Exception("팔로워를 삭제할 권한이 없습니다.");
+					}
+				}
+	*///		} else {
+	//			Popup popup = new Popup("프로세스 참여자는 삭제할 수 없습니다.");
+	//			System.out.println("프로세스 참여자는 삭제할 수 없습니다.");
+	//			return new Object[] {popup};
+	//			throw new Exception("프로세스 참여자는 삭제할 수 없습니다.");
+			//}
+			
+			InstanceFollowers followers = new InstanceFollowers();
+				
+			//TODO delete rolemapping
+	//		processManager.removeRoleMapping(instId, "follower_" + getName(), getUserId());
+	//		processManager.applyChanges();
+	
+			RoleMapping roleMapping = new RoleMapping(new Long(instId), RoleMapping.ROLEMAPPING_FOLLOWER_ROLENAME_FREFIX + getName(), getUserId());
+			if(roleMapping.deleteByInfo(session)) {
+				followers.setInstanceId(instId);
+				followers.load();
+	
+				System.out.println("delete follower done.");
+				return new Object[] {followers, new Popup()};
+				
+			} else {
+	//			Popup popup = new Popup("프로세스 참여자는 삭제할 수 없습니다.");
+	//			System.out.println("프로세스 참여자는 삭제할 수 없습니다.");
+	//			return new Object[] {popup};
+				throw new Exception("삭제 실패");
+			}
 		}
-		
 	}
 	
 	public Refresh addContact() throws Exception {

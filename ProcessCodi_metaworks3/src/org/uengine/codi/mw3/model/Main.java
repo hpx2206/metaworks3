@@ -120,7 +120,7 @@ public class Main {
 			contactWindow.getContactPanel().setSearchBox(null);
 			
 			westLayout.setNorth(contactWindow);
-			westLayout.setCenter(new  NavigationWindow());
+			westLayout.setCenter(new  NavigationWindow(session));
 			westLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, north__spacing_open:5, north__size:'50%'");
 			westLayout.setName("west");
 			

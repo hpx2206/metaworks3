@@ -458,7 +458,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	}
 	@Override
 	public void addTopicUser() throws Exception {
-		
+		System.out.println(getEmpName());
 	}
 	
 	public void checkEmpCode() throws Exception {

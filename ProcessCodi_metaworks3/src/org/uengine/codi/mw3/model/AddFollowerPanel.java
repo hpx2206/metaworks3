@@ -15,18 +15,14 @@ public class AddFollowerPanel implements ContextAware{
 		
 	}
 	
-	public AddFollowerPanel(IUser loginUser, String instanceId) throws Exception{
+	public AddFollowerPanel(IUser loginUser, String instanceId, String type) throws Exception{
 		this();
 		
-//		ContactListPanel contactListPanel = new ContactListPanel();
-//		contactListPanel.getMetaworksContext().setWhen("addFollower");		
-//		contactListPanel.load(loginUser.getUserId());		
-		
 		ContactPanel contactPanel = new ContactPanel(loginUser);
-		contactPanel.getContactListPanel().setId("addFollower");
-		contactPanel.getContactListPanel().getLocalContactList().getMetaworksContext().setWhen("addFollower");		
-		contactPanel.getContactListPanel().getSocialContactList().getMetaworksContext().setWhen("addFollower");
-		contactPanel.getUser().getMetaworksContext().setWhen("addFollower");
+		contactPanel.getContactListPanel().setId(type);
+		contactPanel.getContactListPanel().getLocalContactList().getMetaworksContext().setWhen(type);		
+		contactPanel.getContactListPanel().getSocialContactList().getMetaworksContext().setWhen(type);
+		contactPanel.getUser().getMetaworksContext().setWhen(type);
 		
 		Window window = new Window(contactPanel, "Add Follower");
 		setContactPanel(window);
