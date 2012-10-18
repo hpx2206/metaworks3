@@ -1070,6 +1070,12 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		
 		updateNode.update();
 		
+		TopicMapping tm = new TopicMapping();
+		tm.setTopicId(this.getId());
+		tm.setUserId(session.getUser().getUserId());
+		tm.setUserName(session.getUser().getName());
+		tm.saveMe();
+		
 		return new Object[]{this};
 	}
 	

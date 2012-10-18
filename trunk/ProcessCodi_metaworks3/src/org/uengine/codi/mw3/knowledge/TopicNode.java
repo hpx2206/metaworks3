@@ -63,9 +63,8 @@ public class TopicNode extends Database<ITopicNode> implements ITopicNode {
 	}
 	
 	public Object[] loadTopic() throws Exception{
-		String title = "토픽 주제 : " + getName();
-		session.setWindowTitle(title);
-		return Perspective.loadInstanceListPanel(session, "topic", getId());
+		String title = "주제 : " + getName();
+		return Perspective.loadInstanceListPanel(session, "topic", getId(), title);
 	}
 	
 	
@@ -73,7 +72,7 @@ public class TopicNode extends Database<ITopicNode> implements ITopicNode {
 		
 		if( session.getUser().getUserId().equalsIgnoreCase(getAuthorId()) || session.getEmployee().getIsAdmin()) {
 			// 삭제는 진짜 삭제가 아닌 topic 만 제거를 하여 지식노드에서는 보이도록 설정됨
-//			deleteDatabaseMe();
+			// deleteDatabaseMe();
 			StringBuffer sb = new StringBuffer();
 			sb.append("update bpm_knol");
 			sb.append("   set type = null ");
@@ -83,6 +82,7 @@ public class TopicNode extends Database<ITopicNode> implements ITopicNode {
 			updateNode.set("topicId", this.getId());
 			
 			updateNode.update();
+			
 		} else {
 			throw new Exception("관리자나 초기토픽생성자만 수정가능합니다.");
 		}
@@ -93,29 +93,6 @@ public class TopicNode extends Database<ITopicNode> implements ITopicNode {
 		
 	}
 	
-	public Object[] addTopicUser() throws Exception {
-		ModalWindow popup = new ModalWindow();
-		UnifiedAddContactPanel addTopicUserPanel = new UnifiedAddContactPanel(session);
-		
-		AddLocalContactPanel localContactPanel = new AddLocalContactPanel();
-		IEmployee employee = new Employee();
-		employee.getMetaworksContext().setWhere("addTopic");
-		employee.getMetaworksContext().setHow("tree");
-		employee.setGlobalCom(session.getEmployee().getGlobalCom());
-		
-		EmployeeList employeeList = new EmployeeList();			
-		employeeList.setEmployee(employee.findByDeptOther());
-		
-		localContactPanel.setDeptEmployee(employeeList);
-		addTopicUserPanel.setLocalContact(localContactPanel);
-		
-		popup.setPanel(addTopicUserPanel);
-		popup.setTitle("토픽구성원 추가");
-		
-		return new Object[]{popup};
-	}
-	
-
 	@AutowiredFromClient
 	transient public Session session;
 }

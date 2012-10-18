@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
@@ -52,6 +53,10 @@ public class Perspective {
 	
 	public static Object[] loadInstanceListPanel(Session session, String perspectiveType,
 			String selectedItem) throws Exception {
+		return loadInstanceListPanel(session, perspectiveType, selectedItem, null);
+	}
+	public static Object[] loadInstanceListPanel(Session session, String perspectiveType,
+			String selectedItem, String title) throws Exception {
 		InstanceList instList = new InstanceList();
 		instList.init();
 		savePerspectiveToSession(session, perspectiveType, selectedItem);
@@ -59,17 +64,22 @@ public class Perspective {
 		
 		InstanceListPanel instListPanel = new InstanceListPanel(session);
 		instListPanel.session = session;
+		instListPanel.setMetaworksContext(new MetaworksContext());
+		instListPanel.getMetaworksContext().setWhere(perspectiveType);
 		instListPanel.setInstanceList(instList);
 		
 		// set search Keyword to searchBox
 		instListPanel.getSearchBox().setKeyword(session.getSearchKeyword());
-		if( session.getWindowTitle() == null ){
-			String title = "$perspective." + perspectiveType;
-			instListPanel.setTitle(title);
-			session.setWindowTitle(title);
-		}else{
-			instListPanel.setTitle(session.getWindowTitle());
+		if( title == null && perspectiveType != null && perspectiveType.equals("topic")){
+			title = session.getWindowTitle();
+		}else if( title == null ){
+			title = "$perspective." + perspectiveType;
 		}
+		if( "topic".equals(perspectiveType)){
+			instListPanel.topicFollowersLoad();
+		}
+		instListPanel.setTitle(title);
+		session.setWindowTitle(title);
 		return new Object[] {session, instListPanel};
 	}
 

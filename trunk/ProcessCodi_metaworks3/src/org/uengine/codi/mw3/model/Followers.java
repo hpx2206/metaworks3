@@ -57,11 +57,16 @@ public class Followers{
 		
 	}
 	
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP, loader="auto", loadOnce=true)
+	//, loader="auto", loadOnce=true
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 	public Popup addFollowers() throws Exception{		
 		Popup popup = new Popup(400,400);
 		
-		AddFollowerPanel panel = new AddFollowerPanel(session.user, getInstanceId());
+		String type = "addInstanceFollower";
+		if("topic".equals(this.getInstanceId())){
+			type = "addTopicFollower";
+		}
+		AddFollowerPanel panel = new AddFollowerPanel(session.user, getInstanceId(), type);
 
 		popup.setPanel(panel);
 		popup.setName("AddFollowerPanel");
@@ -71,6 +76,7 @@ public class Followers{
 	
 	@ServiceMethod(inContextMenu=true, callByContent=true, target="popup", mouseBinding="drop")
 	public Object[] drop() throws Exception{
+		
 		Object clipboard = session.getClipboard();
 		if(clipboard instanceof IUser){
 			User newFollowUser = (User)clipboard;
@@ -84,13 +90,22 @@ public class Followers{
 				}
 			}
 			
-			Followers addFollower = new Followers();
-			addFollower.setInstanceId(getInstanceId());
-			newFollowUser.followers = addFollower;
+			if("topic".equals(this.getInstanceId())){
+				TopicFollowers addFollower = new TopicFollowers();
+				addFollower.setInstanceId(getInstanceId());
+				newFollowUser.topicFollowers = addFollower;
+				newFollowUser.getMetaworksContext().setWhen("addTopicFollower");
+			}else{
+				InstanceFollowers addFollower = new InstanceFollowers();
+				addFollower.setInstanceId(getInstanceId());
+				newFollowUser.instanceFollowers = addFollower;
+				newFollowUser.getMetaworksContext().setWhen("addInstanceFollower");
+			}
 			newFollowUser.processManager = processManager;
 			newFollowUser.session = session;
 			return newFollowUser.addFollower();
 		}
+		session.setClipboard(null);
 		return null;
 	}
 	

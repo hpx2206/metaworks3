@@ -1,7 +1,21 @@
 		<div class="pane ui-layout-north">
 		   <div class="boxmiddleright">
 		        <div class="boxmiddleleft">
-		
+					<%
+		            	var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");		
+		            %>
+                	<%
+							if(mw3.where == "topic"){
+								var title = session.windowTitle;
+								if( title != null && title != '' && title.length > 4){
+									title = title.substring(4);
+								}
+					%>
+									<%= title %>
+									<%=fields.topicFollowers.here()%>
+                	<%	
+							}
+					%>
 		            <div id="searchbox">
 		                <div class="searchboxline">
 		                	<div class="searchboxline2">
@@ -15,10 +29,6 @@
 		                <div style="clear:both;"></div>
 		            </div>    
 		            <div class="toolbar">
-		            
-		            <%
-		            	var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");		
-		            %>
 	                    <ul>
 	                        <li onclick="<%=methods.switchToInstanceList.caller()%>" <%=(value.instanceList && session.lastPerspecteType=='allICanSee') ? "class='toolbar_current'" : ""%>><span><img src="images/waveStyle/i_upcoming.png" border="0"></span><span><%=mw3.localize("$ComingUp")%></span></li>
 	                        <li onclick="<%=methods.switchToInstanceListFollowing.caller()%>" <%=(value.instanceList && session.lastPerspecteType=='all') ? "class='toolbar_current'" : ""%>><span><img src="images/waveStyle/i_follow.png" border="0"></span><span ><%=mw3.localize("$Following")%></span></li>               

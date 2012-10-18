@@ -1,32 +1,24 @@
 package org.uengine.codi.mw3.model;
 
-import java.rmi.RemoteException;
 import java.util.ArrayList;
-
-import javax.annotation.PostConstruct;
 
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
-import org.metaworks.ToAppend;
-import org.metaworks.ToPrepend;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Test;
-import org.metaworks.dao.TransactionContext;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.uengine.codi.mw3.knowledge.IWfNode;
 import org.uengine.codi.mw3.knowledge.KnowledgeTool;
 import org.uengine.codi.mw3.knowledge.WfNode;
 import org.uengine.kernel.EJBProcessInstance;
 import org.uengine.kernel.ProcessInstance;
-import org.uengine.processmanager.ProcessManagerBean;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 
@@ -174,7 +166,7 @@ public class InstanceView {
 	protected void loadDefault() throws Exception{
 		ProcessInstance instance = processManager.getProcessInstance(getInstanceId());
 
-		followers = new Followers();
+		followers = new InstanceFollowers();
 		followers.setInstanceId(instanceId);
 		followers.load();
 		
@@ -337,11 +329,11 @@ public class InstanceView {
 			this.scheduleEditor = scheduleEditor;
 		}
 		
-	Followers followers;
-		public Followers getFollowers() {
+	InstanceFollowers followers;
+		public InstanceFollowers getFollowers() {
 			return followers;
 		}
-		public void setFollowers(Followers followers) {
+		public void setFollowers(InstanceFollowers followers) {
 			this.followers = followers;
 		}
 		

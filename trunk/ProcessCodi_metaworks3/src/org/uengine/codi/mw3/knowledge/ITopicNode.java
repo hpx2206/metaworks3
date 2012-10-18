@@ -30,8 +30,4 @@ public interface ITopicNode extends IDAO {
 	@Face(displayName="$Remove")
 	public Object[] remove() throws Exception;
 	
-	@ServiceMethod(inContextMenu=true, callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
-	@Face(displayName="$addTopicUser")
-	public Object[] addTopicUser() throws Exception;
-	
 }

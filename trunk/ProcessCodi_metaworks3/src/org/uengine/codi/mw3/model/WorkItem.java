@@ -612,7 +612,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		
 		instance.databaseMe().setLastCmnt(getTitle());
 		instance.databaseMe().setCurrentUser(loginUser);//may corrupt when the last actor is assigned from process execution.
-		if( session != null && session.getLastPerspecteType().equalsIgnoreCase("topic")){
+		if( instantiation && !instantiated && session != null && session.getLastPerspecteType().equalsIgnoreCase("topic")){
 			instance.databaseMe().setTopicId(session.getLastSelectedItem());
 		}
 		

@@ -42,6 +42,12 @@ public class InstanceListPanel implements ContextAware{
 		instanceList = new InstanceList();
 		instanceList.init();
 	}
+	
+	public void topicFollowersLoad() throws Exception{
+		topicFollowers =  new TopicFollowers();
+		topicFollowers.session = session;
+		topicFollowers.load();
+	}
 
 	MetaworksContext metaworksContext;
 		
@@ -95,7 +101,15 @@ public class InstanceListPanel implements ContextAware{
 			this.knowledge = knowledge;
 		}
 		
-		
+	TopicFollowers topicFollowers;
+		public TopicFollowers getTopicFollowers() {
+			return topicFollowers;
+		}
+		public void setTopicFollowers(TopicFollowers topicFollowers) {
+			this.topicFollowers = topicFollowers;
+		}
+
+
 	//@Hidden
 	@Face(displayName="$Calendar")
 	@ServiceMethod//(inContextMenu=true)
@@ -170,10 +184,14 @@ public class InstanceListPanel implements ContextAware{
 	public void switchToKnowledge() throws Exception{
 		this.setInstanceList(null);
 		this.setScheduleCalendar(null);
-		this.setTitle("$perspective.strategic");
-		this.knowledge = new WfPanel();
-		this.knowledge.session = session;
-		this.knowledge.load(session.getCompany().getComCode());
+		if( this.getMetaworksContext() != null && "topic".equals(this.getMetaworksContext().getWhere()) ){
+			
+		}else{
+			this.setTitle("$perspective.strategic");
+			this.knowledge = new WfPanel();
+			this.knowledge.session = session;
+			this.knowledge.load(session.getCompany().getComCode());
+		}
 	}
 	
 
@@ -198,7 +216,9 @@ public class InstanceListPanel implements ContextAware{
 		newInstancePanel.load(session);
 		
 		NewInstanceWindow window = new NewInstanceWindow(newInstancePanel);
-		window.setTitle(session.getWindowTitle());
+		if( session.getWindowTitle() != null){
+			window.setTitle(session.getWindowTitle());
+		}
 		return window;
 	}
 	
