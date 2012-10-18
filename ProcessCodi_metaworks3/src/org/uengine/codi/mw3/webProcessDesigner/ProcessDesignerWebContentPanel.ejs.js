@@ -161,7 +161,9 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
     			session.clipboard = null;
     		}
     		if(clipboardNode && clipboardNode.__className=="org.uengine.codi.mw3.model.ResourceFile"){
-    			canvas.drawLabel(element, clipboardNode.name);
+    			var wfText = $(element).children('[id$=_LABEL]').text();
+    			wfText = wfText + '\n(' + clipboardNode.name + ')';
+    			canvas.drawLabel(element, wfText);
     			session.clipboard = null;
     		}
     		if(customData.length > 0){
