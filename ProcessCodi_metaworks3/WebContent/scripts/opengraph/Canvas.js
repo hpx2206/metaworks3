@@ -720,10 +720,13 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor) {
 	/**
 	 * OpenGraph XML 문자열로 부터 Shape 을 드로잉한다.
 	 *
-	 * @param {String} xml XML 문자열
+	 * @param {String, Element} xml XML 문자열 또는 DOM Element
 	 * @return {Object} {width, height, x, y, x2, y2}
 	 */
 	this.loadXML = function (xml) {
+		if (!OG.Util.isElement(xml)) {
+			xml = OG.Util.parseXML(xml);
+		}
 		return this.loadJSON(OG.Util.xmlToJson(xml));
 	};
 

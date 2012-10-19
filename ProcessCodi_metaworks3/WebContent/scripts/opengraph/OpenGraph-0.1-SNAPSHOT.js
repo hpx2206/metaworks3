@@ -323,6 +323,31 @@ OG.common.Constants = {
 	LABEL_EDITABLE: true,
 
 	/**
+	 * 라벨 수정여부(GEOM Shape)
+	 */
+	LABEL_EDITABLE_GEOM : true,
+
+	/**
+	 * 라벨 수정여부(TEXT Shape)
+	 */
+	LABEL_EDITABLE_TEXT : true,
+
+	/**
+	 * 라벨 수정여부(HTML Shape)
+	 */
+	LABEL_EDITABLE_HTML : true,
+
+	/**
+	 * 라벨 수정여부(EDGE Shape)
+	 */
+	LABEL_EDITABLE_EDGE : true,
+
+	/**
+	 * 라벨 수정여부(GROUP Shape)
+	 */
+	LABEL_EDITABLE_GROUP: true,
+
+	/**
 	 * 그룹핑 가능여부
 	 */
 	GROUP_DROPABLE: true,
@@ -888,10 +913,24 @@ OG.common.Util = {
 		};
 		for (var lname in json) {
 			if (json.hasOwnProperty(lname) && lname.indexOf("@") == -1) {
-				return processLeaf(lname, json[lname], {});
+				return '<?xml version="1.0" encoding="UTF-8"?>' + processLeaf(lname, json[lname], {});
 			}
 		}
 		return null;
+	},
+
+	parseXML: function (xmlString) {
+		var doc, parser;
+		if (window.ActiveXObject) {
+			doc = new ActiveXObject('Microsoft.XMLDOM');
+			doc.async = 'false';
+			doc.loadXML(xmlString);
+		} else {
+			parser = new DOMParser();
+			doc = parser.parseFromString(xmlString, 'text/xml');
+		}
+
+		return doc;
 	}
 };
 OG.Util = OG.common.Util;
@@ -12117,193 +12156,200 @@ OG.handler.EventHandler = function (renderer) {
 	 * @param {Element} element Shape Element
 	 */
 	this.enableEditLabel = function (element) {
-		$(element).bind({
-			dblclick: function (event) {
-				var container = _RENDERER.getContainer(),
-					envelope = element.shape.geom.getBoundary(),
-					upperLeft = envelope.getUpperLeft(),
-					bBox,
-					left = upperLeft.x - 1,
-					top = upperLeft.y - 1,
-					width = envelope.getWidth(),
-					height = envelope.getHeight(),
-					editorId = element.id + OG.Constants.LABEL_EDITOR_SUFFIX,
-					labelEditor,
-					textAlign = "center",
-					fromLabel,
-					toLabel,
-					/**
-					 * 라인(꺽은선)의 중심위치를 반환한다.
-					 *
-					 * @param {Element} element Edge 엘리먼트
-					 * @return {OG.Coordinate}
-					 */
-						getCenterOfEdge = function (element) {
-						var vertices, lineLength, distance = 0, i, intersectArray;
+		if (($(element).attr("_shape") === OG.Constants.SHAPE_TYPE.GEOM && OG.Constants.LABEL_EDITABLE_GEOM) ||
+			($(element).attr("_shape") === OG.Constants.SHAPE_TYPE.TEXT && OG.Constants.LABEL_EDITABLE_TEXT) ||
+			($(element).attr("_shape") === OG.Constants.SHAPE_TYPE.HTML && OG.Constants.LABEL_EDITABLE_HTML) ||
+			($(element).attr("_shape") === OG.Constants.SHAPE_TYPE.EDGE && OG.Constants.LABEL_EDITABLE_EDGE) ||
+			($(element).attr("_shape") === OG.Constants.SHAPE_TYPE.GROUP && OG.Constants.LABEL_EDITABLE_GROUP)) {
 
-						// Edge Shape 인 경우 라인의 중간 지점 찾기
-						vertices = element.shape.geom.getVertices();
-						lineLength = element.shape.geom.getLength();
+			$(element).bind({
+				dblclick: function (event) {
+					var container = _RENDERER.getContainer(),
+						envelope = element.shape.geom.getBoundary(),
+						upperLeft = envelope.getUpperLeft(),
+						bBox,
+						left = upperLeft.x - 1,
+						top = upperLeft.y - 1,
+						width = envelope.getWidth(),
+						height = envelope.getHeight(),
+						editorId = element.id + OG.Constants.LABEL_EDITOR_SUFFIX,
+						labelEditor,
+						textAlign = "center",
+						fromLabel,
+						toLabel,
+						/**
+						 * 라인(꺽은선)의 중심위치를 반환한다.
+						 *
+						 * @param {Element} element Edge 엘리먼트
+						 * @return {OG.Coordinate}
+						 */
+							getCenterOfEdge = function (element) {
+							var vertices, lineLength, distance = 0, i, intersectArray;
 
-						for (i = 0; i < vertices.length - 1; i++) {
-							distance += vertices[i].distance(vertices[i + 1]);
-							if (distance > lineLength / 2) {
-								intersectArray = element.shape.geom.intersectCircleToLine(
-									vertices[i + 1], distance - lineLength / 2, vertices[i + 1], vertices[i]
-								);
+							// Edge Shape 인 경우 라인의 중간 지점 찾기
+							vertices = element.shape.geom.getVertices();
+							lineLength = element.shape.geom.getLength();
 
-								break;
+							for (i = 0; i < vertices.length - 1; i++) {
+								distance += vertices[i].distance(vertices[i + 1]);
+								if (distance > lineLength / 2) {
+									intersectArray = element.shape.geom.intersectCircleToLine(
+										vertices[i + 1], distance - lineLength / 2, vertices[i + 1], vertices[i]
+									);
+
+									break;
+								}
 							}
+
+							return intersectArray[0];
+						},
+						centerOfEdge;
+
+					// textarea
+					$(container).append("<textarea id='" + element.id + OG.Constants.LABEL_EDITOR_SUFFIX + "'></textarea>");
+					labelEditor = $("#" + editorId);
+
+					// text-align 스타일 적용
+					switch (element.shape.geom.style.get("text-anchor")) {
+					case "start":
+						textAlign = "left";
+						break;
+					case "middle":
+						textAlign = "center";
+						break;
+					case "end":
+						textAlign = "right";
+						break;
+					default:
+						textAlign = "center";
+						break;
+					}
+
+					if ($(element).attr("_shape") === OG.Constants.SHAPE_TYPE.HTML) {
+						// Html Shape
+						$(labelEditor).css(OG.Util.apply(OG.Constants.DEFAULT_STYLE.LABEL_EDITOR, {
+							left: left, top: top, width: width, height: height, "text-align": 'left', overflow: "hidden", resize: "none"
+						}));
+						$(labelEditor).focus();
+						$(labelEditor).val(element.shape.html);
+
+						$(labelEditor).bind({
+							focusout: function () {
+								element.shape.html = this.value;
+								if (element.shape.html) {
+									_RENDERER.redrawShape(element);
+									this.parentNode.removeChild(this);
+								} else {
+									_RENDERER.removeShape(element);
+									this.parentNode.removeChild(this);
+								}
+							}
+						});
+					} else if ($(element).attr("_shape") === OG.Constants.SHAPE_TYPE.TEXT) {
+						// Text Shape
+						$(labelEditor).css(OG.Util.apply(OG.Constants.DEFAULT_STYLE.LABEL_EDITOR, {
+							left: left, top: top, width: width, height: height, "text-align": textAlign, overflow: "hidden", resize: "none"
+						}));
+						$(labelEditor).focus();
+						$(labelEditor).val(element.shape.text);
+
+						$(labelEditor).bind({
+							focusout: function () {
+								element.shape.text = this.value;
+								if (element.shape.text) {
+									_RENDERER.redrawShape(element);
+									this.parentNode.removeChild(this);
+								} else {
+									_RENDERER.removeShape(element);
+									this.parentNode.removeChild(this);
+								}
+							}
+						});
+					} else if ($(element).attr("_shape") === OG.Constants.SHAPE_TYPE.EDGE) {
+						// Edge Shape
+						if (element.shape.label && _RENDERER.isSVG()) {
+							$(element).children('[id$=_LABEL]').each(function (idx, item) {
+								$(item).find("text").each(function (idx2, item2) {
+									bBox = _RENDERER.getBBox(item2);
+									left = bBox.x - 10;
+									top = bBox.y;
+									width = bBox.width + 20;
+									height = bBox.height;
+								});
+							});
+						} else {
+							centerOfEdge = getCenterOfEdge(element);
+							left = centerOfEdge.x - OG.Constants.LABEL_EDITOR_WIDTH / 2;
+							top = centerOfEdge.y - OG.Constants.LABEL_EDITOR_HEIGHT / 2;
+							width = OG.Constants.LABEL_EDITOR_WIDTH;
+							height = OG.Constants.LABEL_EDITOR_HEIGHT;
 						}
 
-						return intersectArray[0];
-					},
-					centerOfEdge;
-
-				// textarea
-				$(container).append("<textarea id='" + element.id + OG.Constants.LABEL_EDITOR_SUFFIX + "'></textarea>");
-				labelEditor = $("#" + editorId);
-
-				// text-align 스타일 적용
-				switch (element.shape.geom.style.get("text-anchor")) {
-				case "start":
-					textAlign = "left";
-					break;
-				case "middle":
-					textAlign = "center";
-					break;
-				case "end":
-					textAlign = "right";
-					break;
-				default:
-					textAlign = "center";
-					break;
-				}
-
-				if ($(element).attr("_shape") === OG.Constants.SHAPE_TYPE.HTML) {
-					// Html Shape
-					$(labelEditor).css(OG.Util.apply(OG.Constants.DEFAULT_STYLE.LABEL_EDITOR, {
-						left: left, top: top, width: width, height: height, "text-align": 'left', overflow: "hidden", resize: "none"
-					}));
-					$(labelEditor).focus();
-					$(labelEditor).val(element.shape.html);
-
-					$(labelEditor).bind({
-						focusout: function () {
-							element.shape.html = this.value;
-							if (element.shape.html) {
-								_RENDERER.redrawShape(element);
-								this.parentNode.removeChild(this);
-							} else {
-								_RENDERER.removeShape(element);
-								this.parentNode.removeChild(this);
-							}
-						}
-					});
-				} else if ($(element).attr("_shape") === OG.Constants.SHAPE_TYPE.TEXT) {
-					// Text Shape
-					$(labelEditor).css(OG.Util.apply(OG.Constants.DEFAULT_STYLE.LABEL_EDITOR, {
-						left: left, top: top, width: width, height: height, "text-align": textAlign, overflow: "hidden", resize: "none"
-					}));
-					$(labelEditor).focus();
-					$(labelEditor).val(element.shape.text);
-
-					$(labelEditor).bind({
-						focusout: function () {
-							element.shape.text = this.value;
-							if (element.shape.text) {
-								_RENDERER.redrawShape(element);
-								this.parentNode.removeChild(this);
-							} else {
-								_RENDERER.removeShape(element);
-								this.parentNode.removeChild(this);
-							}
-						}
-					});
-				} else if ($(element).attr("_shape") === OG.Constants.SHAPE_TYPE.EDGE) {
-					// Edge Shape
-					if (element.shape.label && _RENDERER.isSVG()) {
-						$(element).children('[id$=_LABEL]').each(function (idx, item) {
+						// 시작점 라벨인 경우
+						$(event.srcElement).parents('[id$=_FROMLABEL]').each(function (idx, item) {
 							$(item).find("text").each(function (idx2, item2) {
 								bBox = _RENDERER.getBBox(item2);
 								left = bBox.x - 10;
 								top = bBox.y;
 								width = bBox.width + 20;
 								height = bBox.height;
+								fromLabel = element.shape.fromLabel;
 							});
 						});
-					} else {
-						centerOfEdge = getCenterOfEdge(element);
-						left = centerOfEdge.x - OG.Constants.LABEL_EDITOR_WIDTH / 2;
-						top = centerOfEdge.y - OG.Constants.LABEL_EDITOR_HEIGHT / 2;
-						width = OG.Constants.LABEL_EDITOR_WIDTH;
-						height = OG.Constants.LABEL_EDITOR_HEIGHT;
-					}
 
-					// 시작점 라벨인 경우
-					$(event.srcElement).parents('[id$=_FROMLABEL]').each(function (idx, item) {
-						$(item).find("text").each(function (idx2, item2) {
-							bBox = _RENDERER.getBBox(item2);
-							left = bBox.x - 10;
-							top = bBox.y;
-							width = bBox.width + 20;
-							height = bBox.height;
-							fromLabel = element.shape.fromLabel;
+						// 끝점 라벨인 경우
+						$(event.srcElement).parents('[id$=_TOLABEL]').each(function (idx, item) {
+							$(item).find("text").each(function (idx2, item2) {
+								bBox = _RENDERER.getBBox(item2);
+								left = bBox.x - 10;
+								top = bBox.y;
+								width = bBox.width + 20;
+								height = bBox.height;
+								toLabel = element.shape.toLabel;
+							});
 						});
-					});
 
-					// 끝점 라벨인 경우
-					$(event.srcElement).parents('[id$=_TOLABEL]').each(function (idx, item) {
-						$(item).find("text").each(function (idx2, item2) {
-							bBox = _RENDERER.getBBox(item2);
-							left = bBox.x - 10;
-							top = bBox.y;
-							width = bBox.width + 20;
-							height = bBox.height;
-							toLabel = element.shape.toLabel;
-						});
-					});
+						$(labelEditor).css(OG.Util.apply(OG.Constants.DEFAULT_STYLE.LABEL_EDITOR, {
+							left: left, top: top, width: width, height: height, overflow: "hidden", resize: "none"
+						}));
+						$(labelEditor).focus();
 
-					$(labelEditor).css(OG.Util.apply(OG.Constants.DEFAULT_STYLE.LABEL_EDITOR, {
-						left: left, top: top, width: width, height: height, overflow: "hidden", resize: "none"
-					}));
-					$(labelEditor).focus();
+						if (fromLabel || toLabel) {
+							$(labelEditor).val(fromLabel ? element.shape.fromLabel : element.shape.toLabel);
+						} else {
+							$(labelEditor).val(element.shape.label);
+						}
 
-					if (fromLabel || toLabel) {
-						$(labelEditor).val(fromLabel ? element.shape.fromLabel : element.shape.toLabel);
-					} else {
-						$(labelEditor).val(element.shape.label);
-					}
+						$(labelEditor).bind({
+							focusout: function () {
+								if (fromLabel) {
+									_RENDERER.drawEdgeLabel(element, this.value, 'FROM');
+								} else if (toLabel) {
+									_RENDERER.drawEdgeLabel(element, this.value, 'TO');
+								} else {
+									_RENDERER.drawLabel(element, this.value);
+								}
 
-					$(labelEditor).bind({
-						focusout: function () {
-							if (fromLabel) {
-								_RENDERER.drawEdgeLabel(element, this.value, 'FROM');
-							} else if (toLabel) {
-								_RENDERER.drawEdgeLabel(element, this.value, 'TO');
-							} else {
-								_RENDERER.drawLabel(element, this.value);
+								this.parentNode.removeChild(this);
 							}
+						});
+					} else {
+						$(labelEditor).css(OG.Util.apply(OG.Constants.DEFAULT_STYLE.LABEL_EDITOR, {
+							left: left, top: top, width: width, height: height, "text-align": textAlign, overflow: "hidden", resize: "none"
+						}));
+						$(labelEditor).focus();
+						$(labelEditor).val(element.shape.label);
 
-							this.parentNode.removeChild(this);
-						}
-					});
-				} else {
-					$(labelEditor).css(OG.Util.apply(OG.Constants.DEFAULT_STYLE.LABEL_EDITOR, {
-						left: left, top: top, width: width, height: height, "text-align": textAlign, overflow: "hidden", resize: "none"
-					}));
-					$(labelEditor).focus();
-					$(labelEditor).val(element.shape.label);
-
-					$(labelEditor).bind({
-						focusout: function () {
-							_RENDERER.drawLabel(element, this.value);
-							this.parentNode.removeChild(this);
-						}
-					});
+						$(labelEditor).bind({
+							focusout: function () {
+								_RENDERER.drawLabel(element, this.value);
+								this.parentNode.removeChild(this);
+							}
+						});
+					}
 				}
-			}
-		});
+			});
+		}
 	};
 
 	/**
@@ -13813,10 +13859,13 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor) {
 	/**
 	 * OpenGraph XML 문자열로 부터 Shape 을 드로잉한다.
 	 *
-	 * @param {String} xml XML 문자열
+	 * @param {String, Element} xml XML 문자열 또는 DOM Element
 	 * @return {Object} {width, height, x, y, x2, y2}
 	 */
 	this.loadXML = function (xml) {
+		if (!OG.Util.isElement(xml)) {
+			xml = OG.Util.parseXML(xml);
+		}
 		return this.loadJSON(OG.Util.xmlToJson(xml));
 	};
 
