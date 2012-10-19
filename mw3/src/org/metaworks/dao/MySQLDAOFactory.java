@@ -24,9 +24,6 @@ public class MySQLDAOFactory extends OracleDAOFactory{
 	
 	
 	public KeyGeneratorDAO createKeyGenerator(final String forWhat, final Map options) throws Exception {
-		
-		System.out.println("forWhat = " + forWhat);
-		
 		boolean option_useTableNameHeader = false;
 		if(options!=null && options.containsKey("useTableNameHeader")){
 			option_useTableNameHeader = !"false".equals(options.get("useTableNameHeader"));

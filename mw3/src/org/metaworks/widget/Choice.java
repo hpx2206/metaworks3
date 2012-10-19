@@ -66,6 +66,11 @@ public class Choice {
 		setSelectedText(getOptionNames().get(index));
 	}
 	
+	public void remove(int index){
+		getOptionValues().remove(index);
+		getOptionNames().remove(index);
+	}
+	
 	public void setSelectedValue(String value) {
 		for(int i=0;  i < getOptionValues().size(); i++) {
 			if(value.equals(getOptionValues().get(i))) {
