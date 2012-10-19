@@ -23,7 +23,7 @@
 						                        <% if(mw3.where == "topic"){ 
 							                        	var title = session.windowTitle;
 														if( title != null && title != '' && title.length > 4){
-															title = title.substring(4);
+															title = title.substring(4,10) + '...';
 														}%>
 													"주제:<%= title %>"에 
 												<%}%> 
