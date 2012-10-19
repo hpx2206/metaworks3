@@ -70,6 +70,7 @@ public class Navigation {
 
 	public Navigation(Session session) throws Exception {
 		personalPerspective = new PersonalPerspective();
+		personalPerspective.session = session;
 		personalPerspective.select();
 		
 		topicPerspective = new TopicPerspective();
