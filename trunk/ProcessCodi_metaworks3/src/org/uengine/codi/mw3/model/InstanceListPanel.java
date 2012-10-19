@@ -122,6 +122,10 @@ public class InstanceListPanel implements ContextAware{
 		this.scheduleCalendar = new ScheduleCalendar();
 		this.scheduleCalendar.session = session;
 		this.scheduleCalendar.load();
+		
+		if( this.getMetaworksContext() != null && "topic".equals(this.getMetaworksContext().getWhere()) ){
+			this.topicFollowersLoad();
+		}
 	}
 	
 	//@Hidden
@@ -185,7 +189,10 @@ public class InstanceListPanel implements ContextAware{
 		this.setInstanceList(null);
 		this.setScheduleCalendar(null);
 		if( this.getMetaworksContext() != null && "topic".equals(this.getMetaworksContext().getWhere()) ){
-			
+			this.topicFollowersLoad();
+			this.knowledge = new WfPanel();
+			this.knowledge.session = session;
+			this.knowledge.load(session.getLastSelectedItem());
 		}else{
 			this.setTitle("$perspective.strategic");
 			this.knowledge = new WfPanel();
