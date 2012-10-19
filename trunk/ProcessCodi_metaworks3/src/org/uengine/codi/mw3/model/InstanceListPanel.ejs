@@ -6,12 +6,9 @@
 		            %>
                 	<%
 							if(mw3.where == "topic"){
-								var title = session.windowTitle;
-								if( title != null && title != '' && title.length > 4){
-									title = title.substring(4);
-								}
+								
 					%>
-									<%= title %>
+								
 									<%=fields.topicFollowers.here()%>
                 	<%	
 							}
@@ -19,7 +16,22 @@
 		            <div id="searchbox">
 		                <div class="searchboxline">
 		                	<div class="searchboxline2">
-		                        <div class="newprocessbtn"><a href="#" onclick="<%=methods.newInstance.caller()%>"><span id="method_<%=objectId%>_newInstance"><div id="startBtn"><%=mw3.localize("$New")%></div></span></a></div>
+		                        <div class="newprocessbtn">
+			                        <a href="#" onclick="<%=methods.newInstance.caller()%>">
+			                        	<span id="method_<%=objectId%>_newInstance">
+			                        		<div id="startBtn">
+						                        <% if(mw3.where == "topic"){ 
+							                        	var title = session.windowTitle;
+														if( title != null && title != '' && title.length > 4){
+															title = title.substring(4);
+												}%>
+													"주제:<%= title %>"에 
+												<%}%> 
+													<%=mw3.localize("$New")%>
+											</div>
+										</span>
+									</a>
+								</div>
 		                        <div class="searchboxarea" id="method_<%=objectId%>_newInstance">
 		                        	<%=fields.searchBox.here()%>
 		                        </div>
