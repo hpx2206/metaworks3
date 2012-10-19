@@ -24,17 +24,19 @@ public class DatabaseChoice extends Choice
 			              String codeColumn, 
 			              String nameColumn, 
 			              String conditionColumn, 
-			              String conditionValue) throws Exception {
+			              String conditionValue,
+			              String orderBy) throws Exception {
 		this();
-		load(tableName, codeColumn, nameColumn, conditionColumn, conditionValue);
+		load(tableName, codeColumn, nameColumn, conditionColumn, conditionValue, orderBy);
 	}
 
 	public DatabaseChoice(String tableName, 
 					      String codeColumn,
 					      String nameColumn, 
-					      String conditionClause) throws Exception {
+					      String conditionClause,
+					      String orderBy) throws Exception {
 		this();
-		load(tableName, codeColumn, nameColumn, conditionClause);
+		load(tableName, codeColumn, nameColumn, conditionClause, orderBy);
 	}
 
 	String codeId;
@@ -69,7 +71,7 @@ public class DatabaseChoice extends Choice
 		}
 	}
 
-	public void load(String tableName, String codeColumn, String nameColumn, String conditionClause) throws Exception {
+	public void load(String tableName, String codeColumn, String nameColumn, String conditionClause, String orderBy) throws Exception {
 		StringBuffer sql = new StringBuffer();
 		sql.append("select ");
 		sql.append(codeColumn).append(" id, ");
@@ -78,10 +80,13 @@ public class DatabaseChoice extends Choice
 		if (!"".equals(conditionClause))
 			sql.append(" where ").append(conditionClause);
 		
+		if(orderBy != null)
+			sql.append(" order by " + orderBy);
+
 		load(sql.toString());
 	}
 
-	public void load(String tableName, String codeColumn, String nameColumn, String conditionColumn, String conditionValue) throws Exception {
+	public void load(String tableName, String codeColumn, String nameColumn, String conditionColumn, String conditionValue, String orderBy) throws Exception {
 		StringBuffer sql = new StringBuffer();
 		sql.append("select ");
 		sql.append(codeColumn).append(" id, ");
@@ -89,10 +94,13 @@ public class DatabaseChoice extends Choice
 		sql.append("from ").append(tableName);
 		sql.append(" where ");
 		sql.append(conditionColumn).append(" = '").append(conditionValue).append("' ");
+		
+		if(orderBy != null)
+			sql.append(" order by " + orderBy);
 
 		load(sql.toString());
 	}
-
+	
 	public void copyFromOptionValue(DatabaseChoice object) {
 		setOptionNames((ArrayList)object.getOptionNames().clone());
 		setOptionValues((ArrayList)object.getOptionValues().clone());
