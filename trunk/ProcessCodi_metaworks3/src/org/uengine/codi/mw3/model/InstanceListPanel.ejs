@@ -23,9 +23,9 @@
 						                        <% if(mw3.where == "topic"){ 
 							                        	var title = session.windowTitle;
 														if( title != null && title != '' && title.length > 4){
-															title = title.substring(4,10) + '...';
+															title = title.substring(0,13) + '...';
 														}%>
-													"주제:<%= title %>"에 
+													"<%= title %>"에 
 												<%}%> 
 													<%=mw3.localize("$New")%>
 											</div>
