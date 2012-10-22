@@ -25,23 +25,39 @@ org_uengine_codi_mw3_model_Popup.prototype = {
 		
 		var divId = '#objDiv_' + this.objectId;
 		
-		$(divId).parent().show();
-		$(divId).parent().css({top:y-28,left:x,width:popLayerWidth,height:popLayerHeight});
-		$(divId).parent().removeClass('clue-left-rounded');
-		$(divId).parent().addClass('clue-right-rounded');
+		var parent = $(divId).parent();
+		var arrow = $(divId + ' .cluetip-arrows');
+		
+		parent.show();
+		parent.css({top:y-28,left:x,width:popLayerWidth,height:popLayerHeight});
+		parent.removeClass('clue-left-rounded');
+		parent.addClass('clue-right-rounded');
+		
+		
+		
 		$(divId + ' #addcontact-con').height(h-39);
-		$(divId + ' .cluetip-arrows').css({top:10});
+		arrow.css({top:10});
 		
 		if(bodyWidth && popLayerWidth + x > bodyWidth){
-			$(divId).parent().css({left:x-30 - popLayerWidth});
-			$(divId).parent().removeClass('clue-right-rounded');
-			$(divId).parent().addClass('clue-left-rounded');
+			parent.css({left:x-30 - popLayerWidth});
+			parent.removeClass('clue-right-rounded');
+			parent.addClass('clue-left-rounded');
 		};
 		
 		if(bodyHeight && popLayerHeight + y > bodyHeight){    	
-		 	$(divId).parent().css({top:y+28 - popLayerHeight});
-		 	$(divId + ' .cluetip-arrows').css({top:popLayerHeight-40});
+			parent.css({top:y+28 - popLayerHeight});
+			arrow.css({top:popLayerHeight-40});
 		};
+		
+		var top = parent.css('top');
+		top = top.substring(0, top.length - 2);
+		
+		if(top < 0){
+			var arrowTop = arrow.css('top');			
+			
+			parent.css('top', 0);
+			arrow.css({top:popLayerHeight+Number(top)-40});
+		}
 
 	},
 	destoryPopup : function() {
