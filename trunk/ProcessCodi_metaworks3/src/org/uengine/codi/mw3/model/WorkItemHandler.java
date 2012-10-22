@@ -3,13 +3,10 @@ package org.uengine.codi.mw3.model;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.List;
-import java.util.Vector;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
-import org.metaworks.annotation.Available;
-import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
@@ -17,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.ITool;
 import org.uengine.contexts.ComplexType;
 import org.uengine.kernel.Activity;
-import org.uengine.kernel.ActivityInstanceContext;
 import org.uengine.kernel.HumanActivity;
 import org.uengine.kernel.KeyedParameter;
 import org.uengine.kernel.NeedArrangementToSerialize;
@@ -26,8 +22,6 @@ import org.uengine.kernel.ProcessInstance;
 import org.uengine.kernel.ResultPayload;
 import org.uengine.kernel.RoleMapping;
 import org.uengine.processmanager.ProcessManagerRemote;
-import org.uengine.webservices.worklist.DefaultWorkList;
-import org.uengine.webservices.worklist.WorkList;
 
 //@Face(ejsPath="faces/org/metaworks/widget/Window.ejs", options={"hideLabels"}, values={"true"}, displayName="업무 처리 화면")
 public class WorkItemHandler implements ContextAware{
@@ -58,15 +52,17 @@ public class WorkItemHandler implements ContextAware{
 					ParameterValue pv = parameters[i];
 					pv.setVariableName(pc.getVariable().getName());
 					pv.setArgument(pc.getArgument().getText(session!=null && session.getEmployee()!=null ? session.getEmployee().getLocale() : null));
+										
+					String when = this.getMetaworksContext().getWhen();
 					
 					MetaworksContext mc = new MetaworksContext();
-										
-					if(MetaworksContext.WHEN_EDIT.equals(this.getMetaworksContext().getWhen())){
+					
+					if(MetaworksContext.WHEN_EDIT.equals(when)){
 						if(ParameterContext.DIRECTION_IN.equals(pc.getDirection()))						
-							this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+							when = MetaworksContext.WHEN_VIEW;
 					}
 					
-					mc.setWhen(this.getMetaworksContext().getWhen());					
+					mc.setWhen(when);					
 					pv.setMetaworksContext(mc);
 					
 					
@@ -98,6 +94,10 @@ public class WorkItemHandler implements ContextAware{
 								((ITool)processVariableValue).onLoad();
 							}
 						} else if (processVariableValue instanceof ITool) {
+							if(processVariableValue instanceof ContextAware){
+								((ContextAware)processVariableValue).setMetaworksContext(mc);
+							}
+							
 							// for completed ComplexType Object implements ITool
 							((ITool) processVariableValue).onLoad();
 						}

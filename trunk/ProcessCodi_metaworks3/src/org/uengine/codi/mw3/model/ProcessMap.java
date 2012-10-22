@@ -33,8 +33,6 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 	public ProcessMapList processMapList;
 
 	String mapId;
-	
-		
 		public String getMapId() {
 			return mapId;
 		}
