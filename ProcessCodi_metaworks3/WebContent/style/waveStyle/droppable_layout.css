@@ -937,7 +937,8 @@ img {
 #navigator .depth2 .fist_menu {
     margin: 15px;
 }
-#navigator .depth2 a {padding:0 5px;
+#navigator .depth2 a {
+    /*padding:0 5px;*/
 -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
 }
