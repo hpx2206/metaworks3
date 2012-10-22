@@ -26,7 +26,7 @@
 .lst_type2 dd.photo2{display:inline;float:left;color:#fff;text-align:center}
 .lst_type2 .infoSub{font-size:11px !important; font-weight: normal; margin:3px 0px; height: 17px;}
 .lst_type2 .infoSub span{display:inline-block;}
-.lst_type2 .infoSub span.infoSubFirstSpan{width:85px;}
+.lst_type2 .infoSub span.infoSubFirstSpan{width:125px;}
 .lst_type2 dd{line-height:20px}
 .lst_type2 dd span{color:#808080; margin-right:15px;}
 .lst_type2 dd img{border:none}
