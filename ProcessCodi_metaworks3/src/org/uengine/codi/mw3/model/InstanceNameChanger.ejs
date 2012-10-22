@@ -1,3 +1,11 @@
+<%
+	if(value){
+%>
+	
 <div style="padding:10px;">
 <textarea id="instanceName_<%=objectId%>" row="1" class="instanceName"><%=value ? value.instanceName : ""%></textarea>
 </div>
+
+<%
+	}
+%>	
