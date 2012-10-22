@@ -1,4 +1,3 @@
-<%=mw3.where%>
 <% if(value!=null){
 
 	if(mw3.where=="instanceNavigator"){%>
@@ -23,7 +22,7 @@
 	
 <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tbl_type" <%=(value.status=='Completed') ? "style='background:#eeeeee';":""%>>						
 	<tbody>
-	<tr  class="q <%=value.firstDueTimeTerm ? (value.firstDueTimeTerm>=0 ? (value.firstDueTimeTerm>=3 ? "" : "plus" + value.firstDueTimeTerm ) : "minus" )  : "" %>" style="cursor:pointer;">
+	<tr  id="tr_<%=objectId%>" class="q <%=value.firstDueTimeTerm ? (value.firstDueTimeTerm>=0 ? (value.firstDueTimeTerm>=3 ? "" : "plus" + value.firstDueTimeTerm ) : "minus" )  : "" %>" style="cursor:pointer;">
 		<td id="newInst"><div class="innerNewInst"></div></td>
 		<td class="first_td" valign="top">
 			<div class="worklistuser">

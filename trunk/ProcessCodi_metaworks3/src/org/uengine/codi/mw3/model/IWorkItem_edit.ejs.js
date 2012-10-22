@@ -101,9 +101,10 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.send = function(){
 		this.sending = true;
 
 		var instanceViewThreadPanel = mw3.getAutowiredObject('org.uengine.codi.mw3.model.InstanceViewThreadPanel');
-		
-		
-		if(value.type=='comment'){
+		var object = mw3.objects[this.objectId];
+		if( object && object.metaworksContext && object.metaworksContext.where == 'sns'){
+			value.add();
+		}else if(value.type=='comment'){
 			
 			if(instanceViewThreadPanel){
 				var newComment = JSON.parse(JSON.stringify(value));
