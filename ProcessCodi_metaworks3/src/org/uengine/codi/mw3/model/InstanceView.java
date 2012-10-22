@@ -21,6 +21,8 @@ import org.uengine.kernel.EJBProcessInstance;
 import org.uengine.kernel.ProcessInstance;
 import org.uengine.processmanager.ProcessManagerRemote;
 
+import com.efsol.util.StringUtils;
+
 
 public class InstanceView {
 
@@ -484,10 +486,11 @@ public class InstanceView {
 
 	@ServiceMethod
 	public InstanceViewThreadPanel activityStream() throws Exception{
-		
-		return new InstanceViewThreadPanel(instanceId);
-		
-		
+		InstanceViewThreadPanel instanceViewThreadPanel = new InstanceViewThreadPanel();
+		instanceViewThreadPanel.session = session;
+		instanceViewThreadPanel.load(instanceId);
+		instanceViewThreadPanel.getMetaworksContext().setHow("instanceList");
+		return instanceViewThreadPanel;
 	}
 
 	

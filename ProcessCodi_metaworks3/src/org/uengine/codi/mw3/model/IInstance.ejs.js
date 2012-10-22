@@ -28,14 +28,14 @@ var org_uengine_codi_mw3_model_IInstance = function(objectId, className){
 	 if(object && object.metaworksContext && object.metaworksContext.how == 'blinking'){
 		 this.blinking();
 	 }
-	 if( 'sns' == mw3.where){
-		 $('#' + this.divId).click({objectId : this.objectId}, function(event){
+	 if( object && object.metaworksContext && object.metaworksContext.where == 'sns'){
+		 $('#tr_' + this.objectId).click({objectId : this.objectId}, function(event){
 			var objectId = event.data.objectId;
 				
 				 mw3.call(objectId, 'over');
 		 });
 	}else{
-		 $('#' + this.divId).click({objectId : this.objectId}, function(event){
+		 $('#tr_' + this.objectId).click({objectId : this.objectId}, function(event){
 				var objectId = event.data.objectId;
 					
 				mw3.call(objectId, 'detail');

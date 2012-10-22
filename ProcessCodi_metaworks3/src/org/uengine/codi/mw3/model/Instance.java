@@ -814,7 +814,6 @@ public class Instance extends Database<IInstance> implements IInstance{
 			panel.load(this.getInstId().toString());
 		}
 		
-		this.getMetaworksContext().setWhere("sns");
 		setInstanceViewThreadPanel(panel);
 	}
 	

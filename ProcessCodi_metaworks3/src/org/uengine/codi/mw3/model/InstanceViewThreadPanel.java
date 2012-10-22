@@ -47,7 +47,9 @@ public class InstanceViewThreadPanel implements ContextAware {
 		newItem.setInstId(new Long(getInstanceId()));
 		newItem.setTaskId(new Long(-1));
 		newItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
-		
+		if( "sns".equals(session.getTheme())){
+			newItem.getMetaworksContext().setWhere("sns");
+		}
 		newItem.setWriter(session.user);
 
 		setNewItem(newItem);
