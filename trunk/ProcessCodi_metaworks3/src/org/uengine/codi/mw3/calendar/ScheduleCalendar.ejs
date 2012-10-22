@@ -2,7 +2,10 @@
 	if(value){
 %>
 	<div id="scheduleCalendar_<%=objectId%>"></div>
-	<input value="refresh" type="button" onclick="mw3.getFaceHelper('<%=objectId%>').resize();" style="cursor:pointer;">
+	
+	<div style="margin-top:15px;">
+		<a id="wBtn" href="#"  onclick="mw3.getFaceHelper('<%=objectId%>').resize();" style="float:right"><span>refresh</span></a>
+	</div>
 <%
 	}
 %>
