@@ -226,6 +226,9 @@ if(value){
 %>					
 					<div class="infoSub"><span class="infoSubFirstSpan"><%=mw3.localize("$Name")%> :</span><span><%=fields.empName.here()%></span></div>		
 					<div class="infoSub"><span class="infoSubFirstSpan"><%=mw3.localize("$Password")%> : </span><span><%=fields.password.here() %></span></div>
+					<%
+						mw3.debug(true);
+					%>
 					<div class="infoSub"><span class="infoSubFirstSpan"><%=mw3.localize("$Re-Password")%> : </span><span><%=fields.confirmPassword.here() %></span></div>								
 <%		
 		}

@@ -19,6 +19,8 @@ import org.uengine.codi.mw3.Login;
 import org.uengine.processmanager.ProcessManagerRemote;
 import org.uengine.webservices.worklist.DefaultWorkList;
 
+import com.efsol.util.StringUtils;
+
 
 
 public class Instance extends Database<IInstance> implements IInstance{
@@ -805,9 +807,14 @@ public class Instance extends Database<IInstance> implements IInstance{
 
 	public void over() throws Exception{
 		InstanceViewThreadPanel panel = new InstanceViewThreadPanel();
-		panel.getMetaworksContext().setHow("instanceList");
-		panel.load(this.getInstId().toString());
 		
+		if("".equals(StringUtils.nullToEmpty(this.getInstanceViewThreadPanel().getInstanceId()))){
+			panel.session = session;
+			panel.getMetaworksContext().setHow("instanceList");
+			panel.load(this.getInstId().toString());
+		}
+		
+		this.getMetaworksContext().setWhere("sns");
 		setInstanceViewThreadPanel(panel);
 	}
 	

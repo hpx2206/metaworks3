@@ -162,7 +162,7 @@ public interface IEmployee extends IDAO {
 	public Object subscribeStep3() throws Exception;
 	
 	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_NEW, validate=true, target=ServiceMethodContext.TARGET_APPEND)
-	public Object saveEmployeeInfo() throws Exception;
+	public Object[] saveEmployeeInfo() throws Exception;
 	
 	@ServiceMethod(target="popup", callByContent=true)
 	public Object showDetail() throws Exception;

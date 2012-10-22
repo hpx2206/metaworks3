@@ -97,6 +97,9 @@ public class InstanceList implements ContextAware{
 			instanceContents.setMetaworksContext(getMetaworksContext());
 		}
 		
+		if("sns".equals(session.getTheme()))
+			instanceContents.getMetaworksContext().setWhere("sns");
+		
 		setInstances(instanceContents);
 
 		// setting moreInstanceList

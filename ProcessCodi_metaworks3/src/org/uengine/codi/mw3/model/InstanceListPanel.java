@@ -14,6 +14,7 @@ import org.uengine.codi.mw3.knowledge.WfPanel;
 		ejsPathMappingByContext=
 	{
 		"{where: 'pinterest', face: 'dwr/metaworks/org/uengine/codi/mw3/model/InstanceListPanel_pinterest.ejs'}",
+		"{where: 'sns', face: 'dwr/metaworks/org/uengine/codi/mw3/model/InstanceListPanel_sns.ejs'}",
 	}		
 
 )
@@ -28,6 +29,7 @@ public class InstanceListPanel implements ContextAware{
 	
 	
 	public InstanceListPanel(Session session){		
+		setMetaworksContext(new MetaworksContext());
 		setSearchBox(new SearchBox());
 
 		if(session!=null){
@@ -37,6 +39,12 @@ public class InstanceListPanel implements ContextAware{
 			newInstantiator.setWriter(session.getUser());
 			newInstantiator.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 			newInstantiator.setInstantiation(true);
+			
+			if("sns".equals(session.getTheme()))
+				this.getMetaworksContext().setWhere("sns");
+			if("topic".equals(session.getLastPerspecteType()))
+				this.getMetaworksContext().setHow("topic");
+			
 		}
 		
 		instanceList = new InstanceList();

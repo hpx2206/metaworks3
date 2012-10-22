@@ -8,6 +8,7 @@ import org.metaworks.widget.layout.Layout;
 import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.knowledge.Knowledge;
 import org.uengine.codi.mw3.model.Main;
+import org.uengine.codi.mw3.model.MainSNS;
 import org.uengine.codi.mw3.model.PinterestMain;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.processmarket.Market;
@@ -41,6 +42,11 @@ public class PageNavigator {
 	@ServiceMethod(callByContent=true)
 	public MainPanel goProcess() throws Exception {
 		return new MainPanel(new Main(session));
+	}
+	
+	@ServiceMethod(callByContent=true)
+	public MainPanel goSns() throws Exception {
+		return new MainPanel(new MainSNS(session));
 	}
 
 	@ServiceMethod(callByContent=true)

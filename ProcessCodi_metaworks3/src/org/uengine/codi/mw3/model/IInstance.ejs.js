@@ -28,10 +28,21 @@ var org_uengine_codi_mw3_model_IInstance = function(objectId, className){
 	 if(object && object.metaworksContext && object.metaworksContext.how == 'blinking'){
 		 this.blinking();
 	 }
-
- 
+	 if( 'sns' == mw3.where){
+		 $('#' + this.divId).click({objectId : this.objectId}, function(event){
+			var objectId = event.data.objectId;
+				
+				 mw3.call(objectId, 'over');
+		 });
+	}else{
+		 $('#' + this.divId).click({objectId : this.objectId}, function(event){
+				var objectId = event.data.objectId;
+					
+				mw3.call(objectId, 'detail');
+			 });
+	}
 	// 
-	 
+	 /*
 	$('#' + this.divId).mouseleave({objectId : this.objectId}, function(event){
 		 var objectId = event.data.objectId;
 		 
@@ -45,7 +56,7 @@ var org_uengine_codi_mw3_model_IInstance = function(objectId, className){
 		 
 		 if(object.instanceViewThreadPanel && object.instanceViewThreadPanel.instanceId) 
 			 mw3.call(objectId, 'over');
-			*/
+			*/ /*
 	});
 	
 	$('#' + this.divId).mouseenter({objectId : this.objectId}, function(event){		
@@ -64,13 +75,15 @@ var org_uengine_codi_mw3_model_IInstance = function(objectId, className){
 		}
 		
 	});
+	*/
 }
 
 	
 
 org_uengine_codi_mw3_model_IInstance.prototype = {
 	destroy : function(){
-		$('#' + this.divId).unbind('mouseenter').unbind('mouseleave');
+		//$('#' + this.divId).unbind('mouseenter').unbind('mouseleave');
+		$('#' + this.divId).unbind('click');
 	},
 	startLoading : function(){
 		if(this.windowObjectId && mw3.getFaceHelper(this.windowObjectId) && mw3.getFaceHelper(this.windowObjectId).startLoading)
