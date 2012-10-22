@@ -2,18 +2,15 @@ package org.uengine.codi.mw3.knowledge;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
-import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.dao.IDAO;
-import org.metaworks.dao.MetaworksDAO;
-import org.metaworks.dao.TransactionContext;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.model.InstanceListPanel;
 import org.uengine.codi.mw3.model.Session;
 
+@Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs")
 public class TopicTitle  implements ContextAware{
 	MetaworksContext metaworksContext;
 	public MetaworksContext getMetaworksContext() {
@@ -48,6 +45,7 @@ public class TopicTitle  implements ContextAware{
 			this.url = url;
 		}
 		
+	@Face(displayName="$make")
 	@ServiceMethod(callByContent=true)
 	public Object[] save() throws Exception{
 		

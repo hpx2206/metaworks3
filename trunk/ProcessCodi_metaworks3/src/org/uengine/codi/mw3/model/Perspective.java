@@ -64,8 +64,6 @@ public class Perspective {
 		
 		InstanceListPanel instListPanel = new InstanceListPanel(session);
 		instListPanel.session = session;
-		instListPanel.setMetaworksContext(new MetaworksContext());
-		instListPanel.getMetaworksContext().setWhere(perspectiveType);
 		instListPanel.setInstanceList(instList);
 		
 		// set search Keyword to searchBox

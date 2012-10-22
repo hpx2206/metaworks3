@@ -157,6 +157,15 @@ public class Session implements ContextAware{
 		public void setWindowTitle(String windowTitle) {
 			this.windowTitle = windowTitle;
 		}
+	
+	String theme;
+	@Hidden
+	public String getTheme() {
+		return theme;
+	}
+	public void setTheme(String theme) {
+		this.theme = theme;
+	}
 	//disabled for merging
 //	SearchKeywordBox searchKeywordBox;
 //
@@ -169,6 +178,8 @@ public class Session implements ContextAware{
 //		this.searchKeywordBox = searchKeywordBox;
 //	}
 	
+
+
 	String searchKeyword;
 		@Hidden
 		public String getSearchKeyword() {

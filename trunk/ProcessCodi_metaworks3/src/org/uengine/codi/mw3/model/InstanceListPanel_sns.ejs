@@ -4,6 +4,7 @@
 					<%
 		            	var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");		
 		            %>
+		            <%=fields.newInstantiator.here()%>
                 	<%
 							if(mw3.how == "topic"){
 								
@@ -13,33 +14,6 @@
                 	<%	
 							}
 					%>
-		            <div id="searchbox">
-		                <div class="searchboxline">
-		                	<div class="searchboxline2">
-		                        <div class="newprocessbtn">
-			                        <a href="#" onclick="<%=methods.newInstance.caller()%>">
-			                        	<span id="method_<%=objectId%>_newInstance">
-			                        		<div id="startBtn">
-						                        <% if(mw3.how == "topic"){ 
-							                        	var title = session.windowTitle;
-														if( title != null && title != '' && title.length > 13){
-															title = title.substring(0,13) + '...';
-														}%>
-													"<%= title %>"에 
-												<%}%> 
-													<%=mw3.localize("$New")%>
-											</div>
-										</span>
-									</a>
-								</div>
-		                        <div class="searchboxarea" id="method_<%=objectId%>_newInstance">
-		                        	<%=fields.searchBox.here()%>
-		                        </div>
-		                        <div style="clear:both;"></div>
-		                    </div>
-		                </div>
-		                <div style="clear:both;"></div>
-		            </div>    
 		            <div class="toolbar">
 	                    <ul>
 	                        <li onclick="<%=methods.switchToInstanceList.caller()%>" <%=(value.instanceList && session.lastPerspecteType=='allICanSee') ? "class='toolbar_current'" : ""%>><span><img src="images/waveStyle/i_upcoming.png" border="0"></span><span><%=mw3.localize("$ComingUp")%></span></li>

@@ -688,7 +688,15 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				
 	
 			}else{
-				return new Object[]{new Refresh(instantiatedViewContent), new Refresh(parent)};
+				if("sns".equals(session.getTheme())){
+					WorkItem newInstantiator = new CommentWorkItem();
+					newInstantiator.setWriter(session.getUser());
+					newInstantiator.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+					newInstantiator.setInstantiation(true);
+					return new Object[]{new Refresh(newInstantiator), new Refresh(parent)};
+				}else{
+					return new Object[]{new Refresh(instantiatedViewContent), new Refresh(parent)};
+				}
 			}
 			
 		}

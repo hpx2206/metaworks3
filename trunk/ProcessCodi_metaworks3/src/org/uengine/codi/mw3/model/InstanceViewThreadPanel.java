@@ -3,10 +3,12 @@ package org.uengine.codi.mw3.model;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Id;
-import org.metaworks.dao.MetaworksDAO;
+import org.metaworks.dao.TransactionContext;
 
 
 public class InstanceViewThreadPanel implements ContextAware {
+
+	public Session session;
 	
 	public InstanceViewThreadPanel(){
 		setMetaworksContext(new MetaworksContext());
@@ -19,7 +21,14 @@ public class InstanceViewThreadPanel implements ContextAware {
 		public void setMetaworksContext(MetaworksContext metaworksContext) {
 			this.metaworksContext = metaworksContext;
 		}
-
+	
+	IWorkItem newItem;
+		public IWorkItem getNewItem() {
+			return newItem;
+		}
+		public void setNewItem(IWorkItem newItem) {
+			this.newItem = newItem;
+		}
 	protected InstanceViewThreadPanel(String instanceId) throws Exception{
 		this();
 		
@@ -31,34 +40,18 @@ public class InstanceViewThreadPanel implements ContextAware {
 		setInstanceId(instanceId);
 		
 		IWorkItem result = WorkItem.find(instanceId);
-		IWorkItem thread; 
+		result.getMetaworksContext().setHow("instanceList");
+		setThread(result);
 		
-		if("instanceList".equals(this.getMetaworksContext().getHow())){
-/*			thread = (IWorkItem)MetaworksDAO.createDAOImpl(IWorkItem.class);
-			int cnt = 1;
-			int limit = 5;
-			
-			while(result.next()){
-				cnt++;
-				
-				thread.moveToInsertRow();
-				thread.getImplementationObject().copyFrom(result);
-				
-				if(cnt > limit){
-					setMore(true);
-					
-					break;
-				}
-			}*/		
-			thread = result;
-			
-			
-			thread.getMetaworksContext().setHow("instanceList");
-		}else{
-			thread = result;
-		}
+		CommentWorkItem newItem = new CommentWorkItem();
+		newItem.setInstId(new Long(getInstanceId()));
+		newItem.setTaskId(new Long(-1));
+		newItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		
-		setThread(thread);//.getImplementationObject().toArrayList());		
+		newItem.setWriter(session.user);
+
+		setNewItem(newItem);
+		
 	}
 
 	String instanceId;
