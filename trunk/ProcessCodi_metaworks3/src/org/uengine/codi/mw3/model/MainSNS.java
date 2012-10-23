@@ -9,6 +9,7 @@ import org.metaworks.widget.Window;
 import org.metaworks.widget.layout.Layout;
 import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.knowledge.WfPanel;
+import org.uengine.codi.mw3.knowledge.WfWindow;
 
 @Face(ejsPath="dwr/metaworks/org/uengine/codi/mw3/model/Main.ejs")
 public class MainSNS {
@@ -79,14 +80,13 @@ public class MainSNS {
 			
 		}
 		
-		Window wfWindow = new Window();
+		WfWindow wfWindow = new WfWindow(session.user);
 		WfPanel panel = new WfPanel();
 		
 		panel.session = session;
 		panel.load(session.getCompany().getComCode());				
 		
-		wfWindow.setPanel(panel);
-		wfWindow.setTitle("Knowledge Map");
+		wfWindow.setWfPanel(panel);
 		
 		SNSTopPanel topPanel = new SNSTopPanel(session);
 		if("phone".equals(preferMob) || "tw".equals(preferUX)){
@@ -153,7 +153,7 @@ public class MainSNS {
 			outerLayout.setNorth(topPanel);
 			
 			//Since there's already user portrait in the navigator for this full-fledged mode, the portrait is removed.
-			topPanel.setLoginUser(null);
+//			topPanel.setLoginUser(null);
 			outerLayout.setWest(westLayout);
 			outerLayout.setCenter(eastLayout);		
 			outerLayout.setName("center");
