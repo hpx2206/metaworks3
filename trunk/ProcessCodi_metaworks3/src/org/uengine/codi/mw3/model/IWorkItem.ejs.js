@@ -8,9 +8,14 @@ var org_uengine_codi_mw3_model_IWorkItem = function(objectId, className){
 	var doc = container.html();
 	
 	var regURL = new RegExp("(http|https|ftp|telnet|news|irc)://([-/.a-zA-Z0-9_~#%$?&=:200-377()]+)","gi");	
-    container.html(doc.replace(regURL,"<a href='$1://$2' target='_blank' style='text-decoration:underline'>$1://$2</a>"));
-
-		
+	
+	try{
+		container.html(doc.replace(regURL,"<a href='$1://$2' target='_blank' style='text-decoration:underline'>$1://$2</a>"));
+	}catch(e){
+		if(window.console)
+			console.log(e);
+	}
+	
 	var workItem = mw3.objects[objectId];
 	this.type = workItem.type;
 	
@@ -32,7 +37,7 @@ org_uengine_codi_mw3_model_IWorkItem.prototype = {
 		var object = mw3.getObject(this.objectId);
 		var location = window.location;
 				
-		var url = location.origin + '/uengine-web2/processparticipant/worklist/workitemHandler.jsp?taskId='+object.taskId+'&instanceId='+object.instId+'&tracingTag='+object.trcTag;
+		var url = location.origin.replace('8080','7080') + '/uengine-web/processparticipant/worklist/workitemHandler.jsp?taskId='+object.taskId+'&instanceId='+object.instId+'&tracingTag='+object.trcTag;
 		
 		window.open(url);
 	}

@@ -443,53 +443,38 @@ public class Instance extends Database<IInstance> implements IInstance{
 			this.lastCmnt = lastCmnt;
 		}
 	
-	@Override
-	public String getDefVerId() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setDefVerId(String defVerId) {
-		// TODO Auto-generated method stub
 		
-	}
 
-	@Override
-	public String getDefId() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	String defId;
+		public String getDefId() {
+			return this.defId;
+		}
+		public void setDefId(String defId) {
+			this.defId = defId;
+		}
 
-	@Override
-	public void setDefId(String defId) {
-		// TODO Auto-generated method stub
-		
-	}
+	String defVerId;
+		public String getDefVerId() {
+			return defVerId;
+		}
+		public void setDefVerId(String defVerId) {
+			this.defVerId = defVerId;
+		}
 
-	@Override
-	public String getDefPath() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setDefPath(String DefPath) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public String getDefName() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setDefName(String defName) {
-		// TODO Auto-generated method stub
-		
-	}
+	String defPath;
+		public String getDefPath() {
+			return defPath;
+		}
+		public void setDefPath(String defPath) {
+			this.defPath = defPath;
+		}
+	String defName;
+		public String getDefName() {
+			return defName;
+		}
+		public void setDefName(String defName) {
+			this.defName = defName;
+		}
 
 	@Override
 	public Date getStartedDate() {
