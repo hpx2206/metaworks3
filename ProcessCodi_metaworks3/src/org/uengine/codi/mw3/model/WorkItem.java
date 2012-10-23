@@ -761,7 +761,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 //					new Refresh (refreshedInstanceView.getFollowers())
 //			};					
 			returnObjects = new Object[]{
-					new Refresh(threadPanelOfThis) // 인스턴스 리스트에 맨 꼭대기에 추가함... -- 더 새로운 소식으로 눈에 띄게하는 느낌을 줌...
+					new Refresh(threadPanelOfThis) 
 			};					
 		}else{
 
