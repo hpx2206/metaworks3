@@ -61,6 +61,8 @@ public class TrayItem implements ContextAware {
 		instanceView.load(instance);
 		
 		instanceView.getInstanceViewThreadPanel().getThread().getMetaworksContext().setHow("instance");
+		instanceView.getInstanceViewThreadPanel().getNewItem().getMetaworksContext().setHow("instance");
+		
 		
 		setInstance(instanceView);
 	}

@@ -46,6 +46,9 @@ public class InstanceViewContent extends ContentWindow {
 		//instanceView = new InstssanceView();		
 		//instanceView.processManager = this.processManager;
 		
+		if("sns".equals(session.getTheme())){
+			instanceView.getMetaworksContext().setHow("instanceList");
+		}
 		instanceView.session = session;
 		instanceView.load(instance);
 
