@@ -160,7 +160,7 @@ public class MainSNS {
 			
 			setLayout(outerLayout);
 
-			setPageNavigator(new PageNavigator("process"));	
+			//setPageNavigator(new PageNavigator("process"));	
 		}
 
 	}
