@@ -33,7 +33,8 @@ public class InstanceView {
 	}		
 		
 	public void load(IInstance instance) throws Exception{
-		setMetaworksContext(new MetaworksContext());
+		if(this.getMetaworksContext() == null)
+			setMetaworksContext(new MetaworksContext());
 
 		Instance inst = new Instance();
 		inst.setInstId(instance.getInstId());
@@ -490,8 +491,9 @@ public class InstanceView {
 	public InstanceViewThreadPanel activityStream() throws Exception{
 		InstanceViewThreadPanel instanceViewThreadPanel = new InstanceViewThreadPanel();
 		instanceViewThreadPanel.session = session;
+		instanceViewThreadPanel.getMetaworksContext().setHow(this.getMetaworksContext().getHow());
 		instanceViewThreadPanel.load(instanceId);
-		instanceViewThreadPanel.getMetaworksContext().setHow("instanceList");
+		
 		return instanceViewThreadPanel;
 	}
 
