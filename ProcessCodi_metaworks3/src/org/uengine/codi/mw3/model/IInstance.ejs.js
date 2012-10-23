@@ -6,15 +6,16 @@ var org_uengine_codi_mw3_model_IInstance = function(objectId, className){
 	this.windowObjectId = $('#' + this.divId).closest('.mw3_window').attr('objectId');
 	this.overTimer;
 	
+	$('#' + this.divId).css('border-top','1px solid #e9e9e9')
 	
-	$('#' + this.divId).bind('click', {objectId: this.objectId},function(){
+	/*$('#' + this.divId).bind('click', {objectId: this.objectId},function(){
 		 mw3.getFaceHelper(objectId).unBlinking();
 		 
 		 $(".tbl_type").parent().css("background","none");
 		 $(".tbl_type").parent().css("box-shadow","none");
 		 $(this).css("background","#C9E2FC");
 		 $(this).css("box-shadow","0px 0px 5px 2px rgba(0, 0, 0, 0.1) inset");
-	 });
+	 });*/
 	 
 	/* $('#' + this.divId).hover(
 			 function(){
