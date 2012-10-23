@@ -37,7 +37,8 @@ public class InstanceView {
 
 		Instance inst = new Instance();
 		inst.setInstId(instance.getInstId());
-		String secuopt = inst.databaseMe().getSecuopt();
+		inst.copyFrom(inst.databaseMe());
+		String secuopt = inst.getSecuopt();
 		
 		//if(session!=null){
 			Notification notificationType = new Notification();
@@ -56,7 +57,7 @@ public class InstanceView {
 		setStatus(inst.databaseMe().getStatus());
 		setSecuopt(secuopt);
 		
-		loadDefault();
+		loadDefault(inst);
 		
 		if("1".equals(getSecuopt())){ //means secured conversation
 			
@@ -165,9 +166,10 @@ public class InstanceView {
 	@AutowiredFromClient
 	public Session session;
 
-	protected void loadDefault() throws Exception{
+	protected void loadDefault(Instance inst) throws Exception{
 		ProcessInstance instance = processManager.getProcessInstance(getInstanceId());
 
+		
 		followers = new InstanceFollowers();
 		followers.setInstanceId(instanceId);
 		followers.load();
@@ -191,46 +193,46 @@ public class InstanceView {
 		//setProcessInstanceMonitor(flowChart);
 		
 		setInstanceName(((EJBProcessInstance)instance).getProcessInstanceDAO().getName());
-
 		
-		crowdSourcer = new CrowdSourcer();
-		crowdSourcer.setInstanceId(getInstanceId());
-		crowdSourcer.setFollowers(this.followers);
-		crowdSourcer.setMessage(getInstanceName());
-		
-		if(instance.getProperty("", "facebook_postIds") != null){
-			String[] postIds = (String[])instance.getProperty("", "facebook_postIds");
-			crowdSourcer.setPostIds(postIds);			
-		}
-		
-		boolean isOpen = false;
-		if(instance.getProperty("", "is_open") != null){
-			isOpen = ((String)instance.getProperty("", "is_open")).equals("open") ? true : false;
-		}
-		
-		System.out.println("isOpen :" + isOpen);
-		crowdSourcer.setOpen(isOpen);
-		
-		
-		
-		//threadPosting = new PostingsWorkItem();
-		
-		externalFeedback = new ArrayList<FacebookFeedback>();
-		
-		if(instance.getProperty("", "facebook_postIds") != null){
-			String[] postIds = (String[]) instance.getProperty("", "facebook_postIds");
+		if(inst.getDefId() == null){
+			crowdSourcer = new CrowdSourcer();
+			crowdSourcer.setInstanceId(getInstanceId());
+			crowdSourcer.setFollowers(this.followers);
+			crowdSourcer.setMessage(getInstanceName());
 			
-			for(int i=0; i<postIds.length; i++){
-				FacebookFeedback postingWorkItem = new FacebookFeedback();
-				postingWorkItem.setPostId(postIds[i]);
-				//postingWorkItem.setType("posting");
+			if(instance.getProperty("", "facebook_postIds") != null){
+				String[] postIds = (String[])instance.getProperty("", "facebook_postIds");
+				crowdSourcer.setPostIds(postIds);			
+			}
+			
+			boolean isOpen = false;
+			if(instance.getProperty("", "is_open") != null){
+				isOpen = ((String)instance.getProperty("", "is_open")).equals("open") ? true : false;
+			}
+			
+			System.out.println("isOpen :" + isOpen);
+			crowdSourcer.setOpen(isOpen);
+		
+		
+		
+			//threadPosting = new PostingsWorkItem();
+			
+			externalFeedback = new ArrayList<FacebookFeedback>();
+			
+			if(instance.getProperty("", "facebook_postIds") != null){
+				String[] postIds = (String[]) instance.getProperty("", "facebook_postIds");
 				
-				externalFeedback.add(postingWorkItem);
-			}			
-		}	
+				for(int i=0; i<postIds.length; i++){
+					FacebookFeedback postingWorkItem = new FacebookFeedback();
+					postingWorkItem.setPostId(postIds[i]);
+					//postingWorkItem.setType("posting");
+					
+					externalFeedback.add(postingWorkItem);
+				}			
+			}	
+			eventTriggerPanel = new EventTriggerPanel(instance);
+		}
 		
-		
-		eventTriggerPanel = new EventTriggerPanel(instance);
 		
 		instanceNameChanger = new InstanceNameChanger();
 		instanceNameChanger.setInstanceId(instanceId);
