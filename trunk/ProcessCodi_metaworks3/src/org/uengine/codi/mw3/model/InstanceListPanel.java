@@ -100,8 +100,15 @@ public class InstanceListPanel implements ContextAware{
 			this.newInstantiator = newInstantiator;
 		}	
 	
-	WfPanel knowledge;
+	ProcessMapPanel processMapPanel;
+		public ProcessMapPanel getProcessMapPanel() {
+			return processMapPanel;
+		}
+		public void setProcessMapPanel(ProcessMapPanel processMapPanel) {
+			this.processMapPanel = processMapPanel;
+		}
 		
+	WfPanel knowledge;
 		public WfPanel getKnowledge() {
 			return knowledge;
 		}
@@ -237,5 +244,11 @@ public class InstanceListPanel implements ContextAware{
 		return window;
 	}
 	
+	@ServiceMethod(callByContent=true)
+	public void showProcessMap() throws Exception {
+		processMapPanel = new ProcessMapPanel();		
+		processMapPanel.setMetaworksContext(this.getMetaworksContext());
+		processMapPanel.load(session);
+	}
 	
 }
