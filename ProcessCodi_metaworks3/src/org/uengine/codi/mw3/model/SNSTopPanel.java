@@ -1,6 +1,7 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.annotation.AutowiredToClient;
+import org.metaworks.annotation.Face;
 import org.uengine.codi.mw3.admin.WindowPanel;
 
 public class SNSTopPanel {
@@ -17,8 +18,19 @@ public class SNSTopPanel {
 		notificationBadge.refresh();
 		
 		setLoginUser(session.getUser());
+		
+		setSearchBox(new SearchBox());
 	}
 	
+	SearchBox searchBox;		
+		@Face(options={"keyupSearch"}, values={"true"})
+		public SearchBox getSearchBox() {
+			return searchBox;
+		}
+		public void setSearchBox(SearchBox searchBox) {
+			this.searchBox = searchBox;
+		}
+		
 	WindowPanel windowPanel;
 		public WindowPanel getWindowPanel() {
 			return windowPanel;
