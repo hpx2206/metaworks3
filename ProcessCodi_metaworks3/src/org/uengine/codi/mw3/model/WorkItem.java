@@ -13,7 +13,6 @@ import org.metaworks.ToAppend;
 import org.metaworks.ToPrepend;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
-import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Test;
 import org.metaworks.dao.Database;
 import org.metaworks.dwr.MetaworksRemoteService;
@@ -26,14 +25,13 @@ import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.admin.WebEditor;
 import org.uengine.codi.mw3.knowledge.KnowledgeTool;
 import org.uengine.codi.mw3.knowledge.WfNode;
-import org.uengine.kernel.Activity;
 import org.uengine.kernel.HumanActivity;
 import org.uengine.kernel.ProcessInstance;
+import org.uengine.kernel.RoleMapping;
 import org.uengine.persistence.dao.UniqueKeyGenerator;
 import org.uengine.processmanager.ProcessManagerBean;
 import org.uengine.processmanager.ProcessManagerRemote;
 import org.uengine.webservices.worklist.DefaultWorkList;
-import org.uengine.kernel.RoleMapping;
 
 
 public class WorkItem extends Database<IWorkItem> implements IWorkItem{
@@ -697,7 +695,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 					newInstantiator.setWriter(session.getUser());
 					newInstantiator.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 					newInstantiator.setInstantiation(true);
-					return new Object[]{new Refresh(newInstantiator), new Refresh(parent)};
+					return new Object[]{new Refresh(newInstantiator), new Refresh(parent) , new Remover(new ProcessMapPanel()) }; 
 				}else{
 					return new Object[]{new Refresh(instantiatedViewContent), new Refresh(parent)};
 				}
