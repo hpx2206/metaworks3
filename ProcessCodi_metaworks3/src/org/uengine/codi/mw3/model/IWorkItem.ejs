@@ -15,7 +15,18 @@
 					<div class="notMePicName" style="float:left; color:#5272A7"><%=value.writer.name%></div>
 					<div style="float:left; margin-left:15px; font-size:11px; color:#A4A4A4;"><%=fields.startDate.here()%></div>
 					<div class="clear" style="height:3px;"></div>
-					<div><%=value.title.replace('\n','<br>')%></div>
+					<div><%=value.title.replace('\n','<br>')%>
+					
+					
+						<% if(value.type==null){%>
+						 	<%=mw3.localize('$MyTask')%>: <a href="#" onClick="<%=value.tool=='formApprovalHandler'?'mw3.getFaceHelper('+objectId+').openFormApprovalHandler()':methods.detail.caller()%>"><%=value.title%> [ <%=value.status%> ]</a>
+						
+							<% if(value.tool != 'formApprovalHandler'){ %>
+									<span>
+										<a href="#" onClick="<%=methods.workItemPopup.caller()%>"><img src="images/waveStyle/newWindow.png" style="margin-top:2px;" title="Open new window"></a>
+									</span>				
+							<%}%>											
+						<% }%></div>
 					<div>
 					<%if(value.type=='file'){%>						
 						<%  if(value.file.mimeType.indexOf("image")==0){
