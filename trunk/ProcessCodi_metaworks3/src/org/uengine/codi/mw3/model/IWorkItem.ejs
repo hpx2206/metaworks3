@@ -3,15 +3,12 @@
 	if(mw3.how == 'instanceList'){
 %>
 
-	<table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-bottom:1px solid #E4E4E4">
+	<table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-bottom:1px solid #fff">
 		<tbody>
 			<tr>
-				<td width="65" valign="top" style="padding:5px 0;">
-					
-				</td>
 				<td width="55" valign="top">
-					<div class="notMePic" style="width:55px">
-						<div class="notMePicPic"><%value.writer['size']='small';%><%=fields.writer.here()%></div>						
+					<div style="margin-left:12px; width:55px">
+						<div class="notMePicPic"><%=fields.writer.here()%></div>						
 					</div>
 				</td>			
 				<td style="padding:5px 0;">
@@ -26,7 +23,7 @@
 							}else{
 								value.file.metaworksContext.when='view'; 
 							}%>
-							<div style="width:150px;"><%=fields.file.here()%></div>
+							<div style="width:auto;"><%=fields.file.here()%></div>
 					<%}%>
 					<%if(value.type=='memo'){%>
 					
