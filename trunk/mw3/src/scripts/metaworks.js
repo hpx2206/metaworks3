@@ -76,7 +76,8 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			    this.testSet = {};
 			    
 			    this.dragging = false;
-			    
+			    this.dragStartX = 0;
+			    this.dragStartY = 0;
 			    // Netscape
 			    // 5.0 (Windows NT 6.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11
 			    // Mozilla
@@ -95,7 +96,8 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			    var mouseUp = function(e){
 			    	mw3.mouseX = e.pageX;
 	    			mw3.mouseY = e.pageY; 
-	    			
+	    			mw3.dragStartX = 0;
+   			 		mw3.dragStartY = 0;
    					
    					if(mw3.dragObject && mw3.dragging){
    						
@@ -127,13 +129,14 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			    	var mouseX = e.pageX;
 	    			var mouseY = e.pageY; 
 	    			
- 					if(mw3.dragObject && (
- 							mw3.dragObject.style.left > mouseX || 
- 							mw3.dragObject.style.top > mouseY || 
- 							mw3.dragObject.style.left + mw3.dragObject.style.width < mouseX ||
-  							mw3.dragObject.style.top + mw3.dragObject.style.height < mouseY
- 						)){
- 						
+// 					if(mw3.dragObject && (
+// 							!(mw3.dragObject.style.left > mouseX-10 && mw3.dragObject.style.left < mouseX+10) || 
+// 							!(mw3.dragObject.style.top > mouseY-10 && mw3.dragObject.style.top > mouseY +10)|| 
+// 							mw3.dragObject.style.left + mw3.dragObject.style.width < mouseX ||
+//  							mw3.dragObject.style.top + mw3.dragObject.style.height < mouseY
+// 						)){
+   			 		if( (mw3.dragStartX != 0 && (mouseX > mw3.dragStartX + 30 || mouseX < mw3.dragStartX - 30 )) || 
+   			 			(mw3.dragStartY != 0 && (mouseY > mw3.dragStartY + 30 || mouseY < mw3.dragStartY - 30) )){
  						if(console)
  							console.log('drag  start');
  						
@@ -967,6 +970,8 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					   			 		function(e){
 					   			 			e.preventDefault();
 					   			 			mw3.dragObject = this;
+						   			 		mw3.dragStartX = e.pageX;
+						   			 		mw3.dragStartY = e.pageY;
 					   			 			e.stopPropagation();
 					   			 		}
 					   			 	);
@@ -998,7 +1003,6 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 
 	   			 								this['dropCommand'] = null;
 	   			 								mw3.dragging = false;
-	   			 								
 		   			  	 						var objectId = mw3.dragObject['objectId'];
 		   			 	 						if(objectId && mw3.objects[objectId]){
 		   			 	 							var typeName = mw3.objects[objectId].__className;
