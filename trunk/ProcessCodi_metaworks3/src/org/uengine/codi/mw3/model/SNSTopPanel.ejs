@@ -5,14 +5,9 @@
 		}
 %>
 	
- 	
-	<div class="logo">
-		<table cellpadding=0 cellspacing=0 border=0>
-		<td>	
-			<%=fields.loginUser.here()%>
-		</td>
-		<td><img src="images/waveStyle/<%=mw3.localize("$logo")%>.png"></td>
-		</table>
+ 	<div style="float:left; margin-top:5px;"><%=fields.loginUser.here()%></div>
+	<div class="logo">		
+		<img src="images/waveStyle/<%=mw3.localize("$logo")%>.png">
 	</div>
 	<%=fields.notificationBadge.here()%>
 	
@@ -21,6 +16,7 @@
 	<%=fields.tray.here()%>
 	
     <div class="info">
+    <%=fields.searchBox.here()%>
         <%if(mw3.when!='__design-depth2'){/*TODO: later, rather use 'where' than 'when'.*/%>
         	<%=fields.session.here({when:'hidden'})%>
         <%}else{%>
@@ -28,7 +24,7 @@
         <%}%>	
 	</div>	
 	
-	<%=fields.searchBox.here()%>
+	
 	
 <%
 	}
