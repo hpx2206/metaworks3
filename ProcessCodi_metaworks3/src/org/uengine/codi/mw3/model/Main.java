@@ -119,8 +119,8 @@ public class Main {
 			//Since there's are too many input boxes there, it is removed.
 			contactWindow.getContactPanel().setSearchBox(null);
 			
-			westLayout.setNorth(contactWindow);
-			westLayout.setCenter(new  NavigationWindow(session));
+			westLayout.setNorth(new  NavigationWindow(session));
+			westLayout.setCenter(contactWindow);
 			westLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, north__spacing_open:5, north__size:'50%'");
 			westLayout.setName("west");
 			

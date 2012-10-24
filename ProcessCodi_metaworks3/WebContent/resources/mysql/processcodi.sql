@@ -618,3 +618,5 @@ CREATE TABLE BPM_TOPICMAPPING (
 	USERNAME varchar(1000) DEFAULT NULL,
   PRIMARY KEY (TOPICMAPPINGID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+alter table processmap modify column comcode varchar(20);

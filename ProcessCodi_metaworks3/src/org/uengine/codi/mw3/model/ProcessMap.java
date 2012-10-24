@@ -224,7 +224,6 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 	
 		IInstance instanceRef = new Instance();
 		instanceRef.setInstId(new Long(instId));
-
 		
 		if(newInstancePanel!=null){
 			
@@ -327,6 +326,9 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		processManager.applyChanges();
 
 
+		if( session != null && session.getLastPerspecteType().equalsIgnoreCase("topic")){
+			((Instance)instanceRef).databaseMe().setTopicId(session.getLastSelectedItem());
+		}
 		if(newInstancePanel!=null){
 			((Instance)instanceRef).databaseMe().setSecuopt("" + newInstancePanel.getSecurityLevel().getSelected());
 			((Instance)instanceRef).flushDatabaseMe();

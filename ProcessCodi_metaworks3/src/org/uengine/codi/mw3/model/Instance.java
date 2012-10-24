@@ -202,7 +202,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 		// TASK
 		stmt.append(" (select max(worklist.startdate) startdate, worklist.rootinstid ");
 		stmt.append("from bpm_worklist worklist, bpm_rolemapping rolemapping ");
-		stmt.append("where worklist.rootinstid=rolemapping.rootinstid and (worklist.status != '"+ DefaultWorkList.WORKITEM_STATUS_RESERVED +"' or worklist.status is null)");
+		stmt.append("where worklist.rootinstid=rolemapping.rootinstid and (worklist.status != '"+ DefaultWorkList.WORKITEM_STATUS_RESERVED +"' or worklist.status is null) ");
 		if(taskSql!=null) {
 			stmt.append(taskSql);
 		}
@@ -250,9 +250,9 @@ public class Instance extends Database<IInstance> implements IInstance{
 		}else if("request"
 					.equals(session.getLastPerspecteType())) {
 			
-			instanceSql.append("and inst.initep=?instInitep ");
+			instanceSql.append(" and inst.initep=?instInitep ");
 			criteria.put("instInitep", session.getEmployee().getEmpCode());
-			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
+			instanceSql.append(" and inst.isdeleted!=?instIsdelete ");
 			criteria.put("instIsdelete", "1");
 
 		}else if("stopped"
