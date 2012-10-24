@@ -2,7 +2,9 @@ package org.uengine.codi.mw3.model;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
@@ -10,6 +12,7 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.dao.TransactionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.ITool;
 import org.uengine.contexts.ComplexType;
@@ -42,6 +45,9 @@ public class WorkItemHandler implements ContextAware{
 		}
 		
 		if(humanActivity.getParameters()!=null){
+			// load map for ITool
+			loadMapForITool((Map<String, Object>)makeMapForITool());
+			
 			//creates work item handler
 				parameters = new ParameterValue[humanActivity.getParameters().length];
 				for(int i=0; i<humanActivity.getParameters().length; i++){
@@ -114,10 +120,9 @@ public class WorkItemHandler implements ContextAware{
 					}
 					
 					pv.setValueObject(processVariableValue);
-								
 				}
 				
-				
+				releaseMapForITool();
 		}
 		
 		setInstanceId(instanceId.toString());
@@ -272,6 +277,7 @@ public class WorkItemHandler implements ContextAware{
 		for(int i=0; i<parameters.length; i++){
 			ParameterValue pv = parameters[i];
 
+			
 			String variableTypeName = parameters[i].getVariableType();
 			//Class variableType = Thread.currentThread().getContextClassLoader().loadClass(variableTypeName);
 			Serializable processVariableValue = null;
@@ -373,4 +379,36 @@ public class WorkItemHandler implements ContextAware{
 			this.metaworksContext = metaworksContext;
 		}
 		
+	protected Map<String, Object> makeMapForITool()
+			throws Exception {
+		Map<String, Object> mapForITool = new HashMap<String, Object>();
+
+		mapForITool.put(ITool.ITOOL_INSTANCEID_KEY, getInstanceId());
+		mapForITool.put(ITool.ITOOL_SESSION_KEY, session);
+		mapForITool.put(ITool.ITOOL_PROCESS_MANAGER_KEY, processManager);
+		mapForITool.put(ITool.ITOOL_ACTIVITY_EXT1_KEY, humanActivity.getExtValue1());
+		mapForITool.put(ITool.ITOOL_ACTIVITY_EXT2_KEY, humanActivity.getExtValue2());
+		mapForITool.put(ITool.ITOOL_ACTIVITY_EXT3_KEY, humanActivity.getExtValue3());
+		mapForITool.put(ITool.ITOOL_ACTIVITY_EXT4_KEY, humanActivity.getExtValue4());
+		mapForITool.put(ITool.ITOOL_ACTIVITY_EXT5_KEY, humanActivity.getExtValue5());
+		mapForITool.put(ITool.ITOOL_ACTIVITY_EXT6_KEY, humanActivity.getExtValue6());
+		mapForITool.put(ITool.ITOOL_ACTIVITY_EXT7_KEY, humanActivity.getExtValue7());
+		mapForITool.put(ITool.ITOOL_ACTIVITY_EXT8_KEY, humanActivity.getExtValue8());
+		mapForITool.put(ITool.ITOOL_ACTIVITY_EXT9_KEY, humanActivity.getExtValue9());
+		mapForITool.put(ITool.ITOOL_ACTIVITY_EXT10_KEY, humanActivity.getExtValue10());
+		
+		
+		
+		return mapForITool;
+	}
+	
+	private void loadMapForITool(Map<String, Object> map) {
+		TransactionContext.getThreadLocalInstance().setSharedContext(
+				ITool.ITOOL_MAP_KEY, map);
+	}
+
+	private void releaseMapForITool() {
+		TransactionContext.getThreadLocalInstance().setSharedContext(
+				ITool.ITOOL_MAP_KEY, null);
+	}		
 }
