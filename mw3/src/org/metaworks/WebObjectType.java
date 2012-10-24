@@ -410,6 +410,24 @@ public class WebObjectType{
 					
 					fd.setAttribute("nonEditable.when", whens);
 				}
+				
+				if(nonEditable.where().length > 0){
+					Map wheres = new HashMap();
+					for(String where : nonEditable.where()){
+						wheres.put(where, where);
+					}
+					
+					fd.setAttribute("nonEditable.where", wheres);
+				}
+				
+				if(nonEditable.how().length > 0){
+					Map hows = new HashMap();
+					for(String how : nonEditable.how()){
+						hows.put(how, how);
+					}
+					
+					fd.setAttribute("nonEditable.how", hows);
+				}
 			}
 			
 			// 2012-04-12 cjw where, how 정보 추가

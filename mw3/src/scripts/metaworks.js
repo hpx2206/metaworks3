@@ -3280,11 +3280,6 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				if(!className)
 					className = this.fieldDescriptor.className;
 					
-				if(mw3.when == mw3.WHEN_VIEW)
-					face = className + (this.fieldDescriptor.viewFace ? ":" +this.fieldDescriptor.viewFace : "");
-				else
-					face = className + (this.fieldDescriptor.inputFace ? ":" +this.fieldDescriptor.inputFace : "");
-
 				var oldContext = mw3.getContext();
 				if(context!=null){
 					//mw3.setContext(context);
@@ -3297,6 +3292,12 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				if(context!=null && context.when){
 					when = context.when
 				}
+				
+				if(when == mw3.WHEN_VIEW)
+					face = className + (this.fieldDescriptor.viewFace ? ":" +this.fieldDescriptor.viewFace : "");
+				else
+					face = className + (this.fieldDescriptor.inputFace ? ":" +this.fieldDescriptor.inputFace : "");
+
 				
 				var designMode = (when == "__design");
 				var designModeDepth2 = (when == "__design-depth2");
@@ -3317,6 +3318,12 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					if(this.fieldDescriptor.attributes['noneditable']){
 						if(this.fieldDescriptor.attributes['noneditable.when']){
 							if(this.fieldDescriptor.attributes['noneditable.when'][mw3.when] != null)
+								when = mw3.WHEN_VIEW;
+						}else if(this.fieldDescriptor.attributes['noneditable.where']){
+							if(this.fieldDescriptor.attributes['noneditable.where'][mw3.where] != null)
+								when = mw3.WHEN_VIEW;
+						}else if(this.fieldDescriptor.attributes['noneditable.how']){
+							if(this.fieldDescriptor.attributes['noneditable.how'][mw3.how] != null)
 								when = mw3.WHEN_VIEW;
 						}else{
 							when = mw3.WHEN_VIEW;
