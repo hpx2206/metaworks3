@@ -80,13 +80,10 @@ public class MainSNS {
 			
 		}
 		
-		WfWindow wfWindow = new WfWindow(session.user);
 		WfPanel panel = new WfPanel();
-		
 		panel.session = session;
 		panel.load(session.getCompany().getComCode());				
-		
-		wfWindow.setWfPanel(panel);
+		ContentWindow wfWindow = new ContentWindow(panel);
 		
 		SNSTopPanel topPanel = new SNSTopPanel(session);
 		if("phone".equals(preferMob) || "tw".equals(preferUX)){

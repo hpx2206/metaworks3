@@ -44,6 +44,17 @@ var org_uengine_codi_mw3_model_IInstance = function(objectId, className){
 				mw3.call(objectId, 'detail');
 			 });
 	}
+	 
+	 $('#tr_' + this.objectId).draggable({
+	        start   : function () {
+	        	var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
+	        	session.clipboard = object;
+	        },
+	        cursorAt: { top: -1, left: -1 },
+	        helper  : 'clone',
+	        distance: 30,
+	        opacity: 0.8
+	    });
 	// 
 	 /*
 	$('#' + this.divId).mouseleave({objectId : this.objectId}, function(event){

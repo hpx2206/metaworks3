@@ -13,6 +13,7 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.codi.mw3.model.ContentWindow;
 import org.uengine.codi.mw3.model.IInstance;
 import org.uengine.codi.mw3.model.IWorkItem;
 import org.uengine.codi.mw3.model.Instance;
@@ -220,7 +221,7 @@ public class ScheduleCalendar implements ContextAware {
 	}	
 	
 	@ServiceMethod(payload={"schdId", "callType"})
-	public InstanceViewContent linkScheduleEvent() throws Exception{
+	public Object[] linkScheduleEvent() throws Exception{
 		String instId = null;
 		if( "workitem".equals(callType) ){
 			WorkItem schedule = new WorkItem();
@@ -234,14 +235,14 @@ public class ScheduleCalendar implements ContextAware {
 		instanceViewContent.session = session;
 		instanceViewContent.load(instance);
 		
-		return instanceViewContent;
+		return new Object[]{instanceViewContent};
 	}
 	
 	@Autowired
 	public InstanceViewContent instanceViewContent;
 	
 	@ServiceMethod(callByContent=true)
-	public NewInstanceWindow linkScheduleDay() throws Exception{
+	public Object[] linkScheduleDay() throws Exception{
 		if( getShowUserId() != null && !getShowUserId().equalsIgnoreCase(session.getUser().getUserId())){
 			// 다른 유저의 달력을 클릭하였을 경우 새로글쓰기를 막는다.
 			return null;
@@ -261,67 +262,7 @@ public class ScheduleCalendar implements ContextAware {
 		}
 		newInstancePanel.getNewInstantiator().setTitle(title);
 		
-		return new NewInstanceWindow(newInstancePanel);
+		return new Object[]{new NewInstanceWindow(newInstancePanel)};
 	}
 	
 }
-	
-//	@ServiceMethod(callByContent=true)
-//	public EastRightPanel linkScheduleDay() throws Exception{
-//		return linkScheduleDay(session);
-//	}
-//	
-//	public EastRightPanel linkScheduleDay(Session session) throws Exception{
-//		SchedulePanel empSchedule = new SchedulePanel("employee");
-//		empSchedule.load(session, getSelDate(), getViewMode(), getSchdId());
-//
-//		SchedulePanel partSchedule = new SchedulePanel("part");
-//		partSchedule.load(session, getSelDate(), getViewMode(), 0);
-//		
-//		ArrayList<SchedulePanel> schedulePanels = new ArrayList<SchedulePanel>();
-//		schedulePanels.add(empSchedule);
-//		schedulePanels.add(partSchedule);
-//		
-//		EastRightPanel eastRightPanel = new EastRightPanel();
-//		eastRightPanel.setContent(schedulePanels);
-//		
-//		return eastRightPanel;
-//	}
-
-	/*
-	public EastRightPanel LinkMySchedule() {
-		
-		EastRightPanel eastRightPanel = new EastRightPanel();
-		
-		
-		
-
-		if(this.schid == null || "".equals(this.schid))
-			schedule.setStartDate(this.seldate);
-		else
-			schedule.setSelSchid(this.schid);
-		
-		schedule.setViewid(this.viewMode);
-		
-		try {
-			schedule.load(session);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		eastRightPanel.setContent(schedule);
-		
-		return eastRightPanel;		
-	}	*/
-	
-//	@ServiceMethod(payload={"selDate"})
-//	public EastLeftPanel linkScheduleCalendar() throws Exception {
-//		ScheduleCalendar scheduleCalendar = new ScheduleCalendar();
-//		scheduleCalendar.setSelDate(getSelDate());
-//		scheduleCalendar.load(session);
-//			
-//		EastLeftPanel eastLeftPanel = new EastLeftPanel();
-//		eastLeftPanel.setContent(scheduleCalendar);
-//
-//		return eastLeftPanel;		
-//	}		
-//}

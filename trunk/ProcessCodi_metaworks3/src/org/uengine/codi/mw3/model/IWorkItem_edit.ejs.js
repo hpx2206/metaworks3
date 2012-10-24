@@ -102,21 +102,21 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.send = function(){
 
 		var instanceViewThreadPanel = mw3.getAutowiredObject('org.uengine.codi.mw3.model.InstanceViewThreadPanel');
 		var object = mw3.objects[this.objectId];
-		if( object && object.metaworksContext && object.metaworksContext.where == 'sns'){
-			value.add();
-		}else if(value.type=='comment'){
+		if(value.type=='comment'){
 			
 			if(instanceViewThreadPanel){
 				var newComment = JSON.parse(JSON.stringify(value));
 				newComment.metaworksContext.when = 'view';
 				newComment.taskId = (localTaskId--);
 				newComment.__objectId = null;
-				
+				if( object && object.metaworksContext && object.metaworksContext.how != null){
+					newComment.metaworksContext.how = object.metaworksContext.how;
+				}
 				var toAppend = mw3.locateObject(
 					{
-						__className	:'org.metaworks.ToAppend',
+						__className	:'org.metaworks.ToPrev',
 							target	: newComment,
-							parent	: instanceViewThreadPanel
+							next	: object
 					}, null, 'body'
 				);
 				
@@ -377,9 +377,10 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.press = function(){
 			
 			if(value.instId){
 				var instanceView = mw3.getAutowiredObject('org.uengine.codi.mw3.model.InstanceView@' + value.instId);
-				
-				for(var i=0; i<instanceView.followers.followers.length; i++){
-					exisingFollowers[instanceView.followers.followers[i].userId] = true;
+				if( instanceView != null && instanceView.followers != null && instanceView.followers.followers != null){
+					for(var i=0; i<instanceView.followers.followers.length; i++){
+						exisingFollowers[instanceView.followers.followers[i].userId] = true;
+					}
 				}
 			}
 			
