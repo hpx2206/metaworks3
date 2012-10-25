@@ -3204,9 +3204,9 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				}else if(validator.name == 'condition'){
 					if(validator.options){
 						for(var i=0; i<validator.options.length; i++){
-							var condition = validator.options[i];					
+							var validationCondition = validator.options[i];					
 		    				with(object){
-		    					validation = eval(condition);
+		    					validation = eval(validationCondition);
 		    				}							
 						}
 					}
