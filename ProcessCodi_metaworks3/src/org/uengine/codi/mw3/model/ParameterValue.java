@@ -1,14 +1,12 @@
 package org.uengine.codi.mw3.model;
 
-import java.util.Calendar;
-
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.annotation.Validator;
 
 public class ParameterValue implements ContextAware{
 
 	String variableName;
-		
 		public String getVariableName() {
 			return variableName;
 		}
@@ -25,6 +23,7 @@ public class ParameterValue implements ContextAware{
 		}
 		
 	Object valueObject;
+		@Validator(availableUnder="metaworksContext.when == 'edit'")
 		public Object getValueObject() {
 			return valueObject;
 		}

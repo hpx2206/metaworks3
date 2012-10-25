@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.validation.Valid;
+
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
@@ -149,6 +151,7 @@ public class WorkItemHandler implements ContextAware{
 
 
 	ParameterValue[] parameters;
+		@Valid
 		public ParameterValue[] getParameters() {
 			return parameters;
 		}
@@ -251,7 +254,7 @@ public class WorkItemHandler implements ContextAware{
 	@AutowiredFromClient
 	public Session session;
 		
-	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_EDIT)
+	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_EDIT, validate=true)
 //	@Available(when={"NEW"})
 	public InstanceViewContent complete() throws RemoteException, ClassNotFoundException, Exception{
 		
