@@ -115,6 +115,8 @@ org_metaworks_widget_layout_Layout.prototype.show = function(target){
 
 org_metaworks_widget_layout_Layout.prototype.hide = function(target){
 	
+	console.log('hide : ' + target);
+	
 	//this.change = true;
 	//if(this.list[target].attr('layoutFixed'))
 	//	return false;
@@ -290,7 +292,7 @@ org_metaworks_widget_layout_Layout.prototype.resize = function(){
 							 
 							this.list['east'].width(width);
 						}else{
-							var width = this.list['west'].width() + this.list['west'].width() + resizerWidth;
+							var width = this.list['center'].width() + this.list['west'].width() + resizerWidth;
 							
 							this.list['west'].width(width);
 						}
