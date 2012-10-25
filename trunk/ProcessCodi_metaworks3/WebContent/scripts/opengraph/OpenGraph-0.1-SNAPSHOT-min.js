@@ -7,7 +7,7 @@ OG.layout={};
 OG.renderer={};
 OG.shape={};
 OG.shape.bpmn={};
-OG.common.Constants={CANVAS_BACKGROUND:"#f9f9f9",GEOM_TYPE:{NULL:0,POINT:1,LINE:2,POLYLINE:3,POLYGON:4,RECTANGLE:5,CIRCLE:6,ELLIPSE:7,CURVE:8,BEZIER_CURVE:9,COLLECTION:10},GEOM_NAME:["","Point","Line","PolyLine","Polygon","Rectangle","Circle","Ellipse","Curve","BezierCurve","Collection"],NUM_PRECISION:0,NODE_TYPE:{ROOT:"ROOT",SHAPE:"SHAPE"},SHAPE_TYPE:{GEOM:"GEOM",TEXT:"TEXT",HTML:"HTML",IMAGE:"IMAGE",EDGE:"EDGE",GROUP:"GROUP"},EDGE_TYPE:{STRAIGHT:"straight",PLAIN:"plain",BEZIER:"bezier"},EDGE_PADDING:20,LABEL_PADDING:5,LABEL_EDITOR_WIDTH:70,LABEL_EDITOR_HEIGHT:16,FROMTO_LABEL_OFFSET_TOP:15,LABEL_SUFFIX:"_LABEL",LABEL_EDITOR_SUFFIX:"_LABEL_EDITOR",FROM_LABEL_SUFFIX:"_FROMLABEL",TO_LABEL_SUFFIX:"_TOLABEL",DEFAULT_STYLE:{SHAPE:{cursor:"default"},GEOM:{stroke:"black",fill:"white","fill-opacity":0,"label-position":"center"},TEXT:{stroke:"none","text-anchor":"middle"},HTML:{"label-position":"bottom","text-anchor":"top","vertical-align":"top"},IMAGE:{"label-position":"bottom","text-anchor":"top","vertical-align":"top"},EDGE:{stroke:"black","stroke-width":1,"stroke-opacity":1,"edge-type":"plain","edge-direction":"c c","arrow-start":"none","arrow-end":"classic-wide-long","stroke-dasharray":"","label-position":"center"},EDGE_SHADOW:{stroke:"#00FF00","stroke-width":1,"stroke-opacity":1,"arrow-start":"none","arrow-end":"none","stroke-dasharray":"- "},EDGE_HIDDEN:{stroke:"white","stroke-width":5,"stroke-opacity":0},GROUP:{stroke:"none",fill:"white","fill-opacity":0,"label-position":"bottom","text-anchor":"middle","vertical-align":"top"},GUIDE_BBOX:{stroke:"#00FF00",fill:"none","stroke-dasharray":"- ","shape-rendering":"crispEdges"},GUIDE_UL:{stroke:"black",fill:"#00FF00",cursor:"nwse-resize","shape-rendering":"crispEdges"},GUIDE_UR:{stroke:"black",fill:"#00FF00",cursor:"nesw-resize","shape-rendering":"crispEdges"},GUIDE_LL:{stroke:"black",fill:"#00FF00",cursor:"nesw-resize","shape-rendering":"crispEdges"},GUIDE_LR:{stroke:"black",fill:"#00FF00",cursor:"nwse-resize","shape-rendering":"crispEdges"},GUIDE_LC:{stroke:"black",fill:"#00FF00",cursor:"ew-resize","shape-rendering":"crispEdges"},GUIDE_UC:{stroke:"black",fill:"#00FF00",cursor:"ns-resize","shape-rendering":"crispEdges"},GUIDE_RC:{stroke:"black",fill:"#00FF00",cursor:"ew-resize","shape-rendering":"crispEdges"},GUIDE_LWC:{stroke:"black",fill:"#00FF00",cursor:"ns-resize","shape-rendering":"crispEdges"},GUIDE_FROM:{stroke:"black",fill:"#00FF00",cursor:"move","shape-rendering":"crispEdges"},GUIDE_TO:{stroke:"black",fill:"#00FF00",cursor:"move","shape-rendering":"crispEdges"},GUIDE_CTL_H:{stroke:"black",fill:"#00FF00",cursor:"ew-resize","shape-rendering":"crispEdges"},GUIDE_CTL_V:{stroke:"black",fill:"#00FF00",cursor:"ns-resize","shape-rendering":"crispEdges"},GUIDE_SHADOW:{stroke:"black",fill:"none","stroke-dasharray":"- ","shape-rendering":"crispEdges"},RUBBER_BAND:{stroke:"#0000FF",opacity:0.2,fill:"#0077FF"},TERMINAL:{stroke:"#808080","stroke-width":1,fill:"r(0.5, 0.5)#FFFFFF-#808080","fill-opacity":0.5,cursor:"pointer"},TERMINAL_OVER:{stroke:"#0077FF","stroke-width":4,fill:"r(0.5, 0.5)#FFFFFF-#0077FF","fill-opacity":1,cursor:"pointer"},TERMINAL_BBOX:{stroke:"none",fill:"white","fill-opacity":0},DROP_OVER_BBOX:{stroke:"#0077FF",fill:"none",opacity:0.6,"shape-rendering":"crispEdges"},LABEL:{"font-size":12,"font-color":"black"},LABEL_EDITOR:{position:"absolute",overflow:"visible",resize:"none","text-align":"center",display:"block",padding:0},COLLAPSE:{stroke:"black",fill:"white","fill-opacity":0,cursor:"pointer","shape-rendering":"crispEdges"},COLLAPSE_BBOX:{stroke:"none",fill:"white","fill-opacity":0}},RUBBER_BAND_ID:"OG_R_BAND",GUIDE_SUFFIX:{GUIDE:"_GUIDE",BBOX:"_GUIDE_BBOX",UL:"_GUIDE_UL",UR:"_GUIDE_UR",LL:"_GUIDE_LL",LR:"_GUIDE_LR",LC:"_GUIDE_LC",UC:"_GUIDE_UC",RC:"_GUIDE_RC",LWC:"_GUIDE_LWC",FROM:"_GUIDE_FROM",TO:"_GUIDE_TO",CTL:"_GUIDE_CTL_",CTL_H:"_GUIDE_CTL_H_",CTL_V:"_GUIDE_CTL_V_"},GUIDE_RECT_SIZE:8,GUIDE_MIN_SIZE:18,COLLAPSE_SUFFIX:"_COLLAPSE",COLLAPSE_BBOX_SUFFIX:"_COLLAPSE_BBOX",COLLAPSE_SIZE:10,MOVE_SNAP_SIZE:5,DROP_OVER_BBOX_SUFFIX:"_DROP_OVER",TERMINAL_SUFFIX:{GROUP:"_TERMINAL",BOX:"_TERMINAL_BOX"},TERMINAL_TYPE:{C:"C",E:"E",W:"W",S:"S",N:"N",IN:"IN",OUT:"OUT",INOUT:"INOUT"},TERMINAL_SIZE:3,COPY_PASTE_PADDING:20,AUTO_EXTENSIONAL:true,AUTO_EXTENSION_SIZE:100,SELECTABLE:true,DRAG_SELECTABLE:true,MOVABLE:true,RESIZABLE:true,CONNECTABLE:true,SELF_CONNECTABLE:true,CONNECT_CLONEABLE:true,CONNECT_REQUIRED:true,LABEL_EDITABLE:true,LABEL_EDITABLE_GEOM:true,LABEL_EDITABLE_TEXT:true,LABEL_EDITABLE_HTML:true,LABEL_EDITABLE_EDGE:true,LABEL_EDITABLE_GROUP:true,GROUP_DROPABLE:true,GROUP_COLLAPSIBLE:true,ENABLE_HOTKEY:true};
+OG.common.Constants={CANVAS_BACKGROUND:"#f9f9f9",GEOM_TYPE:{NULL:0,POINT:1,LINE:2,POLYLINE:3,POLYGON:4,RECTANGLE:5,CIRCLE:6,ELLIPSE:7,CURVE:8,BEZIER_CURVE:9,COLLECTION:10},GEOM_NAME:["","Point","Line","PolyLine","Polygon","Rectangle","Circle","Ellipse","Curve","BezierCurve","Collection"],NUM_PRECISION:0,NODE_TYPE:{ROOT:"ROOT",SHAPE:"SHAPE"},SHAPE_TYPE:{GEOM:"GEOM",TEXT:"TEXT",HTML:"HTML",IMAGE:"IMAGE",EDGE:"EDGE",GROUP:"GROUP"},EDGE_TYPE:{STRAIGHT:"straight",PLAIN:"plain",BEZIER:"bezier"},EDGE_PADDING:20,LABEL_PADDING:5,LABEL_EDITOR_WIDTH:70,LABEL_EDITOR_HEIGHT:16,FROMTO_LABEL_OFFSET_TOP:15,LABEL_SUFFIX:"_LABEL",LABEL_EDITOR_SUFFIX:"_LABEL_EDITOR",FROM_LABEL_SUFFIX:"_FROMLABEL",TO_LABEL_SUFFIX:"_TOLABEL",DEFAULT_STYLE:{SHAPE:{cursor:"default"},GEOM:{stroke:"black",fill:"white","fill-opacity":0,"label-position":"center"},TEXT:{stroke:"none","text-anchor":"middle"},HTML:{"label-position":"bottom","text-anchor":"top","vertical-align":"top"},IMAGE:{"label-position":"bottom","text-anchor":"top","vertical-align":"top"},EDGE:{stroke:"black","stroke-width":1,"stroke-opacity":1,"edge-type":"plain","edge-direction":"c c","arrow-start":"none","arrow-end":"classic-wide-long","stroke-dasharray":"","label-position":"center"},EDGE_SHADOW:{stroke:"#00FF00","stroke-width":1,"stroke-opacity":1,"arrow-start":"none","arrow-end":"none","stroke-dasharray":"- "},EDGE_HIDDEN:{stroke:"white","stroke-width":5,"stroke-opacity":0},GROUP:{stroke:"none",fill:"white","fill-opacity":0,"label-position":"bottom","text-anchor":"middle","vertical-align":"top"},GUIDE_BBOX:{stroke:"#00FF00",fill:"none","stroke-dasharray":"- ","shape-rendering":"crispEdges"},GUIDE_UL:{stroke:"black",fill:"#00FF00",cursor:"nwse-resize","shape-rendering":"crispEdges"},GUIDE_UR:{stroke:"black",fill:"#00FF00",cursor:"nesw-resize","shape-rendering":"crispEdges"},GUIDE_LL:{stroke:"black",fill:"#00FF00",cursor:"nesw-resize","shape-rendering":"crispEdges"},GUIDE_LR:{stroke:"black",fill:"#00FF00",cursor:"nwse-resize","shape-rendering":"crispEdges"},GUIDE_LC:{stroke:"black",fill:"#00FF00",cursor:"ew-resize","shape-rendering":"crispEdges"},GUIDE_UC:{stroke:"black",fill:"#00FF00",cursor:"ns-resize","shape-rendering":"crispEdges"},GUIDE_RC:{stroke:"black",fill:"#00FF00",cursor:"ew-resize","shape-rendering":"crispEdges"},GUIDE_LWC:{stroke:"black",fill:"#00FF00",cursor:"ns-resize","shape-rendering":"crispEdges"},GUIDE_FROM:{stroke:"black",fill:"#00FF00",cursor:"move","shape-rendering":"crispEdges"},GUIDE_TO:{stroke:"black",fill:"#00FF00",cursor:"move","shape-rendering":"crispEdges"},GUIDE_CTL_H:{stroke:"black",fill:"#00FF00",cursor:"ew-resize","shape-rendering":"crispEdges"},GUIDE_CTL_V:{stroke:"black",fill:"#00FF00",cursor:"ns-resize","shape-rendering":"crispEdges"},GUIDE_SHADOW:{stroke:"black",fill:"none","stroke-dasharray":"- ","shape-rendering":"crispEdges"},RUBBER_BAND:{stroke:"#0000FF",opacity:0.2,fill:"#0077FF"},TERMINAL:{stroke:"#808080","stroke-width":1,fill:"r(0.5, 0.5)#FFFFFF-#808080","fill-opacity":0.5,cursor:"pointer"},TERMINAL_OVER:{stroke:"#0077FF","stroke-width":4,fill:"r(0.5, 0.5)#FFFFFF-#0077FF","fill-opacity":1,cursor:"pointer"},TERMINAL_BBOX:{stroke:"none",fill:"white","fill-opacity":0},DROP_OVER_BBOX:{stroke:"#0077FF",fill:"none",opacity:0.6,"shape-rendering":"crispEdges"},LABEL:{"font-size":12,"font-color":"black"},LABEL_EDITOR:{position:"absolute",overflow:"visible",resize:"none","text-align":"center",display:"block",padding:0},COLLAPSE:{stroke:"black",fill:"white","fill-opacity":0,cursor:"pointer","shape-rendering":"crispEdges"},COLLAPSE_BBOX:{stroke:"none",fill:"white","fill-opacity":0}},RUBBER_BAND_ID:"OG_R_BAND",GUIDE_SUFFIX:{GUIDE:"_GUIDE",BBOX:"_GUIDE_BBOX",UL:"_GUIDE_UL",UR:"_GUIDE_UR",LL:"_GUIDE_LL",LR:"_GUIDE_LR",LC:"_GUIDE_LC",UC:"_GUIDE_UC",RC:"_GUIDE_RC",LWC:"_GUIDE_LWC",FROM:"_GUIDE_FROM",TO:"_GUIDE_TO",CTL:"_GUIDE_CTL_",CTL_H:"_GUIDE_CTL_H_",CTL_V:"_GUIDE_CTL_V_"},GUIDE_RECT_SIZE:8,GUIDE_MIN_SIZE:18,COLLAPSE_SUFFIX:"_COLLAPSE",COLLAPSE_BBOX_SUFFIX:"_COLLAPSE_BBOX",COLLAPSE_SIZE:10,MOVE_SNAP_SIZE:5,DROP_OVER_BBOX_SUFFIX:"_DROP_OVER",TERMINAL_SUFFIX:{GROUP:"_TERMINAL",BOX:"_TERMINAL_BOX"},TERMINAL_TYPE:{C:"C",E:"E",W:"W",S:"S",N:"N",IN:"IN",OUT:"OUT",INOUT:"INOUT"},TERMINAL_SIZE:3,COPY_PASTE_PADDING:20,AUTO_EXTENSIONAL:true,AUTO_EXTENSION_SIZE:100,SELECTABLE:true,DRAG_SELECTABLE:true,MOVABLE:true,RESIZABLE:true,CONNECTABLE:true,SELF_CONNECTABLE:true,CONNECT_CLONEABLE:true,CONNECT_REQUIRED:true,LABEL_EDITABLE:true,LABEL_EDITABLE_GEOM:true,LABEL_EDITABLE_TEXT:true,LABEL_EDITABLE_HTML:true,LABEL_EDITABLE_EDGE:true,LABEL_EDITABLE_GROUP:true,GROUP_DROPABLE:true,GROUP_COLLAPSIBLE:true,ENABLE_HOTKEY:true,ENABLE_HOTKEY_DELETE:true,ENABLE_HOTKEY_CTRL_A:true,ENABLE_HOTKEY_CTRL_C:true,ENABLE_HOTKEY_CTRL_V:true,ENABLE_HOTKEY_CTRL_G:true,ENABLE_HOTKEY_CTRL_U:true,ENABLE_HOTKEY_ARROW:true};
 OG.Constants=OG.common.Constants;
 if(typeof KeyEvent==="undefined"){var KeyEvent={DOM_VK_CANCEL:3,DOM_VK_HELP:6,DOM_VK_BACK_SPACE:8,DOM_VK_TAB:9,DOM_VK_CLEAR:12,DOM_VK_RETURN:13,DOM_VK_ENTER:14,DOM_VK_SHIFT:16,DOM_VK_CONTROL:17,DOM_VK_ALT:18,DOM_VK_PAUSE:19,DOM_VK_CAPS_LOCK:20,DOM_VK_ESCAPE:27,DOM_VK_SPACE:32,DOM_VK_PAGE_UP:33,DOM_VK_PAGE_DOWN:34,DOM_VK_END:35,DOM_VK_HOME:36,DOM_VK_LEFT:37,DOM_VK_UP:38,DOM_VK_RIGHT:39,DOM_VK_DOWN:40,DOM_VK_PRINTSCREEN:44,DOM_VK_INSERT:45,DOM_VK_DELETE:46,DOM_VK_0:48,DOM_VK_1:49,DOM_VK_2:50,DOM_VK_3:51,DOM_VK_4:52,DOM_VK_5:53,DOM_VK_6:54,DOM_VK_7:55,DOM_VK_8:56,DOM_VK_9:57,DOM_VK_SEMICOLON:59,DOM_VK_EQUALS:61,DOM_VK_A:65,DOM_VK_B:66,DOM_VK_C:67,DOM_VK_D:68,DOM_VK_E:69,DOM_VK_F:70,DOM_VK_G:71,DOM_VK_H:72,DOM_VK_I:73,DOM_VK_J:74,DOM_VK_K:75,DOM_VK_L:76,DOM_VK_M:77,DOM_VK_N:78,DOM_VK_O:79,DOM_VK_P:80,DOM_VK_Q:81,DOM_VK_R:82,DOM_VK_S:83,DOM_VK_T:84,DOM_VK_U:85,DOM_VK_V:86,DOM_VK_W:87,DOM_VK_X:88,DOM_VK_Y:89,DOM_VK_Z:90,DOM_VK_COMMAND:91,DOM_VK_CONTEXT_MENU:93,DOM_VK_NUMPAD0:96,DOM_VK_NUMPAD1:97,DOM_VK_NUMPAD2:98,DOM_VK_NUMPAD3:99,DOM_VK_NUMPAD4:100,DOM_VK_NUMPAD5:101,DOM_VK_NUMPAD6:102,DOM_VK_NUMPAD7:103,DOM_VK_NUMPAD8:104,DOM_VK_NUMPAD9:105,DOM_VK_MULTIPLY:106,DOM_VK_ADD:107,DOM_VK_SEPARATOR:108,DOM_VK_SUBTRACT:109,DOM_VK_DECIMAL:110,DOM_VK_DIVIDE:111,DOM_VK_F1:112,DOM_VK_F2:113,DOM_VK_F3:114,DOM_VK_F4:115,DOM_VK_F5:116,DOM_VK_F6:117,DOM_VK_F7:118,DOM_VK_F8:119,DOM_VK_F9:120,DOM_VK_F10:121,DOM_VK_F11:122,DOM_VK_F12:123,DOM_VK_F13:124,DOM_VK_F14:125,DOM_VK_F15:126,DOM_VK_F16:127,DOM_VK_F17:128,DOM_VK_F18:129,DOM_VK_F19:130,DOM_VK_F20:131,DOM_VK_F21:132,DOM_VK_F22:133,DOM_VK_F23:134,DOM_VK_F24:135,DOM_VK_NUM_LOCK:144,DOM_VK_SCROLL_LOCK:145,DOM_VK_COMMA:188,DOM_VK_PERIOD:190,DOM_VK_SLASH:191,DOM_VK_BACK_QUOTE:192,DOM_VK_OPEN_BRACKET:219,DOM_VK_BACK_SLASH:220,DOM_VK_CLOSE_BRACKET:221,DOM_VK_QUOTE:222,DOM_VK_META:224}
 };OG.common.Util={isEmpty:function(b,a){return b===null||b===undefined||((OG.Util.isArray(b)&&!b.length))||(!a?b==="":false)
@@ -2659,50 +2659,54 @@ if(z){$.each(z.split(","),function(A,B){if(!y||y.toString().indexOf(B)<0){v(B)
 }})
 }this.removeAllTerminal()
 };
-this.connect=function(I,v,y,L,D){var C={},N,F,E,H,J,z,A,M,w,B,K,G,x=function(Q,P,R){var S=$(Q).attr(P),T=S?S.split(","):[],O=[];
-$.each(T,function(U,V){if(V!==R){O.push(V)
+this.connect=function(J,v,z,M,E){var D={},O,G,F,I,K,A,B,N,w,C,L,H,y,x=function(R,Q,S){var T=$(R).attr(Q),U=T?T.split(","):[],P=[];
+$.each(U,function(V,W){if(W!==S){P.push(W)
 }});
-O.push(R);
-$(Q).attr(P,O.toString());
-return Q
+P.push(S);
+$(R).attr(Q,P.toString());
+return R
 };
-OG.Util.apply(C,(L instanceof OG.geometry.Style)?L.map:L||{},OG.Constants.DEFAULT_STYLE.EDGE);
-if(OG.Util.isElement(I)){N=g(I);
-H=[I.terminal.position.x,I.terminal.position.y];
-M=I.terminal.direction.toLowerCase()
-}else{H=I;
-M="c"
-}if(OG.Util.isElement(v)){F=g(v);
-J=[v.terminal.position.x,v.terminal.position.y];
+OG.Util.apply(D,(M instanceof OG.geometry.Style)?M.map:M||{},OG.Constants.DEFAULT_STYLE.EDGE);
+if(OG.Util.isElement(J)){O=g(J);
+I=[J.terminal.position.x,J.terminal.position.y];
+N=J.terminal.direction.toLowerCase()
+}else{I=J;
+N="c"
+}if(OG.Util.isElement(v)){G=g(v);
+K=[v.terminal.position.x,v.terminal.position.y];
 w=v.terminal.direction.toLowerCase()
-}else{J=v;
+}else{K=v;
 w="c"
-}z=H;
-A=J;
-B=M;
-K=w;
-if(N&&M==="c"){E=this.intersectionEdge(C["edge-type"],N,z,A,true);
-H=E.position;
-M=E.direction
-}if(F&&w==="c"){E=this.intersectionEdge(C["edge-type"],F,z,A,false);
-J=E.position;
-w=E.direction
-}G=N&&F&&N.id===F.id;
-if(G){H=J=N.shape.geom.getBoundary().getRightCenter()
-}y=this.drawEdge(new OG.Line(H,J),OG.Util.apply(C,{"edge-direction":M+" "+w}),y?y.id:null,G);
-this.drawLabel(y,D);
-this.drawEdgeLabel(y,null,"FROM");
-this.drawEdgeLabel(y,null,"TO");
-OG.Util.apply(y.shape.geom.style.map,{"edge-direction":B+" "+K});
-y.shapeStyle=y.shape.geom.style.map;
-this.disconnect(y);
-if(OG.Util.isElement(I)){$(y).attr("_from",I.id);
-x(N,"_toedge",y.id)
-}if(OG.Util.isElement(v)){$(y).attr("_to",v.id);
-x(F,"_fromedge",y.id)
+}if(O&&G){y=jQuery.Event("beforeConnectShape",{edge:z,fromShape:O,toShape:G});
+$(o.canvas).trigger(y);
+if(y.isPropagationStopped()){this.remove(z);
+return false
+}}A=I;
+B=K;
+C=N;
+L=w;
+if(O&&N==="c"){F=this.intersectionEdge(D["edge-type"],O,A,B,true);
+I=F.position;
+N=F.direction
+}if(G&&w==="c"){F=this.intersectionEdge(D["edge-type"],G,A,B,false);
+K=F.position;
+w=F.direction
+}H=O&&G&&O.id===G.id;
+if(H){I=K=O.shape.geom.getBoundary().getRightCenter()
+}z=this.drawEdge(new OG.Line(I,K),OG.Util.apply(D,{"edge-direction":N+" "+w}),z?z.id:null,H);
+this.drawLabel(z,E);
+this.drawEdgeLabel(z,null,"FROM");
+this.drawEdgeLabel(z,null,"TO");
+OG.Util.apply(z.shape.geom.style.map,{"edge-direction":C+" "+L});
+z.shapeStyle=z.shape.geom.style.map;
+this.disconnect(z);
+if(OG.Util.isElement(J)){$(z).attr("_from",J.id);
+x(O,"_toedge",z.id)
+}if(OG.Util.isElement(v)){$(z).attr("_to",v.id);
+x(G,"_fromedge",z.id)
 }this.removeAllTerminal();
-if(N&&F){$(o.canvas).trigger("connectShape",[y,N,F])
-}return y
+if(O&&G){$(o.canvas).trigger("connectShape",[z,O,G])
+}return z
 };
 this.disconnect=function(A){var D=this,E,B,F,y,w,v,C,z,x=function(I,H,J){var K=$(I).attr(H),L=K?K.split(","):[],G=[];
 $.each(L,function(M,N){if(N!==J){G.push(N)
@@ -3246,733 +3250,739 @@ this.isVML=function(){return Raphael.vml
 };
 OG.renderer.RaphaelRenderer.prototype=new OG.renderer.IRenderer();
 OG.renderer.RaphaelRenderer.prototype.constructor=OG.renderer.RaphaelRenderer;
-OG.RaphaelRenderer=OG.renderer.RaphaelRenderer;OG.handler.EventHandler=function(i){var d=this,b=i,e,j,h,l,g,f=function(n){return parseInt(n,10)
-},a=function(n){return OG.Util.round(n/OG.Constants.MOVE_SNAP_SIZE)*5
-},k=function(n){var o=OG.Util.isElement(n)?n.id:n;
-return b.getElementById(o.substring(0,o.indexOf(OG.Constants.TERMINAL_SUFFIX.GROUP)))
-},c=function(n,v){var t,r,u,o,s=false,q=false,p;
-t=$(n).attr("_from");
-r=$(n).attr("_to");
-if(t){u=k(t)
-}if(r){o=k(r)
-}for(p=0;
-p<v.length;
-p++){if(u&&v[p].id===u.id){s=true
-}if(o&&v[p].id===o.id){q=true
-}}return{none:!s&&!q,all:s&&q,any:s||q,either:(s&&!q)||(!s&&q),attrEither:(t&&!r)||(!t&&r)}
-},m=function(o){var n=b.getContainer();
-return{x:o.pageX-$(n).offset().left+n.scrollLeft,y:o.pageY-$(n).offset().top+n.scrollTop}
+OG.RaphaelRenderer=OG.renderer.RaphaelRenderer;OG.handler.EventHandler=function(k){var d=this,b=k,f,l,j,n,i,h=function(p){return parseInt(p,10)
+},a=function(p){return OG.Util.round(p/OG.Constants.MOVE_SNAP_SIZE)*5
+},m=function(p){var q=OG.Util.isElement(p)?p.id:p;
+return b.getElementById(q.substring(0,q.indexOf(OG.Constants.TERMINAL_SUFFIX.GROUP)))
+},c=function(p,x){var v,t,w,q,u=false,s=false,r;
+v=$(p).attr("_from");
+t=$(p).attr("_to");
+if(v){w=m(v)
+}if(t){q=m(t)
+}for(r=0;
+r<x.length;
+r++){if(w&&x[r].id===w.id){u=true
+}if(q&&x[r].id===q.id){s=true
+}}return{none:!u&&!s,all:u&&s,any:u||s,either:(u&&!s)||(!u&&s),attrEither:(v&&!t)||(!v&&t)}
+},o=function(q){var p=b.getContainer();
+return{x:q.pageX-$(p).offset().left+p.scrollLeft,y:q.pageY-$(p).offset().top+p.scrollTop}
+},e=function(){var r=[],q,p=[];
+$("[id$="+OG.Constants.GUIDE_SUFFIX.BBOX+"]").each(function(s,t){if(t.id){q=b.clone(t);
+b.setAttr(q,OG.Constants.DEFAULT_STYLE.GUIDE_SHADOW);
+r.push({id:t.id.replace(OG.Constants.GUIDE_SUFFIX.BBOX,""),box:q})
+}});
+$.each(r,function(t,u){var v=b.getElementById(u.id),s;
+if($(v).attr("_shape")===OG.Constants.SHAPE_TYPE.EDGE){s=c(v,r);
+if(s.all||s.none||(s.either&&s.attrEither)){p.push(u)
+}else{b.remove(u.box);
+b.removeGuide(v)
+}}});
+$.each(r,function(s,t){var u=b.getElementById(t.id);
+if($(u).attr("_shape")!==OG.Constants.SHAPE_TYPE.EDGE){p.push(t)
+}});
+return p
+},g=function(t,q,p){var s=[],r=[];
+$.each(t,function(u,v){var w=b.getElementById(v.id);
+if($(w).attr("_shape")===OG.Constants.SHAPE_TYPE.EDGE){s.push(v.id)
+}});
+$.each(t,function(u,v){var w=b.getElementById(v.id);
+b.remove(v.box);
+b.move(w,[q,p],s);
+b.setAttr(w,{cursor:"move"});
+b.drawGuide(w);
+if($(w).attr("_shape")===OG.Constants.SHAPE_TYPE.EDGE){if(c(w,t).none){b.disconnect(w)
+}}r.push(w)
+});
+return r
 };
-e=function(p,n,q){var o=b.getRootGroup();
-if(!p||!n){return
-}if(q){if($(p).attr("_shape")===OG.Constants.SHAPE_TYPE.EDGE){$(n.from).draggable({start:function(w){var u=p.shape.geom.getVertices(),r={},s=$(p).attr("_to"),x,t=[u[u.length-1].x,u[u.length-1].y],v=b.drawEdge(new OG.PolyLine(u),OG.Util.apply(r,OG.Constants.DEFAULT_STYLE.EDGE_SHADOW,p.shape.geom.style.map));
-if(s){x=k(s);
-b.drawTerminal(x);
-t=b.getElementById(s)
-}$(o).data("to_terminal",t);
-$(o).data("edge",v);
-$(o).data("dragged_guide","from");
+f=function(r,p,s){var q=b.getRootGroup();
+if(!r||!p){return
+}if(s){if($(r).attr("_shape")===OG.Constants.SHAPE_TYPE.EDGE){$(p.from).draggable({start:function(y){var w=r.shape.geom.getVertices(),t={},u=$(r).attr("_to"),z,v=[w[w.length-1].x,w[w.length-1].y],x=b.drawEdge(new OG.PolyLine(w),OG.Util.apply(t,OG.Constants.DEFAULT_STYLE.EDGE_SHADOW,r.shape.geom.style.map));
+if(u){z=m(u);
+b.drawTerminal(z);
+v=b.getElementById(u)
+}$(q).data("to_terminal",v);
+$(q).data("edge",x);
+$(q).data("dragged_guide","from");
 b.removeRubberBand(b.getRootElement());
-$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(z,y){if(y.id&&$(y).attr("_shape")!==OG.Constants.SHAPE_TYPE.EDGE){b.removeGuide(y)
+$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(B,A){if(A.id&&$(A).attr("_shape")!==OG.Constants.SHAPE_TYPE.EDGE){b.removeGuide(A)
 }})
-},drag:function(r){var v=m(r),t=$(o).data("edge"),A=$(o).data("edge_terminal"),F=$(o).data("to_terminal"),B=A?[A.terminal.position.x,A.terminal.position.y]:[v.x,v.y],x=OG.Util.isElement(F)?[F.terminal.position.x,F.terminal.position.y]:F,C=A?A.terminal.direction.toLowerCase():"c",y=OG.Util.isElement(F)?F.terminal.direction.toLowerCase():"c",D=A?k(A):null,w=OG.Util.isElement(F)?k(F):null,s,E,u,z;
+},drag:function(t){var x=o(t),v=$(q).data("edge"),C=$(q).data("edge_terminal"),H=$(q).data("to_terminal"),D=C?[C.terminal.position.x,C.terminal.position.y]:[x.x,x.y],z=OG.Util.isElement(H)?[H.terminal.position.x,H.terminal.position.y]:H,E=C?C.terminal.direction.toLowerCase():"c",A=OG.Util.isElement(H)?H.terminal.direction.toLowerCase():"c",F=C?m(C):null,y=OG.Util.isElement(H)?m(H):null,u,G,w,B;
 $(this).css({position:"",left:"",top:""});
-s=B;
-E=x;
-if(D&&C==="c"){u=b.intersectionEdge(t.geom.style.get("edge-type"),D,[s[0],s[1]],[E[0],E[1]],true);
-B=u.position;
-C=u.direction
-}if(w&&y==="c"){u=b.intersectionEdge(t.geom.style.get("edge-type"),w,[s[0],s[1]],[E[0],E[1]],false);
-x=u.position;
-y=u.direction
-}z=D&&w&&D.id===w.id;
-if(z){B=x=D.shape.geom.getBoundary().getRightCenter()
-}if(!z||OG.Constants.SELF_CONNECTABLE){b.drawEdge(new OG.Line(B,x),OG.Util.apply(t.geom.style.map,{"edge-direction":C+" "+y}),t.id,z)
-}},stop:function(v){var y=m(v),x=$(o).data("edge_terminal")||[y.x,y.y],r=$(o).data("to_terminal"),t=OG.Util.isElement(x)?k(x):null,w=OG.Util.isElement(r)?k(r):null,u=$(o).data("edge"),s;
+u=D;
+G=z;
+if(F&&E==="c"){w=b.intersectionEdge(v.geom.style.get("edge-type"),F,[u[0],u[1]],[G[0],G[1]],true);
+D=w.position;
+E=w.direction
+}if(y&&A==="c"){w=b.intersectionEdge(v.geom.style.get("edge-type"),y,[u[0],u[1]],[G[0],G[1]],false);
+z=w.position;
+A=w.direction
+}B=F&&y&&F.id===y.id;
+if(B){D=z=F.shape.geom.getBoundary().getRightCenter()
+}if(!B||OG.Constants.SELF_CONNECTABLE){b.drawEdge(new OG.Line(D,z),OG.Util.apply(v.geom.style.map,{"edge-direction":E+" "+A}),v.id,B)
+}},stop:function(x){var A=o(x),z=$(q).data("edge_terminal")||[A.x,A.y],t=$(q).data("to_terminal"),v=OG.Util.isElement(z)?m(z):null,y=OG.Util.isElement(t)?m(t):null,w=$(q).data("edge"),u;
 $(this).css({position:"absolute",left:"0px",top:"0px"});
-$(o).removeData("to_terminal");
-$(o).removeData("edge");
-$(o).removeData("edge_terminal");
-$(o).removeData("dragged_guide");
-b.remove(u);
-b.removeGuide(p);
-if(t){b.remove(t.id+OG.Constants.DROP_OVER_BBOX_SUFFIX)
-}s=t&&w&&t.id===w.id;
-if(!s||OG.Constants.SELF_CONNECTABLE){p=b.connect(x,r,p,p.shape.geom.style);
-n=b.drawGuide(p);
-e(p,n,true);
-b.toFront(n.group);
-b.setAttr(p,{cursor:OG.Constants.SELECTABLE&&OG.Constants.MOVABLE?"move":(OG.Constants.SELECTABLE?"pointer":OG.Constants.DEFAULT_STYLE.SHAPE.cursor)})
-}}});
-$(n.to).draggable({start:function(w){var t=p.shape.geom.getVertices(),s={},r=$(p).attr("_from"),u,x=[t[0].x,t[0].y],v=b.drawEdge(new OG.PolyLine(t),OG.Util.apply(s,OG.Constants.DEFAULT_STYLE.EDGE_SHADOW,p.shape.geom.style.map));
-if(r){u=k(r);
-b.drawTerminal(u);
-x=b.getElementById(r)
-}$(o).data("from_terminal",x);
-$(o).data("edge",v);
-$(o).data("dragged_guide","to");
+$(q).removeData("to_terminal");
+$(q).removeData("edge");
+$(q).removeData("edge_terminal");
+$(q).removeData("dragged_guide");
+b.remove(w);
+b.removeGuide(r);
+if(v){b.remove(v.id+OG.Constants.DROP_OVER_BBOX_SUFFIX)
+}u=v&&y&&v.id===y.id;
+if(!u||OG.Constants.SELF_CONNECTABLE){r=b.connect(z,t,r,r.shape.geom.style);
+if(r){p=b.drawGuide(r);
+if(r&&p){f(r,p,true);
+b.toFront(p.group);
+b.setAttr(r,{cursor:OG.Constants.SELECTABLE&&OG.Constants.MOVABLE?"move":(OG.Constants.SELECTABLE?"pointer":OG.Constants.DEFAULT_STYLE.SHAPE.cursor)})
+}}}}});
+$(p.to).draggable({start:function(y){var v=r.shape.geom.getVertices(),u={},t=$(r).attr("_from"),w,z=[v[0].x,v[0].y],x=b.drawEdge(new OG.PolyLine(v),OG.Util.apply(u,OG.Constants.DEFAULT_STYLE.EDGE_SHADOW,r.shape.geom.style.map));
+if(t){w=m(t);
+b.drawTerminal(w);
+z=b.getElementById(t)
+}$(q).data("from_terminal",z);
+$(q).data("edge",x);
+$(q).data("dragged_guide","to");
 b.removeRubberBand(b.getRootElement());
-$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(z,y){if(y.id&&$(y).attr("_shape")!==OG.Constants.SHAPE_TYPE.EDGE){b.removeGuide(y)
+$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(B,A){if(A.id&&$(A).attr("_shape")!==OG.Constants.SHAPE_TYPE.EDGE){b.removeGuide(A)
 }})
-},drag:function(r){var v=m(r),t=$(o).data("edge"),A=$(o).data("from_terminal"),F=$(o).data("edge_terminal"),B=OG.Util.isElement(A)?[A.terminal.position.x,A.terminal.position.y]:A,x=F?[F.terminal.position.x,F.terminal.position.y]:[v.x,v.y],C=OG.Util.isElement(A)?A.terminal.direction.toLowerCase():"c",y=F?F.terminal.direction.toLowerCase():"c",D=OG.Util.isElement(A)?k(A):null,w=F?k(F):null,s,E,u,z;
+},drag:function(t){var x=o(t),v=$(q).data("edge"),C=$(q).data("from_terminal"),H=$(q).data("edge_terminal"),D=OG.Util.isElement(C)?[C.terminal.position.x,C.terminal.position.y]:C,z=H?[H.terminal.position.x,H.terminal.position.y]:[x.x,x.y],E=OG.Util.isElement(C)?C.terminal.direction.toLowerCase():"c",A=H?H.terminal.direction.toLowerCase():"c",F=OG.Util.isElement(C)?m(C):null,y=H?m(H):null,u,G,w,B;
 $(this).css({position:"",left:"",top:""});
-s=B;
-E=x;
-if(D&&C==="c"){u=b.intersectionEdge(t.geom.style.get("edge-type"),D,[s[0],s[1]],[E[0],E[1]],true);
-B=u.position;
-C=u.direction
-}if(w&&y==="c"){u=b.intersectionEdge(t.geom.style.get("edge-type"),w,[s[0],s[1]],[E[0],E[1]],false);
-x=u.position;
-y=u.direction
-}z=(D!==null)&&(w!==null)&&D.id===w.id;
-if(z){B=x=w.shape.geom.getBoundary().getRightCenter()
-}if(!z||OG.Constants.SELF_CONNECTABLE){b.drawEdge(new OG.Line(B,x),OG.Util.apply(t.geom.style.map,{"edge-direction":C+" "+y}),t.id,z)
-}},stop:function(v){var y=m(v),x=$(o).data("from_terminal"),r=$(o).data("edge_terminal")||[y.x,y.y],t=OG.Util.isElement(x)?k(x):null,w=OG.Util.isElement(r)?k(r):null,u=$(o).data("edge"),s;
+u=D;
+G=z;
+if(F&&E==="c"){w=b.intersectionEdge(v.geom.style.get("edge-type"),F,[u[0],u[1]],[G[0],G[1]],true);
+D=w.position;
+E=w.direction
+}if(y&&A==="c"){w=b.intersectionEdge(v.geom.style.get("edge-type"),y,[u[0],u[1]],[G[0],G[1]],false);
+z=w.position;
+A=w.direction
+}B=(F!==null)&&(y!==null)&&F.id===y.id;
+if(B){D=z=y.shape.geom.getBoundary().getRightCenter()
+}if(!B||OG.Constants.SELF_CONNECTABLE){b.drawEdge(new OG.Line(D,z),OG.Util.apply(v.geom.style.map,{"edge-direction":E+" "+A}),v.id,B)
+}},stop:function(x){var A=o(x),z=$(q).data("from_terminal"),t=$(q).data("edge_terminal")||[A.x,A.y],v=OG.Util.isElement(z)?m(z):null,y=OG.Util.isElement(t)?m(t):null,w=$(q).data("edge"),u;
 $(this).css({position:"absolute",left:"0px",top:"0px"});
-$(o).removeData("from_terminal");
-$(o).removeData("edge");
-$(o).removeData("edge_terminal");
-$(o).removeData("dragged_guide");
-b.remove(u);
-b.removeGuide(p);
-if(w){b.remove(w.id+OG.Constants.DROP_OVER_BBOX_SUFFIX)
-}s=t&&w&&t.id===w.id;
-if(!s||OG.Constants.SELF_CONNECTABLE){p=b.connect(x,r,p,p.shape.geom.style);
-n=b.drawGuide(p);
-e(p,n,true);
-b.toFront(n.group);
-b.setAttr(p,{cursor:OG.Constants.SELECTABLE&&OG.Constants.MOVABLE?"move":(OG.Constants.SELECTABLE?"pointer":OG.Constants.DEFAULT_STYLE.SHAPE.cursor)})
-}}});
-$.each(n.controls,function(r,s){$(s).draggable({start:function(t){var u=m(t);
-$(this).data("start",{x:u.x,y:u.y});
-$(this).data("offset",{x:u.x-f(b.getAttr(s,"x")),y:u.y-f(b.getAttr(s,"y"))});
-b.remove(n.bBox);
+$(q).removeData("from_terminal");
+$(q).removeData("edge");
+$(q).removeData("edge_terminal");
+$(q).removeData("dragged_guide");
+b.remove(w);
+b.removeGuide(r);
+if(y){b.remove(y.id+OG.Constants.DROP_OVER_BBOX_SUFFIX)
+}u=v&&y&&v.id===y.id;
+if(!u||OG.Constants.SELF_CONNECTABLE){r=b.connect(z,t,r,r.shape.geom.style);
+if(r){p=b.drawGuide(r);
+if(p){f(r,p,true);
+b.toFront(p.group);
+b.setAttr(r,{cursor:OG.Constants.SELECTABLE&&OG.Constants.MOVABLE?"move":(OG.Constants.SELECTABLE?"pointer":OG.Constants.DEFAULT_STYLE.SHAPE.cursor)})
+}}}}});
+$.each(p.controls,function(t,u){$(u).draggable({start:function(v){var w=o(v);
+$(this).data("start",{x:w.x,y:w.y});
+$(this).data("offset",{x:w.x-h(b.getAttr(u,"x")),y:w.y-h(b.getAttr(u,"y"))});
+b.remove(p.bBox);
 b.removeRubberBand(b.getRootElement())
-},drag:function(u){var w=m(u),v=$(this).data("start"),x=$(this).data("offset"),t=w.x-x.x,B=w.y-x.y,z=p.shape.geom.getVertices(),A=s.id.indexOf(OG.Constants.GUIDE_SUFFIX.CTL_H)>=0,y=A?parseInt(s.id.replace(p.id+OG.Constants.GUIDE_SUFFIX.CTL_H,""),10):parseInt(s.id.replace(p.id+OG.Constants.GUIDE_SUFFIX.CTL_V,""),10);
+},drag:function(w){var y=o(w),x=$(this).data("start"),z=$(this).data("offset"),v=y.x-z.x,D=y.y-z.y,B=r.shape.geom.getVertices(),C=u.id.indexOf(OG.Constants.GUIDE_SUFFIX.CTL_H)>=0,A=C?parseInt(u.id.replace(r.id+OG.Constants.GUIDE_SUFFIX.CTL_H,""),10):parseInt(u.id.replace(r.id+OG.Constants.GUIDE_SUFFIX.CTL_V,""),10);
 $(this).css({position:"",left:"",top:""});
-if(A){z[y].x=t;
-z[y+1].x=t
-}else{z[y].y=B;
-z[y+1].y=B
-}p=b.drawEdge(new OG.PolyLine(z),p.shape.geom.style,p.id);
-b.drawGuide(p);
+if(C){B[A].x=v;
+B[A+1].x=v
+}else{B[A].y=D;
+B[A+1].y=D
+}r=b.drawEdge(new OG.PolyLine(B),r.shape.geom.style,r.id);
+b.drawGuide(r);
 b.removeAllTerminal();
-b.drawLabel(p);
-b.drawEdgeLabel(p,null,"FROM");
-b.drawEdgeLabel(p,null,"TO")
-},stop:function(u){var w=m(u),v=$(this).data("start"),x=$(this).data("offset"),t=w.x-x.x,B=w.y-x.y,z=p.shape.geom.getVertices(),A=s.id.indexOf(OG.Constants.GUIDE_SUFFIX.CTL_H)>=0,y=A?parseInt(s.id.replace(p.id+OG.Constants.GUIDE_SUFFIX.CTL_H,""),10):parseInt(s.id.replace(p.id+OG.Constants.GUIDE_SUFFIX.CTL_V,""),10);
+b.drawLabel(r);
+b.drawEdgeLabel(r,null,"FROM");
+b.drawEdgeLabel(r,null,"TO")
+},stop:function(w){var y=o(w),x=$(this).data("start"),z=$(this).data("offset"),v=y.x-z.x,D=y.y-z.y,B=r.shape.geom.getVertices(),C=u.id.indexOf(OG.Constants.GUIDE_SUFFIX.CTL_H)>=0,A=C?parseInt(u.id.replace(r.id+OG.Constants.GUIDE_SUFFIX.CTL_H,""),10):parseInt(u.id.replace(r.id+OG.Constants.GUIDE_SUFFIX.CTL_V,""),10);
 $(this).css({position:"absolute",left:"0px",top:"0px"});
-if(A){z[y].x=t;
-z[y+1].x=t
-}else{z[y].y=B;
-z[y+1].y=B
-}p=b.drawEdge(new OG.PolyLine(z),p.shape.geom.style,p.id);
-b.drawGuide(p);
-b.drawLabel(p);
-b.drawEdgeLabel(p,null,"FROM");
-b.drawEdgeLabel(p,null,"TO");
-b.setAttr(p,{cursor:OG.Constants.SELECTABLE&&OG.Constants.MOVABLE?"move":(OG.Constants.SELECTABLE?"pointer":OG.Constants.DEFAULT_STYLE.SHAPE.cursor)})
+if(C){B[A].x=v;
+B[A+1].x=v
+}else{B[A].y=D;
+B[A+1].y=D
+}r=b.drawEdge(new OG.PolyLine(B),r.shape.geom.style,r.id);
+b.drawGuide(r);
+b.drawLabel(r);
+b.drawEdgeLabel(r,null,"FROM");
+b.drawEdgeLabel(r,null,"TO");
+b.setAttr(r,{cursor:OG.Constants.SELECTABLE&&OG.Constants.MOVABLE?"move":(OG.Constants.SELECTABLE?"pointer":OG.Constants.DEFAULT_STYLE.SHAPE.cursor)})
 }})
 })
-}else{$(n.rc).draggable({start:function(r){var s=m(r);
-$(this).data("start",{x:s.x,y:s.y});
-$(this).data("offset",{x:s.x-f(b.getAttr(n.rc,"x")),y:s.y-f(b.getAttr(n.rc,"y"))});
+}else{$(p.rc).draggable({start:function(t){var u=o(t);
+$(this).data("start",{x:u.x,y:u.y});
+$(this).data("offset",{x:u.x-h(b.getAttr(p.rc,"x")),y:u.y-h(b.getAttr(p.rc,"y"))});
 b.removeRubberBand(b.getRootElement())
-},drag:function(s){var t=m(s),w=$(this).data("start"),v=$(this).data("offset"),u=t.x-v.x,r=u-f(b.getAttr(n.lc,"x"));
+},drag:function(u){var v=o(u),y=$(this).data("start"),x=$(this).data("offset"),w=v.x-x.x,t=w-h(b.getAttr(p.lc,"x"));
 $(this).css({position:"",left:"",top:""});
-if(r>=OG.Constants.GUIDE_MIN_SIZE){b.setAttr(n.rc,{x:u});
-b.setAttr(n.ur,{x:u});
-b.setAttr(n.lr,{x:u});
-b.setAttr(n.uc,{x:OG.Util.round((f(b.getAttr(n.lc,"x"))+u)/2)});
-b.setAttr(n.lwc,{x:OG.Util.round((f(b.getAttr(n.lc,"x"))+u)/2)});
-b.setAttr(n.bBox,{width:r})
+if(t>=OG.Constants.GUIDE_MIN_SIZE){b.setAttr(p.rc,{x:w});
+b.setAttr(p.ur,{x:w});
+b.setAttr(p.lr,{x:w});
+b.setAttr(p.uc,{x:OG.Util.round((h(b.getAttr(p.lc,"x"))+w)/2)});
+b.setAttr(p.lwc,{x:OG.Util.round((h(b.getAttr(p.lc,"x"))+w)/2)});
+b.setAttr(p.bBox,{width:t})
 }b.removeAllTerminal()
-},stop:function(s){var t=m(s),u=$(this).data("start"),r=t.x-u.x;
+},stop:function(u){var v=o(u),w=$(this).data("start"),t=v.x-w.x;
 $(this).css({position:"absolute",left:"0px",top:"0px"});
-if(p&&p.shape.geom){if(p.shape.geom.getBoundary().getWidth()+r<OG.Constants.GUIDE_MIN_SIZE){r=OG.Constants.GUIDE_MIN_SIZE-p.shape.geom.getBoundary().getWidth()
-}b.resize(p,[0,0,0,r]);
-b.drawGuide(p);
-b.setAttr(p,{cursor:OG.Constants.SELECTABLE&&OG.Constants.MOVABLE?"move":(OG.Constants.SELECTABLE?"pointer":OG.Constants.DEFAULT_STYLE.SHAPE.cursor)})
+if(r&&r.shape.geom){if(r.shape.geom.getBoundary().getWidth()+t<OG.Constants.GUIDE_MIN_SIZE){t=OG.Constants.GUIDE_MIN_SIZE-r.shape.geom.getBoundary().getWidth()
+}b.resize(r,[0,0,0,t]);
+b.drawGuide(r);
+b.setAttr(r,{cursor:OG.Constants.SELECTABLE&&OG.Constants.MOVABLE?"move":(OG.Constants.SELECTABLE?"pointer":OG.Constants.DEFAULT_STYLE.SHAPE.cursor)})
 }}});
-$(n.lwc).draggable({start:function(r){var s=m(r);
-$(this).data("start",{x:s.x,y:s.y});
-$(this).data("offset",{x:s.x-f(b.getAttr(n.lwc,"x")),y:s.y-f(b.getAttr(n.lwc,"y"))});
+$(p.lwc).draggable({start:function(t){var u=o(t);
+$(this).data("start",{x:u.x,y:u.y});
+$(this).data("offset",{x:u.x-h(b.getAttr(p.lwc,"x")),y:u.y-h(b.getAttr(p.lwc,"y"))});
 b.removeRubberBand(b.getRootElement())
-},drag:function(s){var t=m(s),w=$(this).data("start"),v=$(this).data("offset"),u=t.y-v.y,r=u-f(b.getAttr(n.uc,"y"));
+},drag:function(u){var v=o(u),y=$(this).data("start"),x=$(this).data("offset"),w=v.y-x.y,t=w-h(b.getAttr(p.uc,"y"));
 $(this).css({position:"",left:"",top:""});
-if(r>=OG.Constants.GUIDE_MIN_SIZE){b.setAttr(n.lwc,{y:u});
-b.setAttr(n.ll,{y:u});
-b.setAttr(n.lr,{y:u});
-b.setAttr(n.lc,{y:OG.Util.round((f(b.getAttr(n.uc,"y"))+u)/2)});
-b.setAttr(n.rc,{y:OG.Util.round((f(b.getAttr(n.uc,"y"))+u)/2)});
-b.setAttr(n.bBox,{height:r})
+if(t>=OG.Constants.GUIDE_MIN_SIZE){b.setAttr(p.lwc,{y:w});
+b.setAttr(p.ll,{y:w});
+b.setAttr(p.lr,{y:w});
+b.setAttr(p.lc,{y:OG.Util.round((h(b.getAttr(p.uc,"y"))+w)/2)});
+b.setAttr(p.rc,{y:OG.Util.round((h(b.getAttr(p.uc,"y"))+w)/2)});
+b.setAttr(p.bBox,{height:t})
 }b.removeAllTerminal()
-},stop:function(s){var t=m(s),u=$(this).data("start"),r=t.y-u.y;
+},stop:function(u){var v=o(u),w=$(this).data("start"),t=v.y-w.y;
 $(this).css({position:"absolute",left:"0px",top:"0px"});
-if(p&&p.shape.geom){if(p.shape.geom.getBoundary().getHeight()+r<OG.Constants.GUIDE_MIN_SIZE){r=OG.Constants.GUIDE_MIN_SIZE-p.shape.geom.getBoundary().getHeight()
-}b.resize(p,[0,r,0,0]);
-b.drawGuide(p);
-b.setAttr(p,{cursor:OG.Constants.SELECTABLE&&OG.Constants.MOVABLE?"move":(OG.Constants.SELECTABLE?"pointer":OG.Constants.DEFAULT_STYLE.SHAPE.cursor)})
+if(r&&r.shape.geom){if(r.shape.geom.getBoundary().getHeight()+t<OG.Constants.GUIDE_MIN_SIZE){t=OG.Constants.GUIDE_MIN_SIZE-r.shape.geom.getBoundary().getHeight()
+}b.resize(r,[0,t,0,0]);
+b.drawGuide(r);
+b.setAttr(r,{cursor:OG.Constants.SELECTABLE&&OG.Constants.MOVABLE?"move":(OG.Constants.SELECTABLE?"pointer":OG.Constants.DEFAULT_STYLE.SHAPE.cursor)})
 }}});
-$(n.lr).draggable({start:function(r){var s=m(r);
-$(this).data("start",{x:s.x,y:s.y});
-$(this).data("offset",{x:s.x-f(b.getAttr(n.lr,"x")),y:s.y-f(b.getAttr(n.lr,"y"))});
+$(p.lr).draggable({start:function(t){var u=o(t);
+$(this).data("start",{x:u.x,y:u.y});
+$(this).data("offset",{x:u.x-h(b.getAttr(p.lr,"x")),y:u.y-h(b.getAttr(p.lr,"y"))});
 b.removeRubberBand(b.getRootElement())
-},drag:function(t){var u=m(t),y=$(this).data("start"),x=$(this).data("offset"),w=u.x-x.x,s=w-f(b.getAttr(n.lc,"x")),v=u.y-x.y,r=v-f(b.getAttr(n.uc,"y"));
+},drag:function(v){var w=o(v),A=$(this).data("start"),z=$(this).data("offset"),y=w.x-z.x,u=y-h(b.getAttr(p.lc,"x")),x=w.y-z.y,t=x-h(b.getAttr(p.uc,"y"));
 $(this).css({position:"",left:"",top:""});
-if(s>=OG.Constants.GUIDE_MIN_SIZE){b.setAttr(n.rc,{x:w});
-b.setAttr(n.ur,{x:w});
-b.setAttr(n.lr,{x:w});
-b.setAttr(n.uc,{x:OG.Util.round((f(b.getAttr(n.lc,"x"))+w)/2)});
-b.setAttr(n.lwc,{x:OG.Util.round((f(b.getAttr(n.lc,"x"))+w)/2)});
-b.setAttr(n.bBox,{width:s})
-}if(r>=OG.Constants.GUIDE_MIN_SIZE){b.setAttr(n.lwc,{y:v});
-b.setAttr(n.ll,{y:v});
-b.setAttr(n.lr,{y:v});
-b.setAttr(n.lc,{y:OG.Util.round((f(b.getAttr(n.uc,"y"))+v)/2)});
-b.setAttr(n.rc,{y:OG.Util.round((f(b.getAttr(n.uc,"y"))+v)/2)});
-b.setAttr(n.bBox,{height:r})
+if(u>=OG.Constants.GUIDE_MIN_SIZE){b.setAttr(p.rc,{x:y});
+b.setAttr(p.ur,{x:y});
+b.setAttr(p.lr,{x:y});
+b.setAttr(p.uc,{x:OG.Util.round((h(b.getAttr(p.lc,"x"))+y)/2)});
+b.setAttr(p.lwc,{x:OG.Util.round((h(b.getAttr(p.lc,"x"))+y)/2)});
+b.setAttr(p.bBox,{width:u})
+}if(t>=OG.Constants.GUIDE_MIN_SIZE){b.setAttr(p.lwc,{y:x});
+b.setAttr(p.ll,{y:x});
+b.setAttr(p.lr,{y:x});
+b.setAttr(p.lc,{y:OG.Util.round((h(b.getAttr(p.uc,"y"))+x)/2)});
+b.setAttr(p.rc,{y:OG.Util.round((h(b.getAttr(p.uc,"y"))+x)/2)});
+b.setAttr(p.bBox,{height:t})
 }b.removeAllTerminal()
-},stop:function(t){var u=m(t),v=$(this).data("start"),s=u.x-v.x,r=u.y-v.y;
+},stop:function(v){var w=o(v),x=$(this).data("start"),u=w.x-x.x,t=w.y-x.y;
 $(this).css({position:"absolute",left:"0px",top:"0px"});
-if(p&&p.shape.geom){if(p.shape.geom.getBoundary().getWidth()+s<OG.Constants.GUIDE_MIN_SIZE){s=OG.Constants.GUIDE_MIN_SIZE-p.shape.geom.getBoundary().getWidth()
-}if(p.shape.geom.getBoundary().getHeight()+r<OG.Constants.GUIDE_MIN_SIZE){r=OG.Constants.GUIDE_MIN_SIZE-p.shape.geom.getBoundary().getHeight()
-}b.resize(p,[0,r,0,s]);
-b.drawGuide(p);
-b.setAttr(p,{cursor:OG.Constants.SELECTABLE&&OG.Constants.MOVABLE?"move":(OG.Constants.SELECTABLE?"pointer":OG.Constants.DEFAULT_STYLE.SHAPE.cursor)})
+if(r&&r.shape.geom){if(r.shape.geom.getBoundary().getWidth()+u<OG.Constants.GUIDE_MIN_SIZE){u=OG.Constants.GUIDE_MIN_SIZE-r.shape.geom.getBoundary().getWidth()
+}if(r.shape.geom.getBoundary().getHeight()+t<OG.Constants.GUIDE_MIN_SIZE){t=OG.Constants.GUIDE_MIN_SIZE-r.shape.geom.getBoundary().getHeight()
+}b.resize(r,[0,t,0,u]);
+b.drawGuide(r);
+b.setAttr(r,{cursor:OG.Constants.SELECTABLE&&OG.Constants.MOVABLE?"move":(OG.Constants.SELECTABLE?"pointer":OG.Constants.DEFAULT_STYLE.SHAPE.cursor)})
 }b.removeAllTerminal()
 }});
-$(n.lc).draggable({start:function(r){var s=m(r);
-$(this).data("start",{x:s.x,y:s.y});
-$(this).data("offset",{x:s.x-f(b.getAttr(n.lc,"x")),y:s.y-f(b.getAttr(n.lc,"y"))});
+$(p.lc).draggable({start:function(t){var u=o(t);
+$(this).data("start",{x:u.x,y:u.y});
+$(this).data("offset",{x:u.x-h(b.getAttr(p.lc,"x")),y:u.y-h(b.getAttr(p.lc,"y"))});
 b.removeRubberBand(b.getRootElement())
-},drag:function(s){var t=m(s),w=$(this).data("start"),v=$(this).data("offset"),u=t.x-v.x,r=f(b.getAttr(n.rc,"x"))-u;
+},drag:function(u){var v=o(u),y=$(this).data("start"),x=$(this).data("offset"),w=v.x-x.x,t=h(b.getAttr(p.rc,"x"))-w;
 $(this).css({position:"",left:"",top:""});
-if(r>=OG.Constants.GUIDE_MIN_SIZE){b.setAttr(n.lc,{x:u});
-b.setAttr(n.ul,{x:u});
-b.setAttr(n.ll,{x:u});
-b.setAttr(n.uc,{x:OG.Util.round((f(b.getAttr(n.rc,"x"))+u)/2)});
-b.setAttr(n.lwc,{x:OG.Util.round((f(b.getAttr(n.rc,"x"))+u)/2)});
-b.setAttr(n.bBox,{x:OG.Util.round(u+f(b.getAttr(n.lc,"width"))/2),width:r})
+if(t>=OG.Constants.GUIDE_MIN_SIZE){b.setAttr(p.lc,{x:w});
+b.setAttr(p.ul,{x:w});
+b.setAttr(p.ll,{x:w});
+b.setAttr(p.uc,{x:OG.Util.round((h(b.getAttr(p.rc,"x"))+w)/2)});
+b.setAttr(p.lwc,{x:OG.Util.round((h(b.getAttr(p.rc,"x"))+w)/2)});
+b.setAttr(p.bBox,{x:OG.Util.round(w+h(b.getAttr(p.lc,"width"))/2),width:t})
 }b.removeAllTerminal()
-},stop:function(s){var t=m(s),u=$(this).data("start"),r=u.x-t.x;
+},stop:function(u){var v=o(u),w=$(this).data("start"),t=w.x-v.x;
 $(this).css({position:"absolute",left:"0px",top:"0px"});
-if(p&&p.shape.geom){if(p.shape.geom.getBoundary().getWidth()+r<OG.Constants.GUIDE_MIN_SIZE){r=OG.Constants.GUIDE_MIN_SIZE-p.shape.geom.getBoundary().getWidth()
-}b.resize(p,[0,0,r,0]);
-b.drawGuide(p);
-b.setAttr(p,{cursor:OG.Constants.SELECTABLE&&OG.Constants.MOVABLE?"move":(OG.Constants.SELECTABLE?"pointer":OG.Constants.DEFAULT_STYLE.SHAPE.cursor)})
+if(r&&r.shape.geom){if(r.shape.geom.getBoundary().getWidth()+t<OG.Constants.GUIDE_MIN_SIZE){t=OG.Constants.GUIDE_MIN_SIZE-r.shape.geom.getBoundary().getWidth()
+}b.resize(r,[0,0,t,0]);
+b.drawGuide(r);
+b.setAttr(r,{cursor:OG.Constants.SELECTABLE&&OG.Constants.MOVABLE?"move":(OG.Constants.SELECTABLE?"pointer":OG.Constants.DEFAULT_STYLE.SHAPE.cursor)})
 }}});
-$(n.ll).draggable({start:function(r){var s=m(r);
-$(this).data("start",{x:s.x,y:s.y});
-$(this).data("offset",{x:s.x-f(b.getAttr(n.ll,"x")),y:s.y-f(b.getAttr(n.ll,"y"))});
+$(p.ll).draggable({start:function(t){var u=o(t);
+$(this).data("start",{x:u.x,y:u.y});
+$(this).data("offset",{x:u.x-h(b.getAttr(p.ll,"x")),y:u.y-h(b.getAttr(p.ll,"y"))});
 b.removeRubberBand(b.getRootElement())
-},drag:function(t){var u=m(t),y=$(this).data("start"),x=$(this).data("offset"),w=u.x-x.x,v=u.y-x.y,s=f(b.getAttr(n.rc,"x"))-w,r=v-f(b.getAttr(n.uc,"y"));
+},drag:function(v){var w=o(v),A=$(this).data("start"),z=$(this).data("offset"),y=w.x-z.x,x=w.y-z.y,u=h(b.getAttr(p.rc,"x"))-y,t=x-h(b.getAttr(p.uc,"y"));
 $(this).css({position:"",left:"",top:""});
-if(s>=OG.Constants.GUIDE_MIN_SIZE){b.setAttr(n.lc,{x:w});
-b.setAttr(n.ul,{x:w});
-b.setAttr(n.ll,{x:w});
-b.setAttr(n.uc,{x:OG.Util.round((f(b.getAttr(n.rc,"x"))+w)/2)});
-b.setAttr(n.lwc,{x:OG.Util.round((f(b.getAttr(n.rc,"x"))+w)/2)});
-b.setAttr(n.bBox,{x:OG.Util.round(w+f(b.getAttr(n.lc,"width"))/2),width:s})
-}if(r>=OG.Constants.GUIDE_MIN_SIZE){b.setAttr(n.lwc,{y:v});
-b.setAttr(n.ll,{y:v});
-b.setAttr(n.lr,{y:v});
-b.setAttr(n.lc,{y:OG.Util.round((f(b.getAttr(n.uc,"y"))+v)/2)});
-b.setAttr(n.rc,{y:OG.Util.round((f(b.getAttr(n.uc,"y"))+v)/2)});
-b.setAttr(n.bBox,{height:r})
+if(u>=OG.Constants.GUIDE_MIN_SIZE){b.setAttr(p.lc,{x:y});
+b.setAttr(p.ul,{x:y});
+b.setAttr(p.ll,{x:y});
+b.setAttr(p.uc,{x:OG.Util.round((h(b.getAttr(p.rc,"x"))+y)/2)});
+b.setAttr(p.lwc,{x:OG.Util.round((h(b.getAttr(p.rc,"x"))+y)/2)});
+b.setAttr(p.bBox,{x:OG.Util.round(y+h(b.getAttr(p.lc,"width"))/2),width:u})
+}if(t>=OG.Constants.GUIDE_MIN_SIZE){b.setAttr(p.lwc,{y:x});
+b.setAttr(p.ll,{y:x});
+b.setAttr(p.lr,{y:x});
+b.setAttr(p.lc,{y:OG.Util.round((h(b.getAttr(p.uc,"y"))+x)/2)});
+b.setAttr(p.rc,{y:OG.Util.round((h(b.getAttr(p.uc,"y"))+x)/2)});
+b.setAttr(p.bBox,{height:t})
 }b.removeAllTerminal()
-},stop:function(t){var u=m(t),v=$(this).data("start"),s=v.x-u.x,r=u.y-v.y;
+},stop:function(v){var w=o(v),x=$(this).data("start"),u=x.x-w.x,t=w.y-x.y;
 $(this).css({position:"absolute",left:"0px",top:"0px"});
-if(p&&p.shape.geom){if(p.shape.geom.getBoundary().getWidth()+s<OG.Constants.GUIDE_MIN_SIZE){s=OG.Constants.GUIDE_MIN_SIZE-p.shape.geom.getBoundary().getWidth()
-}if(p.shape.geom.getBoundary().getHeight()+r<OG.Constants.GUIDE_MIN_SIZE){r=OG.Constants.GUIDE_MIN_SIZE-p.shape.geom.getBoundary().getHeight()
-}b.resize(p,[0,r,s,0]);
-b.drawGuide(p);
-b.setAttr(p,{cursor:OG.Constants.SELECTABLE&&OG.Constants.MOVABLE?"move":(OG.Constants.SELECTABLE?"pointer":OG.Constants.DEFAULT_STYLE.SHAPE.cursor)})
+if(r&&r.shape.geom){if(r.shape.geom.getBoundary().getWidth()+u<OG.Constants.GUIDE_MIN_SIZE){u=OG.Constants.GUIDE_MIN_SIZE-r.shape.geom.getBoundary().getWidth()
+}if(r.shape.geom.getBoundary().getHeight()+t<OG.Constants.GUIDE_MIN_SIZE){t=OG.Constants.GUIDE_MIN_SIZE-r.shape.geom.getBoundary().getHeight()
+}b.resize(r,[0,t,u,0]);
+b.drawGuide(r);
+b.setAttr(r,{cursor:OG.Constants.SELECTABLE&&OG.Constants.MOVABLE?"move":(OG.Constants.SELECTABLE?"pointer":OG.Constants.DEFAULT_STYLE.SHAPE.cursor)})
 }}});
-$(n.uc).draggable({start:function(r){var s=m(r);
-$(this).data("start",{x:s.x,y:s.y});
-$(this).data("offset",{x:s.x-f(b.getAttr(n.uc,"x")),y:s.y-f(b.getAttr(n.uc,"y"))});
+$(p.uc).draggable({start:function(t){var u=o(t);
+$(this).data("start",{x:u.x,y:u.y});
+$(this).data("offset",{x:u.x-h(b.getAttr(p.uc,"x")),y:u.y-h(b.getAttr(p.uc,"y"))});
 b.removeRubberBand(b.getRootElement())
-},drag:function(s){var t=m(s),w=$(this).data("start"),v=$(this).data("offset"),u=t.y-v.y,r=f(b.getAttr(n.lwc,"y"))-u;
+},drag:function(u){var v=o(u),y=$(this).data("start"),x=$(this).data("offset"),w=v.y-x.y,t=h(b.getAttr(p.lwc,"y"))-w;
 $(this).css({position:"",left:"",top:""});
-if(r>=OG.Constants.GUIDE_MIN_SIZE){b.setAttr(n.uc,{y:u});
-b.setAttr(n.ul,{y:u});
-b.setAttr(n.ur,{y:u});
-b.setAttr(n.lc,{y:OG.Util.round((f(b.getAttr(n.lwc,"y"))+u)/2)});
-b.setAttr(n.rc,{y:OG.Util.round((f(b.getAttr(n.lwc,"y"))+u)/2)});
-b.setAttr(n.bBox,{y:OG.Util.round(u+f(b.getAttr(n.uc,"width"))/2),height:r})
+if(t>=OG.Constants.GUIDE_MIN_SIZE){b.setAttr(p.uc,{y:w});
+b.setAttr(p.ul,{y:w});
+b.setAttr(p.ur,{y:w});
+b.setAttr(p.lc,{y:OG.Util.round((h(b.getAttr(p.lwc,"y"))+w)/2)});
+b.setAttr(p.rc,{y:OG.Util.round((h(b.getAttr(p.lwc,"y"))+w)/2)});
+b.setAttr(p.bBox,{y:OG.Util.round(w+h(b.getAttr(p.uc,"width"))/2),height:t})
 }b.removeAllTerminal()
-},stop:function(s){var t=m(s),u=$(this).data("start"),r=u.y-t.y;
+},stop:function(u){var v=o(u),w=$(this).data("start"),t=w.y-v.y;
 $(this).css({position:"absolute",left:"0px",top:"0px"});
-if(p&&p.shape.geom){if(p.shape.geom.getBoundary().getHeight()+r<OG.Constants.GUIDE_MIN_SIZE){r=OG.Constants.GUIDE_MIN_SIZE-p.shape.geom.getBoundary().getHeight()
-}b.resize(p,[r,0,0,0]);
-b.drawGuide(p);
-b.setAttr(p,{cursor:OG.Constants.SELECTABLE&&OG.Constants.MOVABLE?"move":(OG.Constants.SELECTABLE?"pointer":OG.Constants.DEFAULT_STYLE.SHAPE.cursor)})
+if(r&&r.shape.geom){if(r.shape.geom.getBoundary().getHeight()+t<OG.Constants.GUIDE_MIN_SIZE){t=OG.Constants.GUIDE_MIN_SIZE-r.shape.geom.getBoundary().getHeight()
+}b.resize(r,[t,0,0,0]);
+b.drawGuide(r);
+b.setAttr(r,{cursor:OG.Constants.SELECTABLE&&OG.Constants.MOVABLE?"move":(OG.Constants.SELECTABLE?"pointer":OG.Constants.DEFAULT_STYLE.SHAPE.cursor)})
 }}});
-$(n.ul).draggable({start:function(r){var s=m(r);
-$(this).data("start",{x:s.x,y:s.y});
-$(this).data("offset",{x:s.x-f(b.getAttr(n.ul,"x")),y:s.y-f(b.getAttr(n.ul,"y"))});
+$(p.ul).draggable({start:function(t){var u=o(t);
+$(this).data("start",{x:u.x,y:u.y});
+$(this).data("offset",{x:u.x-h(b.getAttr(p.ul,"x")),y:u.y-h(b.getAttr(p.ul,"y"))});
 b.removeRubberBand(b.getRootElement())
-},drag:function(t){var u=m(t),y=$(this).data("start"),x=$(this).data("offset"),w=u.x-x.x,v=u.y-x.y,s=f(b.getAttr(n.rc,"x"))-w,r=f(b.getAttr(n.lwc,"y"))-v;
+},drag:function(v){var w=o(v),A=$(this).data("start"),z=$(this).data("offset"),y=w.x-z.x,x=w.y-z.y,u=h(b.getAttr(p.rc,"x"))-y,t=h(b.getAttr(p.lwc,"y"))-x;
 $(this).css({position:"",left:"",top:""});
-if(s>=OG.Constants.GUIDE_MIN_SIZE){b.setAttr(n.lc,{x:w});
-b.setAttr(n.ul,{x:w});
-b.setAttr(n.ll,{x:w});
-b.setAttr(n.uc,{x:OG.Util.round((f(b.getAttr(n.rc,"x"))+w)/2)});
-b.setAttr(n.lwc,{x:OG.Util.round((f(b.getAttr(n.rc,"x"))+w)/2)});
-b.setAttr(n.bBox,{x:OG.Util.round(w+f(b.getAttr(n.lc,"width"))/2),width:s})
-}if(r>=OG.Constants.GUIDE_MIN_SIZE){b.setAttr(n.uc,{y:v});
-b.setAttr(n.ul,{y:v});
-b.setAttr(n.ur,{y:v});
-b.setAttr(n.lc,{y:OG.Util.round((f(b.getAttr(n.lwc,"y"))+v)/2)});
-b.setAttr(n.rc,{y:OG.Util.round((f(b.getAttr(n.lwc,"y"))+v)/2)});
-b.setAttr(n.bBox,{y:OG.Util.round(v+f(b.getAttr(n.uc,"height"))/2),height:r})
+if(u>=OG.Constants.GUIDE_MIN_SIZE){b.setAttr(p.lc,{x:y});
+b.setAttr(p.ul,{x:y});
+b.setAttr(p.ll,{x:y});
+b.setAttr(p.uc,{x:OG.Util.round((h(b.getAttr(p.rc,"x"))+y)/2)});
+b.setAttr(p.lwc,{x:OG.Util.round((h(b.getAttr(p.rc,"x"))+y)/2)});
+b.setAttr(p.bBox,{x:OG.Util.round(y+h(b.getAttr(p.lc,"width"))/2),width:u})
+}if(t>=OG.Constants.GUIDE_MIN_SIZE){b.setAttr(p.uc,{y:x});
+b.setAttr(p.ul,{y:x});
+b.setAttr(p.ur,{y:x});
+b.setAttr(p.lc,{y:OG.Util.round((h(b.getAttr(p.lwc,"y"))+x)/2)});
+b.setAttr(p.rc,{y:OG.Util.round((h(b.getAttr(p.lwc,"y"))+x)/2)});
+b.setAttr(p.bBox,{y:OG.Util.round(x+h(b.getAttr(p.uc,"height"))/2),height:t})
 }b.removeAllTerminal()
-},stop:function(t){var u=m(t),v=$(this).data("start"),s=v.x-u.x,r=v.y-u.y;
+},stop:function(v){var w=o(v),x=$(this).data("start"),u=x.x-w.x,t=x.y-w.y;
 $(this).css({position:"absolute",left:"0px",top:"0px"});
-if(p&&p.shape.geom){if(p.shape.geom.getBoundary().getWidth()+s<OG.Constants.GUIDE_MIN_SIZE){s=OG.Constants.GUIDE_MIN_SIZE-p.shape.geom.getBoundary().getWidth()
-}if(p.shape.geom.getBoundary().getHeight()+r<OG.Constants.GUIDE_MIN_SIZE){r=OG.Constants.GUIDE_MIN_SIZE-p.shape.geom.getBoundary().getHeight()
-}b.resize(p,[r,0,s,0]);
-b.drawGuide(p);
-b.setAttr(p,{cursor:OG.Constants.SELECTABLE&&OG.Constants.MOVABLE?"move":(OG.Constants.SELECTABLE?"pointer":OG.Constants.DEFAULT_STYLE.SHAPE.cursor)})
+if(r&&r.shape.geom){if(r.shape.geom.getBoundary().getWidth()+u<OG.Constants.GUIDE_MIN_SIZE){u=OG.Constants.GUIDE_MIN_SIZE-r.shape.geom.getBoundary().getWidth()
+}if(r.shape.geom.getBoundary().getHeight()+t<OG.Constants.GUIDE_MIN_SIZE){t=OG.Constants.GUIDE_MIN_SIZE-r.shape.geom.getBoundary().getHeight()
+}b.resize(r,[t,0,u,0]);
+b.drawGuide(r);
+b.setAttr(r,{cursor:OG.Constants.SELECTABLE&&OG.Constants.MOVABLE?"move":(OG.Constants.SELECTABLE?"pointer":OG.Constants.DEFAULT_STYLE.SHAPE.cursor)})
 }}});
-$(n.ur).draggable({start:function(r){var s=m(r);
-$(this).data("start",{x:s.x,y:s.y});
-$(this).data("offset",{x:s.x-f(b.getAttr(n.ur,"x")),y:s.y-f(b.getAttr(n.ur,"y"))});
+$(p.ur).draggable({start:function(t){var u=o(t);
+$(this).data("start",{x:u.x,y:u.y});
+$(this).data("offset",{x:u.x-h(b.getAttr(p.ur,"x")),y:u.y-h(b.getAttr(p.ur,"y"))});
 b.removeRubberBand(b.getRootElement())
-},drag:function(t){var u=m(t),y=$(this).data("start"),x=$(this).data("offset"),w=u.x-x.x,v=u.y-x.y,s=w-f(b.getAttr(n.lc,"x")),r=f(b.getAttr(n.lwc,"y"))-v;
+},drag:function(v){var w=o(v),A=$(this).data("start"),z=$(this).data("offset"),y=w.x-z.x,x=w.y-z.y,u=y-h(b.getAttr(p.lc,"x")),t=h(b.getAttr(p.lwc,"y"))-x;
 $(this).css({position:"",left:"",top:""});
-if(s>=OG.Constants.GUIDE_MIN_SIZE){b.setAttr(n.rc,{x:w});
-b.setAttr(n.ur,{x:w});
-b.setAttr(n.lr,{x:w});
-b.setAttr(n.uc,{x:OG.Util.round((f(b.getAttr(n.lc,"x"))+w)/2)});
-b.setAttr(n.lwc,{x:OG.Util.round((f(b.getAttr(n.lc,"x"))+w)/2)});
-b.setAttr(n.bBox,{width:s})
-}if(r>=OG.Constants.GUIDE_MIN_SIZE){b.setAttr(n.uc,{y:v});
-b.setAttr(n.ul,{y:v});
-b.setAttr(n.ur,{y:v});
-b.setAttr(n.lc,{y:OG.Util.round((f(b.getAttr(n.lwc,"y"))+v)/2)});
-b.setAttr(n.rc,{y:OG.Util.round((f(b.getAttr(n.lwc,"y"))+v)/2)});
-b.setAttr(n.bBox,{y:OG.Util.round(v+f(b.getAttr(n.uc,"width"))/2),height:r})
+if(u>=OG.Constants.GUIDE_MIN_SIZE){b.setAttr(p.rc,{x:y});
+b.setAttr(p.ur,{x:y});
+b.setAttr(p.lr,{x:y});
+b.setAttr(p.uc,{x:OG.Util.round((h(b.getAttr(p.lc,"x"))+y)/2)});
+b.setAttr(p.lwc,{x:OG.Util.round((h(b.getAttr(p.lc,"x"))+y)/2)});
+b.setAttr(p.bBox,{width:u})
+}if(t>=OG.Constants.GUIDE_MIN_SIZE){b.setAttr(p.uc,{y:x});
+b.setAttr(p.ul,{y:x});
+b.setAttr(p.ur,{y:x});
+b.setAttr(p.lc,{y:OG.Util.round((h(b.getAttr(p.lwc,"y"))+x)/2)});
+b.setAttr(p.rc,{y:OG.Util.round((h(b.getAttr(p.lwc,"y"))+x)/2)});
+b.setAttr(p.bBox,{y:OG.Util.round(x+h(b.getAttr(p.uc,"width"))/2),height:t})
 }b.removeAllTerminal()
-},stop:function(t){var u=m(t),v=$(this).data("start"),s=u.x-v.x,r=v.y-u.y;
+},stop:function(v){var w=o(v),x=$(this).data("start"),u=w.x-x.x,t=x.y-w.y;
 $(this).css({position:"absolute",left:"0px",top:"0px"});
-if(p&&p.shape.geom){if(p.shape.geom.getBoundary().getWidth()+s<OG.Constants.GUIDE_MIN_SIZE){s=OG.Constants.GUIDE_MIN_SIZE-p.shape.geom.getBoundary().getWidth()
-}if(p.shape.geom.getBoundary().getHeight()+r<OG.Constants.GUIDE_MIN_SIZE){r=OG.Constants.GUIDE_MIN_SIZE-p.shape.geom.getBoundary().getHeight()
-}b.resize(p,[r,0,0,s]);
-b.drawGuide(p);
-b.setAttr(p,{cursor:OG.Constants.SELECTABLE&&OG.Constants.MOVABLE?"move":(OG.Constants.SELECTABLE?"pointer":OG.Constants.DEFAULT_STYLE.SHAPE.cursor)})
+if(r&&r.shape.geom){if(r.shape.geom.getBoundary().getWidth()+u<OG.Constants.GUIDE_MIN_SIZE){u=OG.Constants.GUIDE_MIN_SIZE-r.shape.geom.getBoundary().getWidth()
+}if(r.shape.geom.getBoundary().getHeight()+t<OG.Constants.GUIDE_MIN_SIZE){t=OG.Constants.GUIDE_MIN_SIZE-r.shape.geom.getBoundary().getHeight()
+}b.resize(r,[t,0,0,u]);
+b.drawGuide(r);
+b.setAttr(r,{cursor:OG.Constants.SELECTABLE&&OG.Constants.MOVABLE?"move":(OG.Constants.SELECTABLE?"pointer":OG.Constants.DEFAULT_STYLE.SHAPE.cursor)})
 }}})
-}}else{if($(p).attr("_shape")===OG.Constants.SHAPE_TYPE.EDGE){b.setAttr(n.from,{cursor:"default"});
-b.setAttr(n.to,{cursor:"default"});
-$.each(n.controls,function(r,s){b.setAttr(s,{cursor:"default"})
+}}else{if($(r).attr("_shape")===OG.Constants.SHAPE_TYPE.EDGE){b.setAttr(p.from,{cursor:"default"});
+b.setAttr(p.to,{cursor:"default"});
+$.each(p.controls,function(t,u){b.setAttr(u,{cursor:"default"})
 })
-}else{b.setAttr(n.ul,{cursor:"default"});
-b.setAttr(n.ur,{cursor:"default"});
-b.setAttr(n.ll,{cursor:"default"});
-b.setAttr(n.lr,{cursor:"default"});
-b.setAttr(n.lc,{cursor:"default"});
-b.setAttr(n.uc,{cursor:"default"});
-b.setAttr(n.rc,{cursor:"default"});
-b.setAttr(n.lwc,{cursor:"default"})
+}else{b.setAttr(p.ul,{cursor:"default"});
+b.setAttr(p.ur,{cursor:"default"});
+b.setAttr(p.ll,{cursor:"default"});
+b.setAttr(p.lr,{cursor:"default"});
+b.setAttr(p.lc,{cursor:"default"});
+b.setAttr(p.uc,{cursor:"default"});
+b.setAttr(p.rc,{cursor:"default"});
+b.setAttr(p.lwc,{cursor:"default"})
 }}};
-j=function(o){var n=o.parentNode;
-if(n){if(j(n)){return true
-}if($(n).attr("_type")===OG.Constants.NODE_TYPE.SHAPE&&$(n).attr("_selected")==="true"){return true
+l=function(q){var p=q.parentNode;
+if(p){if(l(p)){return true
+}if($(p).attr("_type")===OG.Constants.NODE_TYPE.SHAPE&&$(p).attr("_selected")==="true"){return true
 }}return false
 };
-h=function(o){var n=o.childNodes;
-$.each(n,function(p,q){if($(q).attr("_type")===OG.Constants.NODE_TYPE.SHAPE){if(q.childNodes.length>0){h(q)
-}if($(q).attr("_selected")==="true"){b.removeGuide(q);
-$(q).draggable("destroy")
+j=function(q){var p=q.childNodes;
+$.each(p,function(r,s){if($(s).attr("_type")===OG.Constants.NODE_TYPE.SHAPE){if(s.childNodes.length>0){j(s)
+}if($(s).attr("_selected")==="true"){b.removeGuide(s);
+$(s).draggable("destroy")
 }}})
 };
-l=function(o,p){var n=o.childNodes;
-$.each(n,function(q,t){if($(t).attr("_type")===OG.Constants.NODE_TYPE.SHAPE){var v=t.shape.geom.getBoundary(),s,u,r;
-s=t.shape.clone();
-if($(t).attr("_shape")===OG.Constants.SHAPE_TYPE.EDGE){s.geom=new OG.PolyLine(t.shape.geom.getVertices());
-s.geom.style=t.shape.geom.style;
-s.geom.move(OG.Constants.COPY_PASTE_PADDING,OG.Constants.COPY_PASTE_PADDING);
-u=b.drawShape(null,s,null,t.shapeStyle)
-}else{u=b.drawShape([v.getCentroid().x+OG.Constants.COPY_PASTE_PADDING,v.getCentroid().y+OG.Constants.COPY_PASTE_PADDING],s,[v.getWidth(),v.getHeight()],t.shapeStyle)
-}p.appendChild(u);
-d.setClickSelectable(u,OG.Constants.SELECTABLE);
-d.setMovable(u,OG.Constants.SELECTABLE&&OG.Constants.MOVABLE);
-if(OG.Constants.GROUP_DROPABLE){d.enableDragAndDropGroup(u)
-}if(OG.Constants.GROUP_COLLAPSIBLE){d.enableCollapse(u)
-}if($(u).attr("_shape")!==OG.Constants.SHAPE_TYPE.GROUP){if(OG.Constants.CONNECTABLE){d.enableConnect(u)
-}if(OG.Constants.LABEL_EDITABLE){d.enableEditLabel(u)
-}}if(t.childNodes.length>0){l(t,u)
+n=function(q,r){var p=q.childNodes;
+$.each(p,function(s,v){if($(v).attr("_type")===OG.Constants.NODE_TYPE.SHAPE){var x=v.shape.geom.getBoundary(),u,w,t;
+u=v.shape.clone();
+if($(v).attr("_shape")===OG.Constants.SHAPE_TYPE.EDGE){u.geom=new OG.PolyLine(v.shape.geom.getVertices());
+u.geom.style=v.shape.geom.style;
+u.geom.move(OG.Constants.COPY_PASTE_PADDING,OG.Constants.COPY_PASTE_PADDING);
+w=b.drawShape(null,u,null,v.shapeStyle)
+}else{w=b.drawShape([x.getCentroid().x+OG.Constants.COPY_PASTE_PADDING,x.getCentroid().y+OG.Constants.COPY_PASTE_PADDING],u,[x.getWidth(),x.getHeight()],v.shapeStyle)
+}r.appendChild(w);
+d.setClickSelectable(w,OG.Constants.SELECTABLE);
+d.setMovable(w,OG.Constants.SELECTABLE&&OG.Constants.MOVABLE);
+if(OG.Constants.GROUP_DROPABLE){d.enableDragAndDropGroup(w)
+}if(OG.Constants.GROUP_COLLAPSIBLE){d.enableCollapse(w)
+}if($(w).attr("_shape")!==OG.Constants.SHAPE_TYPE.GROUP){if(OG.Constants.CONNECTABLE){d.enableConnect(w)
+}if(OG.Constants.LABEL_EDITABLE){d.enableEditLabel(w)
+}}if(v.childNodes.length>0){n(v,w)
 }}})
 };
-g=function(p,o){var n=b.getRootBBox();
-if(OG.Constants.AUTO_EXTENSIONAL&&n.width<p){b.setCanvasSize([n.width+OG.Constants.AUTO_EXTENSION_SIZE,n.height])
-}if(OG.Constants.AUTO_EXTENSIONAL&&n.height<o){b.setCanvasSize([n.width,n.height+OG.Constants.AUTO_EXTENSION_SIZE])
+i=function(r,q){var p=b.getRootBBox();
+if(OG.Constants.AUTO_EXTENSIONAL&&p.width<r){b.setCanvasSize([p.width+OG.Constants.AUTO_EXTENSION_SIZE,p.height])
+}if(OG.Constants.AUTO_EXTENSIONAL&&p.height<q){b.setCanvasSize([p.width,p.height+OG.Constants.AUTO_EXTENSION_SIZE])
 }};
-this.setResizable=e;
-this.enableEditLabel=function(n){if(($(n).attr("_shape")===OG.Constants.SHAPE_TYPE.GEOM&&OG.Constants.LABEL_EDITABLE_GEOM)||($(n).attr("_shape")===OG.Constants.SHAPE_TYPE.TEXT&&OG.Constants.LABEL_EDITABLE_TEXT)||($(n).attr("_shape")===OG.Constants.SHAPE_TYPE.HTML&&OG.Constants.LABEL_EDITABLE_HTML)||($(n).attr("_shape")===OG.Constants.SHAPE_TYPE.EDGE&&OG.Constants.LABEL_EDITABLE_EDGE)||($(n).attr("_shape")===OG.Constants.SHAPE_TYPE.GROUP&&OG.Constants.LABEL_EDITABLE_GROUP)){$(n).bind({dblclick:function(r){var s=b.getContainer(),y=n.shape.geom.getBoundary(),q=y.getUpperLeft(),C,w=q.x-1,A=q.y-1,u=y.getWidth(),B=y.getHeight(),v=n.id+OG.Constants.LABEL_EDITOR_SUFFIX,p,t="center",D,x,z=function(I){var G,E,J=0,H,F;
-G=I.shape.geom.getVertices();
-E=I.shape.geom.getLength();
-for(H=0;
-H<G.length-1;
-H++){J+=G[H].distance(G[H+1]);
-if(J>E/2){F=I.shape.geom.intersectCircleToLine(G[H+1],J-E/2,G[H+1],G[H]);
+this.setResizable=f;
+this.enableEditLabel=function(p){if(($(p).attr("_shape")===OG.Constants.SHAPE_TYPE.GEOM&&OG.Constants.LABEL_EDITABLE_GEOM)||($(p).attr("_shape")===OG.Constants.SHAPE_TYPE.TEXT&&OG.Constants.LABEL_EDITABLE_TEXT)||($(p).attr("_shape")===OG.Constants.SHAPE_TYPE.HTML&&OG.Constants.LABEL_EDITABLE_HTML)||($(p).attr("_shape")===OG.Constants.SHAPE_TYPE.EDGE&&OG.Constants.LABEL_EDITABLE_EDGE)||($(p).attr("_shape")===OG.Constants.SHAPE_TYPE.GROUP&&OG.Constants.LABEL_EDITABLE_GROUP)){$(p).bind({dblclick:function(t){var u=b.getContainer(),A=p.shape.geom.getBoundary(),s=A.getUpperLeft(),E,y=s.x-1,C=s.y-1,w=A.getWidth(),D=A.getHeight(),x=p.id+OG.Constants.LABEL_EDITOR_SUFFIX,r,v="center",F,z,B=function(K){var I,G,L=0,J,H;
+I=K.shape.geom.getVertices();
+G=K.shape.geom.getLength();
+for(J=0;
+J<I.length-1;
+J++){L+=I[J].distance(I[J+1]);
+if(L>G/2){H=K.shape.geom.intersectCircleToLine(I[J+1],L-G/2,I[J+1],I[J]);
 break
-}}return F[0]
-},o;
-$(s).append("<textarea id='"+n.id+OG.Constants.LABEL_EDITOR_SUFFIX+"'></textarea>");
-p=$("#"+v);
-switch(n.shape.geom.style.get("text-anchor")){case"start":t="left";
+}}return H[0]
+},q;
+$(u).append("<textarea id='"+p.id+OG.Constants.LABEL_EDITOR_SUFFIX+"'></textarea>");
+r=$("#"+x);
+switch(p.shape.geom.style.get("text-anchor")){case"start":v="left";
 break;
-case"middle":t="center";
+case"middle":v="center";
 break;
-case"end":t="right";
+case"end":v="right";
 break;
-default:t="center";
+default:v="center";
 break
-}if($(n).attr("_shape")===OG.Constants.SHAPE_TYPE.HTML){$(p).css(OG.Util.apply(OG.Constants.DEFAULT_STYLE.LABEL_EDITOR,{left:w,top:A,width:u,height:B,"text-align":"left",overflow:"hidden",resize:"none"}));
-$(p).focus();
-$(p).val(n.shape.html);
-$(p).bind({focusout:function(){n.shape.html=this.value;
-if(n.shape.html){b.redrawShape(n);
+}if($(p).attr("_shape")===OG.Constants.SHAPE_TYPE.HTML){$(r).css(OG.Util.apply(OG.Constants.DEFAULT_STYLE.LABEL_EDITOR,{left:y,top:C,width:w,height:D,"text-align":"left",overflow:"hidden",resize:"none"}));
+$(r).focus();
+$(r).val(p.shape.html);
+$(r).bind({focusout:function(){p.shape.html=this.value;
+if(p.shape.html){b.redrawShape(p);
 this.parentNode.removeChild(this)
-}else{b.removeShape(n);
+}else{b.removeShape(p);
 this.parentNode.removeChild(this)
 }}})
-}else{if($(n).attr("_shape")===OG.Constants.SHAPE_TYPE.TEXT){$(p).css(OG.Util.apply(OG.Constants.DEFAULT_STYLE.LABEL_EDITOR,{left:w,top:A,width:u,height:B,"text-align":t,overflow:"hidden",resize:"none"}));
-$(p).focus();
-$(p).val(n.shape.text);
-$(p).bind({focusout:function(){n.shape.text=this.value;
-if(n.shape.text){b.redrawShape(n);
+}else{if($(p).attr("_shape")===OG.Constants.SHAPE_TYPE.TEXT){$(r).css(OG.Util.apply(OG.Constants.DEFAULT_STYLE.LABEL_EDITOR,{left:y,top:C,width:w,height:D,"text-align":v,overflow:"hidden",resize:"none"}));
+$(r).focus();
+$(r).val(p.shape.text);
+$(r).bind({focusout:function(){p.shape.text=this.value;
+if(p.shape.text){b.redrawShape(p);
 this.parentNode.removeChild(this)
-}else{b.removeShape(n);
+}else{b.removeShape(p);
 this.parentNode.removeChild(this)
 }}})
-}else{if($(n).attr("_shape")===OG.Constants.SHAPE_TYPE.EDGE){if(n.shape.label&&b.isSVG()){$(n).children("[id$=_LABEL]").each(function(E,F){$(F).find("text").each(function(H,G){C=b.getBBox(G);
-w=C.x-10;
-A=C.y;
-u=C.width+20;
-B=C.height
+}else{if($(p).attr("_shape")===OG.Constants.SHAPE_TYPE.EDGE){if(p.shape.label&&b.isSVG()){$(p).children("[id$=_LABEL]").each(function(G,H){$(H).find("text").each(function(J,I){E=b.getBBox(I);
+y=E.x-10;
+C=E.y;
+w=E.width+20;
+D=E.height
 })
 })
-}else{o=z(n);
-w=o.x-OG.Constants.LABEL_EDITOR_WIDTH/2;
-A=o.y-OG.Constants.LABEL_EDITOR_HEIGHT/2;
-u=OG.Constants.LABEL_EDITOR_WIDTH;
-B=OG.Constants.LABEL_EDITOR_HEIGHT
-}$(r.srcElement).parents("[id$=_FROMLABEL]").each(function(E,F){$(F).find("text").each(function(H,G){C=b.getBBox(G);
-w=C.x-10;
-A=C.y;
-u=C.width+20;
-B=C.height;
-D=n.shape.fromLabel
-})
-});
-$(r.srcElement).parents("[id$=_TOLABEL]").each(function(E,F){$(F).find("text").each(function(H,G){C=b.getBBox(G);
-w=C.x-10;
-A=C.y;
-u=C.width+20;
-B=C.height;
-x=n.shape.toLabel
+}else{q=B(p);
+y=q.x-OG.Constants.LABEL_EDITOR_WIDTH/2;
+C=q.y-OG.Constants.LABEL_EDITOR_HEIGHT/2;
+w=OG.Constants.LABEL_EDITOR_WIDTH;
+D=OG.Constants.LABEL_EDITOR_HEIGHT
+}$(t.srcElement).parents("[id$=_FROMLABEL]").each(function(G,H){$(H).find("text").each(function(J,I){E=b.getBBox(I);
+y=E.x-10;
+C=E.y;
+w=E.width+20;
+D=E.height;
+F=p.shape.fromLabel
 })
 });
-$(p).css(OG.Util.apply(OG.Constants.DEFAULT_STYLE.LABEL_EDITOR,{left:w,top:A,width:u,height:B,overflow:"hidden",resize:"none"}));
-$(p).focus();
-if(D||x){$(p).val(D?n.shape.fromLabel:n.shape.toLabel)
-}else{$(p).val(n.shape.label)
-}$(p).bind({focusout:function(){if(D){b.drawEdgeLabel(n,this.value,"FROM")
-}else{if(x){b.drawEdgeLabel(n,this.value,"TO")
-}else{b.drawLabel(n,this.value)
+$(t.srcElement).parents("[id$=_TOLABEL]").each(function(G,H){$(H).find("text").each(function(J,I){E=b.getBBox(I);
+y=E.x-10;
+C=E.y;
+w=E.width+20;
+D=E.height;
+z=p.shape.toLabel
+})
+});
+$(r).css(OG.Util.apply(OG.Constants.DEFAULT_STYLE.LABEL_EDITOR,{left:y,top:C,width:w,height:D,overflow:"hidden",resize:"none"}));
+$(r).focus();
+if(F||z){$(r).val(F?p.shape.fromLabel:p.shape.toLabel)
+}else{$(r).val(p.shape.label)
+}$(r).bind({focusout:function(){if(F){b.drawEdgeLabel(p,this.value,"FROM")
+}else{if(z){b.drawEdgeLabel(p,this.value,"TO")
+}else{b.drawLabel(p,this.value)
 }}this.parentNode.removeChild(this)
 }})
-}else{$(p).css(OG.Util.apply(OG.Constants.DEFAULT_STYLE.LABEL_EDITOR,{left:w,top:A,width:u,height:B,"text-align":t,overflow:"hidden",resize:"none"}));
-$(p).focus();
-$(p).val(n.shape.label);
-$(p).bind({focusout:function(){b.drawLabel(n,this.value);
+}else{$(r).css(OG.Util.apply(OG.Constants.DEFAULT_STYLE.LABEL_EDITOR,{left:y,top:C,width:w,height:D,"text-align":v,overflow:"hidden",resize:"none"}));
+$(r).focus();
+$(r).val(p.shape.label);
+$(r).bind({focusout:function(){b.drawLabel(p,this.value);
 this.parentNode.removeChild(this)
 }})
 }}}}})
 }};
-this.enableConnect=function(o){var p,n=b.getRootGroup();
-if(o&&$(o).attr("_shape")!==OG.Constants.SHAPE_TYPE.GROUP){$(o).bind({mouseover:function(){p=b.drawTerminal(o,$(n).data("dragged_guide")==="to"?OG.Constants.TERMINAL_TYPE.IN:OG.Constants.TERMINAL_TYPE.OUT);
-if(p&&p.terminal&&p.terminal.childNodes.length>0){if($(n).data("edge")){$.each(p.terminal.childNodes,function(q,t){var u=$(n).data("from_terminal"),s=u&&OG.Util.isElement(u)?k(u):null,r=o&&s&&o.id===s.id;
-if(t.terminal&&t.terminal.direction.toLowerCase()==="c"&&(($(n).data("dragged_guide")==="to"&&t.terminal.inout.indexOf(OG.Constants.TERMINAL_TYPE.IN)>=0)||($(n).data("dragged_guide")==="from"&&t.terminal.inout.indexOf(OG.Constants.TERMINAL_TYPE.OUT)>=0))&&(!r||OG.Constants.SELF_CONNECTABLE)){b.drawDropOverGuide(o);
-$(n).data("edge_terminal",t);
+this.enableConnect=function(q){var r,p=b.getRootGroup();
+if(q&&$(q).attr("_shape")!==OG.Constants.SHAPE_TYPE.GROUP){$(q).bind({mouseover:function(){r=b.drawTerminal(q,$(p).data("dragged_guide")==="to"?OG.Constants.TERMINAL_TYPE.IN:OG.Constants.TERMINAL_TYPE.OUT);
+if(r&&r.terminal&&r.terminal.childNodes.length>0){if($(p).data("edge")){$.each(r.terminal.childNodes,function(s,v){var w=$(p).data("from_terminal"),u=w&&OG.Util.isElement(w)?m(w):null,t=q&&u&&q.id===u.id;
+if(v.terminal&&v.terminal.direction.toLowerCase()==="c"&&(($(p).data("dragged_guide")==="to"&&v.terminal.inout.indexOf(OG.Constants.TERMINAL_TYPE.IN)>=0)||($(p).data("dragged_guide")==="from"&&v.terminal.inout.indexOf(OG.Constants.TERMINAL_TYPE.OUT)>=0))&&(!t||OG.Constants.SELF_CONNECTABLE)){b.drawDropOverGuide(q);
+$(p).data("edge_terminal",v);
 return false
 }})
-}$(p.bBox).bind({mouseout:function(){if(!$(n).data("edge")){b.removeTerminal(o)
+}$(r.bBox).bind({mouseout:function(){if(!$(p).data("edge")){b.removeTerminal(q)
 }}});
-$.each(p.terminal.childNodes,function(q,r){if(r.terminal){$(r).bind({mouseover:function(u){var v=$(n).data("from_terminal"),t=v&&OG.Util.isElement(v)?k(v):null,s=o&&t&&o.id===t.id;
-if((($(n).data("dragged_guide")==="to"&&r.terminal.inout.indexOf(OG.Constants.TERMINAL_TYPE.IN)>=0)||($(n).data("dragged_guide")==="from"&&r.terminal.inout.indexOf(OG.Constants.TERMINAL_TYPE.OUT)>=0)||(!$(n).data("dragged_guide")&&r.terminal.inout.indexOf(OG.Constants.TERMINAL_TYPE.OUT)>=0))&&(!s||OG.Constants.SELF_CONNECTABLE)){b.setAttr(r,OG.Constants.DEFAULT_STYLE.TERMINAL_OVER);
-$(n).data("edge_terminal",r)
-}},mouseout:function(){b.setAttr(r,OG.Constants.DEFAULT_STYLE.TERMINAL);
-$(n).removeData("edge_terminal")
+$.each(r.terminal.childNodes,function(s,t){if(t.terminal){$(t).bind({mouseover:function(w){var x=$(p).data("from_terminal"),v=x&&OG.Util.isElement(x)?m(x):null,u=q&&v&&q.id===v.id;
+if((($(p).data("dragged_guide")==="to"&&t.terminal.inout.indexOf(OG.Constants.TERMINAL_TYPE.IN)>=0)||($(p).data("dragged_guide")==="from"&&t.terminal.inout.indexOf(OG.Constants.TERMINAL_TYPE.OUT)>=0)||(!$(p).data("dragged_guide")&&t.terminal.inout.indexOf(OG.Constants.TERMINAL_TYPE.OUT)>=0))&&(!u||OG.Constants.SELF_CONNECTABLE)){b.setAttr(t,OG.Constants.DEFAULT_STYLE.TERMINAL_OVER);
+$(p).data("edge_terminal",t)
+}},mouseout:function(){b.setAttr(t,OG.Constants.DEFAULT_STYLE.TERMINAL);
+$(p).removeData("edge_terminal")
 }});
-$(r).draggable({start:function(u){var s=r.terminal.position.x,v=r.terminal.position.y,t=b.drawShape(null,new OG.EdgeShape([s,v],[s,v]),null,OG.Constants.DEFAULT_STYLE.EDGE_SHADOW);
-$(n).data("edge",t);
-$(n).data("from_terminal",r);
-$(n).data("dragged_guide","to");
+$(t).draggable({start:function(w){var u=t.terminal.position.x,z=t.terminal.position.y,v=b.drawShape(null,new OG.EdgeShape([u,z],[u,z]),null,OG.Constants.DEFAULT_STYLE.EDGE_SHADOW);
+$(p).data("edge",v);
+$(p).data("from_terminal",t);
+$(p).data("dragged_guide","to");
 b.removeRubberBand(b.getRootElement());
-$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(x,w){if(w.id){b.removeGuide(w)
+$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(y,x){if(x.id){b.removeGuide(x)
 }})
-},drag:function(s){var w=m(s),u=$(n).data("edge"),B=$(n).data("from_terminal"),F=$(n).data("edge_terminal"),C=[B.terminal.position.x,B.terminal.position.y],y=F?[F.terminal.position.x,F.terminal.position.y]:[w.x,w.y],D=B.terminal.direction.toLowerCase(),z=F?F.terminal.direction.toLowerCase():"c",x=F?k(F):null,t,E,v,A;
+},drag:function(u){var y=o(u),w=$(p).data("edge"),D=$(p).data("from_terminal"),H=$(p).data("edge_terminal"),E=[D.terminal.position.x,D.terminal.position.y],A=H?[H.terminal.position.x,H.terminal.position.y]:[y.x,y.y],F=D.terminal.direction.toLowerCase(),B=H?H.terminal.direction.toLowerCase():"c",z=H?m(H):null,v,G,x,C;
 $(this).css({position:"",left:"",top:""});
-t=C;
-E=y;
-if(!o.shape.geom.getBoundary().isContains(y)&&D==="c"){v=b.intersectionEdge(u.shape.geom.style.get("edge-type"),o,[t[0],t[1]],[E[0],E[1]],true);
-C=v.position;
-D=v.direction
-}if(x&&z==="c"){v=b.intersectionEdge(u.shape.geom.style.get("edge-type"),x,[t[0],t[1]],[E[0],E[1]],false);
-y=v.position;
-z=v.direction
-}A=o&&x&&o.id===x.id;
-if(A){C=y=o.shape.geom.getBoundary().getRightCenter()
-}if(!A||OG.Constants.SELF_CONNECTABLE){b.drawEdge(new OG.Line(C,y),OG.Util.apply(u.shape.geom.style.map,{"edge-direction":D+" "+z}),u.id,A)
-}},stop:function(s){var D=m(s),v=$(n).data("edge"),B=$(n).data("from_terminal"),E=$(n).data("edge_terminal")||[D.x,D.y],w=OG.Util.isElement(E)?k(E):null,u,x,C,z,t,y,A;
+v=E;
+G=A;
+if(!q.shape.geom.getBoundary().isContains(A)&&F==="c"){x=b.intersectionEdge(w.shape.geom.style.get("edge-type"),q,[v[0],v[1]],[G[0],G[1]],true);
+E=x.position;
+F=x.direction
+}if(z&&B==="c"){x=b.intersectionEdge(w.shape.geom.style.get("edge-type"),z,[v[0],v[1]],[G[0],G[1]],false);
+A=x.position;
+B=x.direction
+}C=q&&z&&q.id===z.id;
+if(C){E=A=q.shape.geom.getBoundary().getRightCenter()
+}if(!C||OG.Constants.SELF_CONNECTABLE){b.drawEdge(new OG.Line(E,A),OG.Util.apply(w.shape.geom.style.map,{"edge-direction":F+" "+B}),w.id,C)
+}},stop:function(u){var F=o(u),x=$(p).data("edge"),D=$(p).data("from_terminal"),G=$(p).data("edge_terminal")||[F.x,F.y],y=OG.Util.isElement(G)?m(G):null,w,z,E,B,v,A,C;
 $(this).css({position:"absolute",left:"0px",top:"0px"});
-if(!$(n).data("edge_terminal")&&OG.Constants.CONNECT_CLONEABLE){u=o.shape.geom.getBoundary();
-x=b.drawShape([D.x,D.y],o.shape.clone(),[u.getWidth(),u.getHeight()],o.shapeStyle);
-d.setClickSelectable(x,OG.Constants.SELECTABLE);
-d.setMovable(x,OG.Constants.SELECTABLE&&OG.Constants.MOVABLE);
-if(OG.Constants.GROUP_DROPABLE){d.enableDragAndDropGroup(x)
-}if(OG.Constants.GROUP_COLLAPSIBLE){d.enableCollapse(x)
-}if($(x).attr("_shape")!==OG.Constants.SHAPE_TYPE.GROUP){if(OG.Constants.CONNECTABLE){d.enableConnect(x)
-}if(OG.Constants.LABEL_EDITABLE){d.enableEditLabel(x)
-}}C=b.drawTerminal(x,OG.Constants.TERMINAL_TYPE.IN);
-z=C.terminal.childNodes;
-E=z[0];
-for(y=0;
-y<z.length;
-y++){if(z[y].terminal&&z[y].terminal.direction.toLowerCase()==="c"){E=z[y];
-break
-}}}A=o&&w&&o.id===w.id;
-if(E&&(OG.Util.isElement(E)||!OG.Constants.CONNECT_REQUIRED)&&(!A||OG.Constants.SELF_CONNECTABLE)){v=b.connect(B,E,v);
-t=b.drawGuide(v);
-d.setClickSelectable(v,OG.Constants.SELECTABLE);
-d.setMovable(v,OG.Constants.SELECTABLE&&OG.Constants.MOVABLE);
-e(v,t,OG.Constants.SELECTABLE&&OG.Constants.RESIZABLE);
-if($(v).attr("_shape")!==OG.Constants.SHAPE_TYPE.GROUP){if(OG.Constants.LABEL_EDITABLE){d.enableEditLabel(v)
-}}b.toFront(t.group)
-}else{b.removeShape(v)
-}$(n).removeData("edge");
-$(n).removeData("from_terminal");
-$(n).removeData("edge_terminal");
-$(n).removeData("dragged_guide");
-if(w){b.remove(w.id+OG.Constants.DROP_OVER_BBOX_SUFFIX)
-}}})
-}})
-}else{b.removeTerminal(o)
-}},mouseout:function(q){if($(o).attr("_shape")!==OG.Constants.SHAPE_TYPE.EDGE&&$(n).data("edge")){b.remove(o.id+OG.Constants.DROP_OVER_BBOX_SUFFIX);
-$(n).removeData("edge_terminal")
-}}})
-}};
-this.enableDragAndDropGroup=function(p){var n=b.getRootGroup(),o;
-if(p&&$(p).attr("_shape")===OG.Constants.SHAPE_TYPE.GROUP){$(p).bind({mouseover:function(){if($(n).data("bBoxArray")){o=false;
-$.each($(n).data("bBoxArray"),function(q,r){if(p.id===r.id){o=true
-}});
-if(!o){$(n).data("groupTarget",p);
-b.drawDropOverGuide(p)
-}}},mouseout:function(q){b.remove(p.id+OG.Constants.DROP_OVER_BBOX_SUFFIX);
-$(n).removeData("groupTarget")
-}})
-}};
-this.enableCollapse=function(p){var o,n;
-n=function(q,r){if(r&&r.bBox&&r.collapse){$(r.collapse).bind("click",function(s){if(q.shape.isCollapsed===true){b.expand(q);
-r=b.drawCollapseGuide(q);
-n(q,r)
-}else{b.collapse(q);
-r=b.drawCollapseGuide(q);
-n(q,r)
-}});
-$(r.bBox).bind("mouseout",function(s){b.remove(q.id+OG.Constants.COLLAPSE_BBOX);
-b.remove(q.id+OG.Constants.COLLAPSE_SUFFIX)
-})
-}};
-if(p&&$(p).attr("_shape")===OG.Constants.SHAPE_TYPE.GROUP){$(p).bind({mouseover:function(){o=b.drawCollapseGuide(this);
-if(o&&o.bBox&&o.collapse){n(p,o)
-}}})
-}};
-this.setMovable=function(p,o){var n=b.getRootGroup();
-if(!p){return
-}if(o){$(p).draggable({start:function(t){var u=m(t),v=[],s,r=[],q;
-if(b.getElementById(p.id+OG.Constants.GUIDE_SUFFIX.GUIDE)===null){$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(w,x){if(OG.Util.isElement(x)&&x.id){b.removeGuide(x)
-}});
-b.removeAllTerminal()
-}b.removeGuide(p);
-q=b.drawGuide(p);
-$(this).data("start",{x:u.x,y:u.y});
-$(this).data("offset",{x:u.x-f(b.getAttr(q.bBox,"x")),y:u.y-f(b.getAttr(q.bBox,"y"))});
-$("[id$="+OG.Constants.GUIDE_SUFFIX.BBOX+"]").each(function(w,x){if(x.id){s=b.clone(x);
-b.setAttr(s,OG.Constants.DEFAULT_STYLE.GUIDE_SHADOW);
-v.push({id:x.id.replace(OG.Constants.GUIDE_SUFFIX.BBOX,""),box:s})
-}});
-$.each(v,function(x,y){var z=b.getElementById(y.id),w;
-if($(z).attr("_shape")===OG.Constants.SHAPE_TYPE.EDGE){w=c(z,v);
-if(w.all||w.none||(w.either&&w.attrEither)){r.push(y)
-}else{b.remove(y.box);
-b.removeGuide(z)
-}}});
-$.each(v,function(w,x){var y=b.getElementById(x.id);
-if($(y).attr("_shape")!==OG.Constants.SHAPE_TYPE.EDGE){r.push(x)
-}});
-$(n).data("bBoxArray",r);
-b.removeRubberBand(b.getRootElement());
-b.removeAllTerminal()
-},drag:function(s){var t=m(s),v=$(this).data("start"),u=$(n).data("bBoxArray"),r=a(t.x-v.x),q=a(t.y-v.y);
-g(t.x,t.y);
-$(this).css({position:"",left:"",top:""});
-$.each(u,function(w,x){b.setAttr(x.box,{transform:"t"+r+","+q})
-});
-b.removeAllTerminal()
-},stop:function(q){var t=m(q),r=$(this).data("start"),x=$(n).data("bBoxArray"),z=a(t.x-r.x),y=a(t.y-r.y),w=[],u=$(n).data("groupTarget"),v=[],s;
-$(this).css({position:"",left:"",top:""});
-$.each(x,function(A,B){var C=b.getElementById(B.id);
-if($(C).attr("_shape")===OG.Constants.SHAPE_TYPE.EDGE){w.push(B.id)
-}});
-$.each(x,function(B,C){var D,A;
-b.remove(C.box);
-D=b.getElementById(C.id);
-v.push(D);
-$("[id^='"+C.id+OG.Constants.GUIDE_SUFFIX.GUIDE+"_']").each(function(E,F){A=b.getElementById(F.id);
-b.setAttr(A,{x:f(b.getAttr(A,"x"))+z,y:f(b.getAttr(A,"y"))+y})
-});
-b.move(D,[z,y],w);
-b.setAttr(D,{cursor:"move"});
-if($(D).attr("_shape")===OG.Constants.SHAPE_TYPE.EDGE){if(c(D,x).none){b.disconnect(D)
-}}});
-if(u&&OG.Util.isElement(u)){b.addToGroup(u,v);
-$.each(v,function(A,B){b.removeGuide(B)
-});
-s=b.drawGuide(u);
-e(u,s,OG.Constants.SELECTABLE&&OG.Constants.RESIZABLE);
-b.toFront(s.group);
-b.remove(u.id+OG.Constants.DROP_OVER_BBOX_SUFFIX);
-$(n).removeData("groupTarget")
-}else{b.addToGroup(n,v);
-$.each(v,function(A,B){b.removeGuide(B);
-s=b.drawGuide(B);
-e(B,s,OG.Constants.SELECTABLE&&OG.Constants.RESIZABLE);
-b.toFront(s.group)
-})
-}$(n).removeData("bBoxArray")
-}});
-b.setAttr(p,{cursor:"move"})
-}else{$(p).draggable("destroy");
-b.setAttr(p,{cursor:OG.Constants.SELECTABLE?"pointer":OG.Constants.DEFAULT_STYLE.SHAPE.cursor})
-}};
-this.setClickSelectable=function(o,n){if(n){$(o).bind("click",function(q){var p;
-if(o.shape){if(!q.shiftKey&&!q.ctrlKey){$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(r,s){if(s.id){b.removeGuide(s)
-}})
-}if($(o).attr("_selected")==="true"){if(q.shiftKey||q.ctrlKey){b.removeGuide(o)
-}}else{h(o);
-if(!j(o)){p=b.drawGuide(o);
-if(p){e(o,p,OG.Constants.SELECTABLE&&OG.Constants.RESIZABLE);
-b.removeAllTerminal();
-b.toFront(p.group)
-}}}return false
-}});
-if(n&&OG.Constants.MOVABLE){b.setAttr(o,{cursor:"move"})
-}else{b.setAttr(o,{cursor:"pointer"})
-}}else{$(o).click("destroy");
-b.setAttr(o,{cursor:OG.Constants.DEFAULT_STYLE.SHAPE.cursor})
-}};
-this.setDragSelectable=function(n){var o=b.getRootElement();
-$(o).bind("click",function(q){var p=$(this).data("dragBox");
-if(!p||(p&&p.width<1&&p.height<1)){$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(r,s){if(OG.Util.isElement(s)&&s.id){b.removeGuide(s)
-}});
-b.removeAllTerminal()
-}});
-if(n){$(o).bind("mousedown",function(p){var q=m(p);
-$(this).data("dragBox_first",{x:q.x,y:q.y});
-b.drawRubberBand([q.x,q.y])
-});
-$(o).bind("mousemove",function(s){var u=$(this).data("dragBox_first"),t,r,q,p,v;
-if(u){t=m(s);
-r=t.x-u.x;
-q=t.y-u.y;
-p=r<=0?u.x+r:u.x;
-v=q<=0?u.y+q:u.y;
-b.drawRubberBand([p,v],[Math.abs(r),Math.abs(q)])
-}});
-$(o).bind("mouseup",function(p){var t=$(this).data("dragBox_first"),s,q,z,w,v,u,r;
-b.removeRubberBand(o);
-if(t){s=m(p);
-q=s.x-t.x;
-z=s.y-t.y;
-w=q<=0?t.x+q:t.x;
-v=z<=0?t.y+z:t.y;
-u=new OG.Envelope([w,v],Math.abs(q),Math.abs(z));
-$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"]").each(function(x,y){if(y.shape.geom&&u.isContainsAll(y.shape.geom.getVertices())){h(y);
-if(!j(y)){r=b.drawGuide(y);
-if(r){e(y,r,OG.Constants.SELECTABLE&&OG.Constants.RESIZABLE);
-b.removeAllTerminal()
-}}}});
-$(this).data("dragBox",{width:q,height:z,x:w,y:v})
-}});
-$(o).bind("contextmenu",function(p){b.removeRubberBand(o)
-})
-}else{$(o).unbind("mousedown");
-$(o).unbind("mousemove");
-$(o).unbind("mouseup");
-$(o).unbind("contextmenu")
-}};
-this.setEnableHotKey=function(o){var n=b.getRootGroup();
-if(o){$(window.document).bind("keydown",function(s){var q,u,r,p,t;
-if(s.keyCode===KeyEvent.DOM_VK_DELETE){$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_shape=EDGE][_selected=true]").each(function(v,w){if(w.id){b.removeShape(w)
-}});
-$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(v,w){if(w.id){b.removeShape(w)
-}})
-}if(OG.Constants.SELECTABLE&&s.ctrlKey&&s.keyCode===KeyEvent.DOM_VK_A){$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"]").each(function(w,x){if($(x.parentNode).attr("_shape")!==OG.Constants.SHAPE_TYPE.GROUP){var v=b.drawGuide(x);
-if(v){e(x,v,OG.Constants.SELECTABLE&&OG.Constants.RESIZABLE);
-b.removeTerminal(x)
-}}})
-}if(s.ctrlKey&&s.keyCode===KeyEvent.DOM_VK_C){u=[];
-$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(v,w){u.push(w)
-});
-$(n).data("copied",u)
-}if(s.ctrlKey&&s.keyCode===KeyEvent.DOM_VK_V){q=$(n).data("copied");
-u=[];
-if(q){$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(v,w){if(w.id){b.removeGuide(w)
-}});
-$.each(q,function(v,y){var A=y.shape.geom.getBoundary(),x,z,w;
-x=y.shape.clone();
-if($(y).attr("_shape")===OG.Constants.SHAPE_TYPE.EDGE){x.geom=new OG.PolyLine(y.shape.geom.getVertices());
-x.geom.style=y.shape.geom.style;
-x.geom.move(OG.Constants.COPY_PASTE_PADDING,OG.Constants.COPY_PASTE_PADDING);
-z=b.drawShape(null,x,null,y.shapeStyle)
-}else{z=b.drawShape([A.getCentroid().x+OG.Constants.COPY_PASTE_PADDING,A.getCentroid().y+OG.Constants.COPY_PASTE_PADDING],x,[A.getWidth(),A.getHeight()],y.shapeStyle)
-}w=b.drawGuide(z);
+if(!$(p).data("edge_terminal")&&OG.Constants.CONNECT_CLONEABLE){w=q.shape.geom.getBoundary();
+z=b.drawShape([F.x,F.y],q.shape.clone(),[w.getWidth(),w.getHeight()],q.shapeStyle);
 d.setClickSelectable(z,OG.Constants.SELECTABLE);
 d.setMovable(z,OG.Constants.SELECTABLE&&OG.Constants.MOVABLE);
-e(z,w,OG.Constants.SELECTABLE&&OG.Constants.RESIZABLE);
 if(OG.Constants.GROUP_DROPABLE){d.enableDragAndDropGroup(z)
 }if(OG.Constants.GROUP_COLLAPSIBLE){d.enableCollapse(z)
 }if($(z).attr("_shape")!==OG.Constants.SHAPE_TYPE.GROUP){if(OG.Constants.CONNECTABLE){d.enableConnect(z)
 }if(OG.Constants.LABEL_EDITABLE){d.enableEditLabel(z)
-}}l(y,z);
-u.push(z)
+}}E=b.drawTerminal(z,OG.Constants.TERMINAL_TYPE.IN);
+B=E.terminal.childNodes;
+G=B[0];
+for(A=0;
+A<B.length;
+A++){if(B[A].terminal&&B[A].terminal.direction.toLowerCase()==="c"){G=B[A];
+break
+}}}C=q&&y&&q.id===y.id;
+if(G&&(OG.Util.isElement(G)||!OG.Constants.CONNECT_REQUIRED)&&(!C||OG.Constants.SELF_CONNECTABLE)){x=b.connect(D,G,x);
+if(x){v=b.drawGuide(x);
+if(x&&v){d.setClickSelectable(x,OG.Constants.SELECTABLE);
+d.setMovable(x,OG.Constants.SELECTABLE&&OG.Constants.MOVABLE);
+f(x,v,OG.Constants.SELECTABLE&&OG.Constants.RESIZABLE);
+if($(x).attr("_shape")!==OG.Constants.SHAPE_TYPE.GROUP){if(OG.Constants.LABEL_EDITABLE){d.enableEditLabel(x)
+}}b.toFront(v.group)
+}}}else{b.removeShape(x)
+}$(p).removeData("edge");
+$(p).removeData("from_terminal");
+$(p).removeData("edge_terminal");
+$(p).removeData("dragged_guide");
+if(y){b.remove(y.id+OG.Constants.DROP_OVER_BBOX_SUFFIX)
+}}})
+}})
+}else{b.removeTerminal(q)
+}},mouseout:function(s){if($(q).attr("_shape")!==OG.Constants.SHAPE_TYPE.EDGE&&$(p).data("edge")){b.remove(q.id+OG.Constants.DROP_OVER_BBOX_SUFFIX);
+$(p).removeData("edge_terminal")
+}}})
+}};
+this.enableDragAndDropGroup=function(r){var p=b.getRootGroup(),q;
+if(r&&$(r).attr("_shape")===OG.Constants.SHAPE_TYPE.GROUP){$(r).bind({mouseover:function(){if($(p).data("bBoxArray")){q=false;
+$.each($(p).data("bBoxArray"),function(s,t){if(r.id===t.id){q=true
+}});
+if(!q){$(p).data("groupTarget",r);
+b.drawDropOverGuide(r)
+}}},mouseout:function(s){b.remove(r.id+OG.Constants.DROP_OVER_BBOX_SUFFIX);
+$(p).removeData("groupTarget")
+}})
+}};
+this.enableCollapse=function(r){var q,p;
+p=function(s,t){if(t&&t.bBox&&t.collapse){$(t.collapse).bind("click",function(u){if(s.shape.isCollapsed===true){b.expand(s);
+t=b.drawCollapseGuide(s);
+p(s,t)
+}else{b.collapse(s);
+t=b.drawCollapseGuide(s);
+p(s,t)
+}});
+$(t.bBox).bind("mouseout",function(u){b.remove(s.id+OG.Constants.COLLAPSE_BBOX);
+b.remove(s.id+OG.Constants.COLLAPSE_SUFFIX)
+})
+}};
+if(r&&$(r).attr("_shape")===OG.Constants.SHAPE_TYPE.GROUP){$(r).bind({mouseover:function(){q=b.drawCollapseGuide(this);
+if(q&&q.bBox&&q.collapse){p(r,q)
+}}})
+}};
+this.setMovable=function(r,q){var p=b.getRootGroup();
+if(!r){return
+}if(q){$(r).draggable({start:function(t){var u=o(t),s;
+if(b.getElementById(r.id+OG.Constants.GUIDE_SUFFIX.GUIDE)===null){$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(v,w){if(OG.Util.isElement(w)&&w.id){b.removeGuide(w)
+}});
+b.removeAllTerminal()
+}b.removeGuide(r);
+s=b.drawGuide(r);
+$(this).data("start",{x:u.x,y:u.y});
+$(this).data("offset",{x:u.x-h(b.getAttr(s.bBox,"x")),y:u.y-h(b.getAttr(s.bBox,"y"))});
+$(p).data("bBoxArray",e());
+b.removeRubberBand(b.getRootElement());
+b.removeAllTerminal()
+},drag:function(u){var v=o(u),x=$(this).data("start"),w=$(p).data("bBoxArray"),t=a(v.x-x.x),s=a(v.y-x.y);
+i(v.x,v.y);
+$(this).css({position:"",left:"",top:""});
+$.each(w,function(y,z){b.setAttr(z.box,{transform:"t"+t+","+s})
 });
-$(n).data("copied",u)
-}}if(s.ctrlKey&&s.keyCode===KeyEvent.DOM_VK_G){r=b.group($("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]"));
-if(r){$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(v,w){b.removeGuide(w)
+b.removeAllTerminal()
+},stop:function(s){var v=o(s),t=$(this).data("start"),y=$(p).data("bBoxArray"),A=a(v.x-t.x),z=a(v.y-t.y),w=$(p).data("groupTarget"),x,u;
+$(this).css({position:"",left:"",top:""});
+x=g(y,A,z);
+if(w&&OG.Util.isElement(w)){b.addToGroup(w,x);
+$.each(x,function(B,C){b.removeGuide(C)
 });
-p=b.drawGuide(r);
-if(p){d.setClickSelectable(r,OG.Constants.SELECTABLE);
-d.setMovable(r,OG.Constants.SELECTABLE&&OG.Constants.MOVABLE);
-e(r,p,OG.Constants.SELECTABLE&&OG.Constants.RESIZABLE);
-if(OG.Constants.GROUP_DROPABLE){d.enableDragAndDropGroup(r)
+u=b.drawGuide(w);
+f(w,u,OG.Constants.SELECTABLE&&OG.Constants.RESIZABLE);
+b.toFront(u.group);
+b.remove(w.id+OG.Constants.DROP_OVER_BBOX_SUFFIX);
+$(p).removeData("groupTarget")
+}else{b.addToGroup(p,x);
+$.each(x,function(B,C){b.removeGuide(C);
+u=b.drawGuide(C);
+f(C,u,OG.Constants.SELECTABLE&&OG.Constants.RESIZABLE);
+b.toFront(u.group)
+})
+}$(p).removeData("bBoxArray")
+}});
+b.setAttr(r,{cursor:"move"})
+}else{$(r).draggable("destroy");
+b.setAttr(r,{cursor:OG.Constants.SELECTABLE?"pointer":OG.Constants.DEFAULT_STYLE.SHAPE.cursor})
+}};
+this.setClickSelectable=function(q,p){if(p){$(q).bind("click",function(s){var r;
+if(q.shape){if(!s.shiftKey&&!s.ctrlKey){$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(t,u){if(u.id){b.removeGuide(u)
+}})
+}if($(q).attr("_selected")==="true"){if(s.shiftKey||s.ctrlKey){b.removeGuide(q)
+}}else{j(q);
+if(!l(q)){r=b.drawGuide(q);
+if(r){f(q,r,OG.Constants.SELECTABLE&&OG.Constants.RESIZABLE);
+b.removeAllTerminal();
+b.toFront(r.group)
+}}}return false
+}});
+if(p&&OG.Constants.MOVABLE){b.setAttr(q,{cursor:"move"})
+}else{b.setAttr(q,{cursor:"pointer"})
+}}else{$(q).click("destroy");
+b.setAttr(q,{cursor:OG.Constants.DEFAULT_STYLE.SHAPE.cursor})
+}};
+this.setDragSelectable=function(p){var q=b.getRootElement();
+$(q).bind("click",function(s){var r=$(this).data("dragBox");
+if(!r||(r&&r.width<1&&r.height<1)){$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(t,u){if(OG.Util.isElement(u)&&u.id){b.removeGuide(u)
+}});
+b.removeAllTerminal()
+}});
+if(p){$(q).bind("mousedown",function(r){var s=o(r);
+$(this).data("dragBox_first",{x:s.x,y:s.y});
+b.drawRubberBand([s.x,s.y])
+});
+$(q).bind("mousemove",function(u){var w=$(this).data("dragBox_first"),v,t,s,r,z;
+if(w){v=o(u);
+t=v.x-w.x;
+s=v.y-w.y;
+r=t<=0?w.x+t:w.x;
+z=s<=0?w.y+s:w.y;
+b.drawRubberBand([r,z],[Math.abs(t),Math.abs(s)])
+}});
+$(q).bind("mouseup",function(r){var v=$(this).data("dragBox_first"),u,s,B,A,z,w,t;
+b.removeRubberBand(q);
+if(v){u=o(r);
+s=u.x-v.x;
+B=u.y-v.y;
+A=s<=0?v.x+s:v.x;
+z=B<=0?v.y+B:v.y;
+w=new OG.Envelope([A,z],Math.abs(s),Math.abs(B));
+$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"]").each(function(x,y){if(y.shape.geom&&w.isContainsAll(y.shape.geom.getVertices())){j(y);
+if(!l(y)){t=b.drawGuide(y);
+if(t){f(y,t,OG.Constants.SELECTABLE&&OG.Constants.RESIZABLE);
+b.removeAllTerminal()
+}}}});
+$(this).data("dragBox",{width:s,height:B,x:A,y:z})
+}});
+$(q).bind("contextmenu",function(r){b.removeRubberBand(q)
+})
+}else{$(q).unbind("mousedown");
+$(q).unbind("mousemove");
+$(q).unbind("mouseup");
+$(q).unbind("contextmenu")
+}};
+this.setEnableHotKey=function(q){var p=b.getRootGroup();
+if(q){$(window.document).bind("keydown",function(u){var s,w,t,r,v;
+if(OG.Constants.ENABLE_HOTKEY_DELETE&&u.keyCode===KeyEvent.DOM_VK_DELETE){$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_shape=EDGE][_selected=true]").each(function(x,y){if(y.id){b.removeShape(y)
+}});
+$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(x,y){if(y.id){b.removeShape(y)
+}})
+}if(OG.Constants.ENABLE_HOTKEY_CTRL_A&&OG.Constants.SELECTABLE&&u.ctrlKey&&u.keyCode===KeyEvent.DOM_VK_A){$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"]").each(function(y,z){if($(z.parentNode).attr("_shape")!==OG.Constants.SHAPE_TYPE.GROUP){var x=b.drawGuide(z);
+if(x){f(z,x,OG.Constants.SELECTABLE&&OG.Constants.RESIZABLE);
+b.removeTerminal(z)
+}}})
+}if(OG.Constants.ENABLE_HOTKEY_CTRL_C&&u.ctrlKey&&u.keyCode===KeyEvent.DOM_VK_C){w=[];
+$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(x,y){w.push(y)
+});
+$(p).data("copied",w)
+}if(OG.Constants.ENABLE_HOTKEY_CTRL_V&&u.ctrlKey&&u.keyCode===KeyEvent.DOM_VK_V){s=$(p).data("copied");
+w=[];
+if(s){$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(x,y){if(y.id){b.removeGuide(y)
+}});
+$.each(s,function(x,A){var C=A.shape.geom.getBoundary(),z,B,y;
+z=A.shape.clone();
+if($(A).attr("_shape")===OG.Constants.SHAPE_TYPE.EDGE){z.geom=new OG.PolyLine(A.shape.geom.getVertices());
+z.geom.style=A.shape.geom.style;
+z.geom.move(OG.Constants.COPY_PASTE_PADDING,OG.Constants.COPY_PASTE_PADDING);
+B=b.drawShape(null,z,null,A.shapeStyle)
+}else{B=b.drawShape([C.getCentroid().x+OG.Constants.COPY_PASTE_PADDING,C.getCentroid().y+OG.Constants.COPY_PASTE_PADDING],z,[C.getWidth(),C.getHeight()],A.shapeStyle)
+}y=b.drawGuide(B);
+d.setClickSelectable(B,OG.Constants.SELECTABLE);
+d.setMovable(B,OG.Constants.SELECTABLE&&OG.Constants.MOVABLE);
+f(B,y,OG.Constants.SELECTABLE&&OG.Constants.RESIZABLE);
+if(OG.Constants.GROUP_DROPABLE){d.enableDragAndDropGroup(B)
+}if(OG.Constants.GROUP_COLLAPSIBLE){d.enableCollapse(B)
+}if($(B).attr("_shape")!==OG.Constants.SHAPE_TYPE.GROUP){if(OG.Constants.CONNECTABLE){d.enableConnect(B)
+}if(OG.Constants.LABEL_EDITABLE){d.enableEditLabel(B)
+}}n(A,B);
+w.push(B)
+});
+$(p).data("copied",w)
+}}if(OG.Constants.ENABLE_HOTKEY_CTRL_G&&u.ctrlKey&&u.keyCode===KeyEvent.DOM_VK_G){t=b.group($("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]"));
+if(t){$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(x,y){b.removeGuide(y)
+});
+r=b.drawGuide(t);
+if(r){d.setClickSelectable(t,OG.Constants.SELECTABLE);
+d.setMovable(t,OG.Constants.SELECTABLE&&OG.Constants.MOVABLE);
+f(t,r,OG.Constants.SELECTABLE&&OG.Constants.RESIZABLE);
+if(OG.Constants.GROUP_DROPABLE){d.enableDragAndDropGroup(t)
 }b.removeAllTerminal();
-b.toFront(p.group)
-}}}if(s.ctrlKey&&s.keyCode===KeyEvent.DOM_VK_U){t=b.ungroup($("[_shape="+OG.Constants.SHAPE_TYPE.GROUP+"][_selected=true]"));
-$.each(t,function(v,w){p=b.drawGuide(w);
-if(p){b.removeAllTerminal();
-b.toFront(p.group)
+b.toFront(r.group)
+}}}if(OG.Constants.ENABLE_HOTKEY_CTRL_U&&u.ctrlKey&&u.keyCode===KeyEvent.DOM_VK_U){v=b.ungroup($("[_shape="+OG.Constants.SHAPE_TYPE.GROUP+"][_selected=true]"));
+$.each(v,function(x,y){r=b.drawGuide(y);
+if(r){b.removeAllTerminal();
+b.toFront(r.group)
 }})
-}if(s.shiftKey&&s.keyCode===KeyEvent.DOM_VK_LEFT){$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(v,w){})
-}if(s.shiftKey&&s.keyCode===KeyEvent.DOM_VK_RIGHT){$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(v,w){})
-}if(s.shiftKey&&s.keyCode===KeyEvent.DOM_VK_UP){$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(v,w){})
-}if(s.shiftKey&&s.keyCode===KeyEvent.DOM_VK_DOWN){$("[_type="+OG.Constants.NODE_TYPE.SHAPE+"][_selected=true]").each(function(v,w){})
-}})
+}if(OG.Constants.ENABLE_HOTKEY_ARROW){if(u.shiftKey&&u.keyCode===KeyEvent.DOM_VK_LEFT){g(e(),-1,0)
+}if(u.shiftKey&&u.keyCode===KeyEvent.DOM_VK_RIGHT){g(e(),1,0)
+}if(u.shiftKey&&u.keyCode===KeyEvent.DOM_VK_UP){g(e(),0,-1)
+}if(u.shiftKey&&u.keyCode===KeyEvent.DOM_VK_DOWN){g(e(),0,1)
+}if(!u.shiftKey&&u.keyCode===KeyEvent.DOM_VK_LEFT){g(e(),-5,0)
+}if(!u.shiftKey&&u.keyCode===KeyEvent.DOM_VK_RIGHT){g(e(),5,0)
+}if(!u.shiftKey&&u.keyCode===KeyEvent.DOM_VK_UP){g(e(),0,-5)
+}if(!u.shiftKey&&u.keyCode===KeyEvent.DOM_VK_DOWN){g(e(),0,5)
+}}})
 }else{$(window.document).unbind("keydown")
 }}
 };
@@ -4013,6 +4023,9 @@ if(OG.Constants.CONNECTABLE){_HANDLER.enableConnect(element)
 }if(OG.Constants.GROUP_COLLAPSIBLE){_HANDLER.enableCollapse(element)
 }return element
 };
+this.setStyle=function(shapeElement,style){if(OG.Util.isElement(shapeElement)&&shapeElement.shape&&shapeElement.shape.geom){OG.Util.apply(shapeElement.shape.geom.style.map,style||{});
+_RENDERER.redrawShape(shapeElement)
+}};
 this.drawLabel=function(shapeElement,text,style){return _RENDERER.drawLabel(shapeElement,text,style)
 };
 this.redrawConnectedEdge=function(element,excludeEdgeId){_RENDERER.redrawConnectedEdge(element,excludeEdgeId)
@@ -4036,13 +4049,13 @@ break
 }}_RENDERER.removeTerminal(toElement);
 edge=_RENDERER.drawShape(null,new OG.EdgeShape(fromTerminal.terminal.position,toTerminal.terminal.position));
 edge=_RENDERER.connect(fromTerminal,toTerminal,edge,style,label);
-guide=_RENDERER.drawGuide(edge);
-_HANDLER.setClickSelectable(edge,OG.Constants.SELECTABLE);
+if(edge){guide=_RENDERER.drawGuide(edge);
+if(edge&&guide){_HANDLER.setClickSelectable(edge,OG.Constants.SELECTABLE);
 _HANDLER.setMovable(edge,OG.Constants.SELECTABLE&&OG.Constants.MOVABLE);
 _HANDLER.setResizable(edge,guide,OG.Constants.SELECTABLE&&OG.Constants.RESIZABLE);
 if($(edge).attr("_shape")!==OG.Constants.SHAPE_TYPE.GROUP){if(OG.Constants.LABEL_EDITABLE){_HANDLER.enableEditLabel(edge)
-}}_RENDERER.toFront(guide.group);
-return edge
+}}_RENDERER.toFront(guide.group)
+}}return edge
 };
 this.disconnect=function(element){_RENDERER.disconnect(element)
 };
@@ -4113,6 +4126,13 @@ this.resizeBox=function(element,size){return _RENDERER.resizeBox(element,size)
 this.clone=function(element){return _RENDERER.clone(element)
 };
 this.getElementById=function(id){return _RENDERER.getElementById(id)
+};
+this.getElementsByType=function(shapeType){var root=this.getRootGroup();
+if(shapeType){return $(root).find("[_type=SHAPE][_shape="+shapeType+"]")
+}else{return $(root).find("[_type=SHAPE]")
+}};
+this.getElementsByShapeId=function(shapeId){var root=this.getRootGroup();
+return $(root).find("[_type=SHAPE][_shape_id='"+shapeId+"']")
 };
 this.getBBox=function(element){return _RENDERER.getBBox(element)
 };
@@ -4204,12 +4224,12 @@ minX=(minX>(x-width/2))?(x-width/2):minX;
 minY=(minY>(y-height/2))?(y-height/2):minY;
 maxX=(maxX<(x+width/2))?(x+width/2):maxX;
 maxY=(maxY<(y+height/2))?(y+height/2):maxY;
-switch(shapeType){case OG.Constants.SHAPE_TYPE.GEOM:case OG.Constants.SHAPE_TYPE.GROUP:if(label){shape=eval("new "+shapeId+"('"+label+"')")
-}else{shape=eval("new "+shapeId+"()")
+switch(shapeType){case OG.Constants.SHAPE_TYPE.GEOM:case OG.Constants.SHAPE_TYPE.GROUP:shape=eval("new "+shapeId+"()");
+if(label){shape.label=label
 }element=this.drawShape([x,y],shape,[width,height],OG.JSON.decode(style),id,parent);
 break;
-case OG.Constants.SHAPE_TYPE.EDGE:if(label){shape=eval("new "+shapeId+"("+value+", '"+label+"')")
-}else{shape=eval("new "+shapeId+"("+value+")")
+case OG.Constants.SHAPE_TYPE.EDGE:shape=eval("new "+shapeId+"("+value+")");
+if(label){shape.label=label
 }if(fromLabel){shape.fromLabel=unescape(fromLabel)
 }if(toLabel){shape.toLabel=unescape(toLabel)
 }if(geom){geom=OG.JSON.decode(geom);
@@ -4219,16 +4239,18 @@ shape.geom=geom
 shape.geom=geom
 }}}element=this.drawShape(null,shape,null,OG.JSON.decode(style),id,parent);
 break;
-case OG.Constants.SHAPE_TYPE.HTML:if(label){shape=eval("new "+shapeId+"('"+unescape(value)+"', '"+label+"')")
-}else{shape=eval("new "+shapeId+"('"+unescape(value)+"')")
+case OG.Constants.SHAPE_TYPE.HTML:shape=eval("new "+shapeId+"()");
+if(value){shape.html=unescape(value)
+}if(label){shape.label=label
 }element=this.drawShape([x,y],shape,[width,height,angle],OG.JSON.decode(style),id,parent);
 break;
-case OG.Constants.SHAPE_TYPE.IMAGE:if(label){shape=eval("new "+shapeId+"('"+value+"', '"+label+"')")
-}else{shape=eval("new "+shapeId+"('"+value+"')")
+case OG.Constants.SHAPE_TYPE.IMAGE:shape=eval("new "+shapeId+"('"+value+"')");
+if(label){shape.label=label
 }element=this.drawShape([x,y],shape,[width,height,angle],OG.JSON.decode(style),id,parent);
 break;
-case OG.Constants.SHAPE_TYPE.TEXT:shape=eval("new "+shapeId+"('"+unescape(value)+"')");
-element=this.drawShape([x,y],shape,[width,height,angle],OG.JSON.decode(style),id,parent);
+case OG.Constants.SHAPE_TYPE.TEXT:shape=eval("new "+shapeId+"()");
+if(value){shape.text=unescape(value)
+}element=this.drawShape([x,y],shape,[width,height,angle],OG.JSON.decode(style),id,parent);
 break
 }if(from){$(element).attr("_from",from)
 }if(to){$(element).attr("_to",to)
@@ -4238,6 +4260,40 @@ break
 }}this.setCanvasSize([canvasWidth,canvasHeight]);
 return{width:maxX-minX,height:maxY-minY,x:minX,y:minY,x2:maxX,y2:maxY}
 }return{width:0,height:0,x:0,y:0,x2:0,y2:0}
+};
+this.getPrevEdges=function(element){var prevEdgeIds=$(element).attr("_fromedge"),edgeArray=[],edgeIds,edge,i;
+if(prevEdgeIds){edgeIds=prevEdgeIds.split(",");
+for(i=0;
+i<edgeIds.length;
+i++){edge=this.getElementById(edgeIds[i]);
+if(edge){edgeArray.push(edge)
+}}}return edgeArray
+};
+this.getNextEdges=function(element){var nextEdgeIds=$(element).attr("_toedge"),edgeArray=[],edgeIds,edge,i;
+if(nextEdgeIds){edgeIds=nextEdgeIds.split(",");
+for(i=0;
+i<edgeIds.length;
+i++){edge=this.getElementById(edgeIds[i]);
+if(edge){edgeArray.push(edge)
+}}}return edgeArray
+};
+this.getPrevShapes=function(element){var prevEdges=this.getPrevEdges(element),shapeArray=[],prevShapeId,shape,i;
+for(i=0;
+i<prevEdges.length;
+i++){prevShapeId=$(prevEdges[i]).attr("_from");
+if(prevShapeId){prevShapeId=prevShapeId.substring(0,prevShapeId.indexOf(OG.Constants.TERMINAL_SUFFIX.GROUP));
+shape=this.getElementById(prevShapeId);
+if(shape){shapeArray.push(shape)
+}}}return shapeArray
+};
+this.getNextShapes=function(element){var nextEdges=this.getNextEdges(element),shapeArray=[],nextShapeId,shape,i;
+for(i=0;
+i<nextEdges.length;
+i++){nextShapeId=$(nextEdges[i]).attr("_to");
+if(nextShapeId){nextShapeId=nextShapeId.substring(0,nextShapeId.indexOf(OG.Constants.TERMINAL_SUFFIX.GROUP));
+shape=this.getElementById(nextShapeId);
+if(shape){shapeArray.push(shape)
+}}}return shapeArray
 };
 this.onDrawShape=function(callbackFunc){$(this.getRootElement()).bind("drawShape",function(event,shapeElement){callbackFunc(event,shapeElement)
 })
@@ -4253,6 +4309,9 @@ this.onMoveShape=function(callbackFunc){$(this.getRootElement()).bind("moveShape
 };
 this.onResizeShape=function(callbackFunc){$(this.getRootElement()).bind("resizeShape",function(event,shapeElement,offset){callbackFunc(event,shapeElement,offset)
 })
+};
+this.onBeforeConnectShape=function(callbackFunc){$(this.getRootElement()).bind("beforeConnectShape",function(event){if(callbackFunc(event,event.edge,event.fromShape,event.toShape)===false){event.stopPropagation()
+}})
 };
 this.onConnectShape=function(callbackFunc){$(this.getRootElement()).bind("connectShape",function(event,edgeElement,fromElement,toElement){callbackFunc(event,edgeElement,fromElement,toElement)
 })
