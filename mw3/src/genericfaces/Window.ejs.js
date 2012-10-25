@@ -9,13 +9,15 @@ var Window = function(objectId, className){
 	if(!layout.hasClass('pane')){
 		layout = layout.parent();
 	}	
+	this.layoutDiv = layout;
 	this.layoutName = layout.attr('layoutName');
-	
 	
 	$(this.divId).addClass('mw3_window').addClass('mw3_layout').attr('objectId', objectId);
 	
-	var faceHelper = this;	
-	faceHelper.load();
+	if(layout.css('display') != 'none'){
+		var faceHelper = this;
+		faceHelper.load();		
+	}
 }
 
 Window.prototype.setTitle = function(title){
@@ -93,12 +95,19 @@ Window.prototype.minimize = function(){
 }
 
 Window.prototype.resume = function(){
-	
+		
 	this.hideSmallWindow();
 	
 	var layoutId = $(this.divId).parent().closest('.mw3_layout').attr('objectId');
 	if(layoutId)
 		mw3.getFaceHelper(layoutId).show(this.layoutName);
+	
+	if(typeof this.layout == 'undefined'){
+		this.load();
+		this.resizeChild();
+	}
+		
+	
 }
 
 Window.prototype.showSmallWindow = function(){

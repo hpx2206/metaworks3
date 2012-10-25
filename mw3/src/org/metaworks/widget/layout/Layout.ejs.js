@@ -45,7 +45,6 @@ var org_metaworks_widget_layout_Layout = function(objectId, className){
 				this.name = layout.attr('layoutName');		
 		}
 		
-		
 		faceHelper.load();
 	}
 }
@@ -114,8 +113,6 @@ org_metaworks_widget_layout_Layout.prototype.show = function(target){
 }
 
 org_metaworks_widget_layout_Layout.prototype.hide = function(target){
-	
-	console.log('hide : ' + target);
 	
 	//this.change = true;
 	//if(this.list[target].attr('layoutFixed'))
