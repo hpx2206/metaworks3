@@ -200,9 +200,18 @@ public class Instance extends Database<IInstance> implements IInstance{
 		stmt.append(" BPM_PROCINST inst, ");
 		
 		// TASK
+		/* 2012-10-25 내가할일 및 참여중 쿼리 변경
 		stmt.append(" (select max(worklist.startdate) startdate, worklist.rootinstid ");
 		stmt.append("from bpm_worklist worklist, bpm_rolemapping rolemapping ");
 		stmt.append("where worklist.rootinstid=rolemapping.rootinstid and (worklist.status != '"+ DefaultWorkList.WORKITEM_STATUS_RESERVED +"' or worklist.status is null) ");
+		*/
+				
+		stmt.append(" (select max(worklist.startdate) startdate, worklist.rootinstid ");
+		stmt.append("from bpm_worklist worklist INNER JOIN bpm_rolemapping rolemapping ");
+		stmt.append("ON (worklist.rolename = rolemapping.rolename OR worklist.refrolename=rolemapping.rolename) ");
+		stmt.append("OR worklist.ENDPOINT=?rmEndpoint ");
+		stmt.append("where worklist.rootinstid=rolemapping.rootinstid and (worklist.status != '"+ DefaultWorkList.WORKITEM_STATUS_RESERVED +"' or worklist.status is null)");
+		
 		if(taskSql!=null) {
 			stmt.append(taskSql);
 		}
@@ -240,13 +249,23 @@ public class Instance extends Database<IInstance> implements IInstance{
 			
 			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
 			criteria.put("instIsdelete", "1");
+			instanceSql.append("and inst.status==?instStatus ");
+			criteria.put("instStatus", "Running");
+			// secureopt
+			instanceSql
+					.append("and (exists (select rootinstid from BPM_ROLEMAPPING rm where rm.endpoint=?rmEndpoint and inst.rootinstid=rm.rootinstid)) ");
+			criteria.put("rmEndpoint", session.getEmployee().getEmpCode());
+		}else if("running"
+				.equals(session.getLastPerspecteType())) {
+			
+			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
+			criteria.put("instIsdelete", "1");
 			instanceSql.append("and inst.status!=?instStatus ");
 			criteria.put("instStatus", "Stopped");
 			// secureopt
 			instanceSql
 					.append("and (exists (select rootinstid from BPM_ROLEMAPPING rm where rm.endpoint=?rmEndpoint and inst.rootinstid=rm.rootinstid)) ");
 			criteria.put("rmEndpoint", session.getEmployee().getEmpCode());
-		
 		}else if("request"
 					.equals(session.getLastPerspecteType())) {
 			

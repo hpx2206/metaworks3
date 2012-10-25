@@ -3,7 +3,6 @@ package org.uengine.codi.mw3.model;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Id;
-import org.metaworks.dao.TransactionContext;
 
 
 public class InstanceViewThreadPanel implements ContextAware {

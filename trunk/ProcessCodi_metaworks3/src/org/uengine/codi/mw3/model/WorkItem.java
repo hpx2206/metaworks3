@@ -304,66 +304,75 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 
 	public void detail() throws Exception{
 
-		Long instId = databaseMe().getInstId(); //since it knows metaworks IDAO will load all the field members from the table beyond the listed by setter/getter.
-		String tracingTag = (String) databaseMe().get("trcTag"); //since it knows metaworks IDAO will load all the field members from the table beyond the listed by setter/getter.
+		IWorkItem workItem = databaseMe();
+		
+		Long instId = workItem.getInstId(); //since it knows metaworks IDAO will load all the field members from the table beyond the listed by setter/getter.
+		String tracingTag = (String) workItem.get("trcTag"); //since it knows metaworks IDAO will load all the field members from the table beyond the listed by setter/getter.
 		
 		//WorkItemHandler workItemHandler;
 		
-		String tool = databaseMe().getTool();
+		String tool = workItem.getTool();
 		if(tool.startsWith("mw3.")){
 			String metaworksHandler = 
 				tool.substring(4);
 			
 			workItemHandler = (WorkItemHandler) Thread.currentThread().getContextClassLoader().loadClass(metaworksHandler).newInstance();
-		}else{
-			workItemHandler = new WorkItemHandler();
-		}
-		
-		workItemHandler.processManager = codiPmSVC;
-		workItemHandler.setInstanceId(instId.toString());
-		workItemHandler.setTaskId(getTaskId());
-		workItemHandler.setTracingTag(tracingTag);
-		
-		workItemHandler.setMetaworksContext(new MetaworksContext());
-		
-		boolean editable = false;
-		
-
-			
-		if(DefaultWorkList.WORKITEM_STATUS_NEW.equals(getStatus()) || 
-		   DefaultWorkList.WORKITEM_STATUS_DRAFT.equals(getStatus()) || 
-		   DefaultWorkList.WORKITEM_STATUS_CONFIRMED.equals(getStatus())){
-			
-			ProcessInstance instance = processManager.getProcessInstance(this.getInstId().toString());			
-			HumanActivity humanActivity = (HumanActivity) instance.getProcessDefinition().getActivity(tracingTag);
-			
-			
-			RoleMapping	roleMapping = humanActivity.getRole().getMapping(instance, tracingTag);
-			roleMapping.beforeFirst();
-			
-			do{
-				if(roleMapping.getEndpoint().equals(session.getEmployee().getEmpCode())){
-					editable = true;
-					
-					break;
-				}
-			}while(roleMapping.next());
-		}
-		
-		if(editable){
-			if(this.getDispatchOption() == 1){
-				workItemHandler.getMetaworksContext().setWhen("compete");
+		}else{			
+			if(workItemHandler != null && workItemHandler.getTaskId() != null){
+				workItemHandler = null;
 			}else{
-				workItemHandler.getMetaworksContext().setWhen(WHEN_EDIT);
+				workItemHandler = new WorkItemHandler();
+			}
+		}
+		
+		if(workItemHandler != null){
+			workItemHandler.processManager = codiPmSVC;
+			workItemHandler.setInstanceId(instId.toString());
+			workItemHandler.setTaskId(getTaskId());
+			workItemHandler.setTracingTag(tracingTag);
+			
+			workItemHandler.setMetaworksContext(new MetaworksContext());
+			
+			boolean editable = false;
+			
+
+				
+			if(DefaultWorkList.WORKITEM_STATUS_NEW.equals(getStatus()) || 
+			   DefaultWorkList.WORKITEM_STATUS_DRAFT.equals(getStatus()) || 
+			   DefaultWorkList.WORKITEM_STATUS_CONFIRMED.equals(getStatus())){
+				
+				ProcessInstance instance = processManager.getProcessInstance(this.getInstId().toString());			
+				HumanActivity humanActivity = (HumanActivity) instance.getProcessDefinition().getActivity(tracingTag);
+				
+				
+				RoleMapping	roleMapping = humanActivity.getRole().getMapping(instance, tracingTag);
+				roleMapping.beforeFirst();
+				
+				do{
+					if(roleMapping.getEndpoint().equals(session.getEmployee().getEmpCode())){
+						editable = true;
+						
+						break;
+					}
+				}while(roleMapping.next());
 			}
 			
-		}else{
-			workItemHandler.getMetaworksContext().setWhen(WHEN_VIEW);
-		}
-	
-		workItemHandler.session = session;
+			if(editable){
+				if(this.getDispatchOption() == 1){
+					workItemHandler.getMetaworksContext().setWhen("compete");
+				}else{
+					workItemHandler.getMetaworksContext().setWhen(WHEN_EDIT);
+				}
+				
+			}else{
+				workItemHandler.getMetaworksContext().setWhen(WHEN_VIEW);
+			}
 		
-		workItemHandler.load();
+			workItemHandler.session = session;
+			
+			workItemHandler.load();
+		}
+		
 		
 		//setWorkItemHandler(workItemHandler);
 		
