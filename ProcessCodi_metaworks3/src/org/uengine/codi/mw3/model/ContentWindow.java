@@ -14,4 +14,7 @@ public class ContentWindow extends Window {
 	public ContentWindow(Object panel){
 		super(panel);
 	}	
+	public ContentWindow(Object panel, String title){
+		super(panel, title);
+	}	
 }
