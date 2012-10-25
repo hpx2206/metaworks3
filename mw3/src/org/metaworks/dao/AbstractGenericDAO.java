@@ -493,6 +493,19 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 		if(getTableName()==null || getKeyField()==null)
 			throw new Exception("Although Update query is set to be build automatically, the table name or key field is not set.");
 		
+		/*
+		 * 2012-10-25 jinwon
+		 * syncToDatabase() 후에 DAO의 NonSavable 필드에 값을 set 할 경우 다시 
+		 * update 이 호출되고 NonSavable 필드까지 포함되어 에러가 발생해 이에 대해 처리함
+		 */
+		WebObjectType webObjectType = MetaworksRemoteService.getInstance().getMetaworksType(daoClass.getName());
+		for(FieldDescriptor fd : webObjectType.metaworks2Type().getFieldDescriptors()){
+			if(!fd.isSavable()){
+				if(modifiedFieldMap.containsKey(fd.name.toUpperCase()))
+					modifiedFieldMap.remove(fd.name.toUpperCase());
+			}
+		}
+		
 		if(rowSet==null){
 			
 			ForLoop loopForCacheKeys = new ForLoop(){
@@ -1582,7 +1595,7 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 			setMetaworksContext((MetaworksContext) value);
 			
 			return value;
-		}
+		}		
 		
 		isDirty = true;
 		
