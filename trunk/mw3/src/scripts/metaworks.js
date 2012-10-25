@@ -95,7 +95,8 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			    // other   : addEventListener
 			    var mouseUp = function(e){
 			    	mw3.mouseX = e.pageX;
-	    			mw3.mouseY = e.pageY; 
+	    			mw3.mouseY = e.pageY;
+	    			
 	    			mw3.dragStartX = 0;
    			 		mw3.dragStartY = 0;
    					
@@ -137,10 +138,10 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 // 						)){
    			 		if( (mw3.dragStartX != 0 && (mouseX > mw3.dragStartX + 30 || mouseX < mw3.dragStartX - 30 )) || 
    			 			(mw3.dragStartY != 0 && (mouseY > mw3.dragStartY + 30 || mouseY < mw3.dragStartY - 30) )){
- 						if(console)
- 							console.log('drag  start');
  						
  						if(!mw3.dragging){
+ 	 						if(console)
+ 	 							console.log('drag  start');
  							
  							if(!$("#__dragGuide")[0]){
  								$('body').append("<div id='__dragGuide' style='position:absolute;top:100px;left:100px;background=#000000;width=40px;height=20px;z-index:999999'></div>");
@@ -159,14 +160,16 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
  	 						if(objectId && mw3.objects[objectId]){
  	 							var typeName = mw3.objects[objectId].__className;
  	 	 						$(".onDrop_" + typeName.split('.').join('_')).css("border-width", "1px").css("border-style", "dashed").css("border-color", "orange");		
- 	 						}
- 							
+ 	 						} 							
  						}
  						
- 						
- 						$("#__dragGuide").css("left", mouseX+1);
+						$("#__dragGuide").css("left", mouseX+1);
  						$("#__dragGuide").css("top",mouseY);
  						$("#__dragGuide").show();
+
+ 						
+ 						
+/* 						*/
  						
  						//mw3.dragGuide.show();
  						
@@ -968,11 +971,12 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				   					theDiv[0].addEventListener(
 					   			 		"mousedown",
 					   			 		function(e){
+					   			 			console.log('aaaa');
 					   			 			e.preventDefault();
 					   			 			mw3.dragObject = this;
 						   			 		mw3.dragStartX = e.pageX;
 						   			 		mw3.dragStartY = e.pageY;
-					   			 			e.stopPropagation();
+					   			 			//e.stopPropagation();
 					   			 		}
 					   			 	);
 
@@ -3041,11 +3045,51 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				var objId = object.__objectId;
 
 				if(metadata && metadata.fieldDescriptors && metadata.fieldDescriptors.length > 0){
-					for(var i = 0; i < metadata.fieldDescriptors.length; ++i){					   
+					var fieldOrder = [];
+					
+					if(metadata.faceOptions && metadata.faceOptions.fieldOrder){
+						var fieldOrderValue = metadata.faceOptions.fieldOrder;
+						var newFieldOrder = [];
+						
+						if(fieldOrderValue.indexOf(',')>0){
+							tempOrder = fieldOrderValue.split(',');
+						}else{
+							tempOrder.push(fieldOrderValue);
+						}
+						
+						for (var i=0; i<tempOrder.length; i++){
+							var tempSubOrder = [];
+							
+							if(tempOrder[i].indexOf('-') > -1){
+								tempSubOrder = tempOrder[i].split('-');						
+							}else{
+								tempSubOrder.push(tempOrder[i]);
+							}
+							
+							for (var j=0; j<tempSubOrder.length; j++){
+								for(var k = 0; k < metadata.fieldDescriptors.length; ++k){
+									var fd = metadata.fieldDescriptors[k];
+									
+									if(fd.name == tempSubOrder[j]){
+										fieldOrder.push(k);
+										
+										break;
+									}
+								}
+							}
+								
+						}
+					}else{
+						for(var i = 0; i < metadata.fieldDescriptors.length; ++i){
+							fieldOrder.push(i);
+						}
+					}
+										
+					for(var i = 0; i < fieldOrder.length; i++){					   
 						if(!isValid)
 							continue;
 						
-						var fd = metadata.fieldDescriptors[i];
+						var fd = metadata.fieldDescriptors[fieldOrder[i]];
 					   
 						if(typeof name != 'undefined' && fd.name != name)
 							continue
