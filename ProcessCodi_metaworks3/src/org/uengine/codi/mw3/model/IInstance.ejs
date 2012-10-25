@@ -35,25 +35,28 @@
 		<td>									
 			<ul class="lst_type">										
 				<li class="trigger">
-				<% if(isChat){ %>
-					<!--span class="type_ping"></span--><span class="instanceLock"></span>
-				<% }else if(isOpenCollab){ %>
-					<!--span class="type_ping"></span--><span class="instanceUnLock"></span>
-				<% }else if(isProcess){ %>
-					<span class="type_process"></span><span class="instanceUnLock"></span>
-				<% }else if(isSecureProcess){ %>
-					<span class="type_process"></span><span class="instanceLock"></span>
-				<% } %>	
-						
-				<a href="#middle-center"><b><font color=204070><%=value.initiator.name%></font> &nbsp;&nbsp; <font color=#5C5C5C><%=value.name%></font></b></a></li>
+					<div style="float:left; width:38px;">
+						<% if(isChat){ %>
+							<!--span class="type_ping"></span--><span class="instanceLock"></span>
+						<% }else if(isOpenCollab){ %>
+							<!--span class="type_ping"></span--><span class="instanceUnLock"></span>
+						<% }else if(isProcess){ %>
+							<span class="type_process"></span><span class="instanceUnLock"></span>
+						<% }else if(isSecureProcess){ %>
+							<span class="type_process"></span><span class="instanceLock"></span>
+						<% } %>	
+					</div>						
+					<a href="#middle-center"><b><font color=204070><%=value.initiator.name%></font> &nbsp;&nbsp; <font color=#5C5C5C><%=value.name%></font></b></a>				
+				</li>
 				
 			    <% if(value.instanceViewThreadPanel && value.instanceViewThreadPanel.instanceId) {%>			     
 			    <% }else{%>          
 			    <% if(value.currentUser && value.currentUser.userId && (value.initiator.userId!=value.currentUser.userId || value.name!=value.lastCmnt)){%>
 			   
-			   <table><td><%value.currentUser['size']='small';%><%=fields.currentUser.here()%></td>
-			   <td colspan=2 style="border:none; padding-right:10px;"><font color=204070><%=value.currentUser.name%></font>&nbsp;&nbsp; <font color=gray><%=value.lastCmnt%></font></td></table>
-			 
+			    <li>
+			   		<table style="margin-left:38px;"><td><%value.currentUser['size']='small';%><%=fields.currentUser.here()%></td>
+			  		<td colspan=2 style="border:none; padding-right:10px;"><font color=204070><%=value.currentUser.name%></font>&nbsp;&nbsp; <font color=gray><%=value.lastCmnt%></font></td></table>
+			 	</li>
 			    <%}%>
 			    <%}%>
 												

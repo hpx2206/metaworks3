@@ -13,9 +13,7 @@ var org_uengine_codi_mw3_model_IInstance = function(objectId, className){
 			
 			if( object && object.metaworksContext && object.metaworksContext.where != 'sns'){
 				 $(".tbl_type").parent().css("background","none");
-				 $(".tbl_type").parent().css("box-shadow","none");
 				 $(this).css("background","#C9E2FC");
-				 $(this).css("box-shadow","0px 0px 5px 2px rgba(0, 0, 0, 0.1) inset");
 			}
 		 });
 		
@@ -107,7 +105,7 @@ org_uengine_codi_mw3_model_IInstance.prototype = {
 	},
 	unBlinking : function(){
 		
-		$('#' + this.divId + ' .innerNewInst').css("background","none");
+		$('#' + this.divId + ' .innerNewInst').hide();
 		
 		/*if (this.timeout) {
 			clearTimeout(this.timeout);			
@@ -121,34 +119,8 @@ org_uengine_codi_mw3_model_IInstance.prototype = {
 		
 		var blinkDiv = $('#' + this.divId + ' .innerNewInst');
 		
+		blinkDiv.show( 'pulsate' ,  1500 );		
 		
-		blinkDiv.animate({
-			backgroundColor: "#FEE5A3"
-		}, 500 );
-		
-		setTimeout(function(){
-			blinkDiv.animate({
-				backgroundColor: "#ffffff"
-			}, 500 );
-		},500)
-		
-		setTimeout(function(){
-			blinkDiv.animate({
-				backgroundColor: "#FEE5A3"
-			}, 500 );
-		},1000)
-			
-		setTimeout(function(){
-			blinkDiv.animate({
-				backgroundColor: "#ffffff"
-			}, 500 );
-		},1500)
-		
-		setTimeout(function(){
-			blinkDiv.animate({
-				backgroundColor: "#FEE5A3"
-			}, 500 );
-		},2000)
 		
 			/*if($('#' + this.divId).hasClass('blinking')){
 				$('#' + this.divId).removeClass('blinking');
