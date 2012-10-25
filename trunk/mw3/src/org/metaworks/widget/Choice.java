@@ -93,6 +93,10 @@ public class Choice {
 		}
 	}
 	
+	public int getSize(){
+		return this.getOptionValues().size();
+	}
+	
 	public void onLoad() throws Exception {
 		
 	}
