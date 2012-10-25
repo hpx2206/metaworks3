@@ -2296,7 +2296,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				alert(this.localize(message));
 			};
 			
-			Metaworks3.prototype.showValidation = function(objId, isValid, message){
+			Metaworks3.prototype.showValidation = function(objId, inputObjectId, isValid, message){
 				var infoDivId = "#"+this._getInfoDivId(objId);
 				
 				if(!isValid)
