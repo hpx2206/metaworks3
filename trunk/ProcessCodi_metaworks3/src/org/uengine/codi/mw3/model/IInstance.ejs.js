@@ -9,6 +9,8 @@ var org_uengine_codi_mw3_model_IInstance = function(objectId, className){
 	
 	
 		$('#' + this.divId).bind('click', {objectId: this.objectId},function(){
+			mw3.getFaceHelper(objectId).unBlinking();
+			
 			if( object && object.metaworksContext && object.metaworksContext.where != 'sns'){
 				 $(".tbl_type").parent().css("background","none");
 				 $(".tbl_type").parent().css("box-shadow","none");
