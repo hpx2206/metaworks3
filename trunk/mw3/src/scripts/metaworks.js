@@ -971,12 +971,11 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				   					theDiv[0].addEventListener(
 					   			 		"mousedown",
 					   			 		function(e){
-					   			 			console.log('aaaa');
 					   			 			e.preventDefault();
 					   			 			mw3.dragObject = this;
 						   			 		mw3.dragStartX = e.pageX;
 						   			 		mw3.dragStartY = e.pageY;
-					   			 			//e.stopPropagation();
+					   			 			e.stopPropagation();
 					   			 		}
 					   			 	);
 
