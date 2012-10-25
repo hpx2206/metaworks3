@@ -7,9 +7,13 @@ var org_uengine_codi_mw3_model_InstanceView = function(objectId, className){
 	if(object){
 		$(this.divId).addClass('mw3_layout').attr('objectId', this.objectId);
 
-				
-		var faceHelper = this;	
-		faceHelper.load();		
+		
+		this.windowObjId = $(this.divId).closest('.mw3_window').attr('objectId');
+		
+		if(mw3.getFaceHelper(this.windowObjId).layoutDiv.css('display') != 'none'){
+			var faceHelper = this;	
+			faceHelper.load();					
+		}
 	}
 //		
 //		var posting = [];
@@ -79,6 +83,9 @@ org_uengine_codi_mw3_model_InstanceView.prototype = {
 			$(this.divId).layout().destroy();
 	},
 	resize : function(){
+		if(mw3.getFaceHelper(this.windowObjId).layoutDiv.css('display') != 'none' && typeof mw3.getFaceHelper(this.windowObjId).layout != 'undefined' && typeof this.layout == 'undefined')
+			this.load();					
+		
 		if(this.layout){
 			this.layout.resizeAll();
 			
