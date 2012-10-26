@@ -223,15 +223,17 @@ org_metaworks_widget_layout_Layout.prototype.resume = function(){
 	if(this.parent != null){
 		var parentId = this.parent.attr('objectId');
 		
-		mw3.getFaceHelper(parentId).resume();		
+		var faceHelper = mw3.getFaceHelper(parentId);
+		
+		if(faceHelper && faceHelper.resume)
+			mw3.getFaceHelper(parentId).resume();		
 	}else{
 		this.div.find('.mw3_window').each(function(){
 			var objectId = $(this).attr('objectId');
 			var faceHelper = mw3.getFaceHelper(objectId);
 			
-			if(faceHelper.resume){
+			if(faceHelper && faceHelper.resume)
 				faceHelper.resume();
-			}
 		});
 	}
 	
@@ -307,7 +309,10 @@ org_metaworks_widget_layout_Layout.prototype.resizeChild = function(){
 	this.div.find('.mw3_layout, .mw3_resize').each(function(index, value){
 		var layoutId = value.getAttribute('objectId');
 		
-		if(value.getAttribute('fixed_size') != 'true')
-			mw3.getFaceHelper(layoutId).resize();
+		if(value.getAttribute('fixed_size') != 'true'){
+			if(mw3.getFaceHelper(layoutId) && mw3.getFaceHelper(layoutId).resize)
+				mw3.getFaceHelper(layoutId).resize();
+		}
+			
 	});
 }
