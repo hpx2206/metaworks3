@@ -42,6 +42,8 @@ Window.prototype.load = function(){
 Window.prototype.destroy = function(){
 	if(this.layout)
 		this.layout.destroy();
+	
+	$('.mw3_windowpanel').find(this.smallDivId).remove();
 }
 
 Window.prototype.resize = function(){
