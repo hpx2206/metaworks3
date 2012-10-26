@@ -3,6 +3,8 @@ var Window = function(objectId, className){
 	this.className = className;
 	
 	this.divId = '#objDiv_' + this.objectId;
+	this.divObj = $(this.divId);
+	
 	this.smallDivId = '#sm_' + this.objectId;
 	
 	var layout = $(this.divId).parent();	
@@ -11,8 +13,10 @@ var Window = function(objectId, className){
 	}	
 	this.layoutDiv = layout;
 	this.layoutName = layout.attr('layoutName');
+		
+	$('.mw3_window_last').removeClass('mw3_window_last');	
 	
-	$(this.divId).addClass('mw3_window').addClass('mw3_layout').attr('objectId', objectId);
+	this.divObj.addClass('mw3_window').addClass('mw3_layout').addClass('mw3_window_last').attr('objectId', objectId);
 	
 	if(layout.css('display') != 'none'){
 		var faceHelper = this;
@@ -36,13 +40,22 @@ Window.prototype.load = function(){
 			center__onresize:	'mw3.getFaceHelper('+this.objectId+').resizeChild()'
 	}
 
-	this.layout = $(this.divId).layout(options);
+	this.layout = this.divObj.layout(options);
+}
+
+Window.prototype.loaded = function(){
+	var maximize = $('.mw3_window_maximize');
+	
+	if(maximize.length > 0)
+		mw3.getFaceHelper(maximize.attr('objectId')).maximize();			
 }
 
 Window.prototype.destroy = function(){
 	if(this.layout)
 		this.layout.destroy();
 	
+	this.divObj.unbind('keyup');
+			
 	$('.mw3_windowpanel').find(this.smallDivId).remove();
 }
 
@@ -71,7 +84,8 @@ Window.prototype.maximize = function(){
 	var layout = $(this.divId).parent().closest('.mw3_layout');
 	var layoutId = layout.attr('objectId');
 	
-	if(miximizeBtn.hasClass('togglebtnexp')){
+	if(miximizeBtn.hasClass('togglebtnexp')){	
+		this.divObj.addClass('mw3_window_maximize');
 		
 		// 최대화
 		miximizeBtn.removeClass('togglebtnexp').addClass('togglebtnmini');
@@ -79,6 +93,8 @@ Window.prototype.maximize = function(){
 		mw3.getFaceHelper(layoutId).maximize(this.objectId);
 		
 	}else{
+		this.divObj.removeClass('mw3_window_maximize');
+		
 		// 이전크기로 복원
 		miximizeBtn.removeClass('togglebtnmini').addClass('togglebtnexp');
 

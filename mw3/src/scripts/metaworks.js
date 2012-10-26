@@ -193,12 +193,13 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 	    					mw3.popupDivId = null;
 	    					mw3.dragging = false;
 	    					
- 	 						var objectId = mw3.dragObject['objectId'];
- 	 						if(objectId && mw3.objects[objectId]){
- 	 							var typeName = mw3.objects[objectId].__className;
- 	 	 						$(".onDrop_" + typeName.split('.').join('_')).css("border-width", "").css("border","");		
- 	 						}
-
+	    					if(mw3.dragObject){
+	 	 						var objectId = mw3.dragObject['objectId'];
+	 	 						if(objectId && mw3.objects[objectId]){
+	 	 							var typeName = mw3.objects[objectId].__className;
+	 	 	 						$(".onDrop_" + typeName.split('.').join('_')).css("border-width", "").css("border","");		
+	 	 						}
+	    					}
 	    					$("#__dragGuide").hide();
 	    					
 		    			}
@@ -316,6 +317,10 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 							if(faceHelper){
 								this.faceHelpers[objectId] = faceHelper;
 	
+								if(faceHelper && faceHelper.loaded){
+									faceHelper.loaded();
+								}
+								
 								if(this.objects[objectId]!=null)
 									this.objects[objectId]['__faceHelper'] = faceHelper;
 								
