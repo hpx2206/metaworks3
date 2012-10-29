@@ -64,23 +64,26 @@
 												
 			</ul>								
 		</td>
-		<td class="last_td"><font color="gray"><div style="margin-bottom:5px;"><%=fields.startedDate.here({when: 'timeago'})%></div></font>
-		<% if(mw3.where == 'sns'){ %>
-			<div class="instanceBtn" style="display:none">
-				<span style="float:left"><%=fields.instanceTooltip.here()%></span>
-				<span style="float:left"><%=fields.instanceDrag.here()%></span>
-			</div>
-		<% } %>
-		<%if(value.status=='Completed'){%> <div class="badge">&nbsp;<%=mw3.localize('$Complete')%> &nbsp;</div> 
-		<%}else if(value.dueDate){ 
-			if(value.dueDate < new Date()){%>
-				<div class="badge" style="background:#F52020;">&nbsp;&nbsp; <%=mw3.localize('$Delay')%> &nbsp;&nbsp;</div>
-			<%}else{%>
-					<table><td style="border:none;"><%=mw3.localize('$Due')%> :</td><td style="border:none;"><%=fields.dueDate.here()%></td></table>
-			<%}
-		 }%>
-			
+		<td width="80"><font color="gray"><div style="margin-bottom:5px;"><%=fields.startedDate.here({when: 'timeago'})%></div></font>
+			<% if(mw3.where == 'sns'){ %>
+				<div class="instanceBtn" style="display:none">
+					<span style="float:left"><%=fields.instanceTooltip.here()%></span>
+					<span style="float:left"><%=fields.instanceDrag.here()%></span>
+				</div>
+			<% } %>			
+		</td>	
+		<td width="50">
+			<%if(value.status=='Completed'){%> 
+				<div class="badge">&nbsp;<%=mw3.localize('$Complete')%> &nbsp;</div> 
+			<%}else if(value.dueDate){ 
+				if(value.dueDate < new Date()){%>
+					<div class="badge" style="background:#F52020;">&nbsp;&nbsp; <%=mw3.localize('$Delay')%> &nbsp;&nbsp;</div>
+				<%}else{%>
+						<table><td style="border:none;"><%=mw3.localize('$Due')%> :</td><td style="border:none;"><%=fields.dueDate.here()%></td></table>
+				<%}
+			 }%>
 		</td>
+
 		<% if(mw3.where != 'sns'){ %>
 		<td>
 			<div class="instanceBtn"><%=fields.instanceDrag.here()%></div>
