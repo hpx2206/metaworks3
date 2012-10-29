@@ -33,17 +33,7 @@ public class InstanceTooltip {
 			this.instanceView = instanceView;
 		}
 		
-	public InstanceDrag instanceDrag;
-		public InstanceDrag getInstanceDrag() {
-			return instanceDrag;
-		}
-		public void setInstanceDrag(InstanceDrag instanceDrag) {
-			this.instanceDrag = instanceDrag;
-		}
-		
 	public InstanceTooltip() throws Exception{
-		instanceDrag = new InstanceDrag();
-		instanceDrag.setInstanceId(instanceId);
 	}
 	
 	@ServiceMethod(target="popup", loader="auto")
