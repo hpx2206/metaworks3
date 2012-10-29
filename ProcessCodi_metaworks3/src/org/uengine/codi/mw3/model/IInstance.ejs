@@ -64,6 +64,7 @@
 		</td>
 		<td class="last_td"><font color="gray"><div style="margin-bottom:5px;"><%=fields.startedDate.here({when: 'timeago'})%></div></font>
 		<%=fields.instanceTooltip.here()%>
+		<%=fields.instanceDrag.here()%>
 		<%if(value.status=='Completed'){%> <div class="badge">&nbsp;<%=mw3.localize('$Complete')%> &nbsp;</div> 
 		<%}else if(value.dueDate){ 
 			if(value.dueDate < new Date()){%>

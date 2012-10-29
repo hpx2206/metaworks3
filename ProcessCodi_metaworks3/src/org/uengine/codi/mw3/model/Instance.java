@@ -810,7 +810,13 @@ public class Instance extends Database<IInstance> implements IInstance{
 		public void setInstanceTooltip(InstanceTooltip instanceTooltip) {
 			this.instanceTooltip = instanceTooltip;
 		}
-		
+	public InstanceDrag instanceDrag;
+		public InstanceDrag getInstanceDrag() {
+			return instanceDrag;
+		}
+		public void setInstanceDrag(InstanceDrag instanceDrag) {
+			this.instanceDrag = instanceDrag;
+		}
 	public void over() throws Exception{
 		InstanceViewThreadPanel panel = new InstanceViewThreadPanel();
 		
