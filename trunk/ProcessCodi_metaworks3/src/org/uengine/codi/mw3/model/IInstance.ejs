@@ -79,7 +79,7 @@
 				<%}
 			 }%>
 			<% if(mw3.where == 'sns'){ %>
-				<div class="instanceBtn" style="display:none; margin:5px 0;">
+				<div class="instanceBtn">
 					<span style="float:left"><%=fields.instanceTooltip.here()%></span>
 					<span style="float:left"><%=fields.instanceDrag.here()%></span>
 				</div>
@@ -87,7 +87,7 @@
 		</td>	
 		<% if(mw3.where != 'sns'){ %>
 		<td width="20">
-			<div class="instanceBtn" style="display:none"><%=fields.instanceDrag.here()%></div>
+			<div class="instanceBtn"><%=fields.instanceDrag.here()%></div>
 		</td>
 		<% } %>
 	</tr>
