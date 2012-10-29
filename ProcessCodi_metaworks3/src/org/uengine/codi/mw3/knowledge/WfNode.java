@@ -26,8 +26,10 @@ import org.uengine.codi.mw3.model.Employee;
 import org.uengine.codi.mw3.model.IInstance;
 import org.uengine.codi.mw3.model.IUser;
 import org.uengine.codi.mw3.model.Instance;
+import org.uengine.codi.mw3.model.InstanceDrag;
 import org.uengine.codi.mw3.model.InstanceView;
 import org.uengine.codi.mw3.model.InstanceViewContent;
+import org.uengine.codi.mw3.model.InstanceViewThreadPanel;
 import org.uengine.codi.mw3.model.NewInstancePanel;
 import org.uengine.codi.mw3.model.NewInstanceWindow;
 import org.uengine.codi.mw3.model.Popup;
@@ -882,7 +884,9 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 	public ContentWindow linkInstance() throws Exception {
 		Instance instance = new Instance();
 		instance.setInstId(new Long(getLinkedInstId()));
-		
+		if("sns".equals(session.getTheme())){
+			return null;
+		}
 		instanceViewContent.load(instance);
 		
 		return instanceViewContent;
@@ -1013,6 +1017,24 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 			theUser.setEmpCode(user.getUserId());
 			
 			return new Object[]{new Refresh(this), new ModalWindow(instanceView.schedule().getPanel(), 400, 300, theUser.databaseMe().getEmpName() + "님에게 과제를 부여합니다.")};
+		}else if(clipboard instanceof InstanceDrag){
+			InstanceDrag instanceInClipboard = (InstanceDrag) clipboard;
+			
+			Instance locatorForInstanceInClipboard = new Instance();
+			locatorForInstanceInClipboard.setInstId(instanceInClipboard.getInstanceId());
+			
+			IInstance instance = locatorForInstanceInClipboard.databaseMe();
+
+			WfNode child = new WfNode();		
+			child.setName(instance.getName());
+			child.setLinkedInstId(instance.getInstId());
+			
+			this.addChildNode(child);
+			child.createMe();
+			
+			this.save();
+			
+			return new Object[]{new Refresh(this)};
 		}
 		
 		

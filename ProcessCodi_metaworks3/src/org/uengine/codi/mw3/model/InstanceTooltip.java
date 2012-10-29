@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
@@ -61,6 +62,11 @@ public class InstanceTooltip {
 			instanceView.setInstanceId(instanceId.toString());
 			instanceView.setStatus(status);
 			instanceView.processManager = processManager;
+			if( "sns".equals(session.getTheme())){
+				instanceView.setMetaworksContext(new MetaworksContext());
+				instanceView.getMetaworksContext().setWhere("sns");
+				instanceView.getMetaworksContext().setHow("instanceList");
+			}
 		}
 	}
 	

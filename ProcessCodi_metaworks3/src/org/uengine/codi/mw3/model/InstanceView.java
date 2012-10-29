@@ -414,6 +414,9 @@ public class InstanceView {
 		
 		String tobe = (getStatus().equals("Completed") ? "Running" : "Completed");
 		
+		if(getMetaworksContext()==null){
+			setMetaworksContext(new MetaworksContext());
+		}
 		
 		Instance instance = new Instance();
 		instance.setInstId(new Long(getInstanceId()));
@@ -425,9 +428,12 @@ public class InstanceView {
 		instance.databaseMe().setStatus(tobe);
 		setStatus(tobe);
 		
-		instance.flushDatabaseMe();
 		
-		MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(instance.databaseMe())});
+		instance.flushDatabaseMe();
+		IInstance iInstance = instance.databaseMe();
+		iInstance.setMetaworksContext(getMetaworksContext());
+		
+		MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(iInstance)});
 
 	}
 		

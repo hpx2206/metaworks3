@@ -735,6 +735,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		refreshedInstanceView.session = session;
 		refreshedInstanceView.setMetaworksContext(new MetaworksContext());
 		refreshedInstanceView.getMetaworksContext().setHow(this.getMetaworksContext().getHow());
+		refreshedInstanceView.getMetaworksContext().setWhere(this.getMetaworksContext().getWhere());
 		refreshedInstanceView.load(instance);
 		
 
@@ -752,6 +753,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		threadPanelOfThis.setInstanceId(getInstId().toString());
 		threadPanelOfThis.session = session;
 		threadPanelOfThis.getMetaworksContext().setHow(this.getMetaworksContext().getHow());
+		threadPanelOfThis.getMetaworksContext().setWhere(this.getMetaworksContext().getWhere());
 		threadPanelOfThis.load(getInstId().toString());
 
 		//Add notifications to the followers

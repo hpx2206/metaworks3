@@ -2,11 +2,19 @@ package org.uengine.codi.mw3.model;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Id;
+import org.metaworks.annotation.ServiceMethod;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.codi.mw3.knowledge.IWfNode;
+import org.uengine.codi.mw3.knowledge.KnowledgeTool;
+import org.uengine.codi.mw3.knowledge.WfNode;
+import org.uengine.processmanager.ProcessManagerRemote;
 
 
 public class InstanceViewThreadPanel implements ContextAware {
-
+	
+	@AutowiredFromClient
 	public Session session;
 	
 	public InstanceViewThreadPanel(){
@@ -91,4 +99,38 @@ public class InstanceViewThreadPanel implements ContextAware {
 		public void setMore(boolean more) {
 			this.more = more;
 		}
+		
+	@ServiceMethod(callByContent=true, needToConfirm=true, mouseBinding="drop")
+	public Object[] drop() throws Exception{
+		if( session != null && "sns".equals(session.getTheme())){
+			Object clipboard = session.getClipboard();
+			if(clipboard instanceof IWfNode){
+				WfNode draggedNode = (WfNode) clipboard;
+				
+				//setting the first workItem as wfNode referencer
+				GenericWorkItem genericWI = new GenericWorkItem();
+				
+				genericWI.processManager = processManager;
+				genericWI.session = session;
+				genericWI.setTitle("Attaching Knowledge");//parent.getName());
+				GenericWorkItemHandler genericWIH = new GenericWorkItemHandler();
+				KnowledgeTool knolTool = new KnowledgeTool();
+				knolTool.setNodeId(draggedNode.getId());
+				genericWIH.setTool(knolTool);
+				
+				genericWI.setGenericWorkItemHandler(genericWIH);
+				genericWI.setInstId(new Long(getInstanceId()));
+				genericWI.setMetaworksContext(new MetaworksContext());
+				genericWI.getMetaworksContext().setHow("instanceList");
+				genericWI.getMetaworksContext().setWhere("sns");
+				
+				// TODO attach thread 
+				return genericWI.add();
+			}
+		}
+		return null;
+	}
+	
+	@Autowired
+	public ProcessManagerRemote processManager;	
 }
