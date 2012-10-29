@@ -25,29 +25,22 @@ var org_uengine_codi_mw3_model_IInstance = function(objectId, className){
 	 }
 	 if( object && object.metaworksContext && object.metaworksContext.where == 'sns'){
 		 $('#' + this.divId).css('border-top','1px solid #E3E3E3');
-		 $('#tr_' + this.objectId).click({objectId : this.objectId}, function(event){
+		 $('#td_' + this.objectId).click({objectId : this.objectId}, function(event){
 			var objectId = event.data.objectId;
 				
 				 mw3.call(objectId, 'over');
 		 });
 	}else{
-		 $('#tr_' + this.objectId).click({objectId : this.objectId}, function(event){
+		 $('#td_' + this.objectId).click({objectId : this.objectId}, function(event){
 				var objectId = event.data.objectId;
 					
 				mw3.call(objectId, 'detail');
 			 });
 	}
 	 
-	 $('#tr_' + this.objectId).draggable({
-	        start   : function () {
-	        	var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
-	        	session.clipboard = object;
-	        },
-	        cursorAt: { top: -1, left: -1 },
-	        helper  : 'clone',
-	        distance: 30,
-	        opacity: 0.8
-	    });
+//	 $('#tr_' + this.objectId).mouseenter({objectId : this.objectId}, function(event){
+//		 mw3.call(event.data.objectId, 'overTooltip');
+//    });
 	// 
 	 /*
 	$('#' + this.divId).mouseleave({objectId : this.objectId}, function(event){

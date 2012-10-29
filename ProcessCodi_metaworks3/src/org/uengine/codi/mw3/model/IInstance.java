@@ -139,7 +139,16 @@ public interface IInstance extends IDAO{
 	@NonSavable
 	public InstanceViewThreadPanel getInstanceViewThreadPanel();
 	public void setInstanceViewThreadPanel(InstanceViewThreadPanel instanceViewThreadPanel);
-
+	
+	@ORMapping(
+			objectFields={ "instanceId" , "status" }, 
+			databaseFields={ "instId" , "status" })
+	public InstanceTooltip getInstanceTooltip();
+	public void setInstanceTooltip(InstanceTooltip instanceTooltip);
+	
+	@ORMapping(objectFields="instanceId", databaseFields="instId")
+	public InstanceDrag getInstanceDrag();
+	public void setInstanceDrag(InstanceDrag instanceDrag);
 	
 	/////// following setter/getters stands for mapping tuple data to object by bean mapping /////////
 	
@@ -173,6 +182,5 @@ public interface IInstance extends IDAO{
 	
 	@ServiceMethod(inContextMenu=true, callByContent=true, target=TARGET_SELF)	
 	public void over() throws Exception;
-	
 	
 }

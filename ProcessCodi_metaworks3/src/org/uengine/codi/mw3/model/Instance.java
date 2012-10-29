@@ -495,6 +495,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 			this.defName = defName;
 		}
 
+		
 	@Override
 	public Date getStartedDate() {
 		// TODO Auto-generated method stub
@@ -555,17 +556,13 @@ public class Instance extends Database<IInstance> implements IInstance{
 		
 	}
 
-	@Override
-	public String getStatus() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setStatus(String status) {
-		// TODO Auto-generated method stub
-		
-	}
+	String status;
+		public String getStatus() {
+			return status;
+		}
+		public void setStatus(String status) {
+			this.status = status;
+		}
 
 	@Override
 	public String getInfo() {
@@ -792,11 +789,9 @@ public class Instance extends Database<IInstance> implements IInstance{
 
 	//only the initiator can complete this thread
 	boolean initCmpl;
-	
 		public boolean isInitCmpl() {
 			return initCmpl;
 		}
-	
 		public void setInitCmpl(boolean initCmpl) {
 			this.initCmpl = initCmpl;
 		}
@@ -808,7 +803,20 @@ public class Instance extends Database<IInstance> implements IInstance{
 		public void setInstanceViewThreadPanel(InstanceViewThreadPanel instanceViewThreadPanel) {
 			this.instanceViewThreadPanel = instanceViewThreadPanel;
 		}		
-
+	InstanceTooltip instanceTooltip;
+		public InstanceTooltip getInstanceTooltip() {
+			return instanceTooltip;
+		}
+		public void setInstanceTooltip(InstanceTooltip instanceTooltip) {
+			this.instanceTooltip = instanceTooltip;
+		}
+	public InstanceDrag instanceDrag;
+		public InstanceDrag getInstanceDrag() {
+			return instanceDrag;
+		}
+		public void setInstanceDrag(InstanceDrag instanceDrag) {
+			this.instanceDrag = instanceDrag;
+		}
 	public void over() throws Exception{
 		InstanceViewThreadPanel panel = new InstanceViewThreadPanel();
 		

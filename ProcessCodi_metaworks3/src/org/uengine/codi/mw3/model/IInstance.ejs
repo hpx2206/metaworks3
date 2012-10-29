@@ -22,7 +22,7 @@
 	
 <table width="100%" border="0" cellspacing="0" cellpadding="0" class="tbl_type" <%=(value.status=='Completed') ? "style='background:#eeeeee';":""%>>						
 	<tbody>
-	<tr  id="tr_<%=objectId%>" class="q <%=value.firstDueTimeTerm ? (value.firstDueTimeTerm>=0 ? (value.firstDueTimeTerm>=3 ? "" : "plus" + value.firstDueTimeTerm ) : "minus" )  : "" %>" style="cursor:pointer;">
+	<tr class="q <%=value.firstDueTimeTerm ? (value.firstDueTimeTerm>=0 ? (value.firstDueTimeTerm>=3 ? "" : "plus" + value.firstDueTimeTerm ) : "minus" )  : "" %>" style="cursor:pointer;">
 		<td id="newInst"><div class="innerNewInst"></div></td>
 		<td class="first_td" valign="top">
 			<div class="worklistuser">
@@ -32,7 +32,7 @@
 					</dl>	
 			</div>				
 		</td> 
-		<td>									
+		<td  id="td_<%=objectId%>">									
 			<ul class="lst_type">										
 				<li class="trigger">
 					<div style="float:left; width:38px;">
@@ -63,7 +63,7 @@
 			</ul>								
 		</td>
 		<td class="last_td"><font color="gray"><div style="margin-bottom:5px;"><%=fields.startedDate.here({when: 'timeago'})%></div></font>
-		
+		<%=fields.instanceTooltip.here()%>
 		<%if(value.status=='Completed'){%> <div class="badge">&nbsp;<%=mw3.localize('$Complete')%> &nbsp;</div> 
 		<%}else if(value.dueDate){ 
 			if(value.dueDate < new Date()){%>

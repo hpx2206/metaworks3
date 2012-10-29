@@ -249,6 +249,12 @@ if(value){
 
 	<div id="btnline" style="padding-top:8px; border-top:1px solid #ccc;">
 		<ul>	
+			<% 
+				var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
+				if(session.theme == 'sns') {
+			%>
+			<li><a id="wBtn" href="#" onClick="<%=methods.logout.caller()%>"><span><%=mw3.localize("$Logout")%></span></a></li>	
+			<%}%>
 			<li><a id="wBtn" href="#" onClick="<%=methods.unsubscribe.caller()%>"><span>unsubscribe</span></a></li>	
 			<% if(mw3.when == 'view') {%>
 			<li><a id="wBtn" href="#" onClick="<%=methods.editEmployeeInfo.caller()%>"><span>edit</span></a></li>	
