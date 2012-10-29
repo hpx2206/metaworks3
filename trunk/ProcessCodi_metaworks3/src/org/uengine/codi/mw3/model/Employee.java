@@ -521,4 +521,8 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 //		login.getMetaworksContext().setWhen("edit");
 		return login;
 	}	
+	
+	public Object[] logout() throws Exception{
+		return new Object[]{session.logout() , new Remover(new Popup())};
+	}
 }

@@ -694,7 +694,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 					Browser.withSession(Login.getSessionIdWithUserId(userId), new Runnable(){
 						@Override
 						public void run() {
-							ScriptSessions.addFunctionCall("mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar').__getFaceHelper().addMyschedule", new Object[]{getTitle(), getInstId()+"", newInstancePanel.getDueDate() });
+							ScriptSessions.addFunctionCall("if(mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar')!=null) mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar').__getFaceHelper().addMyschedule", new Object[]{getTitle(), getInstId()+"", newInstancePanel.getDueDate() });
 						}
 						
 					});

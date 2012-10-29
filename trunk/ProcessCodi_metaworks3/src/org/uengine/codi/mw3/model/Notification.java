@@ -222,6 +222,9 @@ public class Notification extends Database<INotification> implements INotificati
 		instanceViewContent.session = session;
 		instanceViewContent.load(instance);
 		
+		instanceViewContent.instanceView.getInstanceViewThreadPanel().getThread().getMetaworksContext().setHow("instance");
+		instanceViewContent.instanceView.getInstanceViewThreadPanel().getNewItem().getMetaworksContext().setHow("instance");
+		
 		setConfirm(true);
 		//flushDatabaseMe();
 		
