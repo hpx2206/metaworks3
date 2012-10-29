@@ -146,10 +146,6 @@ public interface IInstance extends IDAO{
 	public InstanceTooltip getInstanceTooltip();
 	public void setInstanceTooltip(InstanceTooltip instanceTooltip);
 	
-	@ORMapping(objectFields="instanceId", databaseFields="instId")
-	public InstanceDrag getInstanceDrag();
-	public void setInstanceDrag(InstanceDrag instanceDrag);
-	
 	/////// following setter/getters stands for mapping tuple data to object by bean mapping /////////
 	
 	@ORMapping(

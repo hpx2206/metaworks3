@@ -42,6 +42,8 @@ public class InstanceTooltip {
 		}
 		
 	public InstanceTooltip() throws Exception{
+		instanceDrag = new InstanceDrag();
+		instanceDrag.setInstanceId(instanceId);
 	}
 	
 	@ServiceMethod(target="popup", loader="auto")
