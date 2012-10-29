@@ -1,5 +1,5 @@
 <% if(value!=null){ %>
-	<li><a id="wBtn" href="#" onClick="<%=methods.schedule.caller()%>"><span>스케쥴</span></a></li>
-	<li><a id="wBtn" href="#" onClick="<%=methods.remove.caller()%>"><span>삭제</span></a></li>
-	<li><a id="wBtn" href="#" onClick="<%=methods.complete.caller()%>"><span>완료</span></a></li>
+	<span onClick="<%=methods.schedule.caller()%>"><img src="images/waveStyle/i_gantt.png" /></span>
+	<span onClick="<%=methods.remove.caller()%>"><img src="images/waveStyle/i_delete.png" /></span>
+	<span onClick="<%=methods.complete.caller()%>"><img src="images/waveStyle/i_complete.png" /></span>
 <% }%>

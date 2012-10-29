@@ -35,7 +35,7 @@
 		<td  id="td_<%=objectId%>">									
 			<ul class="lst_type">										
 				<li class="trigger">
-					<div style="float:left; width:38px;">
+					<div style="float:left;width:38px;margin-right:-40px">
 						<% if(isChat){ %>
 							<!--span class="type_ping"></span--><span class="instanceLock"></span>
 						<% }else if(isOpenCollab){ %>
@@ -46,7 +46,9 @@
 							<span class="type_process"></span><span class="instanceLock"></span>
 						<% } %>	
 					</div>						
-					<a href="#middle-center"><b><font color=204070><%=value.initiator.name%></font> &nbsp;&nbsp; <font color=#5C5C5C><%=value.name%></font></b></a>				
+					<div style="margin-left:40px">
+						<a href="#middle-center"><b><font color=204070><%=value.initiator.name%></font> &nbsp;&nbsp; <font color=#5C5C5C><%=value.name%></font></b></a>
+					<div>				
 				</li>
 				
 			    <% if(value.instanceViewThreadPanel && value.instanceViewThreadPanel.instanceId) {%>			     
@@ -63,8 +65,12 @@
 			</ul>								
 		</td>
 		<td class="last_td"><font color="gray"><div style="margin-bottom:5px;"><%=fields.startedDate.here({when: 'timeago'})%></div></font>
-		<%=fields.instanceTooltip.here()%>
-		<%=fields.instanceDrag.here()%>
+		<% if(mw3.where == 'sns'){ %>
+			<div class="instanceBtn" style="display:none">
+				<span style="float:left"><%=fields.instanceTooltip.here()%></span>
+				<span style="float:left"><%=fields.instanceDrag.here()%></span>
+			</div>
+		<% } %>
 		<%if(value.status=='Completed'){%> <div class="badge">&nbsp;<%=mw3.localize('$Complete')%> &nbsp;</div> 
 		<%}else if(value.dueDate){ 
 			if(value.dueDate < new Date()){%>
@@ -75,6 +81,11 @@
 		 }%>
 			
 		</td>
+		<% if(mw3.where != 'sns'){ %>
+		<td>
+			<div class="instanceBtn"><%=fields.instanceDrag.here()%></div>
+		</td>
+		<% } %>
 	</tr>
 	</tbody>
 </table>
