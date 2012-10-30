@@ -430,18 +430,15 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 
 			Metaworks3.prototype.setWhen = function(when){
 				this.when = when;
-				
-		 		//alert("ssss mw3.when has been set by " + this.when);
-
 			};
-			
 
 			Metaworks3.prototype.setContext = function(context){
 				if(context.where!=null)
 					this.setWhere(context.where);
 				
-				if(context.when != null)
+				if(context.when != null){
 					this.setWhen(context.when);
+				}
 				
 				this.how = context.how;
 			};
@@ -1122,7 +1119,6 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 						this.template_error(e, actualFace)
 						return
 					} finally{
-						
 						this.setWhen(currentContextWhen);
 					}
 					
@@ -1697,9 +1693,9 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				var tagId = this.createInputId(objectId);
 				
 				var inputTag = document.getElementById(tagId);
-				if(inputTag) 
+				if(inputTag){
 					value = dwr.util.getValue(tagId); //this would prohibit File object damaged
-
+				}
 				var beanPaths = this.beanExpressions[objectId];
 				if(beanPaths)
 				for(var propName in beanPaths){
@@ -2064,7 +2060,9 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				//var thisMetaworks = this;
 				var divId = "objDiv_" + objId;
 				
-				this.setWhen(this.WHEN_VIEW);
+				if(object && object.metaworksContext)
+					this.setContext(object.metaworksContext);
+				//this.setWhen(this.WHEN_VIEW);
 				
 				if(svcNameAndMethodName.indexOf('.') == -1){ //if there only methodname has been provided, guess the service name
 
@@ -3334,11 +3332,13 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					
 				}
 				
-				var when = null;
-				//var when = mw3.when;
+				var parentWhen = mw3.when;
+				var when = null;				
 
 				if(context!=null && context.when){
 					when = context.when
+				}else{
+					when = parentWhen;
 				}
 				
 				if(when == mw3.WHEN_VIEW)
@@ -3388,7 +3388,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				}
 			
 				if(!designMode){ //means general mode
-					if(when)
+					if(when && parentWhen && when != parentWhen)
 						options['when'] = when;
 					
 					html = mw3.locateObject(value, face, null, options);
@@ -3400,7 +3400,6 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					html = this.fieldDescriptor.displayName + " Here.";
 				
 //				mw3.setContext(oldContext);
-				
 				
 				
 				mw3.addBeanProperty(this.objectId, "." + this.fieldDescriptor.name);
