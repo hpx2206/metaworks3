@@ -249,7 +249,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 			
 			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
 			criteria.put("instIsdelete", "1");
-			instanceSql.append("and inst.status==?instStatus ");
+			instanceSql.append("and inst.status=?instStatus ");
 			criteria.put("instStatus", "Running");
 			// secureopt
 			instanceSql
