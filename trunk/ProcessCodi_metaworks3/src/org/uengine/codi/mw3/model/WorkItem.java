@@ -11,6 +11,7 @@ import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ToAppend;
 import org.metaworks.ToPrepend;
+import org.metaworks.ToPrev;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Test;
@@ -831,7 +832,8 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 									ScriptSessions.addFunctionCall("mw3.locateObject", new Object[]{returnObjects, null, "body"});
 								}
 								//대화목록의 맨뒤에 새로 입력한 내용만 붙여서 속도 개선  
-								ScriptSessions.addFunctionCall("mw3.locateObject", new Object[]{new ToAppend(threadPanelOfThis, copyOfThis), null, "body"});
+//								ScriptSessions.addFunctionCall("mw3.locateObject", new Object[]{new ToAppend(threadPanelOfThis, copyOfThis), null, "body"});
+								ScriptSessions.addFunctionCall("mw3.locateObject", new Object[]{new ToPrev(threadPanelOfThis.newItem, copyOfThis), null, "body"});
 								
 								//refresh notification badge
 								if(!postByMe)
@@ -892,7 +894,8 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			
 		}
 		else
-			return new Object[]{new Refresh(newItem), new ToAppend(threadPanelOfThis, copyOfThis)};
+//			return new Object[]{new Refresh(newItem), new ToAppend(threadPanelOfThis, copyOfThis)};
+			return new Object[]{new Refresh(newItem), new ToPrev(threadPanelOfThis.newItem, copyOfThis)};
 	}
 	
 	public Object remove() throws Exception{
