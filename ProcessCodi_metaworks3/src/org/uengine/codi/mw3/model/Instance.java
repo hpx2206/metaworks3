@@ -8,11 +8,13 @@ import java.util.Set;
 
 import org.directwebremoting.Browser;
 import org.directwebremoting.ScriptSessions;
+import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Id;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.TransactionContext;
+import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.Login;
@@ -795,6 +797,13 @@ public class Instance extends Database<IInstance> implements IInstance{
 		public void setInitCmpl(boolean initCmpl) {
 			this.initCmpl = initCmpl;
 		}
+	String progress;
+		public String getProgress() {
+			return progress;
+		}
+		public void setProgress(String progress) {
+			this.progress = progress;
+		}	
 		
 	InstanceViewThreadPanel instanceViewThreadPanel;
 		public InstanceViewThreadPanel getInstanceViewThreadPanel() {
@@ -817,6 +826,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 		public void setInstanceDrag(InstanceDrag instanceDrag) {
 			this.instanceDrag = instanceDrag;
 		}
+		
 	public void over() throws Exception{
 		InstanceViewThreadPanel panel = new InstanceViewThreadPanel();
 		
@@ -824,6 +834,9 @@ public class Instance extends Database<IInstance> implements IInstance{
 			panel.session = session;
 			panel.getMetaworksContext().setHow("instanceList");
 			panel.load(this.getInstId().toString());
+			if( "sns".equals(session.getTheme())){
+				MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(flowchart())});
+			}
 		}
 		
 		setInstanceViewThreadPanel(panel);

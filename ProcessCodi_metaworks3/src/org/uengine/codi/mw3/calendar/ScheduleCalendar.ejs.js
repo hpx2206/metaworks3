@@ -71,7 +71,6 @@ var org_uengine_codi_mw3_calendar_ScheduleCalendar = function(objectId, classNam
 				
 			});		
 		}
-		
 		calendar.fullCalendar('gotoDate', object.selDate);
 	}
 }
@@ -109,6 +108,5 @@ org_uengine_codi_mw3_calendar_ScheduleCalendar.prototype.addMyschedule = functio
 }
 org_uengine_codi_mw3_calendar_ScheduleCalendar.prototype.resize = function(){
 	var calendar = $('#scheduleCalendar_' + this.objectId);
-	
 	calendar.fullCalendar('render');	
 }

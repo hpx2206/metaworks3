@@ -5,14 +5,8 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.MetaworksDAO;
 import org.metaworks.dao.TransactionContext;
-import org.metaworks.widget.ModalWindow;
-import org.uengine.codi.mw3.model.AddLocalContactPanel;
-import org.uengine.codi.mw3.model.Employee;
-import org.uengine.codi.mw3.model.EmployeeList;
-import org.uengine.codi.mw3.model.IEmployee;
 import org.uengine.codi.mw3.model.Perspective;
 import org.uengine.codi.mw3.model.Session;
-import org.uengine.codi.mw3.model.UnifiedAddContactPanel;
 
 public class TopicNode extends Database<ITopicNode> implements ITopicNode {
 	 
@@ -64,7 +58,20 @@ public class TopicNode extends Database<ITopicNode> implements ITopicNode {
 	
 	public Object[] loadTopic() throws Exception{
 		String title = "주제 : " + getName();
-		return Perspective.loadInstanceListPanel(session, "topic", getId(), title);
+		Object[] returnObject = Perspective.loadInstanceListPanel(session, "topic", getId(), title);
+		if( session != null && "sns".equals(session.getTheme()) ){
+			WfPanel wfPanel = new WfPanel();
+			wfPanel.session = session;
+			wfPanel.load(getId());
+			Object[] returnObject2 = new Object[ returnObject.length + 1 ];
+			for( int i = 0; i < returnObject.length; i++){
+				returnObject2[i] = returnObject[i];
+			}
+			returnObject2[returnObject.length] = wfPanel;
+			return returnObject2;
+		}else{
+			return returnObject;
+		}
 	}
 	
 	
@@ -95,4 +102,7 @@ public class TopicNode extends Database<ITopicNode> implements ITopicNode {
 	
 	@AutowiredFromClient
 	transient public Session session;
+	
+//	@AutowiredFromClient
+//	public ContentWindow contentWindow;
 }

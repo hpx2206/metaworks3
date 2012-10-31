@@ -377,6 +377,7 @@ public class InstanceView {
 		ids.setInstId(new Long(getInstanceId()));
 		ids.setDueDate(instance.databaseMe().getDueDate());
 		ids.setOnlyInitiatorCanComplete(instance.databaseMe().isInitCmpl());
+		ids.setProgress(instance.databaseMe().getProgress());
 		return new Popup(ids);
 		
 		//return scheduleEditor;

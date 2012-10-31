@@ -64,6 +64,17 @@ public class Tray {
 			ti.setTitle(instance.databaseMe().getName());
 			setTargetItem(ti);
 			addTrayItem();
+		}else if(clipboard instanceof InstanceDrag){
+			InstanceDrag instanceInClipboard = (InstanceDrag) clipboard;
+			Instance locatorForInstanceInClipboard = new Instance();
+			locatorForInstanceInClipboard.setInstId(instanceInClipboard.getInstanceId());
+			
+			IInstance instance = locatorForInstanceInClipboard.databaseMe();
+			TrayItem ti = new TrayItem();
+			ti.setInstId(instance.getInstId() + "");
+			ti.setTitle(instance.getName());
+			setTargetItem(ti);
+			addTrayItem();
 		}
 	}
 	

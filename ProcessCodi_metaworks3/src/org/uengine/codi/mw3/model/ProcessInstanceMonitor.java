@@ -46,7 +46,14 @@ public class ProcessInstanceMonitor {
 
 		
 	public void load(ProcessManagerRemote processManager)
-			throws RemoteException {
+			throws Exception {
+		
+		org.uengine.kernel.ProcessDefinition procDef = processManager.getProcessInstance(getInstanceId()).getProcessDefinition();
+		
+		if(procDef.getAlias()==null){
+			return;
+		}
+		
 		ViewerOptions options = new ViewerOptions();
 
 		options.put("imagePathRoot", "/uengine-web/processmanager/");

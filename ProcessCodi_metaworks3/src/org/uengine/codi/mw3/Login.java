@@ -289,8 +289,13 @@ public class Login extends Database<ILogin> implements ILogin{
 					mainPanel = pageNavigator.goPinterest();
 					
 				}else{
-					mainPanel = pageNavigator.goProcess();
-//					mainPanel = pageNavigator.goSns();
+					
+					String preferUX = session.getEmployee().getPreferUX();
+					if("fb".equals(preferUX)){
+						mainPanel = pageNavigator.goSns();
+					}else{
+						mainPanel = pageNavigator.goProcess();
+					}
 					
 				}
 				//MainPanel mainPanel = new MainPanel(new IDE(session));

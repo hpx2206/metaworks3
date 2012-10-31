@@ -1,6 +1,7 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.annotation.ServiceMethod;
+import org.uengine.codi.mw3.knowledge.WfPanel;
 
 public class PersonalPerspective extends Perspective {
 
@@ -10,7 +11,22 @@ public class PersonalPerspective extends Perspective {
 
 	@ServiceMethod
 	public Object[] loadAllICanSee() throws Exception{
-		return loadInstanceListPanel("allICanSee", null);
+		Object[] returnObject = loadInstanceListPanel("allICanSee", null);
+		if( session != null && "sns".equals(session.getTheme()) ){
+			WfPanel wfPanel = new WfPanel();
+			String comcode = session.getCompany().getComCode();
+			wfPanel.session = session;
+			wfPanel.load(comcode);
+			Object[] returnObject2 = new Object[ returnObject.length + 1 ];
+			for( int i = 0; i < returnObject.length; i++){
+				returnObject2[i] = returnObject[i];
+			}
+			returnObject2[returnObject.length] = wfPanel;
+			return returnObject2;
+		}else{
+			return returnObject;
+		}
+//		return loadInstanceListPanel("allICanSee", null);
 	}
 	
 	@ServiceMethod

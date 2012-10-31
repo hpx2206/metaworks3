@@ -51,7 +51,14 @@ public class InstanceDueSetter implements ContextAware{
 		public void setOnlyInitiatorCanComplete(boolean onlyInitiatorCanComplete) {
 			this.onlyInitiatorCanComplete = onlyInitiatorCanComplete;
 		}
-		
+	
+	String progress;
+		public String getProgress() {
+			return progress;
+		}
+		public void setProgress(String progress) {
+			this.progress = progress;
+		}
 		
 //	IUser assignee;
 //
@@ -65,12 +72,14 @@ public class InstanceDueSetter implements ContextAware{
 		
 
 
+
 	@ServiceMethod(callByContent=true)
 	public void apply() throws Exception{
 		Instance instance = new Instance();
 		instance.setInstId(getInstId());
 		instance.databaseMe().setDueDate(getDueDate());
 		instance.databaseMe().setInitCmpl(isOnlyInitiatorCanComplete());
+		instance.databaseMe().setProgress(getProgress());
 		MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(instance.databaseMe())});
 		
 //		instance.databaseMe().set

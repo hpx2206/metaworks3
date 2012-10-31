@@ -80,9 +80,13 @@ public class MainSNS {
 			
 		}
 		
-		WfPanel panel = new WfPanel();
-		panel.session = session;
-		panel.load(session.getCompany().getComCode());				
+//		WfPanel panel = new WfPanel();
+//		panel.session = session;
+//		panel.load(session.getCompany().getComCode());				
+//		ContentWindow wfWindow = new ContentWindow(panel);
+		
+		MultiViewPanel panel = new MultiViewPanel();
+		panel.load(session);				
 		ContentWindow wfWindow = new ContentWindow(panel);
 		
 		SNSTopPanel topPanel = new SNSTopPanel(session);
@@ -101,7 +105,7 @@ public class MainSNS {
 			if(!isMobile)
 				setPageNavigator(new PageNavigator("process"));	
 			
-		}else if("pad".equals(preferMob) || "fb".equals(preferUX)  || "asana".equals(preferUX)){
+		}else if("pad".equals(preferMob)){
 			session.setUx("pad");
 			
 			Layout outerLayout = new Layout();
