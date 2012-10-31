@@ -991,6 +991,8 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					   			 		"mousedown",
 					   			 		function(e){
 					   			 			mw3.dragObject = this;
+						   			 		mw3.dragStartX = e.pageX;
+						   			 		mw3.dragStartY = e.pageY;
 					   			 			e.stopPropagation();
 					   			 		}
 					   			 	);

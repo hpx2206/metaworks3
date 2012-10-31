@@ -2,13 +2,13 @@
 <application xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.zeroturnaround.com" xsi:schemaLocation="http://www.zeroturnaround.com http://www.zeroturnaround.com/alderaan/rebel-2_0.xsd">
 
 	<classpath>
-		<dir name="/Users/jyjang/Documents/workspace/mw3/build/classes">
+		<dir name="C:/workspace/mw3/build/classes">
 		</dir>
 	</classpath>
 
 	<web>
 		<link target="/">
-			<dir name="/Users/jyjang/Documents/workspace/mw3/WebContent">
+			<dir name="C:/workspace/mw3/WebContent">
 			</dir>
 		</link>
 	</web>
