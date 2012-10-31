@@ -135,6 +135,9 @@ public interface IInstance extends IDAO{
 	public String getTopicId();
 	public void setTopicId(String topicId);
 	
+	public String getProgress();
+	public void setProgress(String progress);
+	
 	@NonLoadable
 	@NonSavable
 	public InstanceViewThreadPanel getInstanceViewThreadPanel();

@@ -73,7 +73,7 @@
 					<div class="badge" style="background:#F52020;">&nbsp;&nbsp; <%=mw3.localize('$Delay')%> &nbsp;&nbsp;</div>
 					<div class="clear"></div>
 				<%}else{%>
-					<div><table><td style="border:none;"><%=mw3.localize('$Due')%> :</td><td style="border:none;"><%=fields.dueDate.here()%></td></table><div>
+					<div><table><td style="border:none;"><%=mw3.localize('$Due')%> :</td><td style="border:none;"><%=fields.dueDate.here({when: 'timeago'})%></td></table><div>
 				<%}
 			 }%>
 			<% if(mw3.where == 'sns'){ %>

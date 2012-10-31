@@ -1,0 +1,118 @@
+<%
+	if(value!=null){
+		var fieldOrderValue = (objectMetadata.faceOptions ? (objectMetadata.faceOptions['fieldOrder']?objectMetadata.faceOptions['fieldOrder']:'') : '');
+		var fieldOrder = [];
+		var cols = 2;
+		
+		if(fieldOrderValue && fieldOrderValue.length>0){
+			if(fieldOrderValue.indexOf(',')>0){
+				fieldOrder = fieldOrderValue.split(',');
+			}else{
+				fieldOrder.push(fieldOrderValue);
+			}
+			
+			for (var i=0; i<fieldOrder.length; i++){		
+				var tempOrder = [];
+		
+				if(fieldOrder[i].indexOf('-') > -1){
+					tempOrder = fieldOrder[i].split('-');						
+				}else{
+					tempOrder.push(fieldOrder[i]);
+				}
+				
+				var separator = '';
+				var tempField = '';
+				var cnt = 0;
+				
+				for (var j=0; j<tempOrder.length; j++){
+					if(fields[tempOrder[j]]){
+						var fd = fields[tempOrder[j]].fieldDescriptor;
+						
+						if(mw3.isHidden(fd)) continue;
+						
+						tempField += separator + tempOrder[j];
+						separator = '-';
+							
+						cnt++;
+					}
+				}
+				
+				fieldOrder[i] = tempField;
+				
+				if(cols < (cnt * 2))
+					cols = cnt * 2;
+			}			
+		}else{
+			for (var i=0; i<objectMetadata.fieldDescriptors.length; i++){
+				var fd = objectMetadata.fieldDescriptors[i];
+	   		   							
+				if(fd.name == 'metaworksContext') continue;
+							
+				if(mw3.isHidden(fd)) continue;
+											
+				if(value[fd.name] == null
+				   && fd.className != 'java.lang.String'
+				   && fd.className != 'java.lang.Number'
+				   && fd.className != 'java.lang.Boolean'
+				   )
+					continue;
+					
+				fieldOrder.push(fd.name);
+			}
+		}	
+%>
+	<div id="tabs_<%=objectId%>" class="ui-layout-center">
+
+		<ul>
+<%
+		for (var i=0; i<fieldOrder.length; i++){
+			var fd = fields[fieldOrder[i]].fieldDescriptor;
+			
+		  	if(mw3.isHidden(fd)) continue;
+		  	if(fd.name == 'metaworksContext') continue;		
+%>			
+			<li>
+				<a href="#tab_<%=objectId%>_<%=i+1%>" id="title_<%=objectId%>_<%=i+1%>"><%=fd.displayName%></a>
+			</li>		
+<%
+		}
+%>
+		</ul>
+		
+		<div class="ui-layout-content">
+		
+<%
+		var showLabel = !(objectMetadata.faceOptions && objectMetadata.faceOptions['hideLabels']);
+		
+		for (var i=0; i<fieldOrder.length; i++){
+			var fd = fields[fieldOrder[i]].fieldDescriptor;
+		  	
+		  	if(fd.attributes && fd.attributes['hidden']) continue;
+		  	if(fd.name == 'metaworksContext') continue;
+%>	
+			<div id="tab_<%=objectId%>_<%=i+1%>">	
+				<%=fields[fd.name] ? fields[fd.name].here() : "XXX"%>
+			</div>
+		
+<%
+		}
+%>
+	
+			<div>
+				<span <%=showLabel ? "colspan=2":""%>>
+<%		   
+		if(objectMetadata.serviceMethodContexts)
+			for(var key in objectMetadata.serviceMethodContexts){	   
+%>   
+			<%=methods[key].here()%>
+<%	
+			}		   
+%>
+				</span>
+			</div>
+		</div>
+	</div>	
+				
+<%		
+	}
+%>

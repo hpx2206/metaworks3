@@ -13,7 +13,7 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.codi.mw3.model.ContentWindow;
+import org.uengine.codi.mw3.model.CommentWorkItem;
 import org.uengine.codi.mw3.model.IInstance;
 import org.uengine.codi.mw3.model.IWorkItem;
 import org.uengine.codi.mw3.model.Instance;
@@ -232,10 +232,15 @@ public class ScheduleCalendar implements ContextAware {
 		}
 		Instance instance = new Instance();
 		instance.setInstId(new Long(instId));
-		instanceViewContent.session = session;
-		instanceViewContent.load(instance);
 		
-		return new Object[]{instanceViewContent};
+		if( "sns".equals(session.getTheme())){
+			return null;
+		}else{
+			instanceViewContent.session = session;
+			instanceViewContent.load(instance);
+			
+			return new Object[]{instanceViewContent};
+		}
 	}
 	
 	@Autowired
@@ -247,22 +252,32 @@ public class ScheduleCalendar implements ContextAware {
 			// 다른 유저의 달력을 클릭하였을 경우 새로글쓰기를 막는다.
 			return null;
 		}
-		NewInstancePanel newInstancePanel =  new NewInstancePanel();
 		Calendar c = Calendar.getInstance ( );
 		c.setTime(getSelDate());
 		c.set ( c.HOUR_OF_DAY  , +23);
 		c.set ( c.MINUTE  , +59);
 		Date dueDate = c.getTime();
-		newInstancePanel.setDueDate(dueDate);
-		newInstancePanel.session = session;
-		newInstancePanel.load(session);
 		String title = "";
 		if( getSelDate() != null ){
 			title = "[일정:" + new SimpleDateFormat("yyyy/MM/dd").format(getSelDate()) + "]" ;
 		}
-		newInstancePanel.getNewInstantiator().setTitle(title);
-		
-		return new Object[]{new NewInstanceWindow(newInstancePanel)};
+		if( "sns".equals(session.getTheme())){
+			WorkItem newInstantiator = new CommentWorkItem();
+			newInstantiator.setWriter(session.getUser());
+			newInstantiator.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+			newInstantiator.setInstantiation(true);
+			newInstantiator.setDueDate(dueDate);
+			newInstantiator.setTitle(title);
+			return new Object[]{newInstantiator};
+		}else{
+			NewInstancePanel newInstancePanel =  new NewInstancePanel();
+			newInstancePanel.setDueDate(dueDate);
+			newInstancePanel.session = session;
+			newInstancePanel.load(session);
+			newInstancePanel.getNewInstantiator().setTitle(title);
+			
+			return new Object[]{new NewInstanceWindow(newInstancePanel)};
+		}
 	}
 	
 }

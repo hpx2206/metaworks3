@@ -620,3 +620,4 @@ CREATE TABLE BPM_TOPICMAPPING (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 alter table processmap modify column comcode varchar(20);
+alter table bpm_procinst add column progress varchar(10);
