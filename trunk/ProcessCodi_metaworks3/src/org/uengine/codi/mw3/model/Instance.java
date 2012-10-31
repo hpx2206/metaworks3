@@ -201,16 +201,16 @@ public class Instance extends Database<IInstance> implements IInstance{
 		stmt.append(" (select inst.*, task.startdate from ");
 		stmt.append(" BPM_PROCINST inst, ");
 		
-		if("allICanSee".equals(session.getLastPerspecteType())) {
-			stmt.append(" (select max(worklist.startdate) startdate, worklist.rootinstid ");
-			stmt.append("from bpm_worklist worklist, bpm_rolemapping rolemapping ");
-			stmt.append("where worklist.rootinstid=rolemapping.rootinstid and (worklist.status != '"+ DefaultWorkList.WORKITEM_STATUS_RESERVED +"' or worklist.status is null) ");
-		}else{
+		if("all".equals(session.getLastPerspecteType()) || "inbox".equals(session.getLastPerspecteType())) {
 //			2012-10-25 내가할일 및 참여중 쿼리 변경
 			stmt.append(" (select max(worklist.startdate) startdate, worklist.rootinstid ");
 			stmt.append("from bpm_worklist worklist INNER JOIN bpm_rolemapping rolemapping ");
 			stmt.append("ON (worklist.rolename = rolemapping.rolename OR worklist.refrolename=rolemapping.rolename) ");
 			stmt.append("OR worklist.ENDPOINT=?rmEndpoint ");
+			stmt.append("where worklist.rootinstid=rolemapping.rootinstid and (worklist.status != '"+ DefaultWorkList.WORKITEM_STATUS_RESERVED +"' or worklist.status is null) ");
+		}else{
+			stmt.append(" (select max(worklist.startdate) startdate, worklist.rootinstid ");
+			stmt.append("from bpm_worklist worklist, bpm_rolemapping rolemapping ");
 			stmt.append("where worklist.rootinstid=rolemapping.rootinstid and (worklist.status != '"+ DefaultWorkList.WORKITEM_STATUS_RESERVED +"' or worklist.status is null) ");
 		}
 		if(taskSql!=null) {
