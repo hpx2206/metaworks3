@@ -11,7 +11,7 @@ var Tab = function(objectId, className){
 				mw3.getFaceHelper(objectId).resize();
 		}
 	});
-
+	
 	/*
 	if(objectMetadata.faceOptions['tabsBottom'] == 'true'){
 		$('#objDiv_' + objectId).addClass('tabs-bottom');
