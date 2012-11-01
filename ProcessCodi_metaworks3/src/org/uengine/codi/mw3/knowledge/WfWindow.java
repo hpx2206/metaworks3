@@ -11,6 +11,12 @@ import org.uengine.codi.mw3.model.Session;
       values={"true"})
 public class WfWindow {
 	
+	public WfWindow(Session session) throws Exception {
+		WfPanel panel = new WfPanel();
+		panel.session = session;
+		panel.load(session.getCompany().getComCode());
+		setWfPanel(panel);
+	}
 	public WfWindow(IUser user) throws Exception {
 		WfPanel panel = new WfPanel();
 		panel.session = session;

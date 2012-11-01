@@ -201,7 +201,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 		stmt.append(" (select inst.*, task.startdate from ");
 		stmt.append(" BPM_PROCINST inst, ");
 		
-		if("all".equals(session.getLastPerspecteType()) || "inbox".equals(session.getLastPerspecteType())) {
+		if("inbox".equals(session.getLastPerspecteType())) {
 //			2012-10-25 내가할일 및 참여중 쿼리 변경
 			stmt.append(" (select max(worklist.startdate) startdate, worklist.rootinstid ");
 			stmt.append("from bpm_worklist worklist INNER JOIN bpm_rolemapping rolemapping ");
