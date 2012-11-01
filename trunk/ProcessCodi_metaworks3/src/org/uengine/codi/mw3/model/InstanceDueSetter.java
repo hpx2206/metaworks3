@@ -80,7 +80,12 @@ public class InstanceDueSetter implements ContextAware{
 		instance.databaseMe().setDueDate(getDueDate());
 		instance.databaseMe().setInitCmpl(isOnlyInitiatorCanComplete());
 		instance.databaseMe().setProgress(getProgress());
-		MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(instance.databaseMe())});
+		
+		instance.flushDatabaseMe();
+		IInstance iInstance = instance.databaseMe();
+		iInstance.setMetaworksContext(getMetaworksContext());
+		
+		MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(iInstance)});
 		
 //		instance.databaseMe().set
 	}

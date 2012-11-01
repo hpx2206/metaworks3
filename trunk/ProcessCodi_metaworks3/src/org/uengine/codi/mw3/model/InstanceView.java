@@ -378,6 +378,8 @@ public class InstanceView {
 		ids.setDueDate(instance.databaseMe().getDueDate());
 		ids.setOnlyInitiatorCanComplete(instance.databaseMe().isInitCmpl());
 		ids.setProgress(instance.databaseMe().getProgress());
+		ids.setMetaworksContext(getMetaworksContext());
+		ids.getMetaworksContext().setWhen("edit");
 		return new Popup(ids);
 		
 		//return scheduleEditor;
