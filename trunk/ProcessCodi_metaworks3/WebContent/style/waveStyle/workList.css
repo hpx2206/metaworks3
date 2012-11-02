@@ -50,6 +50,8 @@
 .worklistuser dd{ margin:2px 0px 2px 3px; float:left; display:block;}
 .worklistuser dd center{font-size:11px; letter-spacing:-0.1em;}
 
+.instanceBtn{display:none;}
+
 .saidGoodUsersLine td{
 	border-top:none; padding-bottom:5px;  padding-left:71px; font-size:11px; color:#A7A7A7;
 }
