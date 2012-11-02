@@ -475,21 +475,36 @@ org_metaworks_example_ide_SourceCode.prototype = {
 	    		var commandString = this.getCommandString();
 	    		var insertString = '';
 	    		var insertPackage = '';
+	    		var isImport = false;
 	    		
 	    		if(commandString.indexOf('@') == 0)
 	    			commandString = commandString.substring('@'.length);
 	    		
-	    		if(commandString.indexOf("import ") == 0)
+	    		if(commandString.indexOf("import ") == 0){
+	    			isImport = true;
+	    			
 	    			commandString = commandString.substring("import ".length);
+	    		}
 	    		
 	    		var whereEnd = this.editor.getCursorPosition();
 	    		var whereStart = {column: whereEnd.column - commandString.length, row: whereEnd.row};
 	    		
 	    		if(selectedValues[2] == 'package'){
-	    			insertString = selectedValues[0] + ';';
-	    		}else if(selectedValues[2] == 'class' || selectedValues[2] == 'annotation'){
 	    			insertString = selectedValues[0];
-	    			insertPackage = selectedValues[1] + '.' + insertString; 
+	    			
+	    			if(isImport)
+	    				insertString += ';';
+	    		}else if(selectedValues[2] == 'class' || selectedValues[2] == 'annotation'){
+	    			if(commandString.charAt(commandString.length-1) == '.'){
+		    			insertString = selectedValues[1] + '.' + selectedValues[0];		    					    			
+		    			insertPackage = selectedValues[1] + '.' + selectedValues[0]; 	    				
+	    			}else{
+		    			insertString = selectedValues[0];
+		    			insertPackage = selectedValues[1] + '.' + selectedValues[0]; 
+	    			}	    			
+	    			
+	    			if(isImport)
+	    				insertString += ';';
 	    		}else{
 	    			var pos = this.getCommandString().lastIndexOf('.');
 	    			whereStart = {column: whereEnd.column - (commandString.length - (pos + 1)), row: whereEnd.row};
@@ -506,13 +521,15 @@ org_metaworks_example_ide_SourceCode.prototype = {
 	    		}
 	    		this.editor.insert(insertString);
 	    		
-	    		// import package
-	    		if(insertPackage.length > 0){
-	    			var position = this.getSourcePosition();
-	    			
-	    			if(position != 'import'){
-	    				this.importPackage(insertPackage, Number(position));
-	    			}
+	    		if(!isImport){
+		    		// import package
+		    		if(insertPackage.length > 0){
+		    			var position = this.getSourcePosition();
+		    			
+		    			if(position != 'import'){
+		    				this.importPackage(insertPackage, Number(position));
+		    			}
+		    		}	    			
 	    		}
 	    		
     		}else{
