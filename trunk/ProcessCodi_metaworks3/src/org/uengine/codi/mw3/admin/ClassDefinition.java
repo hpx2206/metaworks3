@@ -461,9 +461,11 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 
 	
 //	@ServiceMethod(callByContent=true)
-//	@Face(displayName = "Save")
+	@ServiceMethod(callByContent=true ,when="edit", keyBinding="Ctrl+S")
 	public void save() throws Exception{
-		
+		if( "form".equals(this.getMetaworksContext().getWhere()) && "edit".equals(this.getMetaworksContext().getWhen())){
+			saveAsForm();
+		}
         CodiClassLoader contextClassLoader = CodiClassLoader.getMyClassLoader();
 		String myWorkingCopyPath = ((CodiClassLoader)contextClassLoader).mySourceCodeBase();//"/Users/jyjang/MyWorkingCopy";
 		
@@ -760,7 +762,6 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		getSourceCodes().getClassModeler().setClassFields(classFields);
 	}
 	
-	@ServiceMethod(callByContent=true ,when="edit", keyBinding="Ctrl+S")
 	public void saveAsForm() throws Exception{
 		StringBuffer sb = new StringBuffer();								
 		StringBuffer importBuffer 			= new StringBuffer();		// import 생성 버퍼
@@ -870,8 +871,6 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		
 		getSourceCodes().sourceCode = new JavaSourceCode();
 		getSourceCodes().sourceCode.setCode(sb.toString());
-		
-		compile();
 		
 		MetaworksRemoteService.getInstance().clearMetaworksType(getPackageName() + "." + getClassName());
 		

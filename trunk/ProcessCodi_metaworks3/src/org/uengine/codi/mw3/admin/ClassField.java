@@ -14,6 +14,7 @@ import org.metaworks.annotation.Range;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.example.ide.SourceCode;
 import org.metaworks.website.MetaworksFile;
+import org.uengine.util.UEngineUtil;
 
 public class ClassField implements Cloneable, ContextAware{
 
@@ -188,6 +189,7 @@ public class ClassField implements Cloneable, ContextAware{
 
 		clonedOne.setMetaworksContext(new MetaworksContext());  //TODO: lesson 4 (context injection)
 		clonedOne.getMetaworksContext().setWhere("in-container");
+		clonedOne.getMetaworksContext().setWhen("view");
 		
 		classModeler.classFields.add(clonedOne); 
 		
@@ -197,7 +199,6 @@ public class ClassField implements Cloneable, ContextAware{
 		classModeler.init();
 		//
 		
-		/*
 		if(classSourceCodes!=null && classSourceCodes.getSourceCode().getCode() != null){
 			StringBuffer javaCode = new StringBuffer(classSourceCodes.getSourceCode().getCode());
 			int whereLastBraket = javaCode.lastIndexOf("}");
@@ -221,12 +222,12 @@ public class ClassField implements Cloneable, ContextAware{
 			
 			classSourceCodes.getSourceCode().setCode(javaCode.toString());
 		}
-		*/
 		
-		//if(classSourceCodes != null){
-		//	return new Object[]{classSourceCodes.getSourceCode(), classModeler};			
-		//}else
-		return new Object[]{classModeler};
+		if(classSourceCodes != null){
+			return new Object[]{classSourceCodes.getSourceCode(), classModeler};			
+		}else{
+			return new Object[]{classModeler};
+		}
 	}
 		
 	@ServiceMethod(when=MetaworksContext.WHEN_EDIT, where="in-container", callByContent=true)
