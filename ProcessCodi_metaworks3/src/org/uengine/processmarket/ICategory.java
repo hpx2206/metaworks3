@@ -15,8 +15,7 @@ import org.metaworks.dao.IDAO;
 
 @Face(
 	options={"hideAddBtn"},
-	values={"true"},
-	ejsPathMappingByContext={"{when: 'new', face: 'genericfaces/ObjectFace.ejs'}"}
+	values={"true"}
 )
 public interface ICategory extends IDAO {
     
