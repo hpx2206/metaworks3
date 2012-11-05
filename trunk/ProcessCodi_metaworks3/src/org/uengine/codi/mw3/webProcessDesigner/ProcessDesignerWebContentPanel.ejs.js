@@ -117,19 +117,19 @@ var org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel = fun
 			$("#horizontalLaneShapeText").val("");
     	}
     });
+    var canvasWidth = 1024;		// defualt
+    var canvasHeight = 768;		// defualt
+    
     // load 에서 데이터가 넘어왔을 경우 데이터를 셋팅하여 그림
 	if( object != null && object.graphString != null ){
 		var canvassizeObject = this.icanvas.loadJSON($.parseJSON(object.graphString));
 		// 캔버스 사이즈 조정
-		var canvasWidth = $('#canvas').width();
-		var canvasHeight = $('#canvas').height();
 		if(canvasWidth < canvassizeObject.x2){
 			canvasWidth = canvassizeObject.x2;
 		}
 		if(canvasHeight < canvassizeObject.y2){
 			canvasHeight = canvassizeObject.y2;
 		}
-		this.icanvas.setCanvasSize([canvasWidth, canvasHeight]);
 		$("g[_shape=" + OG.Constants.SHAPE_TYPE.GEOM + "]").each(function (n, element) {
 			faceHelper.addEventGeom(objectId ,canvas, element);
 		});
@@ -137,6 +137,8 @@ var org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel = fun
 			faceHelper.addEventEdge(objectId ,canvas, element);
 		});
 	}
+	
+	this.icanvas.setCanvasSize([canvasWidth, canvasHeight]);
 };
 
 org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype.addEventGeom = function(objectId, canvas, element){
@@ -161,10 +163,20 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
     			session.clipboard = null;
     		}
     		if(clipboardNode && clipboardNode.__className=="org.uengine.codi.mw3.model.ResourceFile"){
-    			var wfText = $(element).children('[id$=_LABEL]').text();
-    			wfText = wfText + '\n(' + clipboardNode.name + ')';
-    			canvas.drawLabel(element, wfText);
-    			session.clipboard = null;
+    			var javaFileName = clipboardNode.name;
+    			if( javaFileName != '' && javaFileName.length > 5){
+    				var tokens  = javaFileName.split(".");
+    				var text = null;
+    		    	if(tokens.length>1)
+    		    		text = tokens[tokens.length-1];
+    		    	if( text != null && text == 'java'){
+    		    		var wfText = $(element).children('[id$=_LABEL]').text();
+    		    		wfText = wfText + '\n(' + clipboardNode.name + ')';
+    		    		canvas.drawLabel(element, wfText);
+    		    		customData.push( {"customId": "" , "customName" : clipboardNode.alias , "customType" : "class"});
+    		    		session.clipboard = null;
+    		    	}
+    			}
     		}
     		if(customData.length > 0){
     			canvas.setCustomData(element, customData);

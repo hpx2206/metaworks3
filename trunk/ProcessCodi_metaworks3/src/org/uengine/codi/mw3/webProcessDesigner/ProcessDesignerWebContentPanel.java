@@ -23,10 +23,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.activitytypes.KnowledgeActivity;
 import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.model.ContentWindow;
+import org.uengine.contexts.ComplexType;
+import org.uengine.contexts.TextContext;
 import org.uengine.kernel.Activity;
+import org.uengine.kernel.ComplexActivity;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.HumanActivity;
+import org.uengine.kernel.ParameterContext;
 import org.uengine.kernel.ProcessDefinition;
+import org.uengine.kernel.ProcessVariable;
 import org.uengine.kernel.Role;
 import org.uengine.kernel.graph.Transition;
 import org.uengine.processmanager.ProcessManagerRemote;
@@ -141,7 +146,7 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
             Iterator<ProcessDesignerCanvas> iterator = ct.iterator();
             while (iterator.hasNext()) {
 				ProcessDesignerCanvas cv = iterator.next();
-				Activity activity = addActivity(cv);
+				Activity activity = addActivity(cv , def);
 				if( activity != null ){
 					if( activity instanceof HumanActivity){
 						def.addRole(((HumanActivity)activity).getRole());
@@ -169,53 +174,86 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 			ProcessDesignerCanvas jsonString = new ProcessDesignerCanvas();
 			jsonString.setJsonString(graphString);
 			cells.add(jsonString);
-			
 			def.setExtendedAttribute( "cells", cells );
+			
 		}
 		
 		processManager.addProcessDefinition( title , 0, "description", false, GlobalContext.serialize(def, ProcessDefinition.class), "", "/"+title+".process2", "/"+title+".process2", "process2");
 		
 	}
 	
-	public Activity addActivity(ProcessDesignerCanvas cv)  throws Exception{
+	public Activity addActivity(ProcessDesignerCanvas cv , ProcessDefinition def)  throws Exception{
 		
-		KnowledgeActivity KnowledgeActivity = null;
+		Activity activity = null;
 		if( cv != null && "GEOM".equalsIgnoreCase(cv.getShapeType()) ){
 			// 휴먼 엑티비티 추가 TODO 여러가지 상황에 맞추어서 추후 변경됨
 			if(cv.getData() != null){
 				String data = unescape(cv.getData());
 				JSONArray jsonArray = (JSONArray)JSONSerializer.toJSON(data);
 				if( jsonArray != null && jsonArray.size() > 0){
-					KnowledgeActivity = new KnowledgeActivity();
+					KnowledgeActivity knowledgeActivity = new KnowledgeActivity();
+					HumanActivity humanActivity = new HumanActivity();
 					for( int i = 0; i < jsonArray.size() ; i++){
 						JSONObject jsonObj = (JSONObject) jsonArray.get(i);
 						String customName = jsonObj.getString("customName");
 						String customType = jsonObj.getString("customType");
+						// 지식노드 - KnowledgeActivity 생성
 						if( customType != null && "wfNode".equalsIgnoreCase(customType)){
 							String customId = jsonObj.getString("customId");
-							KnowledgeActivity.setName(customName);
-							KnowledgeActivity.setKnolNodeId(customId);
+							knowledgeActivity.setName(customName);
+							knowledgeActivity.setKnolNodeId(customId);
+							
+							activity = knowledgeActivity;
+						// 역할 - HumanActivity 생성
 						}else 	if( customType != null && "role".equalsIgnoreCase(customType) ){
 							Role role = new Role();
 							role.setName(customName);
-							KnowledgeActivity.setRole(role);
+							knowledgeActivity.setRole(role);
+							
+							activity = knowledgeActivity;
+						// 클레스 - HumanActivity 생성
+						}else 	if( customType != null && "class".equalsIgnoreCase(customType) ){
+//							String resourceBase = CodiClassLoader.getMyClassLoader().sourceCodeBase();
+//							String fullName = resourceBase  + customName;
+							TextContext text = new TextContext();
+							text.setText("complexAct");
+
+							ComplexType complexType = new ComplexType();
+							complexType.setTypeId("["+customName+"]");
+							ProcessVariable pvs[] = new ProcessVariable[1];
+							pvs[0] = new ProcessVariable();
+							pvs[0].setName("aaaa");
+							pvs[0].setDisplayName(text);
+							pvs[0].setType(complexType.getClass());
+							pvs[0].setDefaultValue(complexType);
+							def.setProcessVariables(pvs);
+							
+							ParameterContext pc[] = new ParameterContext[1];
+							for(int j=0; j < def.getProcessVariables().length ; j++){
+								pc[j] = new ParameterContext();
+								pc[0].setArgument(text);
+								pc[j].setVariable(def.getProcessVariables()[j]);
+							}
+							
+							humanActivity.setParameters(pc);
+							activity = humanActivity;
 						}
 					}
+					
+					
 				}
 			}
 			if( cv.getParent() != null){
-				String groupId = cv.getParent();
-				ProcessDesignerCanvas groupCanvas = getCanvasMap().get(groupId);
-				if( KnowledgeActivity == null ){
-					KnowledgeActivity = new KnowledgeActivity();
+				if( activity instanceof HumanActivity){
+					String groupId = cv.getParent();
+					ProcessDesignerCanvas groupCanvas = getCanvasMap().get(groupId);
+					Role role = new Role();
+					role.setName(groupCanvas.getLabel());
+					((HumanActivity)activity).setRole(role);
 				}
-				Role role = new Role();
-				role.setName(groupCanvas.getLabel());
-				KnowledgeActivity.setRole(role);
-				
 			}
 		}
-		return KnowledgeActivity;
+		return activity;
 	}
 	public void load() throws Exception{
 		
