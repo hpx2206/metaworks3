@@ -9,6 +9,7 @@
 	<property name="was.home" value="${env.WAS_HOME}"/>
 	<property name="processcodi.home" value="${env.PROCESSCODI_HOME}"/>
 	
+	<property name="uengine" value="../uEngine"/>
     <property name="uengine.lib" value="../uEngine/lib"/>
     <property name="was.lib" value="${was.home}/webapps/uengine-web/WEB-INF/lib" />
     <property name="sign.path" value="${was.home}/webapps/uengine-web/processmanager/signed" />
@@ -91,7 +92,7 @@
 	<target name="jnlp">
 		<!-- JNLP SignedJar -->
 		<signjar keystore="${sign.keystore}" storepass="jinyoungj" keypass="jinyoungj"
-			alias="uenginetools" signedjar="${sign.path}metaworks.jar" jar="${uengine.lib}/metaworks.jar" />
+			alias="uenginetools" signedjar="${sign.path}metaworks.jar" jar="${uengine}/metaworks.jar" />
 		<signjar keystore="${sign.keystore}" storepass="jinyoungj" keypass="jinyoungj"
 			alias="uenginetools" signedjar="${sign.path}cul4xdk.jar" jar="${uengine.lib}/cul4xdk.jar" />
 		<signjar keystore="${sign.keystore}" storepass="jinyoungj" keypass="jinyoungj"
