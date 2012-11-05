@@ -13,19 +13,10 @@ import org.metaworks.dao.TransactionContext;
 import org.uengine.codi.mw3.CodiClassLoader;
 
 
-public class GatewayRunner implements ContextAware {
+public class GatewayRunner {
 
 	public GatewayRunner(){
 	}
-
-	MetaworksContext metaworksContext;
-	
-		public MetaworksContext getMetaworksContext() {
-			return metaworksContext;
-		}
-		public void setMetaworksContext(MetaworksContext metaworksContext) {
-			this.metaworksContext = metaworksContext;
-		}
 
 	String fullClassName;
 	@Id
@@ -59,9 +50,6 @@ public class GatewayRunner implements ContextAware {
 	@ServiceMethod(callByContent=true)
 	@Face(displayName="Run (Normal)")
 	public void run() throws Exception{
-		setMetaworksContext(new MetaworksContext());
-		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
-		
 		HttpSession session = TransactionContext.getThreadLocalInstance().getRequest().getSession(); 
 		session.setAttribute("userId", getClassOwner());
 		
