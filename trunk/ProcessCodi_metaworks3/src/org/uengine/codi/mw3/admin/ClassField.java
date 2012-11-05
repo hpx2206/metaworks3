@@ -204,7 +204,7 @@ public class ClassField implements Cloneable, ContextAware{
 		classModeler.init();
 		//
 		
-		if(classSourceCodes!=null && classSourceCodes.getSourceCode().getCode() != null){
+		if(classSourceCodes!=null && "class".equals(classSourceCodes.getMetaworksContext().getWhere())){
 			StringBuffer javaCode = new StringBuffer(classSourceCodes.getSourceCode().getCode());
 			int whereLastBraket = javaCode.lastIndexOf("}");
 			
@@ -226,10 +226,8 @@ public class ClassField implements Cloneable, ContextAware{
 			javaCode.insert(whereLastBraket, sb.toString());
 			
 			classSourceCodes.getSourceCode().setCode(javaCode.toString());
-		}
-		
-		if(classSourceCodes != null){
-			return new Object[]{classSourceCodes.getSourceCode(), classModeler};			
+			
+			return new Object[]{classSourceCodes.getSourceCode(), classModeler};
 		}else{
 			return new Object[]{classModeler};
 		}
