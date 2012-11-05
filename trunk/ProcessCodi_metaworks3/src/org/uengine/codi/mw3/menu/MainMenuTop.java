@@ -1,13 +1,18 @@
 package org.uengine.codi.mw3.menu;
 
 import org.metaworks.ServiceMethodContext;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.menu.MainMenu;
 import org.uengine.codi.mw3.common.MainPanel;
+import org.uengine.codi.mw3.model.Session;
 import org.uengine.processmarket.Market;
 
 public class MainMenuTop extends MainMenu {
+	
+	@AutowiredFromClient
+	public Session session;
 	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
 	@Face(displayName="&File")
@@ -44,6 +49,7 @@ public class MainMenuTop extends MainMenu {
 	@Face(displayName="&Market")
 	public MainPanel market() throws Exception {
 		Market market = new Market();
+		market.session = session;
 		market.load();
 		
 		return new MainPanel(market);
