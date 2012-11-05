@@ -1,12 +1,13 @@
 package org.uengine.processmarket;
 
+import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.website.MetaworksFile;
 
-public class MarketItemPanel {
+public class MarketItemPanel implements ContextAware {
 
     IMarketItem marketItem;
 
@@ -27,13 +28,26 @@ public class MarketItemPanel {
 		public void setCategoryId(int categoryId) {
 			this.categoryId = categoryId;
 		}
-
-
 		
+	MetaworksContext metaworksContext;
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}
+	
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
+		}
+		
+	public MarketItemPanel(){
+		setMetaworksContext(new MetaworksContext());
+		getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+	}
 
 	@Face(displayName="새 아이템 등록")
 	@ServiceMethod
 	public Object[] newItem() throws Exception {
+		
+		
 		MarketItem item = new MarketItem();
 		item.setCategoryId(categoryId);
 		item.setItemFile(new MetaworksFile());
@@ -49,7 +63,8 @@ public class MarketItemPanel {
 		MarketItemPanel mp = new MarketItemPanel();
 		mp.setMarketItem(item);
 		mp.setCategoryId(categoryId);
-
+		mp.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+		
 		return new Object[] { mp };
 	}
     

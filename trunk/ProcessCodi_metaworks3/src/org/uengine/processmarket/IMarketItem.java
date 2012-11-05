@@ -21,7 +21,7 @@ import org.metaworks.website.MetaworksFile;
 		"{where: 'in-list', face: 'faces/org/uengine/processmarket/IMarketItem.ejs'}",
 		"{where: 'normal', face: 'faces/org/uengine/processmarket/IMarketItem.ejs'}",
 		"{when: 'edit', face: 'faces/org/uengine/processmarket/IMarketItem.ejs'}",
-		"{when: 'new', face: 'genericfaces/ObjectFace.ejs'}",
+		"{when: 'new', face: 'genericfaces/FormFace.ejs'}"
 	}
 )
 public interface IMarketItem extends IDAO {
