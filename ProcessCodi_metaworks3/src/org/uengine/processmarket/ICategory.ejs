@@ -8,8 +8,15 @@ if(value!=null){
 		<div class="depth1" onclick="<%=methods.selectCategory.caller()%>"><%=value.categoryName%></div>
 		<div class="depth2">
 			<ul class="fist_menu">
+<%
+				if(value.childrenCategories != null){
+%>
 				<li>
-					<span style="background:url(images/waveStyle/i_sIcon.png) no-repeat 5px 0px;"><a href="#"><%=fields.childrenCategories.here({when: mw3.when})%></a></span>					
+					<span style="background:url(images/waveStyle/i_sIcon.png) no-repeat 5px 0px;"><a href="#"><%=fields.childrenCategories.here({when: mw3.when})%></a></span>
+				</li>					
+<%
+				}
+%>								
 			</ul>
 		</div>
 	</div>
