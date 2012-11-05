@@ -82,7 +82,7 @@ org_uengine_codi_mw3_admin_JavaCodeAssist.prototype = {
 					if(temp[2] != 'package')
 						displayName += ' - ' + temp[1];
 					
-					html += '<li onclick=\"mw3.getFaceHelper(\'' + this.objectId + '\').select();\" index=\"' + i + '\" order=\"' + cnt + '\">';
+					html += '<li onClick=\"mw3.getFaceHelper(' + this.objectId + ').select();\" index=\"' + i + '\" order=\"' + cnt + '\">';
 					html += '	<span class=\"' + temp[2] + '\">' + displayName + '</span>';
 									
 					//if(temp[2] != 'package')
@@ -145,6 +145,16 @@ org_uengine_codi_mw3_admin_JavaCodeAssist.prototype = {
 		}
 	},
 	select : function(){
+		var javaSourceCode = mw3.getAutowiredObject('org.uengine.codi.mw3.model.JavaSourceCode');
+		
+		if(javaSourceCode){
+			javaSourceCodeFaceHelper = mw3.getFaceHelper(javaSourceCode.__objectId);
+			
+			if(javaSourceCodeFaceHelper && javaSourceCodeFaceHelper.selectAssist)
+				javaSourceCodeFaceHelper.selectAssist();
+		}
+	},
+	getSelectedValue : function(){
 		
 		var selected = this.list.children('.selected');
 		var index = selected.attr('index');
@@ -241,8 +251,6 @@ org_uengine_codi_mw3_admin_JavaCodeAssist.prototype = {
 				}
 			}
 		}*/
-		
-		mw3.removeObject(this.objectId);
 	},
 	requestDoc : function(value) {
 		this.removeCodeAssistDocument();
