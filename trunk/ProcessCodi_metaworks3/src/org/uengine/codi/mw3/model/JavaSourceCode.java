@@ -1,6 +1,5 @@
 package org.uengine.codi.mw3.model;
 
-
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -20,9 +19,7 @@ import org.uengine.codi.mw3.admin.ClassField;
 import org.uengine.codi.mw3.admin.ClassMethod;
 import org.uengine.codi.mw3.admin.ClassModeler;
 import org.uengine.codi.mw3.admin.JavaCodeAssist;
-import org.uengine.codi.platform.SMS;
 import org.uengine.util.UEngineUtil;
-import org.xmlsoap.schemas.ws.n2003.n03.business_process.types.tRoles;
 
 public class JavaSourceCode extends SourceCode {
 	static Map<String, Map> packageNames = new HashMap<String, Map>(); //cached for more faster code assistance. may need to stored separately with tenants. (may naturally done because of classloader is different with web-contexts)
@@ -30,7 +27,6 @@ public class JavaSourceCode extends SourceCode {
 	static ArrayList<String> annotationNames = new ArrayList<String>();
 	
 	public void cacheLibrary() {
-		
 		try {
 			packageNames.clear();
 			classNames.clear();
@@ -218,12 +214,13 @@ public class JavaSourceCode extends SourceCode {
 		return "";
 	}
 	
-	public ArrayList<String> findPackage(String expression){
+	public ArrayList<String> findPackage(String expression, String endChar){
 		ArrayList<String> pkgNames = new ArrayList<String>();
 		
 		for(String packageName : packageNames.keySet()){
-			if(packageName.startsWith(expression))
-				pkgNames.add(packageName + "/" + packageName + "/package/");    				
+			if(packageName.startsWith(expression)){
+				pkgNames.add(packageName + endChar + "/" + packageName + "/package/");
+			}
 		}
 		
 		return pkgNames;
@@ -496,6 +493,8 @@ public class JavaSourceCode extends SourceCode {
 		boolean isImport = false;
 		boolean isAnnotation = false;
 		
+		String endChar = "";
+		
 		// get options
 		if(command.startsWith("-")) {
 			int pos = command.indexOf(' ');
@@ -508,6 +507,7 @@ public class JavaSourceCode extends SourceCode {
 		// get import
 		if(command.startsWith("import ")) {
 			isImport = true;
+			endChar = ".*";
 			
 			command = command.substring(7).trim();
 		}else if(command.startsWith("@")){			
@@ -547,7 +547,7 @@ public class JavaSourceCode extends SourceCode {
 				
 				// step 3 : check import
 				if(isImport){
-					ArrayList<String> packages = findPackage(command);
+					ArrayList<String> packages = findPackage(command, endChar);
 					for(int i=0; i<packages.size();i++)
 						pkgNames.add(packages.get(i));
 					
@@ -572,17 +572,17 @@ public class JavaSourceCode extends SourceCode {
 							for(int i=0; i<classInfo.size();i++)
 								clsNames.add(classInfo.get(i));
 						}else{
+							ArrayList<String> packageClasses = findPackageClass(expression);
+							for(int i=0; i<packageClasses.size();i++)
+								clsNames.add(packageClasses.get(i));
+							
 							ArrayList<String> classes = findClasses(expression);
-							if(classes.size() > 0){
-								for(int i=0; i<classes.size();i++)
-									clsNames.add(classes.get(i));
-							}else{						
-								ArrayList<String> packages = findPackage(expression);
-								if(packages.size() > 0){
-									for(int i=0; i<packages.size(); i++)
-										pkgNames.add(packages.get(i));
-								}
-							}
+							for(int i=0; i<classes.size();i++)
+								clsNames.add(classes.get(i));
+						
+							ArrayList<String> packages = findPackage(expression, endChar);
+							for(int i=0; i<packages.size(); i++)
+								pkgNames.add(packages.get(i));
 						}
 					}
 				}
@@ -615,7 +615,8 @@ public class JavaSourceCode extends SourceCode {
 			
 		// make assistances package
 		for(int i=0; i<pkgNames.size(); i++)
-			codeAssist.getAssistances().add(pkgNames.get(i));		
+			codeAssist.getAssistances().add(pkgNames.get(i));
+			
 		
 		
 		
