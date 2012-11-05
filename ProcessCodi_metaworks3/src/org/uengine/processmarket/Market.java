@@ -1,10 +1,7 @@
 package org.uengine.processmarket;
 
-import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
-import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.layout.Layout;
 import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.admin.TopPanel;
@@ -66,8 +63,6 @@ public class Market {
 
 	@AutowiredFromClient
 	public Session session;
-
-
 	
 	PageNavigator pageNavigator;
 		public PageNavigator getPageNavigator() {
