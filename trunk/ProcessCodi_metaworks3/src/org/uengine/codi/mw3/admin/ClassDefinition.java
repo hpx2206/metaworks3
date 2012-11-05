@@ -461,7 +461,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 
 	
 //	@ServiceMethod(callByContent=true)
-	@ServiceMethod(callByContent=true ,when="edit", keyBinding="Ctrl+S")
+	@ServiceMethod(callByContent=true ,when="edit", keyBinding="Ctrl+S", target=ServiceMethodContext.TARGET_NONE)
 	public void save() throws Exception{
 		if( "form".equals(this.getMetaworksContext().getWhere()) && "edit".equals(this.getMetaworksContext().getWhen())){
 			saveAsForm();
