@@ -6,12 +6,6 @@ import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.website.MetaworksFile;
 
-@Face(
-	ejsPath="genericfaces/Window.ejs",
-	options={"hideAddBtn", "hideLabels"},
-	values={"true", "true"},
-	displayName="$Items"
-)
 public class MarketItemPanel {
 
     IMarketItem marketItem;
@@ -54,6 +48,7 @@ public class MarketItemPanel {
 
 		MarketItemPanel mp = new MarketItemPanel();
 		mp.setMarketItem(item);
+		mp.setCategoryId(categoryId);
 
 		return new Object[] { mp };
 	}

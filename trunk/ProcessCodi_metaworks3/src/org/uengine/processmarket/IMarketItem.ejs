@@ -1,11 +1,83 @@
 <%
-
+var marketList="main";
 
 if(value!=null){
 	value.logoImageFile.mimeType='image/png';
 	
-	if(mw3.when==mw3.WHEN_VIEW || !value.isDeleted){%>
+	if(mw3.when==mw3.WHEN_VIEW || !value.isDeleted){
+%>
 	
+	<%if(marketList=="main"){%>
+	<div style="float:left; width:220px; background:#F8F8F8;height:215px; padding:5px; border-bottom:1px solid #C6C6C6; border-right:1px solid #C6C6C6; position:relative">
+		<div>
+			<img src="https://lh5.googleusercontent.com/gQwmJMq84b6uf_s2XByxMIrbICy4f26mLwHVqTxOhjHOCjCQuh71Eln6yZQVzxbLTecIVIbc1A=s220-h140-e365" width="220" height="140" />
+			<%=fields.logoImageFile.here({when:'image'})%>
+		</div>
+		<div>
+			 <b><%=value.itemName%></b> (ver <%=value.version%>)
+		</div>
+
+		<div  style="line-height:18px; margin:3px 0px;" class="badge">&nbsp;<%=value.price > 0 ? ' '+value.price + '원 ' : ' 무료 '%>&nbsp;</div>
+		<div class="clear"></div>
+		<div>
+			<span style="background:url(images/waveStyle/checkbox-red.png) no-repeat 0 -19px; width:17px ; height:20px; float:left;"></span>
+			<span style="background:url(images/waveStyle/checkbox-red.png) no-repeat 0 -19px; width:17px ; height:20px; float:left;"></span>
+			<span style="background:url(images/waveStyle/checkbox-red.png) no-repeat 0 -19px; width:17px ; height:20px; float:left;"></span>
+			<span style="background:url(images/waveStyle/checkbox-red.png) no-repeat 0 -19px; width:17px ; height:20px; float:left;"></span>
+			<span style="background:url(images/waveStyle/checkbox-red.png) no-repeat 0 0px; width:17px ; height:20px; float:left;"></span>
+		</div>
+		
+		
+		<div class="marketItemDetail" style="display:none; position:absolute;  width:220px; height:215px; background:#ECECEC; padding:5px; top:0px; left:0px;">
+			<div  style="float:left; width:160px; margin-top:10px">
+				<div>
+					<b> <%=value.itemName%> </b>(ver <%=value.version%>)
+				</div>
+				<div>제조사: <%=value.comCode%></div>
+				<div>
+					<span style="background:url(images/waveStyle/checkbox-red.png) no-repeat 0 -19px; width:17px ; height:20px; float:left;"></span>
+					<span style="background:url(images/waveStyle/checkbox-red.png) no-repeat 0 -19px; width:17px ; height:20px; float:left;"></span>
+					<span style="background:url(images/waveStyle/checkbox-red.png) no-repeat 0 -19px; width:17px ; height:20px; float:left;"></span>
+					<span style="background:url(images/waveStyle/checkbox-red.png) no-repeat 0 -19px; width:17px ; height:20px; float:left;"></span>
+					<span style="background:url(images/waveStyle/checkbox-red.png) no-repeat 0 0px; width:17px ; height:20px; float:left;"></span>
+				</div>
+			</div>
+			<div style="float:left">
+				<img src="https://lh6.googleusercontent.com/lVganekHAEgjf9nDb7GztmW9ZSXifVukM9E5S1acZycmKZ-mCivhHhym9Ak1rKPrZeoQfr7LWVs=s50-h50-e365" /> 
+			</div>
+			<div class="clear"></div>
+			<p style="margin-top:20px;"><%=value.description%></p>
+			<div style="margin-top:10px;"><a id="wBtn" href="#" onclick=""><span>프로세스 구매 (<%=value.price > 0 ? ' '+value.price + '원 ' : ' 무료 '%>)</span></a></div>
+		</div>
+	</div>
+	<%}else{%>
+	<div>
+		<table style="padding-top:15px;padding-bottom:15px; background:#F8F8F8; width:100%; cursor:pointer;border-bottom:1px solid #C6C6C6">
+			<tbody>
+				<tr>
+					<td style="width:52px; padding:0 25px;"><img src="https://lh6.googleusercontent.com/lVganekHAEgjf9nDb7GztmW9ZSXifVukM9E5S1acZycmKZ-mCivhHhym9Ak1rKPrZeoQfr7LWVs=s50-h50-e365" /> </td>
+					<td style="padding:5px 25px 0 0;">
+						<div style="width:450px; overflow:hidden;color:#262626; font-weight:bold; font-size:16px;"><b> <%=value.itemName%> </b>(ver <%=value.version%>)</div>	
+						<div style="width:450px;display:inline-block;color:#262626;position:relative;top:-5px; margin-top:5px;">제조사: <%=value.comCode%></div>	
+						<div style="width:450px;color:#666;text-overflow:ellipsis;overflow:hidden;"><%=value.description%></div>	
+					</td>
+					<td style="padding:5px 25px 0 0;">
+						<div>
+							<span style="background:url(images/waveStyle/checkbox-red.png) no-repeat 0 -19px; width:17px ; height:20px; float:left;"></span>
+							<span style="background:url(images/waveStyle/checkbox-red.png) no-repeat 0 -19px; width:17px ; height:20px; float:left;"></span>
+							<span style="background:url(images/waveStyle/checkbox-red.png) no-repeat 0 -19px; width:17px ; height:20px; float:left;"></span>
+							<span style="background:url(images/waveStyle/checkbox-red.png) no-repeat 0 -19px; width:17px ; height:20px; float:left;"></span>
+							<span style="background:url(images/waveStyle/checkbox-red.png) no-repeat 0 0px; width:17px ; height:20px; float:left;"></span>
+							<div class="clear"></div>
+						</div>
+					</td>
+					<td style="padding:0 25px 0 0;"><a id="wBtn" href="#" onclick=""><span>프로세스 구매 (<%=value.price > 0 ? ' '+value.price + '원 ' : ' 무료 '%>)</span></a></td>
+			</tbody>
+		</table>
+	</div>
+	<%}%>
+	
+<!--	
 	<table>
 	<td>
 		<b><a onclick="<%=methods.detail.caller()%>"><%=fields.logoImageFile.here({when:'image'})%> <%=value.itemName%> (ver <%=value.version%>)</a></b>
@@ -21,8 +93,9 @@ if(value!=null){
 		<div style="float:left" class="badge" onclick="<%=methods.purchase.caller()%>"><%=value.price > 0 ? ' '+value.price + '원 ' : ' 무료 '%></div>
 	</td>
 	</table>
+-->
 	<%} else if (mw3.when=='detail') {%>
-		
+		detail
 	<%}
 } else {%>
 	There is no marketItem.

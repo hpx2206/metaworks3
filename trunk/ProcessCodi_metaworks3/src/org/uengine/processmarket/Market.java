@@ -56,7 +56,7 @@ public class Market {
 		setLayout(new Layout());
 		MarketCategoryPanel marketCategory = new MarketCategoryPanel();
 		layout.setWest(marketCategory);
-		layout.setCenter(new MarketItemPanel());
+		layout.setCenter(new MarketItemWindow());
 		layout.setNorth(new TopPanel(session));
 		
 		marketCategory.setCategory(Category.loadRootCategory());
