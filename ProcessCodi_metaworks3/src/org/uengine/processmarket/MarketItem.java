@@ -1,12 +1,7 @@
 package org.uengine.processmarket;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.rmi.RemoteException;
 import java.sql.Timestamp;
 
-import org.directwebremoting.io.FileTransfer;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
@@ -15,10 +10,7 @@ import org.metaworks.website.Download;
 import org.metaworks.website.MetaworksFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.model.Session;
-import org.uengine.kernel.ProcessDefinition;
-import org.uengine.processmanager.ProcessDefinitionRemote;
 import org.uengine.processmanager.ProcessManagerRemote;
-import org.uengine.util.UEngineUtil;
 
 public class MarketItem extends Database<IMarketItem> implements IMarketItem {
 	int itemId;

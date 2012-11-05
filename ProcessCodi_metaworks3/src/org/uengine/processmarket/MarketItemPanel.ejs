@@ -1,22 +1,45 @@
 <%
-	var divId = mw3._getObjectDivId(objectId);
-	var divObj = $('#' + divId).parent();
+	console.log(mw3.when);
 	
-	var width = (divObj.width()-400)/220;
-	
-	console.debug(divObj.width());
-	
-	console.debug( value.categoryId);
-		
 	if(value && value.categoryId){
+	
+		if(mw3.when == 'new'){
+%>
+	<%=fields.marketItem.here()%>
+<%		
+		}else{
 %>
 <div>
+<div>
+	<ul id="myGallery">
+            <li><img data-frame="images/waveStyle/market/jpg_large_1.jpg" src="images/waveStyle/market/jpg_large_1.jpg" title="PartyCloud" data-description="Wave is a 100% free, easy to use online accounting app made for small business owners and freelancers. Features include customizable invoices, expenses tracking, real double entry accounting reports, and guest collaborator functionalities. Join the hundreds of thousands of small business customers around the world who have already signed up for Wave. Find additional details at WaveAccounting.com. " />
+            <li><img data-frame="images/waveStyle/market/jpg_large_2.jpg" src="images/waveStyle/market/jpg_large_2.jpg" title="Business Card Maker" data-description="Wave is a 100% free, easy to use online accounting app made for small business owners and freelancers. Features include customizable invoices, expenses tracking, real double entry accounting reports, and guest collaborator functionalities. Join the hundreds of thousands of small business customers around the world who have already signed up for Wave. Find additional details at WaveAccounting.com. " />
+            <li><img data-frame="images/waveStyle/market/jpg_large_3.jpg" src="images/waveStyle/market/jpg_large_3.jpg" title="Best Business App" data-description="Wave is a 100% free, easy to use online accounting app made for small business owners and freelancers. Features include customizable invoices, expenses tracking, real double entry accounting reports, and guest collaborator functionalities. Join the hundreds of thousands of small business customers around the world who have already signed up for Wave. Find additional details at WaveAccounting.com. " />
+            <li><img data-frame="images/waveStyle/market/jpg_large_4.jpg" src="images/waveStyle/market/jpg_large_4.jpg" title="Flight of an Eagle Owl" data-description="A large adult eagle owl in flight. Lingfield, Surrey, UK. (Photo and caption by Mark Bridger/Nature/National Geographic Photo Contest)" />
+            <li><img data-frame="images/waveStyle/market/jpg_large_5.jpg" src="images/waveStyle/market/jpg_large_5.jpg" title="Winter Lollipops" data-description="Winter is extremely beautiful in Lithuania. It was an early morning and minus 25 degrees Celsius outside. This landscape feels out of this world, but in fact it's in the outskirts of my home city, Kaunas—just a mile away from my house. Oftentimes beauty lies just a step away from our door. Kaunas, Lithuania (Photo and caption by Matas Juras/Nature/National Geographic Photo Contest)" />
+            <li><img data-frame="images/waveStyle/market/jpg_large_1.jpg" src="images/waveStyle/market/jpg_large_1.jpg" title="Lone Tree Yellowstone" data-description="A solitary tree surviving another harsh winter in Yellowstone National Park. Yellowstone National Park, Wyoming. (Photo and caption by Anita Erdmann/Nature/National Geographic Photo Contest) " />
+            <li><img data-frame="images/waveStyle/market/jpg_large_2.jpg" src="images/waveStyle/market/jpg_large_2.jpg" title="Is He Still There?!" data-description="One morning while on the Big Island of Hawaii, i exploring my surroundings to see if i could find something to photograph. I almost went back inside when something on this huge palm tree leaf caught my eye. I stayed around and it was this little gecko, startled by my presence he was hidden between the ridges of the leaf. He would pop his head up periodically to check his surroundings, as soon as he saw i was still there he would hide again. We played this game for a while until i got the shot. Holualoa big Island, Hawaii. (Photo and caption by Lorenzo Menendez/Nature/National Geographic Photo Contest)" />
+            <li><img data-frame="images/waveStyle/market/jpg_large_3.jpg" src="images/waveStyle/market/jpg_large_3.jpg" title="Noni Nectar For Green Gecko" data-description="Madagascar Gold Dust Day Gecko licking nectar from a young noni fruit in Kailua, Hawaii. These geckos were living all around the hale' we were staying in, enjoying the noni and basking on the railing and sunny steps to our place. They were very shy mostly, except this one must have enjoyed the nectar so much as to let me get a shot of their favorite activity. They seemed to tend the noni very attentively throughout the day. August 2010, Chandra S Sherin. Kona Village Resort, Kailua - Kona, Hawaii. (Photo and Caption by Chandra Sherin/Nature/National Geographic Photo Contest)" />
+            <li><img data-frame="images/waveStyle/market/jpg_large_4.jpg" src="images/waveStyle/market/jpg_large_4.jpg" title="Flight of an Eagle Owl" data-description="A large adult eagle owl in flight. Lingfield, Surrey, UK. (Photo and caption by Mark Bridger/Nature/National Geographic Photo Contest)" />
+            <li><img data-frame="images/waveStyle/market/jpg_large_5.jpg" src="images/waveStyle/market/jpg_large_5.jpg" title="Winter Lollipops" data-description="Winter is extremely beautiful in Lithuania. It was an early morning and minus 25 degrees Celsius outside. This landscape feels out of this world, but in fact it's in the outskirts of my home city, Kaunas—just a mile away from my house. Oftentimes beauty lies just a step away from our door. Kaunas, Lithuania (Photo and caption by Matas Juras/Nature/National Geographic Photo Contest)" />
+    </ul>
+</div>
 	<%=fields.marketItem.here()%>
+	<div class="marketItem" style="float:left; width:220px; height:215px; padding:5px; background:#F8F8F8;border-bottom:1px solid #C6C6C6; border-right:1px solid #C6C6C6; position:relative; cursor:pointer">
+		<div style="width:26px; margin:95px auto"><img src="images/waveStyle/market/bigplus.png" /></div>
+		<div onClick="<%=methods.newItem.caller()%>" class="marketItemDetail" style="display:none; position:absolute;  width:220px; height:215px; background:#ECECEC; padding:5px; top:0px; left:0px;">
+			<div  style="line-height:18px; margin:90px 0 0 50px; background:#415A85;" class="badge">&nbsp;+ Add New Process&nbsp;</div>
+		</div>
+	</div>
+	
 	<div class="clear"></div>
 </div>
-<%=methods.newItem.here()%>
 
-<%}else{%>
+
+<%
+		}
+	}else{
+%>
 <div>
 	<ul id="myGallery">
             <li><img data-frame="images/waveStyle/market/jpg_large_1.jpg" src="images/waveStyle/market/jpg_large_1.jpg" title="PartyCloud" data-description="Wave is a 100% free, easy to use online accounting app made for small business owners and freelancers. Features include customizable invoices, expenses tracking, real double entry accounting reports, and guest collaborator functionalities. Join the hundreds of thousands of small business customers around the world who have already signed up for Wave. Find additional details at WaveAccounting.com. " />
