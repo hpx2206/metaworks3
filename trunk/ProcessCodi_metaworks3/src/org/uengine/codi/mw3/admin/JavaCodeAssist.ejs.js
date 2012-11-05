@@ -20,6 +20,8 @@ var org_uengine_codi_mw3_admin_JavaCodeAssist = function(objectId, className){
 		this.list.children(':first').css('background', 'yellow').addClass('selected');
 	}
 	
+	$("#" + mw3.popupDivId).css('width', '668px');
+	
 	object.ExtendImport = function(){
 		var object = mw3.objects[objectId];
 		
@@ -100,6 +102,8 @@ org_uengine_codi_mw3_admin_JavaCodeAssist.prototype = {
 		this.list.html(html);
 		
 		this.list.children(':first').addClass('selected').css('background', 'yellow');
+		
+		this.requestDoc();
 	},
 	up : function(){
 		mw3.log('up');
@@ -115,7 +119,10 @@ org_uengine_codi_mw3_admin_JavaCodeAssist.prototype = {
 			if(this.scrollY > this.defaultScroll){		
 				$("#container_content").scrollTop(this.scrollY-28);
 				this.scrollY = this.scrollY - 14
-			}				
+			}			
+			
+			this.requestDoc();
+			
 		}	
 	},
 	down : function(){
@@ -133,6 +140,8 @@ org_uengine_codi_mw3_admin_JavaCodeAssist.prototype = {
 				$("#container_content").scrollTop(this.scrollY);
 				this.scrollY = this.scrollY + 14
 			}		
+			
+			this.requestDoc();
 		}
 	},
 	select : function(){
@@ -236,23 +245,42 @@ org_uengine_codi_mw3_admin_JavaCodeAssist.prototype = {
 		mw3.removeObject(this.objectId);
 	},
 	requestDoc : function(value) {
+		this.removeCodeAssistDocument();
+		
+		var selected = this.list.children('.selected');
+		var index = selected.attr('index');
+		
 		var object = mw3.objects[this.objectId];
-
-		var sourceCode = mw3.objects[object.srcCodeObjectId];
-		var theEditor = sourceCode.__getFaceHelper().editor;
-
-		var whereEnd = theEditor.getCursorPosition();
-		var whereStart = {column: 0, row: whereEnd.row};
 		
-		
-		var line = theEditor.getSession().doc.getTextRange({start: whereStart, end: whereEnd});
+		var selectString = object.assistances[index];
+		if(selectString){
+			var selectStringValues = selectString.split('/');
+			
+			if(selectStringValues[2] == 'class'){
+				var sourceCode = mw3.objects[object.srcCodeObjectId];
+				var theEditor = sourceCode.__getFaceHelper().editor;
 
-		object.selectedItem = value;
-		object.lineAssistRequested = line; 
-		object.showDoc();
+				var whereEnd = theEditor.getCursorPosition();
+				var whereStart = {column: 0, row: whereEnd.row};
+				
+				var line = theEditor.getSession().doc.getTextRange({start: whereStart, end: whereEnd});
+
+				object.selectedItem = selectStringValues[0];
+				object.lineAssistRequested = selectStringValues[1]; 
+				object.showDoc();
+			}
+		}
 	},
 	destroy : function(){
+		this.removeCodeAssistDocument();
+		
 		$('#' + mw3._getObjectDivId(this.objectId)).parent().remove();
+	},
+	removeCodeAssistDocument : function() {
+		var codeAssistDocument = mw3.getAutowiredObject('org.metaworks.example.ide.CodeAssistDocument');
+		
+		if(codeAssistDocument)
+			mw3.removeObject(codeAssistDocument.__objectId);
 	}
 }
 

@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.admin;
 
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.example.ide.CodeAssist;
 import org.metaworks.example.ide.CodeAssistDocument;
@@ -43,7 +44,7 @@ public class JavaCodeAssist extends CodeAssist{
 	public void ExtendImport(){		
 	}
 	
-	@ServiceMethod(callByContent=true)
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_STICK)
 	public CodeAssistDocument showDoc(){		
 		return new CodeAssistDocument(this);
 	}
