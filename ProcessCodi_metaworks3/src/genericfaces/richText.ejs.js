@@ -1,4 +1,4 @@
-var richText = function(objectId, className) {
+/*var richText = function(objectId, className) {
 	this.objectId = objectId;
 	this.className = className;
 	this.divId = mw3._getObjectDivId(this.objectId);
@@ -16,4 +16,4 @@ var richText = function(objectId, className) {
 richText.prototype.getValue = function() {	
 	if(this.editor) 
 		return this.editor.getData();
-}
+}*/
