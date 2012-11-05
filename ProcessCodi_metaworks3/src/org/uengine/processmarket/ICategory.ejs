@@ -4,12 +4,22 @@ if(value!=null){
   if(mw3.when!=mw3.WHEN_VIEW || !value.isDeleted){
  
   if(value.selected){%>
-<b><div class="depth1" onclick="<%=methods.selectCategory.caller()%>"><%=value.categoryName%></div></b>
-<table><td width=10></td><td><%=fields.childrenCategories.here({when: mw3.when})%></td></table>
+	<div id="navigator">
+		<div class="depth1" onclick="<%=methods.selectCategory.caller()%>"><%=value.categoryName%></div>
+		<div class="depth2">
+			<ul class="fist_menu">
+				<li>
+					<span style="background:url(images/waveStyle/i_sIcon.png) no-repeat 5px 0px;"><a href="#"><%=fields.childrenCategories.here({when: mw3.when})%></a></span>					
+			</ul>
+		</div>
+	</div>
 
 <%}else{%>
-
-<a onclick="<%=methods.selectCategory.caller()%>"><%=value.categoryName%></a>
+	<div id="navigator">
+		<div class="depth1">
+			<a onClick="<%=methods.selectCategory.caller()%>" href="#"><%=value.categoryName%></a>
+		</div>
+	</div>
 
 <%}
  }
