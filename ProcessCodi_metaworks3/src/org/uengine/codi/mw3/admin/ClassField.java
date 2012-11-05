@@ -59,7 +59,9 @@ public class ClassField implements Cloneable, ContextAware{
 						"Date", 
 						"File", 
 						"User", 
-						"Source Code"},
+						"Source Code",
+						"WebEditor",
+						"MetaworksContext"},
 				values ={
 						"java.lang.String", 
 						"java.lang.Long", 
@@ -67,7 +69,10 @@ public class ClassField implements Cloneable, ContextAware{
 						"java.util.Date", 
 						"org.metaworks.website.MetaworksFile", 
 						"org.uengine.codi.mw3.model.IUser", 
-						"org.metaworks.example.ide.SourceCode"
+						"org.metaworks.example.ide.SourceCode",
+						"org.uengine.codi.mw3.admin.WebEditor", 
+						"org.metaworks.MetaworksContext"
+
 				}
 		)
 		public String getType() {
