@@ -14,11 +14,13 @@
 	
     <div class="info">
     <%=fields.searchBox.here()%>
-        <%if(mw3.when!='__design-depth2'){/*TODO: later, rather use 'where' than 'when'.*/%>
-        	<%=fields.session.here({when:'hidden'})%>
-        <%}else{%>
-        	session here.
-        <%}%>	
+	    <div style="display:none">
+	        <%if(mw3.when!='__design-depth2'){/*TODO: later, rather use 'where' than 'when'.*/%>
+	        	<%=fields.session.here({when:'hidden'})%>
+	        <%}else{%>
+	        	session here.
+	        <%}%>	
+        </div>
 	</div>	
 	
 	
