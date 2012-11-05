@@ -178,7 +178,7 @@ public class Category extends Database<ICategory> implements ICategory {
 
 	static public ICategory loadRootCategory() throws Exception {
 		ICategory mainCategory = (ICategory) sql(ICategory.class,
-				"select * from category where parentCategoryId = -1");
+				"select * from category where parentCategoryId = -1 and categoryId > 0");
 		
 		mainCategory.select();
 		
