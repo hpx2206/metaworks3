@@ -20,7 +20,7 @@ var org_uengine_codi_mw3_admin_JavaCodeAssist = function(objectId, className){
 		this.list.children(':first').css('background', 'yellow').addClass('selected');
 	}
 	
-	$("#" + mw3.popupDivId).css('width', '668px');
+	$("#" + mw3.popupDivId).css('width', '500px');
 	
 	object.ExtendImport = function(){
 		var object = mw3.objects[objectId];
