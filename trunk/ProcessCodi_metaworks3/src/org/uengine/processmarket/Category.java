@@ -89,19 +89,19 @@ public class Category extends Database<ICategory> implements ICategory {
 	@Override
 	public Object[] selectCategory() throws Exception {
 		ICategory category = databaseMe();
-		
+
 		MarketItemPanel mp = fillMarketItemPanel();
 		if (isSelected()) {
 			category.setChildrenCategories(null);
 			category.setSelected(false);
-			
+
 		}else{
 
-/*		String sql = "select * from category where parentCategoryId = ?parentCategoryId";
-		childrenCategories = (ICategory) sql(ICategory.class, sql);
-		childrenCategories.setParentCategoryId(this.categoryId);
-		childrenCategories.select();
-*/		
+			/*  String sql = "select * from category where parentCategoryId = ?parentCategoryId";
+  childrenCategories = (ICategory) sql(ICategory.class, sql);
+  childrenCategories.setParentCategoryId(this.categoryId);
+  childrenCategories.select();
+			 */  
 			category.setChildrenCategories(null);
 			category.setSelected(true);
 		}
@@ -111,7 +111,7 @@ public class Category extends Database<ICategory> implements ICategory {
 
 	private MarketItemPanel fillMarketItemPanel() throws Exception {
 		MarketItemPanel mp = new MarketItemPanel();
-		IMarketItem items = MarketItem.loadCategoryItems(this);
+		IMarketItem items = MarketItem.loadCategoryItems(this.getCategoryId());
 		items.getMetaworksContext().setHow(MetaworksContext.HOW_IN_LIST);
 		items.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 		mp.setMarketItem(items);
@@ -172,16 +172,16 @@ public class Category extends Database<ICategory> implements ICategory {
 		childrenCategories = (ICategory) sql(ICategory.class, sql);
 		childrenCategories.setParentCategoryId(this.parentCategoryId);
 		childrenCategories.select();
-		
+
 		return childrenCategories;
 	}
 
 	static public ICategory loadRootCategory() throws Exception {
 		ICategory mainCategory = (ICategory) sql(ICategory.class,
 				"select * from category where parentCategoryId = -1 and categoryId > 0");
-		
+
 		mainCategory.select();
-		
+
 		mainCategory.getMetaworksContext().setWhen("view");
 		return mainCategory;
 	}
