@@ -232,8 +232,7 @@ public class ScheduleCalendar implements ContextAware {
 		}
 		Instance instance = new Instance();
 		instance.setInstId(new Long(instId));
-		
-		if( "sns".equals(session.getTheme())){
+		if("sns".equals(session.getEmployee().getPreferUX()) ){
 			return null;
 		}else{
 			instanceViewContent.session = session;
@@ -261,7 +260,7 @@ public class ScheduleCalendar implements ContextAware {
 		if( getSelDate() != null ){
 			title = "[일정:" + new SimpleDateFormat("yyyy/MM/dd").format(getSelDate()) + "]" ;
 		}
-		if( "sns".equals(session.getTheme())){
+		if("sns".equals(session.getEmployee().getPreferUX()) ){
 			WorkItem newInstantiator = new CommentWorkItem();
 			newInstantiator.setWriter(session.getUser());
 			newInstantiator.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);

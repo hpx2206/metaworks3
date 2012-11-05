@@ -72,12 +72,8 @@ public class MainSNS {
 		boolean phone = isPhone();
 		boolean isMobile = pad || phone;
 		
-
-		session.setTheme("sns");
-		
 		if(isMobile && (preferMob==null || "auto".equals(preferMob)) ){
 			preferMob = (pad ? "pad" : "phone");
-			
 		}
 		
 //		WfPanel panel = new WfPanel();
@@ -139,10 +135,8 @@ public class MainSNS {
 			westLayout.setName("west");
 			
 			Layout eastLayout = new Layout();
+			
 			InstanceListWindow instanceWindow = new  InstanceListWindow(session);
-			InstanceListPanel instanceListPanel = instanceWindow.getInstanceListPanel();
-			instanceListPanel.setMetaworksContext(new MetaworksContext()); 
-			instanceListPanel.getMetaworksContext().setWhere("sns");
 			eastLayout.setWest(instanceWindow);
 			
 			eastLayout.setCenter(wfWindow);

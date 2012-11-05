@@ -47,18 +47,19 @@ public class InstanceViewThreadPanel implements ContextAware {
 		setInstanceId(instanceId);
 		
 		IWorkItem result = WorkItem.find(instanceId);
+		result.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+		result.getMetaworksContext().setWhere(this.getMetaworksContext().getWhere());
 		result.getMetaworksContext().setHow(this.getMetaworksContext().getHow());
+		
 		setThread(result);
 		
 		CommentWorkItem newItem = new CommentWorkItem();
 		newItem.setInstId(new Long(getInstanceId()));
 		newItem.setTaskId(new Long(-1));
-		newItem.getMetaworksContext().setHow(this.getMetaworksContext().getHow());
 		newItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
-		if( "sns".equals(session.getTheme())){
-			newItem.getMetaworksContext().setWhere("sns");
-		}
-		newItem.setWriter(session.user);
+		newItem.getMetaworksContext().setWhere(this.getMetaworksContext().getWhere());		
+		newItem.getMetaworksContext().setHow(this.getMetaworksContext().getHow());
+		newItem.setWriter(session.getUser());
 
 		setNewItem(newItem);
 		
@@ -102,7 +103,7 @@ public class InstanceViewThreadPanel implements ContextAware {
 		
 	@ServiceMethod(callByContent=true, needToConfirm=true, mouseBinding="drop")
 	public Object[] drop() throws Exception{
-		if( session != null && "sns".equals(session.getTheme())){
+		if("sns".equals(session.getEmployee().getPreferUX()) ){
 			Object clipboard = session.getClipboard();
 			if(clipboard instanceof IWfNode){
 				WfNode draggedNode = (WfNode) clipboard;

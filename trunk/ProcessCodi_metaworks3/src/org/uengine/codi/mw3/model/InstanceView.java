@@ -33,8 +33,6 @@ public class InstanceView {
 	}		
 		
 	public void load(IInstance instance) throws Exception{
-		if(this.getMetaworksContext() == null)
-			setMetaworksContext(new MetaworksContext());
 
 		Instance inst = new Instance();
 		inst.setInstId(instance.getInstId());
@@ -58,6 +56,7 @@ public class InstanceView {
 		setStatus(inst.databaseMe().getStatus());
 		setSecuopt(secuopt);
 		
+		inst.setMetaworksContext(getMetaworksContext());
 		loadDefault(inst);
 		
 		if("1".equals(getSecuopt())){ //means secured conversation
@@ -366,19 +365,16 @@ public class InstanceView {
 		if(!instance.databaseMe().getInitEp().equals(session.getUser().getUserId())  && !(session.getEmployee()!=null && session.getEmployee().getIsAdmin())){
 			throw new Exception("$OnlyInitiatorCanSetDueDate");
 		}
-		
-//		scheduleEditor = new ScheduleEditor();
-//		scheduleEditor.setInstanceId(instanceId);
-//		scheduleEditor.load(processManager);
-//		
-//		loadDefault();
 
 		InstanceDueSetter ids = new InstanceDueSetter();
 		ids.setInstId(new Long(getInstanceId()));
 		ids.setDueDate(instance.databaseMe().getDueDate());
 		ids.setOnlyInitiatorCanComplete(instance.databaseMe().isInitCmpl());
 		ids.setProgress(instance.databaseMe().getProgress());
-		ids.setMetaworksContext(getMetaworksContext());
+		if("sns".equals(session.getEmployee().getPreferUX()) ){
+			ids.getMetaworksContext().setHow("instanceList");
+			ids.getMetaworksContext().setWhere("sns");
+		}
 		ids.getMetaworksContext().setWhen("edit");
 		return new Popup(ids);
 		
@@ -417,10 +413,6 @@ public class InstanceView {
 		
 		String tobe = (getStatus().equals("Completed") ? "Running" : "Completed");
 		
-		if(getMetaworksContext()==null){
-			setMetaworksContext(new MetaworksContext());
-		}
-		
 		Instance instance = new Instance();
 		instance.setInstId(new Long(getInstanceId()));
 		
@@ -434,7 +426,11 @@ public class InstanceView {
 		
 		instance.flushDatabaseMe();
 		IInstance iInstance = instance.databaseMe();
-		iInstance.setMetaworksContext(getMetaworksContext());
+		iInstance.setMetaworksContext(new MetaworksContext());
+		if("sns".equals(session.getEmployee().getPreferUX()) ){
+			iInstance.getMetaworksContext().setHow("instanceList");
+			iInstance.getMetaworksContext().setWhere("sns");
+		}
 		
 		MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(iInstance)});
 
@@ -500,7 +496,7 @@ public class InstanceView {
 	public InstanceViewThreadPanel activityStream() throws Exception{
 		InstanceViewThreadPanel instanceViewThreadPanel = new InstanceViewThreadPanel();
 		instanceViewThreadPanel.session = session;
-		instanceViewThreadPanel.getMetaworksContext().setHow(this.getMetaworksContext().getHow());
+		instanceViewThreadPanel.setMetaworksContext(getMetaworksContext());
 		instanceViewThreadPanel.load(instanceId);
 		
 		return instanceViewThreadPanel;

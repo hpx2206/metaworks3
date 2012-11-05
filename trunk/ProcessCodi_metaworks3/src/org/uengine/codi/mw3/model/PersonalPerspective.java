@@ -12,7 +12,7 @@ public class PersonalPerspective extends Perspective {
 	@ServiceMethod
 	public Object[] loadAllICanSee() throws Exception{
 		Object[] returnObject = loadInstanceListPanel("allICanSee", null);
-		if( session != null && "sns".equals(session.getTheme()) ){
+		if("sns".equals(session.getEmployee().getPreferUX()) ){
 			WfPanel wfPanel = new WfPanel();
 			String comcode = session.getCompany().getComCode();
 			wfPanel.session = session;

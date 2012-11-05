@@ -884,7 +884,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 	public ContentWindow linkInstance() throws Exception {
 		Instance instance = new Instance();
 		instance.setInstId(new Long(getLinkedInstId()));
-		if("sns".equals(session.getTheme())){
+		if("sns".equals(session.getEmployee().getPreferUX()) ){
 			return null;
 		}
 		instanceViewContent.load(instance);
