@@ -244,8 +244,8 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.press = function(){
 	if (e.keyCode == 13 && !e.shiftKey) {
 		if(  !this.instanceFirst ){
 			window.event.returnValue = false;
+			this.send();
 		}
-		this.send();
     }else{
     	
     	

@@ -84,6 +84,7 @@ public class InstanceDueSetter implements ContextAware{
 		instance.flushDatabaseMe();
 		IInstance iInstance = instance.databaseMe();
 		iInstance.setMetaworksContext(getMetaworksContext());
+		iInstance.getMetaworksContext().setWhen("view");
 		
 		MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(iInstance)});
 		

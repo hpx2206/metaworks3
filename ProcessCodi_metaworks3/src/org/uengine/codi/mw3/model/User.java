@@ -471,6 +471,7 @@ public class User extends Database<IUser> implements IUser {
 		Employee employee = new Employee();
 		employee.setEmpCode(getUserId());
 		employee.setGlobalCom(session.getCompany().getComCode());
+		employee.setPreferUX(session.getEmployee().getPreferUX());
 		userSession.setEmployee(employee);
 		userSession.setCompany(session.getCompany());
 		pPserspective.session = userSession;

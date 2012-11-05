@@ -87,19 +87,17 @@ public class InstanceList implements ContextAware{
 	}
 
 	public InstanceList load(Session session) throws Exception {
-		IInstance instanceContents = Instance.load(session,
-				getPage(), PAGE_CNT);
-		
+		IInstance instanceContents = Instance.load(session,	getPage(), PAGE_CNT);
 		if(getMetaworksContext()==null){
-			instanceContents.setMetaworksContext(new MetaworksContext());
-			instanceContents.getMetaworksContext().setWhen("instanceList");
-		}else{
-			instanceContents.setMetaworksContext(getMetaworksContext());
+			setMetaworksContext(new MetaworksContext());
 		}
+		String preferUX = session.getEmployee().getPreferUX();
 		
-		if("sns".equals(session.getTheme()))
-			instanceContents.getMetaworksContext().setWhere("sns");
-		
+		if("sns".equals(preferUX)){
+			instanceContents.setMetaworksContext(new MetaworksContext());
+			instanceContents.getMetaworksContext().setWhere("sns");			
+			instanceContents.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+		}
 		setInstances(instanceContents);
 
 		// setting moreInstanceList

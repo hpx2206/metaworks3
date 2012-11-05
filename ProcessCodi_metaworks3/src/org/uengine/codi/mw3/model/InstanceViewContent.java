@@ -1,6 +1,5 @@
 package org.uengine.codi.mw3.model;
 
-import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Name;
@@ -44,24 +43,11 @@ public class InstanceViewContent extends ContentWindow {
 	}
 	
 	public void load(IInstance instance) throws Exception{
-		//instanceView = new InstssanceView();		
-		//instanceView.processManager = this.processManager;
-		
-		if("sns".equals(session.getTheme())){
-			if( instanceView.getMetaworksContext() == null){
-				instanceView.setMetaworksContext(new MetaworksContext());
-			}
-			instanceView.getMetaworksContext().setHow("instanceList");
-		}
 		instanceView.session = session;
+		instanceView.setMetaworksContext(getMetaworksContext());
 		instanceView.load(instance);
 
 		setInstanceName(instanceView.getInstanceName());
-//		if(instance instanceof IInstance){
-//			setInstanceName(instance.getName());
-//			
-//		}else
-//			setInstanceName(((Instance)instance).databaseMe().getName());
 	}	
 
 }

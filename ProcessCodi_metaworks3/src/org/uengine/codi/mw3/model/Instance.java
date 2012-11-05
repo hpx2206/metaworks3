@@ -8,6 +8,7 @@ import java.util.Set;
 
 import org.directwebremoting.Browser;
 import org.directwebremoting.ScriptSessions;
+import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.annotation.AutowiredFromClient;
@@ -149,7 +150,6 @@ public class Instance extends Database<IInstance> implements IInstance{
 		if(clipboard instanceof IInstance){
 			IInstance instanceInClipboard = (IInstance) clipboard;
 			
-			
 			if(instanceInClipboard.getInstId().equals(getInstId())){
 				return null; //ignores drag n drop same object 
 			}
@@ -171,8 +171,6 @@ public class Instance extends Database<IInstance> implements IInstance{
 			roleMappingsToUpdate.setRootInstId(this.getInstId());
 			roleMappingsToUpdate.set("oldRootInstId", instanceInClipboard.getInstId());
 			roleMappingsToUpdate.update();
-			
-			getMetaworksContext().setWhen("instanceList");
 			
 			return new Object[]{new Remover(locatorForInstanceInClipboard)};
 		}else{
@@ -390,15 +388,39 @@ public class Instance extends Database<IInstance> implements IInstance{
 	
 	
 	public ContentWindow detail() throws Exception{
-		//InstanceViewContent instanceViewContent = new InstanceViewContent();
-		//instanceViewContent.processManager = this.processManager;
-		//instanceViewContent.
+
+		if(getMetaworksContext()==null){
+			setMetaworksContext(new MetaworksContext());
+		}
+		if("sns".equals(session.getEmployee().getPreferUX()) ){
+			getMetaworksContext().setHow("instanceList");
+			getMetaworksContext().setWhere("sns");
+		}else{
+			getMetaworksContext().setHow("");
+			getMetaworksContext().setWhere("");
+		}
 		
 		TransactionContext.getThreadLocalInstance().setSharedContext("codi_session", session);
 		instanceViewContent.session = session;
+		instanceViewContent.setMetaworksContext(getMetaworksContext());
 		instanceViewContent.load(this);
 		
 		return instanceViewContent;
+	}
+	
+	public void over() throws Exception{
+		
+		InstanceViewThreadPanel panel = new InstanceViewThreadPanel();
+		panel.getMetaworksContext().setHow("instanceList");
+		panel.getMetaworksContext().setWhere("sns");
+		
+		if("".equals(StringUtils.nullToEmpty(this.getInstanceViewThreadPanel().getInstanceId()))){
+			panel.session = session;
+			panel.load(this.getInstId().toString());
+			
+			MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(flowchart())});
+		}
+		setInstanceViewThreadPanel(panel);
 	}
 	
 	public ModalWindow popupDetail() throws Exception{
@@ -825,21 +847,6 @@ public class Instance extends Database<IInstance> implements IInstance{
 		public void setInstanceDrag(InstanceDrag instanceDrag) {
 			this.instanceDrag = instanceDrag;
 		}
-		
-	public void over() throws Exception{
-		InstanceViewThreadPanel panel = new InstanceViewThreadPanel();
-		
-		if("".equals(StringUtils.nullToEmpty(this.getInstanceViewThreadPanel().getInstanceId()))){
-			panel.session = session;
-			panel.getMetaworksContext().setHow("instanceList");
-			panel.load(this.getInstId().toString());
-			if( "sns".equals(session.getTheme())){
-				MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(flowchart())});
-			}
-		}
-		
-		setInstanceViewThreadPanel(panel);
-	}
 	
 	@Override
 	public void split() throws Exception {

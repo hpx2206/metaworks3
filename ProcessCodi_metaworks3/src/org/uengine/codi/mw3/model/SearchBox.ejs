@@ -1,8 +1,7 @@
 <%
 	if(value){
 		var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");		
-		var sessionTheme = session.theme;
-		if( sessionTheme == 'sns'){
+		if( session.employee.preferUX == 'sns'){
 %>	
 			<div style="width:300px; margin-top:5px;">
 				<ul>

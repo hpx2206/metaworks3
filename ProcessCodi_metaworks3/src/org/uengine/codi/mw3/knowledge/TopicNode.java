@@ -59,7 +59,7 @@ public class TopicNode extends Database<ITopicNode> implements ITopicNode {
 	public Object[] loadTopic() throws Exception{
 		String title = "주제 : " + getName();
 		Object[] returnObject = Perspective.loadInstanceListPanel(session, "topic", getId(), title);
-		if( session != null && "sns".equals(session.getTheme()) ){
+		if("sns".equals(session.getEmployee().getPreferUX()) ){
 			WfPanel wfPanel = new WfPanel();
 			wfPanel.session = session;
 			wfPanel.load(getId());

@@ -58,16 +58,11 @@ public class InstanceTooltip {
 	public void instanceViewNullCheck()  throws Exception{
 		if( instanceView == null){
 			instanceView = new InstanceView();
-			instanceView.session = session;
-			instanceView.setInstanceId(instanceId.toString());
-			instanceView.setStatus(status);
-			instanceView.processManager = processManager;
-			if( "sns".equals(session.getTheme())){
-				instanceView.setMetaworksContext(new MetaworksContext());
-				instanceView.getMetaworksContext().setWhere("sns");
-				instanceView.getMetaworksContext().setHow("instanceList");
-			}
 		}
+		instanceView.session = session;
+		instanceView.setInstanceId(instanceId.toString());
+		instanceView.setStatus(status);
+		instanceView.processManager = processManager;
 	}
 	
 	@AutowiredFromClient

@@ -513,8 +513,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	@Override
 	@Test(scenario="first", starter=true, instruction="$Write", next="newActivity()")
 	public Object[] add() throws Exception {
-		
-		
 		Long taskId = UniqueKeyGenerator.issueWorkItemKey(((ProcessManagerBean)processManager).getTransactionContext());
 		
 		
@@ -568,15 +566,14 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				instanceRef.databaseMe().setInitComCd(session.getEmployee().getGlobalCom());
 			
 			instanceRef.databaseMe().setDueDate(getDueDate());
-
-		
-			parent = afterInstantiation(instantiatedViewContent,
-					instanceRef);
+			
+			parent = afterInstantiation(instantiatedViewContent, 	instanceRef);
 
 		}else{
 			if(this instanceof CommentWorkItem && getInstId()!=null){
 				
 				ArrayList<String> initialFollowers = ((CommentWorkItem)this).initialFollowers;
+				
 				if(initialFollowers!=null){
 					for(String userId : initialFollowers){
 						RoleMapping rm = RoleMapping.create();
@@ -584,7 +581,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 						rm.setName("flw_" + userId);
 						
 						processManager.putRoleMapping(getInstId().toString(), rm);
-
 					}
 				}
 				
@@ -594,15 +590,11 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			}
 		}
 		
-		
-
-		
 		setRootInstId(getInstId());
 		
 		User loginUser = new User();
 		loginUser.setUserId(session.getUser().getUserId());
 		loginUser.setName(session.getUser().getName());
-
 
 		setWriter(loginUser);
 		setTaskId(taskId);
@@ -630,272 +622,246 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 //		instanceViewContent.load(instance);
 		
 		getMetaworksContext().setWhen(WHEN_VIEW);
-		
-		WorkItem newItem = new CommentWorkItem();
-		newItem.setInstId(new Long(getInstId()));
-		newItem.setTaskId(new Long(-1));
-		newItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
-
-
+		if("sns".equals(session.getEmployee().getPreferUX())){
+			getMetaworksContext().setHow("instanceList");
+			getMetaworksContext().setWhere("sns");
+		}
 		
 		final IInstance refreshedInstance = instance.databaseMe();
 		refreshedInstance.getMetaworksContext().setHow("blinking");
-		if("sns".equals(session.getTheme())){
-			refreshedInstance.getMetaworksContext().setHow("instanceList");
-			refreshedInstance.getMetaworksContext().setWhere("sns");
-		}
+		refreshedInstance.setMetaworksContext(getMetaworksContext());
 
 		final boolean securedConversation = "1".equals(instance.databaseMe().getSecuopt());
 
-
-		
-		
+		// 새글
 		if(instantiation){
-			
-			if(instantiatedViewContent==null){
-				instantiatedViewContent = instanceViewContent;
-				instantiatedViewContent.session = session;
-				instantiatedViewContent.load(refreshedInstance);
-			}
-			
-			instantiatedViewContent.getInstanceView().setNewItem(newItem);
-			InstanceViewThreadPanel threadPanel = new InstanceViewThreadPanel();
-			threadPanel.setInstanceId(getInstId().toString());
-			
-//			ArrayList<IDAO> workItemArr = new ArrayList<IDAO>();
-//			workItemArr.add(this);
-//			threadPanel.setThread(workItemArr);
-			
-			threadPanel.setThread(this);
 			WorkItem newInstantiator = new CommentWorkItem();
 			newInstantiator.setWriter(session.getUser());
 			newInstantiator.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
-			newInstantiator.setInstId(getInstId());
-			threadPanel.setNewItem(newInstantiator);
-			instantiatedViewContent.getInstanceView().setInstanceViewThreadPanel(threadPanel);
 			
-			if(!securedConversation)
+			if("sns".equals(session.getEmployee().getPreferUX())){
+				newInstantiator.getMetaworksContext().setWhere("sns");
+				newInstantiator.setInstantiation(true);
 				MetaworksRemoteService.getInstance().pushClientObjects(new Object[]{new ToPrepend(new InstanceList(), refreshedInstance)});
-			
-			if(newInstancePanel != null  && newInstancePanel.getDueDate() != null){
-				instance.flushDatabaseMe();
 				
-//				ScheduleCalendar scheduleCalendar = new ScheduleCalendar();
-//				scheduleCalendar.session = session;
-//				scheduleCalendar.load();
-//				return new Object[]{new Refresh(scheduleCalendar), new Refresh(instantiatedViewContent)};
-				
-				ArrayList<String> followerIds = new ArrayList<String>();
-				IUser followers = instantiatedViewContent.getInstanceView().getFollowers().getFollowers();
-				followers.beforeFirst();
-				while(followers.next()){
-					followerIds.add(followers.getUserId());
-				}
-				for(String userId : followerIds){
-					Browser.withSession(Login.getSessionIdWithUserId(userId), new Runnable(){
-						@Override
-						public void run() {
-							ScriptSessions.addFunctionCall("if(mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar')!=null) mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar').__getFaceHelper().addMyschedule", new Object[]{getTitle(), getInstId()+"", newInstancePanel.getDueDate() });
-						}
-						
-					});
-				}
-				return new Object[]{new Refresh(instantiatedViewContent)};
-				
-	
+				return new Object[]{new Refresh(newInstantiator)};
 			}else{
-				if("sns".equals(session.getTheme())){
-					return new Object[]{new Refresh(newInstantiator), new Refresh(parent)}; 
-				}else{
-					return new Object[]{new Refresh(instantiatedViewContent), new Refresh(parent)};
+				newInstantiator.setInstId(getInstId());
+				if(instantiatedViewContent==null){
+					instantiatedViewContent = instanceViewContent;
+					instantiatedViewContent.session = session;
+					instantiatedViewContent.load(refreshedInstance);
 				}
-			}
-			
-		}
-
-		
-		newItem.setWriter(loginUser);
-
-		//OLD WAY
-//		//let the other's list updated
-//		WebContext wctx = WebContextFactory.get();
-//		String currentPage = wctx.getCurrentPage();
-//
-//		   Collection sessions = wctx.getScriptSessionsByPage(currentPage);
-//
-//		   Util utilAll = new Util(sessions);
-//		   utilAll.addFunctionCall("mw3.getAutowiredObject('org.uengine.codi.mw3.model.InstanceView').activityStream");
-
-		
-		//refreshedInstance.getMetaworksContext().setWhere("pinterest");
-
-
-		
-		final InstanceView refreshedInstanceView = new InstanceView();
-		refreshedInstanceView.processManager = processManager;
-		refreshedInstanceView.session = session;
-		refreshedInstanceView.setMetaworksContext(new MetaworksContext());
-		refreshedInstanceView.getMetaworksContext().setHow(this.getMetaworksContext().getHow());
-		refreshedInstanceView.getMetaworksContext().setWhere(this.getMetaworksContext().getWhere());
-		refreshedInstanceView.load(instance);
-		
-
-		
-		//TODO: IF YOU CAN NARROW THE RECEIVERS TO THE FOLLOWERS ONLY IS BEST APPROACH
-
-		//WorkItem copyMe = new WorkItem();
-		//copyMe.setTaskId(getTaskId());
-		final IWorkItem copyOfThis = this;//copyMe.databaseMe();
-
-		//final IWorkItem copyOfThis = /*new WorkItem();
-		//copyOfThis.copyFrom(*/databaseMe();//);
-		
-		final InstanceViewThreadPanel threadPanelOfThis = new InstanceViewThreadPanel();
-		threadPanelOfThis.setInstanceId(getInstId().toString());
-		threadPanelOfThis.session = session;
-		threadPanelOfThis.getMetaworksContext().setHow(this.getMetaworksContext().getHow());
-		threadPanelOfThis.getMetaworksContext().setWhere(this.getMetaworksContext().getWhere());
-		threadPanelOfThis.load(getInstId().toString());
-
-		//Add notifications to the followers
-		IUser followers = refreshedInstanceView.getFollowers().getFollowers();
-		followers.beforeFirst();
-		
-		ArrayList<String> followerIds = new ArrayList<String>();
-		while(followers.next()){
-			followerIds.add(followers.getUserId());
-		}
-		
-		final Object[] returnObjects;
-		if("sns".equals(session.getTheme())){
-			returnObjects = new Object[]{
-					new Refresh(threadPanelOfThis) 
-			};	
-		}else{
-			if(newFollowersAreAdded){
-				returnObjects = new Object[]{
-						new Remover(refreshedInstance), //인스턴스 목록에서 제거 
-						new Remover(refreshedInstance), //인스턴스 목록에서 제거 - 한번하니 다른게 또 있는지 안돼서 두번 지움.. ㅋㅋ 메롱  
-						new ToPrepend(new InstanceList(), refreshedInstance), // 인스턴스 리스트에 맨 꼭대기에 추가함... -- 더 새로운 소식으로 눈에 띄게하는 느낌을 줌...
-						new Refresh (refreshedInstanceView.getFollowers())
-				};					
-			}else{
-				returnObjects = new Object[]{
-						new Remover(refreshedInstance), //인스턴스 목록에서 제거 
-						new Remover(refreshedInstance), //인스턴스 목록에서 제거 - 한번하니 다른게 또 있는지 안돼서 두번 지움.. ㅋㅋ 메롱  
-						new ToPrepend(new InstanceList(), refreshedInstance) // 인스턴스 리스트에 맨 꼭대기에 추가함... -- 더 새로운 소식으로 눈에 띄게하는 느낌을 줌..
-				};			
-			};
-		}
-	
-		
-		if(!securedConversation)
-			MetaworksRemoteService.getInstance().pushClientObjects(returnObjects);
-
-		
-
-		boolean iAmParticipating = false;
-		for(String followerId : followerIds){
-		
-			final boolean postByMe = followerId.equals(session.getUser().getUserId());
-			if(postByMe){ //ignore myself
-				iAmParticipating = true;
-			}else{
-				Notification noti = new Notification();
 				
-				noti.setNotiId(System.currentTimeMillis()); //TODO: why generated is hard to use
-				noti.setUserId(followerId);
-				noti.setActorId(session.getUser().getUserId());
-				noti.setConfirm(false);
-				noti.setInputDate(Calendar.getInstance().getTime());
-				noti.setTaskId(getTaskId());
-				noti.setInstId(getInstId());
+				//instantiatedViewContent.getInstanceView().setNewItem(newItem);
+				
+				InstanceViewThreadPanel threadPanel = new InstanceViewThreadPanel();
+				
+				threadPanel.setInstanceId(getInstId().toString());
+				threadPanel.setNewItem(newInstantiator);
+				threadPanel.setThread(this);
+				
+	//			ArrayList<IDAO> workItemArr = new ArrayList<IDAO>();
+	//			workItemArr.add(this);
+	//			threadPanel.setThread(workItemArr);
 				
 				
-				noti.setActAbstract(session.getUser().getName() + " wrote : " + getTitle());
-	
-				noti.add(refreshedInstance);
-
-			
-				String followerSessionId = Login.getSessionIdWithUserId(followerId);
 				
-				String device = Login.getDeviceWithUserId(followerId);
+				instantiatedViewContent.getInstanceView().setInstanceViewThreadPanel(threadPanel);
 				
 				
-				if("desktop".equals(device) || device==null){
-					try{
-						//NEW WAY IS GOOD
-						Browser.withSession(followerSessionId, new Runnable(){
+				if(!securedConversation)
+					MetaworksRemoteService.getInstance().pushClientObjects(new Object[]{new ToPrepend(new InstanceList(), refreshedInstance)});
+				
+				if(newInstancePanel != null  && newInstancePanel.getDueDate() != null){
+					instance.flushDatabaseMe();
+					
+	//				ScheduleCalendar scheduleCalendar = new ScheduleCalendar();
+	//				scheduleCalendar.session = session;
+	//				scheduleCalendar.load();
+	//				return new Object[]{new Refresh(scheduleCalendar), new Refresh(instantiatedViewContent)};
+					
+					ArrayList<String> followerIds = new ArrayList<String>();
+					IUser followers = instantiatedViewContent.getInstanceView().getFollowers().getFollowers();
+					followers.beforeFirst();
+					while(followers.next()){
+						followerIds.add(followers.getUserId());
+					}
+					for(String userId : followerIds){
+						Browser.withSession(Login.getSessionIdWithUserId(userId), new Runnable(){
 							@Override
 							public void run() {
-								if(securedConversation){
-									ScriptSessions.addFunctionCall("mw3.locateObject", new Object[]{returnObjects, null, "body"});
-								}
-								//대화목록의 맨뒤에 새로 입력한 내용만 붙여서 속도 개선  
-//								ScriptSessions.addFunctionCall("mw3.locateObject", new Object[]{new ToAppend(threadPanelOfThis, copyOfThis), null, "body"});
-								ScriptSessions.addFunctionCall("mw3.locateObject", new Object[]{new ToPrev(threadPanelOfThis.newItem, copyOfThis), null, "body"});
-								
-								//refresh notification badge
-								if(!postByMe)
-									ScriptSessions.addFunctionCall("mw3.getAutowiredObject('" + NotificationBadge.class.getName() + "').refresh", new Object[]{});
-								
-								ScriptSessions.addFunctionCall("mw3.onLoadFaceHelperScript", new Object[]{});
+								ScriptSessions.addFunctionCall("if(mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar')!=null) mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar').__getFaceHelper().addMyschedule", new Object[]{getTitle(), getInstId()+"", newInstancePanel.getDueDate() });
 							}
 							
 						});
-					}catch(Exception e){
-						e.printStackTrace(); //may stops due to error occurs when the follower isn't online.
 					}
-				}else{
-					Session.pushMessage(followerId, returnObjects);
-					
-					NotificationBadge notiBadge = new NotificationBadge();
-					notiBadge.setNewItemCount(-1);
-					
-					Session.pushMessage(followerId, new Refresh(notiBadge));
 				}
 				
+				return new Object[]{new Refresh(instantiatedViewContent)};
+			}
+		
+		// 댓글
+		}else{
+			final IWorkItem copyOfThis = this;//copyMe.databaseMe();
+
+			//final IWorkItem copyOfThis = /*new WorkItem();
+			//copyOfThis.copyFrom(*/databaseMe();//);
+			
+			final InstanceViewThreadPanel threadPanelOfThis = new InstanceViewThreadPanel();
+			threadPanelOfThis.setInstanceId(getInstId().toString());
+			threadPanelOfThis.session = session;
+			threadPanelOfThis.getMetaworksContext().setHow(this.getMetaworksContext().getHow());
+			threadPanelOfThis.getMetaworksContext().setWhere(this.getMetaworksContext().getWhere());
+			threadPanelOfThis.load(getInstId().toString());
+			
+			final Object[] returnObjects;
+			ArrayList<String> followerIds = new ArrayList<String>();
+			
+			if("sns".equals(session.getEmployee().getPreferUX())){
+				returnObjects = new Object[]{
+						new Refresh(threadPanelOfThis) 
+				};
+			}else{
+
+				final InstanceView refreshedInstanceView = new InstanceView();
+				refreshedInstanceView.processManager = processManager;
+				refreshedInstanceView.session = session;
+				refreshedInstanceView.setMetaworksContext(new MetaworksContext());
+				refreshedInstanceView.getMetaworksContext().setHow(this.getMetaworksContext().getHow());
+				refreshedInstanceView.getMetaworksContext().setWhere(this.getMetaworksContext().getWhere());
+				refreshedInstanceView.load(instance);
+				
+				IUser followers = refreshedInstanceView.getFollowers().getFollowers();
+				followers.beforeFirst();
+				
+				while(followers.next()){
+					followerIds.add(followers.getUserId());
+				}
+				
+				if(newFollowersAreAdded){
+					returnObjects = new Object[]{
+							new Remover(refreshedInstance), //인스턴스 목록에서 제거 
+							new Remover(refreshedInstance), //인스턴스 목록에서 제거 - 한번하니 다른게 또 있는지 안돼서 두번 지움.. ㅋㅋ 메롱  
+							new ToPrepend(new InstanceList(), refreshedInstance), // 인스턴스 리스트에 맨 꼭대기에 추가함... -- 더 새로운 소식으로 눈에 띄게하는 느낌을 줌...
+							new Refresh (refreshedInstanceView.getFollowers())
+					};					
+				}else{
+					returnObjects = new Object[]{
+							new Remover(refreshedInstance), //인스턴스 목록에서 제거 
+							new Remover(refreshedInstance), //인스턴스 목록에서 제거 - 한번하니 다른게 또 있는지 안돼서 두번 지움.. ㅋㅋ 메롱  
+							new ToPrepend(new InstanceList(), refreshedInstance) // 인스턴스 리스트에 맨 꼭대기에 추가함... -- 더 새로운 소식으로 눈에 띄게하는 느낌을 줌..
+					};			
+				};
+			}
+			
+			if(!securedConversation)
+				MetaworksRemoteService.getInstance().pushClientObjects(returnObjects);
+			
+			boolean iAmParticipating = false;
+			for(String followerId : followerIds){
+			
+				final boolean postByMe = followerId.equals(session.getUser().getUserId());
+				if(postByMe){ //ignore myself
+					iAmParticipating = true;
+				}else{
+					Notification noti = new Notification();
+					
+					noti.setNotiId(System.currentTimeMillis()); //TODO: why generated is hard to use
+					noti.setUserId(followerId);
+					noti.setActorId(session.getUser().getUserId());
+					noti.setConfirm(false);
+					noti.setInputDate(Calendar.getInstance().getTime());
+					noti.setTaskId(getTaskId());
+					noti.setInstId(getInstId());
+					
+					
+					noti.setActAbstract(session.getUser().getName() + " wrote : " + getTitle());
+		
+					noti.add(refreshedInstance);
+
+				
+					String followerSessionId = Login.getSessionIdWithUserId(followerId);
+					
+					String device = Login.getDeviceWithUserId(followerId);
+					
+					
+					if("desktop".equals(device) || device==null){
+						try{
+							//NEW WAY IS GOOD
+							Browser.withSession(followerSessionId, new Runnable(){
+								@Override
+								public void run() {
+									if(securedConversation){
+										ScriptSessions.addFunctionCall("mw3.locateObject", new Object[]{returnObjects, null, "body"});
+									}
+									//대화목록의 맨뒤에 새로 입력한 내용만 붙여서 속도 개선  
+//									ScriptSessions.addFunctionCall("mw3.locateObject", new Object[]{new ToAppend(threadPanelOfThis, copyOfThis), null, "body"});
+									ScriptSessions.addFunctionCall("mw3.locateObject", new Object[]{new ToPrev(threadPanelOfThis.newItem, copyOfThis), null, "body"});
+									
+									//refresh notification badge
+									if(!postByMe)
+										ScriptSessions.addFunctionCall("mw3.getAutowiredObject('" + NotificationBadge.class.getName() + "').refresh", new Object[]{});
+									
+									ScriptSessions.addFunctionCall("mw3.onLoadFaceHelperScript", new Object[]{});
+								}
+								
+							});
+						}catch(Exception e){
+							e.printStackTrace(); //may stops due to error occurs when the follower isn't online.
+						}
+					}else{
+						Session.pushMessage(followerId, returnObjects);
+						
+						NotificationBadge notiBadge = new NotificationBadge();
+						notiBadge.setNewItemCount(-1);
+						
+						Session.pushMessage(followerId, new Refresh(notiBadge));
+					}
+					
+				}
+			}
+			
+			if(!iAmParticipating){
+				org.uengine.kernel.RoleMapping newFollower = org.uengine.kernel.RoleMapping.create();
+				newFollower.setName("_follower_" + session.getUser().getUserId());
+				newFollower.setEndpoint(session.getUser().getUserId());
+				
+				processManager.putRoleMapping(getInstId().toString(), newFollower);
+				processManager.applyChanges();
+				
+				//refreshedInstanceView.getFollowers().getFollowers().getImplementationObject().moveToInsertRow(session.getUser());
+				//refreshedInstanceView.getFollowers().getFollowers()
+				
+			}
+			
+			// 보안 대화일 경우 처리해야 함.
+			if(!securedConversation){
+				Contact contact = new Contact();
+				contact.setFriend(writer);
+				//contact.setFriendId(writer.getUserId());
+				writer.setMood(title);
+				writer.getMetaworksContext().setWhen("contacts");
+				//contact.setMood(title);
+				
+				MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(contact)});
+			}
+			
+			if("sns".equals(session.getEmployee().getPreferUX()) ){
+				return null;
+			}
+			if("comment".equals(getType())){
+				return new Object[]{copyOfThis};
+			}else{
+				WorkItem newItem = new CommentWorkItem();
+				newItem.setInstId(new Long(getInstId()));
+				newItem.setTaskId(new Long(-1));
+				newItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+				return new Object[]{new Refresh(newItem), new ToPrev(threadPanelOfThis.newItem, copyOfThis)};
+//				return new Object[]{new ToPrev(threadPanelOfThis.newItem, copyOfThis)};
 			}
 		}
-		
-		if(!iAmParticipating){
-			org.uengine.kernel.RoleMapping newFollower = org.uengine.kernel.RoleMapping.create();
-			newFollower.setName("_follower_" + session.getUser().getUserId());
-			newFollower.setEndpoint(session.getUser().getUserId());
-			
-			processManager.putRoleMapping(getInstId().toString(), newFollower);
-			processManager.applyChanges();
-			
-			//refreshedInstanceView.getFollowers().getFollowers().getImplementationObject().moveToInsertRow(session.getUser());
-			//refreshedInstanceView.getFollowers().getFollowers()
-			
-		}
-		
-		
-		// 보안 대화일 경우 처리해야 함.
-		if(!securedConversation){
-			Contact contact = new Contact();
-			contact.setFriend(writer);
-			//contact.setFriendId(writer.getUserId());
-			writer.setMood(title);
-			writer.getMetaworksContext().setWhen("contacts");
-			//contact.setMood(title);
-			
-			MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(contact)});
-		}
-		//
-		
-		//makes new line and change existing div
-		if( "sns".equals(session.getTheme())){
-			return null;
-		}
-		if("comment".equals(getType())){
-			return new Object[]{copyOfThis};
-			
-		}
-		else
-//			return new Object[]{new Refresh(newItem), new ToAppend(threadPanelOfThis, copyOfThis)};
-			return new Object[]{new Refresh(newItem), new ToPrev(threadPanelOfThis.newItem, copyOfThis)};
+
 	}
 	
 	public Object remove() throws Exception{
@@ -974,6 +940,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		
 		instanceRef.databaseMe().getMetaworksContext().setHow("blinking");
 		
+		/*
 		new Thread(){
 
 			@Override
@@ -987,7 +954,8 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			}
 			
 		}.start();
-
+		*/
+		
 		return parent;
 	}
 

@@ -105,8 +105,8 @@ public interface IEmployee extends IDAO {
 	
 	
 	@Range(
-			values={"tw", "fb", "outlook", "asana", "wave"},
-			options={"I love twitter", "I love facebook", "I love Outlook", "I love Asana", "I love Google Wave"}			
+			values={"tw", "fb", "sns", "outlook", "asana", "wave"},
+			options={"I love twitter", "I love facebook", "I Love SNS" ,"I love Outlook", "I love Asana", "I love Google Wave"}			
 			)
 	public String getPreferUX();
 	public void setPreferUX(String preferUX);

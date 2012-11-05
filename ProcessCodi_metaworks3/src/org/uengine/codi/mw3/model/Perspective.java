@@ -62,7 +62,6 @@ public class Perspective {
 		instList.load(session);
 		
 		InstanceListPanel instListPanel = new InstanceListPanel(session);
-		instListPanel.session = session;
 		instListPanel.setInstanceList(instList);
 		
 		// set search Keyword to searchBox

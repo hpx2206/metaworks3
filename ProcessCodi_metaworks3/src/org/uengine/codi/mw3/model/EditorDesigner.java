@@ -24,7 +24,7 @@ public class EditorDesigner extends ResourceDesigner{
 		classDefinition = new ClassDefinition();
 		classDefinition.setAlias(getAlias().substring(0, getAlias().lastIndexOf(".")) + ".clsdef");
 		classDefinition.getMetaworksContext().setWhere("form");
-		classDefinition.afterDeserialization();
 		classDefinition.getMetaworksContext().setWhen("view");
+		classDefinition.afterDeserialization();
 	}
 }
