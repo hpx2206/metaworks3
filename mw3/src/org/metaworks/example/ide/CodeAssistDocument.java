@@ -32,8 +32,12 @@ public class CodeAssistDocument {
 			expression = codeAssist.getLineAssistRequested().substring(codeAssist.getLineAssistRequested().lastIndexOf(' ') + 1);
 		else
 			expression = codeAssist.getLineAssistRequested();
+		
+		String resourePath = expression.replace(".", "/") + "/" + codeAssist.getSelectedItem() + ".html";
+		
+		System.out.println(resourePath);
 
-		InputStream javaDocIS = Thread.currentThread().getContextClassLoader().getResourceAsStream(expression.replace(".", "/") + codeAssist.getSelectedItem() + ".html");
+		InputStream javaDocIS = Thread.currentThread().getContextClassLoader().getResourceAsStream(resourePath);
 		
 		if(javaDocIS!=null){
 			ByteArrayOutputStream bao = new ByteArrayOutputStream();
