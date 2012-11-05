@@ -458,10 +458,11 @@ org_metaworks_example_ide_SourceCode.prototype = {
 		var assist = mw3.getAutowiredObject('org.metaworks.example.ide.CodeAssist');
     	
     	if(assist != null){
-    		this.event.stopEvent(e);    		
+    		if(typeof e != 'undefined')
+    			this.event.stopEvent(e);    		
     		
     		if(this.assistType == 'requestAssist'){
-	    		var selectedValue = mw3.getFaceHelper(assist.__objectId).select();
+	    		var selectedValue = mw3.getFaceHelper(assist.__objectId).getSelectedValue();
 	    		var selectedValues = selectedValue.split('/');
 
 	    		// remove assist
@@ -531,7 +532,6 @@ org_metaworks_example_ide_SourceCode.prototype = {
 		    			}
 		    		}	    			
 	    		}
-	    		
     		}else{
     			this.organizeImports(assist.__objectId);
     		}
@@ -539,6 +539,6 @@ org_metaworks_example_ide_SourceCode.prototype = {
 	},
 	resize : function(e){
 		this.editor.resize();	
-	},
+	}	
 		
 } 
