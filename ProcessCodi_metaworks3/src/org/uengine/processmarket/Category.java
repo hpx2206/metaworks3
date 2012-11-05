@@ -88,20 +88,25 @@ public class Category extends Database<ICategory> implements ICategory {
 
 	@Override
 	public Object[] selectCategory() throws Exception {
+		ICategory category = databaseMe();
+		
 		MarketItemPanel mp = fillMarketItemPanel();
 		if (isSelected()) {
-			setChildrenCategories(null);
-			setSelected(false);
-			return new Object[] { this, mp };
-		}
+			category.setChildrenCategories(null);
+			category.setSelected(false);
+			
+		}else{
 
-		String sql = "select * from category where parentCategoryId = ?parentCategoryId";
+/*		String sql = "select * from category where parentCategoryId = ?parentCategoryId";
 		childrenCategories = (ICategory) sql(ICategory.class, sql);
 		childrenCategories.setParentCategoryId(this.categoryId);
 		childrenCategories.select();
-		this.setSelected(true);
+*/		
+			category.setChildrenCategories(null);
+			category.setSelected(true);
+		}
 
-		return new Object[] { this, mp };
+		return new Object[] { category, mp };
 	}
 
 	private MarketItemPanel fillMarketItemPanel() throws Exception {
