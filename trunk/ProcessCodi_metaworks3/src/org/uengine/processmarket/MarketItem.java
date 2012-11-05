@@ -312,7 +312,7 @@ public class MarketItem extends Database<IMarketItem> implements IMarketItem {
 			if (itemId.next()) {
 				setItemId(itemId.getInt("itemId") + 1);
 			} else {
-				setItemId(0);
+				setItemId(1);
 			}
 
 			uploadMarketItemFiles(itemFile);
@@ -325,7 +325,7 @@ public class MarketItem extends Database<IMarketItem> implements IMarketItem {
 		} catch (Exception e) {
 
 		}
-		setCategoryId(0); // set Category New
+		//setCategoryId(0); // set Category New
 		// if (registringSession()) {
 		// setComCode(session.getEmployee().getGlobalCom());
 		// }
@@ -346,11 +346,11 @@ public class MarketItem extends Database<IMarketItem> implements IMarketItem {
 		deleteDatabaseMe();
 	}
 
-	public static IMarketItem loadCategoryItems(ICategory category)
+	public static IMarketItem loadCategoryItems(int categoryId)
 			throws Exception {
 		IMarketItem items = (IMarketItem) sql(IMarketItem.class,
 				"select * from marketItem where categoryId = ?categoryId");
-		items.setCategoryId(category.getCategoryId());
+		items.setCategoryId(categoryId);
 		items.select();
 		return items;
 	}
@@ -407,8 +407,19 @@ public class MarketItem extends Database<IMarketItem> implements IMarketItem {
 	}
 
 	@Override
-	public IMarketItem addToMarket() throws Exception {
-		setItemId(100);
+	public MarketItemPanel addToMarket() throws Exception {
+		
+		try {
+			IDAO itemId = sql(IDAO.class,
+					"select max(itemId) 'itemId' from marketItem");
+			itemId.select();
+			if (itemId.next()) {
+				setItemId(itemId.getInt("itemId") + 1);
+			} else {
+				setItemId(1);
+			}
+		}catch(Exception e){
+		}
 		setComCode("uEngine");// session.getEmployee().getGlobalCom());
 		
 		if(getItemFile() == null || getItemFile().getFileTransfer()==null)
@@ -420,13 +431,17 @@ public class MarketItem extends Database<IMarketItem> implements IMarketItem {
 		getItemFile().upload();
 		getLogoImageFile().upload();
 
-		createDatabaseMe();
+		createDatabaseMe();		
+		flushDatabaseMe();
 		
-		//flushDatabaseMe();
+		MarketItemPanel mp = new MarketItemPanel();
+		IMarketItem items = MarketItem.loadCategoryItems(this.getCategoryId());
+		items.getMetaworksContext().setHow(MetaworksContext.HOW_IN_LIST);
+		items.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+		mp.setMarketItem(items);
+		mp.setCategoryId(getCategoryId());
 		
-		//getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
-		//databaseMe().getMetaworksContext().setWhen("view");
-		return databaseMe();
+		return mp;
 	}
 
 	private void fillImageFileObject() {
