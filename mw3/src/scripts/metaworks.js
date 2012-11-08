@@ -329,8 +329,16 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 						}catch(faceHelperLoadException){
 							//TODO:
 							//mw3.showError(objectId, faceHelperLoadException.message, 'init');
-							if(console)
-								console.log(faceHelperLoadException.message)
+							if(console){
+								var errMsg = faceHelperClass;
+								
+								if(faceHelperLoadException.lineNumber)
+									errMsg += '(line ' + faceHelperLoadException.lineNumber + ')';
+								
+								errMsg += ' : ' + faceHelperLoadException.message;
+
+								console.log(errMsg);
+							}
 						}
 					}
 					
@@ -2062,8 +2070,8 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				//var thisMetaworks = this;
 				var divId = "objDiv_" + objId;
 				
-				if(object && object.metaworksContext)
-					this.setContext(object.metaworksContext);
+				//if(object && object.metaworksContext)
+				//	this.setContext(object.metaworksContext);
 				//this.setWhen(this.WHEN_VIEW);
 				
 				if(svcNameAndMethodName.indexOf('.') == -1){ //if there only methodname has been provided, guess the service name

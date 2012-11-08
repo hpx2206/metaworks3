@@ -4,13 +4,13 @@ var org_metaworks_widget_ChoiceCombo = function(objectId, className) {
 	
 	var object = mw3.objects[this.objectId];
 	
-	if(object.__descriptor && object.__descriptor.getOptionValue('changeEvent')){
+	if(object != null && object.__descriptor && object.__descriptor.getOptionValue('changeEvent')){
 		$('#' + mw3.createInputId(this.objectId)).bind('change', {objectId : this.objectId},function(event){
 			var change = $(this).find('option:selected');
 			
 			mw3.getFaceHelper(event.data.objectId).change(change.val(), change.text());
 		});
-	}	
+	}
 }
 
 org_metaworks_widget_ChoiceCombo.prototype = {

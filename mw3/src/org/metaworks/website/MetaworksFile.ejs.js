@@ -7,11 +7,10 @@ var org_metaworks_website_MetaworksFile = function(objectId, className){
 	var object = mw3.objects[this.objectId];
 	
 	$("#objDiv_" + this.objectId).attr("objectId", this.objectId);
-	
-	// rest input type='file'
+
 	this.reset();
 	
-	if(object.uploadedPath){
+	if(object && object.uploadedPath){
 		$("#filebtnadd_" + this.objectId).css('display', 'none');
 		
 		if(object.filename)
@@ -90,11 +89,14 @@ org_metaworks_website_MetaworksFile.prototype.addFileChangeListener = function(l
 
 
 org_metaworks_website_MetaworksFile.prototype.reset = function(){
-	$(mw3.getInputElement(this.objectId, 'fileTransfer')).unbind('change');
 	
-	mw3.getInputElement(this.objectId, 'fileTransfer').parentNode.innerHTML = mw3.getInputElement(this.objectId, 'fileTransfer').parentNode.innerHTML;
+	var fileTransfer = mw3.getInputElement(this.objectId, 'fileTransfer');
+	$(fileTransfer).unbind('change');
 
-	$(mw3.getInputElement(this.objectId, 'fileTransfer')).bind('change', {objectId: this.objectId}, function(event){
+	if(fileTransfer)
+		fileTransfer.parentNode.innerHTML = fileTransfer.parentNode.innerHTML;
+
+	$(fileTransfer).bind('change', {objectId: this.objectId}, function(event){
 		var object = mw3.objects[event.data.objectId];
 		var faceHelper = mw3.getFaceHelper(event.data.objectId);
 		
