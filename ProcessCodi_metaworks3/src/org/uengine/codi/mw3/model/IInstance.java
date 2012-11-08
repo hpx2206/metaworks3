@@ -183,7 +183,7 @@ public interface IInstance extends IDAO{
 	@Face(displayName="$SplitFromRootProcess")
 	public void split() throws Exception;
 	
-	@ServiceMethod(inContextMenu=true, callByContent=true, target=TARGET_SELF)	
+	@ServiceMethod(callByContent=true, target=TARGET_SELF)	
 	public void over() throws Exception;
 	
 }
