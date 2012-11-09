@@ -69,11 +69,11 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 		this.alias = alias;
 	}
 	
-	ProcessDesignerCanvas cell[];
-		public ProcessDesignerCanvas[] getCell() {
+	CanvasDTO cell[];
+		public CanvasDTO[] getCell() {
 			return cell;
 		}
-		public void setCell(ProcessDesignerCanvas[] cell) {
+		public void setCell(CanvasDTO[] cell) {
 			this.cell = cell;
 		}
 		
@@ -85,16 +85,33 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 			this.graphString = graphString;
 		}
 		
-	HashMap<String, ProcessDesignerCanvas> canvasMap;
-		public HashMap<String, ProcessDesignerCanvas> getCanvasMap() {
+	HashMap<String, CanvasDTO> canvasMap;
+		public HashMap<String, CanvasDTO> getCanvasMap() {
 			return canvasMap;
 		}
-		public void setCanvasMap(HashMap<String, ProcessDesignerCanvas> canvasMap) {
+		public void setCanvasMap(HashMap<String, CanvasDTO> canvasMap) {
 			this.canvasMap = canvasMap;
 		}
 		
-	@Hidden
+	String valiableString;
+		public String getValiableString() {
+			return valiableString;
+		}
+		public void setValiableString(String valiableString) {
+			this.valiableString = valiableString;
+		}
+		
+	String tempElementName;
+		@Hidden
+		public String getTempElementName() {
+			return tempElementName;
+		}
+		public void setTempElementName(String tempElementName) {
+			this.tempElementName = tempElementName;
+		}
+	
 	String processName;
+		@Hidden
 		public String getProcessName() {
 			return processName;
 		}
@@ -113,19 +130,40 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 	
 	@ServiceMethod(callByContent=true, target="popup")
 	public ModalWindow gateCondition() throws Exception{
-		ConditionPanel conditionPanel = new ConditionPanel();
+		ConditionPanel conditionPanel = new ConditionPanel(tempElementName);
 		conditionPanel.setMetaworksContext(new MetaworksContext());
 		conditionPanel.getMetaworksContext().setWhen("edit");
-		return new ModalWindow(conditionPanel , 600, 400,  "조건분기" );
+		conditionPanel.setValiableString(getValiableString());
+		conditionPanel.load();
+		return new ModalWindow(conditionPanel , 600, 450,  "조건분기" );
+	}
+//	@ServiceMethod(callByContent=true, target="popup")
+//	public ModalWindow dataMapping() throws Exception{
+//		MappingPanel conditionPanel = new MappingPanel();
+//		conditionPanel.setMetaworksContext(new MetaworksContext());
+//		conditionPanel.getMetaworksContext().setWhen("edit");
+//		return new ModalWindow(conditionPanel , 800, 500,  "데이터매핑" );
+//	}
+	
+	public void saveTemp() throws Exception{
+		if( cell != null){
+			HashMap<String, CanvasDTO> canvasMap = new HashMap<String, CanvasDTO>();
+			for(int i = 0; i < cell.length; i++){
+				CanvasDTO cv = cell[i];
+				canvasMap.put(cv.getId(), cv);
+			}
+			setCanvasMap(canvasMap);
+		}
 	}
 		
 	@ServiceMethod(callByContent=true)
 	public void save(String title) throws Exception{
-		ArrayList<ProcessDesignerCanvas> cells = new ArrayList<ProcessDesignerCanvas>();
+		ArrayList<CanvasDTO> cells = new ArrayList<CanvasDTO>();
 		ProcessDefinition def = new ProcessDefinition();
 		if( cell != null){
 			Role[] roles = new Role[0];
 			Activity[] ac = new Activity[0];
+			
 			if( title == null ){
 				throw new Exception("title is null. please set process title");
 			}
@@ -133,19 +171,19 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 			def.setRoles(roles);
 			def.setChildActivities(ac);
 			
-			HashMap<String, ProcessDesignerCanvas> canvasMap = new HashMap<String, ProcessDesignerCanvas>();
+			HashMap<String, CanvasDTO> canvasMap = new HashMap<String, CanvasDTO>();
 			HashMap<String, Activity> activityMap = new HashMap<String, Activity>();
 			for(int i = 0; i < cell.length; i++){
-				ProcessDesignerCanvas cv = cell[i];
+				CanvasDTO cv = cell[i];
 				cells.add(cv);
 				canvasMap.put(cv.getId(), cv);
 			}
 			setCanvasMap(canvasMap);
 			
-			Collection<ProcessDesignerCanvas> ct = canvasMap.values();
-            Iterator<ProcessDesignerCanvas> iterator = ct.iterator();
+			Collection<CanvasDTO> ct = canvasMap.values();
+            Iterator<CanvasDTO> iterator = ct.iterator();
             while (iterator.hasNext()) {
-				ProcessDesignerCanvas cv = iterator.next();
+				CanvasDTO cv = iterator.next();
 				Activity activity = addActivity(cv , def);
 				if( activity != null ){
 					if( activity instanceof HumanActivity){
@@ -156,9 +194,9 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 					activityMap.put(cv.getId(), activity);
 				}
 			}
-            Iterator<ProcessDesignerCanvas> iterator2 = ct.iterator();
+            Iterator<CanvasDTO> iterator2 = ct.iterator();
             while (iterator2.hasNext()) {
-	            ProcessDesignerCanvas cv = iterator2.next();
+	            CanvasDTO cv = iterator2.next();
 				if( cv != null && "EDGE".equalsIgnoreCase(cv.getShapeType()) ){
 					String formStr = cv.getFrom();
 					String toStr = cv.getTo();
@@ -171,7 +209,7 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 					}
 				}
             }
-			ProcessDesignerCanvas jsonString = new ProcessDesignerCanvas();
+			CanvasDTO jsonString = new CanvasDTO();
 			jsonString.setJsonString(graphString);
 			cells.add(jsonString);
 			def.setExtendedAttribute( "cells", cells );
@@ -182,7 +220,7 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 		
 	}
 	
-	public Activity addActivity(ProcessDesignerCanvas cv , ProcessDefinition def)  throws Exception{
+	public Activity addActivity(CanvasDTO cv , ProcessDefinition def)  throws Exception{
 		
 		Activity activity = null;
 		if( cv != null && "GEOM".equalsIgnoreCase(cv.getShapeType()) ){
@@ -215,26 +253,38 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 						}else 	if( customType != null && "class".equalsIgnoreCase(customType) ){
 //							String resourceBase = CodiClassLoader.getMyClassLoader().sourceCodeBase();
 //							String fullName = resourceBase  + customName;
+							
+							
+							
 							TextContext text = new TextContext();
 							text.setText("complexAct");
 
 							ComplexType complexType = new ComplexType();
 							complexType.setTypeId("["+customName+"]");
-							ProcessVariable pvs[] = new ProcessVariable[1];
-							pvs[0] = new ProcessVariable();
-							pvs[0].setName("aaaa");
-							pvs[0].setDisplayName(text);
-							pvs[0].setType(complexType.getClass());
-							pvs[0].setDefaultValue(complexType);
-							def.setProcessVariables(pvs);
+							
+							ProcessVariable pv = new ProcessVariable();
+							pv.setName("aaaa");
+							pv.setDisplayName(text);
+							pv.setType(complexType.getClass());
+							pv.setDefaultValue(complexType);
 							
 							ParameterContext pc[] = new ParameterContext[1];
-							for(int j=0; j < def.getProcessVariables().length ; j++){
+							for(int j=0; j < pc.length ; j++){
 								pc[j] = new ParameterContext();
-								pc[0].setArgument(text);
-								pc[j].setVariable(def.getProcessVariables()[j]);
+								pc[j].setArgument(text);
+								pc[j].setVariable(pv);
 							}
-							
+							ProcessVariable pvs[] = def.getProcessVariables();
+							if( pvs != null && pvs.length > 0){
+								ProcessVariable pvsTemp[] = new ProcessVariable[pvs.length + 1];
+								System.arraycopy(pvs, 0, pvsTemp, 0, pvs.length);
+								pvsTemp[pvs.length] = pv;
+								pvs = pvsTemp;
+							}else{
+								pvs = new ProcessVariable[1];
+								pvs[0] = pv;
+							}
+							def.setProcessVariables(pvs);
 							humanActivity.setParameters(pc);
 							activity = humanActivity;
 						}
@@ -246,7 +296,7 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 			if( cv.getParent() != null){
 				if( activity instanceof HumanActivity){
 					String groupId = cv.getParent();
-					ProcessDesignerCanvas groupCanvas = getCanvasMap().get(groupId);
+					CanvasDTO groupCanvas = getCanvasMap().get(groupId);
 					Role role = new Role();
 					role.setName(groupCanvas.getLabel());
 					((HumanActivity)activity).setRole(role);
@@ -268,11 +318,11 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 			is = new FileInputStream(sourceCodeFile);
 			UEngineUtil.copyStream(is, bao);
 			ProcessDefinition def = (ProcessDefinition) GlobalContext.deserialize(bao.toString("UTF-8"));
-			ArrayList<ProcessDesignerCanvas> cellsList = (ArrayList<ProcessDesignerCanvas>) def.getExtendedAttributes().get("cells");
+			ArrayList<CanvasDTO> cellsList = (ArrayList<CanvasDTO>) def.getExtendedAttributes().get("cells");
 			if( cellsList != null){
-				ProcessDesignerCanvas []cells = new ProcessDesignerCanvas[cellsList.size()];
+				CanvasDTO []cells = new CanvasDTO[cellsList.size()];
 				for(int i = 0; i < cellsList.size(); i++){
-					cells[i] = (ProcessDesignerCanvas)cellsList.get(i);
+					cells[i] = (CanvasDTO)cellsList.get(i);
 					if( cells[i] != null && cells[i].getJsonString() != null){
 						this.setGraphString(cells[i].getJsonString());
 					}
@@ -285,6 +335,8 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 				for(int i =0 ; i < roles.length; i++){
 					org.uengine.codi.mw3.webProcessDesigner.Role designerRole = new org.uengine.codi.mw3.webProcessDesigner.Role();
 					designerRole.setName(roles[i].getName());
+					designerRole.setMetaworksContext(new MetaworksContext());
+					designerRole.getMetaworksContext().setWhen("view");
 					role.add(designerRole);
 				}
 				rolePanel.setRoles(role);
