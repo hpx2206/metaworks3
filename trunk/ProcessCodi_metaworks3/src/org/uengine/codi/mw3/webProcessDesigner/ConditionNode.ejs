@@ -1,30 +1,18 @@
 <%
 	if(value){
 %>
-
-
-
-<ul>
-		<li>
-				<div id="condiNode_<%=objectId%>" class="wfNode" style="margin:3px 0; position:relative">
-				
-					<%
-						if(value.conditionType == 'Eval'){
-					%>
-							<%=fields.conditionObj.here()%>
-					<%
-						}else{
-					%>
-						<%=value.conditionName%>
-					<%
-						}
-					%>
-					<div id="condiNode_current_<%=objectId%>" class="wfnode_current" objectId="<%=objectId%>" style="display:none"><img src="images/waveStyle/navi_icon.png" ></div>
-				</div>
-	
-			<%=fields.childNode.here()%>
-		</li>
-</ul>
+		<ul>
+			<li>
+				<span style="float:left;"></span>
+				<span style="float:left;"><%=fields.operandChoice.here()%></span>
+				<span style="float:left;"><%=fields.valiableChoice.here()%></span>
+				<span style="float:left;"><%=fields.signChoice.here()%></span>
+				<span style="float:left;"><%=fields.expressionChoice.here()%></span>
+				<span style="float:left;"></span>
+				<span style="float:left; display:inline-block; cursor:pointer" onCLick="<%=methods.remove.caller()%>"><img src="images/waveStyle/loadFailed.gif" title="remove"></span>
+				<div class="clear"></div>
+			</li>
+		</ul>
 <%
 	}
 %>

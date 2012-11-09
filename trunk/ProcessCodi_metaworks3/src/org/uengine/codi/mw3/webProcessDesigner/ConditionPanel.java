@@ -1,45 +1,34 @@
 package org.uengine.codi.mw3.webProcessDesigner;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
+import org.dom4j.XPath;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.widget.Choice;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.model.Session;
 
 public class ConditionPanel  implements ContextAware{
 	
 	MetaworksContext metaworksContext;
-	public MetaworksContext getMetaworksContext() {
-		return metaworksContext;
-	}
-	public void setMetaworksContext(MetaworksContext metaworksContext) {
-		this.metaworksContext = metaworksContext;
-	}
-	
-	public ConditionPanel(){
-		this("");
-	}
-	public ConditionPanel(String conditionLabel){
-		and = new And();
-		or = new Or();
-		evaluate = new Evaluate();
-		
-		conditionNode =  new ConditionNode();
-		conditionNode.setConditionType("Root");
-		conditionNode.setConditionName("Or");
-		
-		ConditionNode conditionNode1 =  new ConditionNode();
-		conditionNode1.setConditionName("And");
-		ConditionNode conditionNode2 =  new ConditionNode();
-		conditionNode2.setConditionName("aaaaaaa");
-		conditionNode.addChildNode(conditionNode1);
-		conditionNode.addChildNode(conditionNode2);
-		
-		setConditionLabel(conditionLabel);
-	}
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
+		}
 	
 	String conditionLabel;
 		public String getConditionLabel() {
@@ -48,37 +37,15 @@ public class ConditionPanel  implements ContextAware{
 		public void setConditionLabel(String conditionLabel) {
 			this.conditionLabel = conditionLabel;
 		}
-	And and;
-		public And getAnd() {
-			return and;
+	
+	public ArrayList<ConditionNode>	 conditionNodes;
+		public ArrayList<ConditionNode> getConditionNodes() {
+			return conditionNodes;
 		}
-		public void setAnd(And and) {
-			this.and = and;
-		}
-	Or or;
-		public Or getOr() {
-			return or;
-		}
-		public void setOr(Or or) {
-			this.or = or;
-		}
-	Evaluate evaluate;
-		public Evaluate getEvaluate() {
-			return evaluate;
-		}
-		public void setEvaluate(Evaluate evaluate) {
-			this.evaluate = evaluate;
+		public void setConditionNodes(ArrayList<ConditionNode> conditionNodes) {
+			this.conditionNodes = conditionNodes;
 		}
 
-	
-	private ConditionNode conditionNode;
-		public ConditionNode getConditionNode() {
-			return conditionNode;
-		}
-		public void setConditionNode(ConditionNode conditionNode) {
-			this.conditionNode = conditionNode;
-		}
-		
 	String dragClassName;
 		public String getDragClassName() {
 			return dragClassName;
@@ -87,30 +54,49 @@ public class ConditionPanel  implements ContextAware{
 			this.dragClassName = dragClassName;
 		}
 		
+	String valiableString;
+		public String getValiableString() {
+			return valiableString;
+		}
+		public void setValiableString(String valiableString) {
+			this.valiableString = valiableString;
+		}	
+		
+	public ConditionPanel() throws Exception{
+			this("");
+	}
+	public ConditionPanel(String conditionLabel) throws Exception{
+		setConditionLabel(conditionLabel);
+	}
+	public void load()  throws Exception{
+		conditionNodes = new ArrayList<ConditionNode>();
+		ConditionNode conditionNode = new ConditionNode();
+		conditionNode.init(valiableString);
+		conditionNodes.add(conditionNode);
+	}
+	
 	@ServiceMethod(callByContent=true)
 	public Object[] saveCondition() throws Exception{
+		if( conditionNodes != null && conditionNodes.size() > 0){
+			for (Iterator<ConditionNode> iterator = conditionNodes.iterator() ; iterator.hasNext(); ) {
+				ConditionNode conditionNode = (ConditionNode)iterator.next();
+				System.out.println("getValiableChoice = " + conditionNode.getValiableChoice().getSelected());
+				System.out.println("getSignChoice = " + conditionNode.getSignChoice().getSelected());
+				System.out.println("getExpressionChoice = " + conditionNode.getExpressionChoice().getSelected());
+				System.out.println("getOperandChoice = " + conditionNode.getOperandChoice().getSelected());
+			}
+		}
 		System.out.println("conditionLabel = " + conditionLabel);
 		return new Object[]{ new Remover(new ModalWindow())};
 	}
 	
 	@ServiceMethod(callByContent=true)
-	public Object[] drawCondition() throws Exception{
-		if(dragClassName != null && dragClassName.equalsIgnoreCase("And")){
-			And and = new And();
-		}else if(dragClassName != null && dragClassName.equalsIgnoreCase("Or")){
-			System.out.println( "  =========  여기로 옴 ======" );
-			Or or = new Or();
-			ConditionNode orCondition =  new ConditionNode();
-			orCondition.setConditionType("Or");
-			orCondition.setConditionName("Or");
-			conditionNode.addChildNode(orCondition);
-		}
-		return new Object[]{this};
+	public Object[] addConditionNode() throws Exception{
+		ConditionNode newNode = new ConditionNode();
+		newNode.init(valiableString);
+		conditionNodes.add(newNode);
+		return new Object[]{conditionNodes};
 	}
-	
-	
-
-	
 
 	@AutowiredFromClient
 	public Session session;

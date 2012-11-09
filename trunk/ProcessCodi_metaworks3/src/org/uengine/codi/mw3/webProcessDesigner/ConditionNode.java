@@ -1,15 +1,22 @@
 package org.uengine.codi.mw3.webProcessDesigner;
 
-import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
+import org.dom4j.XPath;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
-import org.metaworks.Refresh;
 import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.widget.Choice;
 import org.uengine.codi.mw3.model.Session;
 
-public class ConditionNode  implements ContextAware{
+public class ConditionNode  implements Cloneable, ContextAware{
 	
 	MetaworksContext metaworksContext;
 	public MetaworksContext getMetaworksContext() {
@@ -19,158 +26,113 @@ public class ConditionNode  implements ContextAware{
 		this.metaworksContext = metaworksContext;
 	}
 	
-	String id;
-		public String getId() {
-			return id;
+	Choice valiableChoice;
+		@Face(ejsPath="dwr/metaworks/org/metaworks/widget/ChoiceCombo.ejs")
+		public Choice getValiableChoice() {
+			return valiableChoice;
 		}
-		public void setId(String id) {
-			this.id = id;
+		public void setValiableChoice(Choice valiableChoice) {
+			this.valiableChoice = valiableChoice;
 		}
-		
-	String parentId;
-		public String getParentId() {
-			return parentId;
+	Choice signChoice;
+		@Face(ejsPath="dwr/metaworks/org/metaworks/widget/ChoiceCombo.ejs")
+		public Choice getSignChoice() {
+			return signChoice;
 		}
-		public void setParentId(String parentId) {
-			this.parentId = parentId;
+		public void setSignChoice(Choice signChoice) {
+			this.signChoice = signChoice;
 		}
-
-	String conditionName;
-		public String getConditionName() {
-			return conditionName;
+	Choice expressionChoice;
+		@Face(ejsPath="dwr/metaworks/org/metaworks/widget/ChoiceCombo.ejs")
+		public Choice getExpressionChoice() {
+			return expressionChoice;
 		}
-		public void setConditionName(String conditionName) {
-			this.conditionName = conditionName;
+		public void setExpressionChoice(Choice expressionChoice) {
+			this.expressionChoice = expressionChoice;
 		}
-	
-	String conditionType;	// and, or, expresion ..
-		public String getConditionType() {
-			return conditionType;
+	Choice operandChoice;
+		@Face(ejsPath="dwr/metaworks/org/metaworks/widget/ChoiceCombo.ejs")
+		public Choice getOperandChoice() {
+			return operandChoice;
 		}
-		public void setConditionType(String conditionType) {
-			this.conditionType = conditionType;
+		public void setOperandChoice(Choice operandChoice) {
+			this.operandChoice = operandChoice;
 		}
-	String nameNext;
-		public String getNameNext() {
-			return nameNext;
-		}
-		public void setNameNext(String nameNext) {
-			this.nameNext = nameNext;
-		}
-		
-	String typeNext;
-	
-		public String getTypeNext() {
-			return typeNext;
-		}
-		public void setTypeNext(String typeNext) {
-			this.typeNext = typeNext;
-		}
-
-		
-	Condition conditionObj;
-		public Condition getConditionObj() {
-			return conditionObj;
-		}
-		public void setConditionObj(Condition conditionObj) {
-			this.conditionObj = conditionObj;
-		}
-
-	
-	private ArrayList<ConditionNode> childNode;
-		public ArrayList<ConditionNode> getChildNode() {
-			return childNode;
-		}
-		public void setChildNode(ArrayList<ConditionNode> childNode) {
-			this.childNode = childNode;
-		}
-		
 	public ConditionNode(){
-		setChildNode( new ArrayList<ConditionNode>() );
-		metaworksContext = new MetaworksContext();
-		getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+		setMetaworksContext(new MetaworksContext());
+		getMetaworksContext().setWhen("edit");
+	}
+	public void makeValiableChoice(String valiableString) throws Exception{
+		if( valiableString != null){
+			Choice choice = new Choice();
+			Document doc = getDocument(valiableString);
+//			Element rootElement = doc.getRootElement();
+			XPath xpathSelector = null;
+			xpathSelector = DocumentHelper.createXPath("//processValiable");
+			List<Element> nodeList = xpathSelector.selectNodes(doc);
+			if( nodeList.size() > 0 ){
+				for (Iterator iterator = nodeList.iterator() ; iterator.hasNext(); ) {
+					Element ele = (Element) iterator.next();
+					String nameAttr = ele.attribute("name").getValue();
+					String idAttr = ele.attribute("id").getValue();
+					choice.add(nameAttr, idAttr);
+				}
+			}
+			setValiableChoice(choice);
+		}
+	}
+	public void makeSignChoice() throws Exception{
+		Choice choice = new Choice();
+		choice.add("==", "==");
+		choice.add("!=", "!=");
+		choice.add(">=", ">=");
+		choice.add(">", ">");
+		choice.add("<", "<");
+		choice.add("<=", "<=");
+		choice.add("contains", "contains");
+		choice.add("not contains", "not contains");
+		setSignChoice(choice);
+	}
+	public void makeExpressionChoice() throws Exception{
+		Choice choice = new Choice();
+		choice.add("Text", "Text");
+		choice.add("Number", "Number");
+		choice.add("Date", "Date");
+		choice.add("Yes or No", "Yes or No");
+		choice.add("File", "File");
+		choice.add("Activity Selection", "Activity Selection");
+		choice.add("Complex Type", "Complex Type");
+		choice.add("Html Form", "Html Form");
+		setExpressionChoice(choice);
+	}
+	public void makeOperandChoice() throws Exception{
+		Choice choice = new Choice();
+		choice.add("And", "And");
+		choice.add("Or", "Or");
+		setOperandChoice(choice);
+	}
+
+	public void init(String valiableString) throws Exception{
+		makeValiableChoice(valiableString);
+		makeSignChoice();
+		makeExpressionChoice();
+		makeOperandChoice();
 	}
 	
-	public void addChildNode(ConditionNode ConditionNode){
-		getChildNode().add(ConditionNode);
+	@ServiceMethod
+	public Object[] remove(){
+		conditionPanel.conditionNodes.remove(this);
+		return new Object[]{conditionPanel.conditionNodes};
 	}
 	
+	private Document getDocument(String xmlDescription) throws DocumentException {
+        if (xmlDescription == null) {
+            return null;
+        }
+        return DocumentHelper.parseText(xmlDescription);
+    }
 	@AutowiredFromClient
 	public Session session;
-	
-//	@ServiceMethod(callByContent=true, mouseBinding="drag")
-//	public Session drag() {
-//		session.setClipboard(this);
-//		return session;
-//	}
-	
-	@ServiceMethod(callByContent=true)
-	public Object[] addChildNode() throws Exception{
-		// 현재 노드 찾기..
-		// 아이디만 가지고... parent 와 현재 노드가 어디 위치인지 어떻게 찾지????? xml 으로 생성이 되어야하나??
-		
-		// expression 이 아니면 하위노드로 만들어 주고, 맞다면 parent를 찾은 후에  
-		if( typeNext != null){
-			ConditionNode newNode = new ConditionNode();
-			newNode.setConditionType(getTypeNext());
-			newNode.setConditionName(getNameNext());
-			newNode.setParentId(getParentId());
-			Condition condition = null;
-			if( typeNext.equalsIgnoreCase("Node")){
-			}else if( typeNext.equalsIgnoreCase("And")){
-				condition = new And();
-				condition.setMetaworksContext(new MetaworksContext());
-				condition.getMetaworksContext().setHow("and");
-				condition.getMetaworksContext().setWhen("expression");
-			}else if( typeNext.equalsIgnoreCase("Or")){ 
-				condition = new Or();
-				condition.setMetaworksContext(new MetaworksContext());
-				condition.getMetaworksContext().setHow("or");
-				condition.getMetaworksContext().setWhen("expression");
-			}else if( typeNext.equalsIgnoreCase("Eval")){
-				condition = new Evaluate();
-				condition.setMetaworksContext(new MetaworksContext());
-				condition.getMetaworksContext().setHow("eval");
-				condition.getMetaworksContext().setWhen("expression");
-			}
-			newNode.setConditionObj(condition);
-			
-			addChildNode(newNode);
-		}
-		return new Object[]{this};
-	}
-	@ServiceMethod(callByContent=true, mouseBinding="drop")
-	public Object[] drop() throws Exception{
-		Object clipboard = session.getClipboard();
-		if(clipboard instanceof ConditionNode){
-			
-			System.out.println("ConditionNode");
-		}else if(clipboard instanceof And){
-			System.out.println("and");
-		}else if(clipboard instanceof Or){
-			System.out.println("or");
-			
-		}
-		return null;
-	}
-	
-	public ConditionNode getNode(String findId){
-		
-		ConditionNode resultNode = null;
-		
-		if(getId().equals(findId)){
-			resultNode = this;
-		}else{
-			for(int i =0; i<getChildNode().size(); i++){
-				resultNode = getChildNode().get(i).getNode(findId);
-				
-				if(resultNode != null)
-					break;				
-			}
-		}
-		return resultNode;			
-	}
-	
 	@AutowiredFromClient
-	public ConditionPanel conditionPanel;
+	transient public ConditionPanel conditionPanel;
 }

@@ -2,16 +2,43 @@ var org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel = fun
 	// default setting
 	this.objectId = objectId;
 	this.className = className;
+	this.divId = mw3._getObjectDivId(this.objectId);
+	this.divObj = $('#' + this.divId);
+	
 	var object = mw3.objects[this.objectId];
 	var faceHelper = this;
 	var canvas = null;
-	$('#objDiv_' + this.objectId).css('height','100%');
-    // Canvas
-    OG.common.Constants.CANVAS_BACKGROUND = "#fff";
+	this.icanvas = null;
+	
+	this.divObj.css('height','100%');
+	var canvasDivObj = $('#canvas');
+	
+	mw3.importScript("dwr/metaworks/org/uengine/codi/mw3/webProcessDesigner/processValiable.js");
+	var pcsValiable = new org.uengine.codi.mw3.webProcessDesigner.ProcessValiable();
+	mw3.pcsValiable = pcsValiable;
+	mw3.pcsValiable.xmlDocument = pcsValiable.createXML();	// dom 객체 생성
+	mw3.pcsValiable.rootElement = pcsValiable.xmlDocument.createElement("processValiables");
+	
+//	if(canvasDivObj.length > 0){
+//		canvasDivObj.show().appendTo('#' + this.divId + '>div:first-child');
+//	}else{
+//		$('#' + this.divId + '>div:first-child').append('<div id=\"canvas\" style=\"height:100%; margin-left:80px; cursor: default; overflow:auto;  background:#F1FCF1; \"></div>');
+//		canvasDivObj = $('#canvas');
+//	    // Canvas
+//	    OG.common.Constants.CANVAS_BACKGROUND = "#fff";
+//	    OG.Constants.ENABLE_CANVAS_OFFSET = true; // Layout 사용하지 않을 경우 true 로 지정
+//	    
+//	    mw3.canvas = new OG.Canvas('canvas');
+//	}
+//	this.icanvas = mw3.canvas;
+//	canvas = this.icanvas;
+	
+	OG.common.Constants.CANVAS_BACKGROUND = "#fff";
     OG.Constants.ENABLE_CANVAS_OFFSET = true; // Layout 사용하지 않을 경우 true 로 지정
-    
-    canvas = new OG.Canvas('canvas');
-    this.icanvas = canvas;
+    mw3.canvas = new OG.Canvas('canvas');
+	this.icanvas = mw3.canvas;
+	canvas = mw3.canvas;
+	
     // Shape drag & drop
     $(".icon_shape").draggable({
         start   : function () {
@@ -25,7 +52,7 @@ var org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel = fun
         helper  : 'clone',
         appendTo: "#canvas"
     });
-    $("#canvas").droppable({
+    canvasDivObj.droppable({
         drop: function (event, ui) {
         	var shapeInfo = $('#canvas').data('DRAG_SHAPE'), shape, element;
             if (shapeInfo) {
@@ -59,7 +86,7 @@ var org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel = fun
             }
         }
     });
-    $("#canvas").mouseup(function(){
+    canvasDivObj.mouseup(function(){
     	var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
  		var clipboardNode = session.clipboard;
  		// 지식노드를 캔버스에 떨구었을때 
@@ -80,12 +107,13 @@ var org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel = fun
     // Shape 이 Connect 되었을 때의 이벤트 리스너
     canvas.onConnectShape(function (event, edgeElement, fromElement, toElement) {
     	// TODO 연결되는 시점에만 호출 되니 그려진 로직은 다른걸 태우던지 해야함
-    	$(edgeElement).bind({
-			dblclick: function (event) {
-				var value = mw3.getObject(objectId);
-				value.gateCondition();
-			}
-		});
+    	faceHelper.addEventEdge(objectId, canvas, edgeElement);
+//    	$(edgeElement).unbind('dblclick').bind({
+//			dblclick: function (event) {
+//				var value = mw3.getObject(objectId);
+//				value.gateCondition();
+//			}
+//		});
     });
     
     // Role.ejs 파일쪽에 있는 스윔레인추가 버튼 클릭시 동작
@@ -137,66 +165,90 @@ var org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel = fun
 			faceHelper.addEventEdge(objectId ,canvas, element);
 		});
 	}
-	
 	this.icanvas.setCanvasSize([canvasWidth, canvasHeight]);
 };
 
+//org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype = {
+//		destroy : function(){
+//			$('#canvas').hide().appendTo('body');
+//			this.icanvas.clear();
+//		}
+//};
 org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype.addEventGeom = function(objectId, canvas, element){
-	$(element).on({
-    	mouseup: function (event, ui) {
-    		var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
-    		var clipboardNode = session.clipboard;
-    		var customData = canvas.getCustomData(element);
-    		if( customData == undefined || customData == null || customData == "" ){
-    			customData = [];
-    		}
-    		if(clipboardNode && clipboardNode.__className=="org.uengine.codi.mw3.knowledge.WfNode"){
-    			canvas.drawLabel(element, clipboardNode.name);
-    			customData.push( {"customId": clipboardNode.id , "customName" : clipboardNode.name , "customType" : "wfNode"});
-    			session.clipboard = null;
-    		}
-    		if(clipboardNode && clipboardNode.__className=="org.uengine.codi.mw3.webProcessDesigner.Role"){
-    			var wfText = $(element).children('[id$=_LABEL]').text();
-    			wfText = wfText + '(' + clipboardNode.name + ')';
-    			canvas.drawLabel(element, wfText);
-    			customData.push( {"customId": "" , "customName" : clipboardNode.name , "customType" : "role"});
-    			session.clipboard = null;
-    		}
-    		if(clipboardNode && clipboardNode.__className=="org.uengine.codi.mw3.model.ResourceFile"){
-    			var javaFileName = clipboardNode.name;
-    			if( javaFileName != '' && javaFileName.length > 5){
-    				var tokens  = javaFileName.split(".");
-    				var text = null;
-    		    	if(tokens.length>1)
-    		    		text = tokens[tokens.length-1];
-    		    	if( text != null && text == 'java'){
-    		    		var wfText = $(element).children('[id$=_LABEL]').text();
-    		    		wfText = wfText + '\n(' + clipboardNode.name + ')';
-    		    		canvas.drawLabel(element, wfText);
-    		    		customData.push( {"customId": "" , "customName" : clipboardNode.alias , "customType" : "class"});
-    		    		session.clipboard = null;
-    		    	}
-    			}
-    		}
-    		if(customData.length > 0){
-    			canvas.setCustomData(element, customData);
-    		}
-//    	},
-//    	"contextmenu": function (event) {
-//    		if( $(this).attr("_shape_id") == "OG.shape.bpmn.G_Gateway" ){
-//    			
-//    		}
-    	}
-    });
+	
+	var shape_id = $(element).attr("_shape_id");
+	if( shape_id == 'OG.shape.bpmn.D_Store' ){
+		// 데이터 매핑 
+		$(element).bind({
+			dblclick: function (event) {
+				var value = mw3.getObject(objectId);
+				value.valiableString = mw3.pcsValiable.toXML(mw3.pcsValiable.rootElement);
+//				value.dataMapping();
+			}
+		});
+	}else{
+		// 그외 
+		$(element).on({
+	    	mouseup: function (event, ui) {
+	    		var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
+	    		var clipboardNode = session.clipboard;
+	    		var customData = canvas.getCustomData(element);
+	    		if( customData == undefined || customData == null || customData == "" ){
+	    			customData = [];
+	    		}
+	    		if(clipboardNode && clipboardNode.__className=="org.uengine.codi.mw3.knowledge.WfNode"){
+	    			canvas.drawLabel(element, clipboardNode.name);
+	    			customData.push( {"customId": clipboardNode.id , "customName" : clipboardNode.name , "customType" : "wfNode"});
+	    			session.clipboard = null;
+	    		}
+	    		if(clipboardNode && clipboardNode.__className=="org.uengine.codi.mw3.webProcessDesigner.Role"){
+	    			var wfText = $(element).children('[id$=_LABEL]').text();
+	    			wfText = wfText + '(' + clipboardNode.name + ')';
+	    			canvas.drawLabel(element, wfText);
+	    			customData.push( {"customId": "" , "customName" : clipboardNode.name , "customType" : "role"});
+	    			session.clipboard = null;
+	    		}
+	    		if(clipboardNode && clipboardNode.__className=="org.uengine.codi.mw3.model.ResourceFile"){
+	    			var javaFileName = clipboardNode.name;
+	    			if( javaFileName != '' && javaFileName.length > 5){
+	    				var tokens  = javaFileName.split(".");
+	    				var text = null;
+	    		    	if(tokens.length>1)
+	    		    		text = tokens[tokens.length-1];
+	    		    	if( text != null && text == 'java'){
+	    		    		var wfText = $(element).children('[id$=_LABEL]').text();
+	    		    		wfText = wfText + '(' + clipboardNode.name + ')';
+	    		    		canvas.drawLabel(element, wfText);
+	    		    		customData.push( {"customId": "" , "customName" : clipboardNode.alias , "customType" : "class"});
+	    		    		session.clipboard = null;
+	    		    		
+	    		    		var valiableNode = mw3.pcsValiable.createValiable();
+	    		    		valiableNode.setAttribute("name",tokens[tokens.length-2]);
+	    		    		valiableNode.setAttribute("type","complexType");
+	    		    		mw3.pcsValiable.addValiable(valiableNode);
+	    		    	}
+	    			}
+	    		}
+	    		if(customData.length > 0){
+	    			canvas.setCustomData(element, customData);
+	    		}
+	    	}
+	    });
+	}
 };
 
 org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype.addEventEdge = function(objectId, canvas, element){
-	$(element).bind({
+	$(element).unbind('dblclick').bind({
 		dblclick: function (event) {
-			var value = mw3.getObject(objectId);
+			var value = mw3.getObject(objectId); 
+			value.tempElementName = $(this).children('[id$=_LABEL]').text();
+			value.valiableString = mw3.pcsValiable.toXML(mw3.pcsValiable.rootElement);
 			value.gateCondition();
 		}
 	});
+};
+org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype.showValiables = function(){
+	alert( mw3.pcsValiable.toXML(mw3.pcsValiable.rootElement)  );
 };
 org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype.clear = function(){
 	this.icanvas.clear();

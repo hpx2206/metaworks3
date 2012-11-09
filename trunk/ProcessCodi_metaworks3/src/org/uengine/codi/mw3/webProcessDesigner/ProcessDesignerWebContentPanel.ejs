@@ -38,7 +38,9 @@
             <!--
             <img src="images/opengraph/subprocess.png" class="icon_shape" _shape_type="GROUP" _shape_id="OG.shape.bpmn.A_Subprocess" _width="200" _height="150"/>
             <img src="images/opengraph/data_object.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.D_Data" _width="50" _height="50"/>
+            -->
             <img src="images/opengraph/data_store.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.D_Store" _width="50" _height="50"/>
+            <!--
             <img src="images/opengraph/group.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.M_Group" _width="50" _height="50"/><br/>
 			-->
             <img src="images/opengraph/connector_sequence.png" class="icon_shape" _shape_type="EDGE" _shape_id="OG.shape.bpmn.C_Sequence" _width="200" _height="150"/>
@@ -58,6 +60,7 @@
 		<div>
 			<ul style="float:left; padding:20px 0 0 5px;">
 				<li style="margin-bottom:3px;"><a id="wBtn" href="#" onClick="mw3.getFaceHelper('<%=objectId%>').clear()"><span>clear</span></a></li>
+				<li style="margin-bottom:3px;"><a id="wBtn" href="#" onClick="mw3.getFaceHelper('<%=objectId%>').showValiables()"><span>valiables</span></a></li>
 				<!--
 				<li><a id="wBtn" href="#" onClick="mw3.getFaceHelper('<%=objectId%>').jsonobject()"><span>json데이터확인</span></a></li>
 				-->
@@ -65,8 +68,7 @@
 			</ul>
 		</div>	
 	</div>
-	<div id="canvas" style="height:100%; margin-left:80px; cursor: default; overflow:auto;  background:#F1FCF1; ">
-	</div>
+	<div id="canvas" style="height:100%; margin-left:80px; cursor: default; overflow:auto;  background:#F1FCF1; "></div>
 </div>
 <div  style="width:100%; height:14%; border-top:1px solid #B4B3B5;">
 
