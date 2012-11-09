@@ -95,7 +95,8 @@ org_metaworks_website_MetaworksFile.prototype.reset = function(){
 
 	if(fileTransfer)
 		fileTransfer.parentNode.innerHTML = fileTransfer.parentNode.innerHTML;
-
+	
+	fileTransfer = mw3.getInputElement(this.objectId, 'fileTransfer');
 	$(fileTransfer).bind('change', {objectId: this.objectId}, function(event){
 		var object = mw3.objects[event.data.objectId];
 		var faceHelper = mw3.getFaceHelper(event.data.objectId);
