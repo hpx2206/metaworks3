@@ -8,6 +8,8 @@ var org_metaworks_ToOpener = function(objectId, className){
 	if(object){
 		mw3.setObject(mw3.recentOpenerObjectId, object.target);
 		
+		mw3.beanExpressions[this.objectId] = null;
+		
 		mw3.removeObject(this.objectId);
 		mw3.onLoadFaceHelperScript();
 	}
