@@ -4,7 +4,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.util.Map;
 
 import javax.servlet.ServletConfig;
@@ -74,9 +73,54 @@ public class TransactionalDwrServlet extends DwrServlet{
 		String pathInfo = request.getPathInfo();
 		String requestContextPath = request.getContextPath();
 
+		boolean isAllow = true;
+    	
+		// forx
+		/*
+    	if(pathInfo.endsWith(".class") || 
+    	   pathInfo.endsWith(".java") ||
+    	   pathInfo.endsWith(".org") ||
+    	   pathInfo.endsWith(".temp") ||
+    	   pathInfo.endsWith(".tmp") ||
+    	   pathInfo.endsWith(".sln") ||
+    	   pathInfo.endsWith(".zip") ||
+    	   pathInfo.endsWith(".egg") ||
+    	   pathInfo.endsWith(".alz") ||
+    	   pathInfo.endsWith(".gz") ||
+    	   pathInfo.endsWith(".tar") ||
+    	   pathInfo.endsWith(".dat") ||
+    	   pathInfo.endsWith(".list") ||
+    	   pathInfo.endsWith(".core") ||
+    	   pathInfo.endsWith(".conf") ||
+    	   pathInfo.endsWith(".inc") ||
+    	   pathInfo.endsWith(".orgin") ||
+    	   pathInfo.endsWith(".log") ||
+    	   pathInfo.endsWith(".old") ||        	   
+    	   pathInfo.endsWith(".bk") || 
+    	   pathInfo.endsWith(".bak"))
+    		isAllow = false;    	
+    	
+    	if(!isAllow){
+    		response.setStatus(404);
+    		
+    		return;
+    	}
+    	*/
+    	
+    	response.setHeader("X-XSS-Protection", "0"); //X-XSS-Protection
+    	
 		int wherePrefixStarts = pathInfo.indexOf(PATH_METAWORKS);
         if (wherePrefixStarts != -1)
         {
+        	// forx
+        	/*
+        	if(pathInfo.endsWith("/") || pathInfo.indexOf(".") == -1){
+        		response.setStatus(404);
+        		
+        		return;        		
+        	}
+        	*/
+        		
         	String mimeType = (pathInfo.endsWith(".js") ? "text/javascript":"text/plain");
         	
         	if(pathInfo.endsWith(".png"))
@@ -114,12 +158,12 @@ public class TransactionalDwrServlet extends DwrServlet{
 				}finally{
 					is.close();
 					response.flushBuffer();
+				    response.getOutputStream().flush();
+				    response.getOutputStream().close();				
 				}
-	            
-	            
-	            return;
-	        }
-
+	        }            	
+        		
+            return;
         }
 
         
@@ -130,7 +174,10 @@ public class TransactionalDwrServlet extends DwrServlet{
 		//TODO: It's debugging option 
 		//MetaworksRemoteService.metadataStorage = new Hashtable<String, WebObjectType>();
 		
-//		TransactionContext tx = TransactionContext.getThreadLocalInstance();  //Very Risky Code since the threads are pooled. so the transactionContext will persist uninteneded.
+        // 아래는 forx용
+		//TransactionContext tx = TransactionContext.getThreadLocalInstance();  //Very Risky Code since the threads are pooled. so the transactionContext will persist uninteneded.
+		
+		// 아래는 codi 용
         TransactionContext tx = new TransactionContext(); //once a TransactionContext is created, it would be cached by ThreadLocal.set, so, we need to remove this after the request processing. 
         
 		tx.setManagedTransaction(false);
@@ -194,7 +241,7 @@ public class TransactionalDwrServlet extends DwrServlet{
 	        }
 			
 	        try{
-	        
+		        
 	        	tx.commit();
 	        }catch(Exception exAtCommit){
 	        	
