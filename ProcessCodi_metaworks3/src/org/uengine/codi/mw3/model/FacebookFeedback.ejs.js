@@ -12,9 +12,6 @@ var org_uengine_codi_mw3_model_FacebookFeedback = function(objectId, className) 
 	
 	query.wait(function(data){
 		for( var i=data.length-1; i>-1; i-- ) {
-			console.log(data[i].text);
-
-			
 			for(var threadIdx in instaceViewThreadPanel.thread){
 				
 				var thread = instaceViewThreadPanel.thread[threadIdx];
@@ -22,8 +19,6 @@ var org_uengine_codi_mw3_model_FacebookFeedback = function(objectId, className) 
 				var createdTime = new Date("1970/01/01");
 				createdTime.setSeconds(createdTime.getSeconds() + data[i].time);
 				
-				
-				console.log(createdTime);
 				var nextThread = (instaceViewThreadPanel.thread.length < threadIdx + 2) ? null : instaceViewThreadPanel.thread[threadIdx + 1];
 				if(nextThread==null || (thread.startedDate < createdTime && nextThread.startedDate > createdTime)){
 					
