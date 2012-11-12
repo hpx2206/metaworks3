@@ -285,6 +285,8 @@ public class Login extends Database<ILogin> implements ILogin{
 					mainPanel = pageNavigator.goKnowledge();
 				}else if("pinterest".equals(lastVisitPage)){
 					mainPanel = pageNavigator.goPinterest();
+				}else if("ide".equals(lastVisitPage)){
+					mainPanel = pageNavigator.goIDE();
 				}else{
 					String preferUX = session.getEmployee().getPreferUX();
 					if("sns".equals(preferUX)){
