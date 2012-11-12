@@ -14,7 +14,7 @@ public class Category extends Database<ICategory> implements ICategory {
 	Timestamp modDate;
 	ICategory childrenCategories;
 	boolean deleted;
-	boolean selected;
+	boolean selected; 
 
 	@Override
 	public int getCategoryId() {
