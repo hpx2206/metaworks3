@@ -5,14 +5,13 @@ import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.Set;
 
+import org.metaworks.MetaworksException;
 import org.metaworks.WebObjectType;
 import org.metaworks.dao.ConnectionFactory;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.dwr.InvocationContext;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.dwr.TransactionalDwrServlet;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 import org.uengine.codi.platform.SecurityContext;
 import org.uengine.processmanager.ProcessManagerBean;
@@ -210,7 +209,8 @@ public class CodiMetaworksRemoteService extends MetaworksRemoteService{
 			
 		} catch (InvocationTargetException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			if(!(e.getTargetException() instanceof MetaworksException))			
+				e.printStackTrace();
 
 			if(TransactionContext.getThreadLocalInstance().getSharedContext("processManagerBeanChanged") != null){
 				processManager = getDirtyProcessManager(processManager);
