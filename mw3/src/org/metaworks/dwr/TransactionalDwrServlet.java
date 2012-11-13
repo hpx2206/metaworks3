@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.directwebremoting.extend.Replies;
 import org.directwebremoting.extend.Reply;
 import org.directwebremoting.servlet.DwrServlet;
+import org.metaworks.MetaworksException;
 import org.metaworks.dao.ConnectionFactory;
 import org.metaworks.dao.JDBCConnectionFactory;
 import org.metaworks.dao.TransactionContext;
@@ -251,7 +252,7 @@ public class TransactionalDwrServlet extends DwrServlet{
 	        	replies.addReply(new Reply(replies.getCalls().getCall(0).getCallId(), null, exAtCommit));
 	        	
 	        	throw exAtCommit;
-	        }
+	        }			
 		}catch(Throwable e){
 			try {
 				tx.rollback();
@@ -260,7 +261,8 @@ public class TransactionalDwrServlet extends DwrServlet{
 				e1.printStackTrace();
 			}
 			
-			e.printStackTrace();
+			if(!(e instanceof MetaworksException))				
+				e.printStackTrace();
 			
 			//in DWR, we never stops the application
 			//throw new ServletException(e);
