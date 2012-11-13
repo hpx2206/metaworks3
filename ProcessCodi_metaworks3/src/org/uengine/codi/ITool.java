@@ -21,10 +21,10 @@ public interface ITool extends /*ContextAware, */Serializable{
 	public static final String ITOOL_ACTIVITY_EXT10_KEY 		= "activityExt10";
 	
 	
-	public void onLoad();
+	public void onLoad() throws Exception;
 	
-	public void beforeComplete();
+	public void beforeComplete() throws Exception;
 	
-	public void afterComplete();
+	public void afterComplete() throws Exception;
 
 }
