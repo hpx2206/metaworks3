@@ -158,14 +158,14 @@ public class Session implements ContextAware{
 			this.windowTitle = windowTitle;
 		}
 	
-	String theme;
-	@Hidden
-	public String getTheme() {
-		return theme;
-	}
-	public void setTheme(String theme) {
-		this.theme = theme;
-	}
+	IRole role;
+		@Hidden
+		public IRole getRole() {
+			return role;
+		}
+		public void setRole(IRole role) {
+			this.role = role;
+		}
 	//disabled for merging
 //	SearchKeywordBox searchKeywordBox;
 //
