@@ -16,8 +16,6 @@ var org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel = fun
 	mw3.importScript("dwr/metaworks/org/uengine/codi/mw3/webProcessDesigner/processValiable.js");
 	var pcsValiable = new org.uengine.codi.mw3.webProcessDesigner.ProcessValiable();
 	mw3.pcsValiable = pcsValiable;
-	mw3.pcsValiable.xmlDocument = pcsValiable.createXML();	// dom 객체 생성
-	mw3.pcsValiable.rootElement = pcsValiable.xmlDocument.createElement("processValiables");
 	
 //	if(canvasDivObj.length > 0){
 //		canvasDivObj.show().appendTo('#' + this.divId + '>div:first-child');
@@ -165,6 +163,12 @@ var org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel = fun
 			faceHelper.addEventEdge(objectId ,canvas, element);
 		});
 	}
+	if( object != null && object.valiableString != null ){
+		mw3.pcsValiable.loadXML(object.valiableString);
+	}else{
+		mw3.pcsValiable.xmlDocument = pcsValiable.createXML();	// dom 객체 생성
+		mw3.pcsValiable.rootElement = pcsValiable.xmlDocument.createElement("processValiables");
+	}
 	this.icanvas.setCanvasSize([canvasWidth, canvasHeight]);
 };
 
@@ -219,11 +223,12 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 	    		    		var wfText = $(element).children('[id$=_LABEL]').text();
 	    		    		wfText = wfText + '(' + clipboardNode.name + ')';
 	    		    		canvas.drawLabel(element, wfText);
-	    		    		customData.push( {"customId": "" , "customName" : clipboardNode.alias , "customType" : "class"});
+	    		    		customData.push( {"customId": "" , "customName" : tokens[tokens.length-2] , "customType" : "class"});
 	    		    		session.clipboard = null;
 	    		    		
 	    		    		var valiableNode = mw3.pcsValiable.createValiable();
 	    		    		valiableNode.setAttribute("name",tokens[tokens.length-2]);
+	    		    		valiableNode.setAttribute("typeId", clipboardNode.alias );
 	    		    		valiableNode.setAttribute("type","complexType");
 	    		    		mw3.pcsValiable.addValiable(valiableNode);
 	    		    	}
@@ -241,18 +246,22 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 	$(element).unbind('dblclick').bind({
 		dblclick: function (event) {
 			var value = mw3.getObject(objectId); 
+			
+			value.tempElementId = $(this).attr('id');
 			value.tempElementName = $(this).children('[id$=_LABEL]').text();
 			value.valiableString = mw3.pcsValiable.toXML(mw3.pcsValiable.rootElement);
 			value.gateCondition();
 		}
 	});
 };
+// TODO delete test code 
 org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype.showValiables = function(){
 	alert( mw3.pcsValiable.toXML(mw3.pcsValiable.rootElement)  );
 };
 org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype.clear = function(){
 	this.icanvas.clear();
 };
+//TODO delete test code 
 org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype.jsonobject = function(){
 //	var object = mw3.getObject(this.objectId);
 //	object.jsonObj = this.icanvas.toJSON();
@@ -306,6 +315,7 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 	var object = mw3.objects[this.objectId];
 	object.cell = cellsForDwr;
 	object.graphString = JSON.stringify(graphJson);
+	object.valiableString = mw3.pcsValiable.toXML(mw3.pcsValiable.rootElement);
 	
 	return object;
 };

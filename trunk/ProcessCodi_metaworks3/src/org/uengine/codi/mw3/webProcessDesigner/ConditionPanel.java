@@ -13,6 +13,7 @@ import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
@@ -37,7 +38,15 @@ public class ConditionPanel  implements ContextAware{
 		public void setConditionLabel(String conditionLabel) {
 			this.conditionLabel = conditionLabel;
 		}
-	
+		
+	String conditionId;
+		public String getConditionId() {
+			return conditionId;
+		}
+		public void setConditionId(String conditionId) {
+			this.conditionId = conditionId;
+		}
+
 	public ArrayList<ConditionNode>	 conditionNodes;
 		public ArrayList<ConditionNode> getConditionNodes() {
 			return conditionNodes;
@@ -75,7 +84,7 @@ public class ConditionPanel  implements ContextAware{
 		conditionNodes.add(conditionNode);
 	}
 	
-	@ServiceMethod(callByContent=true)
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] saveCondition() throws Exception{
 		if( conditionNodes != null && conditionNodes.size() > 0){
 			for (Iterator<ConditionNode> iterator = conditionNodes.iterator() ; iterator.hasNext(); ) {
@@ -87,7 +96,11 @@ public class ConditionPanel  implements ContextAware{
 			}
 		}
 		System.out.println("conditionLabel = " + conditionLabel);
-		return new Object[]{ new Remover(new ModalWindow())};
+		LineShape lineShape = new LineShape();
+		lineShape.setId(this.getConditionId());
+		lineShape.setLabel(this.getConditionLabel());
+		
+		return new Object[]{ new Remover(new ModalWindow()), lineShape};
 	}
 	
 	@ServiceMethod(callByContent=true)
