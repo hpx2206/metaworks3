@@ -1,6 +1,8 @@
 package org.uengine.codi.mw3.webProcessDesigner;
 
-public class CanvasDTO {
+import java.io.Serializable;
+
+public class CanvasDTO implements Serializable{
 		String id;
 			public String getId() {
 				return id;

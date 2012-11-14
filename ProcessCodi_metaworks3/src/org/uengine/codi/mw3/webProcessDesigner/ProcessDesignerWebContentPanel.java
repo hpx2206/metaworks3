@@ -8,11 +8,17 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONSerializer;
 
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
+import org.dom4j.XPath;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Hidden;
@@ -26,7 +32,6 @@ import org.uengine.codi.mw3.model.ContentWindow;
 import org.uengine.contexts.ComplexType;
 import org.uengine.contexts.TextContext;
 import org.uengine.kernel.Activity;
-import org.uengine.kernel.ComplexActivity;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.HumanActivity;
 import org.uengine.kernel.ParameterContext;
@@ -101,6 +106,15 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 			this.valiableString = valiableString;
 		}
 		
+	String tempElementId;
+	@Hidden
+		public String getTempElementId() {
+			return tempElementId;
+		}
+		public void setTempElementId(String tempElementId) {
+			this.tempElementId = tempElementId;
+		}
+	
 	String tempElementName;
 		@Hidden
 		public String getTempElementName() {
@@ -130,10 +144,12 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 	
 	@ServiceMethod(callByContent=true, target="popup")
 	public ModalWindow gateCondition() throws Exception{
-		ConditionPanel conditionPanel = new ConditionPanel(tempElementName);
+		ConditionPanel conditionPanel = new ConditionPanel();
 		conditionPanel.setMetaworksContext(new MetaworksContext());
 		conditionPanel.getMetaworksContext().setWhen("edit");
 		conditionPanel.setValiableString(getValiableString());
+		conditionPanel.setConditionId(this.getTempElementId());
+		conditionPanel.setConditionLabel(this.getTempElementName());
 		conditionPanel.load();
 		return new ModalWindow(conditionPanel , 600, 450,  "조건분기" );
 	}
@@ -170,6 +186,7 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 			def.setName(title);
 			def.setRoles(roles);
 			def.setChildActivities(ac);
+			makeProcessValiable(def);
 			
 			HashMap<String, CanvasDTO> canvasMap = new HashMap<String, CanvasDTO>();
 			HashMap<String, Activity> activityMap = new HashMap<String, Activity>();
@@ -251,41 +268,49 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 							activity = knowledgeActivity;
 						// 클레스 - HumanActivity 생성
 						}else 	if( customType != null && "class".equalsIgnoreCase(customType) ){
-//							String resourceBase = CodiClassLoader.getMyClassLoader().sourceCodeBase();
-//							String fullName = resourceBase  + customName;
-							
-							
-							
-							TextContext text = new TextContext();
-							text.setText("complexAct");
-
-							ComplexType complexType = new ComplexType();
-							complexType.setTypeId("["+customName+"]");
-							
-							ProcessVariable pv = new ProcessVariable();
-							pv.setName("aaaa");
-							pv.setDisplayName(text);
-							pv.setType(complexType.getClass());
-							pv.setDefaultValue(complexType);
-							
-							ParameterContext pc[] = new ParameterContext[1];
-							for(int j=0; j < pc.length ; j++){
-								pc[j] = new ParameterContext();
-								pc[j].setArgument(text);
-								pc[j].setVariable(pv);
-							}
+//							TextContext text = new TextContext();
+//							text.setText("complexAct");
+//
+//							ComplexType complexType = new ComplexType();
+//							complexType.setTypeId("["+customName+"]");
+//							
+//							ProcessVariable pv = new ProcessVariable();
+//							pv.setName("aaaa");
+//							pv.setDisplayName(text);
+//							pv.setType(complexType.getClass());
+//							pv.setDefaultValue(complexType);
+//							ProcessVariable pvs[] = def.getProcessVariables();
+//							if( pvs != null && pvs.length > 0){
+//								ProcessVariable pvsTemp[] = new ProcessVariable[pvs.length + 1];
+//								System.arraycopy(pvs, 0, pvsTemp, 0, pvs.length);
+//								pvsTemp[pvs.length] = pv;
+//								pvs = pvsTemp;
+//							}else{
+//								pvs = new ProcessVariable[1];
+//								pvs[0] = pv;
+//							}
+//							pvs[3].getName();
+//							def.setProcessVariables(pvs);
 							ProcessVariable pvs[] = def.getProcessVariables();
-							if( pvs != null && pvs.length > 0){
-								ProcessVariable pvsTemp[] = new ProcessVariable[pvs.length + 1];
-								System.arraycopy(pvs, 0, pvsTemp, 0, pvs.length);
-								pvsTemp[pvs.length] = pv;
-								pvs = pvsTemp;
-							}else{
-								pvs = new ProcessVariable[1];
-								pvs[0] = pv;
+							if( pvs != null){
+								for(int j=0; j < pvs.length ; j++){
+									if( customName.equals(pvs[j].getName()) ){
+										ParameterContext pc[] = new ParameterContext[1];
+										pc[0] = new ParameterContext();
+										pc[0].setArgument(pvs[j].getDisplayName());
+										pc[0].setVariable(pvs[j]);
+										humanActivity.setParameters(pc);
+										break;
+									}
+								}
 							}
-							def.setProcessVariables(pvs);
-							humanActivity.setParameters(pc);
+//							ParameterContext pc[] = new ParameterContext[1];
+//							for(int j=0; j < pc.length ; j++){
+//								pc[j] = new ParameterContext();
+//								pc[j].setArgument(text);
+//								pc[j].setVariable(pv);
+//							}
+//							humanActivity.setParameters(pc);
 							activity = humanActivity;
 						}
 					}
@@ -305,6 +330,44 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 		}
 		return activity;
 	}
+	public void makeProcessValiable(ProcessDefinition def) throws Exception{
+		ProcessVariable pvs[] = null;
+		if( this.valiableString != null){
+			Document doc = getDocument(valiableString);
+			XPath xpathSelector = null;
+			xpathSelector = DocumentHelper.createXPath("//processValiable");
+			List<Element> nodeList = xpathSelector.selectNodes(doc);
+			if( nodeList.size() > 0 ){
+				pvs = new ProcessVariable[nodeList.size()];
+				for (int i = 0; i < nodeList.size(); i++ ) {
+					Element ele = (Element) nodeList.get(i);
+//					String idAttr = ele.attribute("id").getValue();
+					String nameAttr = ele.attribute("name").getValue();
+					String typeIdAttr = ele.attribute("typeId").getValue();
+					
+					TextContext text = new TextContext();
+					text.setText(nameAttr);
+
+					ComplexType complexType = new ComplexType();
+					complexType.setTypeId("["+typeIdAttr+"]");
+					
+					ProcessVariable pv = new ProcessVariable();
+					pv.setName(nameAttr);
+					pv.setDisplayName(text);
+					pv.setType(complexType.getClass());
+					pv.setDefaultValue(complexType);
+					pvs[i] = pv;
+				}
+				def.setProcessVariables(pvs);
+			}
+		}
+	}
+	private Document getDocument(String xmlDescription) throws DocumentException {
+        if (xmlDescription == null) {
+            return null;
+        }
+        return DocumentHelper.parseText(xmlDescription);
+    }
 	public void load() throws Exception{
 		
 		String processName = getAlias().substring(0, getAlias().indexOf("."));
@@ -341,7 +404,23 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 				}
 				rolePanel.setRoles(role);
 			}
-			
+			ProcessVariable pvs[] = def.getProcessVariables();
+			if( pvs != null && pvs.length != 0){
+				Document doc = DocumentHelper.createDocument();
+				Element rootElement = doc.addElement("processValiables");
+				for(int i =0 ; i < pvs.length; i++){
+					ProcessVariable pv = pvs[i];
+					Element ele = rootElement.addElement("processValiable");
+					ele.addAttribute("id", String.valueOf(i) );
+					ele.addAttribute("name", pv.getName());
+					if( pv.getDefaultValue() instanceof ComplexType ){
+						ComplexType v = (ComplexType)pv.getDefaultValue();
+						ele.addAttribute("typeId", v.getTypeId() );
+						ele.addAttribute("type", "complexType" );
+					}
+				}
+				setValiableString( rootElement.asXML() );
+			}
 		} catch (FileNotFoundException e1) {
 			e1.printStackTrace();
 		} catch (Exception e) {
