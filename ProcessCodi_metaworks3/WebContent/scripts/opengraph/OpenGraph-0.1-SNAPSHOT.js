@@ -9423,7 +9423,7 @@ OG.renderer.RaphaelRenderer = function (container, containerSize, backgroundColo
 	 */
 	this.drawLabel = function (shapeElement, text, style) {
 		var rElement = getREleById(OG.Util.isElement(shapeElement) ? shapeElement.id : shapeElement),
-			element, labelElement, envelope, _style = {}, position, size,
+			element, labelElement, envelope, _style = {}, position, size, beforeText,
 			/**
 			 * 라인(꺽은선)의 중심위치를 반환한다.
 			 *
@@ -9458,6 +9458,7 @@ OG.renderer.RaphaelRenderer = function (container, containerSize, backgroundColo
 			element = rElement.node;
 			envelope = element.shape.geom.getBoundary();
 
+			beforeText = element.shape.label;
 			OG.Util.apply(element.shape.geom.style.map, _style);
 			element.shape.label = text === undefined ? element.shape.label : text;
 
@@ -9497,6 +9498,14 @@ OG.renderer.RaphaelRenderer = function (container, containerSize, backgroundColo
 					element.shape instanceof OG.shape.EdgeShape
 				);
 				element.appendChild(labelElement);
+
+				// drawLabel event fire
+				$(_PAPER.canvas).trigger('drawLabel', [element, text]);
+
+				if (text !== beforeText) {
+					// labelChanged event file
+					$(_PAPER.canvas).trigger('labelChanged', [element, text, beforeText]);
+				}
 			}
 		}
 
@@ -10659,6 +10668,9 @@ OG.renderer.RaphaelRenderer = function (container, containerSize, backgroundColo
 			for (i = 0; i < elements.length; i++) {
 				groupShapeEle.appendChild(elements[i]);
 			}
+
+			// group event fire
+			$(_PAPER.canvas).trigger('group', [groupShapeEle]);
 		}
 
 		return groupShapeEle;
@@ -10682,6 +10694,9 @@ OG.renderer.RaphaelRenderer = function (container, containerSize, backgroundColo
 				}
 				this.removeShape(groupElements[i]);
 			}
+
+			// ungroup event fire
+			$(_PAPER.canvas).trigger('ungroup', [ungroupElements]);
 		}
 
 		return ungroupElements;
@@ -10773,6 +10788,9 @@ OG.renderer.RaphaelRenderer = function (container, containerSize, backgroundColo
 
 			hideChildEdge(element, element);
 			this.redrawShape(element);
+
+			// collapsed event fire
+			$(_PAPER.canvas).trigger('collapsed', [element]);
 		}
 	};
 
@@ -10848,6 +10866,9 @@ OG.renderer.RaphaelRenderer = function (container, containerSize, backgroundColo
 
 			showChildEdge(element, element);
 			this.redrawShape(element);
+
+			// expanded event fire
+			$(_PAPER.canvas).trigger('expanded', [element]);
 		}
 	};
 
@@ -10881,14 +10902,14 @@ OG.renderer.RaphaelRenderer = function (container, containerSize, backgroundColo
 			}
 		}
 
-		// removeShape event fire
-		$(_PAPER.canvas).trigger('removeShape', [rElement.node]);
-
 		this.disconnect(rElement.node);
 		this.removeTerminal(rElement.node);
 		this.removeGuide(rElement.node);
 		this.removeCollapseGuide(rElement.node);
 		this.remove(rElement.node);
+
+		// removeShape event fire
+		$(_PAPER.canvas).trigger('removeShape', [rElement.node]);
 	};
 
 	/**
@@ -11254,10 +11275,12 @@ OG.renderer.RaphaelRenderer = function (container, containerSize, backgroundColo
 				geometry = rElement.node.shape.geom;
 				geometry.move(offset[0], offset[1]);
 
+				this.redrawShape(rElement.node, excludeEdgeId);
+
 				// moveShape event fire
 				$(_PAPER.canvas).trigger('moveShape', [rElement.node, offset]);
 
-				return this.redrawShape(rElement.node, excludeEdgeId);
+				return rElement.node;
 			} else {
 				return element;
 			}
@@ -11328,7 +11351,7 @@ OG.renderer.RaphaelRenderer = function (container, containerSize, backgroundColo
 				width = envelope.getWidth();
 				height = envelope.getHeight();
 
-				return this.drawShape([center.x, center.y], shape, [width, height, angle], rElement.node.shapeStyle, rElement.node.id);
+				this.drawShape([center.x, center.y], shape, [width, height, angle], rElement.node.shapeStyle, rElement.node.id);
 			} else {
 				if (rElement.node.shape.angle) {
 					geometry.rotate(-1 * rElement.node.shape.angle);
@@ -11336,10 +11359,18 @@ OG.renderer.RaphaelRenderer = function (container, containerSize, backgroundColo
 				geometry.rotate(angle);
 				rElement.node.shape.angle = angle;
 
-				return this.redrawShape(rElement.node, excludeEdgeId);
+				this.redrawShape(rElement.node, excludeEdgeId);
 			}
+
+			// rotateShape event fire
+			$(_PAPER.canvas).trigger('rotateShape', [rElement.node, angle]);
+
+			return rElement.node;
 		} else if (rElement) {
 			rElement.rotate(angle);
+
+			// rotateShape event fire
+			$(_PAPER.canvas).trigger('rotateShape', [rElement.node, angle]);
 
 			return rElement.node;
 		}
@@ -11366,10 +11397,12 @@ OG.renderer.RaphaelRenderer = function (container, containerSize, backgroundColo
 		if (rElement && type && geometry) {
 			geometry.resize(offset[0], offset[1], offset[2], offset[3]);
 
+			this.redrawShape(rElement.node, excludeEdgeId);
+
 			// resizeShape event fire
 			$(_PAPER.canvas).trigger('resizeShape', [rElement.node, offset]);
 
-			return this.redrawShape(rElement.node, excludeEdgeId);
+			return rElement.node;
 		} else if (rElement) {
 			bBox = rElement.getBBox();
 
@@ -15910,6 +15943,28 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor, backgroun
 	};
 
 	/**
+	 * 라벨이 Draw 되었을 때의 이벤트 리스너
+	 *
+	 * @param {Function} callbackFunc 콜백함수(event, shapeElement, labelText)
+	 */
+	this.onDrawLabel = function (callbackFunc) {
+		$(this.getRootElement()).bind('drawLabel', function (event, shapeElement, labelText) {
+			callbackFunc(event, shapeElement, labelText);
+		});
+	};
+
+	/**
+	 * 라벨이 Change 되었을 때의 이벤트 리스너
+	 *
+	 * @param {Function} callbackFunc 콜백함수(event, shapeElement, afterText, beforeText)
+	 */
+	this.onLabelChanged = function (callbackFunc) {
+		$(this.getRootElement()).bind('labelChanged', function (event, shapeElement, afterText, beforeText) {
+			callbackFunc(event, shapeElement, afterText, beforeText);
+		});
+	};
+
+	/**
 	 * Shape 이 Redraw 되었을 때의 이벤트 리스너
 	 *
 	 * @param {Function} callbackFunc 콜백함수(event, shapeElement)
@@ -15928,6 +15983,17 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor, backgroun
 	this.onRemoveShape = function (callbackFunc) {
 		$(this.getRootElement()).bind('removeShape', function (event, shapeElement) {
 			callbackFunc(event, shapeElement);
+		});
+	};
+
+	/**
+	 * Shape 이 Rotate 될 때의 이벤트 리스너
+	 *
+	 * @param {Function} callbackFunc 콜백함수(event, element, angle)
+	 */
+	this.onRotateShape = function (callbackFunc) {
+		$(this.getRootElement()).bind('rotateShape', function (event, element, angle) {
+			callbackFunc(event, element, angle);
 		});
 	};
 
@@ -15985,6 +16051,50 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor, backgroun
 	this.onDisconnectShape = function (callbackFunc) {
 		$(this.getRootElement()).bind('disconnectShape', function (event, edgeElement, fromElement, toElement) {
 			callbackFunc(event, edgeElement, fromElement, toElement);
+		});
+	};
+
+	/**
+	 * Shape 이 Grouping 되었을 때의 이벤트 리스너
+	 *
+	 * @param {Function} callbackFunc 콜백함수(event, groupElement)
+	 */
+	this.onGroup = function (callbackFunc) {
+		$(this.getRootElement()).bind('group', function (event, groupElement) {
+			callbackFunc(event, groupElement);
+		});
+	};
+
+	/**
+	 * Shape 이 UnGrouping 되었을 때의 이벤트 리스너
+	 *
+	 * @param {Function} callbackFunc 콜백함수(event, ungroupedElements)
+	 */
+	this.onUnGroup = function (callbackFunc) {
+		$(this.getRootElement()).bind('ungroup', function (event, ungroupedElements) {
+			callbackFunc(event, ungroupedElements);
+		});
+	};
+
+	/**
+	 * Group 이 Collapse 되었을 때의 이벤트 리스너
+	 *
+	 * @param {Function} callbackFunc 콜백함수(event, element)
+	 */
+	this.onCollapsed = function (callbackFunc) {
+		$(this.getRootElement()).bind('collapsed', function (event, element) {
+			callbackFunc(event, element);
+		});
+	};
+
+	/**
+	 * Group 이 Expand 되었을 때의 이벤트 리스너
+	 *
+	 * @param {Function} callbackFunc 콜백함수(event, element)
+	 */
+	this.onExpanded = function (callbackFunc) {
+		$(this.getRootElement()).bind('expanded', function (event, element) {
+			callbackFunc(event, element);
 		});
 	};
 };
