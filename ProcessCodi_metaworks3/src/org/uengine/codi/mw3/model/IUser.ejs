@@ -87,6 +87,19 @@
 		</div>
 <%
 			}
+		}else if(mw3.how == 'picker'){
+%>
+		<div class="user">	
+			<div class="user_focus<%=(value.size=='small' ? ' small':'')%>" style="background: url('<%=portrait%>'); background-size:cover;">	
+				<img id="user_picture_<%=objectId%>" width=1 height=1 src="<%=portrait%>"  onerror="$(this).parent().css({'background':'url(\'<%=unknown%>\') no-repeat','background-size':'cover'})">
+			</div>
+				
+			<div class="user_compact">
+				<%=value.name%>
+			</div>
+			<div style="clear:both"></div>
+		</div>			
+<%		
 		}else{			
 %>
 		<div class="user" onclick="<%=clickAction%>">		
@@ -105,17 +118,16 @@
 <%			
 			}else if(mw3.when == 'self'){
 %>
-
 			<div class="user_compact">
 				<%=value.name%>
 				<%=value.mood ? '<br>'+value.mood : ''%>
 			</div>
-<%		
+<%			
 			}
 %>		
 			<div style="clear:both"></div>
 		</div>
-<%		
+<%		 
 		}
 	}
 %>
