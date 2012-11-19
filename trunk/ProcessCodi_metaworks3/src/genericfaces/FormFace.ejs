@@ -59,7 +59,7 @@
 					
 				fieldOrder.push(fd.name);
 			}
-		}	
+		}
 %>
 	<div class="form_table2"> 
 		<table border="1" cellspacing="0" >	
@@ -81,18 +81,25 @@
 <%				
 			for (var j=0; j<tempOrder.length; j++){					
 				var fd = fields[tempOrder[j]].fieldDescriptor;
+				var colspan = null;
+				
+				if(j == tempOrder.length-1)
+					colspan = cols - (j*2) - 1;
+					
+				var hideLabel = (fd.getOptionValue('hideLabel')?fd.getOptionValue('hideLabel'):false);
+				if(hideLabel){
+					if(colspan == null)
+						colspan = cols - (j*2) - 1;
+						
+					colspan = colspan + 1; 
+				}else{				
 %>
-			<th scope="row" <%=fd.getOptionValue('required')?"class=\"vCheck\"":""%>><%=mw3.localize(fd.displayName)%></th>
+			<th scope="row" <%=(mw3.when=='new' || mw3.when=='edit')?(fd.getOptionValue('required')?'class=\"vCheck\"':''):''%>><%=fd.displayName%></th>
 <%
-				if(j < tempOrder.length-1){ 			
-%> 			
-			<td><%=fields[fd.name] ? fields[fd.name].here() : "XXX"%></td>		
-<%
-				}else{
-%>
-			<td colspan="<%=cols - (j*2) - 1%>"><%=fields[fd.name] ? fields[fd.name].here() : "XXX"%></td>
-<%				
 				}
+%>
+			<td <%=colspan?'colspan=\"'+colspan+'\"':''%>><%=fields[fd.name] ? fields[fd.name].here() : "XXX"%></td>
+<%				
 			}
 %>
 		</tr>
