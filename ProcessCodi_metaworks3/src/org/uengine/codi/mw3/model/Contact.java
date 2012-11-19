@@ -23,7 +23,7 @@ public class Contact extends Database<IContact> implements IContact{
 		
 		IContact contacts = sql(sb.toString());
 		contacts.setUserId(getUserId());		
-		contacts.set("friendName", this.getFriend().getName());
+		contacts.set("friendName", this.getFriend().getName() + "%");
 		contacts.set("network", this.getFriend().getNetwork());
 		contacts.select();
 		contacts.setMetaworksContext(getMetaworksContext());
