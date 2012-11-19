@@ -4,10 +4,16 @@
 		<input type="text" id="<%=mw3.createInputId(objectId)%>" style="width:80px; color:#666;" when="<%=mw3.when%>" readonly />
 		<input type="button" onclick="mw3.getFaceHelper(<%=objectId%>).clear()" value="clear" />
 <%			
-	}else{
+	}else if(mw3.when == 'timeago'){
+		if(value){	
+%>
+	<abbr class="timeago" title="<%= value.ISODateString() %>"><%=value.format('yyyy-MM-dd')%></abbr>
+<%	
+		}
+	}else{	
 		if(value){
 %>
-		<abbr class="timeago" title="<%= value.ISODateString() %>"><%=value.format('yyyy-MM-dd')%></abbr>
+		<%=value.format('yyyy-MM-dd')%>
 <%		
 		}
 	}
