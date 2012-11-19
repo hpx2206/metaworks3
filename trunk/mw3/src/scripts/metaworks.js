@@ -2961,7 +2961,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					} 
 
 					
-					if(fd.attributes['hidden']) 
+					if(fd.attributes['hidden'] || this.when == '___hidden___') 
 						return true;
 										
 				} 
