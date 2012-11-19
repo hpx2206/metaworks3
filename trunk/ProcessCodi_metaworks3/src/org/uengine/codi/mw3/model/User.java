@@ -201,7 +201,10 @@ public class User extends Database<IUser> implements IUser {
 		
 		if(addFollowerPanel!=null && "userPicker".equals(addFollowerPanel.getMetaworksContext().getWhen())){
 			getMetaworksContext().setWhen("edit");
+			getMetaworksContext().setHow("picker");
+			
 			return new Object[]{new Remover(new Popup()), new ToOpener(this)};
+			
 		}else if("addTopicFollower".equals(this.getMetaworksContext().getWhen())){
 			
 			TopicMapping tm = new TopicMapping();

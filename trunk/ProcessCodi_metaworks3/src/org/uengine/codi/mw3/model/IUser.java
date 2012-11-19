@@ -37,7 +37,7 @@ public interface IUser extends IDAO{
 	@ServiceMethod(callByContent=true)
 	public Refresh addContact() throws Exception;
 	
-	@ServiceMethod(callByContent=true)
+	@ServiceMethod(callByContent=true, target=TARGET_APPEND)
 	public Object[] addFollower() throws Exception;
 		
 	@ServiceMethod(when="edit", inContextMenu=true, callByContent=true, target=TARGET_POPUP)

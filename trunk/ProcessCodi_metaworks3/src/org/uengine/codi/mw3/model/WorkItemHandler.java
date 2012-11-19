@@ -257,9 +257,8 @@ public class WorkItemHandler implements ContextAware{
 	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_EDIT, validate=true)
 //	@Available(when={"NEW"})
 	public InstanceViewContent complete() throws RemoteException, ClassNotFoundException, Exception{
-		
+						
 		instance = processManager.getProcessInstance(instanceId);
-
 
 		humanActivity = null;
 		if (instanceId != null && tracingTag != null) {
@@ -273,6 +272,8 @@ public class WorkItemHandler implements ContextAware{
 
 		}
 
+		// load map for ITool
+		loadMapForITool((Map<String, Object>)makeMapForITool());
 		
 		ResultPayload rp = new ResultPayload();
 		
@@ -303,6 +304,19 @@ public class WorkItemHandler implements ContextAware{
 		
 		processManager.completeWorkitem(getInstanceId(), getTracingTag(), getTaskId().toString(), rp );
 		processManager.applyChanges();
+		
+		if(parameters!=null){
+			for(int i=0; i<parameters.length; i++){				
+				Serializable processVariableValue = null;
+				processVariableValue = (Serializable) parameters[i].getValueObject();
+				
+				if(processVariableValue instanceof ITool){
+					((ITool)processVariableValue).afterComplete();
+				}
+			}
+		}
+		
+		releaseMapForITool();
 		
 		//refreshes the instanceview so that the next workitem can be show up
 		Instance instance = new Instance();
@@ -387,6 +401,7 @@ public class WorkItemHandler implements ContextAware{
 		Map<String, Object> mapForITool = new HashMap<String, Object>();
 
 		mapForITool.put(ITool.ITOOL_INSTANCEID_KEY, getInstanceId());
+		mapForITool.put(ITool.ITOOL_TRACINGTAG_KEY, getTracingTag());
 		mapForITool.put(ITool.ITOOL_SESSION_KEY, session);
 		mapForITool.put(ITool.ITOOL_PROCESS_MANAGER_KEY, processManager);
 		mapForITool.put(ITool.ITOOL_ACTIVITY_EXT1_KEY, humanActivity.getExtValue1());
