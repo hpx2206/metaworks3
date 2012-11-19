@@ -6,6 +6,7 @@ public interface ITool extends /*ContextAware, */Serializable{
 	
 	public static final String ITOOL_MAP_KEY 					= "mapForITool";
 	public static final String ITOOL_INSTANCEID_KEY 			= "instanceId";
+	public static final String ITOOL_TRACINGTAG_KEY 			= "tracingtag";
 	public static final String ITOOL_SESSION_KEY 				= "session";
 	public static final String ITOOL_PROCESS_MANAGER_KEY 		= "processManager";
 	
