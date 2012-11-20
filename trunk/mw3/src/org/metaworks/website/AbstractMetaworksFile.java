@@ -29,7 +29,7 @@ public abstract class AbstractMetaworksFile implements ContextAware {
 	}
 	
 
-	MetaworksContext metaworksContext;
+	transient MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
 			return metaworksContext;
 		}
