@@ -359,7 +359,9 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 					
 					node.copyFrom(findNode);
 					node.setChildNode(new ArrayList<WfNode>());
+					node.setMetaworksContext(new MetaworksContext());
 					node.getMetaworksContext().setWhen(getMetaworksContext().getWhen());
+					node.getMetaworksContext().setWhere(this.getMetaworksContext().getWhere());
 					
 					if(node.getVisType()==null && !"ROOT".equals(getMetaworksContext().getHow())){
 						node.getMetaworksContext().setHow(getMetaworksContext().getHow());

@@ -163,7 +163,7 @@ public interface IWfNode extends IDAO {
 	 * Service Method
 	 *  
 	 *******************************************/
-	@ServiceMethod(callByContent=true, except={"childNode", "focus"}, target=TARGET_SELF	)
+	@ServiceMethod(callByContent=true, except={"childNode", "focus"}, target=TARGET_SELF)
 	public void load() throws Exception;
 	
 	@ServiceMethod(callByContent=true, except={"childNode", "focus"}, target="popup")
