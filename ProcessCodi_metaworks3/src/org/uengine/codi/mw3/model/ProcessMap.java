@@ -301,11 +301,19 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 			processManager.applyChanges();
 		
 			
-			InstanceViewContent rootInstanceView = instanceView;// = new InstanceViewContent();
-			rootInstanceView.load(rootInstanceRef);
 			
-
-			return new Object[]{rootInstanceView, new Remover(new Popup())};
+			if("sns".equals(session.getEmployee().getPreferUX())){
+				InstanceViewThreadPanel panel = new InstanceViewThreadPanel();
+				panel.getMetaworksContext().setHow("instanceList");
+				panel.getMetaworksContext().setWhere("sns");
+				panel.session = session;
+				panel.load(processMapList.getParentInstanceId().toString());
+				return new Object[]{panel, new Remover(new Popup())};
+			}else{
+				InstanceViewContent rootInstanceView = instanceView;// = new InstanceViewContent();
+				rootInstanceView.load(rootInstanceRef);
+				return new Object[]{rootInstanceView, new Remover(new Popup())};
+			}
 			
 		}
 		
