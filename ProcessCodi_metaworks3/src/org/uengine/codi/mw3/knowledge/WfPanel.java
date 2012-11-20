@@ -109,7 +109,6 @@ public class WfPanel implements ContextAware {
 			node.setFirst(false);
 			node.load();
 		}
-		
 		setFirst(false);
 		//node.load(nodeId);		
 		

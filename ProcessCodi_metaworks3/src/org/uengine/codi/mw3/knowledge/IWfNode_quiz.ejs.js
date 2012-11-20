@@ -157,6 +157,11 @@ var org_uengine_codi_mw3_knowledge_IWfNode_quiz = function(objectId, className){
 	$('td.radioTr').eq(0).find('input').hide();
 	$('#objDiv_' +this.objectId + ' #quizRadio').eq(0).click(function(){alert("정답입니다")})
 	
+	if(this.mw3Obj.first){
+		setTimeout(function(){
+			mw3.call(objectId, 'load');
+		},1);
+	}
 
 }
 

@@ -149,6 +149,11 @@ var org_uengine_codi_mw3_knowledge_IWfNode_uml = function(objectId, className){
 		this.obj.find('td.#mm_uml_LineL').eq(0).css('background','url(images/waveStyle/mm_uml_RightLine.gif) 0% 50% no-repeat')
 	}
 
+	if(this.mw3Obj.first){
+		setTimeout(function(){
+			mw3.call(objectId, 'load');
+		},1);
+	}
 }
 
 org_uengine_codi_mw3_knowledge_IWfNode_uml.prototype = {
