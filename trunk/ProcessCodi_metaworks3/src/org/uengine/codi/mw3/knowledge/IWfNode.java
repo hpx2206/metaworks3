@@ -151,11 +151,21 @@ public interface IWfNode extends IDAO {
 	@Hidden
 	public String getThumbnailNext() ;
 	public void setThumbnailNext(String thumbnailNext);
+	
+	@NonLoadable
+	@NonSavable
+	@Hidden
+	public boolean isFirst();
+	public void setFirst(boolean first);
+	
 	/*******************************************
 	 * 
 	 * Service Method
 	 *  
 	 *******************************************/
+	@ServiceMethod(callByContent=true, except={"childNode", "focus"})
+	public void load() throws Exception;
+	
 	@ServiceMethod(callByContent=true, except={"childNode", "focus"}, target="popup")
 	@Test(scenario="first", starter=true, instruction="트리 구조의 지식을 작성합니다. 엔터키를 누르면 다음라인, 탭키를 누르면 들여쓰기, 두번 엔터는 내어쓰기 입니다. <p> * 우측 클릭을 하셔서 '프로세스 발행'을 하면 메모한 내용을 기반으로 작업지시도 가능합니다.<br> 좋아하시는 키워드를 입력해보세요...", next="autowiredObject.org.uengine.codi.mw3.knowledge.MashupGoogleImage.putImage()")
 	public Object[] add() throws Exception;
@@ -208,11 +218,11 @@ public interface IWfNode extends IDAO {
 	@ServiceMethod(callByContent=true, except={"childNode", "focus"}, target="popup", inContextMenu=true, keyBinding="Shift+Del")
 	public Object[] removeNode() throws Exception;
 	
-	@ServiceMethod(callByContent=true)
-	public WfNode expand() throws Exception;	
+	@ServiceMethod(callByContent=true, except={"childNode"})
+	public void expand() throws Exception;	
 	
-	@ServiceMethod(callByContent=true)
-	public WfNode collapse() throws Exception;	
+	@ServiceMethod(callByContent=true, except={"childNode"})
+	public void collapse() throws Exception;	
 	
 	@ServiceMethod(callByContent=true, inContextMenu=true, target="popup")
 	@Face(displayName="$presentation")
@@ -256,6 +266,5 @@ public interface IWfNode extends IDAO {
 	public IUser dropUser = null;
 
 	public String getConnType();
-	public void setConnType(String connType);
-	
+	public void setConnType(String connType);	
 }

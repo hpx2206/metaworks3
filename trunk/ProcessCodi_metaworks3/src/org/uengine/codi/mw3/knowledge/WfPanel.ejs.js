@@ -11,7 +11,7 @@ var org_uengine_codi_mw3_knowledge_WfPanel = function(objectId, className){
 	
 	var object = mw3.objects[this.objectId];
 	
-	if(!object.first){
+	if(object.first){
 		setTimeout(function(){
 			mw3.call(objectId, 'load');
 		},1);
