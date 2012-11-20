@@ -168,7 +168,6 @@ public class InstanceView {
 
 	protected void loadDefault(Instance inst) throws Exception{
 		ProcessInstance instance = processManager.getProcessInstance(getInstanceId());
-
 		
 		followers = new InstanceFollowers();
 		followers.setInstanceId(instanceId);

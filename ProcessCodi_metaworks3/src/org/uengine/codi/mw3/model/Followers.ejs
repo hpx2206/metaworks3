@@ -1,3 +1,6 @@
+<%
+console.log(mw3.when);
+%>
 <div id="searchbox">
 	<div class="adduserline"> 
 		<dl>
@@ -12,7 +15,7 @@
 			 			<%=fields.followers.here({options: {alignment:'horizontal'}})%>
 			 		</dd>
 	<%
-			if(mw3.when != "public"){
+			if((mw3.when == 'edit' || mw3.when == 'new') && mw3.when != "public"){
 	%>				 		
 			 		<dd>
 						<img src="images/waveStyle/addUser.png" title="User 추가" onclick="javascript:<%=methods.addFollowers.caller()%>" style="margin-top:7px;">
