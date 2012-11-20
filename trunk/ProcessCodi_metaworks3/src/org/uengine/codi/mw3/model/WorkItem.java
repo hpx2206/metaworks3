@@ -456,6 +456,8 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		wi.setEndpoint(session.getUser().getUserId());
 		wi.setWriter(getWriter());
 		wi.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+		wi.getMetaworksContext().setWhere(this.getMetaworksContext().getWhere());		
+		wi.getMetaworksContext().setHow(this.getMetaworksContext().getHow());
 		wi.setInstantiation(isInstantiation());
 	}
 

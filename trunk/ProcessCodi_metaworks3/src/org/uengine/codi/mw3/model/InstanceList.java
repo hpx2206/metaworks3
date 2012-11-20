@@ -1,8 +1,5 @@
 package org.uengine.codi.mw3.model;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
