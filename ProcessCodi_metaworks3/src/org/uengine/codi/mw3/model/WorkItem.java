@@ -74,11 +74,9 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		}
 
 	Long rootInstId;
-
 		public Long getRootInstId() {
 			return rootInstId;
 		}
-	
 		public void setRootInstId(Long rootInstId) {
 			this.rootInstId = rootInstId;
 		}
@@ -331,6 +329,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			workItemHandler.setInstanceId(instId.toString());
 			workItemHandler.setTaskId(getTaskId());
 			workItemHandler.setTracingTag(tracingTag);
+			workItemHandler.setRootInstId(rootInstId);
 			
 			workItemHandler.setMetaworksContext(new MetaworksContext());
 			

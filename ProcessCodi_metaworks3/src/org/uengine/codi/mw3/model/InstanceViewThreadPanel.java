@@ -66,7 +66,7 @@ public class InstanceViewThreadPanel implements ContextAware {
 	}
 
 	String instanceId;
-	@Id
+		@Id
 		public String getInstanceId() {
 			return instanceId;
 		}

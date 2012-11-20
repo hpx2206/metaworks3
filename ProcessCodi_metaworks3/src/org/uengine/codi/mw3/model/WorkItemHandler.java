@@ -191,6 +191,15 @@ public class WorkItemHandler implements ContextAware{
 			this.taskId = taskId;
 		}
 		
+	Long rootInstId;
+		@Hidden
+		public Long getRootInstId() {
+			return rootInstId;
+		}
+		public void setRootInstId(Long rootInstId) {
+			this.rootInstId = rootInstId;
+		}
+
 	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_EDIT)
 	public Object cancel() throws Exception{
 		instance = processManager.getProcessInstance(instanceId);
@@ -326,16 +335,17 @@ public class WorkItemHandler implements ContextAware{
 		releaseMapForITool();
 		
 		//refreshes the instanceview so that the next workitem can be show up
-		if("sns".equals(session.getEmployee().getPreferUX())){
+		if("sns".equals(session.getEmployee().getPreferUX())){			
 			InstanceViewThreadPanel panel = new InstanceViewThreadPanel();
 			panel.getMetaworksContext().setHow("instanceList");
 			panel.getMetaworksContext().setWhere("sns");
 			panel.session = session;
-			panel.load(getInstanceId());
+			panel.load(this.getRootInstId().toString());
+			
 			return new Object[]{panel, new Remover(new ModalWindow())};
 		}else{
 			Instance instance = new Instance();
-			instance.setInstId(new Long(getInstanceId()));
+			instance.setInstId(this.getRootInstId());
 			
 			instanceViewContent.session = session;
 			instanceViewContent.load(instance);
