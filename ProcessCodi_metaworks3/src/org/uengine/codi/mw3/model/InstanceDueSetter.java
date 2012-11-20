@@ -53,6 +53,7 @@ public class InstanceDueSetter implements ContextAware{
 		}
 	
 	String progress;
+	@Face(displayName="$progress")
 		public String getProgress() {
 			return progress;
 		}
