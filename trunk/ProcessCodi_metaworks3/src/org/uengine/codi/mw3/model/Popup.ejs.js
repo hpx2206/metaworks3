@@ -4,7 +4,13 @@ var org_uengine_codi_mw3_model_Popup = function(objectId, className) {
 	this.divId = "#objDiv_" + this.objectId;
 	this.divObj = $("#objDiv_" + this.objectId).parent();
 	
-	this.divObj.addClass("mw3_popup").attr("objectid", objectId).addClass("clue-right-rounded").addClass("cluetip-rounded").css({position:'absolute','z-index':97,display:'none'});
+	var zIndex = $('.ui-dialog').css('z-index');
+	if(zIndex)
+		zIndex = String(Number(zIndex)+1);
+	else
+		zIndex = 100;
+	
+	this.divObj.addClass("mw3_popup").attr("objectid", objectId).addClass("clue-right-rounded").addClass("cluetip-rounded").css({position:'absolute','z-index':zIndex,display:'none'});
 	
 	var object = mw3.objects[this.objectId];
 	
