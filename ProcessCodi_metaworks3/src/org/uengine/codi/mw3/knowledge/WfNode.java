@@ -231,12 +231,18 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 			this.companyId = companyId;
 		}
 	
+	boolean first;
+		public boolean isFirst() {
+			return first;
+		}
+		public void setFirst(boolean first) {
+			this.first = first;
+		}
+		
 	public WfNode() {
 		setChildNode(new ArrayList<WfNode>());
 		getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 	}
-	
-	 
 	
 	public void search(String keyword) throws Exception {
 		
@@ -294,13 +300,21 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		}
 	}
 	
-	public void load() throws Exception {
+	public void load() throws Exception {		
 		load(this.getId());
 	}
 	
 	public void load(String nodeId) throws Exception {
 		
-		try {
+		setId(nodeId);
+		
+		if(this.getLoadDepth() < LOAD_DEPTH){
+			setLoadDepth(getLoadDepth()+1);
+			
+			setChildNode(this.loadChildren());
+			setClose(false);
+		}
+/*		try {
 			setId(nodeId);
 			
 			if(this.getLoadDepth() > -1)
@@ -312,19 +326,21 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 //			if(!"ROOT".equals(getMetaworksContext().getHow()))
 //				getMetaworksContext().setHow("NONE");
 		}
+*/
 		
-		this.loadChildren();
+		setFirst(false);
+		
 	}
 	
 	
 	
-	public void loadChildren() throws Exception {
+	public ArrayList<WfNode> loadChildren() throws Exception {
 		
-		setChildNode(new ArrayList<WfNode>());		
+		ArrayList<WfNode> child = new ArrayList<WfNode>();
 		
-		if(this.getLoadDepth() < LOAD_DEPTH){
+/*		if(this.getLoadDepth() < LOAD_DEPTH){
 			if(this.getLoadDepth() > -1)
-				setLoadDepth(getLoadDepth()+1);						
+				setLoadDepth(getLoadDepth()+1);	*/					
 			
 			StringBuffer sb = new StringBuffer();
 			sb.append("SELECT *");
@@ -352,14 +368,19 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 					}
 					
 					node.setLoadDepth(this.getLoadDepth());
-					node.loadChildren();  //재귀호출로 하위를 갖고 오네... 기본 3 depth정도로 제한을 둬야할듯.. 
+					node.setClose(true);
+					node.setFirst(this.isFirst());
+					//node.loadChildren();  //재귀호출로 하위를 갖고 오네... 기본 3 depth정도로 제한을 둬야할듯.. 
 					
-					addChildNode(node);
+					child.add(node);
 				}
 			}
+			/*
 		}else{
-			setClose(true);
-		}
+			
+		}*/
+			
+		return child;
 	}
 	
 	public String makeId() throws Exception {
@@ -919,25 +940,24 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		return new NewInstanceWindow(newInstancePanel);		
 	}	
 
-	public WfNode expand() throws Exception {
+	public void expand() throws Exception {
+		/*
 		if(this.getLoadDepth() == LOAD_DEPTH){
 			this.setLoadDepth(this.getLoadDepth()-1);
 			this.loadChildren();
 		}
-			
-		setClose(false);
+		*/
 		
-		return this;
+		this.setChildNode(this.loadChildren());
+		
+		setClose(false);
 	}
 	
 	@AutowiredFromClient
 	transient public Session session;
 	
-	
-	public WfNode collapse() throws Exception {
+	public void collapse() throws Exception {
 		setClose(true);
-		
-		return this;
 	}
 	
 	public ModalWindow presentation() throws Exception{
