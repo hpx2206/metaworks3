@@ -392,6 +392,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	
 	public ModalWindow workItemPopup() throws Exception{
 		
+		this.workItemHandler = null;
 		detail();
 		
 		ModalWindow workItemHandlerModal = new ModalWindow(workItemHandler, 800, 0, getTitle());
