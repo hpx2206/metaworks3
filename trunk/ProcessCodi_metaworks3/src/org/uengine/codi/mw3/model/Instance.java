@@ -13,6 +13,7 @@ import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Id;
+import org.metaworks.dao.DAOFactory;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.dwr.MetaworksRemoteService;
@@ -113,7 +114,22 @@ public class Instance extends Database<IInstance> implements IInstance{
 //		if(oracle)
 //			stmt.append("where rindex between ?startIndex and ?lastIndex ");
 		
-		bottomList.append( " limit " + criteria.get("startIndex") + ", "+InstanceList.PAGE_CNT);
+
+		String typeOfDBMS = null;
+		try {			
+			typeOfDBMS = DAOFactory.getInstance(TransactionContext.getThreadLocalInstance().getConnectionFactory()).getDBMSProductName().toUpperCase();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		System.out.println(" =======> typeOfDBMS : " + typeOfDBMS);
+		/*
+		if ("ORACLE".equals(typeOfDBMS))
+			//bottomList.append( " limit " + criteria.get("startIndex") + ", "+InstanceList.PAGE_CNT);
+		else if ("MYSQL".equals(typeOfDBMS))
+			bottomList.append( " limit " + criteria.get("startIndex") + ", "+InstanceList.PAGE_CNT);
+		*/
+		
 
 		
 		//TODO delete printing
@@ -243,6 +259,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
 			criteria.put("instIsdelete", "1");
 		
+			criteria.put("rmEndpoint", session.getEmployee().getEmpCode());
 		}else if("all"
 				.equals(session.getLastPerspecteType())) {
 			

@@ -1,15 +1,18 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.ContextAware;
+import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
+import org.metaworks.dao.MetaworksDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.processmanager.ProcessManagerRemote;
 
-public class Followers{
+public class Followers implements ContextAware {
 	static final String CONTEXT_WHERE_INFOLLOWERS = "followers";
 
 	String instanceId;
@@ -30,7 +33,21 @@ public class Followers{
 			this.followers = followers;
 		}
 		
+	transient MetaworksContext metaworksContext;
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
+		}
+		
+	public Followers(){
+		setMetaworksContext(new MetaworksContext());
+	}
+		
 	public void load() throws Exception{
+		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+		
 		IUser users = (IUser) Database.sql(IUser.class, "select distinct a.endpoint userId, a.resname name, b.network from bpm_rolemapping a left join contact b on a.endpoint=b.friendId  where rootinstid=?instanceId");
 		users.set("instanceId", instanceId);
 		users.select();
@@ -57,6 +74,14 @@ public class Followers{
 		
 	}
 	
+	public void put(IUser user) throws Exception {
+		if(followers == null)
+			followers = (IUser) MetaworksDAO.createDAOImpl(IUser.class);
+		
+		followers.moveToInsertRow();
+		followers.getImplementationObject().copyFrom(user);		
+	}
+	
 	//, loader="auto", loadOnce=true
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 	public Popup addFollowers() throws Exception{		
@@ -65,6 +90,8 @@ public class Followers{
 		String type = "addInstanceFollower";
 		if("topic".equals(this.getInstanceId())){
 			type = "addTopicFollower";
+		}else if("etc".equals(this.getInstanceId())){
+			type = "addEtcFollower";
 		}
 		AddFollowerPanel panel = new AddFollowerPanel(session.user, getInstanceId(), type);
 

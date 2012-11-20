@@ -8,6 +8,8 @@
 			clickAction = methods.addFollower.caller();
 		}else if(mw3.when == 'addInstanceFollower'){
 			clickAction = methods.addFollower.caller();
+		}else if(mw3.when == 'addEtcFollower'){
+			clickAction = methods.addFollower.caller();
 		}else if(mw3.when == 'self'){
 			clickAction = methods.info.caller();
 		}else{
@@ -108,7 +110,7 @@
 			</div>
 <%	
 			/* case by user */
-			if(mw3.when == 'contacts' || mw3.when == 'addContact' || mw3.when == 'addTopicFollower' || mw3.when == 'addInstanceFollower' ){
+			if(mw3.when == 'contacts' || mw3.when == 'addContact' || mw3.when == 'addTopicFollower' || mw3.when == 'addInstanceFollower' || mw3.when == 'addEtcFollower'){
 %>
 			<div class="user_detail">
 				<span class="fontbold"><%=value.name%></span>

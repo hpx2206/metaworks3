@@ -185,6 +185,9 @@ public class User extends Database<IUser> implements IUser {
 	public ProcessManagerRemote processManager;
 
 	@AutowiredFromClient
+	public Followers etcFollowers;
+	
+	@AutowiredFromClient
 	public TopicFollowers topicFollowers;
 	
 	@AutowiredFromClient
@@ -276,7 +279,12 @@ public class User extends Database<IUser> implements IUser {
 			////// end
 			
 			return new Object[]{new Refresh(followers)};
+		}else if("addEtcFollower".equals(this.getMetaworksContext().getWhen())){			
+			etcFollowers.put(this);
+			
+			return new Object[]{new Refresh(etcFollowers)};
 		}
+		
 		return null;
 	}
 
