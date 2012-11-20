@@ -66,7 +66,7 @@ public class FormWorkItemHandler extends WorkItemHandler{
 
 
 	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_VIEW)
-	public InstanceViewContent complete() throws Exception {
+	public Object[] complete() throws Exception {
 
 		Long instanceId = new Long(getInstanceId());
 		Long taskId = getTaskId();
@@ -105,7 +105,7 @@ public class FormWorkItemHandler extends WorkItemHandler{
 		getMetaworksContext().setWhen("completed");
 		//formActivity.saveWorkItem(instance, payload)
 		
-		return super.complete();
+		return new Object[]{super.complete()};
 	}
 
 
