@@ -1,6 +1,7 @@
 var org_uengine_codi_mw3_knowledge_IWfNode = function(objectId, className){
 	var thisFaceHelper = this;
 	
+	
 	this.objectId = objectId;
 	this.className = className;
 	this.divId = mw3._getObjectDivId(this.objectId);
@@ -9,130 +10,135 @@ var org_uengine_codi_mw3_knowledge_IWfNode = function(objectId, className){
 	
 	this.obj = $('#objDiv_' + this.objectId);
 	this.mw3Obj = mw3.objects[objectId];
-	 
 	
-	this.prevName = this.mw3Obj.name;	
-	this.keyword = this.mw3Obj.name;
-	this.timeout;
-	this.process = false;
+	if(this.mw3Obj){
+
 		
-	var content = this.content = $('#wfnode_content_' + this.objectId);
-	
-	if(this.mw3Obj.metaworksContext.when != 'read'){
-		content.bind('focus', {objectId: this.objectId}, function(event) {		
-			$('.wfnode_current').removeClass('wfnode_current_focus').hide();			
-			$('#wfnode_current_' + event.data.objectId).addClass('wfnode_current_focus').show();			
+		this.prevName = this.mw3Obj.name;	
+		this.keyword = this.mw3Obj.name;
+		this.timeout;
+		this.process = false;
 			
-			var faceHelper = mw3.getFaceHelper(objectId);			
-			if(faceHelper && faceHelper.mw3Obj.type != 'img'){
-				var value = content.val();
-							
-				if(faceHelper.change) 
-					faceHelper.change(value);			
-			}
-			
-		});
-		content.bind('blur', {objectId: this.objectId}, function() {
-			var faceHelper = mw3.getFaceHelper(objectId);			
-			if(faceHelper && faceHelper.mw3Obj.type != 'img'){
-				var value = content.val();
+		var content = this.content = $('#wfnode_content_' + this.objectId);
+		
+		if(this.mw3Obj.metaworksContext.when != 'read'){
+			content.bind('focus', {objectId: this.objectId}, function(event) {		
+				$('.wfnode_current').removeClass('wfnode_current_focus').hide();			
+				$('#wfnode_current_' + event.data.objectId).addClass('wfnode_current_focus').show();			
 				
-				if (faceHelper.timeout) {
-					clearTimeout(faceHelper.timeout);
-				}	
+				var faceHelper = mw3.getFaceHelper(objectId);			
+				if(faceHelper && faceHelper.mw3Obj.type != 'img'){
+					var value = content.val();
+								
+					if(faceHelper.change) 
+						faceHelper.change(value);			
+				}
 				
-				if (faceHelper.prevName != value){
-					faceHelper.prevName = value;
+			});
+			content.bind('blur', {objectId: this.objectId}, function() {
+				var faceHelper = mw3.getFaceHelper(objectId);			
+				if(faceHelper && faceHelper.mw3Obj.type != 'img'){
+					var value = content.val();
 					
-					faceHelper.mw3Obj.name = value;			
-					faceHelper.mw3Obj.save();
-				}
-			}
-		});
-		content.bind('dblclick', {objectId: this.objectId}, function() {
-			mw3.call(objectId, 'drillInto');
-		});
-		
-		if(this.mw3Obj && this.mw3Obj.focus){
-			content.focus();
-			
-			var how = this.mw3Obj.metaworksContext.how;
-			var name = (this.mw3Obj.name?this.mw3Obj.name:'');
-			var nameNext = (this.mw3Obj.nameNext?this.mw3Obj.nameNext:'');
-
-			if(how == "add" || how == "new"){
-				content.selectRange(0, 0);
-			}else if(how == "remove" || how == "indent" || how == "outdent"){
-				var pos = name.length - nameNext.length;
-
-				content.selectRange(pos, pos);
-			}
-
-		}
-
-		var object = this.mw3Obj;
-		$('#wfnode_' + this.objectId).droppable({
-			hoverClass: "wfActive",
-			drop: function( event, ui ) {
-				var dragNodeId = ui.draggable.attr("objectId");
-				
-				var list = $('#objDiv_' + dragNodeId).find('.workflowy_node');
-				for(var i=0; i<list.length; i++){
-					if($(list[i]).attr('objectId') == objectId){
-						alert('옮길 수 없는 위치입니다.');
+					if (faceHelper.timeout) {
+						clearTimeout(faceHelper.timeout);
+					}	
+					
+					if (faceHelper.prevName != value){
+						faceHelper.prevName = value;
 						
-						return false;
+						faceHelper.mw3Obj.name = value;			
+						faceHelper.mw3Obj.save();
 					}
 				}
+			});
+			content.bind('dblclick', {objectId: this.objectId}, function() {
+				mw3.call(objectId, 'drillInto');
+			});
+			
+			if(this.mw3Obj && this.mw3Obj.focus){
+				content.focus();
 				
-				object.dragNode = mw3.objects[dragNodeId]; 
-				
-				mw3.call(objectId, "move");
+				var how = this.mw3Obj.metaworksContext.how;
+				var name = (this.mw3Obj.name?this.mw3Obj.name:'');
+				var nameNext = (this.mw3Obj.nameNext?this.mw3Obj.nameNext:'');
+
+				if(how == "add" || how == "new"){
+					content.selectRange(0, 0);
+				}else if(how == "remove" || how == "indent" || how == "outdent"){
+					var pos = name.length - nameNext.length;
+
+					content.selectRange(pos, pos);
+				}
+
 			}
-		});
 
-		$('#wfnode_' + objectId).hover(			
-				function () {
-					/*$(this).css("background","#F2F8FD");*/
-					if(!$('#move').hasClass("moving")){
-						var html = '';
-
-						html += '<div id=\"controls\">';  
-						html += '  <div id=\"controlsRight\">';
-						html += '    <a id=\"move\" title=\"Drag to move\"></a>';
-						html += '  </div>'; 
-						html += '</div>';
-
-						$(this).append(html);
-
-						$("#controls>#controlsRight>#move").draggable({
-							helper: "clone",
-							cursor: "move",
-							distance: 1,
-							axis: "y",
-							start: function(event, ui) {								
-								$(this).attr("objectId", objectId);				        	
-								$(this).addClass("moving");
-							},
-							stop: function(event, ui) {
-								$('#controls').remove();
-							}
-						});
+			var object = this.mw3Obj;
+			$('#wfnode_' + this.objectId).droppable({
+				hoverClass: "wfActive",
+				drop: function( event, ui ) {
+					var dragNodeId = ui.draggable.attr("objectId");
+					
+					var list = $('#objDiv_' + dragNodeId).find('.workflowy_node');
+					for(var i=0; i<list.length; i++){
+						if($(list[i]).attr('objectId') == objectId){
+							alert('옮길 수 없는 위치입니다.');
+							
+							return false;
+						}
 					}
-				}, 
-				function () {	
-					/*$(this).css("background","none");*/
-					if(!$('#move').hasClass("moving"))
-						$(this).find('#controls').remove();			  
+					
+					object.dragNode = mw3.objects[dragNodeId]; 
+					
+					mw3.call(objectId, "move");
 				}
+			});
 
-		);	
+			$('#wfnode_' + objectId).hover(			
+					function () {
+						/*$(this).css("background","#F2F8FD");*/
+						if(!$('#move').hasClass("moving")){
+							var html = '';
+
+							html += '<div id=\"controls\">';  
+							html += '  <div id=\"controlsRight\">';
+							html += '    <a id=\"move\" title=\"Drag to move\"></a>';
+							html += '  </div>'; 
+							html += '</div>';
+
+							$(this).append(html);
+
+							$("#controls>#controlsRight>#move").draggable({
+								helper: "clone",
+								cursor: "move",
+								distance: 1,
+								axis: "y",
+								start: function(event, ui) {								
+									$(this).attr("objectId", objectId);				        	
+									$(this).addClass("moving");
+								},
+								stop: function(event, ui) {
+									$('#controls').remove();
+								}
+							});
+						}
+					}, 
+					function () {	
+						/*$(this).css("background","none");*/
+						if(!$('#move').hasClass("moving"))
+							$(this).find('#controls').remove();			  
+					}
+
+			);	
+		}
+		this.obj.addClass("workflowy_node").attr("objectId", objectId).attr("nodeId", this.mw3Obj.id).attr('parentId', this.mw3Obj.parentId).css("position", "relative");
+		
+		if(this.mw3Obj.parentId == rootNodeId){
+			this.obj.find('.wfNode').eq(0).addClass("first_wfNode");
+		}
 	}
-	this.obj.addClass("workflowy_node").attr("objectId", objectId).attr("nodeId", this.mw3Obj.id).attr('parentId', this.mw3Obj.parentId).css("position", "relative");
+
 	
-	if(this.mw3Obj.parentId == rootNodeId){
-		this.obj.find('.wfNode').eq(0).addClass("first_wfNode");
-	}
 }
 
 org_uengine_codi_mw3_knowledge_IWfNode.prototype = {
