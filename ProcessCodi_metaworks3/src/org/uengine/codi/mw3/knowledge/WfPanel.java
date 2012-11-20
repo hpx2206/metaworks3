@@ -84,8 +84,6 @@ public class WfPanel implements ContextAware {
 	}
 	
 	public void load(String nodeId, String metaworksContext) throws Exception {
-		setFirst(false);
-		
 		setRootNodeId(nodeId);
 		
 		setMetaworksContext(new MetaworksContext());
@@ -94,8 +92,16 @@ public class WfPanel implements ContextAware {
 		WfNode node = new WfNode();
 		node.setId(nodeId);
 		node.getMetaworksContext().setWhen(metaworksContext);
-		node.getMetaworksContext().setHow("ROOT");
-		node.setFirst(true);		
+		node.getMetaworksContext().setHow("ROOT");		
+		
+		if(this.isFirst()){
+			node.setFirst(true);
+		}else{
+			node.setFirst(false);
+			node.load();
+		}
+		
+		setFirst(false);
 		//node.load(nodeId);		
 		
 /*		if(node.getChildNode().size() == 0){

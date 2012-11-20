@@ -370,6 +370,9 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 					node.setLoadDepth(this.getLoadDepth());
 					node.setClose(true);
 					node.setFirst(this.isFirst());
+					
+					if(!this.isFirst())
+						node.load();
 					//node.loadChildren();  //재귀호출로 하위를 갖고 오네... 기본 3 depth정도로 제한을 둬야할듯.. 
 					
 					child.add(node);
@@ -963,7 +966,9 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 	public ModalWindow presentation() throws Exception{
 		WfPanel_pt panel = new WfPanel_pt();
 		panel.session = session;
-		panel.load(/*session.getCompany().getComCode() */ getParentId(), "presentation");
+		panel.setFirst(false);
+		panel.load(/*session.getCompany().getComCode()*/ getParentId(), "presentation");
+		
 		return new ModalWindow(panel , 1000, 600,  "학습창" );
 	}
 	
