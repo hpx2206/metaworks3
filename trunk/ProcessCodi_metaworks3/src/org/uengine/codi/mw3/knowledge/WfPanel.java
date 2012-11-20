@@ -19,6 +19,15 @@ public class WfPanel implements ContextAware {
 	@AutowiredFromClient
 	public Session session;
 	
+	boolean first;
+		@Hidden
+		public boolean isFirst() {
+			return first;
+		}
+		public void setFirst(boolean first) {
+			this.first = first;
+		}
+
 	WfNode wfNode;		
 		public WfNode getWfNode() {
 			return wfNode;
@@ -60,12 +69,19 @@ public class WfPanel implements ContextAware {
 		public void setMetaworksContext(MetaworksContext metaworksContext) {
 			this.metaworksContext = metaworksContext;
 		}
-		
+	
+	@ServiceMethod
+	public void load() throws Exception {
+		load(session.getCompany().getComCode());
+	}
+	
 	public void load(String nodeId) throws Exception {
 		load(nodeId, MetaworksContext.WHEN_VIEW);
 	}
 	
 	public void load(String nodeId, String metaworksContext) throws Exception {
+		
+		setFirst(true);
 		
 		setRootNodeId(nodeId);
 		
