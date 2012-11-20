@@ -132,6 +132,12 @@ var org_uengine_codi_mw3_knowledge_IWfNode_mindmap = function(objectId, classNam
 				}
 
 		);	
+		
+		if(this.mw3Obj.first){
+			setTimeout(function(){
+				mw3.call(objectId, 'load');
+			},1);
+		}
 	}
 	this.obj.addClass("workflowy_node").attr("objectId", objectId).attr("nodeId", this.mw3Obj.id).attr('parentId', this.mw3Obj.parentId).css("position", "relative");
 	
