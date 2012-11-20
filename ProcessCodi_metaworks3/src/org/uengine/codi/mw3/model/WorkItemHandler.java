@@ -10,11 +10,13 @@ import javax.validation.Valid;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.Remover;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.TransactionContext;
+import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.ITool;
 import org.uengine.contexts.ComplexType;
@@ -256,7 +258,7 @@ public class WorkItemHandler implements ContextAware{
 		
 	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_EDIT, validate=true)
 //	@Available(when={"NEW"})
-	public InstanceViewContent complete() throws RemoteException, ClassNotFoundException, Exception{
+	public Object[] complete() throws RemoteException, ClassNotFoundException, Exception{
 						
 		instance = processManager.getProcessInstance(instanceId);
 
@@ -322,9 +324,10 @@ public class WorkItemHandler implements ContextAware{
 		Instance instance = new Instance();
 		instance.setInstId(new Long(getInstanceId()));
 		
+		instanceViewContent.session = session;
 		instanceViewContent.load(instance);
 		
-		return instanceViewContent;
+		return new Object[]{instanceViewContent, new Remover(new ModalWindow())};
 	}
 	
 	@Autowired
