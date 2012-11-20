@@ -103,7 +103,7 @@ var org_uengine_codi_mw3_knowledge_IWfNode_mindmap = function(objectId, classNam
 
 						html += '<div id=\"controls\">'; 						
 						html += '  <div id=\"controlsRight\">';
-						html += '    <div id=\"authorId\" style=\"top:-50px\" ><img src=\"images/portrait/'+ authorId +'.jpg\" width=\"30\" height=\"30\"></div>';
+						//html += '    <div id=\"authorId\" style=\"top:-50px\" ><img src=\"images/portrait/'+ authorId +'.jpg\" width=\"30\" height=\"30\"></div>';
 						html += '    <a id=\"move\" style=\"top:-42px\" title=\"Drag to move\"></a>';
 						html += '  </div>'; 
 						html += '</div>';
