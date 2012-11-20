@@ -5,12 +5,11 @@ var org_uengine_codi_mw3_model_IUser = function(objectId, className){
 	
 	this.windowObjectId = $('#' + this.divId).closest('.mw3_window').attr('objectId');
 	
-	$('#objDiv_' + this.objectId).parent().css({'border':'none'});
-	
-
 	var user = mw3.objects[objectId];
 	
-	
+
+	if(user.metaworksContext.how!='picker'){
+		$('#objDiv_' + this.objectId).parent().css({'border':'none'});	
 	
 	if(user.metaworksContext.when=='contacts'){
 		
