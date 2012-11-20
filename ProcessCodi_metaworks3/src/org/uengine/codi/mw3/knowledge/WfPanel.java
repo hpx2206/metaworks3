@@ -61,6 +61,14 @@ public class WfPanel implements ContextAware {
 		public void setKeyword(String keyword) {
 			this.keyword = keyword;
 		}
+		
+	int loadDepth;
+		public int getLoadDepth() {
+			return loadDepth;
+		}
+		public void setLoadDepth(int loadDepth) {
+			this.loadDepth = loadDepth;
+		}
 
 	MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
@@ -91,6 +99,7 @@ public class WfPanel implements ContextAware {
 		
 		WfNode node = new WfNode();
 		node.setId(nodeId);
+		node.setLoadDepth(this.getLoadDepth());
 		node.getMetaworksContext().setWhen(metaworksContext);
 		node.getMetaworksContext().setHow("ROOT");		
 		

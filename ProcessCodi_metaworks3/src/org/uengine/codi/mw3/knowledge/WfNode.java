@@ -951,6 +951,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		}
 		*/
 		
+		this.setLoadDepth(3);
 		this.setChildNode(this.loadChildren());
 		
 		setClose(false);
@@ -967,6 +968,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		WfPanel_pt panel = new WfPanel_pt();
 		panel.session = session;
 		panel.setFirst(false);
+		panel.setLoadDepth(0);
 		panel.load(/*session.getCompany().getComCode()*/ getParentId(), "presentation");
 		
 		return new ModalWindow(panel , 1000, 600,  "학습창" );
