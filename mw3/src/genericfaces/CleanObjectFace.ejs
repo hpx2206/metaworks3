@@ -15,9 +15,10 @@
 		}
    
 	   	if(objectMetadata.serviceMethodContexts){
-   			for(var key in objectMetadata.serviceMethodContexts){   
+	   		for(var key in objectMetadata.serviceMethodContexts){
+   	   			var serviceMethod = objectMetadata.serviceMethodContexts[key];
 %>
-	<%=methods[key].here()%>
+	<%=methods[serviceMethod.methodName].here()%>
 <%   
 			}
 		}
