@@ -15,9 +15,10 @@ public class InstanceListWindow extends Window {
 	public InstanceListWindow(Session session) throws Exception {
 		this.session = session;
 		
-		PersonalPerspective personalPerspective = new PersonalPerspective();
-		personalPerspective.session = session;
-		this.instanceListPanel = (InstanceListPanel) personalPerspective.loadAllICanSee()[1];
+		InstanceListPanel instanceListPanel = new InstanceListPanel(session);
+		instanceListPanel.setPreloaded(false);
+
+		this.setInstanceListPanel(instanceListPanel);
 	}
 	
 	InstanceListPanel instanceListPanel;

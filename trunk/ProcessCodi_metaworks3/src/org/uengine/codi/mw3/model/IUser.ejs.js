@@ -10,6 +10,7 @@ var org_uengine_codi_mw3_model_IUser = function(objectId, className){
 
 	if(user.metaworksContext.how!='picker'){
 		$('#objDiv_' + this.objectId).parent().css({'border':'none'});	
+	}
 	
 	if(user.metaworksContext.when=='contacts'){
 		
