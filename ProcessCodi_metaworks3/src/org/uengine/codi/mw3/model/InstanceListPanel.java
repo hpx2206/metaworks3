@@ -51,6 +51,8 @@ public class InstanceListPanel implements ContextAware{
 		
 		instanceList = new InstanceList();
 		instanceList.init();
+		
+		this.setPreloaded(true);
 	}
 	
 	public void topicFollowersLoad() throws Exception{
@@ -119,6 +121,25 @@ public class InstanceListPanel implements ContextAware{
 		}
 
 
+	boolean preloaded;
+		public boolean isPreloaded() {
+			return preloaded;
+		}
+		public void setPreloaded(boolean preloaded) {
+			this.preloaded = preloaded;
+		}
+
+		
+	@ServiceMethod
+	public Object[] load() throws Exception {
+		
+		PersonalPerspective personalPerspective = new PersonalPerspective();
+		personalPerspective.session = session;
+		//this.instanceListPanel = (InstanceListPanel) personalPerspective.loadAllICanSee()[1];
+		
+		return personalPerspective.loadAllICanSee();
+	}
+	
 	//@Hidden
 	@Face(displayName="$Calendar")
 	@ServiceMethod//(inContextMenu=true)
