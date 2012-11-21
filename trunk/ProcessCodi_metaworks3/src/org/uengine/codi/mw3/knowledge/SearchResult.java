@@ -76,23 +76,28 @@ public class SearchResult {
 	@Face(displayName="선택")
 	public Object[] choose() throws Exception{
 		
-		WfNode wfNode = new WfNode();
-		wfNode.load(targetNodeId);
-		wfNode.session = session;
-		if( resultType != null && resultType.equals("slideshare")){
-			wfNode.setNameNext(description);
-			wfNode.setTypeNext("slideshare");	
-		}else if( resultType != null && resultType.equals("LMS")){
-			wfNode.setNameNext(title);
-			wfNode.setUrlNext(url);
-			wfNode.setThumbnailNext(thumbnail);
-			wfNode.setTypeNext("LMS");	
+		if( resultType != null && resultType.equals("KMS")){
+			// 지식맵은 선택시에 wfNode 로의 add 가 이루어 지지 않는다.
+			return null;
 		}else{
-			wfNode.setNameNext(title);
-			wfNode.setTypeNext("text");	
+			WfNode wfNode = new WfNode();
+			wfNode.load(targetNodeId);
+			wfNode.session = session;
+			if( resultType != null && resultType.equals("slideshare")){
+				wfNode.setNameNext(description);
+				wfNode.setTypeNext("slideshare");	
+			}else if( resultType != null && resultType.equals("LMS")){
+				wfNode.setNameNext(title);
+				wfNode.setUrlNext(url);
+				wfNode.setThumbnailNext(thumbnail);
+				wfNode.setTypeNext("LMS");	
+			}else{
+				wfNode.setNameNext(title);
+				wfNode.setTypeNext("text");	
+			}
+			
+			return wfNode.add();
 		}
-		
-		return wfNode.add();
 	}
 	
 	@AutowiredFromClient
