@@ -12,7 +12,7 @@ public class MashupTool {
 	public MashupTool(){}
 	
 	ArrayList<SearchResult> searchResults;
-	@Face(displayName="&nbsp;")
+		@Face(displayName="&nbsp;")
 		public ArrayList<SearchResult> getSearchResults() {
 			return searchResults;
 		}
