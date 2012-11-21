@@ -64,7 +64,7 @@ public class Mashup {
 			this.mashupVideo = mashupVideo;
 		}
 	
-	MashupSlideshare 	mashupSlideshare;
+	MashupSlideshare mashupSlideshare;
 	@Face(displayName="슬라이드")
 	@AutowiredToClient
 		public MashupSlideshare getMashupSlideshare() {
