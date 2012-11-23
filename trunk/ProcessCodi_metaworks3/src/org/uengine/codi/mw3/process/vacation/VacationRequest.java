@@ -13,7 +13,7 @@ import org.uengine.codi.ITool;
 import org.uengine.codi.mw3.model.IUser;
 import org.uengine.codi.mw3.model.User;
 
-@Face(ejsPath="genericfaces/FormFace.ejs", options={"fieldOrder"}, values={"type,destination,startDate,endDate,emergencyContact,delegator,content"})
+@Face(ejsPath="genericfaces/FormFace.ejs", options={"fieldOrder"}, values={"type,destination,startDate,endDate,emergencyContact,content"})
 public class VacationRequest implements ITool, ContextAware {
 
 	String type;
@@ -67,14 +67,14 @@ public class VacationRequest implements ITool, ContextAware {
 			this.emergencyContact = emergencyContact;
 		}
 	
-	IUser delegator;
-		@Face(displayName="업무대리자")
-		public IUser getDelegator() {
-			return delegator;
-		}
-		public void setDelegator(IUser delegator) {
-			this.delegator = delegator;
-		}
+//	IUser delegator;
+//		@Face(displayName="업무대리자")
+//		public IUser getDelegator() {
+//			return delegator;
+//		}
+//		public void setDelegator(IUser delegator) {
+//			this.delegator = delegator;
+//		}
 	
 	String content;
 		@Face(displayName="신청내용", ejsPath="genericfaces/richText.ejs", options={"rows", "cols"}, values={"5", "50"})
@@ -112,20 +112,20 @@ public class VacationRequest implements ITool, ContextAware {
 			IUser delegator = new User();
 			delegator.getMetaworksContext().setHow("picker");
 			
-			this.setDelegator(delegator);
+//			this.setDelegator(delegator);
 			
 			this.setStartDate(new Date());
 			this.setEndDate(new Date());
 		}
 		
-		this.getDelegator().getMetaworksContext().setWhen(this.getMetaworksContext().getWhen());
+//		this.getDelegator().getMetaworksContext().setWhen(this.getMetaworksContext().getWhen());
 	}
 
 	@Override
 	public void beforeComplete() throws Exception {
-		if(MetaworksContext.WHEN_EDIT.equals(this.getMetaworksContext().getWhen())){
-			this.setDelegatorId(this.getDelegator().getUserId());
-		}
+//		if(MetaworksContext.WHEN_EDIT.equals(this.getMetaworksContext().getWhen())){
+//			this.setDelegatorId(this.getDelegator().getUserId());
+//		}
 		
 	}
 
