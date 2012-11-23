@@ -14,36 +14,40 @@ var org_uengine_codi_mw3_model_InstanceListPanel_sns = function(objectId, classN
 			mw3.getFaceHelper(this.windowObjectId).setTitle(mw3.localize(object.title));
 		}
 	}	
-	
-	var faceHelper = this;	
-	faceHelper.load();	
-	
-	var scrollDiv = $('#objDiv_' + this.objectId + " .ui-layout-center .ui-layout-content")
-	
-	scrollDiv.scroll(function(e) {
-		if(scrollDiv.scrollTop() == scrollDiv.find('div').eq(0).height() - scrollDiv.height() && lastMore){
-			mw3.objects[lastMore].more();
-		}
-	});
-	
-	searchBarMagin = $('.newprocessbtn').width() + 20;
-	$('.searchboxarea').css("margin-left",searchBarMagin);
-	
-	
-	/*		
-	 	$('#' + this.divId + ' .ui-layout-content').mCustomScrollbar({
-			callbacks:{
-				
-				onTotalScroll:function(){
-					mw3.objects[lastMore].more();
-					setTimeout(function(){$("#method_37_switchToScheduleCalendar .ui-layout-content").mCustomScrollbar("update");},2000);
-				}
+	if(object && object.preloaded){
+		var faceHelper = this;	
+		faceHelper.load();	
+		
+		var scrollDiv = $('#objDiv_' + this.objectId + " .ui-layout-center .ui-layout-content")
+		
+		scrollDiv.scroll(function(e) {
+			if(scrollDiv.scrollTop() == scrollDiv.find('div').eq(0).height() - scrollDiv.height() && lastMore){
+				mw3.objects[lastMore].more();
 			}
 		});
-	*/
-	
-	$('#' + mw3._getObjectDivId(mw3.getChildObjectId(this.objectId, 'topicFollowers')) + " #searchbox").css("border-bottom","#9EBFC4 1px solid ");
-
+		
+		searchBarMagin = $('.newprocessbtn').width() + 20;
+		$('.searchboxarea').css("margin-left",searchBarMagin);
+		
+		
+		/*		
+		 	$('#' + this.divId + ' .ui-layout-content').mCustomScrollbar({
+				callbacks:{
+					
+					onTotalScroll:function(){
+						mw3.objects[lastMore].more();
+						setTimeout(function(){$("#method_37_switchToScheduleCalendar .ui-layout-content").mCustomScrollbar("update");},2000);
+					}
+				}
+			});
+		*/
+		
+		$('#' + mw3._getObjectDivId(mw3.getChildObjectId(this.objectId, 'topicFollowers')) + " #searchbox").css("border-bottom","#9EBFC4 1px solid ");
+	}else{
+		setTimeout(function(){
+			mw3.call(objectId, 'load');	
+		}, 1);
+	}
 	
 }
 
