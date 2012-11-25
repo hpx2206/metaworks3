@@ -2,10 +2,13 @@ package org.metaworks;
 
 import javax.persistence.Id;
 
+import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Default;
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dwr.MetaworksRemoteService;
 
+@Face(ejsPath="genericfaces/CleanObjectFace.ejs")
 public class Admin {
 
 	public Admin() {
@@ -13,8 +16,9 @@ public class Admin {
 	}
 	
 	String targetClassName;
-	@Id
-	@Default(value="*")
+		@Id
+		@Default(value="*")
+		@Available(when=MetaworksContext.WHEN_EDIT)
 		public String getTargetClassName() {
 			return targetClassName;
 		}
@@ -22,15 +26,10 @@ public class Admin {
 			this.targetClassName = targetClassName;
 		}
 	
-
 	@ServiceMethod
 	public void refreshMetadata() throws Exception{
 		System.out.println("targetClassName : " + getTargetClassName());
 		
-		
 		MetaworksRemoteService.getInstance().clearMetaworksType(getTargetClassName());
 	}
-	
-
-
 }

@@ -14,7 +14,16 @@ var org_metaworks_Refresh = function(objectId, className){
 				var mappedObjId = mw3.objectId_KeyMapping[objKeys[i]];
 	
 				if(mappedObjId){
-					mw3.setObject(mappedObjId, object.target);				
+					var faceHelper = mw3.getFaceHelper(mappedObjId);
+					
+					if(faceHelper && faceHelper.refresh){
+						var html = mw3.locateObject(object.target, null);		
+						
+						faceHelper.refresh(html, object.target);
+					}else{
+						mw3.setObject(mappedObjId, object.target);	
+					}							
+								
 					break;
 				}
 				
@@ -22,4 +31,4 @@ var org_metaworks_Refresh = function(objectId, className){
 		}
 		mw3.onLoadFaceHelperScript();
 	}	
-}
+};

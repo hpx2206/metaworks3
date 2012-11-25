@@ -20,7 +20,7 @@ var org_metaworks_ToAppend = function(objectId, className){
 					var faceHelper = mw3.getFaceHelper(mappedObjId);
 					
 					if(faceHelper && faceHelper.toAppend){
-						faceHelper.toAppend(html);
+						faceHelper.toAppend(html, object.target);
 					}else{
 						$("#objDiv_" + mappedObjId).append(html);	
 					}					
