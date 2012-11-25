@@ -1849,7 +1849,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				$(infoDivId).css('display', 'block').html("");
 			};
 			
-			Metaworks3.prototype.__showResult = function(object, result, objId, svcNameAndMethodName, serviceMethodContext, placeholder, divId ){
+			Metaworks3.prototype.__showResult = function(object, result, objId, svcNameAndMethodName, serviceMethodContext, placeholder, divId, callback ){
     			
     			mw3.requestMetadataBatch(result);
     			
@@ -2021,6 +2021,9 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
         			}
     			}
     			
+    			if(typeof callback == 'function')
+    				callback();
+    			
     			mw3.loaded = true;				        			
     			
     			if(mw3.afterCall)
@@ -2029,15 +2032,13 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
     			
     			return result;
     		};
-			
+    		
 			Metaworks3.prototype.call = function (svcNameAndMethodName){
 				mw3.loaded = false;
 				
 //				mw3.debug("call start");
 
 				var objId;
-				
-
 				
 				if(arguments.length > 1){
 					objId = svcNameAndMethodName;
@@ -2051,8 +2052,8 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				var getAgain = (arguments.length > 2 ? (typeof arguments[2] != 'undefined' ? arguments[2] : true) : true);
 				//var getAgain = (arguments.length > 2 ? arguments[2] : true);
 				var sync = (arguments.length > 3 ? arguments[3] : false);
-				
-				
+				// 2012-11-25 cjw add callback function
+				var callback = (arguments.length > 4 ? arguments[4] : null);
 
 //				if(typeof objId == 'number'){ //check if number
 	
@@ -2192,7 +2193,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			        		callback: function(result){
 			        			
 			        			returnValue = result;
-			        			mw3.__showResult(object, result, objId, svcNameAndMethodName, serviceMethodContext, placeholder, divId );
+			        			mw3.__showResult(object, result, objId, svcNameAndMethodName, serviceMethodContext, placeholder, divId, callback);
 			        			
 			        		},
 
@@ -2345,7 +2346,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			   		if(methodContext.clientSideCall)
 			   			eval("object['"+methodName+"'] = function(){return mw3.clientSideCall(this.__objectId, '"+methodName+"');}");
 			   		else{
-			   			eval("object['"+methodName+"'] = function(getAgain){return mw3.call(this.__objectId, '"+methodName+"', getAgain);}");			   			
+			   			eval("object['"+methodName+"'] = function(getAgain, callback){return mw3.call(this.__objectId, '"+methodName+"', getAgain, false, callback);}");			   			
 			   		}
 			   }
 			   
