@@ -11,6 +11,11 @@ var org_metaworks_Remover = function(objectId, className){
 			mappedObjId = mw3.objectId_KeyMapping[objKeys[i]];
 
 			if(mappedObjId){
+				var faceHelper = mw3.getFaceHelper(mappedObjId);
+				
+				if(faceHelper && faceHelper.remover)
+					faceHelper.remover(object.target);
+					
 				mw3.removeObject(mappedObjId);
 				
 				break;
