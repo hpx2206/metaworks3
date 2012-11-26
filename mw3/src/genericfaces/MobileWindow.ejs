@@ -40,18 +40,25 @@
 </div>
 
 
-<div id="samsungPhone"  >
+<div id="samsungPhone"  style="display:none;">
 	<div class="s_panel">    
         <%=fields.panel.here({where: "mobile"})%>
 	</div>
 	<div id="home_btn" style="top:670px; left:160px;" onclick="mw3.getFaceHelper('<%=objectId%>').close();"></div>
 </div>
 
-<div id="samsungPad" style="display:none;">
+<div id="samsungPad">
 	<div class="s_panel">    
         <%=fields.panel.here({where: "mobile"})%>
 	</div>
-	<div id="home_btn" style="top:840px; left:180px;" onclick="mw3.getFaceHelper('<%=objectId%>').close();"></div>
+	<div id="home_btn" style="top:570px; left:100px;" onclick="mw3.getFaceHelper('<%=objectId%>').close();"></div>
+</div>
+
+<div id="windowsPad"  style="display:none;">
+	<div class="s_panel">    
+        <%=fields.panel.here({where: "mobile"})%>
+	</div>
+	<div id="home_btn" style="top:270px; left:900px;" onclick="mw3.getFaceHelper('<%=objectId%>').close();"></div>
 </div>
 
 <%		

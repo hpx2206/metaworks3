@@ -192,17 +192,34 @@
 
 /* smasungPad */
 #samsungPad{
-    width:1468px;
-    height:996px;
+    width:980px;
+    height:665px;
     position:relative;
     background:url(../../images/simulator/samsungPad.png) no-repeat;
 }
 #samsungPad .s_panel{
     position:absolute;
-    width:1279px;
-    height:754px;
-    top:93px;
-    left:93px;
+    width:855px;
+    height:505px;
+    top:62px;
+    left:62px;
+    background:#fff;
+    
+}
+
+/* smasungPad */
+#windowsPad{
+    width:1000px;
+    height:639px;
+    position:relative;
+    background:url(../../images/simulator/windowsPad.png) no-repeat;
+}
+#windowsPad .s_panel{
+    position:absolute;
+    width:815px;
+    height:467px;
+    top:97px;
+    left:89px;
     background:#fff;
     
 }
