@@ -198,9 +198,11 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 	public void generateSourceCode(){
 		
 		StringBuffer sb = new StringBuffer();
-		sb
-			.append("package ").append(getPackageName()).append(";\n\n")
-			.append("public class " + getClassName() + "{\n\n");
+		
+		if(getPackageName() != null && getPackageName().length() > 0)
+			sb.append("package ").append(getPackageName()).append(";\n\n");
+		
+		sb.append("public class " + getClassName() + "{\n\n");
 		
 		if(getSourceCodes().getClassModeler()!=null && getSourceCodes().getClassModeler().getClassFields()!=null)
 		for(int i=0; i<getSourceCodes().getClassModeler().getClassFields().size(); i++){
@@ -497,36 +499,39 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		String faceSource = sourceCodeBase + "/" + getAlias();
 		faceSource = faceSource.substring(0, faceSource.indexOf(".")) + ".ejs";
 		
-		File ejsFile = new File(faceSource);
+		String faceHelperSource = sourceCodeBase + "/" + getAlias();
+		faceHelperSource = faceHelperSource.substring(0, faceHelperSource.indexOf(".")) + ".ejs.js";
 
 //		if(UEngineUtil.isNotEmpty(getSourceCodes().getFace().getEditor().getContents())){
-		if(UEngineUtil.isNotEmpty(getSourceCodes().getFace().getCode())){
+		
+		File ejsFile = new File(faceSource);
+		File ejsJsFile = new File(faceHelperSource);
+		
+		if(getSourceCodes().getFace() != null && UEngineUtil.isNotEmpty(getSourceCodes().getFace().getCode())){
 			
 			writer = new FileWriter(ejsFile);
 			writer.write(new String(getSourceCodes().getFace().getEditor().getContents().getBytes("UTF-8"),"UTF-8"));
 			writer.close();
 
+
+			if(UEngineUtil.isNotEmpty(getSourceCodes().getFaceHelper().getCode())){			
+				writer = new FileWriter(ejsJsFile);
+				writer.write(getSourceCodes().getFaceHelper().getCode());
+				writer.close();
+
+			}else{
+				ejsJsFile.delete();
+			}
+
 		}else{
 			ejsFile.delete();
-		}
-		
-		//if there is facehelper code, save it.
-		String faceHelperSource = sourceCodeBase + "/" + getAlias();
-		faceHelperSource = faceHelperSource.substring(0, faceHelperSource.indexOf(".")) + ".ejs.js";
-		
-		File ejsJsFile = new File(faceHelperSource);
-
-		if(UEngineUtil.isNotEmpty(getSourceCodes().getFaceHelper().getCode())){
-			
-			writer = new FileWriter(ejsJsFile);
-			writer.write(getSourceCodes().getFaceHelper().getCode());
-			writer.close();
-
-		}else{
 			ejsJsFile.delete();
 		}
 		
-		if( this.getMetaworksContext().getWhere().equalsIgnoreCase("form")){
+		//if there is facehelper code, save it.
+		
+		
+		if( this.getMetaworksContext() != null && "form".equals(this.getMetaworksContext().getWhere()) ){
 			String formSource = sourceCodeBase + "/" + getAlias();
 			formSource = faceHelperSource.substring(0, faceHelperSource.indexOf(".")) + ".editor";
 			File formFile = new File(formSource);
