@@ -2,7 +2,6 @@
 package org.uengine.codi.mw3.admin;
 
 import org.metaworks.MetaworksContext;
-import org.metaworks.annotation.AutowiredToClient;
 import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.example.ide.FormDesigner;
@@ -33,6 +32,7 @@ public class ClassSourceCodes{
 		this.face = new FaceEditor();
 		this.faceHelper = new FaceHelperSourceCode();
 		this.classModeler = new ClassModeler();
+		this.mobileDesigner = new MobileDesigner();
 		//this.formDesigner = new FormDesigner();
 		
 	}
@@ -83,6 +83,15 @@ public class ClassSourceCodes{
 		}
 		public void setFaceHelper(FaceHelperSourceCode faceHelper) {
 			this.faceHelper = faceHelper;
+		}
+	
+	MobileDesigner mobileDesigner;
+		@Available(where={"class"})
+		public MobileDesigner getMobileDesigner() {
+			return mobileDesigner;
+		}
+		public void setMobileDesigner(MobileDesigner mobileDesigner) {
+			this.mobileDesigner = mobileDesigner;
 		}
 	
 }
