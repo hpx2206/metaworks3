@@ -24,7 +24,7 @@ public class EntityDesignerContentPanel extends ContentWindow {
 	public void newEntity(IUser user, String parentFoler) throws Exception {
 		entityDefinition = new EntityDefinition();
 		entityDefinition.setParentFolder(parentFoler);
-		
+		entityDefinition.setPackageName(parentFoler.replaceAll("/", "."));
 		entityDefinition.setAuthor(user);		
 	}
 
