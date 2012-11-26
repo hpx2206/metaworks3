@@ -171,3 +171,38 @@
 	left:160px;
 	cursor:pointer;
 }
+
+
+/* smasungPhone*/
+#samsungPhone{
+    width:400px;
+    height:765px;
+    position:relative;
+    background:url(../../images/simulator/samsungPhone.png) no-repeat;
+}
+#samsungPhone .s_panel{
+    position:absolute;
+    width:334px;
+    height:550px;
+    top:109px;
+    left:31px;
+    background:#fff;
+    
+}
+
+/* smasungPad */
+#samsungPad{
+    width:1468px;
+    height:996px;
+    position:relative;
+    background:url(../../images/simulator/samsungPad.png) no-repeat;
+}
+#samsungPad .s_panel{
+    position:absolute;
+    width:1279px;
+    height:754px;
+    top:93px;
+    left:93px;
+    background:#fff;
+    
+}

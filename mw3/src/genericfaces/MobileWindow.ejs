@@ -17,7 +17,7 @@
 <%
 		}else{
 %>
-<div id="iphone_wrap">
+<div id="iphone_wrap" style="display:none;">
     <div id="view">
         <div id="iphone_status"> </div>
         <div id="safari_address">
@@ -38,6 +38,22 @@
         <div id="home_btn" onclick="mw3.getFaceHelper('<%=objectId%>').close();"></div>
     </div>
 </div>
+
+
+<div id="samsungPhone"  >
+	<div class="s_panel">    
+        <%=fields.panel.here({where: "mobile"})%>
+	</div>
+	<div id="home_btn" style="top:670px; left:160px;" onclick="mw3.getFaceHelper('<%=objectId%>').close();"></div>
+</div>
+
+<div id="samsungPad" style="display:none;">
+	<div class="s_panel">    
+        <%=fields.panel.here({where: "mobile"})%>
+	</div>
+	<div id="home_btn" style="top:840px; left:180px;" onclick="mw3.getFaceHelper('<%=objectId%>').close();"></div>
+</div>
+
 <%		
 		}		
 	}		
