@@ -8,7 +8,7 @@ import org.metaworks.MetaworksContext;
 public class RolePanel implements ContextAware {
 	
 	
-	public RolePanel(){
+	public RolePanel() throws Exception{
 		roles = new ArrayList<Role>();
 		
 		newRole = new Role();
@@ -17,12 +17,12 @@ public class RolePanel implements ContextAware {
 	}
 	
 	MetaworksContext metaworksContext;
-	public MetaworksContext getMetaworksContext() {
-		return metaworksContext;
-	}
-	public void setMetaworksContext(MetaworksContext metaworksContext) {
-		this.metaworksContext = metaworksContext;
-	}
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
+		}
 	
 	public ArrayList<Role> roles;
 		public ArrayList<Role> getRoles() {
@@ -39,4 +39,5 @@ public class RolePanel implements ContextAware {
 		public void setNewRole(Role newRole) {
 			this.newRole = newRole;
 		}
+	
 }

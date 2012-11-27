@@ -10,9 +10,14 @@ var org_uengine_codi_mw3_webProcessDesigner_LineShape = function(objectId, class
 	var canvasObjectFaceHelper = mw3.getFaceHelper(canvasObject.__objectId);
 	var canvas = canvasObjectFaceHelper.icanvas;
 	
-	var customData = [];
-	
 	canvas.drawLabel(element, object.label);
-	canvas.setCustomData(element, customData);
+	if(object.customData != null && object.customData != undefined){
+		var customData = [];
+		var jsonArray = eval(object.customData);
+		for(i in jsonArray){
+		    customData.push(jsonArray[i]);
+		}
+		canvas.setCustomData(element, customData);
+	}
 	
 };
