@@ -30,17 +30,17 @@ var org_uengine_codi_mw3_model_InstanceListPanel = function(objectId, className)
 		$('.searchboxarea').css("margin-left",searchBarMagin);
 		
 		
-		/*		
+		
 		 	$('#' + this.divId + ' .ui-layout-content').mCustomScrollbar({
 				callbacks:{
 					
 					onTotalScroll:function(){
 						mw3.objects[lastMore].more();
-						setTimeout(function(){$("#method_37_switchToScheduleCalendar .ui-layout-content").mCustomScrollbar("update");},2000);
+						//setTimeout(function(){$("#method_37_switchToScheduleCalendar .ui-layout-content").mCustomScrollbar("update");},2000);
 					}
 				}
 			});
-		*/
+		
 		
 		$('#' + mw3._getObjectDivId(mw3.getChildObjectId(this.objectId, 'topicFollowers')) + " #searchbox").css("border-bottom","#9EBFC4 1px solid ");
 	}else{
