@@ -13,10 +13,6 @@ var org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel = fun
 	this.divObj.css('height','100%');
 	var canvasDivObj = $('#canvas');
 	
-	mw3.importScript("dwr/metaworks/org/uengine/codi/mw3/webProcessDesigner/processValiable.js");
-	var pcsValiable = new org.uengine.codi.mw3.webProcessDesigner.ProcessValiable();
-	mw3.pcsValiable = pcsValiable;
-	
 //	if(canvasDivObj.length > 0){
 //		canvasDivObj.show().appendTo('#' + this.divId + '>div:first-child');
 //	}else{
@@ -34,7 +30,7 @@ var org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel = fun
 	OG.common.Constants.CANVAS_BACKGROUND = "#fff";
     OG.Constants.ENABLE_CANVAS_OFFSET = true; // Layout 사용하지 않을 경우 true 로 지정
     mw3.canvas = new OG.Canvas('canvas');
-	this.icanvas = mw3.canvas;
+	this.icanvas = mw3.canvas;	
 	canvas = mw3.canvas;
 	
     // Shape drag & drop
@@ -106,12 +102,6 @@ var org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel = fun
     canvas.onConnectShape(function (event, edgeElement, fromElement, toElement) {
     	// TODO 연결되는 시점에만 호출 되니 그려진 로직은 다른걸 태우던지 해야함
     	faceHelper.addEventEdge(objectId, canvas, edgeElement);
-//    	$(edgeElement).unbind('dblclick').bind({
-//			dblclick: function (event) {
-//				var value = mw3.getObject(objectId);
-//				value.gateCondition();
-//			}
-//		});
     });
     
     // Role.ejs 파일쪽에 있는 스윔레인추가 버튼 클릭시 동작
@@ -163,12 +153,6 @@ var org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel = fun
 			faceHelper.addEventEdge(objectId ,canvas, element);
 		});
 	}
-	if( object != null && object.valiableString != null ){
-		mw3.pcsValiable.loadXML(object.valiableString);
-	}else{
-		mw3.pcsValiable.xmlDocument = pcsValiable.createXML();	// dom 객체 생성
-		mw3.pcsValiable.rootElement = pcsValiable.xmlDocument.createElement("processValiables");
-	}
 	this.icanvas.setCanvasSize([canvasWidth, canvasHeight]);
 };
 
@@ -185,8 +169,8 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 		// 데이터 매핑 
 		$(element).bind({
 			dblclick: function (event) {
-				var value = mw3.getObject(objectId);
-				value.valiableString = mw3.pcsValiable.toXML(mw3.pcsValiable.rootElement);
+//				var value = mw3.getObject(objectId);
+//				value.valiableString = mw3.pcsValiable.toXML(mw3.pcsValiable.rootElement);
 //				value.dataMapping();
 			}
 		});
@@ -204,6 +188,12 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 	    			canvas.drawLabel(element, clipboardNode.name);
 	    			customData.push( {"customId": clipboardNode.id , "customName" : clipboardNode.name , "customType" : "wfNode"});
 	    			session.clipboard = null;
+	    			var value = mw3.objects[objectId];
+	    			value.tempElementId = $(this).attr('id');
+	    			value.tempElementName = clipboardNode.name;
+	    			value.tempElementTypeId = clipboardNode.id;
+	    			value.tempElementType = "wfNode";
+	    			value.addValiable();
 	    		}
 	    		if(clipboardNode && clipboardNode.__className=="org.uengine.codi.mw3.webProcessDesigner.Role"){
 	    			var wfText = $(element).children('[id$=_LABEL]').text();
@@ -226,11 +216,12 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 	    		    		customData.push( {"customId": "" , "customName" : tokens[tokens.length-2] , "customType" : "class"});
 	    		    		session.clipboard = null;
 	    		    		
-	    		    		var valiableNode = mw3.pcsValiable.createValiable();
-	    		    		valiableNode.setAttribute("name",tokens[tokens.length-2]);
-	    		    		valiableNode.setAttribute("typeId", clipboardNode.alias );
-	    		    		valiableNode.setAttribute("type","complexType");
-	    		    		mw3.pcsValiable.addValiable(valiableNode);
+	    		    		var value = mw3.objects[objectId];
+	    	    			value.tempElementId = $(this).attr('id');
+	    	    			value.tempElementName = tokens[tokens.length-2];
+	    	    			value.tempElementTypeId = clipboardNode.alias;
+	    	    			value.tempElementType = "class";
+	    	    			value.addValiable();
 	    		    	}
 	    			}
 	    		}
@@ -245,11 +236,12 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype.addEventEdge = function(objectId, canvas, element){
 	$(element).unbind('dblclick').bind({
 		dblclick: function (event) {
-			var value = mw3.getObject(objectId); 
+			var value = mw3.objects[objectId]; 
 			
 			value.tempElementId = $(this).attr('id');
 			value.tempElementName = $(this).children('[id$=_LABEL]').text();
-			value.valiableString = mw3.pcsValiable.toXML(mw3.pcsValiable.rootElement);
+			value.tempConditionArray = JSON.stringify(canvas.getCustomData(element));
+//			value.valiableString = mw3.pcsValiable.toXML(mw3.pcsValiable.rootElement);
 			value.gateCondition();
 		}
 	});
@@ -315,7 +307,6 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 	var object = mw3.objects[this.objectId];
 	object.cell = cellsForDwr;
 	object.graphString = JSON.stringify(graphJson);
-	object.valiableString = mw3.pcsValiable.toXML(mw3.pcsValiable.rootElement);
 	
 	return object;
 };

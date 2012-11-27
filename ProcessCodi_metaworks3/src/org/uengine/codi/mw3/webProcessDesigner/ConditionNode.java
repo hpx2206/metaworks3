@@ -1,18 +1,16 @@
 package org.uengine.codi.mw3.webProcessDesigner;
 
-import java.util.Iterator;
-import java.util.List;
-
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.DocumentHelper;
-import org.dom4j.Element;
-import org.dom4j.XPath;
+import java.util.ArrayList;
 import org.metaworks.ContextAware;
+import org.metaworks.FieldDescriptor;
 import org.metaworks.MetaworksContext;
+import org.metaworks.WebFieldDescriptor;
+import org.metaworks.WebObjectType;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
+import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.widget.Choice;
 import org.uengine.codi.mw3.model.Session;
 
@@ -26,6 +24,15 @@ public class ConditionNode  implements Cloneable, ContextAware{
 		this.metaworksContext = metaworksContext;
 	}
 	
+	int idx;
+		@Id
+		public int getIdx() {
+			return idx;
+		}
+		public void setIdx(int idx) {
+			this.idx = idx;
+		}
+
 	Choice valiableChoice;
 		@Face(ejsPath="dwr/metaworks/org/metaworks/widget/ChoiceCombo.ejs")
 		public Choice getValiableChoice() {
@@ -58,28 +65,61 @@ public class ConditionNode  implements Cloneable, ContextAware{
 		public void setOperandChoice(Choice operandChoice) {
 			this.operandChoice = operandChoice;
 		}
+	String expressionText;
+		public String getExpressionText() {
+			return expressionText;
+		}
+		public void setExpressionText(String expressionText) {
+			this.expressionText = expressionText;
+		}
+	public ArrayList<Role>	 roleList;
+		public ArrayList<Role> getRoleList() {
+			return roleList;
+		}
+		public void setRoleList(ArrayList<Role> roleList) {
+			this.roleList = roleList;
+		}	
+	public ArrayList<PrcsValiable>	 prcsValiableList;
+		public ArrayList<PrcsValiable> getPrcsValiableList() {
+			return prcsValiableList;
+		}
+		public void setPrcsValiableList(ArrayList<PrcsValiable> prcsValiableList) {
+			this.prcsValiableList = prcsValiableList;
+		}	
+		
 	public ConditionNode(){
 		setMetaworksContext(new MetaworksContext());
 		getMetaworksContext().setWhen("edit");
 	}
-	public void makeValiableChoice(String valiableString) throws Exception{
-		if( valiableString != null){
-			Choice choice = new Choice();
-			Document doc = getDocument(valiableString);
-//			Element rootElement = doc.getRootElement();
-			XPath xpathSelector = null;
-			xpathSelector = DocumentHelper.createXPath("//processValiable");
-			List<Element> nodeList = xpathSelector.selectNodes(doc);
-			if( nodeList.size() > 0 ){
-				for (Iterator iterator = nodeList.iterator() ; iterator.hasNext(); ) {
-					Element ele = (Element) iterator.next();
-					String nameAttr = ele.attribute("name").getValue();
-					String idAttr = ele.attribute("id").getValue();
-					choice.add(nameAttr, idAttr);
+	public void makeValiableChoice() throws Exception{
+		Choice choice = new Choice();
+		if( this.getRoleList() != null){
+			for(int i = 0; i < roleList.size(); i++){
+				Role role = roleList.get(i);
+				choice.add("[ROLE]"+role.name, role.name);
+			}
+		}
+		if( this.getPrcsValiableList() != null){
+			for(int i = 0; i < prcsValiableList.size(); i++){
+				PrcsValiable prcsValiable = prcsValiableList.get(i);
+				String nameAttr = prcsValiable.getName();
+				choice.add(nameAttr, nameAttr);
+				String typeIdAttr = prcsValiable.getTypeId();
+				String typeAttr = prcsValiable.getDataType().getSelected();
+				if( "complexType".equals(typeAttr)){
+					WebObjectType wot = MetaworksRemoteService.getInstance().getMetaworksType( typeIdAttr.substring(0, typeIdAttr.lastIndexOf(".")).replaceAll("/", ".") ); 
+					WebFieldDescriptor wfields[] = wot.getFieldDescriptors();
+					FieldDescriptor fields[] = wot.metaworks2Type().getFieldDescriptors();
+					for(int j=0; j<fields.length; j++){
+						WebFieldDescriptor wfd = wfields[j];
+//						FieldDescriptor fd = fields[i];
+						choice.add("["+nameAttr+"]"+wfd.getName(), wfd.getName());
+					}
 				}
 			}
-			setValiableChoice(choice);
 		}
+		
+		setValiableChoice(choice);
 	}
 	public void makeSignChoice() throws Exception{
 		Choice choice = new Choice();
@@ -95,14 +135,15 @@ public class ConditionNode  implements Cloneable, ContextAware{
 	}
 	public void makeExpressionChoice() throws Exception{
 		Choice choice = new Choice();
-		choice.add("Text", "Text");
-		choice.add("Number", "Number");
-		choice.add("Date", "Date");
+		choice.add("Text", "string");
+		choice.add("Number", "number");
+		choice.add("Date", "date");
 		choice.add("Yes or No", "Yes or No");
 		choice.add("File", "File");
 		choice.add("Activity Selection", "Activity Selection");
-		choice.add("Complex Type", "Complex Type");
-		choice.add("Html Form", "Html Form");
+		choice.add("Knowledge Type" ,"knowledgelType");
+		choice.add("Complex Type" ,"complexType");
+		choice.add("Html Form" ,"htmlType" );
 		setExpressionChoice(choice);
 	}
 	public void makeOperandChoice() throws Exception{
@@ -112,8 +153,8 @@ public class ConditionNode  implements Cloneable, ContextAware{
 		setOperandChoice(choice);
 	}
 
-	public void init(String valiableString) throws Exception{
-		makeValiableChoice(valiableString);
+	public void init() throws Exception{
+		makeValiableChoice();
 		makeSignChoice();
 		makeExpressionChoice();
 		makeOperandChoice();
@@ -124,15 +165,17 @@ public class ConditionNode  implements Cloneable, ContextAware{
 		conditionPanel.conditionNodes.remove(this);
 		return new Object[]{conditionPanel.conditionNodes};
 	}
-	
-	private Document getDocument(String xmlDescription) throws DocumentException {
-        if (xmlDescription == null) {
-            return null;
-        }
-        return DocumentHelper.parseText(xmlDescription);
-    }
 	@AutowiredFromClient
 	public Session session;
 	@AutowiredFromClient
 	transient public ConditionPanel conditionPanel;
+	
+	@Override
+	public boolean equals(Object obj) {
+		if( obj instanceof ConditionNode){
+			return this.idx == ((ConditionNode)obj).idx;
+		}else{
+			return false;
+		}
+	}
 }
