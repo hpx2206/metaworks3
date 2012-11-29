@@ -1,0 +1,24 @@
+<%
+	if(value == null || typeof value == 'undefined'){		
+		return true;
+	}
+%>
+
+<%
+	var sub = false;
+	if(value.sub != null && typeof value.sub != 'undefined' && value.sub)
+		sub = true;
+
+	if(!sub){
+%>
+	
+<div class="c9-left"></div>
+<div class="c9-label"><%=value.name%></div>
+<div class="c9-right"></div>
+<div class="c9-fix"></div>
+
+<%
+	}
+%>
+
+<%=fields.menu.here()%>
