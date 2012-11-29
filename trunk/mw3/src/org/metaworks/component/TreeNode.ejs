@@ -1,0 +1,23 @@
+<%
+	if(value == null || typeof value == 'undefined')
+		return true;
+%>
+	<div class="item-fix">
+		<div class="item">
+			<span>x</span>
+			<div class="label-content">
+				<label style="background-image: url(images/<%=value.type%>.png)">
+					<u class="caption"><%=value.name%></u>
+				</label>
+			</div>
+		</div>
+	</div>	
+<%
+	if(value.child && value.child.length > 0){
+%>
+	<u class="last root" style="display: block; height: auto; overflow: visible;">
+		<%=fields.child.here()%>
+	</u>
+<%
+	}
+%>

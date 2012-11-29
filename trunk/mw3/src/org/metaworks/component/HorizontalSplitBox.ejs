@@ -1,0 +1,36 @@
+
+<%
+	if(value == null || typeof value == 'undefined')
+		return true;
+		
+	var height = value.fixHeight;
+	var splitterHeight = 0;
+	
+	if(value.splitter)
+		splitterHeight = value.splitter.size;
+	
+	var topHeight;
+	var bottomTop;
+	var topBottom;
+	var bottomHeight;
+	
+	console.log(height);
+	
+	if('top' == value.align){
+		topHeight = height;
+		bottomTop = height + splitterHeight;
+	}else{
+		topBottom = height + splitterHeight;
+		bottomHeight = height;
+	}			
+%>
+
+<div class="top" style="position: absolute; min-width: 0px; min-height: 0px; max-width: 10000px; max-height: 10000px;  left: 0px; right: 0px; top: 0px; bottom: <%=topBottom%>px; <%=(topHeight?'height :' + topHeight+'px;':'')%>">
+	<%=fields.top.here()%>
+</div>
+
+<%=fields.splitter.here()%>
+
+<div class="bottom" style="position: absolute; min-width: 0px; min-height: 0px; max-width: 10000px; max-height: 10000px;  left: 0px; right: 0px; bottom: 0px; top: <%=bottomTop%>px; <%=(bottomHeight?'height :' + bottomHeight+'px;':'')%>">
+	<%=fields.bottom.here()%>
+</div>
