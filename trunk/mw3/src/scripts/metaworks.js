@@ -886,10 +886,9 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 
 							return mw3._template(url, contextValues);
 				   		};
-
-
+				   		
 						var html = mw3._template(url, contextValues);
-
+						
 						//$(targetDiv).jqote(templateEngine, contextValues);
 						
 						//#DEBUG POINT
@@ -978,16 +977,21 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				   					theDiv[0]['dragCommand'] = command;
 				   					theDiv[0]['objectId'] = objectId;
 				   					
-				   					theDiv[0].addEventListener(
-					   			 		"mousedown",
-					   			 		function(e){
-					   			 			e.preventDefault();
-					   			 			mw3.dragObject = this;
-						   			 		mw3.dragStartX = e.pageX;
-						   			 		mw3.dragStartY = e.pageY;
-					   			 			e.stopPropagation();
-					   			 		}
-					   			 	);
+				   					var mousedown = function(e){
+				   			 			e.preventDefault();
+				   			 			mw3.dragObject = this;
+					   			 		mw3.dragStartX = e.pageX;
+					   			 		mw3.dragStartY = e.pageY;
+				   			 			e.stopPropagation();
+				   			 		};
+				   			 		
+				   				    if(document.addEventListener){
+					   					theDiv[0].addEventListener("mousedown", mousedown);
+				   				    };
+				   				    
+				   				    if(document.attachEvent){
+					   					theDiv[0].attachEvent("mousedown", mousedown);				   				    	
+				   				    };
 
 				   				}//end of case 'drag start'
 				   				else if(methodContext.mouseBinding == "drag-enableDefault"){
@@ -995,60 +999,74 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				   					theDiv[0]['dragCommand'] = command;
 				   					theDiv[0]['objectId'] = objectId;
 				   					
-				   					theDiv[0].addEventListener(
-					   			 		"mousedown",
-					   			 		function(e){
-					   			 			mw3.dragObject = this;
-						   			 		mw3.dragStartX = e.pageX;
-						   			 		mw3.dragStartY = e.pageY;
-					   			 			e.stopPropagation();
-					   			 		}
-					   			 	);
-
+				   					var mousedown = 						   			 		function(e){
+				   			 			mw3.dragObject = this;
+					   			 		mw3.dragStartX = e.pageX;
+					   			 		mw3.dragStartY = e.pageY;
+				   			 			e.stopPropagation();
+				   			 		};
+				   			 		
+				   				    if(document.addEventListener){
+					   					theDiv[0].addEventListener("mousedown", mousedown);
+				   				    };
+				   				    
+				   				    if(document.attachEvent){
+					   					theDiv[0].attachEvent("mousedown", mousedown);				   				    	
+				   				    };
+				   				    
 				   				}//end of case 'drag start'
 				   				else if(methodContext.mouseBinding == "drop"){
 				   					theDiv[0]['dropCommand'] = command;
 				   					theDiv[0]['objectId'] = objectId;
 
-				   					theDiv[0].addEventListener(
-	   			 						"mouseup",
-	   			 						function(){
-	   			 							if(mw3.dragging){
-	   			 								eval(this['dropCommand']);
+				   					
+				   					var mouseup = function(){
+   			 							if(mw3.dragging){
+   			 								eval(this['dropCommand']);
 
-	   			 								this['dropCommand'] = null;
-	   			 								mw3.dragging = false;
-		   			  	 						var objectId = mw3.dragObject['objectId'];
-		   			 	 						if(objectId && mw3.objects[objectId]){
-		   			 	 							var typeName = mw3.objects[objectId].__className;
-		   			 	 	 						$(".onDrop_" + typeName.split('.').join('_')).css("border-width", "").css("border","");	
-		   			 	 	 						
-		   			 	 	 						this['objectId'] = null;
-		   			 	 						}
+   			 								this['dropCommand'] = null;
+   			 								mw3.dragging = false;
+	   			  	 						var objectId = mw3.dragObject['objectId'];
+	   			 	 						if(objectId && mw3.objects[objectId]){
+	   			 	 							var typeName = mw3.objects[objectId].__className;
+	   			 	 	 						$(".onDrop_" + typeName.split('.').join('_')).css("border-width", "").css("border","");	
+	   			 	 	 						
+	   			 	 	 						this['objectId'] = null;
+	   			 	 						}
 
-	   			 								
-	   			 							}
-	   			 						}
-		   			 				);
+   			 								
+   			 							}
+   			 						};
+				   					
+				   				    if(document.addEventListener){
+					   					theDiv[0].addEventListener("mouseup", mouseup);
+				   				    };
+				   				    
+				   				    if(document.attachEvent){
+					   					theDiv[0].attachEvent("mouseup", mouseup);				   				    	
+				   				    };
+				   				    
 				   				}//end of case 'drop'
 				   				
 				   				//case of general mouse click
 				   				else{
 				   					theDiv[0]['mouseCommand' + which] = command;
 
-					   			    theDiv[0].addEventListener(
-					   			 		"mouseup",
-
-					   			    	function(e) {
-					   			 			
-					   			 			if(e.which == which){
-						   						eval(this['mouseCommand' + e.which]);
-					   			 				e.stopPropagation(); //stops to propagate to parent that means consumes the event here.
-					   			 			}
-					   			 		},
-					   			 		
-					   			 		false //event bubbling, not the capturing
-					   			 	);
+				   					var mouseup = function(e) {
+				   			 			
+				   			 			if(e.which == which){
+					   						eval(this['mouseCommand' + e.which]);
+				   			 				e.stopPropagation(); //stops to propagate to parent that means consumes the event here.
+				   			 			}
+				   			 		};
+				   			 		
+				   				    if(document.addEventListener){
+					   					theDiv[0].addEventListener("mouseup", mouseup, false);
+				   				    };
+				   				    
+				   				    if(document.attachEvent){
+					   					theDiv[0].attachEvent("mouseup", mouseup);				   				    	
+				   				    };
 				   				}
 				   				
 				   				
@@ -3492,3 +3510,18 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				} 
 				return rv;  
 			} 
+			
+	 		jQuery.fn.selectRange = function(start, end) {
+	 		    return this.each(function() {
+	 		        if (this.setSelectionRange) {
+	 		            this.focus();
+	 		            this.setSelectionRange(start, end);
+	 		        } else if (this.createTextRange) {
+	 		            var range = this.createTextRange();
+	 		            range.collapse(true);
+	 		            range.moveEnd('character', end);
+	 		            range.moveStart('character', start);
+	 		            range.select();
+	 		        }
+	 		    });
+	 		};			
