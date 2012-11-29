@@ -614,8 +614,8 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				var serviceMethodMap = {};
 				
 				if(webObjectType.serviceMethodContexts)
-				for(var serviceMethodName in webObjectType.serviceMethodContexts){
-					var serviceMethod = webObjectType.serviceMethodContexts[serviceMethodName];
+				for(var i=0; i<webObjectType.serviceMethodContexts.length; i++){
+					var serviceMethod = webObjectType.serviceMethodContexts[i];
 					
 					serviceMethodMap[serviceMethod.methodName] = serviceMethod;
 					
