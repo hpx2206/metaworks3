@@ -4,16 +4,15 @@ import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.model.Session;
 
 public class Role implements ContextAware , Cloneable{
 	
 	String name;
-
 		public String getName() {
 			return name;
 		}
-	
 		public void setName(String name) {
 			this.name = name;
 		}
@@ -53,6 +52,13 @@ public class Role implements ContextAware , Cloneable{
 	public RolePanel remove(){
 		rolePanel.getRoles().remove(this);
 		return rolePanel;
+	}
+	
+	@ServiceMethod(callByContent=true, target="popup")
+	public ModalWindow roleSetting() throws Exception{
+		RoleSettingPanel roleSettingPanel = new RoleSettingPanel(this.getName());
+		roleSettingPanel.load();
+		return new ModalWindow(roleSettingPanel , 600, 450,  "롤셋팅" );
 	}
 	
 	@AutowiredFromClient

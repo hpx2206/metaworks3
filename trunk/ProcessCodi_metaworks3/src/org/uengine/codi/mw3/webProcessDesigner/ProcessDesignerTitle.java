@@ -35,7 +35,7 @@ public class ProcessDesignerTitle implements ContextAware{
 	@ServiceMethod(callByContent=true)
 	public Object[] save() throws Exception{
 		processDesignerWebContentPanel.processManager = processManager;
-		processDesignerWebContentPanel.save( title );
+		processDesignerWebContentPanel.save( title, true );
 		return new Object[]{ new Remover(new ModalWindow())};
 	}
 	
