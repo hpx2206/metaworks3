@@ -1,0 +1,48 @@
+<table>
+	<tr>	
+		<td>Role name</td>
+		<td><b><%=fields.roleName.here()%></b> </td>
+	</tr>
+</table>
+<br/>
+<br/>
+<table>
+	<tr>	
+		<td><input type="radio" id="" name="groupSelectRadio" value="2" onClick="mw3.getFaceHelper('<%=objectId%>').radioChecked()"/>The group that</td>
+		<td><b><%=fields.roleName.here()%></b> </td>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>	
+		<td><input type="radio" id="" name="groupSelectRadio" value="1" onClick="mw3.getFaceHelper('<%=objectId%>').radioChecked()"/>The specified group</td>
+		<td><input type="text" name="selectedGroup" id="selectedGroup_<%=objectId%>" value="<%=value.selectedGroupName ? value.selectedGroupName : ''%>" style=" width: 100px; " readonly/></td>
+		<td><div id="group_<%=objectId%>" style="width:200px; height:150px; position: relative; display:none;"><%= fields.groupTree.here() %></div></td>
+	</tr>
+	<tr>	
+		<td><input type="radio" id="" name="groupSelectRadio" value="0" onClick="mw3.getFaceHelper('<%=objectId%>').radioChecked()"/>All</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+	</tr>
+</table>
+<br/> 
+<table>
+	<tr>	
+		<td><input type="radio" id="" name="roleSelectRadio" value="1" onClick="mw3.getFaceHelper('<%=objectId%>').radioChecked()"/>The specified role</td>
+		<td><input type="text" name="selectedRole" id="selectedRole_<%=objectId%>" value="<%=value.selectedRoleName ? value.selectedRoleName : ''%>" style=" width: 100px; " readonly/></td>
+		<td><div id="role_<%=objectId%>" style="width:200px; height:150px; position: relative; "><%=fields.roleSelect.here()%></div></td>
+	</tr>
+	<tr>	
+		<td><input type="radio" id="" name="roleSelectRadio" value="0" onClick="mw3.getFaceHelper('<%=objectId%>').radioChecked()"/>All</td>
+		<td>&nbsp;</td>
+		<td>&nbsp;</td>
+	</tr>
+</table>
+<br/> 
+<br/>
+<input type="text" name="desc" id="desc_<%=objectId%>" value="<%=value.desc ? value.desc : ''%>" style=" width: 200px; " readonly/>
+
+<table>
+	<tr>	
+		<td><a id="wBtn" href="#" onClick="mw3.getFaceHelper('<%=objectId%>').saveForm()"><span><%=mw3.localize("$Save")%></span></a></td>
+		<td><a id="wBtn" href="#" onClick="<%=methods.cancel.caller()%>"><span><%=mw3.localize("$Cancel")%></span></a></td>
+	</tr>
+</table>

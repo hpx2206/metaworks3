@@ -18,9 +18,25 @@ public class GeomShape extends CanvasDTO {
 		this.shapeType = "GEOM";
 	}
 	public GeomShape(CanvasDTO cv){
-		this.shapeId = cv.shapeId;
+		
 		this.shapeType = "GEOM";
-		this.data = cv.data;
+		
+		this.id = cv.id  ;			
+		this.parent = cv.parent  ;	
+		this.shapeId = cv.shapeId  ;	
+		this.x = cv.x  ;	
+		this.y = cv.y  ;	
+		this.width = cv.width  ;	
+		this.height = cv.height  ;	
+		this.style = cv.style  ;	
+		this.from = cv.from  ;	
+		this.to = cv.to  ;	
+		this.fromEdge = cv.fromEdge  ;	
+		this.toEdge = cv.toEdge  ;	
+		this.label = cv.label  ;	
+		this.angle = cv.angle  ;	
+		this.value = cv.value  ;	
+		this.data = cv.data  ;
 	}
 	ProcessVariable pvs[];
 		public ProcessVariable[] getPvs() {
@@ -43,6 +59,7 @@ public class GeomShape extends CanvasDTO {
 				String data = ProcessDesignerWebContentPanel.unescape(this.getData());
 				JSONArray jsonArray = (JSONArray)JSONSerializer.toJSON(data);
 				if( jsonArray != null && jsonArray.size() > 0){
+					// 혹시 role 이 배열로 들어있을지 모르니, role 을 먼저 체크하는 loof를 돌린다
 					for( int i = 0; i < jsonArray.size() ; i++){
 						JSONObject jsonObj = (JSONObject) jsonArray.get(i);
 						String customName = jsonObj.getString("customName");
@@ -50,8 +67,14 @@ public class GeomShape extends CanvasDTO {
 						if( customType != null && "role".equalsIgnoreCase(customType) ){
 							Role role = new Role();
 							role.setName(customName);
+//							role.setRoleResolutionContext(context)
 							this.setRole(role);
 						}
+					}
+					for( int i = 0; i < jsonArray.size() ; i++){
+						JSONObject jsonObj = (JSONObject) jsonArray.get(i);
+						String customName = jsonObj.getString("customName");
+						String customType = jsonObj.getString("customType");
 						// 지식노드 - KnowledgeActivity 생성
 						if( customType != null && "wfNode".equalsIgnoreCase(customType)){
 							KnowledgeActivity knowledgeActivity = new KnowledgeActivity();
@@ -65,17 +88,19 @@ public class GeomShape extends CanvasDTO {
 							HumanActivity humanActivity = new HumanActivity();
 							ProcessVariable pvs[] = getPvs();
 							if( pvs != null){
+								ParameterContext pc[] = new ParameterContext[pvs.length];
+								int k = 0;
 								for(int j=0; j < pvs.length ; j++){
 									if( customName.equals(pvs[j].getName()) ){
-										ParameterContext pc[] = new ParameterContext[1];
-										pc[0] = new ParameterContext();
-										pc[0].setArgument(pvs[j].getDisplayName());
-										pc[0].setVariable(pvs[j]);
-										humanActivity.setParameters(pc);
-										humanActivity.setRole(this.getRole());
-										return humanActivity;
+										pc[k] = new ParameterContext();
+										pc[k].setArgument(pvs[j].getDisplayName());
+										pc[k].setVariable(pvs[j]);
+										k++;
 									}
 								}
+								humanActivity.setParameters(pc);
+								humanActivity.setRole(this.getRole());
+								return humanActivity;
 							}
 						}
 					}
@@ -92,5 +117,12 @@ public class GeomShape extends CanvasDTO {
 			return switchActivity;
 		}
 		return null;
+	}
+	
+	public void viewActivityInfo(Activity activity) throws Exception{
+		String activityName = activity.getClass().getName();
+		if( activity instanceof HumanActivity){
+			String roleName = ((HumanActivity) activity).getRole().getName();
+		}
 	}
 }

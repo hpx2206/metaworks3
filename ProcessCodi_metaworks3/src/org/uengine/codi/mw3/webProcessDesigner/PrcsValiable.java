@@ -3,9 +3,8 @@ package org.uengine.codi.mw3.webProcessDesigner;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
-import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.widget.Choice;
+import org.metaworks.component.SelectBox;
 
 public class PrcsValiable implements ContextAware , Cloneable {
 	
@@ -16,12 +15,11 @@ public class PrcsValiable implements ContextAware , Cloneable {
 		public void setName(String name) {
 			this.name = name;
 		}
-	Choice dataType;
-		@Face(ejsPath="dwr/metaworks/org/metaworks/widget/ChoiceCombo.ejs")	
-		public Choice getDataType() {
+	SelectBox dataType;
+		public SelectBox getDataType() {
 			return dataType;
 		}
-		public void setDataType(Choice dataType) {
+		public void setDataType(SelectBox dataType) {
 			this.dataType = dataType;
 		}
 	String initValue;
@@ -73,7 +71,7 @@ public class PrcsValiable implements ContextAware , Cloneable {
 	}
 	
 	public void makeDataTypeChoice() throws Exception{
-		Choice choice = new Choice();
+		SelectBox choice = new SelectBox();
 		choice.add("Text", "string");
 		choice.add("Number", "number");
 		choice.add("Date", "date");

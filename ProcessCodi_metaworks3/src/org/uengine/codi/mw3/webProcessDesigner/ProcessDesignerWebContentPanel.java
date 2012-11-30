@@ -9,9 +9,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import org.dom4j.Document;
-import org.dom4j.DocumentException;
-import org.dom4j.DocumentHelper;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Hidden;
@@ -21,6 +18,7 @@ import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.model.ContentWindow;
+import org.uengine.codi.mw3.model.Popup;
 import org.uengine.contexts.ComplexType;
 import org.uengine.contexts.TextContext;
 import org.uengine.kernel.Activity;
@@ -90,22 +88,16 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 		public void setCanvasMap(HashMap<String, CanvasDTO> canvasMap) {
 			this.canvasMap = canvasMap;
 		}
-		
-	/*
-	 * 조건들의 정보를 담고있다 
-	 * 조건은 line 에서 셋팅을 하며 여러 조건들이 있으니 map 으로 구성
-	 * <line Id , json Array> 형식으로 쓰임
-	 */
-	HashMap<String, String> conditionMap;
-		public HashMap<String, String> getConditionMap() {
-			return conditionMap;
+	HashMap<String, Activity> activityMap;	
+		public HashMap<String, Activity> getActivityMap() {
+			return activityMap;
 		}
-		public void setConditionMap(HashMap<String, String> conditionMap) {
-			this.conditionMap = conditionMap;
+		public void setActivityMap(HashMap<String, Activity> activityMap) {
+			this.activityMap = activityMap;
 		}
-		
+
 	/*
-	 * 라인정보를 셋팅하기 위하여 해당 id를 임시적으로 들고있다
+	 * 엘리먼트정보를 셋팅하기 위하여 해당 id를 임시적으로 들고있다
 	 */
 	String tempElementId;
 	@Hidden
@@ -141,14 +133,15 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 			this.tempElementTypeId = tempElementTypeId;
 		}
 
-	String tempConditionArray;
-		@Hidden
-		public String getTempConditionArray() {
-			return tempConditionArray;
+	String tempElementData;
+	@Hidden
+		public String getTempElementData() {
+			return tempElementData;
 		}
-		public void setTempConditionArray(String tempConditionArray) {
-			this.tempConditionArray = tempConditionArray;
+		public void setTempElementData(String tempElementData) {
+			this.tempElementData = tempElementData;
 		}
+
 	String processName;
 		@Hidden
 		public String getProcessName() {
@@ -173,10 +166,8 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 		conditionPanel.setMetaworksContext(new MetaworksContext());
 		conditionPanel.getMetaworksContext().setWhen("edit");
 		String conditionString = null;
-		if( conditionMap != null ){
-			conditionString = conditionMap.get(this.getTempElementId());
-		}else if( tempConditionArray != null && !tempConditionArray.equals("[]")){
-			conditionString = tempConditionArray.toString();
+		if( tempElementData != null && !tempElementData.equals("[]")){
+			conditionString = tempElementData.toString();
 		}
 		
 		conditionPanel.setRoleList(defineTab.rolePanel.getRoles());
@@ -187,6 +178,22 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 		conditionPanel.setConditionLabel(this.getTempElementName());
 		conditionPanel.load();
 		return new ModalWindow(conditionPanel , 600, 450,  "조건분기" );
+	}
+	@ServiceMethod(target="popup", callByContent=true)
+	public Popup geomInfo() throws Exception{
+		if( this.getTempElementId() != null){
+			Popup infoWindow = new Popup();
+			if( this.getCanvasMap() == null || (this.getCanvasMap() != null && getCanvasMap().get(this.getTempElementId()) == null ) ){
+				save("temp" , false );
+			}
+			GeomShape geomShape = new GeomShape(getCanvasMap().get(this.getTempElementId()));
+			geomShape.viewActivityInfo(this.getActivityMap().get(this.getTempElementId()));
+			infoWindow.setPanel(geomShape);
+			return infoWindow;
+		}else{
+			return null;
+		}
+		
 	}
 	@ServiceMethod(callByContent=true)
 	public PrcsValiablePanel addValiable() throws Exception{
@@ -212,19 +219,8 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 //		return new ModalWindow(conditionPanel , 800, 500,  "데이터매핑" );
 //	}
 	
-	public void saveTemp() throws Exception{
-		if( cell != null){
-			HashMap<String, CanvasDTO> canvasMap = new HashMap<String, CanvasDTO>();
-			for(int i = 0; i < cell.length; i++){
-				CanvasDTO cv = cell[i];
-				canvasMap.put(cv.getId(), cv);
-			}
-			setCanvasMap(canvasMap);
-		}
-	}
-		
 	@ServiceMethod(callByContent=true)
-	public void save(String title) throws Exception{
+	public void save(String title, boolean temp) throws Exception{
 		ArrayList<CanvasDTO> cells = new ArrayList<CanvasDTO>();
 		ProcessDefinition def = new ProcessDefinition();
 		if( cell != null){
@@ -235,10 +231,6 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 					roles[0] = initiator;
 			Activity[] ac = new Activity[0];
 			
-			if( title == null ){
-				throw new Exception("title is null. please set process title");
-			}
-			def.setName(title);
 			def.setRoles(roles);
 			def.setChildActivities(ac);
 			// 변수정의
@@ -328,6 +320,7 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 			CanvasDTO jsonString = new CanvasDTO();
 			jsonString.setJsonString(graphString);
 			cells.add(jsonString);
+			setActivityMap(activityMap);
 			Collection<Activity> coll = activityMap.values();
 	        Iterator<Activity> iter = coll.iterator();
 	        while(iter.hasNext()){
@@ -336,9 +329,13 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 			def.setExtendedAttribute( "cells", cells );
 			
 		}
-		
-		processManager.addProcessDefinition( title , 0, "description", false, GlobalContext.serialize(def, ProcessDefinition.class), "", "/"+title+".process2", "/"+title+".process2", "process2");
-		
+		if( temp ){
+			if( title == null ){
+				throw new Exception("title is null. please set process title");
+			}
+			def.setName(title);
+			processManager.addProcessDefinition( title , 0, "description", false, GlobalContext.serialize(def, ProcessDefinition.class), "", "/"+title+".process2", "/"+title+".process2", "process2");
+		}
 	}
 	
 	public ProcessVariable[] makeProcessValiable() throws Exception{
@@ -364,6 +361,8 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 					
 					pv.setType(complexType.getClass());
 					pv.setDefaultValue(complexType);
+				}else if("string".equals(typeAttr)){
+					pv.setType(String.class);
 				}
 				pvs[i] = pv;
 			}

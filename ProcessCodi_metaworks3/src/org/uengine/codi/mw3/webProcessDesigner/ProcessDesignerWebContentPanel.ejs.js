@@ -228,6 +228,11 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 	    		if(customData.length > 0){
 	    			canvas.setCustomData(element, customData);
 	    		}
+	    	},
+	    	dblclick: function (event) {
+	    		var value = mw3.getOobject(objectId);
+    			value.tempElementId = $(this).attr('id');
+    			value.geomInfo();
 	    	}
 	    });
 	}
@@ -240,8 +245,7 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 			
 			value.tempElementId = $(this).attr('id');
 			value.tempElementName = $(this).children('[id$=_LABEL]').text();
-			value.tempConditionArray = JSON.stringify(canvas.getCustomData(element));
-//			value.valiableString = mw3.pcsValiable.toXML(mw3.pcsValiable.rootElement);
+			value.tempElementData = JSON.stringify(canvas.getCustomData(element));
 			value.gateCondition();
 		}
 	});
