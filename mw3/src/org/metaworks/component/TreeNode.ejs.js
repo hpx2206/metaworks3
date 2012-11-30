@@ -105,6 +105,12 @@ org_metaworks_component_TreeNode.prototype = {
 			window.event.cancelBubble = true;
 		}
 		
+		var tree = this.objectDiv.parentsUntil('.filemgr-tree').parent('.filemgr-tree');
+		
+		if(!this.nodeDiv.hasClass('selected'))
+			tree.trigger('change', [this.objectId]);
+		
+		
 		$('.filemgr-tree .item-fix.selected').removeClass('selected');
 		this.nodeDiv.addClass('selected');
 	},
