@@ -31,5 +31,15 @@ public class MobileWindow {
 		public void setUrl(String url) {
 			this.url = url;
 		}
+		
+	String type;
+		public String getType() {
+			return type;
+		}
+	
+		public void setType(String type) {
+			this.type = type;
+		}
+		
 
 }

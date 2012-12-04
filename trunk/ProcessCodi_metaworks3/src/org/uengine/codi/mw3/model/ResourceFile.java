@@ -436,6 +436,13 @@ public class ResourceFile implements ContextAware{
 				ProcessDesignerWebWindow processDesigner = new ProcessDesignerWebWindow();
 				processDesigner.load(getAlias());
 				return processDesigner;
+			}else if("sql".equals(objType)){
+					EntityDesignerContentPanel entityDesignerContentPanel = new EntityDesignerContentPanel();
+					entityDesignerContentPanel.getMetaworksContext().setHow(pageNavigator.getPageName());
+					entityDesignerContentPanel.processManager = this.processManager;
+					entityDesignerContentPanel.load(getAlias());
+					
+					return entityDesignerContentPanel;				
 			}else {
 				try{
 					ResourceDesigner designer = (ResourceDesigner)Class.forName("org.uengine.codi.mw3.model." + UEngineUtil.toOnlyFirstCharacterUpper(objType) + "Designer").newInstance();

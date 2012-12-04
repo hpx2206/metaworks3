@@ -122,7 +122,7 @@ public class MainSNS {
 
 		}else{
 
-		
+			
 			Layout westLayout = new Layout();
 			ContactWindow contactWindow = new ContactWindow(session.getUser());
 			
@@ -154,7 +154,6 @@ public class MainSNS {
 			outerLayout.setName("center");
 			
 			setLayout(outerLayout);
-
 			//setPageNavigator(new PageNavigator("process"));	
 		}
 

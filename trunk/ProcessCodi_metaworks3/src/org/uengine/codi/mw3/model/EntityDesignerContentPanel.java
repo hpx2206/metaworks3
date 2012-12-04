@@ -3,6 +3,7 @@ package org.uengine.codi.mw3.model;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Face;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.admin.EntityDefinition;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.processmanager.ProcessManagerRemote;
@@ -31,10 +32,12 @@ public class EntityDesignerContentPanel extends ContentWindow {
 	public void load(String defId) throws Exception {
 		try{
 			
-			String defVerId = processManager.getProcessDefinitionProductionVersion(defId);
-			String resource = processManager.getResource(defVerId);
 			
-			entityDefinition = (EntityDefinition) GlobalContext.deserialize(resource, EntityDefinition.class);
+			String defVerId = processManager.getProcessDefinitionProductionVersion(defId);
+			
+			CodiClassLoader codiClassLoader = (CodiClassLoader)Thread.currentThread().getContextClassLoader();
+			
+			entityDefinition = (EntityDefinition) GlobalContext.deserialize(codiClassLoader.getResourceAsStream(defId), EntityDefinition.class);
 			entityDefinition.setDefId(defId);
 			
 			entityDefinition.setMetaworksContext(new MetaworksContext());
@@ -45,15 +48,6 @@ public class EntityDesignerContentPanel extends ContentWindow {
 			}
 			
 			try {
-				ProcessDefinition def = new ProcessDefinition();
-				def.setDefId(new Long(defId));
-				String authorId = def.databaseMe().getAuthor();
-				
-				User author = new User();
-				author.setUserId(authorId);
-				
-				entityDefinition.setAuthor(author);
-				
 			} catch (Exception e2) {
 				// TODO Auto-generated catch block
 				e2.printStackTrace();

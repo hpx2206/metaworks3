@@ -329,7 +329,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			workItemHandler.setInstanceId(instId.toString());
 			workItemHandler.setTaskId(getTaskId());
 			workItemHandler.setTracingTag(tracingTag);
-			workItemHandler.setRootInstId(rootInstId);
+			workItemHandler.setRootInstId(this.getRootInstId());
 			
 			workItemHandler.setMetaworksContext(new MetaworksContext());
 			
