@@ -22,6 +22,13 @@ var org_metaworks_component_Tree = function(objectId, className){
 						'max-height': '10000px'});
 	
 	// scroll bar
-	$('.filemgr-tree').mCustomScrollbar();
+	this.objectDiv.mCustomScrollbar();
 };
 
+this.objectDiv.bind('change', function(event, objectId){
+	console.log('change : ');
+	
+	var node = mw3.getObject(objectId);
+	console.log(node);
+	
+});

@@ -50,6 +50,7 @@ public class VerticalSplitBox {
 			Splitter splitter = new Splitter();
 			splitter.setType(Splitter.TYPE_VERTICAL);
 			splitter.setAlign(this.getAlign());
+			splitter.setSize(5);
 			
 			this.setSplitter(splitter);
 		}else{
