@@ -9,8 +9,6 @@ var org_metaworks_component_Splitter = function(objectId, className){
 	if(this.object == null)
 		return true;
 	
-	console.log('org_metaworks_component_Splitter');
-	
 	$('#' + mw3._getInfoDivId(this.objectId)).remove();
 	
 	this.objectDiv.addClass('splitter');
@@ -77,8 +75,6 @@ var org_metaworks_component_Splitter = function(objectId, className){
 	
 	
 	// toggle setting
-	console.log(this.opts.split);
-	
 	this.splitterToggle = this.objectDiv.children('.splitterToggle');
 	this.splitterToggle.css(this.opts.split,'100%').css(this.opts.fixed,'10%');
 	this.splitterToggle.bind('mousedown', {objectId : this.objectId}, function(event){

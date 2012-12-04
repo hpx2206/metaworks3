@@ -4,7 +4,10 @@
 		
 	
 	var width = value.fixWidth;
-	var splitterWidth = value.splitter.size;
+	var splitterWidth = 0;
+	
+	if(value.splitter)
+		splitterWidth = value.splitter.size;
 	
 	var leftWidth;
 	var rightLeft;
