@@ -1,8 +1,5 @@
 package org.uengine.codi.mw3.menu;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.metaworks.Remover;
@@ -12,11 +9,9 @@ import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.widget.ModalWindow;
-import org.metaworks.widget.Window;
 import org.metaworks.widget.menu.SubMenu;
 import org.uengine.codi.mw3.admin.ClassDefinition;
 import org.uengine.codi.mw3.model.MobileWindow;
-import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.model.TemplateDesigner;
 import org.uengine.codi.mw3.widget.IFrame;
 import org.uengine.codi.platform.Console;
@@ -98,9 +93,31 @@ public class SubMenuRun extends SubMenu {
 	}
 
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
-	@Face(displayName="Run in Mobile")
-	public Object[] runMobile() throws Exception{
+	@Face(displayName="Run in iOS")
+	public Object[] runMobileIPhone() throws Exception{
+		return runMboile(null);
+	}	
+	
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
+	@Face(displayName="Run in Android")
+	public Object[] runMobileSamsungPhone() throws Exception{
+		return runMboile("samsungPhone");
+	}	
+	
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
+	@Face(displayName="Run in Android Tab")
+	public Object[] runMobileSamsungPad() throws Exception{
+		return runMboile("samsungPad");
+	}	
+	
+	
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
+	@Face(displayName="Run in Window 8")
+	public Object[] runMobileWindowsPad() throws Exception{
+		return runMboile("windowsPad");
+	}	
 		
+	public Object[] runMboile(String type) throws Exception {
 		classDefinition.compile();
 		
 		String fullClassName = classDefinition.getPackageName() + "." + classDefinition.getClassName();
@@ -112,6 +129,7 @@ public class SubMenuRun extends SubMenu {
 			
 			MobileWindow outputWindow = new MobileWindow();
 			outputWindow.setPanel(o);
+			outputWindow.setType(type);
 			
 			HttpServletRequest request = TransactionContext.getThreadLocalInstance().getRequest();
 			
@@ -122,8 +140,8 @@ public class SubMenuRun extends SubMenu {
 			Console.addError(e.getMessage());
 		}
 		
-		return new Object[]{new Remover(this)};
-	}	
+		return new Object[]{new Remover(this)};		
+	}
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 	@Face(displayName="Run in New Window")

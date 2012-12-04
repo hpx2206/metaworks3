@@ -108,7 +108,8 @@ public class EntityDefinition implements ContextAware, PropertyListable, NeedArr
 		}
 		
 	String packageName;
-		@Available(when={"edit"})
+		//@Available(when={"edit"})
+		@Hidden
 		public String getPackageName() {
 			return packageName;
 		}
@@ -318,7 +319,7 @@ public class EntityDefinition implements ContextAware, PropertyListable, NeedArr
 	@ServiceMethod(callByContent=true, when="view")
 	public void generateDao() throws Exception {
 		generateDaoInterface();
-		generateDaoImplementation();
+		//generateDaoImplementation();
 	}
 	
 	private void generateDaoImplementation() throws Exception{
@@ -479,6 +480,7 @@ public class EntityDefinition implements ContextAware, PropertyListable, NeedArr
 			;
 		}		
 		
+		/*
 		sb
 		.append("\n\n")
 		.append("	@ServiceMethod(callByContent=true)\n")
@@ -495,9 +497,8 @@ public class EntityDefinition implements ContextAware, PropertyListable, NeedArr
 		.append("	public void delete() throws Exception;\n\n")
 		
 		.append("	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)\n")
-		.append("	public Popup showGrid() throws Exception;\n\n")
-		
-		;
+		.append("	public Popup showGrid() throws Exception;\n\n");
+		*/
 
 		sb.append("}");
 		

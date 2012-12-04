@@ -258,7 +258,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 	@ServiceMethod(callByContent=true, when="view")
 	public Object compile() throws Exception{
 		try{
-			save();
+			//save();
 		}catch(Exception e){
 			return new CheckoutWindow(); //or confirmation dialog for launching CheckoutWindow
 		}
@@ -501,9 +501,11 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		
 		String faceHelperSource = sourceCodeBase + "/" + getAlias();
 		faceHelperSource = faceHelperSource.substring(0, faceHelperSource.indexOf(".")) + ".ejs.js";
-
+		
+		
 //		if(UEngineUtil.isNotEmpty(getSourceCodes().getFace().getEditor().getContents())){
 		
+		/*
 		File ejsFile = new File(faceSource);
 		File ejsJsFile = new File(faceHelperSource);
 		
@@ -527,6 +529,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 			ejsFile.delete();
 			ejsJsFile.delete();
 		}
+		*/
 		
 		//if there is facehelper code, save it.
 		
