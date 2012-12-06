@@ -289,7 +289,7 @@ public class Login extends Database<ILogin> implements ILogin{
 					mainPanel = pageNavigator.goIDE();
 				}else{
 					String preferUX = session.getEmployee().getPreferUX();
-					if("sns".equals(preferUX)){
+					if("sns".equals(preferUX) || "".equals(preferUX)){
 						mainPanel = pageNavigator.goSns();
 					}else{
 						mainPanel = pageNavigator.goProcess();

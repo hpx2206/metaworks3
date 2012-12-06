@@ -644,6 +644,8 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			if("sns".equals(session.getEmployee().getPreferUX())){
 				newInstantiator.getMetaworksContext().setWhere("sns");
 				newInstantiator.setInstantiation(true);
+				refreshedInstance.getMetaworksContext().setHow("instanceList");
+				refreshedInstance.getMetaworksContext().setWhere("sns");
 				MetaworksRemoteService.getInstance().pushClientObjects(new Object[]{new ToPrepend(new InstanceList(), refreshedInstance)});
 				
 				return new Object[]{new Refresh(newInstantiator)};

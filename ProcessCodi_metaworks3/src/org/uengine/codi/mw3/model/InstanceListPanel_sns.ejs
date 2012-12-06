@@ -1,3 +1,7 @@
+<%
+	if(value && value.preloaded){
+%>
+
 		<div class="pane ui-layout-north">
 		   <div class="boxmiddleright">
 		        <div class="boxmiddleleft">
@@ -11,8 +15,6 @@
 		        </div>
 
 		    </div>  		
-		
-			
 		</div>
 
 		<div class="pane ui-layout-center" id="method_<%=objectId%>_switchToScheduleCalendar">
@@ -23,3 +25,6 @@
 				<%=value.knowledge ? fields.knowledge.here() : ""%>
 			</div>
 		</div>
+<%
+	}
+%>
