@@ -147,17 +147,16 @@ var org_uengine_codi_mw3_knowledge_IWfNode = function(objectId, className) {
 		if (this.mw3Obj.parentId == rootNodeId) {
 			this.obj.find('.wfNode').eq(0).addClass("first_wfNode");
 		}
-
-		if(this.mw3Obj.first){
-			setTimeout(function(){
-				mw3.call(objectId, 'load');
-			},1);
-		}
 	}
 
 }
 
 org_uengine_codi_mw3_knowledge_IWfNode.prototype = {
+	loaded : function(){
+		if(this.mw3Obj && this.mw3Obj.first){
+			mw3.call(this.objectId, 'load');
+		}		
+	},
 	getPrev : function() {
 		var searchObj = this.obj;
 
