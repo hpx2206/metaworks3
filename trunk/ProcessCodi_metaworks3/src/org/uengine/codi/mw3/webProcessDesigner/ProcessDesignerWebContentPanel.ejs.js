@@ -9,6 +9,7 @@ var org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel = fun
 	var faceHelper = this;
 	var canvas = null;
 	this.icanvas = null;
+	this.tracingTag = 0;
 	
 	this.divObj.css('height','100%');
 	var canvasDivObj = $('#canvas');
@@ -103,7 +104,9 @@ var org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel = fun
     	// TODO 연결되는 시점에만 호출 되니 그려진 로직은 다른걸 태우던지 해야함
     	faceHelper.addEventEdge(objectId, canvas, edgeElement);
     });
-    
+    canvas.onDrawShape(function (event, shapeElement) {
+    	$(shapeElement).attr("tracingTag",++faceHelper.tracingTag);
+    });
     // Role.ejs 파일쪽에 있는 스윔레인추가 버튼 클릭시 동작
     $(".horizontalLaneShapeCall").click(function(){
     	var text = $("#horizontalLaneShapeText").val();
@@ -139,6 +142,19 @@ var org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel = fun
     // load 에서 데이터가 넘어왔을 경우 데이터를 셋팅하여 그림
 	if( object != null && object.graphString != null ){
 		var canvassizeObject = this.icanvas.loadJSON($.parseJSON(object.graphString));
+		this.tracingTag = object.lastTracingTag;
+		// tracingTag 달아주기
+		if( object != null && object.cell != null ){
+			var cells = object.cell;
+			for(var i=0; i < cells.length; i++){
+				var cellId = cells[i].id;
+				var cellTracing = cells[i].tracingTag;
+				console.log('cellTracing = ' + cellTracing + ' , cellId = ' + cellId );
+				if( cellTracing != null ){
+					$('#'+cellId).attr("tracingTag",cellTracing);
+				}
+			}
+		}
 		// 캔버스 사이즈 조정
 		if(canvasWidth < canvassizeObject.x2){
 			canvasWidth = canvassizeObject.x2;
@@ -167,13 +183,12 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 	var shape_id = $(element).attr("_shape_id");
 	if( shape_id == 'OG.shape.bpmn.D_Store' ){
 		// 데이터 매핑 
-		$(element).bind({
-			dblclick: function (event) {
+//		$(element).bind({
+//			dblclick: function (event) {
 //				var value = mw3.getObject(objectId);
-//				value.valiableString = mw3.pcsValiable.toXML(mw3.pcsValiable.rootElement);
 //				value.dataMapping();
-			}
-		});
+//			}
+//		});
 	}else{
 		// 그외 
 		$(element).on({
@@ -273,6 +288,10 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 	for(var i=0; i<ogArr.length; i++){
 		var og = ogArr[i];
 		var cellForDwr = {};
+		console.log(og['@id']);
+		if( og['@shapeType'] != 'EDGE'){
+			cellForDwr['tracingTag'] = $('#'+og['@id']).attr('tracingTag');
+		}
 		for(var key in og){
 			// 추가로 필요한 정보 관리
 			if(key == '@id'){

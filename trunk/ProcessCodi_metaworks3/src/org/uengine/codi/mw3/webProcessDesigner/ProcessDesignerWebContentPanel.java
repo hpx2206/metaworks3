@@ -9,6 +9,10 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+import net.sf.json.JSONSerializer;
+
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Hidden;
@@ -23,7 +27,10 @@ import org.uengine.contexts.ComplexType;
 import org.uengine.contexts.TextContext;
 import org.uengine.kernel.Activity;
 import org.uengine.kernel.Condition;
+import org.uengine.kernel.EmptyActivity;
 import org.uengine.kernel.GlobalContext;
+import org.uengine.kernel.HumanActivity;
+import org.uengine.kernel.ParameterContext;
 import org.uengine.kernel.ProcessDefinition;
 import org.uengine.kernel.ProcessVariable;
 import org.uengine.kernel.Role;
@@ -35,12 +42,12 @@ import org.uengine.util.UEngineUtil;
 public class ProcessDesignerWebContentPanel extends ContentWindow implements ContextAware {
 	
 	MetaworksContext metaworksContext;
-	public MetaworksContext getMetaworksContext() {
-		return metaworksContext;
-	}
-	public void setMetaworksContext(MetaworksContext metaworksContext) {
-		this.metaworksContext = metaworksContext;
-	}
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
+		}
 	
 	DefineTab defineTab;
 		public DefineTab getDefineTab() {
@@ -49,7 +56,6 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 		public void setDefineTab(DefineTab defineTab) {
 			this.defineTab = defineTab;
 		}
-	
 	public ProcessDesignerWebContentPanel() throws Exception{
 		defineTab = new DefineTab();
 	}
@@ -150,14 +156,20 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 		public void setProcessName(String processName) {
 			this.processName = processName;
 		}
-		
+	String lastTracingTag;
+		public String getLastTracingTag() {
+			return lastTracingTag;
+		}
+		public void setLastTracingTag(String lastTracingTag) {
+			this.lastTracingTag = lastTracingTag;
+		}
 	@ServiceMethod(callByContent=true, target="popup")
 	public ModalWindow doSave() throws Exception{
 		ProcessDesignerTitle dTitle = new ProcessDesignerTitle();
 		dTitle.setMetaworksContext(new MetaworksContext());
 		dTitle.getMetaworksContext().setWhen("edit");
 		dTitle.setTitle(getProcessName());
-		return new ModalWindow(dTitle , 300, 200,  "프로세스명 입력" );
+		return new ModalWindow(dTitle , 600, 600,  "프로세스명 입력" );
 	}
 	
 	@ServiceMethod(callByContent=true, target="popup")
@@ -249,7 +261,6 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 			
 			Collection<CanvasDTO> ct = canvasMap.values();
             Iterator<CanvasDTO> iterator = ct.iterator();
-            int tracingCnt = 0;
             while (iterator.hasNext()) {
 				CanvasDTO cv = iterator.next();
 				
@@ -269,7 +280,7 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 					}
 					Activity activity = geom.makeActivity();
 					if ( activity != null ){
-						activity.setTracingTag(  String.valueOf(tracingCnt++) );
+						activity.setTracingTag(  cv.getTracingTag() );
 						activityMap.put(cv.getId() , activity);
 					}
 				}else if( "GROUP".equalsIgnoreCase(cv.getShapeType()) ){
@@ -379,19 +390,26 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 		
 		ByteArrayOutputStream bao = new ByteArrayOutputStream();
 		FileInputStream is;
-		try {
+//		try {
 			is = new FileInputStream(sourceCodeFile);
 			UEngineUtil.copyStream(is, bao);
 			ProcessDefinition def = (ProcessDefinition) GlobalContext.deserialize(bao.toString("UTF-8"));
+			Long nextTracingTag = def.getNextActivitySequence();
+			lastTracingTag = nextTracingTag.toString();
+			// processDefinition setting
 			ArrayList<CanvasDTO> cellsList = (ArrayList<CanvasDTO>) def.getExtendedAttributes().get("cells");
 			if( cellsList != null){
 				CanvasDTO []cells = new CanvasDTO[cellsList.size()];
+				int tagCnt = 0;
 				for(int i = 0; i < cellsList.size(); i++){
 					cells[i] = (CanvasDTO)cellsList.get(i);
-					if( cells[i] != null && cells[i].getJsonString() != null){
-						this.setGraphString(cells[i].getJsonString());
+					if( cells[i].getTracingTag() != null ){
+						if( Integer.parseInt(cells[i].getTracingTag()) > tagCnt )
+							tagCnt = Integer.parseInt(cells[i].getTracingTag());
 					}
 				}
+				lastTracingTag = String.valueOf(tagCnt + 1);
+				// canvas setting
 				this.setCell(cells);
 			}
 			Role[] roles = def.getRoles();
@@ -404,6 +422,7 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 					designerRole.getMetaworksContext().setWhen("view");
 					role.add(designerRole);
 				}
+				// role setting
 				defineTab.rolePanel.setRoles(role);
 			}
 			ProcessVariable pvs[] = def.getProcessVariables();
@@ -427,13 +446,14 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 					
 					prcsValiable.add(designerValiable);
 				}
+				// ProcessValiable setting
 				defineTab.prcsValiablePanel.setPrcsValiables(prcsValiable);
 			}
-		} catch (FileNotFoundException e1) {
-			e1.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+//		} catch (FileNotFoundException e1) {
+//			e1.printStackTrace();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 	}
 	
 	public static String unescape(String src) {
