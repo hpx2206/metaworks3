@@ -729,7 +729,11 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					}
 					
 					
-					if(objectTypeName.length > 2 && objectTypeName.substr(-2) == '[]'){			//if array of some object type, use ArrayFace with mapped class mapping for the object type.
+					if(options && options['ejsPath']){
+						metadata = this.getMetadata(objectTypeName);
+					
+						actualFace = options['ejsPath'];						
+					}else if(objectTypeName.length > 2 && objectTypeName.substr(-2) == '[]'){			//if array of some object type, use ArrayFace with mapped class mapping for the object type.
 						objectTypeName = objectTypeName.substr(0, objectTypeName.length - 2);
 						metadata = this.getMetadata(objectTypeName);
 						
@@ -744,6 +748,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					}else{
 
 						if(object && object.constructor && object.constructor.toString().indexOf('Array') != -1){
+							
 							try{
 								metadata = this.getMetadata(object[0].__className);
 							}catch(e){}
