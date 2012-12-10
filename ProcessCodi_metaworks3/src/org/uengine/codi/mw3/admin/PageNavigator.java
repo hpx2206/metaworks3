@@ -41,7 +41,12 @@ public class PageNavigator {
 	
 	@ServiceMethod(callByContent=true)
 	public MainPanel goProcess() throws Exception {
-		return new MainPanel(new Main(session));
+		String preferUX = session.getEmployee().getPreferUX();
+		if("sns".equals(preferUX)){
+			return goSns();
+		}else{
+			return new MainPanel(new Main(session));
+		}
 	}
 	
 	@ServiceMethod(callByContent=true)

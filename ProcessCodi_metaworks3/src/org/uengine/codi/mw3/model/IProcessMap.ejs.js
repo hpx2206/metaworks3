@@ -16,8 +16,6 @@ var org_uengine_codi_mw3_model_IProcessMap = function(objectId, className){
 		
 		var session = mw3.getAutowiredObject('org.uengine.codi.mw3.model.Session');
 		
-		console.debug(session);
-		
 		var admin = false;
 		if(session && session.employee)
 			admin = session.employee.isAdmin;		
@@ -63,7 +61,7 @@ var org_uengine_codi_mw3_model_IProcessMap = function(objectId, className){
 			);
 		}
 	}
-}
+};
 
 org_uengine_codi_mw3_model_IProcessMap.prototype = {
 		
@@ -91,7 +89,7 @@ org_uengine_codi_mw3_model_IProcessMap.prototype = {
 		showStatus : function(message){
 			
 		}		
-}
+};
 
 
 

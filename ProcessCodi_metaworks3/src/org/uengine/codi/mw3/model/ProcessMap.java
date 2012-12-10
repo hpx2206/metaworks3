@@ -318,7 +318,6 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		}
 		
 		
-		processManager.executeProcess(instId);
 		
 		//set the role mappings the administrator set.
 		
@@ -326,6 +325,7 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		
 		roleMappingPanel.putRoleMappings(processManager, instId);
 		
+		processManager.executeProcess(instId);
 		
 		//end
 		

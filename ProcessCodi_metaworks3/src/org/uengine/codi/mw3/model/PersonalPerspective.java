@@ -31,7 +31,15 @@ public class PersonalPerspective extends Perspective {
 	
 	@ServiceMethod
 	public Object[] loadAll() throws Exception{
-		return loadInstanceListPanel("all", null);
+		Object[] returnObject = loadInstanceListPanel("all", null);
+		for( int i = 0; i < returnObject.length; i++){
+			if( returnObject[i] instanceof InstanceListPanel){
+				InstanceListPanel instListPanel = (InstanceListPanel)returnObject[i];
+				instListPanel.setSearchBox(new SearchBox());
+				session.setSearchKeyword("");
+			}
+		}
+		return returnObject;
 	}
 	
 	@ServiceMethod
