@@ -88,10 +88,19 @@ public class GeomShape extends CanvasDTO {
 							HumanActivity humanActivity = new HumanActivity();
 							ProcessVariable pvs[] = getPvs();
 							if( pvs != null){
-								ParameterContext pc[] = new ParameterContext[pvs.length];
+								ParameterContext pc[] = new ParameterContext[0];
 								int k = 0;
 								for(int j=0; j < pvs.length ; j++){
 									if( customName.equals(pvs[j].getName()) ){
+										if( k == 0){
+											pc = new ParameterContext[1];
+										}else{
+											// TODO 오류 체크 해봐야함
+											ParameterContext pc2[] = new ParameterContext[k+1];
+											System.arraycopy(pc, 0, pc2, 0, k+1);
+											pc = pc2;
+										}
+										
 										pc[k] = new ParameterContext();
 										pc[k].setArgument(pvs[j].getDisplayName());
 										pc[k].setVariable(pvs[j]);

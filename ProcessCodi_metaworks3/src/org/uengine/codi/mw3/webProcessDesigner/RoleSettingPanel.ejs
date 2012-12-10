@@ -1,44 +1,42 @@
 <table>
 	<tr>	
-		<td>Role name</td>
-		<td><b><%=fields.roleName.here()%></b> </td>
+		<td>Role name : </td>
+		<td><b><%=fields.roleName.here({when:'view'})%></b> </td>
 	</tr>
 </table>
 <br/>
 <br/>
 <table>
 	<tr>	
-		<td><input type="radio" id="" name="groupSelectRadio" value="2" onClick="mw3.getFaceHelper('<%=objectId%>').radioChecked()"/>The group that</td>
-		<td><b><%=fields.roleName.here()%></b> </td>
+		<td width="200px"><input type="radio" id="" name="groupSelectRadio" value="2" onClick="mw3.getFaceHelper('<%=objectId%>').radioChecked()"/>The group that</td>
+		<td width="200px"><b><%=fields.roleName.here({when:'view'})%></b> </td>
 		<td>&nbsp;</td>
 	</tr>
 	<tr>	
-		<td><input type="radio" id="" name="groupSelectRadio" value="1" onClick="mw3.getFaceHelper('<%=objectId%>').radioChecked()"/>The specified group</td>
-		<td><input type="text" name="selectedGroup" id="selectedGroup_<%=objectId%>" value="<%=value.selectedGroupName ? value.selectedGroupName : ''%>" style=" width: 100px; " readonly/></td>
-		<td><div id="group_<%=objectId%>" style="width:200px; height:150px; position: relative; display:none;"><%= fields.groupTree.here() %></div></td>
+		<td><input type="radio" id="" name="groupSelectRadio" value="1" onClick="mw3.getFaceHelper('<%=objectId%>').radioChecked()"/>The specified group
+		<input type="text" name="selectedGroup" id="selectedGroup_<%=objectId%>" value="<%=value.selectedGroupName ? value.selectedGroupName : ''%>" style=" width: 200px; " readonly/></td>
+		<td><div id="group_<%=objectId%>" style="width:100%; height:150px; position: relative; "><%= fields.groupTree.here() %></div></td>
 	</tr>
 	<tr>	
 		<td><input type="radio" id="" name="groupSelectRadio" value="0" onClick="mw3.getFaceHelper('<%=objectId%>').radioChecked()"/>All</td>
 		<td>&nbsp;</td>
-		<td>&nbsp;</td>
 	</tr>
 </table>
 <br/> 
 <table>
 	<tr>	
-		<td><input type="radio" id="" name="roleSelectRadio" value="1" onClick="mw3.getFaceHelper('<%=objectId%>').radioChecked()"/>The specified role</td>
-		<td><input type="text" name="selectedRole" id="selectedRole_<%=objectId%>" value="<%=value.selectedRoleName ? value.selectedRoleName : ''%>" style=" width: 100px; " readonly/></td>
-		<td><div id="role_<%=objectId%>" style="width:200px; height:150px; position: relative; "><%=fields.roleSelect.here()%></div></td>
+		<td width="200px"><input type="radio" id="" name="roleSelectRadio" value="1" onClick="mw3.getFaceHelper('<%=objectId%>').radioChecked()"/>The specified role
+		<input type="text" name="selectedRole" id="selectedRole_<%=objectId%>" value="<%=value.selectedRoleName ? value.selectedRoleName : ''%>" style=" width: 200px; " readonly/></td>
+		<td width="200px"><div id="role_<%=objectId%>" style="width:100%; height:150px; position: relative; "><%=fields.roleSelect.here()%></div></td>
 	</tr>
 	<tr>	
 		<td><input type="radio" id="" name="roleSelectRadio" value="0" onClick="mw3.getFaceHelper('<%=objectId%>').radioChecked()"/>All</td>
-		<td>&nbsp;</td>
 		<td>&nbsp;</td>
 	</tr>
 </table>
 <br/> 
 <br/>
-<input type="text" name="desc" id="desc_<%=objectId%>" value="<%=value.desc ? value.desc : ''%>" style=" width: 200px; " readonly/>
+<input type="text" name="desc" id="desc_<%=objectId%>" value="<%=value.desc ? value.desc : ''%>" style=" width: 400px; " readonly/>
 
 <table>
 	<tr>	

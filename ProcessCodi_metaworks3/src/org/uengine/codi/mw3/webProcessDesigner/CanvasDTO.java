@@ -129,5 +129,11 @@ public class CanvasDTO implements Serializable{
 			public void setJsonString(String jsonString) {
 				this.jsonString = jsonString;
 			}
-
+		String tracingTag;
+			public String getTracingTag() {
+				return tracingTag;
+			}
+			public void setTracingTag(String tracingTag) {
+				this.tracingTag = tracingTag;
+			}
 }

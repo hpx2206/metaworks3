@@ -1,8 +1,11 @@
 package org.uengine.codi.mw3.webProcessDesigner;
 
+import java.util.ArrayList;
+
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Remover;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.SelectBox;
 import org.metaworks.component.Tree;
@@ -10,6 +13,8 @@ import org.metaworks.component.TreeNode;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.IDAO;
 import org.metaworks.widget.ModalWindow;
+
+import com.defaultcompany.organization.DefaultCompanyRoleResolutionContext;
 
 public class RoleSettingPanel implements ContextAware{
 	
@@ -20,7 +25,13 @@ public class RoleSettingPanel implements ContextAware{
 	public void setMetaworksContext(MetaworksContext metaworksContext) {
 		this.metaworksContext = metaworksContext;
 	}
-	
+	Role role;
+		public Role getRole() {
+			return role;
+		}
+		public void setRole(Role role) {
+			this.role = role;
+		}
 	String roleName;
 		public String getRoleName() {
 			return roleName;
@@ -28,26 +39,19 @@ public class RoleSettingPanel implements ContextAware{
 		public void setRoleName(String roleName) {
 			this.roleName = roleName;
 		}
-	String desc;
-		public String getDesc() {
-			return desc;
+	String selectedGroupCode;
+		public String getSelectedGroupCode() {
+			return selectedGroupCode;
 		}
-		public void setDesc(String desc) {
-			this.desc = desc;
+		public void setSelectedGroupCode(String selectedGroupCode) {
+			this.selectedGroupCode = selectedGroupCode;
 		}
-	String selectedGroupName;
-		public String getSelectedGroupName() {
-			return selectedGroupName;
+	String selectedRoleCode;
+		public String getSelectedRoleCode() {
+			return selectedRoleCode;
 		}
-		public void setSelectedGroupName(String selectedGroupName) {
-			this.selectedGroupName = selectedGroupName;
-		}
-	String selectedRoleName;
-		public String getSelectedRoleName() {
-			return selectedRoleName;
-		}
-		public void setSelectedRoleName(String selectedRoleName) {
-			this.selectedRoleName = selectedRoleName;
+		public void setSelectedRoleCode(String selectedRoleCode) {
+			this.selectedRoleCode = selectedRoleCode;
 		}
 	Tree groupTree;
 		public Tree getGroupTree() {
@@ -66,8 +70,9 @@ public class RoleSettingPanel implements ContextAware{
 	public RoleSettingPanel(){
 		setRoleName(null);
 	}
-	public RoleSettingPanel(String roleName){
-		setRoleName(roleName);
+	public RoleSettingPanel(Role role){
+		setRole(role);
+		setRoleName(role.getName());
 	}
 	
 	public void load() throws Exception{
@@ -75,14 +80,16 @@ public class RoleSettingPanel implements ContextAware{
 		getMetaworksContext().setWhen("edit");
 		loadRole();
 		loadGroup();
-		if( desc != null ){
-			// TODO 롤 셋팅부분
+		if( getRole().getRoleResolutionContext() != null ){
+			DefaultCompanyRoleResolutionContext context = (DefaultCompanyRoleResolutionContext)getRole().getRoleResolutionContext();
+			this.selectedRoleCode = context.getRoleId();
+			this.selectedGroupCode = context.getGroupId();
 		}
 	}
 	public void loadRole() throws Exception{
 		
 		SelectBox choice = new SelectBox();
-		choice.setSelectSize(5);
+		choice.setSelectSize(8);
 		choice.setSelectStyle("width:100%;");
 		String roleListSql = " SELECT ROLECODE, DESCR FROM ROLETABLE WHERE ISDELETED = '0' ";
 		IDAO roleDao = Database.sql(IDAO.class, roleListSql);
@@ -125,20 +132,18 @@ public class RoleSettingPanel implements ContextAware{
 		
 		this.setGroupTree(tree);
 	}
-//	@ServiceMethod(callByContent=true, target="popup")
-//	public ModalWindow findRole() throws Exception{
-//		RolePicker rolePicker = new RolePicker();
-//		rolePicker.loadRole();
-//		return new ModalWindow(rolePicker, 400, 450,  "역할찾기" );
-//	}
-//	@ServiceMethod(callByContent=true, target="popup")
-//	public ModalWindow findGroup() throws Exception{
-//		RolePicker rolePicker = new RolePicker();
-//		rolePicker.loadGroup();
-//		return new ModalWindow(rolePicker , 400, 450,  "그룹찾기" );
-//	}
 	@ServiceMethod(callByContent=true)
 	public Object[] save() throws Exception{
+		ArrayList<Role> roles = rolePanel.getRoles();
+		for(int i=0; i<roles.size(); i++){
+			Role role = roles.get(i);
+			if( role.getName().equals(this.getRoleName())){
+				DefaultCompanyRoleResolutionContext context = new DefaultCompanyRoleResolutionContext();
+				context.setRoleId(this.getSelectedRoleCode());
+				context.setGroupId(this.getSelectedGroupCode());
+				role.setRoleResolutionContext(context);
+			}
+		}
 		
 		
 		return new Object[]{ new Remover(new ModalWindow())};
@@ -147,4 +152,7 @@ public class RoleSettingPanel implements ContextAware{
 	public Object cancel() throws Exception{
 		return new Remover(new ModalWindow());
 	}
+	
+	@AutowiredFromClient
+	public RolePanel rolePanel;
 }

@@ -6,6 +6,7 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.kernel.RoleResolutionContext;
 
 public class Role implements ContextAware , Cloneable{
 	
@@ -16,7 +17,13 @@ public class Role implements ContextAware , Cloneable{
 		public void setName(String name) {
 			this.name = name;
 		}
-
+	RoleResolutionContext roleResolutionContext;
+		public RoleResolutionContext getRoleResolutionContext() {
+			return roleResolutionContext;
+		}
+		public void setRoleResolutionContext(RoleResolutionContext roleResolutionContext) {
+			this.roleResolutionContext = roleResolutionContext;
+		}
 		
 	MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
@@ -56,7 +63,7 @@ public class Role implements ContextAware , Cloneable{
 	
 	@ServiceMethod(callByContent=true, target="popup")
 	public ModalWindow roleSetting() throws Exception{
-		RoleSettingPanel roleSettingPanel = new RoleSettingPanel(this.getName());
+		RoleSettingPanel roleSettingPanel = new RoleSettingPanel(this);
 		roleSettingPanel.load();
 		return new ModalWindow(roleSettingPanel , 600, 450,  "롤셋팅" );
 	}
