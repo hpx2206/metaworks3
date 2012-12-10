@@ -13,10 +13,15 @@ var org_uengine_codi_mw3_model_InstanceListPanel = function(objectId, className)
 		if(this.windowObjectId){
 			mw3.getFaceHelper(this.windowObjectId).setTitle(mw3.localize(object.title));
 		}
-	}	
+	}
+	
+	var faceHelper = this;	
+	faceHelper.load();	
+
+	searchBarMagin = $('.newprocessbtn').width() + 20;
+	$('.searchboxarea').css("margin-left",searchBarMagin);
+	
 	if(object && object.preloaded){
-		var faceHelper = this;	
-		faceHelper.load();	
 		
 		var scrollDiv = $('#objDiv_' + this.objectId + " .ui-layout-center .ui-layout-content")
 		
@@ -26,20 +31,16 @@ var org_uengine_codi_mw3_model_InstanceListPanel = function(objectId, className)
 			}
 		});
 		
-		searchBarMagin = $('.newprocessbtn').width() + 20;
-		$('.searchboxarea').css("margin-left",searchBarMagin);
 		
-		
-		
-		 	$('#' + this.divId + ' .ui-layout-content').mCustomScrollbar({
-				callbacks:{
-					
-					onTotalScroll:function(){
-						mw3.objects[lastMore].more();
-						//setTimeout(function(){$("#method_37_switchToScheduleCalendar .ui-layout-content").mCustomScrollbar("update");},2000);
-					}
+	 	$('#' + this.divId + ' .ui-layout-content').mCustomScrollbar({
+			callbacks:{
+				
+				onTotalScroll:function(){
+					mw3.objects[lastMore].more();
+					//setTimeout(function(){$("#method_37_switchToScheduleCalendar .ui-layout-content").mCustomScrollbar("update");},2000);
 				}
-			});
+			}
+		});
 		
 		
 		$('#' + mw3._getObjectDivId(mw3.getChildObjectId(this.objectId, 'topicFollowers')) + " #searchbox").css("border-bottom","#9EBFC4 1px solid ");

@@ -16,9 +16,16 @@ public class InstanceListWindow extends Window {
 		this.session = session;
 		
 		InstanceListPanel instanceListPanel = new InstanceListPanel(session);
-		instanceListPanel.setPreloaded(false);
+		instanceListPanel.setPreloaded(true);
 
-		this.setInstanceListPanel(instanceListPanel);
+		
+		if(instanceListPanel.isPreloaded()){
+			PersonalPerspective personalPerspective = new PersonalPerspective();
+			personalPerspective.session = session;
+			this.instanceListPanel = (InstanceListPanel) personalPerspective.loadAllICanSee()[1];
+		}else{
+			this.setInstanceListPanel(instanceListPanel);	
+		}
 	}
 	
 	InstanceListPanel instanceListPanel;
