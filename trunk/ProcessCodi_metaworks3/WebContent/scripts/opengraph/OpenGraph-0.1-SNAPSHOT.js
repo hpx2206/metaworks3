@@ -10894,8 +10894,15 @@ OG.renderer.RaphaelRenderer = function (container, containerSize, backgroundColo
 	 */
 	this.removeShape = function (element) {
 		var rElement = getREleById(OG.Util.isElement(element) ? element.id : element),
-			childNodes, i;
+			childNodes, beforeEvent, i;
 		childNodes = rElement.node.childNodes;
+
+		beforeEvent = jQuery.Event("beforeRemoveShape", {element: rElement.node});
+		$(_PAPER.canvas).trigger(beforeEvent);
+		if (beforeEvent.isPropagationStopped()) {
+			return false;
+		}
+
 		for (i = childNodes.length - 1; i >= 0; i--) {
 			if ($(childNodes[i]).attr("_type") === OG.Constants.NODE_TYPE.SHAPE) {
 				this.removeShape(childNodes[i]);
@@ -16027,6 +16034,19 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor, backgroun
 	this.onBeforeConnectShape = function (callbackFunc) {
 		$(this.getRootElement()).bind('beforeConnectShape', function (event) {
 			if (callbackFunc(event, event.edge, event.fromShape, event.toShape) === false) {
+				event.stopPropagation();
+			}
+		});
+	};
+
+	/**
+	 * Shape 이 Remove 되기전 이벤트 리스너
+	 *
+	 * @param {Function} callbackFunc 콜백함수(event, element)
+	 */
+	this.onBeforeRemoveShape = function (callbackFunc) {
+		$(this.getRootElement()).bind('beforeRemoveShape', function (event) {
+			if (callbackFunc(event, event.element) === false) {
 				event.stopPropagation();
 			}
 		});
