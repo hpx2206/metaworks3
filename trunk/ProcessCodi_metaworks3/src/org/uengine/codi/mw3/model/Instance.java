@@ -404,7 +404,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 	}
 	
 	
-	public ContentWindow detail() throws Exception{
+	public Object detail() throws Exception{
 
 		if(getMetaworksContext()==null){
 			setMetaworksContext(new MetaworksContext());
@@ -412,17 +412,30 @@ public class Instance extends Database<IInstance> implements IInstance{
 		if("sns".equals(session.getEmployee().getPreferUX()) ){
 			getMetaworksContext().setHow("instanceList");
 			getMetaworksContext().setWhere("sns");
+			
+			InstanceViewThreadPanel panel = new InstanceViewThreadPanel();
+			panel.getMetaworksContext().setHow("instanceList");
+			panel.getMetaworksContext().setWhere("sns");
+			
+			if("".equals(StringUtils.nullToEmpty(this.getInstanceViewThreadPanel().getInstanceId()))){
+				panel.session = session;
+				panel.load(this.getInstId().toString());
+				
+				MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(flowchart())});
+			}
+			setInstanceViewThreadPanel(panel);
+			return this;
 		}else{
 			getMetaworksContext().setHow("");
 			getMetaworksContext().setWhere("");
+			TransactionContext.getThreadLocalInstance().setSharedContext("codi_session", session);
+			instanceViewContent.session = session;
+			instanceViewContent.setMetaworksContext(getMetaworksContext());
+			instanceViewContent.load(this);
+			
+			return instanceViewContent;
 		}
 		
-		TransactionContext.getThreadLocalInstance().setSharedContext("codi_session", session);
-		instanceViewContent.session = session;
-		instanceViewContent.setMetaworksContext(getMetaworksContext());
-		instanceViewContent.load(this);
-		
-		return instanceViewContent;
 	}
 	
 	public void over() throws Exception{

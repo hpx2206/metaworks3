@@ -24,8 +24,8 @@ import org.metaworks.widget.ModalWindow;
 @Table(name="bpm_procinst")
 public interface IInstance extends IDAO{
 
-	@ServiceMethod
-	public ContentWindow detail() throws Exception;
+	@ServiceMethod(callByContent=true)
+	public Object detail() throws Exception;
 
 	@ServiceMethod(target="popup")
 	public ModalWindow popupDetail() throws Exception;

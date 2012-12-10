@@ -3,6 +3,7 @@ package org.uengine.codi.mw3.model;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Hashtable;
 
 import org.directwebremoting.Browser;
 import org.directwebremoting.ScriptSessions;
@@ -644,8 +645,9 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			if("sns".equals(session.getEmployee().getPreferUX())){
 				newInstantiator.getMetaworksContext().setWhere("sns");
 				newInstantiator.setInstantiation(true);
-				refreshedInstance.getMetaworksContext().setHow("instanceList");
-				refreshedInstance.getMetaworksContext().setWhere("sns");
+//				refreshedInstance.getMetaworksContext().setHow("instanceList");
+//				refreshedInstance.getMetaworksContext().setWhere("sns");
+				
 				MetaworksRemoteService.getInstance().pushClientObjects(new Object[]{new ToPrepend(new InstanceList(), refreshedInstance)});
 				
 				return new Object[]{new Refresh(newInstantiator)};
@@ -801,7 +803,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 									}
 									//대화목록의 맨뒤에 새로 입력한 내용만 붙여서 속도 개선  
 //									ScriptSessions.addFunctionCall("mw3.locateObject", new Object[]{new ToAppend(threadPanelOfThis, copyOfThis), null, "body"});
-									ScriptSessions.addFunctionCall("mw3.locateObject", new Object[]{new ToPrev(threadPanelOfThis.newItem, copyOfThis), null, "body"});
+//									ScriptSessions.addFunctionCall("mw3.locateObject", new Object[]{new ToPrev(threadPanelOfThis.newItem, copyOfThis), null, "body"});
 									
 									//refresh notification badge
 									if(!postByMe)

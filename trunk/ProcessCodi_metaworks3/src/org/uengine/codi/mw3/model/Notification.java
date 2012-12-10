@@ -151,49 +151,49 @@ public class Notification extends Database<INotification> implements INotificati
        	String protocol = urlURL.getProtocol();
 
 		final String url = protocol + "://" + host + (port == 80 ? "" : ":"+port) + TransactionContext.getThreadLocalInstance().getRequest().getContextPath();
-
-		new Thread(){
-
-			@Override
-			public void run() {
-				try {
-					
-					if(userInfoDB.getEmpCode()==null && userInfoDB.getFacebookId()!=null){
-						//TODO: this case should be chosen by more deterministic option (e.g. User.network=='facebook') 
-						FacebookClient facebookClient = new DefaultFacebookClient();
-						String facebookId = getUserId();
-						String query = "SELECT uid, name, email, locale FROM user WHERE uid=" + facebookId;
-						
-						List<com.restfb.types.User> users = facebookClient.executeQuery(query, com.restfb.types.User.class);
-						if (users.size() == 0) {
-							throw new UEngineException("There's no such user [" + facebookId + "]");
-						} else {
-							com.restfb.types.User user = users.get(0);
-							userInfoDB.setEmail(user.getEmail());
-						}
-					}
-					
-					(new EMailServerSoapBindingImpl()).sendMail(
-							actorUserInfoDB.getEmail(), 
-							actorUserInfoDB.getEmpName(),
-							userInfoDB.getEmail(), 
-							"[ProcessCodi] " + instance.getName(), 
-							getActAbstract() + "<p><a href='" + url + "'>Connect to Process Codi for details.</a>", 
-							null, 
-							null,
-							"UTF-8"
-					);
-				} catch (RemoteException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			
-			
-		}.start();
+//
+//		new Thread(){
+//
+//			@Override
+//			public void run() {
+//				try {
+//					
+//					if(userInfoDB.getEmpCode()==null && userInfoDB.getFacebookId()!=null){
+//						//TODO: this case should be chosen by more deterministic option (e.g. User.network=='facebook') 
+//						FacebookClient facebookClient = new DefaultFacebookClient();
+//						String facebookId = getUserId();
+//						String query = "SELECT uid, name, email, locale FROM user WHERE uid=" + facebookId;
+//						
+//						List<com.restfb.types.User> users = facebookClient.executeQuery(query, com.restfb.types.User.class);
+//						if (users.size() == 0) {
+//							throw new UEngineException("There's no such user [" + facebookId + "]");
+//						} else {
+//							com.restfb.types.User user = users.get(0);
+//							userInfoDB.setEmail(user.getEmail());
+//						}
+//					}
+//					
+//					(new EMailServerSoapBindingImpl()).sendMail(
+//							actorUserInfoDB.getEmail(), 
+//							actorUserInfoDB.getEmpName(),
+//							userInfoDB.getEmail(), 
+//							"[ProcessCodi] " + instance.getName(), 
+//							getActAbstract() + "<p><a href='" + url + "'>Connect to Process Codi for details.</a>", 
+//							null, 
+//							null,
+//							"UTF-8"
+//					);
+//				} catch (RemoteException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				} catch (Exception e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//			}
+//			
+//			
+//		}.start();
 
 	}
 		

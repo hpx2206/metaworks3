@@ -29,18 +29,12 @@ var org_uengine_codi_mw3_model_IInstance = function(objectId, className){
 	 }
 	 if( object && object.metaworksContext && object.metaworksContext.where == 'sns'){
 		 $('#' + this.divId).css('border-top','1px solid #E3E3E3');
-		 $('#td_' + this.objectId).click({objectId : this.objectId}, function(event){
-			var objectId = event.data.objectId;
-				
-				 mw3.call(objectId, 'over');
-		 });
-	}else{
-		 $('#td_' + this.objectId).click({objectId : this.objectId}, function(event){
-				var objectId = event.data.objectId;
-					
-				mw3.call(objectId, 'detail');
-			 });
 	}
+	 $('#td_' + this.objectId).click({objectId : this.objectId}, function(event){
+		 var objectId = event.data.objectId;
+		 
+		 mw3.call(objectId, 'detail');
+	 });
 	 
 //	 $('#tr_' + this.objectId).mouseenter({objectId : this.objectId}, function(event){
 //		 mw3.call(event.data.objectId, 'overTooltip');
