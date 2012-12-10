@@ -130,7 +130,8 @@ public class Instance extends Database<IInstance> implements IInstance{
 			bottomList.append( " limit " + criteria.get("startIndex") + ", "+InstanceList.PAGE_CNT);
 		*/
 		
-
+		bottomList.append( " limit " + criteria.get("startIndex") + ", "+InstanceList.PAGE_CNT);
+		
 		
 		//TODO delete printing
 		System.out.println("worklist sql:" + bottomList.toString());
@@ -150,6 +151,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 		}
 
 		instanceContents.select();
+		
 //		instanceContents.getCurrentUser().getMetaworksContext().setHow("small");
 		
 		return instanceContents;
