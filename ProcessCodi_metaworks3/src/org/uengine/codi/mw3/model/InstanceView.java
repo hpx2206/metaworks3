@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.knowledge.IWfNode;
 import org.uengine.codi.mw3.knowledge.KnowledgeTool;
 import org.uengine.codi.mw3.knowledge.WfNode;
+import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitorPanel;
 import org.uengine.kernel.EJBProcessInstance;
 import org.uengine.kernel.ProcessInstance;
 import org.uengine.processmanager.ProcessManagerRemote;
@@ -447,8 +448,29 @@ public class InstanceView {
 		
 		modal.setTitle("Process Monitoring");
 		modal.setWidth(700);
-		
+		modal.setHeight(800);
 		ProcessInstanceMonitorPanel processInstanceMonitorPanel = new ProcessInstanceMonitorPanel();
+		processInstanceMonitorPanel.processManager = processManager;
+		processInstanceMonitorPanel.session = session;
+		processInstanceMonitorPanel.load(instanceId);
+		
+		//setProcessInstanceMonitor(processInstanceMonitorPanel);
+		
+		modal.setPanel(processInstanceMonitorPanel);
+		
+		//loadDefault();
+		
+		return modal;
+	}
+	@ServiceMethod(target="popup", loader="auto")
+	public ModalWindow showWFlow() throws Exception{
+		
+		ModalWindow modal = new ModalWindow();
+		
+		modal.setTitle("Process Monitoring");
+		modal.setWidth(700);
+		modal.setHeight(800);
+		InstanceMonitorPanel processInstanceMonitorPanel = new InstanceMonitorPanel();
 		processInstanceMonitorPanel.processManager = processManager;
 		processInstanceMonitorPanel.session = session;
 		processInstanceMonitorPanel.load(instanceId);
