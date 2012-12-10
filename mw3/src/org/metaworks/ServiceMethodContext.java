@@ -210,5 +210,12 @@ public class ServiceMethodContext{
 		public void setValidate(boolean validate) {
 			this.validate = validate;
 		}
-	
+		
+	boolean childrenLoader;
+		public boolean isChildrenLoader() {
+			return childrenLoader;
+		}
+		public void setChildrenLoader(boolean childrenLoader) {
+			this.childrenLoader = childrenLoader;
+		}
 }

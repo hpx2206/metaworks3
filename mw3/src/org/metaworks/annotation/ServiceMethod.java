@@ -38,4 +38,5 @@ public @interface ServiceMethod {
 	String[] cacheClasses() default {};
 	
 	boolean loadOnce() default false;
+	boolean childrenLoader() default false;
 }

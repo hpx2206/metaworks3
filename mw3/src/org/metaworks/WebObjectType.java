@@ -249,13 +249,12 @@ public class WebObjectType{
 			setFaceOptions(optionMap);
 		}
 
-		if(typeFace!=null && typeFace.ejsPath().length() > 0){
+		if(typeFace!=null && typeFace.ejsPath().length() > 0)
 			setFaceComponentPath(typeFace.ejsPath());
-			
-			if(typeFace.ejsPathForArray().length() > 0)
-				setFaceForArray(typeFace.ejsPathForArray());
-			
-		}
+		
+		if(typeFace!=null && typeFace.ejsPathForArray().length() > 0)
+			setFaceForArray(typeFace.ejsPathForArray());
+
 		
 //		else
 //			setFaceComponentPath(getComponentLocationByEscalation(actCls, "faces"));
@@ -883,6 +882,12 @@ public class WebObjectType{
 				smc.setTarget(annotation.target());
 				smc.setValidate(annotation.validate());
 				smc.setRtnCls(method.getReturnType().getName());
+				
+				/*
+				 * 2012-12-06 jinwon
+				 * add childrenLoader option
+				 */
+				smc.setChildrenLoader(annotation.childrenLoader());
 				
 				if(annotation.loader().length > 0 && annotation.loader()[0].length() > 0){
 					if("auto".equals(annotation.loader()[0])){
