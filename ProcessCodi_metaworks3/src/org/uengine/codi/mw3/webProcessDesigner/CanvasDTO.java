@@ -136,4 +136,19 @@ public class CanvasDTO implements Serializable{
 			public void setTracingTag(String tracingTag) {
 				this.tracingTag = tracingTag;
 			}
+		/*  viewer 부분에서  필요한 정보들 transient */
+		transient String instStatus;
+			public String getInstStatus() {
+				return instStatus;
+			}
+			public void setInstStatus(String instStatus) {
+				this.instStatus = instStatus;
+			}
+		transient String backgroundColor;
+			public String getBackgroundColor() {
+				return backgroundColor;
+			}
+			public void setBackgroundColor(String backgroundColor) {
+				this.backgroundColor = backgroundColor;
+			}
 }
