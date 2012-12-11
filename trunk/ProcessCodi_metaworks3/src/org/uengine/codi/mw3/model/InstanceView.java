@@ -468,8 +468,8 @@ public class InstanceView {
 		ModalWindow modal = new ModalWindow();
 		
 		modal.setTitle("Process Monitoring");
-		modal.setWidth(700);
-		modal.setHeight(800);
+		modal.setWidth(1024);
+		modal.setHeight(768);
 		InstanceMonitorPanel processInstanceMonitorPanel = new InstanceMonitorPanel();
 		processInstanceMonitorPanel.processManager = processManager;
 		processInstanceMonitorPanel.session = session;
