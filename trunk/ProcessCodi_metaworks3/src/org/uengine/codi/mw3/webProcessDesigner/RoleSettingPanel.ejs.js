@@ -3,6 +3,10 @@ var org_uengine_codi_mw3_webProcessDesigner_RoleSettingPanel = function(objectId
 	this.className = className;
 	
 	this.object = mw3.objects[this.objectId];
+	
+	if(this.object == null)
+		return true;
+	
 	this.selectedRoleCode = null;
 	this.selectedGroupCode = null;
 	var faceHelperObj = this;
@@ -14,15 +18,15 @@ var org_uengine_codi_mw3_webProcessDesigner_RoleSettingPanel = function(objectId
 		$('input[name=selectedGroup]').val(childObj.name);
 		faceHelperObj.selectedGroupCode = childObj.id;
 	});
-	
+
 	var selectObjectDiv = $('#' + mw3._getObjectDivId(this.object.roleSelect.__objectId));
 	$(selectObjectDiv).find('select').bind('change', function(event, objectId){
 		$('input[name=selectedRole]').val($(this).find('option:selected').text());
 		faceHelperObj.selectedRoleCode = $(this).find('option:selected').val();
 	});
 	
-	this.selectedRoleCode = object.selectedRoleCode;
-	this.selectedGroupCode = object.selectedGroupCode;
+	this.selectedRoleCode = this.object.selectedRoleCode;
+	this.selectedGroupCode = this.object.selectedGroupCode;
 	faceHelperObj.init();
 };
 

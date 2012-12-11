@@ -149,7 +149,6 @@ var org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel = fun
 			for(var i=0; i < cells.length; i++){
 				var cellId = cells[i].id;
 				var cellTracing = cells[i].tracingTag;
-				console.log('cellTracing = ' + cellTracing + ' , cellId = ' + cellId );
 				if( cellTracing != null ){
 					$('#'+cellId).attr("tracingTag",cellTracing);
 				}
@@ -288,7 +287,6 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 	for(var i=0; i<ogArr.length; i++){
 		var og = ogArr[i];
 		var cellForDwr = {};
-		console.log(og['@id']);
 		if( og['@shapeType'] != 'EDGE'){
 			cellForDwr['tracingTag'] = $('#'+og['@id']).attr('tracingTag');
 		}

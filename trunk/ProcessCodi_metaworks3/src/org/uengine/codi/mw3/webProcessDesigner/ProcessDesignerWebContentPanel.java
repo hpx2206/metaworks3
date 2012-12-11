@@ -403,6 +403,9 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 				int tagCnt = 0;
 				for(int i = 0; i < cellsList.size(); i++){
 					cells[i] = (CanvasDTO)cellsList.get(i);
+					if( cells[i] != null && cells[i].getJsonString() != null){
+						this.setGraphString(cells[i].getJsonString());
+					}
 					if( cells[i].getTracingTag() != null ){
 						if( Integer.parseInt(cells[i].getTracingTag()) > tagCnt )
 							tagCnt = Integer.parseInt(cells[i].getTracingTag());
