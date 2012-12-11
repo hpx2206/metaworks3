@@ -332,8 +332,10 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		
 		
 		processManager.applyChanges();
-
-
+		if( session != null && session.getEmployee() != null ){
+			((Instance)instanceRef).databaseMe().setInitiator(session.user);
+			((Instance)instanceRef).databaseMe().setInitComCd(session.getEmployee().getGlobalCom());
+		}
 		if( session != null && session.getLastPerspecteType().equalsIgnoreCase("topic")){
 			((Instance)instanceRef).databaseMe().setTopicId(session.getLastSelectedItem());
 		}
