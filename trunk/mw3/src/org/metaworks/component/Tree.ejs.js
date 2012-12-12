@@ -11,7 +11,6 @@ var org_metaworks_component_Tree = function(objectId, className){
 	
 	this.objectDiv.addClass('filemgr-tree').addClass('filemgr-treeFocus');
 	this.objectDiv.css({'border-width': '0px',
-						'position': 'absolute', 
 						'left': '0px', 
 						'top': '0px',
 						'right': '0px',
@@ -23,12 +22,8 @@ var org_metaworks_component_Tree = function(objectId, className){
 	
 	// scroll bar
 	this.objectDiv.mCustomScrollbar();
+	this.objectDiv.bind('change', function(event, objectId){
+		var node = mw3.getObject(objectId);
+	});
 };
 
-this.objectDiv.bind('change', function(event, objectId){
-	console.log('change : ');
-	
-	var node = mw3.getObject(objectId);
-	console.log(node);
-	
-});
