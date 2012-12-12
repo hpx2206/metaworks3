@@ -4,10 +4,12 @@ import java.util.ArrayList;
 
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.kernel.Activity;
-import org.uengine.kernel.viewer.ActivityViewer;
+import org.uengine.kernel.ProcessDefinition;
+import org.uengine.kernel.ProcessInstance;
 import org.uengine.kernel.viewer.DefaultActivityViewer;
 import org.uengine.processmanager.ProcessManagerRemote;
 
@@ -26,11 +28,38 @@ public class InstanceMonitorPanel {
 		public void setGraphString(String graphString) {
 			this.graphString = graphString;
 		}
-		
+	String instanceId;
+		public String getInstanceId() {
+			return instanceId;
+		}
+		public void setInstanceId(String instanceId) {
+			this.instanceId = instanceId;
+		}
+	ProcessInstance instance;
+		public ProcessInstance getInstance() {
+			return instance;
+		}
+		public void setInstance(ProcessInstance instance) {
+			this.instance = instance;
+		}
+	ProcessDefinition procDef;
+		public ProcessDefinition getProcDef() {
+			return procDef;
+		}
+		public void setProcDef(ProcessDefinition procDef) {
+			this.procDef = procDef;
+		}
+	String tempTracingTag;
+		public String getTempTracingTag() {
+			return tempTracingTag;
+		}
+		public void setTempTracingTag(String tempTracingTag) {
+			this.tempTracingTag = tempTracingTag;
+		}
 	public void load(String instanceId) throws Exception {
-		org.uengine.kernel.ProcessInstance instance = processManager.getProcessInstance(instanceId);
-		org.uengine.kernel.ProcessDefinition procDef = processManager.getProcessInstance(instanceId).getProcessDefinition();
-		System.out.println(procDef.getAlias());
+		this.setInstanceId(instanceId);
+		ProcessInstance instance = processManager.getProcessInstance(instanceId);
+		ProcessDefinition procDef = instance.getProcessDefinition();
 		
 		ArrayList<CanvasDTO> cellsList = (ArrayList<CanvasDTO>) procDef.getExtendedAttributes().get("cells");
 		DefaultActivityViewer dav = new DefaultActivityViewer();
@@ -56,13 +85,22 @@ public class InstanceMonitorPanel {
 		}
 		
 	}
-	@ServiceMethod(callByContent=true)
+	@ServiceMethod(callByContent=true, target="popup")
 	public Popup showActivityInfo() throws Exception{
+		Popup popup = new Popup(400,275);
+		TaskInfoPanel taskInfo = new TaskInfoPanel();
 		
-		return new Popup();
+		ProcessInstance instance = processManager.getProcessInstance(instanceId);
+		ProcessDefinition procDef = instance.getProcessDefinition();
+		
+		Activity activity = procDef.getActivity(getTempTracingTag());
+		taskInfo.load(getInstanceId(), activity, instance);
+		popup.setPanel(taskInfo);
+		return popup;
 	}
 	@AutowiredFromClient
 	public Session session;
 	
+	@Autowired
 	public ProcessManagerRemote processManager;
 }
