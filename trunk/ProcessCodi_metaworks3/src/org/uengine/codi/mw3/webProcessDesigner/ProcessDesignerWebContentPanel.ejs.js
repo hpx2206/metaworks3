@@ -182,12 +182,13 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 	var shape_id = $(element).attr("_shape_id");
 	if( shape_id == 'OG.shape.bpmn.D_Store' ){
 		// 데이터 매핑 
-//		$(element).bind({
-//			dblclick: function (event) {
-//				var value = mw3.getObject(objectId);
-//				value.dataMapping();
-//			}
-//		});
+		$(element).bind({
+			dblclick: function (event) {
+				var value = mw3.getObject(objectId);
+				value.dataMapping();
+			}
+		});
+	}else if( shape_id == 'OG.shape.bpmn.E_Start_Message' ){
 	}else{
 		// 그외 
 		$(element).on({

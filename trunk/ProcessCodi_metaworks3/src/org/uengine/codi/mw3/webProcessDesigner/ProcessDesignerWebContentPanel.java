@@ -223,13 +223,13 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 		
 		return defineTab.prcsValiablePanel;
 	}
-//	@ServiceMethod(callByContent=true, target="popup")
-//	public ModalWindow dataMapping() throws Exception{
-//		MappingPanel conditionPanel = new MappingPanel();
-//		conditionPanel.setMetaworksContext(new MetaworksContext());
-//		conditionPanel.getMetaworksContext().setWhen("edit");
-//		return new ModalWindow(conditionPanel , 800, 500,  "데이터매핑" );
-//	}
+	@ServiceMethod(callByContent=true, target="popup")
+	public ModalWindow dataMapping() throws Exception{
+		MappingPanel conditionPanel = new MappingPanel();
+		conditionPanel.setMetaworksContext(new MetaworksContext());
+		conditionPanel.getMetaworksContext().setWhen("edit");
+		return new ModalWindow(conditionPanel , 800, 500,  "데이터매핑" );
+	}
 	
 	@ServiceMethod(callByContent=true)
 	public void save(String title, boolean temp) throws Exception{
