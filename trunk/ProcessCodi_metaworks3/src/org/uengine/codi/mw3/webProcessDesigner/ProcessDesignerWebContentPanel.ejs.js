@@ -185,6 +185,9 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 		$(element).bind({
 			dblclick: function (event) {
 				var value = mw3.getObject(objectId);
+				value.tempElementId = $(this).attr('id');
+				value.tempElementName = $(this).children('[id$=_LABEL]').text();
+				value.tempElementData = JSON.stringify(canvas.getCustomData(element));
 				value.dataMapping();
 			}
 		});

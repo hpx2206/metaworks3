@@ -2,17 +2,8 @@ var org_uengine_codi_mw3_webProcessDesigner_MappingPanel = function(objectId, cl
 	// default setting
 	this.objectId = objectId;
 	this.className = className;
-	this.divId = mw3._getObjectDivId(this.objectId);
-	this.divObj = $('#' + this.divId);
-	
-	var object = mw3.objects[this.objectId];
 	var faceHelper = this;
 	var canvas = null;
-	this.icanvas = null;
-	this.tracingTag = 0;
-	
-	this.divObj.css('height','100%');
-	var canvasDivObj = $('#canvas2');
 	
 	OG.shape.From = function (label) {
 
@@ -125,7 +116,6 @@ var org_uengine_codi_mw3_webProcessDesigner_MappingPanel = function(objectId, cl
 	OG.common.Constants.CANVAS_BACKGROUND = "#fff";
     OG.Constants.ENABLE_CANVAS_OFFSET = true; // Layout 사용하지 않을 경우 true 로 지정
     canvas = new OG.Canvas('canvas2');
-    this.icanvas = canvas;
     canvas.initConfig({
         selectable      : true,
         dragSelectable  : false,
@@ -237,11 +227,11 @@ var org_uengine_codi_mw3_webProcessDesigner_MappingPanel = function(objectId, cl
             ]
         }
     }).bind('loaded.jstree',function (event, data) {
-    			faceHelper.drawTerminal('tree1', true);
+    			faceHelper.drawTerminal('tree1', true, canvas);
             }).bind('after_open.jstree',function (event, data) {
-            	faceHelper.drawTerminal('tree1', true);
+            	faceHelper.drawTerminal('tree1', true, canvas);
             }).bind('after_close.jstree', function (event, data) {
-            	faceHelper.drawTerminal('tree1', true);
+            	faceHelper.drawTerminal('tree1', true, canvas);
             });
 
     $("#tree2").jstree({
@@ -342,11 +332,11 @@ var org_uengine_codi_mw3_webProcessDesigner_MappingPanel = function(objectId, cl
             ]
         }
     }).bind('loaded.jstree',function (event, data) {
-    			faceHelper.drawTerminal('tree2', false);
+    			faceHelper.drawTerminal('tree2', false, canvas);
             }).bind('after_open.jstree',function (event, data) {
-            	faceHelper.drawTerminal('tree2', false);
+            	faceHelper.drawTerminal('tree2', false, canvas);
             }).bind('after_close.jstree', function (event, data) {
-            	faceHelper.drawTerminal('tree2', false);
+            	faceHelper.drawTerminal('tree2', false, canvas);
             });
 
 
@@ -369,11 +359,15 @@ var org_uengine_codi_mw3_webProcessDesigner_MappingPanel = function(objectId, cl
 
         canvas.getEventHandler().setMovable(shapeElement, true);
     });
-    
+    var object = mw3.objects[this.objectId];
+    if( object != null && object.mapperData != null ){
+		canvas.loadJSON($.parseJSON(object.mapperData));
+    }
+    this.icanvas = canvas;	
 };
 
 org_uengine_codi_mw3_webProcessDesigner_MappingPanel.prototype= {
-		drawTerminal : function(treeId, isLeft) {
+		drawTerminal : function(treeId, isLeft , canvas) {
 		    var tree = $('#' + treeId), id, text, shapeId, shapeElement, parentNode, edgeIds, edge, i,
 		            isParentOpen = function (node) {
 		                var parents = $(node).parents('li');
@@ -400,7 +394,7 @@ org_uengine_codi_mw3_webProcessDesigner_MappingPanel.prototype= {
 		        shapeId = (isLeft ? 'FROM_' : 'TO_') + id;
 
 		        if (isParentOpen(item) && tree.jstree('is_leaf', item)) {
-		            shapeElement = this.icanvas.drawShape(
+		            shapeElement = canvas.drawShape(
 		                    [(isLeft ? 5 : 295), item.offsetTop + item.offsetHeight / 2],
 		                    (isLeft ? new OG.From() : new OG.To()),
 		                    [5, 5],
@@ -411,15 +405,15 @@ org_uengine_codi_mw3_webProcessDesigner_MappingPanel.prototype= {
 		            edgeIds = $(shapeElement).attr(isLeft ? "_toedge" : "_fromedge");
 		            if (edgeIds) {
 		                $.each(edgeIds.split(","), function (indx, edgeId) {
-		                    edge = this.icanvas.getElementById(edgeId);
+		                    edge = canvas.getElementById(edgeId);
 		                    edge.shape.geom.style.map['stroke-dasharray'] = '';
 		                });
 		            }
 
 		            $(shapeElement).click("destroy");
-		            this.icanvas.removeAllGuide();
-		            this.icanvas.redrawConnectedEdge(shapeElement);
-		            this.icanvas.show(shapeElement);
+		            canvas.removeAllGuide();
+		            canvas.redrawConnectedEdge(shapeElement);
+		            canvas.show(shapeElement);
 		        } else {
 		            shapeElement = canvas.getElementById(shapeId);
 		            if (shapeElement) {
@@ -435,17 +429,24 @@ org_uengine_codi_mw3_webProcessDesigner_MappingPanel.prototype= {
 		                edgeIds = $(shapeElement).attr(isLeft ? "_toedge" : "_fromedge");
 		                if (edgeIds) {
 		                    $.each(edgeIds.split(","), function (indx, edgeId) {
-		                        edge = this.icanvas.getElementById(edgeId);
+		                        edge = canvas.getElementById(edgeId);
 		                        edge.shape.geom.style.map['stroke-dasharray'] = '--';
 		                    });
 		                }
 
 		                $(shapeElement).click("destroy");
-		                this.icanvas.removeAllGuide();
-		                this.icanvas.redrawConnectedEdge(shapeElement);
-		                this.icanvas.hide(shapeElement);
+		                canvas.removeAllGuide();
+		                canvas.redrawConnectedEdge(shapeElement);
+		                canvas.hide(shapeElement);
 		            }
 		        }
 		    });
+		},
+		getValue : function(){
+			var object = mw3.objects[this.objectId];
+			object.mapperData = JSON.stringify(this.icanvas.toJSON());
+			
+			return object;
 		}
 };
+
