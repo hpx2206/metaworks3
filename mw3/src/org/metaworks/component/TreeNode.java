@@ -16,6 +16,7 @@ public class TreeNode {
 	public final static String TYPE_FILE_CODE = "page_white_code";
 	public final static String TYPE_FILE_TEXT = "page_white_text";
 	public final static String TYPE_FILE_IMAGE = "image";
+	public final static String TYPE_USER = "user";
 	
 	String id;
 		@Id
