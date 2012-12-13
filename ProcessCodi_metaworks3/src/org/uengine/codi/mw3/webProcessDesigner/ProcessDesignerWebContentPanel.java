@@ -205,7 +205,15 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 		}else{
 			return null;
 		}
+	}
+	@ServiceMethod(callByContent=true, target="popup")
+	public ModalWindow dataMapping() throws Exception{
+		MappingPanel conditionPanel = new MappingPanel();
+		conditionPanel.setElementId(this.getTempElementId());
+		conditionPanel.setMapperData(this.getTempElementData());
 		
+		conditionPanel.getMetaworksContext().setWhen("edit");
+		return new ModalWindow(conditionPanel , 800, 500,  "데이터매핑" );
 	}
 	@ServiceMethod(callByContent=true)
 	public PrcsValiablePanel addValiable() throws Exception{
@@ -222,13 +230,6 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 		defineTab.prcsValiablePanel.setPrcsValiables(prcsValiable);
 		
 		return defineTab.prcsValiablePanel;
-	}
-	@ServiceMethod(callByContent=true, target="popup")
-	public ModalWindow dataMapping() throws Exception{
-		MappingPanel conditionPanel = new MappingPanel();
-		conditionPanel.setMetaworksContext(new MetaworksContext());
-		conditionPanel.getMetaworksContext().setWhen("edit");
-		return new ModalWindow(conditionPanel , 800, 500,  "데이터매핑" );
 	}
 	
 	@ServiceMethod(callByContent=true)
