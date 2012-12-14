@@ -6,6 +6,8 @@ var org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel = fun
 	this.divObj = $('#' + this.divId);
 	
 	var object = mw3.objects[this.objectId];
+	this.object = object;
+	
 	var faceHelper = this;
 	var canvas = null;
 	this.icanvas = null;
@@ -41,7 +43,8 @@ var org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel = fun
                 '_shape_type': $(this).attr('_shape_type'),
                 '_shape_id'  : $(this).attr('_shape_id'),
                 '_width'     : $(this).attr('_width'),
-                '_height'    : $(this).attr('_height')
+                '_height'    : $(this).attr('_height'),
+                '_classname' : $(this).attr('_classname')
             });
         },
         helper  : 'clone',
@@ -72,6 +75,8 @@ var org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel = fun
                             shape, [parseInt(shapeInfo._width, 10), parseInt(shapeInfo._height, 10)]);
                     
                     if (shapeInfo._shape_type === 'GEOM') {
+                    	$(element).attr("_classname", shapeInfo._classname);
+                    	
 	                    // 그리고 난 후의 엘리먼트에 이벤트 등록
 	                    faceHelper.addEventGeom(objectId, canvas, element);
                     }
@@ -142,6 +147,7 @@ var org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel = fun
     // load 에서 데이터가 넘어왔을 경우 데이터를 셋팅하여 그림
 	if( object != null && object.graphString != null ){
 		var canvassizeObject = this.icanvas.loadJSON($.parseJSON(object.graphString));
+		
 		this.tracingTag = object.lastTracingTag;
 		// tracingTag 달아주기
 		if( object != null && object.cell != null ){
@@ -149,8 +155,14 @@ var org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel = fun
 			for(var i=0; i < cells.length; i++){
 				var cellId = cells[i].id;
 				var cellTracing = cells[i].tracingTag;
+				var cellClassname = cells[i].classname;
+				
 				if( cellTracing != null ){
-					$('#'+cellId).attr("tracingTag",cellTracing);
+					$('#'+cellId).attr("tracingTag",cellTracing);					
+				}
+				
+				if( cellClassname != null ){
+					$('#'+cellId).attr("_classname",cellClassname);
 				}
 			}
 		}
@@ -192,6 +204,32 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 			}
 		});
 	}else if( shape_id == 'OG.shape.bpmn.E_Start_Message' ){
+		var object = {__className : $(element).attr("_classname")};
+		
+		$(element).data('activity', object);
+		
+		$(element).bind({
+			dblclick: function (event) {
+				var divId = 'properties_' + objectId;
+				
+				$('body').append("<div id='" + divId + "'></div>");
+
+				var object = {
+					__className : 'org.uengine.codi.mw3.webProcessDesigner.PropertiesWindow',
+					open : true,
+					width : 600,
+					panel : $(this).data('activity'),
+					id : $(this).attr('id')
+				};
+				
+				var metadata = mw3.getMetadata(object.__className);
+				metadata['when'] = 'edit';
+				
+				mw3.locateObject(object, null, '#' + divId, metadata);
+				mw3.onLoadFaceHelperScript();
+			}
+		});
+
 	}else{
 		// 그외 
 		$(element).on({
@@ -293,6 +331,7 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 		var cellForDwr = {};
 		if( og['@shapeType'] != 'EDGE'){
 			cellForDwr['tracingTag'] = $('#'+og['@id']).attr('tracingTag');
+			cellForDwr['classname'] = $('#'+og['@id']).attr('_classname');
 		}
 		for(var key in og){
 			// 추가로 필요한 정보 관리
