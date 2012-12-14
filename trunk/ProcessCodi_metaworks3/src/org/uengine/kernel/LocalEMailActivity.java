@@ -25,7 +25,7 @@ public class LocalEMailActivity extends DefaultActivity{
 		//org_uengine_kernel_ProcessVariableArrayInput varArrinputter = (org_uengine_kernel_ProcessVariableArrayInput) fd.getInputter();
 		//varArrinputter.setFilter(FileContext.class.getName());
 	}
-		
+	
 	String contents;
 		public String getContents() {
 			return contents;

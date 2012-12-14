@@ -91,7 +91,6 @@ public abstract class Activity implements Validatable, java.io.Serializable, Clo
 	/**
 	 * points parent activity (should be kind of ComplexActivity of this activity)
 	 */
-		
 	Activity parentActivity = null;
 		public Activity getParentActivity() {
 			return parentActivity;
