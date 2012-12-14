@@ -192,6 +192,11 @@ var org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel = fun
 org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype.addEventGeom = function(objectId, canvas, element){
 	
 	var shape_id = $(element).attr("_shape_id");
+	if( typeof $(element).attr("_classname") != 'undefined' ){
+		var activityData = {__className : $(element).attr("_classname")};
+		$(element).data('activity', activityData);
+	}
+	
 	if( shape_id == 'OG.shape.bpmn.D_Store' ){
 		// 데이터 매핑 
 		$(element).bind({
@@ -201,32 +206,6 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 				value.tempElementName = $(this).children('[id$=_LABEL]').text();
 				value.tempElementData = JSON.stringify(canvas.getCustomData(element));
 				value.dataMapping();
-			}
-		});
-	}else if( shape_id == 'OG.shape.bpmn.E_Start_Message' ){
-		var object = {__className : $(element).attr("_classname")};
-		
-		$(element).data('activity', object);
-		
-		$(element).bind({
-			dblclick: function (event) {
-				var divId = 'properties_' + objectId;
-				
-				$('body').append("<div id='" + divId + "'></div>");
-
-				var object = {
-					__className : 'org.uengine.codi.mw3.webProcessDesigner.PropertiesWindow',
-					open : true,
-					width : 600,
-					panel : $(this).data('activity'),
-					id : $(this).attr('id')
-				};
-				
-				var metadata = mw3.getMetadata(object.__className);
-				metadata['when'] = 'edit';
-				
-				mw3.locateObject(object, null, '#' + divId, metadata);
-				mw3.onLoadFaceHelperScript();
 			}
 		});
 
@@ -285,11 +264,25 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 	    			canvas.setCustomData(element, customData);
 	    		}
 	    	},
-	    	dblclick: function (event) {
-	    		var value = mw3.getOobject(objectId);
-    			value.tempElementId = $(this).attr('id');
-    			value.geomInfo();
-	    	}
+			dblclick: function (event) {
+				var divId = 'properties_' + objectId;
+				
+				$('body').append("<div id='" + divId + "'></div>");
+
+				var object = {
+					__className : 'org.uengine.codi.mw3.webProcessDesigner.PropertiesWindow',
+					open : true,
+					width : 600,
+					panel : $(this).data('activity'),
+					id : $(this).attr('id')
+				};
+				
+				var metadata = mw3.getMetadata(object.__className);
+				metadata['when'] = 'edit';
+				
+				mw3.locateObject(object, null, '#' + divId, metadata);
+				mw3.onLoadFaceHelperScript();
+			}
 	    });
 	}
 };
@@ -326,13 +319,22 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 	var ogObj = eval(graphJson.opengraph);
 	var ogArr = ogObj.cell;
 	var cellsForDwr = [];
+	
+	
+	var activityMap = {};
+	
 	for(var i=0; i<ogArr.length; i++){
 		var og = ogArr[i];
 		var cellForDwr = {};
+		
 		if( og['@shapeType'] != 'EDGE'){
 			cellForDwr['tracingTag'] = $('#'+og['@id']).attr('tracingTag');
 			cellForDwr['classname'] = $('#'+og['@id']).attr('_classname');
+			var activity = $('#'+og['@id']).data('activity');
+			if(typeof activity != 'undefined')
+				activityMap['#'+og['@id']] = activity;
 		}
+		
 		for(var key in og){
 			// 추가로 필요한 정보 관리
 			if(key == '@id'){
@@ -368,9 +370,11 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 		}
 		cellsForDwr[cellsForDwr.length] = cellForDwr;
 	}
+	
 	var object = mw3.objects[this.objectId];
 	object.cell = cellsForDwr;
 	object.graphString = JSON.stringify(graphJson);
+	object.activityMap = activityMap;
 	
 	return object;
 };
