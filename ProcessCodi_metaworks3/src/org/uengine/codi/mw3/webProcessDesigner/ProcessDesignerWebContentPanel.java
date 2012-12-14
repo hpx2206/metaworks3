@@ -211,7 +211,9 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 		MappingPanel conditionPanel = new MappingPanel();
 		conditionPanel.setElementId(this.getTempElementId());
 		conditionPanel.setMapperData(this.getTempElementData());
-		
+		conditionPanel.setRoleList(defineTab.rolePanel.getRoles());
+		conditionPanel.setPrcsValiableList(defineTab.prcsValiablePanel.getPrcsValiables());
+		conditionPanel.load();
 		conditionPanel.getMetaworksContext().setWhen("edit");
 		return new ModalWindow(conditionPanel , 800, 500,  "데이터매핑" );
 	}
