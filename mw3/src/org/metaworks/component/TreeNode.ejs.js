@@ -149,6 +149,13 @@ org_metaworks_component_TreeNode.prototype = {
 			
 			mw3.call(this.objectId, 'expand');
 		}
+		
+		var tree = this.objectDiv.closest('.filemgr-tree');
+		
+		tree.trigger('expanded');
+		
+		// tree 잡아서
+		
 	},
 	
 	collapse : function(){
@@ -161,5 +168,9 @@ org_metaworks_component_TreeNode.prototype = {
 		}
 		
 		this.objectDiv.children('u').hide();
+		
+		var tree = this.objectDiv.parentsUntil('.filemgr-tree').parent('.filemgr-tree');
+		
+		tree.trigger('collapsed', [this.objectId]);
 	}		
 };
