@@ -129,7 +129,7 @@ var org_uengine_codi_mw3_webProcessDesigner_MappingPanel = function(objectId, cl
         collapsible     : false,
         enableHotKey    : true
     });
-
+    /*
     $("#tree1").jstree({
         "core"     : {
             "animation": 0
@@ -227,7 +227,7 @@ var org_uengine_codi_mw3_webProcessDesigner_MappingPanel = function(objectId, cl
             ]
         }
     }).bind('loaded.jstree',function (event, data) {
-    			faceHelper.drawTerminal('tree1', true, canvas);
+    			faceHelper.drawTerminal('tree1', true, canvas, function(){faceHelper.drawLine();});
             }).bind('after_open.jstree',function (event, data) {
             	faceHelper.drawTerminal('tree1', true, canvas);
             }).bind('after_close.jstree', function (event, data) {
@@ -332,14 +332,51 @@ var org_uengine_codi_mw3_webProcessDesigner_MappingPanel = function(objectId, cl
             ]
         }
     }).bind('loaded.jstree',function (event, data) {
-    			faceHelper.drawTerminal('tree2', false, canvas);
+    			faceHelper.drawTerminal('tree2', false, canvas, function(){faceHelper.drawLine();});
             }).bind('after_open.jstree',function (event, data) {
-            	faceHelper.drawTerminal('tree2', false, canvas);
+            	faceHelper.drawTerminal('tree2', false, canvas , null);
             }).bind('after_close.jstree', function (event, data) {
-            	faceHelper.drawTerminal('tree2', false, canvas);
+            	faceHelper.drawTerminal('tree2', false, canvas , null );
             });
-
-
+	*/
+    
+    
+    this.leftTreeLoaded = false;
+    this.rightTreeLoaded = false;
+    
+    var leftTreeId = mw3.getChildObjectId(this.objectId, 'leftTree');
+    
+    console.log( $('#' + mw3._getObjectDivId(leftTreeId)) );
+    
+    $('#' + mw3._getObjectDivId(leftTreeId)).bind('loaded', function(align){
+//    	faceHelper.drawLine();
+    }).bind('expanded', function(){
+    	console.log('expanded');
+    	//faceHelper.drawTerminals('tree2', false, canvas , null);
+    }).bind('collapsed', function(){
+    	console.log('collapsed');
+    });
+    
+    drawLine = function(align){
+    	if(align == 'left')
+    		this.leftTreeLoaded = true;
+    	else if(align == 'right')
+    		this.rightTreeLoaded = true;
+    	
+    	if(this.leftTreeLoaded && this.rightTreeLoaded){
+    		
+    	}
+    };
+    /*
+     * 
+    $('.filemgr-tree').bind('expanded', function(){
+    	console.log('expanded');
+    	faceHelper.drawTerminals('tree2', false, canvas , null);
+    }).bind('collapsed', function(){
+    	console.log('collapsed');
+    });
+    */
+    
     canvas.onConnectShape(function (event, edgeElement, fromElement, toElement) {
         console.log('connected!', fromElement.id, '--->', toElement.id);
     });
@@ -359,15 +396,19 @@ var org_uengine_codi_mw3_webProcessDesigner_MappingPanel = function(objectId, cl
 
         canvas.getEventHandler().setMovable(shapeElement, true);
     });
-    var object = mw3.objects[this.objectId];
-    if( object != null && object.mapperData != null ){
-		canvas.loadJSON($.parseJSON(object.mapperData));
-    }
+    
     this.icanvas = canvas;	
 };
 
 org_uengine_codi_mw3_webProcessDesigner_MappingPanel.prototype= {
-		drawTerminal : function(treeId, isLeft , canvas) {
+		drawTerminals : function(treeId, isLeft , canvas, callback) {
+			$('.filemgr-tree.left .item-fix').each(function(event, ui){
+	        	console.log(this);
+	        	
+	        	// draw
+	        });
+		},
+		drawTerminal : function(treeId, isLeft , canvas, callback) {
 		    var tree = $('#' + treeId), id, text, shapeId, shapeElement, parentNode, edgeIds, edge, i,
 		            isParentOpen = function (node) {
 		                var parents = $(node).parents('li');
@@ -387,12 +428,11 @@ org_uengine_codi_mw3_webProcessDesigner_MappingPanel.prototype= {
 		                }
 		                return null;
 		            };
-
+		    
 		    $('#' + treeId + ' .jstree-leaf').each(function (idx, item) {
 		        id = $(item).attr('id');
 		        text = $(item).children('a').text();
 		        shapeId = (isLeft ? 'FROM_' : 'TO_') + id;
-
 		        if (isParentOpen(item) && tree.jstree('is_leaf', item)) {
 		            shapeElement = canvas.drawShape(
 		                    [(isLeft ? 5 : 295), item.offsetTop + item.offsetHeight / 2],
@@ -441,6 +481,16 @@ org_uengine_codi_mw3_webProcessDesigner_MappingPanel.prototype= {
 		            }
 		        }
 		    });
+		    
+		    
+		    if(typeof callback == 'function')
+		    	callback();
+		},
+		drawLine : function(){
+			var object = mw3.objects[this.objectId];
+		    if( object != null && object.mapperData != null ){
+				this.icanvas.loadJSON($.parseJSON(object.mapperData));
+		    }
 		},
 		getValue : function(){
 			var object = mw3.objects[this.objectId];
