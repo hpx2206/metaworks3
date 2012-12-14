@@ -1,0 +1,33 @@
+<style>
+	<!--
+	.selectable .ui-selecting { background: #FECA40; }
+	.selectable .ui-selected { background: #F39814; color: white; }
+	.selectable { list-style-type: none; margin: 0; padding: 0; width: 450px; }
+	.selectable li { margin: 3px; padding: 1px; float: left; text-align: center; }
+	-->
+	
+	.selectable .ui-selecting {
+        background: #ccc;
+    }
+    .selectable .ui-selected {
+        background: #999;
+    }
+</style>
+
+<%
+	var rolePanel = mw3.getAutowiredObject('org.uengine.codi.mw3.webProcessDesigner.RolePanel');
+%>
+	<ol id="selectable_<%=objectId%>" class="selectable">
+<%			
+		for(var i=0; i<rolePanel.roles.length; i++){
+			var role = rolePanel.roles[i];
+%>
+		<li class="ui-state-default" name="<%=role.name%>">
+			<%=role.name%>
+		</li>
+<%
+	}
+%>
+	</ol>
+<%				
+%>
