@@ -111,7 +111,7 @@ org_metaworks_component_TreeNode.prototype = {
 			tree.trigger('change', [this.objectId]);
 		
 		
-		$('.filemgr-tree .item-fix.selected').removeClass('selected');
+		tree.find('.item-fix.selected').removeClass('selected');
 		this.nodeDiv.addClass('selected');
 	},
 	

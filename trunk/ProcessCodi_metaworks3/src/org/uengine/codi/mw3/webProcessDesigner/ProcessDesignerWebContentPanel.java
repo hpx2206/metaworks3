@@ -94,11 +94,11 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 		public void setCanvasMap(HashMap<String, CanvasDTO> canvasMap) {
 			this.canvasMap = canvasMap;
 		}
-	HashMap<String, Activity> activityMap;	
-		public HashMap<String, Activity> getActivityMap() {
+	HashMap<String, Object> activityMap;	
+		public HashMap<String, Object> getActivityMap() {
 			return activityMap;
 		}
-		public void setActivityMap(HashMap<String, Activity> activityMap) {
+		public void setActivityMap(HashMap<String, Object> activityMap) {
 			this.activityMap = activityMap;
 		}
 
@@ -199,7 +199,7 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 				save("temp" , false );
 			}
 			GeomShape geomShape = new GeomShape(getCanvasMap().get(this.getTempElementId()));
-			geomShape.viewActivityInfo(this.getActivityMap().get(this.getTempElementId()));
+			geomShape.viewActivityInfo((Activity)this.getActivityMap().get(this.getTempElementId()));
 			infoWindow.setPanel(geomShape);
 			return infoWindow;
 		}else{
@@ -236,6 +236,7 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 	
 	@ServiceMethod(callByContent=true)
 	public void save(String title, boolean temp) throws Exception{
+		
 		ArrayList<CanvasDTO> cells = new ArrayList<CanvasDTO>();
 		ProcessDefinition def = new ProcessDefinition();
 		if( cell != null){
@@ -254,7 +255,7 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 				def.setProcessVariables(pvs);
 			}
 			HashMap<String, CanvasDTO> canvasMap = new HashMap<String, CanvasDTO>();
-			HashMap<String, Activity> activityMap = new HashMap<String, Activity>();
+//			HashMap<String, Object> activityMap = new HashMap<String, Object>();
 			for(int i = 0; i < cell.length; i++){
 				CanvasDTO cv = cell[i];
 				cells.add(cv);
@@ -284,12 +285,12 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 					Activity activity = geom.makeActivity();
 					if ( activity != null ){
 						activity.setTracingTag(  cv.getTracingTag() );
-						activityMap.put(cv.getId() , activity);
+//						activityMap.put(cv.getId() , activity);
 					}
 				}else if( "GROUP".equalsIgnoreCase(cv.getShapeType()) ){
 				}else if( "EDGE".equalsIgnoreCase(cv.getShapeType()) ){
 					// 조건저장
-					LineShape line = new LineShape(cv);
+//					LineShape line = new LineShape(cv);
 				}
 			}
             
@@ -301,8 +302,8 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 					String toStr = cv.getTo();
 					String fromId = formStr.substring(0, formStr.indexOf("_TERMINAL"));
 					String toId = toStr.substring(0, toStr.indexOf("_TERMINAL"));
-					Activity fromAct = activityMap.get(fromId);
-					Activity toAct = activityMap.get(toId);
+					Activity fromAct = (Activity)activityMap.get(fromId);
+					Activity toAct = (Activity)activityMap.get(toId);
 					if( fromAct != null && toAct != null){
 						Transition ts = new Transition(fromAct.getTracingTag()  , toAct.getTracingTag() );
 						// 트렌지션 생성
@@ -334,11 +335,11 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 			CanvasDTO jsonString = new CanvasDTO();
 			jsonString.setJsonString(graphString);
 			cells.add(jsonString);
-			setActivityMap(activityMap);
-			Collection<Activity> coll = activityMap.values();
-	        Iterator<Activity> iter = coll.iterator();
+//			setActivityMap(activityMap);
+			Collection<Object> coll = activityMap.values();
+	        Iterator<Object> iter = coll.iterator();
 	        while(iter.hasNext()){
-	        	def.addChildActivity(iter.next());
+	        	def.addChildActivity((Activity)iter.next());
 	        }
 			def.setExtendedAttribute( "cells", cells );
 			

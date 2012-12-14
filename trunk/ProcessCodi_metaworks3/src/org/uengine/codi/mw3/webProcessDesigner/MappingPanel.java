@@ -149,9 +149,13 @@ public class MappingPanel implements ContextAware {
 		
 		Tree tree = new Tree();
 		tree.setNode(rootNode);
-		
+		tree.setAlign(tree.ALIGN_LEFT);
 		this.setLeftTree(tree);
-		this.setRightTree(tree);
+		
+		Tree tree2 = new Tree();
+		tree2.setNode(rootNode);
+		tree2.setAlign(tree.ALIGN_RIGHT);
+		this.setRightTree(tree2);
 	}
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] doSaveMapper() throws Exception{
