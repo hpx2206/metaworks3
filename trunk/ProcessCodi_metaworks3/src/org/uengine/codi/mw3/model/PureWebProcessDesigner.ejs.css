@@ -1,12 +1,21 @@
-		div.base {
-			position: absolute;
-            overflow: auto;
-			white-space: nowrap;
-			font-family: Arial;
-			font-size: 8pt;
-		}
-        div.base#graph {
-            border-style: solid;
-            border-color: #F2F2F2;
-            border-width: 1px;
-        }
+div.base {
+	position: absolute;
+          overflow: auto;
+	white-space: nowrap;
+	font-family: Arial;
+	font-size: 8pt;
+}
+
+div.base#graph {
+    border-style: solid;
+    border-color: #F2F2F2;
+    border-width: 1px;
+}
+
+.icon_shape {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.dropOverBox : { stroke: "#0077FF", fill: "none", opacity: 0.6, "shape-rendering": "crispEdges" }
