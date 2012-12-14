@@ -9,7 +9,7 @@ var org_metaworks_component_Tree = function(objectId, className){
 	if(this.object == null)
 		return true;
 	
-	this.objectDiv.addClass('filemgr-tree').addClass('filemgr-treeFocus');
+	this.objectDiv.addClass('filemgr-tree').addClass('filemgr-treeFocus').addClass(this.object.align);
 	this.objectDiv.css({'border-width': '0px',
 						'left': '0px', 
 						'top': '0px',
