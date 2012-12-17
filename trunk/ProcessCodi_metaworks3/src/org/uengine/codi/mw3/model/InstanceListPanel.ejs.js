@@ -32,7 +32,7 @@ var org_uengine_codi_mw3_model_InstanceListPanel = function(objectId, className)
 		});
 		
 		
-	 	$('#' + this.divId + ' .ui-layout-content').mCustomScrollbar({
+	 /*	$('#' + this.divId + ' .ui-layout-content').mCustomScrollbar({
 			callbacks:{
 				
 				onTotalScroll:function(){
@@ -40,7 +40,7 @@ var org_uengine_codi_mw3_model_InstanceListPanel = function(objectId, className)
 					//setTimeout(function(){$("#method_37_switchToScheduleCalendar .ui-layout-content").mCustomScrollbar("update");},2000);
 				}
 			}
-		});
+		});*/
 		
 		
 		$('#' + mw3._getObjectDivId(mw3.getChildObjectId(this.objectId, 'topicFollowers')) + " #searchbox").css("border-bottom","#9EBFC4 1px solid ");

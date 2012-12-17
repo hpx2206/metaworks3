@@ -19,7 +19,7 @@ var org_uengine_codi_mw3_model_InstanceView = function(objectId, className){
 				faceHelper.load();					
 		}
 	}
- 	$('#objDiv_' + objectId + ' .ui-layout-content').mCustomScrollbar();
+ 	
 	
 	
 //		var posting = [];
