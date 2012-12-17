@@ -15,19 +15,26 @@
 </style>
 
 <%
-	var rolePanel = mw3.getAutowiredObject('org.uengine.codi.mw3.webProcessDesigner.RolePanel');
+	if('lane' == mw3.how){
+%>
+	<%=include('dwr/metaworks/genericfaces/ObjectFace.ejs')%>
+<%		
+	}else{
+	
+		var rolePanel = mw3.getAutowiredObject('org.uengine.codi.mw3.webProcessDesigner.RolePanel');
 %>
 	<ol id="selectable_<%=objectId%>" class="selectable">
 <%			
-		for(var i=0; i<rolePanel.roles.length; i++){
-			var role = rolePanel.roles[i];
+			for(var i=0; i<rolePanel.roles.length; i++){
+				var role = rolePanel.roles[i];
 %>
 		<li class="ui-state-default" name="<%=role.name%>">
 			<%=role.name%>
 		</li>
 <%
-	}
+		}
 %>
 	</ol>
-<%				
+<%		
+	}		
 %>
