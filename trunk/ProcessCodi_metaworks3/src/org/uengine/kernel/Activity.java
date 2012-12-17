@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.Vector;
 
-import org.metaworks.annotation.Hidden;
+import org.metaworks.annotation.Face;
 import org.uengine.contexts.TextContext;
 import org.uengine.kernel.graph.Transition;
 import org.uengine.processdesigner.ActivityDesigner;
@@ -41,7 +41,6 @@ import org.uengine.util.UEngineUtil;
  * @author Jinyoung Jang
  * @see org.uengine.kernel.ComplexActivity
  */
-
 public abstract class Activity implements Validatable, java.io.Serializable, Cloneable{
 	private static final long serialVersionUID = org.uengine.kernel.GlobalContext.SERIALIZATION_UID;
 	

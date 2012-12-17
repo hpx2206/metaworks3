@@ -4,11 +4,7 @@ import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.metaworks.FieldDescriptor;
 import org.metaworks.Type;
-import org.metaworks.annotation.Hidden;
-import org.uengine.contexts.FileContext;
-import org.uengine.processdesigner.inputters.org_uengine_kernel_ProcessVariableArrayInput;
 import org.uengine.util.UEngineUtil;
 import org.uengine.webservices.emailserver.impl.EMailServerSoapBindingImpl;
 

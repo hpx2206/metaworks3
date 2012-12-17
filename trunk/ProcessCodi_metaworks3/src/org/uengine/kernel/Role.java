@@ -146,7 +146,6 @@ public class Role implements java.io.Serializable, Cloneable, ContextAware {
 		}
 
 	private java.lang.String name;
-		@Hidden
 		public String getName() {
 			return name;
 		}
@@ -155,7 +154,6 @@ public class Role implements java.io.Serializable, Cloneable, ContextAware {
 		}
 
 	private RoleResolutionContext roleResolutionContext = null;
-		@Hidden
 		public RoleResolutionContext getRoleResolutionContext() {
 			if (roleResolutionContext instanceof DirectRoleResolutionContext) {
 				DirectRoleResolutionContext drrc = (DirectRoleResolutionContext) roleResolutionContext;
@@ -175,7 +173,6 @@ public class Role implements java.io.Serializable, Cloneable, ContextAware {
 		}
 	
 	int dispatchingOption = DISPATCHINGOPTION_ALL;
-		@Hidden
 		public int getDispatchingOption() {
 			return dispatchingOption;
 		}
@@ -184,7 +181,6 @@ public class Role implements java.io.Serializable, Cloneable, ContextAware {
 			dispatchingOption = i;
 		}
 	private ServiceDefinition serviceType;
-		@Hidden
 		public ServiceDefinition getServiceType() {
 			return serviceType;
 		}
@@ -193,7 +189,6 @@ public class Role implements java.io.Serializable, Cloneable, ContextAware {
 		}
 	
 	private boolean isHumanWorker;
-		@Hidden
 		public boolean isHumanWorker() {
 			return isHumanWorker;
 		}	
@@ -202,7 +197,6 @@ public class Role implements java.io.Serializable, Cloneable, ContextAware {
 		}
 		
 	private boolean askWhenInit = true;
-		@Hidden
 		public boolean isAskWhenInit() {
 			return askWhenInit;
 		}
@@ -220,7 +214,6 @@ public class Role implements java.io.Serializable, Cloneable, ContextAware {
 		}
 
 	private String defaultEndpoint;
-		@Hidden
 		public String getDefaultEndpoint() {
 			return defaultEndpoint;
 		}
@@ -229,7 +222,6 @@ public class Role implements java.io.Serializable, Cloneable, ContextAware {
 		}
 		
 	private TextContext displayName = TextContext.createInstance();
-		@Hidden
 		public TextContext getDisplayName() {
 			if(displayName==null){
 				displayName = TextContext.createInstance();
@@ -248,7 +240,6 @@ public class Role implements java.io.Serializable, Cloneable, ContextAware {
 		}
 
 	boolean dontPersistResolutionResult;
-		@Hidden
 		public boolean isDontPersistResolutionResult() {
 			return dontPersistResolutionResult;
 		}
@@ -266,17 +257,14 @@ public class Role implements java.io.Serializable, Cloneable, ContextAware {
 		this. name = name;
 	}
 	
-	@Hidden
 	public RoleMapping getMapping(ProcessInstance inst) throws Exception{
 		return getMapping(inst, (String)null);
 	}
 
-	@Hidden
 	public RoleMapping getMapping(ProcessInstance inst, Activity activity) throws Exception{
 		return getMapping(inst, activity.getTracingTag());
 	}
 		
-	@Hidden
 	public RoleMapping getMapping(ProcessInstance inst, String tracingTag) throws Exception{
 		RoleMapping mapping = null;
 		Role role = null;
