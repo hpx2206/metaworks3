@@ -16,10 +16,9 @@ public class PropertiesWindow extends ModalWindow {
 		public void setId(String id) {
 			this.id = id;
 		}
-
+		
 	@ServiceMethod(callByContent=true)
 	public void refresh(){
-		
 	}
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
