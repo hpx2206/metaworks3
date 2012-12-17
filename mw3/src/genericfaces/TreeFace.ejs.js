@@ -11,6 +11,8 @@ var TreeFace = function(objectId, className){
 
 	if(this.object == null)
 		return true;
+
+	this.objectDiv.addClass('mw3_tree');
 	
 	this.objectDiv.css('margin-left', '10px');
 }
