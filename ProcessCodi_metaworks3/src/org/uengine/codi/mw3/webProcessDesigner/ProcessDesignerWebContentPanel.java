@@ -23,6 +23,7 @@ import org.uengine.contexts.TextContext;
 import org.uengine.kernel.Activity;
 import org.uengine.kernel.Condition;
 import org.uengine.kernel.GlobalContext;
+import org.uengine.kernel.HumanActivity;
 import org.uengine.kernel.ProcessDefinition;
 import org.uengine.kernel.ProcessVariable;
 import org.uengine.kernel.Role;
@@ -283,27 +284,22 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 						CanvasDTO groupCanvas = getCanvasMap().get(groupId);
 						Role role = new Role();
 						role.setName(groupCanvas.getLabel());
-						geom.setRole(role);
-						def.addRole(role);
-					}else{
-						geom.setRole(initiator);
+						if(cv.getClassname() != null && "org.uengine.kernel.HumanActivity".equals(cv.getClassname()) ){
+							HumanActivity activity = (HumanActivity)activityMap.get(cv.getId());
+							activity.setRole(role);
+						}
+//						geom.setRole(role);
+//						def.addRole(role);
+//					}else{
+//						geom.setRole(initiator);
 					}
-					Activity activity = geom.makeActivity();
-					if ( activity != null ){
-						activity.setTracingTag(  cv.getTracingTag() );
+//					Activity activity = geom.makeActivity();
+//					if ( activity != null ){
+//						activity.setTracingTag(  cv.getTracingTag() );
 //						activityMap.put(cv.getId() , activity);
-					}
+//					}
 				}else if( "GROUP".equalsIgnoreCase(cv.getShapeType()) ){
 				}else if( "EDGE".equalsIgnoreCase(cv.getShapeType()) ){
-					// 조건저장
-//					LineShape line = new LineShape(cv);
-				}
-			}
-            
-            Iterator<CanvasDTO> iterator2 = ct.iterator();
-            while (iterator2.hasNext()) {
-	            CanvasDTO cv = iterator2.next();
-				if( cv != null && "EDGE".equalsIgnoreCase(cv.getShapeType()) ){
 					String formStr = cv.getFrom();
 					String toStr = cv.getTo();
 					String fromId = formStr.substring(0, formStr.indexOf("_TERMINAL"));
@@ -337,11 +333,11 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 						switchActivity.setConditions(conditions);
 					}
 				}
-            }
+			}
+            
 			CanvasDTO jsonString = new CanvasDTO();
 			jsonString.setJsonString(graphString);
 			cells.add(jsonString);
-//			setActivityMap(activityMap);
 			Collection<Object> coll = activityMap.values();
 	        Iterator<Object> iter = coll.iterator();
 	        while(iter.hasNext()){
@@ -358,7 +354,12 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 			processManager.addProcessDefinition( title , 0, "description", false, GlobalContext.serialize(def, ProcessDefinition.class), "", "/"+title+".process2", "/"+title+".process2", "process2");
 		}
 	}
-	
+	public Role[] makeRole()  throws Exception{
+		ArrayList<org.uengine.codi.mw3.webProcessDesigner.Role> RoleList = defineTab.getRolePanel().getRoles();
+		Role[] roles = null;
+		
+		return roles;
+	}
 	public ProcessVariable[] makeProcessValiable() throws Exception{
 		ProcessVariable pvs[] = null;
 		ArrayList<PrcsValiable> prcsValiable = defineTab.prcsValiablePanel.getPrcsValiables();
@@ -404,8 +405,6 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 			is = new FileInputStream(sourceCodeFile);
 			UEngineUtil.copyStream(is, bao);
 			ProcessDefinition def = (ProcessDefinition) GlobalContext.deserialize(bao.toString("UTF-8"));
-			Long nextTracingTag = def.getNextActivitySequence();
-			lastTracingTag = nextTracingTag.toString();
 			// processDefinition setting
 			ArrayList<CanvasDTO> cellsList = (ArrayList<CanvasDTO>) def.getExtendedAttributes().get("cells");
 			if( cellsList != null){

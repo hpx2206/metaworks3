@@ -76,7 +76,7 @@ var org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel = fun
                     
                     if (shapeInfo._shape_type === 'GEOM' || shapeInfo._shape_type === 'GROUP') {
                     	$(element).attr("_classname", shapeInfo._classname);
-                    	
+                    	$(element).attr("_tracingTag",++faceHelper.tracingTag);
 	                    // 그리고 난 후의 엘리먼트에 이벤트 등록
 	                    faceHelper.addEventGeom(objectId, canvas, element);
                     }
@@ -110,7 +110,10 @@ var org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel = fun
     	faceHelper.addEventEdge(objectId, canvas, edgeElement);
     });
     canvas.onDrawShape(function (event, shapeElement) {
-    	$(shapeElement).attr("tracingTag",++faceHelper.tracingTag);
+    	
+    });
+    canvas.onLabelChanged(function (event, shapeElement, afterText, beforeText) {
+    	// TODO 스윔레인에 text가 써졌을때, 바로 role 추가하는 로직 생성
     });
     // Role.ejs 파일쪽에 있는 스윔레인추가 버튼 클릭시 동작
     $(".horizontalLaneShapeCall").click(function(){
@@ -158,7 +161,7 @@ var org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel = fun
 				var cellClassname = cells[i].classname;
 				
 				if( cellTracing != null ){
-					$('#'+cellId).attr("tracingTag",cellTracing);					
+					$('#'+cellId).attr("_tracingTag",cellTracing);					
 				}
 				
 				if( cellClassname != null ){
@@ -197,8 +200,11 @@ var org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel = fun
 org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype.addEventGeom = function(objectId, canvas, element){
 	
 	var shape_id = $(element).attr("_shape_id");
+//	if( typeof $(element).attr("_tracingTag") != 'undefined' ){
+//		var activityData = {tracingTag : $(element).attr("_tracingTag")};
+//	}
 	if( typeof $(element).attr("_classname") != 'undefined' ){
-		var activityData = {__className : $(element).attr("_classname")};
+		var activityData = {__className : $(element).attr("_classname"), tracingTag : $(element).attr("_tracingTag")};
 		$(element).data('activity', activityData);
 	}
 	
@@ -350,9 +356,10 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 		var cellForDwr = {};
 		
 		if( og['@shapeType'] != 'EDGE'){
-			cellForDwr['tracingTag'] = $('#'+og['@id']).attr('tracingTag');
-			cellForDwr['classname'] = $('#'+og['@id']).attr('_classname');
-			var activity = $('#'+og['@id']).data('activity');
+			$id = $('#'+og['@id']);
+			cellForDwr['tracingTag'] = $id.attr('_tracingTag');
+			cellForDwr['classname'] = $id.attr('_classname');
+			var activity = $id.data('activity');
 			if(typeof activity != 'undefined')
 				activityMap['#'+og['@id']] = activity;
 		}

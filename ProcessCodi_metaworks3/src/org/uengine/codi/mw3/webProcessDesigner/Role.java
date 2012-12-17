@@ -43,10 +43,11 @@ public class Role implements ContextAware , Cloneable{
 	public RolePanel add() throws CloneNotSupportedException{
 		
 		Role added = (Role) this.clone();
-		added.setMetaworksContext(new MetaworksContext());
-		added.getMetaworksContext().setWhen("view");
-		rolePanel.getRoles().add(added);
-		
+		if(!rolePanel.getRoles().contains(added)){
+			added.setMetaworksContext(new MetaworksContext());
+			added.getMetaworksContext().setWhen("view");
+			rolePanel.getRoles().add(added);
+		}
 		setName("");
 		getMetaworksContext().setWhen("edit");
 
