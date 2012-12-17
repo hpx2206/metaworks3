@@ -3,15 +3,10 @@ package org.uengine.codi.mw3.webProcessDesigner;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
-
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-import net.sf.json.JSONSerializer;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
@@ -27,10 +22,7 @@ import org.uengine.contexts.ComplexType;
 import org.uengine.contexts.TextContext;
 import org.uengine.kernel.Activity;
 import org.uengine.kernel.Condition;
-import org.uengine.kernel.EmptyActivity;
 import org.uengine.kernel.GlobalContext;
-import org.uengine.kernel.HumanActivity;
-import org.uengine.kernel.ParameterContext;
 import org.uengine.kernel.ProcessDefinition;
 import org.uengine.kernel.ProcessVariable;
 import org.uengine.kernel.Role;
@@ -163,6 +155,20 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 		public void setLastTracingTag(String lastTracingTag) {
 			this.lastTracingTag = lastTracingTag;
 		}
+		
+	PropertiesWindow propertiesWindow;
+		public PropertiesWindow getPropertiesWindow() {
+			return propertiesWindow;
+		}
+		public void setPropertiesWindow(PropertiesWindow propertiesWindow) {
+			this.propertiesWindow = propertiesWindow;
+		}
+		
+	@ServiceMethod(payload="propertiesWindow", target="popup")
+	public PropertiesWindow showProperties(){
+		return this.getPropertiesWindow();
+	}
+		
 	@ServiceMethod(callByContent=true, target="popup")
 	public ModalWindow doSave() throws Exception{
 		ProcessDesignerTitle dTitle = new ProcessDesignerTitle();

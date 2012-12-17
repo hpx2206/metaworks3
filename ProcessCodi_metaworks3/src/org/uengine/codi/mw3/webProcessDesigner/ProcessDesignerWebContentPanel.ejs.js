@@ -74,7 +74,7 @@ var org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel = fun
                         event.pageY - $('#canvas')[0].offsetTop + $('#canvas')[0].scrollTop	- $('#canvas').offsetParent().offset().top ],
                             shape, [parseInt(shapeInfo._width, 10), parseInt(shapeInfo._height, 10)]);
                     
-                    if (shapeInfo._shape_type === 'GEOM') {
+                    if (shapeInfo._shape_type === 'GEOM' || shapeInfo._shape_type === 'GROUP') {
                     	$(element).attr("_classname", shapeInfo._classname);
                     	
 	                    // 그리고 난 후의 엘리먼트에 이벤트 등록
@@ -176,9 +176,14 @@ var org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel = fun
 		$("g[_shape=" + OG.Constants.SHAPE_TYPE.GEOM + "]").each(function (n, element) {
 			faceHelper.addEventGeom(objectId ,canvas, element);
 		});
+		$("g[_shape=" + OG.Constants.SHAPE_TYPE.GROUP + "]").each(function (n, element) {
+			faceHelper.addEventGeom(objectId ,canvas, element);
+		});		
 		$("g[_shape=" + OG.Constants.SHAPE_TYPE.EDGE + "]").each(function (n, element) {
 			faceHelper.addEventEdge(objectId ,canvas, element);
 		});
+		
+		
 	}
 	this.icanvas.setCanvasSize([canvasWidth, canvasHeight]);
 };
@@ -208,7 +213,6 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 				value.dataMapping();
 			}
 		});
-
 	}else{
 		// 그외 
 		$(element).on({
@@ -264,25 +268,43 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 	    			canvas.setCustomData(element, customData);
 	    		}
 	    	},
-			dblclick: function (event) {
-				var divId = 'properties_' + objectId;
+	    	dblclick: function (event) {
+	    		/*
+	    		var value = mw3.getOobject(objectId);
+    			value.tempElementId = $(this).attr('id');
+    			value.geomInfo();
+    			*/
+	    		var divId = 'properties_' + objectId;
 				
 				$('body').append("<div id='" + divId + "'></div>");
 
-				var object = {
+				var metaworksContext = {
+					__className : 'org.metaworks.MetaworksContext',
+					when : 'edit'
+				};
+				
+				if(shape_id == 'OG.shape.HorizontalLaneShape')
+					metaworksContext['how'] = 'lane';
+					
+				var propertiesWindow = {
 					__className : 'org.uengine.codi.mw3.webProcessDesigner.PropertiesWindow',
 					open : true,
 					width : 600,
 					panel : $(this).data('activity'),
+					metaworksContext : metaworksContext,
 					id : $(this).attr('id')
 				};
 				
-				var metadata = mw3.getMetadata(object.__className);
-				metadata['when'] = 'edit';
 				
-				mw3.locateObject(object, null, '#' + divId, metadata);
-				mw3.onLoadFaceHelperScript();
-			}
+				var object = mw3.getObject(objectId);
+				
+				object['propertiesWindow'] = propertiesWindow;
+				object.showProperties();
+				//var metadata = mw3.getMetadata(object.__className);				
+				
+				//mw3.locateObject(object, null, '#' + divId, metadata);
+				//mw3.onLoadFaceHelperScript();	    		
+	    	}
 	    });
 	}
 };
@@ -377,4 +399,13 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 	object.activityMap = activityMap;
 	
 	return object;
+};
+
+
+org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype.startLoading = function(){
+	this.divObj.trigger('startLoading');
+};
+
+org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype.endLoading = function(){
+	this.divObj.trigger('endLoading');
 };
