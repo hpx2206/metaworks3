@@ -2,12 +2,12 @@
 <%if(value.selected){%>
 	<div class="depth2">
 		<ul class="fist_menu">
-			<li><span style="background:url(images/waveStyle/nav_newsfeed.png) no-repeat 5px 0px;"><a style="background:#C9E2FC;" onClick="<%=methods.loadAllICanSee.caller()%>" href="#"><%=mw3.localize("$All")%></a></span></li>
-			<li><span style="background:url(images/waveStyle/nav_participating.png) no-repeat 5px 0px;"><a onClick="<%=methods.loadAll.caller()%>" href="#"><%=mw3.localize("$Following")%></a></span></li>
-			<li><span style="background:url(images/waveStyle/nav_my_to_do.png) no-repeat 5px 0px;"><a onClick="<%=methods.loadInbox.caller()%>" href="#" ><%=mw3.localize("$MyToDo")%></a></span></li>
-			<li><span style="background:url(images/waveStyle/nav_by_me.png) no-repeat 5px 0px;"><a onClick="<%=methods.loadRequest.caller()%>" href="#"><%=mw3.localize("$StartedbyMe")%></a></span></li>
-			<li><span style="background:url(images/waveStyle/nav_trash.png) no-repeat 5px 0px; "><a onClick="<%=methods.loadStopped.caller()%>" href="#"><%=mw3.localize("$Trash")%></a></span></li>
-			<li><span style="background:url(images/waveStyle/i_gantt.png) no-repeat 5px 0px; "><a onClick="<%=methods.calendar.caller()%>" href="#"><%=mw3.localize("$Calendar")%></a></span></li>
+			<li class="selected_navi"><img class="navi_icon" src="images/waveStyle/nav_newsfeed.png"><a onClick="<%=methods.loadAllICanSee.caller()%>" href="#"><%=mw3.localize("$All")%></a></li>
+			<li><img class="navi_icon" src="images/waveStyle/nav_participating.png"><a onClick="<%=methods.loadAll.caller()%>" href="#"><%=mw3.localize("$Following")%></a></li>
+			<li><img class="navi_icon" src="images/waveStyle/nav_my_to_do.png"><a onClick="<%=methods.loadInbox.caller()%>" href="#" ><%=mw3.localize("$MyToDo")%></a></li>
+			<li><img class="navi_icon" src="images/waveStyle/nav_by_me.png"><a onClick="<%=methods.loadRequest.caller()%>" href="#"><%=mw3.localize("$StartedbyMe")%></a></li>
+			<li><img class="navi_icon" src="images/waveStyle/nav_trash.png"><a onClick="<%=methods.loadStopped.caller()%>" href="#"><%=mw3.localize("$Trash")%></a></li>
+			<li><img class="navi_icon" src="images/waveStyle/nav_gantt.png"><a onClick="<%=methods.calendar.caller()%>" href="#"><%=mw3.localize("$Calendar")%></a></li>
 		</ul>
 	</div>
 <%}else{%>
