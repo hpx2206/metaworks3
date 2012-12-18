@@ -126,7 +126,7 @@ ul, ol, li, dl, dd, dt {
 .wfLink {
     height: 16px;
     padding-right: 25px;
-    background: url(../../images/waveStyle/process.png) no-repeat right 0px;
+    background: url(../../images/waveStyle/i_topic.png) no-repeat right 0px;
     cursor: pointer;
 }
 .wfnode_current {

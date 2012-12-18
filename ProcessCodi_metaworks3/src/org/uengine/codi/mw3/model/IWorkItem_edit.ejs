@@ -1,20 +1,19 @@
 <%
 	if(value){
 	
-	
+		
 		value.writer = mw3.getAutowiredObject('org.uengine.codi.mw3.model.Session').user;
 		value.writer.metaworksContext.when = 'workitem';
 %>
 
 
-<div class="view_box2" style="margin-bottom:40px;">
+<div class="view_box2" <% if(mw3.how = "sns"){ %> style="background:#C9E2FC; margin:0px;padding-bottom:5px;" <%}%>>
 	<!--div class="guide">
 		<span class="tl"></span>
 		<span class="tr"></span>
 	</div-->
-	<!--div class="cont"-->
- 	
-	<table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-top:15px; background:#F3F3F3;">
+	<!--div class="cont"--> 	
+	<table width="100%" border="0" cellspacing="0" cellpadding="0" <% if(mw3.how != "sns"){ %>style="margin-top:15px; background:#F3F3F3;"<%}%>>
 <%		
 		if(value.type == "comment"){
 %>
