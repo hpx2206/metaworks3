@@ -47,9 +47,9 @@
 					<div style="margin-left:40px">
 						<table>
 							<tr>
-								<td><a href="#middle-center"><b><font color=204070><%=value.initiator.name%></font> &nbsp;&nbsp; <font color=#5C5C5C><%=value.name%></font></b></a></td>
+								<td style="border:none;"><a href="#middle-center"><b><font color=204070><%=value.initiator.name%></font> &nbsp;&nbsp; <font color=#5C5C5C><%=value.name%></font></b></a></td>
 								<% if(mw3.where == 'sns'){ %>
-								<td width="150">
+								<td style="border:none;" width="150">
 									<div style="float:left;margin-left:15px;color:#C6C6C6"><%=fields.startedDate.here({when: 'timeago'})%></div>										
 								</td>
 								<%}%>
