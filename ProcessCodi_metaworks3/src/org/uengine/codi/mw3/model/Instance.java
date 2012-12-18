@@ -498,21 +498,17 @@ public class Instance extends Database<IInstance> implements IInstance{
 		}
 		
 	String initComCd;
-	
 		public String getInitComCd() {
 			return initComCd;
 		}
-	
 		public void setInitComCd(String initComCd) {
 			this.initComCd = initComCd;
 		}
 		
 	String lastCmnt;
-	
 		public String getLastCmnt() {
 			return lastCmnt;
 		}
-	
 		public void setLastCmnt(String lastCmnt) {
 			this.lastCmnt = lastCmnt;
 		}
@@ -550,66 +546,48 @@ public class Instance extends Database<IInstance> implements IInstance{
 			this.defName = defName;
 		}
 
+	Date	startedDate;
+		public Date getStartedDate() {
+			return startedDate;
+		}
+	
+		public void setStartedDate(Date startedDate) {
+			this.startedDate = startedDate;
+		}
+
+	Date finishedDate;
+		public Date getFinishedDate() {
+			return finishedDate;
+		}
+	
+		public void setFinishedDate(Date finishedDate) {
+			this.finishedDate = finishedDate;
+		}
+
+	Date dueDate;
+		@Override
+		public Date getDueDate() {
+			return dueDate;
+		}
+		public void setDueDate(Date dueDate) {
+			this.dueDate = dueDate;
+		}
 		
-	@Override
-	public Date getStartedDate() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	Date	defModDate;
+		public Date getDefModDate() {
+			return defModDate;
+		}
+		public void setDefModDate(Date defModDate) {
+			this.defModDate = defModDate;
+		}
 
-	@Override
-	public void setStartedDate(Date when) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public Date getFinishedDate() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setFinishedDate(Date when) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public Date getDueDate() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setDueDate(Date when) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public Date getDefModDate() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setDefModDate(Date when) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public Date getModDate() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setModDate(Date when) {
-		// TODO Auto-generated method stub
-		
-	}
+	Date	modDate;
+		public Date getModDate() {
+			return modDate;
+		}
+		public void setModDate(Date modDate) {
+			this.modDate = modDate;
+		}
 
 	String status;
 		public String getStatus() {
