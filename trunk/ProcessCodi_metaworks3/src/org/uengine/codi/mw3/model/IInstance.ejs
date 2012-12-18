@@ -50,16 +50,16 @@
 								<td><a href="#middle-center"><b><font color=204070><%=value.initiator.name%></font> &nbsp;&nbsp; <font color=#5C5C5C><%=value.name%></font></b></a></td>
 								<% if(mw3.where == 'sns'){ %>
 								<td width="150">
-									<div style="float:left;margin:0 15px;color:#C6C6C6"><%=fields.startedDate.here({when: 'timeago'})%></div>	
+									<div style="float:left;margin-left:15px;color:#C6C6C6"><%=fields.startedDate.here({when: 'timeago'})%></div>	
 									<%if(value.status=='Completed'){%> 
-										<div class="badge" style="background:#98AFC7;">&nbsp;&nbsp;<%=mw3.localize('$Complete')%> &nbsp;&nbsp;</div> 
+										<div class="badge" style="margin-left:15px;background:#98AFC7;">&nbsp;&nbsp;<%=mw3.localize('$Complete')%> &nbsp;&nbsp;</div> 
 										<div class="clear"></div>
 									<%}else if(value.dueDate){ 
 										if(value.dueDate < new Date()){%>
-											<div class="badge" style="background:#F52020;">&nbsp;&nbsp;<%=mw3.localize('$Delay')%> &nbsp;&nbsp;</div>
+											<div class="badge" style="margin-left:15px;background:#F52020;">&nbsp;&nbsp;<%=mw3.localize('$Delay')%> &nbsp;&nbsp;</div>
 											<div class="clear"></div>
 										<%}else if(value.progress != null && value.progress != ''){%>
-											<div class="badge">&nbsp;&nbsp;<%=value.progress%>%  &nbsp;&nbsp;</div>
+											<div class="badge" style="margin-left:15px;">&nbsp;&nbsp;<%=value.progress%>%  &nbsp;&nbsp;</div>
 											<div class="clear"></div>
 										<%}else{%>
 											<div><table><td style="border:none;"><%=mw3.localize('$Due')%> :</td><td style="border:none;"><%=fields.dueDate.here({when: 'timeago'})%></td></table><div>
