@@ -20,10 +20,36 @@ var org_metaworks_component_Tree = function(objectId, className){
 						'max-width': '10000px',
 						'max-height': '10000px'});
 	
-	// scroll bar
-	this.objectDiv.mCustomScrollbar();
 	this.objectDiv.bind('change', function(event, objectId){
-		var node = mw3.getObject(objectId);
 	});
 };
 
+org_metaworks_component_Tree.prototype = {
+	loaded : function(){
+		this.objectDiv.trigger('loaded');
+	},
+	getClosedParentNodes : function(objectId){
+		var object = mw3.objects[objectId];
+		if( object == null || object.parentId == 'root' ){
+			return null;
+		}
+		var parentObjectId = this.objectDiv.find('.item-fix[nodeId='+ object.parentId+']').attr('objectId');
+		var parentObject = mw3.objects[parentObjectId];
+		
+		if( parentObject.expanded ){
+			return this.getClosedParentNodes(parentObject.__objectId);
+		}else{
+			return parentObject.__objectId;
+		}
+		
+		/*
+		var parentNode = $('.item-fix[nodeId='+ object.parentId+']');
+		var parentObjectId = $(parentNode).attr('objectId');
+		var parentObject = mw3.objects[parentObjectId];
+		this.parentNodes.push(parentObject);
+		if( parentObject.parentId ){
+			this.getParentNodes(parentObject.parentId);
+		}
+		*/
+	}
+};

@@ -101,7 +101,7 @@ public class MappingPanel implements ContextAware {
 				String typeAttr = prcsValiable.getDataType().getSelected();
 				
 				RoleTreeNode node = new RoleTreeNode();
-				node.setId(typeIdAttr);
+				node.setId(nameAttr);
 				node.setName(nameAttr);
 				node.setParentId("valiables");
 				node.setType(TreeNode.TYPE_FILE_HTML);
@@ -118,9 +118,9 @@ public class MappingPanel implements ContextAware {
 						WebFieldDescriptor wfd = wfields[j];
 //						FieldDescriptor fd = fields[i];
 						RoleTreeNode childNode = new RoleTreeNode();
-						childNode.setId(typeIdAttr + "." + wfd.getName());
+						childNode.setId(nameAttr + "." + wfd.getName());
 						childNode.setName(wfd.getName());
-						childNode.setParentId(typeIdAttr);
+						childNode.setParentId(nameAttr);
 						childNode.setType(TreeNode.TYPE_FILE_TEXT);
 						node.add(childNode);
 					}
@@ -133,9 +133,8 @@ public class MappingPanel implements ContextAware {
 			roleNode.setName("Roles");
 			roleNode.setParentId("root");
 			roleNode.setType(TreeNode.TYPE_FOLDER);
-			rootNode.add(roleNode);
-			rootNode.setLoaded(true);
-			rootNode.setExpanded(true);
+			roleNode.setLoaded(true);
+			roleNode.setExpanded(false);
 			for(int i = 0; i < roleList.size(); i++){
 				Role role = roleList.get(i);
 				RoleTreeNode node = new RoleTreeNode();
@@ -145,6 +144,7 @@ public class MappingPanel implements ContextAware {
 				node.setType(TreeNode.TYPE_FILE_HTML);
 				roleNode.add(node);
 			}
+			rootNode.add(roleNode);
 		}
 		
 		Tree tree = new Tree();

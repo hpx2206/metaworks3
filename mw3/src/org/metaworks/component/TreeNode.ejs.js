@@ -10,10 +10,8 @@ var org_metaworks_component_TreeNode = function(objectId, className){
 		return true;	
 	
 	this.nodeDiv = $('#' + this.objectDivId).children('div');
+	var faceHelper = this;
 	
-	if(this.object.root)
-		this.nodeDiv.addClass('root');
-
 	if('folder' == this.object.type){
 		// calc status
 		var status = '';
@@ -27,7 +25,7 @@ var org_metaworks_component_TreeNode = function(objectId, className){
 		
 		this.nodeDiv.addClass(status);
 		
-		var faceHelper = this;
+		
 		if(!faceHelper.isExpand())
 			faceHelper.collapse();
 		
@@ -110,7 +108,6 @@ org_metaworks_component_TreeNode.prototype = {
 		if(!this.nodeDiv.hasClass('selected'))
 			tree.trigger('change', [this.objectId]);
 		
-		
 		tree.find('.item-fix.selected').removeClass('selected');
 		this.nodeDiv.addClass('selected');
 	},
@@ -143,6 +140,7 @@ org_metaworks_component_TreeNode.prototype = {
 		}
 		
 		if(this.object.loaded){
+			this.object.expanded = true;
 			this.objectDiv.children('u').show();
 		}else{
 			this.nodeDiv.addClass('loading');
@@ -168,9 +166,10 @@ org_metaworks_component_TreeNode.prototype = {
 		}
 		
 		this.objectDiv.children('u').hide();
+		this.object.expanded = false;
 		
 		var tree = this.objectDiv.parentsUntil('.filemgr-tree').parent('.filemgr-tree');
 		
 		tree.trigger('collapsed', [this.objectId]);
-	}		
+	}
 };
