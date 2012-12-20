@@ -4,112 +4,54 @@ var org_uengine_codi_mw3_webProcessDesigner_MappingPanel = function(objectId, cl
 	this.className = className;
 	var faceHelper = this;
 	var canvas = null;
-	
 	OG.shape.From = function (label) {
+        OG.shape.From.superclass.call(this, label);
+        this.SHAPE_ID = 'OG.shape.From';
+    };
+    OG.shape.From.prototype = new OG.shape.CircleShape();
+    OG.shape.From.superclass = OG.shape.CircleShape;
+    OG.shape.From.prototype.constructor = OG.shape.From;
+    OG.From = OG.shape.From;
 
-	    this.SHAPE_ID = 'OG.shape.From';
+    OG.shape.From.prototype.createTerminal = function () {
+        if (!this.geom) {
+            return [];
+        }
 
-	    this.label = label;
+        var envelope = this.geom.getBoundary();
 
-	    /**
-	     * Shape 간의 연결을 위한 Terminal 을 반환한다.
-	     *
-	     * @return {OG.Terminal[]} Terminal
-	     * @override
-	     */
-	    this.createTerminal = function () {
-	        if (!this.geom) {
-	            return [];
-	        }
+        return [
+            new OG.Terminal(envelope.getCentroid(), OG.Constants.TERMINAL_TYPE.C, OG.Constants.TERMINAL_TYPE.OUT)
+        ];
+    };
+    OG.shape.From.prototype.clone = function () {
+        return new OG.shape.From(this.label);
+    };
 
-	        var envelope = this.geom.getBoundary();
+    // define To Shape
+    OG.shape.To = function (label) {
+        OG.shape.To.superclass.call(this, label);
+        this.SHAPE_ID = 'OG.shape.To';
+    };
+    OG.shape.To.prototype = new OG.shape.CircleShape();
+    OG.shape.To.superclass = OG.shape.CircleShape;
+    OG.shape.To.prototype.constructor = OG.shape.To;
+    OG.To = OG.shape.To;
 
-	        return [
-	            new OG.Terminal(envelope.getCentroid(), OG.Constants.TERMINAL_TYPE.C, OG.Constants.TERMINAL_TYPE.OUT)
-	        ];
-	    };
+    OG.shape.To.prototype.createTerminal = function () {
+        if (!this.geom) {
+            return [];
+        }
 
-	    /**
-	     * 드로잉할 Shape 을 생성하여 반환한다.
-	     *
-	     * @return {OG.geometry.Geometry} Shape 정보
-	     * @override
-	     */
-	    this.createShape = function () {
-	        if (this.geom) {
-	            return this.geom;
-	        }
+        var envelope = this.geom.getBoundary();
 
-	        this.geom = new OG.geometry.Circle([50, 50], 50);
-	        return this.geom;
-	    };
-
-	    /**
-	     * Shape 을 복사하여 새로인 인스턴스로 반환한다.
-	     *
-	     * @return {OG.shape.IShape} 복사된 인스턴스
-	     * @override
-	     */
-	    this.clone = function () {
-	        return new OG.shape.From(this.label);
-	    };
-	};
-	OG.shape.From.prototype = new OG.shape.CircleShape();
-	OG.shape.From.prototype.constructor = OG.shape.From;
-	OG.From = OG.shape.From;
-
-	OG.shape.To = function (label) {
-
-	    this.SHAPE_ID = 'OG.shape.To';
-
-	    this.label = label;
-
-	    /**
-	     * Shape 간의 연결을 위한 Terminal 을 반환한다.
-	     *
-	     * @return {OG.Terminal[]} Terminal
-	     * @override
-	     */
-	    this.createTerminal = function () {
-	        if (!this.geom) {
-	            return [];
-	        }
-
-	        var envelope = this.geom.getBoundary();
-
-	        return [
-	            new OG.Terminal(envelope.getCentroid(), OG.Constants.TERMINAL_TYPE.C, OG.Constants.TERMINAL_TYPE.IN)
-	        ];
-	    };
-
-	    /**
-	     * 드로잉할 Shape 을 생성하여 반환한다.
-	     *
-	     * @return {OG.geometry.Geometry} Shape 정보
-	     * @override
-	     */
-	    this.createShape = function () {
-	        if (this.geom) {
-	            return this.geom;
-	        }
-
-	        this.geom = new OG.geometry.Circle([50, 50], 50);
-	        return this.geom;
-	    };
-
-	    /**
-	     * Shape 을 복사하여 새로인 인스턴스로 반환한다.
-	     *
-	     * @return {OG.shape.IShape} 복사된 인스턴스
-	     * @override
-	     */
-	    this.clone = function () {
-	        return new OG.shape.To(this.label);
-	    };
-	};
-	OG.shape.To.prototype = new OG.shape.CircleShape();
-	OG.shape.To.prototype.constructor = OG.shape.To;
-	OG.To = OG.shape.To;
+        return [
+            new OG.Terminal(envelope.getCentroid(), OG.Constants.TERMINAL_TYPE.C, OG.Constants.TERMINAL_TYPE.IN)
+        ];
+    };
+    OG.shape.To.prototype.clone = function () {
+        return new OG.shape.To(this.label);
+    };
 
 	OG.Constants.DEFAULT_STYLE.EDGE["edge-type"] = "straight";
 	
@@ -345,17 +287,32 @@ var org_uengine_codi_mw3_webProcessDesigner_MappingPanel = function(objectId, cl
     this.rightTreeLoaded = false;
     
     var leftTreeId = mw3.getChildObjectId(this.objectId, 'leftTree');
+    var leftTreeObj = $('#' + mw3._getObjectDivId(leftTreeId));
     
-    console.log( $('#' + mw3._getObjectDivId(leftTreeId)) );
-    
-    $('#' + mw3._getObjectDivId(leftTreeId)).bind('loaded', function(align){
-//    	faceHelper.drawLine();
+    leftTreeObj.bind('loaded', {align : 'left'}, function(event){
+    	faceHelper.drawTerminals(this.id, true, canvas , null);
     }).bind('expanded', function(){
-    	console.log('expanded');
-    	//faceHelper.drawTerminals('tree2', false, canvas , null);
+    	faceHelper.drawTerminals(this.id, true, canvas , null);
     }).bind('collapsed', function(){
-    	console.log('collapsed');
+    	faceHelper.drawTerminals(this.id, true, canvas , null);
     });
+    var rightTreeId = mw3.getChildObjectId(this.objectId, 'rightTree');
+    var rightTreeObj = $('#' + mw3._getObjectDivId(rightTreeId));
+    rightTreeObj.bind('loaded', {align : 'right'}, function(event){
+    	faceHelper.drawTerminals(this.id, false, canvas , null);
+    }).bind('expanded', function(){
+    	faceHelper.drawTerminals(this.id, false, canvas , null);
+    }).bind('collapsed', function(){
+    	faceHelper.drawTerminals(this.id, false, canvas , null);
+    });
+    	//console.log('loaded');
+//    	faceHelper.drawLine();
+//    }).bind('expanded', function(){
+//    	console.log('expanded');
+//    	//faceHelper.drawTerminals('tree2', false, canvas , null);
+//    }).bind('collapsed', function(){
+//    	console.log('collapsed');
+    //});
     
     drawLine = function(align){
     	if(align == 'left')
@@ -401,12 +358,76 @@ var org_uengine_codi_mw3_webProcessDesigner_MappingPanel = function(objectId, cl
 };
 
 org_uengine_codi_mw3_webProcessDesigner_MappingPanel.prototype= {
-		drawTerminals : function(treeId, isLeft , canvas, callback) {
-			$('.filemgr-tree.left .item-fix').each(function(event, ui){
-	        	console.log(this);
-	        	
-	        	// draw
-	        });
+		drawTerminals : function(treeDivId, isLeft , canvas, callback) {
+			var treeId = null;
+			if(isLeft){
+				treeId = mw3.getChildObjectId(this.objectId, 'leftTree');
+			}else{
+				treeId = mw3.getChildObjectId(this.objectId, 'rightTree');
+			}
+			
+			$('#' + treeDivId+' .item-fix').each(function(idx, item) {
+				if(!($(this).hasClass('root'))){
+					var objectId = $(this).attr('objectId');
+					var object = mw3.getObject(objectId);
+					var id = object.id;
+					var text = object.name;
+					var shapeId = (isLeft ? 'FROM_' : 'TO_') + id;
+					var isView = true;
+					var closedParentObjectId = mw3.getFaceHelper(treeId).getClosedParentNodes(objectId);
+					var closedParentObject = mw3.objects[closedParentObjectId];
+					if( object.type != 'folder' && closedParentObject != null ){
+						isView = false;
+					}
+					
+					if( isView ){
+						var shapeElement = canvas.drawShape(
+		                    [(isLeft ? 5 : 295), ( $(this).offset().top - $('#canvas2').offset().top ) + item.offsetHeight / 2],
+		                    (isLeft ? new OG.From() : new OG.To()),
+		                    [5, 5],
+		                    {},
+		                    shapeId
+						);
+
+						edgeIds = $(shapeElement).attr(isLeft ? "_toedge" : "_fromedge");
+						if (edgeIds) {
+							$.each(edgeIds.split(","), function (indx, edgeId) {
+								edge = canvas.getElementById(edgeId);
+								edge.shape.geom.style.map['stroke-dasharray'] = '';
+							});
+						}
+						$(shapeElement).click("destroy");
+						canvas.removeAllGuide();
+						canvas.redrawConnectedEdge(shapeElement);
+						canvas.show(shapeElement);
+					}else{
+						var shapeElement = canvas.getElementById(shapeId);
+						if (shapeElement) {
+							var parentNode = $('.item-fix[objectId='+ closedParentObjectId+']');
+							shapeElement = canvas.drawShape(
+									[(isLeft ? 5 : 295), ( parentNode.offset().top - $('#canvas2').offset().top ) + parentNode[0].offsetHeight / 2],
+									(isLeft ? new OG.From() : new OG.To()),
+									[5, 5],
+									{},
+									shapeId
+							);
+
+							edgeIds = $(shapeElement).attr(isLeft ? "_toedge" : "_fromedge");
+							if (edgeIds) {
+								$.each(edgeIds.split(","), function (indx, edgeId) {
+									edge = canvas.getElementById(edgeId);
+									edge.shape.geom.style.map['stroke-dasharray'] = '--';
+								});
+							}
+							console.log(shapeElement);
+							$(shapeElement).click("destroy");
+							canvas.removeAllGuide();
+							canvas.redrawConnectedEdge(shapeElement);
+							canvas.hide(shapeElement);
+						}
+					}
+				}
+			});
 		},
 		drawTerminal : function(treeId, isLeft , canvas, callback) {
 		    var tree = $('#' + treeId), id, text, shapeId, shapeElement, parentNode, edgeIds, edge, i,
