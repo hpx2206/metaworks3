@@ -75,88 +75,72 @@ public class MappingPanel implements ContextAware {
 		loadTree();
 	}
 	public void loadTree() throws Exception{
-		RoleTreeNode rootNode = new RoleTreeNode();
-		rootNode.setRoot(true);
-		rootNode.setId("root");
-		rootNode.setName("getSchemaLocation");
-		rootNode.setType(TreeNode.TYPE_FOLDER);
 		
-		rootNode.setLoaded(true);
-		rootNode.setExpanded(true);
+		//Tree rightTree = new Tree();
 		
-		if( this.getPrcsValiableList() != null){
-			RoleTreeNode valiableNode = new RoleTreeNode();
-			valiableNode.setId("valiables");
-			valiableNode.setName("Valiables");
-			valiableNode.setParentId("root");
-			valiableNode.setType(TreeNode.TYPE_FOLDER);
-			valiableNode.setLoaded(true);
-			valiableNode.setExpanded(true);
-			rootNode.add(valiableNode);
-			
-			for(int i = 0; i < prcsValiableList.size(); i++){
-				PrcsValiable prcsValiable = prcsValiableList.get(i);
-				String nameAttr = prcsValiable.getName();
-				String typeIdAttr = prcsValiable.getTypeId();
-				String typeAttr = prcsValiable.getDataType().getSelected();
-				
-				RoleTreeNode node = new RoleTreeNode();
-				node.setId(nameAttr);
-				node.setName(nameAttr);
-				node.setParentId("valiables");
-				node.setType(TreeNode.TYPE_FILE_HTML);
-				node.setLoaded(true);
-				node.setExpanded(true);
-				valiableNode.add(node);
-				// TODO 처음에 로딩할 필요가 없다면 아래 루프 부분은 클릭시 작동하는걸로 뺀다. 
-				// RoleTreeNode 를 따로 만들어 주어야 한다.
-				if( "complexType".equals(typeAttr)){
-					WebObjectType wot = MetaworksRemoteService.getInstance().getMetaworksType( typeIdAttr.substring(0, typeIdAttr.lastIndexOf(".")).replaceAll("/", ".") ); 
-					WebFieldDescriptor wfields[] = wot.getFieldDescriptors();
-					FieldDescriptor fields[] = wot.metaworks2Type().getFieldDescriptors();
-					for(int j=0; j<fields.length; j++){
-						WebFieldDescriptor wfd = wfields[j];
-//						FieldDescriptor fd = fields[i];
-						RoleTreeNode childNode = new RoleTreeNode();
-						childNode.setId(nameAttr + "." + wfd.getName());
-						childNode.setName(wfd.getName());
-						childNode.setParentId(nameAttr);
-						childNode.setType(TreeNode.TYPE_FILE_TEXT);
-						node.add(childNode);
-					}
-				}
-			}
-		}
-		if( this.getRoleList() != null){
-			RoleTreeNode roleNode = new RoleTreeNode();
-			roleNode.setId("roles");
-			roleNode.setName("Roles");
-			roleNode.setParentId("root");
-			roleNode.setType(TreeNode.TYPE_FOLDER);
-			roleNode.setLoaded(true);
-			roleNode.setExpanded(false);
-			for(int i = 0; i < roleList.size(); i++){
-				Role role = roleList.get(i);
-				RoleTreeNode node = new RoleTreeNode();
-				node.setId(role.name);
-				node.setName(role.name);
-				node.setParentId("roles");
-				node.setType(TreeNode.TYPE_FILE_HTML);
-				roleNode.add(node);
-			}
-			rootNode.add(roleNode);
-		}
+		/*
+		 * load left tree
+		 */
+		RoleTreeNode leftRoleNode = new RoleTreeNode();
+		leftRoleNode.setId("leftRoles");
+		leftRoleNode.setType(TreeNode.TYPE_FOLDER);
+		leftRoleNode.load(this.getRoleList());
+
+		VariableTreeNode leftVariableTreeNode = new VariableTreeNode();
+		leftVariableTreeNode.setId("leftVariables");
+		leftVariableTreeNode.setType(TreeNode.TYPE_FOLDER);
+		leftVariableTreeNode.load(this.getPrcsValiableList());
 		
-		Tree tree = new Tree();
-		tree.setNode(rootNode);
-		tree.setAlign(tree.ALIGN_LEFT);
-		this.setLeftTree(tree);
+		TreeNode leftRootnode = new TreeNode();
+		leftRoleNode.setRoot(true);
+		leftRootnode.setId("leftRoot");
+		leftRootnode.setName("left");
+		leftRootnode.setType(TreeNode.TYPE_FOLDER);
+		leftRootnode.setLoaded(true);
+		leftRootnode.setExpanded(true);
 		
-		Tree tree2 = new Tree();
-		tree2.setNode(rootNode);
-		tree2.setAlign(tree.ALIGN_RIGHT);
-		this.setRightTree(tree2);
+		leftRootnode.add(leftRoleNode);
+		leftRootnode.add(leftVariableTreeNode);
+		
+		
+		Tree leftTree = new Tree();
+		leftTree.setNode(leftRootnode);
+		
+		this.setLeftTree(leftTree);
+		
+		
+		/*
+		 * load right tree
+		 */
+		RoleTreeNode rightRoleNode = new RoleTreeNode();
+		rightRoleNode.setId("rightRoles");
+		rightRoleNode.setType(TreeNode.TYPE_FOLDER);
+		rightRoleNode.load(this.getRoleList());
+
+		VariableTreeNode rightVariableTreeNode = new VariableTreeNode();
+		rightVariableTreeNode.setId("rightVariables");
+		rightVariableTreeNode.setType(TreeNode.TYPE_FOLDER);
+		rightVariableTreeNode.load(this.getPrcsValiableList());
+		
+		TreeNode rightRootnode = new TreeNode();
+		rightRootnode.setRoot(true);
+		rightRootnode.setId("rightRoot");
+		rightRootnode.setName("right");
+		rightRootnode.setType(TreeNode.TYPE_FOLDER);
+		rightRootnode.setLoaded(true);
+		rightRootnode.setExpanded(true);
+		
+		rightRootnode.add(rightRoleNode);
+		rightRootnode.add(rightVariableTreeNode);
+		
+		Tree rightTree = new Tree();
+		rightTree.setNode(rightRootnode);
+		
+		this.setRightTree(rightTree);
+		
+		
 	}
+	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] doSaveMapper() throws Exception{
 		GeomShape geomShape = new GeomShape();
