@@ -101,6 +101,8 @@ public class TreeNode {
 	 * private function
 	 */
 	public void add(TreeNode node) {
+		node.setParentId(this.getId());
+		
 		this.getChild().add(node);
 	}
 	
