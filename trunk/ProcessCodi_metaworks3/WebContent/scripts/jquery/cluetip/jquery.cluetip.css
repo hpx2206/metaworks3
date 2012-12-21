@@ -83,7 +83,7 @@
 #addContact-con {left: 213px; bottom: 30px; width: 275px; display: block; position: absolute; z-index: 97; display:none;}
 #editicon-con {right: 213px; top: 190px; width: 560px; display: block; position: absolute; z-index: 97; display:none;}
 #clickhelp {right: 45px; top: 50px; width: 200px; display: none; position: absolute; z-index: 97;}
-#cluetip-outer {height: auto; overflow: visible; position: relative; z-index: 97;}
+#cluetip-outer {height: auto; overflow: visible; position: relative;}
 
 
 .cluetip-rounded {
