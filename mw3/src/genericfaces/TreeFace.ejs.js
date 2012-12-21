@@ -12,7 +12,3 @@ var TreeFace = function(objectId, className){
 	if('java.util.ArrayList' != this.objectDiv.parent().attr('classname'))		
 		this.objectDiv.addClass('filemgr-tree').addClass('filemgr-treeFocus')
 }
-
-TreeFace.prototype = {
-
-}
