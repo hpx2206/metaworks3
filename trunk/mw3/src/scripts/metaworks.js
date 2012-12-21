@@ -267,7 +267,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				this.base = base;
 			}
 			
-			Metaworks3.prototype.loadFaceHelper = function(objectId){
+			Metaworks3.prototype.loadFaceHelper = function(objectId, actualface){
 				
 //				if(!mw3.objects[objectId]){
 //					return null;
@@ -292,17 +292,24 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				if(!this.face_ObjectIdMapping[objectId])					
 					return null;
 				
-				
-				var face = this.face_ObjectIdMapping[objectId].face;
-				var className = this.face_ObjectIdMapping[objectId].className;
-				
+				var face = null;
+				var className = null;
 
+				
+				for(var i=0; i<this.face_ObjectIdMapping[objectId].length; i++){
+					if(this.face_ObjectIdMapping[objectId][i].face == actualface){
+						face = this.face_ObjectIdMapping[objectId][i].face;
+						className = this.face_ObjectIdMapping[objectId][i].className;
+
+						break;
+					}
+				}
+				
 				// load faceHelper
 				var faceHelperClass = this.loadedScripts[face];
 				if(!faceHelperClass)
 					return null;
-				
-				
+
 				var thereIsHelperClass = false;
 				try{
 					//console.debug('eval faceHelper [' + objectId + '] -> ' + face);					
@@ -310,7 +317,6 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					thereIsHelperClass = true;
 					
 					if(thereIsHelperClass){
-						
 						try{
 							var faceHelper = eval("new " + faceHelperClass + "('" + objectId + "', '"+ className + "')");
 							
@@ -380,7 +386,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			    		objectIds = mw3.objectIds_FaceMapping[face];								    		
 						
 						for(var objectId in objectIds){
-							if(mw3.loadFaceHelper(objectId) != null){
+							if(mw3.loadFaceHelper(objectId, face) != null){
 								mw3.afterLoadFaceHelper[i] = null;
 								mw3.objectIds_FaceMapping[face] = null;
 
@@ -440,6 +446,11 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				this.when = when;
 			};
 
+			Metaworks3.prototype.setHow = function(how){
+				this.how = how;
+			};
+
+			
 			Metaworks3.prototype.setContext = function(context){
 				if(context.where!=null)
 					this.setWhere(context.where);
@@ -448,7 +459,9 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					this.setWhen(context.when);
 				}
 				
-				this.how = context.how;
+				if(context.how != null){
+					this.how = context.how;
+				}
 			};
 			
 			Metaworks3.prototype.getContext = function(){
@@ -686,7 +699,6 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 
 			
 			Metaworks3.prototype.showObject = function (object, objectTypeName, target){
-				
 					var objectId;
 					var targetDiv;
 					var options;
@@ -714,11 +726,12 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 						objectTypeName = typeNameAndFace[0];
 					}
 					
+										
 					var metadata = this.getMetadata(objectTypeName);
-					
 					
 					//set the context if there's some desired 
 					var currentContextWhen = this.when;
+					
 					
 					if(object && object.metaworksContext){
 						this.setContext(object.metaworksContext);
@@ -726,6 +739,10 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 
 					if(options && options['when']){
 						this.setWhen(options['when']);
+					}
+					
+					if(options && options['how']){
+						this.setHow(options['how']);
 					}
 					
 					
@@ -746,7 +763,6 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 						actualFace = metadata.faceForArray ? metadata.faceForArray : 'dwr/metaworks/genericfaces/ArrayFace.ejs';
 
 					}else{
-
 						if(object && object.constructor && object.constructor.toString().indexOf('Array') != -1){
 							
 							try{
@@ -757,7 +773,6 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 						}
 
 						if(!actualFace){
-							
 							var faceMappingByContext = metadata.faceMappingByContext;
 							
 							if(faceMappingByContext)
@@ -807,8 +822,6 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 							
 					}				
 					
-
-					
 					var editFunction = "mw3.editObject('" + objectId + "', '" + objectTypeName + "')";
 					
 					//create links between objectId and face bi-directionally
@@ -816,7 +829,9 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 							face: actualFace,
 							className: objectTypeName
 					};
-					this.face_ObjectIdMapping[objectId] = faceInfo;
+					this.face_ObjectIdMapping[objectId] = [];
+					this.face_ObjectIdMapping[objectId].push(faceInfo);					
+					
 					if(this.objectIds_FaceMapping [actualFace] == null){
 						this.objectIds_FaceMapping [actualFace]={};
 					}
@@ -845,12 +860,10 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 							object['__descriptor'] = descriptor;
 					}
 					
-					
 					if(actualFace.indexOf("genericfaces") == 0){ //TODO: will need to be optional
 						actualFace = "dwr/metaworks/" + actualFace;
 					}					
 					mw3._importFaceHelper(actualFace);
-					
 					
 					try {
 						//alert("selected face : " + actualFace);
@@ -887,18 +900,31 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 								actualFace = "dwr/metaworks/" + actualFace;
 							}
 							
+							var faceInfo = {
+									face: actualFace,
+									className: objectTypeName
+							};
+							
+							mw3.face_ObjectIdMapping[objectId].push(faceInfo);
+							
+							if(mw3.objectIds_FaceMapping [actualFace] == null){
+								mw3.objectIds_FaceMapping [actualFace]={};
+							}							
+							mw3.objectIds_FaceMapping [actualFace][objectId] = faceInfo;
+							
+							mw3._importFaceHelper(actualFace);
+							
 							var url = mw3.base + (actualFace.indexOf('dwr') == 0 ? '/':'/metaworks/') + actualFace;
 
 							return mw3._template(url, contextValues);
 				   		};
 				   		
+				   		
 						var html = mw3._template(url, contextValues);
-						
 						//$(targetDiv).jqote(templateEngine, contextValues);
-						
 						//#DEBUG POINT
 						$(targetDiv).html(html);
-
+						
 						// object attr apply
 						var htmlAttr = (options && options['htmlAttr'] ? options['htmlAttr'] : null);
 						
@@ -1084,7 +1110,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					   }
 						
 						
-
+						
 					   
 					//install context menu
 						
@@ -1147,7 +1173,8 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 								   $('#' + targetDivId).attr('contextMenu', 'true');
 							   }
 						   }
-					   }						
+					   }		
+					   
 					} catch(e) {
 						this.template_error(e, actualFace)
 						return
@@ -1215,14 +1242,14 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 						}
 					}
 				}
-				
+											
 				if(faceHelperIndex == 0){
 					this.afterLoadFaceHelperCount++;
 					
 					faceHelperIndex = this.afterLoadFaceHelperCount;						
 				}
 				this.afterLoadFaceHelper[faceHelperIndex] = actualFace;
-
+				
 				// import script				
 				if(!mw3.importScript(url, initializingFaceHelper))
 					return false;
@@ -3419,6 +3446,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					if(context['htmlTag']) options['htmlTag'] = context['htmlTag'];					
 					if(context['htmlAttr']) options['htmlAttr'] = context['htmlAttr'];					
 					if(context['htmlAttrChild']) options['htmlAttrChild'] = context['htmlAttrChild'];
+					if(context['ejsPath']) options['ejsPath'] = context['ejsPath'];
 				}
 			
 				if(!designMode){ //means general mode
