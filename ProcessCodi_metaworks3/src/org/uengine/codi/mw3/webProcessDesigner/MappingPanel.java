@@ -92,7 +92,7 @@ public class MappingPanel implements ContextAware {
 		leftVariableTreeNode.load(this.getPrcsValiableList());
 		
 		TreeNode leftRootnode = new TreeNode();
-		leftRoleNode.setRoot(true);
+		leftRootnode.setRoot(true);
 		leftRootnode.setId("leftRoot");
 		leftRootnode.setName("left");
 		leftRootnode.setType(TreeNode.TYPE_FOLDER);

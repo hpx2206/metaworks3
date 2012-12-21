@@ -285,20 +285,24 @@ var org_uengine_codi_mw3_webProcessDesigner_MappingPanel = function(objectId, cl
     
     this.leftTreeLoaded = false;
     this.rightTreeLoaded = false;
+    this.loadDrawed = false;
     
     var leftTreeId = mw3.getChildObjectId(this.objectId, 'leftTree');
     var leftTreeObj = $('#' + mw3._getObjectDivId(leftTreeId));
     
     leftTreeObj.bind('loaded', {align : 'left'}, function(event){
+    	faceHelper.leftTreeLoaded = true;    	
     	faceHelper.drawTerminals(this.id, true, canvas , null);
     }).bind('expanded', function(){
     	faceHelper.drawTerminals(this.id, true, canvas , null);
     }).bind('collapsed', function(){
     	faceHelper.drawTerminals(this.id, true, canvas , null);
     });
+    
     var rightTreeId = mw3.getChildObjectId(this.objectId, 'rightTree');
     var rightTreeObj = $('#' + mw3._getObjectDivId(rightTreeId));
     rightTreeObj.bind('loaded', {align : 'right'}, function(event){
+    	faceHelper.rightTreeLoaded = true;
     	faceHelper.drawTerminals(this.id, false, canvas , null);
     }).bind('expanded', function(){
     	faceHelper.drawTerminals(this.id, false, canvas , null);
@@ -313,17 +317,6 @@ var org_uengine_codi_mw3_webProcessDesigner_MappingPanel = function(objectId, cl
 //    }).bind('collapsed', function(){
 //    	console.log('collapsed');
     //});
-    
-    drawLine = function(align){
-    	if(align == 'left')
-    		this.leftTreeLoaded = true;
-    	else if(align == 'right')
-    		this.rightTreeLoaded = true;
-    	
-    	if(this.leftTreeLoaded && this.rightTreeLoaded){
-    		
-    	}
-    };
     /*
      * 
     $('.filemgr-tree').bind('expanded', function(){
@@ -428,6 +421,13 @@ org_uengine_codi_mw3_webProcessDesigner_MappingPanel.prototype= {
 					}
 				}
 			});
+			
+			if(!this.loadDrawed){
+				if(this.leftTreeLoaded && this.rightTreeLoaded)
+					this.drawLine();
+			}
+			
+			
 		},
 		drawTerminal : function(treeId, isLeft , canvas, callback) {
 		    var tree = $('#' + treeId), id, text, shapeId, shapeElement, parentNode, edgeIds, edge, i,
@@ -508,10 +508,15 @@ org_uengine_codi_mw3_webProcessDesigner_MappingPanel.prototype= {
 		    	callback();
 		},
 		drawLine : function(){
+			this.loadDrawed = true;
+			
 			var object = mw3.objects[this.objectId];
 		    if( object != null && object.mapperData != null ){
+		    	console.log(object.mapperData);
+		    	
+		    	this.icanvas.clear();
 				this.icanvas.loadJSON($.parseJSON(object.mapperData));
-		    }
+		    }		    
 		},
 		getValue : function(){
 			var object = mw3.objects[this.objectId];
