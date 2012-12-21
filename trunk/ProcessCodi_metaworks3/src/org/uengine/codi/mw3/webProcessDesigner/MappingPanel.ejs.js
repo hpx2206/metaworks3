@@ -2,6 +2,8 @@ var org_uengine_codi_mw3_webProcessDesigner_MappingPanel = function(objectId, cl
 	// default setting
 	this.objectId = objectId;
 	this.className = className;
+	this.linekdInfo;
+	var linekdInfo = new ArrayList();
 	var faceHelper = this;
 	var canvas = null;
 	OG.shape.From = function (label) {
@@ -71,217 +73,6 @@ var org_uengine_codi_mw3_webProcessDesigner_MappingPanel = function(objectId, cl
         collapsible     : false,
         enableHotKey    : true
     });
-    /*
-    $("#tree1").jstree({
-        "core"     : {
-            "animation": 0
-        },
-        "themes"   : {
-            "theme": "classic",
-            "dots" : false,
-            "icons": true
-        },
-        "plugins"  : [ "themes", "json_data" ],
-        "json_data": {
-            "data": [
-                {
-                    "data"    : "getSchemaLocation",
-                    "attr"    : { "id": "tree1_1" },
-                    "state"   : "open",
-                    "children": [
-                        {
-                            "data"    : "Variables",
-                            "attr"    : { "id": "tree1_2" },
-//                            "state"   : "open",
-                            "children": [
-                                {
-                                    "data": "Duration",
-                                    "attr": { "id": "tree1_21" }
-                                },
-                                {
-                                    "data": "notes",
-                                    "attr": { "id": "tree1_22" }
-                                },
-                                {
-                                    "data": "startDate",
-                                    "attr": { "id": "tree1_23" }
-                                }
-                            ]
-                        },
-                        {
-                            "data"    : "Roles",
-                            "attr"    : { "id": "tree1_3" },
-                            "state"   : "open",
-                            "children": [
-                                {
-                                    "data": "Initiator",
-                                    "attr": { "id": "tree1_31" }
-                                }
-                            ]
-                        },
-                        {
-                            "data"    : "Instance",
-                            "attr"    : { "id": "tree1_4" },
-                            "state"   : "open",
-                            "children": [
-                                {
-                                    "data": "instanceId",
-                                    "attr": { "id": "tree1_41" }
-                                },
-                                {
-                                    "data": "name",
-                                    "attr": { "id": "tree1_42" }
-                                },
-                                {
-                                    "data": "locale",
-                                    "attr": { "id": "tree1_43" }
-                                }
-                            ]
-                        },
-                        {
-                            "data"    : "Activities",
-                            "attr"    : { "id": "tree1_5" },
-                            "state"   : "open",
-                            "children": [
-                                {
-                                    "data"    : "일정",
-                                    "attr"    : { "id": "tree1_51" },
-                                    "state"   : "open",
-                                    "children": [
-                                        {
-                                            "data": "startedTime",
-                                            "attr": { "id": "tree1_511" }
-                                        },
-                                        {
-                                            "data": "endTime",
-                                            "attr": { "id": "tree1_512" }
-                                        },
-                                        {
-                                            "data": "dueDate",
-                                            "attr": { "id": "tree1_513" }
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ]
-        }
-    }).bind('loaded.jstree',function (event, data) {
-    			faceHelper.drawTerminal('tree1', true, canvas, function(){faceHelper.drawLine();});
-            }).bind('after_open.jstree',function (event, data) {
-            	faceHelper.drawTerminal('tree1', true, canvas);
-            }).bind('after_close.jstree', function (event, data) {
-            	faceHelper.drawTerminal('tree1', true, canvas);
-            });
-
-    $("#tree2").jstree({
-        "core"     : {
-            "rtl"      : true,
-            "animation": 0
-        },
-        "themes"   : {
-            "theme": "classic",
-            "dots" : false,
-            "icons": true
-        },
-        "plugins"  : [ "themes", "json_data" ],
-        "json_data": {
-            "data": [
-                {
-                    "data"    : "getSchemaLocation",
-                    "attr"    : { "id": "tree2_1" },
-                    "state"   : "open",
-                    "children": [
-                        {
-                            "data"    : "Variables",
-                            "attr"    : { "id": "tree2_2" },
-                            "state"   : "open",
-                            "children": [
-                                {
-                                    "data": "Duration",
-                                    "attr": { "id": "tree2_21" }
-                                },
-                                {
-                                    "data": "notes",
-                                    "attr": { "id": "tree2_22" }
-                                },
-                                {
-                                    "data": "startDate",
-                                    "attr": { "id": "tree2_23" }
-                                }
-                            ]
-                        },
-                        {
-                            "data"    : "Roles",
-                            "attr"    : { "id": "tree2_3" },
-                            "state"   : "open",
-                            "children": [
-                                {
-                                    "data": "Initiator",
-                                    "attr": { "id": "tree2_31" }
-                                }
-                            ]
-                        },
-                        {
-                            "data"    : "Instance",
-                            "attr"    : { "id": "tree2_4" },
-                            "state"   : "open",
-                            "children": [
-                                {
-                                    "data": "instanceId",
-                                    "attr": { "id": "tree2_41" }
-                                },
-                                {
-                                    "data": "name",
-                                    "attr": { "id": "tree2_42" }
-                                },
-                                {
-                                    "data": "locale",
-                                    "attr": { "id": "tree2_43" }
-                                }
-                            ]
-                        },
-                        {
-                            "data"    : "Activities",
-                            "attr"    : { "id": "tree2_5" },
-                            "state"   : "open",
-                            "children": [
-                                {
-                                    "data"    : "일정",
-                                    "attr"    : { "id": "tree2_51" },
-                                    "state"   : "open",
-                                    "children": [
-                                        {
-                                            "data": "startedTime",
-                                            "attr": { "id": "tree2_511" }
-                                        },
-                                        {
-                                            "data": "endTime",
-                                            "attr": { "id": "tree2_512" }
-                                        },
-                                        {
-                                            "data": "dueDate",
-                                            "attr": { "id": "tree2_513" }
-                                        }
-                                    ]
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ]
-        }
-    }).bind('loaded.jstree',function (event, data) {
-    			faceHelper.drawTerminal('tree2', false, canvas, function(){faceHelper.drawLine();});
-            }).bind('after_open.jstree',function (event, data) {
-            	faceHelper.drawTerminal('tree2', false, canvas , null);
-            }).bind('after_close.jstree', function (event, data) {
-            	faceHelper.drawTerminal('tree2', false, canvas , null );
-            });
-	*/
-    
     
     this.leftTreeLoaded = false;
     this.rightTreeLoaded = false;
@@ -303,36 +94,29 @@ var org_uengine_codi_mw3_webProcessDesigner_MappingPanel = function(objectId, cl
     var rightTreeObj = $('#' + mw3._getObjectDivId(rightTreeId));
     rightTreeObj.bind('loaded', {align : 'right'}, function(event){
     	faceHelper.rightTreeLoaded = true;
-    	faceHelper.drawTerminals(this.id, false, canvas , null);
+		faceHelper.drawTerminals(this.id, false, canvas , null);
     }).bind('expanded', function(){
     	faceHelper.drawTerminals(this.id, false, canvas , null);
     }).bind('collapsed', function(){
     	faceHelper.drawTerminals(this.id, false, canvas , null);
     });
-    	//console.log('loaded');
-//    	faceHelper.drawLine();
-//    }).bind('expanded', function(){
-//    	console.log('expanded');
-//    	//faceHelper.drawTerminals('tree2', false, canvas , null);
-//    }).bind('collapsed', function(){
-//    	console.log('collapsed');
-    //});
-    /*
-     * 
-    $('.filemgr-tree').bind('expanded', function(){
-    	console.log('expanded');
-    	faceHelper.drawTerminals('tree2', false, canvas , null);
-    }).bind('collapsed', function(){
-    	console.log('collapsed');
-    });
-    */
     
     canvas.onConnectShape(function (event, edgeElement, fromElement, toElement) {
         console.log('connected!', fromElement.id, '--->', toElement.id);
+        var linkedInfoStr = fromElement.id + "," + toElement.id;
+        linekdInfo.add(linkedInfoStr);
+        this.linekdInfo = linekdInfo;
     });
 
     canvas.onDisconnectShape(function (event, edgeElement, fromElement, toElement) {
         console.log('disconnected!', fromElement.id, '-/->', toElement.id);
+        var linkedInfoStr = fromElement.id + "," + toElement.id;
+        for(var i = 0; i < linekdInfo.size(); i++){
+        	if( linekdInfo.get(i) == linkedInfoStr){
+        		linekdInfo.remove(i);
+        	}
+        }
+        this.linekdInfo = linekdInfo;
     });
 
     $(canvas.getRootElement()).bind('contextmenu', function (event) {
@@ -412,7 +196,6 @@ org_uengine_codi_mw3_webProcessDesigner_MappingPanel.prototype= {
 									edge.shape.geom.style.map['stroke-dasharray'] = '--';
 								});
 							}
-							console.log(shapeElement);
 							$(shapeElement).click("destroy");
 							canvas.removeAllGuide();
 							canvas.redrawConnectedEdge(shapeElement);
@@ -422,90 +205,12 @@ org_uengine_codi_mw3_webProcessDesigner_MappingPanel.prototype= {
 				}
 			});
 			
-			if(!this.loadDrawed){
-				if(this.leftTreeLoaded && this.rightTreeLoaded)
-					this.drawLine();
-			}
+//			if(!this.loadDrawed){
+//				if(this.leftTreeLoaded && this.rightTreeLoaded)
+//					this.drawLine();
+//			}
 			
 			
-		},
-		drawTerminal : function(treeId, isLeft , canvas, callback) {
-		    var tree = $('#' + treeId), id, text, shapeId, shapeElement, parentNode, edgeIds, edge, i,
-		            isParentOpen = function (node) {
-		                var parents = $(node).parents('li');
-		                for (i = parents.length - 1; i >= 0; i--) {
-		                    if (tree.jstree('is_closed', parents[i])) {
-		                        return false;
-		                    }
-		                }
-		                return true;
-		            },
-		            getParentClosedNode = function (node) {
-		                var parents = $(node).parents('li');
-		                for (i = parents.length - 1; i >= 0; i--) {
-		                    if (tree.jstree('is_closed', parents[i])) {
-		                        return parents[i];
-		                    }
-		                }
-		                return null;
-		            };
-		    
-		    $('#' + treeId + ' .jstree-leaf').each(function (idx, item) {
-		        id = $(item).attr('id');
-		        text = $(item).children('a').text();
-		        shapeId = (isLeft ? 'FROM_' : 'TO_') + id;
-		        if (isParentOpen(item) && tree.jstree('is_leaf', item)) {
-		            shapeElement = canvas.drawShape(
-		                    [(isLeft ? 5 : 295), item.offsetTop + item.offsetHeight / 2],
-		                    (isLeft ? new OG.From() : new OG.To()),
-		                    [5, 5],
-		                    {},
-		                    shapeId
-		            );
-
-		            edgeIds = $(shapeElement).attr(isLeft ? "_toedge" : "_fromedge");
-		            if (edgeIds) {
-		                $.each(edgeIds.split(","), function (indx, edgeId) {
-		                    edge = canvas.getElementById(edgeId);
-		                    edge.shape.geom.style.map['stroke-dasharray'] = '';
-		                });
-		            }
-
-		            $(shapeElement).click("destroy");
-		            canvas.removeAllGuide();
-		            canvas.redrawConnectedEdge(shapeElement);
-		            canvas.show(shapeElement);
-		        } else {
-		            shapeElement = canvas.getElementById(shapeId);
-		            if (shapeElement) {
-		                parentNode = getParentClosedNode(item);
-		                shapeElement = canvas.drawShape(
-		                        [(isLeft ? 5 : 295), parentNode.offsetTop + parentNode.offsetHeight / 2],
-		                        (isLeft ? new OG.From() : new OG.To()),
-		                        [5, 5],
-		                        {},
-		                        shapeId
-		                );
-
-		                edgeIds = $(shapeElement).attr(isLeft ? "_toedge" : "_fromedge");
-		                if (edgeIds) {
-		                    $.each(edgeIds.split(","), function (indx, edgeId) {
-		                        edge = canvas.getElementById(edgeId);
-		                        edge.shape.geom.style.map['stroke-dasharray'] = '--';
-		                    });
-		                }
-
-		                $(shapeElement).click("destroy");
-		                canvas.removeAllGuide();
-		                canvas.redrawConnectedEdge(shapeElement);
-		                canvas.hide(shapeElement);
-		            }
-		        }
-		    });
-		    
-		    
-		    if(typeof callback == 'function')
-		    	callback();
 		},
 		drawLine : function(){
 			this.loadDrawed = true;
@@ -517,6 +222,9 @@ org_uengine_codi_mw3_webProcessDesigner_MappingPanel.prototype= {
 		    	this.icanvas.clear();
 				this.icanvas.loadJSON($.parseJSON(object.mapperData));
 		    }		    
+		},
+		drawSavedData : function(){
+			// sended data role : " fromElementId , toElementId "//TODO, (in|out|inOut) " 
 		},
 		getValue : function(){
 			var object = mw3.objects[this.objectId];
