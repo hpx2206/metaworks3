@@ -1,34 +1,6 @@
 <%
 	if(value == null || typeof value == 'undefined')
 		return true;
-	
-	var nameField = null;
-	var childField = null;
-	
-	var childLoadMethod = null;	
-	
-	if(objectMetadata.nameFieldDescriptor)
-		nameField = fields[objectMetadata.nameFieldDescriptor.name];
-	
-	if(objectMetadata.childrenFieldDescriptor)
-		childField = fields[objectMetadata.childrenFieldDescriptor.name];
+%>
 		
-	if(objectMetadata.serviceMethodContexts){
-		for(var i=0; i<objectMetadata.serviceMethodContexts.length; i++){
-			var servceMethodContext = objectMetadata.serviceMethodContexts[i];
-			
-			if(servceMethodContext.childrenLoader)
-				childLoadMethod = methods[servceMethodContext.methodName];
-		}
-	}
-%>
-	<div onClick="<%=childLoadMethod.caller()%>">
-		<%=nameField.here()%>
-	</div>
-<%	
-	if(childField){
-%>
-	<%=childField.here()%>
-<%	
-	}
-%>
+<%=include('dwr/metaworks/genericfaces/TreeNodeFace.ejs')%>
