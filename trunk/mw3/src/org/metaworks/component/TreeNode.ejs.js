@@ -10,6 +10,9 @@ var org_metaworks_component_TreeNode = function(objectId, className){
 		return true;	
 	
 	this.nodeDiv = $('#' + this.objectDivId).children('div');
+	
+	this.nodeDiv.attr('objectId', this.objectId);
+	
 	var faceHelper = this;
 	
 	if('folder' == this.object.type){
@@ -103,13 +106,18 @@ org_metaworks_component_TreeNode.prototype = {
 			window.event.cancelBubble = true;
 		}
 		
-		var tree = this.objectDiv.parentsUntil('.filemgr-tree').parent('.filemgr-tree');
-		
-		if(!this.nodeDiv.hasClass('selected'))
-			tree.trigger('change', [this.objectId]);
-		
-		tree.find('.item-fix.selected').removeClass('selected');
-		this.nodeDiv.addClass('selected');
+		var tree = this.nodeDiv.parentsUntil('.filemgr-tree').parent('.filemgr-tree');
+				
+		if(!this.nodeDiv.hasClass('selected')){
+			tree.find('.item-fix.selected').removeClass('selected');
+			this.nodeDiv.addClass('selected');
+
+			tree.trigger('change', [this.objectId]);			
+		}else{
+			tree.find('.item-fix.selected').removeClass('selected');
+			this.nodeDiv.addClass('selected');			
+		}
+			
 	},
 	
 	action : function(){

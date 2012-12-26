@@ -9,7 +9,7 @@ var org_metaworks_component_Tree = function(objectId, className){
 	if(this.object == null)
 		return true;
 	
-	this.objectDiv.addClass('filemgr-tree').addClass('filemgr-treeFocus').addClass(this.object.align);
+	this.objectDiv.addClass('filemgr-tree').addClass('filemgr-treeFocus').addClass(this.object.align);	
 	this.objectDiv.css({'border-width': '0px',
 						'left': '0px', 
 						'top': '0px',
@@ -20,8 +20,9 @@ var org_metaworks_component_Tree = function(objectId, className){
 						'max-width': '10000px',
 						'max-height': '10000px'});
 	
-	this.objectDiv.bind('change', function(event, objectId){
-	});
+	
+	this.objectDiv.attr('objectId', this.objectId);
+	
 };
 
 org_metaworks_component_Tree.prototype = {
@@ -34,7 +35,6 @@ org_metaworks_component_Tree.prototype = {
 			return null;
 		
 		var parentObjectId = this.objectDiv.find('.item-fix[nodeId='+ object.parentId+']').attr('objectId');
-		
 		var parentObject = mw3.objects[parentObjectId];
 		
 		if( parentObject.expanded ){
@@ -52,5 +52,12 @@ org_metaworks_component_Tree.prototype = {
 			this.getParentNodes(parentObject.parentId);
 		}
 		*/
+	},
+	
+	getSelectedNode : function(){
+		
+		var node = this.objectDiv.find('.selected');		
+		
+		return node;
 	}
 };
