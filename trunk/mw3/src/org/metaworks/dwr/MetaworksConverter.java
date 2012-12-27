@@ -1,20 +1,14 @@
 package org.metaworks.dwr;
 
-import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
 import java.lang.reflect.Array;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.StringTokenizer;
-import java.util.TreeMap;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
 import org.directwebremoting.ConversionException;
 import org.directwebremoting.convert.ArrayConverter;
@@ -22,24 +16,15 @@ import org.directwebremoting.convert.BeanConverter;
 import org.directwebremoting.convert.ObjectConverter;
 import org.directwebremoting.convert.StringConverter;
 import org.directwebremoting.extend.ArrayOutboundVariable;
-import org.directwebremoting.extend.ConvertUtil;
-import org.directwebremoting.extend.ErrorOutboundVariable;
-import org.directwebremoting.extend.InboundContext;
 import org.directwebremoting.extend.InboundVariable;
 import org.directwebremoting.extend.ObjectOutboundVariable;
 import org.directwebremoting.extend.OutboundContext;
 import org.directwebremoting.extend.OutboundVariable;
 import org.directwebremoting.extend.Property;
-import org.directwebremoting.extend.PropertyDescriptorProperty;
-import org.directwebremoting.extend.ProtocolConstants;
-import org.directwebremoting.util.LocalUtil;
-import org.metaworks.FieldDescriptor;
-import org.metaworks.MetaworksContext;
-import org.metaworks.ObjectInstance;
 import org.metaworks.WebFieldDescriptor;
 import org.metaworks.WebObjectType;
-import org.metaworks.dao.IDAO;
 import org.metaworks.dao.Database;
+import org.metaworks.dao.IDAO;
 import org.metaworks.dao.MetaworksDAO;
 
 public class MetaworksConverter extends BeanConverter{
@@ -51,8 +36,7 @@ public class MetaworksConverter extends BeanConverter{
     {
     	
     	try {
-    		
-		 	if(paramType == Object.class){
+		 	if(paramType == Object.class || Modifier.isAbstract(paramType.getModifiers())){
 		 		if("string".equals(data.getType())){
 		 			paramType = String.class;
 		 			
@@ -65,6 +49,7 @@ public class MetaworksConverter extends BeanConverter{
 		 			ObjectConverter objectConverter = new ObjectConverter();
 		 			return objectConverter.convertInbound(paramType, data);
 		 		}
+
 
     		 //when unknown object from javascript, metaworks need to get the class Information from the JSON's property value '__className'
 			 	String value = data.getValue();
@@ -91,9 +76,7 @@ public class MetaworksConverter extends BeanConverter{
 			 	}
 			 	
 			}
-			   	
-			
-			
+				
 			if( paramType.isArray() || "array".equals(data.getType())){
 				
 				ArrayConverter arrayConverter = new ArrayConverter();
@@ -126,7 +109,7 @@ public class MetaworksConverter extends BeanConverter{
 				}
 				
 				
-			}else{
+			}else{					
 				return super.convertInbound(paramType, data);
 			}
 			
