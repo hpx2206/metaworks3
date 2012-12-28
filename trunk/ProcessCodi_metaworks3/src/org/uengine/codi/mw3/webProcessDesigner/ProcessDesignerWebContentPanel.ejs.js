@@ -166,6 +166,8 @@ var org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel = fun
 				
 				if( cellClassname != null ){
 					$('#'+cellId).attr("_classname",cellClassname);
+					var activityData = object.activityMap[cellId];
+					$('#'+cellId).data('activity', activityData);
 				}
 			}
 		}
@@ -200,26 +202,23 @@ var org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel = fun
 org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype.addEventGeom = function(objectId, canvas, element){
 	
 	var shape_id = $(element).attr("_shape_id");
-//	if( typeof $(element).attr("_tracingTag") != 'undefined' ){
-//		var activityData = {tracingTag : $(element).attr("_tracingTag")};
-//	}
-	if( typeof $(element).attr("_classname") != 'undefined' ){
+	if( typeof $(element).attr("_classname") != 'undefined' &&  typeof $(element).data("activity") == 'undefined' ){
 		var activityData = {__className : $(element).attr("_classname"), tracingTag : $(element).attr("_tracingTag")};
 		$(element).data('activity', activityData);
 	}
-	
-	if( shape_id == 'OG.shape.bpmn.D_Store' ){
-		// 데이터 매핑 
-		$(element).bind({
-			dblclick: function (event) {
-				var value = mw3.getObject(objectId);
-				value.tempElementId = $(this).attr('id');
-				value.tempElementName = $(this).children('[id$=_LABEL]').text();
-				value.tempElementData = JSON.stringify(canvas.getCustomData(element));
-				value.dataMapping();
-			}
-		});
-	}else{
+//	
+//	if( shape_id == 'OG.shape.bpmn.D_Store' ){
+//		// 데이터 매핑 
+//		$(element).bind({
+//			dblclick: function (event) {
+//				var value = mw3.getObject(objectId);
+//				value.tempElementId = $(this).attr('id');
+//				value.tempElementName = $(this).children('[id$=_LABEL]').text();
+//				value.tempElementData = JSON.stringify(canvas.getCustomData(element));
+//				value.dataMapping();
+//			}
+//		});
+//	}else{
 		// 그외 
 		$(element).on({
 	    	mouseup: function (event, ui) {
@@ -312,7 +311,7 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 				//mw3.onLoadFaceHelperScript();	    		
 	    	}
 	    });
-	}
+//	}
 };
 
 org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype.addEventEdge = function(objectId, canvas, element){
