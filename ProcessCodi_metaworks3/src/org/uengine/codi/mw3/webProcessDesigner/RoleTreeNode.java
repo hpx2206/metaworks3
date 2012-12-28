@@ -15,7 +15,7 @@ public class RoleTreeNode extends TreeNode {
 			Role role = roleList.get(i);			
 			
 			RoleTreeNode node = new RoleTreeNode();			
-			node.setId(role.getName());
+			node.setId("[roles]." + role.getName());
 			node.setName(role.getName());
 			node.setParentId(this.getId());
 			node.setType(TreeNode.TYPE_FILE_HTML);

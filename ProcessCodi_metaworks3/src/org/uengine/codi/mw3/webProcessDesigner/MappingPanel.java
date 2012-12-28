@@ -17,6 +17,7 @@ import org.metaworks.dao.Database;
 import org.metaworks.dao.IDAO;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.widget.ModalWindow;
+import org.uengine.kernel.ParameterContext;
 
 public class MappingPanel implements ContextAware {
 	MetaworksContext metaworksContext;
@@ -68,6 +69,15 @@ public class MappingPanel implements ContextAware {
 		public void setRightTree(Tree rightTree) {
 			this.rightTree = rightTree;
 		}
+		
+	ParameterContext[] mappingElements;
+		public ParameterContext[] getMappingElements() {
+			return mappingElements;
+		}
+		public void setMappingElements(ParameterContext[] mappingElements) {
+			this.mappingElements = mappingElements;
+		}
+		
 	public MappingPanel() throws Exception{
 		setMetaworksContext(new MetaworksContext());
 	}

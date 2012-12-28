@@ -407,6 +407,7 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 			ProcessDefinition def = (ProcessDefinition) GlobalContext.deserialize(bao.toString("UTF-8"));
 			// processDefinition setting
 			ArrayList<CanvasDTO> cellsList = (ArrayList<CanvasDTO>) def.getExtendedAttributes().get("cells");
+			activityMap = new HashMap<String, Object>();
 			if( cellsList != null){
 				CanvasDTO []cells = new CanvasDTO[cellsList.size()];
 				int tagCnt = 0;
@@ -416,6 +417,7 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 						this.setGraphString(cells[i].getJsonString());
 					}
 					if( cells[i].getTracingTag() != null ){
+						activityMap.put(cells[i].getId() , def.getActivity(cells[i].getTracingTag() ));
 						if( Integer.parseInt(cells[i].getTracingTag()) > tagCnt )
 							tagCnt = Integer.parseInt(cells[i].getTracingTag());
 					}
