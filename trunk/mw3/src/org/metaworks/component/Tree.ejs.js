@@ -34,7 +34,7 @@ org_metaworks_component_Tree.prototype = {
 		if(object.root)
 			return null;
 		
-		var parentObjectId = this.objectDiv.find('.item-fix[nodeId='+ object.parentId+']').attr('objectId');
+		var parentObjectId = this.objectDiv.find('.item-fix[id='+ object.parentId+']').attr('objectId');
 		var parentObject = mw3.objects[parentObjectId];
 		
 		if( parentObject.expanded ){
