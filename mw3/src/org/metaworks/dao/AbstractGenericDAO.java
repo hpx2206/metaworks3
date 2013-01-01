@@ -1141,30 +1141,36 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 						ORMapping ormapping = m.getAnnotation(ORMapping.class);
 						if(ormapping!=null){
 							
-							if(ormapping.availableWhen().length() > 0){
-								try{
-									String[] propAndValue = ormapping.availableWhen().split("==");
-									String availabilityCheckPropName = propAndValue[0].trim();
-									String availabilityCheckValue = propAndValue[1].trim();
-
-									Object value = (rowSet!=null ? rowSet.getObject(availabilityCheckPropName) : cache.get(availabilityCheckPropName));
-
-									Object comparer = null;
-									
-									if(availabilityCheckValue.startsWith("'")){ 
-										availabilityCheckValue = availabilityCheckValue.substring(1, availabilityCheckValue.length() - 1);
-										comparer = availabilityCheckValue;
-									}else{
-										comparer = new Integer(availabilityCheckValue);
+							if(ormapping.availableWhen().length > 0 && !ormapping.availableWhen()[0].equals("")){
+								boolean ormappingIsAvailable = false;
+								for( int i = 0; i < ormapping.availableWhen().length; i++){
+									try{
+										String[] propAndValue = ormapping.availableWhen()[i].split("==");
+										String availabilityCheckPropName = propAndValue[0].trim();
+										String availabilityCheckValue = propAndValue[1].trim();
+	
+										Object value = (rowSet!=null ? rowSet.getObject(availabilityCheckPropName) : cache.get(availabilityCheckPropName));
+	
+										Object comparer = null;
+										
+										if(availabilityCheckValue.startsWith("'")){ 
+											availabilityCheckValue = availabilityCheckValue.substring(1, availabilityCheckValue.length() - 1);
+											comparer = availabilityCheckValue;
+										}else{
+											comparer = new Integer(availabilityCheckValue);
+										}
+																	
+										ormappingIsAvailable = comparer.equals(value);
+										if( ormappingIsAvailable ){
+											break;
+										}
+										
+									}catch(Exception e){
+										
 									}
-																
-									boolean ormappingIsAvailable = comparer.equals(value);
-									if(!ormappingIsAvailable)
-										return null;
-									
-								}catch(Exception e){
-									
 								}
+								if(!ormappingIsAvailable)
+									return null;
 							}
 							
 							String[] ORMPropNames = ormapping.objectFields();

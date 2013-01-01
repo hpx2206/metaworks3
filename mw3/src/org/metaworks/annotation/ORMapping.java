@@ -8,5 +8,5 @@ public @interface ORMapping {
 	String[] objectFields();
 	String[] databaseFields();
 	boolean objectIsNullWhenFirstDBFieldIsNull() default false;
-	String availableWhen() default "";
+	String[] availableWhen() default "";
 }
