@@ -118,6 +118,8 @@ public class Main {
 			
 			//Since there's are too many input boxes there, it is removed.
 			contactWindow.getContactPanel().setSearchBox(null);
+
+			ContentWindow contentWindow = createNewInstancePanel(session);
 			
 			westLayout.setNorth(new  NavigationWindow(session));
 			westLayout.setCenter(contactWindow);
@@ -126,8 +128,6 @@ public class Main {
 			
 			Layout eastLayout = new Layout();
 			eastLayout.setWest(new  InstanceListWindow(session));
-			
-			ContentWindow contentWindow = createNewInstancePanel(session);
 			
 			eastLayout.setCenter(contentWindow);
 			eastLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, south__spacing_open:5, west__spacing_open:5, west__size:'60%'");
@@ -138,7 +138,8 @@ public class Main {
 			outerLayout.setNorth(processTopPanel);
 			
 			//Since there's already user portrait in the navigator for this full-fledged mode, the portrait is removed.
-			processTopPanel.setLoginUser(null);
+			//processTopPanel.setLoginUser(null);
+			
 			outerLayout.setWest(westLayout);
 			outerLayout.setCenter(eastLayout);		
 			outerLayout.setName("center");
