@@ -36,7 +36,8 @@ public class MetaworksConverter extends BeanConverter{
     {
     	
     	try {
-		 	if(paramType == Object.class || Modifier.isAbstract(paramType.getModifiers())){
+    		// TODO : Why is the value of the proxy object of Modifier.isAbstract true? need confirm
+		 	if(paramType == Object.class || (!Modifier.isInterface(paramType.getModifiers()) && Modifier.isAbstract(paramType.getModifiers()))){
 		 		if("string".equals(data.getType())){
 		 			paramType = String.class;
 		 			
