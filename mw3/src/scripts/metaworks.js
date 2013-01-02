@@ -61,7 +61,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				this.recentCallMethodName = null;
 				
 			    this.popupDivId;
-			    this.recentOpenerObjectId;
+			    this.recentOpenerObjectId = [];
 			    
 			    this.browser = this.browserCheck();
 			    	
@@ -1686,7 +1686,6 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			};
 				
 			Metaworks3.prototype.createInputId = function(objectId){
-				
 				return "_mapped_input_for_" + objectId;
 			};
 			
@@ -1786,8 +1785,6 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			Metaworks3.prototype.getAutowiredObject = function(className, requireExactOne){
 				
 				if(className.indexOf("@") > 0){
-					
-					
 					if(requireExactOne){
 						try{
 							return this.objects[this.objectId_KeyMapping[className]];
@@ -1936,7 +1933,8 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
         			}else if(serviceMethodContext.target=="popup"){
 
         				//store the recently added object Id for recent opener
-        				mw3.recentOpenerObjectId = objId;
+        				mw3.recentOpenerObjectId.push(objId);
+        				
 
         				if(placeholder){
         					mw3.removeObject(placeholder);
@@ -1955,13 +1953,14 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
         				mw3.locateObject(result, null, '#' + mw3.popupDivId);
 
         				//store the recently added object Id for recebt opener
-        				mw3.recentOpenerObjectId = objId;
-
+        				mw3.recentOpenerObjectId.push(objId);
+        				
         				//objId = mw3.targetObjectId;
         				
-        			}else if(serviceMethodContext.target=="opener" && mw3.recentOpenerObjectId){
+        			}else if(serviceMethodContext.target=="opener" && mw3.recentOpenerObjectId.length > 0){
         				
-        				mw3.setObject(mw3.recentOpenerObjectId, result);
+        				mw3.setObject(mw3.recentOpenerObjectId[mw3.recentOpenerObjectId.length - 1], result);
+        				mw3.recentOpenerObjectId.pop();
         				
         			}else{ //case of target is "auto"
         			
@@ -2117,7 +2116,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 //				}else{
 //				object = objId; //TODO: readability is bad.
 //			}
-				
+
 				//var thisMetaworks = this;
 				var divId = "objDiv_" + objId;
 				
@@ -3364,6 +3363,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				this.fieldDescriptor = fieldDescriptor;
 			};
 			
+			
 			FieldRef.prototype.here = function(context){
 				if(mw3.isHidden(this.fieldDescriptor))					
 					return "";
@@ -3542,19 +3542,4 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					rv = parseFloat(RegExp.$1);
 				} 
 				return rv;  
-			} 
-			
-	 		jQuery.fn.selectRange = function(start, end) {
-	 		    return this.each(function() {
-	 		        if (this.setSelectionRange) {
-	 		            this.focus();
-	 		            this.setSelectionRange(start, end);
-	 		        } else if (this.createTextRange) {
-	 		            var range = this.createTextRange();
-	 		            range.collapse(true);
-	 		            range.moveEnd('character', end);
-	 		            range.moveStart('character', start);
-	 		            range.select();
-	 		        }
-	 		    });
-	 		};			
+			} 		
