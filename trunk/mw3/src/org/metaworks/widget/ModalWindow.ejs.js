@@ -5,15 +5,15 @@ var org_metaworks_widget_ModalWindow = function(objectId, className) {
 
 	$('.mw3_layout').attr('fixed_size', true);
 	
-	var object = mw3.objects[this.objectId];
+	this.object = mw3.objects[this.objectId];
 
-	if(object){
-		var title = object.title;
+	if(this.object){
+		var title = this.object.title;
 		
 		if (title == null)
 			title = $('#title_' + objectId).val();
 		
-		if(object.metaworksContext && object.metaworksContext.where == 'mobile'){
+		if(this.object.metaworksContext && this.object.metaworksContext.where == 'mobile'){
 			var modal = $(this.divId);			
 			var popup = modal.parent();
 			
@@ -28,7 +28,7 @@ var org_metaworks_widget_ModalWindow = function(objectId, className) {
 			
 			$.mobile.changePage('#dialog_' + this.objectId);
 		}else{ 
-			if (object.open) {		
+			if (this.object.open) {		
 				var options = {};
 		
 				options['title'] = title;
@@ -37,45 +37,48 @@ var org_metaworks_widget_ModalWindow = function(objectId, className) {
 					mw3.getFaceHelper(objectId).close();
 				}
 		
-				var width = object.width;
+				var width = this.object.width;
 				var body_width = $('body').width();
 				if(width > body_width)
 					width = body_width;
 				
-				if (object.width)
+				if (this.object.width)
 					options['width'] = width;
 				
-				if (object.height)
-					options['height'] = object.height;
+				
+				if (this.object.height)
+					options['height'] = this.object.height;
 				else
 					options['height'] = $(window).height() - 100;
 				
 				$("#dialog:ui-dialog").dialog("destroy");
-				$(this.divId).dialog(options); //.css('height', '100%');;
+				$(this.divId).dialog(options).css('height', '100%');
 			} else {
 				$(this.divId).css('display', 'none');
 			}
 		}
-	}
-}
-
-org_metaworks_widget_ModalWindow.prototype.destroy = function() {
-	$('#objDiv_' + this.objectId).parent().empty();
+	};
 	
-	setTimeout(function(){
-		$('.mw3_layout').attr('fixed_size', false);
-	},500);
-}
+	this.destroy = function() {
+		$('#objDiv_' + this.objectId).parent().empty();
+		
+		setTimeout(function(){
+			$('.mw3_layout').attr('fixed_size', false);
+		},500);
+	};
 
-org_metaworks_widget_ModalWindow.prototype.close = function() {
-	mw3.removeObject(this.objectId);
-}
+	this.close = function() {
+		mw3.removeObject(this.objectId);
+	};
 
-org_metaworks_widget_ModalWindow.prototype.startLoading = function() {
-	$('#loader_' + this.objectId).show();
-}
+	/*
+	this.prototype.startLoading = function() {
+		$('#loader_' + this.objectId).show();
+	};
 
-org_metaworks_widget_ModalWindow.prototype.endLoading = function() {
-	$('#loader_' + this.objectId).hide();
-
+	this.prototype.endLoading = function() {
+		$('#loader_' + this.objectId).hide();
+	};
+	*/
+	
 }
