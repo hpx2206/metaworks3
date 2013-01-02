@@ -731,6 +731,8 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					
 					//set the context if there's some desired 
 					var currentContextWhen = this.when;
+					var currentContextWhere = this.where;
+					var currentContextHow = this.how;
 					
 					
 					if(object && object.metaworksContext){
@@ -741,9 +743,11 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 						this.setWhen(options['when']);
 					}
 					
+					/*
 					if(options && options['how']){
 						this.setHow(options['how']);
 					}
+					*/
 					
 					
 					if(options && options['ejsPath']){
@@ -1180,6 +1184,9 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 						return
 					} finally{
 						this.setWhen(currentContextWhen);
+						this.setWhere(currentContextWhere)
+						this.setHow(currentContextHow)
+
 					}
 					
 					
