@@ -16,7 +16,10 @@ public class ProcessTopPanel {
 		notificationBadge.session = session;
 		notificationBadge.refresh();
 		
-		setLoginUser(session.getUser());
+		IUser loginUser = new User();
+		loginUser.setUserId(session.getUser().getUserId());
+		loginUser.setName(session.getUser().getName());
+		setLoginUser(loginUser);
 	}
 	
 	WindowPanel windowPanel;
