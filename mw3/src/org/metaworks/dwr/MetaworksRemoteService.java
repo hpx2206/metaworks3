@@ -22,6 +22,7 @@ import org.directwebremoting.WebContextFactory;
 import org.directwebremoting.proxy.dwr.Util;
 import org.metaworks.FieldDescriptor;
 import org.metaworks.MetaworksContext;
+import org.metaworks.MetaworksException;
 import org.metaworks.ObjectInstance;
 import org.metaworks.WebObjectType;
 import org.metaworks.dao.ConnectionFactory;
@@ -295,7 +296,8 @@ public class MetaworksRemoteService {
 				return returned;
 		} catch (InvocationTargetException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			if(!(e.getTargetException() instanceof MetaworksException))
+				e.printStackTrace();
 			
 			throw e.getTargetException();
 		}
