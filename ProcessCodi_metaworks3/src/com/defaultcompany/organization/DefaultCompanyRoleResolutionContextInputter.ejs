@@ -1,0 +1,49 @@
+<%
+	var role = {
+		__className : 'org.uengine.kernel.Role'
+	};
+	
+	var roleMetadata = mw3.getMetadata(role.__className);
+	roleMetadata['how'] = 'selector';
+	
+	var roleHtml = mw3.locateObject(role, role.__className, null, roleMetadata);
+
+
+	var groupSelector = {
+		__className : 'org.uengine.codi.mw3.webProcessDesigner.GroupTreeSelector'
+	};
+	var groupSelectorHtml = mw3.locateObject(groupSelector, groupSelector.__className);
+
+
+	var roleSelector = {
+		__className : 'org.uengine.codi.mw3.webProcessDesigner.RoleTreeSelector',
+	};
+	var roleSelectorHtml = mw3.locateObject(roleSelector, roleSelector.__className);
+%>
+
+<table width="100%" border="1">
+	<tr>
+		<td width="200px"><input type="radio" name="group_<%=objectId%>" value="relativeGroup">the group that</td>
+		<td><%=roleHtml%></td>
+		<td>belongs to.</td>
+	</tr>
+	<tr>				
+		<td><input type="radio" name="group_<%=objectId%>" value="specifiedGroup">the specified group</td>
+		<td colspan="2"><%=groupSelectorHtml%></td>
+	</tr>
+	<tr>						
+		<td><input type="radio" name="group_<%=objectId%>" value="All">All</td>
+		<td colspan="2"></td>
+	</tr>
+</table>
+
+<table width="100%" border="1">
+	<tr>						
+		<td width="200px"><input type="radio" name="role_<%=objectId%>" value="specifiedRole">the specified role</td>		
+		<td><%=roleSelectorHtml%></td>
+	</tr>
+	<tr>						
+		<td><input type="radio" name="role_<%=objectId%>" value="All">All</td>
+		<td></td>
+	</tr>
+</table>
