@@ -13,7 +13,7 @@
 		  	if(fd.name == 'metaworksContext') continue;		
 %>			
 			<li>
-				<a href="#tab_<%=objectId%>_<%=i+1%>" id="title_<%=objectId%>_<%=i+1%>"><%=fd.displayName%></a>
+				<a href="#tab_<%=objectId%>_<%=i+1%>" id="title_<%=objectId%>_<%=i+1%>"><%=mw3.localize(fd.displayName)%></a>
 			</li>		
 <%
 		}
@@ -31,7 +31,7 @@
 		  	if(fd.attributes && fd.attributes['hidden']) continue;
 		  	if(fd.name == 'metaworksContext') continue;
 %>	
-			<div id="tab_<%=objectId%>_<%=i+1%>">	
+			<div id="tab_<%=objectId%>_<%=i+1%>" style="height: 100%">	
 				<%=fields[fd.name] ? fields[fd.name].here() : "XXX"%>
 			</div>
 		
