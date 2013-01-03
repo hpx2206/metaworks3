@@ -4,11 +4,14 @@ var org_uengine_codi_mw3_model_Popup = function(objectId, className) {
 	this.divId = "#objDiv_" + this.objectId;
 	this.divObj = $("#objDiv_" + this.objectId).parent();
 	
-	var zIndex = $('.ui-dialog').css('z-index');
-	if(zIndex)
+	var modalWindow = $('.ui-dialog');
+	
+	var zIndex = 100;
+	
+	if(modalWindow.length > 0){
+		zIndex = $(modalWindow[modalWindow.length-1]).css('z-index');
 		zIndex = String(Number(zIndex)+1);
-	else
-		zIndex = 100;
+	}		
 	
 	this.divObj.addClass("mw3_popup").attr("objectid", objectId).addClass("clue-right-rounded").addClass("cluetip-rounded").css({position:'absolute','z-index':zIndex,display:'none'});
 	
@@ -19,7 +22,7 @@ var org_uengine_codi_mw3_model_Popup = function(objectId, className) {
 //	var y = openerDiv.offset().top;
 	
 	this.createPopup(object.width, object.height, mw3.mouseX, mw3.mouseY);	
-}
+};
 
 org_uengine_codi_mw3_model_Popup.prototype = {
 	createPopup : function(w,h,x,y){
@@ -39,9 +42,9 @@ org_uengine_codi_mw3_model_Popup.prototype = {
 		parent.removeClass('clue-left-rounded');
 		parent.addClass('clue-right-rounded');
 		
+		var innerHeight = h-39;
 		
-		
-		$(divId + ' #addcontact-con').height(h-39);
+		$(divId + ' #addcontact-con').height(innerHeight);
 		arrow.css({top:10});
 		
 		if(bodyWidth && popLayerWidth + x > bodyWidth){
