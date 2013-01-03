@@ -317,6 +317,21 @@ public class Instance extends Database<IInstance> implements IInstance{
 			instanceSql
 					.append("and (inst.secuopt='0' OR (inst.secuopt=1 and exists (select rootinstid from BPM_ROLEMAPPING rm where rm.endpoint=?rmEndpoint and inst.rootinstid=rm.rootinstid))) ");
 			criteria.put("rmEndpoint", session.getEmployee().getEmpCode());
+			
+		}else if("organization.group"
+				.equals(session.getLastPerspecteType())) {
+			
+			String partCode = session.getEmployee().getPartCode();
+			
+			taskSql.append("and rolemapping.endpoint in (select empcode from emptable where partcode=?taskEndpoint) ");
+			criteria.put("taskEndpoint", session.lastSelectedItem);
+			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
+			criteria.put("instIsdelete", "1");
+			
+			// secureopt
+			instanceSql
+			.append("and (inst.secuopt='0' OR (inst.secuopt=1 and exists (select rootinstid from BPM_ROLEMAPPING rm where rm.endpoint=?rmEndpoint and inst.rootinstid=rm.rootinstid))) ");
+			criteria.put("rmEndpoint", session.getEmployee().getEmpCode());
 
 		}else if("process"
 				.equals(session.getLastPerspecteType())) {

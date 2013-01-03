@@ -114,4 +114,8 @@ public interface IDept extends IDAO {
 	
 	@ServiceMethod(target="append", where="picker")
 	public Object pickup() throws Exception;	
+
+	@ServiceMethod
+	public Object[] loadDeptList() throws Exception;
+	
 }

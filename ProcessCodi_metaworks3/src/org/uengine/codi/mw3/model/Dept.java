@@ -6,6 +6,7 @@ import org.metaworks.Remover;
 import org.metaworks.ToAppend;
 import org.metaworks.ToOpener;
 import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
 import org.uengine.codi.mw3.admin.AdminEastPanel;
 
@@ -249,6 +250,7 @@ public class Dept extends Database<IDept> implements IDept {
 				IEmployee employee = new Employee();
 				employee.setMetaworksContext(this.getMetaworksContext());
 				employee.getMetaworksContext().setHow("tree");
+				employee.getMetaworksContext().setWhere("navigator");
 				
 				EmployeeList employeeList = new EmployeeList();			
 				employeeList.setMetaworksContext(this.getMetaworksContext());
@@ -258,6 +260,11 @@ public class Dept extends Database<IDept> implements IDept {
 				setDeptEmployee(employeeList);
 			}
 		}
+	}
+	
+	@ServiceMethod
+	public Object[] loadDeptList() throws Exception {
+		return Perspective.loadInstanceListPanel(session, "organization.group",getPartCode());
 	}
 
 	@Override

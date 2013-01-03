@@ -3,7 +3,7 @@
 		if(mw3.how == 'tree'){
 %>
 		<div>	
-			<a onClick="<%=methods.drillDown.caller() %>" class="idept"><%=fields.partName.here() %></a>			
+			<a onClick="<%=methods.drillDown.caller()%>;<%=methods.loadDeptList.caller()%>" class="idept"><%=fields.partName.here()%></a>					
 <%
 			if(mw3.where=='deptPicker'){
 %>
