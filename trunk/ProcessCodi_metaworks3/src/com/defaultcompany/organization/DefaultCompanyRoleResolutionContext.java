@@ -2,25 +2,22 @@ package com.defaultcompany.organization;
 
 import java.util.Map;
 
-import org.metaworks.FieldDescriptor;
-import org.metaworks.Type;
 import org.uengine.kernel.ProcessDefinition;
 import org.uengine.kernel.ProcessInstance;
 import org.uengine.kernel.Role;
 import org.uengine.kernel.RoleMapping;
 import org.uengine.kernel.RoleResolutionContext;
-import org.uengine.processmanager.SimpleTransactionContext;
-import org.uengine.ui.XMLValueInput;
 import org.uengine.util.dao.ConnectiveDAO;
-import org.uengine.util.dao.GenericDAO;
 import org.uengine.util.dao.IDAO;
 
 public class DefaultCompanyRoleResolutionContext extends RoleResolutionContext {
 
 	private static final long serialVersionUID = org.uengine.kernel.GlobalContext.SERIALIZATION_UID;
+	
+	/*
 	private static final String URL_RoleListXML_JSP = "/usermanager/roleListXML.jsp";
 	private static final String URL_GroupListXML_JSP = "/usermanager/groupListXML.jsp";
-	
+
 	public static void metaworksCallback_changeMetadata(Type type){
 		RoleResolutionContext.metaworksCallback_changeMetadata(type); //call the super's one first
 
@@ -32,6 +29,7 @@ public class DefaultCompanyRoleResolutionContext extends RoleResolutionContext {
 		fd = type.getFieldDescriptor("GroupId");	
 		fd.setInputter(new XMLValueInput(URL_GroupListXML_JSP));
 	}
+	*/
 
 	public RoleMapping getActualMapping(
 		ProcessDefinition pd,

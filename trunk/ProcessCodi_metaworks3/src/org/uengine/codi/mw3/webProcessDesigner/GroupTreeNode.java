@@ -8,33 +8,15 @@ import org.metaworks.dao.IDAO;
 import org.metaworks.dao.MetaworksDAO;
 import org.metaworks.dao.TransactionContext;
 
-public class RoleTreeNode extends TreeNode {
-	
-	public void load(ArrayList<Role> roleList){
-		this.setName("roles");
-		this.setLoaded(true);
-		this.setExpanded(true);
-		
-		for(int i = 0; i < roleList.size(); i++){
-			Role role = roleList.get(i);			
-			
-			RoleTreeNode node = new RoleTreeNode();			
-			node.setId("[roles]." + role.getName());
-			node.setName(role.getName());
-			node.setParentId(this.getId());
-			node.setType(TreeNode.TYPE_FILE_HTML);
-			
-			this.add(node);
-		}
-	}
-	
+public class GroupTreeNode extends TreeNode {
+
 	public ArrayList<TreeNode> loadExpand() throws Exception{
 		
 		ArrayList<TreeNode> child = new ArrayList<TreeNode>();
 		
 		StringBuffer sb = new StringBuffer();
-		sb.append("SELECT roleCode, descr");
-		sb.append("  FROM roleTABLE");
+		sb.append("SELECT partcode, partname");
+		sb.append("  FROM parttable");
 		//sb.append("WHERE ISDELETED = '0'");
 		
 		IDAO dao = (IDAO)MetaworksDAO.createDAOImpl(TransactionContext.getThreadLocalInstance().getConnectionFactory(), sb.toString(), IDAO.class);
@@ -43,17 +25,16 @@ public class RoleTreeNode extends TreeNode {
 		
 		while(dao.next()){
 			GroupTreeNode node = new GroupTreeNode();
-			node.setId(dao.getString("roleCode"));
-			node.setName(dao.getString("descr"));
+			node.setId(dao.getString("partCode"));
+			node.setName(dao.getString("partName"));
 			node.setParentId(this.getId());
-			node.setType(TreeNode.TYPE_FILE_HTML);
+			node.setType(TreeNode.TYPE_FILE_CSS);
 			
 			child.add(node);
 		}
 		
 		this.setExpanded(true);
 		this.setLoaded(true);
-
 		
 		return child;
 	}
