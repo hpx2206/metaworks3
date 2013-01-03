@@ -232,14 +232,11 @@ public class ScheduleCalendar implements ContextAware {
 		}
 		Instance instance = new Instance();
 		instance.setInstId(new Long(instId));
-		if("sns".equals(session.getEmployee().getPreferUX()) ){
-			return null;
-		}else{
-			instanceViewContent.session = session;
-			instanceViewContent.load(instance);
-			
-			return new Object[]{instanceViewContent};
-		}
+		
+		instanceViewContent.session = session;
+		instanceViewContent.load(instance);
+		
+		return new Object[]{instanceViewContent};
 	}
 	
 	@Autowired
