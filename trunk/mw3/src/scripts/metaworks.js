@@ -743,12 +743,9 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 						this.setWhen(options['when']);
 					}
 					
-					/*
 					if(options && options['how']){
 						this.setHow(options['how']);
 					}
-					*/
-					
 					
 					if(options && options['ejsPath']){
 						metadata = this.getMetadata(objectTypeName);
