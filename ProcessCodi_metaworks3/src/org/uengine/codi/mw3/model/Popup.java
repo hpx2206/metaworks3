@@ -1,9 +1,9 @@
 package org.uengine.codi.mw3.model;
 
+import javax.validation.Valid;
+
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
-import org.metaworks.ServiceMethodContext;
-import org.metaworks.annotation.ServiceMethod;
 
 public class Popup implements ContextAware {
 	
@@ -26,6 +26,7 @@ public class Popup implements ContextAware {
 	}	
 
 	Object panel;
+		@Valid
 		public Object getPanel() {
 			return panel;
 		}
@@ -64,21 +65,6 @@ public class Popup implements ContextAware {
 		public void setHeight(int height) {
 			this.height = height;
 		}	
-	
-	@ServiceMethod(when=MetaworksContext.WHEN_NEW, callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
-	public Popup openPopup(){
-		getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-		
-		return this;
-	}
-	
-	@ServiceMethod(when=MetaworksContext.WHEN_VIEW)
-	public Popup closePopup(){
-		getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
-		
-		return this;
-	}
-	
 }
 
 
