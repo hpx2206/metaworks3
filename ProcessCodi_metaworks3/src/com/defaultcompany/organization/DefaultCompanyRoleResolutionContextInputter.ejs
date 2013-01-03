@@ -4,21 +4,25 @@
 	};
 	
 	var roleMetadata = mw3.getMetadata(role.__className);
-	roleMetadata['how'] = 'selector';
-	
 	var roleHtml = mw3.locateObject(role, role.__className, null, roleMetadata);
 
 
 	var groupSelector = {
 		__className : 'org.uengine.codi.mw3.webProcessDesigner.GroupTreeSelector'
 	};
-	var groupSelectorHtml = mw3.locateObject(groupSelector, groupSelector.__className);
+	var groupSelectorMetadata = mw3.getMetadata(groupSelector.__className);
+	groupSelectorMetadata['how'] = 'selector';
+	
+	var groupSelectorHtml = mw3.locateObject(groupSelector, groupSelector.__className, null, groupSelectorMetadata);	
 
 
 	var roleSelector = {
 		__className : 'org.uengine.codi.mw3.webProcessDesigner.RoleTreeSelector',
 	};
-	var roleSelectorHtml = mw3.locateObject(roleSelector, roleSelector.__className);
+	var roleSelectorMetadata = mw3.getMetadata(roleSelector.__className);
+	roleSelectorMetadata['how'] = 'selector';
+	
+	var roleSelectorHtml = mw3.locateObject(roleSelector, roleSelector.__className, null, roleSelectorMetadata);
 %>
 
 <table width="100%" border="1">
