@@ -29,7 +29,7 @@
 				<table border="0" cellspacing="0" cellpadding="0" width="100%">
 					<tr>
 						<td class="<%=nodeStatus%>"  onclick="<%=value.close?methods.expand.caller():methods.collapse.caller()%>"><span>&nbsp;</span></td>
-						<td style="width:30px">
+						<td style="width:30px;color:#65C0ED; padding-top:2px;font-size:11px;" valign="top">
 							<%=value.id%>
 						</td>
 						<td>
@@ -61,16 +61,16 @@
 
 								<input type="text" id="wfnode_content_<%=objectId%>" style="width:100% ; border:none;background:transparent; border:0; font-family: 'Helvetica Neue', Arial, Sans-serif; font-size: 12px; font-weight: normal;background:transparent" value="<%=value.name ? value.name : ''%>" onkeydown="mw3.getFaceHelper('<%=objectId%>').keydown(this)" onkeyup="mw3.getFaceHelper('<%=objectId%>').keyup(this);">
 								<div>
-									<div style="float:left; margin-left:5px">
+									<div style="float:left; font-size:11px; color:#A4A4A4">
 										StartDate:2013-01-01										
 									</div>
-									<div style="float:left; margin-left:5px">
+									<div style="float:left; margin-left:5px; font-size:11px; color:#A4A4A4">
 										EndDate:2013-01-04
 									</div>
-									<div style="float:left; margin-left:5px">
+									<div style="float:left; margin-left:5px; font-size:11px; color:#A4A4A4">
 										rBV:100
 									</div>
-									<div style="float:left; margin-left:5px">
+									<div style="float:left; margin-left:5px; font-size:11px; color:#A4A4A4">
 										ROI:100
 									</div>
 									
