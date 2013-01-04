@@ -19,6 +19,14 @@ public class WfPanel implements ContextAware {
 	@AutowiredFromClient
 	public Session session;
 	
+	String id;
+		public String getId() {
+			return id;
+		}
+		public void setId(String id) {
+			this.id = id;
+		}
+
 	boolean first;
 		@Hidden
 		public boolean isFirst() {
@@ -91,17 +99,32 @@ public class WfPanel implements ContextAware {
 		load(nodeId, MetaworksContext.WHEN_VIEW);
 	}
 	
+	public WfNode makeRootNode(){
+		WfNode node = this.makeNewNode();
+		node.setId(this.getRootNodeId());
+		node.setLoadDepth(this.getLoadDepth());
+		node.getMetaworksContext().setWhen(this.getMetaworksContext().getWhen());
+		node.getMetaworksContext().setHow("ROOT");	
+		
+		return node;
+	}
+	
+	public WfNode makeNewNode(){
+		WfNode node = new WfNode();
+		node.setAuthorId(session.getUser().getUserId());
+		
+		return node;
+	}
+	
 	public void load(String nodeId, String metaworksContext) throws Exception {
 		setRootNodeId(nodeId);
 		
-		setMetaworksContext(new MetaworksContext());
-		getMetaworksContext().setWhen(metaworksContext);
+		if(getMetaworksContext() == null){
+			setMetaworksContext(new MetaworksContext());
+			getMetaworksContext().setWhen(metaworksContext);			
+		}
 		
-		WfNode node = new WfNode();
-		node.setId(nodeId);
-		node.setLoadDepth(this.getLoadDepth());
-		node.getMetaworksContext().setWhen(metaworksContext);
-		node.getMetaworksContext().setHow("ROOT");		
+		WfNode node = makeRootNode();	
 		
 		if(this.isFirst()){
 			node.setFirst(true);
@@ -189,18 +212,14 @@ public class WfPanel implements ContextAware {
 		
 	}
 	
-	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
+	@ServiceMethod(payload="rootNodeId", target=ServiceMethodContext.TARGET_APPEND)
 	@Test(scenario="first", instruction="$first.wfNode.NewProcessInstance", next="autowiredObject.org.uengine.codi.mw3.knowledge.IWfNode.newDocument()")
 	public Object newNode() throws Exception {
-		WfNode newNode = new WfNode();
-		newNode.setAuthorId(session.getUser().getUserId());
+		WfNode newNode = this.makeNewNode();
 		
-		String rootPosition = session.getCompany().getComCode();
-
-		
-		WfNode rootNode = new WfNode();		
-		rootNode.setId(rootPosition);
-		rootNode.loadChildren();
+		WfNode rootNode = this.makeRootNode();		
+		rootNode.setId(this.getRootNodeId());
+		rootNode.setChildNode(rootNode.loadChildren());
 		rootNode.getMetaworksContext().setHow("ROOT");
 		rootNode.addChildNode(newNode);
 				
@@ -216,6 +235,4 @@ public class WfPanel implements ContextAware {
 			return new Refresh(rootNode);
 		}
 	}
-	
-	
 }
