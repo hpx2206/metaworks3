@@ -29,7 +29,7 @@
 				<table border="0" cellspacing="0" cellpadding="0" width="100%">
 					<tr>
 						<td class="<%=nodeStatus%>"  onclick="<%=value.close?methods.expand.caller():methods.collapse.caller()%>"><span>&nbsp;</span></td>
-						<td style="width:30px;color:#65C0ED; padding-top:2px;font-size:11px;" valign="top">
+						<td onClick="<%=methods.modify.caller()%>" style="width:30px;color:#65C0ED; padding-top:2px;font-size:11px;" valign="top">
 							<%=value.id%>
 						</td>
 						<td>
@@ -57,28 +57,42 @@
 %>
 								<input type="text" id="wfnode_content_<%=objectId%>" style="width:100% ; border:none;background:url(images/waveStyle/i_topic.png) no-repeat 5px 0px;  padding-left:30px; border:0; font-family: 'Helvetica Neue', Arial, Sans-serif; font-size: 12px; font-weight: normal;" value="<%=value.name ? value.name : ''%>" onkeydown="mw3.getFaceHelper('<%=objectId%>').keydown(this)" onkeyup="mw3.getFaceHelper('<%=objectId%>').keyup(this);">
 <%				
-						}else{ %>
-
+						}else if(value.type){
+%>
 								<input type="text" id="wfnode_content_<%=objectId%>" style="width:100% ; border:none;background:transparent; border:0; font-family: 'Helvetica Neue', Arial, Sans-serif; font-size: 12px; font-weight: normal;background:transparent" value="<%=value.name ? value.name : ''%>" onkeydown="mw3.getFaceHelper('<%=objectId%>').keydown(this)" onkeyup="mw3.getFaceHelper('<%=objectId%>').keyup(this);">
 								<div>
-									<div style="float:left; font-size:11px; color:#A4A4A4">
-										StartDate:2013-01-01										
+<%								
+							if(value.type == 'plan'){
+%>							
+									<div id="startDate_<%=objectId%>" style="float:left; font-size:11px; color:#A4A4A4">
+										StartDate:<%=value.startDate?value.startDate:'미지정'%>										
 									</div>
-									<div style="float:left; margin-left:5px; font-size:11px; color:#A4A4A4">
-										EndDate:2013-01-04
+									<div id="endDate_<%=objectId%>" style="float:left; margin-left:5px; font-size:11px; color:#A4A4A4">
+										EndDate:<%=value.endDate?value.endDate:'미지정'%>
 									</div>
-									<div style="float:left; margin-left:5px; font-size:11px; color:#A4A4A4">
-										rBV:100
+<%
+							}
+%>
+									<div id="effort_<%=objectId%>" style="float:left; margin-left:5px; font-size:11px; color:#A4A4A4">
+										effort:<%=value.effort%>
 									</div>
-									<div style="float:left; margin-left:5px; font-size:11px; color:#A4A4A4">
-										ROI:100
+									<div id="rBV_<%=objectId%>" style="float:left; margin-left:5px; font-size:11px; color:#A4A4A4">
+										rBV:<%=value.rBV?value.rBV:0%>
+									</div>
+									<div id="roi_<%=objectId%>" style="float:left; margin-left:5px; font-size:11px; color:#A4A4A4">
+										ROI:<%=value.roi?value.roi:0%>
 									</div>
 									
 									<div style="clear:both" />
 								</div>
-<%					}%>
 
-
+<%						
+						}else{
+%>
+								<input type="text" id="wfnode_content_<%=objectId%>" style="width:100% ; border:none;background:transparent; border:0; font-family: 'Helvetica Neue', Arial, Sans-serif; font-size: 12px; font-weight: normal;background:transparent" value="<%=value.name ? value.name : ''%>" onkeydown="mw3.getFaceHelper('<%=objectId%>').keydown(this)" onkeyup="mw3.getFaceHelper('<%=objectId%>').keyup(this);">
+<%
+						}
+%>														
 							</span>
 						</td>
 						
