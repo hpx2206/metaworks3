@@ -1150,6 +1150,14 @@ img {
     color: #fff
 }
 
+.showTodoCount {
+    width: 40px;
+}
+
+.haveTodo {
+    float: left;
+}
+
 .badgeRed {
     display: block;
     background: url('../../images/waveStyle/badgeRed.png') left 0;

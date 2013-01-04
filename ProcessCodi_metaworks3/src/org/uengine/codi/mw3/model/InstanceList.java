@@ -85,6 +85,11 @@ public class InstanceList implements ContextAware{
 
 	public InstanceList load(Session session) throws Exception {
 		IInstance instanceContents = Instance.load(session,	getPage(), PAGE_CNT);
+
+		if(session.lastPerspecteType.equals("inbox")){
+			session.setTodoListCount(instanceContents.size());
+		}
+		
 		if(getMetaworksContext()==null){
 			setMetaworksContext(new MetaworksContext());
 		}

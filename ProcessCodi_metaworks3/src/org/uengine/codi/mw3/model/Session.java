@@ -166,6 +166,15 @@ public class Session implements ContextAware{
 		public void setRole(IRole role) {
 			this.role = role;
 		}
+		
+	int todoListCount;
+		public int getTodoListCount(){
+			return todoListCount;
+		}
+		public void setTodoListCount(int todoListCount){
+			this.todoListCount = todoListCount;
+		}
+		
 	//disabled for merging
 //	SearchKeywordBox searchKeywordBox;
 //
