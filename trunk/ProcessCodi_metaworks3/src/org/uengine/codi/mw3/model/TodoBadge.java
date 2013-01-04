@@ -25,11 +25,13 @@ public class TodoBadge extends NotificationBadge{
 		PersonalPerspective personalPerspective = new PersonalPerspective();
 		personalPerspective.session = session;
 		
-		session.getMetaworksContext().setWhen("todoBage");
+		personalPerspective.session.getMetaworksContext().setWhen("todoBage");
 		
 		personalPerspective.loadInbox();
 		
 		setNewItemCount(session.getTodoListCount());
+		
+		personalPerspective.session.getMetaworksContext().setWhen(null);
 	}
 	
 	@ServiceMethod(target="popup", loader="org.uengine.codi.mw3.model.Popup")
