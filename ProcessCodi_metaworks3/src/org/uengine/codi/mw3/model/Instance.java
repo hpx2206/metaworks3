@@ -260,7 +260,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 			criteria.put("taskEndpoint", session.getEmployee().getEmpCode());
 			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
 			criteria.put("instIsdelete", "1");
-			if(session.getMetaworksContext().getWhen().equals("todoBage")){
+			if(session.getMetaworksContext().getWhen() != null && session.getMetaworksContext().getWhen().equals("todoBage")){
 				instanceSql.append("and inst.status !='Completed' ");
 			}
 		
