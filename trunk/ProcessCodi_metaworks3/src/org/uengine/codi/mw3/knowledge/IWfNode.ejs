@@ -30,7 +30,7 @@
 					<tr>
 						<td class="<%=nodeStatus%>"  onclick="<%=value.close?methods.expand.caller():methods.collapse.caller()%>"><span>&nbsp;</span></td>
 						<td style="width:30px">
-							test
+							<%=value.id%>
 						</td>
 						<td>
 								<span class="wfNodeText" style="width:100%;">
@@ -61,7 +61,20 @@
 
 								<input type="text" id="wfnode_content_<%=objectId%>" style="width:100% ; border:none;background:transparent; border:0; font-family: 'Helvetica Neue', Arial, Sans-serif; font-size: 12px; font-weight: normal;background:transparent" value="<%=value.name ? value.name : ''%>" onkeydown="mw3.getFaceHelper('<%=objectId%>').keydown(this)" onkeyup="mw3.getFaceHelper('<%=objectId%>').keyup(this);">
 								<div>
-									abcdefghijklmnopqrstu
+									<div style="float:left; margin-left:5px">
+										StartDate:2013-01-01										
+									</div>
+									<div style="float:left; margin-left:5px">
+										EndDate:2013-01-04
+									</div>
+									<div style="float:left; margin-left:5px">
+										rBV:100
+									</div>
+									<div style="float:left; margin-left:5px">
+										ROI:100
+									</div>
+									
+									<div style="clear:both" />
 								</div>
 <%					}%>
 
