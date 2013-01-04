@@ -24,6 +24,9 @@ public class TodoBadge extends NotificationBadge{
 	public void refresh() throws Exception{
 		PersonalPerspective personalPerspective = new PersonalPerspective();
 		personalPerspective.session = session;
+		
+		session.getMetaworksContext().setWhen("todoBage");
+		
 		personalPerspective.loadInbox();
 		
 		setNewItemCount(session.getTodoListCount());
