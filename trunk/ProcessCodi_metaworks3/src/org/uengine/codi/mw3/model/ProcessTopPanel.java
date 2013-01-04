@@ -16,6 +16,10 @@ public class ProcessTopPanel {
 		notificationBadge.session = session;
 		notificationBadge.refresh();
 		
+		todoBadge = new TodoBadge();
+		todoBadge.session = session;
+		todoBadge.refresh();
+		
 		IUser loginUser = new User();
 		loginUser.setUserId(session.getUser().getUserId());
 		loginUser.setName(session.getUser().getName());
@@ -46,7 +50,15 @@ public class ProcessTopPanel {
 		public void setNotificationBadge(NotificationBadge notificationBadge) {
 			this.notificationBadge = notificationBadge;
 		}
-
+		
+	TodoBadge todoBadge;
+		public TodoBadge getTodoBadge(){
+			return todoBadge;
+		}
+		public void setTodoBadge(TodoBadge todoBadge){
+			this.todoBadge = todoBadge;
+		}
+		
 	Session session;
 		@AutowiredToClient
 		public Session getSession() {
