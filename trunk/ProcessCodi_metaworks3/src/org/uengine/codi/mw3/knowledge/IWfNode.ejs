@@ -1,8 +1,7 @@
 <%
 	if(value){
 		if(mw3.how != 'NONE'){
-			if(mw3.how != 'ROOT'){
-			
+			if(mw3.how != 'ROOT'){			
 				if(mw3.how == 'PATH'){
 		
 		
@@ -30,6 +29,9 @@
 				<table border="0" cellspacing="0" cellpadding="0" width="100%">
 					<tr>
 						<td class="<%=nodeStatus%>"  onclick="<%=value.close?methods.expand.caller():methods.collapse.caller()%>"><span>&nbsp;</span></td>
+						<td style="width:30px">
+							test
+						</td>
 						<td>
 								<span class="wfNodeText" style="width:100%;">
 					<%	if(value.type=='img'){		
@@ -56,7 +58,11 @@
 								<input type="text" id="wfnode_content_<%=objectId%>" style="width:100% ; border:none;background:url(images/waveStyle/i_topic.png) no-repeat 5px 0px;  padding-left:30px; border:0; font-family: 'Helvetica Neue', Arial, Sans-serif; font-size: 12px; font-weight: normal;" value="<%=value.name ? value.name : ''%>" onkeydown="mw3.getFaceHelper('<%=objectId%>').keydown(this)" onkeyup="mw3.getFaceHelper('<%=objectId%>').keyup(this);">
 <%				
 						}else{ %>
+
 								<input type="text" id="wfnode_content_<%=objectId%>" style="width:100% ; border:none;background:transparent; border:0; font-family: 'Helvetica Neue', Arial, Sans-serif; font-size: 12px; font-weight: normal;background:transparent" value="<%=value.name ? value.name : ''%>" onkeydown="mw3.getFaceHelper('<%=objectId%>').keydown(this)" onkeyup="mw3.getFaceHelper('<%=objectId%>').keyup(this);">
+								<div>
+									abcdefghijklmnopqrstu
+								</div>
 <%					}%>
 
 
