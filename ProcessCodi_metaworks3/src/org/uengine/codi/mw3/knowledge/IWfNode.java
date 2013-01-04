@@ -1,6 +1,7 @@
 package org.uengine.codi.mw3.knowledge;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
@@ -14,6 +15,7 @@ import org.metaworks.annotation.ORMapping;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Table;
 import org.metaworks.annotation.Test;
+import org.metaworks.annotation.TypeSelector;
 import org.metaworks.dao.IDAO;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.model.ContentWindow;
@@ -61,9 +63,15 @@ public interface IWfNode extends IDAO {
 //					//GenericWorkItem.class
 //				} 
 //	)
+	
+	@TypeSelector(values = {"brainstorm"}, classes = {KnowlegeNode.class})
 	public String getType();
 	public void setType(String type);
 		
+	@Hidden
+	public String getRefId();
+	public void setRefId(String refId);
+	
 	@NonLoadable
 	@NonSavable
 	@Hidden
@@ -158,6 +166,42 @@ public interface IWfNode extends IDAO {
 	public boolean isFirst();
 	public void setFirst(boolean first);
 	
+	
+	public int getBudget();
+	public void setBudget(int budget);
+	
+	public int getEffort();
+	public void setEffort(int effort);
+	
+	public int getBenfit();
+	public void setBenfit(int benfit);
+	
+	public int getPenalty();
+	public void setPenalty(int penalty);
+	
+	public Date getStartdate();
+	public void setStartdate(Date startdate);
+	
+	public Date getEnddate();
+	public void setEnddate(Date enddate);
+	
+	@NonLoadable
+	@NonSavable
+	@Hidden
+	public int getProgress();
+	public void setProgress(int progress);
+	
+	
+/*	@NonLoadable
+	@NonSavable
+	public int getrBV();
+	public void setrBV(int rBV);
+
+	@NonLoadable
+	@NonSavable
+	public int getRoi();
+	public void setRoi(int roi);*/
+	
 	/*******************************************
 	 * 
 	 * Service Method
@@ -194,7 +238,7 @@ public interface IWfNode extends IDAO {
 	@ServiceMethod(callByContent=true)
 	public ContentWindow linkInstance() throws Exception;
 	
-	@ServiceMethod(callByContent=true, mouseBinding="drop", target="popup"/*, loader="org.uengine.codi.mw3.model.Popup"*/)
+	@ServiceMethod(callByContent=true, except="childNode", mouseBinding="drop", target=ServiceMethodContext.TARGET_APPEND /*, loader="org.uengine.codi.mw3.model.Popup"*/)
 	public Object[] drop() throws Exception;
 	
 	@ServiceMethod(callByContent=true, except={"childNode", "focus"}, inContextMenu=true, keyBinding="Ctrl+Right")
@@ -232,7 +276,7 @@ public interface IWfNode extends IDAO {
 	@Face(displayName="컨텐츠보기")
 	public ModalWindow showLms() throws Exception;
 	
-	@ServiceMethod(callByContent=true, mouseBinding="drag-enableDefault")
+	@ServiceMethod(callByContent=true, except="childNode", mouseBinding="drag-enableDefault")
 	public Session drag() throws Exception;
 	
 	@ServiceMethod(inContextMenu=true, target="popup")
@@ -250,6 +294,10 @@ public interface IWfNode extends IDAO {
 	@Face(displayName="공개토픽으로 지정")
 	@ServiceMethod(except={"childNode", "focus"}, inContextMenu=true)
 	public Object[] topic() throws Exception;
+	
+	@ServiceMethod(callByContent=true, except={"childNode"}, target=ServiceMethodContext.TARGET_POPUP)
+	public Popup modify();
+
 	/*******************************************
 	 * 
 	 * function
@@ -266,5 +314,6 @@ public interface IWfNode extends IDAO {
 	public IUser dropUser = null;
 
 	public String getConnType();
-	public void setConnType(String connType);	
+	public void setConnType(String connType);
+		
 }
