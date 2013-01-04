@@ -2,6 +2,7 @@ package org.uengine.codi.mw3.knowledge;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Hashtable;
 
 import org.directwebremoting.Browser;
@@ -29,14 +30,12 @@ import org.uengine.codi.mw3.model.Instance;
 import org.uengine.codi.mw3.model.InstanceDrag;
 import org.uengine.codi.mw3.model.InstanceView;
 import org.uengine.codi.mw3.model.InstanceViewContent;
-import org.uengine.codi.mw3.model.InstanceViewThreadPanel;
 import org.uengine.codi.mw3.model.NewInstancePanel;
 import org.uengine.codi.mw3.model.NewInstanceWindow;
 import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.model.ProcessDefinition;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.model.UnstructuredProcessInstanceStarter;
-import org.uengine.codi.mw3.model.User;
 import org.uengine.codi.mw3.model.WorkItem;
 import org.uengine.kernel.GlobalContext;
 
@@ -52,7 +51,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		public void setId(String id) {
 			this.id = id;
 		}	
-		
+				
 	String type;		
 		public String getType() {
 			return type;
@@ -61,6 +60,14 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 			this.type = type;
 		}
 		
+	String refId;
+		public String getRefId() {
+			return refId;
+		}
+		public void setRefId(String refId) {
+			this.refId = refId;
+		}
+
 	String visType;
 
 		public String getVisType() {
@@ -239,6 +246,78 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 			this.first = first;
 		}
 		
+	int budget;
+		public int getBudget() {
+			return budget;
+		}
+		public void setBudget(int budget) {
+			this.budget = budget;
+		}
+	
+	int effort;
+		public int getEffort() {
+			return effort;
+		}
+		public void setEffort(int effort) {
+			this.effort = effort;
+		}
+	
+	int benfit;
+		public int getBenfit() {
+			return benfit;
+		}
+		public void setBenfit(int benfit) {
+			this.benfit = benfit;
+		}
+	
+	int penalty;
+		public int getPenalty() {
+			return penalty;
+		}
+		public void setPenalty(int penalty) {
+			this.penalty = penalty;
+		}
+		
+	Date startdate;
+		public Date getStartdate() {
+			return startdate;
+		}
+		public void setStartdate(Date startdate) {
+			this.startdate = startdate;
+		}
+		
+	Date enddate;
+		public Date getEnddate() {
+			return enddate;
+		}
+		public void setEnddate(Date enddate) {
+			this.enddate = enddate;
+		}
+	
+	int progress;
+		public int getProgress() {
+			return progress;
+		}
+		public void setProgress(int progress) {
+			this.progress = progress;
+		}
+	
+/*	int rBV;
+		public int getrBV() {
+			return rBV;
+		}
+		public void setrBV(int rBV) {
+			this.rBV = rBV;
+		}
+		
+	int roi;
+		public int getRoi() {
+			return roi;
+		}
+		public void setRoi(int roi) {
+			this.roi = roi;
+		}*/
+		
 	public WfNode() {
 		setChildNode(new ArrayList<WfNode>());
 		getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
@@ -309,7 +388,8 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		setId(nodeId);
 		
 		if(this.getLoadDepth() < LOAD_DEPTH){
-			setLoadDepth(getLoadDepth()+1);
+			if(this.getLoadDepth() > -1)
+				setLoadDepth(getLoadDepth()+1);
 			
 			setChildNode(this.loadChildren());
 			setClose(false);
@@ -341,7 +421,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 /*		if(this.getLoadDepth() < LOAD_DEPTH){
 			if(this.getLoadDepth() > -1)
 				setLoadDepth(getLoadDepth()+1);	*/					
-			
+			/*
 			StringBuffer sb = new StringBuffer();
 			sb.append("SELECT *");
 			sb.append("  FROM bpm_knol");
@@ -380,11 +460,53 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 					child.add(node);
 				}
 			}
+			*/
+			
 			/*
 		}else{
 			
 		}*/
-			
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append("SELECT *");
+		sb.append("  FROM bpm_knol");
+		sb.append(" WHERE parentId=?parentId");
+		sb.append("   AND type=?type");
+		sb.append(" ORDER BY no");
+		
+		IWfNode findNode = (IWfNode) sql(IWfNode.class,	sb.toString());
+		
+		findNode.set("parentId", this.getId());
+		findNode.set("type", "brainstorm");
+		findNode.select();
+		
+		if(findNode.size() > 0){
+			while (findNode.next()) {
+				WfNode node = this.makeNewNode();
+				
+				node.copyFrom(findNode);
+				node.setChildNode(new ArrayList<WfNode>());
+				node.setMetaworksContext(new MetaworksContext());
+				node.getMetaworksContext().setWhen(getMetaworksContext().getWhen());
+				node.getMetaworksContext().setWhere(this.getMetaworksContext().getWhere());
+
+				if(node.getVisType()==null){
+					node.getMetaworksContext().setHow("normal");
+				}else{
+					node.getMetaworksContext().setHow(node.getVisType());
+				}
+				
+				node.setLoadDepth(this.getLoadDepth());
+				node.setClose(true);
+				node.setFirst(this.isFirst());
+				
+				if(!this.isFirst())
+					node.load();
+				
+				child.add(node);
+			}
+		}
+		
 		return child;
 	}
 	
@@ -1001,6 +1123,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 	public Object[] drop() throws Exception {
 		Object clipboard = session.getClipboard();
 		if(clipboard instanceof IInstance){
+			System.out.println("drop : clipboard instanceof IInstance");
 			IInstance instanceInClipboard = (IInstance) clipboard;
 			
 			Instance locatorForInstanceInClipboard = new Instance();
@@ -1019,7 +1142,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 			
 			return new Object[]{new Refresh(this)};
 		}else if(clipboard instanceof IUser){
-			
+			System.out.println("drop : clipboard instanceof IUser");
 			IUser user = (IUser) clipboard;
 			
 			//UnstructuredProcessInstanceStarter instanceStarter = new UnstructuredProcessInstanceStarter();
@@ -1047,6 +1170,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 			
 			return new Object[]{new Refresh(this), new ModalWindow(instanceView.schedule().getPanel(), 400, 300, theUser.databaseMe().getEmpName() + "님에게 과제를 부여합니다.")};
 		}else if(clipboard instanceof InstanceDrag){
+			System.out.println("drop : clipboard instanceof InstanceDrag");
 			InstanceDrag instanceInClipboard = (InstanceDrag) clipboard;
 			
 			Instance locatorForInstanceInClipboard = new Instance();
@@ -1065,8 +1189,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 			
 			return new Object[]{new Refresh(this)};
 		}
-		
-		
+				
 		return null;
 	}
 	
@@ -1130,4 +1253,74 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		return new Object[]{this};
 	}
 	
+	public WfNode makeNewNode() {
+		WfNode node = null;
+		
+		try{
+			Class cls = this.getClass();
+			//Constructor ct = cls.getConstructor();
+			node = (WfNode)cls.newInstance();
+
+			if(session != null)
+				node.setAuthorId(session.getUser().getUserId());
+
+			node.setType(this.getType());
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return node;
+	}
+	
+	public WfNode copy(String parentId, WfNode templeteNode){
+		WfNode node = templeteNode.makeNewNode();
+		
+		try{
+			node.copyFrom(templeteNode);
+			node.setName(this.getName());
+			node.setParentId(parentId);			
+			node.setChildNode(new ArrayList<WfNode>());
+			
+			node.createMe();
+			
+			for(int i=0; i<this.getChildNode().size(); i++){
+				WfNode childNode = this.getChildNode().get(i);
+				
+				WfNode copyCode = childNode.copy(node.getId(), templeteNode);
+				node.addChildNode(copyCode);
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return node;
+	}
+	
+	public WfNode link(WfNode templeteNode){
+		WfNode node = templeteNode.makeNewNode();
+		
+		try{
+			node.copyFrom(templeteNode);
+			node.setRefId(this.getId());
+			
+			node.createMe();
+			
+			for(int i=0; i<this.getChildNode().size(); i++){
+				WfNode childNode = this.getChildNode().get(i);
+				
+				WfNode linkCode = childNode.link(templeteNode);
+				node.addChildNode(linkCode);
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return node;
+	}
+	
+	public Popup modify() {
+		return new Popup();
+	}
+
 }
