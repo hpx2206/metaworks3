@@ -202,7 +202,6 @@ var org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel = fun
 
 org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype = {
 		findActivityData : function(tracingTag){
-			alert(tracingTag);
 			var object = mw3.objects[this.objectId];
 			var activityList = object.activityList;
 			if( activityList ){
@@ -316,7 +315,7 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
     	}
     });
 	$(element).bind('apply', function(){
-		alert('11');
+//		alert('11');
 	});
 };
 
