@@ -406,7 +406,7 @@ public class InstanceView {
 		return new Object[]{new Remover(instance.databaseMe())};
 	}
 		
-	@ServiceMethod(callByContent=true)
+	@ServiceMethod(callByContent=true , except={"newItem"})
 	public void complete() throws Exception{
 
 		//processManager.stopProcessInstance(instanceId);

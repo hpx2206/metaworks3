@@ -64,7 +64,6 @@ public interface IWfNode extends IDAO {
 //				} 
 //	)
 	
-	@TypeSelector(values = {"brainstorm"}, classes = {KnowlegeNode.class})
 	public String getType();
 	public void setType(String type);
 		

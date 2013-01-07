@@ -44,7 +44,8 @@ var org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel = fun
                 '_shape_id'  : $(this).attr('_shape_id'),
                 '_width'     : $(this).attr('_width'),
                 '_height'    : $(this).attr('_height'),
-                '_classname' : $(this).attr('_classname')
+                '_classname' : $(this).attr('_classname'),
+                '_classType' : $(this).attr('_classType')
             });
         },
         helper  : 'clone',
@@ -76,6 +77,7 @@ var org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel = fun
                     
                     if (shapeInfo._shape_type === 'GEOM' || shapeInfo._shape_type === 'GROUP') {
                     	$(element).attr("_classname", shapeInfo._classname);
+                    	$(element).attr("_classType", shapeInfo._classType);
                     	$(element).attr("_tracingTag",++faceHelper.tracingTag);
 	                    // 그리고 난 후의 엘리먼트에 이벤트 등록
 	                    faceHelper.addEventGeom(objectId, canvas, element);
@@ -159,6 +161,7 @@ var org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel = fun
 				var cellId = cells[i].id;
 				var cellTracing = cells[i].tracingTag;
 				var cellClassname = cells[i].classname;
+				var cellClassType = cells[i].classType;
 				
 				if( cellTracing != null ){
 					$('#'+cellId).attr("_tracingTag",cellTracing);					
@@ -167,6 +170,10 @@ var org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel = fun
 				if( cellClassname != null ){
 					$('#'+cellId).attr("_classname",cellClassname);
 					var activityData = object.activityMap[cellId];
+//					var activityData = null; 
+//					if( cellClassType == 'Activity'){
+//						activityData = faceHelper.findActivityData(cellTracing);
+//					}
 					$('#'+cellId).data('activity', activityData);
 				}
 			}
@@ -193,6 +200,19 @@ var org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel = fun
 	this.icanvas.setCanvasSize([canvasWidth, canvasHeight]);
 };
 
+org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype = {
+		findActivityData : function(tracingTag){
+			alert(tracingTag);
+			var object = mw3.objects[this.objectId];
+			var activityList = object.activityList;
+			if( activityList ){
+				for( var i = 0; i < activityList.length; i++){
+					activity = activityList[i];
+				}
+			}
+		}
+};
+
 //org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype = {
 //		destroy : function(){
 //			$('#canvas').hide().appendTo('body');
@@ -206,112 +226,98 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 		var activityData = {__className : $(element).attr("_classname"), tracingTag : $(element).attr("_tracingTag")};
 		$(element).data('activity', activityData);
 	}
-//	
-//	if( shape_id == 'OG.shape.bpmn.D_Store' ){
-//		// 데이터 매핑 
-//		$(element).bind({
-//			dblclick: function (event) {
-//				var value = mw3.getObject(objectId);
-//				value.tempElementId = $(this).attr('id');
-//				value.tempElementName = $(this).children('[id$=_LABEL]').text();
-//				value.tempElementData = JSON.stringify(canvas.getCustomData(element));
-//				value.dataMapping();
-//			}
-//		});
-//	}else{
-		// 그외 
-		$(element).on({
-	    	mouseup: function (event, ui) {
-	    		var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
-	    		var clipboardNode = session.clipboard;
-	    		var customData = canvas.getCustomData(element);
-	    		if( customData == undefined || customData == null || customData == "" ){
-	    			customData = [];
-	    		}
-	    		if(clipboardNode && clipboardNode.__className=="org.uengine.codi.mw3.knowledge.WfNode"){
-	    			canvas.drawLabel(element, clipboardNode.name);
-	    			customData.push( {"customId": clipboardNode.id , "customName" : clipboardNode.name , "customType" : "wfNode"});
-	    			session.clipboard = null;
-	    			var value = mw3.objects[objectId];
-	    			value.tempElementId = $(this).attr('id');
-	    			value.tempElementName = clipboardNode.name;
-	    			value.tempElementTypeId = clipboardNode.id;
-	    			value.tempElementType = "wfNode";
-	    			value.addValiable();
-	    		}
-	    		if(clipboardNode && clipboardNode.__className=="org.uengine.codi.mw3.webProcessDesigner.Role"){
-	    			var wfText = $(element).children('[id$=_LABEL]').text();
-	    			wfText = wfText + '(' + clipboardNode.name + ')';
-	    			canvas.drawLabel(element, wfText);
-	    			customData.push( {"customId": "" , "customName" : clipboardNode.name , "customType" : "role"});
-	    			session.clipboard = null;
-	    		}
-	    		if(clipboardNode && clipboardNode.__className=="org.uengine.codi.mw3.model.ResourceFile"){
-	    			var javaFileName = clipboardNode.name;
-	    			if( javaFileName != '' && javaFileName.length > 5){
-	    				var tokens  = javaFileName.split(".");
-	    				var text = null;
-	    		    	if(tokens.length>1)
-	    		    		text = tokens[tokens.length-1];
-	    		    	if( text != null && text == 'java'){
-	    		    		var wfText = $(element).children('[id$=_LABEL]').text();
-	    		    		wfText = wfText + '(' + clipboardNode.name + ')';
-	    		    		canvas.drawLabel(element, wfText);
-	    		    		customData.push( {"customId": "" , "customName" : tokens[tokens.length-2] , "customType" : "class"});
-	    		    		session.clipboard = null;
-	    		    		
-	    		    		var value = mw3.objects[objectId];
-	    	    			value.tempElementId = $(this).attr('id');
-	    	    			value.tempElementName = tokens[tokens.length-2];
-	    	    			value.tempElementTypeId = clipboardNode.alias;
-	    	    			value.tempElementType = "class";
-	    	    			value.addValiable();
-	    		    	}
-	    			}
-	    		}
-	    		if(customData.length > 0){
-	    			canvas.setCustomData(element, customData);
-	    		}
-	    	},
-	    	dblclick: function (event) {
-	    		/*
-	    		var value = mw3.getOobject(objectId);
+	$(element).on({
+    	mouseup: function (event, ui) {
+    		var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
+    		var clipboardNode = session.clipboard;
+    		var customData = canvas.getCustomData(element);
+    		if( customData == undefined || customData == null || customData == "" ){
+    			customData = [];
+    		}
+    		if(clipboardNode && clipboardNode.__className=="org.uengine.codi.mw3.knowledge.WfNode"){
+    			canvas.drawLabel(element, clipboardNode.name);
+    			customData.push( {"customId": clipboardNode.id , "customName" : clipboardNode.name , "customType" : "wfNode"});
+    			session.clipboard = null;
+    			var value = mw3.objects[objectId];
     			value.tempElementId = $(this).attr('id');
-    			value.geomInfo();
-    			*/
-	    		var divId = 'properties_' + objectId;
+    			value.tempElementName = clipboardNode.name;
+    			value.tempElementTypeId = clipboardNode.id;
+    			value.tempElementType = "wfNode";
+    			value.addValiable();
+    		}
+    		if(clipboardNode && clipboardNode.__className=="org.uengine.codi.mw3.webProcessDesigner.Role"){
+    			var wfText = $(element).children('[id$=_LABEL]').text();
+    			wfText = wfText + '(' + clipboardNode.name + ')';
+    			canvas.drawLabel(element, wfText);
+    			customData.push( {"customId": "" , "customName" : clipboardNode.name , "customType" : "role"});
+    			session.clipboard = null;
+    		}
+    		if(clipboardNode && clipboardNode.__className=="org.uengine.codi.mw3.model.ResourceFile"){
+    			var javaFileName = clipboardNode.name;
+    			if( javaFileName != '' && javaFileName.length > 5){
+    				var tokens  = javaFileName.split(".");
+    				var text = null;
+    		    	if(tokens.length>1)
+    		    		text = tokens[tokens.length-1];
+    		    	if( text != null && text == 'java'){
+    		    		var wfText = $(element).children('[id$=_LABEL]').text();
+    		    		wfText = wfText + '(' + clipboardNode.name + ')';
+    		    		canvas.drawLabel(element, wfText);
+    		    		customData.push( {"customId": "" , "customName" : tokens[tokens.length-2] , "customType" : "class"});
+    		    		session.clipboard = null;
+    		    		
+    		    		var value = mw3.objects[objectId];
+    	    			value.tempElementId = $(this).attr('id');
+    	    			value.tempElementName = tokens[tokens.length-2];
+    	    			value.tempElementTypeId = clipboardNode.alias;
+    	    			value.tempElementType = "class";
+    	    			value.addValiable();
+    		    	}
+    			}
+    		}
+    		if(customData.length > 0){
+    			canvas.setCustomData(element, customData);
+    		}
+    	},
+    	dblclick: function (event) {
+    		/*
+    		var value = mw3.getOobject(objectId);
+			value.tempElementId = $(this).attr('id');
+			value.geomInfo();
+			*/
+    		var divId = 'properties_' + objectId;
+			$('body').append("<div id='" + divId + "'></div>");
+			var metaworksContext = {
+				__className : 'org.metaworks.MetaworksContext',
+				when : 'edit'
+			};
+			
+			if(shape_id == 'OG.shape.HorizontalLaneShape')
+				metaworksContext['how'] = 'lane';
 				
-				$('body').append("<div id='" + divId + "'></div>");
-
-				var metaworksContext = {
-					__className : 'org.metaworks.MetaworksContext',
-					when : 'edit'
-				};
-				
-				if(shape_id == 'OG.shape.HorizontalLaneShape')
-					metaworksContext['how'] = 'lane';
-					
-				var propertiesWindow = {
-					__className : 'org.uengine.codi.mw3.webProcessDesigner.PropertiesWindow',
-					open : true,
-					width : 600,
-					panel : $(this).data('activity'),
-					metaworksContext : metaworksContext,
-					id : $(this).attr('id')
-				};
-				
-				
-				var object = mw3.getObject(objectId);
-				
-				object['propertiesWindow'] = propertiesWindow;
-				object.showProperties();
-				//var metadata = mw3.getMetadata(object.__className);				
-				
-				//mw3.locateObject(object, null, '#' + divId, metadata);
-				//mw3.onLoadFaceHelperScript();	    		
-	    	}
-	    });
-//	}
+			var propertiesWindow = {
+				__className : 'org.uengine.codi.mw3.webProcessDesigner.PropertiesWindow',
+				open : true,
+				width : 600,
+				panel : $(this).data('activity'),
+				metaworksContext : metaworksContext,
+				id : $(this).attr('id')
+			};
+			
+			
+			var object = mw3.getObject(objectId);
+			
+			object['propertiesWindow'] = propertiesWindow;
+			object.showProperties();
+			//var metadata = mw3.getMetadata(object.__className);				
+			
+			//mw3.locateObject(object, null, '#' + divId, metadata);
+			//mw3.onLoadFaceHelperScript();	    		
+    	}
+    });
+	$(element).bind('apply', function(){
+		alert('11');
+	});
 };
 
 org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype.addEventEdge = function(objectId, canvas, element){
@@ -346,10 +352,7 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 	var ogObj = eval(graphJson.opengraph);
 	var ogArr = ogObj.cell;
 	var cellsForDwr = [];
-	
-	
 	var activityMap = {};
-	
 	for(var i=0; i<ogArr.length; i++){
 		var og = ogArr[i];
 		var cellForDwr = {};
@@ -358,9 +361,10 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 			$id = $('#'+og['@id']);
 			cellForDwr['tracingTag'] = $id.attr('_tracingTag');
 			cellForDwr['classname'] = $id.attr('_classname');
+			cellForDwr['classType'] = $id.attr('_classType');
 			var activity = $id.data('activity');
 			if(typeof activity != 'undefined')
-				activityMap['#'+og['@id']] = activity;
+				activityMap[og['@id']] = activity;
 		}
 		
 		for(var key in og){

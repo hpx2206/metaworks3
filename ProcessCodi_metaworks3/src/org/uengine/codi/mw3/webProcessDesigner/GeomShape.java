@@ -53,39 +53,38 @@ public class GeomShape extends CanvasDTO {
 			this.role = role;
 		}
 		
-	public Activity makeActivity() {
+	public Activity makeProcVal(Activity activity) {
 		if("OG.shape.bpmn.A_Task".equals(this.getShapeId()) ){
 			if(this.getData() != null){
 				String data = ProcessDesignerWebContentPanel.unescape(this.getData());
 				JSONArray jsonArray = (JSONArray)JSONSerializer.toJSON(data);
 				if( jsonArray != null && jsonArray.size() > 0){
 					// 혹시 role 이 배열로 들어있을지 모르니, role 을 먼저 체크하는 loof를 돌린다
-					for( int i = 0; i < jsonArray.size() ; i++){
-						JSONObject jsonObj = (JSONObject) jsonArray.get(i);
-						String customName = jsonObj.getString("customName");
-						String customType = jsonObj.getString("customType");
-						if( customType != null && "role".equalsIgnoreCase(customType) ){
-							Role role = new Role();
-							role.setName(customName);
-//							role.setRoleResolutionContext(context)
-							this.setRole(role);
-						}
-					}
+//					for( int i = 0; i < jsonArray.size() ; i++){
+//						JSONObject jsonObj = (JSONObject) jsonArray.get(i);
+//						String customName = jsonObj.getString("customName");
+//						String customType = jsonObj.getString("customType");
+//						if( customType != null && "role".equalsIgnoreCase(customType) ){
+//							Role role = new Role();
+//							role.setName(customName);
+////							role.setRoleResolutionContext(context)
+//							this.setRole(role);
+//						}
+//					}
 					for( int i = 0; i < jsonArray.size() ; i++){
 						JSONObject jsonObj = (JSONObject) jsonArray.get(i);
 						String customName = jsonObj.getString("customName");
 						String customType = jsonObj.getString("customType");
 						// 지식노드 - KnowledgeActivity 생성
 						if( customType != null && "wfNode".equalsIgnoreCase(customType)){
-							KnowledgeActivity knowledgeActivity = new KnowledgeActivity();
+							KnowledgeActivity knowledgeActivity = (KnowledgeActivity)activity;
 							String customId = jsonObj.getString("customId");
 							knowledgeActivity.setName(customName);
 							knowledgeActivity.setKnolNodeId(customId);
-							knowledgeActivity.setRole(this.getRole());
 							return knowledgeActivity;
 						// 클레스 - HumanActivity 생성
 						}else 	if( customType != null && "class".equalsIgnoreCase(customType) ){
-							HumanActivity humanActivity = new HumanActivity();
+							HumanActivity humanActivity = (HumanActivity)activity;
 							ProcessVariable pvs[] = getPvs();
 							if( pvs != null){
 								ParameterContext pc[] = new ParameterContext[0];
@@ -108,24 +107,14 @@ public class GeomShape extends CanvasDTO {
 									}
 								}
 								humanActivity.setParameters(pc);
-								humanActivity.setRole(this.getRole());
 								return humanActivity;
 							}
 						}
 					}
 				}
-			}else{
-				HumanActivity humanActivity = new HumanActivity();
-				humanActivity.setRole(this.getRole());
-				return humanActivity;
 			}
 		}	// end if("OG.shape.bpmn.A_Task".equals(this.getShapeId()) )
-		else if("OG.shape.bpmn.G_Gateway".equals(this.getShapeId()) ){
-			SwitchActivity switchActivity = new SwitchActivity();
-			
-			return switchActivity;
-		}
-		return null;
+		return activity;
 	}
 	
 	public void viewActivityInfo(Activity activity) throws Exception{

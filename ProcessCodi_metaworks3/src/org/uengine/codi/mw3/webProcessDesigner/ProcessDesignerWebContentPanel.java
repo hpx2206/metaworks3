@@ -4,9 +4,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
@@ -24,6 +27,7 @@ import org.uengine.kernel.Activity;
 import org.uengine.kernel.Condition;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.HumanActivity;
+import org.uengine.kernel.ParameterContext;
 import org.uengine.kernel.ProcessDefinition;
 import org.uengine.kernel.ProcessVariable;
 import org.uengine.kernel.Role;
@@ -93,6 +97,13 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 		}
 		public void setActivityMap(HashMap<String, Object> activityMap) {
 			this.activityMap = activityMap;
+		}
+	ArrayList<Activity> activityList; 
+		public ArrayList<Activity> getActivityList() {
+			return activityList;
+		}
+		public void setActivityList(ArrayList<Activity> activityList) {
+			this.activityList = activityList;
 		}
 
 	/*
@@ -282,22 +293,15 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 					if( cv.getParent() != null ){
 						String groupId = geom.getParent();
 						CanvasDTO groupCanvas = getCanvasMap().get(groupId);
-						Role role = new Role();
-						role.setName(groupCanvas.getLabel());
-						if(cv.getClassname() != null && "org.uengine.kernel.HumanActivity".equals(cv.getClassname()) ){
-							HumanActivity activity = (HumanActivity)activityMap.get(cv.getId());
-							activity.setRole(role);
+						if( "OG.shape.HorizontalLaneShape".equals(groupCanvas.getShapeId() )){
+							if(cv.getClassname() != null && "org.uengine.kernel.HumanActivity".equals(cv.getClassname()) ){
+								HumanActivity activity = (HumanActivity)activityMap.get(cv.getId());
+								activity = (HumanActivity)geom.makeProcVal(activity);
+								Role role = (Role)getActivityMap().get(groupId);
+								activity.setRole(role);
+							}
 						}
-//						geom.setRole(role);
-//						def.addRole(role);
-//					}else{
-//						geom.setRole(initiator);
 					}
-//					Activity activity = geom.makeActivity();
-//					if ( activity != null ){
-//						activity.setTracingTag(  cv.getTracingTag() );
-//						activityMap.put(cv.getId() , activity);
-//					}
 				}else if( "GROUP".equalsIgnoreCase(cv.getShapeType()) ){
 				}else if( "EDGE".equalsIgnoreCase(cv.getShapeType()) ){
 					String formStr = cv.getFrom();
@@ -341,7 +345,12 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 			Collection<Object> coll = activityMap.values();
 	        Iterator<Object> iter = coll.iterator();
 	        while(iter.hasNext()){
-	        	def.addChildActivity((Activity)iter.next());
+	        	Object act = iter.next();
+	        	if( act instanceof Activity){
+	        		def.addChildActivity((Activity)act);
+	        	}else if( act instanceof Role){
+	        		def.addRole((Role)act);
+	        	}
 	        }
 			def.setExtendedAttribute( "cells", cells );
 			
@@ -408,6 +417,7 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 			// processDefinition setting
 			ArrayList<CanvasDTO> cellsList = (ArrayList<CanvasDTO>) def.getExtendedAttributes().get("cells");
 			activityMap = new HashMap<String, Object>();
+//			activityList = new ArrayList<Activity>();
 			if( cellsList != null){
 				CanvasDTO []cells = new CanvasDTO[cellsList.size()];
 				int tagCnt = 0;
@@ -417,7 +427,31 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 						this.setGraphString(cells[i].getJsonString());
 					}
 					if( cells[i].getTracingTag() != null ){
-						activityMap.put(cells[i].getId() , def.getActivity(cells[i].getTracingTag() ));
+						if( "GEOM".equalsIgnoreCase(cells[i].getShapeType()) ){
+							Activity activity = def.getActivity(cells[i].getTracingTag());
+							if(activity instanceof HumanActivity ){
+//								ParameterContext pc[] = ((HumanActivity) activity).getParameters();
+//								if( pc != null ){
+//									for(int j = 0; j < pc.length; j++){
+//										if(  pc[j].getVariable().getType() == org.uengine.contexts.ComplexType.class ){
+//											Set<ParameterContext> asSet = new HashSet<ParameterContext>(Arrays.asList(pc));
+//									    	asSet.remove(pc[j]);
+//									    	pc = asSet.toArray(new ParameterContext[] {});
+//										}
+//									}
+//									if( pc.length == 0 ) pc = null;
+//								}
+//								((HumanActivity) activity).setParameters(pc);
+								activity = new HumanActivity();
+							}
+//							activityList.add( activity );  
+							activityMap.put(cells[i].getId() , activity );
+						}else if( "GROUP".equalsIgnoreCase(cells[i].getShapeType()) ){
+							// TODO 현재 group 은 role이라서..
+							if( "OG.shape.HorizontalLaneShape".equals(cells[i].getShapeId() )){
+								activityMap.put(cells[i].getId() , def.getRole(cells[i].getLabel() ));
+							}
+						}
 						if( Integer.parseInt(cells[i].getTracingTag()) > tagCnt )
 							tagCnt = Integer.parseInt(cells[i].getTracingTag());
 					}
