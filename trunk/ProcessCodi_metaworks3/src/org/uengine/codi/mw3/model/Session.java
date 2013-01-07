@@ -5,7 +5,6 @@ import java.util.Hashtable;
 
 import javax.servlet.http.HttpSession;
 
-import org.directwebremoting.WebContext;
 import org.directwebremoting.WebContextFactory;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
@@ -23,7 +22,6 @@ import org.uengine.codi.mw3.Login;
 public class Session implements ContextAware{
 	
 	static Hashtable<String, ArrayList> messagesToUsers = new Hashtable<String, ArrayList>(); 
-	
 	
 	public Session() {
 		MetaworksContext metaworkscontext = new MetaworksContext();
