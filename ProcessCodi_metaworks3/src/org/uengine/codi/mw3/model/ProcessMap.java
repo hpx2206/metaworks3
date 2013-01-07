@@ -3,6 +3,7 @@ package org.uengine.codi.mw3.model;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Remover;
 import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
 import org.metaworks.website.MetaworksFile;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -366,7 +367,13 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		
 	}
 	
-
+	@ServiceMethod
+	public Object[] processListFilter() throws Exception{
+		
+		Perspective perspective = new Perspective();
+		
+		return perspective.loadInstanceListPanel(session, "process", session.defId);
+	}
 		
 }
 

@@ -9,33 +9,57 @@ public class ProcessPerspective extends Perspective{
 		setLabel("Process");
 		
 	}
+	
+//	폴터를 뿌리는 부분 수정수정
+//	@ServiceMethod
+//	public Object[] select() throws Exception {
+//		
+//		if(!isSelected()){
+//			
+//			
+//			processDefinitions = new ResourceFile();
+//			processDefinitions.setMetaworksContext(new MetaworksContext());	
+//			processDefinitions.getMetaworksContext().setWhere("navigation");
+//			processDefinitions.setObjType("folder");
+//			processDefinitions.setFolder(true);
+//			processDefinitions.setAlias("");
+//			processDefinitions.setName("/");
+//			processDefinitions.drillDown();
+//			
+//		}
+//		
+//		return super.select();
+//	}
+	
+	protected void loadChildren() throws Exception {
+		
+			IProcessMap processMap = ProcessMap.loadList(session);
+			processMap.getMetaworksContext().setWhen("filter");
+			
+			setProcessMapList(processMap);
+	}
 
-	@ServiceMethod
-	public Object[] select() throws Exception {
-		
-		if(!isSelected()){
-			processDefinitions = new ResourceFile();
-			processDefinitions.setMetaworksContext(new MetaworksContext());	
-			processDefinitions.getMetaworksContext().setWhere("navigation");
-			processDefinitions.setObjType("folder");
-			processDefinitions.setFolder(true);
-			processDefinitions.setAlias("");
-			processDefinitions.setName("/");
-			processDefinitions.drillDown();
-		}
-		
-		return super.select();
+	protected void unloadChildren() throws Exception {
+		setProcessMapList(null);
 	}
 	
-	ResourceFile processDefinitions;
-	
-		public ResourceFile getProcessDefinitions() {
-			return processDefinitions;
+	IProcessMap processMapList;
+		public IProcessMap getProcessMapList() {
+			return processMapList;
+		}	
+		public void setProcessMapList(IProcessMap processMapList) {
+			this.processMapList = processMapList;
 		}
 	
-		public void setProcessDefinitions(ResourceFile processDefinitions) {
-			this.processDefinitions = processDefinitions;
-		}
+//	ResourceFile processDefinitions;
+//	
+//		public ResourceFile getProcessDefinitions() {
+//			return processDefinitions;
+//		}
+//	
+//		public void setProcessDefinitions(ResourceFile processDefinitions) {
+//			this.processDefinitions = processDefinitions;
+//		}
 	
 //	@ServiceMethod
 //	public ContentWindow open() throws Exception {
