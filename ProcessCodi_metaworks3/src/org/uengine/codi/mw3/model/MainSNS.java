@@ -8,8 +8,6 @@ import org.metaworks.dao.TransactionContext;
 import org.metaworks.widget.Window;
 import org.metaworks.widget.layout.Layout;
 import org.uengine.codi.mw3.admin.PageNavigator;
-import org.uengine.codi.mw3.knowledge.WfPanel;
-import org.uengine.codi.mw3.knowledge.WfWindow;
 
 @Face(ejsPath="dwr/metaworks/org/uengine/codi/mw3/model/Main.ejs")
 public class MainSNS {
