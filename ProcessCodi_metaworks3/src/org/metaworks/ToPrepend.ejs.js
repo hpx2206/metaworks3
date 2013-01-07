@@ -41,11 +41,15 @@ var org_metaworks_ToPrepend = function(objectId, className){
 					    setTimeout(reload, 2000);
 						
 					}else{
-
-						var html = mw3.locateObject(object.target, null);//, "#"+mappedObjdivId);
-		
-						$("#objDiv_" + mappedObjId).prepend(html);
-		
+						var faceHelper = mw3.getFaceHelper(mappedObjId);
+						
+						if(faceHelper && faceHelper.toPrepend){
+							faceHelper.toPrepend(object.target);
+						}else{
+							var html = mw3.locateObject(object.target, null);//, "#"+mappedObjdivId);
+							
+							$("#objDiv_" + mappedObjId).prepend(html);							
+						}
 					}
 
 					break;
