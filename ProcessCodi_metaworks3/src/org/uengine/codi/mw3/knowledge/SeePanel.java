@@ -4,8 +4,6 @@ import java.util.ArrayList;
 
 import org.metaworks.component.HorizontalSplitBox;
 
-import examples.GoogleChart;
-
 public class SeePanel extends HorizontalSplitBox {
 	
 	public final static String ID = "see";
