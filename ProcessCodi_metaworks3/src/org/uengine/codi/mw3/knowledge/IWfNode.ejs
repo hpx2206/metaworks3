@@ -1,25 +1,31 @@
 <%
-	if(value){
-		if(mw3.how != 'NONE'){
-			if(mw3.how != 'ROOT'){			
-				if(mw3.how == 'PATH'){
-		
-		
+	if(value == null || typeof value == 'undefined')
+		return true;
+	
+	if(mw3.how != 'NONE'){
+		if(mw3.how == 'PATH'){
 %>
- <div class="wfPath" onclick="<%=methods.drillInto.caller()%>"><%=value.name%> > </div>
+	<div class="wfPath" onclick="<%=methods.drillInto.caller()%>"><%=value.name%>>
 <%		
-				
-				}else {
+		}else{		
 %>
-	<ul>
-		<li>
-		<span id="method_<%=objectId%>_newDocument">
-		
+	<div id="workflowy_node_<%=objectId%>" class="workflowy_node" objectId="<%=objectId%>" nodeId="<%=value.id%>", parentId="<%=value.parentId%>" style="position:relative">
+<%	
+			if(mw3.how != 'ROOT'){			
+%>
+		<ul>
+			<li>
+				<span id="method_<%=objectId%>_newDocument">
 <%
 				var nodeStatus = "opened";
 				if(!value.close)
 					nodeStatus = "closed";
-
+					
+				var brainstorm = false;
+				
+				if(value.type == 'backlog' || value.type == 'plan')
+					brainstorm = true;
+				
 				if(mw3.when != 'read'){
 %>		
 			<div id="wfnode_<%=objectId%>" class="wfNode" style="margin:3px 0; position:relative">
@@ -29,69 +35,81 @@
 				<table border="0" cellspacing="0" cellpadding="0" width="100%">
 					<tr>
 						<td class="<%=nodeStatus%>"  onclick="<%=value.close?methods.expand.caller():methods.collapse.caller()%>"><span>&nbsp;</span></td>
+						
+<%
+					if(brainstorm){
+%>											
 						<td onClick="<%=methods.modify.caller()%>" style="width:30px;color:#65C0ED; padding-top:2px;font-size:11px;" valign="top">
-							<%=value.id%>
+							<div id="nodeId_<%=objectId%>"><%=value.id%></div>
 						</td>
+<%
+					}
+%>											
 						<td>
 								<span class="wfNodeText" style="width:100%;">
-					<%	if(value.type=='img'){		
+<%	
+					if(value.type=='img'){		
 %>
 								<img src="<%=value.name%>">
 								<input type="text" id="wfnode_content_<%=objectId%>" style="height:1px ; border:none;background:transparent" onkeydown="mw3.getFaceHelper('<%=objectId%>').keydown(this)" onkeyup="mw3.getFaceHelper('<%=objectId%>').keyup(this);">
 <%					
-						}else if(value.type=='LMS'){		
+					}else if(value.type=='LMS'){		
 %>
 								<input type="text" id="wfnode_content_<%=objectId%>" style="width:100% ; border:none;background:transparent border:0; font-family: 'Helvetica Neue', Arial, Sans-serif; font-size: 12px; font-weight: normal;background:transparent" value="<%=value.name ? value.name : ''%>" onkeydown="mw3.getFaceHelper('<%=objectId%>').keydown(this)" onkeyup="mw3.getFaceHelper('<%=objectId%>').keyup(this);">
 								<img src="<%=value.thumbnail%>" width="220" height="150" onclick="<%=methods.showLms.caller()%>">
 <%					
-						}else if(value.type=='video'){		
+					}else if(value.type=='video'){		
 %>
 								<input type="text" id="wfnode_content_<%=objectId%>" style="width:100% ; border:none;background:transparent border:0; font-family: 'Helvetica Neue', Arial, Sans-serif; font-size: 12px; font-weight: normal;background:transparent" value="<%=value.name ? value.name : ''%>" onkeydown="mw3.getFaceHelper('<%=objectId%>').keydown(this)" onkeyup="mw3.getFaceHelper('<%=objectId%>').keyup(this);">
 								<object width="300" height="300"><param name="movie" value="<%=value.name%>"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><param name="autoplay" value="0"></param><embed src="<%=value.name%>" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="300" height="300"></embed></object>
 <%				
-						}else if(value.type=='slideshare'){		
+					}else if(value.type=='slideshare'){		
 %>
 								<%=value.name%>
-<%				
-						}else if(value.type=='topic'){		
+<%			
+					}else if(value.type=='topic'){		
 %>
-								<input type="text" id="wfnode_content_<%=objectId%>" style="width:100% ; border:none;background:url(images/waveStyle/i_topic.png) no-repeat 5px 0px;  padding-left:30px; border:0; font-family: 'Helvetica Neue', Arial, Sans-serif; font-size: 12px; font-weight: normal;" value="<%=value.name ? value.name : ''%>" onkeydown="mw3.getFaceHelper('<%=objectId%>').keydown(this)" onkeyup="mw3.getFaceHelper('<%=objectId%>').keyup(this);">
-<%				
-						}else if(value.type){
-%>
-								<input type="text" id="wfnode_content_<%=objectId%>" style="width:100% ; border:none;background:transparent; border:0; font-family: 'Helvetica Neue', Arial, Sans-serif; font-size: 12px; font-weight: normal;background:transparent" value="<%=value.name ? value.name : ''%>" onkeydown="mw3.getFaceHelper('<%=objectId%>').keydown(this)" onkeyup="mw3.getFaceHelper('<%=objectId%>').keyup(this);">
-								<div>
-<%								
-							if(value.type == 'plan'){
-%>							
-									<div id="startDate_<%=objectId%>" style="float:left; font-size:11px; color:#A4A4A4">
-										StartDate:<%=value.startDate?value.startDate:'미지정'%>										
-									</div>
-									<div id="endDate_<%=objectId%>" style="float:left; margin-left:5px; font-size:11px; color:#A4A4A4">
-										EndDate:<%=value.endDate?value.endDate:'미지정'%>
-									</div>
+								<input type="text" id="wfnode_content_<%=objectId%>" style="width:100% ; border:none;background:url(images/waveStyle/i_topic.png) no-repeat 5px 0px;  padding-left:30px; border:0; font-family: 'Helvetica Neue', Arial, Sans-serif; font-size: 12px; font-weight: normal;" value="<%=value.name ? value.name : ''%>" onkeydown="mw3.getFaceHelper('<%=objectId%>').keydown(this)" onkeyup="mw3.getFaceHelper('<%=objectId%>').keyup(this);" />
 <%
-							}
+					}else if(brainstorm){
 %>
+								<input type="text" id="wfnode_content_<%=objectId%>" style="width:100% ; border:none;background:transparent; border:0; font-family: 'Helvetica Neue', Arial, Sans-serif; font-size: 12px; font-weight: normal;background:transparent" value="<%=value.name ? value.name : ''%>" onkeydown="mw3.getFaceHelper('<%=objectId%>').keydown(this)" onkeyup="mw3.getFaceHelper('<%=objectId%>').keyup(this);" />
+								<div>
+									<div id="budget_<%=objectId%>" style="float:left; margin-left:5px; font-size:11px; color:#A4A4A4">
+									</div>					
 									<div id="effort_<%=objectId%>" style="float:left; margin-left:5px; font-size:11px; color:#A4A4A4">
-										effort:<%=value.effort%>
 									</div>
+									<div id="bv_<%=objectId%>" style="float:left; margin-left:5px; font-size:11px; color:#A4A4A4">
+									</div>					
 									<div id="rBV_<%=objectId%>" style="float:left; margin-left:5px; font-size:11px; color:#A4A4A4">
-										rBV:<%=value.rBV?value.rBV:0%>
 									</div>
 									<div id="roi_<%=objectId%>" style="float:left; margin-left:5px; font-size:11px; color:#A4A4A4">
-										ROI:<%=value.roi?value.roi:0%>
 									</div>
 									
 									<div style="clear:both" />
+									
+<%
+						if(value.type == 'plan'){
+%>
+									<div id="startDate_<%=objectId%>" style="float:left; margin-left:5px; font-size:11px; color:#A4A4A4">
+									</div>
+									<div id="endDate_<%=objectId%>" style="float:left; margin-left:5px; font-size:11px; color:#A4A4A4">
+									</div>			
+									<div id="progress_<%=objectId%>" style="float:left; margin-left:5px; font-size:11px; color:#A4A4A4">
+									</div>			
+									
+									<div style="clear:both" />						
+<%
+						}
+%>
 								</div>
 
 <%						
-						}else{
+					}else{
 %>
-								<input type="text" id="wfnode_content_<%=objectId%>" style="width:100% ; border:none;background:transparent; border:0; font-family: 'Helvetica Neue', Arial, Sans-serif; font-size: 12px; font-weight: normal;background:transparent" value="<%=value.name ? value.name : ''%>" onkeydown="mw3.getFaceHelper('<%=objectId%>').keydown(this)" onkeyup="mw3.getFaceHelper('<%=objectId%>').keyup(this);">
+								<input type="text" id="wfnode_content_<%=objectId%>" style="width:100% ; border:none;background:transparent; border:0; font-family: 'Helvetica Neue', Arial, Sans-serif; font-size: 12px; font-weight: normal;background:transparent" value="<%=value.name ? value.name : ''%>" onkeydown="mw3.getFaceHelper('<%=objectId%>').keydown(this)" onkeyup="mw3.getFaceHelper('<%=objectId%>').keyup(this);" />
 <%
-						}
+					}
 %>														
 							</span>
 						</td>
@@ -116,6 +134,38 @@
 						<td>
 							<span class="wfNodeText">
 								<input type="text" id="wfnode_content_<%=objectId%>" style="width:100% ; border:none;background:transparent" style="border:0; font-family: 'Helvetica Neue', Arial, Sans-serif; font-size: 12px; font-weight: normal" value="<%=value.name ? value.name : ''%>" readonly>
+								
+								<div>
+									<div id="budget_<%=objectId%>" style="float:left; margin-left:5px; font-size:11px; color:#A4A4A4">
+									</div>					
+									<div id="effort_<%=objectId%>" style="float:left; margin-left:5px; font-size:11px; color:#A4A4A4">
+									</div>
+									<div id="bv_<%=objectId%>" style="float:left; margin-left:5px; font-size:11px; color:#A4A4A4">
+									</div>					
+									<div id="rBV_<%=objectId%>" style="float:left; margin-left:5px; font-size:11px; color:#A4A4A4">
+									</div>
+									<div id="roi_<%=objectId%>" style="float:left; margin-left:5px; font-size:11px; color:#A4A4A4">
+									</div>
+									
+									<div style="clear:both" />
+									
+<%
+						if(value.type == 'plan'){
+%>
+									<div id="startDate_<%=objectId%>" style="float:left; margin-left:5px; font-size:11px; color:#A4A4A4">
+									</div>
+									<div id="endDate_<%=objectId%>" style="float:left; margin-left:5px; font-size:11px; color:#A4A4A4">
+									</div>			
+									<div id="progress_<%=objectId%>" style="float:left; margin-left:5px; font-size:11px; color:#A4A4A4">
+									</div>			
+									
+									<div style="clear:both" />						
+<%
+						}
+%>
+								</div>
+								
+								
 							</span>
 						</td>
 					</tr>
@@ -123,9 +173,8 @@
 				<div id="wfinfo_<%=objectId%>"></div>
 			</div>
 <%
-				}
-				
-				}
+				}				
+<%
 			}
 			
 			if(!value.close){			
@@ -133,12 +182,23 @@
 	<%=fields.childNode.here()%>
 <%			
 			}
+			
+			if(mw3.how != 'ROOT'){			
 %>
-		</span>
-
-		</li>
-	</ul>
-<%			
+	
+				</span>
+			</li>		
+		</ul>
+<%
+			}			
 		}
+%>
+	</div>
+<%		
 	}
 %>		
+
+
+
+
+

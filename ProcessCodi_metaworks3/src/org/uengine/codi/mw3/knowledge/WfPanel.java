@@ -45,7 +45,7 @@ public class WfPanel implements ContextAware {
 		}
 
 	ArrayList<IWfNode> path;
-	@Face(options="alignment", values="horizontal")
+		@Face(options="alignment", values="horizontal")
 		public ArrayList<IWfNode> getPath() throws Exception{
 			return path; 
 		}
@@ -131,6 +131,10 @@ public class WfPanel implements ContextAware {
 		}else{
 			node.setFirst(false);
 			node.load();
+			
+			if(node.getChildNode().size() == 0){
+				
+			}
 		}
 		setFirst(false);
 		//node.load(nodeId);		

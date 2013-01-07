@@ -2,10 +2,12 @@ var org_uengine_codi_mw3_knowledge_WfPanel = function(objectId, className){
 	this.objectId = objectId;
 	this.className = className;
 	this.divId = mw3._getObjectDivId(this.objectId);
+	this.divObj = $('#' + this.divId);
 	
 	this.windowObjectId = $('#' + this.divId).closest('.mw3_window').attr('objectId');
 	
-	$('#' + this.divId).addClass('workflowy');
+	$('#' + this.divId).addClass('wf_panel').attr('objectId', this.objectId).css({height: '100%', width: '90%'});
+	
 	
 	rootNodeId = mw3.objects[objectId].rootNodeId;
 	
@@ -18,7 +20,7 @@ var org_uengine_codi_mw3_knowledge_WfPanel = function(objectId, className){
 	}
 }
 
-org_uengine_codi_mw3_knowledge_WfPanel.prototype = {
+org_uengine_codi_mw3_knowledge_WfPanel.prototype = {		
 	startLoading : function(){
 		if(this.windowObjectId && mw3.getFaceHelper(this.windowObjectId) && mw3.getFaceHelper(this.windowObjectId).startLoading)
 			mw3.getFaceHelper(this.windowObjectId).startLoading();
@@ -29,7 +31,15 @@ org_uengine_codi_mw3_knowledge_WfPanel.prototype = {
 	},
 	destroy : function(){
 		this.endLoading();
-	}	
-}
+	},
+	toAppend : function(target){
+		var appendTarget = $(this.divObj).find('.workflowy_node:first').children(':first');
+		
+		var html = mw3.locateObject(target, null);
+		
+		appendTarget.append(html);
+		
+	}
+};
 
 var rootNodeId;

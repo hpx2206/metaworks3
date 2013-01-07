@@ -1,7 +1,12 @@
-<div style="width:100%; height:100%;" >
-
 <%
 	if(value && !value.first){
+		if(value.id != null){
+%>
+
+<%=mw3.localize(objectMetadata.displayName) + ' Area'%>
+
+<%
+		}
 %>
 
 <br>
@@ -20,5 +25,3 @@
 		}
 	}
 %>
-
-</div>	
