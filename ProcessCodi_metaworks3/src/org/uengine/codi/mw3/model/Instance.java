@@ -20,6 +20,7 @@ import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.Login;
+import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitorPanel;
 import org.uengine.processmanager.ProcessManagerRemote;
 import org.uengine.webservices.worklist.DefaultWorkList;
 
@@ -441,7 +442,12 @@ public class Instance extends Database<IInstance> implements IInstance{
 				panel.session = session;
 				panel.load(this.getInstId().toString());
 				
-				MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(flowchart())});
+				InstanceMonitorPanel processInstanceMonitorPanel = new InstanceMonitorPanel();
+				processInstanceMonitorPanel.processManager = processManager;
+				processInstanceMonitorPanel.session = session;
+				processInstanceMonitorPanel.load(this.getInstId().toString());
+				MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(processInstanceMonitorPanel)});
+//				MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(flowchart())});
 			}
 			setInstanceViewThreadPanel(panel);
 			return this;

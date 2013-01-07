@@ -3,6 +3,7 @@ package org.uengine.codi.mw3.model;
 import org.metaworks.annotation.Face;
 import org.uengine.codi.mw3.calendar.ScheduleCalendar;
 import org.uengine.codi.mw3.knowledge.WfPanel;
+import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitorPanel;
 
 @Face( options={"fieldOrder"},values={"panel,scheduleCalendar,processInstanceMonitor"} )
 public class MuiltiViewTab {
@@ -25,13 +26,13 @@ public class MuiltiViewTab {
 			this.scheduleCalendar = scheduleCalendar;
 		}
 	
-	ProcessInstanceMonitor processInstanceMonitor;
+		InstanceMonitorPanel processInstanceMonitor;
 		@Face(displayName="프로세스")
-		public ProcessInstanceMonitor getProcessInstanceMonitor() {
+		public InstanceMonitorPanel getProcessInstanceMonitor() {
 			return processInstanceMonitor;
 		}
 		public void setProcessInstanceMonitor(
-				ProcessInstanceMonitor processInstanceMonitor) {
+				InstanceMonitorPanel processInstanceMonitor) {
 			this.processInstanceMonitor = processInstanceMonitor;
 		}
 		
@@ -39,6 +40,6 @@ public class MuiltiViewTab {
 	public void load() throws Exception{
 		this.scheduleCalendar = new ScheduleCalendar(); 
 		this.panel = new WfPanel();
-		this.processInstanceMonitor = new ProcessInstanceMonitor();
+		this.processInstanceMonitor = new InstanceMonitorPanel();
 	}
 }
