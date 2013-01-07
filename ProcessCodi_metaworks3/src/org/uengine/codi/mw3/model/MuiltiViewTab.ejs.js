@@ -6,11 +6,14 @@ var org_uengine_codi_mw3_model_MuiltiViewTab = function(objectId, className){
 	$('#objDiv_' + objectId).addClass('mw3_tab').addClass('mw3_layout').attr('objectId', objectId);
 	$('#tabs_' + objectId).tabs({
 		show: function(event, ui){
-			if(mw3.getFaceHelper(objectId))
+			if(mw3.getFaceHelper(objectId) && mw3.getFaceHelper(objectId).resize)
 				mw3.getFaceHelper(objectId).resize();
+			
 			if( ui.index == 1){
 				var calObjectId = $('#tab_'+objectId+'_2').find('.mw3_layout').attr('objectId');
-				mw3.getFaceHelper(calObjectId).resize();
+				
+				if(mw3.getFaceHelper(calObjectId) && mw3.getFaceHelper(calObjectId).resize)
+					mw3.getFaceHelper(calObjectId).resize();
 			}
 		}
 	});

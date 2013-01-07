@@ -1,3 +1,6 @@
+<%
+	if(value != null && typeof value != 'undefined'){
+%>
 <div class="depth1" onClick="<%=methods.select.caller() %>" ><%=mw3.localize("$Personal")%></div>
 <%if(value.selected){%>
 	<div class="depth2">
@@ -12,3 +15,7 @@
 	</div>
 <%}else{%>
 <%}%>
+
+<%
+	}
+%>
