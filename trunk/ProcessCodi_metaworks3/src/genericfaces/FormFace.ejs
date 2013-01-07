@@ -46,14 +46,14 @@
 			for (var i=0; i<objectMetadata.fieldDescriptors.length; i++){
 				var fd = objectMetadata.fieldDescriptors[i];
 	   		   							
-				if(fd.name == 'metaworksContext') continue;
-							
+				if(fd.name == 'metaworksContext') continue;							
 				if(mw3.isHidden(fd)) continue;
 											
 				if(value[fd.name] == null
 				   && fd.className != 'java.lang.String'
 				   && fd.className != 'java.lang.Number'
 				   && fd.className != 'java.lang.Boolean'
+				   && fd.className != 'java.util.Date'
 				   )
 					continue;
 					
@@ -80,7 +80,7 @@
 		<tr>
 <%				
 			for (var j=0; j<tempOrder.length; j++){					
-				var fd = fields[tempOrder[j]].fieldDescriptor;
+				var fd = fields[tempOrder[j]].fieldDescriptor;				
 				var colspan = null;
 				
 				if(j == tempOrder.length-1)
