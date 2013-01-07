@@ -1,11 +1,11 @@
 package org.uengine.codi.mw3.knowledge;
 
-import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Table;
 import org.metaworks.dao.IDAO;
+import org.metaworks.widget.ModalWindow;
 
 @Table(name="bpm_knol")
 public interface ITopicNode extends IDAO {
@@ -29,5 +29,8 @@ public interface ITopicNode extends IDAO {
 	@ServiceMethod(inContextMenu=true, callByContent=true)
 	@Face(displayName="$Remove")
 	public Object[] remove() throws Exception;
-	
+		
+	@ServiceMethod(inContextMenu=true, callByContent=true, target="popup")
+	@Face(displayName="$Modify")
+	public ModalWindow modify() throws Exception;
 }
