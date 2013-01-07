@@ -857,12 +857,7 @@ org_uengine_codi_mw3_knowledge_IWfNode.prototype = {
 		$('<div>').appendTo(this.obj.find('#wfnode_' + this.objectId).next()).prepend(html);
 	},
 	toPrev : function(target){
-		console.log('toPrev');
-		console.log(target);
-		
 		var html = mw3.locateObject(target, null);
-		
-		console.log(this.obj.parent().parent());
 		
 		$('<div>').insertBefore(this.obj.parent().parent()).append(html);
 		
