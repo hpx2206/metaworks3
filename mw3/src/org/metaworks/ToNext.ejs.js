@@ -15,11 +15,17 @@ var org_metaworks_ToNext = function(objectId, className){
 				var mappedObjId = mw3.objectId_KeyMapping[objKeys[i]];
 	
 				if(mappedObjId){
+					var faceHelper = mw3.getFaceHelper(mappedObjId);
 					
-					var html = mw3.locateObject(object.target, null);//, "#"+mappedObjdivId);
-	
-					$(html).insertAfter("#objDiv_" + mappedObjId);
-	
+					if(faceHelper.toNext){
+						faceHelper.toNext(object.target);
+						
+					}else{
+						var html = mw3.locateObject(object.target, null);//, "#"+mappedObjdivId);
+						
+						$(html).insertAfter("#objDiv_" + mappedObjId);
+					}
+					
 					break;
 				}	
 			}

@@ -3,7 +3,6 @@ package org.metaworks;
 public class ToPrev {
 	
 	Object target;
-
 		public Object getTarget() {
 			return target;
 		}

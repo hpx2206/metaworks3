@@ -8,7 +8,7 @@ var Tab = function(objectId, className){
 	$('#tabs_' + objectId).tabs({
 		show: function(event, ui){
 			if(mw3.getFaceHelper(objectId))
-				mw3.getFaceHelper(objectId).resize();
+				mw3.getFaceHelper(objectId).resize(ui);
 		}
 	});
 	
@@ -45,17 +45,16 @@ Tab.prototype.destroy = function(){
 }
 
 
-Tab.prototype.resize = function(){
+Tab.prototype.resize = function(ui){
 	if(this.layout){
 		this.layout.resizeAll();
 		
-		this.resizeChild();
+		this.resizeChild(ui);
 	}
 }
 
-Tab.prototype.resizeChild = function(){
-	
-	$('#objDiv_' + this.objectId).find('.mw3_resize').each(function(index, value){
+Tab.prototype.resizeChild = function(ui){
+	$(ui.panel).find('.mw3_resize').each(function(index, value){
 		var layoutId = value.getAttribute('objectId');
 		
 		if(layoutId)

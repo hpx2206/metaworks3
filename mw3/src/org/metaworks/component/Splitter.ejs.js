@@ -87,6 +87,7 @@ var org_metaworks_component_Splitter = function(objectId, className){
 		this.B._min = this.dimSum(this.B, "min-" + this.opts.split);
 	
 	this.resize();
+	this.resplit(this.A[0][this.opts.pxSplit]);
 };
 
 org_metaworks_component_Splitter.prototype = {

@@ -1,10 +1,21 @@
 package org.metaworks.component;
 
+import org.metaworks.annotation.Id;
+
 public class HorizontalSplitBox {
 
 	public final static String ALIGN_TOP			= "top";
 	public final static String ALIGN_BOTTOM			= "bottom";
 			
+	String id;
+		@Id
+		public String getId() {
+			return id;
+		}
+		public void setId(String id) {
+			this.id = id;
+		}
+
 	int fixHeight;
 			public int getFixHeight() {
 				return fixHeight;
@@ -60,6 +71,11 @@ public class HorizontalSplitBox {
 		
 	public HorizontalSplitBox() {
 		this.setAlign(ALIGN_TOP);
+	}
+	
+	public HorizontalSplitBox(String id){
+		this();
+		this.setId(id);
 	}
 	
 }

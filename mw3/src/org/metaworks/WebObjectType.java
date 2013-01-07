@@ -974,9 +974,9 @@ public class WebObjectType{
 				}
 				
 				if(hidden!=null){
-					smc.setWhen("___hidden___");
+					if(hidden.on())
+						smc.setWhen("___hidden___");					
 				}
-				
 				
 				Test[] tests = null;
 				if(testSet!=null){

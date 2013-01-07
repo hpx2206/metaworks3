@@ -11,17 +11,15 @@ var org_metaworks_ToPrepend = function(objectId, className){
 		if(objKeys && objKeys.length){
 						        				
 			for(var i=0; i<objKeys.length; i++){
-				
 				var mappedObjId = mw3.objectId_KeyMapping[objKeys[i]];
 				
 				if(mappedObjId){
-					
-					var html = mw3.locateObject(object.target, null);//, "#"+mappedObjdivId);
 					var faceHelper = mw3.getFaceHelper(mappedObjId);
-					
 					if(faceHelper && faceHelper.toPrepend){
-						faceHelper.toPrepend(html);
+						faceHelper.toPrepend(object.target);
 					}else{
+						var html = mw3.locateObject(object.target, null);//, "#"+mappedObjdivId);
+						
 						$("#objDiv_" + mappedObjId).prepend(html);	
 					}
 	
