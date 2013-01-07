@@ -10,7 +10,7 @@ var org_uengine_codi_mw3_webProcessDesigner_ApplyProperties = function(objectId,
 	var canvasObject = mw3.getAutowiredObject('org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerWebContentPanel');
 	var canvasObjectFaceHelper = mw3.getFaceHelper(canvasObject.__objectId);
 	var canvas = canvasObjectFaceHelper.icanvas;
-	console.log(this.object.content);
+//	console.log(this.object.content);
 	
 	var contentValue = this.object.content;
 	var element = document.getElementById(this.object.id);
@@ -19,7 +19,9 @@ var org_uengine_codi_mw3_webProcessDesigner_ApplyProperties = function(objectId,
 		canvas.drawLabel(element, contentValue.name);
 	}else if(contentValue && contentValue.__className=="org.uengine.kernel.HumanActivity"){
 		// TODO 엑티비티별로..??? 이름주기
-		canvas.drawLabel(element, contentValue.name.text);
+		var wfText = $(element).children('[id$=_LABEL]').text();
+		wfText = contentValue.name.text + wfText ;
+		canvas.drawLabel(element, wfText);
 	}
 	
 	$('#' + this.object.id).data('activity', contentValue);

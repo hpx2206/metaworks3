@@ -18,9 +18,10 @@ var org_uengine_codi_mw3_model_InstanceListPanel_sns = function(objectId, classN
 		var faceHelper = this;	
 		faceHelper.load();	
 		
-		var scrollDiv = $('#objDiv_' + this.objectId + " .ui-layout-center .ui-layout-content")
+		var scrollDiv = $('#objDiv_' + this.objectId + " .ui-layout-center .ui-layout-content");
 		
 		scrollDiv.scroll(function(e) {
+			// 커서 위치가 약간 달라서 생기는 문제점
 			if(scrollDiv.scrollTop() == scrollDiv.find('div').eq(0).height() - scrollDiv.height() && lastMore){
 				mw3.objects[lastMore].more();
 			}
@@ -49,7 +50,7 @@ var org_uengine_codi_mw3_model_InstanceListPanel_sns = function(objectId, classN
 		}, 1);
 	}
 	
-}
+};
 
 
 org_uengine_codi_mw3_model_InstanceListPanel_sns.prototype = {

@@ -307,7 +307,7 @@ public class Role implements java.io.Serializable, Cloneable, ContextAware {
 			}
 			
 			//try to use default finally
-			if(mapping==null && role.getDefaultEndpoint()!=null){
+			if(mapping==null && ( role.getDefaultEndpoint()!=null && !"".equals(role.getDefaultEndpoint())) ){
 				try{
 					mapping = RoleMapping.create();
 					mapping.setName(role.getName());

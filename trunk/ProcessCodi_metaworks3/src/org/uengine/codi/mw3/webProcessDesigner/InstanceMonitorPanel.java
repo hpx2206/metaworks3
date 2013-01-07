@@ -60,6 +60,7 @@ public class InstanceMonitorPanel {
 		this.setInstanceId(instanceId);
 		ProcessInstance instance = processManager.getProcessInstance(instanceId);
 		ProcessDefinition procDef = instance.getProcessDefinition();
+		if( procDef.getExtendedAttributes() == null ) return;
 		
 		ArrayList<CanvasDTO> cellsList = (ArrayList<CanvasDTO>) procDef.getExtendedAttributes().get("cells");
 		DefaultActivityViewer dav = new DefaultActivityViewer();

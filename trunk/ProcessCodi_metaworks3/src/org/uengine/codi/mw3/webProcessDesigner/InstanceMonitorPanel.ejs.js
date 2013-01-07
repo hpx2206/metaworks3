@@ -30,7 +30,9 @@ var org_uengine_codi_mw3_webProcessDesigner_InstanceMonitorPanel = function(obje
     });
 	
 	if( object != null && object.graphString != null ){
-		canvas.loadJSON($.parseJSON(object.graphString));
+		var canvassizeObject = canvas.loadJSON($.parseJSON(object.graphString));
+		// 약간의 여유를 두기 위하여 30px 만큼 더해줌
+		canvas.setCanvasSize([canvassizeObject.x2 + 30 , canvassizeObject.y2 + 30]);
 	}
 	if( object != null && object.cell != null ){
 		var cells = object.cell;

@@ -291,7 +291,7 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 				when : 'edit'
 			};
 			
-			if(shape_id == 'OG.shape.HorizontalLaneShape')
+			if(shape_id == 'OG.shape.HorizontalLaneShape' || shape_id == 'OG.shape.VerticalLaneShape')
 				metaworksContext['how'] = 'lane';
 				
 			var propertiesWindow = {
