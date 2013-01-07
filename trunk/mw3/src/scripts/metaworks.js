@@ -101,6 +101,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
    			 		mw3.dragStartY = 0;
    					
    					if(mw3.dragObject && mw3.dragging){
+   						$(mw3.dragObject).trigger('dragend');
    						
    						if(mw3.dragObject['dropCommand']){
    							mw3.dragObject['dropCommand'] = null;
@@ -142,7 +143,9 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
  						if(!mw3.dragging){
  	 						if(console)
  	 							console.log('drag  start');
- 							
+ 							 	 				
+ 	 						$(mw3.dragObject).trigger('dragstart');
+ 	 						
  							if(!$("#__dragGuide")[0]){
  								$('body').append("<div id='__dragGuide' style='position:absolute;top:100px;left:100px;background=#000000;width=40px;height=20px;z-index:999999'></div>");
  							}
@@ -963,6 +966,9 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 						if(theDiv[0] && metadata)
 					    for(var methodName in metadata.serviceMethodContextMap){
 					   		var methodContext = metadata.serviceMethodContextMap[methodName];
+					   		
+						    if(this.isHiddenMethodContext(methodContext))
+							   continue;
 
 				   			if(methodContext.keyBinding && methodContext.keyBinding.length > 0){
 				   				
@@ -1002,8 +1008,6 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				   				else if(methodContext.mouseBinding == "left")
 				   					which = 1;
 
-
-				   				
 				   				if(methodContext.mouseBinding == "drag"){
 				   					
 				   					theDiv[0]['dragCommand'] = command;
@@ -1027,7 +1031,6 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 
 				   				}//end of case 'drag start'
 				   				else if(methodContext.mouseBinding == "drag-enableDefault"){
-				   					
 				   					theDiv[0]['dragCommand'] = command;
 				   					theDiv[0]['objectId'] = objectId;
 				   					
@@ -1050,23 +1053,26 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				   				else if(methodContext.mouseBinding == "drop"){
 				   					theDiv[0]['dropCommand'] = command;
 				   					theDiv[0]['objectId'] = objectId;
-
-				   					
-				   					var mouseup = function(){
+				   									   					
+				   					var mouseup = function(e){
    			 							if(mw3.dragging){
    			 								eval(this['dropCommand']);
-
-   			 								this['dropCommand'] = null;
+   			 								/*  
+   			 								 * after a single drop in the null 
+   			 								 */
+   			 								//this['dropCommand'] = null;
    			 								mw3.dragging = false;
 	   			  	 						var objectId = mw3.dragObject['objectId'];
-	   			 	 						if(objectId && mw3.objects[objectId]){
+	   			  	 						
+	   			 	 						if(typeof objectId != 'undefined' && mw3.objects[objectId]){
 	   			 	 							var typeName = mw3.objects[objectId].__className;
 	   			 	 	 						$(".onDrop_" + typeName.split('.').join('_')).css("border-width", "").css("border","");	
 	   			 	 	 						
-	   			 	 	 						this['objectId'] = null;
+	   			 	 	 						//this['objectId'] = null;
 	   			 	 						}
 
-   			 								
+	   			 	 						$(mw3.dragObject).trigger('drop');
+	   			 	 						$(mw3.dragObject).trigger('dragend');
    			 							}
    			 						};
 				   					
@@ -1119,11 +1125,8 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 						   var menuItems = [];
 						   
 						   for(var i=0; i<contextMenuMethods.length; i++){							   
-							   
 							   var serviceMethodContext = contextMenuMethods[i];
 							   
-							   if(this.isHiddenMethodContext(serviceMethodContext))
-								   continue;
 							   
 							   // 상태에 따른 visible 처리
 							   /*
@@ -1421,17 +1424,18 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				
 				
 				// 2012-09-27 cjw 슈퍼클래스까지 keyMapping
+				/*
 				var objKey = this._createObjectKey(value);
 				if(objKey)
 					this.objectId_KeyMapping[objKey] = objectId;
-				/*
+				*/
+				
 				var objKeys = this._createObjectKey(value, true);
 				if(objKeys && objKeys.length){
 					for(var i=0; i<objKeys.length; i++){
 						this.objectId_KeyMapping[objKeys[i]] = objectId;
 					}
 				}
-				*/
 				
 				
 				this._wireObject(value, objectId);
