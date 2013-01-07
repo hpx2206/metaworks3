@@ -15,6 +15,7 @@ public class TopicPerspective extends Perspective {
 	
 	@Override
 	protected void loadChildren() throws Exception {
+		System.out.println("loadChildren");
 		topicMap = new TopicPanel();
 		topicMap.session = session;
 		topicMap.load();
@@ -33,7 +34,7 @@ public class TopicPerspective extends Perspective {
 	public ModalWindow addTopic() throws Exception{
 		TopicTitle topicTitle = new TopicTitle();
 		topicTitle.setMetaworksContext(new MetaworksContext());
-		topicTitle.getMetaworksContext().setWhen("edit");
+		topicTitle.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 		topicTitle.session = session;
 		return new ModalWindow(topicTitle , 500, 250,  "토픽추가");
 	}
