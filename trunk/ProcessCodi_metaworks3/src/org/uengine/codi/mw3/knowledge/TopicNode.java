@@ -1,10 +1,12 @@
 package org.uengine.codi.mw3.knowledge;
 
+import org.metaworks.MetaworksContext;
 import org.metaworks.Remover;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.MetaworksDAO;
 import org.metaworks.dao.TransactionContext;
+import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.model.Perspective;
 import org.uengine.codi.mw3.model.Session;
 
@@ -59,6 +61,7 @@ public class TopicNode extends Database<ITopicNode> implements ITopicNode {
 	public Object[] loadTopic() throws Exception{
 		String title = "주제 : " + getName();
 		Object[] returnObject = Perspective.loadInstanceListPanel(session, "topic", getId(), title);
+
 		if("sns".equals(session.getEmployee().getPreferUX()) ){
 			WfPanel wfPanel = new WfPanel();
 			wfPanel.session = session;
@@ -94,6 +97,19 @@ public class TopicNode extends Database<ITopicNode> implements ITopicNode {
 			throw new Exception("관리자나 초기토픽생성자만 수정가능합니다.");
 		}
 		return new Object[]{new Remover(this)};
+	}
+	
+
+	public ModalWindow modify() throws Exception {
+		System.out.println("modify");	
+		TopicTitle topicTitle = new TopicTitle();
+		topicTitle.setTopicId(this.getId());
+		topicTitle.setTopicTitle(this.getName());
+		topicTitle.setMetaworksContext(new MetaworksContext());
+		topicTitle.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+		topicTitle.session = session;
+		return new ModalWindow(topicTitle , 500, 250,  "토픽수정");
+
 	}
 	
 	public void addUser() throws Exception {

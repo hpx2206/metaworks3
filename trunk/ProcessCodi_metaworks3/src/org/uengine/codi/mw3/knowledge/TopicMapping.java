@@ -45,7 +45,7 @@ public class TopicMapping extends Database<ITopicMapping> implements ITopicMappi
 		public void setUserName(String userName) {
 			this.userName = userName;
 		}
-
+	
 	public ITopicMapping saveMe() throws Exception {
 		
 		   Map options = new HashMap();
