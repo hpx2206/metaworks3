@@ -621,3 +621,16 @@ CREATE TABLE BPM_TOPICMAPPING (
 
 alter table processmap modify column comcode varchar(20);
 alter table bpm_procinst add column progress varchar(10);
+
+
+
+alter TABLE `bpm_knol` add (
+	`refId` VARCHAR(20) NULL DEFAULT NULL,
+	`budget` INT(11) NULL DEFAULT NULL,
+	`effort` INT(11) NULL DEFAULT NULL,
+	`benfit` INT(11) NULL DEFAULT NULL,
+	`penalty` INT(11) NULL DEFAULT NULL,
+	`startdate` DATE NULL DEFAULT NULL,
+	`enddate` DATE NULL DEFAULT NULL
+
+)
