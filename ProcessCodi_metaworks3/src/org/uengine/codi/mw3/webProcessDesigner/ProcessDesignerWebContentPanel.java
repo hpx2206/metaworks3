@@ -293,7 +293,8 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 					if( cv.getParent() != null ){
 						String groupId = geom.getParent();
 						CanvasDTO groupCanvas = getCanvasMap().get(groupId);
-						if( "OG.shape.HorizontalLaneShape".equals(groupCanvas.getShapeId() )){
+						if( "OG.shape.HorizontalLaneShape".equals(groupCanvas.getShapeId()) 
+								|| "OG.shape.VerticalLaneShape".equals(groupCanvas.getShapeId())){
 							if(cv.getClassname() != null && "org.uengine.kernel.HumanActivity".equals(cv.getClassname()) ){
 								HumanActivity activity = (HumanActivity)activityMap.get(cv.getId());
 								activity = (HumanActivity)geom.makeProcVal(activity);
