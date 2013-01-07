@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.Vector;
 
-import org.metaworks.annotation.Face;
+import org.metaworks.annotation.Hidden;
 import org.uengine.contexts.TextContext;
 import org.uengine.kernel.graph.Transition;
 import org.uengine.processdesigner.ActivityDesigner;
@@ -1417,6 +1417,7 @@ public abstract class Activity implements Validatable, java.io.Serializable, Clo
 	private transient List<Transition> incomingTransitions;
 	private transient List<Transition> outgoingTransitions;
 	
+	@Hidden
 	public List<Transition> getIncomingTransitions() {
 		if (incomingTransitions == null) {
 			incomingTransitions = new ArrayList<Transition>();
@@ -1428,6 +1429,7 @@ public abstract class Activity implements Validatable, java.io.Serializable, Clo
 		this.incomingTransitions = incomingTransitions;
 	}
 	
+	@Hidden
 	public List<Transition> getOutgoingTransitions() {
 		if (outgoingTransitions == null) {
 			outgoingTransitions = new ArrayList<Transition>();

@@ -144,7 +144,13 @@ public class CanvasDTO implements Serializable{
 			public void setClassname(String classname) {
 				this.classname = classname;
 			}
-			
+		String classType;
+			public String getClassType() {
+				return classType;
+			}
+			public void setClassType(String classType) {
+				this.classType = classType;
+			}
 		/*  viewer 부분에서  필요한 정보들 transient */
 		transient String instStatus;
 			public String getInstStatus() {

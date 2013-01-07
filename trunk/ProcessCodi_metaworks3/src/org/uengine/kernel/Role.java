@@ -137,7 +137,7 @@ public class Role implements java.io.Serializable, Cloneable, ContextAware {
 		
 	}
 	
-	MetaworksContext metaworksContext;
+	transient MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
 			return metaworksContext;
 		}

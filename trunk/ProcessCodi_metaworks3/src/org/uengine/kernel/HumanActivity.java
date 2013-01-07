@@ -371,7 +371,7 @@ System.out.println("=========================== HARD-TO-FIND : HumanActivity.cre
 					return super.put(key, val); 
 			}
 		}*/;
-	
+		
 		if(instance!=null){
 			kpv.setProperty(KeyedParameter.INSTRUCTION, getExtraMessage(instance));
 			kpv.setProperty(KeyedParameter.INSTANCEID, instance.getInstanceId());
@@ -400,7 +400,7 @@ System.out.println("=========================== HARD-TO-FIND : HumanActivity.cre
 		
 		kpv.setProperty(KeyedParameter.TOOL, getTool());
 		kpv.setProperty(KeyedParameter.TRACINGTAG, getTracingTag());
-//		kpv.setProperty(KeyedParameter.MESSAGE, getMessage());
+		kpv.setProperty(KeyedParameter.MESSAGE, getMessage() != null ? getMessage() : "");
 		kpv.setProperty(KeyedParameter.TITLE, /*getProcessDefinition().getName() + "("+*/getName().getText(GlobalContext.DEFAULT_LOCALE)/*+")"*/ );// + "(" + instance.getInstanceId()+")");
 		kpv.setProperty(KeyedParameter.DURATION, ""+getDuration());
 		kpv.setProperty(KeyedParameter.PROCESSDEFINITIONNAME, getProcessDefinition().getName().getText(GlobalContext.DEFAULT_LOCALE));
@@ -753,7 +753,7 @@ System.out.println("=========================== HARD-TO-FIND : HumanActivity.cre
 
 	public void setTracingTag(String tag) {
 		super.setTracingTag(tag);		
-//		setMessage("onHumanActivityResult" + getTracingTag());
+		setMessage("onHumanActivityResult" + getTracingTag());
 	}
 	
 	/* (non-Javadoc)
@@ -1005,9 +1005,11 @@ System.out.println("=========================== HARD-TO-FIND : HumanActivity.cre
 	/**
 	 * for getting parameters (without instance info) from outside
 	 */
-//	public Map getParameterMap() throws Exception{
+	public Map getParameterMap() throws Exception{
+		// TODO
+		return null;
 //		return createParameter(null);
-//	}
+	}
 
 	public void setStartedTime(ProcessInstance instance, Calendar theTime) throws Exception {
 		// TODO Auto-generated method stub

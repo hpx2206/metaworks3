@@ -6,10 +6,66 @@ package org.uengine.kernel;
 import java.io.Serializable;
 import java.util.*;
 
+import org.metaworks.annotation.Hidden;
 
-public class ReceiveActivity extends DefaultActivity{
+
+public class ReceiveActivity extends DefaultActivity implements MessageListener{
 	private static final long serialVersionUID = org.uengine.kernel.GlobalContext.SERIALIZATION_UID;
 
+	/**
+	 * @deprecated messageDefinition will be used instead
+	 * 
+	 * @uml.property name="message"
+	 */
+	String message;
+		@Hidden
+		public String getMessage() {
+			if (message == null && getMessageDefinition() != null)
+				setMessage(getMessageDefinition().getName());
+
+			return message;
+		}
+
+		/**
+		 * @deprecated setMessageDefinition will be used instead
+		 * 
+		 * @uml.property name="message"
+		 */
+		public void setMessage(String value) {
+			message = value;
+		}
+
+	/**
+	 * @deprecated parameters will be used instead
+	 * 
+	 * ProcessVariable output;	
+	 * /**
+	 * @deprecated getParameters will be used instead
+	 * 
+	 * public ProcessVariable getOutput(){
+	 * return output;
+	 * }
+	 * /**
+	 * @deprecated setParameters will be used instead
+	 * 
+	 * public void setOutput(ProcessVariable value){
+	 * output = value;
+	 * }
+	 */
+	 /** @uml.property name="messageDefinition"
+	 * @uml.associationEnd 
+	 * @uml.property name="messageDefinition" multiplicity="(0 1)"
+	 */
+	MessageDefinition messageDefinition;
+		@Hidden
+		public MessageDefinition getMessageDefinition() {
+			return messageDefinition;
+		}
+		public void setMessageDefinition(MessageDefinition definition) {
+			if( definition == null) definition = new MessageDefinition();
+			messageDefinition = definition;
+			setMessage(definition.getName());
+		}
 
 	ParameterContext[] parameters;
 		public ParameterContext[] getParameters() {
@@ -42,23 +98,23 @@ public class ReceiveActivity extends DefaultActivity{
 	}*/
 
 	protected void executeActivity(ProcessInstance instance) throws Exception{
-//		System.out.println("ReceiveActivity::waiting for message : "+message);
-//		getProcessDefinition().addMessageListener(instance, this); //subscribes to JMS topic
+		System.out.println("ReceiveActivity::waiting for message : "+message);
+		getProcessDefinition().addMessageListener(instance, this); //subscribes to JMS topic
 	}
 	
 	//TODO: hot-spot
 	protected void onEvent(String command, ProcessInstance instance, Object payload) throws Exception{	
-//		if(!isMyMessage(command, instance, payload)){
-//			super.onEvent(command, instance, payload);
-//			return; 
-//		}
+		if(!isMyMessage(command, instance, payload)){
+			super.onEvent(command, instance, payload);
+			return; 
+		}
 
 		onReceive(instance, payload);
 	}
 	
-//	protected boolean isMyMessage(String message, ProcessInstance instance, Object payload){
-//		return message.equals(Activity.PREPIX_MESSAGE+ "_"+ getMessage());
-//	}
+	protected boolean isMyMessage(String message, ProcessInstance instance, Object payload){
+		return message.equals(Activity.PREPIX_MESSAGE+ "_"+ getMessage());
+	}
 	
 	protected void onReceive(ProcessInstance instance, Object payload) throws Exception{
 		
@@ -85,7 +141,7 @@ System.out.println("ReceiveActivity::payload is " + payload);
 			}
 			
 			//TODO: when user rollback this receive activity, listener should be added again.
-//			getProcessDefinition().removeMessageListener(getMessage(), instance, getTracingTag());
+			getProcessDefinition().removeMessageListener(getMessage(), instance, getTracingTag());
 		}
 			
 		fireComplete(instance);
@@ -141,8 +197,8 @@ System.out.println("ReceiveActivity::payload is " + payload);
 	public ValidationContext validate(Map options){
 		ValidationContext validationContext  = super.validate(options);
 		
-//		if(getMessage()== null)
-//			validationContext.addWarning(getActivityLabel()+" Message must be specified.");
+		if(getMessage()== null)
+			validationContext.addWarning(getActivityLabel()+" Message must be specified.");
 			
 		if(getParameters()!=null){
 			ParameterContext[] parameters = getParameters();
@@ -163,7 +219,7 @@ System.out.println("ReceiveActivity::payload is " + payload);
 
 
 	public boolean onMessage(ProcessInstance instance, Object payload) throws Exception {
-//		onEvent(Activity.PREPIX_MESSAGE+ "_"+ getMessage(), instance, payload);
+		onEvent(Activity.PREPIX_MESSAGE+ "_"+ getMessage(), instance, payload);
 		
 		return true;
 	}
