@@ -309,7 +309,7 @@ public class Login extends Database<ILogin> implements ILogin{
 	}
 
 	
-	private void storeIntoServerSession() {
+	public void storeIntoServerSession() {
 		//setting the userId into session attribute;
 		HttpSession httpSession = TransactionContext.getThreadLocalInstance().getRequest().getSession(); 
 		httpSession.setAttribute("userId", getUserId());
