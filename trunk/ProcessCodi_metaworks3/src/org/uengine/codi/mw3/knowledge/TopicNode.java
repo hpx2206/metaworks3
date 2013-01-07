@@ -7,11 +7,15 @@ import org.metaworks.dao.Database;
 import org.metaworks.dao.MetaworksDAO;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.widget.ModalWindow;
+import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.model.Perspective;
 import org.uengine.codi.mw3.model.Session;
 
 public class TopicNode extends Database<ITopicNode> implements ITopicNode {
 	 
+	@AutowiredFromClient
+	public PageNavigator pageNavigator; 
+	
 	String id;
 		public String getId() {
 			return id;
@@ -48,6 +52,7 @@ public class TopicNode extends Database<ITopicNode> implements ITopicNode {
 		sb.append(" where knol.type = ?type");
 		sb.append(" and knol.companyId = ?companyId");
 		sb.append(" and ( knol.secuopt=0 OR (knol.secuopt=1 and exists (select topicid from BPM_TOPICMAPPING tp where tp.userid=?userid and knol.id=tp.topicid))) ");
+		sb.append(" order by no");
 		
 		ITopicNode dao = (ITopicNode)MetaworksDAO.createDAOImpl(TransactionContext.getThreadLocalInstance(), sb.toString(), ITopicNode.class); 
 		dao.set("type", "topic");
@@ -59,22 +64,28 @@ public class TopicNode extends Database<ITopicNode> implements ITopicNode {
 	}
 	
 	public Object[] loadTopic() throws Exception{
-		String title = "주제 : " + getName();
-		Object[] returnObject = Perspective.loadInstanceListPanel(session, "topic", getId(), title);
-
-		if("sns".equals(session.getEmployee().getPreferUX()) ){
-			WfPanel wfPanel = new WfPanel();
-			wfPanel.session = session;
-			wfPanel.load(getId());
-			Object[] returnObject2 = new Object[ returnObject.length + 1 ];
-			for( int i = 0; i < returnObject.length; i++){
-				returnObject2[i] = returnObject[i];
-			}
-			returnObject2[returnObject.length] = wfPanel;
-			return returnObject2;
+		
+		if(pageNavigator != null && "knowlege".equals(pageNavigator.getPageName())){
+			return new Object[]{new BrainstormPanel(this.getId())};
 		}else{
-			return returnObject;
+			String title = "주제 : " + getName();
+			Object[] returnObject = Perspective.loadInstanceListPanel(session, "topic", getId(), title);
+			
+			if("sns".equals(session.getEmployee().getPreferUX()) ){
+				WfPanel wfPanel = new WfPanel();
+				wfPanel.session = session;
+				wfPanel.load(getId());
+				Object[] returnObject2 = new Object[ returnObject.length + 1 ];
+				for( int i = 0; i < returnObject.length; i++){
+					returnObject2[i] = returnObject[i];
+				}
+				returnObject2[returnObject.length] = wfPanel;
+				return returnObject2;
+			}else{
+				return returnObject;
+			}
 		}
+		
 	}
 	
 	

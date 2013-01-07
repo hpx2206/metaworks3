@@ -3,8 +3,10 @@ package org.uengine.codi.mw3.knowledge;
 import java.util.ArrayList;
 import java.util.Date;
 
+import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
@@ -39,6 +41,7 @@ import org.uengine.codi.mw3.model.Session;
 public interface IWfNode extends IDAO {
 
 	@Id
+	@Hidden
 	public String getId();
 	public void setId(String id);
 	
@@ -64,6 +67,8 @@ public interface IWfNode extends IDAO {
 //				} 
 //	)
 	
+	@Hidden
+	@TypeSelector(values = {"brainstorm"}, classes = {KnowlegeNode.class})
 	public String getType();
 	public void setType(String type);
 		
@@ -77,20 +82,25 @@ public interface IWfNode extends IDAO {
 	public String getTypeNext();
 	public void setTypeNext(String type);
 		
+	@Hidden
 	public Long getLinkedInstId();
 	public void setLinkedInstId(Long linkedInstanceId);
 
+	@Hidden
 	public String getAuthorId();
 	public void setAuthorId(String authorId);
 	
+	@Hidden
 	@ORMapping(databaseFields="authorId", objectFields="userId")
 	public IUser getAuthor();
 	public void setAuthor(IUser author);
 
 	@Name
+	@Hidden
 	public String getName();
 	public void setName(String name);
 		
+	@Hidden
 	public String getParentId();
 	public void setParentId(String parentId);
 	
@@ -124,26 +134,33 @@ public interface IWfNode extends IDAO {
 	
 	@NonLoadable
 	@NonSavable
+	@Hidden(when=MetaworksContext.WHEN_EDIT)
 	public ArrayList<WfNode> getChildNode();
 	public void setChildNode(ArrayList<WfNode> childNode);
 	
+	@Hidden
 	@NonLoadable
 	@NonSavable
 	public int getLoadDepth();
 	public void setLoadDepth(int loadDepth);
 	
+	@Hidden
 	public String getVisType();
 	public void setVisType(String visType);
 	
+	@Hidden
 	public String getUrl() ;
 	public void setUrl(String url) ;
 	
+	@Hidden
 	public String getThumbnail() ;
 	public void setThumbnail(String thumbnail);
 	
+	@Hidden
 	public String getSecuopt();
 	public void setSecuopt(String secuopt);
 	
+	@Hidden
 	public String getCompanyId();
 	public void setCompanyId(String companyId);
 	
@@ -165,24 +182,25 @@ public interface IWfNode extends IDAO {
 	public boolean isFirst();
 	public void setFirst(boolean first);
 	
-	
 	public int getBudget();
 	public void setBudget(int budget);
 	
 	public int getEffort();
 	public void setEffort(int effort);
 	
-	public int getBenfit();
-	public void setBenfit(int benfit);
+	public int getBenefit();
+	public void setBenefit(int benefit);
 	
 	public int getPenalty();
 	public void setPenalty(int penalty);
 	
-	public Date getStartdate();
-	public void setStartdate(Date startdate);
+	@Hidden
+	public Date getStartDate();
+	public void setStartDate(Date startDate);
 	
-	public Date getEnddate();
-	public void setEnddate(Date enddate);
+	@Hidden
+	public Date getEndDate();
+	public void setEndDate(Date endDate);
 	
 	@NonLoadable
 	@NonSavable
@@ -190,112 +208,136 @@ public interface IWfNode extends IDAO {
 	public int getProgress();
 	public void setProgress(int progress);
 	
-	
-/*	@NonLoadable
-	@NonSavable
-	public int getrBV();
-	public void setrBV(int rBV);
-
 	@NonLoadable
 	@NonSavable
-	public int getRoi();
-	public void setRoi(int roi);*/
+	@Hidden
+	public String getRootId();
+	public void setRootId(String rootId);
 	
 	/*******************************************
 	 * 
 	 * Service Method
 	 *  
 	 *******************************************/
+	@Hidden
 	@ServiceMethod(callByContent=true, except={"childNode", "focus"}, target=TARGET_SELF)
 	public void load() throws Exception;
 	
+	@Hidden
 	@ServiceMethod(callByContent=true, except={"childNode", "focus"}, target="popup")
 	@Test(scenario="first", starter=true, instruction="트리 구조의 지식을 작성합니다. 엔터키를 누르면 다음라인, 탭키를 누르면 들여쓰기, 두번 엔터는 내어쓰기 입니다. <p> * 우측 클릭을 하셔서 '프로세스 발행'을 하면 메모한 내용을 기반으로 작업지시도 가능합니다.<br> 좋아하시는 키워드를 입력해보세요...", next="autowiredObject.org.uengine.codi.mw3.knowledge.MashupGoogleImage.putImage()")
 	public Object[] add() throws Exception;
 	
+	@Hidden
 	@ServiceMethod(callByContent=true, except={"childNode", "focus"}, target="popup", inContextMenu=true)
 	@Face(displayName="$MakeAsTemplate")
 	public Object[] makeAsTemplate() throws Exception;
 	
+	@Hidden
 	@ServiceMethod(callByContent=true, except={"childNode", "focus"}, target="popup")
 	public Object[] outdent() throws Exception;
 	
+	@Hidden
 	@ServiceMethod(callByContent=true, except={"childNode", "focus"}, target="popup")
 	public Object[] indent() throws Exception;
 	
+	@Hidden
 	@ServiceMethod(inContextMenu=true, keyBinding="Ctrl+Down")
 	@Face(displayName="$DrillInto")
 	public WfPanel drillInto() throws Exception;
 	
+	@Hidden
 	@ServiceMethod(callByContent=true, except={"childNode", "focus"}, target="popup")
 	public Object[] move() throws Exception;
 
-	
+	@Hidden
 	@ServiceMethod(callByContent=true, except={"childNode", "focus"}, target=ServiceMethodContext.TARGET_NONE)
 	public void save() throws Exception;
-
+	
+	@Hidden
 	@ServiceMethod(callByContent=true)
 	public ContentWindow linkInstance() throws Exception;
 	
-	@ServiceMethod(callByContent=true, except="childNode", mouseBinding="drop", target=ServiceMethodContext.TARGET_APPEND /*, loader="org.uengine.codi.mw3.model.Popup"*/)
+	@Available(when={MetaworksContext.WHEN_VIEW})
+	@ServiceMethod(callByContent=true, except="childNode", mouseBinding="drop", target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] drop() throws Exception;
 	
+	@Hidden
 	@ServiceMethod(callByContent=true, except={"childNode", "focus"}, inContextMenu=true, keyBinding="Ctrl+Right")
 	@Face(displayName="$NewProcessInstance")
-	public ContentWindow newProcessInstance() throws Exception;
-		
+	public Object newProcessInstance() throws Exception;
+	
+	@Hidden
 	@ServiceMethod(inContextMenu=true, keyBinding="Ctrl+D")
 	@Test(scenario="first", instruction="$first.newDocument", next="autowiredObject.org.uengine.codi.mw3.model.FileWorkItem.add()")
 	@Face(displayName="$NewDocument")
 	public ContentWindow newDocument() throws Exception;	
 	
+	@Hidden
 	@ServiceMethod(inContextMenu=true, keyBinding="Ctrl+M")
 	@Face(displayName="$Mashup")
 	public ContentWindow mashup() throws Exception;
 
+	@Hidden
 	@ServiceMethod(callByContent=true, except={"childNode", "focus"}, target="popup")
 	@Face(displayName="$Remove")
 	public Object[] remove() throws Exception;
 	
+	@Hidden
 	@Face(displayName="$Remove")
 	@ServiceMethod(callByContent=true, except={"childNode", "focus"}, target="popup", inContextMenu=true, keyBinding="Shift+Del")
 	public Object[] removeNode() throws Exception;
 	
+	@Hidden
 	@ServiceMethod(callByContent=true, except={"childNode"})
 	public void expand() throws Exception;	
 	
+	@Hidden
 	@ServiceMethod(callByContent=true, except={"childNode"})
 	public void collapse() throws Exception;	
 	
+	@Hidden
 	@ServiceMethod(callByContent=true, inContextMenu=true, target="popup")
 	@Face(displayName="$presentation")
 	public ModalWindow presentation() throws Exception;
 	
+	@Hidden
 	@ServiceMethod(callByContent=true, target="popup")
 	@Face(displayName="컨텐츠보기")
 	public ModalWindow showLms() throws Exception;
 	
+	@Available(when={MetaworksContext.WHEN_VIEW})
 	@ServiceMethod(callByContent=true, except="childNode", mouseBinding="drag-enableDefault")
 	public Session drag() throws Exception;
 	
+	@Hidden
 	@ServiceMethod(inContextMenu=true, target="popup")
 	@Face(displayName="가시화 방법")
 	public Popup visualizationType();
 	
+	@Hidden
 	@ServiceMethod(inContextMenu=true, target="popup")
 	@Face(displayName="하위 연결 방식")
 	public Popup connectionType();
 
+	@Hidden
 	@ServiceMethod(inContextMenu=true, target="popup")
 	@Face(displayName="XML로 전환")
 	public Popup xml() throws Exception;
 	
+	@Hidden
 	@Face(displayName="공개토픽으로 지정")
 	@ServiceMethod(except={"childNode", "focus"}, inContextMenu=true)
 	public Object[] topic() throws Exception;
 	
+	@Hidden
 	@ServiceMethod(callByContent=true, except={"childNode"}, target=ServiceMethodContext.TARGET_POPUP)
 	public Popup modify();
+
+	@Available(when={MetaworksContext.WHEN_EDIT})
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
+	public Object[] apply() throws Exception;
+
 
 	/*******************************************
 	 * 
@@ -312,6 +354,7 @@ public interface IWfNode extends IDAO {
 	@AutowiredFromClient(onDrop=true)
 	public IUser dropUser = null;
 
+	@Hidden
 	public String getConnType();
 	public void setConnType(String connType);
 		

@@ -12,6 +12,7 @@ import org.uengine.codi.mw3.model.ContactWindow;
 import org.uengine.codi.mw3.model.ContentWindow;
 import org.uengine.codi.mw3.model.IUser;
 import org.uengine.codi.mw3.model.Locale;
+import org.uengine.codi.mw3.model.NavigationWindow;
 import org.uengine.codi.mw3.model.ProcessTopPanel;
 import org.uengine.codi.mw3.model.Session;
 
@@ -25,11 +26,21 @@ public class Knowledge {
 		
 		setSession(session);
 		
+		NavigationWindow navigationWindow = new  NavigationWindow(session);
+		navigationWindow.getNavigation().setOrganizationPerspectiveDept(null);
+		navigationWindow.getNavigation().setOrganizationPerspectiveRole(null);
+		navigationWindow.getNavigation().setPersonalPerspective(null);
+		navigationWindow.getNavigation().setStrategicPerspective(null);
+		navigationWindow.getNavigation().setProcessPerspective(null);
+		
 		Layout outerLayout = new Layout();
 		outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:5, east__spacing_open:5,east__size:300, north__size:52");
 		outerLayout.setNorth(new ProcessTopPanel(session));
+		outerLayout.setWest(navigationWindow);
 		
 		Window wfWindow = new Window();
+		wfWindow.setPanel(new BrainstormPanel(session.getCompany().getComCode()));
+		/*
 			WfPanel panel = new WfPanel();
 			
 			panel.session = session;
@@ -42,6 +53,7 @@ public class Knowledge {
 			
 			wfWindow.setPanel(panel);
 			wfWindow.setTitle("Knowledge Map");
+		*/
 		
 		outerLayout.setCenter(wfWindow);
 		

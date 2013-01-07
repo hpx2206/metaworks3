@@ -14,6 +14,8 @@ import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ToNext;
+import org.metaworks.ToOpener;
+import org.metaworks.ToPrepend;
 import org.metaworks.ToPrev;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
@@ -85,7 +87,6 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		public void setConnType(String connType) {
 			this.connType = connType;
 		}
-
 
 	String name;
 		public String getName() {
@@ -262,12 +263,12 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 			this.effort = effort;
 		}
 	
-	int benfit;
-		public int getBenfit() {
-			return benfit;
+	int benefit;
+		public int getBenefit() {
+			return benefit;
 		}
-		public void setBenfit(int benfit) {
-			this.benfit = benfit;
+		public void setBenefit(int benefit) {
+			this.benefit = benefit;
 		}
 	
 	int penalty;
@@ -278,20 +279,20 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 			this.penalty = penalty;
 		}
 		
-	Date startdate;
-		public Date getStartdate() {
-			return startdate;
+	Date startDate;
+		public Date getStartDate() {
+			return startDate;
 		}
-		public void setStartdate(Date startdate) {
-			this.startdate = startdate;
+		public void setStartDate(Date startDate) {
+			this.startDate = startDate;
 		}
 		
-	Date enddate;
-		public Date getEnddate() {
-			return enddate;
+	Date endDate;
+		public Date getEndDate() {
+			return endDate;
 		}
-		public void setEnddate(Date enddate) {
-			this.enddate = enddate;
+		public void setEndDate(Date endDate) {
+			this.endDate = endDate;
 		}
 	
 	int progress;
@@ -302,21 +303,13 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 			this.progress = progress;
 		}
 	
-/*	int rBV;
-		public int getrBV() {
-			return rBV;
+	String rootId;
+		public String getRootId() {
+			return rootId;
 		}
-		public void setrBV(int rBV) {
-			this.rBV = rBV;
+		public void setRootId(String rootId) {
+			this.rootId = rootId;
 		}
-		
-	int roi;
-		public int getRoi() {
-			return roi;
-		}
-		public void setRoi(int roi) {
-			this.roi = roi;
-		}*/
 		
 	public WfNode() {
 		setChildNode(new ArrayList<WfNode>());
@@ -598,7 +591,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 			}
 			
 			// update
-			if(childNode.size()-1 > index){
+			if(childNode.size() > index-1){
 				StringBuffer sb = new StringBuffer();
 				sb.append("update bpm_knol");
 				sb.append("   set no=no-1");
@@ -673,7 +666,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		Object targetObject = null;
 		
 		// 부모 노드를 구한다
-		WfNode parentNode = new WfNode();
+		WfNode parentNode = this.makeNewNode();
 		parentNode.copyMetaworksContext(getMetaworksContext());
 		parentNode.setLoadDepth(-1);
 		parentNode.load(this.getParentId());
@@ -684,7 +677,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		node.save();
 			
 		// 새로운 노드를 만든다.
-		final WfNode newNode = new WfNode();
+		final WfNode newNode = this.makeNewNode();
 		
 		if(getTypeNext() != null && getTypeNext().length() > 0){
 			newNode.setName(getNameNext());
@@ -732,8 +725,11 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		newNode.createMe();
 
 		
-		WebContext wctx = WebContextFactory.get();
-		String mySessionId = wctx.getScriptSession().getId();
+		final Object[] returnObjects;
+		
+		returnObjects = new Object[]{targetObject};
+		
+		
 
 		// 근방에 있는 노드들에게 알려줌... 여그 노드 추가됐어여~~
 		//Integer nodeIndexInteger = new Integer(parentId);
@@ -741,6 +737,10 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		//	ArrayList<String> parentNodeListeners = nodeListeners.get(nodeIndexInteger);
 		
 		//ArrayList<String> parentNodeListeners = wctx.getScriptSession();
+
+		/*
+		WebContext wctx = WebContextFactory.get();
+		String mySessionId = wctx.getScriptSession().getId();
 
 		final Object[] returnObjects;
 		
@@ -770,16 +770,15 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 
 			}
 		//}
-
+		*/
 		
 		return returnObjects;
-
 	}
 	
 	public Object[] indent() throws Exception {
 
 		// 부모 노드를 구한다
-		WfNode parentNode = new WfNode();
+		WfNode parentNode = this.makeNewNode();
 		parentNode.setMetaworksContext(getMetaworksContext());
 		parentNode.setLoadDepth(-1);
 		parentNode.load(this.getParentId());		
@@ -800,6 +799,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		node.setName(this.getName() + this.getNameNext());
 		node.setNameNext(this.getNameNext());
 		node.saveMe();
+		node.setClose(false);
 		node.setFocus(true);
 		
 		if(node.getNo() == 0){
@@ -820,14 +820,14 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 			return null;
 				
 		// 부모 노드를 구한다
-		WfNode parentNode = new WfNode();
+		WfNode parentNode = this.makeNewNode();
 		parentNode.setMetaworksContext(this.getMetaworksContext());
 		parentNode.setId(this.getParentId());		
 		
 		String parentParentId = parentNode.databaseMe().getParentId();
 		
 		// 부모 노드의 부모를 구한다. (변경 부모 노드)
-		WfNode appendNode = new WfNode();
+		WfNode appendNode = this.makeNewNode();
 		appendNode.setMetaworksContext(this.getMetaworksContext());
 		appendNode.setId(parentParentId);		
 		
@@ -862,7 +862,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 	public Object[] remove() throws Exception {
 		
 		// 부모 노드를 구한다
-		WfNode parentNode = new WfNode();
+		WfNode parentNode = this.makeNewNode();
 		parentNode.setMetaworksContext(this.getMetaworksContext());
 		parentNode.setId(this.getParentId());
 		parentNode.setLoadDepth(-1);
@@ -936,14 +936,35 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 	
 	public Object[] move() throws Exception {
 		
-		if( this.getDragNode() == null ){
-			return null;
-		}
 		if(this.getId() == this.getDragNode().getId()){
 			return null;
 		}				
 
-		WfNode parentNode = new WfNode();
+		// Child Verify
+		StringBuffer sb = new StringBuffer();
+		sb.append("SELECT  hi.id");
+		sb.append("  FROM    (");
+		sb.append("		      SELECT  hierarchy_connect_by_parent_eq_prior_id(id) AS id, @level AS level");
+		sb.append("				FROM    (");
+		sb.append("						 SELECT  @start_with := ?id,");
+		sb.append("								 @id := @start_with,");
+		sb.append("						   	     @level := 0");
+		sb.append("						) vars, bpm_knol");
+		sb.append("			   WHERE   @id IS NOT NULL");
+		sb.append("			 ) ho");
+		sb.append("	 JOIN    bpm_knol hi");
+		sb.append("	   ON    hi.id = ho.id");
+		sb.append("	WHERE hi.id = ?dropId");
+		
+		IWfNode childList = sql(sb.toString());
+		childList.setId(dragNode.getId());
+		childList.set("dropId", this.getId());
+		childList.select();
+		if(childList.next())
+			return null;
+		
+		
+		WfNode parentNode = this.makeNewNode();
 		parentNode.setMetaworksContext(this.getMetaworksContext());
 		parentNode.setId(this.getDragNode().getParentId());
 		parentNode.load();
@@ -951,7 +972,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		WfNode dragNode = parentNode.getNode(this.getDragNode().getId());		
 		
 		// 부모 노드를 구한다
-		parentNode = new WfNode();
+		parentNode = this.makeNewNode();;
 		parentNode.setMetaworksContext(this.getMetaworksContext());
 		parentNode.setId(this.getParentId());
 		parentNode.load();
@@ -963,6 +984,9 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 			return null;
 		}
 		
+		WfNode removeNode = this.makeNewNode();
+		removeNode.setId(dragNode.getId());
+		
 		// 자식 존재
 		// 자식 맨 위에 붙임
 		if(node.getChildNode().size() > 0){
@@ -970,15 +994,16 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 				return null;
 			}
 			
-			parentNode.removeChildNode(dragNode.getNo());
+			WfNode targetNode = this.makeNewNode();
+			targetNode.setId(node.getChildNode().get(0).getId());
+			
+			node.removeChildNode(dragNode.getNo());
 			node.addChildNode(0, dragNode);
 			
 			dragNode.saveMe();
 			
-			WfNode targetNode = node.getChildNode().get(1);
-			targetNode.setChildNode(null);
-			
-			return new Object[]{new Remover(dragNode), new ToPrev(targetNode, dragNode)};
+			return new Object[]{new Remover(removeNode), new ToPrev(targetNode, dragNode)};
+			//
 			
 		// 자식 없음
 		// 다음 노드에 붙임	
@@ -987,10 +1012,9 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 			parentNode.addChildNode(node.getNo()+1, dragNode);			
 			dragNode.saveMe();
 			
-			return new Object[]{new Remover(dragNode), new ToNext(this, dragNode)};
+			return new Object[]{new Remover(removeNode), new ToNext(this, dragNode)};
 			
 		}
-		
 		
 	}	
 	
@@ -1040,7 +1064,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		return instanceViewContent;
 	}
 	
-	public ContentWindow newProcessInstance() throws Exception{
+	public Object newProcessInstance() throws Exception{
 		NewInstancePanel newInstancePanel =  new NewInstancePanel();
 		newInstancePanel.setKnowledgeNodeId(this.getId());
 		newInstancePanel.session = session;
@@ -1279,6 +1303,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		try{
 			node.copyFrom(templeteNode);
 			node.setName(this.getName());
+			node.setNo(this.getNo());
 			node.setParentId(parentId);			
 			node.setChildNode(new ArrayList<WfNode>());
 			
@@ -1312,15 +1337,34 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 				WfNode linkCode = childNode.link(templeteNode);
 				node.addChildNode(linkCode);
 			}
+			
 		}catch(Exception e){
 			e.printStackTrace();
 		}
 		
 		return node;
 	}
-	
+
 	public Popup modify() {
-		return new Popup();
+		this.setRefId(this.getId());
+		this.setId(null);
+		
+		this.getMetaworksContext().setHow(this.getType());
+		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+		
+		return new Popup(300,200,this);
 	}
 
+	public Object[] apply() throws Exception {
+		this.setId(this.getRefId());
+		this.setRefId(null);
+
+		this.saveMe();
+		
+		this.setRefId(this.getId());
+		this.setId(null);
+
+		return new Object[]{new Remover(new Popup()), new ToOpener(this)}; 
+	}
+	
 }

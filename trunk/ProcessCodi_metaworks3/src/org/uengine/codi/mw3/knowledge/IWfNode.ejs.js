@@ -4,10 +4,9 @@ var org_uengine_codi_mw3_knowledge_IWfNode = function(objectId, className) {
 	this.objectId = objectId;
 	this.className = className;
 	this.divId = mw3._getObjectDivId(this.objectId);
-	this.windowObjectId = $('#' + this.divId).closest('.mw3_window').attr(
-			'objectId');
+	this.windowObjectId = $('#' + this.divId).closest('.mw3_window').attr('objectId');
 
-	this.obj = $('#objDiv_' + this.objectId);
+	this.obj = $('#workflowy_node_' + this.objectId);
 	this.mw3Obj = mw3.objects[objectId];
 
 	if (this.mw3Obj) {
@@ -56,11 +55,14 @@ var org_uengine_codi_mw3_knowledge_IWfNode = function(objectId, className) {
 					}
 				}
 			});
+			
+			/*
 			content.bind('dblclick', {
 				objectId : this.objectId
 			}, function() {
 				mw3.call(objectId, 'drillInto');
 			});
+			*/
 
 			if (this.mw3Obj && this.mw3Obj.focus) {
 				content.focus();
@@ -80,38 +82,68 @@ var org_uengine_codi_mw3_knowledge_IWfNode = function(objectId, className) {
 				}
 
 			}
+			
+			$('#objDiv_' + objectId).bind('dragstart', 
+				function(e){
+					e.preventDefault();
+					console.log('dragstart');
+					e.stopPropagation();
+				}
+			);
 
+			$('#objDiv_' + objectId).bind('dragend', 
+					function(e){
+						e.preventDefault();
+						console.log('dragend');
+						e.stopPropagation();
+					}
+				);
+
+			
+			$('#wfnode_' + objectId).hover(
+				// mouse in
+				function() {
+					if(mw3.dragging){
+						console.log('in');
+					}					
+				},
+				// mouse out
+				function() {
+					if(mw3.dragging){
+						console.log('out');
+					}
+				}
+			);
+
+			/*
 			var object = this.mw3Obj;
-			$('#wfnode_' + this.objectId).droppable(
-					{
+			$('#wfnode_' + this.objectId).droppable({
 						hoverClass : "wfActive",
 						drop : function(event, ui) {
 							var dragNodeId = ui.draggable.attr("objectId");
+							
+							if(typeof dragNodeId != 'undefined'){
+								var list = $('#objDiv_' + dragNodeId).find('.workflowy_node');
+								for ( var i = 0; i < list.length; i++) {
+									if ($(list[i]).attr('objectId') == objectId) {
+										alert('옮길 수 없는 위치입니다.');
 
-							var list = $('#objDiv_' + dragNodeId).find(
-									'.workflowy_node');
-							for ( var i = 0; i < list.length; i++) {
-								if ($(list[i]).attr('objectId') == objectId) {
-									alert('옮길 수 없는 위치입니다.');
-
-									return false;
+										return false;
+									}
 								}
 							}
 
-							object.dragNode = mw3.objects[dragNodeId];
-
-							mw3.call(objectId, "move");
+							mw3.call(objectId, "drop");
 						}
 					});
 
 			$('#wfnode_' + objectId).hover(function() {
-				/* $(this).css("background","#F2F8FD"); */
 				if (!$('#move').hasClass("moving")) {
 					var html = '';
 
 					html += '<div id=\"controls\">';
 					html += '  <div id=\"controlsRight\">';
-					html += '    <a id=\"move\" title=\"Drag to move\"></a>';
+					html += '    <a id=\"move\" title=\"Drag to move\">aaaaaaaaaaaaaaaa</a>';
 					html += '  </div>';
 					html += '</div>';
 
@@ -123,45 +155,61 @@ var org_uengine_codi_mw3_knowledge_IWfNode = function(objectId, className) {
 						distance : 1,
 						axis : "y",
 						start : function(event, ui) {
+							mw3.dragging = true;
+							
 							$(this).attr("objectId", objectId);
 							$(this).addClass("moving");
+							
+							mw3.call(objectId, 'drag');							
 						},
 						stop : function(event, ui) {
+							mw3.dragging = false;
+							
 							$('#controls').remove();
 						}
 					});
 				}
 			}, function() {
-				/* $(this).css("background","none"); */
 				if (!$('#move').hasClass("moving"))
 					$(this).find('#controls').remove();
 			}
 
 			);
+			*/
+			
 		}
+		
+		/*
 		this.obj.addClass("workflowy_node").attr("objectId", objectId).attr(
 				"nodeId", this.mw3Obj.id)
 				.attr('parentId', this.mw3Obj.parentId).css("position",
 						"relative");
-
+		*/
+		
 		if (this.mw3Obj.parentId == rootNodeId) {
 			this.obj.find('.wfNode').eq(0).addClass("first_wfNode");
 		}
 	}
-
-}
+	
+	if(!(this.mw3Obj.childNode && this.mw3Obj.childNode.length > 0))
+		thisFaceHelper.recalc();
+};
 
 org_uengine_codi_mw3_knowledge_IWfNode.prototype = {
 	loaded : function(){
 		if(this.mw3Obj && this.mw3Obj.first){
-			mw3.call(this.objectId, 'load');
+			var expanded = getCookie('bpm_knol.expanded.' + this.mw3Obj.id);
+			
+			if(this.mw3Obj.parentId == null || expanded == 'true'){
+				mw3.call(this.objectId, 'load');
+			}
 		}		
 	},
 	getPrev : function() {
 		var searchObj = this.obj;
 
 		do {
-			searchObj = searchObj.parent().prev().children().eq(0);
+			searchObj = searchObj.parent().parent().prev().children().eq(0).children('div');
 
 			if (searchObj.hasClass('workflowy_node'))
 				break;
@@ -172,9 +220,9 @@ org_uengine_codi_mw3_knowledge_IWfNode.prototype = {
 	},
 	getNext : function() {
 		var searchObj = this.obj;
-
+		
 		do {
-			searchObj = searchObj.parent().next().children().eq(0);
+			searchObj = searchObj.parent().parent().next().children().eq(0).children('div');
 
 			if (searchObj.hasClass('workflowy_node'))
 				break;
@@ -210,9 +258,6 @@ org_uengine_codi_mw3_knowledge_IWfNode.prototype = {
 				break;
 		}
 		return child;
-	},
-	getValue : function() {
-		return this.mw3Obj;
 	},
 	focus : function() {
 		this.content.focus();
@@ -366,7 +411,7 @@ org_uengine_codi_mw3_knowledge_IWfNode.prototype = {
 		}
 
 		var event = window.event;
-
+		
 		switch (event.keyCode) {
 		case 37: // left
 			var s = this.getSelectionStart(inputObj);
@@ -413,13 +458,13 @@ org_uengine_codi_mw3_knowledge_IWfNode.prototype = {
 						var parentId = parent.attr('objectId');
 
 						if (parentId != '-1') {
+							console.log('outdent');
 							this.mw3Obj.outdent();
 						}
 					}
 				}
 			} else {
-				if (this.mw3Obj.no > 0)
-					mw3.call(this.objectId, 'indent');
+				mw3.call(this.objectId, 'indent');
 			}
 
 			break;
@@ -485,21 +530,21 @@ org_uengine_codi_mw3_knowledge_IWfNode.prototype = {
 	},
 	getSelectionStart : function(o) {
 		if (o.createTextRange) {
-			var r = document.selection.createRange().duplicate()
+			var r = document.selection.createRange().duplicate();
 			r.moveEnd('character', o.value.length)
 			if (r.text == '')
-				return o.value.length
-			return o.value.lastIndexOf(r.text)
+				return o.value.length;
+			return o.value.lastIndexOf(r.text);
 		} else
-			return o.selectionStart
+			return o.selectionStart;
 	},
 	getSelectionEnd : function(o) {
 		if (o.createTextRange) {
-			var r = document.selection.createRange().duplicate()
-			r.moveStart('character', -o.value.length)
-			return r.text.length
+			var r = document.selection.createRange().duplicate();
+			r.moveStart('character', -o.value.length);
+			return r.text.length;
 		} else
-			return o.selectionEnd
+			return o.selectionEnd;
 	},
 	destroy : function() {
 		if (this.windowObjectId && mw3.getFaceHelper(this.windowObjectId)
@@ -523,6 +568,9 @@ org_uengine_codi_mw3_knowledge_IWfNode.prototype = {
 		this.process = false;
 
 	},
+	showInfo: function(message) {
+	
+	},
 	showError : function(message) {
 		this.process = false;
 
@@ -545,6 +593,291 @@ org_uengine_codi_mw3_knowledge_IWfNode.prototype = {
 		this.mw3Obj.nameNext = newUrl;
 		this.mw3Obj.typeNext = "video";
 		this.mw3Obj.add();
-	}
+	},
+	
+	checkLoaded : function(){
+		var loaded = true;
+		
+		var parent = this.getParent();
+		var parentId = parent.attr('objectId');
+		
+		var faceHelper = mw3.getFaceHelper(parentId);
+		
+		if(faceHelper){
+			var child = faceHelper.getFirstChild();
+			while(child.length > 0){
+				var childId = child.attr('objectId');
+				var childObj = mw3.objects[childId];
+				
+				var childFaceHelper = null;
+				if(childObj.id == this.mw3Obj.id)
+					childFaceHelper = this;
+				else
+					childFaceHelper = childObj.getFaceHelper();
+				
+				if(childFaceHelper){
+					child = childFaceHelper.getNext();
+				}else{
+					loaded = false;
+					break;
+				}
+			}
+		}
+		
+		return loaded;
+	},
+	getTotalBV : function(){
+		var totBV = 0;
+		
+		var parent = this.getParent();
+		var parentId = parent.attr('objectId');
+		
+		var faceHelper = mw3.getFaceHelper(parentId);
+		
+		if(faceHelper){
+			var child = faceHelper.getFirstChild();
+			while(child.length > 0){
+				var childId = child.attr('objectId');
+				var childObj = mw3.objects[childId];
+				
+				totBV += childObj.bv;
+								
+				var childFaceHelper = null;
+				if(childObj.id == this.mw3Obj.id)
+					childFaceHelper = this;
+				else
+					childFaceHelper = childObj.getFaceHelper();
+					
+				if(childFaceHelper)
+					child = childFaceHelper.getNext();
+				else
+					break;
+			}
+		}
 
-}
+		return totBV;
+	},
+	
+	getEffort : function(){
+		var effort = this.mw3Obj.effort;		
+		if(this.getFirstChild().length > 0)
+			effort = this.mw3Obj.totEffort;
+		
+		return effort;
+	},
+	
+	getTotalEffort : function(){
+		var totEffort = 0;
+		
+		var parent = this.getParent();
+		var parentId = parent.attr('objectId');
+		
+		var faceHelper = mw3.getFaceHelper(parentId);
+		
+		if(faceHelper){
+			var child = faceHelper.getFirstChild();
+			while(child.length > 0){
+				var childId = child.attr('objectId');
+				var childObj = mw3.objects[childId];
+				
+				var childFaceHelper = null;
+				if(childObj.id == this.mw3Obj.id)
+					childFaceHelper = this;
+				else
+					childFaceHelper = childObj.getFaceHelper();
+				
+				totEffort += childFaceHelper.getEffort();
+				
+				if(childFaceHelper)
+					child = childFaceHelper.getNext();
+				else
+					break;
+			}
+		}
+
+		return totEffort;		
+	},
+	calcBV : function(){
+		this.mw3Obj['bv'] = this.mw3Obj.benefit + this.mw3Obj.penalty;
+	},
+	
+	calcROI : function(){
+		var effort = this.getEffort();
+		
+		var roi = 0;		
+		if(effort > 0)			
+			roi = this.mw3Obj.bv / effort;
+		
+		this.mw3Obj['roi'] = roi;
+		
+	},
+	recalc : function(){
+		this.calcBV();
+		this.calcROI();
+		
+		if(this.checkLoaded()){
+			var parentDivObj = this.getParent();
+			if(parentDivObj.length > 0){
+				var parentId = parentDivObj.attr('objectId');
+				var parentObj = mw3.objects[parentId];
+				
+				var parentFaceHelper = parentObj.getFaceHelper();
+				
+				if(parentFaceHelper){
+					var totBV = this.getTotalBV();
+					var totEffort = this.getTotalEffort();
+					
+					if(this.mw3Obj.metaworksContext.how != 'ROOT'){	
+						parentObj.totEffort = totEffort;
+						parentFaceHelper.recalc();
+					}
+				
+					var childs = [];
+					
+					var child = parentFaceHelper.getFirstChild();
+					while(child.length > 0){
+						var childId = child.attr('objectId');
+						var childObj = mw3.objects[childId];
+						
+						if(childObj){
+							childs.push(childObj);
+							
+							var childFaceHelper = null;
+							if(childObj.id == this.mw3Obj.id)
+								childFaceHelper = this;
+							else
+								childFaceHelper = childObj.getFaceHelper();
+														
+							if(childFaceHelper){
+								childObj['rBV'] = (childObj.bv / totBV) * 100;					
+
+								childFaceHelper.calcRefresh();
+								child = childFaceHelper.getNext();
+							}else
+								break;
+						}else{
+							break;
+						}
+					}	
+					
+					if(parentObj.metaworksContext.how != 'ROOT'){
+						var effortOver = totEffort - parentObj.budget;
+						var compare = function (a,b) {
+						  if (a.roi < b.roi)
+						     return 1;
+						  if (a.roi > b.roi)
+						    return -1;
+						  return 0;
+						};
+						
+						childs.sort(compare);
+						
+						for(var i=childs.length-1; i>=0; i--){
+							var childObj = childs[i];
+							var childFaceHelper = childObj.getFaceHelper();
+							if(childObj.id == this.mw3Obj.id)
+								childFaceHelper = this;
+							else
+								childFaceHelper = childObj.getFaceHelper();
+							
+							var effort = childFaceHelper.getEffort();
+							
+							if(effortOver > 0 && effort > 0){
+								effortOver -= effort;
+								
+								childFaceHelper.effortOverCheck();
+							}else{
+								childFaceHelper.effortOverUnCheck();
+							}							
+						}
+					}
+				}
+			}
+		}
+	},
+	
+	calcRefresh : function(){
+		var rBV = this.mw3Obj.rBV;
+		if(isNaN(rBV) || typeof rBV == 'undefined')
+			rBV = 'N/A';
+		else
+			rBV.toFixed(1);
+		
+		var roi = this.mw3Obj.roi;
+		if(isNaN(roi) || typeof roi == 'undefined')
+			roi = 0;
+
+		var effort = this.getEffort();		
+		
+		var startDate = this.mw3Obj.startDate;
+		if(typeof startDate == 'undefined' || startDate == null)
+			startDate = 'N/A';
+		else
+			startDate = startDate.format('yyyy-MM-dd');
+		
+		var endDate = this.mw3Obj.endDate;
+		if(typeof endDate == 'undefined' || endDate == null)
+			endDate = 'N/A';
+		else
+			endDate = endDate.format('yyyy-MM-dd');
+		
+		this.obj.find('#bv_' + this.objectId).html('bv:' + this.mw3Obj.bv);
+		this.obj.find('#effort_' + this.objectId).html('effort:' + effort);
+		this.obj.find('#budget_' + this.objectId).html('budget:' + this.mw3Obj.budget);
+		this.obj.find('#rBV_' + this.objectId).html('rBV:' + rBV);
+		this.obj.find('#roi_' + this.objectId).html('ROI:' + roi.toFixed(1));
+		
+		this.obj.find('#startDate_' + this.objectId).html('startdate:' + startDate);
+		this.obj.find('#endDate_' + this.objectId).html('enddate:' + endDate);
+		this.obj.find('#progress_' + this.objectId).html('progress:0');		
+	},
+	
+	toOpener : function(target){
+		this.mw3Obj.budget = target.budget;
+		this.mw3Obj.effort = target.effort;
+		this.mw3Obj.benefit = target.benefit;
+		this.mw3Obj.penalty = target.penalty;
+		this.mw3Obj.startDate = target.startDate;		
+		this.mw3Obj.endDate = target.endDate;
+		
+		var firstChild = this.getFirstChild();
+		
+		if(firstChild.length > 0){
+			var firstChildObjId = firstChild.attr('objectId');
+			
+			mw3.getFaceHelper(firstChildObjId).recalc();
+		}else{
+			this.recalc();
+		}
+	},
+	
+	toPrepend : function(target){
+		var html = mw3.locateObject(target, null);
+		
+		$('<div>').appendTo(this.obj.find('#wfnode_' + this.objectId).next()).prepend(html);
+	},
+	toPrev : function(target){
+		console.log('toPrev');
+		console.log(target);
+		
+		var html = mw3.locateObject(target, null);
+		
+		console.log(this.obj.parent().parent());
+		
+		$('<div>').insertBefore(this.obj.parent().parent()).append(html);
+		
+	},
+	toNext : function(target){
+		var html = mw3.locateObject(target, null);
+		
+		$('<div>').insertAfter(this.obj.parent().parent()).append(html);
+	},
+	
+	effortOverCheck : function(){
+		this.obj.find('#nodeId_' + this.objectId).html($('<strike>').css('color', 'red').append(this.mw3Obj.id));
+	},
+	
+	effortOverUnCheck : function(){
+		this.obj.find('#nodeId_' + this.objectId).html(this.mw3Obj.id);
+	}
+};
