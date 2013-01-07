@@ -73,6 +73,9 @@ public interface IProcessMap extends IDAO {
 //	@Test(scenario="first", starter=true, instruction="Issue Tracking 프로세스를 선택합니다.", next="autowiredObject.org.uengine.codi.mw3.admin.PageNavigator.goKnowledge()")
 	public Object[] initiate() throws Exception;
 	
+	@ServiceMethod(payload="defId") 
+	public Object[] processListFilter() throws Exception;
+	
 	public void createMe() throws Exception;
 	public void saveMe() throws Exception;
 	
