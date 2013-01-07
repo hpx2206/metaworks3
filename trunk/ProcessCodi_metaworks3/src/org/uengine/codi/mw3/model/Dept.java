@@ -293,7 +293,7 @@ public class Dept extends Database<IDept> implements IDept {
 		if (getMetaworksContext().getWhen().equals(MetaworksContext.WHEN_NEW)) {
 			this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 			
-			// 생성
+			// �앹꽦
 			this.setGlobalCom(session.getCompany().getComCode());
 			this.setIsDeleted("0");		
 			
@@ -351,7 +351,7 @@ public class Dept extends Database<IDept> implements IDept {
 		
 		
 /*		if( (this.getChildren() != null && this.getChildren().size() > 0) || (this.getDeptEmployee() != null && this.getDeptEmployee().size() > 0))
-			throw new Exception("하위 노드가 존재하면 삭제할 수 없습니다.");*/
+			throw new Exception("�섏쐞 �몃뱶媛�議댁옱�섎㈃ ��젣�����놁뒿�덈떎.");*/
 				
 		dept.syncToDatabaseMe();
 		dept.flushDatabaseMe();
@@ -457,6 +457,26 @@ public class Dept extends Database<IDept> implements IDept {
 		dept.getMetaworksContext().setWhen("edit");
 		
 		return new Object[] {new ToOpener(dept), new Remover(new Popup())};
+	}
+	
+	@Override
+	public Object[] drop() throws Exception {
+		Object clipboard = session.getClipboard();
+			IEmployee employeeInClipboard = (IEmployee) clipboard;
+			
+			Employee locatorForEmployeeInClipboard = new Employee();
+			locatorForEmployeeInClipboard.setEmpCode(employeeInClipboard.getEmpCode());
+			
+			locatorForEmployeeInClipboard.databaseMe().setPartCode(this.getPartCode());
+			locatorForEmployeeInClipboard.flushDatabaseMe();
+			
+			EmployeeList employeeList = new EmployeeList();			
+			employeeList.setMetaworksContext(this.getMetaworksContext());
+			employeeList.setId(this.getPartCode());
+			employeeList.setEmployee(locatorForEmployeeInClipboard.findByDept(this));
+			setDeptEmployee(employeeList);
+			
+			return new Object[]{new Remover(employeeInClipboard)};
 	}
 	
 }

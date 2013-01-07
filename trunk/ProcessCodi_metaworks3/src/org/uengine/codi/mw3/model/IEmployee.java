@@ -182,4 +182,8 @@ public interface IEmployee extends IDAO {
 	
 	@ServiceMethod
 	public Object[] logout() throws Exception;
+	
+	@ServiceMethod(callByContent=true, mouseBinding="drag")
+	public Session drag() throws Exception;
+	
 }

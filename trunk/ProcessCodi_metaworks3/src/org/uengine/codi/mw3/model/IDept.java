@@ -113,7 +113,10 @@ public interface IDept extends IDAO {
 	public Popup openPicker() throws Exception;
 	
 	@ServiceMethod(target="append", where="picker")
-	public Object pickup() throws Exception;	
+	public Object pickup() throws Exception;
+	
+	@ServiceMethod(callByContent=true, mouseBinding="drop", target=ServiceMethodContext.TARGET_APPEND)
+	public Object[] drop() throws Exception;
 
 	@ServiceMethod
 	public Object[] loadDeptList() throws Exception;
