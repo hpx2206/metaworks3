@@ -37,7 +37,8 @@ public interface IRole extends IDAO {
 	public void setEmployeeList(EmployeeList employeeList);
 
 	// service method
-	@ServiceMethod(target="self", payload={"roleCode", "selected"})
+	// 역활 부분에서 리스트 이름이 가려 졌는데 payload에 descr을 추가한다.
+	@ServiceMethod(target="self", payload={"roleCode", "selected" ,"descr"})
 	public void drillDown() throws Exception;
 
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP, inContextMenu=true, needToConfirm=true)

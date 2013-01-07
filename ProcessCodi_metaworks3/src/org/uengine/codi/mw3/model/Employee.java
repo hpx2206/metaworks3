@@ -525,4 +525,9 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	public Object[] logout() throws Exception{
 		return new Object[]{session.logout() , new Remover(new Popup())};
 	}
+	@Override
+	public Session drag() throws Exception {
+		session.setClipboard(this);
+		return session;
+	}
 }
