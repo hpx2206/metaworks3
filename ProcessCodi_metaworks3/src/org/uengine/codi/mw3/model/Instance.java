@@ -464,21 +464,6 @@ public class Instance extends Database<IInstance> implements IInstance{
 		
 	}
 	
-	public void over() throws Exception{
-		
-		InstanceViewThreadPanel panel = new InstanceViewThreadPanel();
-		panel.getMetaworksContext().setHow("instanceList");
-		panel.getMetaworksContext().setWhere("sns");
-		
-		if("".equals(StringUtils.nullToEmpty(this.getInstanceViewThreadPanel().getInstanceId()))){
-			panel.session = session;
-			panel.load(this.getInstId().toString());
-			
-			MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(flowchart())});
-		}
-		setInstanceViewThreadPanel(panel);
-	}
-	
 	public ModalWindow popupDetail() throws Exception{
 		ModalWindow modalWindow = new ModalWindow();
 		InstanceView instanceView = ((InstanceViewContent)detail()).getInstanceView();
