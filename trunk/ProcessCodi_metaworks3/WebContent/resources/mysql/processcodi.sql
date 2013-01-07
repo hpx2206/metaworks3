@@ -628,7 +628,7 @@ alter TABLE `bpm_knol` add (
 	`refId` VARCHAR(20) NULL DEFAULT NULL,
 	`budget` INT(11) NULL DEFAULT NULL,
 	`effort` INT(11) NULL DEFAULT NULL,
-	`benfit` INT(11) NULL DEFAULT NULL,
+	`benefit` INT(11) NULL DEFAULT NULL,
 	`penalty` INT(11) NULL DEFAULT NULL,
 	`startdate` DATE NULL DEFAULT NULL,
 	`enddate` DATE NULL DEFAULT NULL
