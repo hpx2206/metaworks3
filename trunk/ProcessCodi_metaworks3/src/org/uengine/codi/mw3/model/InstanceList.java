@@ -80,11 +80,11 @@ public class InstanceList implements ContextAware{
 	}
 
 	public void init() {
-		setPage(0);
+		setPage(1);
 	}
 
 	public InstanceList load(Session session) throws Exception {
-		IInstance instanceContents = Instance.load(session,	getPage(), PAGE_CNT);
+		IInstance instanceContents = Instance.load(session,	getPage()-1, PAGE_CNT);
 
 		if(session.lastPerspecteType.equals("inbox")){
 			session.setTodoListCount(instanceContents.size());
@@ -104,7 +104,7 @@ public class InstanceList implements ContextAware{
 
 		// setting moreInstanceList
 		setMoreInstanceList(new InstanceList());
-		getMoreInstanceList().setPage(getPage() + 1);
+		getMoreInstanceList().setPage(getPage()+1);
 		return this;
 	}
 
