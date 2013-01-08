@@ -643,12 +643,16 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			newInstantiator.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 			
 			if("sns".equals(session.getEmployee().getPreferUX())){
+				newInstantiator.getMetaworksContext().setHow("sns");
 				newInstantiator.getMetaworksContext().setWhere("sns");
 				newInstantiator.setInstantiation(true);
 //				refreshedInstance.getMetaworksContext().setHow("instanceList");
 //				refreshedInstance.getMetaworksContext().setWhere("sns");
 				
-				MetaworksRemoteService.getInstance().pushClientObjects(new Object[]{new ToPrepend(new InstanceList(), refreshedInstance)});
+				InstanceList prepentTarget = new InstanceList();
+				prepentTarget.setPage(1);
+				
+				MetaworksRemoteService.getInstance().pushClientObjects(new Object[]{new ToPrepend(prepentTarget, refreshedInstance)});
 				
 				return new Object[]{new Refresh(newInstantiator)};
 			}else{
