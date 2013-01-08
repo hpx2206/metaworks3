@@ -1,6 +1,7 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.MetaworksContext;
+import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
@@ -132,7 +133,7 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		ProcessMapList processMapList = new ProcessMapList();
 		processMapList.load(session);
 		
-		return new Object[]{processMapList, new Remover(new Popup())};
+		return new Object[]{new Remover(new Popup()), new Refresh(processMapList)};
 	}
 	
 	public Object[] remove() throws Exception {
@@ -342,8 +343,9 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		}
 		if(newInstancePanel!=null){
 			((Instance)instanceRef).databaseMe().setSecuopt("" + newInstancePanel.getSecurityLevel().getSelected());
-			((Instance)instanceRef).flushDatabaseMe();
+			//((Instance)instanceRef).flushDatabaseMe();
 		}
+		((Instance)instanceRef).flushDatabaseMe();
 
 		instanceView.session = session;
 		instanceView.load(instanceRef);

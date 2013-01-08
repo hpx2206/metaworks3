@@ -1,6 +1,7 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.Remover;
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;
@@ -61,7 +62,7 @@ public interface IProcessMap extends IDAO {
 	@ServiceMethod(callByContent=true, when=WHEN_VIEW)
 	public Object[] remove() throws Exception;
 
-	@ServiceMethod(callByContent=true, when=WHEN_EDIT)
+	@ServiceMethod(callByContent=true, when=WHEN_EDIT, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] save() throws Exception;
 	
 	@Available(when={WHEN_NEW})
