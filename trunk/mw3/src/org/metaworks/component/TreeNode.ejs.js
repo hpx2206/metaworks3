@@ -10,7 +10,6 @@ var org_metaworks_component_TreeNode = function(objectId, className){
 		return true;	
 	
 	this.nodeDiv = $('#' + this.objectDivId).children('div');
-	
 	this.nodeDiv.attr('objectId', this.objectId);
 	
 	var faceHelper = this;
@@ -48,8 +47,11 @@ var org_metaworks_component_TreeNode = function(objectId, className){
 };
 
 org_metaworks_component_TreeNode.prototype = {
+	loaded : function(){
+		this.nodeDiv.trigger('loaded', [this.object.id, this.objectId]);
+	},
 	destroy : function() {
-		$(this.nodeDiv).unbind('click').unbind('dblclick');
+		this.nodeDiv.unbind('click').unbind('dblclick');
 	},
 	startLoading : function(){
 		
@@ -99,6 +101,14 @@ org_metaworks_component_TreeNode.prototype = {
 		return (this.nodeDiv.hasClass('plus') || this.nodeDiv.hasClass('pluslast'));
 	},
 
+	check : function(){
+		this.nodeDiv.find('input[type=checkbox]').each(function(){
+			if($(this).is(':checked'))
+				$(this).prop('checked', false);
+			else
+				$(this).prop('checked', true);
+		});
+	},
 	select : function(){
 		if(event.stopPropagation){
 			event.stopPropagation();
@@ -117,7 +127,6 @@ org_metaworks_component_TreeNode.prototype = {
 			tree.find('.item-fix.selected').removeClass('selected');
 			this.nodeDiv.addClass('selected');			
 		}
-			
 	},
 	
 	action : function(){

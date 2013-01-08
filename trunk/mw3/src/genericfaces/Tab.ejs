@@ -1,4 +1,6 @@
 <%
+	console.log(mw3.when);
+	
 	if(value == null || typeof value == 'undefined')
 		return true;
 %>
@@ -28,7 +30,7 @@
 		for (var i=0; i<objectMetadata.fieldDescriptors.length; i++){
 			var fd = objectMetadata.fieldDescriptors[i];
 		  	
-		  	if(fd.attributes && fd.attributes['hidden']) continue;
+		  	if(mw3.isHidden(fd)) continue;
 		  	if(fd.name == 'metaworksContext') continue;
 %>	
 			<div id="tab_<%=objectId%>_<%=i+1%>" style="height: 100%">	
