@@ -136,13 +136,13 @@
 									<% if(value.type!='comment' && value.type!='src' && value.type!='file' ){%>
 									<%=mw3.localize('$Due')%> : 
 									<%}%>
-									<%=fields.dueDate.here()%></span>
+									<%=fields.dueDate.here({when: 'timeago'})%></span>
 								<%} if(value.startDate!=null){%>		
 									<span class="workItemDate">
 									<% if(value.type!='comment' && value.type!='src' && value.type!='file' ){%>
 									<%=mw3.localize('$Started')%> :  
 									<%}%>
-									<%=fields.startDate.here()%></span>	
+									<%=fields.startDate.here({when: 'timeago'})%></span>	
 								<%}%>										
 								<div class="clear"></div>
 							</div>
