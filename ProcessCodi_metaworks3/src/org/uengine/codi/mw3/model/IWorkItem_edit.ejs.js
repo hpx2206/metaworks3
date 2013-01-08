@@ -47,6 +47,9 @@ var org_uengine_codi_mw3_model_IWorkItem_edit = function(objectId, className){
 	this.initialize();
 	this.dateFirst = true;
 	this.dueDate = null;
+	
+	this.showStatus = function(message){
+	};
 }
 
 org_uengine_codi_mw3_model_IWorkItem_edit.prototype.getValue =  function(){	
