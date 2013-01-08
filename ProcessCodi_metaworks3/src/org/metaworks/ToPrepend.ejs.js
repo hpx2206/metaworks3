@@ -12,11 +12,9 @@ var org_metaworks_ToPrepend = function(objectId, className){
 				
 				var mappedObjId = mw3.objectId_KeyMapping[objKeys[i]];
 				
-				
 				if(mappedObjId){
-					
 					var instanceList = mw3.getObject(mappedObjId);
-					
+					 
 					if(instanceList.metaworksContext && instanceList.metaworksContext.where=="pinterest"){
 						
 						var newInstancePanelObjectId = mw3.getAutowiredObject("org.uengine.codi.mw3.model.NewInstancePanel").__objectId;
