@@ -7,7 +7,6 @@ import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Test;
-import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.calendar.ScheduleCalendar;
 import org.uengine.codi.mw3.knowledge.WfPanel;
 @Face(
@@ -30,7 +29,11 @@ public class InstanceListPanel implements ContextAware{
 	
 	public InstanceListPanel(Session session){		
 		setMetaworksContext(new MetaworksContext());
-		setSearchBox(new SearchBox());
+		
+		SearchBox searchBox = new SearchBox();
+		searchBox.setKeyUpSearch(true);
+		searchBox.setKeyEntetSearch(true);
+		setSearchBox(searchBox);
 
 		if(session!=null){
 			this.session = session;

@@ -10,7 +10,23 @@ public class SearchBox {
 	
 	public SearchBox(){		
 	}
-	
+
+	boolean keyUpSearch;
+		public boolean isKeyUpSearch() {
+			return keyUpSearch;
+		}
+		public void setKeyUpSearch(boolean keyUpSearch) {
+			this.keyUpSearch = keyUpSearch;
+		}
+		
+	boolean keyEntetSearch;
+		public boolean isKeyEntetSearch() {
+			return keyEntetSearch;
+		}
+		public void setKeyEntetSearch(boolean keyEntetSearch) {
+			this.keyEntetSearch = keyEntetSearch;
+		}
+
 	String keyword;
 		public String getKeyword() {
 			return keyword;
@@ -21,7 +37,6 @@ public class SearchBox {
 		
 	@ServiceMethod(callByContent=true)
 	public Object[] search() throws Exception{
-		System.out.println("keyword : " + getKeyword());
 //		
 //		InstanceList instanceList = new InstanceList();
 //		instanceList.init();
