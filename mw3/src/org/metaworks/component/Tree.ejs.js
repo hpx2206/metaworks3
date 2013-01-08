@@ -8,7 +8,7 @@ var org_metaworks_component_Tree = function(objectId, className){
 
 	if(this.object == null)
 		return true;
-	
+
 	this.objectDiv.addClass('filemgr-tree').addClass('filemgr-treeFocus').addClass(this.object.align);	
 	this.objectDiv.css({'border-width': '0px',
 						'left': '0px', 
@@ -19,15 +19,64 @@ var org_metaworks_component_Tree = function(objectId, className){
 						'min-height': '0px',
 						'max-width': '10000px',
 						'max-height': '10000px'});
-	
-	
+
 	this.objectDiv.attr('objectId', this.objectId);
+
+	this.objectDiv.bind('loaded', {objectId: this.objectId}, function(event, nodeId){
+		var faceHelper = mw3.getFaceHelper(event.data.objectId);
+		if(faceHelper && faceHelper.addNode)
+			faceHelper.addNode(nodeId)
+
+	});
 	
+	if(this.object && this.object.showCheckBox){
+		if(this.object.checkNodes){
+			for(var i=0; i<this.object.checkNodes.length; i++){
+				var node = this.object.checkNodes[i];
+
+				$(this.objectDiv.find('#' + node.id)).bind('loaded', function(event, nodeId, objectId){
+					var faceHelper = mw3.getFaceHelper(objectId);
+
+					faceHelper.check();
+				});
+			}
+		}
+	}
 };
 
 org_metaworks_component_Tree.prototype = {
+	getValue : function(){
+		if(this.object && this.object.showCheckBox){
+			// get check nodes
+			var checkNodes = [];
+			this.objectDiv.find('input[type=checkbox]:checked').each(function(){
+				var node = mw3.objects[$(this).attr('objectId')];
+				
+				checkNodes.push(node);
+			});
+			
+			this.object.checkNodes = checkNodes;
+		}
+		
+		
+		// get select node
+		var selectNode = null;		
+		this.objectDiv.find('.item-fix.selected').each(function(){
+			selectNode = mw3.objects[$(this).attr('objectId')];
+		});
+		this.object.selectNode = selectNode;
+		
+		
+		return this.object;
+	},
+	
 	loaded : function(){
 		this.objectDiv.trigger('loaded');
+	},
+	
+	addNode : function(nodeId){
+		if(this.object.showCheckBox)
+			this.objectDiv.find('#' + nodeId + ' .tree-checkbox').css('display', 'inline-block');
 	},
 	getClosedParentNodes : function(objectId){
 		var object = mw3.objects[objectId];
@@ -55,7 +104,6 @@ org_metaworks_component_Tree.prototype = {
 	},
 	
 	getSelectedNode : function(){
-		
 		var node = this.objectDiv.find('.selected');		
 		
 		return node;

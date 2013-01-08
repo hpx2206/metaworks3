@@ -1,5 +1,7 @@
 package org.metaworks.component;
 
+import java.util.ArrayList;
+
 import org.metaworks.annotation.Id;
 
 public class Tree {
@@ -24,12 +26,36 @@ public class Tree {
 			this.align = align;
 		}
 
+	boolean showCheckBox;
+		public boolean isShowCheckBox() {
+			return showCheckBox;
+		}
+		public void setShowCheckBox(boolean showCheckBox) {
+			this.showCheckBox = showCheckBox;
+		}
+
 	TreeNode node;
 		public TreeNode getNode() {
 			return node;
 		}
 		public void setNode(TreeNode node) {
 			this.node = node;
+		}
+	
+	ArrayList<TreeNode> checkNodes;
+		public ArrayList<TreeNode> getCheckNodes() {
+			return checkNodes;
+		}
+		public void setCheckNodes(ArrayList<TreeNode> checkNodes) {
+			this.checkNodes = checkNodes;
+		}
+		
+	TreeNode selectNode;
+		public TreeNode getSelectNode() {
+			return selectNode;
+		}
+		public void setSelectNode(TreeNode selectNode) {
+			this.selectNode = selectNode;
 		}
 		
 	public Tree() {
