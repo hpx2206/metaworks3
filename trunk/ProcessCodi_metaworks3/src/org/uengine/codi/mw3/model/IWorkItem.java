@@ -177,7 +177,7 @@ public interface IWorkItem extends IDAO{
 		@ServiceMethod(when = WHEN_VIEW)
 		public void like() throws Exception;
 		
-		@ServiceMethod(when = WHEN_VIEW, callByContent=true)
+		@ServiceMethod(when = WHEN_VIEW, callByContent=true, target=ServiceMethodContext.TARGET_SELF)
 		public void detail() throws Exception;
 
 		@ServiceMethod(callByContent = true, target="popup")
