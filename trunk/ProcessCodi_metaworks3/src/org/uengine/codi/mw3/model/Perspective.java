@@ -56,23 +56,26 @@ public class Perspective {
 	}
 	public static Object[] loadInstanceListPanel(Session session, String perspectiveType,
 			String selectedItem, String title) throws Exception {
-
-		if (session != null) {
-			if(!perspectiveType.equals(session.getLastPerspecteType())) {
+		
+		try {
+			if(perspectiveType.equals(session.getLastPerspecteType()) != true) {
 				System.out.println("clear text in the search box because perspectiveType is not equal");
-				session.setSearchKeyword("");
-
-			} else if(selectedItem != null && !selectedItem.equals(session.getLastSelectedItem())){
+				session.setSearchKeyword(null);
+	
+			} else if(selectedItem.equals(session.getLastSelectedItem()) != true){
 				System.out.println("clear text in the search box because selectItem is not equal");
-				session.setSearchKeyword("");
+				session.setSearchKeyword(null);
 			}
 			else {
 				System.out.println("remain text in the search box");
 			}
+		} catch (Exception e) {
+			System.out.println("Do nothing");
 		}
-
+		
 		InstanceList instList = new InstanceList();
 		instList.init();
+
 		savePerspectiveToSession(session, perspectiveType, selectedItem);
 		instList.load(session);
 		
@@ -91,7 +94,14 @@ public class Perspective {
 		}
 		instListPanel.setTitle(title);
 		session.setWindowTitle(title);
-		return new Object[] {session, instListPanel};
+
+		
+		SearchBox searchBox = new SearchBox();
+		searchBox.setKeyword(session.getSearchKeyword());
+		searchBox.setKeyUpSearch(true);
+		searchBox.setKeyEntetSearch(true);
+
+		return new Object[] {session, instListPanel, searchBox};
 	}
 
 	private static void savePerspectiveToSession(Session session,

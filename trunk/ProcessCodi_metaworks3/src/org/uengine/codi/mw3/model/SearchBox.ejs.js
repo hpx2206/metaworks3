@@ -6,21 +6,21 @@ var org_uengine_codi_mw3_model_SearchBox = function(objectId, className) {
 	this.windowObjectId = $('#' + this.divId).closest('.mw3_window').attr('objectId');
 	
 	this.timeout;
-	
+
 	var object = mw3.objects[this.objectId];
-	if(object && object.__descriptor){
-		this.isKeyupSearch = object.__descriptor.getOptionValue("keyupSearch");
-		this.isEnterSearch = object.__descriptor.getOptionValue("enterSearch");
+	if(object){
+		this.isKeyupSearch = object.keyUpSearch;
+		this.isEnterSearch = object.keyEntetSearch;
 	}
-	
+
 	if(object && object.keyword)
 		this.keyword = object.keyword;
 
-	$("#search_" + this.objectId).bind('keyup', function(event){
-		mw3.getFaceHelper(objectId).keyup(event, this);
+	$("#search_" + this.objectId).bind('keyup', {objectId: this.objectId}, function(event){
+		mw3.getFaceHelper(event.data.objectId).keyup(event, this);
 	});
 	$("#search_" + this.objectId).focus();
-}
+};
 
 org_uengine_codi_mw3_model_SearchBox.prototype = {
 	getValue : function() {
@@ -31,9 +31,10 @@ org_uengine_codi_mw3_model_SearchBox.prototype = {
 		return object;
 	},
 	keyup : function(e, element) {
+				
 		var keyword = element.value;
 		var objectId = this.objectId;
-		
+
 		if(this.isKeyupSearch){
 			if(this.keyword == keyword)
 				return false;
@@ -65,6 +66,8 @@ org_uengine_codi_mw3_model_SearchBox.prototype = {
 			mw3.getFaceHelper(this.windowObjectId).endLoading();
 	},
 	destroy : function(){
+		$("#search_" + this.objectId).unbind('keyup');
+		
 		this.endLoading();
 	},	
 	showStatus : function(message){
