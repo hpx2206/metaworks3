@@ -86,7 +86,7 @@ public class InstanceList implements ContextAware{
 	public InstanceList load(Session session) throws Exception {
 		IInstance instanceContents = Instance.load(session,	getPage()-1, PAGE_CNT);
 
-		if(session.lastPerspecteType.equals("inbox")){
+		if(session.lastPerspecteType != null && session.lastPerspecteType.equals("inbox")){
 			session.setTodoListCount(instanceContents.size());
 		}
 		

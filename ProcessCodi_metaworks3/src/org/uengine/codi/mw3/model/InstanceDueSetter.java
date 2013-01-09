@@ -10,7 +10,7 @@ import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dwr.MetaworksRemoteService;
 
-@Face(displayName="$InstanceDueSetter")
+@Face(displayName="$InstanceDueSetter", ejsPath="dwr/metaworks/genericfaces/FormFace.ejs")
 public class InstanceDueSetter implements ContextAware{
 	
 	MetaworksContext metaworksContext;
@@ -74,6 +74,7 @@ public class InstanceDueSetter implements ContextAware{
 
 
 
+	@Face(displayName="$Apply")
 	@ServiceMethod(callByContent=true)
 	public void apply() throws Exception{
 		Instance instance = new Instance();
