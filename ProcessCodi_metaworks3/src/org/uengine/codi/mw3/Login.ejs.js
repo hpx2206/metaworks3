@@ -3,30 +3,30 @@ var org_uengine_codi_mw3_Login = function(objectId, className){
 	this.objectId = objectId;
 	this.className = className;
 	this.divId = mw3._getObjectDivId(this.objectId);
-
-	// facebook init
-	var login = mw3.objects[objectId];
+	this.object = mw3.objects[this.objectId];
+	
+	
 	var lastVisitPage = getCookie("codi.lastVisit");
 	if(lastVisitPage) 
-		login.lastVisitPage = lastVisitPage;
-	
+		this.object.lastVisitPage = lastVisitPage;
 
-	var storedId = getCookie("codi.id");
+	if(this.object && this.object.metaworksContext && this.object.metaworksContext.how == 'logout'){
+		delCookie("codi.id", "/","");
+		delCookie("codi.password", "/","");
+		delCookie("codi.rememberMe", "/","");
+	}else{
+		var rememberMe = getCookie("codi.rememberMe");
 		
-	if(storedId!=null){		
-		
-		mw3.getInputElement(objectId, "userId").value = storedId;
-		var password = getCookie("codi.password");
-		mw3.getInputElement(objectId, "password").value = password 
-		var object = mw3.objects[objectId];
-		
-		if(!mw3.autoLogged && password){
-			object.login();
-			mw3["autoLogged"] = true;
-		}
-	}else{		
+		if(rememberMe!=null && rememberMe){
+			var id = getCookie("codi.id");
+			var password = getCookie("codi.password");
 			
+			mw3.getInputElement(objectId, "userId").value = id;			
+			mw3.getInputElement(objectId, "password").value = password;
+			mw3.getInputElement(objectId, "rememberMe").checked = true;
+		}		
 	}
+
 	
 	/*
 	// facebook login status
@@ -44,23 +44,23 @@ var org_uengine_codi_mw3_Login = function(objectId, className){
 	}, true);
 	*/
 	
-	$('#method_facebook_' + objectId).show();
+//	$('#method_facebook_' + objectId).show();
 	
-	var object = mw3.objects[this.objectId]; 
- 
-//mw3.getInputElement(this.objectId, 'userId').value = 'test';
-//mw3.getInputElement(this.objectId, 'password').value = 'testtest';
- 
 	mw3.getInputElement(this.objectId, 'userId').focus();
- 
-// object.login();
  
 	$('#' + this.divId).bind('keydown', function(event){
 		mw3.getFaceHelper(objectId).keydown(event);
 	});
-}
+};
 
 org_uengine_codi_mw3_Login.prototype = {
+	loaded : function(){
+		var login = mw3.getObjectFromUI(this.objectId);
+		
+		if(login.userId && login.password && login.rememberMe){
+			login.login();
+		}
+	},
 	keydown : function(e){
 		if(e.keyCode == 13){
 			window.event.returnValue = false;
@@ -68,15 +68,17 @@ org_uengine_codi_mw3_Login.prototype = {
 			mw3.call(this.objectId, 'login');
 		}
 	},
-	getValue	:	function(){
+	getValue : function(){
 		var login = mw3.getObjectFromUI(this.objectId);
 		
 		if (login.rememberMe){
 			setCookie("codi.id", login.userId, 10, "/", "", "");
 			setCookie("codi.password", login.password, 10, "/", "", "");			
+			setCookie("codi.rememberMe", true, 10, "/", "", "");
 		}else{
-			deleteCookie("codi.id", "/","");
-			deleteCookie("codi.password", "/","");
+			delCookie("codi.id", "/","");
+			delCookie("codi.password", "/","");
+			delCookie("codi.rememberMe", "/","");
 		}
 
 		var lastVisitPage = getCookie("codi.lastVisit");
@@ -108,6 +110,7 @@ org_uengine_codi_mw3_Login.prototype = {
 	loginFacebook : function(){
 		var objectId = this.objectId;
 		
+		/*
 		FB.login(function(response) {
 			if (response.status === 'connected') {
 				$('#method_facebook_' + objectId).hide();
@@ -129,6 +132,7 @@ org_uengine_codi_mw3_Login.prototype = {
 
 				
 			}			
-		}, {scope:'email,user_checkins,publish_stream,user_likes,export_stream'});		
+		}, {scope:'email,user_checkins,publish_stream,user_likes,export_stream'});
+		*/	
 	}
 }

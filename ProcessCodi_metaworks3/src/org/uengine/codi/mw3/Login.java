@@ -8,7 +8,6 @@ import javax.servlet.http.HttpSession;
 import org.directwebremoting.WebContext;
 import org.directwebremoting.WebContextFactory;
 import org.metaworks.MetaworksContext;
-import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Id;
 import org.metaworks.dao.Database;
@@ -16,17 +15,11 @@ import org.metaworks.dao.TransactionContext;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.common.MainPanel;
-import org.uengine.codi.mw3.knowledge.Knowledge;
-import org.uengine.codi.mw3.model.Company;
-import org.uengine.codi.mw3.model.Dept;
 import org.uengine.codi.mw3.model.Employee;
-import org.uengine.codi.mw3.model.ICompany;
-import org.uengine.codi.mw3.model.IDept;
 import org.uengine.codi.mw3.model.IEmployee;
 import org.uengine.codi.mw3.model.IUser;
 import org.uengine.codi.mw3.model.Locale;
 import org.uengine.codi.mw3.model.Main;
-import org.uengine.codi.mw3.model.PinterestMain;
 import org.uengine.codi.mw3.model.PortraitImageFile;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.model.User;
@@ -38,7 +31,6 @@ public class Login extends Database<ILogin> implements ILogin{
 	
 	
 	public Login(){
-		setRememberMe(new Boolean(true));
 		setMetaworksContext(new MetaworksContext());
 		getMetaworksContext().setWhen("edit");
 	}
