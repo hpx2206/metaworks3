@@ -358,7 +358,6 @@ public class InstanceView {
 	
 	@ServiceMethod(target="popup", loader="auto")
 	public Popup schedule() throws Exception{
-
 		Instance instance = new Instance();
 		instance.setInstId(new Long(getInstanceId()));
 		 
@@ -376,9 +375,8 @@ public class InstanceView {
 			ids.getMetaworksContext().setWhere("sns");
 		}
 		ids.getMetaworksContext().setWhen("edit");
-		return new Popup(ids);
 		
-		//return scheduleEditor;
+		return new Popup(350,200,ids);
 	}
 	
 	@ServiceMethod(needToConfirm=true)
