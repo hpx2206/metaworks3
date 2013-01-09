@@ -1352,7 +1352,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		this.getMetaworksContext().setHow(this.getType());
 		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		
-		return new Popup(300,200,this);
+		return new Popup(300,300,this);
 	}
 
 	public Object[] apply() throws Exception {
