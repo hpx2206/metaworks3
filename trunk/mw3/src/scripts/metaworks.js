@@ -2106,7 +2106,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				
 				// 2012-04-14 cjw 재귀호출 막음
 				// 2012-04-18 이전 수정 버전 문제로 재수정 (undefined 일때 true 가 되여야함)
-				var getAgain = (arguments.length > 2 ? (typeof arguments[2] != 'undefined' ? arguments[2] : true) : true);
+				var getAgain = (arguments.length > 2 ? (typeof arguments[2] != 'undefined' ? arguments[2] : true) : true);				
 				//var getAgain = (arguments.length > 2 ? arguments[2] : true);
 				var sync = (arguments.length > 3 ? arguments[3] : false);
 				// 2012-11-25 cjw add callback function
@@ -3362,7 +3362,37 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			if(!Metaworks) alert('Metaworks DWR service looks not available. Metaworks will not work');
 			var mw3 = new Metaworks3('template_caption', 'dwr_caption', Metaworks);
 			
+			mw3.windowFocus = true;
+			mw3.windowActiveElement;
 
+			mw3.windowActiveElement = document.activeElement;
+			
+			if(mw3.browser.indexOf('MSIE') > -1){
+				$(document).focusin(function(event){
+					mw3.windowFocus = true;
+					console.log('f');
+				}).focusout(function(event){
+					if (mw3.windowActiveElement != document.activeElement) {
+						mw3.windowActiveElement = document.activeElement;
+						return;
+					}
+					mw3.windowFocus = false;
+					console.log('b');
+				});
+			}else{
+				$(window).focus(function(event){
+					mw3.windowFocus = true;
+				}).blur(function(event){
+					if (mw3.windowActiveElement != document.activeElement) {
+						mw3.windowActiveElement = document.activeElement;
+						return;
+					}
+					mw3.windowFocus = false;
+				});				
+			}
+			
+			
+			
 			////// reference objects //////
 			
 			var FieldRef = function(object, objectId, fieldDescriptor){
