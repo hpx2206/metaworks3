@@ -2,8 +2,6 @@ package org.uengine.codi.mw3.knowledge;
 
 import org.metaworks.component.HorizontalSplitBox;
 
-import examples.GoogleChart;
-
 public class SeeTab extends HorizontalSplitBox {
 	
 	public SeeTab(){
