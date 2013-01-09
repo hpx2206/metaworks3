@@ -1885,3 +1885,6 @@ html, body {
     cursor: pointer;
     background: url(../../images/waveStyle/light/panel-prev.png) top right no-repeat;
 }
+
+.positionRight {float:right; margin-right:15px;}
+.positionRight > div{float:left}
