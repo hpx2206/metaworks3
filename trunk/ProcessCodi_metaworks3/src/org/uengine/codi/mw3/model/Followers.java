@@ -93,7 +93,7 @@ public class Followers implements ContextAware {
 		}else if("etc".equals(this.getInstanceId())){
 			type = "addEtcFollower";
 		}
-		AddFollowerPanel panel = new AddFollowerPanel(session.user, getInstanceId(), type);
+		AddFollowerPanel panel = new AddFollowerPanel(session, getInstanceId(), type);
 
 		popup.setPanel(panel);
 		popup.setName("AddFollowerPanel");

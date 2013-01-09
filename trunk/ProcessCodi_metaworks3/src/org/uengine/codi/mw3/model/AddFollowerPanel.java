@@ -10,14 +10,17 @@ import org.uengine.codi.mw3.ILogin;
 public class AddFollowerPanel implements ContextAware{
 	
 	public AddFollowerPanel(){
-		
 		setMetaworksContext(new MetaworksContext());
-		
 	}
 	
-	public AddFollowerPanel(IUser loginUser, String instanceId, String type) throws Exception{
+	public AddFollowerPanel(Session session, String instanceId, String type) throws Exception{
 		this();
+		FollowerSelectPanel followerSelectPanel = new FollowerSelectPanel();
+		followerSelectPanel.load(session, type);
 		
+		Window window = new Window(followerSelectPanel, "Add Follower");
+		setContactPanel(window);
+		/*
 		ContactPanel contactPanel = new ContactPanel(loginUser);
 		contactPanel.getContactListPanel().setId(type);
 		contactPanel.getContactListPanel().getLocalContactList().getMetaworksContext().setWhen(type);		
@@ -28,6 +31,8 @@ public class AddFollowerPanel implements ContextAware{
 		setContactPanel(window);
 		
 //		setContactListPanel(contactListPanel);
+ * 
+ */
 		setInstanceId(instanceId);
 	}
 	
@@ -36,36 +41,22 @@ public class AddFollowerPanel implements ContextAware{
 		public String getInstanceId() {
 			return instanceId;
 		}
-	
 		public void setInstanceId(String instanceId) {
 			this.instanceId = instanceId;
 		}
 
-		
 	Window contactPanel;
 		public Window getContactPanel() {
 			return contactPanel;
 		}
-	
 		public void setContactPanel(Window contactPanel) {
 			this.contactPanel = contactPanel;
 		}
 	
-		
-//	ContactListPanel contactListPanel;
-//		public ContactListPanel getContactListPanel() {
-//			return contactListPanel;
-//		}
-//		public void setContactListPanel(ContactListPanel contactListPanel) {
-//			this.contactListPanel = contactListPanel;
-//		}
-
-
 	MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
 			return metaworksContext;
 		}
-	
 		public void setMetaworksContext(MetaworksContext metaworksContext) {
 			this.metaworksContext = metaworksContext;
 		}
