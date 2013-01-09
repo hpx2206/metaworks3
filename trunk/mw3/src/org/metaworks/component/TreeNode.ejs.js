@@ -11,10 +11,11 @@ var org_metaworks_component_TreeNode = function(objectId, className){
 	
 	this.nodeDiv = $('#' + this.objectDivId).children('div');
 	this.nodeDiv.attr('objectId', this.objectId);
+	this.treeDiv = this.nodeDiv.parentsUntil('.filemgr-tree').parent('.filemgr-tree');
 	
 	var faceHelper = this;
 	
-	if('folder' == this.object.type){
+	if(this.object.folder){
 		// calc status
 		var status = '';
 		if(this.object.expanded)
@@ -48,7 +49,9 @@ var org_metaworks_component_TreeNode = function(objectId, className){
 
 org_metaworks_component_TreeNode.prototype = {
 	loaded : function(){
-		this.nodeDiv.trigger('loaded', [this.object.id, this.objectId]);
+		this.nodeDiv.triggerHandler('loaded', [this.object.id, this.objectId]);
+		this.treeDiv.triggerHandler('loadedNode', [this.object.id, this.objectId]);
+		
 	},
 	destroy : function() {
 		this.nodeDiv.unbind('click').unbind('dblclick');
@@ -116,15 +119,13 @@ org_metaworks_component_TreeNode.prototype = {
 			window.event.cancelBubble = true;
 		}
 		
-		var tree = this.nodeDiv.parentsUntil('.filemgr-tree').parent('.filemgr-tree');
-				
 		if(!this.nodeDiv.hasClass('selected')){
-			tree.find('.item-fix.selected').removeClass('selected');
+			this.treeDiv.find('.item-fix.selected').removeClass('selected');
 			this.nodeDiv.addClass('selected');
 
-			tree.trigger('change', [this.objectId]);			
+			this.treeDiv.trigger('change', [this.objectId]);			
 		}else{
-			tree.find('.item-fix.selected').removeClass('selected');
+			this.treeDiv.find('.item-fix.selected').removeClass('selected');
 			this.nodeDiv.addClass('selected');			
 		}
 	},
@@ -138,7 +139,7 @@ org_metaworks_component_TreeNode.prototype = {
 		
 		this.select();
 		
-		if(this.object.type == 'folder'){
+		if(this.object.folder){
 			if(this.isExpand())
 				this.collapse();
 			else if(this.isCollapse())
@@ -165,12 +166,7 @@ org_metaworks_component_TreeNode.prototype = {
 			mw3.call(this.objectId, 'expand');
 		}
 		
-		var tree = this.objectDiv.closest('.filemgr-tree');
-		
-		tree.trigger('expanded');
-		
-		// tree 잡아서
-		
+		this.treeDiv.trigger('expanded');
 	},
 	
 	collapse : function(){
@@ -185,8 +181,6 @@ org_metaworks_component_TreeNode.prototype = {
 		this.objectDiv.children('u').hide();
 		this.object.expanded = false;
 		
-		var tree = this.objectDiv.parentsUntil('.filemgr-tree').parent('.filemgr-tree');
-		
-		tree.trigger('collapsed', [this.objectId]);
+		this.treeDiv.trigger('collapsed', [this.objectId]);
 	}
 };

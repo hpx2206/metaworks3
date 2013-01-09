@@ -22,11 +22,10 @@ var org_metaworks_component_Tree = function(objectId, className){
 
 	this.objectDiv.attr('objectId', this.objectId);
 
-	this.objectDiv.bind('loaded', {objectId: this.objectId}, function(event, nodeId){
+	this.objectDiv.bind('loadedNode', {objectId: this.objectId}, function(event, nodeId, objectId){
 		var faceHelper = mw3.getFaceHelper(event.data.objectId);
-		if(faceHelper && faceHelper.addNode)
-			faceHelper.addNode(nodeId)
-
+		if(faceHelper && faceHelper.loadedNode)
+			faceHelper.loadedNode(nodeId, objectId)
 	});
 	
 	if(this.object && this.object.showCheckBox){
@@ -74,9 +73,13 @@ org_metaworks_component_Tree.prototype = {
 		this.objectDiv.trigger('loaded');
 	},
 	
-	addNode : function(nodeId){
-		if(this.object.showCheckBox)
-			this.objectDiv.find('#' + nodeId + ' .tree-checkbox').css('display', 'inline-block');
+	loadedNode : function(nodeId, objectId){
+		if(this.object.showCheckBox){
+			var node = mw3.objects[objectId];
+			
+			if(!this.object.hiddenCheckBoxFolder || (node && !node.folder))
+				this.objectDiv.find('#' + nodeId + ' .tree-checkbox').css('display', 'inline-block');
+		}
 	},
 	getClosedParentNodes : function(objectId){
 		var object = mw3.objects[objectId];

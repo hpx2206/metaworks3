@@ -33,6 +33,14 @@ public class Tree {
 		public void setShowCheckBox(boolean showCheckBox) {
 			this.showCheckBox = showCheckBox;
 		}
+		
+	boolean hiddenCheckBoxFolder;
+		public boolean isHiddenCheckBoxFolder() {
+			return hiddenCheckBoxFolder;
+		}
+		public void setHiddenCheckBoxFolder(boolean hiddenCheckBoxFolder) {
+			this.hiddenCheckBoxFolder = hiddenCheckBoxFolder;
+		}
 
 	TreeNode node;
 		public TreeNode getNode() {
