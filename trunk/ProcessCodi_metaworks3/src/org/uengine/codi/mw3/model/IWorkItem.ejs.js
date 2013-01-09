@@ -2,8 +2,6 @@ var org_uengine_codi_mw3_model_IWorkItem = function(objectId, className){
 	this.objectId = objectId;
 	this.className = className;
 	
-	
-	
 	var container = $('#objDiv_' + this.objectId).find('.formcontexttitle span').eq(0);
 	var doc = container.html();
 	
@@ -29,7 +27,7 @@ var org_uengine_codi_mw3_model_IWorkItem = function(objectId, className){
 
 	if(workItem.type == 'src' && workItem.extFile!=null && !workItem.contentLoaded){
 		workItem.loadContents();
-	}
+	};
 }
 
 org_uengine_codi_mw3_model_IWorkItem.prototype = {
@@ -41,5 +39,5 @@ org_uengine_codi_mw3_model_IWorkItem.prototype = {
 		
 		window.open(url);
 	}
-}
+};
 
