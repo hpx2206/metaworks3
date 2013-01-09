@@ -45,17 +45,17 @@ var org_metaworks_component_Tree = function(objectId, className){
 
 org_metaworks_component_Tree.prototype = {
 	getValue : function(){
+		// get check nodes
+		var checkNodes = [];
+
 		if(this.object && this.object.showCheckBox){
-			// get check nodes
-			var checkNodes = [];
 			this.objectDiv.find('input[type=checkbox]:checked').each(function(){
 				var node = mw3.objects[$(this).attr('objectId')];
 				
 				checkNodes.push(node);
 			});
-			
-			this.object.checkNodes = checkNodes;
 		}
+		this.object.checkNodes = checkNodes;
 		
 		
 		// get select node
@@ -64,7 +64,6 @@ org_metaworks_component_Tree.prototype = {
 			selectNode = mw3.objects[$(this).attr('objectId')];
 		});
 		this.object.selectNode = selectNode;
-		
 		
 		return this.object;
 	},
