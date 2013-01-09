@@ -83,6 +83,14 @@ public class TreeNode {
 			this.loaded = loaded;
 		}
 
+	boolean folder;
+		public boolean isFolder() {
+			return folder;
+		}
+		public void setFolder(boolean folder) {
+			this.folder = folder;
+		}
+
 	ArrayList<TreeNode> child;
 		public ArrayList<TreeNode> getChild() {
 			return child;
