@@ -27,6 +27,7 @@ public class ContactList implements ContextAware {
 		
 		IUser friend = new User();
 		friend.setName(friendName);
+		friend.getMetaworksContext().setHow(this.getMetaworksContext().getHow());
 		
 		if(LOCAL.equals(this.getMetaworksContext().getWhere())){
 			friend.setNetwork(LOCAL);			

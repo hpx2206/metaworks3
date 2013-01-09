@@ -50,7 +50,10 @@ public class Instance extends Database<IInstance> implements IInstance{
 			throws Exception {
 		
 		Map<String, String> criteria = new HashMap<String, String>();
-
+		
+		if( page < 0 ){
+			page = 0;
+		}
 		// paging 
 		String tempStr = "";
 		tempStr = "" + (page * count);

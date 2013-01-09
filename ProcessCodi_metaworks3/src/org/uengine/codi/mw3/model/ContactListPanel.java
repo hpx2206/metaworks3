@@ -26,21 +26,21 @@ public class ContactListPanel implements ContextAware {
 	
 	public void load(String userId) throws Exception {
 		load(userId, null);
-		
 	}
+	
 	public void load(String userId, String keyword) throws Exception {
 		setId(getMetaworksContext().getWhen());
 		
 		ContactList localContactList = new ContactList();
+		localContactList.getMetaworksContext().setHow(getMetaworksContext().getHow());
 		localContactList.getMetaworksContext().setWhen(getMetaworksContext().getWhen());
 		localContactList.getMetaworksContext().setWhere(ContactList.LOCAL);
 		localContactList.load(userId, keyword);
 		
-		
-		
 		setLocalContactList(localContactList);
 		
 		ContactList socialContactList = new ContactList();
+		socialContactList.getMetaworksContext().setHow(getMetaworksContext().getHow());
 		socialContactList.getMetaworksContext().setWhen(getMetaworksContext().getWhen());
 		socialContactList.getMetaworksContext().setWhere(ContactList.FACEBOOK);
 		socialContactList.load(userId, keyword);

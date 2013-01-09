@@ -69,8 +69,7 @@ public class User extends Database<IUser> implements IUser {
 	public Popup pickUp() throws Exception {
 		Popup popup = new Popup();
 		
-		
-		AddFollowerPanel userPicker = new AddFollowerPanel(fromHttpSession(), null , "addInstanceFollower" );
+		AddFollowerPanel userPicker = new AddFollowerPanel( session , null , "addInstanceFollower" );
 		userPicker.setMetaworksContext(new MetaworksContext()); // propagate context
 		userPicker.getMetaworksContext().setWhen("userPicker");
 		
