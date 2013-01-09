@@ -205,8 +205,10 @@ public class Session implements ContextAware{
 			login.setUserId(getEmployee().getEmpCode());
 		}
 		login.setMetaworksContext(new MetaworksContext());
+		
+		login.getMetaworksContext().setHow("logout");
 		login.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
-		login.getMetaworksContext().setWhere("user");
+		//login.getMetaworksContext().setWhere("user");
 		return login;
 	}
 	
