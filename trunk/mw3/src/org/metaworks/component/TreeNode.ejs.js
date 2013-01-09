@@ -49,12 +49,14 @@ var org_metaworks_component_TreeNode = function(objectId, className){
 
 org_metaworks_component_TreeNode.prototype = {
 	loaded : function(){
-		this.nodeDiv.triggerHandler('loaded', [this.object.id, this.objectId]);
-		this.treeDiv.triggerHandler('loadedNode', [this.object.id, this.objectId]);
-		
+		if(this.object != null){
+			this.nodeDiv.triggerHandler('loaded', [this.object.id, this.objectId]);
+			this.treeDiv.triggerHandler('loadedNode', [this.object.id, this.objectId]);
+		}
 	},
 	destroy : function() {
-		this.nodeDiv.unbind('click').unbind('dblclick');
+		if(this.object != null)
+			this.nodeDiv.unbind();
 	},
 	startLoading : function(){
 		
@@ -77,7 +79,9 @@ org_metaworks_component_TreeNode.prototype = {
 		}
 	},
 	
-	toAppend : function(html, appendobject){
+	toAppend : function(appendobject){
+		var html = mw3.locateObject(appendobject, null);
+		
 		var appendDiv = $('<u></u>').addClass('last').css({'display': 'block', 'height': 'auto', 'overflow': 'visible'});
 		
 		if(this.object.root)
@@ -109,7 +113,7 @@ org_metaworks_component_TreeNode.prototype = {
 	},
 
 	check : function(){
-		this.nodeDiv.find('input[type=checkbox]').each(function(){
+		this.nodeDiv.find('input[type=checkbox]:visible').each(function(){
 			if($(this).is(':checked'))
 				$(this).prop('checked', false);
 			else
@@ -132,6 +136,8 @@ org_metaworks_component_TreeNode.prototype = {
 			this.treeDiv.find('.item-fix.selected').removeClass('selected');
 			this.nodeDiv.addClass('selected');			
 		}
+		
+		this.check();
 	},
 	
 	action : function(){
