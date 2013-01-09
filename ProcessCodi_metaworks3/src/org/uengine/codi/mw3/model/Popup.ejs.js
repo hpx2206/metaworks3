@@ -21,7 +21,8 @@ var org_uengine_codi_mw3_model_Popup = function(objectId, className) {
 //	var x = openerDiv.offset().left + (openerDiv.children()[0].offsetWidth);
 //	var y = openerDiv.offset().top;
 	
-	this.createPopup(object.width, object.height, mw3.mouseX, mw3.mouseY);	
+	var faceHelper = this;
+	faceHelper.createPopup(object.width, object.height, mw3.mouseX, mw3.mouseY);	
 };
 
 org_uengine_codi_mw3_model_Popup.prototype = {
@@ -34,13 +35,11 @@ org_uengine_codi_mw3_model_Popup.prototype = {
 		
 		var divId = '#objDiv_' + this.objectId;
 		
-		var parent = $(divId).parent();
 		var arrow = $(divId + ' .cluetip-arrows');
 		
-		parent.show();
-		parent.css({top:y-28,left:x,width:popLayerWidth,height:popLayerHeight});
-		parent.removeClass('clue-left-rounded');
-		parent.addClass('clue-right-rounded');
+		this.divObj.css({top:y-28,left:x,width:popLayerWidth,height:popLayerHeight});
+		this.divObj.removeClass('clue-left-rounded');
+		this.divObj.addClass('clue-right-rounded');
 		
 		var innerHeight = h-39;
 		
@@ -48,31 +47,30 @@ org_uengine_codi_mw3_model_Popup.prototype = {
 		arrow.css({top:10});
 		
 		if(bodyWidth && popLayerWidth + x > bodyWidth){
-			parent.css({left:x-30 - popLayerWidth});
-			parent.removeClass('clue-right-rounded');
-			parent.addClass('clue-left-rounded');
+			this.divObj.css({left:x-30 - popLayerWidth});
+			this.divObj.removeClass('clue-right-rounded');
+			this.divObj.addClass('clue-left-rounded');
 		};
 		
 		if(bodyHeight && popLayerHeight + y > bodyHeight){    	
-			parent.css({top:y+28 - popLayerHeight});
+			this.divObj.css({top:y+28 - popLayerHeight});
 			arrow.css({top:popLayerHeight-40});
 		};
 		
-		var top = parent.css('top');
+		var top = this.divObj.css('top');
 		top = top.substring(0, top.length - 2);
 		
 		if(top < 0){
 			var arrowTop = arrow.css('top');			
 			
-			parent.css('top', 0);
+			this.divObj.css('top', 0);
 			arrow.css({top:popLayerHeight+Number(top)-40});
 		}
 
+		this.divObj.show();
 	},
 	destoryPopup : function() {
-		var divId = '#objDiv_' + this.objectId;
-		
-		$(divId).parent().remove();
+		this.divObj.remove();
 	},
 	destroy : function() {
 		this.destoryPopup();
@@ -90,4 +88,4 @@ org_uengine_codi_mw3_model_Popup.prototype = {
 			this.destoryPopup();
 		}
 	}		
-}
+};

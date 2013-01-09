@@ -201,10 +201,10 @@ public class Session implements ContextAware{
 		removeUserInfoFromHttpSession();
 		
 		Login login = new Login();
-		if(getEmployee() != null) {
+/*		if(getEmployee() != null) {
 			login.setUserId(getEmployee().getEmpCode());
 		}
-		login.setMetaworksContext(new MetaworksContext());
+*/		login.setMetaworksContext(new MetaworksContext());
 		
 		login.getMetaworksContext().setHow("logout");
 		login.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
