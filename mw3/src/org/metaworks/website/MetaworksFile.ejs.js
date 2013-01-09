@@ -29,17 +29,16 @@ var org_metaworks_website_MetaworksFile = function(objectId, className){
 				width = object.__descriptor.getOptionValue('imageWidth');
 				height = object.__descriptor.getOptionValue('imageHeight');
 			}
-			$("#image_" + this.objectId).html('<img ' + (width?'width='+width+' ':' ') + (height?'height='+height+' ':' ') + 'src=\'' + image + '\'>').attr("href","javascript:mw3.objects[" + objectId + "].download()");
+			$("#image_" + this.objectId).html('<img style=\"display:none\" ' + (width?'width='+width+' ':' ') + (height?'height='+height+' ':' ') + 'src=\'' + image + '\'>').attr("href","javascript:mw3.objects[" + objectId + "].download()");
 			
 			
 			$("#image_" + this.objectId).find('img').load(function(){
 				if($(this).width() > parentwidth){
 					$(this).width(parentwidth);
 				}
+				
+				$(this).show();
 			})
-			
-			
-			
 		}
 			
 	}
