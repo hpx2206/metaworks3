@@ -66,8 +66,12 @@ org_metaworks_component_TreeNode.prototype = {
 	
 	showStatus : function(message){
 		if('expand DONE.' == message){
-			this.nodeDiv.addClass('minlast');
-			this.nodeDiv.removeClass('min');
+			if(this.nodeDiv.find('.item-fix').length > 0){
+				this.nodeDiv.addClass('minlast');
+				this.nodeDiv.removeClass('min');
+			}else{
+				this.nodeDiv.removeClass('min');
+			}
 			
 			this.object.loaded = true;
 		}
