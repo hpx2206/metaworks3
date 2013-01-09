@@ -22,11 +22,11 @@ public class TodoBadge extends NotificationBadge{
 	
 	@ServiceMethod
 	public void refresh() throws Exception{
+	
 		PersonalPerspective personalPerspective = new PersonalPerspective();
+
 		personalPerspective.session = session;
-		
 		personalPerspective.session.getMetaworksContext().setWhen("todoBage");
-		
 		personalPerspective.loadInbox();
 		
 		setNewItemCount(session.getTodoListCount());
@@ -40,7 +40,6 @@ public class TodoBadge extends NotificationBadge{
 		PersonalPerspective personalPerspective = new PersonalPerspective();
 		personalPerspective.session = session;
 		
-		InstanceList lnstList = new InstanceList();
 		
 		session.getMetaworksContext().setWhen("todoBage");
 		session.setLastPerspecteType("inbox");
@@ -48,9 +47,12 @@ public class TodoBadge extends NotificationBadge{
 		personalPerspective.loadInbox();
 		setNewItemCount(session.getTodoListCount());
 		
+		InstanceList instList = new InstanceList();
+		instList.setPage(1);
+		
 		Popup popup = new Popup();
 		popup.setName("Todo List");
-		popup.setPanel(lnstList.load(session));
+		popup.setPanel(instList.load(session));
 		
 		return new Object[]{new Refresh(this), popup};
 	}
