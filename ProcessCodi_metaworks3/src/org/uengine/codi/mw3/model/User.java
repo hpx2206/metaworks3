@@ -476,19 +476,24 @@ public class User extends Database<IUser> implements IUser {
 	
 	@Override
 	public Object[] showWall() throws Exception{
-		PersonalPerspective pPserspective = new PersonalPerspective();
-		Session userSession = new Session();
-		userSession.setUser(this);
 		Employee employee = new Employee();
 		employee.setEmpCode(getUserId());
 		employee.setGlobalCom(session.getCompany().getComCode());
 		employee.setPreferUX(session.getEmployee().getPreferUX());
+		
+		Session userSession = new Session();
+		userSession.setUser(this);
 		userSession.setEmployee(employee);
 		userSession.setCompany(session.getCompany());
+		
+		PersonalPerspective pPserspective = new PersonalPerspective();
 		pPserspective.session = userSession;
+		
 		this.getMetaworksContext().setWhen("chat");
+		
 		return new Object[]{(InstanceListPanel) pPserspective.loadRequest()[1], new Remover(new Popup())};
 	}
+	
 	@Override
 	public ModalWindow showSchedule() throws Exception{
 		ScheduleCalendar scheduleCalendar = new ScheduleCalendar();
