@@ -50,19 +50,17 @@ var org_uengine_codi_mw3_model_InstanceListPanel = function(objectId, className)
 		}, 1);
 	}
 	
-}
-
+};
 
 org_uengine_codi_mw3_model_InstanceListPanel.prototype = {
 	load : function(){
-		
 		var object = mw3.objects[this.objectId];
 		var options = {
 				togglerLength_open:	0, 
 				spacing_open:		0, 
 				spacing_closed:		0,
 				center__onresize:	'mw3.getFaceHelper('+this.objectId+').resizeChild()'
-		}
+		};
 
 		this.layout = this.divElement.layout(options);
 	},
@@ -100,4 +98,4 @@ org_uengine_codi_mw3_model_InstanceListPanel.prototype = {
 		
 	}	
 		
-}
+};
