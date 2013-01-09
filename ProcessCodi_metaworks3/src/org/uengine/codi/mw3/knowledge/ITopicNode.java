@@ -31,6 +31,6 @@ public interface ITopicNode extends IDAO {
 	public Object[] remove() throws Exception;
 		
 	@ServiceMethod(inContextMenu=true, callByContent=true, target="popup")
-	@Face(displayName="$Modify")
+	@Face(displayName="$Edit")
 	public ModalWindow modify() throws Exception;
 }
