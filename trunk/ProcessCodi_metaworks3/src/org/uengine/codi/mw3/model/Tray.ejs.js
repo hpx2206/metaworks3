@@ -27,6 +27,8 @@ org_uengine_codi_mw3_model_Tray.prototype.addTray = function(title, instId, noti
 				if(window.trayAlert)
 					window.trayAlert = clearInterval(window.trayAlert);
 				
+
+				
 				window.trayAlert = setInterval(function(){
 					if(document.title == prevTitle)
 						document.title = title + '님이 메세지를 보냈습니다.';
@@ -34,13 +36,25 @@ org_uengine_codi_mw3_model_Tray.prototype.addTray = function(title, instId, noti
 						document.title = prevTitle;
 				},1000);
 				
+				
+				var notifyFile = 'sound/notify.wav';
+				
 				if(mw3.browser.indexOf('MSIE') > -1){
+					var embed = document.createElement("embed"); 
+					embed.setAttribute("src", notifyFile); 
+					embed.setAttribute("hidden", true); 
+					embed.setAttribute("autostart", true); 
+					document.body.appendChild(embed);
+					
 					$(document).one('focusin', function(event){
 						window.trayAlert = clearInterval(window.trayAlert);
 						
 						document.title = prevTitle;
 					});
 				}else{
+					var audio = new Audio(notifyFile);
+					audio.play();
+					
 					$(window).one('focus', function(event){
 						window.trayAlert = clearInterval(window.trayAlert);
 						
