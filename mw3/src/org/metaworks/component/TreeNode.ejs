@@ -1,6 +1,5 @@
 <%
-	if(value == null || typeof value == 'undefined')
-		return true;
+	if(value != null && typeof value != 'undefined'){
 %>
 	<div class="item-fix <%=value.root?'root':''%>" objectId="<%=objectId%>" id="<%=value.id%>" name="<%=value.name%>">
 		<div class="item">
@@ -15,11 +14,12 @@
 		</div>
 	</div>	
 <%
-	if(value.child && value.child.length > 0){
+		if(value.child && value.child.length > 0){
 %>
 	<u class="last root" style="display: block; height: auto; overflow: visible;">
 		<%=fields.child.here()%>
 	</u>
 <%
+		}
 	}
 %>
