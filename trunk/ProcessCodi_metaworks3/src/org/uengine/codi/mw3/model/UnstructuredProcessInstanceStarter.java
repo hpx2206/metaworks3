@@ -7,14 +7,13 @@ import org.directwebremoting.ScriptSessions;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Remover;
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
-import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.CodiProcessDefinitionFactory;
 import org.uengine.codi.mw3.Login;
-import org.uengine.codi.mw3.knowledge.WfNode;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 public class UnstructuredProcessInstanceStarter implements ContextAware {
@@ -23,7 +22,7 @@ public class UnstructuredProcessInstanceStarter implements ContextAware {
 		setMetaworksContext(new MetaworksContext());
 		getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 	}
-	
+
 	String title;
 		//@Face(ejsPath="genericfaces/richText.ejs", options={"rows"}, values={"5"})
 		public String getTitle() {
@@ -50,7 +49,7 @@ public class UnstructuredProcessInstanceStarter implements ContextAware {
 			this.metaworksContext = metaworksContext;
 		}
 
-	@ServiceMethod(callByContent = true, keyBinding="enter")
+	@ServiceMethod(callByContent = true, keyBinding="enter", target=ServiceMethodContext.TARGET_APPEND)
 	@Test(scenario="first", starter=true, instruction="지금 생각하고 계신 것을 간략히 입력하고 클릭합니다.", next="autowiredObject.org.uengine.codi.mw3.model.InstanceView.newActivity()")
 	public Object[] start() throws Exception{
 		
@@ -106,18 +105,26 @@ public class UnstructuredProcessInstanceStarter implements ContextAware {
 		newItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		instanceView.getInstanceView().setNewItem(newItem);
 	
+		Browser.withSession(Login.getSessionIdWithUserId(session.getEmployee().getEmpCode()), new Runnable(){
+			@Override
+			public void run() {
+				ScriptSessions.addFunctionCall("mw3.getAutowiredObject('org.uengine.codi.mw3.model.Tray').__getFaceHelper().addTray", new Object[]{session.getUser().getName(), instanceView.getInstanceView().getInstanceId()});
+			}
+			
+		});
+		
 		if(getFriend() != null && getFriend().getUserId() != null){
-
 			Browser.withSession(Login.getSessionIdWithUserId(getFriend().getUserId()), new Runnable(){
 
 				@Override
 				public void run() {
-					ScriptSessions.addFunctionCall("mw3.getAutowiredObject('org.uengine.codi.mw3.model.Tray').__getFaceHelper().addTray", new Object[]{session.getUser().getName(), instanceView.getInstanceView().getInstanceId()});
+					ScriptSessions.addFunctionCall("mw3.getAutowiredObject('org.uengine.codi.mw3.model.Tray').__getFaceHelper().addTray", new Object[]{session.getUser().getName(), instanceView.getInstanceView().getInstanceId(), true});
 				}
 				
 			});
 		}
 		
+		/*
 		if(newInstancePanel!=null && newInstancePanel.getKnowledgeNodeId() != null){
 						
 			WfNode parent = new WfNode();
@@ -133,9 +140,12 @@ public class UnstructuredProcessInstanceStarter implements ContextAware {
 			return new Object[]{instanceView, parent};
 
 		}
+		*/
 		
-		return new Object[]{instanceViewAndInstanceList[0], instanceViewAndInstanceList[1], new Remover(new Popup())};
-		
+		if("sns".equals(session.getEmployee().getPreferUX())){
+			return new Object[]{new Remover(new Popup())};
+		}else
+			return new Object[]{instanceViewAndInstanceList[0], instanceViewAndInstanceList[1], new Remover(new Popup())};
 	}
 	
 	@AutowiredFromClient
@@ -149,5 +159,8 @@ public class UnstructuredProcessInstanceStarter implements ContextAware {
 	
 	@Autowired
 	public InstanceViewContent instanceViewContent;
-	
+
+	@AutowiredFromClient
+	public Tray tray;
+
 }

@@ -32,19 +32,19 @@ public class Tray {
 		
 	@ServiceMethod(callByContent=true)
 	public void addTrayItem() throws Exception{
-		
-		if(trayItems==null)
-			trayItems = new ArrayList<TrayItem>();
-		
-		trayItems.add(getTargetItem());
-		
-		save();
+		if(this.getTargetItem() != null && this.getTargetItem().getInstId() != null){
+			if(trayItems==null)
+				trayItems = new ArrayList<TrayItem>();
+			
+			trayItems.add(getTargetItem());
+			
+			save();
+		}
 	}
 	
 	protected void save() throws Exception, FileNotFoundException {
 		GlobalContext.serialize(getTrayItems() , new FileOutputStream( FormActivity.FILE_SYSTEM_DIR + "/Tray_" + session.getUser().getUserId() + ".xml" ) , TrayItem.class);
 	}
-	
 	
 	TrayItem targetItem;
 		public TrayItem getTargetItem() {
