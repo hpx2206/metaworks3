@@ -105,7 +105,7 @@
 		}else if(mw3.how == 'followerCheck'){
 %>
 		<div class="user">		
-			<input type="checkbox" id="followerCheck_<%=objectId%>" name="followerCheck">
+			<li><span><%= fields.userChecked.here() %></span></li>
 			<div class="user_focus<%=(value.size=='small' ? ' small':'')%>" style="background: url('<%=portrait%>'); background-size:cover;"  title="<%=value.name%>">	
 				<img id="user_picture_<%=objectId%>" width=1 height=1 src="<%=portrait%>"  onerror="$(this).parent().css({'background':'url(\'<%=unknown%>\') no-repeat','background-size':'cover'})">
 			</div>

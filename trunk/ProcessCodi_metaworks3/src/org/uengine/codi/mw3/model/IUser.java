@@ -28,7 +28,8 @@ public interface IUser extends IDAO{
 	public String getMood();
 	public void setMood(String mood);
 
-	
+	public boolean isUserChecked();
+	public void setUserChecked(boolean userChecked);
 //	@NonLoadable
 //	@NonSavable
 //	public String getInstanceId() ;
