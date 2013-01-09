@@ -61,6 +61,14 @@ public class User extends Database<IUser> implements IUser {
 		public void setMood(String mood) {
 			this.mood = mood;
 		}
+		
+	boolean userChecked;
+		public boolean isUserChecked() {
+			return userChecked;
+		}
+		public void setUserChecked(boolean userChecked) {
+			this.userChecked = userChecked;
+		}
 
 	@AutowiredFromClient
 	public Session session;
