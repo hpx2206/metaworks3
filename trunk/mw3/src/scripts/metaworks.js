@@ -3370,14 +3370,12 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			if(mw3.browser.indexOf('MSIE') > -1){
 				$(document).focusin(function(event){
 					mw3.windowFocus = true;
-					console.log('f');
 				}).focusout(function(event){
 					if (mw3.windowActiveElement != document.activeElement) {
 						mw3.windowActiveElement = document.activeElement;
 						return;
 					}
 					mw3.windowFocus = false;
-					console.log('b');
 				});
 			}else{
 				$(window).focus(function(event){
