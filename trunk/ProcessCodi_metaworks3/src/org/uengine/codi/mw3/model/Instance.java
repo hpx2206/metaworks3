@@ -434,13 +434,14 @@ public class Instance extends Database<IInstance> implements IInstance{
 		if(getMetaworksContext()==null){
 			setMetaworksContext(new MetaworksContext());
 		}
+		
 		if("sns".equals(session.getEmployee().getPreferUX()) ){
 			getMetaworksContext().setHow("sns");
 			
 			InstanceViewThreadPanel panel = new InstanceViewThreadPanel();
 			panel.getMetaworksContext().setHow("sns");
 			
-			if(this.getInstanceViewThreadPanel() != null && "".equals(StringUtils.nullToEmpty(this.getInstanceViewThreadPanel().getInstanceId()))){
+			if(this.getInstanceViewThreadPanel() == null || "".equals(StringUtils.nullToEmpty(this.getInstanceViewThreadPanel().getInstanceId()))){
 				panel.session = session;
 				panel.load(this.getInstId().toString());
 				
