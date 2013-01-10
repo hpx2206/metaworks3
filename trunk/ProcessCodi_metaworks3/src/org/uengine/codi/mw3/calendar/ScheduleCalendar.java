@@ -9,20 +9,26 @@ import java.util.Map;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.Refresh;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.dwr.MetaworksRemoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.model.CommentWorkItem;
 import org.uengine.codi.mw3.model.IInstance;
 import org.uengine.codi.mw3.model.IWorkItem;
 import org.uengine.codi.mw3.model.Instance;
+import org.uengine.codi.mw3.model.InstanceList;
 import org.uengine.codi.mw3.model.InstanceViewContent;
+import org.uengine.codi.mw3.model.InstanceViewThreadPanel;
 import org.uengine.codi.mw3.model.NewInstancePanel;
 import org.uengine.codi.mw3.model.NewInstanceWindow;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.model.WorkItem;
 import org.uengine.webservices.worklist.DefaultWorkList;
+
+import com.efsol.util.StringUtils;
 
 public class ScheduleCalendar implements ContextAware {
 	@AutowiredFromClient
@@ -222,6 +228,7 @@ public class ScheduleCalendar implements ContextAware {
 	
 	@ServiceMethod(payload={"schdId", "callType"})
 	public Object[] linkScheduleEvent() throws Exception{
+		if("sns".equals(session.getEmployee().getPreferUX()) ){
 		String instId = null;
 		if( "workitem".equals(callType) ){
 			WorkItem schedule = new WorkItem();
@@ -233,10 +240,40 @@ public class ScheduleCalendar implements ContextAware {
 		Instance instance = new Instance();
 		instance.setInstId(new Long(instId));
 		
-		instanceViewContent.session = session;
-		instanceViewContent.load(instance);
+		IInstance scview = instance.databaseMe();
 		
-		return new Object[]{instanceViewContent};
+		InstanceViewThreadPanel panel = new InstanceViewThreadPanel();
+		panel.getMetaworksContext().setHow("instanceList");
+		panel.getMetaworksContext().setWhere("sns");
+		panel.session = session;
+		panel.load(instId);
+		scview.setInstanceViewThreadPanel(panel);
+		
+		InstanceList list = new InstanceList();
+		
+		list.init();  //instanceList에서 page 변경으로 인해서 추가해줌.
+		list.setInstances(scview);
+		
+		return new Object[]{list};
+		
+		} else {
+			String instId = null;
+			if( "workitem".equals(callType) ){
+				WorkItem schedule = new WorkItem();
+				schedule.setTaskId(new Long(getSchdId()));
+				instId = schedule.databaseMe().getInstId().toString();
+			}else{
+				instId = getSchdId() + "";
+			}
+			Instance instance = new Instance();
+			instance.setInstId(new Long(instId));
+			
+			instanceViewContent.session = session;
+			instanceViewContent.load(instance);
+			
+			return new Object[]{instanceViewContent};
+			
+		}
 	}
 	
 	@Autowired
