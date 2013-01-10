@@ -6,14 +6,18 @@ var org_metaworks_Refresh = function(objectId, className){
 		mw3.removeObject(objectId);
 		
 		var objKeys = mw3._createObjectKey(object.target, true);
-			
 		if(objKeys && objKeys.length){
-						        				
+			var matchKeyCnt = 0;
+			if(object.match)
+				matchKeyCnt= objKeys[0].split('@').length;
+				
 			for(var i=0; i<objKeys.length; i++){
+				if(object.match && (matchKeyCnt > objKeys[i].split('@').length))
+					break;
 				
 				var mappedObjId = mw3.objectId_KeyMapping[objKeys[i]];
 	
-				if(mappedObjId){
+				if(typeof mappedObjId != 'undefined' && mappedObjId != null){
 					var faceHelper = mw3.getFaceHelper(mappedObjId);
 					
 					if(faceHelper && faceHelper.refresh){
@@ -26,7 +30,6 @@ var org_metaworks_Refresh = function(objectId, className){
 								
 					break;
 				}
-				
 			}
 		}
 		mw3.onLoadFaceHelperScript();
