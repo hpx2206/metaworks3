@@ -109,7 +109,14 @@ public class Perspective {
 		wfPanel.session = session;
 		wfPanel.load(session.getCompany().getComCode());
 		
-		final Object[] returnObject = new Object[]{new Refresh(searchBox), new Refresh(wfPanel), new Refresh(new FollowerPanel("instance"))};
+		
+		final Object[] returnObject;
+		
+		if("sns".equals(session.getEmployee().getPreferUX()))
+			returnObject = new Object[]{new Refresh(searchBox), new Refresh(wfPanel), new Refresh(new FollowerPanel("instance"))};
+		else
+			returnObject = new Object[]{new Refresh(searchBox)};
+		
 		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getEmployee().getEmpCode()), 
 				returnObject);
 		
