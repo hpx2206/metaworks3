@@ -77,7 +77,7 @@ public class InstanceListPanel implements ContextAware{
 	public void topicFollowersLoad() throws Exception{
 		topicFollowers =  new TopicFollowers();
 		topicFollowers.session = session;
-		//topicFollowers.load();
+		topicFollowers.load();
 	}
 
 	MetaworksContext metaworksContext;

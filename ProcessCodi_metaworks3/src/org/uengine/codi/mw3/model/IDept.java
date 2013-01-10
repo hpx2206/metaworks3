@@ -118,7 +118,7 @@ public interface IDept extends IDAO {
 	@ServiceMethod(callByContent=true, mouseBinding="drop", target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] drop() throws Exception;
 
-	@ServiceMethod
+	@ServiceMethod(payload={"partCode", "partName"})
 	public Object[] loadDeptList() throws Exception;
 	
 }

@@ -52,8 +52,12 @@ org_uengine_codi_mw3_model_Popup.prototype = {
 			this.divObj.addClass('clue-left-rounded');
 		};
 		
+		console.log('bodyHeight : ' + bodyHeight);
+		console.log('popLayerHeight : ' + popLayerHeight);
+		console.log('y : ' + y);
+		
 		if(bodyHeight && popLayerHeight + y > bodyHeight){    	
-			this.divObj.css({top:y+28 - popLayerHeight});
+			this.divObj.css({top:bodyHeight - popLayerHeight - 18});
 			arrow.css({top:popLayerHeight-40});
 		};
 		

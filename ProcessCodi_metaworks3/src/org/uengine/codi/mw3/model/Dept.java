@@ -261,10 +261,9 @@ public class Dept extends Database<IDept> implements IDept {
 			}
 		}
 	}
-	
-	@ServiceMethod
+		
 	public Object[] loadDeptList() throws Exception {
-		return Perspective.loadInstanceListPanel(session, "organization.group",getPartCode());
+		return Perspective.loadInstanceListPanel(session, "organization.group", getPartCode(), "부서 : " + this.getPartName());
 	}
 
 	@Override

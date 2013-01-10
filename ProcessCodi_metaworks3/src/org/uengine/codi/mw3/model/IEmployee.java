@@ -140,7 +140,7 @@ public interface IEmployee extends IDAO {
 	public IEmployee findByRole(Role role) throws Exception;
 	public IEmployee findByDeptOther() throws Exception;
 	
-	@ServiceMethod(where="navigator")
+	@ServiceMethod(where="navigator", payload={"empCode", "empName", "jikName"})
 	public Object[] loadOrganization() throws Exception;
 	
 	@ServiceMethod(target="append", where="picker")
