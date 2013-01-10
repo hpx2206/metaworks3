@@ -1,6 +1,9 @@
 package org.uengine.codi.mw3.model;
 
+import org.directwebremoting.Browser;
+import org.directwebremoting.ScriptSessions;
 import org.metaworks.annotation.ServiceMethod;
+import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.knowledge.WfPanel;
 
 public class PersonalPerspective extends Perspective {
@@ -49,7 +52,8 @@ public class PersonalPerspective extends Perspective {
 		return loadInstanceListPanel("stopped", null);
 	}
 	
-	@ServiceMethod
+	//기존 calendar
+	/*@ServiceMethod
 	public InstanceListPanel calendar() throws Exception{
 		InstanceListPanel instanceListPanel = new InstanceListPanel(session);
 		instanceListPanel.session = session;
@@ -57,5 +61,28 @@ public class PersonalPerspective extends Perspective {
 		instanceListPanel.setNewInstantiator(null);
 		
 		return instanceListPanel;
+	}*/
+	
+	@ServiceMethod
+	public Object[] calendar() throws Exception{
+		if("sns".equals(session.getEmployee().getPreferUX()) ){
+			//js 호출부분
+			Browser.withSession(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Runnable(){
+				@Override
+				public void run() {
+					ScriptSessions.addFunctionCall("if(mw3.getAutowiredObject('org.uengine.codi.mw3.model.MuiltiViewTab')!=null) mw3.getAutowiredObject('org.uengine.codi.mw3.model.MuiltiViewTab').__getFaceHelper().selectTab", new Object[]{"2" });
+				}
+				
+			});
+			
+			return null;
+		}else{
+			InstanceListPanel instanceListPanel = new InstanceListPanel(session);
+			instanceListPanel.session = session;
+			instanceListPanel.switchToScheduleCalendar();
+			instanceListPanel.setNewInstantiator(null);
+			
+			return new Object[]{instanceListPanel};
+		}
 	}
 }
