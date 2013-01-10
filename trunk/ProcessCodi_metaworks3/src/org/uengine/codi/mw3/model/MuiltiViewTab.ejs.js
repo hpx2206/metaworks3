@@ -29,6 +29,7 @@ var org_uengine_codi_mw3_model_MuiltiViewTab = function(objectId, className){
 	
 	var faceHelper = this;
 	
+	
 	faceHelper.load();
 };
 
@@ -69,4 +70,8 @@ org_uengine_codi_mw3_model_MuiltiViewTab.prototype.resizeChild = function(){
 	});
 	
 };
-	
+
+//탭 선택 
+org_uengine_codi_mw3_model_MuiltiViewTab.prototype.selectTab = function(tabIndex){
+	$('#tabs_' + this.objectId).tabs({selected: tabIndex});
+};
