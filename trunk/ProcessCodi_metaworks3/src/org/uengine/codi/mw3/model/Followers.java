@@ -16,6 +16,10 @@ import org.uengine.processmanager.ProcessManagerRemote;
 public class Followers implements ContextAware {
 	static final String CONTEXT_WHERE_INFOLLOWERS = "followers";
 	static final String CONTEXT_WHERE_DEPTFOLLOWERS = "deptFollower";
+	
+	static final String ADD_INSTANCEFOLLOWERS = "addInstanceFollower";
+	static final String ADD_TOPICFOLLOWERS = "addTopicFollower";
+	static final String ADD_ETCFOLLOWERS = "addEtcFollower";
 
 	String instanceId;
 		@Id
@@ -91,11 +95,11 @@ public class Followers implements ContextAware {
 		popup.setHeight(400);
 		popup.setTitle("follower 추가");
 		
-		String type = "addInstanceFollower";
+		String type = ADD_INSTANCEFOLLOWERS;
 		if("topic".equals(this.getInstanceId())){
-			type = "addTopicFollower";
+			type = ADD_TOPICFOLLOWERS;
 		}else if("etc".equals(this.getInstanceId())){
-			type = "addEtcFollower";
+			type = ADD_ETCFOLLOWERS;
 		}
 		AddFollowerPanel panel = new AddFollowerPanel(session, getInstanceId(), type);
 

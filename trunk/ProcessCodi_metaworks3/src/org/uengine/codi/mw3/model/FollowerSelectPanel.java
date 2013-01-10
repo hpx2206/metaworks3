@@ -12,11 +12,12 @@ public class FollowerSelectPanel extends HorizontalSplitBox implements ContextAw
 		public void setMetaworksContext(MetaworksContext metaworksContext) {
 			this.metaworksContext = metaworksContext;
 		}
-
+		
 	public FollowerSelectPanel(){
 		setMetaworksContext(new MetaworksContext());
 	}
 	public void load(Session session, String type) throws Exception{
+		
 		
 		FollowerSelectTab followerSelectTab = new FollowerSelectTab(session);
 		
@@ -40,10 +41,11 @@ public class FollowerSelectPanel extends HorizontalSplitBox implements ContextAw
 		contactListPanel.getSocialContactList().getMetaworksContext().setWhen(type);
 				
 		FollowerSelectCommand followerSelectCommand = new FollowerSelectCommand();
+		followerSelectCommand.setFollowerType(type);
 		
 		this.setTop(followerSelectTab);
 		this.setBottom(followerSelectCommand);
 		this.setFixHeight(50);
 		this.setAlign(FollowerSelectPanel.ALIGN_BOTTOM);
-	}	
+	}
 }

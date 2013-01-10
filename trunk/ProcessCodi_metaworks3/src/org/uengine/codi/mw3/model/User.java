@@ -217,21 +217,21 @@ public class User extends Database<IUser> implements IUser {
 			
 		}else if("addTopicFollower".equals(this.getMetaworksContext().getWhen())){
 			
-			TopicMapping tm = new TopicMapping();
-			tm.setTopicId(session.getLastSelectedItem());
-			tm.setUserId(this.getUserId());
-			
-			if( !tm.findByUser().next() ){
-				tm.setUserName(this.getName());
-				tm.saveMe();
-				tm.flushDatabaseMe();
-			}
-			
-			TopicFollowers topicFollowers = new TopicFollowers();
-			topicFollowers.session = session;
-			topicFollowers.load();
-			
-			return new Object[]{new Refresh(topicFollowers)};
+//			TopicMapping tm = new TopicMapping();
+//			tm.setTopicId(session.getLastSelectedItem());
+//			tm.setUserId(this.getUserId());
+//			
+//			if( !tm.findByUser().next() ){
+//				tm.setUserName(this.getName());
+//				tm.saveMe();
+//				tm.flushDatabaseMe();
+//			}
+//			
+//			TopicFollowers topicFollowers = new TopicFollowers();
+//			topicFollowers.session = session;
+//			topicFollowers.load();
+//			
+//			return new Object[]{new Refresh(topicFollowers)};
 		}else if("addInstanceFollower".equals(this.getMetaworksContext().getWhen())){
 //			String instId = instanceFollowers.getInstanceId();
 //			
@@ -287,7 +287,6 @@ public class User extends Database<IUser> implements IUser {
 //			
 //			return new Object[]{new Refresh(followers)};
 			// TODO 이 부분은 변경됨 FollowerSelectPanel.java 참조
-			return null;
 		}else if("addEtcFollower".equals(this.getMetaworksContext().getWhen())){			
 			etcFollowers.put(this);
 			

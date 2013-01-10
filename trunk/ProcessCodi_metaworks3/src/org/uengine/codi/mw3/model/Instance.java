@@ -1,6 +1,5 @@
 package org.uengine.codi.mw3.model;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -42,7 +41,10 @@ public class Instance extends Database<IInstance> implements IInstance{
 	
 	@AutowiredFromClient
 	public Session session;
-
+	
+	@AutowiredFromClient
+	public MuiltiViewTab muiltiViewTab;
+	
 	public Instance(){
 		
 	}
@@ -428,7 +430,6 @@ public class Instance extends Database<IInstance> implements IInstance{
 		}
 	}
 	
-	
 	public Object detail() throws Exception{
 
 		if(getMetaworksContext()==null){
@@ -445,18 +446,23 @@ public class Instance extends Database<IInstance> implements IInstance{
 				panel.session = session;
 				panel.load(this.getInstId().toString());
 				
-				InstanceFollowers followers = new InstanceFollowers();
-				followers.setInstanceId(this.getInstId().toString());
-				followers.load();
-				
-				InstanceMonitorPanel processInstanceMonitorPanel = new InstanceMonitorPanel();
-				processInstanceMonitorPanel.processManager = processManager;
-				processInstanceMonitorPanel.session = session;
-				processInstanceMonitorPanel.load(this.getInstId().toString());
-				
-				//, new Refresh(followers)
-				MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(processInstanceMonitorPanel) });
-//				MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(flowchart())});
+//				followers = new InstanceFollowers();
+//				followers.setInstanceId(this.getInstId().toString());
+//				followers.load();
+				this.fillFollower();
+				if( muiltiViewTab != null){
+					muiltiViewTab.setFollowers(this.getFollowers());
+					
+					InstanceMonitorPanel processInstanceMonitorPanel = new InstanceMonitorPanel();
+					processInstanceMonitorPanel.processManager = processManager;
+					processInstanceMonitorPanel.session = session;
+					processInstanceMonitorPanel.load(this.getInstId().toString());
+					
+					//, new Refresh(followers)
+					//  ,new Refresh(muiltiViewTab.getFollowers())
+					MetaworksRemoteService.getInstance().pushClientObjects(new Object[]{new Refresh(processInstanceMonitorPanel) });
+	//				MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(flowchart())});
+				}
 			}
 			setInstanceViewThreadPanel(panel);
 			return this;
