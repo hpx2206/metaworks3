@@ -9,6 +9,7 @@ import org.directwebremoting.ScriptSessions;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
+import org.metaworks.ToAppend;
 import org.metaworks.ToPrepend;
 import org.metaworks.ToPrev;
 import org.metaworks.annotation.AutowiredFromClient;
@@ -73,9 +74,11 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		}
 
 	Long rootInstId;
+
 		public Long getRootInstId() {
 			return rootInstId;
 		}
+	
 		public void setRootInstId(Long rootInstId) {
 			this.rootInstId = rootInstId;
 		}
@@ -149,6 +152,16 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			this.file = file;
 		}
 		
+	OverlayCommentOption overlayCommentOption;
+			
+		public OverlayCommentOption getOverlayCommentOption() {
+			return overlayCommentOption;
+		}
+	
+		public void setOverlayCommentOption(OverlayCommentOption overlayCommentOption) {
+			this.overlayCommentOption = overlayCommentOption;
+		}
+
 	public void like() throws Exception{
 		
 	}
@@ -410,6 +423,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		public void setType(String type) {
 			this.type = type;
 		}
+	
 
 	@Override
 	public IWorkItem newSchedule() {
@@ -809,7 +823,17 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 									}
 									//대화목록의 맨뒤에 새로 입력한 내용만 붙여서 속도 개선  
 //									ScriptSessions.addFunctionCall("mw3.locateObject", new Object[]{new ToAppend(threadPanelOfThis, copyOfThis), null, "body"});
-//									ScriptSessions.addFunctionCall("mw3.locateObject", new Object[]{new ToPrev(threadPanelOfThis.newItem, copyOfThis), null, "body"});
+									
+									if(OverlayCommentWorkItem.TYPE.equals(copyOfThis.getType())){
+										
+										WorkItem parentWorkItem = new WorkItem();
+										parentWorkItem.setTaskId(getOverlayCommentOption().getParentTaskId());
+										
+										ScriptSessions.addFunctionCall("mw3.locateObject", new Object[]{new ToAppend(parentWorkItem, this), null, "body"});
+										
+									}else{
+										ScriptSessions.addFunctionCall("mw3.locateObject", new Object[]{new ToPrev(threadPanelOfThis.newItem, copyOfThis), null, "body"});
+									}
 									
 									//refresh notification badge
 									if(!postByMe)
@@ -864,6 +888,11 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			}
 			if("comment".equals(getType())){
 				return new Object[]{copyOfThis};
+			}else if(OverlayCommentWorkItem.TYPE.equals(getType())){
+				WorkItem parentWorkItem = new WorkItem();
+				parentWorkItem.setTaskId(getOverlayCommentOption().getParentTaskId());
+				
+				return new Object[]{new ToAppend(parentWorkItem, this)};
 			}else{
 				WorkItem newItem = new CommentWorkItem();
 				newItem.setInstId(new Long(getInstId()));
@@ -991,7 +1020,33 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		popup.setPanel(processMapList);
 		
 		return popup;
-	}	
+	}
+	
+
+	@Override
+	public OverlayCommentWorkItem comment() throws Exception {
+		
+		OverlayCommentOption overlayCommentOption = new OverlayCommentOption();
+		
+		overlayCommentOption.setParentTaskId(getTaskId());
+		overlayCommentOption.setX("1"); 
+		overlayCommentOption.setY("1");
+		
+		OverlayCommentWorkItem overlayCommentWorkItem = new OverlayCommentWorkItem();
+		overlayCommentWorkItem.setOverlayCommentOption(overlayCommentOption);
+		overlayCommentWorkItem.setInstId(getInstId());
+		
+//		overlayCommentWorkItem.session = session;
+//		overlayCommentWorkItem.processManager = processManager;
+//		
+//		overlayCommentWorkItem.add();
+//		
+		
+		//return new slot 
+		
+		return overlayCommentWorkItem; 
+	}
+
 	
 	@AutowiredFromClient
 	public Session session;
@@ -1001,7 +1056,8 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 
 	@Autowired
 	public InstanceViewContent instanceViewContent;
-
+	
+	
 	
 
 }

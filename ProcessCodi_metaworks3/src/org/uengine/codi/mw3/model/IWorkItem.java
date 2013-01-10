@@ -138,6 +138,16 @@ public interface IWorkItem extends IDAO{
 		
 		@Hidden
 		@ORMapping(
+			databaseFields = {"prtTskId", "ext1", "ext2"}, 
+			objectFields = {"parentTaskId", "x", "y"},
+			objectIsNullWhenFirstDBFieldIsNull = true,
+			availableWhen = "type=='" + OverlayCommentWorkItem.TYPE + "'"		
+		)
+		public OverlayCommentOption getOverlayCommentOption();
+		public void setOverlayCommentOption(OverlayCommentOption overlayCommentOption);
+		
+		@Hidden
+		@ORMapping(
 			databaseFields = { 	"content" }, 
 			objectFields = { 	"contents" },
 			objectIsNullWhenFirstDBFieldIsNull = true,
@@ -257,5 +267,9 @@ public interface IWorkItem extends IDAO{
 		@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)
 		public IWorkItem newMemo() throws Exception;
 
+		
+		@ServiceMethod(inContextMenu=true, callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
+		@Face(displayName="Comment")
+		public OverlayCommentWorkItem comment() throws Exception;
 }
 
