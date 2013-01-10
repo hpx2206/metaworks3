@@ -317,8 +317,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 
 	@Override
 	public Object[] loadOrganization() throws Exception {
-		return Perspective.loadInstanceListPanel(session, "organization",
-				getEmpCode());
+		return Perspective.loadInstanceListPanel(session, "organization", getEmpCode(), "사원 : " + this.getEmpName() + "(" + this.getJikName() +")");
 	}
 
 	@Override

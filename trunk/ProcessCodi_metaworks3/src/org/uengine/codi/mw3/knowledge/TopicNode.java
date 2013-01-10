@@ -71,21 +71,8 @@ public class TopicNode extends Database<ITopicNode> implements ITopicNode {
 			String title = "주제 : " + getName();
 			Object[] returnObject = Perspective.loadInstanceListPanel(session, "topic", getId(), title);
 			
-			if("sns".equals(session.getEmployee().getPreferUX()) ){
-				WfPanel wfPanel = new WfPanel();
-				wfPanel.session = session;
-				wfPanel.load(getId());
-				Object[] returnObject2 = new Object[ returnObject.length + 1 ];
-				for( int i = 0; i < returnObject.length; i++){
-					returnObject2[i] = returnObject[i];
-				}
-				returnObject2[returnObject.length] = wfPanel;
-				return returnObject2;
-			}else{
-				return returnObject;
-			}
-		}
-		
+			return returnObject;
+		}		
 	}
 	
 	
