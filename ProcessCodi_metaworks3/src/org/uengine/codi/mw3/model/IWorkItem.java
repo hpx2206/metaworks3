@@ -2,10 +2,6 @@ package org.uengine.codi.mw3.model;
 
 import java.util.Date;
 
-import javax.annotation.Generated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
@@ -20,14 +16,8 @@ import org.metaworks.annotation.Test;
 import org.metaworks.annotation.TypeSelector;
 import org.metaworks.dao.IDAO;
 import org.metaworks.example.ide.SourceCode;
-import org.metaworks.website.Contents;
-import org.metaworks.website.FileContents;
-import org.metaworks.website.ImageContents;
 import org.metaworks.website.MetaworksFile;
-import org.metaworks.website.ParagraphContents;
-import org.metaworks.website.SourceCodeContents;
 import org.metaworks.widget.ModalWindow;
-import org.metaworks.widget.Window;
 import org.uengine.codi.mw3.admin.WebEditor;
 @Table(name = "bpm_worklist")
 @Face(
@@ -47,7 +37,20 @@ public interface IWorkItem extends IDAO{
 		
 		public String getTrcTag();
 		public void setTrcTag(String trcTag);
+		
+		
+		public int getMajorVer();
+		public void setMajorVer(int majorVer);
 
+		public int getMinorVer();
+		public void setMinorVer(int minorVer);
+
+		public Long getGrpTaskId();
+		public void setGrpTaskId(Long grpTaskId);
+		
+		@Hidden
+		public boolean getIsDeleted();
+		public void setIsDeleted(boolean deleted);
 	
 		public String getTitle();
 		public void setTitle(String title);
@@ -56,11 +59,9 @@ public interface IWorkItem extends IDAO{
 		public String getContent();
 		public void setContent(String content);
 
-
 		@Hidden
 		public String getExtFile();
 		public void setExtFile(String extFile);
-
 		
 		@Hidden
 		@ORMapping(databaseFields = { "content" }, objectFields = { "code" },
@@ -155,6 +156,17 @@ public interface IWorkItem extends IDAO{
 		)
 		public WebEditor getMemo();
 		public void setMemo(WebEditor memo);
+		
+		
+		@ORMapping(
+			databaseFields = { 	"taskId", "grpTaskId", "instId" }, 
+			objectFields = { 	"taskId", "grpTaskId", "instId" }//,
+		//	objectIsNullWhenFirstDBFieldIsNull = true,
+		//	availableWhen= "type=='file'"
+		)
+		public WorkItemVersionChooser getWorkItemVersionChooser();
+		public void setWorkItemVersionChooser(
+				WorkItemVersionChooser workItemVersionChooser);
 		
 		public Long getInstId();
 		public void setInstId(Long instId);
@@ -266,7 +278,9 @@ public interface IWorkItem extends IDAO{
 		
 		@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)
 		public IWorkItem newMemo() throws Exception;
-
+		
+		
+		
 		
 		@ServiceMethod(inContextMenu=true, callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 		@Face(displayName="Comment")

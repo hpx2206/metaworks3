@@ -29,7 +29,7 @@
 							<%}%>											
 						<% }%></div>
 					<div>
-					<%if(value.type=='file'){%>						
+					<%if(value.type=='file'){%>			
 						<%  if(value.file.mimeType.indexOf("image")==0){
 								value.file.metaworksContext.when='image';
 							}else{
@@ -111,8 +111,14 @@
 							<div class="formcontexttitle" id="currentRunningWorkItemHandler" <% if(value.type=='comment'){%>style="font-weight:normal; border:none;"<% }%>>
 								<% if(value.type=='comment' || value.type=='file' || value.type=='src' || value.type=='memo' || value.type=='generic'){%>
 									<span>
-											<%=value.title.replace('\n','<br>')%>
+											<%=value.title.replace('\n','<br>')%> 
+											<%if(value.type=='file'){%>
+											(ver <%=value.majorVer%>.<%=value.minorVer%>)
+											<%}%>
 									</span>								
+									<span>
+										<a href="#" onClick="<%=methods.workItemPopup.caller()%>"><img src="images/waveStyle/newWindow.png" style="margin-top:2px;" title="Open new window"></a>
+									</span>				
 								<%}else if(value.type==null){%>
 									<span>							
  										<%=mw3.localize('$MyTask')%>: <a href="#" onClick="<%=value.tool=='formApprovalHandler'?'mw3.getFaceHelper('+objectId+').openFormApprovalHandler()':methods.detail.caller()%>"><%=value.title%> [ <%=value.status%> ]</a>
@@ -150,12 +156,20 @@
 					</tr>
 					<%if(value.type=='file'){%>
 					<tr>
-						<td>	
+						<td>
 						<%  if(value.file.mimeType.indexOf("image")==0){
 								value.file.metaworksContext.when='image';
-							}else{
+							}else if(value.file.mimeType.indexOf("ms-")>0 || value.file.mimeType.indexOf("office")>0){
+								value.file.metaworksContext.when='pdf';
+						%>
+								<%if(value.workItemVersionChooser!=null){%>
+									<%=fields.workItemVersionChooser.here()%>
+								<%}%>
+								<iframe src="images/pdf/<%=value.grpTaskId%>_<%=value.majorVer%>_<%=value.minorVer%>.pdf" scrolling="no" width=100% height=300px onLoad="resizeFrame(this);"></iframe> 
+						<%	}else{
 								value.file.metaworksContext.when='view'; 
-							}%>
+							}
+						%>
 							<%=fields.file.here()%>
 						</td>
 					</tr>
@@ -230,4 +244,3 @@
 	}
 	}
 %>
-

@@ -30,6 +30,9 @@ var org_uengine_codi_mw3_model_IWorkItem = function(objectId, className){
 	if(workItem.type == 'src' && workItem.extFile!=null && !workItem.contentLoaded){
 		workItem.loadContents();
 	};
+
+
+	
 }
 
 org_uengine_codi_mw3_model_IWorkItem.prototype = {
