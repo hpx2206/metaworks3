@@ -281,7 +281,7 @@ public class ScheduleCalendar implements ContextAware {
 	public InstanceViewContent instanceViewContent;
 	
 	@AutowiredFromClient
-	public InstanceListPanel instanceListPanel;
+	public NewInstancePanel newInstancePanel;
 	
 	@ServiceMethod(callByContent=true)
 	public Object[] linkScheduleDay() throws Exception{
@@ -299,7 +299,7 @@ public class ScheduleCalendar implements ContextAware {
 			title = "[일정:" + new SimpleDateFormat("yyyy/MM/dd").format(getSelDate()) + "]" ;
 		}
 		if("sns".equals(session.getEmployee().getPreferUX()) ){
-			if( instanceListPanel != null ){
+			if( newInstancePanel != null ){
 				WorkItem newInstantiator = new CommentWorkItem();
 				newInstantiator.setWriter(session.getUser());
 				newInstantiator.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
@@ -309,8 +309,8 @@ public class ScheduleCalendar implements ContextAware {
 				newInstantiator.setDueDate(dueDate);
 				newInstantiator.setTitle(title);
 				
-				instanceListPanel.setNewInstantiator(newInstantiator);
-				return new Object[]{instanceListPanel};
+				newInstancePanel.setNewInstantiator(newInstantiator);
+				return new Object[]{newInstancePanel};
 			}
 			return null;
 		}else{
