@@ -9,14 +9,15 @@ var org_metaworks_ToPrev = function(objectId, className){
 		var objKeys = mw3._createObjectKey(object.next, true);
 			
 		if(objKeys && objKeys.length){
-						        				
+			var matchKeyCnt = 0;
+			if(object.match)
+				matchKeyCnt= objKeys[0].split('@').length;
+			
 			for(var i=0; i<objKeys.length; i++){
-				console.log(objKeys[i]);
+				if(object.match && (matchKeyCnt > objKeys[i].split('@').length))
+					break;
 				
 				var mappedObjId = mw3.objectId_KeyMapping[objKeys[i]];
-				
-				console.log(mappedObjId);
-				
 				if(mappedObjId){
 					var faceHelper = mw3.getFaceHelper(mappedObjId);
 					
