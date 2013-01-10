@@ -20,6 +20,7 @@ import org.metaworks.dao.TransactionContext;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.example.ide.SourceCode;
 import org.metaworks.website.MetaworksFile;
+import org.metaworks.widget.IFrame;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.CodiProcessDefinitionFactory;
@@ -417,14 +418,20 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	
 	public ModalWindow workItemPopup() throws Exception{
 		
-		this.workItemHandler = null;
-		detail();
+
 		
 		Object result = null;
 		
 		if("file".equals(this.getType())){
-			result = this;
+			String path = "images/pdf/" +this.getGrpTaskId() + "_" + String.valueOf(this.getMajorVer()) + "_" + String.valueOf(this.getMinorVer()) + ".pdf";
+			IFrame iframe = new IFrame(path);
+			iframe.setWidth("100%");
+			iframe.setHeight("98%");
+			
+			result = iframe;
 		}else{
+			this.workItemHandler = null;
+			detail();			
 			result = workItemHandler; 
 		}
 		
