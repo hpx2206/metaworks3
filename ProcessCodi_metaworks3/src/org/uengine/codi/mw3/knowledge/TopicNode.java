@@ -110,6 +110,18 @@ public class TopicNode extends Database<ITopicNode> implements ITopicNode {
 
 	}
 	
+	public ModalWindow exportHtml() throws Exception {
+		TopicTitle topicTitle = new TopicTitle();
+		topicTitle.setTopicId(this.getId());
+		topicTitle.setTopicTitle(this.getName());
+		topicTitle.getMetaworksContext().setHow("html");
+		topicTitle.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+		
+		topicTitle.makeHtml();
+				
+		return new ModalWindow(topicTitle, 500, 250,  "토픽수정");
+	}
+	
 	public void addUser() throws Exception {
 		
 	}

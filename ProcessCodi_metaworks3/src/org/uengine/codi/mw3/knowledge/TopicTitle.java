@@ -1,5 +1,9 @@
 package org.uengine.codi.mw3.knowledge;
 
+import java.net.URL;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
@@ -7,21 +11,31 @@ import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.ToAppend;
 import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.dao.TransactionContext;
+import org.metaworks.example.ide.SourceCode;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.model.Session;
 
-@Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs")
+@Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs",
+	  ejsPathMappingByContext=	{
+				"{how: 'html', face: 'dwr/metaworks/org/uengine/codi/mw3/knowledge/TopicTitle.ejs'}"
+})
 public class TopicTitle  implements ContextAware{
+	public TopicTitle(){
+		setMetaworksContext(new MetaworksContext());
+	}
+	
 	MetaworksContext metaworksContext;
-	public MetaworksContext getMetaworksContext() {
-		return metaworksContext;
-	}
-	public void setMetaworksContext(MetaworksContext metaworksContext) {
-		this.metaworksContext = metaworksContext;
-	}
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
+		}
 
 	String topicId;
 		@Hidden
@@ -33,7 +47,8 @@ public class TopicTitle  implements ContextAware{
 		}
 
 	String topicTitle;
-	@Face(displayName="$topicTitle")
+		@Face(displayName="$topicTitle")
+		@Available(when={MetaworksContext.WHEN_NEW, MetaworksContext.WHEN_EDIT})
 		public String getTopicTitle() {
 			return topicTitle;
 		}
@@ -41,7 +56,8 @@ public class TopicTitle  implements ContextAware{
 			this.topicTitle = topicTitle;
 		}
 	boolean topicSecuopt;				
-	@Face(displayName="$topicSecuopt")
+		@Face(displayName="$topicSecuopt")
+		@Available(when={MetaworksContext.WHEN_NEW, MetaworksContext.WHEN_EDIT})
 		public boolean isTopicSecuopt() {
 			return topicSecuopt;
 		}
@@ -49,7 +65,8 @@ public class TopicTitle  implements ContextAware{
 			this.topicSecuopt = topicSecuopt;
 		}
 	String url;
-	@Face(displayName="$topicUrl")
+		@Face(displayName="$topicUrl")
+		@Available(when={MetaworksContext.WHEN_NEW, MetaworksContext.WHEN_EDIT})
 		public String getUrl() {
 			return url;
 		}
@@ -57,14 +74,46 @@ public class TopicTitle  implements ContextAware{
 			this.url = url;
 		}
 		
-	@Face(displayName="$make")
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
-	public Object[] save() throws Exception{
-		System.out.println(this.getTopicId());
-		
+	SourceCode embeddedHtml;
+		@Face(displayName="$topicEmbeddedHtml")
+		@Available(how={"html"})
+		public SourceCode getEmbeddedHtml() {
+			return embeddedHtml;
+		}
+		public void setEmbeddedHtml(SourceCode embeddedHtml) {
+			this.embeddedHtml = embeddedHtml;
+		}
+	
+	public void makeHtml() {
+		try{
+			HttpServletRequest request = TransactionContext.getThreadLocalInstance().getRequest();
+			
+	        String url = request.getRequestURL().toString();
+	        String codebase = url.substring( 0, url.lastIndexOf( "/" ) );
+	        URL urlURL = new java.net.URL(codebase);
+	        
+	       	String host = urlURL.getHost();
+	       	int port = urlURL.getPort();
+	       	String path = urlURL.getPath();
+	       	String contextOnly = path.substring(0, path.substring(1).indexOf("/")+1);
+			String protocol = urlURL.getProtocol();
+	
+			String defaultUrl = protocol + "://" + host + ":" + port + contextOnly + "portlet_instanceList.html";
+			String embeddedHtml = "<iframe id=\"portlet\" src=\"" + defaultUrl + "\" style=\"width: 500px; height: 500px; border-width:1px; border-color:red; border-style:solid;\"></iframe>";
+			
+			SourceCode sourceCode = new SourceCode();
+			sourceCode.setCode(embeddedHtml);
+			
+			this.setEmbeddedHtml(sourceCode);
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	public void saveMe() throws Exception {
 		WfNode wfNode = new WfNode();
 		wfNode.setId(this.getTopicId());
-		
 		
 		if(MetaworksContext.WHEN_NEW.equals(this.getMetaworksContext().getWhen())){
 			wfNode.setName(this.getTopicTitle());
@@ -87,36 +136,35 @@ public class TopicTitle  implements ContextAware{
 			wfNode.setName(this.getTopicTitle());
 			wfNode.saveMe();
 		}
+	}
+	
+	@Face(displayName="$Create")
+	@Available(when={MetaworksContext.WHEN_NEW})
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
+	public void save() throws Exception{
+		this.makeHtml();
 		
-		/*
+		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+		this.getMetaworksContext().setHow("html");		
+	}
+	
+	@Face(displayName="$Save")
+	@Available(when={MetaworksContext.WHEN_EDIT})
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
+	public Object[] modify() throws Exception{
+		this.saveMe();
+		
 		TopicNode topicNode = new TopicNode();
-		topicNode.setId(wfNode.getId());
-		topicNode.setName(wfNode.getName());
-		topicNode.session = session;
-		*/
-
-		TopicNode topicNode = new TopicNode();
-		topicNode.setId(wfNode.getId());
-		topicNode.setName(wfNode.getName());
-		
-		
-		System.out.println("save");
-		
-		/*
-		TopicPanel topicPanel = new TopicPanel();
-		topicPanel.session = session;
-		topicPanel.load();
-		
-		return new Object[]{new Refresh(topicPanel), new Remover(new ModalWindow())};
-		*/
+		topicNode.setId(this.getTopicId());
+		topicNode.setName(this.getTopicTitle());
 		
 		//return new Object[]{(InstanceListPanel)topicNode.loadTopic()[1], new Remover(new ModalWindow())};
 		if(MetaworksContext.WHEN_NEW.equals(this.getMetaworksContext().getWhen()))
 			return new Object[]{new ToAppend(new TopicPanel(), topicNode), new Remover(new ModalWindow())};
 		else
 			return new Object[]{new Refresh(topicNode), new Remover(new ModalWindow())};
+		
 	}
-	
 	
 	@AutowiredFromClient
 	transient public Session session;
