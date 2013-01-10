@@ -19,7 +19,7 @@ public class ProcessInstanceNavigator {
 		subInstances.setRootInstId(new Long(instanceId));
 		subInstances.select();
 		//subInstances.setInstId(rootInstance.getInstId());
-		subInstances.getMetaworksContext().setWhere("instanceNavigator");
+		subInstances.getMetaworksContext().setHow("instanceNavigator");
 		
 		
 	}

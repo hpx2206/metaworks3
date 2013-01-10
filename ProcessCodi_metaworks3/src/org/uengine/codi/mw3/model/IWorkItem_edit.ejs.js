@@ -9,11 +9,10 @@ var org_uengine_codi_mw3_model_IWorkItem_edit = function(objectId, className){
 	$("#post_" + this.objectId).focus();
 	//$("#post_" + this.objectId).keydown()
 	
-	$("#post_" + this.objectId).live("keyup keydown",function(){
+	$("#post_" + this.objectId).bind("keyup keydown",function(){
 		var h=$(this);
 		h.height(21).height(h[0].scrollHeight);//where 60 is minimum height of textarea
-		});
-	
+	});
 	
 	var value = mw3.objects[objectId];
 	if(value.type=="file"){
@@ -50,6 +49,10 @@ var org_uengine_codi_mw3_model_IWorkItem_edit = function(objectId, className){
 	
 	this.showStatus = function(message){
 	};
+}
+
+org_uengine_codi_mw3_model_IWorkItem_edit.prototype.destroy = function(){
+	$("#post_" + this.objectId).unbind();	
 }
 
 org_uengine_codi_mw3_model_IWorkItem_edit.prototype.getValue =  function(){	
@@ -119,7 +122,8 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.send = function(){
 					{
 						__className	:'org.metaworks.ToPrev',
 							target	: newComment,
-							next	: object
+							next	: object,
+							match   : true
 					}, null, 'body'
 				);
 				

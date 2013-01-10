@@ -1,13 +1,10 @@
 <% if(value!=null){
 
-	if(mw3.where=="instanceNavigator"){%>
+	if(mw3.how=="instanceNavigator"){%>
 	
 <div id="method_<%=objectId%>_flowchart" style="cursor:pointer" onclick="<%=methods.flowchart.caller()%>"><img src="images/waveStyle/i_workitem_i.png" border=0> <%=value.defName%></div>	
 	
 	<%
-		mw3.where="anywhere";
-	
-	
 	}else{
 			
 		var isChat = (value.defId == null && value.secuopt == '1');
@@ -48,7 +45,7 @@
 						<table>
 							<tr>
 								<td style="border:none;"><a href="#middle-center"><b><font color=204070><%=value.initiator.name%></font> &nbsp;&nbsp; <font color=#5C5C5C><%=value.name%></font></b></a></td>
-								<% if(mw3.where == 'sns'){ %>
+								<% if(mw3.how == 'sns'){ %>
 								<td style="border:none;" width="150">
 									<div style="float:left;margin-left:15px;color:#C6C6C6"><%=fields.startedDate.here({when: 'timeago'})%></div>										
 								</td>
@@ -72,7 +69,7 @@
 			</ul>								
 		</td>
 		<td width="110">	
-			<% if(mw3.where != 'sns'){ %>
+			<% if(mw3.how != 'sns'){ %>
 				<div style="margin-bottom:5px;margin-left:15px;"><%=fields.startedDate.here({when: 'timeago'})%></div>	
 			<%}%>
 				<%if(value.status=='Completed'){%> 
@@ -91,14 +88,14 @@
 					<%}%>
 						
 				<%}%>
-			<% if(mw3.where == 'sns'){ %>
+			<% if(mw3.how == 'sns'){ %>
 				<div class="instanceBtn">
 					<span style="float:left"><%=fields.instanceTooltip.here()%></span>
 					<span style="float:left"><%=fields.instanceDrag.here()%></span>
 				</div>
 			<%}%>				
 		</td>	
-		<% if(mw3.where != 'sns'){ %>
+		<% if(mw3.how != 'sns'){ %>
 		<td width="20">
 			<div class="instanceBtn"><%=fields.instanceDrag.here()%></div>
 		</td>
