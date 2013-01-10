@@ -262,6 +262,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 			criteria.put("taskStatus2", "CONFIRMED");
 			taskSql.append("and rolemapping.endpoint=?taskEndpoint ");
 			criteria.put("taskEndpoint", session.getEmployee().getEmpCode());
+			taskSql.append("or(worklist.duedate is not null and worklist.defid is null)");
 			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
 			criteria.put("instIsdelete", "1");
 			if(session.getMetaworksContext().getWhen() != null && session.getMetaworksContext().getWhen().equals("todoBage")){
