@@ -279,7 +279,9 @@ public class Instance extends Database<IInstance> implements IInstance{
 			criteria.put("instStatus", "Running");
 			// secureopt
 			instanceSql
-					.append("and (exists (select rootinstid from BPM_ROLEMAPPING rm where rm.endpoint=?rmEndpoint and inst.rootinstid=rm.rootinstid)) ");
+					.append("and (exists (select rootinstid from BPM_ROLEMAPPING rm where rm.endpoint=?rmEndpoint and inst.rootinstid=rm.rootinstid) ")
+					.append("						or ?rmEndpoint in ( select empcode from emptable where partcode in (  ")
+					.append("						select endpoint from bpm_rolemapping where assigntype = 2 and instid = inst.rootinstid)))  ");
 			criteria.put("rmEndpoint", session.getEmployee().getEmpCode());
 		}else if("running"
 				.equals(session.getLastPerspecteType())) {
@@ -310,7 +312,9 @@ public class Instance extends Database<IInstance> implements IInstance{
 
 			// secureopt
 			instanceSql
-					.append("and (inst.secuopt='0' OR (inst.secuopt=1 and exists (select rootinstid from BPM_ROLEMAPPING rm where rm.endpoint=?rmEndpoint and inst.rootinstid=rm.rootinstid))) ");
+			.append("and (inst.secuopt='0' OR (inst.secuopt=1 and ( exists (select rootinstid from BPM_ROLEMAPPING rm where rm.endpoint=?rmEndpoint and inst.rootinstid=rm.rootinstid) ")
+			.append("																or ?rmEndpoint in ( select empcode from emptable where partcode in (  ")
+			.append("																				select endpoint from bpm_rolemapping where assigntype = 2 and instid = inst.rootinstid)))))  ");
 			criteria.put("rmEndpoint", session.getEmployee().getEmpCode());
 
 		}else if("organization"
@@ -323,7 +327,9 @@ public class Instance extends Database<IInstance> implements IInstance{
 
 			// secureopt
 			instanceSql
-					.append("and (inst.secuopt='0' OR (inst.secuopt=1 and exists (select rootinstid from BPM_ROLEMAPPING rm where rm.endpoint=?rmEndpoint and inst.rootinstid=rm.rootinstid))) ");
+			.append("and (inst.secuopt='0' OR (inst.secuopt=1 and ( exists (select rootinstid from BPM_ROLEMAPPING rm where rm.endpoint=?rmEndpoint and inst.rootinstid=rm.rootinstid) ")
+			.append("																or ?rmEndpoint in ( select empcode from emptable where partcode in (  ")
+			.append("																				select endpoint from bpm_rolemapping where assigntype = 2 and instid = inst.rootinstid)))))  ");
 			criteria.put("rmEndpoint", session.getEmployee().getEmpCode());
 			
 		}else if("organization.group"
@@ -338,7 +344,9 @@ public class Instance extends Database<IInstance> implements IInstance{
 			
 			// secureopt
 			instanceSql
-			.append("and (inst.secuopt='0' OR (inst.secuopt=1 and exists (select rootinstid from BPM_ROLEMAPPING rm where rm.endpoint=?rmEndpoint and inst.rootinstid=rm.rootinstid))) ");
+			.append("and (inst.secuopt='0' OR (inst.secuopt=1 and ( exists (select rootinstid from BPM_ROLEMAPPING rm where rm.endpoint=?rmEndpoint and inst.rootinstid=rm.rootinstid) ")
+			.append("																or ?rmEndpoint in ( select empcode from emptable where partcode in (  ")
+			.append("																				select endpoint from bpm_rolemapping where assigntype = 2 and instid = inst.rootinstid)))))  ");
 			criteria.put("rmEndpoint", session.getEmployee().getEmpCode());
 
 		}else if("process"
@@ -351,7 +359,9 @@ public class Instance extends Database<IInstance> implements IInstance{
 
 			// secureopt
 			instanceSql
-					.append("and (inst.secuopt='0' OR (inst.secuopt=1 and exists (select rootinstid from BPM_ROLEMAPPING rm where rm.endpoint=?rmEndpoint and inst.rootinstid=rm.rootinstid))) ");
+			.append("and (inst.secuopt='0' OR (inst.secuopt=1 and ( exists (select rootinstid from BPM_ROLEMAPPING rm where rm.endpoint=?rmEndpoint and inst.rootinstid=rm.rootinstid) ")
+			.append("																or ?rmEndpoint in ( select empcode from emptable where partcode in (  ")
+			.append("																				select endpoint from bpm_rolemapping where assigntype = 2 and instid = inst.rootinstid)))))  ");
 			criteria.put("rmEndpoint", session.getEmployee().getEmpCode());
 
 		}else if("strategy"
@@ -364,7 +374,9 @@ public class Instance extends Database<IInstance> implements IInstance{
 
 			// secureopt
 			instanceSql
-					.append("and (inst.secuopt='0' OR (inst.secuopt=1 and exists (select rootinstid from BPM_ROLEMAPPING rm where rm.endpoint=?rmEndpoint and inst.rootinstid=rm.rootinstid))) ");
+			.append("and (inst.secuopt='0' OR (inst.secuopt=1 and ( exists (select rootinstid from BPM_ROLEMAPPING rm where rm.endpoint=?rmEndpoint and inst.rootinstid=rm.rootinstid) ")
+			.append("																or ?rmEndpoint in ( select empcode from emptable where partcode in (  ")
+			.append("																				select endpoint from bpm_rolemapping where assigntype = 2 and instid = inst.rootinstid)))))  ");
 			criteria.put("rmEndpoint", session.getEmployee().getEmpCode());
 
 		}else if("taskExt1"
@@ -379,7 +391,9 @@ public class Instance extends Database<IInstance> implements IInstance{
 
 			// secureopt
 			instanceSql
-					.append("and (inst.secuopt='0' OR (inst.secuopt=1 and exists (select rootinstid from BPM_ROLEMAPPING rm where rm.endpoint=?rmEndpoint and inst.rootinstid=rm.rootinstid))) ");
+			.append("and (inst.secuopt='0' OR (inst.secuopt=1 and ( exists (select rootinstid from BPM_ROLEMAPPING rm where rm.endpoint=?rmEndpoint and inst.rootinstid=rm.rootinstid) ")
+			.append("																or ?rmEndpoint in ( select empcode from emptable where partcode in (  ")
+			.append("																				select endpoint from bpm_rolemapping where assigntype = 2 and instid = inst.rootinstid)))))  ");
 			criteria.put("rmEndpoint", session.getEmployee().getEmpCode());
 
 		}else if("status".equals(session.getLastPerspecteType())) {
@@ -390,7 +404,9 @@ public class Instance extends Database<IInstance> implements IInstance{
 
 			// secureopt
 			instanceSql
-					.append("and (inst.secuopt='0' OR (inst.secuopt=1 and exists (select rootinstid from BPM_ROLEMAPPING rm where rm.endpoint=?rmEndpoint and inst.rootinstid=rm.rootinstid))) ");
+			.append("and (inst.secuopt='0' OR (inst.secuopt=1 and ( exists (select rootinstid from BPM_ROLEMAPPING rm where rm.endpoint=?rmEndpoint and inst.rootinstid=rm.rootinstid) ")
+			.append("																or ?rmEndpoint in ( select empcode from emptable where partcode in (  ")
+			.append("																				select endpoint from bpm_rolemapping where assigntype = 2 and instid = inst.rootinstid)))))  ");
 			criteria.put("rmEndpoint", session.getEmployee().getEmpCode());
 
 		}else if("allICanSee".equals(session.getLastPerspecteType())) {
@@ -400,8 +416,12 @@ public class Instance extends Database<IInstance> implements IInstance{
 			criteria.put("instStatus", "Stopped");
 			// secureopt
 			instanceSql
-			.append("and (inst.secuopt='0' OR (inst.secuopt=1 and exists (select rootinstid from BPM_ROLEMAPPING rm where rm.endpoint=?rmEndpoint and inst.rootinstid=rm.rootinstid)) ")
-			.append("		OR (inst.secuopt=3 and exists (select topicId from BPM_TOPICMAPPING tm where tm.userId=?rmEndpoint and inst.topicId=tm.topicId))) ");
+			.append("and (inst.secuopt='0' OR (inst.secuopt=1 and ( exists (select rootinstid from BPM_ROLEMAPPING rm where rm.endpoint=?rmEndpoint and inst.rootinstid=rm.rootinstid) ")
+			.append("																or ?rmEndpoint in ( select empcode from emptable where partcode in (  ")
+			.append("																				select endpoint from bpm_rolemapping where assigntype = 2 and instid = inst.rootinstid))))  ")
+			.append("		OR (inst.secuopt=3 and ( exists (select topicId from BPM_TOPICMAPPING tm where tm.userId=?rmEndpoint and inst.topicId=tm.topicId) ")
+			.append(" 																	 or ?rmEndpoint in ( select empcode from emptable where partcode in (  ")
+			.append(" 																	 						select userId from BPM_TOPICMAPPING where assigntype = 2 and topicId = inst.topicId )))))  ");
 			criteria.put("rmEndpoint", session.getEmployee().getEmpCode());
 		}else if("topic".equals(session.getLastPerspecteType())) {
 			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
@@ -412,8 +432,12 @@ public class Instance extends Database<IInstance> implements IInstance{
 			criteria.put("topicId", session.getLastSelectedItem());
 			// secureopt
 			instanceSql
-			.append("and (inst.secuopt='0' OR (inst.secuopt=1 and exists (select rootinstid from BPM_ROLEMAPPING rm where rm.endpoint=?rmEndpoint and inst.rootinstid=rm.rootinstid)) ")
-			.append("		OR (inst.secuopt=3 and exists (select topicId from BPM_TOPICMAPPING tm where tm.userId=?rmEndpoint and inst.topicId=tm.topicId))) ");
+			.append("and (inst.secuopt='0' OR (inst.secuopt=1 and ( exists (select rootinstid from BPM_ROLEMAPPING rm where rm.endpoint=?rmEndpoint and inst.rootinstid=rm.rootinstid) ")
+			.append("																or ?rmEndpoint in ( select empcode from emptable where partcode in (  ")
+			.append("																				select endpoint from bpm_rolemapping where assigntype = 2 and instid = inst.rootinstid))))  ")
+			.append("		OR (inst.secuopt=3 and ( exists (select topicId from BPM_TOPICMAPPING tm where tm.userId=?rmEndpoint and inst.topicId=tm.topicId) ")
+			.append(" 																	 or ?rmEndpoint in ( select empcode from emptable where partcode in (  ")
+			.append(" 																	 						select userId from BPM_TOPICMAPPING where assigntype = 2 and topicId = inst.topicId )))))  ");
 			criteria.put("rmEndpoint", session.getEmployee().getEmpCode());
 
 		}else{
@@ -459,7 +483,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 				
 				final Object[] returnObjects = new Object[]{new Refresh(processInstanceMonitorPanel), new Refresh(followerPanel)};
 				
-				MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getEmployee().getEmpCode()), returnObjects);				
+//				MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getEmployee().getEmpCode()), returnObjects);				
 			}
 			setInstanceViewThreadPanel(panel);
 			return this;
