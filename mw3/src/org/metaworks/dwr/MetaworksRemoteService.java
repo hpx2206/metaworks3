@@ -70,6 +70,17 @@ public class MetaworksRemoteService {
 			   }			  
 		});
 	}
+	
+	public static void pushTargetClientObjects(String sessionId, final Object[] object){
+		 Browser.withSession(sessionId, new Runnable(){
+			   @Override
+			   public void run() {
+			    ScriptSessions.addFunctionCall("mw3.locateObject", new Object[]{object, null, "body"});
+			    ScriptSessions.addFunctionCall("mw3.onLoadFaceHelperScript", new Object[]{});
+
+			   }			  
+		});
+	}
 		
 	public void clearMetaworksType(String className) throws Exception {
 		
