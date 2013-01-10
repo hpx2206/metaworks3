@@ -15,7 +15,9 @@ public class OrganizationTree extends Tree {
 
 	@AutowiredFromClient
 	public Session session;
-	
+	public OrganizationTree(){
+		
+	}
 	public OrganizationTree(Session session) {
 		this.session = session;
 		this.setId("organization");

@@ -30,6 +30,9 @@ public class FollowerSelectTab {
 		public void setDeptTree(OrganizationTree deptTree) {
 			this.deptTree = deptTree;
 		}
+	public FollowerSelectTab() throws Exception{
+		
+	}
 	public FollowerSelectTab(Session session) throws Exception{
 		employeeTree = new OrganizationTree(session);
 		deptTree = new OrganizationTree(session);

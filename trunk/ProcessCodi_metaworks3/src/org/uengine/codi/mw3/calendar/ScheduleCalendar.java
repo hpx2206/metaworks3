@@ -19,6 +19,7 @@ import org.uengine.codi.mw3.model.CommentWorkItem;
 import org.uengine.codi.mw3.model.IInstance;
 import org.uengine.codi.mw3.model.IWorkItem;
 import org.uengine.codi.mw3.model.Instance;
+import org.uengine.codi.mw3.model.InstanceListPanel;
 import org.uengine.codi.mw3.model.InstanceList;
 import org.uengine.codi.mw3.model.InstanceViewContent;
 import org.uengine.codi.mw3.model.InstanceViewThreadPanel;
@@ -279,6 +280,9 @@ public class ScheduleCalendar implements ContextAware {
 	@Autowired
 	public InstanceViewContent instanceViewContent;
 	
+	@AutowiredFromClient
+	public InstanceListPanel instanceListPanel;
+	
 	@ServiceMethod(callByContent=true)
 	public Object[] linkScheduleDay() throws Exception{
 		if( getShowUserId() != null && !getShowUserId().equalsIgnoreCase(session.getUser().getUserId())){
@@ -295,13 +299,20 @@ public class ScheduleCalendar implements ContextAware {
 			title = "[일정:" + new SimpleDateFormat("yyyy/MM/dd").format(getSelDate()) + "]" ;
 		}
 		if("sns".equals(session.getEmployee().getPreferUX()) ){
-			WorkItem newInstantiator = new CommentWorkItem();
-			newInstantiator.setWriter(session.getUser());
-			newInstantiator.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
-			newInstantiator.setInstantiation(true);
-			newInstantiator.setDueDate(dueDate);
-			newInstantiator.setTitle(title);
-			return new Object[]{newInstantiator};
+			if( instanceListPanel != null ){
+				WorkItem newInstantiator = new CommentWorkItem();
+				newInstantiator.setWriter(session.getUser());
+				newInstantiator.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+				newInstantiator.getMetaworksContext().setHow("sns");
+				newInstantiator.getMetaworksContext().setWhere("sns");
+				newInstantiator.setInstantiation(true);
+				newInstantiator.setDueDate(dueDate);
+				newInstantiator.setTitle(title);
+				
+				instanceListPanel.setNewInstantiator(newInstantiator);
+				return new Object[]{instanceListPanel};
+			}
+			return null;
 		}else{
 			NewInstancePanel newInstancePanel =  new NewInstancePanel();
 			newInstancePanel.setDueDate(dueDate);

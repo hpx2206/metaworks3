@@ -9,11 +9,13 @@ import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.MetaworksDAO;
+import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 public class Followers implements ContextAware {
 	static final String CONTEXT_WHERE_INFOLLOWERS = "followers";
+	static final String CONTEXT_WHERE_DEPTFOLLOWERS = "deptFollower";
 
 	String instanceId;
 		@Id
@@ -33,6 +35,15 @@ public class Followers implements ContextAware {
 			this.followers = followers;
 		}
 		
+	IDept deptFollowers;
+		@Face(ejsPath="genericfaces/ArrayFace.ejs", options={"alignment"}, values={"horizontal"})
+		public IDept getDeptFollowers() {
+			return deptFollowers;
+		}
+		public void setDeptFollowers(IDept deptFollowers) {
+			this.deptFollowers = deptFollowers;
+		}
+		
 	transient MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
 			return metaworksContext;
@@ -48,30 +59,19 @@ public class Followers implements ContextAware {
 	public void load() throws Exception{
 		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 		
-		IUser users = (IUser) Database.sql(IUser.class, "select distinct a.endpoint userId, a.resname name, b.network from bpm_rolemapping a left join contact b on a.endpoint=b.friendId  where rootinstid=?instanceId");
+		IUser users = (IUser) Database.sql(IUser.class, "select distinct a.endpoint userId, a.resname name, b.network from bpm_rolemapping a left join contact b on a.endpoint=b.friendId  where rootinstid=?instanceId and assigntype = 0 ");
 		users.set("instanceId", instanceId);
 		users.select();
 		
-		
-		/*
-		IUser users_ = (IUser) MetaworksDAO.createDAOImpl(IUser.class);
-
-		
-		//TODO due to mysql - jdbc alias problem
-		while(users.next()){
-			users_.moveToInsertRow();
-			users_.setName((String) users.get("resname"));
-			users_.setUserId((String) users.get("endpoint"));
-
-		}
-		
-		users_.beforeFirst();
-		setFollowers(users_);
-		*/
+		IDept dept = (IDept) Database.sql(IDept.class, "select distinct endpoint PARTCODE, resname PARTNAME from bpm_rolemapping where rootinstid=?instanceId and assigntype = 2 ");
+		dept.set("instanceId", instanceId);
+		dept.select();
 		
 		users.getMetaworksContext().setWhen(CONTEXT_WHERE_INFOLLOWERS);
 		setFollowers(users);
 		
+		dept.getMetaworksContext().setHow("deptFollower");
+		setDeptFollowers(dept);
 	}
 	
 	public void put(IUser user) throws Exception {
@@ -84,8 +84,12 @@ public class Followers implements ContextAware {
 	
 	//, loader="auto", loadOnce=true
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
-	public Popup addFollowers() throws Exception{		
-		Popup popup = new Popup(400,400);
+	public ModalWindow addFollowers() throws Exception{		
+//		Popup popup = new Popup(400,400);
+		ModalWindow popup = new ModalWindow();
+		popup.setWidth(400);
+		popup.setHeight(400);
+		popup.setTitle("follower 추가");
 		
 		String type = "addInstanceFollower";
 		if("topic".equals(this.getInstanceId())){
@@ -96,7 +100,7 @@ public class Followers implements ContextAware {
 		AddFollowerPanel panel = new AddFollowerPanel(session, getInstanceId(), type);
 
 		popup.setPanel(panel);
-		popup.setName("AddFollowerPanel");
+//		popup.setName("AddFollowerPanel");
 		
 		return popup;		
 	}

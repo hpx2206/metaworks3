@@ -72,6 +72,13 @@ public class InstanceView {
 					break;
 				}
 			}
+			IDept deptFollower = getFollowers().getDeptFollowers();
+			while( deptFollower.next() ){
+				if(deptFollower.getPartCode().equals(session.getEmployee().getPartCode()) ){
+					iCanSee = true;
+					break;
+				}
+			}
 			
 			if(!iCanSee){
 				throw new Exception("$NotPermittedToSee");
