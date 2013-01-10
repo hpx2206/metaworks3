@@ -68,29 +68,29 @@ org_metaworks_component_TreeNode.prototype = {
 	
 	showStatus : function(message){
 		if('expand DONE.' == message){
-			if(this.nodeDiv.find('.item-fix').length > 0){
-				this.nodeDiv.addClass('minlast');
-				this.nodeDiv.removeClass('min');
-			}else{
-				this.nodeDiv.removeClass('min');
-			}
+			this.nodeDiv.addClass('minlast');
+			this.nodeDiv.removeClass('min');
 			
 			this.object.loaded = true;
 		}
 	},
 	
 	toAppend : function(appendobject){
-		var html = mw3.locateObject(appendobject, null);
-		
-		var appendDiv = $('<u></u>').addClass('last').css({'display': 'block', 'height': 'auto', 'overflow': 'visible'});
-		
-		if(this.object.root)
-			appendDiv.addClass('root');
-		
-		this.objectDiv.append(appendDiv);
-		this.objectDiv.children('u').append(html);
-		
-		this.push(appendobject);
+		if(appendobject != null && appendobject.length > 0){
+			var html = mw3.locateObject(appendobject, null);
+			
+			var appendDiv = $('<u></u>').addClass('last').css({'display': 'block', 'height': 'auto', 'overflow': 'visible'});
+			
+			if(this.object.root)
+				appendDiv.addClass('root');
+			
+			this.objectDiv.append(appendDiv);
+			this.objectDiv.children('u').append(html);
+			
+			this.push(appendobject);
+		}else{
+			this.nodeDiv.removeClass('minlast');
+		}
 	},
 	
 	push : function(item){
