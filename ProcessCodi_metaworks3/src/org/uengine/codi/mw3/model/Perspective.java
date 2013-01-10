@@ -1,8 +1,12 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.Refresh;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.dwr.MetaworksRemoteService;
+import org.uengine.codi.mw3.Login;
+import org.uengine.codi.mw3.knowledge.WfPanel;
 
 public class Perspective {
 	String label;
@@ -100,8 +104,16 @@ public class Perspective {
 		searchBox.setKeyword(session.getSearchKeyword());
 		searchBox.setKeyUpSearch(true);
 		searchBox.setKeyEntetSearch(true);
-
-		return new Object[] {session, instListPanel, searchBox};
+		
+		WfPanel wfPanel = new WfPanel();
+		wfPanel.session = session;
+		wfPanel.load(session.getCompany().getComCode());
+		
+		final Object[] returnObject = new Object[]{new Refresh(searchBox), new Refresh(wfPanel), new Refresh(new FollowerPanel("instance"))};
+		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getEmployee().getEmpCode()), 
+				returnObject);
+		
+		return new Object[] {session, instListPanel};
 	}
 
 	private static void savePerspectiveToSession(Session session,
