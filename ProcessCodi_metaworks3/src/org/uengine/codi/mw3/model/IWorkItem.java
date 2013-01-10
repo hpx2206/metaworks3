@@ -21,6 +21,7 @@ import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.admin.WebEditor;
 @Table(name = "bpm_worklist")
 @Face(
+		ejsPathForArray="dwr/metaworks/org/uengine/codi/mw3/model/IWorkItem_array.ejs",
 		ejsPathMappingByContext=
 	{
 		"{when: 'new', face: 'dwr/metaworks/org/uengine/codi/mw3/model/IWorkItem_edit.ejs'}",
@@ -83,8 +84,8 @@ public interface IWorkItem extends IDAO{
 
 		@Hidden
 		@Range(
-				options={"WorkItem", "Comment",	"Image",	"Movie",	"Source Code", 	"File", "Schedule", "Postings"}, 
-				values ={"wih", 	 "comment",	"img",		"mov",		"src", 			"file", "schdle" , "postings"}
+				options={"WorkItem", "Comment",	"Image",	"Movie",	"Source Code", 	"File", "Schedule", "Postings", "ovryCmnt"}, 
+				values ={"wih", 	 "comment",	"img",		"mov",		"src", 			"file", "schdle" , "postings", "ovryCmnt"}
 		)
 		@TypeSelector(
 				values = 		{ 
@@ -97,7 +98,8 @@ public interface IWorkItem extends IDAO{
 						"schdle",
 						"postings",
 						"generic",
-						"memo"
+						"memo",
+						"ovryCmnt"
 					}, 
 				classes = 		{ 
 						WorkItem.class,  	
@@ -109,7 +111,8 @@ public interface IWorkItem extends IDAO{
 						ScheduleWorkItem.class,
 						FacebookFeedback.class,
 						GenericWorkItem.class,
-						MemoWorkItem.class
+						MemoWorkItem.class,
+						OverlayCommentWorkItem.class
 					} 
 		)
 		public String getType();

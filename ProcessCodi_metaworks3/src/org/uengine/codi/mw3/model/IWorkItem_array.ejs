@@ -1,0 +1,37 @@
+<%
+	if(value != null && typeof value != 'undefined'){
+%>
+
+<div>
+<%
+		if(typeof options == 'undefined') 
+			options = objectMetadata;
+			
+		for(var i=0; i<value.length; i++){
+			if('ovryCmnt' != value[i].type){ 
+			
+%>
+	<%=mw3.locateObject(value[i], value[i].__className, null, options)%>
+<%
+				mw3.addBeanProperty(value.__objectId, '.boardList[' + i + ']');
+			}else{
+			    var ovryCmntTarget = {
+			    	__className : 'org.uengine.codi.mw3.model.IWorkItem',
+			    	taskId : value[i].overlayCommentOption.parentTaskId
+			    };
+			    
+				var toAppend = {
+					__className : 'org.metaworks.ToAppend',
+					parent : ovryCmntTarget,
+					target : value[i]
+				};
+				
+				mw3.locateObject(toAppend, toAppend.__className, 'body', options);
+			}		
+		}	
+%>		
+</div>
+
+<%
+	}		
+%>
