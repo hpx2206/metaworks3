@@ -1,7 +1,6 @@
 package org.uengine.codi.mw3.model;
 
 import java.util.Calendar;
-import java.util.Date;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
@@ -80,23 +79,28 @@ public class InstanceDueSetter implements ContextAware{
 	public void apply() throws Exception{
 		Instance instance = new Instance();
 		instance.setInstId(getInstId());
+
+		if(getDueDate()==null){
+			instance.databaseMe().setDueDate(null);
+		}else{
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(getDueDate());
+			cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DATE), 23, 59, 59);
+			cal.set(Calendar.MILLISECOND, 0);
+			
+			instance.databaseMe().setDueDate(cal.getTime());
+		}
 		
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(getDueDate());
-		cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DATE), 23, 59, 59);
-		cal.set(Calendar.MILLISECOND, 0);
-		
-		instance.databaseMe().setDueDate(cal.getTime());
 		instance.databaseMe().setInitCmpl(isOnlyInitiatorCanComplete());
 		instance.databaseMe().setProgress(getProgress());
-		
 		instance.flushDatabaseMe();
+		
 		IInstance iInstance = instance.databaseMe();
 		iInstance.setMetaworksContext(getMetaworksContext());
 		iInstance.getMetaworksContext().setWhen("view");
 		
 		MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(iInstance)});
-		
+
 //		instance.databaseMe().set
 	}
 
@@ -104,6 +108,6 @@ public class InstanceDueSetter implements ContextAware{
 	public InstanceDueSetter(){
 		setMetaworksContext(new MetaworksContext());
 		getMetaworksContext().setWhen("edit");
-		setDueDate(new Date());
+		//setDueDate(new Date());
 	}
 }
