@@ -15,6 +15,8 @@ public class PersonalPerspective extends Perspective {
 	@ServiceMethod
 	public Object[] loadAllICanSee() throws Exception{
 		Object[] returnObject = loadInstanceListPanel("allICanSee", null);
+		
+		/*
 		if("sns".equals(session.getEmployee().getPreferUX()) ){
 			WfPanel wfPanel = new WfPanel();
 			String comcode = session.getCompany().getComCode();
@@ -29,6 +31,10 @@ public class PersonalPerspective extends Perspective {
 		}else{
 			return returnObject;
 		}
+		*/
+		
+		return returnObject;
+		
 //		return loadInstanceListPanel("allICanSee", null);
 	}
 	
@@ -58,7 +64,8 @@ public class PersonalPerspective extends Perspective {
 		InstanceListPanel instanceListPanel = new InstanceListPanel(session);
 		instanceListPanel.session = session;
 		instanceListPanel.switchToScheduleCalendar();
-		instanceListPanel.setNewInstantiator(null);
+		// TODO: 2013-01-10
+		//instanceListPanel.setNewInstantiator(null);
 		
 		return instanceListPanel;
 	}*/
