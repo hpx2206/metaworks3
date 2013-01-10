@@ -525,4 +525,4 @@ legend {display:none;}
 #openmind_box li.selected{font-weight:bold;color:#000}
 
 .overlay_comment{position:absolute;left:7px; padding:5px;background:#FCF9A3;box-shadow: 5px 5px 20px #888;max-width: 100px;width: 100px; -webkit-border-radius:4px;}
-.overlay_comment_line{position:absolute;background:url('../../images/waveStyle/workItemCommentLine.png') top right;height:20px;left:117px;}
+.overlay_comment_line{position:absolute;background:url('../../images/waveStyle/workItemCommentLine.png') top right;height:15px;left:117px;}
