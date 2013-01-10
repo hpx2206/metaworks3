@@ -19,23 +19,23 @@ public class IFrame {
 			this.src = src;
 		}
 		
-	int width;
+	String width;
 		
-		public int getWidth() {
+		public String getWidth() {
 			return width;
 		}
 	
-		public void setWidth(int width) {
+		public void setWidth(String width) {
 			this.width = width;
 		}
 
-	int height;
+	String height;
 
-		public int getHeight() {
+		public String getHeight() {
 			return height;
 		}
 	
-		public void setHeight(int height) {
+		public void setHeight(String height) {
 			this.height = height;
 		}
 }
