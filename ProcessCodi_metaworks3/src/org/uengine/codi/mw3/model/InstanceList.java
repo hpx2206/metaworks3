@@ -101,7 +101,7 @@ public class InstanceList implements ContextAware{
 		
 		if("sns".equals(preferUX)){
 			instanceContents.setMetaworksContext(new MetaworksContext());
-			instanceContents.getMetaworksContext().setWhere("sns");			
+			instanceContents.getMetaworksContext().setHow("sns");			
 			instanceContents.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 		}
 		setInstances(instanceContents);
@@ -109,6 +109,7 @@ public class InstanceList implements ContextAware{
 		// setting moreInstanceList
 		setMoreInstanceList(new InstanceList());
 		getMoreInstanceList().setPage(getPage()+1);
+		
 		return this;
 	}
 
