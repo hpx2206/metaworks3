@@ -49,7 +49,7 @@ public class InstanceViewThreadPanel implements ContextAware {
 		if("sns".equals(session.getEmployee().getPreferUX()))
 			how = "sns";
 		
-		getMetaworksContext().setHow("sns");
+		getMetaworksContext().setHow(how);
 		setInstanceId(instanceId);
 				
 		IWorkItem result = WorkItem.find(instanceId);
