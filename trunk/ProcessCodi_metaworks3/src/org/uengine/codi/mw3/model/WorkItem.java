@@ -734,17 +734,30 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			final InstanceViewThreadPanel threadPanelOfThis = new InstanceViewThreadPanel();
 			threadPanelOfThis.setInstanceId(getInstId().toString());
 			threadPanelOfThis.session = session;
-			threadPanelOfThis.getMetaworksContext().setHow(this.getMetaworksContext().getHow());
-			threadPanelOfThis.getMetaworksContext().setWhere(this.getMetaworksContext().getWhere());
-			threadPanelOfThis.load(getInstId().toString());
 			
 			final Object[] returnObjects;
 			ArrayList<String> followerIds = new ArrayList<String>();
 			
 			if("sns".equals(session.getEmployee().getPreferUX())){
-				returnObjects = new Object[]{
-						new Refresh(threadPanelOfThis, true) 
-				};
+				
+				if(OverlayCommentWorkItem.TYPE.equals(copyOfThis.getType())){
+					
+					WorkItem parentWorkItem = new WorkItem();
+					parentWorkItem.setTaskId(getOverlayCommentOption().getParentTaskId());
+					
+					returnObjects = new Object[]{
+							new ToAppend(parentWorkItem, copyOfThis)
+					};
+					
+				}else{
+					returnObjects = new Object[]{
+							new ToPrepend(new InstanceList(), copyOfThis)
+					};
+				}
+				
+				
+				
+				
 			}else{
 
 				final InstanceView refreshedInstanceView = new InstanceView();
@@ -781,6 +794,11 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			
 			//if(!securedConversation)
 			MetaworksRemoteService.getInstance().pushClientObjects(returnObjects);
+			
+
+			threadPanelOfThis.getMetaworksContext().setHow(this.getMetaworksContext().getHow());
+			threadPanelOfThis.getMetaworksContext().setWhere(this.getMetaworksContext().getWhere());
+			threadPanelOfThis.load(getInstId().toString());
 			
 			boolean iAmParticipating = false;
 			for(String followerId : followerIds){
