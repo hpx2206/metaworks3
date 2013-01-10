@@ -1375,21 +1375,38 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 						clsNames = [value.__className];
 					}
 					
-					var id ="";
 					
-					// 2012-04-16 key value null 경우 undefined 안먹게 수정
-					if(metadata.keyFieldDescriptor && value[metadata.keyFieldDescriptor.name])
-						id = "@" + this._createObjectKey(value[metadata.keyFieldDescriptor.name]);
+					var id = "";					
+					var ids = [];
 					
 					var returnValues=[];
 					var j=0;
-					for(var i=0; i<clsNames.length; i++){
-						returnValues[j++] = clsNames[i] + id;
-						
-						if(metadata.keyFieldDescriptor)
-							returnValues[j++] = clsNames[i]; //add placeholder candidates without @id again 							
+					
+					// 2012-04-16 key value null 경우 undefined 안먹게 수정
+					if(metadata.keyFieldDescriptor && value[metadata.keyFieldDescriptor.name])
+						id = this._createObjectKey(value[metadata.keyFieldDescriptor.name], true);
+
+					if(id instanceof Array){
+					    ids = id;
+					}else{
+						ids.push(id);
+					}
+					
+					for(var h=0; h<ids.length; h++){
+						for(var i=0; i<clsNames.length; i++){
+							if(ids[h])
+								returnValues[j++] = clsNames[i] + '@' + ids[h];
+							else
+								returnValues[j++] = clsNames[i];
+						}
 					}
 
+					//add placeholder candidates without @id again
+					for(var i=0; i<clsNames.length; i++){
+						if(metadata.keyFieldDescriptor)
+							returnValues[j++] = clsNames[i];  													
+					}
+					
 					if(arguments.length>1){
 						return returnValues;
 					}else
