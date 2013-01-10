@@ -829,7 +829,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 										WorkItem parentWorkItem = new WorkItem();
 										parentWorkItem.setTaskId(getOverlayCommentOption().getParentTaskId());
 										
-										ScriptSessions.addFunctionCall("mw3.locateObject", new Object[]{new ToAppend(parentWorkItem, this), null, "body"});
+										ScriptSessions.addFunctionCall("mw3.locateObject", new Object[]{new ToAppend(parentWorkItem, copyOfThis), null, "body"});
 										
 									}else{
 										ScriptSessions.addFunctionCall("mw3.locateObject", new Object[]{new ToPrev(threadPanelOfThis.newItem, copyOfThis), null, "body"});
