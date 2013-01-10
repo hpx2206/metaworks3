@@ -24,7 +24,7 @@ legend {display:none;}
 .cb_lstcomment li li .cb_comment_area{margin-top:1px}
 
 .formcontexttitle { position:relative; padding:0px;  font-size:10pt; padding-bottom:3px; border-bottom:1px dotted #ccc;margin-top:2px; margin-bottom:5px; font-weight:bold;}
-.formcontexttitle span{float:left; vertical-align: middle; margin-right:15px;}
+.formcontexttitle span{/*float:left;*/ vertical-align: middle; margin-right:15px;}
 
 .commentTailRight {position:absolute; top:5px; right:0px;}
 .commentTailLeft {position:absolute; top:5px; left:0px;}
@@ -523,3 +523,6 @@ legend {display:none;}
 #openmind_box{position:absolute; right:5px; padding:10px;background:#fff;border:1px solid #5793D7; -webkit-border-radius:4px;display:none}
 #openmind_box li{cursor: pointer; line-height:20px; color: #777777}
 #openmind_box li.selected{font-weight:bold;color:#000}
+
+.overlay_comment{position:absolute;left:7px; padding:5px;background:#FCF9A3;box-shadow: 5px 5px 20px #888;max-width: 100px;width: 100px}
+.overlay_comment_line{position:absolute;background:url('../../images/waveStyle/workItemCommentLine.png') top right;height:20px;left:117px;}
