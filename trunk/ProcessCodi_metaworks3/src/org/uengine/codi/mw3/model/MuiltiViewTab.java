@@ -26,7 +26,7 @@ public class MuiltiViewTab {
 			this.scheduleCalendar = scheduleCalendar;
 		}
 	
-		InstanceMonitorPanel processInstanceMonitor;
+	InstanceMonitorPanel processInstanceMonitor;
 		@Face(displayName="프로세스")
 		public InstanceMonitorPanel getProcessInstanceMonitor() {
 			return processInstanceMonitor;
@@ -35,11 +35,18 @@ public class MuiltiViewTab {
 				InstanceMonitorPanel processInstanceMonitor) {
 			this.processInstanceMonitor = processInstanceMonitor;
 		}
-		
+	InstanceFollowers followers;
+		public InstanceFollowers getFollowers() {
+			return followers;
+		}
+		public void setFollowers(InstanceFollowers followers) {
+			this.followers = followers;
+		}	
 
 	public void load() throws Exception{
 		this.scheduleCalendar = new ScheduleCalendar(); 
 		this.panel = new WfPanel();
 		this.processInstanceMonitor = new InstanceMonitorPanel();
+		followers = new InstanceFollowers();
 	}
 }

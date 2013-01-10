@@ -80,7 +80,7 @@ public class PersonalPerspective extends Perspective {
 			InstanceListPanel instanceListPanel = new InstanceListPanel(session);
 			instanceListPanel.session = session;
 			instanceListPanel.switchToScheduleCalendar();
-			instanceListPanel.setNewInstantiator(null);
+//			instanceListPanel.setNewInstantiator(null);
 			
 			return new Object[]{instanceListPanel};
 		}
