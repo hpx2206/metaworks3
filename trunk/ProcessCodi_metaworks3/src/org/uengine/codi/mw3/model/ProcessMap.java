@@ -354,15 +354,17 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		instanceListPanel.getInstanceList().load(session);
 
 		
-		if(processMapList!=null && processMapList.getTitle()!=null){
-			instanceView.getInstanceView().getInstanceNameChanger().setInstanceName(processMapList.getTitle());
-			instanceView.getInstanceView().getInstanceNameChanger().change();
-			instanceView.getInstanceView().setInstanceName(processMapList.getTitle());
 
-		}
 		if("sns".equals(session.getEmployee().getPreferUX())){
 			return new Object[]{instanceListPanel, new Remover(new Popup())};
 		}else{
+			if(processMapList!=null && processMapList.getTitle()!=null){
+				instanceView.getInstanceView().getInstanceNameChanger().setInstanceName(processMapList.getTitle());
+				instanceView.getInstanceView().getInstanceNameChanger().change();
+				instanceView.getInstanceView().setInstanceName(processMapList.getTitle());
+
+			}
+			
 			return new Object[]{instanceView, instanceListPanel, new Remover(new Popup())};
 		}
 
