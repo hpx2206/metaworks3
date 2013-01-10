@@ -233,59 +233,61 @@ public class User extends Database<IUser> implements IUser {
 			
 			return new Object[]{new Refresh(topicFollowers)};
 		}else if("addInstanceFollower".equals(this.getMetaworksContext().getWhen())){
-			String instId = instanceFollowers.getInstanceId();
-			
-			Instance instance = new Instance();
-			instance.setInstId(new Long(instId));
-			
-			processManager.putRoleMapping(instId, RoleMapping.ROLEMAPPING_FOLLOWER_ROLENAME_FREFIX + getName(), getUserId());
-			processManager.applyChanges();
-			
-			InstanceFollowers followers = new InstanceFollowers();
-			followers.setInstanceId(instId);
-			followers.load();
-			
-			/// send notification to the follower 
-			
-			final boolean postByMe = getUserId().equals(session.getUser().getUserId());
-			if(!postByMe){ //ignore myself
-				Notification noti = new Notification();
-				
-				noti.setNotiId(System.currentTimeMillis()); //TODO: why generated is hard to use
-				noti.setUserId(getUserId());
-				noti.setActorId(session.getUser().getUserId());
-				noti.setConfirm(false);
-				noti.setInputDate(Calendar.getInstance().getTime());
-				//noti.setTaskId(getTaskId());
-				noti.setInstId(new Long(instId));
-				noti.setActAbstract(session.getUser().getName() + " added "  + getName()+ " to '" + instance.databaseMe().getName() + "'");
-	
-				noti.createDatabaseMe();
-				noti.flushDatabaseMe();
-			
-			
-				String followerSessionId = Login.getSessionIdWithUserId(getUserId());
-				
-				try{
-					//NEW WAY IS GOOD
-					Browser.withSession(followerSessionId, new Runnable(){
-		
-						@Override
-						public void run() {
-							//refresh notification badge
-							if(!postByMe)
-								ScriptSessions.addFunctionCall("mw3.getAutowiredObject('" + NotificationBadge.class.getName() + "').refresh", new Object[]{});
-							
-						}
-						
-					});
-				}catch(Exception e){
-					e.printStackTrace();
-				}
-			}
-			////// end
-			
-			return new Object[]{new Refresh(followers)};
+//			String instId = instanceFollowers.getInstanceId();
+//			
+//			Instance instance = new Instance();
+//			instance.setInstId(new Long(instId));
+//			
+//			processManager.putRoleMapping(instId, RoleMapping.ROLEMAPPING_FOLLOWER_ROLENAME_FREFIX + getName(), getUserId());
+//			processManager.applyChanges();
+//			
+//			InstanceFollowers followers = new InstanceFollowers();
+//			followers.setInstanceId(instId);
+//			followers.load();
+//			
+//			/// send notification to the follower 
+//			
+//			final boolean postByMe = getUserId().equals(session.getUser().getUserId());
+//			if(!postByMe){ //ignore myself
+//				Notification noti = new Notification();
+//				
+//				noti.setNotiId(System.currentTimeMillis()); //TODO: why generated is hard to use
+//				noti.setUserId(getUserId());
+//				noti.setActorId(session.getUser().getUserId());
+//				noti.setConfirm(false);
+//				noti.setInputDate(Calendar.getInstance().getTime());
+//				//noti.setTaskId(getTaskId());
+//				noti.setInstId(new Long(instId));
+//				noti.setActAbstract(session.getUser().getName() + " added "  + getName()+ " to '" + instance.databaseMe().getName() + "'");
+//	
+//				noti.createDatabaseMe();
+//				noti.flushDatabaseMe();
+//			
+//			
+//				String followerSessionId = Login.getSessionIdWithUserId(getUserId());
+//				
+//				try{
+//					//NEW WAY IS GOOD
+//					Browser.withSession(followerSessionId, new Runnable(){
+//		
+//						@Override
+//						public void run() {
+//							//refresh notification badge
+//							if(!postByMe)
+//								ScriptSessions.addFunctionCall("mw3.getAutowiredObject('" + NotificationBadge.class.getName() + "').refresh", new Object[]{});
+//							
+//						}
+//						
+//					});
+//				}catch(Exception e){
+//					e.printStackTrace();
+//				}
+//			}
+//			////// end
+//			
+//			return new Object[]{new Refresh(followers)};
+			// TODO 이 부분은 변경됨 FollowerSelectPanel.java 참조
+			return null;
 		}else if("addEtcFollower".equals(this.getMetaworksContext().getWhen())){			
 			etcFollowers.put(this);
 			

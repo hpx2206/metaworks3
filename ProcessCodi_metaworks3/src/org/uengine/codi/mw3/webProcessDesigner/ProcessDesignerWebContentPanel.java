@@ -449,7 +449,7 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 							activityMap.put(cells[i].getId() , activity );
 						}else if( "GROUP".equalsIgnoreCase(cells[i].getShapeType()) ){
 							// TODO 현재 group 은 role이라서..
-							if( "OG.shape.HorizontalLaneShape".equals(cells[i].getShapeId() )){
+							if( "OG.shape.HorizontalLaneShape".equals(cells[i].getShapeId() ) || "OG.shape.VerticalLaneShape".equals(cells[i].getShapeId() )){
 								activityMap.put(cells[i].getId() , def.getRole(cells[i].getLabel() ));
 							}
 						}
