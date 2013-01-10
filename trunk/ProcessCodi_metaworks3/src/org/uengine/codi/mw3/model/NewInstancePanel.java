@@ -28,10 +28,14 @@ public class NewInstancePanel implements ContextAware {
 		processMapPanel.load(session);
 		
 		newInstantiator = new CommentWorkItem();
-		newInstantiator.setWriter(session.getUser());
-		newInstantiator.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+		newInstantiator.setWriter(session.getUser());		
 		newInstantiator.setInstantiation(true);
+		newInstantiator.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		
+		if("sns".equals(session.getEmployee().getPreferUX())){
+			newInstantiator.getMetaworksContext().setHow("sns");
+			this.getMetaworksContext().setHow("sns");
+		}
 		
 		Choice securityLevel = new Choice();
 		securityLevel.add("$Privacy.Normal","0");
