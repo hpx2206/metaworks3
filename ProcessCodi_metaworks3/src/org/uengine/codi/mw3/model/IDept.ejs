@@ -45,7 +45,14 @@
 			}
 		} else if(mw3.how == 'deptFollower'){
 		%>
-			<%=fields.partName.here() %>
+			<span style="float: left; border: none;"> 
+				<div class="user" onclick="mw3.getObject(242).detail()">
+					<div class="user_focus" style="background-image: url(images/portrait/group.png); background-size: cover; background-position: initial initial; background-repeat: no-repeat no-repeat;" title="test">
+						<img id="user_picture_242" width="1" height="1" src="images/portrait/test.jpg" onerror="$(this).parent().css({'background':'url(\'images/portrait/group.png\') no-repeat','background-size':'cover'})">
+					</div>
+					<div style="clear:both"></div>
+				</div>
+			</span>
 		<%
 		} else {
 			if(mw3.when == 'new' || mw3.when == 'edit'){
