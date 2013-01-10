@@ -109,7 +109,6 @@ public class TopicTitle  implements ContextAware{
 	
 	public void saveMe() throws Exception {
 		WfNode wfNode = new WfNode();
-		wfNode.setId(this.getTopicId());
 		
 		if(MetaworksContext.WHEN_NEW.equals(this.getMetaworksContext().getWhen())){
 			wfNode.setName(this.getTopicTitle());
@@ -127,8 +126,13 @@ public class TopicTitle  implements ContextAware{
 			tm.getMetaworksContext().setWhen(this.getMetaworksContext().getWhen());
 			
 			tm.saveMe();
+			
+			this.setTopicId(wfNode.getId());
 		}else{
+			wfNode.setId(this.getTopicId());
+			
 			wfNode.copyFrom(wfNode.databaseMe());
+			
 			wfNode.setName(this.getTopicTitle());
 			wfNode.saveMe();
 		}
@@ -137,11 +141,19 @@ public class TopicTitle  implements ContextAware{
 	@Face(displayName="$Create")
 	@Available(when={MetaworksContext.WHEN_NEW})
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
-	public void save() throws Exception{
+	public Object[] save() throws Exception{
+		this.saveMe();
+		
+		TopicNode topicNode = new TopicNode();
+		topicNode.setId(this.getTopicId());
+		topicNode.setName(this.getTopicTitle());
+		
 		this.makeHtml();
 		
 		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-		this.getMetaworksContext().setHow("html");		
+		this.getMetaworksContext().setHow("html");	
+		
+		return new Object[]{new ToAppend(new TopicPanel(), topicNode), new Refresh(this)};
 	}
 	
 	@Face(displayName="$Save")
@@ -153,13 +165,15 @@ public class TopicTitle  implements ContextAware{
 		TopicNode topicNode = new TopicNode();
 		topicNode.setId(this.getTopicId());
 		topicNode.setName(this.getTopicTitle());
-		
-		//return new Object[]{(InstanceListPanel)topicNode.loadTopic()[1], new Remover(new ModalWindow())};
-		if(MetaworksContext.WHEN_NEW.equals(this.getMetaworksContext().getWhen()))
-			return new Object[]{new ToAppend(new TopicPanel(), topicNode), new Remover(new ModalWindow())};
-		else
-			return new Object[]{new Refresh(topicNode), new Remover(new ModalWindow())};
-		
+
+		return new Object[]{new Refresh(topicNode), new Remover(new ModalWindow())};		
+	}
+	
+	@Face(displayName="$Close")
+	@Available(how={"html"})
+	@ServiceMethod(target=ServiceMethodContext.TARGET_APPEND)
+	public Object close() {
+		return new Remover(new ModalWindow());
 	}
 	
 	@AutowiredFromClient
