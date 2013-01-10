@@ -522,7 +522,6 @@ public class InstanceView {
 	public InstanceViewThreadPanel activityStream() throws Exception{
 		InstanceViewThreadPanel instanceViewThreadPanel = new InstanceViewThreadPanel();
 		instanceViewThreadPanel.session = session;
-		instanceViewThreadPanel.setMetaworksContext(getMetaworksContext());
 		instanceViewThreadPanel.load(instanceId);
 		
 		return instanceViewThreadPanel;
