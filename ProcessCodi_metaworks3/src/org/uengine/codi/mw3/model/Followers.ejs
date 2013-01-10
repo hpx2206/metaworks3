@@ -1,12 +1,12 @@
+	<%
+		if(value && ((value.followers &&  value.followers.length > 0 ) || (value.deptFollowers &&  value.deptFollowers.length > 0 )) ){
+	%>		 	
 <div id="searchbox">
 	<div class="adduserline"> 
 		<dl>
 			<div class="usersAdded">
 			 	<div id="replyUsers">
 			 	
-	<%
-		if(value){
-	%>		 	
 			 	<dl>
 				 	<dd>
 			 			<%=fields.followers.here({options: {alignment:'horizontal'}})%>
@@ -24,11 +24,11 @@
 			}
 	%>				 		
 			 	</dl>
-	<%
-		}
-	%>
 				</div>
 			</div>
 		</dl>
 	</div>
 </div>
+<%
+		}
+	%>

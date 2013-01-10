@@ -445,11 +445,16 @@ public class Instance extends Database<IInstance> implements IInstance{
 				panel.session = session;
 				panel.load(this.getInstId().toString());
 				
+				InstanceFollowers followers = new InstanceFollowers();
+				followers.setInstanceId(this.getInstId().toString());
+				followers.load();
+				
 				InstanceMonitorPanel processInstanceMonitorPanel = new InstanceMonitorPanel();
 				processInstanceMonitorPanel.processManager = processManager;
 				processInstanceMonitorPanel.session = session;
 				processInstanceMonitorPanel.load(this.getInstId().toString());
-				MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(processInstanceMonitorPanel)});
+				
+				MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(processInstanceMonitorPanel) , new Refresh(followers)});
 //				MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(flowchart())});
 			}
 			setInstanceViewThreadPanel(panel);
