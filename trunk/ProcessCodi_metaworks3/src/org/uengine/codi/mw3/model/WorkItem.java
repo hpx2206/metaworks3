@@ -16,6 +16,7 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Test;
 import org.metaworks.dao.Database;
+import org.metaworks.dao.TransactionContext;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.example.ide.SourceCode;
 import org.metaworks.website.MetaworksFile;
@@ -44,9 +45,10 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	
 	protected static IWorkItem find(String instanceId) throws Exception{
 		
-		IWorkItem workitem = (IWorkItem) Database.sql(IWorkItem.class, "select * from bpm_worklist where rootInstId=?instId");
+		IWorkItem workitem = (IWorkItem) Database.sql(IWorkItem.class, "select * from bpm_worklist where rootInstId=?instId and isdeleted!=?isDeleted");
 		
 		workitem.set("instId",instanceId);
+		workitem.set("isDeleted",1);
 		
 		//TODO: this expression should be work later instead of above.
 		//IUser user = new User();
@@ -198,6 +200,18 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			this.memo = memo;
 		}
 	
+		
+	WorkItemVersionChooser workItemVersionChooser;
+	
+		public WorkItemVersionChooser getWorkItemVersionChooser() {
+			return workItemVersionChooser;
+		}
+	
+		public void setWorkItemVersionChooser(
+				WorkItemVersionChooser workItemVersionChooser) {
+			this.workItemVersionChooser = workItemVersionChooser;
+		}
+
 
 	String content;
 		public String getContent() {
@@ -406,9 +420,15 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		this.workItemHandler = null;
 		detail();
 		
-		ModalWindow workItemHandlerModal = new ModalWindow(workItemHandler, 800, 0, getTitle());
-
-		return workItemHandlerModal;
+		Object result = null;
+		
+		if("file".equals(this.getType())){
+			result = this;
+		}else{
+			result = workItemHandler; 
+		}
+		
+		return new ModalWindow(result, 0, 0, getTitle());
 	}
 	
 	@Autowired
@@ -524,6 +544,48 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		public void setInstantiated(boolean instantiated) {
 			this.instantiated = instantiated;
 		}
+		
+	
+	int majorVer;
+		public int getMajorVer() {
+			return majorVer;
+		}
+	
+		public void setMajorVer(int majorVer) {
+			this.majorVer = majorVer;
+		}
+
+		
+	int minorVer;
+		public int getMinorVer() {
+			return minorVer;
+		}
+	
+		public void setMinorVer(int minorVer) {
+			this.minorVer = minorVer;
+		}
+		
+		
+	Long grpTaskId;
+		
+		public Long getGrpTaskId() {
+			return grpTaskId;
+		}
+	
+		public void setGrpTaskId(Long grpTaskId) {
+			this.grpTaskId = grpTaskId;
+		}
+
+		
+	boolean isDeleted;	
+		
+		public boolean getIsDeleted() {
+			return isDeleted;
+		}
+	
+		public void setIsDeleted(boolean isDeleted) {
+			this.isDeleted = isDeleted;
+		}
 
 	@Override
 	@Test(scenario="first", starter=true, instruction="$Write", next="newActivity()")
@@ -616,6 +678,32 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		setStartDate(Calendar.getInstance().getTime());
 		setEndDate(getStartDate());
 		
+		if(getGrpTaskId() == null){
+			setGrpTaskId(taskId);
+			setMajorVer(1);
+			setMinorVer(0);
+			setIsDeleted(false);
+		}
+		
+		if(getMetaworksContext().getWhen().equals("edit")){			
+			if(getFile() != null && getFile().getMimeType() != null && getFile().getMimeType().indexOf("office") > 0){
+				IWorkItem worklist = sql("update bpm_worklist set isdeleted=1 where grptaskid=?taskId and taskid!=?currentTaskId");
+				worklist.set("taskId", getGrpTaskId());
+				worklist.set("currentTaskId", getTaskId());
+				worklist.update();
+				
+				String prefix = TransactionContext.getThreadLocalInstance()
+						.getRequest().getSession().getServletContext()
+						.getRealPath("/images/pdf/");
+				
+				String inputFilePath = getFile().overrideUploadPathPrefix()+ getFile().getUploadedPath();
+				String outputFilePath = prefix + "/" + this.getGrpTaskId() + "_" + String.valueOf(this.getMajorVer()) + "_" + String.valueOf(this.getMinorVer()) + ".pdf";
+				
+				ConvertDocToPdf convertDoc = new ConvertDocToPdf();
+				convertDoc.convertPdf(inputFilePath, outputFilePath);
+			}
+		}
+		
 		if(getTitle().length() > 190){
 			setType(new MemoWorkItem().getType());
 			setContent(getTitle());
@@ -635,7 +723,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		
 		//InstanceViewContent instanceViewContent = new InstanceViewContent();
 //		instanceViewContent.load(instance);
-		
+		String tempWhen = getMetaworksContext().getWhen();
 		getMetaworksContext().setWhen(WHEN_VIEW);
 		if("sns".equals(session.getEmployee().getPreferUX())){
 			getMetaworksContext().setHow("instanceList");
@@ -903,18 +991,26 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				return null;
 			}
 			if("comment".equals(getType())){
-				return new Object[]{copyOfThis};
+				if( tempWhen != null && tempWhen.equals("edit")){
+					return new Object[]{new Refresh(copyOfThis)};
+				}else{
+					return new Object[]{copyOfThis};
+				}
 			}else if(OverlayCommentWorkItem.TYPE.equals(getType())){
 				WorkItem parentWorkItem = new WorkItem();
 				parentWorkItem.setTaskId(getOverlayCommentOption().getParentTaskId());
 				
-				return new Object[]{new ToAppend(parentWorkItem, this)};
+				return new Object[]{new ToAppend(parentWorkItem, this)};				
 			}else{
 				WorkItem newItem = new CommentWorkItem();
 				newItem.setInstId(new Long(getInstId()));
 				newItem.setTaskId(new Long(-1));
 				newItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
-				return new Object[]{new Refresh(newItem), new ToPrev(threadPanelOfThis.newItem, copyOfThis)};
+				if( tempWhen != null && tempWhen.equals("edit")){
+					return new Object[]{new Refresh(copyOfThis) };
+				}else{
+					return new Object[]{new Refresh(newItem), new ToPrev(threadPanelOfThis.newItem, copyOfThis)};
+				}
 //				return new Object[]{new ToPrev(threadPanelOfThis.newItem, copyOfThis)};
 			}
 		}
@@ -945,6 +1041,11 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		if(!session.getUser().getUserId().equals(getWriter().getUserId())){
 			throw new Exception("$OnlyTheWriterCanEdit");
 		}
+		
+		setInstantiation(false);
+		setDueDate(null);
+		setStartDate(null);
+		setEndDate(null);
 		
 		getMetaworksContext().setWhen("edit");
 		
@@ -1072,7 +1173,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 
 	@Autowired
 	public InstanceViewContent instanceViewContent;
-	
+
 	
 	
 

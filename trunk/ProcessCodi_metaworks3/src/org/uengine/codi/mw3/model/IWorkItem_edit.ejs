@@ -116,13 +116,14 @@
 			
 		</tr>			
 		<tr>
+			<%if (value.taskId != null){%>
+				<td height="30"><%=fields.versionUpOption.here()%></td>
+			<%}%>
 			<td height="30" colspan="2" style="padding-left:15px;">
 				<%=fields.file.here()%>
 			</td>
-		</tr>
-		<tr>
 			<td height="30" colspan="2" style="padding-left:15px;"><a id="wBtn" href="#" onClick="<%=methods.add.caller()%>"><span id="method_<%=objectId%>_add"><%=mw3.localize("$Post")%></span></a></td>
-		</tr> 			
+		</tr>
 <%		
 		}
 %>
