@@ -19,7 +19,20 @@ public class ToPrev {
 			this.next = next;
 		}
 
+	boolean match;
+		public boolean isMatch() {
+			return match;
+		}
+	
+		public void setMatch(boolean match) {
+			this.match = match;
+		}
+
 	public ToPrev(Object next, Object target){
+		this(next, target, false);
+	}
+
+	public ToPrev(Object next, Object target, boolean match){
 		setNext(next);
 		setTarget(target); //TODO: need remove detail properties except the key value or clone a new key object containing the only key parts for network optimization
 	}
