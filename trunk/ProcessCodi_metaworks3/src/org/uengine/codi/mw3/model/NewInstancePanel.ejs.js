@@ -37,23 +37,18 @@ var org_uengine_codi_mw3_model_NewInstancePanel = function(objectId, className){
 	
 
 	
-	$('#openmind_box li').bind('mousedown', function(){
+	$('#openmind_box li').bind('mousedown', {objectId : this.objectId}, function(){
 		$(this).siblings().removeClass('selected').end().addClass('selected');
-		
+
+		if(mw3.getChildObjectId(objectId, 'securityLevel') == null){
+			var object = mw3.getObject(objectId);
+			object.securityLevel.selected = $(this).attr('value');
+		}
+			
 		$('#openmind_btn').trigger('click');
 	}).filter(function(){
 		if(securityLevel == $(this).attr('value'))
 			return true;
 		
 	}).addClass('selected');
-};
-
-org_uengine_codi_mw3_model_NewInstancePanel.prototype = {
-	getValue : function(){
-		var securityLevel = $('#openmind_box li.selected').attr('value');
-		
-		this.object.securityLevel.selected = securityLevel;
-		
-		return this.object;
-	}
 };
