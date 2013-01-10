@@ -3,16 +3,17 @@
 		if(mw3.how == 'sns'){
 %>
 	<%=fields.newInstantiator.here()%>
-	
-	<div style="background:#C9E2FC; border-top:1px solid #65C0ED;">
-	<table>
-		<tr>
-			<td width="15"><img src="images/waveStyle/navi_icon.png"></td>
-			<td class="closed"><b><%=mw3.localize("$OpenLevel")%>&nbsp; : &nbsp;</b></td>
-			<td><%=fields.securityLevel.here({when:'edit'})%></td>
-		</tr>
-	</table>
+	<div id="openmind_btn" style="position:absolute; right:15px; top:50px;cursor:pointer;">
+		공개설정▼
 	</div>
+	<div id="openmind_box">
+		<ul>
+			<li class="selected">우리조직 내부에만 공개 (보통 오픈마인드)</li>
+			<li>본건의 관련자에게만 공개 (가장 폐쇄적임) </li>
+			<li>외부 소셜네트워크에도 공개 (가장 오픈마인드!)</li>
+		</ul>
+	</div>
+
 <%		
 		}else{
 %>
