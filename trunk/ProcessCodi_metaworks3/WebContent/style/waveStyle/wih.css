@@ -519,6 +519,7 @@ legend {display:none;}
       font-weight: normal;
 }   
 
+#openmind_btn{padding:2px;background:#DBECFD;border:1px solid #AAD2FB; -webkit-border-radius:4px;}
 #openmind_box{position:absolute; right:5px; padding:10px;background:#fff;border:1px solid #5793D7; -webkit-border-radius:4px;display:none}
 #openmind_box li{cursor: pointer; line-height:20px; color: #777777}
 #openmind_box li.selected{font-weight:bold;color:#000}
