@@ -343,11 +343,16 @@
                     __className : "org.uengine.codi.mw3.model.Locale"
                 }, 'body');
 					
-				mainPage = new MetaworksObject({
+				/* mainPage = new MetaworksObject({
                     __className : "org.uengine.codi.mw3.Login",
                     metaworksContext : {when: 'edit'},
                     rememberMe: true,
                     defId : defId
+                }, 'body'); */
+                
+                mainPage = new MetaworksObject({
+                    __className : "org.uengine.codi.mw3.Login",
+                    metaworksContext : {when: 'edit'}
                 }, 'body');
 				
 				mw3.onLoadFaceHelperScript();
