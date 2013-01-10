@@ -8,9 +8,16 @@
 	</div>
 	<div id="openmind_box">
 		<ul>
-			<li class="selected">우리조직 내부에만 공개 (보통 오픈마인드)</li>
-			<li>본건의 관련자에게만 공개 (가장 폐쇄적임) </li>
-			<li>외부 소셜네트워크에도 공개 (가장 오픈마인드!)</li>
+<%
+			for(var i=0; i<value.securityLevel.optionValues.length; i++){
+				var optionValue = value.securityLevel.optionValues[i];
+				var optionName = value.securityLevel.optionNames[i];
+%>			
+		
+			<li value="<%=optionValue%>"><%=mw3.localize(optionName)%></li>
+<%
+			}
+%>			
 		</ul>
 	</div>
 
