@@ -21,11 +21,6 @@ public class FollowerSelectPanel extends HorizontalSplitBox implements ContextAw
 		
 		FollowerSelectTab followerSelectTab = new FollowerSelectTab(session);
 		
-		OrganizationTree employeeTree = followerSelectTab.getEmployeeTree();
-		employeeTree.setId("employee");
-		employeeTree.setHiddenCheckBoxFolder(true);
-		employeeTree.load();
-		
 		OrganizationTree deptTree = followerSelectTab.getDeptTree();
 				 
 		deptTree.setId("dept");

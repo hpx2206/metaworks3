@@ -43,6 +43,7 @@ public class FollowerSelectCommand {
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] addFollowers() throws Exception{
+		
 		if( Followers.ADD_INSTANCEFOLLOWERS.equals(getFollowerType()) ){
 			String instId = instanceFollowers.getInstanceId();
 			// 현재 부서트리에서는 사용자를 체크 안하게 되어있지만 확장성을 위하여 employee쪽도 넣는 부분을 구현해 놓음
@@ -62,19 +63,15 @@ public class FollowerSelectCommand {
 				processManager.putRoleMapping(instId, roleMap);
 				processManager.applyChanges();
 			}
-			ArrayList<TreeNode> checkEmpNodes = followerSelectTab.getEmployeeTree().getCheckNodes();
-			for(int i=0; i<checkEmpNodes.size(); i++){
-				TreeNode node = checkEmpNodes.get(i);
+			
+			ArrayList<User> userList = followerSelectTab.getContactListPanel().getCheckNodes();
+			for( int i = 0; i < userList.size(); i++ ){
+				User user = userList.get(i);
 				RoleMapping roleMap = RoleMapping.create();
-				roleMap.setName(node.getName());
-				roleMap.setEndpoint(node.getId());
-				roleMap.setResourceName(node.getId());
-				
-				if(DeptTreeNode.TYPE_DEFAULT.equals(node.getType())){
-					roleMap.setAssignType(Role.ASSIGNTYPE_DEPT);
-				}else if(EmployeeTreeNode.TYPE_DEFAULT.equals(node.getType())){
-					roleMap.setAssignType(Role.ASSIGNTYPE_USER);
-				}
+				roleMap.setName(user.getName());
+				roleMap.setEndpoint(user.getUserId());
+				roleMap.setResourceName(user.getUserId());
+				roleMap.setAssignType(Role.ASSIGNTYPE_USER);
 				processManager.putRoleMapping(instId, roleMap);
 				processManager.applyChanges();
 			}
@@ -101,20 +98,15 @@ public class FollowerSelectCommand {
 				tm.saveMe();
 				tm.flushDatabaseMe();
 			}
-			ArrayList<TreeNode> checkEmpNodes = followerSelectTab.getEmployeeTree().getCheckNodes();
-			for(int i=0; i<checkEmpNodes.size(); i++){
-				TreeNode node = checkEmpNodes.get(i);
+			
+			ArrayList<User> userList = followerSelectTab.getContactListPanel().getCheckNodes();
+			for( int i = 0; i < userList.size(); i++ ){
+				User user = userList.get(i);
 				TopicMapping tm = new TopicMapping();
 				tm.setTopicId( session.getLastSelectedItem() );
-				tm.setUserId(node.getId());
-				tm.setUserName(node.getName());
-//				tm.getMetaworksContext().setWhen(this.getMetaworksContext().getWhen());
-				
-				if(DeptTreeNode.TYPE_DEFAULT.equals(node.getType())){
-					tm.setAssigntype(2);
-				}else if(EmployeeTreeNode.TYPE_DEFAULT.equals(node.getType())){
-					tm.setAssigntype(0);
-				}
+				tm.setUserId(user.getUserId());
+				tm.setUserName(user.getName());
+				tm.setAssigntype(0);
 				tm.saveMe();
 				tm.flushDatabaseMe();
 			}
