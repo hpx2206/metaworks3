@@ -1,11 +1,13 @@
 package org.uengine.codi.mw3.portlet;
 
+import org.metaworks.MetaworksException;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.dao.TransactionContext;
 import org.uengine.codi.mw3.Login;
+import org.uengine.codi.mw3.knowledge.TopicNode;
 import org.uengine.codi.mw3.model.Locale;
 import org.uengine.codi.mw3.model.PersonalPerspective;
-import org.uengine.codi.mw3.model.Perspective;
 import org.uengine.codi.mw3.model.Session;
 
 public class InstanceListPortlet {
@@ -51,7 +53,17 @@ public class InstanceListPortlet {
 			this.cookiePasswd = cookiePasswd;
 		}
 		
+	String type;
+		@Hidden
+		public String getType() {
+			return type;
+		}
+		public void setType(String type) {
+			this.type = type;
+		}
+		
 	String topicName;
+
 		@Hidden
 		public String getTopicName() {
 			return topicName;
@@ -77,15 +89,25 @@ public class InstanceListPortlet {
 		session.getMetaworksContext().setWhen("hidden");
 		session.setLastPerspecteType("sns");
 		session.getEmployee().setPreferUX("sns");
+		this.setSession(session);
 		
-		PersonalPerspective personalPerspective = new PersonalPerspective();
-		personalPerspective.session = session;
+		Object[] result = null;
 		
-		Object[] result = (Object[])personalPerspective.loadAllICanSee();
+		if(this.getType() == null || this.getType().length() == 0)
+			throw new MetaworksException("잘못된 경로로 접근하셨습니다.");
+			
+		if("Newspeed".equals(this.getType()))
+			result = goNewspeed();
+		else if("Todo".equals(this.getType()))
+			result = goNewspeed();
+		else if("Topic".equals(this.getType()))
+			result = goTopic();
 		
-		this.setSession((Session)result[0]);
-		this.setContent(result[1]);
+		this.setSession((Session)result[0]);		
 		this.setLoaded(true);
+		
+		if(result != null)
+			this.setContent(result[1]);
 		
 		Locale locale = new Locale();
 		locale.setLanguage(session.getEmployee().getLocale());
@@ -115,6 +137,20 @@ public class InstanceListPortlet {
 	
 	@ServiceMethod(payload={"session", "topicName"})
 	public Object[] goTopic() throws Exception {
+		if(this.getTopicName() == null || this.getTopicName().length() ==0)
+			throw new MetaworksException("잘못된 경로로 접근하셨습니다.");
+		
+		/*
+		TopicNode topic = new TopicNode();
+				
+		try{
+			topic.setId(this.getTopicName());
+			topic.copyFrom(topic.databaseMe());
+		}catch(Exception e){
+			throw new MetaworksException("잘못된 경로로 접근하셨습니다.");
+		}
+		*/
+		
 		return PersonalPerspective.loadInstanceListPanel(session, "topic", this.getTopicName());
 	}
 }
