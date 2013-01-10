@@ -731,7 +731,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			
 			if("sns".equals(session.getEmployee().getPreferUX())){
 				returnObjects = new Object[]{
-						new Refresh(threadPanelOfThis) 
+						new Refresh(threadPanelOfThis, true) 
 				};
 			}else{
 
@@ -855,7 +855,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				writer.getMetaworksContext().setWhen("contacts");
 				//contact.setMood(title);
 				
-				MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(contact)});
+				MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(contact, true)});
 			}
 			
 			if("sns".equals(session.getEmployee().getPreferUX()) ){
