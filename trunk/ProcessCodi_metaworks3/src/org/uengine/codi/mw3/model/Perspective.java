@@ -81,7 +81,7 @@ public class Perspective {
 		
 		InstanceListPanel instListPanel = new InstanceListPanel(session);
 		instListPanel.setInstanceList(instList);
-		
+		instListPanel.session = session;
 		// set search Keyword to searchBox
 		instListPanel.getSearchBox().setKeyword(session.getSearchKeyword());
 		if( title == null && perspectiveType != null && perspectiveType.equals("topic")){
