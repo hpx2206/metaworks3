@@ -645,6 +645,6 @@ alter table BPM_TOPICMAPPING add column `ASSIGNTYPE` int(11) DEFAULT 0 ;
 
 alter table bpm_worklist add column prtTskId int;
 
-alter table bpm_worklist add column GROUPTASKID int(11);
+alter table bpm_worklist add column GRPTASKID int(11);
 alter table bpm_worklist add column MAJORVER int(5);
 alter table bpm_worklist add column MINORVER int(5);
