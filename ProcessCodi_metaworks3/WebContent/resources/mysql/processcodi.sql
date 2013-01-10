@@ -640,3 +640,5 @@ alter table bpm_worklist add column EXT8 varchar(200);
 alter table bpm_worklist add column EXT9 varchar(200);
 alter table bpm_worklist add column EXT10 varchar(200);
 alter table bpm_procinst add column progress varchar(10);
+
+alter table BPM_TOPICMAPPING add column `ASSIGNTYPE` int(11) DEFAULT 0 ;
