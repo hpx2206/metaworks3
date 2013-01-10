@@ -98,7 +98,7 @@ public class TopicTitle  implements ContextAware{
 	       	String contextOnly = path.substring(0, path.substring(1).indexOf("/")+1);
 			String protocol = urlURL.getProtocol();
 	
-			String defaultUrl = protocol + "://" + host + ":" + port + contextOnly + "portlet_instanceList.html?id=" + this.getTopicId();
+			String defaultUrl = protocol + "://" + host + ":" + port + contextOnly + "/portlet_instanceList.html?type=Topic&id=" + this.getTopicId();
 			String embeddedHtml = "<div style='padding:15px;border:1px solid #D7D7D7; font-size:14px; font-weight:bold;margin-bottom:10px;'>&lt;iframe id=\"portlet\" src=\"" + defaultUrl + "\" style=\"width: 500px; height: 500px; border-width:1px; border-color:red; border-style:solid;\"></iframe></div>";
 			
 			this.setEmbeddedHtml(embeddedHtml);
