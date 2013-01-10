@@ -766,8 +766,9 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				};
 			}
 			
-			if(!securedConversation)
-				MetaworksRemoteService.getInstance().pushClientObjects(returnObjects);
+			
+			//if(!securedConversation)
+			MetaworksRemoteService.getInstance().pushClientObjects(returnObjects);
 			
 			boolean iAmParticipating = false;
 			for(String followerId : followerIds){
