@@ -694,9 +694,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				
 				instantiatedViewContent.getInstanceView().setInstanceViewThreadPanel(threadPanel);
 				
-				
-				if(!securedConversation)
-					MetaworksRemoteService.getInstance().pushClientObjects(new Object[]{new ToPrepend(new InstanceList(), refreshedInstance)});
+				MetaworksRemoteService.getInstance().pushClientObjects(new Object[]{new ToPrepend(new InstanceList(), refreshedInstance)});
 				
 				if(newInstancePanel != null  && newInstancePanel.getDueDate() != null){
 					instance.flushDatabaseMe();

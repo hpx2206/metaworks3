@@ -19,6 +19,10 @@ public class InstanceList implements ContextAware{
 
 	final static int PAGE_CNT = 15;
 
+	public InstanceList(){
+		this.setPage(1);
+	}
+
 	int page;
 		@Id
 		@Hidden		
