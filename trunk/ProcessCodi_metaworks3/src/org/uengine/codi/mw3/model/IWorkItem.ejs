@@ -115,10 +115,12 @@
 											<%if(value.type=='file'){%>
 											(ver <%=value.majorVer%>.<%=value.minorVer%>)
 											<%}%>
-									</span>								
+									</span>					
+									<%if(value.type=='file' && value.file.mimeType.indexOf("office")>0){%>			
 									<span>
 										<a href="#" onClick="<%=methods.workItemPopup.caller()%>"><img src="images/waveStyle/newWindow.png" style="margin-top:2px;" title="Open new window"></a>
-									</span>				
+									</span>	
+									<%}%>			
 								<%}else if(value.type==null){%>
 									<span>							
  										<%=mw3.localize('$MyTask')%>: <a href="#" onClick="<%=value.tool=='formApprovalHandler'?'mw3.getFaceHelper('+objectId+').openFormApprovalHandler()':methods.detail.caller()%>"><%=value.title%> [ <%=value.status%> ]</a>
