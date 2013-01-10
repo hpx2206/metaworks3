@@ -1,9 +1,11 @@
 package org.uengine.codi.mw3.model;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
+import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.NonLoadable;
 import org.metaworks.annotation.NonSavable;
@@ -169,6 +171,16 @@ public interface IInstance extends IDAO{
 	public IUser getCurrentUser();
 	public void setCurrentUser(IUser user);
 	
+	/*
+	 * 2013-01-10 cjw
+	 * push client 의 보안 처리
+	 */
+	@Hidden
+	@NonLoadable
+	@NonSavable
+	public InstanceFollowers getFollowers();
+	public void setFollowers(InstanceFollowers followers);
+	
 	@ServiceMethod(inContextMenu=true, callByContent=true, keyBinding="Ctrl+X")
 	public Session cut();
 	
@@ -182,4 +194,6 @@ public interface IInstance extends IDAO{
 	@Available(when="instanceNavigator")
 	@Face(displayName="$SplitFromRootProcess")
 	public void split() throws Exception;
+	
+	public void fillFollower();
 }

@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.model;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -874,7 +875,19 @@ public class Instance extends Database<IInstance> implements IInstance{
 		public void setInstanceDrag(InstanceDrag instanceDrag) {
 			this.instanceDrag = instanceDrag;
 		}
-	
+		
+	/*
+	 * 2013-01-10 cjw
+	 * push client 의 보안 처리
+	 */
+	InstanceFollowers followers;
+		public InstanceFollowers getFollowers() {
+			return followers;
+		}
+		public void setFollowers(InstanceFollowers followers) {
+			this.followers = followers;
+		}
+
 	@Override
 	public void split() throws Exception {
 		Long root = new Long(-1);
@@ -889,5 +902,21 @@ public class Instance extends Database<IInstance> implements IInstance{
 		roleMappingsToUpdate.setRootInstId(root);
 		roleMappingsToUpdate.update();
 
+	}
+	
+	public void fillFollower(){
+		/*
+		 * 2013-01-10 cjw
+		 * push client 의 보안 처리
+		 */
+		try{
+			InstanceFollowers followers = new InstanceFollowers();
+			followers.setInstanceId(this.getInstId().toString());
+			followers.load();
+
+			this.setFollowers(followers);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 }
