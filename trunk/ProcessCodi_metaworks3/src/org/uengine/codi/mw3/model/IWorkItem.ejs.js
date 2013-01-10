@@ -1,7 +1,9 @@
 var org_uengine_codi_mw3_model_IWorkItem = function(objectId, className){
 	this.objectId = objectId;
 	this.className = className;
-	
+
+	$('#objDiv_' + this.objectId).css('position', 'relative');
+
 	var container = $('#objDiv_' + this.objectId).find('.formcontexttitle span').eq(0);
 	var doc = container.html();
 	
