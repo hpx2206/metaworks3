@@ -22,5 +22,11 @@ public class TopicFollowers extends Followers{
 		
 		users.getMetaworksContext().setWhen(CONTEXT_WHERE_TOPICFOLLOWERS);
 		setFollowers(users);
+		
+		IDept dept = tm.findDept();
+		
+		dept.getMetaworksContext().setHow(CONTEXT_WHERE_DEPTFOLLOWERS);
+		setDeptFollowers(dept);
+		
 	}
 }

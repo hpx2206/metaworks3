@@ -7,6 +7,7 @@ import org.metaworks.dao.DAOFactory;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.KeyGeneratorDAO;
 import org.metaworks.dao.TransactionContext;
+import org.uengine.codi.mw3.model.IDept;
 import org.uengine.codi.mw3.model.IUser;
 
 public class TopicMapping extends Database<ITopicMapping> implements ITopicMapping {
@@ -41,11 +42,18 @@ public class TopicMapping extends Database<ITopicMapping> implements ITopicMappi
 		public String getUserName() {
 			return userName;
 		}
-	
 		public void setUserName(String userName) {
 			this.userName = userName;
 		}
 	
+	int assigntype;
+		public int getAssigntype() {
+			return assigntype;
+		}
+		public void setAssigntype(int assigntype) {
+			this.assigntype = assigntype;
+		}
+		
 	public ITopicMapping saveMe() throws Exception {
 		
 		   Map options = new HashMap();
@@ -80,12 +88,22 @@ public class TopicMapping extends Database<ITopicMapping> implements ITopicMappi
 	}
 	
 	public IUser findUser() throws Exception {
-		IUser users = (IUser) Database.sql(IUser.class, "select  userId, userName name from BPM_TOPICMAPPING  where topicId=?topicId");
+		IUser users = (IUser) Database.sql(IUser.class, "select  userId, userName name from BPM_TOPICMAPPING  where topicId=?topicId and assigntype=?assigntype ");
 		
 		users.set("topicId", this.getTopicId() );
+		users.set("assigntype", 0);
 		users.select();
 		
 		return users;
+	}
+	public IDept findDept() throws Exception {
+		IDept dept = (IDept) Database.sql(IDept.class, "select  userId as PARTCODE , userName as  PARTNAME  from BPM_TOPICMAPPING  where topicId=?topicId and assigntype=?assigntype ");
+		
+		dept.set("topicId", this.getTopicId() );
+		dept.set("assigntype", 2);
+		dept.select();
+		
+		return dept;
 	}
 	
 	public void remove() throws Exception {

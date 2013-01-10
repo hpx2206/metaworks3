@@ -22,6 +22,9 @@ public interface ITopicMapping extends IDAO {
 		public String getUserName();
 		public void setUserName(String userName);
 		
+		public int getAssigntype() ;
+		public void setAssigntype(int assigntype) ;
+		
 		@ServiceMethod
 		public void remove() throws Exception;
 }
