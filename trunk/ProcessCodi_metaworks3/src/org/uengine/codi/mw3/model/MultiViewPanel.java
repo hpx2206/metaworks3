@@ -21,8 +21,17 @@ public class MultiViewPanel implements ContextAware {
 		public void setMuiltiViewTab(MuiltiViewTab muiltiViewTab) {
 			this.muiltiViewTab = muiltiViewTab;
 		}
-		
+	InstanceFollowers followers;
+		public InstanceFollowers getFollowers() {
+			return followers;
+		}
+		public void setFollowers(InstanceFollowers followers) {
+			this.followers = followers;
+		}	
 	public void load(Session session) throws Exception{
+		
+		followers = new InstanceFollowers();
+		
 		MuiltiViewTab muiltiViewTab = new MuiltiViewTab();
 		muiltiViewTab.load();
 		

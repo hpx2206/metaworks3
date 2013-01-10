@@ -70,7 +70,7 @@ public class Followers implements ContextAware {
 		users.getMetaworksContext().setWhen(CONTEXT_WHERE_INFOLLOWERS);
 		setFollowers(users);
 		
-		dept.getMetaworksContext().setHow("deptFollower");
+		dept.getMetaworksContext().setHow(CONTEXT_WHERE_DEPTFOLLOWERS);
 		setDeptFollowers(dept);
 	}
 	
