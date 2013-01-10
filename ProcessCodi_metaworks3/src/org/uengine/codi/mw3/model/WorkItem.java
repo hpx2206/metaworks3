@@ -3,14 +3,12 @@ package org.uengine.codi.mw3.model;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Hashtable;
 
 import org.directwebremoting.Browser;
 import org.directwebremoting.ScriptSessions;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
-import org.metaworks.ToAppend;
 import org.metaworks.ToPrepend;
 import org.metaworks.ToPrev;
 import org.metaworks.annotation.AutowiredFromClient;
@@ -630,7 +628,10 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			getMetaworksContext().setWhere("sns");
 		}
 		
-		final IInstance refreshedInstance = instance.databaseMe();
+		Instance refreshedInstance = new Instance();
+		refreshedInstance.copyFrom(instance.databaseMe());
+		refreshedInstance.fillFollower();
+		
 		refreshedInstance.getMetaworksContext().setHow("blinking");
 		refreshedInstance.setMetaworksContext(getMetaworksContext());
 
