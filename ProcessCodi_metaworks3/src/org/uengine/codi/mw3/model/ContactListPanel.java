@@ -1,5 +1,7 @@
 package org.uengine.codi.mw3.model;
 
+import java.util.ArrayList;
+
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Hidden;
@@ -91,13 +93,18 @@ public class ContactListPanel implements ContextAware {
 		}	
 		
 	Invitation invitation;
-
-
 		public Invitation getInvitation() {
 			return invitation;
 		}
-	
 		public void setInvitation(Invitation invitation) {
 			this.invitation = invitation;
+		}
+		
+	ArrayList<User> checkNodes;
+		public ArrayList<User> getCheckNodes() {
+			return checkNodes;
+		}
+		public void setCheckNodes(ArrayList<User> checkNodes) {
+			this.checkNodes = checkNodes;
 		}
 }

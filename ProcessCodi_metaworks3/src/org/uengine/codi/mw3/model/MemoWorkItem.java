@@ -83,9 +83,4 @@ public class MemoWorkItem extends WorkItem{
 
 		}
 	}
-
-	
-	
-
-	
 }

@@ -13,15 +13,6 @@ public class FollowerSelectTab {
 			this.contactListPanel = contactListPanel;
 		}
 	
-	OrganizationTree employeeTree;
-	@Face(displayName="사원")
-		public OrganizationTree getEmployeeTree() {
-			return employeeTree;
-		}
-		public void setEmployeeTree(OrganizationTree employeeTree) {
-			this.employeeTree = employeeTree;
-		}
-		
 	OrganizationTree deptTree;
 		@Face(displayName="부서")
 		public OrganizationTree getDeptTree() {
@@ -34,7 +25,6 @@ public class FollowerSelectTab {
 		
 	}
 	public FollowerSelectTab(Session session) throws Exception{
-		employeeTree = new OrganizationTree(session);
 		deptTree = new OrganizationTree(session);
 		contactListPanel = new ContactListPanel();
 	}
