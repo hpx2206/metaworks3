@@ -35,7 +35,8 @@ public class InstanceListPanel implements ContextAware{
 		searchBox.setKeyEntetSearch(true);
 		setSearchBox(searchBox);
 
-		if(session!=null){
+		// TODO:2013-01-10
+/*		if(session!=null){
 			this.session = session;
 			
 			newInstantiator = new CommentWorkItem();
@@ -50,7 +51,20 @@ public class InstanceListPanel implements ContextAware{
 			if("topic".equals(session.getLastPerspecteType()))
 				this.getMetaworksContext().setHow("topic");
 			
+		}*/
+		
+		try{
+			newInstancePanel = new NewInstancePanel();			
+			newInstancePanel.load(session);
+		}catch(Exception e){
+			e.printStackTrace();
 		}
+			
+		if("sns".equals(session.getEmployee().getPreferUX())){
+			this.getMetaworksContext().setWhere("sns");
+		}
+		if("topic".equals(session.getLastPerspecteType()))
+			this.getMetaworksContext().setHow("topic");
 		
 		instanceList = new InstanceList();
 		instanceList.init();
@@ -98,15 +112,25 @@ public class InstanceListPanel implements ContextAware{
 		public void setScheduleCalendar(ScheduleCalendar scheduleCalendar) {
 			this.scheduleCalendar = scheduleCalendar;
 		}
-		
-	WorkItem newInstantiator;
+	
+	NewInstancePanel newInstancePanel;
+		public NewInstancePanel getNewInstancePanel() {
+			return newInstancePanel;
+		}
+		public void setNewInstancePanel(NewInstancePanel newInstancePanel) {
+			this.newInstancePanel = newInstancePanel;
+		}
+	
+/*	WorkItem newInstantiator;
 		public WorkItem getNewInstantiator() {
 			return newInstantiator;
 		}
 		public void setNewInstantiator(WorkItem newInstantiator) {
 			this.newInstantiator = newInstantiator;
-		}	
+		}	*/
 	
+
+
 	WfPanel knowledge;
 		public WfPanel getKnowledge() {
 			return knowledge;

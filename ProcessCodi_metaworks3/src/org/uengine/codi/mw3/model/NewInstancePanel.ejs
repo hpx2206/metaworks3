@@ -1,9 +1,19 @@
 <%
 	if(value){
+		if(mw3.how == 'sns'){
 %>
-
-<br><br>
+	<%=fields.newInstantiator.here()%>
 	
+	<table>
+		<tr>
+			<td class="closed"><b>&nbsp;&nbsp;&nbsp;<img src="images/waveStyle/navi_icon.png"><%=mw3.localize("$OpenLevel")%>&nbsp; : &nbsp;</b></td>
+			<td><%=fields.securityLevel.here({when:'edit'})%></td>
+		</tr>
+	</table>
+<%		
+		}else{
+%>
+<br><br>	
 	<%=fields.newInstantiator.here()%>	
 	<div id="wihOrContent" style="width: 100%; text-align: center; font-size: 30px; font-weight: bold; "><%=mw3.localize("$or")%></div>
 	<%=fields.processMapPanel.here()%>
@@ -23,7 +33,7 @@
 	<table><td class="closed"><b>&nbsp;&nbsp;&nbsp;<img src="images/waveStyle/navi_icon.png"><%=mw3.localize("$OpenLevel")%>&nbsp; : &nbsp;</b></td><td>
 	<%=fields.securityLevel.here({when:'edit'})%>
 	</td></table>
-	
-<%
+<%		
+		}
 	}
 %>
