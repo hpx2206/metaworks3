@@ -4,9 +4,10 @@
 %>
 	<%=fields.newInstantiator.here()%>
 	
-	<table>
+	<table style="background:#C9E2FC;width:100%; border-top:1px solid #65C0ED">
 		<tr>
-			<td class="closed"><b>&nbsp;&nbsp;&nbsp;<img src="images/waveStyle/navi_icon.png"><%=mw3.localize("$OpenLevel")%>&nbsp; : &nbsp;</b></td>
+			<td width="15"><img src="images/waveStyle/navi_icon.png"></td>
+			<td class="closed" width="70"><b><%=mw3.localize("$OpenLevel")%>&nbsp; : &nbsp;</b></td>
 			<td><%=fields.securityLevel.here({when:'edit'})%></td>
 		</tr>
 	</table>
@@ -30,9 +31,13 @@
 	</td>
 	</table-->
 	
-	<table><td class="closed"><b>&nbsp;&nbsp;&nbsp;<img src="images/waveStyle/navi_icon.png"><%=mw3.localize("$OpenLevel")%>&nbsp; : &nbsp;</b></td><td>
-	<%=fields.securityLevel.here({when:'edit'})%>
-	</td></table>
+	<table>
+		<tr>
+			<td width="15"><img src="images/waveStyle/navi_icon.png"></td>
+			<td class="closed" width="70"><b><%=mw3.localize("$OpenLevel")%>&nbsp; : &nbsp;</b></td>
+			<td><%=fields.securityLevel.here({when:'edit'})%></td>
+		</tr>
+	</table>
 <%		
 		}
 	}
