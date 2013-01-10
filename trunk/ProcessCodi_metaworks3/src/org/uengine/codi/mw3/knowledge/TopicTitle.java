@@ -74,13 +74,13 @@ public class TopicTitle  implements ContextAware{
 			this.url = url;
 		}
 		
-	SourceCode embeddedHtml;
+	String embeddedHtml;
 		@Face(displayName="$topicEmbeddedHtml")
 		@Available(how={"html"})
-		public SourceCode getEmbeddedHtml() {
+		public String getEmbeddedHtml() {
 			return embeddedHtml;
 		}
-		public void setEmbeddedHtml(SourceCode embeddedHtml) {
+		public void setEmbeddedHtml(String embeddedHtml) {
 			this.embeddedHtml = embeddedHtml;
 		}
 	
@@ -98,14 +98,10 @@ public class TopicTitle  implements ContextAware{
 	       	String contextOnly = path.substring(0, path.substring(1).indexOf("/")+1);
 			String protocol = urlURL.getProtocol();
 	
-			String defaultUrl = protocol + "://" + host + ":" + port + contextOnly + "portlet_instanceList.html";
+			String defaultUrl = protocol + "://" + host + ":" + port + contextOnly + "portlet_instanceList.html?id=" + this.getTopicId();
 			String embeddedHtml = "<iframe id=\"portlet\" src=\"" + defaultUrl + "\" style=\"width: 500px; height: 500px; border-width:1px; border-color:red; border-style:solid;\"></iframe>";
 			
-			SourceCode sourceCode = new SourceCode();
-			sourceCode.setCode(embeddedHtml);
-			
-			this.setEmbeddedHtml(sourceCode);
-			
+			this.setEmbeddedHtml(embeddedHtml);
 		}catch(Exception e){
 			e.printStackTrace();
 		}
