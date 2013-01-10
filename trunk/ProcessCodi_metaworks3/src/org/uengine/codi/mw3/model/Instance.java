@@ -42,9 +42,6 @@ public class Instance extends Database<IInstance> implements IInstance{
 	@AutowiredFromClient
 	public Session session;
 	
-	@AutowiredFromClient
-	public MuiltiViewTab muiltiViewTab;
-	
 	public Instance(){
 		
 	}
@@ -450,19 +447,18 @@ public class Instance extends Database<IInstance> implements IInstance{
 //				followers.setInstanceId(this.getInstId().toString());
 //				followers.load();
 				this.fillFollower();
-				if( muiltiViewTab != null){
-					muiltiViewTab.setFollowers(this.getFollowers());
 					
-					InstanceMonitorPanel processInstanceMonitorPanel = new InstanceMonitorPanel();
-					processInstanceMonitorPanel.processManager = processManager;
-					processInstanceMonitorPanel.session = session;
-					processInstanceMonitorPanel.load(this.getInstId().toString());
-					
-					//, new Refresh(followers)
-					//  ,new Refresh(muiltiViewTab.getFollowers())
-					MetaworksRemoteService.getInstance().pushClientObjects(new Object[]{new Refresh(processInstanceMonitorPanel) });
-	//				MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(flowchart())});
-				}
+				InstanceMonitorPanel processInstanceMonitorPanel = new InstanceMonitorPanel();
+				processInstanceMonitorPanel.processManager = processManager;
+				processInstanceMonitorPanel.session = session;
+				processInstanceMonitorPanel.load(this.getInstId().toString());
+				
+				
+				FollowerPanel followerPanel = new FollowerPanel("instance", this.getFollowers());
+				
+				final Object[] returnObjects = new Object[]{new Refresh(processInstanceMonitorPanel), new Refresh(followerPanel)};
+				
+				MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getEmployee().getEmpCode()), returnObjects);				
 			}
 			setInstanceViewThreadPanel(panel);
 			return this;
