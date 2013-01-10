@@ -53,23 +53,25 @@ public class InstanceListPanel implements ContextAware{
 			
 		}*/
 		
-		try{
-			newInstancePanel = new NewInstancePanel();			
-			newInstancePanel.load(session);
-		}catch(Exception e){
-			e.printStackTrace();
-		}
+		if(session!=null){
+			try{
+				newInstancePanel = new NewInstancePanel();			
+				newInstancePanel.load(session);
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+				
+			if("sns".equals(session.getEmployee().getPreferUX())){
+				this.getMetaworksContext().setWhere("sns");
+			}
+			if("topic".equals(session.getLastPerspecteType()))
+				this.getMetaworksContext().setHow("topic");
 			
-		if("sns".equals(session.getEmployee().getPreferUX())){
-			this.getMetaworksContext().setWhere("sns");
+			instanceList = new InstanceList();
+			instanceList.init();
+		
+			this.setPreloaded(true);
 		}
-		if("topic".equals(session.getLastPerspecteType()))
-			this.getMetaworksContext().setHow("topic");
-		
-		instanceList = new InstanceList();
-		instanceList.init();
-		
-		this.setPreloaded(true);
 	}
 	
 	public void topicFollowersLoad() throws Exception{
