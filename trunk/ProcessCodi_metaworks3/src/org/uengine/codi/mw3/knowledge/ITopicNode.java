@@ -33,4 +33,7 @@ public interface ITopicNode extends IDAO {
 	@ServiceMethod(inContextMenu=true, callByContent=true, target="popup")
 	@Face(displayName="$Edit")
 	public ModalWindow modify() throws Exception;
+	
+	@ServiceMethod(inContextMenu=true, callByContent=true,target="popup")
+	public ModalWindow exportHtml() throws Exception;
 }
