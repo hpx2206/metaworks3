@@ -45,6 +45,14 @@ public class TopicNode extends Database<ITopicNode> implements ITopicNode {
 		public void setAuthorId(String authorId) {
 			this.authorId = authorId;
 		}
+
+	String url;
+		public String getUrl() {
+			return url;
+		}
+		public void setUrl(String url) {
+			this.url = url;
+		}
 		
 	public static ITopicNode load(Session session) throws Exception {
 		StringBuffer sb = new StringBuffer();
