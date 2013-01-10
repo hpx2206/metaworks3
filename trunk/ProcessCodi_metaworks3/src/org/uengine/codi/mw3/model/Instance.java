@@ -435,14 +435,12 @@ public class Instance extends Database<IInstance> implements IInstance{
 			setMetaworksContext(new MetaworksContext());
 		}
 		if("sns".equals(session.getEmployee().getPreferUX()) ){
-			getMetaworksContext().setHow("instanceList");
-			getMetaworksContext().setWhere("sns");
+			getMetaworksContext().setHow("sns");
 			
 			InstanceViewThreadPanel panel = new InstanceViewThreadPanel();
-			panel.getMetaworksContext().setHow("instanceList");
-			panel.getMetaworksContext().setWhere("sns");
+			panel.getMetaworksContext().setHow("sns");
 			
-			if("".equals(StringUtils.nullToEmpty(this.getInstanceViewThreadPanel().getInstanceId()))){
+			if(this.getInstanceViewThreadPanel() != null && "".equals(StringUtils.nullToEmpty(this.getInstanceViewThreadPanel().getInstanceId()))){
 				panel.session = session;
 				panel.load(this.getInstId().toString());
 				
@@ -455,7 +453,8 @@ public class Instance extends Database<IInstance> implements IInstance{
 				processInstanceMonitorPanel.session = session;
 				processInstanceMonitorPanel.load(this.getInstId().toString());
 				
-				MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(processInstanceMonitorPanel) , new Refresh(followers)});
+				//, new Refresh(followers)
+				MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(processInstanceMonitorPanel) });
 //				MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(flowchart())});
 			}
 			setInstanceViewThreadPanel(panel);

@@ -44,12 +44,18 @@ public class InstanceViewThreadPanel implements ContextAware {
 	}
 	
 	public void load(String instanceId) throws Exception {
-		setInstanceId(instanceId);
+		String how = null;
 		
+		if("sns".equals(session.getEmployee().getPreferUX()))
+			how = "sns";
+		
+		getMetaworksContext().setHow("sns");
+		setInstanceId(instanceId);
+				
 		IWorkItem result = WorkItem.find(instanceId);
 		result.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-		result.getMetaworksContext().setWhere(this.getMetaworksContext().getWhere());
-		result.getMetaworksContext().setHow(this.getMetaworksContext().getHow());
+		//result.getMetaworksContext().setWhere(this.getMetaworksContext().getWhere());
+		result.getMetaworksContext().setHow(how);
 		
 		setThread(result);
 		
@@ -57,8 +63,8 @@ public class InstanceViewThreadPanel implements ContextAware {
 		newItem.setInstId(new Long(getInstanceId()));
 		newItem.setTaskId(new Long(-1));
 		newItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
-		newItem.getMetaworksContext().setWhere(this.getMetaworksContext().getWhere());		
-		newItem.getMetaworksContext().setHow(this.getMetaworksContext().getHow());
+		//newItem.getMetaworksContext().setWhere(this.getMetaworksContext().getWhere());		
+		newItem.getMetaworksContext().setHow(how);
 		newItem.setWriter(session.getUser());
 
 		setNewItem(newItem);
