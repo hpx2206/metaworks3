@@ -716,6 +716,10 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			setContent(getTitle());
 			setTitle(getTitle().substring(0, 190) + "...");
 		}
+		System.out.println("status = "+this.getStatus());
+		if( this.getStatus() == null ){
+			setStatus("");
+		}
 		createDatabaseMe();
 		flushDatabaseMe();
 		
