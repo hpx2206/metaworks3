@@ -648,3 +648,6 @@ alter table bpm_worklist add column prtTskId int;
 alter table bpm_worklist add column GRPTASKID int(11);
 alter table bpm_worklist add column MAJORVER int(5);
 alter table bpm_worklist add column MINORVER int(5);
+
+alter table bpm_worklist alter column status set default '';
+update bpm_worklist set status = '' where status is null;
