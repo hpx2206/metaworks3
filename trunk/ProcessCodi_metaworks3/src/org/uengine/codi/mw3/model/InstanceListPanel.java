@@ -181,7 +181,7 @@ public class InstanceListPanel implements ContextAware{
 		this.scheduleCalendar = new ScheduleCalendar();
 		this.scheduleCalendar.session = session;
 		this.scheduleCalendar.load();
-		
+		this.preloaded = true;
 		if( this.getMetaworksContext() != null && "topic".equals(this.getMetaworksContext().getWhere()) ){
 			this.topicFollowersLoad();
 		}
@@ -258,6 +258,7 @@ public class InstanceListPanel implements ContextAware{
 			this.knowledge.session = session;
 			this.knowledge.load(session.getCompany().getComCode());
 		}
+		this.preloaded = true;
 	}
 	
 
