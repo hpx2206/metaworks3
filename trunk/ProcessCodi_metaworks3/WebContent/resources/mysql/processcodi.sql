@@ -651,3 +651,5 @@ alter table bpm_worklist add column MINORVER int(5);
 
 alter table bpm_worklist alter column status set default '';
 update bpm_worklist set status = '' where status is null;
+alter table bpm_worklist alter column isdeleted set default 0;
+update bpm_worklist set isdeleted = 0 where isdeleted is null;
