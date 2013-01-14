@@ -138,8 +138,6 @@ public class Instance extends Database<IInstance> implements IInstance{
 			bottomList.append( " limit " + criteria.get("startIndex") + ", "+InstanceList.PAGE_CNT);
 		}
 		
-		
-		
 		//TODO delete printing
 		System.out.println("worklist sql:" + bottomList.toString());
 		
@@ -150,7 +148,6 @@ public class Instance extends Database<IInstance> implements IInstance{
 		Set<String> keys = criteria.keySet();
 		for (Iterator iterator = keys.iterator(); iterator.hasNext();) {
 			String key = (String) iterator.next();
-			System.out.println("key : " + key + " ,value : " + criteria.get(key));
 			if(key.equals(INSTANCE_DIRECT_APPEND_SQL_KEY) || key.equals(TASK_DIRECT_APPEND_SQL_KEY)) {
 				continue;
 			} else {
