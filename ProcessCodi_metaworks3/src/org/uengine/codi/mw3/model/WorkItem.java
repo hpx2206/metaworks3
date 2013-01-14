@@ -690,9 +690,9 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			setMajorVer(1);
 			setMinorVer(0);
 			setIsDeleted(false);
-		}
+		} 
 		
-		if(getMetaworksContext().getWhen().equals("edit")){			
+		if(getMetaworksContext() != null && getMetaworksContext().getWhen()!=null && getMetaworksContext().getWhen().equals("edit")){			
 			if(getFile() != null && getFile().getMimeType() != null && getFile().getMimeType().indexOf("office") > 0){
 				IWorkItem worklist = sql("update bpm_worklist set isdeleted=1 where grptaskid=?taskId and taskid!=?currentTaskId");
 				worklist.set("taskId", getGrpTaskId());
