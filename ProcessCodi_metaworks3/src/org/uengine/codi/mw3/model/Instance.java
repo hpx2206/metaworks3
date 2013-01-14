@@ -134,7 +134,10 @@ public class Instance extends Database<IInstance> implements IInstance{
 			bottomList.append( " limit " + criteria.get("startIndex") + ", "+InstanceList.PAGE_CNT);
 		*/
 		
-		bottomList.append( " limit " + criteria.get("startIndex") + ", "+InstanceList.PAGE_CNT);
+		if(session.getMetaworksContext().getWhen() == null || !session.getMetaworksContext().getWhen().equals("todoBage")){
+			bottomList.append( " limit " + criteria.get("startIndex") + ", "+InstanceList.PAGE_CNT);
+		}
+		
 		
 		
 		//TODO delete printing
