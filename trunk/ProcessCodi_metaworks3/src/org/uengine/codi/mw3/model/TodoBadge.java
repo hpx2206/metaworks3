@@ -25,7 +25,7 @@ public class TodoBadge{
 		PersonalPerspective personalPerspective = new PersonalPerspective();
 
 		personalPerspective.session = session;
-		personalPerspective.session.getMetaworksContext().setWhen("todoBage");
+		personalPerspective.session.getMetaworksContext().setWhen("todoBadge");
 		personalPerspective.loadInbox();
 		personalPerspective.session.getMetaworksContext().setWhen(null);
 		*/
@@ -41,7 +41,7 @@ public class TodoBadge{
 		personalPerspective.loadInbox();
 */		
 		
-		session.getMetaworksContext().setWhen("todoBage");
+		session.getMetaworksContext().setWhen("todoBadge");
 		session.setLastPerspecteType("inbox");
 		session.setSearchKeyword(null);
 		
