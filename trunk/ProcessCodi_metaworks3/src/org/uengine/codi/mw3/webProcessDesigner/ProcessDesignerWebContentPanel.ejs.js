@@ -109,10 +109,13 @@ var org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel = fun
     // Shape 이 Connect 되었을 때의 이벤트 리스너
     canvas.onConnectShape(function (event, edgeElement, fromElement, toElement) {
     	// TODO 연결되는 시점에만 호출 되니 그려진 로직은 다른걸 태우던지 해야함
-    	faceHelper.addEventEdge(objectId, canvas, edgeElement);
+		faceHelper.addEventEdge(objectId, canvas, edgeElement);
     });
     canvas.onDrawShape(function (event, shapeElement) {
     	
+    });
+    canvas.onRemoveShape(function (shapeElement) {
+    	console.log($(shapeElement));
     });
     canvas.onLabelChanged(function (event, shapeElement, afterText, beforeText) {
     	// TODO 스윔레인에 text가 써졌을때, 바로 role 추가하는 로직 생성

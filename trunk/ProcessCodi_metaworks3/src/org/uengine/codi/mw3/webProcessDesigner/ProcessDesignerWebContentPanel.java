@@ -207,7 +207,7 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 		conditionPanel.setConditionId(this.getTempElementId());
 		conditionPanel.setConditionLabel(this.getTempElementName());
 		conditionPanel.load();
-		return new ModalWindow(conditionPanel , 600, 450,  "조건분기" );
+		return new ModalWindow(conditionPanel , 800, 550,  "조건분기" );
 	}
 	@ServiceMethod(target="popup", callByContent=true)
 	public Popup geomInfo() throws Exception{

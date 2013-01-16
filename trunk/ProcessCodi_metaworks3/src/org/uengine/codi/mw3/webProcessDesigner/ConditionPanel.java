@@ -13,6 +13,7 @@ import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.component.TreeNode;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.model.Session;
 
@@ -86,6 +87,14 @@ public class ConditionPanel  implements ContextAware{
 		public void setConditionString(String conditionString) {
 			this.conditionString = conditionString;
 		}
+	ConditionTree conditionTree;	
+		public ConditionTree getConditionTree() {
+			return conditionTree;
+		}
+		public void setConditionTree(ConditionTree conditionTree) {
+			this.conditionTree = conditionTree;
+		}
+		
 		
 	public ConditionPanel() throws Exception{
 			this("");
@@ -94,6 +103,17 @@ public class ConditionPanel  implements ContextAware{
 		setConditionLabel(conditionLabel);
 	}
 	public void load()  throws Exception{
+		conditionTree = new ConditionTree();
+		conditionTree.setId("tree");
+		
+		ConditionTreeNode treeNode = new ConditionTreeNode();
+		treeNode.setFolder(true);
+		treeNode.setName("만족조건");
+		treeNode.setRoot(true);
+		treeNode.setId("rootNode");
+		
+		conditionTree.setNode(treeNode);
+		
 		conditionNodes = new ArrayList<ConditionNode>();
 		if( conditionString == null ){
 			ConditionNode conditionNode = new ConditionNode();
