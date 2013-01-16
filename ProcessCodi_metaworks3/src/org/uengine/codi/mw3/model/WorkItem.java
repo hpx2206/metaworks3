@@ -718,7 +718,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		}
 		System.out.println("status = "+this.getStatus());
 		if( this.getStatus() == null ){
-			setStatus("");
+			setStatus(WorkItem.WORKITEM_STATUS_FEED);
 		}
 		createDatabaseMe();
 		flushDatabaseMe();
@@ -1002,11 +1002,11 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				return null;
 			}
 			if("comment".equals(getType())){
-				if( tempWhen != null && tempWhen.equals("edit")){
+				//if( tempWhen != null && tempWhen.equals("edit")){
 					return new Object[]{new Refresh(copyOfThis)};
-				}else{
-					return new Object[]{copyOfThis};
-				}
+				//}else{
+				//	return new Object[]{copyOfThis};
+				//}
 			}else if(OverlayCommentWorkItem.TYPE.equals(getType())){
 				WorkItem parentWorkItem = new WorkItem();
 				parentWorkItem.setTaskId(getOverlayCommentOption().getParentTaskId());
