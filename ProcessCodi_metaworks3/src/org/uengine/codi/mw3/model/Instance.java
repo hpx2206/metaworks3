@@ -28,8 +28,9 @@ import com.efsol.util.StringUtils;
 
 public class Instance extends Database<IInstance> implements IInstance{
 
-	public final static String INSTNACE_STATUS_STOPPED	= "Stopped";
-	public final static String INSTNACE_STATUS_FAILED	= "Failed";
+	public final static String INSTNACE_STATUS_STOPPED		= "Stopped";
+	public final static String INSTNACE_STATUS_FAILED		= "Failed";
+	public final static String INSTNACE_STATUS_COMPLETED	= "Completed";
 	
 	public static final String TASK_DIRECT_APPEND_SQL_KEY = "task.";
 	public static final String INSTANCE_DIRECT_APPEND_SQL_KEY = "inst.";
@@ -78,10 +79,14 @@ public class Instance extends Database<IInstance> implements IInstance{
 			
 			StringBuffer appendedInstanceSql = new StringBuffer(instanceSql);
 			
-			appendedInstanceSql.append(" AND (inst.name LIKE ?instName or wl.title LIKE ?worklistTitle) ");
+			if(	"inbox".equals(session.getLastPerspecteType())) {				
+				appendedInstanceSql.append("   AND (wl.title like ?keyword or inst.name like ?keyword)");
+				
+			}else{
+				appendedInstanceSql.append(" AND (exists (select 1 from bpm_worklist wl where inst.INSTID = wl.instid and title like ?keyword) or inst.name like ?keyword)  ");
+			}
 			
-			criteria.put("instName", "%" + searchKeyword + "%");			
-			criteria.put("worklistTitle", "%" + searchKeyword + "%");
+			criteria.put("keyword", "%" + searchKeyword + "%");			
 			
 			createSQLPhase2(session, criteria, stmt, worklistSql, appendedInstanceSql);
 
@@ -241,7 +246,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 		//}
 		
 		stmt.append(" instanceList.* FROM ")
-		.append(" (SELECT inst.*, task.startdate")
+		.append(" (SELECT distinct inst.*, task.startdate")
 		.append("  FROM bpm_procinst inst");
 				
 		stmt
@@ -269,9 +274,6 @@ public class Instance extends Database<IInstance> implements IInstance{
 			Map<String, String> criteria, StringBuffer taskSql,
 			StringBuffer instanceSql) {
 
-		taskSql.append("      ,bpm_worklist wl ");
-		instanceSql.append("   AND wl.instid=inst.instid ");		
-		
 		if(	"inbox"
 				.equals(session.getLastPerspecteType())) {
 			
@@ -287,22 +289,18 @@ public class Instance extends Database<IInstance> implements IInstance{
 			*/
 			
 			taskSql
-			.append("      INNER JOIN bpm_rolemapping role")
-			.append("		                 ON (wl.rolename=role.rolename OR wl.refrolename=role.rolename)")
-			.append("							  OR wl.endpoint=?endpoint")
-			.append("							  OR wl.status='" + WorkItem.WORKITEM_STATUS_FEED + "'");
+			.append("      , bpm_worklist wl")
+			.append("           INNER JOIN bpm_rolemapping role")
+			.append("                   ON WL.INSTID=ROLE.INSTID")
+			.append("                  AND role.endpoint=?endpoint");
 			
 			instanceSql
-			.append("   AND wl.instid=role.instid")  
-			.append("   AND (wl.status = '" + WorkItem.WORKITEM_STATUS_NEW + "'")
-			.append("     or wl.status = '" + WorkItem.WORKITEM_STATUS_CONFIRMED + "'")
-			.append("     or wl.status = '" + WorkItem.WORKITEM_STATUS_FEED + "'")
-			.append("     or wl.status = '" + WorkItem.WORKITEM_STATUS_DRAFT + "')")
+			.append("   AND wl.instid=inst.instid")			
 			.append("   AND inst.status<>'" + Instance.INSTNACE_STATUS_STOPPED + "'")
 			.append("   AND inst.status<>'" + Instance.INSTNACE_STATUS_FAILED + "'")
-			
-			.append("   AND role.endpoinT=?endpoint")
-			.append("   AND inst.duedate is not null")
+			.append("   AND inst.status<>'" + Instance.INSTNACE_STATUS_COMPLETED + "'")			
+			.append("   AND ((inst.defid is not null and wl.status in ('" + WorkItem.WORKITEM_STATUS_NEW + "','" + WorkItem.WORKITEM_STATUS_DRAFT + "','" + WorkItem.WORKITEM_STATUS_CONFIRMED + "'))")
+			.append("     OR   (inst.defid is null and inst.DUEDATE is not null and wl.status = '" + WorkItem.WORKITEM_STATUS_FEED + "'))")			
 			.append("   AND inst.isdeleted!=?instIsdelete ");
 			
 			criteria.put("instIsdelete", "1");			
@@ -1046,21 +1044,22 @@ public class Instance extends Database<IInstance> implements IInstance{
 		
 		StringBuffer sb = new StringBuffer();		
 		sb
-		.append("SELECT count(*) cnt")
-		.append("  FROM BPM_PROCINST INST,")
-		.append("       BPM_WORKLIST WL INNER JOIN BPM_ROLEMAPPING ROLE ON (WL.ROLENAME=ROLE.ROLENAME OR WL.REFROLENAME=ROLE.ROLENAME) OR WL.ENDPOINT=?endpoint")
-		.append(" WHERE (wl.status = '" + WorkItem.WORKITEM_STATUS_NEW + "'")
-		.append("     or wl.status = '" + WorkItem.WORKITEM_STATUS_CONFIRMED + "'")
-		.append("     or wl.status = '" + WorkItem.WORKITEM_STATUS_FEED + "'")
-		.append("     or wl.status = '" + WorkItem.WORKITEM_STATUS_DRAFT + "')")
-		.append("   AND WL.INSTID=INST.INSTID")
-		.append("   AND WL.INSTID=ROLE.INSTID")
-		.append("   AND INST.ISDELETED=0")
-		.append("   AND INST.STATUS<>'" + Instance.INSTNACE_STATUS_STOPPED + "'")
-		.append("   AND INST.STATUS<>'" + Instance.INSTNACE_STATUS_FAILED + "'")
-		.append("   AND initcomcd=?initcomcd")		
-		.append("   AND ROLE.ENDPOINT=?endpoint")
-		.append("   AND inst.duedate is not null");
+		.append("select count(*) cnt from (")
+		.append("SELECT distinct inst.instid")
+		.append("  FROM bpm_procinst inst,")
+		.append("       bpm_worklist wl INNER JOIN bpm_rolemapping role ON wl.instid=role.instid AND role.endpoint=?endpoint")
+		.append(" WHERE wl.instid=inst.instid")
+		.append("   AND inst.isdeleted = 0")
+		.append("   AND initcomcd = ?initcomcd")
+		.append("   AND inst.status <> '" + Instance.INSTNACE_STATUS_STOPPED + "'")
+		.append("   AND inst.status <> '" + Instance.INSTNACE_STATUS_FAILED + "'")
+		.append("   AND inst.status <> '" + Instance.INSTNACE_STATUS_COMPLETED + "'")
+				
+
+		.append("   AND ((inst.defid is not null and wl.status in ('" + WorkItem.WORKITEM_STATUS_NEW + "','" + WorkItem.WORKITEM_STATUS_DRAFT + "','" + WorkItem.WORKITEM_STATUS_CONFIRMED + "'))")
+		.append("     OR   (inst.defid is null and inst.DUEDATE is not null and wl.status = '" + WorkItem.WORKITEM_STATUS_FEED + "'))")
+		.append(") a");
+
 		
 		try{
 			IInstance instance = (IInstance) sql(Instance.class, sb.toString());
