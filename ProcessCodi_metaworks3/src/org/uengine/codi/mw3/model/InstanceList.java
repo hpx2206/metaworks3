@@ -1,5 +1,7 @@
 package org.uengine.codi.mw3.model;
 
+import org.directwebremoting.Browser;
+import org.directwebremoting.ScriptSessions;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
@@ -7,6 +9,7 @@ import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
+import org.uengine.codi.mw3.Login;
 
 @Face(
 		ejsPathMappingByContext=
@@ -88,12 +91,20 @@ public class InstanceList implements ContextAware{
 	}
 
 	public InstanceList load(Session session) throws Exception {
-		IInstance instanceContents = Instance.load(session,	getPage()-1, PAGE_CNT);
-
 		if(session.lastPerspecteType != null && session.lastPerspecteType.equals("inbox")){
-			session.setTodoListCount(instanceContents.size());
+			session.setTodoListCount(Instance.countTodo(session));
+		
+			//NEW WAY IS GOOD
+			Browser.withSession(Login.getSessionIdWithUserId(session.getEmployee().getEmpCode()), new Runnable(){
+				@Override
+				public void run() {
+					ScriptSessions.addFunctionCall("mw3.getAutowiredObject('" + TodoBadge.class.getName() + "').refresh", new Object[]{});					
+				}
+				
+			});
 		}
 		
+		IInstance instanceContents = Instance.load(session,	getPage()-1, PAGE_CNT);
 		if(getMetaworksContext()==null){
 			setMetaworksContext(new MetaworksContext());
 		}

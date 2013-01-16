@@ -16,13 +16,11 @@ import org.metaworks.annotation.Id;
 import org.metaworks.dao.DAOFactory;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.TransactionContext;
-import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitorPanel;
 import org.uengine.processmanager.ProcessManagerRemote;
-import org.uengine.webservices.worklist.DefaultWorkList;
 
 import com.efsol.util.StringUtils;
 
@@ -30,6 +28,8 @@ import com.efsol.util.StringUtils;
 
 public class Instance extends Database<IInstance> implements IInstance{
 
+	public final static String INSTNACE_STATUS_STOPPED	= "Stopped";
+	public final static String INSTNACE_STATUS_FAILED	= "Failed";
 	
 	public static final String TASK_DIRECT_APPEND_SQL_KEY = "task.";
 	public static final String INSTANCE_DIRECT_APPEND_SQL_KEY = "inst.";
@@ -74,27 +74,29 @@ public class Instance extends Database<IInstance> implements IInstance{
 
 		String searchKeyword = session.getSearchKeyword();
 		if(searchKeyword != null && !searchKeyword.isEmpty()) {
-			stmt.append("(");
+			//stmt.append("(");
 			
 			StringBuffer appendedInstanceSql = new StringBuffer(instanceSql);
 			
-			appendedInstanceSql.append(" AND inst.name LIKE ?instName ");
+			appendedInstanceSql.append(" AND (inst.name LIKE ?instName or wl.title LIKE ?worklistTitle) ");
+			
 			criteria.put("instName", "%" + searchKeyword + "%");			
+			criteria.put("worklistTitle", "%" + searchKeyword + "%");
 			
 			createSQLPhase2(session, criteria, stmt, worklistSql, appendedInstanceSql);
 
 
-			stmt.append(") union (");
+			//stmt.append(") union (");
 
 
-			StringBuffer appendedWorkListSql = new StringBuffer(worklistSql);
+			//StringBuffer appendedWorkListSql = new StringBuffer(worklistSql);
 			
-			appendedWorkListSql.append(" AND worklist.title LIKE ?worklistTitle ");
-			criteria.put("worklistTitle", "%" + searchKeyword + "%");			
 			
-			createSQLPhase2(session, criteria, stmt, appendedWorkListSql, instanceSql);
+			//criteria.put("worklistTitle", "%" + searchKeyword + "%");			
 			
-			stmt.append(")");
+			//createSQLPhase2(session, criteria, stmt, appendedWorkListSql, instanceSql);
+			
+			//stmt.append(")");
 
 		}else{
 
@@ -143,6 +145,8 @@ public class Instance extends Database<IInstance> implements IInstance{
 		
 		IInstance instanceContents = (IInstance) sql(Instance.class, bottomList.toString());
 		instanceContents.setInitComCd(session.getEmployee().getGlobalCom());
+		instanceContents.set("endpoint", session.getEmployee().getEmpCode());
+		instanceContents.set("partcode", session.getEmployee().getPartCode());
 
 		// TODO add criteria
 		Set<String> keys = criteria.keySet();
@@ -218,35 +222,45 @@ public class Instance extends Database<IInstance> implements IInstance{
 		//if(oracle)
 		//   stmt.append(" ROWNUM rindex,");
 		
-		stmt.append(" instanceList.* from ");
-		stmt.append(" (select inst.*, task.startdate from ");
-		stmt.append(" BPM_PROCINST inst, ");
 		
-		if("inbox".equals(session.getLastPerspecteType())) {
+/*		if("inbox".equals(session.getLastPerspecteType())) {
 //			2012-10-25 내가할일 및 참여중 쿼리 변경
 			stmt.append(" (select max(worklist.startdate) startdate, worklist.rootinstid ");
 			stmt.append("from bpm_worklist worklist INNER JOIN bpm_rolemapping rolemapping ");
 			stmt.append("ON (worklist.rolename = rolemapping.rolename OR worklist.refrolename=rolemapping.rolename) ");
-			stmt.append("OR worklist.ENDPOINT=?rmEndpoint ");
+			stmt.append("OR worklist.ENDPOINT=?endpoint ");
 			stmt.append("where worklist.rootinstid=rolemapping.rootinstid and (worklist.status != '"+ DefaultWorkList.WORKITEM_STATUS_RESERVED +"') ");
-		}else{
-			stmt.append(" (select max(worklist.startdate) startdate, worklist.rootinstid ");
+		}else{*/
+/*			stmt.append(" (select max(worklist.startdate) startdate, worklist.rootinstid ");
 			stmt.append("from bpm_worklist worklist, bpm_rolemapping rolemapping ");
 			stmt.append("where worklist.rootinstid=rolemapping.rootinstid and (worklist.status != '"+ DefaultWorkList.WORKITEM_STATUS_RESERVED +"') ");
-		}
 		if(taskSql!=null) {
 			stmt.append(taskSql);
-		}
-		stmt.append("group by worklist.rootinstid) task ");
+		}			
+*/			
+		//}
+		
+		stmt.append(" instanceList.* FROM ")
+		.append(" (SELECT inst.*, task.startdate")
+		.append("  FROM bpm_procinst inst");
+				
+		stmt
+		.append("      ,(SELECT max(startdate) startdate, worklist.rootinstid")
+		.append("   	   FROM bpm_worklist worklist")
+		.append("  		  WHERE worklist.status != 'RESERVED'")
+		.append("  		  GROUP BY worklist.rootinstid) task ");
+		
+		stmt.append(taskSql.toString());
 		
 		// add instance criteria
-		stmt.append("where inst.instid=task.rootinstid ");
-		stmt.append("and initcomcd=?initComCd ");
+		stmt.append(" WHERE initcomcd=?initComCd");
+		stmt.append("   AND inst.instid=task.rootinstid ");		
+		
 		if(instanceSql!=null) {
 			stmt.append(instanceSql);
 		}
 		
-		stmt.append("order by task.startdate desc) instanceList ");
+		stmt.append(" ORDER BY task.startdate desc) instanceList ");
 	}
 	
 
@@ -255,22 +269,43 @@ public class Instance extends Database<IInstance> implements IInstance{
 			Map<String, String> criteria, StringBuffer taskSql,
 			StringBuffer instanceSql) {
 
+		taskSql.append("      ,bpm_worklist wl ");
+		instanceSql.append("   AND wl.instid=inst.instid ");		
+		
 		if(	"inbox"
 				.equals(session.getLastPerspecteType())) {
 			
+			/*
 			taskSql.append("and (worklist.status=?taskStatus1 or worklist.status=?taskStatus2) ");
 			criteria.put("taskStatus1", "NEW");
 			criteria.put("taskStatus2", "CONFIRMED");
-			taskSql.append("and rolemapping.endpoint=?taskEndpoint ");
-			criteria.put("taskEndpoint", session.getEmployee().getEmpCode());
-			taskSql.append("or(worklist.duedate is not null and worklist.defid is null)");
-			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
-			criteria.put("instIsdelete", "1");
+			taskSql.append("and rolemapping.endpoint=?endpoint ");
+			taskSql.append("or(worklist.duedate is not null and worklist.defid is null)");			
 			if(session.getMetaworksContext().getWhen() != null && session.getMetaworksContext().getWhen().equals("todoBage")){
 				instanceSql.append("and inst.status !='Completed' ");
 			}
+			*/
+			
+			taskSql
+			.append("      INNER JOIN bpm_rolemapping role")
+			.append("		                 ON (wl.rolename=role.rolename OR wl.refrolename=role.rolename)")
+			.append("							  OR wl.endpoint=?endpoint");
+			
+			instanceSql
+			.append("   AND wl.instid=role.instid")  
+			.append("   AND (wl.status = '" + WorkItem.WORKITEM_STATUS_NEW + "'")
+			.append("     or wl.status = '" + WorkItem.WORKITEM_STATUS_CONFIRMED + "'")
+			.append("     or wl.status = '" + WorkItem.WORKITEM_STATUS_FEED + "'")
+			.append("     or wl.status = '" + WorkItem.WORKITEM_STATUS_DRAFT + "')")
+			.append("   AND inst.status<>'" + Instance.INSTNACE_STATUS_STOPPED + "'")
+			.append("   AND inst.status<>'" + Instance.INSTNACE_STATUS_FAILED + "'")
+			
+			.append("   AND role.endpoinT=?endpoint")
+			.append("   AND inst.duedate is not null")
+			.append("   AND inst.isdeleted!=?instIsdelete ");
+			
+			criteria.put("instIsdelete", "1");			
 		
-			criteria.put("rmEndpoint", session.getEmployee().getEmpCode());
 		}else if("all"
 				.equals(session.getLastPerspecteType())) {
 			
@@ -288,11 +323,10 @@ public class Instance extends Database<IInstance> implements IInstance{
 			.append("			select 1 from bpm_rolemapping rm	 ")
 			.append("			where inst.instid = rm.rootinstid	 ")
 			.append("			and inst.secuopt = 1	 ")
-			.append("			and ( 	( assigntype = 0 and rm.endpoint = ?rmEndpoint ) 	 ")
-			.append("					or ( assigntype = 2 and rm.endpoint = ?rmPartCode ) ) ")
+			.append("			and ( 	( assigntype = 0 and rm.endpoint = ?endpoint ) 	 ")
+			.append("					or ( assigntype = 2 and rm.endpoint = ?partCode ) ) ")
 			.append("			)	 ");
-			criteria.put("rmEndpoint", session.getEmployee().getEmpCode());
-			criteria.put("rmPartCode", session.getEmployee().getPartCode());
+
 		}else if("running"
 				.equals(session.getLastPerspecteType())) {
 			
@@ -302,8 +336,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 			criteria.put("instStatus", "Stopped");
 			// secureopt
 			instanceSql
-					.append("and (exists (select rootinstid from BPM_ROLEMAPPING rm where rm.endpoint=?rmEndpoint and inst.rootinstid=rm.rootinstid)) ");
-			criteria.put("rmEndpoint", session.getEmployee().getEmpCode());
+					.append("and (exists (select rootinstid from BPM_ROLEMAPPING rm where rm.endpoint=?endpoint and inst.rootinstid=rm.rootinstid)) ");
 		}else if("request"
 					.equals(session.getLastPerspecteType())) {
 			
@@ -330,11 +363,9 @@ public class Instance extends Database<IInstance> implements IInstance{
 			.append("			select 1 from bpm_rolemapping rm	 ")
 			.append("			where inst.instid = rm.rootinstid	 ")
 			.append("			and inst.secuopt = 1	 ")
-			.append("			and ( 	( assigntype = 0 and rm.endpoint = ?rmEndpoint ) 	 ")
-			.append("					or ( assigntype = 2 and rm.endpoint = ?rmPartCode ) ) ")
+			.append("			and ( 	( assigntype = 0 and rm.endpoint = ?endpoint ) 	 ")
+			.append("					or ( assigntype = 2 and rm.endpoint = ?partcode ) ) ")
 			.append("			)	 ");
-			criteria.put("rmEndpoint", session.getEmployee().getEmpCode());
-			criteria.put("rmPartCode", session.getEmployee().getPartCode());
 
 		}else if("organization"
 					.equals(session.getLastPerspecteType())) {
@@ -354,20 +385,18 @@ public class Instance extends Database<IInstance> implements IInstance{
 			.append("			select 1 from bpm_rolemapping rm	 ")
 			.append("			where inst.instid = rm.rootinstid	 ")
 			.append("			and inst.secuopt = 1	 ")
-			.append("			and ( 	( assigntype = 0 and rm.endpoint = ?rmEndpoint ) 	 ")
-			.append("					or ( assigntype = 2 and rm.endpoint = ?rmPartCode ) ) ")
+			.append("			and ( 	( assigntype = 0 and rm.endpoint = ?endpoint ) 	 ")
+			.append("					or ( assigntype = 2 and rm.endpoint = ?partcode ) ) ")
 			.append("			)	 ");
-			criteria.put("rmEndpoint", session.getEmployee().getEmpCode());
-			criteria.put("rmPartCode", session.getEmployee().getPartCode());
 			
 		}else if("organization.group"
 				.equals(session.getLastPerspecteType())) {
 			
-			String partCode = session.getEmployee().getPartCode();
+			taskSql.append("and rolemapping.endpoint in (select empcode from emptable where partcode=?lastSelectedItem) ");
 			
-			taskSql.append("and rolemapping.endpoint in (select empcode from emptable where partcode=?taskEndpoint) ");
-			criteria.put("taskEndpoint", session.lastSelectedItem);
 			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
+			
+			criteria.put("lastSelectedItem", session.lastSelectedItem);			
 			criteria.put("instIsdelete", "1");
 			
 			// secureopt
@@ -380,11 +409,9 @@ public class Instance extends Database<IInstance> implements IInstance{
 			.append("			select 1 from bpm_rolemapping rm	 ")
 			.append("			where inst.instid = rm.rootinstid	 ")
 			.append("			and inst.secuopt = 1	 ")
-			.append("			and ( 	( assigntype = 0 and rm.endpoint = ?rmEndpoint ) 	 ")
-			.append("					or ( assigntype = 2 and rm.endpoint = ?rmPartCode ) ) ")
+			.append("			and ( 	( assigntype = 0 and rm.endpoint = ?endpoint ) 	 ")
+			.append("					or ( assigntype = 2 and rm.endpoint = ?partcode ) ) ")
 			.append("			)	 ");
-			criteria.put("rmEndpoint", session.getEmployee().getEmpCode());
-			criteria.put("rmPartCode", session.getEmployee().getPartCode());
 
 		}else if("process"
 				.equals(session.getLastPerspecteType())) {
@@ -404,11 +431,9 @@ public class Instance extends Database<IInstance> implements IInstance{
 			.append("			select 1 from bpm_rolemapping rm	 ")
 			.append("			where inst.instid = rm.rootinstid	 ")
 			.append("			and inst.secuopt = 1	 ")
-			.append("			and ( 	( assigntype = 0 and rm.endpoint = ?rmEndpoint ) 	 ")
-			.append("					or ( assigntype = 2 and rm.endpoint = ?rmPartCode ) ) ")
+			.append("			and ( 	( assigntype = 0 and rm.endpoint = ?endpoint ) 	 ")
+			.append("					or ( assigntype = 2 and rm.endpoint = ?partcode ) ) ")
 			.append("			)	 ");
-			criteria.put("rmEndpoint", session.getEmployee().getEmpCode());
-			criteria.put("rmPartCode", session.getEmployee().getPartCode());
 
 		}else if("strategy"
 				.equals(session.getLastPerspecteType())) {
@@ -428,11 +453,9 @@ public class Instance extends Database<IInstance> implements IInstance{
 			.append("			select 1 from bpm_rolemapping rm	 ")
 			.append("			where inst.instid = rm.rootinstid	 ")
 			.append("			and inst.secuopt = 1	 ")
-			.append("			and ( 	( assigntype = 0 and rm.endpoint = ?rmEndpoint ) 	 ")
-			.append("					or ( assigntype = 2 and rm.endpoint = ?rmPartCode ) ) ")
+			.append("			and ( 	( assigntype = 0 and rm.endpoint = ?endpoint ) 	 ")
+			.append("					or ( assigntype = 2 and rm.endpoint = ?partcode ) ) ")
 			.append("			)	 ");
-			criteria.put("rmEndpoint", session.getEmployee().getEmpCode());
-			criteria.put("rmPartCode", session.getEmployee().getPartCode());
 
 		}else if("taskExt1"
 				.equals(session.getLastPerspecteType())) {
@@ -454,11 +477,9 @@ public class Instance extends Database<IInstance> implements IInstance{
 			.append("			select 1 from bpm_rolemapping rm	 ")
 			.append("			where inst.instid = rm.rootinstid	 ")
 			.append("			and inst.secuopt = 1	 ")
-			.append("			and ( 	( assigntype = 0 and rm.endpoint = ?rmEndpoint ) 	 ")
-			.append("					or ( assigntype = 2 and rm.endpoint = ?rmPartCode ) ) ")
+			.append("			and ( 	( assigntype = 0 and rm.endpoint = ?endpoint ) 	 ")
+			.append("					or ( assigntype = 2 and rm.endpoint = ?partcode ) ) ")
 			.append("			)	 ");
-			criteria.put("rmEndpoint", session.getEmployee().getEmpCode());
-			criteria.put("rmPartCode", session.getEmployee().getPartCode());
 
 		}else if("status".equals(session.getLastPerspecteType())) {
 			instanceSql.append("and inst.status=?status ");
@@ -476,10 +497,8 @@ public class Instance extends Database<IInstance> implements IInstance{
 			.append("			select 1 from bpm_rolemapping rm	 ")
 			.append("			where inst.instid = rm.rootinstid	 ")
 			.append("			and inst.secuopt = 1	 ")
-			.append("			and ( 	( assigntype = 0 and rm.endpoint = ?rmEndpoint ) 	 ")
-			.append("					or ( assigntype = 2 and rm.endpoint = ?rmPartCode ) ) ");
-			criteria.put("rmEndpoint", session.getEmployee().getEmpCode());
-			criteria.put("rmPartCode", session.getEmployee().getPartCode());
+			.append("			and ( 	( assigntype = 0 and rm.endpoint = ?endpoint ) 	 ")
+			.append("					or ( assigntype = 2 and rm.endpoint = ?partcode ) ) ");
 
 		}else if("allICanSee".equals(session.getLastPerspecteType())) {
 			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
@@ -496,23 +515,21 @@ public class Instance extends Database<IInstance> implements IInstance{
 			.append("			select 1 from bpm_rolemapping rm	 ")
 			.append("			where inst.instid = rm.rootinstid	 ")
 			.append("			and inst.secuopt = 1	 ")
-			.append("			and ( 	( assigntype = 0 and rm.endpoint = ?rmEndpoint ) 	 ")
-			.append("					or ( assigntype = 2 and rm.endpoint = ?rmPartCode ) ) ")
+			.append("			and ( 	( assigntype = 0 and rm.endpoint = ?endpoint ) 	 ")
+			.append("					or ( assigntype = 2 and rm.endpoint = ?partcode ) ) ")
 			.append("			union all 	 ")
 			.append("			select 1 from bpm_topicmapping tm	 ")
 			.append("			where inst.topicId = tm.topicId	 ")
 			.append("			and inst.secuopt = 3	 ")
-			.append("			and ( 	( assigntype = 0 and tm.userid = ?rmEndpoint ) 	 ")
-			.append("					or ( assigntype = 2 and tm.userid = ?rmPartCode ) ) ")
+			.append("			and ( 	( assigntype = 0 and tm.userid = ?endpoint ) 	 ")
+			.append("					or ( assigntype = 2 and tm.userid = ?partcode ) ) ")
 			.append("			)	 ");
-//			.append("and (inst.secuopt='0' OR (inst.secuopt=1 and ( exists (select rootinstid from BPM_ROLEMAPPING rm where rm.endpoint=?rmEndpoint and inst.rootinstid=rm.rootinstid) ")
-//			.append("																or ?rmEndpoint in ( select empcode from emptable where partcode in (  ")
+//			.append("and (inst.secuopt='0' OR (inst.secuopt=1 and ( exists (select rootinstid from BPM_ROLEMAPPING rm where rm.endpoint=?endpoint and inst.rootinstid=rm.rootinstid) ")
+//			.append("																or ?endpoint in ( select empcode from emptable where partcode in (  ")
 //			.append("																				select endpoint from bpm_rolemapping where assigntype = 2 and instid = inst.rootinstid))))  ")
-//			.append("		OR (inst.secuopt=3 and ( exists (select topicId from BPM_TOPICMAPPING tm where tm.userId=?rmEndpoint and inst.topicId=tm.topicId) ")
-//			.append(" 																	 or ?rmEndpoint in ( select empcode from emptable where partcode in (  ")
+//			.append("		OR (inst.secuopt=3 and ( exists (select topicId from BPM_TOPICMAPPING tm where tm.userId=?endpoint and inst.topicId=tm.topicId) ")
+//			.append(" 																	 or ?endpoint in ( select empcode from emptable where partcode in (  ")
 //			.append(" 																	 						select userId from BPM_TOPICMAPPING where assigntype = 2 and topicId = inst.topicId )))))  ");
-			criteria.put("rmEndpoint", session.getEmployee().getEmpCode());
-			criteria.put("rmPartCode", session.getEmployee().getPartCode());
 		}else if("topic".equals(session.getLastPerspecteType())) {
 			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
 			criteria.put("instIsdelete", "1");
@@ -530,17 +547,15 @@ public class Instance extends Database<IInstance> implements IInstance{
 			.append("			select 1 from bpm_rolemapping rm	 ")
 			.append("			where inst.instid = rm.rootinstid	 ")
 			.append("			and inst.secuopt = 1	 ")
-			.append("			and ( 	( assigntype = 0 and rm.endpoint = ?rmEndpoint ) 	 ")
-			.append("					or ( assigntype = 2 and rm.endpoint = ?rmPartCode ) ) ")
+			.append("			and ( 	( assigntype = 0 and rm.endpoint = ?endpoint ) 	 ")
+			.append("					or ( assigntype = 2 and rm.endpoint = ?partcode ) ) ")
 			.append("			union all 	 ")
 			.append("			select 1 from bpm_topicmapping tm	 ")
 			.append("			where inst.topicId = tm.topicId	 ")
 			.append("			and inst.secuopt = 3	 ")
-			.append("			and ( 	( assigntype = 0 and tm.userid = ?rmEndpoint ) 	 ")
-			.append("					or ( assigntype = 2 and tm.userid = ?rmPartCode ) ) ")
+			.append("			and ( 	( assigntype = 0 and tm.userid = ?endpoint ) 	 ")
+			.append("					or ( assigntype = 2 and tm.userid = ?partcode ) ) ")
 			.append("			)	 ");
-			criteria.put("rmEndpoint", session.getEmployee().getEmpCode());
-			criteria.put("rmPartCode", session.getEmployee().getPartCode());
 
 		}else{
 			// personal inbox
@@ -744,17 +759,15 @@ public class Instance extends Database<IInstance> implements IInstance{
 			this.status = status;
 		}
 
-	@Override
-	public String getInfo() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setInfo(String info) {
-		// TODO Auto-generated method stub
-		
-	}
+	String info;
+		@Override
+		public String getInfo() {
+			return this.info;
+		}
+		@Override
+		public void setInfo(String info) {
+			this.info = info;
+		}
 
 	String name;
 		@Override
@@ -767,161 +780,136 @@ public class Instance extends Database<IInstance> implements IInstance{
 			
 		}
 
-	@Override
-	public boolean getIsDeleted() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+	boolean isDeleted;
+		@Override
+		public boolean getIsDeleted() {
+			return this.isDeleted;
+		}
+		@Override
+		public void setIsDeleted(boolean isDeleted) {
+			this.isDeleted = isDeleted;
+		}
 
-	@Override
-	public void setIsDeleted(boolean isDeleted) {
-		// TODO Auto-generated method stub
-		
-	}
+	boolean isAdhoc;
+		@Override
+		public boolean getIsAdhoc() {
+			return this.isAdhoc;
+		}
+		@Override
+		public void setIsAdhoc(boolean isAdhoc) {
+			this.isAdhoc = isAdhoc;
+		}
 
-	@Override
-	public boolean getIsAdhoc() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+	boolean isSubProcess;
+		@Override
+		public boolean getIsSubProcess() {
+			return this.isSubProcess;
+		}
+		@Override
+		public void setIsSubProcess(boolean isSubProcess) {
+			this.isSubProcess = isSubProcess;
+		}
 
-	@Override
-	public void setIsAdhoc(boolean isAdhoc) {
-		// TODO Auto-generated method stub
-		
-	}
+	Long rootInstId;
+		@Override
+		public Long getRootInstId() {
+			return this.rootInstId;
+		}
+		@Override
+		public void setRootInstId(Long rootInstId) {
+			this.rootInstId = rootInstId;
+		}
 
-	@Override
-	public boolean getIsSubProcess() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+	Long mainInstId;
+		@Override
+		public Long getMainInstId() {
+			return this.mainInstId;
+		}
+		@Override
+		public void setMainInstId(Long mainInstId) {
+			this.mainInstId = mainInstId;
+		}
 
-	@Override
-	public void setIsSubProcess(boolean isSubProcess) {
-		// TODO Auto-generated method stub
-		
-	}
+	String mainActTrcTag;
+		@Override
+		public String getMainActTrcTag() {
+			return this.mainActTrcTag;
+		}
+		@Override
+		public void setMainActTrcTag(String mainActTrcTag) {
+			this.mainActTrcTag = mainActTrcTag;
+		}
 
-	@Override
-	public Long getRootInstId() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	String mainExecScope;
+		@Override
+		public String getMainExecScope() {
+			return this.mainExecScope;
+		}
+		@Override
+		public void setMainExecScope(String mainExecScope) {
+			this.mainExecScope = mainExecScope;
+			
+		}
 
-	@Override
-	public void setRootInstId(Long instanceId) {
-		// TODO Auto-generated method stub
-		
-	}
+	Long mainDefVerId;
+		@Override
+		public Long getMainDefVerId() {
+			return this.mainDefVerId;
+		}
+		@Override
+		public void setMainDefVerId(Long mainDefVerId) {
+			this.mainDefVerId = mainDefVerId;
+		}
 
-	@Override
-	public Long getMainInstId() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	boolean isArchive;
+		@Override
+		public boolean getIsArchive() {
+			return this.isArchive;
+		}
+		@Override
+		public void setIsArchive(boolean isArchive) {
+			this.isArchive = isArchive;
+		}
 
-	@Override
-	public void setMainInstId(Long instanceId) {
-		// TODO Auto-generated method stub
-		
-	}
+	String absTrcPath;
+		@Override
+		public String getAbsTrcPath() {
+			return this.absTrcPath;
+		}
+		@Override
+		public void setAbsTrcPath(String absTrcPath) {
+			this.absTrcPath = absTrcPath;
+		}
 
-	@Override
-	public String getMainActTrcTag() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	boolean dontReturn;	
+		@Override
+		public boolean getDontReturn() {
+			return this.dontReturn;
+		}
+		@Override
+		public void setDontReturn(boolean dontReturn) {
+			this.dontReturn = dontReturn;
+		}
 
-	@Override
-	public void setMainActTrcTag(String value) {
-		// TODO Auto-generated method stub
-		
-	}
+	Number strategyId;
+		@Override
+		public Number getStrategyId() {
+			return this.strategyId;
+		}
+		@Override
+		public void setStrategyId(Number strategyId) {
+			this.strategyId = strategyId;
+		}
 
-	@Override
-	public String getMainExecScope() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setMainExecScope(String value) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public Long getMainDefVerId() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setMainDefVerId(Long defVerId) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public boolean getIsArchive() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public void setIsArchive(boolean isArchive) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public String getAbsTrcPath() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setAbsTrcPath(String value) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public boolean getDontReturn() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public void setDontReturn(boolean value) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public Number getStrategyId() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setStrategyId(Number strategyId) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public String getInitEp() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void setInitEp(String initEp) {
-		// TODO Auto-generated method stub
-		
-	}
+	String initEp;
+		@Override
+		public String getInitEp() {
+			return this.initEp;
+		}
+		@Override
+		public void setInitEp(String initEp) {
+			this.initEp = initEp;
+		}
 	
 	IUser currentUser;
 		public IUser getCurrentUser() {
@@ -939,12 +927,11 @@ public class Instance extends Database<IInstance> implements IInstance{
 			this.initiator = initiator;
 		}
 
-		String secuopt;
+	String secuopt;
 		@Override
 		public String getSecuopt() {
 			return secuopt;
 		}
-
 		@Override
 		public void setSecuopt(String secuopt) {
 			this.secuopt = secuopt;
@@ -975,6 +962,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 		public void setInitCmpl(boolean initCmpl) {
 			this.initCmpl = initCmpl;
 		}
+		
 	String progress;
 		public String getProgress() {
 			return progress;
@@ -990,6 +978,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 		public void setInstanceViewThreadPanel(InstanceViewThreadPanel instanceViewThreadPanel) {
 			this.instanceViewThreadPanel = instanceViewThreadPanel;
 		}		
+		
 	InstanceTooltip instanceTooltip;
 		public InstanceTooltip getInstanceTooltip() {
 			return instanceTooltip;
@@ -997,6 +986,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 		public void setInstanceTooltip(InstanceTooltip instanceTooltip) {
 			this.instanceTooltip = instanceTooltip;
 		}
+		
 	public InstanceDrag instanceDrag;
 		public InstanceDrag getInstanceDrag() {
 			return instanceDrag;
@@ -1047,5 +1037,43 @@ public class Instance extends Database<IInstance> implements IInstance{
 		}catch(Exception e){
 			e.printStackTrace();
 		}
+	}
+	
+	static public int countTodo(Session session) {
+		
+		int result = 0;
+		
+		StringBuffer sb = new StringBuffer();		
+		sb
+		.append("SELECT count(*) cnt")
+		.append("  FROM BPM_PROCINST INST,")
+		.append("       BPM_WORKLIST WL INNER JOIN BPM_ROLEMAPPING ROLE ON (WL.ROLENAME=ROLE.ROLENAME OR WL.REFROLENAME=ROLE.ROLENAME) OR WL.ENDPOINT=?endpoint")
+		.append(" WHERE (wl.status = '" + WorkItem.WORKITEM_STATUS_NEW + "'")
+		.append("     or wl.status = '" + WorkItem.WORKITEM_STATUS_CONFIRMED + "'")
+		.append("     or wl.status = '" + WorkItem.WORKITEM_STATUS_FEED + "'")
+		.append("     or wl.status = '" + WorkItem.WORKITEM_STATUS_DRAFT + "')")
+		.append("   AND WL.INSTID=INST.INSTID")
+		.append("   AND WL.INSTID=ROLE.INSTID")
+		.append("   AND INST.ISDELETED=0")
+		.append("   AND INST.STATUS<>'" + Instance.INSTNACE_STATUS_STOPPED + "'")
+		.append("   AND INST.STATUS<>'" + Instance.INSTNACE_STATUS_FAILED + "'")
+		.append("   AND initcomcd=?initcomcd")		
+		.append("   AND ROLE.ENDPOINT=?endpoint")
+		.append("   AND inst.duedate is not null");
+		
+		try{
+			IInstance instance = (IInstance) sql(Instance.class, sb.toString());
+			instance.set("endpoint", session.getEmployee().getEmpCode());
+			instance.setInitComCd(session.getEmployee().getGlobalCom());
+			instance.select();
+			
+			if(instance.next())
+				result = instance.getInt("cnt");
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return result;
 	}
 }
