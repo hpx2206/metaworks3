@@ -1605,7 +1605,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				var divId =  "#" + this._getObjectDivId(objectId);
 				var infoDivId =  "#" + this._getInfoDivId(objectId);
 				
-				if(!mw3.objects[objectId]['__cached']){
+				if(mw3.objects[objectId] && !mw3.objects[objectId]['__cached']){
 					this.newBeanProperty(objectId);
 					
 					// 2012-04-04 cjw destroy 호출 후 removeObject

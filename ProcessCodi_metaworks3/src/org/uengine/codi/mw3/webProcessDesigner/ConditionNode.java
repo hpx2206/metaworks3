@@ -1,18 +1,21 @@
 package org.uengine.codi.mw3.webProcessDesigner;
 
 import java.util.ArrayList;
+
 import org.metaworks.ContextAware;
 import org.metaworks.FieldDescriptor;
 import org.metaworks.MetaworksContext;
 import org.metaworks.WebFieldDescriptor;
 import org.metaworks.WebObjectType;
 import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.SelectBox;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.uengine.codi.mw3.model.Session;
 
+//@Face(ejsPath="dwr/metaworks/genericfaces/GridFace.ejs")
 public class ConditionNode  implements Cloneable, ContextAware{
 	
 	MetaworksContext metaworksContext;
