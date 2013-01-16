@@ -289,7 +289,8 @@ public class Instance extends Database<IInstance> implements IInstance{
 			taskSql
 			.append("      INNER JOIN bpm_rolemapping role")
 			.append("		                 ON (wl.rolename=role.rolename OR wl.refrolename=role.rolename)")
-			.append("							  OR wl.endpoint=?endpoint");
+			.append("							  OR wl.endpoint=?endpoint")
+			.append("							  OR wl.status='" + WorkItem.WORKITEM_STATUS_FEED + "'");
 			
 			instanceSql
 			.append("   AND wl.instid=role.instid")  
