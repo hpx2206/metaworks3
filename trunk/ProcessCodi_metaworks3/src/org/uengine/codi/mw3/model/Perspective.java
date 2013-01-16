@@ -117,8 +117,7 @@ public class Perspective {
 		else
 			returnObject = new Object[]{new Refresh(searchBox)};
 		
-		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getEmployee().getEmpCode()), 
-				returnObject);
+		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getEmployee().getEmpCode()), returnObject);
 		
 		return new Object[] {session, instListPanel};
 	}
