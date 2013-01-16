@@ -1,7 +1,6 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.ServiceMethodContext;
-import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.NonLoadable;
@@ -54,6 +53,8 @@ public interface IRole extends IDAO {
 	@ServiceMethod(callByContent=true, except={"employeeList"}, target=ServiceMethodContext.TARGET_POPUP)
 	public Object[] saveMe() throws Exception;
 	
+	@ServiceMethod(callByContent=true, mouseBinding="drop", target=ServiceMethodContext.TARGET_APPEND)
+	public Object[] drop() throws Exception;
 	
 	
 	// function

@@ -215,4 +215,49 @@ public class Role extends Database<IRole> implements IRole {
 		
 		return role;		
 	}
+	
+	@Override
+	public Object[] drop() throws Exception {
+		Object clipboard = session.getClipboard();
+		
+		if(clipboard instanceof IUser){
+			IUser user = (IUser) clipboard;
+			
+			IRoleUser alreadyExistChecker = (IRoleUser) Database.sql(IRoleUser.class, "select * from roleUserTable where empcode=?empcode and rolecode=?rolecode");
+			alreadyExistChecker.setEmpCode(user.getUserId());
+			alreadyExistChecker.setRoleCode(this.getRoleCode());
+			alreadyExistChecker.select();
+			if(alreadyExistChecker.next()){
+				throw new Exception("The user is already existing");
+			}
+			
+			try{
+				RoleUser roleUser = new RoleUser();
+				roleUser.setEmpCode(user.getUserId());
+				roleUser.setRoleCode(this.getRoleCode());
+				roleUser.createDatabaseMe();
+				roleUser.flushDatabaseMe();
+			}catch (Exception e) {
+				System.out.println(e);
+			}
+
+			Role findRole = null;
+			try{
+				findRole = new Role();
+				findRole.setRoleCode(this.getRoleCode());
+				findRole.copyFrom(findRole.databaseMe());
+				findRole.setMetaworksContext(this.getMetaworksContext());
+				findRole.drillDown();
+			}catch(Exception e){}
+						
+			if(findRole != null){
+				return new Object[]{new Refresh(findRole)};
+			}else{
+				return null;
+			}
+		}
+		session.setClipboard(null);
+		return null;
+	}
+	
 }
