@@ -83,7 +83,7 @@ public class MainSNS {
 		panel.load(session);				
 		ContentWindow wfWindow = new ContentWindow(panel);
 		
-		SNSTopPanel topPanel = new SNSTopPanel(session);
+		ProcessTopPanel topPanel = new ProcessTopPanel(session);
 		if("phone".equals(preferMob) || "tw".equals(preferUX)){
 			session.setUx("phone");
 			

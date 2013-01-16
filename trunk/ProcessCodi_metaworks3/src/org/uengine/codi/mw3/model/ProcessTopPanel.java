@@ -24,6 +24,13 @@ public class ProcessTopPanel {
 		loginUser.setUserId(session.getUser().getUserId());
 		loginUser.setName(session.getUser().getName());
 		setLoginUser(loginUser);
+		
+		if( "sns".equals(session.getEmployee().getPreferUX())){
+			SearchBox searchBox = new SearchBox();
+			searchBox.setKeyUpSearch(true);
+			searchBox.setKeyEntetSearch(true);
+			setSearchBox(searchBox);
+		}
 	}
 	
 	WindowPanel windowPanel;
@@ -75,6 +82,12 @@ public class ProcessTopPanel {
 		public void setLoginUser(IUser loginUser) {
 			this.loginUser = loginUser;
 		}
-		
+	SearchBox searchBox;		
+		public SearchBox getSearchBox() {
+			return searchBox;
+		}
+		public void setSearchBox(SearchBox searchBox) {
+			this.searchBox = searchBox;
+		}
 
 }

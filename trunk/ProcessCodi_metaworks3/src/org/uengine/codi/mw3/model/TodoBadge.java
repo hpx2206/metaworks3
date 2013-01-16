@@ -4,7 +4,7 @@ import org.metaworks.Refresh;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 
-public class TodoBadge extends NotificationBadge{
+public class TodoBadge{
 	
 	int newItemCount;
 	
