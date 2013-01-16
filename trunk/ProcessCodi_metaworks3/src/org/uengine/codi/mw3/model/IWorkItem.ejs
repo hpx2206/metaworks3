@@ -112,7 +112,7 @@
 								<% if(value.type=='comment' || value.type=='file' || value.type=='src' || value.type=='memo' || value.type=='generic'){%>
 									<span>
 											<%=value.title.replace('\n','<br>')%> 
-											<%if(value.type=='file'){%>
+											<%if(value.type=='file' && value.file.mimeType.indexOf("office")>0){%>
 											(ver <%=value.majorVer%>.<%=value.minorVer%>)
 											<%}%>
 									</span>					
