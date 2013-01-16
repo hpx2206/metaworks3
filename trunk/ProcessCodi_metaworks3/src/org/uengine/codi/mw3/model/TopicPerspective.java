@@ -15,7 +15,6 @@ public class TopicPerspective extends Perspective {
 	
 	@Override
 	protected void loadChildren() throws Exception {
-		System.out.println("loadChildren");
 		topicMap = new TopicPanel();
 		topicMap.session = session;
 		topicMap.load();
