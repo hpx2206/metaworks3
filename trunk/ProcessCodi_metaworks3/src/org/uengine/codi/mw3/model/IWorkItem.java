@@ -30,7 +30,19 @@ import org.uengine.codi.mw3.admin.WebEditor;
 
 )
 public interface IWorkItem extends IDAO{
-		
+
+		public final static String WORKITEM_STATUS_FEED		= "FEED";
+		public final static String WORKITEM_STATUS_DRAFT	= "DRAFT";
+		public final static String WORKITEM_STATUS_NEW 		= "NEW";
+		public final static String WORKITEM_STATUS_CONFIRMED= "CONFIRMED";
+		public final static String WORKITEM_STATUS_RESERVED	= "RESERVED";
+		public final static String WORKITEM_STATUS_REFERENCE= "REFERENCE";
+		public final static String WORKITEM_STATUS_COMPLETED= "COMPLETED";
+		public final static String WORKITEM_STATUS_CANCELLED= "CANCELLED";
+		public final static String WORKITEM_STATUS_SUSPENDED= "SUSPENDED";
+		//When user delegate a workitem, the workitem's status whould be changed to this status and another workitem.	
+		public final static String WORKITEM_STATUS_DELEGATED= "DELEGATED"; 
+	
 		@Id
 		//@GeneratedValue(strategy=GenerationType.TABLE, generator="SEQ_BPM")
 		public Long getTaskId();
