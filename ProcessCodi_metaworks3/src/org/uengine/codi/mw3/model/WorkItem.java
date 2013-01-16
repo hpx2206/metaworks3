@@ -694,8 +694,8 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		
 		if(getMetaworksContext() != null && getMetaworksContext().getWhen()!=null && getMetaworksContext().getWhen().equals("edit")){			
 			if(getFile() != null && getFile().getMimeType() != null && getFile().getMimeType().indexOf("office") > 0){
-				IWorkItem worklist = sql("update bpm_worklist set isdeleted=1 where grptaskid=?taskId and taskid!=?currentTaskId");
-				worklist.set("taskId", getGrpTaskId());
+				IWorkItem worklist = sql("update bpm_worklist set isdeleted=1 where grptaskid=?grpTaskId and taskid!=?currentTaskId");
+				worklist.set("grpTaskId", getGrpTaskId());
 				worklist.set("currentTaskId", getTaskId());
 				worklist.update();
 				
@@ -716,7 +716,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			setContent(getTitle());
 			setTitle(getTitle().substring(0, 190) + "...");
 		}
-		System.out.println("status = "+this.getStatus());
 		if( this.getStatus() == null ){
 			setStatus(WorkItem.WORKITEM_STATUS_FEED);
 		}
@@ -784,6 +783,8 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				threadPanel.setInstanceId(getInstId().toString());
 				threadPanel.setNewItem(newInstantiator);
 				threadPanel.setThread(this);
+				threadPanel.session = session;
+				threadPanel.load(getInstId().toString());
 				
 	//			ArrayList<IDAO> workItemArr = new ArrayList<IDAO>();
 	//			workItemArr.add(this);
@@ -1017,8 +1018,18 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				newItem.setInstId(new Long(getInstId()));
 				newItem.setTaskId(new Long(-1));
 				newItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+				
+				if( workItemVersionChooser != null ){
+					String currentVer = copyOfThis.getMajorVer() + "." + copyOfThis.getMinorVer();
+					
+					workItemVersionChooser.onRelation2Object();
+					workItemVersionChooser.versionSelector.setSelected(currentVer);
+					
+					copyOfThis.setWorkItemVersionChooser(workItemVersionChooser);
+				}
+				
 				if( tempWhen != null && tempWhen.equals("edit")){
-					return new Object[]{new Refresh(copyOfThis) };
+					return new Object[]{new Refresh(copyOfThis)};
 				}else{
 					return new Object[]{new Refresh(newItem), new ToPrev(threadPanelOfThis.newItem, copyOfThis)};
 				}

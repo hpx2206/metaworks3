@@ -175,13 +175,11 @@ public interface IWorkItem extends IDAO{
 		
 		@ORMapping(
 			databaseFields = { 	"taskId", "grpTaskId", "instId" }, 
-			objectFields = { 	"taskId", "grpTaskId", "instId" }//,
-		//	objectIsNullWhenFirstDBFieldIsNull = true,
-		//	availableWhen= "type=='file'"
-		)
+			objectFields = { 	"taskId", "grpTaskId", "instId" }
+		)		
+		@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)
 		public WorkItemVersionChooser getWorkItemVersionChooser();
-		public void setWorkItemVersionChooser(
-				WorkItemVersionChooser workItemVersionChooser);
+		public void setWorkItemVersionChooser(WorkItemVersionChooser workItemVersionChooser);
 		
 		public Long getInstId();
 		public void setInstId(Long instId);

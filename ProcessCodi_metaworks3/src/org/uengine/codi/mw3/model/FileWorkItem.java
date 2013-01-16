@@ -1,12 +1,9 @@
 package org.uengine.codi.mw3.model;
 
-import org.metaworks.Refresh;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Range;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Test;
-import org.metaworks.component.SelectBox;
-import org.metaworks.dao.Database;
 import org.metaworks.website.MetaworksFile;
 import org.uengine.util.UEngineUtil;
 
