@@ -141,7 +141,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 			bottomList.append( " limit " + criteria.get("startIndex") + ", "+InstanceList.PAGE_CNT);
 		*/
 		
-		if(session.getMetaworksContext().getWhen() == null || !session.getMetaworksContext().getWhen().equals("todoBage")){
+		if(session.getMetaworksContext().getWhen() == null || !session.getMetaworksContext().getWhen().equals("todoBadge")){
 			bottomList.append( " limit " + criteria.get("startIndex") + ", "+InstanceList.PAGE_CNT);
 		}
 		
@@ -283,7 +283,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 			criteria.put("taskStatus2", "CONFIRMED");
 			taskSql.append("and rolemapping.endpoint=?endpoint ");
 			taskSql.append("or(worklist.duedate is not null and worklist.defid is null)");			
-			if(session.getMetaworksContext().getWhen() != null && session.getMetaworksContext().getWhen().equals("todoBage")){
+			if(session.getMetaworksContext().getWhen() != null && session.getMetaworksContext().getWhen().equals("todoBadge")){
 				instanceSql.append("and inst.status !='Completed' ");
 			}
 			*/
