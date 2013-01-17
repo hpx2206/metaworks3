@@ -25,9 +25,7 @@ org_uengine_codi_mw3_model_ContactListPanel.prototype = {
 				if( mappedId.length > 2 ){
 					var idStr = mappedId.split('_');
 					var ObjId = idStr[idStr.length -1];
-					console.log(ObjId);
 					var node = mw3.objects[ObjId];
-					console.log(node);
 					checkNodes.push(node);
 				}
 			});
