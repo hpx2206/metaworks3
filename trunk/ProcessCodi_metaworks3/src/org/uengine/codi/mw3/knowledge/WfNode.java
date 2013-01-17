@@ -464,13 +464,11 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		sb.append("SELECT *");
 		sb.append("  FROM bpm_knol");
 		sb.append(" WHERE parentId=?parentId");
-		sb.append("   AND type=?type");
 		sb.append(" ORDER BY no");
 		
 		IWfNode findNode = (IWfNode) sql(IWfNode.class,	sb.toString());
 		
 		findNode.set("parentId", this.getId());
-		findNode.set("type", "brainstorm");
 		findNode.select();
 		
 		if(findNode.size() > 0){
