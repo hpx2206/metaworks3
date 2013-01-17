@@ -12,17 +12,17 @@ import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.example.ide.CompileError;
 import org.metaworks.example.ide.SourceCode;
-import org.metaworks.website.MetaworksFile;
 import org.uengine.kernel.FormActivity;
 import org.uengine.util.UEngineUtil;
 
 public class SourceCodeWorkItem extends WorkItem{
 	
 	public SourceCodeWorkItem(){
-		setType("src");		
+		setType("src");
+		this.setSourceCode(new SourceCode());
+		
 	}
-	
-	
+
 	@Hidden(on=false)
 	public SourceCode getSourceCode() {
 		// TODO Auto-generated method stub
