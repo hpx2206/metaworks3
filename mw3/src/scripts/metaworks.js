@@ -1578,10 +1578,22 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				this.objects[objectId] = value; //change the cached value
 				this.faceHelpers[objectId] = null;
 				
+				
+				/*
+				 * 2013/01/18 jinwon
+				 * super class 까지
+				 */
+				var objKeys = this._createObjectKey(value, true);
+				if(objKeys && objKeys.length){
+					for(var i=0; i<objKeys.length; i++){
+						this.objectId_KeyMapping[objKeys[i]] = objectId;
+					}
+				}
+				/*
 				var objKey = this._createObjectKey(value);
 				if(objKey!=null){
 					this.objectId_KeyMapping[objKey] = objectId;
-				}
+				}*/
 				
 				
 				///// auto wiring object to its class name /////
