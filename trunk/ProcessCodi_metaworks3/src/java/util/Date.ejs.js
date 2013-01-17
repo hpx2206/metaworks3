@@ -35,8 +35,6 @@ java_util_Date.prototype = {
 				if(inputTag){
 					var value = dwr.util.getValue(tagId);
 					
-					console.log(value);
-					
 					if(value == '')
 						return null;
 					else
