@@ -48,13 +48,14 @@ public class InstanceViewThreadPanel implements ContextAware {
 		
 		if("sns".equals(session.getEmployee().getPreferUX()))
 			how = "sns";
+		else
+			how = "normal";
 		
 		getMetaworksContext().setHow(how);
 		setInstanceId(instanceId);
 				
 		IWorkItem result = WorkItem.find(instanceId);
 		result.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-		//result.getMetaworksContext().setWhere(this.getMetaworksContext().getWhere());
 		result.getMetaworksContext().setHow(how);
 		
 		setThread(result);
@@ -62,8 +63,7 @@ public class InstanceViewThreadPanel implements ContextAware {
 		CommentWorkItem newItem = new CommentWorkItem();
 		newItem.setInstId(new Long(getInstanceId()));
 		newItem.setTaskId(new Long(-1));
-		newItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
-		//newItem.getMetaworksContext().setWhere(this.getMetaworksContext().getWhere());		
+		newItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 		newItem.getMetaworksContext().setHow(how);
 		newItem.setWriter(session.getUser());
 
