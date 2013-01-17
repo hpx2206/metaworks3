@@ -6,8 +6,6 @@ var org_uengine_codi_mw3_model_IInstance = function(objectId, className){
 	this.windowObjectId = $('#' + this.divId).closest('.mw3_window').attr('objectId');
 	this.overTimer;
 	
-	
-	
 		$('#' + this.divId).bind('click', {objectId: this.objectId},function(){
 			mw3.getFaceHelper(objectId).unBlinking();
 			
@@ -29,8 +27,9 @@ var org_uengine_codi_mw3_model_IInstance = function(objectId, className){
 	 }
 	 if( object && object.metaworksContext && object.metaworksContext.where == 'sns'){
 		 $('#' + this.divId).css('border-top','1px solid #E3E3E3');
-		 $('.tbl_type td').css('border','none')
-	}
+		 $('.tbl_type td').css('border','none');
+	 }
+	 
 	 $('#td_' + this.objectId).click({objectId : this.objectId}, function(event){
 		 var objectId = event.data.objectId;
 		 
