@@ -197,12 +197,12 @@ var org_uengine_codi_mw3_knowledge_IWfNode = function(objectId, className) {
 
 org_uengine_codi_mw3_knowledge_IWfNode.prototype = {
 	loaded : function(){
-		if(this.mw3Obj && this.mw3Obj.first){
-			var expanded = getCookie('bpm_knol.expanded.' + this.mw3Obj.id);
+		if(this.mw3Obj && this.mw3Obj.first){			
+			//var expanded = getCookie('bpm_knol.expanded.' + this.mw3Obj.id);
 			
-			if(this.mw3Obj.parentId == null || expanded == 'true'){
+			//if(this.mw3Obj.parentId == null || expanded == 'true'){
 				mw3.call(this.objectId, 'load');
-			}
+			//}
 		}		
 	},
 	getPrev : function() {
