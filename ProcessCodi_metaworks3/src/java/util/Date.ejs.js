@@ -16,32 +16,43 @@ var java_util_Date = function(objectId, className){
 		});	
 		
 		
-		//if(typeof mw3.objects[this.objectId].__className == 'undefined')
-			//this.divObj.datepicker("setDate", mw3.objects[this.objectId]);
+		if(mw3.objects[this.objectId] == null || typeof mw3.objects[this.objectId].__className == 'undefined')
+			this.divObj.datepicker("setDate", mw3.objects[this.objectId]);
 	}else{
 		jQuery("abbr.timeago").timeago();
 	}
-}
+};
 
 java_util_Date.prototype = {
 	getValue : function(){
-		var tagId = mw3.createInputId(this.objectId);
+		var when = this.divObj.attr('when');
 		
-		var inputTag = document.getElementById(tagId);
-		if(inputTag){
-			var value = dwr.util.getValue(tagId);
-			
-			if(value == '')
-				return null;
-			else
-				return value;
+		if(when == 'edit' || when == 'new'){
+			if(mw3.objects[this.objectId] && typeof mw3.objects[this.objectId].__className != 'undefined'){
+				var tagId = mw3.createInputId(this.objectId);
+				
+				var inputTag = document.getElementById(tagId);
+				if(inputTag){
+					var value = dwr.util.getValue(tagId);
+					
+					console.log(value);
+					
+					if(value == '')
+						return null;
+					else
+						return value;
+				}else{
+					return null;
+				}
+			}else{
+				return this.divObj.datepicker("getDate");	
+			}
 		}else{
-			return null;
+			return mw3.objects[this.objectId];
 		}
-
 	},
 	clear : function(){
 		mw3.objects[this.objectId] = null;
 		this.divObj.datepicker("setDate", null);
 	}
-}
+};
