@@ -39,6 +39,12 @@ org_uengine_codi_mw3_knowledge_WfPanel.prototype = {
 		
 		appendTarget.append(html);
 		
+	},
+	refresh : function(target){
+		var object = mw3.objects[this.objectId];
+		if(object.rootNodeId != target.rootNodeId){
+			mw3.setObject(this.objectId, target);
+		}
 	}
 };
 
