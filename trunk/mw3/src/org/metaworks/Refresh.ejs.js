@@ -21,9 +21,7 @@ var org_metaworks_Refresh = function(objectId, className){
 					var faceHelper = mw3.getFaceHelper(mappedObjId);
 					
 					if(faceHelper && faceHelper.refresh){
-						var html = mw3.locateObject(object.target, null);		
-						
-						faceHelper.refresh(html, object.target);
+						faceHelper.refresh(object.target);
 					}else{
 						mw3.setObject(mappedObjId, object.target);	
 					}							
