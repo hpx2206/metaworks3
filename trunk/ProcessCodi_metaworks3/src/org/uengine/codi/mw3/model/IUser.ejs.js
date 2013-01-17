@@ -6,13 +6,14 @@ var org_uengine_codi_mw3_model_IUser = function(objectId, className){
 	this.windowObjectId = $('#' + this.divId).closest('.mw3_window').attr('objectId');
 	
 	var user = mw3.objects[objectId];
-	
+	if(user == null)
+		return true;
 
-	if(user.metaworksContext.how!='picker'){
+	if(user.metaworksContext && user.metaworksContext.how!='picker'){
 		$('#objDiv_' + this.objectId).parent().css({'border':'none'});	
 	}
 	
-	if(user.metaworksContext.when=='contacts'){
+	if(user.metaworksContext && user.metaworksContext.when=='contacts'){
 		
 		
 		var msg=$('#objDiv_' + objectId).find('.fontgray').text();
