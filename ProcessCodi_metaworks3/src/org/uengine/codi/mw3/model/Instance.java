@@ -24,8 +24,6 @@ import org.uengine.processmanager.ProcessManagerRemote;
 
 import com.efsol.util.StringUtils;
 
-
-
 public class Instance extends Database<IInstance> implements IInstance{
 
 	public final static String INSTNACE_STATUS_STOPPED		= "Stopped";
@@ -589,19 +587,17 @@ public class Instance extends Database<IInstance> implements IInstance{
 //				followers.load();
 				this.fillFollower();
 					
-				InstanceMonitorPanel processInstanceMonitorPanel = new InstanceMonitorPanel();
-				processInstanceMonitorPanel.processManager = processManager;
-				processInstanceMonitorPanel.session = session;
-				processInstanceMonitorPanel.load(this.getInstId().toString());
-				
-				
-				FollowerPanel followerPanel = new FollowerPanel("instance", this.getFollowers());
-				
-				final Object[] returnObjects = new Object[]{new Refresh(processInstanceMonitorPanel), new Refresh(followerPanel)};
-				
+//				InstanceMonitorPanel processInstanceMonitorPanel = new InstanceMonitorPanel();
+//				processInstanceMonitorPanel.processManager = processManager;
+//				processInstanceMonitorPanel.session = session;
+//				processInstanceMonitorPanel.load(this.getInstId().toString());
+//				FollowerPanel followerPanel = new FollowerPanel("instance", this.getFollowers());			
+//				final Object[] returnObjects = new Object[]{new Refresh(processInstanceMonitorPanel), new Refresh(followerPanel)};				
 //				MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getEmployee().getEmpCode()), returnObjects);				
 			}
+			
 			setInstanceViewThreadPanel(panel);
+			
 			return this;
 		}else{
 			getMetaworksContext().setHow("");
