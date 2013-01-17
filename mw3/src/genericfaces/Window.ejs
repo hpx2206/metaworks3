@@ -55,8 +55,8 @@
 		    	<span class="boxtopright">
 		    		<div id="navigationTitle" class="mw3_window_title">
 		    			<span>
-				            <%if(mw3.localize(windowTitle)){%>
-				    			<%=windowTitle%>
+				            <%if(windowTitle){%>
+				    			<%=mw3.localize(windowTitle)%>
 				    		<%}else{%>
 				    			<%=mw3.localize(objectName)%>
 				    		<%}%>
@@ -99,8 +99,8 @@
 %>		
 					<span>
 						<div>
-				            <%if(mw3.localize(windowTitle)){%>
-				    			<%=windowTitle%>
+				            <%if(windowTitle){%>
+				    			<%=mw3.localize(windowTitle)%>
 				    		<%}else{%>
 								<%=mw3.localize(objectName)%>
 				    		<%}%>
