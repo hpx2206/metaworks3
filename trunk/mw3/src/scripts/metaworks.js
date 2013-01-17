@@ -1500,7 +1500,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				else if(elementTag == 'dl')
 					elementSubTag = 'dd';
 				
-				html="<" + elementTag + elementClass + " id='"+divId+ "'" + (metadata && metadata.focusable ? " tabindex='"+objectId+"' style='outline-style:none'" : "") + " className='" + className + "'>";
+				html="<" + elementTag + elementClass + " id='"+divId+ "'" + (metadata && metadata.focusable ? " tabindex='"+objectId+"' style='outline-style:none'" : "") + " className='" + className + "' objectId='" + objectId + "'>";
 				
 				if(elementSubTag)
 					html+= '<' + elementSubTag + '>';
@@ -1996,10 +1996,12 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 	        			var mappedObjId;
         				for(var j=0; j < results.length; j++){
         					var result_ = results[j];
+        					
+        					if(result_ == null)
+        						continue;
+        					
 		        			var objKeys = mw3._createObjectKey(result_, true);
-		        			
-		        			
-		        			
+
 		        			var neverShowed = true;
 		        			
 		        			
