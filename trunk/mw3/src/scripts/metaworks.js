@@ -59,6 +59,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				this._metadata_version = 0;
 
 				this.recentCallMethodName = null;
+				this.recentCallObjectId = null;
 				
 			    this.popupDivId;
 			    this.recentOpenerObjectId = [];
@@ -1927,6 +1928,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
     			
     			// 2012-03-19 cjw 기존 소스가 ejs.js 생성자 호출 보다 늦게 method 값을 할당하여 맨위로 올림
     			mw3.recentCallMethodName = svcNameAndMethodName;
+    			mw3.recentCallObjectId = objId;
     			
     			if(mw3.isRecordingSession && !mw3.recordingExceptClasses[object.__className]){
     				
