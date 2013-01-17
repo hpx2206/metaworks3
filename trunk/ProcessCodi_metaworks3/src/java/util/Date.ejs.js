@@ -6,7 +6,7 @@ var java_util_Date = function(objectId, className){
 	this.divObj = $('#' + this.inputId);
 		
 	var when = this.divObj.attr('when');
-		
+	
 	if(when == 'edit' || when == 'new'){
 		this.divObj.datepicker({
 			monthNames: ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'],		// 월 한글로 출력
@@ -15,7 +15,9 @@ var java_util_Date = function(objectId, className){
 		  	showMonthAfterYear: true
 		});	
 		
-		this.divObj.datepicker("setDate", mw3.objects[this.objectId]);
+		
+		//if(typeof mw3.objects[this.objectId].__className == 'undefined')
+			//this.divObj.datepicker("setDate", mw3.objects[this.objectId]);
 	}else{
 		jQuery("abbr.timeago").timeago();
 	}
@@ -23,12 +25,20 @@ var java_util_Date = function(objectId, className){
 
 java_util_Date.prototype = {
 	getValue : function(){
-		var when = this.divObj.attr('when');
-		if(when == 'edit' || when == 'new'){
-			return this.divObj.datepicker("getDate");
+		var tagId = mw3.createInputId(this.objectId);
+		
+		var inputTag = document.getElementById(tagId);
+		if(inputTag){
+			var value = dwr.util.getValue(tagId);
+			
+			if(value == '')
+				return null;
+			else
+				return value;
 		}else{
-			return mw3.objects[this.objectId];
+			return null;
 		}
+
 	},
 	clear : function(){
 		mw3.objects[this.objectId] = null;
