@@ -93,7 +93,7 @@ public class Perspective {
 		}else if( title == null ){
 			title = "$perspective." + perspectiveType;
 		}
-		if( "topic".equals(perspectiveType)){
+		if("topic".equals(perspectiveType)){
 			instListPanel.topicFollowersLoad();
 		}
 		instListPanel.setTitle(title);
@@ -104,17 +104,22 @@ public class Perspective {
 		searchBox.setKeyword(session.getSearchKeyword());
 		searchBox.setKeyUpSearch(true);
 		searchBox.setKeyEntetSearch(true);
-		
-		WfPanel wfPanel = new WfPanel();
-		wfPanel.session = session;
-		wfPanel.load(session.getCompany().getComCode());
-		
-		
+			
 		final Object[] returnObject;
 		
-		if("sns".equals(session.getEmployee().getPreferUX()))
+		if("sns".equals(session.getEmployee().getPreferUX())){
+			WfPanel wfPanel = new WfPanel();
+			
+			if("topic".equals(perspectiveType)){
+				wfPanel.session = session;
+				wfPanel.load(selectedItem);
+			}else{			
+				wfPanel.session = session;
+				wfPanel.load(session.getCompany().getComCode());
+			}
+			
 			returnObject = new Object[]{new Refresh(searchBox), new Refresh(wfPanel), new Refresh(new FollowerPanel("instance"))};
-		else
+		}else
 			returnObject = new Object[]{new Refresh(searchBox)};
 		
 		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getEmployee().getEmpCode()), returnObject);
