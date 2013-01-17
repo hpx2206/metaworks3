@@ -1,6 +1,7 @@
 package org.uengine.codi.mw3.model;
 
 import java.util.Calendar;
+import java.util.Date;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
@@ -14,7 +15,6 @@ import org.metaworks.dwr.MetaworksRemoteService;
 public class InstanceDueSetter implements ContextAware{
 	
 	MetaworksContext metaworksContext;
-		
 		public MetaworksContext getMetaworksContext() {
 			return metaworksContext;
 		}
@@ -24,7 +24,7 @@ public class InstanceDueSetter implements ContextAware{
 		}
 
 	Long instId;
-	@Hidden
+		@Hidden
 		public Long getInstId() {
 			return instId;
 		}
@@ -34,7 +34,7 @@ public class InstanceDueSetter implements ContextAware{
 		}
 		
 	java.util.Date dueDate;
-	@Face(displayName="$Due")
+		@Face(displayName="$Due")
 		public java.util.Date getDueDate() {
 			return dueDate;
 		}
@@ -44,7 +44,7 @@ public class InstanceDueSetter implements ContextAware{
 		}
 		
 	boolean onlyInitiatorCanComplete;
-	@Face(displayName="$OnlyInitiatorCanComplete")
+		@Face(displayName="$OnlyInitiatorCanComplete")
 		public boolean isOnlyInitiatorCanComplete() {
 			return onlyInitiatorCanComplete;
 		}
@@ -53,7 +53,7 @@ public class InstanceDueSetter implements ContextAware{
 		}
 	
 	String progress;
-	@Face(displayName="$progress")
+		@Face(displayName="$progress")
 		public String getProgress() {
 			return progress;
 		}
