@@ -81,6 +81,26 @@ public class MetaworksRemoteService {
 			   }			  
 		});
 	}
+	public static void pushInstanceObjects(final Object instanceListener, final Object[] object){
+		Browser.withAllSessions(new Runnable(){
+			   @Override
+			   public void run() {
+			    ScriptSessions.addFunctionCall("mw3.locateObject", new Object[]{instanceListener, null, "body"});
+			    ScriptSessions.addFunctionCall("mw3.onLoadFaceHelperScript", new Object[]{});
+			    ScriptSessions.addFunctionCall("mw3.getAutowiredObject('org.uengine.codi.mw3.model.InstanceListener').__getFaceHelper().returnObject", object );
+			   }			  
+		});
+	}
+	public static void pushWorkItemObjects(final Object workItemListener, final Object[] object){
+		Browser.withAllSessions(new Runnable(){
+			@Override
+			public void run() {
+				ScriptSessions.addFunctionCall("mw3.locateObject", new Object[]{workItemListener, null, "body"});
+				ScriptSessions.addFunctionCall("mw3.onLoadFaceHelperScript", new Object[]{});
+				ScriptSessions.addFunctionCall("mw3.getAutowiredObject('org.uengine.codi.mw3.model.WorkItemListener').__getFaceHelper().returnObject", object );
+			}			  
+		});
+	}
 		
 	public void clearMetaworksType(String className) throws Exception {
 		
