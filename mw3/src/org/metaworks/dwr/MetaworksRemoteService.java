@@ -15,6 +15,8 @@ import java.util.Set;
 import javax.servlet.ServletContext;
 
 import org.directwebremoting.Browser;
+import org.directwebremoting.ScriptSession;
+import org.directwebremoting.ScriptSessionFilter;
 import org.directwebremoting.ScriptSessions;
 import org.directwebremoting.ServerContextFactory;
 import org.directwebremoting.WebContext;
@@ -81,27 +83,30 @@ public class MetaworksRemoteService {
 			   }			  
 		});
 	}
-	public static void pushInstanceObjects(final Object instanceListener, final Object[] object){
-		Browser.withAllSessions(new Runnable(){
-			   @Override
-			   public void run() {
-			    ScriptSessions.addFunctionCall("mw3.locateObject", new Object[]{instanceListener, null, "body"});
-			    ScriptSessions.addFunctionCall("mw3.onLoadFaceHelperScript", new Object[]{});
-			    ScriptSessions.addFunctionCall("mw3.getAutowiredObject('org.uengine.codi.mw3.model.InstanceListener').__getFaceHelper().returnObject", object );
-			   }			  
-		});
-	}
-	public static void pushWorkItemObjects(final Object workItemListener, final Object[] object){
-		Browser.withAllSessions(new Runnable(){
-			@Override
-			public void run() {
-				ScriptSessions.addFunctionCall("mw3.locateObject", new Object[]{workItemListener, null, "body"});
-				ScriptSessions.addFunctionCall("mw3.onLoadFaceHelperScript", new Object[]{});
-				ScriptSessions.addFunctionCall("mw3.getAutowiredObject('org.uengine.codi.mw3.model.WorkItemListener').__getFaceHelper().returnObject", object );
-			}			  
-		});
-	}
 		
+	public static void pushOtherClientObjects(final String sessionId, final Object[] object){
+		Browser.withAllSessionsFiltered(
+				new ScriptSessionFilter(){
+					@Override
+					public boolean match(ScriptSession session)
+					{
+						if(session.getId().equals(sessionId))
+							return false;
+						else
+							return true;
+					}			
+				},
+
+				new Runnable(){
+					@Override
+					public void run() {
+						ScriptSessions.addFunctionCall("mw3.locateObject", new Object[]{object, null, "body"});
+						ScriptSessions.addFunctionCall("mw3.onLoadFaceHelperScript", new Object[]{});
+
+					}			  
+				});
+	}
+	
 	public void clearMetaworksType(String className) throws Exception {
 		
 		if("*".equals(className))
