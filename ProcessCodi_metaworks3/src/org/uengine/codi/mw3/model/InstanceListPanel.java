@@ -275,17 +275,22 @@ public class InstanceListPanel implements ContextAware{
 	@ServiceMethod(inContextMenu=true)
 	public ContentWindow newInstance() throws Exception{
 		NewInstancePanel newInstancePanel =  new NewInstancePanel();
-		
-		if(session.getEmployee().getIsAdmin())
-			newInstancePanel.getMetaworksContext().setHow("admin");
-		
-		newInstancePanel.session = session;
 		newInstancePanel.load(session);
+		
+/*
+ * 		jinwon refactoring
+ * 
+ 		if(session.getEmployee().getIsAdmin())
+			newInstancePanel.getMetaworksContext().setHow("admin");
+*/		
+		
+		
 		
 		NewInstanceWindow window = new NewInstanceWindow(newInstancePanel);
 		if( session.getWindowTitle() != null){
 			window.setTitle(session.getWindowTitle());
 		}
+		
 		return window;
 	}
 	

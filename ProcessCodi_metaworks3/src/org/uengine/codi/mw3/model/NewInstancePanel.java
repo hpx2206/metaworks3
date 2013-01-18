@@ -17,24 +17,23 @@ public class NewInstancePanel implements ContextAware {
 	
 	public NewInstancePanel(){
 		setMetaworksContext(new MetaworksContext());
-		getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+		getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 	}
 	
 	public void load(Session session) throws Exception{
 //		unstructuredProcessInstanceStarter = new UnstructuredProcessInstanceStarter();
 //		
-		processMapPanel = new ProcessMapPanel();		
-		processMapPanel.setMetaworksContext(this.getMetaworksContext());
-		processMapPanel.load(session);
-		
 		newInstantiator = new CommentWorkItem();
 		newInstantiator.setWriter(session.getUser());		
-		newInstantiator.setInstantiation(true);
-		newInstantiator.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		
 		if("sns".equals(session.getEmployee().getPreferUX())){
-			newInstantiator.getMetaworksContext().setHow("sns");
-			this.getMetaworksContext().setHow("sns");
+			getMetaworksContext().setHow("sns");
+			
+			newInstantiator.getMetaworksContext().setHow("sns");			
+		}else{
+			processMapPanel = new ProcessMapPanel();		
+			processMapPanel.setMetaworksContext(this.getMetaworksContext());
+			processMapPanel.load(session);			
 		}
 		
 		Choice securityLevel = new Choice();
@@ -42,8 +41,19 @@ public class NewInstancePanel implements ContextAware {
 		securityLevel.add("$Privacy.OnlyFollowers","1");
 		securityLevel.add("$Privacy.Public","2");
 		
+		/*
+		 * default security level
+		 * 
+		 * 1. level 정보
+		 *  - 0 : 모두 공개
+		 *  - 1 : 팔로워만 공개
+		 *  - 3 : topic 맴버 및 팔로워 만 공개
+		 *  
+		 * 2. topic 일 경우 
+		 *  - 1 : 공개 토픽 
+		 *  - 3 : 비공개 토픽
+		 */
 		if("topic".equals(session.getLastPerspecteType())){
-			
 			StringBuffer sb = new StringBuffer();
 			sb.append("select * from bpm_knol knol");
 			sb.append(" where 	knol.type = ?type");
@@ -65,6 +75,7 @@ public class NewInstancePanel implements ContextAware {
 		}else{
 			securityLevel.setSelected("0");
 		}
+		
 		setSecurityLevel(securityLevel);
 	}
 	
