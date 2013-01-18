@@ -171,12 +171,12 @@ public class com_defaultcompany_organization_DefaultCompanyRoleResolutionContext
 	public void configure(){
 		DefaultCompanyRoleResolutionContext brrrc = new DefaultCompanyRoleResolutionContext();
 		
-		String groupOptionStr = groupOption.getSelection().getActionCommand();
+		String groupOptionStr = groupOption!=null ? groupOption.getSelection().getActionCommand() : null;
 		
-		if(groupOptionStr.equals("relativeGroup")){
+		if("relativeGroup".equals(groupOptionStr)){
 			brrrc.setRelativeRole((Role) definedRoleInputter.getValue());
 			brrrc.setGroupId(null);				
-		}else if(groupOptionStr.equals("specifiedGroup")){
+		}else if("specifiedGroup".equals(groupOptionStr)){
 			brrrc.setGroupId(""+groupInputter.getValue());
 			brrrc.setRelativeRole(null);
 		}else{
@@ -184,9 +184,9 @@ public class com_defaultcompany_organization_DefaultCompanyRoleResolutionContext
 			brrrc.setRelativeRole(null);
 		}
 		
-		String roleOptionStr = roleOption.getSelection().getActionCommand();
+		String roleOptionStr = roleOption !=null ? roleOption.getSelection().getActionCommand() : null;
 		
-		if(roleOptionStr.equals("specifiedRole")){
+		if("specifiedRole".equals(roleOptionStr)){
 			brrrc.setRoleId(""+roleInputter.getValue());
 		}else{
 			brrrc.setRoleId(null);
