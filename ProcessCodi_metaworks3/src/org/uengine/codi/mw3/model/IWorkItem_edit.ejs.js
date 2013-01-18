@@ -9,7 +9,7 @@ var org_uengine_codi_mw3_model_IWorkItem_edit = function(objectId, className){
 	$("#post_" + this.objectId).focus();
 	//$("#post_" + this.objectId).keydown()
 	
-	$("#post_" + this.objectId).bind("keyup keydown",function(){
+	$("#post_" + this.objectId).bind("keyup keydown", function(event){
 		var h=$(this);
 		h.height(21).height(h[0].scrollHeight);//where 60 is minimum height of textarea
 	});
@@ -30,6 +30,10 @@ var org_uengine_codi_mw3_model_IWorkItem_edit = function(objectId, className){
 				}
 			});
 		}, 1000);
+	}else if(value.type == 'comment'){
+		$("#post_" + this.objectId).bind("keyup", {objectId: this.objectId}, function(event){
+			mw3.getFaceHelper(event.data.objectId).press();
+		});		
 	}
 	
 	this.instanceFirst = true;
@@ -39,90 +43,94 @@ var org_uengine_codi_mw3_model_IWorkItem_edit = function(objectId, className){
 	
 	this.sending = false;
 	// process
-	this.processFirst = true;
+	this.processFirst = true;	
 	// user names
 	this.userAddCommands = {};
 	// dates
 	this.initialize();
 	this.dateFirst = true;
 	this.dueDate = null;
-	
-	this.showStatus = function(message){
-	};
-}
-
-org_uengine_codi_mw3_model_IWorkItem_edit.prototype.destroy = function(){
-	$("#post_" + this.objectId).unbind();	
-}
-
-org_uengine_codi_mw3_model_IWorkItem_edit.prototype.getValue =  function(){	
-	//console.debug("getValue()");
-	
-	var object = mw3.objects[this.objectId];
-		
-	
-	if(this.commandTrigger!=null){
-		object.title = this.commandTrigger;
-		object.activityAppAlias = this.commandActivityAppAlias;
-		
-		for(var i=0; i<this.commandParameters.length; i++){
-			var parameterValue = this.commandParameters[i];
-			parameterValue.valueObject = mw3.getObject(parameterValue.objectId);
-		}
-		
-		object.parameters = this.commandParameters;
-	}else{
-		var text = $("#post_" + this.objectId).val();
-		if(text)
-			object.title = text;
-	}
-	
-	if( this.commandActivityAppAlias != null){
-		object.activityAppAlias = this.commandActivityAppAlias;
-	}
-	var initialFollowers = [];
-	for(var idx in this.userAddCommands){
-		initialFollowers[initialFollowers.length] = idx;
-	}
-	
-	if(initialFollowers.length>0){
-		object.initialFollowers = initialFollowers;
-	}
-	if( this.dueDate != null){
-		object.dueDate = this.dueDate; 
-	}
-	return object;
-}
+};
 
 var localTaskId = -2;
 
-org_uengine_codi_mw3_model_IWorkItem_edit.prototype.send = function(){
-	var thisFaceHelper = this;
-	var value = mw3.getObject(this.objectId);
-	
-	this.type = value.type;
-	
-	if(!this.sending){
-		
-		this.sending = true;
-
-		var instanceViewThreadPanel = mw3.getAutowiredObject('org.uengine.codi.mw3.model.InstanceViewThreadPanel');
+org_uengine_codi_mw3_model_IWorkItem_edit.prototype = {
+	getValue : function(){
 		var object = mw3.objects[this.objectId];
-		if(value.type=='comment'){
+		
+		
+		if(this.commandTrigger!=null){
+			object.title = this.commandTrigger;
+			object.activityAppAlias = this.commandActivityAppAlias;
 			
-			if(instanceViewThreadPanel){
+			for(var i=0; i<this.commandParameters.length; i++){
+				var parameterValue = this.commandParameters[i];
+				parameterValue.valueObject = mw3.getObject(parameterValue.objectId);
+			}
+			
+			object.parameters = this.commandParameters;
+		}else{
+			var text = $("#post_" + this.objectId).val();
+			if(text)
+				object.title = text;
+		}
+		
+		if( this.commandActivityAppAlias != null){
+			object.activityAppAlias = this.commandActivityAppAlias;
+		}
+		var initialFollowers = [];
+		for(var idx in this.userAddCommands){
+			initialFollowers[initialFollowers.length] = idx;
+		}
+		
+		if(initialFollowers.length>0){
+			object.initialFollowers = initialFollowers;
+		}
+		if( this.dueDate != null){
+			object.dueDate = this.dueDate; 
+		}
+		return object;		
+	},
+	
+	destroy : function(){
+		$("#post_" + this.objectId).unbind();
+	},
+	
+	showStatus : function(message){
+		if(window.console)
+			console.log(message);
+	},
+	
+	sendComment : function(){
+		var value = mw3.getObject(this.objectId);
+		
+		this.type = value.type;
+		
+		if(!this.sending){			
+			this.sending = true;
+
+			if(value.type=='comment' && value.metaworksContext.when == 'new' && value.instId){				
 				var newComment = JSON.parse(JSON.stringify(value));
+				newComment.metaworksContext = {};
 				newComment.metaworksContext.when = 'view';
-				newComment.taskId = (localTaskId--);
 				newComment.__objectId = null;
-				if( object && object.metaworksContext && object.metaworksContext.how != null){
-					newComment.metaworksContext.how = object.metaworksContext.how;
+				newComment.startDate = new Date();
+				
+				if( value && value.metaworksContext && value.metaworksContext.how != null){
+					newComment.metaworksContext.how = value.metaworksContext.how;
 				}
+				
+				var instanceViewThreadPanel = {
+					__className : 'org.uengine.codi.mw3.model.InstanceViewThreadPanel',
+					instanceId : value.instId
+				};
+				
+
 				var toAppend = mw3.locateObject(
 					{
-						__className	:'org.metaworks.ToPrev',
+						__className	:'org.metaworks.ToAppend',
 							target	: newComment,
-							next	: object,
+							parent	: instanceViewThreadPanel,
 							match   : true
 					}, null, 'body'
 				);
@@ -133,7 +141,7 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.send = function(){
 				mw3.onLoadFaceHelperScript();
 	
 				newComment = mw3.objects[newCommentObjectId];
-				
+				newComment.metaworksContext.when = 'new';
 	
 				try{
 					newComment.add();
@@ -145,18 +153,15 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.send = function(){
 				mw3.setObject(value.__objectId, value);
 				
 				$("#post_" + this.objectId).focus();
+			}else{
+				value.add();
 			}
-			
-			
-
-		}else{
-			value.add();
 		}
-
+		
+		var thisFaceHelper = this;
+		setTimeout(function(){thisFaceHelper.sending=false;}, 1000);
 	}
-	
-	setTimeout(function(){thisFaceHelper.sending=false;}, 1000);
-}
+};
 
 org_uengine_codi_mw3_model_IWorkItem_edit.prototype.showCommandForm = function(processDef){
 	var thisFaceHelper = this;
@@ -164,34 +169,21 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.showCommandForm = function(p
 	var text = $("#post_" + this.objectId).val();
 	var fullText = text;
 	
-	if(fullText==null  ||  fullText.trim().length == 0){
+	if(fullText==null  ||  fullText.trim().length == 0)
 		fullText = processDef.cmTrgr;
-	}
 	
+	if(':' == fullText.charAt(fullText.length - 1))
+		fullText = fullText.substring(0, fullText.length-1);	
 	
 	var divId = "#commandDiv_" + this.objectId;
-
 
 	$(divId).html("<b>" + fullText + ": </b>");
 	$(divId).keydown(function(e){
 		if(e.keyCode==13){
-	
-			thisFaceHelper.send();
-	
+			thisFaceHelper.sendComment();	
 		}
 	
-	});
-			
-	
-	
-	
-	//processMap.processMapList[i].initiate();
-	
-	//break;
-	
-	
-	//alert(processMap.processMapList[i].cmPhrase);
-	//
+	});			
 
 	var entryAndPhrases = processDef.cmPhrase.split("$");
 	
@@ -241,112 +233,104 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.showCommandForm = function(p
 	mw3.onLoadFaceHelperScript();
 	mw3.setWhen('view');
 	
-}
+};
 
 
 
 org_uengine_codi_mw3_model_IWorkItem_edit.prototype.press = function(){
 	var e = window.event;
 	
+	// enter 이고 인스턴스를 발행해야 하는 경우가 아니라면
 	if (e.keyCode == 13 && !e.shiftKey) {
 		if(  !this.instanceFirst ){
 			window.event.returnValue = false;
-			this.send();
+			this.sendComment();
 		}
     }else{
-    	
-    	
-    	var text = $("#post_" + this.objectId).val();
-    	var fullText = text;
-    	
+    	// 입력된 값 parsing
+    	var text = $("#post_" + this.objectId).val();    	
     	var tokens  = text.split(" ");
-    	if(tokens.length>1)
+    	
+    	if(tokens.length > 1)
     		text = tokens[tokens.length-1];
-    	
-    	
+
     	var recommendDivId = "#commandRecommendDiv_" + this.objectId;
     	var processDivId 		= "commandProcessDiv_" + this.objectId;
     	var followerDivId 	= "commandFollowerDiv_" + this.objectId;
-    	var dateDivId 			= "commandDateDiv_" + this.objectId;
+    	var dateDivId 			= "commandDateDiv_" + this.objectId;    	    	
     	var recommendFirst = true;
-    	//////// assists about process initiation /////////
     	
+    	$(recommendDivId).empty();
+    	
+    	//////// assists about process initiation /////////    	
     	var processMap = mw3.getAutowiredObject("org.uengine.codi.mw3.model.ProcessMapList");
     	
-    	//var divIdWithoutShaf = "commandDiv_" + this.objectId; 
-
-//console.log('1');
-
-		if(text && text.length>0 && processMap)
-    	for(var i=0; i<processMap.processMapList.length; i++){
-    		var commandTrigger = processMap.processMapList[i].cmTrgr+":";
-    		var processName = processMap.processMapList[i].name;
-    		if( processName == null || processName == "" ){
-    			break;
-    		}
-//    		console.log('keychar:' + e.charCode)
- //   		console.log('2:' +text + ' and commandTrigger=' + commandTrigger);
-
-    		if(processName.indexOf(text)==0){
-    			var theAppDiv = "#objDiv_" + processMap.processMapList[i].__objectId;
-
-    			if(!theAppDiv['__inEffect']){
-	    			theAppDiv['__inEffect'] = true;
-	    			$(theAppDiv).effect("bounce", {times: 3}, 300);
-    			}
-
-    		}
-    		// 프로세스명을 정확히 입력시 프로세스 추천 목록이 보임
-    		if( text.length>1 && this.processFirst && processName == text ){
-    			var innerHtmlStr = 	"<div id=\"" + processDivId + "\" >";
-	        	  innerHtmlStr		+=	" " + mw3.localize('$AddWithProcess') + ": \"<b>" ;
-	        	  innerHtmlStr		+=	"<span id=\"processDivSpan\">" + processName + "</span>" ;
-	        	  innerHtmlStr		+=	"</b>\"";
-	        	  innerHtmlStr		+=	" | <a href=\"#\" onClick=\"mw3.getFaceHelper('"+this.objectId+"').removeDiv('"+dateDivId+"')\" style=\"cursor:pointer;\">싫어요</a> ";
-	        	  innerHtmlStr		+=	"<br>";
-	        	  innerHtmlStr		+=	"</div>";
-	        	  
-	        	  this.commandActivityAppAlias = processMap.processMapList[i].defId;
-	        	  
-	        	  $(recommendDivId).append(innerHtmlStr);
-	        	  this.processFirst = false;
-    		}else if(text.length>1 && !this.processFirst && processName == text ){
-	        	  $("#processDivSpan").html(processName);
-	        	  this.commandActivityAppAlias = processMap.processMapList[i].defId;
-    		}
-    		
-    		if(commandTrigger && commandTrigger.indexOf(text)==0){
-        		
-        		var commandPhrase = processMap.processMapList[i].cmPhrase;
-        		
-//        		console.log('text:'+text);
-//        		console.log('commandTrigger:'+commandTrigger);
-        		
-        		var thisFaceHelper = this;
-        		if(text==commandTrigger){//e.keyCode == 58 || e.charCode== 58 || e.keyCode == 59 || e.keyCode == 186) { //means ":" that user wants to command
-
-        			this.showCommandForm(processMap.processMapList[i]);
-	    			
+		if(text && text.length>0 && processMap){
+	    	for(var i=0; i<processMap.processMapList.length; i++){
+	    		var commandTrigger = processMap.processMapList[i].cmTrgr + ':';
+	    		var commandPhrase = processMap.processMapList[i].cmPhrase;
+	    		
+	    		var processName = processMap.processMapList[i].name;
+	    		if( processName == null || processName == "" ){
 	    			break;
+	    		}
+	    		
+	    		// 프로세스 명이 일부 같을시에 하단의 프로세스맵을 움직이게 가이드
+	    		if(processName.indexOf(text)==0){
+	    			var theAppDiv = "#objDiv_" + processMap.processMapList[i].__objectId;
+	
+	    			if(!theAppDiv['__inEffect']){
+		    			theAppDiv['__inEffect'] = true;
+		    			$(theAppDiv).effect("bounce", {times: 3}, 300);
+	    			}	
+	    		}
+	    		
+	    		// 프로세스명 보다 트리거명이 우선 작용
+	    		if(commandTrigger.length > 1 && commandTrigger.indexOf(text)==0){	    			
+	    			// 트리거 명과 완전희 같으면
+	    			if(commandTrigger == text){
+	        			this.showCommandForm(processMap.processMapList[i]);
+		    			
+		    			break;	    				
+	    			}else{
+	        			if(recommendFirst){
+	        				var innerHtmlStr = 	"<div>";
+		  		        	  innerHtmlStr		+=	" " + mw3.localize('$RecommendedCommand') + ": \"<b>" ;
+		  		        	  innerHtmlStr		+=	"<span id=\"trigerDivSpan\">" + commandTrigger + "</span>" ;
+		  		        	  innerHtmlStr		+=	"</b>\"";
+		  		        	  innerHtmlStr		+=	"</div>";
+		  		        	  
+		  		        	  $(recommendDivId).append(innerHtmlStr);
+		  		        	  recommendFirst = false;
+	        			}else{
+	        				$("#trigerDivSpan").append(", \"<b>" + commandTrigger + "</b>\"");
+	        			}
+	    			}
 	    			
-        		}else{ //just recommend the command phrase;
-        			
-        			if(recommendFirst){
-        				var innerHtmlStr = 	"<div>";
-	  		        	  innerHtmlStr		+=	" " + mw3.localize('$RecommendedCommand') + ": \"<b>" ;
-	  		        	  innerHtmlStr		+=	"<span id=\"trigerDivSpan\">" + commandTrigger + "</span>" ;
-	  		        	  innerHtmlStr		+=	"</b>\"";
-	  		        	  innerHtmlStr		+=	"</div>";
-	  		        	  
-	  		        	  $(recommendDivId).append(innerHtmlStr);
-	  		        	  recommendFirst = false;
-        			}else{
-        				$("#trigerDivSpan").append(", \"<b>" + commandTrigger + "</b>\"");
-        			}
-        		}
-        	}
-    		
-    	}
+	    		}else{
+		    		// 프로세스명을 정확히 입력시 프로세스 추천 목록이 보임
+		    		if(processName == text){
+		    			if(this.processFirst){
+			    			var innerHtmlStr = 	"<div id=\"" + processDivId + "\" >";
+				        	  innerHtmlStr		+=	" " + mw3.localize('$AddWithProcess') + ": \"<b>" ;
+				        	  innerHtmlStr		+=	"<span id=\"processDivSpan\">" + processName + "</span>" ;
+				        	  innerHtmlStr		+=	"</b>\"";
+				        	  innerHtmlStr		+=	" | <a href=\"#\" onClick=\"mw3.getFaceHelper('"+this.objectId+"').removeDiv('"+processDivId+"')\" style=\"cursor:pointer;\">싫어요</a> ";
+				        	  innerHtmlStr		+=	"<br>";
+				        	  innerHtmlStr		+=	"</div>";
+				        	  
+				        	  this.commandActivityAppAlias = processMap.processMapList[i].defId;
+				        	  
+				        	  $(recommendDivId).append(innerHtmlStr);
+				        	  this.processFirst = false;
+		    			}else{
+				        	  $("#processDivSpan").html(processName);
+				        	  this.commandActivityAppAlias = processMap.processMapList[i].defId;	    				
+		    			}	    				
+		    		}
+	    		}
+	    	}
+		}
 		
     	if(  this.instanceFirst ){
 			//////// assists about dates ////////

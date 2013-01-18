@@ -22,7 +22,7 @@ public class CommentWorkItem extends WorkItem{
 	public CommentWorkItem(){
 		setType("comment");
 	}
-
+	
 	@Hidden(on=false)
 	@Range(size = 80)
 	@Face(displayName = "")
@@ -34,29 +34,23 @@ public class CommentWorkItem extends WorkItem{
 	@ServiceMethod(callByContent = true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] add() throws Exception {
 		
-
 		if(getActivityAppAlias()!=null){
-			//org.uengine.kernel.ProcessDefinition processDefinition = processManager.getProcessDefinition(getActivityAppAlias());
-			
 			StringTokenizer tokenizer = new StringTokenizer(title);
 			String connector = null;
 			
 			if(getParameters()!=null){
-				StringBuffer generatedTitle = new StringBuffer();
-	
+				StringBuffer generatedTitle = new StringBuffer();	
 				
 				int substringDelimiter = 0;
-				for(ParameterValue pv : getParameters()){
-					
+				
+				for(ParameterValue pv : getParameters()){					
 					connector = tokenizer.nextToken("$").substring(substringDelimiter);
 					tokenizer.nextToken(">");
 					
 					generatedTitle.append(connector).append(pv.getValueObject());
 					
-					substringDelimiter=1;
-					
-				}
-				
+					substringDelimiter=1;					
+				}				
 				
 				title = generatedTitle.append(tokenizer.nextElement()).toString();
 			}
@@ -65,7 +59,6 @@ public class CommentWorkItem extends WorkItem{
 			
 			if(getParameters()!=null){	
 				for(ParameterValue pv : getParameters()){
-									
 					Serializable valueObject = (Serializable)pv.getValueObject();
 					
 					processManager.setProcessVariable(newInstId, "", pv.getVariableName(), valueObject);
@@ -76,64 +69,31 @@ public class CommentWorkItem extends WorkItem{
 			if(session.user!=null){
 				rm.setEndpoint(session.user.getUserId());
 				rm.setName("initiator");
-			}
-			
+			}			
 			processManager.setLoggedRoleMapping(rm);
 
-			
-			
 			ProcessInstance instanceObject = processManager.getProcessInstance(newInstId);
 			
 			EJBProcessInstance ejbParentInstance = (EJBProcessInstance)instanceObject;
 			ProcessInstanceDAO instanceDAO = ejbParentInstance.getProcessInstanceDAO();
 			
 			instanceDAO.set("initComCd", session.getCompany().getComCode());
+			setInstId(new Long(newInstId));
 			
+			/*
 			if(!isInstantiation()){ //means sub process
 				instanceDAO.setRootInstId(new Long(getInstId()));
 
-//				processManager.executeProcess(newInstId);
-//
-//				instanceDAO.set("InitEp", session.getUser().getUserId());
-//				instanceDAO.set("InitRsNm", session.getUser().getName());
-//
-//				processManager.applyChanges();
-
-
-				//Instance rootInstance = new Instance();
-				//rootInstance.setInstId(getInstId());
-				
-				//instanceRef = rootInstance;
-
 			}else{
 				setInstId(new Long(newInstId));
-				
-
-//				instanceViewContent.session = session;
-//				
-//				Instance instanceRef = new Instance();
-//				instanceRef.setInstId(getInstId());
-//				instanceViewContent.load(instanceRef);
-//				
-//				
-//				WfNode parent = afterInstantiation(instanceViewContent, instanceRef);
-//				
-//				return new Object[]{ new Refresh(instanceViewContent), new Refresh(parent)};
-
-			}
-			
-//			return super.add();
-			
-
+			}*/
 			processManager.executeProcess(newInstId);
 			
-
 			instanceDAO.set("InitEp", session.getUser().getUserId());
 			instanceDAO.set("InitRsNm", session.getUser().getName());
 
-			
 			//when newly creating process instance, there must be at least one or more rolemapping. so if there's no rolemapping has been defined by running process, add one implicitly.
-			if(isInstantiation()){
+/*			if(isInstantiation()){
 				IRoleMapping roleMapping = new org.uengine.codi.mw3.model.RoleMapping().auto();
 				roleMapping.setRootInstId(new Long(newInstId));
 				roleMapping.select();
@@ -141,22 +101,12 @@ public class CommentWorkItem extends WorkItem{
 				if(!roleMapping.next()){
 					processManager.putRoleMapping(newInstId, rm);
 				}
-			}
+			}*/
 			
 			processManager.applyChanges();
-			
-			
-			instantiated = true;
-			
-			//setInstId(new Long(newInstId));
-
 		}
-		
-
-		// TODO Auto-generated method stub
+				
 		Object[] returnObjects = super.add();
-		
-	
 		
 		return returnObjects;
 		

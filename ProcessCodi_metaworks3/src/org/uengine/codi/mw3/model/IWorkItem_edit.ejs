@@ -1,55 +1,43 @@
 <%
 	if(value){
-	
-		
+		/*		
 		value.writer = mw3.getAutowiredObject('org.uengine.codi.mw3.model.Session').user;
 		value.writer.metaworksContext.when = 'workitem';
+		*/
 %>
 
 
-<div class="view_box2" <% if(mw3.how == "sns"){ %> style="background:#C9E2FC; margin:0px;padding-bottom:5px;" <%}%>>
-	<!--div class="guide">
+<div class="view_box2" style="<%= (mw3.how == 'sns' ? 'background:#C9E2FC; margin:0px;padding-bottom:5px;' : '')%>" >
+	<!--
+		div class="guide">
 		<span class="tl"></span>
 		<span class="tr"></span>
-	</div-->
-	<!--div class="cont"--> 	
-	<table width="100%" border="0" cellspacing="0" cellpadding="0" <% if(mw3.how != "sns"){ %>style="margin-top:15px; background:#F3F3F3;"<%}%>>
+	</div
+	div class="cont"
+	-->
+		 
+ 	<table width="100%" border="0" cellspacing="0" cellpadding="0" style="<%= (mw3.how != 'sns' ? 'margin-top:15px; background:#F3F3F3;' : '')%>">
 <%		
 		if(value.type == "comment"){
 %>
 		<tr>
-		
-			
-			
-			<td width=55>
+			<td width="55">
 				<div style="margin-left:12px; width:55px"><%=fields.writer.here({when:'view'})%></div>
 			</td>
 		
-			
-		
-			<td style=" padding:10px 0;">
-			
+			<td style=" padding:10px 0;">			
 				<div id="commandDiv_<%=objectId%>"> 
-					<textarea class="newComment" _placeholder="<%=mw3.localize('$WhatYouThinkNow')%>" id="post_<%=objectId%>" value="<%=value.title ? value.title : ''%>" tabindex=1 onkeydown="mw3.getFaceHelper('<%=objectId%>').press()"  rows="1" style="width:99%; height:21px; -webkit-border-radius:3px; outline:none;  webkit-border-radius:3px; border:1px solid #ccd; none;"><%=value.title ? value.title : ''%></textarea>
+					<textarea class="post_<%=objectId%>" class="<%=value.type%>" _placeholder="<%=mw3.localize('$WhatYouThinkNow')%>" id="post_<%=objectId%>" value="<%=value.title ? value.title : ''%>" tabindex=1 rows="1" style="width:99%; height:21px; -webkit-border-radius:3px; outline:none;  webkit-border-radius:3px; border:1px solid #ccd; none;"><%=value.title ? value.title : ''%></textarea>
 					<div id="commandRecommendDiv_<%=objectId%>"></div> 
-				</div>
-				
-			</td>		
-<%	
-			if( value.instId != null && value.instId != 0){
-%>
-				<td width=50 align="center"><a id="wBtn" href="#" onClick="mw3.getFaceHelper('<%=objectId%>').send()"><span id="method_<%=objectId%>_add"><%=mw3.localize("$Post")%></span></a></td>
+				</div>				
+			</td>
 			
-<%
-			} else {
-%>
-				<td width=50 align="center"><a id="wBtn" href="#" onClick="<%=methods.add.caller()%>"><span id="method_<%=objectId%>_add"><%=mw3.localize("$Post")%></span></a></td>
-<%
-			}
-%>
+			<td width=50 align="center">		
+				<a id="wBtn" href="#" onClick="mw3.getFaceHelper('<%=objectId%>').sendComment()">
+					<span id="method_<%=objectId%>_add"><%=mw3.localize((mw3.when == 'new')?'$Post':'$Edit')%></span>
+				</a>
+			</td>
 		</tr> 
-		
-		
 <%		
 		}else if(value.type == "src"){
 %>
@@ -57,9 +45,10 @@
 		<tr>
 			<td width="50" height="25" style="color:#8D98AF; padding-left:15px;"> 
 				<%=mw3.localize("$Title")%> 
-			</td>			
+			</td>
+						
 			<td style="padding-right:15px;"> 
-				<input id="post_<%=objectId%>" value="<%=value.title ? value.title : ''%>"  style="width:99%;-webkit-border-radius:3px;  border:1px solid #ccc" onkeydown="mw3.getFaceHelper('<%=objectId%>').press()">
+				<input id="post_<%=objectId%>" class="<%=value.type%>" value="<%=value.title ? value.title : ''%>" style="width:99%;-webkit-border-radius:3px;  border:1px solid #ccc">
 			</td>			
 			
 		</tr>
@@ -75,7 +64,7 @@
 		<tr>
 			<td height="30" colspan="2" style="padding-left:15px;">
 				<a id="wBtn" href="#" onClick="<%=methods.compile.caller()%>"><span><%=mw3.localize("$Compile")%></span></a>
-				<a id="wBtn" href="#" onClick="<%=methods.add.caller()%>"><span><%=mw3.localize("$Post")%></span></a>
+				<a id="wBtn" href="#" onClick="<%=methods.add.caller()%>"><span><%=mw3.localize((mw3.when == 'new')?'$Post':'$Edit')%></span></a>
 			</td>
 		</tr>
 <%		
@@ -87,9 +76,8 @@
 				Title : 
 			</td>			
 			<td style="padding-right:15px;"> 
-				<input id="post_<%=objectId%>" value="<%=value.title ? value.title : ''%>"  style="width:99%;-webkit-border-radius:3px;  border:1px solid #ccc" onkeydown="mw3.getFaceHelper('<%=objectId%>').press()">
+				<input id="post_<%=objectId%>" class="<%=value.type%>" value="<%=value.title ? value.title : ''%>"  style="width:99%;-webkit-border-radius:3px;  border:1px solid #ccc">
 			</td>			
-			
 		</tr>
 		<tr>
 			<td colspan="2">
@@ -111,7 +99,7 @@
 				Title : 
 			</td>
 			<td style="padding-right:15px;"> 
-				<input id="post_<%=objectId%>" value="<%=value.title ? value.title:''%>" style="width:99%;-webkit-border-radius:3px; border:1px solid #ccc">
+				<input id="post_<%=objectId%>" class="<%=value.type%>" value="<%=value.title ? value.title:''%>" style="width:99%;-webkit-border-radius:3px; border:1px solid #ccc">
 			</td>			
 			
 		</tr>			
@@ -122,7 +110,7 @@
 			<td height="30" colspan="2" style="padding-left:15px;">
 				<%=fields.file.here()%>
 			</td>
-			<td height="30" colspan="2" style="padding-left:15px;"><a id="wBtn" href="#" onClick="<%=methods.add.caller()%>"><span id="method_<%=objectId%>_add"><%=mw3.localize("$Post")%></span></a></td>
+			<td height="30" colspan="2" style="padding-left:15px;"><a id="wBtn" href="#" onClick="<%=methods.add.caller()%>"><span id="method_<%=objectId%>_add"><%=mw3.localize((mw3.when == 'new')?'$Post':'$Edit')%></span></a></td>
 		</tr>
 <%		
 		}
@@ -130,6 +118,9 @@
 	</table>
 	<!--/div-->
 	
+<%
+		if(mw3.when == 'new'){
+%>			
 	<div id="wih_button">
 		<a class="<%= value.type=='comment'?'comment_btn_on':'comment_btn_off' %>" onclick="<%=methods.newComment.caller()%>"><span><%=mw3.localize("$Write")%></span></a>
 		<a class="<%= value.type=='memo'?'comment_btn_on':'comment_btn_off' %>" onclick="<%=methods.newMemo.caller()%>"><span id="method_<%=objectId%>_newMemo"><%=mw3.localize("$Memo")%></span></a>
@@ -138,6 +129,9 @@
 		<a class="comment_btn_off" onclick="<%=methods.newActivity.caller()%>"><span id="method_<%=objectId%>_newActivity"><%=mw3.localize("$etc")%></span></a>
 	</div>
 	
+<%
+		}
+%>	
 	<!--div class="guide">
 		<span class="lb"></span>
 		<span class="rb"></span>

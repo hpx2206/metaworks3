@@ -4,19 +4,15 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.directwebremoting.Browser;
-import org.directwebremoting.ScriptSessions;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ToAppend;
 import org.metaworks.ToPrepend;
-import org.metaworks.ToPrev;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Test;
 import org.metaworks.dao.Database;
-import org.metaworks.dao.TransactionContext;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.example.ide.SourceCode;
 import org.metaworks.website.MetaworksFile;
@@ -39,9 +35,8 @@ import org.uengine.webservices.worklist.DefaultWorkList;
 
 public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	
-	
 	public WorkItem(){
-		instantiated = false;
+		this.getMetaworksContext().setWhen(WHEN_NEW);
 	}
 	
 	protected static IWorkItem find(String instanceId) throws Exception{
@@ -77,15 +72,12 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		}
 
 	Long rootInstId;
-
 		public Long getRootInstId() {
 			return rootInstId;
 		}
-	
 		public void setRootInstId(Long rootInstId) {
 			this.rootInstId = rootInstId;
 		}
-
 
 	IUser writer;
 		public IUser getWriter() {
@@ -95,9 +87,8 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			this.writer = writer;
 		}
 
-
 	String title;
-	@Hidden
+		@Hidden
 		public String getTitle() {
 			return title;
 		}
@@ -105,9 +96,8 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			this.title = title;
 		}
 
-
 	boolean like;
-	@Hidden
+		@Hidden
 		public boolean isLike() {
 			return like;
 		}
@@ -116,7 +106,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		}
 		
 	Long taskId;
-	@Hidden
+		@Hidden
 		public Long getTaskId() {
 			return taskId;
 		}
@@ -125,27 +115,21 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		}
 		
 	String trcTag;
-		
 		public String getTrcTag() {
 			return trcTag;
 		}
-	
 		public void setTrcTag(String trcTag) {
 			this.trcTag = trcTag;
 		}
 
-
 	String endpoint;	
-		
-	@Hidden
+		@Hidden
 		public String getEndpoint() {
 			return endpoint;
 		}
-	
 		public void setEndpoint(String endpoint) {
 			this.endpoint = endpoint;
 		}
-		
 		
 	MetaworksFile file;
 		public MetaworksFile getFile() {
@@ -156,18 +140,12 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		}
 		
 	OverlayCommentOption overlayCommentOption;
-			
 		public OverlayCommentOption getOverlayCommentOption() {
 			return overlayCommentOption;
 		}
-	
 		public void setOverlayCommentOption(OverlayCommentOption overlayCommentOption) {
 			this.overlayCommentOption = overlayCommentOption;
 		}
-
-	public void like() throws Exception{
-		
-	}
 
 	//normally it is null, but the 'detail' button pressed, it should be activated (by value set)
 	WorkItemHandler workItemHandler;
@@ -179,11 +157,9 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		}
 		
 	GenericWorkItemHandler genericWorkItemHandler;
-			
 		public GenericWorkItemHandler getGenericWorkItemHandler() {
 			return genericWorkItemHandler;
 		}
-	
 		public void setGenericWorkItemHandler(
 				GenericWorkItemHandler genericWorkItemHandler) {
 			this.genericWorkItemHandler = genericWorkItemHandler;
@@ -191,28 +167,21 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 
 
 	WebEditor memo;
-		
-		
 		public WebEditor getMemo() {
 			return memo;
 		}
-	
 		public void setMemo(WebEditor memo) {
 			this.memo = memo;
 		}
-	
 		
 	WorkItemVersionChooser workItemVersionChooser;
-	
 		public WorkItemVersionChooser getWorkItemVersionChooser() {
 			return workItemVersionChooser;
 		}
-	
 		public void setWorkItemVersionChooser(
 				WorkItemVersionChooser workItemVersionChooser) {
 			this.workItemVersionChooser = workItemVersionChooser;
 		}
-
 
 	String content;
 		public String getContent() {
@@ -223,15 +192,12 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		}
 		
 	String extFile;
-			
 		public String getExtFile() {
 			return extFile;
 		}
-	
 		public void setExtFile(String extFile) {
 			this.extFile = extFile;
 		}
-
 
 	SourceCode sourceCode;
 		public SourceCode getSourceCode() {
@@ -242,60 +208,47 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		}
 		
 	Date startDate;
-			
 		public Date getStartDate() {
 			return startDate;
 		}
-	
 		public void setStartDate(Date startDate) {
 			this.startDate = startDate;
 		}
 		
-		
 	boolean contentLoaded;
-
 		public boolean isContentLoaded() {
 			return contentLoaded;
 		}
-	
 		public void setContentLoaded(boolean contentLoaded) {
 			this.contentLoaded = contentLoaded;
 		}
 
-
 	Date endDate;
-	
 		public Date getEndDate() {
 			return endDate;
 		}
-	
 		public void setEndDate(Date endDate) {
 			this.endDate = endDate;
 		}
 		
 	Date dueDate;
-	
 		public Date getDueDate() {
 			return dueDate;
 		}
-	
 		public void setDueDate(Date dueDate) {
 			this.dueDate = dueDate;
 		}
 		
 	Date saveDate;
-
 		public Date getSaveDate() {
 			return saveDate;
 		}
-	
 		public void setSaveDate(Date saveDate) {
 			this.saveDate = saveDate;
 		}
 
-
 	String tool;
-	@Hidden
+		@Hidden
 		public String getTool() {
 			return tool;
 		}
@@ -307,7 +260,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		public String getStatus() {
 			return status;
 		}
-	
 		public void setStatus(String status) {
 			this.status = status;
 		}
@@ -328,6 +280,90 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			this.roleName = roleName;
 		}
 
+	String ext1;
+		public String getExt1() {
+			return ext1;
+		}
+		public void setExt1(String ext1) {
+			this.ext1 = ext1;
+		}
+		
+	String ext2;
+		public String getExt2() {
+			return ext2;
+		}
+		public void setExt2(String ext2) {
+			this.ext2 = ext2;
+		}
+		
+	String ext3;
+		public String getExt3() {
+			return ext3;
+		}
+		public void setExt3(String ext3) {
+			this.ext3 = ext3;
+		}
+		
+	String ext4;
+		public String getExt4() {
+			return ext4;
+		}
+		public void setExt4(String ext4) {
+			this.ext4 = ext4;
+		}
+		
+	String ext5;
+		public String getExt5() {
+			return ext5;
+		}
+		public void setExt5(String ext5) {
+			this.ext5 = ext5;
+		}
+		
+	String ext6;
+		public String getExt6() {
+			return ext6;
+		}
+		public void setExt6(String ext6) {
+			this.ext6 = ext6;
+		}
+		
+	String ext7;
+		public String getExt7() {
+			return ext7;
+		}
+		public void setExt7(String ext7) {
+			this.ext7 = ext7;
+		}
+		
+	String ext8;
+		public String getExt8() {
+			return ext8;
+		}
+		public void setExt8(String ext8) {
+			this.ext8 = ext8;
+		}
+		
+	String ext9;
+		public String getExt9() {
+			return ext9;
+		}
+		public void setExt9(String ext9) {
+			this.ext9 = ext9;
+		}
+		
+	String ext10;
+		public String getExt10() {
+			return ext10;
+		}
+		public void setExt10(String ext10) {
+			this.ext10 = ext10;
+		}
+
+	public void like() throws Exception{
+		
+	}
+		
 	public void detail() throws Exception{
 
 		IWorkItem workItem = databaseMe();
@@ -452,6 +488,15 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		}
 	
 
+	private void formatWorkItem(WorkItem wi) {
+		wi.setTitle(this.getTitle());
+		wi.setInstId(getInstId());
+		wi.setEndpoint(session.getUser().getUserId());
+		wi.setWriter(getWriter());
+		wi.setMetaworksContext(this.getMetaworksContext());
+		wi.setInstantiation(isInstantiation());
+	}
+		
 	@Override
 	public IWorkItem newSchedule() {
 		return new ScheduleWorkItem();
@@ -469,28 +514,40 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		return new MovieWorkItem();
 	}
 
-	@Override
-	public IWorkItem newFile() throws Exception {
-		// TODO Auto-generated method stub
-		FileWorkItem fwi = new FileWorkItem();
-		fwi.setTitle(title);
-		formatWorkItem(fwi);
-		
-		return fwi;
-	}
 
+	@Override
+	public IWorkItem newComment() throws Exception {
+		CommentWorkItem wi = new CommentWorkItem();
+		formatWorkItem(wi);
+		
+		return wi;
+	}
+	
 	@Override
 	public IWorkItem newMemo() throws Exception {
-		// TODO Auto-generated method stub
 		MemoWorkItem wi = new MemoWorkItem();
-		wi.setTitle(title);
 		formatWorkItem(wi);
-
+		
+		return wi;
+	}
+	
+	@Override
+	public IWorkItem newFile() throws Exception {
+		FileWorkItem wi = new FileWorkItem();
+		formatWorkItem(wi);
+		
+		return wi;
+	}
+	
+	@Override
+	public IWorkItem newSourceCode() throws Exception {
+		SourceCodeWorkItem wi = new SourceCodeWorkItem();
+		formatWorkItem(wi);
 		
 		return wi;
 	}
 
-	private void formatWorkItem(WorkItem wi) {
+/*	private void formatWorkItem(WorkItem wi) {
 		wi.setInstId(getInstId());
 		wi.setEndpoint(session.getUser().getUserId());
 		wi.setWriter(getWriter());
@@ -499,41 +556,11 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		wi.getMetaworksContext().setHow(this.getMetaworksContext().getHow());
 		wi.setInstantiation(isInstantiation());
 	}
-
-
-	@Override
-	public IWorkItem newComment() throws Exception {
-		// TODO Auto-generated method stub
-		CommentWorkItem wi = new CommentWorkItem();
-		
-		String type = wi.getType();
-		wi.copyFrom(this);
-		wi.setType(type);
-		wi.setTitle(title);
-		
-		return wi;
-	}
-	
-	@Override
-	public IWorkItem newSourceCode() throws Exception {
-		// TODO Auto-generated method stub
-		SourceCodeWorkItem wi = new SourceCodeWorkItem();
-		String type = wi.getType();
-		wi.copyFrom(this);
-		wi.setType(type);
-		wi.setTitle(title);
-		wi.setSourceCode(new SourceCode());
-		
-		return wi;
-	}
-	
-	
+*/
 	boolean instantiation;
-		
 		public boolean isInstantiation() {
 			return instantiation;
 		}
-	
 		public void setInstantiation(boolean instantiation) {
 			this.instantiation = instantiation;
 		}
@@ -541,17 +568,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		
 	@AutowiredFromClient
 	public NewInstancePanel newInstancePanel;
-	
-	
-	boolean instantiated;
-		public boolean isInstantiated() {
-			return instantiated;
-		}
-	
-		public void setInstantiated(boolean instantiated) {
-			this.instantiated = instantiated;
-		}
-		
 	
 	int majorVer;
 		public int getMajorVer() {
@@ -594,449 +610,175 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			this.isDeleted = isDeleted;
 		}
 
+	public IInstance save() throws Exception {
+		
+		IInstance instanceRef = null;		
+		
+		// 추가
+		if(WHEN_NEW.equals(getMetaworksContext().getWhen()) || this instanceof FileWorkItem){
+			// 인스턴스 발행
+			if(this.getInstId() == null){				
+				// 인스턴스 발행을 위한 ProcessMap 사용
+				ProcessMap processMap = new ProcessMap();
+				processMap.processManager = processManager;
+				processMap.session = session;
+				processMap.setDefId(CodiProcessDefinitionFactory.unstructuredProcessDefinitionLocation);
+				
+				String instId = processMap.initializeProcess();
+				
+				// 덧글 상태일때 덧글에 입력된 사용자명 자동으로 follower 에 추가해주는 기능
+				if(this instanceof CommentWorkItem){
+					ArrayList<String> initialFollowers = ((CommentWorkItem)this).initialFollowers;
+					if(initialFollowers!=null){
+						for(String userId : initialFollowers){
+							
+							RoleMapping follower = RoleMapping.create();
+							follower.setEndpoint(userId);
+							follower.setName("fol_" + userId);
+
+							processManager.putRoleMapping(instId, follower);
+						}
+					}
+				}
+
+				// WorkItem 의 InstId 할당
+				this.setInstId(new Long(instId));
+				
+				// 기본 정보 설정  
+				Instance instance = new Instance();
+				instance.setInstId(this.getInstId());
+				
+				instanceRef = instance.databaseMe();				
+				
+				instanceRef.setInitCmpl(true);										// 기본값 수정 시작자만 완료 가능하게
+				instanceRef.setInitiator(session.getUser());						// 시작자는 실행한 사람
+				instanceRef.setInitComCd(session.getEmployee().getGlobalCom());		// 시작자의 회사
+				instanceRef.setStatus("Running");									// 처음 상태 Running
+				instanceRef.setDueDate(getDueDate());
+				instanceRef.setName(this.getTitle());	
+				
+				//parent = afterInstantiation(instantiatedViewContent, 	instanceRef);				
+			}else{
+				Instance instance = new Instance();
+				instance.setInstId(this.getInstId());
+				
+				instanceRef = instance.databaseMe();
+			}
+			
+			// 마지막 워크아이템의 제목을 인스턴스의 적용
+			instanceRef.setLastCmnt(getTitle());
+			instanceRef.setCurrentUser(session.getUser());//may corrupt when the last actor is assigned from process execution.
+			
+			// 워크아이템 추가
+			Long taskId = UniqueKeyGenerator.issueWorkItemKey(((ProcessManagerBean)processManager).getTransactionContext());
+			
+			IUser writer = new User();
+			writer.setUserId(session.getUser().getUserId());
+			writer.setName(session.getUser().getName());
+			
+			this.setTaskId(taskId);			
+			this.setRootInstId(this.getInstId());
+			this.setWriter(writer);
+			this.setStartDate(Calendar.getInstance().getTime());
+			this.setEndDate(getStartDate());
+			this.setStatus(WORKITEM_STATUS_FEED);
+			this.setIsDeleted(false);			
+			
+			if(this.getGrpTaskId() == null)
+				this.setGrpTaskId(this.getTaskId());
+			
+			// 덧글 상태일때 덧글이 길면 메모로 변경해주는 기능
+			if(this instanceof CommentWorkItem){
+				if(this.getTitle().length() > TITLE_LIMIT_SIZE){
+					this.setType(WORKITEM_TYPE_MEMO);
+					this.setContent(getTitle());
+					this.setTitle(getTitle().substring(0, TITLE_LIMIT_SIZE) + "...");
+				}
+			}
+			
+			this.createDatabaseMe();
+			
+		// 수정
+		}else{		
+			this.syncToDatabaseMe();
+			
+		}		
+		
+		this.flushDatabaseMe();
+				
+		return instanceRef;
+	}
+	
 	@Override
 	@Test(scenario="first", starter=true, instruction="$Write", next="newActivity()")
 	public Object[] add() throws Exception {
-		Long taskId = UniqueKeyGenerator.issueWorkItemKey(((ProcessManagerBean)processManager).getTransactionContext());
+		Object[] returnObjects = null;
 		
+		Long prevInstId = this.getInstId();
+		String mood = session.getEmployee().getPreferUX();
 		
-		boolean newFollowersAreAdded = false;
-
-		InstanceViewContent instantiatedViewContent = null;
-		WfNode parent = null;
-		if(instantiation && !instantiated){
-			ResourceFile unstructuredProcessDefinition = new ResourceFile();
-			unstructuredProcessDefinition.processManager = processManager;
-			unstructuredProcessDefinition.session = session;
-			unstructuredProcessDefinition.instanceViewContent = instanceViewContent;
-			unstructuredProcessDefinition.setAlias(CodiProcessDefinitionFactory.unstructuredProcessDefinitionLocation);
-
-			
-			if(this instanceof CommentWorkItem){
-				ArrayList<IUser> friends = new ArrayList<IUser>();
+		// 실제 저장
+		Instance instance = new Instance();
+		instance.session = session;
+		instance.instanceViewContent = instanceViewContent;
+		instance.copyFrom(this.save());
+		
+		// 추가
+		if(WHEN_NEW.equals(getMetaworksContext().getWhen())){
+			// 인스턴스 발행
+			if(prevInstId == null){
+				Object detail = instance.detail();
 				
-				ArrayList<String> initialFollowers = ((CommentWorkItem)this).initialFollowers;
-				if(initialFollowers!=null){
-					for(String userId : initialFollowers){
-						
-						User friend = new User();
-						friend.setUserId(userId);
-			
-						friends.add(friend);
-					}
-				}
-			
-				unstructuredProcessDefinition.friends = friends;
-			}
-
-			Object[] instanceViewAndInstanceList = unstructuredProcessDefinition.initiate();
-
-			instantiatedViewContent = (InstanceViewContent)instanceViewAndInstanceList[0];
-			setInstId(new Long(instantiatedViewContent.getInstanceView().getInstanceId()));
-			
-			//이름 변경  
-			instantiatedViewContent.getInstanceView().getInstanceNameChanger().setInstanceName(getTitle());
-			instantiatedViewContent.getInstanceView().getInstanceNameChanger().change();
-			instantiatedViewContent.getInstanceView().setInstanceName(getTitle());
-
-			Instance instanceRef = new Instance();
-			instanceRef.setInstId(new Long
-					(instantiatedViewContent.getInstanceView().instanceId));
-			instanceRef.databaseMe().setInitiator(session.user);
-			instanceRef.databaseMe().setStatus("Running");
-			//ProcessInstance processInstance = processManager.getProcessInstance(instanceRef.getInstId().toString())
-			
-			if(session.getEmployee() != null)
-				instanceRef.databaseMe().setInitComCd(session.getEmployee().getGlobalCom());
-			
-			instanceRef.databaseMe().setDueDate(getDueDate());
-			
-			parent = afterInstantiation(instantiatedViewContent, 	instanceRef);
-
-		}else{
-			if(this instanceof CommentWorkItem && getInstId()!=null){
-				
-				ArrayList<String> initialFollowers = ((CommentWorkItem)this).initialFollowers;
-				
-				if(initialFollowers!=null){
-					for(String userId : initialFollowers){
-						RoleMapping rm = RoleMapping.create();
-						rm.setEndpoint(userId);
-						rm.setName("flw_" + userId);
-						
-						processManager.putRoleMapping(getInstId().toString(), rm);
-					}
-				}
-				
-				processManager.applyChanges();
-				
-				newFollowersAreAdded = true;
-			}
-		}
-		
-		setRootInstId(getInstId());
-		
-		User loginUser = new User();
-		loginUser.setUserId(session.getUser().getUserId());
-		loginUser.setName(session.getUser().getName());
-
-		setWriter(loginUser);
-		setTaskId(taskId);
-		setStartDate(Calendar.getInstance().getTime());
-		setEndDate(getStartDate());
-		
-		if(getGrpTaskId() == null){
-			setGrpTaskId(taskId);
-			setMajorVer(1);
-			setMinorVer(0);
-			setIsDeleted(false);
-		} 
-		
-		if(getMetaworksContext() != null && getMetaworksContext().getWhen()!=null && getMetaworksContext().getWhen().equals("edit")){			
-			if(getFile() != null && getFile().getMimeType() != null && getFile().getMimeType().indexOf("office") > 0){
-				IWorkItem worklist = sql("update bpm_worklist set isdeleted=1 where grptaskid=?grpTaskId and taskid!=?currentTaskId");
-				worklist.set("grpTaskId", getGrpTaskId());
-				worklist.set("currentTaskId", getTaskId());
-				worklist.update();
-				
-				String prefix = TransactionContext.getThreadLocalInstance()
-						.getRequest().getSession().getServletContext()
-						.getRealPath("/images/pdf/");
-				
-				String inputFilePath = getFile().overrideUploadPathPrefix()+ getFile().getUploadedPath();
-				String outputFilePath = prefix + "/" + this.getGrpTaskId() + "_" + String.valueOf(this.getMajorVer()) + "_" + String.valueOf(this.getMinorVer()) + ".pdf";
-				
-				ConvertDocToPdf convertDoc = new ConvertDocToPdf();
-				convertDoc.convertPdf(inputFilePath, outputFilePath);
-			}
-		}
-		
-		if(getTitle().length() > 190){
-			setType(new MemoWorkItem().getType());
-			setContent(getTitle());
-			setTitle(getTitle().substring(0, 190) + "...");
-		}
-		if( this.getStatus() == null ){
-			setStatus(WorkItem.WORKITEM_STATUS_FEED);
-		}
-		createDatabaseMe();
-		flushDatabaseMe();
-		
-		final Instance instance = new Instance();
-		instance.setInstId(getInstId());
-		
-		instance.databaseMe().setLastCmnt(getTitle());
-		instance.databaseMe().setCurrentUser(loginUser);//may corrupt when the last actor is assigned from process execution.
-		if( instantiation && !instantiated && session != null && session.getLastPerspecteType().equalsIgnoreCase("topic")){
-			instance.databaseMe().setTopicId(session.getLastSelectedItem());
-		}
-		
-		//InstanceViewContent instanceViewContent = new InstanceViewContent();
-//		instanceViewContent.load(instance);
-		String tempWhen = getMetaworksContext().getWhen();
-		getMetaworksContext().setWhen(WHEN_VIEW);
-		if("sns".equals(session.getEmployee().getPreferUX())){
-			getMetaworksContext().setHow("instanceList");
-			getMetaworksContext().setWhere("sns");
-		}
-		
-		Instance refreshedInstance = new Instance();
-		refreshedInstance.copyFrom(instance.databaseMe());
-		refreshedInstance.fillFollower();
-		
-		refreshedInstance.getMetaworksContext().setHow("blinking");
-		refreshedInstance.setMetaworksContext(getMetaworksContext());
-
-		final boolean securedConversation = "1".equals(instance.databaseMe().getSecuopt());
-
-		// 새글
-		if(instantiation){
-			WorkItem newInstantiator = new CommentWorkItem();
-			newInstantiator.setWriter(session.getUser());
-			newInstantiator.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
-			
-			if("sns".equals(session.getEmployee().getPreferUX())){
-				newInstantiator.getMetaworksContext().setHow("sns");
-				newInstantiator.getMetaworksContext().setWhere("sns");
-				newInstantiator.setInstantiation(true);
-//				refreshedInstance.getMetaworksContext().setHow("instanceList");
-//				refreshedInstance.getMetaworksContext().setWhere("sns");
-				
-				InstanceList prepentTarget = new InstanceList();
-				prepentTarget.setPage(1);
-				
-				MetaworksRemoteService.getInstance().pushClientObjects(new Object[]{new ToPrepend(prepentTarget, refreshedInstance)});
-				
-				return new Object[]{new Refresh(newInstantiator)};
+				if("sns".equals(mood)){
+					NewInstancePanel panel = new NewInstancePanel();
+					panel.load(session);
+					
+					returnObjects = new Object[]{new ToPrepend(new InstanceList(), detail), new Refresh(panel)};
+				}else
+					returnObjects = new Object[]{new ToPrepend(new InstanceList(), instance), new Refresh(detail)};								
+			// 덧글
 			}else{
-				newInstantiator.setInstId(getInstId());
-				if(instantiatedViewContent==null){
-					instantiatedViewContent = instanceViewContent;
-					instantiatedViewContent.session = session;
-					instantiatedViewContent.load(refreshedInstance);
-				}
+				InstanceViewThreadPanel instanceViewThreadPanel = new InstanceViewThreadPanel();
+				instanceViewThreadPanel.setInstanceId(this.getInstId().toString());
 				
-				//instantiatedViewContent.getInstanceView().setNewItem(newItem);
-				
-				InstanceViewThreadPanel threadPanel = new InstanceViewThreadPanel();
-				
-				threadPanel.setInstanceId(getInstId().toString());
-				threadPanel.setNewItem(newInstantiator);
-				threadPanel.setThread(this);
-				threadPanel.session = session;
-				threadPanel.load(getInstId().toString());
-				
-	//			ArrayList<IDAO> workItemArr = new ArrayList<IDAO>();
-	//			workItemArr.add(this);
-	//			threadPanel.setThread(workItemArr);
-				
-				
-				
-				instantiatedViewContent.getInstanceView().setInstanceViewThreadPanel(threadPanel);
-				
-				MetaworksRemoteService.getInstance().pushClientObjects(new Object[]{new ToPrepend(new InstanceList(), refreshedInstance)});
-				
-				if(newInstancePanel != null  && newInstancePanel.getDueDate() != null){
-					instance.flushDatabaseMe();
-					
-	//				ScheduleCalendar scheduleCalendar = new ScheduleCalendar();
-	//				scheduleCalendar.session = session;
-	//				scheduleCalendar.load();
-	//				return new Object[]{new Refresh(scheduleCalendar), new Refresh(instantiatedViewContent)};
-					
-					ArrayList<String> followerIds = new ArrayList<String>();
-					IUser followers = instantiatedViewContent.getInstanceView().getFollowers().getFollowers();
-					followers.beforeFirst();
-					while(followers.next()){
-						followerIds.add(followers.getUserId());
-					}
-					for(String userId : followerIds){
-						Browser.withSession(Login.getSessionIdWithUserId(userId), new Runnable(){
-							@Override
-							public void run() {
-								ScriptSessions.addFunctionCall("if(mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar')!=null) mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar').__getFaceHelper().addMyschedule", new Object[]{getTitle(), getInstId()+"", newInstancePanel.getDueDate() });
-							}
-							
-						});
-					}
-				}
-				
-				return new Object[]{new Refresh(instantiatedViewContent)};
-			}
-		
-		// 댓글
-		}else{
-			final IWorkItem copyOfThis = this;//copyMe.databaseMe();
-
-			//final IWorkItem copyOfThis = /*new WorkItem();
-			//copyOfThis.copyFrom(*/databaseMe();//);
+				CommentWorkItem commentWorkItem = new CommentWorkItem();
+				commentWorkItem.setWriter(this.getWriter());
+				commentWorkItem.setInstId(this.getInstId());
+				commentWorkItem.getMetaworksContext().setHow(this.getMetaworksContext().getHow());
 			
-			final InstanceViewThreadPanel threadPanelOfThis = new InstanceViewThreadPanel();
-			threadPanelOfThis.setInstanceId(getInstId().toString());
-			threadPanelOfThis.session = session;
-			
-			final Object[] returnObjects;
-			ArrayList<String> followerIds = new ArrayList<String>();
-			
-			if("sns".equals(session.getEmployee().getPreferUX())){
-				
-				if(OverlayCommentWorkItem.TYPE.equals(copyOfThis.getType())){
-					
+				if(this instanceof OverlayCommentWorkItem){
 					WorkItem parentWorkItem = new WorkItem();
 					parentWorkItem.setTaskId(getOverlayCommentOption().getParentTaskId());
 					
-					returnObjects = new Object[]{
-							new ToAppend(parentWorkItem, copyOfThis)
-					};
-					
+					returnObjects = new Object[]{new ToAppend(parentWorkItem, this)};
+				}else if(this instanceof CommentWorkItem){
+					returnObjects = new Object[]{new Refresh(this, false, true)};
 				}else{
-					returnObjects = new Object[]{
-							new ToPrepend(new InstanceList(), copyOfThis)
-					};
+					returnObjects = new Object[]{new ToAppend(instanceViewThreadPanel, this), new Refresh(commentWorkItem, false, true)};	
 				}
-				
-				
-				
-				
-			}else{
-
-				final InstanceView refreshedInstanceView = new InstanceView();
-				refreshedInstanceView.processManager = processManager;
-				refreshedInstanceView.session = session;
-				refreshedInstanceView.setMetaworksContext(new MetaworksContext());
-				refreshedInstanceView.getMetaworksContext().setHow(this.getMetaworksContext().getHow());
-				refreshedInstanceView.getMetaworksContext().setWhere(this.getMetaworksContext().getWhere());
-				refreshedInstanceView.load(instance);
-				
-				IUser followers = refreshedInstanceView.getFollowers().getFollowers();
-				followers.beforeFirst();
-				
-				while(followers.next()){
-					followerIds.add(followers.getUserId());
-				}
-				
-				if(newFollowersAreAdded){
-					returnObjects = new Object[]{
-							new Remover(refreshedInstance), //인스턴스 목록에서 제거 
-							new Remover(refreshedInstance), //인스턴스 목록에서 제거 - 한번하니 다른게 또 있는지 안돼서 두번 지움.. ㅋㅋ 메롱  
-							new ToPrepend(new InstanceList(), refreshedInstance), // 인스턴스 리스트에 맨 꼭대기에 추가함... -- 더 새로운 소식으로 눈에 띄게하는 느낌을 줌...
-							new Refresh (refreshedInstanceView.getFollowers())
-					};					
-				}else{
-					returnObjects = new Object[]{
-							new Remover(refreshedInstance), //인스턴스 목록에서 제거 
-							new Remover(refreshedInstance), //인스턴스 목록에서 제거 - 한번하니 다른게 또 있는지 안돼서 두번 지움.. ㅋㅋ 메롱  
-							new ToPrepend(new InstanceList(), refreshedInstance) // 인스턴스 리스트에 맨 꼭대기에 추가함... -- 더 새로운 소식으로 눈에 띄게하는 느낌을 줌..
-					};			
-				};
 			}
 			
+			// 본인 이외에 다른 사용자에게 push
+			final IWorkItem copyOfThis = this;
+			final IInstance copyOfInstance = instance;
 			
-			//if(!securedConversation)
-			MetaworksRemoteService.getInstance().pushClientObjects(returnObjects);
+			MetaworksRemoteService.pushOtherClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(copyOfInstance), new WorkItemListener(copyOfThis)});
 			
-
-			threadPanelOfThis.getMetaworksContext().setHow(this.getMetaworksContext().getHow());
-			threadPanelOfThis.getMetaworksContext().setWhere(this.getMetaworksContext().getWhere());
-			threadPanelOfThis.load(getInstId().toString());
+		// 수정
+		}else{		
+			// 변경된 WorkItem 을 갱신
+			returnObjects = new Object[]{new Refresh(this, true)};
 			
-			boolean iAmParticipating = false;
-			for(String followerId : followerIds){
+			// 본인 이외에 다른 사용자에게 push
+			final IWorkItem copyOfThis = this;
 			
-				final boolean postByMe = followerId.equals(session.getUser().getUserId());
-				if(postByMe){ //ignore myself
-					iAmParticipating = true;
-				}else{
-					Notification noti = new Notification();
-					
-					noti.setNotiId(System.currentTimeMillis()); //TODO: why generated is hard to use
-					noti.setUserId(followerId);
-					noti.setActorId(session.getUser().getUserId());
-					noti.setConfirm(false);
-					noti.setInputDate(Calendar.getInstance().getTime());
-					noti.setTaskId(getTaskId());
-					noti.setInstId(getInstId());
-					
-					
-					noti.setActAbstract(session.getUser().getName() + " wrote : " + getTitle());
+			MetaworksRemoteService.pushOtherClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new WorkItemListener(copyOfThis)});
+		}		
 		
-					noti.add(refreshedInstance);
-
-				
-					String followerSessionId = Login.getSessionIdWithUserId(followerId);
-					
-					String device = Login.getDeviceWithUserId(followerId);
-					
-					
-					if("desktop".equals(device) || device==null){
-						try{
-							//NEW WAY IS GOOD
-							Browser.withSession(followerSessionId, new Runnable(){
-								@Override
-								public void run() {
-									if(securedConversation){
-										ScriptSessions.addFunctionCall("mw3.locateObject", new Object[]{returnObjects, null, "body"});
-									}
-									//대화목록의 맨뒤에 새로 입력한 내용만 붙여서 속도 개선  
-//									ScriptSessions.addFunctionCall("mw3.locateObject", new Object[]{new ToAppend(threadPanelOfThis, copyOfThis), null, "body"});
-									
-									if(OverlayCommentWorkItem.TYPE.equals(copyOfThis.getType())){
-										
-										WorkItem parentWorkItem = new WorkItem();
-										parentWorkItem.setTaskId(getOverlayCommentOption().getParentTaskId());
-										
-										ScriptSessions.addFunctionCall("mw3.locateObject", new Object[]{new ToAppend(parentWorkItem, copyOfThis), null, "body"});
-										
-									}else{
-										ScriptSessions.addFunctionCall("mw3.locateObject", new Object[]{new ToPrev(threadPanelOfThis.newItem, copyOfThis), null, "body"});
-									}
-									
-									//refresh notification badge
-									if(!postByMe)
-										ScriptSessions.addFunctionCall("mw3.getAutowiredObject('" + NotificationBadge.class.getName() + "').refresh", new Object[]{});
-									
-									ScriptSessions.addFunctionCall("mw3.onLoadFaceHelperScript", new Object[]{});
-								}
-								
-							});
-						}catch(Exception e){
-							e.printStackTrace(); //may stops due to error occurs when the follower isn't online.
-						}
-					}else{
-						Session.pushMessage(followerId, returnObjects);
-						
-						NotificationBadge notiBadge = new NotificationBadge();
-						notiBadge.setNewItemCount(-1);
-						
-						Session.pushMessage(followerId, new Refresh(notiBadge));
-					}
-					
-				}
-			}
-			
-			if(!iAmParticipating){
-				org.uengine.kernel.RoleMapping newFollower = org.uengine.kernel.RoleMapping.create();
-				newFollower.setName("_follower_" + session.getUser().getUserId());
-				newFollower.setEndpoint(session.getUser().getUserId());
-				
-				processManager.putRoleMapping(getInstId().toString(), newFollower);
-				processManager.applyChanges();
-				
-				//refreshedInstanceView.getFollowers().getFollowers().getImplementationObject().moveToInsertRow(session.getUser());
-				//refreshedInstanceView.getFollowers().getFollowers()
-				
-			}
-			
-			// 보안 대화일 경우 처리해야 함.
-			if(!securedConversation){
-				Contact contact = new Contact();
-				contact.setFriend(writer);
-				//contact.setFriendId(writer.getUserId());
-				writer.setMood(title);
-				writer.getMetaworksContext().setWhen("contacts");
-				//contact.setMood(title);
-				
-				MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(contact, true)});
-			}
-			
-			if("sns".equals(session.getEmployee().getPreferUX()) ){
-				return null;
-			}
-			if("comment".equals(getType())){
-				//if( tempWhen != null && tempWhen.equals("edit")){
-					return new Object[]{new Refresh(copyOfThis)};
-				//}else{
-				//	return new Object[]{copyOfThis};
-				//}
-			}else if(OverlayCommentWorkItem.TYPE.equals(getType())){
-				WorkItem parentWorkItem = new WorkItem();
-				parentWorkItem.setTaskId(getOverlayCommentOption().getParentTaskId());
-				
-				return new Object[]{new ToAppend(parentWorkItem, this)};				
-			}else{
-				WorkItem newItem = new CommentWorkItem();
-				newItem.setInstId(new Long(getInstId()));
-				newItem.setTaskId(new Long(-1));
-				newItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
-				
-				if( workItemVersionChooser != null ){
-					String currentVer = copyOfThis.getMajorVer() + "." + copyOfThis.getMinorVer();
-					
-					workItemVersionChooser.onRelation2Object();
-					workItemVersionChooser.versionSelector.setSelected(currentVer);
-					
-					copyOfThis.setWorkItemVersionChooser(workItemVersionChooser);
-				}
-				
-				if( tempWhen != null && tempWhen.equals("edit")){
-					return new Object[]{new Refresh(copyOfThis)};
-				}else{
-					return new Object[]{new Refresh(newItem), new ToPrev(threadPanelOfThis.newItem, copyOfThis)};
-				}
-//				return new Object[]{new ToPrev(threadPanelOfThis.newItem, copyOfThis)};
-			}
-		}
-
+		this.getMetaworksContext().setWhen(WHEN_VIEW);
+		
+		return new Object[]{returnObjects};
+		
 	}
 	
 	public Object remove() throws Exception{
@@ -1067,19 +809,15 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		setInstantiation(false);
 		setDueDate(null);
 		setStartDate(null);
-		setEndDate(null);
-		
-		getMetaworksContext().setWhen("edit");
-		
+		setEndDate(null);		
+	
+		getMetaworksContext().setWhen("edit");		
 	}
 
-	protected WfNode afterInstantiation(
-			InstanceViewContent instantiatedViewContent,
-			final Instance instanceRef) throws Exception {
+	protected WfNode afterInstantiation(InstanceViewContent instantiatedViewContent, final Instance instanceRef) throws Exception {
 		
 		WfNode parent=null;
 		if(newInstancePanel!=null){
-			
 			//instanceRef.databaseMe().setSecuopt(newInstancePanel.getSecurityLevel());
 			instanceRef.databaseMe().setSecuopt(newInstancePanel.getSecurityLevel().getSelected());
 			instanceRef.flushDatabaseMe();
@@ -1095,7 +833,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 
 				instantiatedViewContent.instanceView.instanceNameChanger.setInstanceName(parent.getName());
 				instantiatedViewContent.instanceView.instanceNameChanger.change();
-
 			
 				parent.setLinkedInstId(instId);
 				parent.save();
@@ -1192,11 +929,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	
 	@Autowired
 	public ProcessManagerRemote processManager;
-
+	
 	@Autowired
 	public InstanceViewContent instanceViewContent;
-
-	
-	
-
 }
