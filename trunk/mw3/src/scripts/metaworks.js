@@ -1847,17 +1847,18 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 							var objectId = this.objectId_KeyMapping[tryKey];
 							if(objectId)
 								return this.objects[objectId];
-							
-							if(metadata.keyFieldDescriptor)
-								tryKey = clsNames[i] //add placeholder candidates without @id again
-							
-							var objectId = this.objectId_KeyMapping[tryKey];
-							if(objectId)
-								return this.objects[objectId];
 						}
 						
+						if(metadata.keyFieldDescriptor){
+							for(var i=0; i<clsNames.length; i++){
+								var tryKey = clsNames[i];
+								
+								var objectId = this.objectId_KeyMapping[tryKey];
+								if(objectId)
+									return this.objects[objectId];
+							}
+						}
 					}
-					
 				}
 				
 				
