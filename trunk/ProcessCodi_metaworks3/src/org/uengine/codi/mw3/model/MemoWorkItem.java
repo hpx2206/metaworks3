@@ -22,7 +22,7 @@ import org.uengine.util.UEngineUtil;
 public class MemoWorkItem extends WorkItem{
 	
 	public MemoWorkItem(){
-		setType("memo");		
+		setType(WORKITEM_TYPE_MEMO);
 		setMemo(new WebEditor());
 	}
 

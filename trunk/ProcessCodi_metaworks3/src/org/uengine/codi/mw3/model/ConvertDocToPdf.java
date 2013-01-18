@@ -13,7 +13,9 @@ import com.artofsolving.jodconverter.openoffice.converter.OpenOfficeDocumentConv
 public class ConvertDocToPdf {
 	
 	
-	public void convertPdf(String inputFilePath, String outputFilePath) throws FileNotFoundException, IOException, Exception {
+	public boolean convertPdf(String inputFilePath, String outputFilePath) throws FileNotFoundException, IOException, Exception {
+		
+		boolean isConvert = false;
 		
 		File inputFile = new File(inputFilePath);
 		File outputFile = new File(outputFilePath);
@@ -27,11 +29,14 @@ public class ConvertDocToPdf {
 			DocumentConverter converter = new OpenOfficeDocumentConverter(connection);
 			converter.convert(inputFile, outputFile);
 			
+			isConvert = true;
 		} catch (ConnectException e) {
 			e.printStackTrace();
 		}finally{
 			connection.disconnect();
 		}
+		
+		return isConvert;
 	}
 
 }

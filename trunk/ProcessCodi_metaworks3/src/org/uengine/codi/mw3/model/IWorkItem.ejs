@@ -30,17 +30,10 @@
 						<% }%></div>
 					<div>
 					<%if(value.type=='file'){%>			
-						<%  if(value.file.mimeType.indexOf("image")==0){
-								value.file.metaworksContext.when='image';
-							}else{
-								value.file.metaworksContext.when='view'; 
-							}%>
-							<div style="width:auto;"><%=fields.file.here()%></div>
+							<div style="width:auto;"><%=fields.file.here({when: (value.file.mimeType.indexOf('image')==0)?'image':'view' })%></div>
 					<%}%>
 					<%if(value.type=='memo'){%>
-					
-							<%  value.memo.metaworksContext.when='view'; %>						
-							<%=fields.memo.here()%>						
+							<%=fields.memo.here({when: 'view'})%>						
 						
 					<%}%>
 					<%if(value.type=='src'){%>
@@ -112,11 +105,11 @@
 								<% if(value.type=='comment' || value.type=='file' || value.type=='src' || value.type=='memo' || value.type=='generic'){%>
 									<span>
 											<%=value.title.replace('\n','<br>')%> 
-											<%if(value.type=='file' && value.file.mimeType.indexOf("office")>0){%>
+											<%if(value.type=='file'){%>
 											(ver <%=value.majorVer%>.<%=value.minorVer%>)
 											<%}%>
 									</span>					
-									<%if(value.type=='file' && value.file.mimeType.indexOf("office")>0){%>			
+									<%if(value.type=='file' && value.ext3 == 'true'){%>			
 									<span>
 										<a href="#" onClick="<%=methods.workItemPopup.caller()%>"><img src="images/waveStyle/newWindow.png" style="margin-top:2px;" title="Open new window"></a>
 									</span>	
@@ -159,20 +152,13 @@
 					<%if(value.type=='file'){%>
 					<tr>
 						<td>
-						<%  if(value.file.mimeType.indexOf("image")==0){
-								value.file.metaworksContext.when='image';
-							}else if(value.file.mimeType.indexOf("ms-")>0 || value.file.mimeType.indexOf("office")>0){
-								value.file.metaworksContext.when='pdf';
-						%>
-								<%if(value.workItemVersionChooser!=null){%>
-									<%=fields.workItemVersionChooser.here()%>
-								<%}%>
-								<iframe src="images/pdf/<%=value.grpTaskId%>_<%=value.majorVer%>_<%=value.minorVer%>.pdf" scrolling="no" width=100% height=300px onLoad="resizeFrame(this);"></iframe> 
-						<%	}else{
-								value.file.metaworksContext.when='view'; 
-							}
-						%>
-							<%=fields.file.here()%>
+						<%if(value.workItemVersionChooser!=null){%>
+							<%=fields.workItemVersionChooser.here()%>
+						<%}%>
+						<%if(value.ext3 == 'true'){%>
+							<iframe src="images/pdf/<%=value.grpTaskId%>_<%=value.majorVer%>_<%=value.minorVer%>.pdf" scrolling="no" width=100% height=300px onLoad="resizeFrame(this);"></iframe>
+						<%}%>
+							<%=fields.file.here({when: (value.file.mimeType.indexOf('image')==0)?'image':'view' })%>
 						</td>
 					</tr>
 					<%}%>

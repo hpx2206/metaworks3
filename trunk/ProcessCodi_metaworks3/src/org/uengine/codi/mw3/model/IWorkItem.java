@@ -43,6 +43,11 @@ public interface IWorkItem extends IDAO{
 		//When user delegate a workitem, the workitem's status whould be changed to this status and another workitem.	
 		public final static String WORKITEM_STATUS_DELEGATED= "DELEGATED"; 
 	
+		public final static String WORKITEM_TYPE_MEMO		 = "memo";
+				
+		
+		public final static int TITLE_LIMIT_SIZE             = 40;
+		
 		@Id
 		//@GeneratedValue(strategy=GenerationType.TABLE, generator="SEQ_BPM")
 		public Long getTaskId();
@@ -77,8 +82,11 @@ public interface IWorkItem extends IDAO{
 		public void setExtFile(String extFile);
 		
 		@Hidden
-		@ORMapping(databaseFields = { "content" }, objectFields = { "code" },
-			objectIsNullWhenFirstDBFieldIsNull = true)
+		@ORMapping(
+			databaseFields = { "content" },
+			objectFields = { "code" },
+			objectIsNullWhenFirstDBFieldIsNull = true,
+			availableWhen= "type=='src'")
 		public SourceCode getSourceCode();
 		public void setSourceCode(SourceCode sourceCode);
 		
@@ -176,8 +184,9 @@ public interface IWorkItem extends IDAO{
 		@ORMapping(
 			databaseFields = { 	"taskId", "grpTaskId", "instId" }, 
 			objectFields = { 	"taskId", "grpTaskId", "instId" }
-		)		
-		@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)
+		)
+		@NonSavable
+		@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)		
 		public WorkItemVersionChooser getWorkItemVersionChooser();
 		public void setWorkItemVersionChooser(WorkItemVersionChooser workItemVersionChooser);
 		
@@ -208,6 +217,37 @@ public interface IWorkItem extends IDAO{
 
 		public String getRoleName();
 		public void setRoleName(String roleName);
+				
+		public String getExt1();
+		public void setExt1(String ext1);
+
+		public String getExt2();
+		public void setExt2(String ext2);
+
+		public String getExt3();
+		public void setExt3(String ext3);
+
+		public String getExt4();
+		public void setExt4(String ext4);
+
+		public String getExt5();
+		public void setExt5(String ext5);
+
+		public String getExt6();
+		public void setExt6(String ext6);
+
+		public String getExt7();
+		public void setExt7(String ext7);
+
+		public String getExt8();
+		public void setExt8(String ext8);
+
+		public String getExt9();
+		public void setExt9(String ext9);
+
+		public String getExt10();
+		public void setExt10(String ext10);
+		
 		
 		@ServiceMethod(when = WHEN_VIEW)
 		public void like() throws Exception;
@@ -215,7 +255,7 @@ public interface IWorkItem extends IDAO{
 		@ServiceMethod(when = WHEN_VIEW, callByContent=true, target=ServiceMethodContext.TARGET_SELF)
 		public void detail() throws Exception;
 
-		@ServiceMethod(callByContent = true, target="popup")
+		@ServiceMethod(callByContent = true, target="append")
 		public Object[] add() throws Exception;
 
 		@ServiceMethod(inContextMenu=true, needToConfirm=true, callByContent=true /*TODO: later add except*/)
@@ -245,14 +285,7 @@ public interface IWorkItem extends IDAO{
 		@Hidden
 		public boolean isInstantiation();
 		public void setInstantiation(boolean instantiation);
-
-		@NonLoadable
-		@NonSavable
-		@Hidden
-		public boolean isInstantiated();
-		public void setInstantiated(boolean instantiated);
-
-
+		
 		@NonLoadable
 		@NonSavable
 		@Hidden		
