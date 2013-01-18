@@ -207,28 +207,39 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 	public InstanceViewContent instanceView;
 	
 
+	public String initializeProcess() throws Exception {
+		// process 초기화 (instId 생성)
+		String instId = processManager.initializeProcess(this.getDefId());
+
+		RoleMapping rm = RoleMapping.create();
+		if(session.getUser() != null){
+			rm.setName("initiator");
+			rm.setEndpoint(session.getUser().getUserId());
+			
+			processManager.putRoleMapping(instId, rm);
+		}
+		
+		processManager.setLoggedRoleMapping(rm);
+		processManager.executeProcess(instId);
+		processManager.applyChanges();
+		
+		return instId;
+	}	
+	
 	public Object[] initiate() throws Exception{
 //		InstanceViewContent instanceView// = new InstanceViewContent();
 		
-		String 	instId;		
+		String instId = this.initializeProcess();
 		
-		if(newInstancePanel!=null && newInstancePanel.getNewInstantiator().getTitle()!=null){
-			instId = processManager.initializeProcess(getDefId(), newInstancePanel.getNewInstantiator().getTitle());
-		}else{
-			instId = processManager.initializeProcess(getDefId());
-		}
+		String title = null;		
+		if(newInstancePanel!=null && newInstancePanel.getNewInstantiator().getTitle()!=null)
+			title =  newInstancePanel.getNewInstantiator().getTitle();
 		
-		RoleMapping rm = RoleMapping.create();
-		if(session.user!=null)
-			rm.setEndpoint(session.user.getUserId());
-		
-		processManager.setLoggedRoleMapping(rm);
-	
-		IInstance instanceRef = new Instance();
+		Instance instanceRef = new Instance();
 		instanceRef.setInstId(new Long(instId));
 		
 		if(newInstancePanel!=null){
-			
+			instanceRef.databaseMe().setSecuopt("" + newInstancePanel.getSecurityLevel());
 			
 			if(newInstancePanel.getKnowledgeNodeId() != null){
 			
@@ -278,10 +289,8 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 				
 				instanceView.getInstanceView().setNewItem(newItem);
 								
-				((Instance)instanceRef).databaseMe().setSecuopt("" + newInstancePanel.getSecurityLevel());
-				((Instance)instanceRef).flushDatabaseMe();
-
-
+				instanceRef.databaseMe().setSecuopt("" + newInstancePanel.getSecurityLevel());
+				instanceRef.flushDatabaseMe();
 	
 				return new Object[]{instanceView, parent};
 	
