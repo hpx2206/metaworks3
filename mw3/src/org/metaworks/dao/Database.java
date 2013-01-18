@@ -15,6 +15,7 @@ import org.metaworks.ObjectInstance;
 import org.metaworks.ObjectType;
 import org.metaworks.WebFieldDescriptor;
 import org.metaworks.WebObjectType;
+import org.metaworks.annotation.ORMapping;
 import org.metaworks.dwr.MetaworksRemoteService;
 
 public class Database<T extends IDAO> implements IDAO, Serializable, Cloneable{
@@ -400,11 +401,43 @@ public class Database<T extends IDAO> implements IDAO, Serializable, Cloneable{
 			databaseObjInst.setObject(dao);
 
 			if(fd.isSavable() && fd.getAttribute("ormapping")!=null){
+				ORMapping ormapping = (ORMapping)fd.getAttribute("ormapping");
+				
+				if(ormapping.availableWhen().length > 0 && !ormapping.availableWhen()[0].equals("")){
+					boolean ormappingIsAvailable = false;
+					for( int i = 0; i < ormapping.availableWhen().length; i++){
+						try{
+							String[] propAndValue = ormapping.availableWhen()[i].split("==");
+							String availabilityCheckPropName = propAndValue[0].trim();
+							String availabilityCheckValue = propAndValue[1].trim();
+
+							Object value = objInst.getFieldValue(WebObjectType.toUpperStartedPropertyName(availabilityCheckPropName));
+
+							Object comparer = null;
+							
+							if(availabilityCheckValue.startsWith("'")){ 
+								availabilityCheckValue = availabilityCheckValue.substring(1, availabilityCheckValue.length() - 1);
+								comparer = availabilityCheckValue;
+							}else{
+								comparer = new Integer(availabilityCheckValue);
+							}
+														
+							ormappingIsAvailable = comparer.equals(value);
+							if( ormappingIsAvailable ){
+								break;
+							}
+							
+						}catch(Exception e){
+							
+						}
+					}
+					if(!ormappingIsAvailable)
+						continue;
+				}
 				
 				databaseObjInst.setFieldValue(fd.getName(), fieldValue);
 				
 			}else if(fd.isSavable() || fd.isKey()){
-			
 				if(!dbPrimitiveTypes.containsKey(fd.getClassType())){
 					try {						
 						ObjectType referenceTableType = (ObjectType) MetaworksRemoteService.getInstance().getMetaworksType(fd.getClassType().getName()).metaworks2Type();
@@ -420,11 +453,9 @@ public class Database<T extends IDAO> implements IDAO, Serializable, Cloneable{
 				
 				dao.set(fd.getName(), fieldValue);
 			}
-			
 		}
 		
 		return dao;
-
 	}
 	
 	public T castDatabaseMe(Class<T> desiredType) throws Exception{
