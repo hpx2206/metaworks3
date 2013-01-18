@@ -18,7 +18,9 @@ var org_metaworks_website_MetaworksFile = function(objectId, className){
 		else
 			faceHelper.setFilename(faceHelper.extraFilename(object.uploadedPath));
 		
-		if(object.metaworksContext.when == 'image'){
+		var imageDiv = $("#image_" + this.objectId);
+		
+		if(imageDiv.length > 0){
 			var image = object.downloadImage(false);
 			var width = 0;
 			var height = 0;
@@ -29,10 +31,10 @@ var org_metaworks_website_MetaworksFile = function(objectId, className){
 				width = object.__descriptor.getOptionValue('imageWidth');
 				height = object.__descriptor.getOptionValue('imageHeight');
 			}
-			$("#image_" + this.objectId).html('<img style=\"display:none\" ' + (width?'width='+width+' ':' ') + (height?'height='+height+' ':' ') + 'src=\'' + image + '\'>').attr("href","javascript:mw3.objects[" + objectId + "].download()");
+			imageDiv.html('<img style=\"display:none\" ' + (width?'width='+width+' ':' ') + (height?'height='+height+' ':' ') + 'src=\'' + image + '\'>').attr("href","javascript:mw3.objects[" + objectId + "].download()");
 			
 			
-			$("#image_" + this.objectId).find('img').load(function(){
+			imageDiv.find('img').load(function(){
 				if($(this).width() > parentwidth){
 					$(this).width(parentwidth);
 				}
