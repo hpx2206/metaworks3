@@ -92,6 +92,10 @@ public class InstanceView {
 		
 	}
 	
+	/*
+	 * 2013-01-21 jinwon
+	 * InstanceViewThreadPanel 로 대체
+	 * 
 	@ServiceMethod(inContextMenu=true, callByContent=true, needToConfirm=true, target="popup", mouseBinding="drop")
 	public Object[] drop() throws Exception{
 		Object clipboard = session.getClipboard();
@@ -123,6 +127,7 @@ public class InstanceView {
 		}
 		return null;
 	}
+	*/
 	
 	
 	String status;

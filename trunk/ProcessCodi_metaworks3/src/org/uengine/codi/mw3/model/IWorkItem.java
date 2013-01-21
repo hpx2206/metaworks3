@@ -248,7 +248,6 @@ public interface IWorkItem extends IDAO{
 		public String getExt10();
 		public void setExt10(String ext10);
 		
-		
 		@ServiceMethod(when = WHEN_VIEW)
 		public void like() throws Exception;
 		
