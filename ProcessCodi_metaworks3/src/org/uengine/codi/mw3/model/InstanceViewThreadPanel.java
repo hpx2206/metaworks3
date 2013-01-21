@@ -2,6 +2,7 @@ package org.uengine.codi.mw3.model;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
@@ -107,35 +108,34 @@ public class InstanceViewThreadPanel implements ContextAware {
 			this.more = more;
 		}
 		
-	@ServiceMethod(callByContent=true, needToConfirm=true, mouseBinding="drop")
+	@ServiceMethod(callByContent=true, needToConfirm=true, mouseBinding="drop", target=ServiceMethodContext.TARGET_POPUP)
 	public Object[] drop() throws Exception{
-		if("sns".equals(session.getEmployee().getPreferUX()) ){
-			Object clipboard = session.getClipboard();
-			if(clipboard instanceof IWfNode){
-				WfNode draggedNode = (WfNode) clipboard;
-				
-				//setting the first workItem as wfNode referencer
-				GenericWorkItem genericWI = new GenericWorkItem();
-				
-				genericWI.processManager = processManager;
-				genericWI.session = session;
-				genericWI.setTitle("Attaching Knowledge");//parent.getName());
-				GenericWorkItemHandler genericWIH = new GenericWorkItemHandler();
-				KnowledgeTool knolTool = new KnowledgeTool();
-				knolTool.setNodeId(draggedNode.getId());
-				genericWIH.setTool(knolTool);
-				
-				genericWI.setGenericWorkItemHandler(genericWIH);
-				genericWI.setInstId(new Long(getInstanceId()));
-				genericWI.setMetaworksContext(new MetaworksContext());
-				genericWI.getMetaworksContext().setHow("instanceList");
-				genericWI.getMetaworksContext().setWhere("sns");
-				
-				// TODO attach thread 
-				return genericWI.add();
-			}
+		Object clipboard = session.getClipboard();
+		if(clipboard instanceof IWfNode){
+			WfNode draggedNode = (WfNode) clipboard;
+
+			KnowledgeTool knolTool = new KnowledgeTool();
+			knolTool.setNodeId(draggedNode.getId());
+
+			GenericWorkItemHandler genericWIH = new GenericWorkItemHandler();
+			genericWIH.setTool(knolTool);
+
+			//setting the first workItem as wfNode referencer
+			GenericWorkItem genericWI = new GenericWorkItem();
+			genericWI.setMetaworksContext(new MetaworksContext());
+			genericWI.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+			genericWI.processManager = processManager;
+			genericWI.session = session;
+			genericWI.setTitle("Attaching Knowledge");//parent.getName());
+
+			genericWI.setGenericWorkItemHandler(genericWIH);
+			genericWI.setInstId(new Long(getInstanceId()));
+			
+			// TODO attach thread 
+			return genericWI.add();
+		}else{
+			return null;
 		}
-		return null;
 	}
 	
 	@Autowired
