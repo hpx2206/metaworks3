@@ -1,8 +1,9 @@
+<div style="margin:10px 0">
 <div style="float:left">
 	<%=fields.versionSelector.here({when:'edit'})%>
 </div>
 
-<div style="float:left">
-	<%=methods.choose.here()%>
-</div>
+<a id="wBtn" href="#" onClick="<%=methods.choose.caller()%>"><span><%=mw3.localize("$choose")%></span></a>
+
 <div style="clear:both" />
+<div>
