@@ -58,5 +58,4 @@ var org_metaworks_ToPrepend = function(objectId, className){
 		mw3.removeObject(objectId);
 		mw3.onLoadFaceHelperScript();
 	}
-
-}
+};
