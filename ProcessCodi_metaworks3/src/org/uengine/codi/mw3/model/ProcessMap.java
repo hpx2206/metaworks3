@@ -220,6 +220,7 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		}
 		
 		processManager.setLoggedRoleMapping(rm);
+		
 		processManager.executeProcess(instId);
 		processManager.applyChanges();
 		

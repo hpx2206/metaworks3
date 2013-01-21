@@ -5,6 +5,7 @@ import java.util.Date;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.AutowiredToClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.dao.MetaworksDAO;
@@ -25,15 +26,16 @@ public class NewInstancePanel implements ContextAware {
 //		
 		newInstantiator = new CommentWorkItem();
 		newInstantiator.setWriter(session.getUser());		
+
+		/* for helper */
+		processMapPanel = new ProcessMapPanel();		
+		processMapPanel.setMetaworksContext(this.getMetaworksContext());
+		processMapPanel.load(session);			
 		
 		if("sns".equals(session.getEmployee().getPreferUX())){
 			getMetaworksContext().setHow("sns");
 			
 			newInstantiator.getMetaworksContext().setHow("sns");			
-		}else{
-			processMapPanel = new ProcessMapPanel();		
-			processMapPanel.setMetaworksContext(this.getMetaworksContext());
-			processMapPanel.load(session);			
 		}
 		
 		Choice securityLevel = new Choice();
@@ -133,6 +135,7 @@ public class NewInstancePanel implements ContextAware {
 //	}
 //	
 	ProcessMapPanel processMapPanel;
+		@AutowiredToClient
 		public ProcessMapPanel getProcessMapPanel() {
 			return processMapPanel;
 		}

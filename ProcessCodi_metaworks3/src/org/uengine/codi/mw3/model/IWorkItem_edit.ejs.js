@@ -52,8 +52,6 @@ var org_uengine_codi_mw3_model_IWorkItem_edit = function(objectId, className){
 	this.dueDate = null;
 };
 
-var localTaskId = -2;
-
 org_uengine_codi_mw3_model_IWorkItem_edit.prototype = {
 	getValue : function(){
 		var object = mw3.objects[this.objectId];
@@ -263,7 +261,8 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.press = function(){
     	$(recommendDivId).empty();
     	
     	//////// assists about process initiation /////////    	
-    	var processMap = mw3.getAutowiredObject("org.uengine.codi.mw3.model.ProcessMapList");
+    	var processMapPanel = mw3.getAutowiredObject("org.uengine.codi.mw3.model.ProcessMapPanel");
+    	var processMap = processMapPanel.processMapList;
     	
 		if(text && text.length>0 && processMap){
 	    	for(var i=0; i<processMap.processMapList.length; i++){

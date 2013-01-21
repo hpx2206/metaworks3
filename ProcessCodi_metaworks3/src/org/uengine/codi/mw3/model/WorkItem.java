@@ -607,7 +607,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		// 추가
 		if(WHEN_NEW.equals(getMetaworksContext().getWhen()) || this instanceof FileWorkItem){
 			// 인스턴스 발행
-			if(this.getInstId() == null){				
+			if(this.getInstId() == null){
 				// 인스턴스 발행을 위한 ProcessMap 사용
 				ProcessMap processMap = new ProcessMap();
 				processMap.processManager = processManager;
@@ -647,7 +647,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				instanceRef.setDueDate(getDueDate());
 				instanceRef.setName(this.getTitle());	
 				
-				//parent = afterInstantiation(instantiatedViewContent, 	instanceRef);				
+				afterInstantiation(instanceRef);				
 			}else{
 				Instance instance = new Instance();
 				instance.setInstId(this.getInstId());
@@ -667,13 +667,15 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			writer.setName(session.getUser().getName());
 			
 			this.setTaskId(taskId);			
-			this.setRootInstId(this.getInstId());
 			this.setWriter(writer);
 			this.setStartDate(Calendar.getInstance().getTime());
 			this.setEndDate(getStartDate());
 			this.setStatus(WORKITEM_STATUS_FEED);
 			this.setIsDeleted(false);			
-			
+
+			if(this.getRootInstId() == null)
+				this.setRootInstId(this.getInstId());
+
 			if(this.getGrpTaskId() == null)
 				this.setGrpTaskId(this.getTaskId());
 			
@@ -691,28 +693,25 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		// 수정
 		}else{		
 			this.syncToDatabaseMe();
-			
 		}		
 		
 		this.flushDatabaseMe();
-				
+		
 		return instanceRef;
 	}
 	
-	@Override
-	@Test(scenario="first", starter=true, instruction="$Write", next="newActivity()")
-	public Object[] add() throws Exception {
-		Object[] returnObjects = null;
+	public Object[] makeReturn(Long prevInstId, IInstance instanceRef) throws Exception {
 		
-		Long prevInstId = this.getInstId();
+		Object[] returnObjects = null;
 		String mood = session.getEmployee().getPreferUX();
 		
-		// 실제 저장
+		this.getMetaworksContext().setHow(mood);
+		
 		Instance instance = new Instance();
+		instance.copyFrom(instanceRef);
 		instance.session = session;
 		instance.instanceViewContent = instanceViewContent;
-		instance.copyFrom(this.save());
-		
+
 		// 추가
 		if(WHEN_NEW.equals(getMetaworksContext().getWhen())){
 			// 인스턴스 발행
@@ -731,11 +730,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				InstanceViewThreadPanel instanceViewThreadPanel = new InstanceViewThreadPanel();
 				instanceViewThreadPanel.setInstanceId(this.getInstId().toString());
 				
-				CommentWorkItem commentWorkItem = new CommentWorkItem();
-				commentWorkItem.setWriter(this.getWriter());
-				commentWorkItem.setInstId(this.getInstId());
-				commentWorkItem.getMetaworksContext().setHow(this.getMetaworksContext().getHow());
-			
 				if(this instanceof OverlayCommentWorkItem){
 					WorkItem parentWorkItem = new WorkItem();
 					parentWorkItem.setTaskId(getOverlayCommentOption().getParentTaskId());
@@ -744,7 +738,17 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				}else if(this instanceof CommentWorkItem){
 					returnObjects = new Object[]{new Refresh(this, false, true)};
 				}else{
-					returnObjects = new Object[]{new ToAppend(instanceViewThreadPanel, this), new Refresh(commentWorkItem, false, true)};	
+					
+					if(this instanceof CommentWorkItem){
+						CommentWorkItem commentWorkItem = new CommentWorkItem();
+						commentWorkItem.setWriter(this.getWriter());
+						commentWorkItem.setInstId(this.getInstId());
+						commentWorkItem.getMetaworksContext().setHow(this.getMetaworksContext().getHow());
+						
+						returnObjects = new Object[]{new ToAppend(instanceViewThreadPanel, this), new Refresh(commentWorkItem, false, true)};	
+					}else{
+						returnObjects = new Object[]{new ToAppend(instanceViewThreadPanel, this)};
+					}
 				}
 			}
 			
@@ -752,6 +756,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			final IWorkItem copyOfThis = this;
 			final IInstance copyOfInstance = instance;
 			copyOfInstance.getMetaworksContext().setWhen("blinking");
+			
 			MetaworksRemoteService.pushOtherClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(copyOfInstance), new WorkItemListener(copyOfThis)});
 			
 		// 수정
@@ -767,8 +772,22 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		
 		this.getMetaworksContext().setWhen(WHEN_VIEW);
 		
-		return new Object[]{returnObjects};
+		return returnObjects;
+	}
+	
+	@Override
+	@Test(scenario="first", starter=true, instruction="$Write", next="newActivity()")
+	public Object[] add() throws Exception {
+		Object[] returnObjects = null;
 		
+		Long prevInstId = this.getInstId();
+		
+		Instance instance = new Instance();
+		instance.session = session;
+		instance.instanceViewContent = instanceViewContent;
+		instance.copyFrom(this.save());
+		
+		return makeReturn(prevInstId, instance);
 	}
 	
 	public Object remove() throws Exception{
@@ -803,25 +822,22 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		getMetaworksContext().setWhen("edit");		
 	}
 
-	protected WfNode afterInstantiation(InstanceViewContent instantiatedViewContent, final Instance instanceRef) throws Exception {
+	protected void afterInstantiation(IInstance instanceRef) throws Exception {
 		
-		WfNode parent=null;
 		if(newInstancePanel!=null){
 			//instanceRef.databaseMe().setSecuopt(newInstancePanel.getSecurityLevel());
-			instanceRef.databaseMe().setSecuopt(newInstancePanel.getSecurityLevel().getSelected());
-			instanceRef.flushDatabaseMe();
+			instanceRef.setSecuopt(newInstancePanel.getSecurityLevel().getSelected());			
 			
 			if(newInstancePanel.getDueDate() != null){
-				instanceRef.databaseMe().setDueDate(newInstancePanel.getDueDate());
+				instanceRef.setDueDate(newInstancePanel.getDueDate());
 			}
 			
-			if(newInstancePanel.getKnowledgeNodeId() != null){
-			
-				parent = new WfNode();
+			if(newInstancePanel.getKnowledgeNodeId() != null){			
+				WfNode parent = new WfNode();
+				parent.setLoadDepth(WfNode.LOAD_DEPTH - 1);
 				parent.load(newInstancePanel.getKnowledgeNodeId());
-
-				instantiatedViewContent.instanceView.instanceNameChanger.setInstanceName(parent.getName());
-				instantiatedViewContent.instanceView.instanceNameChanger.change();
+				
+				instanceRef.setName(parent.getName());
 			
 				parent.setLinkedInstId(instId);
 				parent.save();
@@ -840,29 +856,8 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				genericWI.setGenericWorkItemHandler(genericWIH);
 				genericWI.setInstId(new Long(instId));
 				genericWI.add();
-						
 			}
 		}
-		
-		instanceRef.databaseMe().getMetaworksContext().setWhen("blinking");
-		
-		/*
-		new Thread(){
-
-			@Override
-			public void run() {
-				try {
-					MetaworksRemoteService.getInstance().pushClientObjects(new Object[]{new ToPrepend(new InstanceList(), instanceRef.databaseMe()) });
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-			
-		}.start();
-		*/
-		
-		return parent;
 	}
 
 	@Override
