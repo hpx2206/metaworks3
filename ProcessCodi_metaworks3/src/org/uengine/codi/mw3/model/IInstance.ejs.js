@@ -9,9 +9,9 @@ var org_uengine_codi_mw3_model_IInstance = function(objectId, className){
 		$('#' + this.divId).bind('click', {objectId: this.objectId},function(){
 			mw3.getFaceHelper(objectId).unBlinking();
 			
-			if( object && object.metaworksContext && object.metaworksContext.where != 'sns'){
+			if( object && object.metaworksContext && object.metaworksContext.how != 'sns'){
 				 $(".tbl_type").parent().css("background","none");
-				 $(this).css("background","#C9E2FC");
+				 $(this).css("background","#FEE7B1");
 			}
 		 });
 		
@@ -25,7 +25,7 @@ var org_uengine_codi_mw3_model_IInstance = function(objectId, className){
 	 if(object && object.metaworksContext && object.metaworksContext.how == 'blinking'){
 		 this.blinking();
 	 }
-	 if( object && object.metaworksContext && object.metaworksContext.where == 'sns'){
+	 if( object && object.metaworksContext && object.metaworksContext.how == 'sns'){
 		 $('#' + this.divId).css('border-top','1px solid #E3E3E3');
 		 $('.tbl_type td').css('border','none');
 	 }
@@ -106,7 +106,6 @@ org_uengine_codi_mw3_model_IInstance.prototype = {
 	},
 	
 	blinking : function(){
-		
 		
 		var blinkDiv = $('#' + this.divId + ' .innerNewInst');
 		
