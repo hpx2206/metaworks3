@@ -255,7 +255,7 @@ public interface IWorkItem extends IDAO{
 		@ServiceMethod(when = WHEN_VIEW, callByContent=true, target=ServiceMethodContext.TARGET_SELF)
 		public void detail() throws Exception;
 
-		@ServiceMethod(callByContent = true, target="append")
+		@ServiceMethod(callByContent = true, target=ServiceMethodContext.TARGET_APPEND)
 		public Object[] add() throws Exception;
 
 		@ServiceMethod(inContextMenu=true, needToConfirm=true, callByContent=true /*TODO: later add except*/)
@@ -278,13 +278,6 @@ public interface IWorkItem extends IDAO{
 		@Hidden(on=false)
 		public WorkItemHandler getWorkItemHandler();
 		public void setWorkItemHandler(WorkItemHandler workItemHandler);
-		
-
-		@NonLoadable
-		@NonSavable
-		@Hidden
-		public boolean isInstantiation();
-		public void setInstantiation(boolean instantiation);
 		
 		@NonLoadable
 		@NonSavable

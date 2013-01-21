@@ -494,7 +494,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		wi.setEndpoint(session.getUser().getUserId());
 		wi.setWriter(getWriter());
 		wi.setMetaworksContext(this.getMetaworksContext());
-		wi.setInstantiation(isInstantiation());
 	}
 		
 	@Override
@@ -557,15 +556,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		wi.setInstantiation(isInstantiation());
 	}
 */
-	boolean instantiation;
-		public boolean isInstantiation() {
-			return instantiation;
-		}
-		public void setInstantiation(boolean instantiation) {
-			this.instantiation = instantiation;
-		}
-
-		
 	@AutowiredFromClient
 	public NewInstancePanel newInstancePanel;
 	
@@ -761,7 +751,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			// 본인 이외에 다른 사용자에게 push
 			final IWorkItem copyOfThis = this;
 			final IInstance copyOfInstance = instance;
-			
+			copyOfInstance.getMetaworksContext().setWhen("blinking");
 			MetaworksRemoteService.pushOtherClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(copyOfInstance), new WorkItemListener(copyOfThis)});
 			
 		// 수정
@@ -806,7 +796,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			throw new Exception("$OnlyTheWriterCanEdit");
 		}
 		
-		setInstantiation(false);
 		setDueDate(null);
 		setStartDate(null);
 		setEndDate(null);		
@@ -855,7 +844,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			}
 		}
 		
-		instanceRef.databaseMe().getMetaworksContext().setHow("blinking");
+		instanceRef.databaseMe().getMetaworksContext().setWhen("blinking");
 		
 		/*
 		new Thread(){

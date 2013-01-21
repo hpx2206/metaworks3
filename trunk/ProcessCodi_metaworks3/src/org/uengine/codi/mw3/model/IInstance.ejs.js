@@ -2,29 +2,39 @@ var org_uengine_codi_mw3_model_IInstance = function(objectId, className){
 	this.objectId = objectId;
 	this.className = className;
 	this.divId = mw3._getObjectDivId(this.objectId);
+
+	console.log('org_uengine_codi_mw3_model_IInstance');
 	
 	this.windowObjectId = $('#' + this.divId).closest('.mw3_window').attr('objectId');
 	this.overTimer;
 	
-		$('#' + this.divId).bind('click', {objectId: this.objectId},function(){
-			mw3.getFaceHelper(objectId).unBlinking();
-			
-			if( object && object.metaworksContext && object.metaworksContext.how != 'sns'){
-				 $(".tbl_type").parent().css("background","none");
-				 $(this).css("background","#FEE7B1");
-			}
-		 });
+	$('#' + this.divId).bind('click', {objectId: this.objectId},function(){
+		mw3.getFaceHelper(objectId).unBlinking();
 		
-		$('#' + this.divId).hover(function(){				
-				$('#objDiv_' + objectId + ' .instanceBtn').show(200);
-			},function(){	
-				$('#objDiv_' + objectId + ' .instanceBtn').hide(200);
-		});
+		if( object && object.metaworksContext && object.metaworksContext.how != 'sns'){
+			 $(".tbl_type").parent().css("background","none");
+			 $(this).css("background","#FEE7B1");
+		}
+	 });
+	
+	$('#' + this.divId).hover(function(){				
+			$('#objDiv_' + objectId + ' .instanceBtn').show(200);
+		},function(){	
+			$('#objDiv_' + objectId + ' .instanceBtn').hide(200);
+	});
 
-	 var object = mw3.objects[this.objectId];
-	 if(object && object.metaworksContext && object.metaworksContext.how == 'blinking'){
+	var object = mw3.objects[this.objectId];
+	
+	console.log(object);
+			
+	if(object && object.metaworksContext)
+		console.log('metaworksContext.when : ' + object.metaworksContext.when);
+	
+	 
+	 if(object && object.metaworksContext && object.metaworksContext.when == 'blinking'){
 		 this.blinking();
 	 }
+	 
 	 if( object && object.metaworksContext && object.metaworksContext.how == 'sns'){
 		 $('#' + this.divId).css('border-top','1px solid #E3E3E3');
 		 $('.tbl_type td').css('border','none');
@@ -74,7 +84,7 @@ var org_uengine_codi_mw3_model_IInstance = function(objectId, className){
 		
 	});
 	*/
-}
+};
 
 	
 

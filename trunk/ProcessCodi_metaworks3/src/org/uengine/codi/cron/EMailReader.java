@@ -26,6 +26,7 @@ import javax.mail.internet.ContentType;
 import javax.mail.internet.ParseException;
 import javax.mail.search.FlagTerm;
 
+import org.metaworks.MetaworksContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.admin.WebEditor;
 import org.uengine.codi.mw3.model.Company;
@@ -191,7 +192,7 @@ public class EMailReader {
 	    					
 	    					memoWorkItem.setMemo(new WebEditor());
 	    					memoWorkItem.getMemo().setContents(sb.toString());
-	    					memoWorkItem.setInstantiation(true);
+	    					memoWorkItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 	    					
 	    					User theFirstWriter;
 	    					if(fromUsers.size() > 0){

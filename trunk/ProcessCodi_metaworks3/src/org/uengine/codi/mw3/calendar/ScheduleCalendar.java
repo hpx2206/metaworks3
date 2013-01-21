@@ -298,18 +298,20 @@ public class ScheduleCalendar implements ContextAware {
 		if( getSelDate() != null ){
 			title = "[일정:" + new SimpleDateFormat("yyyy/MM/dd").format(getSelDate()) + "]" ;
 		}
+
+		WorkItem newInstantiator = new CommentWorkItem();
+		newInstantiator.setWriter(session.getUser());		
+		newInstantiator.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+		newInstantiator.setDueDate(dueDate);
+		newInstantiator.setTitle(title);
+		
 		if("sns".equals(session.getEmployee().getPreferUX()) ){
 			if( newInstancePanel != null ){
-				WorkItem newInstantiator = new CommentWorkItem();
-				newInstantiator.setWriter(session.getUser());
-				newInstantiator.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 				newInstantiator.getMetaworksContext().setHow("sns");
-				newInstantiator.getMetaworksContext().setWhere("sns");
-				newInstantiator.setInstantiation(true);
-				newInstantiator.setDueDate(dueDate);
-				newInstantiator.setTitle(title);
 				
+				NewInstancePanel newInstancePanel = this.newInstancePanel;
 				newInstancePanel.setNewInstantiator(newInstantiator);
+				
 				return new Object[]{newInstancePanel};
 			}
 			return null;
@@ -318,7 +320,8 @@ public class ScheduleCalendar implements ContextAware {
 			newInstancePanel.setDueDate(dueDate);
 			newInstancePanel.session = session;
 			newInstancePanel.load(session);
-			newInstancePanel.getNewInstantiator().setTitle(title);
+			
+			newInstancePanel.setNewInstantiator(newInstantiator);
 			
 			return new Object[]{new NewInstanceWindow(newInstancePanel)};
 		}
