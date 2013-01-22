@@ -262,6 +262,10 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.press = function(){
     	
     	//////// assists about process initiation /////////    	
     	var processMapPanel = mw3.getAutowiredObject("org.uengine.codi.mw3.model.ProcessMapPanel");
+    	
+    	if(processMapPanel == null || typeof processMapPanel == 'undefined')
+    		return true;
+    	
     	var processMap = processMapPanel.processMapList;
     	
 		if(text && text.length>0 && processMap){

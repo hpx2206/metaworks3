@@ -658,15 +658,14 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			// 마지막 워크아이템의 제목을 인스턴스의 적용
 			instanceRef.setLastCmnt(getTitle());
 			instanceRef.setCurrentUser(session.getUser());//may corrupt when the last actor is assigned from process execution.
-			
-			// 워크아이템 추가
-			Long taskId = UniqueKeyGenerator.issueWorkItemKey(((ProcessManagerBean)processManager).getTransactionContext());
-			
+								
 			IUser writer = new User();
 			writer.setUserId(session.getUser().getUserId());
 			writer.setName(session.getUser().getName());
 			
-			this.setTaskId(taskId);			
+			if(this.getTaskId() == null)
+				this.setTaskId(UniqueKeyGenerator.issueWorkItemKey(((ProcessManagerBean)processManager).getTransactionContext()));
+			
 			this.setWriter(writer);
 			this.setStartDate(Calendar.getInstance().getTime());
 			this.setEndDate(getStartDate());
@@ -675,9 +674,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 
 			if(this.getRootInstId() == null)
 				this.setRootInstId(this.getInstId());
-
-			if(this.getGrpTaskId() == null)
-				this.setGrpTaskId(this.getTaskId());
 			
 			// 덧글 상태일때 덧글이 길면 메모로 변경해주는 기능
 			if(this instanceof CommentWorkItem){
