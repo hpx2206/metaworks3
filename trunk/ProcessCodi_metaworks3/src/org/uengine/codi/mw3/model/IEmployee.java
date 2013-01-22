@@ -1,5 +1,8 @@
 package org.uengine.codi.mw3.model;
 
+import javax.validation.constraints.AssertFalse;
+import javax.validation.constraints.Pattern;
+
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.ServiceMethodContext;
@@ -21,6 +24,7 @@ import org.metaworks.dao.IDAO;
 import org.uengine.codi.mw3.Login;
 
 @Table(name = "EMPTABLE")
+@Face(options={"fieldOrder"}, values={"email,empName,globalCom,password,confirmPassword"})
 public interface IEmployee extends IDAO {
 
 /*	
@@ -30,16 +34,18 @@ public interface IEmployee extends IDAO {
 	public void setUser(IUser user);
 */	
 	@Id
+/*
 	@ValidatorSet({
 		@Validator(name=ValidatorContext.VALIDATE_NOTNULL, message="이름을 입력해 주십시오."),
 		@Validator(name=ValidatorContext.VALIDATE_MIN, options={"3"}, message="이름은 3자 이상 입력하셔야 합니다."),
 	})
+*/
 	public String getEmpCode();
 	public void setEmpCode(String empCode);
 
 	@Name
 	@ValidatorSet({
-		@Validator(name=ValidatorContext.VALIDATE_NOTNULL)
+		@Validator(name=ValidatorContext.VALIDATE_NOTNULL, message="성함을 입력하세요.")
 	})	
 	public String getEmpName();
 	public void setEmpName(String empName);
@@ -82,7 +88,10 @@ public interface IEmployee extends IDAO {
 	@NonSavable
 	public String getPartName();	
 	public void setPartName(String partName);
-	
+		
+	@ValidatorSet({
+		@Validator(name=ValidatorContext.VALIDATE_NOTNULL, message="회사이름을 입력하세요")
+	})	
 	public String getGlobalCom();	
 	public void setGlobalCom(String comCode);
 	
@@ -93,6 +102,11 @@ public interface IEmployee extends IDAO {
 	public String getMobileNo();
 	public void setMobileNo(String mobileNo);
 	
+	@ValidatorSet({
+		@Validator(name=ValidatorContext.VALIDATE_NOTNULL, message="이메일을 입력하세요."),
+		@Validator(name=ValidatorContext.VALIDATE_CONDITION, options={"validEmail==true"}, message="이메일 중복확인을 해주십시오.")
+	})
+	@Pattern(regexp="/^([0-9a-zA-Z_\\.-]+)@([0-9a-zA-Z_-]+)(\\.[0-9a-zA-Z_-]+){1,2}$/", message="이메일 형식이 잘못되었습니다")
 	public String getEmail();
 	public void setEmail(String email);
 
@@ -134,6 +148,12 @@ public interface IEmployee extends IDAO {
 	public String getMood();
 	public void setMood(String mood);
 
+	@AssertFalse(message="이메일 중복체크를 먼저 해주세요")
+	@NonLoadable
+	@NonSavable
+	@Hidden
+	public boolean isValidEmail();
+	public void setValidEmail(boolean validEmail);	
 		
 	public IEmployee findMe() throws Exception;	
 	public IEmployee findByDept(Dept dept) throws Exception;
@@ -173,8 +193,11 @@ public interface IEmployee extends IDAO {
 	@ServiceMethod(callByContent=true, target="popup")
 	public void addTopicUser() throws Exception;
 	
-	@ServiceMethod(callByContent=true, validate=true)
+	@ServiceMethod(callByContent=true)
 	public void checkEmpCode() throws Exception ;
+	
+	@ServiceMethod(payload={"email"}, target=ServiceMethodContext.TARGET_NONE)
+	public String checkId() throws Exception ;
 	
 	@ServiceMethod(needToConfirm=true, target=TARGET_TOP, inContextMenu=true)
 	@Face(displayName="$Unsubscribe")
