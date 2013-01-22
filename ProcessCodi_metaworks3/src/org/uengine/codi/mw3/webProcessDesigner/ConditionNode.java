@@ -25,15 +25,6 @@ public class ConditionNode  implements Cloneable, ContextAware{
 	public void setMetaworksContext(MetaworksContext metaworksContext) {
 		this.metaworksContext = metaworksContext;
 	}
-	
-	int idx;
-		@Id
-		public int getIdx() {
-			return idx;
-		}
-		public void setIdx(int idx) {
-			this.idx = idx;
-		}
 
 	SelectBox valiableChoice;
 		public SelectBox getValiableChoice() {
@@ -158,22 +149,22 @@ public class ConditionNode  implements Cloneable, ContextAware{
 		makeOperandChoice();
 	}
 	
-	@ServiceMethod
-	public Object[] remove(){
-		conditionPanel.conditionNodes.remove(this);
-		return new Object[]{conditionPanel.conditionNodes};
-	}
+//	@ServiceMethod
+//	public Object[] remove(){
+//		conditionPanel.conditionNodes.remove(this);
+//		return new Object[]{conditionPanel.conditionNodes};
+//	}
 	@AutowiredFromClient
 	public Session session;
-	@AutowiredFromClient
-	transient public ConditionPanel conditionPanel;
+//	@AutowiredFromClient
+//	transient public ConditionPanel conditionPanel;
 	
-	@Override
-	public boolean equals(Object obj) {
-		if( obj instanceof ConditionNode){
-			return this.idx == ((ConditionNode)obj).idx;
-		}else{
-			return false;
-		}
-	}
+//	@Override
+//	public boolean equals(Object obj) {
+//		if( obj instanceof ConditionNode){
+//			return this.idx == ((ConditionNode)obj).idx;
+//		}else{
+//			return false;
+//		}
+//	}
 }
