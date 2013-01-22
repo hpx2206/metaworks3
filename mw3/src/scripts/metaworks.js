@@ -1,4 +1,6 @@
 var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
+				this.fn = {};
+				
 				this.metaworksMetadata = new Array();
 				this.metaworksProxy = mwProxy;
 				this.errorDiv = errorDiv;
@@ -3467,7 +3469,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				var when = null;				
 
 				if(context!=null && context.when){
-					when = context.when
+					when = context.when;
 				}else{
 					when = parentWhen;
 				}
@@ -3520,7 +3522,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				}
 			
 				if(!designMode){ //means general mode
-					if(when && parentWhen && when != parentWhen)
+					if(when && context && context.when) // && parentWhen && when != parentWhen)
 						options['when'] = when;
 					
 					html = mw3.locateObject(value, face, null, options);
