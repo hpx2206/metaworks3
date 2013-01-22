@@ -1,17 +1,10 @@
-<%
-	if(value.taskId!=null){
-	
-%>
+<%if(value.taskId!=null){%>
 
 <div class="overlay_comment" style="top:<%=value.overlayCommentOption.y%>px;">
-	<b><%=value.writer.name%></b><br> <%=value.title%>
+<b><%=value.writer.name%></b><br> <%=value.title%>
 </div>
-
-<div class="overlay_comment_line" style="width:<%=value.overlayCommentOption.x-117%>px;top:<%=value.overlayCommentOption.y%>px;">
-</div>
-
-<div id="arror_<%=objectId%>" style="position:absolute;background:url('images/waveStyle/workItemCommentPoint.png') top right; width:15px; height:15px">
-</div>
+<div class="overlay_comment_line" style="width:<%=value.overlayCommentOption.x-117%>px;top:<%=value.overlayCommentOption.y%>px;"></div>
+<div style="position:absolute; left:<%=value.overlayCommentOption.x%>px; top:<%=value.overlayCommentOption.y%>px;background:url('images/waveStyle/workItemCommentPoint.png') top right; width:15px; height:15px"></div>
 		
 
 
