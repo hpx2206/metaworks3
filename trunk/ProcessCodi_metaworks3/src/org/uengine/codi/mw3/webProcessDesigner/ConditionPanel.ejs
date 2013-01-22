@@ -5,23 +5,13 @@ if(value){
     <div style="position: relative; left: 0; width: 700px; height: 400px; background-color: #f6f6f6;">
         <div id="conditionTree" style="width:250px; height: 400px; float: left; background-color: #f6f6f6;" align="left"><%= fields.conditionTree.here() %></div>
         <div id="conditionView" style="width:450px; height: 400px;  float: left;">
-        	<ul>
-			<li>
-				<span style="float:left">Operator</span>
-				<span style="float:left">Valiables</span>
-				<span style="float:left">Condition</span>
-				<span style="float:left">Field</span>
-				<span>Value</span>
-			</li>
-		</ul>
-		<%=fields.conditionNodes.here()%>
+        	<%= fields.conditionExPressionPanel.here() %>
         </div>
     </div>
 </div>
 <div  style="width:100%; height:30px; border-top:1px solid #B4B3B5;" class="addRoleBox">
 		<div style="float:left;">레이블명 : 	</div>
 		<div style="float:left;"><%=fields.conditionLabel.here()%></div>
-		<div style="float:right;"><a id="wBtn" href="#" onClick="<%=methods.addConditionNode.caller()%>"><span><%=mw3.localize("$add")%></span></a></div>
 		<div style="float:right;"><a id="wBtn" href="#" onClick="<%=methods.saveCondition.caller()%>"><span><%=mw3.localize("$save")%></span></a></div>
 </div>
 <%

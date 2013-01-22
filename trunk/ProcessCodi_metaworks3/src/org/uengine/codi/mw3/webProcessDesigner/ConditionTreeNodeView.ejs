@@ -1,0 +1,14 @@
+<div style="text-align: left;">
+<input type="radio" name="expression_<%=objectId%>" value="expression" />Expression
+	<div>
+		<%= fields.conditionNode.here() %>
+	</div>
+<input type="radio" name="expression_<%=objectId%>" value="roleExist" />Existence of actual binding
+	<div>
+	</div>
+<input type="radio" name="expression_<%=objectId%>" value="otherwise" />Otherwise
+</div>
+
+<div>
+	<div style="float:right;"><a id="wBtn" href="#" onClick="<%=methods.addCondition.caller()%>"><span>컨디션 저장</span></a></div>
+</div>

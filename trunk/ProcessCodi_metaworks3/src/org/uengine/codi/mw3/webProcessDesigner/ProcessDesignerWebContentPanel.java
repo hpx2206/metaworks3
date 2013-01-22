@@ -55,6 +55,10 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 		}
 	public ProcessDesignerWebContentPanel() throws Exception{
 		defineTab = new DefineTab();
+		
+		canvasMap = new HashMap<String, CanvasDTO>();
+		activityMap = new HashMap<String, Object>();
+		conditionMap = new HashMap<String, Condition>();
 	}
 	
 	String alias;
@@ -98,13 +102,21 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 		public void setActivityMap(HashMap<String, Object> activityMap) {
 			this.activityMap = activityMap;
 		}
-	ArrayList<Activity> activityList; 
-		public ArrayList<Activity> getActivityList() {
-			return activityList;
+	HashMap<String, Condition> conditionMap;
+		public HashMap<String, Condition> getConditionMap() {
+			return conditionMap;
 		}
-		public void setActivityList(ArrayList<Activity> activityList) {
-			this.activityList = activityList;
+		public void setConditionMap(HashMap<String, Condition> conditionMap) {
+			this.conditionMap = conditionMap;
 		}
+//	ArrayList<Activity> activityList; 
+//		public ArrayList<Activity> getActivityList() {
+//			return activityList;
+//		}
+//		public void setActivityList(ArrayList<Activity> activityList) {
+//			this.activityList = activityList;
+//		}
+
 
 	/*
 	 * 엘리먼트정보를 셋팅하기 위하여 해당 id를 임시적으로 들고있다
@@ -196,8 +208,12 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 		conditionPanel.setMetaworksContext(new MetaworksContext());
 		conditionPanel.getMetaworksContext().setWhen("edit");
 		String conditionString = null;
-		if( tempElementData != null && !tempElementData.equals("[]")){
-			conditionString = tempElementData.toString();
+//		if( tempElementData != null && !tempElementData.equals("[]")){
+//			conditionString = tempElementData.toString();
+//		}
+		if( this.getConditionMap() != null ){
+			Condition condition = conditionMap.get(this.getTempElementId());
+			conditionPanel.setCondition(condition);
 		}
 		
 		conditionPanel.setRoleList(defineTab.rolePanel.getRoles());
@@ -417,7 +433,7 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 			ProcessDefinition def = (ProcessDefinition) GlobalContext.deserialize(bao.toString("UTF-8"));
 			// processDefinition setting
 			ArrayList<CanvasDTO> cellsList = (ArrayList<CanvasDTO>) def.getExtendedAttributes().get("cells");
-			activityMap = new HashMap<String, Object>();
+//			activityMap = new HashMap<String, Object>();
 //			activityList = new ArrayList<Activity>();
 			if( cellsList != null){
 				CanvasDTO []cells = new CanvasDTO[cellsList.size()];
