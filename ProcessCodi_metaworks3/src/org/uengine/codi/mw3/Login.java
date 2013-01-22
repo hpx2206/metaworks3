@@ -222,10 +222,12 @@ public class Login extends Database<ILogin> implements ILogin{
 		emp.checkRegistered();
 		
 		String name = null;
-		try{
-			name = getUserId().substring(0, getUserId().indexOf("@"));
-		}catch(Exception e){
-			throw new RuntimeException("$InvalidMailAddress");
+		if(getUserId().length() != 0){
+			try{
+				name = getUserId().substring(0, getUserId().indexOf("@"));
+			}catch(Exception e){
+				throw new RuntimeException("$InvalidMailAddress");
+			}
 		}
 		
 		emp.setEmpName(name);
