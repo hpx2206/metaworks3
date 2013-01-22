@@ -7,6 +7,8 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Test;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.website.MetaworksFile;
+import org.uengine.persistence.dao.UniqueKeyGenerator;
+import org.uengine.processmanager.ProcessManagerBean;
 import org.uengine.util.UEngineUtil;
 
 public class FileWorkItem extends WorkItem{
@@ -43,12 +45,16 @@ public class FileWorkItem extends WorkItem{
 		if(this.getFile() == null || this.getFile().getFileTransfer() == null || this.getFile().getFileTransfer().getFilename() == null)
 			throw new MetaworksException("파일을 첨부해주세요.");
 		
+		this.setTaskId(UniqueKeyGenerator.issueWorkItemKey(((ProcessManagerBean)processManager).getTransactionContext()));
+		
 		// 추가모드 일때
-		if(WHEN_NEW.equals(this.getMetaworksContext().getWhen())){			
+		if(WHEN_NEW.equals(this.getMetaworksContext().getWhen())){		
+			this.setGrpTaskId(this.getTaskId());
+
 			// default 버전
 			this.setMajorVer(1);
 			this.setMinorVer(0);
-			
+
 		// 수정모드 일때
 		}else if(WHEN_EDIT.equals(this.getMetaworksContext().getWhen())){
 			// 기존 버전 delete 처리하여 안보이게
@@ -79,9 +85,7 @@ public class FileWorkItem extends WorkItem{
 		this.setTool(this.getFile().getMimeType());
 		this.setExtFile(this.getFile().getFilename());
 		
-		// WorkItem 추가
-		Object[] returnObject = super.add();		
-		
+		// office 파일 pdf 로 변환
 		if(getFile().getMimeType() != null && getFile().getMimeType().indexOf("office") > 0){
 			String prefix = TransactionContext.getThreadLocalInstance()
 					.getRequest().getSession().getServletContext()
@@ -94,11 +98,13 @@ public class FileWorkItem extends WorkItem{
 			boolean isConvert = convertDoc.convertPdf(inputFilePath, outputFilePath);
 			
 			if(isConvert){
-				databaseMe().setExt3(String.valueOf(isConvert));
+				this.setExt3(String.valueOf(isConvert));
 			}
 		}
 		
-		
+		// WorkItem 추가
+		Object[] returnObject = super.add();		
+
 		this.setWorkItemVersionChooser(this.databaseMe().getWorkItemVersionChooser());
 		
 		return returnObject;

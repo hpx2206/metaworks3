@@ -63,7 +63,6 @@ public class InstanceViewThreadPanel implements ContextAware {
 		
 		CommentWorkItem newItem = new CommentWorkItem();
 		newItem.setInstId(new Long(getInstanceId()));
-		newItem.setTaskId(new Long(-2));
 		newItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 		newItem.getMetaworksContext().setHow(how);
 		newItem.setWriter(session.getUser());
