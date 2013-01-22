@@ -39,8 +39,7 @@ public class Knowledge {
 		outerLayout.setWest(navigationWindow);
 		
 		Window wfWindow = new Window();
-		wfWindow.setPanel(new BrainstormPanel(session.getCompany().getComCode()));
-		/*
+		//wfWindow.setPanel(new BrainstormPanel(session.getCompany().getComCode()));
 			WfPanel panel = new WfPanel();
 			
 			panel.session = session;
@@ -53,7 +52,6 @@ public class Knowledge {
 			
 			wfWindow.setPanel(panel);
 			wfWindow.setTitle("Knowledge Map");
-		*/
 		
 		outerLayout.setCenter(wfWindow);
 		
