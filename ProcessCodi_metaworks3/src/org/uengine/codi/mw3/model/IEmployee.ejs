@@ -250,11 +250,11 @@ if(value){
 	<div id="btnline" style="padding-top:8px; border-top:1px solid #ccc;">
 		<ul>	
 			<li><a id="wBtn" href="#" onClick="<%=methods.logout.caller()%>"><span><%=mw3.localize("$Logout")%></span></a></li>	
-			<li><a id="wBtn" href="#" onClick="<%=methods.unsubscribe.caller()%>"><span>unsubscribe</span></a></li>	
+			<li><a id="wBtn" href="#" onClick="<%=methods.unsubscribe.caller()%>"><span><%=mw3.localize("$Unsubscribe")%></span></a></li>	
 			<% if(mw3.when == 'view') {%>
-			<li><a id="wBtn" href="#" onClick="<%=methods.editEmployeeInfo.caller()%>"><span>edit</span></a></li>	
+			<li><a id="wBtn" href="#" onClick="<%=methods.editEmployeeInfo.caller()%>"><span><%=mw3.localize("$Edit")%></span></a></li>	
 			<% }else if(mw3.when == 'edit') {%>
-			<li><a id="wBtn" href="#" onClick="<%=methods.saveEmployeeInfo.caller()%>"><span>save</span></a></li>
+			<li><a id="wBtn" href="#" onClick="<%=methods.saveEmployeeInfo.caller()%>"><span><%=mw3.localize("$Save")%></span></a></li>
 			<%}%>
 		</ul>
 	</div>
