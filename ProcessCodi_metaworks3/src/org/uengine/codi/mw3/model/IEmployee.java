@@ -31,8 +31,8 @@ public interface IEmployee extends IDAO {
 */	
 	@Id
 	@ValidatorSet({
-		@Validator(name=ValidatorContext.VALIDATE_NOTNULL),
-		@Validator(name=ValidatorContext.VALIDATE_MIN, options={"3"}),
+		@Validator(name=ValidatorContext.VALIDATE_NOTNULL, message="이름을 입력해 주십시오."),
+		@Validator(name=ValidatorContext.VALIDATE_MIN, options={"3"}, message="이름은 3자 이상 입력하셔야 합니다."),
 	})
 	public String getEmpCode();
 	public void setEmpCode(String empCode);
@@ -50,8 +50,8 @@ public interface IEmployee extends IDAO {
 	
 	@Hidden(when = "view")
 	@ValidatorSet({
-		@Validator(name=ValidatorContext.VALIDATE_NOTNULL),
-		@Validator(name=ValidatorContext.VALIDATE_MIN, options={"4"}),
+		@Validator(name=ValidatorContext.VALIDATE_NOTNULL, message="비밀번호를 입력하여 주십시오."),
+		@Validator(name=ValidatorContext.VALIDATE_MIN , options={"4"}, message="비밀번호는 4자 이상 입력하셔야 합니다.")
 	})
 	@Face(options="type", values="password")
 	public String getPassword();
@@ -62,12 +62,12 @@ public interface IEmployee extends IDAO {
 	@NonLoadable
 	@NonSavable
 	@ValidatorSet({
-		@Validator(name=ValidatorContext.VALIDATE_NOTNULL),
-		@Validator(name=ValidatorContext.VALIDATE_MIN, options={"4"}),
+		@Validator(name=ValidatorContext.VALIDATE_NOTNULL, message="비밀번호 확인를 입력하여 주십시오."),
+		@Validator(name=ValidatorContext.VALIDATE_CONDITION, options={"password == confirmPassword"}, message="비밀번호 확인을 잘 못 입력하셨습니다. 다시 확인해주십시오.")
 	})
 	public String getConfirmPassword();
 	public void setConfirmPassword(String confirmPassword);
-
+	
 	public String getJikName();
 	public void setJikName(String jikName);
 
@@ -173,7 +173,7 @@ public interface IEmployee extends IDAO {
 	@ServiceMethod(callByContent=true, target="popup")
 	public void addTopicUser() throws Exception;
 	
-	@ServiceMethod(callByContent=true)
+	@ServiceMethod(callByContent=true, validate=true)
 	public void checkEmpCode() throws Exception ;
 	
 	@ServiceMethod(needToConfirm=true, target=TARGET_TOP, inContextMenu=true)
@@ -183,6 +183,7 @@ public interface IEmployee extends IDAO {
 	@ServiceMethod
 	public Object[] logout() throws Exception;
 	
+	@Available(how={"tree"}) // 상황에 맞춰서 넣어 줘야 한다.
 	@ServiceMethod(callByContent=true, mouseBinding="drag-enableDefault")
 	public Session drag() throws Exception;
 	
