@@ -690,7 +690,6 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 			
 			node.setFocus(true);
 			node.getMetaworksContext().setHow("add");
-			
 		}else{
 			newNode.setFocus(true);
 			newNode.getMetaworksContext().setHow("add");
@@ -725,7 +724,10 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		
 		final Object[] returnObjects;
 		
-		returnObjects = new Object[]{targetObject};
+		if(targetObject == null)
+			returnObjects = new Object[]{new Refresh(node)};
+		else
+			returnObjects = new Object[]{new Refresh(node), targetObject};
 		
 		
 
