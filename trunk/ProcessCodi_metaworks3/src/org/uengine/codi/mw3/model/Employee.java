@@ -20,6 +20,15 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 			this.user = user;
 		}*/
 
+	boolean validEmail;
+		public boolean isValidEmail() {
+			return validEmail;
+		}
+		public void setValidEmail(boolean validEmail) {
+			this.validEmail = validEmail;
+		}	
+
+
 	String empCode;
 		public String getEmpCode() {
 			return empCode;
@@ -136,8 +145,6 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	public void setJikName(String jikName) {
 		this.jikName = jikName;
 	}
-
-
 
 	@Override
 	public String getPartName() {
@@ -460,6 +467,8 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		System.out.println(getEmpName());
 	}
 	
+	
+	@Override
 	public void checkEmpCode() throws Exception {
 			
 		IEmployee employee = this.findMe();
@@ -467,7 +476,37 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		if(employee.getEmpCode() != null)
 			throw new Exception("이미 존재하는 empCode 입니다.");
 	}
+
+	public boolean checkValidEmail() throws Exception{
+		int posAt = this.getEmail().indexOf("@");
+		
+		if(this.getEmail().length() != 0 && posAt > -1 ) {
+			String[] splitEmail = this.getEmail().split("@", -1);
+			
+			if(splitEmail[0].length() != 0 && splitEmail[1].length() != 0){
+				return true;
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public String checkId() throws Exception {
 	
+		String valid = "invalid";
+
+		if(checkValidEmail()){
+			this.setEmpCode(this.getEmail());
+			IEmployee employee = this.findMe();
+		
+			if(employee.getEmpCode() == null)
+				valid = "valid";
+			else
+				valid = "duplicate";
+		}
+		return valid;
+	}
+
 	@Override
 	public Object[] subscribeStep1() throws Exception {
 		
