@@ -1,5 +1,9 @@
 package org.uengine.codi.mw3.model;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+
 import org.metaworks.MetaworksException;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Range;
@@ -86,7 +90,10 @@ public class FileWorkItem extends WorkItem{
 		this.setExtFile(this.getFile().getFilename());
 		
 		// office 파일 pdf 로 변환
-		if(getFile().getMimeType() != null && getFile().getMimeType().indexOf("office") > 0){
+		if(getFile().getMimeType() != null){
+			if( getFile().getMimeType().indexOf("office") > 0 || getFile().getMimeType().indexOf("pdf") > 0){
+		
+			}
 			String prefix = TransactionContext.getThreadLocalInstance()
 					.getRequest().getSession().getServletContext()
 					.getRealPath("/images/pdf/");
@@ -94,8 +101,19 @@ public class FileWorkItem extends WorkItem{
 			String inputFilePath = getFile().overrideUploadPathPrefix()+ getFile().getUploadedPath();
 			String outputFilePath = prefix + "/" + this.getGrpTaskId() + "_" + String.valueOf(this.getMajorVer()) + "_" + String.valueOf(this.getMinorVer()) + ".pdf";
 			
-			ConvertDocToPdf convertDoc = new ConvertDocToPdf();
-			boolean isConvert = convertDoc.convertPdf(inputFilePath, outputFilePath);
+			boolean isConvert = false;
+			if(getFile().getMimeType().indexOf("office") > 0){
+				ConvertDocToPdf convertDoc = new ConvertDocToPdf();
+				isConvert = convertDoc.convertPdf(inputFilePath, outputFilePath);				
+			}else{
+				try{
+					MetaworksFile.copyStream(new FileInputStream(inputFilePath), new FileOutputStream(outputFilePath));
+				
+					isConvert = true;
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+			}
 			
 			if(isConvert){
 				this.setExt3(String.valueOf(isConvert));
