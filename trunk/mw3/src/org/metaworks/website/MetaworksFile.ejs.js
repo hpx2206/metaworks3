@@ -26,23 +26,24 @@ var org_metaworks_website_MetaworksFile = function(objectId, className){
 			var height = 0;
 			var parentwidth = $("#image_" + this.objectId).parent().width();
 
+			imageDiv.html('<img style=\"display:none;\" src=\'' + image + '\'>').attr("href","javascript:mw3.objects[" + objectId + "].download()");
 			
+			/*
 			if(object.__descriptor){
 				width = object.__descriptor.getOptionValue('imageWidth');
 				height = object.__descriptor.getOptionValue('imageHeight');
 			}
 			imageDiv.html('<img style=\"display:none\" ' + (width?'width='+width+' ':' ') + (height?'height='+height+' ':' ') + 'src=\'' + image + '\'>').attr("href","javascript:mw3.objects[" + objectId + "].download()");
-			
+			*/
 			
 			imageDiv.find('img').load(function(){
 				if($(this).width() > parentwidth){
-					$(this).width(parentwidth);
+					$(this).width("100%");
 				}
 				
 				$(this).show();
-			})
-		}
-			
+			});
+		}	
 	}
 }
 
