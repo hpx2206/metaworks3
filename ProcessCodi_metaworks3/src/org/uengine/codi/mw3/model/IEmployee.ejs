@@ -83,18 +83,19 @@ if(value){
 							</td>
 						</tr-->
 						<tr>
-							<th scope="row"><%=mw3.localize("$Name")%></th>
+							<th scope="row"><%=mw3.localize("$Email")%>(<%=mw3.localize("$Id")%>)</th>
 							<td>
 								<div class="item">
-									<%=fields.empName.here({when:'new'}) %>
+									<span style="float:left;"><%=fields.email.here({when:'new'}) %></span><a style="margin-left:10px;" id="wBtn" href="#" onClick="mw3.getFaceHelper('<%=objectId%>').checkId()"><span>Check ID</span></a>
+									<span style="float:left; color:red; padding-left:10px;" id="checkId_<%=objectId%>"></span>
 								</div>
 							</td>
 						</tr>
 						<tr>
-							<th scope="row"><%=mw3.localize("$Email")%></th>
+							<th scope="row"><%=mw3.localize("$Name")%></th>
 							<td>
 								<div class="item">
-									<%=fields.email.here({when:'new'}) %>
+									<%=fields.empName.here({when:'new'}) %>
 								</div>
 							</td>
 						</tr>
