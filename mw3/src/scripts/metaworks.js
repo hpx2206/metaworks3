@@ -3382,8 +3382,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			
 			Metaworks3.prototype.localize = function(original){
 				var message = original;
-				
-				if(message != null && message.indexOf('$')==0 && this.getMessage){
+				if(message != null && typeof message == 'string' && message.indexOf('$')==0 && this.getMessage){
 					message = message.substring(1);					
 					message = this.getMessage(message);
 				}
