@@ -327,10 +327,7 @@ public interface IWorkItem extends IDAO{
 		@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)
 		public IWorkItem newMemo() throws Exception;
 		
-		
-		
-		
-		@ServiceMethod(inContextMenu=true, callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
+		@ServiceMethod(inContextMenu=true, payload={"instId", "taskId"}, target=ServiceMethodContext.TARGET_POPUP)
 		@Face(displayName="Comment")
 		public OverlayCommentWorkItem comment() throws Exception;
 }
