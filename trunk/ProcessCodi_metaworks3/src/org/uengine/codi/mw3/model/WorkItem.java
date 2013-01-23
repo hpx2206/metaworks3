@@ -831,6 +831,10 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				instanceRef.setDueDate(newInstancePanel.getDueDate());
 			}
 			
+			if(newInstancePanel.getTopicNodeId() != null){
+				instanceRef.setTopicId(newInstancePanel.getTopicNodeId());
+			}
+			
 			if(newInstancePanel.getKnowledgeNodeId() != null){			
 				WfNode parent = new WfNode();
 				parent.setLoadDepth(WfNode.LOAD_DEPTH - 1);

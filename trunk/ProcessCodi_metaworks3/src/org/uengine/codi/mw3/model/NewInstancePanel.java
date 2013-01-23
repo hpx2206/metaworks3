@@ -21,9 +21,93 @@ public class NewInstancePanel implements ContextAware {
 		getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 	}
 	
+	@AutowiredFromClient
+	public Session session;
+	
+	WorkItem newInstantiator;
+		public WorkItem getNewInstantiator() {
+			return newInstantiator;
+		}
+	
+		public void setNewInstantiator(WorkItem newInstantiator) {
+			this.newInstantiator = newInstantiator;
+		}		
+	Choice securityLevel;
+		@Face(ejsPath="dwr/metaworks/org/metaworks/widget/ChoiceCombo.ejs")
+		public Choice getSecurityLevel() {
+			return securityLevel;
+		}
+		public void setSecurityLevel(Choice securityLevel) {
+			this.securityLevel = securityLevel;
+		}
+
+		
+	InstanceBackground instanceBackground; 
+		public InstanceBackground getInstanceBackground() {
+			return instanceBackground;
+		}
+	
+		public void setInstanceBackground(InstanceBackground instanceBackground) {
+			this.instanceBackground = instanceBackground;
+		}
+		
+	ProcessMapPanel processMapPanel;
+		@AutowiredToClient
+		public ProcessMapPanel getProcessMapPanel() {
+			return processMapPanel;
+		}
+		public void setProcessMapPanel(ProcessMapPanel processMapPanel) {
+			this.processMapPanel = processMapPanel;
+		}
+		
+
+	String topicNodeId;
+		public String getTopicNodeId() {
+			return topicNodeId;
+		}
+		public void setTopicNodeId(String topicNodeId) {
+			this.topicNodeId = topicNodeId;
+		}
+
+	String knowledgeNodeId;
+		@Hidden
+		public String getKnowledgeNodeId() {
+			return knowledgeNodeId;
+		}
+		public void setKnowledgeNodeId(String knowledgeNodeId) {
+			this.knowledgeNodeId = knowledgeNodeId;
+		}
+		
+	Date dueDate;
+		@Hidden	
+		public Date getDueDate() {
+			return dueDate;
+		}
+		public void setDueDate(Date dueDate) {
+			this.dueDate = dueDate;
+		}
+		
+	String parentInstanceId;
+		@Hidden
+		public String getParentInstanceId() {
+			return parentInstanceId;
+		}
+		public void setParentInstanceId(String parentInstanceId) {
+			this.parentInstanceId = parentInstanceId;
+		}
+		
+	MetaworksContext metaworksContext;
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}	
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
+		}
+	
+		
 	public void load(Session session) throws Exception{
-//		unstructuredProcessInstanceStarter = new UnstructuredProcessInstanceStarter();
-//		
+		this.setTopicNodeId(session.getLastSelectedItem());
+		
 		newInstantiator = new CommentWorkItem();
 		newInstantiator.setWriter(session.getUser());		
 
@@ -80,104 +164,4 @@ public class NewInstancePanel implements ContextAware {
 		
 		setSecurityLevel(securityLevel);
 	}
-	
-	@AutowiredFromClient
-	public Session session;
-	
-	WorkItem newInstantiator;
-		public WorkItem getNewInstantiator() {
-			return newInstantiator;
-		}
-	
-		public void setNewInstantiator(WorkItem newInstantiator) {
-			this.newInstantiator = newInstantiator;
-		}
-
-//	String securityLevel;
-//	@Range(options={"$Privacy.Normal", "$Privacy.OnlyFollowers", "$Privacy.Public" , "$Privacy.Topic"}, 
-//			values={"0", "1", "2", "3"})	
-//		public String getSecurityLevel() {
-//			return securityLevel;
-//		}
-//	
-//		public void setSecurityLevel(String securityLevel) {
-//			this.securityLevel = securityLevel;
-//		}
-		
-	Choice securityLevel;
-		@Face(ejsPath="dwr/metaworks/org/metaworks/widget/ChoiceCombo.ejs")
-		public Choice getSecurityLevel() {
-			return securityLevel;
-		}
-		public void setSecurityLevel(Choice securityLevel) {
-			this.securityLevel = securityLevel;
-		}
-
-		
-	InstanceBackground instanceBackground; 
-
-		public InstanceBackground getInstanceBackground() {
-			return instanceBackground;
-		}
-	
-		public void setInstanceBackground(InstanceBackground instanceBackground) {
-			this.instanceBackground = instanceBackground;
-		}
-
-	//	UnstructuredProcessInstanceStarter unstructuredProcessInstanceStarter;		
-//	public UnstructuredProcessInstanceStarter getUnstructuredProcessInstanceStarter() {
-//		return unstructuredProcessInstanceStarter;
-//	}
-//
-//	public void setUnstructuredProcessInstanceStarter(
-//			UnstructuredProcessInstanceStarter unstructuredProcessInstanceStarter) {
-//		this.unstructuredProcessInstanceStarter = unstructuredProcessInstanceStarter;
-//	}
-//	
-	ProcessMapPanel processMapPanel;
-		@AutowiredToClient
-		public ProcessMapPanel getProcessMapPanel() {
-			return processMapPanel;
-		}
-		public void setProcessMapPanel(ProcessMapPanel processMapPanel) {
-			this.processMapPanel = processMapPanel;
-		}
-		
-
-	String knowledgeNodeId;
-		@Hidden
-		public String getKnowledgeNodeId() {
-			return knowledgeNodeId;
-		}
-		public void setKnowledgeNodeId(String knowledgeNodeId) {
-			this.knowledgeNodeId = knowledgeNodeId;
-		}
-		
-	Date dueDate;
-		@Hidden	
-		public Date getDueDate() {
-			return dueDate;
-		}
-		public void setDueDate(Date dueDate) {
-			this.dueDate = dueDate;
-		}
-		
-	String parentInstanceId;
-	@Hidden
-		public String getParentInstanceId() {
-			return parentInstanceId;
-		}
-		public void setParentInstanceId(String parentInstanceId) {
-			this.parentInstanceId = parentInstanceId;
-		}
-		
-	MetaworksContext metaworksContext;
-		public MetaworksContext getMetaworksContext() {
-			return metaworksContext;
-		}	
-		public void setMetaworksContext(MetaworksContext metaworksContext) {
-			this.metaworksContext = metaworksContext;
-		}
-	
-
 }
