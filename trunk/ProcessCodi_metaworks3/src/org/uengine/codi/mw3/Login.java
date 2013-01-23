@@ -238,7 +238,7 @@ public class Login implements ContextAware {
 		return window;
 	}
 	
-	@ServiceMethod(target=ServiceMethodContext.TARGET_SELF)
+	@ServiceMethod(payload={"userId"}, target=ServiceMethodContext.TARGET_SELF)
 	public Object subscribe() throws Exception{
 		Employee emp = new Employee();
 		emp.getMetaworksContext().setHow("detail");
