@@ -68,10 +68,7 @@ var org_uengine_codi_mw3_model_InstanceViewPublic = function(objectId, className
 		    					__className: "org.uengine.codi.mw3.model.Session"
 		    			};			
 		    			
-		    			console.log(login);
-		    			
 		    			object.session = login.makeSession();
-		    			
 		    			object.load();
 					}
 				});

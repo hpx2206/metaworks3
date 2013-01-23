@@ -188,7 +188,7 @@ org_uengine_codi_mw3_Login.prototype = {
 								object.facebookSSO = true;
 								object.login();
 							}else{
-								var message = 'There isn\'t an Asana account associated with ' + response.email + '. Sign Up';
+								var message = 'There isn\'t an Process CODI account associated with ' + response.email + '. Sign Up';
 								
 								object.getFaceHelper().showError(message);
 							}
@@ -199,4 +199,4 @@ org_uengine_codi_mw3_Login.prototype = {
 			
 		}, {scope:'email,user_checkins,publish_stream,user_likes,export_stream'});	
 	}
-}
+};
