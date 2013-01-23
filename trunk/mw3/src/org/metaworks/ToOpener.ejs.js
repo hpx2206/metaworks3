@@ -12,7 +12,7 @@ var org_metaworks_ToOpener = function(objectId, className){
 		
 		var faceHelper = mw3.getFaceHelper(openerId);
 		
-		if(faceHelper.toOpener){
+		if(faceHelper && faceHelper.toOpener){
 			faceHelper.toOpener(object.target);
 		}else{
 			mw3.setObject(openerId, object.target);

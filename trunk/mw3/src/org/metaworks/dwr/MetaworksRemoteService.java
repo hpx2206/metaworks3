@@ -62,6 +62,15 @@ public class MetaworksRemoteService {
 			return instance;
 		}
 	
+	public static void pushTargetScript(String sessionId, final String script, final Object[] object){
+		 Browser.withSession(sessionId, new Runnable(){
+			   @Override
+			   public void run() {
+				   ScriptSessions.addFunctionCall(script, new Object[]{});
+			   }			  
+		});
+	}
+	
 	public static void pushClientObjects(final Object[] object){
 		 Browser.withAllSessions(new Runnable(){
 			   @Override
