@@ -709,7 +709,10 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	public Object[] makeReturn(Long prevInstId, IInstance instanceRef) throws Exception {
 		
 		Object[] returnObjects = null;
-		String mood = session.getEmployee().getPreferUX();
+		String mood = null;
+		
+		if(session.getEmployee() != null)
+			mood = session.getEmployee().getPreferUX();
 		
 		this.getMetaworksContext().setHow(mood);
 		
