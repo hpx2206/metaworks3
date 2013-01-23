@@ -92,8 +92,8 @@
 		}else if(mw3.how == 'picker'){
 %>
 		<div class="user">	
-			<div class="user_focus<%=(value.size=='small' ? ' small':'')%>" style="background: url('<%=portrait%>'); background-size:cover;"  title="<%=value.name%>">	
-				<img id="user_picture_<%=objectId%>" width=1 height=1 src="<%=portrait%>"  onerror="$(this).parent().css({'background':'url(\'<%=unknown%>\') no-repeat','background-size':'cover'})">
+			<div class="user_focus" style="background: url('<%=portrait%>'); background-size:cover;"  title="<%=value.name%>">	
+				<img id="user_picture_<%=objectId%>" src="<%=portrait%>" onerror="this.src='<%=unknown%>';" class="pic <%=(value.size=='small' ? ' small':'')%>">
 			</div>
 				
 			<div class="user_compact">
@@ -106,8 +106,8 @@
 %>
 		<div class="user">		
 			<div style="float:left;padding:10px;position:relative;z-index:9999"><span><%= fields.userChecked.here({when:'edit'}) %></span></div>
-			<div class="user_focus<%=(value.size=='small' ? ' small':'')%>" style="background: url('<%=portrait%>'); background-size:cover;"  title="<%=value.name%>">	
-				<img id="user_picture_<%=objectId%>" width=1 height=1 src="<%=portrait%>"  onerror="$(this).parent().css({'background':'url(\'<%=unknown%>\') no-repeat','background-size':'cover'})">
+			<div class="user_focus" style="background: url('<%=portrait%>'); background-size:cover;"  title="<%=value.name%>">	
+				<img id="user_picture_<%=objectId%>" src="<%=portrait%>" onerror="this.src='<%=unknown%>';" class="pic <%=(value.size=='small' ? ' small':'')%>">
 			</div>
 			<div class="user_detail">
 				<span class="fontbold"><%=value.name%></span>
@@ -119,8 +119,8 @@
 		}else{			
 %>
 		<div class="user" onclick="<%=clickAction%>">		
-			<div class="user_focus<%=(value.size=='small' ? ' small':'')%>" style="background: url('<%=portrait%>'); background-size:cover;"  title="<%=value.name%>">	
-				<img id="user_picture_<%=objectId%>" width=1 height=1 src="<%=portrait%>"  onerror="$(this).parent().css({'background':'url(\'<%=unknown%>\') no-repeat','background-size':'cover'})">
+			<div class="user_focus" style="background: url('<%=portrait%>'); background-size:cover;"  title="<%=value.name%>">	
+				<img id="user_picture_<%=objectId%>" src="<%=portrait%>" onerror="this.src='<%=unknown%>';" class="pic <%=(value.size=='small' ? ' small':'')%>">
 			</div>
 <%	
 			/* case by user */
