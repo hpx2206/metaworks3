@@ -4,54 +4,79 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-<meta name="viewport" content="width=320, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<meta name="viewport" content="width=device-height, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0"/>
-<meta name="viewport" content="width=device-height, target-densityDpi=medium-dpi"/>
+		<meta name="viewport" content="width=320; initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<meta name="viewport" content="width=device-height; initial-scale=1.0; maximum-scale=1.0; minimum-scale=1.0; user-scalable=0;"/>
+		<meta name="viewport" content="width=device-height, target-densityDpi=medium-dpi"/>
 
-		<link rel="stylesheet" href="style/uclipse.css" />
-		
 		<!-- jquery -->
-		<link rel="stylesheet" type="text/css" href="scripts/jquery/jquery-ui-189custom/css/ui-lightness/jquery-ui-1.8.9.custom.css" />
-		<link rel="stylesheet" type="text/css" href="scripts/jquery/jquery-ui-189custom/development-bundle/themes/base/jquery.ui.all.css" />
-		<link rel="stylesheet" type="text/css" href="scripts/jquery/jquery.msg.css" media="screen" />
-		
-		<script type="text/javascript" src="scripts/jquery/jquery-1.7.2.min.js"></script>  
-		<!-- 
-		<link rel="stylesheet" type="text/css" href="scripts/jquery/jquery-ui-1.9.2.custom/css/ui-lightness/jquery-ui-1.9.2.custom.css" />
-		<script type="text/javascript" src="scripts/jquery/jquery-ui-1.9.2.custom/js/jquery-ui-1.9.2.custom.min.js"></script> 
-		<script type="text/javascript" src="scripts/jquery/jquery-latest.js"></script> 
-		<script type="text/javascript" src="scripts/jquery/jquery-ui-1.9.2.custom/js/jquery-1.8.3.js"></script>  
-		<script type="text/javascript" src="scripts/jquery/jquery-ui-latest.js"></script> 
-		 -->
-		<!-- <script type="text/javascript" src="scripts/jquery/jqueryMobile/jquery.js"></script>
-		<link rel="stylesheet"  href="scripts/jquery/jqueryMobile/jquery.mobile-1.0.1.min.css" />
-		<script src="scripts/jquery/jqueryMobile/jquery.mobile-1.0.1.min.js"></script>
-		-->
+		<script type="text/javascript" src="scripts/jquery/jquery-1.7.2.min.js"></script>
 		<script type="text/javascript" src="scripts/jquery/jquery-ui-1.8.23.custom.min.js"></script> 
 		<script type="text/javascript" src="scripts/jquery/jquery.layout-latest.js"></script>
 		<script type="text/javascript" src="scripts/jquery/jquery.center.js"></script>
 		<script type="text/javascript" src="scripts/jquery/jquery.msg.js"></script>
 		
-		<!-- for OpenGraph jquery -->
-		<script type="text/javascript" src="scripts/jquery/jquerytree/jquery.jstree.js"></script>
-		<script type="text/javascript" src="scripts/jquery/jquery.contextMenu.js"></script>
-		<link rel="stylesheet" type="text/css" href="style/jquery/jquery.contextMenu.css" />
-		 
-		<script type="text/javascript" src="scripts/jquery.view/jquerymx-1.0.custom.js"></script>
-		
-		<!-- pinterest style -->
-		<link rel="stylesheet" type="text/css" href="style/jquery/masonry/style.css" />
-		<script src="scripts/jquery/jquery.masonry.min.js"></script>
-		<script src="scripts/jquery/box-maker.js"></script>
-		<script src="scripts/jquery/modernizr-transitions.js"></script>
-		<script src="scripts/jquery/jquery.imagesloaded.min.js"></script>
-		
-		<!-- end -->
-		<!-- json2 (ie7) -->
+		<!-- jquery css -->
+		<link rel="stylesheet" type="text/css" href="scripts/jquery/jquery-ui-189custom/css/ui-lightness/jquery-ui-1.8.9.custom.css" />
+		<link rel="stylesheet" type="text/css" href="scripts/jquery/jquery-ui-189custom/development-bundle/themes/base/jquery.ui.all.css" />
+		<link rel="stylesheet" type="text/css" href="scripts/jquery/jquery.msg.css" media="screen" />
+
+
+		<!-- metaowkrs for json2 (ie7) -->
  		<script type="text/javascript" src="scripts/json/json2.js"></script>
-		<script type="text/javascript" src="scripts/common.js"></script>		 
+
+		<!-- metaworks for keyboard mapping -->
+		<script type="text/javascript" src="scripts/shortcut.js"></script>
 		
-				 
+		<!-- metaworks for context menu, import YUI -->
+		<script type="text/javascript" src="scripts/yui-3.2.0-min.js"></script>
+		<link rel="stylesheet" type="text/css" href="style/menu/reset.css">
+		<link rel="stylesheet" type="text/css" href="style/menu/container.css">
+		<link rel="stylesheet" type="text/css" href="style/menu/sam/menu.css">
+		<script type="text/javascript" src="scripts/yui/build/utilities/utilities.js"></script>
+		<script type="text/javascript" src="scripts/yui/build/container/container.js"></script>
+		<script type="text/javascript" src="scripts/yui/build/menu/menu.js"></script>
+	 	
+		
+		<!-- metaworks for ejs engine -->
+		<script type="text/javascript" src="scripts/ejs/ejs.js"></script>
+		<script type="text/javascript" src="scripts/ejs/ejs_debugger.js"></script>
+		<script type="text/javascript" src="scripts/ejs/view.js"></script>
+	
+	
+		<!-- substitue for ejs engine (jQote2) -->		
+		<script type="text/javascript" src="scripts/jquery/jquery.jqote2.js"></script>
+	
+		<!-- metaworks engine -->
+	  	<script type='text/javascript' src='dwr/engine.js'></script> 
+	  	<script type='text/javascript' src='dwr/util.js'></script>	  
+	  	<script type='text/javascript' src='dwr/interface/Metaworks.js'></script> 
+	  	<script type="text/javascript" src="dwr/metaworks/scripts/metaworks.js"></script>
+
+
+		<!-- user scripts -->
+		<script type='text/javascript' src='scripts/common.js'></script>				
+		<script type='text/javascript' src='scripts/jquery/timeago/jquery.timeago.js'></script>				
+		
+		<!-- user scripts : mCustomScrollbar -->
+		<script src="scripts/jquery/customScrollBar/jquery.mousewheel.min.js"></script>
+        <script src="scripts/jquery/customScrollBar/jquery.mCustomScrollbar.js"></script>
+        <link href="scripts/jquery/customScrollBar/jquery.mCustomScrollbar.css" rel="stylesheet" type="text/css" />
+		
+
+		<!-- user css -->
+		<link rel="stylesheet" type="text/css" href="style/waveStyle/droppable_layout.css" />
+		<link rel="stylesheet" type="text/css" href="style/waveStyle/signIn.css" />
+
+
+		<!-- ScheduleCalendar -->
+		<link  type="text/css" rel="stylesheet" href="style/Spacetree.css" media="screen" />
+		<link type="text/css" rel="stylesheet" href="scripts/jquery/fullcalendar/fullcalendar.css" />
+		<link type="text/css" rel="stylesheet" href="scripts/jquery/fullcalendar/fullcalendar.print.css" media="print" />
+
+		<script type="text/javascript" src="scripts/jquery/fullcalendar/fullcalendar.min.js"></script>
+		<script type="text/javascript" src="scripts/jit-yc.js"></script>
+
+
 		<!-- for flowchart -->
 		<script type="text/javascript" src="scripts/raphael/raphael-min.js"></script>
 		<script type="text/javascript" src="scripts/ajax/ajaxCommon.js"></script>
@@ -61,59 +86,108 @@
 		
 		<script type="text/javascript" src="scripts/flowchart/flowchartUtil.js"></script>		 
 		<script type="text/javascript" src="scripts/loopDrawForMW3.js"></script>
-
+ 
 
 		<script type="text/javascript" src="scripts/popupTooltip.js"></script>
 		
 		<LINK type="text/css" rel="stylesheet" href="style/popupTooltip.css">
 		<LINK type="text/css" rel="stylesheet" href="style/flowchart.css">
-		
-		<!-- smart tab -->
-		<link rel="stylesheet" type="text/css" href="style/smartTab.css">				
-		<script type="text/javascript" src="scripts/jquery/jquery.smartTab.js"></script>
-
-		
-		<!-- for keyboard mapping -->
-		<script type="text/javascript" src="scripts/shortcut.js"></script>
-		
 				
-		<!-- iphone -->		
-		<link rel="stylesheet" href="style/simulator/simulator.css" />
+		<!-- for open graph -->
+		<script type="text/javascript" src="scripts/jquery/jquery.contextMenu.js"></script>
+		<link rel="stylesheet" type="text/css" href="style/jquery/jquery.contextMenu.css" />
 		
-		<!-- ejs engine -->
-		<script type="text/javascript" src="scripts/ejs/ejs.js"></script>
-		<script type="text/javascript" src="scripts/ejs/ejs_debugger.js"></script>
-		<script type="text/javascript" src="scripts/ejs/view.js"></script>
-	
-	  	<script type='text/javascript' src='dwr/engine.js'></script> 
-	  	<script type='text/javascript' src='dwr/util.js'></script>	  
-	  	<script type='text/javascript' src='dwr/interface/Metaworks.js'></script> 
-	  	<script type="text/javascript" src="dwr/metaworks/scripts/metaworks.js"></script>
-	
-		<!-- substitue for ejs engine (jQote2) -->
-		
-		<script type="text/javascript" src="scripts/jquery/jquery.jqote2.js"></script>
-		
-	
-	
-		<!-- for context menu, import YUI -->
-		<script type="text/javascript" src="scripts/yui-3.2.0-min.js"></script>
-		<link rel="stylesheet" type="text/css" href="style/menu/reset.css">
-		<link rel="stylesheet" type="text/css" href="style/menu/container.css">
-		<link rel="stylesheet" type="text/css" href="style/menu/sam/menu.css">
-		<script type="text/javascript" src="scripts/yui/build/utilities/utilities.js"></script>
-		<script type="text/javascript" src="scripts/yui/build/container/container.js"></script>
-		<script type="text/javascript" src="scripts/yui/build/menu/menu.js"></script>
-	
-		<!--  for ckeditor -->
+		<script type="text/javascript" src="scripts/opengraph/OpenGraph-0.1-SNAPSHOT-min.js"></script>
+		<link rel="stylesheet" type="text/css" href="dwr/metaworks/org/uengine/codi/mw3/model/PureWebProcessDesigner.ejs.css" />
+
+		<!-- for ckeditor -->
 		<script type='text/javascript' src='scripts/ckeditor_3.6.3/ckeditor/ckeditor.js'></script>
-	
-		<!-- for source code editor--> 
+
+		<!-- for source code editor-->
+		<!--  
 		<script src="scripts/ace/build/src/ace.js" type="text/javascript" charset="utf-8"></script>
 		<script src="scripts/ace/build/src/theme-eclipse.js" type="text/javascript" charset="utf-8"></script>
 		<script src="scripts/ace/build/src/mode-javascript.js" type="text/javascript" charset="utf-8"></script>
 		<script src="scripts/ace/build/src/mode-java.js" type="text/javascript" charset="utf-8"></script>
+		 -->
+		 
+		<!-- for check date -->
+		<script type='text/javascript' src='scripts/datejs/date_kr.js'></script>
+
+		<!-- mw3 component -->
+		<link rel="stylesheet" type="text/css" href="style/uclipse.css" />
+
+		<!-- facebook -->
+		<!-- 
+		<script>(function(d, s, id) {
+		  var js, fjs = d.getElementsByTagName(s)[0];
+		  if (d.getElementById(id)) return;
+		  js = d.createElement(s); js.id = id;
+		  js.src = "//connect.facebook.net/ko_KR/all.js#xfbml=1&appId=119159701538006";
+		  fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));</script>
+		 -->
 		
+		<!-- 
+		<script type="text/javascript" src="scripts/jquery/jquery-latest.js"></script> 
+		<script type="text/javascript" src="scripts/jquery/jquery-ui-latest.js"></script> 
+		 -->
+		 
+ 		
+ 		
+<!-- mobile -->
+<!--
+		<script type="text/javascript" src="scripts/jquery/jqueryMobile/jquery.js"></script>
+		<link rel="stylesheet"  href="scripts/jquery/jqueryMobile/jquery.mobile-1.0.1.min.css" />
+		<script src="scripts/jquery/jqueryMobile/jquery.mobile-1.0.1.min.js"></script>
+-->
+		
+		
+
+		
+		<!-- 
+		<script type="text/javascript" src="scripts/jquery/jquery.contextMenu.js"></script>
+		<link rel="stylesheet" type="text/css" href="style/jquery/jquery.contextMenu.css" />
+		 
+		<script type="text/javascript" src="scripts/jquery.view/jquerymx-1.0.custom.js"></script>
+		 -->
+		 
+		<!-- pinterest style -->
+		<!-- 
+		<link rel="stylesheet" type="text/css" href="style/jquery/masonry/style.css" />
+		<script src="scripts/jquery/jquery.masonry.min.js"></script>
+		<script src="scripts/jquery/box-maker.js"></script>
+		<script src="scripts/jquery/modernizr-transitions.js"></script>
+		<script src="scripts/jquery/jquery.imagesloaded.min.js"></script>
+		 -->
+		 
+		<!-- end -->
+		
+				 
+		
+		<!-- smart tab -->
+		<!-- 
+		<link rel="stylesheet" type="text/css" href="style/smartTab.css">				
+		<script type="text/javascript" src="scripts/jquery/jquery.smartTab.js"></script>
+ 		-->
+ 
+		
+
+	  	
+		<!-- iphone -->
+		<!-- 
+		<link rel="stylesheet" href="style/simulator/simulator.css" />
+		 -->
+		 
+
+	
+		
+	
+	
+
+	 
+	 
+		 
 		<!-- for jLayout -->
 		<!-- 
 		<script src="scripts/jLayout/jquery.jlayout.js" type="text/javascript" charset="utf-8"></script>
@@ -124,93 +198,56 @@
 		 -->
 		 
 		<!-- grid -->
+		<!--
 		<link rel="stylesheet" type="text/css" media="screen" href="scripts/jquery.jqGrid-4.3.1/css/ui.jqgrid.css">
 		<script src="scripts/jquery.jqGrid-4.3.1/js/i18n/grid.locale-en.js" type="text/javascript"></script>
 		<script type="text/javascript" src="scripts/jquery.jqGrid-4.3.1/jquery.jqGrid.js"></script>
-
-		<!-- popup -->
-		<link rel="stylesheet" href="scripts/jquery/cluetip/jquery.cluetip.css" />
-		
-		<!-- popup -->
-		<link rel="stylesheet" href="style/popup.css" />
-		
-		
-		<!-- mCustomScrollbar
-		<script src="scripts/jquery/customScrollBar/jquery.mousewheel.min.js"></script>
-        <script src="scripts/jquery/customScrollBar/jquery.mCustomScrollbar.js"></script>
-        <link href="scripts/jquery/customScrollBar/jquery.mCustomScrollbar.css" rel="stylesheet" type="text/css" />
 		 -->
+		 
+		<!-- popup -->
+ 		<link rel="stylesheet" href="scripts/jquery/cluetip/jquery.cluetip.css" />
 		
-		<!-- default -->
-		<link rel="stylesheet" href="style/waveStyle/droppable_layout.css" />
-		<link href="style/waveStyle/signIn.css" type="text/css" rel="stylesheet">
+		<!-- popup -->
+<!-- 		<link rel="stylesheet" href="style/popup.css" /> -->
+		
+		
+		
+		
 				
 
 		<!--  for chart -->
 		
 
-		<!-- ScheduleCalendar -->
-		<link  type="text/css" rel="stylesheet" href="style/Spacetree.css" media="screen" />
-		<link type="text/css" rel="stylesheet" href="scripts/jquery/fullcalendar/fullcalendar.css" />
-		<link type="text/css" rel="stylesheet" href="scripts/jquery/fullcalendar/fullcalendar.print.css" media="print" />
-
-		<script type="text/javascript" src="scripts/jquery/fullcalendar/fullcalendar.min.js"></script>
-		<script type="text/javascript" src="scripts/jit-yc.js"></script>
 				
 				
-				
-		<!-- for process designer -->
-		<link rel="stylesheet" type="text/css" href="dwr/metaworks/org/uengine/codi/mw3/model/PureWebProcessDesigner.ejs.css" />
+		<!-- for process designer -->		
+<!-- 		
 		
-		<!-- for open graph -->
-	    <script type="text/javascript" src="scripts/opengraph/OpenGraph-0.1-SNAPSHOT.js"></script>
-	    <script type="text/javascript" src="scripts/opengraph/raphael-custom.js"></script>
-	    
+ 	    
 	    <!-- for open presentation -->
+<!-- 	    
 	    <link rel="stylesheet" type="text/css" href="scripts/presentation/jmpressStyle.css" />
 		<script type="text/javascript" src="scripts/presentation/jmpress.all.js"></script>
-	    <!-- 
+ -->		
+
+<!-- 	    		
 		<script type="text/javascript">
 			mxBasePath = 'scripts/mxgraph/src';
 		</script>
 		<script type='text/javascript' src='scripts/mxgraph/src/js/mxClient.js'></script>
 		<script type='text/javascript' src='scripts/mxgraph/examples/editors/js/mxApplication.js'></script>
-		 -->
+ -->
+ 		
 		<!-- date -->
-		<script type='text/javascript' src='scripts/format.js'></script>
-		<script type='text/javascript' src='scripts/jquery/timeago/jquery.timeago.js'></script>				
+<!-- 		
 		
-		<script type='text/javascript' src='scripts/datejs/date_kr.js'></script>
+		
+ -->		
 		<!-- 
 		<script type='text/javascript' src='scripts/jdatejs/prototype.js'></script>				
 		 -->
 						
-						
-		<!-- facebook -->
-		<script>(function(d, s, id) {
-		  var js, fjs = d.getElementsByTagName(s)[0];
-		  if (d.getElementById(id)) return;
-		  js = d.createElement(s); js.id = id;
-		  js.src = "//connect.facebook.net/ko_KR/all.js#xfbml=1&appId=119159701538006";
-		  fjs.parentNode.insertBefore(js, fjs);
-		}(document, 'script', 'facebook-jssdk'));</script>
-		
  		<script type="text/javascript">
-	 		jQuery.fn.selectRange = function(start, end) {
-	 		    return this.each(function() {
-	 		        if (this.setSelectionRange) {
-	 		            this.focus();
-	 		            this.setSelectionRange(start, end);
-	 		        } else if (this.createTextRange) {
-	 		            var range = this.createTextRange();
-	 		            range.collapse(true);
-	 		            range.moveEnd('character', end);
-	 		            range.moveStart('character', start);
-	 		            range.select();
-	 		        }
-	 		    });
-	 		}; 		
-	 		
 			mw3.usingTemplateEngine = 'jQote';
 			//mw3.optimizeObjectMemory = true;
 			
@@ -234,12 +271,9 @@
 			}
 
 			
-			var mainPage
-		
 			var request;
 			
 			$(document).ready(function() {
-				
 				mw3.importClasses(["org.uengine.codi.mw3.model.*", "org.metaworks.widget.*"]);
 				
 				mw3.recordingExceptClasses["org.uengine.codi.mw3.model.Session"] = true;
@@ -257,8 +291,6 @@
 				request = new Request();
 				
 				var defId = request.getParameter("defId");
-				
-				//mw3.usingTemplateEngine = 'jQote';
 				
 		 		mw3.setWhen(mw3.WHEN_VIEW);
 		 		mw3.template_error = function(e, actualFace) {
@@ -278,24 +310,16 @@
 		 		};
 		 		
 		 		Metaworks3.prototype.startLoading = function(objId){
-                    //var infoDivId = "#"+this._getInfoDivId(objId);
-                    
                     var divId = mw3._getObjectDivId(objId);
                     var offset = $('#' + divId).offset();                    
                     
                     var offsetRight = offset.left + $('#' + divId).width() - 20;                    
                     var offsetMiddle = offset.top + ($('#' + divId).height()/2- 8);
                     
-                    //console.debug(offset.left+"  ,  "+$('#' + divId + '>*:first').height());
-                    
-                    
                     var html;
                     html = "<div id='info_div' style='position:absolute; z-index:9999999; top:"+offsetMiddle+"px; left:"+offsetRight+"px;'><img src='dwr/metaworks/images/circleloading.gif'></div>";
                     
-                    
                     $('body').append(html);
-                    
-                    
                 };
                         
                 Metaworks3.prototype.endLoading = function(objId){
@@ -322,7 +346,7 @@
 						    content : "<b>" + mw3.localize(message) + "</b>"
 					});
 		 		}
-
+		 		
 		 		mw3.getMessage = function(key, defaultValue){
 		 			var localeHandler = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Locale");
 		 			
@@ -338,25 +362,19 @@
 		 			return key;		
 		 		}
 				
-		 		
-				var locatePage = new MetaworksObject({
-                    __className : "org.uengine.codi.mw3.model.Locale"
-                }, 'body');
+ 				var locatePage = new MetaworksObject({
+                    __className : "org.uengine.codi.mw3.model.Locale",
+                    language : 'ko'
+                }, 'body').load();
 					
-				/* mainPage = new MetaworksObject({
+				var mainPage = new MetaworksObject({
                     __className : "org.uengine.codi.mw3.Login",
-                    metaworksContext : {when: 'edit'},
-                    rememberMe: true,
-                    defId : defId
-                }, 'body'); */
-                
-                mainPage = new MetaworksObject({
-                    __className : "org.uengine.codi.mw3.Login",
+                    status : 'login',
                     metaworksContext : {when: 'edit'}
                 }, 'body');
 				
 				mw3.onLoadFaceHelperScript();
-                
+				
 				window.onbeforeunload= function(){
 				    return 'You are about to leave this page, OK?';
 				};
