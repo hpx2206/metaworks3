@@ -165,9 +165,7 @@
 					<%if(value.type=='memo'){%>
 					<tr>
 						<td>
-							<%  value.memo.metaworksContext.when='view'; %>
-						
-								<%=fields.memo.here()%>						
+							<%=fields.memo.here({when : 'view'})%>						
 						</td>
 					</tr>
 					<%}%>
