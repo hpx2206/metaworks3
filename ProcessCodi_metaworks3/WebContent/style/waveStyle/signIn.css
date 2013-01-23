@@ -140,7 +140,7 @@ input.submitFacebook {
 	height: 30px;
 	position: relative;
 	top: 10px;
-	left: 100px;
+	left: 110px;
 }
 #loginContainer input.submitTwitter {
     
@@ -152,7 +152,7 @@ input.submitFacebook {
     height: 30px;
     position: relative;
     top: 10px;
-    left: 115px;
+    left: 120px;
 }
 #loginContainer input.submitLinkedin {
     
