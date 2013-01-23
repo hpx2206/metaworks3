@@ -1,3 +1,20 @@
+<%
+	if(value.status == 'subscribe'){
+%>
+	<%=fields.userId.here() %>
+	
+	<input  type="button" value="Create Your Account" onClick="<%=methods.subscribe.caller()%>" /><br />
+	-----------------<br />	
+	<input type="button" value="Sign In using Facebook" onClick="mw3.getFaceHelper(<%=objectId%>).loginFacebook()" /><br />
+	<input type="button" value="Sign In using Twitter" /><br />
+	<input type="button" value="Sign In using LinkedIn" /><br />
+	
+	<div class="message" style="background-color:red" />
+	
+<%	
+	}else{
+%>	
+
 <div id="loginContainer">
     <form action="#" method="post">
         <!-- #first_step -->
@@ -15,7 +32,7 @@
 			
 			
             <span id="method_<%=objectId%>_login"><input id="signin" class="submit"  value="" title="click is login" alt="click is login" onclick="<%=methods.login.caller() %>"/></span>
-            <span id="method_<%=objectId%>_subscribe"><input id="subscribe" class="submitTenant"  value="" title="click is subscribe" alt="click is subscribe" onclick="<%=methods.subscribe.caller() %>"/></span>
+            <span id="method_<%=objectId%>_subscribe"><input id="subscribe" class="submitTenant"  value="" title="click is subscribe" alt="click is subscribe" onclick="<%=methods.popupSubscribe.caller() %>"/></span>
             <span id="method_facebook_<%=objectId%>" style="display:none"><input id="facebook" class="submitFacebook"  value="" title="click is facebook subscribe" alt="click is facebook subscribe" onclick="mw3.getFaceHelper(<%=objectId%>).loginFacebook();"/></span>
             
             <div>
@@ -29,9 +46,15 @@
             	<span class="guide"><a href="#" onClick="mw3.test(<%=objectId%>, 'first', {guidedTour: true})"><b>Guide me!</b></a></span>
             </div>
             
+            <div class="message" style="background-color:red" />
+            
         </div>
         <!-- clearfix -->
         <div class="clear"></div>
         <!-- /clearfix -->
     </form>
 </div>
+
+<%
+	}
+%>	

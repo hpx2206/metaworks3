@@ -7,10 +7,19 @@ import javax.servlet.http.HttpSession;
 
 import org.directwebremoting.WebContext;
 import org.directwebremoting.WebContextFactory;
+import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.MetaworksException;
+import org.metaworks.Refresh;
+import org.metaworks.Remover;
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Face;
+import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
-import org.metaworks.dao.Database;
+import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.annotation.Test;
+import org.metaworks.annotation.Validator;
+import org.metaworks.annotation.ValidatorContext;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.admin.PageNavigator;
@@ -24,20 +33,36 @@ import org.uengine.codi.mw3.model.PortraitImageFile;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.model.User;
 
-public class Login extends Database<ILogin> implements ILogin{
+public class Login implements ContextAware {
 	
 	protected static Hashtable<String, String> userIdSessionIdMapping = new Hashtable<String, String>();
-	protected static Hashtable<String, String> userIdDeviceMapping = new Hashtable<String, String>();
-	
+	protected static Hashtable<String, String> userIdDeviceMapping = new Hashtable<String, String>();	
 	
 	public Login(){
 		setMetaworksContext(new MetaworksContext());
 		getMetaworksContext().setWhen("edit");
 	}
 	
+	MetaworksContext metaworksContext;
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
+		}
+
+	String status;
+		@Id
+		public String getStatus() {
+			return status;
+		}
+		public void setStatus(String status) {
+			this.status = status;
+		}
+
 	String userId;
-	@Id
-	@Face(options="placeholder", values="E-Mail")
+		@Face(options="placeholder", values="E-Mail")
+		@Validator(name = ValidatorContext.VALIDATE_NOTNULL)
 		public String getUserId() {
 			return userId;
 		}
@@ -77,18 +102,15 @@ public class Login extends Database<ILogin> implements ILogin{
 			this.defId = defId;
 		}
 		
-	boolean isFacebookSSO;
-		
+	boolean facebookSSO;
 		public boolean isFacebookSSO() {
-			return isFacebookSSO;
+			return facebookSSO;
 		}
-		public void setFacebookSSO(boolean isFacebookSSO) {
-			this.isFacebookSSO = isFacebookSSO;
+		public void setFacebookSSO(boolean facebookSSO) {
+			this.facebookSSO = facebookSSO;
 		}
-		
+
 	Boolean rememberMe;
-		
-	
 		public Boolean getRememberMe() {
 			return rememberMe;
 		}
@@ -97,7 +119,6 @@ public class Login extends Database<ILogin> implements ILogin{
 		}
 		
 	String lastVisitPage;
-
 		public String getLastVisitPage() {
 			return lastVisitPage;
 		}
@@ -106,7 +127,9 @@ public class Login extends Database<ILogin> implements ILogin{
 		}
 
 	String password;
-	@Face(options={"type", "placeholder"}, values={"password", "Password"})
+		@Face(options={"type", "placeholder"}, values={"password", "Password"})
+		@Validator(name = ValidatorContext.VALIDATE_NOTNULL)
+		@Hidden(when = MetaworksContext.WHEN_VIEW)
 		public String getPassword() {
 			return password;
 		}
@@ -114,44 +137,42 @@ public class Login extends Database<ILogin> implements ILogin{
 		public void setPassword(String password) {
 			this.password = password;
 		}
-
-/*	String errorMessage;
-		public String getErrorMessage() {
-			return errorMessage;
-		}
-
-		public void setErrorMessage(String errorMessage) {
-			this.errorMessage = errorMessage;
-		}
-*/
+		
 	public Session loginService() throws Exception {
 		
 		Session session = new Session();
 		
-		if (getUserId() != null && getPassword() != null) {
-			IEmployee emp = new Employee();
-			emp.setEmpCode(getUserId());
-			emp.setPassword(getPassword());
+		IEmployee emp = new Employee();
+		emp.setEmpCode(getUserId());
+		emp.setPassword(getPassword());
+		
+		if(this.isFacebookSSO()){
+			if (getUserId() != null){
+				session.setEmployee(emp.findMe());
+			}
 			
-			session.setEmployee(emp.load());
-			session.fillSession();
-			
-			setMetaworksContext(new MetaworksContext());
-			getMetaworksContext().setWhen(emp.getMetaworksContext().getWhen());
-				
-				
-				//try {				
-/*			} catch (Exception e) {
-				MetaworksContext contextWhenEdit = new MetaworksContext();
-				contextWhenEdit.setWhen(MetaworksContext.WHEN_EDIT);
-				emp.setMetaworksContext(contextWhenEdit);
-				setErrorMessage(e.getMessage());
-*/
-				// FIXME Monitoring for login errors
-				//throw new RuntimeException(e);//.printStackTrace();
-			//}
-			
+		}else{
+			if (getUserId() != null && getPassword() != null) {
+				session.setEmployee(emp.load());
+			}
 		}
+		
+		session.fillSession();
+		
+		setMetaworksContext(new MetaworksContext());
+		getMetaworksContext().setWhen(emp.getMetaworksContext().getWhen());
+			
+			
+			//try {				
+/*			} catch (Exception e) {
+			MetaworksContext contextWhenEdit = new MetaworksContext();
+			contextWhenEdit.setWhen(MetaworksContext.WHEN_EDIT);
+			emp.setMetaworksContext(contextWhenEdit);
+			setErrorMessage(e.getMessage());
+*/
+			// FIXME Monitoring for login errors
+			//throw new RuntimeException(e);//.printStackTrace();
+		//}
 		
 		setPassword(null);
 		
@@ -207,14 +228,24 @@ public class Login extends Database<ILogin> implements ILogin{
 //		
 //	}
 	
+	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP	)
+	public Object popupSubscribe() throws Exception{
+		Login login = new Login();
+		login.setStatus("subscribe");
+		
+		ModalWindow window = new ModalWindow(login, 720, 450, "Sign Up");
+		
+		return window;
+	}
 	
+	@ServiceMethod(target=ServiceMethodContext.TARGET_SELF)
 	public Object subscribe() throws Exception{
 		Employee emp = new Employee();
 		emp.getMetaworksContext().setHow("detail");
 		emp.getMetaworksContext().setWhen("new");				
 		emp.getMetaworksContext().setWhere("admin");
 		emp.setImageFile(new PortraitImageFile());
-		emp.getImageFile().getMetaworksContext().setWhen(WHEN_EDIT);
+		emp.getImageFile().getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		
 		emp.setEmpCode(getUserId());
 		emp.setEmail(getUserId());
@@ -226,80 +257,70 @@ public class Login extends Database<ILogin> implements ILogin{
 			try{
 				name = getUserId().substring(0, getUserId().indexOf("@"));
 			}catch(Exception e){
-				throw new RuntimeException("$InvalidMailAddress");
+				throw new MetaworksException("$InvalidMailAddress");
 			}
 		}
 		
 		emp.setEmpName(name);
 		emp.setPassword(getPassword());
-
-		ModalWindow window = new ModalWindow(emp, 720, 450, "Sign Up");
 		
-		return window;
+		return emp;
 	}
 		
+	@ServiceMethod(payload={"userId"}, target=ServiceMethodContext.TARGET_NONE)
+	public boolean checkAuthSocial(){
+		if(this.getUserId() == null || this.getUserId().length() == 0)
+			return false;
+		
+		Employee employee = new Employee();
+		employee.setEmpCode(this.getUserId());
+		
+		IEmployee employeeRef = null;
+		
+		try{
+			employeeRef = employee.databaseMe();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		if(employeeRef != null)
+			return true;	
+		else
+			return false;
+	}
+	
+	@Test(scenario="first", starter=true, instruction="Welcome! If you have account, sign in please... or sign up for your new account.", next="autowiredObject.org.uengine.codi.mw3.model.InstanceListPanel.newInstance()")
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)//, validate=true)
 	public Object[] login() throws Exception {
 
+		Session session = loginService();
+		
+		Locale locale = new Locale();
+		locale.setLanguage(session.getEmployee().getLocale());
+		locale.load();
+		
+		MainPanel mainPanel;
+		PageNavigator pageNavigator = new PageNavigator();
+		pageNavigator.session = session;
 
-		if(isFacebookSSO){
-			
-			
-			IUser loginUser = new User();
-			
-			loginUser.setName(getName());
-			loginUser.setUserId(getUserId());
-			loginUser.setMetaworksContext(new MetaworksContext());
-			loginUser.getMetaworksContext().setWhen("view");
-			
-			Session session = new Session();
-			session.setUser(loginUser);
-
-			storeIntoServerSession();
-			
-	/*		
-	*/		
-			//return new MainPanel(new Knowledge(loginUser));
-//			return new MainPanel(new IDE(session));
-			return new Object[]{new MainPanel(new Main(session))};
-			
+		if("knowledge".equals(lastVisitPage)){
+			mainPanel = pageNavigator.goKnowledge();
+		}else if("pinterest".equals(lastVisitPage)){
+			mainPanel = pageNavigator.goPinterest();
+		}else if("ide".equals(lastVisitPage)){
+			mainPanel = pageNavigator.goIDE();
 		}else{
-			Session session = loginService();
-			
-			Locale locale = new Locale();
-			locale.setLanguage(session.getEmployee().getLocale());
-			locale.load();
-			
-			if (getMetaworksContext().getWhen().equals(MetaworksContext.WHEN_VIEW)){
-				
-				MainPanel mainPanel;
-				PageNavigator pageNavigator = new PageNavigator();
-				pageNavigator.session = session;
-
-				if("knowledge".equals(lastVisitPage)){
-					mainPanel = pageNavigator.goKnowledge();
-				}else if("pinterest".equals(lastVisitPage)){
-					mainPanel = pageNavigator.goPinterest();
-				}else if("ide".equals(lastVisitPage)){
-					mainPanel = pageNavigator.goIDE();
-				}else{
-					String preferUX = session.getEmployee().getPreferUX();
-					if("sns".equals(preferUX) || "".equals(preferUX)){
-						mainPanel = pageNavigator.goSns();
-					}else{
-						mainPanel = pageNavigator.goProcess();
-					}
-				}
-				//MainPanel mainPanel = new MainPanel(new IDE(session));
-				//MainPanel mainPanel = new MainPanel(new Knowledge(session));
-				
-				
-				storeIntoServerSession();
-
-				return new Object[]{locale, mainPanel};
-			} else {
-				return new Object[]{this};
+			String preferUX = session.getEmployee().getPreferUX();
+			if("sns".equals(preferUX) || "".equals(preferUX)){
+				mainPanel = pageNavigator.goSns();
+			}else{
+				mainPanel = pageNavigator.goProcess();
 			}
 		}
+		
+		storeIntoServerSession();
+
+		return new Object[]{new Remover(new ModalWindow(), true), new Refresh(locale), new Refresh(mainPanel, false, true)};
 	}
 
 	
@@ -331,6 +352,7 @@ public class Login extends Database<ILogin> implements ILogin{
 		}
 	}
 
+	@ServiceMethod(callByContent=true)
 	public MainPanel loginSocialCoding() throws Exception {
 		storeIntoServerSession();
 		
