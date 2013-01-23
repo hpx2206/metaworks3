@@ -102,7 +102,7 @@ public class ConditionNode  implements Cloneable, ContextAware{
 					for(int j=0; j<fields.length; j++){
 						WebFieldDescriptor wfd = wfields[j];
 //						FieldDescriptor fd = fields[i];
-						choice.add("["+nameAttr+"]"+wfd.getName(), wfd.getName());
+						choice.add("["+nameAttr+"]"+wfd.getName(), nameAttr + "." + wfd.getName());
 					}
 				}
 			}
@@ -124,7 +124,7 @@ public class ConditionNode  implements Cloneable, ContextAware{
 	}
 	public void makeExpressionChoice() throws Exception{
 		SelectBox choice = new SelectBox();
-		choice.add("Text", "string");
+		choice.add("Text", "text");
 		choice.add("Number", "number");
 		choice.add("Date", "date");
 		choice.add("Yes or No", "Yes or No");

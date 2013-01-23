@@ -72,7 +72,7 @@ public class PrcsValiable implements ContextAware , Cloneable {
 	
 	public void makeDataTypeChoice() throws Exception{
 		SelectBox choice = new SelectBox();
-		choice.add("Text", "string");
+		choice.add("Text", "text");
 		choice.add("Number", "number");
 		choice.add("Date", "date");
 		choice.add("Yes or No", "Yes or No");

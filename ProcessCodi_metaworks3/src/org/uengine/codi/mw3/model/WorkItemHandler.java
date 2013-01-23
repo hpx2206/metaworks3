@@ -343,7 +343,7 @@ public class WorkItemHandler implements ContextAware{
 			panel.session = session;
 			panel.load(this.getRootInstId().toString());
 			
-			return new Object[]{panel, new Remover(new ModalWindow())};
+			return new Object[]{panel, new Remover(new ModalWindow() , true )};
 		}else{
 			Instance instance = new Instance();
 			instance.setInstId(this.getRootInstId());
@@ -351,7 +351,7 @@ public class WorkItemHandler implements ContextAware{
 			instanceViewContent.session = session;
 			instanceViewContent.load(instance);
 			
-			return new Object[]{instanceViewContent, new Remover(new ModalWindow())};
+			return new Object[]{instanceViewContent, new Remover(new ModalWindow(), true)};
 		}
 	}
 	
