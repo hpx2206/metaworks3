@@ -24,6 +24,18 @@ org_uengine_codi_mw3_model_Session.prototype = {
 	}
 }
 
+mw3.fn.getPreferUx = function(){
+	var session = mw3.getAutowiredObject('org.uengine.codi.mw3.model.Session');
+	
+	if(session == null || typeof session == 'undefined')
+		return null;
+	
+	if(session.employee == null || typeof session.employee == 'undefined')
+		return null;
+	
+	return session.employee.preferUX;
+};
+
 /*
 function loadTest(){
 	for(var i=0; i<10; i++){

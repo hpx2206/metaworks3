@@ -43,6 +43,15 @@ org_uengine_codi_mw3_model_IWorkItem.prototype = {
 		var url = location.origin.replace('8080','7080') + '/uengine-web/processparticipant/worklist/workitemHandler.jsp?taskId='+object.taskId+'&instanceId='+object.instId+'&tracingTag='+object.trcTag;
 		
 		window.open(url);
+	},
+	
+	toAppend : function(target){
+		var viewBox = $('#objDiv_' + this.objectId).find('.view_box3:first');
+		
+		var html = mw3.locateObject(target, null);
+		
+		viewBox.append(html);
+		
 	}
 };
 
