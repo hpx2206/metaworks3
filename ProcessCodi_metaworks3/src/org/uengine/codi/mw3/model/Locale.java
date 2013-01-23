@@ -27,7 +27,7 @@ public class Locale{
 			this.resourceBundle = resourceBundle;
 		}
 
-	@ServiceMethod
+	@ServiceMethod(payload={"language"})
 	public void load(){		
 		// default language setting
 		String language = "en";		

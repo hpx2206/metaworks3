@@ -358,12 +358,9 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	}	
 	
 	@Override
-	public Object[] saveEmployeeInfo() throws Exception {	
-		
-
+	public boolean saveMe() throws Exception {
 		if (getMetaworksContext().getWhen().startsWith(MetaworksContext.WHEN_NEW)) {
 			checkRegistered();
-
 
 			this.setIsDeleted("0");
 			
@@ -390,13 +387,21 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 			syncToDatabaseMe();
 		}
 		flushDatabaseMe();
+		
 		getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 		
 		if(getImageFile()!=null && getImageFile().getFileTransfer()!=null && getImageFile().getFileTransfer().getFilename()!=null){
 			getImageFile().setEmpCode(this.getEmpCode());
 			getImageFile().upload();
-
 		}
+		
+		return true;
+	}
+	
+	@Override
+	public Object[] saveEmployeeInfo() throws Exception {	
+		
+		this.saveMe();
 		
 		if(session != null && session.getEmployee().getEmpCode().equals(getEmpCode())) {
 			session.setEmployee(findMe());
