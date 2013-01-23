@@ -143,18 +143,16 @@ public class FileWorkItem extends WorkItem{
 			
 			try{
 				
-				Preview preview = new Preview();
-				
-				preview.setTaskId(getTaskId());
-
-
-				
-				//change for converted PDF file to image file (save all pages count to ext1(bpm_worklist table))
-				preview.setPageCountInt(
-					getImageForPdf(inputFilePath, outputFilePath)
-				);
-				
-				databaseMe().setPreview(preview); 
+				if(getFile().getMimeType().indexOf("image") != 0){
+					Preview preview = new Preview();
+					preview.setTaskId(getTaskId());
+	
+					//change for converted PDF file to image file (save all pages count to ext1(bpm_worklist table))
+						preview.setPageCountInt(
+							getImageForPdf(inputFilePath, outputFilePath)
+						);
+					databaseMe().setPreview(preview); 
+				}
 
 			}catch(Exception e){
 				e.printStackTrace();
