@@ -152,19 +152,21 @@
 					<%if(value.type=='file'){%>
 					<tr>
 						<td>
-						<%if(value.workItemVersionChooser!=null){%>
-							<%=fields.workItemVersionChooser.here()%>
-						<%}%>
-						<%if(value.preview!=null){%>
-							<span>
-							<%if(value.metaworksContext.when == 'image'){%>
-								<a onClick="<%=methods.viewAsPDF.caller()%>">PDF로 보기</a>
-								<%=fields.preview.here()%>
-							<%}else {%>
-								<a onClick="<%=methods.viewAsImages.caller()%>">이미지로 보기</a>
-								<iframe src="images/pdf/<%=value.taskId%>.pdf" scrolling="no" width=100% height=300px onLoad="resizeFrame(this);"/>
+						<%if(value.file.mimeType.indexOf("office") > 0){%>
+							<%if(value.workItemVersionChooser!=null){%>
+								<%=fields.workItemVersionChooser.here()%>
 							<%}%>
-							</span>
+							<%if(value.preview!=null){%>
+								<span>
+								<%if(value.metaworksContext.when == 'image'){%>
+									<a onClick="<%=methods.viewAsPDF.caller()%>">PDF로 보기</a>
+									<%=fields.preview.here()%>
+								<%}else{%>
+									<a onClick="<%=methods.viewAsImages.caller()%>">이미지로 보기</a>
+									<iframe src="images/pdf/<%=value.taskId%>.pdf" scrolling="no" width=100% height=300px onLoad="resizeFrame(this);"/>
+								<%}%>
+								</span>
+							<%}%>
 						<%}%>
 							<%=fields.file.here({when: (value.file.mimeType.indexOf('image')==0)?'image':'view' })%>
 						</td>
