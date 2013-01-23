@@ -3,7 +3,6 @@ package org.uengine.codi.mw3.model;
 import java.util.ArrayList;
 
 import org.metaworks.MetaworksContext;
-import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
@@ -14,15 +13,11 @@ import org.metaworks.annotation.Test;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.codi.mw3.knowledge.IWfNode;
-import org.uengine.codi.mw3.knowledge.KnowledgeTool;
-import org.uengine.codi.mw3.knowledge.WfNode;
+import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitorPanel;
 import org.uengine.kernel.EJBProcessInstance;
 import org.uengine.kernel.ProcessInstance;
 import org.uengine.processmanager.ProcessManagerRemote;
-
-import com.efsol.util.StringUtils;
 
 
 public class InstanceView {
@@ -416,7 +411,7 @@ public class InstanceView {
 		return new Object[]{new Remover(instance.databaseMe())};
 	}
 		
-	@ServiceMethod(callByContent=true , except={"newItem"})
+	@ServiceMethod(payload={"instanceId", "status"})
 	public void complete() throws Exception{
 
 		//processManager.stopProcessInstance(instanceId);
@@ -425,25 +420,20 @@ public class InstanceView {
 		
 		Instance instance = new Instance();
 		instance.setInstId(new Long(getInstanceId()));
-		
-		if(instance.databaseMe().isInitCmpl() && session.getUser().getUserId() != instance.databaseMe().getInitEp()){
+		IInstance instanceRef = instance.databaseMe();
+				
+		if(instance.isInitCmpl() && !session.getUser().getUserId().equals(instance.getInitEp())){
 			throw new Exception("$OnlyInitiatorCanComplete");
 		}
 		
-		instance.databaseMe().setStatus(tobe);
-		setStatus(tobe);
-		
-		
+		// instance update flush
+		instanceRef.setStatus(tobe);
 		instance.flushDatabaseMe();
-		IInstance iInstance = instance.databaseMe();
-		iInstance.setMetaworksContext(new MetaworksContext());
-		if("sns".equals(session.getEmployee().getPreferUX()) ){
-			iInstance.getMetaworksContext().setHow("instanceList");
-			iInstance.getMetaworksContext().setWhere("sns");
-		}
 		
-		MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(iInstance)});
-
+		this.load(instance);
+		this.setStatus(tobe);
+		
+		MetaworksRemoteService.pushClientObjects(new Object[]{new InstanceListener(InstanceListener.COMMAND_REFRESH, instanceRef)});
 	}
 		
 	

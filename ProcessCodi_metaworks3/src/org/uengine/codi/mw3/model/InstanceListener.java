@@ -2,6 +2,17 @@ package org.uengine.codi.mw3.model;
 
 public class InstanceListener {
 
+	public final static String COMMAND_APPEND 		= "append";
+	public final static String COMMAND_REFRESH 		= "refresh";
+	
+	String command;
+		public String getCommand() {
+			return command;
+		}
+		public void setCommand(String command) {
+			this.command = command;
+		}
+
 	Object applyItem;
 		public Object getApplyItem() {
 			return applyItem;
@@ -11,6 +22,11 @@ public class InstanceListener {
 		}
 	
 	public InstanceListener(Object applyItem){
+		this(COMMAND_APPEND, applyItem);
+	}
+	
+	public InstanceListener(String command, Object applyItem){
+		this.setCommand(command);
 		this.setApplyItem(applyItem);
 	}
 }
