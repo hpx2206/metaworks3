@@ -14,7 +14,6 @@ import org.metaworks.annotation.Test;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitorPanel;
 import org.uengine.kernel.EJBProcessInstance;
 import org.uengine.kernel.ProcessInstance;
@@ -384,7 +383,8 @@ public class InstanceView {
 		}
 		ids.getMetaworksContext().setWhen("edit");
 		
-		return new Popup(350,200,ids);
+		/*return new Popup(350,200,ids);*/
+		return new Popup(400,300,ids);
 	}
 	
 	@ServiceMethod(payload={"instanceId"}, needToConfirm=true, target=ServiceMethodContext.TARGET_APPEND)
@@ -405,11 +405,19 @@ public class InstanceView {
 			NewInstancePanel instancePanel = new NewInstancePanel();
 			instancePanel.load(session);
 			
+
+			if( todoBadge != null ){
+			todoBadge.refresh();
+			}
+			
 			return new Object[]{new Remover(instance), new Refresh(new ContentWindow(instancePanel))};
 		}else{
 			return new Object[]{new Remover(instance)};
 		}
 	}
+	
+	@AutowiredFromClient
+	public TodoBadge todoBadge;
 		
 	@ServiceMethod(payload={"instanceId", "status"})
 	public void complete() throws Exception{
