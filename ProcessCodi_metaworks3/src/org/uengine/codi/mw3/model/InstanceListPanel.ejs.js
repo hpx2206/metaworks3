@@ -18,8 +18,16 @@ var org_uengine_codi_mw3_model_InstanceListPanel = function(objectId, className)
 	var faceHelper = this;	
 	faceHelper.load();	
 
-	searchBarMagin = $('.newprocessbtn').width() + 20;
-	$('.searchboxarea').css("margin-left",searchBarMagin);
+	
+	var browser = mw3.browserCheck();
+		
+	if(browser == "MSIE 7"){
+		$('.searchboxarea').css("margin-left","20");
+	}else{
+		searchBarMagin = $('.newprocessbtn').width() + 20;
+		$('.searchboxarea').css("margin-left",searchBarMagin);
+	}
+	
 	
 	if(object && object.preloaded){
 		
