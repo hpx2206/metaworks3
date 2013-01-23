@@ -289,6 +289,11 @@ public class Login implements ContextAware {
 			return false;
 	}
 	
+	@ServiceMethod(payload={"userId"}, target=ServiceMethodContext.TARGET_NONE)
+	public Session makeSession() throws Exception {
+		return loginService();
+	}
+	
 	@Test(scenario="first", starter=true, instruction="Welcome! If you have account, sign in please... or sign up for your new account.", next="autowiredObject.org.uengine.codi.mw3.model.InstanceListPanel.newInstance()")
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)//, validate=true)
 	public Object[] login() throws Exception {
