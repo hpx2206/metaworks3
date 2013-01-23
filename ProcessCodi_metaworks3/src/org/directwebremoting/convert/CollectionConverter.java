@@ -87,8 +87,10 @@ public class CollectionConverter extends AbstractConverter
             Property parent = data.getContext().getCurrentProperty();
             Property child = parent.createChild(0);
             child = converterManager.checkOverride(child);
-            Class<?> subtype = Object.class; //child.getPropertyType();
             
+            Class<?> subtype = child.getPropertyType();
+            if("java.lang.String".equals(subtype.getName()))
+            	subtype = Object.class;
             
 
             // subtype.getMethod("h", null).getTypeParameters();
