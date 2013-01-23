@@ -463,6 +463,9 @@ legend {display:none;}
     padding: 0 10px;
 }
 
+*:first-child+html  .view_box .rb,.view_box .lb,.view_box .tr,.view_box .tl ,.view_box3 .rb,.view_box3 .lb,.view_box3 .tr,.view_box3 .tl,.view_box4 .rb,.view_box4 .lb,.view_box4 .tr,.view_box4 .tl{ background-image: none; }
+* html .view_box .rb,.view_box .lb,.view_box .tr,.view_box .tl ,.view_box3 .rb,.view_box3 .lb,.view_box3 .tr,.view_box3 .tl,.view_box4 .rb,.view_box4 .lb,.view_box4 .tr,.view_box4 .tl{ background-image: none; }
+
 #mm_LineL{
     background: url('../../images/waveStyle/mm_MiddleLine.gif') 0% 50% no-repeat;
     width:13px;
