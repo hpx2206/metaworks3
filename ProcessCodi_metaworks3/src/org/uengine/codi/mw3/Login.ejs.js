@@ -82,8 +82,10 @@ org_uengine_codi_mw3_Login.prototype = {
 						
 						FB.api('/' + uid, function(response) {
 							if(login.userId && login.rememberMe && facebookSSO)
-								login.getFaceHelper().loginFacebook();
+								login.getFaceHelper().facebookSSO(response);
 						});
+					}else if('not_authorized' == response.status){
+						login.getFaceHelper().loginFacebook();
 					}	
 
 				}, true);
@@ -143,6 +145,50 @@ org_uengine_codi_mw3_Login.prototype = {
 		
 		$('#' + mw3._getObjectDivId(this.objectId)).find('.message:first').html(mw3.localize(message));
 	},
+	facebookSSO : function(response){
+		var objectId = this.objectId;
+		
+		if(response.email){
+			var object = mw3.getAutowiredObject('org.uengine.codi.mw3.Login@login');
+			
+			mw3.getInputElement(object.__objectId, "userId").value = response.email;
+			
+			var isAuth = object.checkAuthSocial();
+			
+			if(mw3.getObject(objectId).status == 'subscribe'){
+				if(!isAuth){
+					var employee = {
+						__className : 'org.uengine.codi.mw3.model.Employee',
+						metaworksContext : {when : 'new'},
+						empCode : response.email,
+						empName : response.name,
+						email   : response.email,
+						locale  : response.locale.substring(0,2)								
+					};
+					
+					mw3.locateObject(employee, employee.className);
+					
+					var isSave = employee.saveMe();
+				}
+				
+				$(mw3.getInputElement(object.__objectId, "rememberMe")).attr('checked', true);							
+				object.facebookSSO = true;
+				object.login();
+
+				
+			}else{
+				if(isAuth){								
+					$(mw3.getInputElement(object.__objectId, "rememberMe")).attr('checked', true);	
+					object.facebookSSO = true;
+					object.login();
+				}else{
+					var message = 'There isn\'t an Process CODI account associated with ' + response.email + '. Sign Up';
+					
+					object.getFaceHelper().showError(message);
+				}
+			}
+		}
+	},
 	loginFacebook : function(){		
 		if(typeof FB != 'object'){
 			alert('not loaded facebook api');
@@ -152,48 +198,9 @@ org_uengine_codi_mw3_Login.prototype = {
 		
 		FB.login(function(response) {
 			if (response.status === 'connected') {
-				var object = mw3.getAutowiredObject('org.uengine.codi.mw3.Login@login');
-				
 			    var uid = response.authResponse.userID;				
 				FB.api('/' + uid, function(response) {
-					if(response.email){
-						mw3.getInputElement(object.__objectId, "userId").value = response.email;
-						
-						var isAuth = object.checkAuthSocial();
-						
-						if(mw3.getObject(objectId).status == 'subscribe'){
-							if(!isAuth){
-								var employee = {
-									__className : 'org.uengine.codi.mw3.model.Employee',
-									metaworksContext : {when : 'new'},
-									empCode : response.email,
-									empName : response.name,
-									email   : response.email,
-									locale  : response.locale.substring(0,2)								
-								};
-								
-								mw3.locateObject(employee, employee.className);
-								
-								var isSave = employee.saveMe();
-							}
-							
-							$(mw3.getInputElement(object.__objectId, "rememberMe")).attr('checked', true);							
-							object.facebookSSO = true;
-							object.login();
-
-							
-						}else{
-							if(isAuth){								
-								$(mw3.getInputElement(object.__objectId, "rememberMe")).attr('checked', true);	
-								object.facebookSSO = true;
-								object.login();
-							}else{
-								var message = 'There isn\'t an Process CODI account associated with ' + response.email + '. Sign Up';
-								
-								object.getFaceHelper().showError(message);
-							}
-						}
-					}
+					mw3.getFaceHelper(objectId).facebookSSO(response);
 				});
 			}
 			

@@ -89,10 +89,9 @@ public class InstanceViewPublic {
 			instanceViewContent.session = this.getSession();
 			instanceViewContent.load(theInstanceDAO.databaseMe());
 			instanceViewContent.getInstanceView().getMetaworksContext().setWhen("public");
-			
-			setMetaworksContext(new MetaworksContext());
-			getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 		}
 		
+		setMetaworksContext(new MetaworksContext());
+		getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 	}
 }
