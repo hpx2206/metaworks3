@@ -193,15 +193,13 @@ public class ConditionPanel  implements ContextAware{
 				treeNode.setRoleList(roleList);
 				treeNode.setPrcsValiableList(prcsValiableList);
 				treeNode.conditionInit();
-				String nodeName = "";
+				String nodeName = condi.getDescription() != null ? condi.getDescription().getText() : "";
 				String nodeType = "";
 				if( condi instanceof Or ){
 					nodeType = "Or";
-					treeNode.setExpressionType("expression");
 					treeNode.getConditionNode().getOperandChoice().setSelected("Or");
 				}else if( condi instanceof And ){
 					nodeType = "And";
-					treeNode.setExpressionType("expression");
 					treeNode.getConditionNode().getOperandChoice().setSelected("And");
 				}else if( condi instanceof RoleExist ){
 					nodeType = "roleExist";
@@ -210,6 +208,24 @@ public class ConditionPanel  implements ContextAware{
 					nodeType = "otherwise";
 					treeNode.setExpressionType("otherwise");
 				}
+				// and 와 or 의 공통 로직 처리
+				if( condi instanceof Or || condi instanceof And){
+					treeNode.setExpressionType("expression");
+					if( nodeName != null ){
+						String split[] = nodeName.split(" ");
+						if( split.length >= 2){	// a == b
+//							System.out.println(split[0]);
+//							System.out.println(split[1]);
+//							System.out.println(split[2]);
+							treeNode.getConditionNode().getValiableChoice().setSelected(split[0]);
+							treeNode.getConditionNode().getSignChoice().setSelected(split[1]);
+							// TODO Text 이외의 값을.. 어떻게 넣고 가져와야할지의 고민이 필요
+							treeNode.getConditionNode().getExpressionChoice().setSelected("Text");
+							treeNode.getConditionNode().setExpressionText(split[2]);
+						}
+					}
+				}
+				
 				treeNode.setType(nodeType);
 				treeNode.setName(nodeName);
 				rootNode.add(treeNode);

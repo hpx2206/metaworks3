@@ -328,30 +328,14 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 					Activity fromAct = (Activity)activityMap.get(fromId);
 					Activity toAct = (Activity)activityMap.get(toId);
 					if( fromAct != null && toAct != null){
-						Transition ts = new Transition(fromAct.getTracingTag()  , toAct.getTracingTag() );
 						// 트렌지션 생성
-						def.addTransition(ts);
-					}
-					if( fromAct != null && fromAct instanceof SwitchActivity){
-						// 스위치 엑티비티의 조건 분기 컨디션 설정
-						SwitchActivity switchActivity = (SwitchActivity)fromAct;
-						LineShape line = new LineShape(cv);
-						Condition conditionNode = line.makeCondition();
-						Condition[] conditions ;
-						int index = 0;
-						if( switchActivity.getConditions() != null){
-							Condition[] cond = switchActivity.getConditions();
-							conditions = new Condition[cond.length+1];
-							System.arraycopy(cond, 0, conditions, 0, cond.length);
-							index = cond.length;
-						}else{
-							conditions = new Condition[1];
-							index = 0;
+						Transition ts = new Transition(fromAct.getTracingTag()  , toAct.getTracingTag() );
+						// 컨디션 생성
+						if( this.getConditionMap().containsKey(cv.getId())){
+							ts.setCondition(this.getConditionMap().get(cv.getId()));
 						}
-						// childActivity 와 condition 의 index를 동일하게 맞추어준다.
-						switchActivity.addChildActivity(toAct, index);
-						conditions[index] = conditionNode;
-						switchActivity.setConditions(conditions);
+						
+						def.addTransition(ts);
 					}
 				}
 			}
@@ -459,7 +443,10 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 //									if( pc.length == 0 ) pc = null;
 //								}
 //								((HumanActivity) activity).setParameters(pc);
+								
+								// TODO 임시방편..
 								activity = new HumanActivity();
+								activity.setTracingTag(cells[i].getTracingTag());
 							}
 //							activityList.add( activity );  
 							activityMap.put(cells[i].getId() , activity );

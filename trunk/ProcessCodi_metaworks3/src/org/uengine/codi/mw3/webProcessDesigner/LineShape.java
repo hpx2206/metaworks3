@@ -6,11 +6,13 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONSerializer;
 
+import org.uengine.contexts.TextContext;
 import org.uengine.kernel.And;
 import org.uengine.kernel.Condition;
 import org.uengine.kernel.Evaluate;
 import org.uengine.kernel.Or;
 import org.uengine.kernel.Otherwise;
+import org.uengine.kernel.RoleExist;
 
 public class LineShape extends CanvasDTO {
 	
@@ -47,6 +49,8 @@ public class LineShape extends CanvasDTO {
 			for( int i=0; i < child.size(); i++){
 				ConditionTreeNode childNode = child.get(i);
 				String expressionType = childNode.getExpressionType();
+				TextContext condiName = new TextContext();
+				condiName.setText(childNode.getName());
 				if( expressionType != null && expressionType.equals("expression") ){
 					
 					String conditionType = childNode.getConditionNode().getOperandChoice().getSelected();			// And, Or
@@ -56,9 +60,9 @@ public class LineShape extends CanvasDTO {
 					String valiable = childNode.getConditionNode().getValiableChoice().getSelected();					// processValiable
 					
 					Object exppObject = new Object();
-					if( expressionChoice.equals("Text") || expressionChoice.equals("Yes or No")){
+					if( expressionChoice.equalsIgnoreCase("Text") || expressionChoice.equalsIgnoreCase("Yes or No")){
 						exppObject = expressionText;
-					}else if( expressionChoice.equals("Number")){
+					}else if( expressionChoice.equalsIgnoreCase("Number")){
 						exppObject = new Integer(expressionText);
 					}else if( expressionChoice.equals("Date")){
 					}else if( expressionChoice.equals("File")){
@@ -71,16 +75,24 @@ public class LineShape extends CanvasDTO {
 						Or orCondition = new Or();
 						Evaluate eval = new Evaluate(valiable, sign, exppObject);
 						And andCondition = new And(new Condition[]{eval});
+						orCondition.setDescription(condiName);
 						orCondition.addCondition(andCondition);
 						condition.addCondition(orCondition);
 					}else if( conditionType != null && conditionType.equals("And")){
 						Evaluate eval = new Evaluate(valiable, sign, exppObject);
 						And andCondition = new And(new Condition[]{eval});
+						andCondition.setDescription(condiName);
 						condition.addCondition(andCondition);
 					}
 				}else if( expressionType != null && expressionType.equals("roleExist") ){
+					String roleName = "temp";	// TODO 롤 이름을 받아옴
+					RoleExist roleExist = new RoleExist(roleName);
+					And andCondition = new And();
+					andCondition.addCondition(roleExist);
+					condition.addCondition(andCondition);
 				}else if( expressionType != null && expressionType.equals("otherwise") ){
 					Otherwise otherwise = new Otherwise();
+					otherwise.setDescription(condiName);
 					condition.addCondition(otherwise);
 				}
 				// 자식이 또 있는 경우 재귀호출
