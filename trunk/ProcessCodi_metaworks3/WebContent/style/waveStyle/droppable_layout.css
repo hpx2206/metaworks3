@@ -768,7 +768,8 @@ img {
     border-top: 1px solid #8b9fbd;
     border-bottom: 1px solid #8b9fbd;
 }
-
+*:first-child+html #searchbox ul li input { margin-top:-1px}
+* html #searchbox ul li input { margin-top:-1px}
 .adduserline {
     height: 46px;
 }
@@ -797,6 +798,12 @@ img {
     margin-left:5px;
     background: url(../../images/waveStyle/newProcess2.gif) 100% 0% no-repeat;
 }
+.searchboxarea {
+    margin-left: 110px;
+}
+*:first-child+html .searchboxarea { margin-left: 0px;float:left}
+* html .searchboxarea { margin-left: 0px;float:left}
+
 .searchboxarea {
     margin-left: 110px;
 }
