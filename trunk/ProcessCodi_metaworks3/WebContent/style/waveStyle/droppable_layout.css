@@ -1207,7 +1207,7 @@ img {
 }
 
 #navigationTitle, #contactTitle, #wihTitle, #workListTitle, #mindmapTitle, #processTitle {
-    float: left;
+    /*float: left;*/
     
     
 }
