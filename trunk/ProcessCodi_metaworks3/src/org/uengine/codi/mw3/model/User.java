@@ -6,7 +6,6 @@ import javax.servlet.http.HttpSession;
 
 import org.directwebremoting.Browser;
 import org.directwebremoting.ScriptSessions;
-import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ToOpener;
@@ -77,11 +76,18 @@ public class User extends Database<IUser> implements IUser {
 	public Popup pickUp() throws Exception {
 		Popup popup = new Popup();
 		
-		AddFollowerPanel userPicker = new AddFollowerPanel( session , null , "addInstanceFollower" );
-		userPicker.setMetaworksContext(new MetaworksContext()); // propagate context
-		userPicker.getMetaworksContext().setWhen("userPicker");
+		String type = "addAskFollower";
+		ContactPanel contactPanel = new ContactPanel(session.getUser());
+		contactPanel.getContactListPanel().setId(type);
+		contactPanel.getContactListPanel().getLocalContactList().getMetaworksContext().setWhen(type);		
+		contactPanel.getContactListPanel().getSocialContactList().getMetaworksContext().setWhen(type);
+		contactPanel.getUser().getMetaworksContext().setWhen(type);
 		
-		popup.setPanel(userPicker);
+		/*AddFollowerPanel userPicker = new AddFollowerPanel( session , null , "addAskFollower" );
+		userPicker.setMetaworksContext(new MetaworksContext()); // propagate context
+		userPicker.getMetaworksContext().setWhen("userPicker");*/
+		
+		popup.setPanel(contactPanel);
 		popup.setName("AddFollowerPanel");
 		
 		return popup;
@@ -232,7 +238,8 @@ public class User extends Database<IUser> implements IUser {
 //			topicFollowers.load();
 //			
 //			return new Object[]{new Refresh(topicFollowers)};
-		}else if("addInstanceFollower".equals(this.getMetaworksContext().getWhen())){
+		}else if("addAskFollower".equals(this.getMetaworksContext().getWhen())){
+			this.getMetaworksContext().setWhen("edit");
 //			String instId = instanceFollowers.getInstanceId();
 //			
 //			Instance instance = new Instance();
@@ -286,6 +293,8 @@ public class User extends Database<IUser> implements IUser {
 //			////// end
 //			
 //			return new Object[]{new Refresh(followers)};
+			return new Object[]{new Refresh(new Popup()), new ToOpener(this)};
+			
 			// TODO 이 부분은 변경됨 FollowerSelectPanel.java 참조
 		}else if("addEtcFollower".equals(this.getMetaworksContext().getWhen())){			
 			etcFollowers.put(this);
