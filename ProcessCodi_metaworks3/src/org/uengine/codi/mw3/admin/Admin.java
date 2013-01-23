@@ -6,13 +6,12 @@ import javax.servlet.http.HttpSession;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.TransactionContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.model.ClassDesignerContentPanel;
 import org.uengine.codi.mw3.model.ContentWindow;
 import org.uengine.codi.mw3.model.IUser;
-import org.uengine.codi.mw3.model.User;
-import org.uengine.codi.mw3.Login;
-import org.uengine.codi.mw3.ILogin;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.codi.mw3.model.User;
 
 
 public class Admin {
@@ -21,11 +20,10 @@ public class Admin {
 		resourceWindow = new ResourceWindow();
 		contentWindow = new ContentWindow();
 		mainMenu = new UClipseMainMenu();
-		
 	}
 	
 	
-	public Admin(ILogin login) throws Exception{
+	public Admin(Login login) throws Exception{
 		this();
 
 		Session session = new Session();
