@@ -1201,7 +1201,7 @@ img {
 
 #navigationTitle, #contactTitle, #wihTitle, #workListTitle, #mindmapTitle, #processTitle {
     float: left;
-    width:100%;
+    
     
 }
 #navigationTitle span {
