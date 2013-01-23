@@ -527,7 +527,7 @@ legend {display:none;}
 #openmind_box li{cursor: pointer; line-height:20px; color: #777777}
 #openmind_box li.selected{font-weight:bold;color:#000}
 
-.overlay_comment{position:absolute;z-index:100;left:-117px; padding:5px;background:#FCF9A3;box-shadow: 5px 5px 20px #888;max-width: 100px;width: 100px; -webkit-border-radius:4px;/*filter:alpha(opacity=50); -khtml-opacity: 0.5; -moz-opacity: 0.5; opacity: 0.5;*/}
+.overlay_comment{position:absolute;z-index:100;left:7px; padding:5px;background:#FCF9A3;box-shadow: 5px 5px 20px #888;max-width: 100px;width: 100px; -webkit-border-radius:4px;/*filter:alpha(opacity=50); -khtml-opacity: 0.5; -moz-opacity: 0.5; opacity: 0.5;*/}
 .overlay_comment:hover{filter:alpha(opacity=100); -khtml-opacity: 1; -moz-opacity: 1; opacity: 1;*/}
 .overlay_comment_line{position:absolute;z-index:99;background:url('../../images/waveStyle/workItemCommentLine.png') top right repeat-x;height:15px;left:7px;}
 
