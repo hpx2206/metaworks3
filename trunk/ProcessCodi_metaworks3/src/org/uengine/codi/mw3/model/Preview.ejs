@@ -1,0 +1,10 @@
+<%
+for(i=0; i<value.pageCount; i++){
+%>
+<tr>
+	<td> <img width="100%" src="images/pdf/<%=value.taskId%>.pdf_<%=i%>.jpg"/></td>
+</tr>
+<tr>
+	<td align="center"><%=i+1%></td>
+</tr>
+<%}%>

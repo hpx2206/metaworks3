@@ -182,7 +182,16 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				WorkItemVersionChooser workItemVersionChooser) {
 			this.workItemVersionChooser = workItemVersionChooser;
 		}
-
+		
+	Preview preview;
+		public Preview getPreview() {
+			return preview;
+		}
+		public void setPreview(Preview preview) {
+			this.preview = preview;
+		}
+		
+		
 	String content;
 		public String getContent() {
 			return content;

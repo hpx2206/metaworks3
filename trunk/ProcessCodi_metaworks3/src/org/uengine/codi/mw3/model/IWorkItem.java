@@ -160,6 +160,16 @@ public interface IWorkItem extends IDAO{
 		public MetaworksFile getFile();
 		public void setFile(MetaworksFile file);
 		
+		@ORMapping(
+			databaseFields = {"taskId", "ext1"}, 
+			objectFields = {"taskId", "pageCount"},
+			objectIsNullWhenFirstDBFieldIsNull = true,
+			availableWhen = "type=='file'"		
+		)
+		public Preview getPreview();
+		public void setPreview(Preview file);
+
+		
 		@Hidden
 		@ORMapping(
 			databaseFields = {"prtTskId", "ext1", "ext2"}, 
