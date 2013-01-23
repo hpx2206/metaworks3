@@ -120,46 +120,44 @@ public class FileWorkItem extends WorkItem{
 
 		// office 파일 pdf 로 변환
 		if(getFile().getMimeType() != null){
-			if( getFile().getMimeType().indexOf("office") > 0 || getFile().getMimeType().indexOf("pdf") > 0){
 		
-				String prefix = TransactionContext.getThreadLocalInstance()
-						.getRequest().getSession().getServletContext()
-						.getRealPath("/images/pdf/");
-				
-				String inputFilePath = getFile().overrideUploadPathPrefix()+ getFile().getUploadedPath();
-				String outputFilePath = prefix + "/" + this.getTaskId() + ".pdf";
-				
-				
-				//if(office document) then convert document as PDF file.
-				
-				try{
-					if(getFile().getMimeType().indexOf("office") > 0){
-						convertPdf(inputFilePath, outputFilePath);				
-					}else{
-						MetaworksFile.copyStream(new FileInputStream(inputFilePath), new FileOutputStream(outputFilePath));
-					}
-				}catch(Exception e){
-					e.printStackTrace();
+			String prefix = TransactionContext.getThreadLocalInstance()
+					.getRequest().getSession().getServletContext()
+					.getRealPath("/images/pdf/");
+			
+			String inputFilePath = getFile().overrideUploadPathPrefix()+ getFile().getUploadedPath();
+			String outputFilePath = prefix + "/" + this.getTaskId() + ".pdf";
+			
+			
+			//if(office document) then convert document as PDF file.
+			
+			try{
+				if(getFile().getMimeType().indexOf("office") > 0){
+					convertPdf(inputFilePath, outputFilePath);				
+				}else{
+					MetaworksFile.copyStream(new FileInputStream(inputFilePath), new FileOutputStream(outputFilePath));
 				}
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+			
+			try{
 				
-				try{
-					
-					Preview preview = new Preview();
-					
-					preview.setTaskId(getTaskId());
-	
+				Preview preview = new Preview();
+				
+				preview.setTaskId(getTaskId());
 
-					
-					//change for converted PDF file to image file (save all pages count to ext1(bpm_worklist table))
-					preview.setPageCountInt(
-						getImageForPdf(inputFilePath, outputFilePath)
-					);
-					
-					databaseMe().setPreview(preview); 
-	
-				}catch(Exception e){
-					e.printStackTrace();
-				}
+
+				
+				//change for converted PDF file to image file (save all pages count to ext1(bpm_worklist table))
+				preview.setPageCountInt(
+					getImageForPdf(inputFilePath, outputFilePath)
+				);
+				
+				databaseMe().setPreview(preview); 
+
+			}catch(Exception e){
+				e.printStackTrace();
 			}
 			
 		}
