@@ -289,7 +289,7 @@ public class Login implements ContextAware {
 			return false;
 	}
 	
-	@ServiceMethod(payload={"userId"}, target=ServiceMethodContext.TARGET_NONE)
+	@ServiceMethod(payload={"userId", "facebookSSO"}, target=ServiceMethodContext.TARGET_NONE)
 	public Session makeSession() throws Exception {
 		return loginService();
 	}
