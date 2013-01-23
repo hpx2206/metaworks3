@@ -133,16 +133,39 @@ input.submitFacebook {
 #loginContainer input.submitFacebook {
 	
 	display:inline-block;
-	background: url('../../images/signIn/facebook-login-button.png') no-repeat;
+	background: url('../../images/signIn/facebook30.png') no-repeat;
 	border: none;
 	cursor: pointer;
-	width: 123px;
+	width: 30px;
 	height: 30px;
 	position: relative;
 	top: 10px;
 	left: 100px;
 }
-
+#loginContainer input.submitTwitter {
+    
+    display:inline-block;
+    background: url('../../images/signIn/twitter30.png') no-repeat;
+    border: none;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    position: relative;
+    top: 10px;
+    left: 115px;
+}
+#loginContainer input.submitLinkedin {
+    
+    display:inline-block;
+    background: url('../../images/signIn/linkedin30.png') no-repeat;
+    border: none;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    position: relative;
+    top: 10px;
+    left: 130px;
+}
 #loginContainer input.submit:focus {
 	border: none;
 }
