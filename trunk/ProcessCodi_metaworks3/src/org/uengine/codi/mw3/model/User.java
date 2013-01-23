@@ -377,6 +377,7 @@ public class User extends Database<IUser> implements IUser {
 		
 		Contact contact = new Contact();
 		contact.setFriend(this);
+		contact.setFriendId(this.getUserId());
 		contact.setUserId(session.getUser().getUserId());
 		contact.addContact();
 		
