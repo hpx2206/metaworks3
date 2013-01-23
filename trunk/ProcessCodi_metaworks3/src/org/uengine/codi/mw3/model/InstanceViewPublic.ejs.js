@@ -31,8 +31,6 @@ org_uengine_codi_mw3_model_InstanceViewPublic.prototype = {
 				});
 				
 				FB.getLoginStatus(function(response) {
-					console.log(response);
-					
 					if ('connected' == response.status){
 					    var uid = response.authResponse.userID;
 						
@@ -61,12 +59,15 @@ org_uengine_codi_mw3_model_InstanceViewPublic.prototype = {
 
 			var isAuth = login.checkAuthSocial();
 			if(!isAuth){
+				console.log(response);
+				
 				var employee = {
 					__className : 'org.uengine.codi.mw3.model.Employee',
 					metaworksContext : {when : 'new'},
 					empCode : response.email,
 					empName : response.name,
 					email   : response.email,
+					facebookId : response.id,
 					locale  : response.locale.substring(0,2)								
 				};
 				

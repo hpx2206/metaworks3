@@ -663,6 +663,33 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				instance.setInstId(this.getInstId());
 				
 				instanceRef = instance.databaseMe();
+						
+				// 덧글일 때 WorkItem 추가하는 사용자가 팔로워에 추가되어 있지 않다면 추가작업
+				instance.fillFollower();
+
+				IUser followers = instance.getFollowers().getFollowers();
+				boolean existFollower = false;
+				
+				if(followers != null){
+					followers.beforeFirst();
+					
+					while(followers.next()){
+						if(followers.getUserId().equals(session.getUser().getUserId())){
+							existFollower = true;
+							
+							break;
+						}
+					}
+				}	
+						
+				if(!existFollower){
+					org.uengine.kernel.RoleMapping newFollower = org.uengine.kernel.RoleMapping.create();
+					newFollower.setName("_follower_" + session.getUser().getUserId());
+					newFollower.setEndpoint(session.getUser().getUserId());
+					
+					processManager.putRoleMapping(getInstId().toString(), newFollower);
+					processManager.applyChanges();
+				}
 			}
 			
 			// 마지막 워크아이템의 제목을 인스턴스의 적용
@@ -760,19 +787,23 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 					}else{
 						returnObjects = new Object[]{new Refresh(this, false, true)};	
 					}
-					
 				}else{
-					returnObjects = new Object[]{new ToAppend(instanceViewThreadPanel, this)};
+					CommentWorkItem commentWorkItem = new CommentWorkItem();
+					commentWorkItem.setInstId(this.getInstId());
+					commentWorkItem.setWriter(session.getUser());
+					commentWorkItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+					
+					returnObjects = new Object[]{new ToAppend(instanceViewThreadPanel, this), new Refresh(commentWorkItem, false, true)};
 				}
 				
 				MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(copyOfInstance)});
 			}
 			
-			
+			// 팔로워들에게 알림처리
 			Instance instanceForFollower = new Instance();
 			instanceForFollower.setInstId(instanceRef.getInstId());			
 			instanceForFollower.fillFollower();
-			
+
 			IUser followers = instanceForFollower.getFollowers().getFollowers();
 			if(followers != null){
 				followers.beforeFirst();
@@ -781,7 +812,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 					if(session.getUser().getUserId().equals(followers.getUserId()))
 						continue;
 					
-					// noti
 					Notification noti = new Notification();
 					
 					noti.setNotiId(System.currentTimeMillis()); //TODO: why generated is hard to use
@@ -807,10 +837,9 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 
 				}
 			}
-			
-			
+
 			// 본인 이외에 다른 사용자에게 push			
-			MetaworksRemoteService.pushOtherClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(copyOfInstance), new WorkItemListener(copyOfThis)});
+			MetaworksRemoteService.pushOtherClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(copyOfInstance), new WorkItemListener(copyOfThis)});			
 			
 		// 수정
 		}else{		
