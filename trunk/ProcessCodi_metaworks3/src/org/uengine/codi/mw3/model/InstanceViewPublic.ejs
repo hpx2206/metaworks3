@@ -1,9 +1,9 @@
-
 <%	
 	if(value){
 		if(mw3.when == mw3.WHEN_VIEW){
 			if(value.open){
 %>
+	<%=fields.session.here()%>
 	<%=fields.instanceViewContent.here()%>
 <%
 			}else{						
@@ -16,7 +16,6 @@
 		}
 	}else{
 %>
-
   <div id="fb-root"></div>
   <div class="fb-login-button" data-scope="email,user_checkins,publish_stream,user_likes,export_stream" onlogin="mw3.getFaceHelper('<%=objectId%>').login()">
     Login with Facebook

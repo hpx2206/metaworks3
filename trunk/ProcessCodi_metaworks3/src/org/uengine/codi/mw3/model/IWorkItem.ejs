@@ -53,8 +53,13 @@
 %>
 	
 <%
-	var isMine = (value.writer.userId == mw3.getAutowiredObject('org.uengine.codi.mw3.model.Session').user.userId);
-
+	var session = mw3.getAutowiredObject('org.uengine.codi.mw3.model.Session');
+	
+	var isMine = false;
+	
+	if(session && session.user && session.user.userId == value.writer.userId)
+		isMine = true;
+		
 	mw3.setWhen('view');
 	
 	if(isMine == true){

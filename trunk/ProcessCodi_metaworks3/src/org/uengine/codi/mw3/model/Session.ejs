@@ -1,5 +1,4 @@
 <%
-
 	if(value){	
 		if(mw3.when == 'view'){
 			if(value.ux && value.ux == 'phone') {
@@ -16,7 +15,7 @@
 			<span class="ssesionLine"><a href="#" onClick="mw3.test(mw3.getAutowiredObject('org.uengine.codi.mw3.model.InstanceListPanel').__objectId, 'first', {guidedTour:true})" type="application/pdf"><%=mw3.localize("$Help")%></a></span>
 				 
 <%
-			if(value.employee.isAdmin){%>
+			if(value.employee && value.employee.isAdmin){%>
 			<span class="ssesionLine"> | </span>
 			<span class="ssesionLine"><a href="#" onClick="<%=methods.manager.caller()%>"><%=mw3.localize("$Manager")%></a></span>
 <%
