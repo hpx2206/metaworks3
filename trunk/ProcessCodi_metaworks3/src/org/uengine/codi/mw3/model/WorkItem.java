@@ -765,6 +765,47 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(copyOfInstance)});
 			}
 			
+			
+			Instance instanceForFollower = new Instance();
+			instanceForFollower.setInstId(instanceRef.getInstId());			
+			instanceForFollower.fillFollower();
+			
+			IUser followers = instanceForFollower.getFollowers().getFollowers();
+			if(followers != null){
+				followers.beforeFirst();
+				
+				while(followers.next()){
+					if(session.getUser().getUserId().equals(followers.getUserId()))
+						continue;
+					
+					// noti
+					Notification noti = new Notification();
+					
+					noti.setNotiId(System.currentTimeMillis()); //TODO: why generated is hard to use
+					noti.setUserId(followers.getUserId());
+					noti.setActorId(session.getUser().getUserId());
+					noti.setConfirm(false);
+					noti.setInputDate(Calendar.getInstance().getTime());
+					noti.setTaskId(getTaskId());
+					noti.setInstId(getInstId());					
+					noti.setActAbstract(session.getUser().getName() + " wrote : " + getTitle());
+		
+					noti.add(copyOfInstance);
+					
+					if(prevInstId == null){
+						MetaworksRemoteService.pushTargetScript(Login.getSessionIdWithUserId(followers.getUserId()),
+								"if(mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar')!=null) mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar').__getFaceHelper().addMyschedule",
+								new Object[]{getTitle(), getInstId()+"", newInstancePanel.getDueDate()});
+					}
+					
+					MetaworksRemoteService.pushTargetScript(Login.getSessionIdWithUserId(followers.getUserId()),
+							"mw3.getAutowiredObject('" + NotificationBadge.class.getName() + "').refresh",
+							new Object[]{});
+
+				}
+			}
+			
+			
 			// 본인 이외에 다른 사용자에게 push			
 			MetaworksRemoteService.pushOtherClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(copyOfInstance), new WorkItemListener(copyOfThis)});
 			
