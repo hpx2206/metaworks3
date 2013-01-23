@@ -133,15 +133,22 @@ public class FileWorkItem extends WorkItem{
 				//if(office document) then convert document as PDF file.
 				
 				try{
-					Preview preview = new Preview();
-					
-					preview.setTaskId(getTaskId());
-	
 					if(getFile().getMimeType().indexOf("office") > 0){
 						convertPdf(inputFilePath, outputFilePath);				
 					}else{
 						MetaworksFile.copyStream(new FileInputStream(inputFilePath), new FileOutputStream(outputFilePath));
 					}
+				}catch(Exception e){
+					e.printStackTrace();
+				}
+				
+				try{
+					
+					Preview preview = new Preview();
+					
+					preview.setTaskId(getTaskId());
+	
+
 					
 					//change for converted PDF file to image file (save all pages count to ext1(bpm_worklist table))
 					preview.setPageCountInt(

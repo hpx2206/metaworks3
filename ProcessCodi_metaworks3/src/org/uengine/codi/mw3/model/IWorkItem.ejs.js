@@ -45,13 +45,13 @@ org_uengine_codi_mw3_model_IWorkItem.prototype = {
 		window.open(url);
 	}
 	
-/*	, toAppend : function(target){
+	,toAppend : function(target){
 		var viewBox = $('#objDiv_' + this.objectId).find('.view_box3:first');
 		
 		var html = mw3.locateObject(target, null);
 		
 		viewBox.append(html);
 		
-	}*/
+	}
 };
 
