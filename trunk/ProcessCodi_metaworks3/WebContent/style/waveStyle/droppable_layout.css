@@ -223,6 +223,8 @@ img {
     top: 10px;
     right: 65px;
 }
+.ssesionLine{float:left;line-height:37px; height:37px;cursor:pointer;padding:0 2px}
+
 .boxtopleft {
     background: #060;
     width: 100%;
@@ -364,9 +366,7 @@ img {
     height: 100%;
     /* overflow:auto; */
 }
-*+ html .contentcontainer {
-    overflow: hidden;
-}
+
 .topcontentcontainer {
     background: #fff;
     margin: 0 7px 0 3px;
@@ -563,26 +563,17 @@ img {
 .user .user_focus {
     float: left;
     margin-lef: 4px;
-    margin-right: 4px;
-    /*			margin-top: 4px;
-     margin-bottom: 4px;*/
+    margin-right: 4px;   
     background: #eef6f6;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
-    box-shadow: 1px 1px 1px #888;
-    /*	box-shadow: 0px 0px 4px 2px #555 inset;*/
-    /*	 border-width:2px;
-     border-style:solid;
-     border-color:#dfe5e5;*/
+    box-shadow: 1px 1px 1px #888;    
     -o-background-size: 100% 100%;
     -webkit-background-size: 100% 100%;
     -khtml-background-size: 100% 100%;
     -moz-background-size: 100% 100%;
-    background: url('../../images/portrait/unknown_user.gif');
     background-repeat: no-repeat;
-    width: 33px;
-    height: 33px;
 }
 
 .badge {
@@ -604,7 +595,9 @@ img {
 .user .pic {
     width: 33px;
     height: 33px;
-    box-shadow: 1px 1px 1px #888;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
 }
 
 .user .small {
