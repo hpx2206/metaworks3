@@ -49,6 +49,10 @@
 .worklistuser {}
 .worklistuser dd{ margin:2px 0px 2px 3px; float:left; display:block;}
 .worklistuser dd center{font-size:11px; letter-spacing:-0.1em;}
+.instanceType{float:left;width:38px;margin-right:-40px}
+.instanceTitle{margin-left:40px;}
+*:first-child+html .instanceTitle{float:left}
+* html .instanceTitle{float:left}
 
 .instanceBtn{display:none;}
 
