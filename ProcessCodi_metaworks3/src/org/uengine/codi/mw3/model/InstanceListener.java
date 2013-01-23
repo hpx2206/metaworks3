@@ -4,6 +4,7 @@ public class InstanceListener {
 
 	public final static String COMMAND_APPEND 		= "append";
 	public final static String COMMAND_REFRESH 		= "refresh";
+	public final static String COMMAND_REMOVE		= "remove";
 	
 	String command;
 		public String getCommand() {

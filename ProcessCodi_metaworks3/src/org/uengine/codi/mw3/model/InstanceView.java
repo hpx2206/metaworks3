@@ -3,6 +3,7 @@ package org.uengine.codi.mw3.model;
 import java.util.ArrayList;
 
 import org.metaworks.MetaworksContext;
+import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
@@ -386,7 +387,7 @@ public class InstanceView {
 		return new Popup(350,200,ids);
 	}
 	
-	@ServiceMethod(needToConfirm=true)
+	@ServiceMethod(payload={"instanceId"}, needToConfirm=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] remove() throws Exception{
 
 		Instance instance = new Instance();
@@ -399,16 +400,15 @@ public class InstanceView {
 		processManager.stopProcessInstance(instanceId);
 
 		instance.databaseMe().setIsDeleted(true);
-		//instance.flushDatabaseMe();
 		
-//		InstanceListPanel list = new InstanceListPanel();
-//		list.getInstanceList().load(session);
-		
-//		NewInstancePanel newInstancePanel = new NewInstancePanel();
-//		newInstancePanel.session = session;
-//		newInstancePanel.load();
-		
-		return new Object[]{new Remover(instance.databaseMe())};
+		if(!"sns".equals(session.getEmployee().getPreferUX())){
+			NewInstancePanel instancePanel = new NewInstancePanel();
+			instancePanel.load(session);
+			
+			return new Object[]{new Remover(instance), new Refresh(new ContentWindow(instancePanel))};
+		}else{
+			return new Object[]{new Remover(instance)};
+		}
 	}
 		
 	@ServiceMethod(payload={"instanceId", "status"})
