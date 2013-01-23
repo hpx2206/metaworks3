@@ -54,7 +54,7 @@
  #loginContainer table td:nth-child(2) {
  color: #5C9EE5;
 }
-#loginContainer .form input, #loginContainer select {
+#loginContainer .form input, #loginContainer select , #signup input{
 	background: url('../../images/signIn/input.png') no-repeat  !important;
 	color: #ccc;
 	border: 1px solid #E1E1E1 !important;
