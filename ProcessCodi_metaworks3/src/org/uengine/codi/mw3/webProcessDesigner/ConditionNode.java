@@ -107,7 +107,7 @@ public class ConditionNode  implements Cloneable, ContextAware{
 				}
 			}
 		}
-		
+//		choice.setSelectStyle("font-size:10px;");
 		setValiableChoice(choice);
 	}
 	public void makeSignChoice() throws Exception{

@@ -249,9 +249,23 @@ public class Instance extends Database<IInstance> implements IInstance{
 				
 		stmt
 		.append("      ,(SELECT max(startdate) startdate, worklist.rootinstid")
-		.append("   	   FROM bpm_worklist worklist")
-		.append("  		  WHERE worklist.status != 'RESERVED'")
-		.append("  		  GROUP BY worklist.rootinstid) task ");
+		.append("   	   FROM bpm_worklist worklist");
+		
+		if("organization.group"	.equals(session.getLastPerspecteType())) {
+			stmt.append("   	  , 	bpm_rolemapping	  rolemapping ");
+		}
+		stmt.append("  		  WHERE worklist.status != 'RESERVED'");
+		if("organization.group"	.equals(session.getLastPerspecteType())) {
+			stmt.append("and rolemapping.rootinstid = worklist.instid ");
+			stmt.append("and rolemapping.endpoint in (select empcode from emptable where partcode=?lastSelectedItem) ");
+		}
+		
+		stmt.append("  		  GROUP BY worklist.rootinstid) task ");
+//		stmt
+//		.append("      ,(SELECT max(startdate) startdate, worklist.rootinstid")
+//		.append("   	   FROM bpm_worklist worklist")
+//		.append("  		  WHERE worklist.status != 'RESERVED'")
+//		.append("  		  GROUP BY worklist.rootinstid) task ");
 		
 		stmt.append(taskSql.toString());
 		
@@ -389,7 +403,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 		}else if("organization.group"
 				.equals(session.getLastPerspecteType())) {
 			
-			taskSql.append("and rolemapping.endpoint in (select empcode from emptable where partcode=?lastSelectedItem) ");
+//			taskSql.append("and rolemapping.endpoint in (select empcode from emptable where partcode=?lastSelectedItem) ");
 			
 			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
 			

@@ -329,6 +329,8 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 			
 			value.tempElementId = $(this).attr('id');
 			value.tempElementName = $(this).children('[id$=_LABEL]').text();
+			
+		
 			value.tempElementData = JSON.stringify(canvas.getCustomData(element));
 			value.gateCondition();
 		}

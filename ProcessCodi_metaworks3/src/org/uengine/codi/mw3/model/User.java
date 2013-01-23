@@ -76,7 +76,7 @@ public class User extends Database<IUser> implements IUser {
 	public Popup pickUp() throws Exception {
 		Popup popup = new Popup();
 		
-		String type = "addAskFollower";
+		String type = "addInstanceFollower";
 		ContactPanel contactPanel = new ContactPanel(session.getUser());
 		contactPanel.getContactListPanel().setId(type);
 		contactPanel.getContactListPanel().getLocalContactList().getMetaworksContext().setWhen(type);		
@@ -238,8 +238,7 @@ public class User extends Database<IUser> implements IUser {
 //			topicFollowers.load();
 //			
 //			return new Object[]{new Refresh(topicFollowers)};
-		}else if("addAskFollower".equals(this.getMetaworksContext().getWhen())){
-			this.getMetaworksContext().setWhen("edit");
+//		}else if("addInstanceFollower".equals(this.getMetaworksContext().getWhen())){
 //			String instId = instanceFollowers.getInstanceId();
 //			
 //			Instance instance = new Instance();
@@ -293,9 +292,12 @@ public class User extends Database<IUser> implements IUser {
 //			////// end
 //			
 //			return new Object[]{new Refresh(followers)};
-			return new Object[]{new Refresh(new Popup()), new ToOpener(this)};
-			
 			// TODO 이 부분은 변경됨 FollowerSelectPanel.java 참조
+		}else if("addInstanceFollower".equals(this.getMetaworksContext().getWhen())){			
+			getMetaworksContext().setWhen("edit");
+			getMetaworksContext().setHow("picker");
+			
+			return new Object[]{new Remover(new Popup()), new ToOpener(this)};
 		}else if("addEtcFollower".equals(this.getMetaworksContext().getWhen())){			
 			etcFollowers.put(this);
 			

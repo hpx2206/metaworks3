@@ -220,13 +220,14 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		}
 		
 		processManager.setLoggedRoleMapping(rm);
-		
-		processManager.executeProcess(instId);
-		processManager.applyChanges();
-		
+
 		return instId;
 	}	
 	
+	public void executeProcess(String instId) throws Exception {
+		processManager.executeProcess(instId);
+		processManager.applyChanges();
+	}
 	public Object[] initiate() throws Exception{
 //		InstanceViewContent instanceView// = new InstanceViewContent();
 		
@@ -240,7 +241,7 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		instanceRef.setInstId(new Long(instId));
 		
 		if(newInstancePanel!=null){
-			instanceRef.databaseMe().setSecuopt("" + newInstancePanel.getSecurityLevel());
+//			instanceRef.databaseMe().setSecuopt("" + newInstancePanel.getSecurityLevel());
 			
 			if(newInstancePanel.getKnowledgeNodeId() != null){
 			

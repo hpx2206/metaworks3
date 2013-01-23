@@ -1,26 +1,23 @@
 <%
 	if(value){
 %>
-		<ul>
-			<li>
-				<span style="float:left;"><%=fields.operandChoice.here()%></span>
-				<div class="clear"></div>
-			</li>
-		</ul>
-		<ul>
-			<li>
-				<span style="float:left;"><%=fields.valiableChoice.here()%></span>
-				<span style="float:left;"><%=fields.signChoice.here()%></span>
-				<span style="float:left;"><%=fields.expressionChoice.here()%></span>
-				<div class="clear"></div>
-			</li>
-		</ul>
-		<ul>
-			<li>
-				<span style="float:right;"><%=fields.expressionText.here()%></span>
-				<div class="clear"></div>
-			</li>
-		</ul>
+		<table>
+			<tr>
+				<td width="150"><%=fields.operandChoice.here()%></td>
+				<td width="100"></td>
+				<td width="200"></td>
+			</tr>
+			<tr>
+				<td><span style="float:left;"><%=fields.valiableChoice.here()%></span></td>
+				<td><span style="float:left;"><%=fields.signChoice.here()%></span></td>
+				<td><span style="float:left;"><%=fields.expressionChoice.here()%></span></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td></td>
+				<td><span style="float:left;"><%=fields.expressionText.here()%></span></td>
+			</tr>
+		</table>
 <%
 	}
 %>

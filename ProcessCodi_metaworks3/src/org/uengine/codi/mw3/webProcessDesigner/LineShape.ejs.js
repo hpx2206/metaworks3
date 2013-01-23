@@ -19,5 +19,5 @@ var org_uengine_codi_mw3_webProcessDesigner_LineShape = function(objectId, class
 //		}
 //		canvas.setCustomData(element, customData);
 //	}
-//	canvasObject.conditionMap[object.id] = object.lineCondition;
+	canvasObject.conditionMap[object.id] = object.lineCondition;
 };
