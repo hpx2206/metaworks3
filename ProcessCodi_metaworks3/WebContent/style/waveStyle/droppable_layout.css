@@ -601,11 +601,15 @@ img {
      border-style:solid;
      border-color:#dfe5e5;*/
 }
+.user .pic {
+    width: 33px;
+    height: 33px;
+    box-shadow: 1px 1px 1px #888;
+}
 
 .user .small {
-    width: 25px;
-    height: 25px;
-    box-shadow: 1px 1px 1px #888;
+    width: 25px !important;
+    height: 25px !important;
 }
 
 .idept {
