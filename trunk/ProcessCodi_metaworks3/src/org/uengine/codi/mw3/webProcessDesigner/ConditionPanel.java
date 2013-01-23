@@ -179,41 +179,53 @@ public class ConditionPanel  implements ContextAware{
 	}
 	
 	public void makeChildTreeNode( ConditionTreeNode rootNode , Condition condition ) throws Exception{
-		ConditionTreeNode treeNode = new ConditionTreeNode();
-		treeNode.setParentId( rootNode.getId() );
-		treeNode.setType(TreeNode.TYPE_FILE_CODE);
-		
-		treeNode.setRoleList(roleList);
-		treeNode.setPrcsValiableList(prcsValiableList);
-		treeNode.conditionInit();
-		String nodeName = "";
-		if( condition instanceof Or ){
-			nodeName = "Or";
-			treeNode.setExpressionType("expression");
-			treeNode.getConditionNode().getOperandChoice().setSelected("Or");
-		}else if( condition instanceof And ){
-			nodeName = "And";
-			treeNode.setExpressionType("expression");
-			treeNode.getConditionNode().getOperandChoice().setSelected("And");
-		}else if( condition instanceof RoleExist ){
-			nodeName = "roleExist";
-			treeNode.setExpressionType("roleExist");
-		}else if( condition instanceof Otherwise ){
-			nodeName = "otherwise";
-			treeNode.setExpressionType("otherwise");
-		}
-		treeNode.setName(nodeName);
-		rootNode.add(treeNode);
-		// 자식을 가지고 있을 경우 재귀 호출
-		if( condition instanceof Or || condition instanceof And){
-			Condition[] condis = ((And)condition).getConditions();
-			if( condis != null){
-				for( int i=0; i< condis.length; i++){
-					Condition condi = condis[i];
-					makeChildTreeNode(rootNode, condi);
+		// TODO 현재 tree 의 dapth 를 형성시키지 못하니 1depth로 loop를 돌린다 추후 뎁스가 있도록 변경 - 김형국
+		// 처음 들어오는 condition 은 무조건 or 가 최상위임
+		Condition[] condis = ((And)condition).getConditions();
+		if( condis != null){
+			for( int i=0; i< condis.length; i++){
+				Condition condi = condis[i];
+				ConditionTreeNode treeNode = new ConditionTreeNode();
+				treeNode.setMetaworksContext(new MetaworksContext());
+				treeNode.setParentId( rootNode.getId() );
+				treeNode.setType(TreeNode.TYPE_FILE_CODE);
+				
+				treeNode.setRoleList(roleList);
+				treeNode.setPrcsValiableList(prcsValiableList);
+				treeNode.conditionInit();
+				String nodeName = "";
+				String nodeType = "";
+				if( condi instanceof Or ){
+					nodeType = "Or";
+					treeNode.setExpressionType("expression");
+					treeNode.getConditionNode().getOperandChoice().setSelected("Or");
+				}else if( condi instanceof And ){
+					nodeType = "And";
+					treeNode.setExpressionType("expression");
+					treeNode.getConditionNode().getOperandChoice().setSelected("And");
+				}else if( condi instanceof RoleExist ){
+					nodeType = "roleExist";
+					treeNode.setExpressionType("roleExist");
+				}else if( condi instanceof Otherwise ){
+					nodeType = "otherwise";
+					treeNode.setExpressionType("otherwise");
 				}
+				treeNode.setType(nodeType);
+				treeNode.setName(nodeName);
+				rootNode.add(treeNode);
 			}
 		}
+		
+//		// 자식을 가지고 있을 경우 재귀 호출
+//		if( condition instanceof Or || condition instanceof And){
+//			Condition[] condis = ((And)condition).getConditions();
+//			if( condis != null){
+//				for( int i=0; i< condis.length; i++){
+//					Condition condi = condis[i];
+//					makeChildTreeNode(rootNode, condi);
+//				}
+//			}
+//		}
 		
 	}
 	
@@ -225,8 +237,9 @@ public class ConditionPanel  implements ContextAware{
 		
 		ConditionTreeNode rootNode = conditionTree.getNode();
 		Condition condition = lineShape.makeCondition(rootNode);
-//		lineShape.setLineCondition(condition);
-		processDesignerWebContentPanel.getConditionMap().put(this.getConditionId(), condition);
+		lineShape.setLineCondition(condition);
+		// 이렇게 하면.. 호출할때, processDesignerWebContentPanel.getConditionMap() 에 데이타가 하나도 없음
+//		processDesignerWebContentPanel.getConditionMap().put(this.getConditionId(), condition);
 		
 //		if( conditionNodes != null && conditionNodes.size() > 0){
 //			JSONArray jsonArray = new JSONArray();

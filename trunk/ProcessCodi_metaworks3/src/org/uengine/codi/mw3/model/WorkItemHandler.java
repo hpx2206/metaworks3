@@ -11,6 +11,7 @@ import javax.validation.Valid;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Remover;
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
@@ -270,7 +271,7 @@ public class WorkItemHandler implements ContextAware{
 	@AutowiredFromClient
 	public Session session;
 		
-	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_EDIT, validate=true)
+	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_EDIT, validate=true , target=ServiceMethodContext.TARGET_APPEND)
 //	@Available(when={"NEW"})
 	public Object[] complete() throws RemoteException, ClassNotFoundException, Exception{
 						

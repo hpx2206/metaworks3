@@ -630,7 +630,8 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 						}
 					}
 				}
-
+				processMap.executeProcess(instId);
+				
 				// WorkItem 의 InstId 할당
 				this.setInstId(new Long(instId));
 				

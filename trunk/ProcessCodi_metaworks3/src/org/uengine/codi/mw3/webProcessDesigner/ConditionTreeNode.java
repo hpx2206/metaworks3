@@ -174,17 +174,25 @@ public class ConditionTreeNode  implements ContextAware{
 	public Object[] addCondition() throws Exception{
 		this.getMetaworksContext().setHow("");
 		String nodeName = "";
+		String nodeType = "";
 		this.getConditionNode().getExpressionChoice().getSelected();
 		if( expressionType != null && expressionType.equals("expression") ){
-			nodeName = this.getConditionNode().getOperandChoice().getSelected();
+			String val1 = this.getConditionNode().getValiableChoice().getSelected();
+			String val2 = this.getConditionNode().getSignChoice().getSelected();
+			String val3 = this.getConditionNode().getExpressionChoice().getSelected();
+			nodeName = val1 + " " +val2 + " " + val3; 
+			nodeType = this.getConditionNode().getOperandChoice().getSelected();
 		}else if( expressionType != null && expressionType.equals("roleExist") ){
-			nodeName = "roleExist";
+			nodeName = "roleExist"; // role 이 존재하는지 여부로 
+			nodeType = "roleExist";
 		}else if( expressionType != null && expressionType.equals("otherwise") ){
 			nodeName = "otherwise";
+			nodeType = "otherwise";
 		}else{
 			nodeName = "오류";
 		}
 		this.setName(nodeName);
+		this.setType(nodeType);
 		Long idByTime = new Date().getTime();
 		this.setId(idByTime.toString());
 		
