@@ -320,10 +320,20 @@ public class Instance extends Database<IInstance> implements IInstance{
 		}else if("all"
 				.equals(session.getLastPerspecteType())) {
 			
-			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
-			criteria.put("instIsdelete", "1");
-			instanceSql.append("and inst.status=?instStatus ");
-			criteria.put("instStatus", "Running");
+			taskSql
+			.append("      , bpm_worklist wl")
+			.append("           INNER JOIN bpm_rolemapping role")
+			.append("                   ON WL.INSTID=ROLE.INSTID")
+			.append("                  AND role.endpoint=?endpoint");
+			
+			instanceSql
+			.append("   AND wl.instid=inst.instid")			
+			.append("   AND inst.isdeleted!=?instIsdelete ");
+			//.append("   and inst.status=?instStatus ");
+			
+			criteria.put("instIsdelete", "1");			
+			//	criteria.put("instStatus", "Running");			
+			
 			// secureopt
 			instanceSql
 			.append(" and	exists ( ")
@@ -381,9 +391,17 @@ public class Instance extends Database<IInstance> implements IInstance{
 		}else if("organization"
 					.equals(session.getLastPerspecteType())) {
 			
-			taskSql.append("and rolemapping.endpoint=?taskEndpoint ");
+			taskSql
+			.append("      , bpm_worklist wl")
+			.append("           INNER JOIN bpm_rolemapping role")
+			.append("                   ON WL.INSTID=ROLE.INSTID")
+			.append("                  AND role.endpoint=?taskEndpoint");
+			
+			instanceSql
+			.append("   AND wl.instid=inst.instid")			
+			.append("   AND inst.isdeleted!=?instIsdelete ");
+			
 			criteria.put("taskEndpoint", session.getLastSelectedItem());
-			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
 			criteria.put("instIsdelete", "1");
 
 			// secureopt
