@@ -32,17 +32,17 @@ var org_metaworks_component_TreeNode = function(objectId, className){
 		if(!faceHelper.isExpand())
 			faceHelper.collapse();
 		
-		$(this.nodeDiv).children().children('span').bind('click', {objectId : this.objectId}, function(event){
+		this.nodeDiv.children().children('span').bind('click', {objectId : this.objectId}, function(event){
 			mw3.getFaceHelper(event.data.objectId).action();
 		});		
 	}
 	
 	// add event mouse click
-	$(this.nodeDiv).bind('click', {objectId : this.objectId}, function(event){
+	this.nodeDiv.bind('click', {objectId : this.objectId}, function(event){
 		mw3.getFaceHelper(event.data.objectId).select();
 	});
 	
-	$(this.nodeDiv).bind('dblclick', {objectId : this.objectId}, function(event){
+	this.nodeDiv.bind('dblclick', {objectId : this.objectId}, function(event){
 		mw3.getFaceHelper(event.data.objectId).action();
 	});
 };
@@ -55,8 +55,10 @@ org_metaworks_component_TreeNode.prototype = {
 		}
 	},
 	destroy : function() {
-		if(this.object != null)
+		if(this.object != null){
 			this.nodeDiv.unbind();
+			this.nodeDiv.children().children('span').unbind();
+		}
 	},
 	startLoading : function(){
 		
