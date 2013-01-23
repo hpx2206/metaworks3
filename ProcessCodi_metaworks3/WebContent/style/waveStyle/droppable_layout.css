@@ -1896,3 +1896,9 @@ html, body {
 
 .positionRight {float:right; margin-right:15px;}
 .positionRight > div{float:left}
+
+#tabIcon_Company{background: url(../../images/waveStyle/tab_i_company.png) 2px no-repeat; padding-left:22px;}
+#tabIcon_Facebook{background: url(../../images/waveStyle/tab_facebook.png) 2px no-repeat; padding-left:22px;}
+#tabIcon_Twitter{background: url(../../images/waveStyle/tab_twitter.png) 2px no-repeat; padding-left:22px;}
+#tabIcon_LinkedIn{background: url(../../images/waveStyle/tab_in.png) 2px no-repeat; padding-left:22px;}
+#tabIcon_Metoday{background: url(../../images/waveStyle/tab_metoday.png) 2px no-repeat; padding-left:22px;}
