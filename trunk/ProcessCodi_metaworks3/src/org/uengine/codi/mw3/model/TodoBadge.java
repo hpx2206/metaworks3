@@ -21,15 +21,14 @@ public class TodoBadge{
 	@ServiceMethod
 	public void refresh() throws Exception{
 	
-		/*
-		PersonalPerspective personalPerspective = new PersonalPerspective();
+		/*PersonalPerspective personalPerspective = new PersonalPerspective();
 
 		personalPerspective.session = session;
 		personalPerspective.session.getMetaworksContext().setWhen("todoBadge");
 		personalPerspective.loadInbox();
-		personalPerspective.session.getMetaworksContext().setWhen(null);
-		*/
+		personalPerspective.session.getMetaworksContext().setWhen(null);*/
 		
+		session.setTodoListCount(Instance.countTodo(session));
 		setNewItemCount(session.getTodoListCount());
 	}
 	
