@@ -72,6 +72,10 @@ org_metaworks_component_Tree.prototype = {
 		this.objectDiv.trigger('loaded');
 	},
 	
+	destroy : function(){
+		this.objectDiv.unbind();
+	},
+	
 	loadedNode : function(nodeId, objectId){
 		if(this.object.showCheckBox){
 			var node = mw3.objects[objectId];

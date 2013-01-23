@@ -52,7 +52,7 @@ var org_metaworks_widget_ModalWindow = function(objectId, className) {
 				else
 					options['height'] = $(window).height() - 100;
 			
-				console.log(options['height']);
+//				console.log(options['height']);
 				
 				$("#dialog:ui-dialog").dialog("destroy");
 				$(this.divId).dialog(options);
