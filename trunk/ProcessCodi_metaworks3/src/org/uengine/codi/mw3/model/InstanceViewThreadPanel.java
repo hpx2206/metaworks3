@@ -47,7 +47,7 @@ public class InstanceViewThreadPanel implements ContextAware {
 	public void load(String instanceId) throws Exception {
 		String how = null;
 		
-		if("sns".equals(session.getEmployee().getPreferUX()))
+		if(session.getEmployee() != null && "sns".equals(session.getEmployee().getPreferUX()))
 			how = "sns";
 		else
 			how = "normal";
