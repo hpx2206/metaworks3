@@ -67,6 +67,15 @@ public class Contact extends Database<IContact> implements IContact{
 		contact.update();
 	}
 
+	String friendId;
+		@Override
+		public String getFriendId() {
+			return friendId;
+		}
+		public void setFriendId(String friendId) {
+			this.friendId = friendId;
+		}
+
 	IUser friend;
 		@Override
 		public IUser getFriend() {
@@ -77,7 +86,6 @@ public class Contact extends Database<IContact> implements IContact{
 			this.friend = friend;
 		}
 			
-		
 	String userId;
 		@Override
 		public String getUserId() {
