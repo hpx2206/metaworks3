@@ -710,6 +710,12 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 
 		// 추가
 		if(WHEN_NEW.equals(getMetaworksContext().getWhen())){
+			this.getMetaworksContext().setWhen(WHEN_VIEW);
+			
+			final IWorkItem copyOfThis = this;
+			final IInstance copyOfInstance = instance;
+			copyOfInstance.getMetaworksContext().setWhen("blinking");
+			
 			// 인스턴스 발행
 			if(prevInstId == null){
 				Object detail = instance.detail();
@@ -731,32 +737,31 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 					parentWorkItem.setTaskId(getOverlayCommentOption().getParentTaskId());
 					
 					returnObjects = new Object[]{new ToAppend(parentWorkItem, this)};
-				}else if(this instanceof CommentWorkItem){
-					returnObjects = new Object[]{new Refresh(this, false, true)};
-				}else{
-					
-					if(this instanceof CommentWorkItem){
-						CommentWorkItem commentWorkItem = new CommentWorkItem();
-						commentWorkItem.setWriter(this.getWriter());
-						commentWorkItem.setInstId(this.getInstId());
-						commentWorkItem.getMetaworksContext().setHow(this.getMetaworksContext().getHow());
-						
-						returnObjects = new Object[]{new ToAppend(instanceViewThreadPanel, this), new Refresh(commentWorkItem, false, true)};	
+				}else if(this instanceof CommentWorkItem){		
+					if("memo".equals(this.getType())){
+						MemoWorkItem memo = new MemoWorkItem();						
+						memo.copyFrom(this);
+						memo.setMemo(new WebEditor(this.getContent()));
+
+						returnObjects = new Object[]{new Refresh(memo, false, true)};
 					}else{
-						returnObjects = new Object[]{new ToAppend(instanceViewThreadPanel, this)};
+						returnObjects = new Object[]{new Refresh(this, false, true)};	
 					}
+					
+				}else{
+					returnObjects = new Object[]{new ToAppend(instanceViewThreadPanel, this)};
 				}
+				
+				MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(copyOfInstance)});
 			}
 			
-			// 본인 이외에 다른 사용자에게 push
-			final IWorkItem copyOfThis = this;
-			final IInstance copyOfInstance = instance;
-			copyOfInstance.getMetaworksContext().setWhen("blinking");
-			
+			// 본인 이외에 다른 사용자에게 push			
 			MetaworksRemoteService.pushOtherClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(copyOfInstance), new WorkItemListener(copyOfThis)});
 			
 		// 수정
 		}else{		
+			this.getMetaworksContext().setWhen(WHEN_VIEW);
+			
 			// 변경된 WorkItem 을 갱신
 			returnObjects = new Object[]{new Refresh(this, true)};
 			
@@ -765,8 +770,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			
 			MetaworksRemoteService.pushOtherClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new WorkItemListener(copyOfThis)});
 		}		
-		
-		this.getMetaworksContext().setWhen(WHEN_VIEW);
 		
 		return returnObjects;
 	}
