@@ -8,16 +8,17 @@ org_uengine_codi_mw3_model_CrowdSourcer.prototype = {
 		var object = mw3.objects[this.objectId];
 		
 		var url = window.location;
-		var instanceUrl = url.origin + url.pathname + "index.html?instanceId=" + object.instanceId;		
+		
+		var instanceUrl = url.origin + "/uengine-web/instanceView.html?instanceId=" + object.instanceId;		
 		var message = object.message + "\n " + instanceUrl;
 		
 		var followers = object.followers.followers;
 		var facebookFriends = [];
 		
 		for ( var i=0; i < followers.length; i++) {			
-			if(followers[i].network == 'fb')
+			//if(followers[i].network == 'fb')
 				facebookFriends.push(followers[i].userId);
-			else{
+/*			else{
 				
 				if(followers[i]['fbId']==null){
 					mw3._armObject(null, followers[i]);
@@ -31,7 +32,7 @@ org_uengine_codi_mw3_model_CrowdSourcer.prototype = {
 				if(followers[i]['fbId']!=null)
 					facebookFriends.push(followers[i]['fbId']);					
 
-			}
+			}*/
 		}
 		
 		if(facebookFriends.length > 0 ){
