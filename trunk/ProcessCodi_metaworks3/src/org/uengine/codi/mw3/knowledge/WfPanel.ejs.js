@@ -4,6 +4,9 @@ var org_uengine_codi_mw3_knowledge_WfPanel = function(objectId, className){
 	this.divId = mw3._getObjectDivId(this.objectId);
 	this.divObj = $('#' + this.divId);
 	
+	if(mw3.objects[objectId] == null)
+		return true;
+	
 	this.windowObjectId = $('#' + this.divId).closest('.mw3_window').attr('objectId');
 	
 	$('#' + this.divId).addClass('wf_panel').attr('objectId', this.objectId).css({height: '100%', width: '90%'});
@@ -18,7 +21,7 @@ var org_uengine_codi_mw3_knowledge_WfPanel = function(objectId, className){
 			mw3.call(objectId, 'load');
 		},1);
 	}
-}
+};
 
 org_uengine_codi_mw3_knowledge_WfPanel.prototype = {		
 	startLoading : function(){
