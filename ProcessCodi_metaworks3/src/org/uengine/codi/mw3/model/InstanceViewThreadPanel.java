@@ -115,7 +115,8 @@ public class InstanceViewThreadPanel implements ContextAware {
 
 			KnowledgeTool knolTool = new KnowledgeTool();
 			knolTool.setNodeId(draggedNode.getId());
-
+			knolTool.onLoad();
+			
 			GenericWorkItemHandler genericWIH = new GenericWorkItemHandler();
 			genericWIH.setTool(knolTool);
 
@@ -129,6 +130,7 @@ public class InstanceViewThreadPanel implements ContextAware {
 
 			genericWI.setGenericWorkItemHandler(genericWIH);
 			genericWI.setInstId(new Long(getInstanceId()));
+			genericWI.setTitle(draggedNode.getName());
 			
 			// TODO attach thread 
 			return genericWI.add();

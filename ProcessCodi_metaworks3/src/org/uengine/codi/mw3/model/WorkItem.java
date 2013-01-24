@@ -777,6 +777,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 					parentWorkItem.setTaskId(getOverlayCommentOption().getParentTaskId());
 					
 					returnObjects = new Object[]{new ToAppend(parentWorkItem, this)};
+					
 				}else if(this instanceof CommentWorkItem){		
 					if("memo".equals(this.getType())){
 						MemoWorkItem memo = new MemoWorkItem();						
@@ -787,6 +788,8 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 					}else{
 						returnObjects = new Object[]{new Refresh(this, false, true)};	
 					}
+				}else if(this instanceof GenericWorkItem){
+					returnObjects = new Object[]{new ToAppend(instanceViewThreadPanel, this)};
 				}else{
 					CommentWorkItem commentWorkItem = new CommentWorkItem();
 					commentWorkItem.setInstId(this.getInstId());
