@@ -21,6 +21,7 @@ import org.metaworks.annotation.Test;
 import org.metaworks.annotation.Validator;
 import org.metaworks.annotation.ValidatorContext;
 import org.metaworks.dao.TransactionContext;
+import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.common.MainPanel;
@@ -335,6 +336,11 @@ public class Login implements ContextAware {
 		httpSession.setAttribute("userId", getUserId());
 		
 		WebContext wctx = WebContextFactory.get();
+		
+		String sessionId = Login.getSessionIdWithUserId(getUserId());
+		if(!sessionId.equals(wctx.getScriptSession().getId())){
+			MetaworksRemoteService.pushTargetScript(sessionId, "mw3.getAutowiredObject('" + Session.class.getName() + "').__getFaceHelper().fire", new Object[]{"2"});
+		}		
 		
 		userIdSessionIdMapping.put(getUserId().toUpperCase(), wctx.getScriptSession().getId()); //stores session id to find out with user Id
 		
