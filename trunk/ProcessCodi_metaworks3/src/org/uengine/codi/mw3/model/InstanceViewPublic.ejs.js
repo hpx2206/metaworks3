@@ -23,8 +23,8 @@ org_uengine_codi_mw3_model_InstanceViewPublic.prototype = {
 			try{
 				// init the FB JS SDK
 				FB.init({
-					appId      : '119159701538006', // App ID from the App Dashboard
-					channelUrl : '//localhost:8080/uengine-web/InstanceView.html', // Channel File for x-domain communication
+					appId      : facebookAppId, // App ID from the App Dashboard
+					//channelUrl : '//localhost:8080/uengine-web/InstanceView.html', // Channel File for x-domain communication
 					status     : true, // check the login status upon init?
 					cookie     : true, // set sessions cookies to allow your server to access the session?
 					xfbml      : true  // parse XFBML tags on this page?
