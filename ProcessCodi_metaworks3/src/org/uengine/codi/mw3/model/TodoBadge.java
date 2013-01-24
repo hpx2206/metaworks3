@@ -13,7 +13,10 @@ public class TodoBadge{
 		public void setNewItemCount(int newItemCount) {
 			this.newItemCount = newItemCount;
 		}
-	
+
+	@AutowiredFromClient
+	public Session session;
+
 	public TodoBadge(){
 		
 	}
@@ -28,8 +31,7 @@ public class TodoBadge{
 		personalPerspective.loadInbox();
 		personalPerspective.session.getMetaworksContext().setWhen(null);*/
 		
-		session.setTodoListCount(Instance.countTodo(session));
-		setNewItemCount(session.getTodoListCount());
+		setNewItemCount(Instance.countTodo(session));
 	}
 	
 	@ServiceMethod(target="popup", loader="org.uengine.codi.mw3.model.Popup")
@@ -47,16 +49,12 @@ public class TodoBadge{
 		InstanceList instList = new InstanceList();
 		instList.load(session);
 		
-		setNewItemCount(session.getTodoListCount());
-		
 		Popup popup = new Popup();
 		popup.setName("Todo List");
 		popup.setPanel(instList);
 		
-		return new Object[]{new Refresh(this), popup};
+		this.refresh();
+		
+		return new Object[]{new Refresh(session), new Refresh(this), popup};
 	}
-	
-	@AutowiredFromClient
-	public Session session;
-
 }

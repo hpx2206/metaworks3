@@ -1,5 +1,8 @@
 var org_uengine_codi_mw3_model_Session = function(objectId, className){
 	
+	this.objectId = objectId;
+	this.className = className;
+	
 	var session = mw3.objects[objectId];
 
 	var jobId = setInterval(function(){
@@ -16,13 +19,19 @@ var org_uengine_codi_mw3_model_Session = function(objectId, className){
 	}, 10000);
 
 	this.jobId = jobId;
-}
+};
 
 org_uengine_codi_mw3_model_Session.prototype = {
 	destroy : function(){
 		clearInterval(this.jobId);
+	},
+	
+	fire : function(){
+		mw3.call(this.objectId, 'logout');
+		
+		alert('your session fired');
 	}
-}
+};
 
 mw3.fn.getSession = function(){
 	var session = mw3.getAutowiredObject('org.uengine.codi.mw3.model.Session');

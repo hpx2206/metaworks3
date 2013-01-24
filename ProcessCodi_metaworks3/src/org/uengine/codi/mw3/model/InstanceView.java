@@ -14,6 +14,7 @@ import org.metaworks.annotation.Test;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitorPanel;
 import org.uengine.kernel.EJBProcessInstance;
 import org.uengine.kernel.ProcessInstance;
@@ -30,7 +31,7 @@ public class InstanceView {
 		
 	public void load(IInstance instance) throws Exception{
 
-		Instance inst = new Instance();
+		Instance inst = new Instance();	
 		inst.setInstId(instance.getInstId());
 		inst.copyFrom(inst.databaseMe());
 		String secuopt = inst.getSecuopt();
@@ -393,22 +394,30 @@ public class InstanceView {
 		Instance instance = new Instance();
 		instance.setInstId(new Long(getInstanceId()));
 		 
-		if(!instance.databaseMe().getInitEp().equals(session.getUser().getUserId())  && !(session.getEmployee()!=null && session.getEmployee().getIsAdmin())){
+		IInstance instanceRef = instance.databaseMe();
+		
+		if(!instanceRef.getInitEp().equals(session.getUser().getUserId())  && !(session.getEmployee()!=null && session.getEmployee().getIsAdmin())){
 			throw new Exception("$OnlyInitiatorCanDeleteTheInstance");
 		}
 		
 		processManager.stopProcessInstance(instanceId);
 
-		instance.databaseMe().setIsDeleted(true);
+		instanceRef.setIsDeleted(true);
+		instance.flushDatabaseMe();
+		
+		/* 내가 할일 카운트 다시 계산 */
+		if(instanceRef.getDefId() != null || (instanceRef.getDefId() == null && instanceRef.getDueDate() != null)){
+			TodoBadge todoBadge = new TodoBadge();
+			todoBadge.session = session;
+			todoBadge.refresh();
+
+			MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()),
+					new Object[]{new Refresh(todoBadge)});			
+		}
 		
 		if(!"sns".equals(session.getEmployee().getPreferUX())){
 			NewInstancePanel instancePanel = new NewInstancePanel();
 			instancePanel.load(session);
-			
-
-			if( todoBadge != null ){
-			todoBadge.refresh();
-			}
 			
 			return new Object[]{new Remover(instance), new Refresh(new ContentWindow(instancePanel))};
 		}else{
@@ -416,9 +425,6 @@ public class InstanceView {
 		}
 	}
 	
-	@AutowiredFromClient
-	public TodoBadge todoBadge;
-		
 	@ServiceMethod(payload={"instanceId", "status"})
 	public void complete() throws Exception{
 
@@ -437,11 +443,21 @@ public class InstanceView {
 		// instance update flush
 		instanceRef.setStatus(tobe);
 		instance.flushDatabaseMe();
-		
+
 		this.load(instance);
 		this.setStatus(tobe);
 		
 		MetaworksRemoteService.pushClientObjects(new Object[]{new InstanceListener(InstanceListener.COMMAND_REFRESH, instanceRef)});
+
+		/* 내가 할일 카운트 다시 계산 */
+		if(instanceRef.getDefId() != null || (instanceRef.getDefId() == null && instanceRef.getDueDate() != null)){
+			TodoBadge todoBadge = new TodoBadge();
+			todoBadge.session = session;
+			todoBadge.refresh();
+
+			MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()),
+					new Object[]{new Refresh(todoBadge)});			
+		}
 	}
 		
 	

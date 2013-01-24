@@ -6,11 +6,9 @@ import org.uengine.codi.mw3.admin.WindowPanel;
 public class ProcessTopPanel {
 
 	public ProcessTopPanel(Session session) throws Exception {
-		
-		session.setTodoListCount(Instance.countTodo(session));
-		
 		setSession(session);
 		setWindowPanel(new WindowPanel());
+		
 		tray = new Tray();
 		tray.session = session;
 		tray.load();
