@@ -71,8 +71,9 @@ public class FileWorkItem extends WorkItem{
 	@Override
 	@Test(scenario="first", instruction="$first.FileWorkItem.add")
 	public Object[] add() throws Exception {
-		
-		if(this.getFile() == null || this.getFile().getFileTransfer() == null || this.getFile().getFileTransfer().getFilename() == null)
+
+		if (this.getFile() == null || this.getFile().getFileTransfer() == null
+				|| this.getFile().getFileTransfer().getFilename() == null)
 			throw new MetaworksException("파일을 첨부해주세요.");
 		
 		this.setTaskId(UniqueKeyGenerator.issueWorkItemKey(((ProcessManagerBean)processManager).getTransactionContext()));
