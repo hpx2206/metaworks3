@@ -67,15 +67,12 @@ org_uengine_codi_mw3_model_IWorkItem.prototype = {
 			console.log('------ overlay append ebug ------');
 			console.log('target workitem type : ' + this.object.type);
 			console.log('target workitem align : ' + ((this.object.writer.userId == loginUserId)?'right':'left'));
-			
 		}
-		
-		
-		var viewBox = $('#objDiv_' + this.objectId); //.find('.view_box3:first');
 		
 		var html = mw3.locateObject(value, null);
 		
-		viewBox.append(html);
+		var appendDiv = $('#objDiv_' + this.objectId); //.find('.view_box3:first');		
+		appendDiv.append(html);
 		
 	}
 };
