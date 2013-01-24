@@ -122,6 +122,15 @@
 
 	
 		<script type="text/javascript">
+			/*
+			 * facebook app id
+			 *
+			 * 119159701538006 : http://localhost:8080/uengine-web/
+			 * 254387971333741 : http://processcodi.com:9090/uengine-web/
+			 * 210427999080209 : http://184.173.22.147:8080/uengine-web/
+		 	 */ 		
+			var facebookAppId = '119159701538006';
+		
 			var Request = function()
 			{
 			    this.getParameter = function( name )
@@ -143,8 +152,6 @@
 			    }
 			}
 			
-			var mainPage
-		 	
 			$(document).ready(function() {
 				mw3.setWhen(mw3.WHEN_VIEW);
 		 		mw3.template_error = function(e, actualFace) {
