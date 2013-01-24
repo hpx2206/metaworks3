@@ -338,7 +338,7 @@ public class Login implements ContextAware {
 		WebContext wctx = WebContextFactory.get();
 		
 		String sessionId = Login.getSessionIdWithUserId(getUserId());
-		if(!sessionId.equals(wctx.getScriptSession().getId())){
+		if(sessionId != null && !sessionId.equals(wctx.getScriptSession().getId())){
 			MetaworksRemoteService.pushTargetScript(sessionId, "mw3.getAutowiredObject('" + Session.class.getName() + "').__getFaceHelper().fire", new Object[]{"2"});
 		}		
 		
