@@ -77,6 +77,17 @@ public class Perspective {
 			System.out.println("Do nothing");
 		}
 		
+		if(perspectiveType.equals("inbox")){
+			/* 내가 할일 카운트 다시 계산 */
+			TodoBadge todoBadge = new TodoBadge();
+			todoBadge.session = session;
+			todoBadge.refresh();
+
+			MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()),
+					new Object[]{new Refresh(todoBadge, true)});			
+		}
+			
+		
 		InstanceList instList = new InstanceList();
 		instList.init();
 

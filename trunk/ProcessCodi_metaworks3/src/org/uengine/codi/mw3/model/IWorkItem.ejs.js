@@ -1,4 +1,5 @@
 var org_uengine_codi_mw3_model_IWorkItem = function(objectId, className){
+	
 	this.objectId = objectId;
 	this.className = className;
 	this.objectDivId = mw3._getObjectDivId(this.objectId);
@@ -24,15 +25,15 @@ var org_uengine_codi_mw3_model_IWorkItem = function(objectId, className){
 
 	//if(workItem.type == null && (workItem.workItemHandler == null || workItem.workItemHandler.instanceId==null) && workItem.status == 'NEW' && workItem.tool != 'formApprovalHandler'){ //means we need to load workItemHandler	
 	if(workItem.type == null && (workItem.workItemHandler == null || workItem.workItemHandler.instanceId==null) && workItem.tool != 'formApprovalHandler'){ //means we need to load workItemHandler
-		workItem.detail();
+		//workItem.detail();
 	}
 
 	if(workItem.type == 'memo' && workItem.extFile!=null && workItem.memo.contents=="...loading..." && !workItem.contentLoaded){
-		workItem.loadContents();
+		//workItem.loadContents();
 	}
 
 	if(workItem.type == 'src' && workItem.extFile!=null && !workItem.contentLoaded){
-		workItem.loadContents();
+		//workItem.loadContents();
 	};
 
 
@@ -48,7 +49,6 @@ org_uengine_codi_mw3_model_IWorkItem.prototype = {
 		
 		parentList = parentList.parent();
 		
-		this.objectDiv.triggerHandler('loaded');
 		parentList.triggerHandler('loadedItem', [this.object.taskId, this.objectId]);
 	},
 	openFormApprovalHandler : function(){
@@ -64,7 +64,7 @@ org_uengine_codi_mw3_model_IWorkItem.prototype = {
 		if(window.console){
 			var loginUserId = mw3.fn.getLoginUserId();
 			
-			console.log('------ overlay append ebug ------');
+			console.log('------ overlay append log ------');
 			console.log('target workitem type : ' + this.object.type);
 			console.log('target workitem align : ' + ((this.object.writer.userId == loginUserId)?'right':'left'));
 		}
