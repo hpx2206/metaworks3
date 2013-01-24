@@ -310,24 +310,23 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 			Instance rootInstanceRef = new Instance();
 			rootInstanceRef.setInstId(processMapList.getParentInstanceId());
 			
+			roleMappingPanel = new RoleMappingPanel(this, session);
+			roleMappingPanel.putRoleMappings(processManager, instId);
 			processManager.executeProcess(instId);
 			processManager.applyChanges();
-		
-			
-			
+
 			if("sns".equals(session.getEmployee().getPreferUX())){
 				InstanceViewThreadPanel panel = new InstanceViewThreadPanel();
 				panel.getMetaworksContext().setHow("instanceList");
 				panel.getMetaworksContext().setWhere("sns");
 				panel.session = session;
 				panel.load(processMapList.getParentInstanceId().toString());
-				return new Object[]{panel, new Remover(new Popup())};
+				return new Object[]{panel, new Remover(new Popup() , true)};
 			}else{
 				InstanceViewContent rootInstanceView = instanceView;// = new InstanceViewContent();
 				rootInstanceView.load(rootInstanceRef);
-				return new Object[]{rootInstanceView, new Remover(new Popup())};
+				return new Object[]{rootInstanceView, new Remover(new Popup() , true)};
 			}
-			
 		}
 		
 		
@@ -335,16 +334,11 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		//set the role mappings the administrator set.
 		
 		roleMappingPanel = new RoleMappingPanel(this, session);
-		
 		roleMappingPanel.putRoleMappings(processManager, instId);
-		
 		processManager.executeProcess(instId);
-		
+		processManager.applyChanges();
 		//end
 		
-		
-		
-		processManager.applyChanges();
 		if( session != null && session.getEmployee() != null ){
 			((Instance)instanceRef).databaseMe().setInitiator(session.user);
 			((Instance)instanceRef).databaseMe().setInitComCd(session.getEmployee().getGlobalCom());
@@ -363,8 +357,6 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		
 		InstanceListPanel instanceListPanel = new InstanceListPanel(session); //should return instanceListPanel not the instanceList only since there're one or more instanceList object in the client-side
 		instanceListPanel.getInstanceList().load(session);
-
-		
 
 		if("sns".equals(session.getEmployee().getPreferUX())){
 			return new Object[]{instanceListPanel, new Remover(new Popup())};
