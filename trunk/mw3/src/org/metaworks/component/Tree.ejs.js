@@ -25,7 +25,7 @@ var org_metaworks_component_Tree = function(objectId, className){
 	this.objectDiv.bind('loadedNode', {objectId: this.objectId}, function(event, nodeId, objectId){
 		var faceHelper = mw3.getFaceHelper(event.data.objectId);
 		if(faceHelper && faceHelper.loadedNode)
-			faceHelper.loadedNode(nodeId, objectId)
+			faceHelper.loadedNode(nodeId, objectId);
 	});
 	
 	if(this.object && this.object.showCheckBox){
