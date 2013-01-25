@@ -7,4 +7,5 @@ import java.lang.annotation.RetentionPolicy;
 public @interface Hidden {
 	boolean on() default true;
 	String when() default "";
+	String[] media() default {};	
 }
