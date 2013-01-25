@@ -1,0 +1,59 @@
+
+<% 
+
+if(value==null){
+	value = {document: "share your status"};
+}
+
+
+	if(value.metaworksContext){
+		mw3.setContext(value.metaworksContext);
+	}
+
+
+		 mw3.newBeanProperty(objectId);
+
+%>
+
+<table>
+
+	<tr>
+		<td><%=fields.writer.here()%></td> 
+		<td><%=fields.document.here()%>
+		
+<%=methods.post.here()%>
+<%=methods.save.here()%>
+<%=methods.delete.here()%>
+<%=methods.postToGooglePlus.here()%>
+	
+
+		<script>
+			$("#mapped_input_for_<%=mw3.objectId%>").focus();
+		</script>
+
+<%
+  if(value.document && value.likeIt){	
+%>
+
+You like this
+
+<%
+  }else{
+%>
+	<%=methods.like.here()%>
+<%}
+
+  if(mw3.when != mw3.WHEN_EDIT && mw3.when != mw3.WHEN_NEW){
+%>
+		<input type=button onclick="<%=editFunction%>" value="edit">
+		
+<%
+  }
+ 
+%>
+		</td>
+
+	</tr>
+	
+</table>
+

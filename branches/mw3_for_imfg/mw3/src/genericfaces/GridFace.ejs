@@ -1,0 +1,48 @@
+<%
+	if(value == null || typeof value == 'undefined')
+		return true;
+%>
+
+<table border="1">
+
+<!-- table header -->
+	<thead>
+		<tr>
+			<th><input type="checkbox" name="checkall_<%=objectId%>" onClick="javascript:mw3.getFaceHelper(<%=objectId%>).toogleCheck();" /></th>
+<%		
+	for(var i=0; i<objectMetadata.fieldDescriptors.length; i++){
+		var fd = objectMetadata.fieldDescriptors[i];
+		
+		if(mw3.isHidden(fd)) continue;
+		if(fd.name == 'metaworksContext') continue;
+%>
+			<th><%=fd.displayName%></th>
+<%
+	}
+%>	
+		<th></th>				
+		</tr>
+	</thead>	
+	
+<!-- table body -->
+	<tbody>
+<%
+	if(typeof options == 'undefined') 
+		options = objectMetadata;
+		
+	options['htmlTag'] =  'tr';
+	options['ejsPath'] =  'dwr/metaworks/genericfaces/GridFace_Row.ejs';
+	options['parentId'] =  this.objectId;
+		
+	for(var i=0; i<value.length; i++){
+%>
+	<%=mw3.locateObject(value[i], value[i].__className, null, options)%>
+<%
+		mw3.addBeanProperty(value.__objectId, '.boardList[' + i + ']');		
+	}	
+%>		
+	</tbody>
+</table>
+
+<input type="button" value="add" onClick="javascript:mw3.getFaceHelper(<%=objectId%>).addItem();" />
+<input type="button" value="remove" onClick="javascript:mw3.getFaceHelper(<%=objectId%>).removeItem();" />

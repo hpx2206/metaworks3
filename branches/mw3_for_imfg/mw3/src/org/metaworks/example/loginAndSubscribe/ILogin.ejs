@@ -1,0 +1,23 @@
+
+<ul>
+
+
+<font color=red><%=value.message%></font>
+
+<li> <b>UserId:</b>
+<%=fields.userId.here()%>
+
+<li> <b>Password:</b>
+
+<%=fields.password.here()%>
+
+<%=methods.login.here()%>
+
+
+<% if(mw3.where!="mobile"){%>
+
+<div onclick="<%=methods.subscribe.caller()%>">가입버튼</div>
+
+
+<%}%>
+</ul>
