@@ -1,0 +1,40 @@
+<%
+	if(value){
+
+%>
+	<%=fields.fileTransfer.here()%>
+<%		
+		if(mw3.when == "image"){
+%>
+			<a target="_blink" id="image_<%=objectId%>">&nbsp;</a> 
+<%
+		}else{
+		
+			if(mw3.when == mw3.WHEN_NEW || mw3.when == mw3.WHEN_EDIT){
+%>
+
+	
+	<span id="filebtnadd_<%=objectId%>">
+		<a id="wBtn" href="#" onclick="mw3.getFaceHelper(<%=objectId%>).add()"><span><%=mw3.localize('AttachFile')%></span></a>
+	</span>	
+	<span id="filebtndel_<%=objectId%>" style="display:none">
+		<a id="wBtn" href="#" onclick="mw3.getFaceHelper(<%=objectId%>).del()"><span>파일삭제</span></a>
+	</span>
+
+	<span style="line-height:1.8em; margin-left:10px;" id="filename_<%=objectId%>">선택된 파일이 없습니다</span>
+<%
+			}else{
+				if(value.uploadedPath){		
+%>
+	
+	<a id="wBtn" href="#" onclick="<%=methods.download.caller()%>"><span>다운로드</span></a>
+<%		
+				}
+			
+%>
+	<span style="line-height:1.8em; margin-left:10px;" id="filename_<%=objectId%>">등록된 파일이 없습니다</span>
+<%			
+			}
+		}
+	}
+%>

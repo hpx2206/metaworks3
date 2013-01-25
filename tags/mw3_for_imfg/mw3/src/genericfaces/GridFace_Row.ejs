@@ -1,0 +1,18 @@
+<%
+	if(value == null || typeof value == 'undefined')
+		return true;
+%>
+	<td><input type="checkbox" name="check_<%=options['parentId']%>" objectId="<%=objectId%>" /></td>
+<%				
+	for (var i=0; i<objectMetadata.fieldDescriptors.length; i++){
+	  	var fd = objectMetadata.fieldDescriptors[i];
+	   	
+	  	if(mw3.isHidden(fd)) continue;
+	  	if(fd.name == 'metaworksContext') continue;
+%>
+	<td><%=fields[fd.name].here()%></td>
+<%		
+	}		
+%>
+
+<td><input type="button" id="edit_<%=objectId%>" value="edit" onClick="mw3.getFaceHelper(<%=objectId%>).editItem();" /></td>

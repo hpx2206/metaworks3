@@ -1,0 +1,9 @@
+
+
+<%if (!value){%>
+ <img src="images/portrait/unknown_user.gif" width=50><br>
+<%}else{%>
+
+<img src="images/portrait/<%=(value.userId == 0 ? "unknown_user" : value.userId)%>.gif" width=50 alt="<%=value.fistName%>"><br>
+
+<%}%>
