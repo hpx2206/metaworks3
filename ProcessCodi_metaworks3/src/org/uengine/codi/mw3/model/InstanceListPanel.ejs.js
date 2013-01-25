@@ -34,7 +34,7 @@ var org_uengine_codi_mw3_model_InstanceListPanel = function(objectId, className)
 		$('.searchboxarea').css("margin-left",searchBarMagin);
 	}
 	
-	if(object && object.preloaded){
+	if(this.object && this.object.preloaded){
 		/*
 		var scrollDiv = $('#objDiv_' + this.objectId + " .ui-layout-center .ui-layout-content");
 		
