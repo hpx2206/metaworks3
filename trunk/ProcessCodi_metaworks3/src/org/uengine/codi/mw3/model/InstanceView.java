@@ -200,7 +200,7 @@ public class InstanceView {
 		//flowChart.setInstanceId(instanceId);
 		//setProcessInstanceMonitor(flowChart);
 		
-		setInstanceName(((EJBProcessInstance)instance).getProcessInstanceDAO().getName());
+		setInstanceName(inst.getName());
 		
 		if(inst.getDefId() == null){
 			crowdSourcer = new CrowdSourcer();
@@ -243,8 +243,8 @@ public class InstanceView {
 		
 		
 		instanceNameChanger = new InstanceNameChanger();
-		instanceNameChanger.setInstanceId(instanceId);
-		instanceNameChanger.setInstanceName(instanceName);
+		instanceNameChanger.setInstanceId(this.getInstanceId());
+		instanceNameChanger.setInstanceName(this.getInstanceName());
 		
 		setInstanceSecurityConfigurer(new InstanceSecurityConfigurer());
 		getInstanceSecurityConfigurer().setInstanceId(instanceId);
