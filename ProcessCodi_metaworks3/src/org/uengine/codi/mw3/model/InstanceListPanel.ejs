@@ -1,15 +1,14 @@
 <%
-	if(value != null && typeof value != 'undefined'){
-%>	
+	if(value == null && typeof value == 'undefined')
+		return;
+		
+	var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
+%>
 
-					<%
-		            	var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
-							if(mw3.how == "topic"){
-					%>
-									<%=fields.topicFollowers.here()%>
-                	<%	
-							}
-					%>
+<div class="top" style="height: 68px; overflow:hidden; position: absolute; min-width: 0px; min-height: 0px; max-width: 10000px; max-height: 10000px;  left: 0px; right: 0px; top: 0px;">
+	
+	<%=(mw3.how == "topic")?fields.topicFollowers.here():''%>
+	
 		            <div id="searchbox">
 		                <div class="searchboxline">
 		                	<div class="searchboxline2">
@@ -46,15 +45,14 @@
 	                        <li onclick="<%=methods.switchToScheduleCalendar.caller()%>" <%=value.scheduleCalendar ? "class='toolbar_current'" : ""%>><span><img src="images/waveStyle/i_gantt.png" border="0"></span><span><%=mw3.localize("$Calendar")%></span></li>
 	                    </ul>
                 	</div>     
-		
-		
-			
+                		
+</div>
 
-			<div class="ui-layout-content">
+<div class="bottom" style="top: 68px; overflow:auto; position: absolute; min-width: 0px; min-height: 0px; max-width: 10000px; max-height: 10000px;  left: 0px; right: 0px; bottom: 0px;">
+
+
 				<%=value.instanceList ? fields.instanceList.here() : ""%>
 				<%=value.scheduleCalendar ? fields.scheduleCalendar.here() : ""%>
 				<%=value.knowledge ? fields.knowledge.here() : ""%>
-			</div>
-<%
-	}
-%>		
+
+</div>

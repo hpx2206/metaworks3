@@ -1,8 +1,9 @@
 <%
-	if(value){
+	if(value == null && typeof value == 'undefined')
+		return;
 %>
 
-		<div class="pane ui-layout-north" style="z-index:1004">
+<div class="top" style="height: 68px; overflow:hidden; position: absolute; min-width: 0px; min-height: 0px; max-width: 10000px; max-height: 10000px;  left: 0px; right: 0px; top: 0px;">
 			<%=fields.followers.here()%>
 			
 			<div class="toolbar">
@@ -103,33 +104,21 @@
 			        
 			    </ul>
 			</div>
-		</div>
-<%
-		if(mw3.when != "public"){
-%>
- 				<%=fields.crowdSourcer.here()%>				
-<%
-		}
-%>	
-		<div class="pane ui-layout-center">
-			<div class="ui-layout-content" s tyle="background: #5882FA;">
+</div>
+
+<div class="bottom" style="top: 68px; overflow:auto; position: absolute; min-width: 0px; min-height: 0px; max-width: 10000px; max-height: 10000px;  left: 0px; right: 0px; bottom: 0px;">
 				<%=fields.instanceNameChanger.here({when:'edit'})%>
 				<%=fields.eventTriggerPanel.here()%>
 				<%=value.scheduleEditor ? fields.scheduleEditor.here() : ""%>
 				
 				<%=fields.instanceViewThreadPanel.here()%>
 
-
-<%=fields.externalFeedback.here()%>
-
 <%
 		if(mw3.when != "public"){
 %>
+
+				<%=fields.externalFeedback.here()%>
 <%		
 		}
-%>		
-			</div>
-		</div>
-<%			
-	}
 %>
+</div>

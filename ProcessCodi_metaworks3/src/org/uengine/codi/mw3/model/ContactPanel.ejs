@@ -1,39 +1,42 @@
-	<div class="boxmiddleright">
-		<div class="boxmiddleleft">
-			<div id="mystatus">
-				<ul>	                	 	
-					<div id="myInfo">
-						<%=fields.user.here()%>            	 		
-            	 	</div>
-            	 	<div style="clear:both;"></div>
-        	 	</ul> 
-        	</div>
-        	                 	 
-<%	if(value.searchBox){%>        	              
-            <div id="contactsearchbox">
-				<%=fields.searchBox.here()%>
+<%
+	if(value == null && typeof value == 'undefined')
+		return;
+%>
+
+<div class="top" style="bottom: 25px; overflow:hidden; position: absolute; min-width: 0px; min-height: 0px; max-width: 10000px; max-height: 10000px;  left: 0px; right: 0px; top: 0px;">
+	<div class="top" style="height: 41px; overflow:hidden; position: absolute; min-width: 0px; min-height: 0px; max-width: 10000px; max-height: 10000px;  left: 0px; right: 0px; top: 0px;">
+		<div class="boxmiddleright">
+			<div class="boxmiddleleft">
+				<div id="mystatus">
+					<ul>	                	 	
+						<div id="myInfo">
+							<%=fields.user.here()%>            	 		
+	            	 	</div>
+	            	 	<div style="clear:both;"></div>
+	        	 	</ul> 
+	        	</div>
+<%
+			if(value.searchBox){
+%>        	              
+	            <div id="contactsearchbox">
+					<%=fields.searchBox.here()%>
+				</div>
+<%
+			}
+%>
 			</div>
-<%	}%>
 		</div>
 	</div>
-
-	<div class="ui-layout-content">
-			<%=fields.contactListPanel.here()%>
+	
+	<div class="bottom" style="top: 41px; overflow:auto; position: absolute; min-width: 0px; min-height: 0px; max-width: 10000px; max-height: 10000px;  left: 0px; right: 0px; bottom: 0px;">
+		<%=fields.contactListPanel.here()%>
 	</div>
+</div>
 
+<div class="bottom" style="height: 25px; overflow:auto; position: absolute; min-width: 0px; min-height: 0px; max-width: 10000px; max-height: 10000px;  left: 0px; right: 0px; bottom: 0px;">
 	<div id="addcontact">
-
-		<!--
-		<div id="btnAddContact" style="float:right">
-			<a href="#" onclick="<%=methods.addContact.caller()%>"><img src="images/waveStyle/addContact_f.png" /></a>	   
-		</div>
-		<div id="btnAddLocalContact" style="float:right">
-			<a href="#" onclick="<%=methods.addLocalContact.caller()%>"><img src="images/waveStyle/addContact.png" /></a>	   
-		</div>
-		<%=methods.invite.here()%>
-		-->
 		<div id="btnAddUser" style="float:right">
 			<a href="#" onclick="<%=methods.addContact.caller()%>"><img src="images/waveStyle/addUser2.png" /></a>	   
-		</div>
-		
+		</div>		
 	</div>
+</div>
