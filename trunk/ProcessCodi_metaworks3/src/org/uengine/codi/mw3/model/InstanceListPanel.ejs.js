@@ -6,7 +6,7 @@ var org_uengine_codi_mw3_model_InstanceListPanel = function(objectId, className)
 	this.windowObjectId = $('#' + this.divId).closest('.mw3_window').attr('objectId');
 	
 	this.divElement = $('#' + this.divId); 	
-	this.divElement.addClass('mw3_layout').attr('objectId', objectId);
+	this.divElement.attr('objectId', objectId);
 	
 	var object = mw3.objects[this.objectId];
 	if(object && object.title){

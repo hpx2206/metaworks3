@@ -5,7 +5,7 @@ var org_uengine_codi_mw3_model_ContactPanel = function(objectId, className) {
 	
 	this.windowObjectId = $('#' + this.divId).closest('.mw3_window').attr('objectId');
 	
-	$('#' + this.divId).addClass('mw3_layout').attr('objectId', objectId);
+	$('#' + this.divId).attr('objectId', objectId);
 	
 	var faceHelper = this;	
 	faceHelper.load();
