@@ -42,6 +42,13 @@
 						<% } %>	
 					</div>						
 					<div class="instanceTitle">
+						<% if(mw3.how == 'sns'){ %>
+							<div class="instanceBtn instanceBtn_sns">
+								<span style="float:left"><%=fields.instanceTooltip.here()%></span>
+								<span style="float:left"><%=fields.instanceDrag.here()%></span>
+								<div class="clear"></div>
+							</div>
+						<%}%>	
 						<table>
 							<tr>
 								<td style="border:none;"><a href="#middle-center"><b><font color=204070><%=value.initiator.name%></font> &nbsp;&nbsp; 
@@ -63,19 +70,7 @@
 												<div style="float:left; font-size:11px; color:#ccc"><%=fields.dueDate.here({when: 'timeago'})%></div>
 											<%}%>
 												
-										<%}%>
-										
-										
-										
-										<div style="float:left">
-											<% if(mw3.how == 'sns'){ %>
-												<div class="instanceBtn instanceBtn_sns">
-													<span style="float:left"><%=fields.instanceTooltip.here()%></span>
-													<span style="float:left"><%=fields.instanceDrag.here()%></span>
-													<div class="clear"></div>
-												</div>
-											<%}%>		
-										</div>
+										<%}%>	
 										<div class="clear"></div>
 									</div>
 									
