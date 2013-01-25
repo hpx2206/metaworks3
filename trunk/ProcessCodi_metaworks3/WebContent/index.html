@@ -370,11 +370,23 @@
                     language : 'ko'
                 }, 'body').load();
 					
-				var mainPage = new MetaworksObject({
-                    __className : "org.uengine.codi.mw3.Login",
-                    status : 'login',
-                    metaworksContext : {when: 'edit'}
-                }, 'body');
+ 				var object = null;
+ 				var instanceId = request.getParameter("instanceId");
+
+ 				if(instanceId == null || typeof instanceId == 'undefined' || instanceId.length == 0){
+ 				    object = {
+ 					    __className : "org.uengine.codi.mw3.Login",
+ 					    status : 'login',
+ 					    metaworksContext : {when: 'edit'}	
+ 				    }
+ 				}else{
+ 					object = {
+	 					__className:"org.uengine.codi.mw3.model.InstanceViewPublic"			,
+	 					instanceId : instanceId
+ 					}
+ 				}
+ 				
+ 				var mainPage = new MetaworksObject(object, 'body');
 				
 				mw3.onLoadFaceHelperScript();
 				
