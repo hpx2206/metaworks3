@@ -20,10 +20,9 @@ var org_uengine_codi_mw3_model_InstanceListPanel = function(objectId, className)
 	// window 의 title 설정
 	this.windowObjectId = this.objectDiv.closest('.mw3_window').attr('objectId');
 	
-	var object = mw3.objects[this.objectId];
-	if(object && object.title){
+	if(this.object && this.object.title){
 		if(this.windowObjectId){
-			mw3.getFaceHelper(this.windowObjectId).setTitle(mw3.localize(object.title));
+			mw3.getFaceHelper(this.windowObjectId).setTitle(mw3.localize(this.object.title));
 		}
 	}
 	

@@ -1,31 +1,25 @@
 <%
-	if(value && value.preloaded){
+	if(value == null && typeof value == 'undefined')
+		return;
+		
+	var isTopic = (mw3.how == "topic");
 %>
 
-		<div class="pane ui-layout-north">
+<div class="top" style="height: <%=isTopic?'47':'0'%>px; overflow:hidden; position: absolute; min-width: 0px; min-height: 0px; max-width: 10000px; max-height: 10000px;  left: 0px; right: 0px; top: 0px;">
+
 		   <div class="boxmiddleright">
 		        <div class="boxmiddleleft">
-					<%
-		            	var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
-						if(session.lastPerspecteType == 'topic'){
-					%>
-							<%=fields.topicFollowers.here()%>
-                	<%	
-						}
-					%>
+					<%=isTopic?fields.topicFollowers.here():''%>
 		        </div>
 
 		    </div>  		
-		</div>
 
-		<div class="pane ui-layout-center" id="method_<%=objectId%>_switchToScheduleCalendar">
-			<div class="ui-layout-content">
+</div>
+
+<div class="bottom" style="top: <%=isTopic?'47':'0'%>px; overflow:auto; position: absolute; min-width: 0px; min-height: 0px; max-width: 10000px; max-height: 10000px;  left: 0px; right: 0px; bottom: 0px;">
 				<%=fields.newInstancePanel.here()%>
 				<%=value.instanceList ? fields.instanceList.here() : ""%>
 				<%=value.scheduleCalendar ? fields.scheduleCalendar.here() : ""%>
 				<%=value.knowledge ? fields.knowledge.here() : ""%>
-			</div>
-		</div>
-<%
-	}
-%>
+</div>
+		
