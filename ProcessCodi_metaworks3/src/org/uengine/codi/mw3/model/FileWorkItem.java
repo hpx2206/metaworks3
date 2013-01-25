@@ -117,11 +117,13 @@ public class FileWorkItem extends WorkItem{
 		this.setExtFile(this.getFile().getFilename());
 		
 		// WorkItem 추가
-		Object[] returnObject = super.add();		
-
-		// office 파일 pdf 로 변환
-		if(getFile().getMimeType() != null){
+		Object[] returnObject = super.add();
 		
+		// Office, PDF 파일변환
+		String mimeType = getFile().getMimeType();
+		
+		if(mimeType != null && mimeType.indexOf("image") != 0){
+			
 			String prefix = TransactionContext.getThreadLocalInstance()
 					.getRequest().getSession().getServletContext()
 					.getRealPath("/images/pdf/");
@@ -129,39 +131,33 @@ public class FileWorkItem extends WorkItem{
 			String inputFilePath = getFile().overrideUploadPathPrefix()+ getFile().getUploadedPath();
 			String outputFilePath = prefix + "/" + this.getTaskId() + ".pdf";
 			
-			
-			//if(office document) then convert document as PDF file.
-			
 			try{
-				if(getFile().getMimeType().indexOf("office") > 0){
-					convertPdf(inputFilePath, outputFilePath);				
+				// office 문서 mimetype -- 2007이하 버젼: indexOf("ms"), 2007이후버전: indexOf("officedocument")
+				if(mimeType.indexOf("ms") >0 || mimeType.indexOf("officedocument") >0){
+					convertPdf(inputFilePath, outputFilePath);
 				}else{
 					MetaworksFile.copyStream(new FileInputStream(inputFilePath), new FileOutputStream(outputFilePath));
 				}
-			}catch(Exception e){
-				e.printStackTrace();
-			}
-			
-			try{
 				
-				if(getFile().getMimeType().indexOf("image") != 0){
-					Preview preview = new Preview();
-					preview.setTaskId(getTaskId());
+				Preview preview = new Preview();
+				
+				preview.setTaskId(getTaskId());
+				preview.setMimeType(mimeType);
+				preview.setTaskId(getTaskId());
 	
-					//change for converted PDF file to image file (save all pages count to ext1(bpm_worklist table))
-						preview.setPageCountInt(
-							getImageForPdf(inputFilePath, outputFilePath)
-						);
-					databaseMe().setPreview(preview); 
-				}
-
-			}catch(Exception e){
+				//change for converted PDF file to image file (save all pages count to ext1(bpm_worklist table))
+				preview.setPageCountInt(
+					getImageForPdf(inputFilePath, outputFilePath)
+				);
+				databaseMe().setPreview(preview);
+				
+			}catch (Exception e){
 				e.printStackTrace();
 			}
 			
 		}
 		
-		this.setWorkItemVersionChooser(this.databaseMe().getWorkItemVersionChooser());
+ 		this.setWorkItemVersionChooser(this.databaseMe().getWorkItemVersionChooser());
 		
 		return returnObject;
 	}
@@ -171,17 +167,6 @@ public class FileWorkItem extends WorkItem{
 		setFile(new MetaworksFile());
 		
 		super.edit();
-	}
-	
-	
-	@ServiceMethod(callByContent=true)
-	public void viewAsPDF() throws Exception{
-		getMetaworksContext().setWhen("pdf");
-	}
-	
-	@ServiceMethod(callByContent=true)
-	public void viewAsImages()throws Exception{
-		getMetaworksContext().setWhen("image");
 	}
 	
 	
