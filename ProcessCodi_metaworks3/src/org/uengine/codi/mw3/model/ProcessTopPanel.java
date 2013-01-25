@@ -8,7 +8,6 @@ public class ProcessTopPanel {
 	public ProcessTopPanel(Session session) throws Exception {
 		setSession(session);
 		setWindowPanel(new WindowPanel());
-		
 		tray = new Tray();
 		tray.session = session;
 		tray.load();

@@ -11,13 +11,13 @@ var org_uengine_codi_mw3_model_WorkItemListener = function(objectId, className){
 		var value = this.object.applyItem;
 		
 		// value 는 새로 만들어진 workItem
-		var preferUx = mw3.fn.getPreferUx();	
+		var session = mw3.getAutowiredObject('org.uengine.codi.mw3.model.Session');
 		var instanceId = value.instId;
 		var type = value.type;
 		
 		value.metaworksContext.when = 'view';
 		
-		if('sns' == preferUx ){
+		if( session != null && 'sns' == session.employee.preferUX ){
 			// @? 부분은 id값을 부여하여 정확한 객체를 찾기 위함
 //			var instanceListObjectId = mw3.getAutowiredObject("org.uengine.codi.mw3.model.InstanceList@1").__objectId;
 			value.metaworksContext.how = "sns";

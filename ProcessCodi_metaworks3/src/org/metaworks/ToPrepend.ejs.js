@@ -4,8 +4,6 @@ var org_metaworks_ToPrepend = function(objectId, className){
 	var object = mw3.objects[objectId];
 	
 	if(object){
-		mw3.removeObject(objectId);
-		
 		var objKeys = mw3._createObjectKey(object.parent, true);
 			
 		if(objKeys && objKeys.length){
@@ -17,7 +15,7 @@ var org_metaworks_ToPrepend = function(objectId, className){
 				if(mappedObjId){
 					var instanceList = mw3.getObject(mappedObjId);
 					 
-					if(instanceList && instanceList.metaworksContext && instanceList.metaworksContext.where=="pinterest"){
+					if(instanceList.metaworksContext && instanceList.metaworksContext.where=="pinterest"){
 						
 						var newInstancePanelObjectId = mw3.getAutowiredObject("org.uengine.codi.mw3.model.NewInstancePanel").__objectId;
 						
@@ -56,7 +54,8 @@ var org_metaworks_ToPrepend = function(objectId, className){
 				}	
 			}
 		}
-				
+		
+		mw3.removeObject(objectId);
 		mw3.onLoadFaceHelperScript();
 	}
 };

@@ -140,22 +140,17 @@ public class Notification extends Database<INotification> implements INotificati
 		
 		final Employee actorUserInfo = new Employee();
 		actorUserInfo.setEmpCode(getActorId());
+		final IEmployee actorUserInfoDB = actorUserInfo.databaseMe();
 		
-		try{
-			final IEmployee actorUserInfoDB = actorUserInfo.databaseMe();
-			
-			String requestedURL = TransactionContext.getThreadLocalInstance().getRequest().getRequestURL().toString(); 
-	        String base = requestedURL.substring( 0, requestedURL.lastIndexOf( "/" ) );
-	        
-	        URL urlURL = new java.net.URL(base);
-	       	String host = urlURL.getHost();
-	       	int port = urlURL.getPort();
-	       	String protocol = urlURL.getProtocol();
-	
-			final String url = protocol + "://" + host + (port == 80 ? "" : ":"+port) + TransactionContext.getThreadLocalInstance().getRequest().getContextPath();
-		}catch(Exception e){
-			e.printStackTrace();
-		}
+		String requestedURL = TransactionContext.getThreadLocalInstance().getRequest().getRequestURL().toString(); 
+        String base = requestedURL.substring( 0, requestedURL.lastIndexOf( "/" ) );
+        
+        URL urlURL = new java.net.URL(base);
+       	String host = urlURL.getHost();
+       	int port = urlURL.getPort();
+       	String protocol = urlURL.getProtocol();
+
+		final String url = protocol + "://" + host + (port == 80 ? "" : ":"+port) + TransactionContext.getThreadLocalInstance().getRequest().getContextPath();
 //
 //		new Thread(){
 //

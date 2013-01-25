@@ -14,11 +14,15 @@ import org.metaworks.annotation.Test;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.codi.mw3.Login;
+import org.uengine.codi.mw3.knowledge.IWfNode;
+import org.uengine.codi.mw3.knowledge.KnowledgeTool;
+import org.uengine.codi.mw3.knowledge.WfNode;
 import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitorPanel;
 import org.uengine.kernel.EJBProcessInstance;
 import org.uengine.kernel.ProcessInstance;
 import org.uengine.processmanager.ProcessManagerRemote;
+
+import com.efsol.util.StringUtils;
 
 
 public class InstanceView {
@@ -31,7 +35,7 @@ public class InstanceView {
 		
 	public void load(IInstance instance) throws Exception{
 
-		Instance inst = new Instance();	
+		Instance inst = new Instance();
 		inst.setInstId(instance.getInstId());
 		inst.copyFrom(inst.databaseMe());
 		String secuopt = inst.getSecuopt();
@@ -88,10 +92,6 @@ public class InstanceView {
 		
 	}
 	
-	/*
-	 * 2013-01-21 jinwon
-	 * InstanceViewThreadPanel 로 대체
-	 * 
 	@ServiceMethod(inContextMenu=true, callByContent=true, needToConfirm=true, target="popup", mouseBinding="drop")
 	public Object[] drop() throws Exception{
 		Object clipboard = session.getClipboard();
@@ -123,7 +123,6 @@ public class InstanceView {
 		}
 		return null;
 	}
-	*/
 	
 	
 	String status;
@@ -200,7 +199,7 @@ public class InstanceView {
 		//flowChart.setInstanceId(instanceId);
 		//setProcessInstanceMonitor(flowChart);
 		
-		setInstanceName(inst.getName());
+		setInstanceName(((EJBProcessInstance)instance).getProcessInstanceDAO().getName());
 		
 		if(inst.getDefId() == null){
 			crowdSourcer = new CrowdSourcer();
@@ -243,8 +242,8 @@ public class InstanceView {
 		
 		
 		instanceNameChanger = new InstanceNameChanger();
-		instanceNameChanger.setInstanceId(this.getInstanceId());
-		instanceNameChanger.setInstanceName(this.getInstanceName());
+		instanceNameChanger.setInstanceId(instanceId);
+		instanceNameChanger.setInstanceName(instanceName);
 		
 		setInstanceSecurityConfigurer(new InstanceSecurityConfigurer());
 		getInstanceSecurityConfigurer().setInstanceId(instanceId);
@@ -384,48 +383,35 @@ public class InstanceView {
 		}
 		ids.getMetaworksContext().setWhen("edit");
 		
-		/*return new Popup(350,200,ids);*/
-		return new Popup(400,300,ids);
+		return new Popup(350,200,ids);
 	}
 	
-	@ServiceMethod(payload={"instanceId"}, needToConfirm=true, target=ServiceMethodContext.TARGET_APPEND)
+	@ServiceMethod(needToConfirm=true)
 	public Object[] remove() throws Exception{
 
 		Instance instance = new Instance();
 		instance.setInstId(new Long(getInstanceId()));
 		 
-		IInstance instanceRef = instance.databaseMe();
-		
-		if(!instanceRef.getInitEp().equals(session.getUser().getUserId())  && !(session.getEmployee()!=null && session.getEmployee().getIsAdmin())){
+		if(!instance.databaseMe().getInitEp().equals(session.getUser().getUserId())  && !(session.getEmployee()!=null && session.getEmployee().getIsAdmin())){
 			throw new Exception("$OnlyInitiatorCanDeleteTheInstance");
 		}
 		
 		processManager.stopProcessInstance(instanceId);
 
-		instanceRef.setIsDeleted(true);
-		instance.flushDatabaseMe();
+		instance.databaseMe().setIsDeleted(true);
+		//instance.flushDatabaseMe();
 		
-		/* 내가 할일 카운트 다시 계산 */
-		if(instanceRef.getDefId() != null || (instanceRef.getDefId() == null && instanceRef.getDueDate() != null)){
-			TodoBadge todoBadge = new TodoBadge();
-			todoBadge.session = session;
-			todoBadge.refresh();
-
-			MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()),
-					new Object[]{new Refresh(todoBadge)});			
-		}
+//		InstanceListPanel list = new InstanceListPanel();
+//		list.getInstanceList().load(session);
 		
-		if(!"sns".equals(session.getEmployee().getPreferUX())){
-			NewInstancePanel instancePanel = new NewInstancePanel();
-			instancePanel.load(session);
-			
-			return new Object[]{new Remover(instance), new Refresh(new ContentWindow(instancePanel))};
-		}else{
-			return new Object[]{new Remover(instance)};
-		}
+//		NewInstancePanel newInstancePanel = new NewInstancePanel();
+//		newInstancePanel.session = session;
+//		newInstancePanel.load();
+		
+		return new Object[]{new Remover(instance.databaseMe())};
 	}
-	
-	@ServiceMethod(payload={"instanceId", "status"})
+		
+	@ServiceMethod(callByContent=true , except={"newItem"})
 	public void complete() throws Exception{
 
 		//processManager.stopProcessInstance(instanceId);
@@ -434,30 +420,25 @@ public class InstanceView {
 		
 		Instance instance = new Instance();
 		instance.setInstId(new Long(getInstanceId()));
-		IInstance instanceRef = instance.databaseMe();
-				
-		if(instance.isInitCmpl() && !session.getUser().getUserId().equals(instance.getInitEp())){
+		
+		if(instance.databaseMe().isInitCmpl() && session.getUser().getUserId() != instance.databaseMe().getInitEp()){
 			throw new Exception("$OnlyInitiatorCanComplete");
 		}
 		
-		// instance update flush
-		instanceRef.setStatus(tobe);
-		instance.flushDatabaseMe();
-
-		this.load(instance);
-		this.setStatus(tobe);
+		instance.databaseMe().setStatus(tobe);
+		setStatus(tobe);
 		
-		MetaworksRemoteService.pushClientObjects(new Object[]{new InstanceListener(InstanceListener.COMMAND_REFRESH, instanceRef)});
-
-		/* 내가 할일 카운트 다시 계산 */
-		if(instanceRef.getDefId() != null || (instanceRef.getDefId() == null && instanceRef.getDueDate() != null)){
-			TodoBadge todoBadge = new TodoBadge();
-			todoBadge.session = session;
-			todoBadge.refresh();
-
-			MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()),
-					new Object[]{new Refresh(todoBadge)});			
+		
+		instance.flushDatabaseMe();
+		IInstance iInstance = instance.databaseMe();
+		iInstance.setMetaworksContext(new MetaworksContext());
+		if("sns".equals(session.getEmployee().getPreferUX()) ){
+			iInstance.getMetaworksContext().setHow("instanceList");
+			iInstance.getMetaworksContext().setWhere("sns");
 		}
+		
+		MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(iInstance)});
+
 	}
 		
 	

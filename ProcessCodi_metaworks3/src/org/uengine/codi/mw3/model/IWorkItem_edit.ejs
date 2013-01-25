@@ -28,8 +28,7 @@
 			<td style=" padding:10px 0;">			
 				<div id="commandDiv_<%=objectId%>"> 
 					<textarea class="post_<%=objectId%>" class="<%=value.type%>" _placeholder="<%=mw3.localize('$WhatYouThinkNow')%>" id="post_<%=objectId%>" value="<%=value.title ? value.title : ''%>" tabindex=1 rows="1" style="width:99%; height:21px; -webkit-border-radius:3px; outline:none;  webkit-border-radius:3px; border:1px solid #ccd; none;"><%=value.title ? value.title : ''%></textarea>
-					<div id="commandRecommendDiv_<%=objectId%>"></div>
-					<div id="commandFollowerDiv_<%=objectId%>"></div>
+					<div id="commandRecommendDiv_<%=objectId%>"></div> 
 				</div>				
 			</td>
 			
@@ -126,7 +125,7 @@
 		<a class="<%= value.type=='comment'?'comment_btn_on':'comment_btn_off' %>" onclick="<%=methods.newComment.caller()%>"><span><%=mw3.localize("$Write")%></span></a>
 		<a class="<%= value.type=='memo'?'comment_btn_on':'comment_btn_off' %>" onclick="<%=methods.newMemo.caller()%>"><span id="method_<%=objectId%>_newMemo"><%=mw3.localize("$Memo")%></span></a>
 		<a class="<%= value.type=='file'?'comment_btn_on':'comment_btn_off' %>" onclick="<%=methods.newFile.caller()%>"><span id="method_<%=objectId%>_newFile"><%=mw3.localize("$File")%></span></a>
-		<!-- <a class="<%= value.type=='src'?'comment_btn_on':'comment_btn_off' %>" onclick="<%=methods.newSourceCode.caller()%>"><span id="method_<%=objectId%>_newSourceCode"><%=mw3.localize("$SourceCode")%></span></a> -->
+		<a class="<%= value.type=='src'?'comment_btn_on':'comment_btn_off' %>" onclick="<%=methods.newSourceCode.caller()%>"><span id="method_<%=objectId%>_newSourceCode"><%=mw3.localize("$SourceCode")%></span></a>
 		<a class="comment_btn_off" onclick="<%=methods.newActivity.caller()%>"><span id="method_<%=objectId%>_newActivity"><%=mw3.localize("$etc")%></span></a>
 	</div>
 	
@@ -144,4 +143,7 @@
 
 <%
 	}
+	
 %>
+
+

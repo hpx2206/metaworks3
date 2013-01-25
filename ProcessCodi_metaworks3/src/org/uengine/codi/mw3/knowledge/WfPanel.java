@@ -111,9 +111,7 @@ public class WfPanel implements ContextAware {
 	
 	public WfNode makeNewNode(){
 		WfNode node = new WfNode();
-		
-		if(session != null)
-			node.setAuthorId(session.getUser().getUserId());
+		node.setAuthorId(session.getUser().getUserId());
 		
 		return node;
 	}

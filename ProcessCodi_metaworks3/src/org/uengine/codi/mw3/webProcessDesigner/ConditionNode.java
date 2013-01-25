@@ -25,6 +25,15 @@ public class ConditionNode  implements Cloneable, ContextAware{
 	public void setMetaworksContext(MetaworksContext metaworksContext) {
 		this.metaworksContext = metaworksContext;
 	}
+	
+	int idx;
+		@Id
+		public int getIdx() {
+			return idx;
+		}
+		public void setIdx(int idx) {
+			this.idx = idx;
+		}
 
 	SelectBox valiableChoice;
 		public SelectBox getValiableChoice() {
@@ -102,12 +111,12 @@ public class ConditionNode  implements Cloneable, ContextAware{
 					for(int j=0; j<fields.length; j++){
 						WebFieldDescriptor wfd = wfields[j];
 //						FieldDescriptor fd = fields[i];
-						choice.add("["+nameAttr+"]"+wfd.getName(), nameAttr + "." + wfd.getName());
+						choice.add("["+nameAttr+"]"+wfd.getName(), wfd.getName());
 					}
 				}
 			}
 		}
-//		choice.setSelectStyle("font-size:10px;");
+		
 		setValiableChoice(choice);
 	}
 	public void makeSignChoice() throws Exception{
@@ -124,7 +133,7 @@ public class ConditionNode  implements Cloneable, ContextAware{
 	}
 	public void makeExpressionChoice() throws Exception{
 		SelectBox choice = new SelectBox();
-		choice.add("Text", "text");
+		choice.add("Text", "string");
 		choice.add("Number", "number");
 		choice.add("Date", "date");
 		choice.add("Yes or No", "Yes or No");
@@ -149,22 +158,22 @@ public class ConditionNode  implements Cloneable, ContextAware{
 		makeOperandChoice();
 	}
 	
-//	@ServiceMethod
-//	public Object[] remove(){
-//		conditionPanel.conditionNodes.remove(this);
-//		return new Object[]{conditionPanel.conditionNodes};
-//	}
+	@ServiceMethod
+	public Object[] remove(){
+		conditionPanel.conditionNodes.remove(this);
+		return new Object[]{conditionPanel.conditionNodes};
+	}
 	@AutowiredFromClient
 	public Session session;
-//	@AutowiredFromClient
-//	transient public ConditionPanel conditionPanel;
+	@AutowiredFromClient
+	transient public ConditionPanel conditionPanel;
 	
-//	@Override
-//	public boolean equals(Object obj) {
-//		if( obj instanceof ConditionNode){
-//			return this.idx == ((ConditionNode)obj).idx;
-//		}else{
-//			return false;
-//		}
-//	}
+	@Override
+	public boolean equals(Object obj) {
+		if( obj instanceof ConditionNode){
+			return this.idx == ((ConditionNode)obj).idx;
+		}else{
+			return false;
+		}
+	}
 }

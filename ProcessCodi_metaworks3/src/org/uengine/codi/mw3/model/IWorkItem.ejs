@@ -3,7 +3,7 @@
 		if(mw3.how == 'sns'){
 %>
 
-	<table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-bottom:1px solid #fff;position:relative">
+	<table width="100%" border="0" cellspacing="0" cellpadding="0" style="border-bottom:1px solid #fff">
 		<tbody>
 			<tr>
 				<td width="55" valign="top">
@@ -53,19 +53,14 @@
 %>
 	
 <%
-	var session = mw3.getAutowiredObject('org.uengine.codi.mw3.model.Session');
-	
-	var isMine = false;
-	
-	if(session && session.user && session.user.userId == value.writer.userId)
-		isMine = true;
-		
+	var isMine = (value.writer.userId == mw3.getAutowiredObject('org.uengine.codi.mw3.model.Session').user.userId);
+
 	mw3.setWhen('view');
 	
 	if(isMine == true){
 %>
 	<div style="position:relative;">
-		<div class="view_box3" style="margin-right:14px; width:80%;  float:right;position:relative">
+		<div class="view_box3" style="margin-right:14px; width:80%;  float:right">
 		<div class="guide">
 			<span class="tl"></span>
 			<span class="tr"></span>
@@ -83,7 +78,7 @@
 			</td>			
 			<td>
 				<div style="position:relative;">
-		<div class="view_box4" style="margin-left:14px; width:80%;  float:left;position:relative">
+		<div class="view_box4" style="margin-left:14px; width:80%;  float:left">
 			<div class="guide">
 				<span class="tl"></span>
 				<span class="tr"></span>
@@ -100,7 +95,7 @@
 							<div style="position:relative; height:38px;">
 							
 							<img src="images/waveStyle/wih<%=(typeof value.type != 'undefined')?value.type:''%>.png">
-								<% if(value.status && value.status != 'FEED') { %>
+								<% if(value.status) { %>
 									<span style="position:absolute; bottom:3px; right:12px;"><img src="images/activity_status/i_status_<%=value.status%>.png" style="margin-top:1px;" title="<%=value.status%>"></span>										
 								<% } %>					
 						</td>
@@ -114,7 +109,7 @@
 											(ver <%=value.majorVer%>.<%=value.minorVer%>)
 											<%}%>
 									</span>					
-									<%if(value.type=='file' && value.file.mimeType.indexOf("image") != 0 ){%>			
+									<%if(value.type=='file' && value.ext3 == 'true'){%>			
 									<span>
 										<a href="#" onClick="<%=methods.workItemPopup.caller()%>"><img src="images/waveStyle/newWindow.png" style="margin-top:2px;" title="Open new window"></a>
 									</span>	
@@ -160,8 +155,8 @@
 						<%if(value.workItemVersionChooser!=null){%>
 							<%=fields.workItemVersionChooser.here()%>
 						<%}%>
-						<%if(value.preview!=null){%>
-			                <%=fields.preview.here()%>
+						<%if(value.ext3 == 'true'){%>
+							<iframe src="images/pdf/<%=value.grpTaskId%>_<%=value.majorVer%>_<%=value.minorVer%>.pdf" scrolling="no" width=100% height=300px onLoad="resizeFrame(this);"></iframe>
 						<%}%>
 							<%=fields.file.here({when: (value.file.mimeType.indexOf('image')==0)?'image':'view' })%>
 						</td>
@@ -170,7 +165,9 @@
 					<%if(value.type=='memo'){%>
 					<tr>
 						<td>
-							<%=fields.memo.here({when : 'view'})%>						
+							<%  value.memo.metaworksContext.when='view'; %>
+						
+								<%=fields.memo.here()%>						
 						</td>
 					</tr>
 					<%}%>

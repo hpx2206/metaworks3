@@ -3,7 +3,7 @@ var org_uengine_codi_mw3_model_CrowdSourcerWorker = function(objectId, className
 	this.className = className;
 	
 	var faceHelper = this;
-		
+	
 	FB.getLoginStatus(function(response) {
 		if (response.status === 'connected') {
 			faceHelper.facebookPosting();
@@ -20,7 +20,7 @@ var org_uengine_codi_mw3_model_CrowdSourcerWorker = function(objectId, className
 		}
 	});
 	
-};
+}
 
 org_uengine_codi_mw3_model_CrowdSourcerWorker.prototype = {
 	facebookPosting : function(){
@@ -34,4 +34,4 @@ org_uengine_codi_mw3_model_CrowdSourcerWorker.prototype = {
 		
 		mw3.removeObject(this.objectId);		
 	}
-};
+}

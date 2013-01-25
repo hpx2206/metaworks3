@@ -1,16 +1,17 @@
 <%
-	if(value == null && typeof value == 'undefined')
-		return;
-		
-	var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
-	var isTopic = (mw3.how == "topic");
-	
-%>
-
-<div class="top" style="height: <%=isTopic?'115':'68'%>px; overflow:hidden; position: absolute; min-width: 0px; min-height: 0px; max-width: 10000px; max-height: 10000px;  left: 0px; right: 0px; top: 0px;">
-	
-	<%=isTopic?fields.topicFollowers.here():''%>
-	
+	if(value != null && typeof value != 'undefined'){
+%>	
+		<div class="pane ui-layout-north">
+		   <div class="boxmiddleright">
+		        <div class="boxmiddleleft">
+					<%
+		            	var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
+							if(mw3.how == "topic"){
+					%>
+									<%=fields.topicFollowers.here()%>
+                	<%	
+							}
+					%>
 		            <div id="searchbox">
 		                <div class="searchboxline">
 		                	<div class="searchboxline2">
@@ -47,14 +48,20 @@
 	                        <li onclick="<%=methods.switchToScheduleCalendar.caller()%>" <%=value.scheduleCalendar ? "class='toolbar_current'" : ""%>><span><img src="images/waveStyle/i_gantt.png" border="0"></span><span><%=mw3.localize("$Calendar")%></span></li>
 	                    </ul>
                 	</div>     
-                		
-</div>
+		        </div>
 
-<div class="bottom" style="top: <%=isTopic?'115':'68'%>px; overflow:auto; position: absolute; min-width: 0px; min-height: 0px; max-width: 10000px; max-height: 10000px;  left: 0px; right: 0px; bottom: 0px;">
+		    </div>  		
+		
+			
+		</div>
 
-
+		<div class="pane ui-layout-center" id="method_<%=objectId%>_switchToScheduleCalendar">
+			<div class="ui-layout-content">
 				<%=value.instanceList ? fields.instanceList.here() : ""%>
 				<%=value.scheduleCalendar ? fields.scheduleCalendar.here() : ""%>
 				<%=value.knowledge ? fields.knowledge.here() : ""%>
-
-</div>
+			</div>
+		</div>
+<%
+	}
+%>		

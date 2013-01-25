@@ -14,7 +14,6 @@
 	<%=mw3.locateObject(value[i], value[i].__className, null, options)%>
 <%
 				mw3.addBeanProperty(value.__objectId, '.boardList[' + i + ']');
-				mw3.onLoadFaceHelperScript();				
 			}else{
 			    var ovryCmntTarget = {
 			    	__className : 'org.uengine.codi.mw3.model.IWorkItem',
@@ -28,7 +27,7 @@
 				};
 				
 				mw3.locateObject(toAppend, toAppend.__className, 'body', options);
-			}
+			}		
 		}	
 %>		
 </div>

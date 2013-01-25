@@ -8,7 +8,6 @@ var org_uengine_codi_mw3_model_IEmployee = function(objectId, className){
 	
 	var object = mw3.objects[this.objectId];
 	
-	/*
 	if(object && object.metaworksContext && object.metaworksContext.when == 'new'){
 		// facebook login status
 		FB.getLoginStatus(function(response) {
@@ -32,7 +31,6 @@ var org_uengine_codi_mw3_model_IEmployee = function(objectId, className){
 			}
 		});
 	}
-	*/
 	
 	$('#objDiv_' + this.objectId).parent().parent().css({'border':'none'});
 };
@@ -74,24 +72,9 @@ org_uengine_codi_mw3_model_IEmployee.prototype = {
 		if(methodName == 'checkEmpCode'){
 			$('#checkEmpCode_' + this.objectId).html(mw3.localize('$failCheckEmpCode'));
 		}
-	},
-	checkId : function(){
-		var object = mw3.getObject(this.objectId);
-
-		var result = mw3.call(this.objectId, 'checkId');
-
-		if(result == "valid") {
-			object.validEmail = true;
-			$("#checkId_"+this.objectId).text("valid Email");
-		}else { 
-			object.validEmail = false;
-			if(result == "duplicate")
-				$("#checkId_"+this.objectId).text("duplicate Email");
-			else
-				$("#checkId_"+this.objectId).text("invalid Email");
-		}
- 	}
-};
+	}
+	
+}
 
 
 //org_forx_model_codi_IEmployee.prototype.editInfo = function(){

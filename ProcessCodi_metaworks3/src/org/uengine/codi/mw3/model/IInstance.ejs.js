@@ -3,6 +3,8 @@ var org_uengine_codi_mw3_model_IInstance = function(objectId, className){
 	this.className = className;
 	this.divId = mw3._getObjectDivId(this.objectId);
 
+	console.log('org_uengine_codi_mw3_model_IInstance');
+	
 	this.windowObjectId = $('#' + this.divId).closest('.mw3_window').attr('objectId');
 	this.overTimer;
 	
@@ -16,12 +18,19 @@ var org_uengine_codi_mw3_model_IInstance = function(objectId, className){
 	 });
 	
 	$('#' + this.divId).hover(function(){				
-			$('#objDiv_' + objectId + ' .instanceBtn').show();
+			$('#objDiv_' + objectId + ' .instanceBtn').show(200);
 		},function(){	
-			$('#objDiv_' + objectId + ' .instanceBtn').hide();
+			$('#objDiv_' + objectId + ' .instanceBtn').hide(200);
 	});
 
 	var object = mw3.objects[this.objectId];
+	
+	console.log(object);
+			
+	if(object && object.metaworksContext)
+		console.log('metaworksContext.when : ' + object.metaworksContext.when);
+	
+	 
 	 if(object && object.metaworksContext && object.metaworksContext.when == 'blinking'){
 		 this.blinking();
 	 }
@@ -75,8 +84,6 @@ var org_uengine_codi_mw3_model_IInstance = function(objectId, className){
 		
 	});
 	*/
-	 
-	 
 };
 
 	

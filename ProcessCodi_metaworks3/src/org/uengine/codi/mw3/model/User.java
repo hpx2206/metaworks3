@@ -6,6 +6,7 @@ import javax.servlet.http.HttpSession;
 
 import org.directwebremoting.Browser;
 import org.directwebremoting.ScriptSessions;
+import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ToOpener;
@@ -76,18 +77,11 @@ public class User extends Database<IUser> implements IUser {
 	public Popup pickUp() throws Exception {
 		Popup popup = new Popup();
 		
-		String type = "addInstanceFollower";
-		ContactPanel contactPanel = new ContactPanel(session.getUser());
-		contactPanel.getContactListPanel().setId(type);
-		contactPanel.getContactListPanel().getLocalContactList().getMetaworksContext().setWhen(type);		
-		contactPanel.getContactListPanel().getSocialContactList().getMetaworksContext().setWhen(type);
-		contactPanel.getUser().getMetaworksContext().setWhen(type);
-		
-		/*AddFollowerPanel userPicker = new AddFollowerPanel( session , null , "addAskFollower" );
+		AddFollowerPanel userPicker = new AddFollowerPanel( session , null , "addInstanceFollower" );
 		userPicker.setMetaworksContext(new MetaworksContext()); // propagate context
-		userPicker.getMetaworksContext().setWhen("userPicker");*/
+		userPicker.getMetaworksContext().setWhen("userPicker");
 		
-		popup.setPanel(contactPanel);
+		popup.setPanel(userPicker);
 		popup.setName("AddFollowerPanel");
 		
 		return popup;
@@ -238,7 +232,7 @@ public class User extends Database<IUser> implements IUser {
 //			topicFollowers.load();
 //			
 //			return new Object[]{new Refresh(topicFollowers)};
-//		}else if("addInstanceFollower".equals(this.getMetaworksContext().getWhen())){
+		}else if("addInstanceFollower".equals(this.getMetaworksContext().getWhen())){
 //			String instId = instanceFollowers.getInstanceId();
 //			
 //			Instance instance = new Instance();
@@ -293,11 +287,6 @@ public class User extends Database<IUser> implements IUser {
 //			
 //			return new Object[]{new Refresh(followers)};
 			// TODO 이 부분은 변경됨 FollowerSelectPanel.java 참조
-		}else if("addInstanceFollower".equals(this.getMetaworksContext().getWhen())){			
-			getMetaworksContext().setWhen("edit");
-			getMetaworksContext().setHow("picker");
-			
-			return new Object[]{new Remover(new Popup()), new ToOpener(this)};
 		}else if("addEtcFollower".equals(this.getMetaworksContext().getWhen())){			
 			etcFollowers.put(this);
 			
@@ -377,7 +366,6 @@ public class User extends Database<IUser> implements IUser {
 		
 		Contact contact = new Contact();
 		contact.setFriend(this);
-		contact.setFriendId(this.getUserId());
 		contact.setUserId(session.getUser().getUserId());
 		contact.addContact();
 		
@@ -411,8 +399,7 @@ public class User extends Database<IUser> implements IUser {
 	
 //	@ServiceMethod(target="popup", payload={"userId", "network"})
 	public Popup info() throws Exception{
-		Popup infoWindow = new Popup(600, 300);
-		
+		Popup infoWindow = new Popup();	
 		Employee me = new Employee();
 		me.setEmpCode(getUserId());
 		

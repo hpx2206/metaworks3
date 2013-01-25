@@ -16,7 +16,7 @@ org_uengine_codi_mw3_model_TodoBadge.prototype.prototype = {
 		else
 			mw3.endLoading(this.objectId);
 	},
-	showStatus : function(message){
+	status : function(message){
 		
 	}
 };

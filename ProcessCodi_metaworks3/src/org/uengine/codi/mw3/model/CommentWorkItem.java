@@ -29,100 +29,87 @@ public class CommentWorkItem extends WorkItem{
 	public String getTitle() {
 		return super.getTitle();
 	}
-	
 
 	@Test(scenario="first", starter=true, instruction="$first.Add", next="autowiredObject.org.uengine.codi.mw3.model.InstanceView.monitor()")
 	@ServiceMethod(callByContent = true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] add() throws Exception {
 		
-		Object[] returnObjects = null;
-		Long prevInstId = this.getInstId();
+		if(getActivityAppAlias()!=null){
+			StringTokenizer tokenizer = new StringTokenizer(title);
+			String connector = null;
+			
+			if(getParameters()!=null){
+				StringBuffer generatedTitle = new StringBuffer();	
+				
+				int substringDelimiter = 0;
+				
+				for(ParameterValue pv : getParameters()){					
+					connector = tokenizer.nextToken("$").substring(substringDelimiter);
+					tokenizer.nextToken(">");
+					
+					generatedTitle.append(connector).append(pv.getValueObject());
+					
+					substringDelimiter=1;					
+				}				
+				
+				title = generatedTitle.append(tokenizer.nextElement()).toString();
+			}
+			
+			String newInstId = processManager.initializeProcess(getActivityAppAlias(), getTitle());
+			
+			if(getParameters()!=null){	
+				for(ParameterValue pv : getParameters()){
+					Serializable valueObject = (Serializable)pv.getValueObject();
+					
+					processManager.setProcessVariable(newInstId, "", pv.getVariableName(), valueObject);
+				}
+			}
+			
+			RoleMapping rm = RoleMapping.create();
+			if(session.user!=null){
+				rm.setEndpoint(session.user.getUserId());
+				rm.setName("initiator");
+			}			
+			processManager.setLoggedRoleMapping(rm);
 
-		// TODO: 우선 추가 모드 일때만 작업
-		if(WHEN_NEW.equals(this.getMetaworksContext().getWhen())){
-			// defId setting
-			if(getActivityAppAlias()!=null){
-				StringTokenizer tokenizer = new StringTokenizer(this.getTitle());
-				String connector = null;
+			ProcessInstance instanceObject = processManager.getProcessInstance(newInstId);
+			
+			EJBProcessInstance ejbParentInstance = (EJBProcessInstance)instanceObject;
+			ProcessInstanceDAO instanceDAO = ejbParentInstance.getProcessInstanceDAO();
+			
+			instanceDAO.set("initComCd", session.getCompany().getComCode());
+			setInstId(new Long(newInstId));
+			
+			/*
+			if(!isInstantiation()){ //means sub process
+				instanceDAO.setRootInstId(new Long(getInstId()));
+
+			}else{
+				setInstId(new Long(newInstId));
+			}*/
+			processManager.executeProcess(newInstId);
+			
+			instanceDAO.set("InitEp", session.getUser().getUserId());
+			instanceDAO.set("InitRsNm", session.getUser().getName());
+
+			//when newly creating process instance, there must be at least one or more rolemapping. so if there's no rolemapping has been defined by running process, add one implicitly.
+/*			if(isInstantiation()){
+				IRoleMapping roleMapping = new org.uengine.codi.mw3.model.RoleMapping().auto();
+				roleMapping.setRootInstId(new Long(newInstId));
+				roleMapping.select();
 				
-				if(getParameters()!=null){
-					StringBuffer generatedTitle = new StringBuffer();
-					
-					int substringDelimiter = 0;
-					for(ParameterValue pv : getParameters()){
-						connector = tokenizer.nextToken("$").substring(substringDelimiter);
-						tokenizer.nextToken(">");
-						
-						generatedTitle.append(connector).append(pv.getValueObject());
-						
-						substringDelimiter=1;
-					}
-					
-					this.setTitle(generatedTitle.append(tokenizer.nextElement()).toString());
-				}
-				
-				String newInstId = processManager.initializeProcess(getActivityAppAlias(), getTitle());
-				
-				if(getParameters()!=null){	
-					for(ParameterValue pv : getParameters()){
-						Serializable valueObject = (Serializable)pv.getValueObject();
-						
-						processManager.setProcessVariable(newInstId, "", pv.getVariableName(), valueObject);
-					}
-				}
-				
-				RoleMapping rm = RoleMapping.create();
-				if(session.getUser() != null){
-					rm.setName("initiator");
-					rm.setEndpoint(session.getUser().getUserId());
-					
+				if(!roleMapping.next()){
 					processManager.putRoleMapping(newInstId, rm);
 				}
-				
-				processManager.setLoggedRoleMapping(rm);
-				
-				
-				ProcessInstance instanceObject = processManager.getProcessInstance(newInstId);
-				
-				EJBProcessInstance ejbParentInstance = (EJBProcessInstance)instanceObject;
-				ProcessInstanceDAO instanceDAO = ejbParentInstance.getProcessInstanceDAO();
-				
-				instanceDAO.set("initComCd", session.getCompany().getComCode());
-
-				//means sub process
-				if(this.getInstId() != null ){				
-					instanceDAO.setRootInstId(new Long(getInstId()));
-					this.setRootInstId(this.getInstId());
-				}
-				
-				this.setInstId(new Long(newInstId));
-
-				processManager.executeProcess(newInstId);
-				
-				instanceDAO.set("InitEp", session.getUser().getUserId());
-				instanceDAO.set("InitRsNm", session.getUser().getName());
-
-				//when newly creating process instance, there must be at least one or more rolemapping. so if there's no rolemapping has been defined by running process, add one implicitly.
-				if(prevInstId == null){
-					IRoleMapping roleMapping = new org.uengine.codi.mw3.model.RoleMapping().auto();
-					roleMapping.setRootInstId(new Long(newInstId));
-					roleMapping.select();
-					
-					if(!roleMapping.next()){
-						processManager.putRoleMapping(newInstId, rm);
-					}
-				}
-				
-				processManager.applyChanges();
-			}
+			}*/
+			
+			processManager.applyChanges();
 		}
-		
-
-		IInstance instance = this.save();
-		
-		returnObjects = super.makeReturn(prevInstId, instance);
+				
+		Object[] returnObjects = super.add();
 		
 		return returnObjects;
+		
 	}
 	
 	@Autowired

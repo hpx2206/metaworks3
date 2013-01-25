@@ -1,12 +1,13 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.MetaworksContext;
+import org.metaworks.annotation.AutowiredToClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.dao.Database;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.codi.mw3.Login;
 import org.uengine.kernel.ProcessInstance;
 import org.uengine.processmanager.ProcessManagerRemote;
 
@@ -38,13 +39,13 @@ public class InstanceViewPublic {
 	@Autowired
 	public ProcessManagerRemote processManager;	
 
-	String instanceId;
+	Long instanceId;
 		@Id
 		@Hidden
-		public String getInstanceId() {
+		public Long getInstanceId() {
 			return instanceId;
 		}
-		public void setInstanceId(String instanceId) {
+		public void setInstanceId(Long instanceId) {
 			this.instanceId = instanceId;
 		}
 
@@ -68,10 +69,6 @@ public class InstanceViewPublic {
 	public void load() throws Exception {
 		if(getSession() == null)
 			throw new Exception("session error");
-
-		Login login = new Login();
-		login.setUserId(this.getSession().getUser().getUserId());		
-		login.storeIntoServerSession();
 		
 		ProcessInstance instance = processManager.getProcessInstance(String.valueOf(getInstanceId()));
 		
@@ -84,14 +81,14 @@ public class InstanceViewPublic {
 		
 		if(isOpen){
 			Instance theInstanceDAO = new Instance();
-			theInstanceDAO.setInstId(new Long(getInstanceId()));
+			theInstanceDAO.setInstId(getInstanceId());
 			
-			instanceViewContent.session = this.getSession();
 			instanceViewContent.load(theInstanceDAO.databaseMe());
 			instanceViewContent.getInstanceView().getMetaworksContext().setWhen("public");
+			
+			setMetaworksContext(new MetaworksContext());
+			getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 		}
 		
-		setMetaworksContext(new MetaworksContext());
-		getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 	}
 }

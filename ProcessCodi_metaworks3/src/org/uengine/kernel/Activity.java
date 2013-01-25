@@ -1453,31 +1453,9 @@ public abstract class Activity implements Validatable, java.io.Serializable, Clo
 		List<Activity> activities = new ArrayList<Activity>();
 		
 //		System.out.println("outgoingTransitions: " + getOutgoingTransitions().size());
-		boolean otherwiseFlag = false;
-		Activity otherwiseActivity = null;
+		
 		for (Iterator<Transition> it = getOutgoingTransitions().iterator(); it.hasNext(); ) {
-			Transition ts = (Transition)it.next();
-			if( ts.getCondition() != null){
-				Condition condition = ts.getCondition();
-				if( condition.isMet(instance, scope) ){
-					if( condition instanceof Or){
-						Condition[] condis =  ((Or) condition).getConditions();
-						if( condis[0] instanceof Otherwise){
-							// 순서가 없다보니 Otherwise가 먼저와서 무조건 true 가 발생하는 경우가 생김
-							// Otherwise가 먼저 올 경우는 일단 스킵했다가 다시 해준다.
-							otherwiseFlag = true;
-							otherwiseActivity = ts.getTargetActivity();
-							continue;
-						}
-					}
-					activities.add(ts.getTargetActivity());
-				}
-			}else{
-				activities.add(ts.getTargetActivity());
-			}
-		}
-		if( otherwiseFlag && activities.isEmpty()){
-			activities.add(otherwiseActivity);
+			activities.add(it.next().getTargetActivity());
 		}
 		return activities;
 	}

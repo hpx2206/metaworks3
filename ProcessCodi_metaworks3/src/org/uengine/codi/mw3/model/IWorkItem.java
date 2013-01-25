@@ -46,7 +46,7 @@ public interface IWorkItem extends IDAO{
 		public final static String WORKITEM_TYPE_MEMO		 = "memo";
 				
 		
-		public final static int TITLE_LIMIT_SIZE             = 200;
+		public final static int TITLE_LIMIT_SIZE             = 40;
 		
 		@Id
 		//@GeneratedValue(strategy=GenerationType.TABLE, generator="SEQ_BPM")
@@ -160,16 +160,6 @@ public interface IWorkItem extends IDAO{
 		public MetaworksFile getFile();
 		public void setFile(MetaworksFile file);
 		
-		@ORMapping(
-			databaseFields = {"taskId", "ext1"}, 
-			objectFields = {"taskId", "pageCount"},
-			objectIsNullWhenFirstDBFieldIsNull = true,
-			availableWhen = "type=='file'"		
-		)
-		public Preview getPreview();
-		public void setPreview(Preview file);
-
-		
 		@Hidden
 		@ORMapping(
 			databaseFields = {"prtTskId", "ext1", "ext2"}, 
@@ -258,6 +248,7 @@ public interface IWorkItem extends IDAO{
 		public String getExt10();
 		public void setExt10(String ext10);
 		
+		
 		@ServiceMethod(when = WHEN_VIEW)
 		public void like() throws Exception;
 		
@@ -327,7 +318,10 @@ public interface IWorkItem extends IDAO{
 		@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)
 		public IWorkItem newMemo() throws Exception;
 		
-		@ServiceMethod(inContextMenu=true, payload={"instId", "taskId"}, target=ServiceMethodContext.TARGET_POPUP)
+		
+		
+		
+		@ServiceMethod(inContextMenu=true, callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 		@Face(displayName="Comment")
 		public OverlayCommentWorkItem comment() throws Exception;
 }

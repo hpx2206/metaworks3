@@ -2,7 +2,6 @@ package org.uengine.codi.mw3.model;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
-import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
@@ -47,7 +46,7 @@ public class InstanceViewThreadPanel implements ContextAware {
 	public void load(String instanceId) throws Exception {
 		String how = null;
 		
-		if(session.getEmployee() != null && "sns".equals(session.getEmployee().getPreferUX()))
+		if("sns".equals(session.getEmployee().getPreferUX()))
 			how = "sns";
 		else
 			how = "normal";
@@ -63,6 +62,7 @@ public class InstanceViewThreadPanel implements ContextAware {
 		
 		CommentWorkItem newItem = new CommentWorkItem();
 		newItem.setInstId(new Long(getInstanceId()));
+		newItem.setTaskId(new Long(-2));
 		newItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 		newItem.getMetaworksContext().setHow(how);
 		newItem.setWriter(session.getUser());
@@ -107,36 +107,35 @@ public class InstanceViewThreadPanel implements ContextAware {
 			this.more = more;
 		}
 		
-	@ServiceMethod(callByContent=true, needToConfirm=true, mouseBinding="drop", target=ServiceMethodContext.TARGET_POPUP)
+	@ServiceMethod(callByContent=true, needToConfirm=true, mouseBinding="drop")
 	public Object[] drop() throws Exception{
-		Object clipboard = session.getClipboard();
-		if(clipboard instanceof IWfNode){
-			WfNode draggedNode = (WfNode) clipboard;
-
-			KnowledgeTool knolTool = new KnowledgeTool();
-			knolTool.setNodeId(draggedNode.getId());
-			knolTool.onLoad();
-			
-			GenericWorkItemHandler genericWIH = new GenericWorkItemHandler();
-			genericWIH.setTool(knolTool);
-
-			//setting the first workItem as wfNode referencer
-			GenericWorkItem genericWI = new GenericWorkItem();
-			genericWI.setMetaworksContext(new MetaworksContext());
-			genericWI.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
-			genericWI.processManager = processManager;
-			genericWI.session = session;
-			genericWI.setTitle("Attaching Knowledge");//parent.getName());
-
-			genericWI.setGenericWorkItemHandler(genericWIH);
-			genericWI.setInstId(new Long(getInstanceId()));
-			genericWI.setTitle(draggedNode.getName());
-			
-			// TODO attach thread 
-			return genericWI.add();
-		}else{
-			return null;
+		if("sns".equals(session.getEmployee().getPreferUX()) ){
+			Object clipboard = session.getClipboard();
+			if(clipboard instanceof IWfNode){
+				WfNode draggedNode = (WfNode) clipboard;
+				
+				//setting the first workItem as wfNode referencer
+				GenericWorkItem genericWI = new GenericWorkItem();
+				
+				genericWI.processManager = processManager;
+				genericWI.session = session;
+				genericWI.setTitle("Attaching Knowledge");//parent.getName());
+				GenericWorkItemHandler genericWIH = new GenericWorkItemHandler();
+				KnowledgeTool knolTool = new KnowledgeTool();
+				knolTool.setNodeId(draggedNode.getId());
+				genericWIH.setTool(knolTool);
+				
+				genericWI.setGenericWorkItemHandler(genericWIH);
+				genericWI.setInstId(new Long(getInstanceId()));
+				genericWI.setMetaworksContext(new MetaworksContext());
+				genericWI.getMetaworksContext().setHow("instanceList");
+				genericWI.getMetaworksContext().setWhere("sns");
+				
+				// TODO attach thread 
+				return genericWI.add();
+			}
 		}
+		return null;
 	}
 	
 	@Autowired

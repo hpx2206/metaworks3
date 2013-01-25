@@ -223,8 +223,6 @@ img {
     top: 10px;
     right: 65px;
 }
-.ssesionLine{float:left;line-height:37px; height:37px;cursor:pointer;padding:0 2px}
-
 .boxtopleft {
     background: #060;
     width: 100%;
@@ -362,11 +360,13 @@ img {
 }
 .contentcontainer {
     background: #fff;
-    margin:0 7px 0 3px;
+    /*margin:0 7px 0 3px;*/
     height: 100%;
-    overflow:auto; 
+    /* overflow:auto; */
 }
-
+*+ html .contentcontainer {
+    overflow: hidden;
+}
 .topcontentcontainer {
     background: #fff;
     margin: 0 7px 0 3px;
@@ -563,17 +563,26 @@ img {
 .user .user_focus {
     float: left;
     margin-lef: 4px;
-    margin-right: 4px;   
+    margin-right: 4px;
+    /*			margin-top: 4px;
+     margin-bottom: 4px;*/
     background: #eef6f6;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
-    box-shadow: 1px 1px 1px #888;    
+    box-shadow: 1px 1px 1px #888;
+    /*	box-shadow: 0px 0px 4px 2px #555 inset;*/
+    /*	 border-width:2px;
+     border-style:solid;
+     border-color:#dfe5e5;*/
     -o-background-size: 100% 100%;
     -webkit-background-size: 100% 100%;
     -khtml-background-size: 100% 100%;
     -moz-background-size: 100% 100%;
+    background: url('../../images/portrait/unknown_user.gif');
     background-repeat: no-repeat;
+    width: 33px;
+    height: 33px;
 }
 
 .badge {
@@ -592,17 +601,11 @@ img {
      border-style:solid;
      border-color:#dfe5e5;*/
 }
-.user .pic {
-    width: 33px;
-    height: 33px;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    border-radius: 3px;
-}
 
 .user .small {
-    width: 25px !important;
-    height: 25px !important;
+    width: 25px;
+    height: 25px;
+    box-shadow: 1px 1px 1px #888;
 }
 
 .idept {
@@ -768,8 +771,7 @@ img {
     border-top: 1px solid #8b9fbd;
     border-bottom: 1px solid #8b9fbd;
 }
-*:first-child+html #searchbox ul li input { margin-top:-1px}
-* html #searchbox ul li input { margin-top:-1px}
+
 .adduserline {
     height: 46px;
 }
@@ -798,12 +800,6 @@ img {
     margin-left:5px;
     background: url(../../images/waveStyle/newProcess2.gif) 100% 0% no-repeat;
 }
-.searchboxarea {
-    margin-left: 110px;
-}
-*:first-child+html .searchboxarea { margin-left: 0px;float:left}
-* html .searchboxarea { margin-left: 0px;float:left}
-
 .searchboxarea {
     margin-left: 110px;
 }
@@ -1207,14 +1203,10 @@ img {
 }
 
 #navigationTitle, #contactTitle, #wihTitle, #workListTitle, #mindmapTitle, #processTitle {
-    /*float: left;*/
-    
+    float: left;
+    width:100%;
     
 }
-#navigationTitle {
-    position:relative;
-}
-
 #navigationTitle span {
     line-height: 21px;    
     margin-right: 80px;
@@ -1231,9 +1223,9 @@ img {
     -o-text-overow: ellipsis;
 }
 .loadingarea {
-    position:absolute;
-    left:150px;
-    top:2px;
+    float: left;
+    margin-left: 10px;
+    margin-top: 2px;
 }
 
 #Outside_person {
@@ -1896,9 +1888,3 @@ html, body {
 
 .positionRight {float:right; margin-right:15px;}
 .positionRight > div{float:left}
-
-#tabIcon_Company{background: url(../../images/waveStyle/tab_i_company.png) 2px no-repeat; padding-left:22px;}
-#tabIcon_Facebook{background: url(../../images/waveStyle/tab_facebook.png) 2px no-repeat; padding-left:22px;}
-#tabIcon_Twitter{background: url(../../images/waveStyle/tab_twitter.png) 2px no-repeat; padding-left:22px;}
-#tabIcon_LinkedIn{background: url(../../images/waveStyle/tab_in.png) 2px no-repeat; padding-left:22px;}
-#tabIcon_Metoday{background: url(../../images/waveStyle/tab_metoday.png) 2px no-repeat; padding-left:22px;}

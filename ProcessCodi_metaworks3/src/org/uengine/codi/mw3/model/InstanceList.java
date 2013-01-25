@@ -91,7 +91,9 @@ public class InstanceList implements ContextAware{
 	}
 
 	public InstanceList load(Session session) throws Exception {
-		if(session.lastPerspecteType != null && session.lastPerspecteType.equals("inbox")){			
+		if(session.lastPerspecteType != null && session.lastPerspecteType.equals("inbox")){
+			session.setTodoListCount(Instance.countTodo(session));
+		
 			//NEW WAY IS GOOD
 			Browser.withSession(Login.getSessionIdWithUserId(session.getEmployee().getEmpCode()), new Runnable(){
 				@Override

@@ -1,31 +1,24 @@
 var org_uengine_codi_mw3_model_InstanceListPanel_sns = function(objectId, className) {
 	this.objectId = objectId;
 	this.className = className;
-	this.objectDivId = mw3._getObjectDivId(this.objectId);
-	this.objectDiv = $('#' + this.objectDivId);
+	this.divId = mw3._getObjectDivId(this.objectId);
 	
-	this.object = mw3.objects[this.objectId];
-
-	if(this.object == null)
-		return true;
+	this.windowObjectId = $('#' + this.divId).closest('.mw3_window').attr('objectId');
 	
-	this.objectDiv
-		.css({
-			position: 'relative',
-			height:   '100%'
-		});
+	this.divElement = $('#' + this.divId); 	
+	this.divElement.addClass('mw3_layout').attr('objectId', objectId);
 	
-	// window 의 title 설정
-	this.windowObjectId = this.objectDiv.closest('.mw3_window').attr('objectId');
-	
-	if(this.object && this.object.title){
+	var object = mw3.objects[this.objectId];
+	if(object && object.title){
 		if(this.windowObjectId){
-			mw3.getFaceHelper(this.windowObjectId).setTitle(mw3.localize(this.object.title));
+			mw3.getFaceHelper(this.windowObjectId).setTitle(mw3.localize(object.title));
 		}
-	}
-	
-	if(this.object && this.object.preloaded){
-/*		var scrollDiv = $('#objDiv_' + this.objectId + " .ui-layout-center .ui-layout-content");
+	}	
+	if(object && object.preloaded){
+		var faceHelper = this;	
+		faceHelper.load();	
+		
+		var scrollDiv = $('#objDiv_' + this.objectId + " .ui-layout-center .ui-layout-content");
 		
 		scrollDiv.scroll(function(e) {
 			// 커서 위치가 약간 달라서 생기는 문제점
@@ -33,7 +26,7 @@ var org_uengine_codi_mw3_model_InstanceListPanel_sns = function(objectId, classN
 				mw3.objects[lastMore].more();
 			}
 		});
-*/		
+		
 		searchBarMagin = $('.newprocessbtn').width() + 20;
 		$('.searchboxarea').css("margin-left",searchBarMagin);
 		
@@ -61,6 +54,40 @@ var org_uengine_codi_mw3_model_InstanceListPanel_sns = function(objectId, classN
 
 
 org_uengine_codi_mw3_model_InstanceListPanel_sns.prototype = {
+	load : function(){
+		
+		var object = mw3.objects[this.objectId];
+		var options = {
+				togglerLength_open:	0, 
+				spacing_open:		0, 
+				spacing_closed:		0,
+				center__onresize:	'mw3.getFaceHelper('+this.objectId+').resizeChild()'
+		}
+
+		this.layout = this.divElement.layout(options);
+	},
+	destroy : function(){
+		if(this.layout)
+			this.layout.destroy();
+	},
+	resize : function(){
+		if(this.layout){
+			//console.debug('visible : ' + $(this.divId).visible);
+			
+			this.layout.resizeAll();
+			
+			this.resizeChild();
+		}
+	},
+	resizeChild : function(){
+		
+		this.divElement.find('.mw3_layout, .mw3_resize').each(function(index, value){
+			var layoutId = value.getAttribute('objectId');
+			
+			if(layoutId)
+				mw3.getFaceHelper(layoutId).resize();
+		});
+	},
 	startLoading : function(){
 		if(this.windowObjectId && mw3.getFaceHelper(this.windowObjectId) && mw3.getFaceHelper(this.windowObjectId).startLoading)
 			mw3.getFaceHelper(this.windowObjectId).startLoading();

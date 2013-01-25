@@ -30,7 +30,7 @@
 		<td  id="td_<%=objectId%>">									
 			<ul class="lst_type">										
 				<li class="trigger">
-					<div  class="instanceType">
+					<div style="float:left;width:38px;margin-right:-40px">
 						<% if(isChat){ %>
 							<!--span class="type_ping"></span--><span class="instanceLock"></span>
 						<% }else if(isOpenCollab){ %>
@@ -41,52 +41,15 @@
 							<span class="type_process"></span><span class="instanceLock"></span>
 						<% } %>	
 					</div>						
-					<div class="instanceTitle">
+					<div style="margin-left:40px">
 						<table>
 							<tr>
-								<td style="border:none;"><a href="#middle-center"><b><font color=204070><%=value.initiator.name%></font> &nbsp;&nbsp; 
-								
-								<% if(mw3.how != 'sns'){ %>
-									<font color=#5C5C5C><%=value.name%></font></b></a>
-								<%}else{%>
-									</b></a>
-									<div style="margin:5px 0"><font color=#5C5C5C><%=value.name%></font></div>
-									<div>
-										<div style="float:left; font-size:11px; color:#ccc"><%=fields.startedDate.here({when: 'timeago'})%></div>
-										<%if(value.status=='Completed'){%> 
-											<div class="badge" style="float:left; margin:0 4px 4px 4px; background:#98AFC7;">&nbsp;&nbsp;<%=mw3.localize('$Complete')%> &nbsp;&nbsp;</div> 
-										<%}else if(value.dueDate){ 
-											if(value.dueDate < new Date()){%>
-												<div class="badge" style="float:left; margin:0 4px 4px 4px; background:#F52020;">&nbsp;&nbsp;<%=mw3.localize('$Delay')%> &nbsp;&nbsp;</div>
-											<%}else if(value.progress != null && value.progress != ''){%>
-												<div class="badge" style="float:left; margin:0 4px 4px 4px; ">&nbsp;&nbsp;<%=value.progress%>%  &nbsp;&nbsp;</div>
-											<%}else{%>
-												<div style="float:left; margin-left:15px; font-size:11px; color:#ccc"><%=mw3.localize('$Due')%> :</div>
-												<div style="float:left; font-size:11px; color:#ccc"><%=fields.dueDate.here({when: 'timeago'})%></div>
-											<%}%>
-												
-										<%}%>
-										
-										
-										
-										<div style="float:left">
-											<% if(mw3.how == 'sns'){ %>
-												<div class="instanceBtn instanceBtn_sns">
-													<span style="float:left"><%=fields.instanceTooltip.here()%></span>
-													<span style="float:left"><%=fields.instanceDrag.here()%></span>
-													<div class="clear"></div>
-												</div>
-											<%}%>		
-										</div>
-										<div class="clear"></div>
-									</div>
-									
-								<%}%>
-								
+								<td style="border:none;"><a href="#middle-center"><b><font color=204070><%=value.initiator.name%></font> &nbsp;&nbsp; <font color=#5C5C5C><%=value.name%></font></b></a></td>
+								<% if(mw3.how == 'sns'){ %>
+								<td style="border:none;" width="150">
+									<div style="float:left;margin-left:15px;color:#C6C6C6"><%=fields.startedDate.here({when: 'timeago'})%></div>										
 								</td>
-								
-								
-
+								<%}%>
 							</tr>
 						</table>
 					<div>				
@@ -105,11 +68,10 @@
 												
 			</ul>								
 		</td>
-		<% if(mw3.how != 'sns'){ %>
 		<td width="110">	
-			
-				<div style="margin-bottom:5px;margin-left:15px;"><%=fields.startedDate.here({when: 'timeago'})%></div>
-			
+			<% if(mw3.how != 'sns'){ %>
+				<div style="margin-bottom:5px;margin-left:15px;"><%=fields.startedDate.here({when: 'timeago'})%></div>	
+			<%}%>
 				<%if(value.status=='Completed'){%> 
 					<div class="badge" style="margin-left:15px; margin-bottom:4px;background:#98AFC7;">&nbsp;&nbsp;<%=mw3.localize('$Complete')%> &nbsp;&nbsp;</div> 
 					<div style="clear:both"></div>
@@ -121,14 +83,18 @@
 						<div class="badge" style="margin-left:15px; margin-bottom:4px;">&nbsp;&nbsp;<%=value.progress%>%  &nbsp;&nbsp;</div>
 						<div style="clear:both"></div>
 					<%}else{%>
-						<div style="float:left;"><table><td style="border:none;"><%=mw3.localize('$Due')%> :</td><td style="border:none;"><%=fields.dueDate.here({when: 'timeago'})%></td></table></div>
+						<div style="float:left;"><table><td style="border:none;"><%=mw3.localize('$Due')%> :</td><td style="border:none;"><%=fields.dueDate.here({when: 'timeago'})%></td></table><div>
 						<div style="clear:both"></div>
 					<%}%>
 						
 				<%}%>
-			
+			<% if(mw3.how == 'sns'){ %>
+				<div class="instanceBtn">
+					<span style="float:left"><%=fields.instanceTooltip.here()%></span>
+					<span style="float:left"><%=fields.instanceDrag.here()%></span>
+				</div>
+			<%}%>				
 		</td>	
-		<%}%>
 		<% if(mw3.how != 'sns'){ %>
 		<td width="20">
 			<div class="instanceBtn"><%=fields.instanceDrag.here()%></div>

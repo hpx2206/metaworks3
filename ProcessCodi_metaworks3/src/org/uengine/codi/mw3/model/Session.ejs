@@ -1,4 +1,5 @@
 <%
+
 	if(value){	
 		if(mw3.when == 'view'){
 			if(value.ux && value.ux == 'phone') {
@@ -9,20 +10,21 @@
 <%
 			}
 %>
-		<div>
-			<span class="ssesionLine"><%=fields.employee.here() %></span>
-			<span class="ssesionLine"> | </span>
-			<span class="ssesionLine"><a href="#" onClick="mw3.test(mw3.getAutowiredObject('org.uengine.codi.mw3.model.InstanceListPanel').__objectId, 'first', {guidedTour:true})" type="application/pdf"><%=mw3.localize("$Help")%></a></span>
-				 
+		<div style="float:left; margin-right:15px;">
+			<span style="display:inline-block; line-height:37px; cursor:pointer;"><%=fields.employee.here() %></span>
+				 |	
+			<a href="#" onClick="mw3.test(mw3.getAutowiredObject('org.uengine.codi.mw3.model.InstanceListPanel').__objectId, 'first', {guidedTour:true})" type="application/pdf"><%=mw3.localize("$Help")%></a>			 
+
+
 <%
-			if(value.employee && value.employee.isAdmin){%>
-			<span class="ssesionLine"> | </span>
-			<span class="ssesionLine"><a href="#" onClick="<%=methods.manager.caller()%>"><%=mw3.localize("$Manager")%></a></span>
+			if(value.employee.isAdmin){%>
+				 |	
+			<a href="#" onClick="<%=methods.manager.caller()%>"><%=mw3.localize("$Manager")%></a>
 <%
 			}
 %>
-			<span class="ssesionLine"> | </span>
-			<span class="ssesionLine"><a onClick="<%=methods.logout.caller() %>" style="cursor:pointer;"><%=mw3.localize("$Logout")%></a></span>
+				 |	
+			<span style="display:inline-block; line-height:37px;"><a onClick="<%=methods.logout.caller() %>" style="cursor:pointer;"><%=mw3.localize("$Logout")%></a></span>
 		</div>
 <%
 		}
