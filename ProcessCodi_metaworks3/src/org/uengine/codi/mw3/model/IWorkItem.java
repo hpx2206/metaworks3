@@ -46,7 +46,7 @@ public interface IWorkItem extends IDAO{
 		public final static String WORKITEM_TYPE_MEMO		 = "memo";
 				
 		
-		public final static int TITLE_LIMIT_SIZE             = 40;
+		public final static int TITLE_LIMIT_SIZE             = 200;
 		
 		@Id
 		//@GeneratedValue(strategy=GenerationType.TABLE, generator="SEQ_BPM")
