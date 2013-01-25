@@ -1,0 +1,27 @@
+<%if(mw3.when == "new" || mw3.when == "edit") { %>
+<%
+	if(value){
+		for(var i in value.optionValues){
+%>
+		<% if(value.selected == value.optionValues[i] || (value.selected == '' && i == 0)) { %>
+		<table border="0" cellspacing="0" cellpadding="0" style="float:left"><tr><td><input type="radio" name="radio_name_<%=objectId%>" id="radio_<%=objectId%>" value="<%=value.optionValues[i]%>" valueText="<%=value.optionNames[i]%>" checked /></td><td><label class="innerLabel"><%=value.optionNames[i]%></label><span class="space20">&nbsp;</span></td></tr></table>
+		<%} else { %>
+		<table border="0" cellspacing="0" cellpadding="0" style="float:left"><tr><td><input type="radio" name="radio_name_<%=objectId%>" id="radio_<%=objectId%>" value="<%=value.optionValues[i]%>" valueText="<%=value.optionNames[i]%>" /></td><td><label class="innerLabel"><%=value.optionNames[i]%></label><span class="space20">&nbsp;</span></td></tr></table>
+		<%} %>
+<%
+		}
+	}
+%>
+</select>
+<%} else {
+	if(value){
+		for(var i in value.optionValues){
+			if(value.selected == value.optionValues[i]) {
+%>
+<%=value.optionNames[i]%>
+<%
+			}
+		}
+	}
+ }
+%>

@@ -1,0 +1,48 @@
+<%
+	if(value){
+%>	
+		<div class="pane ui-layout-north">
+			<div class="boxmiddleright">
+				<div class="boxmiddleleft">
+		        	                 	 
+		            <div id="contactsearchbox">
+						<%=fields.resourceSearchBox.here()%>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+
+		<div class="pane ui-layout-center">
+			<div class="ui-layout-content">
+				
+				<div id="navigator">
+					<div class="depth2">
+						<ul class="fist_menu">			
+							<li>				
+								<%=fields.resourceFile.here()%>
+							<li>
+						</ul>		
+					</div>
+					<div class="depth2">
+						<ul class="fist_menu">			
+							<li>				
+								<%=fields.webResourceFile.here()%>
+							<li>
+						</ul>		
+					</div>
+					<div class="depth2">
+						<ul class="fist_menu">			
+							<li>				
+								<%=fields.libraryFile.here()%>
+							<li>
+						</ul>		
+					</div>
+				</div>
+				
+			</div>
+		</div>
+
+<%
+	}
+%>	

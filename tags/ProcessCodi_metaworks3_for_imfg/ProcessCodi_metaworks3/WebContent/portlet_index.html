@@ -1,0 +1,70 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="http://ogp.me/ns/fb#" xml:lang="en" lang="en">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		
+		<script type="text/javascript" src="scripts/jquery/jquery-1.7.2.min.js"></script>
+		
+		<script>
+			portletAction = function(){
+				var perspective = $('#perspective').val();
+				var topicName = $('#topic input[type=text]').val();
+				
+				var portlet = document.getElementById('portlet');
+				
+				portlet.contentWindow.portlet(perspective, topicName);
+			};
+			
+			$(document).ready(function() {
+				$('#perspective').change(function(event){
+					if('Topic' == this.value){
+						$('#topic input[type=text]').val('기본');
+						
+						$('#topic').show();
+					}else{
+						$('#topic').hide();
+					}
+					
+					portletAction();
+				});				
+			});
+		</script>
+	</head>
+	
+	<body>
+		<table>
+			<tr><td>
+				<div>
+					<div style="float:left">
+						<select id="perspective">
+							<option value="Newspeed">뉴스피드</option>
+							<option value="Todo">내가 할일</option>
+							<option value="Topic">프로젝트ID</option>
+						</select>
+					</div>
+					
+					<div style="float:left;">
+						&nbsp;
+					</div>
+					
+					<div id="topic" style="float:left; display:none">
+						주제명 : 
+						<input type="text" />
+						<input type="button" value="변경" onClick="portletAction()" />
+						
+						<div style="clear:both" />
+					</div>
+					
+					<div style="clear:both" />				
+				</div>
+			</td></tr>
+			<tr><td>
+				<iframe id="portlet" src="portlet_instanceList.html" style="width: 500px; height: 500px; border-width:1px; border-color:red; border-style:solid;"></iframe>
+			</td></tr>			
+		</table>
+		
+		
+		
+	</body>
+</html>

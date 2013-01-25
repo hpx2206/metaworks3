@@ -1,0 +1,16 @@
+<%
+	if(value){
+%>	
+		<div class="depth1" onClick="<%=methods.select.caller() %>"><span><%=mw3.localize("$OrganizationChart")%></span></div>
+<%
+		if(value.selected){
+%>
+	<div class="depth2">		
+		<%=fields.deptList.here()%>
+		<div class="fist_menu"><a id="wBtn" href="#" onClick="<%=methods.addDept.caller()%>"><span>새로운 부서</span></a><div class="clear"></div></div>
+		<div class="fist_menu"><%=fields.deptEmployee.here()%></div>
+	</div>	
+<%
+		}
+	}
+%>

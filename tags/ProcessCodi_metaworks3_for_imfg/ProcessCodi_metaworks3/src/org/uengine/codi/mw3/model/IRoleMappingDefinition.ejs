@@ -1,0 +1,7 @@
+
+<div class="view_box3" style="background:<%=value.mappedUser.userId ? "#7AD1FF":"#E8E8E8"%>;height:80px;">
+<center>
+<b><%=value.roleName%></b>
+<%=value.mappedUser.userId ? "" : "<font color=gray size=-3><br>(" + mw3.localize("$NotSet") + ")<br><br></font>"%>
+<%=fields.mappedUser.here()%>
+</div>

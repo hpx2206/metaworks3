@@ -1,0 +1,18 @@
+<div id="" style="float:left; margin-left:20px; margin-right:20px; padding-top:17px; position:relative;">	
+	<a class="haveTodo" href="#" onClick="<%=methods.showList.caller()%>">
+<% 
+	if(value.newItemCount>0){
+%>
+		<div class="showTodoCount" id="" style="position:absolute; top:16px; right:-17px;">
+			<img src="images/waveStyle/nav_my_to_do.png" height=18>
+			<a class="badgeRed" href="#" onClick="<%=methods.showList.caller()%>"><span><%=value.newItemCount%></span></a>
+		</div>
+<% 
+	}else{
+%>
+		<img src="images/waveStyle/nav_my_to_do.png" height=18>
+<%
+	}
+%>
+	</a>	
+</div>
