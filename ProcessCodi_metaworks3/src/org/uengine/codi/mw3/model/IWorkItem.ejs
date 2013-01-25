@@ -114,7 +114,7 @@
 											(ver <%=value.majorVer%>.<%=value.minorVer%>)
 											<%}%>
 									</span>					
-									<%if(value.type=='file' && value.ext3 == 'true'){%>			
+									<%if(value.type=='file' && value.file.mimeType.indexOf("image") != 0 ){%>			
 									<span>
 										<a href="#" onClick="<%=methods.workItemPopup.caller()%>"><img src="images/waveStyle/newWindow.png" style="margin-top:2px;" title="Open new window"></a>
 									</span>	

@@ -463,12 +463,10 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	
 	public ModalWindow workItemPopup() throws Exception{
 		
-
-		
 		Object result = null;
 		
 		if("file".equals(this.getType())){
-			String path = "images/pdf/" +this.getGrpTaskId() + "_" + String.valueOf(this.getMajorVer()) + "_" + String.valueOf(this.getMinorVer()) + ".pdf";
+			String path = "images/pdf/" +this.getTaskId() + ".pdf";
 			IFrame iframe = new IFrame(path);
 			iframe.setWidth("100%");
 			iframe.setHeight("98%");
