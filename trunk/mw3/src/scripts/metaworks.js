@@ -1938,7 +1938,9 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			};
 			
 			Metaworks3.prototype.__showResult = function(object, result, objId, svcNameAndMethodName, serviceMethodContext, placeholder, divId, callback ){
-    			
+    							
+				mw3.log('__showResult : ' + svcNameAndMethodName + ' ---> ' + new Date());
+								
     			mw3.requestMetadataBatch(result);
     			
     			// 2012-03-19 cjw 기존 소스가 ejs.js 생성자 호출 보다 늦게 method 값을 할당하여 맨위로 올림
@@ -2140,6 +2142,8 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					objId = this.targetObjectId;
 				}
 				
+				mw3.log('________call : ' + svcNameAndMethodName + ' ---> ' + new Date());
+				
 				// 2012-04-14 cjw 재귀호출 막음
 				// 2012-04-18 이전 수정 버전 문제로 재수정 (undefined 일때 true 가 되여야함)
 				var getAgain = (arguments.length > 2 ? (typeof arguments[2] != 'undefined' ? arguments[2] : true) : true);				
@@ -2265,6 +2269,16 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					
 					if(objectMetadata && objectMetadata.autowiredFields){
 						for(var fieldName in objectMetadata.autowiredFields){
+							// var autowiredField = objectMetadata.autowiredFields[fieldName];
+							// var autowiredClassName = autowiredField.field;
+							// var autowiredSelect = autowiredField.selecct;
+							// if(autowiredSelect != null && autowiredSelect.length > 0){
+							//     for(var i=0; i<this.objectId_KeyMapping.length; i++){
+							//         if(this.objectId_KeyMapping[i] && this.objectId_KeyMapping[i].__className){
+							//         }
+							//     }
+							// }
+							
 							var autowiredClassName =  objectMetadata.autowiredFields[fieldName];
 							autowiredObjects[fieldName] = this.getAutowiredObject(autowiredClassName);
 						}
@@ -3400,29 +3414,33 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			mw3.windowFocus = true;
 			mw3.windowActiveElement;
 
-			mw3.windowActiveElement = document.activeElement;
-			
-			if(mw3.browser.indexOf('MSIE') > -1){
-				$(document).focusin(function(event){
-					mw3.windowFocus = true;
-				}).focusout(function(event){
-					if (mw3.windowActiveElement != document.activeElement) {
-						mw3.windowActiveElement = document.activeElement;
-						return;
-					}
-					mw3.windowFocus = false;
-				});
-			}else{
-				$(window).focus(function(event){
-					mw3.windowFocus = true;
-				}).blur(function(event){
-					if (mw3.windowActiveElement != document.activeElement) {
-						mw3.windowActiveElement = document.activeElement;
-						return;
-					}
-					mw3.windowFocus = false;
-				});				
+			try{
+				mw3.windowActiveElement = document.activeElement;
+				
+				if(mw3.browser.indexOf('MSIE') > -1){
+					$(document).focusin(function(event){
+						mw3.windowFocus = true;
+					}).focusout(function(event){
+						if (mw3.windowActiveElement != document.activeElement) {
+							mw3.windowActiveElement = document.activeElement;
+							return;
+						}
+						mw3.windowFocus = false;
+					});
+				}else{
+					$(window).focus(function(event){
+						mw3.windowFocus = true;
+					}).blur(function(event){
+						if (mw3.windowActiveElement != document.activeElement) {
+							mw3.windowActiveElement = document.activeElement;
+							return;
+						}
+						mw3.windowFocus = false;
+					});				
+				}
+			}catch(e){				
 			}
+
 			
 			
 			
@@ -3547,8 +3565,9 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				this.methodContext = methodContext;
 			};
 
-			MethodRef.prototype.caller = function(){
-				return (this.methodContext.needToConfirm ? 'if (confirm(\'Are you sure to ' + this.methodContext.displayName + ' this?\'))':'')  + 'mw3.getObject(' + this.objectId + ').' + this.methodContext.methodName + '()';
+			MethodRef.prototype.caller = function(){				
+				
+				return 'window.event.stopPropagation();'+(this.methodContext.needToConfirm ? 'if (confirm(\'Are you sure to ' + this.methodContext.displayName + ' this?\'))':'')  + 'mw3.getObject(' + this.objectId + ').' + this.methodContext.methodName + '()';
 			};
 			
 			MethodRef.prototype.here = function(){
