@@ -1,25 +1,29 @@
 var org_uengine_codi_mw3_model_InstanceView = function(objectId, className){
 	this.objectId = objectId;
-	this.className = className;	
-	this.divId = "#objDiv_" + objectId;
+	this.className = className;
+	this.objectDivId = mw3._getObjectDivId(this.objectId);
+	this.objectDiv = $('#' + this.objectDivId);
+	
+	this.object = mw3.objects[this.objectId];
+
+	if(this.object == null)
+		return true;
+	
+	this.objectDiv
+		.css({
+			position: 'relative',
+			height:   '100%'
+		});
+	
+	// window 의 title 설정
+	this.windowObjectId = this.objectDiv.closest('.mw3_window').attr('objectId');
 	
 	var object = mw3.objects[this.objectId];
-	if(object){
-		$(this.divId).addClass('mw3_layout').attr('objectId', this.objectId);
-
-		var faceHelper = this;
-		this.windowObjId = $(this.divId).closest('.mw3_window').attr('objectId');
-		
-		if(typeof this.windowObjId == 'undefined'){
-			faceHelper.load();					
-		}else{
-			var windowFaceHelper = mw3.getFaceHelper(this.windowObjId);
-			
-			if(windowFaceHelper && windowFaceHelper.layoutDiv && windowFaceHelper.layoutDiv.css('display') != 'none')
-				faceHelper.load();					
+	if(object && object.title){
+		if(this.windowObjectId){
+			mw3.getFaceHelper(this.windowObjectId).setTitle(mw3.localize(object.title));
 		}
 	}
- 	
 	
 	
 //		var posting = [];
@@ -70,42 +74,18 @@ var org_uengine_codi_mw3_model_InstanceView = function(objectId, className){
 //		}
 //	}
 
-}
+};
 
 org_uengine_codi_mw3_model_InstanceView.prototype = {
-	load : function(){
-		var object = mw3.objects[this.objectId];
-		var options = {
-				togglerLength_open:	0, 
-				spacing_open:		0, 
-				spacing_closed:		0,
-				center__onresize:	'mw3.getFaceHelper('+this.objectId+').resizeChild()'
-		}
-		
-		this.layout = $(this.divId).layout(options);
-	},
-	destroy : function(){
-		if(this.layout)
-			$(this.divId).layout().destroy();
-	},
-	resize : function(){
-		var windowFaceHelper = mw3.getFaceHelper(this.windowObjId);
-
-		if(windowFaceHelper && windowFaceHelper.layoutDiv && windowFaceHelper.layoutDiv.css('display') != 'none' && typeof windowFaceHelper.layout != 'undefined' && typeof this.layout == 'undefined')
-			this.load();		
-		
-		if(this.layout){
-			this.layout.resizeAll();
+		startLoading : function(){
+			if(this.windowObjectId && mw3.getFaceHelper(this.windowObjectId) && mw3.getFaceHelper(this.windowObjectId).startLoading)
+				mw3.getFaceHelper(this.windowObjectId).startLoading();
+		},
+		endLoading : function(){
+			if(this.windowObjectId && mw3.getFaceHelper(this.windowObjectId) && mw3.getFaceHelper(this.windowObjectId).endLoading)
+				mw3.getFaceHelper(this.windowObjectId).endLoading();
+		},
+		showStatus : function(message){
 			
-			this.resizeChild();
-		}
-	},
-	resizeChild : function(){
-		$(this.divId).find('.mw3_layout, .mw3_resize').each(function(index, value){
-			var layoutId = value.getAttribute('objectId');
-			
-			if(layoutId)
-				mw3.getFaceHelper(layoutId).resize();
-		});
-	}
-}
+		}		
+};

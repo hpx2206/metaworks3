@@ -7,17 +7,18 @@ org_uengine_codi_mw3_model_CrowdSourcer.prototype = {
 	posting : function(){
 		var object = mw3.objects[this.objectId];
 		
-		var url = window.location;
-		
-		var instanceUrl = url.origin + "/uengine-web/instanceView.html?instanceId=" + object.instanceId;		
+		var instanceUrl = 'http://apps.facebook.com/119159701538006/?fb_source=myapps&instanceId=' + object.instanceId;		
 		var message = object.message + "\n " + instanceUrl;
 		
 		var followers = object.followers.followers;
 		var facebookFriends = [];
 		
-		for ( var i=0; i < followers.length; i++) {			
-			//if(followers[i].network == 'fb')
+		for ( var i=0; i < followers.length; i++) {		
+			console.log(followers[i]);
+			
+			if(followers[i].network == 'fb')
 				facebookFriends.push(followers[i].userId);
+			
 /*			else{
 				
 				if(followers[i]['fbId']==null){

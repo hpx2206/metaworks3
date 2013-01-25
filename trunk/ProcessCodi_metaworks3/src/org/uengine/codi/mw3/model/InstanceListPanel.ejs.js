@@ -1,12 +1,24 @@
 var org_uengine_codi_mw3_model_InstanceListPanel = function(objectId, className) {
 	this.objectId = objectId;
 	this.className = className;
+	this.objectDivId = mw3._getObjectDivId(this.objectId);
+	this.objectDiv = $('#' + this.objectDivId);
+	
+	this.object = mw3.objects[this.objectId];
+
+	if(this.object == null)
+		return true;
+	
+	this.objectDiv
+		.css({
+			position: 'relative',
+			height:   '100%'
+		});
+	
 	this.divId = mw3._getObjectDivId(this.objectId);
 	
-	this.windowObjectId = $('#' + this.divId).closest('.mw3_window').attr('objectId');
-	
-	this.divElement = $('#' + this.divId); 	
-	this.divElement.attr('objectId', objectId);
+	// window 의 title 설정
+	this.windowObjectId = this.objectDiv.closest('.mw3_window').attr('objectId');
 	
 	var object = mw3.objects[this.objectId];
 	if(object && object.title){
@@ -15,12 +27,7 @@ var org_uengine_codi_mw3_model_InstanceListPanel = function(objectId, className)
 		}
 	}
 	
-	var faceHelper = this;	
-	faceHelper.load();	
-
-	
 	var browser = mw3.browserCheck();
-		
 	if(browser == "MSIE 7"){
 		$('.searchboxarea').css("margin-left","20");
 	}else{
@@ -28,10 +35,9 @@ var org_uengine_codi_mw3_model_InstanceListPanel = function(objectId, className)
 		$('.searchboxarea').css("margin-left",searchBarMagin);
 	}
 	
-	
 	if(object && object.preloaded){
-		
-		var scrollDiv = $('#objDiv_' + this.objectId + " .ui-layout-center .ui-layout-content")
+		/*
+		var scrollDiv = $('#objDiv_' + this.objectId + " .ui-layout-center .ui-layout-content");
 		
 		scrollDiv.scroll(function(e) {
 			if(scrollDiv.scrollTop() == scrollDiv.find('div').eq(0).height() - scrollDiv.height() && lastMore){
@@ -40,7 +46,7 @@ var org_uengine_codi_mw3_model_InstanceListPanel = function(objectId, className)
 		});
 		
 		
-	 /*	$('#' + this.divId + ' .ui-layout-content').mCustomScrollbar({
+	 	$('#' + this.divId + ' .ui-layout-content').mCustomScrollbar({
 			callbacks:{
 				
 				onTotalScroll:function(){
@@ -57,43 +63,9 @@ var org_uengine_codi_mw3_model_InstanceListPanel = function(objectId, className)
 			mw3.call(objectId, 'load');	
 		}, 1);
 	}
-	
 };
 
 org_uengine_codi_mw3_model_InstanceListPanel.prototype = {
-	load : function(){
-		var object = mw3.objects[this.objectId];
-		var options = {
-				togglerLength_open:	0, 
-				spacing_open:		0, 
-				spacing_closed:		0,
-				center__onresize:	'mw3.getFaceHelper('+this.objectId+').resizeChild()'
-		};
-
-		this.layout = this.divElement.layout(options);
-	},
-	destroy : function(){
-		if(this.layout)
-			this.layout.destroy();
-	},
-	resize : function(){
-		if(this.layout){
-			//console.debug('visible : ' + $(this.divId).visible);
-			
-			this.layout.resizeAll();
-			
-			this.resizeChild();
-		}
-	},
-	resizeChild : function(){
-		
-		this.divElement.find('.mw3_layout, .mw3_resize').each(function(index, value){
-			var layoutId = value.getAttribute('objectId');
-			
-			if(layoutId)
-				mw3.getFaceHelper(layoutId).resize();
-		});
-	},
 	startLoading : function(){
 		if(this.windowObjectId && mw3.getFaceHelper(this.windowObjectId) && mw3.getFaceHelper(this.windowObjectId).startLoading)
 			mw3.getFaceHelper(this.windowObjectId).startLoading();
@@ -105,5 +77,4 @@ org_uengine_codi_mw3_model_InstanceListPanel.prototype = {
 	showStatus : function(message){
 		
 	}	
-		
 };
