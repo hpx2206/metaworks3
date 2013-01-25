@@ -254,7 +254,7 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.press = function(){
 
     	var recommendDivId = "#commandRecommendDiv_" + this.objectId;
     	var processDivId 		= "commandProcessDiv_" + this.objectId;
-    	var followerDivId 	= "commandFollowerDiv_" + this.objectId;
+    	var followerDivId 	= "#commandFollowerDiv_" + this.objectId;
     	var dateDivId 			= "commandDateDiv_" + this.objectId;    	    	
     	var recommendFirst = true;
     	
@@ -384,7 +384,7 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.press = function(){
 				var contact = contactList.contacts[i];
 				
 				if(contact.friend && contact.friend.userId && contact.friend.name && text.indexOf(contact.friend.name) > -1 && !this.userAddCommands[contact.friend.userId] && !exisingFollowers[contact.friend.userId]){
-    				$(recommendDivId).append("" + mw3.localize('$AddUserAsFollower') + ": \"<b>" + contact.friend.name + "</b>\"<br>");
+    				$(followerDivId).append("" + mw3.localize('$AddUserAsFollower') + ": \"<b>" + contact.friend.name + "</b>\"<br>");
     				this.userAddCommands[contact.friend.userId] = contact.friend.userId;
 				}
 			}
