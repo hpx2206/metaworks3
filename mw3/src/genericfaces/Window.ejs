@@ -81,6 +81,7 @@
 	    </div>
 	    
 	    
+		<div class="pane ui-layout-north">
 <%
 		if(mw3.how != null && mw3.how == 'ide'){
 %>
@@ -105,6 +106,8 @@
 				    		<%}%>
 		    			</div>
 		    		</span>
+		    		</div>            		
+
 <%
 			if(mw3.how != null && mw3.how == 'ide'){
 %>
@@ -115,10 +118,7 @@
 					<div id="loader_<%=objectId%>" class="loadingarea" style="display: none; "><img src="/uengine-web/images/waveStyle/ajax-loader.gif" border="0"></div>
 <%		
 			}
-%>	
-		    		</div>            		
-
-	
+%>		
 <%
 			if(maximize){
 %>	
@@ -144,11 +144,14 @@
 %>            		
             	</span>
             </div>		    		
+		</div>		
 		
-			<div class="boxmiddleright">
-	            <div class="boxmiddleleft">
+		<div class="pane ui-layout-west" style="background:url('images/waveStyle/c01.png') right repeat-y;">
+		</div>
 		
-					    <div class="contentcontainer">
+		<div class="pane ui-layout-center">
+			<div class="ui-layout-content" style="background:#fff;">
+			    <div class="contentcontainer">
 <%							
 					
 		for (var i=0; i<objectMetadata.fieldDescriptors.length; i++){						  
@@ -181,11 +184,16 @@
 			}
 		}
 %>
-						</div>
 				</div>
-	            
-	        </div>
+			</div>
+		</div>
+		
+		<div class="pane ui-layout-east" style="background:url('images/waveStyle/c02.png') left repeat-y;">
+		</div>
+		
+		<div class="pane ui-layout-south">
 			<div class="boxbottomleft"><span class="boxbottomright"></span></div>
+		</div>
 <%
      }
  %>

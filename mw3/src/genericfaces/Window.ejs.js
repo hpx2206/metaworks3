@@ -16,11 +16,31 @@ var Window = function(objectId, className){
 		
 	$('.mw3_window_last').removeClass('mw3_window_last');	
 	
-	this.divObj.addClass('mw3_window').addClass('mw3_layout').addClass('mw3_window_last').attr('objectId', objectId).css("padding-bottom","35px");
+	this.divObj.addClass('mw3_window').addClass('mw3_layout').addClass('mw3_window_last').attr('objectId', objectId);
+	
+	if(layout.css('display') != 'none'){
+		var faceHelper = this;
+		faceHelper.load();		
+	}
 }
 
 Window.prototype.setTitle = function(title){
 	$(this.divId + " .mw3_window_title span").html(title);
+}
+
+Window.prototype.load = function(){
+	
+	var object = mw3.objects[this.objectId];
+	var options = {
+			togglerLength_open:	0, 
+			spacing_open:		0, 
+			spacing_closed:		0,
+			west__size: 3,
+			east__size: 7,
+			center__onresize:	'mw3.getFaceHelper('+this.objectId+').resizeChild()'
+	}
+
+	this.layout = this.divObj.layout(options);
 }
 
 Window.prototype.loaded = function(){
@@ -37,6 +57,25 @@ Window.prototype.destroy = function(){
 	this.divObj.unbind('keyup');
 			
 	$('.mw3_windowpanel').find(this.smallDivId).remove();
+}
+
+Window.prototype.resize = function(){
+	
+	if(this.layout){
+		this.layout.resizeAll();
+		
+		this.resizeChild();
+	}
+}
+
+Window.prototype.resizeChild = function(){
+	
+	$(this.divId).find('.mw3_layout, .mw3_resize').each(function(index, value){
+		var layoutId = value.getAttribute('objectId');
+		
+		if(layoutId)
+			mw3.getFaceHelper(layoutId).resize();
+	});
 }
 
 Window.prototype.maximize = function(){

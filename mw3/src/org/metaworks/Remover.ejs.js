@@ -1,14 +1,11 @@
 var org_metaworks_Remover = function(objectId, className){
-	var object = mw3.objects[objectId];	
+	var object = mw3.objects[objectId];
 	
-	var objKeys = [];
-	if(object.match)
-		objKeys.push(mw3._createObjectKey(object.target));
-	else
-		objKeys = mw3._createObjectKey(object.target, true);
-	
+	var objKeys = mw3._createObjectKey(object.target, true);
+		
 	if(objKeys && objKeys.length){
-		for(var i=0; i<objKeys.length; i++){			
+					        				
+		for(var i=0; i<objKeys.length; i++){
 			mappedObjId = mw3.objectId_KeyMapping[objKeys[i]];
 
 			if(mappedObjId){

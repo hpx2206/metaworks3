@@ -20,5 +20,4 @@ import java.lang.annotation.Target;
 public @interface AutowiredFromClient {
 	boolean onDrop() default false;
 	String instruction() default "";
-	String select() default "";
 }

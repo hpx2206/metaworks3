@@ -327,8 +327,7 @@ public class WebObjectType{
 						autowiredFields = new HashMap<String, String>();
 					
 					autowiredFields.put(fields[i].getName(), fields[i].getType().getName());
-					//autowiredFields.put(fields[i].getName(), "{field: '" + fields[i].getType().getName() + "', select: '" + autowiredFromClient.select() + "'}");
-					
+
 				}
 			}
 		}
@@ -391,13 +390,6 @@ public class WebObjectType{
 					
 				}else
 					fd.setAttribute("hidden", hidden.on());
-				
-				Map medias = new HashMap();
-				for(String media : hidden.media()){
-					medias.put(media, media);
-				}
-				
-				fd.setAttribute("hidden.media", medias);
 			}
 
 			if(getAnnotationDeeply(tryingClasses, fd.getName(), AutowiredToClient.class)!=null)
@@ -466,13 +458,6 @@ public class WebObjectType{
 					
 					fd.setAttribute("available.how", hows);
 				}
-				
-				Map medias = new HashMap();
-				for(String media : available.media()){
-					medias.put(media, media);
-				}
-				
-				fd.setAttribute("available.media", medias);
 			}
 
 			

@@ -8,7 +8,7 @@
   </appender> 
 
   <appender name="dwrLogFile" class="org.apache.log4j.FileAppender">
-     <param name="File" value="C:/Program Files/Apache Software Foundation/Tomcat 6.0/webapps/dwr/log/dwrAccess.log"/>
+     <param name="File" value="/java/was/codi-metaworks-was/webapps/dwr/log/dwrAccess.log"/>
      <param name="Append" value="true"/>
      <param name="Threshold" value="DEBUG"/>
      <layout class="org.apache.log4j.PatternLayout">
@@ -17,7 +17,7 @@
   </appender>
   
   <appender name="otherFile" class="org.apache.log4j.FileAppender">
-     <param name="File" value="C:/Program Files/Apache Software Foundation/Tomcat 6.0/webapps/dwr/log/other.log"/>
+     <param name="File" value="/java/was/codi-metaworks-was/webapps/dwr/log/other.log"/>
      <param name="Append" value="true"/>
      <param name="Threshold" value="DEBUG"/>
      <layout class="org.apache.log4j.PatternLayout">

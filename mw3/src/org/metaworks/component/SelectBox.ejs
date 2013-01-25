@@ -9,10 +9,9 @@
 	<%=mw3.localize(value.selectedText)%>
 <%	
 		} else if(mw3.when == "new" || mw3.when == "edit") {
-			var selectBoxName = value.id + "_" + objectId ; 
 %>
 
-	<select id="<%=mw3.createInputId(objectId)%>" size="<%=value.selectSize%>" style="<%=value.selectStyle%>" name="<%=selectBoxName%>">
+	<select id="<%=mw3.createInputId(objectId)%>" size="<%=value.selectSize%>" style="<%=value.selectStyle%>">
 <%	
 			for(var i in value.optionValues){
 				if(value.selected == value.optionValues[i]) {
