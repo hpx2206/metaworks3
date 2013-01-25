@@ -411,7 +411,8 @@ public class User extends Database<IUser> implements IUser {
 	
 //	@ServiceMethod(target="popup", payload={"userId", "network"})
 	public Popup info() throws Exception{
-		Popup infoWindow = new Popup();	
+		Popup infoWindow = new Popup(600, 300);
+		
 		Employee me = new Employee();
 		me.setEmpCode(getUserId());
 		
