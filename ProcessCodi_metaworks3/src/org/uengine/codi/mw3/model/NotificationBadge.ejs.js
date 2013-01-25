@@ -28,7 +28,7 @@ org_uengine_codi_mw3_model_NotificationBadge.prototype.prototype = {
 		else
 			mw3.endLoading(this.objectId);
 	},
-	status : function(message){
+	showStatus : function(message){
 		
 	}
 };
