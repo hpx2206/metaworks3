@@ -5,12 +5,12 @@ var org_uengine_codi_mw3_model_IWorkItem_array = function(objectId, className){
 	this.objectDiv = $('#' + this.objectDivId);
 	this.object = mw3.objects[this.objectId];
 	
-	this.objectDiv.bind('loadedItem', {objectId : this.objectId}, function(event, taskId, itemObjectId){
+/*	this.objectDiv.bind('loadedItem', {objectId : this.objectId}, function(event, taskId, itemObjectId){
 		var itemObject = mw3.objects[itemObjectId];
 		
 		if('ovryCmnt' != itemObject.type)
 				mw3.getFaceHelper(objectId).appendOverlayComment(taskId, itemObjectId);
-	});
+	});*/
 };
 
 org_uengine_codi_mw3_model_IWorkItem_array.prototype = {

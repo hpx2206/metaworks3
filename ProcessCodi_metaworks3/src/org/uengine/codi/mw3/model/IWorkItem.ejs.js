@@ -39,6 +39,7 @@ var org_uengine_codi_mw3_model_IWorkItem = function(objectId, className){
 
 org_uengine_codi_mw3_model_IWorkItem.prototype = {
 	loaded : function(){
+		/*
 		var parentList = this.objectDiv.parent('.workitem_list');
 		
 		if(parentList.length == 0)
@@ -47,6 +48,7 @@ org_uengine_codi_mw3_model_IWorkItem.prototype = {
 		parentList = parentList.parent();
 		
 		parentList.triggerHandler('loadedItem', [this.object.taskId, this.objectId]);
+		*/
 	},
 	openFormApprovalHandler : function(){
 		var object = mw3.getObject(this.objectId);
@@ -56,7 +58,7 @@ org_uengine_codi_mw3_model_IWorkItem.prototype = {
 		
 		window.open(url);
 	}
-	
+	/*
 	,toAppend : function(value){
 		if(window.console){
 			var loginUserId = mw3.fn.getLoginUserId();
@@ -72,5 +74,6 @@ org_uengine_codi_mw3_model_IWorkItem.prototype = {
 		appendDiv.append(html);
 		
 	}
+	*/
 };
 

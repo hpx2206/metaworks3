@@ -16,9 +16,9 @@ var org_uengine_codi_mw3_model_IInstance = function(objectId, className){
 	 });
 	
 	$('#' + this.divId).hover(function(){				
-			$('#objDiv_' + objectId + ' .instanceBtn').show(200);
+			$('#objDiv_' + objectId + ' .instanceBtn').show();
 		},function(){	
-			$('#objDiv_' + objectId + ' .instanceBtn').hide(200);
+			$('#objDiv_' + objectId + ' .instanceBtn').hide();
 	});
 
 	var object = mw3.objects[this.objectId];
