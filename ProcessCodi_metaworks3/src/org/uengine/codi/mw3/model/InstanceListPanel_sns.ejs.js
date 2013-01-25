@@ -24,7 +24,7 @@ var org_uengine_codi_mw3_model_InstanceListPanel_sns = function(objectId, classN
 		}
 	}
 	
-	if(object && object.preloaded){
+	if(this.object && this.object.preloaded){
 /*		var scrollDiv = $('#objDiv_' + this.objectId + " .ui-layout-center .ui-layout-content");
 		
 		scrollDiv.scroll(function(e) {
