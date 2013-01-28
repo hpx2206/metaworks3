@@ -2269,18 +2269,29 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					
 					if(objectMetadata && objectMetadata.autowiredFields){
 						for(var fieldName in objectMetadata.autowiredFields){
-							// var autowiredField = objectMetadata.autowiredFields[fieldName];
-							// var autowiredClassName = autowiredField.field;
-							// var autowiredSelect = autowiredField.selecct;
-							// if(autowiredSelect != null && autowiredSelect.length > 0){
-							//     for(var i=0; i<this.objectId_KeyMapping.length; i++){
-							//         if(this.objectId_KeyMapping[i] && this.objectId_KeyMapping[i].__className){
-							//         }
-							//     }
-							// }
+							var autowiredField = objectMetadata.autowiredFields[fieldName];
+
+							var autowiredClassName = autowiredField.field;
+							var autowiredSelect = autowiredField.select;
 							
-							var autowiredClassName =  objectMetadata.autowiredFields[fieldName];
-							autowiredObjects[fieldName] = this.getAutowiredObject(autowiredClassName);
+							if(autowiredSelect != null && autowiredSelect.length > 0){
+							     for(var i in this.objects){
+							         if(this.objects[i] && this.objects[i].__className == autowiredClassName){
+							        	var isSelect = false;
+							        	
+					    				with(this.objects[i])
+					    					isSelect = eval(autowiredSelect);
+
+					    				if(isSelect){
+					    					autowiredObjects[fieldName] = this.objects[i];
+					    					
+					    					break;
+					    				}
+							         }
+							     }
+							}else{
+								autowiredObjects[fieldName] = this.getAutowiredObject(autowiredClassName);	
+							}
 						}
 					}
 					
