@@ -7,8 +7,8 @@ import java.io.IOException;
 
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Hidden;
-import org.metaworks.dao.TransactionContext;
 import org.metaworks.website.MetaworksFile;
+import org.uengine.kernel.GlobalContext;
 
 public class PortraitImageFile extends MetaworksFile {
 
@@ -32,10 +32,17 @@ public class PortraitImageFile extends MetaworksFile {
 		if (getFileTransfer() == null && getFileTransfer().getFilename() != null && getFileTransfer().getFilename().length() > 0)
 			throw new Exception("No file attached");
 
-		String prefix = TransactionContext.getThreadLocalInstance()
+/*		String prefix = TransactionContext.getThreadLocalInstance()
 				.getRequest().getSession().getServletContext()
-				.getRealPath("/images/portrait/");
-		System.out.println(prefix);
+				.getRealPath("/../portrait/");
+*/
+		String IMAGE_ROOT = GlobalContext.getPropertyString(
+				"server.images.path",
+				"./uengine/images/"
+			);
+
+		String prefix = IMAGE_ROOT + "/portrait/";
+		System.out.println("prefix : " + prefix);
 		// prefix = "/Volumes/DATA/Projects/kipi/uengine/";
 
 		String portraitFileName = getEmpCode() + ".jpg";
