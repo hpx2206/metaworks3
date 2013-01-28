@@ -501,6 +501,16 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 				// ProcessValiable setting
 				defineTab.prcsValiablePanel.setPrcsValiables(prcsValiable);
 			}
+			ArrayList<Transition> tsList = def.getTransitions();
+			if( tsList != null && tsList.size()>0){
+				for(int i =0 ; i < tsList.size(); i++){
+					Transition ts = tsList.get(i);
+					if( ts.getCondition() != null ){
+						Condition cond = ts.getCondition();
+						// 트렌지션에 ID를 하나 추가
+					}
+				}
+			}
 //		} catch (FileNotFoundException e1) {
 //			e1.printStackTrace();
 //		} catch (Exception e) {

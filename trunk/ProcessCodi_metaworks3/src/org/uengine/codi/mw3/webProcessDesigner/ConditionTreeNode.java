@@ -180,9 +180,15 @@ public class ConditionTreeNode  implements ContextAware{
 			String val1 = this.getConditionNode().getValiableChoice().getSelected();
 			String val2 = this.getConditionNode().getSignChoice().getSelected();
 			String val3 = this.getConditionNode().getExpressionChoice().getSelected();
-			if( val3 != null && ( val3.equals("text") || val3.equals("number")) ){
-				val3 = this.getConditionNode().getExpressionText();
-			}else if( val3 != null && val3.equals("date") ){
+			
+			ConditionInput expVal = this.getConditionNode().getConditionInput();
+			if( val3 != null && ( val3.equalsIgnoreCase("text") || val3.equalsIgnoreCase("number")) ){
+				val3 = expVal.getExpressionText();
+			}else if( val3 != null && val3.equalsIgnoreCase("Yes or No") ){
+				val3 = expVal.getYesNo();
+			}else if( val3 != null && val3.equalsIgnoreCase("date") ){
+				val3 = expVal.getExpressionDate().toString();
+			}else if( val3 != null && val3.equalsIgnoreCase("File") ){
 				// TODO
 			}
 			nodeName = val1 + " " +val2 + " " + val3; 

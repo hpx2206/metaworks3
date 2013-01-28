@@ -1,6 +1,7 @@
 package org.uengine.codi.mw3.webProcessDesigner;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import org.metaworks.ContextAware;
 import org.metaworks.FieldDescriptor;
@@ -54,13 +55,14 @@ public class ConditionNode  implements Cloneable, ContextAware{
 		public void setOperandChoice(SelectBox operandChoice) {
 			this.operandChoice = operandChoice;
 		}
-	String expressionText;
-		public String getExpressionText() {
-			return expressionText;
+	ConditionInput conditionInput;
+		public ConditionInput getConditionInput() {
+			return conditionInput;
 		}
-		public void setExpressionText(String expressionText) {
-			this.expressionText = expressionText;
+		public void setConditionInput(ConditionInput conditionInput) {
+			this.conditionInput = conditionInput;
 		}
+
 	public ArrayList<Role>	 roleList;
 		public ArrayList<Role> getRoleList() {
 			return roleList;
@@ -82,6 +84,8 @@ public class ConditionNode  implements Cloneable, ContextAware{
 	}
 	public void makeValiableChoice() throws Exception{
 		SelectBox choice = new SelectBox();
+		choice.setId("makeKey");
+		choice.add("", "null");
 		if( this.getRoleList() != null){
 			for(int i = 0; i < roleList.size(); i++){
 				Role role = roleList.get(i);
@@ -112,6 +116,7 @@ public class ConditionNode  implements Cloneable, ContextAware{
 	}
 	public void makeSignChoice() throws Exception{
 		SelectBox choice = new SelectBox();
+		choice.setId("sign");
 		choice.add("==", "==");
 		choice.add("!=", "!=");
 		choice.add(">=", ">=");
@@ -124,6 +129,8 @@ public class ConditionNode  implements Cloneable, ContextAware{
 	}
 	public void makeExpressionChoice() throws Exception{
 		SelectBox choice = new SelectBox();
+		choice.setId("expression");
+		choice.add("", "null");
 		choice.add("Text", "text");
 		choice.add("Number", "number");
 		choice.add("Date", "date");
@@ -137,6 +144,7 @@ public class ConditionNode  implements Cloneable, ContextAware{
 	}
 	public void makeOperandChoice() throws Exception{
 		SelectBox choice = new SelectBox();
+		choice.setId("operand");
 		choice.add("And", "And");
 		choice.add("Or", "Or");
 		setOperandChoice(choice);
@@ -147,6 +155,9 @@ public class ConditionNode  implements Cloneable, ContextAware{
 		makeSignChoice();
 		makeExpressionChoice();
 		makeOperandChoice();
+
+		conditionInput = new ConditionInput();
+		conditionInput.init();
 	}
 	
 //	@ServiceMethod

@@ -263,77 +263,76 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.press = function(){
     	//////// assists about process initiation /////////    	
     	var processMapPanel = mw3.getAutowiredObject("org.uengine.codi.mw3.model.ProcessMapPanel");
     	
-    	if(processMapPanel == null || typeof processMapPanel == 'undefined')
-    		return true;
-    	
-    	var processMap = processMapPanel.processMapList;
-    	
-		if(text && text.length>0 && processMap){
-	    	for(var i=0; i<processMap.processMapList.length; i++){
-	    		var commandTrigger = processMap.processMapList[i].cmTrgr + ':';
-	    		var commandPhrase = processMap.processMapList[i].cmPhrase;
-	    		
-	    		var processName = processMap.processMapList[i].name;
-	    		if( processName == null || processName == "" ){
-	    			break;
-	    		}
-	    		
-	    		// 프로세스 명이 일부 같을시에 하단의 프로세스맵을 움직이게 가이드
-	    		if(processName.indexOf(text)==0){
-	    			var theAppDiv = "#objDiv_" + processMap.processMapList[i].__objectId;
-	
-	    			if(!theAppDiv['__inEffect']){
-		    			theAppDiv['__inEffect'] = true;
-		    			$(theAppDiv).effect("bounce", {times: 3}, 300);
-	    			}	
-	    		}
-	    		
-	    		// 프로세스명 보다 트리거명이 우선 작용
-	    		if(commandTrigger.length > 1 && commandTrigger.indexOf(text)==0){	    			
-	    			// 트리거 명과 완전희 같으면
-	    			if(commandTrigger == text){
-	        			this.showCommandForm(processMap.processMapList[i]);
-		    			
-		    			break;	    				
-	    			}else{
-	        			if(recommendFirst){
-	        				var innerHtmlStr = 	"<div>";
-		  		        	  innerHtmlStr		+=	" " + mw3.localize('$RecommendedCommand') + ": \"<b>" ;
-		  		        	  innerHtmlStr		+=	"<span id=\"trigerDivSpan\">" + commandTrigger + "</span>" ;
-		  		        	  innerHtmlStr		+=	"</b>\"";
-		  		        	  innerHtmlStr		+=	"</div>";
-		  		        	  
-		  		        	  $(recommendDivId).append(innerHtmlStr);
-		  		        	  recommendFirst = false;
-	        			}else{
-	        				$("#trigerDivSpan").append(", \"<b>" + commandTrigger + "</b>\"");
-	        			}
-	    			}
-	    			
-	    		}else{
-		    		// 프로세스명을 정확히 입력시 프로세스 추천 목록이 보임
-		    		if(processName == text){
-		    			if(this.processFirst){
-			    			var innerHtmlStr = 	"<div id=\"" + processDivId + "\" >";
-				        	  innerHtmlStr		+=	" " + mw3.localize('$AddWithProcess') + ": \"<b>" ;
-				        	  innerHtmlStr		+=	"<span id=\"processDivSpan\">" + processName + "</span>" ;
-				        	  innerHtmlStr		+=	"</b>\"";
-				        	  innerHtmlStr		+=	" | <a href=\"#\" onClick=\"mw3.getFaceHelper('"+this.objectId+"').removeDiv('"+processDivId+"')\" style=\"cursor:pointer;\">싫어요</a> ";
-				        	  innerHtmlStr		+=	"<br>";
-				        	  innerHtmlStr		+=	"</div>";
-				        	  
-				        	  this.commandActivityAppAlias = processMap.processMapList[i].defId;
-				        	  
-				        	  $(recommendDivId).append(innerHtmlStr);
-				        	  this.processFirst = false;
-		    			}else{
-				        	  $("#processDivSpan").html(processName);
-				        	  this.commandActivityAppAlias = processMap.processMapList[i].defId;	    				
-		    			}	    				
-		    		}
-	    		}
-	    	}
-		}
+    	if(processMapPanel != null && typeof processMapPanel != 'undefined'){
+    		var processMap = processMapPanel.processMapList;
+    		
+    		if(text && text.length>0 && processMap){
+    			for(var i=0; i<processMap.processMapList.length; i++){
+    				var commandTrigger = processMap.processMapList[i].cmTrgr + ':';
+    				var commandPhrase = processMap.processMapList[i].cmPhrase;
+    				
+    				var processName = processMap.processMapList[i].name;
+    				if( processName == null || processName == "" ){
+    					break;
+    				}
+    				
+    				// 프로세스 명이 일부 같을시에 하단의 프로세스맵을 움직이게 가이드
+    				if(processName.indexOf(text)==0){
+    					var theAppDiv = "#objDiv_" + processMap.processMapList[i].__objectId;
+    					
+    					if(!theAppDiv['__inEffect']){
+    						theAppDiv['__inEffect'] = true;
+    						$(theAppDiv).effect("bounce", {times: 3}, 300);
+    					}	
+    				}
+    				
+    				// 프로세스명 보다 트리거명이 우선 작용
+    				if(commandTrigger.length > 1 && commandTrigger.indexOf(text)==0){	    			
+    					// 트리거 명과 완전희 같으면
+    					if(commandTrigger == text){
+    						this.showCommandForm(processMap.processMapList[i]);
+    						
+    						break;	    				
+    					}else{
+    						if(recommendFirst){
+    							var innerHtmlStr = 	"<div>";
+    							innerHtmlStr		+=	" " + mw3.localize('$RecommendedCommand') + ": \"<b>" ;
+    							innerHtmlStr		+=	"<span id=\"trigerDivSpan\">" + commandTrigger + "</span>" ;
+    							innerHtmlStr		+=	"</b>\"";
+    							innerHtmlStr		+=	"</div>";
+    							
+    							$(recommendDivId).append(innerHtmlStr);
+    							recommendFirst = false;
+    						}else{
+    							$("#trigerDivSpan").append(", \"<b>" + commandTrigger + "</b>\"");
+    						}
+    					}
+    					
+    				}else{
+    					// 프로세스명을 정확히 입력시 프로세스 추천 목록이 보임
+    					if(processName == text){
+    						if(this.processFirst){
+    							var innerHtmlStr = 	"<div id=\"" + processDivId + "\" >";
+    							innerHtmlStr		+=	" " + mw3.localize('$AddWithProcess') + ": \"<b>" ;
+    							innerHtmlStr		+=	"<span id=\"processDivSpan\">" + processName + "</span>" ;
+    							innerHtmlStr		+=	"</b>\"";
+    							innerHtmlStr		+=	" | <a href=\"#\" onClick=\"mw3.getFaceHelper('"+this.objectId+"').removeDiv('"+processDivId+"')\" style=\"cursor:pointer;\">싫어요</a> ";
+    							innerHtmlStr		+=	"<br>";
+    							innerHtmlStr		+=	"</div>";
+    							
+    							this.commandActivityAppAlias = processMap.processMapList[i].defId;
+    							
+    							$(recommendDivId).append(innerHtmlStr);
+    							this.processFirst = false;
+    						}else{
+    							$("#processDivSpan").html(processName);
+    							this.commandActivityAppAlias = processMap.processMapList[i].defId;	    				
+    						}	    				
+    					}
+    				}
+    			}
+    		}
+    	}
 		
     	if(  this.instanceFirst ){
 			//////// assists about dates ////////

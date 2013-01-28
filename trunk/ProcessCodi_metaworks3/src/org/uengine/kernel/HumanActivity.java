@@ -60,6 +60,7 @@ public class HumanActivity extends ReceiveActivity{
 	
 	
 	protected Role role;
+	@Hidden
 		public Role getRole() {
 			
 			if(role!=null && role.getName()!=null && getProcessDefinition()!=null){
@@ -77,6 +78,7 @@ public class HumanActivity extends ReceiveActivity{
 		}
 		
 	Role referenceRole;
+	@Hidden
 		public Role getReferenceRole() {
 			return referenceRole;
 		}
@@ -85,6 +87,7 @@ public class HumanActivity extends ReceiveActivity{
 		}
 	
 	String tool;
+	@Hidden
 		public String getTool() {
 			return tool;
 		}
@@ -93,6 +96,7 @@ public class HumanActivity extends ReceiveActivity{
 		}
 
 	boolean isSendEmailWorkitem=true;
+	@Hidden
 		public boolean isSendEmailWorkitem() {
 			return isSendEmailWorkitem;
 		}
@@ -101,6 +105,7 @@ public class HumanActivity extends ReceiveActivity{
 		}
 		
 	boolean isNotificationWorkitem=false;
+	@Hidden
 		public boolean isNotificationWorkitem() {
 			return isNotificationWorkitem;
 		}
@@ -109,6 +114,7 @@ public class HumanActivity extends ReceiveActivity{
 		}
 		
 	boolean isAllowAnonymous=true;
+	@Hidden
 		public boolean isAllowAnonymous() {
 			return isAllowAnonymous;
 		}
@@ -207,6 +213,7 @@ public class HumanActivity extends ReceiveActivity{
 	}
 	
 	int co2Emission;
+	@Hidden
 		public int getCo2Emission() {
 			return co2Emission;
 		}
@@ -215,6 +222,7 @@ public class HumanActivity extends ReceiveActivity{
 		}
 
 	int workload;
+	@Hidden
 		public int getWorkload() {
 			return workload;
 		}
@@ -223,6 +231,7 @@ public class HumanActivity extends ReceiveActivity{
 		}
 
 	int priority;
+	@Hidden
 		public int getPriority() {
 			return priority;
 		}
@@ -240,6 +249,7 @@ public class HumanActivity extends ReceiveActivity{
 		}
 		
 	String extValue1;
+	@Hidden
 		public String getExtValue1() {
 			return extValue1;
 		}
@@ -248,6 +258,7 @@ public class HumanActivity extends ReceiveActivity{
 		}
 		
 	String extValue2;
+	@Hidden
 		public String getExtValue2() {
 			return extValue2;
 		}
@@ -256,6 +267,7 @@ public class HumanActivity extends ReceiveActivity{
 		}
 		
 	String extValue3;
+	@Hidden
 		public String getExtValue3() {
 			return extValue3;
 		}
@@ -264,6 +276,7 @@ public class HumanActivity extends ReceiveActivity{
 		}
 	
     String extValue4;
+    @Hidden
 		public String getExtValue4() {
 			return extValue4;
 		}
@@ -272,6 +285,7 @@ public class HumanActivity extends ReceiveActivity{
 		}
 
 	String extValue5;
+	@Hidden
 		public String getExtValue5() {
 			return extValue5;
 		}
@@ -280,6 +294,7 @@ public class HumanActivity extends ReceiveActivity{
 		}
 		
 	String extValue6;
+		@Hidden
 		public String getExtValue6() {
 			return extValue6;
 		}
@@ -288,6 +303,7 @@ public class HumanActivity extends ReceiveActivity{
 		}
 			
 	String extValue7;
+	@Hidden
 		public String getExtValue7() {
 			return extValue7;
 		}
@@ -296,6 +312,7 @@ public class HumanActivity extends ReceiveActivity{
 		}
 			
 	String extValue8;
+	@Hidden
 		public String getExtValue8() {
 			return extValue8;
 		}
@@ -304,6 +321,7 @@ public class HumanActivity extends ReceiveActivity{
 		}
 		
 	String extValue9;
+	@Hidden
 		public String getExtValue9() {
 			return extValue9;
 		}
@@ -312,6 +330,7 @@ public class HumanActivity extends ReceiveActivity{
 		}
 		
 	String extValue10;
+	@Hidden
 		public String getExtValue10() {
 			return extValue10;
 		}
