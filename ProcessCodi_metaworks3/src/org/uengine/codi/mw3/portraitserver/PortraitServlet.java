@@ -59,8 +59,8 @@ public class PortraitServlet extends HttpServlet {
 		
 		File f = new File(realPath  + File.separator + name);
 		
-		if(!f.exists()){
-			System.out.println(name + " is not exist!!!!!");
+		if(!f.exists() || f.length() == 0L){
+			System.out.println(name + " is not exist!!!!!" + "or length is 0!!!!!");
 			f = new File(realPath  + File.separator + "unknown_user.gif");
 			imgFormat = "gif";
 			mimeType = "image/gif";
