@@ -1,13 +1,7 @@
-<script>
- $(function () {
-	$('#myTab').tab('show');
- });
-</script>
-
 
 <%if(mw3.device == mw3.DEVICE_PC){%>  
-<div class="bs-docs-example">
-	<ul id="myTab" class="nav nav-tabs">
+<div class="bs-docs-example"  id="wrapper">
+	<ul id="scroller" class="nav nav-tabs">
 		<%
 			for (var i=0; i<value.tabs.length; i++){ 
 		%>
