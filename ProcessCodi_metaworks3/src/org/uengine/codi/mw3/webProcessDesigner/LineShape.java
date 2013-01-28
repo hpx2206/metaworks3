@@ -55,16 +55,20 @@ public class LineShape extends CanvasDTO {
 					
 					String conditionType = childNode.getConditionNode().getOperandChoice().getSelected();			// And, Or
 					String expressionChoice 	= childNode.getConditionNode().getExpressionChoice().getSelected();	// Text, Number
-					String expressionText 	= childNode.getConditionNode().getExpressionText();							// Text Val , Number Val
 					String sign = childNode.getConditionNode().getSignChoice().getSelected();								// == , =>
 					String valiable = childNode.getConditionNode().getValiableChoice().getSelected();					// processValiable
 					
+					ConditionInput expressionInput 	= childNode.getConditionNode().getConditionInput();			// Text , Number , Date ..
+					
 					Object exppObject = new Object();
-					if( expressionChoice.equalsIgnoreCase("Text") || expressionChoice.equalsIgnoreCase("Yes or No")){
-						exppObject = expressionText;
+					if( expressionChoice.equalsIgnoreCase("Text") ){
+						exppObject = expressionInput.getExpressionText();
 					}else if( expressionChoice.equalsIgnoreCase("Number")){
-						exppObject = new Integer(expressionText);
+						exppObject = expressionInput.getExpressionText();
+					}else if( expressionChoice.equals("Yes or No")){
+						exppObject = expressionInput.getYesNo();
 					}else if( expressionChoice.equals("Date")){
+						exppObject = expressionInput.getExpressionDate();
 					}else if( expressionChoice.equals("File")){
 					}else if( expressionChoice.equals("Activity Selection")){
 					}else if( expressionChoice.equals("Complex Type")){
@@ -108,51 +112,4 @@ public class LineShape extends CanvasDTO {
 		return null;
 	}
 	
-	public Condition makeCondition(){
-		
-		if(this.getData() != null){
-			Or condition = new Or();
-			String data = ProcessDesignerWebContentPanel.unescape(this.getData());
-			JSONArray jsonArray = (JSONArray)JSONSerializer.toJSON(data);
-			if( jsonArray != null && jsonArray.size() > 0){
-				for( int i = 0; i < jsonArray.size() ; i++){
-					JSONObject jsonObject = jsonArray.getJSONObject(i);
-					String operand = jsonObject.getString("operandChoice");					// And, Or
-					String expressionType 	= jsonObject.getString("expressionChoice");	// Text, Number
-					String expressionText 	= jsonObject.getString("expressionText");		// Text Val , Number Val
-					String sign = jsonObject.getString("signChoice");								// == , =>
-					String valiable = jsonObject.getString("valiableChoice");					// processValiable
-					
-					Object exppObject = new Object();
-					if( expressionType.equals("Text") || expressionType.equals("Yes or No")){
-						exppObject = expressionText;
-					}else if( expressionType.equals("Number")){
-						exppObject = new Integer(expressionText);
-					}else if( expressionType.equals("Date")){
-					}else if( expressionType.equals("File")){
-					}else if( expressionType.equals("Activity Selection")){
-					}else if( expressionType.equals("Complex Type")){
-					}else if( expressionType.equals("Html Form")){
-					}
-					
-					if( operand.equals("And")){
-						Evaluate eval = new Evaluate(valiable, sign, exppObject);
-						And andCondition = new And(new Condition[]{eval});
-						condition.addCondition(andCondition);
-					}else if( operand.equals("Or")){
-						Or orCondition = new Or();
-						Evaluate eval = new Evaluate(valiable, sign, exppObject);
-						And andCondition = new And(new Condition[]{eval});
-						orCondition.addCondition(andCondition);
-						condition.addCondition(orCondition);
-					}else{	//Otherwise
-						
-					}
-				}
-			}
-			return condition;
-		}
-		
-		return null;
-	}
 }

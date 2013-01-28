@@ -1,6 +1,7 @@
 package org.uengine.codi.mw3.webProcessDesigner;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 
 import net.sf.json.JSONArray;
@@ -18,6 +19,7 @@ import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.kernel.And;
 import org.uengine.kernel.Condition;
+import org.uengine.kernel.Evaluate;
 import org.uengine.kernel.Or;
 import org.uengine.kernel.Otherwise;
 import org.uengine.kernel.RoleExist;
@@ -142,40 +144,6 @@ public class ConditionPanel  implements ContextAware{
 		conditionExPressionPanel.init();
 		setConditionExPressionPanel(conditionExPressionPanel);
 		
-		/*
-		conditionNodes = new ArrayList<ConditionNode>();
-		if( conditionString == null ){
-			ConditionNode conditionNode = new ConditionNode();
-			int index = 1;
-			conditionNode.setIdx(index);
-			conditionNode.setRoleList(getRoleList());
-			conditionNode.setPrcsValiableList(getPrcsValiableList());
-			conditionNode.init();
-			conditionNodes.add(index - 1, conditionNode);
-		}else{
-			JSONArray jsonArray = (JSONArray)JSONSerializer.toJSON(conditionString);
-			if( jsonArray != null && jsonArray.size() > 0){
-				for( int i = 0; i < jsonArray.size() ; i++){
-					JSONObject jsonObj = (JSONObject) jsonArray.get(i);
-					ConditionNode conditionNode = new ConditionNode();
-					int index = jsonObj.getInt("index");
-					conditionNode.setIdx(index);
-					conditionNode.setRoleList(getRoleList());
-					conditionNode.setPrcsValiableList(getPrcsValiableList());
-					conditionNode.init();
-					conditionNode.getValiableChoice().setSelected(jsonObj.getString("valiableChoice"));
-					conditionNode.getSignChoice().setSelected(jsonObj.getString("signChoice"));
-					conditionNode.getOperandChoice().setSelected(jsonObj.getString("operandChoice"));
-					conditionNode.getExpressionChoice().setSelected(jsonObj.getString("expressionChoice"));
-					if( jsonObj.containsKey("expressionText") ){
-						conditionNode.setExpressionText(jsonObj.getString("expressionText"));
-					}
-					conditionNodes.add(index - 1, conditionNode);
-				}
-			}
-		}
-		*/
-		
 	}
 	
 	public void makeChildTreeNode( ConditionTreeNode rootNode , Condition condition ) throws Exception{
@@ -211,17 +179,39 @@ public class ConditionPanel  implements ContextAware{
 				// and 와 or 의 공통 로직 처리
 				if( condi instanceof Or || condi instanceof And){
 					treeNode.setExpressionType("expression");
-					if( nodeName != null ){
-						String split[] = nodeName.split(" ");
-						if( split.length >= 2){	// a == b
-//							System.out.println(split[0]);
-//							System.out.println(split[1]);
-//							System.out.println(split[2]);
-							treeNode.getConditionNode().getValiableChoice().setSelected(split[0]);
-							treeNode.getConditionNode().getSignChoice().setSelected(split[1]);
-							// TODO Text 이외의 값을.. 어떻게 넣고 가져와야할지의 고민이 필요
-							treeNode.getConditionNode().getExpressionChoice().setSelected("Text");
-							treeNode.getConditionNode().setExpressionText(split[2]);
+					if( !"".equals(nodeName) ){
+						Condition childCondition[] = ((And)condi).getConditions();
+						if( childCondition != null && childCondition.length > 0){
+							for(int j = 0; j < childCondition.length; j++){
+								Condition cd = childCondition[j];
+								if( cd instanceof Evaluate){
+									Evaluate eval = (Evaluate)cd;
+									
+									treeNode.getConditionNode().getValiableChoice().setSelected(eval.getKey());
+									treeNode.getConditionNode().getSignChoice().setSelected(eval.getCondition());
+									Object value = eval.getValue();
+									if( value instanceof String){
+										String expString = (String)value;
+										if( "yes".equalsIgnoreCase(expString) || "no".equalsIgnoreCase(expString) ){
+											treeNode.getConditionNode().getExpressionChoice().setSelected("Yes or No");
+											treeNode.getConditionNode().getConditionInput().getMetaworksContext().setHow("Yes or No");
+											treeNode.getConditionNode().getConditionInput().setYesNo(expString);
+										}else{
+											treeNode.getConditionNode().getExpressionChoice().setSelected("text");
+											treeNode.getConditionNode().getConditionInput().getMetaworksContext().setHow("text");
+											treeNode.getConditionNode().getConditionInput().setExpressionText(expString);
+										}
+									}else if( value instanceof Long){
+										treeNode.getConditionNode().getExpressionChoice().setSelected("number");
+										treeNode.getConditionNode().getConditionInput().getMetaworksContext().setHow("number");
+										treeNode.getConditionNode().getConditionInput().setExpressionText(value.toString());
+									}else if( value instanceof Date){
+										treeNode.getConditionNode().getExpressionChoice().setSelected("date");
+										treeNode.getConditionNode().getConditionInput().getMetaworksContext().setHow("date");
+										treeNode.getConditionNode().getConditionInput().setExpressionDate((Date)value);
+									}
+								}
+							}
 						}
 					}
 				}
@@ -254,24 +244,6 @@ public class ConditionPanel  implements ContextAware{
 		ConditionTreeNode rootNode = conditionTree.getNode();
 		Condition condition = lineShape.makeCondition(rootNode);
 		lineShape.setLineCondition(condition);
-		// 이렇게 하면.. 호출할때, processDesignerWebContentPanel.getConditionMap() 에 데이타가 하나도 없음
-//		processDesignerWebContentPanel.getConditionMap().put(this.getConditionId(), condition);
-		
-//		if( conditionNodes != null && conditionNodes.size() > 0){
-//			JSONArray jsonArray = new JSONArray();
-//			for (Iterator<ConditionNode> iterator = conditionNodes.iterator() ; iterator.hasNext(); ) {
-//				JSONObject jsonObject = new JSONObject();
-//				ConditionNode conditionNode = (ConditionNode)iterator.next();
-//				jsonObject.put("index", conditionNode.getIdx() );
-//				jsonObject.put("valiableChoice", conditionNode.getValiableChoice().getSelected());
-//				jsonObject.put("signChoice", conditionNode.getSignChoice().getSelected());
-//				jsonObject.put("operandChoice", conditionNode.getOperandChoice().getSelected());
-//				jsonObject.put("expressionChoice", conditionNode.getExpressionChoice().getSelected());
-//				jsonObject.put("expressionText", conditionNode.getExpressionText());
-//				jsonArray.add(jsonObject);
-//			}
-//			lineShape.setCustomData(jsonArray.toString());
-//		}
 		
 		return new Object[]{ new Remover(new ModalWindow()), lineShape};
 	}
@@ -290,7 +262,4 @@ public class ConditionPanel  implements ContextAware{
 
 	@AutowiredFromClient
 	public Session session;
-	
-	@AutowiredFromClient
-	public ProcessDesignerWebContentPanel processDesignerWebContentPanel;
 }
