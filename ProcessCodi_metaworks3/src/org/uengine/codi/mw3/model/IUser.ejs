@@ -16,12 +16,12 @@
 			clickAction = methods.detail.caller();
 		}
 					
-		var unknown = 'userimages/unknown_user.gif';
+		var unknown = 'portrait/unknown_user.gif';
 		var portrait = unknown;
 		
 		if(value.network == 'local' || value.network == null){
 			if(value.userId)
-				portrait = 'userimages/' + value.userId + '.jpg';			
+				portrait = 'portrait/' + value.userId + '.jpg';			
 		}else if(value.network == 'fb'){
 			if(value.userId)
 				portrait = 'http://graph.facebook.com/' + value.userId + '/picture';			
