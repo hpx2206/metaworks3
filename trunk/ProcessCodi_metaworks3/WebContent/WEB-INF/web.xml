@@ -189,4 +189,16 @@
 		<welcome-file>index.jsp</welcome-file>		
 	</welcome-file-list>
 
+  <servlet>
+    <description></description>
+    <display-name>PortraitServlet</display-name>
+    <servlet-name>PortraitServlet</servlet-name>
+    <servlet-class>org.uengine.codi.mw3.portraitserver.PortraitServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>PortraitServlet</servlet-name>
+    <url-pattern>/portrait/*</url-pattern>
+  </servlet-mapping>
+
+
 </web-app>
