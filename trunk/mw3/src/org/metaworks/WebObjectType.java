@@ -157,11 +157,11 @@ public class WebObjectType{
 			this.fieldDescriptors = fieldDescriptors;
 		}
 		
-	Map<String, String> autowiredFields;
-		public Map<String, String> getAutowiredFields() {
+	Map<String, HashMap> autowiredFields;
+		public Map<String, HashMap> getAutowiredFields() {
 			return autowiredFields;
 		}
-		public void setAutowiredFields(Map<String, String> autowiredFields) {
+		public void setAutowiredFields(Map<String, HashMap> autowiredFields) {
 			this.autowiredFields = autowiredFields;
 		}
 
@@ -324,10 +324,14 @@ public class WebObjectType{
 					
 				}else{
 					if(autowiredFields == null)
-						autowiredFields = new HashMap<String, String>();
+						autowiredFields = new HashMap<String, HashMap>();
 					
-					autowiredFields.put(fields[i].getName(), fields[i].getType().getName());
-					//autowiredFields.put(fields[i].getName(), "{field: '" + fields[i].getType().getName() + "', select: '" + autowiredFromClient.select() + "'}");
+					HashMap<String, String> autowiredField = new HashMap<String, String>();
+					autowiredField.put("field", fields[i].getType().getName());
+					autowiredField.put("select", autowiredFromClient.select());
+					
+					//autowiredFields.put(fields[i].getName(), fields[i].getType().getName());
+					autowiredFields.put(fields[i].getName(), autowiredField);
 					
 				}
 			}
@@ -392,12 +396,14 @@ public class WebObjectType{
 				}else
 					fd.setAttribute("hidden", hidden.on());
 				
-				Map medias = new HashMap();
-				for(String media : hidden.media()){
-					medias.put(media, media);
+				if(hidden.media().length > 1){
+					Map medias = new HashMap();
+					for(String media : hidden.media()){
+						medias.put(media, media);
+					}
+					
+					fd.setAttribute("hidden.media", medias);
 				}
-				
-				fd.setAttribute("hidden.media", medias);
 			}
 
 			if(getAnnotationDeeply(tryingClasses, fd.getName(), AutowiredToClient.class)!=null)
@@ -465,14 +471,15 @@ public class WebObjectType{
 					}
 					
 					fd.setAttribute("available.how", hows);
-				}
 				
-				Map medias = new HashMap();
-				for(String media : available.media()){
-					medias.put(media, media);
+				if(available.media().length > 0){}				
+					Map medias = new HashMap();
+					for(String media : available.media()){
+						medias.put(media, media);
+					}
+					
+					fd.setAttribute("available.media", medias);
 				}
-				
-				fd.setAttribute("available.media", medias);
 			}
 
 			
@@ -878,7 +885,6 @@ public class WebObjectType{
 			ServiceMethod annotation = (ServiceMethod) getAnnotationDeeply(tryingClasses, method.getName(), ServiceMethod.class, false);
 			
 			if(annotation!=null){
-				
 				Face face = (Face) getAnnotationDeeply(tryingClasses, method.getName(), Face.class, false);
 				Children children = (Children) getAnnotationDeeply(tryingClasses, method.getName(), Children.class, false);
 				Name name = (Name) getAnnotationDeeply(tryingClasses, method.getName(), Name.class, false);

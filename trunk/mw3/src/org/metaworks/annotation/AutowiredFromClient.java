@@ -16,7 +16,7 @@ import java.lang.annotation.Target;
  *
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
+@Target({ElementType.FIELD, ElementType.PARAMETER})
 public @interface AutowiredFromClient {
 	boolean onDrop() default false;
 	String instruction() default "";
