@@ -27,6 +27,16 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				this.WHERE_EVER = "wherever";
 				this.where = this.WHERE_EVER;
 				
+				
+				this.DEVICE_MOBILE = "mobile";
+				this.DEVICE_PC = "pc";
+				this.DEVICE_EVER = "wherever";
+				this.device = this.DEVICE_PC;
+				
+				this.SCROLL_OPTION_1 = "1";
+				this.SCROLL_OPTION_N = "n";
+				this.scrollOption= this.SCROLL_OPTION_1;  //N...
+				
 				this.base = "";
 				
 				this.objects = {};
@@ -454,6 +464,14 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 
 			Metaworks3.prototype.setHow = function(how){
 				this.how = how;
+			};
+
+			Metaworks3.prototype.setDevice = function(device){
+				this.device = device;
+			};
+
+			Metaworks3.prototype.setScrollOption = function(scrollOption){
+				this.scrollOption = scrollOption;
 			};
 
 			
