@@ -250,9 +250,7 @@ public class ScheduleCalendar implements ContextAware {
 		panel.load(instId);
 		scview.setInstanceViewThreadPanel(panel);
 		
-		InstanceList list = new InstanceList();
-		
-		list.init();  //instanceList에서 page 변경으로 인해서 추가해줌.
+		InstanceList list = new InstanceList(session);
 		list.setInstances(scview);
 		
 		return new Object[]{list};
