@@ -66,14 +66,14 @@ public class PortraitServlet extends HttpServlet {
 			mimeType = "image/gif";
 		}
 		
-		response.setContentType(mimeType);
-		
-		BufferedImage bi = ImageIO.read(f);
-		OutputStream out = response.getOutputStream();
-		ImageIO.write(bi, imgFormat, out);
-		out.close();
-
-		
+		if(f.exists() && f.length() > 0L){
+			response.setContentType(mimeType);
+			
+			BufferedImage bi = ImageIO.read(f);
+			OutputStream out = response.getOutputStream();
+			ImageIO.write(bi, imgFormat, out);
+			out.close();
+		}		
 	}
 
 	/**
