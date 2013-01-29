@@ -88,12 +88,10 @@ public class Perspective {
 		}
 			
 		
-		InstanceList instList = new InstanceList();
-		instList.init();
-
 		savePerspectiveToSession(session, perspectiveType, selectedItem);
-		instList.load(session);
-		
+		InstanceList instList = new InstanceList(session);
+		instList.load();
+
 		InstanceListPanel instListPanel = new InstanceListPanel(session);
 		instListPanel.setInstanceList(instList);
 		instListPanel.session = session;
