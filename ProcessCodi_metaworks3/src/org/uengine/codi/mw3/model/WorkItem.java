@@ -855,6 +855,13 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			MetaworksRemoteService.pushOtherClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new WorkItemListener(copyOfThis)});
 		}		
 		
+		if(this.getDueDate() != null){
+			MetaworksRemoteService.pushTargetScript(Login.getSessionIdWithUserId(session.getUser().getUserId()),
+					"if(mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar')!=null) mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar').__getFaceHelper().addMyschedule",
+					new Object[]{instanceRef.getName(), instanceRef.getInstId().toString(), instanceRef.getDueDate() });
+			
+		}
+		
 		return returnObjects;
 	}
 	
