@@ -1,16 +1,12 @@
 <%
 if(value){
 	var portrait;
-	var onErrorImg;
 		
 	if(value.empCode)
 		portrait = 'portrait/' + value.empCode + '.jpg';
 	else
 		portrait = 'portrait/unknown_user.gif';
 	
-	onErrorImg = "this.src='portrait/unknown_user.gif'";
-
-
 	if(mw3.where == 'admin'){
 		if(mw3.how == 'tree'){
 		
@@ -32,7 +28,7 @@ if(value){
 		} else if(mw3.how == 'detail') {
 			if(mw3.when == 'view') {
 			%>
-				<img id="userPicture_<%=objectId %>" onerror="<%=onErrorImg %>" src="<%=portrait %>" width="30" height="30">
+				<img id="userPicture_<%=objectId %>" src="<%=portrait%>" width="30" height="30">
 				<%=fields.imageFile.here() %>
 				<%=mw3.localize("$Id")%> :<%=value.empCode %>
 				<%=mw3.localize("$Name")%> : <%=fields.empName.here() %>
@@ -194,7 +190,7 @@ if(value){
 	<%
 	} else if(mw3.where == 'instanceList') {
 	%>
-	<img id="userPicture_<%=objectId %>" onerror="<%=onErrorImg %>" src="<%=portrait %>" width="30" height="30" title="<%=value.empName %>">
+	<img id="userPicture_<%=objectId %>" src="<%=portrait %>" width="30" height="30" title="<%=value.empName %>">
 	<%
 	} else if(mw3.where == 'inSession') {
 	%>
@@ -206,7 +202,7 @@ if(value){
 	<%
 	} else if(mw3.where == 'inWorkItem') {
 	%>
-	<img id="userPicture_<%=objectId %>" onerror="<%=onErrorImg %>" src="<%=portrait %>" width="30" height="30"><%=fields.empCode.here() %>
+	<img id="userPicture_<%=objectId %>" src="<%=portrait %>" width="30" height="30"><%=fields.empCode.here() %>
 	<%
 	} else if(mw3.where == 'inDetailView') {
 	%>
@@ -215,7 +211,7 @@ if(value){
 		<li>
 			<dl class="lst_type2">
 				<dd class="photo2">
-					<div id="popupInfoImgWih"><img id="userPicture_<%=objectId %>" onerror="<%=onErrorImg %>" src="<%=portrait %>" width="104" height="104"></div>
+					<div id="popupInfoImgWih"><img id="userPicture_<%=objectId %>" src="<%=portrait %>" width="104" height="104"></div>
 										
 					
 				</dd>

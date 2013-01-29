@@ -16,9 +16,7 @@
 			clickAction = methods.detail.caller();
 		}
 					
-		var unknown = 'portrait/unknown_user.gif';
-		var portrait = unknown;
-		
+		var portrait = '';		
 		if(value.network == 'local' || value.network == null){
 			if(value.userId)
 				portrait = 'portrait/' + value.userId + '.jpg';			
@@ -34,7 +32,7 @@
 				<dl class="lst_type2">
 
 					<dd class="photo">
-						<div id="popupInfoImgWih"><img id="user_picture_<%=objectId%>" src="<%=portrait%>" onerror="this.src='<%=unknown%>';" width="104" height="104"></div>	
+						<div id="popupInfoImgWih"><img id="user_picture_<%=objectId%>" src="<%=portrait%>" width="104" height="104"></div>	
 					</dd>
 					<dd class="tit">
 						<div id="popupInfoNameWih"><b><%=value.name%></b></div>
@@ -93,7 +91,7 @@
 %>
 		<div class="user">	
 			<div class="user_focus" style="background: url('<%=portrait%>'); background-size:cover;"  title="<%=value.name%>">	
-				<img id="user_picture_<%=objectId%>" src="<%=portrait%>" onerror="this.src='<%=unknown%>';" class="pic <%=(value.size=='small' ? ' small':'')%>">
+				<img id="user_picture_<%=objectId%>" src="<%=portrait%>" class="pic <%=(value.size=='small' ? ' small':'')%>">
 			</div>
 				
 			<div class="user_compact">
@@ -107,7 +105,7 @@
 		<div class="user">		
 			<div style="float:left;padding:10px;position:relative;z-index:9999"><span><%= fields.userChecked.here({when:'edit'}) %></span></div>
 			<div class="user_focus" style="background: url('<%=portrait%>'); background-size:cover;"  title="<%=value.name%>">	
-				<img id="user_picture_<%=objectId%>" src="<%=portrait%>" onerror="this.src='<%=unknown%>';" class="pic <%=(value.size=='small' ? ' small':'')%>">
+				<img id="user_picture_<%=objectId%>" src="<%=portrait%>" class="pic <%=(value.size=='small' ? ' small':'')%>">
 			</div>
 			<div class="user_detail">
 				<span class="fontbold"><%=value.name%></span>
@@ -120,7 +118,7 @@
 %>
 		<div class="user" onclick="<%=clickAction%>">		
 			<div class="user_focus" style="background: url('<%=portrait%>'); background-size:cover;"  title="<%=value.name%>">	
-				<img id="user_picture_<%=objectId%>" src="<%=portrait%>" onerror="this.src='<%=unknown%>';" class="pic <%=(value.size=='small' ? ' small':'')%>">
+				<img id="user_picture_<%=objectId%>" src="<%=portrait%>" class="pic <%=(value.size=='small' ? ' small':'')%>">
 			</div>
 <%	
 			/* case by user */
