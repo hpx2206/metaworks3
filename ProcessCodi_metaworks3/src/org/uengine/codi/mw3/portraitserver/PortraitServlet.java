@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.uengine.codi.common.ImageUtils;
 import org.uengine.kernel.GlobalContext;
 
 /**
@@ -31,49 +32,95 @@ public class PortraitServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
 
-		String name = null;
-		String imgFormat = "jpg";
-		String mimeType = "image/jpg";
-		
-		String IMAGE_ROOT = GlobalContext.getPropertyString(
-				"server.images.path",
-				"./uengine/images/"
-			);
-		String realPath = IMAGE_ROOT + "/portrait";
-		
 		String pathInfo = request.getPathInfo();
+		if(pathInfo == null)
+			return;
+		
+		// because pathInfo is started with a "/" character
+		boolean exists = false;
+		
+		String portraitName = pathInfo.substring(1);		
+		
+		String fileSystemPath = GlobalContext.getPropertyString("filesystem.path",".");
+		String portraitPath = fileSystemPath + "/portrait";
+		
+		// 사진 폴더 생성
+		File portraitDirectory = new File(portraitPath);		
+		if(!portraitDirectory.exists() || !portraitDirectory.isDirectory())
+			portraitDirectory.mkdirs();
 
-		if(pathInfo != null){
-			name = pathInfo.substring(1);  //because pathInfo is started with a "/" character
 
-			if(pathInfo.endsWith(".png")){
-				imgFormat = "png";
-				mimeType = "image/png";
-			}else if(pathInfo.endsWith(".gif")){
-				imgFormat = "gif";
-				mimeType = "image/gif";
-			}
-		}
-		
-		File f = new File(realPath  + File.separator + name);
-		
-		if(!f.exists() || f.length() == 0L){
-			System.out.println(name + " is not exist!!!!!" + "or length is 0!!!!!");
-			f = new File(realPath  + File.separator + "unknown_user.gif");
-			imgFormat = "gif";
-			mimeType = "image/gif";
-		}
-		
-		if(f.exists() && f.length() > 0L){
-			response.setContentType(mimeType);
+		int pos = portraitName.lastIndexOf(".");
+		if(pos > -1 && ".thumnail".equals(portraitName.substring(pos))){
+			String empCode = portraitName.substring(0, pos);
+			String thumnailName = portraitPath + "/" + empCode + ".thumnail.jpg";
+			String srcName = portraitPath + "/" + empCode + ".jpg";
+			String unknownName = portraitPath + "/unknown_user.gif";
 			
-			BufferedImage bi = ImageIO.read(f);
-			OutputStream out = response.getOutputStream();
-			ImageIO.write(bi, imgFormat, out);
-			out.close();
-		}		
+			// 쎔네일 파일 존재 확인
+			File thumnailFile = new File(thumnailName);
+			if(thumnailFile.exists() && thumnailFile.isFile()){
+				exists = true;
+			}else{
+				File srcFile = new File(srcName);
+				
+				if(srcFile.exists() && srcFile.isFile()){
+					try{
+						ImageUtils.createThumbnail(srcFile.getAbsolutePath(),thumnailFile.getAbsolutePath(), "jpg", 104, 104);
+						exists = true;
+					}catch(Exception e){
+						e.printStackTrace();
+					}
+				}
+			}
+			
+			OutputStream out = null;
+			try{
+				out = response.getOutputStream();
+				
+				if(exists){
+					BufferedImage bi = ImageIO.read(new File(thumnailName));
+					response.setContentType("image/jpg");
+					ImageIO.write(bi, "jpg", out);
+				}else{
+					File unknownFile = new File(unknownName);
+					if(unknownFile.exists() && unknownFile.isFile()){
+						BufferedImage bi = ImageIO.read(unknownFile);
+						response.setContentType("image/gif");
+						ImageIO.write(bi, "gif", out);					
+					}				
+				}
+			}finally{
+				if(out != null){
+					out.close();
+					out = null;
+				}
+			}
+		}else{			
+			String srcName = portraitPath + "/" + pathInfo + ".jpg";
+			
+			System.out.println("원본 이미지 요청 : " + srcName);
+			
+			File srcFile = new File(srcName);
+			
+			if(srcFile.exists() && srcFile.isFile()){
+				OutputStream out = null;
+				try{
+					out = response.getOutputStream();
+				
+					BufferedImage bi = ImageIO.read(srcFile);
+					response.setContentType("image/jpg");
+					ImageIO.write(bi, "jpg", out);
+				}finally{
+					if(out != null){
+						out.close();
+						out = null;
+					}
+				}
+			}
+			
+		}
 	}
 
 	/**

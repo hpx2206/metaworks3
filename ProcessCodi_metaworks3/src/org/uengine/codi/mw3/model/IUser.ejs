@@ -19,7 +19,7 @@
 		var portrait = '';		
 		if(value.network == 'local' || value.network == null){
 			if(value.userId)
-				portrait = 'portrait/' + value.userId + '.jpg';			
+				portrait = 'portrait/' + value.userId + '.thumnail';			
 		}else if(value.network == 'fb'){
 			if(value.userId)
 				portrait = 'http://graph.facebook.com/' + value.userId + '/picture';			

@@ -1,11 +1,9 @@
 <%
 if(value){
-	var portrait;
+	var portrait = '';
 		
 	if(value.empCode)
-		portrait = 'portrait/' + value.empCode + '.jpg';
-	else
-		portrait = 'portrait/unknown_user.gif';
+		portrait = 'portrait/' + value.empCode + '.thumnail.jpg';
 	
 	if(mw3.where == 'admin'){
 		if(mw3.how == 'tree'){
