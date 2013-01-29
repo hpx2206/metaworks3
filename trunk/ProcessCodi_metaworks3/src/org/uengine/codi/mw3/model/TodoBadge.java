@@ -42,12 +42,11 @@ public class TodoBadge{
 		personalPerspective.loadInbox();
 */		
 		
-		session.getMetaworksContext().setWhen("todoBadge");
 		session.setLastPerspecteType("inbox");
 		session.setSearchKeyword(null);
 		
-		InstanceList instList = new InstanceList();
-		instList.load(session);
+		InstanceList instList = new InstanceList(session);
+		instList.load();
 		
 		Popup popup = new Popup();
 		popup.setName("Todo List");

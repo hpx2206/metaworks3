@@ -63,15 +63,6 @@ public class Session implements ContextAware{
 			this.guidedTour = guidedTour;
 		}
 		
-	Navigation navigation;
-		public Navigation getNavigation() {
-			return navigation;
-		}
-	
-		public void setNavigation(Navigation navigation) {
-			this.navigation = navigation;
-		}
-		
 	Object clipboard;
 	@Hidden
 		public Object getClipboard() {
