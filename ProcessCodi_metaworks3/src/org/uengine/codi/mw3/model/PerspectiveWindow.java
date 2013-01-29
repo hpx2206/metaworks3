@@ -4,7 +4,11 @@ import org.metaworks.widget.Window;
 
 public class PerspectiveWindow extends Window {
 	
-	public PerspectiveWindow(Session session) throws Exception{
+	public PerspectiveWindow() throws Exception {
+		this(null);		
+	}
+	
+	public PerspectiveWindow(Session session) throws Exception {
 		setPanel(new PerspectivePanel(session));
 	}
 

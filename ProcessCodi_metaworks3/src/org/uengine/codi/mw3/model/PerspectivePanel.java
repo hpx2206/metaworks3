@@ -67,20 +67,26 @@ public class PerspectivePanel {
 			this.topicPerspective = topicPerspective;
 		}
 	
+	public PerspectivePanel() throws Exception {
+		this(null);
+	}
+	
 	public PerspectivePanel(Session session) throws Exception {
-		personalPerspective = new PersonalPerspective();
-		personalPerspective.session = session;
-		personalPerspective.select();
-		
-		topicPerspective = new TopicPerspective();
-		topicPerspective.session = session;
-		topicPerspective.select();
-		
-		organizationPerspectiveDept = new OrganizationPerspectiveDept();
-		organizationPerspectiveRole = new OrganizationPerspectiveRole();
-		processPerspective = new ProcessPerspective();
-		//processStatusPerspective = new ProcessStatusPerspective();
-		
-		strategicPerspective = new StrategicPerspective();
+		if(session != null){
+			personalPerspective = new PersonalPerspective();
+			personalPerspective.session = session;
+			personalPerspective.select();
+			
+			topicPerspective = new TopicPerspective();
+			topicPerspective.session = session;
+			topicPerspective.select();
+			
+			organizationPerspectiveDept = new OrganizationPerspectiveDept();
+			organizationPerspectiveRole = new OrganizationPerspectiveRole();
+			processPerspective = new ProcessPerspective();
+			//processStatusPerspective = new ProcessStatusPerspective();
+			
+			strategicPerspective = new StrategicPerspective();
+		}
 	}
 }

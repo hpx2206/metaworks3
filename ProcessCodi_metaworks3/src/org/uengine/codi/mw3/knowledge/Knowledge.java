@@ -1,20 +1,16 @@
 package org.uengine.codi.mw3.knowledge;
 
-import org.metaworks.Refresh;
 import org.metaworks.annotation.AutowiredToClient;
-import org.metaworks.annotation.Hidden;
-import org.metaworks.website.ContentPanel;
 import org.metaworks.widget.Window;
 import org.metaworks.widget.layout.Layout;
 import org.uengine.codi.mw3.admin.PageNavigator;
-import org.uengine.codi.mw3.model.ContactPanel;
 import org.uengine.codi.mw3.model.ContactWindow;
 import org.uengine.codi.mw3.model.ContentWindow;
-import org.uengine.codi.mw3.model.IUser;
-import org.uengine.codi.mw3.model.Locale;
-import org.uengine.codi.mw3.model.NavigationWindow;
+import org.uengine.codi.mw3.model.PerspectivePanel;
+import org.uengine.codi.mw3.model.PerspectiveWindow;
 import org.uengine.codi.mw3.model.ProcessTopPanel;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.codi.mw3.model.TopicPerspective;
 
 public class Knowledge {
 
@@ -26,52 +22,65 @@ public class Knowledge {
 		
 		setSession(session);
 		
-		NavigationWindow navigationWindow = new  NavigationWindow(session);
-		navigationWindow.getNavigation().setOrganizationPerspectiveDept(null);
-		navigationWindow.getNavigation().setOrganizationPerspectiveRole(null);
-		navigationWindow.getNavigation().setPersonalPerspective(null);
-		navigationWindow.getNavigation().setStrategicPerspective(null);
-		navigationWindow.getNavigation().setProcessPerspective(null);
+		// perspective
+		TopicPerspective topicPerspective = new TopicPerspective();
+		topicPerspective.session = session;
+		topicPerspective.select();
 		
-		Layout outerLayout = new Layout();
-		outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:5, east__spacing_open:5,east__size:300, north__size:52");
-		outerLayout.setNorth(new ProcessTopPanel(session));
-		outerLayout.setWest(navigationWindow);
+		PerspectivePanel perspectivePanel = new PerspectivePanel();
+		perspectivePanel.setTopicPerspective(topicPerspective);
 		
-		Window wfWindow = new Window();
+		PerspectiveWindow perspectiveWindow = new PerspectiveWindow();
+		perspectiveWindow.setPanel(perspectivePanel);
+		
+		// contact
+		ContactWindow contactWindow = new ContactWindow(session.getUser());
+		contactWindow.getContactPanel().setSearchBox(null);
+		
+		// knowlege node
+		
 		//wfWindow.setPanel(new BrainstormPanel(session.getCompany().getComCode()));
-			WfPanel panel = new WfPanel();
+		WfPanel panel = new WfPanel();
 			
-			panel.session = session;
+		panel.session = session;
 			
-//			if("uEngine".equals(session.getCompany().getComCode())){
-//				panel.load("-1");
-//			}else{
-				panel.load(session.getCompany().getComCode());				
-//			}
-			
-			wfWindow.setPanel(panel);
-			wfWindow.setTitle("Knowledge Map");
+//		if("uEngine".equals(session.getCompany().getComCode())){
+//			panel.load("-1");
+//		}else{
+			panel.load(session.getCompany().getComCode());				
+//		}
+		Window wfWindow = new Window();
+		wfWindow.setTitle("Knowledge Map");
+		wfWindow.setPanel(panel);
 		
-		outerLayout.setCenter(wfWindow);
 		
+		// mashup
 		Mashup mashup = new Mashup();
 		ContentWindow mashupContentWindow = new ContentWindow(mashup);
 		mashupContentWindow.setTitle("Mashup");
-		
+//		mashupGoogleImage = mashup.getMashupGoogleImage();		
 
-//		mashupGoogleImage = mashup.getMashupGoogleImage();
+		
+		// layout
+		Layout westLayout = new Layout();
+		westLayout.setCenter(perspectiveWindow);
+		westLayout.setSouth(contactWindow);
+		westLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, south__spacing_open:5, south__size:'50%'");
+		westLayout.setName("west");
+
 		
 		
-		setPageNavigator(new PageNavigator("knowlege"));	
+		Layout outerLayout = new Layout();
+		outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:5, east__spacing_open:5,east__size: '40%', north__size:52");
+		outerLayout.setWest(westLayout);
+		outerLayout.setNorth(new ProcessTopPanel(session));
+		outerLayout.setCenter(wfWindow);
+		outerLayout.setEast(mashup);
+		outerLayout.setName("center");
 		
-		Layout innerLayout = new Layout();
-		innerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, north__spacing_open:5, north__size:'60%'");
-		innerLayout.setCenter(new ContactWindow(session.getUser()));
-		innerLayout.setNorth(mashupContentWindow);
+		setLayout(outerLayout);
 		
-		outerLayout.setEast(innerLayout);
-		setLayout(outerLayout);		
+		setPageNavigator(new PageNavigator("knowlege"));
 
 	}
 //	
