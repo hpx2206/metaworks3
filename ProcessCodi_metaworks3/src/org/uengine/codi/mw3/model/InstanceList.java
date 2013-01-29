@@ -21,8 +21,15 @@ import org.uengine.codi.mw3.Login;
 public class InstanceList implements ContextAware{
 
 	final static int PAGE_CNT = 15;
-
+	
 	public InstanceList(){
+		this(null);
+	}
+	
+	public InstanceList(Session session){
+		this.session = session;
+		
+		this.setNavigation(new Navigation(session));
 		this.setPage(1);
 	}
 
@@ -60,14 +67,14 @@ public class InstanceList implements ContextAware{
 	
 		public void setMoreInstanceList(InstanceList moreInstanceList) {
 			this.moreInstanceList = moreInstanceList;
+		}		
+
+	Navigation navigation;
+		public Navigation getNavigation() {
+			return navigation;
 		}
-		
-	String keyword;
-		public String getKeyword() {
-			return keyword;
-		}
-		public void setKeyword(String keyword) {
-			this.keyword = keyword;
+		public void setNavigation(Navigation navigation) {
+			this.navigation = navigation;
 		}
 
 	@AutowiredFromClient
@@ -83,17 +90,17 @@ public class InstanceList implements ContextAware{
 
 	@ServiceMethod(callByContent = true, except = { "instances" })
 	public void more() throws Exception {
-		load(session);
+		load(this.getNavigation());
 	}
 
-	public void init() {
-		setPage(1);
+	public InstanceList load() throws Exception {
+		return load(this.getNavigation());
 	}
-
-	public InstanceList load(Session session) throws Exception {
-		if(session.lastPerspecteType != null && session.lastPerspecteType.equals("inbox")){			
+	
+	public InstanceList load(Navigation navigation) throws Exception {
+		if(navigation.getPerspectiveType() != null && navigation.getPerspectiveType().equals("inbox")){			
 			//NEW WAY IS GOOD
-			Browser.withSession(Login.getSessionIdWithUserId(session.getEmployee().getEmpCode()), new Runnable(){
+			Browser.withSession(Login.getSessionIdWithUserId(navigation.getEmployee().getEmpCode()), new Runnable(){
 				@Override
 				public void run() {
 					ScriptSessions.addFunctionCall("mw3.getAutowiredObject('" + TodoBadge.class.getName() + "').refresh", new Object[]{});					
@@ -102,7 +109,7 @@ public class InstanceList implements ContextAware{
 			});
 		}
 		
-		IInstance instanceContents = Instance.load(session,	getPage()-1, PAGE_CNT);
+		IInstance instanceContents = Instance.load(navigation,	getPage()-1, PAGE_CNT);
 		if(getMetaworksContext()==null){
 			setMetaworksContext(new MetaworksContext());
 		}
@@ -117,6 +124,7 @@ public class InstanceList implements ContextAware{
 
 		// setting moreInstanceList
 		setMoreInstanceList(new InstanceList());
+		getMoreInstanceList().setNavigation(navigation);
 		getMoreInstanceList().setPage(getPage()+1);
 		
 		return this;
