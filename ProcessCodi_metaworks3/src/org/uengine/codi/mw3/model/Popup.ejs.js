@@ -70,6 +70,8 @@ org_uengine_codi_mw3_model_Popup.prototype = {
 		this.divObj.show();
 	},
 	destoryPopup : function() {
+		mw3.endLoading(this.objectId);
+		
 		this.divObj.remove();
 	},
 	destroy : function() {
