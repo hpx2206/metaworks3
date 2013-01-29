@@ -9,7 +9,6 @@ import java.util.Set;
 import org.directwebremoting.Browser;
 import org.directwebremoting.ScriptSessions;
 import org.metaworks.MetaworksContext;
-import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Id;
@@ -19,7 +18,6 @@ import org.metaworks.dao.TransactionContext;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.Login;
-import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitorPanel;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 import com.efsol.util.StringUtils;
@@ -45,7 +43,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 		
 	}
 	
-	static public IInstance load(Session session, int page, int count)
+	static public IInstance load(Navigation navigation, int page, int count)
 			throws Exception {
 		
 		Map<String, String> criteria = new HashMap<String, String>();
@@ -66,18 +64,18 @@ public class Instance extends Database<IInstance> implements IInstance{
 
 		// TODO makes all criteria
 
-		createSqlPhase1(session, 
+		createSqlPhase1(navigation, 
 				criteria, worklistSql, instanceSql);
 		
 		StringBuffer stmt = new StringBuffer();		
 
-		String searchKeyword = session.getSearchKeyword();
+		String searchKeyword = navigation.getKeyword();
 		if(searchKeyword != null && !searchKeyword.isEmpty()) {
 			//stmt.append("(");
 			
 			StringBuffer appendedInstanceSql = new StringBuffer(instanceSql);
 			
-			if(	"inbox".equals(session.getLastPerspecteType())) {				
+			if(	"inbox".equals(navigation.getPerspectiveType())) {				
 				appendedInstanceSql.append("   AND (wl.title like ?keyword or inst.name like ?keyword)");
 				
 			}else{
@@ -86,7 +84,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 			
 			criteria.put("keyword", "%" + searchKeyword + "%");			
 			
-			createSQLPhase2(session, criteria, stmt, worklistSql, appendedInstanceSql);
+			createSQLPhase2(navigation, criteria, stmt, worklistSql, appendedInstanceSql);
 
 
 			//stmt.append(") union (");
@@ -103,7 +101,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 
 		}else{
 
-			createSQLPhase2(session, criteria, stmt, worklistSql, instanceSql);
+			createSQLPhase2(navigation, criteria, stmt, worklistSql, instanceSql);
 		}
 		
 		// TODO add direct append to sql
@@ -132,24 +130,19 @@ public class Instance extends Database<IInstance> implements IInstance{
 		}
 		
 		System.out.println(" =======> typeOfDBMS : " + typeOfDBMS);
-		/*
-		if ("ORACLE".equals(typeOfDBMS))
-			//bottomList.append( " limit " + criteria.get("startIndex") + ", "+InstanceList.PAGE_CNT);
-		else if ("MYSQL".equals(typeOfDBMS))
+
+/*		if ("ORACLE".equals(typeOfDBMS))
 			bottomList.append( " limit " + criteria.get("startIndex") + ", "+InstanceList.PAGE_CNT);
-		*/
-		
-		if(session.getMetaworksContext().getWhen() == null || !session.getMetaworksContext().getWhen().equals("todoBadge")){
+		else if ("MYSQL".equals(typeOfDBMS))*/
 			bottomList.append( " limit " + criteria.get("startIndex") + ", "+InstanceList.PAGE_CNT);
-		}
 		
 		//TODO delete printing
 		System.out.println("worklist sql:" + bottomList.toString());
 		
 		IInstance instanceContents = (IInstance) sql(Instance.class, bottomList.toString());
-		instanceContents.setInitComCd(session.getEmployee().getGlobalCom());
-		instanceContents.set("endpoint", session.getEmployee().getEmpCode());
-		instanceContents.set("partcode", session.getEmployee().getPartCode());
+		instanceContents.setInitComCd(navigation.getEmployee().getGlobalCom());
+		instanceContents.set("endpoint", navigation.getEmployee().getEmpCode());
+		instanceContents.set("partcode", navigation.getEmployee().getPartCode());
 
 		// TODO add criteria
 		Set<String> keys = criteria.keySet();
@@ -219,14 +212,14 @@ public class Instance extends Database<IInstance> implements IInstance{
 		return null;
 	}
 	
-	static private void createSQLPhase2(Session session, Map<String, String> criteria, StringBuffer stmt, StringBuffer taskSql, StringBuffer instanceSql) {
+	static private void createSQLPhase2(Navigation navigation, Map<String, String> criteria, StringBuffer stmt, StringBuffer taskSql, StringBuffer instanceSql) {
 		stmt.append("select");
 		
 		//if(oracle)
 		//   stmt.append(" ROWNUM rindex,");
 		
 		
-/*		if("inbox".equals(session.getLastPerspecteType())) {
+/*		if("inbox".equals(navigation.getPerspectiveType())) {
 //			2012-10-25 내가할일 및 참여중 쿼리 변경
 			stmt.append(" (select max(worklist.startdate) startdate, worklist.rootinstid ");
 			stmt.append("from bpm_worklist worklist INNER JOIN bpm_rolemapping rolemapping ");
@@ -251,11 +244,11 @@ public class Instance extends Database<IInstance> implements IInstance{
 		.append("      ,(SELECT max(startdate) startdate, worklist.rootinstid")
 		.append("   	   FROM bpm_worklist worklist");
 		
-		if("organization.group"	.equals(session.getLastPerspecteType())) {
+		if("organization.group"	.equals(navigation.getPerspectiveType())) {
 			stmt.append("   	  , 	bpm_rolemapping	  rolemapping ");
 		}
 		stmt.append("  		  WHERE worklist.status != 'RESERVED'");
-		if("organization.group"	.equals(session.getLastPerspecteType())) {
+		if("organization.group"	.equals(navigation.getPerspectiveType())) {
 			stmt.append("and rolemapping.rootinstid = worklist.instid ");
 			stmt.append("and rolemapping.endpoint in (select empcode from emptable where partcode=?lastSelectedItem) ");
 		}
@@ -282,12 +275,12 @@ public class Instance extends Database<IInstance> implements IInstance{
 	
 
 
-	static private void createSqlPhase1(Session session,
+	static private void createSqlPhase1(Navigation navigation,
 			Map<String, String> criteria, StringBuffer taskSql,
 			StringBuffer instanceSql) {
 
 		if(	"inbox"
-				.equals(session.getLastPerspecteType())) {
+				.equals(navigation.getPerspectiveType())) {
 			
 			/*
 			taskSql.append("and (worklist.status=?taskStatus1 or worklist.status=?taskStatus2) ");
@@ -318,7 +311,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 			criteria.put("instIsdelete", "1");			
 		
 		}else if("all"
-				.equals(session.getLastPerspecteType())) {
+				.equals(navigation.getPerspectiveType())) {
 			
 			taskSql
 			.append("      , bpm_worklist wl")
@@ -349,7 +342,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 			.append("			)	 ");
 
 		}else if("running"
-				.equals(session.getLastPerspecteType())) {
+				.equals(navigation.getPerspectiveType())) {
 			
 			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
 			criteria.put("instIsdelete", "1");
@@ -359,15 +352,15 @@ public class Instance extends Database<IInstance> implements IInstance{
 			instanceSql
 					.append("and (exists (select rootinstid from BPM_ROLEMAPPING rm where rm.endpoint=?endpoint and inst.rootinstid=rm.rootinstid)) ");
 		}else if("request"
-					.equals(session.getLastPerspecteType())) {
+					.equals(navigation.getPerspectiveType())) {
 			
 			instanceSql.append(" and inst.initep=?instInitep ");
-			criteria.put("instInitep", session.getEmployee().getEmpCode());
+			criteria.put("instInitep", navigation.getEmployee().getEmpCode());
 			instanceSql.append(" and inst.isdeleted!=?instIsdelete ");
 			criteria.put("instIsdelete", "1");
 
 		}else if("stopped"
-					.equals(session.getLastPerspecteType())) {
+					.equals(navigation.getPerspectiveType())) {
 			
 			instanceSql.append("and inst.status=?instStatus ");
 			criteria.put("instStatus", "Stopped");
@@ -389,7 +382,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 			.append("			)	 ");
 
 		}else if("organization"
-					.equals(session.getLastPerspecteType())) {
+					.equals(navigation.getPerspectiveType())) {
 			
 			taskSql
 			.append("      , bpm_worklist wl")
@@ -401,7 +394,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 			.append("   AND wl.instid=inst.instid")			
 			.append("   AND inst.isdeleted!=?instIsdelete ");
 			
-			criteria.put("taskEndpoint", session.getLastSelectedItem());
+			criteria.put("taskEndpoint", navigation.getPerspectiveValue());
 			criteria.put("instIsdelete", "1");
 
 			// secureopt
@@ -419,13 +412,13 @@ public class Instance extends Database<IInstance> implements IInstance{
 			.append("			)	 ");
 			
 		}else if("organization.group"
-				.equals(session.getLastPerspecteType())) {
+				.equals(navigation.getPerspectiveType())) {
 			
 //			taskSql.append("and rolemapping.endpoint in (select empcode from emptable where partcode=?lastSelectedItem) ");
 			
 			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
 			
-			criteria.put("lastSelectedItem", session.lastSelectedItem);			
+			criteria.put("lastSelectedItem", navigation.getPerspectiveValue());			
 			criteria.put("instIsdelete", "1");
 			
 			// secureopt
@@ -443,10 +436,10 @@ public class Instance extends Database<IInstance> implements IInstance{
 			.append("			)	 ");
 
 		}else if("process"
-				.equals(session.getLastPerspecteType())) {
+				.equals(navigation.getPerspectiveType())) {
 			
 			instanceSql.append("and inst.defverid=?instDefVerId ");
-			criteria.put("instDefVerId", session.getLastSelectedItem());
+			criteria.put("instDefVerId", navigation.getPerspectiveValue());
 			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
 			criteria.put("instIsdelete", "1");
 
@@ -465,10 +458,10 @@ public class Instance extends Database<IInstance> implements IInstance{
 			.append("			)	 ");
 
 		}else if("strategy"
-				.equals(session.getLastPerspecteType())) {
+				.equals(navigation.getPerspectiveType())) {
 			
 			instanceSql.append("and inst.strategyid=?instStrategyId ");
-			criteria.put("instStrategyId", session.getLastSelectedItem());
+			criteria.put("instStrategyId", navigation.getPerspectiveValue());
 			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
 			criteria.put("instIsdelete", "1");
 
@@ -487,10 +480,10 @@ public class Instance extends Database<IInstance> implements IInstance{
 			.append("			)	 ");
 
 		}else if("taskExt1"
-				.equals(session.getLastPerspecteType())) {
+				.equals(navigation.getPerspectiveType())) {
 			
 			instanceSql.append("and task.ext1=?taskExt1 ");
-			criteria.put("taskExt1", session.getLastSelectedItem());
+			criteria.put("taskExt1", navigation.getPerspectiveValue());
 			instanceSql.append("and inst.status=?status ");
 			criteria.put("status", "Running");
 			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
@@ -510,9 +503,9 @@ public class Instance extends Database<IInstance> implements IInstance{
 			.append("					or ( assigntype = 2 and rm.endpoint = ?partcode ) ) ")
 			.append("			)	 ");
 
-		}else if("status".equals(session.getLastPerspecteType())) {
+		}else if("status".equals(navigation.getPerspectiveType())) {
 			instanceSql.append("and inst.status=?status ");
-			criteria.put("status", session.getLastSelectedItem());
+			criteria.put("status", navigation.getPerspectiveValue());
 			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
 			criteria.put("instIsdelete", "1");
 
@@ -529,7 +522,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 			.append("			and ( 	( assigntype = 0 and rm.endpoint = ?endpoint ) 	 ")
 			.append("					or ( assigntype = 2 and rm.endpoint = ?partcode ) ) ");
 
-		}else if("allICanSee".equals(session.getLastPerspecteType())) {
+		}else if("allICanSee".equals(navigation.getPerspectiveType())) {
 			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
 			criteria.put("instIsdelete", "1");
 			instanceSql.append("and inst.status!=?instStatus ");
@@ -559,13 +552,13 @@ public class Instance extends Database<IInstance> implements IInstance{
 //			.append("		OR (inst.secuopt=3 and ( exists (select topicId from BPM_TOPICMAPPING tm where tm.userId=?endpoint and inst.topicId=tm.topicId) ")
 //			.append(" 																	 or ?endpoint in ( select empcode from emptable where partcode in (  ")
 //			.append(" 																	 						select userId from BPM_TOPICMAPPING where assigntype = 2 and topicId = inst.topicId )))))  ");
-		}else if("topic".equals(session.getLastPerspecteType())) {
+		}else if("topic".equals(navigation.getPerspectiveType())) {
 			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
 			criteria.put("instIsdelete", "1");
 			instanceSql.append("and inst.status!=?instStatus ");
 			criteria.put("instStatus", "Stopped");
 			instanceSql.append("and inst.topicId =?topicId ");
-			criteria.put("topicId", session.getLastSelectedItem());
+			criteria.put("topicId", navigation.getPerspectiveValue());
 			// secureopt
 			instanceSql
 			.append(" and	exists ( ")
@@ -592,7 +585,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 			criteria.put("taskStatus1", "NEW");
 			criteria.put("taskStatus2", "CONFIRMED");
 			taskSql.append("and rolemapping.endpoint=?taskEndpoint ");
-			criteria.put("taskEndpoint", session.getEmployee().getEmpCode());
+			criteria.put("taskEndpoint", navigation.getEmployee().getEmpCode());
 			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
 			criteria.put("instIsdelete", "1");
 		}

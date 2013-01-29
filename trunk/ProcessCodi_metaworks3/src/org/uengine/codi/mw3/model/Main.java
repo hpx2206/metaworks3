@@ -118,16 +118,20 @@ public class Main {
 			
 			//Since there's are too many input boxes there, it is removed.
 			contactWindow.getContactPanel().setSearchBox(null);
-
+			
+			PerspectiveWindow perspectiveWindow = new PerspectiveWindow(session);
+			
 			ContentWindow contentWindow = createNewInstancePanel(session);
 			
-			westLayout.setNorth(new  NavigationWindow(session));
+			InstanceListWindow instanceListWindow = new InstanceListWindow(session);
+			
+			westLayout.setNorth(perspectiveWindow);
 			westLayout.setCenter(contactWindow);
 			westLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, north__spacing_open:5, north__size:'50%'");
 			westLayout.setName("west");
 			
 			Layout eastLayout = new Layout();
-			eastLayout.setWest(new  InstanceListWindow(session));
+			eastLayout.setWest(instanceListWindow);
 			
 			eastLayout.setCenter(contentWindow);
 			eastLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, south__spacing_open:5, west__spacing_open:5, west__size:'40%'");

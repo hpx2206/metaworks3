@@ -2,87 +2,58 @@ package org.uengine.codi.mw3.model;
 
 public class Navigation {
 	
-	PersonalPerspective personalPerspective;
-
-		public PersonalPerspective getPersonalPerspective() {
-			return personalPerspective;
+	String perspectiveType;
+		public String getPerspectiveType() {
+			return perspectiveType;
+		}
+		public void setPerspectiveType(String perspectiveType) {
+			this.perspectiveType = perspectiveType;
 		}
 	
-		public void setPersonalPerspective(PersonalPerspective personalPerspective) {
-			this.personalPerspective = personalPerspective;
+	String perspectiveValue;
+		public String getPerspectiveValue() {
+			return perspectiveValue;
+		}	
+		public void setPerspectiveValue(String perspectiveValue) {
+			this.perspectiveValue = perspectiveValue;
 		}
-
-	OrganizationPerspectiveDept organizationPerspectiveDept;
-		public OrganizationPerspectiveDept getOrganizationPerspectiveDept() {
-			return organizationPerspectiveDept;
-		}
-		public void setOrganizationPerspectiveDept(
-				OrganizationPerspectiveDept organizationPerspectiveDept) {
-			this.organizationPerspectiveDept = organizationPerspectiveDept;
-		}
-	
-	OrganizationPerspectiveRole organizationPerspectiveRole;
-		public OrganizationPerspectiveRole getOrganizationPerspectiveRole() {
-			return organizationPerspectiveRole;
-		}
-	
-		public void setOrganizationPerspectiveRole(
-				OrganizationPerspectiveRole organizationPerspectiveRole) {
-			this.organizationPerspectiveRole = organizationPerspectiveRole;
-		}
-
-	ProcessPerspective processPerspective;
-		public ProcessPerspective getProcessPerspective() {
-			return processPerspective;
-		}
-	
-		public void setProcessPerspective(ProcessPerspective processPerspective) {
-			this.processPerspective = processPerspective;
-		}
-	
-//	ProcessStatusPerspective processStatusPerspective;
-//	
-//		public ProcessStatusPerspective getProcessStatusPerspective() {
-//			return processStatusPerspective;
-//		}
-//	
-//		public void setProcessStatusPerspective(
-//				ProcessStatusPerspective processStatusPerspective) {
-//			this.processStatusPerspective = processStatusPerspective;
-//		}
-
-	StrategicPerspective strategicPerspective;
-		public StrategicPerspective getStrategicPerspective() {
-			return strategicPerspective;
-		}
-	
-		public void setStrategicPerspective(StrategicPerspective strategicPerspective) {
-			this.strategicPerspective = strategicPerspective;
-		}
-	TopicPerspective topicPerspective;
-		public TopicPerspective getTopicPerspective() {
-			return topicPerspective;
-		}
-	
-		public void setTopicPerspective(TopicPerspective topicPerspective) {
-			this.topicPerspective = topicPerspective;
-		}
-
-	public Navigation(Session session) throws Exception {
-		personalPerspective = new PersonalPerspective();
-		personalPerspective.session = session;
-		personalPerspective.select();
 		
-		topicPerspective = new TopicPerspective();
-		topicPerspective.session = session;
-		topicPerspective.select();
-		
-		organizationPerspectiveDept = new OrganizationPerspectiveDept();
-		organizationPerspectiveRole = new OrganizationPerspectiveRole();
-		processPerspective = new ProcessPerspective();
-		//processStatusPerspective = new ProcessStatusPerspective();
-		
-		strategicPerspective = new StrategicPerspective();
+	String keyword;
+		public String getKeyword() {
+			return keyword;
+		}
+		public void setKeyword(String keyword) {
+			this.keyword = keyword;
+		}
+	
+	Employee employee;
+		public Employee getEmployee() {
+			return employee;
+		}
+		public void setEmployee(Employee employee) {
+			this.employee = employee;
+		}
+	
+	public Navigation(){
+		this(null);
+	}
+	
+	public Navigation(Session session){
+		if(session != null){
+			Employee employee = null;
+			
+			try{
+				employee = new Employee();
+				employee.copyFrom(session.getEmployee());
+			}catch(Exception e){
+				e.printStackTrace();
+			}
+			
+			this.setPerspectiveType(session.lastPerspecteType);
+			this.setPerspectiveValue(session.lastSelectedItem);		
+			this.setKeyword(session.getSearchKeyword());
+			this.setEmployee(employee);
+		}
 	}
 	
 }
