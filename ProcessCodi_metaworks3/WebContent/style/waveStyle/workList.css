@@ -54,7 +54,7 @@
 *:first-child+html .instanceTitle{float:left}
 * html .instanceTitle{float:left}
 
-.instanceBtn_sns{display:none; position:absolute; right: 10px;top:0px; background:#fff; border:1px solid #1C94C4;-webkit-border-radius: 5px;
+.instanceBtn_sns{display:none; position:absolute; right: 10px;top:10px; background:#fff; border:1px solid #1C94C4;-webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px; padding:2px;}
     
