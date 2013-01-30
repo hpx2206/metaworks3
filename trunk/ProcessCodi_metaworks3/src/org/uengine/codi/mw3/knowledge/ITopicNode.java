@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.knowledge;
 
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
@@ -36,4 +37,7 @@ public interface ITopicNode extends IDAO {
 	
 	@ServiceMethod(inContextMenu=true, callByContent=true,target="popup")
 	public ModalWindow exportHtml() throws Exception;
+	
+	@ServiceMethod(callByContent=true, mouseBinding="drop", target=ServiceMethodContext.TARGET_APPEND)
+	public Object[] drop() throws Exception;
 }
