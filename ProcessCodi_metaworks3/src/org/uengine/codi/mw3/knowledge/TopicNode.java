@@ -1,6 +1,7 @@
 package org.uengine.codi.mw3.knowledge;
 
 import org.metaworks.MetaworksContext;
+import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
@@ -8,6 +9,9 @@ import org.metaworks.dao.MetaworksDAO;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.admin.PageNavigator;
+import org.uengine.codi.mw3.model.Instance;
+import org.uengine.codi.mw3.model.InstanceDrag;
+import org.uengine.codi.mw3.model.InstanceList;
 import org.uengine.codi.mw3.model.Perspective;
 import org.uengine.codi.mw3.model.Session;
 
@@ -134,6 +138,25 @@ public class TopicNode extends Database<ITopicNode> implements ITopicNode {
 	
 	public void addUser() throws Exception {
 		
+	}
+
+	@Override
+	public Object[] drop() throws Exception {
+		Object clipboard = session.getClipboard();
+		if(clipboard instanceof InstanceDrag){
+			InstanceDrag instanceInClipboard = (InstanceDrag) clipboard;
+			
+			Instance locatorForInstanceInClipboard = new Instance();
+			locatorForInstanceInClipboard.setInstId(instanceInClipboard.getInstanceId());
+			locatorForInstanceInClipboard.databaseMe().setTopicId(this.getId());			
+			locatorForInstanceInClipboard.flushDatabaseMe();
+			
+			InstanceList instList = new InstanceList(session);
+			instList.load();
+			
+			return new Object[]{new Refresh(instList)};
+		}
+		return null;
 	}
 	
 	@AutowiredFromClient
