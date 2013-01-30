@@ -98,7 +98,7 @@ public class PortraitServlet extends HttpServlet {
 				}
 			}
 		}else{			
-			String srcName = portraitPath + "/" + pathInfo + ".jpg";
+			String srcName = portraitPath + pathInfo;
 			
 			System.out.println("원본 이미지 요청 : " + srcName);
 			
