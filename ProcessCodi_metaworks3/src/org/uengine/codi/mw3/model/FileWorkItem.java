@@ -54,13 +54,6 @@ public class FileWorkItem extends WorkItem{
 			this.versionUpOption = versionUpOption;
 		}
 	
-	Preview preview;
-		public Preview getPreview() {
-			return preview;
-		}
-		public void setPreview(Preview file) {
-			this.preview = file;
-		}
 		
 	@Override
 	@Hidden(on=false) //overrides the annotation
@@ -116,9 +109,6 @@ public class FileWorkItem extends WorkItem{
 		this.setTool(this.getFile().getMimeType());
 		this.setExtFile(this.getFile().getFilename());
 		
-		// WorkItem 추가
-		Object[] returnObject = super.add();
-		
 		// Office, PDF 파일변환
 		String mimeType = getFile().getMimeType();
 		
@@ -149,13 +139,16 @@ public class FileWorkItem extends WorkItem{
 				preview.setPageCountInt(
 					getImageForPdf(inputFilePath, outputFilePath)
 				);
-				databaseMe().setPreview(preview);
 				
+				this.setPreview(preview);
 			}catch (Exception e){
 				e.printStackTrace();
 			}
 			
 		}
+		
+		// WorkItem 추가
+		Object[] returnObject = super.add();
 		
  		this.setWorkItemVersionChooser(this.databaseMe().getWorkItemVersionChooser());
 		
