@@ -16,16 +16,26 @@
 				<%
 				var gridMetadata = mw3.getMetadata(value[0].__className);
 				var fd = gridMetadata.fieldDescriptors
+				
 				for(var i=0; i<fd.length; i++){
 					var responsive = "";
-					if(fd[i].options != null){
-						for(var j=0; j<fd[i].options.length; j++){
-							if(fd[i].options.length == 1 && fd[i].options == "responsive") responsive = fd[i].values;
-							else if(fd[i].options[j] == "responsive"){
-								responsive = fd[i].values[j]; 
+					var aMedia = fd[i].attributes['available.media'];
+					var hMedia = fd[i].attributes['hidden.media'];
+					
+					if(aMedia != null){
+						for(o in aMedia){
+							if(o == mw3.MEDIA_PC){
+								responsive = "visible-desktop";
+							}
+						}
+					}else if(hMedia != null){
+						for(o in hMedia){
+							if(o == mw3.MEDIA_MOBILE){
+								responsive = "hidden-phone";
 							}
 						}
 					}
+					
 					
 					%>
 					<th class="fabrik_ordercell demo_iphone___label 340_order fabrik_list_45_group_54 <%=responsive%>">
