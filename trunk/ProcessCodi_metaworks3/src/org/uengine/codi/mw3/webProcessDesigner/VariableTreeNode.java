@@ -2,7 +2,11 @@ package org.uengine.codi.mw3.webProcessDesigner;
 
 import java.util.ArrayList;
 
+import org.metaworks.FieldDescriptor;
+import org.metaworks.WebFieldDescriptor;
+import org.metaworks.WebObjectType;
 import org.metaworks.component.TreeNode;
+import org.metaworks.dwr.MetaworksRemoteService;
 
 public class VariableTreeNode extends TreeNode {
 
@@ -15,7 +19,7 @@ public class VariableTreeNode extends TreeNode {
 			PrcsValiable prcsValiable = prcsValiableList.get(i);
 			String nameAttr = prcsValiable.getName();
 			
-			RoleTreeNode node = new RoleTreeNode();
+			VariableTreeNode node = new VariableTreeNode();
 			node.setId(nameAttr);
 			node.setName(nameAttr);
 			node.setParentId("valiables");
@@ -26,7 +30,6 @@ public class VariableTreeNode extends TreeNode {
 			
 			// TODO 처음에 로딩할 필요가 없다면 아래 루프 부분은 클릭시 작동하는걸로 뺀다. 
 			// RoleTreeNode 를 따로 만들어 주어야 한다.
-			/*
 			String typeIdAttr = prcsValiable.getTypeId();
 			String typeAttr = prcsValiable.getDataType().getSelected();
 			
@@ -35,6 +38,9 @@ public class VariableTreeNode extends TreeNode {
 					WebObjectType wot = MetaworksRemoteService.getInstance().getMetaworksType( typeIdAttr.substring(0, typeIdAttr.lastIndexOf(".")).replaceAll("/", ".") ); 
 					WebFieldDescriptor wfields[] = wot.getFieldDescriptors();
 					FieldDescriptor fields[] = wot.metaworks2Type().getFieldDescriptors();
+					if( fields.length > 0){
+						node.setFolder(true);
+					}
 					for(int j=0; j<fields.length; j++){
 						WebFieldDescriptor wfd = wfields[j];
 //						FieldDescriptor fd = fields[i];
@@ -49,7 +55,7 @@ public class VariableTreeNode extends TreeNode {
 				
 			}catch(Exception e){
 				e.printStackTrace();
-			}*/
+			}
 		}
 	}
 	/*

@@ -37,6 +37,7 @@
 	<convert converter="metaworks" match="org.uengine.processmarket.*"/>
 	
 	<convert converter="metaworks" match="org.uengine.kernel.*"/>
+	<convert converter="metaworks" match="org.uengine.contexts.*"/>
 	
 	<convert converter="metaworks" match="org.uengine.codi.activitytypes.wih.*"/>
 	<convert converter="metaworks" match="com.defaultcompany.sample.*"/>
