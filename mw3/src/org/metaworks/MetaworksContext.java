@@ -16,12 +16,23 @@ public class MetaworksContext {
 	public final static String WHERE_PC = "pc";
 	public final static String WHERE_MOBILE = "mobile";
 	public final static String WHERE_EVER = "wherever";
+	
+	public final static String MEDIA_PC = "pc";
+	public final static String MEDIA_MOBILE = "mobile";
+	public final static String MEDIA_EVER = "wherever";
 
 	String when;
 	String where;
 	String how;
+	String media;
 	
 	
+	public String getMedia() {
+		return media;
+	}
+	public void setMedia(String media) {
+		this.media = media;
+	}
 	public String getWhen() {
 		return when;
 	}
