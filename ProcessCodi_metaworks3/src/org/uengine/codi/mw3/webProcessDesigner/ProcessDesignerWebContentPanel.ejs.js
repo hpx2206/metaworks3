@@ -36,6 +36,22 @@ var org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel = fun
 	this.icanvas = mw3.canvas;	
 	canvas = mw3.canvas;
 	
+	canvas.initConfig({
+        selectable       : true,
+        dragSelectable   : true,
+        movable          : true,
+        resizable        : true,
+        connectable      : true,
+        selfConnectable  : false,
+        connectCloneable : false,
+        connectRequired  : true,
+        labelEditable    : true,
+        groupDropable    : true,
+        collapsible      : true,
+        enableHotKey     : true,
+        enableContextMenu: true
+    });
+	
     // Shape drag & drop
     $(".icon_shape").draggable({
         start   : function () {
@@ -76,11 +92,16 @@ var org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel = fun
                             shape, [parseInt(shapeInfo._width, 10), parseInt(shapeInfo._height, 10)]);
                     
                     if (shapeInfo._shape_type === 'GEOM' || shapeInfo._shape_type === 'GROUP') {
-                    	$(element).attr("_classname", shapeInfo._classname);
-                    	$(element).attr("_classType", shapeInfo._classType);
-                    	$(element).attr("_tracingTag",++faceHelper.tracingTag);
-	                    // 그리고 난 후의 엘리먼트에 이벤트 등록
-	                    faceHelper.addEventGeom(objectId, canvas, element);
+                    	
+                    	if( shapeInfo._shape_id == 'OG.shape.bpmn.E_Start' || shapeInfo._shape_id == 'OG.shape.bpmn.E_End'){
+                    		// do nothing
+                    	}else{
+                    		$(element).attr("_classname", shapeInfo._classname);
+                    		$(element).attr("_classType", shapeInfo._classType);
+                    		$(element).attr("_tracingTag",++faceHelper.tracingTag);
+                    		// 그리고 난 후의 엘리먼트에 이벤트 등록
+                    		faceHelper.addEventGeom(objectId, canvas, element);
+                    	}
                     }
                 }
                 this.icanvas = canvas;
@@ -108,11 +129,10 @@ var org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel = fun
     
     // Shape 이 Connect 되었을 때의 이벤트 리스너
     canvas.onConnectShape(function (event, edgeElement, fromElement, toElement) {
-    	// TODO 연결되는 시점에만 호출 되니 그려진 로직은 다른걸 태우던지 해야함
 		faceHelper.addEventEdge(objectId, canvas, edgeElement);
     });
     canvas.onDrawShape(function (event, shapeElement) {
-    	
+//    	console.log(shapeElement);
     });
     canvas.onRemoveShape(function (shapeElement) {
     	console.log($(shapeElement));
@@ -121,34 +141,34 @@ var org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel = fun
     	// TODO 스윔레인에 text가 써졌을때, 바로 role 추가하는 로직 생성
     });
     // Role.ejs 파일쪽에 있는 스윔레인추가 버튼 클릭시 동작
-    $(".horizontalLaneShapeCall").click(function(){
-    	var text = $("#horizontalLaneShapeText").val();
-    	if( text == null || text == '' || text == undefined ){
-    		alert('Role 명을 입력해주세요');	// TODO 다국어 처리~
-    	}else{
-    		var newNodeWidth = 300 ;
-			var newNodeHeight = 100 ;
-			var positionWidth = 300;
-			var positionHeight = 300;
-			var eleLength = $("g[_shape_id='OG.shape.HorizontalLaneShape']").length;
-			if( eleLength == 0 ){
-				positionWidth = $('#canvas').width() - $('#canvas')[0].offsetLeft + $('#canvas')[0].scrollLeft	- $('#canvas').offsetParent().offset().left;
-				positionHeight = $('#canvas').height() - $('#canvas')[0].offsetTop + $('#canvas')[0].scrollTop	- $('#canvas').offsetParent().offset().top;
-			}else{
-				$("g[_shape_id='OG.shape.HorizontalLaneShape']").each(function (index, element) {
-					if (index === eleLength - 1) {
-						positionWidth = $(this).position().left  + (element.getBBox().width / 2 ) ; 
-						positionHeight = $(this).position().top + (element.getBBox().height /2 ) + element.getBBox().height ;
-						newNodeWidth = element.getBBox().width;
-						newNodeHeight = element.getBBox().height;
-					}
-				});
-			}
-			canvas.drawShape([ positionWidth , positionHeight ],
-				 new OG.shape.HorizontalLaneShape(text) , [parseInt(newNodeWidth, 10), parseInt(newNodeHeight, 10)]);
-			$("#horizontalLaneShapeText").val("");
-    	}
-    });
+//    $(".horizontalLaneShapeCall").click(function(){
+//    	var text = $("#horizontalLaneShapeText").val();
+//    	if( text == null || text == '' || text == undefined ){
+//    		alert('Role 명을 입력해주세요');	// TODO 다국어 처리~
+//    	}else{
+//    		var newNodeWidth = 300 ;
+//			var newNodeHeight = 100 ;
+//			var positionWidth = 300;
+//			var positionHeight = 300;
+//			var eleLength = $("g[_shape_id='OG.shape.HorizontalLaneShape']").length;
+//			if( eleLength == 0 ){
+//				positionWidth = $('#canvas').width() - $('#canvas')[0].offsetLeft + $('#canvas')[0].scrollLeft	- $('#canvas').offsetParent().offset().left;
+//				positionHeight = $('#canvas').height() - $('#canvas')[0].offsetTop + $('#canvas')[0].scrollTop	- $('#canvas').offsetParent().offset().top;
+//			}else{
+//				$("g[_shape_id='OG.shape.HorizontalLaneShape']").each(function (index, element) {
+//					if (index === eleLength - 1) {
+//						positionWidth = $(this).position().left  + (element.getBBox().width / 2 ) ; 
+//						positionHeight = $(this).position().top + (element.getBBox().height /2 ) + element.getBBox().height ;
+//						newNodeWidth = element.getBBox().width;
+//						newNodeHeight = element.getBBox().height;
+//					}
+//				});
+//			}
+//			canvas.drawShape([ positionWidth , positionHeight ],
+//				 new OG.shape.HorizontalLaneShape(text) , [parseInt(newNodeWidth, 10), parseInt(newNodeHeight, 10)]);
+//			$("#horizontalLaneShapeText").val("");
+//    	}
+//    });
     var canvasWidth = 1024;		// defualt
     var canvasHeight = 768;		// defualt
     
@@ -172,6 +192,7 @@ var org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel = fun
 				
 				if( cellClassname != null ){
 					$('#'+cellId).attr("_classname",cellClassname);
+					$('#'+cellId).attr("_classType",cellClassType);
 					var activityData = object.activityMap[cellId];
 //					var activityData = null; 
 //					if( cellClassType == 'Activity'){
@@ -329,9 +350,6 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 			
 			value.tempElementId = $(this).attr('id');
 			value.tempElementName = $(this).children('[id$=_LABEL]').text();
-			
-		
-			value.tempElementData = JSON.stringify(canvas.getCustomData(element));
 			value.gateCondition();
 		}
 	});

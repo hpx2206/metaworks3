@@ -134,7 +134,7 @@ public class ConditionPanel  implements ContextAware{
 		treeNode.setId("rootNode");
 		treeNode.setName("만족조건");
 		if( condition != null ){
-			makeChildTreeNode(treeNode , condition);
+			makeChildTreeNode(treeNode , condition); 
 		}
 		conditionTree.setNode(treeNode);
 			

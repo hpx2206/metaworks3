@@ -240,17 +240,17 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 			return null;
 		}
 	}
-	@ServiceMethod(callByContent=true, target="popup")
-	public ModalWindow dataMapping() throws Exception{
-		MappingPanel conditionPanel = new MappingPanel();
-		conditionPanel.setElementId(this.getTempElementId());
-		conditionPanel.setMapperData(this.getTempElementData());
-		conditionPanel.setRoleList(defineTab.rolePanel.getRoles());
-		conditionPanel.setPrcsValiableList(defineTab.prcsValiablePanel.getPrcsValiables());
-		conditionPanel.load();
-		conditionPanel.getMetaworksContext().setWhen("edit");
-		return new ModalWindow(conditionPanel , 800, 500,  "데이터매핑" );
-	}
+//	@ServiceMethod(callByContent=true, target="popup")
+//	public ModalWindow dataMapping() throws Exception{
+//		MappingPanel conditionPanel = new MappingPanel();
+//		conditionPanel.setElementId(this.getTempElementId());
+//		conditionPanel.setMapperData(this.getTempElementData());
+//		conditionPanel.setRoleList(defineTab.rolePanel.getRoles());
+//		conditionPanel.setPrcsValiableList(defineTab.prcsValiablePanel.getPrcsValiables());
+//		conditionPanel.load();
+//		conditionPanel.getMetaworksContext().setWhen("edit");
+//		return new ModalWindow(conditionPanel , 800, 500,  "데이터매핑" );
+//	}
 	@ServiceMethod(callByContent=true)
 	public PrcsValiablePanel addValiable() throws Exception{
 		ArrayList<PrcsValiable> prcsValiable = defineTab.prcsValiablePanel.getPrcsValiables();
@@ -332,6 +332,7 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 						Transition ts = new Transition(fromAct.getTracingTag()  , toAct.getTracingTag() );
 						// 컨디션 생성
 						if( this.getConditionMap().containsKey(cv.getId())){
+							ts.setTransitionId(cv.getId());
 							ts.setCondition(this.getConditionMap().get(cv.getId()));
 						}
 						
@@ -506,8 +507,7 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 				for(int i =0 ; i < tsList.size(); i++){
 					Transition ts = tsList.get(i);
 					if( ts.getCondition() != null ){
-						Condition cond = ts.getCondition();
-						// 트렌지션에 ID를 하나 추가
+						conditionMap.put(ts.getTransitionId(), ts.getCondition());
 					}
 				}
 			}
