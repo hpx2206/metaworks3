@@ -9,7 +9,7 @@ var org_uengine_codi_mw3_knowledge_WfPanel = function(objectId, className){
 	
 	this.windowObjectId = $('#' + this.divId).closest('.mw3_window').attr('objectId');
 	
-	$('#' + this.divId).addClass('wf_panel').attr('objectId', this.objectId).css({height: '100%', width: '90%'});
+	$('#' + this.divId).addClass('wf_panel').attr('objectId', this.objectId);
 	
 	
 	rootNodeId = mw3.objects[objectId].rootNodeId;
