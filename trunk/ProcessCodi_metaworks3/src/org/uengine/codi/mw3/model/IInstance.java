@@ -55,6 +55,8 @@ public interface IInstance extends IDAO{
 	public String getDefName();
 	public void setDefName(String defName);
 
+	public String getBeforeCmnt();
+	public void setBeforeCmnt(String beforeComment);
 	
 	public String getLastCmnt();
 	public void setLastCmnt(String lastComment);

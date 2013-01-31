@@ -655,3 +655,6 @@ alter table bpm_worklist alter column isdeleted set default 0;
 update bpm_worklist set isdeleted = 0 where isdeleted is null;
 
 alter table roleusertable modify column EMPCODE varchar(100);
+
+--2013.01.31
+alter table bpm_procinst add beforeCmnt varchar(200);
