@@ -10,15 +10,23 @@
 	for (var i=0; i<objectMetadata.fieldDescriptors.length; i++){
 	  	var fd = objectMetadata.fieldDescriptors[i];
 	  	
-	  	if(mw3.isHidden(fd)) continue;
-	  	if(fd.name == 'metaworksContext') continue;
+//	  	if(mw3.isHidden(fd)) continue;
+//	  	if(fd.name == 'metaworksContext') continue;
 
 		var responsive = "";
-		if(fd.options != null){
-			for(var j=0; j<fd.options.length; j++){
-				if(fd.options.length == 1 && fd.options == "responsive") responsive = fd.values;
-				else if(fd.options[j] == "responsive"){
-					responsive = fd.values[j]; 
+		var aMedia = fd.attributes['available.media'];
+		var hMedia = fd.attributes['hidden.media'];
+		
+		if(aMedia != null){
+			for(o in aMedia){
+				if(o == mw3.MEDIA_PC){
+					responsive = "visible-desktop";
+				}
+			}
+		}else if(hMedia != null){
+			for(o in hMedia){
+				if(o == mw3.MEDIA_MOBILE){
+					responsive = "hidden-phone";
 				}
 			}
 		}
