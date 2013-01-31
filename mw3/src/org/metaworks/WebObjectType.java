@@ -395,8 +395,8 @@ public class WebObjectType{
 					
 				}else
 					fd.setAttribute("hidden", hidden.on());
-				
-				if(hidden.media().length > 1){
+
+				if(hidden.media().length > 0){
 					Map medias = new HashMap();
 					for(String media : hidden.media()){
 						medias.put(media, media);
@@ -471,8 +471,9 @@ public class WebObjectType{
 					}
 					
 					fd.setAttribute("available.how", hows);
+				}
 				
-				if(available.media().length > 0){}				
+				if(available.media().length > 0){				
 					Map medias = new HashMap();
 					for(String media : available.media()){
 						medias.put(media, media);
