@@ -73,13 +73,18 @@
 				</li>
 				
 			    <% if(value.instanceViewThreadPanel && value.instanceViewThreadPanel.instanceId) {%>			     
-			    <% }else{%>          
-			    <% if(value.currentUser && value.currentUser.userId && (value.initiator.userId!=value.currentUser.userId || value.name!=value.lastCmnt)){%>
-			   
+			    <% }else if(value.beforeCmnt != null){%>
+			    <% if(value.currentUser && value.currentUser.userId && (value.initiator.userId!=value.currentUser.userId || value.name!=value.beforeCmnt)){%>
 			    <li>
 			   		<table style="margin-left:38px;"><td><%value.currentUser['size']='small';%><%=fields.currentUser.here()%></td>
-			  		<td colspan=2 style="border:none; padding-right:10px;"><font color=204070><%=value.currentUser.name%></font>&nbsp;&nbsp; <font color=gray><%=value.lastCmnt%></font></td></table>
+			  		<td colspan=2 style="border:none; padding-right:10px;"><font color=204070><%=value.currentUser.name%></font>&nbsp;&nbsp; <font color=gray><%=value.beforeCmnt%></font></td></table>
 			 	</li>
+			   		<%if(value.name!=value.lastCmnt && value.lastCmnt != null){%>
+					    <li>
+					   		<table style="margin-left:38px;"><td><%value.currentUser['size']='small';%><%=fields.currentUser.here()%></td>
+					  		<td colspan=2 style="border:none; padding-right:10px;"><font color=204070><%=value.currentUser.name%></font>&nbsp;&nbsp; <font color=gray><%=value.lastCmnt%></font></td></table>
+					 	</li>
+			   		<%}%>
 			    <%}%>
 			    <%}%>
 												

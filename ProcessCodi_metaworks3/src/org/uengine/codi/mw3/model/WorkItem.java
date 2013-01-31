@@ -691,7 +691,21 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			}
 			
 			// 마지막 워크아이템의 제목을 인스턴스의 적용
-			instanceRef.setLastCmnt(getTitle());
+			String beforeCmnt = instanceRef.getBeforeCmnt();
+			
+			if(beforeCmnt == null){
+				if(instanceRef.getName() != getTitle()){
+					instanceRef.setBeforeCmnt(getTitle());
+				}
+			}else{
+				if(instanceRef.getLastCmnt() == null){
+					instanceRef.setLastCmnt(getTitle());
+				}else {
+					instanceRef.setBeforeCmnt(instanceRef.getLastCmnt());
+					instanceRef.setLastCmnt(getTitle());
+				}
+			}
+			
 			instanceRef.setCurrentUser(session.getUser());//may corrupt when the last actor is assigned from process execution.
 								
 			IUser writer = new User();

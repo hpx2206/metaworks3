@@ -687,6 +687,14 @@ public class Instance extends Database<IInstance> implements IInstance{
 			this.initComCd = initComCd;
 		}
 		
+	String beforeCmnt;
+		public String getBeforeCmnt() {
+			return beforeCmnt;
+		}
+		public void setBeforeCmnt(String beforeCmnt) {
+			this.beforeCmnt = beforeCmnt;
+		}
+		
 	String lastCmnt;
 		public String getLastCmnt() {
 			return lastCmnt;
@@ -695,8 +703,6 @@ public class Instance extends Database<IInstance> implements IInstance{
 			this.lastCmnt = lastCmnt;
 		}
 	
-		
-
 	String defId;
 		public String getDefId() {
 			return this.defId;
