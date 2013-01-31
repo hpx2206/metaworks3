@@ -326,6 +326,11 @@ public interface IWfNode extends IDAO {
 	public Popup xml() throws Exception;
 	
 	@Hidden
+	@ServiceMethod(inContextMenu=true, target="popup")
+	@Face(displayName="JSON 전환")
+	public Popup json() throws Exception;
+	
+	@Hidden
 	@Face(displayName="공개토픽으로 지정")
 	@ServiceMethod(except={"childNode", "focus"}, inContextMenu=true)
 	public Object[] topic() throws Exception;

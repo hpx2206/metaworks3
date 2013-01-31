@@ -110,14 +110,14 @@ var org_uengine_contexts_MappingContext = function(objectId, className){
     });
     
     canvas.onConnectShape(function (event, edgeElement, fromElement, toElement) {
-        console.log('connected!', fromElement.id, '--->', toElement.id);
+//        console.log('connected!', fromElement.id, '--->', toElement.id);
         var linkedInfoStr = fromElement.id + "," + toElement.id;
         linekedInfo.add(linkedInfoStr);
         faceHelper.linekedInfo = linekedInfo;
     });
 
     canvas.onDisconnectShape(function (event, edgeElement, fromElement, toElement) {
-        console.log('disconnected!', fromElement.id, '-/->', toElement.id);
+//        console.log('disconnected!', fromElement.id, '-/->', toElement.id);
         var linkedInfoStr = fromElement.id + "," + toElement.id;
         for(var i = 0; i < linekedInfo.size(); i++){
         	if( linekedInfo.get(i) == linkedInfoStr){
@@ -225,10 +225,10 @@ org_uengine_contexts_MappingContext.prototype = {
 				return;
 			}
 			for(var i = 0; i < elements.length; i++){
-				var toId = elements[i].argument.text;
-				var fromId = elements[i].variable.name;
-				console.log('fromId ============ ' +fromId );
-				console.log('toId ========== ' +toId );
+				var toId = 'TO_' + elements[i].argument.text;
+				var fromId = 'FROM_' + elements[i].variable.name;
+//				console.log('fromId ============ ' +fromId );
+//				console.log('toId ========== ' +toId );
 				var fromShape = this.icanvas.getElementById(fromId);
 				var toShape = this.icanvas.getElementById(toId);
 				this.icanvas.connect(fromShape, toShape);
@@ -250,14 +250,17 @@ org_uengine_contexts_MappingContext.prototype = {
 						console.log('toId = ' +toId );
 						// argument : 받은 변수정보 => toId
 						// variable : 준 변수 정보 => formId
-						
+						var fromText = fromId.substring(5);
+						var toText = toId.substring(3);
+						console.log('fromText = ' +fromText );
+						console.log('toText = ' +toText );
 						var processValiable = {
 								__className : 'org.uengine.kernel.ProcessVariable',
-								name : fromId
+								name : fromText
 						};
 						var argumentText = {
 								__className : 'org.uengine.contexts.TextContext',
-								text : toId
+								text : toText
 						};
 						var mappingElement = {
 							__className : 'org.uengine.kernel.MappingElement',

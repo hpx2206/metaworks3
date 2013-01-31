@@ -10,6 +10,8 @@ public class PerspectiveWindow extends Window {
 	
 	public PerspectiveWindow(Session session) throws Exception {
 		setPanel(new PerspectivePanel(session));
+		// title 을 '관점' 으로 셋팅해줌..
+		setTitle("$Navigation");
 	}
 
 }
