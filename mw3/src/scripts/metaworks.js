@@ -27,6 +27,10 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				this.WHERE_EVER = "wherever";
 				this.where = this.WHERE_EVER;
 				
+				this.MEDIA_PC = "pc";
+				this.MEDIA_MOBILE = "mobile";
+				this.MEDIA_EVER = "wherever"
+				this.media = this.MEDIA_PC;
 				
 				this.DEVICE_MOBILE = "mobile";
 				this.DEVICE_PC = "pc";
@@ -464,6 +468,10 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 
 			Metaworks3.prototype.setHow = function(how){
 				this.how = how;
+			};
+			
+			Metaworks3.prototype.setMedia = function(media){
+				this.media = media;
 			};
 
 			Metaworks3.prototype.setDevice = function(device){
