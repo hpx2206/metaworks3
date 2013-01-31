@@ -5,6 +5,9 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.Hashtable;
 
+import net.sf.json.JSON;
+import net.sf.json.JSONSerializer;
+
 import org.directwebremoting.Browser;
 import org.directwebremoting.ScriptSession;
 import org.directwebremoting.ScriptSessions;
@@ -40,6 +43,9 @@ import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.model.UnstructuredProcessInstanceStarter;
 import org.uengine.codi.mw3.model.WorkItem;
 import org.uengine.kernel.GlobalContext;
+
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.json.JsonHierarchicalStreamDriver;
 
 public class WfNode extends Database<IWfNode> implements IWfNode {
 	
@@ -1245,12 +1251,38 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		WfNodeXML wfNodeXML = new WfNodeXML();
 		
 		SourceCode sourceCode = new SourceCode();
+		this.load();
 		sourceCode.setCode(GlobalContext.serialize(this, Object.class));
 		wfNodeXML.setXml(sourceCode);
 		wfNodeXML.setNodeId(getId());
 		
+		
 		Popup popup = new Popup(wfNodeXML);
 		popup.setName("To/From XML");
+		
+		return popup;
+	}
+	@Override
+	public Popup json() throws Exception {
+		
+		WfNodeXML wfNodeXML = new WfNodeXML();
+		
+		SourceCode sourceCode = new SourceCode();
+		this.load();
+		
+		XStream xstream = new XStream(new JsonHierarchicalStreamDriver());
+		xstream.setMode(XStream.NO_REFERENCES);
+        xstream.alias("지식", this.getClass());
+
+//        System.out.println(xstream.toXML(this));
+        
+		sourceCode.setCode(xstream.toXML(this));
+		wfNodeXML.setXml(sourceCode);
+		wfNodeXML.setNodeId(getId());
+		
+		
+		Popup popup = new Popup(wfNodeXML);
+		popup.setName("To/From JSON");
 		
 		return popup;
 	}
