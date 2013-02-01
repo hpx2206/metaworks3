@@ -687,20 +687,20 @@ public class Instance extends Database<IInstance> implements IInstance{
 			this.initComCd = initComCd;
 		}
 		
-	String beforeCmnt;
-		public String getBeforeCmnt() {
-			return beforeCmnt;
-		}
-		public void setBeforeCmnt(String beforeCmnt) {
-			this.beforeCmnt = beforeCmnt;
-		}
-		
 	String lastCmnt;
 		public String getLastCmnt() {
 			return lastCmnt;
 		}
 		public void setLastCmnt(String lastCmnt) {
 			this.lastCmnt = lastCmnt;
+		}
+		
+	String lastCmnt2;
+		public String getLastCmnt2() {
+			return lastCmnt2;
+		}
+		public void setLastCmnt2(String lastCmnt2) {
+			this.lastCmnt2 = lastCmnt2;
 		}
 	
 	String defId;
