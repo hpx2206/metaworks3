@@ -658,3 +658,7 @@ alter table roleusertable modify column EMPCODE varchar(100);
 
 --2013.01.31
 alter table bpm_procinst add beforeCmnt varchar(200);
+
+--2013.02.01
+alter table bpm_procinst drop beforeCmnt;
+alter table bpm_procinst add lastcmnt2 varchar(200);

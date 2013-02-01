@@ -55,11 +55,11 @@ public interface IInstance extends IDAO{
 	public String getDefName();
 	public void setDefName(String defName);
 
-	public String getBeforeCmnt();
-	public void setBeforeCmnt(String beforeComment);
-	
 	public String getLastCmnt();
 	public void setLastCmnt(String lastComment);
+
+	public String getLastCmnt2();
+	public void setLastCmnt2(String lastComment2);
 
 	public Date getStartedDate();
 	public void setStartedDate(Date when);

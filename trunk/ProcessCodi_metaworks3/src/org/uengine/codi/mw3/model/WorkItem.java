@@ -691,18 +691,18 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			}
 			
 			// 마지막 워크아이템의 제목을 인스턴스의 적용
-			String beforeCmnt = instanceRef.getBeforeCmnt();
+			String lastCmnt = instanceRef.getLastCmnt();
 			
-			if(beforeCmnt == null){
+			if(lastCmnt == null){
 				if(instanceRef.getName() != getTitle()){
-					instanceRef.setBeforeCmnt(getTitle());
+					instanceRef.setLastCmnt(getTitle());
 				}
 			}else{
-				if(instanceRef.getLastCmnt() == null){
-					instanceRef.setLastCmnt(getTitle());
+				if(instanceRef.getLastCmnt2() == null){
+					instanceRef.setLastCmnt2(getTitle());
 				}else {
-					instanceRef.setBeforeCmnt(instanceRef.getLastCmnt());
-					instanceRef.setLastCmnt(getTitle());
+					instanceRef.setLastCmnt(instanceRef.getLastCmnt2());
+					instanceRef.setLastCmnt2(getTitle());
 				}
 			}
 			
