@@ -1,6 +1,15 @@
 <%
 	if(value){
 %>
+	<div id="moreWorkDiv" align="center">
+		<%
+		if(value.lastIndex != null && value.lastIndex >5 && value.moreTitle != null){
+		%>
+			<a href="#" onClick="<%=methods.more.caller()%>"><%=value.moreTitle%></a>
+		<%
+		}
+		%>
+	</div>
 	<%=fields.thread.here()%>
 	<%=fields.newItem.here()%>
 <%
