@@ -41,7 +41,28 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	
 	protected static IWorkItem find(String instanceId) throws Exception{
 		
-		IWorkItem workitem = (IWorkItem) Database.sql(IWorkItem.class, "select * from bpm_worklist where rootInstId=?instId and isdeleted!=?isDeleted");
+		String sql = "select * from bpm_worklist where rootInstId=?instId and isdeleted!=?isDeleted";
+		
+		IWorkItem workitem = (IWorkItem) Database.sql(IWorkItem.class, sql);
+		
+		workitem.set("instId",instanceId);
+		workitem.set("isDeleted",1);
+		
+		//TODO: this expression should be work later instead of above.
+		//IUser user = new User();
+		//user.setEndpoint(login.getEmpCode());
+		//workitem.setWriter(user);
+		
+		workitem.select();
+		
+		return workitem;
+	}
+	
+	protected static IWorkItem find(String instanceId, int startIndex, int lastIndex) throws Exception{
+		
+		String sql = "select * from bpm_worklist where rootInstId=?instId and isdeleted!=?isDeleted";
+		
+		IWorkItem workitem = (IWorkItem) Database.sql(IWorkItem.class, sql + " limit " + startIndex + ", " + lastIndex);
 		
 		workitem.set("instId",instanceId);
 		workitem.set("isDeleted",1);

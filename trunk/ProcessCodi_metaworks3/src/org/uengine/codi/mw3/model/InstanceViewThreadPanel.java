@@ -15,6 +15,8 @@ import org.uengine.processmanager.ProcessManagerRemote;
 
 public class InstanceViewThreadPanel implements ContextAware {
 	
+	final static int LIST_CNT = 5;
+
 	@AutowiredFromClient
 	public Session session;
 	
@@ -37,6 +39,32 @@ public class InstanceViewThreadPanel implements ContextAware {
 		public void setNewItem(IWorkItem newItem) {
 			this.newItem = newItem;
 		}
+		
+	public int startIndex;
+		public int getStartIndex() {
+			return startIndex;
+		}
+		public void setStartIndex(int startIndex) {
+			this.startIndex = startIndex;
+		}
+		
+	public int lastIndex;
+		public int getLastIndex() {
+			return lastIndex;
+		}
+		public void setLastIndex(int lastIndex) {
+			this.lastIndex = lastIndex;
+		}
+		
+	public String moreTitle;
+		public String getMoreTitle() {
+			return moreTitle;
+		}
+		public void setMoreTitle(String moreTitle) {
+			this.moreTitle = moreTitle;
+		}
+	
+		
 	protected InstanceViewThreadPanel(String instanceId) throws Exception{
 		this();
 		
@@ -59,6 +87,18 @@ public class InstanceViewThreadPanel implements ContextAware {
 		result.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 		result.getMetaworksContext().setHow(how);
 		
+		if(!more){
+			if(result.size()>5){
+				setLastIndex(result.size());
+				setStartIndex(lastIndex - LIST_CNT);
+				setMoreTitle(startIndex + "개의 이전업무 더 보기");
+				
+				result = WorkItem.find(instanceId, startIndex, lastIndex);
+				
+				more = false;
+			}
+		}
+		
 		setThread(result);
 		
 		CommentWorkItem newItem = new CommentWorkItem();
@@ -69,6 +109,14 @@ public class InstanceViewThreadPanel implements ContextAware {
 
 		setNewItem(newItem);
 		
+	}
+	
+	@ServiceMethod(callByContent = true)
+	public void more() throws Exception {
+		setMore(true);
+		setMoreTitle(null);
+		
+		load(instanceId);
 	}
 
 	String instanceId;
