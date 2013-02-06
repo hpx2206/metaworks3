@@ -14,8 +14,8 @@ var org_uengine_codi_mw3_model_IInstance = function(objectId, className){
 		mw3.getFaceHelper(objectId).unBlinking();
 		
 		if( object && object.metaworksContext && object.metaworksContext.how != 'sns'){
-			 $(".tbl_type").parent().css({'margin':'0 8px 0 5px','border-right':'1px solid #ccc','border-bottom':'none','border-radius':'0px','-moz-border-radius':'0px;','-webkit-border-radius':'0px;'});
-			 $(this).css({'margin':'0px 2px 0 0','border-right':'2px solid #A1A1A1','border-bottom':'2px solid #A1A1A1','border-radius':'7px','-moz-border-radius':'7px;','-webkit-border-radius':'7px;'});
+			 $(".tbl_type").parent().css({'margin':'0 8px 0 5px','border-right':'1px solid #ccc','border-bottom':'none','border-radius':'0px','-moz-border-radius':'0px;','-webkit-border-radius':'0px;','background':'#fff'});
+			 $(this).css({'margin':'0px 2px 0 0','border-right':'2px solid #A1A1A1','border-bottom':'2px solid #A1A1A1','border-radius':'7px','-moz-border-radius':'7px;','-webkit-border-radius':'7px;','background':'#E1EFFD'});
 		}
 	 });
 	
