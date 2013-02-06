@@ -24,7 +24,20 @@ var org_uengine_codi_mw3_admin_PageNavigator = function(objectId, className){
 				height: '42px'
 			}, 700);
 	});	
-
+	/*
+	$('.goProcess').hover(
+			function(){$('.msg_block').css("background","url(images/waveStyle/pageNavigation_Process.png)");},
+			function(){$('.msg_block').css("background","url(images/waveStyle/pageNavigation.png)")}	
+	)
+	$('.goKnowledge').hover(
+			function(){$('.msg_block').css("background","url(images/waveStyle/pageNavigation_Knowledge.png)");},
+			function(){$('.msg_block').css("background","url(images/waveStyle/pageNavigation.png)")}	
+	)
+	$('.goIDE').hover(
+			function(){$('.msg_block').css("background","url(images/waveStyle/pageNavigation_IDE.png)");},
+			function(){$('.msg_block').css("background","url(images/waveStyle/pageNavigation.png)")}	
+	)
+	*/
 	
 }
 
