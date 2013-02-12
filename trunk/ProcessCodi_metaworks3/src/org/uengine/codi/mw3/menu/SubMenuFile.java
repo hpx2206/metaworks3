@@ -17,6 +17,7 @@ import org.uengine.codi.mw3.model.ContentWindow;
 import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.model.ResourceFile;
 import org.uengine.codi.mw3.svn.CheckoutWindow;
+import org.uengine.codi.mw3.uidesigner.UIDesigner;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 public class SubMenuFile extends SubMenu {
@@ -103,6 +104,12 @@ public class SubMenuFile extends SubMenu {
 		classDefinition.save();
 		
 		return new Remover(this);		
+	}
+	
+	@ServiceMethod
+	@Face(displayName="New UI")
+	public UIDesigner newUI() throws Exception{
+		return new UIDesigner();
 	}
 
 	
