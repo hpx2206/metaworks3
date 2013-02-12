@@ -416,6 +416,44 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 			is = new FileInputStream(sourceCodeFile);
 			UEngineUtil.copyStream(is, bao);
 			ProcessDefinition def = (ProcessDefinition) GlobalContext.deserialize(bao.toString("UTF-8"));
+						
+			
+			ProcessVariable pvs[] = def.getProcessVariables();
+			if( pvs != null && pvs.length != 0){
+				ArrayList<PrcsValiable> prcsValiable = defineTab.prcsValiablePanel.getPrcsValiables();
+				for(int i =0 ; i < pvs.length; i++){
+					ProcessVariable pv = pvs[i];
+					
+					PrcsValiable designerValiable = new PrcsValiable();
+					designerValiable.setName(pv.getName());
+					
+					if( pv.getDefaultValue() instanceof ComplexType ){
+						ComplexType v = (ComplexType)pv.getDefaultValue();
+						designerValiable.getDataType().setSelected("complexType");
+						designerValiable.setTypeId(v.getTypeId().replace("[", "").replace("]", ""));
+					}else if( pv.getDefaultValue() instanceof String ){
+						designerValiable.getDataType().setSelected("string");
+					}else if( pv.getDefaultValue() instanceof Number ){
+						designerValiable.getDataType().setSelected("number");
+					}// TODO others
+					
+					prcsValiable.add(designerValiable);
+				}
+				// ProcessValiable setting
+				defineTab.prcsValiablePanel.setPrcsValiables(prcsValiable);
+			}
+			
+			ProcessVariable[] procVars = def.getProcessVariables();
+			for(int i=0; i<procVars.length; i++){
+				procVars[i].setType(null);
+				procVars[i].setDefaultValue(null);
+				//procVars[i].setDisplayName(null);
+				
+				//procVars[i] = ProcessVariable.forName(procVars[i].getName());
+				//def.getExtendedAttributes()
+			}
+			
+			
 			// processDefinition setting
 			ArrayList<CanvasDTO> cellsList = (ArrayList<CanvasDTO>) def.getExtendedAttributes().get("cells");
 //			activityMap = new HashMap<String, Object>();
@@ -430,6 +468,9 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 					}
 					if( cells[i].getTracingTag() != null ){
 						if( "GEOM".equalsIgnoreCase(cells[i].getShapeType()) ){
+							
+						
+							
 							Activity activity = def.getActivity(cells[i].getTracingTag());
 							if(activity instanceof HumanActivity ){
 //								ParameterContext pc[] = ((HumanActivity) activity).getParameters();
@@ -478,30 +519,7 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 				// role setting
 				defineTab.rolePanel.setRoles(role);
 			}
-			ProcessVariable pvs[] = def.getProcessVariables();
-			if( pvs != null && pvs.length != 0){
-				ArrayList<PrcsValiable> prcsValiable = defineTab.prcsValiablePanel.getPrcsValiables();
-				for(int i =0 ; i < pvs.length; i++){
-					ProcessVariable pv = pvs[i];
-					
-					PrcsValiable designerValiable = new PrcsValiable();
-					designerValiable.setName(pv.getName());
-					
-					if( pv.getDefaultValue() instanceof ComplexType ){
-						ComplexType v = (ComplexType)pv.getDefaultValue();
-						designerValiable.getDataType().setSelected("complexType");
-						designerValiable.setTypeId(v.getTypeId().replace("[", "").replace("]", ""));
-					}else if( pv.getDefaultValue() instanceof String ){
-						designerValiable.getDataType().setSelected("string");
-					}else if( pv.getDefaultValue() instanceof Number ){
-						designerValiable.getDataType().setSelected("number");
-					}// TODO others
-					
-					prcsValiable.add(designerValiable);
-				}
-				// ProcessValiable setting
-				defineTab.prcsValiablePanel.setPrcsValiables(prcsValiable);
-			}
+
 			ArrayList<Transition> tsList = def.getTransitions();
 			if( tsList != null && tsList.size()>0){
 				for(int i =0 ; i < tsList.size(); i++){
