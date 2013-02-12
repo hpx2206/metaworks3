@@ -2,7 +2,15 @@ package org.metaworks.widget.layout;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.annotation.Face;
 
+
+@Face(
+		ejsPathMappingByContext=
+	{
+		"{when: 'design', face: 'dwr/metaworks/org/metaworks/widget/layout/Layout_design.ejs'}",
+	}		
+)
 public class Layout implements ContextAware {
 
 	public Layout() {
@@ -58,7 +66,8 @@ public class Layout implements ContextAware {
 			this.options = options;
 		}
 		
-	String name;		
+	String name;
+	
 		public String getName() {
 			return name;
 		}
