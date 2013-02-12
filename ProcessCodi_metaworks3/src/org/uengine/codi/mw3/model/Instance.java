@@ -1021,6 +1021,33 @@ public class Instance extends Database<IInstance> implements IInstance{
 			this.instanceDrag = instanceDrag;
 		}
 		
+	int bvBenefit;
+		@Override
+		public int getBVBenefit() {
+			return bvBenefit;
+		}
+		public void setBVBenefit(int benefit) {
+			this.bvBenefit = benefit;
+		}
+	
+	int bvPenalty;
+		@Override
+		public int getBVPenalty() {
+			return bvPenalty;
+		}
+		public void setBVPenalty(int penalty) {
+			this.bvPenalty = penalty;
+		}
+
+	int effort;
+		@Override
+		public int getEffort() {
+			return effort;
+		}
+		public void setEffort(int effort) {
+			this.effort = effort;
+		}
+
 	/*
 	 * 2013-01-10 cjw
 	 * push client 의 보안 처리
@@ -1092,6 +1119,45 @@ public class Instance extends Database<IInstance> implements IInstance{
 			IInstance instance = (IInstance) sql(Instance.class, sb.toString());
 			instance.set("endpoint", session.getEmployee().getEmpCode());
 			instance.setInitComCd(session.getEmployee().getGlobalCom());
+			instance.select();
+			
+			if(instance.next())
+				result = instance.getInt("cnt");
+			
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+		return result;
+	}
+	
+static public int countTodo(String empCode, String comCode) {
+		
+		int result = 0;
+		
+		StringBuffer sb = new StringBuffer();		
+		sb
+		.append("select count(*) cnt from (")
+		.append("SELECT distinct inst.instid")
+		.append("  FROM bpm_procinst inst,")
+		.append("       bpm_worklist wl INNER JOIN bpm_rolemapping role ON wl.instid=role.instid AND role.endpoint=?endpoint")
+		.append(" WHERE wl.instid=inst.instid")
+		.append("   AND inst.isdeleted = 0")
+		.append("   AND initcomcd = ?initcomcd")
+		.append("   AND inst.status <> '" + Instance.INSTNACE_STATUS_STOPPED + "'")
+		.append("   AND inst.status <> '" + Instance.INSTNACE_STATUS_FAILED + "'")
+		.append("   AND inst.status <> '" + Instance.INSTNACE_STATUS_COMPLETED + "'")
+				
+
+		.append("   AND ((inst.defid is not null and wl.status in ('" + WorkItem.WORKITEM_STATUS_NEW + "','" + WorkItem.WORKITEM_STATUS_DRAFT + "','" + WorkItem.WORKITEM_STATUS_CONFIRMED + "'))")
+		.append("     OR   (inst.defid is null and inst.DUEDATE is not null and wl.status = '" + WorkItem.WORKITEM_STATUS_FEED + "'))")
+		.append(") a");
+
+		
+		try{
+			IInstance instance = (IInstance) sql(Instance.class, sb.toString());
+			instance.set("endpoint", empCode);
+			instance.setInitComCd(comCode);
 			instance.select();
 			
 			if(instance.next())

@@ -1,6 +1,5 @@
 package org.uengine.codi.mw3.model;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 import org.metaworks.annotation.Available;
@@ -141,6 +140,15 @@ public interface IInstance extends IDAO{
 	
 	public String getProgress();
 	public void setProgress(String progress);
+	
+	public int getBVBenefit();
+	public void setBVBenefit(int benefit);
+	
+	public int getBVPenalty();
+	public void setBVPenalty(int penalty);
+	
+	public int getEffort();
+	public void setEffort(int effort);
 	
 	@NonLoadable
 	@NonSavable

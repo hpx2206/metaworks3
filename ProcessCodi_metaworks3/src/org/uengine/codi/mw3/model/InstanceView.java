@@ -2,6 +2,8 @@ package org.uengine.codi.mw3.model;
 
 import java.util.ArrayList;
 
+import javax.sql.RowSet;
+
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
@@ -16,7 +18,6 @@ import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitorPanel;
-import org.uengine.kernel.EJBProcessInstance;
 import org.uengine.kernel.ProcessInstance;
 import org.uengine.processmanager.ProcessManagerRemote;
 
@@ -376,6 +377,9 @@ public class InstanceView {
 		InstanceDueSetter ids = new InstanceDueSetter();
 		ids.setInstId(new Long(getInstanceId()));
 		ids.setDueDate(instance.databaseMe().getDueDate());
+		ids.setBenefit(instance.databaseMe().getBVBenefit());
+		ids.setPenalty(instance.databaseMe().getBVPenalty());
+		ids.setEffort(instance.databaseMe().getEffort());
 		ids.setOnlyInitiatorCanComplete(instance.databaseMe().isInitCmpl());
 		ids.setProgress(instance.databaseMe().getProgress());
 		if("sns".equals(session.getEmployee().getPreferUX()) ){
@@ -442,6 +446,10 @@ public class InstanceView {
 		
 		// instance update flush
 		instanceRef.setStatus(tobe);
+		
+		instance.setBVBenefit(instanceRef.getBVBenefit());
+		instance.setBVPenalty(instanceRef.getBVPenalty());
+		instance.setEffort(instanceRef.getEffort());
 		instance.flushDatabaseMe();
 
 		this.load(instance);
@@ -458,8 +466,47 @@ public class InstanceView {
 			MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()),
 					new Object[]{new Refresh(todoBadge)});			
 		}
+		
+		//inst_emp_perf 테이블에 성과정보 저장 insert
+		int businessValue = instance.getBVBenefit() + instance.getBVPenalty();
+		
+		if(tobe.equals("Running")){
+			deleteBV();
+		}else if (tobe.equals("Completed")){
+			insertBV(businessValue);
+		}
+		
+	}
+	
+	private void insertBV(int businessValue) throws Exception{
+		IRoleMapping allFollower = RoleMapping.allFollower(Long.parseLong(instanceId));
+		RowSet rowset = allFollower.getImplementationObject().getRowSet();
+		
+		InstanceEmployeePerformance bizVal = new InstanceEmployeePerformance();
+		
+		if(allFollower.size() > 0){
+			int eachBV = businessValue/ allFollower.size();
+
+			
+			while(rowset.next()){
+				bizVal.setInstId(rowset.getLong("instId"));
+				bizVal.setEmpCode(rowset.getString("endPoint"));
+				bizVal.setBusinessValue(eachBV);
+				
+				bizVal.createDatabaseMe();
+			}
+
+		}
+		
 	}
 		
+	private void deleteBV() throws Exception{
+		InstanceEmployeePerformance bizVal = new InstanceEmployeePerformance();
+		
+		bizVal.setInstId(Long.parseLong(instanceId));
+		bizVal.deleteDatabaseMe();
+		
+	}
 	
 	
 	@ServiceMethod(target="popup", loader="auto")

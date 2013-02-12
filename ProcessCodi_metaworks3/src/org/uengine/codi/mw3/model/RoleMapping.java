@@ -107,5 +107,15 @@ public class RoleMapping extends Database<IRoleMapping> implements IRoleMapping 
 			return false;
 		}
 	}
+	
+	public static IRoleMapping allFollower(Long instId) throws Exception{
+		String sql = "select * from bpm_rolemapping where rootinstid=?rootInstId";
+		
+		IRoleMapping findRoleMapping = (IRoleMapping) Database.sql(IRoleMapping.class, sql);
+		findRoleMapping.set("rootInstId", instId);
+		findRoleMapping.select();
+		
+		return findRoleMapping;
+	}
 
 }
