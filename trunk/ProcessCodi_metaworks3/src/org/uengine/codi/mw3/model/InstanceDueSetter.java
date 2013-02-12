@@ -17,7 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.Login;
 import org.uengine.processmanager.ProcessManagerRemote;
 
-@Face(displayName="$InstanceDueSetter", ejsPath="dwr/metaworks/genericfaces/FormFace.ejs")
+@Face(displayName="$InstanceDueSetter", ejsPath="dwr/metaworks/genericfaces/FormFace.ejs"
+	, options={"fieldOrder"},values={"progress,dueDate,benefit,penalty,effort,onlyInitiatorCanComplete"} )
 public class InstanceDueSetter implements ContextAware{
 	
 	MetaworksContext metaworksContext;
@@ -66,6 +67,33 @@ public class InstanceDueSetter implements ContextAware{
 		public void setProgress(String progress) {
 			this.progress = progress;
 		}
+
+	int benefit;
+		@Face(displayName="$BV.benefit")
+		public int getBenefit() {
+			return benefit;
+		}
+		public void setBenefit(int benefit) {
+			this.benefit = benefit;
+		}
+
+	int penalty;
+		@Face(displayName="$BV.penalty")
+		public int getPenalty() {
+			return penalty;
+		}
+		public void setPenalty(int penalty) {
+			this.penalty = penalty;
+		}
+
+	int effort;
+		@Face(displayName="$Effort")
+		public int getEffort() {
+			return effort;
+		}
+		public void setEffort(int effort) {
+			this.effort = effort;
+		}
 		
 //	IUser assignee;
 //
@@ -99,6 +127,11 @@ public class InstanceDueSetter implements ContextAware{
 		
 		instance.databaseMe().setInitCmpl(isOnlyInitiatorCanComplete());
 		instance.databaseMe().setProgress(getProgress());
+		
+		instance.databaseMe().setBVBenefit(getBenefit());
+		instance.databaseMe().setBVPenalty(getPenalty());
+		instance.databaseMe().setEffort(getEffort());
+		
 		instance.flushDatabaseMe();
 		
 		IInstance iInstance = instance.databaseMe();
@@ -106,22 +139,23 @@ public class InstanceDueSetter implements ContextAware{
 		iInstance.getMetaworksContext().setWhen("view");
 		
 		
-		//if schedule changed
-		CommentWorkItem workItem = new CommentWorkItem();
-		workItem.getMetaworksContext().setHow("changeSchedule");
-		workItem.session = session;
-		workItem.processManager = processManager;
-
-		String title = "[일정 변경:" + new SimpleDateFormat("yyyy/MM/dd").format(getDueDate()) + "]";
-
-		workItem.setInstId(getInstId());
-		workItem.setTitle(title);
-		workItem.add();
-		
-		
-		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new ToAppend(workItem, workItem)});
-		MetaworksRemoteService.pushOtherClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(iInstance), new WorkItemListener(workItem)});
-		
+		if(getDueDate() != null){
+			//if schedule changed
+			CommentWorkItem workItem = new CommentWorkItem();
+			workItem.getMetaworksContext().setHow("changeSchedule");
+			workItem.session = session;
+			workItem.processManager = processManager;
+			
+			String title = "[일정 변경:" + new SimpleDateFormat("yyyy/MM/dd").format(getDueDate()) + "]";
+			
+			workItem.setInstId(getInstId());
+			workItem.setTitle(title);
+			workItem.add();
+			
+			MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new ToAppend(workItem, workItem)});
+			MetaworksRemoteService.pushOtherClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(iInstance), new WorkItemListener(workItem)});
+	
+		}
 		
 		return new Object[]{new Remover(new Popup(), true)};
 	}

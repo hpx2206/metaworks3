@@ -115,6 +115,32 @@
 				<%}%>
 			
 		</td>	
+		<%
+		if(value.bVBenefit != null && value.bVPenalty != null && value.effort != null){
+			var bv = value.bVBenefit + value.bVPenalty;
+			var roi = Math.round(bv/value.effort);
+		%>
+		<td width="100">
+			<div style="margin-bottom:5px;float:right;">Buz Val</div>
+			<div class="clear"></div>
+			<%if(bv > 0) {%>
+				<div style="float:right;"><%=bv%></div>
+			<%}else{%>
+				<div style="float:right;">-</div>
+			<%}%>
+				<div style="clear:both"></div>
+		</td>
+		<td width="100">
+			<div style="margin-bottom:5px;float:right;">ROI</div>
+			<div class="clear"></div>
+			<%if(roi > 0) {%>
+				<div style="float:right;"><%=roi%></div>
+			<%}else{%>
+				<div style="float:right;">-</div>
+			<%}%>
+			<div style="clear:both"></div>
+		</td>
+		<%}%>
 		<% if(mw3.how != 'sns'){ %>
 		<td width="30">
 			<div class="instanceBtn" style="width: 15px;margin: 0 auto;"><%=fields.instanceDrag.here()%></div>

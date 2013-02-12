@@ -91,6 +91,9 @@ public interface IUser extends IDAO{
 
 	@ServiceMethod(inContextMenu=true, needToConfirm=true, target="none")
 	public void addAsAdmin() throws Exception;
+	
+	@ServiceMethod(payload={"userId"})
+	public int getBV(String empcode) throws Exception;
 
 
 }

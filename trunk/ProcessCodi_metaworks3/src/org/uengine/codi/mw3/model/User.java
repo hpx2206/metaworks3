@@ -1,21 +1,18 @@
 package org.uengine.codi.mw3.model;
 
-import java.util.Calendar;
-
 import javax.servlet.http.HttpSession;
+import javax.sql.RowSet;
 
-import org.directwebremoting.Browser;
-import org.directwebremoting.ScriptSessions;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ToOpener;
 import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.widget.ModalWindow;
 import org.metaworks.widget.Window;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.calendar.ScheduleCalendar;
 import org.uengine.codi.mw3.knowledge.ITopicMapping;
 import org.uengine.codi.mw3.knowledge.TopicMapping;
@@ -67,6 +64,22 @@ public class User extends Database<IUser> implements IUser {
 		}
 		public void setUserChecked(boolean userChecked) {
 			this.userChecked = userChecked;
+		}
+		
+	int businessValue;
+		public int getBusinessValue() {
+			return businessValue;
+		}
+		public void setBusinessValue(int businessValue) {
+			this.businessValue = businessValue;
+		}
+		
+	int todoCount;
+		public int getTodoCount() {
+			return todoCount;
+		}
+		public void setTodoCount(int todoCount) {
+			this.todoCount = todoCount;
 		}
 
 	@AutowiredFromClient
@@ -160,6 +173,15 @@ public class User extends Database<IUser> implements IUser {
 			employee.setEmpCode(getUserId());
 			setMood(employee.databaseMe().getMood());
 			setName(employee.databaseMe().getEmpName());
+			
+			//선택된 유저의 business value를 보인다.
+			int myBV = getBV(getUserId());
+			setBusinessValue(myBV);
+			
+			//선택된 유저가 해야 할 일의 개수를 보인다.
+			int todoCount = Instance.countTodo(getUserId(), employee.databaseMe().getGlobalCom());
+			setTodoCount(todoCount);
+			
 			setNetwork("local");
 		}catch(Exception e){
 		//	e.printStackTrace();
@@ -521,6 +543,27 @@ public class User extends Database<IUser> implements IUser {
 		scheduleCalendar.session = session;
 		scheduleCalendar.loadByUserId(getUserId());
 		return new ModalWindow(scheduleCalendar, 600, 540, getName() + " Schedule" );
+	}
+	
+	@ServiceMethod()
+	public int getBV(String empCode) throws Exception{
+		
+		int totalBV = 0;
+		
+		String sql = "select sum(businessvalue) totalBV from inst_emp_perf where empcode=?empCode";
+		
+		IInstanceEmployeePerformance getBV = (IInstanceEmployeePerformance) Database.sql(IInstanceEmployeePerformance.class, sql);
+		getBV.set("empCode", empCode);
+		getBV.select();
+		
+		RowSet rowset = getBV.getImplementationObject().getRowSet();
+		
+		if(rowset.next()){
+			totalBV = rowset.getInt("totalBV");
+		}
+		
+		return totalBV;
+		
 	}
 	
 }
