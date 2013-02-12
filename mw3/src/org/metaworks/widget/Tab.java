@@ -4,6 +4,11 @@ import org.metaworks.annotation.Id;
 
 public class Tab {
 
+	public Tab() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
 	public String tabTitle;	
 		@Id
 		public String getTabTitle() {

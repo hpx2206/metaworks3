@@ -2,6 +2,9 @@ package org.metaworks;
 
 
 public class Remover {
+	
+	public static final Remover ModalWindow = new Remover(new org.metaworks.widget.ModalWindow()); 
+//	public static final Remover Popup = new Remover(new org.metaworks.widget.Popup());
 		
 	Object target;
 		public Object getTarget() {
