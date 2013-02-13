@@ -13,9 +13,13 @@
 %>
 	<%=mw3.locateObject(value[i], value[i].__className, null, options)%>
 <%
-				mw3.addBeanProperty(value.__objectId, '.boardList[' + i + ']');
-				mw3.onLoadFaceHelperScript();				
-			}else{
+				mw3.addBeanProperty(value.__objectId, '.boardList[' + i + ']');				
+			}
+		}
+		mw3.onLoadFaceHelperScript();
+		
+		for(var i=0; i<value.length; i++){
+			if('ovryCmnt' == value[i].type){
 			    var ovryCmntTarget = {
 			    	__className : 'org.uengine.codi.mw3.model.IWorkItem',
 			    	taskId : value[i].overlayCommentOption.parentTaskId
