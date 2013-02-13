@@ -271,3 +271,7 @@ HashMap.prototype = {
 		return "{" + ret.join(", ") + "}";
 	}	
 }
+
+String.prototype.replaceAll = function(arg1, arg2) {
+	return this.replace(eval("/"+arg1+"/gi"), arg2);
+}
