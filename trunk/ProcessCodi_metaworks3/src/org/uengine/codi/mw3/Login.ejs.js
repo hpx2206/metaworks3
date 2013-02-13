@@ -50,46 +50,45 @@ org_uengine_codi_mw3_Login.prototype = {
 		var login = mw3.getObjectFromUI(this.objectId);
 		var facebookSSO = getCookie("codi.facebookSSO");
 		
-		if(login.userId && login.password && login.rememberMe && !facebookSSO){
-			var facebookSSO = getCookie("codi.facebookSSO");
-			
-			if(!facebookSSO)
-				login.login();
-		}
+		console.log(facebookSSO);
 		
-		var objectId = this.objectId;
-		
-		if(typeof FB == 'object'){
-			$('#method_facebook_' + this.objectId).show();
+		if(login.userId && login.password && login.rememberMe){
+			login.login();
 		}else{
-			window.fbAsyncInit = function() {
-			    // init the FB JS SDK
-			    FB.init({
-			      appId      : facebookAppId, // App ID from the App Dashboard
-			      //channelUrl : '//localhost:8080/uengine-web/index.html', // Channel File for x-domain communication
-			      status     : true, // check the login status upon init?
-			      cookie     : true, // set sessions cookies to allow your server to access the session?
-			      xfbml      : true  // parse XFBML tags on this page?
-			    });
-
-			    $('#method_facebook_' + objectId).show();
-			    
-			    // Additional initialization code such as adding Event Listeners goes here
-				// facebook login status
-				FB.getLoginStatus(function(response) {
-					if (response.status == 'connected'){
-					    var uid = response.authResponse.userID;
-						
-						FB.api('/' + uid, function(response) {
-							if(login.userId && login.rememberMe && facebookSSO)
-								login.getFaceHelper().facebookSSO(response);
-						});
-					}else if('not_authorized' == response.status){
-						login.getFaceHelper().loginFacebook();
-					}	
-
-				}, true);
-			};
+			var objectId = this.objectId;
+			
+			if(typeof FB == 'object'){
+				$('#method_facebook_' + this.objectId).show();
+			}else{
+				window.fbAsyncInit = function() {
+				    // init the FB JS SDK
+				    FB.init({
+				      appId      : facebookAppId, // App ID from the App Dashboard
+				      //channelUrl : '//localhost:8080/uengine-web/index.html', // Channel File for x-domain communication
+				      status     : true, // check the login status upon init?
+				      cookie     : true, // set sessions cookies to allow your server to access the session?
+				      xfbml      : true  // parse XFBML tags on this page?
+				    });
+	
+				    $('#method_facebook_' + objectId).show();
+				    
+				    // Additional initialization code such as adding Event Listeners goes here
+					// facebook login status
+					FB.getLoginStatus(function(response) {
+						if (response.status == 'connected'){
+						    var uid = response.authResponse.userID;
+							
+							FB.api('/' + uid, function(response) {
+								if(login.userId && login.rememberMe && facebookSSO)
+									login.getFaceHelper().facebookSSO(response);
+							});
+						}else if('not_authorized' == response.status){
+							login.getFaceHelper().loginFacebook();
+						}	
+	
+					}, true);
+				};
+			}
 		}
 	},
 	keydown : function(e){
