@@ -145,17 +145,19 @@
 				<%}%>
 			
 		</td>	
-		<% if(mw3.how != 'sns'){ %>
+		
 		<td width="30">
-			<div class="instanceBtn" style="width: 15px;margin: 0 auto;"><%=fields.instanceDrag.here()%></div>
+			<% if(mw3.how != 'sns'){ %>
+				<div class="instanceBtn" style="width: 15px;margin: 0 auto;"><%=fields.instanceDrag.here()%></div>
+			<% } %>
 		</td>
-		<% } %>
+		
 	</tr>
 	</tbody>
 </table>
 
 <% if(value.instanceViewThreadPanel && value.instanceViewThreadPanel.instanceId) {%>
-<div style="background:#F3F3F3; margin-left:65px; margin-bottom:15px;  margin-right:20px;position:relative">
+<div style="background:#F3F3F3; margin-left:65px;  margin-right:20px;position:relative">
 	<!--div style="position:absolute; top:-10px; left:49%;"><img src="images/waveStyle/topShadowArrow.png"></div-->
 	<%=fields.instanceViewThreadPanel.here()%>
 </div>
