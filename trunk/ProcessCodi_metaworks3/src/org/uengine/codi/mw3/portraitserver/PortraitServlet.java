@@ -65,7 +65,7 @@ public class PortraitServlet extends HttpServlet {
 			}else{
 				File srcFile = new File(srcName);
 				
-				if(srcFile.exists() && srcFile.isFile()){
+				if(srcFile.exists() && srcFile.isFile() && srcFile.length() > 0){
 					try{
 						ImageUtils.createThumbnail(srcFile.getAbsolutePath(),thumnailFile.getAbsolutePath(), "jpg", 104, 104);
 						exists = true;
