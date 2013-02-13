@@ -2,16 +2,15 @@ var org_uengine_codi_mw3_model_IInstance = function(objectId, className){
 	this.objectId = objectId;
 	this.className = className;
 	this.divId = mw3._getObjectDivId(this.objectId);
-
+	this.objDiv = $('#' + this.divId);
+	
 	this.windowObjectId = $('#' + this.divId).closest('.mw3_window').attr('objectId');
 	this.overTimer;
 	
-	$('#' + this.divId).parent().css("background","#DFE1E3")
-	$('#' + this.divId).css({'margin':'0 0 0 5px','border-left':'1px solid #ccc','border-right':'1px solid #ccc','background':'#fff'});
-	
-
-	
-	$('#' + this.divId).bind('click', {objectId: this.objectId},function(){
+	this.objDiv.bind('click', {objectId: this.objectId},function(){
+		$('#' + this.divId).parent().css("background","#DFE1E3")
+		$('#' + this.divId).css({'margin':'0 0 0 5px','border-left':'1px solid #ccc','border-right':'1px solid #ccc','background':'#fff'});
+		
 		mw3.getFaceHelper(objectId).unBlinking();
 		
 		//if( object && object.metaworksContext && object.metaworksContext.how != 'sns'){
@@ -20,7 +19,7 @@ var org_uengine_codi_mw3_model_IInstance = function(objectId, className){
 		//}
 	 });
 	
-	$('#' + this.divId).hover(function(){				
+	this.objDiv.hover(function(){				
 			$('#objDiv_' + objectId + ' .instanceBtn').show();
 		},function(){	
 			$('#objDiv_' + objectId + ' .instanceBtn').hide();
@@ -82,8 +81,6 @@ var org_uengine_codi_mw3_model_IInstance = function(objectId, className){
 		
 	});
 	*/
-	 
-	 
 };
 
 	
