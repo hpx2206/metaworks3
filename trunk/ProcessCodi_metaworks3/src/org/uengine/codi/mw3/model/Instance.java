@@ -702,6 +702,22 @@ public class Instance extends Database<IInstance> implements IInstance{
 		public void setLastCmnt2(String lastCmnt2) {
 			this.lastCmnt2 = lastCmnt2;
 		}
+		
+	IUser lastCmntUser;
+		public IUser getLastCmntUser() {
+			return lastCmntUser;
+		}
+		public void setLastCmntUser(IUser lastCmntUser) {
+			this.lastCmntUser = lastCmntUser;
+		}
+		
+	IUser lastCmnt2User;
+		public IUser getLastCmnt2User() {
+			return lastCmnt2User;
+		}
+		public void setLastCmnt2User(IUser lastCmnt2User) {
+			this.lastCmnt2User = lastCmnt2User;
+		}
 	
 	String defId;
 		public String getDefId() {

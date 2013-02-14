@@ -181,6 +181,20 @@ public interface IInstance extends IDAO{
 	public IUser getCurrentUser();
 	public void setCurrentUser(IUser user);
 	
+	@ORMapping(
+			objectFields = { "userId", "name"},
+			databaseFields = { "lastCmntEp", "lastCmntRsnm"} 
+			)
+	public IUser getLastCmntUser();
+	public void setLastCmntUser(IUser lastCmntUser);
+	
+	@ORMapping(
+			objectFields = { "userId", "name"},
+			databaseFields = { "lastCmnt2Ep", "lastCmnt2Rsnm" } 
+			)
+	public IUser getLastCmnt2User();
+	public void setLastCmnt2User(IUser lastCmnt2User);
+	
 	/*
 	 * 2013-01-10 cjw
 	 * push client 의 보안 처리

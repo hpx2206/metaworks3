@@ -85,13 +85,13 @@
 			    <% }else if(value.lastCmnt != null){%>
 			    <% if(value.currentUser && value.currentUser.userId && (value.initiator.userId!=value.currentUser.userId || value.name!=value.lastCmnt)){%>
 			    <li>
-			   		<table style="margin-left:38px;"><td><%value.currentUser['size']='small';%><%=fields.currentUser.here()%></td>
-			  		<td colspan=2 style="border:none; padding-right:10px;"><font color=204070><%=value.currentUser.name%></font>&nbsp;&nbsp; <font color=gray><%=lastCmnt%></font></td></table>
+			   		<table style="margin-left:38px;"><td><%value.currentUser['size']='small';%><%=fields.lastCmntUser.here()%></td>
+			  		<td colspan=2 style="border:none; padding-right:10px;"><font color=204070><%=value.lastCmntUser.name%></font>&nbsp;&nbsp; <font color=gray><%=lastCmnt%></font></td></table>
 			 	</li>
 			   		<%if(value.name!=value.lastCmnt2 && value.lastCmnt2 != null){%>
 					    <li>
-					   		<table style="margin-left:38px;"><td><%value.currentUser['size']='small';%><%=fields.currentUser.here()%></td>
-					  		<td colspan=2 style="border:none; padding-right:10px;"><font color=204070><%=value.currentUser.name%></font>&nbsp;&nbsp; <font color=gray><%=value.lastCmnt2%></font></td></table>
+					   		<table style="margin-left:38px;"><td><%value.currentUser['size']='small';%><%=fields.lastCmnt2User.here()%></td>
+					  		<td colspan=2 style="border:none; padding-right:10px;"><font color=204070><%=value.lastCmnt2User.name%></font>&nbsp;&nbsp; <font color=gray><%=value.lastCmnt2%></font></td></table>
 					 	</li>
 			   		<%}%>
 			    <%}%>
