@@ -7,15 +7,17 @@ var org_uengine_codi_mw3_model_IInstance = function(objectId, className){
 	this.windowObjectId = $('#' + this.divId).closest('.mw3_window').attr('objectId');
 	this.overTimer;
 	
-	this.objDiv.bind('click', {objectId: this.objectId},function(){
-		$('#' + this.divId).parent().css("background","#DFE1E3")
-		$('#' + this.divId).css({'margin':'0 0 0 5px','border-left':'1px solid #ccc','border-right':'1px solid #ccc','background':'#fff'});
-		
+	$('#' + this.divId).parent().css("background","#DFE1E3")
+	$('#' + this.divId).css({'margin':'0 0 0 5px','border-left':'1px solid #ccc','background':'#fff'});
+	
+
+	
+	$('#' + this.divId).bind('click', {objectId: this.objectId},function(){
 		mw3.getFaceHelper(objectId).unBlinking();
 		
 		//if( object && object.metaworksContext && object.metaworksContext.how != 'sns'){
-			 $(".tbl_type").parent().css({'margin':'0 0 0 5px','border-right':'1px solid #ccc','border-bottom':'none','border-radius':'0px','-moz-border-radius':'0px;','-webkit-border-radius':'0px;','background':'#fff'});
-			 $(this).css({'margin':'0px 0 0 0','border-right':'2px solid #A1A1A1','border-bottom':'2px solid #A1A1A1','border-radius':'7px','-moz-border-radius':'7px;','-webkit-border-radius':'7px;','background':'#E1EFFD'});
+			 $(".tbl_type").parent().css({'margin':'0 0 0 5px','border-left':'1px solid #ccc','border-bottom':'none','border-radius':'0px','-moz-border-radius':'0px;','-webkit-border-radius':'0px;','background':'#fff'});
+			 $(this).css({'margin':'0px 0 0 0','border-left':'1px solid #ccc','border-bottom':'2px solid #A1A1A1','border-radius':'7px','-moz-border-radius':'7px;','-webkit-border-radius':'7px;','background':'#E1EFFD'});
 		//}
 	 });
 	
@@ -116,7 +118,7 @@ org_uengine_codi_mw3_model_IInstance.prototype = {
 		
 		var blinkDiv = $('#' + this.divId + ' .innerNewInst');
 		
-		blinkDiv.show( 'pulsate' ,  1500 );		
+		blinkDiv.show( 'pulsate' ,  1500 ).height(blinkDiv.parent().height());		
 		
 		
 			/*if($('#' + this.divId).hasClass('blinking')){
