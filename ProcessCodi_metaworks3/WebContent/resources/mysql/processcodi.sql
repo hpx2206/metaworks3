@@ -662,3 +662,16 @@ alter table bpm_procinst add beforeCmnt varchar(200);
 --2013.02.01
 alter table bpm_procinst drop beforeCmnt;
 alter table bpm_procinst add lastcmnt2 varchar(200);
+
+--2013.02.04
+alter table bpm_procinst add BVBENEFIT int(6);
+alter table bpm_procinst add BVPENALTY int(6);
+alter table bpm_procinst add EFFORT int(6);
+
+create table INST_EMP_PERF (
+	INSTID int(11) NOT NULL,
+	EMPCODE varchar(20) NOT NULL,
+	BUSINESSVALUE int(10),
+	PRIMARY KEY (INSTID, EMPCODE)
+);
+
