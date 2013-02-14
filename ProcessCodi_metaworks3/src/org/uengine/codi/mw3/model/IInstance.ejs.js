@@ -15,10 +15,10 @@ var org_uengine_codi_mw3_model_IInstance = function(objectId, className){
 	$('#' + this.divId).bind('click', {objectId: this.objectId},function(){
 		mw3.getFaceHelper(objectId).unBlinking();
 		
-		//if( object && object.metaworksContext && object.metaworksContext.how != 'sns'){
+		if( object && object.metaworksContext && object.metaworksContext.how != 'sns'){
 			 $(".tbl_type").parent().css({'margin':'0 0 0 5px','border-left':'1px solid #ccc','border-bottom':'none','border-radius':'0px','-moz-border-radius':'0px;','-webkit-border-radius':'0px;','background':'#fff'});
 			 $(this).css({'margin':'0px 0 0 0','border-left':'1px solid #ccc','border-bottom':'2px solid #A1A1A1','border-radius':'7px','-moz-border-radius':'7px;','-webkit-border-radius':'7px;','background':'#E1EFFD'});
-		//}
+		}
 	 });
 	
 	this.objDiv.hover(function(){				
