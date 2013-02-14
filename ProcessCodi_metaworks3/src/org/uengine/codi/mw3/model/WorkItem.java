@@ -717,13 +717,18 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			if(lastCmnt == null){
 				if(instanceRef.getName() != getTitle()){
 					instanceRef.setLastCmnt(getTitle());
+					instanceRef.setLastCmntUser(session.getUser());
 				}
 			}else{
 				if(instanceRef.getLastCmnt2() == null){
 					instanceRef.setLastCmnt2(getTitle());
+					instanceRef.setLastCmnt2User(session.getUser());
 				}else {
 					instanceRef.setLastCmnt(instanceRef.getLastCmnt2());
+					instanceRef.setLastCmntUser(instanceRef.getLastCmnt2User());
+					
 					instanceRef.setLastCmnt2(getTitle());
+					instanceRef.setLastCmnt2User(session.getUser());
 				}
 			}
 			
