@@ -438,27 +438,22 @@ public class InstanceView {
 		
 		Instance instance = new Instance();
 		instance.setInstId(new Long(getInstanceId()));
-		IInstance instanceRef = instance.databaseMe();
+		instance.copyFrom(instance.databaseMe());
 				
 		if(instance.isInitCmpl() && !session.getUser().getUserId().equals(instance.getInitEp())){
 			throw new Exception("$OnlyInitiatorCanComplete");
 		}
 		
 		// instance update flush
-		instanceRef.setStatus(tobe);
-		
-		instance.setBVBenefit(instanceRef.getBVBenefit());
-		instance.setBVPenalty(instanceRef.getBVPenalty());
-		instance.setEffort(instanceRef.getEffort());
-		instance.flushDatabaseMe();
+		instance.databaseMe().setStatus(tobe);
 
 		this.load(instance);
 		this.setStatus(tobe);
 		
-		MetaworksRemoteService.pushClientObjects(new Object[]{new InstanceListener(InstanceListener.COMMAND_REFRESH, instanceRef)});
+		MetaworksRemoteService.pushClientObjects(new Object[]{new InstanceListener(InstanceListener.COMMAND_REFRESH, instance)});
 
 		/* 내가 할일 카운트 다시 계산 */
-		if(instanceRef.getDefId() != null || (instanceRef.getDefId() == null && instanceRef.getDueDate() != null)){
+		if(instance.getDefId() != null || (instance.getDefId() == null && instance.getDueDate() != null)){
 			TodoBadge todoBadge = new TodoBadge();
 			todoBadge.session = session;
 			todoBadge.refresh();
