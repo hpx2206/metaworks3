@@ -85,6 +85,12 @@ ul, ol, li, dl, dd, dt {
 .wf_panel ul {
     padding-left: 25px;
     list-style-type: none;
+    border-left:1px dotted #ccc;
+    margin-left:8px;
+}
+.wf_panel ul:first {
+    
+    border-left:none;
 }
 .wf_panel li {
     list-style-type: none;
