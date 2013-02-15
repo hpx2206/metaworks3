@@ -209,6 +209,8 @@
 					
 				var mainPage = new MetaworksObject({
                     __className : "org.uengine.codi.mw3.portlet.InstanceListPortlet",
+                    topicName : request.getParameter("id"),
+                    type : request.getParameter("type")
                 }, 'body');
 				
 				mw3.onLoadFaceHelperScript();
