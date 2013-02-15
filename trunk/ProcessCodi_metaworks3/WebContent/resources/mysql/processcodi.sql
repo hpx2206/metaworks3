@@ -680,3 +680,5 @@ alter table bpm_procinst add lastCmntEp varchar(100);
 alter table bpm_procinst add lastCmntRsnm varchar(100);
 alter table bpm_procinst add lastCmnt2Ep varchar(100);
 alter table bpm_procinst add lastCmnt2Rsnm varchar(100);
+
+alter table bpm_worklist modify column title varchar(3000);
