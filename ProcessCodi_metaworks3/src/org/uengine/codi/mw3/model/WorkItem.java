@@ -643,21 +643,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				processMap.setDefId(CodiProcessDefinitionFactory.unstructuredProcessDefinitionLocation);
 				
 				String instId = processMap.initializeProcess();
-				
-				// 덧글 상태일때 덧글에 입력된 사용자명 자동으로 follower 에 추가해주는 기능
-				if(this instanceof CommentWorkItem){
-					ArrayList<String> initialFollowers = ((CommentWorkItem)this).initialFollowers;
-					if(initialFollowers!=null){
-						for(String userId : initialFollowers){
-							
-							RoleMapping follower = RoleMapping.create();
-							follower.setEndpoint(userId);
-							follower.setName("fol_" + userId);
-
-							processManager.putRoleMapping(instId, follower);
-						}
-					}
-				}
 				processMap.executeProcess(instId);
 				
 				// WorkItem 의 InstId 할당
@@ -708,6 +693,20 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 					
 					processManager.putRoleMapping(getInstId().toString(), newFollower);
 					processManager.applyChanges();
+				}
+			}
+			// 덧글 상태일때 덧글에 입력된 사용자명 자동으로 follower 에 추가해주는 기능
+			if(this instanceof CommentWorkItem){
+				ArrayList<String> initialFollowers = ((CommentWorkItem)this).initialFollowers;
+				if(initialFollowers!=null){
+					for(String userId : initialFollowers){
+						
+						RoleMapping follower = RoleMapping.create();
+						follower.setEndpoint(userId);
+						follower.setName("fol_" + userId);
+
+						processManager.putRoleMapping(this.getInstId().toString() , follower);
+					}
 				}
 			}
 			

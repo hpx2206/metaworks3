@@ -752,6 +752,7 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 		
 		WebFieldDescriptor wfields[] = wot.getFieldDescriptors();
 		FieldDescriptor fields[] = wot.metaworks2Type().getFieldDescriptors();
+		
 
 		ArrayList<ClassField> classFields = new ArrayList<ClassField>();
 		for(int i=0; i<fields.length; i++){
@@ -808,7 +809,6 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 				if(!importList.contains(importStr)){
 					importList.add(importStr);
 				}
-//				importBuffer.append("import ").append(fieldType).append(" ;\n");
 				
 				if(field.isInterface()){
 					// 인터페이스인 경우, 객체 생성을 해주기 위하여 인터페이스가 아닌 클레스도 import 한다
@@ -823,6 +823,19 @@ public class ClassDefinition implements ContextAware, PropertyListable, NeedArra
 					constructorBuffer	
 									.append("		").append("set").append(fieldNameFirstCharUpper)
 									.append("( new ").append(className).append("() ); \n");
+				}
+				// 특정 초기 셋팅이 필요한 변수 셋팅 ex) select box
+				if( fieldType.equalsIgnoreCase("org.metaworks.component.SelectBox")){
+					String selectOption = field.getSelectOption();
+					String selectValue = field.getSelectValue();
+					if( selectOption != null && selectValue != null){
+						String[] option = selectOption.split(",");
+						String[] value = selectValue.split(",");
+						for( int j =0; j < option.length; j++){
+//							System.out.println(option[j].trim() + " , " + value[j].trim() );
+							constructorBuffer	.append("		").append(field.getId()).append(".add( ").append("\"" + option[j].trim() +"\"" + " , " + "\"" +  value[j].trim() + "\"" ).append(" );  \n");
+						}
+					}
 				}
 				fieldType = className;
 			}

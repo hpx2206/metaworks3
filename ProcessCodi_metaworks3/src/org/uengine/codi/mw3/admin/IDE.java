@@ -30,7 +30,7 @@ public class IDE {
 		}
 		
 		innerLayout.setCenter(contentWindow);		
-		innerLayout.setSouth(consoleWindow);
+//		innerLayout.setSouth(consoleWindow);
 		
 		innerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, south__spacing_open:5, south__size:'20%'");
 		
@@ -45,7 +45,7 @@ public class IDE {
 		outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:5, east__spacing_open:5, west__size:300, east__size:500, north__size:52");
 		outerLayout.setNorth(new TopPanel(session));
 		outerLayout.setWest(resourceWindow);
-		outerLayout.setEast(hintWindow);
+//		outerLayout.setEast(hintWindow);
 		outerLayout.setCenter(innerLayout);		
 		
 		setLayout(outerLayout);		

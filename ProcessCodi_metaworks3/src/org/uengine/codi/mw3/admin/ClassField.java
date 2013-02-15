@@ -54,9 +54,8 @@ public class ClassField implements Cloneable, ContextAware{
 	@Range(
 				options={
 						"String", 
-						"Long", 
-						"Double", 
 						"Date", 
+						"Select Box", 
 						"File", 
 						"User", 
 						"Source Code",
@@ -64,9 +63,8 @@ public class ClassField implements Cloneable, ContextAware{
 						"MetaworksContext"},
 				values ={
 						"java.lang.String", 
-						"java.lang.Long", 
-						"java.lang.Double", 
 						"java.util.Date", 
+						"org.metaworks.component.SelectBox", 
 						"org.metaworks.website.MetaworksFile", 
 						"org.uengine.codi.mw3.model.IUser", 
 						"org.metaworks.example.ide.SourceCode",
@@ -148,7 +146,20 @@ public class ClassField implements Cloneable, ContextAware{
 		public void setInterface(boolean isInterface) {
 			this.isInterface = isInterface;
 		}
-
+	String selectOption;
+		public String getSelectOption() {
+			return selectOption;
+		}
+		public void setSelectOption(String selectOption) {
+			this.selectOption = selectOption;
+		}
+	String selectValue;
+		public String getSelectValue() {
+			return selectValue;
+		}
+		public void setSelectValue(String selectValue) {
+			this.selectValue = selectValue;
+		}
 		
 //	Object defaultValue;
 //	@Face(displayName="$defaultValue")
