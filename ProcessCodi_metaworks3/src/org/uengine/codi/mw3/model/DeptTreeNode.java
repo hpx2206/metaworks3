@@ -2,8 +2,10 @@ package org.uengine.codi.mw3.model;
 
 import java.util.ArrayList;
 
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.ToAppend;
 import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.TreeNode;
 
 public class DeptTreeNode extends TreeNode {
@@ -75,6 +77,7 @@ public class DeptTreeNode extends TreeNode {
 	}
 	
 	@Override
+	@ServiceMethod(payload={"id", "hiddenEmployee"}, target=ServiceMethodContext.TARGET_APPEND)
 	public Object expand() throws Exception{
 		return new ToAppend(this, this.loadExpand());
 	}

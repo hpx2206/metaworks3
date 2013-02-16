@@ -109,9 +109,15 @@ public class RoleMapping extends Database<IRoleMapping> implements IRoleMapping 
 	}
 	
 	public static IRoleMapping allFollower(Long instId) throws Exception{
-		String sql = "select * from bpm_rolemapping where rootinstid=?rootInstId";
+		StringBuffer str = new StringBuffer();
+		// rolomapping 테이블에서  follower 를 가져올 경우에 instId 와 endpoint가 동일한 결과를 가져올수 있다
+		// 그리하여 group by 로 묶어서 중복된 데이터를 제거함
+		str.append(" select * from ( ")
+			.append("	select * from bpm_rolemapping where rootinstid=?rootInstId " )
+			.append(" ) rolemapping ")
+			.append(" group by rolemapping.endpoint ");
 		
-		IRoleMapping findRoleMapping = (IRoleMapping) Database.sql(IRoleMapping.class, sql);
+		IRoleMapping findRoleMapping = (IRoleMapping) Database.sql(IRoleMapping.class, str.toString());
 		findRoleMapping.set("rootInstId", instId);
 		findRoleMapping.select();
 		

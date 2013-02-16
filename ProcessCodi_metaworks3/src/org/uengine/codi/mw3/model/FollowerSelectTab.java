@@ -26,6 +26,7 @@ public class FollowerSelectTab {
 	}
 	public FollowerSelectTab(Session session) throws Exception{
 		deptTree = new OrganizationTree(session);
+		deptTree.setHiddenEmployee(true);
 		contactListPanel = new ContactListPanel();
 	}
 }

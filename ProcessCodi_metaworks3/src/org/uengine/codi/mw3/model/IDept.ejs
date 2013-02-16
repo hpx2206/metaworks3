@@ -44,13 +44,14 @@
 <%	
 			}
 		} else if(mw3.how == 'deptFollower'){
+		console.log(value);
 		%>
 			<span style="float: left; border: none;"> 
-				<div class="user" onclick="">
-					<div class="user_focus" style="background-image: url(images/group.png); background-size: cover; background-position: initial initial; background-repeat: no-repeat no-repeat;" title="<%=value.partName%>">
-						<img id="user_picture_242" width="1" height="1" src="images/test.jpg" onerror="$(this).parent().css({'background':'url(\'images/group.png\') no-repeat','background-size':'cover'})">
-					</div>
-					<div style="clear:both"></div>
+				<div class="user">		
+				<div class="user_focus" style="background: url(images/portrait/group.png); background-size:cover;"  title="<%=value.partName%>">	
+					<img id="user_picture_<%=objectId%>" src="images/portrait/group.png" width=34 height=34>
+				</div>
+				<div style="clear:both"></div>
 				</div>
 			</span>
 		<%
