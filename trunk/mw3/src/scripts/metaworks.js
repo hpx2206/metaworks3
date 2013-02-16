@@ -398,7 +398,6 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					this.objectIds_FaceMapping[face] = null;
 				}
 				*/
-				
 		    	for(var i in mw3.afterLoadFaceHelper){
 		    		var face = mw3.afterLoadFaceHelper[i];
 		    		
@@ -1447,7 +1446,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			Metaworks3.prototype.locateObject = function(value/*, className, divName*/){
 				var objectId = ++ this.objectId;
 				var divId =  this._getObjectDivId(objectId);
-				var infoDivId = this._getInfoDivId(objectId)
+				var infoDivId = this._getInfoDivId(objectId);
 				var html; 
 
 				var className;
@@ -1965,7 +1964,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			
 			Metaworks3.prototype.__showResult = function(object, result, objId, svcNameAndMethodName, serviceMethodContext, placeholder, divId, callback ){
     							
-				mw3.log('__showResult : ' + svcNameAndMethodName + ' ---> ' + new Date());
+//				mw3.log('__showResult : ' + svcNameAndMethodName + ' ---> ' + new Date());
 								
     			mw3.requestMetadataBatch(result);
     			
@@ -2168,7 +2167,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					objId = this.targetObjectId;
 				}
 				
-				mw3.log('________call : ' + svcNameAndMethodName + ' ---> ' + new Date());
+//				mw3.log('________call : ' + svcNameAndMethodName + ' ---> ' + new Date());
 				
 				// 2012-04-14 cjw 재귀호출 막음
 				// 2012-04-18 이전 수정 버전 문제로 재수정 (undefined 일때 true 가 되여야함)
@@ -3604,7 +3603,8 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 
 			MethodRef.prototype.caller = function(){				
 				
-				return 'window.event.stopPropagation();'+(this.methodContext.needToConfirm ? 'if (confirm(\'Are you sure to ' + this.methodContext.displayName + ' this?\'))':'')  + 'mw3.getObject(' + this.objectId + ').' + this.methodContext.methodName + '()';
+				return 'if(event.stopPropagation)	 event.stopPropagation(); else if(window.event) window.event.cancelBubble = true;'+(this.methodContext.needToConfirm ? 'if (confirm(\'Are you sure to ' + this.methodContext.displayName + ' this?\'))':'')  + 'mw3.getObject(' + this.objectId + ').' + this.methodContext.methodName + '()';
+				//return 'window.event.stopPropagation();'+(this.methodContext.needToConfirm ? 'if (confirm(\'Are you sure to ' + this.methodContext.displayName + ' this?\'))':'')  + 'mw3.getObject(' + this.objectId + ').' + this.methodContext.methodName + '()';
 			};
 			
 			MethodRef.prototype.here = function(){
