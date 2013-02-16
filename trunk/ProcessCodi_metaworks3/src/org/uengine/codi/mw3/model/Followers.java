@@ -67,7 +67,7 @@ public class Followers implements ContextAware {
 		users.set("instanceId", instanceId);
 		users.select();
 		
-		IDept dept = (IDept) Database.sql(IDept.class, "select distinct endpoint PARTCODE, resname PARTNAME from bpm_rolemapping where rootinstid=?instanceId and assigntype = 2 ");
+		IDept dept = (IDept) Database.sql(IDept.class, "select distinct endpoint PARTCODE, rolename PARTNAME from bpm_rolemapping where rootinstid=?instanceId and assigntype = 2 ");
 		dept.set("instanceId", instanceId);
 		dept.select();
 		

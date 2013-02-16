@@ -31,6 +31,7 @@ public class OrganizationTree extends Tree {
 		rootNode.setId(session.getCompany().getComCode());
 		rootNode.setName(session.getCompany().getComName());
 		rootNode.setRoot(true);
+		rootNode.setHiddenEmployee(this.isHiddenEmployee());
 		rootNode.setChild(rootNode.loadExpand());
 		
 		this.setNode(rootNode);
