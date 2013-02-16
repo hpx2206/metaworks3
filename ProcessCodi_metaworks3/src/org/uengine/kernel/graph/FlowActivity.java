@@ -57,7 +57,10 @@ public class FlowActivity extends ComplexActivity {
 		Activity child = null;
 		for (Iterator it = getChildActivities().iterator(); it.hasNext();) {
 			child = (Activity) it.next();
-			if (child.getIncomingTransitions().size() == 0) {
+			if( child.getOutgoingTransitions().size() == 0 && child.getIncomingTransitions().size() == 0){
+				// null 로 리턴될 경우 super 로직을 태움
+				return null;
+			}else	if (child.getIncomingTransitions().size() == 0) {
 				return child;
 			}
 		}
@@ -126,9 +129,15 @@ public class FlowActivity extends ComplexActivity {
 			ProcessTransactionContext ptc) {
 		// TODO 처음이 휴먼 액티비티가 아닐수 있기때문에, 제일 처음 나오는 휴먼엑티비티를 찾아야함
 		
+		// transition 이 없으면 super 로직을 태움
 		ActivityReference startActivityRef = new ActivityReference();
 		try {
-			startActivityRef.setActivity(getStartActivity());
+			Activity act = getStartActivity();
+			if( act == null){
+				startActivityRef = super.getInitiatorHumanActivityReference(ptc);
+			}else{
+				startActivityRef.setActivity(act);
+			}
 		} catch (UEngineException e) {
 			// TODO Auto-generated catch block
 			throw new RuntimeException(e);
