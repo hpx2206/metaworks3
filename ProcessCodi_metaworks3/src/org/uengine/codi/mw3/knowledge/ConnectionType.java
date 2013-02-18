@@ -3,18 +3,24 @@ package org.uengine.codi.mw3.knowledge;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Range;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dwr.MetaworksRemoteService;
+import org.uengine.codi.mw3.Login;
+import org.uengine.codi.mw3.filter.AllSessionFilter;
+import org.uengine.codi.mw3.model.Session;
 
 public class ConnectionType implements ContextAware{
+
+	@AutowiredFromClient
+	public Session session;
 
 	public ConnectionType() {
 	}
 	
-
 	public ConnectionType(WfNode wfNode) {
 		setMetaworksContext(new MetaworksContext());
 		getMetaworksContext().setWhen("edit");
@@ -52,7 +58,12 @@ public class ConnectionType implements ContextAware{
 		theNode.setId(getNodeId());
 		theNode.databaseMe().setConnType(getConnType());
 		
-		MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(theNode.databaseMe())});
+		//MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(theNode.databaseMe())});
+		MetaworksRemoteService.pushClientObjectsFiltered(
+				new AllSessionFilter(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom())),
+				new Object[]{new Refresh(theNode.databaseMe())});
+
+		
 	}
 	
 	MetaworksContext metaworksContext;
