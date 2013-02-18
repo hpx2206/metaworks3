@@ -114,6 +114,21 @@
 			<td height="30" colspan="2" style="padding-left:15px;"><a id="wBtn" href="#" onClick="<%=methods.add.caller()%>"><span id="method_<%=objectId%>_add"><%=mw3.localize((mw3.when == 'new')?'$Post':'$Edit')%></span></a></td>
 		</tr>
 <%		
+		}else if(value.type == "remoteConf"){
+%>
+		<tr>
+			<td width="50" height="25" style="color:#8D98AF; padding-left:15px;"> 
+				Title : 
+			</td>
+			<td style="padding-right:15px;"> 
+				<input id="post_<%=objectId%>" class="<%=value.type%>" value="<%=value.title ? value.title:''%>" style="width:99%;-webkit-border-radius:3px; border:1px solid #ccc">
+			</td>			
+			<td height="30" colspan="2" style="padding-left:15px;">
+				<a id="wBtn" href="#" onClick="<%=methods.add.caller()%>"><span id="method_<%=objectId%>_add"><%=mw3.localize((mw3.when == 'new')?'$Post':'$Edit')%></span></a>
+			</td>
+			
+		</tr>			
+<%		
 		}
 %>
 	</table>
@@ -125,6 +140,7 @@
 	<div id="wih_button">
 		<a class="<%= value.type=='comment'?'comment_btn_on':'comment_btn_off' %>" onclick="<%=methods.newComment.caller()%>"><span><%=mw3.localize("$Write")%></span></a>
 		<a class="<%= value.type=='memo'?'comment_btn_on':'comment_btn_off' %>" onclick="<%=methods.newMemo.caller()%>"><span id="method_<%=objectId%>_newMemo"><%=mw3.localize("$Memo")%></span></a>
+		<a class="<%= value.type=='remoteConf'?'comment_btn_on':'comment_btn_off' %>" onclick="<%=methods.newRemoteConference.caller()%>"><span id="method_<%=objectId%>_newRemoteConference"><%=mw3.localize("$RemoteConference")%></span></a>
 		<a class="<%= value.type=='file'?'comment_btn_on':'comment_btn_off' %>" onclick="<%=methods.newFile.caller()%>"><span id="method_<%=objectId%>_newFile"><%=mw3.localize("$File")%></span></a>
 		<!-- <a class="<%= value.type=='src'?'comment_btn_on':'comment_btn_off' %>" onclick="<%=methods.newSourceCode.caller()%>"><span id="method_<%=objectId%>_newSourceCode"><%=mw3.localize("$SourceCode")%></span></a> -->
 		<a class="comment_btn_off" onclick="<%=methods.newActivity.caller()%>"><span id="method_<%=objectId%>_newActivity"><%=mw3.localize("$etc")%></span></a>

@@ -44,6 +44,8 @@ public interface IWorkItem extends IDAO{
 		public final static String WORKITEM_STATUS_DELEGATED= "DELEGATED"; 
 	
 		public final static String WORKITEM_TYPE_MEMO		 = "memo";
+		
+		public final static String WORKITEM_TYPE_REMOTECONF	 = "remoteConf";
 				
 		
 		public final static int TITLE_LIMIT_SIZE             = 2900;
@@ -119,7 +121,8 @@ public interface IWorkItem extends IDAO{
 						"postings",
 						"generic",
 						"memo",
-						"ovryCmnt"
+						"ovryCmnt",
+						"remoteConf"
 					}, 
 				classes = 		{ 
 						WorkItem.class,  	
@@ -132,7 +135,8 @@ public interface IWorkItem extends IDAO{
 						FacebookFeedback.class,
 						GenericWorkItem.class,
 						MemoWorkItem.class,
-						OverlayCommentWorkItem.class
+						OverlayCommentWorkItem.class,
+						RemoteConferenceWorkItem.class
 					} 
 		)
 		public String getType();
@@ -326,6 +330,10 @@ public interface IWorkItem extends IDAO{
 		
 		@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)
 		public IWorkItem newMemo() throws Exception;
+		
+		@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)
+		public IWorkItem newRemoteConference() throws Exception;
+		
 		
 		@ServiceMethod(inContextMenu=true, payload={"instId", "taskId"}, target=ServiceMethodContext.TARGET_POPUP)
 		@Face(displayName="Comment")
