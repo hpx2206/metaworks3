@@ -71,7 +71,7 @@ public class InstanceViewPublic {
 
 		Login login = new Login();
 		login.setUserId(this.getSession().getUser().getUserId());		
-		login.storeIntoServerSession();
+		login.storeIntoServerSession(session);
 		
 		ProcessInstance instance = processManager.getProcessInstance(String.valueOf(getInstanceId()));
 		
