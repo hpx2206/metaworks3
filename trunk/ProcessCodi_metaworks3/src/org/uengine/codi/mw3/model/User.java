@@ -427,7 +427,7 @@ public class User extends Database<IUser> implements IUser {
 		contactList.getMetaworksContext().setWhere(this.getMetaworksContext().getWhere());
 		contactList.load(session.getUser().getUserId());
 		
-		return new Object[] {contactList, new Popup()};
+		return new Object[] {new Refresh(contactList , true)};
 		
 	}
 	
