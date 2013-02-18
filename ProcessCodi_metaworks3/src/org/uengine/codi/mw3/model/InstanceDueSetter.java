@@ -157,7 +157,7 @@ public class InstanceDueSetter implements ContextAware{
 			
 			//MetaworksRemoteService.pushOtherClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(iInstance), new WorkItemListener(workItem)});
 			MetaworksRemoteService.pushClientObjectsFiltered(
-					new OtherSessionFilter(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom()), session.getUser().getUserId()),
+					new OtherSessionFilter(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom()), session.getUser().getUserId().toUpperCase()),
 					new Object[]{new InstanceListener(iInstance), new WorkItemListener(workItem)});		
 		}
 		

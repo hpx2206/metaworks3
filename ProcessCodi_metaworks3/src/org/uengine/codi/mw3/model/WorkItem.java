@@ -897,7 +897,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 
 			// 본인 이외에 다른 사용자에게 push			
 			MetaworksRemoteService.pushClientObjectsFiltered(
-					new OtherSessionFilter(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom()), session.getUser().getUserId()),
+					new OtherSessionFilter(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom()), session.getUser().getUserId().toUpperCase()),
 					new Object[]{new InstanceListener(copyOfInstance), new WorkItemListener(copyOfThis)});			
 			
 		// 수정
