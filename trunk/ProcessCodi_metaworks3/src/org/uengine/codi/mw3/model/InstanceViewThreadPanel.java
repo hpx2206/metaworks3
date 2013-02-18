@@ -91,7 +91,7 @@ public class InstanceViewThreadPanel implements ContextAware {
 			if(result.size()>5){
 				setLastIndex(result.size());
 				setStartIndex(lastIndex - LIST_CNT);
-				setMoreTitle(startIndex + "개의 이전업무 더 보기");
+				setMoreTitle(startIndex + "개의 이전 대화 더 보기");
 				
 				result = WorkItem.find(instanceId, startIndex, lastIndex);
 				
