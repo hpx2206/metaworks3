@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.CodiProcessDefinitionFactory;
 import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.admin.WebEditor;
+import org.uengine.codi.mw3.filter.OtherSessionFilter;
 import org.uengine.codi.mw3.knowledge.KnowledgeTool;
 import org.uengine.codi.mw3.knowledge.WfNode;
 import org.uengine.kernel.HumanActivity;
@@ -643,7 +644,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			this.isDeleted = isDeleted;
 		}
 
-	public IInstance save() throws Exception {
+		public IInstance save() throws Exception {
 		
 		IInstance instanceRef = null;		
 		
@@ -776,7 +777,8 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			this.createDatabaseMe();
 			
 		// 수정
-		}else{		
+		}else{
+			this.copyFrom(databaseMe());
 			this.syncToDatabaseMe();
 		}		
 		
@@ -894,7 +896,9 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			}
 
 			// 본인 이외에 다른 사용자에게 push			
-			MetaworksRemoteService.pushOtherClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(copyOfInstance), new WorkItemListener(copyOfThis)});			
+			MetaworksRemoteService.pushClientObjectsFiltered(
+					new OtherSessionFilter(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom()), session.getUser().getUserId()),
+					new Object[]{new InstanceListener(copyOfInstance), new WorkItemListener(copyOfThis)});			
 			
 		// 수정
 		}else{		
@@ -906,7 +910,11 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			// 본인 이외에 다른 사용자에게 push
 			final IWorkItem copyOfThis = this;
 			
-			MetaworksRemoteService.pushOtherClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new WorkItemListener(copyOfThis)});
+			//MetaworksRemoteService.pushOtherClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new WorkItemListener(copyOfThis)});
+			
+			MetaworksRemoteService.pushClientObjectsFiltered(
+					new OtherSessionFilter(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom()), session.getUser().getUserId()),
+					new Object[]{new WorkItemListener(copyOfThis)});	
 		}		
 		
 		if(this.getDueDate() != null){
@@ -1054,7 +1062,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		
 		return overlayCommentWorkItem; 
 	}
-
 	
 	@AutowiredFromClient
 	public Session session;

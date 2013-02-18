@@ -9,6 +9,7 @@ import org.directwebremoting.WebContextFactory;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.NonEditable;
@@ -29,6 +30,9 @@ public class Session implements ContextAware{
 		
 		setMetaworksContext(metaworkscontext);
 	}
+	
+	@AutowiredFromClient
+	public Session session;
 	
 	IUser user;	
 		public IUser getUser() {
@@ -192,11 +196,9 @@ public class Session implements ContextAware{
 		removeUserInfoFromHttpSession();
 		
 		Login login = new Login();
-/*		if(getEmployee() != null) {
-			login.setUserId(getEmployee().getEmpCode());
-		}
-*/		login.setMetaworksContext(new MetaworksContext());
+		login.fireServerSession(session);
 		
+		login.setMetaworksContext(new MetaworksContext());
 		login.getMetaworksContext().setHow("logout");
 		login.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 		//login.getMetaworksContext().setWhere("user");
@@ -205,6 +207,8 @@ public class Session implements ContextAware{
 		
 	@ServiceMethod(target=ServiceMethodContext.TARGET_NONE)
 	public Object heartbeat(){
+		Login.getSessionIdWithCompany("enkisoft");
+		
 		//nothing to do
 		String sessionId = WebContextFactory.get().getScriptSession().getId();
 		//System.out.println("heartbeat:" + sessionId);
