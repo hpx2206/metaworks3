@@ -519,8 +519,9 @@ img {
  */
 
 #container {
-    min-height: 300px;
+  /*  min-height: 300px;
     min-width: 600px;
+  */  
     position: absolute;
     top: 0px;	/* margins in pixels */
     bottom: 5px;	/* could also use a percent */
