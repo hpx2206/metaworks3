@@ -1,7 +1,9 @@
 package org.uengine.codi.mw3;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Iterator;
 
 import javax.servlet.http.HttpSession;
 
@@ -36,7 +38,10 @@ import org.uengine.codi.mw3.model.User;
 
 public class Login implements ContextAware {
 	
-	protected static Hashtable<String, String> userIdSessionIdMapping = new Hashtable<String, String>();
+	protected static Hashtable<String, HashMap<String, String>> SessionIdForCompanyMapping = new Hashtable<String, HashMap<String, String>>();
+	protected static Hashtable<String, HashMap<String, String>> SessionIdForDeptMapping = new Hashtable<String, HashMap<String, String>>();
+	protected static Hashtable<String, String> SessionIdForEmployeeMapping = new Hashtable<String, String>();
+	
 	protected static Hashtable<String, String> userIdDeviceMapping = new Hashtable<String, String>();	
 	
 	public Login(){
@@ -181,9 +186,23 @@ public class Login implements ContextAware {
 	}
 	
 	public static String getSessionIdWithUserId(String userId){
-		return userIdSessionIdMapping.get(userId.toUpperCase());
+		return SessionIdForEmployeeMapping.get(userId.toUpperCase());
 	}
 
+	public static HashMap<String, String> getSessionIdWithCompany(String companyId){
+		companyId = companyId.toUpperCase();
+		if(SessionIdForCompanyMapping.containsKey(companyId)){
+			HashMap<String, String> mapping = SessionIdForCompanyMapping.get(companyId);
+			//System.out.println(.);
+			
+			Iterator<String> iterator = mapping.keySet().iterator();
+			
+			return mapping;
+		}else{
+			return null;
+		}
+	}
+	
 	public static String getDeviceWithUserId(String userId){
 		return userIdDeviceMapping.get(userId.toUpperCase());
 	}
@@ -324,34 +343,48 @@ public class Login implements ContextAware {
 			}
 		}
 		
-		storeIntoServerSession();
+		storeIntoServerSession(session);
 
 		return new Object[]{new Remover(new ModalWindow(), true), new Refresh(locale), new Refresh(mainPanel, false, true)};
 	}
 
+	public void fireServerSession(Session session) {
+		String userId = session.getUser().getUserId().toUpperCase();
+		
+		SessionIdForEmployeeMapping.remove(userId);
+		
+		if(session.getEmployee() != null){
+			String partCode = session.getEmployee().getPartCode().toUpperCase();
+			String globalCom = session.getEmployee().getGlobalCom().toUpperCase();
+
+			if(partCode != null && partCode.length() > 0){
+				HashMap<String, String> mapping = null;
+				
+				if(SessionIdForDeptMapping.containsKey(partCode)){
+					mapping = SessionIdForDeptMapping.get(partCode);
+					mapping.remove(userId);
+					SessionIdForDeptMapping.put(partCode, mapping);
+				}
+			}
+			
+			if(globalCom != null && globalCom.length() > 0){
+				HashMap<String, String> mapping = null;
+				
+				if(SessionIdForCompanyMapping.containsKey(globalCom)){
+					mapping = SessionIdForCompanyMapping.get(globalCom);
+					mapping.remove(userId);
+					SessionIdForCompanyMapping.put(globalCom, mapping);
+				}
+			}
+		}
+	}
 	
-	public void storeIntoServerSession() {
+	public void storeIntoServerSession(Session session) {
+		String userId = session.getUser().getUserId().toUpperCase();
+		
 		//setting the userId into session attribute;
 		HttpSession httpSession = TransactionContext.getThreadLocalInstance().getRequest().getSession(); 
-		httpSession.setAttribute("userId", getUserId());
-		
-		WebContext wctx = WebContextFactory.get();
-		
-		String sessionId = Login.getSessionIdWithUserId(getUserId());
-		if(sessionId != null && !sessionId.equals(wctx.getScriptSession().getId())){
-			MetaworksRemoteService.pushTargetScript(sessionId, "mw3.getAutowiredObject('" + Session.class.getName() + "').__getFaceHelper().fire", new Object[]{"2"});
-		}		
-		
-		userIdSessionIdMapping.put(getUserId().toUpperCase(), wctx.getScriptSession().getId()); //stores session id to find out with user Id
-		
-		String device = "desktop";
-		if(Main.isPad()){
-			device = "pad";
-		}else if(Main.isPhone()){
-			device = "phone";
-		}
-		
-		userIdDeviceMapping.put(getUserId().toUpperCase(), device); //stores session id to find out with user Id
+		httpSession.setAttribute("userId", userId);
 		
 		String mySourceCodeBase = CodiClassLoader.mySourceCodeBase();
 		
@@ -361,12 +394,65 @@ public class Login implements ContextAware {
 		if(mySourceCodeBase!=null && new File(mySourceCodeBase).exists()){
 			httpSession.setAttribute("sourceCodeBase", mySourceCodeBase);
 		}
+		
+		// fire exist session 
+		if(SessionIdForEmployeeMapping.containsKey(userId)){
+			MetaworksRemoteService.pushTargetScript(Login.getSessionIdWithUserId(getUserId()), "mw3.getAutowiredObject('" + Session.class.getName() + "').__getFaceHelper().fire", new Object[]{"2"});
+		}else{
+			// manager sessionId
+			WebContext wctx = WebContextFactory.get();
+			String sessionId = wctx.getScriptSession().getId();
+						
+			SessionIdForEmployeeMapping.put(userId, sessionId); //stores session id to find out with user Id
+			
+			if(session.getEmployee() != null){
+				String partCode = session.getEmployee().getPartCode();
+				String globalCom = session.getEmployee().getGlobalCom();
+				
+				if(partCode != null && partCode.length() > 0){
+					partCode = partCode.toUpperCase();					
+					HashMap<String, String> mapping = null;
+					
+					if(SessionIdForDeptMapping.containsKey(partCode))
+						mapping = SessionIdForDeptMapping.get(partCode);
+					else
+						mapping = new HashMap<String, String>();
+					
+					mapping.put(userId, sessionId);
+					SessionIdForDeptMapping.put(partCode, mapping);
+					
+				}
+				
+				if(globalCom != null && globalCom.length() > 0){
+					globalCom = globalCom.toUpperCase();
+					HashMap<String, String> mapping = null;
+					
+					if(SessionIdForCompanyMapping.containsKey(globalCom))
+						mapping = SessionIdForCompanyMapping.get(globalCom);
+					else
+						mapping = new HashMap<String, String>();
+					
+					mapping.put(userId, sessionId);
+					SessionIdForCompanyMapping.put(globalCom, mapping);
+					
+				}
+			}
+		}
+		
+		String device = "desktop";
+		if(Main.isPad()){
+			device = "pad";
+		}else if(Main.isPhone()){
+			device = "phone";
+		}
+		
+		userIdDeviceMapping.put(userId.toUpperCase(), device); //stores session id to find out with user Id
+		
+
 	}
 
 	@ServiceMethod(callByContent=true)
 	public MainPanel loginSocialCoding() throws Exception {
-		storeIntoServerSession();
-		
 		IUser loginUser = new User();
 		
 		loginUser.setName(getName());
@@ -375,7 +461,9 @@ public class Login implements ContextAware {
 		Session session = new Session();
 		session.setUser(loginUser);
 		session.setDefId(getDefId());
-
+		
+		storeIntoServerSession(session);
+		
 		MainPanel mainPanel = new MainPanel(new Main(session));
 		
 		return mainPanel;
