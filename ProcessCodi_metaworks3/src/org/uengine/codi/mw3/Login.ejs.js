@@ -50,8 +50,6 @@ org_uengine_codi_mw3_Login.prototype = {
 		var login = mw3.getObjectFromUI(this.objectId);
 		var facebookSSO = getCookie("codi.facebookSSO");
 		
-		console.log(facebookSSO);
-		
 		if(login.userId && login.password && login.rememberMe){
 			login.login();
 		}else{
