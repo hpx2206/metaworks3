@@ -35,7 +35,10 @@ org_uengine_codi_mw3_model_InstanceList.prototype = {
 			var userId = session.employee.empCode;
 			var partCode = session.employee.partCode;
 			
-			if(target.secuopt == '0' || target.secuopt == '2'){
+			// 보안설정 전에 자기 자신이 올린글 (채팅, 새글쓰기)은 바로 붙음. 
+			// 자기가 올린글을 보안으로 하였을때 followers가 null 이기 때문에 (target.initEp ==  userId) 추가함 2/18 김형국
+			// 보안설정
+			if(target.secuopt == '0' || target.secuopt == '2' || target.initEp ==  userId){
 				isAuth = true;
 				
 			} else if(target.secuopt == '1'){			// follower
