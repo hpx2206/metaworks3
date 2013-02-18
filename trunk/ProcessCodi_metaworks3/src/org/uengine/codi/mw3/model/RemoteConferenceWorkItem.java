@@ -114,7 +114,7 @@ public class RemoteConferenceWorkItem extends WorkItem{
 		String checkSum = hex_sha1("end" + endParam + salt);
 		String endURI = "end?" + endParam + "&checksum=" + checkSum;
 		
-		String getRecordURI = getRecordingInfo();
+//		String getRecordURI = getRecordingInfo();
 		
 		URL url = new URL("http://" + GlobalContext.getPropertyString("bbb.server.host") + "/bigbluebutton/api/" + endURI);
 		
@@ -177,6 +177,9 @@ public class RemoteConferenceWorkItem extends WorkItem{
 //			url = "http://" + GlobalContext.getPropertyString("bbb.server.host")+ "/playback/slides/playback.html?meetingId=" + recordID;
 //			
 //		}
+//		
+//		databaseMe().setExt4(url);
+//		
 //		return url;
 //		
 //	}
