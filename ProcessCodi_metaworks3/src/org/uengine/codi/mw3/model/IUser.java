@@ -64,7 +64,7 @@ public interface IUser extends IDAO{
 	@Face(displayName="$RemoveFromFollowers")
 	public Object[] removeFollower() throws Exception;
 	
-	@ServiceMethod(callByContent=true, inContextMenu=true)
+	@ServiceMethod(callByContent=true, inContextMenu=true, target=TARGET_APPEND)
 	@Face(displayName="$RemoveFromContact")
 	public Object[] removeContact() throws Exception;
 	

@@ -3,7 +3,7 @@
 		if(mw3.how == 'tree'){
 %>
 		<div>	
-			<a onClick="<%=methods.drillDown.caller()%>;<%=methods.loadDeptList.caller()%>" class="idept"><%=fields.partName.here()%></a>					
+			<a onClick="<%=methods.drillDown.caller()%>; <% if(mw3.where!='addContact'){%><%=methods.loadDeptList.caller()%><% } %>" class="idept"><%=fields.partName.here()%></a>					
 <%
 			if(mw3.where=='deptPicker'){
 %>
@@ -44,7 +44,6 @@
 <%	
 			}
 		} else if(mw3.how == 'deptFollower'){
-		console.log(value);
 		%>
 			<span style="float: left; border: none;"> 
 				<div class="user">		

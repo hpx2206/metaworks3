@@ -11,6 +11,7 @@ public class AddLocalContactPanel {
 	
 	public AddLocalContactPanel(Session session) throws Exception {
 		IDept dept = new Dept();
+		dept.getMetaworksContext().setWhere("addContact");
 		dept.getMetaworksContext().setHow("tree");
 		dept.setGlobalCom(session.getEmployee().getGlobalCom());
 		
