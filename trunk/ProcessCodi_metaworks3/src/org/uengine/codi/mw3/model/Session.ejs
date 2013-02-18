@@ -7,7 +7,7 @@
 			<span style="display:inline-block; line-height:37px; padding-left:45px;"><b><%=mw3.localize("$List")%></b></span>			
 		</div>
 <%
-			}
+			}else{
 %>
 		<div>
 			<span class="ssesionLine"><%=fields.employee.here() %></span>
@@ -25,6 +25,7 @@
 			<span class="ssesionLine"><a onClick="<%=methods.logout.caller() %>" style="cursor:pointer;"><%=mw3.localize("$Logout")%></a></span>
 		</div>
 <%
+			}
 		}
 	}
 %>
