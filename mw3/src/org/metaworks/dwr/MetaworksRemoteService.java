@@ -66,7 +66,7 @@ public class MetaworksRemoteService {
 		 Browser.withSession(sessionId, new Runnable(){
 			   @Override
 			   public void run() {
-				   ScriptSessions.addFunctionCall(script, new Object[]{});
+				   ScriptSessions.addFunctionCall(script, object);
 			   }			  
 		});
 	}
@@ -94,6 +94,7 @@ public class MetaworksRemoteService {
 	}
 		
 	public static void pushOtherClientObjects(final String sessionId, final Object[] object){
+		
 		Browser.withAllSessionsFiltered(
 				new ScriptSessionFilter(){
 					@Override
@@ -105,6 +106,21 @@ public class MetaworksRemoteService {
 							return true;
 					}			
 				},
+
+				new Runnable(){
+					@Override
+					public void run() {
+						ScriptSessions.addFunctionCall("mw3.locateObject", new Object[]{object, null, "body"});
+						ScriptSessions.addFunctionCall("mw3.onLoadFaceHelperScript", new Object[]{});
+
+					}			  
+				});
+	}
+	
+	public static void pushClientObjectsFiltered(ScriptSessionFilter filter, final Object[] object){
+		
+		Browser.withAllSessionsFiltered(
+				filter,
 
 				new Runnable(){
 					@Override
