@@ -1,11 +1,11 @@
-<% if(value!=null){
-
-	 var instanceTitle = value.name;
-	 var lastCmnt = value.lastCmnt;
-	 var lastCmnt2 = value.lastCmnt2; 
+<%
+if(value!=null){
+	var instanceTitle = value.name;
+	var lastCmnt = value.lastCmnt;
+	var lastCmnt2 = value.lastCmnt2; 
 	 
-	 var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
-	 if(session.searchKeyword != null && session.searchKeyword.length > 0){
+	var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
+	if(session.searchKeyword != null && session.searchKeyword.length > 0){
 		if(typeof instanceTitle == 'string')
 			instanceTitle = instanceTitle.replaceAll(session.searchKeyword, '<b style=\"background:yellow\">' + session.searchKeyword + '</b>');
 		 
@@ -14,7 +14,7 @@
 			
 		if(typeof lastCmnt2 == 'string')
 			lastCmnt2 = lastCmnt2.replaceAll(session.searchKeyword, '<b style=\"background:yellow\">' + session.searchKeyword + '</b>');
-	 }
+	}
 	 
 	if(mw3.how=="instanceNavigator"){%>
 	
