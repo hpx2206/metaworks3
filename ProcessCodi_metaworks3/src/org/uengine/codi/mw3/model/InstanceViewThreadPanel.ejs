@@ -1,11 +1,13 @@
 <%
 	if(value){
 %>
-	<div id="moreWorkDiv" align="center">
+	<div id="moreWorkDiv">
 		<%
 		if(value.lastIndex != null && value.lastIndex >5 && value.moreTitle != null){
-		%>
-			<a style="display:block; padding:8px; border:1px solid #e1e1e1;margin:15px;" href="#" onClick="<%=methods.more.caller()%>"><%=value.moreTitle%></a>
+		%>	
+			<div class="morePoint"></div>
+			<a class="moreBtn5" href="#" onClick="<%=methods.more.caller()%>"><%=value.moreTitle%></a>
+			<div class="morePoint"></div>
 		<%
 		}
 		%>
