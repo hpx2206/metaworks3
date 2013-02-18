@@ -211,8 +211,15 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		public void setPreview(Preview preview) {
 			this.preview = preview;
 		}
-		
-		
+	
+	RemoteConferenceWorkItem remoteConf;
+		public RemoteConferenceWorkItem getRemoteConf() {
+			return remoteConf;
+		}
+		public void setRemoteConf(RemoteConferenceWorkItem remoteConf) {
+			this.remoteConf = remoteConf;
+		}
+
 	String content;
 		public String getContent() {
 			return content;
@@ -553,6 +560,14 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	@Override
 	public IWorkItem newMemo() throws Exception {
 		MemoWorkItem wi = new MemoWorkItem();
+		formatWorkItem(wi);
+		
+		return wi;
+	}
+	
+	@Override
+	public IWorkItem newRemoteConference() throws Exception {
+		RemoteConferenceWorkItem wi = new RemoteConferenceWorkItem();
 		formatWorkItem(wi);
 		
 		return wi;

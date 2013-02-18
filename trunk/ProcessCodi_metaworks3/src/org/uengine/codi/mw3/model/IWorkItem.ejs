@@ -100,14 +100,14 @@
 							<div style="position:relative; height:38px;">
 							
 							<img src="images/waveStyle/wih<%=(typeof value.type != 'undefined')?value.type:''%>.png">
-								<% if(value.status && value.status != 'FEED') { %>
+								<% if(value.status && value.status != 'FEED' && value.type != 'remoteConf') { %>
 									<span style="position:absolute; bottom:3px; right:12px;"><img src="images/activity_status/i_status_<%=value.status%>.png" style="margin-top:1px;" title="<%=value.status%>"></span>										
 								<% } %>					
 						</td>
 					<% }%>
 						<td>
 							<div class="formcontexttitle" id="currentRunningWorkItemHandler" <% if(value.type=='comment'){%>style="font-weight:normal; border:none;"<% }%>>
-								<% if(value.type=='comment' || value.type=='file' || value.type=='src' || value.type=='memo' || value.type=='generic'){%>
+								<% if(value.type=='comment' || value.type=='file' || value.type=='src' || value.type=='memo' || value.type=='generic' || value.type=='remoteConf'){%>
 									<span>
 											<%=value.title.replace('\n','<br>')%> 
 											<%if(value.type=='file'){%>
@@ -173,6 +173,22 @@
 							<%=fields.memo.here({when : 'view'})%>						
 						</td>
 					</tr>
+					<%}%>
+					<%if(value.type=='remoteConf'){%>
+						<%if(value.status != 'Completed'){%>
+							<tr>
+								<td><a href="#" onClick="<%=methods.join.caller()%>"><%=mw3.localize('$GoJoin')%></a></td>
+								<td><a href="#" onClick="<%=methods.end.caller()%>"><%=mw3.localize('$EndMeeting')%></a></td>
+							</tr>
+						<%}else{%>
+							<tr>
+							<%if(value.ext4 != null){%>
+								<td><iframe src="<%=value.ext4%>" frameborder="0" scrolling="no" width=100% height=300px onLoad="resizeFrame(this);"/></td>
+							<%}else{%>
+								<td><a href="#" onClick="<%=methods.palyBack.caller()%>"><%=mw3.localize('$PlayBack')%></a></td>
+							<%}%>
+							</tr>
+						<%}%>
 					<%}%>
 					<%if(value.type=='src'){%>
 					<tr>
