@@ -40,6 +40,9 @@ var org_uengine_codi_mw3_model_IUser = function(objectId, className){
 }
 
 org_uengine_codi_mw3_model_IUser.prototype = {
+	destroy : function(){
+		this.endLoading();
+	},
 	startLoading : function(){
 		if(this.windowObjectId && mw3.getFaceHelper(this.windowObjectId) && mw3.getFaceHelper(this.windowObjectId).startLoading)
 			mw3.getFaceHelper(this.windowObjectId).startLoading();

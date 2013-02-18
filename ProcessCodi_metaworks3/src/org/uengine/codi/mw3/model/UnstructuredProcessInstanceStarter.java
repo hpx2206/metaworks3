@@ -67,15 +67,14 @@ public class UnstructuredProcessInstanceStarter implements ContextAware {
 		
 		Object[] instanceViewAndInstanceList = unstructuredProcessDefinition.initiate();
 		
-		final InstanceViewContent instanceView = (InstanceViewContent) instanceViewAndInstanceList[0];
+		InstanceViewContent instanceView = (InstanceViewContent) instanceViewAndInstanceList[0];
 		
 		instanceView.getInstanceView().getInstanceNameChanger().setInstanceName(getTitle());
 		instanceView.getInstanceView().getInstanceNameChanger().change();
 
-		
+		final String instId = instanceView.getInstanceView().instanceId;
 		Instance instance = new Instance();
-		instance.setInstId(new Long
-				(instanceView.getInstanceView().instanceId));
+		instance.setInstId(new Long(instId));
 		User initUser = new User();
 		initUser.setUserId(session.getUser().getUserId());
 		initUser.setName(session.getUser().getName());
@@ -97,18 +96,14 @@ public class UnstructuredProcessInstanceStarter implements ContextAware {
 		comment.processManager = processManager;
 		comment.session = session;
 		comment.setTitle(getTitle());
-		comment.add();
-		
-		WorkItem newItem = new CommentWorkItem();
-		newItem.setInstId(new Long(instanceView.getInstanceView().getInstanceId()));
-		newItem.setTaskId(new Long(instanceView.getInstanceView().getInstanceId()));
-		newItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
-		instanceView.getInstanceView().setNewItem(newItem);
+		comment.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+		Object[] returnObject = comment.add();
+		instanceView.load(instance);
 	
 		Browser.withSession(Login.getSessionIdWithUserId(session.getEmployee().getEmpCode()), new Runnable(){
 			@Override
 			public void run() {
-				ScriptSessions.addFunctionCall("mw3.getAutowiredObject('org.uengine.codi.mw3.model.Tray').__getFaceHelper().addTray", new Object[]{session.getUser().getName(), instanceView.getInstanceView().getInstanceId()});
+				ScriptSessions.addFunctionCall("mw3.getAutowiredObject('org.uengine.codi.mw3.model.Tray').__getFaceHelper().addTray", new Object[]{session.getUser().getName(), instId});
 			}
 			
 		});
@@ -118,34 +113,30 @@ public class UnstructuredProcessInstanceStarter implements ContextAware {
 
 				@Override
 				public void run() {
-					ScriptSessions.addFunctionCall("mw3.getAutowiredObject('org.uengine.codi.mw3.model.Tray').__getFaceHelper().addTray", new Object[]{session.getUser().getName(), instanceView.getInstanceView().getInstanceId(), true});
+					ScriptSessions.addFunctionCall("mw3.getAutowiredObject('org.uengine.codi.mw3.model.Tray').__getFaceHelper().addTray", new Object[]{session.getUser().getName(), instId, true});
 				}
 				
 			});
 		}
 		
-		/*
-		if(newInstancePanel!=null && newInstancePanel.getKnowledgeNodeId() != null){
-						
-			WfNode parent = new WfNode();
-			parent.load(newInstancePanel.getKnowledgeNodeId());
-			
-			WfNode child = new WfNode();		
-			child.setName(getTitle());
-			child.setLinkedInstId(Long.parseLong(instanceView.getInstanceView().getInstanceId()));
-			parent.addChildNode(child);
-			
-			child.createMe();
-
-			return new Object[]{instanceView, parent};
-
-		}
-		*/
 		
 		if("sns".equals(session.getEmployee().getPreferUX())){
-			return new Object[]{new Remover(new Popup())};
-		}else
-			return new Object[]{instanceViewAndInstanceList[0], instanceViewAndInstanceList[1], new Remover(new Popup())};
+			Object[] returnObject2 = new Object[ returnObject.length + 1 ];
+			for( int i = 0; i < returnObject.length; i++){
+				returnObject2[i] = returnObject[i];
+			}
+			returnObject2[returnObject.length] = new Remover(new Popup());
+			return returnObject2;
+		}else{
+			Object[] returnObject2 = new Object[ returnObject.length + 2 ];
+			for( int i = 0; i < returnObject.length; i++){
+				returnObject2[i] = returnObject[i];
+			}
+			returnObject2[returnObject.length] = instanceView;
+			returnObject2[returnObject.length + 1] = new Remover(new Popup());
+			return returnObject2;
+		}
+		
 	}
 	
 	@AutowiredFromClient
