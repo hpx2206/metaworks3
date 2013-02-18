@@ -67,7 +67,7 @@ public class Loader {
 		if(session != null){
 			this.setSession(session);
 		
-			login.storeIntoServerSession();
+			login.storeIntoServerSession(session);
 			
 			isAllow = true;
 		}
