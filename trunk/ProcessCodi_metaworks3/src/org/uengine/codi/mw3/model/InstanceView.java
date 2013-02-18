@@ -604,7 +604,7 @@ public class InstanceView {
 		
 		setSecuopt(secuopt);
 		
-//		loadDefault();
+		this.load(instance);
 	}
 	
 	transient MetaworksContext metaworksContext;
