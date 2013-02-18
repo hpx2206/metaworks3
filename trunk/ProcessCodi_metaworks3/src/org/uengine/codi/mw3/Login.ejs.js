@@ -119,7 +119,7 @@ org_uengine_codi_mw3_Login.prototype = {
 		return login;
 	},
 	startLoading : function(){
-		$('body').prepend('<div style=\"position:absolute; z-index:99999; width:100%; height100%;\"><div id=\"mw3_progress\" style=\" width:70px; height:70px; background:url(images/waveStyle/loadingBg.png) no-repeat; margin:23% auto;\"><img style=\"margin:10px 0 0 17px;\" src=\"images/waveStyle/load.gif\" /></div></div>');
+		$('body').prepend('<div style=\"position:absolute; z-index:99999; width:100%; height100%;\"><div id=\"mw3_progress\" style=\" width:70px; height:70px; background:url(images/waveStyle/loadingBg.png) no-repeat; margin:45% auto;\"><img style=\"margin:10px 0 0 17px;\" src=\"images/waveStyle/load.gif\" /></div></div>');
 	},
 	endLoading : function(){	
 		setTimeout(function(){
