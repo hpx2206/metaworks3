@@ -15,6 +15,7 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.Login;
+import org.uengine.codi.mw3.filter.OtherSessionFilter;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 @Face(displayName="$InstanceDueSetter", ejsPath="dwr/metaworks/genericfaces/FormFace.ejs"
@@ -153,8 +154,11 @@ public class InstanceDueSetter implements ContextAware{
 			workItem.add();
 			
 			MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new ToAppend(workItem, workItem)});
-			MetaworksRemoteService.pushOtherClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(iInstance), new WorkItemListener(workItem)});
-	
+			
+			//MetaworksRemoteService.pushOtherClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(iInstance), new WorkItemListener(workItem)});
+			MetaworksRemoteService.pushClientObjectsFiltered(
+					new OtherSessionFilter(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom()), session.getUser().getUserId()),
+					new Object[]{new InstanceListener(iInstance), new WorkItemListener(workItem)});		
 		}
 		
 		return new Object[]{new Remover(new Popup(), true)};

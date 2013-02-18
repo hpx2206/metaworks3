@@ -17,6 +17,7 @@ import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.Login;
+import org.uengine.codi.mw3.filter.AllSessionFilter;
 import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitorPanel;
 import org.uengine.kernel.ProcessInstance;
 import org.uengine.processmanager.ProcessManagerRemote;
@@ -450,7 +451,11 @@ public class InstanceView {
 		this.load(instance);
 		this.setStatus(tobe);
 		
-		MetaworksRemoteService.pushClientObjects(new Object[]{new InstanceListener(InstanceListener.COMMAND_REFRESH, instance)});
+		//MetaworksRemoteService.pushClientObjects(new Object[]{new InstanceListener(InstanceListener.COMMAND_REFRESH, instance)});
+		MetaworksRemoteService.pushClientObjectsFiltered(
+				new AllSessionFilter(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom())),
+				new Object[]{new InstanceListener(InstanceListener.COMMAND_REFRESH, instance)});
+		
 
 		/* 내가 할일 카운트 다시 계산 */
 		if(instance.getDefId() != null || (instance.getDefId() == null && instance.getDueDate() != null)){
