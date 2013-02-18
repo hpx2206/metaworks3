@@ -43,6 +43,7 @@ public class DeptTreeNode extends TreeNode {
 				node.setId(dept.getPartCode());
 				node.setName(dept.getPartName());
 				node.setParentId(this.getId());
+				node.setHiddenEmployee(this.isHiddenEmployee());
 				
 				child.add(node);
 			}
