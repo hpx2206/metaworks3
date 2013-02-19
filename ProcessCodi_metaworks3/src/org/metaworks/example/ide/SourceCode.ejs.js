@@ -1,36 +1,48 @@
 var org_metaworks_example_ide_SourceCode = function(objectId, className){
-	
-
 	this.objectId = objectId;
 	this.className = className;
 
 	this.divName = "objDiv_" + objectId;	
-	
+
+	$("#" + this.divName).css("width", "100%").css("height", '100%').css("overflow", "hidden");
+	$("#" + this.divName).addClass('mw3_editor').addClass('mw3_resize').attr('objectId', objectId);
+
 	this.loadRequestAssist = false;
 	this.lastCommandString = "";
 	
-	var object = mw3.objects[this.objectId];
-	
-	if(object){
-		$("#" + this.divName).css("width", "100%").css("height", '100%').css("overflow", "hidden");
-		$("#" + this.divName).addClass('mw3_editor').addClass('mw3_resize').attr('objectId', objectId);
+	if(mw3.importScript('scripts/ace/build/src/ace.js')){
+		mw3.importScript('scripts/ace/build/src/theme-eclipse.js');
+		mw3.importScript('scripts/ace/build/src/mode-javascript.js');
+		mw3.importScript('scripts/ace/build/src/mode-java.js', function(){mw3.getFaceHelper(objectId).load();});
 		
-		this.editor = ace.edit(this.divName);
-	    this.editor.setTheme("ace/theme/eclipse");
+	}else{
+		var faceHelper = this;
+		
+		faceHelper.load();
+	}
+};
+
+org_metaworks_example_ide_SourceCode.prototype = {
+	load : function(){
+		var faceHelper = this;
+		var object = mw3.objects[faceHelper.objectId];
+		
+		faceHelper.editor = ace.edit(faceHelper.divName);
+		faceHelper.editor.setTheme("ace/theme/eclipse");
 	
 	    var JavaScriptMode = require("ace/mode/java").Mode;
-	    this.editor.getSession().setMode(new JavaScriptMode());
+	    faceHelper.editor.getSession().setMode(new JavaScriptMode());
 	    
-	    this.editor.getSession().on('change', function(event){
+	    faceHelper.editor.getSession().on('change', function(event){
 	    	try{
 	    		mw3.getFaceHelper(objectId).change(event);
 	    	}catch(e){    		
 	    	}
 	    });
 	      
-	    this.event = require("pilot/event");
+	    faceHelper.event = require("pilot/event");
 	    
-	    this.editor.setKeyboardHandler(    		   
+	    faceHelper.editor.setKeyboardHandler(    		   
 	    	{
 	    		handleKeyboard : function(data, hashId, key, keyCode, e) {
 	    			switch (e.keyCode) {
@@ -40,7 +52,6 @@ var org_metaworks_example_ide_SourceCode = function(objectId, className){
 			    	    	break;
 	    				case 32 :    	
 							if(e.ctrlKey){				
-								var faceHelper = mw3.getFaceHelper(objectId);	
 								var command = faceHelper.getCommandString();
 								
 								mw3.mouseX = e.srcElement.offsetLeft + 4;
@@ -55,7 +66,6 @@ var org_metaworks_example_ide_SourceCode = function(objectId, className){
 							
 							break;		    	    	
 	    				case 190:
-	    					var faceHelper = mw3.getFaceHelper(objectId);    					
 	    					var command = faceHelper.getCommandString();
 	    					
 	    					command += '.';
@@ -71,7 +81,6 @@ var org_metaworks_example_ide_SourceCode = function(objectId, className){
 	    					
 	    				case 79 : // ctrl + shift + o
 	    					if(e.ctrlKey && e.shiftKey){
-	    						var faceHelper = mw3.getFaceHelper(objectId);
 	    						var command = faceHelper.getCommandString();
 	    						
 	    						mw3.mouseX = e.srcElement.offsetLeft + 4;
@@ -98,7 +107,7 @@ var org_metaworks_example_ide_SourceCode = function(objectId, className){
 		    name: "gotoleft",
 		    bindKey: this.bindKey("Left", "Left|Ctrl-B"),
 		    exec: function(env, args, request) {
-		    	mw3.getFaceHelper(objectId).closeAssist();
+		    	faceHelper.closeAssist();
 		    	
 		    	env.editor.navigateLeft(args.times);
 		    }
@@ -107,7 +116,7 @@ var org_metaworks_example_ide_SourceCode = function(objectId, className){
 		    name: "gotoleft",
 		    bindKey: this.bindKey("Right", "Right|Ctrl-F"),
 		    exec: function(env, args, request) {
-		    	mw3.getFaceHelper(objectId).closeAssist();
+		    	faceHelper.closeAssist();
 		    	
 		    	env.editor.navigateRight(args.times);
 		    }
@@ -140,7 +149,7 @@ var org_metaworks_example_ide_SourceCode = function(objectId, className){
 		    name: "esckey",
 		    bindKey: this.bindKey("Esc", "Esc"),
 		    exec: function(env, args, request) {
-		    	mw3.getFaceHelper(objectId).closeAssist();
+		    	faceHelper.closeAssist();
 		    }
 		});
 		
@@ -164,13 +173,13 @@ var org_metaworks_example_ide_SourceCode = function(objectId, className){
 	          
 	    
     	if(object.code)
-    		this.editor.getSession().setValue(object.code);
+    		faceHelper.editor.getSession().setValue(object.code);
     	
     	if(object.compileErrors){
     		for(var i in object.compileErrors){
     			var compileError = object.compileErrors[i];
 
-    			this.editor.getSession().setAnnotations([{ 
+    			faceHelper.editor.getSession().setAnnotations([{ 
                     row: compileError.line -1, 
                     column: compileError.column -1, 
                     text: compileError.message, 
@@ -178,10 +187,7 @@ var org_metaworks_example_ide_SourceCode = function(objectId, className){
                   }]); 
     		}
     	}
-	}
-}
-
-org_metaworks_example_ide_SourceCode.prototype = {
+	},
 	bindKey : function(win, mac) {
 	    return {
 	        win: win,
