@@ -72,6 +72,11 @@ org_uengine_codi_mw3_model_IProcessMap.prototype = {
 				var workItemHandlerFH = mw3.getAutowiredObject("org.uengine.codi.mw3.model.CommentWorkItem@-1").getFaceHelper();
 				
 				workItemHandlerFH.showCommandForm(processMap);
+				var popup = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Popup").getFaceHelper();
+				if( popup ){
+					var popupObjectId = popup.__objectId;
+					popup.destoryPopup(popupObjectId);
+				}
 			}else{
 				processMap.initiate();
 			}

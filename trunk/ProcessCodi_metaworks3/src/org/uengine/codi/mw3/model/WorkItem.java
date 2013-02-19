@@ -3,6 +3,8 @@ package org.uengine.codi.mw3.model;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
@@ -17,10 +19,12 @@ import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.example.ide.SourceCode;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.IFrame;
+import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.CodiProcessDefinitionFactory;
 import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.admin.WebEditor;
+import org.uengine.codi.mw3.filter.AllSessionFilter;
 import org.uengine.codi.mw3.filter.OtherSessionFilter;
 import org.uengine.codi.mw3.knowledge.KnowledgeTool;
 import org.uengine.codi.mw3.knowledge.WfNode;
@@ -858,9 +862,20 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(copyOfInstance)});
 			}
 			
-			IUser followers = instanceFollowers.getFollowers();
-			
 			// 팔로워들에게 알림처리
+			// 부서로 추가된 팔로워들의 userId 를 가져온다.
+			IDept deptFollower = instanceFollowers.getDeptFollowers();
+			HashMap<String, String> deptUserSessionList = new HashMap<String, String>();
+			if(deptFollower != null){
+				deptFollower.beforeFirst();
+				while(deptFollower.next()){
+					HashMap<String, String> deptSessionList = Login.getSessionIdWithDept(deptFollower.getPartCode());
+					deptUserSessionList.putAll(deptSessionList);
+				}
+			}
+			
+			// 유저로 추가된 팔로워 알림 처리
+			IUser followers = instanceFollowers.getFollowers();
 			if(followers != null){
 				followers.beforeFirst();
 				
@@ -868,32 +883,41 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 					if(session.getUser().getUserId().equals(followers.getUserId()))
 						continue;
 					
-					Notification noti = new Notification();
-					
-					noti.setNotiId(System.currentTimeMillis()); //TODO: why generated is hard to use
-					noti.setUserId(followers.getUserId());
-					noti.setActorId(session.getUser().getUserId());
-					noti.setConfirm(false);
-					noti.setInputDate(Calendar.getInstance().getTime());
-					noti.setTaskId(getTaskId());
-					noti.setInstId(getInstId());					
-					noti.setActAbstract(session.getUser().getName() + " wrote : " + getTitle());
-		
-					noti.add(copyOfInstance);
-					
-					if(prevInstId == null){
-						MetaworksRemoteService.pushTargetScript(Login.getSessionIdWithUserId(followers.getUserId()),
-								"if(mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar')!=null) mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar').__getFaceHelper().addMyschedule",
-								new Object[]{getTitle(), getInstId()+"", newInstancePanel.getDueDate()});
+					if(deptUserSessionList.containsKey(followers.getUserId().toUpperCase())){
+						deptUserSessionList.remove(followers.getUserId().toUpperCase());
 					}
-					
-					MetaworksRemoteService.pushTargetScript(Login.getSessionIdWithUserId(followers.getUserId()),
-							"mw3.getAutowiredObject('" + NotificationBadge.class.getName() + "').refresh",
-							new Object[]{});
-
+					deptUserSessionList.put(followers.getUserId() , Login.getSessionIdWithUserId(followers.getUserId()) );
 				}
 			}
-
+			// noti 저장
+			Iterator<String> iterator = deptUserSessionList.keySet().iterator();
+			while(iterator.hasNext()){
+				String followerUserId = (String)iterator.next();
+				Notification noti = new Notification();
+				
+				noti.setNotiId(System.currentTimeMillis()); //TODO: why generated is hard to use
+				noti.setUserId(followerUserId);
+				noti.setActorId(session.getUser().getUserId());
+				noti.setConfirm(false);
+				noti.setInputDate(Calendar.getInstance().getTime());
+				noti.setTaskId(getTaskId());
+				noti.setInstId(getInstId());					
+				noti.setActAbstract(session.getUser().getName() + " wrote : " + getTitle());
+	
+				noti.add(copyOfInstance);
+			}
+			
+			// noti 발송
+			if(prevInstId == null){
+				MetaworksRemoteService.pushTargetScriptFiltered(new AllSessionFilter(deptUserSessionList),
+						"if(mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar')!=null) mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar').__getFaceHelper().addMyschedule",
+						new Object[]{getTitle(), getInstId()+"", newInstancePanel.getDueDate()});
+			}
+			
+			MetaworksRemoteService.pushTargetScriptFiltered(new AllSessionFilter(deptUserSessionList),
+					"mw3.getAutowiredObject('" + NotificationBadge.class.getName() + "').refresh",
+					new Object[]{});
+			
 			// 본인 이외에 다른 사용자에게 push			
 			MetaworksRemoteService.pushClientObjectsFiltered(
 					new OtherSessionFilter(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom()), session.getUser().getUserId().toUpperCase()),

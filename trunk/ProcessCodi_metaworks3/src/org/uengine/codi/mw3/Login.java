@@ -189,6 +189,20 @@ public class Login implements ContextAware {
 		return SessionIdForEmployeeMapping.get(userId.toUpperCase());
 	}
 
+	public static HashMap<String, String> getSessionIdWithDept(String deptId){
+		deptId = deptId.toUpperCase();
+		if(SessionIdForDeptMapping.containsKey(deptId)){
+			HashMap<String, String> mapping = SessionIdForDeptMapping.get(deptId);
+			//System.out.println(.);
+			
+			Iterator<String> iterator = mapping.keySet().iterator();
+			
+			return (HashMap<String, String>)mapping.clone();
+		}else{
+			return null;
+		}
+	}
+	
 	public static HashMap<String, String> getSessionIdWithCompany(String companyId){
 		companyId = companyId.toUpperCase();
 		if(SessionIdForCompanyMapping.containsKey(companyId)){
