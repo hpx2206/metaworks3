@@ -27,15 +27,14 @@ public class Preview {
 		public void setMimeType(String mimeType) {
 			this.mimeType = mimeType;
 		}
-		
-	
+				
 	public void setPageCountInt(int pageCount) {
 		this.pageCount = Integer.toString(pageCount);
 	}
 	
 	@ServiceMethod(callByContent=true)
 	public void viewAsPDF() throws Exception{
-		setMimeType("dpf");
+		setMimeType("pdf");
 	}
 	
 	@ServiceMethod(callByContent=true)
