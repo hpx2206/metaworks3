@@ -14,7 +14,7 @@
 			<%for(i=0; i<value.pageCount; i++){%>
 			<table>
 				<tr>
-					<td> <img width="100%" src="images/pdf/<%=value.taskId%>.pdf_<%=i%>.jpg"/></td>
+					<td> <img width="100%" src="preview/<%=value.taskId%>.pdf_<%=i%>.jpg"/></td>
 				</tr>
 				<tr>
 					<td align="center" style="padding:5px 0 20px 0; font-weight:bold">< Page <%=i+1%> ></td>
@@ -22,7 +22,13 @@
 			</table>
 			<%}%>
 		<%}else{%>
-			<iframe src="images/pdf/<%=value.taskId%>.pdf" frameborder="0" scrolling="no" width=100% height=300px onLoad="resizeFrame(this);"/>
+			<iframe src="preview/<%=value.taskId%>.pdf" frameborder="0" scrolling="no" width=100% height=300px onLoad="resizeFrame(this);"/>
 		<%}%>
 	</span>
+<%}else{%>
+	<li></li>
+	<li><b><i>미리보기 작업중...</i></b></li>
+	<progress id="convertProgressBar"></progress>
+	<li></li>
+	<iframe src="preview/<%=value.taskId%>.pdf" width=0px height=0px>
 <%}%>

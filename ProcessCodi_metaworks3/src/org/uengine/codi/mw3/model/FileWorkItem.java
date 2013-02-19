@@ -16,12 +16,14 @@ import java.nio.channels.FileChannel;
 import javax.imageio.ImageIO;
 
 import org.metaworks.MetaworksException;
+import org.metaworks.Refresh;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Range;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Test;
-import org.metaworks.dao.TransactionContext;
+import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.website.MetaworksFile;
+import org.uengine.kernel.GlobalContext;
 import org.uengine.persistence.dao.UniqueKeyGenerator;
 import org.uengine.processmanager.ProcessManagerBean;
 import org.uengine.util.UEngineUtil;
@@ -53,8 +55,7 @@ public class FileWorkItem extends WorkItem{
 		public void setVersionUpOption(String versionUpOption) {
 			this.versionUpOption = versionUpOption;
 		}
-	
-		
+
 	@Override
 	@Hidden(on=false) //overrides the annotation
 	public MetaworksFile getFile() {
@@ -108,7 +109,9 @@ public class FileWorkItem extends WorkItem{
 		this.setContent(this.getFile().getUploadedPath());
 		this.setTool(this.getFile().getMimeType());
 		this.setExtFile(this.getFile().getFilename());
-		
+
+/*	
+ * 파일변환 로직을 createPreviewFile()로 이동하여 PreviewServlet에서 호출하여 쓰도록 변경
 		// Office, PDF 파일변환
 		String mimeType = getFile().getMimeType();
 		
@@ -146,6 +149,7 @@ public class FileWorkItem extends WorkItem{
 			}
 			
 		}
+*/
 		
 		// WorkItem 추가
 		Object[] returnObject = super.add();
@@ -163,58 +167,57 @@ public class FileWorkItem extends WorkItem{
 	}
 	
 	
-	public static int getImageForPdf(String inputFile, String outputFile) throws IOException{
+	public int getImageForPdf(String inputFile, String outputFile) throws IOException{
 		
 		File file = new File(outputFile);
 	
-			RandomAccessFile raf = new RandomAccessFile(file, "r");
-			FileChannel channel = raf.getChannel();
-			ByteBuffer buf = channel.map(FileChannel.MapMode.READ_ONLY, 0, channel.size());
+		RandomAccessFile raf = new RandomAccessFile(file, "r");
+		FileChannel channel = raf.getChannel();
+		ByteBuffer buf = channel.map(FileChannel.MapMode.READ_ONLY, 0, channel.size());
+		
+		PDFFile pdfFile = new PDFFile(buf);
+		PDFPage	page;
+		
+		int lastPageNumber = pdfFile.getNumPages();
+		
+		for(int i=0;i<lastPageNumber; i++){
+			page = pdfFile.getPage(i);
 			
-			PDFFile pdfFile = new PDFFile(buf);
-			PDFPage	page;
+			Rectangle rect = new Rectangle(
+											0,			//left
+											0,			//right
+											(int)page.getBBox().getWidth(),	//width
+											(int)page.getBBox().getHeight()	//height
+										   );
 			
-			int lastPageNumber = pdfFile.getNumPages();
+			Image images = page.getImage(
+											rect.width,
+											rect.height,
+											rect,		//crip rec
+											null,		//null for ImageObserver
+											true,		//fill background with white
+											true		//block until drawing is done
+										 );
 			
+			int w = images.getWidth(null);
+			int h = images.getHeight(null);
 			
-			for(int i=0;i<lastPageNumber; i++){
-				page = pdfFile.getPage(i);
-				
-				Rectangle rect = new Rectangle(
-												0,			//left
-												0,			//right
-												(int)page.getBBox().getWidth(),	//width
-												(int)page.getBBox().getHeight()	//height
-											   );
-				
-				Image images = page.getImage(
-												rect.width,
-												rect.height,
-												rect,		//crip rec
-												null,		//null for ImageObserver
-												true,		//fill background with white
-												true		//block until drawing is done
-											 );
-				
-				int w = images.getWidth(null);
-				int h = images.getHeight(null);
-				
-				BufferedImage bi = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
-				
-				Graphics2D g2 = bi.createGraphics();
-				g2.drawImage(images, 0, 0, null);
-				g2.dispose();
-				
-				ImageIO.write(bi, "jpg", new File(outputFile + "_" + i + ".jpg"));
-				
-			}
+			BufferedImage bi = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+			
+			Graphics2D g2 = bi.createGraphics();
+			g2.drawImage(images, 0, 0, null);
+			g2.dispose();
+			
+			ImageIO.write(bi, "jpg", new File(outputFile + "_" + i + ".jpg"));
+			
+		}
 
 		
 		return lastPageNumber;
 	}
 	
 	
-	public static boolean convertPdf(String inputFilePath, String outputFilePath) throws FileNotFoundException, IOException, Exception {
+	public boolean convertPdf(String inputFilePath, String outputFilePath) throws FileNotFoundException, IOException, Exception {
 		
 		boolean isConvert = false;
 		
@@ -237,5 +240,58 @@ public class FileWorkItem extends WorkItem{
 		
 		return isConvert;
 	}
+	
+	public boolean createPreviewFile(Long taskId, String realContent, String realFileMimeType){
+		
+		boolean result = false;
+		String fileSystemPath = GlobalContext.getPropertyString("filesystem.path",".");
+		String previewPath = fileSystemPath + "/preview";
+		
+		String realFilePath = fileSystemPath + "/" + realContent;
+		
+		File realFile = new File(realFilePath);
+		
+		if(realFile.exists() && realFile.isFile() && realFile.length() > 0) {
+			// Office, PDF 파일변환
+			if(realFileMimeType != null && realFileMimeType.indexOf("image") != 0){
+				String inputFilePath = realFilePath;
+				String outputFilePath = previewPath + "/" + taskId + ".pdf";
+				
+				try{
+					Preview preview = new Preview();
+					
+					// office 문서 realFileMimeType -- 2007이하 버젼: indexOf("ms"), 2007이후버전: indexOf("officedocument")
+					if(realFileMimeType.indexOf("ms") > 0 || realFileMimeType.indexOf("officedocument") > 0 || realFileMimeType.indexOf("text/plain") > -1){
+						convertPdf(inputFilePath, outputFilePath);
+					}else{
+						MetaworksFile.copyStream(new FileInputStream(inputFilePath), new FileOutputStream(outputFilePath));
+					}
 
+					preview.setTaskId(taskId);
+					preview.setMimeType(realFileMimeType);
+		
+					//change for converted PDF file to image file (save all pages count to ext1(bpm_worklist table))
+					preview.setPageCountInt(
+							getImageForPdf(inputFilePath, outputFilePath)
+					);
+
+					WorkItem workItem =new WorkItem();
+					workItem.setTaskId(taskId);
+					workItem.databaseMe().setExt1(preview.getPageCount());
+					workItem.flushDatabaseMe();
+					
+					this.setPreview(preview);
+
+					MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(preview)});
+
+					result = true;
+					
+				}catch (Exception e){
+					e.printStackTrace();
+				}
+			}
+		}
+		return result;
+	}
+	
 }

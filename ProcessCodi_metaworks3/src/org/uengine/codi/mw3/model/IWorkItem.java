@@ -17,7 +17,6 @@ import org.metaworks.annotation.TypeSelector;
 import org.metaworks.dao.IDAO;
 import org.metaworks.example.ide.SourceCode;
 import org.metaworks.website.MetaworksFile;
-import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.admin.WebEditor;
 @Table(name = "bpm_worklist")
 @Face(
@@ -300,7 +299,7 @@ public interface IWorkItem extends IDAO{
 
 		@Face(displayName="Open")
 		@ServiceMethod(inContextMenu=true, when = WHEN_VIEW, callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
-		public ModalWindow workItemPopup() throws Exception;
+		public Popup workItemPopup() throws Exception;
 
 		public String getStatus();
 		public void setStatus(String status);

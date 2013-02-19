@@ -160,7 +160,7 @@
 						<%if(value.workItemVersionChooser!=null){%>
 							<%=fields.workItemVersionChooser.here()%>
 						<%}%>
-						<%if(value.preview!=null){%>
+						<%if(value.preview!=null && value.file.mimeType.indexOf('image')!=0){%>
 			                <%=fields.preview.here()%>
 						<%}%>
 							<%=fields.file.here({when: (value.file.mimeType.indexOf('image')==0)?'image':'view' })%>
