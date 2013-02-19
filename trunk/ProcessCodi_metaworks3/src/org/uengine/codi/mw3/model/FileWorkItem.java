@@ -109,6 +109,14 @@ public class FileWorkItem extends WorkItem{
 		this.setContent(this.getFile().getUploadedPath());
 		this.setTool(this.getFile().getMimeType());
 		this.setExtFile(this.getFile().getFilename());
+		
+		String mimeType = getFile().getMimeType();
+		if(mimeType != null && mimeType.indexOf("image") != 0){
+			Preview preview = new Preview();
+			preview.setTaskId(getTaskId());
+			preview.setMimeType(mimeType);
+			this.setPreview(preview);
+		}
 
 /*	
  * 파일변환 로직을 createPreviewFile()로 이동하여 PreviewServlet에서 호출하여 쓰도록 변경
