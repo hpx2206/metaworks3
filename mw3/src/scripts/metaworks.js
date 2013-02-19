@@ -1351,6 +1351,17 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 //									}
 //								};
 //							}
+							
+							if(typeof afterLoadScript == 'function'){
+								script.onload = afterLoadScript;
+								
+								script.onreadystatechange = function() { //for IE
+									if (this.readyState == 'complete' || this.readyState == 'loaded') {
+										
+										afterLoadScript;
+									}
+								}
+							}
 					   },
 					   
 					   error:function(xhr){
