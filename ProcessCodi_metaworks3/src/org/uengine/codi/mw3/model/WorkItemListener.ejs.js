@@ -3,7 +3,7 @@ var org_uengine_codi_mw3_model_WorkItemListener = function(objectId, className){
 	this.className = className;
 	this.object = mw3.objects[this.objectId];
 
-	console.log('org_uengine_codi_mw3_model_WorkItemListener');
+	if (console && console.log) console.log('org_uengine_codi_mw3_model_WorkItemListener');
 
 	if(this.object){
 		mw3.removeObject(this.objectId);

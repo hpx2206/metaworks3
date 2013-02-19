@@ -227,14 +227,14 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 	    			}
 	    			
 	    			if(e.keyCode == 84 && e.shiftKey && e.ctrlKey){
-	    				console.log(JSON.stringify(mw3.templates));
+	    				if (console && console.log) console.log(JSON.stringify(mw3.templates));
 	    			}
 	    			
 	    			if(e.keyCode == 123 && e.shiftKey){ //F12 -- let the recorder starts for testing automation
 	    				
 		    			if(mw3.isRecordingSession){
 		    				
-		    				console.log(JSON.stringify(mw3.recording));
+		    				if (console && console.log) console.log(JSON.stringify(mw3.recording));
 		    				alert('Recording Done. See the logs for recorded JSON.');
 		    				this.recording=[];
 		    				mw3.isRecordingSession = false;

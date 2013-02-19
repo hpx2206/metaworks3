@@ -59,7 +59,7 @@ org_uengine_codi_mw3_model_InstanceViewPublic.prototype = {
 
 			var isAuth = login.checkAuthSocial();
 			if(!isAuth){
-				console.log(response);
+				if (console && console.log) console.log(response);
 				
 				var employee = {
 					__className : 'org.uengine.codi.mw3.model.Employee',
