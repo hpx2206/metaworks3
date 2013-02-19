@@ -21,6 +21,10 @@ public class AllSessionFilter implements ScriptSessionFilter {
 	
 	@Override
 	public boolean match(ScriptSession scriptsession) {
+		System.out.println("filteredSession : " + filteredSession.keySet().toString());
+		System.out.println("match : " + filteredSession.containsValue(scriptsession.getId()));
+		System.out.println(filteredSession.get("TEST"));
+		System.out.println(scriptsession.getId());
 		if(filteredSession != null && filteredSession.containsValue(scriptsession.getId()))
 			return true;
 		else

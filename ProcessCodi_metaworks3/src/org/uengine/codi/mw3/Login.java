@@ -197,7 +197,7 @@ public class Login implements ContextAware {
 			
 			Iterator<String> iterator = mapping.keySet().iterator();
 			
-			return mapping;
+			return (HashMap<String, String>)mapping.clone();
 		}else{
 			return null;
 		}
@@ -351,35 +351,48 @@ public class Login implements ContextAware {
 	public void fireServerSession(Session session) {
 		String userId = session.getUser().getUserId().toUpperCase();
 		
-		SessionIdForEmployeeMapping.remove(userId);
 		
-		if(session.getEmployee() != null){
-			String partCode = session.getEmployee().getPartCode().toUpperCase();
-			String globalCom = session.getEmployee().getGlobalCom().toUpperCase();
-
-			if(partCode != null && partCode.length() > 0){
-				HashMap<String, String> mapping = null;
-				
-				if(SessionIdForDeptMapping.containsKey(partCode)){
-					mapping = SessionIdForDeptMapping.get(partCode);
-					mapping.remove(userId);
-					SessionIdForDeptMapping.put(partCode, mapping);
-				}
-			}
+		if(SessionIdForEmployeeMapping.containsKey(userId)){
+			String sessionId = SessionIdForEmployeeMapping.get(userId);
 			
-			if(globalCom != null && globalCom.length() > 0){
-				HashMap<String, String> mapping = null;
+			WebContext wctx = WebContextFactory.get();
+			
+			if(sessionId.equals(wctx.getScriptSession().getId())){
+				SessionIdForEmployeeMapping.remove(userId);
 				
-				if(SessionIdForCompanyMapping.containsKey(globalCom)){
-					mapping = SessionIdForCompanyMapping.get(globalCom);
-					mapping.remove(userId);
-					SessionIdForCompanyMapping.put(globalCom, mapping);
+				if(session.getEmployee() != null){
+					String partCode = session.getEmployee().getPartCode().toUpperCase();
+					String globalCom = session.getEmployee().getGlobalCom().toUpperCase();
+
+					if(partCode != null && partCode.length() > 0){
+						HashMap<String, String> mapping = null;
+						
+						if(SessionIdForDeptMapping.containsKey(partCode)){
+							mapping = SessionIdForDeptMapping.get(partCode);
+							mapping.remove(userId);
+							SessionIdForDeptMapping.put(partCode, mapping);
+						}
+					}
+					
+					if(globalCom != null && globalCom.length() > 0){
+						HashMap<String, String> mapping = null;
+						
+						if(SessionIdForCompanyMapping.containsKey(globalCom)){
+							mapping = SessionIdForCompanyMapping.get(globalCom);
+							mapping.remove(userId);
+							SessionIdForCompanyMapping.put(globalCom, mapping);
+						}
+					}
 				}
 			}
 		}
+		
+		
+
 	}
 	
 	public void storeIntoServerSession(Session session) {
+		System.out.println("storeIntoServerSession");
 		String userId = session.getUser().getUserId().toUpperCase();
 		
 		//setting the userId into session attribute;
@@ -398,44 +411,49 @@ public class Login implements ContextAware {
 		// fire exist session 
 		if(SessionIdForEmployeeMapping.containsKey(userId)){
 			MetaworksRemoteService.pushTargetScript(Login.getSessionIdWithUserId(getUserId()), "mw3.getAutowiredObject('" + Session.class.getName() + "').__getFaceHelper().fire", new Object[]{"2"});
-		}else{
-			// manager sessionId
-			WebContext wctx = WebContextFactory.get();
-			String sessionId = wctx.getScriptSession().getId();
-						
-			SessionIdForEmployeeMapping.put(userId, sessionId); //stores session id to find out with user Id
+		}
+		
+		// manager sessionId
+		WebContext wctx = WebContextFactory.get();
+		String sessionId = wctx.getScriptSession().getId();
+		
+		System.out.println("sessionId : " + sessionId);
+		
+		SessionIdForEmployeeMapping.put(userId, sessionId); //stores session id to find out with user Id
+		
+		if(session.getEmployee() != null){
+			String partCode = session.getEmployee().getPartCode();
+			String globalCom = session.getEmployee().getGlobalCom();
 			
-			if(session.getEmployee() != null){
-				String partCode = session.getEmployee().getPartCode();
-				String globalCom = session.getEmployee().getGlobalCom();
+			System.out.println("globalCom : " + globalCom);
+			
+			if(partCode != null && partCode.length() > 0){
+				partCode = partCode.toUpperCase();					
+				HashMap<String, String> mapping = null;
 				
-				if(partCode != null && partCode.length() > 0){
-					partCode = partCode.toUpperCase();					
-					HashMap<String, String> mapping = null;
-					
-					if(SessionIdForDeptMapping.containsKey(partCode))
-						mapping = SessionIdForDeptMapping.get(partCode);
-					else
-						mapping = new HashMap<String, String>();
-					
-					mapping.put(userId, sessionId);
-					SessionIdForDeptMapping.put(partCode, mapping);
-					
-				}
+				if(SessionIdForDeptMapping.containsKey(partCode))
+					mapping = SessionIdForDeptMapping.get(partCode);
+				else
+					mapping = new HashMap<String, String>();
 				
-				if(globalCom != null && globalCom.length() > 0){
-					globalCom = globalCom.toUpperCase();
-					HashMap<String, String> mapping = null;
-					
-					if(SessionIdForCompanyMapping.containsKey(globalCom))
-						mapping = SessionIdForCompanyMapping.get(globalCom);
-					else
-						mapping = new HashMap<String, String>();
-					
-					mapping.put(userId, sessionId);
-					SessionIdForCompanyMapping.put(globalCom, mapping);
-					
-				}
+				mapping.put(userId, sessionId);
+				SessionIdForDeptMapping.put(partCode, mapping);
+				
+			}
+			
+			if(globalCom != null && globalCom.length() > 0){
+				globalCom = globalCom.toUpperCase();
+				HashMap<String, String> mapping = null;
+				
+				if(SessionIdForCompanyMapping.containsKey(globalCom))
+					mapping = SessionIdForCompanyMapping.get(globalCom);
+				else
+					mapping = new HashMap<String, String>();
+				
+				System.out.println("LOGIN : " + sessionId);
+				mapping.put(userId, sessionId);
+				SessionIdForCompanyMapping.put(globalCom, mapping);
+				
 			}
 		}
 		
