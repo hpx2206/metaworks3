@@ -20,8 +20,14 @@ public class MashupSlideshare extends MashupTool {
 	public void search() throws Exception{
 		if( getKeyword() != null){
 			SlideShareAPIImpl sImpl = new SlideShareAPIImpl(new SlideShareConnectorImpl( "ru6hIw7A" , "cK20Q4ep" ));
+					
+			Tag tag = null;
 			
-			Tag tag = sImpl.getSlideshowByTag(keyword);
+			try{
+				tag = sImpl.getSlideshowByTag(keyword);
+			}catch(Exception e){				
+			}
+			
 			if( tag != null){
 				setSearchResults(new ArrayList<SearchResult>());
 				
