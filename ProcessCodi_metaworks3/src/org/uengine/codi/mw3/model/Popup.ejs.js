@@ -26,7 +26,18 @@ var org_uengine_codi_mw3_model_Popup = function(objectId, className) {
 };
 
 org_uengine_codi_mw3_model_Popup.prototype = {
+
+	
+			
 	createPopup : function(w,h,x,y){
+	
+		var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
+		
+
+		
+		
+		
+		
 		var popLayerWidth = w;
 		var popLayerHeight = h;
 		
@@ -37,32 +48,39 @@ org_uengine_codi_mw3_model_Popup.prototype = {
 		
 		var arrow = $(divId + ' .cluetip-arrows');
 		
-		if(popLayerWidth > bodyWidth){
-			popLayerWidth = bodyWidth - 70;
+		var innerHeight = h-39;	
+		
+		if('phone' == session.ux){
+			this.divObj.find('.cluetip-outer').css('width', '100%');
+		
+			this.divObj.css({'top':'10px','left':'10px','width':bodyWidth-50,'height':bodyHeight-30});	
+			$(divId + ' #addcontact-con').height(bodyHeight-70);
+			arrow.css({'display':'none'});		
+		}else{
+			this.divObj.css({top:y-28,left:x,width:popLayerWidth,height:popLayerHeight});			
+			$(divId + ' #addcontact-con').height(innerHeight);
+			arrow.css({top:10});	
 		}
 		
-		this.divObj.find('.cluetip-outer').css('width', popLayerWidth);
+				
 		
-		
-		this.divObj.css({top:y-28,left:x,width:popLayerWidth,height:popLayerHeight});
 		this.divObj.removeClass('clue-left-rounded');
 		this.divObj.addClass('clue-right-rounded');
 		
-		var innerHeight = h-39;
 		
-		$(divId + ' #addcontact-con').height(innerHeight);
-		arrow.css({top:10});
+		if('phone' != session.ux){
 		
-		if(bodyWidth && popLayerWidth + x > bodyWidth){
-			this.divObj.css({left:x-30 - popLayerWidth});
-			this.divObj.removeClass('clue-right-rounded');
-			this.divObj.addClass('clue-left-rounded');
-		};
-		
-		if(bodyHeight && popLayerHeight + y > bodyHeight){    	
-			this.divObj.css({top:bodyHeight - popLayerHeight - 18});
-			arrow.css({top:popLayerHeight-40});
-		};
+			if(bodyWidth && popLayerWidth + x > bodyWidth){
+				this.divObj.css({left:x-30 - popLayerWidth});
+				this.divObj.removeClass('clue-right-rounded');
+				this.divObj.addClass('clue-left-rounded');
+			};
+			
+			if(bodyHeight && popLayerHeight + y > bodyHeight){    	
+				this.divObj.css({top:bodyHeight - popLayerHeight - 18});
+				arrow.css({top:popLayerHeight-40});
+			};
+		}
 		
 		var top = this.divObj.css('top');
 		top = top.substring(0, top.length - 2);
