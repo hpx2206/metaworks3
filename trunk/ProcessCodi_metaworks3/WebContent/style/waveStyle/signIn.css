@@ -130,7 +130,7 @@ input.submitFacebook {
 	left: 10px;
 }
 
-#loginContainer input.submitFacebook {
+#loginContainer .submitFacebook {
 	
 	display:inline-block;
 	background: url('../../images/signIn/facebook30.png') no-repeat;
@@ -140,9 +140,9 @@ input.submitFacebook {
 	height: 30px;
 	position: relative;
 	top: 10px;
-	left: 110px;
+	left: 195px;
 }
-#loginContainer input.submitTwitter {
+#loginContainer .submitTwitter {
     
     display:inline-block;
     background: url('../../images/signIn/twitter30.png') no-repeat;
@@ -154,7 +154,7 @@ input.submitFacebook {
     top: 10px;
     left: 120px;
 }
-#loginContainer input.submitLinkedin {
+#loginContainer .submitLinkedin {
     
     display:inline-block;
     background: url('../../images/signIn/linkedin30.png') no-repeat;

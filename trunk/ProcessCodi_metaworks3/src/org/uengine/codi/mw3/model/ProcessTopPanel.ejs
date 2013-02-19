@@ -33,7 +33,7 @@
 			<%=fields.tray.here()%>
 			
 			
-		    <div class="info">
+		    <div class="info" <% if(session.ux && value.session.ux == 'phone') { %> style="right:0px;" <%}%>>
 		    
 		        <%if(mw3.when!='__design-depth2'){/*TODO: later, rather use 'where' than 'when'.*/%>
 		        	<%=fields.session.here({when:'view'})%>
