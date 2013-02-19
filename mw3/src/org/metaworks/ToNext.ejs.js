@@ -17,7 +17,7 @@ var org_metaworks_ToNext = function(objectId, className){
 				if(mappedObjId){
 					var faceHelper = mw3.getFaceHelper(mappedObjId);
 					
-					if(faceHelper.toNext){
+					if(faceHelper && faceHelper.toNext){
 						faceHelper.toNext(object.target);
 						
 					}else{
