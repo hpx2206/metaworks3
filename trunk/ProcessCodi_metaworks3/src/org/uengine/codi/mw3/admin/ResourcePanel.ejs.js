@@ -1,7 +1,17 @@
 var org_uengine_codi_mw3_admin_ResourcePanel = function(objectId, className){
 	this.objectId = objectId;
 	this.className = className;
-	this.divId = "#objDiv_" + objectId;
+	this.objectDivId = mw3._getObjectDivId(this.objectId);
+	this.objectDiv = $('#' + this.objectDivId);
 	
-	$(this.divId).attr('objectId', objectId);
+	this.object = mw3.objects[this.objectId];
+
+	if(this.object == null)
+		return true;
+	
+	this.objectDiv
+	.css({
+		position: 'relative',
+		height:   '100%'
+	})
 };

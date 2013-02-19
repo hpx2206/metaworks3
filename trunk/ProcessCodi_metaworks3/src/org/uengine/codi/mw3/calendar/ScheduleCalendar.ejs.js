@@ -6,6 +6,20 @@ var org_uengine_codi_mw3_calendar_ScheduleCalendar = function(objectId, classNam
 	var object = mw3.objects[objectId];
 	
 	if(object){
+		if(mw3.importScript('scripts/jquery/fullcalendar/fullcalendar.min.js', function(){mw3.getFaceHelper(objectId).load();})){
+			mw3.importStyle('scripts/jquery/fullcalendar/fullcalendar.css');
+		}else{
+			var faceHelper = this;
+			
+			faceHelper.load();
+		}
+	}
+}
+
+org_uengine_codi_mw3_calendar_ScheduleCalendar.prototype = {
+	load : function(){
+		var object = mw3.objects[this.objectId];
+		
 		$('#objDiv_' + this.objectId).addClass('mw3_layout').attr('objectId', this.objectId);
 		
 		var calendar = $('#scheduleCalendar_' + this.objectId);
@@ -71,7 +85,7 @@ var org_uengine_codi_mw3_calendar_ScheduleCalendar = function(objectId, classNam
 				
 			});		
 		}
-		calendar.fullCalendar('gotoDate', object.selDate);
+		calendar.fullCalendar('gotoDate', object.selDate);		
 	}
 }
 
