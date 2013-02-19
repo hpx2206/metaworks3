@@ -1915,3 +1915,8 @@ html, body {
 #tabIcon_Twitter{background: url(../../images/waveStyle/tab_twitter.png) 2px no-repeat; padding-left:22px;}
 #tabIcon_LinkedIn{background: url(../../images/waveStyle/tab_in.png) 2px no-repeat; padding-left:22px;}
 #tabIcon_Metoday{background: url(../../images/waveStyle/tab_metoday.png) 2px no-repeat; padding-left:22px;}
+
+
+@media all and (max-width: 480px) {
+    .toolbar ul li span.toolbarIcon{display:none}
+}

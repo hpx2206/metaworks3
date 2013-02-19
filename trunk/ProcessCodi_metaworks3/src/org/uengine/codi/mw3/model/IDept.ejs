@@ -57,11 +57,22 @@
 		} else {
 			if(mw3.when == 'new' || mw3.when == 'edit'){
 %>
-			PartCode : <%=fields.partCode.here({when : mw3.when=='edit'?'view':mw3.when}) %>
-			PartName : <%=fields.partName.here() %>
-			Description : <%=fields.description.here() %>
 			
-			<%=methods.saveDeptInfo.here() %>
+		<div class="lst_type2" style="height:190px; padding-top:20px">
+			<div class="infoSub"><span class="infoSubFirstSpan" style="width:90px"><%=mw3.localize("$PartCode")%> :</span><span><%=fields.partCode.here({when : mw3.when=='edit'?'view':mw3.when}) %></span></div>		
+			<div class="infoSub"><span class="infoSubFirstSpan" style="width:90px"><%=mw3.localize("$PartName")%> :</span><span><%=fields.partName.here()%></span></div>	
+			<div class="infoSub"><span class="infoSubFirstSpan" style="width:90px"><%=mw3.localize("$Description")%> :</span><span><%=fields.description.here()%></span></div>	
+			
+		</div>
+		
+		
+		<div id="btnline" style="padding-top:8px; border-top:1px solid #ccc;">
+			<ul>	
+				<li><a id="wBtn" href="#" onClick="<%=methods.saveDeptInfo.caller()%>"><span>saveDeptInfo</span></a></li>	
+				
+			</ul>
+		</div>
+
 <%			
 			}
 		}
