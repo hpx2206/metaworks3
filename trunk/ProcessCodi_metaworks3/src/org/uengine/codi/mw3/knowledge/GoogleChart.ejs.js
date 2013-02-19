@@ -10,7 +10,7 @@ function loadChartApis(){
 function chartApisLoaded(){
 	
 	var object = mw3.objects[chartId];
-	console.log(chartId);
+	if (console && console.log) console.log(chartId);
 	if(object){
 		object.getFaceHelper().drawChart();
 	}

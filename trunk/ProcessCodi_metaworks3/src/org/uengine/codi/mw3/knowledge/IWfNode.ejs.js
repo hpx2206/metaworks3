@@ -86,7 +86,7 @@ var org_uengine_codi_mw3_knowledge_IWfNode = function(objectId, className) {
 			$('#objDiv_' + objectId).bind('dragstart', 
 				function(e){
 					e.preventDefault();
-					console.log('dragstart');
+					if (console && console.log) console.log('dragstart');
 					e.stopPropagation();
 				}
 			);
@@ -94,7 +94,7 @@ var org_uengine_codi_mw3_knowledge_IWfNode = function(objectId, className) {
 			$('#objDiv_' + objectId).bind('dragend', 
 					function(e){
 						e.preventDefault();
-						console.log('dragend');
+						if (console && console.log) console.log('dragend');
 						e.stopPropagation();
 					}
 				);
@@ -104,13 +104,13 @@ var org_uengine_codi_mw3_knowledge_IWfNode = function(objectId, className) {
 				// mouse in
 				function() {
 					if(mw3.dragging){
-						console.log('in');
+						if (console && console.log) console.log('in');
 					}					
 				},
 				// mouse out
 				function() {
 					if(mw3.dragging){
-						console.log('out');
+						if (console && console.log) console.log('out');
 					}
 				}
 			);
@@ -458,7 +458,7 @@ org_uengine_codi_mw3_knowledge_IWfNode.prototype = {
 						var parentId = parent.attr('objectId');
 
 						if (parentId != '-1') {
-							console.log('outdent');
+							if (console && console.log) console.log('outdent');
 							this.mw3Obj.outdent();
 						}
 					}

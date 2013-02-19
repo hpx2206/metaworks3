@@ -107,11 +107,11 @@ org_metaworks_component_Splitter.prototype = {
 			}else
 				this.A._posSplit = this.A.offset()[this.opts.origin] + this.A[0][this.opts.pxSplit] + this.B.offset()[this.opts.origin] - event[this.opts.eventPos] + this.B[0][this.opts.pxSplit];
 			
-			console.log('this.A.offset()[this.opts.origin]' + this.A.offset()[this.opts.origin]);
-			console.log('this.B.offset()[this.opts.origin] : ' + this.B.offset()[this.opts.origin]);
-			console.log('this.A[0][this.opts.pxSplit] : ' + this.A[0][this.opts.pxSplit]);
-			console.log('event[this.opts.eventPos] : ' + event[this.opts.eventPos]);
-			console.log('this.B[0][this.opts.pxSplit] : ' + this.B[0][this.opts.pxSplit]);
+			if (console && console.log) console.log('this.A.offset()[this.opts.origin]' + this.A.offset()[this.opts.origin]);
+			if (console && console.log) console.log('this.B.offset()[this.opts.origin] : ' + this.B.offset()[this.opts.origin]);
+			if (console && console.log) console.log('this.A[0][this.opts.pxSplit] : ' + this.A[0][this.opts.pxSplit]);
+			if (console && console.log) console.log('event[this.opts.eventPos] : ' + event[this.opts.eventPos]);
+			if (console && console.log) console.log('this.B[0][this.opts.pxSplit] : ' + this.B[0][this.opts.pxSplit]);
 			
 			this.A.css('-webkit-user-select', 'none');
 			this.B.css('-webkit-user-select', 'none');
@@ -127,15 +127,15 @@ org_metaworks_component_Splitter.prototype = {
 		doSplitMouse : function (event) {
 			var newPos;
 			
-			console.log('this.A._posSplit : ' + this.A._posSplit);
-			console.log('event[this.opts.eventPos] : ' + event[this.opts.eventPos]);
+			if (console && console.log) console.log('this.A._posSplit : ' + this.A._posSplit);
+			if (console && console.log) console.log('event[this.opts.eventPos] : ' + event[this.opts.eventPos]);
 			
 			if(this.opts.origin == this.object.align)
 				newPos = this.A._posSplit+event[this.opts.eventPos];
 			else
 				newPos = this.A._posSplit-event[this.opts.eventPos];
 			
-			console.log('move : ' + this.A._posSplit + ' : ' + event[this.opts.eventPos]);
+			if (console && console.log) console.log('move : ' + this.A._posSplit + ' : ' + event[this.opts.eventPos]);
 			
 			this.resplit(newPos);
 			
@@ -163,7 +163,7 @@ org_metaworks_component_Splitter.prototype = {
 				this.B.css(this.opts.side1, newPos + this.object.size);
 				this.objectDiv.css(this.opts.side1, this.A[0][this.opts.pxSplit]);
 			}else{
-				console.log(newPos + ' : ' + this.max);
+				if (console && console.log) console.log(newPos + ' : ' + this.max);
 				
 				newPos = Math.max(newPos, this.B._min, this.object.min, Math.min(newPos, this.max));
 				
