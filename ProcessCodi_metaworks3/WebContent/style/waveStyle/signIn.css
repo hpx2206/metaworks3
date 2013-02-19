@@ -280,8 +280,16 @@ input.submitFacebook {
 #loginContainer h1, #loginContainer h2{
     background:url('../../images/waveStyle/doore.png') no-repeat 50%;
 }
+#loginContainer .options{
+    margin:30px 0 0 65px;
+}
 }
 
+@media all and (max-height: 480px) {
+    #loginContainer{
+         margin-top:-20px;
+    }
+}
 
 
  /* 
