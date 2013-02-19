@@ -9,7 +9,6 @@ import org.directwebremoting.WebContextFactory;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
-import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.NonEditable;
@@ -30,9 +29,6 @@ public class Session implements ContextAware{
 		
 		setMetaworksContext(metaworkscontext);
 	}
-	
-	@AutowiredFromClient
-	public Session session;
 	
 	IUser user;	
 		public IUser getUser() {
@@ -196,7 +192,7 @@ public class Session implements ContextAware{
 		removeUserInfoFromHttpSession();
 		
 		Login login = new Login();
-		login.fireServerSession(session);
+		login.fireServerSession(this);
 		
 		login.setMetaworksContext(new MetaworksContext());
 		login.getMetaworksContext().setHow("logout");

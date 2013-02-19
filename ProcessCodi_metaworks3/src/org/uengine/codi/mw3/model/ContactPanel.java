@@ -70,15 +70,15 @@ public class ContactPanel {
 
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 	public Object addContact() throws Exception{
-		//Popup popup = new Popup();
+		Popup popup = new Popup();
 		
-		ModalWindow popup = new ModalWindow();
+		//ModalWindow popup = new ModalWindow();
 		
 //			popup.setPageX(this.pageX);
 //			popup.setPageY(this.pageY);
 		
 		popup.setPanel(new UnifiedAddContactPanel(session));
-		popup.setTitle("연락처 추가");
+		//popup.setTitle("연락처 추가");
 		return popup;
 	}
 	

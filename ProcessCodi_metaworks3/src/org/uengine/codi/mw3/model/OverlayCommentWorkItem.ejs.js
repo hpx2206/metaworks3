@@ -15,8 +15,9 @@ var org_uengine_codi_mw3_model_OverlayCommentWorkItem = function(objectId, class
 
 		var comment = prompt('Enter Comment : ');
 		
-		workItem.title = comment;
-		workItem.add();
-				
+		if(comment){
+			workItem.title = comment;
+			workItem.add();		
+		}				
 	}
 };
