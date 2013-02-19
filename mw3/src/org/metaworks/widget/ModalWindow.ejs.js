@@ -8,6 +8,8 @@ var org_metaworks_widget_ModalWindow = function(objectId, className) {
 	this.object = mw3.objects[this.objectId];
 
 	if(this.object){
+		var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
+
 		var title = this.object.title;
 		
 		if (title == null)
@@ -52,6 +54,12 @@ var org_metaworks_widget_ModalWindow = function(objectId, className) {
 				else
 					options['height'] = $(window).height() - 100;
 			
+				
+				if(session.ux == 'phone'){
+					options['height'] = $(window).height() - 10;
+					options['width'] = body_width - 10;
+				}
+				
 //				console.log(options['height']);
 				
 				$("#dialog:ui-dialog").dialog("destroy");
