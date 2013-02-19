@@ -753,7 +753,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			writer.setUserId(session.getUser().getUserId());
 			writer.setName(session.getUser().getName());
 			
-			if(this.getTaskId() == null)
+			if(this.getTaskId() == null || this.getTaskId() == -1)
 				this.setTaskId(UniqueKeyGenerator.issueWorkItemKey(((ProcessManagerBean)processManager).getTransactionContext()));
 			
 			this.setWriter(writer);

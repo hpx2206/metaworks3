@@ -71,11 +71,15 @@ public class InstanceView {
 				}
 			}
 			IDept deptFollower = getFollowers().getDeptFollowers();
-			while( deptFollower.next() ){
-				if(deptFollower.getPartCode().equals(session.getEmployee().getPartCode()) ){
-					iCanSee = true;
-					break;
+			if( deptFollower.getImplementationObject().getCachedRows() != null ){
+				deptFollower.beforeFirst();
+				while( deptFollower.next() ){
+					if(deptFollower.getPartCode().equals(session.getEmployee().getPartCode()) ){
+						iCanSee = true;
+						break;
+					}
 				}
+				deptFollower.beforeFirst();
 			}
 			
 			if(!iCanSee){
@@ -83,7 +87,6 @@ public class InstanceView {
 			}
 			
 			followers.beforeFirst();
-			
 		}
 		
 		setInstanceViewThreadPanel(activityStream());
@@ -600,11 +603,36 @@ public class InstanceView {
 		
 		Instance instance = new Instance();
 		instance.setInstId(new Long(instanceId));
-		String secuopt = instance.databaseMe().getSecuopt();
 		
-		setSecuopt(secuopt);
+		IUser followers = getFollowers().getFollowers();
+		followers.beforeFirst();
 		
-		this.load(instance);
+		boolean iCanSee = false;
+		while(followers.next()){
+			if(session.getUser().getUserId().equals(followers.getUserId())){
+				iCanSee = true;
+				break;
+			}
+		}
+		followers.beforeFirst();
+		IDept deptFollower = getFollowers().getDeptFollowers();
+		if( deptFollower.getImplementationObject().getCachedRows() != null ){
+			deptFollower.beforeFirst();
+			while( deptFollower.next() ){
+				if(deptFollower.getPartCode().equals(session.getEmployee().getPartCode()) ){
+					iCanSee = true;
+					break;
+				}
+			}
+			deptFollower.beforeFirst();
+		}
+		if(iCanSee){
+			String secuopt = instance.databaseMe().getSecuopt();
+			setSecuopt(secuopt);
+			this.load(instance);
+		}else{
+			throw new Exception("$OnlyFollowerCanSecuopt");
+		}
 	}
 	
 	transient MetaworksContext metaworksContext;
