@@ -187,7 +187,7 @@ public class Session implements ContextAware{
 			this.searchKeyword = searchKeyword;
 		}
 	
-	@ServiceMethod
+	@ServiceMethod(callByContent=true)
 	public Login logout() {
 		removeUserInfoFromHttpSession();
 		

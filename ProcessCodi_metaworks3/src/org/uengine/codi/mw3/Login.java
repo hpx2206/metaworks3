@@ -361,10 +361,11 @@ public class Login implements ContextAware {
 				SessionIdForEmployeeMapping.remove(userId);
 				
 				if(session.getEmployee() != null){
-					String partCode = session.getEmployee().getPartCode().toUpperCase();
-					String globalCom = session.getEmployee().getGlobalCom().toUpperCase();
+					String partCode = session.getEmployee().getPartCode();
+					String globalCom = session.getEmployee().getGlobalCom();
 
 					if(partCode != null && partCode.length() > 0){
+						partCode = partCode.toUpperCase();
 						HashMap<String, String> mapping = null;
 						
 						if(SessionIdForDeptMapping.containsKey(partCode)){
@@ -375,6 +376,7 @@ public class Login implements ContextAware {
 					}
 					
 					if(globalCom != null && globalCom.length() > 0){
+						globalCom = globalCom.toUpperCase();
 						HashMap<String, String> mapping = null;
 						
 						if(SessionIdForCompanyMapping.containsKey(globalCom)){
