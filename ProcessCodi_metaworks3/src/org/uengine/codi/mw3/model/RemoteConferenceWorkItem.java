@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
@@ -41,7 +42,7 @@ public class RemoteConferenceWorkItem extends WorkItem{
 		
 		String salt = GlobalContext.getPropertyString("bbb.security.salt");
 		
-		String createParam = "name=" + session.getUser().getName() + "&record=" + record + "&meetingID=" + getTaskId();// + "&attendeePW=" + password;
+		String createParam = "name=" + URLEncoder.encode(session.getUser().getName(), "UTF-8") + "&record=" + record + "&meetingID=" + getTaskId();// + "&attendeePW=" + password;
 		String checkSum = hex_sha1("create" + createParam + salt);
 		String callURI = "/bigbluebutton/api/create?" + createParam + "&checksum=" + checkSum;
 		
@@ -95,7 +96,7 @@ public class RemoteConferenceWorkItem extends WorkItem{
 		String meetingID = databaseMe().getExt1();
 		String attendeePW = databaseMe().getExt2();
 		
-		String joinParam = "meetingID=" + meetingID + "&fullName=" + session.getUser().getName() + "&password=" + attendeePW;
+		String joinParam = "meetingID=" + meetingID + "&fullName=" + URLEncoder.encode(session.getUser().getName(), "UTF-8") + "&password=" + attendeePW;
 		String joinCheckSum = hex_sha1("join" + joinParam + salt);
 		String joinURI = "join?" + joinParam + "&checksum=" + joinCheckSum;
 				

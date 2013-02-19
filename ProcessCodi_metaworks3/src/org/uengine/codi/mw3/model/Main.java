@@ -149,8 +149,9 @@ public class Main {
 			outerLayout.setName("center");
 			
 			setLayout(outerLayout);
-
-			setPageNavigator(new PageNavigator("process"));	
+			if( session.getEmployee().getIsAdmin() ){	// 관리자일 경우만 page flip 이 보임
+				setPageNavigator(new PageNavigator("process"));
+			}
 		}
 
 	}
