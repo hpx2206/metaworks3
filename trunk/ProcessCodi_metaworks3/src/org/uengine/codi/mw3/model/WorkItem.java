@@ -808,6 +808,9 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			
 			final IWorkItem copyOfThis = this;
 			final IInstance copyOfInstance = instance;
+			copyOfInstance.fillFollower();
+			InstanceFollowers instanceFollowers = copyOfInstance.getFollowers();
+					
 			copyOfInstance.getMetaworksContext().setWhen("blinking");
 			
 			// 인스턴스 발행
@@ -856,12 +859,9 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(copyOfInstance)});
 			}
 			
+			IUser followers = instanceFollowers.getFollowers();
+			
 			// 팔로워들에게 알림처리
-			Instance instanceForFollower = new Instance();
-			instanceForFollower.setInstId(instanceRef.getInstId());			
-			instanceForFollower.fillFollower();
-
-			IUser followers = instanceForFollower.getFollowers().getFollowers();
 			if(followers != null){
 				followers.beforeFirst();
 				
