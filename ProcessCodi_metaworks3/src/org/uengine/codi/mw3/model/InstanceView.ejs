@@ -20,49 +20,49 @@
 			        
 			        <li id="wih_btn_item_Information">
 			        	<a href="#" onClick="<%=methods.monitor.caller()%>">
-			        		<span id="method_<%=objectId%>_monitor"><img src="images/waveStyle/i_workitem_i.png" border="0"></span>
+			        		<span id="method_<%=objectId%>_monitor" class="toolbarIcon"><img src="images/waveStyle/i_workitem_i.png" border="0"></span>
 			        		<span><%=mw3.localize("$process")%></span>
 			        	</a>
 			        </li>
 			        <li id="wih_btn_item_GanttChart">
 			        	<a href="#" onClick="<%=methods.schedule.caller()%>">
-			        		<span style="color: black; "><img src="images/waveStyle/i_gantt.png" border="0" valign=center></span>
+			        		<span style="color: black; " class="toolbarIcon"><img src="images/waveStyle/i_gantt.png" border="0" valign=center></span>
 			        		<span style="color: black; "><%=mw3.localize("$Schedule")%></span>
 			        	</a>
 			        </li>
 			        <li id="wih_btn_sendMail" style="display: none; ">
 			        	<a href="#" onClick="sendMail()">
-			        		<span><img src="images/waveStyle/i_mail.png" border="0"></span>
+			        		<span class="toolbarIcon"><img src="images/waveStyle/i_mail.png" border="0"></span>
 			        		<span><%=mw3.localize("$Mail")%></span>
 			        	</a>
 			        </li>
 			        <li id="wih_btn_reply" style="display: block; ">
 			        	<a href="#" onClick="<%=methods.newSubInstancePanel.caller()%>">
-			        		<span style="color: black; cursor:hand "><img src="images/waveStyle/i_reply.png" border="0"></span>
+			        		<span style="color: black; cursor:hand " class="toolbarIcon"><img src="images/waveStyle/i_reply.png" border="0"></span>
 			        		<span><%=mw3.localize("$activity")%></span>
 			        	</a>
 			        </li>
 			        <li id="wih_btn_edit" style="display: none; ">
 			        	<a href="">
-			        		<span><img src="images/waveStyle/i_edit.png" border="0"></span>
+			        		<span class="toolbarIcon"><img src="images/waveStyle/i_edit.png" border="0"></span>
 			        		<span><%=mw3.localize("$Edit")%></span>
 			        	</a>
 			        </li>
 			        <li id="wih_btn_delete" style="display: none; ">
 			        	<a href="#" onClick="deleteMail()">
-			        		<span><img src="images/waveStyle/i_delete.png" border="0"></span>
+			        		<span class="toolbarIcon"><img src="images/waveStyle/i_delete.png" border="0"></span>
 			        		<span><%=mw3.localize("$Deletemail")%></span>
 			        	</a>
 			        </li>
 			        <li id="wih_btn_item_delete" style="display: block; ">
 			        	<a href="#" onClick="<%=methods.remove.caller()%>">
-			        		<span><img src="images/waveStyle/i_delete.png" border="0"></span>
+			        		<span class="toolbarIcon"><img src="images/waveStyle/i_delete.png" border="0"></span>
 			        		<span><%=mw3.localize("$Delete")%></span>
 			        	</a>
 			        </li>
 			        <li id="wih_btn_toInstance" style="display: none; ">
 			        	<a href="#" onClick="getRecommandProcessList();">
-			        		<span><img src="images/waveStyle/i_toinst.png" border="0"></span>
+			        		<span class="toolbarIcon"><img src="images/waveStyle/i_toinst.png" border="0"></span>
 			        		<span><%=mw3.localize("$processchange")%></span>
 			        	</a>
 			        </li>			       
@@ -71,7 +71,7 @@
 %>						        
 			        <li id="wih_btn_sec">
 			        	<a href="#" onClick="<%=methods.toggleSecurityConversation.caller()%>">
-			        		<span><img src="images/waveStyle/i_unsecuopt.png" border="0"></span>
+			        		<span class="toolbarIcon"><img src="images/waveStyle/i_unsecuopt.png" border="0"></span>
 			        		<span><%=mw3.localize("$Privacy")%></span>
 			        	</a>
 			        </li>
@@ -80,7 +80,7 @@
 %>						        
 			        <li id="wih_btn_sec" class="toolbar_current">
 			        	<a href="#" onClick="<%=methods.toggleSecurityConversation.caller()%>">
-			        		<span><img src="images/waveStyle/i_secuopt.png" border="0"></span>
+			        		<span class="toolbarIcon"><img src="images/waveStyle/i_secuopt.png" border="0"></span>
 			        		<span><%=mw3.localize("$MakeItPrivacy")%></span>
 			        	</a>
 			        </li>
@@ -91,7 +91,7 @@
 %>						        
 			        <li id="wih_btn_complete">
 			        	<a href="#" onClick="<%=methods.complete.caller()%>">
-			        		<span><img src="images/waveStyle/i_complete.png" border="0"></span>
+			        		<span class="toolbarIcon"><img src="images/waveStyle/i_complete.png" border="0"></span>
 			        		<span><%=mw3.localize("$Completing")%></span>
 			        	</a>
 			        </li>
@@ -101,7 +101,7 @@
 %>						        
 			        <li id="wih_btn_complete" class="toolbar_current">
 			        	<a href="#" onClick="<%=methods.complete.caller()%>">
-			        		<span><img src="images/waveStyle/i_complete.png" border="0"></span>
+			        		<span class="toolbarIcon"><img src="images/waveStyle/i_complete.png" border="0"></span>
 			        		<span><%=mw3.localize("$Complete")%></span>
 			        	</a>
 			        </li>
