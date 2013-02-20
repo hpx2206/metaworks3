@@ -3614,7 +3614,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 
 			MethodRef.prototype.caller = function(){				
 				
-				return 'if(event.stopPropagation)	 event.stopPropagation(); else if(window.event) window.event.cancelBubble = true;'+(this.methodContext.needToConfirm ? 'if (confirm(\'Are you sure to ' + this.methodContext.displayName + ' this?\'))':'')  + 'mw3.getObject(' + this.objectId + ').' + this.methodContext.methodName + '()';
+				return 'if(event && event.stopPropagation)	 event.stopPropagation(); else if(window.event) window.event.cancelBubble = true;'+(this.methodContext.needToConfirm ? 'if (confirm(\'Are you sure to ' + this.methodContext.displayName + ' this?\'))':'')  + 'mw3.getObject(' + this.objectId + ').' + this.methodContext.methodName + '()';
 				//return 'window.event.stopPropagation();'+(this.methodContext.needToConfirm ? 'if (confirm(\'Are you sure to ' + this.methodContext.displayName + ' this?\'))':'')  + 'mw3.getObject(' + this.objectId + ').' + this.methodContext.methodName + '()';
 			};
 			
