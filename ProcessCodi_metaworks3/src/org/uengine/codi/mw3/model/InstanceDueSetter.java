@@ -19,7 +19,7 @@ import org.uengine.codi.mw3.filter.OtherSessionFilter;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 @Face(displayName="$InstanceDueSetter", ejsPath="dwr/metaworks/genericfaces/FormFace.ejs"
-	, options={"fieldOrder"},values={"progress,dueDate,benefit,penalty,effort,onlyInitiatorCanComplete"} )
+	, options={"fieldOrder"},values={"dueDate,benefit,penalty,effort,progress,onlyInitiatorCanComplete"} )
 public class InstanceDueSetter implements ContextAware{
 	
 	MetaworksContext metaworksContext;
