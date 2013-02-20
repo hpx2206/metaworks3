@@ -73,7 +73,7 @@ public class CommentWorkItem extends WorkItem{
 				
 				RoleMapping rm = RoleMapping.create();
 				if(session.getUser() != null){
-					rm.setName("initiator");
+					rm.setName("Initiator");
 					rm.setEndpoint(session.getUser().getUserId());
 					
 					processManager.putRoleMapping(newInstId, rm);

@@ -570,7 +570,7 @@ public class ResourceFile implements ContextAware{
 			//// setting initiator if there's nothing to state the initiator in the definition ////
 			org.uengine.kernel.RoleMapping rm = org.uengine.kernel.RoleMapping.create();
 			if(session.user!=null){
-				rm.setName("initiator");
+				rm.setName("Initiator");
 				rm.setEndpoint(session.user.getUserId());
 			}
 
