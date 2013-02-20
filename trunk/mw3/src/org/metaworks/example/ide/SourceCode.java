@@ -1,11 +1,23 @@
 package org.metaworks.example.ide;
 
 import org.metaworks.ServiceMethodContext;
+import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 
 public class SourceCode {
+	
 	public SourceCode(){
 	}
+	
+	String id;
+		@Id
+		public String getId() {
+			return id;
+		}
+		public void setId(String id) {
+			this.id = id;
+		}
+
 	String code;
 		public String getCode() {
 			return code;
