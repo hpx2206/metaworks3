@@ -3087,6 +3087,12 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				return objectRef;
 			};
 			
+			Metaworks3.prototype.ajaxCall = function(url){
+				$.ajax({
+				    url: url,
+				    dataType: "html"
+				})
+			}
 			
 			Metaworks3.prototype.isHidden = function(fd){
 

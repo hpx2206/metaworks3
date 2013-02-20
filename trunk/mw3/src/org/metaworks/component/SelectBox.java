@@ -1,8 +1,10 @@
 package org.metaworks.component;
 
+import java.io.Serializable;
+
 import org.metaworks.common.ChoiceBox;
 
-public class SelectBox extends ChoiceBox{
+public class SelectBox extends ChoiceBox implements Serializable{
 	int selectSize;
 		public int getSelectSize() {
 			return selectSize;
@@ -22,5 +24,9 @@ public class SelectBox extends ChoiceBox{
 		super();
 		setSelectSize(1);
 		setSelectStyle("");
+	}
+	
+	public String toString(){
+		return this.getSelected();
 	}
 }
