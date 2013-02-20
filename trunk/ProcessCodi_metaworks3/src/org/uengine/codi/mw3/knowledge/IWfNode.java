@@ -23,6 +23,7 @@ import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.model.ContentWindow;
 import org.uengine.codi.mw3.model.IInstance;
 import org.uengine.codi.mw3.model.IUser;
+import org.uengine.codi.mw3.model.InstanceDrag;
 import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.model.Session;
 
@@ -355,6 +356,9 @@ public interface IWfNode extends IDAO {
 	
 	@AutowiredFromClient(onDrop=true)
 	public IInstance dropInstance = null;
+	
+	@AutowiredFromClient(onDrop=true)
+	public InstanceDrag dropInstanceDrag = null;
 	
 	@AutowiredFromClient(onDrop=true)
 	public IUser dropUser = null;
