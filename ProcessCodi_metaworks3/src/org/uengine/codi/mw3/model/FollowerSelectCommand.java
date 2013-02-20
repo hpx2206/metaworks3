@@ -125,7 +125,7 @@ public class FollowerSelectCommand {
 	
 	@ServiceMethod
 	public Remover cancel() throws Exception{
-		return new Remover(new Popup());
+		return new Remover(new Popup() , true);
 	}
 	
 }
