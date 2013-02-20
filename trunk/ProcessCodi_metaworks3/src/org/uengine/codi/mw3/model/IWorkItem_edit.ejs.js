@@ -6,15 +6,21 @@ var org_uengine_codi_mw3_model_IWorkItem_edit = function(objectId, className){
 	this.commandParameters = null;
 	this.type = null;
 
+	var value = mw3.objects[objectId];
+	
+	this.instanceFirst = true;
+	if( value.instId != null && value.instId != 0){
+		this.instanceFirst = false;
+	}
+	
 	$("#post_" + this.objectId).focus();
 	//$("#post_" + this.objectId).keydown()
 	
-	$("#post_" + this.objectId).bind("keyup keydown", function(event){
+	$("#post_" + this.objectId).bind("keyup", function(event){
 		var h=$(this);
 		h.height(21).height(h[0].scrollHeight);//where 60 is minimum height of textarea
 	});
 	
-	var value = mw3.objects[objectId];
 	if(value.type=="file"){
 		setTimeout(function(){
 			var fileUplodaerObjectId = mw3.getChildObjectId(objectId, "file");
@@ -31,15 +37,21 @@ var org_uengine_codi_mw3_model_IWorkItem_edit = function(objectId, className){
 			});
 		}, 1000);
 	}else if(value.type == 'comment'){
+		$("#post_" + this.objectId).bind("keydown", {instanceFirst: this.instanceFirst}, function(event){
+			if (event.keyCode == 13 && !event.shiftKey) {
+				if(  !event.data.instanceFirst ){
+					window.event.cancelBubble = true;
+					window.event.returnValue = false;
+				}
+			}
+		});
+		
 		$("#post_" + this.objectId).bind("keyup", {objectId: this.objectId}, function(event){
 			mw3.getFaceHelper(event.data.objectId).press();
 		});		
 	}
 	
-	this.instanceFirst = true;
-	if( value.instId != null && value.instId != 0){
-		this.instanceFirst = false;
-	}
+
 	
 	this.sending = false;
 	// process
@@ -107,50 +119,52 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype = {
 		if(!this.sending){			
 			this.sending = true;
 
-			if(value.type=='comment' && value.metaworksContext.when == 'new' && value.instId){				
-				var newComment = JSON.parse(JSON.stringify(value));
-				newComment.metaworksContext = {};
-				newComment.metaworksContext.when = 'view';
-				newComment.__objectId = null;
-				newComment.startDate = new Date();
-				
-				if( value && value.metaworksContext && value.metaworksContext.how != null){
-					newComment.metaworksContext.how = value.metaworksContext.how;
+			if(value.type=='comment' && value.metaworksContext.when == 'new' && value.instId){
+				if(value.title && value.title.trim().length){
+					var newComment = JSON.parse(JSON.stringify(value));
+					newComment.metaworksContext = {};
+					newComment.metaworksContext.when = 'view';
+					newComment.__objectId = null;
+					newComment.startDate = new Date();
+					
+					if( value && value.metaworksContext && value.metaworksContext.how != null){
+						newComment.metaworksContext.how = value.metaworksContext.how;
+					}
+					
+					var instanceViewThreadPanel = {
+						__className : 'org.uengine.codi.mw3.model.InstanceViewThreadPanel',
+						instanceId : value.instId
+					};
+					
+	
+					var toAppend = mw3.locateObject(
+						{
+							__className	:'org.metaworks.ToAppend',
+								target	: newComment,
+								parent	: instanceViewThreadPanel,
+								match   : true
+						}, null, 'body'
+					);
+					
+					//may problematic. TODO: 'toAppend.target' should point to the newly acquired object with the __objectId exists.
+					var newCommentObjectId = toAppend.targetObjectId + 1;
+					
+					mw3.onLoadFaceHelperScript();
+		
+					newComment = mw3.objects[newCommentObjectId];
+					newComment.metaworksContext.when = 'new';
+		
+					try{
+						newComment.add();
+					}catch(e){
+						//handle when fail
+					}
+		
+					value.title = "";
+					mw3.setObject(value.__objectId, value);
+					
+					$("#post_" + this.objectId).focus();
 				}
-				
-				var instanceViewThreadPanel = {
-					__className : 'org.uengine.codi.mw3.model.InstanceViewThreadPanel',
-					instanceId : value.instId
-				};
-				
-
-				var toAppend = mw3.locateObject(
-					{
-						__className	:'org.metaworks.ToAppend',
-							target	: newComment,
-							parent	: instanceViewThreadPanel,
-							match   : true
-					}, null, 'body'
-				);
-				
-				//may problematic. TODO: 'toAppend.target' should point to the newly acquired object with the __objectId exists.
-				var newCommentObjectId = toAppend.targetObjectId + 1;
-				
-				mw3.onLoadFaceHelperScript();
-	
-				newComment = mw3.objects[newCommentObjectId];
-				newComment.metaworksContext.when = 'new';
-	
-				try{
-					newComment.add();
-				}catch(e){
-					//handle when fail
-				}
-	
-				value.title = "";
-				mw3.setObject(value.__objectId, value);
-				
-				$("#post_" + this.objectId).focus();
 			}else{
 				value.add();
 			}
@@ -240,10 +254,7 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.press = function(){
 	
 	// enter 이고 인스턴스를 발행해야 하는 경우가 아니라면
 	if (e.keyCode == 13 && !e.shiftKey) {
-		if(  !this.instanceFirst ){
-			window.event.returnValue = false;
-			this.sendComment();
-		}
+		this.sendComment();
     }else{
     	// 입력된 값 parsing
     	var text = $("#post_" + this.objectId).val();    	
