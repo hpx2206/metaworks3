@@ -14,6 +14,8 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.cookie.CookiePolicy;
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.directwebremoting.Browser;
+import org.directwebremoting.ScriptSessions;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.input.SAXBuilder;
@@ -21,6 +23,7 @@ import org.metaworks.Refresh;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.IFrame;
 import org.metaworks.widget.ModalWindow;
+import org.uengine.codi.mw3.Login;
 import org.uengine.kernel.GlobalContext;
 
 public class RemoteConferenceWorkItem extends WorkItem{
@@ -197,6 +200,14 @@ public class RemoteConferenceWorkItem extends WorkItem{
 		String recordParam = "meetingID=" + meetingID;
 		String checkSum = hex_sha1("getRecordings" + recordParam + salt);
 		String recordURI = "/bigbluebutton/api/getRecordings?" + recordParam + "&checksum=" + checkSum;
+		
+		final String ajaxUrl = "http://" + GlobalContext.getPropertyString("bbb.server.host")+ "/playback/slides/playback.html?meetingId=" + recordURI;
+		Browser.withSession(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Runnable(){
+			   @Override
+			   public void run() {
+			    ScriptSessions.addFunctionCall("mw3.ajaxCall", new Object[]{ajaxUrl});
+			   }			  
+		});
 		
 		String url = null;
 		String recordID = null;

@@ -213,7 +213,7 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 
 		RoleMapping rm = RoleMapping.create();
 		if(session.getUser() != null){
-			rm.setName("initiator");
+			rm.setName("Initiator");
 			rm.setEndpoint(session.getUser().getUserId());
 			
 			processManager.putRoleMapping(instId, rm);
