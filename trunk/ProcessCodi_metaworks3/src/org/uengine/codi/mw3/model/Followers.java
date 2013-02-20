@@ -88,12 +88,12 @@ public class Followers implements ContextAware {
 	
 	//, loader="auto", loadOnce=true
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
-	public ModalWindow addFollowers() throws Exception{		
-//		Popup popup = new Popup(400,400);
-		ModalWindow popup = new ModalWindow();
+	public Popup addFollowers() throws Exception{		
+		Popup popup = new Popup(400,400);
+//		Popup popup = new ModalWindow();
 		popup.setWidth(400);
 		popup.setHeight(400);
-		popup.setTitle("follower 추가");
+		//popup.setTitle("follower 추가");
 		
 		String type = ADD_INSTANCEFOLLOWERS;
 		if("topic".equals(this.getInstanceId())){

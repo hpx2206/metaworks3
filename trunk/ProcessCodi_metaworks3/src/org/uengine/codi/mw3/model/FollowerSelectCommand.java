@@ -79,7 +79,7 @@ public class FollowerSelectCommand {
 			instanceFollowers = new InstanceFollowers();
 			instanceFollowers.setInstanceId(instId);
 			instanceFollowers.load();
-			return new Object[]{new Refresh(instanceFollowers) , new Remover(new ModalWindow())};
+			return new Object[]{new Refresh(instanceFollowers) , new Remover(new Popup(), true)};
 		}else if( Followers.ADD_TOPICFOLLOWERS.equals(getFollowerType()) ){
 			ArrayList<TreeNode> checkNodes = followerSelectTab.getDeptTree().getCheckNodes();
 			for(int i=0; i<checkNodes.size(); i++){
@@ -115,7 +115,7 @@ public class FollowerSelectCommand {
 			topicFollowers.session = session;
 			topicFollowers.load();
 			
-			return new Object[]{new Refresh(topicFollowers) , new Remover(new ModalWindow())};
+			return new Object[]{new Refresh(topicFollowers) , new Remover(new Popup(), true)};
 		}
 		
 		// TODO notification 구현
