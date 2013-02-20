@@ -99,5 +99,8 @@ public class Tray {
 	
 	@AutowiredFromClient(onDrop=true)
 	public IInstance dropInstance;
+
+	@AutowiredFromClient(onDrop=true)
+	public InstanceDrag dropInstanceDrag;
 }
 
