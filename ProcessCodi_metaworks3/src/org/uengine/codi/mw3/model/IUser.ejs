@@ -4,11 +4,7 @@
 		
 		if(mw3.when == 'addContact'){
 			clickAction = methods.addContact.caller();
-		}else if(mw3.when == 'addTopicFollower'){
-			clickAction = methods.addFollower.caller();
-		}else if(mw3.when == 'addInstanceFollower'){
-			clickAction = methods.addFollower.caller();
-		}else if(mw3.when == 'addEtcFollower'){
+		}else if(mw3.when == 'addTopicFollower' || mw3.when == 'addInstanceFollower' || mw3.when == 'addEtcFollower'  || mw3.when == 'addPicker'){
 			clickAction = methods.addFollower.caller();
 		}else if(mw3.when == 'self' || mw3.when == 'self_small'){
 			clickAction = methods.info.caller();
@@ -138,7 +134,7 @@
 			</div>
 <%	
 			/* case by user */
-			if(mw3.when == 'contacts' || mw3.when == 'addContact' || mw3.when == 'addTopicFollower' || mw3.when == 'addInstanceFollower' || mw3.when == 'addEtcFollower'){
+			if(mw3.when == 'contacts' || mw3.when == 'addContact' || mw3.when == 'addTopicFollower' || mw3.when == 'addInstanceFollower' || mw3.when == 'addEtcFollower' || mw3.when == 'addPicker'){
 %>
 			<div class="user_detail">
 				<span class="fontbold"><%=value.name%></span>
