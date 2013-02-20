@@ -54,8 +54,8 @@ var org_metaworks_widget_ModalWindow = function(objectId, className) {
 			
 				
 				if(options['width'] == body_width){
-					options['width'] = body_width -50;
-					options['height'] = $(window).height() - 50;
+					options['width'] = body_width -30;
+					options['height'] = $(window).height() - 30;
 				}
 //				console.log(options['height']);
 				
