@@ -27,7 +27,15 @@ public class Preview {
 		public void setMimeType(String mimeType) {
 			this.mimeType = mimeType;
 		}
-				
+
+	String convertingResult;
+		public String getConvertingResult() {
+			return convertingResult;
+		}
+		public void setConvertingResult(String convertingResult) {
+			this.convertingResult = convertingResult;
+		}		
+
 	public void setPageCountInt(int pageCount) {
 		this.pageCount = Integer.toString(pageCount);
 	}

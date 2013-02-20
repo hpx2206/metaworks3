@@ -258,7 +258,8 @@ public class FileWorkItem extends WorkItem{
 		String realFilePath = fileSystemPath + "/" + realContent;
 		
 		File realFile = new File(realFilePath);
-		
+
+		Preview preview = new Preview();
 		if(realFile.exists() && realFile.isFile() && realFile.length() > 0) {
 			// Office, PDF 파일변환
 			if(realFileMimeType != null && realFileMimeType.indexOf("image") != 0){
@@ -266,8 +267,6 @@ public class FileWorkItem extends WorkItem{
 				String outputFilePath = previewPath + "/" + taskId + ".pdf";
 				
 				try{
-					Preview preview = new Preview();
-					
 					// office 문서 realFileMimeType -- 2007이하 버젼: indexOf("ms"), 2007이후버전: indexOf("officedocument")
 					if(realFileMimeType.indexOf("ms") > 0 || realFileMimeType.indexOf("officedocument") > 0 || realFileMimeType.indexOf("text/plain") > -1){
 						convertPdf(inputFilePath, outputFilePath);
@@ -287,18 +286,18 @@ public class FileWorkItem extends WorkItem{
 					workItem.setTaskId(taskId);
 					workItem.databaseMe().setExt1(preview.getPageCount());
 					workItem.flushDatabaseMe();
-					
-					this.setPreview(preview);
-
-					MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(preview)});
-
 					result = true;
+					preview.setConvertingResult("success");
+					this.setPreview(preview);
 					
 				}catch (Exception e){
 					e.printStackTrace();
 				}
 			}
 		}
+		preview.setConvertingResult("fail");
+		this.setPreview(preview);
+		MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(preview)});
 		return result;
 	}
 	
