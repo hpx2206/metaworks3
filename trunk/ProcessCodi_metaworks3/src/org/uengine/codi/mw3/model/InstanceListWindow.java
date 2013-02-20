@@ -12,6 +12,10 @@ public class InstanceListWindow extends Window {
 	
 	public InstanceListWindow(){}
 	
+	public InstanceListWindow(Object panel){
+		this.setPanel(panel);
+	}
+	
 	public InstanceListWindow(Session session) throws Exception {
 		this.session = session;
 		
@@ -22,20 +26,11 @@ public class InstanceListWindow extends Window {
 		if(instanceListPanel.isPreloaded()){
 			PersonalPerspective personalPerspective = new PersonalPerspective();
 			personalPerspective.session = session;
-			this.instanceListPanel = (InstanceListPanel) personalPerspective.loadAllICanSee()[1];
+			this.setPanel((InstanceListPanel) personalPerspective.loadAllICanSee()[1]);
 		}else{
-			this.setInstanceListPanel(instanceListPanel);	
+			this.setPanel(instanceListPanel);	
 		}
 	}
-	
-	InstanceListPanel instanceListPanel;
-		public InstanceListPanel getInstanceListPanel() {
-			return instanceListPanel;
-		}
-		public void setInstanceListPanel(InstanceListPanel instanceListPanel) {
-			this.instanceListPanel = instanceListPanel;
-		}
-	
 		
 	@AutowiredFromClient
 	public Session session;

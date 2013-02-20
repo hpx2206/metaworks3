@@ -237,7 +237,17 @@ public class Session implements ContextAware{
 	
 	@ServiceMethod(callByContent=true)
 	public Object[] returnToList() throws Exception{
-		return PersonalPerspective.loadInstanceListPanel(this, this.getLastPerspecteType(), this.getLastSelectedItem());
+		Object[] instanceListObj = PersonalPerspective.loadInstanceListPanel(this, this.getLastPerspecteType(), this.getLastSelectedItem());
+		InstanceListWindow instanceListWindow = null;
+				
+		for(int i=0; i<instanceListObj.length; i++){
+			if(instanceListObj[i] instanceof InstanceListPanel){
+				instanceListWindow = new InstanceListWindow((InstanceListPanel)instanceListObj[i]);
+			}
+				
+		}
+		
+		return new Object[]{instanceListWindow};
 	}
 	
 	
