@@ -682,3 +682,7 @@ alter table bpm_procinst add lastCmnt2Ep varchar(100);
 alter table bpm_procinst add lastCmnt2Rsnm varchar(100);
 
 alter table bpm_worklist modify column title varchar(3000);
+
+alter table emptable add approved int(1);
+
+update emptable set approved = 1;
