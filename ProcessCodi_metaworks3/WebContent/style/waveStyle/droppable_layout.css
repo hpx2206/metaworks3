@@ -100,14 +100,14 @@ ul, ol, li, dl, dd, dt {
     height: 18px;
     width: 18px;
     line-height: 18px;
-    background: url(../../images/waveStyle/plus.gif) no-repeat;
+    background: url(../../images/waveStyle/plus.png) no-repeat 0 3px;
     cursor: pointer;
 }
 .wf_panel .closed {
     height: 18px;
     width: 18px;
     line-height: 18px;
-    background: url(../../images/waveStyle/minus.gif) no-repeat;
+    background: url(../../images/waveStyle/minus.png) no-repeat 0 3px;
     cursor: pointer;
 }
 .wf_panel .wfNodeText {
