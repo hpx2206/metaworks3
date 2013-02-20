@@ -10,9 +10,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathFactory;
-
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.cookie.CookiePolicy;
@@ -95,16 +92,17 @@ public class RemoteConferenceWorkItem extends WorkItem{
 		
 		String meetingID = databaseMe().getExt1();
 		String attendeePW = databaseMe().getExt2();
+		String title = databaseMe().getTitle();
 		
 		String joinParam = "meetingID=" + meetingID + "&fullName=" + URLEncoder.encode(session.getUser().getName(), "UTF-8") + "&password=" + attendeePW;
 		String joinCheckSum = hex_sha1("join" + joinParam + salt);
 		String joinURI = "join?" + joinParam + "&checksum=" + joinCheckSum;
 		
-		IFrame frame = new IFrame("http://"+ GlobalContext.getPropertyString("bbb.server.host") + "/bigbluebutton/api/" + joinURI);
-		frame.setWidth("900");
-		frame.setHeight("580");
+		IFrame iframe = new IFrame();
+		iframe.setSrc("http://"+ GlobalContext.getPropertyString("bbb.server.host") + "/bigbluebutton/api/" + joinURI);
+		iframe.setWidth("100%");
 				
-		return new ModalWindow(frame, 1000, 600, databaseMe().getTitle());
+		return new ModalWindow(iframe, 1000, 550, title);
 	}
 	
 	@ServiceMethod
@@ -131,6 +129,7 @@ public class RemoteConferenceWorkItem extends WorkItem{
 		databaseMe().setStatus("Completed");
 		setWriter(session.getUser());
 		setTitle(databaseMe().getTitle());
+		
 //		databaseMe().setExt4(getRecordURI);
 		
 	}
@@ -220,16 +219,12 @@ public class RemoteConferenceWorkItem extends WorkItem{
 		Document documentToAttach = builder.build(is);
 		Element rootElement = documentToAttach.getRootElement();
 		
-		if(rootElement.getChild("messageKey").equals("noRecordings")){
-			System.out.println("오류뱉어 !!");
-		}else {
-			Element childs = rootElement.getChild("recordings").getChild("recording");
-			List<Element> childsList = childs.getChildren();
-			
-			for(Element elem : childsList){
-				if("recordID".equals(elem.getName())){
-					recordID = elem.getValue();
-				}
+		Element childs = rootElement.getChild("recordings").getChild("recording");
+		List<Element> childsList = childs.getChildren();
+		
+		for(Element elem : childsList){
+			if("recordID".equals(elem.getName())){
+				recordID = elem.getValue();
 			}
 		}
 		
