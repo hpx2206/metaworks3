@@ -28,7 +28,7 @@ public class ClassSourceCodes{
 	}
 	
 	public void load(){
-		this.sourceCode = new JavaSourceCode();
+		this.sourceCode = new JavaSourceCode("JavaSourceCode");
 		this.face = new FaceEditor();
 		this.faceHelper = new FaceHelperSourceCode();
 		this.classModeler = new ClassModeler();

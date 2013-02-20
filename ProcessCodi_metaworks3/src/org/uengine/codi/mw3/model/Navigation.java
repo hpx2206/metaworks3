@@ -2,6 +2,14 @@ package org.uengine.codi.mw3.model;
 
 public class Navigation {
 	
+	String media;
+		public String getMedia() {
+			return media;
+		}
+		public void setMedia(String media) {
+			this.media = media;
+		}
+
 	String perspectiveType;
 		public String getPerspectiveType() {
 			return perspectiveType;
@@ -53,6 +61,7 @@ public class Navigation {
 			this.setPerspectiveValue(session.lastSelectedItem);		
 			this.setKeyword(session.getSearchKeyword());
 			this.setEmployee(employee);
+			this.setMedia(session.getUx());
 		}
 	}
 	

@@ -21,6 +21,7 @@ import org.uengine.codi.mw3.Login;
 public class InstanceList implements ContextAware{
 
 	final static int PAGE_CNT = 15;
+	final static int PAGE_CNT_MOBILE = 5;
 	
 	public InstanceList(){
 		this(null);

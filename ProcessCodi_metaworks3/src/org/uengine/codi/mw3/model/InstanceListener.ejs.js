@@ -9,27 +9,31 @@ var org_uengine_codi_mw3_model_InstanceListener = function(objectId, className){
 		mw3.removeObject(this.objectId);
 		
 		var value = this.object.applyItem;
-		value.instanceViewThreadPanel = null;
 		
-		var preferUx = mw3.fn.getPreferUx();		
-		var instId = value.instId;
-				
-		value.metaworksContext.how = preferUx;
-		
-		if(this.object.command == 'refresh'){
-			// sns 모드일 경우 instance 가 열려있지 않을 경우에만 action
-			if( 'sns' != preferUx || !faceHelper.isOpenInstance(instId) )
-				faceHelper.changeInstance(instId, value);
-										
-		}else{
-			// sns 모드일 경우 instance 가 열려있지 않을 경우에만 action
-			if( 'sns' != preferUx || !faceHelper.isOpenInstance(instId) ){
-				faceHelper.removeInstance(instId);
-				faceHelper.appendInstance(value);	
-			}
-		}
+		var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
+		if(session.lastPerspecteType == 'allICanSee' && (session.keyword == null || typeof session.keyword == 'undefined' && session.searchKeyword == '')){
+			value.instanceViewThreadPanel = null;
 			
-		mw3.onLoadFaceHelperScript();
+			var preferUx = mw3.fn.getPreferUx();		
+			var instId = value.instId;
+					
+			value.metaworksContext.how = preferUx;
+			
+			if(this.object.command == 'refresh'){
+				// sns 모드일 경우 instance 가 열려있지 않을 경우에만 action
+				if( 'sns' != preferUx || !faceHelper.isOpenInstance(instId) )
+					faceHelper.changeInstance(instId, value);
+											
+			}else{
+				// sns 모드일 경우 instance 가 열려있지 않을 경우에만 action
+				if( 'sns' != preferUx || !faceHelper.isOpenInstance(instId) ){
+					faceHelper.removeInstance(instId);
+					faceHelper.appendInstance(value);	
+				}
+			}
+				
+			mw3.onLoadFaceHelperScript();
+		}
 	}
 };
 

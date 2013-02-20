@@ -26,6 +26,16 @@ public class JavaSourceCode extends SourceCode {
 	static ArrayList<String> classNames = new ArrayList<String>();
 	static ArrayList<String> annotationNames = new ArrayList<String>();
 	
+	public static final String TYPE_JAVA = "java";
+	
+	public JavaSourceCode(){
+		this(TYPE_JAVA);
+	}
+	
+	public JavaSourceCode(String id){
+		this.setId(id);
+	}
+	
 	public void cacheLibrary() {
 		try {
 			packageNames.clear();
