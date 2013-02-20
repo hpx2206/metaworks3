@@ -201,14 +201,6 @@ public class RemoteConferenceWorkItem extends WorkItem{
 		String checkSum = hex_sha1("getRecordings" + recordParam + salt);
 		String recordURI = "/bigbluebutton/api/getRecordings?" + recordParam + "&checksum=" + checkSum;
 		
-		final String ajaxUrl = "http://" + GlobalContext.getPropertyString("bbb.server.host")+ "/playback/slides/playback.html?meetingId=" + recordURI;
-		Browser.withSession(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Runnable(){
-			   @Override
-			   public void run() {
-			    ScriptSessions.addFunctionCall("mw3.ajaxCall", new Object[]{ajaxUrl});
-			   }			  
-		});
-		
 		String url = null;
 		String recordID = null;
 		
@@ -240,7 +232,7 @@ public class RemoteConferenceWorkItem extends WorkItem{
 				}
 			}
 		}catch (Exception e) {
-			throw new Exception("No recording file.");
+			throw new Exception("레코딩 변환작업 중입니다.");
 		}
 		
 		is.close();
