@@ -192,6 +192,7 @@ public class Session implements ContextAware{
 		removeUserInfoFromHttpSession();
 		
 		Login login = new Login();
+		login.setStatus("login");
 		login.fireServerSession(this);
 		
 		login.setMetaworksContext(new MetaworksContext());
