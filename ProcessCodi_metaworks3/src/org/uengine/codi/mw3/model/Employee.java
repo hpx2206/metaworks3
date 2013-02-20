@@ -379,6 +379,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 			checkRegistered();
 
 			this.setIsDeleted("0");
+			this.setApproved(true);
 			
 			if(this.getGlobalCom()==null){
 				this.setGlobalCom("uEngine");
@@ -388,8 +389,11 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 				company.setComCode(this.getGlobalCom());
 
 				try{
-					company.databaseMe();
-				}catch(Exception e){										
+					company.databaseMe();					
+				}catch(Exception e){		
+					company.createDatabaseMe();
+					company.syncToDatabaseMe();
+					
 					this.setIsAdmin(true);
 					this.setApproved(true);
 				}
@@ -425,11 +429,11 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		}
 		
 		Session session = new Session();
-		session.setEmployee(this);		
+		session.setEmployee(this);
 		session.fillSession();
 		session.setGuidedTour(true);
 		
-		if(this.getIsAdmin() == false){
+		if(this.getIsAdmin() == false && !this.isApproved()){
 			CommentWorkItem newComment = new CommentWorkItem();
 			newComment.processManager = processManager;
 			newComment.session = session;
@@ -569,6 +573,11 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	}
 	@Override
 	public Object subscribeStep2() throws Exception {
+		if(!this.checkValidEmail()){
+			throw new Exception("Is that email is already subscribed");
+		}
+
+		
 		if(!getPassword().equals(getConfirmPassword())){
 			throw new Exception("Re-entered password doesn't match");
 		}
