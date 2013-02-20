@@ -122,7 +122,7 @@ public class Invitation implements ContextAware{
 		newUser_.setName(newUser.getEmpName());
 		newUser_.setUserId(newUser.getEmpCode());
 		newUser_.setNetwork("local");
-		
+		newContact.setFriendId(newUser.getEmpCode());
 		newContact.setFriend(newUser_);
 		newContact.createDatabaseMe();
 		
