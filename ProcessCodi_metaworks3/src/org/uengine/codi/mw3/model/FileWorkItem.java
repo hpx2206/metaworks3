@@ -287,15 +287,18 @@ public class FileWorkItem extends WorkItem{
 					workItem.databaseMe().setExt1(preview.getPageCount());
 					workItem.flushDatabaseMe();
 					result = true;
-					preview.setConvertingResult("success");
-					this.setPreview(preview);
 					
 				}catch (Exception e){
 					e.printStackTrace();
 				}
 			}
 		}
-		preview.setConvertingResult("fail");
+		
+		if(result) {
+			preview.setConvertingResult("success");
+		}else{
+			preview.setConvertingResult("fail");
+		}
 		this.setPreview(preview);
 		MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(preview)});
 		return result;
