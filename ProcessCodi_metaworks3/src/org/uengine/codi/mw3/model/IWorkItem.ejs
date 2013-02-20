@@ -162,8 +162,8 @@
 						<%}%>
 						<%if(value.preview!=null && 
 							 value.file.mimeType.indexOf('image')!=0 &&
-							 value.file.mimeType.indexOf('zip')!=-1 &&
-							 value.file.mimeType.indexOf('octet')!=-1){%>
+							 value.file.mimeType.indexOf('zip')==-1 &&
+							 value.file.mimeType.indexOf('octet')==-1){%>
 			                <%=fields.preview.here()%>
 						<%}%>
 							<%=fields.file.here({when: (value.file.mimeType.indexOf('image')==0)?'image':'view' })%>
