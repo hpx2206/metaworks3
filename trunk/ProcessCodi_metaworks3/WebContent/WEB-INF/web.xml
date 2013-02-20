@@ -199,6 +199,31 @@
     <servlet-name>PortraitServlet</servlet-name>
     <url-pattern>/portrait/*</url-pattern>
   </servlet-mapping>
-
-
+  
+  <servlet>
+    <description></description>
+    <display-name>PreviewServlet</display-name>
+    <servlet-name>PreviewServlet</servlet-name>
+    <servlet-class>org.uengine.codi.mw3.previewserver.PreviewServlet</servlet-class>
+    <init-param>
+      <param-name>connectionString</param-name>
+      <param-value>jdbc:mysql://localhost:3306/uengine?useUnicode=true&amp;characterEncoding=UTF8</param-value>
+    </init-param>
+    <init-param>
+      <param-name>driverClass</param-name>
+      <param-value>com.mysql.jdbc.Driver</param-value>
+    </init-param>
+    <init-param>
+      <param-name>userId</param-name>
+      <param-value>root</param-value>
+    </init-param>
+    <init-param>
+      <param-name>password</param-name>
+      <param-value></param-value>
+    </init-param>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>PreviewServlet</servlet-name>
+    <url-pattern>/preview/*</url-pattern>
+  </servlet-mapping>
 </web-app>
