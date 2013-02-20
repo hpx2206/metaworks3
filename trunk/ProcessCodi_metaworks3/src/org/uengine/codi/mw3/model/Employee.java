@@ -7,10 +7,18 @@ import org.metaworks.ToOpener;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
 import org.metaworks.widget.ModalWindow;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.common.MainPanel;
+import org.uengine.processmanager.ProcessManagerRemote;
 
 public class Employee extends Database<IEmployee> implements IEmployee {
+
+	@Autowired
+	public ProcessManagerRemote processManager;
+
+	@AutowiredFromClient
+	public Locale localeManager;
 	
 /*	IUser user;	
 		public IUser getUser() {
@@ -204,6 +212,14 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 			this.imageFile = imageFile;
 		}
 
+	boolean approved;
+		public boolean isApproved() {
+			return approved;
+		}
+		public void setApproved(boolean approved) {
+			this.approved = approved;
+		}
+		
 	@Override
 	public IEmployee load() throws Exception {
 		String errorMessage;
@@ -373,10 +389,9 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 
 				try{
 					company.databaseMe();
-				}catch(Exception e){
-					company.setComName(this.getGlobalCom());
-					company.createDatabaseMe();
+				}catch(Exception e){										
 					this.setIsAdmin(true);
+					this.setApproved(true);
 				}
 			}
 			
@@ -413,6 +428,17 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		session.setEmployee(this);		
 		session.fillSession();
 		session.setGuidedTour(true);
+		
+		if(this.getIsAdmin() == false){
+			CommentWorkItem newComment = new CommentWorkItem();
+			newComment.processManager = processManager;
+			newComment.session = session;
+
+			newComment.setTitle(localeManager.getResourceBundle().getProperty("RequestJoinApprovedMessage"));
+			newComment.save();
+			
+			processManager.applyChanges();
+		}
 		
 		return new Object[] {new Remover(new ModalWindow()), new ToOpener(new MainPanel(new Main(session)))};
 	}

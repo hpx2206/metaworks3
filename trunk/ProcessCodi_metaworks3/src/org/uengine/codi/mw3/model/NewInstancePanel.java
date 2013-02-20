@@ -112,9 +112,11 @@ public class NewInstancePanel implements ContextAware {
 		newInstantiator.setWriter(session.getUser());		
 
 		/* for helper */
-		processMapPanel = new ProcessMapPanel();		
-		processMapPanel.setMetaworksContext(this.getMetaworksContext());
-		processMapPanel.load(session);			
+		if(session.getEmployee().isApproved()){
+			processMapPanel = new ProcessMapPanel();		
+			processMapPanel.setMetaworksContext(this.getMetaworksContext());
+			processMapPanel.load(session);						
+		}
 		
 		if("sns".equals(session.getEmployee().getPreferUX())){
 			getMetaworksContext().setHow("sns");

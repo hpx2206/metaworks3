@@ -14,8 +14,7 @@ var org_uengine_codi_mw3_model_NotificationBadge = function(objectId, className)
 
 };
 
-
-org_uengine_codi_mw3_model_NotificationBadge.prototype.prototype = {
+org_uengine_codi_mw3_model_NotificationBadge.prototype = {
 	startLoading : function(){
 		if(this.windowObjectId && mw3.getFaceHelper(this.windowObjectId) && mw3.getFaceHelper(this.windowObjectId).startLoading)
 			mw3.getFaceHelper(this.windowObjectId).startLoading();
@@ -29,6 +28,5 @@ org_uengine_codi_mw3_model_NotificationBadge.prototype.prototype = {
 			mw3.endLoading(this.objectId);
 	},
 	showStatus : function(message){
-		
 	}
 };

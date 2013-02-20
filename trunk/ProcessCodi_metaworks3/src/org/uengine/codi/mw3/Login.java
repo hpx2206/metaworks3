@@ -433,15 +433,11 @@ public class Login implements ContextAware {
 		WebContext wctx = WebContextFactory.get();
 		String sessionId = wctx.getScriptSession().getId();
 		
-		System.out.println("sessionId : " + sessionId);
-		
 		SessionIdForEmployeeMapping.put(userId, sessionId); //stores session id to find out with user Id
 		
-		if(session.getEmployee() != null){
+		if(session.getEmployee() != null && session.getEmployee().isApproved()){
 			String partCode = session.getEmployee().getPartCode();
 			String globalCom = session.getEmployee().getGlobalCom();
-			
-			System.out.println("globalCom : " + globalCom);
 			
 			if(partCode != null && partCode.length() > 0){
 				partCode = partCode.toUpperCase();					
