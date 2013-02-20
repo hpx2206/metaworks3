@@ -8,7 +8,6 @@ import java.io.IOException;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.website.MetaworksFile;
-import org.uengine.codi.common.ImageUtils;
 import org.uengine.kernel.GlobalContext;
 
 public class PortraitImageFile extends MetaworksFile {
@@ -36,11 +35,17 @@ public class PortraitImageFile extends MetaworksFile {
 		String fileSystemPath = GlobalContext.getPropertyString("filesystem.path",".");
 		String portraitPath = fileSystemPath + "/portrait";
 		String srcName = portraitPath + "/" + getEmpCode() + ".jpg";
+		String thumnailName = portraitPath + "/" + getEmpCode() + ".thumnail.jpg";
 		
 		// 업로드 폴더 확인 및 생성
 		File portraitFile = new File(portraitPath);
 		if(!portraitFile.exists() || !portraitFile.isDirectory())
 			portraitFile.mkdirs();
+
+		File thumnailNameFile =new File(thumnailName);
+		if(thumnailNameFile.exists()){
+			thumnailNameFile.delete();
+		}
 		
 		copyStream(getFileTransfer().getInputStream(), new FileOutputStream(srcName));
 		
