@@ -95,7 +95,7 @@ public class User extends Database<IUser> implements IUser {
 	public Popup pickUp() throws Exception {
 		Popup popup = new Popup();
 		
-		String type = "addInstanceFollower";
+		String type = "addPicker";
 		ContactPanel contactPanel = new ContactPanel(session.getUser());
 		contactPanel.getContactListPanel().setId(type);
 		contactPanel.getContactListPanel().getLocalContactList().getMetaworksContext().setWhen(type);		
@@ -373,21 +373,21 @@ public class User extends Database<IUser> implements IUser {
 					e.printStackTrace();
 				}
 			}
-			////// end
+//			////// end
 			
 			return new Object[]{new Refresh(followers)};
 			//TODO: restored by jjy. 
-			
-//			getMetaworksContext().setWhen("edit");
-//			getMetaworksContext().setHow("picker");
-//			
-//			return new Object[]{new Remover(new Popup()), new ToOpener(this)};
 			
 			//
 		}else if("addEtcFollower".equals(this.getMetaworksContext().getWhen())){			
 			etcFollowers.put(this);
 			
 			return new Object[]{new Refresh(etcFollowers)};
+		}else if("addPicker".equals(this.getMetaworksContext().getWhen())){
+			getMetaworksContext().setWhen("edit");
+			getMetaworksContext().setHow("picker");
+			
+			return new Object[]{new Remover(new Popup()), new ToOpener(this)};			
 		}
 		
 		return null;
