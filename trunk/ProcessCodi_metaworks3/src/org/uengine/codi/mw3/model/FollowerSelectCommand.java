@@ -124,8 +124,8 @@ public class FollowerSelectCommand {
 	}
 	
 	@ServiceMethod
-	public Remover cancle() throws Exception{
-		return new Remover(new ModalWindow());
+	public Remover cancel() throws Exception{
+		return new Remover(new Popup());
 	}
 	
 }
