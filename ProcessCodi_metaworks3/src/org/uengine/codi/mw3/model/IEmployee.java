@@ -150,6 +150,9 @@ public interface IEmployee extends IDAO {
 	public String getMood();
 	public void setMood(String mood);
 
+	public boolean isApproved();
+	public void setApproved(boolean approved);
+
 	@AssertFalse(message="이메일 중복체크를 먼저 해주세요")
 	@NonLoadable
 	@NonSavable
@@ -213,6 +216,5 @@ public interface IEmployee extends IDAO {
 	
 	@Available(how={"tree"}) // 상황에 맞춰서 넣어 줘야 한다.
 	@ServiceMethod(callByContent=true, mouseBinding="drag-enableDefault")
-	public Session drag() throws Exception;
-	
+	public Session drag() throws Exception;	
 }

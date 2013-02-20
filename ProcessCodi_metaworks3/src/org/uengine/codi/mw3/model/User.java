@@ -3,6 +3,7 @@ package org.uengine.codi.mw3.model;
 import javax.servlet.http.HttpSession;
 import javax.sql.RowSet;
 
+import org.metaworks.MetaworksException;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ToOpener;
@@ -564,6 +565,16 @@ public class User extends Database<IUser> implements IUser {
 		
 		return totalBV;
 		
+	}
+	
+	public void approvedSubscribe() throws Exception {
+		if(!session.getEmployee().getIsAdmin()){
+			throw new Exception("$AdminOnly");
+		}
+		
+		Employee employee = new Employee();
+		employee.setEmpCode(this.getUserId());
+		employee.databaseMe().setApproved(true);
 	}
 	
 }

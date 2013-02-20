@@ -95,5 +95,8 @@ public interface IUser extends IDAO{
 	@ServiceMethod(payload={"userId"})
 	public int getBV(String empcode) throws Exception;
 
+	@ServiceMethod(callByContent=true, needToConfirm=true, inContextMenu=true)
+	@Face(displayName="$ApprovedSubscribe") 
+	public void approvedSubscribe() throws Exception;
 
 }

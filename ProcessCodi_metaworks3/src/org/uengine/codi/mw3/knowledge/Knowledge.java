@@ -22,20 +22,8 @@ public class Knowledge {
 		
 		setSession(session);
 		
-		// perspective
-		TopicPerspective topicPerspective = new TopicPerspective();
-		topicPerspective.session = session;
-		topicPerspective.select();
 		
-		PerspectivePanel perspectivePanel = new PerspectivePanel();
-		perspectivePanel.setTopicPerspective(topicPerspective);
 		
-		PerspectiveWindow perspectiveWindow = new PerspectiveWindow();
-		perspectiveWindow.setPanel(perspectivePanel);
-		
-		// contact
-		ContactWindow contactWindow = new ContactWindow(session.getUser());
-		contactWindow.getContactPanel().setSearchBox(null);
 		
 		// knowlege node
 		
@@ -47,7 +35,12 @@ public class Knowledge {
 //		if("uEngine".equals(session.getCompany().getComCode())){
 //			panel.load("-1");
 //		}else{
-			panel.load(session.getCompany().getComCode());				
+		if(session.getEmployee().isApproved()){
+			panel.load(session.getCompany().getComCode());	
+		}else{
+			panel.load(session.getUser().getUserId());
+		}			
+							
 //		}
 		Window wfWindow = new Window();
 		wfWindow.setTitle("Knowledge Map");
@@ -61,22 +54,39 @@ public class Knowledge {
 //		mashupGoogleImage = mashup.getMashupGoogleImage();		
 
 		
-		// layout
-		Layout westLayout = new Layout();
-		westLayout.setCenter(perspectiveWindow);
-		westLayout.setSouth(contactWindow);
-		westLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, south__spacing_open:5, south__size:'50%'");
-		westLayout.setName("west");
-
-		
-		
 		Layout outerLayout = new Layout();
 		outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:5, east__spacing_open:5,east__size: '40%', north__size:52");
-		outerLayout.setWest(westLayout);
+		
 		outerLayout.setNorth(new ProcessTopPanel(session));
 		outerLayout.setCenter(wfWindow);
 		outerLayout.setEast(mashup);
 		outerLayout.setName("center");
+		
+		if(session.getEmployee().isApproved()){
+			// perspective
+			TopicPerspective topicPerspective = new TopicPerspective();
+			topicPerspective.session = session;
+			topicPerspective.select();
+			
+			PerspectivePanel perspectivePanel = new PerspectivePanel();
+			perspectivePanel.setTopicPerspective(topicPerspective);
+			
+			PerspectiveWindow perspectiveWindow = new PerspectiveWindow();
+			perspectiveWindow.setPanel(perspectivePanel);
+			
+			// contact
+			ContactWindow contactWindow = new ContactWindow(session.getUser());
+			contactWindow.getContactPanel().setSearchBox(null);
+			
+			// layout
+			Layout westLayout = new Layout();
+			westLayout.setCenter(perspectiveWindow);
+			westLayout.setSouth(contactWindow);
+			westLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, south__spacing_open:5, south__size:'50%'");
+			westLayout.setName("west");
+			
+			outerLayout.setWest(westLayout);
+		}
 		
 		setLayout(outerLayout);
 		

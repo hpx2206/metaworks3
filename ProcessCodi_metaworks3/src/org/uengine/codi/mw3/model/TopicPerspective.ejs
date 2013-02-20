@@ -1,3 +1,7 @@
+<%
+	if(value){
+%>
+	
 <div class="depth1" onClick="<%=methods.select.caller() %>"><%=mw3.localize("$Topic")%></div>
 <%if(value.selected){%>
 	<div class="depth2">
@@ -7,3 +11,7 @@
 	</div>
 <%}else{%>
 <%}%>
+
+<%
+	}
+%>

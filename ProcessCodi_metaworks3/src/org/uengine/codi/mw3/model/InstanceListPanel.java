@@ -255,7 +255,14 @@ public class InstanceListPanel implements ContextAware{
 			this.setTitle("$perspective.strategic");
 			this.knowledge = new WfPanel();
 			this.knowledge.session = session;
-			this.knowledge.load(session.getCompany().getComCode());
+			
+			if(session.getEmployee().isApproved()){
+				this.knowledge.load(session.getCompany().getComCode());	
+			}else{
+				this.knowledge.load(session.getUser().getUserId());
+			}	
+			
+			
 		}
 		this.preloaded = true;
 	}

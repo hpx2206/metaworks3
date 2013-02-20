@@ -76,14 +76,17 @@ public class PerspectivePanel {
 			personalPerspective = new PersonalPerspective();
 			personalPerspective.session = session;
 			personalPerspective.select();
+						
+			if(session.getEmployee().isApproved()){
+				topicPerspective = new TopicPerspective();
+				topicPerspective.session = session;
+				topicPerspective.select();
+				
+				organizationPerspectiveDept = new OrganizationPerspectiveDept();
+				organizationPerspectiveRole = new OrganizationPerspectiveRole();
+				processPerspective = new ProcessPerspective();
+			}
 			
-			topicPerspective = new TopicPerspective();
-			topicPerspective.session = session;
-			topicPerspective.select();
-			
-			organizationPerspectiveDept = new OrganizationPerspectiveDept();
-			organizationPerspectiveRole = new OrganizationPerspectiveRole();
-			processPerspective = new ProcessPerspective();
 			//processStatusPerspective = new ProcessStatusPerspective();
 			
 			strategicPerspective = new StrategicPerspective();

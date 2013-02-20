@@ -116,8 +116,6 @@ public class Main {
 			Layout westLayout = new Layout();
 			ContactWindow contactWindow = new ContactWindow(session.getUser());
 			
-			//Since there's are too many input boxes there, it is removed.
-			contactWindow.getContactPanel().setSearchBox(null);
 			
 			PerspectiveWindow perspectiveWindow = new PerspectiveWindow(session);
 			
@@ -125,10 +123,16 @@ public class Main {
 			
 			InstanceListWindow instanceListWindow = new InstanceListWindow(session);
 			
-			westLayout.setNorth(perspectiveWindow);
-			westLayout.setCenter(contactWindow);
-			westLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, north__spacing_open:5, north__size:'50%'");
+			westLayout.setCenter(perspectiveWindow);
+			
+			westLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, south__spacing_open:5, south__size:'50%'");
 			westLayout.setName("west");
+			
+			//Since there's are too many input boxes there, it is removed.
+			if(session.getEmployee().isApproved()){
+				contactWindow.getContactPanel().setSearchBox(null);
+				westLayout.setSouth(contactWindow);
+			}
 			
 			Layout eastLayout = new Layout();
 			eastLayout.setWest(instanceListWindow);
