@@ -1,9 +1,21 @@
 var org_uengine_codi_mw3_model_MuiltiViewTab = function(objectId, className){
 	this.objectId = objectId;
 	this.className = className;
-		
+	this.objectDivId = mw3._getObjectDivId(this.objectId);
+	this.objectDiv = $('#' + this.objectDivId);
 	
-	$('#objDiv_' + objectId).addClass('mw3_tab').addClass('mw3_layout').attr('objectId', objectId);
+	this.object = mw3.objects[this.objectId];
+
+	if(this.object == null)
+		return true;
+	
+	this.objectDiv
+		.css({
+			position: 'relative',
+			height:   '100%'
+		})
+		.addClass('mw3_tab');
+	
 	$('#tabs_' + objectId).tabs({
 		show: function(event, ui){
 			if(mw3.getFaceHelper(objectId) && mw3.getFaceHelper(objectId).resize)
@@ -26,52 +38,11 @@ var org_uengine_codi_mw3_model_MuiltiViewTab = function(objectId, className){
 	$('#objDiv_' + objectId).removeClass( "ui-corner-all");
 	$( ".tabs-bottom .ui-tabs-nav, .tabs-bottom .ui-tabs-nav > *" ).removeClass( "ui-corner-all ui-corner-top" ).addClass( "ui-corner-bottom" );
 	*/
-	
-	var faceHelper = this;
-	
-	
-	faceHelper.load();
 };
 
-org_uengine_codi_mw3_model_MuiltiViewTab.prototype.load = function(){
-	
-	var object = mw3.objects[this.objectId];
-	var options = {
-			togglerLength_open:	0, 
-			spacing_open:		0, 
-			spacing_closed:		0,
-			center__onresize:	'mw3.getFaceHelper('+this.objectId+').resizeChild()'
-	};
-
-
-	this.layout = $('#objDiv_' + this.objectId).layout(options);
-};
-
-org_uengine_codi_mw3_model_MuiltiViewTab.prototype.destroy = function(){
-	$('#tabs_' + this.objectId).tabs('destroy');
-};
-
-
-org_uengine_codi_mw3_model_MuiltiViewTab.prototype.resize = function(){
-	if(this.layout){
-		this.layout.resizeAll();
-		
-		this.resizeChild();
+org_uengine_codi_mw3_model_MuiltiViewTab.prototype = {
+	// 탭 선택
+	selectTab : function(tabIndex){
+		$('#tabs_' + this.objectId).tabs({selected: tabIndex});
 	}
-};
-
-org_uengine_codi_mw3_model_MuiltiViewTab.prototype.resizeChild = function(){
-	
-	$('#objDiv_' + this.objectId).find('.mw3_resize').each(function(index, value){
-		var layoutId = value.getAttribute('objectId');
-		
-		if(layoutId)
-			mw3.getFaceHelper(layoutId).resize();
-	});
-	
-};
-
-//탭 선택 
-org_uengine_codi_mw3_model_MuiltiViewTab.prototype.selectTab = function(tabIndex){
-	$('#tabs_' + this.objectId).tabs({selected: tabIndex});
 };
