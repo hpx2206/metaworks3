@@ -105,7 +105,6 @@ public interface IEmployee extends IDAO {
 	
 	@ValidatorSet({
 		@Validator(name=ValidatorContext.VALIDATE_NOTNULL, condition="metaworksContext.when == 'new2'", message="이메일을 입력하세요."),
-		@Validator(name=ValidatorContext.VALIDATE_CONDITION, condition="metaworksContext.when == 'new2'", options={"validEmail==true"}, message="이메일 중복확인을 해주십시오."),
 		@Validator(name=ValidatorContext.VALIDATE_REGULAREXPRESSION, condition="metaworksContext.when == 'new2'", options={"/^([0-9a-zA-Z_\\.-]+)@([0-9a-zA-Z_-]+)(\\.[0-9a-zA-Z_-]+){1,2}$/"}, message="이메일 형식이 잘못되었습니다")
 	})
 	//@Pattern(regexp="/^([0-9a-zA-Z_\\.-]+)@([0-9a-zA-Z_-]+)(\\.[0-9a-zA-Z_-]+){1,2}$/", message="이메일 형식이 잘못되었습니다")
@@ -153,7 +152,6 @@ public interface IEmployee extends IDAO {
 	public boolean isApproved();
 	public void setApproved(boolean approved);
 
-	@AssertFalse(message="이메일 중복체크를 먼저 해주세요")
 	@NonLoadable
 	@NonSavable
 	@Hidden
