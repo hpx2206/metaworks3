@@ -29,7 +29,7 @@ org_uengine_codi_mw3_model_Session.prototype = {
 	fire : function(){
 		mw3.call(this.objectId, 'logout');
 		
-		alert('your session fired');
+		alert('Your Session is disconnected since you have connected by another browser.');
 	}
 };
 
