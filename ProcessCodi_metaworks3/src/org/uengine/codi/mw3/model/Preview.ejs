@@ -26,9 +26,11 @@
 		<%}%>
 	</span>
 <%}else{%>
-	<li></li>
-	<li><b><i>미리보기 작업중...</i></b></li>
-	<progress id="convertProgressBar"></progress>
-	<li></li>
-	<iframe src="preview/<%=value.taskId%>.pdf" width=0px height=0px>
+	<%if(value.convertingResult != 'fail'){%>
+		<li></li>
+		<li><b><i>미리보기 작업중...</i></b></li>
+		<progress id="convertProgressBar"></progress>
+		<li></li>
+		<iframe src="preview/<%=value.taskId%>.pdf" width=0px height=0px>
+	<%}%>
 <%}%>
