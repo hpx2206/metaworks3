@@ -188,8 +188,8 @@ public class RemoteConferenceWorkItem extends WorkItem{
 //		
 //	}
 	
-	@ServiceMethod
-	public IFrame palyBack() throws Exception{
+	@ServiceMethod(target="popup")
+	public ModalWindow palyBack() throws Exception{
 		String salt = GlobalContext.getPropertyString("bbb.security.salt");
 		
 		String meetingID = databaseMe().getExt1();
@@ -219,20 +219,28 @@ public class RemoteConferenceWorkItem extends WorkItem{
 		Document documentToAttach = builder.build(is);
 		Element rootElement = documentToAttach.getRootElement();
 		
-		Element childs = rootElement.getChild("recordings").getChild("recording");
-		List<Element> childsList = childs.getChildren();
-		
-		for(Element elem : childsList){
-			if("recordID".equals(elem.getName())){
-				recordID = elem.getValue();
+		try{
+			Element childs = rootElement.getChild("recordings").getChild("recording");
+			List<Element> childsList = childs.getChildren();
+			
+			for(Element elem : childsList){
+				if("recordID".equals(elem.getName())){
+					recordID = elem.getValue();
+				}
 			}
+		}catch (Exception e) {
+			throw new Exception("No recording file.");
 		}
 		
 		is.close();
 		
 		url = "http://" + GlobalContext.getPropertyString("bbb.server.host")+ "/playback/slides/playback.html?meetingId=" + recordID;
 		
-		return new IFrame(url);
+		IFrame iframe = new IFrame();
+		iframe.setSrc(url);
+		iframe.setWidth("100%");
+		
+		return new ModalWindow(iframe, 1000, 550, databaseMe().getTitle());
 		
 	}
 	
