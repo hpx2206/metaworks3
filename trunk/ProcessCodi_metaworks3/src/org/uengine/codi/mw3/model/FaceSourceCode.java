@@ -6,6 +6,12 @@ import org.metaworks.example.ide.CodeAssist;
 
 public class FaceSourceCode extends JavaSourceCode{
 
+	public static final String TYPE_EJS = "ejs";
+	
+	public FaceSourceCode(){
+		super(TYPE_EJS);
+	}
+
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_STICK)
 	public CodeAssist requestAssist() {
 		return super.requestAssist();

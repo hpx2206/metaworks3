@@ -134,7 +134,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 /*		if ("ORACLE".equals(typeOfDBMS))
 			bottomList.append( " limit " + criteria.get("startIndex") + ", "+InstanceList.PAGE_CNT);
 		else if ("MYSQL".equals(typeOfDBMS))*/
-			bottomList.append( " limit " + criteria.get("startIndex") + ", "+InstanceList.PAGE_CNT);
+			bottomList.append( " limit " + criteria.get("startIndex") + ", "+ ("phone".equals(navigation.getMedia())?InstanceList.PAGE_CNT_MOBILE:InstanceList.PAGE_CNT));
 		
 		//TODO delete printing
 		System.out.println("worklist sql:" + bottomList.toString());

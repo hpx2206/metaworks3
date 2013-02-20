@@ -37,10 +37,22 @@ var org_uengine_codi_mw3_model_IInstance = function(objectId, className){
 		 $('.tbl_type td').css('border','none');
 	 }
 	 
-	 $('#td_' + this.objectId).click({objectId : this.objectId}, function(event){
+	 $('#td_' + this.objectId).click({objectId : this.objectId}, function(event){	 	
 		 var objectId = event.data.objectId;
 		 
-		 mw3.call(objectId, 'detail');
+		 var object = mw3.getObject(objectId);
+		 
+		 object.detail(true, function(){
+		 	var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
+		 	
+		 	if(session && session.ux == 'phone'){
+ 				$('.mw3_popup').each(function(){
+					var objectId = $(this).attr('objectId');
+					
+					mw3.getFaceHelper(objectId).destoryPopup();
+				});
+		 	}
+		 });
 	 });
 	 
 	 
