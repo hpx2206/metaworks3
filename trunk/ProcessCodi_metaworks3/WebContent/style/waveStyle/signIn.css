@@ -245,8 +245,12 @@ input.submitFacebook {
 .checkStyle span{font-size:11px; color:#555555;}
  .checkStyle  .infoSub{margin-left: 25px;}
  
- 
- 
+.signUpMail{
+   padding:80px 10px; width:530px;  margin:0 auto
+}
+ .signUpmailBtn{
+     margin:20px 0;padding:0 25px;float:left;height:35px; line-height:35px;
+ }
  @media all and (max-width: 480px) {
 #loginContainer{
     background: url('../../images/signIn/container_mobile.png') no-repeat;
@@ -262,7 +266,8 @@ input.submitFacebook {
     margin: 10px 30px 0 30px;
 }
 #loginContainer .form input, #loginContainer select, #signup input{
-    width:180px
+    width:180px;
+    float:none;
 }
 #loginContainer .submitFacebook {
     display:none;
@@ -283,6 +288,18 @@ input.submitFacebook {
 #loginContainer .options{
     margin:30px 0 0 65px;
 }
+.fbloginBox{
+    display: none;
+}
+.signUpMail{
+    width: 232px;
+}
+ .signUpmailBtn{
+     margin:20px auto;
+     width:127px;
+     float:none;
+}
+#green_and_orange_step_menu{display:none;}
 }
 
 @media all and (max-height: 480px) {
