@@ -19,7 +19,7 @@ var org_uengine_codi_mw3_calendar_ScheduleCalendar = function(objectId, classNam
 org_uengine_codi_mw3_calendar_ScheduleCalendar.prototype = {
 	load : function(){
 		var object = mw3.objects[this.objectId];
-		
+		var objectId = this.objectId;
 		$('#objDiv_' + this.objectId).addClass('mw3_layout').attr('objectId', this.objectId);
 		
 		var calendar = $('#scheduleCalendar_' + this.objectId);

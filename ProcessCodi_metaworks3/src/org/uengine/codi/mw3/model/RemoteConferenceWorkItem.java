@@ -99,8 +99,12 @@ public class RemoteConferenceWorkItem extends WorkItem{
 		String joinParam = "meetingID=" + meetingID + "&fullName=" + URLEncoder.encode(session.getUser().getName(), "UTF-8") + "&password=" + attendeePW;
 		String joinCheckSum = hex_sha1("join" + joinParam + salt);
 		String joinURI = "join?" + joinParam + "&checksum=" + joinCheckSum;
+		
+		IFrame frame = new IFrame("http://"+ GlobalContext.getPropertyString("bbb.server.host") + "/bigbluebutton/api/" + joinURI);
+		frame.setWidth("900");
+		frame.setHeight("580");
 				
-		return new ModalWindow(new IFrame("http://"+ GlobalContext.getPropertyString("bbb.server.host") + "/bigbluebutton/api/" + joinURI), 1000, 800, databaseMe().getTitle());
+		return new ModalWindow(frame, 1000, 600, databaseMe().getTitle());
 	}
 	
 	@ServiceMethod
