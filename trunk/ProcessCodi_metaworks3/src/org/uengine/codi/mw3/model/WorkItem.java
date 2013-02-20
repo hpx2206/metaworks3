@@ -870,7 +870,9 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				deptFollower.beforeFirst();
 				while(deptFollower.next()){
 					HashMap<String, String> deptSessionList = Login.getSessionIdWithDept(deptFollower.getPartCode());
-					deptUserSessionList.putAll(deptSessionList);
+					
+					if(deptSessionList != null)
+						deptUserSessionList.putAll(deptSessionList);
 				}
 			}
 			
