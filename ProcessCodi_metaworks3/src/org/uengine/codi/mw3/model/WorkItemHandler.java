@@ -202,7 +202,7 @@ public class WorkItemHandler implements ContextAware{
 		}
 
 	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_EDIT)
-	public Object cancel() throws Exception{
+	public Object[] cancel() throws Exception{
 		instance = processManager.getProcessInstance(instanceId);
 
 		humanActivity = (HumanActivity) instance.getProcessDefinition().getActivity(tracingTag);
@@ -224,16 +224,23 @@ public class WorkItemHandler implements ContextAware{
 		cancelledHistory.setTitle(humanActivity.getName().getText() + " task has been cancelled by me.");
 		cancelledHistory.setWriter(session.getUser());
 		cancelledHistory.add();
-		if("sns".equals(session.getEmployee().getPreferUX())){
-			return new Remover(new ModalWindow());
-		}else{
-			return this;
-		}
+		Instance instance = new Instance();
+		instance.setInstId(this.getRootInstId());
+		
+		instanceViewContent.session = session;
+		instanceViewContent.load(instance);
+		
+		return new Object[]{instanceViewContent, new Remover(new ModalWindow(), true)};
+//		if("sns".equals(session.getEmployee().getPreferUX())){
+//			return new Remover(new ModalWindow());
+//		}else{
+//			return this;
+//		}
 		
 	}
 
 	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_EDIT)
-	public void skip() throws Exception{
+	public Object[] skip() throws Exception{
 		instance = processManager.getProcessInstance(instanceId);
 
 		humanActivity = (HumanActivity) instance.getProcessDefinition()
@@ -266,6 +273,13 @@ public class WorkItemHandler implements ContextAware{
 		cancelledHistory.setWriter(session.getUser());
 		cancelledHistory.add();
 		
+		Instance instance = new Instance();
+		instance.setInstId(this.getRootInstId());
+		
+		instanceViewContent.session = session;
+		instanceViewContent.load(instance);
+		
+		return new Object[]{instanceViewContent, new Remover(new ModalWindow(), true)};
 	}
 
 	@AutowiredFromClient
