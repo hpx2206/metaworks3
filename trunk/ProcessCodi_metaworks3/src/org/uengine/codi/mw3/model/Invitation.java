@@ -84,6 +84,7 @@ public class Invitation implements ContextAware{
 		newUser.setPassword("generated");
 		newUser.setGlobalCom(session.getCompany().getComCode());
 		newUser.setLocale(session.getEmployee().getLocale());
+		newUser.setApproved(true);
 		newUser.createDatabaseMe();
 		
 		
