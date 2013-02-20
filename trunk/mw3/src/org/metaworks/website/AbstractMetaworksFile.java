@@ -138,8 +138,9 @@ public abstract class AbstractMetaworksFile implements ContextAware {
 			throw new Exception("No file attached");
 		
 		String prefix = overrideUploadPathPrefix();
-		
-		String uploadFileName = renameUploadFile(fileTransfer.getFilename());		
+
+		String uploadFileName = renameUploadFileWithMimeType(fileTransfer.getFilename(), fileTransfer.getMimeType());	
+		//String uploadFileName = renameUploadFile(fileTransfer.getFilename());		
 		String uploadPath = prefix + uploadFileName;
 		
 		new File(uploadPath).getParentFile().mkdirs();
@@ -194,6 +195,46 @@ public abstract class AbstractMetaworksFile implements ContextAware {
 			
 			fileBody += fileExt;
 		}
+		
+		return fileBody;
+	}
+	
+	public String renameUploadFileWithMimeType(String filename, String mimeType ) {
+		String fileBody;
+		String fileExt = null;
+		
+		fileBody = Long.toString(System.currentTimeMillis());
+		
+		//한글파일일 경우 확장자 구분하는 .까지 깨지는 경우가 발생한다.
+		if(mimeType.indexOf("pdf") > -1){
+			fileExt = ".pdf";
+		} else if(mimeType.indexOf("plain") > -1){
+			fileExt = ".txt";
+		} else if(mimeType.indexOf("rtf") > -1){
+			fileExt = ".rtf";
+		} else if(mimeType.indexOf("ms") > -1){
+			if(mimeType.indexOf("excel") > -1){
+				fileExt = ".xls";
+			} else if(mimeType.indexOf("powerpoint") > -1){
+				fileExt = ".ppt";
+			} else if(mimeType.indexOf("word") > -1){
+				fileExt = ".doc";
+			}
+		} else if(mimeType.indexOf("officedocument") > -1){
+			if(mimeType.indexOf("sheet") > -1){
+				fileExt = ".xlsx";
+			} else if(mimeType.indexOf("presentation") > -1){
+				fileExt = ".pptx";
+			} else if(mimeType.indexOf("word") > -1){
+				fileExt = ".docx";
+			}
+		} else {
+			if(filename.lastIndexOf(".") != -1){
+				fileExt = filename.substring(filename.lastIndexOf("."));
+			}
+		}
+		
+		fileBody += fileExt;
 		
 		return fileBody;
 	}
