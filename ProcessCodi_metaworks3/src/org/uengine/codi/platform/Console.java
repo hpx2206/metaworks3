@@ -30,7 +30,7 @@ public class Console {
 	
 	   //TODO: filter other topic's postings;
 	   Util theScriptSessionUtil = new Util(session);
-	   theScriptSessionUtil.addFunctionCall("mw3.getAutowiredObject('"+ Console.class.getName() +"').__getFaceHelper().addLog('" + log + "')");
+	   theScriptSessionUtil.addFunctionCall("if(mw3.getAutowiredObject('"+ Console.class.getName() +"') != null) mw3.getAutowiredObject('"+ Console.class.getName() +"').__getFaceHelper().addLog", new Object[]{log});
 	
 	}
 	
