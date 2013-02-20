@@ -268,7 +268,8 @@ public class FileWorkItem extends WorkItem{
 				
 				try{
 					// office 문서 realFileMimeType -- 2007이하 버젼: indexOf("ms"), 2007이후버전: indexOf("officedocument")
-					if(realFileMimeType.indexOf("ms") > 0 || realFileMimeType.indexOf("officedocument") > 0 || realFileMimeType.indexOf("text/plain") > -1){
+					if(realFileMimeType.indexOf("ms") > 0 || realFileMimeType.indexOf("officedocument") > 0 || 
+					   realFileMimeType.indexOf("text/plain") > -1 || realFileMimeType.indexOf("rtf") > -1){
 						convertPdf(inputFilePath, outputFilePath);
 					}else{
 						MetaworksFile.copyStream(new FileInputStream(inputFilePath), new FileOutputStream(outputFilePath));
