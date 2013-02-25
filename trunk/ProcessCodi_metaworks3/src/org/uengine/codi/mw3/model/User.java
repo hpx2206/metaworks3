@@ -583,30 +583,35 @@ public class User extends Database<IUser> implements IUser {
 	
 	@Override
 	public Object[] showWall() throws Exception{
+		
 		Employee employee = new Employee();
 		employee.setEmpCode(getUserId());
-		employee.setGlobalCom(session.getCompany().getComCode());
-		employee.setPreferUX(session.getEmployee().getPreferUX());
+		employee.copyFrom(employee.databaseMe());
+		employee.session = session;
 		
-		Session userSession = new Session();
-		userSession.setUser(this);
-		userSession.setEmployee(employee);
-		userSession.setCompany(session.getCompany());
+		// "organization" 팔로워기준 - 자기가 추가되어있으면 다보임
+//		Object[] employeeList = employee.loadOrganization();
 		
-		PersonalPerspective pPserspective = new PersonalPerspective();
-		pPserspective.session = userSession;
+		// "request"  시작자기준 
+		employee.session.setEmployee(employee);
+		Object[] employeeList = Perspective.loadInstanceListPanel(session, "request", employee.getEmpCode(), "사원 : " + employee.getEmpName() + "(" + employee.getJikName() +")");
 		
-		this.getMetaworksContext().setWhen("chat");
-		
-		return new Object[]{(InstanceListPanel) pPserspective.loadRequest()[1], new Remover(new Popup())};
+		return new Object[]{(InstanceListPanel) employeeList[1], new Remover(new Popup())};
 	}
 	
 	@Override
-	public ModalWindow showSchedule() throws Exception{
+	public Object[] showSchedule() throws Exception{
+		InstanceListPanel instListPanel = new InstanceListPanel();
+		
 		ScheduleCalendar scheduleCalendar = new ScheduleCalendar();
 		scheduleCalendar.session = session;
 		scheduleCalendar.loadByUserId(getUserId());
-		return new ModalWindow(scheduleCalendar, 600, 540, getName() + " Schedule" );
+		
+		instListPanel.setPreloaded(true);
+		instListPanel.setScheduleCalendar(scheduleCalendar);
+		instListPanel.setTitle(getName() + " Schedule");
+		
+		return new Object[]{instListPanel, new Remover(new Popup())};
 	}
 	
 	@ServiceMethod()
