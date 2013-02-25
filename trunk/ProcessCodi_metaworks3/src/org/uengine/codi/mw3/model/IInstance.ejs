@@ -31,7 +31,7 @@ if(value!=null){
 	
 	%>
 	
-<table width="100%" border="0" cellspacing="0" cellpadding="0" class="tbl_type" <%=(value.status=='Completed') ? "style='background:#eeeeee;position:relative;'":""%> style="position:relative;">						
+<table width="100%" border="0" cellspacing="0" cellpadding="0" class="instanceList tbl_type" <%=(value.status=='Completed') ? "style='background:#eeeeee;position:relative;'":""%> style="position:relative;">						
 	<tbody>
 	<tr class="q <%=value.firstDueTimeTerm ? (value.firstDueTimeTerm>=0 ? (value.firstDueTimeTerm>=3 ? "" : "plus" + value.firstDueTimeTerm ) : "minus" )  : "" %>" style="cursor:pointer;">
 		<td id="newInst"><div class="innerNewInst"></div></td>
@@ -43,7 +43,7 @@ if(value!=null){
 					</dl>	
 			</div>				
 		</td> 
-		<td  id="td_<%=objectId%>">
+		<td id="td_<%=objectId%>">
 										<% if(mw3.how == 'sns'){ %>
 												<div class="instanceBtn instanceBtn_sns">
 													<span style="float:left"><%=fields.instanceTooltip.here()%></span>
@@ -97,12 +97,12 @@ if(value!=null){
 			    <% if(value.currentUser && value.currentUser.userId && (value.initiator.userId!=value.currentUser.userId || value.name!=value.lastCmnt)){%>
 			    <li>
 			   		<table style="margin-left:38px;"><td><%value.currentUser['size']='small';%><%=fields.lastCmntUser.here()%></td>
-			  		<td colspan=2 style="border:none; padding-right:10px;"><font color=204070><%=value.lastCmntUser.name%></font>&nbsp;&nbsp; <font color=gray><%=lastCmnt%></font></td></table>
+			  		<td colspan=2 style="border:none; padding-right:10px;"><font color=204070><%=value.lastCmntUser.name%></font>&nbsp;&nbsp; <font color="gray" class="inctanceReply"><%=lastCmnt%></font></td></table>
 			 	</li>
 			   		<%if(value.name!=value.lastCmnt2 && value.lastCmnt2 != null){%>
 					    <li>
 					   		<table style="margin-left:38px;"><td><%value.currentUser['size']='small';%><%=fields.lastCmnt2User.here()%></td>
-					  		<td colspan=2 style="border:none; padding-right:10px;"><font color=204070><%=value.lastCmnt2User.name%></font>&nbsp;&nbsp; <font color=gray><%=lastCmnt2%></font></td></table>
+					  		<td colspan=2 style="border:none; padding-right:10px;"><font color=204070><%=value.lastCmnt2User.name%></font>&nbsp;&nbsp; <font color="gray" class="inctanceReply"><%=lastCmnt2%></font></td></table>
 					 	</li>
 			   		<%}%>
 			    <%}%>
@@ -140,7 +140,7 @@ if(value!=null){
 			}
 		}
 		%>
-		<td width="45">	
+		<td width="45" class="instanceStatus">	
 			
 				<%if(value.status=='Completed'){%> 
 					<div class="badge" style="float:right; margin-bottom:4px;background:#98AFC7;">&nbsp;&nbsp;<%=mw3.localize('$Complete')%> &nbsp;&nbsp;</div> 
@@ -160,7 +160,7 @@ if(value!=null){
 			
 		</td>	
 		
-		<td width="20">
+		<td width="20"  class="instanceMove">
 			<% if(mw3.how != 'sns'){ %>
 				<div class="instanceBtn" style="width: 15px;margin: 0 auto;"><%=fields.instanceDrag.here()%></div>
 			<% } %>
