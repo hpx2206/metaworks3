@@ -44,19 +44,15 @@ public class PreviewServlet extends HttpServlet {
     }
     
 	@Override
-	public void init(ServletConfig servletConfig) throws ServletException {
+	public void init() throws ServletException {
 		// TODO Auto-generated method stub
-		super.init(servletConfig);
-		
-		if("true".equals(servletConfig.getInitParameter("useSpring"))){
-			useSpring = true;
-		}
+		super.init();
 
-		String connectionString = getServletConfig().getInitParameter("connectionString");
+		String connectionString = GlobalContext.getPropertyString("jdbc.url", null);
 		if(connectionString!=null){
-			String driverClass = getServletConfig().getInitParameter("driverClass");
-			String userId = getServletConfig().getInitParameter("userId");
-			String password = getServletConfig().getInitParameter("password");
+			String driverClass = GlobalContext.getPropertyString("jdbc.driverClassName", null);
+			String userId = GlobalContext.getPropertyString("jdbc.username", "root");
+			String password = GlobalContext.getPropertyString("jdbc.password", "");
 			
 			JDBCConnectionFactory cf = new JDBCConnectionFactory();
 			cf.setConnectionString(connectionString);
@@ -66,14 +62,13 @@ public class PreviewServlet extends HttpServlet {
 	
 			connectionFactory = cf;
 		}
-
 	}
     
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
+
 		TransactionContext tx = new TransactionContext();
 		tx.setManagedTransaction(false);
 		tx.setAutoCloseConnection(true);
@@ -81,11 +76,11 @@ public class PreviewServlet extends HttpServlet {
 		if(connectionFactory!=null)
 			tx.setConnectionFactory(connectionFactory);
 		
+		String pathInfo = request.getPathInfo();
+		if(pathInfo == null)
+			return;
+		
 		try{
-			String pathInfo = request.getPathInfo();
-			if(pathInfo == null)
-				return;
-
 			// because pathInfo is started with a "/" character
 			String previewName = pathInfo.substring(1);		
 			
