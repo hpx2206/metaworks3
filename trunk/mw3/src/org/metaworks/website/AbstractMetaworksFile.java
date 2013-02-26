@@ -209,7 +209,7 @@ public abstract class AbstractMetaworksFile implements ContextAware {
 		if(mimeType.indexOf("pdf") > -1){
 			fileExt = ".pdf";
 		} else if(mimeType.indexOf("plain") > -1){
-			fileExt = ".txt";
+			fileExt = ".rtf";
 		} else if(mimeType.indexOf("rtf") > -1){
 			fileExt = ".rtf";
 		} else if(mimeType.indexOf("ms") > -1){
