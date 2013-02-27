@@ -102,6 +102,18 @@
 			</map>
 		</property>
 	</bean>
+	
+	<!-- Schedule Reader -->
+	<bean id="scheduleReader" class="org.springframework.scheduling.quartz.JobDetailBean">
+    	<property name="jobClass" value="org.uengine.codi.cron.ScheduleReader"/>
+    	<property name="jobDataAsMap">
+			<map>
+				<entry key="connectionFactory">
+					<ref local="springConnectionFactoryForMetaworks"/>
+				</entry>
+			</map>
+		</property>
+	</bean>
 		
 	<!-- bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
 		<property name="jobDetail" ref="cronQuartzJob"/>
@@ -114,11 +126,17 @@
 		<property name="repeatInterval" value="120000"/>
 	</bean>
 	
-	
+	<!-- 매일 오전 8시 일정 시그널링 -->
+	<bean id="scheduleTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
+   		<property name="jobDetail" ref="scheduleReader"/>
+    	 <property name="cronExpression" value="0 0 8 * * ?"/>
+	</bean>
+
 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="triggers">
 			<list>
 				<ref bean="simpleTrigger"/>
+	            <ref bean="scheduleTrigger"/>
 			</list>
 		</property>
 		<!-- property name="schedulerContextAsMap">
