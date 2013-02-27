@@ -45,13 +45,18 @@ import org.uengine.codi.mw3.model.WorkItem;
 import org.uengine.kernel.GlobalContext;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
+import com.thoughtworks.xstream.annotations.XStreamOmitField;
 import com.thoughtworks.xstream.io.json.JsonHierarchicalStreamDriver;
 
+@XStreamAlias("node")
 public class WfNode extends Database<IWfNode> implements IWfNode {
 	
 	static Hashtable<Integer, ArrayList<String>> nodeListeners = new Hashtable<Integer, ArrayList<String>>();
 	public final static int LOAD_DEPTH = 3;
 	
+	@XStreamAsAttribute
 	String id;
 		public String getId() {
 			return id;
@@ -60,6 +65,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 			this.id = id;
 		}	
 				
+	@XStreamAsAttribute
 	String type;		
 		public String getType() {
 			return type;
@@ -68,6 +74,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 			this.type = type;
 		}
 		
+	@XStreamAsAttribute
 	String refId;
 		public String getRefId() {
 			return refId;
@@ -76,6 +83,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 			this.refId = refId;
 		}
 
+	@XStreamAsAttribute
 	String visType;
 
 		public String getVisType() {
@@ -85,6 +93,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 			this.visType = visType;
 		}
 
+	@XStreamAsAttribute
 	String connType;
 		
 		public String getConnType() {
@@ -94,6 +103,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 			this.connType = connType;
 		}
 
+	@XStreamAlias("text")
 	String name;
 		public String getName() {
 			return name;
@@ -111,6 +121,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 			this.authorId = authorId;
 		}
 		
+	@XStreamOmitField
 	IUser author;
 
 		public IUser getAuthor() {
@@ -120,6 +131,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 			this.author = author;
 		}
 
+	@XStreamOmitField
 	String nameNext;
 		public String getNameNext() {
 			return nameNext;
@@ -128,6 +140,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 			this.nameNext = nameNext;
 		}
 		
+	@XStreamOmitField
 	String typeNext;
 	
 		public String getTypeNext() {
@@ -137,6 +150,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 			this.typeNext = typeNext;
 		}
 
+	@XStreamOmitField
 	boolean focus;	
 		public boolean isFocus() {
 			return focus;
@@ -145,6 +159,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 			this.focus = focus;
 		}
 		
+	@XStreamOmitField
 	boolean close;
 		public boolean isClose() {
 			return close;
@@ -153,6 +168,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 			this.close = close;
 		}
 
+	@XStreamOmitField
 	Long linkedInstId;	
 		public Long getLinkedInstId() {
 			return linkedInstId;
@@ -160,7 +176,8 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		public void setLinkedInstId(Long linkedInstanceId) {
 			this.linkedInstId = linkedInstanceId;
 		}		
-		
+	
+	@XStreamOmitField		
 	int no;
 		public int getNo() {
 			return no;
@@ -168,7 +185,8 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		public void setNo(int no) {
 			this.no = no;
 		}
-
+		
+	@XStreamOmitField
 	String parentId;			
 		public String getParentId() {
 			return parentId;
@@ -191,6 +209,8 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		public void setThumbnail(String thumbnail) {
 			this.thumbnail = thumbnail;
 		}
+	
+	@XStreamOmitField
 	String urlNext;
 		public String getUrlNext() {
 			return urlNext;
@@ -198,6 +218,8 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		public void setUrlNext(String urlNext) {
 			this.urlNext = urlNext;
 		}
+	
+	@XStreamOmitField
 	String thumbnailNext;
 		public String getThumbnailNext() {
 			return thumbnailNext;
@@ -207,6 +229,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		}
 
 
+	@XStreamOmitField
 	WfNode dragNode;
 		public WfNode getDragNode() {
 			return dragNode;
@@ -223,6 +246,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 			this.childNode = childNode;
 		}		
 		
+	@XStreamOmitField
 	public int loadDepth = 0;
 		public int getLoadDepth() {
 			return loadDepth;
@@ -230,6 +254,8 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		public void setLoadDepth(int loadDepth) {
 			this.loadDepth = loadDepth;
 		}
+		
+	@XStreamOmitField
 	String secuopt;
 		public String getSecuopt() {
 			return secuopt;
@@ -237,6 +263,8 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		public void setSecuopt(String secuopt) {
 			this.secuopt = secuopt;
 		}
+		
+	@XStreamOmitField
 	String companyId;
 		public String getCompanyId() {
 			return companyId;
@@ -245,6 +273,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 			this.companyId = companyId;
 		}
 	
+	@XStreamOmitField
 	boolean first;
 		public boolean isFirst() {
 			return first;
@@ -252,7 +281,8 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		public void setFirst(boolean first) {
 			this.first = first;
 		}
-		
+	
+	@XStreamOmitField
 	int budget;
 		public int getBudget() {
 			return budget;
@@ -261,6 +291,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 			this.budget = budget;
 		}
 	
+	@XStreamOmitField
 	int effort;
 		public int getEffort() {
 			return effort;
@@ -269,6 +300,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 			this.effort = effort;
 		}
 	
+	@XStreamOmitField
 	int benefit;
 		public int getBenefit() {
 			return benefit;
@@ -277,6 +309,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 			this.benefit = benefit;
 		}
 	
+	@XStreamOmitField
 	int penalty;
 		public int getPenalty() {
 			return penalty;
@@ -285,6 +318,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 			this.penalty = penalty;
 		}
 		
+	@XStreamOmitField
 	Date startDate;
 		public Date getStartDate() {
 			return startDate;
@@ -293,6 +327,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 			this.startDate = startDate;
 		}
 		
+	@XStreamOmitField
 	Date endDate;
 		public Date getEndDate() {
 			return endDate;
@@ -301,6 +336,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 			this.endDate = endDate;
 		}
 	
+	@XStreamOmitField
 	int progress;
 		public int getProgress() {
 			return progress;
@@ -309,6 +345,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 			this.progress = progress;
 		}
 	
+	@XStreamOmitField
 	String rootId;
 		public String getRootId() {
 			return rootId;
