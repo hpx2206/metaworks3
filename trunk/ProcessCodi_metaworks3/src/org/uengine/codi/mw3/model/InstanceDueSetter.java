@@ -22,6 +22,9 @@ import org.uengine.processmanager.ProcessManagerRemote;
 	, options={"fieldOrder"},values={"dueDate,benefit,penalty,effort,progress,onlyInitiatorCanComplete"} )
 public class InstanceDueSetter implements ContextAware{
 	
+	@AutowiredFromClient
+	public Locale localeManager;
+	
 	MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
 			return metaworksContext;
@@ -147,7 +150,8 @@ public class InstanceDueSetter implements ContextAware{
 			workItem.session = session;
 			workItem.processManager = processManager;
 			
-			String title = "[일정 변경:" + new SimpleDateFormat("yyyy/MM/dd").format(getDueDate()) + "]";
+			String title = localeManager.getResourceBundle().getProperty("ChangedDate");
+				   title += ": " + new SimpleDateFormat("yyyy/MM/dd").format(getDueDate());
 			
 			workItem.setInstId(getInstId());
 			workItem.setTitle(title);
