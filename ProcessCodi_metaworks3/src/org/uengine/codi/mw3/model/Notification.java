@@ -141,21 +141,22 @@ public class Notification extends Database<INotification> implements INotificati
 		final Employee actorUserInfo = new Employee();
 		actorUserInfo.setEmpCode(getActorId());
 		
-		try{
-			final IEmployee actorUserInfoDB = actorUserInfo.databaseMe();
-			
-			String requestedURL = TransactionContext.getThreadLocalInstance().getRequest().getRequestURL().toString(); 
-	        String base = requestedURL.substring( 0, requestedURL.lastIndexOf( "/" ) );
-	        
-	        URL urlURL = new java.net.URL(base);
-	       	String host = urlURL.getHost();
-	       	int port = urlURL.getPort();
-	       	String protocol = urlURL.getProtocol();
-	
-			final String url = protocol + "://" + host + (port == 80 ? "" : ":"+port) + TransactionContext.getThreadLocalInstance().getRequest().getContextPath();
-		}catch(Exception e){
-			e.printStackTrace();
-		}
+//TODO: e-mail nofitication		
+//		try{
+//			final IEmployee actorUserInfoDB = actorUserInfo.databaseMe();
+//			
+//			String requestedURL = TransactionContext.getThreadLocalInstance().getRequest().getRequestURL().toString(); 
+//	        String base = requestedURL.substring( 0, requestedURL.lastIndexOf( "/" ) );
+//	        
+//	        URL urlURL = new java.net.URL(base);
+//	       	String host = urlURL.getHost();
+//	       	int port = urlURL.getPort();
+//	       	String protocol = urlURL.getProtocol();
+//	
+//			final String url = protocol + "://" + host + (port == 80 ? "" : ":"+port) + TransactionContext.getThreadLocalInstance().getRequest().getContextPath();
+//		}catch(Exception e){
+//			e.printStackTrace();
+//		}
 //
 //		new Thread(){
 //
