@@ -1324,6 +1324,43 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		return popup;
 	}
 	
+	public void topicList(String type) throws Exception{
+		StringBuffer sb = new StringBuffer();
+		sb.append("select * from bpm_knol knol");
+		sb.append(" where knol.type = ?type");	
+		sb.append(" order by no");
+		
+		IWfNode dao = sql(sb.toString());
+		
+//		ITopicNode dao = (ITopicNode)MetaworksDAO.createDAOImpl(TransactionContext.getThreadLocalInstance(), sb.toString(), ITopicNode.class); 
+		dao.set("type", "topic");
+		dao.select();
+		
+		if(dao.size() > 0){
+			while (dao.next()) {
+				WfNode node = this.makeNewNode();
+				
+				node.copyFrom(dao);
+				node.setChildNode(new ArrayList<WfNode>());
+				node.setMetaworksContext(new MetaworksContext());
+				node.getMetaworksContext().setWhen(getMetaworksContext().getWhen());
+				node.getMetaworksContext().setWhere(this.getMetaworksContext().getWhere());
+
+				if(node.getVisType()==null){
+					node.getMetaworksContext().setHow("normal");
+				}else{
+					node.getMetaworksContext().setHow(node.getVisType());
+				}
+				
+				node.setLoadDepth(1);
+				node.setClose(true);
+				
+				childNode.add(node);
+			}
+		}
+		
+	}
+	
 	@Override
 	public Object[] topic() throws Exception{
 		StringBuffer sb = new StringBuffer();
