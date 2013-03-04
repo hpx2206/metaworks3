@@ -423,6 +423,8 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		
 		setId(nodeId);
 		
+		this.copyFrom(this.databaseMe());
+		
 		if(this.getLoadDepth() < LOAD_DEPTH){
 			if(this.getLoadDepth() > -1)
 				setLoadDepth(getLoadDepth()+1);
