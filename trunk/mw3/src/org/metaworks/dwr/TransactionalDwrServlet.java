@@ -240,9 +240,7 @@ public class TransactionalDwrServlet extends DwrServlet{
 	        	Method method = c.getMethod(methodName, new Class[]{String.class});
 	        	method.invoke(object, new Object[]{objectId});
 	        	
-//	        	Object rtnValue = metaworksRemoteService.callMetaworksService(className, object, methodName, null);
-	        	
-	        	toXML(object, response.getOutputStream());
+	        	toXmlByXstream(object, response.getOutputStream());
 	        	
 	        	response.flushBuffer();
 	        }else{
@@ -306,7 +304,11 @@ public class TransactionalDwrServlet extends DwrServlet{
 	protected void toXML(Object obj, OutputStream out){
 		xstream.toXML(obj, out);
 	}
-	
+
+	protected void toXmlByXstream(Object obj, OutputStream out) {
+		xstream.autodetectAnnotations(true);
+		xstream.toXML(obj, out);
+	}
 	
 	static public void copyStream(InputStream sourceInputStream, OutputStream targetOutputStream, String appendix) throws Exception{
 		int length = 1024;
