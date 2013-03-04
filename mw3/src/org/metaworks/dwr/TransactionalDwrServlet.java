@@ -4,6 +4,8 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.ServletConfig;
@@ -224,7 +226,25 @@ public class TransactionalDwrServlet extends DwrServlet{
 	        	
 	        	response.flushBuffer();
 	        	
+	        }else	if(pathInfo.startsWith("/mw3-rpc")){
+            	String className = request.getParameter("className");
+            	String objectId = request.getParameter("id");
+            	String methodName = request.getParameter("methodName");
+        		Class c = Thread.currentThread().getContextClassLoader().loadClass(className);
+	        	Object object = c.newInstance();
 	        	
+	        	MetaworksRemoteService metaworksRemoteService = MetaworksRemoteService.getInstance();
+	        	InvocationContext invocationContext = metaworksRemoteService.prepareToCall(className, object, methodName, null);
+	        	object = invocationContext.getObject();
+	        	
+	        	Method method = c.getMethod(methodName, new Class[]{String.class});
+	        	method.invoke(object, new Object[]{objectId});
+	        	
+//	        	Object rtnValue = metaworksRemoteService.callMetaworksService(className, object, methodName, null);
+	        	
+	        	toXML(object, response.getOutputStream());
+	        	
+	        	response.flushBuffer();
 	        }else{
 
 				
