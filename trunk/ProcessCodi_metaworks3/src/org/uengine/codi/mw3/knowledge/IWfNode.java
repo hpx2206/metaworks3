@@ -321,7 +321,6 @@ public interface IWfNode extends IDAO {
 	@Face(displayName="하위 연결 방식")
 	public Popup connectionType();
 
-	@Hidden
 	@ServiceMethod(inContextMenu=true, target="popup")
 	@Face(displayName="XML로 전환")
 	public Popup xml() throws Exception;
