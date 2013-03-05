@@ -368,7 +368,7 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 
 			}
 			
-			return new Object[]{instanceListPanel, instanceView, new Remover(new Popup() , true)};
+			return new Object[]{new Remover(new Popup() , true), instanceListPanel, instanceView};
 		}
 
 		
