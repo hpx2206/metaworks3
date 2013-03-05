@@ -293,6 +293,8 @@ public class Login implements ContextAware {
 			}catch(Exception e){
 				throw new MetaworksException("$InvalidMailAddress");
 			}
+		}else if(getUserId().length() == 0){
+			throw new MetaworksException("$YouMustCheckYourEmail");
 		}
 		
 		emp.setEmpName(name);

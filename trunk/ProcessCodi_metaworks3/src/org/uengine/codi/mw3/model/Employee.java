@@ -1,5 +1,10 @@
 package org.uengine.codi.mw3.model;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
@@ -10,6 +15,7 @@ import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.common.MainPanel;
+import org.uengine.kernel.GlobalContext;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 public class Employee extends Database<IEmployee> implements IEmployee {
@@ -407,7 +413,8 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		}
 		flushDatabaseMe();
 		
-		getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+		//codi user 추가 시 이행하도록 이동
+		//getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 		
 		if(getImageFile()!=null && getImageFile().getFileTransfer()!=null && getImageFile().getFileTransfer().getFilename()!=null){
 			getImageFile().setEmpCode(this.getEmpCode());
@@ -418,9 +425,63 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	}
 	
 	@Override
+	public boolean createCodi() throws Exception {
+		
+		if (getMetaworksContext().getWhen().startsWith(MetaworksContext.WHEN_NEW)) {
+			
+			Employee emp = new Employee();
+			emp.setEmpCode(GlobalContext.getPropertyString("codi.user.id") + "." + this.globalCom);
+			emp.setEmpName(GlobalContext.getPropertyString("codi.user.name"));
+			emp.setGlobalCom(this.globalCom);
+			emp.setLocale(this.getLocale());
+			emp.setApproved(true);
+			
+			if(emp.findMe().getEmpCode() != null && emp.findMe().getEmpCode().equals(GlobalContext.getPropertyString("codi.user.id") + "." + this.globalCom))
+				return false;
+			
+			emp.createDatabaseMe();
+			
+			this.createCodiThumNail(emp.getEmpCode());
+		}
+		
+		getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+		
+		
+		return true;
+	}
+	
+	@Override
+	public void createCodiThumNail(String target) throws Exception {
+		
+		String inputPath = GlobalContext.getPropertyString("fastcat.server.host") + ":" + GlobalContext.getPropertyString("fastcat.server.port") 
+							+ GlobalContext.WEB_CONTEXT_ROOT + "/images/portrait/codi.jpg";
+		
+		String outputPath = GlobalContext.getPropertyString("filesystem.path") + "/portrait/" + target + ".jpg";
+		
+		URL url = new URL(inputPath);
+		
+		try {
+			InputStream fis = url.openStream();
+			FileOutputStream fos = new FileOutputStream(outputPath);
+			
+			int bytesRead = 0;
+			
+			byte[] buffer = new byte[1024];   
+			while ((bytesRead = fis.read(buffer, 0, 1024)) != -1) {
+				fos.write(buffer, 0, bytesRead);
+			}
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	@Override
 	public Object[] saveEmployeeInfo() throws Exception {	
 		
 		this.saveMe();
+		this.createCodi();
 		
 		if(session != null && session.getEmployee().getEmpCode().equals(getEmpCode())) {
 			session.setEmployee(findMe());

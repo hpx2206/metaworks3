@@ -22,6 +22,7 @@ import org.uengine.codi.mw3.model.IUser;
 import org.uengine.codi.mw3.model.Locale;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.model.User;
+import org.uengine.kernel.GlobalContext;
 
 public class ScheduleReader extends QuartzJobBean{
 	
@@ -69,28 +70,28 @@ public class ScheduleReader extends QuartzJobBean{
 			if(instList.size() > 0 ){
 				
 				while(instRow.next()){
-
-					IUser writer = new User();
-					writer.setUserId(instRow.getString("INITEP"));
-					writer.setName(instRow.getString("INITRSNM"));
-					
-					ICompany company = new Company();
-					company.setComCode(instRow.getString("INITCOMCD"));
 					
 					IEmployee emp = new Employee();
-					emp.setEmpCode(instRow.getString("INITEP"));
-					emp.setGlobalCom(instRow.getString("INITCOMCD"));
+					emp.setEmpCode(GlobalContext.getPropertyString("codi.user.id")  + "." + instRow.getString("INITCOMCD"));
+					emp.setGlobalCom(GlobalContext.getPropertyString("codi.user.name"));
+					emp = emp.findMe();
+
+					IUser writer = new User();
+					writer.setUserId(emp.getEmpCode());
+					writer.setName(emp.getEmpName());
 					
+					ICompany company = new Company();
+					company.setComCode(emp.getGlobalCom());
 					
 					codiSession.setUser(writer);
 					codiSession.setCompany(company);
 					codiSession.setEmployee(emp);
 					
-					localeManager.setLanguage(emp.findMe().getLocale());
+					localeManager.setLanguage(emp.getLocale());
 					localeManager.load();
 					
 					workItem.setInstId(instRow.getLong("INSTID"));
-					workItem.setEndpoint(instRow.getString("INITEP"));
+					workItem.setEndpoint(emp.getEmpCode());
 					workItem.setDueDate(instRow.getDate("DUEDATE"));
 					workItem.setRootInstId(instRow.getLong("INSTID"));
 					workItem.setWriter(writer);
