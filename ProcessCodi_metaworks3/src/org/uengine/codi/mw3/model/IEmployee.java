@@ -190,6 +190,12 @@ public interface IEmployee extends IDAO {
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_NONE)
 	public boolean saveMe() throws Exception;
 	
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_NONE)
+	boolean createCodi() throws Exception;
+	
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_NONE)
+	void createCodiThumNail(String target) throws Exception;
+	
 	@ServiceMethod(target="popup", callByContent=true)
 	public Object showDetail() throws Exception;
 	
@@ -214,5 +220,6 @@ public interface IEmployee extends IDAO {
 	
 	@Available(how={"tree"}) // 상황에 맞춰서 넣어 줘야 한다.
 	@ServiceMethod(callByContent=true, mouseBinding="drag-enableDefault")
-	public Session drag() throws Exception;	
+	public Session drag() throws Exception;
+	
 }

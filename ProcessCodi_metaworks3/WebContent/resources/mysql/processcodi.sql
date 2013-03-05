@@ -686,3 +686,7 @@ alter table bpm_worklist modify column title varchar(3000);
 alter table emptable add approved int(1);
 
 update emptable set approved = 1;
+
+
+-- 2013.3.5 codi user information 서버 적용시 comcode 확인해서 insert해주세요. empcode는 processCodi.'COMCODE' 입니다. 아래를 예시로
+insert into emptable (empcode, empname, globalcom, locale, approved) values('processCodi.uEngine', 'CODI', 'uEngine', 'ko', 1);
