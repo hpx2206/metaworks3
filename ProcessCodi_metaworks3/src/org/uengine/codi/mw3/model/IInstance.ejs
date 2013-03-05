@@ -1,5 +1,7 @@
 <%
-if(value!=null){
+if(value){
+	console.log(value);
+	
 	var instanceTitle = value.name;
 	var lastCmnt = value.lastCmnt;
 	var lastCmnt2 = value.lastCmnt2; 
@@ -52,36 +54,48 @@ if(value!=null){
 												</div>
 											<%}%>									
 			<ul class="lst_type">										
-				<li class="trigger">
-					<div  class="instanceType">
-						<% if(isChat){ %>
-							<!--span class="type_ping"></span--><span class="instanceLock"></span>
-						<% }else if(isOpenCollab){ %>
-							<!--span class="type_ping"></span--><span class="instanceUnLock"></span>
-						<% }else if(isProcess){ %>
-							<span class="type_process"></span><span class="instanceUnLock"></span>
-						<% }else if(isSecureProcess){ %>
-							<span class="type_process"></span><span class="instanceLock"></span>
-						<% } %>	
-					</div>						
+				<li class="trigger">					
 					<div class="instanceTitle">
 						<table cellspacing="0" cellpadding="0">
 							<tr>
-								<td style="border:none;"><a href="#"><b><font color=204070><%=value.initiator.name%></font>&nbsp;&nbsp;
+								<td  style="border:none;"><a href="#"><b><font color=204070><%=value.initiator.name%></font>&nbsp;&nbsp;
 								
 									<font color=#5C5C5C><%=instanceTitle%></font></b></a>
 									<div>
+										<div  class="instanceType">
+											<% if(isChat){ %>
+												<!--span class="type_ping"></span--><span class="instanceLock"></span>
+											<% }else if(isOpenCollab){ %>
+												<!--span class="type_ping"></span--><span class="instanceUnLock"></span>
+											<% }else if(isProcess){ %>
+												<span class="type_process"></span><span class="instanceUnLock"></span>
+											<% }else if(isSecureProcess){ %>
+												<span class="type_process"></span><span class="instanceLock"></span>
+											<% } %>	
+										</div>										
 										<div style="float:left; font-size:11px;  margin:3px 3px 3px 0;"><%=fields.startedDate.here({when: 'timeago'})%></div>
 										
 										<%if(value.dueDate){ 
-											if(value.dueDate > new Date()){%>
-					
+											if(value.status=='Completed'){
+											%>
+										<!--float:right; margin-bottom:4px-->
+										<div class="badge" style="margin-top:2px;background:#98AFC7;">&nbsp;&nbsp;<%=mw3.localize('$Complete')%> &nbsp;&nbsp;</div> 
+											<%
+											}else if(value.dueDate < new Date()){
+											%>
+										<div class="badge" style="margin-top:2px;background:#F52020;">&nbsp;&nbsp;<%=mw3.localize('$Delay')%> &nbsp;&nbsp;</div>
+											<%
+											}else{
+											%>
 										<div style="float:left; font-size:11px;margin:3px 3px 3px 0;">
-											<table cellspacing="0" cellpadding="0"><td style="border:none;"> , <%=mw3.localize('$Due')%> : </td><td style="border:none;"> <%=fields.dueDate.here({when: 'timeago'})%></td></table>
-										</div>
+											<span style="float:left;">, <%=mw3.localize('$Due')%> :&nbsp;</span>
+											<span style="float:left;"><%=fields.dueDate.here({when: 'timeago'})%></span>
+											<div style="clear:both"></div>
+										</div>											
+											<%
+											}
+										}%>
 										
-										<%}}%>
-											
 										<div style="clear:both"></div>
 									</div>													
 								</td>
@@ -96,12 +110,14 @@ if(value!=null){
 			    <% }else if(value.lastCmnt != null){%>
 			    <% if(value.currentUser && value.currentUser.userId && (value.initiator.userId!=value.currentUser.userId || value.name!=value.lastCmnt)){%>
 			    <li>
-			   		<table style="margin-left:38px;"><td><%value.currentUser['size']='small';%><%=fields.lastCmntUser.here()%></td>
+			    	<!--style="margin-left:38px;"-->
+			   		<table><td><%value.currentUser['size']='small';%><%=fields.lastCmntUser.here()%></td>
 			  		<td colspan=2 style="border:none; padding-right:10px;"><font color=204070><%=value.lastCmntUser.name%></font>&nbsp;&nbsp; <font color="gray" class="inctanceReply"><%=lastCmnt%></font></td></table>
 			 	</li>
 			   		<%if(value.name!=value.lastCmnt2 && value.lastCmnt2 != null){%>
 					    <li>
-					   		<table style="margin-left:38px;"><td><%value.currentUser['size']='small';%><%=fields.lastCmnt2User.here()%></td>
+					    	<!--style="margin-left:38px;"-->
+					   		<table><td><%value.currentUser['size']='small';%><%=fields.lastCmnt2User.here()%></td>
 					  		<td colspan=2 style="border:none; padding-right:10px;"><font color=204070><%=value.lastCmnt2User.name%></font>&nbsp;&nbsp; <font color="gray" class="inctanceReply"><%=lastCmnt2%></font></td></table>
 					 	</li>
 			   		<%}%>
@@ -140,25 +156,7 @@ if(value!=null){
 			}
 		}
 		%>
-		<td width="45" class="instanceStatus">	
-			
-				<%if(value.status=='Completed'){%> 
-					<div class="badge" style="float:right; margin-bottom:4px;background:#98AFC7;">&nbsp;&nbsp;<%=mw3.localize('$Complete')%> &nbsp;&nbsp;</div> 
-					<div style="clear:both"></div>
-				<%}else if(value.dueDate){ 
-					if(value.dueDate < new Date()){%>
-						<div class="badge" style="float:right; margin-bottom:4px;background:#F52020;">&nbsp;&nbsp;<%=mw3.localize('$Delay')%> &nbsp;&nbsp;</div>
-						<div style="clear:both"></div>
-					<%}else if(value.progress != null && value.progress != ''){%>
-						<div class="badge" style="float:right; margin-bottom:4px;">&nbsp;&nbsp;<%=value.progress%>%  &nbsp;&nbsp;</div>
-						<div style="clear:both"></div>
-					<%}else{%>
-						
-					<%}%>
-						
-				<%}%>
-			
-		</td>	
+
 		
 		<td width="20"  class="instanceMove">
 			<% if(mw3.how != 'sns'){ %>
