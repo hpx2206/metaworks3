@@ -50,14 +50,14 @@ public class PerspectivePanel {
 	//		this.processStatusPerspective = processStatusPerspective;
 	//	}
 	
-	StrategicPerspective strategicPerspective;
-		public StrategicPerspective getStrategicPerspective() {
-			return strategicPerspective;
-		}
-	
-		public void setStrategicPerspective(StrategicPerspective strategicPerspective) {
-			this.strategicPerspective = strategicPerspective;
-		}
+//	StrategicPerspective strategicPerspective;
+//		public StrategicPerspective getStrategicPerspective() {
+//			return strategicPerspective;
+//		}
+//	
+//		public void setStrategicPerspective(StrategicPerspective strategicPerspective) {
+//			this.strategicPerspective = strategicPerspective;
+//		}
 	TopicPerspective topicPerspective;
 		public TopicPerspective getTopicPerspective() {
 			return topicPerspective;
@@ -89,7 +89,7 @@ public class PerspectivePanel {
 			
 			//processStatusPerspective = new ProcessStatusPerspective();
 			
-			strategicPerspective = new StrategicPerspective();
+			//strategicPerspective = new StrategicPerspective();
 		}
 	}
 }
