@@ -1,36 +1,38 @@
-<%if(value.pageCount > 0){%>
+<%if(value.statusPreview == 'converting'){%>
+	<li></li>
+	<li><b><i>미리보기 작업중...</i></b></li>
+	<progress id="convertProgressBar"></progress>
+	<li></li>
+<%}%>
+<%if(value.convertingResult != 'fail'){%>
 	<span>
 		<div class="workItem_tabs">
 			 <ul>
 				<li class="current">
 					<a href="#" onClick="<%=methods.viewAsPDF.caller()%>"><span>PDF로 보기</span></a>
 				</li>	
+				<%if(value.pageCount != null){%>
 			 	<li>
 			 		<a href="#" onClick="<%=methods.viewAsImages.caller()%>"><span>이미지로 보기</span></a>
 			 	</li>
+				<%}%>
 			 </ul>
 		</div>
 		<%if(value.mimeType != null && value.mimeType == 'image'){%>
-			<%for(i=0; i<value.pageCount; i++){%>
-			<table>
-				<tr>
-					<td> <img width="100%" src="preview/<%=value.taskId%>.pdf_<%=i%>.jpg"/></td>
-				</tr>
-				<tr>
-					<td align="center" style="padding:5px 0 20px 0; font-weight:bold">< Page <%=i+1%> ></td>
-				</tr>
-			</table>
+			<%if(value.pageCount != null){%>
+				<%for(i=0; i<value.pageCount; i++){%>
+				<table>
+					<tr>
+						<td> <img width="100%" src="preview/<%=value.taskId%>.pdf_<%=i%>.jpg"/></td>
+					</tr>
+					<tr>
+						<td align="center" style="padding:5px 0 20px 0; font-weight:bold">< Page <%=i+1%> ></td>
+					</tr>
+				</table>
+				<%}%>
 			<%}%>
 		<%}else{%>
 			<iframe src="preview/<%=value.taskId%>.pdf" frameborder="0" scrolling="no" width=100% height=300px onLoad="resizeFrame(this);"/>
 		<%}%>
 	</span>
-<%}else{%>
-	<%if(value.convertingResult != 'fail'){%>
-		<li></li>
-		<li><b><i>미리보기 작업중...</i></b></li>
-		<progress id="convertProgressBar"></progress>
-		<li></li>
-		<iframe src="preview/<%=value.taskId%>.pdf" width=0px height=0px>
-	<%}%>
 <%}%>

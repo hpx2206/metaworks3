@@ -260,6 +260,10 @@ public class FileWorkItem extends WorkItem{
 		File realFile = new File(realFilePath);
 
 		Preview preview = new Preview();
+		preview.setStatusPreview("converting");
+		this.setPreview(preview);
+		MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(preview)});
+		
 		if(realFile.exists() && realFile.isFile() && realFile.length() > 0) {
 			// Office, PDF 파일변환
 			if(realFileMimeType != null && realFileMimeType.indexOf("image") != 0){
@@ -271,8 +275,10 @@ public class FileWorkItem extends WorkItem{
 					if(realFileMimeType.indexOf("ms") > 0 || realFileMimeType.indexOf("officedocument") > 0 || 
 					   realFileMimeType.indexOf("plain") > 0 || realFileMimeType.indexOf("rtf") > 0){
 						convertPdf(inputFilePath, outputFilePath);
+						result = true;
 					}else{
 						MetaworksFile.copyStream(new FileInputStream(inputFilePath), new FileOutputStream(outputFilePath));
+						result = true;
 					}
 
 					preview.setTaskId(taskId);
@@ -300,6 +306,8 @@ public class FileWorkItem extends WorkItem{
 		}else{
 			preview.setConvertingResult("fail");
 		}
+
+		preview.setStatusPreview("convertingComplete");
 		this.setPreview(preview);
 		MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(preview)});
 		return result;
