@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
@@ -68,17 +67,17 @@ public class PreviewServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+		
+		String pathInfo = request.getPathInfo();
+		if(pathInfo == null)
+			return;
+		
 		TransactionContext tx = new TransactionContext();
 		tx.setManagedTransaction(false);
 		tx.setAutoCloseConnection(true);
 		
 		if(connectionFactory!=null)
 			tx.setConnectionFactory(connectionFactory);
-		
-		String pathInfo = request.getPathInfo();
-		if(pathInfo == null)
-			return;
 		
 		try{
 			// because pathInfo is started with a "/" character
