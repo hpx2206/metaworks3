@@ -36,6 +36,15 @@ public class Preview {
 			this.convertingResult = convertingResult;
 		}		
 
+	String statusPreview;
+		public String getStatusPreview() {
+			return statusPreview;
+		}
+		public void setStatusPreview(String statusPreview) {
+			this.statusPreview = statusPreview;
+		}	
+		
+
 	public void setPageCountInt(int pageCount) {
 		this.pageCount = Integer.toString(pageCount);
 	}
