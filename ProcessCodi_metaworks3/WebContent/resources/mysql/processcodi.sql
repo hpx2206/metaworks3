@@ -675,6 +675,7 @@ create table INST_EMP_PERF (
 	PRIMARY KEY (INSTID, EMPCODE)
 );
 
+
 --2013.02.14
 alter table bpm_procinst add lastCmntEp varchar(100);
 alter table bpm_procinst add lastCmntRsnm varchar(100);
@@ -690,3 +691,5 @@ update emptable set approved = 1;
 
 -- 2013.3.5 codi user information 서버 적용시 comcode 확인해서 insert해주세요. empcode는 processCodi.'COMCODE' 입니다. 아래를 예시로
 insert into emptable (empcode, empname, globalcom, locale, approved) values('processCodi.uEngine', 'CODI', 'uEngine', 'ko', 1);
+
+alter table INST_EMP_PERF modify column EMPCODE varchar(100);
