@@ -781,7 +781,8 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			
 		// 수정
 		}else{
-			this.copyFrom(databaseMe());
+//			this.copyFrom(databaseMe());
+			this.databaseMe();
 			this.syncToDatabaseMe();
 		}		
 		
@@ -938,7 +939,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			//MetaworksRemoteService.pushOtherClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new WorkItemListener(copyOfThis)});
 			
 			MetaworksRemoteService.pushClientObjectsFiltered(
-					new OtherSessionFilter(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom()), session.getUser().getUserId()),
+					new OtherSessionFilter(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom()), session.getUser().getUserId().toUpperCase()),
 					new Object[]{new WorkItemListener(copyOfThis)});	
 		}		
 		

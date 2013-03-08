@@ -56,6 +56,10 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 	static Hashtable<Integer, ArrayList<String>> nodeListeners = new Hashtable<Integer, ArrayList<String>>();
 	public final static int LOAD_DEPTH = 3;
 	
+	@XStreamOmitField
+	MetaworksContext metaworksContext;
+
+	
 	@XStreamAsAttribute
 	String id;
 		public String getId() {
@@ -422,8 +426,6 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 	public void load(String nodeId) throws Exception {
 		
 		setId(nodeId);
-		
-		this.copyFrom(this.databaseMe());
 		
 		if(this.getLoadDepth() < LOAD_DEPTH){
 			if(this.getLoadDepth() > -1)
