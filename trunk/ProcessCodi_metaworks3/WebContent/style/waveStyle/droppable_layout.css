@@ -81,6 +81,21 @@ ul, ol, li, dl, dd, dt {
     margin: 0px;
     padding: 0px;
 }
+.editor_div{font-size:13px;}
+.editor_div ul li{
+    list-style-type:disc;
+    margin-left:15px;
+}
+
+.editor_div ol li{
+    list-style-type:decimal;
+    margin-left:15px;
+}
+
+.editor_div dl dd , dl dt{
+    margin-left:15px;
+}
+
 
 .wf_panel ul {
     padding-left: 25px;

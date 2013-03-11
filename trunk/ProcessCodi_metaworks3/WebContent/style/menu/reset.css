@@ -10,9 +10,11 @@ version: 2.8.1
  * @namespace
  * @requires 
  */
+
+
+/*
 html {
 	color: #000;
-	/*background: #FFF;*/
 }
 
 body,
@@ -108,7 +110,6 @@ sub {
 	vertical-align: baseline;
 }
 
-/*because legend doesn't inherit in IE */
 legend {
 	color: #000;
 }
@@ -125,8 +126,7 @@ option {
 	font-weight: inherit;
 }
 
-/*@purpose To enable resizing for IE */
-/*@branch For IE6-Win, IE7-Win */
+
 input,
 button,
 textarea,
@@ -134,5 +134,5 @@ select {
 	*font-size: 100%;
 }
 
-
+*/
 
