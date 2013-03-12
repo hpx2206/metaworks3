@@ -18,7 +18,7 @@ var org_uengine_codi_mw3_model_IWorkItem_edit = function(objectId, className){
 	
 	$("#post_" + this.objectId).bind("keyup", function(event){
 		var h=$(this);
-		h.height(21).height(h[0].scrollHeight);//where 60 is minimum height of textarea
+		h.height(21).height(h[0].scrollHeight - 4);//where 60 is minimum height of textarea
 	});
 	
 	if(value.type=="file"){
