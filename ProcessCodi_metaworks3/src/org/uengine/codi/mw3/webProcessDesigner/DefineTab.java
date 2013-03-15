@@ -4,7 +4,7 @@ public class DefineTab {
 	
 	public DefineTab() throws Exception{
 		rolePanel = new RolePanel();
-		prcsValiablePanel = new PrcsValiablePanel();
+		prcsValiablePanel = new PrcsVariablePanel();
 	}
 	
 	RolePanel rolePanel	;
@@ -15,11 +15,11 @@ public class DefineTab {
 			this.rolePanel = rolePanel;
 		}
 		
-	PrcsValiablePanel prcsValiablePanel;
-		public PrcsValiablePanel getPrcsValiablePanel() {
+	PrcsVariablePanel prcsValiablePanel;
+		public PrcsVariablePanel getPrcsValiablePanel() {
 			return prcsValiablePanel;
 		}
-		public void setPrcsValiablePanel(PrcsValiablePanel prcsValiablePanel) {
+		public void setPrcsValiablePanel(PrcsVariablePanel prcsValiablePanel) {
 			this.prcsValiablePanel = prcsValiablePanel;
 		}
 }

@@ -152,7 +152,7 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 			faceHelper.addEventEdge(objectId, canvas, edgeElement);
 	    });
 	    canvas.onDrawShape(function (event, shapeElement) {
-//	    	console.log(shapeElement);
+	    	// TODO 여기서 Shape 객체를 바로 만드려고 하였으나 연결정보는 가지고 있지 않다.
 	    });
 	    canvas.onRemoveShape(function (shapeElement) {
 	    	console.log($(shapeElement));
@@ -275,6 +275,7 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
     		if( customData == undefined || customData == null || customData == "" ){
     			customData = [];
     		}
+    		
     		if(clipboardNode && clipboardNode.__className=="org.uengine.codi.mw3.knowledge.WfNode"){
     			canvas.drawLabel(element, clipboardNode.name);
     			customData.push( {"customId": clipboardNode.id , "customName" : clipboardNode.name , "customType" : "wfNode"});
@@ -301,6 +302,14 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
     		    	if(tokens.length>1)
     		    		text = tokens[tokens.length-1];
     		    	if( text != null && text == 'java'){
+    		    		var eleClassName = $(this).attr("_classname");
+    		    		if( eleClassName == 'org.uengine.kernel.InvocationActivity'){
+    		    			var activityData = $(this).data('activity');
+    		    			activityData.resourceClass = clipboardNode.alias;
+    		    			$(this).data('activity', activityData);
+    		    		}
+    		    		
+    		    		
     		    		var wfText = $(element).children('[id$=_LABEL]').text();
     		    		wfText = wfText + '(' + clipboardNode.name + ')';
     		    		canvas.drawLabel(element, wfText);
@@ -347,7 +356,6 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 			
 			
 			var object = mw3.getObject(objectId);
-			
 			object['propertiesWindow'] = propertiesWindow;
 			object.showProperties();
 			//var metadata = mw3.getMetadata(object.__className);				

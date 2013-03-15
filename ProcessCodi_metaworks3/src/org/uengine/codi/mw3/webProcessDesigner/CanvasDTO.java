@@ -2,6 +2,8 @@ package org.uengine.codi.mw3.webProcessDesigner;
 
 import java.io.Serializable;
 
+import org.uengine.kernel.Activity;
+
 public class CanvasDTO implements Serializable{
 		String id;
 			public String getId() {
@@ -165,5 +167,12 @@ public class CanvasDTO implements Serializable{
 			}
 			public void setBackgroundColor(String backgroundColor) {
 				this.backgroundColor = backgroundColor;
+			}
+		transient Activity activity;
+			public Activity getActivity() {
+				return activity;
+			}
+			public void setActivity(Activity activity) {
+				this.activity = activity;
 			}
 }

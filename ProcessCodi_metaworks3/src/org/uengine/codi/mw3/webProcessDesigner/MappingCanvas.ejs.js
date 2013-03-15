@@ -1,4 +1,4 @@
-var org_uengine_contexts_MappingContext = function(objectId, className){
+var org_uengine_codi_mw3_webProcessDesigner_MappingCanvas= function(objectId, className){
 	// default setting
 	this.objectId = objectId;
 	this.className = className;
@@ -70,7 +70,8 @@ var org_uengine_contexts_MappingContext = function(objectId, className){
 	
 	OG.common.Constants.CANVAS_BACKGROUND = "#fff";
     OG.Constants.ENABLE_CANVAS_OFFSET = true; // Layout 사용하지 않을 경우 true 로 지정
-    canvas = new OG.Canvas('canvas2');
+    this.canvasId = object.canvasId;
+    canvas = new OG.Canvas(this.canvasId);
     canvas.initConfig({
         selectable      : true,
         dragSelectable  : false,
@@ -90,23 +91,31 @@ var org_uengine_contexts_MappingContext = function(objectId, className){
     this.loadDrawed = false;
     this.divId = mw3._getObjectDivId(this.objectId);
 	this.divObj = $('#' + this.divId);
-    var leftTreeObj = this.divObj.find("#tree1");
+	// canvas는 단독으로 동작하는게 아니고 상위 화면을 가지고있기때문에 parent 로 구하여 작업한다.
+	this.parentDivObj = this.divObj.parent();
+	this.leftTreeId = object.leftTreeId;
+	this.rightTreeId = object.rightTreeId;
+    var leftTreeObj = this.parentDivObj.find("#" + this.leftTreeId );
     
     leftTreeObj.bind('loaded', {align : 'left'}, function(event){
-		faceHelper.drawTerminals(this.id, true, canvas , null);
+		faceHelper.drawTerminals(this.id, true, canvas , null , false);
     }).bind('expanded', function(){
-    	faceHelper.drawTerminals(this.id, true, canvas , null);
+    	faceHelper.drawTerminals(this.id, true, canvas , null , false);
     }).bind('collapsed', function(){
-    	faceHelper.drawTerminals(this.id, true, canvas , null);
+    	faceHelper.drawTerminals(this.id, true, canvas , null , false);
+    }).bind('toAppended', function(){
+    	faceHelper.drawTerminals(this.id, true, canvas , null , true);
     });
     
-    var rightTreeObj = this.divObj.find("#tree2");
+    var rightTreeObj = this.parentDivObj.find("#"+ this.rightTreeId);
     rightTreeObj.bind('loaded', {align : 'right'}, function(event){
-		faceHelper.drawTerminals(this.id, false, canvas , null);
+		faceHelper.drawTerminals(this.id, false, canvas , null , false);
     }).bind('expanded', function(){
-    	faceHelper.drawTerminals(this.id, false, canvas , null);
+    	faceHelper.drawTerminals(this.id, false, canvas , null , false);
     }).bind('collapsed', function(){
-    	faceHelper.drawTerminals(this.id, false, canvas , null);
+    	faceHelper.drawTerminals(this.id, false, canvas , null , false);
+    }).bind('toAppended', function(){
+    	faceHelper.drawTerminals(this.id, false, canvas , null , true);
     });
     
     canvas.onConnectShape(function (event, edgeElement, fromElement, toElement) {
@@ -132,16 +141,17 @@ var org_uengine_contexts_MappingContext = function(objectId, className){
     this.callCount = 1;
 };
 
-org_uengine_contexts_MappingContext.prototype = {
-		drawTerminals : function(treeDivId, isLeft , canvas, callback) {
+org_uengine_codi_mw3_webProcessDesigner_MappingCanvas.prototype = {
+		drawTerminals : function(treeDivId, isLeft , canvas, callback, isAppend) {
 			var treeObjectId = null;
 			if(isLeft){
-				treeObjectId = this.divObj.find("#tree1 .filemgr-tree").attr('objectId');
+				treeObjectId = this.parentDivObj.find("#"+this.leftTreeId +" .filemgr-tree").attr('objectId');
 			}else{
-				treeObjectId = this.divObj.find("#tree2 .filemgr-tree").attr('objectId');
+				treeObjectId = this.parentDivObj.find("#"+this.rightTreeId +" .filemgr-tree").attr('objectId');
 			}
 			var leftTreeLoding = this.leftTreeLoaded;
 			var rightTreeLoding = this.rightTreeLoaded;
+			var canvasId = this.canvasId;
 			$('#' + treeDivId+' .item-fix').each(function(idx, item) {
 				if(!($(this).hasClass('root'))){
 					var objectId = $(this).attr('objectId');
@@ -151,13 +161,14 @@ org_uengine_contexts_MappingContext.prototype = {
 					var isView = true;
 					var closedParentObjectId = mw3.getFaceHelper(treeObjectId).getClosedParentNodes(objectId);
 					var closedParentObject = mw3.objects[closedParentObjectId];
-					if( object.type != 'folder' && closedParentObject != null ){
+					// 동적으로 새롭게 붙은 노드들은 무조건 도형을 그려야 하기때문에 isAppend 를 체크하여줌
+					if( object.type != 'folder' && closedParentObject != null && !isAppend){
 						isView = false;
 					}
 					
 					if( isView ){
 						var shapeElement = canvas.drawShape(
-		                    [(isLeft ? 5 : 295), ( $(this).offset().top - $('#canvas2').offset().top ) + item.offsetHeight / 2],
+		                    [(isLeft ? 5 : 295), ( $(this).offset().top - $('#'+canvasId).offset().top ) + item.offsetHeight / 2],
 		                    (isLeft ? new OG.From() : new OG.To()),
 		                    [5, 5],
 		                    {},
@@ -180,7 +191,7 @@ org_uengine_contexts_MappingContext.prototype = {
 						if (shapeElement) {
 							var parentNode = $('.item-fix[objectId='+ closedParentObjectId+']');
 							shapeElement = canvas.drawShape(
-									[(isLeft ? 5 : 295), ( parentNode.offset().top - $('#canvas2').offset().top ) + parentNode[0].offsetHeight / 2],
+									[(isLeft ? 5 : 295), ( parentNode.offset().top - $('#'+canvasId).offset().top ) + parentNode[0].offsetHeight / 2],
 									(isLeft ? new OG.From() : new OG.To()),
 									[5, 5],
 									{},
@@ -224,14 +235,17 @@ org_uengine_contexts_MappingContext.prototype = {
 			if(typeof elements == 'undefined'){
 				return;
 			}
-			for(var i = 0; i < elements.length; i++){
-				var toId = 'TO_' + elements[i].argument.text;
-				var fromId = 'FROM_' + elements[i].variable.name;
-//				if (console && console.log) console.log('fromId ============ ' +fromId );
-//				if (console && console.log) console.log('toId ========== ' +toId );
-				var fromShape = this.icanvas.getElementById(fromId);
-				var toShape = this.icanvas.getElementById(toId);
-				this.icanvas.connect(fromShape, toShape);
+			if( elements != null ){
+				for(var i = 0; i < elements.length; i++){
+					var toId = 'TO_' + elements[i].argument.text;
+					var fromId = 'FROM_' + elements[i].variable.name;
+					// "." 을 "-" 로 변경
+					toId = toId.replace(/\./gi, "-");
+					fromId = fromId.replace(/\./gi, "-");
+					var fromShape = this.icanvas.getElementById(fromId);
+					var toShape = this.icanvas.getElementById(toId);
+					this.icanvas.connect(fromShape, toShape);
+				}
 			}
 		},
 		getValue : function(){
@@ -254,6 +268,8 @@ org_uengine_contexts_MappingContext.prototype = {
 						var toText = toId.substring(3);
 						if (console && console.log) console.log('fromText = ' +fromText );
 						if (console && console.log) console.log('toText = ' +toText );
+						fromText = fromText.replace(/-/gi, ".");
+						toText = toText.replace(/-/gi, ".");
 						var processValiable = {
 								__className : 'org.uengine.kernel.ProcessVariable',
 								name : fromText

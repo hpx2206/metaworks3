@@ -70,11 +70,11 @@ public class ConditionNode  implements Cloneable, ContextAware{
 		public void setRoleList(ArrayList<Role> roleList) {
 			this.roleList = roleList;
 		}	
-	public ArrayList<PrcsValiable>	 prcsValiableList;
-		public ArrayList<PrcsValiable> getPrcsValiableList() {
+	public ArrayList<PrcsVariable>	 prcsValiableList;
+		public ArrayList<PrcsVariable> getPrcsValiableList() {
 			return prcsValiableList;
 		}
-		public void setPrcsValiableList(ArrayList<PrcsValiable> prcsValiableList) {
+		public void setPrcsValiableList(ArrayList<PrcsVariable> prcsValiableList) {
 			this.prcsValiableList = prcsValiableList;
 		}	
 		
@@ -94,7 +94,7 @@ public class ConditionNode  implements Cloneable, ContextAware{
 		}
 		if( this.getPrcsValiableList() != null){
 			for(int i = 0; i < prcsValiableList.size(); i++){
-				PrcsValiable prcsValiable = prcsValiableList.get(i);
+				PrcsVariable prcsValiable = prcsValiableList.get(i);
 				String nameAttr = prcsValiable.getName();
 				choice.add(nameAttr, nameAttr);
 				String typeIdAttr = prcsValiable.getTypeId();

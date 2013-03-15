@@ -151,11 +151,11 @@ public class ConditionTreeNode  implements ContextAware{
 		public void setRoleList(ArrayList<Role> roleList) {
 			this.roleList = roleList;
 		}
-	public ArrayList<PrcsValiable>	 prcsValiableList;
-		public ArrayList<PrcsValiable> getPrcsValiableList() {
+	public ArrayList<PrcsVariable>	 prcsValiableList;
+		public ArrayList<PrcsVariable> getPrcsValiableList() {
 			return prcsValiableList;
 		}
-		public void setPrcsValiableList(ArrayList<PrcsValiable> prcsValiableList) {
+		public void setPrcsValiableList(ArrayList<PrcsVariable> prcsValiableList) {
 			this.prcsValiableList = prcsValiableList;
 		}
 		
