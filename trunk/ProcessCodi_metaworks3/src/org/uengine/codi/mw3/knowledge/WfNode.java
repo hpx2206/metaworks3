@@ -241,7 +241,8 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		public void setDragNode(WfNode dragNode) {
 			this.dragNode = dragNode;
 		}
-		
+	
+	@XStreamAlias("childNodes")
 	ArrayList<WfNode> childNode;
 		public ArrayList<WfNode> getChildNode() {
 			return childNode;

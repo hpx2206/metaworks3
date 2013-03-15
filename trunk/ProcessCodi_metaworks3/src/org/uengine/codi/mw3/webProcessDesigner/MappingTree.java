@@ -1,5 +1,7 @@
 package org.uengine.codi.mw3.webProcessDesigner;
 
+import java.io.Serializable;
+
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
@@ -21,31 +23,32 @@ public class MappingTree extends Tree{
 	@ServiceMethod(target=ServiceMethodContext.TARGET_SELF)
 	public void init(){
 		String treeId = this.getId();
-		RoleTreeNode leftRoleNode = new RoleTreeNode();
-		leftRoleNode.setId(treeId + "Roles");
-		leftRoleNode.setType(TreeNode.TYPE_FOLDER);
-		leftRoleNode.setFolder(true);
-		leftRoleNode.load(defineTab.getRolePanel().getRoles());
+		RoleTreeNode roleNode = new RoleTreeNode();
+		roleNode.setId(treeId + "Roles");
+		roleNode.setType(TreeNode.TYPE_FOLDER);
+		roleNode.setFolder(true);
+		roleNode.load(defineTab.getRolePanel().getRoles());
 
-		VariableTreeNode leftVariableTreeNode = new VariableTreeNode();
-		leftVariableTreeNode.setId(treeId + "Variables");
-		leftVariableTreeNode.setType(TreeNode.TYPE_FOLDER);
-		leftVariableTreeNode.setFolder(true);
-		leftVariableTreeNode.load(defineTab.getPrcsValiablePanel().getPrcsValiables());
+		VariableTreeNode variableTreeNode = new VariableTreeNode();
+		variableTreeNode.setId(treeId + "Variables");
+		variableTreeNode.setTreeId(treeId);
+		variableTreeNode.setType(TreeNode.TYPE_FOLDER);
+		variableTreeNode.setFolder(true);
+		variableTreeNode.load(defineTab.getPrcsValiablePanel().getPrcsValiables());
 		
-		TreeNode leftRootnode = new TreeNode();
-		leftRootnode.setRoot(true);
-		leftRootnode.setId(treeId + "Root");
-		leftRootnode.setName(treeId + "Root");
-		leftRootnode.setType(TreeNode.TYPE_FOLDER);
-		leftRootnode.setFolder(true);
-		leftRootnode.setLoaded(true);
-		leftRootnode.setExpanded(true);
+		TreeNode rootnode = new TreeNode();
+		rootnode.setRoot(true);
+		rootnode.setId(treeId + "Root");
+		rootnode.setName(treeId + "Root");
+		rootnode.setType(TreeNode.TYPE_FOLDER);
+		rootnode.setFolder(true);
+		rootnode.setLoaded(true);
+		rootnode.setExpanded(true);
 		
-		leftRootnode.add(leftRoleNode);
-		leftRootnode.add(leftVariableTreeNode);
+		rootnode.add(roleNode);
+		rootnode.add(variableTreeNode);
 		
-		this.setNode(leftRootnode);
+		this.setNode(rootnode);
 		
 		setPreLoaded(true);
 	}

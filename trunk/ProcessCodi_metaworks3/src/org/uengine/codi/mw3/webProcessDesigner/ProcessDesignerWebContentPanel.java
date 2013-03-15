@@ -4,12 +4,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Set;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
@@ -27,11 +24,11 @@ import org.uengine.kernel.Activity;
 import org.uengine.kernel.Condition;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.HumanActivity;
-import org.uengine.kernel.ParameterContext;
+import org.uengine.kernel.IDrawDesigne;
+import org.uengine.kernel.InvocationActivity;
 import org.uengine.kernel.ProcessDefinition;
 import org.uengine.kernel.ProcessVariable;
 import org.uengine.kernel.Role;
-import org.uengine.kernel.SwitchActivity;
 import org.uengine.kernel.graph.Transition;
 import org.uengine.processmanager.ProcessManagerRemote;
 import org.uengine.util.UEngineUtil;
@@ -87,7 +84,14 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 		public void setGraphString(String graphString) {
 			this.graphString = graphString;
 		}
-		
+	PrcsVariable[] prcsVariables;
+		public PrcsVariable[] getPrcsVariables() {
+			return prcsVariables;
+		}
+		public void setPrcsVariables(PrcsVariable[] prcsVariables) {
+			this.prcsVariables = prcsVariables;
+		}
+
 	HashMap<String, CanvasDTO> canvasMap;
 		public HashMap<String, CanvasDTO> getCanvasMap() {
 			return canvasMap;
@@ -189,7 +193,16 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 		}
 		
 	@ServiceMethod(payload="propertiesWindow", target="popup")
-	public PropertiesWindow showProperties(){
+	public PropertiesWindow showProperties() throws Exception{
+		Object activityObject = propertiesWindow.getPanel();
+		if( activityObject != null ){
+			Class paramClass = activityObject.getClass();
+			// 현재 클레스가 IDrawDesigne 인터페이스를 상속 받았는지 확인
+			boolean isDesigner = IDrawDesigne.class.isAssignableFrom(paramClass);
+			if( isDesigner ){
+				((IDrawDesigne)activityObject).drawInit();
+			}
+		}
 		return this.getPropertiesWindow();
 	}
 		
@@ -252,9 +265,10 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 //		return new ModalWindow(conditionPanel , 800, 500,  "데이터매핑" );
 //	}
 	@ServiceMethod(callByContent=true)
-	public PrcsValiablePanel addValiable() throws Exception{
-		ArrayList<PrcsValiable> prcsValiable = defineTab.prcsValiablePanel.getPrcsValiables();
-		PrcsValiable designerValiable = new PrcsValiable();
+	public PrcsVariablePanel addValiable() throws Exception{
+		ArrayList<PrcsVariable> prcsValiable = defineTab.prcsValiablePanel.getPrcsValiables();
+		PrcsVariable designerValiable = new PrcsVariable();
+		designerValiable.load();
 		designerValiable.setName(tempElementName);
 		designerValiable.setTypeId(tempElementTypeId);
 		if( tempElementType != null && "wfNode".equals(tempElementType) ){
@@ -277,7 +291,7 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 			Role[] roles = new Role[1];
 					// default role
 					Role initiator = new Role();
-					initiator.setName("initiator");
+					initiator.setName("Initiator");
 					roles[0] = initiator;
 			Activity[] ac = new Activity[0];
 			
@@ -373,11 +387,11 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 	}
 	public ProcessVariable[] makeProcessValiable() throws Exception{
 		ProcessVariable pvs[] = null;
-		ArrayList<PrcsValiable> prcsValiable = defineTab.prcsValiablePanel.getPrcsValiables();
+		ArrayList<PrcsVariable> prcsValiable = defineTab.prcsValiablePanel.getPrcsValiables();
 		if( prcsValiable != null && prcsValiable.size() > 0 ){
 			pvs = new ProcessVariable[prcsValiable.size()];
 			for (int i = 0; i < prcsValiable.size(); i++ ) {
-				PrcsValiable prcsv = prcsValiable.get(i);
+				PrcsVariable prcsv = prcsValiable.get(i);
 				String nameAttr = prcsv.getName();
 				String typeIdAttr = prcsv.getTypeId();
 				String typeAttr = prcsv.getDataType().getSelected();
@@ -420,11 +434,12 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 			
 			ProcessVariable pvs[] = def.getProcessVariables();
 			if( pvs != null && pvs.length != 0){
-				ArrayList<PrcsValiable> prcsValiable = defineTab.prcsValiablePanel.getPrcsValiables();
+				ArrayList<PrcsVariable> prcsValiable = defineTab.prcsValiablePanel.getPrcsValiables();
 				for(int i =0 ; i < pvs.length; i++){
 					ProcessVariable pv = pvs[i];
 					
-					PrcsValiable designerValiable = new PrcsValiable();
+					PrcsVariable designerValiable = new PrcsVariable();
+					designerValiable.load();
 					designerValiable.setName(pv.getName());
 					
 					if( pv.getDefaultValue() instanceof ComplexType ){
@@ -444,13 +459,15 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 			}
 			
 			ProcessVariable[] procVars = def.getProcessVariables();
-			for(int i=0; i<procVars.length; i++){
-				procVars[i].setType(null);
-				procVars[i].setDefaultValue(null);
-				//procVars[i].setDisplayName(null);
-				
-				//procVars[i] = ProcessVariable.forName(procVars[i].getName());
-				//def.getExtendedAttributes()
+			if( procVars != null){
+				for(int i=0; i<procVars.length; i++){
+					procVars[i].setType(null);
+					procVars[i].setDefaultValue(null);
+					//procVars[i].setDisplayName(null);
+					
+					//procVars[i] = ProcessVariable.forName(procVars[i].getName());
+					//def.getExtendedAttributes()
+				}
 			}
 			
 			

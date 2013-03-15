@@ -53,6 +53,48 @@ public class GeomShape extends CanvasDTO {
 			this.role = role;
 		}
 		
+	public String geomInfoStart(int geomX ,int geomY ) throws Exception{
+		// shapeId = "OG.shape.bpmn.E_Start";
+		// shapeId = "OG.shape.bpmn.E_End";
+		StringBuffer geomInfo = new StringBuffer();
+		geomInfo.append("{");
+			geomInfo.append("type:'Circle',");
+			geomInfo.append("center:["+geomX+", "+geomY+"],");
+			geomInfo.append("radius:15");
+		geomInfo.append("}");
+		return null;
+	}
+	public String geomInfoSwitch(int geomX ,int geomY ) throws Exception{
+		// String shapeId = "OG.shape.bpmn.G_Gateway";
+		StringBuffer geomInfo = new StringBuffer();
+		geomInfo.append("{");
+			geomInfo.append("type:'Polygon',");
+			geomInfo.append("vertices:[");
+				geomInfo.append("["+(geomX-  10)+", "+geomY+"],");
+				geomInfo.append("["+geomX+", "+(geomY+10)+"],");
+				geomInfo.append("["+(geomX + 10) +", "+geomY+"],");
+				geomInfo.append("["+geomX+", "+(geomY-10)+"],");
+				geomInfo.append("["+(geomX - 10) +", "+geomY+"]");
+			geomInfo.append("]");
+		geomInfo.append("}");
+		
+		
+		return null;
+	}
+	public String geomInfoTask(int geomX ,int geomY , int geomWidth, int geomHeight ) throws Exception{
+		// String shapeId = "OG.shape.bpmn.A_Task";
+		StringBuffer geomInfo = new StringBuffer();
+		geomInfo.append("{");
+			geomInfo.append("type:'Rectangle',");
+			geomInfo.append("upperLeft:["+( geomX - geomWidth/2 ) +", "+( geomY - geomHeight/2 )+"],");
+			geomInfo.append("width:"+geomWidth+",");
+			geomInfo.append("height:"+geomHeight+",");
+			geomInfo.append("angle:0");
+		geomInfo.append("}");
+		return null;
+	}
+		
+		
 	public Activity makeProcVal(Activity activity) {
 		if("OG.shape.bpmn.A_Task".equals(this.getShapeId()) ){
 			if(this.getData() != null){

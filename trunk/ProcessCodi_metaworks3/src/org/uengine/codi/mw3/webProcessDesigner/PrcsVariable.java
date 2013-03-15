@@ -6,7 +6,7 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.SelectBox;
 
-public class PrcsValiable implements ContextAware , Cloneable {
+public class PrcsVariable implements ContextAware , Cloneable {
 	
 	String name;
 		public String getName() {
@@ -43,31 +43,34 @@ public class PrcsValiable implements ContextAware , Cloneable {
 		public void setMetaworksContext(MetaworksContext metaworksContext) {
 			this.metaworksContext = metaworksContext;
 		}
-	public PrcsValiable() throws Exception{
+	public PrcsVariable() throws Exception{
+		
+	}
+	public void load() throws Exception{
 		this.makeDataTypeChoice();
 	}
 	@ServiceMethod(when="edit", callByContent=true)
-	public PrcsValiablePanel add() throws Exception{
+	public PrcsVariablePanel add() throws Exception{
 		
-		PrcsValiable added = (PrcsValiable) this.clone();
+		PrcsVariable added = (PrcsVariable) this.clone();
 		added.setMetaworksContext(new MetaworksContext());
 		added.getMetaworksContext().setWhen("view");
-		prcsValiablePanal.getPrcsValiables().add(added);
+		prcsVariablePanel.getPrcsValiables().add(added);
 		
 		setName("");
 		setInitValue("");
 		makeDataTypeChoice();
 		getMetaworksContext().setWhen("edit");
 	
-		prcsValiablePanal.setNewPrcsValiable(this);
+		prcsVariablePanel.setNewPrcsValiable(this);
 		
-		return prcsValiablePanal;
+		return prcsVariablePanel;
 	}
 	
 	@ServiceMethod(when="view", callByContent=true)
-	public PrcsValiablePanel remove(){
-		prcsValiablePanal.getPrcsValiables().remove(this);
-		return prcsValiablePanal;
+	public PrcsVariablePanel remove(){
+		prcsVariablePanel.getPrcsValiables().remove(this);
+		return prcsVariablePanel;
 	}
 	
 	public void makeDataTypeChoice() throws Exception{
@@ -85,11 +88,11 @@ public class PrcsValiable implements ContextAware , Cloneable {
 	}
 	
 	@AutowiredFromClient
-	public PrcsValiablePanel prcsValiablePanal;
+	public PrcsVariablePanel prcsVariablePanel;
 	
 
 	@Override
 	public boolean equals(Object obj) {
-		return obj!=null && obj instanceof PrcsValiable && ((PrcsValiable)obj).getName().equals(getName());
+		return obj!=null && obj instanceof PrcsVariable && ((PrcsVariable)obj).getName().equals(getName());
 	}
 }
