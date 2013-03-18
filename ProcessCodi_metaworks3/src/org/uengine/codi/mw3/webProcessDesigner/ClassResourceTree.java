@@ -33,9 +33,10 @@ public class ClassResourceTree extends Tree {
 	@ServiceMethod(callByContent= true, target=ServiceMethodContext.TARGET_SELF)	
 	public void init() throws Exception{
 		
-		TreeNode rootnode = new TreeNode();
+		VariableTreeNode rootnode = new VariableTreeNode();
 		rootnode.setRoot(true);
 		rootnode.setId(this.getId());
+		rootnode.setTreeId(this.getId());
 		rootnode.setType(TreeNode.TYPE_FOLDER);
 		rootnode.setFolder(true);
 		rootnode.setLoaded(true);
@@ -44,26 +45,14 @@ public class ClassResourceTree extends Tree {
 		if( resourceClass == null ){
 			rootnode.setName("resource를 등록해주세요.");
 		}else{
-			rootnode.setName(resourceClass);
+			String fullClassName =  resourceClass.substring(0, resourceClass.lastIndexOf(".")).replaceAll("/", ".") ;
+			String className = fullClassName.substring(fullClassName.lastIndexOf(".") + 1);
 			
+			rootnode.setId(className);
+			rootnode.setName(resourceClass);
+			rootnode.setClassName(fullClassName);
 			try{
-				String fullClassName =  resourceClass.substring(0, resourceClass.lastIndexOf(".")).replaceAll("/", ".") ;
-				String className = fullClassName.substring(fullClassName.lastIndexOf(".") + 1);
-				WebObjectType wot = MetaworksRemoteService.getInstance().getMetaworksType(fullClassName); 
-				WebFieldDescriptor wfields[] = wot.getFieldDescriptors();
-				FieldDescriptor fields[] = wot.metaworks2Type().getFieldDescriptors();
-				if( fields != null && fields.length > 0){
-					for(int j=0; j<fields.length; j++){
-						WebFieldDescriptor wfd = wfields[j];
-						ClassResourceNode resourceNode = new ClassResourceNode();
-						resourceNode.setId(className +"-"+wfd.getName());	// TODO
-						resourceNode.setName(wfd.getName());
-						resourceNode.setParentId(this.getId());
-						resourceNode.setType(TreeNode.TYPE_FILE_TEXT);
-						rootnode.add(resourceNode);
-					}
-				}
-				
+				rootnode.setChild(rootnode.loadExpand(rootnode));				
 			}catch(Exception e){
 				e.printStackTrace();
 			}

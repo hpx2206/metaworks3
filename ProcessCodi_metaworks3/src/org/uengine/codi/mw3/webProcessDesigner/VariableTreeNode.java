@@ -73,7 +73,6 @@ public class VariableTreeNode extends TreeNode {
 			childNode.setName(wfd.getName());
 			childNode.setParentId(node.getId());
 			if( wfd.getClassName().startsWith("org.uengine.codi.mw3")){
-				childNode.setRoot(true);
 				childNode.setFolder(true);
 				childNode.setLoaded(false);
 				childNode.setExpanded(false);

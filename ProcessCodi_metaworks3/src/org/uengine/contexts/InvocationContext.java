@@ -61,8 +61,6 @@ public class InvocationContext implements ContextAware ,Serializable{
 	public void loadTree() throws Exception{
 		mappingTree = new MappingTree();
 		classResourceTree = new ClassResourceTree();
-		if( this.id != null ){
-		}
 	}
 	public void treeSetId(String id){
 		mappingTree.setId( "mapping" + id);

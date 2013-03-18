@@ -229,6 +229,20 @@ org_uengine_codi_mw3_webProcessDesigner_MappingCanvas.prototype = {
 			}
 			// sended data role : " fromElementId , toElementId "//TODO, (in|out|inOut) " 
 		},
+		drawUnExtendedTerminal : function(shapeId , isLeft , parentElement){
+			var canvas = this.icanvas;
+			var shapeElement = canvas.drawShape(
+					[(isLeft ? 5 : 295), ($(parentElement).offset().top - $('#'+this.canvasId).offset().top ) + 4 ],
+					(isLeft ? new OG.From() : new OG.To()),
+					[5, 5],
+					{},
+					shapeId
+			);
+
+			$(shapeElement).click("destroy");
+			canvas.removeAllGuide();
+			canvas.hide(shapeElement);
+		},
 		drawLine : function(){
 			this.loadDrawed = true;
 			var elements = this.object.mappingElements;
@@ -242,10 +256,36 @@ org_uengine_codi_mw3_webProcessDesigner_MappingCanvas.prototype = {
 					// "." 을 "-" 로 변경
 					toId = toId.replace(/\./gi, "-");
 					fromId = fromId.replace(/\./gi, "-");
+					
+//					console.log('fromId = ' + fromId);
+//					console.log('toId = ' + toId);
+					
 					var fromShape = this.icanvas.getElementById(fromId);
 					var toShape = this.icanvas.getElementById(toId);
+					// 동적으로 생성되는 노드는 로드 시점에 아직 안그려져 있을수 있다.
+					if( typeof(fromShape) == "undefined" || fromShape == null){
+						var parentElement = this.findParentNode(fromId);
+						// 선이 이어진 도형만 그린 후에 선을 연결시키고 숨겨준다. 
+						this.drawUnExtendedTerminal(fromId, true, parentElement);
+						fromShape = this.icanvas.getElementById(fromId);
+					}
+					if( typeof(toShape) == "undefined" || toShape == null){
+						var parentElement = this.findParentNode(toId);
+						this.drawUnExtendedTerminal(toId, false, parentElement);
+						toShape = this.icanvas.getElementById(toId);
+					}
+					// 선을 그린다.
 					this.icanvas.connect(fromShape, toShape);
 				}
+			}
+		},
+		findParentNode : function(nodeId){
+			var parentNodeId = nodeId.substring(0, nodeId.lastIndexOf("-") );
+			var shapeNode = this.icanvas.getElementById(parentNodeId);
+			if( shapeNode == null ){
+				return this.findParentNode(parentNodeId);
+			}else{
+				return shapeNode;
 			}
 		},
 		getValue : function(){

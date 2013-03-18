@@ -11,6 +11,7 @@ import org.metaworks.dwr.MetaworksRemoteService;
 import org.uengine.codi.mw3.webProcessDesigner.ClassResourceMethod;
 import org.uengine.codi.mw3.webProcessDesigner.MappingCanvas;
 import org.uengine.contexts.InvocationContext;
+import org.uengine.util.UEngineUtil;
 
 public class InvocationActivity extends DefaultActivity implements IDrawDesigne {
 	
@@ -119,7 +120,21 @@ public class InvocationActivity extends DefaultActivity implements IDrawDesigne 
 					value = param.getTransformerMapping().getTransformer().letTransform(instance, param.getTransformerMapping().getLinkedArgumentName());
 				}else{
 					srcVariableName = param.getVariable().getName();				
-					value = instance.getBeanProperty(srcVariableName); // varA			
+					
+					String [] wholePartPath = srcVariableName.replace('.','@').split("@");
+					// wholePartPath.length >= 3 이 되는 이유는 안쪽에 객체의 값을 참조하려고 하는 부분이기때문에 따로 값을 가져와야함
+					if( wholePartPath.length >= 3 ){
+						String rootObjectName = wholePartPath[0] + "." + wholePartPath[1];
+						Object rootObject = instance.getBeanProperty(rootObjectName);
+						if( rootObject != null ){
+							value = UEngineUtil.getBeanProperty(rootObject, wholePartPath[2]);
+						}
+						for(int j = 3; j < wholePartPath.length ; j++){
+							value = UEngineUtil.getBeanProperty(value, wholePartPath[j]);
+						}
+					}else{
+						value = instance.getBeanProperty(srcVariableName); // varA
+					}
 				}			
 				// targetFieldName 은 className.fieldName 이런식으로 들어오기 때문에 약간의 조작이 필요함.
 				String fieldName = targetFieldName.substring(targetFieldName.lastIndexOf(".") + 1);
@@ -129,9 +144,7 @@ public class InvocationActivity extends DefaultActivity implements IDrawDesigne 
 				System.out.println("111 =========>> " + srcVariableName);
 				System.out.println("111 =========>> " + targetFieldName);
 				System.out.println("111 =========>> " + output);
-				
-				
-				
+				System.out.println("111 =========>> " + value);
 				
 				Method m = resourceClass.getMethod("set"+output, new Class[]{String.class});
 				m.invoke(object, new Object[]{value});
@@ -165,6 +178,7 @@ public class InvocationActivity extends DefaultActivity implements IDrawDesigne 
 				String targetFieldName = param.getArgument().getText();
 				
 				srcVariableName = param.getVariable().getName();
+				
 				// srcVariableName 은 className.fieldName 이런식으로 들어오기 때문에 약간의 조작이 필요함.
 				String fieldName = srcVariableName.substring(srcVariableName.lastIndexOf(".") + 1);
 				// 첫글자는 대문자로
@@ -176,4 +190,5 @@ public class InvocationActivity extends DefaultActivity implements IDrawDesigne 
 		}
 		fireComplete(instance);
 	}
+	
 }
