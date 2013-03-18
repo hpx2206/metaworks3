@@ -87,14 +87,40 @@ if(value){
 											}else{
 											%>
 										<div style="float:left; font-size:11px;margin:3px 3px 3px 0;">
-											<span style="float:left;">, <%=mw3.localize('$Due')%> :&nbsp;</span>
+											<span style="float:left;">· <%=mw3.localize('$Due')%> :&nbsp;</span>
 											<span style="float:left;"><%=fields.dueDate.here({when: 'timeago'})%></span>
 											<div style="clear:both"></div>
 										</div>											
 											<%
 											}
 										}%>
-										
+										<%
+										if(value.bVBenefit != null && value.bVPenalty != null && value.effort != null){
+											var bv = value.bVBenefit + value.bVPenalty;
+											if(value.effort != 0) {
+												var roi = Math.round(bv/value.effort);
+										%>
+										<div style="float:left; font-size:11px;margin:3px 3px 3px 0;">
+											<span style="float:left;">· Biz Val :&nbsp;</span>
+											<%if(bv > 0) {%>
+											<span style="float:left;"><%=bv%></span>
+											<%}else{%>
+											<span style="float:left;">-</span>
+											<%}%>
+										</div>
+										<div style="float:left; font-size:11px;margin:3px 3px 3px 0;">
+											<span style="float:left;">· ROI :&nbsp;</span>
+											<%if(roi > 0) {%>
+											<span style="float:left;"><%=roi%></span>
+											<%}else{%>
+											<span style="float:left;">-</span>
+											<%}%>
+											<div style="clear:both"></div>
+										</div>
+										<%
+											}
+										}
+										%>
 										<div style="clear:both"></div>
 									</div>													
 								</td>
@@ -125,36 +151,7 @@ if(value){
 												
 			</ul>								
 		</td>
-		<%
-		if(value.bVBenefit != null && value.bVPenalty != null && value.effort != null){
-			var bv = value.bVBenefit + value.bVPenalty;
-			if(value.effort != 0) {
-				var roi = Math.round(bv/value.effort);
-		%>
-				<td width="100">
-					<div style="margin-bottom:5px;float:right;">Biz Val</div>
-					<div class="clear"></div>
-					<%if(bv > 0) {%>
-						<div style="float:right;"><%=bv%></div>
-					<%}else{%>
-						<div style="float:right;">-</div>
-					<%}%>
-						<div style="clear:both"></div>
-				</td>
-				<td width="100">
-					<div style="margin-bottom:5px;float:right;">ROI</div>
-					<div class="clear"></div>
-					<%if(roi > 0) {%>
-						<div style="float:right;"><%=roi%></div>
-					<%}else{%>
-						<div style="float:right;">-</div>
-					<%}%>
-					<div style="clear:both"></div>
-				</td>
-		<%
-			}
-		}
-		%>
+
 
 		
 		<td width="20"  class="instanceMove">
