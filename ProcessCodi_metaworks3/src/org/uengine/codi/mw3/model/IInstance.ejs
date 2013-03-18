@@ -72,7 +72,7 @@ if(value){
 												<span class="type_process"></span><span class="instanceLock"></span>
 											<% } %>	
 										</div>										
-										<div style="float:left; font-size:11px;  margin:3px 7px 3px 0;"><%=fields.startedDate.here({when: 'timeago'})%></div>
+										<div style="float:left; font-size:11px;  margin:3px 8px 3px 0;"><%=fields.startedDate.here({when: 'timeago'})%></div>
 										
 										<%if(value.dueDate){ 
 											if(value.status=='Completed'){
@@ -86,7 +86,7 @@ if(value){
 											<%
 											}else{
 											%>
-										<div style="float:left; font-size:11px;margin:3px 7px 3px 0;">
+										<div style="float:left; font-size:11px;margin:3px 8px 3px 0;">
 											<span style="float:left;"><b>·</b> <%=mw3.localize('$Due')%> :&nbsp;</span>
 											<span style="float:left;"><%=fields.dueDate.here({when: 'timeago'})%></span>
 											<div style="clear:both"></div>
@@ -100,7 +100,7 @@ if(value){
 											if(value.effort != 0) {
 												var roi = Math.round(bv/value.effort);
 										%>
-										<div style="float:left; font-size:11px;margin:3px 7px 3px 0;">
+										<div style="float:left; font-size:11px;margin:3px 8px 3px 0;">
 											<span style="float:left;"><b>·</b> Biz Val :&nbsp;</span>
 											<%if(bv > 0) {%>
 											<span style="float:left;"><%=bv%></span>
@@ -108,7 +108,7 @@ if(value){
 											<span style="float:left;">-</span>
 											<%}%>
 										</div>
-										<div style="float:left; font-size:11px;margin:3px 7px 3px 0;">
+										<div style="float:left; font-size:11px;margin:3px 8px 3px 0;">
 											<span style="float:left;"><b>·</b> ROI :&nbsp;</span>
 											<%if(roi > 0) {%>
 											<span style="float:left;"><%=roi%></span>
