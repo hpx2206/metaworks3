@@ -15,8 +15,8 @@ import org.metaworks.annotation.NonEditable;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.widget.ModalWindow;
-import org.metaworks.widget.Window;
 import org.uengine.codi.mw3.Login;
+import org.uengine.codi.mw3.marketplace.Marketplace;
 
 	
 public class Session implements ContextAware{
@@ -314,6 +314,16 @@ public class Session implements ContextAware{
 			throw new Exception(
 					"There is no Company info in user info.");
 		}
+	}
+	
+	@ServiceMethod(callByContent=true)
+	public Object myVendor() throws Exception	{
+		
+		Marketplace marketplace = new Marketplace();
+		
+		marketplace.session = this;
+		return marketplace.showMyVendor();
+		
 	}
 
 }
