@@ -7,6 +7,7 @@ import org.metaworks.annotation.Test;
 import org.metaworks.widget.layout.Layout;
 import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.knowledge.Knowledge;
+import org.uengine.codi.mw3.marketplace.Marketplace;
 import org.uengine.codi.mw3.model.Main;
 import org.uengine.codi.mw3.model.MainSNS;
 import org.uengine.codi.mw3.model.PinterestMain;
@@ -71,6 +72,16 @@ public class PageNavigator {
 		market.load();
 		
 		return new MainPanel(market);
+	}
+	
+	@ServiceMethod(callByContent=true, inContextMenu=true)
+	public MainPanel goMarketplace() throws Exception {
+		
+		Marketplace marketplace = new Marketplace();
+		marketplace.session = session;
+		marketplace.load();
+		
+		return new MainPanel(marketplace);
 	}
 	
 
