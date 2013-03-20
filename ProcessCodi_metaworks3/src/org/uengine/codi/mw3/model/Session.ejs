@@ -7,17 +7,21 @@
 			<span style="display:inline-block; line-height:37px; padding-left:45px;"><b><%=mw3.localize("$List")%></b></span>			
 		</div>
 <%
-			}else{
+			}else{ 
 %>
 		<div>
 			<span class="ssesionLine"><%=fields.employee.here() %></span>
 			<span class="ssesionLine"> | </span>
-			<span class="ssesionLine"><a href="#" onClick="mw3.test(mw3.getAutowiredObject('org.uengine.codi.mw3.model.InstanceListPanel').__objectId, 'first', {guidedTour:true})" type="application/pdf"><%=mw3.localize("$Help")%></a></span>
-				 
+			
+			<%if(value.metaworksContext.where == 'marketplace'){%>
+				<span class="ssesionLine"><a href="#" onClick="<%=methods.myVendor.caller()%>"><%=mw3.localize("$VendorProfile")%></a></span>
+			<%}else{%>
+				<span class="ssesionLine"><a href="#" onClick="mw3.test(mw3.getAutowiredObject('org.uengine.codi.mw3.model.InstanceListPanel').__objectId, 'first', {guidedTour:true})" type="application/pdf"><%=mw3.localize("$Help")%></a></span>
+			<%}%>
 <%
 			if(value.employee && value.employee.isAdmin){%>
-			<span class="ssesionLine"> | </span>
-			<span class="ssesionLine"><a href="#" onClick="<%=methods.manager.caller()%>"><%=mw3.localize("$Manager")%></a></span>
+				<span class="ssesionLine"> | </span>
+				<span class="ssesionLine"><a href="#" onClick="<%=methods.manager.caller()%>"><%=mw3.localize("$Manager")%></a></span>
 <%
 			}
 %>
