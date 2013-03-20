@@ -270,8 +270,18 @@ HashMap.prototype = {
 		}
 		return "{" + ret.join(", ") + "}";
 	}	
-}
+};
 
 String.prototype.replaceAll = function(arg1, arg2) {
 	return this.replace(eval("/"+arg1+"/gi"), arg2);
-}
+};
+
+String.prototype.startsWith = function(arg1) {
+	return (this.indexOf(arg1) == 0);
+};
+
+String.prototype.endsWith = function(arg1) {
+	var pos = this.lastIndexOf(arg1);
+	
+	return (pos > -1 && (pos == (this.length - arg1.length)));
+};
