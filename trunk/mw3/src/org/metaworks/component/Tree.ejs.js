@@ -91,7 +91,6 @@ org_metaworks_component_Tree.prototype = {
 		
 		var parentObjectId = this.objectDiv.find('.item-fix[id='+ object.parentId+']').attr('objectId');
 		var parentObject = mw3.objects[parentObjectId];
-		
 		if( parentObject.expanded ){
 			return this.getClosedParentNodes(parentObject.__objectId);
 		}else{
@@ -113,5 +112,22 @@ org_metaworks_component_Tree.prototype = {
 		var node = this.objectDiv.find('.selected');		
 		
 		return node;
+	},
+	
+	toAppend : function(appendobject){
+		if(appendobject != null && appendobject.length > 0){
+			var html = mw3.locateObject(appendobject, null);
+			var appendDiv = $('<u></u>').addClass('last').css({'display': 'block', 'height': 'auto', 'overflow': 'visible'});
+			if(this.object.root)
+				appendDiv.addClass('root');
+			
+			// 넘어온 arrayList 의 첫번째 값의 parentId를 구한다 (모두 같기 때문에)
+			var parenNodtId = appendobject[0].parentId;
+			var targetDiv = this.objectDiv.find("#"+parenNodtId).parent();
+			targetDiv.append(appendDiv);
+			targetDiv.children('u').append(html);
+			
+			this.objectDiv.trigger('toAppended');
+		}
 	}
 };
