@@ -85,3 +85,26 @@
  
 .instance.phone .first_td {display: none}
 .instance.phone .instanceType {display: none}
+
+
+
+.fixed_img_row ul{margin:0;padding:0;font-size:12px;font-family:Tahoma, Geneva, sans-serif;list-style:none}
+.fixed_img_row li{border:1px solid #E5E5E5;border-left:0;border-right:0;border-top:0;vertical-align:top;*zoom:1; padding-left:10px;}
+.fixed_img_row li:after{display:block;clear:both;content:""}
+.fixed_img_row a{text-decoration:none;cursor:pointer}
+.fixed_img_row a strong{display:inline-block;margin:0 0 4px 0;color:#333}
+.fixed_img_row .thumb img{display:block;border:0; width:140px;}
+.fixed_img_row p{margin:0;color:#767676;line-height:1.4}
+.fixed_img_row a:hover strong,
+.fixed_img_row a:active strong,
+.fixed_img_row a:focus strong{text-decoration:underline}
+
+
+
+.viewMore{line-height:30px;}
+.appFirstTd,.appVenderTd,.appBtnTd{ width:150px;  text-align:center;}
+.appTitleTd{vertical-align:top; padding:15px;}
+.titleLine{line-height: 20px; font-weight:bold}
+.simpleOverview{ line-height: 20px; color:#565656}
+.fullOverview{ line-height: 20px;}
+
