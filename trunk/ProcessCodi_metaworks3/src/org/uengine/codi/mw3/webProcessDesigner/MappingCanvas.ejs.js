@@ -66,12 +66,13 @@ var org_uengine_codi_mw3_webProcessDesigner_MappingCanvas= function(objectId, cl
         return new OG.shape.To(this.label);
     };
 
-	OG.Constants.DEFAULT_STYLE.EDGE["edge-type"] = "straight";
+//	OG.Constants.DEFAULT_STYLE.EDGE["edge-type"] = "straight";
 	
 	OG.common.Constants.CANVAS_BACKGROUND = "#fff";
     OG.Constants.ENABLE_CANVAS_OFFSET = true; // Layout 사용하지 않을 경우 true 로 지정
     this.canvasId = object.canvasId;
     canvas = new OG.Canvas(this.canvasId);
+    canvas._CONFIG.DEFAULT_STYLE.EDGE["edge-type"] = "straight";
     canvas.initConfig({
         selectable      : true,
         dragSelectable  : false,

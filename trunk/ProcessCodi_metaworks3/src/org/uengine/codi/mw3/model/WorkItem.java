@@ -731,21 +731,25 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			
 			// 마지막 워크아이템의 제목을 인스턴스의 적용
 			String lastCmnt = instanceRef.getLastCmnt();
-			
+			// title 이 LASTCMT_LIMIT_SIZE 보다 크다면 사이즈를 조절함
+			String cmntTitle = this.getTitle();
+			if(cmntTitle.length() > LASTCMT_LIMIT_SIZE){
+				cmntTitle = getTitle().substring(0, LASTCMT_LIMIT_SIZE - 5) + "..." ;
+			}
 			if(lastCmnt == null){
 				if(instanceRef.getName() != getTitle()){
-					instanceRef.setLastCmnt(getTitle());
+					instanceRef.setLastCmnt(cmntTitle);
 					instanceRef.setLastCmntUser(session.getUser());
 				}
 			}else{
 				if(instanceRef.getLastCmnt2() == null){
-					instanceRef.setLastCmnt2(getTitle());
+					instanceRef.setLastCmnt2(cmntTitle);
 					instanceRef.setLastCmnt2User(session.getUser());
 				}else {
 					instanceRef.setLastCmnt(instanceRef.getLastCmnt2());
 					instanceRef.setLastCmntUser(instanceRef.getLastCmnt2User());
 					
-					instanceRef.setLastCmnt2(getTitle());
+					instanceRef.setLastCmnt2(cmntTitle);
 					instanceRef.setLastCmnt2User(session.getUser());
 				}
 			}

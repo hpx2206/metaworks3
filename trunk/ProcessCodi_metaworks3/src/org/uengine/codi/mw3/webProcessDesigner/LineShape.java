@@ -48,12 +48,12 @@ public class LineShape extends CanvasDTO {
 			Or condition = new Or();
 			for( int i=0; i < child.size(); i++){
 				ConditionTreeNode childNode = child.get(i);
-				String expressionType = childNode.getExpressionType();
+				ConditionNode conditionNode = childNode.getConditionNode();
+				String conditionType = conditionNode.getConditionType();
 				TextContext condiName = new TextContext();
 				condiName.setText(childNode.getName());
-				if( expressionType != null && expressionType.equals("expression") ){
+				if( conditionType != null && ( conditionType.equals("And") || conditionType.equals("Or") )){
 					
-					String conditionType = childNode.getConditionNode().getOperandChoice().getSelected();			// And, Or
 					String expressionChoice 	= childNode.getConditionNode().getExpressionChoice().getSelected();	// Text, Number
 					String sign = childNode.getConditionNode().getSignChoice().getSelected();								// == , =>
 					String valiable = childNode.getConditionNode().getValiableChoice().getSelected();					// processValiable
@@ -89,13 +89,7 @@ public class LineShape extends CanvasDTO {
 						andCondition.setDescription(condiName);
 						condition.addCondition(andCondition);
 					}
-				}else if( expressionType != null && expressionType.equals("roleExist") ){
-					String roleName = "temp";	// TODO 롤 이름을 받아옴
-					RoleExist roleExist = new RoleExist(roleName);
-					And andCondition = new And();
-					andCondition.addCondition(roleExist);
-					condition.addCondition(andCondition);
-				}else if( expressionType != null && expressionType.equals("otherwise") ){
+				}else if( conditionType != null && conditionType.equals("otherwise") ){
 					Otherwise otherwise = new Otherwise();
 					otherwise.setDescription(condiName);
 					condition.addCondition(otherwise);

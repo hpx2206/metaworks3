@@ -48,6 +48,7 @@ public interface IWorkItem extends IDAO{
 				
 		
 		public final static int TITLE_LIMIT_SIZE             = 2900;
+		public final static int LASTCMT_LIMIT_SIZE             = 200;
 		
 		@Id
 		//@GeneratedValue(strategy=GenerationType.TABLE, generator="SEQ_BPM")

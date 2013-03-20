@@ -13,16 +13,16 @@ import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.TreeNode;
+import org.uengine.codi.mw3.model.Popup;
 
 @Face(
-	ejsPath="dwr/metaworks/org/metaworks/component/TreeNode.ejs",
-	ejsPathForArray="genericfaces/CleanArrayFace.ejs",
-		ejsPathMappingByContext=
-	{
-		"{how: 'condition', face: 'dwr/metaworks/org/uengine/codi/mw3/webProcessDesigner/ConditionTreeNodeView.ejs'}",
-	}		
+	ejsPath="dwr/metaworks/org/metaworks/component/TreeNode.ejs"
 )
 public class ConditionTreeNode  implements ContextAware{
+	
+	public final static String CONDITION_AND				= "And";
+	public final static String CONDITION_OR				= "Or";
+	public final static String CONDITION_OTHERWISE	= "Otherwise";
 	
 	MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
@@ -103,7 +103,15 @@ public class ConditionTreeNode  implements ContextAware{
 		public void setFolder(boolean folder) {
 			this.folder = folder;
 		}
-
+		
+	ConditionTreeNode parentNode;
+		public ConditionTreeNode getParentNode() {
+			return parentNode;
+		}
+		public void setParentNode(ConditionTreeNode parentNode) {
+			this.parentNode = parentNode;
+		}
+		
 	ArrayList<ConditionTreeNode> child;
 		public ArrayList<ConditionTreeNode> getChild() {
 			return child;
@@ -113,6 +121,7 @@ public class ConditionTreeNode  implements ContextAware{
 		}
 		
 	public ConditionTreeNode() {
+		this.setMetaworksContext(new MetaworksContext());
 		ArrayList<ConditionTreeNode> child = new ArrayList<ConditionTreeNode>();
 		
 		this.setChild(child);
@@ -128,13 +137,6 @@ public class ConditionTreeNode  implements ContextAware{
 		}
 		public void setExpression(String expression) {
 			this.expression = expression;
-		}
-	String expressionType;
-		public String getExpressionType() {
-			return expressionType;
-		}
-		public void setExpressionType(String expressionType) {
-			this.expressionType = expressionType;
 		}
 
 	ConditionNode conditionNode;
@@ -160,67 +162,118 @@ public class ConditionTreeNode  implements ContextAware{
 		}
 		
 	public void conditionInit() throws Exception{
-		
 		ConditionNode conditionNode = new ConditionNode();
 		conditionNode.setRoleList(getRoleList());
 		conditionNode.setPrcsValiableList(getPrcsValiableList());
 		conditionNode.init();
 		
 		setConditionNode(conditionNode);
-		
 	}
 	
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_AUTO)
-	public Object[] addCondition() throws Exception{
-		this.getMetaworksContext().setHow("");
-		String nodeName = "";
-		String nodeType = "";
-		this.getConditionNode().getExpressionChoice().getSelected();
-		if( expressionType != null && expressionType.equals("expression") ){
-			String val1 = this.getConditionNode().getValiableChoice().getSelected();
-			String val2 = this.getConditionNode().getSignChoice().getSelected();
-			String val3 = this.getConditionNode().getExpressionChoice().getSelected();
-			
-			ConditionInput expVal = this.getConditionNode().getConditionInput();
-			if( val3 != null && ( val3.equalsIgnoreCase("text") || val3.equalsIgnoreCase("number")) ){
-				val3 = expVal.getExpressionText();
-			}else if( val3 != null && val3.equalsIgnoreCase("Yes or No") ){
-				val3 = expVal.getYesNo();
-			}else if( val3 != null && val3.equalsIgnoreCase("date") ){
-				val3 = expVal.getExpressionDate().toString();
-			}else if( val3 != null && val3.equalsIgnoreCase("File") ){
-				// TODO
-			}
-			nodeName = val1 + " " +val2 + " " + val3; 
-			nodeType = this.getConditionNode().getOperandChoice().getSelected();
-		}else if( expressionType != null && expressionType.equals("roleExist") ){
-			nodeName = "roleExist"; // role 이 존재하는지 여부로 
-			nodeType = "roleExist";
-		}else if( expressionType != null && expressionType.equals("otherwise") ){
-			nodeName = "otherwise";
-			nodeType = "otherwise";
-		}else{
-			nodeName = "오류";
-		}
-		this.setName(nodeName);
-		this.setType(nodeType);
-		Long idByTime = new Date().getTime();
-		this.setId(idByTime.toString());
+	public ConditionTreeNodeView makeNodeView(ConditionTreeNode treeNode) throws Exception{
+		ConditionTreeNodeView conditionTreeNode = new ConditionTreeNodeView();
+		conditionTreeNode.setId("expression");
+		conditionTreeNode.setRoleList(getRoleList());
+		conditionTreeNode.setPrcsValiableList(getPrcsValiableList());
+		conditionTreeNode.conditionInit();
+		conditionTreeNode.getConditionNode().getMetaworksContext().setHow("new");
 		
-		ArrayList<ConditionTreeNode> rootTreechilds = conditionTree.getNode().getChild();
-		rootTreechilds.add(this);
-		//conditionPanel.getConditionTree().getNode().setChild(rootTreechilds);
-		return new Object[]{conditionTree};
+		conditionTreeNode.setParentNode(treeNode);
+		conditionTreeNode.getConditionNode().setParentTreeNode(treeNode);
+		
+		return conditionTreeNode;
 	}
+	
+	@ServiceMethod(inContextMenu=true, callByContent=true)
+	@Available(how="tree")
+	public Object newAND() throws Exception{
+		ConditionTreeNodeView conditionTreeNode = this.makeNodeView(this);
+		conditionTreeNode.getConditionNode().setConditionType(CONDITION_AND);
+		ConditionExPressionPanel conditionExPressionPanel = new ConditionExPressionPanel();
+		conditionExPressionPanel.setConditionTreeNode(conditionTreeNode);
+		return conditionExPressionPanel;
+	}
+	
+	@ServiceMethod(inContextMenu=true, callByContent=true)
+	@Available(how="tree")
+	public Object newOR() throws Exception{
+		ConditionTreeNodeView conditionTreeNode = this.makeNodeView(this);
+		conditionTreeNode.getConditionNode().setConditionType(CONDITION_OR);
+		ConditionExPressionPanel conditionExPressionPanel = new ConditionExPressionPanel();
+		conditionExPressionPanel.setConditionTreeNode(conditionTreeNode);
+		return conditionExPressionPanel;
+	}
+	
+	@ServiceMethod(inContextMenu=true, callByContent=true, target=ServiceMethodContext.TARGET_AUTO)
+	@Available(how="tree")
+	public Object newOtherwise() throws Exception{
+		if( conditionTree != null ){
+			ConditionTreeNode parentNode = conditionTree.getNode();
+			
+			ConditionTreeNode node = new ConditionTreeNode();
+			Long idByTime = new Date().getTime();
+			node.setId(idByTime.toString());
+			node.setParentNode(this);
+			node.setParentId(this.getId());
+			node.getMetaworksContext().setHow("otherwise");
+			node.setConditionNode(new ConditionNode());
+	//		node.setPrcsValiableList(this.getPrcsValiableList());
+	//		node.setRoleList(this.getRoleList());
+			node.setName(CONDITION_OTHERWISE);
+			node.setType("page_white_text");	// TODO 아이콘 관련이기때문에.. 추후 변경
+			
+			parentNode.add(node);
+		}
+		
+		return new Refresh( conditionTree);
+	}
+	
+	@ServiceMethod(inContextMenu=true, payload={"id","parentNode"})
+	@Available(how="tree")
+	public Object delete() throws Exception{
+		
+		ConditionTreeNode parentNode = this.getParentNode();
+		if( parentNode != null && parentNode.getChild() != null ){
+			for(int i =0; i<parentNode.getChild().size(); i++){
+				if( parentNode.getChild().get(i).getId().equals(this.getId())){
+					parentNode.getChild().remove(i);
+				}
+			}
+		}
+			
+		return new Refresh(parentNode);
+	}
+//	public ConditionTreeNode findNode(ConditionTreeNode node , String nodeId) throws Exception{
+//		ConditionTreeNode resultNode = null;
+//		if( node.getId().equals(nodeId)){
+//			return node;
+//		}else{
+//			for(int i =0; i<node.getChild().size(); i++){
+//				resultNode = node.getChild().get(i).findNode(node.getChild().get(i), nodeId);
+//				
+//				if(resultNode != null)
+//					break;				
+//			}
+//			return resultNode;
+//		}
+//	}
 	
 	@ServiceMethod(callByContent = true , target=ServiceMethodContext.TARGET_AUTO)
 	public Object action() throws Exception {
-		this.getMetaworksContext().setHow("condition");
+		
+		ConditionTreeNodeView conditionTreeNode = new ConditionTreeNodeView();
+		conditionTreeNode.setId("expression");
+		conditionTreeNode.setRoleList(getRoleList());
+		conditionTreeNode.setPrcsValiableList(getPrcsValiableList());
+		conditionTreeNode.setConditionNode(getConditionNode());
+		conditionTreeNode.getConditionNode().getMetaworksContext().setHow("edit");
 		ConditionExPressionPanel conditionExPressionPanel = new ConditionExPressionPanel();
-		conditionExPressionPanel.setConditionTreeNode(this);
+		conditionExPressionPanel.setConditionTreeNode(conditionTreeNode);
+		
 		return conditionExPressionPanel;
 	}
 	
 	@AutowiredFromClient
 	public ConditionTree conditionTree;
+	
 }

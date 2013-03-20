@@ -3,11 +3,6 @@
 %>
 		<table>
 			<tr>
-				<td width="150"><%=fields.operandChoice.here()%></td>
-				<td width="100"></td>
-				<td width="200"></td>
-			</tr>
-			<tr>
 				<td><span style="float:left;"><%=fields.valiableChoice.here()%></span></td>
 				<td><span style="float:left;"><%=fields.signChoice.here()%></span></td>
 				<td><span style="float:left;"><%=fields.expressionChoice.here()%></span></td>
@@ -20,6 +15,21 @@
 				</td>
 			</tr>
 		</table>
+		<%
+			if( mw3.how == "new" ){
+		%>
+		<div>
+			<div style="float:right;"><a id="wBtn" href="#" onClick="<%=methods.addCondition.caller()%>"><span>컨디션 저장</span></a></div>
+		</div>
+		<%
+			}else if( mw3.how == "edit" ){
+		%>
+		<div>
+			<div style="float:right;"><a id="wBtn" href="#" onClick="<%=methods.addCondition.caller()%>"><span>컨디션 수정</span></a></div>
+		</div>
+		<%
+			}
+		%>
 <%
 	}
 %>
