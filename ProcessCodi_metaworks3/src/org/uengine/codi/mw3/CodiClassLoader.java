@@ -31,6 +31,7 @@ import org.codehaus.commons.compiler.jdk.ByteArrayJavaFileManager;
 import org.codehaus.commons.compiler.jdk.ByteArrayJavaFileManager.ByteArrayJavaFileObject;
 import org.metaworks.ObjectType;
 import org.metaworks.dao.TransactionContext;
+import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.util.UEngineUtil;
 
@@ -125,17 +126,24 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
 	}
     
 	public static String mySourceCodeBase(){
-		String userId = null;
+		
+		//currently there may be each folder for users and also there must be tenant
+		String tenantId = null;
 		try{
-			userId = (String) TransactionContext.getThreadLocalInstance().getRequest().getSession().getAttribute("userId");
+			tenantId = (String) TransactionContext.getThreadLocalInstance().getRequest().getSession().getAttribute("userId");
 		}catch(Exception e){
 			
 		}
 		
-		userId = "main"; //fixed value for now
+		tenantId = "main"; //fixed value for now
 		
-		if(UEngineUtil.isNotEmpty(userId)) {
-			String dir = getCodeBaseRoot() + userId;
+		//TODO: not-tested yet.
+		if(TenantContext.getThreadLocalInstance()!=null && TenantContext.getThreadLocalInstance().getTenantId()!=null){
+			tenantId = TenantContext.getThreadLocalInstance().getTenantId();
+		}
+		
+		if(UEngineUtil.isNotEmpty(tenantId)) {
+			String dir = getCodeBaseRoot() + tenantId;
 //			File f = new File(dir);
 //			if(!f.exists()) return null;
 			
