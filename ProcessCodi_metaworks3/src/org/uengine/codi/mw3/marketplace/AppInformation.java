@@ -9,12 +9,12 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.SelectBox;
 import org.metaworks.website.MetaworksFile;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.codi.mw3.marketplace.category.Category;
+import org.uengine.codi.mw3.marketplace.category.ICategory;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.persistence.dao.UniqueKeyGenerator;
 import org.uengine.processmanager.ProcessManagerBean;
 import org.uengine.processmanager.ProcessManagerRemote;
-import org.uengine.processmarket.Category;
-import org.uengine.processmarket.ICategory;
 
 public class AppInformation {
 

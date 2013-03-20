@@ -6,8 +6,8 @@ import org.metaworks.component.SelectBox;
 import org.metaworks.widget.layout.Layout;
 import org.uengine.codi.mw3.model.Company;
 import org.uengine.codi.mw3.model.Session;
-import org.uengine.processmarket.Category;
-import org.uengine.processmarket.MarketCategoryPanel;
+import org.uengine.codi.mw3.marketplace.category.Category;
+import org.uengine.codi.mw3.marketplace.category.MarketCategoryPanel;
 
 public class MyVendor {
 	

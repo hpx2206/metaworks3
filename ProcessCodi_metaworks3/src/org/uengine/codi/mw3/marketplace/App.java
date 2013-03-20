@@ -9,10 +9,9 @@ import org.metaworks.dao.Database;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.layout.Layout;
 import org.uengine.codi.mw3.model.Session;
-import org.uengine.processmarket.Category;
-import org.uengine.processmarket.MarketCategoryPanel;
-
-import org.uengine.processmarket.ICategory;
+import org.uengine.codi.mw3.marketplace.category.Category;
+import org.uengine.codi.mw3.marketplace.category.ICategory;
+import org.uengine.codi.mw3.marketplace.category.MarketCategoryPanel;
 
 public class App extends Database<IApp> implements IApp{
 	
