@@ -39,9 +39,10 @@ public class Marketplace {
 		MarketplaceTopPanel top = new MarketplaceTopPanel(session);
 
 		//center
-		MarketplaceCenterPanel center = new MarketplaceCenterPanel();
-		center.session = session;
-		center.load();
+		MarketplaceCenterWindow center = new MarketplaceCenterWindow(session);
+//		MarketplaceCenterPanel center = new MarketplaceCenterPanel();
+//		center.session = session;
+//		center.load();
 		
 		//west
 		MarketCategoryPanel marketCategory = new MarketCategoryPanel(session);

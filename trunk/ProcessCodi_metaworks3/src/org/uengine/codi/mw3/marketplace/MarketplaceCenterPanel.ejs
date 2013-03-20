@@ -73,16 +73,17 @@ if(value){
 %>
 	
 	<% if(listing.metaworksContext.when == 'marketplaceHome') { %>
-	
+		
+		<div id="searchbox" style="height:30px;">
+			<div class="searchboxarea" id="method_<%=objectId%>_newInstance">
+				<%=fields.searchBox.here()%>
+			</div>
+			<div style="clear:both;"></div>
+		</div>
+		
 		<table>
 			<tr>
-				<td> <div style="font-size:15px; font-weight:bold">Top Installs</div> <td>	
-			</tr>
-			<tr>
-				<td> <img src="images/empty_editor_divider.png" /> <td>	
-			</tr>
-			<tr>
-				<td> <%=fields.listing.here()%> <td>	
+				<td> <%=fields.listing.here()%> </td>	
 			</tr>
 			<tr>
 				<td colspan="2"> <a herf="#" onClick="#"> See all>> </a> </td>
