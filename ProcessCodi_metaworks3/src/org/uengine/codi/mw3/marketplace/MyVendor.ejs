@@ -4,35 +4,41 @@
 if(value){
 
 %>
-
-	<div><%=value.vendor.comName%></div>
-	<img src="images/empty_editor_divider.png" />
+	<div class="detailView_app">
+		<div class="topTitle_app"><%=value.vendor.comName%></div>		
+		<div class="clear"></div>
+	</div>		
 	
-	<div>
-		<table>
-			<tr>
-				<td><img src="images/logo.png" width=150 height=150 /></td>
-				<td width=500>
-					<ul font-size=15px><li><%=value.vendor.description%></li></ul>
-					<ul><li><%=value.vendor.repMail%></li></ul>
-				</td>
-			</tr>
-			<tr>
-				<td colspan="2" align="right">
-					<div><a href="#" onClick="<%=methods.createListing.caller()%>"> Create a new Listing </a></div>
-				</td>
-			</tr>
-		</table>
+	<div class="fixed_img_row">
+   	  <ul>	
+	     <li> 
+        	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td class="appFirstTd"><span class="thumb"> logo </span> </td>
+                    <td class="appTitleTd">
+                    	<div class="fullOverview"><%=value.vendor.description%></div> 
+                    	<div class="simpleOverview"><%=value.vendor.repMail%></div>
+                    </td>
+                    <td class="appBtnTd">
+						<div class="badge" style="float:none;margin-top:2px;background:#679BD1;padding:3px 8px; width:80px" onClick="<%=methods.createListing.caller()%>"> Create a new Listing </div>
+					</td>
+                </tr>
+            </table>
+		 </li>
+		</ul>
 	</div>
+
+
 	
 	<%
 	
 	if(value.listing != null){
 	
 	%>
-	
-		<div><%=mw3.localize('$Apps')%></div>
-		<img src="images/empty_editor_divider.png" />
+	<div class="detailView_app">
+		<div class="topTitle_app"><%=mw3.localize('$Apps')%></div>		
+		<div class="clear"></div>
+	</div>	
 	
 		<%=fields.listing.here()%>
 	
