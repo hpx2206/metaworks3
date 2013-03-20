@@ -6,6 +6,9 @@ import java.util.Date;
 import org.metaworks.ContextAware;
 import org.metaworks.FieldDescriptor;
 import org.metaworks.MetaworksContext;
+import org.metaworks.Refresh;
+import org.metaworks.ServiceMethodContext;
+import org.metaworks.ToAppend;
 import org.metaworks.WebFieldDescriptor;
 import org.metaworks.WebObjectType;
 import org.metaworks.annotation.AutowiredFromClient;
@@ -48,19 +51,28 @@ public class ConditionNode  implements Cloneable, ContextAware{
 		public void setExpressionChoice(SelectBox expressionChoice) {
 			this.expressionChoice = expressionChoice;
 		}
-	SelectBox operandChoice;
-		public SelectBox getOperandChoice() {
-			return operandChoice;
-		}
-		public void setOperandChoice(SelectBox operandChoice) {
-			this.operandChoice = operandChoice;
-		}
 	ConditionInput conditionInput;
 		public ConditionInput getConditionInput() {
 			return conditionInput;
 		}
 		public void setConditionInput(ConditionInput conditionInput) {
 			this.conditionInput = conditionInput;
+		}
+	
+	String conditionType;
+		public String getConditionType() {
+			return conditionType;
+		}
+		public void setConditionType(String conditionType) {
+			this.conditionType = conditionType;
+		}
+		
+	ConditionTreeNode parentTreeNode;
+		public ConditionTreeNode getParentTreeNode() {
+			return parentTreeNode;
+		}
+		public void setParentTreeNode(ConditionTreeNode parentTreeNode) {
+			this.parentTreeNode = parentTreeNode;
 		}
 
 	public ArrayList<Role>	 roleList;
@@ -142,40 +154,59 @@ public class ConditionNode  implements Cloneable, ContextAware{
 		choice.add("Html Form" ,"htmlType" );
 		setExpressionChoice(choice);
 	}
-	public void makeOperandChoice() throws Exception{
-		SelectBox choice = new SelectBox();
-		choice.setId("operand");
-		choice.add("And", "And");
-		choice.add("Or", "Or");
-		setOperandChoice(choice);
+	
+	@ServiceMethod( callByContent=true ,target=ServiceMethodContext.TARGET_AUTO)
+	public Object addCondition() throws Exception{
+//		this.getMetaworksContext().setHow("tree");
+		String nodeName = "";
+		if( conditionType != null && ( conditionType.equals("And") || conditionType.equals("Or") )){
+			String val1 = this.getValiableChoice().getSelected();
+			String val2 = this.getSignChoice().getSelected();
+			String val3 = this.getExpressionChoice().getSelected();
+			
+			ConditionInput expVal = this.getConditionInput();
+			if( val3 != null && ( val3.equalsIgnoreCase("text") || val3.equalsIgnoreCase("number")) ){
+				val3 = expVal.getExpressionText();
+			}else if( val3 != null && val3.equalsIgnoreCase("Yes or No") ){
+				val3 = expVal.getYesNo();
+			}else if( val3 != null && val3.equalsIgnoreCase("date") ){
+				val3 = expVal.getExpressionDate().toString();
+			}else if( val3 != null && val3.equalsIgnoreCase("File") ){
+				// TODO
+			}
+			nodeName = "[" +conditionType + "]" + val1 + " " +val2 + " " + val3; 
+		}else if( conditionType != null && conditionType.equals("otherwise") ){
+			nodeName = "otherwise";
+		}else{
+			nodeName = "오류";
+		}
+		ConditionTreeNode node = new ConditionTreeNode();
+		Long idByTime = new Date().getTime();
+		node.setId(idByTime.toString());
+		node.setParentNode(this.getParentTreeNode());
+		node.setParentId(this.getParentTreeNode().getId());
+		node.getMetaworksContext().setHow("tree");
+		node.setConditionNode(this);
+		node.setPrcsValiableList(this.getPrcsValiableList());
+		node.setRoleList(this.getRoleList());
+		node.setName(nodeName);
+		node.setType("page_white_text");	// TODO 아이콘 관련이기때문에.. 추후 변경
+		
+		parentTreeNode.add(node);
+		
+		return new Refresh( parentTreeNode);
 	}
 
 	public void init() throws Exception{
 		makeValiableChoice();
 		makeSignChoice();
 		makeExpressionChoice();
-		makeOperandChoice();
 
 		conditionInput = new ConditionInput();
 		conditionInput.init();
 	}
 	
-//	@ServiceMethod
-//	public Object[] remove(){
-//		conditionPanel.conditionNodes.remove(this);
-//		return new Object[]{conditionPanel.conditionNodes};
-//	}
 	@AutowiredFromClient
 	public Session session;
-//	@AutowiredFromClient
-//	transient public ConditionPanel conditionPanel;
 	
-//	@Override
-//	public boolean equals(Object obj) {
-//		if( obj instanceof ConditionNode){
-//			return this.idx == ((ConditionNode)obj).idx;
-//		}else{
-//			return false;
-//		}
-//	}
 }

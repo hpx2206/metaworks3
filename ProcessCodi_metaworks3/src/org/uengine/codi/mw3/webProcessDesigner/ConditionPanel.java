@@ -72,28 +72,6 @@ public class ConditionPanel  implements ContextAware{
 			this.prcsValiableList = prcsValiableList;
 		}
 		
-//	String dragClassName;
-//		public String getDragClassName() {
-//			return dragClassName;
-//		}
-//		public void setDragClassName(String dragClassName) {
-//			this.dragClassName = dragClassName;
-//		}
-//		
-//	String valiableString;
-//		public String getValiableString() {
-//			return valiableString;
-//		}
-//		public void setValiableString(String valiableString) {
-//			this.valiableString = valiableString;
-//		}	
-	String conditionString;
-		public String getConditionString() {
-			return conditionString;
-		}
-		public void setConditionString(String conditionString) {
-			this.conditionString = conditionString;
-		}
 	ConditionTree conditionTree;	
 		public ConditionTree getConditionTree() {
 			return conditionTree;
@@ -127,21 +105,24 @@ public class ConditionPanel  implements ContextAware{
 		conditionTree.setId("tree");
 		
 		ConditionTreeNode treeNode = new ConditionTreeNode();
+		treeNode.getMetaworksContext().setHow("tree");
 		treeNode.setLoaded(true);
 		treeNode.setFolder(true);
 		treeNode.setRoot(true);
 		treeNode.setExpanded(true);
 		treeNode.setId("rootNode");
 		treeNode.setName("만족조건");
+		treeNode.setRoleList(roleList);
+		treeNode.setPrcsValiableList(prcsValiableList);
 		if( condition != null ){
 			makeChildTreeNode(treeNode , condition); 
 		}
 		conditionTree.setNode(treeNode);
 			
 		ConditionExPressionPanel conditionExPressionPanel = new ConditionExPressionPanel();
-		conditionExPressionPanel.setRoleList(roleList);
-		conditionExPressionPanel.setPrcsValiableList(prcsValiableList);
-		conditionExPressionPanel.init();
+//		conditionExPressionPanel.setRoleList(roleList);
+//		conditionExPressionPanel.setPrcsValiableList(prcsValiableList);
+//		conditionExPressionPanel.init();
 		setConditionExPressionPanel(conditionExPressionPanel);
 		
 	}
@@ -154,31 +135,27 @@ public class ConditionPanel  implements ContextAware{
 			for( int i=0; i< condis.length; i++){
 				Condition condi = condis[i];
 				ConditionTreeNode treeNode = new ConditionTreeNode();
-				treeNode.setMetaworksContext(new MetaworksContext());
 				treeNode.setParentId( rootNode.getId() );
 				treeNode.setType(TreeNode.TYPE_FILE_CODE);
 				
 				treeNode.setRoleList(roleList);
 				treeNode.setPrcsValiableList(prcsValiableList);
 				treeNode.conditionInit();
+				
+				ConditionNode conditionNode = treeNode.getConditionNode();
 				String nodeName = condi.getDescription() != null ? condi.getDescription().getText() : "";
 				String nodeType = "";
 				if( condi instanceof Or ){
-					nodeType = "Or";
-					treeNode.getConditionNode().getOperandChoice().setSelected("Or");
+					nodeType = treeNode.CONDITION_OR;
 				}else if( condi instanceof And ){
-					nodeType = "And";
-					treeNode.getConditionNode().getOperandChoice().setSelected("And");
-				}else if( condi instanceof RoleExist ){
-					nodeType = "roleExist";
-					treeNode.setExpressionType("roleExist");
+					nodeType = treeNode.CONDITION_AND;
 				}else if( condi instanceof Otherwise ){
-					nodeType = "otherwise";
-					treeNode.setExpressionType("otherwise");
+					nodeType = treeNode.CONDITION_OTHERWISE;
+					conditionNode.setConditionType(nodeType);
 				}
 				// and 와 or 의 공통 로직 처리
 				if( condi instanceof Or || condi instanceof And){
-					treeNode.setExpressionType("expression");
+					conditionNode.setConditionType(nodeType);
 					if( !"".equals(nodeName) ){
 						Condition childCondition[] = ((And)condi).getConditions();
 						if( childCondition != null && childCondition.length > 0){
@@ -187,28 +164,28 @@ public class ConditionPanel  implements ContextAware{
 								if( cd instanceof Evaluate){
 									Evaluate eval = (Evaluate)cd;
 									
-									treeNode.getConditionNode().getValiableChoice().setSelected(eval.getKey());
-									treeNode.getConditionNode().getSignChoice().setSelected(eval.getCondition());
+									conditionNode.getValiableChoice().setSelected(eval.getKey());
+									conditionNode.getSignChoice().setSelected(eval.getCondition());
 									Object value = eval.getValue();
 									if( value instanceof String){
 										String expString = (String)value;
 										if( "yes".equalsIgnoreCase(expString) || "no".equalsIgnoreCase(expString) ){
-											treeNode.getConditionNode().getExpressionChoice().setSelected("Yes or No");
-											treeNode.getConditionNode().getConditionInput().getMetaworksContext().setHow("Yes or No");
-											treeNode.getConditionNode().getConditionInput().setYesNo(expString);
+											conditionNode.getExpressionChoice().setSelected("Yes or No");
+											conditionNode.getConditionInput().getMetaworksContext().setHow("Yes or No");
+											conditionNode.getConditionInput().setYesNo(expString);
 										}else{
-											treeNode.getConditionNode().getExpressionChoice().setSelected("text");
-											treeNode.getConditionNode().getConditionInput().getMetaworksContext().setHow("text");
-											treeNode.getConditionNode().getConditionInput().setExpressionText(expString);
+											conditionNode.getExpressionChoice().setSelected("text");
+											conditionNode.getConditionInput().getMetaworksContext().setHow("text");
+											conditionNode.getConditionInput().setExpressionText(expString);
 										}
 									}else if( value instanceof Long){
-										treeNode.getConditionNode().getExpressionChoice().setSelected("number");
-										treeNode.getConditionNode().getConditionInput().getMetaworksContext().setHow("number");
-										treeNode.getConditionNode().getConditionInput().setExpressionText(value.toString());
+										conditionNode.getExpressionChoice().setSelected("number");
+										conditionNode.getConditionInput().getMetaworksContext().setHow("number");
+										conditionNode.getConditionInput().setExpressionText(value.toString());
 									}else if( value instanceof Date){
-										treeNode.getConditionNode().getExpressionChoice().setSelected("date");
-										treeNode.getConditionNode().getConditionInput().getMetaworksContext().setHow("date");
-										treeNode.getConditionNode().getConditionInput().setExpressionDate((Date)value);
+										conditionNode.getExpressionChoice().setSelected("date");
+										conditionNode.getConditionInput().getMetaworksContext().setHow("date");
+										conditionNode.getConditionInput().setExpressionDate((Date)value);
 									}
 								}
 							}

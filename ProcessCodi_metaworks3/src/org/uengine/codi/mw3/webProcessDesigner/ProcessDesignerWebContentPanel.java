@@ -29,6 +29,8 @@ import org.uengine.kernel.InvocationActivity;
 import org.uengine.kernel.ProcessDefinition;
 import org.uengine.kernel.ProcessVariable;
 import org.uengine.kernel.Role;
+import org.uengine.kernel.RoleParameterContext;
+import org.uengine.kernel.SubProcessActivity;
 import org.uengine.kernel.graph.Transition;
 import org.uengine.processmanager.ProcessManagerRemote;
 import org.uengine.util.UEngineUtil;
@@ -55,6 +57,7 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 		
 		canvasMap = new HashMap<String, CanvasDTO>();
 		activityMap = new HashMap<String, Object>();
+		roleMap = new HashMap<String, Object>();
 		conditionMap = new HashMap<String, Condition>();
 	}
 	
@@ -106,6 +109,14 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 		public void setActivityMap(HashMap<String, Object> activityMap) {
 			this.activityMap = activityMap;
 		}
+	HashMap<String, Object> roleMap;
+		public HashMap<String, Object> getRoleMap() {
+			return roleMap;
+		}
+		public void setRoleMap(HashMap<String, Object> roleMap) {
+			this.roleMap = roleMap;
+		}
+
 	HashMap<String, Condition> conditionMap;
 		public HashMap<String, Condition> getConditionMap() {
 			return conditionMap;
@@ -113,14 +124,6 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 		public void setConditionMap(HashMap<String, Condition> conditionMap) {
 			this.conditionMap = conditionMap;
 		}
-//	ArrayList<Activity> activityList; 
-//		public ArrayList<Activity> getActivityList() {
-//			return activityList;
-//		}
-//		public void setActivityList(ArrayList<Activity> activityList) {
-//			this.activityList = activityList;
-//		}
-
 
 	/*
 	 * 엘리먼트정보를 셋팅하기 위하여 해당 id를 임시적으로 들고있다
@@ -220,10 +223,6 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 		ConditionPanel conditionPanel = new ConditionPanel();
 		conditionPanel.setMetaworksContext(new MetaworksContext());
 		conditionPanel.getMetaworksContext().setWhen("edit");
-		String conditionString = null;
-//		if( tempElementData != null && !tempElementData.equals("[]")){
-//			conditionString = tempElementData.toString();
-//		}
 		if( this.getConditionMap() != null ){
 			Condition condition = conditionMap.get(this.getTempElementId());
 			conditionPanel.setCondition(condition);
@@ -232,11 +231,10 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 		conditionPanel.setRoleList(defineTab.rolePanel.getRoles());
 		conditionPanel.setPrcsValiableList(defineTab.prcsValiablePanel.getPrcsValiables());
 		
-		conditionPanel.setConditionString(conditionString);
 		conditionPanel.setConditionId(this.getTempElementId());
 		conditionPanel.setConditionLabel(this.getTempElementName());
 		conditionPanel.load();
-		return new ModalWindow(conditionPanel , 800, 550,  "조건분기" );
+		return new ModalWindow(conditionPanel , 800, 550,  "조건편집" );
 	}
 	@ServiceMethod(target="popup", callByContent=true)
 	public Popup geomInfo() throws Exception{
@@ -320,20 +318,36 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 					// 엑티비티 생성
 					GeomShape geom = new GeomShape(cv);
 					geom.setPvs(pvs);
-					if( cv.getParent() != null ){
-						String groupId = geom.getParent();
-						CanvasDTO groupCanvas = getCanvasMap().get(groupId);
-						if( "OG.shape.HorizontalLaneShape".equals(groupCanvas.getShapeId()) 
-								|| "OG.shape.VerticalLaneShape".equals(groupCanvas.getShapeId())){
-							if(cv.getClassname() != null && "org.uengine.kernel.HumanActivity".equals(cv.getClassname()) ){
-								HumanActivity activity = (HumanActivity)activityMap.get(cv.getId());
-								activity = (HumanActivity)geom.makeProcVal(activity);
-								Role role = (Role)getActivityMap().get(groupId);
+					if(cv.getClassname() != null && "org.uengine.kernel.HumanActivity".equals(cv.getClassname()) ){
+						HumanActivity activity = (HumanActivity)activityMap.get(cv.getId());
+						activity = (HumanActivity)geom.makeProcVal(activity);
+						if( cv.getParent() != null ){
+							String groupId = geom.getParent();
+							CanvasDTO groupCanvas = getCanvasMap().get(groupId);
+							if( "OG.shape.HorizontalLaneShape".equals(groupCanvas.getShapeId()) 
+									|| "OG.shape.VerticalLaneShape".equals(groupCanvas.getShapeId())){
+								Role role = (Role)getRoleMap().get(groupId);
 								activity.setRole(role);
 							}
+						}else{
+							// 만약 휴먼엑티비티에  role 이 셋팅이 안되어 있다면 default role 로 initator 로 셋팅을 해준다.(서브프로세스의 role셋팅을 위하여)
+							activity.setRole(initiator);
 						}
 					}
 				}else if( "GROUP".equalsIgnoreCase(cv.getShapeType()) ){
+					// 서브프로세스
+					if(cv.getClassname() != null && "org.uengine.kernel.SubProcessActivity".equals(cv.getClassname()) ){
+						SubProcessActivity activity = (SubProcessActivity)activityMap.get(cv.getId());
+						Role role = (Role)getRoleMap().get(cv.getParent());
+						
+						RoleParameterContext[] roleBindings = new RoleParameterContext[1];
+						roleBindings[0] = new RoleParameterContext();
+						roleBindings[0].setRole(role);
+						// 서브프로세스 안쪽의 role 은 무조건 initiator 로 통일 시킨다.
+						roleBindings[0].setArgument(initiator.getName());
+						activity.setRoleBindings(roleBindings);
+					}
+					
 				}else if( "EDGE".equalsIgnoreCase(cv.getShapeType()) ){
 					String formStr = cv.getFrom();
 					String toStr = cv.getTo();
@@ -358,13 +372,21 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 			CanvasDTO jsonString = new CanvasDTO();
 			jsonString.setJsonString(graphString);
 			cells.add(jsonString);
+			 // def 에 Activity 셋팅
 			Collection<Object> coll = activityMap.values();
 	        Iterator<Object> iter = coll.iterator();
 	        while(iter.hasNext()){
 	        	Object act = iter.next();
 	        	if( act instanceof Activity){
 	        		def.addChildActivity((Activity)act);
-	        	}else if( act instanceof Role){
+	        	}
+	        }
+	        // def 에 Role 셋팅
+	        Collection<Object> collRole = roleMap.values();
+	        Iterator<Object> iterRole = collRole.iterator();
+	        while(iterRole.hasNext()){
+	        	Object act = iterRole.next();
+	        	if( act instanceof Role){
 	        		def.addRole((Role)act);
 	        	}
 	        }
@@ -485,34 +507,14 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 					}
 					if( cells[i].getTracingTag() != null ){
 						if( "GEOM".equalsIgnoreCase(cells[i].getShapeType()) ){
-							
-						
-							
 							Activity activity = def.getActivity(cells[i].getTracingTag());
-							if(activity instanceof HumanActivity ){
-//								ParameterContext pc[] = ((HumanActivity) activity).getParameters();
-//								if( pc != null ){
-//									for(int j = 0; j < pc.length; j++){
-//										if(  pc[j].getVariable().getType() == org.uengine.contexts.ComplexType.class ){
-//											Set<ParameterContext> asSet = new HashSet<ParameterContext>(Arrays.asList(pc));
-//									    	asSet.remove(pc[j]);
-//									    	pc = asSet.toArray(new ParameterContext[] {});
-//										}
-//									}
-//									if( pc.length == 0 ) pc = null;
-//								}
-//								((HumanActivity) activity).setParameters(pc);
-								
-								// TODO 임시방편..
-								activity = new HumanActivity();
-								activity.setTracingTag(cells[i].getTracingTag());
-							}
-//							activityList.add( activity );  
 							activityMap.put(cells[i].getId() , activity );
 						}else if( "GROUP".equalsIgnoreCase(cells[i].getShapeType()) ){
-							// TODO 현재 group 은 role이라서..
 							if( "OG.shape.HorizontalLaneShape".equals(cells[i].getShapeId() ) || "OG.shape.VerticalLaneShape".equals(cells[i].getShapeId() )){
-								activityMap.put(cells[i].getId() , def.getRole(cells[i].getLabel() ));
+								roleMap.put(cells[i].getId() , def.getRole(cells[i].getLabel() ));
+							}else if( "OG.shape.bpmn.A_Subprocess".equals(cells[i].getShapeId() )){
+								Activity activity = def.getActivity(cells[i].getTracingTag());
+								activityMap.put(cells[i].getId() , activity );
 							}
 						}
 						if( Integer.parseInt(cells[i].getTracingTag()) > tagCnt )
