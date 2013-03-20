@@ -1,0 +1,211 @@
+
+<%
+if(mw3.when == 'filter'){
+
+%>
+
+	<img  class="navi_icon" alt="" src="images/processMap/iconDefault.png" width="13" height="13"/><a href="#" onClick="#"><%=value.appName%></a>
+
+<%
+}else {
+
+	if(value){
+	
+		if(value.metaworksContext.when == 'myVendor') {
+		
+	%>
+		<div>
+			<table>
+				<tr>
+					<td><div style="width: 70px; height: 70px"> <%=fields.logoFile.here({when:'image'})%> </div></td>
+					<td width=500>
+						<ul><li><a href="#" onClick="<%=methods.detailListing.caller()%>" > <%=value.appName%> </a></li></ul>
+						<ul><li> <%=value.simpleOverview%></li></ul>
+						<ul><li><a href="#" onClick="<%=methods.detailListing.caller()%>" > veiw more overview>> </a></li></ul>
+					</td>
+					<td>
+						<ul><li> Listing Status </li></ul>
+						<ul><li> <%=value.status%> </li></ul>
+					</td>
+					<td>
+						<%if(value.status == 'Unpublished'){%>
+						
+							<ul><li> <a href="#" onClick="<%=methods.readyPublished.caller()%>" > Ready for publish </a> </li></ul>
+							
+						<%}%>
+							<ul><li> <a href="#" onClick="<%=methods.editListing.caller()%>" > Edit Detail </a> </li></ul>
+					</td>
+				</tr>
+			</table>
+		</div>
+	<%
+		
+		}else if(value.metaworksContext.when == 'detailList'){
+		
+		var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
+		var company = session.company[0];
+		var category = value.category[0];
+		
+	%>
+		<div>CODI Apps > <a href="#" onclick="#"> <%=category.categoryName%> </a></div>
+		
+		<table>
+			<tr>
+				<td colspan="2" style="font-size:20px; font-weight:bold"><%=value.appName%></td>
+			</tr>
+			<tr>
+				<td colspan="2" align="right">by <%=company.comName%></td>
+			</tr>
+			<tr>
+				<td colspan="2" align="center"><img src="images/empty_editor_divider.png" /></td>
+			</tr>
+			<tr>
+				<td><div style="width: 200px; height: 200px"> <%=fields.logoFile.here({when:'image'})%> </div></td>
+				<td width=500>
+					<ul><li> <%=value.simpleOverview%> </li></ul>
+					<ul><li> Pricing Detail </li></ul>
+					<ul><li> <%=value.pricing%> </li></ul>
+					<ul><li> Status > <%=value.status%> </li></ul>
+				</td>
+			</tr>
+			<%
+			if(value.status == 'Published') {
+			
+			%>
+			
+				<tr>
+					<td colspan="2" align="right"> <a href="#" onClick="<%=methods.addAppOurGroup.caller()%>"> <%=mw3.localize('$Add') %> </a> </td>
+				</tr>
+			
+			<%
+			
+			}
+			%>
+			
+			<tr>
+				<td>
+					<span>
+						<div class="workItem_tabs">
+							 <ul>
+								<li class="current">
+									<a href="#" onClick="mw3.getFaceHelper('<%=objectId%>').showDescription()"><span>Description</span></a>
+								</li>	
+							 	<li>
+							 		<a href="#" onClick="mw3.getFaceHelper('<%=objectId%>').showVendor()"><span>Vendor</span></a>
+							 	</li>
+							 </ul>
+						</div>
+						
+						<div id="tab_Vendor" style="display:none">
+							<div>
+								<table>
+									<tr>
+										<td rowspan="3"> <img src="images/logo.png" width=150 height=150 /> </td>
+										<td> <%=company.comName%> </td>
+									</tr>
+									<tr>
+										<td> <img src="images/empty_editor_divider.png" /> </td>
+									</tr>
+									<tr>
+										<td width=500>
+											<ul font-size=15px><li><%=company.description%></li></ul>
+											<ul><li><%=company.repMail%></li></ul>
+										</td>
+									</tr>
+								</table>
+							</div>
+						</div>
+	
+						<div id="tab_Description">
+							<%=value.fullOverview%>
+						</div>
+						
+					</span>
+				</td>
+			</tr>
+		</table>
+		
+	<%
+		}else if(value.metaworksContext.when == 'marketplaceHome'){
+		
+	%>
+	
+		<table>
+			<tr>
+				<td rowspan="3" style="width: 100px; height: 100px">  <%=fields.logoFile.here({when:'image'})%> </td>
+				<td> <a href="#" onClick="<%=methods.detailListing.caller()%>"> <%=value.appName%> (<%=value.pricing%>) </a> </td>
+			</tr>
+			<tr>
+				<td> <%=value.simpleOverview%> </td>
+			</tr>
+			<tr>
+				<td> <%=value.fullOverview%> </td>
+			</tr>
+		</table>
+	
+	<%	
+		
+		}else if(value.metaworksContext.when == 'newApps') {
+	
+	%>
+		<table>
+			<tr>
+				<td> <a href="#" onClick="<%=methods.detailListing.caller()%>"> <%=value.appName%> (<%=value.pricing%>) </a> </td>
+			</tr>
+			<tr>
+				<td> <%=value.simpleOverview%> </td>
+			</tr>
+			<tr>
+				<td> <img src="images/waveStyle/m02.png" /> </td>
+			</tr>
+		</table>
+	
+	<%
+		}else if(value.metaworksContext.when == 'searchForCategory' ) {
+		
+	%>
+		
+		<table>
+			<tr>
+				<td rowspan="3" style="width: 100px; height: 100px">  <%=fields.logoFile.here({when:'image'})%> </td>
+				<td> <a href="#" onClick="<%=methods.detailListing.caller()%>"> <%=value.appName%> </a> </td>
+			</tr>
+			<tr>
+				<td> <%=value.simpleOverview%> </td>
+			</tr>
+			<tr>
+				<td> <span style:"font-weight:bold"> Pricing: </span> <%=value.pricing%> </td>
+			</tr>
+		</table>
+	
+	<%
+		
+		}else if(value.metaworksContext.when == 'searchForSearchBox') {
+		
+	%>
+		
+		<table>
+			<tr>
+				<td rowspan="3" style="width: 100px; height: 100px">  <%=fields.logoFile.here({when:'image'})%> </td>
+				<td> <a href="#" onClick="<%=methods.detailListing.caller()%>"> <%=value.appName%> </a> </td>
+			</tr>
+			<tr>
+				<td> <%=value.simpleOverview%> </td>
+			</tr>
+			<tr>
+				<td> <span style:"font-weight:bold"> Pricing: </span> <%=value.pricing%> </td>
+			</tr>
+			<tr>
+				<td> <span style:"font-weight:bold; font-style:oblique" align="right"> service by <%=value.pricing%> </td>
+			</tr>
+		</table>
+			
+	<%
+		}
+	
+	}
+	
+}
+%>
+
+	

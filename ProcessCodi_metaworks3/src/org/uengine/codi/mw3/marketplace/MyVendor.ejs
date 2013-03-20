@@ -1,0 +1,45 @@
+
+<%
+
+if(value){
+
+%>
+
+	<div><%=value.vendor.comName%></div>
+	<img src="images/empty_editor_divider.png" />
+	
+	<div>
+		<table>
+			<tr>
+				<td><img src="images/logo.png" width=150 height=150 /></td>
+				<td width=500>
+					<ul font-size=15px><li><%=value.vendor.description%></li></ul>
+					<ul><li><%=value.vendor.repMail%></li></ul>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2" align="right">
+					<div><a href="#" onClick="<%=methods.createListing.caller()%>"> Create a new Listing </a></div>
+				</td>
+			</tr>
+		</table>
+	</div>
+	
+	<%
+	
+	if(value.listing != null){
+	
+	%>
+	
+		<div><%=mw3.localize('$Listings')%></div>
+		<img src="images/empty_editor_divider.png" />
+	
+		<%=fields.listing.here()%>
+	
+	<%
+	
+	}
+	
+}
+
+%>
