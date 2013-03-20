@@ -25,7 +25,8 @@ var org_metaworks_example_ide_SourceCode = function(objectId, className){
 org_metaworks_example_ide_SourceCode.prototype = {
 	load : function(){
 		var faceHelper = this;
-		var object = mw3.objects[faceHelper.objectId];
+		var objectId = faceHelper.objectId;
+		var object = mw3.objects[objectId];
 		
 		faceHelper.editor = ace.edit(faceHelper.divName);
 		faceHelper.editor.setTheme("ace/theme/eclipse");
@@ -460,6 +461,7 @@ org_metaworks_example_ide_SourceCode.prototype = {
 		
 		return result.substring('package'.length).trim();
 	},
+	
 	selectAssist : function(e){
 		var assist = mw3.getAutowiredObject('org.metaworks.example.ide.CodeAssist');
     	
