@@ -109,3 +109,10 @@
 .simpleOverview{ line-height: 20px; color:#87876A}
 .fullOverview{ line-height: 20px;}
 
+.detailView_app_outer{padding:0 15px;}
+.detailView_app {border-bottom: 2px solid #222222; margin-bottom:20px;}
+.detailView_app .topTitle_app{ float:left; font-size: 18px; font-weight:bold; padding-left:15px; line-height: 30px; height:30px;}
+.detailView_app .byCompany_app{ float:right; padding-right:15px;  line-height: 30px; height:30px;}
+
+#tab_Vendor{ border:1px solid #E5E5E5; border-top:0;}
+#tab_Description{ padding:10px; border:1px solid #E5E5E5; border-top:0;}
