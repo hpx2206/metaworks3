@@ -1,0 +1,72 @@
+
+<%
+
+if(value){
+
+var context = value.file.metaworksContext.when;
+
+%>
+
+	<div><%=mw3.localize('$Listing.Information')%></div>
+	<img src="images/empty_editor_divider.png" />
+
+	<div font-color=red><%=mw3.localize('$AllFiledsRequired')%></div>
+	
+	<table>
+		<tr>
+			<td><div><%=mw3.localize('$Listing.Category')%></div></td>
+			<td><%=fields.categories.here()%></td>
+			<td>
+			<%
+			if(context == "edit"){
+			
+			%>
+				<%=methods.edit.here()%> 
+			<%
+			
+			}else{
+			
+			%>
+				<%=methods.add.here()%>
+			<%
+			}
+			%>
+			</td>
+		</tr>
+		<tr>
+			<td><div><%=mw3.localize('$Listing.Name')%></div></td>
+			<td colspan="2"><%=fields.listingName.here()%></td>
+		</tr>
+		<tr>
+			<td><div><%=mw3.localize('$Listing.Overview.Simple')%></div></td>
+			<td colspan="2">
+				<ul><li><%=fields.simpleOverview.here()%></li></ul>
+				<ul><li>200 charecter(s) remaining</li></ul>
+			</td>
+		</tr>
+		<tr>
+			<td><div><%=mw3.localize('$Listing.Overview.Full')%></div></td>
+			<td colspan="2">
+				<ul><li><%=fields.fullOverview.here()%></li></ul>
+				<ul><li>1500 charecter(s) remaining</li></ul>
+			</td>
+		</tr>
+		<tr>
+			<td><div><%=mw3.localize('$Listing.Pricing')%></div></td>
+			<td colspan="2"><%=fields.pricing.here()%></td>
+		</tr>
+		<tr>
+			<td><div><%=mw3.localize('$Listing.FileAttach')%></div></td>
+			<td colspan="2"><%=fields.file.here({when:'edit'})%></td>
+		</tr>
+		<tr>
+			<td><div><%=mw3.localize('$Listing.LogoFileAttach')%></div></td>
+			<td colspan="2"><%=fields.logoFile.here({when:'edit'})%></td>
+		</tr>
+	</table>
+
+
+<%
+}
+
+%>

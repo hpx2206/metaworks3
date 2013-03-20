@@ -1,0 +1,40 @@
+
+<%
+
+if(value){
+
+
+%>
+
+	<span>
+		<table width="100%">
+			<tr>
+				<td colspan="4" align="right">
+					 <%=fields.session.here({when:'view'})%>
+				</td>
+			</tr>
+			<tr>
+				<td width="30">
+					<div class="logo"> <img src="images/waveStyle/logo.png" onClick="#"> </div>
+				</td>
+				<td valign="bottom" width="50">
+					Marketplace
+				</td>
+				<td>
+					<div id="searchbox" width="50%">
+					   	<div class="searchboxarea" id="method_<%=objectId%>_newInstance">
+					       	<%=fields.searchBox.here()%>
+					    </div>
+						<div style="clear:both;"></div>
+						
+					</div>
+				</td>
+			</tr>
+		</table>
+	</span>
+<%
+
+}
+
+%>
+
