@@ -27,6 +27,14 @@ public class TreeNode {
 			this.id = id;
 		}
 		
+	String treeId;
+		public String getTreeId() {
+			return treeId;
+		}
+		public void setTreeId(String treeId) {
+			this.treeId = treeId;
+		}
+		
 	String name;
 		public String getName() {
 			return name;

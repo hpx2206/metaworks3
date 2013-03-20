@@ -80,9 +80,7 @@ org_metaworks_component_TreeNode.prototype = {
 	toAppend : function(appendobject){
 		if(appendobject != null && appendobject.length > 0){
 			var html = mw3.locateObject(appendobject, null);
-			
 			var appendDiv = $('<u></u>').addClass('last').css({'display': 'block', 'height': 'auto', 'overflow': 'visible'});
-			
 			if(this.object.root)
 				appendDiv.addClass('root');
 			
@@ -90,6 +88,8 @@ org_metaworks_component_TreeNode.prototype = {
 			this.objectDiv.children('u').append(html);
 			
 			this.push(appendobject);
+			
+			this.treeDiv.trigger('toAppended');
 		}else{
 			this.nodeDiv.removeClass('minlast');
 		}
