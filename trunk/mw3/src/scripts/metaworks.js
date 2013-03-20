@@ -1195,13 +1195,14 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 									   new YAHOO.widget.ContextMenu(
 											"_contextmenu_" + objectId,
 											{
-												zindex: 99,
+												zindex: 2000,
 												trigger: theDiv[0],
 												itemdata: menuItems,
 												lazyload: true
 											}
 										);
 								   });
+								   
 								   $('#' + targetDivId).attr('contextMenu', 'true');
 							   }
 						   }
