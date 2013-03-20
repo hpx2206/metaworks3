@@ -2,7 +2,6 @@ package org.uengine.codi.mw3.marketplace;
 
 import org.metaworks.annotation.Face;
 import org.uengine.codi.mw3.model.Session;
-import org.uengine.processmarket.Category;
 
 @Face(
 		ejsPath="genericfaces/Window.ejs",

@@ -51,7 +51,7 @@ public class Market {
 	public void load() throws Exception {
 		
 		setLayout(new Layout());
-		MarketCategoryPanel marketCategory = new MarketCategoryPanel(session);
+		MarketCategoryPanel marketCategory = new MarketCategoryPanel();
 		layout.setWest(marketCategory);
 		layout.setCenter(new MarketItemWindow());
 		layout.setNorth(new TopPanel(session));

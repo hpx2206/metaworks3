@@ -8,8 +8,8 @@ import org.metaworks.widget.layout.Layout;
 import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.marketplace.searchbox.MarketplaceSearchBox;
 import org.uengine.codi.mw3.model.Session;
-import org.uengine.processmarket.Category;
-import org.uengine.processmarket.MarketCategoryPanel;
+import org.uengine.codi.mw3.marketplace.category.Category;
+import org.uengine.codi.mw3.marketplace.category.MarketCategoryPanel;
 
 public class Marketplace {
 	

@@ -9,7 +9,7 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Table;
 import org.metaworks.dao.IDAO;
 import org.metaworks.website.MetaworksFile;
-import org.uengine.processmarket.ICategory;
+import org.uengine.codi.mw3.marketplace.category.ICategory;
 
 
 @Table(name="APP")

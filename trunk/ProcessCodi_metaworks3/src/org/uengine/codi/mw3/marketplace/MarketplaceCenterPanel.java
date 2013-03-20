@@ -4,7 +4,7 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.uengine.codi.mw3.marketplace.searchbox.MarketplaceSearchBox;
 import org.uengine.codi.mw3.model.Session;
-import org.uengine.processmarket.ICategory;
+import org.uengine.codi.mw3.marketplace.category.ICategory;
 
 public class MarketplaceCenterPanel {
 	
