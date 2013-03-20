@@ -25,7 +25,6 @@ public class MarketplaceCenterWindow {
 		
 		centerPanel = new MarketplaceCenterPanel();
 		centerPanel.session = session;
-		centerPanel.load();
 		
 	}
 }

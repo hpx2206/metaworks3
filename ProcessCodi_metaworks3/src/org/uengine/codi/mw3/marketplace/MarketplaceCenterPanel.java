@@ -12,11 +12,11 @@ public class MarketplaceCenterPanel {
 		
 	}
 	
-	IListing listing;
-		public IListing getListing() {
+	IApp listing;
+		public IApp getListing() {
 			return listing;
 		}
-		public void setListing(IListing listing) {
+		public void setListing(IApp listing) {
 			this.listing = listing;
 		}
 		
@@ -41,23 +41,23 @@ public class MarketplaceCenterPanel {
 	public Session session;
 
 	
-	public void load() throws Exception {
-		
-		Listing findlisting = new Listing();
-		findlisting.setVendorId(session.getCompany().getComCode());
-		findlisting.session = session;
-		
-		listing = findlisting.findByVendor();
-		listing.getMetaworksContext().setWhen("marketplaceHome");
-
-		MarketplaceSearchBox searchBox = new MarketplaceSearchBox();
-		searchBox.setKeyUpSearch(true);
-		searchBox.setKeyEntetSearch(true);
-
-		
-		setListing(listing);
-		setSearchBox(searchBox);
-
-	}
+//	public void load() throws Exception {
+//		
+////		Listing findlisting = new Listing();
+////		findlisting.setVendorId(session.getCompany().getComCode());
+////		findlisting.session = session;
+////		
+////		listing = findlisting.findByVendor();
+//////		listing.getMetaworksContext().setWhen("marketplaceHome");
+//
+//		MarketplaceSearchBox searchBox = new MarketplaceSearchBox();
+//		searchBox.setKeyUpSearch(true);
+//		searchBox.setKeyEntetSearch(true);
+//
+//		
+////		setListing(listing);
+//		setSearchBox(searchBox);
+//
+//	}
 
 }

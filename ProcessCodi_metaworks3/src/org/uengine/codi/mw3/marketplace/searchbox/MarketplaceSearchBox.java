@@ -3,12 +3,11 @@ package org.uengine.codi.mw3.marketplace.searchbox;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.layout.Layout;
-import org.uengine.codi.mw3.marketplace.IListing;
-import org.uengine.codi.mw3.marketplace.Listing;
+import org.uengine.codi.mw3.marketplace.App;
+import org.uengine.codi.mw3.marketplace.IApp;
 import org.uengine.codi.mw3.marketplace.MarketplaceCenterPanel;
 import org.uengine.codi.mw3.marketplace.MarketplaceEastPanel;
 import org.uengine.codi.mw3.marketplace.MarketplaceWestPanel;
-import org.uengine.codi.mw3.model.Perspective;
 import org.uengine.codi.mw3.model.Session;
 
 public class MarketplaceSearchBox {
@@ -46,10 +45,10 @@ public class MarketplaceSearchBox {
 		
 		session.setSearchKeyword(getKeyword());
 		
-		Listing findListing = new Listing();
+		App findListing = new App();
 		findListing.setAppName(getKeyword());
 		
-		IListing getListing = findListing.searchApps();
+		IApp getListing = findListing.searchApps();
 		getListing.getMetaworksContext().setWhen("searchForSearchBox");
 		
 		//west - category combo box, list panel

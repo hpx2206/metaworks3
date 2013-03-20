@@ -16,11 +16,11 @@ public class MarketplaceEastPanel {
 		
 	}
 	
-	IListing listing;
-		public IListing getListing() {
+	IApp listing;
+		public IApp getListing() {
 			return listing;
 		}
-		public void setListing(IListing listing) {
+		public void setListing(IApp listing) {
 			this.listing = listing;
 		}
 	
@@ -31,17 +31,14 @@ public class MarketplaceEastPanel {
 	
 	public void load() throws Exception {
 		
-		Listing findlisting = new Listing();
+		App findlisting = new App();
 		
 		findlisting.session = session;
 		findlisting.setVendorId(session.getCompany().getComCode());
 		
 		listing = findlisting.findNewApps();
-		listing.getMetaworksContext().setWhen("newApps");
-
 		
 		setListing(listing);
-		
 		
 	}
 

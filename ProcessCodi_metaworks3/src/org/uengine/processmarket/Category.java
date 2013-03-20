@@ -9,9 +9,10 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.IDAO;
 import org.metaworks.widget.layout.Layout;
-import org.uengine.codi.mw3.marketplace.IListing;
-import org.uengine.codi.mw3.marketplace.Listing;
+import org.uengine.codi.mw3.marketplace.App;
+import org.uengine.codi.mw3.marketplace.IApp;
 import org.uengine.codi.mw3.marketplace.MarketplaceCenterPanel;
+import org.uengine.codi.mw3.marketplace.MarketplaceCenterWindow;
 import org.uengine.codi.mw3.marketplace.MarketplaceEastPanel;
 import org.uengine.codi.mw3.model.Session;
 
@@ -97,24 +98,28 @@ public class Category extends Database<ICategory> implements ICategory {
 
 	@Override
 	public Object[] selectCategory() throws Exception {
-		ICategory category = databaseMe();
 		
-		Listing findListings = new Listing();
+		ICategory category = databaseMe();
+		category.getMetaworksContext().setWhen("searchForCategory");
+		
+		
+		App findListings = new App();
+		
 		findListings.session = session;
+		findListings.setCategory(this);
+		findListings.setVendorId(session.getCompany().getComCode());
+		
+		IApp getListing = findListings.findForCategory();
+		getListing.getMetaworksContext().setWhen((getListing.size() > 0) ? "searchForCategory" : "HavntResult");
+		
+
+		MarketplaceCenterPanel centerPanel = new MarketplaceCenterPanel();
+		centerPanel.setListing(getListing);
 		
 		//center - search result
-		IListing getListing = findListings.findForCategory();
-		
-		
-		MarketplaceCenterPanel center = new MarketplaceCenterPanel();
-		center.setListing(getListing);
-		center.setCategory(category);
-		
-		String status = (getListing.size() > 0) ? "searchForCategory" : "HavntResult";
+		MarketplaceCenterWindow center = new MarketplaceCenterWindow(session);
+		center.setCenterPanel(centerPanel);
 
-		category.getMetaworksContext().setWhen("searchForCategory");
-		getListing.getMetaworksContext().setWhen(status);
-		
 		//west - category
 		MarketCategoryPanel marketCategory = new MarketCategoryPanel(session);
 		marketCategory.setCategory(Category.loadRootCategory());

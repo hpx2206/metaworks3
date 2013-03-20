@@ -6,6 +6,7 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.layout.Layout;
 import org.uengine.codi.mw3.admin.PageNavigator;
+import org.uengine.codi.mw3.marketplace.searchbox.MarketplaceSearchBox;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.processmarket.Category;
 import org.uengine.processmarket.MarketCategoryPanel;
@@ -40,9 +41,25 @@ public class Marketplace {
 
 		//center
 		MarketplaceCenterWindow center = new MarketplaceCenterWindow(session);
-//		MarketplaceCenterPanel center = new MarketplaceCenterPanel();
-//		center.session = session;
-//		center.load();
+		
+		MarketplaceCenterPanel appListPanel = new MarketplaceCenterPanel();
+		
+		App findlisting = new App();
+		findlisting.setVendorId(session.getCompany().getComCode());
+		findlisting.session = session;
+		
+		IApp listing = findlisting.findByVendor();
+		listing.getMetaworksContext().setWhen("marketplaceHome");
+		
+		MarketplaceSearchBox searchBox = new MarketplaceSearchBox();
+		searchBox.setKeyUpSearch(true);
+		searchBox.setKeyEntetSearch(true);
+
+		appListPanel.setListing(listing);
+		appListPanel.setSearchBox(searchBox);
+		
+		center.setCenterPanel(appListPanel);
+		
 		
 		//west
 		MarketCategoryPanel marketCategory = new MarketCategoryPanel(session);
