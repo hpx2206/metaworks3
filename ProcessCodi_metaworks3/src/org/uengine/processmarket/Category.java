@@ -2,9 +2,18 @@ package org.uengine.processmarket;
 
 import java.sql.Timestamp;
 
+import javax.print.attribute.standard.Fidelity;
+
 import org.metaworks.MetaworksContext;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.IDAO;
+import org.metaworks.widget.layout.Layout;
+import org.uengine.codi.mw3.marketplace.IListing;
+import org.uengine.codi.mw3.marketplace.Listing;
+import org.uengine.codi.mw3.marketplace.MarketplaceCenterPanel;
+import org.uengine.codi.mw3.marketplace.MarketplaceEastPanel;
+import org.uengine.codi.mw3.model.Session;
 
 public class Category extends Database<ICategory> implements ICategory {
 
@@ -89,24 +98,40 @@ public class Category extends Database<ICategory> implements ICategory {
 	@Override
 	public Object[] selectCategory() throws Exception {
 		ICategory category = databaseMe();
+		
+		Listing findListings = new Listing();
+		findListings.session = session;
+		
+		//center - search result
+		IListing getListing = findListings.findForCategory();
+		
+		
+		MarketplaceCenterPanel center = new MarketplaceCenterPanel();
+		center.setListing(getListing);
+		center.setCategory(category);
+		
+		String status = (getListing.size() > 0) ? "searchForCategory" : "HavntResult";
 
-		MarketItemPanel mp = fillMarketItemPanel();
-		if (isSelected()) {
-			category.setChildrenCategories(null);
-			category.setSelected(false);
-
-		}else{
-
-			/*  String sql = "select * from category where parentCategoryId = ?parentCategoryId";
-  childrenCategories = (ICategory) sql(ICategory.class, sql);
-  childrenCategories.setParentCategoryId(this.categoryId);
-  childrenCategories.select();
-			 */  
-			category.setChildrenCategories(null);
-			category.setSelected(true);
-		}
-
-		return new Object[] { category, mp };
+		category.getMetaworksContext().setWhen("searchForCategory");
+		getListing.getMetaworksContext().setWhen(status);
+		
+		//west - category
+		MarketCategoryPanel marketCategory = new MarketCategoryPanel(session);
+		marketCategory.setCategory(Category.loadRootCategory());
+		
+		//east - new apps
+		MarketplaceEastPanel east = new MarketplaceEastPanel();
+		east.session = session;
+		east.load();
+		
+		
+		Layout layout = new Layout();
+		
+		layout.setWest(marketCategory);
+		layout.setCenter(center);
+		layout.setEast(east);
+		
+		return new Object[] { layout };
 	}
 
 	private MarketItemPanel fillMarketItemPanel() throws Exception {
@@ -185,5 +210,8 @@ public class Category extends Database<ICategory> implements ICategory {
 		mainCategory.getMetaworksContext().setWhen("view");
 		return mainCategory;
 	}
-
+	
+	@AutowiredFromClient
+	public Session session;
+	
 }
