@@ -6,8 +6,10 @@ import org.metaworks.widget.layout.Layout;
 import org.uengine.codi.mw3.marketplace.App;
 import org.uengine.codi.mw3.marketplace.IApp;
 import org.uengine.codi.mw3.marketplace.MarketplaceCenterPanel;
+import org.uengine.codi.mw3.marketplace.MarketplaceCenterWindow;
 import org.uengine.codi.mw3.marketplace.MarketplaceEastPanel;
-import org.uengine.codi.mw3.marketplace.MarketplaceWestPanel;
+import org.uengine.codi.mw3.marketplace.category.Category;
+import org.uengine.codi.mw3.marketplace.category.MarketCategoryPanel;
 import org.uengine.codi.mw3.model.Session;
 
 public class MarketplaceSearchBox {
@@ -52,13 +54,17 @@ public class MarketplaceSearchBox {
 		getListing.getMetaworksContext().setWhen("searchForSearchBox");
 		
 		//west - category combo box, list panel
-		MarketplaceWestPanel west = new MarketplaceWestPanel();
+		MarketCategoryPanel marketCategory = new MarketCategoryPanel(session);
+		marketCategory.setCategory(Category.loadRootCategory());
 		
 		//center - search result
-		MarketplaceCenterPanel center = new MarketplaceCenterPanel();
-		center.session = session;
-		center.setListing(getListing);
-		center.getListing().getMetaworksContext().setWhen("searchForSearchBox");
+		MarketplaceCenterPanel centerPanel = new MarketplaceCenterPanel();
+		centerPanel.session = session;
+		centerPanel.setListing(getListing);
+		centerPanel.getListing().getMetaworksContext().setWhen("searchForSearchBox");
+		
+		MarketplaceCenterWindow centerwin = new MarketplaceCenterWindow(session);
+		centerwin.setCenterPanel(centerPanel);
 		
 		//east - new apps
 		MarketplaceEastPanel east = new MarketplaceEastPanel();
@@ -70,8 +76,8 @@ public class MarketplaceSearchBox {
 		
 		mainPanel.setId("main");
 		mainPanel.setName("center");
-		mainPanel.setCenter(center);
-		mainPanel.setWest(west);
+		mainPanel.setCenter(centerwin);
+		mainPanel.setWest(marketCategory);
 		mainPanel.setEast(east);
 		
 		return new Object[] {mainPanel};

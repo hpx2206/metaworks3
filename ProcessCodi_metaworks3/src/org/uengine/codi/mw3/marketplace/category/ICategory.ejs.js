@@ -3,18 +3,18 @@ var org_uengine_codi_mw3_marketplace_category_ICategory = function(objectId, cla
 	this.className = className;
 };
 
-org_uengine_processmarket_ICategory.prototype.showStatus = function(status){
+org_uengine_codi_mw3_marketplace_category_ICategory.prototype.showStatus = function(status){
 };
 
-org_uengine_processmarket_ICategory.prototype.startLoading = function(){
+org_uengine_codi_mw3_marketplace_category_ICategory.prototype.startLoading = function(){
 	
 };
 
-org_uengine_processmarket_ICategory.prototype.endLoading = function(){
+org_uengine_codi_mw3_marketplace_category_ICategory.prototype.endLoading = function(){
 
 };
 
-org_uengine_processmarket_ICategory.prototype.showChildrenCategories = function(){
+org_uengine_codi_mw3_marketplace_category_ICategory.prototype.showChildrenCategories = function(){
 	var currCategory = mw3.getObject(this.objectId);
 	currCategory.selectCategory();
 	var children = currCategory.childrenCategories;

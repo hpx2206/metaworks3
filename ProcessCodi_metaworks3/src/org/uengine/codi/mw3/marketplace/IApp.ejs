@@ -10,7 +10,7 @@ if(mw3.when == 'filter'){
 }else {
 
 	if(value){
-	
+	console.log(value.metaworksContext.when);
 		if(value.metaworksContext.when == 'myVendor') {
 		
 	%>
@@ -43,13 +43,14 @@ if(mw3.when == 'filter'){
 		
 		}else if(value.metaworksContext.when == 'detailList'){
 		
+		console.log(value);
+		
 		var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
 		var company = session.company[0];
-		var category = value.category[0];
 		
 	%>
 	2
-		<div>CODI Apps > <a href="#" onclick="#"> <%=category.categoryName%> </a></div>
+		<div>CODI Apps > <a href="#" onclick="#"> <%=value.category.categoryId%> </a></div>
 		
 		<table>
 			<tr>
