@@ -6,13 +6,6 @@ import org.uengine.codi.mw3.marketplace.searchbox.MarketplaceSearchBox;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.processmarket.ICategory;
 
-
-@Face(
-		ejsPath="genericfaces/Window.ejs",
-		options={"hideAddBtn", "hideLabels"},
-		values={"true", "true"},
-		displayName="TopInstall"
-	)
 public class MarketplaceCenterPanel {
 	
 	public MarketplaceCenterPanel(){
