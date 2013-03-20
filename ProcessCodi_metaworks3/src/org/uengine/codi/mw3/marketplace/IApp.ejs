@@ -14,31 +14,30 @@ if(mw3.when == 'filter'){
 		if(value.metaworksContext.when == 'myVendor') {
 		
 	%>
-	1
-		<div>
-			<table>
-				<tr>
-					<td><div style="width: 70px; height: 70px"> <%=fields.logoFile.here({when:'image'})%> </div></td>
-					<td width=500>
-						<ul><li><a href="#" onClick="<%=methods.detailListing.caller()%>" > <%=value.appName%> </a></li></ul>
-						<ul><li> <%=value.simpleOverview%></li></ul>
-						<ul><li><a href="#" onClick="<%=methods.detailListing.caller()%>" > veiw more overview>> </a></li></ul>
-					</td>
-					<td>
-						<ul><li> Listing Status </li></ul>
-						<ul><li> <%=value.status%> </li></ul>
-					</td>
-					<td>
-						<%if(value.status == 'Unpublished'){%>
-						
-							<ul><li> <a href="#" onClick="<%=methods.readyPublished.caller()%>" > Ready for publish </a> </li></ul>
-							
+	<div class="fixed_img_row">
+   	  <ul>	
+	     <li> 
+        	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td class="appFirstTd"><span class="thumb"> <%=fields.logoFile.here({when:'image'})%> </span> </td>
+                    <td class="appTitleTd">
+                    	<div class="titleLine"> <strong><a href="#" onClick="<%=methods.detailListing.caller()%>"> <%=value.appName%> (<%=value.pricing%>) </a></strong></div>
+                    	<div class="simpleOverview"><%=value.simpleOverview%></div>
+                        <div><a href="#" class="viewMore">view more overview</a></div>
+                    </td>
+                    <td class="appVenderTd"><b>Listing Status</b><br><%=value.status%></td>
+                    <td class="appBtnTd">
+                    	<%if(value.status == 'Unpublished'){%>
+							<div class="badge" style="float:none;margin-top:2px;background:#679BD1;padding:3px 8px; width:80px" onClick="<%=methods.readyPublished.caller()%>">Ready for publish</div>
 						<%}%>
-							<ul><li> <a href="#" onClick="<%=methods.editListing.caller()%>" > Edit Detail </a> </li></ul>
+							<div class="badge" style="float:none;margin-top:2px;background:#679BD1;padding:3px 8px; width:80px" onClick="<%=methods.editListing.caller()%>">Edit Detail</div>
 					</td>
-				</tr>
-			</table>
-		</div>
+                </tr>
+            </table>
+		 </li>
+		</ul>
+	</div>
+
 	<%
 		
 		}else if(value.metaworksContext.when == 'detailList'){
