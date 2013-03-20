@@ -22,11 +22,11 @@ public class MyVendor {
 			this.vendor = vendor;
 		}
 	
-	IListing listing;
-		public IListing getListing() {
+	IApp listing;
+		public IApp getListing() {
 			return listing;
 		}
-		public void setListing(IListing listing) {
+		public void setListing(IApp listing) {
 			this.listing = listing;
 		}
 
@@ -43,7 +43,7 @@ public class MyVendor {
 		setVendor(vendor);
 		
 		
-		Listing findlisting = new Listing();
+		App findlisting = new App();
 		findlisting.setVendorId(session.getCompany().getComCode());
 		
 		listing = findlisting.findByVendor();
@@ -57,7 +57,7 @@ public class MyVendor {
 	@ServiceMethod
 	public Object createListing() throws Exception {
 		
-		ListingInformation createListing = new ListingInformation();
+		AppInformation createListing = new AppInformation();
 		createListing.session = session;
 		
 		SelectBox categories = new SelectBox();

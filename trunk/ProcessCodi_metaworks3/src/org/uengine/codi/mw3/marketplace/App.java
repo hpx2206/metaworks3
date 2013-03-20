@@ -14,7 +14,7 @@ import org.uengine.processmarket.MarketCategoryPanel;
 
 import org.uengine.processmarket.ICategory;
 
-public class Listing extends Database<IListing> implements IListing{
+public class App extends Database<IApp> implements IApp{
 	
 	int appId;
 		public int getAppId() {
@@ -136,9 +136,9 @@ public class Listing extends Database<IListing> implements IListing{
 	public Session session;
 		
 	
-	public IListing findByVendor() throws Exception {
+	public IApp findByVendor() throws Exception {
 		
-		IListing findListings = (IListing) Database.sql(IListing.class, "select * from app where vendorId=?vendorId and isdeleted=?isdeleted order by installCnt desc");
+		IApp findListings = (IApp) Database.sql(IApp.class, "select * from app where vendorId=?vendorId and isdeleted=?isdeleted order by installCnt desc");
 		
 		findListings.setVendorId(this.getVendorId());
 		findListings.setIsDeleted(false);
@@ -150,26 +150,28 @@ public class Listing extends Database<IListing> implements IListing{
 		
 	}
 	
-	public IListing findMe() throws Exception {
+	public IApp findMe() throws Exception {
 		return this.databaseMe();
 	}
 	
-	public IListing findNewApps() throws Exception {
+	public IApp findNewApps() throws Exception {
 
 		//from 15days ago
-		IListing findListing = (IListing) Database.sql(IListing.class, "select * from app where DATE_FORMAT(createdate,'%Y-%m-%d') between DATE_SUB(CURRENT_DATE, INTERVAL 15 DAY) and CURRENT_DATE");
+		IApp findListing = (IApp) Database.sql(IApp.class, "select * from app where DATE_FORMAT(createdate,'%Y-%m-%d') between DATE_SUB(CURRENT_DATE, INTERVAL 15 DAY) and CURRENT_DATE");
 		
 		findListing.setAppId(this.getAppId());
 		findListing.setVendorId(this.getVendorId());
 		findListing.select();
 		
+		findListing.getMetaworksContext().setWhen("newApps");
+		
 		return findListing;
 		
 	}
 	
-	public IListing searchApps() throws Exception{
+	public IApp searchApps() throws Exception{
 		
-		IListing findListing = (IListing) Database.sql(IListing.class, "select * from app where appName like ?AppName");
+		IApp findListing = (IApp) Database.sql(IApp.class, "select * from app where appName like ?AppName");
 		
 		findListing.setAppName("%" + this.getAppName() + "%");
 		findListing.select();
@@ -178,9 +180,9 @@ public class Listing extends Database<IListing> implements IListing{
 		
 	}
 	
-	public IListing findForCategory() throws Exception{
+	public IApp findForCategory() throws Exception{
 		
-		IListing findListing = (IListing) Database.sql(IListing.class, "select * from app where categoryId=?categoryId and vendorid=?vendorId");
+		IApp findListing = (IApp) Database.sql(IApp.class, "select * from app where categoryId=?categoryId and vendorid=?vendorId");
 		
 		findListing.set("categoryId", this.getCategory().getCategoryId());
 		findListing.setVendorId(this.getVendorId());
@@ -190,9 +192,9 @@ public class Listing extends Database<IListing> implements IListing{
 		
 	}
 	
-	public static IListing findPublishedApps(Session session) throws Exception {
+	public static IApp findPublishedApps(Session session) throws Exception {
 		
-		IListing findListing = (IListing) Database.sql(IListing.class, "select * from app where status=?status and isdeleted=?isDeleted and vendorid=?vendorId");
+		IApp findListing = (IApp) Database.sql(IApp.class, "select * from app where status=?status and isdeleted=?isDeleted and vendorid=?vendorId");
 		
 		findListing.setStatus("Published");
 		findListing.setIsDeleted(false);
@@ -204,11 +206,11 @@ public class Listing extends Database<IListing> implements IListing{
 	}
 	
 	public void readyPublished() throws Exception {
-		Listing listing = new Listing();
 		
-		listing.setAppId(getAppId());
-		listing.databaseMe().setStatus(ListingInformation.STATUS_PUBLISHED);
+		App selectedApp = new App();
 		
+		selectedApp.setAppId(getAppId());
+		selectedApp.databaseMe().setStatus(AppInformation.STATUS_PUBLISHED);
 		
 		flushDatabaseMe();
 		
@@ -235,7 +237,7 @@ public class Listing extends Database<IListing> implements IListing{
 	
 	public Object editListing() throws Exception {
 		
-		ListingInformation editListing = new ListingInformation();
+		AppInformation editListing = new AppInformation();
 		editListing.session = session;
 		
 		SelectBox categories = new SelectBox();

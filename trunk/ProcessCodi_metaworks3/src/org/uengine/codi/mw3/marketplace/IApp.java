@@ -13,7 +13,7 @@ import org.uengine.processmarket.ICategory;
 
 
 @Table(name="APP")
-public interface IListing extends IDAO{
+public interface IApp extends IDAO{
 	
 	@Id
 	public int getAppId();
@@ -72,9 +72,9 @@ public interface IListing extends IDAO{
 	public ICategory getCategory();
 	public void setCategory(ICategory category);
 	
-	public IListing findMe() throws Exception;
+	public IApp findMe() throws Exception;
 	
-	public IListing findByVendor() throws Exception;
+	public IApp findByVendor() throws Exception;
 	
 	@ServiceMethod(callByContent=true)
 	public void readyPublished() throws Exception;

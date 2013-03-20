@@ -16,7 +16,7 @@ import org.uengine.processmanager.ProcessManagerRemote;
 import org.uengine.processmarket.Category;
 import org.uengine.processmarket.ICategory;
 
-public class ListingInformation {
+public class AppInformation {
 
 	public final static String STATUS_REQUEST = "Request";
 	public final static String STATUS_APPROVAL = "Approval";
@@ -24,7 +24,7 @@ public class ListingInformation {
 	public final static String STATUS_PUBLISHED = "Published";
 	public final static String STATUS_UNPUBLISHED = "Unpublished";
 
-	public ListingInformation() throws Exception {
+	public AppInformation() throws Exception {
 
 		setFile(new MetaworksFile());
 		setLogoFile(new MetaworksFile());
@@ -115,7 +115,7 @@ public class ListingInformation {
 		getFile().upload();
 		getLogoFile().upload();
 
-		Listing listing = new Listing();
+		App listing = new App();
 		
 		listing.setAppId(UniqueKeyGenerator.issueWorkItemKey(((ProcessManagerBean)processManager).getTransactionContext()).intValue());
 		listing.setAppName(listingName);
@@ -148,7 +148,7 @@ public class ListingInformation {
 			throw new MetaworksException("$YouMustAttachLogoFile");
 		
 		
-		Listing listing = new Listing();
+		App listing = new App();
 		
 		listing.setAppId(getListingId());
 		
