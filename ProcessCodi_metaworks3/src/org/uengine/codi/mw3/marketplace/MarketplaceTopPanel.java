@@ -1,6 +1,5 @@
 package org.uengine.codi.mw3.marketplace;
 
-import org.uengine.codi.mw3.marketplace.searchbox.MarketplaceSearchBox;
 import org.uengine.codi.mw3.model.IUser;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.model.Tray;
@@ -22,11 +21,7 @@ public class MarketplaceTopPanel {
 		loginUser.setUserId(session.getUser().getUserId());
 		loginUser.setName(session.getUser().getName());
 		setLoginUser(loginUser);
-		
-		MarketplaceSearchBox searchBox = new MarketplaceSearchBox();
-		searchBox.setKeyUpSearch(true);
-		searchBox.setKeyEntetSearch(true);
-		setSearchBox(searchBox);
+
 	}
 
 	
@@ -38,14 +33,6 @@ public class MarketplaceTopPanel {
 			this.session = session;
 		}
 	
-	MarketplaceSearchBox searchBox;		
-		public MarketplaceSearchBox getSearchBox() {
-			return searchBox;
-		}
-		public void setSearchBox(MarketplaceSearchBox searchBox) {
-			this.searchBox = searchBox;
-		}
-
 	Tray tray;
 		public Tray getTray() {
 			return tray;

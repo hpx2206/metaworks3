@@ -28,7 +28,8 @@ public class MarketplaceCenterPanel {
 			this.category = category;
 		}
 		
-	MarketplaceSearchBox searchBox;		
+	MarketplaceSearchBox searchBox;	
+		@Face(options={"keyupSearch"}, values={"true"})
 		public MarketplaceSearchBox getSearchBox() {
 			return searchBox;
 		}
@@ -36,7 +37,6 @@ public class MarketplaceCenterPanel {
 			this.searchBox = searchBox;
 		}
 
-		
 	@AutowiredFromClient
 	public Session session;
 
@@ -50,10 +50,14 @@ public class MarketplaceCenterPanel {
 		listing = findlisting.findByVendor();
 		listing.getMetaworksContext().setWhen("marketplaceHome");
 
+		MarketplaceSearchBox searchBox = new MarketplaceSearchBox();
+		searchBox.setKeyUpSearch(true);
+		searchBox.setKeyEntetSearch(true);
+
 		
 		setListing(listing);
-		
-		
+		setSearchBox(searchBox);
+
 	}
 
 }
