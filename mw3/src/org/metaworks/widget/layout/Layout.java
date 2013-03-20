@@ -3,6 +3,7 @@ package org.metaworks.widget.layout;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Face;
+import org.metaworks.annotation.Id;
 
 
 @Face(
@@ -18,6 +19,15 @@ public class Layout implements ContextAware {
 		getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 	}
 	
+	String id;
+		@Id
+		public String getId() {
+			return id;
+		}
+		public void setId(String id) {
+			this.id = id;
+		}
+
 	Object north;
 		public Object getNorth() {
 			return north;
