@@ -12,6 +12,7 @@ import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.marketplace.category.Category;
 import org.uengine.codi.mw3.marketplace.category.ICategory;
 import org.uengine.codi.mw3.marketplace.category.MarketCategoryPanel;
+import org.uengine.codi.mw3.marketplace.searchbox.MarketplaceSearchBox;
 
 public class App extends Database<IApp> implements IApp{
 	
@@ -217,19 +218,37 @@ public class App extends Database<IApp> implements IApp{
 	
 	public Object detailListing() throws Exception {
 		
-		this.copyFrom(this.findMe());
+//		this.copyFrom(this.findMe());
 		this.getMetaworksContext().setWhen("detailList");
 		
 		Category category = new Category();
 		category.setCategoryId(this.getCategory().getCategoryId());
 		
-		this.setCategory(category.databaseMe());
+		MarketplaceSearchBox searchBox = new MarketplaceSearchBox();
+		searchBox.setKeyUpSearch(true);
+		searchBox.setKeyEntetSearch(true);
+		
+//		this.setCategory(category.databaseMe());
+		
+		MarketplaceCenterPanel centerPenal = new MarketplaceCenterPanel();
+		centerPenal.setListing(this.findMe());
+		centerPenal.setSearchBox(searchBox);
+		centerPenal.setCategory(category.databaseMe());
+		centerPenal.getListing().getMetaworksContext().setWhen("detailList");
+		
+		MarketplaceCenterWindow centerWin = new MarketplaceCenterWindow(session);
+		centerWin.setCenterPanel(centerPenal);
+		
+		//west
+		MarketCategoryPanel marketCategory = new MarketCategoryPanel(session);
+		marketCategory.setCategory(Category.loadRootCategory());
 		
 		Layout mainLayout = new Layout();
 		
 		mainLayout.setId("main");
 		mainLayout.setName("center");
-		mainLayout.setCenter(this);
+		mainLayout.setCenter(centerWin);
+		mainLayout.setWest(marketCategory);
 		
 		return mainLayout;
 	}
