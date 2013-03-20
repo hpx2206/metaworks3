@@ -693,3 +693,37 @@ update emptable set approved = 1;
 insert into emptable (empcode, empname, globalcom, locale, approved) values('processCodi.uEngine', 'CODI', 'uEngine', 'ko', 1);
 
 alter table INST_EMP_PERF modify column EMPCODE varchar(100);
+
+
+-- 2013.03.12
+create table APP(
+	APPID int(11) NOT NULL,
+	APPNAME varchar(100),
+	SIMPLEOVERVIEW varchar(200),
+	FULLOVERVIEW varchar(1500),
+	PRICING varchar(200),
+	CREATEDATE datetime DEFAULT NULL,
+	UPDATEDATE datetime DEFAULT NULL,
+	VERSION varchar(5),
+	EXTFILENAME varchar(200),
+	FILECONTENT varchar(1000),
+	LOGOFILENAME varchar(200),
+	LOGOCONTENT varchar(1000),
+	STATUS varchar(100),	-- request, approval/reject, published/unpublished
+	VENDORID varchar(20),
+	CATEGORYID int(11),
+	INSTALLCNT int(11) DEFAULT 0,
+	ISDELETED int(11) DEFAULT false
+	PRIMARY KEY(APPID)
+);
+
+
+-- 2013.03.19
+create table APPMAPPING(
+	APPID int(11) NOT NULL,
+	COMCODE  varchar(20) NOT NULL,
+	APPNAME varchar(100),
+	ISDELETED int(11) DEFAULT false,
+	PRIMARY KEY(APPID, COMCODE),
+	FOREIGN KEY (APPID) REFERENCES APP (APPID)
+);
