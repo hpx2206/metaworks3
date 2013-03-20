@@ -2,9 +2,6 @@ package org.uengine.codi.mw3.marketplace.category;
 
 import java.sql.Timestamp;
 
-import javax.print.attribute.standard.Fidelity;
-
-import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.IDAO;

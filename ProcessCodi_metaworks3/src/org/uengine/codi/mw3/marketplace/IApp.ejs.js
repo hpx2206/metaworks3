@@ -1,8 +1,8 @@
-var org_uengine_codi_mw3_marketplace_IListing = function(objectId, className){
+var org_uengine_codi_mw3_marketplace_IApp = function(objectId, className){
 	
 };
 
-org_uengine_codi_mw3_marketplace_IListing.prototype = {
+org_uengine_codi_mw3_marketplace_IApp.prototype = {
 		
 		showDescription: function(){
 			$("#tab_Vendor").css('display', 'none');
