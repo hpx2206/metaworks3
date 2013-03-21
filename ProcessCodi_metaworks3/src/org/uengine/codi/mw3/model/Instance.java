@@ -122,15 +122,6 @@ public class Instance extends Database<IInstance> implements IInstance{
 //			stmt.append("where rindex between ?startIndex and ?lastIndex ");
 		
 
-		String typeOfDBMS = null;
-		try {			
-			typeOfDBMS = DAOFactory.getInstance(TransactionContext.getThreadLocalInstance().getConnectionFactory()).getDBMSProductName().toUpperCase();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		System.out.println(" =======> typeOfDBMS : " + typeOfDBMS);
-
 /*		if ("ORACLE".equals(typeOfDBMS))
 			bottomList.append( " limit " + criteria.get("startIndex") + ", "+InstanceList.PAGE_CNT);
 		else if ("MYSQL".equals(typeOfDBMS))*/
