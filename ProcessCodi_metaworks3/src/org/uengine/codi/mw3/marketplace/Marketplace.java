@@ -99,6 +99,7 @@ public class Marketplace {
 		MarketplaceCenterPanel centerPanel = new MarketplaceCenterPanel();
 		centerPanel.setCategory(Category.loadRootCategory());
 		centerPanel.setListing(myVendor.load());
+		centerPanel.setVendor(myVendor);
 		
 		MarketplaceCenterWindow centerWin = new MarketplaceCenterWindow(session);
 		centerWin.setCenterPanel(centerPanel);
