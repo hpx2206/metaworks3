@@ -2,9 +2,11 @@ package org.uengine.codi.mw3.marketplace;
 
 import java.util.Calendar;
 
+import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.MetaworksException;
 import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.SelectBox;
 import org.metaworks.website.MetaworksFile;
@@ -16,7 +18,16 @@ import org.uengine.persistence.dao.UniqueKeyGenerator;
 import org.uengine.processmanager.ProcessManagerBean;
 import org.uengine.processmanager.ProcessManagerRemote;
 
-public class AppInformation {
+@Face(
+		displayName = "$AppInfo",
+		ejsPathMappingByContext = {
+			"{when: 'new', face: 'genericfaces/FormFace.ejs'}",
+			"{when: 'edit', face: 'genericfaces/FormFace.ejs'}"
+		},
+		options={"fieldOrder"},
+		values={"categories,listingName,simpleOverview,fullOverview,file,logoFile"}
+	)
+public class AppInformation implements ContextAware {
 
 	public final static String STATUS_REQUEST = "Request";
 	public final static String STATUS_APPROVAL = "Approval";
@@ -29,9 +40,17 @@ public class AppInformation {
 		setFile(new MetaworksFile());
 		setLogoFile(new MetaworksFile());
 		
-		new MetaworksContext().setWhen("edit");
+		this.setMetaworksContext(new MetaworksContext());
 
 	}
+
+	MetaworksContext metaworksContext;
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
+		}
 
 	SelectBox categories;
 		public SelectBox getCategories() {
@@ -103,7 +122,7 @@ public class AppInformation {
 	@AutowiredFromClient
 	public Session session;
 
-	@ServiceMethod(callByContent = true)
+	@ServiceMethod(callByContent = true, when = "new")
 	public void add() throws Exception {
 
 		if (getFile() == null || getFile().getFileTransfer() == null || getFile().getFileTransfer().getFilename() == null || getFile().getFilename() == null)
@@ -138,7 +157,7 @@ public class AppInformation {
 	}
 	
 	
-	@ServiceMethod(callByContent = true)
+	@ServiceMethod(callByContent = true, when="edit")
 	public void edit() throws Exception {
 
 		if (getFile() == null || getFile().getFileTransfer() == null || getFile().getFileTransfer().getFilename() == null || getFile().getFilename() == null)

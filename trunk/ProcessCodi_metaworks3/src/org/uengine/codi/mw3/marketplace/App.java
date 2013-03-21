@@ -16,6 +16,10 @@ import org.uengine.codi.mw3.marketplace.searchbox.MarketplaceSearchBox;
 
 public class App extends Database<IApp> implements IApp{
 	
+	public App() throws Exception{
+		
+	}
+	
 	int appId;
 		public int getAppId() {
 			return appId;
@@ -131,7 +135,15 @@ public class App extends Database<IApp> implements IApp{
 			this.category = category;
 		}
 	
+	IAppMapping appMapping;
+		public IAppMapping getAppMapping() {
+			return appMapping;
+		}
+		public void setAppMapping(IAppMapping appMapping) {
+			this.appMapping = appMapping;
+		}
 
+		
 	@AutowiredFromClient
 	public Session session;
 		
@@ -280,13 +292,20 @@ public class App extends Database<IApp> implements IApp{
 		editListing.setFile(getExtfile());
 		editListing.setLogoFile(getLogoFile());
 		
-		getMetaworksContext().setWhen("edit");
+		editListing.getMetaworksContext().setWhen("edit");
+		
+		
+		MarketplaceCenterPanel centerPanel = new MarketplaceCenterPanel();
+		centerPanel.setAppInfo(editListing);
+		
+		MarketplaceCenterWindow centerWin = new MarketplaceCenterWindow(session);
+		centerWin.setCenterPanel(centerPanel);
 		
 		Layout mainLayout = new Layout();
 		
 		mainLayout.setId("main");
 		mainLayout.setName("center");
-		mainLayout.setCenter(editListing);
+		mainLayout.setCenter(centerWin);
 		
 		return mainLayout;
 	}
@@ -302,16 +321,18 @@ public class App extends Database<IApp> implements IApp{
 		
 	}
 	
-	public void addAppOurGroup()throws Exception {
+	public void addApp()throws Exception {
 		
 		AppMapping addApp = new AppMapping();
 		
 		addApp.setAppId(getAppId());
 		addApp.setAppName(getAppName());
-		addApp.setComCode(session.getCompany());
+		addApp.setComCode(session.getCompany().getComCode());
 		addApp.setIsDeleted(false);
 		
-		addApp.createDatabaseMe();
+		if(addApp.findMe().size() == 0 )
+			addApp.createDatabaseMe();
+		
 		
 	}
 	

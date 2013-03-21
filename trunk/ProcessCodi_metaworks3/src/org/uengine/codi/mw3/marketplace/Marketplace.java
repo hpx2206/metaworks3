@@ -44,6 +44,7 @@ public class Marketplace {
 		
 		MarketplaceCenterPanel appListPanel = new MarketplaceCenterPanel();
 		
+		
 		App findlisting = new App();
 		findlisting.setVendorId(session.getCompany().getComCode());
 		findlisting.session = session;

@@ -14,7 +14,6 @@ import org.uengine.codi.mw3.marketplace.MarketplaceEastPanel;
 import org.uengine.codi.mw3.marketplace.searchbox.MarketplaceSearchBox;
 import org.uengine.codi.mw3.model.Session;
 
-import bsh.This;
 
 public class Category extends Database<ICategory> implements ICategory {
 

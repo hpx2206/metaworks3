@@ -4,6 +4,8 @@ import java.util.Date;
 
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;
+import org.metaworks.annotation.NonLoadable;
+import org.metaworks.annotation.NonSavable;
 import org.metaworks.annotation.ORMapping;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Table;
@@ -72,6 +74,11 @@ public interface IApp extends IDAO{
 	public ICategory getCategory();
 	public void setCategory(ICategory category);
 	
+	@NonLoadable
+	@NonSavable
+	public IAppMapping getAppMapping();
+	public void setAppMapping(IAppMapping appMapping);
+	
 	public IApp findMe() throws Exception;
 	
 	public IApp findByVendor() throws Exception;
@@ -86,6 +93,6 @@ public interface IApp extends IDAO{
 	public Object editListing() throws Exception;
 	
 	@ServiceMethod(callByContent=true)
-	public void addAppOurGroup()throws Exception;
+	public void addApp()throws Exception;
 
 }

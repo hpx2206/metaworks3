@@ -78,11 +78,18 @@ public class MyVendor {
 
 		createListing.setCategories(categories);
 		
+		
+		MarketplaceCenterPanel centerPanel = new MarketplaceCenterPanel();
+		centerPanel.setAppInfo(createListing);
+		
+		MarketplaceCenterWindow centerWin = new MarketplaceCenterWindow(session);
+		centerWin.setCenterPanel(centerPanel);
+	
 		Layout mainLayout = new Layout();
 		
 		mainLayout.setId("main");
 		mainLayout.setName("center");
-		mainLayout.setCenter(createListing);
+		mainLayout.setCenter(centerWin);
 		
 		return mainLayout;
 	}
