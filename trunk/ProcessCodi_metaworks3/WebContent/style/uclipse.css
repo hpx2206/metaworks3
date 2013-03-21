@@ -137,11 +137,96 @@ body {
     padding-left : 300px;
 }
 
+/* 534 */
+.filemgr-tree U .item-fix-right {
+    padding-right : 15px !important;
+}
+
+.filemgr-tree U U .item-fix-right {
+    padding-right : 30px !important;
+}
+
+.filemgr-tree U U U .item-fix-right {
+    padding-right : 45px !important;
+}
+
+.filemgr-tree U U U U .item-fix-right {
+    padding-right : 60px !important;
+}
+
+.filemgr-tree U U U U U .item-fix-right {
+    padding-right : 75px !important;
+}
+
+.filemgr-tree U U U U U U .item-fix-right {
+    padding-right : 90px !important;
+}
+
+.filemgr-tree U U U U U U U .item-fix-right {
+    padding-right : 105px !important;
+}
+
+.filemgr-tree U U U U U U U U .item-fix-right {
+    padding-right : 120px !important;
+}
+
+.filemgr-tree U U U U U U U U U .item-fix-right {
+    padding-right : 135px !important;
+}
+
+.filemgr-tree U U U U U U U U U U .item-fix-right {
+    padding-right : 150px !important;
+}
+
+.filemgr-tree U U U U U U U U U U U .item-fix-right {
+    padding-right : 165px !important;
+}
+
+.filemgr-tree U U U U U U U U U U U U .item-fix-right {
+    padding-right : 180px !important;
+}
+
+.filemgr-tree U U U U U U U U U U U U U .item-fix-right {
+    padding-right : 195px !important;
+}
+
+.filemgr-tree U U U U U U U U U U U U U U .item-fix-right {
+    padding-right : 210px !important;
+}
+
+.filemgr-tree U U U U U U U U U U U U U U U .item-fix-right {
+    padding-right : 225px !important;
+}
+
+.filemgr-tree U U U U U U U U U U U U U U U U .item-fix-right {
+    padding-right : 240px !important;
+}
+
+.filemgr-tree U U U U U U U U U U U U U U U U U .item-fix-right {
+    padding-right : 255px !important;
+}
+
+.filemgr-tree U U U U U U U U U U U U U U U U U U .item-fix-right {
+    padding-right : 270px !important;
+}
+
+.filemgr-tree U U U U U U U U U U U U U U U U U U U .item-fix-right {
+    padding-right : 285px !important;
+}
+
+.filemgr-tree U U U U U U U U U U U U U U U U U U U U .item-fix-right {
+    padding-right : 300px !important;
+}
+
+
 
 .filemgr-tree .item-fix {
     position:relative;
     /*width:100%;*/
 }
+
+
+
 .filemgr-tree:not(.searchresults) .item-fix {
     border-top:1px solid transparent;
     border-bottom:1px solid transparent;
@@ -155,6 +240,13 @@ body {
     padding:0 0 0 14px;
     position:relative;
 }
+
+.filemgr-tree .item-fix-right .item {
+    padding:0 14px 0 0 !important;
+    position:relative;
+}
+
+
 .filemgr-tree.openfile .item-fix .item{
 }
 
@@ -237,6 +329,11 @@ body {
     text-indent : -2000px;
 }
 
+.filemgr-tree .item-fix-right .item SPAN {
+    right:4px;
+    left:inherit !important;
+}
+
 .filemgr-tree.openfile .item SPAN{
     left: 3px;
     display: block;
@@ -308,6 +405,17 @@ body {
     background-repeat:no-repeat;
     padding-left:0px;
 }
+
+.filemgr-tree .item-fix-right .item LABEL {
+    display:block;
+    position:relative;
+    height:18px;
+    background-position:right 1px !important;
+    background-repeat:no-repeat;
+    padding-left:0px;
+}
+
+
 .filemgr-tree.searchresults .item LABEL {
     background-position: 3px 50%;
 }
@@ -323,6 +431,18 @@ body {
     text-decoration:none;
     white-space: nowrap;
 }
+.filemgr-tree .item-fix-right .item LABEL .caption {
+    font-family : Tahoma, Arial;
+    font-size   : 11px;
+    display:block;
+    position:relative;
+    overflow:hidden;
+    height:16px;
+    padding:1px 23px 0 0 !important;
+    text-decoration:none;
+    white-space: nowrap;
+}
+
 .filemgr-tree.not(treeOutline) .item LABEL .caption {
     color       : #101010;
 }
