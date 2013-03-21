@@ -97,11 +97,12 @@ public class Marketplace {
 		
 		
 		MarketplaceCenterPanel centerPanel = new MarketplaceCenterPanel();
+		centerPanel.setCategory(Category.loadRootCategory());
 		centerPanel.setListing(myVendor.load());
 		
 		MarketplaceCenterWindow centerWin = new MarketplaceCenterWindow(session);
 		centerWin.setCenterPanel(centerPanel);
-		
+		centerWin.getCenterPanel().getListing().getMetaworksContext().setWhen("myVendor");
 		
 		Layout mainLayout = new Layout();
 		
