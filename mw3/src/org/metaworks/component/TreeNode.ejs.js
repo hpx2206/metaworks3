@@ -79,18 +79,23 @@ org_metaworks_component_TreeNode.prototype = {
 	},
 	
 	toAppend : function(appendobject){
-		if(appendobject){
-			var html = mw3.locateObject(appendobject, null);
-			var appendDiv = $('<u></u>').addClass('last').css({'display': 'block', 'height': 'auto', 'overflow': 'visible'});
-			if(this.object.root)
-				appendDiv.addClass('root');
-			
-			this.objectDiv.append(appendDiv);
-			this.objectDiv.children('u:last').append(html);
-			
-			this.push(appendobject);
-			
-			this.treeDiv.trigger('toAppended');
+		if(appendobject != null && appendobject.length > 0){
+			for(var i=0; i<appendobject.length; i++){
+				var html = mw3.locateObject(appendobject[i], null);
+				
+				var appendDiv = $('<u></u>').addClass('last').css({'display': 'block', 'height': 'auto', 'overflow': 'visible'});
+				
+				if(this.object.root)
+					appendDiv.addClass('root');
+				
+				this.objectDiv.append(appendDiv);
+				this.objectDiv.children('u:last').append(html);
+				
+				this.push(appendobject[i]);				
+				
+				this.treeDiv.trigger('toAppended');
+			}
+		
 		}else{
 			this.nodeDiv.removeClass('minlast');
 		}
@@ -100,29 +105,50 @@ org_metaworks_component_TreeNode.prototype = {
 		if(this.object == null || typeof this.object == 'undefined')
 			return true;
 		
+		var childObjectId;
+		
 		if(this.object.child == null || typeof this.object.child == 'undefined' || this.object.child.length == 0){
+			childObjectId = ++ mw3.objectId;
+			
 			this.object.child = [];
+			mw3.objects[childObjectId] = this.object.child;
 			
-			var objectId = ++ mw3.objectId;
-			
-			mw3.objects[objectId] = this.object.child;
-			var beanName = {};
-			var fieldName = '.child';
-			beanName[fieldName] = {
-				fieldName		: fieldName ,
-				valueObjectId	: objectId
+			var beanName = 
+			{
+				'.child' : 
+				{
+					fieldName : '.child' ,
+					valueObjectId : childObjectId
+				
+				}
 			};
-			
+
 			mw3.beanExpressions[this.objectId] = beanName;
-			
-			var childBeanName = {};
-			var childFieldName = '[0]';
-			childBeanName[childFieldName] = {
-					fieldName		: childFieldName ,
-					valueObjectId	: objectId
-			};
-			mw3.beanExpressions[objectId] = childBeanName;
+		   
+		}else{
+			childObjectId = mw3.beanExpressions[this.objectId]['.child'].valueObjectId
 		}
+
+		var lastPropName = '0';
+		
+		if(mw3.beanExpressions[childObjectId]){
+			for(var propName in mw3.beanExpressions[childObjectId]){
+				lastPropName = propName.substring(1, propName.length-1);
+				lastPropName = Number(lastPropName)	 + 1;
+			}
+		}else{
+			mw3.beanExpressions[childObjectId] = {};
+		}
+		
+		lastPropName = '[' + lastPropName + ']'; 
+		
+		var beanName = 
+		{
+			fieldName : lastPropName ,
+			valueObjectId : item.__objectId
+		};
+		
+		mw3.beanExpressions[childObjectId][lastPropName] = beanName;
 		
 		this.object.child.push(item);
 	},
