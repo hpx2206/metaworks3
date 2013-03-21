@@ -33,8 +33,8 @@ var org_uengine_codi_mw3_admin_JavaCodeAssist = function(objectId, className){
 		
 		$("#" + mw3.popupDivId).remove();
 		editor.focus();		
-	}
-}
+	};
+};
 
 org_uengine_codi_mw3_admin_JavaCodeAssist.prototype = {
 	change : function(expression){
