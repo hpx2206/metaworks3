@@ -53,6 +53,11 @@ public class MarketplaceSearchBox {
 		IApp getListing = findListing.searchApps();
 		getListing.getMetaworksContext().setWhen("searchForSearchBox");
 		
+		MarketplaceSearchBox searchBox = new MarketplaceSearchBox();
+		searchBox.setKeyEntetSearch(true);
+		searchBox.setKeyUpSearch(true);
+		searchBox.setKeyword(getKeyword());
+		
 		//west - category combo box, list panel
 		MarketCategoryPanel marketCategory = new MarketCategoryPanel(session);
 		marketCategory.setCategory(Category.loadRootCategory());
@@ -61,6 +66,7 @@ public class MarketplaceSearchBox {
 		MarketplaceCenterPanel centerPanel = new MarketplaceCenterPanel();
 		centerPanel.session = session;
 		centerPanel.setListing(getListing);
+		centerPanel.setSearchBox(searchBox);
 		centerPanel.getListing().getMetaworksContext().setWhen("searchForSearchBox");
 		
 		MarketplaceCenterWindow centerwin = new MarketplaceCenterWindow(session);

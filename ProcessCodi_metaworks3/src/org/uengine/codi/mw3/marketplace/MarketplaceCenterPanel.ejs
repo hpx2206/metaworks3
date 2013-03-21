@@ -3,100 +3,36 @@
 
 if(value){
 
+console.log(value);
+
 	var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
 	var company = session.company[0];
 	
 %>
-	
-<%
-	if(value.category != null ) {
-	var category = value.category[0];
 
-%>
-
-	<%
-		if(value.category.metaworksContext.when == 'searchForCategory'){
-
-	%>
-		
-			<div> CODI Apps > <%=category.categoryName%> </div>
-			<div style="font-weight:bold; font-size:20px"> <%=category.categoryName%> </div>
-		
-	<%
-		}
-		
-	<%	
-		if(value.listing.length != 0) {
-		
-	%>
-		
-		 <div><%=fields.listing.here()%> </div>
-		
-	<%
-		}else {
-	%>
-		
-			<div> <%=mw3.localize('$App.NoResult')%> </div>
-		
-	<%
-		}
-	%>
-		
-		
-	
-	
-<%
-	
-	}else if(value.listing != null && value.listing.length != 0) {
-	
-	var listing = value.listing[0];
-	
-%>
-	
-	<% if(listing.metaworksContext.when == 'marketplaceHome') { %>
-		
-		<div id="searchbox">
-			<div class="searchboxline">
-				<div class="searchboxline2">
-					<div class="searchboxarea" id="method_<%=objectId%>_newInstance">
-						<%=fields.searchBox.here()%>
-					</div>
-					<div style="clear:both;"></div>
+	<div id="searchbox">
+		<div class="searchboxline">
+			<div class="searchboxline2">
+				<div class="searchboxarea" id="method_<%=objectId%>_newInstance">
+					<%=fields.searchBox.here()%>
 				</div>
+				<div style="clear:both;"></div>
 			</div>
 		</div>
-		<div><%=fields.listing.here()%></div>
-		<div><a herf="#" onClick="#"> See all>> </a></div> 
-		
-	<% }else if(listing.metaworksContext.when == 'searchForSearchBox'){ %>
+	</div>
 	
-			<table>
-				<tr>
-					<td> <div style="font-size:15px; font-weight:bold">Search results for in </div> <td>	
-				</tr>
-				<tr>
-					<td align="right"> <%=value.listing.length%> for keyword<td>	
-				</tr>
-				<tr>
-					<td> <%=fields.listing.here()%> <td>	
-				</tr>
-				<tr>
-					<td colspan="2"> <a herf="#" onClick="#"> paging </a> </td>
-				</tr>
-			</table>
-
-	<% } %>
-	
-<%
-	}else {
-	
-	%>
-	
-		<div> <%=mw3.localize('$App.NoResult')%> </div>
-			
-	<%
-	
-	}
+	 <div><%=fields.listing.here()%> </div>
+	 
+	 
+	 <%
+	 if(value.listing == null || value.listing.length == 0) {
+	 
+	 %>
+	 
+	 	<div> <%=mw3.localize('$App.NoResult')%> </div>
+	 
+	 <%
+	 }
 
 }
 %>
