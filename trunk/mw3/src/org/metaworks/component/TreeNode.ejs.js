@@ -45,6 +45,7 @@ var org_metaworks_component_TreeNode = function(objectId, className){
 	this.nodeDiv.bind('dblclick', {objectId : this.objectId}, function(event){
 		mw3.getFaceHelper(event.data.objectId).action();
 	});
+	
 };
 
 org_metaworks_component_TreeNode.prototype = {
@@ -78,14 +79,14 @@ org_metaworks_component_TreeNode.prototype = {
 	},
 	
 	toAppend : function(appendobject){
-		if(appendobject != null && appendobject.length > 0){
+		if(appendobject){
 			var html = mw3.locateObject(appendobject, null);
 			var appendDiv = $('<u></u>').addClass('last').css({'display': 'block', 'height': 'auto', 'overflow': 'visible'});
 			if(this.object.root)
 				appendDiv.addClass('root');
 			
 			this.objectDiv.append(appendDiv);
-			this.objectDiv.children('u').append(html);
+			this.objectDiv.children('u:last').append(html);
 			
 			this.push(appendobject);
 			
@@ -99,8 +100,28 @@ org_metaworks_component_TreeNode.prototype = {
 		if(this.object == null || typeof this.object == 'undefined')
 			return true;
 		
-		if(this.object.child == null || typeof this.object.child == 'undefined'){
-			this.object.tabs = [];
+		if(this.object.child == null || typeof this.object.child == 'undefined' || this.object.child.length == 0){
+			this.object.child = [];
+			
+			var objectId = ++ mw3.objectId;
+			
+			mw3.objects[objectId] = this.object.child;
+			var beanName = {};
+			var fieldName = '.child';
+			beanName[fieldName] = {
+				fieldName		: fieldName ,
+				valueObjectId	: objectId
+			};
+			
+			mw3.beanExpressions[this.objectId] = beanName;
+			
+			var childBeanName = {};
+			var childFieldName = '[0]';
+			childBeanName[childFieldName] = {
+					fieldName		: childFieldName ,
+					valueObjectId	: objectId
+			};
+			mw3.beanExpressions[objectId] = childBeanName;
 		}
 		
 		this.object.child.push(item);
