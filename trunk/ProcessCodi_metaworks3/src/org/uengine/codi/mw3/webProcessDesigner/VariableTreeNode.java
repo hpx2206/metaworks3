@@ -41,6 +41,7 @@ public class VariableTreeNode extends TreeNode {
 			node.setLoaded(true);
 			node.setExpanded(true);
 			node.setFolder(true);
+			node.setAlign(this.getAlign());
 			
 			// TODO 처음에 로딩할 필요가 없다면 아래 루프 부분은 클릭시 작동하는걸로 뺀다. 
 			// RoleTreeNode 를 따로 만들어 주어야 한다.
@@ -72,6 +73,7 @@ public class VariableTreeNode extends TreeNode {
 			childNode.setTreeId(node.getTreeId());
 			childNode.setName(wfd.getName());
 			childNode.setParentId(node.getId());
+			childNode.setAlign(node.getAlign());
 			if( wfd.getClassName().startsWith("org.uengine.codi.mw3")){
 				childNode.setFolder(true);
 				childNode.setLoaded(false);

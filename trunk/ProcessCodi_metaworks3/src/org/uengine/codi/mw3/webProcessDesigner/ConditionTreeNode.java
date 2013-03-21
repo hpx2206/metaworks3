@@ -7,6 +7,7 @@ import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.ServiceMethodContext;
+import org.metaworks.ToAppend;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
@@ -184,54 +185,48 @@ public class ConditionTreeNode  implements ContextAware{
 		return conditionTreeNode;
 	}
 	
-	@ServiceMethod(inContextMenu=true, callByContent=true)
-	@Available(how="tree")
+	public ConditionTreeNode makeConditionNode() throws Exception{
+		ConditionTreeNode node = new ConditionTreeNode();
+		Long idByTime = new Date().getTime();
+		node.setId(idByTime.toString());
+		node.setParentNode(this);
+		node.setParentId(this.getId());
+		node.setPrcsValiableList(this.getPrcsValiableList());
+		node.setRoleList(this.getRoleList());
+		node.conditionInit();
+		node.setType("page_white_text");	// TODO 아이콘 관련이기때문에.. 추후 변경
+		return node;
+	}
+	
+	@ServiceMethod(inContextMenu=true, callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object newAND() throws Exception{
-		ConditionTreeNodeView conditionTreeNode = this.makeNodeView(this);
-		conditionTreeNode.getConditionNode().setConditionType(CONDITION_AND);
-		ConditionExPressionPanel conditionExPressionPanel = new ConditionExPressionPanel();
-		conditionExPressionPanel.setConditionTreeNode(conditionTreeNode);
-		return conditionExPressionPanel;
+		ConditionTreeNode node = this.makeConditionNode();
+		node.setName(CONDITION_AND);
+		node.getConditionNode().setConditionType(CONDITION_AND);
+		node.getConditionNode().setParentTreeNode(node);
+		return new ToAppend(this , node);
 	}
 	
-	@ServiceMethod(inContextMenu=true, callByContent=true)
-	@Available(how="tree")
+	@ServiceMethod(inContextMenu=true, callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object newOR() throws Exception{
-		ConditionTreeNodeView conditionTreeNode = this.makeNodeView(this);
-		conditionTreeNode.getConditionNode().setConditionType(CONDITION_OR);
-		ConditionExPressionPanel conditionExPressionPanel = new ConditionExPressionPanel();
-		conditionExPressionPanel.setConditionTreeNode(conditionTreeNode);
-		return conditionExPressionPanel;
+		ConditionTreeNode node = this.makeConditionNode();
+		node.setName(CONDITION_OR);
+		node.getConditionNode().setConditionType(CONDITION_OR);
+		node.getConditionNode().setParentTreeNode(node);
+		return new ToAppend(this , node);
 	}
 	
-	@ServiceMethod(inContextMenu=true, callByContent=true, target=ServiceMethodContext.TARGET_AUTO)
-	@Available(how="tree")
+	@ServiceMethod(inContextMenu=true, callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object newOtherwise() throws Exception{
-		if( conditionTree != null ){
-			ConditionTreeNode parentNode = conditionTree.getNode();
-			
-			ConditionTreeNode node = new ConditionTreeNode();
-			Long idByTime = new Date().getTime();
-			node.setId(idByTime.toString());
-			node.setParentNode(this);
-			node.setParentId(this.getId());
-			node.getMetaworksContext().setHow("otherwise");
-			node.setConditionNode(new ConditionNode());
-	//		node.setPrcsValiableList(this.getPrcsValiableList());
-	//		node.setRoleList(this.getRoleList());
+			ConditionTreeNode node = this.makeConditionNode();
 			node.setName(CONDITION_OTHERWISE);
-			node.setType("page_white_text");	// TODO 아이콘 관련이기때문에.. 추후 변경
-			
-			parentNode.add(node);
-		}
-		
-		return new Refresh( conditionTree);
+			node.getConditionNode().setConditionType(CONDITION_OTHERWISE);
+			node.getConditionNode().setParentTreeNode(node);
+			return new ToAppend(this , node);
 	}
 	
 	@ServiceMethod(inContextMenu=true, payload={"id","parentNode"})
-	@Available(how="tree")
 	public Object delete() throws Exception{
-		
 		ConditionTreeNode parentNode = this.getParentNode();
 		if( parentNode != null && parentNode.getChild() != null ){
 			for(int i =0; i<parentNode.getChild().size(); i++){
@@ -240,7 +235,6 @@ public class ConditionTreeNode  implements ContextAware{
 				}
 			}
 		}
-			
 		return new Refresh(parentNode);
 	}
 //	public ConditionTreeNode findNode(ConditionTreeNode node , String nodeId) throws Exception{
@@ -272,8 +266,5 @@ public class ConditionTreeNode  implements ContextAware{
 		
 		return conditionExPressionPanel;
 	}
-	
-	@AutowiredFromClient
-	public ConditionTree conditionTree;
 	
 }

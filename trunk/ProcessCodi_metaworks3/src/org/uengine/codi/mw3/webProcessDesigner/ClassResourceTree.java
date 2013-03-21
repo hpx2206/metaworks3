@@ -41,6 +41,7 @@ public class ClassResourceTree extends Tree {
 		rootnode.setFolder(true);
 		rootnode.setLoaded(true);
 		rootnode.setExpanded(true);
+		rootnode.setAlign(this.getAlign());
 		
 		if( resourceClass == null ){
 			rootnode.setName("resource를 등록해주세요.");

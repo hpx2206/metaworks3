@@ -114,15 +114,16 @@ public class ConditionPanel  implements ContextAware{
 		treeNode.setName("만족조건");
 		treeNode.setRoleList(roleList);
 		treeNode.setPrcsValiableList(prcsValiableList);
+		treeNode.setParentNode(treeNode);
+//		treeNode.add(new ConditionTreeNode()); 
+		
 		if( condition != null ){
 			makeChildTreeNode(treeNode , condition); 
 		}
 		conditionTree.setNode(treeNode);
 			
 		ConditionExPressionPanel conditionExPressionPanel = new ConditionExPressionPanel();
-//		conditionExPressionPanel.setRoleList(roleList);
-//		conditionExPressionPanel.setPrcsValiableList(prcsValiableList);
-//		conditionExPressionPanel.init();
+		conditionExPressionPanel.getConditionTreeNode().getConditionNode().getMetaworksContext().setWhen("view");
 		setConditionExPressionPanel(conditionExPressionPanel);
 		
 	}

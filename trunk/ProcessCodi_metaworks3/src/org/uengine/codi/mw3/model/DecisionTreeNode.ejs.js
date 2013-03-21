@@ -40,8 +40,8 @@ org_uengine_codi_mw3_model_DecisionTreeNode.prototype.refreshVariableSelector = 
 			
 			this.selector.options[i] = document.createElement('option');
 
-			this.selector.options[i].text = classField.fieldName;
-			this.selector.options[i].value = classField.fieldName;
+			this.selector.options[i].text = classField.displayname;
+			this.selector.options[i].value = classField.id;
 			
 			if(classField.fieldName == variableName){
 				this.selector.options[i].selected = true;

@@ -1,16 +1,13 @@
 package org.uengine.codi.mw3.model;
 
-import java.util.ArrayList;
 
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Face;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.codi.mw3.admin.ClassField;
-import org.uengine.kernel.ProcessVariable;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 @Face(ejsPath = "genericfaces/Tab.ejs", options = { "hideLabels" }, values = { "true" })
-public class RuleDesignerContentPanel extends ContentWindow {
+public class RuleDesignerContentPanel {
 
 	public RuleDesignerContentPanel() {
 		setMetaworksContext(new MetaworksContext());
