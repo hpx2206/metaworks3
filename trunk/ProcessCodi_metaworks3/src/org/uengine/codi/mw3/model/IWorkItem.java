@@ -107,7 +107,7 @@ public interface IWorkItem extends IDAO{
 		@Hidden
 		@Range(
 				options={"WorkItem", "Comment",	"Image",	"Movie",	"Source Code", 	"File", "Schedule", "Postings", "ovryCmnt"}, 
-				values ={"wih", 	 "comment",	"img",		"mov",		"src", 			"file", "schdle" , "postings", "ovryCmnt"}
+				values ={"wih", 	 "comment",	"img",		"mov",		"src", 			"file", "schedule" , "postings", "ovryCmnt"}
 		)
 		@TypeSelector(
 				values = 		{ 
@@ -117,7 +117,7 @@ public interface IWorkItem extends IDAO{
 						"mov", 				
 						"src",
 						"file", 
-						"schdle",
+						"schedule",
 						"postings",
 						"generic",
 						"memo",
@@ -191,6 +191,7 @@ public interface IWorkItem extends IDAO{
 			objectIsNullWhenFirstDBFieldIsNull = true,
 			availableWhen= "type=='memo'"
 		)
+		@ServiceMethod(callByContent=true)		
 		public WebEditor getMemo();
 		public void setMemo(WebEditor memo);
 		
@@ -280,7 +281,7 @@ public interface IWorkItem extends IDAO{
 		public void edit() throws Exception;
 
 		
-		@ServiceMethod(callByContent = true)
+		@ServiceMethod(callByContent = true, target=ServiceMethodContext.TARGET_SELF)
 		public void loadContents() throws Exception;
 		
 //		@ServiceMethod(callByContent=true)
