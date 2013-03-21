@@ -39,6 +39,15 @@ public class PerspectivePanel {
 			this.processPerspective = processPerspective;
 		}
 	
+	OrganizationPerspectiveApp appPerspective;
+		public OrganizationPerspectiveApp getAppPerspective() {
+			return appPerspective;
+		}
+		
+		public void setAppPerspective(OrganizationPerspectiveApp appPerspective) {
+			this.appPerspective = appPerspective;
+		}
+	
 	//ProcessStatusPerspective processStatusPerspective;
 	//
 	//	public ProcessStatusPerspective getProcessStatusPerspective() {
@@ -50,7 +59,8 @@ public class PerspectivePanel {
 	//		this.processStatusPerspective = processStatusPerspective;
 	//	}
 	
-//	StrategicPerspective strategicPerspective;
+
+	//	StrategicPerspective strategicPerspective;
 //		public StrategicPerspective getStrategicPerspective() {
 //			return strategicPerspective;
 //		}
@@ -58,6 +68,7 @@ public class PerspectivePanel {
 //		public void setStrategicPerspective(StrategicPerspective strategicPerspective) {
 //			this.strategicPerspective = strategicPerspective;
 //		}
+		
 	TopicPerspective topicPerspective;
 		public TopicPerspective getTopicPerspective() {
 			return topicPerspective;
@@ -85,6 +96,8 @@ public class PerspectivePanel {
 				organizationPerspectiveDept = new OrganizationPerspectiveDept();
 				organizationPerspectiveRole = new OrganizationPerspectiveRole();
 				processPerspective = new ProcessPerspective();
+				appPerspective = new OrganizationPerspectiveApp();
+				
 			}
 			
 			//processStatusPerspective = new ProcessStatusPerspective();

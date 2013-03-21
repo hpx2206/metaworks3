@@ -1,0 +1,17 @@
+<%
+	if(value != null){
+%>
+<div class="depth1" onClick="<%=methods.select.caller() %>"><%=mw3.localize("$App")%></div>
+
+	<%if(value.selected){%>
+		<div class="depth2">
+			<ul class="fist_menu">
+				<li><%=fields.appList.here() %></li>
+			</ul>
+		</div>
+	<%}else{%>
+	<%}%>
+
+<%
+	}
+%>
