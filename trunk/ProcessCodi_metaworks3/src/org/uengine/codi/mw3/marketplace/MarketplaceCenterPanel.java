@@ -36,6 +36,15 @@ public class MarketplaceCenterPanel {
 		public void setSearchBox(MarketplaceSearchBox searchBox) {
 			this.searchBox = searchBox;
 		}
+	
+	MyVendor vendor;
+		public MyVendor getVendor() {
+			return vendor;
+		}
+		public void setVendor(MyVendor vendor) {
+			this.vendor = vendor;
+		}
+
 
 	@AutowiredFromClient
 	public Session session;
