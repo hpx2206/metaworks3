@@ -7,6 +7,7 @@ import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.calendar.ScheduleCalendar;
 import org.uengine.codi.mw3.knowledge.WfPanel;
 @Face(
@@ -22,6 +23,9 @@ public class InstanceListPanel implements ContextAware{
 	@AutowiredFromClient
 	public Session session;
 
+	@Autowired
+	public ProcessMap processMap;
+	
 	public InstanceListPanel(){
 		this(null);
 	}
