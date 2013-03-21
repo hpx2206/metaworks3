@@ -103,11 +103,13 @@
 
 
 .viewMore{line-height:30px;}
-.appFirstTd,.appVenderTd,.appBtnTd{ width:150px;  text-align:center;}
+.appFirstTd,.appVenderTd,.appBtnTd, .appStatusTd{ width:150px;  text-align:center;}
 .appTitleTd{vertical-align:top; padding:15px;}
 .titleLine{line-height: 20px; font-weight:bold}
-.simpleOverview{ line-height: 20px; color:#87876A}
-.fullOverview{ line-height: 20px;}
+.simpleOverview{ line-height: 30px; color:#87876A}
+.pricing{line-height: 15px; color:#87876A;}
+.vendor{line-height: 15px; color:#808080; font-style:oblique}
+.fullOverview{line-height: 20px;}
 
 .detailView_app_outer{padding:0 15px;}
 .detailView_app {border-bottom: 2px solid #222222; margin-bottom:20px;}

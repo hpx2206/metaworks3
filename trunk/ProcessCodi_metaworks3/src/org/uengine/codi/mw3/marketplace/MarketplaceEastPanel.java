@@ -31,12 +31,13 @@ public class MarketplaceEastPanel {
 	
 	public void load() throws Exception {
 		
-		App findlisting = new App();
+		App findListing = new App();
 		
-		findlisting.session = session;
-		findlisting.setVendorId(session.getCompany().getComCode());
+		findListing.session = session;
+		findListing.setVendorId(session.getCompany().getComCode());
 		
-		listing = findlisting.findNewApps();
+		listing = findListing.findNewApps();
+		findListing.getMetaworksContext().setWhen("newApps");
 		
 		setListing(listing);
 		

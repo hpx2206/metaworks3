@@ -10,7 +10,10 @@ if(mw3.when == 'filter'){
 }else {
 
 	if(value){
-	console.log(value.metaworksContext.when);
+	
+		var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
+		var company = session.company[0];
+		
 		if(value.metaworksContext.when == 'myVendor') {
 		
 	%>
@@ -41,12 +44,7 @@ if(mw3.when == 'filter'){
 	<%
 		
 		}else if(value.metaworksContext.when == 'detailList'){
-		
-		console.log(value);
-		
-		var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
-		var company = session.company[0];
-		
+
 	%>
 		<div>CODI Apps > <a href="#" onclick="#"> <%=value.category.categoryId%> </a></div>
 		
@@ -136,6 +134,8 @@ if(mw3.when == 'filter'){
 	<%
 		}else if(value.metaworksContext.when == 'marketplaceHome'){
 		
+console.log(company);
+		
 	%>
 	<div class="fixed_img_row">
    	  <ul>	
@@ -144,12 +144,17 @@ if(mw3.when == 'filter'){
                 <tr>
                     <td class="appFirstTd"><span class="thumb"> <%=fields.logoFile.here({when:'image'})%> </span> </td>
                     <td class="appTitleTd">
-                    	<div class="titleLine"> <strong><a href="#" onClick="<%=methods.detailListing.caller()%>"> <%=value.appName%> (<%=value.pricing%>) </a></strong></div>
+                    	<div class="titleLine"> <strong><a href="#" onClick="<%=methods.detailListing.caller()%>"> <%=value.appName%> </a></strong></div>
                     	<div class="simpleOverview"><%=value.simpleOverview%></div>
                     	<!--div class="fullOverview"><%=value.fullOverview%></div--> 
-                        <div><a href="#" class="viewMore">view more overview</a></div>
+                        <div class="titleLine"> Pricing Detail</div>
+                        <div class="pricing"> <%=value.pricing%> </div>
+                        <div class="vendor"> service by <%=company.comName%></div>
                     </td>
-                    <td class="appVenderTd">service by uEngine</td>
+                    <td class="appStatusTd">
+                    	<div> Status </div>
+                    	<div> <%=value.status%> </div>
+                    </td>
                     <td class="appBtnTd">
 						<div class="badge" style="float:none;margin-top:2px;background:#679BD1;padding:3px 8px; width:80px">Add it now</div>
 					</td>
