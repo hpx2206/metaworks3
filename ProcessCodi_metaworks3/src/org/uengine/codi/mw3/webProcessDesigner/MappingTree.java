@@ -20,13 +20,14 @@ public class MappingTree extends Tree{
 			this.preLoaded = preLoaded;
 		}
 
-	@ServiceMethod(target=ServiceMethodContext.TARGET_SELF)
+	@ServiceMethod(payload={"id", "align"} , target=ServiceMethodContext.TARGET_SELF)
 	public void init(){
 		String treeId = this.getId();
 		RoleTreeNode roleNode = new RoleTreeNode();
 		roleNode.setId(treeId + "Roles");
 		roleNode.setType(TreeNode.TYPE_FOLDER);
 		roleNode.setFolder(true);
+		roleNode.setAlign(this.getAlign());
 		roleNode.load(defineTab.getRolePanel().getRoles());
 
 		VariableTreeNode variableTreeNode = new VariableTreeNode();
@@ -34,6 +35,7 @@ public class MappingTree extends Tree{
 		variableTreeNode.setTreeId(treeId);
 		variableTreeNode.setType(TreeNode.TYPE_FOLDER);
 		variableTreeNode.setFolder(true);
+		variableTreeNode.setAlign(this.getAlign());
 		variableTreeNode.load(defineTab.getPrcsValiablePanel().getPrcsValiables());
 		
 		TreeNode rootnode = new TreeNode();
@@ -44,6 +46,7 @@ public class MappingTree extends Tree{
 		rootnode.setFolder(true);
 		rootnode.setLoaded(true);
 		rootnode.setExpanded(true);
+		rootnode.setAlign(this.getAlign());
 		
 		rootnode.add(roleNode);
 		rootnode.add(variableTreeNode);

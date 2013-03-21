@@ -1,5 +1,6 @@
 <%
 	if(value){
+		if( mw3.when == "edit" ){
 %>
 		<table>
 			<tr>
@@ -15,21 +16,10 @@
 				</td>
 			</tr>
 		</table>
-		<%
-			if( mw3.how == "new" ){
-		%>
 		<div>
-			<div style="float:right;"><a id="wBtn" href="#" onClick="<%=methods.addCondition.caller()%>"><span>컨디션 저장</span></a></div>
+			<div style="float:right;"><a id="wBtn" href="#" onClick="<%=methods.saveCondition.caller()%>"><span>컨디션 저장</span></a></div>
 		</div>
-		<%
-			}else if( mw3.how == "edit" ){
-		%>
-		<div>
-			<div style="float:right;"><a id="wBtn" href="#" onClick="<%=methods.addCondition.caller()%>"><span>컨디션 수정</span></a></div>
-		</div>
-		<%
-			}
-		%>
 <%
+		}
 	}
 %>

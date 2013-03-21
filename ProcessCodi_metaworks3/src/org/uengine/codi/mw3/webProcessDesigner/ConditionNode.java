@@ -156,7 +156,7 @@ public class ConditionNode  implements Cloneable, ContextAware{
 	}
 	
 	@ServiceMethod( callByContent=true ,target=ServiceMethodContext.TARGET_AUTO)
-	public Object addCondition() throws Exception{
+	public Object[] saveCondition() throws Exception{
 //		this.getMetaworksContext().setHow("tree");
 		String nodeName = "";
 		if( conditionType != null && ( conditionType.equals("And") || conditionType.equals("Or") )){
@@ -180,21 +180,16 @@ public class ConditionNode  implements Cloneable, ContextAware{
 		}else{
 			nodeName = "오류";
 		}
-		ConditionTreeNode node = new ConditionTreeNode();
-		Long idByTime = new Date().getTime();
-		node.setId(idByTime.toString());
-		node.setParentNode(this.getParentTreeNode());
-		node.setParentId(this.getParentTreeNode().getId());
-		node.getMetaworksContext().setHow("tree");
-		node.setConditionNode(this);
-		node.setPrcsValiableList(this.getPrcsValiableList());
-		node.setRoleList(this.getRoleList());
+		// 왼쪽 트리 변경
+		ConditionTreeNode node = getParentTreeNode();
 		node.setName(nodeName);
-		node.setType("page_white_text");	// TODO 아이콘 관련이기때문에.. 추후 변경
+		node.setConditionNode(this);
 		
-		parentTreeNode.add(node);
+		// 오른쪽 패널 화면 아무것도 안나오도록 설정
+		ConditionNode conditionNode = new ConditionNode();
+		conditionNode.getMetaworksContext().setWhen("view");
 		
-		return new Refresh( parentTreeNode);
+		return new Object[]{node , conditionNode};
 	}
 
 	public void init() throws Exception{

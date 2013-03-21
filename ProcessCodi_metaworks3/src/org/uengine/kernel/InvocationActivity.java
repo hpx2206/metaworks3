@@ -71,10 +71,12 @@ public class InvocationActivity extends DefaultActivity implements IDrawDesigne 
 			
 			MappingCanvas inCanvas = invocationContextIn.getMappingCanvas();
 			inCanvas.setLeftTreeId(invocationContextIn.getMappingTree().getId());
+			invocationContextIn.getClassResourceTree().setAlign("right");
 			inCanvas.setRightTreeId(invocationContextIn.getClassResourceTree().getId());
 			
 			MappingCanvas outCanvas = invocationContextOut.getMappingCanvas();
 			outCanvas.setLeftTreeId(invocationContextOut.getClassResourceTree().getId());
+			invocationContextOut.getMappingTree().setAlign("right");
 			outCanvas.setRightTreeId(invocationContextOut.getMappingTree().getId());
 		}
 		

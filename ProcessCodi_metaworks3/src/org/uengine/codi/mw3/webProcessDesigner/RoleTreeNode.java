@@ -22,6 +22,7 @@ public class RoleTreeNode extends TreeNode {
 			node.setId("[roles]." + role.getName());
 			node.setName(role.getName());
 			node.setParentId(this.getId());
+			node.setAlign(this.getAlign());
 			node.setType(TreeNode.TYPE_FILE_HTML);
 			
 			this.add(node);
