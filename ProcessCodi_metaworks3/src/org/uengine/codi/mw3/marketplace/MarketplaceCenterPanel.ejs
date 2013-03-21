@@ -25,20 +25,38 @@ if(value){
 	<%
 	
 	}
-	%>
+
 	
-	<div><%=fields.vendor.here()%> </div>
-	<div><%=fields.listing.here()%> </div>
+	if(value.vendor != null) {
+	
+	%>
+		<div><%=fields.vendor.here()%> </div>
+		
+	<%
+	} else if (value.appInfo != null) {
+		
+	%>
+		
+		<div><%=fields.appInfo.here()%> </div>
+	
+	<%
+	} else{
+		
+	%>
+		
+		<div><%=fields.listing.here()%> </div>
+	
+	<%
+	}
 	 
-	 
-	 <%
 	 if(value.listing == null || value.listing.length == 0) {
-	 
+	 	if(!value.appInfo){
 	 %>
-	 
+
 	 	<div> <%=mw3.localize('$App.NoResult')%> </div>
 	 
 	 <%
+		 }
 	 }
 
 }

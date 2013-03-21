@@ -44,29 +44,18 @@ public class MarketplaceCenterPanel {
 		public void setVendor(MyVendor vendor) {
 			this.vendor = vendor;
 		}
+		
+	AppInformation appInfo;
+		public AppInformation getAppInfo() {
+			return appInfo;
+		}
+		public void setAppInfo(AppInformation appInfo) {
+			this.appInfo = appInfo;
+		}
 
-
+		
 	@AutowiredFromClient
 	public Session session;
 
-	
-//	public void load() throws Exception {
-//		
-////		Listing findlisting = new Listing();
-////		findlisting.setVendorId(session.getCompany().getComCode());
-////		findlisting.session = session;
-////		
-////		listing = findlisting.findByVendor();
-//////		listing.getMetaworksContext().setWhen("marketplaceHome");
-//
-//		MarketplaceSearchBox searchBox = new MarketplaceSearchBox();
-//		searchBox.setKeyUpSearch(true);
-//		searchBox.setKeyEntetSearch(true);
-//
-//		
-////		setListing(listing);
-//		setSearchBox(searchBox);
-//
-//	}
 
 }

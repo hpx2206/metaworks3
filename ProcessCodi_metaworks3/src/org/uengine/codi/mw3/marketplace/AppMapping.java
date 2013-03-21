@@ -1,7 +1,7 @@
 package org.uengine.codi.mw3.marketplace;
 
+import org.apache.kandula.wsbai.GetCoordCtxWCodeReqType;
 import org.metaworks.dao.Database;
-import org.uengine.codi.mw3.model.ICompany;
 
 public class AppMapping extends Database<IAppMapping> implements IAppMapping {
 	
@@ -13,11 +13,11 @@ public class AppMapping extends Database<IAppMapping> implements IAppMapping {
 			this.appId = appId;
 		}
 	
-	ICompany comCode;
-		public ICompany getComCode() {
+	String comCode;
+		public String getComCode() {
 			return comCode;
 		}
-		public void setComCode(ICompany comCode) {
+		public void setComCode(String comCode) {
 			this.comCode = comCode;
 		}
 	
@@ -37,5 +37,29 @@ public class AppMapping extends Database<IAppMapping> implements IAppMapping {
 			this.isDeleted = isDeleted;
 		}
 	
+		
+
+	public IAppMapping findMe() throws Exception {
+
+		IAppMapping findApp = (IAppMapping) Database.sql(IAppMapping.class, "select * from appmapping where appid=?appId and comcode=?comCode");
+		
+		findApp.setAppId(this.getAppId());
+		findApp.setComCode(this.getComCode());
+		findApp.select();
+		
+		return findApp;
+	}
+	
+	public IAppMapping findMyApps() throws Exception {
+		
+		IAppMapping findApp = (IAppMapping) Database.sql(IAppMapping.class, "select * from appmapping where comcode=?comCode and isdeleted=?isDeleted");
+		
+		findApp.setComCode(this.getComCode());
+		findApp.setIsDeleted(this.getIsDeleted());
+		findApp.select();
+		
+		return findApp;
+	}
+		
 	
 }
