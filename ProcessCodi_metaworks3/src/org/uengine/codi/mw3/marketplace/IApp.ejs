@@ -145,12 +145,13 @@ if(mw3.when == 'filter'){
                     	<div class="titleLine"> <strong><a href="#" onClick="<%=methods.detailListing.caller()%>"> <%=value.appName%> </a></strong></div>
                     	<div class="simpleOverview"><%=value.simpleOverview%></div>
                     	<!--div class="fullOverview"><%=value.fullOverview%></div--> 
-                        <div class="titleLine"> Pricing Detail</div>
-                        <div class="pricing"> <%=value.pricing%> </div>
+                        <div class="PricingDetail_app" style="float:left"> Pricing Detail : </div>
+						<div style="float:left;margin:7px 5px"><%=value.pricing%> </div>
+						<div class="clear"></div>
                         <div class="vendor"> service by <%=company.comName%></div>
                     </td>
                     <td class="appStatusTd">
-                    	<div> Status </div>
+                    	<div> <b>Status</b> </div>
                     	<div> <%=value.status%> </div>
                     </td>
                     <td class="appBtnTd">
