@@ -93,16 +93,21 @@ public class Marketplace {
 	public Object showMyVendor() throws Exception {
 		
 		MyVendor myVendor = new MyVendor();
-		
 		myVendor.session = session;
-		myVendor.load();
+		
+		
+		MarketplaceCenterPanel centerPanel = new MarketplaceCenterPanel();
+		centerPanel.setListing(myVendor.load());
+		
+		MarketplaceCenterWindow centerWin = new MarketplaceCenterWindow(session);
+		centerWin.setCenterPanel(centerPanel);
 		
 		
 		Layout mainLayout = new Layout();
 		
 		mainLayout.setId("main");
 		mainLayout.setName("center");
-		mainLayout.setCenter(myVendor);
+		mainLayout.setCenter(centerWin);
 		
 		return mainLayout;
 		

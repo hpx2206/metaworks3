@@ -31,7 +31,7 @@ public class MyVendor {
 		}
 
 		
-	public void load() throws Exception{
+	public IApp load() throws Exception{
 		
 		vendor = new Company();
 		
@@ -44,13 +44,14 @@ public class MyVendor {
 		
 		
 		App findlisting = new App();
+		
 		findlisting.setVendorId(session.getCompany().getComCode());
 		
 		listing = findlisting.findByVendor();
 		listing.getMetaworksContext().setWhen("myVendor");
-
-		
 		setListing(listing);
+		
+		return this.getListing();
 		
 	}
 	

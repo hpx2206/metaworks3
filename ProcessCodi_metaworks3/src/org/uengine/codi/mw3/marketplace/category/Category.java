@@ -11,152 +11,145 @@ import org.uengine.codi.mw3.marketplace.IApp;
 import org.uengine.codi.mw3.marketplace.MarketplaceCenterPanel;
 import org.uengine.codi.mw3.marketplace.MarketplaceCenterWindow;
 import org.uengine.codi.mw3.marketplace.MarketplaceEastPanel;
+import org.uengine.codi.mw3.marketplace.searchbox.MarketplaceSearchBox;
 import org.uengine.codi.mw3.model.Session;
+
+import bsh.This;
 
 public class Category extends Database<ICategory> implements ICategory {
 
+
 	int categoryId;
+		@Override
+		public int getCategoryId() {
+			return categoryId;
+		}
+		@Override
+		public void setCategoryId(int categoryId) {
+			this.categoryId = categoryId;
+		}
+
 	String categoryName;
+		@Override
+		public String getCategoryName() {
+			return categoryName;
+		}
+		@Override
+		public void setCategoryName(String categoryName) {
+			this.categoryName = categoryName;
+		}
+
+
 	int parentCategoryId;
-	Timestamp modDate;
+		@Override
+		public int getParentCategoryId() {
+			return parentCategoryId;
+		}
+		@Override
+		public void setParentCategoryId(int parentCategoryId) {
+			this.parentCategoryId = parentCategoryId;
+		}
+
 	ICategory childrenCategories;
-	boolean deleted;
+		@Override
+		public ICategory getChildrenCategories() {
+			return childrenCategories;
+		}
+		@Override
+		public void setChildrenCategories(ICategory childrenCategories) {
+			this.childrenCategories = childrenCategories;
+		}
+
+	Timestamp modDate;
+		@Override
+		public Timestamp getModDate() {
+			return modDate;
+		}
+		@Override
+		public void setModdDate(Timestamp currentTimeStamp) {
+			this.modDate = currentTimeStamp;
+		}
+
 	boolean selected; 
+		@Override
+		public boolean isSelected() {
+			return selected;
+		}
+		@Override
+		public void setSelected(boolean selected) {
+			this.selected = selected;
+		}
 
-	@Override
-	public int getCategoryId() {
-		return categoryId;
-	}
+	boolean deleted;
+		@Override
+		public boolean isDeleted() {
+			return this.deleted;
+		}
+		@Override
+		public void setDeleted(boolean deleted) {
+			this.deleted = deleted;
+		}
 
-	@Override
-	public void setCategoryId(int categoryId) {
-		this.categoryId = categoryId;
-	}
-
-	@Override
-	public String getCategoryName() {
-		return categoryName;
-	}
-
-	@Override
-	public void setCategoryName(String categoryName) {
-		this.categoryName = categoryName;
-	}
-
-	@Override
-	public int getParentCategoryId() {
-		return parentCategoryId;
-	}
-
-	@Override
-	public void setParentCategoryId(int parentCategoryId) {
-		this.parentCategoryId = parentCategoryId;
-	}
-
-	@Override
-	public ICategory getChildrenCategories() {
-		return childrenCategories;
-	}
-
-	@Override
-	public void setChildrenCategories(ICategory childrenCategories) {
-		this.childrenCategories = childrenCategories;
-	}
-
-	@Override
-	public Timestamp getModDate() {
-		return modDate;
-	}
-
-	@Override
-	public void setModdDate(Timestamp currentTimeStamp) {
-		this.modDate = currentTimeStamp;
-	}
-
-	@Override
-	public boolean isSelected() {
-		return selected;
-	}
-
-	@Override
-	public void setSelected(boolean selected) {
-		this.selected = selected;
-	}
-
-	@Override
-	public boolean isDeleted() {
-		return this.deleted;
-	}
-
-	@Override
-	public void setDeleted(boolean deleted) {
-		this.deleted = deleted;
-	}
-
+		
 	@Override
 	public Object[] selectCategory() throws Exception {
 		
-		ICategory category = databaseMe();
-		category.getMetaworksContext().setWhen("searchForCategory");
+		App findApps = new App();
+		findApps.session = session;
+		findApps.setCategory(this.databaseMe());
+		findApps.setVendorId(session.getCompany().getComCode());
 		
+		IApp getApp = findApps.findForCategory();
 		
-		App findListings = new App();
+		MarketplaceSearchBox searchBox = new MarketplaceSearchBox();
+		searchBox.setKeyEntetSearch(true);
+		searchBox.setKeyUpSearch(true);
 		
-		findListings.session = session;
-		findListings.setCategory(this);
-		findListings.setVendorId(session.getCompany().getComCode());
-		
-		IApp getListing = findListings.findForCategory();
-		getListing.getMetaworksContext().setWhen((getListing.size() > 0) ? "searchForCategory" : "HavntResult");
-		
-
+		//center
 		MarketplaceCenterPanel centerPanel = new MarketplaceCenterPanel();
-		centerPanel.setListing(getListing);
+		centerPanel.setSearchBox(searchBox);
+		centerPanel.setListing(getApp);
+		centerPanel.setCategory(this);
 		
-		//center - search result
-		MarketplaceCenterWindow center = new MarketplaceCenterWindow(session);
-		center.setCenterPanel(centerPanel);
-
-		//west - category
-		MarketCategoryPanel marketCategory = new MarketCategoryPanel(session);
-		marketCategory.setCategory(Category.loadRootCategory());
+		MarketplaceCenterWindow centerWin = new MarketplaceCenterWindow(session);
+		centerWin.setCenterPanel(centerPanel);
+		centerWin.getCenterPanel().getListing().getMetaworksContext().setWhen((getApp.size() > 0) ? "searchForCategory" : "HavntResult");
 		
-		//east - new apps
+		//east
 		MarketplaceEastPanel east = new MarketplaceEastPanel();
 		east.session = session;
 		east.load();
 		
+		//west
+		MarketCategoryPanel marketCategory = new MarketCategoryPanel(session);
+		marketCategory.setCategory(this.loadRootCategory());
 		
 		Layout layout = new Layout();
-		
+		layout.setId("main");
+		layout.setName("center");
 		layout.setWest(marketCategory);
-		layout.setCenter(center);
+		layout.setCenter(centerWin);
 		layout.setEast(east);
+		
 		
 		return new Object[] { layout };
 	}
 
-//	private MarketItemPanel fillMarketItemPanel() throws Exception {
-//		MarketItemPanel mp = new MarketItemPanel();
-//		IMarketItem items = MarketItem.loadCategoryItems(this.getCategoryId());
-//		items.getMetaworksContext().setHow(MetaworksContext.HOW_IN_LIST);
-//		items.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-//		mp.setMarketItem(items);
-//		mp.setCategoryId(getCategoryId());
-//		return mp;
-//	}
-
 	@Override
 	public void save() throws Exception {
 		try {
-			IDAO categoryId = sql(IDAO.class,
-					"select max(categoryId) 'categoryId' from category");
+			
+			IDAO categoryId = sql(IDAO.class, "select max(categoryId) 'categoryId' from category");
 			categoryId.select();
+			
 			if (categoryId.next()) {
 				setCategoryId(categoryId.getInt("categoryId") + 1);
+			
 			} else {
 				setCategoryId(0);
+			
 			}
+		
 		} catch (Exception e) {
 
 		}

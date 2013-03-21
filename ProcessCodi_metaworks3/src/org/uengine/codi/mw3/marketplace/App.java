@@ -163,8 +163,6 @@ public class App extends Database<IApp> implements IApp{
 		findListing.setVendorId(this.getVendorId());
 		findListing.select();
 		
-		findListing.getMetaworksContext().setWhen("newApps");
-		
 		return findListing;
 		
 	}
@@ -217,9 +215,6 @@ public class App extends Database<IApp> implements IApp{
 	}
 	
 	public Object detailListing() throws Exception {
-		
-//		this.copyFrom(this.findMe());
-		this.getMetaworksContext().setWhen("detailList");
 		
 		Category category = new Category();
 		category.setCategoryId(this.getCategory().getCategoryId());
