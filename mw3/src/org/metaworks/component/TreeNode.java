@@ -18,6 +18,9 @@ public class TreeNode {
 	public final static String TYPE_FILE_IMAGE = "image";
 	public final static String TYPE_USER = "user";
 	
+	public final static String ALIGN_LEFT			= "left";
+	public final static String ALIGN_RIGHT			= "right";
+	
 	String id;
 		@Id
 		public String getId() {
@@ -34,7 +37,13 @@ public class TreeNode {
 		public void setTreeId(String treeId) {
 			this.treeId = treeId;
 		}
-		
+	String align;
+		public String getAlign() {
+			return align;
+		}
+		public void setAlign(String align) {
+			this.align = align;
+		}
 	String name;
 		public String getName() {
 			return name;
@@ -109,7 +118,7 @@ public class TreeNode {
 		
 	public TreeNode() {
 		ArrayList<TreeNode> child = new ArrayList<TreeNode>();
-		
+		this.setAlign(ALIGN_LEFT);
 		this.setChild(child);
 	}
 	
