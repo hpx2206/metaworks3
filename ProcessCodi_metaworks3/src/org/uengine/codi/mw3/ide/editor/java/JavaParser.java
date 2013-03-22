@@ -16,6 +16,14 @@ import org.eclipse.jdt.core.dom.VariableDeclaration;
 
 public class JavaParser {
 
+	String packageName;
+		public String getPackageName() {
+			return packageName;
+		}
+		public void setPackageName(String packageName) {
+			this.packageName = packageName;
+		}
+
 	String className;
 		public String getClassName() {
 			return className;
@@ -57,22 +65,17 @@ public class JavaParser {
 		parser.setResolveBindings(true);
 		parser.setStatementsRecovery(true);
 		parser.setBindingsRecovery(true);
-
-		
-		//parser.setSource("public class A { User user = new User(); A ap = B.load(); \n int i = 9;  \n int j; \n ArrayList<Integer> al = new ArrayList<Integer>();j=1000; }".toCharArray());
 		parser.setSource(this.getContent().toCharArray());
-		//parser.setSource("/*abc*/".toCharArray());
 		
 		parser.setKind(ASTParser.K_COMPILATION_UNIT);
  
 		CompilationUnit unit = (CompilationUnit)parser.createAST(null);
 				
 		PackageDeclaration packageDeclaration = unit.getPackage();
-		System.out.println("package : " + packageDeclaration.getName().getFullyQualifiedName());
 		TypeDeclaration typeDeclaration = (TypeDeclaration) unit.types().get(0);
-		String className = typeDeclaration.getName().getFullyQualifiedName(); 
-		System.out.println("class : " + typeDeclaration.getName().getFullyQualifiedName());
 		
+		this.setPackageName(packageDeclaration.getName().getFullyQualifiedName());
+		this.setClassName(className);
 		
 		ArrayList<JavaMethod> methods = new ArrayList<JavaMethod>();
 		ArrayList<JavaField> fields = new ArrayList<JavaField>();
@@ -91,12 +94,12 @@ public class JavaParser {
                 for (Object parameter : methodDeclaration.parameters()) {
                 	parameters.add(makeJavaField((SingleVariableDeclaration) parameter));
                 }
-                
+                                                
 				JavaMethod method = new JavaMethod();
 		    	method.setName(name);
 		    	method.setReturnType(returnType);
 		    	method.setParameters(parameters);
-		    	method.setOwnerClassName(className);
+		    	method.setOwnerClassName(this.getClassName());
 		    	methods.add(method);
 			}else if(declarationclass instanceof FieldDeclaration){
 				fields.addAll(makeJavaField((FieldDeclaration)declarationclass));
@@ -105,8 +108,6 @@ public class JavaParser {
 				System.out.println("else");
 			}
 		}
-		
-		
 		this.setMethods(methods);
 		this.setFields(fields);
 		
