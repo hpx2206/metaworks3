@@ -108,7 +108,8 @@
 .titleLine{margin-bottom:10px;font-weight:bold;font-size: 14px;}
 .simpleOverview{margin-bottom:10px; line-height: 110%; color:#87876A}
 .pricing{line-height: 15px; color:#87876A;}
-.vendor{line-height: 15px; color:#808080; font-style:oblique}
+.newApp_pricing{line-height: 15px; color:#eee8aa; font-style:oblique}
+.vendor{line-height: 15px; color:#808000; font-style:oblique}
 .fullOverview{line-height: 20px;}
 
 .detailView_app_outer{padding:0 15px;}

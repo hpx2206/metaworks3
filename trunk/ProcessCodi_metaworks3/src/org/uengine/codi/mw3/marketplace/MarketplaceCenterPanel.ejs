@@ -6,9 +6,8 @@ if(value){
 	var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
 	var company = session.company[0];
 	
-%>
-	<%
-	if(value.searchBox != null) {
+
+	if(value.searchBox != null && value.metaworksContext.when != 'detailList') {
 
 	%>
 		<div id="searchbox">
@@ -23,12 +22,9 @@ if(value){
 		</div>
 	
 	<%
-	
 	}
-
 	
 	if(value.vendor != null) {
-	
 	%>
 		<div><%=fields.vendor.here()%> </div>
 		
@@ -40,24 +36,44 @@ if(value){
 		<div><%=fields.appInfo.here()%> </div>
 	
 	<%
-	} else{
-		
-	%>
-		
-		<div><%=fields.listing.here()%> </div>
-	
-	<%
-	}
+	} 
 	 
 	 if(value.listing == null || value.listing.length == 0) {
 	 	if(!value.appInfo){
 	 %>
-
+	 
 	 	<div style="margin-top:30px; text-align:center;"> <%=mw3.localize('$App.NoResult')%> </div>
 	 
 	 <%
 		 }
-	 }
+	 }else{
+		
+		if(value.metaworksContext.when == 'searchForCategory') {
+			
+		%>
+			<div> <a href="#" onClick="<%=methods.gomarketHome.caller()%>">CODI Apps </a> >  <%=value.category.categoryName%> </div>
+		
+		<%
+		}else if(value.metaworksContext.when == 'detailList') {
+			var category;
+			
+			if(value.category != null && value.category.length !=0 ) {
+			
+				category = value.category[0];
+			
+		
+			%>
+				<div> <a href="#" onClick="<%=methods.gomarketHome.caller()%>">CODI Apps </a> > <a href="#" onClick="mw3.getFaceHelper(<%=objectId%>).selectCategory()"> <%=category.categoryName%> </a></div>
+			
+			<%
+			}
+		}
+		
+		%>
+		<div><%=fields.listing.here()%> </div>
+	
+	<%
+	}
 
 }
 %>

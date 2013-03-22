@@ -25,15 +25,12 @@ public interface ICategory extends IDAO {
     
     @Name
     public String getCategoryName();
-
     public void setCategoryName(String categoryName);
     
     public int getParentCategoryId();
-    
     public void setParentCategoryId(int parentCategoryId);
     
     public Timestamp getModDate();
-    
     public void setModdDate(Timestamp currentTimeStamp);
     
     @NonLoadable
@@ -41,7 +38,6 @@ public interface ICategory extends IDAO {
     @Children
     @Hidden
     public ICategory getChildrenCategories();
-    
     public void setChildrenCategories(ICategory childrenCategories);
     
     @NonLoadable
@@ -51,7 +47,6 @@ public interface ICategory extends IDAO {
     public void setSelected(boolean selected);
     
     public boolean isDeleted();
-
     public void setDeleted(boolean deleted);
 
     @ServiceMethod(callByContent = true, when = "never")

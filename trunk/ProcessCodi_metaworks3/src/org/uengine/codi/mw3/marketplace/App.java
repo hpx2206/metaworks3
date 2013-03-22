@@ -3,11 +3,14 @@ package org.uengine.codi.mw3.marketplace;
 import java.util.Date;
 
 
+import org.metaworks.Refresh;
 import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.SelectBox;
 import org.metaworks.dao.Database;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.layout.Layout;
+import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.marketplace.category.Category;
 import org.uengine.codi.mw3.marketplace.category.ICategory;
@@ -230,17 +233,18 @@ public class App extends Database<IApp> implements IApp{
 		
 		Category category = new Category();
 		category.setCategoryId(this.getCategory().getCategoryId());
+		this.setCategory(category.databaseMe());
 		
 		MarketplaceSearchBox searchBox = new MarketplaceSearchBox();
 		searchBox.setKeyUpSearch(true);
 		searchBox.setKeyEntetSearch(true);
 		
-//		this.setCategory(category.databaseMe());
 		
 		MarketplaceCenterPanel centerPenal = new MarketplaceCenterPanel();
 		centerPenal.setListing(this.findMe());
 		centerPenal.setSearchBox(searchBox);
-		centerPenal.setCategory(category.databaseMe());
+		centerPenal.setCategory(this.getCategory());
+		centerPenal.getMetaworksContext().setWhen("detailList");
 		centerPenal.getListing().getMetaworksContext().setWhen("detailList");
 		
 		MarketplaceCenterWindow centerWin = new MarketplaceCenterWindow(session);
@@ -282,6 +286,9 @@ public class App extends Database<IApp> implements IApp{
 		}
 		
 		categories.setSelected(Integer.toString(this.getCategory().getCategoryId()));
+		
+		getExtfile().getMetaworksContext().setWhen("edit");
+		getLogoFile().getMetaworksContext().setWhen("edit");
 		
 		editListing.setListingId(getAppId());
 		editListing.setCategories(categories);
@@ -336,4 +343,14 @@ public class App extends Database<IApp> implements IApp{
 		
 	}
 	
+	public Object gomarketHome() throws Exception {
+		
+		PageNavigator gomarketHome = new PageNavigator();
+		gomarketHome.session = session;
+		
+		return new Refresh(gomarketHome.goMarketplace(), true);
+
+	}
+	
+
 }

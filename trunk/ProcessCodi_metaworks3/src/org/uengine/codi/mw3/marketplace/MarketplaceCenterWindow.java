@@ -7,7 +7,7 @@ import org.uengine.codi.mw3.model.Session;
 		ejsPath="genericfaces/Window.ejs",
 		options={"hideAddBtn", "hideLabels"},
 		values={"true", "true"},
-		displayName="TopInstall"
+		displayName="Top Install"
 	)
 public class MarketplaceCenterWindow {
 

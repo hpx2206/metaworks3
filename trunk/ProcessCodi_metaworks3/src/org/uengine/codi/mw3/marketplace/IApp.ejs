@@ -7,11 +7,10 @@ var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
 var company = session.company[0];
 var when = value.metaworksContext.when;
 
+
 	if(when == 'detailList'){
 
 %>
-	<div>CODI Apps > <a href="#" onclick="#"> <%=value.category.categoryId%> </a></div>
-	
 	<div class="detailView_app_outer">
 		<div class="detailView_app">
 			<div class="topTitle_app"><%=value.appName%></div>
@@ -89,12 +88,13 @@ var when = value.metaworksContext.when;
 	}else if(when == 'newApps') {
 
 %>
-	
+
+<div style="width:50px; float:left"> <%=fields.logoFile.here({when:'image'})%> </div>
 <div class="fixed_img_row">
   <ul>	
      <li>
-     	<div class="titleLine"><a href="#" onClick="<%=methods.detailListing.caller()%>"> <%=value.appName%> (<%=value.pricing%>) </a></div>
-     	<div  class="simpleOverview"><%=value.simpleOverview%></div>
+     	<div class="titleLine"><a href="#" onClick="<%=methods.detailListing.caller()%>"> <%=value.appName%> </a></div>
+     	<div class="newApp_pricing"> <%=value.pricing%> </div>
      </li>
   </ul>
 </div>  
@@ -104,6 +104,7 @@ var when = value.metaworksContext.when;
 	}else {
 	
 %>
+
 	<div class="fixed_img_row">
 	   	  <ul>	
 		     <li> 
@@ -137,10 +138,10 @@ var when = value.metaworksContext.when;
 							%>
 							
 								<%if(value.status == 'Unpublished'){%>
-									<div class="badge" style="float:none;margin-top:2px;background:#679BD1;padding:3px 8px; width:80px" onClick="<%=methods.readyPublished.caller()%>">Ready for publish</div>
+									<div class="badge" style="float:none;margin-top:2px;background:#679BD1;padding:3px 8px; width:80px"><a herf="#" onClick="<%=methods.readyPublished.caller()%>"> Ready for publish </a></div>
 								<%}%>
 								
-								<div class="badge" style="float:none;margin-top:2px;background:#679BD1;padding:3px 8px; width:80px" onClick="<%=methods.editListing.caller()%>">Edit Detail</div>
+								<div class="badge" style="float:none;margin-top:2px;background:#679BD1;padding:3px 8px; width:80px"><a herf="#" onClick="<%=methods.editListing.caller()%>"> Edit Detail </a></div>
 						
 							<%
 							}
