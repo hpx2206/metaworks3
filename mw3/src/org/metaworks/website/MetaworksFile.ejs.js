@@ -28,13 +28,12 @@ var org_metaworks_website_MetaworksFile = function(objectId, className){
 
 			imageDiv.html('<img style=\"display:none;\" src=\'' + image + '\'>').attr("href","javascript:mw3.objects[" + objectId + "].download()");
 			
-			/*
 			if(object.__descriptor){
-				width = object.__descriptor.getOptionValue('imageWidth');
-				height = object.__descriptor.getOptionValue('imageHeight');
+				width = object.__descriptor.getOptionValue('width');
+				height = object.__descriptor.getOptionValue('height');
+				
+				$("#objDiv_" + this.objectId).css('width',width+'px').css('height',height+'px');
 			}
-			imageDiv.html('<img style=\"display:none\" ' + (width?'width='+width+' ':' ') + (height?'height='+height+' ':' ') + 'src=\'' + image + '\'>').attr("href","javascript:mw3.objects[" + objectId + "].download()");
-			*/
 			
 			imageDiv.find('img').load(function(){
 				if($(this).width() > parentwidth){
