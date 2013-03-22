@@ -88,16 +88,14 @@ var when = value.metaworksContext.when;
 	}else if(when == 'newApps') {
 
 %>
-
-<div style="width:50px; float:left; margin:4px;"> <%=fields.logoFile.here({when:'image'})%> </div>
-<div class="fixed_img_row">
-  <ul>	
-     <li>
-     	<div class="titleLine"><a href="#" onClick="<%=methods.detailListing.caller()%>"> <%=value.appName%> </a></div>
-     </li>
-  </ul>
-</div>  
-<div class="clear"></div>
+<div style="padding:7px 0; border-bottom:1px solid #e5e5e5;">
+	<div style="width:50px; float:left; margin:4px;"> <%=fields.logoFile.here({when:'image'})%> </div>
+	<div style="margin-left:50px;">  
+	     	<div class="titleLine" style="margin:0px"><a href="#" onClick="<%=methods.detailListing.caller()%>"> <%=value.appName%> </a></div>
+	     	<div class="newApp_pricing"> <%=value.pricing%> </div>  
+	</div>  
+	<div class="clear"></div>
+</div>
 <%
 	
 	}else {
