@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Id;
+import org.metaworks.annotation.Name;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.common.MetaworksUtil;
 import org.uengine.codi.mw3.ide.editor.java.JavaParser;
@@ -19,6 +20,15 @@ public class Editor {
 		}
 		public void setFilename(String filename) {
 			this.filename = filename;
+		}
+
+	String name;
+		@Name
+		public String getName() {
+			return name;
+		}
+		public void setName(String name) {
+			this.name = name;
 		}
 
 	String content;
@@ -43,6 +53,10 @@ public class Editor {
 	
 	public Editor(String filename){
 		this.setFilename(filename);
+		
+		if(filename.lastIndexOf(File.separatorChar) > -1){
+			this.setName(filename.substring(filename.lastIndexOf(File.separatorChar)+1));
+		}
 	}
 	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_NONE)

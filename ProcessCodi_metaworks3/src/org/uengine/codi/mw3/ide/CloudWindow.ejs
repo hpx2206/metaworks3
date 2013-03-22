@@ -9,12 +9,10 @@ if (value != null){
 		var tabMetadata = mw3.getMetadata(value.tabs[i].__className);
 		
 		if(tabMetadata.nameFieldDescriptor){
-
+			tabName = object[tabMetadata.nameFieldDescriptor.name];
 		}else{
 			tabName = tabMetadata.displayName;
 		}
-		
-		console.log(tabName);
 		
 		var tabOptions = {
 			ejsPath : 'dwr/metaworks/org/uengine/codi/mw3/ide/CloudTab.ejs'
@@ -25,7 +23,7 @@ if (value != null){
 			name : tabName
 		};
 %>
-	<div id="top_<%=objectId%>_<%=i%>" onClick="mw3.getFaceHelper('<%=objectId%>').select('<%=objectId%>_<%=i%>');">
+	<div id="top_<%=objectId%>_<%=i%>" class="cloudTab">
 		<%=mw3.locateObject(tab, tab.__className, null, tabOptions)%>
 	</div>
 <%			
