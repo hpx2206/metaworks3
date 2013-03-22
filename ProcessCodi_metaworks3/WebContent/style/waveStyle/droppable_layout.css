@@ -300,7 +300,7 @@ img {
 
 .boxtoprightTab .tabCurrent {
     display: block;
-    background: url('../../images/ide/tCurrnetL.png') left 0 no-repeat;
+    background: url('../../images/ide/tab_outl.png') left 0 no-repeat;
     float: left;
     margin-left: -4px;
     padding-left: 10px;
@@ -313,11 +313,22 @@ img {
 .boxtoprightTab .tabCurrent span {
     display: block;
     float: left;
-    background: url('../../images/ide/tCurrnetR.png') right 0;
+    background: url('../../images/ide/tab_outR.png') right 0;
     line-height: 200%;
     padding-right: 23px;
     height: 20px;
     overflow: hidden
+}
+
+.boxtoprightTab .selected .tabCurrent {
+    background: url('../../images/ide/tCurrnetL.png') left 0 no-repeat  !important;
+    
+}
+
+.boxtoprightTab .selected .tabCurrent span {
+   
+    background: url('../../images/ide/tCurrnetR.png') right 0 !important;
+   
 }
 
 .boxmiddleright {
