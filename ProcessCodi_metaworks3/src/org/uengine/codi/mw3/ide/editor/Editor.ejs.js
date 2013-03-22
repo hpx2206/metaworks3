@@ -9,7 +9,7 @@ var org_uengine_codi_mw3_ide_editor_Editor = function(objectId, className){
 	if(this.object == null)
 		return true;
 	
-	this.objectDiv.css("width", "100%").css("height", '100%').css("overflow", "hidden");
+	this.objectDiv.css("width", "100%").css("height", '100%').css("overflow", "hidden").addClass('mw3_resize');
 	
 	this.loadRequestAssist = false;
 	this.lastCommandString = "";
@@ -70,12 +70,24 @@ org_uengine_codi_mw3_ide_editor_Editor.prototype = {
 	    faceHelper.editor.setKeyboardHandler(    		   
 	    	{
 	    		handleKeyboard : function(data, hashId, key, keyCode, e) {
+	    			console.log(e.keyCode);
+	    			
 	    			switch (e.keyCode) {
 	    				case 13 :	// enter
 			    			mw3.getFaceHelper(objectId).selectAssist(e);
 			    	    	
 			    	    	break;
-			    	    	
+			    	    
+	    				case 83:	// s
+	    					if(e.ctrlKey && e.shiftKey){
+		    					mw3.mouseX = e.srcElement.offsetLeft + 4;
+		    					mw3.mouseY = e.srcElement.offsetTop + 18;
+		    					
+		    					mw3.call(objectId, 'quickMenu');
+		    					
+	    						faceHelper.stopEvent(e);
+	    					}
+	    					
 	    				case 190:	// .
 	    					var command = faceHelper.getCommandString();
 	    					
@@ -642,8 +654,6 @@ org_uengine_codi_mw3_ide_editor_Editor.prototype = {
 		var jbPath = this.getJavaBuildPath();
 		
 		if(jbPath){
-			console.log(jbPath.annotationMap);
-			
 			for(var className in jbPath.annotationMap){
 				if(expression.trim() == '' || className.toLowerCase().startsWith(expression)){
 					var annotationPackageFromClass = jbPath.classMap[className];
@@ -654,6 +664,8 @@ org_uengine_codi_mw3_ide_editor_Editor.prototype = {
 				}
 			}
 		}		
-	}
-	
+	},
+	resize : function(e){
+		this.editor.resize();	
+	}	
 };
