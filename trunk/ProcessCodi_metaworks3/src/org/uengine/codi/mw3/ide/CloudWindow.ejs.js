@@ -9,11 +9,19 @@ var org_uengine_codi_mw3_ide_CloudWindow = function(objectId, className){
 	if(this.object == null)
 		return true;
 	
-	this.objectDiv.css('height', '100%');
+	this.objectDiv.css({
+		'height': '100%',
+		'position': 'relative'
+	});
 };
 
 org_uengine_codi_mw3_ide_CloudWindow.prototype = {
 	toAppend : function(object){
-		this.objectDiv.find('.contentcontainer:first').append(mw3.locateObject(object, null));
+		this.objectDiv.find('.top').append(mw3.locateObject(object, null));
+	},
+	
+	select : function(id){
+		$('#top_' + id).siblings().removeClass('selected').end().addClass('selected');
+		$('#bottom_' + id).siblings().hide().end().show();
 	}
 };
