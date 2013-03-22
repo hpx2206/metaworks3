@@ -36,17 +36,7 @@ if(value){
 		<div><%=fields.appInfo.here()%> </div>
 	
 	<%
-	} 
-	 
-	 if(value.listing == null || value.listing.length == 0) {
-	 	if(!value.appInfo){
-	 %>
-	 
-	 	<div style="margin-top:30px; text-align:center;"> <%=mw3.localize('$App.NoResult')%> </div>
-	 
-	 <%
-		 }
-	 }else{
+	}else{
 		
 		if(value.metaworksContext.when == 'searchForCategory') {
 			
@@ -74,6 +64,16 @@ if(value){
 	
 	<%
 	}
+	 
+	 if(value.listing == null || value.listing.length == 0) {
+	 	if(!value.appInfo){
+	 %>
+	 
+	 	<div style="margin-top:30px; text-align:center;"> <%=mw3.localize('$App.NoResult')%> </div>
+	 
+	 <%
+		 }
+	 }
 
 }
 %>
