@@ -22,6 +22,14 @@ public class Menu {
 			this.name = name;
 		}
 	
+	boolean context;
+		public boolean isContext() {
+			return context;
+		}
+		public void setContext(boolean context) {
+			this.context = context;
+		}
+
 	boolean sub;
 		public boolean isSub() {
 			return sub;

@@ -17,7 +17,7 @@ var org_metaworks_component_MenuItem = function(objectId, className){
 	if(this.object.subMenu)
 		this.objectDiv.addClass("submenu");
 	
-	this.objectDiv.css({'min-width': '0px',
+	this.objectDiv.css({'min-width': '100px',
 						'min-height': '0px',
 						'max-width': '9961px',
 						'max-height': '9992px',
@@ -32,7 +32,7 @@ var org_metaworks_component_MenuItem = function(objectId, className){
 		// add event mouse over
 		$(this.objectDiv).hover(
 			function () {
-				$(this).children(':last').children(':first').show();
+				$(this).children(':last').children(':first').css('left', $(this).outerWidth() + 'px').show();
 			}, 
 			function () {
 				$(this).children(':last').children(':first').hide();
@@ -43,13 +43,23 @@ var org_metaworks_component_MenuItem = function(objectId, className){
 
 org_metaworks_component_MenuItem.prototype = {
 	click : function(){
+		if(this.objectDiv.hasClass('submenu')){
+			return true;
+		}
+		
 		if(event.stopPropagation){
 			event.stopPropagation();
 		}else if(window.event){
 			window.event.cancelBubble = true;
 		}
 		
-		var parent = this.objectDiv.parentsUntil('.c9-menu-btn').parent();
+		var parent = this.objectDiv.parent('.menu');
+		
+		if(parent.length == 0)
+			parent = this.objectDiv.parentsUntil('.c9-menu-btn');
+		
+		parent = parent.parent();
+		
 		var parentId = parent.attr('objectId');
 		
 		if(parentId){

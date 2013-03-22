@@ -1,15 +1,18 @@
 <%
-	if(value == null || typeof value == 'undefined'){		
-		return true;
-	}
+	if(value != null && typeof value != 'undefined'){		
 %>
 
 <%
-	var sub = false;
-	if(value.sub != null && typeof value.sub != 'undefined' && value.sub)
-		sub = true;
+		var sub = false;
+		var context = false;
+		
+		if(value.sub != null && typeof value.sub != 'undefined' && value.sub)
+			sub = true;
+	
+		if(value.context != null && typeof value.context != 'undefined' && value.context)
+			context = true;
 
-	if(!sub){
+		if(!sub && !context){
 %>
 	
 <div class="c9-left"></div>
@@ -18,7 +21,11 @@
 <div class="c9-fix"></div>
 
 <%
-	}
+		}
 %>
 
 <%=fields.menu.here()%>
+
+<%
+	}
+%>
