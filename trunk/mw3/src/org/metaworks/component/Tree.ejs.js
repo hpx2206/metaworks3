@@ -45,6 +45,13 @@ var org_metaworks_component_Tree = function(objectId, className){
 
 org_metaworks_component_Tree.prototype = {
 	getValue : function(){
+		var beanPaths = mw3.beanExpressions[this.objectId];
+		if(beanPaths)
+		for(var propName in beanPaths){
+			var beanPath = beanPaths[propName];
+			eval("mw3.objects[this.objectId]" + beanPath.fieldName + "=mw3.getObject('" + beanPath.valueObjectId + "')");
+		}
+		
 		// get check nodes
 		var checkNodes = [];
 
