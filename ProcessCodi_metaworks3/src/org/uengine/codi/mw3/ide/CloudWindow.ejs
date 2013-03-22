@@ -23,7 +23,7 @@ if (value != null){
 			name : tabName
 		};
 %>
-	<div id="top_<%=objectId%>_<%=i%>" class="cloudTab">
+	<div id="top_<%=objectId%>_<%=i%>" class="cloudTab <%=(i==0)?'selected':''%>">
 		<%=mw3.locateObject(tab, tab.__className, null, tabOptions)%>
 	</div>
 <%			

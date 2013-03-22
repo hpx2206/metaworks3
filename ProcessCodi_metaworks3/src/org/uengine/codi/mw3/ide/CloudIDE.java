@@ -1,6 +1,9 @@
 package org.uengine.codi.mw3.ide;
 
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Hidden;
+import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.widget.ModalWindow;
 import org.metaworks.widget.layout.Layout;
 import org.uengine.codi.mw3.ide.view.Navigator;
 import org.uengine.codi.mw3.model.Session;
@@ -76,12 +79,8 @@ public class CloudIDE {
 		Navigator navigator = new Navigator();		
 		navigator.load(baseDir, projectId);
 
-		Navigator navigator2 = new Navigator();
-		navigator2.load("D:/", "D:/");
-		
 		CloudWindow navigatorWindow = new CloudWindow();
 		navigatorWindow.getTabs().add(navigator);
-		navigatorWindow.getTabs().add(navigator2);
 
 		CloudWindow editorWindow = new CloudWindow("editor");
 		
@@ -97,5 +96,12 @@ public class CloudIDE {
 		jbPath.load();
 		
 		this.setJavaBuildPath(jbPath);
+	}
+	
+	@ServiceMethod(keyBinding={"@Ctrl+Shift+C"}, target=ServiceMethodContext.TARGET_POPUP)
+	public ModalWindow openResource(){
+		OpenResource openResource = new OpenResource();
+		
+		return new ModalWindow(openResource);
 	}
 }

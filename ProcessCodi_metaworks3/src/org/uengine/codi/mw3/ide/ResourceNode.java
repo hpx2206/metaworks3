@@ -56,6 +56,7 @@ public class ResourceNode extends TreeNode {
 	public Menu showContextMenu() {
 		session.setClipboard(this);
 		
+		return new ResourceContextMenu();
 		/*
 		menu.setId("edit");
 		menu.setName("Edit");
@@ -118,7 +119,5 @@ public class ResourceNode extends TreeNode {
 		
 		menu.add(line);
 		*/
-		
-		return new ResourceContextMenu();
 	}
 }

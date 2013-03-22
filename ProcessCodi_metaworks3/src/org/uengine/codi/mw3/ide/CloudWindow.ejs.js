@@ -18,7 +18,7 @@ var org_uengine_codi_mw3_ide_CloudWindow = function(objectId, className){
 };
 
 org_uengine_codi_mw3_ide_CloudWindow.prototype = {
-	load : function(){
+	loaded : function(){
 		this.bind();
 	},
 	bind : function(){
