@@ -89,16 +89,15 @@ var when = value.metaworksContext.when;
 
 %>
 
-<div style="width:50px; float:left"> <%=fields.logoFile.here({when:'image'})%> </div>
+<div style="width:50px; float:left; margin:4px;"> <%=fields.logoFile.here({when:'image'})%> </div>
 <div class="fixed_img_row">
   <ul>	
      <li>
      	<div class="titleLine"><a href="#" onClick="<%=methods.detailListing.caller()%>"> <%=value.appName%> </a></div>
-     	<div class="newApp_pricing"> <%=value.pricing%> </div>
      </li>
   </ul>
 </div>  
- 
+<div class="clear"></div>
 <%
 	
 	}else {
