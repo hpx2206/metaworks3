@@ -3,8 +3,6 @@ package org.uengine.codi.mw3.ide;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.metaworks.annotation.Face;
-
 public class CloudWindow {
 
 	String id;
@@ -16,7 +14,6 @@ public class CloudWindow {
 		}
 
 	List<Object> tabs;
-		@Face(ejsPath="dwr/metaworks/genericfaces/Tab.ejs")
 		public List<Object> getTabs() {
 			return tabs;
 		}

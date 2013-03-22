@@ -7,6 +7,7 @@ import org.uengine.codi.mw3.model.Session;
 
 public class CloudIDE {
 	public CloudIDE() {
+		
 		/*		setPageNavigator(new PageNavigator("ide"));
 
 		Layout innerLayout = new Layout();
@@ -75,8 +76,12 @@ public class CloudIDE {
 		Navigator navigator = new Navigator();		
 		navigator.load(baseDir, projectId);
 
+		Navigator navigator2 = new Navigator();
+		navigator2.load("D:/", "D:/");
+		
 		CloudWindow navigatorWindow = new CloudWindow();
 		navigatorWindow.getTabs().add(navigator);
+		navigatorWindow.getTabs().add(navigator2);
 
 		CloudWindow editorWindow = new CloudWindow("editor");
 		
