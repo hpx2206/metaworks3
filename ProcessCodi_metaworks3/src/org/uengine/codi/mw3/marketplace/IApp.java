@@ -94,5 +94,8 @@ public interface IApp extends IDAO{
 	
 	@ServiceMethod(callByContent=true)
 	public void addApp()throws Exception;
-
+	
+	@ServiceMethod(callByContent=true)
+	public Object gomarketHome() throws Exception;
+	
 }

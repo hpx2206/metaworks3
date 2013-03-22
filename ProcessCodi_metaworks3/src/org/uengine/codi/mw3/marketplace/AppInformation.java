@@ -2,15 +2,20 @@ package org.uengine.codi.mw3.marketplace;
 
 import java.util.Calendar;
 
+import javax.persistence.SequenceGenerator;
+
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.MetaworksException;
+import org.metaworks.Refresh;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
+import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.SelectBox;
 import org.metaworks.website.MetaworksFile;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.marketplace.category.Category;
 import org.uengine.codi.mw3.marketplace.category.ICategory;
 import org.uengine.codi.mw3.model.Session;
@@ -25,7 +30,7 @@ import org.uengine.processmanager.ProcessManagerRemote;
 			"{when: 'edit', face: 'genericfaces/FormFace.ejs'}"
 		},
 		options={"fieldOrder"},
-		values={"categories,listingName,simpleOverview,fullOverview,file,logoFile"}
+		values={"categories,listingName,simpleOverview,fullOverview,pricing,file,logoFile"}
 	)
 public class AppInformation implements ContextAware {
 
@@ -43,7 +48,8 @@ public class AppInformation implements ContextAware {
 		this.setMetaworksContext(new MetaworksContext());
 
 	}
-
+	
+	@Hidden
 	MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
 			return metaworksContext;
@@ -51,7 +57,8 @@ public class AppInformation implements ContextAware {
 		public void setMetaworksContext(MetaworksContext metaworksContext) {
 			this.metaworksContext = metaworksContext;
 		}
-
+	
+	@Face(displayName="카테고리")
 	SelectBox categories;
 		public SelectBox getCategories() {
 			return categories;
@@ -59,7 +66,8 @@ public class AppInformation implements ContextAware {
 		public void setCategories(SelectBox categories) {
 			this.categories = categories;
 		}
-		
+	
+	@Hidden
 	int listingId;
 		public int getListingId() {
 			return listingId;
@@ -68,6 +76,7 @@ public class AppInformation implements ContextAware {
 			this.listingId = listingId;
 		}
 
+	@Face(displayName="앱이름")
 	String listingName;
 		public String getListingName() {
 			return listingName;
@@ -76,6 +85,7 @@ public class AppInformation implements ContextAware {
 			this.listingName = listingName;
 		}
 
+	@Face(displayName="심플 설명")
 	String simpleOverview;
 		public String getSimpleOverview() {
 			return simpleOverview;
@@ -83,7 +93,8 @@ public class AppInformation implements ContextAware {
 		public void setSimpleOverview(String simpleOverview) {
 			this.simpleOverview = simpleOverview;
 		}
-
+		
+	@Face(displayName="데테일 설명")
 	String fullOverview;
 		public String getFullOverview() {
 			return fullOverview;
@@ -92,6 +103,7 @@ public class AppInformation implements ContextAware {
 			this.fullOverview = fullOverview;
 		}
 
+	@Face(displayName="앱 첨부 파일")
 	MetaworksFile file;
 		public MetaworksFile getFile() {
 			return file;
@@ -100,6 +112,7 @@ public class AppInformation implements ContextAware {
 			this.file = file;
 		}
 
+	@Face(displayName="가격")
 	String pricing;
 		public String getPricing() {
 			return pricing;
@@ -108,6 +121,7 @@ public class AppInformation implements ContextAware {
 			this.pricing = pricing;
 		}
 
+	@Face(displayName="로고파일")
 	MetaworksFile logoFile;
 		public MetaworksFile getLogoFile() {
 			return logoFile;
@@ -123,7 +137,7 @@ public class AppInformation implements ContextAware {
 	public Session session;
 
 	@ServiceMethod(callByContent = true, when = "new")
-	public void add() throws Exception {
+	public Object add() throws Exception {
 
 		if (getFile() == null || getFile().getFileTransfer() == null || getFile().getFileTransfer().getFilename() == null || getFile().getFilename() == null)
 			throw new MetaworksException("$YouMustAttachItemFile");
@@ -153,6 +167,14 @@ public class AppInformation implements ContextAware {
 		listing.setCategory(category);
 
 		listing.createDatabaseMe();
+		listing.flushDatabaseMe();
+		
+		PageNavigator gomarketHome = new PageNavigator();
+		gomarketHome.session = session;
+		
+		
+		return new Refresh(gomarketHome.goMarketplace(), true);
+		
 
 	}
 	

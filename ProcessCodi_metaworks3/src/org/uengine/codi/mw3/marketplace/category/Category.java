@@ -109,6 +109,7 @@ public class Category extends Database<ICategory> implements ICategory {
 		centerPanel.setSearchBox(searchBox);
 		centerPanel.setListing(getApp);
 		centerPanel.setCategory(this);
+		centerPanel.getMetaworksContext().setWhen("searchForCategory");
 		
 		MarketplaceCenterWindow centerWin = new MarketplaceCenterWindow(session);
 		centerWin.setCenterPanel(centerPanel);
