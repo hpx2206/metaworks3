@@ -41,7 +41,13 @@ if(value){
 		if(value.metaworksContext.when == 'searchForCategory') {
 			
 		%>
-			<div> <a href="#" onClick="<%=methods.gomarketHome.caller()%>">CODI Apps </a> >  <%=value.category.categoryName%> </div>
+			<div class="toolbar">
+                <ul>
+                    <li  onClick="<%=methods.gomarketHome.caller()%>"><span>CODI Apps</span></li>
+                    <li onClick="mw3.getFaceHelper(<%=objectId%>).selectCategory()"><span class="toolbarIcon"><span > > <%=value.category.categoryName%></span></li>               
+                   
+                </ul>
+        	</div>
 		
 		<%
 		}else if(value.metaworksContext.when == 'detailList') {
@@ -53,7 +59,14 @@ if(value){
 			
 		
 			%>
-				<div> <a href="#" onClick="<%=methods.gomarketHome.caller()%>">CODI Apps </a> > <a href="#" onClick="mw3.getFaceHelper(<%=objectId%>).selectCategory()"> <%=category.categoryName%> </a></div>
+				
+					<div class="toolbar">
+	                    <ul>
+	                        <li onClick="<%=methods.gomarketHome.caller()%>"><span>CODI Apps</span></li>
+	                        <li onClick="mw3.getFaceHelper(<%=objectId%>).selectCategory()"><span class="toolbarIcon"><span > > <%=category.categoryName%></span></li>               
+	                       
+	                    </ul>
+                	</div>  
 			
 			<%
 			}
