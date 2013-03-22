@@ -1262,6 +1262,11 @@ img {
     text-overflow:ellipsis;
     -o-text-overow: ellipsis;
 }
+
+.boxtoprightTab #navigationTitle span {    
+    margin-right: 0px;
+}
+
 #navigationTitle span div{
     margin-right: 60px;
     overflow:hidden;
