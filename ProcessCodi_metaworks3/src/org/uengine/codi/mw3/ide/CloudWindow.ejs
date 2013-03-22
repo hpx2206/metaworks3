@@ -1,8 +1,8 @@
 <%
 if (value != null){	
 %>
-
-<div class="top" style="background-color:yellow; height: 60px; overflow:hidden; position: absolute; min-width: 0px; min-height: 0px; max-width: 10000px; max-height: 10000px;  left: 0px; right: 0px; top: 0px;">
+<div class="boxtopleftTab">
+    <span class="boxtoprightTab">
 <%	
 	for (var i=0; i<value.tabs.length; i++){
 		var tabName = '';
@@ -30,11 +30,14 @@ if (value != null){
 	</div>
 <%			
 	}
-%>                		
+%>  
+    </span>
 </div>
 
-<div class="bottom" style="background-color:green;  top: 60px; overflow:auto; position: absolute; min-width: 0px; min-height: 0px; max-width: 10000px; max-height: 10000px;  left: 0px; right: 0px; bottom: 0px;">
 
+<div class="boxmiddleright">
+	<div class="boxmiddleleft">
+		<div class="contentcontainer">
 <%
 	for (var i=0; i<value.tabs.length; i++){
 %>
@@ -44,8 +47,15 @@ if (value != null){
 <%	
 	}
 %>
-
+		
+		</div>
+	</div>
 </div>
+
+
+<div class="boxbottomleft"><span class="boxbottomright"></span></div>
+
+
 
 <%
 }
