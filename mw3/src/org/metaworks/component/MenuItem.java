@@ -58,4 +58,10 @@ public class MenuItem {
 		this.setType(type);
 	}
 	
+	public MenuItem(String id, String name){
+		this();
+		this.setId(id);
+		this.setName(name);
+	}
+	
 }
