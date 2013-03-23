@@ -79,6 +79,13 @@ org_metaworks_component_TreeNode.prototype = {
 	},
 	
 	toAppend : function(appendobject){
+		if(appendobject != null && ( appendobject.length == undefined || appendobject.length == 0) ){
+			// array 로 생성하여 준다.
+			var tempObject = [];
+			tempObject[0] = appendobject;
+			appendobject = tempObject;
+			
+		}
 		if(appendobject != null && appendobject.length > 0){
 			for(var i=0; i<appendobject.length; i++){
 				var html = mw3.locateObject(appendobject[i], null);
@@ -126,7 +133,7 @@ org_metaworks_component_TreeNode.prototype = {
 			mw3.beanExpressions[this.objectId] = beanName;
 		   
 		}else{
-			childObjectId = mw3.beanExpressions[this.objectId]['.child'].valueObjectId
+			childObjectId = mw3.beanExpressions[this.objectId]['.child'].valueObjectId;
 		}
 
 		var lastPropName = '0';
