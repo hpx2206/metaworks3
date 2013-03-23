@@ -115,7 +115,6 @@ public class ConditionPanel  implements ContextAware{
 		treeNode.setRoleList(roleList);
 		treeNode.setPrcsValiableList(prcsValiableList);
 		treeNode.setParentNode(treeNode);
-//		treeNode.add(new ConditionTreeNode()); 
 		
 		if( condition != null ){
 			makeChildTreeNode(treeNode , condition); 
@@ -136,81 +135,83 @@ public class ConditionPanel  implements ContextAware{
 			for( int i=0; i< condis.length; i++){
 				Condition condi = condis[i];
 				ConditionTreeNode treeNode = new ConditionTreeNode();
+				Long idByTime = new Date().getTime();
+				treeNode.setId(idByTime.toString());
+				treeNode.setParentNode(rootNode);
 				treeNode.setParentId( rootNode.getId() );
-				treeNode.setType(TreeNode.TYPE_FILE_CODE);
-				
 				treeNode.setRoleList(roleList);
 				treeNode.setPrcsValiableList(prcsValiableList);
 				treeNode.conditionInit();
 				
-				ConditionNode conditionNode = treeNode.getConditionNode();
+				ConditionNode conditionNode = makeConditionNode(treeNode , condi);
+				
 				String nodeName = condi.getDescription() != null ? condi.getDescription().getText() : "";
 				String nodeType = "";
 				if( condi instanceof Or ){
-					nodeType = treeNode.CONDITION_OR;
+					nodeType = ConditionTreeNode.CONDITION_OR;
 				}else if( condi instanceof And ){
-					nodeType = treeNode.CONDITION_AND;
+					nodeType = ConditionTreeNode.CONDITION_AND;
 				}else if( condi instanceof Otherwise ){
-					nodeType = treeNode.CONDITION_OTHERWISE;
-					conditionNode.setConditionType(nodeType);
+					nodeType = ConditionTreeNode.CONDITION_OTHERWISE;
 				}
-				// and 와 or 의 공통 로직 처리
-				if( condi instanceof Or || condi instanceof And){
-					conditionNode.setConditionType(nodeType);
-					if( !"".equals(nodeName) ){
-						Condition childCondition[] = ((And)condi).getConditions();
-						if( childCondition != null && childCondition.length > 0){
-							for(int j = 0; j < childCondition.length; j++){
-								Condition cd = childCondition[j];
-								if( cd instanceof Evaluate){
-									Evaluate eval = (Evaluate)cd;
-									
-									conditionNode.getValiableChoice().setSelected(eval.getKey());
-									conditionNode.getSignChoice().setSelected(eval.getCondition());
-									Object value = eval.getValue();
-									if( value instanceof String){
-										String expString = (String)value;
-										if( "yes".equalsIgnoreCase(expString) || "no".equalsIgnoreCase(expString) ){
-											conditionNode.getExpressionChoice().setSelected("Yes or No");
-											conditionNode.getConditionInput().getMetaworksContext().setHow("Yes or No");
-											conditionNode.getConditionInput().setYesNo(expString);
-										}else{
-											conditionNode.getExpressionChoice().setSelected("text");
-											conditionNode.getConditionInput().getMetaworksContext().setHow("text");
-											conditionNode.getConditionInput().setExpressionText(expString);
-										}
-									}else if( value instanceof Long){
-										conditionNode.getExpressionChoice().setSelected("number");
-										conditionNode.getConditionInput().getMetaworksContext().setHow("number");
-										conditionNode.getConditionInput().setExpressionText(value.toString());
-									}else if( value instanceof Date){
-										conditionNode.getExpressionChoice().setSelected("date");
-										conditionNode.getConditionInput().getMetaworksContext().setHow("date");
-										conditionNode.getConditionInput().setExpressionDate((Date)value);
-									}
-								}
-							}
-						}
-					}
-				}
-				
-				treeNode.setType(nodeType);
+				conditionNode.setConditionType(nodeType);
+				treeNode.setType("page_white_text");
+//				treeNode.setType(nodeType);
 				treeNode.setName(nodeName);
+				conditionNode.setParentTreeNode(treeNode);
+				treeNode.setConditionNode(conditionNode);
 				rootNode.add(treeNode);
 			}
 		}
+	}
+	
+	public ConditionNode makeConditionNode(ConditionTreeNode treeNode , Condition condition ) throws Exception{
+		ConditionNode conditionNode = treeNode.getConditionNode();
+		// and 와 or 의 공통 로직 처리
+		if( condition instanceof Or || condition instanceof And){
+			Condition childCondition[] = ((And)condition).getConditions();
+			if( childCondition != null && childCondition.length > 0){
+				for(int j = 0; j < childCondition.length; j++){
+					Condition cd = childCondition[j];
+					if( cd instanceof Evaluate){
+						Evaluate eval = (Evaluate)cd;
+						
+						conditionNode.getValiableChoice().setSelected(eval.getKey());
+						conditionNode.getSignChoice().setSelected(eval.getCondition());
+						Object value = eval.getValue();
+						if( value instanceof String){
+							String expString = (String)value;
+							if( "yes".equalsIgnoreCase(expString) || "no".equalsIgnoreCase(expString) ){
+								conditionNode.getExpressionChoice().setSelected("Yes or No");
+								conditionNode.getConditionInput().getMetaworksContext().setHow("Yes or No");
+								conditionNode.getConditionInput().setYesNo(expString);
+							}else{
+								conditionNode.getExpressionChoice().setSelected("text");
+								conditionNode.getConditionInput().getMetaworksContext().setHow("text");
+								conditionNode.getConditionInput().setExpressionText(expString);
+							}
+						}else if( value instanceof Long){
+							conditionNode.getExpressionChoice().setSelected("number");
+							conditionNode.getConditionInput().getMetaworksContext().setHow("number");
+							conditionNode.getConditionInput().setExpressionText(value.toString());
+						}else if( value instanceof Date){
+							conditionNode.getExpressionChoice().setSelected("date");
+							conditionNode.getConditionInput().getMetaworksContext().setHow("date");
+							conditionNode.getConditionInput().setExpressionDate((Date)value);
+						}else{
+							conditionNode.getExpressionChoice().setSelected("null");
+							conditionNode.getConditionInput().getMetaworksContext().setHow("null");
+						}	
+					}else if( cd instanceof Or){
+						makeChildTreeNode(treeNode , cd);
+					}else if( cd instanceof And){
+						conditionNode = makeConditionNode(treeNode , cd);
+					}
+				}
+			}
+		}
 		
-//		// 자식을 가지고 있을 경우 재귀 호출
-//		if( condition instanceof Or || condition instanceof And){
-//			Condition[] condis = ((And)condition).getConditions();
-//			if( condis != null){
-//				for( int i=0; i< condis.length; i++){
-//					Condition condi = condis[i];
-//					makeChildTreeNode(rootNode, condi);
-//				}
-//			}
-//		}
-		
+		return conditionNode;
 	}
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)

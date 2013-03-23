@@ -171,20 +171,6 @@ public class ConditionTreeNode  implements ContextAware{
 		setConditionNode(conditionNode);
 	}
 	
-	public ConditionTreeNodeView makeNodeView(ConditionTreeNode treeNode) throws Exception{
-		ConditionTreeNodeView conditionTreeNode = new ConditionTreeNodeView();
-		conditionTreeNode.setId("expression");
-		conditionTreeNode.setRoleList(getRoleList());
-		conditionTreeNode.setPrcsValiableList(getPrcsValiableList());
-		conditionTreeNode.conditionInit();
-		conditionTreeNode.getConditionNode().getMetaworksContext().setHow("new");
-		
-		conditionTreeNode.setParentNode(treeNode);
-		conditionTreeNode.getConditionNode().setParentTreeNode(treeNode);
-		
-		return conditionTreeNode;
-	}
-	
 	public ConditionTreeNode makeConditionNode() throws Exception{
 		ConditionTreeNode node = new ConditionTreeNode();
 		Long idByTime = new Date().getTime();
@@ -237,20 +223,6 @@ public class ConditionTreeNode  implements ContextAware{
 		}
 		return new Refresh(parentNode);
 	}
-//	public ConditionTreeNode findNode(ConditionTreeNode node , String nodeId) throws Exception{
-//		ConditionTreeNode resultNode = null;
-//		if( node.getId().equals(nodeId)){
-//			return node;
-//		}else{
-//			for(int i =0; i<node.getChild().size(); i++){
-//				resultNode = node.getChild().get(i).findNode(node.getChild().get(i), nodeId);
-//				
-//				if(resultNode != null)
-//					break;				
-//			}
-//			return resultNode;
-//		}
-//	}
 	
 	@ServiceMethod(callByContent = true , target=ServiceMethodContext.TARGET_AUTO)
 	public Object action() throws Exception {

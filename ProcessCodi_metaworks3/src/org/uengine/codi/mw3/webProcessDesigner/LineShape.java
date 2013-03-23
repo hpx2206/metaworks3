@@ -52,7 +52,7 @@ public class LineShape extends CanvasDTO {
 				String conditionType = conditionNode.getConditionType();
 				TextContext condiName = new TextContext();
 				condiName.setText(childNode.getName());
-				if( conditionType != null && ( conditionType.equals("And") || conditionType.equals("Or") )){
+				if( conditionType != null && ( conditionType.equals(ConditionTreeNode.CONDITION_AND) || conditionType.equals(ConditionTreeNode.CONDITION_OR) )){
 					
 					String expressionChoice 	= childNode.getConditionNode().getExpressionChoice().getSelected();	// Text, Number
 					String sign = childNode.getConditionNode().getSignChoice().getSelected();								// == , =>
@@ -71,36 +71,46 @@ public class LineShape extends CanvasDTO {
 						// TODO 컨버팅 에러로 인하여 잠시 보류
 //						exppObject = expressionInput.getExpressionDate();
 					}else if( expressionChoice.equals("File")){
-					}else if( expressionChoice.equals("Activity Selection")){
-					}else if( expressionChoice.equals("Complex Type")){
-					}else if( expressionChoice.equals("Html Form")){
+					}else if( expressionChoice.equals("variable")){
+						exppObject = expressionInput.getValiableChoice().getSelected();
+//					}else if( expressionChoice.equals("Activity Selection")){
+//					}else if( expressionChoice.equals("Complex Type")){
+//					}else if( expressionChoice.equals("Html Form")){
 					}
 					
-					if( conditionType != null && conditionType.equals("Or")){
+					if( conditionType != null && conditionType.equals(ConditionTreeNode.CONDITION_OR)){
 						Or orCondition = new Or();
 						Evaluate eval = new Evaluate(valiable, sign, exppObject);
 						And andCondition = new And(new Condition[]{eval});
+						// 자식이 또 있는 경우 재귀호출
+						if( childNode.getChild() != null &&  childNode.getChild().size() > 0){
+							Condition childcond = makeCondition(childNode);
+							if( childcond != null ){
+								andCondition.addCondition(childcond);
+							}
+						}
 						orCondition.setDescription(condiName);
 						orCondition.addCondition(andCondition);
 						condition.addCondition(orCondition);
-					}else if( conditionType != null && conditionType.equals("And")){
+					}else if( conditionType != null && conditionType.equals(ConditionTreeNode.CONDITION_AND)){
 						Evaluate eval = new Evaluate(valiable, sign, exppObject);
 						And andCondition = new And(new Condition[]{eval});
+						// 자식이 또 있는 경우 재귀호출
+						if( childNode.getChild() != null &&  childNode.getChild().size() > 0){
+							Condition childcond = makeCondition(childNode);
+							if( childcond != null ){
+								andCondition.addCondition(childcond);
+							}
+						}
 						andCondition.setDescription(condiName);
 						condition.addCondition(andCondition);
 					}
-				}else if( conditionType != null && conditionType.equals("otherwise") ){
+				}else if( conditionType != null && conditionType.equals(ConditionTreeNode.CONDITION_OTHERWISE) ){
 					Otherwise otherwise = new Otherwise();
 					otherwise.setDescription(condiName);
 					condition.addCondition(otherwise);
 				}
-				// 자식이 또 있는 경우 재귀호출
-				if( childNode.getChild() != null &&  childNode.getChild().size() > 0){
-					Condition childcond = makeCondition(childNode);
-					if( childcond != null ){
-						condition.addCondition(childcond);
-					}
-				}
+				
 			}
 			return condition;
 		}

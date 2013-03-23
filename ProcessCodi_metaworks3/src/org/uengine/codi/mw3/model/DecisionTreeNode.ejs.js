@@ -28,13 +28,14 @@ var __rule_seq = 0;
 
 org_uengine_codi_mw3_model_DecisionTreeNode.prototype.refreshVariableSelector = function(){
 	var ruleVariableDefinition = mw3.getAutowiredObject("org.uengine.codi.mw3.model.RuleVariableDefinition");
-	var variableName = mw3.objects[this.objectId];
-	if(variableName)
-		variableName = variableName.name;
+	
+	var selectedValue = null;
+	if( this.selector.options[this.selector.selectedIndex] != null ){
+		selectedValue = this.selector.options[this.selector.selectedIndex].value;
+	}
 	
 	if(ruleVariableDefinition.classFields != null) {
 		this.selector.options = null;
-		
 		for(var i=0;i<ruleVariableDefinition.classFields.length;i++) {
 			var classField = ruleVariableDefinition.classFields[i];
 			
@@ -42,15 +43,10 @@ org_uengine_codi_mw3_model_DecisionTreeNode.prototype.refreshVariableSelector = 
 
 			this.selector.options[i].text = classField.displayname;
 			this.selector.options[i].value = classField.id;
-			
-			if(classField.fieldName == variableName){
-				this.selector.options[i].selected = true;
-			}
-
 		}
+		$("#variableSelector_" + this.objectId +" > option[value="+selectedValue+"]").attr("selected", "true");
 	}
-	
-}
+};
 
 org_uengine_codi_mw3_model_DecisionTreeNode.prototype.getValue = function(){
 	var object = mw3.getObjectFromUI(this.objectId);
