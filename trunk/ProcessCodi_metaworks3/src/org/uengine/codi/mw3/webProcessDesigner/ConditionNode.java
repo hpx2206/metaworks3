@@ -119,6 +119,15 @@ public class ConditionNode  implements Cloneable, ContextAware{
 						WebFieldDescriptor wfd = wfields[j];
 //						FieldDescriptor fd = fields[i];
 						choice.add("["+nameAttr+"]"+wfd.getName(), nameAttr + "." + wfd.getName());
+						if( wfd.getClassName().startsWith("org.uengine.codi.mw3")){
+							WebObjectType wot2 = MetaworksRemoteService.getInstance().getMetaworksType(wfd.getClassName() ); 
+							WebFieldDescriptor wfields2[] = wot2.getFieldDescriptors();
+							FieldDescriptor fields2[] = wot2.metaworks2Type().getFieldDescriptors();
+							for(int k=0; k<fields2.length; k++){
+								WebFieldDescriptor wfd2 = wfields2[k];
+								choice.add("["+nameAttr+"]"+wfd.getName()+ "." + wfd2.getName(), nameAttr + "." + wfd.getName() + "." + wfd2.getName());
+							}
+						}
 					}
 				}
 			}
@@ -142,16 +151,16 @@ public class ConditionNode  implements Cloneable, ContextAware{
 	public void makeExpressionChoice() throws Exception{
 		SelectBox choice = new SelectBox();
 		choice.setId("expression");
-		choice.add("", "null");
+		choice.add("NULL", "null");
 		choice.add("Text", "text");
 		choice.add("Number", "number");
 		choice.add("Date", "date");
 		choice.add("Yes or No", "Yes or No");
 		choice.add("File", "File");
-		choice.add("Activity Selection", "Activity Selection");
-		choice.add("Knowledge Type" ,"knowledgelType");
-		choice.add("Complex Type" ,"complexType");
-		choice.add("Html Form" ,"htmlType" );
+//		choice.add("Activity Selection", "Activity Selection");
+//		choice.add("Knowledge Type" ,"knowledgelType");
+		choice.add("Process Variable" ,"variable");
+//		choice.add("Html Form" ,"htmlType" );
 		setExpressionChoice(choice);
 	}
 	
@@ -159,7 +168,7 @@ public class ConditionNode  implements Cloneable, ContextAware{
 	public Object[] saveCondition() throws Exception{
 //		this.getMetaworksContext().setHow("tree");
 		String nodeName = "";
-		if( conditionType != null && ( conditionType.equals("And") || conditionType.equals("Or") )){
+		if( conditionType != null && ( conditionType.equals(ConditionTreeNode.CONDITION_AND) || conditionType.equals(ConditionTreeNode.CONDITION_OR) )){
 			String val1 = this.getValiableChoice().getSelected();
 			String val2 = this.getSignChoice().getSelected();
 			String val3 = this.getExpressionChoice().getSelected();
@@ -173,9 +182,11 @@ public class ConditionNode  implements Cloneable, ContextAware{
 				val3 = expVal.getExpressionDate().toString();
 			}else if( val3 != null && val3.equalsIgnoreCase("File") ){
 				// TODO
+			}else if( val3 != null && val3.equalsIgnoreCase("variable") ){
+				val3 = expVal.getValiableChoice().getSelectedText();
 			}
 			nodeName = "[" +conditionType + "]" + val1 + " " +val2 + " " + val3; 
-		}else if( conditionType != null && conditionType.equals("otherwise") ){
+		}else if( conditionType != null && conditionType.equals(ConditionTreeNode.CONDITION_OTHERWISE) ){
 			nodeName = "otherwise";
 		}else{
 			nodeName = "오류";
@@ -199,6 +210,7 @@ public class ConditionNode  implements Cloneable, ContextAware{
 
 		conditionInput = new ConditionInput();
 		conditionInput.init();
+		conditionInput.setValiableChoice(valiableChoice);
 	}
 	
 	@AutowiredFromClient

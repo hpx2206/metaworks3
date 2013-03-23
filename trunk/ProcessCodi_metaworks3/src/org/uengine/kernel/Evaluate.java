@@ -10,6 +10,7 @@ import org.metaworks.WebObjectType;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.uengine.codi.ITool;
 import org.uengine.processmanager.SimulatorTransactionContext;
+import org.uengine.util.UEngineUtil;
 
 
 
@@ -73,61 +74,71 @@ public class Evaluate extends Condition{
 			
 			ObjectInstance returnValObjInst = (ObjectInstance) MetaworksRemoteService.getInstance().getMetaworksType(returnVal.getClass().getName() ).metaworks2Type().createInstance();
 			returnValObjInst.setObject(returnVal);
-			 
 			FieldDescriptor fields[] = returnValObjInst.getFieldDescriptors();
-			for(int j=0; j<fields.length; j++){
-				FieldDescriptor fd = fields[j];
-				if( key.equalsIgnoreCase( returnVal.getClass().getSimpleName() + "." + fd.getName() ) ){
-					Object keyVal = returnValObjInst.getFieldValue(fd.getName());
-					if( condition.equals( "!=")){
-						return !( keyVal.equals(compareVal) );
+			Object keyVal = null;
+			String [] wholePartPath = getKey().replace('.','@').split("@");
+			if( wholePartPath.length == 3 ){	// variable + ObjectName + Object.variable
+				Object rootObject = instance.getBeanProperty(wholePartPath[0] + "." + wholePartPath[1]);
+				if( rootObject != null ){
+					keyVal = UEngineUtil.getBeanProperty(rootObject, wholePartPath[2]);
+				}
+			}else{
+				for(int j=0; j<fields.length; j++){
+					FieldDescriptor fd = fields[j];
+					if( key.equalsIgnoreCase( returnVal.getClass().getSimpleName() + "." + fd.getName() ) ){
+						keyVal = returnValObjInst.getFieldValue(fd.getName());
 					}
-					//use default comparator
-					if( condition.equals( "==")){
-						return keyVal.equals(compareVal);
+				}
+			}
+			if(keyVal != null){
+				if( condition.equals( "!=")){
+					return !( keyVal.equals(compareVal) );
+				}
+				//use default comparator
+				if( condition.equals( "==")){
+					return keyVal.equals(compareVal);
+				}
+				if(!( keyVal instanceof Comparable) && (condition.startsWith(">") || condition.startsWith("<")))
+					throw new UEngineException("The value type ["+ returnVal.getClass() +"] cannot be compared.");
+
+				if(keyVal instanceof Comparable){
+					int compareResult = 0;
+					try {
+						/*
+						 * example : 숫자형을 compareTo 했을때 데이터형이 달라서 String 으로 바꿔서
+						 * 비교를 한다면 예로 9 와 10을 비교하면 음수가 나오는것이 아니라 양수가 나오게 된다.
+						 * 따라서 숫자형일때는 그형에 맞춰서 비교를 하고 나머지일 경우는 객체 자체를 비교
+						 * 그래도 에러가 난다면 문자열로 형변환한 다음에 비교를 하도록 수정하였다.
+						 */
+						if (compareVal instanceof Integer) {
+							compareResult = ((Integer)Integer.parseInt(String.valueOf(keyVal))).compareTo((Integer)compareVal);
+						} else if (compareVal instanceof Long) {
+							compareResult = ((Long)Long.parseLong(String.valueOf(keyVal))).compareTo((Long)compareVal);
+						} else if (compareVal instanceof Float) {
+							compareResult = ((Float)Float.parseFloat(String.valueOf(keyVal))).compareTo((Float)compareVal);
+						} else if (compareVal instanceof Double) {
+							compareResult = ((Double)Double.parseDouble(String.valueOf(keyVal))).compareTo((Double)compareVal);
+						} else {
+							compareResult = ((Comparable)keyVal).compareTo(compareVal);	
+						}
+					} catch(Exception e) {
+						compareResult = String.valueOf(keyVal).compareTo(String.valueOf(compareVal));
 					}
-					if(!( keyVal instanceof Comparable) && (condition.startsWith(">") || condition.startsWith("<")))
-						throw new UEngineException("The value type ["+ returnVal.getClass() +"] cannot be compared.");
 
-					if(keyVal instanceof Comparable){
-						int compareResult = 0;
-						try {
-							/*
-							 * example : 숫자형을 compareTo 했을때 데이터형이 달라서 String 으로 바꿔서
-							 * 비교를 한다면 예로 9 와 10을 비교하면 음수가 나오는것이 아니라 양수가 나오게 된다.
-							 * 따라서 숫자형일때는 그형에 맞춰서 비교를 하고 나머지일 경우는 객체 자체를 비교
-							 * 그래도 에러가 난다면 문자열로 형변환한 다음에 비교를 하도록 수정하였다.
-							 */
-							if (compareVal instanceof Integer) {
-								compareResult = ((Integer)Integer.parseInt(String.valueOf(keyVal))).compareTo((Integer)compareVal);
-							} else if (compareVal instanceof Long) {
-								compareResult = ((Long)Long.parseLong(String.valueOf(keyVal))).compareTo((Long)compareVal);
-							} else if (compareVal instanceof Float) {
-								compareResult = ((Float)Float.parseFloat(String.valueOf(keyVal))).compareTo((Float)compareVal);
-							} else if (compareVal instanceof Double) {
-								compareResult = ((Double)Double.parseDouble(String.valueOf(keyVal))).compareTo((Double)compareVal);
-							} else {
-								compareResult = ((Comparable)keyVal).compareTo(compareVal);	
-							}
-						} catch(Exception e) {
-							compareResult = String.valueOf(keyVal).compareTo(String.valueOf(compareVal));
-						}
-
-						if( condition.equals(">")){
-							return (compareResult>0);
-						}
-							
-						if( condition.equals("<")){
-							return (compareResult<0);
-						}
+					if( condition.equals(">")){
+						return (compareResult>0);
+					}
 						
-						if( condition.equals(">=")){
-							return (compareResult>0 || compareResult==0);
-						}
-							
-						if( condition.equals("<=")){
-							return (compareResult<0 || compareResult==0);
-						}
+					if( condition.equals("<")){
+						return (compareResult<0);
+					}
+					
+					if( condition.equals(">=")){
+						return (compareResult>0 || compareResult==0);
+					}
+						
+					if( condition.equals("<=")){
+						return (compareResult<0 || compareResult==0);
 					}
 				}
 			}

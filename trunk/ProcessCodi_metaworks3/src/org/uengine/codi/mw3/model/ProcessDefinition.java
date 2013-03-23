@@ -337,8 +337,9 @@ public class ProcessDefinition extends Database<IProcessDefinition> implements I
 				return entityDesignerContentPanel;		
 			}else if("rule_dt".equals(objType)){
 				ruleDesignerContentPanel.load(defId);
-				
-				return ruleDesignerContentPanel;		
+				ContentWindow window = new ContentWindow();
+				window.setPanel(ruleDesignerContentPanel);
+				return window;		
 			}
 //		}finally{
 //			codiPmSVC.remove();

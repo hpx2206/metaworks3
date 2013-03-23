@@ -71,12 +71,11 @@ public class InvocationActivity extends DefaultActivity implements IDrawDesigne 
 			
 			MappingCanvas inCanvas = invocationContextIn.getMappingCanvas();
 			inCanvas.setLeftTreeId(invocationContextIn.getMappingTree().getId());
-			invocationContextIn.getClassResourceTree().setAlign("right");
 			inCanvas.setRightTreeId(invocationContextIn.getClassResourceTree().getId());
 			
 			MappingCanvas outCanvas = invocationContextOut.getMappingCanvas();
 			outCanvas.setLeftTreeId(invocationContextOut.getClassResourceTree().getId());
-			invocationContextOut.getMappingTree().setAlign("right");
+			
 			outCanvas.setRightTreeId(invocationContextOut.getMappingTree().getId());
 		}
 		
@@ -88,12 +87,14 @@ public class InvocationActivity extends DefaultActivity implements IDrawDesigne 
 		invocationContextIn.loadTree();
 		invocationContextIn.treeSetId(inId);
 		invocationContextIn.getClassResourceTree().setResourceClass(resourceClass);
+		invocationContextIn.getClassResourceTree().setAlign("right");
 		
 		String outId = "out";
 		invocationContextOut.setId(outId);
 		invocationContextOut.loadTree();
 		invocationContextOut.treeSetId(outId);
 		invocationContextOut.getClassResourceTree().setResourceClass(resourceClass);
+		invocationContextOut.getMappingTree().setAlign("right");
 	}
 	protected void executeActivity(ProcessInstance instance) throws Exception {
 		/**

@@ -7,6 +7,7 @@ import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Range;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.component.SelectBox;
 
 public class ConditionInput implements ContextAware {
 	
@@ -51,19 +52,27 @@ public class ConditionInput implements ContextAware {
 			this.changeType = changeType;
 		}
 		
+	SelectBox valiableChoice;
+		public SelectBox getValiableChoice() {
+			return valiableChoice;
+		}
+		public void setValiableChoice(SelectBox valiableChoice) {
+			this.valiableChoice = valiableChoice;
+		}	
+		
 	public ConditionInput(){
 		this.setMetaworksContext(new MetaworksContext());
 		getMetaworksContext().setWhen("edit");
 	}
 	public void init(){
 		expressionDate = new Date();
-		
+		valiableChoice = new SelectBox();
 	}
 	public void load() throws Exception{
 		
 	}
 		
-	@ServiceMethod( payload={"changeType"} )
+	@ServiceMethod( payload={"changeType" , "valiableChoice"} )
 	public void changeInput() throws Exception{
 		this.getMetaworksContext().setHow(changeType);
 	}
