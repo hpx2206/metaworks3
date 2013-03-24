@@ -1,6 +1,6 @@
 <%
-	if(value == null || typeof value == 'undefined')
-		return true;
+	if(value != null && typeof value != 'undefined'){
+		console.log(value);
 %>
 
 <table border="1">
@@ -38,7 +38,6 @@
 %>
 	<%=mw3.locateObject(value[i], value[i].__className, null, options)%>
 <%
-		mw3.addBeanProperty(value.__objectId, '.boardList[' + i + ']');		
 	}	
 %>		
 	</tbody>
@@ -46,3 +45,6 @@
 
 <input type="button" value="add" onClick="javascript:mw3.getFaceHelper(<%=objectId%>).addItem();" />
 <input type="button" value="remove" onClick="javascript:mw3.getFaceHelper(<%=objectId%>).removeItem();" />
+<%
+	}
+%>

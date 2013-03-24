@@ -15,9 +15,6 @@ var GridFace = function(objectId, className){
 };
 
 GridFace.prototype = {
-	getValue : function(){
-	},
-	
 	add : function(object){
 		var options = mw3.getMetadata(object.__className);
 		
@@ -27,6 +24,7 @@ GridFace.prototype = {
 		
 		var html = mw3.locateObject(object, object.__className, null, options);
 		
+		this.object.push(object);
 		this.objectDiv.children('table').append(html);
 		
 		mw3.onLoadFaceHelperScript();
