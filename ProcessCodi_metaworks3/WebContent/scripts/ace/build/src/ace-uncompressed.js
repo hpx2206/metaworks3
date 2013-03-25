@@ -2373,6 +2373,8 @@ function findKeyCommand(env, sender, hashId, textOrKey) {
 function execKeyCommand(env, sender, hashId, textOrKey) {
     var command = findKeyCommand(env, sender, hashId, textOrKey);
     if (command) {
+    	console.log(command);
+    	
         return exec(command, env, sender, { });   
     } else {
         return false;
@@ -8229,6 +8231,7 @@ canon.addCommand({
         env.editor.find(needle);
     }
 });
+/*
 canon.addCommand({
     name: "replace",
     bindKey: bindKey("Ctrl-R", "Command-Option-F"),
@@ -8242,6 +8245,7 @@ canon.addCommand({
         env.editor.replace(replacement, {needle: needle});
     }
 });
+
 canon.addCommand({
     name: "replaceall",
     bindKey: bindKey("Ctrl-Shift-R", "Command-Shift-Option-F"),
@@ -8255,6 +8259,7 @@ canon.addCommand({
         env.editor.replaceAll(replacement, {needle: needle});
     }
 });
+*/
 canon.addCommand({
     name: "undo",
     bindKey: bindKey("Ctrl-Z", "Command-Z"),
