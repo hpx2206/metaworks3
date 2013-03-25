@@ -1,0 +1,43 @@
+package org.uengine.codi.mw3.ide.editor.java;
+
+import org.metaworks.MetaworksException;
+import org.metaworks.ServiceMethodContext;
+import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.component.Menu;
+import org.metaworks.component.MenuItem;
+import org.metaworks.widget.ModalWindow;
+import org.uengine.codi.mw3.model.Session;
+
+public class JavaSourceMenu extends Menu {
+	@AutowiredFromClient
+	public Session session;
+	
+	public JavaSourceMenu(){
+		this.setId("Source");
+		this.setName("Source");
+		
+		this.add(new MenuItem("genGetAndSet", "Generate Getters and Setters"));
+	}
+	
+	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
+	public Object genGetAndSet() throws Exception {
+		Object clipboard = session.getClipboard();
+		if(clipboard instanceof JavaCodeEditor){
+			JavaCodeEditor editor = (JavaCodeEditor)clipboard;
+			
+			GenerateGettersAndSetters genGNS = new GenerateGettersAndSetters();
+			genGNS.setId(editor.getFilename());
+			genGNS.setContent(editor.getContent());
+			genGNS.load();
+			
+			if(genGNS.getFieldTree().getNode().getChild().size() > 0)
+				return new ModalWindow(genGNS);
+			else
+				throw new MetaworksException("The operation is not applicable to the current selection. Select a field which is not declared as type variable or type the declares such fields."); 
+		}else{
+			return null;
+		}
+		
+	}
+}
