@@ -9,6 +9,7 @@ import org.metaworks.ContextAware;
 import org.metaworks.FieldDescriptor;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Type;
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.inputter.RadioInput;
 import org.metaworks.validator.NotNullValid;
@@ -20,7 +21,7 @@ import org.uengine.util.UEngineUtil;
 /**
  * @author Jinyoung Jang
  */
-
+@Face(ejsPath="genericfaces/ActivityFace.ejs", options={"fieldOrder"},values={"name,displayName"})
 public class Role implements java.io.Serializable, Cloneable, ContextAware {
 	private static final long serialVersionUID = org.uengine.kernel.GlobalContext.SERIALIZATION_UID;
 	
@@ -146,6 +147,7 @@ public class Role implements java.io.Serializable, Cloneable, ContextAware {
 		}
 
 	private java.lang.String name;
+	@Face(displayName="역할 이름")
 		public String getName() {
 			return name;
 		}
@@ -222,6 +224,7 @@ public class Role implements java.io.Serializable, Cloneable, ContextAware {
 		}
 		
 	private TextContext displayName = TextContext.createInstance();
+	@Face(displayName="역할 설명")
 		public TextContext getDisplayName() {
 			if(displayName==null){
 				displayName = TextContext.createInstance();

@@ -8,6 +8,8 @@ import java.io.Serializable;
 
 import javax.xml.namespace.QName;
 
+import org.metaworks.annotation.Face;
+import org.metaworks.annotation.Hidden;
 import org.uengine.contexts.DatabaseSynchronizationOption;
 import org.uengine.contexts.TextContext;
 
@@ -15,10 +17,12 @@ import org.uengine.contexts.TextContext;
  * @author Jinyoung Jang
  */
 
+@Face(ejsPath="genericfaces/ActivityFace.ejs", options={"fieldOrder"},values={"name,displayName"})
 public class ProcessVariable implements java.io.Serializable, NeedArrangementToSerialize, Cloneable{
 	private static final long serialVersionUID = org.uengine.kernel.GlobalContext.SERIALIZATION_UID;
 	
 	String name;
+	@Face(displayName="변수 이름")
 		public String getName() {
 			return name;
 		}
@@ -26,7 +30,8 @@ public class ProcessVariable implements java.io.Serializable, NeedArrangementToS
 			name = value;
 		}
 
-	TextContext displayName = TextContext.createInstance();	
+	TextContext displayName = TextContext.createInstance();
+	@Face(displayName="변수 설명")
 		public TextContext getDisplayName(){
 			if(displayName.getText()==null){
 				TextContext result = TextContext.createInstance();
@@ -60,6 +65,7 @@ public class ProcessVariable implements java.io.Serializable, NeedArrangementToS
 		}
 
 	Role openRole;
+	@Hidden
 		public Role getOpenRole() {
 			return openRole;
 		}
@@ -68,6 +74,7 @@ public class ProcessVariable implements java.io.Serializable, NeedArrangementToS
 		}
 	
 	String xmlBindingClsName;
+	@Hidden
 		public String getXmlBindingClassName(){
 			if(getQName()!=null && xmlBindingClsName==null)
 				xmlBindingClsName = org.uengine.util.UEngineUtil.QName2ClassName(getQName());
@@ -79,6 +86,7 @@ public class ProcessVariable implements java.io.Serializable, NeedArrangementToS
 		}
 
 	QName qname;
+	@Hidden
 		public QName getQName(){
 			return qname;
 		}
@@ -126,6 +134,7 @@ public class ProcessVariable implements java.io.Serializable, NeedArrangementToS
 */
 	
 	boolean askWhenInit = false;
+	@Hidden
 		public boolean isAskWhenInit() {
 			return askWhenInit;
 		}
@@ -134,6 +143,7 @@ public class ProcessVariable implements java.io.Serializable, NeedArrangementToS
 		}
 
 	Object defaultValue = null;
+	@Hidden
 		public Object getDefaultValue() {
 			return defaultValue;
 		}
@@ -142,6 +152,7 @@ public class ProcessVariable implements java.io.Serializable, NeedArrangementToS
 		}
 		
 	boolean isVolatile;
+	@Hidden
 		public boolean isVolatile() {
 			return isVolatile;
 		}
@@ -268,6 +279,7 @@ System.out.println("ProcessVariable:: converting from String to Integer");
 	}
 	
 	boolean isDatabaseSynchronized;
+	@Hidden
 		public boolean isDatabaseSynchronized() {
 			return isDatabaseSynchronized;
 		}
@@ -276,6 +288,7 @@ System.out.println("ProcessVariable:: converting from String to Integer");
 		}
 			
 	DatabaseSynchronizationOption databaseSynchronizationOption;
+	@Hidden
 		public DatabaseSynchronizationOption getDatabaseSynchronizationOption() {
 			return databaseSynchronizationOption;
 		}

@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.Vector;
 
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.uengine.contexts.TextContext;
 import org.uengine.kernel.graph.Transition;
@@ -41,6 +42,7 @@ import org.uengine.util.UEngineUtil;
  * @author Jinyoung Jang
  * @see org.uengine.kernel.ComplexActivity
  */
+@Face(ejsPath="genericfaces/ActivityFace.ejs", options={"fieldOrder"},values={"name,description"})
 public abstract class Activity implements Validatable, java.io.Serializable, Cloneable{
 	private static final long serialVersionUID = org.uengine.kernel.GlobalContext.SERIALIZATION_UID;
 	
@@ -104,6 +106,7 @@ public abstract class Activity implements Validatable, java.io.Serializable, Clo
 	
 
 	TextContext name;
+	@Face(displayName="엑티비티 이름")
 		public TextContext getName() {
 			return name;
 		}
@@ -124,6 +127,7 @@ public abstract class Activity implements Validatable, java.io.Serializable, Clo
 		}
 		
 	TextContext description = TextContext.createInstance();
+	@Face(displayName="엑티비티 설명")
 		public TextContext getDescription() {
 			return description;
 		}
@@ -135,6 +139,7 @@ public abstract class Activity implements Validatable, java.io.Serializable, Clo
 		 * tracingTag is a identifier for a certain activity within a process definition.
 		 */
 	String tracingTag;
+	@Hidden
 		public String getTracingTag() {
 			return tracingTag;
 		}
@@ -154,6 +159,7 @@ public abstract class Activity implements Validatable, java.io.Serializable, Clo
 	 * for ABC (Activity-Based Costing)
 	 */
 	int cost;
+	@Hidden
 		public int getCost() {
 			return cost;
 		}
@@ -162,6 +168,7 @@ public abstract class Activity implements Validatable, java.io.Serializable, Clo
 		}
 
 	Hashtable extendedAttributes;
+	@Hidden
 		public Hashtable getExtendedAttributes(){
 			return extendedAttributes;
 		}
@@ -185,6 +192,7 @@ public abstract class Activity implements Validatable, java.io.Serializable, Clo
 	 * retry limits for activity execution
 	 */
 	int retryLimit;
+	@Hidden
 		public int getRetryLimit() {
 			return retryLimit;
 		}
@@ -193,6 +201,7 @@ public abstract class Activity implements Validatable, java.io.Serializable, Clo
 		}
 
 	int retryDelay;
+	@Hidden
 		public int getRetryDelay() {
 			return retryDelay;
 		}
@@ -201,6 +210,7 @@ public abstract class Activity implements Validatable, java.io.Serializable, Clo
 		}
 	
 	boolean isHidden = false;
+	@Hidden
 		public boolean isHidden() {
 			return isHidden;
 		}
@@ -241,6 +251,7 @@ public abstract class Activity implements Validatable, java.io.Serializable, Clo
 		}
 
 	boolean isDynamicChangeAllowed = true;
+	@Hidden
 		public boolean isDynamicChangeAllowed() {
 			return isDynamicChangeAllowed;
 		}
@@ -249,6 +260,7 @@ public abstract class Activity implements Validatable, java.io.Serializable, Clo
 		}
 		
 	boolean isQueuingEnabled = false;
+	@Hidden
 		public boolean isQueuingEnabled() {
 			return isQueuingEnabled;
 		}
@@ -257,6 +269,7 @@ public abstract class Activity implements Validatable, java.io.Serializable, Clo
 		}
 
 	String activityIcon;
+	@Hidden
 		public String getActivityIcon(){
 			return activityIcon;
 		}
@@ -265,6 +278,7 @@ public abstract class Activity implements Validatable, java.io.Serializable, Clo
 		}
 		
 	String statusCode;
+	@Hidden
 		public String getStatusCode() {
 			return statusCode;
 		}
@@ -274,6 +288,7 @@ public abstract class Activity implements Validatable, java.io.Serializable, Clo
 
 		
 	protected boolean isFaultTolerant = false;
+	@Hidden
 		public boolean isFaultTolerant() {
 			return isFaultTolerant;
 		}

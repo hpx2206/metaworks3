@@ -30,6 +30,8 @@ public class Instance extends Database<IInstance> implements IInstance{
 	
 	public static final String TASK_DIRECT_APPEND_SQL_KEY = "task.";
 	public static final String INSTANCE_DIRECT_APPEND_SQL_KEY = "inst.";
+	
+	public static final String DEFAULT_DEFVERID = "Unstructured.process";
 
 	
 	
@@ -295,8 +297,8 @@ public class Instance extends Database<IInstance> implements IInstance{
 			.append("   AND inst.status<>'" + Instance.INSTNACE_STATUS_STOPPED + "'")
 			.append("   AND inst.status<>'" + Instance.INSTNACE_STATUS_FAILED + "'")
 			.append("   AND inst.status<>'" + Instance.INSTNACE_STATUS_COMPLETED + "'")			
-			.append("   AND ((inst.defid is not null and wl.status in ('" + WorkItem.WORKITEM_STATUS_NEW + "','" + WorkItem.WORKITEM_STATUS_DRAFT + "','" + WorkItem.WORKITEM_STATUS_CONFIRMED + "'))")
-			.append("     OR   (inst.defid is null and inst.DUEDATE is not null and wl.status = '" + WorkItem.WORKITEM_STATUS_FEED + "'))")			
+			.append("   AND ((inst.defVerId != "+Instance.DEFAULT_DEFVERID+" and wl.status in ('" + WorkItem.WORKITEM_STATUS_NEW + "','" + WorkItem.WORKITEM_STATUS_DRAFT + "','" + WorkItem.WORKITEM_STATUS_CONFIRMED + "'))")
+			.append("     OR   (inst.defVerId = "+Instance.DEFAULT_DEFVERID+" and inst.DUEDATE is not null and wl.status = '" + WorkItem.WORKITEM_STATUS_FEED + "'))")			
 			.append("   AND inst.isdeleted!=?instIsdelete ");
 			
 			criteria.put("instIsdelete", "1");			
@@ -1129,8 +1131,8 @@ public class Instance extends Database<IInstance> implements IInstance{
 		.append("   AND inst.status <> '" + Instance.INSTNACE_STATUS_COMPLETED + "'")
 				
 
-		.append("   AND ((inst.defid is not null and wl.status in ('" + WorkItem.WORKITEM_STATUS_NEW + "','" + WorkItem.WORKITEM_STATUS_DRAFT + "','" + WorkItem.WORKITEM_STATUS_CONFIRMED + "'))")
-		.append("     OR   (inst.defid is null and inst.DUEDATE is not null and wl.status = '" + WorkItem.WORKITEM_STATUS_FEED + "'))")
+		.append("   AND ((inst.defVerId != "+Instance.DEFAULT_DEFVERID+" and wl.status in ('" + WorkItem.WORKITEM_STATUS_NEW + "','" + WorkItem.WORKITEM_STATUS_DRAFT + "','" + WorkItem.WORKITEM_STATUS_CONFIRMED + "'))")
+		.append("     OR   (inst.defVerId = "+Instance.DEFAULT_DEFVERID+" and inst.DUEDATE is not null and wl.status = '" + WorkItem.WORKITEM_STATUS_FEED + "'))")
 		.append(") a");
 
 		
@@ -1150,7 +1152,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 		return result;
 	}
 	
-static public int countTodo(String empCode, String comCode) {
+	static public int countTodo(String empCode, String comCode) {
 		
 		int result = 0;
 		
@@ -1168,8 +1170,8 @@ static public int countTodo(String empCode, String comCode) {
 		.append("   AND inst.status <> '" + Instance.INSTNACE_STATUS_COMPLETED + "'")
 				
 
-		.append("   AND ((inst.defid is not null and wl.status in ('" + WorkItem.WORKITEM_STATUS_NEW + "','" + WorkItem.WORKITEM_STATUS_DRAFT + "','" + WorkItem.WORKITEM_STATUS_CONFIRMED + "'))")
-		.append("     OR   (inst.defid is null and inst.DUEDATE is not null and wl.status = '" + WorkItem.WORKITEM_STATUS_FEED + "'))")
+		.append("   AND ((inst.defVerId != "+Instance.DEFAULT_DEFVERID+" and wl.status in ('" + WorkItem.WORKITEM_STATUS_NEW + "','" + WorkItem.WORKITEM_STATUS_DRAFT + "','" + WorkItem.WORKITEM_STATUS_CONFIRMED + "'))")
+		.append("     OR   (inst.defVerId = "+Instance.DEFAULT_DEFVERID+" and inst.DUEDATE is not null and wl.status = '" + WorkItem.WORKITEM_STATUS_FEED + "'))")
 		.append(") a");
 
 		

@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.ITool;
 import org.uengine.contexts.ComplexType;
 import org.uengine.kernel.Activity;
+import org.uengine.kernel.ActivityReference;
 import org.uengine.kernel.HumanActivity;
 import org.uengine.kernel.KeyedParameter;
 import org.uengine.kernel.NeedArrangementToSerialize;
@@ -290,7 +291,7 @@ public class WorkItemHandler implements ContextAware{
 	public Object[] complete() throws RemoteException, ClassNotFoundException, Exception{
 						
 		instance = processManager.getProcessInstance(instanceId);
-
+		
 		humanActivity = null;
 		if (instanceId != null && tracingTag != null) {
 			humanActivity = (HumanActivity) instance.getProcessDefinition()
@@ -348,7 +349,7 @@ public class WorkItemHandler implements ContextAware{
 		}
 		
 		releaseMapForITool();
-		
+		saveLastComent(instance);
 		//refreshes the instanceview so that the next workitem can be show up
 		if("sns".equals(session.getEmployee().getPreferUX())){			
 			InstanceViewThreadPanel panel = new InstanceViewThreadPanel();
@@ -369,6 +370,35 @@ public class WorkItemHandler implements ContextAware{
 		}
 	}
 	
+	private void saveLastComent(ProcessInstance processInstance) throws Exception{
+		String title = humanActivity.getName().getText();
+		Instance instance = new Instance();
+		instance.setInstId(this.getRootInstId());
+		IInstance instanceRef = instance.databaseMe();
+		
+		ActivityReference actRef = processInstance.getProcessDefinition().getInitiatorHumanActivityReference(processInstance.getProcessTransactionContext());
+		boolean thisIsInitiationActivity = (actRef.getActivity() == humanActivity);
+		
+		if(thisIsInitiationActivity){
+			if(instanceRef.getLastCmnt().equals(title) ){
+				instanceRef.setLastCmnt(title);
+				instanceRef.setLastCmntUser(session.getUser());
+			}
+		}else{
+			if(instanceRef.getLastCmnt2() == null){
+				instanceRef.setLastCmnt2(title);
+				instanceRef.setLastCmnt2User(session.getUser());
+			}else {
+				instanceRef.setLastCmnt(instanceRef.getLastCmnt2());
+				instanceRef.setLastCmntUser(instanceRef.getLastCmnt2User());
+				
+				instanceRef.setLastCmnt2(title);
+				instanceRef.setLastCmnt2User(session.getUser());
+			}
+		}
+//		instance.copyFrom(instanceRef);
+//		instance.databaseMe();
+	}
 	@Autowired
 	public InstanceViewContent instanceViewContent;
 	

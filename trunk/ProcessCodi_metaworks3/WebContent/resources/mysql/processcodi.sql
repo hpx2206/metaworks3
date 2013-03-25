@@ -713,7 +713,7 @@ create table APP(
 	VENDORID varchar(20),
 	CATEGORYID int(11),
 	INSTALLCNT int(11) DEFAULT 0,
-	ISDELETED int(11) DEFAULT false
+	ISDELETED int(11) DEFAULT false,
 	PRIMARY KEY(APPID)
 );
 
