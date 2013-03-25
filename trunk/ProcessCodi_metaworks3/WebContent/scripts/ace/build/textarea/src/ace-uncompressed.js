@@ -8221,6 +8221,7 @@ canon.addCommand({
         env.editor.find(needle);
     }
 });
+/*
 canon.addCommand({
     name: "replace",
     bindKey: bindKey("Ctrl-R", "Command-Option-F"),
@@ -8247,6 +8248,7 @@ canon.addCommand({
         env.editor.replaceAll(replacement, {needle: needle});
     }
 });
+*/
 canon.addCommand({
     name: "undo",
     bindKey: bindKey("Ctrl-Z", "Command-Z"),
