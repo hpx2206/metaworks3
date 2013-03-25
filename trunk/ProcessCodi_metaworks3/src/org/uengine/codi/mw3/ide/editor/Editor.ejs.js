@@ -70,8 +70,6 @@ org_uengine_codi_mw3_ide_editor_Editor.prototype = {
 	    faceHelper.editor.setKeyboardHandler(    		   
 	    	{
 	    		handleKeyboard : function(data, hashId, key, keyCode, e) {
-	    			console.log(e.keyCode);
-	    			
 	    			switch (e.keyCode) {
 	    				case 13 :	// enter
 			    			mw3.getFaceHelper(objectId).selectAssist(e);
@@ -79,14 +77,16 @@ org_uengine_codi_mw3_ide_editor_Editor.prototype = {
 			    	    	break;
 			    	    
 	    				case 83:	// s
-	    					if(e.ctrlKey && e.shiftKey){
-		    					mw3.mouseX = e.srcElement.offsetLeft + 4;
+	    					if(e.altKey && e.shiftKey){
+		    					mw3.mouseX = e.srcElement.offsetLeft-2;
 		    					mw3.mouseY = e.srcElement.offsetTop + 18;
 		    					
 		    					mw3.call(objectId, 'quickMenu');
 		    					
-	    						faceHelper.stopEvent(e);
+	    						faceHelper.event.stopEvent(e);
 	    					}
+	    					
+	    					break;
 	    					
 	    				case 190:	// .
 	    					var command = faceHelper.getCommandString();
