@@ -215,7 +215,7 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 		dTitle.setMetaworksContext(new MetaworksContext());
 		dTitle.getMetaworksContext().setWhen("edit");
 		dTitle.setTitle(getProcessName());
-		return new ModalWindow(dTitle , 600, 600,  "프로세스명 입력" );
+		return new ModalWindow(dTitle , 600, 200,  "프로세스명 입력" );
 	}
 	
 	@ServiceMethod(callByContent=true, target="popup")

@@ -220,8 +220,10 @@ public class ConditionTreeNode  implements ContextAware{
 					parentNode.getChild().remove(i);
 				}
 			}
+			return new Refresh(parentNode);
+		}else{
+			return null;
 		}
-		return new Refresh(parentNode);
 	}
 	
 	@ServiceMethod(callByContent = true , target=ServiceMethodContext.TARGET_AUTO)

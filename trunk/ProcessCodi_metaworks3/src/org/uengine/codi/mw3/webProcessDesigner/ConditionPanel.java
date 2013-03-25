@@ -111,10 +111,9 @@ public class ConditionPanel  implements ContextAware{
 		treeNode.setRoot(true);
 		treeNode.setExpanded(true);
 		treeNode.setId("rootNode");
-		treeNode.setName("만족조건");
+		treeNode.setName("[Or]만족조건");
 		treeNode.setRoleList(roleList);
 		treeNode.setPrcsValiableList(prcsValiableList);
-		treeNode.setParentNode(treeNode);
 		
 		if( condition != null ){
 			makeChildTreeNode(treeNode , condition); 
@@ -128,7 +127,6 @@ public class ConditionPanel  implements ContextAware{
 	}
 	
 	public void makeChildTreeNode( ConditionTreeNode rootNode , Condition condition ) throws Exception{
-		// TODO 현재 tree 의 dapth 를 형성시키지 못하니 1depth로 loop를 돌린다 추후 뎁스가 있도록 변경 - 김형국
 		// 처음 들어오는 condition 은 무조건 or 가 최상위임
 		Condition[] condis = ((And)condition).getConditions();
 		if( condis != null){
@@ -178,29 +176,36 @@ public class ConditionPanel  implements ContextAware{
 						
 						conditionNode.getValiableChoice().setSelected(eval.getKey());
 						conditionNode.getSignChoice().setSelected(eval.getCondition());
+						ConditionInput conditionInput = conditionNode.getConditionInput();
 						Object value = eval.getValue();
 						if( value instanceof String){
 							String expString = (String)value;
 							if( "yes".equalsIgnoreCase(expString) || "no".equalsIgnoreCase(expString) ){
 								conditionNode.getExpressionChoice().setSelected("Yes or No");
-								conditionNode.getConditionInput().getMetaworksContext().setHow("Yes or No");
-								conditionNode.getConditionInput().setYesNo(expString);
+								conditionInput.getMetaworksContext().setHow("Yes or No");
+								conditionInput.setYesNo(expString);
 							}else{
-								conditionNode.getExpressionChoice().setSelected("text");
-								conditionNode.getConditionInput().getMetaworksContext().setHow("text");
-								conditionNode.getConditionInput().setExpressionText(expString);
+								if( conditionInput.getValiableChoice().getOptionValues().contains(expString) ){
+									conditionNode.getExpressionChoice().setSelected("variable");
+									conditionInput.getMetaworksContext().setHow("variable");
+									conditionInput.getValiableChoice().setSelected(expString);
+								}else{
+									conditionNode.getExpressionChoice().setSelected("text");
+									conditionInput.getMetaworksContext().setHow("text");
+									conditionInput.setExpressionText(expString);
+								}
 							}
 						}else if( value instanceof Long){
 							conditionNode.getExpressionChoice().setSelected("number");
-							conditionNode.getConditionInput().getMetaworksContext().setHow("number");
-							conditionNode.getConditionInput().setExpressionText(value.toString());
+							conditionInput.getMetaworksContext().setHow("number");
+							conditionInput.setExpressionText(value.toString());
 						}else if( value instanceof Date){
 							conditionNode.getExpressionChoice().setSelected("date");
-							conditionNode.getConditionInput().getMetaworksContext().setHow("date");
-							conditionNode.getConditionInput().setExpressionDate((Date)value);
+							conditionInput.getMetaworksContext().setHow("date");
+							conditionInput.setExpressionDate((Date)value);
 						}else{
 							conditionNode.getExpressionChoice().setSelected("null");
-							conditionNode.getConditionInput().getMetaworksContext().setHow("null");
+							conditionInput.getMetaworksContext().setHow("null");
 						}	
 					}else if( cd instanceof Or){
 						makeChildTreeNode(treeNode , cd);
