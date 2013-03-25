@@ -29,7 +29,7 @@ public class JavaCodeEditor extends Editor {
 		return editorMenu;
 	}
 
-	@ServiceMethod(target=ServiceMethodContext.TARGET_STICK)
+	@ServiceMethod(payload={"filename", "content"}, target=ServiceMethodContext.TARGET_STICK)
 	public Object[] quickMenu(){
 		session.setClipboard(this);
 		

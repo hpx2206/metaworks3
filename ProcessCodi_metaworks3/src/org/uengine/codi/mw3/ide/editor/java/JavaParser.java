@@ -82,7 +82,7 @@ public class JavaParser {
 		ArrayList<JavaField> fields = new ArrayList<JavaField>();
 		
 		for(Object declarationclass : typeDeclaration.bodyDeclarations()){
-			if(declarationclass instanceof MethodDeclaration){
+			if(declarationclass instanceof MethodDeclaration){				
 				MethodDeclaration methodDeclaration  = (MethodDeclaration)declarationclass;
 				
 				String name = methodDeclaration.getName().getFullyQualifiedName();
@@ -192,8 +192,9 @@ public class JavaParser {
 		
 	
 	private ArrayList<JavaField> makeJavaField(FieldDeclaration fd){
-		ArrayList<JavaField> fields = new ArrayList<JavaField>();
-				
+		System.out.println("length : " + fd.getLength());
+		ArrayList<JavaField> fields = new ArrayList<JavaField>();				
+
 		SimpleType simpleType = (SimpleType)fd.getType();
 		String fieldType = simpleType.getName().getFullyQualifiedName();
 		
