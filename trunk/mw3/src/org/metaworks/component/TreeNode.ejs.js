@@ -28,8 +28,7 @@ var org_metaworks_component_TreeNode = function(objectId, className){
 		
 		this.nodeDiv.addClass(status);
 		
-		
-		if(!faceHelper.isExpand())
+		if(faceHelper.isCollapse())
 			faceHelper.collapse();
 		
 		this.nodeDiv.children().children('span').bind('click', {objectId : this.objectId}, function(event){

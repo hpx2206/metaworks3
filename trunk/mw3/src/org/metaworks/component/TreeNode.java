@@ -18,6 +18,9 @@ public class TreeNode {
 	public final static String TYPE_FILE_IMAGE = "image";
 	public final static String TYPE_USER = "user";
 	
+	public final static String TYPE_FIELD			= "field";
+	public final static String TYPE_METHOD			= "method";
+	
 	public final static String ALIGN_LEFT			= "left";
 	public final static String ALIGN_RIGHT			= "right";
 	
@@ -108,6 +111,14 @@ public class TreeNode {
 			this.folder = folder;
 		}
 
+	boolean hidden;
+		public boolean isHidden() {
+			return hidden;
+		}
+		public void setHidden(boolean hidden) {
+			this.hidden = hidden;
+		}
+
 	ArrayList<TreeNode> child;
 		public ArrayList<TreeNode> getChild() {
 			return child;
@@ -146,6 +157,5 @@ public class TreeNode {
 		// Override method
 		
 		return null;
-	}
-	
+	}	
 }
