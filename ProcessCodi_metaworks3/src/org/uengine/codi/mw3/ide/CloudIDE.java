@@ -5,6 +5,9 @@ import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
 import org.metaworks.widget.layout.Layout;
+import org.uengine.codi.mw3.Login;
+import org.uengine.codi.mw3.admin.TopPanel;
+import org.uengine.codi.mw3.ide.editor.java.JavaCodeEditor;
 import org.uengine.codi.mw3.ide.view.Navigator;
 import org.uengine.codi.mw3.model.Session;
 
@@ -76,6 +79,19 @@ public class CloudIDE {
 		String defaultBuildOutputPath = baseDir + "/WebContent/WEB-INF/classes";
 		String libraryPath = baseDir + "/WebContent/WEB-INF/lib";
 
+		Login login = new Login();
+		login.setUserId("test");
+		login.setPassword("test");
+		
+		Session session = new Session();
+		
+		try {
+			session = login.loginService();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		Navigator navigator = new Navigator();		
 		navigator.load(baseDir, projectId);
 
@@ -83,11 +99,13 @@ public class CloudIDE {
 		navigatorWindow.getTabs().add(navigator);
 
 		CloudWindow editorWindow = new CloudWindow("editor");
+		JavaCodeEditor editor = new JavaCodeEditor("D:\\ide_workspace\\somehow\\codi\\src\\examples\\GoogleChart.java");
+		editorWindow.getTabs().add(editor);
 		
 		Layout outerLayout = new Layout();
 		outerLayout.setWest(navigatorWindow);
 		outerLayout.setCenter(editorWindow);
-		outerLayout.setNorth(new Session());
+		outerLayout.setNorth(new TopPanel(session));
 		outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:5, east__spacing_open:5, west__size:300, east__size:500, north__size:52");
 		
 		this.setLayout(outerLayout);
@@ -98,10 +116,15 @@ public class CloudIDE {
 		this.setJavaBuildPath(jbPath);
 	}
 	
-	@ServiceMethod(keyBinding={"@Ctrl+Shift+C"}, target=ServiceMethodContext.TARGET_POPUP)
+	@ServiceMethod(keyBinding="Ctrl+S@Global", target=ServiceMethodContext.TARGET_NONE)
+	public void save(){
+		System.out.println("save");
+	}
+	
+	@ServiceMethod(keyBinding="Ctrl+Shift+R@Global", target=ServiceMethodContext.TARGET_POPUP)
 	public ModalWindow openResource(){
 		OpenResource openResource = new OpenResource();
 		
-		return new ModalWindow(openResource);
+		return new ModalWindow(openResource, "Open Resource");
 	}
 }

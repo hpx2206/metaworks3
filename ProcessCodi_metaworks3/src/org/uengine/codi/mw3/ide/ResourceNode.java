@@ -49,6 +49,7 @@ public class ResourceNode extends TreeNode {
 	
 	@Override
 	public Object action(){
+		System.out.println(this.getId());
 		return new ToAppend(new CloudWindow("editor"), new JavaCodeEditor(this.getId()));
 	}
 	

@@ -9,7 +9,7 @@ if (value != null){
 		var tabMetadata = mw3.getMetadata(value.tabs[i].__className);
 		
 		if(tabMetadata.nameFieldDescriptor){
-			tabName = object[tabMetadata.nameFieldDescriptor.name];
+			tabName = value.tabs[i][tabMetadata.nameFieldDescriptor.name];
 		}else{
 			tabName = tabMetadata.displayName;
 		}
