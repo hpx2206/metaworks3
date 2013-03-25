@@ -1007,7 +1007,11 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				   					var command = "if(mw3.objects['"+ objectId +"']!=null) mw3.call("+objectId+", '"+methodName+"')";
 				   					
 				   					if(keyBinding.indexOf("@Global") > -1){
-				   						keyBinding = keyBinding.substr(keyBinding.length - "@Global".length);
+				   						/*
+				   						 * 2013-03-25 cjw
+				   						 * global 일때 keyBinding 문제 해결 
+				   						 */ 
+				   						keyBinding = keyBinding.substr(0, keyBinding.length - "@Global".length);
 				   					
 				   						shortcut.remove(keyBinding);
 					   					shortcut.add(keyBinding, command);
@@ -1121,6 +1125,14 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				   					var mouseup = function(e) {
 				   			 			
 				   			 			if(e.which == which){
+					   				    	mw3.mouseX = e.pageX;
+					   		    			mw3.mouseY = e.pageY;
+				   			 				
+					   		    			// click(mouse right) is contextmenu block
+				   			 				if(which == 3){
+				   			 					document.oncontextmenu = function() { return false; };
+				   			 				}
+				   			 				
 					   						eval(this['mouseCommand' + e.which]);
 				   			 				e.stopPropagation(); //stops to propagate to parent that means consumes the event here.
 				   			 			}
@@ -2016,25 +2028,43 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
         				//store the recently added object Id for recent opener
         				mw3.recentOpenerObjectId.push(objId);
         				
+        				mw3.popupDivId = 'popup_' + objId;
+        				
+        				$('#' + mw3.popupDivId).remove();
 
         				if(placeholder){
         					mw3.removeObject(placeholder);
         				}
 
-        				mw3.popupDivId = 'popup_' + objId;
+        				
         				//$('body').append("<div id='" + mw3.popupDivId + "' class='target_popup' style='z-index:10;position:absolute; top:50px; left:10px'></div>");
         				$('body').append("<div id='" + mw3.popupDivId + "' class='target_popup' style='z-index:10;position:absolute; top:0px; left:0px'></div>");
+        				
+        				$('body').one('click', {popupDivId: mw3.popupDivId}, function(event){$('#' + event.data.popupDivId).remove();});
+        				
         				mw3.locateObject(result, null, '#' + mw3.popupDivId).targetDivId;
-        					
+        				
         				
         				//objId = mw3.targetObjectId;
         			}else if(serviceMethodContext.target=="stick"){
-		    			mw3.popupDivId = 'stick_' + objId;
-        				$('body').append("<div id='" + mw3.popupDivId + "' class='target_stick' style='z-index:10;position:absolute; top:" + mw3.mouseY + "px; left:" + mw3.mouseX + "px'></div>");
-        				mw3.locateObject(result, null, '#' + mw3.popupDivId);
-
-        				//store the recently added object Id for recebt opener
+        				//store the recently added object Id for recent opener
         				mw3.recentOpenerObjectId.push(objId);
+        				
+        				mw3.popupDivId = 'stick_' + objId;
+        				
+        				$('#' + mw3.popupDivId).remove();
+        				
+        				if(placeholder){
+        					mw3.removeObject(placeholder);
+        				}
+        				
+		    			
+        				$('body').append("<div id='" + mw3.popupDivId + "' class='target_stick' style='z-index:10;position:absolute; top:" + mw3.mouseY + "px; left:" + mw3.mouseX + "px'></div>");
+        				
+        				$('body').one('click', {popupDivId: mw3.popupDivId}, function(event){$('#' + event.data.popupDivId).remove();});
+        				
+        				mw3.locateObject(result, null, '#' + mw3.popupDivId);        				
+
         				
         				//objId = mw3.targetObjectId;
         				
@@ -2342,6 +2372,13 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 						this.objectId_KeyMapping[objectKey] = objId;
 
 					
+
+					if(serviceMethodContext && serviceMethodContext.target!="none"){
+
+						if(serviceMethodContext.loadOnce && serviceMethodContext['cachedObjectId']){
+							return this.__showResult(object, this.objects[serviceMethodContext['cachedObjectId']], objId, svcNameAndMethodName, serviceMethodContext, placeholder, divId );
+						}
+					}
 					
 					this.metaworksProxy.callMetaworksService(className, object, svcNameAndMethodName, autowiredObjects,
 						{ 
@@ -2377,17 +2414,12 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			    		}
 					);
 
+
 					///// just after call, 
 					this.startProgress();
 
 					var placeholder = null;
 					if(serviceMethodContext && serviceMethodContext.target!="none"){
-
-						if(serviceMethodContext.loadOnce && serviceMethodContext['cachedObjectId']){
-							return this.__showResult(object, this.objects[serviceMethodContext['cachedObjectId']], objId, svcNameAndMethodName, serviceMethodContext, placeholder, divId );
-						}
-						
-						
 						var loader = serviceMethodContext.loader;
 						
 						
