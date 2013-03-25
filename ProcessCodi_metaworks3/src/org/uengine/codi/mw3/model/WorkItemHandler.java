@@ -17,9 +17,12 @@ import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.TransactionContext;
+import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.ITool;
+import org.uengine.codi.mw3.Login;
+import org.uengine.codi.mw3.filter.OtherSessionFilter;
 import org.uengine.contexts.ComplexType;
 import org.uengine.kernel.Activity;
 import org.uengine.kernel.ActivityReference;
@@ -349,7 +352,15 @@ public class WorkItemHandler implements ContextAware{
 		}
 		
 		releaseMapForITool();
-		saveLastComent(instance);
+		// lastCmn 저장
+		IInstance copyOfInstance = saveLastComent(instance);
+		// 본인의 instanceList 에 push
+		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(copyOfInstance)});
+		// 본인 이외에 다른 사용자에게 push			
+		MetaworksRemoteService.pushClientObjectsFiltered(
+				new OtherSessionFilter(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom()), session.getUser().getUserId().toUpperCase()),
+				new Object[]{new InstanceListener(copyOfInstance)});			
+		
 		//refreshes the instanceview so that the next workitem can be show up
 		if("sns".equals(session.getEmployee().getPreferUX())){			
 			InstanceViewThreadPanel panel = new InstanceViewThreadPanel();
@@ -360,17 +371,14 @@ public class WorkItemHandler implements ContextAware{
 			
 			return new Object[]{panel, new Remover(new ModalWindow() , true )};
 		}else{
-			Instance instance = new Instance();
-			instance.setInstId(this.getRootInstId());
-			
 			instanceViewContent.session = session;
-			instanceViewContent.load(instance);
+			instanceViewContent.load(copyOfInstance);
 			
 			return new Object[]{instanceViewContent, new Remover(new ModalWindow(), true)};
 		}
 	}
 	
-	private void saveLastComent(ProcessInstance processInstance) throws Exception{
+	private IInstance saveLastComent(ProcessInstance processInstance) throws Exception{
 		String title = humanActivity.getName().getText();
 		Instance instance = new Instance();
 		instance.setInstId(this.getRootInstId());
@@ -398,6 +406,7 @@ public class WorkItemHandler implements ContextAware{
 		}
 //		instance.copyFrom(instanceRef);
 //		instance.databaseMe();
+		return instanceRef;
 	}
 	@Autowired
 	public InstanceViewContent instanceViewContent;
