@@ -1,8 +1,6 @@
 <%
 	if(value != null && typeof value != 'undefined'){
-		console.log(value);
 %>
-
 <table border="1">
 
 <!-- table header -->
@@ -19,7 +17,7 @@
 			<th><%=fd.displayName%></th>
 <%
 	}
-%>	
+%>
 		<th></th>				
 		</tr>
 	</thead>	
@@ -27,17 +25,19 @@
 <!-- table body -->
 	<tbody>
 <%
-	if(typeof options == 'undefined') 
-		options = objectMetadata;
-		
-	options['htmlTag'] =  'tr';
-	options['ejsPath'] =  'dwr/metaworks/genericfaces/GridFace_Row.ejs';
-	options['parentId'] =  this.objectId;
-		
-	for(var i=0; i<value.length; i++){
+	if(value != null){
+		if(typeof options == 'undefined') 
+			options = objectMetadata;
+			
+		options['htmlTag'] =  'tr';
+		options['ejsPath'] =  'dwr/metaworks/genericfaces/GridFace_Row.ejs';
+		options['parentId'] =  this.objectId;
+			
+		for(var i=0; i<value.length; i++){
 %>
 	<%=mw3.locateObject(value[i], value[i].__className, null, options)%>
 <%
+		}		
 	}	
 %>		
 	</tbody>
