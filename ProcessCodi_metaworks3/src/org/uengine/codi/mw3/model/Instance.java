@@ -297,8 +297,8 @@ public class Instance extends Database<IInstance> implements IInstance{
 			.append("   AND inst.status<>'" + Instance.INSTNACE_STATUS_STOPPED + "'")
 			.append("   AND inst.status<>'" + Instance.INSTNACE_STATUS_FAILED + "'")
 			.append("   AND inst.status<>'" + Instance.INSTNACE_STATUS_COMPLETED + "'")			
-			.append("   AND ((inst.defVerId != "+Instance.DEFAULT_DEFVERID+" and wl.status in ('" + WorkItem.WORKITEM_STATUS_NEW + "','" + WorkItem.WORKITEM_STATUS_DRAFT + "','" + WorkItem.WORKITEM_STATUS_CONFIRMED + "'))")
-			.append("     OR   (inst.defVerId = "+Instance.DEFAULT_DEFVERID+" and inst.DUEDATE is not null and wl.status = '" + WorkItem.WORKITEM_STATUS_FEED + "'))")			
+			.append("   AND ((inst.defVerId != '"+Instance.DEFAULT_DEFVERID+"' and wl.status in ('" + WorkItem.WORKITEM_STATUS_NEW + "','" + WorkItem.WORKITEM_STATUS_DRAFT + "','" + WorkItem.WORKITEM_STATUS_CONFIRMED + "'))")
+			.append("     OR   (inst.defVerId = '"+Instance.DEFAULT_DEFVERID+"' and inst.DUEDATE is not null and wl.status = '" + WorkItem.WORKITEM_STATUS_FEED + "'))")			
 			.append("   AND inst.isdeleted!=?instIsdelete ");
 			
 			criteria.put("instIsdelete", "1");			
@@ -1131,8 +1131,8 @@ public class Instance extends Database<IInstance> implements IInstance{
 		.append("   AND inst.status <> '" + Instance.INSTNACE_STATUS_COMPLETED + "'")
 				
 
-		.append("   AND ((inst.defVerId != "+Instance.DEFAULT_DEFVERID+" and wl.status in ('" + WorkItem.WORKITEM_STATUS_NEW + "','" + WorkItem.WORKITEM_STATUS_DRAFT + "','" + WorkItem.WORKITEM_STATUS_CONFIRMED + "'))")
-		.append("     OR   (inst.defVerId = "+Instance.DEFAULT_DEFVERID+" and inst.DUEDATE is not null and wl.status = '" + WorkItem.WORKITEM_STATUS_FEED + "'))")
+		.append("   AND ((inst.defVerId != '"+Instance.DEFAULT_DEFVERID+"' and wl.status in ('" + WorkItem.WORKITEM_STATUS_NEW + "','" + WorkItem.WORKITEM_STATUS_DRAFT + "','" + WorkItem.WORKITEM_STATUS_CONFIRMED + "'))")
+		.append("     OR   (inst.defVerId = '"+Instance.DEFAULT_DEFVERID+"' and inst.DUEDATE is not null and wl.status = '" + WorkItem.WORKITEM_STATUS_FEED + "'))")
 		.append(") a");
 
 		
@@ -1170,8 +1170,8 @@ public class Instance extends Database<IInstance> implements IInstance{
 		.append("   AND inst.status <> '" + Instance.INSTNACE_STATUS_COMPLETED + "'")
 				
 
-		.append("   AND ((inst.defVerId != "+Instance.DEFAULT_DEFVERID+" and wl.status in ('" + WorkItem.WORKITEM_STATUS_NEW + "','" + WorkItem.WORKITEM_STATUS_DRAFT + "','" + WorkItem.WORKITEM_STATUS_CONFIRMED + "'))")
-		.append("     OR   (inst.defVerId = "+Instance.DEFAULT_DEFVERID+" and inst.DUEDATE is not null and wl.status = '" + WorkItem.WORKITEM_STATUS_FEED + "'))")
+		.append("   AND ((inst.defVerId != '"+Instance.DEFAULT_DEFVERID+"' and wl.status in ('" + WorkItem.WORKITEM_STATUS_NEW + "','" + WorkItem.WORKITEM_STATUS_DRAFT + "','" + WorkItem.WORKITEM_STATUS_CONFIRMED + "'))")
+		.append("     OR   (inst.defVerId = '"+Instance.DEFAULT_DEFVERID+"' and inst.DUEDATE is not null and wl.status = '" + WorkItem.WORKITEM_STATUS_FEED + "'))")
 		.append(") a");
 
 		
