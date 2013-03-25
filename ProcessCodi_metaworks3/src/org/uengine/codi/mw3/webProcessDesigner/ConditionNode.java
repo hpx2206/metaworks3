@@ -156,7 +156,7 @@ public class ConditionNode  implements Cloneable, ContextAware{
 		choice.add("Number", "number");
 		choice.add("Date", "date");
 		choice.add("Yes or No", "Yes or No");
-		choice.add("File", "File");
+//		choice.add("File", "File");
 //		choice.add("Activity Selection", "Activity Selection");
 //		choice.add("Knowledge Type" ,"knowledgelType");
 		choice.add("Process Variable" ,"variable");
@@ -210,7 +210,11 @@ public class ConditionNode  implements Cloneable, ContextAware{
 
 		conditionInput = new ConditionInput();
 		conditionInput.init();
-		conditionInput.setValiableChoice(valiableChoice);
+		// 두개를 동시에 쓰는 경우가 생기기 때문에 객체를 분리하여 주었다
+		SelectBox selectBox = new SelectBox();
+		selectBox.setOptionNames(valiableChoice.getOptionNames());
+		selectBox.setOptionValues(valiableChoice.getOptionValues());
+		conditionInput.setValiableChoice(selectBox);
 	}
 	
 	@AutowiredFromClient
