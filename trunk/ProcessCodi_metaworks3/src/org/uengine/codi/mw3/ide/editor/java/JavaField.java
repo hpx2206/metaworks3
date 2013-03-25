@@ -1,6 +1,8 @@
 package org.uengine.codi.mw3.ide.editor.java;
 
-public class JavaField {
+import org.metaworks.component.TreeNode;
+
+public class JavaField extends TreeNode {
 
 	String name;
 		public String getName() {
