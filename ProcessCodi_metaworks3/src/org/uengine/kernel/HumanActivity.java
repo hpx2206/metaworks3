@@ -123,6 +123,7 @@ public class HumanActivity extends ReceiveActivity{
 		}		
 		
 	int duration;
+	@Hidden
 		public int getDuration() {
 			return duration;
 		}

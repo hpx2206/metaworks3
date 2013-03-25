@@ -70,7 +70,7 @@ public class LineShape extends CanvasDTO {
 					}else if( expressionChoice.equalsIgnoreCase("Date")){
 						// TODO 컨버팅 에러로 인하여 잠시 보류
 //						exppObject = expressionInput.getExpressionDate();
-					}else if( expressionChoice.equals("File")){
+//					}else if( expressionChoice.equals("File")){
 					}else if( expressionChoice.equals("variable")){
 						exppObject = expressionInput.getValiableChoice().getSelected();
 //					}else if( expressionChoice.equals("Activity Selection")){
