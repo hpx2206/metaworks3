@@ -1,5 +1,6 @@
 <%
 	if(value != null && typeof value != 'undefined'){
+		if(!value.hidden){
 %>
 	<!--div class="item-fix <%=value.root?'root':''%>" objectId="<%=objectId%>" id="<%=value.id%>" name="<%=value.name%>">
 		<div class="item">
@@ -33,6 +34,8 @@
 	
 	
 <%
+	}
+	
 		if(value.child && value.child.length > 0){
 %>
 	<u class="last root" style="display: block; height: auto; overflow: visible;">
