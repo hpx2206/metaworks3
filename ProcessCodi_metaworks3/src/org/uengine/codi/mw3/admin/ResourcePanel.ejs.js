@@ -12,6 +12,6 @@ var org_uengine_codi_mw3_admin_ResourcePanel = function(objectId, className){
 	this.objectDiv
 	.css({
 		position: 'relative',
-		height:   '100%'
+		//height:   '100%'
 	})
 };

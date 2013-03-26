@@ -19,6 +19,16 @@ var org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel = fun
 			faceHelper.load();
 		}
 	}
+	
+	$('.leftMenuTab_ide').click(function(){
+		if($(this).hasClass('closed')){
+			$(this).next('.leftMenuTabInner_ide').show();
+			$(this).removeClass('closed');
+		}else{
+			$(this).next('.leftMenuTabInner_ide').hide();
+			$(this).addClass('closed');
+		}
+	})
 };
 
 org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype = {
