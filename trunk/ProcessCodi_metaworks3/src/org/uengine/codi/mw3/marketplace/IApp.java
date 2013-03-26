@@ -59,6 +59,10 @@ public interface IApp extends IDAO{
 
 	public boolean isDeleted();
 	public void setIsDeleted(boolean isDeleted);
+	
+	public int getInstallCnt();
+	public void setInstallCnt(int installCnt);
+	
 		
 	@ORMapping(
 		databaseFields = {"logoContent", "logoFileName"}, 
@@ -84,7 +88,7 @@ public interface IApp extends IDAO{
 	public IApp findByVendor() throws Exception;
 	
 	@ServiceMethod(callByContent=true)
-	public void readyPublished() throws Exception;
+	public Object readyPublished() throws Exception;
 	
 	@ServiceMethod(callByContent=true)
 	public Object detailListing() throws Exception;

@@ -7,7 +7,7 @@ var context = value.file.metaworksContext.when;
 
 %>
 
-	<div font-color=red><%=mw3.localize('$AllFiledsRequired')%></div>
+	<div font-color=red><%=mw3.localize('$CheckAppInformation')%></div>
 	<img src="images/empty_editor_divider.png" />
 	
 	<table>
@@ -39,11 +39,11 @@ var context = value.file.metaworksContext.when;
 		</tr>
 		<tr>
 			<td><div><%=mw3.localize('$App.FileAttach')%></div></td>
-			<td><%=fields.file.here({when:'edit'})%></td>
+			<td><%=fields.file.here({when:'view'})%></td>
 		</tr>
 		<tr>
 			<td><div><%=mw3.localize('$App.LogoFileAttach')%></div></td>
-			<td><%=fields.logoFile.here({when:'edit'})%></td>
+			<td><%=fields.logoFile.here({when:'image'})%></td>
 		</tr>
 	</table>
 

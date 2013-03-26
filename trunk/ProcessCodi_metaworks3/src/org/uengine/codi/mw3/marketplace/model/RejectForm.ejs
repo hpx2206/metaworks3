@@ -1,0 +1,18 @@
+
+
+<%
+if(value) {
+
+%>
+
+	
+	<h2> <%=mw3.localize('$Request.Approval.Result')%> >> <%=mw3.localize('$Rejected')%> </h2>
+	<h4> <%=mw3.localize('$Rejected.Msg')%> </h4>
+	
+
+	<%=fields.rejectReason.here({when:'view'})%>
+
+<%
+}
+
+%>

@@ -2,8 +2,6 @@ package org.uengine.codi.mw3.marketplace;
 
 import java.util.Calendar;
 
-import javax.persistence.SequenceGenerator;
-
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.MetaworksException;
@@ -15,27 +13,31 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.SelectBox;
 import org.metaworks.website.MetaworksFile;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.codi.ITool;
 import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.marketplace.category.Category;
 import org.uengine.codi.mw3.marketplace.category.ICategory;
+import org.uengine.codi.mw3.marketplace.model.RequestApproval;
+import org.uengine.codi.mw3.model.InstanceViewContent;
+import org.uengine.codi.mw3.model.ProcessMap;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.kernel.KeyedParameter;
+import org.uengine.kernel.ResultPayload;
 import org.uengine.persistence.dao.UniqueKeyGenerator;
 import org.uengine.processmanager.ProcessManagerBean;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 @Face(
 		displayName = "$AppInfo",
-		ejsPathMappingByContext = {
-			"{when: 'new', face: 'genericfaces/FormFace.ejs'}",
-			"{when: 'edit', face: 'genericfaces/FormFace.ejs'}"
-		},
+		ejsPath="genericfaces/FormFace.ejs"
+		,
 		options={"fieldOrder"},
 		values={"categories,listingName,simpleOverview,fullOverview,pricing,file,logoFile"}
 	)
-public class AppInformation implements ContextAware {
+public class AppInformation implements ContextAware, ITool {
 
 	public final static String STATUS_REQUEST = "Request";
-	public final static String STATUS_APPROVAL = "Approval";
+	public final static String STATUS_APPROVED = "Approved";
 	public final static String STATUS_REJECT = "Reject";
 	public final static String STATUS_PUBLISHED = "Published";
 	public final static String STATUS_UNPUBLISHED = "Unpublished";
@@ -49,7 +51,6 @@ public class AppInformation implements ContextAware {
 
 	}
 	
-	@Hidden
 	MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
 			return metaworksContext;
@@ -58,8 +59,9 @@ public class AppInformation implements ContextAware {
 			this.metaworksContext = metaworksContext;
 		}
 	
-	@Face(displayName="카테고리")
+	
 	SelectBox categories;
+		@Face(displayName="카테고리")
 		public SelectBox getCategories() {
 			return categories;
 		}
@@ -67,8 +69,8 @@ public class AppInformation implements ContextAware {
 			this.categories = categories;
 		}
 	
-	@Hidden
 	int listingId;
+		@Hidden
 		public int getListingId() {
 			return listingId;
 		}
@@ -76,26 +78,26 @@ public class AppInformation implements ContextAware {
 			this.listingId = listingId;
 		}
 
-	@Face(displayName="앱이름")
 	String listingName;
+		@Face(displayName="앱이름")
 		public String getListingName() {
 			return listingName;
 		}
 		public void setListingName(String listingName) {
 			this.listingName = listingName;
 		}
-
-	@Face(displayName="심플 설명")
+	
 	String simpleOverview;
+		@Face(displayName="심플 설명")
 		public String getSimpleOverview() {
 			return simpleOverview;
 		}
 		public void setSimpleOverview(String simpleOverview) {
 			this.simpleOverview = simpleOverview;
 		}
-		
-	@Face(displayName="데테일 설명")
+	
 	String fullOverview;
+		@Face(displayName="데테일 설명")
 		public String getFullOverview() {
 			return fullOverview;
 		}
@@ -103,8 +105,8 @@ public class AppInformation implements ContextAware {
 			this.fullOverview = fullOverview;
 		}
 
-	@Face(displayName="앱 첨부 파일")
 	MetaworksFile file;
+		@Face(displayName="앱 첨부 파일")
 		public MetaworksFile getFile() {
 			return file;
 		}
@@ -112,8 +114,8 @@ public class AppInformation implements ContextAware {
 			this.file = file;
 		}
 
-	@Face(displayName="가격")
 	String pricing;
+		@Face(displayName="가격")
 		public String getPricing() {
 			return pricing;
 		}
@@ -121,24 +123,44 @@ public class AppInformation implements ContextAware {
 			this.pricing = pricing;
 		}
 
-	@Face(displayName="로고파일")
 	MetaworksFile logoFile;
+		@Face(displayName="로고파일", options={"width", "height"}, values={"150", "150"})
 		public MetaworksFile getLogoFile() {
 			return logoFile;
 		}
 		public void setLogoFile(MetaworksFile logoFile) {
 			this.logoFile = logoFile;
 		}
+	
+	IApp app;
+		public IApp getApp() {
+			return app;
+		}
+		public void setApp(IApp app) {
+			this.app = app;
+		}
 
+	ICategory category;
+		public ICategory getCategory() {
+			return category;
+		}
+		public void setCategory(ICategory category) {
+			this.category = category;
+		}
+		
 	@Autowired
-	public ProcessManagerRemote processManager;
+	transient public ProcessManagerRemote processManager;
 
 	@AutowiredFromClient
-	public Session session;
+	transient public Session session;
+	
+	@Autowired
+	transient public InstanceViewContent instanceView;
+	
 
 	@ServiceMethod(callByContent = true, when = "new")
 	public Object add() throws Exception {
-
+		
 		if (getFile() == null || getFile().getFileTransfer() == null || getFile().getFileTransfer().getFilename() == null || getFile().getFilename() == null)
 			throw new MetaworksException("$YouMustAttachItemFile");
 
@@ -162,6 +184,8 @@ public class AppInformation implements ContextAware {
 		listing.setStatus(STATUS_REQUEST);
 		listing.setIsDeleted(false);
 		
+		this.setApp(listing);
+		
 		ICategory category = new Category();
 		category.setCategoryId(Integer.parseInt(categories.getSelected()));
 		listing.setCategory(category);
@@ -173,11 +197,29 @@ public class AppInformation implements ContextAware {
 		gomarketHome.session = session;
 		
 		
+		
+		String defId = "appRegister_001.process";
+		
+		ProcessMap goProcess = new ProcessMap();
+		goProcess.session = session;
+		goProcess.processManager = processManager;
+		goProcess.instanceView = instanceView;
+		goProcess.setDefId(defId);
+		
+		// 프로세스 발행
+	    Long instId = Long.valueOf(goProcess.initializeProcess());
+	    
+	    // 프로세스 실행
+	    ResultPayload rp = new ResultPayload();
+	    rp.setProcessVariableChange(new KeyedParameter("requestAppendApp", this));
+	    
+	    //무조건 compleate
+	    processManager.executeProcessByWorkitem(instId.toString(), rp);
+	    
 		return new Refresh(gomarketHome.goMarketplace(), true);
 		
 
 	}
-	
 	
 	@ServiceMethod(callByContent = true, when="edit")
 	public void edit() throws Exception {
@@ -220,6 +262,29 @@ public class AppInformation implements ContextAware {
 		
 		listing.syncToDatabaseMe();
 
+	}
+	
+	@Override
+	public void onLoad() throws Exception {
+		if(MetaworksContext.WHEN_VIEW.equals(this.getMetaworksContext().getWhen())){
+			this.getLogoFile().getMetaworksContext().setWhen("image");
+			this.getFile().getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+		}
+		
+	}
+	@Override
+	public void beforeComplete() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void afterComplete() throws Exception {
+		
+//		RequestApproval ra = new RequestApproval();
+//		
+//		ra.session = session;
+//		ra.setApp(this.getApp());
+		
 	}
 
 }
