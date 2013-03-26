@@ -104,7 +104,7 @@ legend {display:none;}
 .form_table2 tfoot th{border-bottom:1px solid #ddd}
 .form_table2 tbody td{border-bottom:1px solid #ddd;background:#FFF;}
 .form_table2 tfoot td{border-bottom:1px solid #ddd;font-weight:bold;color:#333}
-.form_table2 .item{position:relative;margin:-4px 0}
+.form_table2 .item{/*position:relative;margin:-4px 0*/}
 .form_table2 .item .i_help{position:absolute;top:4px;right:0}
 .form_table2 .item .i_label{ top:6px; left:10px}
 .form_table2 .item .i_dsc{margin:2px 0}
