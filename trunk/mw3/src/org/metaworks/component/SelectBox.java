@@ -26,6 +26,11 @@ public class SelectBox extends ChoiceBox implements Serializable{
 		setSelectStyle("");
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		return this.getSelected().equals(obj);
+	}
+	
 	public String toString(){
 		return this.getSelected();
 	}
