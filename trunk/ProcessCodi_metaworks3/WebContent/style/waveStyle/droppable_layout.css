@@ -74,6 +74,7 @@ input:focus {
     outline: none;
 }
 
+h1{ font-size:13px; font-weight: bold; padding-left: 25px; background: url('../../images/waveStyle/control_play_blue.png') 2px 0px no-repeat;}
 /* list */
 
 ul, ol, li, dl, dd, dt {
