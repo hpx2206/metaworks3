@@ -17,7 +17,6 @@ import org.uengine.codi.ITool;
 import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.marketplace.category.Category;
 import org.uengine.codi.mw3.marketplace.category.ICategory;
-import org.uengine.codi.mw3.marketplace.model.RequestApproval;
 import org.uengine.codi.mw3.model.InstanceViewContent;
 import org.uengine.codi.mw3.model.ProcessMap;
 import org.uengine.codi.mw3.model.Session;
@@ -88,7 +87,8 @@ public class AppInformation implements ContextAware, ITool {
 		}
 	
 	String simpleOverview;
-		@Face(displayName="심플 설명")
+		@Face(displayName="심플 설명", ejsPath="dwr/metaworks/genericfaces/richText.ejs", options={"rows", "cols"}, values={"10", "130"})
+		@ServiceMethod(callByContent=true)
 		public String getSimpleOverview() {
 			return simpleOverview;
 		}
@@ -97,7 +97,7 @@ public class AppInformation implements ContextAware, ITool {
 		}
 	
 	String fullOverview;
-		@Face(displayName="데테일 설명")
+		@Face(displayName="데테일 설명", ejsPath="dwr/metaworks/genericfaces/richText.ejs", options={"rows", "cols"}, values={"15", "130"})
 		public String getFullOverview() {
 			return fullOverview;
 		}
@@ -280,10 +280,6 @@ public class AppInformation implements ContextAware, ITool {
 	@Override
 	public void afterComplete() throws Exception {
 		
-//		RequestApproval ra = new RequestApproval();
-//		
-//		ra.session = session;
-//		ra.setApp(this.getApp());
 		
 	}
 

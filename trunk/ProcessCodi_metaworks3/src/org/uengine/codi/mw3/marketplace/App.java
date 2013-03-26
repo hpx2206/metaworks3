@@ -19,9 +19,7 @@ import org.uengine.codi.mw3.model.IUser;
 import org.uengine.codi.mw3.model.InstanceViewContent;
 import org.uengine.codi.mw3.model.ProcessMap;
 import org.uengine.codi.mw3.model.Session;
-import org.uengine.kernel.EJBProcessInstance;
 import org.uengine.kernel.KeyedParameter;
-import org.uengine.kernel.ProcessInstance;
 import org.uengine.kernel.ResultPayload;
 import org.uengine.processmanager.ProcessManagerRemote;
 
