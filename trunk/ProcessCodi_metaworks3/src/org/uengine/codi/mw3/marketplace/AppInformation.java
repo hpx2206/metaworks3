@@ -88,7 +88,6 @@ public class AppInformation implements ContextAware, ITool {
 	
 	String simpleOverview;
 		@Face(displayName="심플 설명", ejsPath="dwr/metaworks/genericfaces/richText.ejs", options={"rows", "cols"}, values={"10", "130"})
-		@ServiceMethod(callByContent=true)
 		public String getSimpleOverview() {
 			return simpleOverview;
 		}
