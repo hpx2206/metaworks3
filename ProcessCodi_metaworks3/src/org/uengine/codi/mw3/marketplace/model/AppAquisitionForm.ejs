@@ -1,0 +1,19 @@
+
+
+<%
+if(value) {
+console.log(value);
+
+%>
+
+	<h2> <%=mw3.localize('$Request.Approval')%> </h2>
+	<h4> <%=value.writer.name%><%=mw3.localize('$Request.Aquisition.Msg')%> </h4>
+	
+	
+	<div> <%=fields.appInfo.here()%> </div>
+	
+	
+<%
+}
+
+%>

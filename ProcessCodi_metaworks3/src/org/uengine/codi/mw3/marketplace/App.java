@@ -2,20 +2,28 @@ package org.uengine.codi.mw3.marketplace;
 
 import java.util.Date;
 
-
 import org.metaworks.Refresh;
 import org.metaworks.annotation.AutowiredFromClient;
-import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.SelectBox;
 import org.metaworks.dao.Database;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.layout.Layout;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.admin.PageNavigator;
-import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.marketplace.category.Category;
 import org.uengine.codi.mw3.marketplace.category.ICategory;
 import org.uengine.codi.mw3.marketplace.category.MarketCategoryPanel;
+import org.uengine.codi.mw3.marketplace.model.AppAquisitionForm;
 import org.uengine.codi.mw3.marketplace.searchbox.MarketplaceSearchBox;
+import org.uengine.codi.mw3.model.IUser;
+import org.uengine.codi.mw3.model.InstanceViewContent;
+import org.uengine.codi.mw3.model.ProcessMap;
+import org.uengine.codi.mw3.model.Session;
+import org.uengine.kernel.EJBProcessInstance;
+import org.uengine.kernel.KeyedParameter;
+import org.uengine.kernel.ProcessInstance;
+import org.uengine.kernel.ResultPayload;
+import org.uengine.processmanager.ProcessManagerRemote;
 
 public class App extends Database<IApp> implements IApp{
 	
@@ -146,10 +154,40 @@ public class App extends Database<IApp> implements IApp{
 			this.appMapping = appMapping;
 		}
 
+	IUser user;
+		public IUser getUser() {
+			return user;
+		}
+		public void setUser(IUser user) {
+			this.user = user;
+		}
+	
+	AppInformation appInfo;
+		public AppInformation getAppInfo() {
+			return appInfo;
+		}
+		public void setAppInfo(AppInformation appInfo) {
+			this.appInfo = appInfo;
+		}	
+	
+	int installCnt;
+		public int getInstallCnt() {
+			return installCnt;
+		}
+		public void setInstallCnt(int installCnt) {
+			this.installCnt = installCnt;
+		}
 		
+
 	@AutowiredFromClient
 	public Session session;
-		
+	
+	@Autowired
+	public ProcessManagerRemote processManager;
+	
+	@Autowired
+	public InstanceViewContent instanceView;
+	
 	
 	public IApp findByVendor() throws Exception {
 		
@@ -218,7 +256,7 @@ public class App extends Database<IApp> implements IApp{
 		
 	}
 	
-	public void readyPublished() throws Exception {
+	public Object readyPublished() throws Exception {
 		
 		App selectedApp = new App();
 		
@@ -226,6 +264,8 @@ public class App extends Database<IApp> implements IApp{
 		selectedApp.databaseMe().setStatus(AppInformation.STATUS_PUBLISHED);
 		
 		flushDatabaseMe();
+		
+		return this.gomarketHome();
 		
 	}
 	
@@ -330,15 +370,51 @@ public class App extends Database<IApp> implements IApp{
 	
 	public void addApp()throws Exception {
 		
-		AppMapping addApp = new AppMapping();
+		App app = new App();
+		app.setAppId(this.getAppId());
+		app.setAppName(this.getAppName());
+		app.setVendorId(this.getVendorId());
+		app.setInstallCnt(this.getInstallCnt());
 		
-		addApp.setAppId(getAppId());
-		addApp.setAppName(getAppName());
-		addApp.setComCode(session.getCompany().getComCode());
-		addApp.setIsDeleted(false);
 		
-		if(addApp.findMe().size() == 0 )
-			addApp.createDatabaseMe();
+		AppInformation setAppInfo = new AppInformation();
+		
+		setAppInfo.getMetaworksContext().setWhen("view");
+		
+		setAppInfo.setListingId(this.getAppId());
+		setAppInfo.setListingName(this.getAppName());
+		setAppInfo.setSimpleOverview(this.getSimpleOverview());
+		setAppInfo.setFullOverview(this.getFullOverview());
+		setAppInfo.setPricing(this.getPricing());
+		setAppInfo.setFile(this.getExtfile());
+		setAppInfo.setLogoFile(this.getLogoFile());
+		setAppInfo.setCategory(this.getCategory());
+		
+		
+		AppAquisitionForm addApp = new AppAquisitionForm();
+		addApp.setApp(app);
+		addApp.setWriter(session.getUser());
+		addApp.setAppInfo(setAppInfo);
+
+		
+		String defId = "appAcquisition_001.process";
+		
+		ProcessMap goProcess = new ProcessMap();
+		goProcess.session = session;
+		goProcess.processManager = processManager;
+		goProcess.instanceView = instanceView;
+		goProcess.setDefId(defId);
+		
+		
+		// 프로세스 발행
+	    Long instId = Long.valueOf(goProcess.initializeProcess());
+	    
+	    // 프로세스 실행
+	    ResultPayload rp = new ResultPayload();
+	    rp.setProcessVariableChange(new KeyedParameter("requestAquisitionApp", addApp));
+	    
+	    //무조건 compleate
+	    processManager.executeProcessByWorkitem(instId.toString(), rp);
 		
 		
 	}

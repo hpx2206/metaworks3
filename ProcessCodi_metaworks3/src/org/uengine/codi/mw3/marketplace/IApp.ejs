@@ -34,7 +34,7 @@ var when = value.metaworksContext.when;
 	                    <td class="appBtnTd">
 	                    	<% if(value.status == 'Published') { %>
 	                    	
-								<div class="badge" style="float:none;margin-top:2px;background:#679BD1;padding:3px 8px; width:80px"><a href="#" onClick="<%=methods.addApp.caller()%>"> Add it now </a></div>
+								<div class="badge" style="float:none;margin-top:2px;background:#679BD1;padding:3px 8px; width:80px"><a onClick="<%=methods.addApp.caller()%>"> Add it now </a></div>
 							
 							<% } %>
 						</td>                 
@@ -125,20 +125,26 @@ var when = value.metaworksContext.when;
 								if(value.status == 'Published') {
 							%>
 							
-								<div class="badge" style="float:none;margin-top:2px;background:#679BD1;padding:3px 8px; width:80px"><a href="#" onClick="<%=methods.addApp.caller()%>"> Add it now </a></div>
+								<div class="badge" style="float:none;margin-top:2px;background:#679BD1;padding:3px 8px; width:80px"><a onClick="<%=methods.addApp.caller()%>"> Add it now </a></div>
 							
 							<%
-								}							
+								}else if(value.status == 'Approved'){
+							
+							%>
+									<div class="badge" style="float:none;margin-top:2px;background:#679BD1;padding:3px 8px; width:80px"><a onClick="<%=methods.readyPublished.caller()%>"> Ready for publish </a></div>
+								
+								<%
+								}
 							
 							}else if(when == 'myVendor'){
 							
 							%>
 							
-								<%if(value.status == 'Unpublished'){%>
-									<div class="badge" style="float:none;margin-top:2px;background:#679BD1;padding:3px 8px; width:80px"><a herf="#" onClick="<%=methods.readyPublished.caller()%>"> Ready for publish </a></div>
+								<%if(value.status == 'Approved'){%>
+									<div class="badge" style="float:none;margin-top:2px;background:#679BD1;padding:3px 8px; width:80px"><a onClick="<%=methods.readyPublished.caller()%>"> Ready for publish </a></div>
 								<%}%>
 								
-								<div class="badge" style="float:none;margin-top:2px;background:#679BD1;padding:3px 8px; width:80px"><a herf="#" onClick="<%=methods.editListing.caller()%>"> Edit Detail </a></div>
+								<div class="badge" style="float:none;margin-top:2px;background:#679BD1;padding:3px 8px; width:80px"><a onClick="<%=methods.editListing.caller()%>"> Edit Detail </a></div>
 						
 							<%
 							}

@@ -1,0 +1,25 @@
+
+
+<%
+if(value) {
+
+%>
+
+	
+	<h2> <%=mw3.localize('$Request.Approval')%> </h2>
+	<h4> <%=mw3.localize('$Request.Approval.Msg')%> </h4>
+	
+	
+	<div id="reqApp_Y_<%=objectId%>" style="float:left"> <%=mw3.localize('$Yes')%> </div>
+	<div> <%=fields.approval.here()%> </div>
+
+	
+	<div id="textArea_<%=objectId%>">
+		<h4> <%=mw3.localize('$Rejected.Reason')%> </h4>
+		<%=fields.rejectReason.here()%>
+	</div>
+	
+	<%
+}
+
+%>
