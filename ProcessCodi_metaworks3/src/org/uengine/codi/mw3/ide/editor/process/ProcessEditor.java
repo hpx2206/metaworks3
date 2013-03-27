@@ -33,12 +33,10 @@ public class ProcessEditor extends Editor {
 	
 	public Object save(){
 		try {
-			this.getProcessDesigner().save(this.getProcessDesigner().getAlias(), true);
+			this.getProcessDesigner().saveMe(this);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 		return null;
 	}
 }

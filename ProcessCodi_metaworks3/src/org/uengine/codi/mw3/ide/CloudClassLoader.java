@@ -53,14 +53,16 @@ public class CloudClassLoader {
 			classpath.add(classesFile.toURI().toURL());
 			
 			// lib for .jar file
-			File libFile = new File(this.getLibraryPath());		
-			for(String filename : libFile.list()){
-				if(filename.endsWith(".jar")){
-					File file = new File(libFile.getAbsolutePath() + File.separator + filename);
-					classpath.add(file.toURI().toURL());
+			File libFile = new File(this.getLibraryPath());	
+			if( libFile != null && libFile.list() != null){
+				for(String filename : libFile.list()){
+					if(filename.endsWith(".jar")){
+						File file = new File(libFile.getAbsolutePath() + File.separator + filename);
+						classpath.add(file.toURI().toURL());
+					}
 				}
 			}
-			
+				
 			URLClassLoader cl =  new URLClassLoader(classpath.toArray(new URL[classpath.size()]), null);
 			
 			this.setCl(cl);

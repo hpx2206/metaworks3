@@ -1,8 +1,10 @@
 package org.uengine.codi.mw3.webProcessDesigner;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -16,6 +18,7 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.CodiClassLoader;
+import org.uengine.codi.mw3.ide.editor.process.ProcessEditor;
 import org.uengine.codi.mw3.model.ContentWindow;
 import org.uengine.codi.mw3.model.Popup;
 import org.uengine.contexts.ComplexType;
@@ -278,6 +281,135 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 		defineTab.prcsValiablePanel.setPrcsValiables(prcsValiable);
 		
 		return defineTab.prcsValiablePanel;
+	}
+	public void saveMe(ProcessEditor processEditor) throws Exception{
+		String tempTitle = processEditor.getName();
+		String title = tempTitle.replace('.','@').split("@")[0];
+		
+		ArrayList<CanvasDTO> cells = new ArrayList<CanvasDTO>();
+		ProcessDefinition def = new ProcessDefinition();
+		if( cell != null){
+			Role[] roles = new Role[1];
+					// default role
+					Role initiator = new Role();
+					initiator.setName("Initiator");
+					roles[0] = initiator;
+			Activity[] ac = new Activity[0];
+			
+			def.setRoles(roles);
+			def.setChildActivities(ac);
+			// 변수정의
+			ProcessVariable pvs[] = makeProcessValiable();
+			if( pvs != null ){
+				def.setProcessVariables(pvs);
+			}
+			HashMap<String, CanvasDTO> canvasMap = new HashMap<String, CanvasDTO>();
+//			HashMap<String, Object> activityMap = new HashMap<String, Object>();
+			for(int i = 0; i < cell.length; i++){
+				CanvasDTO cv = cell[i];
+				cells.add(cv);
+				canvasMap.put(cv.getId(), cv);
+			}
+			setCanvasMap(canvasMap);
+			
+			Collection<CanvasDTO> ct = canvasMap.values();
+            Iterator<CanvasDTO> iterator = ct.iterator();
+            while (iterator.hasNext()) {
+				CanvasDTO cv = iterator.next();
+				
+				if( "GEOM".equalsIgnoreCase(cv.getShapeType()) ){
+					// 엑티비티 생성
+					GeomShape geom = new GeomShape(cv);
+					geom.setPvs(pvs);
+					if(cv.getClassname() != null && "org.uengine.kernel.HumanActivity".equals(cv.getClassname()) ){
+						HumanActivity activity = (HumanActivity)activityMap.get(cv.getId());
+						activity = (HumanActivity)geom.makeProcVal(activity);
+						if( cv.getParent() != null ){
+							String groupId = geom.getParent();
+							CanvasDTO groupCanvas = getCanvasMap().get(groupId);
+							if( "OG.shape.HorizontalLaneShape".equals(groupCanvas.getShapeId()) 
+									|| "OG.shape.VerticalLaneShape".equals(groupCanvas.getShapeId())){
+								Role role = (Role)getRoleMap().get(groupId);
+								activity.setRole(role);
+							}
+						}else{
+							// 만약 휴먼엑티비티에  role 이 셋팅이 안되어 있다면 default role 로 initator 로 셋팅을 해준다.(서브프로세스의 role셋팅을 위하여)
+							activity.setRole(initiator);
+						}
+					}
+				}else if( "GROUP".equalsIgnoreCase(cv.getShapeType()) ){
+					// 서브프로세스
+					if(cv.getClassname() != null && "org.uengine.kernel.SubProcessActivity".equals(cv.getClassname()) ){
+						SubProcessActivity activity = (SubProcessActivity)activityMap.get(cv.getId());
+						Role role = (Role)getRoleMap().get(cv.getParent());
+						
+						RoleParameterContext[] roleBindings = new RoleParameterContext[1];
+						roleBindings[0] = new RoleParameterContext();
+						roleBindings[0].setRole(role);
+						// 서브프로세스 안쪽의 role 은 무조건 initiator 로 통일 시킨다.
+						roleBindings[0].setArgument(initiator.getName());
+						activity.setRoleBindings(roleBindings);
+					}
+					
+				}else if( "EDGE".equalsIgnoreCase(cv.getShapeType()) ){
+					String formStr = cv.getFrom();
+					String toStr = cv.getTo();
+					String fromId = formStr.substring(0, formStr.indexOf("_TERMINAL"));
+					String toId = toStr.substring(0, toStr.indexOf("_TERMINAL"));
+					Activity fromAct = (Activity)activityMap.get(fromId);
+					Activity toAct = (Activity)activityMap.get(toId);
+					if( fromAct != null && toAct != null){
+						// 트렌지션 생성
+						Transition ts = new Transition(fromAct.getTracingTag()  , toAct.getTracingTag() );
+						// 컨디션 생성
+						if( this.getConditionMap().containsKey(cv.getId())){
+							ts.setTransitionId(cv.getId());
+							ts.setCondition(this.getConditionMap().get(cv.getId()));
+						}
+						
+						def.addTransition(ts);
+					}
+				}
+			}
+            
+			CanvasDTO jsonString = new CanvasDTO();
+			jsonString.setJsonString(graphString);
+			cells.add(jsonString);
+			 // def 에 Activity 셋팅
+			Collection<Object> coll = activityMap.values();
+	        Iterator<Object> iter = coll.iterator();
+	        while(iter.hasNext()){
+	        	Object act = iter.next();
+	        	if( act instanceof Activity){
+	        		def.addChildActivity((Activity)act);
+	        	}
+	        }
+	        // def 에 Role 셋팅
+	        Collection<Object> collRole = roleMap.values();
+	        Iterator<Object> iterRole = collRole.iterator();
+	        while(iterRole.hasNext()){
+	        	Object act = iterRole.next();
+	        	if( act instanceof Role){
+	        		def.addRole((Role)act);
+	        	}
+	        }
+			def.setExtendedAttribute( "cells", cells );
+			
+		}
+			def.setName(title);
+			FileOutputStream fos = null;
+			try{
+				File file = new File(processEditor.jbPath.getBasePath() + processEditor.getFilename());
+				fos = new FileOutputStream(file);
+				String definitionInString = (String)GlobalContext.serialize(def, ProcessDefinition.class);
+				ByteArrayInputStream bai = new ByteArrayInputStream(definitionInString.getBytes(GlobalContext.ENCODING));
+				UEngineUtil.copyStream(bai, fos);
+			} catch (Exception e) {
+				throw e;//e.printStackTrace();
+			} finally{
+				if(fos!=null)
+					fos.close();
+			}
 	}
 	
 	@ServiceMethod(callByContent=true)
