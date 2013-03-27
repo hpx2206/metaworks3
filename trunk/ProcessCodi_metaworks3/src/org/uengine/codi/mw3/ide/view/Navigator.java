@@ -1,5 +1,7 @@
 package org.uengine.codi.mw3.ide.view;
 
+import java.io.File;
+
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
@@ -37,7 +39,7 @@ public class Navigator implements CloudContent{
 		projectNode.setRoot(true);
 		projectNode.setFolder(true);
 		projectNode.setType(ResourceNode.TYPE_FOLDER);
-		projectNode.setId(sourceCodeBase);
+		projectNode.setId("");
 		projectNode.setName(projectName);
 		
 		ResourceTree resourceTree = new ResourceTree();
