@@ -42,12 +42,13 @@ org_uengine_codi_mw3_ide_editor_Editor.prototype = {
 		var faceHelper = this;
 		var objectId = faceHelper.objectId;
 		var object = mw3.objects[objectId];
-
+ 
 		faceHelper.editor = ace.edit(faceHelper.objectDivId);
 		faceHelper.editor.setTheme("ace/theme/eclipse");
 		
 		var JavaMode = require("ace/mode/" + faceHelper.object.type).Mode;
 		faceHelper.editor.getSession().setMode(new JavaMode());
+		
 		
 		if(!faceHelper.object.loaded){
 			faceHelper.object.content = mw3.call(objectId, 'load');

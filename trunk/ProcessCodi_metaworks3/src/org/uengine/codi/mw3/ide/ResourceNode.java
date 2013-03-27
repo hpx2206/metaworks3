@@ -83,7 +83,7 @@ public class ResourceNode extends TreeNode {
 		return new ToAppend(new CloudWindow("editor"), editor);
 	}
 	
-	@ServiceMethod(payload={"id"}, mouseBinding="right", target=ServiceMethodContext.TARGET_STICK)
+	@ServiceMethod(payload={"id", "name"}, mouseBinding="right", target=ServiceMethodContext.TARGET_STICK)
 	public Object[] showContextMenu() {
 		session.setClipboard(this);
 		
