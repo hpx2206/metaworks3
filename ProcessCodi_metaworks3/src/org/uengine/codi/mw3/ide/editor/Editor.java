@@ -3,16 +3,27 @@ package org.uengine.codi.mw3.ide.editor;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 import org.metaworks.ServiceMethodContext;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.common.MetaworksUtil;
+import org.uengine.codi.mw3.ide.CloudContent;
+import org.uengine.codi.mw3.ide.JavaBuildPath;
 import org.uengine.codi.mw3.ide.editor.java.JavaParser;
 
-public class Editor {
-
+public class Editor implements CloudContent {
+	
+	public final static String TYPE_RESOURCE = "resource";
+	public final static String TYPE_FILE = "file";
+	
+	@AutowiredFromClient
+	public JavaBuildPath jbPath;
+	
 	String filename;
 		@Id
 		public String getFilename() {
@@ -29,6 +40,14 @@ public class Editor {
 		}
 		public void setName(String name) {
 			this.name = name;
+		}
+
+	String type;
+		public String getType() {
+			return type;
+		}
+		public void setType(String type) {
+			this.type = type;
 		}
 
 	String content;
@@ -48,33 +67,90 @@ public class Editor {
 		}
 		
 	public Editor(){
-		
+		this(null);
 	}
 	
 	public Editor(String filename){
-		this.setFilename(filename);
-		
-		if(filename.lastIndexOf(File.separatorChar) > -1){
-			this.setName(filename.substring(filename.lastIndexOf(File.separatorChar)+1));
-		}
+		this(filename, TYPE_FILE);
 	}
 	
-	@ServiceMethod(target=ServiceMethodContext.TARGET_NONE)
-	public String load() {
-		ByteArrayOutputStream bao = new ByteArrayOutputStream();
-		FileInputStream is;
+	public Editor(String filename, String type){
+		if(filename == null)
+			return;
 		
-		File file = new File(this.getFilename());
-		if(file.exists()){
+		char separatorChar = File.separatorChar;
+
+		System.out.println("filename : " + filename);
+		
+		this.setFilename(filename);
+		this.setType(type);
+		
+		if(filename.lastIndexOf(separatorChar) > -1){
+			this.setName(filename.substring(filename.lastIndexOf(separatorChar)+1));
+		}		
+	}
+	
+	@ServiceMethod(callByContent=true, except="content", target=ServiceMethodContext.TARGET_NONE)
+	public String load() {
+		InputStream is = null;
+		ByteArrayOutputStream bao = null;
+		
+		try {
 			bao = new ByteArrayOutputStream();
-			try {
-				is = new FileInputStream(file);
-				MetaworksUtil.copyStream(is, bao);
+			
+			//if(TYPE_FILE.equals(this.getType())){
+				File file = new File(this.getFilename());
+				if(file.exists()){
+					
+					try {
+						is = new FileInputStream(file);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}			
+				}
+			/*
+			}else{
 				
-				this.setContent(bao.toString());
-			} catch (Exception e) {
-				e.printStackTrace();
-			}			
+				CloudClassLoader ccl = new CloudClassLoader(jbPath.getLibraryPath(), jbPath.getDefaultBuildOutputPath());
+				ccl.load();
+				System.out.println("change : " + ccl.getSourceResourceName(this.getFilename()));
+				
+				try {
+					is = ccl.getCl().getResourceAsStream(ccl.getSourceResourceName(this.getFilename()));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			*/
+				
+			MetaworksUtil.copyStream(is, bao);
+			
+			this.setContent(bao.toString());
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			if(is != null){
+				try {
+					is.close();
+					is = null;
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+				
+			if(bao != null){
+				try {
+					bao.close();
+					bao = null;
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
 		}
 		
 		return this.getContent();

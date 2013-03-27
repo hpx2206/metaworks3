@@ -42,14 +42,15 @@ org_uengine_codi_mw3_ide_editor_Editor.prototype = {
 		var objectId = faceHelper.objectId;
 		var object = mw3.objects[objectId];
 
-		var content = mw3.call(objectId, 'load');
-		faceHelper.objectDiv.html(content);
-		
 		faceHelper.editor = ace.edit(faceHelper.objectDivId);
 		faceHelper.editor.setTheme("ace/theme/eclipse");
 
 		var JavaMode = require("ace/mode/java").Mode;
 		faceHelper.editor.getSession().setMode(new JavaMode());
+
+		var content = mw3.call(objectId, 'load');
+		faceHelper.editor.getSession().setValue(content);
+
 		
 	    faceHelper.editor.getSession().on('change', function(event){
 	    	try{
@@ -591,17 +592,17 @@ org_uengine_codi_mw3_ide_editor_Editor.prototype = {
     	}		
 	},
 	
-	getJavaBuildPath : function(){
+	getContentLibrary : function(){
 		var cloudIDE = mw3.getAutowiredObject('org.uengine.codi.mw3.ide.CloudIDE');
 		
-		return cloudIDE.javaBuildPath;
+		return cloudIDE.contentLibrary;
 		
 	},
 	addPackage : function(packageList, command, endChar){
-		var jbPath = this.getJavaBuildPath();
+		var library = this.getContentLibrary();
 		
-		if(jbPath){
-			for(var packageName in jbPath.packageMap){
+		if(library){
+			for(var packageName in library.packageMap){
 				if(packageName.startsWith(command)){
 					packageList.push(packageName + endChar + "/" + packageName + "/package/");
 				}
@@ -610,10 +611,10 @@ org_uengine_codi_mw3_ide_editor_Editor.prototype = {
 	},
 	
 	addPackageClass : function(classList, expression){
-		var jbPath = this.getJavaBuildPath();
+		var contentLibrary = this.getContentLibrary();
 		
-		if(jbPath){
-			var classFromPackage = jbPath.packageMap[expression];
+		if(contentLibrary){
+			var classFromPackage = contentLibrary.packageMap[expression];
 			
 			if(classFromPackage){
 				for(var i=0; i<classFromPackage.length; i++){
@@ -624,10 +625,10 @@ org_uengine_codi_mw3_ide_editor_Editor.prototype = {
 	},
 	
 	addPackageStartWith : function(packageList, expression){
-		var jbPath = this.getJavaBuildPath();
+		var contentLibrary = this.getContentLibrary();
 		
-		if(jbPath){
-			for(var packageName in jbPath.packageMap){
+		if(contentLibrary){
+			for(var packageName in contentLibrary.packageMap){
 				if(packageName.toLowerCase().startsWith(expression))
 					packageList.push(packageName + "//package/");
 			}			
@@ -635,12 +636,12 @@ org_uengine_codi_mw3_ide_editor_Editor.prototype = {
 	},
 	
 	addClassesStartWith : function(classList, expression){
-		var jbPath = this.getJavaBuildPath();
+		var contentLibrary = this.getContentLibrary();
 		
-		if(jbPath){
-			for(var className in jbPath.classMap){
+		if(contentLibrary){
+			for(var className in contentLibrary.classMap){
 				if(className.toLowerCase().startsWith(expression)){
-					var packageFromClass = jbPath.classMap[className];
+					var packageFromClass = contentLibrary.classMap[className];
 					
 					for(var i=0; i<packageFromClass.length; i++){
 						classList.push(className + '/' + packageFromClass[i] + '/class/');	
@@ -651,12 +652,12 @@ org_uengine_codi_mw3_ide_editor_Editor.prototype = {
 	},
 	
 	addAnnotation : function(classList, expression){
-		var jbPath = this.getJavaBuildPath();
+		var contentLibrary = this.getContentLibrary();
 		
-		if(jbPath){
-			for(var className in jbPath.annotationMap){
+		if(contentLibrary){
+			for(var className in contentLibrary.annotationMap){
 				if(expression.trim() == '' || className.toLowerCase().startsWith(expression)){
-					var annotationPackageFromClass = jbPath.classMap[className];
+					var annotationPackageFromClass = contentLibrary.classMap[className];
 					
 					for(var i=0; i<annotationPackageFromClass.length; i++){
 						classList.push(className + '/' + annotationPackageFromClass[i] + '/class/');	
