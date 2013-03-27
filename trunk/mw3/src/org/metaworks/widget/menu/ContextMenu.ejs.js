@@ -20,8 +20,5 @@ var org_metaworks_widget_menu_ContextMenu = function(objectId, className){
 }
 
 org_metaworks_widget_menu_ContextMenu.prototype.select = function(value, label){
-	
-	
-	
 	mw3.call(this.objectId, methodName);
 }	
