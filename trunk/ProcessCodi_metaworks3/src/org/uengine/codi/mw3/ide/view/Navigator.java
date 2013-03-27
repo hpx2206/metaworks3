@@ -1,11 +1,24 @@
 package org.uengine.codi.mw3.ide.view;
 
 import org.metaworks.annotation.Face;
+import org.metaworks.annotation.Hidden;
+import org.metaworks.annotation.Id;
+import org.uengine.codi.mw3.ide.CloudContent;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.ResourceTree;
 
 @Face(displayName="$Navigator", ejsPath="dwr/metaworks/genericfaces/CleanObjectFace.ejs")
-public class Navigator {
+public class Navigator implements CloudContent{
+
+	String id;
+		@Id
+		@Hidden
+		public String getId() {
+			return id;
+		}
+		public void setId(String id) {
+			this.id = id;
+		}
 
 	ResourceTree resourceTree;
 		public ResourceTree getResourceTree() {
@@ -15,6 +28,10 @@ public class Navigator {
 			this.resourceTree = resourceTree;
 		}
 		
+	public Navigator(){
+		this.setId("view_navigator");
+	}
+	
 	public void load(String sourceCodeBase, String projectName){
 		ResourceNode projectNode = new ResourceNode();
 		projectNode.setRoot(true);
