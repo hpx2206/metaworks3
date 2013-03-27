@@ -381,7 +381,8 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 			var propertiesWindow = {
 				__className : 'org.uengine.codi.mw3.webProcessDesigner.PropertiesWindow',
 				open : true,
-				width : 800,
+				width : 860,
+				height : 600,
 				panel : $(this).data('activity'),
 				metaworksContext : metaworksContext,
 				id : $(this).attr('id')
