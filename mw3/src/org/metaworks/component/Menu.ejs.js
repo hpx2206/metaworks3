@@ -46,6 +46,13 @@ var org_metaworks_component_Menu = function(objectId, className){
 		// blur
 		this.objectDiv.removeClass('c9-menu-btnDown');
 		this.objectDiv.children('.menu').hide();
+		
+		var parent = this.objectDiv.parentsUntil('.menu');
+		if(parent.length > 0){
+			var parentObjectId = parent.attr('objectId');
+			
+			mw3.getFaceHelper(parentObjectId).click();
+		}
 	};
 	
 	this.action = function(menuId){

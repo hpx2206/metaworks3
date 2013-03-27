@@ -24,7 +24,7 @@ var org_metaworks_component_MenuItem = function(objectId, className){
 						'position' : 'relative'});
 	
 	// add event mouse click
-	$(this.objectDiv).bind('click', {objectId : this.objectId}, function(event){
+	$(this.objectDiv).bind('mousedown', {objectId : this.objectId}, function(event){
 		mw3.getFaceHelper(event.data.objectId).click();
 	});		
 	
@@ -47,11 +47,11 @@ org_metaworks_component_MenuItem.prototype = {
 			return true;
 		}
 		
-		if(event.stopPropagation){
+/*		if(event.stopPropagation){
 			event.stopPropagation();
 		}else if(window.event){
 			window.event.cancelBubble = true;
-		}
+		}*/
 		
 		var parent = this.objectDiv.parent('.menu');
 		
