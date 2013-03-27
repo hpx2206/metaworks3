@@ -17,6 +17,14 @@ public class AquisitionSuccessForm implements ITool{
 			this.app = app;
 		}
 
+	String url;
+		public String getUrl() {
+			return url;
+		}
+		public void setUrl(String url) {
+			this.url = url;
+		}
+
 		
 	@Override
 	public void onLoad() throws Exception {
@@ -37,7 +45,7 @@ public class AquisitionSuccessForm implements ITool{
 		App uploadApp = new App();
 		uploadApp.setAppId(app.getAppId());
 		uploadApp.databaseMe().setInstallCnt(app.getInstallCnt() + 1);
-		
+		uploadApp.databaseMe().setUrl(this.getUrl());
 		
 		AppMapping addApp = new AppMapping();
 		

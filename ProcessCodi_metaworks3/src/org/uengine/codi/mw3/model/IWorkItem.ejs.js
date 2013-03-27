@@ -26,15 +26,15 @@ var org_uengine_codi_mw3_model_IWorkItem = function(objectId, className){
 	//if(workItem.type == null && (workItem.workItemHandler == null || workItem.workItemHandler.instanceId==null) && workItem.status == 'NEW' && workItem.tool != 'formApprovalHandler'){ //means we need to load workItemHandler	
 	if(workItem.type == null && (workItem.workItemHandler == null || workItem.workItemHandler.instanceId==null) && workItem.tool != 'formApprovalHandler'){ //means we need to load workItemHandler
 		workItem.detail();
-	}
-
-	if(workItem.type == 'memo' && workItem.extFile!=null && workItem.memo.contents=="...loading..." && !workItem.contentLoaded){
+	}else if(workItem.type == 'memo' && workItem.extFile!=null && workItem.memo.contents=="...loading..." && !workItem.contentLoaded){
+		this.extFile = workItem.extFile;
+		console.log("loadContent" + objectId);
+		//workItem.loadContents();
+		mw3.call(this.objectId, 'loadContents');
+		
+	}else if(workItem.type == 'src' && workItem.extFile!=null && !workItem.contentLoaded){
 		workItem.loadContents();
 	}
-
-	if(workItem.type == 'src' && workItem.extFile!=null && !workItem.contentLoaded){
-		workItem.loadContents();
-	};
 };
 
 org_uengine_codi_mw3_model_IWorkItem.prototype = {

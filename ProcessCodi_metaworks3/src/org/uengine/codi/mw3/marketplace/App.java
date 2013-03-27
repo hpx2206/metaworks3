@@ -136,6 +136,15 @@ public class App extends Database<IApp> implements IApp{
 			this.isDeleted = isDeleted;
 		}
 	
+	String url;
+		public String getUrl() {
+			return url;
+		}
+		public void setUrl(String url) {
+			this.url = url;
+		}
+
+		
 	ICategory category;
 		public ICategory getCategory() {
 			return category;

@@ -10,13 +10,13 @@
   <simulationResources/>
   <revisionInfoList>
     <org.uengine.kernel.RevisionInfo>
-      <version>15</version>
+      <version>17</version>
     </org.uengine.kernel.RevisionInfo>
   </revisionInfoList>
   <archive>true</archive>
   <uEngineVersion>0</uEngineVersion>
   <id>appAcquisition_001.process</id>
-  <version>15</version>
+  <version>17</version>
   <belongingDefinitionId>D:/codi/codebase/main/src/appAcquisition_001.process</belongingDefinitionId>
   <isAdhoc>true</isAdhoc>
   <initiateByFirstWorkitem>true</initiateByFirstWorkitem>
@@ -24,7 +24,7 @@
   <workListFields/>
   <isVolatile>false</isVolatile>
   <modifiedDate>
-    <time>1364255776493</time>
+    <time>1364374072474</time>
   </modifiedDate>
   <activitySequence>11</activitySequence>
   <alias>appAcquisition_001.process</alias>
@@ -113,6 +113,15 @@
       <defaultValue class="org.uengine.contexts.ComplexType">
         <typeId>[org/uengine/codi/mw3/marketplace/model/AquisitionSuccessForm.java]</typeId>
       </defaultValue>
+      <isVolatile>false</isVolatile>
+      <isDatabaseSynchronized>false</isDatabaseSynchronized>
+      <databaseSynchronizationOption/>
+    </org.uengine.kernel.ProcessVariable>
+    <org.uengine.kernel.ProcessVariable>
+      <name>url</name>
+      <displayName/>
+      <type>java.lang.String</type>
+      <askWhenInit>false</askWhenInit>
       <isVolatile>false</isVolatile>
       <isDatabaseSynchronized>false</isDatabaseSynchronized>
       <databaseSynchronizationOption/>
@@ -210,7 +219,7 @@
       <role>
         <name>SystemAdmin</name>
         <roleResolutionContext class="com.defaultcompany.organization.DefaultCompanyRoleResolutionContext">
-          <roleId>SAdmin</roleId>
+          <roleId>SystemAdmin</roleId>
         </roleResolutionContext>
         <dispatchingOption>0</dispatchingOption>
         <serviceType/>
@@ -270,19 +279,6 @@
           <org.uengine.kernel.MappingElement>
             <isKey>false</isKey>
             <argument>
-              <text>rejectReason</text>
-            </argument>
-            <variable>
-              <name>approvalPage.rejectReason</name>
-              <displayName/>
-              <askWhenInit>false</askWhenInit>
-              <isVolatile>false</isVolatile>
-              <isDatabaseSynchronized>false</isDatabaseSynchronized>
-            </variable>
-          </org.uengine.kernel.MappingElement>
-          <org.uengine.kernel.MappingElement>
-            <isKey>false</isKey>
-            <argument>
               <text>app</text>
             </argument>
             <variable>
@@ -296,10 +292,36 @@
           <org.uengine.kernel.MappingElement>
             <isKey>false</isKey>
             <argument>
+              <text>url</text>
+            </argument>
+            <variable>
+              <name>approvalPage.url</name>
+              <displayName/>
+              <askWhenInit>false</askWhenInit>
+              <isVolatile>false</isVolatile>
+              <isDatabaseSynchronized>false</isDatabaseSynchronized>
+            </variable>
+          </org.uengine.kernel.MappingElement>
+          <org.uengine.kernel.MappingElement>
+            <isKey>false</isKey>
+            <argument>
               <text>approval</text>
             </argument>
             <variable>
               <name>approvalPage.approval</name>
+              <displayName/>
+              <askWhenInit>false</askWhenInit>
+              <isVolatile>false</isVolatile>
+              <isDatabaseSynchronized>false</isDatabaseSynchronized>
+            </variable>
+          </org.uengine.kernel.MappingElement>
+          <org.uengine.kernel.MappingElement>
+            <isKey>false</isKey>
+            <argument>
+              <text>rejectReason</text>
+            </argument>
+            <variable>
+              <name>approvalPage.rejectReason</name>
               <displayName/>
               <askWhenInit>false</askWhenInit>
               <isVolatile>false</isVolatile>
@@ -359,6 +381,19 @@
             <org.uengine.kernel.MappingActivity>
               <mappingContext>
                 <mappingElements>
+                  <org.uengine.kernel.MappingElement>
+                    <isKey>false</isKey>
+                    <argument>
+                      <text>successForm.url</text>
+                    </argument>
+                    <variable>
+                      <name>url</name>
+                      <displayName/>
+                      <askWhenInit>false</askWhenInit>
+                      <isVolatile>false</isVolatile>
+                      <isDatabaseSynchronized>false</isDatabaseSynchronized>
+                    </variable>
+                  </org.uengine.kernel.MappingElement>
                   <org.uengine.kernel.MappingElement>
                     <isKey>false</isKey>
                     <argument>
@@ -454,8 +489,20 @@
                   <org.uengine.kernel.MappingElement>
                     <isKey>false</isKey>
                     <argument>
+                      <text>rejectPage.app</text>
+                    </argument>
+                    <variable>
+                      <name>app</name>
+                      <displayName/>
+                      <askWhenInit>false</askWhenInit>
+                      <isVolatile>false</isVolatile>
+                      <isDatabaseSynchronized>false</isDatabaseSynchronized>
+                    </variable>
+                  </org.uengine.kernel.MappingElement>
+                  <org.uengine.kernel.MappingElement>
+                    <isKey>false</isKey>
+                    <argument>
                       <text>rejectPage.rejectReason</text>
-                      <localedTexts/>
                     </argument>
                     <variable>
                       <name>rejectReason</name>

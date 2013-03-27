@@ -732,3 +732,5 @@ create table APPMAPPING(
 -- 2013.03.27
 alter table app modify simpleoverview varchar(1000);
 alter table app modify fulloverview varchar(5000);
+
+alter table app add url varchar(200);

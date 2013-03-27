@@ -4,7 +4,6 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.uengine.codi.ITool;
 import org.uengine.codi.mw3.marketplace.IApp;
-import org.uengine.codi.mw3.marketplace.IAppMapping;
 import org.uengine.codi.mw3.model.Session;
 
 public class AquisitionApprovalForm implements ITool{
@@ -34,7 +33,15 @@ public class AquisitionApprovalForm implements ITool{
 			this.app = app;
 		}
 
+	String url;
+		public String getUrl() {
+			return url;
+		}
+		public void setUrl(String url) {
+			this.url = url;
+		}
 		
+
 	@AutowiredFromClient
 	public Session session;
 	

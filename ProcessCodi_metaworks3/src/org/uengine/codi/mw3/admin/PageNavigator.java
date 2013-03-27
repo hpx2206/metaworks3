@@ -1,7 +1,5 @@
 package org.uengine.codi.mw3.admin;
 
-import java.lang.reflect.Method;
-
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
@@ -10,10 +8,13 @@ import org.metaworks.widget.layout.Layout;
 import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.knowledge.Knowledge;
 import org.uengine.codi.mw3.marketplace.Marketplace;
+import org.uengine.codi.mw3.marketplace.MarketplaceTopPanel;
 import org.uengine.codi.mw3.model.Main;
 import org.uengine.codi.mw3.model.MainSNS;
 import org.uengine.codi.mw3.model.PinterestMain;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.codi.mw3.tadpole.TadPole;
+import org.uengine.codi.mw3.widget.IFrame;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.processmarket.Market;
 
@@ -88,43 +89,13 @@ public class PageNavigator{
 	}
 	
 	@ServiceMethod(callByContent=true)
-	public void goTadPole() throws Exception {
+	public MainPanel goTadPole() throws Exception {
 		
-		String host = GlobalContext.getPropertyString("pole.server.host");
-		String port = GlobalContext.getPropertyString("pole.server.port");
-		String uri  = GlobalContext.getPropertyString("pole.call.uri");
-
-		String url = "http://" + host + ":" + port + uri;
+		TadPole tadPole = new TadPole();
+		tadPole.session = session;
+		tadPole.load();
 		
-        String os = System.getProperty("os.name");
-        Runtime runtime = Runtime.getRuntime();
- 
-        try {
-        	
-        	// Block for Windows Platform
-        	if (os.startsWith("Windows")) {
-        		
-        		String cmd = "rundll32 url.dll,FileProtocolHandler " + url;
-        		Process p = runtime.exec(cmd);
-        	}
-        	
-        	// Block for Mac OS
-        	else if (os.startsWith("Mac OS")) {
-        		
-        		Class fileMgr = Class.forName("com.apple.eio.FileManager");
-        		Method openURL = fileMgr.getDeclaredMethod("openURL", new Class[] { String.class });
-
-        		openURL.invoke(null, new Object[] { url });
-        		
-        	}
-        	
-        } catch (Exception x) {
-        	
-        	System.err.println("Exception occurd while invoking Browser!");
-        	x.printStackTrace();
-        	
-        }
-		
+		return new MainPanel(tadPole);
 	}
 	
 

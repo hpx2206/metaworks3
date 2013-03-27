@@ -56,14 +56,15 @@ public interface IApp extends IDAO{
 	public String getVendorId();
 	public void setVendorId(String vendorId);
 
-
 	public boolean isDeleted();
 	public void setIsDeleted(boolean isDeleted);
 	
 	public int getInstallCnt();
 	public void setInstallCnt(int installCnt);
 	
-		
+	public String getUrl();
+	public void setUrl(String url);
+	
 	@ORMapping(
 		databaseFields = {"logoContent", "logoFileName"}, 
 		objectFields = {"uploadedPath", "filename"}
