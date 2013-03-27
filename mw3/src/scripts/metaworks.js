@@ -2040,7 +2040,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
         				//$('body').append("<div id='" + mw3.popupDivId + "' class='target_popup' style='z-index:10;position:absolute; top:50px; left:10px'></div>");
         				$('body').append("<div id='" + mw3.popupDivId + "' class='target_popup' style='z-index:10;position:absolute; top:0px; left:0px'></div>");
         				
-        				$('body').one('click', {popupDivId: mw3.popupDivId}, function(event){$('#' + event.data.popupDivId).remove();});
+        				$('body').one('mousedown', {popupDivId: mw3.popupDivId}, function(event){$('#' + event.data.popupDivId).remove();});
         				
         				mw3.locateObject(result, null, '#' + mw3.popupDivId).targetDivId;
         				
@@ -2061,7 +2061,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 		    			
         				$('body').append("<div id='" + mw3.popupDivId + "' class='target_stick' style='z-index:10;position:absolute; top:" + mw3.mouseY + "px; left:" + mw3.mouseX + "px'></div>");
         				
-        				$('body').one('click', {popupDivId: mw3.popupDivId}, function(event){$('#' + event.data.popupDivId).remove();});
+        				$('body').one('mousedown', {popupDivId: mw3.popupDivId}, function(event){$('#' + event.data.popupDivId).remove();});
         				
         				mw3.locateObject(result, null, '#' + mw3.popupDivId);        				
 
@@ -2343,23 +2343,40 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 							
 							if(autowiredSelect != null && autowiredSelect.length > 0){
 							     for(var i in this.objects){
-							         if(this.objects[i] && this.objects[i].__className == autowiredClassName){
-							        	var isSelect = false;
-							        	
-							        	with(object){
-							        		with(this.objects[i])
-					    						isSelect = eval(autowiredSelect);
-							        	}
+							    	 
+							    	 if(this.objects[i] && this.objects[i].__className){
+							    		 var sameClass = false;
+								    	 var autowiredObjectMetadata = this.getMetadata(this.objects[i].__className);
+	 							    	 
+								    	 for(var j=0; j<autowiredObjectMetadata.superClasses.length; j++){
+								    		 if(autowiredObjectMetadata.superClasses[j] == autowiredClassName){
+								    			 console.log('super : ' + autowiredObjectMetadata.superClasses[j]);
+								    			 sameClass = true;
+								    			 
+								    			 break;
+								    		 }
+								    	 }
+						    			 
+						    			 if(sameClass){
+							    			 var isSelect = false;
+							    			 with(object){
+							    				 with(this.objects[i])
+							    				 	isSelect = eval(autowiredSelect);
+							    			 }
 
-					    				if(isSelect){
-					    					autowiredObjects[fieldName] = this.objects[i];
-					    					
-					    					break;
-					    				}
-							         }
+							    			 if(isSelect){
+							    				 autowiredObjects[fieldName] = this.getObject(i);
+
+							    				 break;
+							    			 }
+						    			 }
+							    	 }
 							     }
 							}else{
 								autowiredObjects[fieldName] = this.getAutowiredObject(autowiredClassName);	
+								
+								if(autowiredObjects[fieldName] && autowiredObjects[fieldName].__objectId)
+									autowiredObjects[fieldName] = this.getObject(autowiredObjects[fieldName].__objectId);
 							}
 						}
 					}
