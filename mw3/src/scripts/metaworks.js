@@ -2346,8 +2346,10 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 							         if(this.objects[i] && this.objects[i].__className == autowiredClassName){
 							        	var isSelect = false;
 							        	
-					    				with(this.objects[i])
-					    					isSelect = eval(autowiredSelect);
+							        	with(object){
+							        		with(this.objects[i])
+					    						isSelect = eval(autowiredSelect);
+							        	}
 
 					    				if(isSelect){
 					    					autowiredObjects[fieldName] = this.objects[i];
@@ -3009,7 +3011,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 						var fieldDescriptor = objectMetadata.fieldDescriptors[i];
 						if(fieldDescriptor.attributes && fieldDescriptor.attributes['autowiredtoclient']){ //means this field never have change to registered or autowired since it is not called by ObjectFace.ejs or custom faces.
 							var fieldValue = value[fieldDescriptor.name];
-
+							
 							if(fieldValue && fieldValue.__className){
 								var objectMetadataFD = this.getMetadata(fieldValue.__className); 
 								
