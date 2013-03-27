@@ -23,7 +23,8 @@ public class SuccessForm implements ITool{
 		public void setApp(IApp app) {
 			this.app = app;
 		}
-
+	
+		
 	@Override
 	public void onLoad() throws Exception {
 		
@@ -43,6 +44,7 @@ public class SuccessForm implements ITool{
 		App uploadApp = new App();
 		uploadApp.setAppId(this.getApp().getAppId());
 		uploadApp.databaseMe().setStatus(AppInformation.STATUS_APPROVED);
+		
 		
 	}
 
