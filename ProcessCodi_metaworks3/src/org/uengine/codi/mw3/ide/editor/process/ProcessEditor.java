@@ -32,7 +32,12 @@ public class ProcessEditor extends Editor {
 	}
 	
 	public Object save(){
-		System.out.println("save");
+		try {
+			this.getProcessDesigner().save(this.getProcessDesigner().getAlias(), true);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		return null;
 	}
