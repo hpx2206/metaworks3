@@ -84,6 +84,16 @@ public class PageNavigator {
 		return new MainPanel(marketplace);
 	}
 	
+	@ServiceMethod(callByContent=true, inContextMenu=true)
+	public MainPanel goTadPole() throws Exception {
+		
+		Marketplace marketplace = new Marketplace();
+		marketplace.session = session;
+		marketplace.load();
+		
+		return new MainPanel(marketplace);
+	}
+	
 
 	@ServiceMethod(callByContent=true)
 	@Test(scenario="first", starter=true, instruction="<br><br><br><br><br><br>R&D 지식모드 (Knowledge Mode) 로 넘어갑니다..", next="autowiredObject.org.uengine.codi.mw3.knowledge.WfNode.add()")	

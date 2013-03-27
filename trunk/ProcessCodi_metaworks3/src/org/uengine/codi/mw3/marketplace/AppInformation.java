@@ -221,7 +221,7 @@ public class AppInformation implements ContextAware, ITool {
 	}
 	
 	@ServiceMethod(callByContent = true, when="edit")
-	public void edit() throws Exception {
+	public Object edit() throws Exception {
 
 		if (getFile() == null || getFile().getFileTransfer() == null || getFile().getFileTransfer().getFilename() == null || getFile().getFilename() == null)
 			throw new MetaworksException("$YouMustAttachItemFile");
@@ -260,6 +260,11 @@ public class AppInformation implements ContextAware, ITool {
 		listing.setCategory(category);
 		
 		listing.syncToDatabaseMe();
+		
+		Marketplace goVendorPage = new Marketplace();
+		goVendorPage.session = session;
+		
+		return new Refresh(goVendorPage.showMyVendor(), true);
 
 	}
 	
