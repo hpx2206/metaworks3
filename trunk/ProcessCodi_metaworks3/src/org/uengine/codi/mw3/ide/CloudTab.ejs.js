@@ -9,3 +9,16 @@ var org_uengine_codi_mw3_ide_CloudTab = function(objectId, className){
 	if(this.object == null)
 		return true;
 };
+
+org_uengine_codi_mw3_ide_CloudTab.prototype = {
+	remover : function(removerObject){
+		this.remove();
+	},
+	remove : function(){
+		this.objectDiv.trigger('removetab');
+	},
+	
+	select : function(){
+		this.objectDiv.trigger('selecttab');
+	}
+};
