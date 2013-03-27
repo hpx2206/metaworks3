@@ -87,15 +87,7 @@ org_metaworks_component_TreeNode.prototype = {
 		}
 		if(appendobject != null && appendobject.length > 0){
 			for(var i=0; i<appendobject.length; i++){
-				var html = mw3.locateObject(appendobject[i], null);
-				
-				var appendDiv = $('<u></u>').addClass('last').css({'display': 'block', 'height': 'auto', 'overflow': 'visible'});
-				
-				if(this.object.root)
-					appendDiv.addClass('root');
-				
-				this.objectDiv.append(appendDiv);
-				this.objectDiv.children('u:last').append(html);
+				$('<div>').appendTo(this.objectDiv.children('u').show()).html(mw3.locateObject(appendobject[i], null));
 				
 				this.push(appendobject[i]);				
 				
