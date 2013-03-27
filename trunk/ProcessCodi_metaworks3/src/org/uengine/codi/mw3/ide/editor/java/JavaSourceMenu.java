@@ -32,7 +32,7 @@ public class JavaSourceMenu extends Menu {
 			genGNS.load();
 			
 			if(genGNS.getFieldTree().getNode().getChild().size() > 0)
-				return new ModalWindow(genGNS);
+				return new ModalWindow(genGNS, 600, 0, "Generate Getters And Setters");
 			else
 				throw new MetaworksException("The operation is not applicable to the current selection. Select a field which is not declared as type variable or type the declares such fields."); 
 		}else{
