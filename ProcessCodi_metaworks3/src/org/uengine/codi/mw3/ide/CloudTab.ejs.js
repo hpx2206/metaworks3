@@ -15,6 +15,8 @@ org_uengine_codi_mw3_ide_CloudTab.prototype = {
 		this.remove();
 	},
 	remove : function(){
+		console.log('remove');
+		
 		this.objectDiv.trigger('removetab');
 	},
 	

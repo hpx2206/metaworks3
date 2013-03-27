@@ -113,6 +113,7 @@ public class NewClass extends Templete {
 			node.setType(TreeNode.TYPE_FILE_TEXT);
 			
 			JavaCodeEditor editor = new JavaCodeEditor();
+			editor.jbPath = jbPath;
 			editor.setFilename(jbPath.getSrcPath() + File.separatorChar + this.getPackageName() + File.separatorChar + this.getName());
 			editor.setName(this.getName());
 			editor.setLoaded(true);

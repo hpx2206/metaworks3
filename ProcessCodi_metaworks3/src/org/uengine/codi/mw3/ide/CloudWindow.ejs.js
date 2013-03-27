@@ -28,6 +28,8 @@ org_uengine_codi_mw3_ide_CloudWindow.prototype = {
 		
 		this.objectDiv.find('.cloudTab:first').unbind();
 		this.objectDiv.find('.cloudTab').bind('removetab', function(){
+			console.log('removetab');
+			
 			var id = $(this).attr('id');
 			
 			mw3.getFaceHelper(objectId).remove(id.substring(id.indexOf('_')+1));
@@ -105,15 +107,29 @@ org_uengine_codi_mw3_ide_CloudWindow.prototype = {
 	},
 	
 	remove : function(id){
-		var tabDivObj = $('#top_' + id);
+		console.log(id);
 		
+		var tabDivObj = $('#top_' + id).children(':first');
 		
-		var tab = mw3.getAutowiredObject('org.uengine.codi.mw3.ide.CloudTab@'+id, true);
-		if(tab)
-			mw3.removeObject(tab.__objectId);
-		
-		var content = mw3.getAutowiredObject('org.uengine.codi.mw3.ide.CloudContent@'+id, true);
-		if(content)
-			mw3.removeObject(content.__objectId);
+		if(tabDivObj){
+			var tabObjectId = tabDivObj.attr('objectId');
+			var tabObject = mw3.getObject(tabObjectId);
+			
+			var tabMetadata = mw3.getMetadata(tabObject.__className);
+			
+			if(tabMetadata.keyFieldDescriptor){
+				tabId = tabObject[tabMetadata.keyFieldDescriptor.name];
+			}
+			
+			var tab = mw3.getAutowiredObject('org.uengine.codi.mw3.ide.CloudTab@'+tabId, true);
+			
+			if(tab)
+				mw3.removeObject(tab.__objectId);
+			
+			var content = mw3.getAutowiredObject('org.uengine.codi.mw3.ide.CloudContent@'+tabId, true);
+			if(content)
+				mw3.removeObject(content.__objectId);
+			
+		}
 	}
 };

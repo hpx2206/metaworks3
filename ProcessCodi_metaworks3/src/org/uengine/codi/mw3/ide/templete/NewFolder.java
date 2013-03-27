@@ -11,6 +11,7 @@ import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.TreeNode;
 import org.metaworks.widget.ModalWindow;
+import org.uengine.codi.mw3.ide.JavaBuildPath;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.Templete;
 import org.uengine.codi.mw3.model.Session;
@@ -20,6 +21,9 @@ public class NewFolder extends Templete {
 
 	@AutowiredFromClient
 	public Session session;
+	
+	@AutowiredFromClient
+	public JavaBuildPath jbPath;
 	
 	String name;
 		@Face(displayName="Name")
@@ -41,6 +45,10 @@ public class NewFolder extends Templete {
 			node.setId(targetNode.getId() + File.separatorChar + node.getName());			
 			node.setType(TreeNode.TYPE_FOLDER);
 			node.setFolder(true);
+			
+			File file = new File(jbPath.getBasePath() + node.getId());
+			if(!file.exists())
+				file.mkdirs();
 			
 			return new Object[]{new Remover(new ModalWindow()), new ToAppend(targetNode, node)};
 		}else{

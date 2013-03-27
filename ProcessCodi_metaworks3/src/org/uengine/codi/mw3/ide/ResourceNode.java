@@ -62,13 +62,19 @@ public class ResourceNode extends TreeNode {
 		}else if(this.getName().endsWith(".pwd")){
 			editor = new ProcessEditor(this.getId());
 		}else{
-			String ext = this.getName().substring(this.getName().lastIndexOf("."));
+			int pos = this.getName().lastIndexOf(".");
+			
+			String ext = "";
 			String type = "html";
 			
-			if(".js".equals(ext)){
-				type = "javascript";
-			}else if(".xml".equals(ext)){
-				type = "xml";
+			if(pos > -1){
+				ext = this.getName().substring(pos);			
+				
+				if(".js".equals(ext)){
+					type = "javascript";
+				}else if(".xml".equals(ext)){
+					type = "xml";
+				}
 			}
 
 			editor = new Editor(this.getId(), type);
