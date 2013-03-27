@@ -22,10 +22,10 @@ public class ResourceContextMenu extends Menu {
 		this.setContext(true);
 		
 		this.add(new SubMenuItem(new NewMenu()));
-		this.add(new MenuItem(MenuItem.TYPE_DIVIDER));
+/*		this.add(new MenuItem(MenuItem.TYPE_DIVIDER));
 		this.add(new SubMenuItem(new TeamMenu()));
 		this.add(new MenuItem(MenuItem.TYPE_DIVIDER));
-		this.add(new MenuItem("showProperties", "Properties"));
+		this.add(new MenuItem("showProperties", "Properties"));*/
 	}
 	
 	@ServiceMethod
