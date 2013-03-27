@@ -10155,7 +10155,7 @@ OG.shape.GroupShape = function (label) {
 	this.SHAPE_ID = 'OG.shape.GroupShape';
 	this.label = label;
 
-//	this.CONNECTABLE = false;
+	this.CONNECTABLE = false;
 	this.SELF_CONNECTABLE = false;
 
 	/**
