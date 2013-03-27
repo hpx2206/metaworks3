@@ -727,3 +727,8 @@ create table APPMAPPING(
 	PRIMARY KEY(APPID, COMCODE),
 	FOREIGN KEY (APPID) REFERENCES APP (APPID)
 );
+
+
+-- 2013.03.27
+alter table app modify simpleoverview varchar(1000);
+alter table app modify fulloverview varchar(5000);
