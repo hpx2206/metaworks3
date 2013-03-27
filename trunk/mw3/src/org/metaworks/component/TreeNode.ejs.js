@@ -32,7 +32,7 @@ var org_metaworks_component_TreeNode = function(objectId, className){
 			faceHelper.collapse();
 		
 		this.nodeDiv.children().children('span').bind('click', {objectId : this.objectId}, function(event){
-			mw3.getFaceHelper(event.data.objectId).action();
+			faceHelper.action();
 		});		
 	}
 	
@@ -201,8 +201,6 @@ org_metaworks_component_TreeNode.prototype = {
 		}else if(window.event){
 			window.event.cancelBubble = true;
 		}
-		
-		this.select();
 		
 		if(this.object.folder){
 			if(this.isExpand())
