@@ -5,9 +5,14 @@ if (value != null){
     <span class="boxtoprightTab">
 <%	
 	for (var i=0; i<value.tabs.length; i++){
+		var tabId = null;
 		var tabName = '';
 		var tabMetadata = mw3.getMetadata(value.tabs[i].__className);
 		
+		if(tabMetadata.keyFieldDescriptor){
+			tabId = value.tabs[i][tabMetadata.keyFieldDescriptor.name];
+		}
+
 		if(tabMetadata.nameFieldDescriptor){
 			tabName = value.tabs[i][tabMetadata.nameFieldDescriptor.name];
 		}else{
@@ -15,15 +20,18 @@ if (value != null){
 		}
 		
 		var tabOptions = {
-			ejsPath : 'dwr/metaworks/org/uengine/codi/mw3/ide/CloudTab.ejs'
+			ejsPath : 'dwr/metaworks/org/uengine/codi/mw3/ide/CloudTab.ejs',
+			parentObjectId : objectId,
+			index : i
 		};
 		
 		var tab = {
 			__className : 'org.uengine.codi.mw3.ide.CloudTab',
+			id : tabId,
 			name : tabName
 		};
 %>
-	<div id="top_<%=objectId%>_<%=i%>" class="cloudTab <%=(i==0)?'selected':''%>">
+	<div id="top_<%=objectId%>_<%=i%>" class="cloudTab">
 		<%=mw3.locateObject(tab, tab.__className, null, tabOptions)%>
 	</div>
 <%			
@@ -39,7 +47,7 @@ if (value != null){
 <%
 	for (var i=0; i<value.tabs.length; i++){
 %>
-	<div id="bottom_<%=objectId%>_<%=i%>" style="<%=(i>0)?'display:none':''%>">
+	<div id="bottom_<%=objectId%>_<%=i%>" style="display:none">
 		<%=mw3.locateObject(value.tabs[i], value.tabs[i].__className)%>
 	</div>		
 <%	

@@ -6,6 +6,8 @@ import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.metaworks.annotation.Hidden;
+
 
 public class CloudClassLoader {
 
@@ -26,6 +28,7 @@ public class CloudClassLoader {
 		}
 		
 	URLClassLoader cl;
+		@Hidden
 		public URLClassLoader getCl() {
 			return cl;
 		}
@@ -39,11 +42,13 @@ public class CloudClassLoader {
 	}
 
 	public void load(){
+		
 		List<URL> classpath = new ArrayList<URL>();
 		
 		try {
 			File classesFile = new File(this.getDefaultBuildOutputPath());
 			
+			System.out.println(classesFile.getAbsolutePath());
 			// classes for .class file
 			classpath.add(classesFile.toURI().toURL());
 			
@@ -63,4 +68,17 @@ public class CloudClassLoader {
 			e.printStackTrace();
 		}
 	}
+	
+    public static String getSourceResourceName(String className) {
+
+        // Strip nested type suffixes.
+        {
+            int idx = className.lastIndexOf('.') + 1;
+            idx = className.indexOf('$', idx);
+            if (idx != -1) className = className.substring(0, idx);
+        }
+
+        return className.replace('.', '/') + ".java";
+    }
+
 }
