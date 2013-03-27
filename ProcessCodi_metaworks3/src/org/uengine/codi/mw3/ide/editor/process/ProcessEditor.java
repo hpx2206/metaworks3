@@ -13,6 +13,10 @@ public class ProcessEditor extends Editor {
 			this.processDesigner = processDesigner;
 		}
 
+	public ProcessEditor(){
+		super();
+	}
+		
 	public ProcessEditor(String filename){
 		super(filename);
 		
