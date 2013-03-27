@@ -36,9 +36,9 @@ public class CloudClassLoader {
 			this.cl = cl;
 		}
 		
-	public CloudClassLoader(String libraryPath, String defaultBuildOutputPath) {
-		this.setLibraryPath(libraryPath);
-		this.setDefaultBuildOutputPath(defaultBuildOutputPath);
+	public CloudClassLoader(JavaBuildPath jbPath) {
+		this.setLibraryPath(jbPath.getBasePath() + jbPath.getLibraryPath());
+		this.setDefaultBuildOutputPath(jbPath.getBasePath() + jbPath.getDefaultBuildOutputPath());
 	}
 
 	public void load(){

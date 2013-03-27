@@ -2,9 +2,9 @@ package org.uengine.codi.mw3.ide;
 
 import java.io.File;
 
-import org.eclipse.jdt.core.compiler.IProblem;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
+import org.metaworks.ToAppend;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.AutowiredToClient;
 import org.metaworks.annotation.Hidden;
@@ -17,6 +17,7 @@ import org.uengine.codi.mw3.ide.editor.Editor;
 import org.uengine.codi.mw3.ide.editor.java.JavaCodeEditor;
 import org.uengine.codi.mw3.ide.view.Navigator;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.kernel.GlobalContext;
 
 public class CloudIDE {
 	public CloudIDE() {
@@ -64,54 +65,54 @@ public class CloudIDE {
 	}
 
 	Layout layout;
-	public Layout getLayout() {
-		return layout;
-	}
-	public void setLayout(Layout layout) {
-		this.layout = layout;
-	}
+		public Layout getLayout() {
+			return layout;
+		}
+		public void setLayout(Layout layout) {
+			this.layout = layout;
+		}
 
 	JavaBuildPath javaBuildPath;
-	@Hidden
-	@AutowiredToClient
-	public JavaBuildPath getJavaBuildPath() {
-		return javaBuildPath;
-	}
-	public void setJavaBuildPath(JavaBuildPath javaBuildPath) {
-		this.javaBuildPath = javaBuildPath;
-	}
+		@Hidden
+		@AutowiredToClient
+		public JavaBuildPath getJavaBuildPath() {
+			return javaBuildPath;
+		}
+		public void setJavaBuildPath(JavaBuildPath javaBuildPath) {
+			this.javaBuildPath = javaBuildPath;
+		}	
 
 	ContentLibrary contentLibrary;
-	public ContentLibrary getContentLibrary() {
-		return contentLibrary;
-	}
-	public void setContentLibrary(ContentLibrary contentLibrary) {
-		this.contentLibrary = contentLibrary;
-	}
+		public ContentLibrary getContentLibrary() {
+			return contentLibrary;
+		}
+		public void setContentLibrary(ContentLibrary contentLibrary) {
+			this.contentLibrary = contentLibrary;
+		}
 
 	ResourceLibrary resourceLibrary;
-	public ResourceLibrary getResourceLibrary() {
-		return resourceLibrary;
-	}
-	public void setResourceLibrary(ResourceLibrary resourceLibrary) {
-		this.resourceLibrary = resourceLibrary;
-	}
+		public ResourceLibrary getResourceLibrary() {
+			return resourceLibrary;
+		}
+		public void setResourceLibrary(ResourceLibrary resourceLibrary) {
+			this.resourceLibrary = resourceLibrary;
+		}
 
 	String currentEditorId;
-	public String getCurrentEditorId() {
-		return currentEditorId;
-	}
-	public void setCurrentEditorId(String currentEditorId) {
-		this.currentEditorId = currentEditorId;
-	}
+		public String getCurrentEditorId() {
+			return currentEditorId;
+		}
+		public void setCurrentEditorId(String currentEditorId) {
+			this.currentEditorId = currentEditorId;
+		}
 
 	public void load(String userId, String projectId){
 
-		//String baseDir = "D:/ide_workspace/" + userId + "/" + projectId;
-		String basePath = "/Users/somehow/codebase/" + userId + "/" + projectId;
-		String srcPath = basePath + "/src";
-		String defaultBuildOutputPath = basePath + "/WebContent/WEB-INF/classes";
-		String libraryPath = basePath + "/WebContent/WEB-INF/lib";
+		String codebasePath = GlobalContext.getPropertyString("codebase", "codebase");
+		String basePath = codebasePath + File.separatorChar  + "users" + File.separatorChar + userId + File.separatorChar + projectId;
+		String srcPath = File.separatorChar + "src";
+		String defaultBuildOutputPath = File.separatorChar + "WebContent" + File.separatorChar + "WEB-INF" + File.separatorChar + "classes";
+		String libraryPath = File.separatorChar + "WebContent" + File.separatorChar + "WEB-INF" + File.separatorChar + "lib";
 
 		Login login = new Login();
 		login.setUserId("test");
@@ -125,14 +126,17 @@ public class CloudIDE {
 			e.printStackTrace();
 		}
 
-		JavaBuildPath jbPath = new JavaBuildPath(libraryPath, defaultBuildOutputPath);
+		JavaBuildPath jbPath = new JavaBuildPath();
 		jbPath.setBasePath(basePath);
 		jbPath.setSrcPath(srcPath);
 		jbPath.setDefaultBuildOutputPath(defaultBuildOutputPath);
 		jbPath.setLibraryPath(libraryPath);
 
+		CloudClassLoader ccl = new CloudClassLoader(jbPath);
+		ccl.load();
+		
 		ContentLibrary contentLib = new ContentLibrary();
-		contentLib.load(jbPath.getLibraryPath(), jbPath.getDefaultBuildOutputPath());
+		contentLib.load(ccl);
 
 		ResourceLibrary resourceLib = new ResourceLibrary();
 		resourceLib.load(jbPath.getSrcPath(), jbPath.getLibraryPath(), jbPath.getDefaultBuildOutputPath());
@@ -144,7 +148,7 @@ public class CloudIDE {
 		navigatorWindow.getTabs().add(navigator);
 
 		CloudWindow editorWindow = new CloudWindow("editor");
-		JavaCodeEditor editor = new JavaCodeEditor(srcPath + "/examples" + File.separatorChar + "TestProject.java");
+		JavaCodeEditor editor = new JavaCodeEditor(File.separatorChar + "src" + File.separatorChar + "examples" + File.separatorChar + "TestProject.java");
 
 		editorWindow.getTabs().add(editor);
 
@@ -160,39 +164,6 @@ public class CloudIDE {
 		this.setContentLibrary(contentLib);
 		this.setResourceLibrary(resourceLib);
 
-		try {
-			CloudClassLoader ccl = new CloudClassLoader(jbPath.getLibraryPath(), jbPath.getDefaultBuildOutputPath());
-			ccl.load();
-
-			CompilationChecker compCheck = new CompilationChecker(ccl.getCl());
-			IProblem[] problems = compCheck.getErrors("TestProject", editor.load());
-			
-			compCheck.display();
-			
-			/*
-			boolean error = false;
-			for (IProblem problem : problems) {
-			   StringBuffer buffer = new StringBuffer();
-			   buffer.append(problem.getMessage());
-			   buffer.append(" line: ");
-			   buffer.append(problem.getSourceLineNumber());
-			   String msg = buffer.toString(); 
-			   if(problem.isError()) {
-			      error = true; 
-			      msg = "Error:\n" + msg;
-			   }	
-			   else 
-			      if(problem.isWarning())
-			         msg = "Warning:\n" + msg;
-
-			   System.out.println(msg);  
-			}*/
-		}catch(Exception e){
-			e.printStackTrace();
-		}
-		
-		
-		
 		/*
 		Map settings = new HashMap();
 		settings.put(CompilerOptions.OPTION_LineNumberAttribute,CompilerOptions.GENERATE);
@@ -249,12 +220,14 @@ public class CloudIDE {
 	}
 
 
-	@AutowiredFromClient(select="currentEditorId==filename")
-	public JavaCodeEditor editor;
+	@AutowiredFromClient(select="typeof currentEditorId!='undefined' && currentEditorId==filename")
+	public Editor editor;
 	
-	@ServiceMethod(payload={"currentEditorId"}, keyBinding="Ctrl+S@Global", target=ServiceMethodContext.TARGET_NONE)
-	public void save(){
-		editor.save();
+	@ServiceMethod(payload={"currentEditorId", "javaBuildPath"}, keyBinding="Ctrl+S@Global", target=ServiceMethodContext.TARGET_APPEND)
+	public Object save(){
+		editor.jbPath = this.getJavaBuildPath();
+		
+		return new ToAppend(editor, editor.save());
 	}
 
 	@ServiceMethod(payload={"currentEditorId"}, keyBinding="Ctrl+W@Global", target=ServiceMethodContext.TARGET_NONE)

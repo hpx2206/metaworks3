@@ -3,11 +3,6 @@ package org.uengine.codi.mw3.ide;
 
 public class JavaBuildPath {
 	
-	public JavaBuildPath(String libraryPath, String defaultBuildOutputPath) {
-		this.setLibraryPath(libraryPath);
-		this.setDefaultBuildOutputPath(defaultBuildOutputPath);
-	}
-
 	String basePath;
 		public String getBasePath() {
 			return basePath;

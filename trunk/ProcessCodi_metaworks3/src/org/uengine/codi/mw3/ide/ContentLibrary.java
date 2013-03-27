@@ -31,10 +31,7 @@ public class ContentLibrary {
 			this.annotationMap = annotationMap;
 		}
 	
-	public void load(String libraryPath, String outputPath){
-		CloudClassLoader ccl = new CloudClassLoader(libraryPath, outputPath);
-		ccl.load();
-		
+	public void load(CloudClassLoader ccl){
 		Map<String, List<String>> packageMap = new HashMap<String, List<String>>();
 		Map<String, List<String>> classMap = new HashMap<String, List<String>>();
 		Map<String, List<String>> annotationMap = new HashMap<String, List<String>>();

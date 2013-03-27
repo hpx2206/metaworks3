@@ -206,32 +206,6 @@ public class CompilationChecker {
 		}
 	}
 
-	/**
-	 * ClassLoader implementation
-	 */
-	private class CustomClassLoader extends ClassLoader {
-
-		private Map classMap;
-
-		CustomClassLoader(ClassLoader parent, List classesList) {
-			this.classMap = new HashMap();
-			for (int i = 0; i < classesList.size(); i++) {
-				ClassFile classFile = (ClassFile) classesList.get(i);
-				String className = CharOperation.toString(classFile
-						.getCompoundName());
-				this.classMap.put(className, classFile.getBytes());
-			}
-		}
-
-		public Class findClass(String name) throws ClassNotFoundException {
-			byte[] bytes = (byte[]) this.classMap.get(name);
-			if (bytes != null)
-				return defineClass(name, bytes, 0, bytes.length);
-
-			return super.findClass(name);
-		}
-	};
-
 	private ICompilationUnit generateCompilationUnit() {
 		ASTParser parser = ASTParser.newParser(AST.JLS4);
 		try {
@@ -248,59 +222,6 @@ public class CompilationChecker {
 		CompilationUnit unit = (CompilationUnit) parser.createAST(null);
 
 		return new CompilationUnitImpl(unit);
-	}
-
-	public static String fileName = "Brightness";
-
-	private void compileAndRun(ICompilationUnit unit, boolean runIt) {
-
-		Map settings = new HashMap();
-		settings.put(CompilerOptions.OPTION_LineNumberAttribute,
-				CompilerOptions.GENERATE);
-		settings.put(CompilerOptions.OPTION_SourceFileAttribute,
-				CompilerOptions.GENERATE);
-
-		CompileRequestorImpl requestor = new CompileRequestorImpl();
-		Compiler compiler = new Compiler(new NameEnvironmentImpl(unit),
-				DefaultErrorHandlingPolicies.proceedWithAllProblems(),
-				settings, requestor, new DefaultProblemFactory(
-						Locale.getDefault()));
-
-		compiler.compile(new ICompilationUnit[] { unit });
-		// System.out.println(unit.getContents());
-		List problems = requestor.getProblems();
-		boolean error = false;
-		for (Iterator it = problems.iterator(); it.hasNext();) {
-			IProblem problem = (IProblem) it.next();
-			StringBuffer buffer = new StringBuffer();
-			buffer.append(problem.getMessage());
-			buffer.append(" line: ");
-			buffer.append(problem.getSourceLineNumber());
-			String msg = buffer.toString();
-			if (problem.isError()) {
-				error = true;
-				msg = "Error:\n" + msg + " " + problem.toString();
-			} else if (problem.isWarning())
-				msg = "Warning:\n" + msg;
-
-			System.out.println(msg);
-		}
-
-		if (!error && runIt) {
-			try {
-				ClassLoader loader = new CustomClassLoader(cl, requestor.getResults());
-				String className = CharOperation
-						.toString(unit.getPackageName())
-						+ "."
-						+ new String(unit.getMainTypeName());
-				Class clazz = loader.loadClass(className);
-				Method m = clazz.getMethod("main",
-						new Class[] { String[].class });
-				m.invoke(clazz, new Object[] { new String[0] });
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked", "deprecation" })
@@ -431,13 +352,12 @@ public class CompilationChecker {
 
 	String sourceText = "";
 
-	public IProblem[] getErrors(String sourceName, String source) {
-		return getErrors(sourceName, source, null);
+	public IProblem[] getErrors(String source) {
+		return getErrors(source, null);
 	}
 	
 	@SuppressWarnings("rawtypes")
-	public IProblem[] getErrors(String sourceName, String source,  Map settings) {
-		fileName = sourceName;
+	public IProblem[] getErrors(String source,  Map settings) {
 		sourceText = source;
 
 		compileMeQuitely(generateCompilationUnit(), settings);

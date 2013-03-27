@@ -3,13 +3,15 @@ package org.uengine.codi.mw3.ide;
 import java.io.File;
 import java.util.ArrayList;
 
+import org.metaworks.Refresh;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.ToAppend;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.component.Menu;
 import org.metaworks.component.TreeNode;
+import org.uengine.codi.mw3.ide.editor.Editor;
 import org.uengine.codi.mw3.ide.editor.java.JavaCodeEditor;
+import org.uengine.codi.mw3.ide.editor.process.ProcessEditor;
 import org.uengine.codi.mw3.ide.menu.ResourceContextMenu;
 import org.uengine.codi.mw3.model.Session;
 
@@ -17,19 +19,22 @@ public class ResourceNode extends TreeNode {
 	@AutowiredFromClient
 	public Session session;
 	
+	@AutowiredFromClient
+	public JavaBuildPath jbPath;
+	
 	@Override
 	public Object expand() throws Exception {
 		
 		ArrayList<TreeNode> child = new ArrayList<TreeNode>();
 
-		File file = new File(this.getId());
+		File file = new File(jbPath.getBasePath() + File.separatorChar + this.getId());
 		String[] childFilePaths = file.list();
 		
 		for(int i=0; i<childFilePaths.length; i++){
-			File childFile = new File(this.getId() + "/" + childFilePaths[i]);
+			File childFile = new File(file.getAbsolutePath() + File.separatorChar + childFilePaths[i]);
 			
 			ResourceNode node = new ResourceNode();
-			node.setId(childFile.getAbsolutePath());
+			node.setId(this.getId() + File.separatorChar + childFile.getName());
 			node.setName(childFile.getName());
 			node.setParentId(this.getId());
 			
@@ -49,15 +54,36 @@ public class ResourceNode extends TreeNode {
 	
 	@Override
 	public Object action(){
-		System.out.println(this.getId());
-		return new ToAppend(new CloudWindow("editor"), new JavaCodeEditor(this.getId()));
+		
+		Editor editor;
+		
+		if(this.getName().endsWith(".java")){
+			editor = new JavaCodeEditor(this.getId());
+		}else if(this.getName().endsWith(".pwd")){
+			editor = new ProcessEditor(this.getId());
+		}else{
+			String ext = this.getName().substring(this.getName().lastIndexOf("."));
+			String type = "html";
+			
+			if(".js".equals(ext)){
+				type = "javascript";
+			}else if(".xml".equals(ext)){
+				type = "xml";
+			}
+
+			editor = new Editor(this.getId(), type);
+		}
+		
+		return new ToAppend(new CloudWindow("editor"), editor);
 	}
 	
-	@ServiceMethod(loadOnce=true, mouseBinding="right", target=ServiceMethodContext.TARGET_STICK)
-	public Menu showContextMenu() {
+	@ServiceMethod(payload={"id"}, mouseBinding="right", target=ServiceMethodContext.TARGET_STICK)
+	public Object[] showContextMenu() {
 		session.setClipboard(this);
 		
-		return new ResourceContextMenu();
+		return new Object[]{new Refresh(session), new ResourceContextMenu()};
+		
+		
 		/*
 		menu.setId("edit");
 		menu.setName("Edit");
