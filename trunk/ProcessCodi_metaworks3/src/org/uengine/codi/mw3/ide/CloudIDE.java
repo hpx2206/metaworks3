@@ -17,6 +17,7 @@ import org.uengine.codi.mw3.ide.editor.Editor;
 import org.uengine.codi.mw3.ide.editor.java.JavaCodeEditor;
 import org.uengine.codi.mw3.ide.view.Navigator;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.codi.util.CodiFileUtil;
 import org.uengine.kernel.GlobalContext;
 
 public class CloudIDE {
@@ -109,11 +110,16 @@ public class CloudIDE {
 	public void load(String userId, String projectId){
 
 		String codebasePath = GlobalContext.getPropertyString("codebase", "codebase");
+		
 		String basePath = codebasePath + File.separatorChar  + "users" + File.separatorChar + userId + File.separatorChar + projectId;
 		String srcPath = File.separatorChar + "src";
 		String defaultBuildOutputPath = File.separatorChar + "WebContent" + File.separatorChar + "WEB-INF" + File.separatorChar + "classes";
 		String libraryPath = File.separatorChar + "WebContent" + File.separatorChar + "WEB-INF" + File.separatorChar + "lib";
 
+		CodiFileUtil.mkdirs(srcPath);
+		CodiFileUtil.mkdirs(defaultBuildOutputPath);
+		CodiFileUtil.mkdirs(libraryPath);
+		
 		Login login = new Login();
 		login.setUserId("test");
 		login.setPassword("test");
@@ -148,9 +154,9 @@ public class CloudIDE {
 		navigatorWindow.getTabs().add(navigator);
 
 		CloudWindow editorWindow = new CloudWindow("editor");
-		JavaCodeEditor editor = new JavaCodeEditor(File.separatorChar + "src" + File.separatorChar + "examples" + File.separatorChar + "TestProject.java");
+		//JavaCodeEditor editor = new JavaCodeEditor(File.separatorChar + "src" + File.separatorChar + "examples" + File.separatorChar + "TestProject.java");
 
-		editorWindow.getTabs().add(editor);
+		//editorWindow.getTabs().add(editor);
 
 		Layout outerLayout = new Layout();
 		outerLayout.setWest(navigatorWindow);
