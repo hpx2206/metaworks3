@@ -3,6 +3,7 @@ package org.uengine.codi.mw3.ide.editor;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -23,7 +24,7 @@ public class Editor implements CloudContent {
 	
 	@AutowiredFromClient
 	public JavaBuildPath jbPath;
-	
+
 	String filename;
 		@Id
 		public String getFilename() {
@@ -80,8 +81,6 @@ public class Editor implements CloudContent {
 		
 		char separatorChar = File.separatorChar;
 
-		System.out.println("filename : " + filename);
-		
 		this.setFilename(filename);
 		this.setType(type);
 		
@@ -99,7 +98,7 @@ public class Editor implements CloudContent {
 			bao = new ByteArrayOutputStream();
 			
 			//if(TYPE_FILE.equals(this.getType())){
-				File file = new File(this.getFilename());
+				File file = new File(jbPath.getBasePath() + this.getFilename());
 				if(file.exists()){
 					
 					try {
@@ -154,6 +153,35 @@ public class Editor implements CloudContent {
 		}
 		
 		return this.getContent();
+	}
+	
+	public Object save(){
+		FileWriter writer = null;
+
+		try {
+			File file = new File(jbPath.getBasePath() + this.getFilename());
+			if(!file.exists()){
+				file.getParentFile().mkdirs();
+				file.createNewFile();
+			}
+
+			writer = new FileWriter(file);
+			writer.write(this.getContent());
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally{
+			if(writer != null)
+				try {
+					writer.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		}
+		
+		return null;
 	}
 	
 	@ServiceMethod(payload={"content"}, target=ServiceMethodContext.TARGET_NONE)
