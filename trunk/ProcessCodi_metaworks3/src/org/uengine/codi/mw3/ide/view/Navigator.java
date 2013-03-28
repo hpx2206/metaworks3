@@ -51,7 +51,8 @@ public class Navigator implements CloudContent{
 		}
 		
 	public Navigator(){
-		this.setId("Navigator");
+		this.setId("navigator");
+		this.setType(this.getId());
 		this.setName("$Navigator");		
 	}
 	

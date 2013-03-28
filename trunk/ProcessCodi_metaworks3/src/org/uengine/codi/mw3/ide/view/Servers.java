@@ -14,6 +14,7 @@ public class Servers implements CloudContent{
 
 	String id;
 		@Id
+		@Hidden
 		public String getId() {
 			return id;
 		}
@@ -40,7 +41,6 @@ public class Servers implements CloudContent{
 			this.type = type;
 		}
 	Tree serverTree;
-		@Hidden
 		public Tree getServerTree() {
 			return serverTree;
 		}
@@ -49,6 +49,8 @@ public class Servers implements CloudContent{
 		}
 
 	public Servers(){
+		this.setId("servers");
+		this.setType(this.getId());
 		this.setName("$Servers");
 	}
 	
