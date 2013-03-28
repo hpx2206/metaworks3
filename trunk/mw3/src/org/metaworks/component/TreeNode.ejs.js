@@ -9,6 +9,9 @@ var org_metaworks_component_TreeNode = function(objectId, className){
 	if(this.object == null)
 		return true;	
 	
+	if(this.object.hidden)
+		this.objectDiv.addClass('minus15');
+	
 	this.nodeDiv = $('#' + this.objectDivId).children('div');
 	this.nodeDiv.attr('objectId', this.objectId);
 	this.treeDiv = this.nodeDiv.parentsUntil('.filemgr-tree').parent('.filemgr-tree');
