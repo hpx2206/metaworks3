@@ -6,7 +6,6 @@ import org.metaworks.MetaworksException;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.ToAppend;
-import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.TreeNode;
@@ -14,14 +13,11 @@ import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.ide.CloudWindow;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.Templete;
-import org.uengine.codi.mw3.ide.editor.process.ProcessEditor;
-import org.uengine.codi.mw3.model.Session;
+import org.uengine.codi.mw3.ide.editor.Editor;
 
 @Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs", options={"fieldOrder"}, values={"packageName,name"})
-public class NewProcess extends Templete {
+public class NewFile extends Templete {
 
-	@AutowiredFromClient
-	public Session session;
 	
 	String name;
 		@Face(displayName="Name")
@@ -39,11 +35,13 @@ public class NewProcess extends Templete {
 			ResourceNode targetNode = (ResourceNode)clipboard;
 			
 			ResourceNode node = new ResourceNode();
-			node.setName(this.getName() + ".process2");
+			node.setName(this.getName());
 			node.setId(targetNode.getId() + File.separatorChar + node.getName());			
-			node.setType(TreeNode.TYPE_FILE_PROCESS);
+			node.setType(ResourceNode.findNodeType(this.getName()));
 			
-			ProcessEditor editor = new ProcessEditor(node.getId());
+			Editor editor = (Editor)node.beforeAction();
+			editor.jbPath = jbPath;
+			editor.save();
 			
 			return new Object[]{new Remover(new ModalWindow()), new ToAppend(targetNode, node), new ToAppend(new CloudWindow("editor"), editor)};
 		}else{

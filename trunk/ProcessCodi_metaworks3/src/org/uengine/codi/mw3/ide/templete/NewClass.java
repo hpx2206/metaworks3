@@ -110,7 +110,7 @@ public class NewClass extends Templete {
 			ResourceNode node = new ResourceNode();
 			node.setName(this.getName() + ".java");
 			node.setId(parentId + File.separatorChar + node.getName());			
-			node.setType(TreeNode.TYPE_FILE_TEXT);
+			node.setType(TreeNode.TYPE_FILE_JAVA);
 			
 			JavaCodeEditor editor = new JavaCodeEditor();
 			editor.jbPath = jbPath;
