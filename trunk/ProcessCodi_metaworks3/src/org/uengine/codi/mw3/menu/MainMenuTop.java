@@ -21,6 +21,12 @@ public class MainMenuTop extends MainMenu {
 	}
 	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_STICK)
+	@Face(displayName="&Edit")
+	public SubMenuSource edit() throws Exception {
+		return new SubMenuSource();
+	}
+
+	@ServiceMethod(target=ServiceMethodContext.TARGET_STICK)
 	@Face(displayName="&Source")
 	public SubMenuSource source() throws Exception {
 		return new SubMenuSource();
