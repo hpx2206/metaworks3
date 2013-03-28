@@ -147,7 +147,7 @@ public class CloudIDE {
 		contentLib.load(ccl);
 
 		ResourceLibrary resourceLib = new ResourceLibrary();
-		resourceLib.load(jbPath.getSrcPath(), jbPath.getLibraryPath(), jbPath.getDefaultBuildOutputPath());
+		resourceLib.load(jbPath.getBasePath());
 
 		Navigator navigator = new Navigator();		
 		navigator.load(basePath, projectId);
@@ -159,9 +159,12 @@ public class CloudIDE {
 		JavaCodeEditor editor = new JavaCodeEditor(File.separatorChar + "src" + File.separatorChar + "examples" + File.separatorChar + "TestProject.java");
 		editorWindow.getTabs().add(editor);
 		
+		Servers servers = new Servers();
+		servers.load();
+		
 		CloudWindow etcWindow = new CloudWindow("etc");
 		etcWindow.getTabs().add(new Console());
-		etcWindow.getTabs().add(new Servers());
+		etcWindow.getTabs().add(servers);
 		
 		Layout centerLayout = new Layout();
 		centerLayout.setId("center");

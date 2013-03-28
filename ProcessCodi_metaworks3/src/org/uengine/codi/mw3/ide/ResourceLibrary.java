@@ -18,7 +18,8 @@ public class ResourceLibrary {
 	public ResourceLibrary(){
 		this.setResourceMap(new HashMap<String, List<String>>());
 	}
-	public void load(String basePath, String libraryPath, String outputPath){
+	
+	public void load(String basePath){
 		File file = new File(basePath);
 		if(file.exists()){
 			if(file.isDirectory()){
