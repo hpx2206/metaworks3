@@ -1,10 +1,10 @@
 package org.uengine.codi.mw3.ide.menu;
 
 import org.metaworks.ServiceMethodContext;
-import org.metaworks.ToAppend;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.MenuItem;
 import org.uengine.codi.mw3.ide.ServerNode;
+import org.uengine.codi.mw3.ide.ServerNodeManager;
 
 public class ServerContextMenu extends CloudMenu {
 
@@ -31,7 +31,7 @@ public class ServerContextMenu extends CloudMenu {
 		if(clipboard instanceof ServerNode){
 			ServerNode node = (ServerNode)clipboard;
 						
-			return new ToAppend(node, "starting");
+			return new ServerNodeManager(node, "Starting");
 		}else
 			return null;
 	}
