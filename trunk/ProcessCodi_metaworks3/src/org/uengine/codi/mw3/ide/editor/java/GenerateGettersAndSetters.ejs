@@ -1,18 +1,20 @@
 
-<div style="bottom: 50px; overflow:hidden; position: absolute; min-width: 0px; min-height: 0px; max-width: 10000px; max-height: 10000px;  left: 0px; right: 0px; top: 0px;">
-	<div style="position: absolute; left: 0px; right: 120px; top: 0px; bottom: 0px;">
+<div>
+	<div style="float:left;width:420px;height:600px;border:1px solid #ccc;background:#F6F6F6;margin:10px;">
+		<div></div>
 		<%=fields.fieldTree.here()%>
 	</div>
 	
-	<div style="position: absolute; right: 0px; top: 0px; bottom: 0px; width: 120px">
-		<input type="button" value="Select All" />
-		<input type="button" value="Deselect All" />
-		<input type="button" value="Select Getters" />
-		<input type="button" value="Select Setters" />
+	<div style="float:left;margin:10px">
+		<a id="wBtn" href="#" ><span>Select All</span></a><div class="clear" style="margin-bottom:7px"></div>
+		<a id="wBtn" href="#" ><span>Deselect All</span></a><div class="clear" style="margin-bottom:7px"></div>
+		<a id="wBtn" href="#" ><span>Select Getters</span></a><div class="clear" style="margin-bottom:7px"></div>
+		<a id="wBtn" href="#" ><span>Select Setters</span></a><div class="clear"></div>
 	</div>	
+	<div class="clear"></div>
 </div>
 
-<div style="height: 50px; overflow:auto; position: absolute; min-width: 0px; min-height: 0px; max-width: 10000px; max-height: 10000px;  left: 0px; right: 0px; bottom: 0px;">
+<div style="margin-top:15px;">
 	<div class="positionRight">
 		<%=methods.ok.here()%>
 		<%=methods.cancel.here()%>
