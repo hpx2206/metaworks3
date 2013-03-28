@@ -1,10 +1,10 @@
 package org.uengine.codi.mw3.ide.editor.java;
 
-import org.metaworks.component.Menu;
 import org.metaworks.component.MenuItem;
+import org.uengine.codi.mw3.ide.menu.CloudMenu;
 import org.uengine.codi.mw3.ide.menu.SubMenuItem;
 
-public class JavaEditorMenu extends Menu {
+public class JavaEditorMenu extends CloudMenu {
 
 	public JavaEditorMenu(){
 		this.setId("Editor");

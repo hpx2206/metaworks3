@@ -4,20 +4,12 @@ import java.util.ArrayList;
 
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.ToAppend;
-import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.component.Menu;
 import org.metaworks.component.MenuItem;
-import org.uengine.codi.mw3.ide.JavaBuildPath;
+import org.uengine.codi.mw3.ide.menu.CloudMenu;
 import org.uengine.codi.mw3.ide.view.Console;
-import org.uengine.codi.mw3.model.Session;
 
-public class JavaRunAsMenu extends Menu {
-	@AutowiredFromClient
-	public Session session;
-	
-	@AutowiredFromClient
-	public JavaBuildPath jbPath;
+public class JavaRunAsMenu extends CloudMenu {
 	
 	public JavaRunAsMenu(){
 		this.setId("RunAs");

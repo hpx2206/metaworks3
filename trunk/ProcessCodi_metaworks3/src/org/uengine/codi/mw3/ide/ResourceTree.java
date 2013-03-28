@@ -4,4 +4,5 @@ import org.metaworks.component.Tree;
 
 public class ResourceTree extends Tree {
 
+	
 }

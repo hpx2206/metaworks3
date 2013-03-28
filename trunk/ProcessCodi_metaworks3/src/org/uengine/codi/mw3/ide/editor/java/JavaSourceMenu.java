@@ -2,16 +2,12 @@ package org.uengine.codi.mw3.ide.editor.java;
 
 import org.metaworks.MetaworksException;
 import org.metaworks.ServiceMethodContext;
-import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.component.Menu;
 import org.metaworks.component.MenuItem;
 import org.metaworks.widget.ModalWindow;
-import org.uengine.codi.mw3.model.Session;
+import org.uengine.codi.mw3.ide.menu.CloudMenu;
 
-public class JavaSourceMenu extends Menu {
-	@AutowiredFromClient
-	public Session session;
+public class JavaSourceMenu extends CloudMenu {
 	
 	public JavaSourceMenu(){
 		this.setId("Source");

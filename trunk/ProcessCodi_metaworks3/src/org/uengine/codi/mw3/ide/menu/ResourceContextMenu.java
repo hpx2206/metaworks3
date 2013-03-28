@@ -4,23 +4,13 @@ import java.io.File;
 
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
-import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.component.Menu;
 import org.metaworks.component.MenuItem;
 import org.uengine.codi.mw3.ide.CloudTab;
-import org.uengine.codi.mw3.ide.JavaBuildPath;
 import org.uengine.codi.mw3.ide.ResourceNode;
-import org.uengine.codi.mw3.model.Session;
 
-public class ResourceContextMenu extends Menu {
+public class ResourceContextMenu extends CloudMenu {
 
-	@AutowiredFromClient
-	public Session session;
-	
-	@AutowiredFromClient
-	public JavaBuildPath jbPath;
-	
 	public ResourceContextMenu(){
 		this.setId("ResourceContext");
 		this.setName("ResourceContext");
