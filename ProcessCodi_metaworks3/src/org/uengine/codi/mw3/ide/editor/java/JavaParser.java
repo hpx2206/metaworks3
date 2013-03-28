@@ -75,7 +75,9 @@ public class JavaParser {
 		PackageDeclaration packageDeclaration = unit.getPackage();
 		TypeDeclaration typeDeclaration = (TypeDeclaration) unit.types().get(0);
 		
-		this.setPackageName(packageDeclaration.getName().getFullyQualifiedName());
+		if(packageDeclaration != null)
+			this.setPackageName(packageDeclaration.getName().getFullyQualifiedName());
+		
 		this.setClassName(className);
 		
 		ArrayList<JavaMethod> methods = new ArrayList<JavaMethod>();
