@@ -2350,7 +2350,6 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 	 							    	 
 								    	 for(var j=0; j<autowiredObjectMetadata.superClasses.length; j++){
 								    		 if(autowiredObjectMetadata.superClasses[j] == autowiredClassName){
-								    			 console.log('super : ' + autowiredObjectMetadata.superClasses[j]);
 								    			 sameClass = true;
 								    			 
 								    			 break;
