@@ -18,7 +18,6 @@ import org.uengine.codi.mw3.ide.CompilationChecker;
 import org.uengine.codi.mw3.ide.editor.Editor;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.platform.Console;
-import org.uengine.codi.platform.SecurityContext;
 
 public class JavaCodeEditor extends Editor {
 
@@ -31,10 +30,8 @@ public class JavaCodeEditor extends Editor {
 
 	public JavaCodeEditor(String filename) {
 		super(filename);
-	}
-
-	public JavaCodeEditor(String filename, String type) {
-		super(filename, type);
+		
+		this.setType(Editor.TYPE_JAVA);
 	}
 
 	private ICompilationUnit unit;

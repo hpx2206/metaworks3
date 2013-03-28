@@ -480,7 +480,7 @@ org_uengine_codi_mw3_ide_editor_java_JavaCodeEditor.prototype = {
 			var assist = new MetaworksObject({
                 __className : 'org.uengine.codi.mw3.ide.editor.java.JavaCodeAssist',
                 assistMap : assistMap,
-                editorId : this.object.filename
+                editorId : this.object.id
             }, 'body');
 			
 			mw3.onLoadFaceHelperScript();
