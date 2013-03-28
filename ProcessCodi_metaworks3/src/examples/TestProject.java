@@ -5,7 +5,9 @@ import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
+import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.ide.CloudIDE;
+import org.uengine.codi.mw3.model.Session;
 
 public class TestProject implements ContextAware {
 
@@ -63,8 +65,20 @@ public class TestProject implements ContextAware {
 	@Face(displayName="Start Editing")
 	@ServiceMethod(callByContent=true, except="content")
 	public void run(){
+		Login login = new Login();
+		login.setUserId("test");
+		login.setPassword("test");
+
+		Session session = new Session();
+
+		try {
+			session = login.loginService();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		CloudIDE cloudIde = new CloudIDE();
-		cloudIde.load("somehow", "codi");
+		cloudIde.load(session);
 		
 		this.setContent(cloudIde);
 	}
