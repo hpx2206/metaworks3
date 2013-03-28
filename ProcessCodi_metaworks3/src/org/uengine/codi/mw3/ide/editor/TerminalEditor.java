@@ -14,11 +14,12 @@ public class TerminalEditor extends Editor {
 			this.frame = frame;
 		}
 		
-	public TerminalEditor(){
+	public TerminalEditor(){	
 		this.count++;
 		
 		this.setName("Terminal " + String.valueOf(this.count));
 		this.setId("TerminalEditor" + String.valueOf(this.count)); 
+		this.setType("terminal");
 		
 		IFrame frame = new IFrame();
 		frame.setSrc("http://192.168.0.10:6080/vnc_auto.html?token=5af77cf4-8127-4137-b272-659ad1f9595f&title=test(89e3fd1f-3602-4b14-9e19-94407004797e)");

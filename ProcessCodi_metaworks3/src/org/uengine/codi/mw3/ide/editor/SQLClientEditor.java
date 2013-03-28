@@ -20,6 +20,7 @@ public class SQLClientEditor extends Editor {
 		
 		this.setName("SQL Client " + String.valueOf(this.count));
 		this.setId("SQLClientEditor" + String.valueOf(this.count)); 
+		this.setType("sqlclient");
 		
 		String host = GlobalContext.getPropertyString("pole.server.host");
 		String port = GlobalContext.getPropertyString("pole.server.port");
