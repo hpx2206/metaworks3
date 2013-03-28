@@ -51,7 +51,8 @@ var org_metaworks_component_Menu = function(objectId, className){
 		if(parent.length > 0){
 			var parentObjectId = parent.attr('objectId');
 			
-			mw3.getFaceHelper(parentObjectId).click();
+			if(parentObjectId && mw3.getFaceHelper(parentObjectId) && mw3.getFaceHelper(parentObjectId).click)
+				mw3.getFaceHelper(parentObjectId).click();
 		}
 	};
 	
