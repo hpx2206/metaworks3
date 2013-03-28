@@ -1,6 +1,5 @@
 package org.uengine.codi.mw3.tadpole;
 
-import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.model.IUser;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.model.Tray;
@@ -22,8 +21,6 @@ public class TadpoleTopPanel {
 		loginUser.setUserId(session.getUser().getUserId());
 		loginUser.setName(session.getUser().getName());
 		setLoginUser(loginUser);
-		
-		setPageNavigator(new PageNavigator());
 
 	}
 
@@ -52,12 +49,4 @@ public class TadpoleTopPanel {
 			this.loginUser = loginUser;
 		}
 
-	PageNavigator pageNavigator;
-		public PageNavigator getPageNavigator() {
-			return pageNavigator;
-		}
-
-		public void setPageNavigator(PageNavigator pageNavigator) {
-			this.pageNavigator = pageNavigator;
-		}
 }
