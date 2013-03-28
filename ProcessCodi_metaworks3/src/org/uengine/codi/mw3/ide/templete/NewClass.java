@@ -114,7 +114,7 @@ public class NewClass extends Templete {
 			
 			JavaCodeEditor editor = new JavaCodeEditor();
 			editor.jbPath = jbPath;
-			editor.setFilename(jbPath.getSrcPath() + File.separatorChar + this.getPackageName() + File.separatorChar + this.getName());
+			editor.setId(jbPath.getSrcPath() + File.separatorChar + this.getPackageName() + File.separatorChar + this.getName());
 			editor.setName(this.getName());
 			editor.setLoaded(true);
 			editor.setContent(this.make());
