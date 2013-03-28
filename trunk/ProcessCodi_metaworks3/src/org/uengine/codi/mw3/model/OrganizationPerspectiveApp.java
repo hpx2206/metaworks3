@@ -48,7 +48,9 @@ public class OrganizationPerspectiveApp extends Perspective{
 		App app = new App();
 		app.setAppId(this.getAppList().getAppId());
 		
-		String url = app.findMe().getUrl();
+//		String url = app.findMe().getUrl();
+		//동영상 촬용용 후에 위 소스로 원복할것!
+		String url = "http://192.168.0.225:8080/realcloud/index.html";
 		
         String os = System.getProperty("os.name");
         Runtime runtime = Runtime.getRuntime();
