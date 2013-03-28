@@ -226,7 +226,7 @@ public class AppInformation implements ContextAware, ITool {
 		if (getFile() == null || getFile().getFileTransfer() == null || getFile().getFileTransfer().getFilename() == null || getFile().getFilename() == null)
 			throw new MetaworksException("$YouMustAttachItemFile");
 
-		if (getLogoFile() == null || getLogoFile().getFileTransfer() == null || getFile().getFileTransfer().getFilename() == null || getLogoFile().getFilename() == null)
+		if (getLogoFile() == null || getLogoFile().getFileTransfer() == null || getLogoFile().getFileTransfer().getFilename() == null || getLogoFile().getFilename() == null)
 			throw new MetaworksException("$YouMustAttachLogoFile");
 		
 		
