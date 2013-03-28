@@ -1,11 +1,14 @@
 package org.uengine.codi.mw3.ide.menu;
 
 import org.metaworks.ServiceMethodContext;
+import org.metaworks.ToAppend;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.MenuItem;
 import org.metaworks.widget.ModalWindow;
+import org.uengine.codi.mw3.ide.CloudWindow;
 import org.uengine.codi.mw3.ide.JavaBuildPath;
+import org.uengine.codi.mw3.ide.editor.TerminalEditor;
 import org.uengine.codi.mw3.ide.templete.NewClass;
 import org.uengine.codi.mw3.ide.templete.NewFolder;
 import org.uengine.codi.mw3.ide.templete.NewProcess;
@@ -28,6 +31,8 @@ public class NewMenu extends ResourceMenu {
 		this.add(new MenuItem(MenuItem.TYPE_DIVIDER));
 		this.add(new MenuItem("newClass", "Class"));
 		this.add(new MenuItem("newFolder", "Folder"));
+		this.add(new MenuItem(MenuItem.TYPE_DIVIDER));
+		this.add(new MenuItem("newTerminal", "Terminal"));
 		
 	}
 	
@@ -65,5 +70,10 @@ public class NewMenu extends ResourceMenu {
 		NewRole newRole = new NewRole();
 		
 		return new ModalWindow(newRole, 300, 150, "New Role");
+	}
+	
+	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
+	public Object newTerminal(){
+		return new ToAppend(new CloudWindow("editor"), new TerminalEditor());
 	}
 }
