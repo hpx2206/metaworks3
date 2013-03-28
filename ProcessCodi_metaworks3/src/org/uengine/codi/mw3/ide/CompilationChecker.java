@@ -69,13 +69,17 @@ public class CompilationChecker {
 		}
 
 		public char[][] getPackageName() {
-			String[] names = getSimpleNames(this.unit.getPackage().getName()
-					.getFullyQualifiedName());
-			char[][] packages = new char[names.length][];
-			for (int i = 0; i < names.length; ++i)
-				packages[i] = names[i].toCharArray();
+			if(this.unit.getPackage() != null){
+				String[] names = getSimpleNames(this.unit.getPackage().getName()
+						.getFullyQualifiedName());
+				char[][] packages = new char[names.length][];
+				for (int i = 0; i < names.length; ++i)
+					packages[i] = names[i].toCharArray();
 
-			return packages;
+				return packages;
+			}else{
+				return null;
+			}
 		}
 
 		public char[] getFileName() {
@@ -206,7 +210,35 @@ public class CompilationChecker {
 		}
 	}
 
-	private ICompilationUnit generateCompilationUnit() {
+	/**
+	 * ClassLoader implementation
+	 */
+	private class CustomClassLoader extends ClassLoader {
+
+		private Map classMap;
+
+		CustomClassLoader(ClassLoader parent, List classesList) {
+			this.classMap = new HashMap();
+			for (int i = 0; i < classesList.size(); i++) {
+				ClassFile classFile = (ClassFile) classesList.get(i);
+				String className = CharOperation.toString(classFile
+						.getCompoundName());
+				this.classMap.put(className, classFile.getBytes());
+			}
+		}
+
+		public Class findClass(String name) throws ClassNotFoundException {
+			byte[] bytes = (byte[]) this.classMap.get(name);
+			if (bytes != null)
+				return defineClass(name, bytes, 0, bytes.length);
+
+			return super.findClass(name);
+		}
+	};
+	
+	public ICompilationUnit generateCompilationUnit(String sourceText) {
+		this.sourceText = sourceText;
+		
 		ASTParser parser = ASTParser.newParser(AST.JLS4);
 		try {
 			parser.setSource(sourceText.toCharArray());
@@ -352,15 +384,13 @@ public class CompilationChecker {
 
 	String sourceText = "";
 
-	public IProblem[] getErrors(String source) {
-		return getErrors(source, null);
+	public IProblem[] getErrors(ICompilationUnit unit) {
+		return getErrors(unit, null);
 	}
 	
 	@SuppressWarnings("rawtypes")
-	public IProblem[] getErrors(String source,  Map settings) {
-		sourceText = source;
-
-		compileMeQuitely(generateCompilationUnit(), settings);
+	public IProblem[] getErrors(ICompilationUnit unit,  Map settings) {
+		compileMeQuitely(unit, settings);
 		// System.out.println("getErrors(), Done.");
 		return prob;
 	}

@@ -9,10 +9,12 @@ var org_uengine_codi_mw3_ide_CloudWindow = function(objectId, className){
 	if(this.object == null)
 		return true;
 	
+	
+	//		'height': '100%',
+	//'position': 'relative',
 	this.objectDiv.css({
-		'height': '100%',
-		'position': 'relative'
-	});
+		'padding-bottom': '35px'
+	}).addClass('mw3_layout');
 	
 	this.lastIndex = this.object.tabs.length;
 };
@@ -28,15 +30,13 @@ org_uengine_codi_mw3_ide_CloudWindow.prototype = {
 		
 		this.objectDiv.find('.cloudTab:first').unbind();
 		this.objectDiv.find('.cloudTab').bind('removetab', function(){
-			console.log('removetab');
-			
 			var id = $(this).attr('id');
 			
 			mw3.getFaceHelper(objectId).remove(id.substring(id.indexOf('_')+1));
 		});
-		this.objectDiv.find('.cloudTab').bind('click selecttab', function(){		
+		this.objectDiv.find('.cloudTab').bind('click selecttab', function(){	
 			var id = $(this).attr('id');
-			
+
 			mw3.getFaceHelper(objectId).select(id.substring(id.indexOf('_')+1));
 		});
 	},
