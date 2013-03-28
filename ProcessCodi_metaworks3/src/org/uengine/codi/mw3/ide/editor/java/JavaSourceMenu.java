@@ -23,7 +23,7 @@ public class JavaSourceMenu extends CloudMenu {
 			JavaCodeEditor editor = (JavaCodeEditor)clipboard;
 			
 			GenerateGettersAndSetters genGNS = new GenerateGettersAndSetters();
-			genGNS.setId(editor.getFilename());
+			genGNS.setId(editor.getId());
 			genGNS.setContent(editor.getContent());
 			genGNS.load();
 			
