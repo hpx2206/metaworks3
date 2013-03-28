@@ -20,6 +20,8 @@ public class ProcessEditor extends Editor {
 	public ProcessEditor(String filename){
 		super(filename);
 		
+		this.setType("process");
+		
 		try {
 			ProcessDesignerWebContentPanel processDesignerWebContentPanel = new ProcessDesignerWebContentPanel();
 			processDesignerWebContentPanel.setAlias(filename);
