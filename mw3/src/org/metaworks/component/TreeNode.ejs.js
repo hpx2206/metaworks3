@@ -240,5 +240,8 @@ org_metaworks_component_TreeNode.prototype = {
 		this.object.expanded = false;
 		
 		this.treeDiv.trigger('collapsed', [this.objectId]);
+	},
+	changeName : function(name){
+		this.nodeDiv.find('.caption').html(name);
 	}
 };
