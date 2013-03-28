@@ -13,11 +13,11 @@ public class CloudWindow {
 			this.id = id;
 		}
 
-	List<Object> tabs;
-		public List<Object> getTabs() {
+	List<CloudContent> tabs;
+		public List<CloudContent> getTabs() {
 			return tabs;
 		}
-		public void setTabs(List<Object> tabs) {
+		public void setTabs(List<CloudContent> tabs) {
 			this.tabs = tabs;
 		}
 		
@@ -26,7 +26,7 @@ public class CloudWindow {
 	}
 	
 	public CloudWindow(String id){
-		List<Object> tabs = new ArrayList<Object>();
+		List<CloudContent> tabs = new ArrayList<CloudContent>();
 
 		this.setId(id);
 		this.setTabs(tabs);

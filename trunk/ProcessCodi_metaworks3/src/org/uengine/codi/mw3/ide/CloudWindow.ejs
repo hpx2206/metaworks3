@@ -9,16 +9,6 @@ if (value != null){
 		var tabName = '';
 		var tabMetadata = mw3.getMetadata(value.tabs[i].__className);
 		
-		if(tabMetadata.keyFieldDescriptor){
-			tabId = value.tabs[i][tabMetadata.keyFieldDescriptor.name];
-		}
-
-		if(tabMetadata.nameFieldDescriptor){
-			tabName = value.tabs[i][tabMetadata.nameFieldDescriptor.name];
-		}else{
-			tabName = tabMetadata.displayName;
-		}
-		
 		var tabOptions = {
 			ejsPath : 'dwr/metaworks/org/uengine/codi/mw3/ide/CloudTab.ejs',
 			parentObjectId : objectId,
@@ -27,8 +17,10 @@ if (value != null){
 		
 		var tab = {
 			__className : 'org.uengine.codi.mw3.ide.CloudTab',
-			id : tabId,
-			name : tabName
+			id : value.tabs[i].id,
+			name : value.tabs[i].name,
+			type : value.tabs[i].type,
+			parentId : objectId
 		};
 %>
 	<div id="top_<%=objectId%>_<%=i%>" class="cloudTab" >

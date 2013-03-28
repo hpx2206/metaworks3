@@ -243,7 +243,7 @@ public class CloudIDE {
 	}
 
 
-	@AutowiredFromClient(select="typeof currentEditorId!='undefined' && currentEditorId==filename")
+	@AutowiredFromClient(select="typeof currentEditorId!='undefined' && currentEditorId==id")
 	public Editor editor;
 	
 	@ServiceMethod(payload={"currentEditorId", "javaBuildPath"}, keyBinding="Ctrl+S@Global", target=ServiceMethodContext.TARGET_APPEND)

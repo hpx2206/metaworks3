@@ -44,20 +44,15 @@ org_uengine_codi_mw3_ide_CloudWindow.prototype = {
 		
 		var tabId = null;
 		var tabName = '';
-		var tabMetadata = mw3.getMetadata(object.__className);
-		
-		if(tabMetadata.keyFieldDescriptor){
-			tabId = object[tabMetadata.keyFieldDescriptor.name];
-		}
 
-		var autowiredTab = mw3.getAutowiredObject('org.uengine.codi.mw3.ide.CloudTab@'+tabId, true);
+		var autowiredTab = mw3.getAutowiredObject('org.uengine.codi.mw3.ide.CloudTab@'+object.id, true);
 		
 		if(autowiredTab){
 			autowiredTab.getFaceHelper().select();
 		}else{
 			
-			if(tabMetadata.nameFieldDescriptor){
-				tabName = object[tabMetadata.nameFieldDescriptor.name];
+			if(object.name){
+				tabName = object.name;
 			}else{
 				tabName = tabMetadata.displayName;
 			}
@@ -69,7 +64,9 @@ org_uengine_codi_mw3_ide_CloudWindow.prototype = {
 			var tab = {
 				__className : 'org.uengine.codi.mw3.ide.CloudTab',
 				name : tabName,
-				id : tabId
+				id : object.id,
+				type : object.type,
+				parentId : this.objectId
 			};
 			
 			
@@ -98,7 +95,7 @@ org_uengine_codi_mw3_ide_CloudWindow.prototype = {
 				if(contentMetadata.superClasses[i] == 'org.uengine.codi.mw3.ide.editor.Editor'){
 					var cloudIDE = mw3.getAutowiredObject('org.uengine.codi.mw3.ide.CloudIDE');
 					
-					cloudIDE.currentEditorId = content.filename;
+					cloudIDE.currentEditorId = content.id;
 					
 					break;
 				}

@@ -1,9 +1,18 @@
 package org.uengine.codi.mw3.ide;
 
+import org.metaworks.Refresh;
+import org.metaworks.ServiceMethodContext;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Id;
+import org.metaworks.annotation.ServiceMethod;
+import org.uengine.codi.mw3.ide.menu.WindowContextMenu;
+import org.uengine.codi.mw3.model.Session;
 
 public class CloudTab {
 
+	@AutowiredFromClient
+	public Session session;
+	
 	String id;
 		@Id
 		public String getId() {
@@ -21,6 +30,22 @@ public class CloudTab {
 			this.name = name;
 		}
 	
+	String type;
+		public String getType() {
+			return type;
+		}
+		public void setType(String type) {
+			this.type = type;
+		}
+	
+	String parentId;
+		public String getParentId() {
+			return parentId;
+		}
+		public void setParentId(String parentId) {
+			this.parentId = parentId;
+		}
+		
 	public CloudTab(){
 		this(null);
 	}
@@ -29,4 +54,10 @@ public class CloudTab {
 		this.setId(id);
 	}
 	
+	@ServiceMethod(payload={"id", "parentId"},mouseBinding="right", target=ServiceMethodContext.TARGET_STICK)
+	public Object[] showContextMenu() {
+		session.setClipboard(this);
+		
+		return new Object[]{new Refresh(session), new WindowContextMenu()};
+	}
 }
