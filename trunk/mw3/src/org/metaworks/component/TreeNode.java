@@ -16,6 +16,11 @@ public class TreeNode {
 	public final static String TYPE_FILE_CODE = "page_white_code";
 	public final static String TYPE_FILE_TEXT = "page_white_text";
 	public final static String TYPE_FILE_IMAGE = "image";
+	public final static String TYPE_FILE_JAVA = "java";
+	public final static String TYPE_FILE_EJS = "ejs";
+	public final static String TYPE_FILE_JS = "js";
+	public final static String TYPE_FILE_FORM = "form";
+	public final static String TYPE_FILE_PROCESS = "process";
 	public final static String TYPE_USER = "user";
 	
 	public final static String TYPE_FIELD			= "field";

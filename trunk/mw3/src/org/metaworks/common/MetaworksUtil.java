@@ -11,12 +11,14 @@ public class MetaworksUtil {
 		int c; 
 		int total_bytes=0;
 			
-		while ((c = sourceInputStream.read(bytes)) != -1) { 
-				total_bytes +=c; 
-				targetOutputStream.write(bytes,0,c); 
-		} 
-		
-		if (sourceInputStream != null) try { sourceInputStream.close(); } catch (Exception e) {}
-		if (targetOutputStream != null) try { targetOutputStream.close(); } catch (Exception e) {}
+		try{
+			while ((c = sourceInputStream.read(bytes)) != -1) { 
+					total_bytes +=c; 
+					targetOutputStream.write(bytes,0,c); 
+			} 
+		}finally{
+			if (sourceInputStream != null) try { sourceInputStream.close(); } catch (Exception e) {}
+			if (targetOutputStream != null) try { targetOutputStream.close(); } catch (Exception e) {}
+		}
 	}	
 }
