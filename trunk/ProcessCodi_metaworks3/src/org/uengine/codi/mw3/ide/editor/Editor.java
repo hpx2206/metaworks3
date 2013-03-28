@@ -19,21 +19,20 @@ import org.uengine.codi.mw3.ide.editor.java.JavaParser;
 
 public class Editor implements CloudContent {
 	
-	public final static String TYPE_RESOURCE = "resource";
-	public final static String TYPE_FILE = "file";
+	public final static String TYPE_JAVA = "java";
 	
 	@AutowiredFromClient
 	public JavaBuildPath jbPath;
 
-	String filename;
+	String id;
 		@Id
-		public String getFilename() {
-			return filename;
+		public String getId() {
+			return id;
 		}
-		public void setFilename(String filename) {
-			this.filename = filename;
+		public void setId(String id) {
+			this.id = id;
 		}
-
+		
 	String name;
 		@Name
 		public String getName() {
@@ -71,21 +70,21 @@ public class Editor implements CloudContent {
 		this(null);
 	}
 	
-	public Editor(String filename){
-		this(filename, TYPE_FILE);
+	public Editor(String id){
+		this(id, null);
 	}
 	
-	public Editor(String filename, String type){
-		if(filename == null)
+	public Editor(String id, String type){
+		if(id == null)
 			return;
 		
 		char separatorChar = File.separatorChar;
 
-		this.setFilename(filename);
+		this.setId(id);
 		this.setType(type);
 		
-		if(filename.lastIndexOf(separatorChar) > -1){
-			this.setName(filename.substring(filename.lastIndexOf(separatorChar)+1));
+		if(id.lastIndexOf(separatorChar) > -1){
+			this.setName(id.substring(id.lastIndexOf(separatorChar)+1));
 		}		
 	}
 	
@@ -98,7 +97,7 @@ public class Editor implements CloudContent {
 			bao = new ByteArrayOutputStream();
 			
 			//if(TYPE_FILE.equals(this.getType())){
-				File file = new File(jbPath.getBasePath() + this.getFilename());
+				File file = new File(jbPath.getBasePath() + this.getId());
 				if(file.exists()){
 					
 					try {
@@ -159,7 +158,7 @@ public class Editor implements CloudContent {
 		FileWriter writer = null;
 
 		try {
-			File file = new File(jbPath.getBasePath() + this.getFilename());
+			File file = new File(jbPath.getBasePath() + this.getId());
 			if(!file.exists()){
 				file.getParentFile().mkdirs();
 				file.createNewFile();
