@@ -5,6 +5,7 @@ import java.io.File;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
+import org.metaworks.annotation.Name;
 import org.uengine.codi.mw3.ide.CloudContent;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.ResourceTree;
@@ -21,6 +22,25 @@ public class Navigator implements CloudContent{
 		public void setId(String id) {
 			this.id = id;
 		}
+		
+	String name;
+		@Name
+		@Hidden
+		public String getName() {
+			return name;
+		}
+		public void setName(String name) {
+			this.name = name;
+		}
+	
+	String type;
+		@Hidden
+		public String getType() {
+			return type;
+		}
+		public void setType(String type) {
+			this.type = type;
+		}
 
 	ResourceTree resourceTree;
 		public ResourceTree getResourceTree() {
@@ -31,7 +51,8 @@ public class Navigator implements CloudContent{
 		}
 		
 	public Navigator(){
-		this.setId("view_navigator");
+		this.setId("Navigator");
+		this.setName("$Navigator");		
 	}
 	
 	public void load(String sourceCodeBase, String projectName){
