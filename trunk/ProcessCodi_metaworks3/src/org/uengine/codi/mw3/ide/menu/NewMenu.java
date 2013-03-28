@@ -10,6 +10,7 @@ import org.uengine.codi.mw3.ide.CloudWindow;
 import org.uengine.codi.mw3.ide.JavaBuildPath;
 import org.uengine.codi.mw3.ide.editor.TerminalEditor;
 import org.uengine.codi.mw3.ide.templete.NewClass;
+import org.uengine.codi.mw3.ide.templete.NewFile;
 import org.uengine.codi.mw3.ide.templete.NewFolder;
 import org.uengine.codi.mw3.ide.templete.NewProcess;
 import org.uengine.codi.mw3.ide.templete.NewRole;
@@ -31,6 +32,7 @@ public class NewMenu extends ResourceMenu {
 		this.add(new MenuItem(MenuItem.TYPE_DIVIDER));
 		this.add(new MenuItem("newClass", "Class"));
 		this.add(new MenuItem("newFolder", "Folder"));
+		this.add(new MenuItem("newFile", "File"));
 		this.add(new MenuItem(MenuItem.TYPE_DIVIDER));
 		this.add(new MenuItem("newTerminal", "Terminal"));
 		
@@ -57,6 +59,14 @@ public class NewMenu extends ResourceMenu {
 		
 		return new ModalWindow(newFolder, 300, 150, "New Folder");
 	}
+	
+	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
+	public ModalWindow newFile(){
+		NewFile newFile = new NewFile();
+		
+		return new ModalWindow(newFile, 300, 150, "New File");
+	}
+	
 	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
 	public ModalWindow newProcess(){
