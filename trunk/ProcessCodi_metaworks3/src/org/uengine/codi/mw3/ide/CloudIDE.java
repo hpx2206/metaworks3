@@ -12,10 +12,13 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
 import org.metaworks.widget.layout.Layout;
 import org.uengine.codi.mw3.Login;
+import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.admin.TopPanel;
 import org.uengine.codi.mw3.ide.editor.Editor;
 import org.uengine.codi.mw3.ide.editor.java.JavaCodeEditor;
+import org.uengine.codi.mw3.ide.view.Console;
 import org.uengine.codi.mw3.ide.view.Navigator;
+import org.uengine.codi.mw3.ide.view.Servers;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.util.CodiFileUtil;
 import org.uengine.kernel.GlobalContext;
@@ -107,8 +110,19 @@ public class CloudIDE {
 			this.currentEditorId = currentEditorId;
 		}
 
-	public void load(String userId, String projectId){
+	PageNavigator pageNavigator;
+		public PageNavigator getPageNavigator() {
+			return pageNavigator;
+		}
+		public void setPageNavigator(PageNavigator pageNavigator) {
+			this.pageNavigator = pageNavigator;
+		}		
+		
+	public void load(Session session){
 
+		String userId =  session.getUser().getUserId();
+		String projectId = "realcloud";
+		
 		String codebasePath = GlobalContext.getPropertyString("codebase", "codebase");
 		
 		String basePath = codebasePath + File.separatorChar  + "users" + File.separatorChar + userId + File.separatorChar + projectId;
@@ -116,21 +130,9 @@ public class CloudIDE {
 		String defaultBuildOutputPath = File.separatorChar + "WebContent" + File.separatorChar + "WEB-INF" + File.separatorChar + "classes";
 		String libraryPath = File.separatorChar + "WebContent" + File.separatorChar + "WEB-INF" + File.separatorChar + "lib";
 
-		CodiFileUtil.mkdirs(srcPath);
-		CodiFileUtil.mkdirs(defaultBuildOutputPath);
-		CodiFileUtil.mkdirs(libraryPath);
-		
-		Login login = new Login();
-		login.setUserId("test");
-		login.setPassword("test");
-
-		Session session = new Session();
-
-		try {
-			//session = login.loginService();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		CodiFileUtil.mkdirs(basePath + File.separatorChar +srcPath);
+		CodiFileUtil.mkdirs(basePath + File.separatorChar +defaultBuildOutputPath);
+		CodiFileUtil.mkdirs(basePath + File.separatorChar +libraryPath);
 
 		JavaBuildPath jbPath = new JavaBuildPath();
 		jbPath.setBasePath(basePath);
@@ -150,19 +152,29 @@ public class CloudIDE {
 		Navigator navigator = new Navigator();		
 		navigator.load(basePath, projectId);
 
-		CloudWindow navigatorWindow = new CloudWindow();
+		CloudWindow navigatorWindow = new CloudWindow("explorer");
 		navigatorWindow.getTabs().add(navigator);
 
 		CloudWindow editorWindow = new CloudWindow("editor");
-		//JavaCodeEditor editor = new JavaCodeEditor(File.separatorChar + "src" + File.separatorChar + "examples" + File.separatorChar + "TestProject.java");
-
-		//editorWindow.getTabs().add(editor);
-
+		JavaCodeEditor editor = new JavaCodeEditor(File.separatorChar + "src" + File.separatorChar + "examples" + File.separatorChar + "TestProject.java");
+		editorWindow.getTabs().add(editor);
+		
+		CloudWindow etcWindow = new CloudWindow("etc");
+		etcWindow.getTabs().add(new Console());
+		etcWindow.getTabs().add(new Servers());
+		
+		Layout centerLayout = new Layout();
+		centerLayout.setId("center");
+		centerLayout.setName("center");
+		centerLayout.setCenter(editorWindow);
+		centerLayout.setSouth(etcWindow);
+		centerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, south__spacing_open:5, south__size:150");
+		
 		Layout outerLayout = new Layout();
 		outerLayout.setWest(navigatorWindow);
-		outerLayout.setCenter(editorWindow);
+		outerLayout.setCenter(centerLayout);
 		outerLayout.setNorth(new TopPanel(session));
-		outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:5, east__spacing_open:5, west__size:300, east__size:500, north__size:52");
+		outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:5, east__spacing_open:5, west__size:250, north__size:52");
 
 		this.setLayout(outerLayout);
 
@@ -170,13 +182,15 @@ public class CloudIDE {
 		this.setContentLibrary(contentLib);
 		this.setResourceLibrary(resourceLib);
 
+		this.setPageNavigator(new PageNavigator("ide"));
+		
 		/*
 		Map settings = new HashMap();
 		settings.put(CompilerOptions.OPTION_LineNumberAttribute,CompilerOptions.GENERATE);
 		settings.put(CompilerOptions.OPTION_SourceFileAttribute,CompilerOptions.GENERATE);
 
 		CompileRequestorImpl requestor = new CompileRequestorImpl();
-		Compiler compiler = new Compiler(new NameEnvironmentImpl(unit),
+		Compiler compiler = new Compiler(new NameEnviro	nmentImpl(unit),
 										DefaultErrorHandlingPolicies.proceedWithAllProblems(),
 										settings,
 										requestor,
