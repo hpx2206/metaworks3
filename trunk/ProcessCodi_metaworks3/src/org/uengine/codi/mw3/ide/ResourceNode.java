@@ -43,7 +43,7 @@ public class ResourceNode extends TreeNode {
 				node.setFolder(true);
 			}
 			else{
-				node.setType(TreeNode.TYPE_FILE_TEXT);
+				node.setType(findNodeType(node.getName()));
 			}
 			
 			child.add(node);
@@ -52,9 +52,7 @@ public class ResourceNode extends TreeNode {
 		return new ToAppend(this, child);
 	}
 	
-	@Override
-	public Object action(){
-		
+	public Editor beforeAction(){
 		Editor editor;
 		
 		if(this.getName().endsWith(".java")){
@@ -80,7 +78,12 @@ public class ResourceNode extends TreeNode {
 			editor = new Editor(this.getId(), type);
 		}
 		
-		return new ToAppend(new CloudWindow("editor"), editor);
+		return editor;
+	}
+	
+	@Override
+	public Object action(){
+		return new ToAppend(new CloudWindow("editor"), this.beforeAction());
 	}
 	
 	@ServiceMethod(payload={"id", "name"}, mouseBinding="right", target=ServiceMethodContext.TARGET_STICK)
@@ -88,69 +91,35 @@ public class ResourceNode extends TreeNode {
 		session.setClipboard(this);
 		
 		return new Object[]{new Refresh(session), new ResourceContextMenu()};
+	}
+	
+	public static String findNodeType(String name){
+		String nodeType = TreeNode.TYPE_FILE_TEXT;
+			
+		int pos = name.lastIndexOf('.');
+		if(pos > -1){
+			String ext = name.substring(pos);
+			
+			if(".html".equals(ext)){
+				nodeType = TreeNode.TYPE_FILE_HTML;
+			}else if(".java".equals(ext)){
+				nodeType = TreeNode.TYPE_FILE_JAVA;
+			}else if(".ejs".equals(ext)){
+				nodeType = TreeNode.TYPE_FILE_EJS;
+			}else if(".js".equals(ext)){
+				nodeType = TreeNode.TYPE_FILE_JS;
+			}else if(".form".equals(ext)){
+				nodeType = TreeNode.TYPE_FILE_FORM;
+			}else if(".process2".equals(ext)){
+				nodeType = TreeNode.TYPE_FILE_PROCESS;
+			}else if(".css".equals(ext)){
+				nodeType = TreeNode.TYPE_FILE_CSS;
+			}else if(".jpg".equals(ext) || ".gif".equals(ext) || ".png".equals(ext)){
+				nodeType = TreeNode.TYPE_FILE_IMAGE;
+			}
+
+		}
 		
-		
-		/*
-		menu.setId("edit");
-		menu.setName("Edit");
-		
-		// add undo menu item
-		MenuItem undo = new MenuItem();
-		undo.setId("undo");
-		undo.setName("Undo");
-		undo.setShortcut("Ctrl-Z");
-		
-		menu.add(undo);
-		
-		
-		// add redo menu item
-		MenuItem redo = new MenuItem();
-		redo.setId("redo");
-		redo.setName("Redo");
-		redo.setShortcut("Ctrl-Shift-Z|Ctrl-Y");
-		
-		menu.add(redo);
-		
-		// divider
-		menu.add(new MenuItem(MenuItem.TYPE_DIVIDER));
-		
-		
-		// add cut menu item
-		MenuItem cut = new MenuItem();
-		cut.setId("cut");
-		cut.setName("Cut");
-		cut.setShortcut("Ctrl-X");
-		
-		menu.add(cut);
-		
-		// add copy menu item
-		MenuItem copy = new MenuItem();
-		copy.setId("copy");
-		copy.setName("Copy");
-		copy.setShortcut("Ctrl-C");
-		
-		menu.add(copy);
-		
-		// add paste menu item
-		MenuItem paste = new MenuItem();
-		paste.setId("paste");
-		paste.setName("Paste");
-		paste.setShortcut("Ctrl-V");
-		
-		menu.add(paste);
-		
-		// add line menu item
-		Menu lineMenu = new Menu();
-		lineMenu.setId("line");
-		lineMenu.setName("Line");
-		lineMenu.setSub(true);
-		
-		MenuItem line = new MenuItem();
-		line.setId("line");
-		line.setName("Line");
-		line.setSubMenu(lineMenu);
-		
-		menu.add(line);
-		*/
+		return nodeType;
 	}
 }
