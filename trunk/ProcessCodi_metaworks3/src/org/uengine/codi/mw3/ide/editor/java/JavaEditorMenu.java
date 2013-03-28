@@ -11,5 +11,8 @@ public class JavaEditorMenu extends Menu {
 		this.setName("Editor");
 		
 		this.add(new SubMenuItem(new JavaSourceMenu()));
+		this.add(new MenuItem(MenuItem.TYPE_DIVIDER));
+		this.add(new SubMenuItem(new JavaRunAsMenu()));
+		
 	}
 }
