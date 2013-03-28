@@ -637,8 +637,8 @@ img {
 }
 
 .idept {
-    height: 18px;
-    line-height: 18px;
+    height: 16px;
+    line-height: 16px;
     display: block;
     background: url(../../images/waveStyle/i_company.png) 10px no-repeat;
     padding-left: 35px;
@@ -647,8 +647,8 @@ img {
     cursor: pointer;
 }
 .iemployee {
-    height: 18px;
-    line-height: 18px;
+    height: 16px;
+    line-height: 16px;
     display: block;
     background: url(../../images/waveStyle/i_user.png) 10px no-repeat;
     padding-left: 35px;
