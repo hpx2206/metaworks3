@@ -219,7 +219,174 @@ body {
 }
 
 
+.filemgr-tree U .item-fix {
+    padding-left : 15px;
+}
 
+.filemgr-tree U U .item-fix {
+    padding-left : 30px;
+}
+
+.filemgr-tree U U U .item-fix {
+    padding-left : 45px;
+}
+
+.filemgr-tree U U U U .item-fix {
+    padding-left : 60px;
+}
+
+.filemgr-tree U U U U U .item-fix {
+    padding-left : 75px;
+}
+
+.filemgr-tree U U U U U U .item-fix {
+    padding-left : 90px;
+}
+
+.filemgr-tree U U U U U U U .item-fix {
+    padding-left : 105px;
+}
+
+.filemgr-tree U U U U U U U U .item-fix {
+    padding-left : 120px;
+}
+
+.filemgr-tree U U U U U U U U U .item-fix {
+    padding-left : 135px;
+}
+
+.filemgr-tree U U U U U U U U U U .item-fix {
+    padding-left : 150px;
+}
+
+.filemgr-tree U U U U U U U U U U U .item-fix {
+    padding-left : 165px;
+}
+
+.filemgr-tree U U U U U U U U U U U U .item-fix {
+    padding-left : 180px;
+}
+
+.filemgr-tree U U U U U U U U U U U U U .item-fix {
+    padding-left : 195px;
+}
+
+.filemgr-tree U U U U U U U U U U U U U U .item-fix {
+    padding-left : 210px;
+}
+
+.filemgr-tree U U U U U U U U U U U U U U U .item-fix {
+    padding-left : 225px;
+}
+
+.filemgr-tree U U U U U U U U U U U U U U U U .item-fix {
+    padding-left : 240px;
+}
+
+.filemgr-tree U U U U U U U U U U U U U U U U U .item-fix {
+    padding-left : 255px;
+}
+
+.filemgr-tree U U U U U U U U U U U U U U U U U U .item-fix {
+    padding-left : 270px;
+}
+
+.filemgr-tree U U U U U U U U U U U U U U U U U U U .item-fix {
+    padding-left : 285px;
+}
+
+.filemgr-tree U U U U U U U U U U U U U U U U U U U U .item-fix {
+    padding-left : 300px;
+}
+
+
+
+/*-15px*/
+.minus15 U .item-fix {
+    padding-left : 0px !important;
+}
+
+.minus15 U U .item-fix {
+    padding-left : 15px  !important;
+}
+
+.minus15 U U U .item-fix {
+    padding-left : 30px  !important;
+}
+
+.minus15 U U U U .item-fix {
+    padding-left : 45px  !important;
+}
+
+.minus15 U U U U U .item-fix {
+    padding-left : 60px !important;
+}
+
+.minus15 U U U U U U .item-fix {
+    padding-left : 75px !important;
+}
+
+.minus15 U U U U U U U .item-fix {
+    padding-left : 90px !important;
+}
+
+.minus15 U U U U U U U U .item-fix {
+    padding-left : 105px !important;
+}
+
+.minus15 U U U U U U U U U .item-fix {
+    padding-left : 120px !important;
+}
+
+.minus15 U U U U U U U U U U .item-fix {
+    padding-left : 135px !important;
+}
+
+.minus15 U U U U U U U U U U U .item-fix {
+    padding-left : 150px !important;
+}
+
+.minus15 U U U U U U U U U U U U .item-fix {
+    padding-left : 165px !important;
+}
+
+.minus15 U U U U U U U U U U U U U .item-fix {
+    padding-left : 180px !important;
+}
+
+.minus15 U U U U U U U U U U U U U U .item-fix {
+    padding-left : 195px !important;
+}
+
+.minus15 U U U U U U U U U U U U U U U .item-fix {
+    padding-left : 210px !important;
+}
+
+.minus15 U U U U U U U U U U U U U U U U .item-fix {
+    padding-left : 225px !important;
+}
+
+.minus15 U U U U U U U U U U U U U U U U U .item-fix {
+    padding-left : 240px !important;
+}
+
+.minus15 U U U U U U U U U U U U U U U U U U .item-fix {
+    padding-left : 255px !important;
+}
+
+.minus15 U U U U U U U U U U U U U U U U U U U .item-fix {
+    padding-left : 270px !important;
+}
+
+.filemgr-tree U U U U U U U U U U U U U U U U U U U U .item-fix {
+    padding-left : 295px !important;
+}    
+    
+    
+/**/
+    
+    
+    
 .filemgr-tree .item-fix {
     position:relative;
     /*width:100%;*/
