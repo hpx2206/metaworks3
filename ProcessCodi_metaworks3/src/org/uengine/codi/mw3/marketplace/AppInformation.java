@@ -260,6 +260,7 @@ public class AppInformation implements ContextAware, ITool {
 		listing.setCategory(category);
 		
 		listing.syncToDatabaseMe();
+		listing.flushDatabaseMe();
 		
 		Marketplace goVendorPage = new Marketplace();
 		goVendorPage.session = session;
