@@ -6,6 +6,7 @@ import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.uengine.codi.mw3.Login;
+import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.ide.CloudIDE;
 import org.uengine.codi.mw3.model.Session;
 
@@ -80,6 +81,6 @@ public class TestProject implements ContextAware {
 		CloudIDE cloudIde = new CloudIDE();
 		cloudIde.load(session);
 		
-		this.setContent(cloudIde);
+		this.setContent(new MainPanel(cloudIde));
 	}
 }
