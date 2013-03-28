@@ -30,7 +30,7 @@ public class Servers implements CloudContent{
 		node.setHidden(true);
 		
 		ServerNode tomcatNode = new ServerNode();
-		tomcatNode.setId("servers/tocmat");
+		tomcatNode.setId("Tomcat v7.0 Server at 192.168.0.225");
 		tomcatNode.setName("Tomcat v7.0 Server at 192.168.0.225 [Stopeed]");
 		tomcatNode.setType(TreeNode.TYPE_FILE_SERVER);
 		
