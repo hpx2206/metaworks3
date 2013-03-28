@@ -12,9 +12,7 @@ import org.uengine.codi.mw3.model.Main;
 import org.uengine.codi.mw3.model.MainSNS;
 import org.uengine.codi.mw3.model.PinterestMain;
 import org.uengine.codi.mw3.model.Session;
-import org.uengine.codi.mw3.tadpole.TadpoleTopPanel;
-import org.uengine.codi.mw3.widget.IFrame;
-import org.uengine.kernel.GlobalContext;
+import org.uengine.codi.mw3.tadpole.Tadpole;
 import org.uengine.processmarket.Market;
 
 public class PageNavigator{
@@ -87,33 +85,15 @@ public class PageNavigator{
 		return new MainPanel(marketplace);
 	}
 	
-	@ServiceMethod(callByContent=true)
-	public Object goTadPole() throws Exception {
-		//top
-		TadpoleTopPanel top = new TadpoleTopPanel(session);
-		top.setPageNavigator(new PageNavigator());
+	
+	@ServiceMethod(callByContent=true, inContextMenu=true)
+	public MainPanel goTadPole() throws Exception {
 		
-		//center
-		String host = GlobalContext.getPropertyString("pole.server.host");
-		String port = GlobalContext.getPropertyString("pole.server.port");
-		String uri  = GlobalContext.getPropertyString("pole.call.uri");
+		Tadpole tadpole = new Tadpole();
+		tadpole.session = session;
+		tadpole.load();
 		
-		String url = "http://" + host + ":" + port + uri;
-		
-		IFrame goTadPole = new IFrame();
-		goTadPole.setSrc(url);
-		goTadPole.setWidth(1900);
-		goTadPole.setHeight(800);
-		
-		Layout mainLayout = new Layout();
-		
-		mainLayout.setName("center");
-		mainLayout.setId("main");
-		mainLayout.setNorth(top);
-		mainLayout.setCenter(goTadPole);
-		
-		
-		return new Object[] {new MainPanel(mainLayout)};
+		return new MainPanel(tadpole);
 	}
 	
 
