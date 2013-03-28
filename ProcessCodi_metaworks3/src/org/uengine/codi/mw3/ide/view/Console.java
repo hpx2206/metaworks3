@@ -35,6 +35,8 @@ public class Console implements CloudContent{
 		}
 		
 	public Console(){
+		this.setId("console");
+		this.setType(this.getId());
 		this.setName("$Console");
 	}
 		
