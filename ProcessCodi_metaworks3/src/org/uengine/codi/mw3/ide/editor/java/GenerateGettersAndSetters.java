@@ -2,6 +2,7 @@ package org.uengine.codi.mw3.ide.editor.java;
 
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
+import org.metaworks.ToAppend;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.Tree;
 import org.metaworks.component.TreeNode;
@@ -33,10 +34,6 @@ public class GenerateGettersAndSetters {
 		public void setFieldTree(Tree fieldTree) {
 			this.fieldTree = fieldTree;
 		}
-		
-	String test;
-		
-	String test2;
 	
 	public GenerateGettersAndSetters(){
 	}
@@ -71,7 +68,10 @@ public class GenerateGettersAndSetters {
 					getter.setType(TreeNode.TYPE_METHOD);
 					getter.setLoaded(true);
 					getter.setId("get" + CodiStringUtil.firstUpperCase(field.getName()));
-					getter.setName(getter.getId());
+					getter.setName(getter.getId() + "()");
+					getter.setExt1("get");
+					getter.setExt2(field.getName());
+					getter.setExt3(field.getType());
 				}
 
 				TreeNode setter = null;
@@ -81,6 +81,11 @@ public class GenerateGettersAndSetters {
 					setter.setLoaded(true);
 					setter.setId("set" + CodiStringUtil.firstUpperCase(field.getName()));
 					setter.setName(setter.getId() + "(" + field.getType() +")");
+
+					setter.setExt1("set");
+					setter.setExt2(field.getName());
+					setter.setExt3("void");
+					setter.setExt4(field.getType() + " " + field.getName());
 				}
 
 				if(getter != null || setter != null){
@@ -111,12 +116,32 @@ public class GenerateGettersAndSetters {
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] ok(){
 		
+		StringBuffer sb = new StringBuffer();
+		String lineChar = "";
+				
 		for(TreeNode node : this.getFieldTree().getCheckNodes()){
-			if(TreeNode.TYPE_METHOD.equals(node.getType()))
-			System.out.println(node.getName());
+			if(TreeNode.TYPE_METHOD.equals(node.getType())){				
+				String name = node.getName();
+				
+				if("set".equals(node.getExt1()))
+					name = name.replace(")", " " + node.getExt2() + ")");
+				
+				sb.append(lineChar).append("public ").append(node.getExt3()).append(" ").append(name).append("{").append("\n");
+				
+				if("get".equals(node.getExt1())){
+					sb.append("\t").append("return").append(" this.").append(node.getExt2()).append(";").append("\n");	
+				}else{
+					sb.append("\t").append("this.").append(node.getExt2()).append(" = ").append(node.getExt2()).append(";").append("\n");	
+				}
+				
+				sb.append("}").append("\t");				
+				sb.append("\n");
+				
+				lineChar = "\n";
+			}
 		}
 		
-		return new Object[]{new Remover(new ModalWindow())};
+		return new Object[]{new Remover(new ModalWindow()), new ToAppend(new JavaCodeEditor(this.getId()), sb.toString())};
 	}
 	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_APPEND)

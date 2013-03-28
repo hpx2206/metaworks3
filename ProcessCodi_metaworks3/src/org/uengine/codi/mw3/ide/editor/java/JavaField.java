@@ -1,9 +1,8 @@
 package org.uengine.codi.mw3.ide.editor.java;
 
-import org.metaworks.component.TreeNode;
 
-public class JavaField extends TreeNode {
-
+public class JavaField {
+	
 	String name;
 		public String getName() {
 			return name;
@@ -11,7 +10,7 @@ public class JavaField extends TreeNode {
 		public void setName(String name) {
 			this.name = name;
 		}
-	
+
 	String type;
 		public String getType() {
 			return type;
@@ -19,7 +18,7 @@ public class JavaField extends TreeNode {
 		public void setType(String type) {
 			this.type = type;
 		}
-		
+
 	boolean statics;
 		public boolean isStatics() {
 			return statics;
