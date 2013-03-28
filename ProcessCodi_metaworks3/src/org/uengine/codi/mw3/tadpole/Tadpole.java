@@ -37,6 +37,7 @@ public class Tadpole {
 		//top
 		TadpoleTopPanel top = new TadpoleTopPanel(session);
 		
+		
 		//center
 		String host = GlobalContext.getPropertyString("pole.server.host");
 		String port = GlobalContext.getPropertyString("pole.server.port");
@@ -47,11 +48,14 @@ public class Tadpole {
 		IFrame goTadPole = new IFrame();
 		goTadPole.setSrc(url);
 		
+		TadpoleCenterPanel center = new TadpoleCenterPanel();
+		center.setTadpoleHome(goTadPole);
+		
 		Layout mainLayout = new Layout();
 		
 		mainLayout.setName("center");
 		mainLayout.setId("main");
-		mainLayout.setCenter(goTadPole);
+		mainLayout.setCenter(center);
 		
 		Layout storeLayout = new Layout();
 		storeLayout.setNorth(top);
