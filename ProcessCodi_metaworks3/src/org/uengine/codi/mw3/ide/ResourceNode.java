@@ -55,26 +55,13 @@ public class ResourceNode extends TreeNode {
 	public Editor beforeAction(){
 		Editor editor;
 		
-		if(this.getName().endsWith(".java")){
+		String type = ResourceNode.findNodeType(this.getName());
+		
+		if(type.equals(TreeNode.TYPE_FILE_JAVA)){
 			editor = new JavaCodeEditor(this.getId());
-		}else if(this.getName().endsWith(".pwd")){
+		}else if(type.equals(TreeNode.TYPE_FILE_PROCESS)){
 			editor = new ProcessEditor(this.getId());
 		}else{
-			int pos = this.getName().lastIndexOf(".");
-			
-			String ext = "";
-			String type = "html";
-			
-			if(pos > -1){
-				ext = this.getName().substring(pos);			
-				
-				if(".js".equals(ext)){
-					type = "javascript";
-				}else if(".xml".equals(ext)){
-					type = "xml";
-				}
-			}
-
 			editor = new Editor(this.getId(), type);
 		}
 		
