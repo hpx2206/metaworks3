@@ -637,21 +637,21 @@ img {
 }
 
 .idept {
-    height: 23px;
-    line-height: 23px;
+    height: 18px;
+    line-height: 18px;
     display: block;
-    background: url(../../images/waveStyle/i_company.png) no-repeat;
-    padding-left: 20px;
+    background: url(../../images/waveStyle/i_company.png) 10px no-repeat;
+    padding-left: 35px;
     overflow: hidden;
     white-space: nowrap;
     cursor: pointer;
 }
 .iemployee {
-    height: 23px;
-    line-height: 23px;
+    height: 18px;
+    line-height: 18px;
     display: block;
-    background: url(../../images/waveStyle/i_user.png) no-repeat;
-    padding-left: 20px;
+    background: url(../../images/waveStyle/i_user.png) 10px no-repeat;
+    padding-left: 35px;
     overflow: hidden;
     white-space: nowrap;
     cursor: pointer;
