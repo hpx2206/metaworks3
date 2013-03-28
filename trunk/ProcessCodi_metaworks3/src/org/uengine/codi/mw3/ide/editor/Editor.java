@@ -166,7 +166,7 @@ public class Editor implements CloudContent {
 			}
 
 			writer = new FileWriter(file);
-			writer.write(this.getContent());
+			writer.write(this.getContent()!=null?this.getContent():"");
 
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
