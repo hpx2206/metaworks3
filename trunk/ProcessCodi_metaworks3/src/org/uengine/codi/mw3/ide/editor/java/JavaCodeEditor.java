@@ -5,8 +5,8 @@ import java.io.PrintStream;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
-import org.aspectj.org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jdt.core.compiler.CharOperation;
+import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jdt.internal.compiler.env.ICompilationUnit;
 import org.metaworks.Refresh;
 import org.metaworks.ServiceMethodContext;
@@ -69,7 +69,7 @@ public class JavaCodeEditor extends Editor {
 			CompilationChecker compCheck = new CompilationChecker(ccl.getCl());
 			this.unit = compCheck.generateCompilationUnit(this.getContent());
 			
-			IProblem[] problems = (IProblem[]) compCheck.getErrors(this.unit);
+			IProblem[] problems = compCheck.getErrors(this.unit);
 			compCheck.display();
 
 			for (IProblem problem : problems) {

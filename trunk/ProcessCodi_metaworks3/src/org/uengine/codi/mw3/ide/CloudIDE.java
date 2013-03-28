@@ -156,8 +156,8 @@ public class CloudIDE {
 		navigatorWindow.getTabs().add(navigator);
 
 		CloudWindow editorWindow = new CloudWindow("editor");
-		JavaCodeEditor editor = new JavaCodeEditor(File.separatorChar + "src" + File.separatorChar + "examples" + File.separatorChar + "TestProject.java");
-		editorWindow.getTabs().add(editor);
+		//JavaCodeEditor editor = new JavaCodeEditor(File.separatorChar + "src" + File.separatorChar + "examples" + File.separatorChar + "TestProject.java");
+		//editorWindow.getTabs().add(editor);
 		
 		Servers servers = new Servers();
 		servers.load();
