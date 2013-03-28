@@ -6,6 +6,7 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.MenuItem;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.ide.CloudWindow;
+import org.uengine.codi.mw3.ide.editor.SQLClientEditor;
 import org.uengine.codi.mw3.ide.editor.TerminalEditor;
 import org.uengine.codi.mw3.ide.templete.NewClass;
 import org.uengine.codi.mw3.ide.templete.NewFile;
@@ -29,6 +30,7 @@ public class NewMenu extends CloudMenu {
 		this.add(new MenuItem("newFile", "File"));
 		this.add(new MenuItem(MenuItem.TYPE_DIVIDER));
 		this.add(new MenuItem("newTerminal", "Terminal"));
+		this.add(new MenuItem("newSQLClient", "SQL Client"));
 		
 	}
 	
@@ -79,5 +81,11 @@ public class NewMenu extends CloudMenu {
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
 	public Object newTerminal(){
 		return new ToAppend(new CloudWindow("editor"), new TerminalEditor());
+	}
+	
+	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
+	public Object newSQLClient() throws Exception{
+		
+		return new ToAppend(new CloudWindow("editor"), new SQLClientEditor());
 	}
 }
