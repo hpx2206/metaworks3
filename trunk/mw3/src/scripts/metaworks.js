@@ -2040,7 +2040,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
         				//$('body').append("<div id='" + mw3.popupDivId + "' class='target_popup' style='z-index:10;position:absolute; top:50px; left:10px'></div>");
         				$('body').append("<div id='" + mw3.popupDivId + "' class='target_popup' style='z-index:10;position:absolute; top:0px; left:0px'></div>");
         				
-        				$('body').one('mousedown', {popupDivId: mw3.popupDivId}, function(event){$('#' + event.data.popupDivId).remove();});
+        				$('body').one('click', {popupDivId: mw3.popupDivId}, function(event){$('#' + event.data.popupDivId).remove();});
         				
         				mw3.locateObject(result, null, '#' + mw3.popupDivId).targetDivId;
         				
@@ -2061,7 +2061,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 		    			
         				$('body').append("<div id='" + mw3.popupDivId + "' class='target_stick' style='z-index:10;position:absolute; top:" + mw3.mouseY + "px; left:" + mw3.mouseX + "px'></div>");
         				
-        				$('body').one('mousedown', {popupDivId: mw3.popupDivId}, function(event){$('#' + event.data.popupDivId).remove();});
+        				$('body').one('click', {popupDivId: mw3.popupDivId}, function(event){$('#' + event.data.popupDivId).remove();});
         				
         				mw3.locateObject(result, null, '#' + mw3.popupDivId);        				
 
