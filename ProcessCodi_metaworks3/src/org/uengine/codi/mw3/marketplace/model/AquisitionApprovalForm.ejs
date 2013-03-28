@@ -13,10 +13,6 @@ if(value) {
 	<div id="reqApp_Y_<%=objectId%>" style="float:left"> <%=mw3.localize('$Yes')%> </div>
 	<div id="reqApp_Y_checkBox_<%=objectId%>"> <%=fields.approval.here()%> </div>
 
-	<div id="reqApp_url_"_<%=objectId%>">
-		<div style="float:left"> <%=mw3.localize('$Url')%> </div>
-		<div> <%=fields.url.here()%> </div>
-	</div>
 	<div id="textArea_<%=objectId%>">
 		<h4> <%=mw3.localize('$Rejected.Reason')%> </h4>
 		<%=fields.rejectReason.here()%>
