@@ -1,5 +1,7 @@
 package org.uengine.codi.mw3.ide.editor.java;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
@@ -15,6 +17,8 @@ import org.uengine.codi.mw3.ide.CloudClassLoader;
 import org.uengine.codi.mw3.ide.CompilationChecker;
 import org.uengine.codi.mw3.ide.editor.Editor;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.codi.platform.Console;
+import org.uengine.codi.platform.SecurityContext;
 
 public class JavaCodeEditor extends Editor {
 
@@ -100,8 +104,30 @@ public class JavaCodeEditor extends Editor {
 			String packageName = CharOperation.toString(this.unit.getPackageName());
 			if(packageName != null && !packageName.isEmpty())
 				className = packageName + "." + className;
-				
+						
 			Class clazz = ccl.getCl().loadClass(className);
+			
+			System.setOut(new PrintStream(new ByteArrayOutputStream()){
+				public void println(String str){
+						Console.addLog(str);
+				}
+
+				public void println(Object x) {
+						Console.addLog(""+x);
+				}
+				
+			});	
+
+			System.setErr(new PrintStream(new ByteArrayOutputStream()){
+				public void println(String str){
+				}
+				public void print(String str){
+				}
+				public void println(Object x) {
+				}
+			});
+			
+			
 			Method m = clazz.getMethod("main",	new Class[] { String[].class });
 			m.invoke(clazz, new Object[] { new String[0] });
 		} catch (Exception e) {
