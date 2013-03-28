@@ -2,8 +2,16 @@ package org.uengine.codi.mw3.ide;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.annotation.AutowiredFromClient;
+import org.uengine.codi.mw3.model.Session;
 
 public class Templete implements ContextAware {
+	
+	@AutowiredFromClient
+	public Session session;
+	
+	@AutowiredFromClient
+	public JavaBuildPath jbPath;
 	
 	MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {

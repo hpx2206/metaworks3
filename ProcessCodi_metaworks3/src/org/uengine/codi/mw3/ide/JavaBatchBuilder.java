@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.Writer;
 import java.util.HashMap;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,6 +15,12 @@ import org.eclipse.jdt.core.compiler.batch.BatchCompiler;
 
 public class JavaBatchBuilder {
 
+	String classPath;
+	
+	String outputPath;
+	
+	List<String> buildClass;
+	
 	public boolean build(){
 		Exception exception = null;
 		boolean success = false;
