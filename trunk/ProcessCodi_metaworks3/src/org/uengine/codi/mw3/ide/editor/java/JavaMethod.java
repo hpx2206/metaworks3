@@ -11,7 +11,7 @@ public class JavaMethod {
 		public void setName(String name) {
 			this.name = name;
 		}
-		
+
 	String returnType;
 		public String getReturnType() {
 			return returnType;

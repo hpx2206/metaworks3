@@ -10,6 +10,7 @@ import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.Modifier;
 import org.eclipse.jdt.core.dom.PackageDeclaration;
+import org.eclipse.jdt.core.dom.PrimitiveType;
 import org.eclipse.jdt.core.dom.SimpleType;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
@@ -62,7 +63,7 @@ public class JavaParser {
 		if(this.getContent() == null)
 			return;
 		
-		ASTParser parser = ASTParser.newParser(AST.JLS3);
+		ASTParser parser = ASTParser.newParser(AST.JLS4);
 		parser.setResolveBindings(true);
 		parser.setStatementsRecovery(true);
 		parser.setBindingsRecovery(true);
@@ -88,10 +89,16 @@ public class JavaParser {
 				MethodDeclaration methodDeclaration  = (MethodDeclaration)declarationclass;
 				
 				String name = methodDeclaration.getName().getFullyQualifiedName();
-		    	String returnType = methodDeclaration.getName().getFullyQualifiedName();
-		    	
-		    	if(returnType == null)
-		    		returnType = "void";
+				String returnTypeName = null;
+				
+				if(methodDeclaration.getReturnType2() instanceof SimpleType){
+					SimpleType returnType = (SimpleType)methodDeclaration.getReturnType2();
+					
+					returnTypeName = returnType.getName().getFullyQualifiedName();
+				}
+					
+		    	if(returnTypeName == null)
+		    		returnTypeName = "void";
 		    	
 		    	List<JavaField> parameters = new ArrayList<JavaField>();
                 for (Object parameter : methodDeclaration.parameters()) {
@@ -100,7 +107,7 @@ public class JavaParser {
                                                 
 				JavaMethod method = new JavaMethod();
 		    	method.setName(name);
-		    	method.setReturnType(returnType);
+		    	method.setReturnType(returnTypeName);
 		    	method.setParameters(parameters);
 		    	method.setOwnerClassName(this.getClassName());
 		    	methods.add(method);

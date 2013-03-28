@@ -38,18 +38,22 @@ org_uengine_codi_mw3_ide_editor_java_JavaCodeEditor.prototype = {
 		return object;
 	},
 		
-	toAppend : function(errorList){
-		var annotations = [];
-		
-		for(var i=0; i<errorList.length; i++){
-			annotations.push({ 
-                row: errorList[i].lineNumber - 1,  
-                text: errorList[i].message, 
-                type: errorList[i].type 
-            });
+	toAppend : function(appendObject){
+		if(typeof appendObject == 'array'){
+			var annotations = [];
+			
+			for(var i=0; i<appendObject.length; i++){
+				annotations.push({ 
+	                row: appendObject[i].lineNumber - 1,  
+	                text: appendObject[i].message, 
+	                type: appendObject[i].type 
+	            });
+			}
+			
+			this.editor.getSession().setAnnotations(annotations);			
+		}else{
+			this.editor.insert(appendObject);
 		}
-		
-		this.editor.getSession().setAnnotations(annotations);
 	},
 	
 	load : function(){		
