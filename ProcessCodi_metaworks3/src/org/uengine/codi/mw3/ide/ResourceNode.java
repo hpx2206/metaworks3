@@ -61,10 +61,15 @@ public class ResourceNode extends TreeNode {
 			editor = new JavaCodeEditor(this.getId());
 		}else if(type.equals(TreeNode.TYPE_FILE_PROCESS)){
 			editor = new ProcessEditor(this.getId());
+			((ProcessEditor)editor).getProcessDesigner().setBasePath(jbPath.getBasePath());
+			try {
+				((ProcessEditor)editor).getProcessDesigner().load();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}else{
 			editor = new Editor(this.getId(), type);
 		}
-		
 		return editor;
 	}
 	
