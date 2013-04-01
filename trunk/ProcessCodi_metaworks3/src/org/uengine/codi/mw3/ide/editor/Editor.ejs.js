@@ -47,6 +47,8 @@ org_uengine_codi_mw3_ide_editor_Editor.prototype = {
 		faceHelper.editor.setTheme("ace/theme/eclipse");
 		
 		var type = 'javascript';
+		if(this.object.type == 'html')
+			type = 'html';
 		
 		var JavaMode = require("ace/mode/" + type).Mode;
 		faceHelper.editor.getSession().setMode(new JavaMode());
