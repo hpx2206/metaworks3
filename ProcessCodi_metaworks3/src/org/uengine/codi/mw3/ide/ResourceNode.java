@@ -97,7 +97,7 @@ public class ResourceNode extends TreeNode {
 				nodeType = TreeNode.TYPE_FILE_JS;
 			}else if(".form".equals(ext)){
 				nodeType = TreeNode.TYPE_FILE_FORM;
-			}else if(".process2".equals(ext)){
+			}else if(".wpd".equals(ext)){
 				nodeType = TreeNode.TYPE_FILE_PROCESS;
 			}else if(".css".equals(ext)){
 				nodeType = TreeNode.TYPE_FILE_CSS;
