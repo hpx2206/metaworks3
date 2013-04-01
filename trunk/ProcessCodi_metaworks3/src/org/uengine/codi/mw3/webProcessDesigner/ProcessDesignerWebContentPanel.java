@@ -190,6 +190,15 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 			this.lastTracingTag = lastTracingTag;
 		}
 		
+	String basePath;
+	@Hidden
+		public String getBasePath() {
+			return basePath;
+		}
+		public void setBasePath(String basePath) {
+			this.basePath = basePath;
+		}
+
 	PropertiesWindow propertiesWindow;
 		public PropertiesWindow getPropertiesWindow() {
 			return propertiesWindow;
@@ -399,7 +408,7 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 			def.setName(title);
 			FileOutputStream fos = null;
 			try{
-				File file = new File(processEditor.jbPath.getBasePath() + processEditor.getFilename());
+				File file = new File(processEditor.jbPath.getBasePath() + processEditor.getId());
 				fos = new FileOutputStream(file);
 				String definitionInString = (String)GlobalContext.serialize(def, ProcessDefinition.class);
 				ByteArrayInputStream bai = new ByteArrayInputStream(definitionInString.getBytes(GlobalContext.ENCODING));
@@ -576,7 +585,8 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 		String processName = getAlias().substring(0, getAlias().indexOf("."));
 		setProcessName(processName);
 		/// read source file
-		File sourceCodeFile = new File(CodiClassLoader.getMyClassLoader().sourceCodeBase() + "/" + processName + ".process2");
+		File sourceCodeFile = new File(getBasePath() + getAlias());
+//		File sourceCodeFile = new File(CodiClassLoader.getMyClassLoader().sourceCodeBase() + "/" + processName + ".process2");
 		
 		ByteArrayOutputStream bao = new ByteArrayOutputStream();
 		FileInputStream is;
