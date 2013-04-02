@@ -8,13 +8,10 @@ import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.ToAppend;
-import org.metaworks.annotation.AutowiredFromClient;
-import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.component.TreeNode;
-import org.uengine.codi.mw3.model.Popup;
+import org.uengine.kernel.Role;
 
 @Face(
 	ejsPath="dwr/metaworks/org/metaworks/component/TreeNode.ejs"

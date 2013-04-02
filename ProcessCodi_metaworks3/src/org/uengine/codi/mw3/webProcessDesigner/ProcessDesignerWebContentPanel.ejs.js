@@ -290,7 +290,7 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
     		if( shapeType == 'GEOM' ){	
 	    		if(clipboardNode && clipboardNode.__className=="org.uengine.codi.mw3.knowledge.WfNode"){
 	    			canvas.drawLabel(element, clipboardNode.name);
-	    			customData.push( {"customId": clipboardNode.id , "customName" : clipboardNode.name , "customType" : "wfNode"});
+//	    			customData.push( {"customId": clipboardNode.id , "customName" : clipboardNode.name , "customType" : "wfNode"});
 	    			var value = mw3.objects[objectId];
 	    			value.tempElementId = $(this).attr('id');
 	    			value.tempElementName = clipboardNode.name;
@@ -298,12 +298,12 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 	    			value.tempElementType = "wfNode";
 	    			value.addValiable();
 	    		}
-	    		if(clipboardNode && clipboardNode.__className=="org.uengine.codi.mw3.webProcessDesigner.Role"){
-	    			var wfText = $(element).children('[id$=_LABEL]').text();
-	    			wfText = wfText + '(' + clipboardNode.name + ')';
-	    			canvas.drawLabel(element, wfText);
-	    			customData.push( {"customId": "" , "customName" : clipboardNode.name , "customType" : "role"});
-	    		}
+//	    		if(clipboardNode && clipboardNode.__className=="org.uengine.codi.mw3.webProcessDesigner.Role"){
+//	    			var wfText = $(element).children('[id$=_LABEL]').text();
+//	    			wfText = wfText + '(' + clipboardNode.name + ')';
+//	    			canvas.drawLabel(element, wfText);
+//	    			customData.push( {"customId": "" , "customName" : clipboardNode.name , "customType" : "role"});
+//	    		}
 	    		if(clipboardNode && clipboardNode.__className=="org.uengine.codi.mw3.model.ResourceFile"){
 	    			var javaFileName = clipboardNode.name;
 	    			if( javaFileName != '' && javaFileName.length > 5){
@@ -323,14 +323,22 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 	    		    		var wfText = $(element).children('[id$=_LABEL]').text();
 	    		    		wfText = wfText + '(' + clipboardNode.name + ')';
 	    		    		canvas.drawLabel(element, wfText);
-	    		    		customData.push( {"customId": "" , "customName" : tokens[tokens.length-2] , "customType" : "class"});
+//	    		    		customData.push( {"customId": "" , "customName" : tokens[tokens.length-2] , "customType" : "class"});
 	    		    		
 	    		    		var value = mw3.objects[objectId];
-	    	    			value.tempElementId = $(this).attr('id');
-	    	    			value.tempElementName = tokens[tokens.length-2];
-	    	    			value.tempElementTypeId = clipboardNode.alias;
-	    	    			value.tempElementType = "class";
-	    	    			value.addValiable();
+	    		    		var variableName = tokens[tokens.length-2];
+	    		    		var contentValue = {
+									__className : 'org.uengine.codi.mw3.webProcessDesigner.PrcsVariable',
+									name : variableName ,
+									typeId : clipboardNode.alias ,
+									variableType : 'complexType'
+							};
+	    		    		value.variableMap[variableName] = contentValue;
+//	    	    			value.tempElementId = $(this).attr('id');
+//	    	    			value.tempElementName = tokens[tokens.length-2];
+//	    	    			value.tempElementTypeId = clipboardNode.alias;
+//	    	    			value.tempElementType = "class";
+//	    	    			value.addValiable();
 	    		    	}
 	    			}
 	    		}

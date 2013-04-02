@@ -3,21 +3,16 @@ package org.uengine.codi.mw3.webProcessDesigner;
 import java.util.ArrayList;
 
 import org.metaworks.ContextAware;
-import org.metaworks.FieldDescriptor;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
-import org.metaworks.WebFieldDescriptor;
-import org.metaworks.WebObjectType;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.Tree;
 import org.metaworks.component.TreeNode;
-import org.metaworks.dao.Database;
-import org.metaworks.dao.IDAO;
-import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.kernel.ParameterContext;
+import org.uengine.kernel.Role;
 
 public class MappingPanel implements ContextAware {
 	MetaworksContext metaworksContext;

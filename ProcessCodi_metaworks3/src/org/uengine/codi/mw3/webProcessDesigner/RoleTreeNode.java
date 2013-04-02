@@ -7,6 +7,7 @@ import org.metaworks.component.TreeNode;
 import org.metaworks.dao.IDAO;
 import org.metaworks.dao.MetaworksDAO;
 import org.metaworks.dao.TransactionContext;
+import org.uengine.kernel.Role;
 
 public class RoleTreeNode extends TreeNode {
 	
@@ -19,7 +20,8 @@ public class RoleTreeNode extends TreeNode {
 			Role role = roleList.get(i);			
 			
 			RoleTreeNode node = new RoleTreeNode();			
-			node.setId("[roles]." + role.getName());
+			// 주의 : id에 "." 이 들어간다면 Tree 에서 Id검색을 할수가 없다. 그리하여 "-" 으로 데이터 셋팅함
+			node.setId("[roles]-" + role.getName());
 			node.setName(role.getName());
 			node.setParentId(this.getId());
 			node.setAlign(this.getAlign());

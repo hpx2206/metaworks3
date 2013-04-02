@@ -46,7 +46,7 @@ public class VariableTreeNode extends TreeNode {
 			// TODO 처음에 로딩할 필요가 없다면 아래 루프 부분은 클릭시 작동하는걸로 뺀다. 
 			// RoleTreeNode 를 따로 만들어 주어야 한다.
 			String typeIdAttr = prcsValiable.getTypeId();
-			String typeAttr = prcsValiable.getDataType().getSelected();
+			String typeAttr = prcsValiable.getVariableType();
 			String className =  typeIdAttr.substring(0, typeIdAttr.lastIndexOf(".")).replaceAll("/", ".");
 			node.setClassName(className);
 			this.add(node);
