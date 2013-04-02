@@ -1,6 +1,8 @@
 package org.uengine.codi.mw3.webProcessDesigner;
 
-import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
@@ -8,6 +10,7 @@ import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.Tree;
 import org.metaworks.component.TreeNode;
+import org.uengine.kernel.Role;
 
 public class MappingTree extends Tree{
 	
@@ -22,13 +25,28 @@ public class MappingTree extends Tree{
 
 	@ServiceMethod(payload={"id", "align"} , target=ServiceMethodContext.TARGET_SELF)
 	public void init(){
+		ArrayList<Role>	 roleList = new ArrayList<Role>();
+        Collection<Object> collRole = wpdPanel.roleMap.values();
+        Iterator<Object> iterRole = collRole.iterator();
+        while(iterRole.hasNext()){
+        	Object act = iterRole.next();
+        	roleList.add((Role)act);
+        }
+        ArrayList<PrcsVariable>	 variableList = new ArrayList<PrcsVariable>();
+        Collection<Object> collVariable = wpdPanel.variableMap.values();
+        Iterator<Object> iterVariable = collVariable.iterator();
+        while(iterVariable.hasNext()){
+        	Object act = iterVariable.next();
+        	variableList.add((PrcsVariable)act);
+        }
+        
 		String treeId = this.getId();
 		RoleTreeNode roleNode = new RoleTreeNode();
 		roleNode.setId(treeId + "Roles");
 		roleNode.setType(TreeNode.TYPE_FOLDER);
 		roleNode.setFolder(true);
 		roleNode.setAlign(this.getAlign());
-		roleNode.load(defineTab.getRolePanel().getRoles());
+		roleNode.load(roleList);
 
 		VariableTreeNode variableTreeNode = new VariableTreeNode();
 		variableTreeNode.setId(treeId + "Variables");
@@ -36,7 +54,15 @@ public class MappingTree extends Tree{
 		variableTreeNode.setType(TreeNode.TYPE_FOLDER);
 		variableTreeNode.setFolder(true);
 		variableTreeNode.setAlign(this.getAlign());
-		variableTreeNode.load(defineTab.getPrcsValiablePanel().getPrcsValiables());
+		variableTreeNode.load(variableList);
+		
+		InstanceTreeNode InstanceTreeNode = new InstanceTreeNode();
+		InstanceTreeNode.setId(treeId + "Instance");
+		InstanceTreeNode.setTreeId(treeId);
+		InstanceTreeNode.setType(TreeNode.TYPE_FOLDER);
+		InstanceTreeNode.setFolder(true);
+		InstanceTreeNode.setAlign(this.getAlign());
+		InstanceTreeNode.load();
 		
 		TreeNode rootnode = new TreeNode();
 		rootnode.setRoot(true);
@@ -50,6 +76,7 @@ public class MappingTree extends Tree{
 		
 		rootnode.add(roleNode);
 		rootnode.add(variableTreeNode);
+		rootnode.add(InstanceTreeNode);
 		
 		this.setNode(rootnode);
 		
@@ -57,5 +84,5 @@ public class MappingTree extends Tree{
 	}
 	
 	@AutowiredFromClient
-	public DefineTab defineTab;
+	public ProcessDesignerWebContentPanel wpdPanel;
 }

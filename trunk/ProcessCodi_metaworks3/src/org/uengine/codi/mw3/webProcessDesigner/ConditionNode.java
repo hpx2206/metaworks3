@@ -1,23 +1,19 @@
 package org.uengine.codi.mw3.webProcessDesigner;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 import org.metaworks.ContextAware;
 import org.metaworks.FieldDescriptor;
 import org.metaworks.MetaworksContext;
-import org.metaworks.Refresh;
 import org.metaworks.ServiceMethodContext;
-import org.metaworks.ToAppend;
 import org.metaworks.WebFieldDescriptor;
 import org.metaworks.WebObjectType;
 import org.metaworks.annotation.AutowiredFromClient;
-import org.metaworks.annotation.Face;
-import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.SelectBox;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.kernel.Role;
 
 //@Face(ejsPath="dwr/metaworks/genericfaces/GridFace.ejs")
 public class ConditionNode  implements Cloneable, ContextAware{
@@ -101,7 +97,7 @@ public class ConditionNode  implements Cloneable, ContextAware{
 		if( this.getRoleList() != null){
 			for(int i = 0; i < roleList.size(); i++){
 				Role role = roleList.get(i);
-				choice.add("[ROLE]"+role.name, role.name);
+				choice.add("[ROLE]"+role.getName(), role.getName());
 			}
 		}
 		if( this.getPrcsValiableList() != null){
@@ -110,7 +106,7 @@ public class ConditionNode  implements Cloneable, ContextAware{
 				String nameAttr = prcsValiable.getName();
 				choice.add(nameAttr, nameAttr);
 				String typeIdAttr = prcsValiable.getTypeId();
-				String typeAttr = prcsValiable.getDataType().getSelected();
+				String typeAttr = prcsValiable.getVariableType();
 				if( "complexType".equals(typeAttr)){
 					WebObjectType wot = MetaworksRemoteService.getInstance().getMetaworksType( typeIdAttr.substring(0, typeIdAttr.lastIndexOf(".")).replaceAll("/", ".") ); 
 					WebFieldDescriptor wfields[] = wot.getFieldDescriptors();

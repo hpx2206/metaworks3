@@ -2,11 +2,6 @@ package org.uengine.codi.mw3.webProcessDesigner;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
-
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-import net.sf.json.JSONSerializer;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
@@ -14,15 +9,14 @@ import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.component.TreeNode;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.kernel.Role;
 import org.uengine.kernel.And;
 import org.uengine.kernel.Condition;
 import org.uengine.kernel.Evaluate;
 import org.uengine.kernel.Or;
 import org.uengine.kernel.Otherwise;
-import org.uengine.kernel.RoleExist;
 
 public class ConditionPanel  implements ContextAware{
 	

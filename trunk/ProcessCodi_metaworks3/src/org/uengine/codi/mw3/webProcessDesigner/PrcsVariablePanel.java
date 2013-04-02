@@ -10,7 +10,7 @@ public class PrcsVariablePanel {
 		prcsValiables = new ArrayList<PrcsVariable>();
 		
 		newPrcsValiable = new PrcsVariable();
-		newPrcsValiable.load();
+//		newPrcsValiable.load();
 		newPrcsValiable.setMetaworksContext(new MetaworksContext());
 		newPrcsValiable.getMetaworksContext().setWhen("edit");
 	}

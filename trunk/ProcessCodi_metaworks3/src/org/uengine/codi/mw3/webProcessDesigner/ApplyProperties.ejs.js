@@ -16,6 +16,7 @@ var org_uengine_codi_mw3_webProcessDesigner_ApplyProperties = function(objectId,
 	var element = document.getElementById(this.object.id);
 	
 	if(contentValue && contentValue.__className=="org.uengine.kernel.Role"){
+		canvasObject.roleMap[this.object.id] = contentValue;
 		canvas.drawLabel(element, contentValue.name);
 	}else if(contentValue && contentValue.__className=="org.uengine.kernel.HumanActivity"){
 		// TODO 엑티비티별로..??? 이름주기

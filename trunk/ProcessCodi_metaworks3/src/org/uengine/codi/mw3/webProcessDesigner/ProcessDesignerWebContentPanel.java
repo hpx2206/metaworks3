@@ -20,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.ide.editor.process.ProcessEditor;
 import org.uengine.codi.mw3.model.ContentWindow;
-import org.uengine.codi.mw3.model.Popup;
 import org.uengine.contexts.ComplexType;
 import org.uengine.contexts.TextContext;
 import org.uengine.kernel.Activity;
@@ -28,7 +27,6 @@ import org.uengine.kernel.Condition;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.HumanActivity;
 import org.uengine.kernel.IDrawDesigne;
-import org.uengine.kernel.InvocationActivity;
 import org.uengine.kernel.ProcessDefinition;
 import org.uengine.kernel.ProcessVariable;
 import org.uengine.kernel.Role;
@@ -48,19 +46,20 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 			this.metaworksContext = metaworksContext;
 		}
 	
-	DefineTab defineTab;
-		public DefineTab getDefineTab() {
-			return defineTab;
-		}
-		public void setDefineTab(DefineTab defineTab) {
-			this.defineTab = defineTab;
-		}
+//	DefineTab defineTab;
+//		public DefineTab getDefineTab() {
+//			return defineTab;
+//		}
+//		public void setDefineTab(DefineTab defineTab) {
+//			this.defineTab = defineTab;
+//		}
 	public ProcessDesignerWebContentPanel() throws Exception{
-		defineTab = new DefineTab();
+//		defineTab = new DefineTab();
 		
 		canvasMap = new HashMap<String, CanvasDTO>();
 		activityMap = new HashMap<String, Object>();
 		roleMap = new HashMap<String, Object>();
+		variableMap = new HashMap<String, Object>();
 		conditionMap = new HashMap<String, Condition>();
 	}
 	
@@ -90,13 +89,13 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 		public void setGraphString(String graphString) {
 			this.graphString = graphString;
 		}
-	PrcsVariable[] prcsVariables;
-		public PrcsVariable[] getPrcsVariables() {
-			return prcsVariables;
-		}
-		public void setPrcsVariables(PrcsVariable[] prcsVariables) {
-			this.prcsVariables = prcsVariables;
-		}
+//	PrcsVariable[] prcsVariables;
+//		public PrcsVariable[] getPrcsVariables() {
+//			return prcsVariables;
+//		}
+//		public void setPrcsVariables(PrcsVariable[] prcsVariables) {
+//			this.prcsVariables = prcsVariables;
+//		}
 
 	HashMap<String, CanvasDTO> canvasMap;
 		public HashMap<String, CanvasDTO> getCanvasMap() {
@@ -119,7 +118,13 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 		public void setRoleMap(HashMap<String, Object> roleMap) {
 			this.roleMap = roleMap;
 		}
-
+	HashMap<String, Object> variableMap;
+		public HashMap<String, Object> getVariableMap() {
+			return variableMap;
+		}
+		public void setVariableMap(HashMap<String, Object> variableMap) {
+			this.variableMap = variableMap;
+		}
 	HashMap<String, Condition> conditionMap;
 		public HashMap<String, Condition> getConditionMap() {
 			return conditionMap;
@@ -232,6 +237,23 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 	
 	@ServiceMethod(callByContent=true, target="popup")
 	public ModalWindow gateCondition() throws Exception{
+		
+		ArrayList<Role>	 roleList = new ArrayList<Role>();
+        Collection<Object> collRole = roleMap.values();
+        Iterator<Object> iterRole = collRole.iterator();
+        while(iterRole.hasNext()){
+        	Object act = iterRole.next();
+        	roleList.add((Role)act);
+        }
+        
+        ArrayList<PrcsVariable> variableList = new ArrayList<PrcsVariable>();
+        Collection<Object> collVariable = variableMap.values();
+        Iterator<Object> iterVariable = collVariable.iterator();
+        while(iterVariable.hasNext()){
+        	Object act = iterVariable.next();
+        	variableList.add((PrcsVariable)act);
+        }
+        
 		ConditionPanel conditionPanel = new ConditionPanel();
 		conditionPanel.setMetaworksContext(new MetaworksContext());
 		conditionPanel.getMetaworksContext().setWhen("edit");
@@ -240,29 +262,29 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 			conditionPanel.setCondition(condition);
 		}
 		
-		conditionPanel.setRoleList(defineTab.rolePanel.getRoles());
-		conditionPanel.setPrcsValiableList(defineTab.prcsValiablePanel.getPrcsValiables());
+		conditionPanel.setRoleList(roleList);
+		conditionPanel.setPrcsValiableList(variableList);
 		
 		conditionPanel.setConditionId(this.getTempElementId());
 		conditionPanel.setConditionLabel(this.getTempElementName());
 		conditionPanel.load();
 		return new ModalWindow(conditionPanel , 800, 550,  "조건편집" );
 	}
-	@ServiceMethod(target="popup", callByContent=true)
-	public Popup geomInfo() throws Exception{
-		if( this.getTempElementId() != null){
-			Popup infoWindow = new Popup();
-			if( this.getCanvasMap() == null || (this.getCanvasMap() != null && getCanvasMap().get(this.getTempElementId()) == null ) ){
-				save("temp" , false );
-			}
-			GeomShape geomShape = new GeomShape(getCanvasMap().get(this.getTempElementId()));
-			geomShape.viewActivityInfo((Activity)this.getActivityMap().get(this.getTempElementId()));
-			infoWindow.setPanel(geomShape);
-			return infoWindow;
-		}else{
-			return null;
-		}
-	}
+//	@ServiceMethod(target="popup", callByContent=true)
+//	public Popup geomInfo() throws Exception{
+//		if( this.getTempElementId() != null){
+//			Popup infoWindow = new Popup();
+//			if( this.getCanvasMap() == null || (this.getCanvasMap() != null && getCanvasMap().get(this.getTempElementId()) == null ) ){
+//				save("temp" , false );
+//			}
+//			GeomShape geomShape = new GeomShape(getCanvasMap().get(this.getTempElementId()));
+//			geomShape.viewActivityInfo((Activity)this.getActivityMap().get(this.getTempElementId()));
+//			infoWindow.setPanel(geomShape);
+//			return infoWindow;
+//		}else{
+//			return null;
+//		}
+//	}
 //	@ServiceMethod(callByContent=true, target="popup")
 //	public ModalWindow dataMapping() throws Exception{
 //		MappingPanel conditionPanel = new MappingPanel();
@@ -274,23 +296,23 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 //		conditionPanel.getMetaworksContext().setWhen("edit");
 //		return new ModalWindow(conditionPanel , 800, 500,  "데이터매핑" );
 //	}
-	@ServiceMethod(callByContent=true)
-	public PrcsVariablePanel addValiable() throws Exception{
-		ArrayList<PrcsVariable> prcsValiable = defineTab.prcsValiablePanel.getPrcsValiables();
-		PrcsVariable designerValiable = new PrcsVariable();
-		designerValiable.load();
-		designerValiable.setName(tempElementName);
-		designerValiable.setTypeId(tempElementTypeId);
-		if( tempElementType != null && "wfNode".equals(tempElementType) ){
-			designerValiable.getDataType().setSelected("knowledgelType");		// TODO 임시 셋팅
-		}else if( tempElementType != null && "class".equals(tempElementType) ){
-			designerValiable.getDataType().setSelected("complexType");
-		}
-		prcsValiable.add(designerValiable);
-		defineTab.prcsValiablePanel.setPrcsValiables(prcsValiable);
-		
-		return defineTab.prcsValiablePanel;
-	}
+//	@ServiceMethod(callByContent=true)
+//	public PrcsVariablePanel addValiable() throws Exception{
+//		ArrayList<PrcsVariable> prcsValiable = defineTab.prcsValiablePanel.getPrcsValiables();
+//		PrcsVariable designerValiable = new PrcsVariable();
+//		designerValiable.load();
+//		designerValiable.setName(tempElementName);
+//		designerValiable.setTypeId(tempElementTypeId);
+//		if( tempElementType != null && "wfNode".equals(tempElementType) ){
+//			designerValiable.getDataType().setSelected("knowledgelType");		// TODO 임시 셋팅
+//		}else if( tempElementType != null && "class".equals(tempElementType) ){
+//			designerValiable.getDataType().setSelected("complexType");
+//		}
+//		prcsValiable.add(designerValiable);
+//		defineTab.prcsValiablePanel.setPrcsValiables(prcsValiable);
+//		
+//		return defineTab.prcsValiablePanel;
+//	}
 	public void saveMe(ProcessEditor processEditor) throws Exception{
 		String tempTitle = processEditor.getName();
 		String title = tempTitle.replace('.','@').split("@")[0];
@@ -542,51 +564,79 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 			processManager.addProcessDefinition( title , 0, "description", false, GlobalContext.serialize(def, ProcessDefinition.class), "", "/"+title+".process2", "/"+title+".process2", "process2");
 		}
 	}
-	public Role[] makeRole()  throws Exception{
-		ArrayList<org.uengine.codi.mw3.webProcessDesigner.Role> RoleList = defineTab.getRolePanel().getRoles();
-		Role[] roles = null;
-		
-		return roles;
-	}
+//	public Role[] makeRole()  throws Exception{
+//		ArrayList<org.uengine.codi.mw3.webProcessDesigner.Role> RoleList = defineTab.getRolePanel().getRoles();
+//		Role[] roles = null;
+//		
+//		return roles;
+//	}
 	public ProcessVariable[] makeProcessValiable() throws Exception{
-		ProcessVariable pvs[] = null;
-		ArrayList<PrcsVariable> prcsValiable = defineTab.prcsValiablePanel.getPrcsValiables();
-		if( prcsValiable != null && prcsValiable.size() > 0 ){
-			pvs = new ProcessVariable[prcsValiable.size()];
-			for (int i = 0; i < prcsValiable.size(); i++ ) {
-				PrcsVariable prcsv = prcsValiable.get(i);
-				String nameAttr = prcsv.getName();
-				String typeIdAttr = prcsv.getTypeId();
-				String typeAttr = prcsv.getDataType().getSelected();
-				
-				TextContext text = new TextContext();
-				text.setText(nameAttr);
+		Collection<Object> collVariable = variableMap.values();
+		ProcessVariable pvs[] = new ProcessVariable[collVariable.size()];
+        Iterator<Object> iterVariable = collVariable.iterator();
+        int i = 0;
+        while(iterVariable.hasNext()){
+        	PrcsVariable prcsv = (PrcsVariable)iterVariable.next();
+			String nameAttr = prcsv.getName();
+			String typeIdAttr = prcsv.getTypeId();
+			String typeAttr = prcsv.getVariableType();
+			
+			TextContext text = new TextContext();
+			text.setText(nameAttr);
 
-				ProcessVariable pv = new ProcessVariable();
-				pv.setName(nameAttr);
-				pv.setDisplayName(text);
-				if( "complexType".equals(typeAttr)){
-					ComplexType complexType = new ComplexType();
-					complexType.setTypeId("["+typeIdAttr+"]");
-					
-					pv.setType(complexType.getClass());
-					pv.setDefaultValue(complexType);
-				}else if("string".equals(typeAttr)){
-					pv.setType(String.class);
-				}
-				pvs[i] = pv;
+			ProcessVariable pv = new ProcessVariable();
+			pv.setName(nameAttr);
+			pv.setDisplayName(text);
+			if( "complexType".equals(typeAttr)){
+				ComplexType complexType = new ComplexType();
+				complexType.setTypeId("["+typeIdAttr+"]");
+				
+				pv.setType(complexType.getClass());
+				pv.setDefaultValue(complexType);
+			}else if("string".equals(typeAttr)){
+				pv.setType(String.class);
 			}
-			return pvs;
-		}
-		return null;
+			pvs[i] = pv;
+			i++;
+        }
+        return pvs;
+//		ArrayList<PrcsVariable> prcsValiable = defineTab.prcsValiablePanel.getPrcsValiables();
+//		if( prcsValiable != null && prcsValiable.size() > 0 ){
+//			pvs = new ProcessVariable[prcsValiable.size()];
+//			for (int i = 0; i < prcsValiable.size(); i++ ) {
+//				PrcsVariable prcsv = prcsValiable.get(i);
+//				String nameAttr = prcsv.getName();
+//				String typeIdAttr = prcsv.getTypeId();
+//				String typeAttr = prcsv.getDataType().getSelected();
+//				
+//				TextContext text = new TextContext();
+//				text.setText(nameAttr);
+//
+//				ProcessVariable pv = new ProcessVariable();
+//				pv.setName(nameAttr);
+//				pv.setDisplayName(text);
+//				if( "complexType".equals(typeAttr)){
+//					ComplexType complexType = new ComplexType();
+//					complexType.setTypeId("["+typeIdAttr+"]");
+//					
+//					pv.setType(complexType.getClass());
+//					pv.setDefaultValue(complexType);
+//				}else if("string".equals(typeAttr)){
+//					pv.setType(String.class);
+//				}
+//				pvs[i] = pv;
+//			}
+//			return pvs;
+//		}
+//		return null;
 	}
 	public void load() throws Exception{
 		
 		String processName = getAlias().substring(0, getAlias().indexOf("."));
 		setProcessName(processName);
 		/// read source file
-		File sourceCodeFile = new File(getBasePath() + getAlias());
-//		File sourceCodeFile = new File(CodiClassLoader.getMyClassLoader().sourceCodeBase() + "/" + processName + ".process2");
+//		File sourceCodeFile = new File(getBasePath() + getAlias());
+		File sourceCodeFile = new File(CodiClassLoader.getMyClassLoader().sourceCodeBase() + "/" + processName + ".process2");
 		
 		ByteArrayOutputStream bao = new ByteArrayOutputStream();
 		FileInputStream is;
@@ -595,31 +645,28 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 			UEngineUtil.copyStream(is, bao);
 			ProcessDefinition def = (ProcessDefinition) GlobalContext.deserialize(bao.toString("UTF-8"));
 						
+			// default role
+			Role initiator = new Role();
+			initiator.setName("Initiator");
+			roleMap.put("Initiator" , initiator);
 			
 			ProcessVariable pvs[] = def.getProcessVariables();
 			if( pvs != null && pvs.length != 0){
-				ArrayList<PrcsVariable> prcsValiable = defineTab.prcsValiablePanel.getPrcsValiables();
 				for(int i =0 ; i < pvs.length; i++){
 					ProcessVariable pv = pvs[i];
-					
 					PrcsVariable designerValiable = new PrcsVariable();
-					designerValiable.load();
 					designerValiable.setName(pv.getName());
-					
 					if( pv.getDefaultValue() instanceof ComplexType ){
 						ComplexType v = (ComplexType)pv.getDefaultValue();
-						designerValiable.getDataType().setSelected("complexType");
+						designerValiable.setVariableType("complexType");
 						designerValiable.setTypeId(v.getTypeId().replace("[", "").replace("]", ""));
 					}else if( pv.getDefaultValue() instanceof String ){
-						designerValiable.getDataType().setSelected("string");
+						designerValiable.setVariableType("string");
 					}else if( pv.getDefaultValue() instanceof Number ){
-						designerValiable.getDataType().setSelected("number");
 					}// TODO others
 					
-					prcsValiable.add(designerValiable);
+					variableMap.put(pv.getName(), designerValiable);
 				}
-				// ProcessValiable setting
-				defineTab.prcsValiablePanel.setPrcsValiables(prcsValiable);
 			}
 			
 			ProcessVariable[] procVars = def.getProcessVariables();
@@ -667,19 +714,20 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 				// canvas setting
 				this.setCell(cells);
 			}
-			Role[] roles = def.getRoles();
-			if( roles != null && roles.length != 0){
-				ArrayList<org.uengine.codi.mw3.webProcessDesigner.Role> role = defineTab.rolePanel.getRoles();
-				for(int i =0 ; i < roles.length; i++){
-					org.uengine.codi.mw3.webProcessDesigner.Role designerRole = new org.uengine.codi.mw3.webProcessDesigner.Role();
-					designerRole.setName(roles[i].getName());
-					designerRole.setMetaworksContext(new MetaworksContext());
-					designerRole.getMetaworksContext().setWhen("view");
-					role.add(designerRole);
-				}
-				// role setting
-				defineTab.rolePanel.setRoles(role);
-			}
+//			Role[] roles = def.getRoles();
+//			if( roles != null && roles.length != 0){
+////				ArrayList<org.uengine.codi.mw3.webProcessDesigner.Role> role = defineTab.rolePanel.getRoles();
+//				for(int i =0 ; i < roles.length; i++){
+//					org.uengine.codi.mw3.webProcessDesigner.Role designerRole = new org.uengine.codi.mw3.webProcessDesigner.Role();
+//					designerRole.setName(roles[i].getName());
+//					designerRole.setMetaworksContext(new MetaworksContext());
+//					designerRole.getMetaworksContext().setWhen("view");
+//					roleMap.put(cells[i].getId() , def.getRole(cells[i].getLabel() ));
+//					role.add(designerRole);
+//				}
+//				// role setting
+////				defineTab.rolePanel.setRoles(role);
+//			}
 
 			ArrayList<Transition> tsList = def.getTransitions();
 			if( tsList != null && tsList.size()>0){
