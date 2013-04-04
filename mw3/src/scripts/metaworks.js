@@ -2053,10 +2053,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
         					}else{
         						$('#' + event.data.popupDivId).remove();
         					}
-        					
-        					
-        					
-        			});
+        				});
         				
         				mw3.locateObject(result, null, '#' + mw3.popupDivId).targetDivId;
         				
@@ -2077,7 +2074,20 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 		    			
         				$('body').append("<div id='" + mw3.popupDivId + "' class='target_stick' style='z-index:10;position:absolute; top:" + mw3.mouseY + "px; left:" + mw3.mouseX + "px'></div>");
         				
-        				$('body').one('click', {popupDivId: mw3.popupDivId}, function(event){$('#' + event.data.popupDivId).remove();});
+        				$('body').one('click', {popupDivId: mw3.popupDivId}, function(event){
+        					var divObj = $("#" + event.data.popupDivId);
+        					var l_position = divObj.offset();
+        					l_position.right = parseInt(l_position.left) + divObj.width();
+        					l_position.bottom = parseInt(l_position.top) + divObj.height();
+
+
+        					if ( ( l_position.left <= event.pageX && event.pageX <= l_position.right )
+        							&& ( l_position.top <= event.pageY && event.pageY <= l_position.bottom ) ){
+        						
+        					}else{
+        						$('#' + event.data.popupDivId).remove();
+        					}
+        				});
         				
         				mw3.locateObject(result, null, '#' + mw3.popupDivId);        				
 
