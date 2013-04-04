@@ -2,13 +2,26 @@ package org.metaworks.common;
 
 import java.util.ArrayList;
 
+import org.metaworks.ContextAware;
+import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Id;
 
-public class ChoiceBox {
+public class ChoiceBox implements ContextAware {
 	public ChoiceBox(){
 		setOptionValues(new ArrayList<String>());
 		setOptionNames(new ArrayList<String>());
+		
+		setMetaworksContext(new MetaworksContext());
 	}
+	
+	MetaworksContext metaworksContext;
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
+		}
+
 	String id;	
 		@Id
 		public String getId() {
