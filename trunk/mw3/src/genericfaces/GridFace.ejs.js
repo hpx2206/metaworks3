@@ -29,7 +29,30 @@ GridFace.prototype = {
 		
 		mw3.onLoadFaceHelperScript();
 	},
-	
+
+	modify : function(object){
+		var metadata = mw3.getMetadata(this.className);		
+		
+		if(metadata.keyFieldDescriptor){
+			var keyFieldName = metadata.keyFieldDescriptor.name;
+			
+			for(var i=0; i<this.object.length; i++){
+				if(this.object[i][keyFieldName] == object[keyFieldName]){
+					var options = metadata;
+					options['htmlTag'] =  'tr';
+					options['ejsPath'] =  'dwr/metaworks/genericfaces/GridFace_Row.ejs';
+					options['parentId'] =  this.objectId;
+					
+					$('#' + mw3._getObjectDivId(this.object[i].__objectId)).replaceWith(mw3.locateObject(object, object.__className, null, options));
+					
+					this.object[i] = object;
+					
+					break;
+				}
+			}
+		}
+	},
+
 	remove : function(){
 		var checked = this.objectDiv.find('[name=check_' + this.objectId + ']:checked');
 		

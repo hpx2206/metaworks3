@@ -1,5 +1,8 @@
 <%
 	if(value != null && typeof value != 'undefined'){
+		var showAddBtn = !(objectMetadata.faceOptions && objectMetadata.faceOptions['hideAddBtn']);
+		var showRemoveBtn = !(objectMetadata.faceOptions && objectMetadata.faceOptions['hideRemoveBtn']);
+		var showEditBtn = !(objectMetadata.faceOptions && objectMetadata.faceOptions['hideEditBtn']);		
 %>
 <table border="1">
 
@@ -17,8 +20,13 @@
 			<th><%=fd.displayName%></th>
 <%
 	}
+	
+	if(showEditBtn){
 %>
-		<th></th>				
+		<th></th>	
+<%					
+	}
+%>
 		</tr>
 	</thead>	
 	
@@ -43,8 +51,20 @@
 	</tbody>
 </table>
 
+<%
+		if(showAddBtn){
+%>	
 <input type="button" value="add" onClick="javascript:mw3.getFaceHelper(<%=objectId%>).addItem();" />
+<%
+		}
+%>
+<%
+		if(showRemoveBtn){
+%>	
 <input type="button" value="remove" onClick="javascript:mw3.getFaceHelper(<%=objectId%>).removeItem();" />
+<%
+		}
+%>	
 <%
 	}
 %>

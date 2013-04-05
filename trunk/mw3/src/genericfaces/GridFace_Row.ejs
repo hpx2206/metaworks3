@@ -1,8 +1,8 @@
-<%
-	if(value == null || typeof value == 'undefined')
-		return true;
+<%	
+	if(value != null && typeof value != 'undefined'){
+		var showEditBtn = !(objectMetadata.faceOptions && objectMetadata.faceOptions['hideEditBtn']);
 %>
-	<td><input type="checkbox" name="check_<%=options['parentId']%>" objectId="<%=objectId%>" /></td>
+	<td><input type="checkbox" name="check_<%=options['parentId']%>" objectId="<%=objectId%>" <%=mw3.how=='checked'?'checked':''%> /></td>
 <%				
 	for (var i=0; i<objectMetadata.fieldDescriptors.length; i++){
 	  	var fd = objectMetadata.fieldDescriptors[i];
@@ -13,6 +13,13 @@
 	<td><%=fields[fd.name].here()%></td>
 <%		
 	}		
+	
+		if(showEditBtn){
 %>
 
 <td><input type="button" id="edit_<%=objectId%>" value="edit" onClick="mw3.getFaceHelper(<%=objectId%>).editItem();" /></td>
+
+<%
+		}
+	}
+%>
