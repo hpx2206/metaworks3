@@ -904,7 +904,7 @@ public class WebObjectType{
 				smc.setTarget(annotation.target());
 				smc.setValidate(annotation.validate());
 				smc.setRtnCls(method.getReturnType().getName());
-				
+				smc.setBindingHidden(annotation.bindingHidden());
 				/*
 				 * 2012-12-06 jinwon
 				 * add childrenLoader option
@@ -929,11 +929,6 @@ public class WebObjectType{
 				smc.setNameGetter(name!=null? true:false);
 				smc.setChildrenGetter(children!=null? true:false);
 				
-				if(annotation.mouseBinding().length() > 0){
-					smc.setMouseBinding(annotation.mouseBinding());
-				}
-				
-				
 				if(annotation.except().length > 0){
 					Map<String, String> excepList = new HashMap<String, String>();
 					for(String except : annotation.except()){
@@ -950,6 +945,29 @@ public class WebObjectType{
 					smc.setPayload(payloads);
 				}
 				
+				/*
+				 * event binding
+				 */
+				if(annotation.bindingFor().length > 0){
+					
+					List<String> bindingForList = new ArrayList<String>();
+					for(String binding : annotation.bindingFor()){
+						bindingForList.add(binding);
+					}
+					
+					smc.setBindingFor(bindingForList);
+				}
+
+				if(annotation.eventBinding().length > 0){
+					
+					List<String> eventBindingList = new ArrayList<String>();
+					for(String binding : annotation.eventBinding()){
+						eventBindingList.add(binding);
+					}
+					
+					smc.setEventBinding(eventBindingList);
+				}
+				
 				if(annotation.keyBinding().length > 0){
 					
 					List<String> keyBindingList = new ArrayList<String>();
@@ -959,6 +977,11 @@ public class WebObjectType{
 					
 					smc.setKeyBinding(keyBindingList);
 				}
+				
+				if(annotation.mouseBinding().length() > 0){
+					smc.setMouseBinding(annotation.mouseBinding());
+				}
+				
 
 				smc.setInContextMenu(annotation.inContextMenu());
 				
@@ -1240,8 +1263,8 @@ public class WebObjectType{
 	       	String contextOnly = path.substring(0, path.substring(1).indexOf("/")+1);
 			String protocol = urlURL.getProtocol();
 			
-			//if("/dwr".equals(contextOnly))
-			//	contextOnly = "";
+			if("/dwr".equals(contextOnly))
+				contextOnly = "";
 						
 			//host = "127.0.0.1";
 			

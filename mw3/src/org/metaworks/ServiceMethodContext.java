@@ -170,7 +170,22 @@ public class ServiceMethodContext{
 			this.payload = payload;
 		}
 
-		
+	List<String> bindingFor;
+		public List<String> getBindingFor() {
+			return bindingFor;
+		}
+		public void setBindingFor(List<String> bindingFor) {
+			this.bindingFor = bindingFor;
+		}
+
+	List<String> eventBinding;
+		public List<String> getEventBinding() {
+			return eventBinding;
+		}
+		public void setEventBinding(List<String> eventBinding) {
+			this.eventBinding = eventBinding;
+		}
+
 	List<String> keyBinding;
 		public List<String> getKeyBinding() {
 			return keyBinding;
@@ -217,5 +232,13 @@ public class ServiceMethodContext{
 		}
 		public void setChildrenLoader(boolean childrenLoader) {
 			this.childrenLoader = childrenLoader;
+		}
+		
+	boolean bindingHidden;
+		public boolean isBindingHidden() {
+			return bindingHidden;
+		}
+		public void setBindingHidden(boolean bindingHidden) {
+			this.bindingHidden = bindingHidden;
 		}
 }
