@@ -22,7 +22,9 @@ var org_uengine_codi_mw3_model_Popup = function(objectId, className) {
 //	var y = openerDiv.offset().top;
 	
 	var faceHelper = this;
-	faceHelper.createPopup(object.width, object.height, mw3.mouseX, mw3.mouseY);	
+	faceHelper.createPopup(object.width, object.height, mw3.mouseX, mw3.mouseY);
+	
+	faceHelper.bind();
 };
 
 org_uengine_codi_mw3_model_Popup.prototype = {
@@ -32,11 +34,10 @@ org_uengine_codi_mw3_model_Popup.prototype = {
 	createPopup : function(w,h,x,y){
 	
 		var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
+		var ux = '';
 		
-
-		
-		
-		
+		if(session)
+			ux = session.ux;
 		
 		var popLayerWidth = w;
 		var popLayerHeight = h;
@@ -50,7 +51,7 @@ org_uengine_codi_mw3_model_Popup.prototype = {
 		
 		var innerHeight = h-39;	
 		
-		if('phone' == session.ux){
+		if('phone' == ux){
 			this.divObj.find('.cluetip-outer').css('width', '100%');
 		
 			this.divObj.css({'top':'10px','left':'10px','width':bodyWidth-50,'height':bodyHeight-30});	
@@ -62,13 +63,11 @@ org_uengine_codi_mw3_model_Popup.prototype = {
 			arrow.css({top:10});	
 		}
 		
-				
-		
 		this.divObj.removeClass('clue-left-rounded');
 		this.divObj.addClass('clue-right-rounded');
 		
 		
-		if('phone' != session.ux){
+		if('phone' != ux){
 		
 			if(bodyWidth && popLayerWidth + x > bodyWidth){
 				this.divObj.css({left:x-30 - popLayerWidth});
@@ -97,22 +96,36 @@ org_uengine_codi_mw3_model_Popup.prototype = {
 	destoryPopup : function() {
 		mw3.endLoading(this.objectId);
 		
+		this.unbind();
 		this.divObj.remove();
 	},
 	destroy : function() {
 		this.destoryPopup();
 	},
-	checkPosition : function(e){
-		var l_position = this.divObj.offset();
-		l_position.right = parseInt(l_position.left) + this.divObj.width();
-		l_position.bottom = parseInt(l_position.top) + this.divObj.height();
-
-
-		if ( ( l_position.left <= e.pageX && e.pageX <= l_position.right )
-				&& ( l_position.top <= e.pageY && e.pageY <= l_position.bottom ) ){
+	bind : function(){
+		$('body').bind('click.' + this.objectId, {objectId: this.objectId}, function(event){
+			var faceHelper = mw3.getFaceHelper(event.data.objectId);
+			var result = faceHelper.isMouseInContanier($('#' + mw3._getObjectDivId(event.data.objectId)), event);
 			
+			if(!result)
+				faceHelper.destoryPopup();
+		});
+		
+	},
+	unbind : function(){
+		$('body').unbind('click.' + this.objectId);
+	},
+	
+	isMouseInContanier : function(container, event){
+		var containerOffset = container.offset();
+		containerOffset.right = parseInt(containerOffset.left) + container.width();
+		containerOffset.bottom = parseInt(containerOffset.top) + container.height();
+		
+		if ((containerOffset.left <= event.screenX && event.screenX <= containerOffset.right) && 
+			(containerOffset.top <= event.screenY && event.screenY <= containerOffset.bottom)){
+			return true;
 		}else{
-			this.destoryPopup();
+			return false;
 		}
-	}		
+	}
 };
