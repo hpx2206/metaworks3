@@ -110,11 +110,11 @@ org_metaworks_website_MetaworksFile.prototype.reset = function(){
 	});		
 }
 
-org_metaworks_website_MetaworksFile.prototype.add = function(){
-	mw3.getInputElement(this.objectId, 'fileTransfer').click();
+org_metaworks_website_MetaworksFile.prototype.add = function(event){
+	$(mw3.getInputElement(this.objectId, 'fileTransfer')).trigger(event);
 }
 
-org_metaworks_website_MetaworksFile.prototype.del = function(){
+org_metaworks_website_MetaworksFile.prototype.del = function(event){
 	var object = mw3.objects[this.objectId];
 	
 	if(object.uploadedPath){
