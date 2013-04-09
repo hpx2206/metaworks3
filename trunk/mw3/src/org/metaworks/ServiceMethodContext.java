@@ -19,8 +19,8 @@ public class ServiceMethodContext{
 	
 	public final static String MOUSEBINDING_LEFTCLICK 	= "left";
 	public final static String MOUSEBINDING_RIGHTCLICK 	= "right";
-	public final static String MOUSEBINDING_ONOVER 	= "over";
-	public final static String MOUSEBINDING_ONOUT 	= "out";
+	public final static String MOUSEBINDING_ONOVER 		= "over";
+	public final static String MOUSEBINDING_ONOUT 		= "out";
 	
 	
 	public boolean clientSide;
