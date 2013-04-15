@@ -153,6 +153,13 @@ public class CanvasDTO implements Serializable{
 			public void setClassType(String classType) {
 				this.classType = classType;
 			}
+		String roleName;
+			public String getRoleName() {
+				return roleName;
+			}
+			public void setRoleName(String roleName) {
+				this.roleName = roleName;
+			}
 		/*  viewer 부분에서  필요한 정보들 transient */
 		transient String instStatus;
 			public String getInstStatus() {

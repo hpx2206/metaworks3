@@ -31,6 +31,10 @@ public class VariableTreeNode extends TreeNode {
 		for(int i = 0; i < prcsValiableList.size(); i++){
 			PrcsVariable prcsValiable = prcsValiableList.get(i);
 			String nameAttr = prcsValiable.getName();
+			// TODO 처음에 로딩할 필요가 없다면 아래 루프 부분은 클릭시 작동하는걸로 뺀다. 
+			String typeIdAttr = prcsValiable.getTypeId();
+			String typeAttr = prcsValiable.getVariableType();
+			if( typeAttr == null ) continue;
 			
 			VariableTreeNode node = new VariableTreeNode();
 			node.setId(nameAttr);
@@ -43,10 +47,6 @@ public class VariableTreeNode extends TreeNode {
 			node.setFolder(true);
 			node.setAlign(this.getAlign());
 			
-			// TODO 처음에 로딩할 필요가 없다면 아래 루프 부분은 클릭시 작동하는걸로 뺀다. 
-			// RoleTreeNode 를 따로 만들어 주어야 한다.
-			String typeIdAttr = prcsValiable.getTypeId();
-			String typeAttr = prcsValiable.getVariableType();
 			String className =  typeIdAttr.substring(0, typeIdAttr.lastIndexOf(".")).replaceAll("/", ".");
 			node.setClassName(className);
 			this.add(node);

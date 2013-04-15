@@ -481,21 +481,25 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 					// 엑티비티 생성
 					GeomShape geom = new GeomShape(cv);
 					geom.setPvs(pvs);
-					if(cv.getClassname() != null && "org.uengine.kernel.HumanActivity".equals(cv.getClassname()) ){
-						HumanActivity activity = (HumanActivity)activityMap.get(cv.getId());
-						activity = (HumanActivity)geom.makeProcVal(activity);
+					if(cv.getClassname() != null 
+							&& ( "org.uengine.kernel.HumanActivity".equals(cv.getClassname()) 
+								|| "org.uengine.codi.activitytypes.KnowledgeActivity".equals(cv.getClassname()) )){
+						Activity activity = (HumanActivity)activityMap.get(cv.getId());
+						activity = geom.makeProcVal(activity);
+						
 						if( cv.getParent() != null ){
 							String groupId = geom.getParent();
 							CanvasDTO groupCanvas = getCanvasMap().get(groupId);
 							if( "OG.shape.HorizontalLaneShape".equals(groupCanvas.getShapeId()) 
 									|| "OG.shape.VerticalLaneShape".equals(groupCanvas.getShapeId())){
 								Role role = (Role)getRoleMap().get(groupId);
-								activity.setRole(role);
+								((HumanActivity)activity).setRole(role);
 							}
 						}else{
 							// 만약 휴먼엑티비티에  role 이 셋팅이 안되어 있다면 default role 로 initator 로 셋팅을 해준다.(서브프로세스의 role셋팅을 위하여)
-							activity.setRole(initiator);
+							((HumanActivity)activity).setRole(initiator);
 						}
+						activityMap.put(cv.getId(), activity);
 					}
 				}else if( "GROUP".equalsIgnoreCase(cv.getShapeType()) ){
 					// 서브프로세스
@@ -561,7 +565,7 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 				throw new Exception("title is null. please set process title");
 			}
 			def.setName(title);
-			processManager.addProcessDefinition( title , 0, "description", false, GlobalContext.serialize(def, ProcessDefinition.class), "", "/"+title+".process2", "/"+title+".process2", "process2");
+			processManager.addProcessDefinition( title , 0, "description", false, GlobalContext.serialize(def, ProcessDefinition.class), "", "/"+title+".process2", title+".process2", "process2");
 		}
 	}
 //	public Role[] makeRole()  throws Exception{
@@ -700,7 +704,7 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 							activityMap.put(cells[i].getId() , activity );
 						}else if( "GROUP".equalsIgnoreCase(cells[i].getShapeType()) ){
 							if( "OG.shape.HorizontalLaneShape".equals(cells[i].getShapeId() ) || "OG.shape.VerticalLaneShape".equals(cells[i].getShapeId() )){
-								roleMap.put(cells[i].getId() , def.getRole(cells[i].getLabel() ));
+								roleMap.put(cells[i].getId() , def.getRole(cells[i].getRoleName() ));
 							}else if( "OG.shape.bpmn.A_Subprocess".equals(cells[i].getShapeId() )){
 								Activity activity = def.getActivity(cells[i].getTracingTag());
 								activityMap.put(cells[i].getId() , activity );
