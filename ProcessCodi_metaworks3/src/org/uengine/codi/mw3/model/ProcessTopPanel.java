@@ -67,6 +67,14 @@ public class ProcessTopPanel {
 			this.todoBadge = todoBadge;
 		}
 		
+	String pageType;
+		public String getPageType() {
+			return pageType;
+		}
+		public void setPageType(String pageType) {
+			this.pageType = pageType;
+		}
+
 	Session session;
 		@AutowiredToClient
 		public Session getSession() {

@@ -186,13 +186,15 @@ var org_uengine_codi_mw3_knowledge_IWfNode = function(objectId, className) {
 						"relative");
 		*/
 		
-		if (this.mw3Obj.parentId == rootNodeId) {
+		if (this.mw3Obj.parentId == this.mw3Obj.rootNodeId) {
 			this.obj.find('.wfNode').eq(0).addClass("first_wfNode");
 		}
 	}
-	
-	if(!(this.mw3Obj.childNode && this.mw3Obj.childNode.length > 0))
+	if(!(this.mw3Obj.childNode && this.mw3Obj.childNode.length > 0) && (this.mw3Obj.type == 'backlog' || this.mw3Obj.type == 'plan')){
+		// type 이 brainstorm 일 경우만 탄다. 
 		thisFaceHelper.recalc();
+	}
+		
 };
 
 org_uengine_codi_mw3_knowledge_IWfNode.prototype = {
@@ -336,8 +338,7 @@ org_uengine_codi_mw3_knowledge_IWfNode.prototype = {
 		this.timeout = setTimeout(
 				function() {
 
-					var mashupToolNames = [ "GoogleImage", "LMS", "KMS",
-							"Video", "Slideshare" ];
+					var mashupToolNames = [ "GoogleImage", "LMS", "KMS", "Wiki" ,"Video", "Slideshare" ];
 
 					for ( var i in mashupToolNames) {
 						var mashupToolName = mashupToolNames[i];
@@ -346,7 +347,6 @@ org_uengine_codi_mw3_knowledge_IWfNode.prototype = {
 								.getAutowiredObject('org.uengine.codi.mw3.knowledge.Mashup'
 										+ mashupToolName);
 						var mashupTool = null;
-
 						if (mashup) {
 
 							if (mashup.search) {
@@ -866,6 +866,11 @@ org_uengine_codi_mw3_knowledge_IWfNode.prototype = {
 		var html = mw3.locateObject(target, null);
 		
 		$('<div>').insertAfter(this.obj.parent().parent()).append(html);
+	},
+	toAppend : function(target){
+		var html = mw3.locateObject(target, null);
+		
+		$('<div>').appendTo(this.obj).append(html);
 	},
 	
 	effortOverCheck : function(){

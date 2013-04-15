@@ -354,12 +354,16 @@ public class WorkItemHandler implements ContextAware{
 		releaseMapForITool();
 		// lastCmn 저장
 		IInstance copyOfInstance = saveLastComent(instance);
+		
+		// TODO pushTargetClientObjects 를 하고 나면 copyOfInstance 가 변경이 되는 상황이 발생하여 새로운 객체를 생성하여줌
+		Instance inst = new Instance();
+		inst.copyFrom(copyOfInstance);
 		// 본인의 instanceList 에 push
-		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(copyOfInstance)});
+		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(inst)});
 		// 본인 이외에 다른 사용자에게 push			
 		MetaworksRemoteService.pushClientObjectsFiltered(
 				new OtherSessionFilter(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom()), session.getUser().getUserId().toUpperCase()),
-				new Object[]{new InstanceListener(copyOfInstance)});			
+				new Object[]{new InstanceListener(inst)});			
 		
 		//refreshes the instanceview so that the next workitem can be show up
 		if("sns".equals(session.getEmployee().getPreferUX())){			
@@ -388,7 +392,7 @@ public class WorkItemHandler implements ContextAware{
 		boolean thisIsInitiationActivity = (actRef.getActivity() == humanActivity);
 		
 		if(thisIsInitiationActivity){
-			if(instanceRef.getLastCmnt().equals(title) ){
+			if(instanceRef.getLastCmnt() !=null && instanceRef.getLastCmnt().equals(title) ){
 				instanceRef.setLastCmnt(title);
 				instanceRef.setLastCmntUser(session.getUser());
 			}

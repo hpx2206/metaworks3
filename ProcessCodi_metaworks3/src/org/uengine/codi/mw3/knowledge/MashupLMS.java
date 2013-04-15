@@ -6,7 +6,7 @@ import java.util.Hashtable;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 
-@Face(displayName="LMS에서 검색", options={"hideEditBtn"}, values= {"true"})
+@Face(displayName="LMS에서 검색", ejsPath="dwr/metaworks/org/uengine/codi/mw3/knowledge/MashupKMS.ejs")
 public class MashupLMS extends MashupTool{
 
 	@ServiceMethod(callByContent=true, payload={"keyword", "targetNodeId"})
@@ -14,7 +14,7 @@ public class MashupLMS extends MashupTool{
 		
 		if( getKeyword() != null){
 			setSearchResults(new ArrayList<SearchResult>());
-			QueryMaker QueryMaker = new QueryMaker();
+			QueryMaker2 QueryMaker = new QueryMaker2();
 			ArrayList result = QueryMaker.getResult( getKeyword() );
 			if( result != null){
 				for(int i = 0; i < result.size(); i++){

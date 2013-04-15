@@ -23,7 +23,21 @@
 <%
 			}else{
 %>
+			<%if( "process" == value.pageType ){ %>
+				<div style="float: left; margin-top: 7px; border: none;">
+			 		<img src="images/portrait/i_modeIcon01.png" />
+			 	</div>
+			<%}else if( "knol" == value.pageType ){ %>
+				<div style="float: left; margin-top: 7px; border: none;">
+			 		<img src="images/portrait/i_modeIcon02.png" />
+			 	</div>
+			<%}else if( "LMS" == value.pageType ){ %>
+				<div style="float: left; margin-top: 10px; border: none;">
+			 		<img src="images/portrait/i_modeIcon03.png" />
+			 	</div>
+			<%} %>
 		 	<div style="float:left; margin-top:5px;"><%=fields.loginUser.here({when: 'self_small'})%></div>
+		 	
 			<%=fields.notificationBadge.here()%>
 			
 			<%=fields.todoBadge.here()%>

@@ -2,6 +2,7 @@ package org.uengine.codi.mw3.knowledge;
 
 import java.io.Serializable;
 
+import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
 import org.uengine.codi.ITool;
@@ -18,21 +19,29 @@ public class KnowledgeTool implements ITool, Serializable{
 		}
 
 	//very important in serializable object
-	transient WfPanel wfPanel;
-		public WfPanel getWfPanel() {
-			return wfPanel;
+//	transient WfPanel wfPanel;
+//		public WfPanel getWfPanel() {
+//			return wfPanel;
+//		}
+//		public void setWfPanel(WfPanel wfPanel) {
+//			this.wfPanel = wfPanel;
+//		}
+	transient WfNode wfNode;
+		public WfNode getWfNode() {
+			return wfNode;
 		}
-		public void setWfPanel(WfPanel wfPanel) {
-			this.wfPanel = wfPanel;
+		public void setWfNode(WfNode wfNode) {
+			this.wfNode = wfNode;
 		}
-		
-		
 	@Override
 	public void onLoad() {
 		try {
-			wfPanel = new WfPanel();
-			wfPanel.session = session;
-			wfPanel.load(nodeId);
+			wfNode = new WfNode();
+			wfNode.setMetaworksContext(new MetaworksContext());
+			wfNode.getMetaworksContext().setWhen("onlyView");
+			wfNode.session = session;
+			wfNode.setLoadDepth(2);
+			wfNode.load(nodeId);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

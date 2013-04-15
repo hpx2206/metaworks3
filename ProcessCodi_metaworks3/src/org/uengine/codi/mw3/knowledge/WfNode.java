@@ -1,24 +1,16 @@
 package org.uengine.codi.mw3.knowledge;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.Hashtable;
-
-import net.sf.json.JSON;
-import net.sf.json.JSONSerializer;
-
-import org.directwebremoting.Browser;
-import org.directwebremoting.ScriptSession;
-import org.directwebremoting.ScriptSessions;
 import org.directwebremoting.WebContext;
 import org.directwebremoting.WebContextFactory;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
+import org.metaworks.ToAppend;
 import org.metaworks.ToNext;
 import org.metaworks.ToOpener;
-import org.metaworks.ToPrepend;
 import org.metaworks.ToPrev;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
@@ -426,6 +418,10 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 	
 	public void load(String nodeId) throws Exception {
 		
+//		WfNode thisNode = new WfNode();
+//		thisNode.setId(nodeId);
+//		this.copyFrom(thisNode.databaseMe());
+		
 		setId(nodeId);
 		
 		if(this.getLoadDepth() < LOAD_DEPTH){
@@ -593,6 +589,9 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		return -1;
 	}
 	public void addChildNode(WfNode newNode) throws Exception {
+		if(childNode == null){
+			setChildNode(new ArrayList<WfNode>());
+		}
 		addChildNode(childNode.size(), newNode);	
 	}
 	
@@ -728,11 +727,19 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		if(getTypeNext() != null && getTypeNext().length() > 0){
 			newNode.setName(getNameNext());
 			newNode.setType(getTypeNext());
-			if( getUrlNext() != null ){
-				newNode.setUrl(getUrlNext());
-			}
-			if( getThumbnailNext() != null ){
-				newNode.setThumbnail(getThumbnailNext());
+			// wiki 로 들어온 데이터는 특별하게 하위노드까지 입력하는 작업을 해줘야 한다.
+			if( getTypeNext().equalsIgnoreCase("wiki")){
+				String childXmlData = getThumbnailNext();	// searchResult 에서 xml형식으로 넘어온 데이터
+				XStream xstream = new XStream();
+				Object object = xstream.fromXML(childXmlData);
+				System.out.println("111");
+			}else{
+				if( getUrlNext() != null ){
+					newNode.setUrl(getUrlNext());
+				}
+				if( getThumbnailNext() != null ){
+					newNode.setThumbnail(getThumbnailNext());
+				}
 			}
 			node.addChildNode(newNode);
 			
@@ -821,6 +828,95 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		*/
 		
 		return returnObjects;
+	}
+	
+	public Object[] addMashup() throws Exception {
+		// 검색에서 올라온 데이터이기 때문에 자기자신을 모두 채워준다.
+		
+		// 새로운 노드를 만든다.
+		final WfNode newNode = this.makeNewNode();
+		
+		if(getTypeNext() != null && getTypeNext().length() > 0){
+			newNode.setName(getNameNext());
+			newNode.setType(getTypeNext());
+			newNode.setParentId(this.getId());
+			if( getTypeNext().equalsIgnoreCase("wiki")){
+				// TODO
+			}else{
+				if( getUrlNext() != null ){
+					newNode.setUrl(getUrlNext());
+				}
+				if( getThumbnailNext() != null ){
+					newNode.setThumbnail(getThumbnailNext());
+				}
+			}
+			this.addChildNode(newNode);
+			this.setFocus(true);
+			this.getMetaworksContext().setHow("add");
+		}
+		
+		newNode.setAuthorId(session.getUser().getUserId());		
+		newNode.setCompanyId(session.getCompany().getComCode());
+		newNode.createMe();
+		
+		// wiki 로 들어온 데이터는 특별하게 하위노드까지 입력하는 작업을 해줘야 한다.
+		if( getTypeNext().equalsIgnoreCase("wiki")){
+			String childXmlData = getThumbnailNext();	// searchResult 에서 xml형식으로 넘어온 데이터
+			XStream xStream = new XStream();
+//						Mapper mapper = xStream.getMapper();
+			xStream.alias("node", WfNode.class);
+			xStream.aliasField("text", WfNode.class, "name");
+//						xStream.registerConverter(new MapConverter(mapper));
+			WfNode xmlObject = (WfNode)xStream.fromXML(childXmlData);
+			newNode.setChildNode(xmlObject.getChildNode());
+			newNode.createChildNodesInsert();
+		}
+		
+		return new Object[]{new Refresh(this)};
+	}
+	
+	public void createChildNodesInsert() throws Exception{
+		ArrayList<WfNode> childList = this.getChildNode();
+		if( childList != null && childList.size() > 0 ){
+			for(int i =0; i<childList.size(); i++){
+				WfNode node = childList.get(i);
+				String title = node.getName();
+				if( title.trim().startsWith("http") ){
+					node.setType("img");
+				}else{
+					node.setType(this.getType());
+				}
+				// 없는 부가적인 데이터를 채워준다
+				node.setParentId(this.getId());
+				node.setAuthorId(this.getAuthorId());		
+				node.setCompanyId(this.getCompanyId());
+				int LimitValue = 1000;
+				if( title.length() > LimitValue ){
+					int cnt = title.length() / LimitValue ; 	// 몫
+					String tempString = null;
+					int beginIndex = 0;
+					int endIndex = LimitValue;
+					for( int j =1 ; j <= cnt+1 ; j++ ){
+						if( j != 1 ){
+							beginIndex = endIndex ;
+							endIndex = beginIndex + LimitValue;
+						}
+						if( j == cnt + 1 ){
+							endIndex = title.length();
+						}
+						tempString = title.substring(beginIndex, endIndex);
+						node.setName(tempString.trim());
+						node.createMe();
+					}
+				}else{
+					node.setName(title.trim());
+					node.createMe();
+				}
+				
+				
+				node.createChildNodesInsert();
+			}
+		}
 	}
 	
 	public Object[] indent() throws Exception {
@@ -1173,7 +1269,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 	public ModalWindow showLms() throws Exception{
 		MshupLMSPopup panel = new MshupLMSPopup();
 		panel.setUrl(getUrl());
-		return new ModalWindow(panel , 1000, 700,  "학습 콘텐츠" );
+		return new ModalWindow(panel , 900, 550,  "학습 콘텐츠" );
 	}
 	
 	@Override

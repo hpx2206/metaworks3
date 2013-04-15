@@ -78,6 +78,7 @@ public class Main {
 		}
 		
 		ProcessTopPanel processTopPanel = new ProcessTopPanel(session);
+		processTopPanel.setPageType("process");
 		if("phone".equals(preferMob) || "tw".equals(preferUX)){
 			session.setUx("phone");
 			
