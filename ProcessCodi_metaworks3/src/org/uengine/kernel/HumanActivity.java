@@ -22,6 +22,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
 import org.metaworks.annotation.Hidden;
+import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.widget.ModalWindow;
 import org.uengine.contexts.TextContext;
 import org.uengine.persistence.dao.DAOFactory;
 import org.uengine.persistence.worklist.WorklistDAOType;
@@ -421,7 +423,11 @@ System.out.println("=========================== HARD-TO-FIND : HumanActivity.cre
 		kpv.setProperty(KeyedParameter.TOOL, getTool());
 		kpv.setProperty(KeyedParameter.TRACINGTAG, getTracingTag());
 		kpv.setProperty(KeyedParameter.MESSAGE, getMessage() != null ? getMessage() : "");
-		kpv.setProperty(KeyedParameter.TITLE, /*getProcessDefinition().getName() + "("+*/getName().getText(GlobalContext.DEFAULT_LOCALE)/*+")"*/ );// + "(" + instance.getInstanceId()+")");
+		String title = getName().getText(GlobalContext.DEFAULT_LOCALE);
+		if( getDescription() != null && getDescription().getText() != null ){
+			title = getDescription().getText();
+		}
+		kpv.setProperty(KeyedParameter.TITLE, title);
 		kpv.setProperty(KeyedParameter.DURATION, ""+getDuration());
 		kpv.setProperty(KeyedParameter.PROCESSDEFINITIONNAME, getProcessDefinition().getName().getText(GlobalContext.DEFAULT_LOCALE));
 		kpv.setProperty(KeyedParameter.CO2EMISSION, ""+getCo2Emission());
@@ -1249,5 +1255,14 @@ System.out.println("=========================== HARD-TO-FIND : HumanActivity.cre
 				}
 			}
 		}
+	}
+	@ServiceMethod(callByContent=true, target="popup")
+	public ModalWindow showParameter() throws Exception{
+		ModalWindow parameter = new ModalWindow();
+		
+		ParameterContextPanel parameterContextPanel = new ParameterContextPanel();
+		parameterContextPanel.load();
+		parameter.setPanel(parameterContextPanel);
+		return parameter;
 	}
 }

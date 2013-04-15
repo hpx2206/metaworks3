@@ -123,9 +123,9 @@ public class GeomShape extends CanvasDTO {
 							String customId = jsonObj.getString("customId");
 							knowledgeActivity.setName(customName);
 							knowledgeActivity.setKnolNodeId(customId);
-							return knowledgeActivity;
+						}
 						// 클레스 - HumanActivity 생성
-						}else 	if( customType != null && "class".equalsIgnoreCase(customType) ){
+						if( customType != null ){
 							HumanActivity humanActivity = (HumanActivity)activity;
 							ProcessVariable pvs[] = getPvs();
 							if( pvs != null){
@@ -149,7 +149,6 @@ public class GeomShape extends CanvasDTO {
 									}
 								}
 								humanActivity.setParameters(pc);
-								return humanActivity;
 							}
 						}
 					}

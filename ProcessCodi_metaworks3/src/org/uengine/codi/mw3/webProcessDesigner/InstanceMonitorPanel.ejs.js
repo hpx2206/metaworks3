@@ -4,6 +4,22 @@ var org_uengine_codi_mw3_webProcessDesigner_InstanceMonitorPanel = function(obje
 	this.className = className;
 //	this.divId = mw3._getObjectDivId(this.objectId);
 	var object = mw3.objects[this.objectId];
+	this.objectId = objectId;
+	this.className = className;
+	this.divId = mw3._getObjectDivId(this.objectId);
+	this.divObj = $('#' + this.divId);
+	
+	var object = mw3.objects[this.objectId];
+	
+	if(object){
+		if(mw3.importScript('scripts/opengraph/OpenGraph-0.1-SNAPSHOT.js', function(){mw3.getFaceHelper(objectId).load();})){
+			mw3.importScript('scripts/jquery/jquery.contextMenu.js');
+			
+			mw3.importStyle('style/jquery/jquery.contextMenu.css');
+			mw3.importStyle('dwr/metaworks/org/uengine/codi/mw3/model/PureWebProcessDesigner.ejs.css');
+		}
+	}
+	
 	var faceHelper = this;
 	var canvas = null;
 	
