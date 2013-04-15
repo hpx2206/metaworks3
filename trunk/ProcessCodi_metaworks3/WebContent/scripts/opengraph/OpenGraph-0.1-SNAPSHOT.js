@@ -10408,6 +10408,7 @@ OG.shape.bpmn.A_Subprocess.prototype.createShape = function () {
 	if (this.geom) {
 		return this.geom;
 	}
+	this.CONNECTABLE = true;
 
 	this.geom = new OG.geometry.Rectangle([0, 0], 100, 100);
 	this.geom.style = new OG.geometry.Style({
@@ -21231,34 +21232,34 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor, backgroun
 		 */
 		DEFAULT_STYLE: {
 			SHAPE         : { cursor: "default" },
-			GEOM          : { stroke: "black", fill: "white", "fill-opacity": 0, "label-position": "center" },
+			GEOM          : { stroke: "gray", fill: "white", "fill-opacity": 0, "label-position": "center" },
 			TEXT          : { stroke: "none", "text-anchor": "middle" },
 			HTML          : { "label-position": "bottom", "text-anchor": "middle", "vertical-align": "top" },
 			IMAGE         : { "label-position": "bottom", "text-anchor": "middle", "vertical-align": "top" },
-			EDGE          : { stroke: "black", fill: "none", "fill-opacity": 0, "stroke-width": 1, "stroke-opacity": 1, "edge-type": "plain", "edge-direction": "c c", "arrow-start": "none", "arrow-end": "classic-wide-long", "stroke-dasharray": "", "label-position": "center" },
+			EDGE          : { stroke: "gray", fill: "none", "fill-opacity": 0, "stroke-width": 1, "stroke-opacity": 1, "edge-type": "plain", "edge-direction": "c c", "arrow-start": "none", "arrow-end": "classic-wide-long", "stroke-dasharray": "", "label-position": "center" },
 			EDGE_SHADOW   : { stroke: "#00FF00", fill: "none", "fill-opacity": 0, "stroke-width": 1, "stroke-opacity": 1, "arrow-start": "none", "arrow-end": "none", "stroke-dasharray": "- " },
 			EDGE_HIDDEN   : { stroke: "white", fill: "none", "fill-opacity": 0, "stroke-width": 5, "stroke-opacity": 0 },
 			GROUP         : { stroke: "none", fill: "white", "fill-opacity": 0, "label-position": "bottom", "text-anchor": "middle", "vertical-align": "top" },
 			GUIDE_BBOX    : { stroke: "#00FF00", fill: "none", "stroke-dasharray": "- ", "shape-rendering": "crispEdges" },
-			GUIDE_UL      : { stroke: "black", fill: "#00FF00", cursor: "nwse-resize", "shape-rendering": "crispEdges" },
-			GUIDE_UR      : { stroke: "black", fill: "#00FF00", cursor: "nesw-resize", "shape-rendering": "crispEdges" },
-			GUIDE_LL      : { stroke: "black", fill: "#00FF00", cursor: "nesw-resize", "shape-rendering": "crispEdges" },
-			GUIDE_LR      : { stroke: "black", fill: "#00FF00", cursor: "nwse-resize", "shape-rendering": "crispEdges" },
-			GUIDE_LC      : { stroke: "black", fill: "#00FF00", cursor: "ew-resize", "shape-rendering": "crispEdges" },
-			GUIDE_UC      : { stroke: "black", fill: "#00FF00", cursor: "ns-resize", "shape-rendering": "crispEdges" },
-			GUIDE_RC      : { stroke: "black", fill: "#00FF00", cursor: "ew-resize", "shape-rendering": "crispEdges" },
-			GUIDE_LWC     : { stroke: "black", fill: "#00FF00", cursor: "ns-resize", "shape-rendering": "crispEdges" },
-			GUIDE_FROM    : { stroke: "black", fill: "#00FF00", cursor: "move", "shape-rendering": "crispEdges" },
-			GUIDE_TO      : { stroke: "black", fill: "#00FF00", cursor: "move", "shape-rendering": "crispEdges" },
-			GUIDE_CTL_H   : { stroke: "black", fill: "#00FF00", cursor: "ew-resize", "shape-rendering": "crispEdges" },
-			GUIDE_CTL_V   : { stroke: "black", fill: "#00FF00", cursor: "ns-resize", "shape-rendering": "crispEdges" },
-			GUIDE_SHADOW  : { stroke: "black", fill: "none", "stroke-dasharray": "- ", "shape-rendering": "crispEdges" },
+			GUIDE_UL      : { stroke: "gray", fill: "#00FF00", cursor: "nwse-resize", "shape-rendering": "crispEdges" },
+			GUIDE_UR      : { stroke: "gray", fill: "#00FF00", cursor: "nesw-resize", "shape-rendering": "crispEdges" },
+			GUIDE_LL      : { stroke: "gray", fill: "#00FF00", cursor: "nesw-resize", "shape-rendering": "crispEdges" },
+			GUIDE_LR      : { stroke: "gray", fill: "#00FF00", cursor: "nwse-resize", "shape-rendering": "crispEdges" },
+			GUIDE_LC      : { stroke: "gray", fill: "#00FF00", cursor: "ew-resize", "shape-rendering": "crispEdges" },
+			GUIDE_UC      : { stroke: "gray", fill: "#00FF00", cursor: "ns-resize", "shape-rendering": "crispEdges" },
+			GUIDE_RC      : { stroke: "gray", fill: "#00FF00", cursor: "ew-resize", "shape-rendering": "crispEdges" },
+			GUIDE_LWC     : { stroke: "gray", fill: "#00FF00", cursor: "ns-resize", "shape-rendering": "crispEdges" },
+			GUIDE_FROM    : { stroke: "gray", fill: "#00FF00", cursor: "move", "shape-rendering": "crispEdges" },
+			GUIDE_TO      : { stroke: "gray", fill: "#00FF00", cursor: "move", "shape-rendering": "crispEdges" },
+			GUIDE_CTL_H   : { stroke: "gray", fill: "#00FF00", cursor: "ew-resize", "shape-rendering": "crispEdges" },
+			GUIDE_CTL_V   : { stroke: "gray", fill: "#00FF00", cursor: "ns-resize", "shape-rendering": "crispEdges" },
+			GUIDE_SHADOW  : { stroke: "gray", fill: "none", "stroke-dasharray": "- ", "shape-rendering": "crispEdges" },
 			RUBBER_BAND   : { stroke: "#0000FF", opacity: 0.2, fill: "#0077FF" },
 			TERMINAL      : { stroke: "#808080", "stroke-width": 1, fill: "r(0.5, 0.5)#FFFFFF-#808080", "fill-opacity": 0.5, cursor: "pointer" },
 			TERMINAL_OVER : { stroke: "#0077FF", "stroke-width": 4, fill: "r(0.5, 0.5)#FFFFFF-#0077FF", "fill-opacity": 1, cursor: "pointer" },
 			TERMINAL_BBOX : { stroke: "none", fill: "white", "fill-opacity": 0 },
 			DROP_OVER_BBOX: { stroke: "#0077FF", fill: "none", opacity: 0.6, "shape-rendering": "crispEdges" },
-			LABEL         : { "font-size": 12, "font-color": "black" },
+			LABEL         : { "font-size": 12, "font-color": "gray" },
 			LABEL_EDITOR  : { position: "absolute", overflow: "visible", resize: "none", "text-align": "center", display: "block", padding: 0 },
 			COLLAPSE      : { stroke: "black", fill: "white", "fill-opacity": 0, cursor: "pointer", "shape-rendering": "crispEdges" },
 			COLLAPSE_BBOX : { stroke: "none", fill: "white", "fill-opacity": 0 }
