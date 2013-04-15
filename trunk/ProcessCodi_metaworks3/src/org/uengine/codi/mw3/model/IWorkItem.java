@@ -94,8 +94,8 @@ public interface IWorkItem extends IDAO{
 		
 		@Hidden
 		@ORMapping(
-			databaseFields = { "content", "instId", "taskId", "trcTag" }, 
-			objectFields = { "serializedTool", "instanceId", "taskId", "tracingTag" },
+			databaseFields = { "content", "instId", "taskId", "trcTag" , "status" }, 
+			objectFields = { "serializedTool", "instanceId", "taskId", "tracingTag" , "status" },
 			objectIsNullWhenFirstDBFieldIsNull = true,
 			availableWhen= "type=='generic'"
 		)

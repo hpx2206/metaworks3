@@ -26,7 +26,40 @@
 				if(value.type == 'backlog' || value.type == 'plan')
 					brainstorm = true;
 				
-				if(mw3.when != 'read'){
+				if(mw3.when == 'onlyView'){
+%>
+			<div id="wfnode_<%=objectId%>" class="wfNode" style="margin:3px 0; position:relative">
+				<table border="0" cellspacing="0" cellpadding="0" width="100%">
+					<tr>
+						<td class="<%=nodeStatus%>"  onclick="<%=value.close?methods.expand.caller():methods.collapse.caller()%>"><span>&nbsp;</span></td>
+						<td>
+								<span class="wfNodeText" style="width:100%;">
+<%	
+					if(value.type=='img'){		
+%>
+								<img src="<%=value.name%>" width="220" height="150">
+<%					
+					}else if(value.type=='LMS'){		
+%>
+								<img src="<%=value.thumbnail%>" width="220" height="150" onclick="<%=methods.showLms.caller()%>">
+<%					
+					}else if(value.type=='video'){		
+%>
+								<object width="300" height="300"><param name="movie" value="<%=value.name%>"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><param name="autoplay" value="0"></param><embed src="<%=value.name%>" type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" width="300" height="300"></embed></object>
+<%				
+					}else if(value.type=='slideshare' || value.type=='topic' || value.type=='wiki'){		
+%>
+								<%=value.name%>
+<%			
+					}
+%>				
+						</td>
+					</tr>
+				</table>
+								
+			</div>
+<%		
+				}else if(mw3.when != 'read'){
 %>		
 			<div id="wfnode_<%=objectId%>" class="wfNode" style="margin:3px 0; position:relative">
 				<div id="wfnode_current_<%=objectId%>" class="wfnode_current" objectId="<%=objectId%>" style="display:none"><img src="images/waveStyle/navi_icon.png" ></div>
@@ -50,7 +83,7 @@
 <%	
 					if(value.type=='img'){		
 %>
-								<img src="<%=value.name%>">
+								<img src="<%=value.name%>" width="220" height="150">
 								<input type="text" id="wfnode_content_<%=objectId%>" style="height:1px ; border:none;background:transparent" onkeydown="mw3.getFaceHelper('<%=objectId%>').keydown(this)" onkeyup="mw3.getFaceHelper('<%=objectId%>').keyup(this);">
 <%					
 					}else if(value.type=='LMS'){		

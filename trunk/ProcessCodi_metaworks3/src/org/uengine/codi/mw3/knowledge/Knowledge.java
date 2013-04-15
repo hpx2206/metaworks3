@@ -57,7 +57,9 @@ public class Knowledge {
 		Layout outerLayout = new Layout();
 		outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:5, east__spacing_open:5,east__size: '40%', north__size:52");
 		
-		outerLayout.setNorth(new ProcessTopPanel(session));
+		ProcessTopPanel processTopPanel = new ProcessTopPanel(session);
+		processTopPanel.setPageType("knol");
+		outerLayout.setNorth(processTopPanel);
 		outerLayout.setCenter(wfWindow);
 		outerLayout.setEast(mashup);
 		outerLayout.setName("center");

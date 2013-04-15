@@ -1,13 +1,15 @@
 package org.uengine.codi.mw3.knowledge;
 
-import java.util.ArrayList;
-
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ImagePath;
 import org.metaworks.annotation.Name;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.annotation.Validator;
+import org.metaworks.annotation.ValidatorContext;
+import org.metaworks.annotation.ValidatorSet;
 import org.uengine.codi.mw3.model.Session;
 
 @Face(options="hideEditBtn", values="true")
@@ -20,7 +22,6 @@ public class SearchResult {
 	String targetNodeId;
 	String resultType;
 
-	@Hidden
 	public String getTargetNodeId() {
 		return targetNodeId;
 	}
@@ -71,11 +72,9 @@ public class SearchResult {
 		this.resultType = resultType;
 	}
 	
-	@ServiceMethod(callByContent=true, mouseBinding="left")
-	@Hidden
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	@Face(displayName="선택")
 	public Object[] choose() throws Exception{
-		
 		if( resultType != null && resultType.equals("KMS")){
 			// 지식맵은 선택시에 wfNode 로의 add 가 이루어 지지 않는다.
 			return null;
@@ -83,9 +82,15 @@ public class SearchResult {
 			WfNode wfNode = new WfNode();
 			wfNode.load(targetNodeId);
 			wfNode.session = session;
+			wfNode.copyFrom(wfNode.databaseMe());
 			if( resultType != null && resultType.equals("slideshare")){
 				wfNode.setNameNext(description);
 				wfNode.setTypeNext("slideshare");	
+			}else if( resultType != null && resultType.equals("WIKI")){
+				// 주의 : 같은 변수에 서로 다른 목적으로 사용하는 변수를 넣었으니 조심해서 사용하자
+				wfNode.setNameNext(title);	//	제일 상위 제목 
+				wfNode.setThumbnailNext(description);	// xml 형식으로 넘어오니 객체화 시킨후에 저장
+				wfNode.setTypeNext("wiki");	
 			}else if( resultType != null && resultType.equals("LMS")){
 				wfNode.setNameNext(title);
 				wfNode.setUrlNext(url);
@@ -96,7 +101,7 @@ public class SearchResult {
 				wfNode.setTypeNext("text");	
 			}
 			
-			return wfNode.add();
+			return wfNode.addMashup();
 		}
 	}
 	

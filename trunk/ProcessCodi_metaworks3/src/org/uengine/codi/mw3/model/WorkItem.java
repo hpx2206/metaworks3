@@ -414,7 +414,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		//WorkItemHandler workItemHandler;
 		
 		String tool = workItem.getTool();
-		if(tool.startsWith("mw3.")){
+		if(tool != null && tool.startsWith("mw3.")){
 			String metaworksHandler = 
 				tool.substring(4);
 			
@@ -646,7 +646,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			this.isDeleted = isDeleted;
 		}
 
-		public IInstance save() throws Exception {
+	public IInstance save() throws Exception {
 		
 		IInstance instanceRef = null;		
 		

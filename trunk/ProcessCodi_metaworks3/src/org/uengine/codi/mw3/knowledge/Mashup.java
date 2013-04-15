@@ -13,27 +13,33 @@ public class Mashup {
 	
 	public Mashup(){
 		setMashupGoogleImage(new MashupGoogleImage());
-//		setMashupLMS(new MashupLMS());
+		setMashupLMS(new MashupLMS());
 		setMashupKMS(new MashupKMS());
 		setMashupVideo(new MashupVideo());
 		setMashupSlideshare(new MashupSlideshare());
+		setMashupWiki(new MashupWiki());
 	}
 
 	MashupGoogleImage mashupGoogleImage;
-	@Face(displayName="이미지")
-	@AutowiredToClient
-	
+		@Face(displayName="이미지")
+		@AutowiredToClient
 		public MashupGoogleImage getMashupGoogleImage() {
 			return mashupGoogleImage;
 		}
-	
 		public void setMashupGoogleImage(MashupGoogleImage mashupGoogleImage) {
 			this.mashupGoogleImage = mashupGoogleImage;
 		}
 		
-		
+	MashupWiki mashupWiki;
+	@Face(displayName="위키피디아")
+		public MashupWiki getMashupWiki() {
+			return mashupWiki;
+		}
+		public void setMashupWiki(MashupWiki mashupWiki) {
+			this.mashupWiki = mashupWiki;
+		}
+
 	MashupLMS mashupLMS;
-	@Hidden
 	@Face(displayName="학습 콘텐츠")
 		public MashupLMS getMashupLMS() {
 			return mashupLMS;
