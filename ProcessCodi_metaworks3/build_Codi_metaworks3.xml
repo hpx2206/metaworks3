@@ -29,6 +29,7 @@
 		<copy todir="${was.home}/webapps/uengine-web/WEB-INF/classes/" overwrite="yes">
 			<fileset dir="bin">
 	 			<include name="**/*.*"/>
+	 			<exclude name="rebel.xml"/>
 			</fileset>
 		</copy>
 		
