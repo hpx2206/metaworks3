@@ -3260,6 +3260,8 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				
     			var validationConditionExpression = validator.condition;    			
     			if(validationConditionExpression != null){
+    				console.log(validationConditionExpression);
+    				
     				with(object){
     					validationCondition = eval(validationConditionExpression);
     				}
@@ -3339,6 +3341,22 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 								}
 							}
 								
+						}
+						
+						for(var i = 0; i < metadata.fieldDescriptors.length; i++){
+							var isExistField = false;
+							
+							for (var j=0; j<fieldOrder.length; j++){
+								if(i == fieldOrder[j]){
+									isExistField = true;
+									
+									break;
+								}
+							}
+							
+							if(!isExistField)
+								fieldOrder.push(i);
+							
 						}
 					}else{
 						for(var i = 0; i < metadata.fieldDescriptors.length; ++i){
@@ -3468,7 +3486,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 						for(var i=0; i<validator.options.length; i++){
 							var validationCondition = validator.options[i];					
 		    				with(object){
-		    					validation = eval(validationCondition);
+		    					validation = !(eval(validationCondition));
 		    				}							
 						}
 					}

@@ -11,7 +11,7 @@
 		} else if(mw3.when == "new" || mw3.when == "edit") {
 %>
 
-	<select id="<%=mw3.createInputId(objectId)%>">
+	<select id="select_<%=objectId%>">
 <%	
 			for(var i in value.optionValues){
 				if(value.selected == value.optionValues[i]) {

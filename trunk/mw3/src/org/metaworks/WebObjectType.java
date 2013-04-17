@@ -928,6 +928,7 @@ public class WebObjectType{
 
 				smc.setNameGetter(name!=null? true:false);
 				smc.setChildrenGetter(children!=null? true:false);
+				smc.setConstructor(annotation.constructor());
 				
 				if(annotation.except().length > 0){
 					Map<String, String> excepList = new HashMap<String, String>();
