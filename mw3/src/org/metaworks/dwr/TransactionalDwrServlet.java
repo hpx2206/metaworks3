@@ -22,6 +22,7 @@ import org.metaworks.dao.JDBCConnectionFactory;
 import org.metaworks.dao.TransactionContext;
 
 import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
 
 public class TransactionalDwrServlet extends DwrServlet{
 
@@ -243,6 +244,26 @@ public class TransactionalDwrServlet extends DwrServlet{
 	        	toXmlByXstream(object, response.getOutputStream());
 	        	
 	        	response.flushBuffer();
+	        }else if(pathInfo.startsWith("/mw3-json-rpc")){
+	        	String className = request.getParameter("className");
+            	String objectId = request.getParameter("id");
+            	String methodName = request.getParameter("methodName");
+        		Class c = Thread.currentThread().getContextClassLoader().loadClass(className);
+	        	Object object = c.newInstance();
+	        	
+	        	MetaworksRemoteService metaworksRemoteService = MetaworksRemoteService.getInstance();
+	        	InvocationContext invocationContext = metaworksRemoteService.prepareToCall(className, object, methodName, null);
+	        	object = invocationContext.getObject();
+	        	
+	        	Method method = c.getMethod(methodName, new Class[]{String.class});
+	        	method.invoke(object, new Object[]{objectId});
+	        	
+	        	XStream xstream4JSON = new XStream(new JettisonMappedXmlDriver());
+//	            System.out.println("JSON RESULT");
+//	            System.out.println(xstream4JSON.toXML(object));
+	        	xstream4JSON.toXML(object, response.getOutputStream());	
+	        	// http://localhost:8080/uengine-web/dwr/mw3-json-rpc?className=org.uengine.codi.mw3.knowledge.WfNode&methodName=load&id=1
+	            response.flushBuffer();
 	        }else{
 
 				
