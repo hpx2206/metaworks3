@@ -24,9 +24,11 @@
 			</fileset>
 		</jar>
 		
-		
 		<copy file="./build/process_codi.jar" todir="${new.home}/WebContent/WEB-INF/lib"/>
 		<copy file="./WebContent/WEB-INF/lib/metaworks3.jar" todir="${new.home}/WebContent/WEB-INF/lib"/>
+		<copy file="./WebContent/WEB-INF/lib/uengine.jar" todir="${new.home}/WebContent/WEB-INF/lib"/>
+		<copy file="./WebContent/processmanager/signeduengine_settings.jar" todir="${new.home}/WebContent/processmanager"/>
+		<copy file="./WebContent/processmanager/signeduengine.jar" todir="${new.home}/WebContent/processmanager"/>
 		
 	</target>
 </project>
