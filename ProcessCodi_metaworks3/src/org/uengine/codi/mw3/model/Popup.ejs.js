@@ -121,8 +121,9 @@ org_uengine_codi_mw3_model_Popup.prototype = {
 		containerOffset.right = parseInt(containerOffset.left) + container.width();
 		containerOffset.bottom = parseInt(containerOffset.top) + container.height();
 		
-		if ((containerOffset.left <= event.screenX && event.screenX <= containerOffset.right) && 
-			(containerOffset.top <= event.screenY && event.screenY <= containerOffset.bottom)){
+		if ('select-one' == event.srcElement.type ||
+			((containerOffset.left <= event.pageX && event.pageX <= containerOffset.right) && 
+			(containerOffset.top <= event.pageY && event.pageY <= containerOffset.bottom))){
 			return true;
 		}else{
 			return false;
