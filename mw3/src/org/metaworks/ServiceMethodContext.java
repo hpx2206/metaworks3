@@ -241,4 +241,13 @@ public class ServiceMethodContext{
 		public void setBindingHidden(boolean bindingHidden) {
 			this.bindingHidden = bindingHidden;
 		}
+		
+	boolean constructor;
+		public boolean isConstructor() {
+			return constructor;
+		}
+		public void setConstructor(boolean constructor) {
+			this.constructor = constructor;
+		}
+		
 }

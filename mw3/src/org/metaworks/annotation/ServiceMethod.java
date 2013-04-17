@@ -12,12 +12,10 @@ import org.metaworks.dao.IDAO;
 @Target(ElementType.METHOD)
 public @interface ServiceMethod {
 	
-	
 	String when() 				default IDAO.WHEN_EVER;
 	String where() 				default IDAO.WHERE_EVER;
 	String how() 				default IDAO.HOW_EVER;
 	String target() 			default ServiceMethodContext.TARGET_AUTO;
-	
 	
 	boolean callByContent() 	default false;
 	boolean needToConfirm() 	default false;	//shows 'Are you sure to do this....?'
@@ -40,6 +38,6 @@ public @interface ServiceMethod {
 	
 	boolean loadOnce() 			default false;
 	boolean childrenLoader() 	default false;
-	
+	boolean constructor()		default false;
 	boolean bindingHidden() 	default false;
 }

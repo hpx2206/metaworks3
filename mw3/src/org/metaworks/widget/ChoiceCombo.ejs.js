@@ -16,7 +16,8 @@ var org_metaworks_widget_ChoiceCombo = function(objectId, className) {
 org_metaworks_widget_ChoiceCombo.prototype = {
 	getValue : function(){
 		var object = mw3.objects[this.objectId];
-		var combo = $('#' + mw3.createInputId(this.objectId));
+		
+		var combo = $('#select_' + this.objectId);
 		
 		if(combo.length > 0){
 			var change = combo.find('option:selected');
