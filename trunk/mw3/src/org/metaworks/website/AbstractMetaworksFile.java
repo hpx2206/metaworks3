@@ -134,7 +134,7 @@ public abstract class AbstractMetaworksFile implements ContextAware {
 	@ServiceMethod(callByContent=true)
 	public void upload() throws FileNotFoundException, IOException, Exception{
 		
-		if(fileTransfer==null && fileTransfer.getFilename()!=null && fileTransfer.getFilename().length() > 0) 
+		if(fileTransfer==null || fileTransfer.getFilename()==null || fileTransfer.getFilename().length() <= 0) 
 			throw new Exception("No file attached");
 		
 		String prefix = overrideUploadPathPrefix();
