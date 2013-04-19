@@ -1,5 +1,7 @@
 package org.uengine.codi.mw3.model;
 
+import org.uengine.codi.mw3.knowledge.ProjectPerspective;
+
 public class PerspectivePanel {
 
 	PersonalPerspective personalPerspective;
@@ -47,7 +49,15 @@ public class PerspectivePanel {
 		public void setAppPerspective(OrganizationPerspectiveApp appPerspective) {
 			this.appPerspective = appPerspective;
 		}
-	
+		
+	ProjectPerspective projectPerspective;
+		public ProjectPerspective getProjectPerspective() {
+			return projectPerspective;
+		}	
+		public void setProjectPerspective(ProjectPerspective projectPerspective) {
+			this.projectPerspective = projectPerspective;
+		}
+
 	//ProcessStatusPerspective processStatusPerspective;
 	//
 	//	public ProcessStatusPerspective getProcessStatusPerspective() {
@@ -97,6 +107,7 @@ public class PerspectivePanel {
 				organizationPerspectiveRole = new OrganizationPerspectiveRole();
 				processPerspective = new ProcessPerspective();
 				appPerspective = new OrganizationPerspectiveApp();
+				projectPerspective = new ProjectPerspective();
 				
 			}
 			
