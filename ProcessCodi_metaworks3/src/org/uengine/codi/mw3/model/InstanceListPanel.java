@@ -9,7 +9,9 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.calendar.ScheduleCalendar;
+import org.uengine.codi.mw3.knowledge.ProjectInfo;
 import org.uengine.codi.mw3.knowledge.WfPanel;
+import org.uengine.processmanager.ProcessManagerRemote;
 @Face(
 		ejsPathMappingByContext=
 	{
@@ -25,6 +27,9 @@ public class InstanceListPanel implements ContextAware{
 
 	@Autowired
 	public ProcessMap processMap;
+	
+	@Autowired
+	public ProcessManagerRemote processManager;
 	
 	public InstanceListPanel(){
 		this(null);
@@ -304,5 +309,20 @@ public class InstanceListPanel implements ContextAware{
 		return window;
 	}
 	
+
+	ProjectInfo projectInfo;
+		public ProjectInfo getProjectInfo() {
+			return projectInfo;
+		}
+		public void setProjectInfo(ProjectInfo projectInfo) {
+			this.projectInfo = projectInfo;
+		}
+		  
+	public void projectInfoLoad() throws Exception {
+		projectInfo = new ProjectInfo();
+		projectInfo.session = session;
+		projectInfo.processManager = processManager;
+		projectInfo.load();
+	}
 	
 }
