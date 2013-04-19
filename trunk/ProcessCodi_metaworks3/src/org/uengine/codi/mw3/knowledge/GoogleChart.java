@@ -6,6 +6,14 @@ public class GoogleChart {
 	public final static String CHARTTYPE_LINECHART 			= "line";
 	public final static String CHARTTYPE_COLUMNCHART 		= "column";
 	
+	String id;
+		public String getId() {
+			return id;
+		}
+		public void setId(String id) {
+			this.id = id;
+		}
+
 	String type;
 		public String getType() {
 			return type;
