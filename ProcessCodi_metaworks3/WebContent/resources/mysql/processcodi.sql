@@ -656,14 +656,14 @@ update bpm_worklist set isdeleted = 0 where isdeleted is null;
 
 alter table roleusertable modify column EMPCODE varchar(100);
 
---2013.01.31
+-- 2013.01.31
 alter table bpm_procinst add beforeCmnt varchar(200);
 
---2013.02.01
+-- 2013.02.01
 alter table bpm_procinst drop beforeCmnt;
 alter table bpm_procinst add lastcmnt2 varchar(200);
 
---2013.02.04
+-- 2013.02.04
 alter table bpm_procinst add BVBENEFIT int(6);
 alter table bpm_procinst add BVPENALTY int(6);
 alter table bpm_procinst add EFFORT int(6);
@@ -676,7 +676,7 @@ create table INST_EMP_PERF (
 );
 
 
---2013.02.14
+-- 2013.02.14
 alter table bpm_procinst add lastCmntEp varchar(100);
 alter table bpm_procinst add lastCmntRsnm varchar(100);
 alter table bpm_procinst add lastCmnt2Ep varchar(100);
@@ -734,3 +734,6 @@ alter table app modify simpleoverview varchar(1000);
 alter table app modify fulloverview varchar(5000);
 
 alter table app add url varchar(200);
+
+-- 2013.04.03 컬럼명 수정
+alter table bpm_knol change benfit BENEFIT int(11);
