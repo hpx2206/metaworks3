@@ -1,17 +1,54 @@
 package org.uengine.codi.mw3.project;
 
-import org.metaworks.annotation.AutowiredFromClient;
-import org.metaworks.annotation.Face;
-import org.metaworks.annotation.NonLoadable;
-import org.metaworks.component.SelectBox;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.codi.ITool;
-import org.uengine.codi.mw3.model.Session;
-import org.uengine.processmanager.ProcessManagerRemote;
+import java.util.ArrayList;
 
-public class VMRequest implements ITool {
+import org.metaworks.ContextAware;
+import org.metaworks.MetaworksContext;
+import org.uengine.codi.ITool;
+import org.uengine.codi.deltacloud.DeltaCloud;
+import org.uengine.codi.deltacloud.dto.RealmsDDTO;
+
+public class VMRequest implements ITool, ContextAware {
 	
-	public VMRequest() {
+	transient MetaworksContext metaworksContext;
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
+		}
+
+	VMTempleteCombo vmTempleteCombo;
+		public VMTempleteCombo getVmTempleteCombo() {
+			return vmTempleteCombo;
+		}
+		public void setVmTempleteCombo(VMTempleteCombo vmTempleteCombo) {
+			this.vmTempleteCombo = vmTempleteCombo;
+		}
+		
+	public VMRequest(){
+		this.setMetaworksContext(new MetaworksContext());
+	}
+	@Override
+	public void onLoad() throws Exception {
+		if(MetaworksContext.WHEN_EDIT.equals(this.getMetaworksContext().getWhen())){
+			this.setVmTempleteCombo(new VMTempleteCombo(null));
+		}
+	}
+
+	@Override
+	public void beforeComplete() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void afterComplete() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	/*public VMRequest() {
 		
 		this.osSelect = new SelectBox();
 		this.dbSelect = new SelectBox();
@@ -88,6 +125,6 @@ public class VMRequest implements ITool {
 		// TODO Auto-generated method stub
 		
 		System.out.print(this.osSelect.getSelectedText());
-	}
+	}*/
 
 }

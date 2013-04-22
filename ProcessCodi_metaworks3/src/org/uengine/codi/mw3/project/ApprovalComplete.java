@@ -21,7 +21,26 @@ import org.uengine.processmanager.ProcessManagerRemote;
 
 public class ApprovalComplete implements ITool  {
 
-	String approvedUrl;
+	@Override
+	public void onLoad() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void beforeComplete() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void afterComplete() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
+
+	
+	/*String approvedUrl;
 		@Face(displayName="승인 : ")
 		public String getApprovedUrl() {
 			return approvedUrl;
@@ -143,5 +162,5 @@ public class ApprovalComplete implements ITool  {
 			System.exit(1);
 		}
 	}
-		
+*/		
 }

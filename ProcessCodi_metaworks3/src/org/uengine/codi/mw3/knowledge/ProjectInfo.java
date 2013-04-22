@@ -135,12 +135,12 @@ public class ProjectInfo implements ContextAware {
 			}
 			
 			serial = processManager.getProcessVariable(linkedId, "", "VMRequest");
-			if(serial instanceof VMRequest) {
+/*			if(serial instanceof VMRequest) {
 				VMRequest vmRequest = (VMRequest)serial;
 				this.os = vmRequest.getOsSelect().getSelectedText();
 				this.db = vmRequest.getDbSelect().getSelectedText();
 				this.was = vmRequest.getWasSelect().getSelectedText();
-			}
+			}*/
 			
 //			serial = processManager.getProcessVariable(linkedId, "", "VMCreate");
 //			if(serial instanceof VMCreate) {
