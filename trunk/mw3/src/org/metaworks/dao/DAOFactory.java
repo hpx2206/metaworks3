@@ -3,7 +3,7 @@
  */
 package org.metaworks.dao;
 
-import java.util.Calendar;
+import java.sql.Connection;
 import java.util.Map;
 
 /**
@@ -34,9 +34,24 @@ public abstract class DAOFactory{
 	
 	
 	public static DAOFactory getInstance(ConnectionFactory tc){
-		DAOFactory daoFactory;
+		DAOFactory daoFactory = null;
+		
 		try{
-			USE_CLASS_NAME = "org.metaworks.dao.MySQLDAOFactory";//GlobalContext.getPropertyString("daofactory.class");
+			Connection conn = tc.getConnection();
+			
+			if(conn != null){
+				System.out.println("getDatabaseProductName :" + conn.getMetaData().getDatabaseProductName());
+				
+				if("MySql".equals(conn.getMetaData().getDatabaseProductName())){
+					USE_CLASS_NAME = "org.metaworks.dao.MySQLDAOFactory";
+				}else if("Oracle".equals(conn.getMetaData().getDatabaseProductName())){
+					USE_CLASS_NAME = "org.metaworks.dao.OracleDAOFactory";
+				}else if("CUBRID".equals(conn.getMetaData().getDatabaseProductName())){
+					USE_CLASS_NAME = "org.metaworks.dao.CubridDAOFactory";
+				}
+			}
+			
+			//USE_CLASS_NAME = "org.metaworks.dao.MySQLDAOFactory";//GlobalContext.getPropertyString("daofactory.class");
 			daoFactory = (DAOFactory)Thread.currentThread().getContextClassLoader().loadClass(USE_CLASS_NAME).newInstance();
 		}catch(Exception e){
 			e.printStackTrace();
