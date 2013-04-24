@@ -159,6 +159,7 @@ public interface IEmployee extends IDAO {
 	public void setValidEmail(boolean validEmail);	
 		
 	public IEmployee findMe() throws Exception;	
+	public IEmployee findMeByEmpName() throws Exception;
 	public IEmployee findByDept(Dept dept) throws Exception;
 	public IEmployee findByRole(Role role) throws Exception;
 	public IEmployee findByDeptOther() throws Exception;

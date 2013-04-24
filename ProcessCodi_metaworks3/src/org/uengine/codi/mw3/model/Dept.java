@@ -362,7 +362,7 @@ public class Dept extends Database<IDept> implements IDept {
 		dept.syncToDatabaseMe();
 		dept.flushDatabaseMe();
 		
-		return new Object[]{new Remover(dept)};		
+		return new Object[]{new Remover(dept , true)};		
 	}
 
 	@Override

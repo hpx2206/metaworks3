@@ -26,6 +26,13 @@ public class EmployeeList implements ContextAware {
 		public void setEmployee(IEmployee employee) {
 			this.employee = employee;
 		}
+	boolean checkBox; 
+		public boolean isCheckBox() {
+			return checkBox;
+		}
+		public void setCheckBox(boolean checkBox) {
+			this.checkBox = checkBox;
+		}
 
 	MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
