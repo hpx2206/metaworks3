@@ -54,6 +54,31 @@
 				</div>
 			</span>
 		<%
+		} else if(mw3.how == 'manager'){
+		%>
+			<div class="form_table2"> 
+				<table border="1" cellspacing="0" >	
+					<tbody>
+						<tr>
+							<th width=100>회사명</th>
+							<td><%=fields.globalCom.here({when:'view'})%></td>
+						</tr>
+						<tr>
+							<th>부서코드</th>
+							<td><%=fields.partCode.here({when:'view'})%></td>
+						</tr>	
+						<tr>
+							<th>부서명</th>
+							<td><%=fields.partName.here({when:'edit'})%></td>
+						</tr>
+						<tr>
+							<th>정보</th>
+							<td><%=fields.description.here({when:'edit'})%></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		<%
 		} else {
 			if(mw3.when == 'new' || mw3.when == 'edit'){
 %>

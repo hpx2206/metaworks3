@@ -276,7 +276,20 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		return employee;
 
 	}
-
+	@Override
+	public IEmployee findMeByEmpName() throws Exception {
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append("select EMPTABLE.*, PARTTABLE.PARTNAME from ");
+		sb.append("EMPTABLE LEFT OUTER JOIN PARTTABLE on EMPTABLE.partcode=PARTTABLE.partcode ");
+		sb.append("where EMPTABLE.EMPNAME like ?empName ");
+		
+		IEmployee findEmployee = (IEmployee) sql(sb.toString());
+		findEmployee.set("empName", "%" + getEmpName() + "%" );
+		findEmployee.select();
+		
+		return findEmployee;
+	}
 	@Override
 	public IEmployee findByDept(Dept dept) throws Exception {
 		StringBuffer sb = new StringBuffer();

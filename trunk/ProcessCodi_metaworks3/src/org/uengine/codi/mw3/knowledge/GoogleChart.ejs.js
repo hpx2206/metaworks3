@@ -8,20 +8,20 @@ function loadChartApis(){
 }
 
 function chartApisLoaded(){
-	
-	var object = mw3.objects[chartId];
-	if (console && console.log) console.log(chartId);
-	if(object){
-		object.getFaceHelper().drawChart();
-	}
+	$('div[classname="org.uengine.codi.mw3.knowledge.GoogleChart"]').each(function( index ) {
+		var chartObjectId = $(this).attr('objectid');
+		var object = mw3.objects[chartObjectId];
+		if( !object.loaded ){
+			object.getFaceHelper().drawChart();
+			object.loaded = true;
+		}
+	});
 }
 
 var org_uengine_codi_mw3_knowledge_GoogleChart = function(objectId, className){
 	this.objectId = objectId;
 	this.className = className;
 	this.objectDivId = mw3._getObjectDivId(this.objectId);
-	
-	window.chartId = this.objectId;
 	
 	var script = document.createElement("script");
 	script.src = "https://www.google.com/jsapi?callback=loadChartApis";	

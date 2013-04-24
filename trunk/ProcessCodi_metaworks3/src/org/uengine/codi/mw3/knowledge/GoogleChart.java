@@ -13,7 +13,13 @@ public class GoogleChart {
 		public void setId(String id) {
 			this.id = id;
 		}
-
+	boolean loaded;
+		public boolean isLoaded() {
+			return loaded;
+		}
+		public void setLoaded(boolean loaded) {
+			this.loaded = loaded;
+		}
 	String type;
 		public String getType() {
 			return type;
