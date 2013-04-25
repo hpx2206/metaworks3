@@ -2,28 +2,53 @@ package org.uengine.codi.deltacloud;
 
 import java.util.ArrayList;
 
-import org.uengine.codi.deltacloud.dto.HardwareProfilesCDTO;
-import org.uengine.codi.deltacloud.dto.HardwareProfilesDDTO;
-import org.uengine.codi.deltacloud.dto.ImagesDDTO;
-import org.uengine.codi.deltacloud.dto.ImagesSF;
-import org.uengine.codi.deltacloud.dto.RealmsDDTO;
+import org.uengine.kernel.GlobalContext;
 
 public class DeltaCloud {
 
-	public final static String url = "http://192.168.50.14/deltacloud/api";
+	public String url = "http://192.168.50.14/deltacloud/api";
 	
-	public ArrayList<RealmsDDTO> realms() throws Exception {
-		return RealmsSF.realmsXmlParser(this.url);
-		 
+	public DeltaCloud() {
+		this.url = (String)GlobalContext.getPropertyString("deltacloud.url", "http://192.168.50.14/deltacloud/api");
 	}
 	
-	public ArrayList<ImagesDDTO> images() throws Exception {
-		return ImagesSF.imagesXmlParser(this.url);
+	public ArrayList<Realm> realms() throws Exception {
+		Realm realm = new Realm(this.url);
+		
+		return realm.list();
 	}
 	
-	public ArrayList<HardwareProfilesDDTO> hardwareProfiles() throws Exception {
-		return HardwareProfilesSF.hardwareProfilesXmlParser(this.url);
+	public ArrayList<Image> images() throws Exception {
+		Image image = new Image(this.url);
+		
+		return image.list();
 	}
+	
+	public ArrayList<HardwareProfile> hardwareProfiles() throws Exception {
+		HardwareProfile hardwareProfile = new HardwareProfile(this.url);
+		
+		return hardwareProfile.list();
+	}
+	
+	public Instance createInstance(String name, String realmId, String imageId, String hardwareProfileId) throws Exception {
+		Instance instance = new Instance(this.url);
+		
+		instance.setName(name);
+		instance.setRealmId(realmId);
+		instance.setImageId(imageId);
+		instance.setHardwareProfileId(hardwareProfileId);
+		
+		return instance.create();
+	}
+	
+	public WorkflowResult workflowStatus(String workflowId) throws Exception {
+		WorkflowResult wfResult = new WorkflowResult(this.url);
+		wfResult.setId(workflowId);
+		
+		return wfResult.requestStatus();
+	}
+
+	
 	/**
 	 * @param args
 	 */
@@ -32,7 +57,7 @@ public class DeltaCloud {
 		
 		try {
 			// realm case
-			ArrayList<RealmsDDTO> arrayList = deltaCloud.realms();
+			ArrayList<Realm> arrayList = deltaCloud.realms();
 			
 			System.out.println("Realms Case");
 			for(int i=0;i<arrayList.size();i++){
@@ -47,10 +72,14 @@ public class DeltaCloud {
 		}
 		try {
 			// image case
-			ArrayList<ImagesDDTO> arrayList = deltaCloud.images();
+			ArrayList<Image> arrayList = deltaCloud.images();
 			
 			System.out.println("Images Case");
 			for(int i=0;i<arrayList.size();i++){
+				
+				String descr = arrayList.get(i).getDescription();
+				String[] parser = descr.split("_");
+				
 				System.out.println("id : "+arrayList.get(i).getId());
 				System.out.println("name : "+arrayList.get(i).getName());
 				System.out.println("description : "+arrayList.get(i).getDescription());
@@ -64,19 +93,16 @@ public class DeltaCloud {
 		
 		try {
 			// hardwareprofiles case
-			ArrayList<HardwareProfilesDDTO> arrayList = deltaCloud.hardwareProfiles();
+			ArrayList<HardwareProfile> arrayList = deltaCloud.hardwareProfiles();
 			
 			System.out.println("HardwareProfiles Case");
 			for(int i=0;i<arrayList.size();i++){
 				System.out.println("id : "+arrayList.get(i).getId());
 				System.out.println("name : "+arrayList.get(i).getName());
-				
-				int size = arrayList.get(i).getHardwareProfilesCDTOs().length;
-				HardwareProfilesCDTO[] dtos = new HardwareProfilesCDTO[size];
-				for(int j=0;j<size;j++){
-					dtos=arrayList.get(i).getHardwareProfilesCDTOs();
-					System.out.println("value : "+dtos[j].getValue()+" unit : "+dtos[j].getUnit()+" kind : "+dtos[j].getKind()+" name : "+dtos[j].getName());
-				}
+				System.out.println("cpu : "+arrayList.get(i).getCpu());
+				System.out.println("memory : "+arrayList.get(i).getMemory());
+				System.out.println("architecture : "+arrayList.get(i).getArchitecture());
+				System.out.println("storage : "+arrayList.get(i).getStorage());
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
