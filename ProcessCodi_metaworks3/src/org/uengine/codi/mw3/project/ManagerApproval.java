@@ -1,34 +1,23 @@
 package org.uengine.codi.mw3.project;
 
 import org.metaworks.annotation.Face;
-import org.metaworks.annotation.NonLoadable;
-import org.metaworks.component.SelectBox;
+import org.metaworks.annotation.Range;
 import org.uengine.codi.ITool;
 
+@Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs")
 public class ManagerApproval implements ITool  {
 	
 	public ManagerApproval() { 
-		setAccept( new SelectBox() ); 
-		accept.add( "승인" , "yes" );  
-		accept.add( "거부" , "no" );  
 	}
 	
-	SelectBox accept;
+	String approval;
 		@Face(displayName="승인여부")
-		public SelectBox getAccept() {
-			return accept;
+		@Range(options={"승인", "거부"}, values={"approval", "reject"})
+		public String getApproval() {
+			return approval;
 		}
-		public void setAccept(SelectBox accept) {
-			this.accept = accept;
-		}
-		
-	String name;
-		@NonLoadable
-		public String getName() {
-			return name;
-		}	
-		public void setName(String name) {
-			this.name = name;
+		public void setApproval(String approval) {
+			this.approval = approval;
 		}
 
 	@Override

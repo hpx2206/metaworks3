@@ -1,13 +1,12 @@
 package org.uengine.codi.mw3.project;
 
-import java.util.ArrayList;
-
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.annotation.Face;
+import org.metaworks.annotation.Hidden;
 import org.uengine.codi.ITool;
-import org.uengine.codi.deltacloud.DeltaCloud;
-import org.uengine.codi.deltacloud.dto.RealmsDDTO;
 
+@Face(displayName="템플릿 선택", ejsPath="dwr/metaworks/genericfaces/FormFace.ejs", options={"fieldOrder"}, values={"vmRealmCombo,vmImageCombo"})
 public class VMRequest implements ITool, ContextAware {
 	
 	transient MetaworksContext metaworksContext;
@@ -18,113 +17,63 @@ public class VMRequest implements ITool, ContextAware {
 			this.metaworksContext = metaworksContext;
 		}
 
-	VMTempleteCombo vmTempleteCombo;
-		public VMTempleteCombo getVmTempleteCombo() {
-			return vmTempleteCombo;
+	String vmRealmId;
+		@Hidden
+		public String getVmRealmId() {
+			return vmRealmId;
 		}
-		public void setVmTempleteCombo(VMTempleteCombo vmTempleteCombo) {
-			this.vmTempleteCombo = vmTempleteCombo;
+		public void setVmRealmId(String vmRealmId) {
+			this.vmRealmId = vmRealmId;
+		}
+	
+	String vmImageId;
+		@Hidden
+		public String getVmImageId() {
+			return vmImageId;
+		}
+		public void setVmImageId(String vmImageId) {
+			this.vmImageId = vmImageId;
+		}
+	
+	VMRealmCombo vmRealmCombo;
+		@Face(displayName="망")
+		public VMRealmCombo getVmRealmCombo() {
+			return vmRealmCombo;
+		}
+		public void setVmRealmCombo(VMRealmCombo vmRealmCombo) {
+			this.vmRealmCombo = vmRealmCombo;
+		}
+	
+	VMImageCombo vmImageCombo;
+		@Face(displayName="템플릿")
+		public VMImageCombo getVmImageCombo() {
+			return vmImageCombo;
+		}
+		public void setVmImageCombo(VMImageCombo vmImageCombo) {
+			this.vmImageCombo = vmImageCombo;
 		}
 		
 	public VMRequest(){
 		this.setMetaworksContext(new MetaworksContext());
 	}
+	
 	@Override
 	public void onLoad() throws Exception {
 		if(MetaworksContext.WHEN_EDIT.equals(this.getMetaworksContext().getWhen())){
-			this.setVmTempleteCombo(new VMTempleteCombo(null));
+			this.setVmRealmCombo(new VMRealmCombo(null));
+			this.setVmImageCombo(new VMImageCombo(this.getVmRealmCombo().getSelected(), null));
 		}
 	}
 
 	@Override
 	public void beforeComplete() throws Exception {
-		// TODO Auto-generated method stub
-		
+		this.setVmRealmId(this.getVmRealmCombo().getSelected());
+		this.setVmImageId(this.getVmImageCombo().getSelected());
 	}
-
+	
 	@Override
 	public void afterComplete() throws Exception {
 		// TODO Auto-generated method stub
 		
 	}
-	
-	/*public VMRequest() {
-		
-		this.osSelect = new SelectBox();
-		this.dbSelect = new SelectBox();
-		this.wasSelect = new SelectBox();
-		
-		this.osSelect.add("Windows", "Windows");
-		this.osSelect.add("Ubuntu", "Ubuntu");
-		this.osSelect.add("Ios", "Ios");
-		
-		this.dbSelect.add("Cubrid", "Cubrid");
-		this.dbSelect.add("Oracle", "Oracle");
-		this.dbSelect.add("Mysql", "Mysql");
-		this.dbSelect.add("Mssql", "Mssql");
-		
-		this.wasSelect.add("Apache Tomcat7.0", "Apache Tomcat7.0");	
-		this.wasSelect.add("Apache Tomcat6.0", "Apache Tomcat6.0");	
-		this.wasSelect.add("IIS", "IIS");	
-		this.wasSelect.add("JBOSS", "JBOSS");	
-		this.wasSelect.add("IBM Web Spere", "IBM Web Spere");	
-	}
-
-	SelectBox osSelect;
-		@Face(displayName="OS: ")
-		public SelectBox getOsSelect() {
-			return osSelect;
-		}	
-		public void setOsSelect(SelectBox osSelect) {
-			this.osSelect = osSelect;
-		}
-		
-	SelectBox dbSelect;
-		@Face(displayName="DB: ")
-		public SelectBox getDbSelect() {
-			return dbSelect;
-		}
-		public void setDbSelect(SelectBox dbSelect) {
-			this.dbSelect = dbSelect;
-		}
-		
-	SelectBox wasSelect;
-		@Face(displayName="DB: ")
-		public SelectBox getWasSelect() {
-			return wasSelect;
-		}
-		public void setWasSelect(SelectBox wasSelect) {
-			this.wasSelect = wasSelect;
-		}
-		
-	String name;
-		@NonLoadable
-		public String getName() {
-			return name;
-		}	
-		public void setName(String name) {
-			this.name = name;
-		}
-		
-	@Autowired
-	public ProcessManagerRemote processManager;
-	
-	@Override
-	public void onLoad() throws Exception {
-		// TODO Auto-generated method stub	
-	}
-
-	@Override
-	public void beforeComplete() throws Exception {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void afterComplete() throws Exception {
-		// TODO Auto-generated method stub
-		
-		System.out.print(this.osSelect.getSelectedText());
-	}*/
-
 }
