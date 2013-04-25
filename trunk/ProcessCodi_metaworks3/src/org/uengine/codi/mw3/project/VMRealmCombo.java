@@ -5,29 +5,31 @@ import java.util.ArrayList;
 import org.metaworks.annotation.Face;
 import org.metaworks.widget.Choice;
 import org.uengine.codi.deltacloud.DeltaCloud;
-import org.uengine.codi.deltacloud.dto.RealmsDDTO;
+import org.uengine.codi.deltacloud.Realm;
 
 @Face(ejsPath="dwr/metaworks/org/metaworks/widget/ChoiceCombo.ejs")
-public class VMTempleteCombo extends Choice {
+public class VMRealmCombo extends Choice {
 
-	public VMTempleteCombo(){
+	public VMRealmCombo(){
 		
 	}
 	
-	public VMTempleteCombo(String defaultValue){
+	public VMRealmCombo(String defaultValue){
 		this.onLoad(defaultValue);
+		
+		if(this.getSize() > 0)
+			this.select(0);
 	}
 	
 	public void onLoad(String defaultValue){
-		DeltaCloud deltaCloud = new DeltaCloud();
-		
 		try {
-			// realm case
-			ArrayList<RealmsDDTO> realms = deltaCloud.realms();
+			DeltaCloud deltaCloud = new DeltaCloud();
 			
-			System.out.println("Realms Case");
+			// realm case
+			ArrayList<Realm> realms = deltaCloud.realms();
+			
 			for(int i=0;i<realms.size();i++){
-				RealmsDDTO realm = realms.get(i);
+				Realm realm = realms.get(i);
 				
 				if("available".equals(realm.getState())){
 					this.add(realm.getName(), realm.getId());

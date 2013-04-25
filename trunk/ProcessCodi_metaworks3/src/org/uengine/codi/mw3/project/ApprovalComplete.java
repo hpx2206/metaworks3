@@ -1,26 +1,51 @@
 package org.uengine.codi.mw3.project;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Serializable;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.Map;
-
 import org.metaworks.annotation.Face;
-import org.metaworks.annotation.NonLoadable;
-import org.metaworks.dao.Database;
-import org.metaworks.dao.TransactionContext;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.ITool;
-import org.uengine.codi.mw3.knowledge.IWfNode;
-import org.uengine.kernel.GlobalContext;
-import org.uengine.processmanager.ProcessManagerRemote;
 
+@Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs")
 public class ApprovalComplete implements ITool  {
 
+	String serverName;	
+		public String getServerName() {
+			return serverName;
+		}
+		public void setServerName(String serverName) {
+			this.serverName = serverName;
+		}
+
+	String serverIp;
+		public String getServerIp() {
+			return serverIp;
+		}
+		public void setServerIp(String serverIp) {
+			this.serverIp = serverIp;
+		}
+
+	String realmId;
+		public String getRealmId() {
+			return realmId;
+		}
+		public void setRealmId(String realmId) {
+			this.realmId = realmId;
+		}
+	
+	String imageId;
+		public String getImageId() {
+			return imageId;
+		}
+		public void setImageId(String imageId) {
+			this.imageId = imageId;
+		}
+	
+	String hardwareProfileId;
+		public String getHardwareProfileId() {
+			return hardwareProfileId;
+		}
+		public void setHardwareProfileId(String hardwareProfileId) {
+			this.hardwareProfileId = hardwareProfileId;
+		}
+		
 	@Override
 	public void onLoad() throws Exception {
 		// TODO Auto-generated method stub
