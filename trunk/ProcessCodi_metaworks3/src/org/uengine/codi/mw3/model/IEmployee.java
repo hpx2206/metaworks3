@@ -1,7 +1,5 @@
 package org.uengine.codi.mw3.model;
 
-import javax.validation.constraints.AssertFalse;
-
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.ServiceMethodContext;
@@ -68,7 +66,7 @@ public interface IEmployee extends IDAO {
 	@NonSavable
 	@ValidatorSet({
 		@Validator(name=ValidatorContext.VALIDATE_NOTNULL, message="비밀번호 확인를 입력하여 주십시오."),
-		@Validator(name=ValidatorContext.VALIDATE_CONDITION, options={"password == confirmPassword"}, message="비밀번호 확인을 잘 못 입력하셨습니다. 다시 확인해주십시오.")
+		@Validator(name=ValidatorContext.VALIDATE_CONDITION, options={"password != confirmPassword"}, message="비밀번호 확인을 잘 못 입력하셨습니다. 다시 확인해주십시오.")
 	})
 	public String getConfirmPassword();
 	public void setConfirmPassword(String confirmPassword);
