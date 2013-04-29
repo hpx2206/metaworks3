@@ -15,7 +15,6 @@ import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.common.MainPanel;
-import org.uengine.codi.mw3.tadpole.Tadpole;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.processmanager.ProcessManagerRemote;
 
@@ -518,18 +517,6 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 			
 			processManager.applyChanges();
 		}
-		
-		StringBuffer param = new StringBuffer();
-		
-		//parameter로 넘겨줘야 할 값 == comcode, userid, pw, name
-		param.append("?comcode=").append(this.getGlobalCom()).append("&");
-		param.append("userId=").append(this.getEmpCode()).append("&");
-		param.append("pw=").append(this.getPassword()).append("&");
-		param.append("userName=").append(this.getEmpName());
-		
-		Tadpole tadpole = new Tadpole();
-		tadpole.session = session;
-		tadpole.createUserAtTadpole(param.toString());
 		
 		return new Object[] {new Remover(new ModalWindow()), new ToOpener(new MainPanel(new Main(session)))};
 	}
