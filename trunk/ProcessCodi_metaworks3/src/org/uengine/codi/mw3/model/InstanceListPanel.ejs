@@ -3,33 +3,40 @@
 		return;
 		
 	var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
+	console.log(session);
 	var isTopic = (mw3.how == "topic");
 	
 %>
 
-<div class="top" style="height: <%=isTopic?'115':'68'%>px; overflow:hidden; position: absolute; min-width: 0px; min-height: 0px; max-width: 10000px; max-height: 10000px;  left: 0px; right: 0px; top: 0px;">
+<div class="top" style="height: <%=isTopic?'136':'68'%>px; overflow:hidden; position: absolute; min-width: 0px; min-height: 0px; max-width: 10000px; max-height: 10000px;  left: 0px; right: 0px; top: 0px;">
 	
 	<%=isTopic?fields.topicFollowers.here():''%>
 	
 		            <div id="searchbox">
 		                <div class="searchboxline">
 		                	<div class="searchboxline2">
-		                        <div class="newprocessbtn">
-			                        <a href="#" onclick="<%=methods.newInstance.caller()%>">
-			                        	<span id="method_<%=objectId%>_newInstance">
-			                        		<div id="startBtn">
-						                        <% if(mw3.how == "topic"){ 
-							                        	var title = session.windowTitle;
-														if( title != null && title != '' && title.length > 13){
-															title = title.substring(0,13) + '...';
-														}%>
-													"<%= title %>"에 
-												<%}%> 
-													<%=mw3.localize("$New")%>
-											</div>
-										</span>
-									</a>
-								</div>
+		                		<%
+									if(isTopic){
+								%>
+			                        <div class="newprocessbtn">
+				                        <a href="#" onclick="<%=methods.newInstance.caller()%>">
+				                        	<span id="method_<%=objectId%>_newInstance">
+				                        		<div id="startBtn">
+							                        <% if(mw3.how == "topic"){ 
+								                        	var title = session.windowTitle;
+															if( title != null && title != '' && title.length > 13){
+																title = title.substring(0,13) + '...';
+															}%>
+														"<%= title %>"에
+													<%}%> 
+														<%=mw3.localize("$New")%>
+												</div>
+											</span>
+										</a>
+									</div>
+								<%
+										}
+								%>
 		                        <div class="searchboxarea" id="method_<%=objectId%>_newInstance">
 		                        	<%=fields.searchBox.here()%>
 		                        </div>
@@ -46,11 +53,31 @@
 	                        <li onclick="<%=methods.switchToKnowledge.caller()%>" <%=value.knowledge ? "class='toolbar_current'" : ""%>><span class="toolbarIcon"><img src="images/waveStyle/i_know.png" border="0"></span><span id="method_<%=objectId%>_switchToKnowledge"><%=mw3.localize("$Strategic")%></span></li>               
 	                        <li onclick="<%=methods.switchToScheduleCalendar.caller()%>" <%=value.scheduleCalendar ? "class='toolbar_current'" : ""%>><span class="toolbarIcon"><img src="images/waveStyle/i_gantt.png" border="0"></span><span><%=mw3.localize("$Calendar")%></span></li>
 	                    </ul>
-                	</div>     
+                	</div> 
+                	
+                	<%
+                		if(isTopic){
+					%>  
+						 <div id="project_Info" class="toolbar" style="text-align:center;line-height:20px;cursor:pointer">
+		                    Project info. ▼
+	                	</div> 
+
+					<%
+						}
+					%>  
                 		
 </div>
-
-<div class="bottom" style="top: <%=isTopic?'115':'68'%>px; overflow:auto; position: absolute; min-width: 0px; min-height: 0px; max-width: 10000px; max-height: 10000px;  left: 0px; right: 0px; bottom: 0px;">
+					<%
+                		if(isTopic){
+					%> 
+						<div class="projectInfo" style="width:100%; position:absolute;top:136px;z-index:99; background:#fff;display:none;">
+							<%= fields.projectInfo.here() %>						
+						</div>
+						
+					<%
+						}
+					%>  
+<div class="bottom" style="top: <%=isTopic?'136':'68'%>px; overflow:auto; position: absolute; min-width: 0px; min-height: 0px; max-width: 10000px; max-height: 10000px;  left: 0px; right: 0px; bottom: 0px;">
 
 
 				<%=value.instanceList ? fields.instanceList.here() : ""%>
