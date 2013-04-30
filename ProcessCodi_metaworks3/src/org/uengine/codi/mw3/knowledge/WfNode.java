@@ -8,11 +8,11 @@ import org.directwebremoting.WebContextFactory;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
-import org.metaworks.ToAppend;
 import org.metaworks.ToNext;
 import org.metaworks.ToOpener;
 import org.metaworks.ToPrev;
 import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.dao.DAOUtil;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.dao.UniqueKeyGenerator;
@@ -35,6 +35,7 @@ import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.model.UnstructuredProcessInstanceStarter;
 import org.uengine.codi.mw3.model.WorkItem;
 import org.uengine.kernel.GlobalContext;
+import org.uengine.processmanager.ProcessManagerRemote;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
@@ -50,6 +51,9 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 	
 	@XStreamOmitField
 	MetaworksContext metaworksContext;
+	
+	@Autowired
+	ProcessManagerRemote connectionFactory;
 
 	
 	@XStreamAsAttribute
@@ -359,11 +363,14 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 	public void search(String keyword) throws Exception {
 		
 		try {
+			
+			DAOUtil daoUtil = new DAOUtil();
+			
 			StringBuffer sb = new StringBuffer();
 			sb.append("SELECT *");
 			sb.append("  FROM bpm_knol");
 			sb.append(" WHERE name like ?name");
-			sb.append(" ORDER BY no");
+			sb.append(" ORDER BY " + daoUtil.replaceReservedKeyword("no"));
 			
 			IWfNode node = sql(sb.toString());
 			node.setName("%" + keyword + "%");
@@ -387,11 +394,14 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 	public void searchKMS(String keyword) throws Exception {
 		
 		try {
+			
+			DAOUtil daoUtil = new DAOUtil();
+			
 			StringBuffer sb = new StringBuffer();
 			sb.append("SELECT *");
 			sb.append("  FROM bpm_knol");
 			sb.append(" WHERE name REGEXP ?name");
-			sb.append(" ORDER BY no");
+			sb.append(" ORDER BY " + daoUtil.replaceReservedKeyword("no"));
 			
 			IWfNode node = sql(sb.toString());
 			node.setName(keyword);
@@ -504,11 +514,13 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 			
 		}*/
 		
+		DAOUtil daoUtil = new DAOUtil();
+		
 		StringBuffer sb = new StringBuffer();
 		sb.append("SELECT *");
 		sb.append("  FROM bpm_knol");
 		sb.append(" WHERE parentId=?parentId");
-		sb.append(" ORDER BY no");
+		sb.append(" ORDER BY " + daoUtil.replaceReservedKeyword("no"));
 		
 		IWfNode findNode = (IWfNode) sql(IWfNode.class,	sb.toString());
 		
@@ -603,11 +615,14 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		
 		// update
 		if(childNode.size()-1 > index){
+			
+			DAOUtil daoUtil = new DAOUtil();
+			
 			StringBuffer sb = new StringBuffer();
 			sb.append("update bpm_knol");
 			sb.append("   set no=no+1");
 			sb.append(" where parentId=?parentId");
-			sb.append("   and no>=?no");
+			sb.append("   and " + daoUtil.replaceReservedKeyword("no") + ">=?no");
 			
 			IWfNode updateNode = sql(sb.toString());
 			updateNode.setParentId(this.getId());
@@ -637,11 +652,14 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 			
 			// update
 			if(childNode.size() > index-1){
+				
+				DAOUtil daoUtil = new DAOUtil();
+				
 				StringBuffer sb = new StringBuffer();
 				sb.append("update bpm_knol");
 				sb.append("   set no=no-1");
 				sb.append(" where parentId=?parentId");
-				sb.append("   and no>=?no");
+				sb.append("   and " + daoUtil.replaceReservedKeyword("no") + ">=?no");
 				
 				IWfNode updateNode = sql(sb.toString());
 				updateNode.setParentId(this.getId());
@@ -1426,10 +1444,13 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 	}
 	
 	public void topicList(String type) throws Exception{
+		
+		DAOUtil daoUtil = new DAOUtil();
+		
 		StringBuffer sb = new StringBuffer();
 		sb.append("select * from bpm_knol knol");
 		sb.append(" where knol.type = ?type");	
-		sb.append(" order by no");
+		sb.append(" order by " + daoUtil.replaceReservedKeyword("no"));
 		
 		IWfNode dao = sql(sb.toString());
 		

@@ -5,6 +5,7 @@ import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.dao.DAOUtil;
 import org.metaworks.dao.Database;
 import org.metaworks.website.MetaworksFile;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -191,10 +192,13 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 	}
 	
 	public static IProcessMap loadList(Session session) throws Exception {
+		
+		DAOUtil daoUtil = new DAOUtil();
+		
 		StringBuffer sb = new StringBuffer();
 		sb.append("SELECT *");
 		sb.append("  FROM processMap where comCode=?comCode");
-		sb.append(" ORDER BY no");
+		sb.append(" ORDER BY " + daoUtil.replaceReservedKeyword("no"));
 
 		IProcessMap processMap = (IProcessMap)sql(ProcessMap.class, sb.toString());
 		processMap.setComCode(session.getCompany().getComCode());
