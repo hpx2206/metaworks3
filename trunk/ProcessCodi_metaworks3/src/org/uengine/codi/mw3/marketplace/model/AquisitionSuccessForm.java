@@ -2,10 +2,8 @@ package org.uengine.codi.mw3.marketplace.model;
 
 import org.uengine.codi.ITool;
 import org.uengine.codi.mw3.marketplace.App;
-import org.uengine.codi.mw3.marketplace.AppInformation;
 import org.uengine.codi.mw3.marketplace.AppMapping;
 import org.uengine.codi.mw3.marketplace.IApp;
-import org.uengine.codi.mw3.marketplace.IAppMapping;
 
 public class AquisitionSuccessForm implements ITool{
 	
