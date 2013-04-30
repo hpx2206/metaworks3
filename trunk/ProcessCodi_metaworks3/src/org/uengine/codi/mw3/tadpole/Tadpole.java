@@ -1,6 +1,13 @@
 package org.uengine.codi.mw3.tadpole;
 
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLConnection;
+
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.layout.Layout;
@@ -39,11 +46,11 @@ public class Tadpole {
 		
 		
 		//center
-		String host = GlobalContext.getPropertyString("pole.server.host");
-		String port = GlobalContext.getPropertyString("pole.server.port");
-		String uri  = GlobalContext.getPropertyString("pole.call.uri");
+		String ip = GlobalContext.getPropertyString("pole.call.ip");
+		String port = GlobalContext.getPropertyString("pole.call.port");
+		String db  = GlobalContext.getPropertyString("pole.call.db");
 		
-		String url = "http://" + host + ":" + port + uri;
+		String url = "http://" + ip + ":" + port + db;
 		
 		IFrame goTadPole = new IFrame();
 		goTadPole.setSrc(url);
@@ -66,5 +73,45 @@ public class Tadpole {
 		pageNavigator = new PageNavigator();
 		
 	}
+	
+	public void createUserAtTadpole(String parameter) throws Exception {
+		
 
+		String ip = GlobalContext.getPropertyString("pole.call.ip");
+		String port = GlobalContext.getPropertyString("pole.call.port");
+		String db  = GlobalContext.getPropertyString("pole.call.db");
+		
+		String sUrl = "http://" + ip + ":" + port + db + "/create" + parameter;
+		
+		URL url;					//URL 주소 객체
+		URLConnection connection;	//URL접속을 가지는 객체
+		InputStream is;				//URL접속에서 내용을 읽기위한 Stream
+		InputStreamReader isr;
+		BufferedReader br;
+		try{
+			
+			//URL객체를 생성하고 해당 URL로 접속한다..
+			url = new URL(sUrl);
+			connection = url.openConnection();
+			
+			//내용을 읽어오기위한 InputStream객체를 생성한다..
+			is = connection.getInputStream();
+			isr = new InputStreamReader(is);
+			br = new BufferedReader(isr);
+			
+			//내용을 읽어서 화면에 출력한다..
+			String buf = null;
+			
+			while(true){
+				buf = br.readLine();
+				if(buf == null) break;
+				System.out.println(buf);
+			}
+			
+		}catch(IOException ioe){
+			System.err.println("IOException " + ioe);
+			ioe.printStackTrace();
+		}
+
+	}
 }
