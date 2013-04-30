@@ -34,6 +34,16 @@ var org_uengine_codi_mw3_model_InstanceListPanel = function(objectId, className)
 		$('.searchboxarea').css("margin-left",searchBarMagin);
 	}
 	
+	$("#project_Info").click(function(){
+		if($(this).hasClass('current')){
+			$('.projectInfo').slideUp(250);
+			$(this).removeClass('current').text("Project info. ▼");
+		}else{
+			$('.projectInfo').slideDown(250);
+			$(this).addClass('current').text("Project info. ▲");
+		}
+	})
+	
 	if(this.object && this.object.preloaded){
 		/*
 		var scrollDiv = $('#objDiv_' + this.objectId + " .ui-layout-center .ui-layout-content");

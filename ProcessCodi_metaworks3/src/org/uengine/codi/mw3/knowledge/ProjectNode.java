@@ -54,8 +54,9 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 //		dao.set("companyId", session.getCompany().getComCode());
 //		dao.select();
 		
-		IProjectNode dao  = (IProjectNode)MetaworksDAO.createDAOImpl(TransactionContext.getThreadLocalInstance(), "select * from bpm_knol where type= ?type", IProjectNode.class);
+		IProjectNode dao  = (IProjectNode)MetaworksDAO.createDAOImpl(TransactionContext.getThreadLocalInstance(), "select * from bpm_knol where type= ?type and companyId=?companyId order by name", IProjectNode.class);
 		dao.set("type", "project");
+		dao.set("companyId", session.getCompany().getComCode());
 		dao.select();
 
 		return dao;
