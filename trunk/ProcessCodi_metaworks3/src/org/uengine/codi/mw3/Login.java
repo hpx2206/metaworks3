@@ -336,6 +336,8 @@ public class Login implements ContextAware {
 
 		Session session = loginService();
 		
+		storeIntoServerSession(session);
+		
 		Locale locale = new Locale();
 		locale.setLanguage(session.getEmployee().getLocale());
 		locale.load();
@@ -359,8 +361,6 @@ public class Login implements ContextAware {
 			}
 		}
 		
-		storeIntoServerSession(session);
-
 		return new Object[]{new Remover(new ModalWindow(), true), new Refresh(locale), new Refresh(mainPanel, false, true)};
 	}
 
@@ -410,16 +410,23 @@ public class Login implements ContextAware {
 	}
 	
 	public void storeIntoServerSession(Session session) {
-		System.out.println("storeIntoServerSession");
+		/*
+		 * 2013/04/22 cjw
+		 * 
+		 * add tenant process
+		 */
 		String userId = session.getUser().getUserId().toUpperCase();
+		String tenantId = session.getEmployee().getGlobalCom();
 		
 		//setting the userId into session attribute;
-		HttpSession httpSession = TransactionContext.getThreadLocalInstance().getRequest().getSession(); 
+		HttpSession httpSession = TransactionContext.getThreadLocalInstance().getRequest().getSession();
 		httpSession.setAttribute("userId", userId);
+		httpSession.setAttribute("tenantId", tenantId);
 		
 		String mySourceCodeBase = CodiClassLoader.mySourceCodeBase();
 		
-		if(mySourceCodeBase.endsWith("main/src/"))
+		//if(mySourceCodeBase.endsWith("main/src/"))
+		if(mySourceCodeBase.endsWith(tenantId + "/src/"))
 			(new File(mySourceCodeBase)).mkdirs();
 		
 		if(mySourceCodeBase!=null && new File(mySourceCodeBase).exists()){
