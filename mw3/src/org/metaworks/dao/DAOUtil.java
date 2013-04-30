@@ -51,7 +51,8 @@ public class DAOUtil {
 	}
 	
 	public String replaceReservedKeyword(String propertyName) {
-		if(this.getReservedWord().indexOf(propertyName.toUpperCase()) > -1){
+		
+		if(this.reservedWord != null && this.getReservedWord().indexOf(propertyName.toUpperCase()) > -1){
 			if("CUBRID".equals(this.getDatabaseProductName())) {
 				propertyName = "\"" + propertyName + "\"";
 			}

@@ -52,8 +52,9 @@ public abstract class DAOFactory{
 			}
 			*/
 			
-			//USE_CLASS_NAME = "org.metaworks.dao.MySQLDAOFactory";//GlobalContext.getPropertyString("daofactory.class");
-			USE_CLASS_NAME = "org.metaworks.dao.CubridDAOFactory";
+			USE_CLASS_NAME = "org.metaworks.dao.MySQLDAOFactory";
+			//GlobalContext.getPropertyString("daofactory.class");
+//			USE_CLASS_NAME = "org.metaworks.dao.CubridDAOFactory";
 			daoFactory = (DAOFactory)Thread.currentThread().getContextClassLoader().loadClass(USE_CLASS_NAME).newInstance();
 		}catch(Exception e){
 			e.printStackTrace();
