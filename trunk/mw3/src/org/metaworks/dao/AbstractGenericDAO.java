@@ -2,16 +2,13 @@ package org.metaworks.dao;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.Types;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -27,7 +24,6 @@ import org.metaworks.FieldDescriptor;
 import org.metaworks.MetaworksContext;
 import org.metaworks.ObjectInstance;
 import org.metaworks.ObjectType;
-import org.metaworks.WebFieldDescriptor;
 import org.metaworks.WebObjectType;
 import org.metaworks.annotation.ORMapping;
 import org.metaworks.dwr.MetaworksRemoteService;
@@ -67,7 +63,7 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 		
     protected CachedRowSet rowSet = null;
     
-    private ConnectionFactory connectionFactory;
+    protected ConnectionFactory connectionFactory;
 		public ConnectionFactory getConnectionFactory() {
 			return connectionFactory;
 		}
@@ -365,7 +361,11 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 		
 		
 		WebObjectType webObjectType = MetaworksRemoteService.getInstance().getMetaworksType(daoClass.getName());
-
+		
+		/*
+		 * 2013/04/23 add database type(cubrid)
+		 */
+		final DAOUtil daoUtil = new DAOUtil();
 		
 		if(rowSet==null){	
 			ForLoop loopForCacheKeys = new ForLoop(){
@@ -377,6 +377,8 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 //					webObjectType
 					//ignores metaworks signals
 					if("METAWORKSCONTEXT".equals(propertyName)) return;
+					
+					propertyName = daoUtil.replaceReservedKeyword(propertyName);
 					
 					sql_KeyNames.append(sep + propertyName);
 					sql_ValuePlaceHolders.append(sep + "?" + propertyName);
@@ -507,6 +509,7 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 		}
 		
 		if(rowSet==null){
+			final DAOUtil daoUtil = new DAOUtil();
 			
 			ForLoop loopForCacheKeys = new ForLoop(){
 				String sep = "";
@@ -519,6 +522,7 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 					//ignores metaworks signals
 					if("METAWORKSCONTEXT".equals(propertyName)) return;
 
+					propertyName = daoUtil.replaceReservedKeyword(propertyName);
 
 					sql_SetPairs.append(sep + propertyName + "=?" + propertyName);
 					
