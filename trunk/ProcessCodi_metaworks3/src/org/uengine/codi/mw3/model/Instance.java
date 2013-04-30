@@ -289,9 +289,9 @@ public class Instance extends Database<IInstance> implements IInstance{
 			
 			taskSql
 			.append("      , bpm_worklist wl")
-			.append("           INNER JOIN bpm_rolemapping role")
-			.append("                   ON WL.INSTID=ROLE.INSTID")
-			.append("                  AND role.endpoint=?endpoint");
+			.append("           INNER JOIN bpm_rolemapping rm")
+			.append("                   ON WL.INSTID=rm.INSTID")
+			.append("                  AND rm.endpoint=?endpoint");
 			
 			instanceSql
 			.append("   AND wl.instid=inst.instid")			
@@ -309,9 +309,9 @@ public class Instance extends Database<IInstance> implements IInstance{
 			
 			taskSql
 			.append("      , bpm_worklist wl")
-			.append("           INNER JOIN bpm_rolemapping role")
-			.append("                   ON WL.INSTID=ROLE.INSTID")
-			.append("                  AND role.endpoint=?endpoint");
+			.append("           INNER JOIN bpm_rolemapping rm")
+			.append("                   ON WL.INSTID=rm.INSTID")
+			.append("                  AND rm.endpoint=?endpoint");
 			
 			instanceSql
 			.append("   AND wl.instid=inst.instid")			
@@ -381,9 +381,9 @@ public class Instance extends Database<IInstance> implements IInstance{
 			
 			taskSql
 			.append("      , bpm_worklist wl")
-			.append("           INNER JOIN bpm_rolemapping role")
-			.append("                   ON WL.INSTID=ROLE.INSTID")
-			.append("                  AND role.endpoint=?taskEndpoint");
+			.append("           INNER JOIN bpm_rolemapping rm")
+			.append("                   ON WL.INSTID=rm.INSTID")
+			.append("                  AND rm.endpoint=?taskEndpoint");
 			
 			instanceSql
 			.append("   AND wl.instid=inst.instid")			
@@ -1123,7 +1123,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 		.append("select count(*) cnt from (")
 		.append("SELECT distinct inst.instid")
 		.append("  FROM bpm_procinst inst,")
-		.append("       bpm_worklist wl INNER JOIN bpm_rolemapping role ON wl.instid=role.instid AND role.endpoint=?endpoint")
+		.append("       bpm_worklist wl INNER JOIN bpm_rolemapping rm ON wl.instid=rm.instid AND rm.endpoint=?endpoint")
 		.append(" WHERE wl.instid=inst.instid")
 		.append("   AND inst.isdeleted = 0")
 		.append("   AND initcomcd = ?initcomcd")
@@ -1162,7 +1162,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 		.append("select count(*) cnt from (")
 		.append("SELECT distinct inst.instid")
 		.append("  FROM bpm_procinst inst,")
-		.append("       bpm_worklist wl INNER JOIN bpm_rolemapping role ON wl.instid=role.instid AND role.endpoint=?endpoint")
+		.append("       bpm_worklist wl INNER JOIN bpm_rolemapping rm ON wl.instid=rm.instid AND rm.endpoint=?endpoint")
 		.append(" WHERE wl.instid=inst.instid")
 		.append("   AND inst.isdeleted = 0")
 		.append("   AND initcomcd = ?initcomcd")
