@@ -3,6 +3,7 @@ package org.uengine.codi.mw3.knowledge;
 import java.util.ArrayList;
 
 import org.metaworks.MetaworksContext;
+import org.metaworks.dao.DAOUtil;
 
 public class KnowlegeNode extends WfNode {
 
@@ -10,13 +11,15 @@ public class KnowlegeNode extends WfNode {
 	public ArrayList<WfNode> loadChildren() throws Exception {
 		
 		ArrayList<WfNode> child = new ArrayList<WfNode>();				
-			
+
+		DAOUtil daoUtil = new DAOUtil();
+		
 		StringBuffer sb = new StringBuffer();
 		sb.append("SELECT *");
 		sb.append("  FROM bpm_knol");
 		sb.append(" WHERE parentId=?parentId");
 		sb.append("   AND type=?type");
-		sb.append(" ORDER BY no");
+		sb.append("	ORDER BY " + daoUtil.replaceReservedKeyword("no"));
 		
 		IWfNode findNode = (IWfNode) sql(IWfNode.class,	sb.toString());
 		
@@ -60,13 +63,14 @@ public class KnowlegeNode extends WfNode {
 		
 		childNode.add(index, newNode);
 		
+		DAOUtil daoUtil = new DAOUtil();
 		// update
 		if(childNode.size()-1 > index){
 			StringBuffer sb = new StringBuffer();
 			sb.append("update bpm_knol");
-			sb.append("   set no=no+1");
+			sb.append("   set " + daoUtil.replaceReservedKeyword("no") + "=" + daoUtil.replaceReservedKeyword("no") + "+1");
 			sb.append(" where parentId=?parentId");
-			sb.append("   and no>=?no");
+			sb.append("   and " + daoUtil.replaceReservedKeyword("no") + ">=?no");
 			sb.append("   and type=?type");
 			
 			IWfNode updateNode = sql(sb.toString());
