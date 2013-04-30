@@ -4,26 +4,12 @@ import java.io.Serializable;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
-import org.metaworks.Refresh;
-import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
-import org.metaworks.annotation.Face;
-import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.codi.mw3.model.Instance;
-import org.uengine.codi.mw3.model.InstanceListPanel;
-import org.uengine.codi.mw3.model.InstanceView;
 import org.uengine.codi.mw3.model.InstanceViewContent;
-import org.uengine.codi.mw3.model.Perspective;
-import org.uengine.codi.mw3.model.ProcessMap;
-import org.uengine.codi.mw3.model.RoleMappingPanel;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.project.ProjectCreate;
-import org.uengine.codi.mw3.project.SVNEdit;
-import org.uengine.codi.mw3.project.VMRequest;
-import org.uengine.kernel.KeyedParameter;
-import org.uengine.kernel.ResultPayload;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 public class ProjectInfo implements ContextAware {
@@ -165,6 +151,7 @@ public class ProjectInfo implements ContextAware {
 		
 	}
 	
+	/*
 	@Face(displayName="SVN수정")
 //	@Available(when={MetaworksContext.WHEN_VIEW})
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
@@ -220,6 +207,7 @@ public class ProjectInfo implements ContextAware {
 		
 		return returnObject;
 	}
+	*/
 
 	@AutowiredFromClient
 	public Session session;
