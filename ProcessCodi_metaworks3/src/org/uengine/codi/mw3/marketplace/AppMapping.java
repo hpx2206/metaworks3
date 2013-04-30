@@ -1,6 +1,5 @@
 package org.uengine.codi.mw3.marketplace;
 
-import org.apache.kandula.wsbai.GetCoordCtxWCodeReqType;
 import org.metaworks.dao.Database;
 
 public class AppMapping extends Database<IAppMapping> implements IAppMapping {

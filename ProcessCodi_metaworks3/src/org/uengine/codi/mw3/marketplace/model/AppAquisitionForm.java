@@ -1,6 +1,7 @@
 package org.uengine.codi.mw3.marketplace.model;
 
 
+import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Face;
 import org.uengine.codi.ITool;
 import org.uengine.codi.mw3.marketplace.AppInformation;
@@ -53,7 +54,10 @@ public class AppAquisitionForm implements ITool{
 		
 	@Override
 	public void onLoad() throws Exception {
-		// TODO Auto-generated method stub
+		if(MetaworksContext.WHEN_VIEW.equals(appInfo.getMetaworksContext().getWhen())){
+			appInfo.getLogoFile().getMetaworksContext().setWhen("image");
+			appInfo.getFile().getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+		}
 		
 	}
 
