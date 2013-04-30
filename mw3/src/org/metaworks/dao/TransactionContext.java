@@ -405,8 +405,9 @@ public class TransactionContext implements ConnectionFactory{
  
 
 			try{
-				if(isAutoCloseConnection())
+				if(isAutoCloseConnection()){
 					connection.close();
+				}
 			}catch(Exception e){
 				e.printStackTrace();
 			}
