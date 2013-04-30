@@ -6,10 +6,8 @@ import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
-import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.TreeNode;
-import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.knowledge.TopicMapping;
 import org.uengine.kernel.Role;
@@ -85,6 +83,8 @@ public class FollowerSelectCommand {
 			for(int i=0; i<checkNodes.size(); i++){
 				TreeNode node = checkNodes.get(i);
 				TopicMapping tm = new TopicMapping();
+				tm.processManager = processManager;
+				
 				tm.setTopicId( session.getLastSelectedItem() );
 				tm.setUserId(node.getId());
 				tm.setUserName(node.getName());
@@ -103,6 +103,8 @@ public class FollowerSelectCommand {
 			for( int i = 0; i < userList.size(); i++ ){
 				User user = userList.get(i);
 				TopicMapping tm = new TopicMapping();
+				tm.processManager = processManager;
+				
 				tm.setTopicId( session.getLastSelectedItem() );
 				tm.setUserId(user.getUserId());
 				tm.setUserName(user.getName());
