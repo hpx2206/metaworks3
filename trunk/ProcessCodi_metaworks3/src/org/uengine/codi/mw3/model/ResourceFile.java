@@ -203,7 +203,7 @@ public class ResourceFile implements ContextAware{
 			
 			rf.setName(childFilePaths[i]);
 			rf.setAlias(childAlias);
-			rf.setuEngineAlias("[" + childAlias + "]");
+			rf.setuEngineAlias(childAlias);
 			rf.setFolder(f.isDirectory());
 			rf.setMetaworksContext(getMetaworksContext());
 			
