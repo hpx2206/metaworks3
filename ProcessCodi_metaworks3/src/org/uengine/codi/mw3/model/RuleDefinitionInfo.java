@@ -5,6 +5,7 @@ import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 
+//@Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs")
 public class RuleDefinitionInfo  implements ContextAware{
 
 	String defId;

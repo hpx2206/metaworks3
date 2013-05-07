@@ -2,24 +2,28 @@ package org.uengine.codi.mw3.model;
 
 
 import org.metaworks.MetaworksContext;
-import org.metaworks.annotation.Face;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.processmanager.ProcessManagerRemote;
 
-@Face(ejsPath = "genericfaces/Tab.ejs", options = { "hideLabels" }, values = { "true" })
 public class RuleDesignerContentPanel {
 
 	public RuleDesignerContentPanel() {
 		setMetaworksContext(new MetaworksContext());
+		RuleDefinition ruleDefinition = new RuleDefinition();
+		ruleDefinition.init();
+		setRuleDefinition(ruleDefinition);
+		
+		RuleVariableDefinition ruleVariableDefinition = new RuleVariableDefinition();
+		
+		setRuleVariableDefinition(ruleVariableDefinition);
 	}
 	
-	
-	RuleDefinitionInfo ruleDefinitionInfo;
-		public RuleDefinitionInfo getRuleDefinitionInfo() {
-			return ruleDefinitionInfo;
+	String alias;
+		public String getAlias() {
+			return alias;
 		}
-		public void setRuleDefinitionInfo(RuleDefinitionInfo ruleDefinitionInfo) {
-			this.ruleDefinitionInfo = ruleDefinitionInfo;
+		public void setAlias(String alias) {
+			this.alias = alias;
 		}
 
 	RuleVariableDefinition ruleVariableDefinition;
@@ -39,19 +43,17 @@ public class RuleDesignerContentPanel {
 			this.ruleDefinition = ruleDefinition;
 		}
 
-	public void newRule(String parentFolder) throws Exception {
+	/*public void newRule(String parentFolder) throws Exception {
 		
 		ruleVariableDefinition = new RuleVariableDefinition();
 		ruleDefinitionInfo = new RuleDefinitionInfo();
 		ruleDefinitionInfo.setParentFolder(parentFolder);
-		ruleDefinitionInfo.setMetaworksContext(new MetaworksContext());
-		ruleDefinitionInfo.getMetaworksContext().setWhen("edit");
 		
 		ruleDefinition = new RuleDefinition();
 		ruleDefinition.init();
 
-	}
-
+	}*/
+	
 	public void load(String defId) throws Exception{
 		String defVerId = processManager.getProcessDefinitionProductionVersion(defId);
 		

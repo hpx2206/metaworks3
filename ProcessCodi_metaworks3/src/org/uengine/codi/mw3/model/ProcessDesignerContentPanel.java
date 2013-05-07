@@ -1,9 +1,6 @@
 package org.uengine.codi.mw3.model;
 
 import java.rmi.RemoteException;
-import java.util.HashMap;
-
-import net.sf.hibernate.collection.Map;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
