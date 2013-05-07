@@ -639,8 +639,8 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 		String processName = getAlias().substring(0, getAlias().indexOf("."));
 		setProcessName(processName);
 		/// read source file
-//		File sourceCodeFile = new File(getBasePath() + getAlias());
-		File sourceCodeFile = new File(CodiClassLoader.getMyClassLoader().sourceCodeBase() + "/" + processName + ".process2");
+		File sourceCodeFile = new File(getBasePath() + getAlias());
+//		File sourceCodeFile = new File(CodiClassLoader.getMyClassLoader().sourceCodeBase() + "/" + processName + ".process2");
 		
 		ByteArrayOutputStream bao = new ByteArrayOutputStream();
 		FileInputStream is;
@@ -687,36 +687,38 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 			
 			
 			// processDefinition setting
-			ArrayList<CanvasDTO> cellsList = (ArrayList<CanvasDTO>) def.getExtendedAttributes().get("cells");
-//			activityMap = new HashMap<String, Object>();
-//			activityList = new ArrayList<Activity>();
-			if( cellsList != null){
-				CanvasDTO []cells = new CanvasDTO[cellsList.size()];
-				int tagCnt = 0;
-				for(int i = 0; i < cellsList.size(); i++){
-					cells[i] = (CanvasDTO)cellsList.get(i);
-					if( cells[i] != null && cells[i].getJsonString() != null){
-						this.setGraphString(cells[i].getJsonString());
-					}
-					if( cells[i].getTracingTag() != null ){
-						if( "GEOM".equalsIgnoreCase(cells[i].getShapeType()) ){
-							Activity activity = def.getActivity(cells[i].getTracingTag());
-							activityMap.put(cells[i].getId() , activity );
-						}else if( "GROUP".equalsIgnoreCase(cells[i].getShapeType()) ){
-							if( "OG.shape.HorizontalLaneShape".equals(cells[i].getShapeId() ) || "OG.shape.VerticalLaneShape".equals(cells[i].getShapeId() )){
-								roleMap.put(cells[i].getId() , def.getRole(cells[i].getRoleName() ));
-							}else if( "OG.shape.bpmn.A_Subprocess".equals(cells[i].getShapeId() )){
+			if(def.getExtendedAttributes() != null){
+				ArrayList<CanvasDTO> cellsList = (ArrayList<CanvasDTO>) def.getExtendedAttributes().get("cells");
+	//			activityMap = new HashMap<String, Object>();
+	//			activityList = new ArrayList<Activity>();
+				if( cellsList != null){
+					CanvasDTO []cells = new CanvasDTO[cellsList.size()];
+					int tagCnt = 0;
+					for(int i = 0; i < cellsList.size(); i++){
+						cells[i] = (CanvasDTO)cellsList.get(i);
+						if( cells[i] != null && cells[i].getJsonString() != null){
+							this.setGraphString(cells[i].getJsonString());
+						}
+						if( cells[i].getTracingTag() != null ){
+							if( "GEOM".equalsIgnoreCase(cells[i].getShapeType()) ){
 								Activity activity = def.getActivity(cells[i].getTracingTag());
 								activityMap.put(cells[i].getId() , activity );
+							}else if( "GROUP".equalsIgnoreCase(cells[i].getShapeType()) ){
+								if( "OG.shape.HorizontalLaneShape".equals(cells[i].getShapeId() ) || "OG.shape.VerticalLaneShape".equals(cells[i].getShapeId() )){
+									roleMap.put(cells[i].getId() , def.getRole(cells[i].getRoleName() ));
+								}else if( "OG.shape.bpmn.A_Subprocess".equals(cells[i].getShapeId() )){
+									Activity activity = def.getActivity(cells[i].getTracingTag());
+									activityMap.put(cells[i].getId() , activity );
+								}
 							}
+							if( Integer.parseInt(cells[i].getTracingTag()) > tagCnt )
+								tagCnt = Integer.parseInt(cells[i].getTracingTag());
 						}
-						if( Integer.parseInt(cells[i].getTracingTag()) > tagCnt )
-							tagCnt = Integer.parseInt(cells[i].getTracingTag());
 					}
+					lastTracingTag = String.valueOf(tagCnt + 1);
+					// canvas setting
+					this.setCell(cells);
 				}
-				lastTracingTag = String.valueOf(tagCnt + 1);
-				// canvas setting
-				this.setCell(cells);
 			}
 //			Role[] roles = def.getRoles();
 //			if( roles != null && roles.length != 0){
