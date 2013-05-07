@@ -30,7 +30,7 @@ public class JavaRunAsMenu extends CloudMenu {
 			
 			ArrayList<String> messages = new ArrayList<String>();
 			
-			if(errorList.size() == 0){
+			if(errorList != null && errorList.size() == 0){
 				messages.add("launch Java Application...");		
 				
 				editor.runJava();
@@ -54,7 +54,7 @@ public class JavaRunAsMenu extends CloudMenu {
 			
 			ArrayList<String> messages = new ArrayList<String>();
 			
-			if(errorList.size() == 0){
+			if(errorList != null && errorList.size() == 0){
 				messages.add("launch Metaworks Application...");		
 			}
 			

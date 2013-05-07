@@ -1,12 +1,13 @@
 package org.uengine.codi.mw3.ide.editor.java;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.PrintStream;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.jdt.core.compiler.CharOperation;
-import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jdt.internal.compiler.env.ICompilationUnit;
 import org.metaworks.Refresh;
 import org.metaworks.ServiceMethodContext;
@@ -14,7 +15,7 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.Window;
 import org.uengine.codi.mw3.ide.CloudClassLoader;
-import org.uengine.codi.mw3.ide.CompilationChecker;
+import org.uengine.codi.mw3.ide.JavaBatchBuilder;
 import org.uengine.codi.mw3.ide.editor.Editor;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.platform.Console;
@@ -62,6 +63,24 @@ public class JavaCodeEditor extends Editor {
 
 		ArrayList<JavaCodeError> errorList = new ArrayList<JavaCodeError>();
 
+		CloudClassLoader ccl = new CloudClassLoader(jbPath);
+		ccl.load();
+		
+		List<String> buildClass = new ArrayList<String>();		
+		List<String> classPath = ccl.makeClassPath();
+		
+		JavaBatchBuilder jBatchBuilder = new JavaBatchBuilder();
+		jBatchBuilder.setClassPath(classPath);
+		jBatchBuilder.setOutputPath(jbPath.getBasePath() + File.separatorChar + jbPath.getDefaultBuildOutputPath());
+		jBatchBuilder.setBuildClass(buildClass);
+		
+		if(jBatchBuilder.build(errorList)){
+			return errorList;
+		}else{
+			return null;
+		}
+		
+		/*
 		try {
 			CloudClassLoader ccl = new CloudClassLoader(jbPath);
 			ccl.load();
@@ -87,8 +106,7 @@ public class JavaCodeEditor extends Editor {
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-
-		return errorList;
+		*/
 	}
 
 	public Object runJava(){
