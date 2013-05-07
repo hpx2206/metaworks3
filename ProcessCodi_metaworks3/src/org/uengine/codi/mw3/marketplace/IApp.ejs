@@ -85,7 +85,7 @@ var when = value.metaworksContext.when;
 	
 <%	
 	
-	}else if(when == 'newApps') {
+	}else if(when == 'newApps' && value.status != 'Request' && value.status != 'Rejected') {
 
 %>
 <div style="padding:7px 0; border-bottom:1px solid #e5e5e5;">
@@ -99,6 +99,8 @@ var when = value.metaworksContext.when;
 <%
 	
 	}else {
+	
+		if(value.status != 'Request'){
 	
 %>
 
@@ -158,6 +160,7 @@ var when = value.metaworksContext.when;
 		</div>	
 
 <%	
+		}
 	
 	}
 

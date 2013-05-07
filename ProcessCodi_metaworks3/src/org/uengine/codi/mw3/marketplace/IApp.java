@@ -11,6 +11,7 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Table;
 import org.metaworks.dao.IDAO;
 import org.metaworks.website.MetaworksFile;
+import org.uengine.codi.mw3.knowledge.IWfNode;
 import org.uengine.codi.mw3.marketplace.category.ICategory;
 
 
@@ -78,6 +79,13 @@ public interface IApp extends IDAO{
 	)
 	public ICategory getCategory();
 	public void setCategory(ICategory category);
+	
+	@ORMapping(
+			databaseFields = {"projectId"}, 
+			objectFields = {"id"}
+	)
+	public IWfNode getProject();
+	public void setProject(IWfNode project);
 	
 	@NonLoadable
 	@NonSavable

@@ -4,6 +4,8 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.SelectBox;
 import org.metaworks.widget.layout.Layout;
+import org.uengine.codi.mw3.knowledge.IProjectNode;
+import org.uengine.codi.mw3.knowledge.ProjectNode;
 import org.uengine.codi.mw3.model.Company;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.marketplace.category.Category;
@@ -56,7 +58,7 @@ public class MyVendor {
 	}
 	
 	@ServiceMethod
-	public Object createListing() throws Exception {
+	public Object createApp() throws Exception {
 		
 		AppInformation createListing = new AppInformation();
 		createListing.session = session;
@@ -75,8 +77,23 @@ public class MyVendor {
 				categories.add(categoryName, categoryId);
 			}
 		}
+		
+		SelectBox attachProject = new SelectBox();
+		
+		IProjectNode projectList = ProjectNode.load(session);
+		
+		if(projectList.size() > 0) {
+			while(projectList.next()){
+				String projectId = projectList.getId();
+				String projectName = projectList.getName();
+				
+				
+				attachProject.add(projectName, projectId);
+			}
+		}
 
 		createListing.setCategories(categories);
+		createListing.setAttachProject(attachProject);
 		
 		
 		MarketplaceCenterPanel centerPanel = new MarketplaceCenterPanel();

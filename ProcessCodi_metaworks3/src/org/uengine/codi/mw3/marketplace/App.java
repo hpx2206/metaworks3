@@ -10,10 +10,12 @@ import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.layout.Layout;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.admin.PageNavigator;
+import org.uengine.codi.mw3.knowledge.IProjectNode;
+import org.uengine.codi.mw3.knowledge.IWfNode;
+import org.uengine.codi.mw3.knowledge.ProjectNode;
 import org.uengine.codi.mw3.marketplace.category.Category;
 import org.uengine.codi.mw3.marketplace.category.ICategory;
 import org.uengine.codi.mw3.marketplace.category.MarketCategoryPanel;
-import org.uengine.codi.mw3.marketplace.model.AppAquisitionForm;
 import org.uengine.codi.mw3.marketplace.searchbox.MarketplaceSearchBox;
 import org.uengine.codi.mw3.model.IUser;
 import org.uengine.codi.mw3.model.InstanceViewContent;
@@ -25,6 +27,13 @@ import org.uengine.processmanager.ProcessManagerRemote;
 
 public class App extends Database<IApp> implements IApp{
 	
+	public final static String STATUS_REQUEST = "Request";
+	public final static String STATUS_APPROVED = "Approved";
+	public final static String STATUS_REJECTED = "Rejected";
+	public final static String STATUS_PUBLISHED = "Published";
+	public final static String STATUS_UNPUBLISHED = "Unpublished";
+
+
 	public App() throws Exception{
 		
 	}
@@ -153,6 +162,14 @@ public class App extends Database<IApp> implements IApp{
 			this.category = category;
 		}
 	
+	IWfNode project;
+		public IWfNode getProject() {
+			return project;
+		}
+		public void setProject(IWfNode project) {
+			this.project = project;
+		}
+
 	IAppMapping appMapping;
 		public IAppMapping getAppMapping() {
 			return appMapping;
@@ -268,7 +285,7 @@ public class App extends Database<IApp> implements IApp{
 		App selectedApp = new App();
 		
 		selectedApp.setAppId(getAppId());
-		selectedApp.databaseMe().setStatus(AppInformation.STATUS_PUBLISHED);
+		selectedApp.databaseMe().setStatus(STATUS_PUBLISHED);
 		
 		flushDatabaseMe();
 		
@@ -334,16 +351,34 @@ public class App extends Database<IApp> implements IApp{
 		
 		categories.setSelected(Integer.toString(this.getCategory().getCategoryId()));
 		
-		getExtfile().getMetaworksContext().setWhen("edit");
+		
+		SelectBox projects = new SelectBox();
+		
+		IProjectNode projectList = ProjectNode.load(session);
+		
+		if(projectList.size() > 0) {
+			while(projectList.next()){
+				
+				String projectId = projectList.getId();
+				String projectName = projectList.getName();
+				
+				
+				projects.add(projectName, projectId);
+			}
+		}
+		
+		projects.setSelected(this.getProject().getId());
+		
+//		getExtfile().getMetaworksContext().setWhen("edit");
 		getLogoFile().getMetaworksContext().setWhen("edit");
 		
-		editListing.setListingId(getAppId());
+		editListing.setAppId(getAppId());
 		editListing.setCategories(categories);
-		editListing.setListingName(getAppName());
+		editListing.setAttachProject(projects);
+		editListing.setAppName(getAppName());
 		editListing.setSimpleOverview(getSimpleOverview());
 		editListing.setFullOverview(getFullOverview());
 		editListing.setPricing(getPricing());
-		editListing.setFile(getExtfile());
 		editListing.setLogoFile(getLogoFile());
 		
 		editListing.getMetaworksContext().setWhen("edit");
@@ -388,23 +423,15 @@ public class App extends Database<IApp> implements IApp{
 		
 		setAppInfo.getMetaworksContext().setWhen("view");
 		
-		setAppInfo.setListingId(this.getAppId());
-		setAppInfo.setListingName(this.getAppName());
+		setAppInfo.setAppId(this.getAppId());
+		setAppInfo.setAppName(this.getAppName());
 		setAppInfo.setSimpleOverview(this.getSimpleOverview());
 		setAppInfo.setFullOverview(this.getFullOverview());
 		setAppInfo.setPricing(this.getPricing());
-		setAppInfo.setFile(this.getExtfile());
 		setAppInfo.setLogoFile(this.getLogoFile());
 		setAppInfo.setCategory(this.getCategory());
 		
-		
-		AppAquisitionForm addApp = new AppAquisitionForm();
-		addApp.setApp(app);
-		addApp.setWriter(session.getUser());
-		addApp.setAppInfo(setAppInfo);
-
-		
-		String defId = "appAcquisition_001.process";
+		String defId = "AppAcquisition.process";
 		
 		ProcessMap goProcess = new ProcessMap();
 		goProcess.session = session;
@@ -418,7 +445,7 @@ public class App extends Database<IApp> implements IApp{
 	    
 	    // 프로세스 실행
 	    ResultPayload rp = new ResultPayload();
-	    rp.setProcessVariableChange(new KeyedParameter("requestAquisitionApp", addApp));
+	    rp.setProcessVariableChange(new KeyedParameter("requestAquisitionApp", setAppInfo));
 	    
 	    //무조건 compleate
 	    processManager.executeProcessByWorkitem(instId.toString(), rp);
