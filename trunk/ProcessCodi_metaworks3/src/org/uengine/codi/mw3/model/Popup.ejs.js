@@ -24,13 +24,10 @@ var org_uengine_codi_mw3_model_Popup = function(objectId, className) {
 	var faceHelper = this;
 	faceHelper.createPopup(object.width, object.height, mw3.mouseX, mw3.mouseY);
 	
-	faceHelper.bind();
+	//faceHelper.bind();
 };
 
 org_uengine_codi_mw3_model_Popup.prototype = {
-
-	
-			
 	createPopup : function(w,h,x,y){
 	
 		var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
@@ -95,38 +92,9 @@ org_uengine_codi_mw3_model_Popup.prototype = {
 	},
 	destoryPopup : function() {
 		mw3.endLoading(this.objectId);
-		
-		this.unbind();
 		this.divObj.remove();
 	},
 	destroy : function() {
 		this.destoryPopup();
-	},
-	bind : function(){
-		$('body').bind('click.' + this.objectId, {objectId: this.objectId}, function(event){
-			var faceHelper = mw3.getFaceHelper(event.data.objectId);
-			var result = faceHelper.isMouseInContanier($('#' + mw3._getObjectDivId(event.data.objectId)), event);
-			
-			if(!result)
-				faceHelper.destoryPopup();
-		});
-		
-	},
-	unbind : function(){
-		$('body').unbind('click.' + this.objectId);
-	},
-	
-	isMouseInContanier : function(container, event){
-		var containerOffset = container.offset();
-		containerOffset.right = parseInt(containerOffset.left) + container.width();
-		containerOffset.bottom = parseInt(containerOffset.top) + container.height();
-		
-		if ('select-one' == event.srcElement.type ||
-			((containerOffset.left <= event.pageX && event.pageX <= containerOffset.right) && 
-			(containerOffset.top <= event.pageY && event.pageY <= containerOffset.bottom))){
-			return true;
-		}else{
-			return false;
-		}
 	}
 };
