@@ -737,3 +737,6 @@ alter table app add url varchar(200);
 
 -- 2013.04.03 컬럼명 수정
 alter table bpm_knol change benfit BENEFIT int(11);
+
+-- 2013.05.06 app - project mapping
+alter table app add projectId varchar(20);
