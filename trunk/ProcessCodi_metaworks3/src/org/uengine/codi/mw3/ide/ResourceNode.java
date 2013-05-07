@@ -12,6 +12,7 @@ import org.metaworks.component.TreeNode;
 import org.uengine.codi.mw3.ide.editor.Editor;
 import org.uengine.codi.mw3.ide.editor.java.JavaCodeEditor;
 import org.uengine.codi.mw3.ide.editor.process.ProcessEditor;
+import org.uengine.codi.mw3.ide.editor.role.RoleEditor;
 import org.uengine.codi.mw3.ide.menu.ResourceContextMenu;
 import org.uengine.codi.mw3.model.Session;
 
@@ -30,24 +31,38 @@ public class ResourceNode extends TreeNode {
 		File file = new File(jbPath.getBasePath() + File.separatorChar + this.getId());
 		String[] childFilePaths = file.list();
 		
+		// folder
 		for(int i=0; i<childFilePaths.length; i++){
 			File childFile = new File(file.getAbsolutePath() + File.separatorChar + childFilePaths[i]);
 			
-			ResourceNode node = new ResourceNode();
-			node.setId(this.getId() + File.separatorChar + childFile.getName());
-			node.setName(childFile.getName());
-			node.setParentId(this.getId());
-			
 			if(childFile.isDirectory()){
+				ResourceNode node = new ResourceNode();
+				node.setId(this.getId() + File.separatorChar + childFile.getName());
+				node.setName(childFile.getName());
+				node.setParentId(this.getId());
 				node.setType(TreeNode.TYPE_FOLDER);
 				node.setFolder(true);
+				
+				child.add(node);
 			}
-			else{
-				node.setType(findNodeType(node.getName()));
-			}
-			
-			child.add(node);
 		}
+		
+		// file
+		for(int i=0; i<childFilePaths.length; i++){
+			File childFile = new File(file.getAbsolutePath() + File.separatorChar + childFilePaths[i]);
+			
+			
+			if(!childFile.isDirectory()){
+				ResourceNode node = new ResourceNode();
+				node.setId(this.getId() + File.separatorChar + childFile.getName());
+				node.setName(childFile.getName());
+				node.setParentId(this.getId());
+				node.setType(findNodeType(node.getName()));
+				
+				child.add(node);
+			}
+		}
+		
 				
 		return new ToAppend(this, child);
 	}
@@ -67,6 +82,13 @@ public class ResourceNode extends TreeNode {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+		}else if(type.equals(TreeNode.TYPE_FILE_ROLE)){
+			editor = new RoleEditor(this.getId());
+			try {
+				((RoleEditor)editor).load();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}else{
 			editor = new Editor(this.getId(), type);
 		}
@@ -78,7 +100,7 @@ public class ResourceNode extends TreeNode {
 		return new ToAppend(new CloudWindow("editor"), this.beforeAction());
 	}
 	
-	@ServiceMethod(payload={"id", "name"}, mouseBinding="right", target=ServiceMethodContext.TARGET_STICK)
+	@ServiceMethod(payload={"id", "name"}, mouseBinding="right", target=ServiceMethodContext.TARGET_POPUP)
 	public Object[] showContextMenu() {
 		session.setClipboard(this);
 		
@@ -104,6 +126,8 @@ public class ResourceNode extends TreeNode {
 				nodeType = TreeNode.TYPE_FILE_FORM;
 			}else if(".wpd".equals(ext)){
 				nodeType = TreeNode.TYPE_FILE_PROCESS;
+			}else if(".role".equals(ext)){
+				nodeType = TreeNode.TYPE_FILE_ROLE;
 			}else if(".css".equals(ext)){
 				nodeType = TreeNode.TYPE_FILE_CSS;
 			}else if(".jpg".equals(ext) || ".gif".equals(ext) || ".png".equals(ext)){
@@ -113,5 +137,12 @@ public class ResourceNode extends TreeNode {
 		}
 		
 		return nodeType;
+	}
+	
+	@ServiceMethod(payload={"id", "name"}, mouseBinding="drag")
+	public Object drag() {
+		session.setClipboard(this);
+		
+		return new Object[]{session};
 	}
 }

@@ -12,16 +12,35 @@ import java.util.regex.Pattern;
 
 import org.eclipse.jdt.core.compiler.CompilationProgress;
 import org.eclipse.jdt.core.compiler.batch.BatchCompiler;
+import org.uengine.codi.mw3.ide.editor.java.JavaCodeError;
 
 public class JavaBatchBuilder {
 
-	String classPath;
-	
+	List<String> classPath;
+		public List<String> getClassPath() {
+			return classPath;
+		}
+		public void setClassPath(List<String> classPath) {
+			this.classPath = classPath;
+		}
+
 	String outputPath;
+		public List<String> getBuildClass() {
+			return buildClass;
+		}
+		public void setBuildClass(List<String> buildClass) {
+			this.buildClass = buildClass;
+		}
 	
 	List<String> buildClass;
-	
-	public boolean build(){
+		public String getOutputPath() {
+			return outputPath;
+		}
+		public void setOutputPath(String outputPath) {
+			this.outputPath = outputPath;
+		}
+		
+	public boolean build(List<JavaCodeError> errorList){
 		Exception exception = null;
 		boolean success = false;
 
@@ -97,9 +116,12 @@ public class JavaBatchBuilder {
 					exception = new Exception(errorMessage);
 				}
 				
-				System.out.println("dotJavaFilename : " + dotJavaFilename);
-				System.out.println("dotJavaLineIndex : " + dotJavaLineIndex);
-				System.out.println("errorMessage : " + errorMessage);
+				JavaCodeError error = new JavaCodeError();
+				error.setLineNumber(dotJavaLineIndex);
+				error.setMessage(errorMessage);
+				error.setType(JavaCodeError.TYPE_ERROR);
+				
+				errorList.add(error);
 			}
 
 		} catch (IOException e) {
