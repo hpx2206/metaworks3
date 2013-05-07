@@ -80,7 +80,27 @@ org_metaworks_component_TreeNode.prototype = {
 		}
 	},
 	
+	draggable : function(command){
+		this.objectDiv.draggable({
+			      appendTo: "body",
+			      helper: function( event ) {
+			    	  
+			          return $('<div>').addClass('filemgr-tree').append($(this).children(':first').clone());
+			      },
+			      zIndex: 100,
+				  start: function() {
+			      },
+			      drag: function() {
+			      },
+			      stop: function() {
+			      }
+			    });
+	},
 	toAppend : function(appendobject){
+		if(!this.object.expanded){
+			return true;
+		}
+		
 		if(appendobject != null && ( appendobject.length == undefined || appendobject.length == 0) ){
 			// array 로 생성하여 준다.
 			var tempObject = [];
@@ -202,8 +222,10 @@ org_metaworks_component_TreeNode.prototype = {
 				this.collapse();
 			else if(this.isCollapse())
 				this.expand();
+		}else{
+			mw3.call(this.objectId, 'action');
 		}
-		mw3.call(this.objectId, 'action');
+		
 	},
 	expand : function(){
 		if(this.nodeDiv.hasClass('pluslast')){
@@ -214,8 +236,9 @@ org_metaworks_component_TreeNode.prototype = {
 			this.nodeDiv.addClass('min');
 		}
 		
+		this.object.expanded = true;
+		
 		if(this.object.loaded){
-			this.object.expanded = true;
 			this.objectDiv.children('u').show();
 		}else{
 			this.nodeDiv.addClass('loading');

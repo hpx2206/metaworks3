@@ -12,10 +12,10 @@ var org_metaworks_component_Menu = function(objectId, className){
 	//function
 	// function
 	this.destroy = function(){
-		$(this.objectDiv).unbind('hover').unbind('click');	
+		$(this.objectDiv).unbind('hover').unbind('mousedown');	
 	};
 	
-	this.click = function(){
+	this.select = function(){
 		if(event.stopPropagation){
 			event.stopPropagation();
 		}else if(window.event){
@@ -51,8 +51,8 @@ var org_metaworks_component_Menu = function(objectId, className){
 		if(parent.length > 0){
 			var parentObjectId = parent.attr('objectId');
 			
-			if(parentObjectId && mw3.getFaceHelper(parentObjectId) && mw3.getFaceHelper(parentObjectId).click)
-				mw3.getFaceHelper(parentObjectId).click();
+			if(parentObjectId && mw3.getFaceHelper(parentObjectId) && mw3.getFaceHelper(parentObjectId).select)
+				mw3.getFaceHelper(parentObjectId).select();
 		}
 	};
 	
@@ -101,7 +101,9 @@ var org_metaworks_component_Menu = function(objectId, className){
 	var menuDiv = this.objectDiv.children(':last').prev();
 	
 	menuDiv.addClass('menu').addClass('downward').addClass('moveright');
-	menuDiv.css({'position': 'absolute', 
+	//{
+	menuDiv.css({
+				 'position': 'absolute',
 				 'min-width': '0px',
 				 'min-height': '0px',
 				 'max-width': '9998px',
@@ -121,6 +123,9 @@ var org_metaworks_component_Menu = function(objectId, className){
 	if(!sub){
 		if(context){
 			this.focus();
+			
+			closeOutsideContainer(this.objectDivId);
+			
 		}else{
 			this.objectDiv.addClass('c9-menu-btn');
 			this.objectDiv.addClass('c9-menu-btnBool');
@@ -147,9 +152,9 @@ var org_metaworks_component_Menu = function(objectId, className){
 				}
 			);
 			
-			// add event mouse click
-			$(this.objectDiv).bind('click', {objectId : this.objectId}, function(event){
-				mw3.getFaceHelper(event.data.objectId).click();
+			// add event mouse down
+			$(this.objectDiv).bind('mousedown', {objectId : this.objectId}, function(event){
+				mw3.getFaceHelper(event.data.objectId).select();
 			});		
 		}
 			
