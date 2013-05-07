@@ -100,8 +100,7 @@ public class ProjectTitle implements ContextAware {
 		session.setLastSelectedItem(this.getTopicId());
 		
 
-//		String defId = "ProjectPerspective.process";
-		String defId = "ProjectManagement.process";
+		String defId = "CreateProject.process";
 		
 		ProcessMap processMap = new ProcessMap();
 		processMap.processManager = processManager;

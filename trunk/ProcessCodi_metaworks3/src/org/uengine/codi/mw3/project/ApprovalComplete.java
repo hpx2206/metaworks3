@@ -17,6 +17,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.ITool;
 import org.uengine.codi.mw3.knowledge.ITopicMapping;
 import org.uengine.codi.mw3.knowledge.TopicMapping;
+import org.uengine.codi.mw3.model.Employee;
+import org.uengine.codi.vm.JschCommand;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.processmanager.ProcessManagerRemote;
 
@@ -63,13 +65,8 @@ public class ApprovalComplete implements ITool  {
 			this.hardwareProfileId = hardwareProfileId;
 		}
 	
-	@Autowired
-	public ProcessManagerRemote processManager;
-	
-	
 	@Override
 	public void onLoad() throws Exception {
-		// TODO Auto-generated method stub
 		
 	}
 
@@ -77,11 +74,9 @@ public class ApprovalComplete implements ITool  {
 	public void beforeComplete() throws Exception {
 		
 		Map map = (Map)TransactionContext.getThreadLocalInstance().getSharedContext(ITOOL_MAP_KEY);
-		processManager = (ProcessManagerRemote)map.get(ITOOL_PROCESS_MANAGER_KEY);
+		ProcessManagerRemote processManager = (ProcessManagerRemote)map.get(ITOOL_PROCESS_MANAGER_KEY);
 		
 		String instId = (String)map.get(ITOOL_INSTANCEID_KEY);
-		
-		
 		
 		
 		if(processManager != null && processManager.getProcessVariable(instId.toString(), "", "vm_ip") != null){
@@ -90,6 +85,17 @@ public class ApprovalComplete implements ITool  {
 			String projectName = (String)((Serializable)processManager.getProcessVariable(instId.toString(), "", "projectName"));
 			String projectId = (String)((Serializable)processManager.getProcessVariable(instId.toString(), "", "projectId"));
 			
+			
+			JschCommand jschServerBehaviour = new JschCommand();
+			
+			//create SVN
+			String command = GlobalContext.getPropertyString("vm.svn.createProject") + " \"" + projectName + "\"";
+			jschServerBehaviour.runCommand(command);
+			
+			//SVN setting
+			command = GlobalContext.getPropertyString("vm.svn.setting") + " \"" + projectName + "\"";
+			jschServerBehaviour.runCommand(command);
+			
 			TopicMapping tp = new TopicMapping();
 			tp.setTopicId(projectId);
 			
@@ -97,15 +103,30 @@ public class ApprovalComplete implements ITool  {
 			
 			RowSet rs = participateUsers.getImplementationObject().getRowSet();
 			
-			
 			while(rs.next()) {
-				String parameter = "?db=" + vmDb + "&email=" + rs.getString("userId") + "&url=" + vmIp + "&name=" + projectName;
 				
+				Employee employee = new Employee();
+				employee.setEmpCode(rs.getString("userId"));
+				
+				String password =  employee.findMe().getPassword();
+				
+				//vm 유저 추가
+				command = GlobalContext.getPropertyString("vm.svn.createUser") + " \"" + projectName + "\" \"" + rs.getString("userId") + "\" \"" + password + "\"";
+				jschServerBehaviour.runCommand(command);
+				
+				//올챙이 류저 추가
+				String parameter = "?db=" + vmDb + "&email=" + rs.getString("userId") + "&url=" + vmIp + "&name=" + projectName;
 				createDatabase(parameter);
+				
 			}
 			
+			//svn프로젝트와 동일한 hudson job생성
+			command = GlobalContext.getPropertyString("vm.hudson.createJob") + " \"" + projectName + "\"";
+			jschServerBehaviour.runCommand(command);
+			
+			command = GlobalContext.getPropertyString("vm.hudson.setting") + " \"" + projectName + "\"" + " \"" + GlobalContext.getPropertyString("vm.server.ip") + "\"";
+			jschServerBehaviour.runCommand(command);
 		}
-		
 	}
 
 	@Override
@@ -114,88 +135,6 @@ public class ApprovalComplete implements ITool  {
 		
 	}
 
-	
-	/*String approvedUrl;
-		@Face(displayName="승인 : ")
-		public String getApprovedUrl() {
-			return approvedUrl;
-		}
-		public void setApprovedUrl(String approvedUrl) {
-			String url = "승인된 URL : http://192.168.0.225:8080/realcloud/ ";
-			this.approvedUrl = url;
-		}
-		
-	String name;
-		@NonLoadable
-		public String getName() {
-			return name;
-		}	
-		public void setName(String name) {
-			this.name = name;
-		}
-		
-	String projectId;
-		public String getProjectId() {
-			return projectId;
-		}
-		public void setProjectId(String projectId) {
-			this.projectId = projectId;
-		}	
-	
-	@Autowired
-	public ProcessManagerRemote processManager;
-
-	@Override
-	public void onLoad() throws Exception {
-		Map map = (Map)TransactionContext.getThreadLocalInstance().getSharedContext(ITOOL_MAP_KEY);
-		
-		processManager = (ProcessManagerRemote)map.get(ITOOL_PROCESS_MANAGER_KEY);
-		
-		String projectId = this.getProjectId();
-		
-		IWfNode wfNode = (IWfNode)Database.sql(IWfNode.class, "select * from bpm_knol where id = ?id");
-		wfNode.set("id", projectId);
-		wfNode.select();
-		
-		
-		String os = null;
-		String db = null;
-		String was = null;
-		
-		if(wfNode.size() > 0) {
-			wfNode.next();
-			
-			String linkedId = String.valueOf(wfNode.getLinkedInstId());
-			
-			Serializable serial = null;
-			
-			serial = processManager.getProcessVariable(linkedId, "", "VMRequest");
-			if(serial instanceof VMRequest) {
-				VMRequest vmRequest = (VMRequest)serial;
-				
-				os = vmRequest.getOsSelect().getSelectedText();
-				db = vmRequest.getDbSelect().getSelectedText();
-				was = vmRequest.getWasSelect().getSelectedText();
-			}
-			
-		}
-		
-		if(os != null && db != null && was != null) {
-			createDatabase(db);
-		}
-	}
-
-	@Override
-	public void beforeComplete() throws Exception {
-		
-		
-	}
-		
-	public void afterComplete() throws Exception {
-		
-	}
-	*/
-	
 	protected void createDatabase(String parameter) {
 		
 		String ip = GlobalContext.getPropertyString("pole.call.ip");
