@@ -22,15 +22,8 @@ var org_uengine_codi_mw3_webProcessDesigner_LineShape = function(objectId, class
 			canvas.drawLabel(edgeEle, object.label);
 		}
 	}
-	
-	canvas.drawLabel(element, object.label);
-//	if(object.customData != null && object.customData != undefined){
-//		var customData = [];
-//		var jsonArray = eval(object.customData);
-//		for(i in jsonArray){
-//		    customData.push(jsonArray[i]);
-//		}
-//		canvas.setCustomData(element, customData);
-//	}
-	canvasObject.conditionMap[object.id] = object.lineCondition;
+	if( element ){
+		canvas.drawLabel(element, object.label);
+		canvasObject.conditionMap[object.id] = object.lineCondition;
+	}
 };
