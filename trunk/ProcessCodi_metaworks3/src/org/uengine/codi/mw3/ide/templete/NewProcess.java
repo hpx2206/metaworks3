@@ -14,6 +14,7 @@ import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.ide.CloudWindow;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.Templete;
+import org.uengine.codi.mw3.ide.editor.Editor;
 import org.uengine.codi.mw3.ide.editor.process.ProcessEditor;
 import org.uengine.codi.mw3.model.Session;
 
@@ -44,8 +45,10 @@ public class NewProcess extends Templete {
 			node.setType(TreeNode.TYPE_FILE_PROCESS);
 			
 			ProcessEditor editor = new ProcessEditor(node.getId());
+			editor.jbPath = jbPath;
+			editor.save();
 			
-			return new Object[]{new Remover(new ModalWindow()), new ToAppend(targetNode, node), new ToAppend(new CloudWindow("editor"), editor)};
+			return new Object[]{new ToAppend(targetNode, node), new ToAppend(new CloudWindow("editor"), editor), new Remover(new ModalWindow())};
 		}else{
 			throw new MetaworksException("finish error");
 		}
