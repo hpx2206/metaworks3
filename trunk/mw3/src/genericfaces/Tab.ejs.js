@@ -12,15 +12,21 @@ var Tab = function(objectId, className){
 		}
 	});
 	
-	/*
-	if(objectMetadata.faceOptions['tabsBottom'] == 'true'){
-		$('#objDiv_' + objectId).addClass('tabs-bottom');
-	}	
 	var objectMetadata = mw3.getMetadata(className);
-	$('#objDiv_' + objectId).removeClass( "ui-corner-all");
-	$( ".tabs-bottom .ui-tabs-nav, .tabs-bottom .ui-tabs-nav > *" ).removeClass( "ui-corner-all ui-corner-top" ).addClass( "ui-corner-bottom" );
-	*/
 	
+	if(objectMetadata.faceOptions['tabsBottom'] == 'true'){
+		$('#tabs_' + objectId).addClass('tabs-bottom');
+		
+		// fix the classes
+	    $( ".tabs-bottom .ui-tabs-nav, .tabs-bottom .ui-tabs-nav > *" )
+	      .removeClass( "ui-corner-all ui-corner-top" )
+	      .addClass( "ui-corner-bottom" );
+	 
+	    // move the nav to the bottom
+	    $( ".tabs-bottom .ui-tabs-nav" ).appendTo( ".tabs-bottom" );
+		
+	}	
+
 	var faceHelper = this;
 	
 	faceHelper.load();
