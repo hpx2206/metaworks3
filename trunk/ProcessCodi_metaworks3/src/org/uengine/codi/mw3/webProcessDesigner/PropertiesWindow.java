@@ -23,7 +23,7 @@ public class PropertiesWindow extends ModalWindow {
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] apply(){
-		return new Object[]{new Remover(new PropertiesWindow()), new ApplyProperties(this.id, this.getPanel())};
+		return new Object[]{new ApplyProperties(this.id, this.getPanel()), new Remover(new PropertiesWindow())};
 	}
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
