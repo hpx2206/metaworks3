@@ -14,7 +14,7 @@ import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.ide.CloudWindow;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.Templete;
-import org.uengine.codi.mw3.ide.editor.process.ProcessEditor;
+import org.uengine.codi.mw3.ide.editor.role.RoleEditor;
 import org.uengine.codi.mw3.model.Session;
 
 @Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs", options={"fieldOrder"}, values={"packageName,name"})
@@ -39,13 +39,13 @@ public class NewRole extends Templete {
 			ResourceNode targetNode = (ResourceNode)clipboard;
 			
 			ResourceNode node = new ResourceNode();
-			node.setName(this.getName() + ".wpd");
+			node.setName(this.getName() + ".role");
 			node.setId(targetNode.getId() + File.separatorChar + node.getName());			
-			node.setType(TreeNode.TYPE_FILE_HTML);
+			node.setType(TreeNode.TYPE_FILE_ROLE);
 			
-			ProcessEditor editor = new ProcessEditor(node.getId());
+			RoleEditor editor = new RoleEditor(node.getId());
 			
-			return new Object[]{new Remover(new ModalWindow()), new ToAppend(targetNode, node), new ToAppend(new CloudWindow("editor"), editor)};
+			return new Object[]{new ToAppend(targetNode, node), new ToAppend(new CloudWindow("editor"), editor), new Remover(new ModalWindow())};
 		}else{
 			throw new MetaworksException("finish error");
 		}
