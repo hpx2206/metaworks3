@@ -46,11 +46,29 @@ public class CloudClassLoader {
 		List<URL> classpath = new ArrayList<URL>();
 		
 		try {
+			for(String filepath : this.makeClassPath()){
+				File file = new File(filepath);
+				
+				classpath.add(file.toURI().toURL());
+			}
+			
+			URLClassLoader cl =  new URLClassLoader(classpath.toArray(new URL[classpath.size()]), null);
+		
+			this.setCl(cl);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		
+	}
+
+	public List<String>makeClassPath(){
+		List<String> classpath = new ArrayList<String>();
+		
+		try {
 			File classesFile = new File(this.getDefaultBuildOutputPath());
 			
-			System.out.println(classesFile.getAbsolutePath());
 			// classes for .class file
-			classpath.add(classesFile.toURI().toURL());
+			classpath.add(classesFile.getAbsolutePath());
 			
 			// lib for .jar file
 			File libFile = new File(this.getLibraryPath());	
@@ -58,19 +76,18 @@ public class CloudClassLoader {
 				for(String filename : libFile.list()){
 					if(filename.endsWith(".jar")){
 						File file = new File(libFile.getAbsolutePath() + File.separator + filename);
-						classpath.add(file.toURI().toURL());
+						classpath.add(file.getAbsolutePath());
 					}
 				}
 			}
 				
-			URLClassLoader cl =  new URLClassLoader(classpath.toArray(new URL[classpath.size()]), null);
-			
-			this.setCl(cl);
 		}catch(Exception e){
 			e.printStackTrace();
 		}
+		
+		return classpath;
 	}
-	
+
     public static String getSourceResourceName(String className) {
 
         // Strip nested type suffixes.

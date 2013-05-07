@@ -170,7 +170,7 @@ public class CloudIDE {
 		centerLayout.setId("center");
 		centerLayout.setName("center");
 		centerLayout.setCenter(editorWindow);
-		centerLayout.setSouth(etcWindow);
+		//centerLayout.setSouth(etcWindow);
 		centerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, south__spacing_open:5, south__size:150");
 		
 		Layout outerLayout = new Layout();
@@ -257,7 +257,6 @@ public class CloudIDE {
 	public Object close(){
 		return new Remover(new CloudTab(this.getCurrentEditorId()));
 	}
-
 
 	@ServiceMethod(keyBinding="Ctrl+Shift+R@Global", target=ServiceMethodContext.TARGET_POPUP)
 	public ModalWindow openResource(){
