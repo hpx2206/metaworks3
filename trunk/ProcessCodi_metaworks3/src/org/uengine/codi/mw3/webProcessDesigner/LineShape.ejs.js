@@ -10,6 +10,19 @@ var org_uengine_codi_mw3_webProcessDesigner_LineShape = function(objectId, class
 	var canvasObjectFaceHelper = mw3.getFaceHelper(canvasObject.__objectId);
 	var canvas = canvasObjectFaceHelper.icanvas;
 	
+	if( object && object.drawByObject){
+		console.log('lineShape 호출!!!! obectID = ' + object.id);
+		console.log('lineShape 호출!!!! label = ' + object.label);
+		var elementFrom = document.getElementById( object.from );
+		var elementTo = document.getElementById( object.to );
+		console.log(elementFrom);
+		console.log(elementTo);
+		if( elementFrom && elementTo ){
+			var edgeEle = canvas.connect(elementFrom, elementTo);
+			canvas.drawLabel(edgeEle, object.label);
+		}
+	}
+	
 	canvas.drawLabel(element, object.label);
 //	if(object.customData != null && object.customData != undefined){
 //		var customData = [];

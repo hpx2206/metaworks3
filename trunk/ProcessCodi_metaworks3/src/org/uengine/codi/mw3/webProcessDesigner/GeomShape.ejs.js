@@ -10,6 +10,17 @@ var org_uengine_codi_mw3_webProcessDesigner_GeomShape = function(objectId, class
 	var canvasObjectFaceHelper = mw3.getFaceHelper(canvasObject.__objectId);
 	var canvas = canvasObjectFaceHelper.icanvas;
 	
+	if( object && object.drawByObject){
+		console.log('geomShape 호출!!!! obectID = ' + object.id);
+		console.log('geomShape 호출!!!! label = ' + object.label);
+		var initText = object.label;
+		var shape = eval('new ' + object.shapeId + '(\''+initText+'\')');
+		element = canvas.drawShape([
+            object.x, object.y 
+            ],
+                shape, [parseInt(object.width, 10), parseInt(object.height, 10)] , {} , object.id);
+	}
+	
 //	canvas.drawLabel(element, object.label);
 	if(object.data != null && object.data != undefined){
 //		var customData = [];

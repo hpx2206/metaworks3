@@ -216,15 +216,37 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 	    var canvasWidth = 1024;		// defualt
 	    var canvasHeight = 768;		// defualt
 	    
+	    if( object != null && object.cell != null ){
+			var cells = object.cell;
+			// 도형을 모두 그린후에 선을 그린다
+			for(var i=0; i < cells.length; i++){
+				if( cells[i].drawByObject && cells[i].shapeType != 'EDGE' ){
+					var html = mw3.locateObject(cells[i]);
+					canvasDivObj.append(html);
+				}
+			}
+			for( i=0; i < cells.length; i++){
+				if( cells[i].drawByObject && cells[i].shapeType == 'EDGE' ){
+					var html = mw3.locateObject(cells[i]);
+					canvasDivObj.append(html);
+				}
+			}
+	    }
 	    // load 에서 데이터가 넘어왔을 경우 데이터를 셋팅하여 그림
 		if( object != null && object.graphString != null ){
 			var canvassizeObject = this.icanvas.loadJSON($.parseJSON(object.graphString));
+			
+			// 동적으로 데이터를 그려준다.
 			
 			this.tracingTag = object.lastTracingTag;
 			// tracingTag 달아주기
 			if( object != null && object.cell != null ){
 				var cells = object.cell;
 				for(var i=0; i < cells.length; i++){
+					cells[i].__className = 'org.uengine.codi.mw3.webProcessDesigner.GeomShape';
+					var html = mw3.locateObject(cells[i] , 'org.uengine.codi.mw3.webProcessDesigner.GeomShape');
+					console.log(html);
+					canvasDivObj.append(html);
 					var cellId = cells[i].id;
 					var cellTracing = cells[i].tracingTag;
 					var cellClassname = cells[i].classname;
@@ -325,6 +347,10 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 //	    			value.tempElementTypeId = clipboardNode.id;
 //	    			value.tempElementType = "wfNode";
 //	    			value.addValiable();
+	    		}
+	    		if( clipboardNode && clipboardNode.__className=="org.uengine.codi.mw3.ide.ResourceNode"){
+	    			var javaFileName = clipboardNode.name;
+		    		canvas.drawLabel(element, javaFileName);
 	    		}
 	    		if(clipboardNode && clipboardNode.__className=="org.uengine.codi.mw3.model.ResourceFile"){
 	    			var javaFileName = clipboardNode.name;

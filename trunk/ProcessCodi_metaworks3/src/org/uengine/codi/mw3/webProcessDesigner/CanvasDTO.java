@@ -160,6 +160,13 @@ public class CanvasDTO implements Serializable{
 			public void setRoleName(String roleName) {
 				this.roleName = roleName;
 			}
+		boolean drawByObject;
+			public boolean isDrawByObject() {
+				return drawByObject;
+			}
+			public void setDrawByObject(boolean drawByObject) {
+				this.drawByObject = drawByObject;
+			}
 		/*  viewer 부분에서  필요한 정보들 transient */
 		transient String instStatus;
 			public String getInstStatus() {
