@@ -1,7 +1,5 @@
 package org.metaworks.dao;
 
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -52,7 +50,7 @@ public class DAOUtil {
 	
 	public String replaceReservedKeyword(String propertyName) {
 		
-		if(this.reservedWord != null && this.getReservedWord().indexOf(propertyName.toUpperCase()) > -1){
+		if(this.getReservedWord().indexOf(propertyName.toUpperCase()) > -1){
 			if("CUBRID".equals(this.getDatabaseProductName())) {
 				propertyName = "\"" + propertyName + "\"";
 			}
