@@ -18,7 +18,7 @@ public RuleDesignerContentPanel getRuleDesignerContentPanel() {
 
 public void newRule(String parentFolder) throws Exception {
 	ruleDesignerContentPanel = new RuleDesignerContentPanel();
-	ruleDesignerContentPanel.newRule(parentFolder);
+	//ruleDesignerContentPanel.newRule(parentFolder);
 }
 
 public void load(String defId) throws Exception {

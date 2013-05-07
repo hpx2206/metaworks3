@@ -127,7 +127,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 /*		if ("ORACLE".equals(typeOfDBMS))
 			bottomList.append( " limit " + criteria.get("startIndex") + ", "+InstanceList.PAGE_CNT);
 		else if ("MYSQL".equals(typeOfDBMS))*/
-		if( count != 0 && page != 0 )
+		//if( count != 0 && page != 0 )
 			bottomList.append( " limit " + criteria.get("startIndex") + ", "+ ("phone".equals(navigation.getMedia())?InstanceList.PAGE_CNT_MOBILE:InstanceList.PAGE_CNT));
 		
 		//TODO delete printing
@@ -1175,7 +1175,6 @@ public class Instance extends Database<IInstance> implements IInstance{
 		.append("     OR   (inst.defVerId = '"+Instance.DEFAULT_DEFVERID+"' and inst.DUEDATE is not null and wl.status = '" + WorkItem.WORKITEM_STATUS_FEED + "'))")
 		.append(") a");
 
-		
 		try{
 			IInstance instance = (IInstance) sql(Instance.class, sb.toString());
 			instance.set("endpoint", empCode);
