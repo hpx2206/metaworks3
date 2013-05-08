@@ -262,6 +262,6 @@ public class CloudIDE {
 	public ModalWindow openResource(){
 		OpenResource openResource = new OpenResource();
 
-		return new ModalWindow(openResource, 600, 0, "Open Resource");
+		return new ModalWindow(openResource, 600, 450, "Open Resource");
 	}
 }
