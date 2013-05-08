@@ -50,6 +50,7 @@ org_uengine_codi_mw3_ide_CloudWindow.prototype = {
 		if(autowiredTab){
 			autowiredTab.getFaceHelper().select();
 		}else{
+			var tabMetadata = mw3.getMetadata(object.__className);
 			
 			if(object.name){
 				tabName = object.name;
@@ -79,8 +80,6 @@ org_uengine_codi_mw3_ide_CloudWindow.prototype = {
 			this.bind();
 			this.select(id);
 		}
-
-		
 	},
 	
 	select : function(id){
