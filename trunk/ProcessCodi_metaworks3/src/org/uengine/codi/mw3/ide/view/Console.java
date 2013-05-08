@@ -38,6 +38,21 @@ public class Console implements CloudContent{
 		this.setId("console");
 		this.setType(this.getId());
 		this.setName("$Console");
+		
+		/*
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				try {
+					new TopicListener().run();
+				} catch (JMSException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}				
+			}
+		}).start();
+		*/
 	}
 		
 }
