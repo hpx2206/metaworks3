@@ -7,6 +7,9 @@ import java.util.Iterator;
 
 import javax.servlet.http.HttpSession;
 
+import net.oauth.example.dna.OAuthBasic;
+import net.oauth.example.dna.OAuthDB;
+
 import org.directwebremoting.WebContext;
 import org.directwebremoting.WebContextFactory;
 import org.metaworks.ContextAware;
@@ -360,7 +363,22 @@ public class Login implements ContextAware {
 				mainPanel = pageNavigator.goProcess();
 			}
 		}
+				
+		//Request Token
+		OAuthBasic oauth = new OAuthBasic();
+		oauth.requestToken();
+
+		// Request Access Token
+		String accessToken = oauth.retrieveAccessToken("");
+		System.out.println("accessToken  = " + accessToken);
+
+		session.setAccessToken(accessToken);
 		
+		//user id, access token save to cubrid
+		OAuthDB oauthDB = new OAuthDB(); 
+		oauthDB.update(session.getUser().getUserId(), session.getAccessToken());
+		
+				
 		return new Object[]{new Remover(new ModalWindow(), true), new Refresh(locale), new Refresh(mainPanel, false, true)};
 	}
 

@@ -100,11 +100,13 @@ public class PageNavigator{
 	@ServiceMethod(callByContent=true, inContextMenu=true)
 	public MainPanel goNkia() throws Exception {
 		
-		Nkia nkia = new Nkia();
-		nkia.session = session;
-		nkia.load();
-		
-		return new MainPanel(nkia);
+//		Nkia nkia = new Nkia();
+//		nkia.session = session;
+//		nkia.load();
+//		
+//		return new MainPanel(nkia);
+		System.out.println("paasManager" + session.getAccessToken());
+		return new MainPanel(new RemoteNewPage(session, "IaaS Admin", "http://192.168.212.52/kiat_sso.jsp?access_token=" + session.getAccessToken() + "&user_id=" + session.getUser().getUserId())); //paasManager
 	}
 	
 
