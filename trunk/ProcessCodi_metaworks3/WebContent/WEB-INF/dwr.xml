@@ -37,6 +37,10 @@
 	<convert converter="metaworks" match="org.uengine.codi.mw3.marketplace.*"/>
 	<convert converter="metaworks" match="org.uengine.codi.mw3.marketplace.category.*"/>
 	<convert converter="metaworks" match="org.uengine.codi.mw3.marketplace.searchbox.*"/>
+	<convert converter="metaworks" match="org.uengine.codi.mw3.ide.*"/>
+	<convert converter="metaworks" match="org.uengine.codi.mw3.ide.editor.*"/>
+	<convert converter="metaworks" match="org.uengine.codi.mw3.ide.editor.java.*"/>
+	<convert converter="metaworks" match="org.uengine.codi.mw3.ide.editor.process.*"/>
 	
 	<convert converter="metaworks" match="org.uengine.processmarket.*"/>
 	
