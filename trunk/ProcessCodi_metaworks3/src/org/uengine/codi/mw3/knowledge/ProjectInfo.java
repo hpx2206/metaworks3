@@ -17,13 +17,11 @@ import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.dao.Database;
 import org.metaworks.website.Download;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.model.InstanceViewContent;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.project.ApprovalComplete;
-import org.uengine.codi.mw3.project.ProjectCreate;
 import org.uengine.codi.mw3.project.VMRequest;
 import org.uengine.codi.vm.JschCommand;
 import org.uengine.kernel.GlobalContext;
@@ -144,42 +142,34 @@ public class ProjectInfo implements ContextAware {
 		
 		String projectId = session.getLastSelectedItem();
 		
-		IWfNode wfNode = (IWfNode)Database.sql(IWfNode.class, 
+		
+/*		IWfNode wfNode = (IWfNode)Database.sql(IWfNode.class, 
 				"select * from bpm_knol where id = ?id");
 		wfNode.set("id", projectId);
-		wfNode.select();
+		wfNode.select();*/
 		
-		if(wfNode.size() > 0) {
-			wfNode.next();
-			
+		WfNode wfNode = new WfNode();
+		wfNode.setId(projectId);
+		wfNode.copyFrom(wfNode.databaseMe());
+		
 			String linkedId = String.valueOf(wfNode.getLinkedInstId());
 			
+			this.projectName = wfNode.getName();
+			this.description = wfNode.getDescription();
+
+			
 			Serializable serial = null;
-			
-			serial = processManager.getProcessVariable(linkedId, "", "ProjectCreate");
-			if(serial instanceof ProjectCreate) {
-				ProjectCreate projectCreate = (ProjectCreate)serial;
-				this.projectName = projectCreate.getName();
-				this.description = projectCreate.getDescription();
-			}
-			
 			serial = processManager.getProcessVariable(linkedId, "", "VMRequest");
 			if(serial instanceof VMRequest) {
 				VMRequest vmRequest = (VMRequest)serial;
 				this.templateName = vmRequest.getVmImageCombo().getSelectedText();
 			}
 			
-			serial = processManager.getProcessVariable(linkedId, "", "ApprovalComplete");
-			if(serial instanceof ApprovalComplete) {
-				ApprovalComplete approvalComplete = (ApprovalComplete)serial;
-				this.ip = approvalComplete.getServerIp();
-			}
-			
+			this.ip = (String)(Serializable)processManager.getProcessVariable(linkedId, "", "vm_ip");
 			
 			this.svn = "svn://" + GlobalContext.getPropertyString("vm.manager.ip") + "/" + this.projectName;
 			this.hudson = "http://" + GlobalContext.getPropertyString("vm.manager.ip") + "/hudson/";
 			
-		}
 		
 	}
 	
