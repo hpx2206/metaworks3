@@ -11,7 +11,7 @@ public class ManagerApproval implements ITool  {
 	}
 	
 	String approval;
-		@Face(displayName="승인여부")
+		@Face(displayName="요청된 개발기 생성을 승인합니다.")
 		@Range(options={"승인", "거부"}, values={"approval", "reject"})
 		public String getApproval() {
 			return approval;

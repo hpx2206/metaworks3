@@ -215,6 +215,11 @@ public interface IWfNode extends IDAO {
 	public String getRootId();
 	public void setRootId(String rootId);
 	
+	@Hidden
+	public String getDescription();
+	public void setDescription(String description);
+	
+	
 	/*******************************************
 	 * 
 	 * Service Method

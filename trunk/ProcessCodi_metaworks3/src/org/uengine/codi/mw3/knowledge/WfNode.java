@@ -354,6 +354,14 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		public void setRootId(String rootId) {
 			this.rootId = rootId;
 		}
+	
+	String description;
+		public String getDescription() {
+			return description;
+		}
+		public void setDescription(String description) {
+			this.description = description;
+		}
 		
 	public WfNode() {
 		setChildNode(new ArrayList<WfNode>());

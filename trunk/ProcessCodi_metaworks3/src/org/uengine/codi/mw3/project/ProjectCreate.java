@@ -14,6 +14,14 @@ public class ProjectCreate implements ITool {
 		public void setName(String name) {
 			this.name = name;
 		}
+	
+	String description;		
+		public String getDescription() {
+			return description;
+		}
+		public void setDescription(String description) {
+			this.description = description;
+		}
 		
 	String projectId;
 		public String getProjectId() {
