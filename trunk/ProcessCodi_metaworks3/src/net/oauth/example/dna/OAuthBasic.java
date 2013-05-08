@@ -33,7 +33,7 @@ public class OAuthBasic {
 	
 	public void requestToken() throws Exception {
 		
-		String authUrl = provider.retrieveRequestToken(consumer, "http://10.10.10.76/uengine/oauth/accessToken.jsp");	
+		String authUrl = provider.retrieveRequestToken(consumer, "http://10.10.10.76/uengine-web/oauth/accessToken.jsp");	
 		
 		HttpClient httpClient = new HttpClient();
 		GetMethod getMethod = new GetMethod(authUrl);
