@@ -1,15 +1,32 @@
+
 package org.uengine.codi.mw3.knowledge;
-
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.Serializable;
+import java.net.URL;
+import java.net.URLConnection;
 
+import org.directwebremoting.io.FileTransfer;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.Remover;
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.Face;
+import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
+import org.metaworks.website.Download;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.model.InstanceViewContent;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.codi.mw3.project.ApprovalComplete;
 import org.uengine.codi.mw3.project.ProjectCreate;
+import org.uengine.codi.mw3.project.VMRequest;
+import org.uengine.codi.vm.JschCommand;
+import org.uengine.kernel.GlobalContext;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 public class ProjectInfo implements ContextAware {
@@ -89,16 +106,41 @@ public class ProjectInfo implements ContextAware {
 		public void setCi(String ci) {
 			this.ci = ci;
 		}
+	
+	String description;
+		public String getDescription() {
+			return description;
+		}
+		public void setDescription(String description) {
+			this.description = description;
+		}
+	
+	String hudson;
+		public String getHudson() {
+			return hudson;
+		}
+		public void setHudson(String hudson) {
+			this.hudson = hudson;
+		}
+		
+	String templateName;
+		public String getTemplateName() {
+			return templateName;
+		}
+		public void setTemplateName(String templateName) {
+			this.templateName = templateName;
+		}
+		
+	String ip;
+		public String getIp() {
+			return ip;
+		}
+		public void setIp(String ip) {
+			this.ip = ip;
+		}
+		
 		
 	public void load() throws Exception {
-		
-		this.projectName = "";
-		this.os = "";
-		this.db = "";
-		this.was = "";
-		this.vm = "http://192.168.0.225:8080/realcloud/";
-//		this.svn = "";
-//		this.ci = "";
 		
 		String projectId = session.getLastSelectedItem();
 		
@@ -121,32 +163,21 @@ public class ProjectInfo implements ContextAware {
 			}
 			
 			serial = processManager.getProcessVariable(linkedId, "", "VMRequest");
-/*			if(serial instanceof VMRequest) {
+			if(serial instanceof VMRequest) {
 				VMRequest vmRequest = (VMRequest)serial;
-				this.os = vmRequest.getOsSelect().getSelectedText();
-				this.db = vmRequest.getDbSelect().getSelectedText();
-				this.was = vmRequest.getWasSelect().getSelectedText();
-			}*/
+				this.templateName = vmRequest.getVmImageCombo().getSelectedText();
+			}
 			
-//			serial = processManager.getProcessVariable(linkedId, "", "VMCreate");
-//			if(serial instanceof VMCreate) {
-//				VMCreate vmCreate = (VMCreate)serial;
-//				this.vm = vmCreate.getIp();
-//			}
-//			
-//			serial = processManager.getProcessVariable(linkedId, "", "SVNSetting");
-//			if(serial instanceof SVNSetting) {
-//				SVNSetting svnSetting = (SVNSetting)serial;
-//				this.svn = svnSetting.getSvnUrl();
-//				
-//				metaworksContext.setHow("isSVNEdit");
-//			}
-//			
-//			serial = processManager.getProcessVariable(linkedId, "", "CICreate");
-//			if(serial instanceof CICreate) {
-//				CICreate ciCreate = (CICreate)serial;
-//				this.ci = ciCreate.getCiUrl();
-//			}
+			serial = processManager.getProcessVariable(linkedId, "", "ApprovalComplete");
+			if(serial instanceof ApprovalComplete) {
+				ApprovalComplete approvalComplete = (ApprovalComplete)serial;
+				this.ip = approvalComplete.getServerIp();
+			}
+			
+			
+			this.svn = "svn://" + GlobalContext.getPropertyString("vm.manager.ip") + "/" + this.projectName;
+			this.hudson = "http://" + GlobalContext.getPropertyString("vm.manager.ip") + "/hudson/";
+			
 		}
 		
 	}
@@ -208,6 +239,50 @@ public class ProjectInfo implements ContextAware {
 		return returnObject;
 	}
 	*/
+	
+	@Face(displayName="반영")
+	@ServiceMethod(callByContent=true)
+	public Object insert() throws Exception{
+		
+//		callURL(hudsonReload());
+//		callURL(hudsonBuild());
+		
+		JschCommand jschServerBehaviour = new JschCommand();
+	
+		String command = GlobalContext.getPropertyString("vm.hudson.setting") + " \"" + this.getProjectName() + "\"" + " \"" + this.getIp() + "\"";
+		jschServerBehaviour.runCommand(command);
+		
+		try {
+			Thread.sleep(35000);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		command = GlobalContext.getPropertyString("vm.hudson.build") + " \"" + this.getProjectName() + "\"";
+		jschServerBehaviour.runCommand(command);
+		
+		return new Remover(this);
+		
+	}
+	
+	@Face(displayName="개발자 샌드박스 받기")
+	@ServiceMethod(target=ServiceMethodContext.TARGET_APPEND)
+	public Download devSendbox() throws Exception{
+		String fileSystemPath = GlobalContext.getPropertyString("filesystem.path",".");
+		String sendboxPath = fileSystemPath + "/resource/sandbox_final.ova";
+		
+		return new Download(new FileTransfer(new String("sandbox_final.ova".getBytes("UTF-8"),"ISO8859_1"), null,  new FileInputStream(sendboxPath)));		
+	}
+	
+	@Face(displayName="이클립스 다운받기")
+	@ServiceMethod(target=ServiceMethodContext.TARGET_APPEND)
+	public Download eclipseDownload() throws Exception{
+		String fileSystemPath = GlobalContext.getPropertyString("filesystem.path",".");
+		String sendboxPath = fileSystemPath + "/resource/govFramEclpse64.zip";
+		
+		return new Download(new FileTransfer(new String("govFramEclpse64.zip".getBytes("UTF-8"),"ISO8859_1"), null,  new FileInputStream(sendboxPath)));		
+	}
 
 	@AutowiredFromClient
 	public Session session;
@@ -217,5 +292,67 @@ public class ProjectInfo implements ContextAware {
 	
 	@Autowired
 	public InstanceViewContent instanceViewContent;
+	
+	public String hudsonReload() throws Exception {
+		return "http://192.168.12.212:8080/hudson/reload";
+	}
+	
+	public String hudsonBuild() throws Exception {
+		return "http://192.168.12.212:8080/hudson/job/" + this.getProjectName() + "/build";
+	}
+	
+	public void callURL(String sUrl) throws Exception {
+		URL url;
+		URLConnection connection;
+		InputStream is;
+		InputStreamReader isr;
+		BufferedReader br;
+		try{
+			
+			url = new URL(sUrl);
+			connection = url.openConnection();
+			
+			is = connection.getInputStream();
+			isr = new InputStreamReader(is);
+			br = new BufferedReader(isr);
+			
+			String buf = null;
+			
+			while(true){
+				buf = br.readLine();
+				if(buf == null) break;
+			}
+			
+		}catch(IOException ioe){
+			System.err.println("IOException " + ioe);
+			ioe.printStackTrace();
+		}
+	}
+	
+//	public static void main(String args[]){
+//		
+//		String urlString = "http://192.168.12.212:8080/hudson/reload";
+//		
+//		HttpURLConnection conn = null;
+//		
+//		 try {
+//			   URL connectURI = new URL(urlString);
+//			   
+//			   conn = (HttpURLConnection) connectURI.openConnection();   
+//			   conn.setDoInput(true);
+//			   conn.setDoOutput(false);
+//			   conn.setRequestMethod("GET");
+//			   conn.connect();   
+//			   
+//			   if(conn.getResponseCode() != HttpURLConnection.HTTP_OK){
+//				   throw new RuntimeException("Faild / HTTP error code : "+conn.getResponseCode());
+//			   }else{
+//				   System.out.println("success");
+//			   }
+//		 }catch(Exception e){
+//			 e.printStackTrace();
+//		 }
+//			
+//	}
 
 }

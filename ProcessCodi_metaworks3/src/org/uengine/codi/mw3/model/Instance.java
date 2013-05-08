@@ -134,10 +134,11 @@ public class Instance extends Database<IInstance> implements IInstance{
 		System.out.println("worklist sql:" + bottomList.toString());
 		
 		IInstance instanceContents = (IInstance) sql(Instance.class, bottomList.toString());
-		instanceContents.setInitComCd(navigation.getEmployee().getGlobalCom());
-		instanceContents.set("endpoint", navigation.getEmployee().getEmpCode());
-		instanceContents.set("partcode", navigation.getEmployee().getPartCode());
-
+		
+		criteria.put("initComCd", navigation.getEmployee().getGlobalCom());
+		criteria.put("endpoint", navigation.getEmployee().getEmpCode());
+		criteria.put("partcode", navigation.getEmployee().getPartCode());
+		
 		// TODO add criteria
 		Set<String> keys = criteria.keySet();
 		for (Iterator iterator = keys.iterator(); iterator.hasNext();) {
@@ -145,6 +146,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 			if(key.equals(INSTANCE_DIRECT_APPEND_SQL_KEY) || key.equals(TASK_DIRECT_APPEND_SQL_KEY)) {
 				continue;
 			} else {
+				System.out.println(key + " : " + criteria.get(key) );
 				instanceContents.set(key, criteria.get(key));
 			}
 		}
@@ -257,8 +259,11 @@ public class Instance extends Database<IInstance> implements IInstance{
 		stmt.append(taskSql.toString());
 		
 		// add instance criteria
+		/* 2013-05-08 cjw
 		stmt.append(" WHERE initcomcd=?initComCd");
 		stmt.append("   AND inst.instid=task.rootinstid ");		
+		*/
+		stmt.append(" WHERE inst.instid=task.rootinstid ");
 		
 		if(instanceSql!=null) {
 			stmt.append(instanceSql);
@@ -528,11 +533,11 @@ public class Instance extends Database<IInstance> implements IInstance{
 				.append(" and	exists ( ")
 				.append("			select 1 from bpm_procinst	 ")
 				.append("			where inst.instid = instid	 ")
-				.append("			and secuopt = 0	 ")
+				.append("			and secuopt = 0	and inst.initcomcd = ?initComCd ")
 				.append("			union all	 ")
 				.append("			select 1 from bpm_rolemapping rm	 ")
 				.append("			where inst.instid = rm.rootinstid	 ")
-				.append("			and inst.secuopt = 1	 ")
+				.append("			and inst.secuopt <= 1	 ")
 				.append("			and ( 	( assigntype = 0 and rm.endpoint = ?endpoint ) 	 ")
 				.append("					or ( assigntype = 2 and rm.endpoint = ?partcode ) ) ")
 				.append("			union all 	 ")

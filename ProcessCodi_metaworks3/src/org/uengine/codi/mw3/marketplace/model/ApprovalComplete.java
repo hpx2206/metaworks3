@@ -114,15 +114,18 @@ public class ApprovalComplete implements ITool  {
 			jschServerBehaviour.runCommand(command);
 			
 			//job에 svn연결
-			command = GlobalContext.getPropertyString("vm.hudson.setting") + " \"" + projectName + "\"" + " \"" + GlobalContext.getPropertyString("vm.server.ip") + "\"";
+			command = GlobalContext.getPropertyString("vm.hudson.setting") + " \"" + projectName +  "\"";
 			jschServerBehaviour.runCommand(command);
 			
+			command = GlobalContext.getPropertyString("vm.hudson.build") + " \"" + projectName +  "\"";
+			jschServerBehaviour.runCommand(command);
 			
 			ProjectInfo projectInfo = new ProjectInfo();
 			
 			projectInfo.setProjectName(projectName);
 			projectInfo.callURL(projectInfo.hudsonReload());
 			projectInfo.callURL(projectInfo.hudsonBuild());
+			
 		}
 	}
 
