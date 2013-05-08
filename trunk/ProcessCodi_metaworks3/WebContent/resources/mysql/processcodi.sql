@@ -740,3 +740,6 @@ alter table bpm_knol change benfit BENEFIT int(11);
 
 -- 2013.05.06 app - project mapping
 alter table app add projectId varchar(20);
+
+-- 2013.05.07 project description 추가
+alter table bpm_knol add description varchar(1000);

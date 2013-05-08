@@ -7,7 +7,6 @@ import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Face;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.kernel.ProcessInstance;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 

@@ -13,7 +13,6 @@ import javax.sql.RowSet;
 
 import org.metaworks.annotation.Face;
 import org.metaworks.dao.TransactionContext;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.ITool;
 import org.uengine.codi.mw3.knowledge.ITopicMapping;
 import org.uengine.codi.mw3.knowledge.TopicMapping;
@@ -124,8 +123,8 @@ public class ApprovalComplete implements ITool  {
 			command = GlobalContext.getPropertyString("vm.hudson.createJob") + " \"" + projectName + "\"";
 			jschServerBehaviour.runCommand(command);
 			
-			command = GlobalContext.getPropertyString("vm.hudson.setting") + " \"" + projectName + "\"" + " \"" + GlobalContext.getPropertyString("vm.server.ip") + "\"";
-			jschServerBehaviour.runCommand(command);
+//			command = GlobalContext.getPropertyString("vm.hudson.setting") + " \"" + projectName + "\"" + " \"" + GlobalContext.getPropertyString("vm.server.ip") + "\"";
+//			jschServerBehaviour.runCommand(command);
 		}
 	}
 

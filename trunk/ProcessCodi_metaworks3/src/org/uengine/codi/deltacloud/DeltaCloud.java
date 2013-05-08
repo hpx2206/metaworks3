@@ -6,10 +6,10 @@ import org.uengine.kernel.GlobalContext;
 
 public class DeltaCloud {
 
-	public String url = "http://192.168.50.14/deltacloud/api";
+	public String url;
 	
 	public DeltaCloud() {
-		this.url = (String)GlobalContext.getPropertyString("deltacloud.url", "http://192.168.50.14/deltacloud/api");
+		this.url = (String)GlobalContext.getPropertyString("deltacloud.api.url");
 	}
 	
 	public ArrayList<Realm> realms() throws Exception {

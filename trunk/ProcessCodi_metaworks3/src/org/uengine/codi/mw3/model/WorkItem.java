@@ -44,7 +44,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	
 	protected static IWorkItem find(String instanceId) throws Exception{
 		
-		String sql = "select * from bpm_worklist where rootInstId=?instId and isdeleted!=?isDeleted";
+		String sql = "select * from bpm_worklist where rootInstId=?instId and isdeleted!=?isDeleted  order by taskId";
 		
 		IWorkItem workitem = (IWorkItem) Database.sql(IWorkItem.class, sql);
 		
@@ -63,7 +63,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	
 	protected static IWorkItem find(String instanceId, int startIndex, int lastIndex) throws Exception{
 		
-		String sql = "select * from bpm_worklist where rootInstId=?instId and isdeleted!=?isDeleted";
+		String sql = "select * from bpm_worklist where rootInstId=?instId and isdeleted!=?isDeleted order by taskId";
 		
 		IWorkItem workitem = (IWorkItem) Database.sql(IWorkItem.class, sql + " limit " + startIndex + ", " + lastIndex);
 		

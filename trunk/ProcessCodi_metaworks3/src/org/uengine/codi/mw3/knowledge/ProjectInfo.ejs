@@ -5,29 +5,34 @@
 	    	<col />
 	    </colgroup>
 		<tr height="22">
-			<th align="right"><b>project name :</b></th>
+			<th align="right"><b><%=mw3.localize("$ProjectName")%> :</b></th>
 			<td><%= fields.projectName.here() %></td>
 		</tr>
 		<tr height="22">
-			<th align="right"><b>OS Info :</b></th>
-			<td><%= fields.os.here() %></td>
+			<th align="right"><b><%=mw3.localize("$TemplateName")%> :</b></th>
+			<td><%= fields.templateName.here() %></td>
 		</tr>
 		<tr height="22">
-			<th align="right"><b>DB Info :</b></th>
-			<td><%= fields.db.here() %></td>
+			<th align="right"><b><%=mw3.localize("$Ip")%> :</b></th>
+			<td><%= fields.ip.here() %></td>
 		</tr>
 		<tr height="22">
-			<th align="right"><b>WAS Info :</b></th>
-			<td><%= fields.was.here() %></td>
+			<th align="right"><b><%=mw3.localize("$Svn")%> :</b></th>
+			<td><%= fields.svn.here() %></td>
 		</tr>
 		<tr height="22">
-			<th align="right"><b>IP Info :</b></th>
-			<td><%= fields.vm.here() %></td>
+			<th align="right"><b><%=mw3.localize("$Hudson")%> :</b></th>
+			<td><%= fields.hudson.here() %></td>
+		</tr>
+		<tr height="50">
+			<th align="right"><b><%=mw3.localize("$ProjectDescription")%> :</b></th>
+			<td><%= fields.description.here() %></td>
 		</tr>
 		<tr height="22">
 			<th></th>
 			<td align="right">
 				<div class="positionRight">
+					<%=methods.eclipseDownload.here()%>
 					<%=methods.devSendbox.here()%>
 					<%=methods.insert.here()%>
 				</div>
