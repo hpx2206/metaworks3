@@ -16,14 +16,14 @@ import oauth.signpost.basic.DefaultOAuthProvider;
 
 public class OAuthBasic {
 	
-	static final String REQUEST_TOKEN_URL = "http://localhost:8080/uengine-web/request_token";
-	static final String AUTHORIZE_URL = "http://localhost:8080/uengine-web/authorize";
-	static final String ACCESS_TOKEN_URL = "http://localhost:8080/uengine-web/access_token";
+	static final String REQUEST_TOKEN_URL = "http://192.168.212.108:33000/uengine-web/request_token";
+	static final String AUTHORIZE_URL = "http://192.168.212.108:33000/uengine-web/authorize";
+	static final String ACCESS_TOKEN_URL = "http://192.168.212.108:33000/uengine-web/access_token";
 	 
 	static final String CONSUMER_KEY = "noCallbackConsumer";
 	static final String CONSUMER_SECRET = "noCallbackSecret";
 	 
-	static final String API_URL = "http://localhost:8080/uengine-web/echo";
+	static final String API_URL = "http://192.168.212.108:33000/uengine-web/echo";
 	 
 	// Service Provider
 	static OAuthProvider provider = new DefaultOAuthProvider(REQUEST_TOKEN_URL, ACCESS_TOKEN_URL, AUTHORIZE_URL);  
