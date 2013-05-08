@@ -160,6 +160,7 @@ public class ProjectInfo implements ContextAware {
 			if(serial instanceof ProjectCreate) {
 				ProjectCreate projectCreate = (ProjectCreate)serial;
 				this.projectName = projectCreate.getName();
+				this.description = projectCreate.getDescription();
 			}
 			
 			serial = processManager.getProcessVariable(linkedId, "", "VMRequest");
