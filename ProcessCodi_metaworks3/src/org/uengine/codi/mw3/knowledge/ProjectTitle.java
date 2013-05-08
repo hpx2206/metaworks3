@@ -68,6 +68,16 @@ public class ProjectTitle implements ContextAware {
 		public void setTopicTitle(String topicTitle) {
 			this.topicTitle = topicTitle;
 		}
+	
+	String topicDescription;
+		@Face(displayName="$ProjectDescription")
+		@Available(when={MetaworksContext.WHEN_NEW, MetaworksContext.WHEN_EDIT})
+		public String getTopicDescription() {
+			return topicDescription;
+		}
+		public void setTopicDescription(String topicDescription) {
+			this.topicDescription = topicDescription;
+		}
 		
 	String embeddedHtml;
 		@Face(displayName="$topicEmbeddedHtml")
@@ -112,6 +122,7 @@ public class ProjectTitle implements ContextAware {
 				
 		ProjectCreate projectCreate = new ProjectCreate();
 		projectCreate.setName(this.getTopicTitle());
+		projectCreate.setDescription(this.getTopicDescription());
 		projectCreate.setProjectId(session.getLastSelectedItem());
 		
 		ResultPayload rp = new ResultPayload();

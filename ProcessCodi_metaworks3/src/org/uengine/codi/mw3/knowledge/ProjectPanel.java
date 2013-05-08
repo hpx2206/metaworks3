@@ -12,7 +12,7 @@ import org.uengine.codi.mw3.model.Session;
 
 public class ProjectPanel {
 	
-	@Face(displayName="$AddProject")
+	@Face(displayName="$CreateProject")
 	@ServiceMethod(callByContent = true, target = ServiceMethodContext.TARGET_APPEND)
 	public ModalWindow addProject() throws Exception {
 
@@ -21,7 +21,7 @@ public class ProjectPanel {
 		projectTitle.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 		projectTitle.session = session;
 		
-		return new ModalWindow(projectTitle , 500, 200,  "프로젝트추가");
+		return new ModalWindow(projectTitle , 500, 200,  "프로젝트생성");
 	}
 	
 	
