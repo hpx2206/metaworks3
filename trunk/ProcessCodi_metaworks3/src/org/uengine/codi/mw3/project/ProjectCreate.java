@@ -1,13 +1,16 @@
 package org.uengine.codi.mw3.project;
 
+import org.metaworks.annotation.Face;
+import org.metaworks.annotation.Hidden;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.ITool;
 import org.uengine.processmanager.ProcessManagerRemote;
 
+@Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs")
 public class ProjectCreate implements ITool {
 	
 	String name;
-//		@Face(displayName="$ProjectName")	
+		@Face(displayName="프로젝트명")
 		public String getName() {
 			return name;
 		}	
@@ -15,7 +18,8 @@ public class ProjectCreate implements ITool {
 			this.name = name;
 		}
 	
-	String description;		
+	String description;
+		@Face(displayName="프로젝트설명")
 		public String getDescription() {
 			return description;
 		}
@@ -24,6 +28,7 @@ public class ProjectCreate implements ITool {
 		}
 		
 	String projectId;
+		@Hidden
 		public String getProjectId() {
 			return projectId;
 		}
