@@ -54,7 +54,7 @@ public class ResourceContextMenu extends CloudMenu {
 				file.delete();
 			}
 			
-			return new Object[]{new Remover(node), new Remover(new CloudTab(node.getId()))};
+			return new Object[]{new Remover(new CloudTab(node.getId()), true), new Remover(node)};
 		}else{
 			return null;
 		}
