@@ -33,7 +33,7 @@ public class JavaRunAsMenu extends CloudMenu {
 			if(errorList != null && errorList.size() == 0){
 				messages.add("launch Java Application...");		
 				
-				editor.runJava();
+				//editor.runJava();
 			}
 			
 			return new ToAppend(new Console(), messages);
@@ -58,7 +58,7 @@ public class JavaRunAsMenu extends CloudMenu {
 				messages.add("launch Metaworks Application...");		
 			}
 			
-			return new Object[]{new ToAppend(new Console(), messages), editor.runMetaworks()};
+			return new Object[]{new ToAppend(new Console(), messages)/*, editor.runMetaworks()*/};
 		}
 		
 		return null;
