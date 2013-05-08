@@ -4,10 +4,9 @@ import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
+import org.metaworks.annotation.ServiceMethod;
 import org.uengine.codi.ITool;
 
-//@Face(displayName="템플릿 선택", ejsPath="dwr/metaworks/genericfaces/FormFace.ejs", options={"fieldOrder"}, values={"vmRealmCombo,vmImageCombo"})
-@Face(displayName="템플릿 선택", ejsPath="dwr/metaworks/org/uengine/codi/mw3/project/VMRequest.ejs", options={"fieldOrder"}, values={"vmRealmCombo,vmImageCombo"})
 public class VMRequest implements ITool, ContextAware {
 	
 	transient MetaworksContext metaworksContext;
@@ -64,6 +63,12 @@ public class VMRequest implements ITool, ContextAware {
 			this.setVmRealmCombo(new VMRealmCombo(null));
 			this.setVmImageCombo(new VMImageCombo(this.getVmRealmCombo().getSelected(), null));
 		}
+	}
+
+	@Hidden
+	@ServiceMethod(callByContent=true, eventBinding="change", bindingFor="vmRealmCombo", bindingHidden=true)
+	public void changeVMRealmCombo(){
+		this.setVmImageCombo(new VMImageCombo(this.getVmRealmCombo().getSelected(), null));
 	}
 
 	@Override
