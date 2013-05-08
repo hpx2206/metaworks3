@@ -1,5 +1,6 @@
 package org.metaworks.dao;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -36,6 +37,8 @@ public class DAOUtil {
 			if(this.reservedWord == null){
 				if("CUBRID".equals(this.getDatabaseProductName())) {
 					this.reservedWord = Arrays.asList(new String[]{"NO"});
+				}else{
+					this.reservedWord = new ArrayList<String>();
 				}
 			}
 			
