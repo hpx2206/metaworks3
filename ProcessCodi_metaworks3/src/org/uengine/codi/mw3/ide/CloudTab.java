@@ -54,7 +54,7 @@ public class CloudTab {
 		this.setId(id);
 	}
 	
-	@ServiceMethod(payload={"id", "parentId"},mouseBinding="right", target=ServiceMethodContext.TARGET_STICK)
+	@ServiceMethod(payload={"id", "parentId", "name"},mouseBinding="right", target=ServiceMethodContext.TARGET_STICK)
 	public Object[] showContextMenu() {
 		session.setClipboard(this);
 		
