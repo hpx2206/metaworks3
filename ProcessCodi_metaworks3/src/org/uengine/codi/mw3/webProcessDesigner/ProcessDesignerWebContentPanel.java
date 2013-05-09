@@ -684,44 +684,6 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 					//def.getExtendedAttributes()
 				}
 			}
-			// sample code 
-//			ArrayList<CanvasDTO> cellsList = new ArrayList<CanvasDTO>();  
-//			GeomShape dto1 = new GeomShape();
-//			dto1.setId("OG_101");
-//			dto1.setLabel("첫번째 노드");
-//			dto1.setShapeId("OG.shape.bpmn.A_Task");
-//			dto1.setWidth("70");
-//			dto1.setHeight("50");
-//			dto1.setX("100");
-//			dto1.setY("100");
-//			dto1.setTo("OG_102");
-//			dto1.setDrawByObject(true);
-//			
-//			GeomShape dto2 = new GeomShape();
-//			dto2.setId("OG_102");
-//			dto2.setLabel("두번쨰 노드");
-//			dto2.setShapeId("OG.shape.bpmn.A_Task");
-//			dto2.setWidth("70");
-//			dto2.setHeight("50");
-//			dto2.setX("300");
-//			dto2.setY("300");
-//			dto2.setFrom("OG_101");
-//			dto2.setDrawByObject(true);
-//			
-//			LineShape dto3 = new LineShape();
-//			dto3.setId("OG_103");
-//			dto3.setLabel("first line");
-//			dto3.setShapeId("OG.shape.EdgeShape");
-//			dto3.setFrom("OG_101");
-//			dto3.setTo("OG_102");
-//			dto3.setDrawByObject(true);
-//			
-//			cellsList.add(dto1);
-//			cellsList.add(dto2);
-//			cellsList.add(dto3);
-			
-			
-			
 			
 			// processDefinition setting
 			
