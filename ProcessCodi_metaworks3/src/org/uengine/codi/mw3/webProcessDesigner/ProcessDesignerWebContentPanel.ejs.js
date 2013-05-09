@@ -1,3 +1,56 @@
+$.ui.intersect = function(draggable, droppable, toleranceMode) {
+	if (!droppable.offset) return false;
+
+	var x1 = (draggable.positionAbs || draggable.position.absolute).left, x2 = x1 + draggable.helperProportions.width,
+		y1 = (draggable.positionAbs || draggable.position.absolute).top, y2 = y1 + draggable.helperProportions.height;
+	var l = droppable.offset.left, r = l + droppable.proportions.width,
+		t = droppable.offset.top, b = t + droppable.proportions.height;
+
+	switch (toleranceMode) {
+		case 'fit':
+			return (l <= x1 && x2 <= r
+				&& t <= y1 && y2 <= b);
+			break;
+		case 'intersect':
+			return (l < x1 + (draggable.helperProportions.width / 2) // Right Half
+				&& x2 - (draggable.helperProportions.width / 2) < r // Left Half
+				&& t < y1 + (draggable.helperProportions.height / 2) // Bottom Half
+				&& y2 - (draggable.helperProportions.height / 2) < b ); // Top Half
+			break;
+		case 'pointer':
+			var draggableLeft = ((draggable.positionAbs || draggable.position.absolute).left + (draggable.clickOffset || draggable.offset.click).left),
+				draggableTop = ((draggable.positionAbs || draggable.position.absolute).top + (draggable.clickOffset || draggable.offset.click).top),
+				isOver = $.ui.isOver(draggableTop, draggableLeft, t, l, droppable.proportions.height, droppable.proportions.width);
+			return isOver;
+			break;
+		case 'touch':
+			return (
+					(y1 >= t && y1 <= b) ||	// Top edge touching
+					(y2 >= t && y2 <= b) ||	// Bottom edge touching
+					(y1 < t && y2 > b)		// Surrounded vertically
+				) && (
+					(x1 >= l && x1 <= r) ||	// Left edge touching
+					(x2 >= l && x2 <= r) ||	// Right edge touching
+					(x1 < l && x2 > r)		// Surrounded horizontally
+				);
+			break;
+		case 'geom':
+			var boundary = droppable.element[0].shape.geom.getBoundary();
+			
+			var draggableLeft = ((draggable.positionAbs || draggable.position.absolute).left + (draggable.clickOffset || draggable.offset.click).left),
+			draggableTop = ((draggable.positionAbs || draggable.position.absolute).top + (draggable.clickOffset || draggable.offset.click).top),
+			isOver = $.ui.isOver(draggableTop, draggableLeft, t, l, boundary._height, boundary._width);
+			
+			return isOver;
+			
+			break;
+		default:
+			return false;
+			break;
+		}
+
+};
+
 var org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel = function(objectId, className){
 	// default setting
 	this.objectId = objectId;
@@ -8,16 +61,14 @@ var org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel = fun
 	var object = mw3.objects[this.objectId];
 	
 	if(object){
-		if(mw3.importScript('scripts/opengraph/OpenGraph-0.1-SNAPSHOT.js', function(){mw3.getFaceHelper(objectId).load();})){
-			mw3.importScript('scripts/jquery/jquery.contextMenu.js');
-			
-			mw3.importStyle('style/jquery/jquery.contextMenu.css');
-			mw3.importStyle('dwr/metaworks/org/uengine/codi/mw3/model/PureWebProcessDesigner.ejs.css');
-		}else{
-			var faceHelper = this;
-			
-			faceHelper.load();
-		}
+		mw3.importScript('scripts/opengraph/OpenGraph-0.1-SNAPSHOT.js');
+		mw3.importScript('scripts/jquery/jquery.contextMenu.js');
+		mw3.importStyle('style/jquery/jquery.contextMenu.css');
+		mw3.importStyle('dwr/metaworks/org/uengine/codi/mw3/model/PureWebProcessDesigner.ejs.css');
+		
+		var faceHelper = this;
+		
+		faceHelper.load();
 	}
 	
 	$('.leftMenuTab_ide').click(function(){
@@ -44,13 +95,13 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 		this.tracingTag = 0;
 		
 		this.divObj.css('height','100%');
-		var canvasDivObj = $('#canvas');
+		var canvasDivObj = $('#canvas_' + objectId);
 		
 //		if(canvasDivObj.length > 0){
 //			canvasDivObj.show().appendTo('#' + this.divId + '>div:first-child');
 //		}else{
 //			$('#' + this.divId + '>div:first-child').append('<div id=\"canvas\" style=\"height:100%; margin-left:80px; cursor: default; overflow:auto;  background:#F1FCF1; \"></div>');
-//			canvasDivObj = $('#canvas');
+//			canvasDivObj = $('#canvas_' + objectId);
 //		    // Canvas
 //		    OG.common.Constants.CANVAS_BACKGROUND = "#fff";
 //		    OG.Constants.ENABLE_CANVAS_OFFSET = true; // Layout 사용하지 않을 경우 true 로 지정
@@ -62,7 +113,7 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 		
 		OG.common.Constants.CANVAS_BACKGROUND = "#fff";
 	    OG.Constants.ENABLE_CANVAS_OFFSET = true; // Layout 사용하지 않을 경우 true 로 지정
-	    mw3.canvas = new OG.Canvas('canvas');
+	    mw3.canvas = new OG.Canvas('canvas_' + objectId);
 		this.icanvas = mw3.canvas;	
 		canvas = mw3.canvas;
 		
@@ -84,29 +135,31 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 		
 	    // Shape drag & drop
 	    $(".icon_shape").draggable({
-	        start   : function () {
-	        	$('#canvas').data('DRAG_SHAPE', {
-	                '_shape_type': $(this).attr('_shape_type'),
-	                '_shape_id'  : $(this).attr('_shape_id'),
-	                '_width'     : $(this).attr('_width'),
-	                '_height'    : $(this).attr('_height'),
-	                '_classname' : $(this).attr('_classname'),
-	                '_classType' : $(this).attr('_classType')
-	            });
-	        },
 	        helper  : 'clone',
-	        appendTo: "#canvas"
+	        appendTo: "#canvas_" + this.objectId
 	    });
 	    canvasDivObj.droppable({
+	    	
 	        drop: function (event, ui) {
-	        	var shapeInfo = $('#canvas').data('DRAG_SHAPE'), shape, element;
+	        	if(!$(ui.draggable).hasClass('icon_shape'))
+	        		return true;
+	        	
+	        	var shapeInfo = {
+		                '_shape_type': $(ui.draggable).attr('_shape_type'),
+		                '_shape_id'  : $(ui.draggable).attr('_shape_id'),
+		                '_width'     : $(ui.draggable).attr('_width'),
+		                '_height'    : $(ui.draggable).attr('_height'),
+		                '_classname' : $(ui.draggable).attr('_classname'),
+		                '_classType' : $(ui.draggable).attr('_classType')
+		            }, shape, element;
+	        	
 	            if (shapeInfo) {
 	                if (shapeInfo._shape_type === 'EDGE') {
 	                    shape = eval('new ' + shapeInfo._shape_id + '()');
 	                    element = canvas.drawShape(null, shape, null);
 	                    canvas.RENDERER.move(element, [
-	                        event.pageX - $('#canvas')[0].offsetLeft + $('#canvas')[0].scrollLeft - $('#canvas').offsetParent().offset().left,
-	                        event.pageY - $('#canvas')[0].offsetTop + + $('#canvas')[0].scrollTop	- $('#canvas').offsetParent().offset().top ]);
+	                        event.pageX - $("#canvas_" + objectId)[0].offsetLeft + $("#canvas_" + objectId)[0].scrollLeft - $("#canvas_" + objectId).offsetParent().offset().left,
+	                        event.pageY - $("#canvas_" + objectId)[0].offsetTop + + $("#canvas_" + objectId)[0].scrollTop	- $("#canvas_" + objectId).offsetParent().offset().top ]);
 	                } else {
 	                	// 초기 텍스트 값 셋팅
 	                	var initText = "";
@@ -116,11 +169,11 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 	                		initText = "end";
 	                	}
 	                    shape = eval('new ' + shapeInfo._shape_id + '(\''+initText+'\')');
+	    
 	                    element = canvas.drawShape([
-	                        event.pageX - $('#canvas')[0].offsetLeft + $('#canvas')[0].scrollLeft	- $('#canvas').offsetParent().offset().left,
-	                        event.pageY - $('#canvas')[0].offsetTop + $('#canvas')[0].scrollTop	- $('#canvas').offsetParent().offset().top ],
+	                        event.pageX - $('#canvas_' + objectId)[0].offsetLeft + $('#canvas_' + objectId)[0].scrollLeft	- $('#canvas_' + objectId).offsetParent().offset().left,
+	                        event.pageY - $('#canvas_' + objectId)[0].offsetTop + $('#canvas_' + objectId)[0].scrollTop	- $('#canvas_' + objectId).offsetParent().offset().top ],
 	                            shape, [parseInt(shapeInfo._width, 10), parseInt(shapeInfo._height, 10)]);
-	                    
 	                    if (shapeInfo._shape_type === 'GEOM' || shapeInfo._shape_type === 'GROUP') {
 	                    	
 	                    	if( shapeInfo._shape_id == 'OG.shape.bpmn.E_Start' || shapeInfo._shape_id == 'OG.shape.bpmn.E_End'){
@@ -135,7 +188,6 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 	                    }
 	                }
 	                this.icanvas = canvas;
-	                $('#canvas').removeData('DRAG_SHAPE');
 	            }
 	        }
 	    });
@@ -147,8 +199,8 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 	 			var newNodeWidth = 70 ;
 	 			var newNodeHeight = 50 ;
 	 			var knolElement = canvas.drawShape([
-	                 event.pageX - $('#canvas')[0].offsetLeft + $('#canvas')[0].scrollLeft	- $('#canvas').offsetParent().offset().left,
-	                 event.pageY - $('#canvas')[0].offsetTop + $('#canvas')[0].scrollTop	- $('#canvas').offsetParent().offset().top ],
+	                 event.pageX - $('#canvas_' + objectId)[0].offsetLeft + $('#canvas_' + objectId)[0].scrollLeft	- $('#canvas_' + objectId).offsetParent().offset().left,
+	                 event.pageY - $('#canvas_' + objectId)[0].offsetTop + $('#canvas_' + objectId)[0].scrollTop	- $('#canvas_' + objectId).offsetParent().offset().top ],
 	                 new OG.shape.bpmn.A_Task(clipboardNode.name) , [parseInt(newNodeWidth, 10), parseInt(newNodeHeight, 10)]);
 	 			var customData = [];
 	 			customData.push( {"customId": clipboardNode.id , "customName" : clipboardNode.name , "customType" : "wfNode"});
@@ -196,8 +248,8 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 //				var positionHeight = 300;
 //				var eleLength = $("g[_shape_id='OG.shape.HorizontalLaneShape']").length;
 //				if( eleLength == 0 ){
-//					positionWidth = $('#canvas').width() - $('#canvas')[0].offsetLeft + $('#canvas')[0].scrollLeft	- $('#canvas').offsetParent().offset().left;
-//					positionHeight = $('#canvas').height() - $('#canvas')[0].offsetTop + $('#canvas')[0].scrollTop	- $('#canvas').offsetParent().offset().top;
+//					positionWidth = $('#canvas_' + objectId).width() - $('#canvas_' + objectId)[0].offsetLeft + $('#canvas_' + objectId)[0].scrollLeft	- $('#canvas_' + objectId).offsetParent().offset().left;
+//					positionHeight = $('#canvas_' + objectId).height() - $('#canvas_' + objectId)[0].offsetTop + $('#canvas_' + objectId)[0].scrollTop	- $('#canvas_' + objectId).offsetParent().offset().top;
 //				}else{
 //					$("g[_shape_id='OG.shape.HorizontalLaneShape']").each(function (index, element) {
 //						if (index === eleLength - 1) {
@@ -216,37 +268,15 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 	    var canvasWidth = 1024;		// defualt
 	    var canvasHeight = 768;		// defualt
 	    
-	    if( object != null && object.cell != null ){
-			var cells = object.cell;
-			// 도형을 모두 그린후에 선을 그린다
-			for(var i=0; i < cells.length; i++){
-				if( cells[i].drawByObject && cells[i].shapeType != 'EDGE' ){
-					var html = mw3.locateObject(cells[i]);
-					canvasDivObj.append(html);
-				}
-			}
-			for( i=0; i < cells.length; i++){
-				if( cells[i].drawByObject && cells[i].shapeType == 'EDGE' ){
-					var html = mw3.locateObject(cells[i]);
-					canvasDivObj.append(html);
-				}
-			}
-	    }
 	    // load 에서 데이터가 넘어왔을 경우 데이터를 셋팅하여 그림
 		if( object != null && object.graphString != null ){
 			var canvassizeObject = this.icanvas.loadJSON($.parseJSON(object.graphString));
-			
-			// 동적으로 데이터를 그려준다.
 			
 			this.tracingTag = object.lastTracingTag;
 			// tracingTag 달아주기
 			if( object != null && object.cell != null ){
 				var cells = object.cell;
 				for(var i=0; i < cells.length; i++){
-					cells[i].__className = 'org.uengine.codi.mw3.webProcessDesigner.GeomShape';
-					var html = mw3.locateObject(cells[i] , 'org.uengine.codi.mw3.webProcessDesigner.GeomShape');
-					console.log(html);
-					canvasDivObj.append(html);
 					var cellId = cells[i].id;
 					var cellTracing = cells[i].tracingTag;
 					var cellClassname = cells[i].classname;
@@ -303,7 +333,7 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 
 //org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype = {
 //		destroy : function(){
-//			$('#canvas').hide().appendTo('body');
+//			$('#canvas_' + objectId).hide().appendTo('body');
 //			this.icanvas.clear();
 //		}
 //};
@@ -314,14 +344,83 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 		var activityData = {__className : $(element).attr("_classname"), tracingTag : $(element).attr("_tracingTag")};
 		$(element).data('activity', activityData);
 	}
-	$(element).on({
-    	mouseup: function (event, ui) {
-    		var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
-    		var clipboardNode = session.clipboard;
+	
+	/*
+	$(element).droppable({
+		greedy: true,		
+		tolerance: 'geom',
+    	over: function(event, ui){
+    		console.log('over');
+    	},
+    	out: function(event, ui){
+    		console.log('out');
+    	},
+		    	
+		drop: function(event, ui){
+			console.log('drop');
+			
     		var customData = canvas.getCustomData(element);
     		if( customData == undefined || customData == null || customData == "" ){
     			customData = [];
     		}
+    		var shapeType = $(this).attr("_shape");
+    		if( shapeType == 'GEOM' ){	
+    			var dragObjId = ui.draggable.attr('objectId');
+    			if(dragObjId){
+    				var dragObj = mw3.getObject(dragObjId);
+    				
+    				switch (dragObj.__className){
+    				case 'org.uengine.codi.mw3.ide.ResourceNode':
+    					switch (dragObj.type) {
+    					case 'java':
+    						var nodeId = dragObj.id;
+    						var nodeName = dragObj.name;
+    						nodeName = nodeName.substring(0, nodeName.lastIndexOf('.'));
+						
+    						canvas.drawLabel(element, nodeName);
+	    		    		customData.push( {"customId": "" , "customName" : nodeName , "customType" : "class"});
+	    		    		
+	    		    		var value = mw3.objects[objectId];
+	    		    		var contentValue = {
+									__className : 'org.uengine.codi.mw3.webProcessDesigner.PrcsVariable',
+									name : nodeName ,
+									typeId : nodeId ,
+									variableType : 'complexType'
+							};
+	    		    		value.variableMap[nodeName] = contentValue;
+		    			
+    						break;
+    					default:
+    						break;
+    					} 
+    					
+    					break;
+    				default:
+    					break;
+    				
+    				}
+    			}
+    		}
+    		
+    		if(customData.length > 0){
+    			canvas.setCustomData(element, customData);
+    		}
+		}
+	});
+	*/
+	
+	$(element).on({
+    	mouseup: function (event, ui) {
+    		var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
+    		var clipboardNode = session.clipboard;
+    		
+    		console.log(clipboardNode);
+    		
+    		var customData = canvas.getCustomData(element);
+    		if( customData == undefined || customData == null || customData == "" ){
+    			customData = [];
+    		}
+
     		var shapeType = $(this).attr("_shape");
     		if( shapeType == 'GEOM' ){	
 	    		if(clipboardNode && clipboardNode.__className=="org.uengine.codi.mw3.knowledge.WfNode"){
@@ -348,11 +447,8 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 //	    			value.tempElementType = "wfNode";
 //	    			value.addValiable();
 	    		}
-	    		if( clipboardNode && clipboardNode.__className=="org.uengine.codi.mw3.ide.ResourceNode"){
-	    			var javaFileName = clipboardNode.name;
-		    		canvas.drawLabel(element, javaFileName);
-	    		}
-	    		if(clipboardNode && clipboardNode.__className=="org.uengine.codi.mw3.model.ResourceFile"){
+	    		
+	    		if(clipboardNode && clipboardNode.__className=="org.uengine.codi.mw3.ide.ResourceNode"){
 	    			var javaFileName = clipboardNode.name;
 	    			if( javaFileName != '' && javaFileName.length > 5){
 	    				var tokens  = javaFileName.split(".");
@@ -378,10 +474,12 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 	    		    		var contentValue = {
 									__className : 'org.uengine.codi.mw3.webProcessDesigner.PrcsVariable',
 									name : variableName ,
-									typeId : clipboardNode.alias ,
+									typeId : clipboardNode.id ,
 									variableType : 'complexType'
 							};
 	    		    		value.variableMap[variableName] = contentValue;
+	    		    		
+	    		    		canvas.drawLabel(element, variableName);
 //	    	    			value.tempElementId = $(this).attr('id');
 //	    	    			value.tempElementName = tokens[tokens.length-2];
 //	    	    			value.tempElementTypeId = clipboardNode.alias;
