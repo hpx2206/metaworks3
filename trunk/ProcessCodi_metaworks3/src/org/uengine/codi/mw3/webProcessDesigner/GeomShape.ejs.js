@@ -6,19 +6,23 @@ var org_uengine_codi_mw3_webProcessDesigner_GeomShape = function(objectId, class
 	
 	var element = document.getElementById(object.id);
 	
-	var canvasObject = mw3.getAutowiredObject('org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerWebContentPanel');
+	var canvasObject;
+	if( object != null && object.viewType != null && "blockView" == object.viewType ){
+		canvasObject = mw3.getAutowiredObject('org.uengine.codi.mw3.webProcessDesigner.InstanceMonitorPanel');
+	}else{
+		canvasObject = mw3.getAutowiredObject('org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerWebContentPanel');
+	}
+	
 	var canvasObjectFaceHelper = mw3.getFaceHelper(canvasObject.__objectId);
 	var canvas = canvasObjectFaceHelper.icanvas;
 	
 	if( object && object.drawByObject){
-		console.log('geomShape 호출!!!! obectID = ' + object.id);
-		console.log('geomShape 호출!!!! label = ' + object.label);
 		var initText = object.label;
 		var shape = eval('new ' + object.shapeId + '(\''+initText+'\')');
 		element = canvas.drawShape([
             object.x, object.y 
-            ],
-                shape, [parseInt(object.width, 10), parseInt(object.height, 10)] , {} , object.id);
+            ], 
+            shape, [parseInt(object.width, 10), parseInt(object.height, 10)] , {} , object.id);
 	}
 	
 //	canvas.drawLabel(element, object.label);

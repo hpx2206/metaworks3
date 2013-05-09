@@ -6,17 +6,19 @@ var org_uengine_codi_mw3_webProcessDesigner_LineShape = function(objectId, class
 	
 	var element = document.getElementById(object.id);
 	
-	var canvasObject = mw3.getAutowiredObject('org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerWebContentPanel');
+	var canvasObject;
+	if( object != null && object.viewType != null && "blockView" == object.viewType ){
+		canvasObject = mw3.getAutowiredObject('org.uengine.codi.mw3.webProcessDesigner.InstanceMonitorPanel');
+	}else{
+		canvasObject = mw3.getAutowiredObject('org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerWebContentPanel');
+	}
+	
 	var canvasObjectFaceHelper = mw3.getFaceHelper(canvasObject.__objectId);
 	var canvas = canvasObjectFaceHelper.icanvas;
 	
 	if( object && object.drawByObject){
-		console.log('lineShape 호출!!!! obectID = ' + object.id);
-		console.log('lineShape 호출!!!! label = ' + object.label);
 		var elementFrom = document.getElementById( object.from );
 		var elementTo = document.getElementById( object.to );
-		console.log(elementFrom);
-		console.log(elementTo);
 		if( elementFrom && elementTo ){
 			var edgeEle = canvas.connect(elementFrom, elementTo);
 			canvas.drawLabel(edgeEle, object.label);

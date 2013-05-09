@@ -8,8 +8,8 @@ var org_uengine_codi_mw3_webProcessDesigner_InstanceMonitorPanel = function(obje
 	this.className = className;
 	this.divId = mw3._getObjectDivId(this.objectId);
 	this.divObj = $('#' + this.divId);
-	
-	var object = mw3.objects[this.objectId];
+	this.icanvas = null;
+	var canvasDivObj = $('#canvasView');
 	
 	if(object){
 		if(mw3.importScript('scripts/opengraph/OpenGraph-0.1-SNAPSHOT.js', function(){mw3.getFaceHelper(objectId).load();})){
@@ -24,7 +24,7 @@ var org_uengine_codi_mw3_webProcessDesigner_InstanceMonitorPanel = function(obje
 	var canvas = null;
 	
 	canvas = new OG.Canvas('canvasView');
-	
+	this.icanvas = canvas;
 	// TODO 위쪽 세개를 false로 놓으면 화면에 그려지질 않는다.. 왜그럴까?
 	canvas.initConfig({
         selectable      : false,
@@ -50,6 +50,22 @@ var org_uengine_codi_mw3_webProcessDesigner_InstanceMonitorPanel = function(obje
 		// 약간의 여유를 두기 위하여 30px 만큼 더해줌
 		canvas.setCanvasSize([canvassizeObject.x2 + 30 , canvassizeObject.y2 + 30]);
 	}
+	if( object != null && object.cell != null ){
+		var cells = object.cell;
+		// 도형을 모두 그린후에 선을 그린다
+		for(var i=0; i < cells.length; i++){
+			if( cells[i].drawByObject && cells[i].shapeType != 'EDGE' ){
+				var html = mw3.locateObject(cells[i]);
+				canvasDivObj.append(html);
+			}
+		}
+		for( i=0; i < cells.length; i++){
+			if( cells[i].drawByObject && cells[i].shapeType == 'EDGE' ){
+				var html = mw3.locateObject(cells[i]);
+				canvasDivObj.append(html);
+			}
+		}
+    }
 	if( object != null && object.cell != null ){
 		var cells = object.cell;
 		for(var i=0; i < cells.length; i++){

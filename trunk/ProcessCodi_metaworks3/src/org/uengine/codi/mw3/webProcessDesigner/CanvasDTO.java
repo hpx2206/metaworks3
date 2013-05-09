@@ -167,6 +167,14 @@ public class CanvasDTO implements Serializable{
 			public void setDrawByObject(boolean drawByObject) {
 				this.drawByObject = drawByObject;
 			}
+		String viewType;
+			/* 특별하게 보이고 싶은 경우에 viewType을 셋팅하여 넘긴다*/
+			public String getViewType() {
+				return viewType;
+			}
+			public void setViewType(String viewType) {
+				this.viewType = viewType;
+			}
 		/*  viewer 부분에서  필요한 정보들 transient */
 		transient String instStatus;
 			public String getInstStatus() {
