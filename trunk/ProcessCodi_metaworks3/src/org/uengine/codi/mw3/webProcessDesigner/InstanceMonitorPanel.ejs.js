@@ -9,7 +9,7 @@ var org_uengine_codi_mw3_webProcessDesigner_InstanceMonitorPanel = function(obje
 	this.divId = mw3._getObjectDivId(this.objectId);
 	this.divObj = $('#' + this.divId);
 	this.icanvas = null;
-	var canvasDivObj = $('#canvasView');
+	var canvasDivObj = $('#canvasView_'+objectId);
 	
 	if(object){
 		if(mw3.importScript('scripts/opengraph/OpenGraph-0.1-SNAPSHOT.js', function(){mw3.getFaceHelper(objectId).load();})){
@@ -23,13 +23,14 @@ var org_uengine_codi_mw3_webProcessDesigner_InstanceMonitorPanel = function(obje
 	var faceHelper = this;
 	var canvas = null;
 	
-	canvas = new OG.Canvas('canvasView');
+	canvas = new OG.Canvas('canvasView_'+objectId);
 	this.icanvas = canvas;
+	canvas._CONFIG.DEFAULT_STYLE.EDGE["edge-type"] = "bezier";
 	// TODO 위쪽 세개를 false로 놓으면 화면에 그려지질 않는다.. 왜그럴까?
 	canvas.initConfig({
-        selectable      : false,
-        dragSelectable  : false,
-        movable         : false,
+        selectable      : true,
+        dragSelectable  : true,
+        movable         : true,
         resizable       : false,
         connectable     : false,
         selfConnectable : false,
@@ -45,27 +46,38 @@ var org_uengine_codi_mw3_webProcessDesigner_InstanceMonitorPanel = function(obje
 		faceHelper.addEvent(objectId, canvas, shapeElement);
     });
 	
+	var minX = Number.MAX_VALUE, minY = Number.MAX_VALUE, maxX = Number.MIN_VALUE, maxY = Number.MIN_VALUE;
 	if( object != null && object.graphString != null ){
 		var canvassizeObject = canvas.loadJSON($.parseJSON(object.graphString));
 		// 약간의 여유를 두기 위하여 30px 만큼 더해줌
-		canvas.setCanvasSize([canvassizeObject.x2 + 30 , canvassizeObject.y2 + 30]);
+		maxX = canvassizeObject.x2 + 30;
+		maxY = canvassizeObject.y2 + 30;
+		canvasDivObj.width(maxX + 30);
+		canvasDivObj.height(maxY + 30);
+		canvas.setCanvasSize([maxX , maxY]);
+	}else{
+		if( object != null && object.cell != null ){
+			var cells = object.cell;
+			// 도형을 모두 그린후에 선을 그린다
+			for(var i=0; i < cells.length; i++){
+				if( cells[i].drawByObject && cells[i].shapeType != 'EDGE' ){
+					
+					var x = parseInt(cells[i].x, 10);
+					var y = parseInt(cells[i].y, 10);
+					var width = parseInt(cells[i].width, 10);
+					var height = parseInt(cells[i].height, 10);
+					
+					minX = (minX > (x - width / 2)) ? (x - width / 2) : minX;
+					minY = (minY > (y - height / 2)) ? (y - height / 2) : minY;
+					maxX = (maxX < (x + width / 2)) ? (x + width / 2) : maxX;
+					maxY = (maxY < (y + height / 2)) ? (y + height / 2) : maxY;
+				}
+			}
+			canvasDivObj.width(maxX + 30);
+			canvasDivObj.height(maxY + 30);
+			canvas.setCanvasSize([maxX , maxY]);
+		}
 	}
-	if( object != null && object.cell != null ){
-		var cells = object.cell;
-		// 도형을 모두 그린후에 선을 그린다
-		for(var i=0; i < cells.length; i++){
-			if( cells[i].drawByObject && cells[i].shapeType != 'EDGE' ){
-				var html = mw3.locateObject(cells[i]);
-				canvasDivObj.append(html);
-			}
-		}
-		for( i=0; i < cells.length; i++){
-			if( cells[i].drawByObject && cells[i].shapeType == 'EDGE' ){
-				var html = mw3.locateObject(cells[i]);
-				canvasDivObj.append(html);
-			}
-		}
-    }
 	if( object != null && object.cell != null ){
 		var cells = object.cell;
 		for(var i=0; i < cells.length; i++){
@@ -80,8 +92,32 @@ var org_uengine_codi_mw3_webProcessDesigner_InstanceMonitorPanel = function(obje
 			}
 		}
 	}
+	
 };
 org_uengine_codi_mw3_webProcessDesigner_InstanceMonitorPanel.prototype = {
+		loaded : function(){
+			var object = mw3.objects[this.objectId];
+			var canvasDivObj = $('#canvasView_'+this.objectId);
+			if( object != null && object.cell != null ){
+				var cells = object.cell;
+				for(var i=0; i < cells.length; i++){
+					if( cells[i].drawByObject && cells[i].shapeType != 'EDGE' ){
+						var html = mw3.locateObject(cells[i]);
+						canvasDivObj.append(html);
+					}
+				}
+				for( i=0; i < cells.length; i++){
+					if( cells[i].drawByObject && cells[i].shapeType == 'EDGE' ){
+						var html = mw3.locateObject(cells[i]);
+						canvasDivObj.append(html);
+					}
+				}
+				if(object.graphString == null ){
+					var graphJson = this.icanvas.toJSON();
+					object.graphString = JSON.stringify(graphJson);
+				}
+			}
+		},
 		addEvent : function(objectId, canvas, element){
 			var shape = $(element).attr("_shape");
 			if( shape == "GEOM"){
