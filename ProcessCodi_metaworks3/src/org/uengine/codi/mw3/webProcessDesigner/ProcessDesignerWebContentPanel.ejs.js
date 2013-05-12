@@ -617,6 +617,18 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 			if(key == '@shapeId'){
 				cellForDwr['shapeId'] = og[key];
 			}
+			if(key == '@x'){
+				cellForDwr['x'] = og[key];
+			}
+			if(key == '@y'){
+				cellForDwr['y'] = og[key];
+			}
+			if(key == '@width'){
+				cellForDwr['width'] = og[key];
+			}
+			if(key == '@height'){
+				cellForDwr['height'] = og[key];
+			}
 			if(key == '@label'){
 				cellForDwr['label'] = og[key];
 			}
