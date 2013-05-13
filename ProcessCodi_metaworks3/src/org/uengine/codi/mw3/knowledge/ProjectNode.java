@@ -1,25 +1,25 @@
 package org.uengine.codi.mw3.knowledge;
 
 import org.metaworks.Remover;
-import org.metaworks.ServiceMethodContext;
-import org.metaworks.annotation.AutowiredFromClient;
-import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.MetaworksDAO;
 import org.metaworks.dao.TransactionContext;
-import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.model.IInstance;
 import org.uengine.codi.mw3.model.Instance;
 import org.uengine.codi.mw3.model.InstanceListPanel;
-import org.uengine.codi.mw3.model.InstanceViewContent;
 import org.uengine.codi.mw3.model.Perspective;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 
 public class ProjectNode extends TopicNode implements IProjectNode {
+	
+	String type ="project";
+	
+	public ProjectNode(){
+		this.setType(this.type);
+	}
 	
 	public Object[] loadTopic() throws Exception {
 		// TODO Auto-generated method stub
@@ -62,6 +62,30 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 		return dao;
 	}
 	
+	public IProjectNode completedProject() throws Exception {
+		
+		StringBuffer sql = new StringBuffer();
+		
+		sql.append("SELECT knol.id, knol.name, inst.instid ");
+		sql.append("FROM bpm_procinst inst ");
+		sql.append("	INNER JOIN bpm_knol knol ON (knol.type=?type AND knol.companyid=?comcode) ");
+		sql.append("WHERE inst.status=?status ");
+		sql.append("	AND inst.initcomcd=knol.companyid ");
+		sql.append("	AND knol.linkedinstid=inst.instid");
+		
+		
+		IProjectNode dao  = (IProjectNode) Database.sql(IProjectNode.class, sql.toString());
+		
+		dao.setType(this.type);
+		dao.setCompanyId(this.getCompanyId());
+		dao.set("status", Instance.INSTNACE_STATUS_COMPLETED);
+		dao.select();
+		
+		return dao;
+		
+		
+	}
+	
 	public Object[] remove() throws Exception {
 		
 		if( session.getUser().getUserId().equalsIgnoreCase(getAuthorId()) || session.getEmployee().getIsAdmin()) {
@@ -101,6 +125,6 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 	
 	@Autowired
 	public ProcessManagerRemote processManager;
-
+	
 	
 }

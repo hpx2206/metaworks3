@@ -152,24 +152,24 @@ public class ProjectInfo implements ContextAware {
 		wfNode.setId(projectId);
 		wfNode.copyFrom(wfNode.databaseMe());
 		
-			String linkedId = String.valueOf(wfNode.getLinkedInstId());
-			
-			this.projectName = wfNode.getName();
-			this.description = wfNode.getDescription();
-
-			
-			Serializable serial = null;
-			serial = processManager.getProcessVariable(linkedId, "", "VMRequest");
-			if(serial instanceof VMRequest) {
-				VMRequest vmRequest = (VMRequest)serial;
-				this.templateName = vmRequest.getVmImageCombo().getSelectedText();
+			if(wfNode.getLinkedInstId() != null){
+				String linkedId = String.valueOf(wfNode.getLinkedInstId());
+				
+				this.projectName = wfNode.getName();
+				this.description = wfNode.getDescription();
+	
+				Serializable serial = null;
+				serial = processManager.getProcessVariable(linkedId, "", "VMRequest");
+				if(serial instanceof VMRequest) {
+					VMRequest vmRequest = (VMRequest)serial;
+					this.templateName = vmRequest.getVmImageCombo().getSelectedText();
+				}
+				
+				this.ip = (String)(Serializable)processManager.getProcessVariable(linkedId, "", "vm_ip");
+				
+				this.svn = "svn://" + GlobalContext.getPropertyString("vm.manager.ip") + "/" + this.projectName;
+				this.hudson = "http://" + GlobalContext.getPropertyString("vm.manager.ip") + "/hudson/";
 			}
-			
-			this.ip = (String)(Serializable)processManager.getProcessVariable(linkedId, "", "vm_ip");
-			
-			this.svn = "svn://" + GlobalContext.getPropertyString("vm.manager.ip") + "/" + this.projectName;
-			this.hudson = "http://" + GlobalContext.getPropertyString("vm.manager.ip") + "/hudson/";
-			
 		
 	}
 	

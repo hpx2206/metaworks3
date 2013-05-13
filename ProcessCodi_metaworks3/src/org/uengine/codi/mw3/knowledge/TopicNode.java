@@ -58,6 +58,22 @@ public class TopicNode extends Database<ITopicNode> implements ITopicNode {
 		public void setUrl(String url) {
 			this.url = url;
 		}
+	
+	String type;
+		public String getType() {
+			return type;
+		}
+		public void setType(String type) {
+			this.type = type;
+		}
+	
+	String companyId;
+		public String getCompanyId() {
+			return companyId;
+		}
+		public void setCompanyId(String companyId) {
+			this.companyId = companyId;
+		}
 		
 	public static ITopicNode load(Session session) throws Exception {
 		

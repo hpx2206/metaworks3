@@ -24,6 +24,13 @@ public interface ITopicNode extends IDAO {
 	public String getAuthorId();
 	public void setAuthorId(String authorId);
 	
+	public String getType();
+	public void setType(String type);
+	
+	public String getCompanyId();
+	public void setCompanyId(String companyId);
+	
+	
 	@ServiceMethod(callByContent=true)
 	public Object[] loadTopic() throws Exception;
 	
