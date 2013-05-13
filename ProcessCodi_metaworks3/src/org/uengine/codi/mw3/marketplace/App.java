@@ -129,12 +129,12 @@ public class App extends Database<IApp> implements IApp{
 			this.status = status;
 		}
 	
-	String vendorId;
-		public String getVendorId() {
-			return vendorId;
+	String comcode;
+		public String getComcode() {
+			return comcode;
 		}
-		public void setVendorId(String vendorId) {
-			this.vendorId = vendorId;
+		public void setComcode(String comcode) {
+			this.comcode = comcode;
 		}
 		
 	boolean isDeleted;
@@ -215,9 +215,9 @@ public class App extends Database<IApp> implements IApp{
 	
 	public IApp findByVendor() throws Exception {
 		
-		IApp findListings = (IApp) Database.sql(IApp.class, "select * from app where vendorId=?vendorId and isdeleted=?isdeleted order by installCnt desc");
+		IApp findListings = (IApp) Database.sql(IApp.class, "select * from app where comcode=?comcode and isdeleted=?isdeleted order by installCnt desc");
 		
-		findListings.setVendorId(this.getVendorId());
+		findListings.setComcode(this.getComcode());
 		findListings.setIsDeleted(false);
 		
 		findListings.select();
@@ -232,12 +232,18 @@ public class App extends Database<IApp> implements IApp{
 	}
 	
 	public IApp findNewApps() throws Exception {
-
-		//from 15days ago
-		IApp findListing = (IApp) Database.sql(IApp.class, "select * from app where DATE_FORMAT(createdate,'%Y-%m-%d') between DATE_SUB(CURRENT_DATE, INTERVAL 15 DAY) and CURRENT_DATE");
 		
-		findListing.setAppId(this.getAppId());
-		findListing.setVendorId(this.getVendorId());
+		StringBuffer sql = new StringBuffer();
+		sql.append("select * from app");
+		sql.append(" where comcode=?comcode");
+		sql.append(" and status=?status");
+		sql.append(" and DATE_FORMAT(createdate,'%Y-%m-%d') between DATE_SUB(CURRENT_DATE, INTERVAL 15 DAY) and CURRENT_DATE");
+		
+		//from 15days ago
+		IApp findListing = (IApp) Database.sql(IApp.class, sql.toString());
+		
+		findListing.setComcode(this.getComcode());
+		findListing.setStatus(STATUS_APPROVED);
 		findListing.select();
 		
 		return findListing;
@@ -257,10 +263,10 @@ public class App extends Database<IApp> implements IApp{
 	
 	public IApp findForCategory() throws Exception{
 		
-		IApp findListing = (IApp) Database.sql(IApp.class, "select * from app where categoryId=?categoryId and vendorid=?vendorId");
+		IApp findListing = (IApp) Database.sql(IApp.class, "select * from app where categoryId=?categoryId and comcode=?comcode");
 		
 		findListing.set("categoryId", this.getCategory().getCategoryId());
-		findListing.setVendorId(this.getVendorId());
+		findListing.setComcode(this.getComcode());
 		findListing.select();
 		
 		return findListing;
@@ -269,11 +275,11 @@ public class App extends Database<IApp> implements IApp{
 	
 	public static IApp findPublishedApps(Session session) throws Exception {
 		
-		IApp findListing = (IApp) Database.sql(IApp.class, "select * from app where status=?status and isdeleted=?isDeleted and vendorid=?vendorId");
+		IApp findListing = (IApp) Database.sql(IApp.class, "select * from app where status=?status and isdeleted=?isDeleted and comcode=?comcode");
 		
 		findListing.setStatus("Published");
 		findListing.setIsDeleted(false);
-		findListing.setVendorId(session.getCompany().getComCode());
+		findListing.setComcode(session.getCompany().getComCode());
 		findListing.select();
 		
 		return findListing;
@@ -415,7 +421,7 @@ public class App extends Database<IApp> implements IApp{
 		App app = new App();
 		app.setAppId(this.getAppId());
 		app.setAppName(this.getAppName());
-		app.setVendorId(this.getVendorId());
+		app.setComcode(this.getComcode());
 		app.setInstallCnt(this.getInstallCnt());
 		
 		

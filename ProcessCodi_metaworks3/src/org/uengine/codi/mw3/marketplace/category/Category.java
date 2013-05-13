@@ -96,7 +96,7 @@ public class Category extends Database<ICategory> implements ICategory {
 		App findApps = new App();
 		findApps.session = session;
 		findApps.setCategory(this.databaseMe());
-		findApps.setVendorId(session.getCompany().getComCode());
+		findApps.setComcode(session.getCompany().getComCode());
 		
 		IApp getApp = findApps.findForCategory();
 		

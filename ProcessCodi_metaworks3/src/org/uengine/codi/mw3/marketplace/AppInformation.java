@@ -180,7 +180,7 @@ public class AppInformation implements ContextAware, ITool {
 		listing.setPricing(pricing);
 		listing.setLogoFile(getLogoFile());
 		listing.setCreateDate(Calendar.getInstance().getTime());
-		listing.setVendorId(session.getCompany().getComCode());
+		listing.setComcode(session.getCompany().getComCode());
 		listing.setStatus(App.STATUS_REQUEST);
 		listing.setIsDeleted(false);
 		listing.setCategory(category);
@@ -236,7 +236,7 @@ public class AppInformation implements ContextAware, ITool {
 		listing.setPricing(pricing);
 		listing.setLogoFile(getLogoFile());
 		listing.setCreateDate(Calendar.getInstance().getTime());
-		listing.setVendorId(session.getCompany().getComCode());
+		listing.setComcode(session.getCompany().getComCode());
 		listing.setStatus(App.STATUS_REQUEST);
 		listing.setIsDeleted(false);
 
