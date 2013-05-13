@@ -743,3 +743,6 @@ alter table app add projectId varchar(20);
 
 -- 2013.05.07 project description 추가
 alter table bpm_knol add description varchar(1000);
+
+-- 2013.05.13 app테이블 컬럼명 수정(vendorid -> comcode) 속성동일 varchar(20)
+alter table app change vendorid comcode varchar(20);

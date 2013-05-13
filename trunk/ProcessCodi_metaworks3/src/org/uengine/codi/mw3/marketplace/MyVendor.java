@@ -47,7 +47,7 @@ public class MyVendor {
 		
 		App findlisting = new App();
 		
-		findlisting.setVendorId(session.getCompany().getComCode());
+		findlisting.setComcode(session.getCompany().getComCode());
 		
 		listing = findlisting.findByVendor();
 		listing.getMetaworksContext().setWhen("myVendor");
@@ -80,7 +80,10 @@ public class MyVendor {
 		
 		SelectBox attachProject = new SelectBox();
 		
-		IProjectNode projectList = ProjectNode.load(session);
+		ProjectNode projectNode = new ProjectNode();
+		projectNode.setCompanyId(session.getCompany().getComCode());
+		
+		IProjectNode projectList = projectNode.completedProject();
 		
 		if(projectList.size() > 0) {
 			while(projectList.next()){

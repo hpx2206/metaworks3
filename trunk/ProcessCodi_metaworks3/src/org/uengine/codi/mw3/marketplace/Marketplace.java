@@ -46,7 +46,7 @@ public class Marketplace {
 		
 		
 		App findlisting = new App();
-		findlisting.setVendorId(session.getCompany().getComCode());
+		findlisting.setComcode(session.getCompany().getComCode());
 		findlisting.session = session;
 		
 		IApp listing = findlisting.findByVendor();

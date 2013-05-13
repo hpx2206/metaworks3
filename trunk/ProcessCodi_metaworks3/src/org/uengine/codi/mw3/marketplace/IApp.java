@@ -54,8 +54,8 @@ public interface IApp extends IDAO{
 	public String getStatus();
 	public void setStatus(String status);
 
-	public String getVendorId();
-	public void setVendorId(String vendorId);
+	public String getComcode();
+	public void setComcode(String comcode);
 
 	public boolean isDeleted();
 	public void setIsDeleted(boolean isDeleted);

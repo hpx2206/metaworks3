@@ -32,7 +32,7 @@ public class MarketplaceEastPanel {
 	public Object load() throws Exception {
 
 		App findListing = new App();
-		findListing.setVendorId(session.getCompany().getComCode());
+		findListing.setComcode(session.getCompany().getComCode());
 		findListing.session = session;
 		
 		IApp listing = findListing.findNewApps();
