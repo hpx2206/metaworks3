@@ -68,7 +68,7 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 		
 		sql.append("SELECT knol.id, knol.name, inst.instid ");
 		sql.append("FROM bpm_procinst inst ");
-		sql.append("	INNER JOIN bpm_knol knol ON (knol.type=?type AND knol.companyid=?comcode) ");
+		sql.append("	INNER JOIN bpm_knol knol ON (knol.type=?type AND knol.companyid=?companyid) ");
 		sql.append("WHERE inst.status=?status ");
 		sql.append("	AND inst.initcomcd=knol.companyid ");
 		sql.append("	AND knol.linkedinstid=inst.instid");
