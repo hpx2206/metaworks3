@@ -197,4 +197,12 @@ public class CanvasDTO implements Serializable{
 			public void setActivity(Activity activity) {
 				this.activity = activity;
 			}
+		String tooltip;
+			public String getTooltip() {
+				return tooltip;
+			}
+			public void setTooltip(String tooltip) {
+				this.tooltip = tooltip;
+			}
+			
 }

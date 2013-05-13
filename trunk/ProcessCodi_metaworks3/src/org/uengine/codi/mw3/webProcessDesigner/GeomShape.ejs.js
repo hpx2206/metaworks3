@@ -23,6 +23,16 @@ var org_uengine_codi_mw3_webProcessDesigner_GeomShape = function(objectId, class
             object.x, object.y 
             ], 
             shape, [parseInt(object.width, 10), parseInt(object.height, 10)] , {} , object.id);
+		
+		$(element).attr('title', object.tooltip);
+		$(element).hover(function(event, ui) {
+			console.log('in');
+			  $('body').append('<div id=\"shape_tooltip\" style=\"z-index: 1000; position: absolute; width: 200px; height: 30px; background-color: lightgray; text-align: center; padding: 15px 0px 0px; top: ' + event.pageY + 'px; left: ' + event.pageX + 'px\">' + object.tooltip + '</div>');
+		}, function(){
+			console.log('out');
+			$('#shape_tooltip').remove();
+		});
+		//$(element).tooltip();
 	}
 	
 //	canvas.drawLabel(element, object.label);
