@@ -22,9 +22,9 @@ public class SQLClientEditor extends Editor {
 		this.setId("SQLClientEditor" + String.valueOf(this.count)); 
 		this.setType("sqlclient");
 		
-		String host = GlobalContext.getPropertyString("pole.server.host");
-		String port = GlobalContext.getPropertyString("pole.server.port");
-		String uri  = GlobalContext.getPropertyString("pole.call.uri");
+		String host = GlobalContext.getPropertyString("pole.call.ip");
+		String port = GlobalContext.getPropertyString("pole.call.port");
+		String uri  = GlobalContext.getPropertyString("pole.call.db");
 		
 		String url = "http://" + host + ":" + port + uri;
 		
