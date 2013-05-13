@@ -37,6 +37,8 @@ public class GeomShape extends CanvasDTO {
 		this.angle = cv.angle  ;	
 		this.value = cv.value  ;	
 		this.data = cv.data  ;
+		
+		this.tooltip = cv.tooltip;
 	}
 	ProcessVariable pvs[];
 		public ProcessVariable[] getPvs() {
