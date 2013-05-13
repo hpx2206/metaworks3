@@ -34,9 +34,11 @@ org_uengine_codi_mw3_knowledge_GoogleChart.prototype = {
 		var object = mw3.objects[this.objectId];
 		
 		if(object.data != null){
+			//console.log(object.data);
+			
 			var data = google.visualization.arrayToDataTable(object.data);
 			
-			var options = {width: 400, height: 400, title: object.title};
+			var options = {width: 450, height: 400, title: object.title};
 
 	        var chart = null;
 	    	
