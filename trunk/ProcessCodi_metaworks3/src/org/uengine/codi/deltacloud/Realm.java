@@ -114,7 +114,7 @@ public class Realm {
 	}
 	
 	public static void main(String args[]){
-		Realm realm = new Realm("http://192.168.50.14/deltacloud/api");
+		Realm realm = new Realm("http://192.168.212.52/deltacloud/api");
 		
 		try {
 			ArrayList<Realm> list =  realm.list();

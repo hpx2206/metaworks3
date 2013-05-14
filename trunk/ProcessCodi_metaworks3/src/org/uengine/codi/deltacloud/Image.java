@@ -118,7 +118,7 @@ public class Image {
 	
 	public static void main(String[] args){
 		try {
-			Image image = new Image("http://192.168.50.14/deltacloud/api");
+			Image image = new Image("http://192.168.212.52/deltacloud/api");
 			ArrayList<Image> list = image.list();
 			
 			for(int i=0;i<list.size();i++){
@@ -126,6 +126,10 @@ public class Image {
 				System.out.println("name : "+list.get(i).getName());
 				System.out.println("architecture : "+list.get(i).getArchitecture());
 				System.out.println("description : "+list.get(i).getDescription());
+				
+				
+				String desc[] = list.get(i).getDescription().split("_");
+				System.out.println(desc[9]);
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
