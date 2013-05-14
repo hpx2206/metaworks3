@@ -51,9 +51,11 @@
                 	<%
                 		if(isTopic){
 					%>  
-						 <div id="project_Info" class="toolbar" style="text-align:center;line-height:20px;cursor:pointer">
+						 <div id="project_Info" class="toolbar" onclick="<%=methods.loadProjectInfo.caller()%>" style="text-align:center;line-height:20px;cursor:pointer">
 		                    Project info. ▼
 	                	</div> 
+	                	
+	                	
 
 					<%
 						}
