@@ -81,6 +81,7 @@ public class Marketplace {
 
 		
 		Layout storeLayout = new Layout();
+		storeLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, north__size:52");
 		storeLayout.setNorth(top);
 		storeLayout.setCenter(mainLayout);
 		
