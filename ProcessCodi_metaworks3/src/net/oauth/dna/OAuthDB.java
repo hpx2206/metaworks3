@@ -1,13 +1,12 @@
 package net.oauth.dna;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import org.uengine.kernel.GlobalContext;
+import org.metaworks.dao.TransactionContext;
 
 public class OAuthDB {
 	
@@ -17,63 +16,77 @@ public class OAuthDB {
 		Connection conn = null;
 		Statement stmt = null;
 		ResultSet rs = null;
-		PreparedStatement pstmt = null;
-		
-		Class.forName("cubrid.jdbc.driver.CUBRIDDriver");
-		conn = DriverManager.getConnection(
-				"jdbc:" + GlobalContext.getPropertyString("cubrid.run.server.db") + ":"
-						+ GlobalContext.getPropertyString("cubrid.run.server.ip") + ":" 
-						+ GlobalContext.getPropertyString("cubrid.run.server.port") + ":"
-						+ GlobalContext.getPropertyString("cubrid.run.server.database") + ":::?charset=utf-8"
-		,GlobalContext.getPropertyString("cubrid.run.server.user"), GlobalContext.getPropertyString("cubrid.run.server.password"));
-//		conn = DriverManager.getConnection(
-//				"jdbc:cubrid:192.168.212.108:33000:uengine:::?charset=utf-8", "dba", "");
-		
-		sql = "select * from oauth_token where user_id='" + user_id + "'";
-		
-		stmt = conn.createStatement();
-		rs = stmt.executeQuery(sql);
-		
-		if(rs.next()) {
-			//update
+		PreparedStatement pstmt = null;		
+		  
+		try {
 			
-			sql = "update oauth_token set access_token= ? where user_id= ?";
+			sql = "select * from oauth_token where user_id='" + user_id + "'";
 			
-			pstmt = conn.prepareStatement(sql);
+			conn = TransactionContext.getThreadLocalInstance().getConnection();
 			
-            pstmt.setString(1, access_token);
-            pstmt.setString(2, user_id);
-            pstmt.executeUpdate();
+			pstmt = conn.prepareStatement(sql);			
+			rs = pstmt.executeQuery(sql);			
+			
+			if(rs.next()) {
+				//update
+				
+				sql = "update oauth_token set access_token='" + access_token + "' where user_id='" + user_id + "'";
+				
+				pstmt = conn.prepareStatement(sql);
+				pstmt.executeUpdate();
+				
+			}
+			else {
+				//insert
+				
+				sql = "insert into oauth_token (user_id, access_token) values ('" + user_id +"', '" + access_token +  "')";
+				
+				pstmt = conn.prepareStatement(sql);
+				pstmt.executeUpdate();
+			}
+			
+			conn.commit();
+				
+			if(rs != null)
+				rs.close();	
+			
+		} catch (Exception e) {
+			
+			conn.rollback();
+			
+			e.printStackTrace();
+			
+			String message = e.getMessage();			
+			throw new Exception(message);
+		}		
+		finally{
+			
+			try{
+				if(conn != null){
+					conn.close();
+					conn = null;
+				}
+			} catch (SQLException sqle){			
+			}
+			
+			try {
+				if(stmt != null){
+					stmt.close();
+					stmt = null;
+				}
+			} catch (SQLException sqle){						
+			}
+			
+			try {
+				if(pstmt != null){
+					pstmt.close();
+					pstmt = null;
+				}
+			} catch (SQLException sqle){						
+			}	
 			
 		}
-		else {
-			//insert
-			
-			sql = "INSERT INTO oauth_token (user_id, access_token) VALUES (?, ?)";
-			
-			pstmt = conn.prepareStatement(sql);
-			
-            pstmt.setString(1, user_id);
-            pstmt.setString(2, access_token);
-            pstmt.executeUpdate();
-		}
 		
-		stmt.close();
-		pstmt.close();
-		rs.close();
-        conn.commit();
-        conn.close();		
 	}
 	
-//	try {
-//
-//
-//	} catch (SQLException e) {
-//		System.err.println(e.getMessage());
-//	} catch (Exception e) {
-//		System.err.println(e.getMessage());
-//	} finally {
-//		if (conn != null)
-//			conn.close();
-//	}
 }
