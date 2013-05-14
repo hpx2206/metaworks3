@@ -9,7 +9,7 @@ var org_uengine_codi_mw3_webProcessDesigner_InstanceMonitorPanel = function(obje
 	this.divId = mw3._getObjectDivId(this.objectId);
 	this.divObj = $('#' + this.divId);
 	this.icanvas = null;
-	var canvasDivObj = $('#canvasView_'+objectId);
+	this.canvasDivObj = $('#canvasView_'+objectId);
 	
 	if(object){
 		if(mw3.importScript('scripts/opengraph/OpenGraph-0.1-SNAPSHOT.js', function(){mw3.getFaceHelper(objectId).load();})){
@@ -52,8 +52,8 @@ var org_uengine_codi_mw3_webProcessDesigner_InstanceMonitorPanel = function(obje
 		// 약간의 여유를 두기 위하여 30px 만큼 더해줌
 		maxX = canvassizeObject.x2 + 30;
 		maxY = canvassizeObject.y2 + 30;
-		canvasDivObj.width(maxX + 30);
-		canvasDivObj.height(maxY + 30);
+		this.canvasDivObj.width(maxX + 30);
+		this.canvasDivObj.height(maxY + 30);
 		canvas.setCanvasSize([maxX , maxY]);
 	}else{
 		if( object != null && object.cell != null ){
@@ -73,8 +73,8 @@ var org_uengine_codi_mw3_webProcessDesigner_InstanceMonitorPanel = function(obje
 					maxY = (maxY < (y + height / 2)) ? (y + height / 2) : maxY;
 				}
 			}
-			canvasDivObj.width(maxX + 30);
-			canvasDivObj.height(maxY + 30);
+			this.canvasDivObj.width(maxX + 30);
+			this.canvasDivObj.height(maxY + 30);
 			canvas.setCanvasSize([maxX , maxY]);
 		}
 	}
@@ -97,19 +97,26 @@ var org_uengine_codi_mw3_webProcessDesigner_InstanceMonitorPanel = function(obje
 org_uengine_codi_mw3_webProcessDesigner_InstanceMonitorPanel.prototype = {
 		loaded : function(){
 			var object = mw3.objects[this.objectId];
-			var canvasDivObj = $('#canvasView_'+this.objectId);
+			if( object != null && object.cell != null ){
+				if(object.graphString == null ){
+					var graphJson = this.icanvas.toJSON();
+					object.graphString = JSON.stringify(graphJson);
+				}
+			}
+			/*
+			var object = mw3.objects[this.objectId];
 			if( object != null && object.cell != null ){
 				var cells = object.cell;
 				for(var i=0; i < cells.length; i++){
 					if( cells[i].drawByObject && cells[i].shapeType != 'EDGE' ){
 						var html = mw3.locateObject(cells[i]);
-						canvasDivObj.append(html);
+						this.canvasDivObj.append(html);
 					}
 				}
 				for( i=0; i < cells.length; i++){
 					if( cells[i].drawByObject && cells[i].shapeType == 'EDGE' ){
 						var html = mw3.locateObject(cells[i]);
-						canvasDivObj.append(html);
+						this.canvasDivObj.append(html);
 					}
 				}
 				if(object.graphString == null ){
@@ -117,6 +124,7 @@ org_uengine_codi_mw3_webProcessDesigner_InstanceMonitorPanel.prototype = {
 					object.graphString = JSON.stringify(graphJson);
 				}
 			}
+			*/
 		},
 		addEvent : function(objectId, canvas, element){
 			var shape = $(element).attr("_shape");
