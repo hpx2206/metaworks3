@@ -2,11 +2,13 @@ package org.uengine.codi.mw3.model;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Test;
+import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.calendar.ScheduleCalendar;
 import org.uengine.codi.mw3.knowledge.ProjectInfo;
@@ -311,6 +313,7 @@ public class InstanceListPanel implements ContextAware{
 	
 
 	ProjectInfo projectInfo;
+		@Hidden
 		public ProjectInfo getProjectInfo() {
 			return projectInfo;
 		}
@@ -324,5 +327,19 @@ public class InstanceListPanel implements ContextAware{
 		projectInfo.processManager = processManager;
 		projectInfo.load();
 	}
+	
+	@ServiceMethod(target="popup", callByContent=true)
+	public Object loadProjectInfo() throws Exception {
+
+		ModalWindow modalWindow = new ModalWindow();
+		modalWindow.setTitle("Project Info");
+		modalWindow.setWidth(450);
+		modalWindow.setHeight(350);
+		modalWindow.setPanel(projectInfo);
+		
+		
+		return modalWindow;
+	}
+	
 	
 }
