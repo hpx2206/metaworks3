@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package net.oauth.example.provider.core;
+package net.oauth.provider.core;
 
 import java.io.IOException;
 import java.io.InputStream;
