@@ -17,7 +17,6 @@ org_uengine_codi_mw3_marketplace_MarketplaceCenterPanel.prototype = {
 
 		object.category = category;
 		object.selectCategory();
-		console.log(object);
 	}
 		
 };
