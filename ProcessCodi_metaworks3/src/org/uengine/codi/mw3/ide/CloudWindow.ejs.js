@@ -103,8 +103,6 @@ org_uengine_codi_mw3_ide_CloudWindow.prototype = {
 	},
 	
 	remove : function(id){
-		console.log(id);
-		
 		var tabDivObj = $('#top_' + id).children(':first');
 		
 		if(tabDivObj){

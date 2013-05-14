@@ -118,10 +118,9 @@ public class CloudIDE {
 			this.pageNavigator = pageNavigator;
 		}		
 		
-	public void load(Session session){
+	public void load(Session session, String projectId){
 
 		String userId =  session.getUser().getUserId();
-		String projectId = "realcloud";
 		
 		String codebasePath = GlobalContext.getPropertyString("codebase", "codebase");
 		

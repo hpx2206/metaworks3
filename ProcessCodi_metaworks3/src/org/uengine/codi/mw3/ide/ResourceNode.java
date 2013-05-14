@@ -12,7 +12,7 @@ import org.metaworks.component.TreeNode;
 import org.uengine.codi.mw3.ide.editor.Editor;
 import org.uengine.codi.mw3.ide.editor.java.JavaCodeEditor;
 import org.uengine.codi.mw3.ide.editor.process.ProcessEditor;
-import org.uengine.codi.mw3.ide.editor.role.RoleEditor;
+import org.uengine.codi.mw3.ide.editor.rule.RuleEditor;
 import org.uengine.codi.mw3.ide.menu.ResourceContextMenu;
 import org.uengine.codi.mw3.model.Session;
 
@@ -82,10 +82,10 @@ public class ResourceNode extends TreeNode {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		}else if(type.equals(TreeNode.TYPE_FILE_ROLE)){
-			editor = new RoleEditor(this.getId());
+		}else if(type.equals(TreeNode.TYPE_FILE_RULE)){
+			editor = new RuleEditor(this.getId());
 			try {
-				((RoleEditor)editor).load();
+				((RuleEditor)editor).load();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -126,8 +126,8 @@ public class ResourceNode extends TreeNode {
 				nodeType = TreeNode.TYPE_FILE_FORM;
 			}else if(".wpd".equals(ext)){
 				nodeType = TreeNode.TYPE_FILE_PROCESS;
-			}else if(".role".equals(ext)){
-				nodeType = TreeNode.TYPE_FILE_ROLE;
+			}else if(".rule".equals(ext)){
+				nodeType = TreeNode.TYPE_FILE_RULE;
 			}else if(".css".equals(ext)){
 				nodeType = TreeNode.TYPE_FILE_CSS;
 			}else if(".jpg".equals(ext) || ".gif".equals(ext) || ".png".equals(ext)){
