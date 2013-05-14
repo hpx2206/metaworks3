@@ -1398,7 +1398,7 @@ body {
 	margin: -1px 0 0 0;
 	padding: 3px 0 3px 0;
 	z-index: 10000;
-	position: absolute;
+/*  	position: absolute; */
 	overflow: visible;
 	font-family: Tahoma, Arial;
 	font-size: 11px;
