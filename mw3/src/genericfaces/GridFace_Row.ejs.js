@@ -11,6 +11,9 @@ var GridFace_Row = function(objectId, className){
 };
 
 GridFace_Row.prototype = {
+	loaded: function(){
+		this.objectDiv.trigger('loaded');
+	}
 	edit : function(object){
 		var options = mw3.getMetadata(object.__className);
 		
