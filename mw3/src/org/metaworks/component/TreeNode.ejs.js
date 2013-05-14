@@ -35,17 +35,17 @@ var org_metaworks_component_TreeNode = function(objectId, className){
 			faceHelper.collapse();
 		
 		this.nodeDiv.children().children('span').bind('click', {objectId : this.objectId}, function(event){
-			faceHelper.action();
+			faceHelper.action(event);
 		});		
 	}
 	
 	// add event mouse click
 	this.nodeDiv.bind('click', {objectId : this.objectId}, function(event){
-		mw3.getFaceHelper(event.data.objectId).select();
+		mw3.getFaceHelper(event.data.objectId).select(event);
 	});
 	
 	this.nodeDiv.bind('dblclick', {objectId : this.objectId}, function(event){
-		mw3.getFaceHelper(event.data.objectId).action();
+		mw3.getFaceHelper(event.data.objectId).action(event);
 	});
 	
 };
@@ -84,11 +84,11 @@ org_metaworks_component_TreeNode.prototype = {
 		this.objectDiv.draggable({
 			      appendTo: "body",
 			      helper: function( event ) {
-			    	  
 			          return $('<div>').addClass('filemgr-tree').append($(this).children(':first').clone());
 			      },
 			      zIndex: 100,
-				  start: function() {
+				  start: function(event, ui) {
+					  eval(command);
 			      },
 			      drag: function() {
 			      },
@@ -120,6 +120,8 @@ org_metaworks_component_TreeNode.prototype = {
 		}else{
 			this.nodeDiv.removeClass('minlast');
 		}
+		
+		//mw3.onLoadFaceHelperScript();
 	},
 	
 	push : function(item){
@@ -190,7 +192,7 @@ org_metaworks_component_TreeNode.prototype = {
 				$(this).prop('checked', true);
 		});
 	},
-	select : function(){
+	select : function(event){
 		if(event.stopPropagation){
 			event.stopPropagation();
 		}else if(window.event){
@@ -210,7 +212,7 @@ org_metaworks_component_TreeNode.prototype = {
 		this.check();
 	},
 	
-	action : function(){
+	action : function(event){
 		if(event.stopPropagation){
 			event.stopPropagation();
 		}else if(window.event){
