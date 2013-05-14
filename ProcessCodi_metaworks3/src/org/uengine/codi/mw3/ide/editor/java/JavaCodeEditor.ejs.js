@@ -401,8 +401,6 @@ org_uengine_codi_mw3_ide_editor_java_JavaCodeEditor.prototype = {
 	},
 	
 	requestAssist : function(e, command){
-		console.log('this.loadRequestAssist : ' + this.loadRequestAssist);
-		
 		if(!this.loadRequestAssist){
 			this.loadRequestAssist = true;
 			
@@ -455,10 +453,7 @@ org_uengine_codi_mw3_ide_editor_java_JavaCodeEditor.prototype = {
 						this.addPackageClass(classList, expression);
 					}else{
 						if('this' == expression){
-							console.log(mw3.call(this.objectId, 'parsing'));
-							
 						}else{
-							console.log('not');
 						}
 					}
 				}else{
