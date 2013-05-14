@@ -414,8 +414,6 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
     		var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
     		var clipboardNode = session.clipboard;
     		
-    		console.log(clipboardNode);
-    		
     		var customData = canvas.getCustomData(element);
     		if( customData == undefined || customData == null || customData == "" ){
     			customData = [];
