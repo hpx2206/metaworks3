@@ -1,4 +1,5 @@
 var org_uengine_codi_mw3_webProcessDesigner_GeomShape = function(objectId, className){
+	
 	this.objectId = objectId;
 	this.className = className;
 
@@ -33,6 +34,8 @@ var org_uengine_codi_mw3_webProcessDesigner_GeomShape = function(objectId, class
 			$('#shape_tooltip').remove();
 		});
 		//$(element).tooltip();
+		
+		
 	}
 	
 //	canvas.drawLabel(element, object.label);
