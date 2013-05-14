@@ -1,20 +1,22 @@
 <%
 	if(value){
 %>
-<%	
+	<li>
+<%
 		if(value.secuopt=='1'){
 %>	
- 			
- 				<li><img class="navi_icon" src="images/waveStyle/nav_topic_sec.png"><a onClick="<%=methods.loadTopic.caller()%>" href="#"><%=value.name%></a></li>
- 				
-	 			
- 			
-<%	
+ 		<img class="navi_icon" src="images/waveStyle/nav_topic_sec.png" />
+<%
 		}else{
-%>	 
- 				<li><img class="navi_icon" src="images/waveStyle/nav_topic.png"><a onClick="<%=methods.loadTopic.caller()%>" href="#"><%=value.name%></a></li>
- 
- <%
- 		}
+%>
+		<img class="navi_icon" src="images/waveStyle/nav_topic.png" />
+<%
+		}
+%>
+ 		<a onClick="<%=methods.loadTopic.caller()%>" href="#">
+ 			<%=value.name%>
+ 		</a>
+ 	</li>	
+<%	
 	}
 %>
