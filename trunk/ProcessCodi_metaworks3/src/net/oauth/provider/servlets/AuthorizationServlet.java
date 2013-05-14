@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package net.oauth.example.provider.servlets;
+package net.oauth.provider.servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -28,7 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 import net.oauth.OAuth;
 import net.oauth.OAuthAccessor;
 import net.oauth.OAuthMessage;
-import net.oauth.example.provider.core.SampleOAuthProvider;
+import net.oauth.provider.core.SampleOAuthProvider;
 import net.oauth.server.OAuthServlet;
 
 /**
