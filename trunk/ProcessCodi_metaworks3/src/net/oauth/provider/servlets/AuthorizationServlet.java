@@ -28,7 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 import net.oauth.OAuth;
 import net.oauth.OAuthAccessor;
 import net.oauth.OAuthMessage;
-import net.oauth.provider.core.SampleOAuthProvider;
+import net.oauth.provider.core.OAuthProvider;
 import net.oauth.server.OAuthServlet;
 
 /**
@@ -51,7 +51,7 @@ public class AuthorizationServlet extends HttpServlet {
         try{
             OAuthMessage requestMessage = OAuthServlet.getMessage(request, null);
             
-            OAuthAccessor accessor = SampleOAuthProvider.getAccessor(requestMessage);
+            OAuthAccessor accessor = OAuthProvider.getAccessor(requestMessage);
            
             if (Boolean.TRUE.equals(accessor.getProperty("authorized"))) {
                 // already authorized send the user back
@@ -61,7 +61,7 @@ public class AuthorizationServlet extends HttpServlet {
             }
         
         } catch (Exception e){
-            SampleOAuthProvider.handleException(e, request, response, true);
+            OAuthProvider.handleException(e, request, response, true);
         }
         
         
@@ -75,19 +75,19 @@ public class AuthorizationServlet extends HttpServlet {
         try{
             OAuthMessage requestMessage = OAuthServlet.getMessage(request, null);
             
-            OAuthAccessor accessor = SampleOAuthProvider.getAccessor(requestMessage);
+            OAuthAccessor accessor = OAuthProvider.getAccessor(requestMessage);
             
             String userId = request.getParameter("userId");
             if(userId == null){
                 sendToAuthorizePage(request, response, accessor);
             }
             // set userId in accessor and mark it as authorized
-            SampleOAuthProvider.markAsAuthorized(accessor, userId);
+            OAuthProvider.markAsAuthorized(accessor, userId);
             
             returnToConsumer(request, response, accessor);
             
         } catch (Exception e){
-            SampleOAuthProvider.handleException(e, request, response, true);
+            OAuthProvider.handleException(e, request, response, true);
         }
     }
     
@@ -110,7 +110,7 @@ public class AuthorizationServlet extends HttpServlet {
         String userId = request.getParameter("userId");
         userId = "";
         try{
-        	 SampleOAuthProvider.markAsAuthorized(accessor, userId);
+        	 OAuthProvider.markAsAuthorized(accessor, userId);
              
              returnToConsumer(request, response, accessor);
         }catch(Exception ex) {

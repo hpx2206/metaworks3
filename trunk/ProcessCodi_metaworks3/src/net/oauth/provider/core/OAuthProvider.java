@@ -49,7 +49,7 @@ import net.oauth.server.OAuthServlet;
  *
  * @author Praveen Alavilli
  */
-public class SampleOAuthProvider {
+public class OAuthProvider {
 
     public static final OAuthValidator VALIDATOR = new SimpleOAuthValidator();
 
@@ -66,9 +66,9 @@ public class SampleOAuthProvider {
         if (p == null) {
             p = new Properties();
             String resourceName = "/"
-                    + SampleOAuthProvider.class.getPackage().getName().replace(
+                    + OAuthProvider.class.getPackage().getName().replace(
                     ".", "/") + "/provider.properties";
-            URL resource = SampleOAuthProvider.class.getClassLoader()
+            URL resource = OAuthProvider.class.getClassLoader()
             .getResource(resourceName);
             if (resource == null) {
                 throw new IOException("resource not found: " + resourceName);
@@ -114,7 +114,7 @@ public class SampleOAuthProvider {
         // try to load from local cache if not throw exception
         String consumer_key = requestMessage.getConsumerKey();
         
-        consumer = SampleOAuthProvider.ALL_CONSUMERS.get(consumer_key);
+        consumer = OAuthProvider.ALL_CONSUMERS.get(consumer_key);
         
         if(consumer == null) {
             OAuthProblemException problem = new OAuthProblemException("token_rejected");
@@ -133,7 +133,7 @@ public class SampleOAuthProvider {
         // try to load from local cache if not throw exception
         String consumer_token = requestMessage.getToken();
         OAuthAccessor accessor = null;
-        for (OAuthAccessor a : SampleOAuthProvider.ALL_TOKENS) {
+        for (OAuthAccessor a : OAuthProvider.ALL_TOKENS) {
             if(a.requestToken != null) {
                 if (a.requestToken.equals(consumer_token)) {
                     accessor = a;

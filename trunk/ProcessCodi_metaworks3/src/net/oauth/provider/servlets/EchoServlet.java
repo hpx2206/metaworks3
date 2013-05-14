@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import net.oauth.OAuthAccessor;
 import net.oauth.OAuthMessage;
-import net.oauth.provider.core.SampleOAuthProvider;
+import net.oauth.provider.core.OAuthProvider;
 import net.oauth.server.OAuthServlet;
 
 /**
@@ -50,8 +50,8 @@ public class EchoServlet extends HttpServlet {
             throws IOException, ServletException {
         try{
             OAuthMessage requestMessage = OAuthServlet.getMessage(request, null);
-            OAuthAccessor accessor = SampleOAuthProvider.getAccessor(requestMessage);
-            SampleOAuthProvider.VALIDATOR.validateMessage(requestMessage, accessor);
+            OAuthAccessor accessor = OAuthProvider.getAccessor(requestMessage);
+            OAuthProvider.VALIDATOR.validateMessage(requestMessage, accessor);
             String userId = (String) accessor.getProperty("user");
             
             response.setContentType("text/plain");
@@ -67,7 +67,7 @@ public class EchoServlet extends HttpServlet {
             out.close();
             
         } catch (Exception e){
-            SampleOAuthProvider.handleException(e, request, response, false);
+            OAuthProvider.handleException(e, request, response, false);
         }
     }
 

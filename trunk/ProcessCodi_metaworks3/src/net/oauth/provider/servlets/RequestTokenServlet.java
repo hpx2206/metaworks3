@@ -29,7 +29,7 @@ import net.oauth.OAuth;
 import net.oauth.OAuthAccessor;
 import net.oauth.OAuthConsumer;
 import net.oauth.OAuthMessage;
-import net.oauth.provider.core.SampleOAuthProvider;
+import net.oauth.provider.core.OAuthProvider;
 import net.oauth.server.OAuthServlet;
 
 /**
@@ -44,7 +44,7 @@ public class RequestTokenServlet extends HttpServlet {
         super.init(config);
         // nothing at this point
         try{
-            SampleOAuthProvider.loadConsumers(config);
+            OAuthProvider.loadConsumers(config);
         }catch(IOException e){
             throw new ServletException(e.getMessage());
         }
@@ -68,10 +68,10 @@ public class RequestTokenServlet extends HttpServlet {
         try {
             OAuthMessage requestMessage = OAuthServlet.getMessage(request, null);
             
-            OAuthConsumer consumer = SampleOAuthProvider.getConsumer(requestMessage);
+            OAuthConsumer consumer = OAuthProvider.getConsumer(requestMessage);
             
             OAuthAccessor accessor = new OAuthAccessor(consumer);
-            SampleOAuthProvider.VALIDATOR.validateMessage(requestMessage, accessor);
+            OAuthProvider.VALIDATOR.validateMessage(requestMessage, accessor);
             {
                 // Support the 'Variable Accessor Secret' extension
                 // described in http://oauth.pbwiki.com/AccessorSecret
@@ -81,7 +81,7 @@ public class RequestTokenServlet extends HttpServlet {
                 }
             }
             // generate request_token and secret
-            SampleOAuthProvider.generateRequestToken(accessor);
+            OAuthProvider.generateRequestToken(accessor);
             
             response.setContentType("text/plain");
             OutputStream out = response.getOutputStream();
@@ -91,7 +91,7 @@ public class RequestTokenServlet extends HttpServlet {
             out.close();
             
         } catch (Exception e){
-            SampleOAuthProvider.handleException(e, request, response, true);
+            OAuthProvider.handleException(e, request, response, true);
         }
         
     }

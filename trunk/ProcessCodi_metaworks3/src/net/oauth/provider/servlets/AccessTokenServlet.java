@@ -29,7 +29,7 @@ import net.oauth.OAuth;
 import net.oauth.OAuthAccessor;
 import net.oauth.OAuthMessage;
 import net.oauth.OAuthProblemException;
-import net.oauth.provider.core.SampleOAuthProvider;
+import net.oauth.provider.core.OAuthProvider;
 import net.oauth.server.OAuthServlet;
 
 /**
@@ -61,8 +61,8 @@ public class AccessTokenServlet extends HttpServlet {
         try{
             OAuthMessage requestMessage = OAuthServlet.getMessage(request, null);
             
-            OAuthAccessor accessor = SampleOAuthProvider.getAccessor(requestMessage);
-            SampleOAuthProvider.VALIDATOR.validateMessage(requestMessage, accessor);
+            OAuthAccessor accessor = OAuthProvider.getAccessor(requestMessage);
+            OAuthProvider.VALIDATOR.validateMessage(requestMessage, accessor);
             
             // make sure token is authorized
             if (!Boolean.TRUE.equals(accessor.getProperty("authorized"))) {
@@ -70,7 +70,7 @@ public class AccessTokenServlet extends HttpServlet {
                 throw problem;
             }
             // generate access token and secret
-            SampleOAuthProvider.generateAccessToken(accessor);
+            OAuthProvider.generateAccessToken(accessor);
             
             response.setContentType("text/plain");
             OutputStream out = response.getOutputStream();
@@ -80,7 +80,7 @@ public class AccessTokenServlet extends HttpServlet {
             out.close();
             
         } catch (Exception e){
-            SampleOAuthProvider.handleException(e, request, response, true);
+            OAuthProvider.handleException(e, request, response, true);
         }
     }
 
