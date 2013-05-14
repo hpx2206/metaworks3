@@ -752,3 +752,10 @@ INSERT INTO `uengine`.`comtable` (`COMCODE`, `COMNAME`) VALUES ('CloudManager', 
 INSERT INTO `uengine`.`emptable` (`empcode`, `EMPNAME`, `PASSWORD`, `ISADMIN`, `GLOBALCOM`, `ISDELETED`, `LOCALE`, `approved`) VALUES ('paasManager', 'paasManager', 'admin', '1', 'CloudManager', '0', 'ko', '1');
 INSERT INTO `uengine`.`roletable` (`ROLECODE`, `COMCODE`, `DESCR`, `ISDELETED`) VALUES ('paasManager', 'CloudManager', 'paasManager', '0');
 INSERT INTO `uengine`.`roleusertable` (`ROLECODE`, `EMPCODE`) VALUES ('paasManager', 'paasManager');
+
+
+-- 2013.05.14
+CREATE TABLE oauth_token (
+	user_id VARCHAR(300) NOT NULL,
+	access_token VARCHAR(300) NOT NULL
+);
