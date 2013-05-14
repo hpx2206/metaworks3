@@ -9,13 +9,13 @@ var org_uengine_codi_mw3_model_InstanceNameChanger = function(objectId, classNam
 		
 		$('#instanceName_' + this.objectId).bind('focus', function(){
 			$(this).css("border","solid 1px #ccc");
-		})
+		});
 		
 		$('#instanceName_' + this.objectId).bind('blur', function(){
 			mw3.getFaceHelper(objectId).change();
 			$(this).css("border","none");
 	
-		})
+		});
 		
 		var autoSizing = function(){
 			var h=$('#instanceName_' + objectId);
