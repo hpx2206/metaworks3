@@ -28,7 +28,6 @@ var org_uengine_codi_mw3_model_IWorkItem = function(objectId, className){
 		workItem.detail();
 	}else if(workItem.type == 'memo' && workItem.extFile!=null && workItem.memo.contents=="...loading..." && !workItem.contentLoaded){
 		this.extFile = workItem.extFile;
-		console.log("loadContent" + objectId);
 		//workItem.loadContents();
 		mw3.call(this.objectId, 'loadContents');
 		
