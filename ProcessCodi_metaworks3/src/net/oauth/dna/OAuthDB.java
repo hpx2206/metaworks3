@@ -1,4 +1,4 @@
-package net.oauth.example.dna;
+package net.oauth.dna;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+
+import org.uengine.kernel.GlobalContext;
 
 public class OAuthDB {
 	
@@ -19,7 +21,13 @@ public class OAuthDB {
 		
 		Class.forName("cubrid.jdbc.driver.CUBRIDDriver");
 		conn = DriverManager.getConnection(
-				"jdbc:cubrid:192.168.212.108:33000:uengine:::?charset=utf-8", "dba", "");
+				"jdbc:" + GlobalContext.getPropertyString("cubrid.run.server.db") + ":"
+						+ GlobalContext.getPropertyString("cubrid.run.server.ip") + ":" 
+						+ GlobalContext.getPropertyString("cubrid.run.server.port") + ":"
+						+ GlobalContext.getPropertyString("cubrid.run.server.database") + ":::?charset=utf-8"
+		,GlobalContext.getPropertyString("cubrid.run.server.user"), GlobalContext.getPropertyString("cubrid.run.server.password"));
+//		conn = DriverManager.getConnection(
+//				"jdbc:cubrid:192.168.212.108:33000:uengine:::?charset=utf-8", "dba", "");
 		
 		sql = "select * from oauth_token where user_id='" + user_id + "'";
 		
