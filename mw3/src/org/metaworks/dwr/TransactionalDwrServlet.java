@@ -144,10 +144,13 @@ public class TransactionalDwrServlet extends DwrServlet{
             //response.setHeader(HttpConstants.HEADER_ETAG, "\"" + lastModified + '\"');
         	
         	pathInfo = pathInfo.substring(wherePrefixStarts + PATH_METAWORKS.length() + 1);
-        	InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(pathInfo);
         	
-	        if(is!=null){
-	            try {
+        	InputStream is = null;
+        	
+        	try{
+        		is = Thread.currentThread().getContextClassLoader().getResourceAsStream(pathInfo);
+        		
+    	        if(is!=null){
 	            	String appendix = null;
 	            	
 	            	if(pathInfo.endsWith("/metaworks.js")){
@@ -155,19 +158,19 @@ public class TransactionalDwrServlet extends DwrServlet{
 	            	}
 	            	
 					copyStream(is, response.getOutputStream(), appendix);
-					
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}finally{
-					is.close();
-					response.flushBuffer();
-				    response.getOutputStream().flush();
-				    response.getOutputStream().close();				
-				}
-	        }            	
+    	        }
+        	}catch(Exception e){
+        		e.printStackTrace();
+        	}finally{
+        		if(is != null)
+        			is.close();
         		
-            return;
+				response.flushBuffer();
+			    response.getOutputStream().flush();
+			    response.getOutputStream().close();		
+        	}
+        	
+        	return;
         }
 
         
