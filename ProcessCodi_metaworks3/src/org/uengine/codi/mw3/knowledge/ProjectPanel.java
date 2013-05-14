@@ -21,7 +21,7 @@ public class ProjectPanel {
 		projectTitle.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 		projectTitle.session = session;
 		
-		return new ModalWindow(projectTitle , 500, 200,  "프로젝트생성");
+		return new ModalWindow(projectTitle , 500, 300,  "프로젝트생성");
 	}
 	
 	
