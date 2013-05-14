@@ -224,9 +224,8 @@ org_metaworks_component_TreeNode.prototype = {
 				this.collapse();
 			else if(this.isCollapse())
 				this.expand();
-		}else{
-			mw3.call(this.objectId, 'action');
 		}
+		mw3.call(this.objectId, 'action');
 		
 	},
 	expand : function(){
