@@ -371,21 +371,22 @@ public class Login implements ContextAware {
 				mainPanel = pageNavigator.goProcess();
 			}
 		}
-				
-		//Request Token
-		OAuthBasic oauth = new OAuthBasic();
-		oauth.requestToken();
-
-		// Request Access Token
-		String accessToken = oauth.retrieveAccessToken("");
-		System.out.println("accessToken  = " + accessToken);
-
-		session.setAccessToken(accessToken);
 		
-		//user id, access token save to cubrid
-		OAuthDB oauthDB = new OAuthDB(); 
-		oauthDB.update(session.getUser().getUserId(), session.getAccessToken());
-		
+		if (Boolean.parseBoolean(GlobalContext.getPropertyString("sso.on"))) {
+			//Request Token
+			OAuthBasic oauth = new OAuthBasic();
+			oauth.requestToken();
+
+			// Request Access Token
+			String accessToken = oauth.retrieveAccessToken("");
+			System.out.println("accessToken  = " + accessToken);
+
+			session.setAccessToken(accessToken);
+			
+			//user id, access token save to cubrid
+			OAuthDB oauthDB = new OAuthDB(); 
+			oauthDB.update(session.getUser().getUserId(), session.getAccessToken());
+		}		
 				
 		return new Object[]{new Remover(new ModalWindow(), true), new Refresh(locale), new Refresh(mainPanel, false, true)};
 	}
