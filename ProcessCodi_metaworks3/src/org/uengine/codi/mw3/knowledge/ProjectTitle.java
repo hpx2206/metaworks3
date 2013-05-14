@@ -70,7 +70,7 @@ public class ProjectTitle implements ContextAware {
 		}
 	
 	String topicDescription;
-		@Face(displayName="$ProjectDescription")
+		@Face(displayName="$ProjectDescription", ejsPath="genericfaces/richText.ejs", options = { "rows", "cols" }, values = { "10", "50" })
 		@Available(when={MetaworksContext.WHEN_NEW, MetaworksContext.WHEN_EDIT})
 		public String getTopicDescription() {
 			return topicDescription;
