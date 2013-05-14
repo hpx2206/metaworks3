@@ -79,7 +79,7 @@ public class TestProject implements ContextAware {
 		}
 		
 		CloudIDE cloudIde = new CloudIDE();
-		cloudIde.load(session);
+		cloudIde.load(session, "");
 		
 		this.setContent(new MainPanel(cloudIde));
 	}
