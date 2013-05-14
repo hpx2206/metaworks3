@@ -746,3 +746,9 @@ alter table bpm_knol add description varchar(1000);
 
 -- 2013.05.13 app테이블 컬럼명 수정(vendorid -> comcode) 속성동일 varchar(20)
 alter table app change vendorid comcode varchar(20);
+
+-- 2013.05.14 paasManager user 추가
+INSERT INTO `uengine`.`comtable` (`COMCODE`, `COMNAME`) VALUES ('CloudManager', 'cloud manager');
+INSERT INTO `uengine`.`emptable` (`empcode`, `EMPNAME`, `PASSWORD`, `ISADMIN`, `GLOBALCOM`, `ISDELETED`, `LOCALE`, `approved`) VALUES ('paasManager', 'paasManager', 'admin', '1', 'CloudManager', '0', 'ko', '1');
+INSERT INTO `uengine`.`roletable` (`ROLECODE`, `COMCODE`, `DESCR`, `ISDELETED`) VALUES ('paasManager', 'CloudManager', 'paasManager', '0');
+INSERT INTO `uengine`.`roleusertable` (`ROLECODE`, `EMPCODE`) VALUES ('paasManager', 'paasManager');
