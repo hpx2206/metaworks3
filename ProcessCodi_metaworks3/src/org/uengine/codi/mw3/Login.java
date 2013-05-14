@@ -13,8 +13,8 @@ import java.util.Iterator;
 
 import javax.servlet.http.HttpSession;
 
-import net.oauth.example.dna.OAuthBasic;
-import net.oauth.example.dna.OAuthDB;
+import net.oauth.dna.OAuthBasic;
+import net.oauth.dna.OAuthDB;
 
 import org.directwebremoting.WebContext;
 import org.directwebremoting.WebContextFactory;
