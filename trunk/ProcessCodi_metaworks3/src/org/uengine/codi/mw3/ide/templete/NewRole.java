@@ -14,7 +14,7 @@ import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.ide.CloudWindow;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.Templete;
-import org.uengine.codi.mw3.ide.editor.role.RoleEditor;
+import org.uengine.codi.mw3.ide.editor.rule.RuleEditor;
 import org.uengine.codi.mw3.model.Session;
 
 @Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs", options={"fieldOrder"}, values={"packageName,name"})
@@ -41,9 +41,9 @@ public class NewRole extends Templete {
 			ResourceNode node = new ResourceNode();
 			node.setName(this.getName() + ".role");
 			node.setId(targetNode.getId() + File.separatorChar + node.getName());			
-			node.setType(TreeNode.TYPE_FILE_ROLE);
+			node.setType(TreeNode.TYPE_FILE_RULE);
 			
-			RoleEditor editor = new RoleEditor(node.getId());
+			RuleEditor editor = new RuleEditor(node.getId());
 			
 			return new Object[]{new ToAppend(targetNode, node), new ToAppend(new CloudWindow("editor"), editor), new Remover(new ModalWindow())};
 		}else{
