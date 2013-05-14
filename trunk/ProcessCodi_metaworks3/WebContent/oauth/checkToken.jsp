@@ -1,42 +1,57 @@
 <%@page import="org.uengine.kernel.GlobalContext"%>
+<%@page import="org.metaworks.dao.TransactionContext"%>
 <%@ page contentType="text/html;charset=utf-8" import="java.sql.*" %>
 
 <%
 	String access_token = request.getParameter("access_token");
 	String user_id = request.getParameter("user_id");
 	
-	System.out.println("*************************************************");
-	
-	try{
-		
-		Class.forName("cubrid.jdbc.driver.CUBRIDDriver");
-		conn = DriverManager.getConnection(
-				"jdbc:" + GlobalContext.getPropertyString("cubrid.run.server.db") + ":"
-						+ GlobalContext.getPropertyString("cubrid.run.server.ip") + ":" 
-						+ GlobalContext.getPropertyString("cubrid.run.server.port") + ":"
-						+ GlobalContext.getPropertyString("cubrid.run.server.database") + ":::?charset=utf-8"
-		,GlobalContext.getPropertyString("cubrid.run.server.user"), GlobalContext.getPropertyString("cubrid.run.server.password"));
-		
-//		conn = DriverManager.getConnection(
-//		"jdbc:cubrid:192.168.212.108:33000:uengine:::?charset=utf-8", "dba", "");
-			
+	try{			
 		  
-		Statement stmt = con.createStatement();
-
+		Connection conn = TransactionContext.getThreadLocalInstance().getConnection();
 		  
-		String query = "select * from oauth_token where access_token='" + token + "' and user_id='" + user_id + "'";
+		String query = "select * from oauth_token where access_token='" + access_token + "' and user_id='" + user_id + "'";
 		  
-		ResultSet rs = stmt.executeQuery(query);
+		PreparedStatement pstmt = conn.prepareStatement(query);			
+		ResultSet rs = pstmt.executeQuery(query);
 		
 		if(rs.next()) {
 			id = rs.getString(1);  
-		}		  
-		  
-		System.out.println("*** id = " + id);
-		  
-		stmt.close();
-		con.close();
+		} 
+
 	}
-	catch(Exception e){}
+	catch(Exception e){		
+		e.printStackTrace();
+		
+		String message = e.getMessage();			
+		throw new Exception(message);
+	}
+	finally{
+		
+		try{
+			if(conn != null){
+				conn.close();
+				conn = null;
+			}
+		} catch (SQLException sqle){			
+		}
+		
+		try {
+			if(stmt != null){
+				stmt.close();
+				stmt = null;
+			}
+		} catch (SQLException sqle){						
+		}
+		
+		try {
+			if(pstmt != null){
+				pstmt.close();
+				pstmt = null;
+			}
+		} catch (SQLException sqle){						
+		}	
+		
+	}
 %>
 out.println(id);
