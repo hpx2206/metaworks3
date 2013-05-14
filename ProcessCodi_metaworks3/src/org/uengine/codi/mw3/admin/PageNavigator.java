@@ -6,13 +6,13 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Test;
 import org.metaworks.widget.layout.Layout;
 import org.uengine.codi.mw3.common.MainPanel;
+import org.uengine.codi.mw3.ide.CloudIDE;
 import org.uengine.codi.mw3.knowledge.Knowledge;
 import org.uengine.codi.mw3.marketplace.Marketplace;
 import org.uengine.codi.mw3.model.Main;
 import org.uengine.codi.mw3.model.MainSNS;
 import org.uengine.codi.mw3.model.PinterestMain;
 import org.uengine.codi.mw3.model.Session;
-import org.uengine.codi.mw3.nkia.Nkia;
 import org.uengine.codi.mw3.tadpole.Tadpole;
 import org.uengine.processmarket.Market;
 
@@ -38,8 +38,12 @@ public class PageNavigator{
 		}
 
 	@ServiceMethod(callByContent=true)
-	public MainPanel goIDE() throws Exception {		
-		return new MainPanel(new IDE(session));
+	public MainPanel goIDE() throws Exception {
+		CloudIDE cloudIDE = new CloudIDE();
+		cloudIDE.load(session, "");
+			
+		return new MainPanel(cloudIDE);
+		//return new MainPanel(new IDE(session));
 	}
 	
 	@ServiceMethod(callByContent=true)
