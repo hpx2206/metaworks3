@@ -3,11 +3,9 @@ package org.uengine.codi.mw3.model;
 import javax.servlet.http.HttpServletRequest;
 
 import org.metaworks.MetaworksContext;
-import org.metaworks.annotation.Hidden;
+import org.metaworks.annotation.AutowiredToClient;
 import org.metaworks.dao.TransactionContext;
-import org.metaworks.widget.IFrame;
 import org.metaworks.widget.Window;
-import org.metaworks.widget.grid.Grid;
 import org.metaworks.widget.layout.Layout;
 import org.uengine.codi.mw3.admin.PageNavigator;
 
@@ -17,6 +15,38 @@ public class Main {
 		
 	}
 	
+	Layout layout;
+		public Layout getLayout() {
+			return layout;
+		}
+		public void setLayout(Layout layout) {
+			this.layout = layout;
+		}
+		
+	Session session;
+		@AutowiredToClient
+		public Session getSession() {
+			return session;
+		}
+		public void setSession(Session session) {
+			this.session = session;
+		}
+
+	PageNavigator pageNavigator;
+		public PageNavigator getPageNavigator() {
+			return pageNavigator;
+		}
+		public void setPageNavigator(PageNavigator pageNavigator) {
+			this.pageNavigator = pageNavigator;
+		}
+		
+	Logo logo;
+		public Logo getLogo() {
+			return logo;
+		}
+		public void setLogo(Logo logo) {
+			this.logo = logo;
+		}	
 	
 	public static boolean isPad(){
 		
@@ -156,6 +186,7 @@ public class Main {
 			setLayout(outerLayout);
 //			if( session.getEmployee().getIsAdmin() ){	// 관리자일 경우만 page flip 이 보임
 				setPageNavigator(new PageNavigator("process"));
+				setSession(session);
 //			}
 		}
 
@@ -206,29 +237,5 @@ public class Main {
 		
 		return instanceListWindow;
 	}
-
-	Layout layout;
-		public Layout getLayout() {
-			return layout;
-		}
-		public void setLayout(Layout layout) {
-			this.layout = layout;
-		}
-
-	PageNavigator pageNavigator;
-		public PageNavigator getPageNavigator() {
-			return pageNavigator;
-		}
-		public void setPageNavigator(PageNavigator pageNavigator) {
-			this.pageNavigator = pageNavigator;
-		}
-		
-	Logo logo;
-		public Logo getLogo() {
-			return logo;
-		}
-		public void setLogo(Logo logo) {
-			this.logo = logo;
-		}		
 }
 
