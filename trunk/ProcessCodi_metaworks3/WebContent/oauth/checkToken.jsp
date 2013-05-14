@@ -1,3 +1,4 @@
+<%@page import="org.uengine.kernel.GlobalContext"%>
 <%@ page contentType="text/html;charset=utf-8" import="java.sql.*" %>
 
 <%
@@ -10,7 +11,14 @@
 		
 		Class.forName("cubrid.jdbc.driver.CUBRIDDriver");
 		conn = DriverManager.getConnection(
-				"jdbc:cubrid:192.168.212.108:33000:uengine:::?charset=utf-8", "dba", "");
+				"jdbc:" + GlobalContext.getPropertyString("cubrid.run.server.db") + ":"
+						+ GlobalContext.getPropertyString("cubrid.run.server.ip") + ":" 
+						+ GlobalContext.getPropertyString("cubrid.run.server.port") + ":"
+						+ GlobalContext.getPropertyString("cubrid.run.server.database") + ":::?charset=utf-8"
+		,GlobalContext.getPropertyString("cubrid.run.server.user"), GlobalContext.getPropertyString("cubrid.run.server.password"));
+		
+//		conn = DriverManager.getConnection(
+//		"jdbc:cubrid:192.168.212.108:33000:uengine:::?charset=utf-8", "dba", "");
 			
 		  
 		Statement stmt = con.createStatement();

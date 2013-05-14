@@ -224,7 +224,7 @@
   
   <servlet>
     <servlet-name>RequestTokenServlet</servlet-name>
-    <servlet-class>net.oauth.example.provider.servlets.RequestTokenServlet</servlet-class>
+    <servlet-class>net.oauth.provider.servlets.RequestTokenServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>RequestTokenServlet</servlet-name>
@@ -233,7 +233,7 @@
   
   <servlet>
     <servlet-name>AuthorizationServlet</servlet-name>
-    <servlet-class>net.oauth.example.provider.servlets.AuthorizationServlet</servlet-class>
+    <servlet-class>net.oauth.provider.servlets.AuthorizationServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>AuthorizationServlet</servlet-name>
@@ -242,7 +242,7 @@
   
   <servlet>
     <servlet-name>AccessTokenServlet</servlet-name>
-    <servlet-class>net.oauth.example.provider.servlets.AccessTokenServlet</servlet-class>
+    <servlet-class>net.oauth.provider.servlets.AccessTokenServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>AccessTokenServlet</servlet-name>
@@ -251,7 +251,7 @@
   
   <servlet>
     <servlet-name>EchoServlet</servlet-name>
-    <servlet-class>net.oauth.example.provider.servlets.EchoServlet</servlet-class>
+    <servlet-class>net.oauth.provider.servlets.EchoServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>EchoServlet</servlet-name>
