@@ -100,6 +100,7 @@ public class MyVendor {
 		
 		
 		MarketplaceCenterPanel centerPanel = new MarketplaceCenterPanel();
+		centerPanel.session = session;
 		centerPanel.setAppInfo(createListing);
 		
 		MarketplaceCenterWindow centerWin = new MarketplaceCenterWindow(session);
