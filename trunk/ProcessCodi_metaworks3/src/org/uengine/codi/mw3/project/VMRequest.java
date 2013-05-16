@@ -7,6 +7,7 @@ import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.uengine.codi.ITool;
 
+@Face(displayName="텤플릿 선택", ejsPath="dwr/metaworks/genericfaces/FormFace.ejs", options={"fieldOrder"}, values={"vmRealmCombo,vmImageCombo"})
 public class VMRequest implements ITool, ContextAware {
 	
 	transient MetaworksContext metaworksContext;
