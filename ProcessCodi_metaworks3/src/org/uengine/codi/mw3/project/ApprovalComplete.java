@@ -125,6 +125,25 @@ public class ApprovalComplete implements ITool  {
 			
 //			command = GlobalContext.getPropertyString("vm.hudson.setting") + " \"" + projectName + "\"" + " \"" + GlobalContext.getPropertyString("vm.server.ip") + "\"";
 //			jschServerBehaviour.runCommand(command);
+			
+			//filecommand롭 보내고
+			//해당파일 실행하고 => commend만 날리면됨.
+			//put-append local-path [remote-path]
+			
+			//가상서버에 ip변경 스크립트 파일 복사하기
+			jschServerBehaviour.copySettingFileToVM(vmIp);
+			
+			String[] commands = new String[3];
+			commands[0] = GlobalContext.getPropertyString("vm.add.permission");			//전송된 파일에 권한 부여하기
+			commands[1] = GlobalContext.getPropertyString("vm.setting.adjustEnv");		//환경세팅 스크립트 파일 실행하기
+			commands[2] = GlobalContext.getPropertyString("vm.setting.adjustHosts");
+			
+			if(commands.length != 0){
+				for(int i=0; i<commands.length; i++){
+					jschServerBehaviour.runCommand(commands[i]);
+				}
+			}
+			
 		}
 	}
 

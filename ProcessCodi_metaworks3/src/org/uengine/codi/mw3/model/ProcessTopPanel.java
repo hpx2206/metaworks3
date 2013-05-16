@@ -99,4 +99,11 @@ public class ProcessTopPanel {
 			this.searchBox = searchBox;
 		}
 
+	String mode;
+		public String getMode() {
+			return mode;
+		}
+		public void setMode(String mode) {
+			this.mode = mode;
+		}	
 }
