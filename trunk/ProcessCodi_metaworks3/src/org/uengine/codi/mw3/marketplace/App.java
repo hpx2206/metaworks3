@@ -17,6 +17,7 @@ import org.uengine.codi.mw3.marketplace.category.Category;
 import org.uengine.codi.mw3.marketplace.category.ICategory;
 import org.uengine.codi.mw3.marketplace.category.MarketCategoryPanel;
 import org.uengine.codi.mw3.marketplace.searchbox.MarketplaceSearchBox;
+import org.uengine.codi.mw3.model.ICompany;
 import org.uengine.codi.mw3.model.IUser;
 import org.uengine.codi.mw3.model.InstanceViewContent;
 import org.uengine.codi.mw3.model.ProcessMap;
@@ -129,6 +130,14 @@ public class App extends Database<IApp> implements IApp{
 			this.status = status;
 		}
 	
+	ICompany company;
+		public ICompany getCompany() {
+			return company;
+		}
+		public void setCompany(ICompany company) {
+			this.company = company;
+		}
+		
 	String comcode;
 		public String getComcode() {
 			return comcode;
@@ -136,7 +145,7 @@ public class App extends Database<IApp> implements IApp{
 		public void setComcode(String comcode) {
 			this.comcode = comcode;
 		}
-		
+
 	boolean isDeleted;
 		public boolean isDeleted() {
 			return isDeleted;
@@ -215,35 +224,56 @@ public class App extends Database<IApp> implements IApp{
 	
 	public IApp findByVendor() throws Exception {
 		
-		IApp findListings = (IApp) Database.sql(IApp.class, "select * from app where comcode=?comcode and isdeleted=?isdeleted order by installCnt desc");
+		StringBuffer sql = new StringBuffer();
+		sql.append("select app.*, comtable.comname, comtable.description, comtable.repmail from app, comtable");
+		sql.append(" where app.comcode = comtable.comcode");
+		sql.append("   and app.comcode=?comcode");
+		sql.append("   and app.isdeleted=?isdeleted");
+		sql.append(" order by installCnt desc");
+		
+		IApp findListings = (IApp) Database.sql(IApp.class, sql.toString());
 		
 		findListings.setComcode(this.getComcode());
 		findListings.setIsDeleted(false);
-		
 		findListings.select();
 
 		
 		return findListings;
-		
 	}
 	
 	public IApp findMe() throws Exception {
-		return this.databaseMe();
+		
+		StringBuffer sql = new StringBuffer();
+		sql.append("select app.*, comtable.comname, comtable.description, comtable.repmail from app, comtable");
+		sql.append(" where app.comcode = comtable.comcode");
+		sql.append("   and app.appId=?appId");
+		
+		IApp findListing = (IApp) Database.sql(IApp.class, sql.toString());
+		
+		findListing.setStatus(STATUS_PUBLISHED);
+		findListing.setAppId(this.getAppId());
+		findListing.select();
+		
+		if(findListing.next())
+			return findListing;
+		else
+			return null;
 	}
 	
 	public IApp findNewApps() throws Exception {
 		
 		StringBuffer sql = new StringBuffer();
-		sql.append("select * from app");
-		sql.append(" where comcode=?comcode");
-		sql.append(" and status=?status");
-		sql.append(" and DATE_FORMAT(createdate,'%Y-%m-%d') between DATE_SUB(CURRENT_DATE, INTERVAL 15 DAY) and CURRENT_DATE");
+		sql.append("select app.*, comtable.comname, comtable.description, comtable.repmail from app, comtable");
+		sql.append(" where app.comcode = comtable.comcode");
+		sql.append("   and status=?status"); 
+		sql.append("   and app.isdeleted=?isdeleted");
+		sql.append("   and DATE_FORMAT(createdate,'%Y-%m-%d') between DATE_SUB(CURRENT_DATE, INTERVAL 15 DAY) and CURRENT_DATE");
 		
 		//from 15days ago
 		IApp findListing = (IApp) Database.sql(IApp.class, sql.toString());
 		
-		findListing.setComcode(this.getComcode());
-		findListing.setStatus(STATUS_APPROVED);
+		findListing.setStatus(STATUS_PUBLISHED);
+		findListing.setIsDeleted(false);
 		findListing.select();
 		
 		return findListing;
@@ -252,34 +282,57 @@ public class App extends Database<IApp> implements IApp{
 	
 	public IApp searchApps() throws Exception{
 		
-		IApp findListing = (IApp) Database.sql(IApp.class, "select * from app where appName like ?AppName");
+		StringBuffer sql = new StringBuffer();
+		sql.append("select app.*, comtable.comname, comtable.description, comtable.repmail from app, comtable");
+		sql.append(" where app.comcode = comtable.comcode");
+		sql.append("   and status=?status");
+		sql.append("   and app.isdeleted=?isdeleted");
+		sql.append("   and appName like ?AppName");
+
+		
+		IApp findListing = (IApp) Database.sql(IApp.class, sql.toString());
 		
 		findListing.setAppName("%" + this.getAppName() + "%");
+		findListing.setStatus(STATUS_PUBLISHED);
+		findListing.setIsDeleted(false);
 		findListing.select();
 		
 		return findListing;
 		
+	}
+	
+	public IApp findHome() throws Exception{
+		StringBuffer sql = new StringBuffer();
+		sql.append("select app.*, comtable.comname, comtable.description, comtable.repmail from app, comtable");
+		sql.append(" where app.comcode = comtable.comcode");
+		sql.append("   and status=?status");
+		sql.append("   and app.isdeleted=?isdeleted");
+
+		
+		IApp findListing = (IApp) Database.sql(IApp.class, sql.toString());
+		
+		findListing.setStatus(STATUS_PUBLISHED);
+		findListing.setIsDeleted(false);
+		findListing.select();
+		
+		return findListing;
 	}
 	
 	public IApp findForCategory() throws Exception{
+
+		StringBuffer sql = new StringBuffer();
+		sql.append("select app.*, comtable.comname, comtable.description, comtable.repmail from app, comtable");
+		sql.append(" where app.comcode = comtable.comcode");
+		sql.append("   and status=?status");
+		sql.append("   and categoryId=?categoryId");
+		sql.append("   and app.isdeleted=?isdeleted");
+
 		
-		IApp findListing = (IApp) Database.sql(IApp.class, "select * from app where categoryId=?categoryId and comcode=?comcode");
+		IApp findListing = (IApp) Database.sql(IApp.class, sql.toString());
 		
 		findListing.set("categoryId", this.getCategory().getCategoryId());
-		findListing.setComcode(this.getComcode());
-		findListing.select();
-		
-		return findListing;
-		
-	}
-	
-	public static IApp findPublishedApps(Session session) throws Exception {
-		
-		IApp findListing = (IApp) Database.sql(IApp.class, "select * from app where status=?status and isdeleted=?isDeleted and comcode=?comcode");
-		
-		findListing.setStatus("Published");
+		findListing.setStatus(STATUS_PUBLISHED);
 		findListing.setIsDeleted(false);
-		findListing.setComcode(session.getCompany().getComCode());
 		findListing.select();
 		
 		return findListing;

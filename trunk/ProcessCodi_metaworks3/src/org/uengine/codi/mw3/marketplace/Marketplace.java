@@ -49,7 +49,7 @@ public class Marketplace {
 		findlisting.setComcode(session.getCompany().getComCode());
 		findlisting.session = session;
 		
-		IApp listing = findlisting.findByVendor();
+		IApp listing = findlisting.findHome();
 		listing.getMetaworksContext().setWhen("marketplaceHome");
 		
 		MarketplaceSearchBox searchBox = new MarketplaceSearchBox();

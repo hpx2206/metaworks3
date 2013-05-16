@@ -13,6 +13,7 @@ import org.metaworks.dao.IDAO;
 import org.metaworks.website.MetaworksFile;
 import org.uengine.codi.mw3.knowledge.IWfNode;
 import org.uengine.codi.mw3.marketplace.category.ICategory;
+import org.uengine.codi.mw3.model.ICompany;
 
 
 @Table(name="APP")
@@ -56,6 +57,11 @@ public interface IApp extends IDAO{
 
 	public String getComcode();
 	public void setComcode(String comcode);
+	
+	@NonSavable
+	@ORMapping(objectFields={"comCode", "comName", "description", "repMail"}, databaseFields={"comCode", "comName", "description", "repMail"})
+	public ICompany getCompany();
+	public void setCompany(ICompany company);
 
 	public boolean isDeleted();
 	public void setIsDeleted(boolean isDeleted);
