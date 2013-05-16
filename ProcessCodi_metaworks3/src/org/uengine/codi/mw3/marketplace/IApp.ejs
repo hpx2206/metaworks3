@@ -1,12 +1,7 @@
 	
 <%
 if(value){
-
-var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
-
-var company = session.company[0];
-var when = value.metaworksContext.when;
-
+	var when = mw3.when;
 
 	if(when == 'detailList'){
 
@@ -14,7 +9,7 @@ var when = value.metaworksContext.when;
 	<div class="detailView_app_outer">
 		<div class="detailView_app">
 			<div class="topTitle_app"><%=value.appName%></div>
-			<div class="byCompany_app">by <%=company.comName%></div>
+			<div class="byCompany_app">by <%=value.company.comname%></div>
 			
 			<div class="clear"></div>
 		</div>
@@ -66,9 +61,9 @@ var when = value.metaworksContext.when;
 		                <tr>
 		                    <td class="appFirstTd"><span class="thumb"> logo </span> </td>
 		                    <td class="appTitleTd">
-		                    	<div class="titleLine"> <strong><%=company.comName%></strong></div>
-		                    	<div class="fullOverview"><%=company.description%></div> 
-		                    	<div class="simpleOverview"><%=company.repMail%></div>
+		                    	<div class="titleLine"> <strong><%=value.company.comName?value.company.comName:''%></strong></div>
+		                    	<div class="fullOverview"><%=value.company.description?value.company.description:''%></div> 
+		                    	<div class="simpleOverview"><%=value.company.repMail?value.company.repMail:''%></div>
 		                    </td>
 		                </tr>
 		            </table>
@@ -99,9 +94,6 @@ var when = value.metaworksContext.when;
 <%
 	
 	}else {
-	
-		if(value.status != 'Request'){
-	
 %>
 
 	<div class="fixed_img_row">
@@ -117,7 +109,7 @@ var when = value.metaworksContext.when;
 	                        <div class="PricingDetail_app" style="float:left"> Pricing Detail : </div>
 							<div style="float:left;margin:7px 5px"><%=value.pricing%> </div>
 							<div class="clear"></div>
-	                        <div class="vendor"> service by <%=company.comName%></div>
+	                        <div class="vendor"> service by <%=value.company.comName%></div>
 	                    </td>
 	                    <td class="appStatusTd"><b>Listing Status</b><br><%=value.status%> </td>
 	                    <td class="appBtnTd">
@@ -159,9 +151,7 @@ var when = value.metaworksContext.when;
 			</ul>
 		</div>	
 
-<%	
-		}
-	
+<%		
 	}
 
 }
