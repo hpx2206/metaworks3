@@ -224,8 +224,8 @@ public class AppInformation implements ContextAware, ITool {
 			throw new MetaworksException("$YouMustAttachLogoFile");
 
 		App listing = new App();
-		listing.setAppId(getAppId());
-
+		listing.setAppId(this.getAppId());
+		
 		if (!(listing.databaseMe().getLogoFile().getFilename()).equals(getLogoFile().getFilename())) {
 			getLogoFile().upload();
 		}
@@ -237,7 +237,7 @@ public class AppInformation implements ContextAware, ITool {
 		listing.setLogoFile(getLogoFile());
 		listing.setCreateDate(Calendar.getInstance().getTime());
 		listing.setComcode(session.getCompany().getComCode());
-		listing.setStatus(App.STATUS_REQUEST);
+		listing.setStatus(listing.databaseMe().getStatus());	
 		listing.setIsDeleted(false);
 
 		ICategory category = new Category();
