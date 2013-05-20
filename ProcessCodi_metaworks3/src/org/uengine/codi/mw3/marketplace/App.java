@@ -508,7 +508,8 @@ public class App extends Database<IApp> implements IApp{
 	    
 	    //무조건 compleate
 	    processManager.executeProcessByWorkitem(instId.toString(), rp);
-		
+	    processManager.applyChanges();
+	    
 		
 	}
 	
