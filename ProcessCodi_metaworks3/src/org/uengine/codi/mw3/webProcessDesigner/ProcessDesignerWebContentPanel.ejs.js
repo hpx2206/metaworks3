@@ -446,7 +446,7 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 //	    			value.addValiable();
 	    		}
 	    		
-	    		if(clipboardNode && clipboardNode.__className=="org.uengine.codi.mw3.ide.ResourceNode"){
+	    		if(clipboardNode && clipboardNode.__className=="org.uengine.codi.mw3.model.ResourceFile"){	    			
 	    			var javaFileName = clipboardNode.name;
 	    			if( javaFileName != '' && javaFileName.length > 5){
 	    				var tokens  = javaFileName.split(".");
@@ -460,24 +460,26 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 	    		    			activityData.resourceClass = clipboardNode.alias;
 	    		    			$(this).data('activity', activityData);
 	    		    		}
-	    		    		
-	    		    		
 //	    		    		var wfText = $(element).children('[id$=_LABEL]').text();
 //	    		    		wfText = wfText + '(' + clipboardNode.name + ')';
 //	    		    		canvas.drawLabel(element, wfText);
-	    		    		customData.push( {"customId": "" , "customName" : tokens[tokens.length-2] , "customType" : "class"});
-	    		    		
 	    		    		var value = mw3.objects[objectId];
 	    		    		var variableName = tokens[tokens.length-2];
+	    		    		
+	    		    		console.log(clipboardNode);
+	    		    		
 	    		    		var contentValue = {
 									__className : 'org.uengine.codi.mw3.webProcessDesigner.PrcsVariable',
-									name : variableName ,
-									typeId : clipboardNode.id ,
+									name : variableName,
+									typeId : clipboardNode.alias ,
 									variableType : 'complexType'
 							};
 	    		    		value.variableMap[variableName] = contentValue;
 	    		    		
 	    		    		canvas.drawLabel(element, variableName);
+	    		    		
+	    		    		customData.push( {"customId": "" , "customName" : variableName , "customType" : "class"});
+	    		    		
 //	    	    			value.tempElementId = $(this).attr('id');
 //	    	    			value.tempElementName = tokens[tokens.length-2];
 //	    	    			value.tempElementTypeId = clipboardNode.alias;
@@ -515,6 +517,10 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
     		}
     	},
     	dblclick: function (event) {
+    		if(event.stopPropagation){
+    			event.stopPropagation();
+    		}
+    		
     		/*
     		var value = mw3.getOobject(objectId);
 			value.tempElementId = $(this).attr('id');
