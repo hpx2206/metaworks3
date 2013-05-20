@@ -35,7 +35,6 @@ public class AppInformation implements ContextAware, ITool {
 	public AppInformation() throws Exception {
 
 		setLogoFile(new MetaworksFile());
-
 		this.setMetaworksContext(new MetaworksContext());
 
 	}
@@ -212,7 +211,8 @@ public class AppInformation implements ContextAware, ITool {
 
 		// 무조건 compleate
 		processManager.executeProcessByWorkitem(instId.toString(), rp);
-
+		processManager.applyChanges();
+		
 		return new Refresh(gomarketHome.goMarketplace(), true);
 
 	}
@@ -258,6 +258,9 @@ public class AppInformation implements ContextAware, ITool {
 	public void onLoad() throws Exception {
 		if (MetaworksContext.WHEN_VIEW.equals(this.getMetaworksContext()
 				.getWhen())) {
+			if(this.getLogoFile().getMetaworksContext() == null){
+				this.getLogoFile().setMetaworksContext(new MetaworksContext());
+			}
 			this.getLogoFile().getMetaworksContext().setWhen("image");
 		}
 
