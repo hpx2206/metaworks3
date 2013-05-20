@@ -75,19 +75,24 @@ public class MappingActivity extends DefaultActivity implements IDrawDesigne {
 					value = param.getTransformerMapping().getTransformer().letTransform(instance, param.getTransformerMapping().getLinkedArgumentName());
 				}else{
 					srcVariableName = param.getVariable().getName();		
-					String [] wholePartPath = srcVariableName.replace('.','@').split("@");
-					// wholePartPath.length >= 3 이 되는 이유는 안쪽에 객체의 값을 참조하려고 하는 부분이기때문에 따로 값을 가져와야함
-					if( wholePartPath.length >= 3 ){
-						String rootObjectName = wholePartPath[0] + "." + wholePartPath[1];
-						Object rootObject = instance.getBeanProperty(rootObjectName);
-						if( rootObject != null ){
-							value = UEngineUtil.getBeanProperty(rootObject, wholePartPath[2]);
-						}
-						for(int j = 3; j < wholePartPath.length ; j++){
-							value = UEngineUtil.getBeanProperty(value, wholePartPath[j]);
-						}
-					}else{
+					if( srcVariableName.startsWith("[activities]") || srcVariableName.startsWith("[instance]") ){
 						value = instance.getBeanProperty(srcVariableName); // varA
+					}else{
+						String [] wholePartPath = srcVariableName.replace('.','@').split("@");
+						// wholePartPath.length >= 3 이 되는 이유는 안쪽에 객체의 값을 참조하려고 하는 부분이기때문에 따로 값을 가져와야함
+						if( wholePartPath.length >= 3 ){
+							String rootObjectName = wholePartPath[0] + "." + wholePartPath[1];
+							// 이걸 바로 호출
+							Object rootObject = instance.getBeanProperty(rootObjectName);
+							if( rootObject != null ){
+								value = UEngineUtil.getBeanProperty(rootObject, wholePartPath[2]);
+							}
+							for(int j = 3; j < wholePartPath.length ; j++){
+								value = UEngineUtil.getBeanProperty(value, wholePartPath[j]);
+							}
+						}else{
+							value = instance.getBeanProperty(srcVariableName); // varA
+						}
 					}
 				}			
 				
