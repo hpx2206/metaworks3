@@ -1,6 +1,5 @@
 package org.uengine.codi.scheduler;
 
-import java.rmi.RemoteException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -10,25 +9,16 @@ import java.util.List;
 
 import org.metaworks.dao.ConnectionFactory;
 import org.metaworks.dao.TransactionContext;
+import org.metaworks.dao.TransactionListener;
 import org.metaworks.spring.SpringConnectionFactory;
 import org.quartz.JobExecutionContext;
 import org.quartz.StatefulJob;
 import org.uengine.codi.CodiProcessManagerBean;
 import org.uengine.codi.MetaworksUEngineSpringConnectionAdapter;
-import org.uengine.codi.cron.EMailReader;
-import org.uengine.codi.mw3.CodiClassLoader;
-import org.uengine.codi.mw3.model.ProcessMap;
-import org.uengine.codi.mw3.model.RoleMappingPanel;
-import org.uengine.codi.mw3.project.ProjectCreate;
 import org.uengine.kernel.Activity;
-import org.uengine.kernel.KeyedParameter;
 import org.uengine.kernel.ProcessInstance;
-import org.uengine.kernel.ResultPayload;
-import org.uengine.kernel.RoleMapping;
-import org.uengine.kernel.TransactionListener;
 import org.uengine.kernel.WaitActivity;
 import org.uengine.scheduler.SchedulerItem;
-import org.uengine.util.dao.DefaultConnectionFactory;
 
 
 public class WaitJob implements StatefulJob {
@@ -39,6 +29,23 @@ public class WaitJob implements StatefulJob {
 		
 //		System.out.println("scheduler WaitJob execute() start...");
 		
+		TransactionContext tx = new TransactionContext(); //once a TransactionContext is created, it would be cached by ThreadLocal.set, so, we need to remove this after the request processing. 
+	        
+		tx.setManagedTransaction(false);
+		tx.setAutoCloseConnection(true);
+
+		connectionFactory = (SpringConnectionFactory) context.getJobDetail().getJobDataMap().get("connectionFactory");
+		
+		MetaworksUEngineSpringConnectionAdapter connectionAdapter = new MetaworksUEngineSpringConnectionAdapter();
+
+		CodiProcessManagerBean pm = new CodiProcessManagerBean();
+		pm.setConnectionFactory(connectionAdapter);
+		pm.setAutoCloseConnection(false);
+		pm.setManagedTransaction(true);
+		
+		if(connectionFactory!=null)
+			tx.setConnectionFactory(connectionFactory);
+		
 		Calendar now = Calendar.getInstance();
 		
 		List<SchedulerItem> schedulerItems = this.getAllSchedule();
@@ -46,26 +53,9 @@ public class WaitJob implements StatefulJob {
 		for (final SchedulerItem item : schedulerItems) {
 			
 			if (!(item.getStartDate().getTime() <= now.getTimeInMillis())) {
-				//continue;
+				continue;
 			}
 
-	        TransactionContext tx = new TransactionContext(); //once a TransactionContext is created, it would be cached by ThreadLocal.set, so, we need to remove this after the request processing. 
-	        
-			tx.setManagedTransaction(false);
-			tx.setAutoCloseConnection(true);
-
-			connectionFactory = (SpringConnectionFactory) context.getJobDetail().getJobDataMap().get("connectionFactory");
-			
-			MetaworksUEngineSpringConnectionAdapter connectionAdapter = new MetaworksUEngineSpringConnectionAdapter();
-
-			CodiProcessManagerBean pm = new CodiProcessManagerBean();
-			pm.setConnectionFactory(connectionAdapter);
-			pm.setAutoCloseConnection(false);
-			pm.setManagedTransaction(true);
-			
-			if(connectionFactory!=null)
-				tx.setConnectionFactory(connectionFactory);
-			
 			ProcessInstance instance = null;
 			
 			try {
@@ -87,18 +77,18 @@ public class WaitJob implements StatefulJob {
 						
 						String status = wa.getStatus(instance);
 						if (Activity.STATUS_RUNNING.equals(status) || Activity.STATUS_TIMEOUT.equals(status)) {
-							instance.getProcessTransactionContext().addTransactionListener(new TransactionListener() {
+							tx.addTransactionListener(new TransactionListener() {
 
-								public void beforeRollback(org.uengine.processmanager.TransactionContext tx) throws Exception {
+								public void beforeRollback(TransactionContext tx) throws Exception {
 								}
 
-								public void beforeCommit(org.uengine.processmanager.TransactionContext tx) throws Exception {
+								public void beforeCommit(TransactionContext tx) throws Exception {
 								}
 
-								public void afterRollback(org.uengine.processmanager.TransactionContext tx) throws Exception {
+								public void afterRollback(TransactionContext tx) throws Exception {
 								}
 
-								public void afterCommit(org.uengine.processmanager.TransactionContext tx) throws Exception {
+								public void afterCommit(TransactionContext tx) throws Exception {
 									deleteSchedule(item.getIdx());
 								}
 							});
@@ -153,7 +143,7 @@ public class WaitJob implements StatefulJob {
         List<SchedulerItem> schedulerItems = new ArrayList<SchedulerItem>();
         
         try {
-            conn = DefaultConnectionFactory.create().getConnection();
+            conn = connectionFactory.getConnection();
             stmt = conn.createStatement();
             
             StringBuilder sql = new StringBuilder();
@@ -217,7 +207,7 @@ public class WaitJob implements StatefulJob {
         Statement stmt = null;
         
         try {
-            conn = DefaultConnectionFactory.create().getConnection();
+            conn = connectionFactory.getConnection();
             stmt = conn.createStatement();
             
             StringBuilder sql = new StringBuilder();
