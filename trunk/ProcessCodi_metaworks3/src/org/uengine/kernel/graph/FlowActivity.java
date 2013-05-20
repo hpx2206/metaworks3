@@ -1,12 +1,14 @@
 package org.uengine.kernel.graph;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.List;
 
 import org.uengine.kernel.Activity;
 import org.uengine.kernel.ActivityReference;
 import org.uengine.kernel.ComplexActivity;
+import org.uengine.kernel.HumanActivity;
 import org.uengine.kernel.ProcessInstance;
 import org.uengine.kernel.UEngineException;
 import org.uengine.processmanager.ProcessTransactionContext;
@@ -114,6 +116,10 @@ public class FlowActivity extends ComplexActivity {
 				// register token before queueActivity()
 				for (int i = 0; i < possibleNextActivities.size(); i++) {
 					Activity child = possibleNextActivities.get(i);
+					
+					child.reset(instance);
+					child.setStartedTime(instance, (Calendar)null);
+					
 					int tokenCount = child.getTokenCount(instance);
 					child.setTokenCount(instance, ++tokenCount);
 				}
