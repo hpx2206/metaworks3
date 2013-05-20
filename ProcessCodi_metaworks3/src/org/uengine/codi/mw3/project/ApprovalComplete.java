@@ -133,10 +133,12 @@ public class ApprovalComplete implements ITool  {
 			//가상서버에 ip변경 스크립트 파일 복사하기
 			jschServerBehaviour.copySettingFileToVM(vmIp);
 			
+			
+			
 			String[] commands = new String[3];
 			commands[0] = GlobalContext.getPropertyString("vm.add.permission");			//전송된 파일에 권한 부여하기
-			commands[1] = GlobalContext.getPropertyString("vm.setting.adjustEnv");		//환경세팅 스크립트 파일 실행하기
-			commands[2] = GlobalContext.getPropertyString("vm.setting.adjustHosts");
+			commands[1] = GlobalContext.getPropertyString("vm.remote.filepath") + GlobalContext.getPropertyString("vm.setting.adjustEnv");		//환경세팅 스크립트 파일 실행하기
+			commands[2] = GlobalContext.getPropertyString("vm.remote.filepath") + GlobalContext.getPropertyString("vm.setting.adjustHosts");
 			
 			if(commands.length != 0){
 				for(int i=0; i<commands.length; i++){
