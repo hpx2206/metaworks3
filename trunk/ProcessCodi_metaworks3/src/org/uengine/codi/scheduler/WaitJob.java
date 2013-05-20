@@ -185,11 +185,7 @@ public class WaitJob implements StatefulJob {
                     stmt.close();
                 } catch (Exception e) { }
             }
-            if (conn != null) {
-                try {
-                    conn.close();
-                } catch (Exception e) { }
-            }
+
         }
      
         return schedulerItems;
@@ -219,11 +215,6 @@ public class WaitJob implements StatefulJob {
             if (stmt != null) {
                 try {
                     stmt.close();
-                } catch (Exception e) { }
-            }
-            if (conn != null) {
-                try {
-                    conn.close();
                 } catch (Exception e) { }
             }
         }
