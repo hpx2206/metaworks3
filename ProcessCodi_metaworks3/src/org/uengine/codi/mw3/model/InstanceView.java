@@ -208,10 +208,12 @@ public class InstanceView {
 		setInstanceName(inst.getName());
 		
 		if(inst.getDefId() == null){
+			/*
 			crowdSourcer = new CrowdSourcer();
 			crowdSourcer.setInstanceId(getInstanceId());
 			crowdSourcer.setFollowers(this.followers);
 			crowdSourcer.setMessage(getInstanceName());
+			
 			
 			if(instance.getProperty("", "facebook_postIds") != null){
 				String[] postIds = (String[])instance.getProperty("", "facebook_postIds");
@@ -222,6 +224,7 @@ public class InstanceView {
 			if(instance.getProperty("", "is_open") != null){
 				isOpen = ((String)instance.getProperty("", "is_open")).equals("open") ? true : false;
 			}
+			
 			
 			System.out.println("isOpen :" + isOpen);
 			crowdSourcer.setOpen(isOpen);
@@ -243,6 +246,8 @@ public class InstanceView {
 					externalFeedback.add(postingWorkItem);
 				}			
 			}	
+			*/
+			
 			eventTriggerPanel = new EventTriggerPanel(instance);
 		}
 		
