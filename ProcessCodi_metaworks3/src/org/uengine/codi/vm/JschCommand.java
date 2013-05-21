@@ -29,12 +29,8 @@ public class JschCommand {
 			this.jschSession = jschSession;
 		}
 	
-	public Session sessionLogin() throws JSchException{
+	public Session sessionLogin(String host, String userId, String passwd) throws JSchException{
 		JSch jsch=new JSch();
-		
-		String host = GlobalContext.getPropertyString("vm.manager.ip");
-		String userId = GlobalContext.getPropertyString("vm.manager.user");
-		String passwd = GlobalContext.getPropertyString("vm.manager.password");
 		
 		Session session=jsch.getSession(userId, host, 22);
 		session.setPassword(passwd);
@@ -54,79 +50,26 @@ public class JschCommand {
 		return session;
 	}
 	
-	public String runCommand(String command){
-		String output = "";
-		try{
-			if( getJschSession() == null ){
-				System.out.println("try connect");
-				this.sessionLogin();
-			}
-			System.out.println("connected");
-			ChannelExec channel = (ChannelExec)getJschSession().openChannel("exec");
-			
-			((ChannelExec)channel).setCommand(command);
-			channel.setInputStream(null);
-			System.out.println("run command");
-			channel.connect();
-			System.out.println("finish");
-			InputStream in=channel.getInputStream();
-			output = setInAndOutStream(channel, in);
-			
-			channel.disconnect();
-		}catch(Exception e){
-			if( getJschSession() != null )	getJschSession().disconnect();
-		}
+	public String runCommand(String command) throws Exception {
 		
-//		getJschSession().disconnect();
-	
+		if( getJschSession() == null )
+			throw new Exception("not connected");
+		
+		String output = "";
+		
+		ChannelExec channel = (ChannelExec)getJschSession().openChannel("exec");
+		
+		((ChannelExec)channel).setCommand(command);
+		channel.setInputStream(null);
+		channel.connect();
+
+		// run
+		InputStream in=channel.getInputStream();
+		output = setInAndOutStream(channel, in);
+		
+		channel.disconnect();
+
 		return output;
-	}
-	
-	public void copySettingFileToVM(String host){
-		try{
-			
-			JSch jsch=new JSch();
-			
-//			String host = "192.168.212.60";
-//			//나중에 뺼 코드(if문)
-//			if(host == null)
-//				host = "192.168.212.60";
-//			String userId = "root";
-//			String passwd = "redhatxen";
-			
-			String userId = GlobalContext.getPropertyString("vm.manager.user");
-			String passwd = GlobalContext.getPropertyString("vm.manager.password");
-			
-			
-			Session session=jsch.getSession(userId, host, 22);
-			session.setPassword(passwd);
-			
-			// username and password will be given via UserInfo interface.
-			UserInfo ui = new MyUserInfo(){
-			      public void showMessage(String message){
-			      }
-			      public boolean promptYesNo(String message){
-			      	return true;
-			      }
-			};
-			session.setUserInfo(ui);
-			session.connect();
-			
-			Channel channel = session.openChannel("sftp");
-			channel.connect();
-			ChannelSftp sftpChannel = (ChannelSftp) channel;
-			
-			SftpProgressMonitor monitor=new MyProgressMonitor();
-			int mode = ChannelSftp.APPEND;
-			sftpChannel.put(GlobalContext.getPropertyString("vm.local.filepath") + GlobalContext.getPropertyString("vm.filename.adjustEnv"), GlobalContext.getPropertyString("vm.remote.filepath") + GlobalContext.getPropertyString("vm.filename.adjustEnv"), monitor, mode);
-			sftpChannel.put(GlobalContext.getPropertyString("vm.local.filepath") + GlobalContext.getPropertyString("vm.filename.adjustHosts"), GlobalContext.getPropertyString("vm.remote.filepath") + GlobalContext.getPropertyString("vm.filename.adjustHosts"), monitor, mode);
-			sftpChannel.exit();
-			
-			channel.disconnect();
-		}catch (Exception e) {
-			// TODO: handle exception
-		}
-//		getJschSession().disconnect();
 	}
 	
 	private static String setInAndOutStream(Channel channel, InputStream in) throws IOException, JSchException {
