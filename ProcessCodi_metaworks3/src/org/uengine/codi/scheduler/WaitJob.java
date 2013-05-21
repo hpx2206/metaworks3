@@ -144,8 +144,7 @@ public class WaitJob implements StatefulJob {
         
         try {
             conn = connectionFactory.getConnection();
-            stmt = conn.createStatement();
-            
+            stmt = conn.createStatement(); 
             StringBuilder sql = new StringBuilder();
             sql.append("SELECT "); 
             sql.append("	SCHEDULE_TABLE.SCHE_IDX, "); 
@@ -185,7 +184,11 @@ public class WaitJob implements StatefulJob {
                     stmt.close();
                 } catch (Exception e) { }
             }
-
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (Exception e) { }
+            }
         }
      
         return schedulerItems;
@@ -210,11 +213,19 @@ public class WaitJob implements StatefulJob {
             sql.append(" DELETE FROM SCHEDULE_TABLE WHERE SCHE_IDX=").append(idx);
             
             stmt.executeUpdate(sql.toString());
-
+        } catch (Exception e) {
+			if (conn != null) try { conn.rollback(); } catch (Exception e1) { }
+			throw e;
         } finally {
             if (stmt != null) {
                 try {
                     stmt.close();
+                } catch (Exception e) { }
+            }
+            if (conn != null) {
+            	conn.setAutoCommit(true);
+                try {
+                    conn.close();
                 } catch (Exception e) { }
             }
         }
