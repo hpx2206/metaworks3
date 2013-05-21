@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 
 import org.directwebremoting.io.FileTransfer;
 import org.metaworks.ContextAware;
@@ -19,9 +20,10 @@ import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.website.Download;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.codi.hudson.HudsonJobApi;
+import org.uengine.codi.hudson.HudsonJobDDTO;
 import org.uengine.codi.mw3.model.InstanceViewContent;
 import org.uengine.codi.mw3.model.Session;
-import org.uengine.codi.mw3.project.ApprovalComplete;
 import org.uengine.codi.mw3.project.VMRequest;
 import org.uengine.codi.vm.JschCommand;
 import org.uengine.kernel.GlobalContext;
@@ -238,20 +240,100 @@ public class ProjectInfo implements ContextAware {
 //		callURL(hudsonReload());
 //		callURL(hudsonBuild());
 		
+		String host = GlobalContext.getPropertyString("vm.manager.ip");
+		String userId = GlobalContext.getPropertyString("vm.manager.user");
+		String passwd = GlobalContext.getPropertyString("vm.manager.password");
+
+		String targetUserId = GlobalContext.getPropertyString("vm.target.user");
+		String targetPassword= GlobalContext.getPropertyString("vm.target.password");
+
 		JschCommand jschServerBehaviour = new JschCommand();
-	
-		String command = GlobalContext.getPropertyString("vm.hudson.setting") + " \"" + this.getProjectName() + "\"" + " \"" + this.getIp() + "\"";
-		jschServerBehaviour.runCommand(command);
+		jschServerBehaviour.sessionLogin(host, userId, passwd);
 		
-		try {
-			Thread.sleep(35000);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		String scriptHudsonSetting = GlobalContext.getPropertyString("vm.hudson.setting");
+		String scriptHudsonBuild = GlobalContext.getPropertyString("vm.hudson.build");
+		String scriptFilePermission = GlobalContext.getPropertyString("vm.permission");
+		String scriptTargetStartUp = GlobalContext.getPropertyString("vm.target.startup");
+		
+		String paramProjectName = "\"" + this.getProjectName() + "\"";
+		String paramIP = "\"" + this.getIp() + "\"";
+		
+		String hudsonURL = GlobalContext.getPropertyString("vm.hudson.url");
+		String nextBuilderNumber = null;
+		String builderResult = null;
+		
+		long timeoutTime = 200000;
+		long sleepTime = 5000;
+		long tryTime = 0;
+		
+		/*
+		this.setProjectName("paastest6");
+		this.setIp("192.168.212.64");
+ 
+		//<!-- temp work
+		jschServerBehaviour.runCommand(GlobalContext.getPropertyString("vm.svn.createProject") + " " + paramProjectName);
+		jschServerBehaviour.runCommand(GlobalContext.getPropertyString("vm.svn.setting") + " " + paramProjectName);
+		jschServerBehaviour.runCommand(GlobalContext.getPropertyString("vm.svn.createUser") + " " + paramProjectName + " " + "paasManager admin");
+		jschServerBehaviour.runCommand(GlobalContext.getPropertyString("vm.hudson.createJob") + " " + paramProjectName);
+		//--> temp work
+		
+		if(true)
+			return new Remover(this);
+
+		*/
+		
+		jschServerBehaviour.runCommand(scriptHudsonSetting + " " +paramProjectName + " " + paramIP);
+		
+		HudsonJobApi hudsonJobApi = new HudsonJobApi();
+
+		while(nextBuilderNumber == null){
+			HudsonJobDDTO hudsonJobDDTO = hudsonJobApi.hudsonJobApiXmlParser(hudsonURL, this.getProjectName());
+			
+			nextBuilderNumber = hudsonJobDDTO.getNextBuilderNumber();
+			System.out.println("nextBuilderNumber :" + nextBuilderNumber);
+			try {
+				tryTime += sleepTime;
+				Thread.sleep(sleepTime);
+			} catch (Exception e) {
+			}
+			
+			if(tryTime > timeoutTime)
+				break;
 		}
 		
-		command = GlobalContext.getPropertyString("vm.hudson.build") + " \"" + this.getProjectName() + "\"";
-		jschServerBehaviour.runCommand(command);
+		// build hudson
+		jschServerBehaviour.runCommand(scriptHudsonBuild + " " + paramProjectName);
+		
+		while(builderResult == null){
+			HudsonJobDDTO hudsonJobDDTO = hudsonJobApi.hudsonJobApiXmlParser(hudsonURL, this.getProjectName());
+			
+			if(nextBuilderNumber.equals(hudsonJobDDTO.getLastSuccessfulBuild().getNumber()))
+				builderResult = "SUCCESS";
+			else if(nextBuilderNumber.equals(hudsonJobDDTO.getLastUnSuccessfulBuild().getNumber()))
+				builderResult = "UNSUCCESS";
+			else if(nextBuilderNumber.equals(hudsonJobDDTO.getLastFailedBuild().getNumber()))
+				builderResult = "FAILED";
+			
+			try {
+				Thread.sleep(5000);
+			} catch (Exception e) {
+			}
+		}
+
+		if(jschServerBehaviour.getJschSession() != null)
+			jschServerBehaviour.getJschSession().disconnect();
+
+		
+		if(builderResult.equals("SUCCESS")){
+			
+			jschServerBehaviour.sessionLogin(this.getIp(), targetUserId, targetPassword);
+			
+			jschServerBehaviour.runCommand(scriptFilePermission);
+			jschServerBehaviour.runCommand(scriptTargetStartUp + " " + this.getProjectName());
+			
+			if(jschServerBehaviour.getJschSession() != null)
+				jschServerBehaviour.getJschSession().disconnect();
+		}
 		
 		return new Remover(this);
 		
