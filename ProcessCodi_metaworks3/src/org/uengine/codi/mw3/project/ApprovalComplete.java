@@ -79,13 +79,17 @@ public class ApprovalComplete implements ITool  {
 		
 		
 		if(processManager != null && processManager.getProcessVariable(instId.toString(), "", "vm_ip") != null){
+			String host = GlobalContext.getPropertyString("vm.manager.ip");
+			String userId = GlobalContext.getPropertyString("vm.manager.user");
+			String passwd = GlobalContext.getPropertyString("vm.manager.password");
+			
 			String vmDb = (String)((Serializable)processManager.getProcessVariable(instId.toString(), "", "vm_db"));
 			String vmIp = (String)((Serializable)processManager.getProcessVariable(instId.toString(), "", "vm_ip"));
 			String projectName = (String)((Serializable)processManager.getProcessVariable(instId.toString(), "", "projectName"));
 			String projectId = (String)((Serializable)processManager.getProcessVariable(instId.toString(), "", "projectId"));
 			
-			
 			JschCommand jschServerBehaviour = new JschCommand();
+			jschServerBehaviour.sessionLogin(host, userId, passwd);
 			
 			//create SVN
 			String command = GlobalContext.getPropertyString("vm.svn.createProject") + " \"" + projectName + "\"";
@@ -123,6 +127,7 @@ public class ApprovalComplete implements ITool  {
 			command = GlobalContext.getPropertyString("vm.hudson.createJob") + " \"" + projectName + "\"";
 			jschServerBehaviour.runCommand(command);
 			
+			jschServerBehaviour.getJschSession().disconnect();
 //			command = GlobalContext.getPropertyString("vm.hudson.setting") + " \"" + projectName + "\"" + " \"" + GlobalContext.getPropertyString("vm.server.ip") + "\"";
 //			jschServerBehaviour.runCommand(command);
 			
@@ -130,11 +135,7 @@ public class ApprovalComplete implements ITool  {
 			//해당파일 실행하고 => commend만 날리면됨.
 			//put-append local-path [remote-path]
 			
-			//가상서버에 ip변경 스크립트 파일 복사하기
-			jschServerBehaviour.copySettingFileToVM(vmIp);
-			
-			
-			
+			/*
 			String[] commands = new String[3];
 			commands[0] = GlobalContext.getPropertyString("vm.add.permission");			//전송된 파일에 권한 부여하기
 			commands[1] = GlobalContext.getPropertyString("vm.remote.filepath") + GlobalContext.getPropertyString("vm.setting.adjustEnv");		//환경세팅 스크립트 파일 실행하기
@@ -145,6 +146,7 @@ public class ApprovalComplete implements ITool  {
 					jschServerBehaviour.runCommand(commands[i]);
 				}
 			}
+			*/
 			
 		}
 	}
