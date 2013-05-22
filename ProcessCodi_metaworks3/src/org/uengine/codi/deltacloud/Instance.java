@@ -82,7 +82,7 @@ public class Instance {
 			}else if("public_addresses".equals(el.getName())){
 				instance.setPublicAddress(el.getValue());
 			}else{
-				System.out.println(el.getName() + ":" + el.getValue());
+				//System.out.println(el.getName() + ":" + el.getValue());
 			}
 		}
 		
