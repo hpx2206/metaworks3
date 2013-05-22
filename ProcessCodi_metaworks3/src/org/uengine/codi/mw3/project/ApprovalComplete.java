@@ -88,46 +88,51 @@ public class ApprovalComplete implements ITool  {
 			String projectName = (String)((Serializable)processManager.getProcessVariable(instId.toString(), "", "projectName"));
 			String projectId = (String)((Serializable)processManager.getProcessVariable(instId.toString(), "", "projectId"));
 			
+			String scriptSvnCreateProject = GlobalContext.getPropertyString("vm.svn.createProject");
+			String scriptSvnSetting = GlobalContext.getPropertyString("vm.svn.setting");
+			String scriptSvnInsertUser = GlobalContext.getPropertyString("vm.svn.createUser");
+			String scriptHudsonCreateJob = GlobalContext.getPropertyString("vm.hudson.createJob");
+			
+			String paramProjectName = "\"" + projectName + "\"";
+			
+
+			
 			JschCommand jschServerBehaviour = new JschCommand();
 			jschServerBehaviour.sessionLogin(host, userId, passwd);
 			
 			//create SVN
-			String command = GlobalContext.getPropertyString("vm.svn.createProject") + " \"" + projectName + "\"";
-			jschServerBehaviour.runCommand(command);
-			
+			jschServerBehaviour.runCommand(scriptSvnCreateProject + " " + paramProjectName);
 			//SVN setting
-			command = GlobalContext.getPropertyString("vm.svn.setting") + " \"" + projectName + "\"";
-			jschServerBehaviour.runCommand(command);
+			jschServerBehaviour.runCommand(scriptSvnSetting + " " + paramProjectName);
+			//svn프로젝트와 동일한 hudson job생성
+			jschServerBehaviour.runCommand(scriptHudsonCreateJob + " " + paramProjectName);
 			
 			TopicMapping tp = new TopicMapping();
 			tp.setTopicId(projectId);
 			
 			ITopicMapping participateUsers = tp.findUsers();
-			
-			RowSet rs = participateUsers.getImplementationObject().getRowSet();
-			
-			while(rs.next()) {
-				
+			while(participateUsers.next()){
 				Employee employee = new Employee();
-				employee.setEmpCode(rs.getString("userId"));
+				employee.setEmpCode(participateUsers.getString("userId"));
 				
 				String password =  employee.findMe().getPassword();
 				
 				//vm 유저 추가
-				command = GlobalContext.getPropertyString("vm.svn.createUser") + " \"" + projectName + "\" \"" + rs.getString("userId") + "\" \"" + password + "\"";
-				jschServerBehaviour.runCommand(command);
+				String paramInsertUserId = "\"" + participateUsers.getString("userId") + "\"";
+				String paramInsertPassword = "\"" + password + "\"";
+				
+				jschServerBehaviour.runCommand(scriptSvnInsertUser + " " + paramProjectName + " " + paramInsertUserId + " " + paramInsertPassword);
 				
 				//올챙이 류저 추가
-				String parameter = "?db=" + vmDb + "&email=" + rs.getString("userId") + "&url=" + vmIp + "&name=" + projectName;
+				String parameter = "?db=" + vmDb + "&email=" + participateUsers.getString("userId") + "&url=" + vmIp + "&name=" + projectName;
 				createDatabase(parameter);
-				
 			}
 			
-			//svn프로젝트와 동일한 hudson job생성
-			command = GlobalContext.getPropertyString("vm.hudson.createJob") + " \"" + projectName + "\"";
-			jschServerBehaviour.runCommand(command);
-			
 			jschServerBehaviour.getJschSession().disconnect();
+			
+			
+			
+			
 //			command = GlobalContext.getPropertyString("vm.hudson.setting") + " \"" + projectName + "\"" + " \"" + GlobalContext.getPropertyString("vm.server.ip") + "\"";
 //			jschServerBehaviour.runCommand(command);
 			
