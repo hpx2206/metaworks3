@@ -452,3 +452,81 @@ CREATE TABLE "schedule_table"(
 "startdate" datetime
 );
 
+
+-- index
+ALTER TABLE "app" ADD PRIMARY KEY("appid");
+ALTER TABLE "appkeys" ADD PRIMARY KEY("appkey");
+ALTER TABLE "appmapping" ADD PRIMARY KEY("appid","comcode");
+ALTER TABLE "bizrate" ADD PRIMARY KEY("empcode","yearmm");
+ALTER TABLE "bpm_acltable" ADD PRIMARY KEY("acltableid");
+ALTER TABLE "bpm_deadln_dim" ADD PRIMARY KEY("deadln_id");
+ALTER TABLE "bpm_knol" ADD PRIMARY KEY("id");
+ALTER TABLE "bpm_procdef" ADD PRIMARY KEY("defid");
+ALTER TABLE "bpm_procdefver" ADD PRIMARY KEY("defverid");
+ALTER TABLE "bpm_procinst" ADD PRIMARY KEY("instid");
+ALTER TABLE "bpm_procvar" ADD PRIMARY KEY("varid");
+ALTER TABLE "bpm_rolemapping" ADD PRIMARY KEY("rolemappingid");
+ALTER TABLE "bpm_strtg" ADD PRIMARY KEY("strtgid");
+ALTER TABLE "bpm_tag" ADD PRIMARY KEY("tagid");
+ALTER TABLE "bpm_topicmapping" ADD PRIMARY KEY("topicmappingid");
+ALTER TABLE "bpm_worklist" ADD PRIMARY KEY("taskid");
+ALTER TABLE "category" ADD PRIMARY KEY("categoryid");
+ALTER TABLE "comtable" ADD PRIMARY KEY("comcode");
+ALTER TABLE "emptable" ADD PRIMARY KEY("empcode");
+ALTER TABLE "oauth_token" ADD PRIMARY KEY("user_id");
+ALTER TABLE "parttable" ADD PRIMARY KEY("partcode");
+ALTER TABLE "processmap" ADD PRIMARY KEY("mapid");
+ALTER TABLE "roletable" ADD PRIMARY KEY("rolecode");
+ALTER TABLE "roleusertable" ADD PRIMARY KEY("rolecode","empcode","comcode");
+
+CREATE INDEX "parentid" ON "bpm_knol"("parentid","no");
+CREATE INDEX "fkf57f151c46f158c1" ON "bpm_procinst"("defid");
+
+CREATE INDEX "fkf57f151c78eb68e6" ON "bpm_procinst"("rootinstid");
+
+CREATE INDEX "test1" ON "bpm_procinst"("instid","rootinstid","secuopt");
+CREATE INDEX "test1" ON "bpm_rolemapping"("rootinstid","assigntype","endpoint");
+
+CREATE INDEX "test2" ON "bpm_rolemapping"("instid","rolename");
+
+CREATE INDEX "test3" ON "bpm_rolemapping"("rolename");
+CREATE INDEX "test1" ON "bpm_worklist"("instid","rolename");
+
+CREATE INDEX "test2" ON "bpm_worklist"("instid","refrolename");
+
+ALTER TABLE "bpm_procdefver" ADD  CONSTRAINT  "fk_defid" FOREIGN KEY ("defid") REFERENCES "bpm_procdef"("defid") ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE "parttable" ADD  CONSTRAINT  "fk_comcode" FOREIGN KEY ("comcode") REFERENCES "comtable"("comcode") ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+
+-- marketplace category data add
+INSERT INTO "category" ("categoryid", "categoryname", "parentcategoryid", "moddate", "deleted") VALUES (1, '인사/급여', -1, NULL, 0);
+INSERT INTO "category" ("categoryid", "categoryname", "parentcategoryid", "moddate", "deleted") VALUES (2, '영업 관리', -1, NULL, 0);
+INSERT INTO "category" ("categoryid", "categoryname", "parentcategoryid", "moddate", "deleted") VALUES (3, '생산 관리', -1, NULL, 0);
+INSERT INTO "category" ("categoryid", "categoryname", "parentcategoryid", "moddate", "deleted") VALUES (4, '설비 관리', -1, NULL, 0);
+INSERT INTO "category" ("categoryid", "categoryname", "parentcategoryid", "moddate", "deleted") VALUES (5, '구매 관리', -1, NULL, 0);
+INSERT INTO "category" ("categoryid", "categoryname", "parentcategoryid", "moddate", "deleted") VALUES (6, '수출입 관리', -1, NULL, 0);
+INSERT INTO "category" ("categoryid", "categoryname", "parentcategoryid", "moddate", "deleted") VALUES (7, '재고 관리', -1, NULL, 0);
+INSERT INTO "category" ("categoryid", "categoryname", "parentcategoryid", "moddate", "deleted") VALUES (8, '품질 관리', -1, NULL, 0);
+INSERT INTO "category" ("categoryid", "categoryname", "parentcategoryid", "moddate", "deleted") VALUES (9, '기술 정보 관리', -1, NULL, 0);
+
+
+-- paasManager and sample tester data add
+INSERT INTO "comtable" ("comcode", "comname", "description", "isdeleted", "repmail", "repmlhst", "repmlpwd") VALUES ('uengine.org', 'uengine.org', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO "comtable" ("comcode", "comname", "description", "isdeleted", "repmail", "repmlhst", "repmlpwd") VALUES ('CloudManager', 'CloudManager', '', '', '', '', '');
+INSERT INTO "comtable" ("comcode", "comname", "description", "isdeleted", "repmail", "repmlhst", "repmlpwd") VALUES ('uenginecloud.com', 'uenginecloud.com', '', '', '', '', '');
+
+INSERT INTO "emptable" ("empcode", "empname", "password", "isadmin", "jikname", "email", "partcode", "globalcom", "isdeleted", "locale", "nateon", "msn", "mobilecmp", "mobileno", "facebookid", "facebookpassword", "preferux", "prefermob", "mood", "appkey", "approved") VALUES ('test', 'test', 'test', 1, NULL, 'test@uengine.org', NULL, 'uengine.org', '0', 'ko', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
+INSERT INTO "emptable" ("empcode", "empname", "password", "isadmin", "jikname", "email", "partcode", "globalcom", "isdeleted", "locale", "nateon", "msn", "mobilecmp", "mobileno", "facebookid", "facebookpassword", "preferux", "prefermob", "mood", "appkey", "approved") VALUES ('processCodi.uengine.org', 'CODI', NULL, 0, NULL, NULL, NULL, 'uengine.org', NULL, 'ko', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
+INSERT INTO "emptable" ("empcode", "empname", "password", "isadmin", "jikname", "email", "partcode", "globalcom", "isdeleted", "locale", "nateon", "msn", "mobilecmp", "mobileno", "facebookid", "facebookpassword", "preferux", "prefermob", "mood", "appkey", "approved") VALUES ('paasManager', 'paasManager', 'admin', 1, '', 'paasManager@cloud.Manager', NULL, 'CloudManager', '0', 'ko', NULL, NULL, NULL, '', '', NULL, 'tw        ', 'auto      ', NULL, NULL, 1);
+INSERT INTO "emptable" ("empcode", "empname", "password", "isadmin", "jikname", "email", "partcode", "globalcom", "isdeleted", "locale", "nateon", "msn", "mobilecmp", "mobileno", "facebookid", "facebookpassword", "preferux", "prefermob", "mood", "appkey", "approved") VALUES ('pm@uenginecloud.com', 'pm', 'test', 1, '', 'pm@uenginecloud.com', NULL, 'uenginecloud.com', '0', 'ko', NULL, NULL, NULL, '', '', NULL, 'tw        ', 'auto      ', NULL, NULL, 1);
+INSERT INTO "emptable" ("empcode", "empname", "password", "isadmin", "jikname", "email", "partcode", "globalcom", "isdeleted", "locale", "nateon", "msn", "mobilecmp", "mobileno", "facebookid", "facebookpassword", "preferux", "prefermob", "mood", "appkey", "approved") VALUES ('processCodi.uenginecloud.com', 'CODI', NULL, 0, NULL, NULL, NULL, 'uenginecloud.com', NULL, 'ko', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
+INSERT INTO "emptable" ("empcode", "empname", "password", "isadmin", "jikname", "email", "partcode", "globalcom", "isdeleted", "locale", "nateon", "msn", "mobilecmp", "mobileno", "facebookid", "facebookpassword", "preferux", "prefermob", "mood", "appkey", "approved") VALUES ('tenantAdmin@uenginecloud.com', 'tenantAdmin', 'test', 1, '', 'tenantAdmin@uenginecloud.com', NULL, 'uenginecloud.com', '0', 'ko', NULL, NULL, NULL, '', '', NULL, 'tw        ', 'auto      ', NULL, NULL, 1);
+INSERT INTO "emptable" ("empcode", "empname", "password", "isadmin", "jikname", "email", "partcode", "globalcom", "isdeleted", "locale", "nateon", "msn", "mobilecmp", "mobileno", "facebookid", "facebookpassword", "preferux", "prefermob", "mood", "appkey", "approved") VALUES ('dev01@uenginecloud.com', '개발자1', 'test', 0, 'eee', 'dev01@uenginecloud.com', NULL, 'uenginecloud.com', '0', 'ko', NULL, NULL, NULL, '', '', NULL, 'wave      ', 'auto      ', NULL, NULL, 1);
+INSERT INTO "emptable" ("empcode", "empname", "password", "isadmin", "jikname", "email", "partcode", "globalcom", "isdeleted", "locale", "nateon", "msn", "mobilecmp", "mobileno", "facebookid", "facebookpassword", "preferux", "prefermob", "mood", "appkey", "approved") VALUES ('somehow', '개발자2', 'test', 0, NULL, 'dev02@uenginecloud.com', NULL, 'uenginecloud.com', '0', 'ko', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1);
+INSERT INTO "emptable" ("empcode", "empname", "password", "isadmin", "jikname", "email", "partcode", "globalcom", "isdeleted", "locale", "nateon", "msn", "mobilecmp", "mobileno", "facebookid", "facebookpassword", "preferux", "prefermob", "mood", "appkey", "approved") VALUES ('pm@uengine.org', 'pm', 'test', 1, '', 'pm@uengine.org', NULL, 'uengine.org', '0', 'ko', NULL, NULL, NULL, '', '', NULL, 'tw        ', 'auto      ', NULL, NULL, 1);
+INSERT INTO "emptable" ("empcode", "empname", "password", "isadmin", "jikname", "email", "partcode", "globalcom", "isdeleted", "locale", "nateon", "msn", "mobilecmp", "mobileno", "facebookid", "facebookpassword", "preferux", "prefermob", "mood", "appkey", "approved") VALUES ('tenantAdmin@uengine.org', 'tenantManager', 'test', 1, '', 'tenantManager@uengine.org', NULL, 'uengine.org', '0', 'ko', NULL, NULL, NULL, '', '', NULL, 'tw        ', 'auto      ', NULL, NULL, 1);
+INSERT INTO "emptable" ("empcode", "empname", "password", "isadmin", "jikname", "email", "partcode", "globalcom", "isdeleted", "locale", "nateon", "msn", "mobilecmp", "mobileno", "facebookid", "facebookpassword", "preferux", "prefermob", "mood", "appkey", "approved") VALUES ('dev01@uengine.org', '개발자1', 'test', 0, '', 'dev01@uengine.org', NULL, 'uengine.org', '0', 'ko', NULL, NULL, NULL, '', '', NULL, 'tw        ', 'auto      ', NULL, NULL, 1);
+
+INSERT INTO "roletable" ("rolecode", "comcode", "descr", "isdeleted") VALUES ('paasManager', 'CloudManager', 'PaaS관리자', '0');
+
+INSERT INTO "roleusertable" ("rolecode", "empcode", "comcode") VALUES ('paasManager', 'paasManager', 'CloudManager');
