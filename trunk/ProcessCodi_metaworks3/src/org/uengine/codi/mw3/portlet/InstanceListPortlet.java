@@ -3,14 +3,13 @@ package org.uengine.codi.mw3.portlet;
 import org.metaworks.MetaworksException;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.dao.TransactionContext;
+import org.metaworks.widget.Window;
 import org.uengine.codi.mw3.Login;
-import org.uengine.codi.mw3.knowledge.TopicNode;
 import org.uengine.codi.mw3.model.Locale;
 import org.uengine.codi.mw3.model.PersonalPerspective;
 import org.uengine.codi.mw3.model.Session;
 
-public class InstanceListPortlet {
+public class InstanceListPortlet extends Window {
 	Session session;
 		public Session getSession() {
 			return session;
@@ -87,8 +86,8 @@ public class InstanceListPortlet {
 		
 		Session session = login.loginService();
 		session.getMetaworksContext().setWhen("hidden");
-		session.setLastPerspecteType("sns");
-		session.getEmployee().setPreferUX("sns");
+		session.setLastPerspecteType("portlet");
+		session.getEmployee().setPreferUX("portlet");
 		this.setSession(session);
 		
 		Object[] result = null;
