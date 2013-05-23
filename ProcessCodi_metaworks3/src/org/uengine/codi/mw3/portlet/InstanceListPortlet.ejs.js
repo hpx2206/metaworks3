@@ -9,6 +9,8 @@ var org_uengine_codi_mw3_portlet_InstanceListPortlet = function(objectId, classN
 	if(this.object == null)
 		return true;
 	
+	this.objectDiv.css('height', '100%');
+	
 	if(!this.object.loaded)
 		mw3.call(this.objectId, 'load');
 };
