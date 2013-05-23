@@ -170,7 +170,7 @@ public class ProjectInfo implements ContextAware {
 				this.ip = (String)(Serializable)processManager.getProcessVariable(linkedId, "", "vm_ip");
 				
 				this.svn = "svn://" + GlobalContext.getPropertyString("vm.manager.ip") + "/" + this.projectName;
-				this.hudson = "http://" + GlobalContext.getPropertyString("vm.manager.ip") + "/hudson/";
+				this.hudson = GlobalContext.getPropertyString("vm.hudson.url");
 			}
 		
 	}
