@@ -24,8 +24,8 @@ var org_uengine_codi_mw3_model_IWorkItem = function(objectId, className){
 	this.type = workItem.type;
 
 	//if(workItem.type == null && (workItem.workItemHandler == null || workItem.workItemHandler.instanceId==null) && workItem.status == 'NEW' && workItem.tool != 'formApprovalHandler'){ //means we need to load workItemHandler	
-	if(workItem.type == null && (workItem.workItemHandler == null || workItem.workItemHandler.instanceId==null) && workItem.tool != 'formApprovalHandler'){ //means we need to load workItemHandler
-		workItem.detail();
+	if(workItem.type == null && (workItem.workItemHandler == null || workItem.workItemHandler.instanceId==null) && workItem.status == 'NEW' && workItem.tool != 'formApprovalHandler'){ //means we need to load workItemHandler
+		//workItem.detail();
 	}else if(workItem.type == 'memo' && workItem.extFile!=null && workItem.memo.contents=="...loading..." && !workItem.contentLoaded){
 		this.extFile = workItem.extFile;
 		//workItem.loadContents();
