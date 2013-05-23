@@ -26,46 +26,44 @@ public class WaitJob implements StatefulJob {
 	public static ConnectionFactory connectionFactory;
 	
 	public void execute(JobExecutionContext context) {
-		
-//		System.out.println("scheduler WaitJob execute() start...");
-		
-		TransactionContext tx = new TransactionContext(); //once a TransactionContext is created, it would be cached by ThreadLocal.set, so, we need to remove this after the request processing. 
-	        
-		tx.setManagedTransaction(false);
-		tx.setAutoCloseConnection(true);
 
-		connectionFactory = (SpringConnectionFactory) context.getJobDetail().getJobDataMap().get("connectionFactory");
+		TransactionContext tx = null;
 		
-		MetaworksUEngineSpringConnectionAdapter connectionAdapter = new MetaworksUEngineSpringConnectionAdapter();
-
-		CodiProcessManagerBean pm = new CodiProcessManagerBean();
-		pm.setConnectionFactory(connectionAdapter);
-		pm.setAutoCloseConnection(false);
-		pm.setManagedTransaction(true);
-		
-		if(connectionFactory!=null)
-			tx.setConnectionFactory(connectionFactory);
-		
-		Calendar now = Calendar.getInstance();
-		
-		List<SchedulerItem> schedulerItems = this.getAllSchedule();
-		
-		for (final SchedulerItem item : schedulerItems) {
+		try{
+			connectionFactory = (SpringConnectionFactory) context.getJobDetail().getJobDataMap().get("connectionFactory");
 			
-			if (!(item.getStartDate().getTime() <= now.getTimeInMillis())) {
-				continue;
-			}
-
-			ProcessInstance instance = null;
+			tx = new TransactionContext(); //once a TransactionContext is created, it would be cached by ThreadLocal.set, so, we need to remove this after the request processing.
+			tx.setManagedTransaction(true);
+			tx.setAutoCloseConnection(true);
 			
-			try {
+			if(connectionFactory!=null)
+				tx.setConnectionFactory(connectionFactory);
+
+			MetaworksUEngineSpringConnectionAdapter connectionAdapter = new MetaworksUEngineSpringConnectionAdapter();
+	
+			CodiProcessManagerBean pm = new CodiProcessManagerBean();
+			pm.setConnectionFactory(connectionAdapter);
+			pm.setAutoCloseConnection(false);
+			pm.setManagedTransaction(true);
+			
+			Calendar now = Calendar.getInstance();
+			
+			List<SchedulerItem> schedulerItems = this.getAllSchedule();
+			
+			for (final SchedulerItem item : schedulerItems) {
+				if (!(item.getStartDate().getTime() <= now.getTimeInMillis())) {
+					continue;
+				}
+	
+				ProcessInstance instance = null;
+				
 				try {
 					instance = pm.getProcessInstance(item.getInstanceId());
 				} catch (Exception e) {
+					e.printStackTrace();
 				}
 				
 				boolean isError = true;
-				
 				if (instance != null) {
 					Activity act = instance.getProcessDefinition().getActivity(item.getTracingTag());
 					/*
@@ -83,13 +81,13 @@ public class WaitJob implements StatefulJob {
 								}
 
 								public void beforeCommit(TransactionContext tx) throws Exception {
+									deleteSchedule(item.getIdx());
 								}
 
 								public void afterRollback(TransactionContext tx) throws Exception {
 								}
 
 								public void afterCommit(TransactionContext tx) throws Exception {
-									deleteSchedule(item.getIdx());
 								}
 							});
 							
@@ -113,23 +111,28 @@ public class WaitJob implements StatefulJob {
 				if (isError) {
 					deleteSchedule(item.getIdx());
 				}
-				
-				pm.applyChanges();
-				tx.commit();
+			}
 			
-			} catch (Exception e) {
-				e.printStackTrace();
+			pm.applyChanges();
+			tx.commit();
+
+		}catch(Exception e){
+			e.printStackTrace();
+			
+			if(tx != null){
 				try {
 					tx.rollback();
 				} catch (Exception e1) {
 					e1.printStackTrace();
-				}
-			} finally{
+				}			
+			}
+		}finally{
+			if(tx != null){
 				try {
 					tx.releaseResources();
 				} catch (Exception e) {
 					e.printStackTrace();
-				}
+				}							
 			}
 		}
 
@@ -207,12 +210,15 @@ public class WaitJob implements StatefulJob {
         
         try {
             conn = connectionFactory.getConnection();
+            
             stmt = conn.createStatement();
             
             StringBuilder sql = new StringBuilder();
             sql.append(" DELETE FROM SCHEDULE_TABLE WHERE SCHE_IDX=").append(idx);
             
             stmt.executeUpdate(sql.toString());
+            
+            conn.commit();
         } catch (Exception e) {
 			if (conn != null) try { conn.rollback(); } catch (Exception e1) { }
 			throw e;
@@ -223,7 +229,6 @@ public class WaitJob implements StatefulJob {
                 } catch (Exception e) { }
             }
             if (conn != null) {
-            	conn.setAutoCommit(true);
                 try {
                     conn.close();
                 } catch (Exception e) { }
