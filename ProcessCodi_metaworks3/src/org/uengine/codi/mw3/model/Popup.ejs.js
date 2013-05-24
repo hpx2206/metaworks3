@@ -67,9 +67,14 @@ org_uengine_codi_mw3_model_Popup.prototype = {
 		if('phone' != ux){
 		
 			if(bodyWidth && popLayerWidth + x > bodyWidth){
-				this.divObj.css({left:x-30 - popLayerWidth});
 				this.divObj.removeClass('clue-right-rounded');
-				this.divObj.addClass('clue-left-rounded');
+				
+				if(x-30 - popLayerWidth < 0){
+					this.divObj.css({left:0});
+				}else{
+					this.divObj.css({left:x-30 - popLayerWidth});
+					this.divObj.addClass('clue-left-rounded');
+				}
 			};
 			
 			if(bodyHeight && popLayerHeight + y > bodyHeight){    	
