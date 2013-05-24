@@ -1,3 +1,43 @@
+var MetaworksService = function(className, object, svcNameAndMethodName, autowiredObjects, objId, divId, placeholder, callback, sync, serviceMethodContext){
+	
+	this.call = function(){
+		mw3.metaworksProxy.callMetaworksService(className, object, svcNameAndMethodName, autowiredObjects,
+				{ 
+	        		callback: function(result){
+	        			
+	        			returnValue = result;
+	        			mw3.__showResult(object, result, objId, svcNameAndMethodName, serviceMethodContext, placeholder, divId, callback);
+	        			
+	        		},
+
+	        		async: !sync && serviceMethodContext.target!="none",
+	        		
+	        		errorHandler:function(errorString, exception) {
+	        			mw3.endProgress();				        			
+	        			
+	        			if(serviceMethodContext.target=="none")
+	        				throw exception;
+	        			
+	        			if(mw3.objects[objId] && mw3.getFaceHelper(objId) && mw3.getFaceHelper(objId).showError){
+		        			if(!exception)
+		        				mw3.getFaceHelper(objId).showError( errorString, svcNameAndMethodName );
+		        			else
+		        				mw3.getFaceHelper(objId).showError( (exception.targetException ? exception.targetException.message : exception.message), svcNameAndMethodName );
+						
+						}else{
+							if(!exception)
+								mw3.showError(objId, errorString, svcNameAndMethodName);
+							else
+								mw3.showError(objId, (exception.targetException ? exception.targetException.message : exception.message), svcNameAndMethodName, exception);
+						}
+	        		}
+			
+	    		}
+			);
+	}
+
+};
+
 var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				this.fn = {};
 				
@@ -2442,41 +2482,10 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 						}
 					}
 					
-					this.metaworksProxy.callMetaworksService(className, object, svcNameAndMethodName, autowiredObjects,
-						{ 
-			        		callback: function(result){
-			        			
-			        			returnValue = result;
-			        			mw3.__showResult(object, result, objId, svcNameAndMethodName, serviceMethodContext, placeholder, divId, callback);
-			        			
-			        		},
-
-			        		async: !sync && serviceMethodContext.target!="none",
-			        		
-			        		errorHandler:function(errorString, exception) {
-			        			mw3.endProgress();				        			
-			        			
-			        			if(serviceMethodContext.target=="none")
-			        				throw exception;
-			        			
-			        			if(mw3.objects[objId] && mw3.getFaceHelper(objId) && mw3.getFaceHelper(objId).showError){
-				        			if(!exception)
-				        				mw3.getFaceHelper(objId).showError( errorString, svcNameAndMethodName );
-				        			else
-				        				mw3.getFaceHelper(objId).showError( (exception.targetException ? exception.targetException.message : exception.message), svcNameAndMethodName );
-								
-								}else{
-									if(!exception)
-										mw3.showError(objId, errorString, svcNameAndMethodName);
-									else
-										mw3.showError(objId, (exception.targetException ? exception.targetException.message : exception.message), svcNameAndMethodName, exception);
-								}
-			        		}
 					
-			    		}
-					);
-
-
+					var metaworksService = new MetaworksService(className, object, svcNameAndMethodName, autowiredObjects, objId, divId, placeholder, callback, sync, serviceMethodContext);					
+					metaworksService.call();
+					
 					///// just after call, 
 					this.startProgress();
 
