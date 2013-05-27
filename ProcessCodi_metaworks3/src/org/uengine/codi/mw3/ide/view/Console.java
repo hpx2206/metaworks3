@@ -3,10 +3,9 @@ package org.uengine.codi.mw3.ide.view;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;
-import org.uengine.codi.mw3.ide.CloudContent;
 
 @Face(displayName="$Console")
-public class Console implements CloudContent{
+public class Console {
 
 	String id;
 		@Id
