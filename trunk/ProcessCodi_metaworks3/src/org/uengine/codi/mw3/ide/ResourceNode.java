@@ -68,30 +68,33 @@ public class ResourceNode extends TreeNode {
 	}
 	
 	public Editor beforeAction(){
-		Editor editor;
+		Editor editor = null;
 		
-		String type = ResourceNode.findNodeType(this.getName());
-		
-		if(type.equals(TreeNode.TYPE_FILE_JAVA)){
-			editor = new JavaCodeEditor(this.getId());
-		}else if(type.equals(TreeNode.TYPE_FILE_PROCESS)){
-			editor = new ProcessEditor(this.getId());
-			((ProcessEditor)editor).getProcessDesigner().setBasePath(jbPath.getBasePath());
-			try {
-				((ProcessEditor)editor).getProcessDesigner().load();
-			} catch (Exception e) {
-				e.printStackTrace();
+		if(!this.isFolder()){
+			String type = ResourceNode.findNodeType(this.getName());
+			
+			if(type.equals(TreeNode.TYPE_FILE_JAVA)){
+				editor = new JavaCodeEditor(this.getId());
+			}else if(type.equals(TreeNode.TYPE_FILE_PROCESS)){
+				editor = new ProcessEditor(this.getId());
+				((ProcessEditor)editor).getProcessDesigner().setBasePath(jbPath.getBasePath());
+				try {
+					((ProcessEditor)editor).getProcessDesigner().load();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}else if(type.equals(TreeNode.TYPE_FILE_RULE)){
+				editor = new RuleEditor(this.getId());
+				try {
+					((RuleEditor)editor).load();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}else{
+				editor = new Editor(this.getId(), type);
 			}
-		}else if(type.equals(TreeNode.TYPE_FILE_RULE)){
-			editor = new RuleEditor(this.getId());
-			try {
-				((RuleEditor)editor).load();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}else{
-			editor = new Editor(this.getId(), type);
 		}
+		
 		return editor;
 	}
 	
