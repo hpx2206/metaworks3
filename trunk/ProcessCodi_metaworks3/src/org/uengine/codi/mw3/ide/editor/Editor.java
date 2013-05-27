@@ -13,11 +13,10 @@ import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.common.MetaworksUtil;
-import org.uengine.codi.mw3.ide.CloudContent;
 import org.uengine.codi.mw3.ide.JavaBuildPath;
 import org.uengine.codi.mw3.ide.editor.java.JavaParser;
 
-public class Editor implements CloudContent {
+public class Editor {
 	
 	public final static String TYPE_JAVA = "java";
 	
