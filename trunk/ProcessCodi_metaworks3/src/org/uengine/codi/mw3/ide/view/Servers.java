@@ -6,11 +6,10 @@ import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;
 import org.metaworks.component.Tree;
 import org.metaworks.component.TreeNode;
-import org.uengine.codi.mw3.ide.CloudContent;
 import org.uengine.codi.mw3.ide.ServerNode;
 
 @Face(displayName="$Servers", ejsPath="dwr/metaworks/genericfaces/CleanObjectFace.ejs")
-public class Servers implements CloudContent{
+public class Servers {
 
 	String id;
 		@Id
