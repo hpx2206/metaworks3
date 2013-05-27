@@ -8,7 +8,7 @@ import org.metaworks.annotation.ServiceMethod;
 import org.uengine.codi.mw3.ide.menu.WindowContextMenu;
 import org.uengine.codi.mw3.model.Session;
 
-public class CloudTab {
+public class CloudTab implements Tab {
 
 	@AutowiredFromClient
 	public Session session;
@@ -44,6 +44,14 @@ public class CloudTab {
 		}
 		public void setParentId(String parentId) {
 			this.parentId = parentId;
+		}
+		
+	String className;
+		public String getClassName() {
+			return className;
+		}
+		public void setClassName(String className) {
+			this.className = className;
 		}
 		
 	public CloudTab(){

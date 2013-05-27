@@ -3,6 +3,9 @@ package org.uengine.codi.mw3.ide;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.metaworks.annotation.Face;
+
+@Face(options={"tabClass"}, values={"org.uengine.codi.mw3.ide.CloudTab"})
 public class CloudWindow {
 
 	String id;
@@ -13,11 +16,11 @@ public class CloudWindow {
 			this.id = id;
 		}
 
-	List<CloudContent> tabs;
-		public List<CloudContent> getTabs() {
+	List<Object> tabs;
+		public List<Object> getTabs() {
 			return tabs;
 		}
-		public void setTabs(List<CloudContent> tabs) {
+		public void setTabs(List<Object> tabs) {
 			this.tabs = tabs;
 		}
 		
@@ -26,7 +29,7 @@ public class CloudWindow {
 	}
 	
 	public CloudWindow(String id){
-		List<CloudContent> tabs = new ArrayList<CloudContent>();
+		List<Object> tabs = new ArrayList<Object>();
 
 		this.setId(id);
 		this.setTabs(tabs);

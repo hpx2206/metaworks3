@@ -14,11 +14,18 @@ org_uengine_codi_mw3_ide_CloudTab.prototype = {
 	remover : function(removerObject){
 		this.remove();
 	},
-	remove : function(){
+	
+	remove : function(event){
+		event.stopPropagation();
+		
 		this.objectDiv.trigger('removetab');
 	},
 	
 	select : function(){
 		this.objectDiv.trigger('selecttab');
+	},
+	
+	destroy : function(){
+		this.objectDiv.parent().remove();
 	}
 };
