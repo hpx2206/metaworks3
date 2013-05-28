@@ -58,11 +58,8 @@
 		}
 		
 	}
-%>
-<%
+	
 	if(ret_id != null && ret_id.length() > 0) {
-%>
-	out.println(<%= ret_id %>);
-<%
+		out.println(ret_id);
 	}
 %>
