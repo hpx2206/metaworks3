@@ -1,6 +1,8 @@
 var MetaworksService = function(className, object, svcNameAndMethodName, autowiredObjects, objId, divId, placeholder, callback, sync, serviceMethodContext){
 	
 	this.call = function(){
+		var returnValue = null;
+		
 		mw3.metaworksProxy.callMetaworksService(className, object, svcNameAndMethodName, autowiredObjects,
 				{ 
 	        		callback: function(result){
@@ -34,6 +36,8 @@ var MetaworksService = function(className, object, svcNameAndMethodName, autowir
 			
 	    		}
 			);
+		
+		return returnValue;
 	}
 
 };
@@ -2484,7 +2488,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					
 					
 					var metaworksService = new MetaworksService(className, object, svcNameAndMethodName, autowiredObjects, objId, divId, placeholder, callback, sync, serviceMethodContext);					
-					metaworksService.call();
+					returnValue = metaworksService.call();
 					
 					///// just after call, 
 					this.startProgress();
