@@ -1,57 +1,68 @@
-<%@page import="org.uengine.kernel.GlobalContext"%>
-<%@page import="org.metaworks.dao.TransactionContext"%>
-<%@ page contentType="text/html;charset=utf-8" import="java.sql.*" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+
+<%@ page import="org.uengine.util.dao.DefaultConnectionFactory" %>
+<%@ page import="java.sql.*" %>
 
 <%
 	String access_token = request.getParameter("access_token");
 	String user_id = request.getParameter("user_id");
 	
-	try{			
-		  
-		Connection conn = TransactionContext.getThreadLocalInstance().getConnection();
-		  
-		String query = "select * from oauth_token where access_token='" + access_token + "' and user_id='" + user_id + "'";
-		  
-		PreparedStatement pstmt = conn.prepareStatement(query);			
-		ResultSet rs = pstmt.executeQuery(query);
+	Connection conn = null;
+	PreparedStatement pstmt = null;
+	ResultSet rs = null;
+	
+	String query = "";
+	String ret_id = "";
+	
+	if (access_token != null && access_token.length() > 0 && user_id != null && user_id.length() > 0) {
 		
-		if(rs.next()) {
-			id = rs.getString(1);  
-		} 
+		try{			
+			conn = DefaultConnectionFactory.create().getConnection();
+			  
+			query = "select * from oauth_token where access_token='" + access_token + "' and user_id='" + user_id + "'";
+			  
+			pstmt = conn.prepareStatement(query);			
+			rs = pstmt.executeQuery(query);
+			
+			if(rs.next()) {
+				ret_id = rs.getString(1);  
+			} 
 
-	}
-	catch(Exception e){		
-		e.printStackTrace();
-		
-		String message = e.getMessage();			
-		throw new Exception(message);
-	}
-	finally{
-		
-		try{
-			if(conn != null){
-				conn.close();
-				conn = null;
-			}
-		} catch (SQLException sqle){			
+			if(rs != null)
+				rs.close();	
 		}
-		
-		try {
-			if(stmt != null){
-				stmt.close();
-				stmt = null;
-			}
-		} catch (SQLException sqle){						
+		catch(Exception e){		
+			e.printStackTrace();
+			
+			String message = e.getMessage();			
+			throw new Exception(message);
 		}
-		
-		try {
-			if(pstmt != null){
-				pstmt.close();
-				pstmt = null;
+		finally{
+			
+			try{
+				if(conn != null){
+					conn.close();
+					conn = null;
+				}
+			} catch (SQLException sqle){			
 			}
-		} catch (SQLException sqle){						
-		}	
+			
+			try {
+				if(pstmt != null){
+					pstmt.close();
+					pstmt = null;
+				}
+			} catch (SQLException sqle){						
+			}	
+			
+		}
 		
 	}
 %>
-out.println(id);
+<%
+	if(ret_id != null && ret_id.length() > 0) {
+%>
+	out.println(<%= ret_id %>);
+<%
+	}
+%>
