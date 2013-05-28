@@ -375,7 +375,7 @@ public class Login implements ContextAware {
 		if (Boolean.parseBoolean(GlobalContext.getPropertyString("sso.on"))) {
 			//Request Token
 			OAuthBasic oauth = new OAuthBasic();
-			oauth.requestToken();
+			//oauth.requestToken();
 
 			// Request Access Token
 			String accessToken = oauth.retrieveAccessToken("");
