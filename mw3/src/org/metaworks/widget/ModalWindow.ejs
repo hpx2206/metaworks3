@@ -2,23 +2,6 @@
 
 <%
 	if (value){
-		var objectName; 
-
-		if(value.__toString != null){
-			objectName = value.__toString();
-		}
-		
-		if(!objectName){
-			objectName = objectMetadata.displayName;
-		}
-		
-		var resourceName = null;
-		if(objectName.indexOf('$')==0){
-			objectName = objectName.substring(1);
-		}
-%>		
-		<input type="hidden" id="title_<%=objectId%>" value="<%=objectName%>">
-<%					
 		for (var i=0; i<objectMetadata.fieldDescriptors.length; i++){						  
 			var fd = objectMetadata.fieldDescriptors[i];
 		  	

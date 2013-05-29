@@ -10,8 +10,15 @@ var org_metaworks_widget_ModalWindow = function(objectId, className) {
 	if(this.object){
 		var title = this.object.title;
 		
-		if (title == null)
-			title = $('#title_' + objectId).val();
+		if (title == null){
+			
+			
+			var metadata = mw3.getMetadata(this.className);
+			
+			title = metadata.displayName;
+		}
+	
+		title = mw3.localize(title);
 		
 		if(this.object.metaworksContext && this.object.metaworksContext.where == 'mobile'){
 			var modal = $(this.divId);			

@@ -10,4 +10,4 @@ var org_metaworks_widget_IFrame = function(objectId, className){
 		return true;
 	
 	this.objectDiv.css('height', '100%');
-} 
+};
