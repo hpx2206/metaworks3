@@ -135,9 +135,10 @@ public class ProjectTitle implements ContextAware {
 		processManager.applyChanges();
 		
 		Instance instance = new Instance();
+		
 		instance.setInstId(new Long(instId));
 		instance.databaseMe().setTopicId(this.getTopicId());
-		instance.databaseMe().setName(this.getTopicTitle());
+		instance.databaseMe().setName(instance.getDefName() + " : " + this.getTopicTitle());
 		instance.flushDatabaseMe();
 	
 		IWfNode wfNode = (IWfNode)Database.sql(IWfNode.class, 
