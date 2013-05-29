@@ -8,7 +8,6 @@ import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
 
 import org.directwebremoting.io.FileTransfer;
 import org.metaworks.ContextAware;
@@ -17,8 +16,10 @@ import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
+import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.website.Download;
+import org.metaworks.website.OpenBrowser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.hudson.HudsonJobApi;
 import org.uengine.codi.hudson.HudsonJobDDTO;
@@ -29,6 +30,7 @@ import org.uengine.codi.vm.JschCommand;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.processmanager.ProcessManagerRemote;
 
+@Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs", options={"fieldOrder", "methodOrder"}, values={"projectName,description,ip,templateName,hudson,svn", "eclipseDownload,devSendbox,vmDownload,deploy"})
 public class ProjectInfo implements ContextAware {
 	
 	MetaworksContext metaworksContext;
@@ -43,6 +45,7 @@ public class ProjectInfo implements ContextAware {
 		this.setMetaworksContext(new MetaworksContext());
 	}
 	
+	@Hidden
 	String projectId;
 		public String getProjectId() {
 			return projectId;
@@ -51,6 +54,7 @@ public class ProjectInfo implements ContextAware {
 			this.projectId = projectId;
 		}
 
+	@Face(displayName="$ProjectName")
 	String projectName;
 		public String getProjectName() {
 			return projectName;
@@ -58,7 +62,8 @@ public class ProjectInfo implements ContextAware {
 		public void setProjectName(String projectName) {
 			this.projectName = projectName;
 		}
-		
+	
+	@Hidden
 	String os;
 		public String getOs() {
 			return os;
@@ -67,6 +72,7 @@ public class ProjectInfo implements ContextAware {
 			this.os = os;
 		}
 		
+	@Hidden
 	String db;
 		public String getDb() {
 			return db;
@@ -75,6 +81,7 @@ public class ProjectInfo implements ContextAware {
 			this.db = db;
 		}
 			
+	@Hidden
 	String was;
 		public String getWas() {
 			return was;
@@ -83,6 +90,7 @@ public class ProjectInfo implements ContextAware {
 			this.was = was;
 		}
 		
+	@Hidden
 	String vm;
 		public String getVm() {
 			return vm;
@@ -91,6 +99,7 @@ public class ProjectInfo implements ContextAware {
 			this.vm = vm;
 		}
 		
+	@Face(displayName="$Svn")
 	String svn;
 		public String getSvn() {
 			return svn;
@@ -99,6 +108,7 @@ public class ProjectInfo implements ContextAware {
 			this.svn = svn;
 		}
 
+	@Hidden
 	String ci;
 		public String getCi() {
 			return ci;
@@ -107,6 +117,7 @@ public class ProjectInfo implements ContextAware {
 			this.ci = ci;
 		}
 	
+	@Face(displayName="$ProjectDescription")
 	String description;
 		public String getDescription() {
 			return description;
@@ -115,6 +126,7 @@ public class ProjectInfo implements ContextAware {
 			this.description = description;
 		}
 	
+	@Face(displayName="@Hudson")
 	String hudson;
 		public String getHudson() {
 			return hudson;
@@ -122,7 +134,8 @@ public class ProjectInfo implements ContextAware {
 		public void setHudson(String hudson) {
 			this.hudson = hudson;
 		}
-		
+	
+	@Face(displayName="@TemplateName")
 	String templateName;
 		public String getTemplateName() {
 			return templateName;
@@ -131,12 +144,22 @@ public class ProjectInfo implements ContextAware {
 			this.templateName = templateName;
 		}
 		
+	@Face(displayName="$Ip")
 	String ip;
 		public String getIp() {
 			return ip;
 		}
 		public void setIp(String ip) {
 			this.ip = ip;
+		}
+	
+	@Hidden
+	String vmDouwnUrl;
+		public String getVmDouwnUrl() {
+			return vmDouwnUrl;
+		}
+		public void setVmDouwnUrl(String vmDouwnUrl) {
+			this.vmDouwnUrl = vmDouwnUrl;
 		}
 		
 		
@@ -233,9 +256,9 @@ public class ProjectInfo implements ContextAware {
 	}
 	*/
 	
-	@Face(displayName="반영")
+	@Face(displayName="$Deploy")
 	@ServiceMethod(callByContent=true)
-	public Object insert() throws Exception{
+	public Object deploy() throws Exception{
 		
 //		callURL(hudsonReload());
 //		callURL(hudsonBuild());
@@ -339,7 +362,7 @@ public class ProjectInfo implements ContextAware {
 		
 	}
 	
-	@Face(displayName="개발자 샌드박스 받기")
+	@Face(displayName="$OpenDevSandBox")
 	@ServiceMethod(target=ServiceMethodContext.TARGET_APPEND)
 	public Download devSendbox() throws Exception{
 		String fileSystemPath = GlobalContext.getPropertyString("filesystem.path",".");
@@ -348,13 +371,23 @@ public class ProjectInfo implements ContextAware {
 		return new Download(new FileTransfer(new String("sandbox_final.ova".getBytes("UTF-8"),"ISO8859_1"), null,  new FileInputStream(sendboxPath)));		
 	}
 	
-	@Face(displayName="이클립스 다운받기")
+	@Face(displayName="$DownEclipse")
 	@ServiceMethod(target=ServiceMethodContext.TARGET_APPEND)
 	public Download eclipseDownload() throws Exception{
 		String fileSystemPath = GlobalContext.getPropertyString("filesystem.path",".");
 		String sendboxPath = fileSystemPath + "/resource/govFramEclpse64.zip";
 		
 		return new Download(new FileTransfer(new String("govFramEclpse64.zip".getBytes("UTF-8"),"ISO8859_1"), null,  new FileInputStream(sendboxPath)));		
+	}
+	
+	@Face(displayName="$VMDown")
+	@ServiceMethod(target=ServiceMethodContext.TARGET_APPEND)
+	public OpenBrowser vmDownload() throws Exception{
+		
+		String url =  GlobalContext.getPropertyString("vm.download.url");
+		
+		return new OpenBrowser(url);
+        
 	}
 
 	@AutowiredFromClient
