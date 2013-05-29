@@ -11,6 +11,7 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.TreeNode;
 import org.uengine.codi.mw3.ide.editor.Editor;
 import org.uengine.codi.mw3.ide.editor.java.JavaCodeEditor;
+import org.uengine.codi.mw3.ide.editor.metadata.MetadataEditor;
 import org.uengine.codi.mw3.ide.editor.process.ProcessEditor;
 import org.uengine.codi.mw3.ide.editor.rule.RuleEditor;
 import org.uengine.codi.mw3.ide.menu.ResourceContextMenu;
@@ -71,6 +72,7 @@ public class ResourceNode extends TreeNode {
 		Editor editor = null;
 		
 		if(!this.isFolder()){
+		
 			String type = ResourceNode.findNodeType(this.getName());
 			
 			if(type.equals(TreeNode.TYPE_FILE_JAVA)){
@@ -80,6 +82,14 @@ public class ResourceNode extends TreeNode {
 				((ProcessEditor)editor).getProcessDesigner().setBasePath(jbPath.getBasePath());
 				try {
 					((ProcessEditor)editor).getProcessDesigner().load();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}else if(type.equals(TreeNode.TYPE_FILE_METADATA)){
+				editor = new MetadataEditor(this.getId());
+				editor.jbPath = jbPath;
+				try {
+					((MetadataEditor)editor).loadPage();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -94,7 +104,6 @@ public class ResourceNode extends TreeNode {
 				editor = new Editor(this.getId(), type);
 			}
 		}
-		
 		return editor;
 	}
 	
@@ -135,6 +144,8 @@ public class ResourceNode extends TreeNode {
 				nodeType = TreeNode.TYPE_FILE_CSS;
 			}else if(".jpg".equals(ext) || ".gif".equals(ext) || ".png".equals(ext)){
 				nodeType = TreeNode.TYPE_FILE_IMAGE;
+			}else if(".metadata".equals(ext)){
+				nodeType = TreeNode.TYPE_FILE_METADATA;
 			}
 
 		}
