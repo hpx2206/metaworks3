@@ -14,18 +14,17 @@ import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.ide.CloudWindow;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.Templete;
-import org.uengine.codi.mw3.ide.editor.Editor;
 import org.uengine.codi.mw3.ide.editor.process.ProcessEditor;
 import org.uengine.codi.mw3.model.Session;
 
-@Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs", options={"fieldOrder"}, values={"packageName,name"})
+@Face(displayName="templete.process", ejsPath="dwr/metaworks/genericfaces/FormFace.ejs")
 public class NewProcess extends Templete {
 
 	@AutowiredFromClient
 	public Session session;
 	
 	String name;
-		@Face(displayName="Name")
+		@Face(displayName="templete.process.name")
 		public String getName() {
 			return name;
 		}
@@ -41,11 +40,10 @@ public class NewProcess extends Templete {
 			
 			ResourceNode node = new ResourceNode();
 			node.setName(this.getName() + ".wpd");
-			node.setId(targetNode.getId() + File.separatorChar + node.getName());			
-			node.setType(TreeNode.TYPE_FILE_PROCESS);
+			node.setId(targetNode.getId() + File.separatorChar + node.getName());
+			node.setPath(targetNode.getPath() + File.separatorChar + node.getName());
 			
-			ProcessEditor editor = new ProcessEditor(node.getId());
-			editor.jbPath = jbPath;
+			ProcessEditor editor = new ProcessEditor(node);
 			editor.save();
 			
 			return new Object[]{new ToAppend(targetNode, node), new ToAppend(new CloudWindow("editor"), editor), new Remover(new ModalWindow())};

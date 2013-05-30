@@ -43,7 +43,6 @@ public class NewMenu extends CloudMenu {
 	public ModalWindow newClass(){
 		NewClass newClass = new NewClass();
 		newClass.session = session;
-		newClass.jbPath = jbPath;
 		newClass.load();
 		
 		return new ModalWindow(newClass, 300, 150, "New Java Class");

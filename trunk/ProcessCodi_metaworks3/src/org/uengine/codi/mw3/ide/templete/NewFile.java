@@ -8,19 +8,17 @@ import org.metaworks.ServiceMethodContext;
 import org.metaworks.ToAppend;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.component.TreeNode;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.ide.CloudWindow;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.Templete;
 import org.uengine.codi.mw3.ide.editor.Editor;
 
-@Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs", options={"fieldOrder"}, values={"packageName,name"})
+@Face(displayName="$templete.file", ejsPath="dwr/metaworks/genericfaces/FormFace.ejs")
 public class NewFile extends Templete {
-
 	
 	String name;
-		@Face(displayName="Name")
+		@Face(displayName="$templete.file.name")
 		public String getName() {
 			return name;
 		}
@@ -36,11 +34,10 @@ public class NewFile extends Templete {
 			
 			ResourceNode node = new ResourceNode();
 			node.setName(this.getName());
-			node.setId(targetNode.getId() + File.separatorChar + node.getName());			
-			node.setType(ResourceNode.findNodeType(this.getName()));
+			node.setId(targetNode.getId() + File.separatorChar + node.getName());
+			node.setPath(targetNode.getPath() + File.separatorChar + node.getName());
 			
 			Editor editor = (Editor)node.beforeAction();
-			editor.jbPath = jbPath;
 			editor.save();
 			
 			return new Object[]{new Remover(new ModalWindow()), new ToAppend(targetNode, node), new ToAppend(new CloudWindow("editor"), editor)};

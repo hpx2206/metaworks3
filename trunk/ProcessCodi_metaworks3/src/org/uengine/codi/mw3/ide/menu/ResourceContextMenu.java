@@ -45,7 +45,7 @@ public class ResourceContextMenu extends CloudMenu {
 	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
 	public Object[] remove(){
-		Object clipboard = session.getClipboard();
+/*		Object clipboard = session.getClipboard();
 		if(clipboard instanceof ResourceNode){
 			ResourceNode node = (ResourceNode)clipboard;
 			
@@ -57,7 +57,9 @@ public class ResourceContextMenu extends CloudMenu {
 			return new Object[]{new Remover(new CloudTab(node.getId()), true), new Remover(node)};
 		}else{
 			return null;
-		}
+		}*/
+		
+		return null;
 	}
 	
 	@ServiceMethod

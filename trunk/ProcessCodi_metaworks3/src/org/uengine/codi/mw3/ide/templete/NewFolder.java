@@ -11,22 +11,18 @@ import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.TreeNode;
 import org.metaworks.widget.ModalWindow;
-import org.uengine.codi.mw3.ide.JavaBuildPath;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.Templete;
 import org.uengine.codi.mw3.model.Session;
 
-@Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs", options={"fieldOrder"}, values={"packageName,name"})
+@Face(displayName="$templete.folder", ejsPath="dwr/metaworks/genericfaces/FormFace.ejs")
 public class NewFolder extends Templete {
 
 	@AutowiredFromClient
 	public Session session;
 	
-	@AutowiredFromClient
-	public JavaBuildPath jbPath;
-	
 	String name;
-		@Face(displayName="Name")
+		@Face(displayName="$templete.folder.name")
 		public String getName() {
 			return name;
 		}
@@ -42,11 +38,12 @@ public class NewFolder extends Templete {
 			
 			ResourceNode node = new ResourceNode();
 			node.setName(this.getName());
-			node.setId(targetNode.getId() + File.separatorChar + node.getName());			
+			node.setId(targetNode.getId() + File.separatorChar + node.getName());
+			node.setPath(targetNode.getPath() + File.separatorChar + node.getName());
 			node.setType(TreeNode.TYPE_FOLDER);
 			node.setFolder(true);
 			
-			File file = new File(jbPath.getBasePath() + node.getId());
+			File file = new File(node.getPath());
 			if(!file.exists())
 				file.mkdirs();
 			
