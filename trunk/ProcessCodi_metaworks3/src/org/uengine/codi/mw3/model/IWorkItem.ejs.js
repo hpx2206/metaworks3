@@ -23,32 +23,20 @@ var org_uengine_codi_mw3_model_IWorkItem = function(objectId, className){
 	var workItem = mw3.objects[objectId];
 	this.type = workItem.type;
 
-	//if(workItem.type == null && (workItem.workItemHandler == null || workItem.workItemHandler.instanceId==null) && workItem.status == 'NEW' && workItem.tool != 'formApprovalHandler'){ //means we need to load workItemHandler	
-	if(workItem.type == null && (workItem.workItemHandler == null || workItem.workItemHandler.instanceId==null) && workItem.status == 'NEW' && workItem.tool != 'formApprovalHandler'){ //means we need to load workItemHandler
-		//workItem.detail();
-	}else if(workItem.type == 'memo' && workItem.extFile!=null && workItem.memo.contents=="...loading..." && !workItem.contentLoaded){
-		this.extFile = workItem.extFile;
-		//workItem.loadContents();
-		mw3.call(this.objectId, 'loadContents');
-		
+	var contentLoad = false;	
+	if(workItem.type == 'memo' && workItem.extFile!=null && !workItem.contentLoaded){
+		contentLoad = true;
 	}else if(workItem.type == 'src' && workItem.extFile!=null && !workItem.contentLoaded){
-		workItem.loadContents();
+		contentLoad = true;
 	}
+	
+	if(contentLoad)
+		mw3.call(this.objectId, 'loadContents');
+	else
+		workItem.findChild();
 };
 
 org_uengine_codi_mw3_model_IWorkItem.prototype = {
-	loaded : function(){
-		/*
-		var parentList = this.objectDiv.parent('.workitem_list');
-		
-		if(parentList.length == 0)
-			parentList = this.objectDiv.parentsUntil('.workitem_list');
-		
-		parentList = parentList.parent();
-		
-		parentList.triggerHandler('loadedItem', [this.object.taskId, this.objectId]);
-		*/
-	},
 	openFormApprovalHandler : function(){
 		var object = mw3.getObject(this.objectId);
 		var location = window.location;
@@ -57,22 +45,5 @@ org_uengine_codi_mw3_model_IWorkItem.prototype = {
 		
 		window.open(url);
 	}
-	/*
-	,toAppend : function(value){
-		if(window.console){
-			var loginUserId = mw3.fn.getLoginUserId();
-			
-			console.log('------ overlay append log ------');
-			console.log('target workitem type : ' + this.object.type);
-			console.log('target workitem align : ' + ((this.object.writer.userId == loginUserId)?'right':'left'));
-		}
-		
-		var html = mw3.locateObject(value, null);
-		
-		var appendDiv = $('#objDiv_' + this.objectId); //.find('.view_box3:first');		
-		appendDiv.append(html);
-		
-	}
-	*/
 };
 
