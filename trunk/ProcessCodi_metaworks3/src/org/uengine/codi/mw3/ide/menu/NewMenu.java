@@ -23,14 +23,14 @@ public class NewMenu extends CloudMenu {
 		
 		//this.add(new MenuItem("newPackage", "Package"));
 		this.add(new MenuItem("newProcess", "Process"));
-		this.add(new MenuItem("newRole", "Role"));
+		//this.add(new MenuItem("newRole", "Role"));
 		this.add(new MenuItem(MenuItem.TYPE_DIVIDER));
 		this.add(new MenuItem("newClass", "Class"));
 		this.add(new MenuItem("newFolder", "Folder"));
 		this.add(new MenuItem("newFile", "File"));
 		this.add(new MenuItem(MenuItem.TYPE_DIVIDER));
-		this.add(new MenuItem("newTerminal", "Terminal"));
-		this.add(new MenuItem("newSQLClient", "SQL Client"));
+		//this.add(new MenuItem("newTerminal", "Terminal"));
+		//this.add(new MenuItem("newSQLClient", "SQL Client"));
 		
 	}
 	
