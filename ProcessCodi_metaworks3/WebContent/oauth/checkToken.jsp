@@ -4,6 +4,9 @@
 <%@ page import="java.sql.*" %>
 
 <%
+	response.addHeader("Access-Control-Allow-Origin","*");
+	response.addHeader("Access-Control-Allow-Credentials", "true");
+	
 	String access_token = request.getParameter("access_token");
 	String user_id = request.getParameter("user_id");
 	
