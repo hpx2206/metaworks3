@@ -141,7 +141,8 @@ public class GenerateGettersAndSetters {
 			}
 		}
 		
-		return new Object[]{new Remover(new ModalWindow()), new ToAppend(new JavaCodeEditor(this.getId()), sb.toString())};
+		//return new Object[]{new Remover(new ModalWindow()), new ToAppend(new JavaCodeEditor(this.getId()), sb.toString())};
+		return null;
 	}
 	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_APPEND)

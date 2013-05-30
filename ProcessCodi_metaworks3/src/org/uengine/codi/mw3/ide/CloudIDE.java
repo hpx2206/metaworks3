@@ -24,6 +24,7 @@ import org.uengine.codi.util.CodiFileUtil;
 import org.uengine.kernel.GlobalContext;
 
 public class CloudIDE {
+	
 	public CloudIDE() {
 
 		/*		setPageNavigator(new PageNavigator("ide"));
@@ -75,6 +76,14 @@ public class CloudIDE {
 		public void setLayout(Layout layout) {
 			this.layout = layout;
 		}
+		
+	Workspace workspace;
+		public Workspace getWorkspace() {
+			return workspace;
+		}
+		public void setWorkspace(Workspace workspace) {
+			this.workspace = workspace;
+		}
 
 	JavaBuildPath javaBuildPath;
 		@Hidden
@@ -118,6 +127,40 @@ public class CloudIDE {
 			this.pageNavigator = pageNavigator;
 		}		
 		
+	public void load(){
+		String tenantId = "uengine";
+		String codebase = GlobalContext.getPropertyString("codebase", "codebase");
+		
+		// make workspace
+		Workspace workspace = new Workspace();
+		workspace.load(codebase, tenantId);
+		
+		Navigator navigator = new Navigator();		
+		navigator.load(workspace);
+
+		CloudWindow navigatorWindow = new CloudWindow("explorer");
+		navigatorWindow.getTabs().add(navigator);
+		
+		CloudWindow editorWindow = new CloudWindow("editor");
+		
+		Layout centerLayout = new Layout();
+		centerLayout.setId("center");
+		centerLayout.setName("center");
+		centerLayout.setCenter(editorWindow);
+		//centerLayout.setCenter(editorWindow);
+		//centerLayout.setSouth(etcWindow);
+		centerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, south__spacing_open:5, south__size:150");
+		
+		Layout outerLayout = new Layout();
+		outerLayout.setWest(navigatorWindow);
+		outerLayout.setCenter(centerLayout);
+		//outerLayout.setNorth(new TopPanel(session));
+		outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:5, east__spacing_open:5, west__size:250, north__size:52");
+
+		this.setLayout(outerLayout);
+		
+	}
+	
 	public void load(Session session, String projectId){
 
 		String userId =  session.getUser().getUserId();
@@ -242,7 +285,7 @@ public class CloudIDE {
 	}
 
 
-	@AutowiredFromClient(select="typeof currentEditorId!='undefined' && currentEditorId==id")
+	@AutowiredFromClient(select="typeof currentEditorId!='undefined' && currentEditorId==autowiredObject.id")
 	public Editor editor;
 	
 	@ServiceMethod(payload={"currentEditorId", "javaBuildPath"}, keyBinding="Ctrl+S@Global", target=ServiceMethodContext.TARGET_APPEND)

@@ -11,35 +11,55 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.TreeNode;
 import org.uengine.codi.mw3.ide.editor.Editor;
 import org.uengine.codi.mw3.ide.editor.java.JavaCodeEditor;
-import org.uengine.codi.mw3.ide.editor.metadata.MetadataEditor;
-import org.uengine.codi.mw3.ide.editor.process.ProcessEditor;
-import org.uengine.codi.mw3.ide.editor.rule.RuleEditor;
 import org.uengine.codi.mw3.ide.menu.ResourceContextMenu;
 import org.uengine.codi.mw3.model.Session;
 
 public class ResourceNode extends TreeNode {
+
 	@AutowiredFromClient
 	public Session session;
 	
-	@AutowiredFromClient
-	public JavaBuildPath jbPath;
+	public final static String TYPE_PROJECT 			= "project";
 	
+	String path;
+		public String getPath() {
+			return path;
+		}
+		public void setPath(String path) {
+			this.path = path;
+		}
+		
+	public ResourceNode(){
+	}
+
+	public ResourceNode(Project project){
+		this.setId(project.getId());
+		this.setName(project.getId());
+		this.setType(TYPE_PROJECT);
+		this.setFolder(true);
+
+		this.setPath(project.getPath());
+	}
+	
+
 	@Override
+	@ServiceMethod(payload={"id", "path"}, target=ServiceMethodContext.TARGET_APPEND)
 	public Object expand() throws Exception {
 		
 		ArrayList<TreeNode> child = new ArrayList<TreeNode>();
-
-		File file = new File(jbPath.getBasePath() + File.separatorChar + this.getId());
-		String[] childFilePaths = file.list();
 		
+		File file = new File(this.getPath());
+		String[] childFilePaths = file.list();
+
 		// folder
 		for(int i=0; i<childFilePaths.length; i++){
 			File childFile = new File(file.getAbsolutePath() + File.separatorChar + childFilePaths[i]);
 			
 			if(childFile.isDirectory()){
-				ResourceNode node = new ResourceNode();
-				node.setId(this.getId() + File.separatorChar + childFile.getName());
+				ResourceNode node = new ResourceNode();				
+				node.setId(this.getId() + File.separatorChar + childFile.getName());				
 				node.setName(childFile.getName());
+				node.setPath(this.getPath() + File.separatorChar + childFile.getName());
 				node.setParentId(this.getId());
 				node.setType(TreeNode.TYPE_FOLDER);
 				node.setFolder(true);
@@ -47,30 +67,40 @@ public class ResourceNode extends TreeNode {
 				child.add(node);
 			}
 		}
-		
+				
 		// file
 		for(int i=0; i<childFilePaths.length; i++){
 			File childFile = new File(file.getAbsolutePath() + File.separatorChar + childFilePaths[i]);
-			
 			
 			if(!childFile.isDirectory()){
 				ResourceNode node = new ResourceNode();
 				node.setId(this.getId() + File.separatorChar + childFile.getName());
 				node.setName(childFile.getName());
+				node.setPath(this.getPath() + File.separatorChar + childFile.getName());
 				node.setParentId(this.getId());
 				node.setType(findNodeType(node.getName()));
 				
 				child.add(node);
 			}
 		}
-		
+	
 				
 		return new ToAppend(this, child);
 	}
 	
 	public Editor beforeAction(){
+		
+		
 		Editor editor = null;
 		
+		if(!this.isFolder()){
+			String type = ResourceNode.findNodeType(this.getName());
+			
+			if(type.equals(TreeNode.TYPE_FILE_JAVA)){
+				editor = new JavaCodeEditor(this);
+			}
+		}
+		/*
 		if(!this.isFolder()){
 		
 			String type = ResourceNode.findNodeType(this.getName());
@@ -104,10 +134,13 @@ public class ResourceNode extends TreeNode {
 				editor = new Editor(this.getId(), type);
 			}
 		}
+		*/
+		
 		return editor;
 	}
 	
 	@Override
+	@ServiceMethod(payload={"id", "name", "path", "folder"}, target=ServiceMethodContext.TARGET_APPEND)
 	public Object action(){
 		return new ToAppend(new CloudWindow("editor"), this.beforeAction());
 	}
