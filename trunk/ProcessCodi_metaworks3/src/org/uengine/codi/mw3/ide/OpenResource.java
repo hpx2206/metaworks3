@@ -12,9 +12,6 @@ import org.uengine.codi.mw3.ide.editor.java.JavaCodeEditor;
 
 public class OpenResource {
 
-	@AutowiredFromClient
-	public JavaBuildPath jbPath;
-	
 	String keyword;
 		public String getKeyword() {
 			return keyword;

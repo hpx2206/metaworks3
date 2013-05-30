@@ -34,6 +34,7 @@ public class Workspace {
 		Project project_codi= new Project();
 		project_codi.setId("codi");
 		project_codi.setPath(codebase + "/" + tenantId + "/codi");
+		project_codi.load();
 		
 		projects.add(project_codi);
 		
@@ -41,9 +42,9 @@ public class Workspace {
 		Project project_mw3 = new Project();
 		project_mw3.setId("mw3");
 		project_mw3.setPath(codebase + "/" + tenantId + "/mw3");
-
-		projects.add(project_mw3);
+		project_codi.load();
 		
+		projects.add(project_mw3);
 		
 		
 		this.setProjects(projects);

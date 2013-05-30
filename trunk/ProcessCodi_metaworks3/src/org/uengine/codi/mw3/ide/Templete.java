@@ -10,9 +10,6 @@ public class Templete implements ContextAware {
 	@AutowiredFromClient
 	public Session session;
 	
-	@AutowiredFromClient
-	public JavaBuildPath jbPath;
-	
 	MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
 			return metaworksContext;

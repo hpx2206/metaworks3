@@ -36,10 +36,10 @@ public class CloudClassLoader {
 			this.cl = cl;
 		}
 		
-	public CloudClassLoader(JavaBuildPath jbPath) {
+/*	public CloudClassLoader(JavaBuildPath jbPath) {
 		this.setLibraryPath(jbPath.getBasePath() + jbPath.getLibraryPath());
 		this.setDefaultBuildOutputPath(jbPath.getBasePath() + jbPath.getDefaultBuildOutputPath());
-	}
+	}*/
 
 	public void load(){
 		

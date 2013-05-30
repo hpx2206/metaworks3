@@ -1,5 +1,8 @@
 package org.uengine.codi.mw3.ide;
 
+import java.io.File;
+import java.util.ArrayList;
+
 public class Project {
 
 	String id;
@@ -27,5 +30,32 @@ public class Project {
 			this.close = close;
 		}
 	
+	BuildPath buildPath;
+		public BuildPath getBuildPath() {
+			return buildPath;
+		}
+		public void setBuildPath(BuildPath buildPath) {
+			this.buildPath = buildPath;
+		}
+		
+	public void load(){
+		Source source = new Source();
+		source.setName("src");
+		source.setId(this.getId() + File.separatorChar + source.getName());
+		
+		ArrayList<Source> sources = new ArrayList<Source>();
+		sources.add(source);
+		
+		BuildOutputPath buildOutputPath = new BuildOutputPath();
+		buildOutputPath.setName("bin");
+		buildOutputPath.setId(this.getId() + File.separatorChar + buildOutputPath.getId());
+		
+		BuildPath buildPath = new BuildPath();
+		buildPath.setSource(sources);
+		buildPath.setDefaultBuildOutputPath(buildOutputPath);
+		
+		this.setBuildPath(buildPath);
+		
+	}
 	
 }

@@ -11,6 +11,7 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.TreeNode;
 import org.uengine.codi.mw3.ide.editor.Editor;
 import org.uengine.codi.mw3.ide.editor.java.JavaCodeEditor;
+import org.uengine.codi.mw3.ide.editor.process.ProcessEditor;
 import org.uengine.codi.mw3.ide.menu.ResourceContextMenu;
 import org.uengine.codi.mw3.model.Session;
 
@@ -96,8 +97,19 @@ public class ResourceNode extends TreeNode {
 		if(!this.isFolder()){
 			String type = ResourceNode.findNodeType(this.getName());
 			
+			this.setType(type);
+			
 			if(type.equals(TreeNode.TYPE_FILE_JAVA)){
 				editor = new JavaCodeEditor(this);
+			}else if(type.equals(TreeNode.TYPE_FILE_PROCESS)){
+				editor = new ProcessEditor(this);
+				try {
+					editor.load();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}else{
+				editor = new Editor(this);
 			}
 		}
 		/*
@@ -145,7 +157,7 @@ public class ResourceNode extends TreeNode {
 		return new ToAppend(new CloudWindow("editor"), this.beforeAction());
 	}
 	
-	@ServiceMethod(payload={"id", "name"}, mouseBinding="right", target=ServiceMethodContext.TARGET_POPUP)
+	@ServiceMethod(payload={"id", "name", "path", "folder"}, mouseBinding="right", target=ServiceMethodContext.TARGET_POPUP)
 	public Object[] showContextMenu() {
 		session.setClipboard(this);
 		
@@ -186,7 +198,7 @@ public class ResourceNode extends TreeNode {
 		return nodeType;
 	}
 	
-	@ServiceMethod(payload={"id", "name"}, mouseBinding="drag")
+	//@ServiceMethod(payload={"id", "name"}, mouseBinding="drag")
 	public Object drag() {
 		session.setClipboard(this);
 		

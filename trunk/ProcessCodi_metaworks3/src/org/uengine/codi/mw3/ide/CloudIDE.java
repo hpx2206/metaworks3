@@ -85,16 +85,6 @@ public class CloudIDE {
 			this.workspace = workspace;
 		}
 
-	JavaBuildPath javaBuildPath;
-		@Hidden
-		@AutowiredToClient
-		public JavaBuildPath getJavaBuildPath() {
-			return javaBuildPath;
-		}
-		public void setJavaBuildPath(JavaBuildPath javaBuildPath) {
-			this.javaBuildPath = javaBuildPath;
-		}	
-
 	ContentLibrary contentLibrary;
 		public ContentLibrary getContentLibrary() {
 			return contentLibrary;
@@ -127,7 +117,7 @@ public class CloudIDE {
 			this.pageNavigator = pageNavigator;
 		}		
 		
-	public void load(){
+	public void load(Session session){
 		String tenantId = "uengine";
 		String codebase = GlobalContext.getPropertyString("codebase", "codebase");
 		
@@ -154,7 +144,7 @@ public class CloudIDE {
 		Layout outerLayout = new Layout();
 		outerLayout.setWest(navigatorWindow);
 		outerLayout.setCenter(centerLayout);
-		//outerLayout.setNorth(new TopPanel(session));
+		outerLayout.setNorth(new TopPanel(session));
 		outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:5, east__spacing_open:5, west__size:250, north__size:52");
 
 		this.setLayout(outerLayout);
@@ -162,7 +152,7 @@ public class CloudIDE {
 	}
 	
 	public void load(Session session, String projectId){
-
+		/*
 		String userId =  session.getUser().getUserId();
 		
 		String codebasePath = GlobalContext.getPropertyString("codebase", "codebase");
@@ -228,6 +218,7 @@ public class CloudIDE {
 		this.setResourceLibrary(resourceLib);
 
 		this.setPageNavigator(new PageNavigator("ide"));
+		*/
 		
 		/*
 		Map settings = new HashMap();
@@ -288,10 +279,8 @@ public class CloudIDE {
 	@AutowiredFromClient(select="typeof currentEditorId!='undefined' && currentEditorId==autowiredObject.id")
 	public Editor editor;
 	
-	@ServiceMethod(payload={"currentEditorId", "javaBuildPath"}, keyBinding="Ctrl+S@Global", target=ServiceMethodContext.TARGET_APPEND)
+	@ServiceMethod(payload={"currentEditorId"}, keyBinding="Ctrl+S@Global", target=ServiceMethodContext.TARGET_APPEND)
 	public Object save(){
-		editor.jbPath = this.getJavaBuildPath();
-		
 		return new ToAppend(editor, editor.save());
 	}
 
