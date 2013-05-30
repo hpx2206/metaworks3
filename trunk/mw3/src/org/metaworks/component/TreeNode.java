@@ -193,7 +193,7 @@ public class TreeNode {
 		return null;
 	}
 	
-	@ServiceMethod(payload={"id", "name"}, target=ServiceMethodContext.TARGET_APPEND)
+	@ServiceMethod(payload={"id", "name", "folder"}, target=ServiceMethodContext.TARGET_APPEND)
 	public Object action() throws Exception {
 		// Override method
 		
