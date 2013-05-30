@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.ide.editor.process;
 
+import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.editor.Editor;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerWebContentPanel;
 
@@ -14,23 +15,37 @@ public class ProcessEditor extends Editor {
 		}
 
 	public ProcessEditor(){
-		super();
+		
 	}
 		
-	public ProcessEditor(String filename){
-		super(filename);
+	public ProcessEditor(ResourceNode resourceNode){
+		super(resourceNode);
 		
 		this.setType("process");
 		
 		try {
 			ProcessDesignerWebContentPanel processDesignerWebContentPanel = new ProcessDesignerWebContentPanel();
-			processDesignerWebContentPanel.setAlias(filename);
+			processDesignerWebContentPanel.setAlias(this.getResourceNode().getPath());
 			
 			this.setProcessDesigner(processDesignerWebContentPanel);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	@Override
+	public String load() {
+		String definitionString = super.load();
+		
+		try {
+			this.getProcessDesigner().load(new String(definitionString.getBytes(), "UTF-8"));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+		
+		return definitionString;
 	}
 	
 	public Object save(){
