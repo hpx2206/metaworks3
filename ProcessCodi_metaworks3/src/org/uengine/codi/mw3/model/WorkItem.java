@@ -9,10 +9,12 @@ import java.util.Iterator;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.ToAppend;
 import org.metaworks.ToPrepend;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
+import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Test;
 import org.metaworks.dao.Database;
 import org.metaworks.dwr.MetaworksRemoteService;
@@ -42,13 +44,50 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		this.getMetaworksContext().setWhen(WHEN_NEW);
 	}
 	
+	@ServiceMethod(target=ServiceMethodContext.TARGET_APPEND)
+	public ToAppend findChild() throws Exception{
+		StringBuffer sql = new StringBuffer();
+		
+		sql.append("select *");
+		sql.append("  from bpm_worklist");
+		sql.append(" where prttskid=?prttskid");
+		sql.append("   and isdeleted!=?isDeleted");
+		sql.append("   and type=?type");
+		sql.append(" order by taskId");
+		
+		IWorkItem workitem = (IWorkItem) Database.sql(IWorkItem.class, sql.toString());
+		
+		workitem.set("prttskid", this.getTaskId());
+		workitem.set("type", "ovryCmnt");
+		workitem.set("isDeleted",1);
+		
+		//TODO: this expression should be work later instead of above.
+		//IUser user = new User();
+		//user.setEndpoint(login.getEmpCode());
+		//workitem.setWriter(user);
+		
+		workitem.select();
+		
+		return new ToAppend(this, workitem);
+	}
+	
 	protected static IWorkItem find(String instanceId) throws Exception{
 		
-		String sql = "select * from bpm_worklist where rootInstId=?instId and isdeleted!=?isDeleted  order by taskId";
+		//String sql = "select * from bpm_worklist where rootInstId=?instId and isdeleted!=?isDeleted order by taskId";
 		
-		IWorkItem workitem = (IWorkItem) Database.sql(IWorkItem.class, sql);
+		StringBuffer sql = new StringBuffer();
+		
+		sql.append("select *");
+		sql.append("  from bpm_worklist");
+		sql.append(" where rootInstId=?instId");
+		sql.append("   and isdeleted!=?isDeleted");
+		sql.append("   and type!=?type");
+		sql.append(" order by taskId");
+		
+		IWorkItem workitem = (IWorkItem) Database.sql(IWorkItem.class, sql.toString());
 		
 		workitem.set("instId",instanceId);
+		workitem.set("type", "ovryCmnt");
 		workitem.set("isDeleted",1);
 		
 		//TODO: this expression should be work later instead of above.
@@ -63,11 +102,22 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	
 	protected static IWorkItem find(String instanceId, int startIndex, int lastIndex) throws Exception{
 		
-		String sql = "select * from bpm_worklist where rootInstId=?instId and isdeleted!=?isDeleted order by taskId";
+		//String sql = "select * from bpm_worklist where rootInstId=?instId and isdeleted!=?isDeleted order by taskId";
 		
-		IWorkItem workitem = (IWorkItem) Database.sql(IWorkItem.class, sql + " limit " + startIndex + ", " + lastIndex);
+		StringBuffer sql = new StringBuffer();
 		
-		workitem.set("instId",instanceId);
+		sql.append("select *");
+		sql.append("  from bpm_worklist");
+		sql.append(" where rootInstId=?instId");
+		sql.append("   and isdeleted!=?isDeleted");
+		sql.append("   and type!=?type");
+		sql.append(" order by taskId");
+		sql.append(" limit " + startIndex + ", " + lastIndex);
+		
+		IWorkItem workitem = (IWorkItem) Database.sql(IWorkItem.class, sql.toString());
+		
+		workitem.set("instId", instanceId);
+		workitem.set("type", "ovryCmnt");		
 		workitem.set("isDeleted",1);
 		
 		//TODO: this expression should be work later instead of above.
