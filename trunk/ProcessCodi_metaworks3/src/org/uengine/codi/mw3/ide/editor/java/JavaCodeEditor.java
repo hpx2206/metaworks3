@@ -1,15 +1,10 @@
 package org.uengine.codi.mw3.ide.editor.java;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.metaworks.Refresh;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
-import org.uengine.codi.mw3.ide.CloudClassLoader;
-import org.uengine.codi.mw3.ide.JavaBatchBuilder;
+import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.editor.Editor;
 import org.uengine.codi.mw3.model.Session;
 
@@ -17,13 +12,13 @@ public class JavaCodeEditor extends Editor {
 
 	@AutowiredFromClient
 	public Session session;
-
+	
 	public JavaCodeEditor(){
-		super();
+		//this(null);
 	}
 
-	public JavaCodeEditor(String filename) {
-		super(filename);
+	public JavaCodeEditor(ResourceNode resourceNode) {
+		super(resourceNode);
 		
 		this.setType(Editor.TYPE_JAVA);
 	}
@@ -52,8 +47,9 @@ public class JavaCodeEditor extends Editor {
 
 	@Override
 	public Object save(){
-		super.save();
+		return super.save();
 
+		/*
 		ArrayList<JavaCodeError> errorList = new ArrayList<JavaCodeError>();
 
 		CloudClassLoader ccl = new CloudClassLoader(jbPath);
@@ -72,6 +68,7 @@ public class JavaCodeEditor extends Editor {
 		}else{
 			return null;
 		}
+		*/
 		
 		/*
 		try {

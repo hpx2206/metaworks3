@@ -14,12 +14,21 @@ import org.metaworks.annotation.Name;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.common.MetaworksUtil;
 import org.uengine.codi.mw3.ide.JavaBuildPath;
+import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.editor.java.JavaParser;
 
 public class Editor {
 	
 	public final static String TYPE_JAVA = "java";
 	
+	ResourceNode resourceNode;
+		public ResourceNode getResourceNode() {
+			return resourceNode;
+		}
+		public void setResourceNode(ResourceNode resourceNode) {
+			this.resourceNode = resourceNode;
+		}
+
 	@AutowiredFromClient
 	public JavaBuildPath jbPath;
 
@@ -64,9 +73,17 @@ public class Editor {
 		public void setLoaded(boolean loaded) {
 			this.loaded = loaded;
 		}
-		
+			
 	public Editor(){
-		this(null);
+		
+	}
+	
+	public Editor(ResourceNode resourceNode){
+		this.setResourceNode(resourceNode);
+		
+		this.setId(resourceNode.getId());
+		this.setName(resourceNode.getName());
+		
 	}
 	
 	public Editor(String id){
@@ -87,7 +104,7 @@ public class Editor {
 		}		
 	}
 	
-	@ServiceMethod(callByContent=true, except="content", target=ServiceMethodContext.TARGET_NONE)
+	@ServiceMethod(payload={"resourceNode"}, target=ServiceMethodContext.TARGET_NONE)
 	public String load() {
 		InputStream is = null;
 		ByteArrayOutputStream bao = null;
@@ -96,7 +113,7 @@ public class Editor {
 			bao = new ByteArrayOutputStream();
 			
 			//if(TYPE_FILE.equals(this.getType())){
-				File file = new File(jbPath.getBasePath() + this.getId());
+				File file = new File(this.getResourceNode().getPath());
 				if(file.exists()){
 					
 					try {
@@ -157,7 +174,7 @@ public class Editor {
 		FileWriter writer = null;
 
 		try {
-			File file = new File(jbPath.getBasePath() + this.getId());
+			File file = new File(this.getResourceNode().getPath());
 			if(!file.exists()){
 				file.getParentFile().mkdirs();
 				file.createNewFile();

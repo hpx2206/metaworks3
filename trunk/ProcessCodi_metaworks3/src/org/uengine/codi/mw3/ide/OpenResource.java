@@ -37,7 +37,7 @@ public class OpenResource {
 		result.add(new Remover(new ModalWindow()));
 		
 		for(String resourceName : this.getSelectedResources()){
-			result.add(new ToAppend(new CloudWindow("editor"), new JavaCodeEditor(resourceName)));
+			//result.add(new ToAppend(new CloudWindow("editor"), new JavaCodeEditor(resourceName)));
 		}
 		
 		return result;

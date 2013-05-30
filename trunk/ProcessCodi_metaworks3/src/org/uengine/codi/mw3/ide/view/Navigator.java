@@ -1,13 +1,13 @@
 package org.uengine.codi.mw3.ide.view;
 
-import java.io.File;
-
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;
+import org.uengine.codi.mw3.ide.Project;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.ResourceTree;
+import org.uengine.codi.mw3.ide.Workspace;
 
 @Face(displayName="$Navigator", ejsPath="dwr/metaworks/genericfaces/CleanObjectFace.ejs")
 public class Navigator {
@@ -54,6 +54,23 @@ public class Navigator {
 		this.setType(this.getId());
 		this.setName("$Navigator");		
 	}
+	
+	public void load(Workspace workspace){
+		ResourceNode workspaceNode = new ResourceNode();
+		workspaceNode.setId(workspace.getId());
+		workspaceNode.setRoot(true);
+		workspaceNode.setHidden(true);
+		
+		for(Project project : workspace.getProjects())			
+			workspaceNode.add(new ResourceNode(project));
+		
+		ResourceTree resourceTree = new ResourceTree();
+		resourceTree.setId(workspace.getId());
+		resourceTree.setNode(workspaceNode);
+		
+		this.setResourceTree(resourceTree);
+	}
+	
 	
 	public void load(String sourceCodeBase, String projectName){
 		ResourceNode projectNode = new ResourceNode();
