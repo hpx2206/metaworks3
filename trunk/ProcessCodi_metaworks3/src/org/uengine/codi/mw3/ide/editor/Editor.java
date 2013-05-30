@@ -8,12 +8,10 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.metaworks.ServiceMethodContext;
-import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.common.MetaworksUtil;
-import org.uengine.codi.mw3.ide.JavaBuildPath;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.editor.java.JavaParser;
 
@@ -28,9 +26,6 @@ public class Editor {
 		public void setResourceNode(ResourceNode resourceNode) {
 			this.resourceNode = resourceNode;
 		}
-
-	@AutowiredFromClient
-	public JavaBuildPath jbPath;
 
 	String id;
 		@Id
@@ -83,7 +78,7 @@ public class Editor {
 		
 		this.setId(resourceNode.getId());
 		this.setName(resourceNode.getName());
-		
+		this.setType(resourceNode.getType());
 	}
 	
 	public Editor(String id){

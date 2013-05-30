@@ -21,7 +21,7 @@ public class JavaRunAsMenu extends CloudMenu {
 	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
 	public Object javaApplication() throws Exception {
-		Object clipboard = session.getClipboard();
+		/*Object clipboard = session.getClipboard();
 		if(clipboard instanceof JavaCodeEditor){
 			JavaCodeEditor editor = (JavaCodeEditor)clipboard;
 			editor.jbPath = jbPath;
@@ -39,13 +39,15 @@ public class JavaRunAsMenu extends CloudMenu {
 			return new ToAppend(new Console(), messages);
 		}else{
 			return null;
-		}
+		}*/
+		
+		return null;
 		
 	}
 	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
 	public Object[] metaworksApplication() throws Exception {
-		Object clipboard = session.getClipboard();
+/*		Object clipboard = session.getClipboard();
 		if(clipboard instanceof JavaCodeEditor){
 			JavaCodeEditor editor = (JavaCodeEditor)clipboard;
 			editor.jbPath = jbPath;
@@ -58,8 +60,8 @@ public class JavaRunAsMenu extends CloudMenu {
 				messages.add("launch Metaworks Application...");		
 			}
 			
-			return new Object[]{new ToAppend(new Console(), messages)/*, editor.runMetaworks()*/};
-		}
+			return new Object[]{new ToAppend(new Console(), messages), editor.runMetaworks()};
+		}*/
 		
 		return null;
 		
