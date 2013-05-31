@@ -430,7 +430,7 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 			def.setName(title);
 			FileOutputStream fos = null;
 			try{
-				File file = new File(processEditor.jbPath.getBasePath() + processEditor.getId());
+				File file = new File(processEditor.getResourceNode().getPath());
 				fos = new FileOutputStream(file);
 				String definitionInString = (String)GlobalContext.serialize(def, ProcessDefinition.class);
 				ByteArrayInputStream bai = new ByteArrayInputStream(definitionInString.getBytes(GlobalContext.ENCODING));
@@ -634,116 +634,124 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 //		}
 //		return null;
 	}
+	
+	public void load(String definitionString) throws Exception {
+		ProcessDefinition def = (ProcessDefinition) GlobalContext.deserialize(definitionString);
+		
+		// default role
+		Role initiator = new Role();
+		initiator.setName("Initiator");
+		roleMap.put("Initiator" , initiator);
+		
+		ProcessVariable pvs[] = def.getProcessVariables();
+		if( pvs != null && pvs.length != 0){
+			for(int i =0 ; i < pvs.length; i++){
+				ProcessVariable pv = pvs[i];
+				PrcsVariable designerValiable = new PrcsVariable();
+				designerValiable.setName(pv.getName());
+				if( pv.getDefaultValue() instanceof ComplexType ){
+					ComplexType v = (ComplexType)pv.getDefaultValue();
+					designerValiable.setVariableType("complexType");
+					designerValiable.setTypeId(v.getTypeId().replace("[", "").replace("]", ""));
+				}else if( pv.getDefaultValue() instanceof String ){
+					designerValiable.setVariableType("string");
+				}else if( pv.getDefaultValue() instanceof Number ){
+				}// TODO others
+				
+				variableMap.put(pv.getName(), designerValiable);
+			}
+		}
+		
+		ProcessVariable[] procVars = def.getProcessVariables();
+		if( procVars != null){
+			for(int i=0; i<procVars.length; i++){
+				procVars[i].setType(null);
+				procVars[i].setDefaultValue(null);
+				//procVars[i].setDisplayName(null);
+				
+				//procVars[i] = ProcessVariable.forName(procVars[i].getName());
+				//def.getExtendedAttributes()
+			}
+		}
+		
+		// processDefinition setting
+		
+		if(def.getExtendedAttributes() != null){
+			ArrayList<CanvasDTO> cellsList = (ArrayList<CanvasDTO>) def.getExtendedAttributes().get("cells");
+//			activityMap = new HashMap<String, Object>();
+//			activityList = new ArrayList<Activity>();
+			if( cellsList != null){
+				CanvasDTO []cells = new CanvasDTO[cellsList.size()];
+				int tagCnt = 0;
+				for(int i = 0; i < cellsList.size(); i++){
+					cells[i] = (CanvasDTO)cellsList.get(i);
+					if( cells[i] != null && cells[i].getJsonString() != null){
+						this.setGraphString(cells[i].getJsonString());
+					}
+					if( cells[i].getTracingTag() != null ){
+						if( "GEOM".equalsIgnoreCase(cells[i].getShapeType()) ){
+							Activity activity = def.getActivity(cells[i].getTracingTag());
+							activityMap.put(cells[i].getId() , activity );
+						}else if( "GROUP".equalsIgnoreCase(cells[i].getShapeType()) ){
+							if( "OG.shape.HorizontalLaneShape".equals(cells[i].getShapeId() ) || "OG.shape.VerticalLaneShape".equals(cells[i].getShapeId() )){
+								roleMap.put(cells[i].getId() , def.getRole(cells[i].getRoleName() ));
+							}else if( "OG.shape.bpmn.A_Subprocess".equals(cells[i].getShapeId() )){
+								Activity activity = def.getActivity(cells[i].getTracingTag());
+								activityMap.put(cells[i].getId() , activity );
+							}
+						}
+						if( Integer.parseInt(cells[i].getTracingTag()) > tagCnt )
+							tagCnt = Integer.parseInt(cells[i].getTracingTag());
+					}
+				}
+				lastTracingTag = String.valueOf(tagCnt + 1);
+				// canvas setting
+				this.setCell(cells);
+			}
+		}
+//		Role[] roles = def.getRoles();
+//		if( roles != null && roles.length != 0){
+////			ArrayList<org.uengine.codi.mw3.webProcessDesigner.Role> role = defineTab.rolePanel.getRoles();
+//			for(int i =0 ; i < roles.length; i++){
+//				org.uengine.codi.mw3.webProcessDesigner.Role designerRole = new org.uengine.codi.mw3.webProcessDesigner.Role();
+//				designerRole.setName(roles[i].getName());
+//				designerRole.setMetaworksContext(new MetaworksContext());
+//				designerRole.getMetaworksContext().setWhen("view");
+//				roleMap.put(cells[i].getId() , def.getRole(cells[i].getLabel() ));
+//				role.add(designerRole);
+//			}
+//			// role setting
+////			defineTab.rolePanel.setRoles(role);
+//		}
+
+		ArrayList<Transition> tsList = def.getTransitions();
+		if( tsList != null && tsList.size()>0){
+			for(int i =0 ; i < tsList.size(); i++){
+				Transition ts = tsList.get(i);
+				if( ts.getCondition() != null ){
+					conditionMap.put(ts.getTransitionId(), ts.getCondition());
+				}
+			}
+		}
+	}
+	
 	public void load() throws Exception{
 		
 		String processName = getAlias().substring(0, getAlias().indexOf("."));
 		setProcessName(processName);
 		/// read source file
-//		File sourceCodeFile = new File(getBasePath() + getAlias());
-		File sourceCodeFile = new File(CodiClassLoader.getMyClassLoader().sourceCodeBase() + "/" + processName + ".process2");
+		File sourceCodeFile = new File(getBasePath() + getAlias());
+		//File sourceCodeFile = new File(CodiClassLoader.getMyClassLoader().sourceCodeBase() + "/" + processName + ".process2");
 		
 		ByteArrayOutputStream bao = new ByteArrayOutputStream();
 		FileInputStream is;
 //		try {
 			is = new FileInputStream(sourceCodeFile);
 			UEngineUtil.copyStream(is, bao);
-			ProcessDefinition def = (ProcessDefinition) GlobalContext.deserialize(bao.toString("UTF-8"));
-						
-			// default role
-			Role initiator = new Role();
-			initiator.setName("Initiator");
-			roleMap.put("Initiator" , initiator);
 			
-			ProcessVariable pvs[] = def.getProcessVariables();
-			if( pvs != null && pvs.length != 0){
-				for(int i =0 ; i < pvs.length; i++){
-					ProcessVariable pv = pvs[i];
-					PrcsVariable designerValiable = new PrcsVariable();
-					designerValiable.setName(pv.getName());
-					if( pv.getDefaultValue() instanceof ComplexType ){
-						ComplexType v = (ComplexType)pv.getDefaultValue();
-						designerValiable.setVariableType("complexType");
-						designerValiable.setTypeId(v.getTypeId().replace("[", "").replace("]", ""));
-					}else if( pv.getDefaultValue() instanceof String ){
-						designerValiable.setVariableType("string");
-					}else if( pv.getDefaultValue() instanceof Number ){
-					}// TODO others
-					
-					variableMap.put(pv.getName(), designerValiable);
-				}
-			}
+			this.load(bao.toString("UTF-8"));
 			
-			ProcessVariable[] procVars = def.getProcessVariables();
-			if( procVars != null){
-				for(int i=0; i<procVars.length; i++){
-					procVars[i].setType(null);
-					procVars[i].setDefaultValue(null);
-					//procVars[i].setDisplayName(null);
-					
-					//procVars[i] = ProcessVariable.forName(procVars[i].getName());
-					//def.getExtendedAttributes()
-				}
-			}
 			
-			// processDefinition setting
-			
-			if(def.getExtendedAttributes() != null){
-				ArrayList<CanvasDTO> cellsList = (ArrayList<CanvasDTO>) def.getExtendedAttributes().get("cells");
-	//			activityMap = new HashMap<String, Object>();
-	//			activityList = new ArrayList<Activity>();
-				if( cellsList != null){
-					CanvasDTO []cells = new CanvasDTO[cellsList.size()];
-					int tagCnt = 0;
-					for(int i = 0; i < cellsList.size(); i++){
-						cells[i] = (CanvasDTO)cellsList.get(i);
-						if( cells[i] != null && cells[i].getJsonString() != null){
-							this.setGraphString(cells[i].getJsonString());
-						}
-						if( cells[i].getTracingTag() != null ){
-							if( "GEOM".equalsIgnoreCase(cells[i].getShapeType()) ){
-								Activity activity = def.getActivity(cells[i].getTracingTag());
-								activityMap.put(cells[i].getId() , activity );
-							}else if( "GROUP".equalsIgnoreCase(cells[i].getShapeType()) ){
-								if( "OG.shape.HorizontalLaneShape".equals(cells[i].getShapeId() ) || "OG.shape.VerticalLaneShape".equals(cells[i].getShapeId() )){
-									roleMap.put(cells[i].getId() , def.getRole(cells[i].getRoleName() ));
-								}else if( "OG.shape.bpmn.A_Subprocess".equals(cells[i].getShapeId() )){
-									Activity activity = def.getActivity(cells[i].getTracingTag());
-									activityMap.put(cells[i].getId() , activity );
-								}
-							}
-							if( Integer.parseInt(cells[i].getTracingTag()) > tagCnt )
-								tagCnt = Integer.parseInt(cells[i].getTracingTag());
-						}
-					}
-					lastTracingTag = String.valueOf(tagCnt + 1);
-					// canvas setting
-					this.setCell(cells);
-				}
-			}
-//			Role[] roles = def.getRoles();
-//			if( roles != null && roles.length != 0){
-////				ArrayList<org.uengine.codi.mw3.webProcessDesigner.Role> role = defineTab.rolePanel.getRoles();
-//				for(int i =0 ; i < roles.length; i++){
-//					org.uengine.codi.mw3.webProcessDesigner.Role designerRole = new org.uengine.codi.mw3.webProcessDesigner.Role();
-//					designerRole.setName(roles[i].getName());
-//					designerRole.setMetaworksContext(new MetaworksContext());
-//					designerRole.getMetaworksContext().setWhen("view");
-//					roleMap.put(cells[i].getId() , def.getRole(cells[i].getLabel() ));
-//					role.add(designerRole);
-//				}
-//				// role setting
-////				defineTab.rolePanel.setRoles(role);
-//			}
-
-			ArrayList<Transition> tsList = def.getTransitions();
-			if( tsList != null && tsList.size()>0){
-				for(int i =0 ; i < tsList.size(); i++){
-					Transition ts = tsList.get(i);
-					if( ts.getCondition() != null ){
-						conditionMap.put(ts.getTransitionId(), ts.getCondition());
-					}
-				}
-			}
 //		} catch (FileNotFoundException e1) {
 //			e1.printStackTrace();
 //		} catch (Exception e) {
