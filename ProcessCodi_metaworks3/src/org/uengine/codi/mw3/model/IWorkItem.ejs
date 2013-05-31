@@ -1,5 +1,16 @@
 <%
-	if(value && value.type!='ovryCmnt'){ 
+	if(value){
+		if(value.more){
+%>
+
+	<div id="moreWorkDiv">
+		<div class="morePoint"></div>
+		<a class="moreBtn5" href="#" onClick="<%=methods.moreView.caller()%>">더 보기</a>
+		<div class="morePoint"></div>
+	</div>
+<%		
+		}else{
+		 
 		if(mw3.how == 'sns'){
 %>
 
@@ -252,6 +263,7 @@
 	
 	
 <%
+	}
 	}
 	}
 %>

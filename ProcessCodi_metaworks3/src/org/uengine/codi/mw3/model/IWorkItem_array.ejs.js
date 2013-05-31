@@ -10,5 +10,30 @@ var org_uengine_codi_mw3_model_IWorkItem_array = function(objectId, className){
 		
 		if(workItem.type == null && (workItem.workItemHandler == null || workItem.workItemHandler.instanceId==null) && workItem.status == 'NEW' && workItem.tool != 'formApprovalHandler')
 			workItem.detail();
+		
+		if(workItem){
+			if(workItem.type == 'ovryCmnt'){
+				this.objectDiv.one('loaded.workitem_' + workItem.overlayCommentOption.parentTaskId, {workItem: workItem}, function(event){				
+					console.log('loaded');
+					var workItem = event.data.workItem;
+					
+					var ovryCmntTarget = {
+				    	__className : 'org.uengine.codi.mw3.model.IWorkItem',
+				    	taskId : workItem.overlayCommentOption.parentTaskId
+				    };
+				    
+					var toAppend = {
+						__className : 'org.metaworks.ToAppend',
+						parent : ovryCmntTarget,
+						target : workItem,
+						match : true
+					};
+					
+					mw3.locateObject(toAppend, toAppend.__className, 'body');
+					
+					mw3.onLoadFaceHelperScript();
+				});
+			}
+		}
 	}
 };
