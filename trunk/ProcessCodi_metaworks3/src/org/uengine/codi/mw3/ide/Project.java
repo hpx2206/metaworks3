@@ -3,9 +3,12 @@ package org.uengine.codi.mw3.ide;
 import java.io.File;
 import java.util.ArrayList;
 
+import org.metaworks.annotation.Id;
+
 public class Project {
 
 	String id;
+		@Id
 		public String getId() {
 			return id;
 		}

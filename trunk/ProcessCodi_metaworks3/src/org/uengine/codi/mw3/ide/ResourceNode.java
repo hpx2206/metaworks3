@@ -23,6 +23,14 @@ public class ResourceNode extends TreeNode {
 	
 	public final static String TYPE_PROJECT 			= "project";
 	
+	String projectId;
+		public String getProjectId() {
+			return projectId;
+		}
+		public void setProjectId(String projectId) {
+			this.projectId = projectId;
+		}
+
 	String path;
 		public String getPath() {
 			return path;
@@ -41,6 +49,7 @@ public class ResourceNode extends TreeNode {
 		this.setFolder(true);
 
 		this.setPath(project.getPath());
+		this.setProjectId(project.getId());
 	}
 	
 
@@ -58,7 +67,8 @@ public class ResourceNode extends TreeNode {
 			File childFile = new File(file.getAbsolutePath() + File.separatorChar + childFilePaths[i]);
 			
 			if(childFile.isDirectory()){
-				ResourceNode node = new ResourceNode();				
+				ResourceNode node = new ResourceNode();
+				node.setProjectId(this.getProjectId());
 				node.setId(this.getId() + File.separatorChar + childFile.getName());				
 				node.setName(childFile.getName());
 				node.setPath(this.getPath() + File.separatorChar + childFile.getName());
@@ -76,6 +86,7 @@ public class ResourceNode extends TreeNode {
 			
 			if(!childFile.isDirectory()){
 				ResourceNode node = new ResourceNode();
+				node.setProjectId(this.getProjectId());
 				node.setId(this.getId() + File.separatorChar + childFile.getName());
 				node.setName(childFile.getName());
 				node.setPath(this.getPath() + File.separatorChar + childFile.getName());
@@ -85,13 +96,11 @@ public class ResourceNode extends TreeNode {
 				child.add(node);
 			}
 		}
-	
 				
 		return new ToAppend(this, child);
 	}
 	
 	public Editor beforeAction(){
-		
 		
 		Editor editor = null;
 		
@@ -160,12 +169,12 @@ public class ResourceNode extends TreeNode {
 	}
 	
 	@Override
-	@ServiceMethod(payload={"id", "name", "path", "folder"}, target=ServiceMethodContext.TARGET_APPEND)
+	@ServiceMethod(payload={"id", "name", "path", "folder", "projectId"}, target=ServiceMethodContext.TARGET_APPEND)
 	public Object action(){
 		return new ToAppend(new CloudWindow("editor"), this.beforeAction());
 	}
 	
-	@ServiceMethod(payload={"id", "name", "path", "folder"}, mouseBinding="right", target=ServiceMethodContext.TARGET_POPUP)
+	@ServiceMethod(payload={"id", "name", "path", "folder", "projectId"}, mouseBinding="right", target=ServiceMethodContext.TARGET_POPUP)
 	public Object[] showContextMenu() {
 		session.setClipboard(this);
 		
