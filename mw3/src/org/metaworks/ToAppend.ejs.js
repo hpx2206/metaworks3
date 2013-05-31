@@ -1,17 +1,22 @@
 
 var org_metaworks_ToAppend = function(objectId, className){
-
-	var object = mw3.objects[objectId];
 	
+	var object = mw3.objects[objectId];
+
 	if(object){
 		mw3.removeObject(objectId);
 		
 		if(object.target && object.parent){
-			var objKeys = mw3._createObjectKey(object.parent, true);
+			var objKeys = [];
 			
+			if(object.match)
+				objKeys.push(mw3._createObjectKey(object.parent));
+			else
+				objKeys = mw3._createObjectKey(object.parent, true);
+
 			if(objKeys && objKeys.length){
 							        				
-				for(var i=0; i<objKeys.length; i++){
+				for(var i=0; i<objKeys.length; i++){			
 					var mappedObjId = mw3.objectId_KeyMapping[objKeys[i]];
 					
 					if(mappedObjId){
@@ -33,5 +38,4 @@ var org_metaworks_ToAppend = function(objectId, className){
 				
 		mw3.onLoadFaceHelperScript();
 	}
-
 }
