@@ -1,17 +1,6 @@
 <%
 	if(value){
 %>
-	<div id="moreWorkDiv">
-		<%
-		if(value.lastIndex != null && value.lastIndex >5 && value.moreTitle != null){
-		%>	
-			<div class="morePoint"></div>
-			<a class="moreBtn5" href="#" onClick="<%=methods.more.caller()%>"><%=value.moreTitle%></a>
-			<div class="morePoint"></div>
-		<%
-		}
-		%>
-	</div>
 	<%=fields.thread.here()%>
 	<%=fields.newItem.here()%>
 <%

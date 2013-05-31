@@ -44,33 +44,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		this.getMetaworksContext().setWhen(WHEN_NEW);
 	}
 	
-	@ServiceMethod(target=ServiceMethodContext.TARGET_APPEND)
-	public ToAppend findChild() throws Exception{
-		StringBuffer sql = new StringBuffer();
-		
-		sql.append("select *");
-		sql.append("  from bpm_worklist");
-		sql.append(" where prttskid=?prttskid");
-		sql.append("   and isdeleted!=?isDeleted");
-		sql.append("   and type=?type");
-		sql.append(" order by taskId");
-		
-		IWorkItem workitem = (IWorkItem) Database.sql(IWorkItem.class, sql.toString());
-		
-		workitem.set("prttskid", this.getTaskId());
-		workitem.set("type", "ovryCmnt");
-		workitem.set("isDeleted",1);
-		
-		//TODO: this expression should be work later instead of above.
-		//IUser user = new User();
-		//user.setEndpoint(login.getEmpCode());
-		//workitem.setWriter(user);
-		
-		workitem.select();
-		
-		return new ToAppend(this, workitem);
-	}
-	
 	protected static IWorkItem find(String instanceId) throws Exception{
 		
 		//String sql = "select * from bpm_worklist where rootInstId=?instId and isdeleted!=?isDeleted order by taskId";
@@ -81,13 +54,11 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		sql.append("  from bpm_worklist");
 		sql.append(" where rootInstId=?instId");
 		sql.append("   and isdeleted!=?isDeleted");
-		sql.append("   and type!=?type");
 		sql.append(" order by taskId");
 		
 		IWorkItem workitem = (IWorkItem) Database.sql(IWorkItem.class, sql.toString());
 		
 		workitem.set("instId",instanceId);
-		workitem.set("type", "ovryCmnt");
 		workitem.set("isDeleted",1);
 		
 		//TODO: this expression should be work later instead of above.
@@ -100,25 +71,56 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		return workitem;
 	}
 	
-	protected static IWorkItem find(String instanceId, int startIndex, int lastIndex) throws Exception{
-		
-		//String sql = "select * from bpm_worklist where rootInstId=?instId and isdeleted!=?isDeleted order by taskId";
+	protected static IWorkItem findComment(String instanceId) throws Exception{
 		
 		StringBuffer sql = new StringBuffer();
-		
+				
 		sql.append("select *");
 		sql.append("  from bpm_worklist");
 		sql.append(" where rootInstId=?instId");
 		sql.append("   and isdeleted!=?isDeleted");
-		sql.append("   and type!=?type");
+		sql.append("   and type=?type");
 		sql.append(" order by taskId");
-		sql.append(" limit " + startIndex + ", " + lastIndex);
 		
 		IWorkItem workitem = (IWorkItem) Database.sql(IWorkItem.class, sql.toString());
 		
 		workitem.set("instId", instanceId);
 		workitem.set("type", "ovryCmnt");		
 		workitem.set("isDeleted",1);
+		
+		
+		//TODO: this expression should be work later instead of above.
+		//IUser user = new User();
+		//user.setEndpoint(login.getEmpCode());
+		//workitem.setWriter(user);
+		
+		workitem.select();
+		
+		return workitem;
+	}
+	
+	protected static IWorkItem find(String instanceId, int count) throws Exception{
+		
+		//String sql = "select * from bpm_worklist where rootInstId=?instId and isdeleted!=?isDeleted order by taskId";
+		
+		StringBuffer sql = new StringBuffer();
+		
+		sql.append("select * from (");
+		sql.append("select *");
+		sql.append("  from bpm_worklist");
+		sql.append(" where rootInstId=?instId");
+		sql.append("   and isdeleted!=?isDeleted");
+		sql.append("   and type!=?type");
+		sql.append(" order by taskId desc");
+		sql.append(" limit " + (count + 1));
+		sql.append(") worklist order by taskId ");
+		
+		IWorkItem workitem = (IWorkItem) Database.sql(IWorkItem.class, sql.toString());
+		
+		workitem.set("instId", instanceId);
+		workitem.set("type", "ovryCmnt");		
+		workitem.set("isDeleted",1);
+		
 		
 		//TODO: this expression should be work later instead of above.
 		//IUser user = new User();
@@ -448,6 +450,14 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		}
 		public void setExt10(String ext10) {
 			this.ext10 = ext10;
+		}
+
+	boolean more;
+		public boolean isMore() {
+			return more;
+		}	
+		public void setMore(boolean more) {
+			this.more = more;
 		}
 
 	public void like() throws Exception{
@@ -1140,6 +1150,38 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		//return new slot 
 		
 		return overlayCommentWorkItem; 
+	}
+	
+	public Object moreView() throws Exception {
+		StringBuffer sql = new StringBuffer();
+		
+		sql.append("select *");
+		sql.append("  from bpm_worklist");
+		sql.append(" where rootInstId=?instId");
+		sql.append("   and taskId<=?taskId");
+		sql.append("   and type!=?type");
+		sql.append("   and isdeleted!=?isDeleted");
+		
+		sql.append(" order by taskId");
+		
+		IWorkItem workitem = (IWorkItem) Database.sql(IWorkItem.class, sql.toString());
+		
+		workitem.set("instId", this.getInstId());
+		workitem.set("taskId", this.getTaskId());
+		workitem.set("type", "ovryCmnt");
+		workitem.set("isDeleted",1);
+		
+		//TODO: this expression should be work later instead of above.
+		//IUser user = new User();
+		//user.setEndpoint(login.getEmpCode());
+		//workitem.setWriter(user);
+		
+		workitem.select();
+		
+		System.out.println("size:" + workitem.size());
+		
+		return workitem;
+		
 	}
 	
 	@AutowiredFromClient

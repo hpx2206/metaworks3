@@ -6,6 +6,7 @@ import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.dao.MetaworksDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.knowledge.IWfNode;
 import org.uengine.codi.mw3.knowledge.KnowledgeTool;
@@ -82,24 +83,28 @@ public class InstanceViewThreadPanel implements ContextAware {
 		
 		getMetaworksContext().setHow(how);
 		setInstanceId(instanceId);
-				
-		IWorkItem result = WorkItem.find(instanceId);
-		result.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-		result.getMetaworksContext().setHow(how);
 		
-		if(!more){
-			if(result.size()>5){
-				setLastIndex(result.size());
-				setStartIndex(lastIndex - LIST_CNT);
-				setMoreTitle(startIndex + "개의 이전 대화 더 보기");
-				
-				result = WorkItem.find(instanceId, startIndex, lastIndex);
-				
-				more = false;
-			}
+		IWorkItem thread = (IWorkItem)MetaworksDAO.createDAOImpl(IWorkItem.class);
+		IWorkItem result = WorkItem.find(instanceId, LIST_CNT);
+		
+		
+		boolean more = result.size() > 5;
+		while(result.next()){
+			thread.moveToInsertRow();
+			thread.getImplementationObject().copyFrom(result);
+			
+			if(more)
+				thread.setMore(more);
+			
+			more = false;
 		}
 		
-		setThread(result);
+		result = WorkItem.findComment(instanceId);
+		while(result.next()){
+			thread.moveToInsertRow();
+			thread.getImplementationObject().copyFrom(result);
+		}
+		setThread(thread);
 		
 		CommentWorkItem newItem = new CommentWorkItem();
 		newItem.setInstId(new Long(getInstanceId()));

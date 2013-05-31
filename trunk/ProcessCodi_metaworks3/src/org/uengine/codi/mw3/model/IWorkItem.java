@@ -262,6 +262,13 @@ public interface IWorkItem extends IDAO{
 
 		public String getExt10();
 		public void setExt10(String ext10);
+
+		
+		@Hidden
+		@NonSavable
+		@NonLoadable
+		public boolean isMore();
+		public void setMore(boolean more);
 		
 		@ServiceMethod(when = WHEN_VIEW)
 		public void like() throws Exception;
@@ -339,5 +346,8 @@ public interface IWorkItem extends IDAO{
 		@ServiceMethod(inContextMenu=true, payload={"instId", "taskId"}, target=ServiceMethodContext.TARGET_POPUP)
 		@Face(displayName="Comment")
 		public OverlayCommentWorkItem comment() throws Exception;
+		
+		@ServiceMethod(payload={"instId", "taskId"}, target=ServiceMethodContext.TARGET_SELF)
+		public Object moreView() throws Exception;
 }
 

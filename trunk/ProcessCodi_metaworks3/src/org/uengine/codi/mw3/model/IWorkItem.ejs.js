@@ -11,13 +11,15 @@ var org_uengine_codi_mw3_model_IWorkItem = function(objectId, className){
 	var container = this.objectDiv.find('.formcontexttitle span').eq(0);
 	var doc = container.html();
 	
-	var regURL = new RegExp("(http|https|ftp|telnet|news|irc)://([-/.a-zA-Z0-9_~#%$?&=:200-377()]+)","gi");	
-	
-	try{
-		container.html(doc.replace(regURL,"<a href='$1://$2' target='_blank' style='text-decoration:underline'>$1://$2</a>"));
-	}catch(e){
-		if(window.console)
-			console.log(e);
+	if(doc){
+		var regURL = new RegExp("(http|https|ftp|telnet|news|irc)://([-/.a-zA-Z0-9_~#%$?&=:200-377()]+)","gi");	
+		
+		try{
+			container.html(doc.replace(regURL,"<a href='$1://$2' target='_blank' style='text-decoration:underline'>$1://$2</a>"));
+		}catch(e){
+			if(window.console)
+				console.log(e);
+		}
 	}
 	
 	var workItem = mw3.objects[objectId];
@@ -33,7 +35,7 @@ var org_uengine_codi_mw3_model_IWorkItem = function(objectId, className){
 	if(contentLoad)
 		mw3.call(this.objectId, 'loadContents');
 	else
-		workItem.findChild();
+		this.objectDiv.trigger('loaded.workitem_' + workItem.taskId);
 };
 
 org_uengine_codi_mw3_model_IWorkItem.prototype = {
