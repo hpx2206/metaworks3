@@ -736,9 +736,21 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 	
 	public void copyFrom(IDAO fromObj) throws Exception{
 		
+		
 		if(rowSet!=null)
 			throw new RuntimeException("Selected DAO's properties cannott be changed. ");
 		
+		/*
+		 * rowset 을 복사하지 않아서 ormapping 된 값을 제대로 못들고 오는 현상 발생하여 수정함 
+		 */
+		ResultSetMetaData rsMetaData = fromObj.getImplementationObject().rowSet.getMetaData();
+		for(int i=1; i<=rsMetaData.getColumnCount(); i++){
+			String propertyName = rsMetaData.getColumnName(i);
+			
+			cachedRows.get(cursor).put(propertyName.toUpperCase(), fromObj.getImplementationObject().rowSet.getObject(i));
+		}
+		
+		/*
 		WebObjectType wot = MetaworksRemoteService.getInstance().getMetaworksType(daoClass.getName());
 				
 		ObjectInstance fromObjInst = (ObjectInstance) wot.metaworks2Type().createInstance();
@@ -751,9 +763,8 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 			
 			fieldValue = fromObjInst.getFieldValue(fd.getName());
 			
-			
 			cachedRows.get(cursor).put(fd.getName().toUpperCase(), fieldValue);
-		}
+		}*/
 	}
 
 	
@@ -1150,7 +1161,7 @@ public abstract class AbstractGenericDAO implements InvocationHandler, IDAO {
 								for( int i = 0; i < ormapping.availableWhen().length; i++){
 									try{
 										String[] propAndValue = ormapping.availableWhen()[i].split("==");
-										String availabilityCheckPropName = propAndValue[0].trim();
+										String availabilityCheckPropName = propAndValue[0].trim().toUpperCase();
 										String availabilityCheckValue = propAndValue[1].trim();
 	
 										Object value = (rowSet!=null ? rowSet.getObject(availabilityCheckPropName) : cache.get(availabilityCheckPropName));
