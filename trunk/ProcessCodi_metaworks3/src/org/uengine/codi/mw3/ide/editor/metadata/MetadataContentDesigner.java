@@ -80,6 +80,8 @@ public class MetadataContentDesigner implements ContextAware {
 			저장할때 주의해야함. */
 		
 		// TODO 앱일경우 상위 프로젝트 찾기
+		setId(this.getResourceNode().getPath());
+		
 		XStream xstream = new XStream();
 		FileInputStream fin;
 		try {

@@ -77,8 +77,8 @@ org_uengine_codi_mw3_ide_CloudWindow.prototype = {
 			this.lastIndex = this.lastIndex + 1;
 			var id = this.objectId + '_' + this.lastIndex;
 	
-			$('<div>').addClass(this.divClass).attr('id', 'top_' + id).appendTo(this.objectDiv.find('.boxtoprightTab')).html(mw3.locateObject(tab, tab.__className, null));
-			$('<div>').attr('id', 'bottom_' + id).appendTo(this.objectDiv.find('.contentcontainer')).html(mw3.locateObject(object, object.__className, null));
+			$('<div>').addClass(this.divClass).attr('id', 'top_' + id).appendTo(this.objectDiv.find('.boxtoprightTab').first()).html(mw3.locateObject(tab, tab.__className, null));
+			$('<div>').attr('id', 'bottom_' + id).appendTo(this.objectDiv.find('.contentcontainer').first()).html(mw3.locateObject(object, object.__className, null));
 			
 			this.bind();
 			this.select(id);
