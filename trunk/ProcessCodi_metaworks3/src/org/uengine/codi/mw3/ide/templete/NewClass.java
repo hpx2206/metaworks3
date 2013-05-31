@@ -17,14 +17,14 @@ import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.Templete;
 import org.uengine.codi.mw3.model.Session;
 
-@Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs", options={"fieldOrder"}, values={"packageName,name"})
+@Face(displayName="$templete.class", ejsPath="dwr/metaworks/genericfaces/FormFace.ejs", options={"fieldOrder"}, values={"packageName,name"})
 public class NewClass extends Templete {
 
 	@AutowiredFromClient
 	public Session session;
 	
 	String packageName;
-		@Face(displayName="Package")
+		@Face(displayName="$templete.class.package")
 		@Hidden
 		public String getPackageName() {
 			return packageName;
@@ -35,7 +35,7 @@ public class NewClass extends Templete {
 		}
 
 	String name;
-		@Face(displayName="Name")
+		@Face(displayName="$templete.class.name")
 		public String getName() {
 			return name;
 		}
