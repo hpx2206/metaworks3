@@ -18,6 +18,7 @@ var org_uengine_codi_mw3_ide_editor_metadata_MetadataXmlEditor = function(object
 	if(mw3.importScript('scripts/ace/build/src/ace.js')){
 		mw3.importScript('scripts/ace/build/src/theme-eclipse.js');
 		mw3.importScript('scripts/ace/build/src/mode-javascript.js');
+		mw3.importScript('scripts/ace/build/src/mode-java.js');
 		mw3.importScript('scripts/ace/build/src/mode-xml.js');
 		mw3.importScript('scripts/ace/build/src/mode-html.js', function(){mw3.getFaceHelper(objectId).load();});
 
