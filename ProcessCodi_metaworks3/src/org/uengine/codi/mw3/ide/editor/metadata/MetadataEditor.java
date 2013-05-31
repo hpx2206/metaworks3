@@ -1,6 +1,7 @@
 package org.uengine.codi.mw3.ide.editor.metadata;
 
 import org.metaworks.annotation.ServiceMethod;
+import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.editor.MultiPageEditor;
 
 public class MetadataEditor extends MultiPageEditor{
@@ -8,8 +9,8 @@ public class MetadataEditor extends MultiPageEditor{
 	public MetadataEditor(){
 		super();
 	}
-	public MetadataEditor(String fileName){
-		super(fileName);
+	public MetadataEditor(ResourceNode resourceNode){
+		super(resourceNode);
 		this.setType("metadata");
 	}
 	
@@ -17,18 +18,17 @@ public class MetadataEditor extends MultiPageEditor{
 		this.setCallServiceFunction(true);
 		this.setCallSelectFunctionName("selectPage");
 		
-		MetadataXmlEditor metadataXmlEditor = new MetadataXmlEditor(this.getId());
+		MetadataXmlEditor metadataXmlEditor = new MetadataXmlEditor(this.getResourceNode());
 		createPage(metadataXmlEditor, "xml");
 		
-		MetadataContentDesigner metadataContentDesigner = new MetadataContentDesigner(this.getId());
-		metadataContentDesigner.jbPath = this.jbPath;
+		MetadataContentDesigner metadataContentDesigner = new MetadataContentDesigner(this.getResourceNode());
 		metadataContentDesigner.load();
 		createPage(metadataContentDesigner, "designer");
 	}
 	
 	@ServiceMethod(callByContent=true)
 	public Object selectPage() throws Exception{
-		System.out.println("ddddddd");
+//		System.out.println("ddddddd");
 		return null;
 	}
 }

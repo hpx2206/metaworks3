@@ -7,15 +7,12 @@ import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Id;
-import org.uengine.codi.mw3.ide.JavaBuildPath;
+import org.uengine.codi.mw3.ide.ResourceNode;
 
 import com.thoughtworks.xstream.XStream;
 
 public class MetadataContentDesigner implements ContextAware {
 
-	@AutowiredFromClient
-	public JavaBuildPath jbPath;
-	
 	MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
 			return metaworksContext;
@@ -27,10 +24,8 @@ public class MetadataContentDesigner implements ContextAware {
 	public MetadataContentDesigner(){
 		this(null);
 	}
-	public MetadataContentDesigner(String fileName){
-		setId(fileName + "Designer");
-		setFileName(fileName);
-		
+	public MetadataContentDesigner(ResourceNode resourceNode){
+		this.setResourceNode(resourceNode);
 		metaworksContext = new MetaworksContext();
 		metaworksContext.setWhen(MetaworksContext.WHEN_EDIT);
 	}
@@ -42,12 +37,12 @@ public class MetadataContentDesigner implements ContextAware {
 		public void setId(String id) {
 			this.id = id;
 		}
-	String fileName;
-		public String getFileName() {
-			return fileName;
+	ResourceNode resourceNode;
+		public ResourceNode getResourceNode() {
+			return resourceNode;
 		}
-		public void setFileName(String fileName) {
-			this.fileName = fileName;
+		public void setResourceNode(ResourceNode resourceNode) {
+			this.resourceNode = resourceNode;
 		}
 	String processBasePath;
 		public String getProcessBasePath() {
@@ -88,12 +83,12 @@ public class MetadataContentDesigner implements ContextAware {
 		XStream xstream = new XStream();
 		FileInputStream fin;
 		try {
-			fin = new FileInputStream(this.jbPath.getBasePath() + this.fileName);
+			fin = new FileInputStream(this.getResourceNode().getPath());
 			xstream.alias("metadata", MatadataXML.class);
-			xstream.alias("property", MetadataProperty.class);
+			xstream.alias("MetadataProperty", MetadataProperty.class);
 			
 			MatadataXML metadata = (MatadataXML)xstream.fromXML( fin );
-			metadata.setFilePath(fileName);
+			metadata.setFilePath(this.getResourceNode().getPath());
 			setMetadata(metadata);
 			
 		} catch (FileNotFoundException e) {

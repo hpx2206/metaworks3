@@ -1,9 +1,13 @@
 package org.uengine.codi.mw3.ide;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import org.metaworks.annotation.AutowiredToClient;
 import org.metaworks.annotation.Hidden;
+import org.uengine.codi.mw3.knowledge.IProjectNode;
+import org.uengine.codi.mw3.knowledge.ProjectNode;
+import org.uengine.codi.util.CodiFileUtil;
 
 public class Workspace {
 
@@ -30,21 +34,27 @@ public class Workspace {
 		
 		ArrayList<Project> projects = new ArrayList<Project>();
 			
-		// db query
-		Project project_codi= new Project();
-		project_codi.setId("codi");
-		project_codi.setPath(codebase + "/" + tenantId + "/codi");
-		project_codi.load();
-		
-		projects.add(project_codi);
-		
-		
-		Project project_mw3 = new Project();
-		project_mw3.setId("mw3");
-		project_mw3.setPath(codebase + "/" + tenantId + "/mw3");
-		project_codi.load();
-		
-		projects.add(project_mw3);
+		ProjectNode projectNode = new ProjectNode();
+		projectNode.setCompanyId(tenantId);
+		try {
+			IProjectNode projectList = projectNode.completedProject();
+			while(projectList.next()){
+				ProjectNode node = new ProjectNode();
+				node.copyFrom(projectList);
+				String path = codebase + File.separatorChar + tenantId + File.separatorChar + node.getName();
+				CodiFileUtil.mkdirs(path);
+				
+				Project project = new Project();
+				project.setId(node.getName());
+				project.setPath(path);
+				project.load();
+				
+				projects.add(project);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 		
 		this.setProjects(projects);

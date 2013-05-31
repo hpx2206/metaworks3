@@ -6,21 +6,14 @@ import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.ToAppend;
 import org.metaworks.annotation.AutowiredFromClient;
-import org.metaworks.annotation.AutowiredToClient;
-import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
 import org.metaworks.widget.layout.Layout;
-import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.admin.TopPanel;
 import org.uengine.codi.mw3.ide.editor.Editor;
-import org.uengine.codi.mw3.ide.editor.java.JavaCodeEditor;
-import org.uengine.codi.mw3.ide.view.Console;
 import org.uengine.codi.mw3.ide.view.Navigator;
-import org.uengine.codi.mw3.ide.view.Servers;
 import org.uengine.codi.mw3.model.Session;
-import org.uengine.codi.util.CodiFileUtil;
 import org.uengine.kernel.GlobalContext;
 
 public class CloudIDE {
@@ -118,12 +111,14 @@ public class CloudIDE {
 		}		
 		
 	public void load(Session session){
-		String tenantId = "uengine";
+		String tenantId = "uEngine";
 		String codebase = GlobalContext.getPropertyString("codebase", "codebase");
-		
+		String companyId = session.getEmployee().getGlobalCom();
 		// make workspace
 		Workspace workspace = new Workspace();
-		workspace.load(codebase, tenantId);
+		// TODO tenantId 로 변경... 근데 companyId 는 필요함
+//		workspace.load(codebase, tenantId);
+		workspace.load(codebase, companyId);
 		
 		Navigator navigator = new Navigator();		
 		navigator.load(workspace);

@@ -45,7 +45,6 @@ public class MatadataXML {
 		public void setTypeName(String typeName) {
 			this.typeName = typeName;
 		}
-	@XStreamAlias("metadataProperties")
 	ArrayList<MetadataProperty> properties;
 		public ArrayList<MetadataProperty> getProperties() {
 			return properties;
@@ -53,7 +52,6 @@ public class MatadataXML {
 		public void setProperties(ArrayList<MetadataProperty> properties) {
 			this.properties = properties;
 		}
-	@XStreamAlias("metadataDefinitions")
 	ArrayList<MetadataDefinition> definitions;
 		public ArrayList<MetadataDefinition> getDefinitions() {
 			return definitions;
@@ -61,7 +59,6 @@ public class MatadataXML {
 		public void setDefinitions(ArrayList<MetadataDefinition> definitions) {
 			this.definitions = definitions;
 		}
-	@XStreamAlias("metadataRules")
 	ArrayList<MetadataRule> rules;
 		public ArrayList<MetadataRule> getRules() {
 			return rules;

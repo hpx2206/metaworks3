@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.ide.editor.metadata;
 
+import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.editor.Editor;
 
 public class MetadataXmlEditor extends Editor {
@@ -7,8 +8,8 @@ public class MetadataXmlEditor extends Editor {
 	public MetadataXmlEditor(){
 		super();
 	}
-	public MetadataXmlEditor(String fileName){
-		super(fileName);
+	public MetadataXmlEditor(ResourceNode resourceNode){
+		super(resourceNode);
 		this.setType("metadata");
 	}
 	
