@@ -12,7 +12,7 @@ import org.uengine.codi.mw3.ide.templete.NewClass;
 import org.uengine.codi.mw3.ide.templete.NewFile;
 import org.uengine.codi.mw3.ide.templete.NewFolder;
 import org.uengine.codi.mw3.ide.templete.NewProcess;
-import org.uengine.codi.mw3.ide.templete.NewRole;
+import org.uengine.codi.mw3.ide.templete.NewRule;
 
 public class NewMenu extends CloudMenu {
 
@@ -42,8 +42,6 @@ public class NewMenu extends CloudMenu {
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
 	public ModalWindow newClass(){
 		NewClass newClass = new NewClass();
-		newClass.session = session;
-		newClass.load();
 		
 		return new ModalWindow(newClass, 300, 150, "New Java Class");
 	}
@@ -59,7 +57,7 @@ public class NewMenu extends CloudMenu {
 	public ModalWindow newFile(){
 		NewFile newFile = new NewFile();
 		
-		return new ModalWindow(newFile, 300, 150, "New File");
+		return new ModalWindow(newFile, 300, 150, "$templete.file");
 	}
 	
 	
@@ -67,14 +65,14 @@ public class NewMenu extends CloudMenu {
 	public ModalWindow newProcess(){
 		NewProcess newProcess = new NewProcess();
 		
-		return new ModalWindow(newProcess, 300, 150, "New Process");
+		return new ModalWindow(newProcess, 300, 150, "$templete.process");
 	}
 	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
-	public ModalWindow newRole(){
-		NewRole newRole = new NewRole();
+	public ModalWindow newRule(){
+		NewRule newRule = new NewRule();
 		
-		return new ModalWindow(newRole, 300, 150, "New Role");
+		return new ModalWindow(newRule, 300, 150, "$templete.rule");
 	}
 	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
