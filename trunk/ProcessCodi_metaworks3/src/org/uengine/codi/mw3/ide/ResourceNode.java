@@ -11,6 +11,7 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.TreeNode;
 import org.uengine.codi.mw3.ide.editor.Editor;
 import org.uengine.codi.mw3.ide.editor.java.JavaCodeEditor;
+import org.uengine.codi.mw3.ide.editor.metadata.MetadataEditor;
 import org.uengine.codi.mw3.ide.editor.process.ProcessEditor;
 import org.uengine.codi.mw3.ide.menu.ResourceContextMenu;
 import org.uengine.codi.mw3.model.Session;
@@ -105,6 +106,13 @@ public class ResourceNode extends TreeNode {
 				editor = new ProcessEditor(this);
 				try {
 					editor.load();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}else if(type.equals(TreeNode.TYPE_FILE_METADATA)){
+				editor = new MetadataEditor(this);
+				try {
+					((MetadataEditor)editor).loadPage();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

@@ -3,6 +3,7 @@ package org.uengine.codi.mw3.ide.editor;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
+import org.uengine.codi.mw3.ide.ResourceNode;
 
 @Face(options={"tabClass"}, values={"org.uengine.codi.mw3.ide.CloudTab"})
 public class MultiPageEditor extends Editor {
@@ -40,9 +41,8 @@ public class MultiPageEditor extends Editor {
 	public MultiPageEditor(){
 		super();
 	}
-	public MultiPageEditor(String fileName){
-		super(fileName);
-		
+	public MultiPageEditor(ResourceNode resourceNode){
+		super(resourceNode);
 	}
 
 	public void createPage(Object page, String pageTitle){
