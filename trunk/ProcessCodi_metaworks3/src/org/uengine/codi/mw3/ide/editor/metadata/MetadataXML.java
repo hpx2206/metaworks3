@@ -1,18 +1,23 @@
 package org.uengine.codi.mw3.ide.editor.metadata;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
+import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.model.Popup;
+import org.uengine.kernel.GlobalContext;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
 
 @XStreamAlias("metadata")
-public class MatadataXML {
+public class MetadataXML {
 	
 	@XStreamOmitField
 	String filePath;
@@ -81,12 +86,41 @@ public class MatadataXML {
 	public void save(){
 		
 	}
+	
+	public MetadataXML loadWithProjectId(String projectId){
+		String codebase = GlobalContext.getPropertyString("codebase", "codebase");
+		String path = codebase + File.separatorChar + projectId;
+		
+		ResourceNode resourceNode = new ResourceNode();
+		resourceNode.setId(projectId);
+		resourceNode.setPath(path);
+		
+		return loadWithResourceNode(resourceNode);
+	}
+	public MetadataXML loadWithResourceNode(ResourceNode resourceNode){
+		MetadataXML metadata = null;
+		
+		XStream xstream = new XStream();
+		FileInputStream fin;
+		try {
+			fin = new FileInputStream(resourceNode.getPath());
+			xstream.alias("metadata", MetadataXML.class);
+			xstream.alias("MetadataProperty", MetadataProperty.class);
+			
+			metadata = (MetadataXML)xstream.fromXML( fin );
+			metadata.setFilePath(resourceNode.getId());
+			
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		return metadata;
+	}
 		
 	public static void main(String[] args) {
 		XStream stream = new XStream();
 		stream.autodetectAnnotations(true);
 		
-		MatadataXML xml = new MatadataXML();
+		MetadataXML xml = new MetadataXML();
 		xml.setCompany("uengine");
 		xml.setType("project");
 		xml.setTypeName("오키도키");

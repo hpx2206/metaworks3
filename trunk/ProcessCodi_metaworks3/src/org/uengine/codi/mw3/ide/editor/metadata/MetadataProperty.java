@@ -14,6 +14,9 @@ public class MetadataProperty {
 	@XStreamAsAttribute
 	boolean isKeyEditable;
 	
+	@XStreamAsAttribute
+	boolean isRemote;
+
 	String name;
 	String value;
 	
@@ -28,6 +31,12 @@ public class MetadataProperty {
 	}
 	public void setKeyEditable(boolean isKeyEditable) {
 		this.isKeyEditable = isKeyEditable;
+	}
+	public boolean isRemote() {
+		return isRemote;
+	}
+	public void setRemote(boolean isRemote) {
+		this.isRemote = isRemote;
 	}
 	public String getName() {
 		return name;
