@@ -6,7 +6,6 @@ var org_uengine_codi_mw3_ide_CloudIDE = function(objectId, className){
 	this.objectDiv = $('#' + this.objectDivId);
 	
 	this.object = mw3.objects[this.objectId];
-
 	if(this.object == null)
 		return true;
 	
@@ -15,7 +14,6 @@ var org_uengine_codi_mw3_ide_CloudIDE = function(objectId, className){
 org_uengine_codi_mw3_ide_CloudIDE.prototype = {
 	getValue : function(){
 		var tabDivObj = $('.org_uengine_codi_mw3_ide_CloudTab.focus').children(':first');
-		
 		if(tabDivObj){
 			var tabObjectId = tabDivObj.attr('objectId');
 			var tabObject = mw3.getObject(tabObjectId);

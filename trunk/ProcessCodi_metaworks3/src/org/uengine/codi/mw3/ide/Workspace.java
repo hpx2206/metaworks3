@@ -33,14 +33,14 @@ public class Workspace {
 		this.setId(tenantId);
 		
 		ArrayList<Project> projects = new ArrayList<Project>();
-		// 테넌트의 메인 불러오기
-		String mainPath = codebase + File.separatorChar + tenantId + File.separatorChar + "main";
-		CodiFileUtil.mkdirs(mainPath);
-		Project main = new Project();
-		main.setId(tenantId + "Main");
-		main.setPath(mainPath);
-		main.load();
-		projects.add(main);
+//		// 테넌트의 메인 불러오기 - TODO 메인은 필요없을듯??
+//		String mainPath = codebase + File.separatorChar + tenantId + File.separatorChar + "main";
+//		CodiFileUtil.mkdirs(mainPath);
+//		Project main = new Project();
+//		main.setId(tenantId + "Main");
+//		main.setPath(mainPath);
+//		main.load();
+//		projects.add(main);
 		
 		// 테넌트의 프로젝트 불러오기
 		ProjectNode projectNode = new ProjectNode();

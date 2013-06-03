@@ -9,25 +9,27 @@ import org.uengine.kernel.GlobalContext;
 
 public class MetadataBundle {
 	
-	static String CODI_BASE_ID = "CODI";
-	
 	// HashMap<프로젝트 아이디, 해당프로젝트의 메타데이타 파일 경로>
 	public static HashMap<String, String> uengineMetadata = new HashMap<String, String>();
 	// HashMap<프로젝트 아이디, Properties>
 	public static HashMap<String, Properties> projectProperty = new HashMap<String, Properties>();
 	
 	public MetadataBundle(){
-		// TODO 유엔진 메타데이터를 찾아서 uengineMetadata 에 담아놓는다.
-		String codebase = GlobalContext.getPropertyString("codebase", "codebase");
-		String mainPath = codebase + File.separatorChar + "main";
-		String mainFileName = "uengine.metadata";	// TODO
-		File mainFile = new File(mainPath + File.separatorChar + mainFileName);
-		if(!mainFile.exists()){
-			try {
-				mainFile.createNewFile();
-			} catch (IOException e) {
-				e.printStackTrace();
+		this(null);
+	}
+	public MetadataBundle(String projectId){
+		// 1. 앱이 처음 만들어 졌을때 xml 데이터를 쓰고, 파일등의 리소스를 모두 다운받는다...
+		// 2. 앱이 구동될때, 리소스들을 모두 메모리에 담아 놓는다.. ( MetadataBundle 은 각 앱에서 1회 호출된다 )
+		// 3. 로컬 경로에서 모두 리소스를 가져온다. - 
+		// 4. TODO 추후에 - 변경로직 체크 ,  스케쥴링을 걸어서 변경된 부분을 담는 작업..
+		
+		try {
+			File mainFile = findMetadataFile( projectId );
+			if(!mainFile.exists()){
+				throw new Exception("can not find file");
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -49,19 +51,31 @@ public class MetadataBundle {
 		}
 	}
 	
+	private File findMetadataFile(String projectId) throws Exception{
+		String codebase = GlobalContext.getPropertyString("codebase", "codebase");
+		String mainPath = codebase + File.separatorChar + "main";
+		String mainFileName = "uengine.metadata";	// TODO
+		
+		File mainFile = new File(mainPath + File.separatorChar + mainFileName);
+		return mainFile;
+	}
+	
 	public Properties loadProjectProperty(String projectId) throws Exception{
 		String companyId = null;
 		
-		String codiMetadataPath = uengineMetadata.get(CODI_BASE_ID);
-		String companyMetadataPath = uengineMetadata.get(companyId);
-		String projectMetadataPath = uengineMetadata.get(projectId);
 		// TODO metadataPath 의 xml 파일을 읽어서 
 		// 프로퍼티에 상위 키값을 모두 찾아서 로딩시킨다.
 		Properties props = new Properties();
 		
-		// 1. 코디쪽 메타데이터를 읽어서 프로퍼티에 쓴다
-		// 2. 테넌트 메인 메타데이터를 읽어서 프로퍼티에 쓴다(같은 키값 오버라이딩)
-		// 3. 프로젝트 메타데이터를 읽어서 프로퍼티에 쓴다(같은 키값 오버라이딩)
+		// 로컬에 있는 리소스를 보고 판단하기...
+		// xml 에 type 이 local , remote 로 나누어진다... 
+		
+		// 1. xml에서 데이터를 읽었을때, 로컬 경로를 찾을때..
+		// 2. 또다른 메타데이터를 참조하여서 상위 프로젝트를 찾아야 할 경우..
+		/*
+		 * 상위 프로젝트 아이디나 어떤 값을 가지고 있어야한다.... 
+		 * 상위 프로젝트는 어떻게 찾아가야하나???
+		 */
 		
 		return props;
 	}
@@ -73,5 +87,6 @@ public class MetadataBundle {
 	 */
 	public void changeProjectProperty(String projectId) throws Exception{
 		// TODO
+		// type : local 은 
 	}
 }
