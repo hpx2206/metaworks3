@@ -5,7 +5,7 @@ import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.uengine.codi.mw3.ide.ResourceNode;
 
-@Face(options={"tabClass"}, values={"org.uengine.codi.mw3.ide.CloudTab"})
+@Face(options={"tabClass"}, values={"org.uengine.codi.mw3.ide.MultiTab"})
 public class MultiPageEditor extends Editor {
 	
 	String[] pageText;

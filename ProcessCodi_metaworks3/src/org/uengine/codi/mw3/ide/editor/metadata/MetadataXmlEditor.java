@@ -14,8 +14,7 @@ public class MetadataXmlEditor extends Editor {
 	}
 	
 	public Object save(){
-		
-		return null;
+		return super.save();
 	}
 	
 	public Object append() throws Exception{

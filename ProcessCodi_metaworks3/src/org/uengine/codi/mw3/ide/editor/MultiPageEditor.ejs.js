@@ -27,6 +27,20 @@ var org_uengine_codi_mw3_ide_editor_MultiPageEditor = function(objectId, classNa
 };
 
 org_uengine_codi_mw3_ide_editor_MultiPageEditor.prototype = {
+		getValue : function(){
+			var object = mw3.objects[this.objectId];	
+			if( object.pagePanel != null  && object.pagePanel.length > 0 ){
+				for(var i = 0; i < this.object.pagePanel.length; i++ ){
+					var childObjectId = object.pagePanel[i].__objectId;
+					var childObject = mw3.objects[childObjectId];
+					var childFaceHelper = mw3.getFaceHelper(childObjectId);
+					if( childFaceHelper && childFaceHelper.editor ){
+						childObject.content = childFaceHelper.editor.getSession().getValue();
+					}
+				}
+			}
+			return object;
+		},
 		loaded : function(){
 			this.bind();
 			

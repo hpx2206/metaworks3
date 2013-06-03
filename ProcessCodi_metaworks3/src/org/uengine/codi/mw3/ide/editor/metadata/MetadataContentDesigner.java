@@ -80,7 +80,7 @@ public class MetadataContentDesigner implements ContextAware {
 			저장할때 주의해야함. */
 		
 		// TODO 앱일경우 상위 프로젝트 찾기
-		setId(this.getResourceNode().getPath());
+		setId(this.getResourceNode().getId());
 		
 		XStream xstream = new XStream();
 		FileInputStream fin;
@@ -90,7 +90,7 @@ public class MetadataContentDesigner implements ContextAware {
 			xstream.alias("MetadataProperty", MetadataProperty.class);
 			
 			MatadataXML metadata = (MatadataXML)xstream.fromXML( fin );
-			metadata.setFilePath(this.getResourceNode().getPath());
+			metadata.setFilePath(this.getResourceNode().getId());
 			setMetadata(metadata);
 			
 		} catch (FileNotFoundException e) {
