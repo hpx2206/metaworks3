@@ -65,11 +65,11 @@ public class MetadataContentDesigner implements ContextAware {
 		public void setUploadBasePath(String uploadBasePath) {
 			this.uploadBasePath = uploadBasePath;
 		}
-	MatadataXML metadata;
-		public MatadataXML getMetadata() {
+	MetadataXML metadata;
+		public MetadataXML getMetadata() {
 			return metadata;
 		}
-		public void setMetadata(MatadataXML metadata) {
+		public void setMetadata(MetadataXML metadata) {
 			this.metadata = metadata;
 		}
 		
@@ -82,20 +82,8 @@ public class MetadataContentDesigner implements ContextAware {
 		// TODO 앱일경우 상위 프로젝트 찾기
 		setId(this.getResourceNode().getId());
 		
-		XStream xstream = new XStream();
-		FileInputStream fin;
-		try {
-			fin = new FileInputStream(this.getResourceNode().getPath());
-			xstream.alias("metadata", MatadataXML.class);
-			xstream.alias("MetadataProperty", MetadataProperty.class);
-			
-			MatadataXML metadata = (MatadataXML)xstream.fromXML( fin );
-			metadata.setFilePath(this.getResourceNode().getId());
-			setMetadata(metadata);
-			
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
+		MetadataXML metadata = new MetadataXML();
+		setMetadata( metadata.loadWithResourceNode(this.getResourceNode()) );
 		
 	}
 }
