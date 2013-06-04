@@ -110,7 +110,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		sql.append("  from bpm_worklist");
 		sql.append(" where rootInstId=?instId");
 		sql.append("   and isdeleted!=?isDeleted");
-		sql.append("   and type!=?type");
+		sql.append("   and (type!=?type or type is null)");
 		sql.append(" order by taskId desc");
 		sql.append(" limit " + (count + 1));
 		sql.append(") worklist order by taskId ");
@@ -1159,7 +1159,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		sql.append("  from bpm_worklist");
 		sql.append(" where rootInstId=?instId");
 		sql.append("   and taskId<=?taskId");
-		sql.append("   and type!=?type");
+		sql.append("   and (type!=?type or type is null)");
 		sql.append("   and isdeleted!=?isDeleted");
 		
 		sql.append(" order by taskId");
