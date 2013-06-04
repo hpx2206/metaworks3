@@ -33,6 +33,13 @@ public class WindowContextMenu extends CloudMenu {
 	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
 	public Object[] closeOther(){
+		Object clipboard = session.getClipboard();
+		if(clipboard instanceof CloudTab){
+			CloudTab cloudTab = (CloudTab)clipboard;
+			
+			return new Object[]{new Remover(this)};
+//			return new Object[]{new ToAppend(new Remover(new CloudTab(cloudTab.getParentId())), this)};
+		}
 		return null;
 	}
 	

@@ -1,0 +1,32 @@
+<%
+if(value) {
+
+%>
+<div class="inLineSpan">
+	<div style="float:left;">
+		<ul>
+			<li><span class="firstSpan"><%=mw3.localize('$Name')%></span><span><%=fields.name.here()%></span></li>
+			<li><span class="firstSpan"><%=mw3.localize('$Value')%></span><span><%=fields.value.here()%></span></li>
+			
+			<% if(mw3.when == 'view'){ %>
+				<li><span class="firstSpan"><%=mw3.localize('$Type')%></span><span><%=fields.type.here()%></span></li>
+			<% } else if(mw3.when == 'edit') { %>
+				<li><span class="firstSpan"><%=mw3.localize('$Type')%></span><span><%=fields.selectedType.here()%></span></li>
+			<% } %>
+		</ul>
+	</div>	
+			
+	<% if(mw3.when == 'view'){ %>
+		<div style="float:right;">
+			<span style="display:inline-block; cursor:pointer" onCLick="<%=methods.remove.caller()%>"><img src="images/activity_status/i_status_CANCELLED.png" title="remove"></span>
+			<span style="display:inline-block; cursor:pointer" onCLick="mw3.getFaceHelper('<%=objectId%>').removeProperty()">ss<img src="images/activity_status/i_status_CANCELLED.png" title="remove">ss</span>
+		</div>
+	<% } %>
+
+	<div class="clear"></div>
+</div>
+
+<%
+}
+
+%>

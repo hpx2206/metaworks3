@@ -33,6 +33,7 @@ public class MetadataEditor extends MultiPageEditor{
 	}
 	
 	@Override
+	@ServiceMethod(callByContent=true)
 	public Object save(){
 		Object[] panel = this.getPagePanel();
 		if( panel != null && panel.length > 0 ){
@@ -41,10 +42,19 @@ public class MetadataEditor extends MultiPageEditor{
 				if( panel[i] instanceof MetadataXmlEditor ){
 					MetadataXmlEditor metadataXmlEditor = (MetadataXmlEditor)panel[i];
 					metadataXmlEditor.save();
+					
 				}
 			}
 		}
 		return null;
 	}
 	
+	
+	@ServiceMethod(callByContent=true)
+	public Object remove(){
+		Object[] panel = this.getPagePanel();
+		
+		
+		return null;
+	}
 }
