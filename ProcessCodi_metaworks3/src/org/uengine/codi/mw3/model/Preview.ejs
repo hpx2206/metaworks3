@@ -1,38 +1,76 @@
-<%if(value.statusPreview == 'converting'){%>
-	<li></li>
-	<li><b><i>미리보기 작업중...</i></b></li>
-	<progress id="convertProgressBar"></progress>
-	<li></li>
-<%}%>
-<%if(value.convertingResult != 'fail'){%>
-	<span>
+<%
+	console.log(value.mimeType);
+	console.log(value.convertStatus);
+	
+	var preview = false;
+%>
+	<span id="preview_<%=objectId%>">
 		<div class="workItem_tabs">
 			 <ul>
 				<li class="current">
 					<a href="#" onClick="<%=methods.viewAsPDF.caller()%>"><span>PDF로 보기</span></a>
 				</li>	
-				<%if(value.pageCount != null){%>
-			 	<li>
+			 	<li style="<%=value.convertStatus==null?'display:none':''%>">
 			 		<a href="#" onClick="<%=methods.viewAsImages.caller()%>"><span>이미지로 보기</span></a>
 			 	</li>
-				<%}%>
 			 </ul>
 		</div>
-		<%if(value.mimeType != null && value.mimeType == 'image'){%>
-			<%if(value.pageCount != null){%>
-				<%for(i=0; i<value.pageCount; i++){%>
+<%		
+		if(value.mimeType != null && value.mimeType == 'image'){
+			if(value.convertStatus != null && value.convertStatus == '2')
+				preview = true
+		}else{			
+			if(value.convertStatus != null && (value.convertStatus =='1' || value.convertStatus =='2'))
+				preview = true
+		}
+		
+		console.log('preview : ' + preview);
+		
+		if(!preview){
+%>
+		<div id="convert_progress_<%=value.convertStatus==null?'pdf':'img'%>_<%=objectId%>" align="center">
+			<br />
+			<br />
+			<br />
+			<li></li>
+			<li><b><i>미리보기 작업중</i></b></li>
+			<progress id="convertProgressBar"></progress>
+			<li></li>
+		</div>
+<%
+		}
+		
+		if(value.mimeType != null && value.mimeType == 'image'){
+			if(!preview){
+%>
+		<img style="display:none" src="preview/<%=value.taskId%>.image" />
+<%
+			}else{
+				if(value.pageCount != null){
+%>
 				<table>
-					<tr>
+<%
+					for(i=0; i<value.pageCount; i++){
+%>
+ 					<tr>
 						<td> <img width="100%" src="preview/<%=value.taskId%>.pdf_<%=i%>.jpg"/></td>
 					</tr>
 					<tr>
 						<td align="center" style="padding:5px 0 20px 0; font-weight:bold">< Page <%=i+1%> ></td>
 					</tr>
+<%				
+					}
+%>
 				</table>
-				<%}%>
-			<%}%>
-		<%}else{%>
-			<iframe src="preview/<%=value.taskId%>.pdf" frameborder="0" scrolling="no" width="100%" height="300px" />
-		<%}%>
+<%
+				}		
+			}
+		}else{
+%>
+		 <iframe id="converted_pdf_<%=objectId%>" style="display:none" onload="mw3.getFaceHelper(<%=objectId%>).onloadPdf();" src="preview/<%=value.taskId%>.pdf" frameborder="0" scrolling="no" width="100%" height="300px" />
+<%				
+		}
+%>
+		<br />
+		<br />
 	</span>
-<%}%>

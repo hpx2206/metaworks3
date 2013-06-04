@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 
 public class Preview {
@@ -13,6 +14,7 @@ public class Preview {
 		}
 		
 	Long taskId;
+		@Id
 		public Long getTaskId() {
 			return taskId;
 		}
@@ -27,24 +29,15 @@ public class Preview {
 		public void setMimeType(String mimeType) {
 			this.mimeType = mimeType;
 		}
-
-	String convertingResult;
-		public String getConvertingResult() {
-			return convertingResult;
-		}
-		public void setConvertingResult(String convertingResult) {
-			this.convertingResult = convertingResult;
-		}		
-
-	String statusPreview;
-		public String getStatusPreview() {
-			return statusPreview;
-		}
-		public void setStatusPreview(String statusPreview) {
-			this.statusPreview = statusPreview;
-		}	
 		
-
+	String convertStatus;
+		public String getConvertStatus() {
+			return convertStatus;
+		}
+		public void setConvertStatus(String convertStatus) {
+			this.convertStatus = convertStatus;
+		}
+		
 	public void setPageCountInt(int pageCount) {
 		this.pageCount = Integer.toString(pageCount);
 	}

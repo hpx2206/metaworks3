@@ -23,6 +23,7 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Test;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.website.MetaworksFile;
+import org.uengine.codi.util.CodiStatusUtil;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.persistence.dao.UniqueKeyGenerator;
 import org.uengine.processmanager.ProcessManagerBean;
@@ -177,7 +178,7 @@ public class FileWorkItem extends WorkItem{
 	
 	public int getImageForPdf(String inputFile, String outputFile) throws IOException{
 		
-		File file = new File(outputFile);
+		File file = new File(inputFile);
 	
 		RandomAccessFile raf = new RandomAccessFile(file, "r");
 		FileChannel channel = raf.getChannel();
@@ -249,11 +250,120 @@ public class FileWorkItem extends WorkItem{
 		return isConvert;
 	}
 	
-	public boolean createPreviewFile(Long taskId, String realContent, String realFileMimeType){
+	public boolean createPreviewFile(String targetPath, String convertType){
+		
+		try {
+			this.copyFrom(this.databaseMe());
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		
+		if(this.getTool() == null)
+			return true;
+		
+		File srcFile = new File(this.getFile().overrideUploadPathPrefix() + this.getContent());
+		if(!srcFile.isFile())
+			return false;
+
+		boolean convert = true;
+		String convertedFilePath = targetPath + File.separatorChar + this.makeConvertedFilename();
+		
+		
+		if("image".equals(convertType)){
+			if(this.getExt1() == null){
+				convert = false;
+			}
+		}
+		
+		
+		if(convert){
+			CodiStatusUtil statusUtil = new CodiStatusUtil(targetPath, convertType);
+			
+			if(!statusUtil.ready())
+				return false;
+			
+			statusUtil.queue();
+			
+			if("pdf".equals(convertType)){
+				boolean converted = false;
+				
+				if(this.getTool().indexOf("ms") > 0 || this.getTool().indexOf("officedocument") > 0 ||
+				   this.getTool().indexOf("ms") > 0 || this.getTool().indexOf("officedocument") > 0 ||		
+				   this.getTool().indexOf("plain") > 0 || this.getTool().indexOf("rtf") > 0){
+					
+					// converting office file with jod converter, open office
+					System.out.println("office converting");
+					try {
+						convertPdf(srcFile.getAbsolutePath(), convertedFilePath);
+						converted = true;
+					} catch (Exception e) {
+						e.printStackTrace();
+						return false;
+					}
+				}else if(this.getTool().equals("application/pdf")){
+					System.out.println("pdf converting");
+					
+					
+					try {
+						MetaworksFile.copyStream(new FileInputStream(srcFile.getAbsolutePath()), new FileOutputStream(convertedFilePath));
+						converted = true;
+					} catch (Exception e) {
+						e.printStackTrace();
+						return false;
+					}
+				}
+				
+				if(converted){
+					Preview preview = new Preview();
+					preview.setTaskId(this.getTaskId());
+					preview.setMimeType(convertType);
+					preview.setConvertStatus("1");
+
+					try {
+						databaseMe().setExt1(preview.getConvertStatus());
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						return false;
+					}
+					
+					MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(preview)});
+					
+				}
+			}else if("image".equals(convertType)){
+				
+				try {
+					int pageCount = getImageForPdf(convertedFilePath, convertedFilePath);
+										
+					Preview preview = new Preview();
+					preview.setTaskId(this.getTaskId());
+					preview.setMimeType(convertType);
+					preview.setPageCount(String.valueOf(pageCount));
+					preview.setConvertStatus("2");
+					
+					databaseMe().setExt1(preview.getConvertStatus());
+					databaseMe().setExt2(preview.getPageCount());
+
+					
+					MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(preview)});
+				} catch (Exception e) {
+					e.printStackTrace();
+					return false;
+				}
+			}
+		}
+		
+					
+		return true;
+		
+
+		/*
+		
 		
 		boolean result = false;
 		String fileSystemPath = GlobalContext.getPropertyString("filesystem.path",".");
-		String previewPath = fileSystemPath + "/preview";
+		String previewPath = fileSystemPath + "/preview";8
 		
 		String realFilePath = fileSystemPath + "/" + realContent;
 		
@@ -311,6 +421,10 @@ public class FileWorkItem extends WorkItem{
 		this.setPreview(preview);
 		MetaworksRemoteService.pushClientObjects(new Object[]{new Refresh(preview)});
 		return result;
+		*/
 	}
 	
+	public String makeConvertedFilename(){
+		return this.getTaskId() + ".pdf";
+	}
 }
