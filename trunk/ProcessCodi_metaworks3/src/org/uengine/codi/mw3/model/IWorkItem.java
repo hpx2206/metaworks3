@@ -165,8 +165,8 @@ public interface IWorkItem extends IDAO{
 		public void setFile(MetaworksFile file);
 		
 		@ORMapping(
-			databaseFields = {"taskId", "ext1"}, 
-			objectFields = {"taskId", "pageCount"},
+			databaseFields = {"taskId", "ext1", "ext2"}, 
+			objectFields = {"taskId", "convertStatus", "pageCount"},
 			objectIsNullWhenFirstDBFieldIsNull = true,
 			availableWhen = "type=='file'"		
 		)
