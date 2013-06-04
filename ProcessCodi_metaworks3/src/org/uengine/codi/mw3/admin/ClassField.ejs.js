@@ -11,8 +11,6 @@ var org_uengine_codi_mw3_admin_ClassField = function(objectId, className){
 		
 		$('#' + mw3._getObjectDivId(this.objectId) ).find('select').bind('change', {objectId : this.objectId},function(event){
 			var change = $(this).find('option:selected');
-//			console.log(change.text());
-//			console.log(change.val());
 			var selectedText = change.text();
 			if( selectedText.indexOf('Select') > 0){
 				$("#selectOption_"+objectId).show();
