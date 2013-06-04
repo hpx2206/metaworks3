@@ -5,6 +5,7 @@ import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.example.ide.FormDesigner;
+import org.uengine.codi.mw3.ide.form.NewFormDesigner;
 import org.uengine.codi.mw3.model.FaceHelperSourceCode;
 import org.uengine.codi.mw3.model.JavaSourceCode;
 
@@ -33,9 +34,9 @@ public class ClassSourceCodes{
 		this.faceHelper = new FaceHelperSourceCode();
 		this.classModeler = new ClassModeler();
 		this.mobileDesigner = new MobileDesigner();
-		//this.formDesigner = new FormDesigner();
-		
-	}
+//		this.formDesigner = new FormDesigner();
+		this.formDesigner = new NewFormDesigner();		
+	}	
 	
 	JavaSourceCode sourceCode;
 		@Available(where={"class"})
@@ -67,12 +68,21 @@ public class ClassSourceCodes{
 			this.face = face;
 		}
 		
-	FormDesigner formDesigner;
-		@Available(where={"class"})
-		public FormDesigner getFormDesigner() {
+//	FormDesigner formDesigner;
+//		@Available(where={"class"})
+//		public FormDesigner getFormDesigner() {
+//			return formDesigner;
+//		}
+//		public void setFormDesigner(FormDesigner formDesigner) {
+//			this.formDesigner = formDesigner;
+//		}
+		
+	NewFormDesigner formDesigner;
+		@Face(displayName="폼디자이너")
+		public NewFormDesigner getFormDesigner() {
 			return formDesigner;
 		}
-		public void setFormDesigner(FormDesigner formDesigner) {
+		public void setFormDesigner(NewFormDesigner formDesigner) {
 			this.formDesigner = formDesigner;
 		}
 
