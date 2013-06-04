@@ -3,6 +3,7 @@ package org.uengine.codi.mw3.ide.editor.metadata;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import org.metaworks.ServiceMethodContext;
@@ -87,32 +88,29 @@ public class MetadataXML {
 		
 	}
 	
-	public MetadataXML loadWithProjectId(String projectId){
-		String codebase = GlobalContext.getPropertyString("codebase", "codebase");
-		String path = codebase + File.separatorChar + projectId;
-		
-		ResourceNode resourceNode = new ResourceNode();
-		resourceNode.setId(projectId);
-		resourceNode.setPath(path);
-		
-		return loadWithResourceNode(resourceNode);
-	}
 	public MetadataXML loadWithResourceNode(ResourceNode resourceNode){
+		MetadataXML metadata = loadWithPath(resourceNode.getPath());
+		metadata.setFilePath(resourceNode.getId());
+		return metadata;
+	}
+	public MetadataXML loadWithPath(String filePath){
 		MetadataXML metadata = null;
-		
-		XStream xstream = new XStream();
 		FileInputStream fin;
 		try {
-			fin = new FileInputStream(resourceNode.getPath());
-			xstream.alias("metadata", MetadataXML.class);
-			xstream.alias("MetadataProperty", MetadataProperty.class);
-			
-			metadata = (MetadataXML)xstream.fromXML( fin );
-			metadata.setFilePath(resourceNode.getId());
-			
+			fin = new FileInputStream(filePath);
+			metadata = loadWithInputstream(fin);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
+		return metadata;
+	}
+	public MetadataXML loadWithInputstream(InputStream stream){
+		MetadataXML metadata = null;
+		XStream xstream = new XStream();
+		xstream.alias("metadata", MetadataXML.class);
+		xstream.alias("MetadataProperty", MetadataProperty.class);
+		xstream.autodetectAnnotations(true);
+		metadata = (MetadataXML)xstream.fromXML( stream );
 		return metadata;
 	}
 		
