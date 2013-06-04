@@ -1,15 +1,12 @@
 package org.uengine.codi.mw3.ide.editor.metadata;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.util.ArrayList;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
-import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Id;
+import org.metaworks.annotation.ServiceMethod;
 import org.uengine.codi.mw3.ide.ResourceNode;
-
-import com.thoughtworks.xstream.XStream;
 
 public class MetadataContentDesigner implements ContextAware {
 
@@ -27,7 +24,6 @@ public class MetadataContentDesigner implements ContextAware {
 	public MetadataContentDesigner(ResourceNode resourceNode){
 		this.setResourceNode(resourceNode);
 		metaworksContext = new MetaworksContext();
-		metaworksContext.setWhen(MetaworksContext.WHEN_EDIT);
 	}
 	String id;
 		@Id
@@ -73,6 +69,15 @@ public class MetadataContentDesigner implements ContextAware {
 			this.metadata = metadata;
 		}
 		
+	public ArrayList<MetadataProperty> metadataProprty;
+		public ArrayList<MetadataProperty> getMetadataProprty() {
+			return metadataProprty;
+		}
+		public void setMetadataProprty(ArrayList<MetadataProperty> metadataProprty) {
+			this.metadataProprty = metadataProprty;
+		}
+	
+	@ServiceMethod(callByContent=true)
 	public void load(){
 		/* TODO  앱에서는 메타데이터 파일이 없을수도 있다.
 			파일이 있는 경우에도, property 값에 아무것도 안들어가 있다면, 상위 프로젝트에서 정보를 요청하도록...
@@ -84,6 +89,32 @@ public class MetadataContentDesigner implements ContextAware {
 		
 		MetadataXML metadata = new MetadataXML();
 		setMetadata( metadata.loadWithResourceNode(this.getResourceNode()) );
+		
+		/* 이전소스 -> KHK
+		XStream xstream = new XStream();
+		FileInputStream fin;
+		try {
+			fin = new FileInputStream(this.getResourceNode().getPath());
+			xstream.alias("metadata", MetadataXML.class);
+			xstream.alias("MetadataProperty", MetadataProperty.class);
+			
+			MetadataXML metadata = (MetadataXML)xstream.fromXML( fin );
+			metadata.setFilePath(this.getResourceNode().getId());
+			
+//			// type 별로 읽어서 
+//			// type img  -> 이미지 파일일때 파일을 읽음
+//			File imgFile = new File(경로);
+//			MetaDataImg = new ;
+//			setImgFile(imgFile);
+			
+			setMetadata(metadata);
+			
+			metaworksContext.setWhen(MetaworksContext.WHEN_EDIT);
+			
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		*/
 		
 	}
 }

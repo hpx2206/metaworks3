@@ -2,11 +2,16 @@ var org_uengine_codi_mw3_ide_editor_metadata_AddPropertyPopup = function(objectI
 	this.objectId = objectId;
 	this.className = className;
 	
+	this.divObj = $("#objDiv_" + this.objectId).parent("#objDiv_");
+	
 };
 
 org_uengine_codi_mw3_ide_editor_metadata_AddPropertyPopup.prototype = {
 		saveProperty : function(){
+			
 			var object = mw3.getObject(this.objectId);
+			
+			
 			var autowiredXml = mw3.getAutowiredObject('org.uengine.codi.mw3.ide.editor.metadata.MetadataXmlEditor' + '@'+object.filePath, true);
 			if(autowiredXml){
 				var metadataProperty = {
@@ -23,6 +28,23 @@ org_uengine_codi_mw3_ide_editor_metadata_AddPropertyPopup.prototype = {
 				xmlObjectId = autowiredXml.__objectId;
 				xmlFaceHelper = mw3.getFaceHelper(xmlObjectId);
 				xmlFaceHelper.addProperty(xml);
+				var popup =	{
+							__className	:'org.uengine.codi.mw3.model.Popup'
+						};
+					
+				
+				var remove = mw3.locateObject(
+						{
+							__className	:'org.metaworks.Remover',
+								target	: popup,
+								match   : true
+						}, null, 'body'
+					);
 			}
+			
+			
+			mw3.endLoading(object);
+			this.divObj.remove();
+			
 		}
 };

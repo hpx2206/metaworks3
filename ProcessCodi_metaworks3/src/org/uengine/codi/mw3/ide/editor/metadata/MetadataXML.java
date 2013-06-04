@@ -1,17 +1,14 @@
 package org.uengine.codi.mw3.ide.editor.metadata;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-import org.metaworks.ServiceMethodContext;
+import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Id;
-import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.component.SelectBox;
 import org.uengine.codi.mw3.ide.ResourceNode;
-import org.uengine.codi.mw3.model.Popup;
-import org.uengine.kernel.GlobalContext;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
@@ -19,6 +16,10 @@ import com.thoughtworks.xstream.annotations.XStreamOmitField;
 
 @XStreamAlias("metadata")
 public class MetadataXML {
+	
+	public MetadataXML() {
+		init();
+	}
 	
 	@XStreamOmitField
 	String filePath;
@@ -73,6 +74,16 @@ public class MetadataXML {
 			this.rules = rules;
 		}
 		
+		MetadataProperty newMetadataProperty;
+		public MetadataProperty getNewMetadataProperty() {
+			return newMetadataProperty;
+		}
+		public void setNewMetadataProperty(MetadataProperty newMetadataProperty) {
+			this.newMetadataProperty = newMetadataProperty;
+		}
+
+	/*
+	 *  안써
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
 	public Popup addProperty(){
 		Popup popup = new Popup();
@@ -87,6 +98,7 @@ public class MetadataXML {
 	public void save(){
 		
 	}
+	*/
 	
 	public MetadataXML loadWithResourceNode(ResourceNode resourceNode){
 		MetadataXML metadata = loadWithPath(resourceNode.getPath());
@@ -115,32 +127,47 @@ public class MetadataXML {
 	}
 		
 	public static void main(String[] args) {
-		XStream stream = new XStream();
-		stream.autodetectAnnotations(true);
-		
-		MetadataXML xml = new MetadataXML();
-		xml.setCompany("uengine");
-		xml.setType("project");
-		xml.setTypeName("오키도키");
-		
-		ArrayList<MetadataProperty> properties = new ArrayList<MetadataProperty>();
-		
-		MetadataProperty type1 = new MetadataProperty();
-		type1.setType("file");
-		type1.setKeyEditable(false);
-		type1.setName("filename");
-		type1.setValue("file value");
-		
-		MetadataProperty type2 = new MetadataProperty();
-		type2.setType("img");
-		type2.setKeyEditable(false);
-		type2.setName("imgname");
-		type2.setValue("img value");
-		
-		properties.add(type1);
-		properties.add(type2);
-		
-		xml.setProperties(properties);
-		System.out.println(stream.toXML(xml));
+//		XStream stream = new XStream();
+//		stream.autodetectAnnotations(true);
+//		
+//		MetadataXML xml = new MetadataXML();
+//		xml.setCompany("uengine");
+//		xml.setType("project");
+//		xml.setTypeName("오키도키");
+//		
+//		ArrayList<MetadataProperty> properties = new ArrayList<MetadataProperty>();
+//		
+//		MetadataProperty type1 = new MetadataProperty();
+//		type1.setType("file");
+//		type1.setKeyEditable(false);
+//		type1.setName("filename");
+//		type1.setValue("file value");
+//		
+//		MetadataProperty type2 = new MetadataProperty();
+//		type2.setType("img");
+//		type2.setKeyEditable(false);
+//		type2.setName("imgname");
+//		type2.setValue("img value");
+//		
+//		properties.add(type1);
+//		properties.add(type2);
+//		
+//		xml.setProperties(properties);
+//		System.out.println(stream.toXML(xml));
 	}
+	
+	protected void init() {
+		newMetadataProperty = new MetadataProperty();
+		newMetadataProperty.metaworksContext = new MetaworksContext();
+		newMetadataProperty.metaworksContext.setWhen(MetaworksContext.WHEN_EDIT);
+		newMetadataProperty.metaworksContext.setWhere("ide");
+		
+		
+		newMetadataProperty.selectedType = new SelectBox();
+		newMetadataProperty.selectedType.add("텍스트", "string");
+		newMetadataProperty.selectedType.add("파일", "file");
+		newMetadataProperty.selectedType.add("이미지", "img");
+		newMetadataProperty.selectedType.add("프로세스", "process");
+	}
+
 }
