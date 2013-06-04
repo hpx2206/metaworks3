@@ -18,9 +18,11 @@ package org.directwebremoting.convert;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.StringTokenizer;
@@ -39,6 +41,7 @@ import org.directwebremoting.extend.OutboundContext;
 import org.directwebremoting.extend.OutboundVariable;
 import org.directwebremoting.extend.Property;
 import org.directwebremoting.extend.ProtocolConstants;
+import org.metaworks.dwr.MetaworksConverter;
 
 /**
  * An implementation of Converter for Collections of Strings.
@@ -154,7 +157,32 @@ public class CollectionConverter extends AbstractConverter
                 InboundVariable nested = new InboundVariable(data.getContext(), null, splitType, splitValue);
                 nested.dereference();
 
+		 		if(!"string".equals(nested.getType()) && !"number".equals(data.getType())){
+	                String temp = nested.getValue();			 	
+				 	if(temp.length() >= 2 && !("null".equals(temp))){
+				 		temp = temp.substring(1, temp.length() - 1);
+		
+					    Map<String, String> tokens = extractInboundTokens(paramType, temp);
+					    
+					    String refName = tokens.get("__className");
+					    
+					    if(refName!=null){
+						    refName = refName.split(":")[1];
+						    
+						   	String className = data.getContext().getInboundVariable(refName).getFormField().getString();
+						  
+						   	try {
+						   		subtype = Thread.currentThread().getContextClassLoader().loadClass(className);
+							} catch (ClassNotFoundException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+					    }
+				 	}
+		 		}
+			 	
                 Object output = converterManager.convertInbound(subtype, nested, child);
+                
                 col.add(output);
             }
 
@@ -242,4 +270,32 @@ public class CollectionConverter extends AbstractConverter
      * The log stream
      */
     private static final Log log = LogFactory.getLog(CollectionConverter.class);
+    
+    protected static Map<String, String> extractInboundTokens(Class<?> paramType, String value) throws ConversionException
+    {
+        Map<String, String> tokens = new HashMap<String, String>();
+        StringTokenizer st = new StringTokenizer(value, ProtocolConstants.INBOUND_MAP_SEPARATOR);
+        int size = st.countTokens();
+
+        for (int i = 0; i < size; i++)
+        {
+            String token = st.nextToken();
+            if (token.trim().length() == 0)
+            {
+                continue;
+            }
+
+            int colonpos = token.indexOf(ProtocolConstants.INBOUND_MAP_ENTRY);
+            if (colonpos == -1)
+            {
+                throw new ConversionException(paramType, "Missing " + ProtocolConstants.INBOUND_MAP_ENTRY + " in object description: " + token);
+            }
+
+            String key = token.substring(0, colonpos).trim();
+            String val = token.substring(colonpos + 1).trim();
+            tokens.put(key, val);
+        }
+
+        return tokens;
+    }
 }
