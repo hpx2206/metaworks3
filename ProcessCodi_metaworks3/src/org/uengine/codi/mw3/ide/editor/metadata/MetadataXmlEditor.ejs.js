@@ -51,9 +51,6 @@ org_uengine_codi_mw3_ide_editor_metadata_MetadataXmlEditor.prototype = {
 			search.set({needle:'</MetadataProperty>' , backwards:true});
 			var range = search.find(this.editor.getSession());
 			
-			console.log("range");
-			console.log(range);
-			
 			if(range != null){
 				var pos = {row:range.end.row ,column:range.end.column};
 				this.editor.getSession().doc.insertNewLine(pos);
@@ -61,43 +58,17 @@ org_uengine_codi_mw3_ide_editor_metadata_MetadataXmlEditor.prototype = {
 				this.editor.getSession().doc.insert(posNext,xml); 
 			}
 			
-			console.log("xml" + xml);
 		},
 		removeProperty : function(xml, name){
-			console.log(this.editor);
-			
-			var search = this.editor.$search;
-			search.set({needle:'<name>ss</name>', wholeWord:true});
-			console.log(search.getOptions());
-			
-			var range = search.find(this.editor.getSession());
-			console.log(this.editor.getSession());
 			
 			var object = mw3.objects[this.objectId];
+			
+			var search = this.editor.$search;
+			search.set({needle:xml.toString(), wholeWord:true});
+			
 			var content = object.content.toString();
-
-			var replace = content.replace(/xml.toString()/, "");
-			
-//			console.log(replace);
-			
-			if(replace != null){
-				
-			}
-			
-			
-//
-//			console.log("xml: ");
-//			console.log(xml.toString());
-//			
-//			var content = object.content.toString();
-//			console.log("before contents: ");
-//			console.log(content);
-//			
-//			console.log("replace contents: ");
-//			
-//			var recon = content.replace(xml.toString(), "ssssssadsawrewrqwrwqkjrhqkwjrhqkjwrhkqjwrh");
-//			console.log(replace);
-			
+			var range = search.find(this.editor.getSession());
+			var replace = content.replaceAll(/xml.toString()/g, " ");
 			
 		},
 		addDefinition : function(){		

@@ -49,12 +49,4 @@ public class MetadataEditor extends MultiPageEditor{
 		return null;
 	}
 	
-	
-	@ServiceMethod(callByContent=true)
-	public Object remove(){
-		Object[] panel = this.getPagePanel();
-		
-		
-		return null;
-	}
 }
