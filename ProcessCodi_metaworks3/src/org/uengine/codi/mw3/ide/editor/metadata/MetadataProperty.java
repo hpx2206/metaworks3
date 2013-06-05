@@ -2,6 +2,7 @@ package org.uengine.codi.mw3.ide.editor.metadata;
 
 import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
+import org.metaworks.annotation.KeepAtClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.SelectBox;
 import org.metaworks.website.MetaworksFile;
@@ -97,5 +98,10 @@ public class MetadataProperty {
 		
 		System.out.println("remove herer");
 		
+	}
+	
+	@ServiceMethod(payload="selectedType", eventBinding="change", bindingFor="selectedType", bindingHidden=true, target=ServiceMethodContext.TARGET_APPEND)
+	public void selectType() {
+		this.getFile().setMimeType(selectedType.getSelected());
 	}
 }
