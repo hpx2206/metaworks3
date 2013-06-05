@@ -37,7 +37,7 @@ public class VMRequest implements ITool, ContextAware {
 		}
 	
 	VMRealmCombo vmRealmCombo;
-		@Face(displayName="망")
+		@Face(displayName="망", options={"required"}, values={"true"})
 		public VMRealmCombo getVmRealmCombo() {
 			return vmRealmCombo;
 		}
@@ -46,7 +46,7 @@ public class VMRequest implements ITool, ContextAware {
 		}
 	
 	VMImageCombo vmImageCombo;
-		@Face(displayName="템플릿")
+		@Face(displayName="템플릿", options={"required"}, values={"true"})
 		public VMImageCombo getVmImageCombo() {
 			return vmImageCombo;
 		}

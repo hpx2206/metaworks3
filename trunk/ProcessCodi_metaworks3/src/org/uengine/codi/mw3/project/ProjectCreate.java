@@ -10,7 +10,7 @@ import org.uengine.processmanager.ProcessManagerRemote;
 public class ProjectCreate implements ITool {
 	
 	String name;
-		@Face(displayName="프로젝트명")
+		@Face(displayName="프로젝트명", options={"required"}, values={"true"})
 		public String getName() {
 			return name;
 		}	
