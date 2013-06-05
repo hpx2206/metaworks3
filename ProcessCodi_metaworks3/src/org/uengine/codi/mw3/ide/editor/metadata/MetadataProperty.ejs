@@ -27,6 +27,7 @@ if(value) {
 					<% if(type == 'file'){ %>
 						<span><div style="width:auto;"><%=fields.file.here()%></div></span>
 						<span>
+						  <a id="wBtn" href="#" onClick="<%=methods.findResource.caller()%>"><span>찾아보기</span></a>
 							<a id="wBtn" href="#" onClick="#"><span>다운로드</span></a>
 							<a id="wBtn" href="#" onClick="#"><span>업로드</span></a>
 						</span>

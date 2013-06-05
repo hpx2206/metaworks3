@@ -33,24 +33,6 @@ public class MetadataServlet extends HttpServlet {
 		projectId = "uu";
 		tanentId = "uEngine";
 		
-		String metadataType = request.getParameter("type");
-		if( metadataType != null ){
-			String projectBasePath = MetadataBundle.getProjectBasePath(tanentId, projectId);
-			if( "img".equalsIgnoreCase(metadataType)){
-				OutputStream out = null;
-				try{
-					out = response.getOutputStream();
-					BufferedImage bi = ImageIO.read(new File(projectBasePath + pathInfo));
-					response.setContentType("image/jpg");
-					ImageIO.write(bi, "jpg", out);
-				}finally{
-					if(out != null){
-						out.close();
-						out = null;
-					}
-				}
-			}
-		}
 		if(pathInfo.startsWith("/getMetadataFile")){
 			// 요청받은 정보를 가지고, 메타데이터 파일을 찾아서 stream 으로 내려준다.
 //			projectId = request.getParameter("projectId");
@@ -81,14 +63,44 @@ public class MetadataServlet extends HttpServlet {
 	        DataInputStream in = new DataInputStream(new FileInputStream(file));
 	        
 	        // reads the file's bytes and writes them to the response stream
-	        while ((in != null) && ((length = in.read(byteBuffer)) != -1))
-	        {
+	        while ((in != null) && ((length = in.read(byteBuffer)) != -1)){
 	            outStream.write(byteBuffer,0,length);
 	        }
 	        
 	        in.close();
 	        outStream.close();
 	        response.flushBuffer();
+//		}else if(pathInfo.startsWith("/getResourceFile")){
+		}else{
+			String metadataType = request.getParameter("type");
+			if( metadataType != null ){
+				String projectBasePath = MetadataBundle.getProjectBasePath(tanentId, projectId);
+				if( "img".equalsIgnoreCase(metadataType)){
+					OutputStream out = null;
+					try{
+						out = response.getOutputStream();
+						File imgFile = new File(projectBasePath + pathInfo);
+						BufferedImage bi = ImageIO.read(imgFile);
+						ServletContext context  = getServletConfig().getServletContext();
+				        String mimetype = context.getMimeType(imgFile.getPath());
+				        String fileName = imgFile.getName();
+				        String fileType = fileName.substring(fileName.lastIndexOf(".")+1);
+//				        System.out.println("fileName = " + fileName);
+//				        System.out.println("fileType = " + fileType);
+				        // sets response content type
+				        if (mimetype == null) {
+				            mimetype = "image/jpg";
+				        }
+						response.setContentType(mimetype);
+						ImageIO.write(bi, fileType, out);
+					}finally{
+						if(out != null){
+							out.close();
+							out = null;
+						}
+					}
+				}
+			}
 		}
 		// 요청받은 앱으로 리소스를 내려준다.
 		
