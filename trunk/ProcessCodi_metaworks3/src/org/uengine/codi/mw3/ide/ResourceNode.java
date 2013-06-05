@@ -3,10 +3,14 @@ package org.uengine.codi.mw3.ide;
 import java.io.File;
 import java.util.ArrayList;
 
+import org.metaworks.ContextAware;
+import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
+import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.ToAppend;
 import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.Available;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.TreeNode;
 import org.uengine.codi.mw3.ide.editor.Editor;
@@ -14,15 +18,24 @@ import org.uengine.codi.mw3.ide.editor.java.JavaCodeEditor;
 import org.uengine.codi.mw3.ide.editor.metadata.MetadataEditor;
 import org.uengine.codi.mw3.ide.editor.process.ProcessEditor;
 import org.uengine.codi.mw3.ide.menu.ResourceContextMenu;
+import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.model.Session;
 
-public class ResourceNode extends TreeNode {
+public class ResourceNode extends TreeNode implements ContextAware {
 
 	@AutowiredFromClient
 	public Session session;
 	
 	public final static String TYPE_PROJECT 			= "project";
 	
+	MetaworksContext metaworksContext;
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
+		}
+
 	String projectId;
 		public String getProjectId() {
 			return projectId;
@@ -40,6 +53,7 @@ public class ResourceNode extends TreeNode {
 		}
 		
 	public ResourceNode(){
+		setMetaworksContext(new MetaworksContext());
 	}
 
 	public ResourceNode(Project project){
@@ -50,11 +64,13 @@ public class ResourceNode extends TreeNode {
 
 		this.setPath(project.getPath());
 		this.setProjectId(project.getId());
+		
+		setMetaworksContext(new MetaworksContext());
 	}
 	
 
 	@Override
-	@ServiceMethod(payload={"id", "path"}, target=ServiceMethodContext.TARGET_APPEND)
+	@ServiceMethod(callByContent=true, except="child", target=ServiceMethodContext.TARGET_SELF)
 	public Object expand() throws Exception {
 		
 		ArrayList<TreeNode> child = new ArrayList<TreeNode>();
@@ -74,6 +90,7 @@ public class ResourceNode extends TreeNode {
 				node.setPath(this.getPath() + File.separatorChar + childFile.getName());
 				node.setParentId(this.getId());
 				node.setType(TreeNode.TYPE_FOLDER);
+				node.setMetaworksContext(getMetaworksContext());
 				node.setFolder(true);
 				
 				child.add(node);
@@ -92,12 +109,14 @@ public class ResourceNode extends TreeNode {
 				node.setPath(this.getPath() + File.separatorChar + childFile.getName());
 				node.setParentId(this.getId());
 				node.setType(findNodeType(node.getName()));
-				
+				node.setMetaworksContext(getMetaworksContext());
 				child.add(node);
 			}
 		}
 				
-		return new ToAppend(this, child);
+		this.setChild(child);
+		
+		return this;
 	}
 	
 	public Editor beforeAction(){
@@ -166,6 +185,13 @@ public class ResourceNode extends TreeNode {
 		*/
 		
 		return editor;
+	}
+	
+	@Available(where={"resource"})
+	@ServiceMethod(callByContent=true , target=ServiceMethodContext.TARGET_APPEND, mouseBinding="dblclick")
+	public Object[] popupAction(){
+		System.out.println("aaaaaaaaaaaaaaaaaaa");
+		return new Object[]{new Remover(new Popup() , true) };
 	}
 	
 	@Override
