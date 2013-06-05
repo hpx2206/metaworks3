@@ -1179,7 +1179,33 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				   				    };
 				   				    
 				   				}//end of case 'drop'
-				   				
+				   				else if(methodContext.mouseBinding == "dblclick"){
+				   					theDiv[0]['mouseCommand'] = command;
+
+				   					var dblclick = function(e) {
+					   						eval(this['mouseCommand']);
+				   			 				e.stopPropagation(); //stops to propagate to parent that means consumes the event here.
+				   			 		};
+				   			 		
+				   			 		
+				   				    if(document.addEventListener){
+					   					theDiv[0].addEventListener("dblclick", dblclick, false);
+				   				    };
+				   				    
+				   				    if(document.attachEvent){
+					   					theDiv[0].attachEvent("dblclick", dblclick);				   				    	
+				   				    };
+				   				    
+				   				    
+				   				    
+//				   					if(document.addEventListener){
+//					   					theDiv[0].addEventListener("dblclick", dblclick);
+//				   				    };
+//				   				    
+//				   				    if(document.attachEvent){
+//					   					theDiv[0].attachEvent("dblclick", dblclick);				   				    	
+//				   				    };
+				   				}//end of case 'dbl-click'
 				   				//case of general mouse click
 				   				else{
 				   					theDiv[0]['mouseCommand' + which] = command;
@@ -2447,8 +2473,8 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 						    			 if(sameClass){
 							    			 var isSelect = false;
 							    			 with(object){
-							    				 with(this.objects[i])
-							    				 	isSelect = eval(autowiredSelect);
+							    	                autowiredObject = this.objects[i];
+							    	                isSelect = eval(autowiredSelect);
 							    			 }
 
 							    			 if(isSelect){
@@ -3577,6 +3603,9 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			};
 			
 			Metaworks3.prototype.getMessage = function(message){
+				return message;
+			};
+			Metaworks3.prototype.metadataBundle = function(message){
 				return message;
 			};
 			
