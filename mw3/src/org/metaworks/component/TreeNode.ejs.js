@@ -44,6 +44,7 @@ var org_metaworks_component_TreeNode = function(objectId, className){
 		mw3.getFaceHelper(event.data.objectId).select(event);
 	});
 	
+	
 	this.nodeDiv.bind('dblclick', {objectId : this.objectId}, function(event){
 		mw3.getFaceHelper(event.data.objectId).action(event);
 	});
@@ -225,7 +226,12 @@ org_metaworks_component_TreeNode.prototype = {
 			else if(this.isCollapse())
 				this.expand();
 		}else{
-			mw3.call(this.objectId, 'action');
+			// 마우스 이벤트가 걸려있지 않으면 action 을 태운다.
+			if( this.objectDiv[0]['mouseCommand'] != null ){
+				eval(this.objectDiv[0]['mouseCommand']);
+			}else{
+				mw3.call(this.objectId, 'action');
+			}
 		}
 		
 	},
