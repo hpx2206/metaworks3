@@ -2,6 +2,11 @@
 if(value) {
 
 	var type = value.type;
+	var selectedType;
+	
+	if(value.selectedType != null){
+		selectedType = value.selectedType.selected;
+	}
 	
 %>
 <div class="inLineSpan">
@@ -11,10 +16,11 @@ if(value) {
  	<div style="float:left;">
 		<ul>
 			<li><span class="firstSpan"><%=mw3.localize('$Name')%></span><span><%=fields.name.here()%></span></li>
-			<li><span class="firstSpan"><%=mw3.localize('$Value')%></span><span><%=fields.value.here({when:'view'})%></span></li>
 			<li><span class="firstSpan"><%=mw3.localize('$Type')%></span><span><%=fields.selectedType.here()%></span></li>
-			<% if(value.file.mimeType == 'file' || value.file.mimeType == 'img'){ %>
+			<% if(selectedType == 'file' || selectedType == 'img'){ %>
 				<li><span class="firstSpan"><%=mw3.localize('$uploadFile')%></span><span><%=fields.file.here()%></span></li>
+			<% }else if(selectedType == 'string' || selectedType == 'string'){%>
+				<li><span class="firstSpan"><%=mw3.localize('$Value')%></span><span><%=fields.value.here()%></span></li>
 			<% } %>
 		</ul>
  	</div>

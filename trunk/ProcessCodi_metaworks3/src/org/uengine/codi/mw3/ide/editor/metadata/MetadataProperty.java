@@ -95,6 +95,16 @@ public class MetadataProperty {
 			this.metaworksContext = metaworksContext;
 		}
 	
+	@XStreamAsAttribute
+	int index;
+		public int getIndex() {
+			return index;
+		}
+		public void setIndex(int index) {
+			this.index = index;
+		}
+
+		
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_NONE)
 	public String toXmlXStream(){
 		XStream stream = new XStream();
@@ -146,8 +156,6 @@ public class MetadataProperty {
 		
 	}
 	
-	@ServiceMethod(payload="selectedType", eventBinding="change", bindingFor="selectedType", bindingHidden=true, target=ServiceMethodContext.TARGET_APPEND)
-	public void selectType() {
-		this.getFile().setMimeType(selectedType.getSelected());
-	}
+	@ServiceMethod(payload="selectedType", eventBinding="change", bindingFor="selectedType", bindingHidden=true, target=ServiceMethodContext.TARGET_SELF)
+	public void selectType() {}
 }

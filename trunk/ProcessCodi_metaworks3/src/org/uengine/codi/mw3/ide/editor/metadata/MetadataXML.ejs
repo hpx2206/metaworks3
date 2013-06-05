@@ -1,3 +1,9 @@
+<%
+
+if(value){
+%>
+
+
 <%= fields.properties.here({when:'view'}) %>
 <%= fields.newMetadataProperty.here() %>
 
@@ -5,3 +11,7 @@
 	<span><%=mw3.localize("$addProperty")%></span>
 </a>
 
+
+<%
+}
+%>

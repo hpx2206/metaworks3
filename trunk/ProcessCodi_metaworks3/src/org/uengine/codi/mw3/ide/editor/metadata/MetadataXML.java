@@ -6,7 +6,9 @@ import java.io.InputStream;
 import java.util.ArrayList;
 
 import org.metaworks.MetaworksContext;
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Id;
+import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.SelectBox;
 import org.uengine.codi.mw3.ide.ResourceNode;
 
@@ -54,6 +56,11 @@ public class MetadataXML {
 		}
 	ArrayList<MetadataProperty> properties;
 		public ArrayList<MetadataProperty> getProperties() {
+			int index;
+			
+			for(index=0; index < properties.size(); index++){
+				properties.get(index).setIndex(index);
+			}
 			return properties;
 		}
 		public void setProperties(ArrayList<MetadataProperty> properties) {
@@ -73,7 +80,6 @@ public class MetadataXML {
 		public void setRules(ArrayList<MetadataRule> rules) {
 			this.rules = rules;
 		}
-		
 	MetadataProperty newMetadataProperty;
 		public MetadataProperty getNewMetadataProperty() {
 			return newMetadataProperty;
@@ -126,6 +132,21 @@ public class MetadataXML {
 		return metadata;
 	}
 		
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_NONE)
+	public String toXmlXStream(){
+		try {
+			Thread.sleep(5000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		XStream stream = new XStream();
+		stream.autodetectAnnotations(true);
+		
+		return stream.toXML(this);
+	}
+	
 	public static void main(String[] args) {
 //		XStream stream = new XStream();
 //		stream.autodetectAnnotations(true);
@@ -183,6 +204,7 @@ public class MetadataXML {
 		newMetadataProperty.selectedType.add("파일", "file");
 		newMetadataProperty.selectedType.add("이미지", "img");
 		newMetadataProperty.selectedType.add("프로세스", "process");
+		newMetadataProperty.selectedType.setSelected(newMetadataProperty.selectedType.getOptionValues().get(0));
 	}
 	
 }
