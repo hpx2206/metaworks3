@@ -6,6 +6,7 @@ var org_uengine_codi_mw3_ide_editor_metadata_MetadataProperty = function(objectI
 
 
 org_uengine_codi_mw3_ide_editor_metadata_MetadataProperty.prototype = {
+	
 	removeProperty: function(){
 		
 		var object = mw3.objects[this.objectId];
@@ -31,6 +32,7 @@ org_uengine_codi_mw3_ide_editor_metadata_MetadataProperty.prototype = {
 //		var metadataProperty =  mw3.getAutowiredObject('org.uengine.codi.mw3.ide.editor.metadata.MetadataProperty');
 //		var metadataEditor =  mw3.getAutowiredObject('org.uengine.codi.mw3.ide.editor.metadata.MetadataEditor');
 //		mw3.call(metadataEditor.__objectId, 'remove');
-//		
-	}	
+		
+	}
+
 };

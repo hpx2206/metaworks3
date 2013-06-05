@@ -4,6 +4,7 @@ import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.SelectBox;
+import org.metaworks.website.MetaworksFile;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
@@ -15,7 +16,7 @@ import com.thoughtworks.xstream.annotations.XStreamOmitField;
 public class MetadataProperty {
 	
 	public MetadataProperty() {
-		//filePath load
+		setFile(new MetaworksFile()); 
 	}
 	
 	@XStreamAsAttribute
@@ -59,6 +60,15 @@ public class MetadataProperty {
 		}
 		public void setValue(String value) {
 			this.value = value;
+		}
+	
+	@XStreamOmitField
+	MetaworksFile file;
+		public MetaworksFile getFile() {
+			return file;
+		}
+		public void setFile(MetaworksFile file) {
+			this.file = file;
 		}
 	
 	@XStreamOmitField
