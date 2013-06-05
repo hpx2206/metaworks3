@@ -1,50 +1,56 @@
 <%
 if(value) {
 
+	var type = value.type;
+	
 %>
 <div class="inLineSpan">
 
-	<div style="float:left;">
-	<%
-	var type = value.type;
-	
-	if(type != null){
-	%>	
-		<ul>
-			<li>
-				<span><%=value.name%>: </span>
-				<% if(type == 'file'){ %>
-					<span><div style="width:auto;"><%=fields.file.here()%></div></span>
-					<span>
-						<a id="wBtn" href="#" onClick="#"><span>다운로드</span></a>
-						<a id="wBtn" href="#" onClick="#"><span>업로드</span></a>
-					</span>
-				<% }else if(type == 'string'){ %>
-					<span><%=fields.value.here({when:'edit'})%></span>
-					<span><a id="wBtn" href="#" onClick="#"><span>수정</span></a></span>
-				<% }else if(type == 'process'){ %>
-					<span>	프로세스는 어떻게 ? </span>
-				 	
-				<% }else if(type == 'img'){ %>
-					<span><div style="width:auto;"><%=fields.file.here()%></div></span>
-					<span>
-						<a id="wBtn" href="#" onClick="#"><span>다운로드</span></a>
-						<a id="wBtn" href="#" onClick="#"><span>업로드</span></a>
-					</span>
-				<% } %>
-			</li>
-		</ul>
-	</div>
-	<%
-	}
-	%>	
-			
-	<% if(mw3.when == 'view'){ %>
-		<div style="float:right;">
-			<span style="display:inline-block; cursor:pointer" onCLick="mw3.getFaceHelper('<%=objectId%>').removeProperty()"><img src="images/activity_status/i_status_CANCELLED.png" title="remove"></span>
-		</div>
-	<% } %>
+	<% if(mw3.when == 'edit') { %>
 
+ 	<div style="float:left;">
+		<ul>
+			<li><span class="firstSpan"><%=mw3.localize('$Name')%></span><span><%=fields.name.here()%></span></li>
+			<li><span class="firstSpan"><%=mw3.localize('$Value')%></span><span><%=fields.value.here({when:'view'})%></span></li>
+			<li><span class="firstSpan"><%=mw3.localize('$Type')%></span><span><%=fields.selectedType.here()%></span></li>
+			<% if(value.file.mimeType == 'file' || value.file.mimeType == 'img'){ %>
+				<li><span class="firstSpan"><%=mw3.localize('$uploadFile')%></span><span><%=fields.file.here()%></span></li>
+			<% } %>
+		</ul>
+ 	</div>
+	<% }else { %>
+ 	<div style="float:left;">
+		<% 	if(type != null){ %>	
+			<ul>
+				<li>
+					<span><%=value.name%>: </span>
+					<% if(type == 'file'){ %>
+						<span><div style="width:auto;"><%=fields.file.here()%></div></span>
+						<span>
+							<a id="wBtn" href="#" onClick="#"><span>다운로드</span></a>
+							<a id="wBtn" href="#" onClick="#"><span>업로드</span></a>
+						</span>
+					<% }else if(type == 'string'){ %>
+						<span><%=fields.value.here({when:'edit'})%></span>
+						<span><a id="wBtn" href="#" onClick="#"><span>수정</span></a></span>
+					<% }else if(type == 'process'){ %>
+						<span>	프로세스는 어떻게 ? </span>
+					 	
+					<% }else if(type == 'img'){ %>
+						<span><div style="width:auto;"><%=fields.file.here()%></div></span>
+						<span>
+							<a id="wBtn" href="#" onClick="#"><span>다운로드</span></a>
+							<a id="wBtn" href="#" onClick="#"><span>업로드</span></a>
+						</span>
+					<% } %>
+				</li>
+			</ul>
+		<% } %>	
+	</div>
+	<div style="float:right;">
+		<span style="display:inline-block; cursor:pointer" onCLick="mw3.getFaceHelper('<%=objectId%>').removeProperty()"><img src="images/activity_status/i_status_CANCELLED.png" title="remove"></span>
+	</div>
+	<% } %>
 	<div class="clear"></div>
 </div>
 

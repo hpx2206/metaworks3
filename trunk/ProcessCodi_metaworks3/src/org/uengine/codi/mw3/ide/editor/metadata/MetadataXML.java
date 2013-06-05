@@ -127,50 +127,48 @@ public class MetadataXML {
 	}
 		
 	public static void main(String[] args) {
-		
-		
-		XStream stream = new XStream();
-		stream.autodetectAnnotations(true);
-		
-		MetadataXML xml = new MetadataXML();
-		xml.setCompany("uengine");
-		xml.setType("project");
-		xml.setTypeName("오키도키");
-		
-		ArrayList<MetadataProperty> properties = new ArrayList<MetadataProperty>();
-		
-		MetadataProperty type1 = new MetadataProperty();
-		type1.setType("file");
-		type1.setKeyEditable(false);
-		type1.setName("filename");
-		type1.setValue("file value");
-		
-		MetadataProperty type2 = new MetadataProperty();
-		type2.setType("img");
-		type2.setKeyEditable(false);
-		type2.setName("imgname");
-		type2.setValue("img value");
-		
-		MetadataProperty type3 = new MetadataProperty();
-		type2.setType("string");
-		type2.setKeyEditable(false);
-		type2.setName("ss");
-		type2.setValue("ss");
-		
-		properties.add(type1);
-		properties.add(type2);
-		properties.add(type3);
-		
-		xml.setProperties(properties);
-		System.out.println(stream.toXML(xml));
-		
-		
-		MetadataXML xml1 = new MetadataXML();
-		
-		ArrayList<MetadataProperty> properties1 = new ArrayList<MetadataProperty>();
-		properties1.add(type3);
-		xml.setProperties(properties1);
-		System.out.println(stream.toXML(xml));
+//		XStream stream = new XStream();
+//		stream.autodetectAnnotations(true);
+//		
+//		MetadataXML xml = new MetadataXML();
+//		xml.setCompany("uengine");
+//		xml.setType("project");
+//		xml.setTypeName("오키도키");
+//		
+//		ArrayList<MetadataProperty> properties = new ArrayList<MetadataProperty>();
+//		
+//		MetadataProperty type1 = new MetadataProperty();
+//		type1.setType("file");
+//		type1.setKeyEditable(false);
+//		type1.setName("filename");
+//		type1.setValue("file value");
+//		
+//		MetadataProperty type2 = new MetadataProperty();
+//		type2.setType("img");
+//		type2.setKeyEditable(false);
+//		type2.setName("imgname");
+//		type2.setValue("img value");
+//		
+//		MetadataProperty type3 = new MetadataProperty();
+//		type2.setType("string");
+//		type2.setKeyEditable(false);
+//		type2.setName("ss");
+//		type2.setValue("ss");
+//		
+//		properties.add(type1);
+//		properties.add(type2);
+//		properties.add(type3);
+//		
+//		xml.setProperties(properties);
+//		System.out.println(stream.toXML(xml));
+//		
+//		
+//		MetadataXML xml1 = new MetadataXML();
+//		
+//		ArrayList<MetadataProperty> properties1 = new ArrayList<MetadataProperty>();
+//		properties1.add(type3);
+//		xml.setProperties(properties1);
+//		System.out.println(stream.toXML(xml));
 	}
 	
 	protected void init() {
