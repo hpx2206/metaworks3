@@ -585,6 +585,9 @@ System.out.println("=========================== HARD-TO-FIND : HumanActivity.cre
 		try{
 			roleMapping = getActualMapping(instance);
 			
+			/*
+			 * 2013/06/10
+			 * role mapping 이 되어있지 않은 경우에 Exception 발생 안하게 변경 
 			UEngineException actualWorkerNotBound = new UEngineException("Actual worker for '"+ getRole() +"' isn't bound yet"); 
 			actualWorkerNotBound.setActivity(this);
 			actualWorkerNotBound.setInstance(instance);
@@ -594,6 +597,8 @@ System.out.println("=========================== HARD-TO-FIND : HumanActivity.cre
 				throw actualWorkerNotBound;
 			if(roleMapping.getEndpoint().trim().length()==0) 
 				throw actualWorkerNotBound;
+			*/
+			
 		}catch(Exception e){
 			
 			//if(getRole().getRoleResolutionContext()==null)
@@ -641,7 +646,12 @@ System.out.println("=========================== HARD-TO-FIND : HumanActivity.cre
 			}
 
 		} else {
-			kpv.put(KeyedParameter.DISPATCHINGOPTION, ""+getRole().getDispatchingOption());
+			/*
+			 * 2013/06/10
+			 * role mapping 이 되어있지 않은 경우에 경합모드로 변경
+			 */
+			//kpv.put(KeyedParameter.DISPATCHINGOPTION, ""+getRole().getDispatchingOption());
+			kpv.put(KeyedParameter.DISPATCHINGOPTION, ""+Role.DISPATCHINGOPTION_RACING);
 		}
 		
 		if(getRole()!=null)
