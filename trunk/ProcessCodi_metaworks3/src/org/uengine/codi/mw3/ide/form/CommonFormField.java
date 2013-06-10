@@ -2,25 +2,24 @@ package org.uengine.codi.mw3.ide.form;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
-import org.metaworks.ServiceMethodContext;
+import org.metaworks.WebFieldDescriptor;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Available;
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.util.UEngineUtil;
 
-public class CommonFormField implements ContextAware {
+public class CommonFormField implements ContextAware, Cloneable {
 	
 	@AutowiredFromClient
-	public Session session;
+	public Session session;			// for drag
 	
 	@AutowiredFromClient
-	public Form form;
+	public Form form;				// for action
 	
-	@AutowiredFromClient
-	public FormFieldProperties properties;
-
 	MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
 			return metaworksContext;
@@ -29,73 +28,98 @@ public class CommonFormField implements ContextAware {
 			this.metaworksContext = metaworksContext;
 		}
 		
-	String formfieldId;
-		@Id
-		@Hidden
-		public String getFormfieldId() {
-			return formfieldId;
-		}
-		public void setFormfieldId(String formfieldId) {
-			this.formfieldId = formfieldId;
-		}
-		
 	String fieldId;
-		@Available(when="modify", where="properties")
+	@Id
 		public String getFieldId() {
 			return fieldId;
 		}
-	
 		public void setFieldId(String fieldId) {
 			this.fieldId = fieldId;
 		}
 		
-	String fieldName;
-		@Available(when="modify", where="properties")
-		public String getFieldName() {
-			return fieldName;
+	String fieldType;
+	@Hidden
+		public String getFieldType() {
+			return fieldType;
 		}
-	
-		public void setFieldName(String fieldName) {
-			this.fieldName = fieldName;
+		public void setFieldType(String fieldType) {
+			this.fieldType = fieldType;
+		}	
+
+	String id;
+	@Face(displayName="$form.field.id")
+	@Available(when={MetaworksContext.WHEN_EDIT}, where={"properties"})
+		public String getId() {
+			return id;
 		}
-	
-	Boolean hidden;
-		@Available(when="modify", where="properties")
-		public Boolean getHidden() {
-			return hidden;
-		}
-	
-		public void setHidden(Boolean hidden) {
-			this.hidden = hidden;
+		public void setId(String id) {
+			this.id = id;
 		}
 		
-	public CommonFormField() {
-		setMetaworksContext(new MetaworksContext());
-		getMetaworksContext().setHow("eeeee");
+	String displayName;
+	@Face(displayName="$form.field.displayname")
+	@Available(where={"form", "properties"})
+		public String getDisplayName() {
+			return displayName;
+		}
+		public void setDisplayName(String displayName) {
+			this.displayName = displayName;
+		}
+	
+	Boolean hide;
+	@Face(displayName="$form.field.hide")
+	@Available(when={MetaworksContext.WHEN_EDIT}, where={"properties"})
+		public Boolean getHide() {
+			return hide;
+		}
+		public void setHide(Boolean hide) {
+			this.hide = hide;
+		}
+		
+	public void init(){
+		this.setMetaworksContext(new MetaworksContext());
+		this.setId("");
+		this.setDisplayName("");
+		this.setHide(false);
 	}
 		
 	@ServiceMethod(mouseBinding="drag")
-	@Available(when="view", where="menu")
-	public Session drag() {
+	@Available(when={MetaworksContext.WHEN_VIEW}, where={"menu"})
+	public Session drag() {				
+		session.setClipboard(this);
 		
 		return session;
 	}
 	
 	@ServiceMethod(callByContent=true)
-	@Available(when="view", where="form")
+	@Available(when={MetaworksContext.WHEN_VIEW}, where={"form"})
 	public Object modify() {
+		
+		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+		this.getMetaworksContext().setWhere("properties");
+		
+		return new FormFieldProperties(this);
 
-		return properties;
 	}
 	
 	@ServiceMethod(callByContent=true)
-	@Available(when="view", where="form")
-	public void copy() {
-		System.out.println("aaa");
+	@Available(when={MetaworksContext.WHEN_VIEW}, where={"form"})
+	public Object copy() {
+		try {
+			CommonFormField cloneFormField = (CommonFormField)this.clone();
+			cloneFormField.setFieldId(form.createFormFieldId());
+
+			form.formFields.add(cloneFormField);
+		} catch (CloneNotSupportedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return form;
 	}
-	
+		
 	@ServiceMethod(callByContent=true)
-	@Available(when="view", where="form")
+	@Available(when={MetaworksContext.WHEN_VIEW}, where={"form"})
 	public Object remove() {
 		
 		form.formFields.remove(this);
@@ -104,22 +128,180 @@ public class CommonFormField implements ContextAware {
 	}
 	
 	@ServiceMethod(callByContent=true)
-	@Available(when="view", where="form")
-	public void up() {
-		
-	}
-	
-	@ServiceMethod(callByContent=true)
-	@Available(when="view", where="form")
-	public void down() {
-		
-	}
-	
-	@ServiceMethod(callByContent=true)
-	@Available(when="view", where="menu")
-	public Object add(){
-		form.formFields.add(this);
+	@Available(when={MetaworksContext.WHEN_VIEW}, where={"form"})
+	public Object up() {				
+		int index = form.formFields.indexOf(this);
+		if(index > 0) {
+			form.formFields.remove(this);
+			form.formFields.add(index-1,this);
+		}
 		
 		return form;
 	}
+	
+	@ServiceMethod(callByContent=true)
+	@Available(when={MetaworksContext.WHEN_VIEW}, where={"form"})
+	public Object down() {
+		int index = form.formFields.indexOf(this);
+		if(index < form.formFields.size()-1) {
+			form.formFields.remove(this);
+			form.formFields.add(index+1,this);
+		}
+		
+		return form;
+	}
+	
+	@ServiceMethod(callByContent=true)
+	@Available(when={MetaworksContext.WHEN_EDIT}, where={"properties"})
+	public Object save() {
+		
+		int pos = form.formFields.indexOf(this);
+		if(pos > -1){
+			this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+			this.getMetaworksContext().setWhere("form");
+			
+			form.formFields.set(pos, this);		
+		}
+		
+		return form;
+	}	
+	
+	@Override	
+	public boolean equals(Object obj) {
+		boolean result = false;
+		
+		if(obj instanceof CommonFormField){
+			CommonFormField commonFormField = (CommonFormField)obj;
+			
+			result = this.getFieldId().equals(commonFormField.getFieldId());
+		}
+		
+		return result;
+	}	
+		
+	String ejsPath;
+		@Hidden
+		public String getEjsPath() {
+			return ejsPath;
+		}
+		public void setEjsPath(String ejsPath) {
+			this.ejsPath = ejsPath;
+		}
+		
+	String options;
+		@Hidden
+		public String getOptions() {
+			return options;
+		}
+		public void setOptions(String options) {
+			this.options = options;
+		}
+	
+	String values;
+		@Hidden
+		public String getValues() {
+			return values;
+		}
+		public void setValues(String values) {
+			this.values = values;
+		}
+
+	public String makeValueString(String value){
+		return "\"" + value + "\"";
+	}
+	
+	public String generateFace(){
+		String separatorChar = "";
+		
+		StringBuffer face = new StringBuffer();
+		face.append("	@Face(");
+		if(this.getDisplayName() != null && !this.getDisplayName().equals("")){
+			face.append(separatorChar);
+			face.append("displayName=" + this.makeValueString(this.getDisplayName()));
+			separatorChar  = ", ";
+		}
+	
+		if(this.getEjsPath() != null && !this.getEjsPath().equals("")){
+			face.append(separatorChar);
+			face.append("ejsPath=" + this.makeValueString(this.getEjsPath()));
+			separatorChar  = ", ";
+		}
+		
+		if(this.getOptions() != null && !this.getOptions().equals("")){
+			face.append(separatorChar);
+			face.append("options={" + this.getOptions());
+			separatorChar  = "}, ";
+		}
+		
+		if(this.getValues() != null && !this.getValues().equals("")){
+			face.append(separatorChar);
+			face.append("values={" + this.getValues());
+			face.append("}");
+		}
+				
+		face.append(")\n");
+		
+		return face.toString();
+	}
+	
+	public String generateAnnotationCode() {
+		
+		StringBuffer annotationdBuffer = new StringBuffer();
+				
+		if(this.getHide()){
+			annotationdBuffer.append("	@Hidden\n");
+		}
+		
+		annotationdBuffer.append(this.generateFace());
+		
+		return annotationdBuffer.toString();
+	}
+	
+	public String generateVariableCode() {		
+		
+		StringBuffer variableBuffer = new StringBuffer();		
+		variableBuffer.append("	").append(this.getFieldType()).append(" ").append(this.getId()).append(";\n");
+		
+		return variableBuffer.toString();
+	}
+	
+	public String generatePropertyCode() {
+		
+		StringBuffer propertyBuffer = new StringBuffer();
+		String fieldIdFirstCharUpper = UEngineUtil.toOnlyFirstCharacterUpper(this.getId());
+				
+		propertyBuffer
+		.append("		public ").append(this.getFieldType()).append(" get").append(fieldIdFirstCharUpper).append("(){ return ").append(this.getId()).append("; }\n")
+		.append("		public void set").append(fieldIdFirstCharUpper).append("(").append(this.getFieldType()).append(" ").append(this.getId()).append("){ this.").append(this.getId()).append(" = ").append(this.getId()).append("; }\n\n")
+		;		
+		
+		return propertyBuffer.toString();		
+	}
+	
+	public boolean equalsType(WebFieldDescriptor fd){
+		return true;
+	}
+	
+	public CommonFormField make(WebFieldDescriptor fd)  {
+		CommonFormField formField = null;
+		
+		try {
+			formField = (CommonFormField)this.clone();
+			formField.setFieldId(form.createFormFieldId());
+			formField.setId(fd.getName());
+			formField.setDisplayName(fd.getDisplayName());
+			formField.setHide((Boolean)fd.getAttributes().get("is key"));
+			
+			formField.setMetaworksContext(new MetaworksContext());
+			formField.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+			formField.getMetaworksContext().setWhere("form");
+			
+		} catch (CloneNotSupportedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return formField;		
+	}
+
 }

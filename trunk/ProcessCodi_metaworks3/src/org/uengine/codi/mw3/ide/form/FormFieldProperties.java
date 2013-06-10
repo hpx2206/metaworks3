@@ -9,8 +9,12 @@ public class FormFieldProperties {
 		public void setFormField(CommonFormField formField) {
 			this.formField = formField;
 		}
-		
-	public void load() {
-		formField = new CommonFormField();
+
+	public FormFieldProperties(){
+		this(null);
+	}
+	
+	public FormFieldProperties(CommonFormField formField){
+		this.setFormField(formField);
 	}
 }
