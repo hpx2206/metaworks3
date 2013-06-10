@@ -30,7 +30,7 @@ public class ProcessDesignerWebWindow  extends ContentWindow{
 	public void load(String alias) throws Exception {
 		processDesignerWebContentPanel = new ProcessDesignerWebContentPanel();
 		processDesignerWebContentPanel.setAlias(alias);
-		processDesignerWebContentPanel.load();
+		processDesignerWebContentPanel.loadOld();
 		
 //		WebCanvasPanel = new WebCanvasPanel();
 	}
