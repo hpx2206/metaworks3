@@ -8,9 +8,10 @@ public class BuildPath {
 		public ArrayList<Source> getSources() {
 			return sources;
 		}
-		public void setSource(ArrayList<Source> sources) {
+		public void setSources(ArrayList<Source> sources) {
 			this.sources = sources;
 		}
+
 /*
 	String libraryPath;
 		public String getLibraryPath() {

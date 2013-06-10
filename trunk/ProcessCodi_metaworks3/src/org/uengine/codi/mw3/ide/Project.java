@@ -45,20 +45,21 @@ public class Project {
 		Source source = new Source();
 		source.setName("src");
 		source.setId(this.getId() + File.separatorChar + source.getName());
+		source.setPath(this.getPath() + File.separatorChar + source.getName());
 		
 		ArrayList<Source> sources = new ArrayList<Source>();
 		sources.add(source);
 		
 		BuildOutputPath buildOutputPath = new BuildOutputPath();
 		buildOutputPath.setName("bin");
-		buildOutputPath.setId(this.getId() + File.separatorChar + buildOutputPath.getId());
+		buildOutputPath.setId(this.getId() + File.separatorChar + buildOutputPath.getName());
+		buildOutputPath.setPath(this.getPath() + File.separatorChar + buildOutputPath.getName());
 		
 		BuildPath buildPath = new BuildPath();
-		buildPath.setSource(sources);
+		buildPath.setSources(sources);
 		buildPath.setDefaultBuildOutputPath(buildOutputPath);
 		
 		this.setBuildPath(buildPath);
-		
 	}
 	
 }

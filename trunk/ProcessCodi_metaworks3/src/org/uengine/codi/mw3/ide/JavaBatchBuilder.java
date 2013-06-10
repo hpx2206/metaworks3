@@ -23,6 +23,14 @@ public class JavaBatchBuilder {
 		public void setClassPath(List<String> classPath) {
 			this.classPath = classPath;
 		}
+		
+	String sourcePath;
+		public String getSourcePath() {
+			return sourcePath;
+		}
+		public void setSourcePath(String sourcePath) {
+			this.sourcePath = sourcePath;
+		}
 
 	String outputPath;
 		public List<String> getBuildClass() {
@@ -45,18 +53,29 @@ public class JavaBatchBuilder {
 		boolean success = false;
 
 		try {
+			/*
+			System.out.println(this.getSourcePath());
+			System.out.println("D:/uEngine/codi-was-metaworks/bin/uengine/codebase/uengine.org/jwtest01/src");
+			System.out.println("===========");
+			System.out.println(this.getOutputPath());
+			System.out.println("D:/uEngine/codi-was-metaworks/bin/uengine/codebase/uengine.org/jwtest01/bin");
+			System.out.println("===========");
+			System.out.println(this.buildClass.get(0));
+			System.out.println("D:/uEngine/codi-was-metaworks/bin/uengine/codebase/uengine.org/jwtest01/src/examples/JavaTest.java");
+			*/
 			String baseCommand[] = new String[] { "-Xemacs",
 					// "-noExit", // not necessary for ecj
 					"-source", "1.5", "-target", "1.5", "-classpath",
-					"/Users/somehow/codebase/somehow/codi/src", "-nowarn", // we're not currently
+					this.getSourcePath(), "-nowarn", // we're not currently
 					// interested in warnings
 					// (works in ecj)
-					"-d", "/Users/somehow/codebase/somehow/codi/WebContent/WEB-INF/classes" // output the
+					"-d", this.getOutputPath() // output the
 					// classes in
 					// the buildPath
 					,
-					"/Users/somehow/codebase/somehow/codi/src/examples/TestProject.java"
+					this.buildClass.get(0)
 			};
+			
 			final StringBuffer errorBuffer = new StringBuffer();
 			Writer internalWriter = new Writer() {
 				public void write(char[] buf, int off, int len) {

@@ -3,8 +3,6 @@ package org.uengine.codi.mw3.ide;
 import java.io.File;
 import java.util.ArrayList;
 
-import org.metaworks.annotation.AutowiredToClient;
-import org.metaworks.annotation.Hidden;
 import org.uengine.codi.mw3.knowledge.IProjectNode;
 import org.uengine.codi.mw3.knowledge.ProjectNode;
 import org.uengine.codi.util.CodiFileUtil;
@@ -20,8 +18,6 @@ public class Workspace {
 		}
 
 	ArrayList<Project> projects;
-		@Hidden
-		@AutowiredToClient
 		public ArrayList<Project> getProjects() {
 			return projects;
 		}

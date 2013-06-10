@@ -102,6 +102,14 @@ public class CloudIDE {
 		public void setCurrentEditorId(String currentEditorId) {
 			this.currentEditorId = currentEditorId;
 		}
+		
+	String currentProjectId;
+		public String getCurrentProjectId() {
+			return currentProjectId;
+		}
+		public void setCurrentProjectId(String currentProjectId) {
+			this.currentProjectId = currentProjectId;
+		}
 
 	PageNavigator pageNavigator;
 		public PageNavigator getPageNavigator() {
@@ -120,6 +128,7 @@ public class CloudIDE {
 		// TODO tenantId 로 변경... 근데 companyId 는 필요함
 //		workspace.load(codebase, tenantId);
 		workspace.load(codebase, companyId);
+		this.setWorkspace(workspace);
 		
 		Navigator navigator = new Navigator();		
 		navigator.load(workspace);
@@ -292,8 +301,13 @@ public class CloudIDE {
 	@AutowiredFromClient(select="typeof currentEditorId!='undefined' && currentEditorId==autowiredObject.id")
 	public Editor editor;
 	
-	@ServiceMethod(payload={"currentEditorId"}, keyBinding="Ctrl+S@Global", target=ServiceMethodContext.TARGET_APPEND)
+	@AutowiredFromClient(select="typeof currentProjectId!='undefined' && currentProjectId == autowiredObject.id")
+	public Project project; 
+	
+	@ServiceMethod(payload={"currentEditorId", "currentProjectId"}, keyBinding="Ctrl+S@Global", target=ServiceMethodContext.TARGET_APPEND)
 	public Object save(){
+		editor.project = project;
+		
 		return new ToAppend(editor, editor.save());
 	}
 
