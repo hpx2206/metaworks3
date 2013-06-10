@@ -1,6 +1,7 @@
 package org.uengine.codi.mw3.ide.editor.metadata;
 
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.metadata.MetadataXML;
 import org.uengine.codi.mw3.ide.ResourceNode;
 
 public class CustomizeProperty {
@@ -30,7 +31,9 @@ public class CustomizeProperty {
 	public void load(){
 		
 		MetadataXMLImpl metadata = new MetadataXMLImpl();
-		setMetadataXML( (MetadataXMLImpl)metadata.loadWithResourceNode(this.getResourceNode()));
+		MetadataXML XML = metadata.loadWithResourceNode(this.getResourceNode());
+		metadata.loadMetadataXml(XML);
+		setMetadataXML(metadata);
 
 	}
 
