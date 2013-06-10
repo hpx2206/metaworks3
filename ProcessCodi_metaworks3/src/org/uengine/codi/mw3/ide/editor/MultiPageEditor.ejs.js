@@ -28,6 +28,20 @@ var org_uengine_codi_mw3_ide_editor_MultiPageEditor = function(objectId, classNa
 
 org_uengine_codi_mw3_ide_editor_MultiPageEditor.prototype = {
 		getValue : function(){
+			console.log('getValue');
+			
+			var beanPaths = mw3.beanExpressions[this.objectId];
+			
+			console.log(beanPaths);
+			
+			if(beanPaths)
+			for(var propName in beanPaths){
+				console.log(propName);
+				
+				var beanPath = beanPaths[propName];
+				eval("mw3.objects[this.objectId]" + beanPath.fieldName + "=mw3.getObject('" + beanPath.valueObjectId + "')");
+			}
+			
 			var object = mw3.objects[this.objectId];	
 			if( object.pagePanel != null  && object.pagePanel.length > 0 ){
 				for(var i = 0; i < this.object.pagePanel.length; i++ ){

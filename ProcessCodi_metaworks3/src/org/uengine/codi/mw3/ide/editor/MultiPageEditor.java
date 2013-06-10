@@ -82,6 +82,6 @@ public class MultiPageEditor extends Editor {
 	}
 	
 	public Object save(){
-		return null;
+		return super.save();
 	}
 }

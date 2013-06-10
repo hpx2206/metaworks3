@@ -12,6 +12,7 @@ import org.metaworks.widget.layout.Layout;
 import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.admin.TopPanel;
 import org.uengine.codi.mw3.ide.editor.Editor;
+import org.uengine.codi.mw3.ide.editor.metadata.MetadataEditor;
 import org.uengine.codi.mw3.ide.view.Navigator;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.kernel.GlobalContext;
@@ -111,7 +112,7 @@ public class CloudIDE {
 		}		
 		
 	public void load(Session session){
-		String tenantId = "uEngine";
+		String tenantId = "uengine";
 		String codebase = GlobalContext.getPropertyString("codebase", "codebase");
 		String companyId = session.getEmployee().getGlobalCom();
 		// make workspace
@@ -127,6 +128,23 @@ public class CloudIDE {
 		navigatorWindow.getTabs().add(navigator);
 		
 		CloudWindow editorWindow = new CloudWindow("editor");
+		
+		ResourceNode resourceNode = new ResourceNode();
+		resourceNode.setProjectId("test0001");
+		resourceNode.setName("uengine.metadata");
+		resourceNode.setId(resourceNode.getProjectId() + File.separatorChar + "uengine.metadata");
+		resourceNode.setPath(codebase +File.separatorChar +  tenantId + File.separatorChar + resourceNode.getId());
+		
+		System.out.println(resourceNode.getPath());
+		
+		MetadataEditor editor = new MetadataEditor(resourceNode);
+		try {
+			editor.loadPage();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		editorWindow.getTabs().add(editor);
 		
 		Layout centerLayout = new Layout();
 		centerLayout.setId("center");
