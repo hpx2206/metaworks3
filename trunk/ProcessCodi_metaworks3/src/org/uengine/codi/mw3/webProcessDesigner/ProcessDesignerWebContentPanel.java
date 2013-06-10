@@ -735,6 +735,29 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 		}
 	}
 	
+	public void loadOld() throws Exception{
+		
+		String processName = getAlias();
+		setProcessName(processName);
+		/// read source file
+		//File sourceCodeFile = new File(getBasePath() + getAlias());
+		File sourceCodeFile = new File(CodiClassLoader.getMyClassLoader().sourceCodeBase() + "/" + processName);
+		
+		ByteArrayOutputStream bao = new ByteArrayOutputStream();
+		FileInputStream is;
+//		try {
+			is = new FileInputStream(sourceCodeFile);
+			UEngineUtil.copyStream(is, bao);
+			
+			this.load(bao.toString("UTF-8"));
+			
+			
+//		} catch (FileNotFoundException e1) {
+//			e1.printStackTrace();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+	}
 	public void load() throws Exception{
 		
 		String processName = getAlias().substring(0, getAlias().indexOf("."));
