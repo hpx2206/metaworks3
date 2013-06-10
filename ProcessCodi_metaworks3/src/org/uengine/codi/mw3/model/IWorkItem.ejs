@@ -87,10 +87,16 @@
 	<tbody>
 		<tr>
 			<td width="65" valign="top">
+<%
+			if(value.status != 'DELEGATED'){
+%>								
 				<div class="notMePic">
 					<div class="notMePicPic"><%=fields.writer.here()%></div>
 					<div class="notMePicName"><%=value.writer.name%></div>
-				</div>
+				</div>						
+<%
+			}
+%>				
 			</td>			
 			<td>
 				<div style="position:relative;">
@@ -253,8 +259,14 @@
 	<% if(isMine == true){%>
 		<div class="commentTailRight"><img src="images/waveStyle/bubbleTailRight.png" ></div>
 	</div>		
-	<% }else if(isMine == false){%>
-		<div class="commentTailLeft"><img src="images/waveStyle/bubbleTailLeft.png" ></div>	
+	<% }else if(isMine == false){
+			if(value.status != 'DELEGATED'){
+%>								
+				<div class="commentTailLeft"><img src="images/waveStyle/bubbleTailLeft.png" >						
+<%
+			}
+%>
+		</div>	
 		</div></td></tr></tbody></table>
 	<% } %>
 	<div class="clear"></div>
