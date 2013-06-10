@@ -12,6 +12,7 @@ import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.common.MetaworksUtil;
+import org.uengine.codi.mw3.ide.Project;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.editor.java.JavaParser;
 
@@ -26,6 +27,8 @@ public class Editor {
 		public void setResourceNode(ResourceNode resourceNode) {
 			this.resourceNode = resourceNode;
 		}
+		
+	public Project project; 
 
 	String id;
 		@Id
@@ -165,6 +168,7 @@ public class Editor {
 		return this.getContent();
 	}
 	
+	@ServiceMethod(payload={"resourceNode"})
 	public Object save(){
 		FileWriter writer = null;
 
