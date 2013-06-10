@@ -24,7 +24,6 @@ import org.metaworks.annotation.Test;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.website.MetaworksFile;
 import org.uengine.codi.util.CodiStatusUtil;
-import org.uengine.kernel.GlobalContext;
 import org.uengine.persistence.dao.UniqueKeyGenerator;
 import org.uengine.processmanager.ProcessManagerBean;
 import org.uengine.util.UEngineUtil;

@@ -531,7 +531,19 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		tadpole.session = session;
 		tadpole.createUserAtTadpole(param.toString());
 		
-		return new Object[] {new Remover(new ModalWindow()), new ToOpener(new MainPanel(new Main(session)))};
+		ModalWindow removeWindow = new ModalWindow();
+		removeWindow.setId("subscribe");
+		
+		ModalWindow modalWindow = new ModalWindow();
+		modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+		modalWindow.setWidth(300);
+		modalWindow.setHeight(150);
+		
+		modalWindow.setTitle("$JoinCompleteTitle");
+		modalWindow.setPanel(localeManager.getString("$JoinCompleteMessage"));
+		modalWindow.getButtons().put("$Confirm", new ToOpener(new MainPanel(new Main(session))));
+		
+		return new Object[] {modalWindow, new Remover(removeWindow, true)};
 	}
 	
 	public void checkRegistered() throws Exception {
