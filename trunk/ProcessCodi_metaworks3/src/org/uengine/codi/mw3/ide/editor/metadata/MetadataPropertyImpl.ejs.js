@@ -1,17 +1,17 @@
-var org_uengine_codi_mw3_ide_editor_metadata_MetadataProperty = function(objectId, className){
+var org_uengine_codi_mw3_ide_editor_metadata_MetadataPropertyImpl = function(objectId, className){
 	this.objectId = objectId;
 	this.className = className;
 	
 };
 
 
-org_uengine_codi_mw3_ide_editor_metadata_MetadataProperty.prototype = {
+org_uengine_codi_mw3_ide_editor_metadata_MetadataPropertyImpl.prototype = {
 	
 	removeProperty: function(){
 		
 		
 		var object = mw3.objects[this.objectId];
-		var metadataXML =  mw3.getAutowiredObject('org.uengine.codi.mw3.ide.editor.metadata.MetadataXML');
+		var metadataXML =  mw3.getAutowiredObject('org.uengine.codi.mw3.ide.editor.metadata.MetadataXMLImpl');
 
 /*		var properties = metadataXML.properties;
 		var array = new Array();
@@ -24,11 +24,11 @@ org_uengine_codi_mw3_ide_editor_metadata_MetadataProperty.prototype = {
 		
 		metadataXML.properties = array;*/
 		
-			console.log(metadataXML);
+//			console.log(metadataXML);
 			
 			var xmlData = mw3.call(metadataXML.__objectId, 'toXmlXStream');
 			
-			console.log(xmlData);
+//			console.log(xmlData);
 			/*xmlObjectId = autowiredXml.__objectId;
 			xmlFaceHelper = mw3.getFaceHelper(xmlObjectId);
 			xmlFaceHelper.removeProperty(xml, object.name);*/

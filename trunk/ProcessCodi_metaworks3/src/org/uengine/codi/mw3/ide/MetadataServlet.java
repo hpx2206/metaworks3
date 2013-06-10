@@ -15,6 +15,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.metaworks.metadata.MetadataBundle;
+
 public class MetadataServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final int BUFSIZE = 4096;
