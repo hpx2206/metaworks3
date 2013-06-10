@@ -48,4 +48,11 @@ public class Locale{
 		
 		resourceBundle = webMessageBundles.get(language);		
 	}
+	
+	public String getString(String key){
+		if(key.startsWith("$"))			
+			return resourceBundle.getProperty(key.substring(1));
+		else
+			return key;
+	}
 }
