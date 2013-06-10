@@ -76,8 +76,8 @@ public class ComplexType implements Serializable, PropertyListable{
 			String key = typeId.substring(2, typeId.lastIndexOf("]"));
 			String value = MetadataBundle.projectBundle.getProperty(key);
 //			firstSourcePath = MetadataBundle.projectBundle.getProperty("sourceCodePath");
-			System.out.println("key = " + key);
-			System.out.println("value = " + value);
+//			System.out.println("key = " + key);
+//			System.out.println("value = " + value);
 			className = value.substring(1, value.lastIndexOf(".")).replace('/', '.');
 		}else{
 			className = typeId.substring(1, typeId.lastIndexOf(".")).replace('/', '.');

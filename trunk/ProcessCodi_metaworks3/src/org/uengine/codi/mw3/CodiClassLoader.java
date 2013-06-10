@@ -191,7 +191,15 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
 		if( name != null  && name.startsWith("@") && MetadataBundle.projectBundle != null){
 			String key = name.substring(1);
 			String value = MetadataBundle.projectBundle.getProperty(key);
-			firstSourcePath = MetadataBundle.projectBundle.getProperty("sourceCodePath");
+			// tenant 의 소스를 보고 없으면 main 파일을 바라본다.
+			String sourceCodeBase = CodiClassLoader.mySourceCodeBase();
+			File file = new File(sourceCodeBase + "/" + value);
+			if(file.exists()){
+				firstSourcePath = sourceCodeBase;
+			}else{
+				firstSourcePath = MetadataBundle.projectBundle.getProperty("sourceCodePath");
+			}
+			
 			name = value;
 		}else{
 			firstSourcePath = sourcePath[0].getPath();
@@ -589,7 +597,19 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
 		if(sourceCodeBase==null) {
 			cl.setSourcePath(new File[]{new File(CodiClassLoader.getCodeBaseRoot())});
 		}else{
-			cl.setSourcePath(new File[]{new File(sourceCodeBase), new File(CodiClassLoader.getCodeBaseRoot())});
+			String projectKey = GlobalContext.getPropertyString("metadataKey", "metadataKey");
+			  if( projectKey == null ){
+				  try {
+					throw new Exception("잘못된 접근입니다");
+				} catch (Exception e) {
+					e.printStackTrace();
+					return null;
+				}
+			  }
+			cl.setSourcePath(new File[]{
+					new File(sourceCodeBase), 
+					new File(CodiClassLoader.getCodeBaseRoot() + File.separatorChar + projectKey+ File.separatorChar + "root") ,
+					new File(CodiClassLoader.getCodeBaseRoot())});
 		}
 				
 		return cl;

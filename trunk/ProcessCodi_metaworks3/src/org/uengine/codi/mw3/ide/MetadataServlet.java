@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.metaworks.metadata.MetadataBundle;
+import org.uengine.codi.mw3.CodiClassLoader;
 
 public class MetadataServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -29,20 +30,16 @@ public class MetadataServlet extends HttpServlet {
 		String pathInfo = request.getPathInfo();
 //		System.out.println("pathInfo = " + pathInfo);
 		
-		//  TODO url을 통해서 projectId 와 tanentId 를 안다고 가정
+		//  TODO url을 통해서 projectId 를 안다고 가정
 		String projectId = null;
-		String tanentId = null;
 		projectId = "uu";
-		tanentId = "uEngine";
 		
 		if(pathInfo.startsWith("/getMetadataFile")){
 			// 요청받은 정보를 가지고, 메타데이터 파일을 찾아서 stream 으로 내려준다.
 //			projectId = request.getParameter("projectId");
-//			tanentId = request.getParameter("tanentId");
 			projectId = "gddf";
-			tanentId = "uEngine";
 			String metadataFileName = request.getParameter("metadataFileName");
-			String projectBasePath = MetadataBundle.getProjectBasePath(tanentId, projectId);
+			String projectBasePath = MetadataBundle.getProjectBasePath(projectId);
 			String filePath = projectBasePath + File.separatorChar + metadataFileName;
 			File file = new File(filePath);
 	        int length   = 0;
@@ -72,23 +69,28 @@ public class MetadataServlet extends HttpServlet {
 	        in.close();
 	        outStream.close();
 	        response.flushBuffer();
-//		}else if(pathInfo.startsWith("/getResourceFile")){
 		}else{
 			String metadataType = request.getParameter("type");
 			if( metadataType != null ){
-				String projectBasePath = MetadataBundle.getProjectBasePath(tanentId, projectId);
+				// codebase/appId/root
+				String projectBasePath = MetadataBundle.getProjectBasePath(projectId);
+				// codebase/appId/tenentId
+				String tenentBasePath = CodiClassLoader.mySourceCodeBase();
 				if( "img".equalsIgnoreCase(metadataType)){
 					OutputStream out = null;
 					try{
 						out = response.getOutputStream();
-						File imgFile = new File(projectBasePath + pathInfo);
+						// tenentBasePath 를 먼저 살펴 본 후에 없으면  root 를 살펴본다
+						File imgFile = new File(tenentBasePath + pathInfo);
+						if( !imgFile.exists() ){
+							imgFile = new File(projectBasePath + pathInfo);
+						}
+						
 						BufferedImage bi = ImageIO.read(imgFile);
 						ServletContext context  = getServletConfig().getServletContext();
 				        String mimetype = context.getMimeType(imgFile.getPath());
 				        String fileName = imgFile.getName();
 				        String fileType = fileName.substring(fileName.lastIndexOf(".")+1);
-//				        System.out.println("fileName = " + fileName);
-//				        System.out.println("fileType = " + fileType);
 				        // sets response content type
 				        if (mimetype == null) {
 				            mimetype = "image/jpg";
