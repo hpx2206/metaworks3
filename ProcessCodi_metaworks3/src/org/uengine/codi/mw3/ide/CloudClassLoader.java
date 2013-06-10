@@ -10,22 +10,6 @@ import org.metaworks.annotation.Hidden;
 
 
 public class CloudClassLoader {
-
-	String libraryPath;
-		public String getLibraryPath() {
-			return libraryPath;
-		}
-		public void setLibraryPath(String libraryPath) {
-			this.libraryPath = libraryPath;
-		}
-		
-	String defaultBuildOutputPath;
-		public String getDefaultBuildOutputPath() {
-			return defaultBuildOutputPath;
-		}
-		public void setDefaultBuildOutputPath(String defaultBuildOutputPath) {
-			this.defaultBuildOutputPath = defaultBuildOutputPath;
-		}
 		
 	URLClassLoader cl;
 		@Hidden
@@ -36,17 +20,16 @@ public class CloudClassLoader {
 			this.cl = cl;
 		}
 		
-/*	public CloudClassLoader(JavaBuildPath jbPath) {
-		this.setLibraryPath(jbPath.getBasePath() + jbPath.getLibraryPath());
-		this.setDefaultBuildOutputPath(jbPath.getBasePath() + jbPath.getDefaultBuildOutputPath());
-	}*/
+	public CloudClassLoader(){
+		
+	}
 
-	public void load(){
+	public void load(BuildPath buildPath){
 		
 		List<URL> classpath = new ArrayList<URL>();
 		
 		try {
-			for(String filepath : this.makeClassPath()){
+			for(String filepath : this.makeClassPath(buildPath)){
 				File file = new File(filepath);
 				
 				classpath.add(file.toURI().toURL());
@@ -61,24 +44,28 @@ public class CloudClassLoader {
 		
 	}
 
-	public List<String>makeClassPath(){
+	public List<String>makeClassPath(BuildPath buildPath){
 		List<String> classpath = new ArrayList<String>();
 		
 		try {
-			File classesFile = new File(this.getDefaultBuildOutputPath());
+			BuildOutputPath buildOutputPath = buildPath.getDefaultBuildOutputPath();
 			
 			// classes for .class file
-			classpath.add(classesFile.getAbsolutePath());
+			classpath.add(buildOutputPath.getPath());
+
 			
-			// lib for .jar file
-			File libFile = new File(this.getLibraryPath());	
-			if( libFile != null && libFile.list() != null){
-				for(String filename : libFile.list()){
-					if(filename.endsWith(".jar")){
-						File file = new File(libFile.getAbsolutePath() + File.separator + filename);
-						classpath.add(file.getAbsolutePath());
+			for(Source source : buildPath.getSources()){
+				// lib for .jar file
+				File libFile = new File(source.getPath());	
+				if( libFile != null && libFile.list() != null){
+					for(String filename : libFile.list()){
+						if(filename.endsWith(".jar")){
+							File file = new File(libFile.getAbsolutePath() + File.separator + filename);
+							classpath.add(file.getAbsolutePath());
+						}
 					}
 				}
+				
 			}
 				
 		}catch(Exception e){

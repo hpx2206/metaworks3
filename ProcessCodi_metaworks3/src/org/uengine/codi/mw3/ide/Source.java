@@ -20,4 +20,13 @@ public class Source {
 		public void setName(String name) {
 			this.name = name;
 		}
+		
+	String path;
+		public String getPath() {
+			return path;
+		}
+		public void setPath(String path) {
+			this.path = path;
+		}
+	
 }
