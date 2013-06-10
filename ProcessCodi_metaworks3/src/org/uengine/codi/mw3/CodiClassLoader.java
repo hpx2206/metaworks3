@@ -31,6 +31,7 @@ import org.codehaus.commons.compiler.jdk.ByteArrayJavaFileManager;
 import org.codehaus.commons.compiler.jdk.ByteArrayJavaFileManager.ByteArrayJavaFileObject;
 import org.metaworks.ObjectType;
 import org.metaworks.dao.TransactionContext;
+import org.metaworks.metadata.MetadataBundle;
 import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.util.UEngineUtil;
@@ -112,7 +113,20 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
 		if(!f.exists()) //f.mkdirs();
 			dir = codebaseRoot + "main";
 		
-		setSourcePath(new File[]{new File(dir + "/src/")});
+		// 1. 메타데이터가 있는 경우 우선적으로 메타데이터 path 를 보도록 한다.
+		String firstSourcePath = null;
+		if(MetadataBundle.projectBundle != null){
+			firstSourcePath = MetadataBundle.projectBundle.getProperty("sourceCodePath");
+			setSourcePath(new File[]{new File(firstSourcePath)});
+		}
+		if( firstSourcePath != null ){
+			File[] sourcePath2 = new File[sourcePath.length+1];
+			System.arraycopy(sourcePath, 0, sourcePath2, 0, sourcePath.length);
+			sourcePath2[sourcePath.length] = new File(dir + "/src/");
+			sourcePath = sourcePath2;
+		}else{
+			setSourcePath(new File[]{new File(dir + "/src/")});
+		}
 		
 		return sourcePath[0].getPath();
 	}
@@ -126,37 +140,62 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
 	}
     
 	public static String mySourceCodeBase(){
-		
-		//currently there may be each folder for users and also there must be tenant
-		String tenantId = null;
-		try{
-			tenantId = (String) TransactionContext.getThreadLocalInstance().getRequest().getSession().getAttribute("userId");
-		}catch(Exception e){
-			
-		}
-		
-		tenantId = "main"; //fixed value for now
-		
-		//TODO: not-tested yet.
-		if(TenantContext.getThreadLocalInstance()!=null && TenantContext.getThreadLocalInstance().getTenantId()!=null){
-			tenantId = TenantContext.getThreadLocalInstance().getTenantId();
-		}
-		
-		if(UEngineUtil.isNotEmpty(tenantId)) {
-			String dir = getCodeBaseRoot() + tenantId;
-//			File f = new File(dir);
-//			if(!f.exists()) return null;
-			
-			return dir + "/src/";
-		}
-		
-		return null;
+		  String tenantId = null;
+		  
+		  if(TenantContext.getThreadLocalInstance()!=null && TenantContext.getThreadLocalInstance().getTenantId()!=null){
+			  tenantId = TenantContext.getThreadLocalInstance().getTenantId();
+		  }else{
+			  tenantId = "main";
+		  }
+		  
+		  String projectKey = GlobalContext.getPropertyString("metadataKey", "metadataKey");
+		  if( projectKey == null ){
+			  try {
+				throw new Exception("잘못된 접근입니다");
+			} catch (Exception e) {
+				e.printStackTrace();
+				return null;
+			}
+		  }
+		  return CodiClassLoader.getCodeBaseRoot() + File.separatorChar + projectKey + File.separatorChar + tenantId;
+//		  
+//		//currently there may be each folder for users and also there must be tenant
+//		String tenantId = null;
+//		try{
+//			tenantId = (String) TransactionContext.getThreadLocalInstance().getRequest().getSession().getAttribute("userId");
+//		}catch(Exception e){
+//			
+//		}
+//		
+//		tenantId = "main"; //fixed value for now
+//		
+//		//TODO: not-tested yet.
+//		if(TenantContext.getThreadLocalInstance()!=null && TenantContext.getThreadLocalInstance().getTenantId()!=null){
+//			tenantId = TenantContext.getThreadLocalInstance().getTenantId();
+//		}
+//		
+//		if(UEngineUtil.isNotEmpty(tenantId)) {
+//			String dir = getCodeBaseRoot() + tenantId;
+////			File f = new File(dir);
+////			if(!f.exists()) return null;
+//			
+//			return dir + "/src/";
+//		}
+//		
+//		return null;
 	}
     
 	@Override
 	public InputStream getResourceAsStream(String name) {
-		
-		String firstSourcePath = sourcePath[0].getPath();
+		String firstSourcePath = "";
+		if( name != null  && name.startsWith("@") && MetadataBundle.projectBundle != null){
+			String key = name.substring(1);
+			String value = MetadataBundle.projectBundle.getProperty(key);
+			firstSourcePath = MetadataBundle.projectBundle.getProperty("sourceCodePath");
+			name = value;
+		}else{
+			firstSourcePath = sourcePath[0].getPath();
+		}
 
 		if(name.endsWith(".ejs") || name.endsWith(".ejs.js") || name.endsWith("xml") || name.endsWith(".process") || name.endsWith(".process2") || name.endsWith(".sql")){
 			try {
@@ -548,14 +587,10 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
 
 		//TODO: for guest users, sourceCodeBase to the main committer is right answer.
 		if(sourceCodeBase==null) {
-			String codebase = GlobalContext.getPropertyString("codebase","codebase/");
-			if(!codebase.endsWith("/"))
-				codebase = codebase + "/";
-			
-			sourceCodeBase = codebase + "main/src/";
+			cl.setSourcePath(new File[]{new File(CodiClassLoader.getCodeBaseRoot())});
+		}else{
+			cl.setSourcePath(new File[]{new File(sourceCodeBase), new File(CodiClassLoader.getCodeBaseRoot())});
 		}
-		
-		cl.setSourcePath(new File[]{new File(sourceCodeBase)});
 				
 		return cl;
 	}  
@@ -563,6 +598,7 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
 	
 	public static void refreshClassLoader(String resourceName){
 		
+		/*
 		String sourceCodeBase = null;
 		
 		if(TransactionContext.getThreadLocalInstance()!=null && TransactionContext.getThreadLocalInstance().getRequest()!=null){
@@ -577,7 +613,7 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
 
 		Thread.currentThread().setContextClassLoader(cl);
 		codiClassLoader = cl;
-		
+		*/
 	}
 
 	public static void initClassLoader(){
