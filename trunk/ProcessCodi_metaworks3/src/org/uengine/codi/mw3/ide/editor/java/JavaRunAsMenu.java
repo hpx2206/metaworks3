@@ -4,14 +4,27 @@ import java.util.ArrayList;
 
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.ToAppend;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.MenuItem;
+import org.metaworks.widget.ModalWindow;
+import org.uengine.codi.mw3.ide.Project;
+import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.menu.CloudMenu;
 import org.uengine.codi.mw3.ide.view.Console;
 
 public class JavaRunAsMenu extends CloudMenu {
 	
+	@AutowiredFromClient(select="resourceNode.projectId == autowiredObject.id")
+	public Project project; 
+
 	public JavaRunAsMenu(){
+		
+	}
+	
+	public JavaRunAsMenu(ResourceNode resourceNode){
+		this.setResourceNode(resourceNode);
+		
 		this.setId("RunAs");
 		this.setName("Run As");
 		
@@ -45,23 +58,27 @@ public class JavaRunAsMenu extends CloudMenu {
 		
 	}
 	
-	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
+	@ServiceMethod(payload="resourceNode", target=ServiceMethodContext.TARGET_POPUP)
 	public Object[] metaworksApplication() throws Exception {
-/*		Object clipboard = session.getClipboard();
+		System.out.println("metaworksApplication");
+		System.out.println(project);
+		
+		Object clipboard = session.getClipboard();
 		if(clipboard instanceof JavaCodeEditor){
 			JavaCodeEditor editor = (JavaCodeEditor)clipboard;
-			editor.jbPath = jbPath;
+			editor.project = project;
 			
-			ArrayList<JavaCodeError> errorList = (ArrayList<JavaCodeError>)editor.save();
+			//ArrayList<JavaCodeError> errorList = (ArrayList<JavaCodeError>)editor.save();
 			
 			ArrayList<String> messages = new ArrayList<String>();
 			
-			if(errorList != null && errorList.size() == 0){
+			/*if(errorList != null && errorList.size() == 0){
 				messages.add("launch Metaworks Application...");		
-			}
+			}*/
 			
-			return new Object[]{new ToAppend(new Console(), messages), editor.runMetaworks()};
-		}*/
+			//return new Object[]{new ToAppend(new Console(), messages), editor.runMetaworks()};
+			return new Object[]{new ModalWindow(editor.runMetaworks(), 0, 0, "Run")};
+		}
 		
 		return null;
 		
