@@ -61,16 +61,20 @@ public class MetadataBundle {
 	public void loadProperty() throws Exception{
 		// 1. 해당 앱의 메인 경로에 있는 uengine.metadata 파일을 찾는다.
 		String projectKey = GlobalContext.getPropertyString("metadataKey", "metadataKey");
-		String sourceCodeBase = CodiClassLoader.mySourceCodeBase();
 		// TODO projectKey 가 암호화 키로 온다는 가정하에 구하는 로직 필요함
 		String projectId = projectKey;
+		String sourceCodeBase = CodiClassLoader.mySourceCodeBase();
+		String projectBasePath = getProjectBasePath(projectId);
+		
 		// 앱의 루트 경로 생성 
 		// TODO 나중에 url 로 호출을 해야할지도 모르겠음 우선 메인경로에 있다고 생각하고 작업, 
 		// 				metadataKey 키만 가지고 찾을수 있다고 가정함
-//		String metadataPath = getProjectBasePath(tanentId, projectId);
-		String metadataFileName = ".metadata";
-		String fullPath = sourceCodeBase + File.separatorChar + metadataFileName;
-		File metadataFile = new File(fullPath);
+		String metadataFileName = "uengine.metadata";
+		
+		// metadata file 확인 : codebase/appId/root
+		String metadataFilePath = projectBasePath + File.separatorChar + metadataFileName;
+		File metadataFile = new File(metadataFilePath);
+		
 		if( !metadataFile.exists() ){
 			if( !metadataFile.getParentFile().exists() ){
 				metadataFile.getParentFile().mkdirs();
@@ -85,7 +89,23 @@ public class MetadataBundle {
 		metadataXML = metadataXML.loadWithPath(metadataFile.getPath());
 		
 		Properties props = new Properties();
-		props.put("sourceCodePath", sourceCodeBase);
+		props.put("sourceCodePath", projectBasePath);
+		setMetadataProperties(props, metadataXML);
+		
+		// tenant metadata file 확인 : codebase/appId/tenant
+		String fullPath = sourceCodeBase + File.separatorChar + metadataFileName;
+		File tenantMetadataFile = new File(fullPath);
+		if( tenantMetadataFile.exists()){
+			MetadataXML tenantMetadataXML = new MetadataXML();
+			tenantMetadataXML = metadataXML.loadWithPath(tenantMetadataFile.getPath());
+			setMetadataProperties(props, tenantMetadataXML);
+		}
+		
+//		projectProperty.put(projectId, props);
+		projectBundle = props;
+	}
+	
+	public void setMetadataProperties(Properties props, MetadataXML metadataXML){
 		ArrayList<MetadataProperty> properties =  metadataXML.getProperties();
 		if( properties != null ){
 			for( MetadataProperty metadataProperty : properties){
@@ -98,10 +118,7 @@ public class MetadataBundle {
 				props.put(key, value);
 			}
 		}
-//		projectProperty.put(projectId, props);
-		projectBundle = props;
 	}
-	
 	/**
 	 * 앱에서 메인서버의 프로젝트로 메타데이터 파일 및 리소스를 요청
 	 * 관점 : 앱에서 서블릿을 통하여 호출
@@ -110,11 +127,9 @@ public class MetadataBundle {
 		// 코디 서버로 요청 '/metadata' 서블릿을 통하여 요청함
 		String codiServerUrl = "http://localhost:8080/uengine-web/";
 		String requestUrl = "metadata/getMetadataFile";
-		String tanentId = TenantContext.getThreadLocalInstance().getTenantId();
 		HttpClient httpClient = new HttpClient();
 		GetMethod getMethod = new GetMethod(codiServerUrl + requestUrl);
 		getMethod.setQueryString(new NameValuePair[] { 
-				new NameValuePair("tanentId", tanentId) ,
 				new NameValuePair("projectId", projectId) ,
 				new NameValuePair("metadataFileName", metadataFile.getName()) 
 		});
@@ -129,7 +144,7 @@ public class MetadataBundle {
 					metadataXML = metadataXML.loadWithInputstream(in);
 					ArrayList<MetadataProperty> properties =  metadataXML.getProperties();
 					if( properties != null ){
-						String metadataPath = CodiClassLoader.mySourceCodeBase();
+						String metadataPath = getProjectBasePath(projectId);
 						for( MetadataProperty metadataProperty : properties){
 							// for 문을 돌면서 해당 경로에 데이터가 없다면 데이터를 요청하고, remote 를  true로 준다.
 							String value = metadataProperty.getValue();
@@ -140,7 +155,7 @@ public class MetadataBundle {
 										checkFile.getParentFile().mkdirs();
 									}
 									// 파일이 없다면 메인서버에서 리소스를 가져온다.
-									makeFileFromRemote(tanentId, projectId , value , metadataPath+value);
+									makeFileFromRemote(projectId , value , metadataPath+value);
 									// 원격에서 가져왔다는걸 명시해준다.
 //									metadataProperty.setRemote(true);
 								}
@@ -171,13 +186,12 @@ public class MetadataBundle {
 	 * 로컬의 메인 바로 아래에 있는 메타데이터 파일을 읽어서 프로퍼티로 생성을 해 놓는다.
 	 * 관점 : 앱에서 호출
 	 */
-	private void makeFileFromRemote(String tanentId, String projectId, String requsetPath, String fileFullPath) throws Exception{
+	private void makeFileFromRemote( String projectId, String requsetPath, String fileFullPath) throws Exception{
 		String codiServerUrl = "http://localhost:8080/uengine-web/";
 		String requestUrl = "metadata/getMetadataFile";
 		HttpClient httpClient = new HttpClient();
 		GetMethod getMethod = new GetMethod(codiServerUrl + requestUrl);
 		getMethod.setQueryString(new NameValuePair[] { 
-				new NameValuePair("tanentId", tanentId) ,
 				new NameValuePair("projectId", projectId) ,
 				new NameValuePair("metadataFileName", requsetPath) 
 		});
@@ -218,9 +232,9 @@ public class MetadataBundle {
 		// TODO
 	}
 	
-	public static String getProjectBasePath(String tanentId, String projectId){
+	public static String getProjectBasePath(String projectId){
 		String codebase = GlobalContext.getPropertyString("codebase", "codebase");
-		String projectBasePath = codebase + File.separatorChar + projectId+ File.separatorChar + tanentId;
+		String projectBasePath = codebase + File.separatorChar + projectId+ File.separatorChar + "root";
 		
 		return projectBasePath;
 	}
