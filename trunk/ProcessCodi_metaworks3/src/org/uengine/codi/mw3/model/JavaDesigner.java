@@ -39,7 +39,7 @@ public class JavaDesigner extends ResourceDesigner{
 //		classDefinition.getMetaworksContext().setWhen("view");
 		
 		NewFormDesignerLayout formDesigner = new NewFormDesignerLayout();	
-		formDesigner.load();
+		formDesigner.load(getAlias());
 		setNewFormDesignerLayout(formDesigner);
 	}
 
