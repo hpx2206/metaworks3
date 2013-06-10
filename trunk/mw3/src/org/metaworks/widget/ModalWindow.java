@@ -1,9 +1,13 @@
 package org.metaworks.widget;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
+import org.metaworks.annotation.Id;
 
 @Face(displayName="ModalWindow")
 public class ModalWindow implements ContextAware {
@@ -26,7 +30,7 @@ public class ModalWindow implements ContextAware {
 			
 	public ModalWindow(Object panel, int width, int height, String title) {
 		setMetaworksContext(new MetaworksContext());
-
+		setButtons(new HashMap<String, Object>());
 		setPanel(panel);
 		setWidth(width);
 		setHeight(height);		
@@ -41,6 +45,16 @@ public class ModalWindow implements ContextAware {
 	
 		public void setMetaworksContext(MetaworksContext metaworksContext) {
 			this.metaworksContext = metaworksContext;
+		}
+		
+	String id;
+		@Id
+		@Hidden
+		public String getId() {
+			return id;
+		}
+		public void setId(String id) {
+			this.id = id;
 		}
 
 	boolean open;
@@ -86,5 +100,14 @@ public class ModalWindow implements ContextAware {
 		}
 		public void setPanel(Object panel) {
 			this.panel = panel;
+		}
+		
+	Map<String, Object> buttons;	
+		@Hidden
+		public Map<String, Object> getButtons() {
+			return buttons;
+		}
+		public void setButtons(Map<String, Object> buttons) {
+			this.buttons = buttons;
 		}
 }
