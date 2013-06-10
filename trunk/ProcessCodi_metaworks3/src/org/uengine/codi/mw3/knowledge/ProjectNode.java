@@ -66,12 +66,14 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 		
 		StringBuffer sql = new StringBuffer();
 		
-		sql.append("SELECT knol.id, knol.name, inst.instid ");
-		sql.append("FROM bpm_procinst inst ");
-		sql.append("	INNER JOIN bpm_knol knol ON (knol.type=?type AND knol.companyid=?companyid) ");
-		sql.append("WHERE inst.status=?status ");
-		sql.append("	AND inst.initcomcd=knol.companyid ");
-		sql.append("	AND knol.linkedinstid=inst.instid");
+		sql.append("SELECT knol.id, knol.name");
+		sql.append("  FROM bpm_knol knol");
+		
+		//sql.append("FROM bpm_procinst inst ");
+		//sql.append("	INNER JOIN bpm_knol knol ON (knol.type=?type AND knol.companyid=?companyid) ");
+		//sql.append("WHERE inst.status=?status ");
+		//sql.append("	AND inst.initcomcd=knol.companyid ");
+		//sql.append("	AND knol.linkedinstid=inst.instid");
 		
 		
 		IProjectNode dao  = (IProjectNode) Database.sql(IProjectNode.class, sql.toString());
