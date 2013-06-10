@@ -289,7 +289,7 @@ public class WorkItemHandler implements ContextAware{
 	@AutowiredFromClient
 	public Session session;
 		
-	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_EDIT, validate=true , target=ServiceMethodContext.TARGET_APPEND)
+	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_EDIT, validate=true)
 //	@Available(when={"NEW"})
 	public Object[] complete() throws RemoteException, ClassNotFoundException, Exception{
 						
