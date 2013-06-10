@@ -388,6 +388,22 @@ public class WorkItemHandler implements ContextAware{
 		instance.setInstId(this.getRootInstId());
 		IInstance instanceRef = instance.databaseMe();
 		
+		/*
+		 * 2013/06/10 cjw
+		 * complete 시에 마지막 코멘트 정보의 writer 가 null 이 되는 현상 수정
+		 */
+		if(instanceRef.getLastCmnt() ==null){
+			instanceRef.setLastCmnt(title);
+			instanceRef.setLastCmntUser(session.getUser());
+		}else{
+			instanceRef.setLastCmnt(instanceRef.getLastCmnt2());
+			instanceRef.setLastCmntUser(instanceRef.getLastCmnt2User());
+			
+			instanceRef.setLastCmnt2(title);
+			instanceRef.setLastCmnt2User(session.getUser());
+		}
+
+		/*
 		ActivityReference actRef = processInstance.getProcessDefinition().getInitiatorHumanActivityReference(processInstance.getProcessTransactionContext());
 		boolean thisIsInitiationActivity = (actRef.getActivity() == humanActivity);
 		
@@ -408,6 +424,8 @@ public class WorkItemHandler implements ContextAware{
 				instanceRef.setLastCmnt2User(session.getUser());
 			}
 		}
+		*/
+		
 //		instance.copyFrom(instanceRef);
 //		instance.databaseMe();
 		return instanceRef;
