@@ -11,8 +11,6 @@ var org_metaworks_widget_ModalWindow = function(objectId, className) {
 		var title = this.object.title;
 		
 		if (title == null){
-			
-			
 			var metadata = mw3.getMetadata(this.className);
 			
 			title = metadata.displayName;
@@ -64,6 +62,23 @@ var org_metaworks_widget_ModalWindow = function(objectId, className) {
 					options['width'] = body_width -30;
 					options['height'] = $(window).height() - 30;
 				}
+				
+				var buttons = {};
+				for(var button in this.object.buttons){
+					var action = this.object.buttons[button];
+					
+					buttons[mw3.localize(button)] = function(){
+						if(action != null){
+							mw3.getFaceHelper(objectId).close();
+							
+							mw3.locateObject(action, null, 'body');
+							mw3.onLoadFaceHelperScript();
+						}
+					}
+				}
+				
+				options['buttons'] = buttons;
+				
 				$("#dialog:ui-dialog").dialog("destroy");
 				$(this.divId).dialog(options);
 				//$(this.divId).dialog(options).css('height', '100%');
