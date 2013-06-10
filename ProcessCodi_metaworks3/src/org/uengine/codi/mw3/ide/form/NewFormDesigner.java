@@ -1,5 +1,7 @@
 package org.uengine.codi.mw3.ide.form;
 
+import org.metaworks.annotation.Hidden;
+
 
 public class NewFormDesigner {
 	
@@ -26,14 +28,23 @@ public class NewFormDesigner {
 		public void setMenu(FormFieldMenu menu) {
 			this.menu = menu;
 		}
-			
+	
+	String alias;
+	@Hidden
+		public String getAlias() {
+			return alias;
+		}
+		public void setAlias(String alias) {
+			this.alias = alias;
+		}
+	
 	public void load() {
-		
 		setForm(new Form());
+		form.setPackageName(getAlias().substring(0, getAlias().lastIndexOf("/")));
+		form.setId(getAlias().substring(getAlias().lastIndexOf("/") + 1, getAlias().lastIndexOf(".")));
 		form.load();
 		
 		setProperties(new FormFieldProperties());
-//		properties.load();
 		
 		setMenu(new FormFieldMenu());
 		menu.load();

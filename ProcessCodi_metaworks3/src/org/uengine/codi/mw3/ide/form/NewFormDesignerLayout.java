@@ -12,14 +12,15 @@ public class NewFormDesignerLayout {
 			this.layout = layout;
 		}
 	
-	public void load(){
+	public void load(String alias) {
 		
-		NewFormDesigner formDesigner = new NewFormDesigner();	
+		NewFormDesigner formDesigner = new NewFormDesigner();
+		formDesigner.setAlias(alias);
 		formDesigner.load();
 		
 		Layout outerLayout = new Layout();
 		
-		outerLayout.setOptions("togglerLength_open:10, west__size:'70%', east__size:'30%'");
+		outerLayout.setOptions("togglerLength_open:10, west__size:'60%', east__size:'40%'");
 		outerLayout.setCenter(formDesigner.getForm());		
 		
 		Layout eastLayout = new Layout();

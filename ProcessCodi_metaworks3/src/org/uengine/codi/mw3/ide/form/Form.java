@@ -1,24 +1,53 @@
 package org.uengine.codi.mw3.ide.form;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.util.ArrayList;
 
 import org.metaworks.MetaworksContext;
-import org.metaworks.ServiceMethodContext;
-import org.metaworks.ToAppend;
+import org.metaworks.WebFieldDescriptor;
+import org.metaworks.WebObjectType;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.dwr.MetaworksRemoteService;
+import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.model.Session;
 
 public class Form {
 	
 	@AutowiredFromClient
 	public Session session;
+
+	public final static String FORM_FIELD_ID_PREFIX = "FORMFIELD_";
+
+	String id;
+		public String getId() {
+			return id;
+		}
+		public void setId(String id) {
+			this.id = id;
+		}
+
+	String name;
+		public String getName() {
+			return name;
+		}
+		public void setName(String name) {
+			this.name = name;
+		}
 	
-	@AutowiredFromClient
-	public Form form;
+	String packageName;
+	@Hidden
+		public String getPackageName() {
+			return packageName;
+		}
+		public void setPackageName(String packageName) {
+			this.packageName = packageName;
+		}
+			
 	
-	ArrayList<CommonFormField> formFields;	
+	ArrayList<CommonFormField> formFields;
 		public ArrayList<CommonFormField> getFormFields() {
 			return formFields;
 		}	
@@ -26,24 +55,162 @@ public class Form {
 			this.formFields = formFields;
 		}
 
-	public void load() {		
-		formFields = new ArrayList<CommonFormField>();
+	public void load() {
+		setFormFields(new ArrayList<CommonFormField>());
+		
+		try {
+			this.load2();
+		}catch(Exception ex) {
+			
+		}		
 	}
 	
 	@ServiceMethod(mouseBinding="drop", callByContent=true) 
 	public Object drop() {
 		
 		Object clipboard = session.getClipboard();
-		SingleTextField singleTextField = null;
-		
-		if(clipboard instanceof SingleTextField){
-			singleTextField = (SingleTextField) clipboard;			
+		if(clipboard instanceof CommonFormField){
+			CommonFormField formField = (CommonFormField) clipboard;
+			formField.setFieldId(createFormFieldId());
+			
+			formField.init();
+			formField.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+			formField.getMetaworksContext().setWhere("form");		
+			
+			formFields.add(formField);
+			
+		}else{		
+			return null;
 		}
 			
-		form.formFields.add(singleTextField);
 		
-		return form;
-		//return new ToAppend(form, singleTextField);
+		return this;
 	}
 	
+	public void load2() throws Exception {
+		// TODO : process config file		
+		ArrayList<CommonFormField> list = new ArrayList<CommonFormField>();
+		list.add(new SingleTextField());
+		list.add(new MultipleChoiceField());
+		
+		String id = this.getPackageName() + "." +this.getId();
+		
+		WebObjectType wot = MetaworksRemoteService.getInstance().getMetaworksType(id);
+
+		this.setName(wot.getDisplayName());
+		
+		for(int i=0; i < wot.getFieldDescriptors().length; i++){
+			WebFieldDescriptor fd = wot.getFieldDescriptors()[i];
+			
+			for(int j=0; j< list.size(); j++){
+				CommonFormField formField = list.get(j);
+				
+				if(formField.equalsType(fd)){
+					formField.form = this;
+					CommonFormField addFormField = formField.make(fd);
+					
+					this.getFormFields().add(addFormField);
+				}
+			}
+		}
+	}
+	
+	@ServiceMethod(callByContent=true)
+	public void save() { 
+	
+		StringBuffer sb = new StringBuffer();
+		StringBuffer importBuffer = new StringBuffer();
+		StringBuffer methodBuffer = new StringBuffer();
+		StringBuffer constructorBuffer 	= new StringBuffer();
+		ArrayList<String> importList = new ArrayList<String>();
+		
+		importBuffer.append("import org.uengine.codi.ITool; \n");
+		importBuffer.append("import org.metaworks.annotation.Face;\n");
+		
+		constructorBuffer.append("	public " + this.getId() + "() { \n");
+		
+		for(CommonFormField field : formFields) {
+		
+			String importStr = "";
+			
+			if(field.getHide()) {
+				importStr = "import org.metaworks.annotation.Hidden;\n";
+				if(!importList.contains(importStr)){
+					importList.add(importStr);
+				}
+			}
+
+			methodBuffer.append(field.generateVariableCode());
+			methodBuffer.append(field.generateAnnotationCode());
+			methodBuffer.append(field.generatePropertyCode());
+		}
+		
+		methodBuffer
+		.append("	@Override\n")
+		.append("	public void onLoad() throws Exception {\n")
+		.append("	}\n\n");
+		
+		methodBuffer
+		.append("	@Override\n")
+		.append("	public void beforeComplete() throws Exception {\n")
+		.append("	}\n\n");
+		
+		methodBuffer
+		.append("	@Override\n")
+		.append("	public void afterComplete() throws Exception {\n")
+		.append("	}\n\n");
+		
+		for(int i =0; i < importList.size(); i++){
+			importBuffer.append(importList.get(i));
+		}
+		
+		constructorBuffer.append("	}\n\n");
+		
+		sb.append("package ").append(getPackageName()).append(";\n\n"); //일단 빼고,
+		sb.append(importBuffer.toString());
+//		sb.append("@Face(ejsPath=\"genericfaces/FormFace.ejs\", options={\"fieldOrder\"},values={\""+ classFaceOrderStr +"\"})\n");
+		sb.append("public class " + this.getId() + "").append(" implements ITool").append( "{\n\n");
+		sb.append(constructorBuffer.toString());
+		sb.append(methodBuffer.toString());	
+		
+		sb.append("}");
+		
+		System.out.println(sb.toString());
+		
+		try {
+		
+//			String formSource = "D:/uEngine/codi-was-metaworks/bin/uengine/codebase/main/src/test/Test.java";
+			String alias = getPackageName() + "/" + getId() + ".java";
+			String formSource =  CodiClassLoader.getMyClassLoader().sourceCodeBase() + alias;
+			
+			File formFile = new File(formSource);
+			FileWriter writer = new FileWriter(formFile);
+			writer.write(sb.toString());
+			writer.close();
+		}catch(Exception ex) {
+			
+		}
+		
+	}
+	
+	public String createFormFieldId() {	
+		int id = 0;
+		
+		if(this.getFormFields() != null && this.getFormFields().size() > 0) {
+			
+			int max_id = 0;
+			int cur_id = 0;
+			
+			for(int i = 0; i <this.getFormFields().size(); i++) {				
+				CommonFormField cf =  this.getFormFields().get(i);
+				cur_id = Integer.parseInt(cf.getFieldId().replace(FORM_FIELD_ID_PREFIX, "")); 
+				if (max_id < cur_id)
+					max_id = cur_id;				
+			}
+			
+			id = max_id + 1;
+		}
+		
+		return FORM_FIELD_ID_PREFIX + String.valueOf(id);
+	}
 }
