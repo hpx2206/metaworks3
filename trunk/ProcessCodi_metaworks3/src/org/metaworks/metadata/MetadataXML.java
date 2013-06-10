@@ -2,11 +2,14 @@ package org.metaworks.metadata;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
+import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.SelectBox;
@@ -16,12 +19,21 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
 
+@Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs")
 @XStreamAlias("metadata")
-public class MetadataXML {
+public class MetadataXML implements ContextAware {
 	
 	public MetadataXML() {
 		init();
 	}
+	
+	MetaworksContext metaworksContext;
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
+		}
 	
 	@XStreamOmitField
 	String filePath;
@@ -66,20 +78,7 @@ public class MetadataXML {
 		public void setProperties(ArrayList<MetadataProperty> properties) {
 			this.properties = properties;
 		}
-//	ArrayList<MetadataDefinition> definitions;
-//		public ArrayList<MetadataDefinition> getDefinitions() {
-//			return definitions;
-//		}
-//		public void setDefinitions(ArrayList<MetadataDefinition> definitions) {
-//			this.definitions = definitions;
-//		}
-//	ArrayList<MetadataRule> rules;
-//		public ArrayList<MetadataRule> getRules() {
-//			return rules;
-//		}
-//		public void setRules(ArrayList<MetadataRule> rules) {
-//			this.rules = rules;
-//		}
+		
 	MetadataProperty newMetadataProperty;
 		public MetadataProperty getNewMetadataProperty() {
 			return newMetadataProperty;
@@ -114,7 +113,6 @@ public class MetadataXML {
 		try {
 			Thread.sleep(5000);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -124,55 +122,13 @@ public class MetadataXML {
 		return stream.toXML(this);
 	}
 	
-	public static void main(String[] args) {
-//		XStream stream = new XStream();
-//		stream.autodetectAnnotations(true);
-//		
-//		MetadataXML xml = new MetadataXML();
-//		xml.setCompany("uengine");
-//		xml.setType("project");
-//		xml.setTypeName("오키도키");
-//		
-//		ArrayList<MetadataProperty> properties = new ArrayList<MetadataProperty>();
-//		
-//		MetadataProperty type1 = new MetadataProperty();
-//		type1.setType("file");
-//		type1.setKeyEditable(false);
-//		type1.setName("filename");
-//		type1.setValue("file value");
-//		
-//		MetadataProperty type2 = new MetadataProperty();
-//		type2.setType("img");
-//		type2.setKeyEditable(false);
-//		type2.setName("imgname");
-//		type2.setValue("img value");
-//		
-//		MetadataProperty type3 = new MetadataProperty();
-//		type2.setType("string");
-//		type2.setKeyEditable(false);
-//		type2.setName("ss");
-//		type2.setValue("ss");
-//		
-//		properties.add(type1);
-//		properties.add(type2);
-//		properties.add(type3);
-//		
-//		xml.setProperties(properties);
-//		System.out.println(stream.toXML(xml));
-//		
-//		
-//		MetadataXML xml1 = new MetadataXML();
-//		
-//		ArrayList<MetadataProperty> properties1 = new ArrayList<MetadataProperty>();
-//		properties1.add(type3);
-//		xml.setProperties(properties1);
-//		System.out.println(stream.toXML(xml));
-	}
-	
 	protected void init() {
+		this.setMetaworksContext(new MetaworksContext());
+		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+		
 		newMetadataProperty = new MetadataProperty();
 		newMetadataProperty.metaworksContext = new MetaworksContext();
-		newMetadataProperty.metaworksContext.setWhen(MetaworksContext.WHEN_EDIT);
+		newMetadataProperty.metaworksContext.setWhen(MetaworksContext.WHEN_NEW);
 		newMetadataProperty.metaworksContext.setWhere("ide");
 		
 		
@@ -187,7 +143,22 @@ public class MetadataXML {
 	public MetadataXML loadWithResourceNode(ResourceNode resourceNode){
 		MetadataXML metadata = loadWithPath(resourceNode.getPath());
 		metadata.setFilePath(resourceNode.getId());
+		metadata.init();
+		
 		return metadata;
+	}
+	
+	public boolean save(){
+		
+		for(int i=0; i<this.getProperties().size(); i++){
+			MetadataProperty metadataProperty = this.getProperties().get(i);
+			
+			if(metadataProperty.isChange() && metadataProperty.getType().equals("file")){
+				
+			}
+		}
+		
+		return true;
 	}
 	
 }

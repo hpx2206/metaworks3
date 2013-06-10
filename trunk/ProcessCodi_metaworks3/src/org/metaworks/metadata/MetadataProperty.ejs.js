@@ -24,7 +24,7 @@ org_metaworks_metadata_MetadataProperty.prototype = {
 		
 		metadataXML.properties = array;*/
 		
-//			console.log(metadataXML);
+			console.log(metadataXML);
 			
 			var xmlData = mw3.call(metadataXML.__objectId, 'toXmlXStream');
 			
