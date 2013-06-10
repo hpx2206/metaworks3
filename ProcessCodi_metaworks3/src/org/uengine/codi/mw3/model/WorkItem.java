@@ -497,9 +497,8 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			workItemHandler.setMetaworksContext(new MetaworksContext());
 			
 			boolean editable = false;
+			boolean existRoleMapping = false;
 			
-
-				
 			if(DefaultWorkList.WORKITEM_STATUS_NEW.equals(getStatus()) || 
 			   DefaultWorkList.WORKITEM_STATUS_DRAFT.equals(getStatus()) || 
 			   DefaultWorkList.WORKITEM_STATUS_CONFIRMED.equals(getStatus())){
@@ -509,15 +508,20 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				
 				
 				RoleMapping	roleMapping = humanActivity.getRole().getMapping(instance, tracingTag);
-				roleMapping.beforeFirst();
 				
-				do{
-					if(roleMapping.getEndpoint().equals(session.getEmployee().getEmpCode())){
-						editable = true;
-						
-						break;
-					}
-				}while(roleMapping.next());
+				if(roleMapping != null){
+					existRoleMapping = true;
+					
+					roleMapping.beforeFirst();
+					
+					do{
+						if(roleMapping.getEndpoint().equals(session.getEmployee().getEmpCode())){
+							editable = true;
+							
+							break;
+						}
+					}while(roleMapping.next());
+				}
 			}
 			
 			if(editable){
@@ -527,6 +531,8 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 					workItemHandler.getMetaworksContext().setWhen(WHEN_EDIT);
 				}
 				
+			}else if(!existRoleMapping && this.getDispatchOption() == 1){
+				workItemHandler.getMetaworksContext().setWhen("compete");
 			}else{
 				workItemHandler.getMetaworksContext().setWhen(WHEN_VIEW);
 			}
