@@ -1,11 +1,11 @@
-var org_uengine_codi_mw3_ide_editor_metadata_MetadataPropertyImpl = function(objectId, className){
+var org_metaworks_metadata_MetadataProperty = function(objectId, className){
 	this.objectId = objectId;
 	this.className = className;
 	
 };
 
 
-org_uengine_codi_mw3_ide_editor_metadata_MetadataPropertyImpl.prototype = {
+org_metaworks_metadata_MetadataProperty.prototype = {
 	
 	removeProperty: function(){
 		

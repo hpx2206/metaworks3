@@ -10,11 +10,11 @@ public class CustomizeProperty {
 		// TODO Auto-generated constructor stub
 	}
 	
-	MetadataXMLImpl metadataXML;
-		public MetadataXMLImpl getMetadataXML() {
+	MetadataXML metadataXML;
+		public MetadataXML getMetadataXML() {
 			return metadataXML;
 		}
-		public void setMetadataXML(MetadataXMLImpl metadataXML) {
+		public void setMetadataXML(MetadataXML metadataXML) {
 			this.metadataXML = metadataXML;
 		}
 
@@ -29,12 +29,8 @@ public class CustomizeProperty {
 		
 	@ServiceMethod(callByContent=true)
 	public void load(){
-		
-		MetadataXMLImpl metadata = new MetadataXMLImpl();
-		MetadataXML XML = metadata.loadWithResourceNode(this.getResourceNode());
-		metadata.loadMetadataXml(XML);
-		setMetadataXML(metadata);
-
+		MetadataXML metadata = new MetadataXML();
+		setMetadataXML(metadata.loadWithResourceNode(this.getResourceNode()));
 	}
 
 }

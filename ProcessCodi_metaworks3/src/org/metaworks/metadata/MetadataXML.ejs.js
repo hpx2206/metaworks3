@@ -1,14 +1,12 @@
-var org_uengine_codi_mw3_ide_editor_metadata_MetadataXMLImpl = function(objectId, className){
+var org_metaworks_metadata_MetadataXML = function(objectId, className){
 	
 	this.objectId = objectId;
 	this.claassName = className;
-	
-	
 };
 
 
 
-org_uengine_codi_mw3_ide_editor_metadata_MetadataXMLImpl.prototype = {
+org_metaworks_metadata_MetadataXML.prototype = {
 		
 	saveProperty : function(){
 		

@@ -15,7 +15,7 @@ org_uengine_codi_mw3_ide_editor_metadata_AddPropertyPopup.prototype = {
 			var autowiredXml = mw3.getAutowiredObject('org.uengine.codi.mw3.ide.editor.metadata.MetadataXmlEditor' + '@'+object.filePath, true);
 			if(autowiredXml){
 				var metadataProperty = {
-						__className : 'org.uengine.codi.mw3.ide.editor.metadata.MetadataProperty',
+						__className : 'org.uengine.codi.mw3.ide.editor.metadata.MetadataPropertyImpl',
 						name : object.key	,
 						value : object.value,
 						type : object.type.selected,
