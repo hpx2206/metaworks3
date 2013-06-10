@@ -44,28 +44,18 @@ public class TenantAwareFilter implements Filter{
 			if(tenantIdPos > 0){
 				String tenantId = pathInfo.substring(tenantIdPos + 5);
 				tenantId = tenantId.substring(tenantId.indexOf("/"));
-				
-				
-				
 				RequestDispatcher dispatcher = request.getRequestDispatcher("");
 		        dispatcher.forward(request, response);
-				
 			}
-			
 		}
-		
 		//
 		String serverName = httpServletRequest.getServerName();
-		
 		if(serverName!=null){
 			int tenantIdPos = serverName.indexOf(".");
 			if(tenantIdPos > 0){
-				String tenantId = serverName.substring(0, tenantIdPos);
-				
+				String tenantId = serverName.substring(0, tenantIdPos);				
 				new TenantContext(tenantId); //create unique tenant context for the requested thread.
-				
 			}
-			
 		}
         
         

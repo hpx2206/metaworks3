@@ -7,13 +7,9 @@ public class TenantContext{
     static ThreadLocal<TenantContext> local = new ThreadLocal<TenantContext>();
 
     String tenantId;
-    
-	    
 		public String getTenantId() {
 			return tenantId;
 		}
-	
-	
 		public void setTenantId(String tenantId) {
 			this.tenantId = tenantId;
 		}
