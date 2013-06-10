@@ -1,9 +1,12 @@
 package org.uengine.codi.mw3.ide.editor.metadata;
 
+import org.metaworks.annotation.Face;
+import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.metadata.MetadataXML;
 import org.uengine.codi.mw3.ide.ResourceNode;
 
+@Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs")
 public class CustomizeProperty {
 	
 	public CustomizeProperty() {
@@ -19,6 +22,7 @@ public class CustomizeProperty {
 		}
 
 	ResourceNode resourceNode;
+		@Hidden
 		public ResourceNode getResourceNode() {
 			return resourceNode;
 		}
