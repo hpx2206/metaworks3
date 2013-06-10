@@ -16,6 +16,7 @@ import org.codehaus.janino.util.Traverser;
 import org.metaworks.FieldDescriptor;
 import org.metaworks.ObjectType;
 import org.metaworks.Type;
+import org.metaworks.metadata.MetadataBundle;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.ProcessDefinition;
 import org.uengine.kernel.PropertyListable;
@@ -67,12 +68,21 @@ public class ComplexType implements Serializable, PropertyListable{
 
 	public Class getTypeClass(ProcessManagerRemote pm) throws Exception{
 		if(typeClass!=null) return typeClass;
-	
-		
 		
 //		String clsTypeId = ProcessDefinition.splitDefinitionAndVersionId(getTypeId())[1];
+		String typeId = getTypeId();
+		String className = null;
+		if( typeId != null  && typeId.startsWith("[@") && MetadataBundle.projectBundle != null){
+			String key = typeId.substring(2, typeId.lastIndexOf("]"));
+			String value = MetadataBundle.projectBundle.getProperty(key);
+//			firstSourcePath = MetadataBundle.projectBundle.getProperty("sourceCodePath");
+			System.out.println("key = " + key);
+			System.out.println("value = " + value);
+			className = value.substring(1, value.lastIndexOf(".")).replace('/', '.');
+		}else{
+			className = typeId.substring(1, typeId.lastIndexOf(".")).replace('/', '.');
+		}
 		
-		String className = getTypeId().substring(1, getTypeId().lastIndexOf(".")).replace('/', '.');
 		
 		typeClass = Thread.currentThread().getContextClassLoader().loadClass(className);
 		
