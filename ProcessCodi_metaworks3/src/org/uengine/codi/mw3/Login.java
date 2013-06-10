@@ -278,6 +278,7 @@ public class Login implements ContextAware {
 		login.setStatus("subscribe");
 		
 		ModalWindow window = new ModalWindow(login, 560, 450, "Sign Up");
+		window.setId("subscribe");
 		
 		return window;
 	}
@@ -343,7 +344,6 @@ public class Login implements ContextAware {
 	@Test(scenario="first", starter=true, instruction="Welcome! If you have account, sign in please... or sign up for your new account.", next="autowiredObject.org.uengine.codi.mw3.model.InstanceListPanel.newInstance()")
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)//, validate=true)
 	public Object[] login() throws Exception {
-
 //		goTadpoleLogin(userId, password);
 		Session session = loginService();
 		
@@ -375,7 +375,7 @@ public class Login implements ContextAware {
 		if (Boolean.parseBoolean(GlobalContext.getPropertyString("sso.on"))) {
 			//Request Token
 			OAuthBasic oauth = new OAuthBasic();
-			//oauth.requestToken();
+			oauth.requestToken();
 
 			// Request Access Token
 			String accessToken = oauth.retrieveAccessToken("");
