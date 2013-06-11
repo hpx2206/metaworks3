@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.metaworks.ServiceMethodContext;
+import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;
 import org.metaworks.annotation.ServiceMethod;
@@ -21,6 +23,7 @@ public class Editor {
 	public final static String TYPE_JAVA = "java";
 	
 	ResourceNode resourceNode;
+		@Hidden
 		public ResourceNode getResourceNode() {
 			return resourceNode;
 		}
@@ -28,6 +31,7 @@ public class Editor {
 			this.resourceNode = resourceNode;
 		}
 		
+	@AutowiredFromClient(select="resourceNode.projectId == autowiredObject.id")
 	public Project project; 
 
 	String id;
