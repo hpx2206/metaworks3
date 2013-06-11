@@ -1245,7 +1245,7 @@ public class WebObjectType{
 		
 //		return pkgName + "." + compType +(isDefault ? ".Default" : ".")+ clsName + compType.substring(0, 1).toUpperCase() + compType.substring(1, compType.length());
 		
-		return compType + pkgName!=null?"/"+ pkgName:"" + "/" + clsName + "." + extName;		
+		return compType + (pkgName!=null?"/"+ pkgName:"") + "/" + clsName + "." + extName;		
 	}
 	
 	static public boolean tryToFindComponent(String componentName){	
