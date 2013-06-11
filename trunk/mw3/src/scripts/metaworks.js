@@ -1,22 +1,188 @@
 var MetaworksService = function(className, object, svcNameAndMethodName, autowiredObjects, objId, divId, placeholder, callback, sync, serviceMethodContext){
+	this.faceHelperQueue = [];
+	this.index = null;
+	
+	this.setIndex = function(index){
+		this.index = index;
+	};
+	
+	this.__showResult = function(object, result, objId, svcNameAndMethodName, serviceMethodContext, placeholder, divId, callback ){
+		mw3.log('__showResult start : ' + svcNameAndMethodName);
+		
+		mw3.requestMetadataBatch(result);
+		
+		// 2012-03-19 cjw 기존 소스가 ejs.js 생성자 호출 보다 늦게 method 값을 할당하여 맨위로 올림
+		mw3.recentCallMethodName = svcNameAndMethodName;
+		mw3.recentCallObjectId = objId;
+		
+		if(mw3.isRecordingSession && !mw3.recordingExceptClasses[object.__className]){
+			
+			var objectKey = mw3._createObjectKey(object);
+			var next = "autowiredObject." + objectKey + "." + svcNameAndMethodName;
+			
+			mw3.recording[mw3.recording.length] = {
+				//next: next,
+				value: object,
+				objectKey: objectKey,
+				methodName: svcNameAndMethodName//,
+				//scenario: "testScenario"
+			};
+		}
+		
+		//alert("call.result=" + dwr.util.toDescriptiveString(result, 5))
+//		mw3.debug("call result");
+
+		if(result){
+
+			if(serviceMethodContext.target=="none"){
+				// none mode is object return
+			}else if(serviceMethodContext.target=="self"){
+				mw3.setObject(objId, result);
+				
+			}else if(serviceMethodContext.target=="popup" || serviceMethodContext.target=="stick"){
+				//store the recently added object Id for recent opener
+				mw3.recentOpenerObjectId.push(objId);
+				
+				mw3.popupDivId = serviceMethodContext.target + '_' + objId;
+				
+				$('#' + mw3.popupDivId).remove();
+
+				if(placeholder)
+					mw3.removeObject(placeholder);
+				
+				$('body').append("<div id='" + mw3.popupDivId + "' class='target_" + serviceMethodContext.target + "' style='z-index:10;position:absolute; top:" + mw3.mouseY + "px; left:" + mw3.mouseX + "px'></div>");
+				
+				mw3.locateObject(result, null, '#' + mw3.popupDivId);
+				
+				// stick mode is auto close
+				if(serviceMethodContext.target == 'stick')
+					closeOutsideContainer(mw3.popupDivId);				
+				
+			}else if(serviceMethodContext.target=="opener" && mw3.recentOpenerObjectId.length > 0){
+				mw3.setObject(mw3.recentOpenerObjectId[mw3.recentOpenerObjectId.length - 1], result);
+				mw3.recentOpenerObjectId.pop();
+				
+			}else{ //case of target is "auto"
+				var results = result.length ? result: [result];
+				
+    			var mappedObjId;
+				for(var j=0; j < results.length; j++){
+					var result_ = results[j];
+					
+					if(result_ == null)
+						continue;
+					
+        			var objKeys = mw3._createObjectKey(result_, true);
+        			var neverShowed = true;
+        			
+        			if(serviceMethodContext.target == 'auto'){
+	        			if(objKeys && objKeys.length){
+	        				for(var i=0; i<objKeys.length && neverShowed; i++){
+		        				mappedObjId = mw3.objectId_KeyMapping[objKeys[i]];
+		        				
+		        				var mappedObjdivId = "objDiv_" + mappedObjId;
+		        				if(mappedObjId && document.getElementById(mappedObjdivId)){ //if there's mappedObjId exists, replace that div part.
+		        					if(serviceMethodContext.target=="append"){
+		        						mw3.locateObject(result_, null, "#"+mappedObjdivId);
+		        					}else if(serviceMethodContext.target=="prepend"){
+										mw3.locateObject(result_, null, "#"+mappedObjdivId, {prepend: true});
+									}else{
+		        						mw3.setObject(mappedObjId, result_);
+		        					}
+		        					
+			        				neverShowed = false;
+		        				}
+	        				}
+	        			}
+        			}
+
+        			if(neverShowed){
+        				if(serviceMethodContext.target=="append"){
+    						mw3.locateObject(result_, null, "#"+divId);
+    					}else if(serviceMethodContext.target=="prepend"){
+							mw3.locateObject(result_, null, "#"+divId, {prepend: true});
+						}else{
+    						mw3.setObject(objId, result_);
+    					}
+    					
+    					neverShowed = false;
+        			}
+				}
+				
+				if(neverShowed){
+					if(serviceMethodContext.target=="append"){
+						mw3.locateObject(result, null, "#"+divId);
+					}else if(serviceMethodContext.target=="prepend"){
+						mw3.locateObject(result, null, "#"+divId, {prepend: true});
+					}else{
+						mw3.setObject(objId, result);
+					}
+				}
+			}
+		}
+
+		//after call the request, the call-originator should be focused again.
+		var sourceObjectIdNewlyGotten = mw3.objectId_KeyMapping[objectKey];
+		if(sourceObjectIdNewlyGotten){
+			// 2012-03-21 cjw 자동 focus 를 하지 않기 위해 수정
+			//$("#objDiv_" + sourceObjectIdNewlyGotten).focus();
+			//objId = sourceObjectIdNewlyGotten;
+		}
+		
+		// 2012-04-16 faceHelper call change
+		if(serviceMethodContext.target != "none"){
+			if(serviceMethodContext.loadOnce){
+				result['__cached'] = true;
+				serviceMethodContext['cachedObjectId'] = mw3.targetObjectId;
+			}
+			    				
+			mw3.onLoadFaceHelperScript();
+			
+			if(mw3.getFaceHelper(objId) && mw3.getFaceHelper(objId).endLoading){
+				mw3.getFaceHelper(objId).endLoading(svcNameAndMethodName);
+			}else{
+				mw3.endLoading(objId, svcNameAndMethodName);
+			}
+				
+			//TODO: why different method name?  showStatus and showInfo
+			if(mw3.getFaceHelper(objId) && mw3.getFaceHelper(objId).showStatus){
+				mw3.getFaceHelper(objId).showStatus( svcNameAndMethodName + " DONE.");
+			}else{
+
+				mw3.showInfo(objId, svcNameAndMethodName + " DONE");	
+			}
+		}
+		
+		if(typeof callback == 'function')
+			callback();
+		
+		if(mw3.afterCall)
+			mw3.afterCall(svcNameAndMethodName, result);
+		
+		mw3.log('__showResult end : ' + svcNameAndMethodName);
+		
+		return result;
+	};
 	
 	this.call = function(){
 		var returnValue = null;
+		var metaworksServiceIndex = this.index;
 		
 		mw3.metaworksProxy.callMetaworksService(className, object, svcNameAndMethodName, autowiredObjects,
 				{ 
-	        		callback: function(result){
-	        			
+	        		callback: function(result){	        			
 	        			returnValue = result;
-	        			mw3.__showResult(object, result, objId, svcNameAndMethodName, serviceMethodContext, placeholder, divId, callback);
 	        			
+	        			if(serviceMethodContext.target != "none"){
+	        				var metaworksService = mw3.metaworksServices[metaworksServiceIndex];
+	        				metaworksService.__showResult(object, result, objId, svcNameAndMethodName, serviceMethodContext, placeholder, divId, callback);
+	        				mw3.metaworksServices[metaworksServiceIndex] = null;
+	        			} 
 	        		},
 
 	        		async: !sync && serviceMethodContext.target!="none",
 	        		
 	        		errorHandler:function(errorString, exception) {
-	        			mw3.endProgress();				        			
-	        			
 	        			if(serviceMethodContext.target=="none")
 	        				throw exception;
 	        			
@@ -38,7 +204,7 @@ var MetaworksService = function(className, object, svcNameAndMethodName, autowir
 			);
 		
 		return returnValue;
-	}
+	};
 
 };
 
@@ -139,6 +305,12 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			    this.dragging = false;
 			    this.dragStartX = 0;
 			    this.dragStartY = 0;
+			    
+			    /*
+			     * metaworks service array
+			     */
+			    this.metaworksServices = [];
+			    
 			    // Netscape
 			    // 5.0 (Windows NT 6.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.79 Safari/535.11
 			    // Mozilla
@@ -839,15 +1011,20 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 						actualFace = metadata.faceForArray ? metadata.faceForArray : 'dwr/metaworks/genericfaces/ArrayFace.ejs';
 
 					}else{
-						if(object && object.constructor && object.constructor.toString().indexOf('Array') != -1){
-							
-							try{
-								metadata = this.getMetadata(object[0].__className);
-							}catch(e){}
-							
-							actualFace = metadata && metadata.faceForArray ? metadata.faceForArray : 'dwr/metaworks/genericfaces/ArrayFace.ejs';
-						}
 
+						if(object && object.constructor && object.constructor.toString().indexOf('Array') != -1){
+							if(metadata && metadata.faceForArray){
+								actualFace = metadata && metadata.faceForArray ? metadata.faceForArray : 'dwr/metaworks/genericfaces/ArrayFace.ejs';
+							}else{
+								try{
+									metadata = this.getMetadata(object[0].__className);
+								}catch(e){}
+								
+								actualFace = metadata && metadata.faceForArray ? metadata.faceForArray : 'dwr/metaworks/genericfaces/ArrayFace.ejs';
+							}
+						}							
+						
+						
 						if(!actualFace){
 							var faceMappingByContext = metadata.faceMappingByContext;
 							
@@ -2055,12 +2232,6 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				}
 			};
 			
-			Metaworks3.prototype.startProgress = function(){				
-			};
-
-			Metaworks3.prototype.endProgress = function(){
-			};
-
 			Metaworks3.prototype.startLoading = function(objId){
 				var infoDivId = "#"+this._getInfoDivId(objId);
 				
@@ -2269,8 +2440,6 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
     				//objId = sourceObjectIdNewlyGotten;
     			}
     			
-    			mw3.endProgress();
-    			
     			// 2012-04-16 faceHelper call change
     			if(serviceMethodContext.target != "none"){
     				
@@ -2369,8 +2538,6 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 						
 						if(serviceMethodContext && serviceMethodContext.validate == true){										
 							if(!this.validObject(object)){
-								this.endProgress();
-								
 								if(this.getFaceHelper(objId) && this.getFaceHelper(objId).endLoading){
 									this.getFaceHelper(objId).endLoading(svcNameAndMethodName);
 								}else{
@@ -2473,8 +2640,8 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 						    			 if(sameClass){
 							    			 var isSelect = false;
 							    			 with(object){
-							    	                autowiredObject = this.objects[i];
-							    	                isSelect = eval(autowiredSelect);
+							    				 var autowiredObject = this.objects[i];
+							    				 isSelect = eval(autowiredSelect);
 							    			 }
 
 							    			 if(isSelect){
@@ -2513,12 +2680,14 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					}
 					
 					
-					var metaworksService = new MetaworksService(className, object, svcNameAndMethodName, autowiredObjects, objId, divId, placeholder, callback, sync, serviceMethodContext);					
+					var metaworksService = new MetaworksService(className, object, svcNameAndMethodName, autowiredObjects, objId, divId, placeholder, callback, sync, serviceMethodContext);
+					this.metaworksServices.push(metaworksService);
+					
+					metaworksService.setIndex(this.metaworksServices.indexOf(metaworksService));
+					
 					returnValue = metaworksService.call();
 					
 					///// just after call, 
-					this.startProgress();
-
 					var placeholder = null;
 					if(serviceMethodContext && serviceMethodContext.target!="none"){
 						var loader = serviceMethodContext.loader;
@@ -3872,5 +4041,63 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				} 
 				return rv;  
 			}
+			
+			function closeOutsideContainer(divId){
+				$('#' + divId).one('destroy', {divId: divId}, function(event){
+					$(this).remove();
+					
+					$('body').unbind('mousedown.cos_' + event.data.divId);
+				});
+				
+				$('body').bind('mousedown.cos_' + divId, {divId: divId}, function(event){
+					var container = $('#' + event.data.divId);
+					
+					var result = isMouseInContanier(container, event);				
+					if(!result)
+						$(container).trigger('destroy');
+				});
+			};
+			
+			function isMouseInContanier(container, event){
+				var containerOffset = container.offset();
+				
+				containerOffset.right = parseInt(containerOffset.left) + container.width();
+				containerOffset.bottom = parseInt(containerOffset.top) + container.height();
+
+				if ('select-one' == event.srcElement.type ||
+					((containerOffset.left <= event.pageX && event.pageX <= containerOffset.right) && 
+					(containerOffset.top <= event.pageY && event.pageY <= containerOffset.bottom))){
+					return true;
+				}else{
+					return false;
+				}
+			}
+			
+			Date.prototype.format = function(f) {
+			    if (!this.valueOf()) return " ";
+			 
+			    var weekName = ["일요일", "월요일", "화요일", "수요일", "목요일", "금요일", "토요일"];
+			    var d = this;
+			     
+			    return f.replace(/(yyyy|yy|MM|dd|E|hh|mm|ss|a\/p)/gi, function($1) {
+			        switch ($1) {
+			            case "yyyy": return d.getFullYear();
+			            case "yy": return (d.getFullYear() % 1000).zf(2);
+			            case "MM": return (d.getMonth() + 1).zf(2);
+			            case "dd": return d.getDate().zf(2);
+			            case "E": return weekName[d.getDay()];
+			            case "HH": return d.getHours().zf(2);
+			            case "hh": return ((h = d.getHours() % 12) ? h : 12).zf(2);
+			            case "mm": return d.getMinutes().zf(2);
+			            case "ss": return d.getSeconds().zf(2);
+			            case "a/p": return d.getHours() < 12 ? "오전" : "오후";
+			            default: return $1;
+			        }
+			    });
+			};
+			 
+			String.prototype.string = function(len){var s = '', i = 0; while (i++ < len) { s += this; } return s;};
+			String.prototype.zf = function(len){return "0".string(len - this.length) + this;};
+			Number.prototype.zf = function(len){return this.toString().zf(len);};
 			
 			
