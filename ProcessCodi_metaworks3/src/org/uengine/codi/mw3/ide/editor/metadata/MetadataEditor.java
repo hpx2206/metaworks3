@@ -52,7 +52,7 @@ public class MetadataEditor extends MultiPageEditor{
 			}
 		}
 
-		if(metadataContentDesigner != null)
+		if(metadataContentDesigner != null && metadataContentDesigner.getCustomizeProperies().getMetadataXML() != null)
 			this.setContent(metadataContentDesigner.getCustomizeProperies().getMetadataXML().toXmlXStream());
 		return super.save();
 	}
