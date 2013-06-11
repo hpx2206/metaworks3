@@ -294,18 +294,11 @@ public class CodiDwrServlet extends TransactionalDwrServlet{
 		if(session!=null){
 			String tenantId = (String) session.getAttribute("tenantId");
 			if(tenantId == null || (tenantId != null && !tenantId.equals(TenantContext.getThreadLocalInstance().getTenantId()))){
-				MetadataBundle metadata = new MetadataBundle(tenantId);
-				try {
-					metadata.loadProperty();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
 				String sourceCodeBase = CodiClassLoader.mySourceCodeBase();
 				CodiClassLoader clForSession = CodiClassLoader.createClassLoader(sourceCodeBase);
-				if( TenantContext.getThreadLocalInstance() == null )
-					tenantId = "uengine";
-				else
+				if( TenantContext.getThreadLocalInstance() != null )
 					tenantId = TenantContext.getThreadLocalInstance().getTenantId();
+				
 				session.setAttribute("tenantId", tenantId);
 				CodiClassLoader.codiClassLoader = clForSession;
 				

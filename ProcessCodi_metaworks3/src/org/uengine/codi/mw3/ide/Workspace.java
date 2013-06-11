@@ -30,7 +30,10 @@ public class Workspace {
 	public void load(){
 		
 //		String projectId = MetadataBundle.getProjectId();
-		String tenantId = TenantContext.getThreadLocalInstance().getTenantId();
+		String tenantId = null;
+		if( TenantContext.getThreadLocalInstance() != null ){
+			tenantId = TenantContext.getThreadLocalInstance().getTenantId();
+		}
 		
 		if( tenantId == null )	tenantId = "uengine";
 		

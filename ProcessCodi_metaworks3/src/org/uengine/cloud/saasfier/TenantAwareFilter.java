@@ -55,6 +55,8 @@ public class TenantAwareFilter implements Filter{
 			if(tenantIdPos > 0){
 				String tenantId = serverName.substring(0, tenantIdPos);				
 				new TenantContext(tenantId); //create unique tenant context for the requested thread.
+			}else{
+				new TenantContext(null);
 			}
 		}
         

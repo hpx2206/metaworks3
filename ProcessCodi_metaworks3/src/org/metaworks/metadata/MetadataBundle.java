@@ -75,18 +75,18 @@ public class MetadataBundle {
 			if( !metadataFile.getParentFile().exists() ){
 				metadataFile.getParentFile().mkdirs();
 			}
-			metadataFile.createNewFile();
+//			metadataFile.createNewFile();
 			metadataFile = getPropertyRemote(projectId, metadataFile);
 		}
-		if( !metadataFile.exists() ){
-			return;
-		}
 		MetadataXML metadataXML = new MetadataXML();
-		metadataXML = metadataXML.loadWithPath(metadataFile.getPath());
-		
 		Properties props = new Properties();
-		props.put("sourceCodePath", projectBasePath);
-		setMetadataProperties(props, metadataXML);
+		
+		if( metadataFile.exists() ){
+			metadataXML = metadataXML.loadWithPath(metadataFile.getPath());
+			
+			props.put("sourceCodePath", projectBasePath);
+			setMetadataProperties(props, metadataXML);
+		}
 		
 		// tenant metadata file 확인 : codebase/appId/tenant
 		String fullPath = sourceCodeBase + File.separatorChar + metadataFileName;
@@ -138,32 +138,33 @@ public class MetadataBundle {
 					in = new BufferedInputStream(getMethod.getResponseBodyAsStream());  
 					MetadataXML metadataXML = new MetadataXML();
 					metadataXML = metadataXML.loadWithInputstream(in);
-					ArrayList<MetadataProperty> properties =  metadataXML.getProperties();
-					if( properties != null ){
-						String metadataPath = getProjectBasePath(projectId);
-						for( MetadataProperty metadataProperty : properties){
-							// for 문을 돌면서 해당 경로에 데이터가 없다면 데이터를 요청하고, remote 를  true로 준다.
-							String value = metadataProperty.getValue();
-							if( !"string".equalsIgnoreCase(metadataProperty.getType())){
-								File checkFile = new File(metadataPath+value);
-								if( !checkFile.exists() ){
-									if( !checkFile.getParentFile().exists() ){
-										checkFile.getParentFile().mkdirs();
+					if( metadataXML != null ){
+						ArrayList<MetadataProperty> properties =  metadataXML.getProperties();
+						if( properties != null ){
+							String metadataPath = getProjectBasePath(projectId);
+							for( MetadataProperty metadataProperty : properties){
+								// for 문을 돌면서 해당 경로에 데이터가 없다면 데이터를 요청하고, remote 를  true로 준다.
+								String value = metadataProperty.getValue();
+								if( !"string".equalsIgnoreCase(metadataProperty.getType())){
+									File checkFile = new File(metadataPath+value);
+									if( !checkFile.exists() ){
+										if( !checkFile.getParentFile().exists() ){
+											checkFile.getParentFile().mkdirs();
+										}
+										// 파일이 없다면 메인서버에서 리소스를 가져온다.
+										makeFileFromRemote(projectId , value , metadataPath+value);
+										// 원격에서 가져왔다는걸 명시해준다.
+	//									metadataProperty.setRemote(true);
 									}
-									// 파일이 없다면 메인서버에서 리소스를 가져온다.
-									makeFileFromRemote(projectId , value , metadataPath+value);
-									// 원격에서 가져왔다는걸 명시해준다.
-//									metadataProperty.setRemote(true);
 								}
 							}
 						}
+						XStream stream = new XStream();
+						stream.autodetectAnnotations(true);
+						
+						out = new BufferedOutputStream(new FileOutputStream(metadataFile));  
+						stream.toXML(metadataXML, out);
 					}
-					XStream stream = new XStream();
-					stream.autodetectAnnotations(true);
-					
-					out = new BufferedOutputStream(new FileOutputStream(metadataFile));  
-					stream.toXML(metadataXML, out);
-					
 			}  
 		}catch(Exception e){
 			e.printStackTrace();
@@ -230,13 +231,18 @@ public class MetadataBundle {
 	
 	public static String getProjectBasePath(String projectId){
 		String codebase = GlobalContext.getPropertyString("codebase", "codebase");
-		String projectBasePath = codebase + File.separatorChar + projectId+ File.separatorChar + "root";
+		String projectBasePath = null;
+		if( projectId == null ){
+			projectBasePath = codebase + File.separatorChar + "root";
+		}else{
+			projectBasePath = codebase + File.separatorChar + projectId+ File.separatorChar + "root";
+		}
 		
 		return projectBasePath;
 	}
 	
 	public static String getProjectId(){
-		String projectKey = GlobalContext.getPropertyString("metadataKey", "codi");
+		String projectKey = GlobalContext.getPropertyString("metadataKey", null );
 		// TODO projectKey 가 암호화 키로 온다는 가정하에 구하는 로직 필요함
 		String projectId = projectKey;
 		
