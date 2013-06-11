@@ -83,6 +83,7 @@
 			<param-value>UTF-8</param-value>
 		</init-param>
 	</filter>
+ -->
 	
 	<servlet>
 		<servlet-name>QuartzInitializer</servlet-name>
@@ -103,7 +104,6 @@
  		<servlet-class>org.uengine.scheduler.JobScheduler</servlet-class>
  		<load-on-startup>2</load-on-startup>
  	</servlet>
- -->
  	<!-- CODI Spring ServletDispatcher -->
  	<servlet>
 		<servlet-name>dispatcher</servlet-name>
@@ -223,6 +223,17 @@
   </servlet-mapping>
   
   <servlet>
+    <description></description>
+    <display-name>MetadataServlet</display-name>
+    <servlet-name>MetadataServlet</servlet-name>
+    <servlet-class>org.uengine.codi.mw3.ide.MetadataServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>MetadataServlet</servlet-name>
+    <url-pattern>/metadata/*</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
     <servlet-name>RequestTokenServlet</servlet-name>
     <servlet-class>net.oauth.provider.servlets.RequestTokenServlet</servlet-class>
   </servlet>
@@ -257,5 +268,20 @@
     <servlet-name>EchoServlet</servlet-name>
     <url-pattern>/echo</url-pattern>
   </servlet-mapping>
+  
+    <filter>
+        <filter-name>TenantAwareFilter</filter-name>
+        <filter-class>org.uengine.cloud.saasfier.TenantAwareFilter</filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>UTF-8</param-value>
+        </init-param>
+    </filter>
+    
+    <filter-mapping>
+        <filter-name>TenantAwareFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+  
   
 </web-app>
