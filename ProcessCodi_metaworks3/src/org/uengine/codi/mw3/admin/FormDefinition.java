@@ -4,7 +4,6 @@ package org.uengine.codi.mw3.admin;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.ServiceMethod;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.kernel.GlobalContext;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 public class FormDefinition {
