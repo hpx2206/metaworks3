@@ -1,5 +1,6 @@
 package org.metaworks.metadata;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -71,9 +72,12 @@ public class MetadataXML implements ContextAware {
 	ArrayList<MetadataProperty> properties;
 		public ArrayList<MetadataProperty> getProperties() {
 			int index;
-			
-			for(index=0; index < properties.size(); index++){
-				properties.get(index).setIndex(index);
+			if( properties != null ){
+				for(index=0; index < properties.size(); index++){
+					properties.get(index).setIndex(index);
+				}
+			}else{
+				properties = new ArrayList<MetadataProperty>();
 			}
 			return properties;
 		}
@@ -93,15 +97,18 @@ public class MetadataXML implements ContextAware {
 	public MetadataXML loadWithPath(String filePath){
 		MetadataXML metadata = null;
 		FileInputStream fin = null;
-		try {
-			fin = new FileInputStream(filePath);
-			metadata = loadWithInputstream(fin);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}finally{
-			if( fin != null ){
-				try { fin.close(); } catch (IOException e) { e.printStackTrace(); }
-				fin = null;
+		File file = new File(filePath);
+		if(file.exists()){
+			try {
+				fin = new FileInputStream(filePath);
+				metadata = loadWithInputstream(fin);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}finally{
+				if( fin != null ){
+					try { fin.close(); } catch (IOException e) { e.printStackTrace(); }
+					fin = null;
+				}
 			}
 		}
 		return metadata;
@@ -149,6 +156,9 @@ public class MetadataXML implements ContextAware {
 	
 	public MetadataXML loadWithResourceNode(ResourceNode resourceNode) throws Exception{
 		MetadataXML metadata = loadWithPath(resourceNode.getPath());
+		if( metadata == null ){
+			metadata = new MetadataXML();
+		}
 		metadata.setFilePath(resourceNode.getId());
 		
 		
