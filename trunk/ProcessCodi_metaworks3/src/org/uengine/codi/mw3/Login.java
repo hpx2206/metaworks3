@@ -443,11 +443,12 @@ public class Login implements ContextAware {
 		 * add tenant process
 		 */
 		String userId = session.getUser().getUserId().toUpperCase();
-		String tenantId = session.getEmployee().getGlobalCom();
+//		String tenantId = session.getEmployee().getGlobalCom();
 		
 		//setting the userId into session attribute;
 		HttpSession httpSession = TransactionContext.getThreadLocalInstance().getRequest().getSession();
 		httpSession.setAttribute("userId", userId);
+		/*
 		httpSession.setAttribute("tenantId", tenantId);
 		
 		String mySourceCodeBase = CodiClassLoader.mySourceCodeBase();
@@ -459,7 +460,7 @@ public class Login implements ContextAware {
 		if(mySourceCodeBase!=null && new File(mySourceCodeBase).exists()){
 			httpSession.setAttribute("sourceCodeBase", mySourceCodeBase);
 		}
-		
+		*/
 		// fire exist session 
 		if(SessionIdForEmployeeMapping.containsKey(userId)){
 			MetaworksRemoteService.pushTargetScript(Login.getSessionIdWithUserId(getUserId()), "mw3.getAutowiredObject('" + Session.class.getName() + "').__getFaceHelper().fire", new Object[]{"2"});

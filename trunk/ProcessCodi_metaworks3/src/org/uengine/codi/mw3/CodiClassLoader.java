@@ -138,51 +138,60 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
 		
 		return coderoot;
 	}
-    
+	
+	 /**
+	   * 1. appId 가 없으면, tenant 가 없으면
+		codebase 기본
+		  root
+		    src
+		    image
+		    file
+		
+		2. appId 가 없으면, tenant 가 있을때
+		codebase
+		  tenantId 기본
+		    src
+		    image
+		    file
+		
+		3. appId 가 있고, tenant 가 없으면(프로젝트 일때)
+		codebase
+		  appId
+		    root 기본
+		      src
+		      image
+		      file
+		
+		4. appId 가 있고, tenant 도 있으면
+		codebase
+		  appId
+		    tenantId 기본
+		      src
+		      image
+		      file
+	   */
 	public static String mySourceCodeBase(){
 		  String tenantId = null;
+		  String projectId = MetadataBundle.getProjectId();
 		  
 		  if(TenantContext.getThreadLocalInstance()!=null && TenantContext.getThreadLocalInstance().getTenantId()!=null){
 			  tenantId = TenantContext.getThreadLocalInstance().getTenantId();
+		  }
+		  if( tenantId == null && projectId == null ){
+			  // 1번
+			  return CodiClassLoader.getCodeBaseRoot() + File.separatorChar + "root";
+		  }else if( tenantId != null && projectId == null ){
+			  // 2번
+			  return CodiClassLoader.getCodeBaseRoot() + File.separatorChar + tenantId;
+		  }else if( tenantId == null && projectId != null ){
+			  // 3번
+			  return CodiClassLoader.getCodeBaseRoot() + File.separatorChar + projectId +  File.separatorChar + "root";
 		  }else{
-			  tenantId = "main";
+			  // 4번
+			  return CodiClassLoader.getCodeBaseRoot() + File.separatorChar + projectId + File.separatorChar + tenantId;
 		  }
 		  
-		  String projectKey = MetadataBundle.getProjectId();
-		  if( projectKey == null ){
-			  try {
-				throw new Exception("잘못된 접근입니다");
-			} catch (Exception e) {
-				e.printStackTrace();
-				return null;
-			}
-		  }
-		  return CodiClassLoader.getCodeBaseRoot() + File.separatorChar + projectKey + File.separatorChar + tenantId;
 //		  
-//		//currently there may be each folder for users and also there must be tenant
-//		String tenantId = null;
-//		try{
-//			tenantId = (String) TransactionContext.getThreadLocalInstance().getRequest().getSession().getAttribute("userId");
-//		}catch(Exception e){
-//			
-//		}
-//		
-//		tenantId = "main"; //fixed value for now
-//		
-//		//TODO: not-tested yet.
-//		if(TenantContext.getThreadLocalInstance()!=null && TenantContext.getThreadLocalInstance().getTenantId()!=null){
-//			tenantId = TenantContext.getThreadLocalInstance().getTenantId();
-//		}
-//		
-//		if(UEngineUtil.isNotEmpty(tenantId)) {
-//			String dir = getCodeBaseRoot() + tenantId;
-////			File f = new File(dir);
-////			if(!f.exists()) return null;
-//			
-//			return dir + "/src/";
-//		}
-//		
-//		return null;
 	}
     
 	@Override
@@ -598,17 +607,16 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
 			cl.setSourcePath(new File[]{new File(CodiClassLoader.getCodeBaseRoot())});
 		}else{
 			String projectKey = MetadataBundle.getProjectId();
-			  if( projectKey == null ){
-				  try {
-					throw new Exception("잘못된 접근입니다");
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			  }
-			cl.setSourcePath(new File[]{
-					new File(sourceCodeBase), 
-					new File(CodiClassLoader.getCodeBaseRoot() + File.separatorChar + projectKey+ File.separatorChar + "root") ,
-					new File(CodiClassLoader.getCodeBaseRoot())});
+			if( projectKey == null ){
+				cl.setSourcePath(new File[]{
+						new File(sourceCodeBase), 
+						new File(CodiClassLoader.getCodeBaseRoot())});
+			}else{
+				cl.setSourcePath(new File[]{
+						new File(sourceCodeBase), 
+						new File(CodiClassLoader.getCodeBaseRoot() + File.separatorChar + projectKey+ File.separatorChar + "root") ,
+						new File(CodiClassLoader.getCodeBaseRoot())});
+			}
 		}
 				
 		return cl;

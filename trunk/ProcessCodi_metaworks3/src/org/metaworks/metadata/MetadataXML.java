@@ -2,11 +2,13 @@ package org.metaworks.metadata;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.MetaworksException;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
@@ -90,22 +92,31 @@ public class MetadataXML implements ContextAware {
 
 	public MetadataXML loadWithPath(String filePath){
 		MetadataXML metadata = null;
-		FileInputStream fin;
+		FileInputStream fin = null;
 		try {
 			fin = new FileInputStream(filePath);
 			metadata = loadWithInputstream(fin);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
+		}finally{
+			if( fin != null ){
+				try { fin.close(); } catch (IOException e) { e.printStackTrace(); }
+				fin = null;
+			}
 		}
 		return metadata;
 	}
 	public MetadataXML loadWithInputstream(InputStream stream){
 		MetadataXML metadata = null;
-		XStream xstream = new XStream();
-		xstream.alias("metadata", MetadataXML.class);
-		xstream.alias("MetadataProperty", MetadataProperty.class);
-		xstream.autodetectAnnotations(true);
-		metadata = (MetadataXML)xstream.fromXML( stream );
+		try{
+			XStream xstream = new XStream();
+			xstream.alias("metadata", MetadataXML.class);
+			xstream.alias("MetadataProperty", MetadataProperty.class);
+			xstream.autodetectAnnotations(true);
+			metadata = (MetadataXML)xstream.fromXML( stream );
+		}catch(Exception e){
+			System.err.println(new MetaworksException("메타데이터 파일이 없거나 온전하지 않습니다."));
+		}
 		return metadata;
 	}
 		
