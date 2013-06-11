@@ -209,7 +209,7 @@ public class ResourceNode extends TreeNode implements ContextAware {
 	public Object[] showContextMenu() {
 		session.setClipboard(this);
 		
-		return new Object[]{new Refresh(session), new ResourceContextMenu()};
+		return new Object[]{new Refresh(session), new ResourceContextMenu(this)};
 	}
 	
 	public static String findNodeType(String name){

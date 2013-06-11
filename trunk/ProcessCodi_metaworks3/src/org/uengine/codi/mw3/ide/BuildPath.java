@@ -34,18 +34,58 @@ public class BuildPath {
 		
 	}
 	
-	public String makeFullClassName(String path){
-		String className = null;
+	public String makePackageName(String path){
+		String packageName = null;
 		
 		for(Source source : this.getSources()){
 			if(path.startsWith(source.getId())){
-				className = path.substring(source.getId().length()+1, path.length()-5);
+				if(path.length() > source.getId().length())
+					packageName = path.substring(source.getId().length()+1);
+				
 				break;
 			}
 		}
 		
-		if(className != null)
+		if(packageName != null){
+			if(packageName.endsWith(".java")){
+				packageName = packageName.substring(0, packageName.length()-5);
+				
+				if(packageName.indexOf(File.separatorChar) > -1)
+					packageName = packageName.substring(0, packageName.lastIndexOf(File.separatorChar));
+				else
+					packageName = null;
+			}
+		}
+		
+		if(packageName != null)
+			packageName = packageName.replace(File.separatorChar, '.');
+		
+		return packageName;
+	}
+	
+	public String makeClassName(String path){
+		String className = null;
+		
+		for(Source source : this.getSources()){
+			if(path.startsWith(source.getId())){
+				if(path.length() > source.getId().length())
+					className = path.substring(source.getId().length()+1);
+				
+				break;
+			}
+		}
+
+		
+		if(className != null){
+			if(className.endsWith(".java"))
+				className = className.substring(0, className.length()-5);
+			
+			if(className.indexOf(File.separatorChar) > -1)
+				className = className.substring(className.lastIndexOf(File.separatorChar)+1);
+
+			
 			className = className.replace(File.separatorChar, '.');
+		}
 		
 		return className;
 	}
