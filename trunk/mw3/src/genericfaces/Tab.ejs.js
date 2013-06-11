@@ -14,7 +14,7 @@ var Tab = function(objectId, className){
 	
 	var objectMetadata = mw3.getMetadata(className);
 	
-	if(objectMetadata.faceOptions['tabsBottom'] == 'true'){
+	if(objectMetadata && objectMetadata.faceOptions && objectMetadata.faceOptions['tabsBottom'] == 'true'){
 		$('#tabs_' + objectId).addClass('tabs-bottom');
 		
 		// fix the classes
