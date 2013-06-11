@@ -2,10 +2,13 @@ package org.uengine.codi.mw3.ide.editor.metadata;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.annotation.Face;
+import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 import org.uengine.codi.mw3.ide.ResourceNode;
 
+@Face(ejsPath="dwr/metaworks/genericfaces/CleanObjectFace.ejs")
 public class MetadataContentDesigner implements ContextAware {
 
 	MetaworksContext metaworksContext;
@@ -25,6 +28,7 @@ public class MetadataContentDesigner implements ContextAware {
 	}
 	String id;
 		@Id
+		@Hidden
 		public String getId() {
 			return id;
 		}
@@ -32,13 +36,15 @@ public class MetadataContentDesigner implements ContextAware {
 			this.id = id;
 		}
 	ResourceNode resourceNode;
+		@Hidden
 		public ResourceNode getResourceNode() {
 			return resourceNode;
 		}
 		public void setResourceNode(ResourceNode resourceNode) {
 			this.resourceNode = resourceNode;
 		}
-	String processBasePath;
+	String processBasePath;	
+		@Hidden
 		public String getProcessBasePath() {
 			return processBasePath;
 		}
@@ -46,6 +52,7 @@ public class MetadataContentDesigner implements ContextAware {
 			this.processBasePath = processBasePath;
 		}
 	String imgBasePath;
+		@Hidden
 		public String getImgBasePath() {
 			return imgBasePath;
 		}
@@ -53,6 +60,7 @@ public class MetadataContentDesigner implements ContextAware {
 			this.imgBasePath = imgBasePath;
 		}
 	String uploadBasePath;
+		@Hidden
 		public String getUploadBasePath() {
 			return uploadBasePath;
 		}
@@ -60,6 +68,7 @@ public class MetadataContentDesigner implements ContextAware {
 			this.uploadBasePath = uploadBasePath;
 		}
 	CommonProperty commonProperties;
+		@Hidden
 		public CommonProperty getCommonProperties() {
 			return commonProperties;
 		}
@@ -75,6 +84,7 @@ public class MetadataContentDesigner implements ContextAware {
 		}
 	
 			
+	@Hidden
 	@ServiceMethod(callByContent=true)
 	public void load() throws Exception{
 		/* TODO  앱에서는 메타데이터 파일이 없을수도 있다.

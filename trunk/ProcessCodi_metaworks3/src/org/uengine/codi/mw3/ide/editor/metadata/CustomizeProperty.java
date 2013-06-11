@@ -6,7 +6,7 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.metadata.MetadataXML;
 import org.uengine.codi.mw3.ide.ResourceNode;
 
-@Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs")
+@Face(ejsPath="dwr/metaworks/genericfaces/CleanObjectFace.ejs")
 public class CustomizeProperty {
 	
 	public CustomizeProperty() {
@@ -31,6 +31,7 @@ public class CustomizeProperty {
 		}
 		
 		
+	@Hidden
 	@ServiceMethod(callByContent=true)
 	public void load() throws Exception {
 		MetadataXML metadata = new MetadataXML();
