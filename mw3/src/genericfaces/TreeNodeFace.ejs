@@ -4,7 +4,7 @@
 
 	var nameField = null;
 	var childField = null;
-	
+	var iconField = null;
 	var childLoadMethod = null;	
 	
 	if(objectMetadata.nameFieldDescriptor)
@@ -12,13 +12,16 @@
 	
 	if(objectMetadata.childrenFieldDescriptor)
 		childField = fields[objectMetadata.childrenFieldDescriptor.name];
+		
+	if(objectMetadata.iconFieldDescriptor)
+		iconField = fields[objectMetadata.iconFieldDescriptor.name];
 %>
 
 <div class="item-fix">
 	<div class="item">
 		<span>x</span>
 		<div class="label-content">
-			<label>
+			<label style="display:inline-block; <%=iconField?'background-image: url(images/' + value[objectMetadata.iconFieldDescriptor.name] + '.png)':''%>">
 				<u class="caption"><%=nameField.here()%></u>
 			</label>
 		</div>
