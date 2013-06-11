@@ -302,7 +302,10 @@ public class CodiDwrServlet extends TransactionalDwrServlet{
 				}
 				String sourceCodeBase = CodiClassLoader.mySourceCodeBase();
 				CodiClassLoader clForSession = CodiClassLoader.createClassLoader(sourceCodeBase);
-				tenantId = TenantContext.getThreadLocalInstance().getTenantId();
+				if( TenantContext.getThreadLocalInstance() == null )
+					tenantId = "uengine";
+				else
+					tenantId = TenantContext.getThreadLocalInstance().getTenantId();
 				session.setAttribute("tenantId", tenantId);
 				CodiClassLoader.codiClassLoader = clForSession;
 				
