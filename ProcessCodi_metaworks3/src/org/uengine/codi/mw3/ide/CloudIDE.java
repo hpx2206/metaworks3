@@ -120,7 +120,7 @@ public class CloudIDE {
 		}		
 		
 	public void load(Session session){
-		String tenantId = "uengine";
+		String tenantId = "uEngine";
 		String codebase = GlobalContext.getPropertyString("codebase", "codebase");
 		String companyId = session.getEmployee().getGlobalCom();
 		// make workspace

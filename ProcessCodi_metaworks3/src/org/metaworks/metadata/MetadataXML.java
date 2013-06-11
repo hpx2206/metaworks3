@@ -2,7 +2,6 @@ package org.metaworks.metadata;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
@@ -12,14 +11,13 @@ import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.component.SelectBox;
 import org.uengine.codi.mw3.ide.ResourceNode;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
 
-@Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs")
+@Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs", options={"fieldOrder"}, values={"type,typeName,filePath,company,properties,newMetadataProperty"})
 @XStreamAlias("metadata")
 public class MetadataXML implements ContextAware {
 	
@@ -27,6 +25,7 @@ public class MetadataXML implements ContextAware {
 		init();
 	}
 	
+	@XStreamOmitField
 	MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
 			return metaworksContext;
@@ -48,7 +47,7 @@ public class MetadataXML implements ContextAware {
 	String company;
 		public String getCompany() {
 			return company;
-		}
+		}	
 		public void setCompany(String company) {
 			this.company = company;
 		}
@@ -78,7 +77,8 @@ public class MetadataXML implements ContextAware {
 		public void setProperties(ArrayList<MetadataProperty> properties) {
 			this.properties = properties;
 		}
-		
+	
+	@XStreamOmitField
 	MetadataProperty newMetadataProperty;
 		public MetadataProperty getNewMetadataProperty() {
 			return newMetadataProperty;
@@ -130,14 +130,8 @@ public class MetadataXML implements ContextAware {
 		newMetadataProperty.metaworksContext = new MetaworksContext();
 		newMetadataProperty.metaworksContext.setWhen(MetaworksContext.WHEN_NEW);
 		newMetadataProperty.metaworksContext.setWhere("ide");
+		newMetadataProperty.setType(MetadataProperty.STRING_PROP);
 		
-		
-		newMetadataProperty.selectedType = new SelectBox();
-		newMetadataProperty.selectedType.add("텍스트", "string");
-		newMetadataProperty.selectedType.add("파일", "file");
-		newMetadataProperty.selectedType.add("이미지", "img");
-		newMetadataProperty.selectedType.add("프로세스", "process");
-		newMetadataProperty.selectedType.setSelected(newMetadataProperty.selectedType.getOptionValues().get(0));
 	}
 	
 	public MetadataXML loadWithResourceNode(ResourceNode resourceNode){
