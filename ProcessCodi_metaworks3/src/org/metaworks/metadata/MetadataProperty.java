@@ -162,11 +162,9 @@ public class MetadataProperty implements Cloneable {
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 	public Object findResource(){
 		
-		String codebase = GlobalContext.getPropertyString("codebase", "codebase");
-		String companyId = "uEngine";
 		// make workspace
 		Workspace workspace = new Workspace();
-		workspace.load(codebase, companyId);
+		workspace.load();
 		
 		Navigator navigator = new Navigator();		
 		ResourceNode workspaceNode = new ResourceNode();
