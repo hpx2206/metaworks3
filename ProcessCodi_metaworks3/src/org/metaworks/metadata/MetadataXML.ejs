@@ -1,17 +1,15 @@
 <%
-
-if(value){
+	if(value){
 %>
 
+<div class="top" style="overflow:auto; position: absolute; min-width: 0px; min-height: 0px; max-width: 10000px; max-height: 10000px;  left: 0px; right: 0px; top: 0px; bottom: 170px;">
+	<%=fields.properties.here()%>
+</div>
 
-<%= fields.properties.here({when:'view'}) %>
-<%= fields.newMetadataProperty.here() %>
-
-<a id="wBtn" href="#" onClick="mw3.getFaceHelper('<%=objectId%>').saveProperty()">
-	<span><%=mw3.localize("$addProperty")%></span>
-</a>
-
+<div class="bottom" style="overflow:auto; position: absolute; min-width: 0px; min-height: 0px; max-width: 10000px; max-height: 10000px;  left: 0px; right: 0px; bottom: 0px; height :170px">
+	<%=fields.newMetadataProperty.here()%>
+</div>
 
 <%
-}
+	}
 %>
