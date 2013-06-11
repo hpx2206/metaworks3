@@ -72,17 +72,10 @@ public class ProcessMapList implements ContextAware {
 	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP, callByContent=true)
 	public ModalWindow append() {
-		ResourceFile processDefinitions = new ResourceFile();
-		
-		processDefinitions.setMetaworksContext(new MetaworksContext());	
-		processDefinitions.getMetaworksContext().setWhen("appendProcessMap");
+		AddProcessMapPanel addProcessMapPanel = new AddProcessMapPanel();
+		addProcessMapPanel.load();
 
-		processDefinitions.setFolder(true);
-		processDefinitions.setAlias("");
-		processDefinitions.setName("/");
-		processDefinitions.drillDown();
-		
-		ModalWindow modalWindow = new ModalWindow(processDefinitions, 800, 600, "프로세스 맵 등록");
+		ModalWindow modalWindow = new ModalWindow(addProcessMapPanel, 800, 600, "프로세스 맵 등록");
 		
 		return modalWindow;
 	}		
