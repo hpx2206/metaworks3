@@ -46,6 +46,7 @@ if (value != null){
 		<%=mw3.locateObject(value.tabs[i], value.tabs[i].__className)%>
 	</div>		
 <%	
+		mw3.addBeanProperty(objectId, "[" + i + "]");
 	}
 %>
 		
