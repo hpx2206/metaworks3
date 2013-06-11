@@ -22,7 +22,6 @@ import com.thoughtworks.xstream.annotations.XStreamOmitField;
 public class MetadataXML implements ContextAware {
 	
 	public MetadataXML() {
-		init();
 	}
 	
 	@XStreamOmitField
@@ -122,7 +121,7 @@ public class MetadataXML implements ContextAware {
 		return stream.toXML(this);
 	}
 	
-	protected void init() {
+	protected void init() throws Exception {
 		this.setMetaworksContext(new MetaworksContext());
 		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 		
@@ -131,12 +130,25 @@ public class MetadataXML implements ContextAware {
 		newMetadataProperty.metaworksContext.setWhen(MetaworksContext.WHEN_NEW);
 		newMetadataProperty.metaworksContext.setWhere("ide");
 		newMetadataProperty.setType(MetadataProperty.STRING_PROP);
+		newMetadataProperty = (MetadataProperty) newMetadataProperty.selectType();
 		
 	}
 	
-	public MetadataXML loadWithResourceNode(ResourceNode resourceNode){
+	public MetadataXML loadWithResourceNode(ResourceNode resourceNode) throws Exception{
 		MetadataXML metadata = loadWithPath(resourceNode.getPath());
 		metadata.setFilePath(resourceNode.getId());
+		
+		
+		for(MetadataProperty metadataProperty : metadata.getProperties()){
+			if(MetadataProperty.FILE_PROP.equals(metadataProperty.getType()) || metadataProperty.IMAGE_PROP.equals(metadataProperty.getType())){
+				MetadataFile file = new MetadataFile();
+				file.setFilePath(resourceNode.getId());
+				file.setUploadedPath(metadataProperty.getValue());
+				file.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+				metadataProperty.setFile(file);
+			}
+		}
+			
 		metadata.init();
 		
 		return metadata;
