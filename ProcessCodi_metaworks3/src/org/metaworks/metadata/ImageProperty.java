@@ -3,6 +3,7 @@ package org.metaworks.metadata;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Hidden;
+import org.metaworks.annotation.NonEditable;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
@@ -17,6 +18,7 @@ public class ImageProperty extends MetadataProperty{
 	String value;
 		@Hidden
 		@Available(when=MetaworksContext.WHEN_VIEW)
+		@NonEditable(when={MetaworksContext.WHEN_EDIT})
 		public String getValue() {
 			return value;
 		}

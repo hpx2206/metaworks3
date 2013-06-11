@@ -14,6 +14,7 @@ import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
+import org.metaworks.annotation.NonEditable;
 import org.metaworks.annotation.Range;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.TypeSelector;
@@ -70,6 +71,7 @@ public class MetadataProperty implements Cloneable {
 						FormProperty.class
 				} 
 				)
+		@NonEditable(when={MetaworksContext.WHEN_EDIT})
 		public String getType() {
 			return type;
 		}
@@ -241,9 +243,8 @@ public class MetadataProperty implements Cloneable {
 	public Object edit(){
 		
 		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
-		this.setType(this.getType());
 		this.setName(this.getName());
-		this.getFile().getMetaworksContext().setWhere(this.getType());
+		this.getFile().getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		this.setFile(this.getFile());
 		
 		return this;
