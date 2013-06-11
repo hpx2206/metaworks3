@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.ide.editor.form;
 
+import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.editor.Editor;
 import org.uengine.codi.mw3.ide.form.Form;
@@ -41,14 +42,17 @@ public class FormEditor extends Editor {
 	}
 	@Override
 	public String load() {
+		
+		Thread.currentThread().setContextClassLoader(CodiClassLoader.createClassLoader(project.getBuildPath().getSources().get(0).getPath()));
+		
+		String fullClassName = project.getBuildPath().makeFullClassName(this.getId());
+		
 		Form form = new Form();
-		form.setPackageName(this.getId().substring(0, getId().lastIndexOf("\\")).replace("\\", "."));
-		form.setId(this.getResourceNode().getPath());
+		form.setPackageName(fullClassName.substring(0, fullClassName.lastIndexOf('.')));
+		form.setId(fullClassName.substring(fullClassName.lastIndexOf('.')+1));
 		form.load();
 		
 		this.setForm(form);
-		
-		
 		
 		setProperties(new FormFieldProperties());
 		

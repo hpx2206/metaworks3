@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.ide;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class BuildPath {
@@ -31,6 +32,22 @@ public class BuildPath {
 		
 	public BuildPath(){
 		
+	}
+	
+	public String makeFullClassName(String path){
+		String className = null;
+		
+		for(Source source : this.getSources()){
+			if(path.startsWith(source.getId())){
+				className = path.substring(source.getId().length()+1, path.length()-5);
+				break;
+			}
+		}
+		
+		if(className != null)
+			className = className.replace(File.separatorChar, '.');
+		
+		return className;
 	}
 	
 }

@@ -14,7 +14,7 @@ import org.metaworks.annotation.Available;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.TreeNode;
 import org.uengine.codi.mw3.ide.editor.Editor;
-import org.uengine.codi.mw3.ide.editor.java.JavaCodeEditor;
+import org.uengine.codi.mw3.ide.editor.form.FormEditor;
 import org.uengine.codi.mw3.ide.editor.metadata.MetadataEditor;
 import org.uengine.codi.mw3.ide.editor.process.ProcessEditor;
 import org.uengine.codi.mw3.ide.menu.ResourceContextMenu;
@@ -25,7 +25,10 @@ public class ResourceNode extends TreeNode implements ContextAware {
 
 	@AutowiredFromClient
 	public Session session;
-	
+
+	@AutowiredFromClient(select="type=='java' && projectId ==autowiredObject.id")
+	public Project project;
+
 	public final static String TYPE_PROJECT 			= "project";
 	
 	MetaworksContext metaworksContext;
@@ -129,7 +132,9 @@ public class ResourceNode extends TreeNode implements ContextAware {
 			this.setType(type);
 			
 			if(type.equals(TreeNode.TYPE_FILE_JAVA)){
-				editor = new JavaCodeEditor(this);
+				editor = new FormEditor(this);
+				editor.project = project;
+				editor.load();
 			}else if(type.equals(TreeNode.TYPE_FILE_PROCESS)){
 				editor = new ProcessEditor(this);
 				try {
@@ -195,7 +200,7 @@ public class ResourceNode extends TreeNode implements ContextAware {
 	}
 	
 	@Override
-	@ServiceMethod(payload={"id", "name", "path", "folder", "projectId"}, target=ServiceMethodContext.TARGET_APPEND)
+	@ServiceMethod(payload={"id", "name", "path", "type", "folder", "projectId"}, target=ServiceMethodContext.TARGET_APPEND)
 	public Object action(){
 		return new ToAppend(new CloudWindow("editor"), this.beforeAction());
 	}
