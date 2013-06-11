@@ -92,7 +92,11 @@ public class Form {
 		list.add(new SingleTextField());
 		list.add(new MultipleChoiceField());
 		
-		String alias = this.getPackageName() + "." +this.getId();
+		String alias = "";
+		
+		if(this.getPackageName() != null)
+			alias += this.getPackageName()+ ".";
+		alias += this.getId();
 		
 		WebObjectType wot = MetaworksRemoteService.getInstance().getMetaworksType(alias);
 
