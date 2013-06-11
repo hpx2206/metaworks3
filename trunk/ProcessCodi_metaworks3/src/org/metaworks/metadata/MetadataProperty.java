@@ -13,7 +13,6 @@ import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Range;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.TypeSelector;
-import org.metaworks.component.SelectBox;
 import org.uengine.codi.mw3.ide.Project;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.ResourceTree;
@@ -27,7 +26,7 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
 
-@Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs", options={"fieldOrder"}, values={"name,selectedType,value,file"})
+@Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs", options={"fieldOrder"}, values={"name,type,value,file"})
 @XStreamAlias("MetadataProperty")
 public class MetadataProperty implements Cloneable {
 	
@@ -45,30 +44,27 @@ public class MetadataProperty implements Cloneable {
 	}
 	
 	@XStreamAsAttribute
-	@Available(when=MetaworksContext.WHEN_VIEW)
-	@Range(
-			options={"File",	"Image",	"Process",	"String",	"Form"}, 
-			values ={"file",	"img",		"process",	"string",	"form"}
-			)
-	
-	@TypeSelector(
-			values = 		{ 
-					"file",			
-					"img",		
-					"process", 
-					"string",
-					"form"
-			}, 
-			classes = 		{ 
-					FileProperty.class,
-					ImageProperty.class,
-					ProcessProperty.class,
-					StringProperty.class,
-					FormProperty.class
-			} 
-			)
 	String type;
-		
+		@Range(
+				options={"File",	"Image",	"Process",	"String",	"Form"}, 
+				values ={"file",	"img",		"process",	"string",	"form"}
+				)
+		@TypeSelector(
+				values = 		{ 
+						"file",			
+						"img",		
+						"process", 
+						"string",
+						"form"
+				}, 
+				classes = 		{ 
+						FileProperty.class,
+						ImageProperty.class,
+						ProcessProperty.class,
+						StringProperty.class,
+						FormProperty.class
+				} 
+				)
 		public String getType() {
 			return type;
 		}
@@ -76,16 +72,6 @@ public class MetadataProperty implements Cloneable {
 			this.type = type;
 		}
 	
-	@XStreamOmitField
-	@Available(when={MetaworksContext.WHEN_NEW, MetaworksContext.WHEN_EDIT})
-	SelectBox selectedType;
-		public SelectBox getSelectedType() {
-			return selectedType;
-		}
-		public void setSelectedType(SelectBox selectedType) {
-			this.selectedType = selectedType;
-		}
-
 	@XStreamAsAttribute
 	boolean isKeyEditable;
 		public boolean isKeyEditable() {
@@ -95,9 +81,9 @@ public class MetadataProperty implements Cloneable {
 			this.isKeyEditable = isKeyEditable;
 		}
 		
-	@Hidden
 	@XStreamAsAttribute
 	boolean isRemote;
+		@Hidden
 		public boolean isRemote() {
 			return isRemote;
 		}
@@ -114,8 +100,9 @@ public class MetadataProperty implements Cloneable {
 			this.name = name;
 		}
 	
-	@Hidden
+
 	String value;
+		@Available(where={STRING_PROP,"ide"})
 		public String getValue() {
 			return value;
 		}
@@ -125,6 +112,7 @@ public class MetadataProperty implements Cloneable {
 	
 	@XStreamOmitField
 	MetadataFile file;
+		@Available(where={IMAGE_PROP,FILE_PROP})
 		public MetadataFile getFile() {
 			return file;
 		}
@@ -141,9 +129,9 @@ public class MetadataProperty implements Cloneable {
 			this.metaworksContext = metaworksContext;
 		}
 	
-	@Hidden
 	@XStreamOmitField
 	int index;
+		@Hidden
 		public int getIndex() {
 			return index;
 		}
@@ -151,8 +139,9 @@ public class MetadataProperty implements Cloneable {
 			this.index = index;
 		}
 		
-	@Hidden
+	@XStreamOmitField
 	boolean change;
+		@Hidden
 		public boolean isChange() {
 			return change;
 		}
@@ -205,7 +194,7 @@ public class MetadataProperty implements Cloneable {
 	
 	@Available(when=MetaworksContext.WHEN_NEW)
 	@ServiceMethod(callByContent=true)
-	public Object add(){
+	public Object add() throws FileNotFoundException, IOException, Exception{
 		
 		MetadataProperty clone = null;
 		
@@ -215,11 +204,21 @@ public class MetadataProperty implements Cloneable {
 			clone.getFile().getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 			clone.setChange(true);
 			
+			//file upload;
+			this.getFile().setFilePath(metadataXML.getFilePath());
+			this.getFile().upload();
+			
+			//type별로 이미지/파일일때 value == path로0
+			if(FILE_PROP.equals(this.getType()) || IMAGE_PROP.equals(this.getType())){
+				String filePath = this.metadataXML.getFilePath();
+				String value = filePath.substring(0,filePath.lastIndexOf("\\"));
+				clone.setValue(value + "/" + this.getFile().getFilename());
+			}
+			
 			metadataXML.getProperties().add(clone);
 			metadataXML.init();
 			
 		} catch (CloneNotSupportedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -233,38 +232,24 @@ public class MetadataProperty implements Cloneable {
 		metadataXML.getProperties().remove(this);
 		
 		return metadataXML;
-		//XStream stream = new XStream();
-		//stream.autodetectAnnotations(true);
-		
-		//System.out.println("remove here");
-		
 	}
 	
 	@Hidden
-	@ServiceMethod(payload="selectedType", eventBinding="change", bindingFor="selectedType", bindingHidden=true, target=ServiceMethodContext.TARGET_SELF)
+	@ServiceMethod(payload="type", eventBinding="change", bindingFor="type", bindingHidden=true, target=ServiceMethodContext.TARGET_SELF)
 	public Object selectType() {
-		String seletedType = this.getSelectedType().getSelected();
+		if(FILE_PROP.equals(this.getType()) || IMAGE_PROP.equals(this.getType())){
+			this.getMetaworksContext().setWhere(FILE_PROP);
+		}else if(PROCESS_PROP.equals(this.getType())){
+			this.getMetaworksContext().setWhere(PROCESS_PROP);
+		}else if(STRING_PROP.equals(this.getType())){
+			this.getMetaworksContext().setWhere(STRING_PROP);
+		}else if(FORM_PROP.equals(this.getType())){
+			this.getMetaworksContext().setWhen(FORM_PROP);
+		}else {
+			this.getMetaworksContext().setWhere("");
+		}
+		return this;
 		
-		if(FILE_PROP.equals(seletedType)){
-			
-		}else if(PROCESS_PROP.equals(seletedType)){
-			
-		}
-		try {
-			
-			metadataXML.getNewMetadataProperty().getFile().remove();
-			
-//		} catch (FileNotFoundException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (IOException e) {
-			// TODO Auto-generated catch block
-//			e.printStackTrace();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return metadataXML.newMetadataProperty;
 	}
 	
 	@Override
