@@ -45,16 +45,8 @@ public class FormEditor extends Editor {
 		
 		Thread.currentThread().setContextClassLoader(CodiClassLoader.createClassLoader(project.getBuildPath().getSources().get(0).getPath()));
 		
-		String fullClassName = project.getBuildPath().makeFullClassName(this.getId());
-		String packageName = null;
-		String className = null;
-		
-		if(fullClassName.indexOf('.') > -1){
-			packageName = fullClassName.substring(0, fullClassName.lastIndexOf('.'));
-			className = fullClassName.substring(fullClassName.lastIndexOf('.')+1); 
-		}else{
-			className = fullClassName;
-		}
+		String packageName = project.getBuildPath().makePackageName(this.getId());
+		String className = project.getBuildPath().makeClassName(this.getId());
 		
 		Form form = new Form();
 		form.setPackageName(packageName);

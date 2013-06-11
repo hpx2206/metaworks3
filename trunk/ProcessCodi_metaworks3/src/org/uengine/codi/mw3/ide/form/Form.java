@@ -168,7 +168,9 @@ public class Form {
 		
 		constructorBuffer.append("	}\n\n");
 		
-		sb.append("package ").append(getPackageName()).append(";\n\n");
+		if(this.getPackageName() != null)
+			sb.append("package ").append(getPackageName()).append(";\n\n");
+		
 		sb.append(importBuffer.toString());
 		sb.append("public class " + this.getId() + "").append(" implements ITool").append( "{\n\n");
 		sb.append(constructorBuffer.toString());
