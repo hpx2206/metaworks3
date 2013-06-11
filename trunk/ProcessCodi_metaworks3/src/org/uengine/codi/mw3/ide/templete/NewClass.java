@@ -20,9 +20,6 @@ import org.uengine.codi.mw3.model.Session;
 @Face(displayName="$templete.class", ejsPath="dwr/metaworks/genericfaces/FormFace.ejs", options={"fieldOrder"}, values={"packageName,name"})
 public class NewClass extends Templete {
 
-	@AutowiredFromClient
-	public Session session;
-	
 	String packageName;
 		@Face(displayName="$templete.class.package")
 		@Hidden
