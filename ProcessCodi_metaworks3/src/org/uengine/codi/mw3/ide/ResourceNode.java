@@ -26,7 +26,7 @@ public class ResourceNode extends TreeNode implements ContextAware {
 	@AutowiredFromClient
 	public Session session;
 
-	@AutowiredFromClient(select="type=='java' && projectId ==autowiredObject.id")
+	@AutowiredFromClient(select="typeof type != 'undefined' && type=='java' && projectId ==autowiredObject.id")
 	public Project project;
 
 	public final static String TYPE_PROJECT 			= "project";
