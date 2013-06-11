@@ -27,7 +27,9 @@ import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Children;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
+import org.metaworks.annotation.Icon;
 import org.metaworks.annotation.Id;
+import org.metaworks.annotation.ImagePath;
 import org.metaworks.annotation.KeepAtClient;
 import org.metaworks.annotation.Name;
 import org.metaworks.annotation.NonEditable;
@@ -35,7 +37,6 @@ import org.metaworks.annotation.NonLoadable;
 import org.metaworks.annotation.NonSavable;
 import org.metaworks.annotation.ORMapping;
 import org.metaworks.annotation.Range;
-import org.metaworks.annotation.ImagePath;
 import org.metaworks.annotation.Resource;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Test;
@@ -381,6 +382,9 @@ public class WebObjectType{
 			if(getAnnotationDeeply(tryingClasses, fd.getName(), Children.class)!=null)
 				fd.setAttribute("children", new Boolean(true));
 
+			if(getAnnotationDeeply(tryingClasses, fd.getName(), Icon.class)!=null)
+				fd.setAttribute("icon", new Boolean(true));
+			
 			if(getAnnotationDeeply(tryingClasses, fd.getName(), NonLoadable.class)!=null)
 				fd.setLoadable(false);
 
@@ -1229,12 +1233,19 @@ public class WebObjectType{
 		
 		//String pkgName = cls.getPackage().getName(); //not work for janino compiled classes
 		
-		String pkgName = cls.getName().substring(0, cls.getName().lastIndexOf("."));
+		
+		String pkgName = null;
+		
+		if(cls.getName().indexOf('.') > -1){
+			pkgName = cls.getName().substring(0, cls.getName().lastIndexOf("."));
+			pkgName = pkgName.replaceAll("\\.", "/");
+		}
 		
 		String clsName = getClassNameOnly(cls);
 		
-//		return pkgName + "." + compType +(isDefault ? ".Default" : ".")+ clsName + compType.substring(0, 1).toUpperCase() + compType.substring(1, compType.length());		
-		return compType + "/" + pkgName.replaceAll("\\.", "/") + "/" + clsName + "." + extName;		
+//		return pkgName + "." + compType +(isDefault ? ".Default" : ".")+ clsName + compType.substring(0, 1).toUpperCase() + compType.substring(1, compType.length());
+		
+		return compType + pkgName!=null?"/"+ pkgName:"" + "/" + clsName + "." + extName;		
 	}
 	
 	static public boolean tryToFindComponent(String componentName){	
