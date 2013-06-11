@@ -1,22 +1,24 @@
 package org.uengine.codi.mw3.ide.menu;
 
-import java.io.File;
-
-import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.MenuItem;
-import org.uengine.codi.mw3.ide.CloudTab;
 import org.uengine.codi.mw3.ide.ResourceNode;
 
 public class ResourceContextMenu extends CloudMenu {
 
 	public ResourceContextMenu(){
+		this(null);
+	}
+	
+	public ResourceContextMenu(ResourceNode resourceNode){
+		this.setResourceNode(resourceNode);
+		
 		this.setId("ResourceContext");
 		this.setName("ResourceContext");
 		this.setContext(true);
 		
-		this.add(new SubMenuItem(new NewMenu()));
+		this.add(new SubMenuItem(new NewMenu(this.getResourceNode())));
 		this.add(new MenuItem("open", "Open"));
 		this.add(new MenuItem(MenuItem.TYPE_DIVIDER));
 		this.add(new MenuItem("copy", "Copy"));
@@ -29,6 +31,7 @@ public class ResourceContextMenu extends CloudMenu {
 		this.add(new SubMenuItem(new TeamMenu()));
 		this.add(new MenuItem(MenuItem.TYPE_DIVIDER));
 		this.add(new MenuItem("showProperties", "Properties"));*/
+
 	}
 	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
