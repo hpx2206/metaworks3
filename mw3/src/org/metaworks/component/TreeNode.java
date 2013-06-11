@@ -80,14 +80,6 @@ public class TreeNode {
 			this.parentId = parentId;
 		}
 		
-	String path;
-		public String getPath() {
-			return path;
-		}
-		public void setPath(String path) {
-			this.path = path;
-		}
-
 	boolean root;
 		public boolean isRoot() {
 			return root;
