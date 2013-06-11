@@ -51,7 +51,6 @@ public class MetadataFile extends AbstractMetaworksFile {
 
 	@Override
 	public String renameUploadFileWithMimeType(String filename, String mimeType) {
-		// TODO Auto-generated method stub
 		return "/" + super.renameUploadFileWithMimeType(filename, mimeType);
 	}
 	
@@ -73,7 +72,6 @@ public class MetadataFile extends AbstractMetaworksFile {
 		setMimeType(getFileTransfer().getMimeType());
 		
 		setFileTransfer(null);	//ensure to clear the data
-		super.upload();
 	}
 
 }
