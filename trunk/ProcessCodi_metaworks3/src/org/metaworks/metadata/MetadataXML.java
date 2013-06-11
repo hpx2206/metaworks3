@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
-import org.metaworks.annotation.Face;
+import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 import org.uengine.codi.mw3.ide.ResourceNode;
@@ -17,7 +17,6 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
 
-@Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs", options={"fieldOrder"}, values={"type,typeName,filePath,company,properties,newMetadataProperty"})
 @XStreamAlias("metadata")
 public class MetadataXML implements ContextAware {
 	
@@ -44,6 +43,7 @@ public class MetadataXML implements ContextAware {
 		}
 		
 	String company;
+		@Hidden
 		public String getCompany() {
 			return company;
 		}	
@@ -51,6 +51,7 @@ public class MetadataXML implements ContextAware {
 			this.company = company;
 		}
 	String type;
+		@Hidden
 		public String getType() {
 			return type;
 		}
@@ -58,6 +59,7 @@ public class MetadataXML implements ContextAware {
 			this.type = type;
 		}
 	String typeName;
+		@Hidden
 		public String getTypeName() {
 			return typeName;
 		}
