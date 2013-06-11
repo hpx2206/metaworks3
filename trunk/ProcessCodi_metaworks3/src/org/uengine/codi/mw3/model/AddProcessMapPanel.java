@@ -1,11 +1,13 @@
 package org.uengine.codi.mw3.model;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Face;
 import org.metaworks.metadata.MetadataProperty;
 import org.metaworks.metadata.MetadataXML;
+import org.uengine.codi.mw3.CodiClassLoader;
 
 @Face(ejsPath="dwr/metaworks/genericfaces/Tab.ejs")
 public class AddProcessMapPanel {
@@ -57,19 +59,22 @@ public class AddProcessMapPanel {
 		
 
 		// load metadata
+		String sourceCodeBase = CodiClassLoader.mySourceCodeBase();
+		String metadataFileName = "uengine.metadata";
+		String metadataFilePath = sourceCodeBase + File.separatorChar + metadataFileName;
 		MetadataXML metadataXML = new MetadataXML();
-		metadataXML = metadataXML.loadWithPath("d:/uengine.metadata");
+		metadataXML = metadataXML.loadWithPath(metadataFilePath);
 
-		
-		for(MetadataProperty metadataProperty : metadataXML.getProperties()){
-			if(MetadataProperty.PROCESS_PROP.equals(metadataProperty.getType())){
-				metadataProperty.setMetaworksContext(new MetaworksContext());
-				metadataProperty.getMetaworksContext().setHow("appendProcessMap");
-				
-				metadataTree.getChild().add(metadataProperty);
+		if( metadataXML != null ){
+			for(MetadataProperty metadataProperty : metadataXML.getProperties()){
+				if(MetadataProperty.PROCESS_PROP.equals(metadataProperty.getType())){
+					metadataProperty.setMetaworksContext(new MetaworksContext());
+					metadataProperty.getMetaworksContext().setHow("appendProcessMap");
+					
+					metadataTree.getChild().add(metadataProperty);
+				}
 			}
 		}
-		
 		
 		this.setMetadataTree(metadataTree);
 	}
