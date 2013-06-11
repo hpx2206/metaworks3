@@ -476,7 +476,7 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 							};
 	    		    		value.variableMap[variableName] = contentValue;
 	    		    		
-	    		    		canvas.drawLabel(element, variableName);
+//	    		    		canvas.drawLabel(element, variableName);
 	    		    		
 	    		    		customData.push( {"customId": "" , "customName" : variableName , "customType" : "class"});
 	    		    		
