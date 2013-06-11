@@ -1,5 +1,7 @@
 package org.uengine.codi.mw3.ide.view;
 
+import java.util.ArrayList;
+
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
@@ -61,7 +63,7 @@ public class Navigator {
 		workspaceNode.setRoot(true);
 		workspaceNode.setHidden(true);
 		
-		for(Project project : workspace.getProjects())			
+		for(Project project : workspace.getProjects())
 			workspaceNode.add(new ResourceNode(project));
 		
 		ResourceTree resourceTree = new ResourceTree();

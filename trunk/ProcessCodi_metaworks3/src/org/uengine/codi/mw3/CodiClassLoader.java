@@ -148,7 +148,7 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
 			  tenantId = "main";
 		  }
 		  
-		  String projectKey = GlobalContext.getPropertyString("metadataKey", "metadataKey");
+		  String projectKey = MetadataBundle.getProjectId();
 		  if( projectKey == null ){
 			  try {
 				throw new Exception("잘못된 접근입니다");
@@ -597,13 +597,12 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
 		if(sourceCodeBase==null) {
 			cl.setSourcePath(new File[]{new File(CodiClassLoader.getCodeBaseRoot())});
 		}else{
-			String projectKey = GlobalContext.getPropertyString("metadataKey", "metadataKey");
+			String projectKey = MetadataBundle.getProjectId();
 			  if( projectKey == null ){
 				  try {
 					throw new Exception("잘못된 접근입니다");
 				} catch (Exception e) {
 					e.printStackTrace();
-					return null;
 				}
 			  }
 			cl.setSourcePath(new File[]{
