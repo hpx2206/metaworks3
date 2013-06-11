@@ -59,16 +59,12 @@ public class MetadataBundle {
 	
 	@ServiceMethod
 	public void loadProperty() throws Exception{
-		// 1. 해당 앱의 메인 경로에 있는 uengine.metadata 파일을 찾는다.
-		String projectKey = GlobalContext.getPropertyString("metadataKey", "metadataKey");
-		// TODO projectKey 가 암호화 키로 온다는 가정하에 구하는 로직 필요함
-		String projectId = projectKey;
+		String projectId = getProjectId();
 		String sourceCodeBase = CodiClassLoader.mySourceCodeBase();
 		String projectBasePath = getProjectBasePath(projectId);
 		
 		// 앱의 루트 경로 생성 
-		// TODO 나중에 url 로 호출을 해야할지도 모르겠음 우선 메인경로에 있다고 생각하고 작업, 
-		// 				metadataKey 키만 가지고 찾을수 있다고 가정함
+		// 1. 해당 앱의 메인 경로에 있는 uengine.metadata 파일을 찾는다.
 		String metadataFileName = "uengine.metadata";
 		
 		// metadata file 확인 : codebase/appId/root
@@ -237,5 +233,13 @@ public class MetadataBundle {
 		String projectBasePath = codebase + File.separatorChar + projectId+ File.separatorChar + "root";
 		
 		return projectBasePath;
+	}
+	
+	public static String getProjectId(){
+		String projectKey = GlobalContext.getPropertyString("metadataKey", "codi");
+		// TODO projectKey 가 암호화 키로 온다는 가정하에 구하는 로직 필요함
+		String projectId = projectKey;
+		
+		return projectId;
 	}
 }

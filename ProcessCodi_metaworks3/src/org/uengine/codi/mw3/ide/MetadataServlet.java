@@ -36,12 +36,20 @@ public class MetadataServlet extends HttpServlet {
 		
 		if(pathInfo.startsWith("/getMetadataFile")){
 			// 요청받은 정보를 가지고, 메타데이터 파일을 찾아서 stream 으로 내려준다.
-//			projectId = request.getParameter("projectId");
-			projectId = "gddf";
+			projectId = request.getParameter("projectId");
 			String metadataFileName = request.getParameter("metadataFileName");
 			String projectBasePath = MetadataBundle.getProjectBasePath(projectId);
 			String filePath = projectBasePath + File.separatorChar + metadataFileName;
 			File file = new File(filePath);
+			if( !file.exists() ){
+				// 해당 프로젝트에 파일이 존재하지 않는 경우 최상위를 확인한다.
+				projectId = "codi";
+				filePath = MetadataBundle.getProjectBasePath(projectId) + File.separatorChar + metadataFileName;
+				file = new File(filePath);
+				if( !file.exists() ){
+					return;
+				}
+			}
 	        int length   = 0;
 	        ServletOutputStream outStream = response.getOutputStream();
 	        ServletContext context  = getServletConfig().getServletContext();

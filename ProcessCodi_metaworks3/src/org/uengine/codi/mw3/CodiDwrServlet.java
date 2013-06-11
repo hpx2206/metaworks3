@@ -290,7 +290,6 @@ public class CodiDwrServlet extends TransactionalDwrServlet{
 	@Override
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
-		
 		HttpSession session = request.getSession();
 		if(session!=null){
 			String tenantId = (String) session.getAttribute("tenantId");

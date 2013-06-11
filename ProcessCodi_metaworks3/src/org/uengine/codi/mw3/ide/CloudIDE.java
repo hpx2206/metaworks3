@@ -120,14 +120,9 @@ public class CloudIDE {
 		}		
 		
 	public void load(Session session){
-		String tenantId = "uEngine";
-		String codebase = GlobalContext.getPropertyString("codebase", "codebase");
-		String companyId = session.getEmployee().getGlobalCom();
 		// make workspace
 		Workspace workspace = new Workspace();
-		// TODO tenantId 로 변경... 근데 companyId 는 필요함
-//		workspace.load(codebase, tenantId);
-		workspace.load(codebase, companyId);
+		workspace.load();
 		this.setWorkspace(workspace);
 		
 		Navigator navigator = new Navigator();		
@@ -138,22 +133,22 @@ public class CloudIDE {
 		
 		CloudWindow editorWindow = new CloudWindow("editor");
 		
-		ResourceNode resourceNode = new ResourceNode();
-		resourceNode.setProjectId("test0001");
-		resourceNode.setName("uengine.metadata");
-		resourceNode.setId(resourceNode.getProjectId() + File.separatorChar + "uengine.metadata");
-		resourceNode.setPath(codebase +File.separatorChar +  tenantId + File.separatorChar + resourceNode.getId());
-		
-		System.out.println(resourceNode.getPath());
-		
-		MetadataEditor editor = new MetadataEditor(resourceNode);
-		try {
-			editor.loadPage();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		editorWindow.getTabs().add(editor);
+//		ResourceNode resourceNode = new ResourceNode();
+//		resourceNode.setProjectId("test0001");
+//		resourceNode.setName("uengine.metadata");
+//		resourceNode.setId(resourceNode.getProjectId() + File.separatorChar + "uengine.metadata");
+//		resourceNode.setPath(codebase +File.separatorChar +  tenantId + File.separatorChar + resourceNode.getId());
+//		
+//		System.out.println(resourceNode.getPath());
+//		
+//		MetadataEditor editor = new MetadataEditor(resourceNode);
+//		try {
+//			editor.loadPage();
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		editorWindow.getTabs().add(editor);
 		
 		Layout centerLayout = new Layout();
 		centerLayout.setId("center");
