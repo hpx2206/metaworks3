@@ -228,6 +228,14 @@ public abstract class AbstractMetaworksFile implements ContextAware {
 			} else if(mimeType.indexOf("word") > -1){
 				fileExt = ".docx";
 			}
+		} else if(mimeType.indexOf("haansoft") > -1){
+			if(mimeType.indexOf("sheet") > -1){
+				fileExt = ".xlsx";
+			} else if(mimeType.indexOf("pptx") > -1){
+				fileExt = ".pptx";
+			} else if(mimeType.indexOf("word") > -1){
+				fileExt = ".docx";
+			}
 		} else {
 			if(filename.lastIndexOf(".") != -1){
 				fileExt = filename.substring(filename.lastIndexOf("."));
