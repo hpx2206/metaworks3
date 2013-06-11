@@ -32,7 +32,7 @@ public class CustomizeProperty {
 		
 		
 	@ServiceMethod(callByContent=true)
-	public void load(){
+	public void load() throws Exception {
 		MetadataXML metadata = new MetadataXML();
 		setMetadataXML(metadata.loadWithResourceNode(this.getResourceNode()));
 	}

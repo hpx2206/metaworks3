@@ -76,7 +76,7 @@ public class MetadataContentDesigner implements ContextAware {
 	
 			
 	@ServiceMethod(callByContent=true)
-	public void load(){
+	public void load() throws Exception{
 		/* TODO  앱에서는 메타데이터 파일이 없을수도 있다.
 			파일이 있는 경우에도, property 값에 아무것도 안들어가 있다면, 상위 프로젝트에서 정보를 요청하도록...
 			xml파일에는 써지지 않지만, 메타데이터 디자인 텝에서는 상위 프로젝트의 메타데이터 정보를 읽어와야한다.
