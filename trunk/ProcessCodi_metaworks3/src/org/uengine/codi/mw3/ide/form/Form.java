@@ -10,6 +10,8 @@ import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dwr.MetaworksRemoteService;
+import org.metaworks.widget.Window;
+import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.model.Session;
 
 @Face(options={"hideEditBtn"}, values={"true"})
@@ -37,13 +39,23 @@ public class Form {
 		}
 	
 	String packageName;
-	@Hidden
+		@Hidden
 		public String getPackageName() {
 			return packageName;
 		}
 		public void setPackageName(String packageName) {
 			this.packageName = packageName;
 		}	
+	
+	public String getFullClassName(){
+		String fullClassName = "";
+		
+		if(this.getPackageName() != null)
+			fullClassName += this.getPackageName()+ ".";
+		fullClassName += this.getId();
+		
+		return fullClassName;
+	}
 	
 	ArrayList<CommonFormField> formFields;
 		public ArrayList<CommonFormField> getFormFields() {
@@ -92,11 +104,7 @@ public class Form {
 		list.add(new SingleTextField());
 		list.add(new MultipleChoiceField());
 		
-		String alias = "";
-		
-		if(this.getPackageName() != null)
-			alias += this.getPackageName()+ ".";
-		alias += this.getId();
+		String alias = this.getFullClassName();
 		
 		WebObjectType wot = MetaworksRemoteService.getInstance().getMetaworksType(alias);
 
@@ -200,5 +208,5 @@ public class Form {
 		}
 		
 		return FORM_FIELD_ID_PREFIX + String.valueOf(id);
-	}
+	}	
 }
