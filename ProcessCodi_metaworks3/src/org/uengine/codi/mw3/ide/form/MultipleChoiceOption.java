@@ -55,11 +55,10 @@ public class MultipleChoiceOption implements ContextAware {
 	@ServiceMethod(callByContent=true)
 	public Object remove() {
 		
-		multipleChoiceField.getChoiceOptions().remove(this);
+		multipleChoiceField.getChoiceOptions().remove(this);		
 		
-		
-		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
-		this.getMetaworksContext().setWhere("properties");
+		multipleChoiceField.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+		multipleChoiceField.getMetaworksContext().setWhere("properties");
 		
 		return new FormFieldProperties(multipleChoiceField);
 		

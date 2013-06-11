@@ -1,24 +1,23 @@
 package org.uengine.codi.mw3.ide.form;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.util.ArrayList;
 
 import org.metaworks.MetaworksContext;
 import org.metaworks.WebFieldDescriptor;
 import org.metaworks.WebObjectType;
 import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dwr.MetaworksRemoteService;
-import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.model.Session;
 
+@Face(options={"hideEditBtn"}, values={"true"})
 public class Form {
 	
 	@AutowiredFromClient
 	public Session session;
-
+		
 	public final static String FORM_FIELD_ID_PREFIX = "FORMFIELD_";
 
 	String id;
@@ -44,8 +43,7 @@ public class Form {
 		}
 		public void setPackageName(String packageName) {
 			this.packageName = packageName;
-		}
-			
+		}	
 	
 	ArrayList<CommonFormField> formFields;
 		public ArrayList<CommonFormField> getFormFields() {
@@ -59,13 +57,14 @@ public class Form {
 		setFormFields(new ArrayList<CommonFormField>());
 		
 		try {
-			this.load2();
+			this.formLoad();
 		}catch(Exception ex) {
 			
 		}		
 	}
 	
-	@ServiceMethod(mouseBinding="drop", callByContent=true) 
+	@Hidden
+	@ServiceMethod(mouseBinding="drop", callByContent=true, bindingHidden=true) 
 	public Object drop() {
 		
 		Object clipboard = session.getClipboard();
@@ -87,15 +86,15 @@ public class Form {
 		return this;
 	}
 	
-	public void load2() throws Exception {
+	public void formLoad() throws Exception {
 		// TODO : process config file		
 		ArrayList<CommonFormField> list = new ArrayList<CommonFormField>();
 		list.add(new SingleTextField());
 		list.add(new MultipleChoiceField());
 		
-		String id = this.getPackageName() + "." +this.getId();
+		String alias = this.getPackageName() + "." +this.getId();
 		
-		WebObjectType wot = MetaworksRemoteService.getInstance().getMetaworksType(id);
+		WebObjectType wot = MetaworksRemoteService.getInstance().getMetaworksType(alias);
 
 		this.setName(wot.getDisplayName());
 		
@@ -115,8 +114,7 @@ public class Form {
 		}
 	}
 	
-	@ServiceMethod(callByContent=true)
-	public void save() { 
+	public String generateJavaCode() { 
 	
 		StringBuffer sb = new StringBuffer();
 		StringBuffer importBuffer = new StringBuffer();
@@ -166,31 +164,15 @@ public class Form {
 		
 		constructorBuffer.append("	}\n\n");
 		
-		sb.append("package ").append(getPackageName()).append(";\n\n"); //일단 빼고,
+		sb.append("package ").append(getPackageName()).append(";\n\n");
 		sb.append(importBuffer.toString());
-//		sb.append("@Face(ejsPath=\"genericfaces/FormFace.ejs\", options={\"fieldOrder\"},values={\""+ classFaceOrderStr +"\"})\n");
 		sb.append("public class " + this.getId() + "").append(" implements ITool").append( "{\n\n");
 		sb.append(constructorBuffer.toString());
 		sb.append(methodBuffer.toString());	
-		
 		sb.append("}");
 		
-		System.out.println(sb.toString());
-		
-		try {
-		
-//			String formSource = "D:/uEngine/codi-was-metaworks/bin/uengine/codebase/main/src/test/Test.java";
-			String alias = getPackageName() + "/" + getId() + ".java";
-			String formSource =  CodiClassLoader.getMyClassLoader().sourceCodeBase() + alias;
-			
-			File formFile = new File(formSource);
-			FileWriter writer = new FileWriter(formFile);
-			writer.write(sb.toString());
-			writer.close();
-		}catch(Exception ex) {
-			
-		}
-		
+//		System.out.println(sb.toString());		
+		return sb.toString();		
 	}
 	
 	public String createFormFieldId() {	
