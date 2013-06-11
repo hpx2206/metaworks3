@@ -2,58 +2,94 @@ package org.metaworks.metadata;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Map;
 
+import org.metaworks.ContextAware;
 import org.metaworks.FieldDescriptor;
 import org.metaworks.MetaworksContext;
 import org.metaworks.ObjectInstance;
+import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
+import org.metaworks.ToOpener;
 import org.metaworks.WebObjectType;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Available;
+import org.metaworks.annotation.Children;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
+import org.metaworks.annotation.Icon;
 import org.metaworks.annotation.Id;
+import org.metaworks.annotation.Name;
 import org.metaworks.annotation.NonEditable;
 import org.metaworks.annotation.Range;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.TypeSelector;
 import org.metaworks.dwr.MetaworksRemoteService;
+import org.metaworks.widget.ModalWindow;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.ide.Project;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.ResourceTree;
 import org.uengine.codi.mw3.ide.Workspace;
 import org.uengine.codi.mw3.ide.view.Navigator;
 import org.uengine.codi.mw3.model.Popup;
+import org.uengine.codi.mw3.model.ProcessMap;
+import org.uengine.codi.mw3.model.ProcessMapList;
+import org.uengine.codi.mw3.model.Session;
+import org.uengine.processmanager.ProcessManagerRemote;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
 
-@Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs", options={"fieldOrder"}, values={"name,type,value,file"})
+@Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs",
+	  ejsPathMappingByContext={
+		"{how: 'tree', face: 'dwr/metaworks/genericfaces/TreeFace.ejs'}",
+		"{how: 'picker', face: 'dwr/metaworks/org/metaworks/metadata/MetadataPropertyPicker.ejs'}",
+		"{how: 'appendProcessMap', face: 'dwr/metaworks/org/metaworks/metadata/MetadataPropertyProcessMap.ejs'}"
+		
+	  }, 
+	  options={"fieldOrder"}, values={"name,type,value,file"})
 @XStreamAlias("MetadataProperty")
-public class MetadataProperty implements Cloneable {
+public class MetadataProperty implements ContextAware, Cloneable {
 	
 	public final static String FILE_PROP = "file";
 	public final static String FORM_PROP = "form";
-	public final static String IMAGE_PROP = "img";
+	public final static String IMAGE_PROP = "image";
 	public final static String STRING_PROP = "string";
 	public final static String PROCESS_PROP = "process";
+	
+	@Autowired
+	public ProcessManagerRemote processManager;
 	
 	@AutowiredFromClient
 	public MetadataXML metadataXML;
 	
+	@AutowiredFromClient
+	public Session session;
+
 	public MetadataProperty() {
 		setFile(new MetadataFile());
 		setMetaworksContext(new MetaworksContext());
 	}
 	
+	@XStreamOmitField	
+	ArrayList<MetadataProperty> child;
+		@Children
+		public ArrayList<MetadataProperty> getChild() {
+			return child;
+		}
+		public void setChild(ArrayList<MetadataProperty> child) {
+			this.child = child;
+		}
+
 	@XStreamAsAttribute
 	String type;
 		@Range(
 				options={"File",	"Image",	"Process",	"String",	"Form"}, 
-				values ={"file",	"img",		"process",	"string",	"form"}
+				values ={"file",	"image",	"process",	"string",	"form"}
 				)
 		@TypeSelector(
 				values = 		{ 
@@ -71,6 +107,7 @@ public class MetadataProperty implements Cloneable {
 						FormProperty.class
 				} 
 				)
+		@Icon
 		@NonEditable(when={MetaworksContext.WHEN_EDIT})
 		public String getType() {
 			return type;
@@ -98,8 +135,17 @@ public class MetadataProperty implements Cloneable {
 			this.isRemote = isRemote;
 		}
 
-	String name;
+	String id;
 		@Id
+		public String getId() {
+			return id;
+		}
+		public void setId(String id) {
+			this.id = id;
+		}
+
+	String name;
+		@Name
 		public String getName() {
 			return name;
 		}
@@ -369,6 +415,128 @@ public class MetadataProperty implements Cloneable {
 		
 		return false;
 	}
+
+	@Available(how="tree")
+	@ServiceMethod(callByContent=true, except="child", mouseBinding="left", target=ServiceMethodContext.TARGET_APPEND)
+	public Object[] pick(){		
+		
+		if("folder".equals(this.getType()))
+			return null;
+		else{
+			this.getMetaworksContext().setHow("picker");
+			
+			return new Object[]{new ToOpener(this), new Remover(new Popup())};
+		}
+	}
+
 	
+	@Available(how="picker")
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
+	public Object openPicker() {
+		MetadataXML metadataXML = new MetadataXML();
+		metadataXML = metadataXML.loadWithPath("d:/uengine.metadata");
+		
+		MetadataProperty metadataTree = new MetadataProperty();
+		metadataTree.setChild(metadataXML.getProperties());
+		metadataTree.setMetaworksContext(new MetaworksContext());
+		metadataTree.getMetaworksContext().setHow("tree");
+		metadataTree.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+		
+		metadataTree.setId("__ROOT__");		
+		metadataTree.setName("Metadata");
+		metadataTree.setType("folder");
+		
+		MetadataProperty mpImage = new MetadataProperty();
+		mpImage.setName("image");
+		mpImage.setId("image");
+		mpImage.setType("folder");
+		mpImage.setChild(new ArrayList<MetadataProperty>());
+		
+		MetadataProperty mpProcess = new MetadataProperty();
+		mpProcess.setName("process");
+		mpProcess.setId("process");
+		mpProcess.setType("folder");
+		mpProcess.setChild(new ArrayList<MetadataProperty>());
+		
+		MetadataProperty mpFile = new MetadataProperty();
+		mpFile.setName("file");
+		mpFile.setId("file");
+		mpFile.setType("folder");
+		mpFile.setChild(new ArrayList<MetadataProperty>());
+
+		MetadataProperty mpForm = new MetadataProperty();
+		mpForm.setName("form");
+		mpForm.setId("form");
+		mpForm.setType("folder");
+		mpForm.setChild(new ArrayList<MetadataProperty>());
+		
+		MetadataProperty mpString = new MetadataProperty();
+		mpString.setName("string");
+		mpString.setId("string");
+		mpString.setType("folder");
+		mpString.setChild(new ArrayList<MetadataProperty>());
+
+		
+		for(MetadataProperty metadataProperty : metadataXML.getProperties()){
+			metadataProperty.setMetaworksContext(new MetaworksContext());
+			metadataProperty.getMetaworksContext().setHow("tree");
+			
+			if(MetadataProperty.IMAGE_PROP.equals(metadataProperty.getType())){
+				mpImage.getChild().add(metadataProperty);
+			}else if(MetadataProperty.PROCESS_PROP.equals(metadataProperty.getType())){
+				mpProcess.getChild().add(metadataProperty);
+			}else if(MetadataProperty.FILE_PROP.equals(metadataProperty.getType())){
+				mpFile.getChild().add(metadataProperty);
+			}else if(MetadataProperty.FORM_PROP.equals(metadataProperty.getType())){
+				mpForm.getChild().add(metadataProperty);
+			}else if(MetadataProperty.STRING_PROP.equals(metadataProperty.getType())){
+				mpString.getChild().add(metadataProperty);
+			}
+		}
+		
+		metadataTree.setChild(new ArrayList<MetadataProperty>());
+		metadataTree.getChild().add(mpImage);
+		metadataTree.getChild().add(mpProcess);
+		metadataTree.getChild().add(mpFile);
+		metadataTree.getChild().add(mpForm);
+		metadataTree.getChild().add(mpString);
+
+
+		return new Popup(metadataTree);
+
+	}
 	
+	@ServiceMethod(callByContent=true, except="child")
+	public Object[] appendProcessMap() throws Exception {
+		String alias = "@" + this.getName();
+			
+		ProcessMap processMap = new ProcessMap();
+
+		org.uengine.kernel.ProcessDefinition procDef = processManager.getProcessDefinition(alias);
+		String fullCommandPhrase = procDef.getDescription().getText();
+		
+		if(fullCommandPhrase!=null){
+			int commandCotentStarts = fullCommandPhrase.indexOf(':');
+			if(-1 < commandCotentStarts){
+				
+				processMap.setCmPhrase(fullCommandPhrase);
+				processMap.setCmTrgr(fullCommandPhrase.substring(0, commandCotentStarts));
+			}
+		}
+			
+		processMap.setMapId(session.getCompany().getComCode() + "." + alias);
+		processMap.setDefId(alias);
+		processMap.setName(this.getName());
+		processMap.setComCode(session.getCompany().getComCode());
+		
+		if(!processMap.confirmExist())
+			throw new Exception("$AlreadyAddedApp");
+
+		processMap.createMe();
+		
+		ProcessMapList processMapList = new ProcessMapList();
+		processMapList.load(session);
+		
+		return new Object[]{processMapList, new Remover(new ModalWindow())};		
+	}
 }
