@@ -235,6 +235,8 @@ public abstract class AbstractMetaworksFile implements ContextAware {
 				fileExt = ".pptx";
 			} else if(mimeType.indexOf("word") > -1){
 				fileExt = ".docx";
+			} else if(mimeType.indexOf("hwp") > -1){
+				fileExt = ".hwp";
 			}
 		} else {
 			if(filename.lastIndexOf(".") != -1){
