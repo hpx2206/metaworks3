@@ -20,16 +20,6 @@ public class MoneyField extends CommonFormField {
 		this.setEjsPath("dwr/metaworks/genericfaces/MoneyField.ejs");
 		
 	}
-
-	@Override
-	public boolean equalsType(WebFieldDescriptor fd){
-		
-		if(fd.getInputFace() != null && fd.getInputFace().equals(this.getEjsPath()) && "java.lang.String".equals(fd.getClassName()) ){
-			return true;
-		}
-		
-		return false;
-	}
 	
 	@Override
 	public Object apply() {

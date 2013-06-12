@@ -21,16 +21,6 @@ public class DateField extends CommonFormField {
 	}
 	
 	@Override
-	public boolean equalsType(WebFieldDescriptor fd){
-			
-		if(fd.getInputFace() != null && fd.getInputFace().equals(this.getEjsPath()) && "java.util.Date".equals(fd.getClassName()) ){
-			return true;
-		}
-		
-		return false;
-	}
-	
-	@Override
 	public Object apply() {
 		this.setValues(makeValueString(this.getFormat()));
 		this.setOptions(makeValueString("format"));

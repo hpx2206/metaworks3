@@ -69,7 +69,7 @@ public class Form {
 		try {
 			this.formLoad();
 		}catch(Exception ex) {
-			
+			ex.printStackTrace();
 		}		
 	}
 	
@@ -126,6 +126,8 @@ public class Form {
 					CommonFormField addFormField = formField.make(fd);
 					
 					this.getFormFields().add(addFormField);
+					
+					break;
 				}
 			}
 		}
