@@ -10,8 +10,6 @@ import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dwr.MetaworksRemoteService;
-import org.metaworks.widget.Window;
-import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.model.Session;
 
 @Face(options={"hideEditBtn"}, values={"true"})
