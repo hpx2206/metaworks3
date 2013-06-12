@@ -14,14 +14,21 @@ import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.common.MetaworksUtil;
-import org.uengine.codi.mw3.ide.Project;
 import org.uengine.codi.mw3.ide.ResourceNode;
+import org.uengine.codi.mw3.ide.Workspace;
 import org.uengine.codi.mw3.ide.editor.java.JavaParser;
+import org.uengine.codi.mw3.model.Session;
 
 public class Editor {
 	
 	public final static String TYPE_JAVA = "java";
 	
+	@AutowiredFromClient
+	public Session session;
+	
+	@AutowiredFromClient
+	public Workspace workspace; 
+
 	ResourceNode resourceNode;
 		@Hidden
 		public ResourceNode getResourceNode() {
@@ -29,10 +36,7 @@ public class Editor {
 		}
 		public void setResourceNode(ResourceNode resourceNode) {
 			this.resourceNode = resourceNode;
-		}
-		
-	@AutowiredFromClient(select="resourceNode.projectId == autowiredObject.id")
-	public Project project; 
+		}		
 
 	String id;
 		@Id
