@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -1150,11 +1151,8 @@ public class WebObjectType{
 						componentPathHashBeenChanged = true;
 
 						componentPath = "dwr/metaworks/" + componentPath;
-					}else
-					if(!tryToFindComponent(componentPath)){
-						
+					}else if(!tryToFindComponent(componentPath)){
 						componentPath = null;
-						
 					}
 					
 					if(!componentPathHashBeenChanged && face!=null)
@@ -1261,8 +1259,7 @@ public class WebObjectType{
 			}
 			
 		}catch(Exception ex){}
-		
-		
+			
 		try{
 			HttpServletRequest request = TransactionContext.getThreadLocalInstance().getRequest();
 			
@@ -1278,7 +1275,7 @@ public class WebObjectType{
 			if("/dwr".equals(contextOnly))
 				contextOnly = "";
 						
-			//host = "127.0.0.1";
+			host = "127.0.0.1";
 			
 			new URL(protocol + "://" + host + ":" + port + contextOnly + "/metaworks/" + componentName).openStream();
 			
@@ -1286,6 +1283,7 @@ public class WebObjectType{
 		}catch(Exception e){
 			return false;
 		}
+		
 	}
 
 	
