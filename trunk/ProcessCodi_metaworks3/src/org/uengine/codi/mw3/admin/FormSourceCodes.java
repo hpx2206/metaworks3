@@ -2,7 +2,7 @@ package org.uengine.codi.mw3.admin;
 
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
-import org.metaworks.example.ide.FormDesigner;
+import org.uengine.codi.mw3.ide.form.NewFormDesigner;
 import org.uengine.codi.mw3.model.FaceHelperSourceCode;
 import org.uengine.codi.mw3.model.JavaSourceCode;
 
@@ -30,10 +30,10 @@ public class FormSourceCodes extends ClassSourceCodes {
 	}
 	@Hidden(on=true)
 	@Override
-	public FormDesigner getFormDesigner() {
+	public NewFormDesigner getFormDesigner() {
 		return formDesigner;
 	}
-	public void setFormDesigner(FormDesigner formDesigner) {
+	public void setFormDesigner(NewFormDesigner formDesigner) {
 		this.formDesigner = formDesigner;
 	}
 	@Hidden
