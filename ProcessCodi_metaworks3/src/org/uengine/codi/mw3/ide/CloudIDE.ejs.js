@@ -24,13 +24,8 @@ org_uengine_codi_mw3_ide_CloudIDE.prototype = {
 				tabId = tabObject[tabMetadata.keyFieldDescriptor.name];
 			}
 			
-			if(tabId){
+			if(tabId)
 				this.object.currentEditorId = tabId;
-				
-				var editor = mw3.getAutowiredObject('org.uengine.codi.mw3.ide.editor.Editor@' + tabId);
-				if(editor)
-					this.object.currentProjectId = editor.resourceNode.projectId;
-			}
 		}
 		
 		return this.object;
