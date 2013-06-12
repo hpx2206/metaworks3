@@ -13,9 +13,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import javassist.NotFoundException;
-
-import javax.servlet.http.HttpSession;
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticListener;
 import javax.tools.JavaCompiler;
@@ -29,15 +26,14 @@ import org.codehaus.commons.compiler.AbstractJavaSourceClassLoader;
 import org.codehaus.commons.compiler.ICompilerFactory;
 import org.codehaus.commons.compiler.jdk.ByteArrayJavaFileManager;
 import org.codehaus.commons.compiler.jdk.ByteArrayJavaFileManager.ByteArrayJavaFileObject;
-import org.metaworks.ObjectType;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.metadata.MetadataBundle;
 import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.kernel.GlobalContext;
-import org.uengine.util.UEngineUtil;
 
 public class CodiClassLoader extends AbstractJavaSourceClassLoader {
 
+	public List<File>          defaultSourcePath;
     private File[]             sourcePath;
     private String             optionalCharacterEncoding;
     private boolean            debuggingInfoLines;
@@ -67,8 +63,6 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
     }
     
     public static CodiClassLoader getMyClassLoader(){
-    	
-    	
         ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
 
         return (CodiClassLoader) contextClassLoader;
@@ -101,7 +95,7 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
 			
 		}
 		
-		if(userId==null)
+		//if(userId==null)
 			userId = "main";
 		
 		String codebaseRoot = getCodeBaseRoot();
@@ -602,26 +596,55 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
 //		if(sourceCodeBase==null)
 //			sourceCodeBase = "/Users/jyjang/javasources/";
 
+		
+		
+		List<File> sourcePath = new ArrayList<File>();
+		
+		
 		//TODO: for guest users, sourceCodeBase to the main committer is right answer.
 		if(sourceCodeBase==null) {
-			cl.setSourcePath(new File[]{new File(CodiClassLoader.getCodeBaseRoot())});
+			//sourcePath.add(new File(CodiClassLoader.getCodeBaseRoot()));
+			System.out.println("============= sourceCodeBase is null ==============");
 		}else{
 			String projectKey = MetadataBundle.getProjectId();
 			if( projectKey == null ){
-				cl.setSourcePath(new File[]{
-						new File(sourceCodeBase), 
-						new File(CodiClassLoader.getCodeBaseRoot())});
+				sourcePath.add(new File(sourceCodeBase));
 			}else{
-				cl.setSourcePath(new File[]{
-						new File(sourceCodeBase), 
-						new File(CodiClassLoader.getCodeBaseRoot() + File.separatorChar + projectKey+ File.separatorChar + "root") ,
-						new File(CodiClassLoader.getCodeBaseRoot())});
+				sourcePath.add(new File(sourceCodeBase));
+				sourcePath.add(new File(CodiClassLoader.getCodeBaseRoot() + File.separatorChar + projectKey+ File.separatorChar + "root"));
 			}
 		}
+		
+		cl.defaultSourcePath = sourcePath;
+		cl.setSourcePath(sourcePath.toArray(new File[sourcePath.size()]));
 				
 		return cl;
 	}  
 	
+	public void addSourcePath(String path){
+		
+		if(path != null){
+			boolean add = false;
+			List<File> sourcePath = new ArrayList<File>();
+
+			for(File file : this.defaultSourcePath){
+				sourcePath.add(file);
+				
+				System.out.println(file.getAbsoluteFile() + " == " + path);
+				if(!file.getAbsoluteFile().equals(path)){
+					add = true;
+				}
+			}
+
+			if(add){
+				fileManager = null;
+				
+				sourcePath.add(0, new File(path));
+				
+				this.setSourcePath(sourcePath.toArray(new File[sourcePath.size()]));
+			}				
+		}
+	}
 	
 	public static void refreshClassLoader(String resourceName){
 		

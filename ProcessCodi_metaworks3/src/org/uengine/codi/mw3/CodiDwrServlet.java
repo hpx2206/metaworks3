@@ -293,6 +293,24 @@ public class CodiDwrServlet extends TransactionalDwrServlet{
 		HttpSession session = request.getSession();
 		if(session!=null){
 			String tenantId = (String) session.getAttribute("tenantId");
+			String projectSourcePath = (String) session.getAttribute("projectSourcePath");
+			
+			String sourceCodeBase = CodiClassLoader.mySourceCodeBase();
+			CodiClassLoader clForSession = CodiClassLoader.createClassLoader(sourceCodeBase);
+			if( TenantContext.getThreadLocalInstance() != null )
+				tenantId = TenantContext.getThreadLocalInstance().getTenantId();
+			
+			session.setAttribute("tenantId", tenantId);
+			
+			if(projectSourcePath != null)
+				clForSession.addSourcePath(projectSourcePath);
+				
+			CodiClassLoader.codiClassLoader = clForSession;
+			
+			Thread.currentThread().setContextClassLoader(clForSession);
+
+			/*
+			String tenantId = (String) session.getAttribute("tenantId");
 			if(tenantId == null || (tenantId != null && !tenantId.equals(TenantContext.getThreadLocalInstance().getTenantId()))){
 				String sourceCodeBase = CodiClassLoader.mySourceCodeBase();
 				CodiClassLoader clForSession = CodiClassLoader.createClassLoader(sourceCodeBase);
@@ -306,6 +324,7 @@ public class CodiDwrServlet extends TransactionalDwrServlet{
 			}else{
 				Thread.currentThread().setContextClassLoader(CodiClassLoader.codiClassLoader); 
 			}
+			*/
 		}else{
 			Thread.currentThread().setContextClassLoader(CodiClassLoader.codiClassLoader);
 		}
