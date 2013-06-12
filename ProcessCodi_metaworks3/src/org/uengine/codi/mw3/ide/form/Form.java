@@ -80,7 +80,7 @@ public class Form {
 		Object clipboard = session.getClipboard();
 		if(clipboard instanceof CommonFormField){
 			CommonFormField formField = (CommonFormField) clipboard;
-			formField.setFieldId(createFormFieldId());
+			formField.setFieldId(makeFormFieldId());
 			
 			formField.init();
 			formField.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
@@ -101,6 +101,13 @@ public class Form {
 		ArrayList<CommonFormField> list = new ArrayList<CommonFormField>();
 		list.add(new SingleTextField());
 		list.add(new MultipleChoiceField());
+		list.add(new DateField());
+		list.add(new NumberField());
+		list.add(new FileUploadField());
+		list.add(new UserField());
+		list.add(new DropDownField());
+		list.add(new CheckBoxField());
+		list.add(new ParagraphField());
 		
 		String alias = this.getFullClassName();
 		
@@ -131,27 +138,55 @@ public class Form {
 		StringBuffer methodBuffer = new StringBuffer();
 		StringBuffer constructorBuffer 	= new StringBuffer();
 		ArrayList<String> importList = new ArrayList<String>();
+		ArrayList<String> constructorList = new ArrayList<String>();
+		String classFaceOrderStr = "";
 		
 		importBuffer.append("import org.uengine.codi.ITool; \n");
 		importBuffer.append("import org.metaworks.annotation.Face;\n");
 		
 		constructorBuffer.append("	public " + this.getId() + "() { \n");
 		
-		for(CommonFormField field : formFields) {
+		for(int i = 0; i < formFields.size(); i++) {
+			
+			CommonFormField field = formFields.get(i);
 		
 			String importStr = "";
+			String constructortStr = "";
 			
+			if( i == 0){
+				classFaceOrderStr = field.getId();
+			}else{
+				classFaceOrderStr += "," + field.getId();
+			}
+			
+			//여기 hidden 부분 어떻게 처리 할까? 암튼 이거 아니야 -________________- 어케해방
 			if(field.getHide()) {
 				importStr = "import org.metaworks.annotation.Hidden;\n";
 				if(!importList.contains(importStr)){
 					importList.add(importStr);
 				}
 			}
-
+			
+			importStr = field.generateImportCode();
+			if(!importList.contains(importStr)){
+				importList.add(importStr);
+			}
+			
+			constructortStr = field.generateConstructorCode();
+			if(!constructorList.contains(constructortStr)){
+				constructorList.add(constructortStr);
+			}
+			
+			
 			methodBuffer.append(field.generateVariableCode());
 			methodBuffer.append(field.generateAnnotationCode());
 			methodBuffer.append(field.generatePropertyCode());
 		}
+		
+		for(int i =0; i < constructorList.size(); i++){
+			constructorBuffer.append(constructorList.get(i));
+		}
+		constructorBuffer.append("	}\n\n");
 		
 		methodBuffer
 		.append("	@Override\n")
@@ -172,12 +207,11 @@ public class Form {
 			importBuffer.append(importList.get(i));
 		}
 		
-		constructorBuffer.append("	}\n\n");
-		
 		if(this.getPackageName() != null)
 			sb.append("package ").append(getPackageName()).append(";\n\n");
 		
-		sb.append(importBuffer.toString());
+		sb.append(importBuffer.toString() + "\n");
+		sb.append("@Face(ejsPath=\"genericfaces/FormFace.ejs\", options={\"fieldOrder\"},values={\""+ classFaceOrderStr +"\"})\n");
 		sb.append("public class " + this.getId() + "").append(" implements ITool").append( "{\n\n");
 		sb.append(constructorBuffer.toString());
 		sb.append(methodBuffer.toString());	
@@ -187,7 +221,7 @@ public class Form {
 		return sb.toString();		
 	}
 	
-	public String createFormFieldId() {	
+	public String makeFormFieldId() {	
 		int id = 0;
 		
 		if(this.getFormFields() != null && this.getFormFields().size() > 0) {
@@ -195,13 +229,14 @@ public class Form {
 			int max_id = 0;
 			int cur_id = 0;
 			
-			for(int i = 0; i <this.getFormFields().size(); i++) {				
+			for(int i = 0; i <this.getFormFields().size(); i++) {								
 				CommonFormField cf =  this.getFormFields().get(i);
-				cur_id = Integer.parseInt(cf.getFieldId().replace(FORM_FIELD_ID_PREFIX, "")); 
+				cur_id = Integer.parseInt(cf.getFieldId().replace(FORM_FIELD_ID_PREFIX, ""));
+
 				if (max_id < cur_id)
-					max_id = cur_id;				
+					max_id = cur_id;
+								
 			}
-			
 			id = max_id + 1;
 		}
 		

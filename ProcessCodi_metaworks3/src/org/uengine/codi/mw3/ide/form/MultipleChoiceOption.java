@@ -3,15 +3,17 @@ package org.uengine.codi.mw3.ide.form;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 
 
 public class MultipleChoiceOption implements ContextAware {
 
-	@AutowiredFromClient(select="parentId == autowiredObject.fieldId")
-	public MultipleChoiceField multipleChoiceField;
+	@AutowiredFromClient(select="parentId == autowiredObject.fieldId && autowiredObject.metaworksContext.where == 'properties'")
+	public MultipleChoiceField formField;
 			
 	String parentId;
+//		@Hidden
 		public String getParentId() {
 			return parentId;
 		}
@@ -19,12 +21,13 @@ public class MultipleChoiceOption implements ContextAware {
 			this.parentId = parentId;
 		}
 		
-	String id;
-		public String getId() {
-			return id;
+	String fieldId;
+//		@Hidden
+		public String getFieldId() {
+			return fieldId;
 		}
-		public void setId(String id) {
-			this.id = id;
+		public void setFieldId(String fieldId) {
+			this.fieldId = fieldId;
 		}		
 
 	String option;
@@ -55,14 +58,12 @@ public class MultipleChoiceOption implements ContextAware {
 	@ServiceMethod(callByContent=true)
 	public Object remove() {
 		
-		multipleChoiceField.getChoiceOptions().remove(this);		
+		formField.getChoiceOptions().remove(this);		
 		
-		multipleChoiceField.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
-		multipleChoiceField.getMetaworksContext().setWhere("properties");
+		formField.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+		formField.getMetaworksContext().setWhere("properties");
 		
-		return new FormFieldProperties(multipleChoiceField);
-		
-//		return multipleChoiceField;
+		return new FormFieldProperties(formField);
 	}
 	
 	@Override
@@ -72,9 +73,9 @@ public class MultipleChoiceOption implements ContextAware {
 		if(obj instanceof MultipleChoiceOption){
 			MultipleChoiceOption mc = (MultipleChoiceOption)obj;
 			
-			result = this.getId().equals(mc.getId());
+			result = this.getFieldId().equals(mc.getFieldId());
 		}
 		
 		return result;
-	}	
+	}
 }

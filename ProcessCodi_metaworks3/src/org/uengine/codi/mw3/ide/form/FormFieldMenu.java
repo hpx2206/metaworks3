@@ -1,14 +1,13 @@
 package org.uengine.codi.mw3.ide.form;
 
-import java.lang.reflect.Constructor;
+import java.awt.Checkbox;
 import java.util.ArrayList;
 
-import javax.swing.JFrame;
-
 import org.metaworks.MetaworksContext;
-import org.uengine.kernel.GlobalContext;
-import org.uengine.processdesigner.RolePicker;
+import org.metaworks.annotation.Face;
 
+
+@Face(options={"hideEditBtn"}, values={"true"}, ejsPath="genericfaces/FormFace.ejs")
 public class FormFieldMenu {
 
 	ArrayList<CommonFormField> formFields;	
@@ -53,7 +52,49 @@ public class FormFieldMenu {
 		multipleChoiceField.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 		multipleChoiceField.getMetaworksContext().setWhere("menu");
 		
+		DateField dateField = new DateField();
+		dateField.setMetaworksContext(new MetaworksContext());
+		dateField.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+		dateField.getMetaworksContext().setWhere("menu");
+		
+		NumberField numberField = new NumberField();
+		numberField.setMetaworksContext(new MetaworksContext());
+		numberField.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+		numberField.getMetaworksContext().setWhere("menu");
+		
+		FileUploadField fileUploadField = new FileUploadField();
+		fileUploadField.setMetaworksContext(new MetaworksContext());
+		fileUploadField.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+		fileUploadField.getMetaworksContext().setWhere("menu");
+		
+		UserField userField = new UserField();
+		userField.setMetaworksContext(new MetaworksContext());
+		userField.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+		userField.getMetaworksContext().setWhere("menu");
+		
+		DropDownField dropDownField = new DropDownField();
+		dropDownField.setMetaworksContext(new MetaworksContext());
+		dropDownField.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+		dropDownField.getMetaworksContext().setWhere("menu");
+		
+		CheckBoxField checkBoxField = new CheckBoxField();
+		checkBoxField.setMetaworksContext(new MetaworksContext());
+		checkBoxField.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+		checkBoxField.getMetaworksContext().setWhere("menu");
+		
+		ParagraphField paragraphField = new ParagraphField();
+		paragraphField.setMetaworksContext(new MetaworksContext());
+		paragraphField.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+		paragraphField.getMetaworksContext().setWhere("menu");
+		
 		formFields.add(singleTextField);
-		formFields.add(multipleChoiceField);		
+		formFields.add(multipleChoiceField);
+		formFields.add(dateField);
+		formFields.add(numberField);
+		formFields.add(fileUploadField);
+		formFields.add(userField);
+		formFields.add(dropDownField);
+		formFields.add(checkBoxField);
+		formFields.add(paragraphField);
 	}
 }
