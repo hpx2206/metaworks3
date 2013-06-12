@@ -1,7 +1,5 @@
 package org.uengine.codi.mw3.ide;
 
-import java.io.File;
-
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.ToAppend;
@@ -12,10 +10,8 @@ import org.metaworks.widget.layout.Layout;
 import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.admin.TopPanel;
 import org.uengine.codi.mw3.ide.editor.Editor;
-import org.uengine.codi.mw3.ide.editor.metadata.MetadataEditor;
 import org.uengine.codi.mw3.ide.view.Navigator;
 import org.uengine.codi.mw3.model.Session;
-import org.uengine.kernel.GlobalContext;
 
 public class CloudIDE {
 	
@@ -133,22 +129,24 @@ public class CloudIDE {
 		
 		CloudWindow editorWindow = new CloudWindow("editor");
 		
-//		ResourceNode resourceNode = new ResourceNode();
-//		resourceNode.setProjectId("test0001");
-//		resourceNode.setName("uengine.metadata");
-//		resourceNode.setId(resourceNode.getProjectId() + File.separatorChar + "uengine.metadata");
-//		resourceNode.setPath(codebase +File.separatorChar +  tenantId + File.separatorChar + resourceNode.getId());
-//		
-//		System.out.println(resourceNode.getPath());
-//		
-//		MetadataEditor editor = new MetadataEditor(resourceNode);
-//		try {
-//			editor.loadPage();
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		editorWindow.getTabs().add(editor);
+		/*
+		ResourceNode resourceNode = new ResourceNode();
+		resourceNode.setProjectId("test0001");
+		resourceNode.setName("uengine.metadata");
+		resourceNode.setId(resourceNode.getProjectId() + File.separatorChar + "uengine.metadata");
+		resourceNode.setPath(codebase +File.separatorChar +  tenantId + File.separatorChar + resourceNode.getId());
+		
+		System.out.println(resourceNode.getPath());
+		
+		MetadataEditor editor = new MetadataEditor(resourceNode);
+		try {
+			editor.loadPage();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		editorWindow.getTabs().add(editor);
+		*/
 		
 		Layout centerLayout = new Layout();
 		centerLayout.setId("center");
@@ -291,17 +289,13 @@ public class CloudIDE {
 		 */
 
 	}
-
-
+	
 	@AutowiredFromClient(select="typeof currentEditorId!='undefined' && currentEditorId==autowiredObject.id")
 	public Editor editor;
 	
-	@AutowiredFromClient(select="typeof currentProjectId!='undefined' && currentProjectId == autowiredObject.id")
-	public Project project; 
-	
-	@ServiceMethod(payload={"currentEditorId", "currentProjectId"}, keyBinding="Ctrl+S@Global", target=ServiceMethodContext.TARGET_APPEND)
+	@ServiceMethod(payload={"currentEditorId", "workspace"}, keyBinding="Ctrl+S@Global", target=ServiceMethodContext.TARGET_APPEND)
 	public Object save(){
-		editor.project = project;
+		editor.workspace = this.getWorkspace();
 		
 		return new ToAppend(editor, editor.save());
 	}

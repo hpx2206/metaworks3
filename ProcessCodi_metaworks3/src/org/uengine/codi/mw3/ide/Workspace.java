@@ -87,4 +87,13 @@ public class Workspace {
 		
 		this.setProjects(projects);
 	}
+	
+	public Project findProject(String projectId){
+		for(Project project : this.getProjects()){
+			if(projectId.equals(project.getId()))
+				return project;
+		}
+		
+		return null;
+	}
 }

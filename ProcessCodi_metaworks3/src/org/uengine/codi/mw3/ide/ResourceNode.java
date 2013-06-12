@@ -26,8 +26,8 @@ public class ResourceNode extends TreeNode implements ContextAware {
 	@AutowiredFromClient
 	public Session session;
 
-	@AutowiredFromClient(select="typeof type != 'undefined' && type=='java' && projectId ==autowiredObject.id")
-	public Project project;
+	@AutowiredFromClient
+	public Workspace workspace;
 
 	public final static String TYPE_PROJECT 			= "project";
 	
@@ -133,7 +133,7 @@ public class ResourceNode extends TreeNode implements ContextAware {
 			
 			if(type.equals(TreeNode.TYPE_FILE_JAVA)){
 				editor = new FormEditor(this);
-				editor.project = project;
+				editor.workspace = workspace;
 				editor.load();
 			}else if(type.equals(TreeNode.TYPE_FILE_PROCESS)){
 				editor = new ProcessEditor(this);
