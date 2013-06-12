@@ -853,7 +853,9 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					if(fd.attributes['children']){
 						webObjectType['childrenFieldDescriptor'] = fd;
 					}
-					
+					if(fd.attributes['icon']){
+						webObjectType['iconFieldDescriptor'] = fd;
+					}
 					if(fd.attributes['typeSelector']){
 						webObjectType['typeSelector'] = fd;
 					}
