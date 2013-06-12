@@ -7,8 +7,8 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.MenuItem;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.ide.CloudWindow;
-import org.uengine.codi.mw3.ide.Project;
 import org.uengine.codi.mw3.ide.ResourceNode;
+import org.uengine.codi.mw3.ide.Workspace;
 import org.uengine.codi.mw3.ide.editor.SQLClientEditor;
 import org.uengine.codi.mw3.ide.editor.TerminalEditor;
 import org.uengine.codi.mw3.ide.templete.NewClass;
@@ -20,8 +20,8 @@ import org.uengine.codi.mw3.ide.templete.NewRule;
 
 public class NewMenu extends CloudMenu {
 
-	@AutowiredFromClient(select="typeof resourceNode != 'undefined' && resourceNode.projectId == autowiredObject.id")
-	public Project project;
+	@AutowiredFromClient
+	public Workspace workspace;
 	
 	public NewMenu(){
 		this(null);
@@ -63,7 +63,7 @@ public class NewMenu extends CloudMenu {
 	public ModalWindow newForm(){
 		NewForm newForm = new NewForm();
 		newForm.setResourceNode(this.getResourceNode());
-		newForm.project = project;
+		newForm.workspace = workspace;
 		newForm.load();
 		
 		return new ModalWindow(newForm, 300, 150, "New Form");
