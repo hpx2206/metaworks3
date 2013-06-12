@@ -1,8 +1,12 @@
 package org.uengine.codi.mw3.ide.menu;
 
+import java.io.File;
+
+import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.MenuItem;
+import org.uengine.codi.mw3.ide.CloudTab;
 import org.uengine.codi.mw3.ide.ResourceNode;
 
 public class ResourceContextMenu extends CloudMenu {
@@ -48,11 +52,11 @@ public class ResourceContextMenu extends CloudMenu {
 	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
 	public Object[] remove(){
-/*		Object clipboard = session.getClipboard();
+		Object clipboard = session.getClipboard();
 		if(clipboard instanceof ResourceNode){
 			ResourceNode node = (ResourceNode)clipboard;
 			
-			File file = new File(jbPath.getBasePath() + node.getId());
+			File file = new File(node.getPath());
 			if(file.exists()){
 				file.delete();
 			}
@@ -60,9 +64,7 @@ public class ResourceContextMenu extends CloudMenu {
 			return new Object[]{new Remover(new CloudTab(node.getId()), true), new Remover(node)};
 		}else{
 			return null;
-		}*/
-		
-		return null;
+		}
 	}
 	
 	@ServiceMethod
