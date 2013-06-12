@@ -45,7 +45,7 @@ public class Project {
 		Source source = new Source();
 		source.setName("src");
 		source.setId(this.getId() + File.separatorChar + source.getName());
-		source.setPath(this.getPath() + File.separatorChar + source.getName());
+		source.setPath(new File(this.getPath() + File.separatorChar + source.getName()).getAbsolutePath());
 		
 		ArrayList<Source> sources = new ArrayList<Source>();
 		sources.add(source);
@@ -53,7 +53,7 @@ public class Project {
 		BuildOutputPath buildOutputPath = new BuildOutputPath();
 		buildOutputPath.setName("bin");
 		buildOutputPath.setId(this.getId() + File.separatorChar + buildOutputPath.getName());
-		buildOutputPath.setPath(this.getPath() + File.separatorChar + buildOutputPath.getName());
+		buildOutputPath.setPath(new File(this.getPath() + File.separatorChar + buildOutputPath.getName()).getAbsolutePath());
 		
 		BuildPath buildPath = new BuildPath();
 		buildPath.setSources(sources);
