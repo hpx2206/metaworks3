@@ -9,14 +9,4 @@ public class FileUploadField extends CommonFormField {
 		this.setDefine(true);
 //		this.setEjsPath("dwr/metaworks/genericfaces/MetaworksFile.ejs");
 	}
-	
-	@Override
-	public boolean equalsType(WebFieldDescriptor fd){
-			
-		if(fd.getInputFace() != null && fd.getInputFace().equals(this.getEjsPath()) && "org.metaworks.website.MetaworksFile".equals(fd.getClassName()) ){
-			return true;
-		}
-		
-		return false;
-	}
 }

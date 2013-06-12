@@ -35,7 +35,6 @@ public class MultipleChoiceField extends CommonFormField {
 
 	public MultipleChoiceField(){
 		this.setFieldType("java.lang.String");
-		this.setDefine(false);
 		this.setEjsPath("dwr/metaworks/genericfaces/RadioButton.ejs");
 		this.setChoiceOptions(new ArrayList<MultipleChoiceOption>());
 	}
@@ -92,17 +91,6 @@ public class MultipleChoiceField extends CommonFormField {
 		super.apply();
 		
 		return form;
-	}
-	
-	@Override
-	public boolean equalsType(WebFieldDescriptor fd){
-			
-		System.out.println("fd.getClassType().getName() : " + fd.getClassName());
-		if(fd.getInputFace() != null && fd.getInputFace().equals(this.getEjsPath()) && "java.lang.String".equals(fd.getClassName()) ){
-			return true;
-		}
-		
-		return false;
 	}
 	
 	@Override

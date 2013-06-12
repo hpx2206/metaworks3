@@ -339,7 +339,23 @@ public class CommonFormField implements ContextAware, Cloneable {
 	}
 	
 	public boolean equalsType(WebFieldDescriptor fd){
-		return true;
+		
+		boolean equals = false;
+		
+		if(this.getEjsPath() == null){
+			if(fd.getInputFace() == null || fd.getInputFace().equals(""))
+				equals = true;
+		}else if(this.getEjsPath().equals(fd.getInputFace())){
+			equals = true;
+		}
+		
+		if(equals){
+			if(!this.getFieldType().equals(fd.getClassName()))
+				equals = false;
+		}
+		
+		return equals;
+
 	}
 	
 	public CommonFormField make(WebFieldDescriptor fd)  {
