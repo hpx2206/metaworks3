@@ -3,15 +3,17 @@ package org.uengine.codi.mw3.ide.editor.form;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.dao.TransactionContext;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.widget.ModalWindow;
-import org.metaworks.widget.Window;
 import org.uengine.codi.mw3.CodiClassLoader;
+import org.uengine.codi.mw3.ide.Project;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.editor.Editor;
 import org.uengine.codi.mw3.ide.form.Form;
 import org.uengine.codi.mw3.ide.form.FormFieldMenu;
 import org.uengine.codi.mw3.ide.form.FormFieldProperties;
+import org.uengine.codi.mw3.ide.form.FormPreview;
 
 public class FormEditor extends Editor {
 
@@ -49,8 +51,10 @@ public class FormEditor extends Editor {
 	
 	@Override
 	public String load() {
+		Project project = workspace.findProject(this.getResourceNode().getProjectId());
 		
-		Thread.currentThread().setContextClassLoader(CodiClassLoader.createClassLoader(project.getBuildPath().getSources().get(0).getPath()));
+		//CodiClassLoader.refreshSourcePath(project.getBuildPath().getSources().get(0).getPath());
+		TransactionContext.getThreadLocalInstance().getRequest().getSession().setAttribute("projectSourcePath", project.getBuildPath().getSources().get(0).getPath());
 		
 		String packageName = project.getBuildPath().makePackageName(this.getId());
 		String className = project.getBuildPath().makeClassName(this.getId());
@@ -82,16 +86,22 @@ public class FormEditor extends Editor {
 	@Face(displayName="$Preview")
 	@ServiceMethod(payload={"resourceNode", "form"}, target=ServiceMethodContext.TARGET_POPUP)
 	public Object preview() throws Exception {
-		Thread.currentThread().setContextClassLoader(CodiClassLoader.createClassLoader(project.getBuildPath().getSources().get(0).getPath()));
+		Project project = workspace.findProject(this.getResourceNode().getProjectId());
+		
+		TransactionContext.getThreadLocalInstance().getRequest().getSession().setAttribute("projectSourcePath", project.getBuildPath().getSources().get(0).getPath());
+		
+		//CodiClassLoader.refreshSourcePath(project.getBuildPath().getSources().get(0).getPath());
+		
+		//Thread.currentThread().setContextClassLoader(CodiClassLoader.createClassLoader(project.getBuildPath().getSources().get(0).getPath()));
 		
 		Object o = Thread.currentThread().getContextClassLoader().loadClass(form.getFullClassName()).newInstance();//cl.loadClass(getPackageName() + "." + getClassName()).newInstance();
 
 		MetaworksRemoteService.getInstance().getMetaworksType(form.getFullClassName());
 		
-		Window outputWindow = new Window();
-		outputWindow.setPanel(o);
-		
-		return new ModalWindow(outputWindow, 0, 0, "$Preview");
+		//Window outputWindow = new Window();
+		//outputWindow.setPanel(o);
+
+		return new ModalWindow(new FormPreview(o), 0, 0, "$Preview");
 		
 	}
 
