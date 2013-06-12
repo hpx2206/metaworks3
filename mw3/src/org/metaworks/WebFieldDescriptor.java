@@ -29,16 +29,11 @@ public class WebFieldDescriptor {
 
 		}
 		
-		/*
-		 * 2013-06-12 cjw
-		 * 
-		 
 		if(oldFd.getInputter()!=null && oldFd.getInputter() instanceof SelectInput){
 			SelectInput selectInput = (SelectInput) oldFd.getInputter();
 			setOptions(selectInput.getSelections());
 			setValues(selectInput.getValues());
 		}
-		*/
 		
 		if(oldFd.getInputter() instanceof FaceInput){
 			FaceInput faceInput = (FaceInput)oldFd.getInputter();
@@ -47,7 +42,6 @@ public class WebFieldDescriptor {
 			setOptions(faceInput.getFace().options());
 			setValues(faceInput.getFace().values());
 		}
-		/*
 		else
 		if(oldFd.getInputter()!=null 
 				&& !(oldFd.getInputter() instanceof TextInput)
@@ -56,7 +50,6 @@ public class WebFieldDescriptor {
 				&& !(oldFd.getInputter() instanceof CalendarInput)
 		)
 			setInputFace(WebObjectType.getComponentLocationByEscalation( oldFd.getInputter().getClass(), "genericfaces"));
-		*/
 		
 		if(oldFd.getAttributeTable()!=null){
 			for(Object key : oldFd.getAttributeTable().keySet()){
