@@ -1,6 +1,6 @@
 <%
 
-	var format = descriptor ? descriptor.getOptionValue('format') : 'yy-mm-dd';
+	var format = descriptor ? descriptor.getOptionValue('format', 'yy-mm-dd') : 'yy-mm-dd';
 	var convertValue = $.datepicker.formatDate( format, value );
 				
 	if(mw3.when == 'new' || mw3.when == 'edit'){
