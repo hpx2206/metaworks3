@@ -98,14 +98,6 @@ public class CloudIDE {
 		public void setCurrentEditorId(String currentEditorId) {
 			this.currentEditorId = currentEditorId;
 		}
-		
-	String currentProjectId;
-		public String getCurrentProjectId() {
-			return currentProjectId;
-		}
-		public void setCurrentProjectId(String currentProjectId) {
-			this.currentProjectId = currentProjectId;
-		}
 
 	PageNavigator pageNavigator;
 		public PageNavigator getPageNavigator() {
