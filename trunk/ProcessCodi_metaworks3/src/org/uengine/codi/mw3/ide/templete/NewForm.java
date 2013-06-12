@@ -15,13 +15,14 @@ import org.uengine.codi.mw3.ide.CloudWindow;
 import org.uengine.codi.mw3.ide.Project;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.Templete;
+import org.uengine.codi.mw3.ide.Workspace;
 import org.uengine.codi.mw3.ide.editor.Editor;
 
 @Face(displayName="$templete.form", ejsPath="dwr/metaworks/genericfaces/FormFace.ejs", options={"fieldOrder"}, values={"packageName,name"})
 public class NewForm extends Templete {
 
-	@AutowiredFromClient(select="typeof resourceNode != 'undefined' && resourceNode.projectId == autowiredObject.id")
-	public Project project;
+	@AutowiredFromClient
+	public Workspace workspace;
 	
 	String packageName;
 		@Face(displayName="$templete.form.package")
@@ -44,6 +45,8 @@ public class NewForm extends Templete {
 		}
 	
 	public void load(){
+		Project project = workspace.findProject(this.getResourceNode().getProjectId());
+		
 		String packageName = project.getBuildPath().makePackageName(this.getResourceNode().getId());
 		
 		this.setPackageName(packageName);
@@ -62,7 +65,7 @@ public class NewForm extends Templete {
 			node.setProjectId(targetNode.getProjectId());
 			node.setParentId(targetNode.getParentId());
 			node.setType(targetNode.getType());
-			node.project = project;
+			node.workspace = workspace;
 			
 			Editor editor = (Editor)node.beforeAction();			
 			editor.save();
