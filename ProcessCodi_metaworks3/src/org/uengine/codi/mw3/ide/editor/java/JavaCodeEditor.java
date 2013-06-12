@@ -1,26 +1,21 @@
 package org.uengine.codi.mw3.ide.editor.java;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.metaworks.Refresh;
 import org.metaworks.ServiceMethodContext;
-import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.widget.Window;
 import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.ide.CloudClassLoader;
 import org.uengine.codi.mw3.ide.JavaBatchBuilder;
+import org.uengine.codi.mw3.ide.Project;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.editor.Editor;
-import org.uengine.codi.mw3.model.Session;
 
 public class JavaCodeEditor extends Editor {
-
-	@AutowiredFromClient
-	public Session session;
 
 	public JavaCodeEditor() {
 	}
@@ -55,6 +50,8 @@ public class JavaCodeEditor extends Editor {
 	public Object save() {
 		super.save();
 
+		Project project = workspace.findProject(this.getResourceNode().getProjectId());
+		
 		ArrayList<JavaCodeError> errorList = new ArrayList<JavaCodeError>();
 
 		CloudClassLoader ccl = new CloudClassLoader();
@@ -117,6 +114,8 @@ public class JavaCodeEditor extends Editor {
 
 	public Object runMetaworks(){
 		try {
+			Project project = workspace.findProject(this.getResourceNode().getProjectId());
+			
 			/*CloudClassLoader ccl = new CloudClassLoader();
 			ccl.load(project.getBuildPath());
 			*/

@@ -3,20 +3,18 @@ package org.uengine.codi.mw3.ide.editor.java;
 import java.util.ArrayList;
 
 import org.metaworks.ServiceMethodContext;
-import org.metaworks.ToAppend;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.MenuItem;
 import org.metaworks.widget.ModalWindow;
-import org.uengine.codi.mw3.ide.Project;
 import org.uengine.codi.mw3.ide.ResourceNode;
+import org.uengine.codi.mw3.ide.Workspace;
 import org.uengine.codi.mw3.ide.menu.CloudMenu;
-import org.uengine.codi.mw3.ide.view.Console;
 
 public class JavaRunAsMenu extends CloudMenu {
 	
-	@AutowiredFromClient(select="resourceNode.projectId == autowiredObject.id")
-	public Project project; 
+	@AutowiredFromClient
+	public Workspace workspace; 
 
 	public JavaRunAsMenu(){
 		
@@ -60,13 +58,10 @@ public class JavaRunAsMenu extends CloudMenu {
 	
 	@ServiceMethod(payload="resourceNode", target=ServiceMethodContext.TARGET_POPUP)
 	public Object[] metaworksApplication() throws Exception {
-		System.out.println("metaworksApplication");
-		System.out.println(project);
-		
 		Object clipboard = session.getClipboard();
 		if(clipboard instanceof JavaCodeEditor){
 			JavaCodeEditor editor = (JavaCodeEditor)clipboard;
-			editor.project = project;
+			editor.workspace = workspace;
 			
 			//ArrayList<JavaCodeError> errorList = (ArrayList<JavaCodeError>)editor.save();
 			
