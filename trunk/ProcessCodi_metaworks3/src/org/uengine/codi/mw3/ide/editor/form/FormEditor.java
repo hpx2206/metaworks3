@@ -10,6 +10,7 @@ import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.ide.Project;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.editor.Editor;
+import org.uengine.codi.mw3.ide.form.CommonFormField;
 import org.uengine.codi.mw3.ide.form.Form;
 import org.uengine.codi.mw3.ide.form.FormFieldMenu;
 import org.uengine.codi.mw3.ide.form.FormFieldProperties;
@@ -54,7 +55,6 @@ public class FormEditor extends Editor {
 		Project project = workspace.findProject(this.getResourceNode().getProjectId());
 		
 		//CodiClassLoader.refreshSourcePath(project.getBuildPath().getSources().get(0).getPath());
-		TransactionContext.getThreadLocalInstance().getRequest().getSession().setAttribute("projectSourcePath", project.getBuildPath().getSources().get(0).getPath());
 		
 		String packageName = project.getBuildPath().makePackageName(this.getId());
 		String className = project.getBuildPath().makeClassName(this.getId());
@@ -62,6 +62,10 @@ public class FormEditor extends Editor {
 		Form form = new Form();
 		form.setPackageName(packageName);
 		form.setId(className);
+		
+		TransactionContext.getThreadLocalInstance().getRequest().getSession().setAttribute("projectSourcePath", project.getBuildPath().getSources().get(0).getPath());
+		CodiClassLoader.refreshClassLoader(form.getFullClassName());
+
 		form.load();
 		
 		this.setForm(form);
@@ -75,12 +79,15 @@ public class FormEditor extends Editor {
 	}
 	
 	@Override
-	public Object save() {
-		// TODO: 만들어서 this.setContent() 넣어주면되
-		this.setContent(form.generateJavaCode());
-		
-		// TODO Auto-generated method stub
-		return super.save();
+	public Object save() {		
+		if(this.blankCheck()) {
+			this.setContent(form.generateJavaCode());
+			return super.save();
+		}
+		else {
+			System.out.println("====== blank error error error ======");
+			return null;
+		}
 	}
 	
 	@Face(displayName="$Preview")
@@ -104,5 +111,24 @@ public class FormEditor extends Editor {
 		return new ModalWindow(new FormPreview(o), 0, 0, "$Preview");
 		
 	}
+	
+	
+//	validation check
+	
+	public boolean blankCheck() {
+		
+		for(CommonFormField formField : form.getFormFields()) {
+			
+			if(
+					(formField.getId() == null || formField.getId().trim().length() == 0)
+					|| (formField.getDisplayName() == null || formField.getDisplayName().trim().length() == 0)) 
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	
 
 }

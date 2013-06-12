@@ -3,15 +3,18 @@ package org.uengine.codi.mw3.ide.form;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.WebFieldDescriptor;
+import org.metaworks.WebObjectType;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.dwr.MetaworksRemoteService;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.util.UEngineUtil;
 
+@Face(options={"hideEditBtn"}, values={"true"})
 public class CommonFormField implements ContextAware, Cloneable {
 	
 	@AutowiredFromClient
@@ -29,7 +32,8 @@ public class CommonFormField implements ContextAware, Cloneable {
 		}
 		
 	String fieldId;
-	@Id
+		@Id
+//		@Hidden
 		public String getFieldId() {
 			return fieldId;
 		}
@@ -38,17 +42,17 @@ public class CommonFormField implements ContextAware, Cloneable {
 		}
 		
 	String fieldType;
-	@Hidden
+		@Hidden
 		public String getFieldType() {
 			return fieldType;
 		}
 		public void setFieldType(String fieldType) {
 			this.fieldType = fieldType;
-		}	
-
+		}
+	
 	String id;
-	@Face(displayName="$form.field.id")
-	@Available(when={MetaworksContext.WHEN_EDIT}, where={"properties"})
+		@Face(displayName="$form.field.id")
+		@Available(when={MetaworksContext.WHEN_EDIT}, where={"properties"})
 		public String getId() {
 			return id;
 		}
@@ -57,8 +61,8 @@ public class CommonFormField implements ContextAware, Cloneable {
 		}
 		
 	String displayName;
-	@Face(displayName="$form.field.displayname")
-	@Available(where={"form", "properties"})
+		@Face(displayName="$form.field.displayname")
+		@Available(where={"form", "properties"})
 		public String getDisplayName() {
 			return displayName;
 		}
@@ -67,13 +71,49 @@ public class CommonFormField implements ContextAware, Cloneable {
 		}
 	
 	Boolean hide;
-	@Face(displayName="$form.field.hide")
-	@Available(when={MetaworksContext.WHEN_EDIT}, where={"properties"})
+		@Face(displayName="$form.field.hide")
+		@Available(when={MetaworksContext.WHEN_EDIT}, where={"properties"})
 		public Boolean getHide() {
 			return hide;
 		}
 		public void setHide(Boolean hide) {
 			this.hide = hide;
+		}
+		
+	String ejsPath;
+		@Hidden
+		public String getEjsPath() {
+			return ejsPath;
+		}
+		public void setEjsPath(String ejsPath) {
+			this.ejsPath = ejsPath;
+		}
+		
+	String options;
+		@Hidden
+		public String getOptions() {
+			return options;
+		}
+		public void setOptions(String options) {
+			this.options = options;
+		}
+	
+	String values;
+		@Hidden
+		public String getValues() {
+			return values;
+		}
+		public void setValues(String values) {
+			this.values = values;
+		}
+		
+	boolean define;
+		@Hidden
+		public boolean isDefine() {
+			return define;
+		}
+		public void setDefine(boolean define) {
+			this.define = define;
 		}
 		
 	public void init(){
@@ -107,7 +147,7 @@ public class CommonFormField implements ContextAware, Cloneable {
 	public Object copy() {
 		try {
 			CommonFormField cloneFormField = (CommonFormField)this.clone();
-			cloneFormField.setFieldId(form.createFormFieldId());
+			cloneFormField.setFieldId(form.makeFormFieldId());
 
 			form.formFields.add(cloneFormField);
 		} catch (CloneNotSupportedException e) {
@@ -153,17 +193,24 @@ public class CommonFormField implements ContextAware, Cloneable {
 	
 	@ServiceMethod(callByContent=true)
 	@Available(when={MetaworksContext.WHEN_EDIT}, where={"properties"})
-	public Object save() {
+	public Object apply() {
 		
-		int pos = form.formFields.indexOf(this);
-		if(pos > -1){
-			this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-			this.getMetaworksContext().setWhere("form");
+		if(this.duplicationCheck()) {
+		
+			int pos = form.formFields.indexOf(this);
+			if(pos > -1){
+				this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+				this.getMetaworksContext().setWhere("form");
+				
+				form.formFields.set(pos, this);		
+			}
 			
-			form.formFields.set(pos, this);		
+			return form;
 		}
-		
-		return form;
+		else {
+			System.out.println("====== duplication error error error ======");
+			return null;
+		}
 	}	
 	
 	@Override	
@@ -179,36 +226,33 @@ public class CommonFormField implements ContextAware, Cloneable {
 		return result;
 	}	
 		
-	String ejsPath;
-		@Hidden
-		public String getEjsPath() {
-			return ejsPath;
-		}
-		public void setEjsPath(String ejsPath) {
-			this.ejsPath = ejsPath;
-		}
-		
-	String options;
-		@Hidden
-		public String getOptions() {
-			return options;
-		}
-		public void setOptions(String options) {
-			this.options = options;
-		}
-	
-	String values;
-		@Hidden
-		public String getValues() {
-			return values;
-		}
-		public void setValues(String values) {
-			this.values = values;
-		}
-
 	public String makeValueString(String value){
 		return "\"" + value + "\"";
 	}
+	
+	
+	public String generateImportCode() {
+		StringBuffer importBuffer = new StringBuffer();
+		
+		if(this.isDefine()){
+			importBuffer.append("import " + this.getFieldType() + ";\n");
+			
+			try {
+				WebObjectType wot = MetaworksRemoteService.getInstance().getMetaworksType(this.getFieldType());
+				Class iDAOClass = wot.iDAOClass();
+				if(iDAOClass != null){
+					importBuffer.append("import " + wot.iDAOClass().getName() + ";\n");
+				}
+				
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		return importBuffer.toString();		
+	}
+	
 	
 	public String generateFace(){
 		String separatorChar = "";
@@ -257,10 +301,25 @@ public class CommonFormField implements ContextAware, Cloneable {
 		return annotationdBuffer.toString();
 	}
 	
+	public String generateConstructorCode() {
+		StringBuffer constructordBuffer = new StringBuffer();				
+		
+		if(this.isDefine()){
+			constructordBuffer
+			.append("		").append("this.set").append(UEngineUtil.toOnlyFirstCharacterUpper(this.getId()))
+			.append("(new ").append(this.getFieldType().substring(this.getFieldType().lastIndexOf(".")+1))
+			.append("()); \n");
+		}	
+		
+		return constructordBuffer.toString();
+	}
+	
 	public String generateVariableCode() {		
 		
-		StringBuffer variableBuffer = new StringBuffer();		
-		variableBuffer.append("	").append(this.getFieldType()).append(" ").append(this.getId()).append(";\n");
+		StringBuffer variableBuffer = new StringBuffer();
+		String type = this.getFieldType().substring(this.getFieldType().lastIndexOf(".")+1);
+		
+		variableBuffer.append("	").append(type).append(" ").append(this.getId()).append(";\n");
 		
 		return variableBuffer.toString();
 	}
@@ -269,10 +328,11 @@ public class CommonFormField implements ContextAware, Cloneable {
 		
 		StringBuffer propertyBuffer = new StringBuffer();
 		String fieldIdFirstCharUpper = UEngineUtil.toOnlyFirstCharacterUpper(this.getId());
+		String type = this.getFieldType().substring(this.getFieldType().lastIndexOf(".")+1);
 				
 		propertyBuffer
-		.append("		public ").append(this.getFieldType()).append(" get").append(fieldIdFirstCharUpper).append("(){ return ").append(this.getId()).append("; }\n")
-		.append("		public void set").append(fieldIdFirstCharUpper).append("(").append(this.getFieldType()).append(" ").append(this.getId()).append("){ this.").append(this.getId()).append(" = ").append(this.getId()).append("; }\n\n")
+		.append("		public ").append(type).append(" get").append(fieldIdFirstCharUpper).append("(){ return ").append(this.getId()).append("; }\n")
+		.append("		public void set").append(fieldIdFirstCharUpper).append("(").append(type).append(" ").append(this.getId()).append("){ this.").append(this.getId()).append(" = ").append(this.getId()).append("; }\n\n")
 		;		
 		
 		return propertyBuffer.toString();		
@@ -287,7 +347,7 @@ public class CommonFormField implements ContextAware, Cloneable {
 		
 		try {
 			formField = (CommonFormField)this.clone();
-			formField.setFieldId(form.createFormFieldId());
+			formField.setFieldId(form.makeFormFieldId());
 			formField.setId(fd.getName());
 			formField.setDisplayName(fd.getDisplayName());
 			formField.setHide((Boolean)fd.getAttributes().get("is key"));
@@ -303,5 +363,14 @@ public class CommonFormField implements ContextAware, Cloneable {
 		
 		return formField;		
 	}
-
+	
+//	validation check
+	public boolean duplicationCheck() {		
+		for(CommonFormField formField : form.formFields) {	
+			if(this.getId().equals(formField.getId())) {
+				return false;
+			}
+		}
+		return true;
+	}
 }

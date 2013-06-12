@@ -6,13 +6,17 @@ import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.WebFieldDescriptor;
 import org.metaworks.annotation.Available;
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 
 public class MultipleChoiceField extends CommonFormField {
-		
+	
+	public final static String OPTION_FIELD_ID_PREFIX = "OPTIONFIELD_";
+	
 	ArrayList<MultipleChoiceOption> choiceOptions;
-	@Available(when={MetaworksContext.WHEN_EDIT}, where={"properties"})
+		@Face(displayName="$multipleChoiceOption.displayname")
+		@Available(when={MetaworksContext.WHEN_EDIT}, where={"properties"})
 		public ArrayList<MultipleChoiceOption> getChoiceOptions() {
 			return choiceOptions;
 		}
@@ -21,7 +25,7 @@ public class MultipleChoiceField extends CommonFormField {
 		}
 		
 	int selectedIndex;
-	@Hidden
+		@Hidden
 		public int getSelectedIndex() {
 			return selectedIndex;
 		}
@@ -30,8 +34,10 @@ public class MultipleChoiceField extends CommonFormField {
 		}
 
 	public MultipleChoiceField(){
-		this.setFieldType("String");
-		this.setEjsPath("genericfaces/RadioButton.ejs");
+		this.setFieldType("java.lang.String");
+		this.setDefine(false);
+		this.setEjsPath("dwr/metaworks/genericfaces/RadioButton.ejs");
+		this.setChoiceOptions(new ArrayList<MultipleChoiceOption>());
 	}
 	
 	@Override
@@ -40,24 +46,24 @@ public class MultipleChoiceField extends CommonFormField {
 		this.setChoiceOptions(new ArrayList<MultipleChoiceOption>());
 	}
 	
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)
+	@ServiceMethod(callByContent=true)//, target=ServiceMethodContext.TARGET_SELF)
 	@Available(when={MetaworksContext.WHEN_EDIT}, where={"properties"})
-	public Object addOption() {
-		if(choiceOptions == null)
-			choiceOptions = new ArrayList<MultipleChoiceOption>();
+	public Object addOption() {	
 		
 		MultipleChoiceOption option = new MultipleChoiceOption();
 		option.setParentId(this.getFieldId());
-		option.setId(form.createFormFieldId());
+		option.setFieldId(this.makeOptionFieldId());
 		option.setOption("");
 		option.setValue("");
-		choiceOptions.add(option);
 		
-		return this;
+		this.getChoiceOptions().add(option);
+		
+		return new FormFieldProperties(this);
+		//return this;
 	}
 		
 	@Override
-	public Object save() {
+	public Object apply() {
 		
 		if(this.getChoiceOptions() != null && this.getChoiceOptions().size() > 0) {
 			StringBuffer optionsBuffer = new StringBuffer();
@@ -83,7 +89,7 @@ public class MultipleChoiceField extends CommonFormField {
 			this.setValues(valuesBuffer.toString());
 		}
 		
-		super.save();
+		super.apply();
 		
 		return form;
 	}
@@ -113,9 +119,8 @@ public class MultipleChoiceField extends CommonFormField {
 			
 			for(int i = 0; i < options.length; i++) {
 				MultipleChoiceOption mc = new MultipleChoiceOption();
-				mc.multipleChoiceField = (MultipleChoiceField)formField;
 				mc.setParentId(formField.getFieldId());
-				mc.setId(Form.FORM_FIELD_ID_PREFIX + String.valueOf(++field_id));
+				mc.setFieldId(makeOptionFieldId());
 				mc.setOption((String)options[i]);
 				mc.setValue((String)values[i]);
 				choiceOptions.add(mc);
@@ -126,5 +131,26 @@ public class MultipleChoiceField extends CommonFormField {
 		
 		return formField;		
 	}
+	
+	public String makeOptionFieldId() {	
+		int id = 0;
+		
+		if(this.getChoiceOptions() != null && this.getChoiceOptions().size() > 0) {
+			
+			int max_id = 0;
+			int cur_id = 0;
+			
+			for(int i = 0; i <this.getChoiceOptions().size(); i++) {								
+				MultipleChoiceOption option =  this.getChoiceOptions().get(i);
+				cur_id = Integer.parseInt(option.getFieldId().replace(OPTION_FIELD_ID_PREFIX, ""));
 
+				if (max_id < cur_id)
+					max_id = cur_id;
+								
+			}
+			id = max_id + 1;
+		}
+		
+		return OPTION_FIELD_ID_PREFIX + String.valueOf(id);
+	}
 }

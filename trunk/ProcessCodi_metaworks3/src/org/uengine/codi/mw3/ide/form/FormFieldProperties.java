@@ -1,5 +1,8 @@
 package org.uengine.codi.mw3.ide.form;
 
+import org.metaworks.annotation.Face;
+
+@Face(options={"hideEditBtn"}, values={"true"}, ejsPath="genericfaces/FormFace.ejs")
 public class FormFieldProperties {
 	
 	CommonFormField formField;	
