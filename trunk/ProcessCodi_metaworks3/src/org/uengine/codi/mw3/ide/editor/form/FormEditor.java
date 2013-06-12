@@ -64,7 +64,12 @@ public class FormEditor extends Editor {
 		form.setId(className);
 		
 		TransactionContext.getThreadLocalInstance().getRequest().getSession().setAttribute("projectSourcePath", project.getBuildPath().getSources().get(0).getPath());
-		CodiClassLoader.refreshClassLoader(form.getFullClassName());
+		try {
+			MetaworksRemoteService.getInstance().clearMetaworksType(form.getFullClassName());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		form.load();
 		
@@ -90,12 +95,20 @@ public class FormEditor extends Editor {
 		}
 	}
 	
-	@Face(displayName="$Preview")
+	@Face(displayName="$SaveAndPreview")
 	@ServiceMethod(payload={"resourceNode", "form"}, target=ServiceMethodContext.TARGET_POPUP)
 	public Object preview() throws Exception {
 		Project project = workspace.findProject(this.getResourceNode().getProjectId());
 		
+		this.save();
+		
 		TransactionContext.getThreadLocalInstance().getRequest().getSession().setAttribute("projectSourcePath", project.getBuildPath().getSources().get(0).getPath());
+		try {
+			MetaworksRemoteService.getInstance().clearMetaworksType(form.getFullClassName());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		//CodiClassLoader.refreshSourcePath(project.getBuildPath().getSources().get(0).getPath());
 		
