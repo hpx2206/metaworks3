@@ -2,22 +2,25 @@ package org.uengine.codi.mw3.marketplace.category;
 
 import java.sql.Timestamp;
 
+import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.IDAO;
-import org.metaworks.widget.layout.Layout;
-import org.uengine.codi.mw3.marketplace.App;
-import org.uengine.codi.mw3.marketplace.IApp;
+import org.uengine.codi.mw3.marketplace.AppDetail;
+import org.uengine.codi.mw3.marketplace.AppList;
 import org.uengine.codi.mw3.marketplace.MarketplaceCenterPanel;
-import org.uengine.codi.mw3.marketplace.MarketplaceCenterWindow;
-import org.uengine.codi.mw3.marketplace.MarketplaceEastPanel;
 import org.uengine.codi.mw3.marketplace.searchbox.MarketplaceSearchBox;
 import org.uengine.codi.mw3.model.Session;
 
 
 public class Category extends Database<ICategory> implements ICategory {
 
+	@AutowiredFromClient
+	public Session session;
 
+	@AutowiredFromClient
+	public AppDetail appDetail;
+	
 	int categoryId;
 		@Override
 		public int getCategoryId() {
@@ -93,6 +96,20 @@ public class Category extends Database<ICategory> implements ICategory {
 	@Override
 	public Object[] selectCategory() throws Exception {
 		
+/*		MarketplaceCenterPanel centerPanel = new MarketplaceCenterPanel();
+		
+		try {
+			centerPanel.setAppList(App.findForCategory(String.valueOf(this.getCategoryId())));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
+		
+		session.setLastSelectedItem(String.valueOf(this.getCategoryId()));
+		session.setSearchKeyword(null);
+		
+		
+/*		
 		App findApps = new App();
 		findApps.session = session;
 		findApps.setCategory(this.databaseMe());
@@ -100,9 +117,11 @@ public class Category extends Database<ICategory> implements ICategory {
 		
 		IApp getApp = findApps.findForCategory();
 		
+		
 		MarketplaceSearchBox searchBox = new MarketplaceSearchBox();
 		searchBox.setKeyEntetSearch(true);
 		searchBox.setKeyUpSearch(true);
+		
 		
 		//center
 		MarketplaceCenterPanel centerPanel = new MarketplaceCenterPanel();
@@ -113,7 +132,7 @@ public class Category extends Database<ICategory> implements ICategory {
 		
 		MarketplaceCenterWindow centerWin = new MarketplaceCenterWindow(session);
 		centerWin.setCenterPanel(centerPanel);
-		centerWin.getCenterPanel().getListing().getMetaworksContext().setWhen((getApp.size() > 0) ? "searchForCategory" : "HavntResult");
+		//centerWin.getCenterPanel().getListing().getMetaworksContext().setWhen((getApp.size() > 0) ? "searchForCategory" : "HavntResult");
 		
 		//east
 		MarketplaceEastPanel east = new MarketplaceEastPanel();
@@ -121,18 +140,35 @@ public class Category extends Database<ICategory> implements ICategory {
 		east.load();
 		
 		//west
+		
 		MarketCategoryPanel marketCategory = new MarketCategoryPanel(session);
 		marketCategory.setCategory(this.loadRootCategory());
 		
+		
 		Layout layout = new Layout();
-		layout.setId("main");
 		layout.setName("center");
-		layout.setWest(marketCategory);
+		//layout.setWest(marketCategory);
 		layout.setCenter(centerWin);
-		layout.setEast(east);
+		layout.setEast(east);*/
 		
-		
-		return new Object[] { layout };
+		if(appDetail == null)
+			return new Object[]{session, new MarketplaceSearchBox()};
+		else{
+			MarketplaceCenterPanel centerPanel = new MarketplaceCenterPanel();
+			
+			try {
+				AppList appList = new AppList();
+				appList.load(String.valueOf(this.getCategoryId()), null);
+				
+				centerPanel.setAppList(appList);
+				centerPanel.getMetaworksContext().setHow(MetaworksContext.HOW_IN_LIST);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			return new Object[]{session, centerPanel, new MarketplaceSearchBox()};
+		}
 	}
 
 	@Override
@@ -198,15 +234,12 @@ public class Category extends Database<ICategory> implements ICategory {
 
 	static public ICategory loadRootCategory() throws Exception {
 		ICategory mainCategory = (ICategory) sql(ICategory.class,
-				"select * from category where parentCategoryId = -1 and categoryId > 0");
+				"select * from category where parentCategoryId = -1 order by categoryId");
 
 		mainCategory.select();
 
 		mainCategory.getMetaworksContext().setWhen("view");
 		return mainCategory;
 	}
-	
-	@AutowiredFromClient
-	public Session session;
 	
 }

@@ -14,6 +14,7 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.IDAO;
 
 @Face(
+	ejsPathForArray="dwr/metaworks/genericfaces/ListFace.ejs",
 	options={"hideAddBtn"},
 	values={"true"}
 )
@@ -49,7 +50,7 @@ public interface ICategory extends IDAO {
     public boolean isDeleted();
     public void setDeleted(boolean deleted);
 
-    @ServiceMethod(callByContent = true, when = "never")
+    @ServiceMethod(mouseBinding="left")
     public Object[] selectCategory() throws Exception; // should avoid 'select()' since it is for IDAO sql data selection.
 
     @ServiceMethod(callByContent = true)
