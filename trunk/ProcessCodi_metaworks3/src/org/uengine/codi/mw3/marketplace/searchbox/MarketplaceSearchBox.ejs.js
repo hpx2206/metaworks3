@@ -1,73 +1,25 @@
-var org_uengine_codi_mw3_marketplace_searchbox_MarketplaceSearchBox = function(objectId, className) {
+var org_uengine_codi_mw3_marketplace_searchbox_MarketplaceSearchBox = function(objectId, className){
 	this.objectId = objectId;
 	this.className = className;
-	this.divId = mw3._getObjectDivId(this.objectId);
+	this.objectDivId = mw3._getObjectDivId(this.objectId);
+	this.objectDiv = $('#' + this.objectDivId);
 	
-	this.windowObjectId = $('#' + this.divId).closest('.mw3_window').attr('objectId');
-	
-	this.timeout;
+	this.object = mw3.objects[this.objectId];
 
-	var object = mw3.objects[this.objectId];
-	if(object){
-		this.isKeyupSearch = object.keyUpSearch;
-		this.isEnterSearch = object.keyEntetSearch;
-	}
+	if(this.object == null)
+		return true;
 
-	if(object && object.keyword)
-		this.keyword = object.keyword;
-
-	$("#search_" + this.objectId).bind('keyup', {objectId: this.objectId}, function(event){
-		mw3.getFaceHelper(event.data.objectId).keyup(event, this);
+	$(mw3.getInputElement(this.objectId, 'keyword')).bind('keyup', {objectId: this.objectId}, function(event){
+		mw3.getFaceHelper(event.data.objectId).keyup(event);
 	});
-	$("#search_" + this.objectId).focus();
 };
 
 org_uengine_codi_mw3_marketplace_searchbox_MarketplaceSearchBox.prototype = {
-	getValue : function() {
-		var object = mw3.objects[this.objectId];
-
-		object.keyword = $("#search_" + this.objectId).val();
-
-		return object;
-	},
-	keyup : function(e, element) {
-				
-		var keyword = element.value;
-		var objectId = this.objectId;
-
-		if(this.isEnterSearch){
-			if(e.keyCode == 13){	// key return
-				window.event.returnValue = false;
-				
-				mw3.call(objectId, 'search');
-			} 
-		}else if(this.isKeyupSearch){
-			if(this.keyword == keyword)
-				return false;
+	keyup : function(e) {
+		if(e.keyCode == 13){
+			window.event.returnValue = false;
 			
-			this.keyword = keyword;
-			
-			if (this.timeout) {
-				clearTimeout(this.timeout);
-			}
-			
-			this.timeout = setTimeout(function() {
-				mw3.call(objectId, 'search');
-			}, 1500);
-		}
-
-	},
-	startLoading : function(){
-		if(this.windowObjectId && mw3.getFaceHelper(this.windowObjectId) && mw3.getFaceHelper(this.windowObjectId).startLoading)
-			mw3.getFaceHelper(this.windowObjectId).startLoading();
-	},
-	endLoading : function(){
-		if(this.windowObjectId && mw3.getFaceHelper(this.windowObjectId) && mw3.getFaceHelper(this.windowObjectId).endLoading)
-			mw3.getFaceHelper(this.windowObjectId).endLoading();
-	},
-	destroy : function(){
-		$("#search_" + this.objectId).unbind('keyup');
-		
-		this.endLoading();
-	}	
+			mw3.call(this.objectId, 'search');
+		} 
+	}
 };

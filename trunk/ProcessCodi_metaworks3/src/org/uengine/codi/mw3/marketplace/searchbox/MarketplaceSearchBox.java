@@ -1,50 +1,44 @@
 package org.uengine.codi.mw3.marketplace.searchbox;
 
+import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.widget.layout.Layout;
-import org.uengine.codi.mw3.marketplace.App;
-import org.uengine.codi.mw3.marketplace.IApp;
+import org.uengine.codi.mw3.marketplace.AppDetail;
+import org.uengine.codi.mw3.marketplace.AppList;
 import org.uengine.codi.mw3.marketplace.MarketplaceCenterPanel;
-import org.uengine.codi.mw3.marketplace.MarketplaceCenterWindow;
-import org.uengine.codi.mw3.marketplace.MarketplaceEastPanel;
-import org.uengine.codi.mw3.marketplace.category.Category;
-import org.uengine.codi.mw3.marketplace.category.MarketCategoryPanel;
-import org.uengine.codi.mw3.model.Session;
+import org.uengine.codi.mw3.model.SearchBox;
 
-public class MarketplaceSearchBox {
-	
+public class MarketplaceSearchBox extends SearchBox {	
+
 	@AutowiredFromClient
-	public Session session;
+	public AppDetail appDetail;
 	
-	boolean keyUpSearch;
-		public boolean isKeyUpSearch() {
-			return keyUpSearch;
-		}
-		public void setKeyUpSearch(boolean keyUpSearch) {
-			this.keyUpSearch = keyUpSearch;
-		}
+	public MarketplaceSearchBox(){
+		this.setKeyEntetSearch(true);
+	}
 	
-	boolean keyEntetSearch;
-		public boolean isKeyEntetSearch() {
-			return keyEntetSearch;
-		}
-		public void setKeyEntetSearch(boolean keyEntetSearch) {
-			this.keyEntetSearch = keyEntetSearch;
-		}
-	
-	String keyword;
-		public String getKeyword() {
-			return keyword;
-		}
-		public void setKeyword(String keyword) {
-			this.keyword = keyword;
-		}
-		
-		
 	@ServiceMethod(callByContent=true)
 	public Object[] search() throws Exception{
+				
+		AppList appList = new AppList();
+		try {
+			appList.load(session.getLastSelectedItem(), this.getKeyword());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
+		if(appDetail == null){
+			return new Object[]{appList};
+		}else{
+			MarketplaceCenterPanel centerPanel = new MarketplaceCenterPanel();
+			
+			centerPanel.setAppList(appList);
+			centerPanel.getMetaworksContext().setHow(MetaworksContext.HOW_IN_LIST);
+			
+			return new Object[]{centerPanel};
+		}
+		/*
 		session.setSearchKeyword(getKeyword());
 		
 		App findListing = new App();
@@ -59,9 +53,8 @@ public class MarketplaceSearchBox {
 		searchBox.setKeyword(getKeyword());
 		
 		//west - category combo box, list panel
-		MarketCategoryPanel marketCategory = new MarketCategoryPanel(session);
-		marketCategory.setCategory(Category.loadRootCategory());
-		
+//		MarketCategoryPanel marketCategory = new MarketCategoryPanel(session);
+//		marketCategory.setCategory(Category.loadRootCategory());		
 		//center - search result
 		MarketplaceCenterPanel centerPanel = new MarketplaceCenterPanel();
 		centerPanel.session = session;
@@ -83,10 +76,11 @@ public class MarketplaceSearchBox {
 		mainPanel.setId("main");
 		mainPanel.setName("center");
 		mainPanel.setCenter(centerwin);
-		mainPanel.setWest(marketCategory);
+		//mainPanel.setWest(marketCategory);
 		mainPanel.setEast(east);
 		
 		return new Object[] {mainPanel};
+		*/
 	}	
 
 }
