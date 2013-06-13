@@ -2,6 +2,7 @@ package org.uengine.codi.mw3.marketplace;
 
 import java.util.Date;
 
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;
 import org.metaworks.annotation.NonLoadable;
@@ -17,6 +18,7 @@ import org.uengine.codi.mw3.model.ICompany;
 
 
 @Table(name="APP")
+@Face(ejsPathForArray="dwr/metaworks/genericfaces/ListFace.ejs")
 public interface IApp extends IDAO{
 	
 	@Id
@@ -106,7 +108,7 @@ public interface IApp extends IDAO{
 	public Object readyPublished() throws Exception;
 	
 	@ServiceMethod(callByContent=true)
-	public Object detailListing() throws Exception;
+	public Object detail() throws Exception;
 	
 	@ServiceMethod(callByContent=true)
 	public Object editListing() throws Exception;

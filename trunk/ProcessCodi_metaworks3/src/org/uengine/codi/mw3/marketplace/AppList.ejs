@@ -1,0 +1,15 @@
+<%
+	if(value != null && typeof value != 'undefined'){
+		if(value.value && value.value.length > 0){
+%>
+
+<%=fields.value.here()%>
+
+<%
+		}else{
+%>
+	검색 결과 또는 목록이 존재하지 않습니다.
+<%		
+		}
+	}
+%>

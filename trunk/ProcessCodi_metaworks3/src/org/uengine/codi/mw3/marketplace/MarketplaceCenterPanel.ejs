@@ -1,87 +1,36 @@
+<%
+	if(value != null && typeof value != 'undefined'){
+		if(mw3.how == 'inList'){
+%>
+		
+<div class="mp_center_banner">
+          <div id="slideshow_<%=objectId%>" data-cycle-timeout="0" data-cycle-fx="carousel" data-cycle-carousel-visible="1" data-cycle-prev="#prev"  data-cycle-next="#next" data-cycle-carousel-fluid=true data-cycle-pager=".mp_left_menu" data-cycle-pager-template="" data-cycle-pager-active-class="current">
+            <IMG src="images/marketPlace/mainBanner0.jpg">
+            <IMG src="images/marketPlace/mainBanner1.jpg"> 
+            <IMG src="images/marketPlace/mainBanner2.jpg"> 
+            <IMG src="images/marketPlace/mainBanner3.jpg"> 
+            <IMG src="images/marketPlace/mainBanner4.jpg"> 
+            <IMG src="images/marketPlace/mainBanner5.jpg"> 
+            <IMG src="images/marketPlace/mainBanner6.jpg"> 
+            <IMG src="images/marketPlace/mainBanner7.jpg"> 
+            <IMG src="images/marketPlace/mainBanner8.jpg"> 
+            <IMG src="images/marketPlace/mainBanner9.jpg"> 
+          </div>
+          <div class="mp_center_btn">
+             <A id="prev" class="mp_banner_btn_p" href="#"> <img src="images/marketPlace/banner_prev.png" border="0"/> </A> 
+             <A id="next" class="mp_banner_btn_n" href="#"> <img src="images/marketPlace/banner_next.png"  border="0"/> </A> 
+          </div>
+</div>
+   
+<%=fields.appList.here({htmlAttr: {class : 'mp_lst_type'}})%>
 
 <%
+		}else{
+%>
 
-if(value){
-	if(value.searchBox != null && value.metaworksContext.when != 'detailList') {
+<%=fields.appDetail.here()%>
 
-	%>
-		<div id="searchbox">
-			<div class="searchboxline">
-				<div class="searchboxline2">
-					<div class="searchboxarea" id="method_<%=objectId%>_newInstance" style="margin-left:10px;">
-						<%=fields.searchBox.here()%>
-					</div>
-					<div style="clear:both;"></div>
-				</div>
-			</div>
-		</div>
-	
-	<%
-	}
-	
-	if(value.vendor != null) {
-	%>
-		<div><%=fields.vendor.here()%> </div>
-		
-	<%
-	} else if (value.appInfo != null) {
-		
-	%>
-		
-		<div><%=fields.appInfo.here()%> </div>
-	
-	<%
-	}else{
-		
-		if(value.metaworksContext.when == 'searchForCategory') {
-			
-		%>
-			<div class="toolbar">
-                <ul>
-                    <li onClick="<%=methods.gomarketHome.caller()%>"><span>CODI Apps</span></li>
-                    <li><span class="toolbarIcon"><span> > <%=value.category.categoryName%></span></li>               
-                   
-                </ul>
-        	</div>
-		
-		<%
-		}else if(value.metaworksContext.when == 'detailList') {
-			var category;
-			
-			if(value.category != null && value.category.length !=0 ) {
-			
-				category = value.category[0];
-			
-		
-			%>
-				
-					<div class="toolbar">
-	                    <ul>
-	                        <li onClick="<%=methods.gomarketHome.caller()%>"><span>CODI Apps</span></li>
-	                        <li onClick="mw3.getFaceHelper(<%=objectId%>).selectCategory()"><span class="toolbarIcon"><span > > <%=category.categoryName%></span></li>               
-	                       
-	                    </ul>
-                	</div>  
-			
-			<%
-			}
+<%
 		}
-		
-		%>
-		<div><%=fields.listing.here()%> </div>
-	
-	<%
 	}
-	 
-	 if(value.listing == null || value.listing.length == 0) {
-	 	if(!value.appInfo){
-	 %>
-	 
-	 	<div style="margin-top:30px; text-align:center;"> <%=mw3.localize('$App.NoResult')%> </div>
-	 
-	 <%
-		 }
-	 }
-
-}
 %>
