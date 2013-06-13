@@ -1195,4 +1195,19 @@ public class Instance extends Database<IInstance> implements IInstance{
 		
 		return result;
 	}
+	
+	public static IInstance loadServers(String topicId) throws Exception {
+		
+		StringBuffer sb = new StringBuffer();		
+		sb
+		.append("SELECT *")
+		.append("  FROM bpm_procinst inst")
+		.append(" WHERE topicId=?topicId");
+
+		IInstance instance = (IInstance) sql(Instance.class, sb.toString());
+		instance.setTopicId(topicId);
+		instance.select();
+		
+		return instance; 
+	}
 }
