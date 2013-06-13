@@ -860,13 +860,16 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 						webObjectType['typeSelector'] = fd;
 					}
 					
-					fd['getOptionValue'] = function(option){
+					fd['getOptionValue'] = function(option, defaultValue){
 						if(this.options!=null && this.values!=null)
 						
 						for(var i=0; i<this.options.length && i<this.values.length; i++){
 							if(option==this.options[i])
 								return this.values[i];
 						}
+						
+						if(defaultValue)
+							return defaultValue;
 					};
 					
 				}
@@ -896,6 +899,12 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				}
 				
 				webObjectType['serviceMethodContextMap'] = serviceMethodMap;
+				webObjectType['getOptionValue'] = function(option, defaultValue){
+						if(this.faceOptions && this.faceOptions[option])
+							return this.faceOptions[option];
+						else if(defaultValue)
+							return defaultValue;
+				};
 
 			};
 			
@@ -1100,13 +1109,16 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					var descriptor = (options ? options['descriptor']: null);
 					
 					if(descriptor!=null){
-						descriptor['getOptionValue'] = function(option){
+						descriptor['getOptionValue'] = function(option, defaultValue){
 							if(this.options!=null && this.values!=null)
 							
 							for(var i=0; i<this.options.length && i<this.values.length; i++){
 								if(option==this.options[i])
 									return this.values[i];
 							}
+							
+							if(defaultValue)
+								return defaultValue;
 						}
 					
 						//only when the descriptor has some options, the object is given to access to it's descriptor among properties in it's parent object.
