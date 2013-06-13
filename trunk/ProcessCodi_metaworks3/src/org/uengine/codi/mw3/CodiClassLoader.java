@@ -174,16 +174,16 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
 		  }
 		  if( tenantId == null && projectId == null ){
 			  // 1번
-			  return CodiClassLoader.getCodeBaseRoot() + File.separatorChar + "root";
+			  return CodiClassLoader.getCodeBaseRoot() + "root" + File.separatorChar;
 		  }else if( tenantId != null && projectId == null ){
 			  // 2번
-			  return CodiClassLoader.getCodeBaseRoot() + File.separatorChar + tenantId;
+			  return CodiClassLoader.getCodeBaseRoot() + tenantId + File.separatorChar;
 		  }else if( tenantId == null && projectId != null ){
 			  // 3번
-			  return CodiClassLoader.getCodeBaseRoot() + File.separatorChar + projectId +  File.separatorChar + "root";
+			  return CodiClassLoader.getCodeBaseRoot() + projectId +  File.separatorChar + "root" + File.separatorChar;
 		  }else{
 			  // 4번
-			  return CodiClassLoader.getCodeBaseRoot() + File.separatorChar + projectId + File.separatorChar + tenantId;
+			  return CodiClassLoader.getCodeBaseRoot() + projectId + File.separatorChar + tenantId + File.separatorChar;
 		  }
 		  
 //		  
