@@ -1,0 +1,14 @@
+<%
+	if(mw3.when == 'new' || mw3.when == 'edit'){
+	
+		if(mw3.how = 'resourcePicker'){
+	
+%>
+		<span>
+			<a id="wBtn" href="#" onClick="mw3.call(<%=objectId%>, 'findResource')"><span><%=mw3.localize("$ide.findResource")%></span></a>
+		</span>
+			
+<%
+		}
+	}
+%>

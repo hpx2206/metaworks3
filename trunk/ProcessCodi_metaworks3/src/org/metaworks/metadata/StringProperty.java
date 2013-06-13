@@ -1,6 +1,7 @@
 package org.metaworks.metadata;
 
 import org.metaworks.annotation.Hidden;
+import org.uengine.codi.mw3.ide.ResourceNode;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
@@ -12,7 +13,6 @@ public class StringProperty extends MetadataProperty{
 		setType(MetadataProperty.STRING_PROP);
 	}
 	
-	
 	@XStreamOmitField
 	MetadataFile file;
 		@Hidden
@@ -23,4 +23,14 @@ public class StringProperty extends MetadataProperty{
 			this.file = file;
 		}
 		
+	@XStreamOmitField
+	ResourceNode resourceNode;
+		@Hidden
+		public ResourceNode getResourceNode() {
+			return resourceNode;
+		}
+		public void setResourceNode(ResourceNode resourceNode) {
+			this.resourceNode = resourceNode;
+		}
+	
 }
