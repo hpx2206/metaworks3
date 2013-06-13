@@ -107,7 +107,7 @@ public class CodiProcessDefinitionFactory extends ProcessDefinitionFactory{
 			alias = (UEngineUtil.isNotEmpty(folder) ? folder + "/" : "") + (String) options.get("alias")  + "." + objectType;
 	
 		
-		String sourceCodeBase = CodiClassLoader.getMyClassLoader().sourceCodeBase();
+		String sourceCodeBase = CodiClassLoader.getMyClassLoader().mySourceCodeBase();
 		
 		String defFileName;
 
