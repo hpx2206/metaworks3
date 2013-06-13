@@ -163,13 +163,14 @@ public class MetadataXML implements ContextAware {
 		
 		
 		for(MetadataProperty metadataProperty : metadata.getProperties()){
-			if(MetadataProperty.FILE_PROP.equals(metadataProperty.getType()) || metadataProperty.IMAGE_PROP.equals(metadataProperty.getType())){
+			if(MetadataProperty.FILE_PROP.equals(metadataProperty.getType()) || MetadataProperty.IMAGE_PROP.equals(metadataProperty.getType())){
 				MetadataFile file = new MetadataFile();
-				file.setFilePath(resourceNode.getId());
 				file.setUploadedPath(metadataProperty.getValue());
 				file.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+				file.setMimeType(ResourceNode.findNodeType(metadataProperty.getValue()));
 				metadataProperty.setFile(file);
 			}
+			metadataProperty.selectType();
 		}
 			
 		metadata.init();

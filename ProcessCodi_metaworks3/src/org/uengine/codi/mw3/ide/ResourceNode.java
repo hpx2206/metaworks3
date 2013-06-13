@@ -9,8 +9,10 @@ import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.ToAppend;
+import org.metaworks.ToOpener;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Available;
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.TreeNode;
 import org.uengine.codi.mw3.ide.editor.Editor;
@@ -18,9 +20,16 @@ import org.uengine.codi.mw3.ide.editor.form.FormEditor;
 import org.uengine.codi.mw3.ide.editor.metadata.MetadataEditor;
 import org.uengine.codi.mw3.ide.editor.process.ProcessEditor;
 import org.uengine.codi.mw3.ide.menu.ResourceContextMenu;
+import org.uengine.codi.mw3.ide.view.Navigator;
 import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.model.Session;
 
+@Face(
+	ejsPath = "dwr/metaworks/org/metaworks/component/TreeNode.ejs",
+	ejsPathMappingByContext = {
+		"{how:	'tree', face: 'dwr/metaworks/org/metaworks/component/TreeNode.ejs'}",
+		"{how:	'resourcePicker', face: 'dwr/metaworks/org/metaworks/metadata/ResourceNodePicker.ejs'}"
+	})
 public class ResourceNode extends TreeNode implements ContextAware {
 
 	@AutowiredFromClient
@@ -122,6 +131,41 @@ public class ResourceNode extends TreeNode implements ContextAware {
 		return this;
 	}
 	
+	@ServiceMethod(callByContent=true, except="child", target=ServiceMethodContext.TARGET_POPUP)
+	public Object findResource(){
+		
+		// make workspace
+		Workspace workspace = new Workspace();
+		workspace.load();
+		
+		Navigator navigator = new Navigator();
+		
+		ResourceNode workspaceNode = new ResourceNode();
+		workspaceNode.setId(workspace.getId());
+		workspaceNode.setRoot(true);
+		workspaceNode.setHidden(true);
+		workspaceNode.setMetaworksContext(new MetaworksContext());
+		workspaceNode.getMetaworksContext().setHow("tree");
+		
+		for(Project project : workspace.getProjects()){
+			ResourceNode node = new ResourceNode(project);
+			node.getMetaworksContext().setWhere("resource");
+			workspaceNode.add(node);
+		}
+		
+		ResourceTree resourceTree = new ResourceTree();
+		resourceTree.setId(workspace.getId());
+		resourceTree.setNode(workspaceNode);
+		
+		navigator.setResourceTree(resourceTree);
+		navigator.setId("popupTree");
+		
+		Popup popup = new Popup();
+		popup.setPanel(navigator);
+		
+		return popup;	
+	}
+	
 	public Editor beforeAction(){
 		
 		Editor editor = null;
@@ -195,8 +239,7 @@ public class ResourceNode extends TreeNode implements ContextAware {
 	@Available(where={"resource"})
 	@ServiceMethod(callByContent=true , target=ServiceMethodContext.TARGET_APPEND, mouseBinding="dblclick")
 	public Object[] popupAction(){
-		System.out.println("aaaaaaaaaaaaaaaaaaa");
-		return new Object[]{new Remover(new Popup() , true) };
+		return new Object[]{new ToOpener(this), new Remover(new Popup())};
 	}
 	
 	@Override
