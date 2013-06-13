@@ -195,16 +195,18 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
 		if( name != null  && name.startsWith("@") && MetadataBundle.projectBundle != null){
 			String key = name.substring(1);
 			String value = MetadataBundle.projectBundle.getProperty(key);
-			// tenant 의 소스를 보고 없으면 main 파일을 바라본다.
-			String sourceCodeBase = CodiClassLoader.mySourceCodeBase();
-			File file = new File(sourceCodeBase + "/" + value);
-			if(file.exists()){
-				firstSourcePath = sourceCodeBase;
-			}else{
-				firstSourcePath = MetadataBundle.projectBundle.getProperty("sourceCodePath");
+			if( value != null ){
+				// tenant 의 소스를 보고 없으면 main 파일을 바라본다.
+				String sourceCodeBase = CodiClassLoader.mySourceCodeBase();
+				File file = new File(sourceCodeBase + "/" + value);
+				if(file.exists()){
+					firstSourcePath = sourceCodeBase;
+				}else{
+					firstSourcePath = MetadataBundle.projectBundle.getProperty("sourceCodePath");
+				}
+				
+				name = value;
 			}
-			
-			name = value;
 		}else{
 			firstSourcePath = sourcePath[0].getPath();
 		}

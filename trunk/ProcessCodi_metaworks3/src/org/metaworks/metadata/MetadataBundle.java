@@ -248,4 +248,8 @@ public class MetadataBundle {
 		
 		return projectId;
 	}
+	
+	public static String getBundleData(String key){
+		return MetadataBundle.projectBundle.getProperty(key);
+	}
 }
