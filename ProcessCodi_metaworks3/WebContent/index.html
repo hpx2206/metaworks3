@@ -224,7 +224,11 @@
 		<!-- 
 		<script type='text/javascript' src='scripts/jdatejs/prototype.js'></script>				
 		 -->
-						
+		 
+		<script type="text/javascript" src="scripts/jquery/jqueryCycle/jquery.cycle2.js"></script>
+		<script type="text/javascript" src="scripts/jquery/jqueryCycle/jquery.cycle2.carousel.js"></script> 
+	    <script type="text/javascript" src="scripts/jquery/jqueryCycle/jquery.cycle2.center.js"></script> 
+
  		<script type="text/javascript">
 			/*
 			 * facebook app id
@@ -258,13 +262,15 @@
 			}
 
 			$(document).ready(function() {
+				$.fn.cycle.defaults.autoSelector = '.slideshow';
+				
 				var request = new Request();
 
 				if (navigator.appVersion.indexOf("Win")!=-1){
 					$('body').css('font-family', "'맑은 고딕', Malgun gothic, Arial");
 				}
 
-				mw3.importClasses(["org.uengine.codi.mw3.model.*", "org.metaworks.widget.*"]);
+				//mw3.importClasses(["org.uengine.codi.mw3.model.*", "org.metaworks.widget.*"]);
 				
 				mw3.recordingExceptClasses["org.uengine.codi.mw3.model.Session"] = true;
 				
@@ -371,6 +377,27 @@
 				window.onbeforeunload= function(){
 				    return 'You are about to leave this page, OK?';
 				};
+				
+				/*
+				sso test
+				$.ajax('http://192.168.212.76/uengine-web/oauth/checkToken.jsp?access_token=541b7995ec557ed2396a4a91eb3ed576&user_id=paasManager', 							
+						{
+							async: false, 
+							success:function(data, textStatus, jqXHR) {
+								console.log('success');
+								console.log(jqXHR);
+								console.log(textStatus);
+								console.log(data);								
+							},
+							error:function(jqXHR, textStatus, errorThrown){
+								console.log('error');
+								console.log(jqXHR);
+								console.log(textStatus);
+								console.log(errorThrown);
+							}
+						}
+					);
+				*/
 			});
 		</script>
 	</head>
