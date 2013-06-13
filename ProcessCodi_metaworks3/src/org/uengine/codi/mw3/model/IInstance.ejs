@@ -6,7 +6,7 @@ if(value){
 	var lastCmnt2 = value.lastCmnt2; 
 	 
 	var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
-	if(session.searchKeyword != null && session.searchKeyword.length > 0){
+	if(session && session.searchKeyword != null && session.searchKeyword.length > 0){
 		if(typeof instanceTitle == 'string')
 			instanceTitle = instanceTitle.replaceAll(session.searchKeyword, '<b style=\"background:yellow\">' + session.searchKeyword + '</b>');
 		 

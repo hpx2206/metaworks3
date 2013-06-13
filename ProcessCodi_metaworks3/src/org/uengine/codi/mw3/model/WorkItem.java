@@ -1073,7 +1073,11 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		
 		if(newInstancePanel!=null){
 			//instanceRef.databaseMe().setSecuopt(newInstancePanel.getSecurityLevel());
-			instanceRef.setSecuopt(newInstancePanel.getSecurityLevel().getSelected());			
+			
+			if(newInstancePanel.getSecurityLevel().getSelected() != null)
+				instanceRef.setSecuopt(newInstancePanel.getSecurityLevel().getSelected());			
+			else
+				instanceRef.setSecuopt("0");
 			
 			if(newInstancePanel.getDueDate() != null){
 				instanceRef.setDueDate(newInstancePanel.getDueDate());

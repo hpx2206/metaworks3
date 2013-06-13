@@ -136,6 +136,7 @@
 	
 <%
 		if(mw3.when == 'new'){
+			if( session && session.employee.preferUX != 'sns'){
 %>			
 	<div id="wih_button">		
 <%
@@ -155,6 +156,7 @@
 		<a class="<%= value.type=='src'?'comment_btn_on':'comment_btn_off' %>" onclick="<%=methods.newSourceCode.caller()%>"><span id="method_<%=objectId%>_newSourceCode"><%=mw3.localize("$SourceCode")%></span></a>
 		<a class="comment_btn_off" onclick="<%=methods.newActivity.caller()%>"><span id="method_<%=objectId%>_newActivity"><%=mw3.localize("$etc")%></span></a>
 <%		
+		}
 		}
 %>			
 		
