@@ -383,7 +383,7 @@ public class CommonFormField implements ContextAware, Cloneable {
 //	validation check
 	public boolean duplicationCheck() {		
 		for(CommonFormField formField : form.formFields) {	
-			if(this.getId().equals(formField.getId())) {
+			if(!this.getFieldId().equals(formField.getFieldId()) && this.getId().equals(formField.getId())) {
 				return false;
 			}
 		}

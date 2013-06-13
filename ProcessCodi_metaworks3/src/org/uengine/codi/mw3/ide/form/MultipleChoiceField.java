@@ -64,30 +64,7 @@ public class MultipleChoiceField extends CommonFormField {
 	@Override
 	public Object apply() {
 		
-		if(this.getChoiceOptions() != null && this.getChoiceOptions().size() > 0) {
-			StringBuffer optionsBuffer = new StringBuffer();
-			StringBuffer valuesBuffer = new StringBuffer();
-			
-			for(int i = 0; i < this.getChoiceOptions().size(); i++) {
-				
-				MultipleChoiceOption choiceOption = this.getChoiceOptions().get(i);
-				
-				optionsBuffer
-				.append(makeValueString(choiceOption.getOption()));
-				
-				valuesBuffer
-				.append(makeValueString(choiceOption.getValue()));
-				
-				if(i != this.getChoiceOptions().size()-1) {
-					optionsBuffer.append(", ");					
-					valuesBuffer.append(", ");
-				}				
-			}
-			
-			this.setOptions(optionsBuffer.toString());
-			this.setValues(valuesBuffer.toString());
-		}
-		
+		this.setOptionsAndValues(this, this.getChoiceOptions());		
 		super.apply();
 		
 		return form;
@@ -97,8 +74,7 @@ public class MultipleChoiceField extends CommonFormField {
 	public CommonFormField make(WebFieldDescriptor fd)  {
 		
 		CommonFormField formField = super.make(fd);
-		int field_id = Integer.parseInt(formField.getFieldId().replace(Form.FORM_FIELD_ID_PREFIX, ""));
-		
+			
 		if (fd.getOptions().length > 0) {
 			Object[] options = fd.getOptions();
 			Object[] values = fd.getValues();
@@ -108,14 +84,17 @@ public class MultipleChoiceField extends CommonFormField {
 			for(int i = 0; i < options.length; i++) {
 				MultipleChoiceOption mc = new MultipleChoiceOption();
 				mc.setParentId(formField.getFieldId());
-				mc.setFieldId(makeOptionFieldId());
+				mc.setFieldId(OPTION_FIELD_ID_PREFIX + String.valueOf(i));
+//				mc.setFieldId(makeOptionFieldId()); 
 				mc.setOption((String)options[i]);
 				mc.setValue((String)values[i]);
 				choiceOptions.add(mc);
 			}
 			
 			((MultipleChoiceField)formField).setChoiceOptions(choiceOptions);
-		}
+			
+			this.setOptionsAndValues((MultipleChoiceField)formField, choiceOptions);	
+		}		
 		
 		return formField;		
 	}
@@ -140,5 +119,33 @@ public class MultipleChoiceField extends CommonFormField {
 		}
 		
 		return OPTION_FIELD_ID_PREFIX + String.valueOf(id);
+	}
+	
+	public void setOptionsAndValues(MultipleChoiceField multipleChoiceField, ArrayList<MultipleChoiceOption> choiceOptions) {
+		
+		if(choiceOptions != null && choiceOptions.size() > 0) {
+		
+			StringBuffer optionsBuffer = new StringBuffer();
+			StringBuffer valuesBuffer = new StringBuffer();
+			
+			for(int i = 0; i < choiceOptions.size(); i++) {
+				
+				MultipleChoiceOption choiceOption = choiceOptions.get(i);
+				
+				optionsBuffer
+				.append(makeValueString(choiceOption.getOption()));
+				
+				valuesBuffer
+				.append(makeValueString(choiceOption.getValue()));
+				
+				if(i != choiceOptions.size()-1) {
+					optionsBuffer.append(", ");					
+					valuesBuffer.append(", ");
+				}				
+			}
+			
+			multipleChoiceField.setOptions(optionsBuffer.toString());
+			multipleChoiceField.setValues(valuesBuffer.toString());
+		}
 	}
 }

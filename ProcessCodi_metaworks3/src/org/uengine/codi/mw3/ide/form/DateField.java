@@ -21,6 +21,17 @@ public class DateField extends CommonFormField {
 	}
 	
 	@Override
+	public CommonFormField make(WebFieldDescriptor fd)  {
+		
+		CommonFormField formField = super.make(fd);
+		
+		formField.setOptions(makeValueString((String)fd.getOptions()[0]));
+		formField.setValues(makeValueString((String)fd.getValues()[0]));
+		
+		return formField;		
+	}
+	
+	@Override
 	public Object apply() {
 		this.setValues(makeValueString(this.getFormat()));
 		this.setOptions(makeValueString("format"));
