@@ -1,5 +1,23 @@
 <%
 	if (value) {
+	
+		var methodOrderValue = (objectMetadata.faceOptions ? (objectMetadata.faceOptions['methodOrder']?objectMetadata.faceOptions['methodOrder']:'') : '');
+		var methodOrder = [];
+		
+		if(methodOrderValue && methodOrderValue.length>0){
+			if(methodOrderValue.indexOf(',')>0){
+				methodOrder = methodOrderValue.split(',');
+			}else{
+				methodOrder.push(methodOrderValue);
+			}
+		}else{
+			for(var key in objectMetadata.serviceMethodContexts){
+	   		   	var serviceMethod = objectMetadata.serviceMethodContexts[key];	   		
+	   		   	
+	   		   	methodOrder.push(serviceMethod.methodName);
+			}
+		}
+	
 		var fieldOrderValue = (objectMetadata.faceOptions ? (objectMetadata.faceOptions['fieldOrder']?objectMetadata.faceOptions['fieldOrder']:'') : '');
 		var fieldOrder = [];
 		var cols = 2;
@@ -112,16 +130,15 @@
 		</table>
 	</div>
 <%		
-		
-	   	if(objectMetadata.serviceMethodContexts){
+	   	if(methodOrder.length > 0){
 %>
 		
 		<div class="positionRight">
 <%			   	
-			for(var key in objectMetadata.serviceMethodContexts){
-	   		   	var serviceMethod = objectMetadata.serviceMethodContexts[key];	   		   	
+			for(var i=0; i<methodOrder.length; i++){
+	   		   	var serviceMethodName = methodOrder[i];	   		   	
 %>
-				<%=methods[serviceMethod.methodName].here()%>
+				<%=methods[serviceMethodName].here()%>
 <%	   	   	
 			}
 %>			
