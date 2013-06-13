@@ -6,10 +6,10 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.layout.Layout;
 import org.uengine.codi.mw3.admin.PageNavigator;
-import org.uengine.codi.mw3.marketplace.searchbox.MarketplaceSearchBox;
+import org.uengine.codi.mw3.model.ContentWindow;
+import org.uengine.codi.mw3.model.InstanceList;
+import org.uengine.codi.mw3.model.InstanceListPanel;
 import org.uengine.codi.mw3.model.Session;
-import org.uengine.codi.mw3.marketplace.category.Category;
-import org.uengine.codi.mw3.marketplace.category.MarketCategoryPanel;
 
 public class Marketplace {
 	
@@ -40,8 +40,10 @@ public class Marketplace {
 		MarketplaceTopPanel top = new MarketplaceTopPanel(session);
 
 		//center
-		MarketplaceCenterWindow center = new MarketplaceCenterWindow(session);
+		MarketplaceWindow marketplaceWindow = new MarketplaceWindow();
 		
+		
+		/*
 		MarketplaceCenterPanel appListPanel = new MarketplaceCenterPanel();
 		
 		
@@ -70,22 +72,32 @@ public class Marketplace {
 		MarketplaceEastPanel east = new MarketplaceEastPanel();
 		east.session = session;
 		east.load();
+		*/
+		
+		session.getEmployee().setPreferUX("sns");
+		session.setLastPerspecteType("topic");
+		session.setLastSelectedItem("Marketplace");
+		
+		InstanceList instList = new InstanceList(session);
+		instList.load();
+		
+		InstanceListPanel instanceListPanel = new InstanceListPanel(session);
+		instanceListPanel.setInstanceList(instList);
+		
+		ContentWindow topicStreamWindow = new ContentWindow();
+		topicStreamWindow.setPanel(instanceListPanel);
+		
+		Layout marketPlaceLayout =  new Layout();
+		marketPlaceLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, east__size:350");
+		marketPlaceLayout.setCenter(marketplaceWindow);
+		marketPlaceLayout.setEast(topicStreamWindow);
 		
 		Layout mainLayout = new Layout();
+		mainLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, north__size:52");
+		mainLayout.setNorth(top);
+		mainLayout.setCenter(marketPlaceLayout);
 		
-		mainLayout.setName("center");
-		mainLayout.setId("main");
-		mainLayout.setWest(marketCategory);
-		mainLayout.setCenter(center);
-		mainLayout.setEast(east);
-
-		
-		Layout storeLayout = new Layout();
-		storeLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, north__size:52");
-		storeLayout.setNorth(top);
-		storeLayout.setCenter(mainLayout);
-		
-		this.setLayout(storeLayout);
+		this.setLayout(mainLayout);
 		
 		pageNavigator = new PageNavigator();
 		
@@ -93,7 +105,7 @@ public class Marketplace {
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object showMyVendor() throws Exception {
-		
+		/*
 		MyVendor myVendor = new MyVendor();
 		myVendor.session = session;
 		
@@ -106,12 +118,12 @@ public class Marketplace {
 		MarketplaceCenterWindow centerWin = new MarketplaceCenterWindow(session);
 		centerWin.setCenterPanel(centerPanel);
 		centerWin.getCenterPanel().getListing().getMetaworksContext().setWhen("myVendor");
-		
+		*/
 		Layout mainLayout = new Layout();
 		
 		mainLayout.setId("main");
 		mainLayout.setName("center");
-		mainLayout.setCenter(centerWin);
+		//mainLayout.setCenter(centerWin);
 		
 		return mainLayout;
 		

@@ -13,10 +13,7 @@ import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.knowledge.IProjectNode;
 import org.uengine.codi.mw3.knowledge.IWfNode;
 import org.uengine.codi.mw3.knowledge.ProjectNode;
-import org.uengine.codi.mw3.marketplace.category.Category;
 import org.uengine.codi.mw3.marketplace.category.ICategory;
-import org.uengine.codi.mw3.marketplace.category.MarketCategoryPanel;
-import org.uengine.codi.mw3.marketplace.searchbox.MarketplaceSearchBox;
 import org.uengine.codi.mw3.model.ICompany;
 import org.uengine.codi.mw3.model.IUser;
 import org.uengine.codi.mw3.model.InstanceViewContent;
@@ -280,65 +277,33 @@ public class App extends Database<IApp> implements IApp{
 		
 	}
 	
-	public IApp searchApps() throws Exception{
+	public static IApp findApp(String categoryId, String keyword) throws Exception{
 		
 		StringBuffer sql = new StringBuffer();
-		sql.append("select app.*, comtable.comname, comtable.description, comtable.repmail from app, comtable");
-		sql.append(" where app.comcode = comtable.comcode");
-		sql.append("   and status=?status");
-		sql.append("   and app.isdeleted=?isdeleted");
-		sql.append("   and appName like ?AppName");
-
+		sql.append("select * from app");
+		sql.append(" where status=?status");
+		sql.append("   and isdeleted=?isdeleted");		
+		
+		if(categoryId != null && !categoryId.equals("0"))
+			sql.append("   and categoryId=?categoryId");
+		if(keyword != null)
+			sql.append("   and appName like ?AppName");
+		
 		
 		IApp findListing = (IApp) Database.sql(IApp.class, sql.toString());
 		
-		findListing.setAppName("%" + this.getAppName() + "%");
+		findListing.set("categoryId", categoryId);
+		findListing.setAppName("%" + keyword + "%");
 		findListing.setStatus(STATUS_PUBLISHED);
 		findListing.setIsDeleted(false);
+		
+		
 		findListing.select();
 		
 		return findListing;
 		
 	}
-	
-	public IApp findHome() throws Exception{
-		StringBuffer sql = new StringBuffer();
-		sql.append("select app.*, comtable.comname, comtable.description, comtable.repmail from app, comtable");
-		sql.append(" where app.comcode = comtable.comcode");
-		sql.append("   and status=?status");
-		sql.append("   and app.isdeleted=?isdeleted");
-
 		
-		IApp findListing = (IApp) Database.sql(IApp.class, sql.toString());
-		
-		findListing.setStatus(STATUS_PUBLISHED);
-		findListing.setIsDeleted(false);
-		findListing.select();
-		
-		return findListing;
-	}
-	
-	public IApp findForCategory() throws Exception{
-
-		StringBuffer sql = new StringBuffer();
-		sql.append("select app.*, comtable.comname, comtable.description, comtable.repmail from app, comtable");
-		sql.append(" where app.comcode = comtable.comcode");
-		sql.append("   and status=?status");
-		sql.append("   and categoryId=?categoryId");
-		sql.append("   and app.isdeleted=?isdeleted");
-
-		
-		IApp findListing = (IApp) Database.sql(IApp.class, sql.toString());
-		
-		findListing.set("categoryId", this.getCategory().getCategoryId());
-		findListing.setStatus(STATUS_PUBLISHED);
-		findListing.setIsDeleted(false);
-		findListing.select();
-		
-		return findListing;
-		
-	}
-	
 	public Object readyPublished() throws Exception {
 		
 		App selectedApp = new App();
@@ -352,17 +317,28 @@ public class App extends Database<IApp> implements IApp{
 		
 	}
 	
-	public Object detailListing() throws Exception {
-		
+	public Object detail() throws Exception {
+		MarketplaceCenterPanel centerPenal = new MarketplaceCenterPanel();
+		try {
+			centerPenal.setAppDetail(new AppDetail(databaseMe()));
+			centerPenal.getMetaworksContext().setHow("detail");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		/*
 		Category category = new Category();
 		category.setCategoryId(this.getCategory().getCategoryId());
 		this.setCategory(category.databaseMe());
+		*/
 		
+		/*
 		MarketplaceSearchBox searchBox = new MarketplaceSearchBox();
 		searchBox.setKeyUpSearch(true);
 		searchBox.setKeyEntetSearch(true);
+		*/
 		
-		
+		/*
 		MarketplaceCenterPanel centerPenal = new MarketplaceCenterPanel();
 		centerPenal.setListing(this.findMe());
 		centerPenal.setSearchBox(searchBox);
@@ -376,15 +352,16 @@ public class App extends Database<IApp> implements IApp{
 		//west
 		MarketCategoryPanel marketCategory = new MarketCategoryPanel(session);
 		marketCategory.setCategory(Category.loadRootCategory());
+		*/
 		
-		Layout mainLayout = new Layout();
+		//Layout mainLayout = new Layout();
 		
-		mainLayout.setId("main");
-		mainLayout.setName("center");
-		mainLayout.setCenter(centerWin);
-		mainLayout.setWest(marketCategory);
+		//mainLayout.setId("main");
+		//mainLayout.setName("center");
+		//mainLayout.setCenter(centerWin);
+		//mainLayout.setWest(marketCategory);
 		
-		return mainLayout;
+		return centerPenal;
 	}
 	
 	public Object editListing() throws Exception {
@@ -394,10 +371,10 @@ public class App extends Database<IApp> implements IApp{
 		
 		SelectBox categories = new SelectBox();
 
-		MarketCategoryPanel marketCategory = new MarketCategoryPanel(session);
-		marketCategory.setCategory(Category.loadRootCategory());
+		//MarketCategoryPanel marketCategory = new MarketCategoryPanel(session);
+		//marketCategory.setCategory(Category.loadRootCategory());
 
-		if (marketCategory.getCategory().size() > 0) {
+/*		if (marketCategory.getCategory().size() > 0) {
 			while (marketCategory.getCategory().next()) {
 
 				String categoryId = Integer.toString(marketCategory.getCategory().getCategoryId());
@@ -406,7 +383,7 @@ public class App extends Database<IApp> implements IApp{
 				categories.add(categoryName, categoryId);
 				
 			}
-		}
+		}*/
 		
 		categories.setSelected(Integer.toString(this.getCategory().getCategoryId()));
 		
@@ -444,7 +421,7 @@ public class App extends Database<IApp> implements IApp{
 		
 		
 		MarketplaceCenterPanel centerPanel = new MarketplaceCenterPanel();
-		centerPanel.setAppInfo(editListing);
+		//centerPanel.setAppInfo(editListing);
 		
 		MarketplaceCenterWindow centerWin = new MarketplaceCenterWindow(session);
 		centerWin.setCenterPanel(centerPanel);
