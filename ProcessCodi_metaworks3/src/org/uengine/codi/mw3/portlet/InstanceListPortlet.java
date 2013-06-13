@@ -86,8 +86,8 @@ public class InstanceListPortlet extends Window {
 		
 		Session session = login.loginService();
 		session.getMetaworksContext().setWhen("hidden");
-		session.setLastPerspecteType("portlet");
-		session.getEmployee().setPreferUX("portlet");
+		session.setLastPerspecteType("sns");
+		session.getEmployee().setPreferUX("sns");
 		this.setSession(session);
 		
 		Object[] result = null;
