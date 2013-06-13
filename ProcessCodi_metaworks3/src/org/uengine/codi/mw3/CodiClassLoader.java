@@ -27,6 +27,7 @@ import org.codehaus.commons.compiler.ICompilerFactory;
 import org.codehaus.commons.compiler.jdk.ByteArrayJavaFileManager;
 import org.codehaus.commons.compiler.jdk.ByteArrayJavaFileManager.ByteArrayJavaFileObject;
 import org.metaworks.dao.TransactionContext;
+import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.metadata.MetadataBundle;
 import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.kernel.GlobalContext;
@@ -647,6 +648,13 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
 	}
 	
 	public static void refreshClassLoader(String resourceName){
+		
+		try {
+			MetaworksRemoteService.getInstance().clearMetaworksType(resourceName);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		/*
 		String sourceCodeBase = null;
