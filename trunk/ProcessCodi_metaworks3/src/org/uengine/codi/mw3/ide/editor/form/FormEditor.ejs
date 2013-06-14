@@ -1,22 +1,5 @@
-<div class="fb_wrap">
-    <div class="fb_left">
-    	<%=fields.form.here()%>
-        <div style="height:50px"></div>
-    </div>
-    <div class="fb_content">
-        <div class="fb_property">
-        	<div class="fb_property_tit">Property</div>
-        	 <%=fields.properties.here()%>            
-            <div class="poperty_box">
-            	<label class="fb_box_desc2" id="">Choices </label>
-                 <div class="multi_line"><span><input class="text medium" id="field0" type="text" readonly="readonly" value="0123456789"></span><span><img src="images/waveStyle/add.png" /><img src="images/waveStyle/delete.png" /></span></div>
-                 <div class="multi_line"><span><input class="text medium" id="field0" type="text" readonly="readonly" value="0123456789"></span><span><img src="images/waveStyle/add.png" /><img src="images/waveStyle/delete.png" /></span></div>
-                 <div class="multi_line"><span><input class="text medium" id="field0" type="text" readonly="readonly" value="0123456789"></span><span><img src="images/waveStyle/add.png" /><img src="images/waveStyle/delete.png" /></span></div>
-            </div>
-        </div>
-        <div class="fb_addForm">
-        	<div class="fb_property_tit">Add a field</div>
-            <%=fields.menu.here()%>         
-        </div>
-    </div>
+<%=fields.form.here({htmlAttr:{class:'fb_left'}})%>
+
+<div class="fb_content">
+    <%=fields.menu.here({htmlAttr:{class:'fb_addForm'}})%>         
 </div>
