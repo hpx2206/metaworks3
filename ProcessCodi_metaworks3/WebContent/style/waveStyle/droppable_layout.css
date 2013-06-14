@@ -2142,3 +2142,108 @@ html, body {
 .mp_sub_dsc2{margin:20px 20px; padding:10px; line-height:20px; border:1px solid #CCC; background:#FAFAFA;
  -webkit-border-radius:3px;
  -moz-border-radius:3px;}
+
+
+
+/* selfPortal*/
+.sp_center{margin-left:209px;
+	border-left:1px solid #CCC;
+	height:100%;
+	overflow:auto;
+	position:relative;background:#FFF}
+.sp_sub_cate{line-height:30px; border-bottom:1px solid #ccc; position:absolute; width:100%; background:#F7F7F7}
+.sp_sub_cate span {font-size:14px; font-weight:bold; margin-left:15px;}
+.sp_left{ float:left; width:200px; border-right:1px solid #ccc;  height:100%; top:30px;}
+.sp_left_con{margin-top:30px;}
+.sp_content{ margin-left:200px;}
+.sp_left_con .form_tit { margin:15px 15px 5px 15px; display:block; padding-left:20px; font-weight:bold;background:url('../../images/marketPlace/sp_arrow_green.gif') no-repeat 2px 28px ;}
+.sp_form_block {width:90%; margin:15px 15px 5px 15px;}
+.sp_accordion h3{display:block; height:26px; line-height:26px; padding-left:20px; background:url('../../images/marketPlace/sp_accordian_bg.png') no-repeat right; border:1px solid #ccc; border-left:none; border-right:none; margin:0px} 
+.sp_accordion li{margin:10px;padding-left:20px; background:url('../../images/marketPlace/sp_arrow_black.gif') no-repeat 8px 3px;;}
+.sp_position_right {float:right;}
+.sn_view_box{ padding:5px; border:1px solid #ccc; display:inline-block;-webkit-border-radius:3px;
+ -moz-border-radius:3px; position:relative}
+.sn_view_arrow{ position:absolute; top:-15px; left:20px;}
+
+
+
+/*formBuilder*/
+.fb_wrap{height:100%; background:#FFF; padding-right:346px;*display:inline-block;_width /**/:100%;}
+.fb_left{float:left;width:100%; height:100%; overflow:auto }
+.fb_content{float:left;position:relative;left:346px;width:345px;margin-left:-346px; overflow:auto; height:100%; border-left:1px solid #ccc}
+.fb_content .fb_property{ border-bottom:1px solid #ccc; padding:0 15px 15px 15px; background:#f3f7fb;}
+.fb_content .fb_property_tit { margin-bottom:15px;line-height:25px; padding-left:20px; font-weight:bold; color:#039; border-bottom:1px dotted #CCC; background:url('../../images/waveStyle/control_play_blue.png') 0px 4px no-repeat;}
+.fb_content .fb_property .fb_desc{ margin-top:15px;}
+.fb_property input.small{width:25%; }
+.fb_property input.medium{width:70%;}
+.fb_property input.large{width:100%; }
+.fb_property .multi_line{ margin-bottom:5px}
+.fb_property .multi_line img{margin:0 0 0 5px;}
+.fb_property .poperty_box{ border:1px dotted #06C; padding:15px 10px 10px 10px; position:relative; margin-bottom:9px;}
+.fb_box_desc{font-weight:bold; margin-bottom:5px; margin-top:10px; display:block; font-size:95%;}
+.fb_box_desc2{position:absolute; top:-8px; left:20px; background:#f3f7fb; padding:3px; font-weight:bold}
+
+.fb_content .fb_addForm{ padding:0 15px 15px 15px;}
+.fb_form_box{ margin:15px;padding:10px; background:#f3f7fb; border:1px solid #ccc; margin-bottom:15px; position:relative}
+.fb_form_box:hover{border:1px dotted #000;}
+.fb_form_box.current{border:1px solid #4286b9; background:#dbe8f2;}
+.hover_div{ position:absolute;bottom:5px; right:5px; z-index:999}
+.hover_div span img{margin-left:5px:}
+.fb_desc{border: medium none ; 
+	padding: 0pt 4px 5px 0pt; 
+	line-height: 150%; 
+	color: rgb(34, 34, 34); 
+	display: block; 
+	font-size: 95%; 
+	font-weight: bold; }
+	
+.fb_property input.text, .fb_property select.select, .fb_form_box input.text, .fb_form_box textarea.textarea, .fb_form_box select.select { 
+	border-style: solid; 
+	border-color: rgb(124, 124, 124) rgb(195, 195, 195) rgb(221, 221, 221); 
+	border-width: 1px; margin: 0pt;
+	background: rgb(255, 255, 255) url('images/input_bg.gif') repeat-x scroll center top;
+	font-size: 100%; 
+	color: rgb(51, 51, 51); 
+}
+.fb_form_box input.small{width:25%}
+.fb_form_box input.medium{width:50%}
+.fb_form_box input.large{width:100%}
+
+.fb_form_box input.text, .fb_property input.text { padding: 2px 0pt; }
+.fb_form_box input.currency { text-align: right; }
+.fb_form_box input.checkbox, .fb_form_box input.radio { 
+	margin: 8px 0pt 0pt 3px; 
+	display: block; 
+	line-height: 1.4em; 
+	width: 13px;
+	height: 13px; 
+}
+.fb_form_box label.choice { 
+	margin: -19px 0pt 0pt 25px; 
+	padding: 4px 0pt 5px; 
+	font-size: 100%; 
+	display: block; 
+	line-height: 1.4em; 
+	color: rgb(68, 68, 68); 
+	width: 90%; 
+}
+.fb_box .icon{width: 16px; height: 16px; }
+.fb_form_box textarea.textarea { 
+	margin-top: 1px; 
+}
+.fb_form_box textarea.small{width:25%}
+.fb_form_box textarea.medium{width:50%}
+.fb_form_box textarea.large{width:100%}
+
+.fb_form_box select.select { 
+	margin: 1px 0pt; 
+	padding: 1px 0pt 0pt; 
+}
+select.select[class] { 
+	margin: 0pt; 
+	padding: 1px 0pt; 
+}
+.fb_addForm li { width:140px; margin:0 15px 15px 0; border:1px solid #06F; line-height:30px; background:#069; float:left; cursor:pointer}
+.fb_addForm li img{ position:relative; top:3px;  background:#069;}
+.fb_addForm li span { padding:5px;}
+.fb_addForm .add_f_text{ color:#fff; font-weight:bold}
