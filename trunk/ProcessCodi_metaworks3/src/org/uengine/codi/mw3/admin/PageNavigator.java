@@ -12,6 +12,7 @@ import org.uengine.codi.mw3.model.Main;
 import org.uengine.codi.mw3.model.MainSNS;
 import org.uengine.codi.mw3.model.PinterestMain;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.codi.mw3.selfservice.SelfService;
 import org.uengine.codi.mw3.tadpole.Tadpole;
 import org.uengine.processmarket.Market;
 
@@ -110,6 +111,18 @@ public class PageNavigator{
 //		return new MainPanel(nkia);
 		System.out.println("paasManager" + session.getAccessToken());
 		return new MainPanel(new RemoteNewPage(session, "IaaS Admin", "http://192.168.212.52/kiat_sso.jsp?access_token=" + session.getAccessToken() + "&user_id=" + session.getUser().getUserId())); //paasManager
+	}
+	
+	@ServiceMethod(callByContent=true, inContextMenu=true)
+	public MainPanel goSelfServicePortal() throws Exception {
+		
+		
+		SelfService selfService = new SelfService();
+		selfService.session = session;
+		selfService.load();
+		
+		return new MainPanel(selfService);
+		
 	}
 	
 
