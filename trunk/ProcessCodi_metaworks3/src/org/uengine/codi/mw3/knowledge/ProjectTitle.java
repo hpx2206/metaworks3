@@ -128,7 +128,7 @@ public class ProjectTitle implements ContextAware {
 		ResultPayload rp = new ResultPayload();
 		rp.setProcessVariableChange(new KeyedParameter("ProjectCreate", projectCreate));
 		
-		RoleMappingPanel roleMappingPanel = new RoleMappingPanel(processMap, session);
+		RoleMappingPanel roleMappingPanel = new RoleMappingPanel(processManager, processMap.getDefId(), session);
 		roleMappingPanel.putRoleMappings(processManager, instId);
 		
 		processManager.executeProcessByWorkitem(instId.toString(), rp);
@@ -154,8 +154,6 @@ public class ProjectTitle implements ContextAware {
 		
 		for (int i = 0; i < returnObj.length; i++) {
 			if( returnObj[i] instanceof InstanceListPanel){
-				((InstanceListPanel)returnObj[i]).processManager = processManager;
-				((InstanceListPanel)returnObj[i]).projectInfoLoad();
 				returnObject[i] = new Refresh(returnObj[i]);
 			}else{
 				returnObject[i] = new Refresh(returnObj[i]);

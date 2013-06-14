@@ -3,7 +3,6 @@ package org.uengine.codi.mw3.knowledge;
 import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
-import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;

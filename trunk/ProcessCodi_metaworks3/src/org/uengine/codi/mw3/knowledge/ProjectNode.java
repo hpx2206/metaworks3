@@ -30,9 +30,6 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 			
 			String title = "프로젝트: " + getName();
 			Object[] returnObject = Perspective.loadInstanceListPanel(session, "topic", getId(), title);
-			//session, InstanceListPanel
-			((InstanceListPanel)returnObject[1]).processManager = processManager;
-			((InstanceListPanel)returnObject[1]).projectInfoLoad();
 			
 			return returnObject;
 		}
@@ -67,20 +64,16 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 		StringBuffer sql = new StringBuffer();
 		
 		sql.append("SELECT knol.id, knol.name ");
-//		sql.append("  FROM bpm_knol knol");
-		
-		sql.append("FROM bpm_procinst inst  ");
-		sql.append("	INNER JOIN bpm_knol knol ON (knol.type=?type AND knol.companyid=?companyid) ");
-		sql.append("WHERE inst.status=?status ");
-		sql.append("	AND inst.initcomcd=knol.companyid ");
-		sql.append("	AND knol.linkedinstid=inst.instid");
+		sql.append("  FROM bpm_knol knol");
+//		sql.append("  FROM bpm_procinst inst  ");
+		sql.append(" WHERE type AND knol.companyid=?companyid");
+//		sql.append("	AND knol.linkedinstid=inst.instid");
 		
 		
 		IProjectNode dao  = (IProjectNode) Database.sql(IProjectNode.class, sql.toString());
 		
 		dao.setType(this.type);
 		dao.setCompanyId(this.getCompanyId());
-		dao.set("status", Instance.INSTNACE_STATUS_COMPLETED);
 		dao.select();
 		
 		return dao;
