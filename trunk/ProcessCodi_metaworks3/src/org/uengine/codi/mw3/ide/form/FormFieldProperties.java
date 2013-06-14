@@ -15,7 +15,7 @@ public class FormFieldProperties {
 		}
 
 	public FormFieldProperties(){
-		this(null);
+		this(new CommonFormField());
 	}
 	
 	public FormFieldProperties(CommonFormField formField){

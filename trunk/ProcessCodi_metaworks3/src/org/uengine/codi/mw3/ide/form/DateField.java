@@ -3,13 +3,6 @@ package org.uengine.codi.mw3.ide.form;
 import org.metaworks.WebFieldDescriptor;
 import org.metaworks.annotation.Face;
 
-@Face(displayName="$form.field.DateField",
-		options={"hideEditBtn"}, values={"true"},
-		ejsPathMappingByContext={
-			"{where: 'form', face: 'dwr/metaworks/org/uengine/codi/mw3/ide/form/DateField.ejs'}",
-			"{where: 'properties', face: 'dwr/metaworks/org/uengine/codi/mw3/ide/form/Properties.ejs'}",
-			"{where: 'menu', face: 'dwr/metaworks/org/uengine/codi/mw3/ide/form/Menu.ejs'}"
-})
 public class DateField extends CommonFormField {
 	
 	String format;
@@ -22,9 +15,10 @@ public class DateField extends CommonFormField {
 		}
 
 	public DateField() {		
+		this.setName("Date");
+		this.setDisplayName("Date");
 		this.setFieldType("java.util.Date");
 		this.setDefine(true);
-		this.setDisplayName("$form.field.DateField");
 //		this.setEjsPath("dwr/metaworks/genericfaces/Date.ejs");
 	}
 	

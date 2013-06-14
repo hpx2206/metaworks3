@@ -2,7 +2,7 @@
 	var ejsPath = 'dwr/metaworks/' + objectTypeName.split('.').join('/') + 'Preview.ejs';
 %>
 
-<label class="fb_desc" id="">Single Line</label>
+<label class="fb_desc" id=""><%=fields.displayName.here()%></label>
 
 <div>
 	<%=include(ejsPath)%>
