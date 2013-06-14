@@ -1,4 +1,5 @@
 <%@page import="org.uengine.persistence.processdefinition.*,org.uengine.persistence.processdefinitionversion.*,javax.naming.InitialContext,javax.naming.NamingException,javax.rmi.PortableRemoteObject,org.uengine.kernel.*,org.uengine.processmanager.*,java.io.*,org.uengine.util.UEngineUtil"%><%
+	/*
 	TransactionContext st = new SimpleTransactionContext();
 
 	try{
@@ -53,5 +54,6 @@
 	}finally{
 		st.releaseResources();
 	}
+	*/
 	
 %>
