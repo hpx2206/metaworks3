@@ -1995,7 +1995,7 @@ html, body {
 
 
 .mp_wrap {
-	height:100%
+	height:100%;
 }
 .mp_left {
 	float:left;
@@ -2024,6 +2024,9 @@ html, body {
 	-webkit-border-radius:3px;
 	-moz-border-radius:3px;
 }
+
+.mp_menu_list{background:url('../../images/marketPlace/leftMenuListApp.png') no-repeat 3px 6px ;}
+
 .mp_menu_list1{background:url('../../images/marketPlace/leftMenuList01.png') no-repeat 3px 6px ;}
 .mp_menu_list2{background:url('../../images/marketPlace/leftMenuList02.png') no-repeat 3px 6px ;}
 .mp_menu_list3{background:url('../../images/marketPlace/leftMenuList03.png') no-repeat 3px 6px ;}
@@ -2146,16 +2149,16 @@ html, body {
 
 
 /* selfPortal*/
-.sp_center{margin-left:209px;
+.sp_center{_display:inline-block;
 	border-left:1px solid #CCC;
 	height:100%;
-	overflow:auto;
-	position:relative;background:#FFF}
+	background:#FFF;
+	overflow: auto;}
 .sp_sub_cate{line-height:30px; border-bottom:1px solid #ccc; position:absolute; width:100%; background:#F7F7F7}
 .sp_sub_cate span {font-size:14px; font-weight:bold; margin-left:15px;}
-.sp_left{ float:left; width:200px; border-right:1px solid #ccc;  height:100%; top:30px;}
+.sp_left{overflow: auto; float:left;width:180px;margin-right:-200px; height:100%; border-right:1px solid #ccc; }
 .sp_left_con{margin-top:30px;}
-.sp_content{ margin-left:200px;}
+.sp_content{ overflow: auto; margin-left:200px; }
 .sp_left_con .form_tit { margin:15px 15px 5px 15px; display:block; padding-left:20px; font-weight:bold;background:url('../../images/marketPlace/sp_arrow_green.gif') no-repeat 2px 28px ;}
 .sp_form_block {width:90%; margin:15px 15px 5px 15px;}
 .sp_accordion h3{display:block; height:26px; line-height:26px; padding-left:20px; background:url('../../images/marketPlace/sp_accordian_bg.png') no-repeat right; border:1px solid #ccc; border-left:none; border-right:none; margin:0px} 
@@ -2164,7 +2167,6 @@ html, body {
 .sn_view_box{ padding:5px; border:1px solid #ccc; display:inline-block;-webkit-border-radius:3px;
  -moz-border-radius:3px; position:relative}
 .sn_view_arrow{ position:absolute; top:-15px; left:20px;}
-
 
 
 /*formBuilder*/
