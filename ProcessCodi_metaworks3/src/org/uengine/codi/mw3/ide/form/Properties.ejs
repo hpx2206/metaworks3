@@ -1,20 +1,35 @@
-<%console.log(value);%>
-
-<%=fields.id.here()%>
-<%=fields.displayName.here()%>
-<%=fields.hide.here()%>
-
-<label class="fb_box_desc" id=""><%=mw3.localize('$form.field.id')%></label>
-<div class="">
-	<input class="text medium" id="field0" type="text" value="ccc" />
-</div>
-
-<label class="fb_box_desc" id=""><%=mw3.localize('$form.field.displayname')%></label>
-<div class="">          	
-	<input class="text medium" id="field0" type="text" value="ddd" />
-</div>
-
-<label class="fb_box_desc" id=""><%=mw3.localize('$form.field.hide')%></label>
-<div class="">
-	<input class="text medium" id="field0" type="text" value="aaa" />
-</div>
+<%
+	if(value){
+		var fieldOrderValue = (objectMetadata.faceOptions ? (objectMetadata.faceOptions['fieldOrder']?objectMetadata.faceOptions['fieldOrder']:'') : '');
+		var fieldOrder = [];
+		
+		if(fieldOrderValue && fieldOrderValue.length>0){
+			if(fieldOrderValue.indexOf(',')>0){
+				fieldOrder = fieldOrderValue.split(',');
+			}else{
+				fieldOrder.push(fieldOrderValue);
+			}
+			
+		}else{
+			for (var i=0; i<objectMetadata.fieldDescriptors.length; i++){
+				var fd = objectMetadata.fieldDescriptors[i];
+	   		   							
+				if(fd.name == 'metaworksContext') continue;							
+				if(mw3.isHidden(fd)) continue;
+										
+				fieldOrder.push(fd.name);
+			}
+		}
+		
+		for (var i=0; i<fieldOrder.length; i++){
+			if(fieldOrder[i].length == 0)
+				continue;
+				
+			var fd = fields[fieldOrder[i]].fieldDescriptor;				
+%>			
+		<label class="fb_box_desc" id="">Property</label>
+		<%=fields[fd.name] ? fields[fd.name].here() : "XXX"%>
+<%				
+		}
+	}
+%>

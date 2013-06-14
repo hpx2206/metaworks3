@@ -20,4 +20,14 @@ var org_uengine_codi_mw3_ide_form_CommonFormField = function(objectId, className
 		
 		mw3.call(event.data.objectId, 'modify');		
 	});
+	
+	this.startLoading = function(){
+		
+	};
+	this.endLoading = function(){
+		
+	};
+	this.showStatus = function(){
+		
+	};
 };

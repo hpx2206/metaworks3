@@ -12,6 +12,8 @@ import org.metaworks.annotation.Face;
 public class FileUploadField extends CommonFormField {
 
 	public FileUploadField() {
+		this.setName("FileUpload");
+		this.setDisplayName("FileUpload");
 		this.setFieldType("org.metaworks.website.MetaworksFile");
 		this.setDefine(true);
 //		this.setEjsPath("dwr/metaworks/genericfaces/MetaworksFile.ejs");
