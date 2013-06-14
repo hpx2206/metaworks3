@@ -39,6 +39,8 @@ public class VMImageCombo extends Choice {
 			
 			for(int i=0;i<images.size();i++){
 				Image image = images.get(i);
+				
+				System.out.println(image.getDescription());
 								
 				String imageRealmId = image.getDescription().split("_")[9];
 				if(realmId == null || imageRealmId.equals(realmId))
