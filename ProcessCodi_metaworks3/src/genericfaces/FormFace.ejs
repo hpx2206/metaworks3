@@ -1,6 +1,8 @@
 <%
 	if (value) {
-	
+		var methodVAlign = (objectMetadata.faceOptions ? (objectMetadata.faceOptions['methodVAlign']?objectMetadata.faceOptions['methodVAlign']:'bottom') : 'bottom');
+		var showViewBox = !(objectMetadata.faceOptions && objectMetadata.faceOptions['hideViewBox']);
+
 		var methodOrderValue = (objectMetadata.faceOptions ? (objectMetadata.faceOptions['methodOrder']?objectMetadata.faceOptions['methodOrder']:'') : '');
 		var methodOrder = [];
 		
@@ -17,7 +19,7 @@
 	   		   	methodOrder.push(serviceMethod.methodName);
 			}
 		}
-	
+		
 		var fieldOrderValue = (objectMetadata.faceOptions ? (objectMetadata.faceOptions['fieldOrder']?objectMetadata.faceOptions['fieldOrder']:'') : '');
 		var fieldOrder = [];
 		var cols = 2;
@@ -80,9 +82,29 @@
 				fieldOrder.push(fd.name);
 			}
 		}
+		
+	   	if(methodVAlign == 'top' && methodOrder.length > 0){
 %>
-	<div class="form_table2"> 
-		<table border="1" cellspacing="0" >	
+		
+		<div class="positionRight">
+<%			   	
+			for(var i=0; i<methodOrder.length; i++){
+	   		   	var serviceMethodName = methodOrder[i];	   		   	
+%>
+				<%=methods[serviceMethodName].here()%>
+<%	   	   	
+			}
+%>	
+			<div class="clear"></div>
+		</div>
+		<div class="clear"></div>
+<%			
+		}		
+%>
+
+
+	<div <%=showViewBox?'class=\"form_table2\"':''%>> 
+		<table style="width: 100%;" border="<%=showViewBox?'1':'0'%>" cellspacing="0" >	
 			<tbody>
 <%	
 		for (var i=0; i<fieldOrder.length; i++){
@@ -130,7 +152,8 @@
 		</table>
 	</div>
 <%		
-	   	if(methodOrder.length > 0){
+		
+	   	if(methodVAlign == 'bottom' && methodOrder.length > 0){
 %>
 		
 		<div class="positionRight">
