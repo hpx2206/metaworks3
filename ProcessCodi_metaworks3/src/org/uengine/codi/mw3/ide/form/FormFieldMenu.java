@@ -3,15 +3,10 @@ package org.uengine.codi.mw3.ide.form;
 import java.util.ArrayList;
 
 import org.metaworks.MetaworksContext;
-import org.metaworks.annotation.Face;
 
-
-@Face(options={"hideEditBtn"}, values={"true"}, 
-		ejsPath="dwr/metaworks/org/uengine/codi/mw3/ide/form/FormFieldMenu.ejs",
-		ejsPathForArray="dwr/metaworks/genericfaces/ListFace.ejs")
 public class FormFieldMenu {
 
-	ArrayList<CommonFormField> formFields;	
+	ArrayList<CommonFormField> formFields;
 		public ArrayList<CommonFormField> getFormFields() {
 			return formFields;
 		}	
