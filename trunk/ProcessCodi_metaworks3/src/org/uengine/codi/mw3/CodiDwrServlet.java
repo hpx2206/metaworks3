@@ -280,10 +280,8 @@ public class CodiDwrServlet extends TransactionalDwrServlet{
 		}catch(Exception e){
 			throw new RuntimeException(e);
 		}
-		
-
-		
-    	CodiClassLoader.refreshClassLoader(null);
+    	
+    	//CodiClassLoader.refreshClassLoader(null);
 	}
 
 
