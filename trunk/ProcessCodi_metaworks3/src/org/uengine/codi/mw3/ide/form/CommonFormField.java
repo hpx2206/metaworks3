@@ -14,7 +14,11 @@ import org.metaworks.dwr.MetaworksRemoteService;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.util.UEngineUtil;
 
-@Face(options={"hideEditBtn"}, values={"true"})
+@Face(options={"hideEditBtn"}, values={"true"},
+		ejsPathMappingByContext= {
+			"{where: 'properties', face: 'dwr/metaworks/org/uengine/codi/mw3/ide/form/Properties.ejs'}",
+			"{where: 'menu', face: 'dwr/metaworks/org/uengine/codi/mw3/ide/form/Menu.ejs'}"
+		})
 public class CommonFormField implements ContextAware, Cloneable {
 	
 	@AutowiredFromClient
@@ -131,6 +135,7 @@ public class CommonFormField implements ContextAware, Cloneable {
 		return session;
 	}
 	
+	//, mouseBinding="left"
 	@ServiceMethod(callByContent=true)
 	@Available(when={MetaworksContext.WHEN_VIEW}, where={"form"})
 	public Object modify() {
@@ -195,22 +200,15 @@ public class CommonFormField implements ContextAware, Cloneable {
 	@Available(when={MetaworksContext.WHEN_EDIT}, where={"properties"})
 	public Object apply() {
 		
-		if(this.duplicationCheck()) {
-		
-			int pos = form.formFields.indexOf(this);
-			if(pos > -1){
-				this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-				this.getMetaworksContext().setWhere("form");
-				
-				form.formFields.set(pos, this);		
-			}
+		int pos = form.formFields.indexOf(this);
+		if(pos > -1){
+			this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+			this.getMetaworksContext().setWhere("form");
 			
-			return form;
+			form.formFields.set(pos, this);		
 		}
-		else {
-			System.out.println("====== duplication error error error ======");
-			return null;
-		}
+		
+		return form;
 	}	
 	
 	@Override	
@@ -381,12 +379,12 @@ public class CommonFormField implements ContextAware, Cloneable {
 	}
 	
 //	validation check
-	public boolean duplicationCheck() {		
-		for(CommonFormField formField : form.formFields) {	
-			if(!this.getFieldId().equals(formField.getFieldId()) && this.getId().equals(formField.getId())) {
-				return false;
-			}
-		}
-		return true;
-	}
+//	public boolean duplicationCheck() {		
+//		for(CommonFormField formField : form.formFields) {	
+//			if(!this.getFieldId().equals(formField.getFieldId()) && this.getId().equals(formField.getId())) {
+//				return false;
+//			}
+//		}
+//		return true;
+//	}
 }
