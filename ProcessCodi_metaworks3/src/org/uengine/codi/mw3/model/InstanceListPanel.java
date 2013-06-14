@@ -2,7 +2,6 @@ package org.uengine.codi.mw3.model;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
-import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
@@ -11,7 +10,7 @@ import org.metaworks.annotation.Test;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.calendar.ScheduleCalendar;
-import org.uengine.codi.mw3.knowledge.ProjectInfo;
+import org.uengine.codi.mw3.knowledge.ProjectManager;
 import org.uengine.codi.mw3.knowledge.WfPanel;
 import org.uengine.processmanager.ProcessManagerRemote;
 @Face(
@@ -312,6 +311,7 @@ public class InstanceListPanel implements ContextAware{
 	}
 	
 
+	/*
 	ProjectInfo projectInfo;
 		@Hidden
 		public ProjectInfo getProjectInfo() {
@@ -320,22 +320,28 @@ public class InstanceListPanel implements ContextAware{
 		public void setProjectInfo(ProjectInfo projectInfo) {
 			this.projectInfo = projectInfo;
 		}
-		  
+	
+	
 	public void projectInfoLoad() throws Exception {
-		projectInfo = new ProjectInfo();
-		projectInfo.session = session;
-		projectInfo.processManager = processManager;
+		
+		//projectInfo.session = session;
+		//projectInfo.processManager = processManager;
 		projectInfo.load();
 	}
+	*/
 	
 	@ServiceMethod(target="popup", callByContent=true)
 	public Object loadProjectInfo() throws Exception {
-
+		
+		ProjectManager projectManager = new ProjectManager();
+		projectManager.processManager = processManager; 
+		projectManager.load(session.getLastSelectedItem());
+		
 		ModalWindow modalWindow = new ModalWindow();
 		modalWindow.setTitle("Project Info");
-		modalWindow.setWidth(450);
-		modalWindow.setHeight(350);
-		modalWindow.setPanel(projectInfo);
+		modalWindow.setWidth(700);
+		modalWindow.setHeight(500);
+		modalWindow.setPanel(projectManager);
 		
 		
 		return modalWindow;

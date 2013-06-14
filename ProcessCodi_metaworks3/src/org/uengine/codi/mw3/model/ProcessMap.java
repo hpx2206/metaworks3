@@ -167,7 +167,7 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 	public Popup modify() throws Exception {
 		getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		
-		this.setRoleMappingPanel(new RoleMappingPanel(this, session));
+		this.setRoleMappingPanel(new RoleMappingPanel(processManager, this.getDefId(), session));
 		
 		
 		Popup popup = new Popup(580, 460);
@@ -314,7 +314,7 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 			Instance rootInstanceRef = new Instance();
 			rootInstanceRef.setInstId(processMapList.getParentInstanceId());
 			
-			roleMappingPanel = new RoleMappingPanel(this, session);
+			roleMappingPanel = new RoleMappingPanel(processManager, this.getDefId(), session);
 			roleMappingPanel.putRoleMappings(processManager, instId);
 			processManager.executeProcess(instId);
 			processManager.applyChanges();
@@ -337,7 +337,7 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		
 		//set the role mappings the administrator set.
 		
-		roleMappingPanel = new RoleMappingPanel(this, session);
+		roleMappingPanel = new RoleMappingPanel(processManager, this.getDefId(), session);
 		roleMappingPanel.putRoleMappings(processManager, instId);
 		processManager.executeProcess(instId);
 		processManager.applyChanges();

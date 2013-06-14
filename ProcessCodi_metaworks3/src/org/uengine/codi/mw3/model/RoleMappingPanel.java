@@ -7,6 +7,7 @@ import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Face;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 
@@ -15,7 +16,6 @@ public class RoleMappingPanel implements ContextAware{
 	
 	
 	MetaworksContext metaworksContext;
-
 		public MetaworksContext getMetaworksContext() {
 			return metaworksContext;
 		}
@@ -26,11 +26,9 @@ public class RoleMappingPanel implements ContextAware{
 		
 	ArrayList<IRoleMappingDefinition> roleMappingDefinitions;
 	@Face(options="alignment", values="horizontal")
-
 		public ArrayList<IRoleMappingDefinition> getRoleMappingDefinitions() {
 			return roleMappingDefinitions;
 		}
-	
 		public void setRoleMappingDefinitions(
 				ArrayList<IRoleMappingDefinition> roleMappingDefinitions) {
 			this.roleMappingDefinitions = roleMappingDefinitions;
@@ -40,24 +38,22 @@ public class RoleMappingPanel implements ContextAware{
 	public RoleMappingPanel(){}
 
 
-	public RoleMappingPanel(ProcessMap processMap, Session session) throws RemoteException{
-		
-		processManager = processMap.processManager;
+	public RoleMappingPanel(ProcessManagerRemote processManager, String defId, Session session) throws RemoteException{
 		
 		roleMappingDefinitions = new ArrayList<IRoleMappingDefinition>();
 		
-		org.uengine.kernel.ProcessDefinition definition = processManager.getProcessDefinition(processMap.getDefId());
+		org.uengine.kernel.ProcessDefinition definition = processManager.getProcessDefinition(defId);
 		for(org.uengine.kernel.Role role : definition.getRoles()){
 			RoleMappingDefinition roleMappingDefinition = new RoleMappingDefinition();
-			roleMappingDefinition.setRoleDefId(session.getCompany().getComCode() + "." + processMap.getDefId() + "." + role.getName());
+			roleMappingDefinition.setRoleDefId(TenantContext.getThreadLocalInstance().getTenantId() + "." + defId + "." + role.getName());
 			
 			try{
 				roleMappingDefinitions.add(roleMappingDefinition.databaseMe());
 			}catch(Exception e){
-				roleMappingDefinition.setDefId(processMap.getDefId());
+				roleMappingDefinition.setDefId(defId);
 				roleMappingDefinition.setRoleName(role.getName());
 				roleMappingDefinition.setMappedUser(new User());
-				roleMappingDefinition.setComCode(session.getCompany().getComCode());
+				roleMappingDefinition.setComCode(TenantContext.getThreadLocalInstance().getTenantId());
 				roleMappingDefinitions.add(roleMappingDefinition);
 			}
 		}
