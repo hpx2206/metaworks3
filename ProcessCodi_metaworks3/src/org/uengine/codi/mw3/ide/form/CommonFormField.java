@@ -9,12 +9,14 @@ import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
+import org.metaworks.annotation.Name;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.util.UEngineUtil;
 
 @Face(options={"hideEditBtn"}, values={"true"},
+		ejsPath="dwr/metaworks/org/uengine/codi/mw3/ide/form/CommonFormField.ejs",
 		ejsPathMappingByContext= {
 			"{where: 'properties', face: 'dwr/metaworks/org/uengine/codi/mw3/ide/form/Properties.ejs'}",
 			"{where: 'menu', face: 'dwr/metaworks/org/uengine/codi/mw3/ide/form/Menu.ejs'}"
@@ -45,6 +47,16 @@ public class CommonFormField implements ContextAware, Cloneable {
 			this.fieldId = fieldId;
 		}
 		
+	String name;
+		@Hidden
+		@Name
+		public String getName() {
+			return name;
+		}
+		public void setName(String name) {
+			this.name = name;
+		}
+		
 	String fieldType;
 		@Hidden
 		public String getFieldType() {
@@ -63,7 +75,7 @@ public class CommonFormField implements ContextAware, Cloneable {
 		public void setId(String id) {
 			this.id = id;
 		}
-		
+				
 	String displayName;
 		@Face(displayName="$form.field.displayname")
 		@Available(where={"form", "properties"})

@@ -1,5 +1,14 @@
 <%
-	var name = (objectMetadata.name).substring((objectMetadata.name).lastIndexOf(".")+1);
+
+	var displayName = objectMetadata.displayName;
+	
+	var nameField = null;
+	if(objectMetadata.nameFieldDescriptor)
+  		nameField = fields[objectMetadata.nameFieldDescriptor.name];  	
+  		
+  	if(nameField && value[nameField.fieldDescriptor.name])
+  		displayName = value[nameField.fieldDescriptor.name];
+  	
 %>
 
-<span><img src="images/waveStyle/<%=name%>.png" /></span><span class="add_f_text"><%=mw3.localize(objectMetadata.displayName)%></span>
+<span><img src="images/waveStyle/<%=name%>.png" /></span><span class="add_f_text"><%=mw3.localize(displayName)%></span>
