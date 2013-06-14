@@ -3,10 +3,11 @@ package org.uengine.codi.mw3.ide.form;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 
-
+@Face(ejsPath="dwr/metaworks/org/uengine/codi/mw3/ide/form/MultipleChoiceOption.ejs")
 public class MultipleChoiceOption implements ContextAware {
 
 	@AutowiredFromClient(select="parentId == autowiredObject.fieldId && autowiredObject.metaworksContext.where == 'properties'")

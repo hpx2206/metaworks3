@@ -1,13 +1,14 @@
 package org.uengine.codi.mw3.ide.form;
 
-import java.awt.Checkbox;
 import java.util.ArrayList;
 
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Face;
 
 
-@Face(options={"hideEditBtn"}, values={"true"}, ejsPath="genericfaces/FormFace.ejs")
+@Face(options={"hideEditBtn"}, values={"true"}, 
+		ejsPath="dwr/metaworks/org/uengine/codi/mw3/ide/form/FormFieldMenu.ejs",
+		ejsPathForArray="dwr/metaworks/genericfaces/ListFace.ejs")
 public class FormFieldMenu {
 
 	ArrayList<CommonFormField> formFields;	
@@ -41,11 +42,10 @@ public class FormFieldMenu {
 	      CommonFormField formField = new org.uengine.codi.mw3.ide.form.MultipleChoiceField();
 		*/
 		
-		
-		SingleTextField singleTextField = new SingleTextField();
-		singleTextField.setMetaworksContext(new MetaworksContext());
-		singleTextField.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-		singleTextField.getMetaworksContext().setWhere("menu");
+		SingleLineTextField singleLineTextField = new SingleLineTextField();
+		singleLineTextField.setMetaworksContext(new MetaworksContext());
+		singleLineTextField.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+		singleLineTextField.getMetaworksContext().setWhere("menu");
 	
 		MultipleChoiceField multipleChoiceField = new MultipleChoiceField();
 		multipleChoiceField.setMetaworksContext(new MetaworksContext());
@@ -87,7 +87,7 @@ public class FormFieldMenu {
 		paragraphField.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 		paragraphField.getMetaworksContext().setWhere("menu");
 		
-		formFields.add(singleTextField);
+		formFields.add(singleLineTextField);
 		formFields.add(multipleChoiceField);
 		formFields.add(dateField);
 		formFields.add(numberField);

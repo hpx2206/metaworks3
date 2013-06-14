@@ -12,7 +12,8 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.uengine.codi.mw3.model.Session;
 
-@Face(options={"hideEditBtn"}, values={"true"})
+@Face(options={"hideEditBtn"}, values={"true"},
+		ejsPath="dwr/metaworks/org/uengine/codi/mw3/ide/form/Form.ejs")
 public class Form {
 	
 	@AutowiredFromClient
@@ -21,6 +22,7 @@ public class Form {
 	public final static String FORM_FIELD_ID_PREFIX = "FORMFIELD_";
 
 	String id;
+		@Face(displayName="$form.id")
 		public String getId() {
 			return id;
 		}
@@ -29,6 +31,7 @@ public class Form {
 		}
 
 	String name;
+		@Face(displayName="$form.name")
 		public String getName() {
 			return name;
 		}
@@ -43,17 +46,7 @@ public class Form {
 		}
 		public void setPackageName(String packageName) {
 			this.packageName = packageName;
-		}	
-	
-	public String getFullClassName(){
-		String fullClassName = "";
-		
-		if(this.getPackageName() != null)
-			fullClassName += this.getPackageName()+ ".";
-		fullClassName += this.getId();
-		
-		return fullClassName;
-	}
+		}
 	
 	ArrayList<CommonFormField> formFields;
 		public ArrayList<CommonFormField> getFormFields() {
@@ -63,6 +56,16 @@ public class Form {
 			this.formFields = formFields;
 		}
 
+	public String getFullClassName() {
+		String fullClassName = "";
+
+		if (this.getPackageName() != null)
+			fullClassName += this.getPackageName() + ".";
+		fullClassName += this.getId();
+
+		return fullClassName;
+	}
+	
 	public void load() {
 		setFormFields(new ArrayList<CommonFormField>());
 		
@@ -99,7 +102,7 @@ public class Form {
 	public void formLoad() throws Exception {
 		// TODO : process config file		
 		ArrayList<CommonFormField> list = new ArrayList<CommonFormField>();
-		list.add(new SingleTextField());
+		list.add(new SingleLineTextField());
 		list.add(new MultipleChoiceField());
 		list.add(new DateField());
 		list.add(new NumberField());

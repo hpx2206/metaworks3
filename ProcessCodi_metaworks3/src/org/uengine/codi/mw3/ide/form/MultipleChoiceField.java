@@ -3,13 +3,19 @@ package org.uengine.codi.mw3.ide.form;
 import java.util.ArrayList;
 
 import org.metaworks.MetaworksContext;
-import org.metaworks.ServiceMethodContext;
 import org.metaworks.WebFieldDescriptor;
 import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 
+@Face(displayName="$form.field.MultipleChoiceField",
+		options={"hideEditBtn"}, values={"true"},
+		ejsPathMappingByContext={
+			"{where: 'form', face: 'dwr/metaworks/org/uengine/codi/mw3/ide/form/MultipleChoiceField.ejs'}",
+			"{where: 'properties', face: 'dwr/metaworks/org/uengine/codi/mw3/ide/form/Properties.ejs'}",
+			"{where: 'menu', face: 'dwr/metaworks/org/uengine/codi/mw3/ide/form/Menu.ejs'}"
+})
 public class MultipleChoiceField extends CommonFormField {
 	
 	public final static String OPTION_FIELD_ID_PREFIX = "OPTIONFIELD_";
@@ -35,6 +41,7 @@ public class MultipleChoiceField extends CommonFormField {
 
 	public MultipleChoiceField(){
 		this.setFieldType("java.lang.String");
+		this.setDisplayName("aaaaa");
 		this.setEjsPath("dwr/metaworks/genericfaces/RadioButton.ejs");
 		this.setChoiceOptions(new ArrayList<MultipleChoiceOption>());
 	}

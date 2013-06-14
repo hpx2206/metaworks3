@@ -6,11 +6,9 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.widget.ModalWindow;
-import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.ide.Project;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.editor.Editor;
-import org.uengine.codi.mw3.ide.form.CommonFormField;
 import org.uengine.codi.mw3.ide.form.Form;
 import org.uengine.codi.mw3.ide.form.FormFieldMenu;
 import org.uengine.codi.mw3.ide.form.FormFieldProperties;
@@ -85,14 +83,8 @@ public class FormEditor extends Editor {
 	
 	@Override
 	public Object save() {		
-		if(this.blankCheck()) {
-			this.setContent(form.generateJavaCode());
-			return super.save();
-		}
-		else {
-			System.out.println("====== blank error error error ======");
-			return null;
-		}
+		this.setContent(form.generateJavaCode());
+		return super.save();
 	}
 	
 	@Face(displayName="$SaveAndPreview")
@@ -128,20 +120,18 @@ public class FormEditor extends Editor {
 	
 //	validation check
 	
-	public boolean blankCheck() {
-		
-		for(CommonFormField formField : form.getFormFields()) {
-			
-			if(
-					(formField.getId() == null || formField.getId().trim().length() == 0)
-					|| (formField.getDisplayName() == null || formField.getDisplayName().trim().length() == 0)) 
-			{
-				return false;
-			}
-		}
-		return true;
-	}
-	
-	
+//	public boolean blankCheck() {
+//		
+//		for(CommonFormField formField : form.getFormFields()) {
+//			
+//			if(
+//					(formField.getId() == null || formField.getId().trim().length() == 0)
+//					|| (formField.getDisplayName() == null || formField.getDisplayName().trim().length() == 0)) 
+//			{
+//				return false;
+//			}
+//		}
+//		return true;
+//	}
 
 }

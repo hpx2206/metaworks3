@@ -1,26 +1,22 @@
-<%
-	if(value == null && typeof value == 'undefined')
-		return;
-		
-%>
-
-
-<div class="top" style="background-color:gray; height: 50px; overflow:hidden; position: absolute; min-width: 0px; min-height: 0px; max-width: 10000px; max-height: 10000px;  left: 0px; right: 0px; top: 0px;">
-	<%=methods.preview.here()%>
+<div class="fb_wrap">
+    <div class="fb_left">
+    	<%=fields.form.here()%>
+        <div style="height:50px"></div>
+    </div>
+    <div class="fb_content">
+        <div class="fb_property">
+        	<div class="fb_property_tit">Property</div>
+        	 <%=fields.properties.here()%>            
+            <div class="poperty_box">
+            	<label class="fb_box_desc2" id="">Choices </label>
+                 <div class="multi_line"><span><input class="text medium" id="field0" type="text" readonly="readonly" value="0123456789"></span><span><img src="images/waveStyle/add.png" /><img src="images/waveStyle/delete.png" /></span></div>
+                 <div class="multi_line"><span><input class="text medium" id="field0" type="text" readonly="readonly" value="0123456789"></span><span><img src="images/waveStyle/add.png" /><img src="images/waveStyle/delete.png" /></span></div>
+                 <div class="multi_line"><span><input class="text medium" id="field0" type="text" readonly="readonly" value="0123456789"></span><span><img src="images/waveStyle/add.png" /><img src="images/waveStyle/delete.png" /></span></div>
+            </div>
+        </div>
+        <div class="fb_addForm">
+        	<div class="fb_property_tit">Add a field</div>
+            <%=fields.menu.here()%>         
+        </div>
+    </div>
 </div>
-
-<div class="bottom" style="background-color:gray; top: 50px; overflow:auto; position: absolute; min-width: 0px; min-height: 0px; max-width: 10000px; max-height: 10000px;  left: 0px; right: 0px; bottom: 0px;">	
-	<div class="left" style="background-color:gray; width: 500px; overflow:auto; position: absolute; min-width: 0px; min-height: 0px; max-width: 10000px; max-height: 10000px;  left: 0px; right: 0px; top: 0px; bottom:0px">
-		<%=fields.form.here()%>
-	</div>
-	
-	<div class="right" style="left: 500px; overflow:auto; position: absolute; min-width: 0px; min-height: 0px; max-width: 10000px; max-height: 10000px;  right: 0px; top: 0px; bottom:0px">
-		<div class="top" style="background-color:gray; height: 400px; overflow:auto; position: absolute; min-width: 0px; min-height: 0px; max-width: 10000px; max-height: 10000px;  left: 0px; right: 0px; top: 0px;">
-			<%=fields.properties.here()%>
-		</div>
-		
-		<div class="bottom" style="background-color:gray; top: 400px; overflow:auto; position: absolute; min-width: 0px; min-height: 0px; max-width: 10000px; max-height: 10000px;  left: 0px; right: 0px; bottom: 0px;">
-			<%=fields.menu.here()%>
-		</div>
-	</div>
-</div>	
