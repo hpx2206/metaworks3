@@ -30,6 +30,5 @@ public interface IAppMapping extends IDAO{
 	
 	@ServiceMethod(callByContent=true)
 	public IAppMapping findMyApps() throws Exception;
-
-
+	
 }

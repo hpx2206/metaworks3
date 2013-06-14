@@ -2,11 +2,15 @@ package org.metaworks.metadata;
 
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Available;
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.NonEditable;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
-
+@Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs",
+ejsPathMappingByContext={
+	"{where: 'ssp', face: 'dwr/metaworks/org/metaworks/metadata/FileProperty.ejs'}"
+})
 @XStreamAlias("MetadataProperty")
 public class FileProperty extends MetadataProperty {
 	
