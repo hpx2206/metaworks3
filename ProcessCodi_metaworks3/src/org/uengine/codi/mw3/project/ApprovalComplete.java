@@ -9,14 +9,14 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Map;
 
-import javax.sql.RowSet;
-
 import org.metaworks.annotation.Face;
 import org.metaworks.dao.TransactionContext;
 import org.uengine.codi.ITool;
 import org.uengine.codi.mw3.knowledge.ITopicMapping;
 import org.uengine.codi.mw3.knowledge.TopicMapping;
+import org.uengine.codi.mw3.knowledge.WfNode;
 import org.uengine.codi.mw3.model.Employee;
+import org.uengine.codi.mw3.model.Instance;
 import org.uengine.codi.vm.JschCommand;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.processmanager.ProcessManagerRemote;
@@ -79,57 +79,30 @@ public class ApprovalComplete implements ITool  {
 		
 		
 		if(processManager != null && processManager.getProcessVariable(instId.toString(), "", "vm_ip") != null){
+			Instance instance = new Instance();
+			instance.setInstId(Long.parseLong(instId));
+			String topicId = instance.databaseMe().getTopicId();
+			
+			WfNode wfNode = new WfNode();
+			wfNode.setId(topicId);
+			String projectName = wfNode.databaseMe().getName();
+			
 			String host = GlobalContext.getPropertyString("vm.manager.ip");
 			String userId = GlobalContext.getPropertyString("vm.manager.user");
 			String passwd = GlobalContext.getPropertyString("vm.manager.password");
 			
-			String vmDb = (String)((Serializable)processManager.getProcessVariable(instId.toString(), "", "vm_db"));
-			String vmIp = (String)((Serializable)processManager.getProcessVariable(instId.toString(), "", "vm_ip"));
-			String projectName = (String)((Serializable)processManager.getProcessVariable(instId.toString(), "", "projectName"));
-			String projectId = (String)((Serializable)processManager.getProcessVariable(instId.toString(), "", "projectId"));
-			
-			String scriptSvnCreateProject = GlobalContext.getPropertyString("vm.svn.createProject");
-			String scriptSvnSetting = GlobalContext.getPropertyString("vm.svn.setting");
-			String scriptSvnInsertUser = GlobalContext.getPropertyString("vm.svn.createUser");
+			String vmName = (String)((Serializable)processManager.getProcessVariable(instId.toString(), "", "vm_name"));
+
+			String paramProjectName = "\"" + projectName + "_" + vmName + "\"";
 			String scriptHudsonCreateJob = GlobalContext.getPropertyString("vm.hudson.createJob");
 			
-			String paramProjectName = "\"" + projectName + "\"";
-			
-
-			
+			// TODO: KIAT 에서 활성화
+			/*
 			JschCommand jschServerBehaviour = new JschCommand();
-			jschServerBehaviour.sessionLogin(host, userId, passwd);
-			
-			//create SVN
-			jschServerBehaviour.runCommand(scriptSvnCreateProject + " " + paramProjectName);
-			//SVN setting
-			jschServerBehaviour.runCommand(scriptSvnSetting + " " + paramProjectName);
-			//svn프로젝트와 동일한 hudson job생성
-			jschServerBehaviour.runCommand(scriptHudsonCreateJob + " " + paramProjectName);
-			
-			TopicMapping tp = new TopicMapping();
-			tp.setTopicId(projectId);
-			
-			ITopicMapping participateUsers = tp.findUsers();
-			while(participateUsers.next()){
-				Employee employee = new Employee();
-				employee.setEmpCode(participateUsers.getString("userId"));
-				
-				String password =  employee.findMe().getPassword();
-				
-				//vm 유저 추가
-				String paramInsertUserId = "\"" + participateUsers.getString("userId") + "\"";
-				String paramInsertPassword = "\"" + password + "\"";
-				
-				jschServerBehaviour.runCommand(scriptSvnInsertUser + " " + paramProjectName + " " + paramInsertUserId + " " + paramInsertPassword);
-				
-				//올챙이 류저 추가
-				String parameter = "?db=" + vmDb + "&email=" + participateUsers.getString("userId") + "&url=" + vmIp + "&name=" + projectName;
-				createDatabase(parameter);
-			}
-			
+			jschServerBehaviour.sessionLogin(host, userId, passwd);			
+			jschServerBehaviour.runCommand(scriptHudsonCreateJob + " " + paramProjectName);		// hudson job 생성
 			jschServerBehaviour.getJschSession().disconnect();
-			
+			*/
 			
 			
 			
