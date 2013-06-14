@@ -35,8 +35,6 @@ public class AppMapping extends Database<IAppMapping> implements IAppMapping {
 		public void setIsDeleted(boolean isDeleted) {
 			this.isDeleted = isDeleted;
 		}
-	
-		
 
 	public IAppMapping findMe() throws Exception {
 
@@ -59,6 +57,6 @@ public class AppMapping extends Database<IAppMapping> implements IAppMapping {
 		
 		return findApp;
 	}
-		
+	
 	
 }

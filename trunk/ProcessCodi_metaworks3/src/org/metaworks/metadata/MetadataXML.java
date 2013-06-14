@@ -113,6 +113,7 @@ public class MetadataXML implements ContextAware {
 		}
 		return metadata;
 	}
+	
 	public MetadataXML loadWithInputstream(InputStream stream){
 		MetadataXML metadata = null;
 		try{

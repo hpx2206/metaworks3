@@ -324,7 +324,6 @@ public class MetadataProperty implements ContextAware, Cloneable {
 		this.getFile().getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		this.setFile(this.getFile());
 		
-		
 		MetadataProperty editProperty = (MetadataProperty)dstInstance.getObject();
 		
 		int index = metadataXML.properties.indexOf(this);

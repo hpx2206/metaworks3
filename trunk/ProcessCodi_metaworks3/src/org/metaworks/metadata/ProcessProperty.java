@@ -1,9 +1,14 @@
 package org.metaworks.metadata;
 
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
+@Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs",
+ejsPathMappingByContext={
+	"{where: 'ssp', face: 'dwr/metaworks/org/metaworks/metadata/ProcessProperty.ejs'}"
+})
 @XStreamAlias("MetadataProperty")
 public class ProcessProperty extends MetadataProperty{
 	
