@@ -35,13 +35,11 @@ public class DateField extends CommonFormField {
 	}
 	
 	@Override
-	public Object apply() {
+	public Object[] apply() {
 		this.setValues(makeValueString(this.getFormat()));
 		this.setOptions(makeValueString("format"));
 				
-		super.apply();	
-		
-		return form;
+		return super.apply();
 	}
 	
 }
