@@ -29,6 +29,10 @@ public class CommonFormField implements ContextAware, Cloneable {
 	@AutowiredFromClient
 	public Form form;				// for action
 	
+	@AutowiredFromClient
+	public FormFieldProperties formFieldProperty; 
+	
+	
 	MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
 			return metaworksContext;
@@ -207,8 +211,9 @@ public class CommonFormField implements ContextAware, Cloneable {
 	
 	@ServiceMethod(callByContent=true)
 	@Available(when={MetaworksContext.WHEN_EDIT}, where={"properties"})
-	public Object apply() {
+	public Object[] apply() {
 		
+		/*
 		int pos = form.formFields.indexOf(this);
 		if(pos > -1){
 			this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
@@ -217,7 +222,9 @@ public class CommonFormField implements ContextAware, Cloneable {
 			form.formFields.set(pos, this);		
 		}
 		
-		return form;
+		return form;*/
+		
+		return new Object[]{form, formFieldProperty};
 	}	
 	
 	@Override	

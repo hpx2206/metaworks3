@@ -1,4 +1,4 @@
-var org_uengine_codi_mw3_ide_form_Form = function(objectId, className){
+var org_uengine_codi_mw3_ide_form_FormFieldProperties = function(objectId, className){
 
 	this.startLoading = function(){
 		

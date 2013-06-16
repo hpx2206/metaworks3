@@ -3,7 +3,6 @@ package org.uengine.codi.mw3.ide.form;
 import java.util.ArrayList;
 
 import org.metaworks.MetaworksContext;
-import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 
@@ -28,12 +27,31 @@ public class MultipleChoiceOptionPanel {
 			this.choiceOptions = choiceOptions;
 		}
 		
-	public MultipleChoiceOptionPanel(){
-	 
-		this.setChoiceOptions(new ArrayList<MultipleChoiceOption>());
+	public void init(){
+	
+		//TODO : 기본 입력 값 처리
 		
-		MultipleChoiceOption option = new MultipleChoiceOption();
-		option.setParentId(this.getParentId());
-		option.add();
+		ArrayList<MultipleChoiceOption> options = new ArrayList<MultipleChoiceOption>();
+		
+		MultipleChoiceOption option1 = new MultipleChoiceOption();
+		option1.setFieldId(MultipleChoiceOption.OPTION_FIELD_ID_PREFIX + "_0");
+		option1.setOption("First option");
+		option1.setValue("first");
+		
+		MultipleChoiceOption option2 = new MultipleChoiceOption();
+		option2.setFieldId(MultipleChoiceOption.OPTION_FIELD_ID_PREFIX + "_1");
+		option2.setOption("Second option");
+		option2.setValue("second");
+		
+		MultipleChoiceOption option3 = new MultipleChoiceOption();
+		option3.setFieldId(MultipleChoiceOption.OPTION_FIELD_ID_PREFIX + "_2");
+		option3.setOption("Third option");
+		option3.setValue("third");
+	
+		options.add(option1);
+		options.add(option2);
+		options.add(option3);
+		
+		this.setChoiceOptions(options);
 	}
 }
