@@ -18,7 +18,7 @@ import org.uengine.util.UEngineUtil;
 @Face(options={"hideEditBtn"}, values={"true"},
 		ejsPath="dwr/metaworks/org/uengine/codi/mw3/ide/form/CommonFormField.ejs",
 		ejsPathMappingByContext= {
-			"{where: 'properties', face: 'dwr/metaworks/org/uengine/codi/mw3/ide/form/Properties.ejs'}",
+			"{where: 'properties', face: 'dwr/metaworks/org/uengine/codi/mw3/ide/form/FormProperties.ejs'}",
 			"{where: 'menu', face: 'dwr/metaworks/org/uengine/codi/mw3/ide/form/Menu.ejs'}"
 		})
 public class CommonFormField implements ContextAware, Cloneable {
@@ -134,9 +134,6 @@ public class CommonFormField implements ContextAware, Cloneable {
 		
 	public void init(){
 		this.setMetaworksContext(new MetaworksContext());
-		this.setId("");
-		this.setDisplayName("");
-		this.setHide(false);
 	}
 		
 	@ServiceMethod(mouseBinding="drag")

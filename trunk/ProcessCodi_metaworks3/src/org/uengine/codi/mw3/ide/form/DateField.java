@@ -17,6 +17,7 @@ public class DateField extends CommonFormField {
 	public DateField() {		
 		this.setName("Date");
 		this.setDisplayName("Date");
+		this.setFormat("yy-mm-dd");
 		this.setFieldType("java.util.Date");
 		this.setDefine(true);
 //		this.setEjsPath("dwr/metaworks/genericfaces/Date.ejs");
