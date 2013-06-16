@@ -62,10 +62,8 @@ public class Workspace {
 		projects.add(tenantMain);
 		
 		// 테넌트의 프로젝트 불러오기
-		ProjectNode projectNode = new ProjectNode();
-		projectNode.setCompanyId(tenantId);
 		try {
-			IProjectNode projectList = projectNode.completedProject();
+			IProjectNode projectList = ProjectNode.completedProject(tenantId);
 			while(projectList.next()){
 				ProjectNode node = new ProjectNode();
 				node.copyFrom(projectList);
