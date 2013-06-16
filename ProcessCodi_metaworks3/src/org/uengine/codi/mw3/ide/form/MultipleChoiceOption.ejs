@@ -1,5 +1,5 @@
-<div>
-	<%=mw3.localize('$option.field.displayname')%><%=fields.option.here()%>
-	<%=mw3.localize('$option.field.id')%><%=fields.value.here()%>
-	<%=methods.remove.here()%>
+<div class="multi_line">
+	<span><input class="text medium" id="field0" type="text" value=""></span>
+	<span onclick="<%=methods.add.caller()%>"><img src="images/waveStyle/add.png" /></span>		
+	<span onclick="<%=methods.remove.caller()%>"><img src="images/waveStyle/delete.png" /></span>
 </div>

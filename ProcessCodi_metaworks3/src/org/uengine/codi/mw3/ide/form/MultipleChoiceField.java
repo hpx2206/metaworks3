@@ -2,12 +2,9 @@ package org.uengine.codi.mw3.ide.form;
 
 import java.util.ArrayList;
 
-import org.metaworks.MetaworksContext;
 import org.metaworks.WebFieldDescriptor;
-import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
-import org.metaworks.annotation.ServiceMethod;
 
 public class MultipleChoiceField extends CommonFormField {
 	
@@ -28,7 +25,7 @@ public class MultipleChoiceField extends CommonFormField {
 	}
 	
 	MultipleChoiceOptionPanel multipleChoiceOptionPanel;
-		@Face(displayName="Choices")
+		@Face(displayName="")
 		public MultipleChoiceOptionPanel getMultipleChoiceOptionPanel() {
 			return multipleChoiceOptionPanel;
 		}
@@ -37,11 +34,15 @@ public class MultipleChoiceField extends CommonFormField {
 			this.multipleChoiceOptionPanel = multipleChoiceOptionPanel;
 		}
 		
-	@Override
-	public void init(){
-		super.init();
-//		this.setChoiceOptions(new ArrayList<MultipleChoiceOption>());
-	}
+//	@Override
+//	public void init(){
+//		super.init();
+//		
+//		MultipleChoiceOptionPanel panel = new MultipleChoiceOptionPanel();
+//		panel.setParentId(this.getFieldId());		
+//		
+//		this.setMultipleChoiceOptionPanel(panel);
+//	}
 	
 	@Override
 	public Object apply() {

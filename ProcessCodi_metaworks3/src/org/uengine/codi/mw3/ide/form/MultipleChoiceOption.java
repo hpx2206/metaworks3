@@ -5,7 +5,6 @@ import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
-import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 
 @Face(ejsPath="dwr/metaworks/org/uengine/codi/mw3/ide/form/MultipleChoiceOption.ejs")
@@ -62,9 +61,9 @@ public class MultipleChoiceOption implements ContextAware {
 	@ServiceMethod(callByContent=true)//, target=ServiceMethodContext.TARGET_SELF)
 	@Available(when={MetaworksContext.WHEN_EDIT}, where={"properties"})
 	public Object add() {	
-		
+
 		MultipleChoiceOption option = new MultipleChoiceOption();
-		option.setParentId(this.getFieldId());
+		option.setParentId(this.getParentId());
 		option.setFieldId(this.makeOptionFieldId());
 		option.setOption("");
 		option.setValue("");
