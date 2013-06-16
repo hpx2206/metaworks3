@@ -14,8 +14,10 @@ import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.NonEditable;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.TransactionContext;
+import org.metaworks.widget.ModalPanel;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.Login;
+import org.uengine.codi.mw3.marketplace.MyVendor;
 
 	
 public class Session implements ContextAware{
@@ -326,7 +328,10 @@ public class Session implements ContextAware{
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 	public Object myVendor() throws Exception	{		
-		return new ModalWindow("앱 관리", 0, 0, "앱 관리");
+		MyVendor myVendor = new MyVendor();
+		myVendor.load(this);
+		
+		return new ModalWindow(new ModalPanel(myVendor), 0, 0, "앱 관리");
 	}
 
 }
