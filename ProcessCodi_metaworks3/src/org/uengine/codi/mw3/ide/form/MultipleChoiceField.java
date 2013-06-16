@@ -18,10 +18,16 @@ public class MultipleChoiceField extends CommonFormField {
 		}
 
 	public MultipleChoiceField(){
+		
 		this.setName("MultipleChoice");
 		this.setDisplayName("MultipleChoice");
 		this.setFieldType("java.lang.String");
-		this.setEjsPath("dwr/metaworks/genericfaces/RadioButton.ejs");
+		this.setEjsPath("dwr/metaworks/genericfaces/RadioButton.ejs");	
+		
+		MultipleChoiceOptionPanel panel = new MultipleChoiceOptionPanel();
+		panel.init();
+		
+		this.setMultipleChoiceOptionPanel(panel);
 	}
 	
 	MultipleChoiceOptionPanel multipleChoiceOptionPanel;
@@ -32,27 +38,8 @@ public class MultipleChoiceField extends CommonFormField {
 		public void setMultipleChoiceOptionPanel(
 				MultipleChoiceOptionPanel multipleChoiceOptionPanel) {
 			this.multipleChoiceOptionPanel = multipleChoiceOptionPanel;
-		}
-		
-//	@Override
-//	public void init(){
-//		super.init();
-//		
-//		MultipleChoiceOptionPanel panel = new MultipleChoiceOptionPanel();
-//		panel.setParentId(this.getFieldId());		
-//		
-//		this.setMultipleChoiceOptionPanel(panel);
-//	}
-	
-	@Override
-	public Object apply() {
-		
-		this.setOptionsAndValues(this, this.getMultipleChoiceOptionPanel().getChoiceOptions());		
-		super.apply();
-		
-		return form;
-	}
-	
+		}		
+
 	@Override
 	public CommonFormField make(WebFieldDescriptor fd)  {
 		
@@ -66,7 +53,7 @@ public class MultipleChoiceField extends CommonFormField {
 			
 			for(int i = 0; i < options.length; i++) {
 				MultipleChoiceOption mc = new MultipleChoiceOption();
-				mc.setParentId(formField.getFieldId());
+//				mc.setParentId(formField.getFieldId());
 				mc.setFieldId(MultipleChoiceOption.OPTION_FIELD_ID_PREFIX + String.valueOf(i));
 //				mc.setFieldId(makeOptionFieldId()); 
 				mc.setOption((String)options[i]);
