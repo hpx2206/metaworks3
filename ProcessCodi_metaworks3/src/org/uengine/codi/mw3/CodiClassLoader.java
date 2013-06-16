@@ -188,6 +188,28 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
 		  
 //		  
 	}
+	public static String mySourceCodeBase(String projectId){
+		String tenantId = null;
+		
+		if(TenantContext.getThreadLocalInstance()!=null && TenantContext.getThreadLocalInstance().getTenantId()!=null){
+			tenantId = TenantContext.getThreadLocalInstance().getTenantId();
+		}
+		if( tenantId == null && projectId == null ){
+			// 1번
+			return CodiClassLoader.getCodeBaseRoot() + "root" + File.separatorChar;
+		}else if( tenantId != null && projectId == null ){
+			// 2번
+			return CodiClassLoader.getCodeBaseRoot() + tenantId + File.separatorChar;
+		}else if( tenantId == null && projectId != null ){
+			// 3번
+			return CodiClassLoader.getCodeBaseRoot() + projectId +  File.separatorChar + "root" + File.separatorChar;
+		}else{
+			// 4번
+			return CodiClassLoader.getCodeBaseRoot() + projectId + File.separatorChar + tenantId + File.separatorChar;
+		}
+		
+//		  
+	}
     
 	@Override
 	public InputStream getResourceAsStream(String name) {
