@@ -3,6 +3,7 @@ package org.uengine.codi.mw3.marketplace.category;
 import java.sql.Timestamp;
 
 import org.metaworks.ServiceMethodContext;
+import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Children;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
@@ -50,6 +51,7 @@ public interface ICategory extends IDAO {
     public boolean isDeleted();
     public void setDeleted(boolean deleted);
 
+    @Available(how=HOW_IN_LIST)
     @ServiceMethod(mouseBinding="left")
     public Object[] selectCategory() throws Exception; // should avoid 'select()' since it is for IDAO sql data selection.
 
