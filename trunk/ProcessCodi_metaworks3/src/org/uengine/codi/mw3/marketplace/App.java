@@ -1,18 +1,23 @@
 package org.uengine.codi.mw3.marketplace;
 
+import java.util.Calendar;
 import java.util.Date;
 
-import org.metaworks.Refresh;
+import org.metaworks.ContextAware;
+import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.component.SelectBox;
 import org.metaworks.dao.Database;
 import org.metaworks.website.MetaworksFile;
-import org.metaworks.widget.layout.Layout;
+import org.metaworks.widget.ModalPanel;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.codi.mw3.admin.PageNavigator;
+import org.uengine.cloud.saasfier.TenantContext;
+import org.uengine.codi.ITool;
 import org.uengine.codi.mw3.knowledge.IProjectNode;
 import org.uengine.codi.mw3.knowledge.IWfNode;
 import org.uengine.codi.mw3.knowledge.ProjectNode;
+import org.uengine.codi.mw3.knowledge.WfNode;
+import org.uengine.codi.mw3.marketplace.category.Category;
 import org.uengine.codi.mw3.marketplace.category.ICategory;
 import org.uengine.codi.mw3.model.ICompany;
 import org.uengine.codi.mw3.model.IUser;
@@ -21,16 +26,17 @@ import org.uengine.codi.mw3.model.ProcessMap;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.kernel.KeyedParameter;
 import org.uengine.kernel.ResultPayload;
+import org.uengine.persistence.dao.UniqueKeyGenerator;
+import org.uengine.processmanager.ProcessManagerBean;
 import org.uengine.processmanager.ProcessManagerRemote;
 
-public class App extends Database<IApp> implements IApp{
+public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 	
 	public final static String STATUS_REQUEST = "Request";
 	public final static String STATUS_APPROVED = "Approved";
 	public final static String STATUS_REJECTED = "Rejected";
 	public final static String STATUS_PUBLISHED = "Published";
 	public final static String STATUS_UNPUBLISHED = "Unpublished";
-
 
 	public App() throws Exception{
 		
@@ -100,14 +106,6 @@ public class App extends Database<IApp> implements IApp{
 		public void setVersion(String version) {
 			this.version = version;
 		}
-	
-	MetaworksFile extfile;
-		public MetaworksFile getExtfile() {
-			return extfile;
-		}
-		public void setExtfile(MetaworksFile extfile) {
-			this.extfile = extfile;
-		}
 		
 	MetaworksFile logoFile;
 		@Override
@@ -142,6 +140,14 @@ public class App extends Database<IApp> implements IApp{
 		public void setComcode(String comcode) {
 			this.comcode = comcode;
 		}
+		
+	String comName;
+		public String getComName() {
+			return comName;
+		}
+		public void setComName(String comName) {
+			this.comName = comName;
+		}
 
 	boolean isDeleted;
 		public boolean isDeleted() {
@@ -167,7 +173,23 @@ public class App extends Database<IApp> implements IApp{
 		public void setCategory(ICategory category) {
 			this.category = category;
 		}
+		
+	SelectBox categories;
+		public SelectBox getCategories() {
+			return categories;
+		}
+		public void setCategories(SelectBox categories) {
+			this.categories = categories;
+		}
 	
+	SelectBox attachProject;
+		public SelectBox getAttachProject() {
+			return attachProject;
+		}
+		public void setAttachProject(SelectBox attachProject) {
+			this.attachProject = attachProject;
+		}
+		
 	IWfNode project;
 		public IWfNode getProject() {
 			return project;
@@ -210,22 +232,20 @@ public class App extends Database<IApp> implements IApp{
 		
 
 	@AutowiredFromClient
-	public Session session;
+	transient public Session session;
 	
 	@Autowired
-	public ProcessManagerRemote processManager;
+	transient public ProcessManagerRemote processManager;
 	
 	@Autowired
-	public InstanceViewContent instanceView;
+	transient public InstanceViewContent instanceView;
 	
 	
 	public IApp findByVendor() throws Exception {
 		
 		StringBuffer sql = new StringBuffer();
-		sql.append("select app.*, comtable.comname, comtable.description, comtable.repmail from app, comtable");
-		sql.append(" where app.comcode = comtable.comcode");
-		sql.append("   and app.comcode=?comcode");
-		sql.append("   and app.isdeleted=?isdeleted");
+		sql.append("select * from app");
+		sql.append(" where isdeleted=?isdeleted");
 		sql.append(" order by installCnt desc");
 		
 		IApp findListings = (IApp) Database.sql(IApp.class, sql.toString());
@@ -306,14 +326,44 @@ public class App extends Database<IApp> implements IApp{
 		
 	public Object readyPublished() throws Exception {
 		
-		App selectedApp = new App();
+		this.setAppId(getAppId());
+		this.setStatus(STATUS_PUBLISHED);
 		
-		selectedApp.setAppId(getAppId());
-		selectedApp.databaseMe().setStatus(STATUS_PUBLISHED);
-		
+		syncToDatabaseMe();
 		flushDatabaseMe();
 		
-		return this.gomarketHome();
+		return this;
+		
+	}
+	
+	public void load() throws Exception {
+
+		SelectBox categories = new SelectBox();
+		SelectBox attachProject = new SelectBox();
+		
+		ICategory category = Category.loadRootCategory();
+		if (category.size() > 0) {
+			while (category.next()) {
+				String categoryId = Integer.toString(category.getCategoryId());
+				String categoryName = category.getCategoryName();
+
+				categories.add(categoryName, categoryId);
+			}
+		}
+		
+		IProjectNode projectList = ProjectNode.completedProject(TenantContext.getThreadLocalInstance().getTenantId());		
+		if(projectList.size() > 0) {
+			while(projectList.next()){
+				String projectId = projectList.getId();
+				String projectName = projectList.getName();
+				
+				attachProject.add(projectName, projectId);
+			}
+		}
+		
+		this.setCategories(categories);
+		this.setAttachProject(attachProject);
+		this.setLogoFile(new MetaworksFile());
 		
 	}
 	
@@ -326,124 +376,85 @@ public class App extends Database<IApp> implements IApp{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		/*
-		Category category = new Category();
-		category.setCategoryId(this.getCategory().getCategoryId());
-		this.setCategory(category.databaseMe());
-		*/
-		
-		/*
-		MarketplaceSearchBox searchBox = new MarketplaceSearchBox();
-		searchBox.setKeyUpSearch(true);
-		searchBox.setKeyEntetSearch(true);
-		*/
-		
-		/*
-		MarketplaceCenterPanel centerPenal = new MarketplaceCenterPanel();
-		centerPenal.setListing(this.findMe());
-		centerPenal.setSearchBox(searchBox);
-		centerPenal.setCategory(this.getCategory());
-		centerPenal.getMetaworksContext().setWhen("detailList");
-		centerPenal.getListing().getMetaworksContext().setWhen("detailList");
-		
-		MarketplaceCenterWindow centerWin = new MarketplaceCenterWindow(session);
-		centerWin.setCenterPanel(centerPenal);
-		
-		//west
-		MarketCategoryPanel marketCategory = new MarketCategoryPanel(session);
-		marketCategory.setCategory(Category.loadRootCategory());
-		*/
-		
-		//Layout mainLayout = new Layout();
-		
-		//mainLayout.setId("main");
-		//mainLayout.setName("center");
-		//mainLayout.setCenter(centerWin);
-		//mainLayout.setWest(marketCategory);
 		
 		return centerPenal;
 	}
 	
-	public Object editListing() throws Exception {
+	public Object edit() throws Exception {
 		
-		AppInformation editListing = new AppInformation();
-		editListing.session = session;
+		this.load();
+		this.getMetaworksContext().setHow(null);
+		this.getMetaworksContext().setWhen("edit");
 		
-		SelectBox categories = new SelectBox();
+		this.getCategories().setSelected(String.valueOf(this.getCategory().getCategoryId()));
+		
+		return new ModalPanel(this);
+	}
 
-		//MarketCategoryPanel marketCategory = new MarketCategoryPanel(session);
-		//marketCategory.setCategory(Category.loadRootCategory());
+	public Object save() throws Exception {
 
-/*		if (marketCategory.getCategory().size() > 0) {
-			while (marketCategory.getCategory().next()) {
+		ICategory category = new Category();
+		category.setCategoryId(Integer.parseInt(categories.getSelected()));
 
-				String categoryId = Integer.toString(marketCategory.getCategory().getCategoryId());
-				String categoryName = marketCategory.getCategory().getCategoryName();
+		if(this.getLogoFile().getFileTransfer() != null &&
+		   this.getLogoFile().getFilename() != null && 
+		   this.getLogoFile().getFilename().length() > 0)			
+			this.getLogoFile().upload();
 
-				categories.add(categoryName, categoryId);
-				
-			}
-		}*/
+		this.setCategory(category);
 		
-		categories.setSelected(Integer.toString(this.getCategory().getCategoryId()));
-		
-		
-		SelectBox projects = new SelectBox();
-		
-		IProjectNode projectList = ProjectNode.load(session);
-		
-		if(projectList.size() > 0) {
-			while(projectList.next()){
-				
-				String projectId = projectList.getId();
-				String projectName = projectList.getName();
-				
-				
-				projects.add(projectName, projectId);
-			}
+		if(MetaworksContext.WHEN_NEW.equals(this.getMetaworksContext().getWhen())){
+			IWfNode project = new WfNode();
+			project.setId(this.getAttachProject().getSelected());
+
+			setAppId(UniqueKeyGenerator.issueWorkItemKey(((ProcessManagerBean) processManager).getTransactionContext()).intValue());
+			setCreateDate(Calendar.getInstance().getTime());
+			setComcode(session.getCompany().getComCode());
+			setComName(session.getCompany().getComName());
+			
+			this.setProject(project);
+			this.setStatus(STATUS_REQUEST);
+			
+			createDatabaseMe();
+			
+
+			// 앱 등록일 경우 프로세스 발행
+			String defId = "AppRegister.process";
+			
+			ProcessMap goProcess = new ProcessMap();
+			goProcess.session = session;
+			goProcess.processManager = processManager;
+			goProcess.instanceView = instanceView;
+			goProcess.setDefId(defId);
+
+			// 프로세스 발행
+			Long instId = Long.valueOf(goProcess.initializeProcess());
+
+			// 프로세스 실행
+			ResultPayload rp = new ResultPayload();
+			rp.setProcessVariableChange(new KeyedParameter("appInformation", this));
+
+			// 무조건 compleate
+			processManager.executeProcessByWorkitem(instId.toString(), rp);
+			processManager.applyChanges();
+		}else{
+			syncToDatabaseMe();
 		}
 		
-		projects.setSelected(this.getProject().getId());
-		
-//		getExtfile().getMetaworksContext().setWhen("edit");
-		getLogoFile().getMetaworksContext().setWhen("edit");
-		
-		editListing.setAppId(getAppId());
-		editListing.setCategories(categories);
-		editListing.setAttachProject(projects);
-		editListing.setAppName(getAppName());
-		editListing.setSimpleOverview(getSimpleOverview());
-		editListing.setFullOverview(getFullOverview());
-		editListing.setPricing(getPricing());
-		editListing.setLogoFile(getLogoFile());
-		
-		editListing.getMetaworksContext().setWhen("edit");
-		
-		
-		MarketplaceCenterPanel centerPanel = new MarketplaceCenterPanel();
-		//centerPanel.setAppInfo(editListing);
-		
-		MarketplaceCenterWindow centerWin = new MarketplaceCenterWindow(session);
-		centerWin.setCenterPanel(centerPanel);
-		
-		Layout mainLayout = new Layout();
-		
-		mainLayout.setId("main");
-		mainLayout.setName("center");
-		mainLayout.setCenter(centerWin);
-		
-		return mainLayout;
-	}
+		flushDatabaseMe();
 
-	
-	public void showDescription() throws Exception {
-		this.getMetaworksContext().setWhere("showDescription");
+		MyVendor myVendor = new MyVendor();
+		myVendor.load(session);
 		
+		return new ModalPanel(myVendor);
 	}
 	
-	public void showVendor() throws Exception {
-		this.getMetaworksContext().setWhere("showVendor");
+	public Object cancel() throws Exception {
 		
+		MyVendor myVendor = new MyVendor();
+		myVendor.load(session);
+		
+		return new ModalPanel(myVendor);
 	}
 	
 	public void addApp()throws Exception {
@@ -489,14 +500,26 @@ public class App extends Database<IApp> implements IApp{
 	    
 		
 	}
+	@Override
+	public void onLoad() throws Exception {
+		if (MetaworksContext.WHEN_VIEW.equals(this.getMetaworksContext()
+				.getWhen())) {
+			if(this.getLogoFile().getMetaworksContext() == null){
+				this.getLogoFile().setMetaworksContext(new MetaworksContext());
+			}
+			this.getLogoFile().getMetaworksContext().setWhen("image");
+		}
+	}
 	
-	public Object gomarketHome() throws Exception {
+	@Override
+	public void beforeComplete() throws Exception {
+		// TODO Auto-generated method stub
 		
-		PageNavigator gomarketHome = new PageNavigator();
-		gomarketHome.session = session;
+	}
+	@Override
+	public void afterComplete() throws Exception {
+		// TODO Auto-generated method stub
 		
-		return new Refresh(gomarketHome.goMarketplace(), true);
-
 	}
 	
 

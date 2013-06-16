@@ -1,15 +1,11 @@
 package org.uengine.codi.mw3.marketplace;
 
+import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.component.SelectBox;
-import org.metaworks.widget.layout.Layout;
-import org.uengine.codi.mw3.knowledge.IProjectNode;
-import org.uengine.codi.mw3.knowledge.ProjectNode;
+import org.metaworks.widget.ModalPanel;
 import org.uengine.codi.mw3.model.Company;
 import org.uengine.codi.mw3.model.Session;
-import org.uengine.codi.mw3.marketplace.category.Category;
-import org.uengine.codi.mw3.marketplace.category.MarketCategoryPanel;
 
 public class MyVendor {
 	
@@ -30,10 +26,11 @@ public class MyVendor {
 		}
 		public void setListing(IApp listing) {
 			this.listing = listing;
+			
 		}
 
 		
-	public IApp load() throws Exception{
+	public void load(Session session) throws Exception{
 		
 		vendor = new Company();
 		
@@ -50,16 +47,25 @@ public class MyVendor {
 		findlisting.setComcode(session.getCompany().getComCode());
 		
 		listing = findlisting.findByVendor();
+		listing.getMetaworksContext().setHow("myVendor");
 		listing.getMetaworksContext().setWhen("myVendor");
-		setListing(listing);
 		
-		return this.getListing();
-		
+		setListing(listing);		
 	}
 	
 	@ServiceMethod
 	public Object createApp() throws Exception {
 		
+		App app = new App();
+		app.load();
+		app.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+		
+		return new ModalPanel(app);
+		
+		
+		
+		
+		/*
 		AppInformation createListing = new AppInformation();
 		createListing.session = session;
 		
@@ -113,6 +119,7 @@ public class MyVendor {
 		mainLayout.setCenter(centerWin);
 		
 		return mainLayout;
+		*/
 	}
 
 }

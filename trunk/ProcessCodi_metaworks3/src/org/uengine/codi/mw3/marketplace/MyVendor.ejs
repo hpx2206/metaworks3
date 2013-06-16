@@ -1,52 +1,23 @@
+<%
+	if(value){
+%>
+	<div class="detailView_app_outer">
+
+		<div class="positionRight">
+			<img style="cursor: pointer;" src="images/marketPlace/registerApp.png" onClick="<%=methods.createApp.caller()%>" />
+		</div>
+		<div class="clear"></div>
 
 <%
-
-if(value){
-
+		if(value.listing != null){
 %>
-<div class="detailView_app_outer">
-	<div class="detailView_app">
-		<div class="topTitle_app"><%=value.vendor.comName%></div>		
-		<div class="clear"></div>
-	</div>		
-	
-	<div class="fixed_img_row">
-   	  <ul>	
-	     <li> 
-        	<table width="100%" border="0" cellspacing="0" cellpadding="0">
-                <tr>
-                    <td class="appFirstTd"><span class="thumb"> logo </span> </td>
-                    <td class="appTitleTd">
-                    	<div class="fullOverview"><%=value.vendor.description%></div> 
-                    	<div class="simpleOverview"><%=value.vendor.repMail%></div>
-                    </td>
-                    <td class="appBtnTd">
-						<div class="badge" style="float:none;margin-top:2px;background:#679BD1;padding:3px 8px; width:80px"><a herf="#" onClick="<%=methods.createApp.caller()%>"> Create a new Listing </a></div>
-					</td>
-                </tr>
-            </table>
-		 </li>
-		</ul>
-	</div>
-
-
-	
-	<%
-	
-	if(value.listing != null){
-	
-	%>
-	<div class="detailView_app">
-		<div class="topTitle_app"><%=mw3.localize('$Apps')%></div>		
-		<div class="clear"></div>
-	</div>	
-	
+		<div class="detailView_app" style="margin-top: 3px;">
+			<div class="clear"></div>
+		</div>	
+						
 		<%=fields.listing.here()%>
-</div>	
-	<%
-	
+	</div>	
+<%
+		}
 	}
-	
-}
-
 %>
