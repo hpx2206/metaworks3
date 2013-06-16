@@ -15,6 +15,8 @@ import org.uengine.processmanager.ProcessManagerRemote;
 
 public class ProjectNode extends TopicNode implements IProjectNode {
 	
+	public final static String TYPE_PROJECT = "project";
+	
 	String type ="project";
 	
 	public ProjectNode(){
@@ -59,7 +61,7 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 		return dao;
 	}
 	
-	public IProjectNode completedProject() throws Exception {
+	public static IProjectNode completedProject(String companyId) throws Exception {
 		
 		StringBuffer sql = new StringBuffer();
 		
@@ -72,8 +74,8 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 		
 		IProjectNode dao  = (IProjectNode) Database.sql(IProjectNode.class, sql.toString());
 		
-		dao.setType(this.type);
-		dao.setCompanyId(this.getCompanyId());
+		dao.setType(TYPE_PROJECT);
+		dao.setCompanyId(companyId);
 		dao.select();
 		
 		return dao;
