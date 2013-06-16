@@ -213,10 +213,15 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
     
 	@Override
 	public InputStream getResourceAsStream(String name) {
+		
+		ArrayList<File> sourcePath = new ArrayList<File>();
+		
 		String firstSourcePath = "";
 		if( name != null  && name.startsWith("@") && MetadataBundle.projectBundle != null){
 			String key = name.substring(1);
 			String value = MetadataBundle.projectBundle.getProperty(key);
+			
+			/*
 			if( value != null ){
 				// tenant 의 소스를 보고 없으면 main 파일을 바라본다.
 				String sourceCodeBase = CodiClassLoader.mySourceCodeBase();
@@ -229,19 +234,37 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
 				
 				name = value;
 			}
-		}else{
-			firstSourcePath = sourcePath[0].getPath();
-		}
-
-		if(name.endsWith(".ejs") || name.endsWith(".ejs.js") || name.endsWith("xml") || name.endsWith(".process") || name.endsWith(".process2") || name.endsWith(".sql")){
-			try {
-				FileInputStream fis = new FileInputStream(firstSourcePath + "/" + name);
-				return fis;
-			} catch (FileNotFoundException e) {
-			}
+			*/
 			
+			name = value;	
+			
+			String sourceCodeBase = CodiClassLoader.mySourceCodeBase();
+			
+			sourcePath.add(new File(sourceCodeBase + "/" + value));
+			sourcePath.add(new File(MetadataBundle.projectBundle.getProperty("sourceCodePath")));
+			
+		}else{
+			for(File file : this.sourcePath)
+				sourcePath.add(file);				
 		}
-
+		
+		
+	
+		if(name != null){
+			if(name.endsWith(".ejs") || name.endsWith(".ejs.js") || name.endsWith(".xml") || name.endsWith(".process") || name.endsWith(".process2") || name.endsWith(".sql")){
+				
+				for(File file : sourcePath){
+					try {
+						if(file.exists()){
+							FileInputStream fis = new FileInputStream(file.getAbsolutePath() + "/" + name);
+							return fis;
+						}
+					} catch (FileNotFoundException e) {
+					}				
+				}
+			}
+		}
+		
 		return super.getResourceAsStream(name);
 	}
 	
@@ -655,7 +678,6 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
 			for(File file : this.defaultSourcePath){
 				sourcePath.add(file);
 				
-				System.out.println(file.getAbsoluteFile() + " == " + path);
 				if(!file.getAbsoluteFile().equals(path)){
 					add = true;
 				}
