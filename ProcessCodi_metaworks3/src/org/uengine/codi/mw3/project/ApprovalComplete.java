@@ -12,12 +12,8 @@ import java.util.Map;
 import org.metaworks.annotation.Face;
 import org.metaworks.dao.TransactionContext;
 import org.uengine.codi.ITool;
-import org.uengine.codi.mw3.knowledge.ITopicMapping;
-import org.uengine.codi.mw3.knowledge.TopicMapping;
 import org.uengine.codi.mw3.knowledge.WfNode;
-import org.uengine.codi.mw3.model.Employee;
 import org.uengine.codi.mw3.model.Instance;
-import org.uengine.codi.vm.JschCommand;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.processmanager.ProcessManagerRemote;
 
@@ -72,7 +68,7 @@ public class ApprovalComplete implements ITool  {
 	@Override
 	public void beforeComplete() throws Exception {
 		
-		Map map = (Map)TransactionContext.getThreadLocalInstance().getSharedContext(ITOOL_MAP_KEY);
+/*		Map map = (Map)TransactionContext.getThreadLocalInstance().getSharedContext(ITOOL_MAP_KEY);
 		ProcessManagerRemote processManager = (ProcessManagerRemote)map.get(ITOOL_PROCESS_MANAGER_KEY);
 		
 		String instId = (String)map.get(ITOOL_INSTANCEID_KEY);
@@ -95,6 +91,7 @@ public class ApprovalComplete implements ITool  {
 
 			String paramProjectName = "\"" + projectName + "_" + vmName + "\"";
 			String scriptHudsonCreateJob = GlobalContext.getPropertyString("vm.hudson.createJob");
+			String scriptHudsonSetSvnInfo = GlobalContext.getPropertyString("vm.hudson.setting");*/
 			
 			// TODO: KIAT 에서 활성화
 			/*
@@ -102,6 +99,9 @@ public class ApprovalComplete implements ITool  {
 			jschServerBehaviour.sessionLogin(host, userId, passwd);			
 			jschServerBehaviour.runCommand(scriptHudsonCreateJob + " " + paramProjectName);		// hudson job 생성
 			jschServerBehaviour.getJschSession().disconnect();
+			
+			jschServerBehaviour.runCommand(scriptHudsonSetSvnInfo + " \"" + paramProjectName +  "\"");	// hudson job 에 svn 정보 설정
+
 			*/
 			
 			
@@ -126,7 +126,7 @@ public class ApprovalComplete implements ITool  {
 			}
 			*/
 			
-		}
+		//}
 	}
 
 	@Override
