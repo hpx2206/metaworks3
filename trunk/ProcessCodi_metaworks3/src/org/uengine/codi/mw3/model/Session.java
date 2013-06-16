@@ -16,7 +16,6 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.Login;
-import org.uengine.codi.mw3.marketplace.Marketplace;
 
 	
 public class Session implements ContextAware{
@@ -325,14 +324,9 @@ public class Session implements ContextAware{
 		}
 	}
 	
-	@ServiceMethod(callByContent=true)
-	public Object myVendor() throws Exception	{
-		
-		Marketplace marketplace = new Marketplace();
-		
-		marketplace.session = this;
-		return marketplace.showMyVendor();
-		
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
+	public Object myVendor() throws Exception	{		
+		return new ModalWindow("앱 관리", 0, 0, "앱 관리");
 	}
 
 }
