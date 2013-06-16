@@ -109,12 +109,18 @@ public class MultipleChoiceOption implements ContextAware {
 			
 			pos = form.getFormFields().indexOf(multipleChoiceField);
 			if(pos > -1){
-				form.getFormFields().set(pos, multipleChoiceField);
+				CommonFormField applyFormField = (CommonFormField)multipleChoiceField.clone();
 				
+				
+				applyFormField.setMetaworksContext(new MetaworksContext());
+				applyFormField.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+				applyFormField.getMetaworksContext().setWhere("form");
+
+				form.formFields.set(pos, applyFormField);
 			}
 		}
-		
 		return new Object[]{form, formFieldProperty};
+		
 	}
 	
 	@Override
