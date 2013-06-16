@@ -8,12 +8,13 @@ var GridFace_Row = function(objectId, className){
 	
 	if(this.object == null)
 		return true;
+	
 };
 
 GridFace_Row.prototype = {
-	loaded: function(){
+	loaded : function(){
 		this.objectDiv.trigger('loaded');
-	}
+	},
 	edit : function(object){
 		var options = mw3.getMetadata(object.__className);
 		
@@ -72,5 +73,9 @@ GridFace_Row.prototype = {
 	        	$( this ).remove();
 	        }
         });
+	},
+	
+	setRownum : function(rownum){
+		$('#rownum_' + this.objectId).html(rownum);
 	}
 };
