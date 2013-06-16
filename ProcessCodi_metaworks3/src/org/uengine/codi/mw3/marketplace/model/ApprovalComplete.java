@@ -67,71 +67,10 @@ public class ApprovalComplete implements ITool  {
 	@Override
 	public void beforeComplete() throws Exception {
 		
-		Map map = (Map)TransactionContext.getThreadLocalInstance().getSharedContext(ITOOL_MAP_KEY);
-		ProcessManagerRemote processManager = (ProcessManagerRemote)map.get(ITOOL_PROCESS_MANAGER_KEY);
-		
-		String instId = (String)map.get(ITOOL_INSTANCEID_KEY);
-		
-		
-		if(processManager != null && processManager.getProcessVariable(instId.toString(), "", "projectId") != null){
-			
-			String projectName = (String)((Serializable)processManager.getProcessVariable(instId.toString(), "", "projectName"));
-			String projectId = (String)((Serializable)processManager.getProcessVariable(instId.toString(), "", "projectId"));
-			
-			
-			JschCommand jschServerBehaviour = new JschCommand();
-			
-			//create SVN
-			String command = GlobalContext.getPropertyString("vm.svn.createProject") + " \"" + projectName + "\"";
-			jschServerBehaviour.runCommand(command);
-			
-			//SVN setting
-			command = GlobalContext.getPropertyString("vm.svn.setting") + " \"" + projectName + "\"";
-			jschServerBehaviour.runCommand(command);
-			
-			TopicMapping tp = new TopicMapping();
-			tp.setTopicId(projectId);
-			
-			ITopicMapping participateUsers = tp.findUsers();
-			
-			RowSet rs = participateUsers.getImplementationObject().getRowSet();
-			
-			while(rs.next()) {
-				
-				Employee employee = new Employee();
-				employee.setEmpCode(rs.getString("userId"));
-				
-				String password =  employee.findMe().getPassword();
-				
-				//vm 유저 추가
-				command = GlobalContext.getPropertyString("vm.svn.createUser") + " \"" + projectName + "\" \"" + rs.getString("userId") + "\" \"" + password + "\"";
-				jschServerBehaviour.runCommand(command);
-				
-			}
-			
-			//svn프로젝트와 동일한 hudson job생성
-			command = GlobalContext.getPropertyString("vm.hudson.createJob") + " \"" + projectName + "\"";
-			jschServerBehaviour.runCommand(command);
-			
-			//job에 svn연결
-			command = GlobalContext.getPropertyString("vm.hudson.setting") + " \"" + projectName +  "\"";
-			jschServerBehaviour.runCommand(command);
-			
-			command = GlobalContext.getPropertyString("vm.hudson.build") + " \"" + projectName +  "\"";
-			jschServerBehaviour.runCommand(command);
-			
-			ProjectInfo projectInfo = new ProjectInfo();
-			
-			projectInfo.setProjectName(projectName);
-			projectInfo.callURL(projectInfo.hudsonReload());
-			projectInfo.callURL(projectInfo.hudsonBuild());
-			
-		}
 	}
 
 	@Override
 	public void afterComplete() throws Exception {
-		// TODO Auto-generated method stub
 		
 	}
 
