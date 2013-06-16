@@ -38,6 +38,14 @@ public class MarketplaceCenterPanel implements ContextAware{
 			this.appDetail = appDetail;
 		}
 	
+	MyVendor myVendor;
+		public MyVendor getMyVendor() {
+			return myVendor;
+		}
+		public void setMyVendor(MyVendor myVendor) {
+			this.myVendor = myVendor;
+		}
+	
 
 	/*
 	ICategory category;

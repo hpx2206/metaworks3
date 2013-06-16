@@ -3,12 +3,14 @@
 		if(value.value && value.value.length > 0){
 %>
 
-<%=fields.value.here()%>
+	<%=fields.value.here()%>
 
 <%
 		}else{
 %>
-	검색 결과 또는 목록이 존재하지 않습니다.
+	<div style="padding: 24px 21px; font-size: 14px; display: block;">
+		<div>아직 등록된 앱이 없습니다.</div>
+	</div>
 <%		
 		}
 	}

@@ -40,6 +40,7 @@ public class AppList {
 	public void load(String categoryId, String keyword){
 		try {
 			this.setValue(App.findApp(categoryId, keyword));
+			this.getValue().getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 			this.getValue().getMetaworksContext().setHow(MetaworksContext.HOW_IN_LIST);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
