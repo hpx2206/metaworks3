@@ -4,6 +4,7 @@ import java.rmi.RemoteException;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Available;
@@ -15,6 +16,8 @@ import org.metaworks.annotation.Range;
 import org.metaworks.annotation.ServiceMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.ITool;
+import org.uengine.codi.hudson.HudsonJobApi;
+import org.uengine.codi.hudson.HudsonJobDDTO;
 import org.uengine.codi.mw3.model.IInstance;
 import org.uengine.codi.mw3.model.Instance;
 import org.uengine.codi.mw3.model.RoleMappingPanel;
@@ -23,6 +26,8 @@ import org.uengine.codi.mw3.model.User;
 import org.uengine.codi.mw3.project.VMHardwareProfileCombo;
 import org.uengine.codi.mw3.project.VMImageCombo;
 import org.uengine.codi.mw3.project.VMRealmCombo;
+import org.uengine.codi.vm.JschCommand;
+import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.KeyedParameter;
 import org.uengine.kernel.ResultPayload;
 import org.uengine.kernel.RoleMapping;
@@ -303,10 +308,25 @@ public class ProjectServer implements ITool, ContextAware {
 	@Available(when={SERVER_STATUS_STOPPED})
 	@Face(displayName="$project.server.start")
 	@ServiceMethod(callByContent=true)
-	public void start(){
+	public void start() throws Exception {
 		//this.setStatus(SERVER_STATUS_STARTING);
 		this.setStatus(SERVER_STATUS_STARTED);
 		this.getMetaworksContext().setWhen(this.getStatus());
+		
+		String targetUserId = GlobalContext.getPropertyString("vm.target.user");
+		String targetPassword= GlobalContext.getPropertyString("vm.target.password");
+
+		String scriptFilePermission = GlobalContext.getPropertyString("vm.permission");
+		String scriptTargetStartUp = GlobalContext.getPropertyString("vm.target.startup");
+
+		JschCommand jschServerBehaviour = new JschCommand();
+		jschServerBehaviour.sessionLogin(this.getIp(), targetUserId, targetPassword);
+		
+		jschServerBehaviour.runCommand(scriptFilePermission);
+		jschServerBehaviour.runCommand(scriptTargetStartUp + " " + projectInfo.getProjectName());
+		
+		if(jschServerBehaviour.getJschSession() != null)
+			jschServerBehaviour.getJschSession().disconnect();
 	}
 	
 	@Available(when={SERVER_STATUS_STARTED})
@@ -321,9 +341,72 @@ public class ProjectServer implements ITool, ContextAware {
 	@Available(when={SERVER_STATUS_STOPPED, SERVER_STATUS_STARTING})
 	@Face(displayName="$project.server.deploy")
 	@ServiceMethod(callByContent=true)
-	public void deploy(){
+	public void deploy() throws Exception {
 		this.setStatus(SERVER_STATUS_DEPLOYING);
-		this.getMetaworksContext().setWhen(this.getStatus());				
+		this.getMetaworksContext().setWhen(this.getStatus());	
+		
+		String host = GlobalContext.getPropertyString("vm.manager.ip");
+		String userId = GlobalContext.getPropertyString("vm.manager.user");
+		String passwd = GlobalContext.getPropertyString("vm.manager.password");
+
+		JschCommand jschServerBehaviour = new JschCommand();
+		jschServerBehaviour.sessionLogin(host, userId, passwd);
+		
+		String scriptHudsonSetting = GlobalContext.getPropertyString("vm.hudson.setting");
+		String scriptHudsonBuild = GlobalContext.getPropertyString("vm.hudson.build");
+		
+		String paramProjectName = "\"" + projectInfo.getProjectName() + "\"";
+		String paramIP = "\"" + this.getIp() + "\"";
+		
+		String hudsonURL = GlobalContext.getPropertyString("vm.hudson.url");
+		String nextBuilderNumber = null;
+		String builderResult = null;
+		
+		long timeoutTime = 200000;
+		long sleepTime = 5000;
+		long tryTime = 0;
+		
+		jschServerBehaviour.runCommand(scriptHudsonSetting + " " +paramProjectName + " " + paramIP);
+		
+		HudsonJobApi hudsonJobApi = new HudsonJobApi();
+
+		while(nextBuilderNumber == null){
+			HudsonJobDDTO hudsonJobDDTO = hudsonJobApi.hudsonJobApiXmlParser(hudsonURL, projectInfo.getProjectName());
+			
+			nextBuilderNumber = hudsonJobDDTO.getNextBuilderNumber();
+			System.out.println("nextBuilderNumber :" + nextBuilderNumber);
+			try {
+				tryTime += sleepTime;
+				Thread.sleep(sleepTime);
+			} catch (Exception e) {
+			}
+			
+			if(tryTime > timeoutTime)
+				break;
+		}
+		
+		// build hudson
+		jschServerBehaviour.runCommand(scriptHudsonBuild + " " + paramProjectName);
+		
+		while(builderResult == null){
+			HudsonJobDDTO hudsonJobDDTO = hudsonJobApi.hudsonJobApiXmlParser(hudsonURL, projectInfo.getProjectName());
+			
+			if(nextBuilderNumber.equals(hudsonJobDDTO.getLastSuccessfulBuild().getNumber()))
+				builderResult = "SUCCESS";
+			else if(nextBuilderNumber.equals(hudsonJobDDTO.getLastUnSuccessfulBuild().getNumber()))
+				builderResult = "UNSUCCESS";
+			else if(nextBuilderNumber.equals(hudsonJobDDTO.getLastFailedBuild().getNumber()))
+				builderResult = "FAILED";
+			
+			try {
+				Thread.sleep(5000);
+			} catch (Exception e) {
+			}
+		}
+
+		if(jschServerBehaviour.getJschSession() != null)
+			jschServerBehaviour.getJschSession().disconnect();
+
 	}
 	
 	@Available(when={SERVER_STATUS_STARTED, SERVER_STATUS_STOPPED, SERVER_STATUS_STARTING, SERVER_STATUS_STOPPING, SERVER_STATUS_DEPLOYING, SERVER_STATUS_RUNNING})

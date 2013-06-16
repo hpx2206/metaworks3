@@ -3,6 +3,7 @@ package org.uengine.codi.mw3.knowledge;
 import java.net.URL;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.sql.RowSet;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
@@ -15,24 +16,15 @@ import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.dao.Database;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.codi.mw3.knowledge.TopicMapping;
-import org.uengine.codi.mw3.knowledge.WfNode;
-import org.uengine.codi.mw3.model.Instance;
+import org.uengine.codi.mw3.model.Employee;
 import org.uengine.codi.mw3.model.InstanceListPanel;
-import org.uengine.codi.mw3.model.InstanceView;
 import org.uengine.codi.mw3.model.InstanceViewContent;
-import org.uengine.codi.mw3.model.Perspective;
-import org.uengine.codi.mw3.model.ProcessMap;
-import org.uengine.codi.mw3.model.RoleMappingPanel;
 import org.uengine.codi.mw3.model.Session;
-import org.uengine.codi.mw3.project.ApprovalComplete;
-import org.uengine.codi.mw3.project.ProjectCreate;
-import org.uengine.kernel.KeyedParameter;
-import org.uengine.kernel.ResultPayload;
+import org.uengine.codi.vm.JschCommand;
+import org.uengine.kernel.GlobalContext;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 
@@ -94,22 +86,27 @@ public class ProjectTitle implements ContextAware {
 	@Available(when={MetaworksContext.WHEN_NEW})
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] save() throws Exception{
+
 		
 		this.saveMe();
 		
+		session.setLastPerspecteType("topic");
+		session.setLastSelectedItem(this.getTopicId());
+
 		ProjectNode projectNode = new ProjectNode();
 		projectNode.setId(this.getTopicId());
 		projectNode.setName(this.getTopicTitle());
+		projectNode.session = session;
 		
 		this.makeHtml();
 		
 		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 		this.getMetaworksContext().setHow("html");	
 	
-		session.setLastPerspecteType("topic");
-		session.setLastSelectedItem(this.getTopicId());
-		
 
+		//String title = "프로젝트: " + this.getTopicTitle();
+		
+		/*
 		String defId = "CreateProject.process";
 		
 		ProcessMap processMap = new ProcessMap();
@@ -168,6 +165,45 @@ public class ProjectTitle implements ContextAware {
 		returnObject[returnObj.length] = new Refresh(instanceViewContent);
 		returnObject[returnObj.length + 1] = new ToAppend(new ProjectPanel(), projectNode);
 		returnObject[returnObj.length + 2] = new Remover(new ModalWindow(), true);
+		*/
+		
+		
+
+		String host = GlobalContext.getPropertyString("vm.manager.ip");
+		String userId = GlobalContext.getPropertyString("vm.manager.user");
+		String passwd = GlobalContext.getPropertyString("vm.manager.password");
+
+		JschCommand jschServerBehaviour = new JschCommand();
+		jschServerBehaviour.sessionLogin(host, userId, passwd);
+		
+		// create SVN
+		String command = GlobalContext.getPropertyString("vm.svn.createProject") + " \"" + projectNode.getName()+ "\"";
+		jschServerBehaviour.runCommand(command);
+		
+		// setting SVN
+		command = GlobalContext.getPropertyString("vm.svn.setting") + " \"" +  projectNode.getName() + "\"";
+		jschServerBehaviour.runCommand(command);
+		
+		// create Hudson job
+		command = GlobalContext.getPropertyString("vm.hudson.createJob") + " \"" + projectNode.getName() + "\"";
+		jschServerBehaviour.runCommand(command);
+				
+		//SVN 유저 추가
+		command = GlobalContext.getPropertyString("vm.svn.createUser") + " \"" +  projectNode.getName() + "\" \"" + session.getEmployee().getEmpCode() + "\" \"" + session.getEmployee().getPassword() + "\"";
+		jschServerBehaviour.runCommand(command);
+
+		
+		Object[] returnObj = projectNode.loadTopic();
+		Object[] returnObject = new Object[ returnObj.length + 3];
+		for (int i = 0; i < returnObj.length; i++) {
+			if( returnObj[i] instanceof InstanceListPanel){
+				returnObject[i] = new Refresh(returnObj[i]);
+			}else{
+				returnObject[i] = new Refresh(returnObj[i]);
+			}			
+		}
+		returnObject[returnObj.length ] = new ToAppend(new ProjectPanel(), projectNode);
+		returnObject[returnObj.length + 1] = new Remover(new ModalWindow(), true);
 		
 		return returnObject;
 		
