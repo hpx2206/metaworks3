@@ -1,6 +1,7 @@
 package org.uengine.codi.mw3.selfservice;
 
 import org.metaworks.annotation.Face;
+import org.metaworks.metadata.MetadataProperty;
 import org.uengine.codi.mw3.model.Session;
 
 
@@ -30,6 +31,12 @@ public class SelfServiceWindow {
 		
 		SelfServiceControlPanel selfServiceControlPanel = new SelfServiceControlPanel();
 		selfServiceControlPanel.load(session);
+		
+		MetadataProperty metadataProperty = new MetadataProperty();
+		metadataProperty.setId("metaDetailView");
+		metadataProperty.getMetaworksContext().setWhere("ssp");
+		
+		selfServiceControlPanel.setMetadataProperty(metadataProperty);
 		
 		this.setSelfServiceControlPanel(selfServiceControlPanel);
 	}

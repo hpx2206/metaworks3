@@ -1,4 +1,4 @@
-var org_metaworks_metadata_FileProperty = function(objectId, className){
+var org_metaworks_metadata_ImageProperty = function(objectId, className){
 	this.objectId = objectId;
 	this.className = className;
 	

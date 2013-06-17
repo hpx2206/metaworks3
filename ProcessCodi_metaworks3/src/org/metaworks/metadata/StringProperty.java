@@ -1,5 +1,8 @@
 package org.metaworks.metadata;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.uengine.codi.mw3.ide.ResourceNode;
@@ -38,4 +41,15 @@ public class StringProperty extends MetadataProperty{
 			this.resourceNode = resourceNode;
 		}
 	
+	@Override
+	public Object edit() throws Exception {
+		// TODO Auto-generated method stub
+		return super.edit();
+	}
+	
+	@Override
+	public Object save() throws FileNotFoundException, IOException, Exception {
+		// TODO Auto-generated method stub
+		return super.save();
+	}
 }

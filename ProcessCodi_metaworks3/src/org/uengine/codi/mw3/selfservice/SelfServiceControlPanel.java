@@ -92,6 +92,13 @@ public class SelfServiceControlPanel {
 			this.imageProperties = imageProperties;
 		}
 
+	MetadataProperty metadataProperty;
+		public MetadataProperty getMetadataProperty() {
+			return metadataProperty;
+		}
+		public void setMetadataProperty(MetadataProperty metadataProperty) {
+			this.metadataProperty = metadataProperty;
+		}
 
 	int appId;
 		public int getAppId() {
