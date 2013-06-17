@@ -452,6 +452,13 @@ CREATE TABLE "schedule_table"(
 "startdate" datetime
 );
 
+create table "INST_EMP_PERF" (
+	"INSTID" int(11) NOT NULL,
+	"EMPCODE" varchar(20) NOT NULL,
+	"BUSINESSVALUE" int(10),
+	PRIMARY KEY (INSTID, EMPCODE)
+);
+
 
 -- index
 ALTER TABLE "app" ADD PRIMARY KEY("appid");
