@@ -353,7 +353,25 @@
                     __className : "org.uengine.codi.mw3.model.Locale",
                     language : 'ko'
                 }, 'body').load();
-					
+ 				
+ 				mw3.metadataBundle = function(key, defaultValue){
+                    var metadataHandler = mw3.getAutowiredObject("org.metaworks.metadata.MetadataBundle");
+                    
+                    if(metadataHandler!=null && metadataHandler.projectBundle != null){                        
+                        var message = metadataHandler.projectBundle[key];                        
+                        if(message)
+                            return message;
+                    }
+                    
+                    if(defaultValue)
+                        return defaultValue;
+                    
+                    return key;     
+                }
+ 				var metadataPage = new MetaworksObject({
+                    __className : "org.metaworks.metadata.MetadataBundle"
+                }, 'body').loadProperty();
+ 				
  				var object = null;
  				var instanceId = request.getParameter("instanceId");
 
