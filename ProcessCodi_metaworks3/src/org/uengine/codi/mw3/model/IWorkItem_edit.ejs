@@ -136,13 +136,12 @@
 	
 <%
 		if(mw3.when == 'new'){
+			var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");		
+			if( session && session.ux != 'phone'){
+		
 			if( session && session.employee.preferUX != 'sns'){
 %>			
 	<div id="wih_button">		
-<%
-		var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");		
-		if( session && session.ux != 'phone'){
-%>
 		<a class="<%= value.type=='comment'?'comment_btn_on':'comment_btn_off' %>" onclick="<%=methods.newComment.caller()%>"><span><%=mw3.localize("$Write")%></span></a>
 <%
 			if( session && session.ux != 'pad'){
