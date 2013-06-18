@@ -100,11 +100,11 @@ public class ContactListPanel implements ContextAware {
 			this.invitation = invitation;
 		}
 		
-	ArrayList<User> checkNodes;
-		public ArrayList<User> getCheckNodes() {
+	ArrayList<IUser> checkNodes;
+		public ArrayList<IUser> getCheckNodes() {
 			return checkNodes;
 		}
-		public void setCheckNodes(ArrayList<User> checkNodes) {
+		public void setCheckNodes(ArrayList<IUser> checkNodes) {
 			this.checkNodes = checkNodes;
 		}
 }
