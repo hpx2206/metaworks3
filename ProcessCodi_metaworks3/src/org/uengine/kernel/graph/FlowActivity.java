@@ -143,6 +143,7 @@ public class FlowActivity extends ComplexActivity {
 				startActivityRef = super.getInitiatorHumanActivityReference(ptc);
 			}else{
 				startActivityRef.setActivity(act);
+				startActivityRef.setAbsoluteTracingTag(act.getTracingTag());
 			}
 		} catch (UEngineException e) {
 			// TODO Auto-generated catch block

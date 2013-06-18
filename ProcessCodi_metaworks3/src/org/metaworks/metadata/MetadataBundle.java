@@ -71,6 +71,7 @@ public class MetadataBundle {
 		String metadataFilePath = projectBasePath + File.separatorChar + metadataFileName;
 		File metadataFile = new File(metadataFilePath);
 		
+		// 무조건 파일들을 내려받도록 설정 - if( !metadataFile.exists() ){  << 주석 처리
 		if( !metadataFile.exists() ){
 			if( !metadataFile.getParentFile().exists() ){
 				metadataFile.getParentFile().mkdirs();
@@ -184,7 +185,7 @@ public class MetadataBundle {
 	 * 관점 : 앱에서 호출
 	 */
 	private void makeFileFromRemote( String projectId, String requsetPath, String fileFullPath) throws Exception{
-		String codiServerUrl = "http://localhost:8080/uengine-web/";
+		String codiServerUrl = GlobalContext.getPropertyString("metadataUrl", "http://localhost:8080/uengine-web/");
 		String requestUrl = "metadata/getMetadataFile";
 		HttpClient httpClient = new HttpClient();
 		GetMethod getMethod = new GetMethod(codiServerUrl + requestUrl);
