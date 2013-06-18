@@ -195,14 +195,28 @@
 				var instanceId = request.getParameter("instanceId");
 				var userId = request.getParameter("userId");
 				var passwd = request.getParameter("password");
-		 		mw3.setWhen(mw3.WHEN_EDIT);
 		 		mw3.setBase("/uengine-web");
 
  				var locatePage = new MetaworksObject({
                     __className : "org.uengine.codi.mw3.model.Locale",
                     language : 'ko'
                 }, 'body').load();
- 				
+ 				mw3.metadataBundle = function(key, defaultValue){
+                    var metadataHandler = mw3.getAutowiredObject("org.metaworks.metadata.MetadataBundle");
+                    if(metadataHandler!=null && metadataHandler.projectBundle != null){                        
+                        var message = metadataHandler.projectBundle[key];                        
+                        if(message)
+                            return message;
+                    }
+                    
+                    if(defaultValue)
+                        return defaultValue;
+                    
+                    return key;     
+                }
+                var metadataPage = new MetaworksObject({
+                    __className : "org.metaworks.metadata.MetadataBundle"
+                }, 'body').loadProperty();
 				var mainPage = new MetaworksObject({
 					instanceId : instanceId,
 					userId : userId,
