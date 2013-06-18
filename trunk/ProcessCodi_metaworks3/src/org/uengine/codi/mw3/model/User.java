@@ -324,11 +324,11 @@ public class User extends Database<IUser> implements IUser {
 		}else if("addInstanceFollower".equals(this.getMetaworksContext().getWhen())){			
 			
 			String instId = instanceFollowers.getInstanceId();
-			
+
 			Instance instance = new Instance();
 			instance.setInstId(new Long(instId));
 			
-			processManager.putRoleMapping(instId, RoleMapping.ROLEMAPPING_FOLLOWER_ROLENAME_FREFIX + getName(), getUserId());
+			processManager.putRoleMapping(instId, RoleMapping.ROLEMAPPING_FOLLOWER_ROLENAME_FREFIX + getUserId(), getUserId());
 			processManager.applyChanges();
 			
 			InstanceFollowers followers = new InstanceFollowers();
@@ -442,19 +442,19 @@ public class User extends Database<IUser> implements IUser {
 	//		processManager.removeRoleMapping(instId, "follower_" + getName(), getUserId());
 	//		processManager.applyChanges();
 	
-			RoleMapping roleMapping = new RoleMapping(new Long(instId), RoleMapping.ROLEMAPPING_FOLLOWER_ROLENAME_FREFIX + getName(), getUserId());
+			RoleMapping roleMapping = new RoleMapping(new Long(instId), RoleMapping.ROLEMAPPING_FOLLOWER_ROLENAME_FREFIX + getUserId(), getUserId());
 			if(roleMapping.deleteByInfo(session)) {
 				followers.setInstanceId(instId);
 				followers.load();
 	
 				System.out.println("delete follower done.");
-				return new Object[] {followers, new Popup()};
+				return new Object[]{new Refresh(followers)};  // refresh로 새로 뿌려주기
 				
 			} else {
 	//			Popup popup = new Popup("프로세스 참여자는 삭제할 수 없습니다.");
 	//			System.out.println("프로세스 참여자는 삭제할 수 없습니다.");
 	//			return new Object[] {popup};
-				throw new Exception("삭제 실패");
+				throw new Exception("작성자는 제거 될 수 없습니다.");
 			}
 		}
 	}
