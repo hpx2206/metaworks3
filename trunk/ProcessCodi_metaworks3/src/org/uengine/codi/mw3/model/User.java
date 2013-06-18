@@ -10,6 +10,7 @@ import org.directwebremoting.ScriptSessions;
 import org.metaworks.MetaworksException;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.ToOpener;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
@@ -392,7 +393,7 @@ public class User extends Database<IUser> implements IUser {
 		
 		return null;
 	}
-
+	@ServiceMethod
 	public Object[] removeFollower() throws Exception {
 		if("topicFollowers".equals(this.getMetaworksContext().getWhen())){
 			TopicMapping tm = new TopicMapping();
@@ -454,7 +455,7 @@ public class User extends Database<IUser> implements IUser {
 	//			Popup popup = new Popup("프로세스 참여자는 삭제할 수 없습니다.");
 	//			System.out.println("프로세스 참여자는 삭제할 수 없습니다.");
 	//			return new Object[] {popup};
-				throw new Exception("작성자는 제거 될 수 없습니다.");
+				throw new Exception("Author can not be deleted from follower list.");
 			}
 		}
 	}
