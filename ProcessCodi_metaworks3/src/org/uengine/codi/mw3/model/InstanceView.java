@@ -27,7 +27,10 @@ public class InstanceView {
 
 	@Autowired
 	public ProcessManagerRemote processManager;	
-	
+
+	@AutowiredFromClient
+	public Locale localeManager;
+
 	public InstanceView() {
 	}		
 		
@@ -225,17 +228,12 @@ public class InstanceView {
 				isOpen = ((String)instance.getProperty("", "is_open")).equals("open") ? true : false;
 			}
 			
-			
 			System.out.println("isOpen :" + isOpen);
 			crowdSourcer.setOpen(isOpen);
 		
-		
-		
 			//threadPosting = new PostingsWorkItem();
-			
 			externalFeedback = new ArrayList<FacebookFeedback>();
-			
-			if(instance.getProperty("", "facebook_postIds") != null){
+			if(instance.getProperty("", "facebook_postIds") != null){x1
 				String[] postIds = (String[]) instance.getProperty("", "facebook_postIds");
 				
 				for(int i=0; i<postIds.length; i++){
@@ -262,7 +260,6 @@ public class InstanceView {
 	}
 	
 	ArrayList<FacebookFeedback> externalFeedback;
-		
 		public ArrayList<FacebookFeedback> getExternalFeedback() {
 			return externalFeedback;
 		}
@@ -443,8 +440,6 @@ public class InstanceView {
 
 		//processManager.stopProcessInstance(instanceId);
 		
-		String tobe = (getStatus().equals("Completed") ? "Running" : "Completed");
-		
 		Instance instance = new Instance();
 		instance.setInstId(new Long(getInstanceId()));
 		instance.copyFrom(instance.databaseMe());
@@ -453,17 +448,38 @@ public class InstanceView {
 			throw new Exception("$OnlyInitiatorCanComplete");
 		}
 		
+		String tobe = null;
+		String title = null;
+		
+		if(getStatus().equals("Completed")){
+			tobe = "Running";
+			title = localeManager.getResourceBundle().getProperty("CancleCompleted");
+		}else{
+			tobe = "Completed";
+			title = localeManager.getResourceBundle().getProperty("CompletedDate");
+		}
+			
+		//if schedule changed
+		CommentWorkItem workItem = new CommentWorkItem();
+		workItem.getMetaworksContext().setHow("changeSchedule");
+		workItem.session = session;
+		workItem.processManager = processManager;
+		
+		workItem.setInstId(new Long(getInstanceId()));
+		workItem.setTitle(title);
+		workItem.add();
+		workItem.flushDatabaseMe();
+		
 		// instance update flush
 		instance.databaseMe().setStatus(tobe);
 
 		this.load(instance);
 		this.setStatus(tobe);
-		
+
 		//MetaworksRemoteService.pushClientObjects(new Object[]{new InstanceListener(InstanceListener.COMMAND_REFRESH, instance)});
 		MetaworksRemoteService.pushClientObjectsFiltered(
 				new AllSessionFilter(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom())),
-				new Object[]{new InstanceListener(InstanceListener.COMMAND_REFRESH, instance)});
-		
+				new Object[]{new InstanceListener(InstanceListener.COMMAND_REFRESH, instance.databaseMe())});
 
 		/* 내가 할일 카운트 다시 계산 */
 		if(instance.getDefId() != null || (instance.getDefId() == null && instance.getDueDate() != null)){
@@ -472,7 +488,7 @@ public class InstanceView {
 			todoBadge.refresh();
 
 			MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()),
-					new Object[]{new Refresh(todoBadge)});			
+					new Object[]{new Refresh(todoBadge), new WorkItemListener(workItem)});			
 		}
 		
 		//inst_emp_perf 테이블에 성과정보 저장 insert
@@ -483,7 +499,6 @@ public class InstanceView {
 		}else if (tobe.equals("Completed")){
 			insertBV(businessValue);
 		}
-		
 	}
 	
 	private void insertBV(int businessValue) throws Exception{
