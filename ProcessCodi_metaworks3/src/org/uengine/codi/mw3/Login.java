@@ -308,9 +308,14 @@ public class Login implements ContextAware {
 			throw new MetaworksException("$YouMustCheckYourEmail");
 		}
 		
-		emp.setEmpName(name);
+		//defaultUX, defaultMob 값 설정
+		String defaultUX = "wave";
+		String defaultMob = "auto";
+				
+		emp.setEmpName(name);	
 		emp.setPassword(getPassword());
-		
+		emp.setPreferUX(defaultUX);
+		emp.setPreferMob(defaultMob);
 		return emp;
 	}
 		
