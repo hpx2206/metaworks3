@@ -164,19 +164,21 @@ public class CollectionConverter extends AbstractConverter
 		
 					    Map<String, String> tokens = extractInboundTokens(paramType, temp);
 					    
-					    String refName = tokens.get("__className");
-					    
-					    if(refName!=null){
-						    refName = refName.split(":")[1];
+					    if(tokens != null){
+						    String refName = tokens.get("__className");
 						    
-						   	String className = data.getContext().getInboundVariable(refName).getFormField().getString();
-						  
-						   	try {
-						   		subtype = Thread.currentThread().getContextClassLoader().loadClass(className);
-							} catch (ClassNotFoundException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
+						    if(refName!=null){
+							    refName = refName.split(":")[1];
+							    
+							   	String className = data.getContext().getInboundVariable(refName).getFormField().getString();
+							  
+							   	try {
+							   		subtype = Thread.currentThread().getContextClassLoader().loadClass(className);
+								} catch (ClassNotFoundException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+						    }
 					    }
 				 	}
 		 		}
@@ -288,7 +290,7 @@ public class CollectionConverter extends AbstractConverter
             int colonpos = token.indexOf(ProtocolConstants.INBOUND_MAP_ENTRY);
             if (colonpos == -1)
             {
-                throw new ConversionException(paramType, "Missing " + ProtocolConstants.INBOUND_MAP_ENTRY + " in object description: " + token);
+                return null;
             }
 
             String key = token.substring(0, colonpos).trim();
