@@ -67,25 +67,6 @@ public class TopicMapping extends Database<ITopicMapping> implements ITopicMappi
 		public void setAssigntype(int assigntype) {
 			this.assigntype = assigntype;
 		}
-
-	String vmIp;
-		@NonLoadable
-		public String getVmIp() {
-			return vmIp;
-		}
-		public void setVmIp(String vmIp) {
-			this.vmIp = vmIp;
-		}
-		
-	String vmDB;
-		@NonLoadable
-		public String getVmDB() {
-			return vmDB;
-		}
-		public void setVmDB(String vmDB) {
-			this.vmDB = vmDB;
-		}
-
 	
 	public ITopicMapping saveMe() throws Exception {
 
@@ -103,25 +84,16 @@ public class TopicMapping extends Database<ITopicMapping> implements ITopicMappi
 		
 		WfNode node = new WfNode();
 		node.setId(this.getTopicId());
-		Long instId = node.databaseMe().getLinkedInstId();
-
+		node.copyFrom(node.databaseMe());
 		
-		final String DBTYPE_CUBRID = "cubrid";
-		final String DBTYPE_ORACLE = "oracle";
-		final String DBTYPE_MYSQL = "mysql";
-		final String DBTYPE_MSSQL = "mssql";
-		final String DBTYPE_MONGODB = "mongo";
-		
-
-		if(processManager != null && processManager.getProcessVariable(instId.toString(), "", "vm_ip") != null){
-			String vmIp = (String)((Serializable)processManager.getProcessVariable(instId.toString(), "", "vm_ip"));
-			String vmDb = (String)((Serializable)processManager.getProcessVariable(instId.toString(), "", "vm_db"));
-			
-			this.setVmIp(vmIp);
-			this.setVmDB(vmDb);
-			
-			createDatabaseToTadpole();
-			
+		if(node.getType().equals("project") && node.getLinkedInstId() != null){
+			if(processManager != null && processManager.getProcessVariable(node.getLinkedInstId().toString(), "", "vm_ip") != null){
+				String vmIp = (String)((Serializable)processManager.getProcessVariable(node.getLinkedInstId().toString(), "", "vm_ip"));
+				String vmDb = (String)((Serializable)processManager.getProcessVariable(node.getLinkedInstId().toString(), "", "vm_db"));
+				
+				createDatabaseToTadpole(vmIp, vmDb);
+				
+			}
 		}
 		
 		return createDatabaseMe();
@@ -176,15 +148,15 @@ public class TopicMapping extends Database<ITopicMapping> implements ITopicMappi
 		deleteDatabaseMe();
 	}
 	
-	protected void createDatabaseToTadpole() {
+	protected void createDatabaseToTadpole(String vmDB, String vmIP) {
 		
 		String ip = GlobalContext.getPropertyString("pole.call.ip");
 		String port = GlobalContext.getPropertyString("pole.call.port");
 		String db  = GlobalContext.getPropertyString("pole.call.db");
 		
-		String parameter = "?db=" + this.getVmDB()
+		String parameter = "?db=" + vmDB
 							+ "&email=" + this.getUserId()
-							+ "&url=" + this.getVmIp()
+							+ "&url=" + vmIP
 							+ "&name=" + "aaaa";
 		
 		String sUrl = "http://" + ip + ":" + port + db + "/createDatabase" + parameter;
