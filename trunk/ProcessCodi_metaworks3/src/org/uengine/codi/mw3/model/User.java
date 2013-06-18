@@ -455,7 +455,7 @@ public class User extends Database<IUser> implements IUser {
 	//			Popup popup = new Popup("프로세스 참여자는 삭제할 수 없습니다.");
 	//			System.out.println("프로세스 참여자는 삭제할 수 없습니다.");
 	//			return new Object[] {popup};
-				throw new Exception("Author can not be deleted from follower list.");
+				throw new Exception("Author can not be removed from follower list.");
 			}
 		}
 	}
