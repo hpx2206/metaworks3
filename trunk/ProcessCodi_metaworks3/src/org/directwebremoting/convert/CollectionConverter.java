@@ -157,7 +157,7 @@ public class CollectionConverter extends AbstractConverter
                 InboundVariable nested = new InboundVariable(data.getContext(), null, splitType, splitValue);
                 nested.dereference();
 
-		 		if(!"string".equals(nested.getType()) && !"number".equals(data.getType())){
+		 		if(!"string".equals(nested.getType()) && !"number".equals(nested.getType())){
 	                String temp = nested.getValue();			 	
 				 	if(temp.length() >= 2 && !("null".equals(temp))){
 				 		temp = temp.substring(1, temp.length() - 1);
@@ -290,7 +290,7 @@ public class CollectionConverter extends AbstractConverter
             int colonpos = token.indexOf(ProtocolConstants.INBOUND_MAP_ENTRY);
             if (colonpos == -1)
             {
-                return null;
+            	throw new ConversionException(paramType, "Missing " + ProtocolConstants.INBOUND_MAP_ENTRY + " in object description: " + token);
             }
 
             String key = token.substring(0, colonpos).trim();
