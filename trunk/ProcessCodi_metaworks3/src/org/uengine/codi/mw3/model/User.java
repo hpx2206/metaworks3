@@ -393,7 +393,7 @@ public class User extends Database<IUser> implements IUser {
 		
 		return null;
 	}
-	@ServiceMethod
+	@ServiceMethod(target=TARGET_APPEND)
 	public Object[] removeFollower() throws Exception {
 		if("topicFollowers".equals(this.getMetaworksContext().getWhen())){
 			TopicMapping tm = new TopicMapping();
