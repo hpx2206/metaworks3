@@ -1,10 +1,10 @@
 package org.uengine.codi.mw3.knowledge;
 
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
-import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Available;
@@ -14,15 +14,18 @@ import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;
 import org.metaworks.annotation.Range;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.widget.IFrame;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.ITool;
+import org.uengine.codi.deltacloud.DeltaCloud;
+import org.uengine.codi.deltacloud.Image;
 import org.uengine.codi.hudson.HudsonJobApi;
 import org.uengine.codi.hudson.HudsonJobDDTO;
 import org.uengine.codi.mw3.model.IInstance;
 import org.uengine.codi.mw3.model.Instance;
+import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.model.RoleMappingPanel;
 import org.uengine.codi.mw3.model.Session;
-import org.uengine.codi.mw3.model.User;
 import org.uengine.codi.mw3.project.VMHardwareProfileCombo;
 import org.uengine.codi.mw3.project.VMImageCombo;
 import org.uengine.codi.mw3.project.VMRealmCombo;
@@ -40,7 +43,7 @@ import org.uengine.processmanager.ProcessManagerRemote;
 			"{how: 'inList', face: 'dwr/metaworks/genericfaces/GridFace_Row.ejs'}",
 		},
 	  options={"addBtnName", "removeBtnName", "hideEditBtn", "showExtraBtn", "callbackAddBtn", "callbackConfirmBtn", "popupWidth", "gridButtons"},
-	  values={"$project.server.add", "$project.server.remove", "true", "true", "add", "confirm", "500", "refresh"})
+	  values={"$project.server.add", "$project.server.remove", "true", "true", "add", "confirm", "500", "refresh,statistics"})
 public class ProjectServer implements ITool, ContextAware {
 
 	public final static String SERVER_STATUS_REQUEST 		= "Request";
@@ -123,6 +126,7 @@ public class ProjectServer implements ITool, ContextAware {
 	String group;
 		@Face(displayName="$project.server.group")
 		@Range(options={"개발", "운영"}, values={"dev", "prod"})
+		@Available(when={MetaworksContext.WHEN_EDIT, MetaworksContext.WHEN_NEW})
 		public String getGroup() {
 			return group;
 		}
@@ -200,12 +204,10 @@ public class ProjectServer implements ITool, ContextAware {
 		this.setMetaworksContext(new MetaworksContext());
 		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 		
-		/*
-		 * TODO: KIAT 에서 활성화
+		// TODO: KIAT 에서 활성화
 		this.setVmRealmCombo(new VMRealmCombo(null));
 		this.setVmImageCombo(new VMImageCombo(this.getVmRealmCombo().getSelected(), null));
 		this.setVmHardwareProfileCombo(new VMHardwareProfileCombo(null));
-		*/
 	}
 		
 	@Hidden
@@ -214,8 +216,7 @@ public class ProjectServer implements ITool, ContextAware {
 		
 		String type = null;
 		
-		/*
-		 * TODO: KIAT 에서 활성화
+		//TODO: KIAT 에서 활성화
 		try {
 			DeltaCloud deltaCloud = new DeltaCloud();
 			
@@ -237,14 +238,7 @@ public class ProjectServer implements ITool, ContextAware {
 		
 		this.setVmRealmId(this.getVmRealmCombo().getSelected());
 		this.setVmImageId(this.getVmImageCombo().getSelected());
-		this.setVmHardwareProfileId(this.getVmHardwareProfileId());
-		*/
-		
-		// TODO: 임시 테스트 코드 차후 제거
-		session = new Session();
-		session.setUser(new User());
-		session.getUser().setUserId("test");
-		session.getUser().setName("test");
+		this.setVmHardwareProfileId(this.getVmHardwareProfileCombo().getSelected());
 		
 		this.setStatus(SERVER_STATUS_REQUEST);
 		this.setIp("Not Allocated");
@@ -309,36 +303,46 @@ public class ProjectServer implements ITool, ContextAware {
 	@Face(displayName="$project.server.start")
 	@ServiceMethod(callByContent=true)
 	public void start() throws Exception {
-		//this.setStatus(SERVER_STATUS_STARTING);
-		this.setStatus(SERVER_STATUS_STARTED);
+		this.setStatus(SERVER_STATUS_RUNNING);
 		this.getMetaworksContext().setWhen(this.getStatus());
 		
 		String targetUserId = GlobalContext.getPropertyString("vm.target.user");
 		String targetPassword= GlobalContext.getPropertyString("vm.target.password");
 
-		String scriptFilePermission = GlobalContext.getPropertyString("vm.permission");
-		String scriptTargetStartUp = GlobalContext.getPropertyString("vm.target.startup");
-
+		String scriptStart = "service jboss -b " + this.getIp() + " > /dev/null 2>&1 &";
+		
 		JschCommand jschServerBehaviour = new JschCommand();
 		jschServerBehaviour.sessionLogin(this.getIp(), targetUserId, targetPassword);
 		
-		jschServerBehaviour.runCommand(scriptFilePermission);
-		jschServerBehaviour.runCommand(scriptTargetStartUp + " " + projectInfo.getProjectName());
+		jschServerBehaviour.runCommand(scriptStart);
 		
 		if(jschServerBehaviour.getJschSession() != null)
 			jschServerBehaviour.getJschSession().disconnect();
 	}
 	
-	@Available(when={SERVER_STATUS_STARTED})
+	@Available(when={SERVER_STATUS_RUNNING})
 	@Face(displayName="$project.server.stop")
 	@ServiceMethod(callByContent=true)
-	public void stop(){
-		//this.setStatus(SERVER_STATUS_STOPPING);
+	public void stop() throws Exception {
 		this.setStatus(SERVER_STATUS_STOPPED);
-		this.getMetaworksContext().setWhen(this.getStatus());		
+		this.getMetaworksContext().setWhen(this.getStatus());
+		
+		String targetUserId = GlobalContext.getPropertyString("vm.target.user");
+		String targetPassword= GlobalContext.getPropertyString("vm.target.password");
+		
+		String scriptStop = "service jboss-cli --connect command=:shutdown";
+		
+		JschCommand jschServerBehaviour = new JschCommand();
+		jschServerBehaviour.sessionLogin(this.getIp(), targetUserId, targetPassword);
+		
+		jschServerBehaviour.runCommand(scriptStop);
+		
+		if(jschServerBehaviour.getJschSession() != null)
+			jschServerBehaviour.getJschSession().disconnect();
+		
 	}
 
-	@Available(when={SERVER_STATUS_STOPPED, SERVER_STATUS_STARTING})
+	@Available(when={SERVER_STATUS_STOPPED})
 	@Face(displayName="$project.server.deploy")
 	@ServiceMethod(callByContent=true)
 	public void deploy() throws Exception {
@@ -352,6 +356,8 @@ public class ProjectServer implements ITool, ContextAware {
 		JschCommand jschServerBehaviour = new JschCommand();
 		jschServerBehaviour.sessionLogin(host, userId, passwd);
 		
+		// create Hudson job
+		String scriptCreateJob = GlobalContext.getPropertyString("vm.hudson.createJob"); 
 		String scriptHudsonSetting = GlobalContext.getPropertyString("vm.hudson.setting");
 		String scriptHudsonBuild = GlobalContext.getPropertyString("vm.hudson.build");
 		
@@ -366,7 +372,8 @@ public class ProjectServer implements ITool, ContextAware {
 		long sleepTime = 5000;
 		long tryTime = 0;
 		
-		jschServerBehaviour.runCommand(scriptHudsonSetting + " " +paramProjectName + " " + paramIP);
+		jschServerBehaviour.runCommand(scriptCreateJob + " " + paramProjectName);
+		jschServerBehaviour.runCommand(scriptHudsonSetting + " " +paramProjectName + " " + paramIP + " " + "\"\\/ssw\\/data\\/jboss\\/standalone\\/deployments\"");
 		
 		HudsonJobApi hudsonJobApi = new HudsonJobApi();
 
@@ -374,7 +381,6 @@ public class ProjectServer implements ITool, ContextAware {
 			HudsonJobDDTO hudsonJobDDTO = hudsonJobApi.hudsonJobApiXmlParser(hudsonURL, projectInfo.getProjectName());
 			
 			nextBuilderNumber = hudsonJobDDTO.getNextBuilderNumber();
-			System.out.println("nextBuilderNumber :" + nextBuilderNumber);
 			try {
 				tryTime += sleepTime;
 				Thread.sleep(sleepTime);
@@ -403,15 +409,16 @@ public class ProjectServer implements ITool, ContextAware {
 			} catch (Exception e) {
 			}
 		}
-
+		
 		if(jschServerBehaviour.getJschSession() != null)
 			jschServerBehaviour.getJschSession().disconnect();
 
 	}
 	
-	@Available(when={SERVER_STATUS_STARTED, SERVER_STATUS_STOPPED, SERVER_STATUS_STARTING, SERVER_STATUS_STOPPING, SERVER_STATUS_DEPLOYING, SERVER_STATUS_RUNNING})
+	//@Available(when={SERVER_STATUS_STARTED, SERVER_STATUS_STOPPED, SERVER_STATUS_STARTING, SERVER_STATUS_STOPPING, SERVER_STATUS_DEPLOYING, SERVER_STATUS_RUNNING})
 	@Face(displayName="$project.server.log")
 	@ServiceMethod(callByContent=true)
+	@Hidden
 	public void log(){
 		
 	}
@@ -427,6 +434,41 @@ public class ProjectServer implements ITool, ContextAware {
 		return projectServers;
 	}
 	
+	public void status() throws Exception {
+		if(!"Not Allocated".equals(this.getIp())){
+			String targetUserId = GlobalContext.getPropertyString("vm.target.user");
+			String targetPassword= GlobalContext.getPropertyString("vm.target.password");
+			
+			String scriptStatus = "netstat -an | grep 8080|grep -v grep |grep LISTEN|wc -l";
+			String scriptStarting = "ps -ef|grep service|grep jboss|grep -v grep|wc -l";
+					
+			JschCommand jschServerBehaviour = new JschCommand();
+			jschServerBehaviour.sessionLogin(this.getIp(), targetUserId, targetPassword);
+			
+			String starting = jschServerBehaviour.runCommand(scriptStarting);
+			String status = jschServerBehaviour.runCommand(scriptStatus);
+			
+			if("1".equals(starting)){
+				if("1".equals(status)){
+					this.setStatus(SERVER_STATUS_RUNNING);					
+				}else{
+					this.setStatus(SERVER_STATUS_STARTING);
+				}
+			}else{
+				this.setStatus(SERVER_STATUS_STOPPED);
+			}
+			
+			this.getMetaworksContext().setWhen(this.getStatus());
+			
+			if(jschServerBehaviour.getJschSession() != null)
+				jschServerBehaviour.getJschSession().disconnect();
+		}
+	}
+	
+	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
+	public Object statistics(){
+		return new Popup(new IFrame("http://192.168.212.77:10086?admin?status"));
+	}
 	
 	@Override
 	public void onLoad() throws Exception {

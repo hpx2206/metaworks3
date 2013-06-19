@@ -16,8 +16,10 @@ import org.metaworks.dao.Database;
 import org.metaworks.dao.KeyGeneratorDAO;
 import org.metaworks.dao.TransactionContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.codi.mw3.model.Employee;
 import org.uengine.codi.mw3.model.IDept;
 import org.uengine.codi.mw3.model.IUser;
+import org.uengine.codi.vm.JschCommand;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.processmanager.ProcessManagerRemote;
 
@@ -86,6 +88,25 @@ public class TopicMapping extends Database<ITopicMapping> implements ITopicMappi
 		node.setId(this.getTopicId());
 		node.copyFrom(node.databaseMe());
 		
+		if(node.getType().equals("project")){
+			String host = GlobalContext.getPropertyString("vm.manager.ip");
+			String userId = GlobalContext.getPropertyString("vm.manager.user");
+			String passwd = GlobalContext.getPropertyString("vm.manager.password");
+
+			JschCommand jschServerBehaviour = new JschCommand();
+			jschServerBehaviour.sessionLogin(host, userId, passwd);
+			
+			Employee employee = new Employee();
+			employee.setEmpCode(this.getUserId());
+			employee.copyFrom(employee.findMe());			
+			
+			//SVN 유저 추가
+			String command = GlobalContext.getPropertyString("vm.svn.createUser") + " \"" +  node.getName() + "\" \"" + employee.getEmpCode() + "\" \"" + employee.getPassword() + "\"";
+			jschServerBehaviour.runCommand(command);
+		}
+				
+		/*
+		 * 
 		if(node.getType().equals("project") && node.getLinkedInstId() != null){
 			if(processManager != null && processManager.getProcessVariable(node.getLinkedInstId().toString(), "", "vm_ip") != null){
 				String vmIp = (String)((Serializable)processManager.getProcessVariable(node.getLinkedInstId().toString(), "", "vm_ip"));
@@ -95,6 +116,7 @@ public class TopicMapping extends Database<ITopicMapping> implements ITopicMappi
 				
 			}
 		}
+		*/
 		
 		return createDatabaseMe();
 	}
