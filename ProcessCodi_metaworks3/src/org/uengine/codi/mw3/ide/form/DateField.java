@@ -3,10 +3,16 @@ package org.uengine.codi.mw3.ide.form;
 import org.metaworks.WebFieldDescriptor;
 import org.metaworks.annotation.Face;
 
+@Face(options={"fieldOrder"}, values={"displayName,id,format,hide"},
+ejsPath="dwr/metaworks/org/uengine/codi/mw3/ide/form/CommonFormField.ejs",
+ejsPathMappingByContext= {
+		"{where: 'properties', face: 'dwr/metaworks/org/uengine/codi/mw3/ide/form/FormFieldModify.ejs'}",
+		"{where: 'menu', face: 'dwr/metaworks/org/uengine/codi/mw3/ide/form/Menu.ejs'}"
+})
 public class DateField extends CommonFormField {
 	
 	String format;
-		@Face(ejsPath="dwr/metaworks/genericfaces/SelectBox.ejs", options={"YYYY-MM-DD", "DD-MM-YYYY"}, values={"yy-mm-dd", "dd-mm-yy"})
+		@Face(displayName="$form.field.date.format", ejsPath="dwr/metaworks/genericfaces/SelectBox.ejs", options={"YYYY-MM-DD", "DD-MM-YYYY"}, values={"yy-mm-dd", "dd-mm-yy"})
 		public String getFormat() {
 			return format;
 		}
@@ -15,8 +21,7 @@ public class DateField extends CommonFormField {
 		}
 
 	public DateField() {		
-		this.setName("Date");
-		this.setDisplayName("Date");
+		this.setName("DateField");
 		this.setFormat("yy-mm-dd");
 		this.setFieldType("java.util.Date");
 		this.setDefine(true);

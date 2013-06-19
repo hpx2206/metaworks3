@@ -1,5 +1,6 @@
 <%
-	var ejsPath = 'dwr/metaworks/' + objectTypeName.split('.').join('/') + 'Preview.ejs';
+	var ejsPath = 'dwr/metaworks/' + objectTypeName.split('.').join('/') + 'Preview.ejs';	
+	var displayName = (value.displayName == null || value.displayName =='') ? '$form.field.' + objectMetadata.displayName : value.displayName;	
 %>
 
 <div class="hover_div" style="display:none">
@@ -9,7 +10,7 @@
 	</span>
 </div>
 
-<label class="fb_desc" id=""><%=fields.displayName.here()%></label>
+<label class="fb_desc" id=""><%=mw3.localize(displayName)%></label>
 
 <div>
 	<%=include(ejsPath)%>

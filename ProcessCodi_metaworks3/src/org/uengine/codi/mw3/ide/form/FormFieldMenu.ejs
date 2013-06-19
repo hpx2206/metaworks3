@@ -8,7 +8,7 @@
 %>
 	<%=mw3.locateObject(value.formFields[i], value.formFields[i].__className, null, {'htmlTag' : 'li'})%>
 <%
-				mw3.addBeanProperty(objectId, 'formFields.[' + i + ']');				
+				mw3.addBeanProperty(objectId, '.formFields[' + i + ']');				
 			}
 			
 			mw3.onLoadFaceHelperScript();
