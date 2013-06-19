@@ -29,5 +29,11 @@ var org_uengine_codi_mw3_selfservice_SelfServiceControlPanel = function(objectId
 org_uengine_codi_mw3_selfservice_SelfServiceControlPanel.prototype = {
 		resize : function(){
 			$('#sp_accordion').accordion('resize');
+		},
+		showStatus : function(status){
+		},
+		startLoading : function(status){
+		},
+		endLoading : function(status){
 		}
 };
