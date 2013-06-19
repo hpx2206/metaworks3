@@ -28,11 +28,14 @@ import org.metaworks.annotation.TypeSelector;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.ide.ResourceNode;
+import org.uengine.codi.mw3.ide.editor.process.ProcessEditor;
 import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.model.ProcessMap;
 import org.uengine.codi.mw3.model.ProcessMapList;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerWebContentPanel;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 import com.thoughtworks.xstream.XStream;
@@ -298,6 +301,25 @@ public class MetadataProperty implements ContextAware, Cloneable {
 
 	@Available(when = MetaworksContext.WHEN_VIEW)
 	@ServiceMethod(callByContent = true)
+	public Object modify() throws Exception {
+		String sourceCodeBase = CodiClassLoader.mySourceCodeBase("jwtest01");
+		
+		ResourceNode node = new ResourceNode();
+		node.setId(this.getValue());
+		node.setName(this.getValue());
+		node.setPath(sourceCodeBase + this.getValue());
+		
+		ProcessEditor processEditor = new ProcessEditor(node);
+		processEditor.load();
+		
+		return processEditor;
+	}
+	
+	
+	
+	
+	@Available(when = MetaworksContext.WHEN_VIEW)
+	@ServiceMethod(callByContent = true)
 	public Object edit() throws Exception {
 
 		Class dstClass = null;
@@ -333,9 +355,11 @@ public class MetadataProperty implements ContextAware, Cloneable {
 				dstInstance.setFieldValue(fd.getName(),
 						srcInstance.getFieldValue(fd.getName()));
 		}
+		
 		if( this.getMetaworksContext() == null ){
 			this.setMetaworksContext( new MetaworksContext() );
 		}
+		
 		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		this.setName(this.getName());
 		this.getFile().getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
