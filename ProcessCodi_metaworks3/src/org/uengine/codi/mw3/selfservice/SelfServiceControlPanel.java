@@ -164,7 +164,17 @@ public class SelfServiceControlPanel {
 		String metadataFilePath = sourceCodeBase + File.separatorChar + metadataFileName;
 		
 		MetadataXML metadataXML = new MetadataXML();
-		metadataXML = metadataXML.loadWithPath(metadataFilePath);
+		
+		try {
+			metadataXML = metadataXML.loadWithPath(metadataFilePath);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		if(metadataXML == null)
+			metadataXML = new MetadataXML();
+		
 		metadataXML.setFilePath(sourceCodeBase);
 		
 		this.metadataProperties = new ArrayList<MetadataProperty>();
