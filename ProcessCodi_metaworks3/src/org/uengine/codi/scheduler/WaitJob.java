@@ -15,6 +15,7 @@ import org.quartz.JobExecutionContext;
 import org.quartz.StatefulJob;
 import org.uengine.codi.CodiProcessManagerBean;
 import org.uengine.codi.MetaworksUEngineSpringConnectionAdapter;
+import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.kernel.Activity;
 import org.uengine.kernel.ProcessInstance;
 import org.uengine.kernel.WaitActivity;
@@ -30,6 +31,8 @@ public class WaitJob implements StatefulJob {
 		TransactionContext tx = null;
 		
 		try{
+			Thread.currentThread().setContextClassLoader(CodiClassLoader.codiClassLoader);
+			
 			connectionFactory = (SpringConnectionFactory) context.getJobDetail().getJobDataMap().get("connectionFactory");
 			
 			tx = new TransactionContext(); //once a TransactionContext is created, it would be cached by ThreadLocal.set, so, we need to remove this after the request processing.
@@ -93,7 +96,7 @@ public class WaitJob implements StatefulJob {
 							
 							isError = false;
 							
-							if(wa.getInstanceStop().equals("STOP_INSTANCE")){
+							if(wa.getInstanceStop() != null && wa.getInstanceStop().equals("STOP_INSTANCE")){
 								wa.stopInstance(instance);
 							}
 							
