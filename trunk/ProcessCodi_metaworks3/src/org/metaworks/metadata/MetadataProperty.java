@@ -73,156 +73,149 @@ public class MetadataProperty implements ContextAware, Cloneable {
 
 	@XStreamOmitField
 	ArrayList<MetadataProperty> child;
-
-	@Children
-	public ArrayList<MetadataProperty> getChild() {
-		return child;
-	}
-
-	public void setChild(ArrayList<MetadataProperty> child) {
-		this.child = child;
-	}
+		@Children
+		public ArrayList<MetadataProperty> getChild() {
+			return child;
+		}
+		public void setChild(ArrayList<MetadataProperty> child) {
+			this.child = child;
+		}
 
 	@XStreamAsAttribute
 	String type;
-
-	@Range(options = { "File", "Image", "Process", "String", "Form" }, values = {
-			"file", "image", "process", "string", "form" })
-	@TypeSelector(values = { "file", "image", "process", "string", "form" }, classes = {
-			FileProperty.class, ImageProperty.class, ProcessProperty.class,
-			StringProperty.class, FormProperty.class })
-	@Icon
-	@NonEditable(when = { MetaworksContext.WHEN_EDIT })
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
+		@Range(options = { "File", "Image", "Process", "String", "Form" }, values = {
+				"file", "image", "process", "string", "form" })
+		@TypeSelector(values = { "file", "image", "process", "string", "form" }, classes = {
+				FileProperty.class, ImageProperty.class, ProcessProperty.class,
+				StringProperty.class, FormProperty.class })
+		@Icon
+		@NonEditable(when = { MetaworksContext.WHEN_EDIT })
+		public String getType() {
+			return type;
+		}
+		public void setType(String type) {
+			this.type = type;
+		}
 
 	@XStreamAsAttribute
 	boolean isKeyEditable;
-
-	public boolean isKeyEditable() {
-		return isKeyEditable;
-	}
-
-	public void setKeyEditable(boolean isKeyEditable) {
-		this.isKeyEditable = isKeyEditable;
-	}
+		public boolean isKeyEditable() {
+			return isKeyEditable;
+		}
+		public void setKeyEditable(boolean isKeyEditable) {
+			this.isKeyEditable = isKeyEditable;
+		}
 
 	@XStreamAsAttribute
 	boolean isRemote;
-
-	@Hidden
-	public boolean isRemote() {
-		return isRemote;
-	}
-
-	public void setRemote(boolean isRemote) {
-		this.isRemote = isRemote;
-	}
+		@Hidden
+		public boolean isRemote() {
+			return isRemote;
+		}
+		public void setRemote(boolean isRemote) {
+			this.isRemote = isRemote;
+		}
 
 	String id;
-
-	@Id
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
+		@Id
+		public String getId() {
+			return id;
+		}
+		public void setId(String id) {
+			this.id = id;
+		}
 
 	String name;
-
-	@Name
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
+		@Name
+		public String getName() {
+			return name;
+		}
+		public void setName(String name) {
+			this.name = name;
+		}
 
 	String value;
-
-	public String getValue() {
-		return value;
-	}
-
-	public void setValue(String value) {
-		this.value = value;
-	}
+		public String getValue() {
+			return value;
+		}
+		public void setValue(String value) {
+			this.value = value;
+		}
 
 	String description;
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
+		public String getDescription() {
+			return description;
+		}
+		public void setDescription(String description) {
+			this.description = description;
+		}
 
 	@XStreamOmitField
 	MetadataFile file;
-
-	public MetadataFile getFile() {
-		return file;
-	}
-
-	public void setFile(MetadataFile file) {
-		this.file = file;
-	}
+		public MetadataFile getFile() {
+			return file;
+		}
+		public void setFile(MetadataFile file) {
+			this.file = file;
+		}
 
 	@XStreamOmitField
 	MetaworksContext metaworksContext;
-
-	public MetaworksContext getMetaworksContext() {
-		return metaworksContext;
-	}
-
-	public void setMetaworksContext(MetaworksContext metaworksContext) {
-		this.metaworksContext = metaworksContext;
-	}
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
+		}
 
 	@XStreamOmitField
 	int index;
-
-	@Hidden
-	public int getIndex() {
-		return index;
-	}
-
-	public void setIndex(int index) {
-		this.index = index;
-	}
+		@Hidden
+		public int getIndex() {
+			return index;
+		}
+		public void setIndex(int index) {
+			this.index = index;
+		}
 
 	@XStreamOmitField
 	boolean change;
-
-	@Hidden
-	public boolean isChange() {
-		return change;
-	}
-
-	public void setChange(boolean change) {
-		this.change = change;
-	}
+		@Hidden
+		public boolean isChange() {
+			return change;
+		}
+		public void setChange(boolean change) {
+			this.change = change;
+		}
 
 	@XStreamOmitField
 	ResourceNode resourceNode;
+		public ResourceNode getResourceNode() {
+			return resourceNode;
+		}
+		public void setResourceNode(ResourceNode resourceNode) {
+			this.resourceNode = resourceNode;
+		}
 
-	public ResourceNode getResourceNode() {
-		return resourceNode;
-	}
+	@XStreamOmitField
+	boolean checkFile;
+		public boolean isCheckFile() {
+			return checkFile;
+		}
+		public void setCheckFile(boolean checkFile) {
+			this.checkFile = checkFile;
+		}
+	
+	@XStreamOmitField
+	boolean checkResource;
+		public boolean isCheckResource() {
+			return checkResource;
+		}
+		public void setCheckResource(boolean checkResource) {
+			this.checkResource = checkResource;
+		}
 
-	public void setResourceNode(ResourceNode resourceNode) {
-		this.resourceNode = resourceNode;
-	}
-
+		
 	@Hidden
 	@ServiceMethod(callByContent = true, target = ServiceMethodContext.TARGET_NONE)
 	public String toXmlXStream() {
@@ -334,12 +327,10 @@ public class MetadataProperty implements ContextAware, Cloneable {
 
 		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		this.setName(this.getName());
-		this.getFile().getMetaworksContext()
-				.setWhen(MetaworksContext.WHEN_EDIT);
+		this.getFile().getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		this.setFile(this.getFile());
 
-		MetadataProperty editProperty = (MetadataProperty) dstInstance
-				.getObject();
+		MetadataProperty editProperty = (MetadataProperty) dstInstance.getObject();
 
 		int index = metadataXML.properties.indexOf(this);
 
@@ -435,18 +426,15 @@ public class MetadataProperty implements ContextAware, Cloneable {
 
 		Class dstClass = null;
 
-		WebObjectType srcWOT = MetaworksRemoteService.getInstance()
-				.getMetaworksType(this.getClass().getName());
-		ObjectInstance srcInstance = (ObjectInstance) srcWOT.metaworks2Type()
-				.createInstance();
+		WebObjectType srcWOT = MetaworksRemoteService.getInstance().getMetaworksType(this.getClass().getName());
+		ObjectInstance srcInstance = (ObjectInstance) srcWOT.metaworks2Type().createInstance();
 		srcInstance.setObject(this);
 
 		for (FieldDescriptor fd : srcWOT.metaworks2Type().getFieldDescriptors()) {
 			Map<String, String> typeSelector = (Map<String, String>) fd.getAttribute("typeSelector");
 			if (typeSelector != null) {
 
-				String typeName = (String) srcInstance.getFieldValue(fd
-						.getName());
+				String typeName = (String) srcInstance.getFieldValue(fd.getName());
 				String selectedTypeClassName = typeSelector.get(typeName);
 
 				if (selectedTypeClassName == null)
@@ -462,10 +450,8 @@ public class MetadataProperty implements ContextAware, Cloneable {
 		if (dstClass == null)
 			throw new Exception("type selector exception");
 
-		WebObjectType dstWOT = MetaworksRemoteService.getInstance()
-				.getMetaworksType(dstClass.getName());
-		ObjectInstance dstInstance = (ObjectInstance) dstWOT.metaworks2Type()
-				.createInstance();
+		WebObjectType dstWOT = MetaworksRemoteService.getInstance().getMetaworksType(dstClass.getName());
+		ObjectInstance dstInstance = (ObjectInstance) dstWOT.metaworks2Type().createInstance();
 
 		for (FieldDescriptor fd : dstWOT.metaworks2Type().getFieldDescriptors()) {
 			if (fd.getAttribute("ormapping") == null)
@@ -473,11 +459,9 @@ public class MetadataProperty implements ContextAware, Cloneable {
 						srcInstance.getFieldValue(fd.getName()));
 		}
 
-		MetadataProperty metadataProperty = (MetadataProperty) dstInstance
-				.getObject();
+		MetadataProperty metadataProperty = (MetadataProperty) dstInstance.getObject();
 		metadataProperty.setMetaworksContext(new MetaworksContext());
-		metadataProperty.getMetaworksContext().setWhen(
-				MetaworksContext.WHEN_NEW);
+		metadataProperty.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 
 		if (!STRING_PROP.equals(this.getType())) {
 
@@ -635,18 +619,20 @@ public class MetadataProperty implements ContextAware, Cloneable {
 
 	@Hidden
 	@ServiceMethod(callByContent = true, target=ServiceMethodContext.TARGET_AUTO)
-	public MetadataProperty showPropertyDetail() {
+	public MetadataProperty showPropertyDetail() throws Exception {
 		
 		MetadataProperty detailProperty = new MetadataProperty();
-		
-		detailProperty.setId("metaDetailView");
-		detailProperty.getMetaworksContext().setWhen("show_detail");
-		detailProperty.getMetaworksContext().setWhere("ssp");
 		
 		detailProperty.setName(this.getName());
 		detailProperty.setType(this.getType());
 		detailProperty.setDescription(this.getDescription());
 		detailProperty.setValue(this.getValue());
+		
+		detailProperty = (MetadataProperty) detailProperty.selectType();
+		
+		detailProperty.setId("metaDetailView");
+		detailProperty.getMetaworksContext().setWhen("show_detail");
+		detailProperty.getMetaworksContext().setWhere("ssp");
 		
 		if(MetadataProperty.FILE_PROP.equals(this.getType()) || MetadataProperty.IMAGE_PROP.equals(this.getType())){
 			MetadataFile file = new MetadataFile();

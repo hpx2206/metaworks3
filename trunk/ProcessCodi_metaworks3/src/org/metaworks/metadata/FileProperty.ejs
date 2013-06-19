@@ -1,13 +1,38 @@
 
 <%
+
 if(mw3.where == 'ssp'){
-
-%>
-
-<ul>
-	<li id="sp_accordion_list_<%=objectId%>"><%=value.name%></li>
-</ul>
-
-<%
+	if(mw3.when == 'show_detail' ) {
+	%>
+		<span class="form_tit"><br /><br /><%=value.description%></span>
+		<div class="sp_form_block">
+			<span><%=fields.file.here()%></span>
+		</div>
+		
+		<div class="sp_form_block">
+			<div class="sn_view_box"><div class="sn_view_arrow"><img src="images/marketPlace/sp_box_arrow.gif"  /></div><%=fields.file.here({when: (value.file.mimeType.indexOf('image')==0)?'image':'view' })%></div>
+			<div id="sp_editBtn_<%=objectId%>" class="sp_position_right"><a id="wBtn" onClick="<%=methods.edit.caller()%>"><span><%=mw3.localize('$Edit')%></span></a></div>
+		</div>
+	<%
+	}else if(mw3.when == 'edit') {
+	%>
+		<span class="form_tit"><br /><br /><%=value.description%></span>
+		<div class="sp_form_block">
+			<span id="sp_checkFile_<%=objectId%>" style="width=30px;"><%=fields.checkFile.here()%></span><span><%=fields.file.here({when:'edit'})%></span>
+			<span id="sp_checkResource_<%=objectId%>" style="width=30px;"><%=fields.checkResource.here()%></span><span><%=fields.resourceNode.here()%></span>
+		</div>
+		<div class="sp_form_block">
+			<div id="sp_saveBtn_<%=objectId%>" class="sp_position_right"><a id="wBtn" onClick="<%=methods.save.caller()%>"><span><%=mw3.localize('$Save')%></span></a></div>
+		</div>
+		
+	<%
+	}else {
+	%>
+		<ul>
+			<li id="sp_accordion_list_<%=objectId%>"><%=value.description%></li>
+		</ul>
+	
+	<%
+	}
 }
 %>

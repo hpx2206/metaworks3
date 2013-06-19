@@ -43,8 +43,9 @@ public class StringProperty extends MetadataProperty{
 	
 	@Override
 	public Object edit() throws Exception {
+		this.getMetaworksContext().setWhen("edit");
 		// TODO Auto-generated method stub
-		return super.edit();
+		return this;
 	}
 	
 	@Override

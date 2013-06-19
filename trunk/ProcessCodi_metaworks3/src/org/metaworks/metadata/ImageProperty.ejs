@@ -2,12 +2,34 @@
 if(mw3.where == 'ssp'){
 
 %>
-
-<ul>
-	<li id="sp_accordion_list_<%=objectId%>"><%=value.name%></li>
-</ul>
+	<%
+	if(mw3.when == 'show_detail' ) {
+	%>
+			<span class="form_tit"><br /><br /><%=value.description%></span>
+			<div class="sp_form_block">
+				<span><%=fields.file.here()%></span>
+			</div>
+			
+			<div class="sp_form_block">
+				<div class="sn_view_box"><div class="sn_view_arrow"><img src="images/marketPlace/sp_box_arrow.gif"  /></div><%=fields.file.here({when:'image'})%></div>
+				<div id="sp_editBtn_<%=objectId%>" class="sp_position_right" onClick="<%=methods.edit.caller()%>"><%=mw3.localize('$Edit')%></div>
+			</div>
+			
+	<%
+	}else {
+	%>
+	
+	<ul>
+		<li id="sp_accordion_list_<%=objectId%>"><%=value.description%></li>
+	</ul>
+	
+	<%
+	}
+	%>
 
 <%
 }
-
 %>
+
+
+

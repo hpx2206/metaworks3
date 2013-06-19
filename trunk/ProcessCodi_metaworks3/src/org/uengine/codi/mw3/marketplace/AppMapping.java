@@ -35,7 +35,13 @@ public class AppMapping extends Database<IAppMapping> implements IAppMapping {
 		public void setIsDeleted(boolean isDeleted) {
 			this.isDeleted = isDeleted;
 		}
-
+	boolean selected;
+		public boolean isSelected() {
+			return selected;
+		}
+		public void setSelected(boolean selected) {
+			this.selected = selected;
+		}
 	public IAppMapping findMe() throws Exception {
 
 		IAppMapping findApp = (IAppMapping) Database.sql(IAppMapping.class, "select * from appmapping where appid=?appId and comcode=?comCode");
