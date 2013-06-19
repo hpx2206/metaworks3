@@ -4,18 +4,13 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Serializable;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Map;
 
 import org.metaworks.annotation.Face;
-import org.metaworks.dao.TransactionContext;
 import org.uengine.codi.ITool;
-import org.uengine.codi.mw3.knowledge.WfNode;
-import org.uengine.codi.mw3.model.Instance;
+import org.uengine.codi.vm.JschCommand;
 import org.uengine.kernel.GlobalContext;
-import org.uengine.processmanager.ProcessManagerRemote;
 
 @Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs")
 public class ApprovalComplete implements ITool  {
@@ -131,7 +126,14 @@ public class ApprovalComplete implements ITool  {
 
 	@Override
 	public void afterComplete() throws Exception {
-		// TODO Auto-generated method stub
+		
+		String targetUserId = GlobalContext.getPropertyString("vm.target.user");
+		String targetPassword= GlobalContext.getPropertyString("vm.target.password");
+		
+		JschCommand jschServerBehaviour = new JschCommand();
+		jschServerBehaviour.sessionLogin("192.168.212.77", targetUserId, targetPassword);		
+		
+		String command = "/ssw/data/haproxy.sh add_backend.sh https " + this.getServerName() + " "+ this.getServerIp() + " 8080";
 		
 	}
 
