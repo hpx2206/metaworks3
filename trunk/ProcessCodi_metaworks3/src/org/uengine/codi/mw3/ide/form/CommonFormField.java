@@ -1,7 +1,5 @@
 package org.uengine.codi.mw3.ide.form;
 
-import javax.persistence.Version;
-
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.WebFieldDescriptor;
@@ -17,10 +15,10 @@ import org.metaworks.dwr.MetaworksRemoteService;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.util.UEngineUtil;
 
-@Face(options={"hideEditBtn"}, values={"true"},
+@Face(options={"fieldOrder"}, values={"displayName,id,fieldSize,hide"},
 ejsPath="dwr/metaworks/org/uengine/codi/mw3/ide/form/CommonFormField.ejs",
 ejsPathMappingByContext= {
-		"{where: 'properties', face: 'dwr/metaworks/org/uengine/codi/mw3/ide/form/FormProperties.ejs'}",
+		"{where: 'properties', face: 'dwr/metaworks/org/uengine/codi/mw3/ide/form/FormFieldModify.ejs'}",
 		"{where: 'menu', face: 'dwr/metaworks/org/uengine/codi/mw3/ide/form/Menu.ejs'}"
 })
 public class CommonFormField implements ContextAware, Cloneable {
@@ -32,7 +30,7 @@ public class CommonFormField implements ContextAware, Cloneable {
 	public Form form;				// for action
 
 	@AutowiredFromClient
-	public FormFieldProperties formFieldProperty; 
+	public Properties formFieldProperty; 
 
 
 	MetaworksContext metaworksContext;
@@ -45,7 +43,7 @@ public class CommonFormField implements ContextAware, Cloneable {
 
 	String fieldId;
 	@Id
-	//		@Hidden
+	@Hidden
 	public String getFieldId() {
 		return fieldId;
 	}
@@ -71,6 +69,15 @@ public class CommonFormField implements ContextAware, Cloneable {
 	public void setFieldType(String fieldType) {
 		this.fieldType = fieldType;
 	}
+	
+	String fieldSize;
+	@Face(displayName="$form.field.size", ejsPath="dwr/metaworks/genericfaces/SelectBox.ejs", options={"Small","Medium","Large"}, values={"small","medium","large"})
+		public String getFieldSize() {
+			return fieldSize;
+		}
+		public void setFieldSize(String fieldSize) {
+			this.fieldSize = fieldSize;
+		}
 
 	String id;
 	@Face(displayName="$form.field.id")
@@ -140,16 +147,24 @@ public class CommonFormField implements ContextAware, Cloneable {
 
 	public void init(){
 		this.setMetaworksContext(new MetaworksContext());
+		this.setHide(false);
+		this.setFieldSize("medium");
 	}
 
 	@ServiceMethod(mouseBinding="drag")
 	@Available(when={MetaworksContext.WHEN_VIEW}, where={"menu"})
-	public Session drag() {				
+	public Session drag() {
+	
 		session.setClipboard(this);
 
 		return session;
 	}
-
+	
+	@ServiceMethod()
+	public void click() {
+		System.out.print("ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ");
+	}
+	
 	//, mouseBinding="left"
 	@ServiceMethod(callByContent=true)
 	@Available(when={MetaworksContext.WHEN_VIEW}, where={"form"})
@@ -210,6 +225,7 @@ public class CommonFormField implements ContextAware, Cloneable {
 	@Available(when={MetaworksContext.WHEN_EDIT}, where={"properties"})
 	public Object[] apply() {
 
+		FormFieldProperties formFieldProperty = (FormFieldProperties)this.formFieldProperty;
 		formFieldProperty.setFormField(this);
 
 		int pos = form.formFields.indexOf(this);

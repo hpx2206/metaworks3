@@ -2,10 +2,19 @@ package org.uengine.codi.mw3.ide.form;
 
 import java.util.ArrayList;
 
+import org.metaworks.MetaworksContext;
 import org.metaworks.WebFieldDescriptor;
+import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
+import org.metaworks.annotation.ServiceMethod;
 
+@Face(options={"fieldOrder"}, values={"displayName,id,multipleChoiceOptionPanel,hide"},
+ejsPath="dwr/metaworks/org/uengine/codi/mw3/ide/form/CommonFormField.ejs",
+ejsPathMappingByContext= {
+		"{where: 'properties', face: 'dwr/metaworks/org/uengine/codi/mw3/ide/form/FormFieldModify.ejs'}",
+		"{where: 'menu', face: 'dwr/metaworks/org/uengine/codi/mw3/ide/form/Menu.ejs'}"
+})
 public class MultipleChoiceField extends CommonFormField {
 	
 	int selectedIndex;
@@ -16,19 +25,6 @@ public class MultipleChoiceField extends CommonFormField {
 		public void setSelectedIndex(int selectedIndex) {
 			this.selectedIndex = selectedIndex;
 		}
-
-	public MultipleChoiceField(){
-		
-		this.setName("MultipleChoice");
-		this.setDisplayName("MultipleChoice");
-		this.setFieldType("java.lang.String");
-		this.setEjsPath("dwr/metaworks/genericfaces/RadioButton.ejs");	
-		
-		MultipleChoiceOptionPanel panel = new MultipleChoiceOptionPanel();
-		panel.init();
-		
-		this.setMultipleChoiceOptionPanel(panel);
-	}
 	
 	MultipleChoiceOptionPanel multipleChoiceOptionPanel;
 		@Face(displayName="")
@@ -39,7 +35,19 @@ public class MultipleChoiceField extends CommonFormField {
 				MultipleChoiceOptionPanel multipleChoiceOptionPanel) {
 			this.multipleChoiceOptionPanel = multipleChoiceOptionPanel;
 		}		
+	
+	public MultipleChoiceField() {
+		this.setName("MultipleChoiceField");
+		this.setFieldType("java.lang.String");
+		this.setEjsPath("dwr/metaworks/genericfaces/RadioButton.ejs");
 
+		MultipleChoiceOptionPanel panel = new MultipleChoiceOptionPanel();
+		panel.init();
+
+		this.setOptionsAndValues(this, panel.getChoiceOptions());
+		this.setMultipleChoiceOptionPanel(panel);
+	}
+	
 	@Override
 	public CommonFormField make(WebFieldDescriptor fd)  {
 		
@@ -97,4 +105,15 @@ public class MultipleChoiceField extends CommonFormField {
 			multipleChoiceField.setValues(valuesBuffer.toString());
 		}
 	}
+	
+	
+	@ServiceMethod(callByContent=true)
+	@Available(when={MetaworksContext.WHEN_EDIT}, where={"properties"})
+	public Object[] apply() {
+		
+		this.setOptionsAndValues(this, this.getMultipleChoiceOptionPanel().choiceOptions);
+		super.apply();
+		
+		return new Object[]{form, formFieldProperty};
+	}	
 }

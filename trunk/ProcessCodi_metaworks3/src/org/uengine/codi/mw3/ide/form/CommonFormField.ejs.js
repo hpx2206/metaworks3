@@ -14,6 +14,9 @@ var org_uengine_codi_mw3_ide_form_CommonFormField = function(objectId, className
 	this.objectDiv.addClass('fb_form_box');
 	
 	this.objectDiv.bind('click', {objectId: this.objectId}, function(event, ui){
+		event.preventDefault();
+		event.stopPropagation();
+		
 		$('.fb_form_box').removeClass('current');
 		$(this).addClass('current');
 		

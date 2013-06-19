@@ -3,9 +3,8 @@ package org.uengine.codi.mw3.ide.form;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 
-@Face(options={"hideEditBtn"}, values={"true"}, 
-		ejsPath="dwr/metaworks/org/uengine/codi/mw3/ide/form/FormFieldProperties.ejs")
-public class FormFieldProperties {
+@Face(options={"hideEditBtn"}, values={"true"})
+public class FormFieldProperties extends Properties {
 	
 	CommonFormField formField;	
 		public CommonFormField getFormField() {
@@ -14,7 +13,7 @@ public class FormFieldProperties {
 		public void setFormField(CommonFormField formField) {
 			this.formField = formField;
 		}
-
+		
 	public FormFieldProperties(){
 		this(new CommonFormField());
 	}

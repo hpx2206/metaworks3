@@ -2,10 +2,12 @@ package org.uengine.codi.mw3.ide.form;
 
 import java.util.ArrayList;
 
+import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.WebFieldDescriptor;
 import org.metaworks.WebObjectType;
 import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
@@ -14,12 +16,20 @@ import org.uengine.codi.mw3.model.Session;
 
 @Face(options={"hideEditBtn"}, values={"true"},
 		ejsPath="dwr/metaworks/org/uengine/codi/mw3/ide/form/Form.ejs")
-public class Form {
+public class Form implements ContextAware {
 	
 	@AutowiredFromClient
 	public Session session;
 		
 	public final static String FORM_FIELD_ID_PREFIX = "FORMFIELD_";
+	
+	MetaworksContext metaworksContext;
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}	
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
+		}
 
 	String id;
 		@Face(displayName="$form.id")
@@ -40,7 +50,7 @@ public class Form {
 		}
 	
 	String packageName;
-		@Hidden
+		@Hidden   
 		public String getPackageName() {
 			return packageName;
 		}
@@ -49,6 +59,7 @@ public class Form {
 		}
 	
 	ArrayList<CommonFormField> formFields;
+		@Available(when={MetaworksContext.WHEN_VIEW}, where={"form"})
 		public ArrayList<CommonFormField> getFormFields() {
 			return formFields;
 		}	
@@ -67,13 +78,20 @@ public class Form {
 	}
 	
 	public void load() {
-		setFormFields(new ArrayList<CommonFormField>());
+		this.setFormFields(new ArrayList<CommonFormField>());
+		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+		this.getMetaworksContext().setWhere("form");
 		
 		try {
 			this.formLoad();
 		}catch(Exception ex) {
 			ex.printStackTrace();
 		}		
+	}
+	
+	public Form() {
+		this.setMetaworksContext(new MetaworksContext());
+		this.setName("");
 	}
 	
 	@Hidden
@@ -97,6 +115,30 @@ public class Form {
 			
 		
 		return this;
+	}
+	
+	@ServiceMethod(callByContent=true)
+	@Available(when={MetaworksContext.WHEN_VIEW}, where={"form"})
+	public Object modify() {
+		
+		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+		this.getMetaworksContext().setWhere("properties");
+		
+		FormProperties formProperties = new FormProperties();
+		formProperties.setId(this.getId());
+		formProperties.setName(this.getName());
+		formProperties.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+		
+		return formProperties;
+	}
+	
+	@ServiceMethod(callByContent=true)
+	@Available(when={MetaworksContext.WHEN_EDIT}, where={"properties"})
+	public Object[] apply() {
+
+
+		
+		return null;
 	}
 	
 	public void formLoad() throws Exception {
@@ -216,7 +258,7 @@ public class Form {
 			sb.append("package ").append(getPackageName()).append(";\n\n");
 		
 		sb.append(importBuffer.toString() + "\n");
-		sb.append("@Face(ejsPath=\"genericfaces/FormFace.ejs\", options={\"fieldOrder\"},values={\""+ classFaceOrderStr +"\"})\n");
+		sb.append("@Face(displayName=\"" + this.getName() +"\", ejsPath=\"genericfaces/FormFace.ejs\", options={\"fieldOrder\"},values={\""+ classFaceOrderStr +"\"})\n");
 		sb.append("public class " + this.getId() + "").append(" implements ITool").append( "{\n\n");
 		sb.append(constructorBuffer.toString());
 		sb.append(methodBuffer.toString());	
@@ -246,5 +288,5 @@ public class Form {
 		}
 		
 		return FORM_FIELD_ID_PREFIX + String.valueOf(id);
-	}	
+	}
 }

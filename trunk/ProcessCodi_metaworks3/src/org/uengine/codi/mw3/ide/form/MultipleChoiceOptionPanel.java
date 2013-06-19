@@ -2,8 +2,6 @@ package org.uengine.codi.mw3.ide.form;
 
 import java.util.ArrayList;
 
-import org.metaworks.MetaworksContext;
-import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 
 @Face(ejsPath="dwr/metaworks/org/uengine/codi/mw3/ide/form/MultipleChoiceOptionPanel.ejs")
@@ -19,7 +17,6 @@ public class MultipleChoiceOptionPanel {
 	}
 	
 	ArrayList<MultipleChoiceOption> choiceOptions;
-		@Available(when={MetaworksContext.WHEN_EDIT}, where={"properties"})
 		public ArrayList<MultipleChoiceOption> getChoiceOptions() {
 			return choiceOptions;
 		}
@@ -34,17 +31,17 @@ public class MultipleChoiceOptionPanel {
 		ArrayList<MultipleChoiceOption> options = new ArrayList<MultipleChoiceOption>();
 		
 		MultipleChoiceOption option1 = new MultipleChoiceOption();
-		option1.setFieldId(MultipleChoiceOption.OPTION_FIELD_ID_PREFIX + "_0");
+		option1.setFieldId(MultipleChoiceOption.OPTION_FIELD_ID_PREFIX + "0");
 		option1.setOption("First option");
 		option1.setValue("first");
 		
 		MultipleChoiceOption option2 = new MultipleChoiceOption();
-		option2.setFieldId(MultipleChoiceOption.OPTION_FIELD_ID_PREFIX + "_1");
+		option2.setFieldId(MultipleChoiceOption.OPTION_FIELD_ID_PREFIX + "1");
 		option2.setOption("Second option");
 		option2.setValue("second");
 		
 		MultipleChoiceOption option3 = new MultipleChoiceOption();
-		option3.setFieldId(MultipleChoiceOption.OPTION_FIELD_ID_PREFIX + "_2");
+		option3.setFieldId(MultipleChoiceOption.OPTION_FIELD_ID_PREFIX + "2");
 		option3.setOption("Third option");
 		option3.setValue("third");
 	
