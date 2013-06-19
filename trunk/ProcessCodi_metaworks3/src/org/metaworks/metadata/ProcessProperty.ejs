@@ -1,13 +1,62 @@
 <%
 if(mw3.where == 'ssp'){
-
+	if(mw3.when == 'show_detail' ) {
+	
+	%>
+		<span class="form_tit"><br /><br /><%=value.description%></span>
+		<div class="sp_form_block">
+			<div class="sn_view_box"><div class="sn_view_arrow"><img src="images/marketPlace/sp_box_arrow.gif"  /></div><%=fields.filePreview.here({when:'image'})%></div>
+		</div>
+		
+		<%
+		if(value.file.metaworksContext.when == 'edit') {
+		
+		%>
+		
+			<div class="sp_form_block">
+				<div id="sp_saveBtn_<%=objectId%>" class="sp_position_right"><a id="wBtn" onClick="<%=methods.save.caller()%>"><span><%=mw3.localize('$Save')%></span></a></div>
+			</div>
+		
+		<%
+		}else {
+		%>
+		
+			<div class="sp_form_block">
+				<div id="sp_editBtn_<%=objectId%>" style="line-height: 210%;" class="sp_position_right"><a id="wBtn" onClick="<%=methods.edit.caller()%>"><span>저장</span></a></div>
+			</div>
+		
+		<%	
+		}
 %>
+		<!--
+		<div class="sp_form_block">
+			<%=fields.resourceNode.here()%>
+		</div>
+		-->
+		
+		<div class="sp_form_block">
+			<div><a id="wBtn" onClick="<%=methods.modify.caller()%>"><span>편집</span></a></div>
+		</div>
+		<div class="sp_form_block">
+			<%=fields.file.here()%>
+		</div>
 
-<ul>
-	<li id="sp_accordion_list_<%=objectId%>"><%=value.description%></li>
-</ul>
+<%
+
+	}else {
+	%>
+	
+	<ul>
+		<li id="sp_accordion_list_<%=objectId%>"><%=value.description%></li>
+	</ul>
+	
+	<%
+	}
+	%>
 
 <%
 }
-
 %>
+
+
+

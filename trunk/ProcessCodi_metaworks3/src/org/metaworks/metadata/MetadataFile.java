@@ -9,7 +9,7 @@ import org.metaworks.website.AbstractMetaworksFile;
 import org.uengine.codi.mw3.CodiClassLoader;
 
 
-@Face(ejsPath="org/metaworks/website/MetaworksFile.ejs")
+@Face(ejsPath="org/metaworks/website/MetaworksFile.ejs", options={"hideText"}, values={"true"})
 public class MetadataFile extends AbstractMetaworksFile {
 	
 	public MetadataFile() {
