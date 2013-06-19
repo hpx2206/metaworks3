@@ -27,7 +27,7 @@ public class MultipleChoiceField extends CommonFormField {
 		}
 	
 	MultipleChoiceOptionPanel multipleChoiceOptionPanel;
-		@Face(displayName="")
+		@Face(displayName=" ")
 		public MultipleChoiceOptionPanel getMultipleChoiceOptionPanel() {
 			return multipleChoiceOptionPanel;
 		}
