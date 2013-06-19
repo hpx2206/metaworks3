@@ -1,7 +1,6 @@
 var org_metaworks_metadata_MetadataProperty = function(objectId, className){
 	this.objectId = objectId;
 	this.className = className;
-	
 };
 
 

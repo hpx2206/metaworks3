@@ -61,7 +61,6 @@ public class FileProperty extends MetadataProperty {
 
 			if (checkFile) {
 				MetadataFile file = new MetadataFile();
-				file.setType(this.getType());
 				file.setUploadedPath(this.getValue());
 				file.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 				file.setMimeType(ResourceNode.findNodeType(this.getValue()));

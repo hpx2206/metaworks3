@@ -12,26 +12,26 @@ import org.uengine.codi.mw3.CodiClassLoader;
 @Face(ejsPath="org/metaworks/website/MetaworksFile.ejs")
 public class MetadataFile extends AbstractMetaworksFile {
 	
+	public MetadataFile() {
+		setAuto(true);
+	}
+	
 	@AutowiredFromClient
 	public MetadataXML metadataXml;
 	
-	String type;
-		public String getType() {
-			return type;
-		}
-		public void setType(String type) {
-			this.type = type;
-		}
-
+	@AutowiredFromClient
+	public MetadataProperty metadataProperty;
+	
 	@Override
 	public String overrideUploadPathPrefix() {
-		if(metadataXml != null && this.getType() != null){
-			return metadataXml.getFilePath() + File.separatorChar + this.getType() + File.separatorChar	;
-		}else if(metadataXml != null && this.getType() == null){
-			return metadataXml.getFilePath() + File.separatorChar;
-		}else {
-			return CodiClassLoader.mySourceCodeBase();
-		}
+		
+			if(metadataXml != null && metadataProperty != null){
+				return metadataXml.getFilePath() + File.separatorChar + metadataProperty.getType() + File.separatorChar	;
+			}else if(metadataXml != null && metadataProperty == null){
+				return metadataXml.getFilePath() + File.separatorChar;
+			}else {
+				return CodiClassLoader.mySourceCodeBase();
+			}
 	}
 	
 	@Override

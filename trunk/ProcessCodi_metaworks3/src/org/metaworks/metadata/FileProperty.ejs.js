@@ -26,9 +26,10 @@ var org_metaworks_metadata_FileProperty = function(objectId, className){
 			$(this).css('cursor','auto');
 	});
 	
+	/*
 	var isFile = false;
 	var isResource = false;
-	/*
+
 	console.log($("#sp_checkFile_" + this.objectId).children()[0]);
 	console.log($('#' + checkFileDivId).children()[0]);
 	console.log($("#sp_checkResource_" + this.objectId).children()[0]);
