@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.ide.editor.form;
 
+import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
@@ -11,8 +12,8 @@ import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.editor.Editor;
 import org.uengine.codi.mw3.ide.form.Form;
 import org.uengine.codi.mw3.ide.form.FormFieldMenu;
-import org.uengine.codi.mw3.ide.form.FormFieldProperties;
 import org.uengine.codi.mw3.ide.form.FormPreview;
+import org.uengine.codi.mw3.ide.form.FormProperties;
 
 public class FormEditor extends Editor {
 
@@ -24,14 +25,14 @@ public class FormEditor extends Editor {
 			this.form = form;
 		}
 		
-	FormFieldProperties properties;
-		public FormFieldProperties getProperties() {
+	FormProperties properties;
+		public FormProperties getProperties() {
 			return properties;
 		}
-		public void setProperties(FormFieldProperties properties) {
+		public void setProperties(FormProperties properties) {
 			this.properties = properties;
 		}
-	
+
 	FormFieldMenu menu;
 		public FormFieldMenu getMenu() {
 			return menu;
@@ -69,14 +70,21 @@ public class FormEditor extends Editor {
 			e.printStackTrace();
 		}
 
-		form.load();
-		
+		form.load();		
 		this.setForm(form);
 		
-		setProperties(new FormFieldProperties());
+//		this.setProperties(new FormFieldProperties());
 		
-		setMenu(new FormFieldMenu());
-		menu.load();
+		FormProperties formProperties = new FormProperties();
+		formProperties.setId(form.getId());
+		formProperties.setName(form.getName());
+		formProperties.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+		this.setProperties(formProperties);
+		
+		
+		FormFieldMenu formFieldMenu = new FormFieldMenu();
+		formFieldMenu.load();
+		this.setMenu(formFieldMenu);
 		
 		return null;
 	}
@@ -90,6 +98,7 @@ public class FormEditor extends Editor {
 	@Face(displayName="$SaveAndPreview")
 	@ServiceMethod(payload={"resourceNode", "form"}, target=ServiceMethodContext.TARGET_POPUP)
 	public Object preview() throws Exception {
+		
 		Project project = workspace.findProject(this.getResourceNode().getProjectId());
 		
 		this.save();
