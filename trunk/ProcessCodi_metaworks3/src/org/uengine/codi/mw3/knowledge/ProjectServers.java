@@ -3,21 +3,30 @@ package org.uengine.codi.mw3.knowledge;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
-import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.annotation.Id;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.model.IInstance;
 import org.uengine.codi.mw3.model.Instance;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 @Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs", options={"hideViewBox", "methodVAlign"}, values={"true", "top"})
-public class ProjectServers {
+public class ProjectServers implements ContextAware {
 
 	@Autowired
 	public ProcessManagerRemote processManager;
 	
+	MetaworksContext metaworksContext;
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
+		}
+
 	String projectId;
 		@Hidden
 		public String getProjectId() {
@@ -28,6 +37,7 @@ public class ProjectServers {
 		}
 
 	String serverGroup;
+		@Id
 		@Hidden
 		public String getServerGroup() {
 			return serverGroup;
@@ -50,6 +60,9 @@ public class ProjectServers {
 	}
 	
 	public ProjectServers(String projectId, String serverGroup){
+		this.setMetaworksContext(new MetaworksContext());
+		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+		
 		this.setProjectId(projectId);
 		this.setServerList(new ProjectServer[0]);
 		this.setServerGroup(serverGroup);
@@ -89,6 +102,7 @@ public class ProjectServers {
 				server.setMetaworksContext(new MetaworksContext());
 				server.getMetaworksContext().setHow(MetaworksContext.HOW_IN_LIST);
 				server.getMetaworksContext().setWhen(status);
+				server.status();
 				
 				serverList.add(server);
 			}

@@ -184,10 +184,6 @@ public class ProjectTitle implements ContextAware {
 		command = GlobalContext.getPropertyString("vm.svn.setting") + " \"" +  projectNode.getName() + "\"";
 		jschServerBehaviour.runCommand(command);
 		
-		// create Hudson job
-		command = GlobalContext.getPropertyString("vm.hudson.createJob") + " \"" + projectNode.getName() + "\"";
-		jschServerBehaviour.runCommand(command);
-				
 		//SVN 유저 추가
 		command = GlobalContext.getPropertyString("vm.svn.createUser") + " \"" +  projectNode.getName() + "\" \"" + session.getEmployee().getEmpCode() + "\" \"" + session.getEmployee().getPassword() + "\"";
 		jschServerBehaviour.runCommand(command);
