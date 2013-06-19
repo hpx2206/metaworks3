@@ -324,7 +324,9 @@ public class MetadataProperty implements ContextAware, Cloneable {
 				dstInstance.setFieldValue(fd.getName(),
 						srcInstance.getFieldValue(fd.getName()));
 		}
-
+		if( this.getMetaworksContext() == null ){
+			this.setMetaworksContext( new MetaworksContext() );
+		}
 		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		this.setName(this.getName());
 		this.getFile().getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
