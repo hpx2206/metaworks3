@@ -1202,7 +1202,8 @@ public class Instance extends Database<IInstance> implements IInstance{
 		sb
 		.append("SELECT *")
 		.append("  FROM bpm_procinst inst")
-		.append(" WHERE topicId=?topicId");
+		.append(" WHERE topicId=?topicId")
+		.append("   AND isdeleted = 0");
 
 		IInstance instance = (IInstance) sql(Instance.class, sb.toString());
 		instance.setTopicId(topicId);
