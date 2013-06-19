@@ -2126,7 +2126,12 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				if(beanPaths)
 				for(var propName in beanPaths){
 					var beanPath = beanPaths[propName];
-					eval("this.objects[objectId]" + beanPath.fieldName + "=this.getObject('" + beanPath.valueObjectId + "')");
+					
+					try{
+						eval("this.objects[objectId]" + beanPath.fieldName + "=this.getObject('" + beanPath.valueObjectId + "')");
+					}catch(e){
+						throw new Error("Error when to map the " + propName + " beanExpressions. check in " + mw3.objects[objectId].__className + " ejs template file. [" + beanPath.fieldName + "]");
+					}
 				}
 				
 				//if(!inputTag && !beanPaths){
