@@ -304,15 +304,14 @@ public class CloudIDE {
 		modalWindow.setWidth(300);
 		modalWindow.setHeight(150);
 						
-		modalWindow.setTitle("저장완료"); //$JoinCompleteTitle
-		modalWindow.setPanel(localeManager.getString("저장이 완료되었습니다."));//$JoinCompleteMessage
+		modalWindow.setTitle("$SaveCompleteTitle");
+		modalWindow.setPanel(localeManager.getString("$SaveCompleteMessage"));
 		modalWindow.getButtons().put("$Confirm", new ToOpener(this));
 		
 		objects[0] = modalWindow;
 		objects[1] = new ToAppend(editor, editor.save());
 		
-		return objects;	
-//		return new ToAppend(editor, editor.save());
+		return objects;
 	}
 
 	@ServiceMethod(payload={"currentEditorId"}, keyBinding="Ctrl+W@Global", target=ServiceMethodContext.TARGET_NONE)
