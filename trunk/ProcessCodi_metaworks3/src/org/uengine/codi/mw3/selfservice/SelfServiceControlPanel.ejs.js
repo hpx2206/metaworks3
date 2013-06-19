@@ -23,6 +23,7 @@ var org_uengine_codi_mw3_selfservice_SelfServiceControlPanel = function(objectId
 		});
 	
 
+	setCookie("codi.lastVisit", "selfservice", 10, "/", "", "");
 };
 
 org_uengine_codi_mw3_selfservice_SelfServiceControlPanel.prototype = {
