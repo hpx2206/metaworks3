@@ -1,13 +1,5 @@
 package org.uengine.codi.mw3.ide.form;
 
-import org.metaworks.annotation.Face;
-
-@Face(options={"fieldOrder"}, values={"displayName,id,hide"},
-ejsPath="dwr/metaworks/org/uengine/codi/mw3/ide/form/CommonFormField.ejs",
-ejsPathMappingByContext= {
-		"{where: 'properties', face: 'dwr/metaworks/org/uengine/codi/mw3/ide/form/FormFieldModify.ejs'}",
-		"{where: 'menu', face: 'dwr/metaworks/org/uengine/codi/mw3/ide/form/Menu.ejs'}"
-})
 public class DropDownField extends MultipleChoiceField {
 	
 	public DropDownField(){
