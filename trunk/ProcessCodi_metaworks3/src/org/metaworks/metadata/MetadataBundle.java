@@ -72,13 +72,13 @@ public class MetadataBundle {
 		File metadataFile = new File(metadataFilePath);
 		
 		// 무조건 파일들을 내려받도록 설정 - if( !metadataFile.exists() ){  << 주석 처리
-		if( !metadataFile.exists() ){
+//		if( !metadataFile.exists() ){
 			if( !metadataFile.getParentFile().exists() ){
 				metadataFile.getParentFile().mkdirs();
 			}
 //			metadataFile.createNewFile();
 			metadataFile = getPropertyRemote(projectId, metadataFile);
-		}
+//		}
 		MetadataXML metadataXML = new MetadataXML();
 		Properties props = new Properties();
 		
@@ -108,7 +108,7 @@ public class MetadataBundle {
 			for( MetadataProperty metadataProperty : properties){
 				String key = metadataProperty.getName();
 				String value = metadataProperty.getValue();
-				if( "img".equals(metadataProperty.getType())){
+				if( "image".equals(metadataProperty.getType())){
 					value = "metadata" + value + "?type=" + metadataProperty.getType();
 				}
 				// TODO others
@@ -122,7 +122,7 @@ public class MetadataBundle {
 	 */
 	private File getPropertyRemote(String projectId, File metadataFile){
 		// 코디 서버로 요청 '/metadata' 서블릿을 통하여 요청함
-		String codiServerUrl = "http://localhost:8080/uengine-web/";
+		String codiServerUrl = GlobalContext.getPropertyString("metadataUrl", "http://localhost:8080/uengine-web/");
 		String requestUrl = "metadata/getMetadataFile";
 		HttpClient httpClient = new HttpClient();
 		GetMethod getMethod = new GetMethod(codiServerUrl + requestUrl);
@@ -140,6 +140,9 @@ public class MetadataBundle {
 					MetadataXML metadataXML = new MetadataXML();
 					metadataXML = metadataXML.loadWithInputstream(in);
 					if( metadataXML != null ){
+						// metadataXML 안쪽에 isFirst 같은 변수를 두어서.. 자기 프로젝트의 모든 리소스를 내려받는 작업이 필요하다.
+						// TODO 우선 모두 가져오는 방식으로..
+						
 						ArrayList<MetadataProperty> properties =  metadataXML.getProperties();
 						if( properties != null ){
 							String metadataPath = getProjectBasePath(projectId);
@@ -196,15 +199,16 @@ public class MetadataBundle {
 		
 		OutputStream out = null;
 		InputStream inputStream = null;
+		
 		try{
 			int statusCode = httpClient.executeMethod(getMethod);
 			if (statusCode == HttpStatus.SC_OK) {  
 				inputStream = new BufferedInputStream(getMethod.getResponseBodyAsStream()); 
 				out = new FileOutputStream(fileFullPath);
-	 
+				
 				int read = 0;
 				byte[] bytes = new byte[1024];
-		 
+				
 				while ((read = inputStream.read(bytes)) != -1) {
 					out.write(bytes, 0, read);
 				}
@@ -219,6 +223,7 @@ public class MetadataBundle {
 			}
 			getMethod.releaseConnection();
 		}
+		
 	}
 	
 	/**

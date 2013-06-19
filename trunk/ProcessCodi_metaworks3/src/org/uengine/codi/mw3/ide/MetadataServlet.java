@@ -1,11 +1,15 @@
 package org.uengine.codi.mw3.ide;
 
 import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletContext;
@@ -39,6 +43,7 @@ public class MetadataServlet extends HttpServlet {
 			projectId = request.getParameter("projectId");
 			String metadataFileName = request.getParameter("metadataFileName");
 			String projectBasePath = MetadataBundle.getProjectBasePath(projectId);
+				
 			String filePath = projectBasePath + File.separatorChar + metadataFileName;
 			File file = new File(filePath);
 			if( !file.exists() ){
@@ -50,33 +55,34 @@ public class MetadataServlet extends HttpServlet {
 					return;
 				}
 			}
-	        int length   = 0;
-	        ServletOutputStream outStream = response.getOutputStream();
-	        ServletContext context  = getServletConfig().getServletContext();
-	        String mimetype = context.getMimeType(filePath);
-	        
-	        // sets response content type
-	        if (mimetype == null) {
-	            mimetype = "application/octet-stream";
-	        }
-	        response.setContentType(mimetype);
-	        response.setContentLength((int)file.length());
-	        String fileName = file.getName();
-	        
-	        // sets HTTP header
-	        response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
-	        
-	        byte[] byteBuffer = new byte[BUFSIZE];
-	        DataInputStream in = new DataInputStream(new FileInputStream(file));
-	        
-	        // reads the file's bytes and writes them to the response stream
-	        while ((in != null) && ((length = in.read(byteBuffer)) != -1)){
-	            outStream.write(byteBuffer,0,length);
-	        }
-	        
-	        in.close();
-	        outStream.close();
-	        response.flushBuffer();
+			int length   = 0;
+			ServletOutputStream outStream = response.getOutputStream();
+			ServletContext context  = getServletConfig().getServletContext();
+			String mimetype = context.getMimeType(filePath);
+			
+			// sets response content type
+			if (mimetype == null) {
+				mimetype = "application/octet-stream";
+			}
+			response.setContentType(mimetype);
+			response.setContentLength((int)file.length());
+			String fileName = file.getName();
+			
+			// sets HTTP header
+			response.setHeader("Content-Disposition", "attachment; filename=\"" + fileName + "\"");
+			
+			byte[] byteBuffer = new byte[BUFSIZE];
+			DataInputStream in = new DataInputStream(new FileInputStream(file));
+			
+			// reads the file's bytes and writes them to the response stream
+			while ((in != null) && ((length = in.read(byteBuffer)) != -1)){
+				outStream.write(byteBuffer,0,length);
+			}
+			
+			in.close();
+			outStream.close();
+			response.flushBuffer();
+			
 		}else{
 			String metadataType = request.getParameter("type");
 			if( metadataType != null ){
@@ -84,7 +90,7 @@ public class MetadataServlet extends HttpServlet {
 				String projectBasePath = MetadataBundle.getProjectBasePath(projectId);
 				// codebase/appId/tenentId
 				String tenentBasePath = CodiClassLoader.mySourceCodeBase();
-				if( "img".equalsIgnoreCase(metadataType)){
+				if( "image".equalsIgnoreCase(metadataType)){
 					OutputStream out = null;
 					try{
 						out = response.getOutputStream();
@@ -117,4 +123,5 @@ public class MetadataServlet extends HttpServlet {
 		// 요청받은 앱으로 리소스를 내려준다.
 		
 	}
+	
 }

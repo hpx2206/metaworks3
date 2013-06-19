@@ -28,7 +28,9 @@ if(value) {
 			</ul>
 		</span>
 	</div>
-		<% if(value.file.mimeType != null && value.file.mimeType=='image'){ %>
+		<% 
+		if(value.file != null && value.file.mimeType != null && value.file.mimeType=='image'){ 
+		%>
 			<div style="width:200px;height:200px;float:left;margin: 0px 5px 0px 0px;"><%=fields.file.here({when: (value.file.mimeType.indexOf('image')==0)?'image':'view'})%></div>
 	<% } %>
 	

@@ -68,8 +68,9 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 		sql.append("SELECT knol.id, knol.name ");
 		sql.append("  FROM bpm_knol knol");
 //		sql.append("  FROM bpm_procinst inst  ");
-		sql.append(" WHERE type AND knol.companyid=?companyid");
+		sql.append(" WHERE knol.type=?type AND knol.companyid=?companyid");
 //		sql.append("	AND knol.linkedinstid=inst.instid");
+		
 		
 		
 		IProjectNode dao  = (IProjectNode) Database.sql(IProjectNode.class, sql.toString());
