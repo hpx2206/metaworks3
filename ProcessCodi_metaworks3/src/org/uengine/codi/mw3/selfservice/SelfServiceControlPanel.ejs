@@ -1,4 +1,10 @@
+<%
 
+console.log("selfservice portal");
+console.log(value);
+
+
+%>
 <div class="mp_wrap">
     <div class="mp_left">
 		<div>
@@ -11,7 +17,9 @@
     <div class="sp_center">
         <div class="sp_sub_cate">
             <div style="float:left; border-right:1px solid #ccc; padding-right:3px; height:30px; background:#FFF"><img src="images/marketPlace/sub_back.gif" /></div>
-            <span> <%=mw3.localize('$ssp.doc.app')%> > <%=mw3.localize('$ssp.metadata')%> </span>
+            <% if(value.appName != null) { %>
+            	<span><%=value.appName%></span>
+            <% } %>
         </div>
         <div class="sp_left">
             <div class="sp_left_con" style="height: 100%">

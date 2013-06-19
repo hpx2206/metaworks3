@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import org.metaworks.MetaworksContext;
+import org.metaworks.annotation.AutowiredToClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.metadata.FileProperty;
@@ -35,6 +36,10 @@ import org.uengine.codi.mw3.model.Session;
 
 @Face(displayName="$SelfServicePortal")
 public class SelfServiceControlPanel {
+	
+	public SelfServiceControlPanel() {
+
+	}
 	
 	IAppMapping appMapping;
 		public IAppMapping getAppMapping() {
@@ -108,11 +113,24 @@ public class SelfServiceControlPanel {
 			this.appId = appId;
 		}
 		
-		
-	public SelfServiceControlPanel() {
-
-	}
+	String appName;
+		public String getAppName() {
+			return appName;
+		}
+		public void setAppName(String appName) {
+			this.appName = appName;
+		}
 	
+	MetadataXML metadataXml;
+		@AutowiredToClient
+		public MetadataXML getMetadataXml() {
+			return metadataXml;
+		}
+		public void setMetadataXml(MetadataXML metadataXml) {
+			this.metadataXml = metadataXml;
+		}
+
+		
 	public void load(Session session) throws Exception {
 
 		AppMapping appMp = new AppMapping();
@@ -144,8 +162,10 @@ public class SelfServiceControlPanel {
 		String sourceCodeBase = CodiClassLoader.mySourceCodeBase(projectName);
 		String metadataFileName = "uengine.metadata";
 		String metadataFilePath = sourceCodeBase + File.separatorChar + metadataFileName;
+		
 		MetadataXML metadataXML = new MetadataXML();
 		metadataXML = metadataXML.loadWithPath(metadataFilePath);
+		metadataXML.setFilePath(sourceCodeBase);
 		
 		this.metadataProperties = new ArrayList<MetadataProperty>();
 		this.fileProperties = new ArrayList<FileProperty>();
@@ -172,8 +192,14 @@ public class SelfServiceControlPanel {
 			}
 			
 			this.metadataProperties.add(metadataProperty.getIndex(), metadataProperty);
-			
 		}
 		
+		metadataXML.setProperties(this.metadataProperties);
+		this.setMetadataXml(metadataXML);
+	}
+	
+	@ServiceMethod(callByContent=true)
+	public void saveProperty() {
+		System.out.println("save property");
 	}
 }
