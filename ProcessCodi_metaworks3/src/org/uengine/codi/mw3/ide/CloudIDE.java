@@ -1,20 +1,28 @@
 package org.uengine.codi.mw3.ide;
 
+import org.metaworks.MetaworksContext;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.ToAppend;
+import org.metaworks.ToOpener;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
 import org.metaworks.widget.layout.Layout;
 import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.admin.TopPanel;
+import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.ide.editor.Editor;
 import org.uengine.codi.mw3.ide.view.Navigator;
+import org.uengine.codi.mw3.model.Locale;
+import org.uengine.codi.mw3.model.Main;
 import org.uengine.codi.mw3.model.Session;
 
 public class CloudIDE {
 	
+	@AutowiredFromClient
+	public Locale localeManager;
+		
 	public CloudIDE() {
 
 		/*		setPageNavigator(new PageNavigator("ide"));
@@ -286,10 +294,25 @@ public class CloudIDE {
 	public Editor editor;
 	
 	@ServiceMethod(payload={"currentEditorId", "workspace"}, keyBinding="Ctrl+S@Global", target=ServiceMethodContext.TARGET_APPEND)
-	public Object save(){
+	public Object save() throws Exception{
 		editor.workspace = this.getWorkspace();
 		
-		return new ToAppend(editor, editor.save());
+		Object[] objects = new Object[2];
+		
+		ModalWindow modalWindow = new ModalWindow();
+		modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+		modalWindow.setWidth(300);
+		modalWindow.setHeight(150);
+						
+		modalWindow.setTitle("저장완료"); //$JoinCompleteTitle
+		modalWindow.setPanel(localeManager.getString("저장이 완료되었습니다."));//$JoinCompleteMessage
+		modalWindow.getButtons().put("$Confirm", new ToOpener(this));
+		
+		objects[0] = modalWindow;
+		objects[1] = new ToAppend(editor, editor.save());
+		
+		return objects;	
+//		return new ToAppend(editor, editor.save());
 	}
 
 	@ServiceMethod(payload={"currentEditorId"}, keyBinding="Ctrl+W@Global", target=ServiceMethodContext.TARGET_NONE)
