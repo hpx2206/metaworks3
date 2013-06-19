@@ -66,7 +66,7 @@ public class FollowerSelectCommand {
 			for( int i = 0; i < userList.size(); i++ ){
 				IUser user = userList.get(i);
 				RoleMapping roleMap = RoleMapping.create();
-				roleMap.setName(org.uengine.codi.mw3.model.RoleMapping.ROLEMAPPING_FOLLOWER_ROLENAME_FREFIX + user.getName());
+				roleMap.setName(org.uengine.codi.mw3.model.RoleMapping.ROLEMAPPING_FOLLOWER_ROLENAME_FREFIX + user.getUserId());
 				roleMap.setEndpoint(user.getUserId());
 				roleMap.setResourceName(user.getName());
 				roleMap.setAssignType(Role.ASSIGNTYPE_USER);
