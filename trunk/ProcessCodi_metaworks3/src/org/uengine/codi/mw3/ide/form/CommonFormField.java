@@ -15,7 +15,7 @@ import org.metaworks.dwr.MetaworksRemoteService;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.util.UEngineUtil;
 
-@Face(options={"fieldOrder"}, values={"displayName,id,fieldSize,hide"},
+@Face(options={"fieldOrder"}, values={"displayName,id,hide"},
 ejsPath="dwr/metaworks/org/uengine/codi/mw3/ide/form/CommonFormField.ejs",
 ejsPathMappingByContext= {
 		"{where: 'properties', face: 'dwr/metaworks/org/uengine/codi/mw3/ide/form/FormFieldModify.ejs'}",
@@ -71,6 +71,7 @@ public class CommonFormField implements ContextAware, Cloneable {
 	}
 	
 	String fieldSize;
+	@Hidden
 	@Face(displayName="$form.field.size", ejsPath="dwr/metaworks/genericfaces/SelectBox.ejs", options={"Small","Medium","Large"}, values={"small","medium","large"})
 		public String getFieldSize() {
 			return fieldSize;
@@ -160,9 +161,19 @@ public class CommonFormField implements ContextAware, Cloneable {
 		return session;
 	}
 	
-	@ServiceMethod()
-	public void click() {
-		System.out.print("ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ");
+	@ServiceMethod(eventBinding="click")
+	@Available(when={MetaworksContext.WHEN_VIEW}, where={"menu"})
+	public Object click() {
+		CommonFormField formField = this;		
+		formField.setFieldId(form.makeFormFieldId());
+		
+		formField.init();
+		formField.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+		formField.getMetaworksContext().setWhere("form");		
+		
+		form.getFormFields().add(formField);			
+		
+		return form;		
 	}
 	
 	//, mouseBinding="left"
