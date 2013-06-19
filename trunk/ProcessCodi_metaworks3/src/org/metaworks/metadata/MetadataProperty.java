@@ -301,25 +301,6 @@ public class MetadataProperty implements ContextAware, Cloneable {
 
 	@Available(when = MetaworksContext.WHEN_VIEW)
 	@ServiceMethod(callByContent = true)
-	public Object modify() throws Exception {
-		String sourceCodeBase = CodiClassLoader.mySourceCodeBase("jwtest01");
-		
-		ResourceNode node = new ResourceNode();
-		node.setId(this.getValue());
-		node.setName(this.getValue());
-		node.setPath(sourceCodeBase + this.getValue());
-		
-		ProcessEditor processEditor = new ProcessEditor(node);
-		processEditor.load();
-		
-		return processEditor;
-	}
-	
-	
-	
-	
-	@Available(when = MetaworksContext.WHEN_VIEW)
-	@ServiceMethod(callByContent = true)
 	public Object edit() throws Exception {
 
 		Class dstClass = null;
@@ -697,4 +678,9 @@ public class MetadataProperty implements ContextAware, Cloneable {
 		return detailProperty;
 	}
 
+	@Available(when = MetaworksContext.WHEN_VIEW)
+	@ServiceMethod(callByContent = true)
+	public Object modify() throws Exception {
+		return null;
+	}
 }

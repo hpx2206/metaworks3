@@ -5,7 +5,15 @@ var org_metaworks_metadata_MetadataProperty = function(objectId, className){
 
 
 org_metaworks_metadata_MetadataProperty.prototype = {
-	
+		showStatus : function(status){
+			console.log('111111');
+		},
+		startLoading : function(status){
+			console.log('111111');
+		},
+		endLoading : function(status){
+			console.log('111111');
+		},	
 	removeProperty: function(){
 		
 		

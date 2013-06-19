@@ -4,6 +4,8 @@ var org_metaworks_metadata_ProcessProperty = function(objectId, className){
 	
 	this.object = mw3.objects[this.objectId];
 	
+	$('#' + mw3._getObjectDivId(this.objectId)).css({'height':'100%'});
+	$('#' + mw3._getInfoDivId(this.objectId)).remove();
 	
 	this.accordionList = $("#sp_accordion_list_" + this.objectId);
 	
@@ -25,4 +27,16 @@ var org_metaworks_metadata_ProcessProperty = function(objectId, className){
 		}, function(){			
 			$(this).css('cursor','auto');
 	});
+};
+
+org_metaworks_metadata_ProcessProperty.prototype = {
+	showStatus : function(status){
+		console.log('aaaa');
+	},
+	startLoading : function(status){
+		console.log('bbbb');
+	},
+	endLoading : function(status){
+		console.log('cccc');
+	}	
 };

@@ -2,6 +2,9 @@ package org.metaworks.metadata;
 
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
+import org.uengine.codi.mw3.CodiClassLoader;
+import org.uengine.codi.mw3.ide.ResourceNode;
+import org.uengine.codi.mw3.ide.editor.form.FormEditor;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
@@ -24,5 +27,20 @@ public class FormProperty extends MetadataProperty{
 		public void setValue(String value) {
 			this.value = value;
 		}
+
+	@Override
+	public Object modify() throws Exception {
+		String sourceCodeBase = CodiClassLoader.mySourceCodeBase("jwtest01");
+		
+		ResourceNode node = new ResourceNode();
+		node.setId(this.getValue());
+		node.setName(this.getValue());
+		node.setPath(sourceCodeBase + this.getValue());
+		
+		FormEditor formEditor = new FormEditor(node);
+		formEditor.load();
+		
+		return formEditor;
+	}
 
 }
