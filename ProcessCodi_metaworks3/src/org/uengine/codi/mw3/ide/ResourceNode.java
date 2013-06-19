@@ -15,6 +15,8 @@ import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.TreeNode;
+import org.metaworks.metadata.MetadataFile;
+import org.metaworks.metadata.MetadataProperty;
 import org.uengine.codi.mw3.ide.editor.Editor;
 import org.uengine.codi.mw3.ide.editor.form.FormEditor;
 import org.uengine.codi.mw3.ide.editor.metadata.MetadataEditor;
@@ -37,6 +39,9 @@ public class ResourceNode extends TreeNode implements ContextAware {
 
 	@AutowiredFromClient
 	public Workspace workspace;
+	
+	@AutowiredFromClient
+	public MetadataProperty metadataProperty;
 
 	public final static String TYPE_PROJECT 			= "project";
 	
@@ -63,6 +68,15 @@ public class ResourceNode extends TreeNode implements ContextAware {
 		public void setPath(String path) {
 			this.path = path;
 		}
+	
+	boolean hasPick;
+		public boolean isHasPick() {
+			return hasPick;
+		}
+		public void setHasPick(boolean hasPick) {
+			this.hasPick = hasPick;
+		}
+
 		
 	public ResourceNode(){
 		setMetaworksContext(new MetaworksContext());
@@ -239,6 +253,25 @@ public class ResourceNode extends TreeNode implements ContextAware {
 	@Available(where={"resource"})
 	@ServiceMethod(callByContent=true , target=ServiceMethodContext.TARGET_APPEND, mouseBinding="dblclick")
 	public Object[] popupAction(){
+		
+//		MetadataFile resourceFile = new MetadataFile();
+//		
+//		resourceFile.overrideUploadPathPrefix();
+//		resourceFile.setFilename(this.getName());
+//		resourceFile.setUploadedPath(this.getId());
+//		resourceFile.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+//		resourceFile.setMimeType(ResourceNode.findNodeType(this.getName()));
+//		
+//		metadataProperty.setFilePreview(resourceFile);
+//		metadataProperty.setFile(resourceFile);
+		metadataProperty.setResourceNode(this);
+//		hasPick = true;
+		
+//		metadataProperty.setType(type)
+		
+		//픽업되는 순간  xml에 저장하고 load 해서 미리보기 
+		this.getMetaworksContext().setHow("resourcePicker");
+		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 		return new Object[]{new ToOpener(this), new Remover(new Popup())};
 	}
 	

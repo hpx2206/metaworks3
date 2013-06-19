@@ -158,6 +158,15 @@ public class MetadataProperty implements ContextAware, Cloneable {
 		public void setFile(MetadataFile file) {
 			this.file = file;
 		}
+	
+	@XStreamOmitField
+	MetadataFile filePreview;
+		public MetadataFile getFilePreview() {
+			return filePreview;
+		}
+		public void setFilePreview(MetadataFile filePreview) {
+			this.filePreview = filePreview;
+		}
 
 	@XStreamOmitField
 	MetaworksContext metaworksContext;
@@ -636,12 +645,29 @@ public class MetadataProperty implements ContextAware, Cloneable {
 		detailProperty.getMetaworksContext().setWhen("show_detail");
 		detailProperty.getMetaworksContext().setWhere("ssp");
 		
-		if(MetadataProperty.FILE_PROP.equals(this.getType()) || MetadataProperty.IMAGE_PROP.equals(this.getType())){
+		if(MetadataProperty.FILE_PROP.equals(this.getType())){
 			MetadataFile file = new MetadataFile();
 			file.setUploadedPath(this.getValue());
 			file.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 			file.setMimeType(ResourceNode.findNodeType(this.getValue()));
 			detailProperty.setFile(file);
+		}else if(MetadataProperty.IMAGE_PROP.equals(this.getType())){
+			MetadataFile file = new MetadataFile();
+			file.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+			file.setUploadedPath(this.getValue());
+			file.setMimeType(ResourceNode.findNodeType(this.getValue()));
+			
+
+			ResourceNode resourceNode = new ResourceNode();
+			resourceNode.setMetaworksContext(new MetaworksContext());
+			resourceNode.getMetaworksContext().setHow("resourcePicker");
+			resourceNode.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+			
+			detailProperty.setFile(file);
+			detailProperty.setFilePreview(file);
+			detailProperty.setResourceNode(resourceNode);
+			detailProperty.metadataXML = metadataXML;
+			
 		}
 		
 		return detailProperty;

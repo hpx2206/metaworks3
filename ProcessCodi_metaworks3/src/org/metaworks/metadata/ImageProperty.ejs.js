@@ -25,4 +25,5 @@ var org_metaworks_metadata_ImageProperty = function(objectId, className){
 		}, function(){			
 			$(this).css('cursor','auto');
 	});
+	
 };

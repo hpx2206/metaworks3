@@ -1995,14 +1995,29 @@ html, body {
 
 
 .mp_wrap {
-	height:100%;
+	position: relative;
+	width: 100%;
+	height: 100%;
 }
 .mp_left {
-	float:left;
+	/* float:left;
 	width:209px;
 	margin-right:-209px;
 	background:#d6e2ef;
-	height:100%;
+	height:100%; */
+	
+	background-color:#d6e2ef;
+	width: 209px;
+	overflow:auto;
+	position: absolute;
+	min-width: 0px;
+	min-height: 0px;
+	max-width: 10000px;
+	max-height: 10000px;
+	left: 0px;
+	right: 0px;
+	top: 0px;
+	height:100%
 }
 .mp_left_sec_line {
 	height:2px;
@@ -2147,26 +2162,35 @@ html, body {
  -moz-border-radius:3px;}
 
 
-
 /* selfPortal*/
-.sp_center{_display:inline-block;
+.sp_center{
+	background-color:#FFF;
+	overflow:hidden;
+	position: absolute;
+	min-width: 0px;
+	min-height: 0px;
+	max-width: 10000px;
+	max-height: 10000px;
+	left: 209px;
+	right: 0px;
+	top: 0px;
+	height: 100%;
 	border-left:1px solid #CCC;
-	height:100%;
-	background:#FFF;
-	overflow: auto;}
-.sp_sub_cate{line-height:30px; border-bottom:1px solid #ccc; position:absolute; width:100%; background:#F7F7F7}
+}
+.sp_sub_cate{line-height:30px; background-color:#F7F7F7; border-bottom:1px; height: 30px; overflow:hidden; position: absolute; min-width: 0px; min-height: 0px; max-width: 10000px; max-height: 10000px;  left: 0px; right: 0px; top: 0px; border-bottom:1px solid #ccc;}
 .sp_sub_cate span {font-size:14px; font-weight:bold; margin-left:15px;}
-.sp_left{overflow: auto; float:left;width:180px;margin-right:-200px; height:100%; border-right:1px solid #ccc; }
-.sp_left_con{margin-top:30px;}
-.sp_content{ overflow: auto; margin-left:200px; }
+.sp_left{top: 30px; overflow:auto; position: absolute; min-width: 0px; min-height: 0px; max-width: 10000px; max-height: 10000px; left: 0px; right: 0px; bottom: 0px;}
+.sp_left_con{width: 200px; overflow:hidden; position: absolute; min-width: 0px; min-height: 0px; max-width: 10000px; max-height: 10000px; border-right:1px solid #ccc; left: 0px; right: 0px; top: 0px; height:100%}
+.sp_content{overflow:auto; position: absolute; min-width: 0px; min-height: 0px; max-width: 10000px; max-height: 10000px;  left: 200px; right: 0px; top: 30px; height: 100%;}
+.sp_content .form_tit { margin:15px 15px 5px 15px; display:block; padding-left:20px; font-weight:bold;background:url('../../images/marketPlace/sp_arrow_green.gif') no-repeat 2px 28px ;}
 .sp_left_con .form_tit { margin:15px 15px 5px 15px; display:block; padding-left:20px; font-weight:bold;background:url('../../images/marketPlace/sp_arrow_green.gif') no-repeat 2px 28px ;}
-.sp_form_block {width:90%; margin:15px 15px 5px 15px;}
+.sp_form_block {width:90%; margin:20px 15px 5px 15px; display:block;}
 .sp_accordion h3{display:block; height:26px; line-height:26px; padding-left:20px; background:url('../../images/marketPlace/sp_accordian_bg.png') no-repeat right; border:1px solid #ccc; border-left:none; border-right:none; margin:0px} 
 .sp_accordion li{margin:10px;padding-left:20px; background:url('../../images/marketPlace/sp_arrow_black.gif') no-repeat 8px 3px;;}
-.sp_position_right {float:right;}
-.sn_view_box{ padding:5px; border:1px solid #ccc; display:inline-block;-webkit-border-radius:3px;
- -moz-border-radius:3px; position:relative}
+.sp_position_right {float:right; margin-top: 5px;}
+.sn_view_box{ padding:5px; border:1px solid #ccc; display:inline-block;-webkit-border-radius:3px;width:500px;-moz-border-radius:3px; position:relative}
 .sn_view_arrow{ position:absolute; top:-15px; left:20px;}
+
 
 
 /*formBuilder*/
