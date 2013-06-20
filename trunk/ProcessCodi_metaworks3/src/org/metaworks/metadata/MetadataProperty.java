@@ -35,6 +35,7 @@ import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.model.ProcessMap;
 import org.uengine.codi.mw3.model.ProcessMapList;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitorPanel;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerWebContentPanel;
 import org.uengine.processmanager.ProcessManagerRemote;
 
@@ -672,6 +673,12 @@ public class MetadataProperty implements ContextAware, Cloneable {
 			file.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 			file.setMimeType(ResourceNode.findNodeType(this.getValue()));
 			detailProperty.setFile(file);
+		}else if(MetadataProperty.PROCESS_PROP.equals(this.getType())){
+			
+			InstanceMonitorPanel processInstanceMonitorPanel = new InstanceMonitorPanel();
+			processInstanceMonitorPanel.loadProcess(this.getValue());
+			((ProcessProperty)detailProperty).setProcessInstanceMonitorPanel(processInstanceMonitorPanel);
+			
 		}else if(MetadataProperty.IMAGE_PROP.equals(this.getType())){
 			MetadataFile file = new MetadataFile();
 			file.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);

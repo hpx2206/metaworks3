@@ -8,6 +8,7 @@ import org.metaworks.annotation.ServiceMethod;
 import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.editor.process.ProcessEditor;
+import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitorPanel;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
@@ -23,12 +24,20 @@ public class ProcessProperty extends MetadataProperty{
 	}
 	
 	String value;
-		@Hidden
+	@Hidden
 		public String getValue() {
 			return value;
 		}
 		public void setValue(String value) {
 			this.value = value;
+		}
+	InstanceMonitorPanel processInstanceMonitorPanel;
+		public InstanceMonitorPanel getProcessInstanceMonitorPanel() {
+			return processInstanceMonitorPanel;
+		}
+		public void setProcessInstanceMonitorPanel(
+				InstanceMonitorPanel processInstanceMonitorPanel) {
+			this.processInstanceMonitorPanel = processInstanceMonitorPanel;
 		}
 
 	@Available(when = MetaworksContext.WHEN_VIEW)
