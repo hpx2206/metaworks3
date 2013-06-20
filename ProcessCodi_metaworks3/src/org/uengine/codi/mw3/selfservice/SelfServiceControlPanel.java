@@ -186,6 +186,7 @@ public class SelfServiceControlPanel {
 		
 		for(MetadataProperty metadataProperty : metadataXML.getProperties()){
 			metadataProperty = (MetadataProperty) metadataProperty.selectType();
+			metadataProperty.setProjectId(projectName);
 			metadataProperty.setMetaworksContext(new MetaworksContext());
 			metadataProperty.getMetaworksContext().setWhere("ssp");
 			
