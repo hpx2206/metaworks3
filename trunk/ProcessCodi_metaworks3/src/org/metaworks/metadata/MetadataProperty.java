@@ -77,6 +77,7 @@ public class MetadataProperty implements ContextAware, Cloneable {
 	@XStreamOmitField
 	ArrayList<MetadataProperty> child;
 		@Children
+		@Hidden
 		public ArrayList<MetadataProperty> getChild() {
 			return child;
 		}
@@ -99,9 +100,20 @@ public class MetadataProperty implements ContextAware, Cloneable {
 		public void setType(String type) {
 			this.type = type;
 		}
+		
+	@XStreamOmitField
+	String projectId;
+		@Hidden
+		public String getProjectId() {
+			return projectId;
+		}
+		public void setProjectId(String projectId) {
+			this.projectId = projectId;
+		}
 
 	@XStreamAsAttribute
 	boolean isKeyEditable;
+	@Hidden
 		public boolean isKeyEditable() {
 			return isKeyEditable;
 		}
@@ -121,6 +133,7 @@ public class MetadataProperty implements ContextAware, Cloneable {
 
 	String id;
 		@Id
+		@Hidden
 		public String getId() {
 			return id;
 		}
@@ -211,6 +224,7 @@ public class MetadataProperty implements ContextAware, Cloneable {
 
 	@XStreamOmitField
 	boolean checkFile;
+	@Hidden
 		public boolean isCheckFile() {
 			return checkFile;
 		}
@@ -220,6 +234,7 @@ public class MetadataProperty implements ContextAware, Cloneable {
 	
 	@XStreamOmitField
 	boolean checkResource;
+	@Hidden
 		public boolean isCheckResource() {
 			return checkResource;
 		}
@@ -643,6 +658,7 @@ public class MetadataProperty implements ContextAware, Cloneable {
 		detailProperty.setType(this.getType());
 		detailProperty.setDescription(this.getDescription());
 		detailProperty.setValue(this.getValue());
+		detailProperty.setProjectId(this.getProjectId());
 		
 		detailProperty = (MetadataProperty) detailProperty.selectType();
 		
@@ -672,7 +688,21 @@ public class MetadataProperty implements ContextAware, Cloneable {
 			detailProperty.setFilePreview(file);
 			detailProperty.setResourceNode(resourceNode);
 			detailProperty.metadataXML = metadataXML;
+		}else if(MetadataProperty.FORM_PROP.equals(this.getType())){
+			MetadataFile file = new MetadataFile();
+			file.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+			file.setUploadedPath(this.getValue());
+			file.setMimeType(ResourceNode.findNodeType(this.getValue()));
 			
+
+			ResourceNode resourceNode = new ResourceNode();
+			resourceNode.setMetaworksContext(new MetaworksContext());
+			resourceNode.getMetaworksContext().setHow("resourcePicker");
+			resourceNode.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+			
+			detailProperty.setFile(file);
+			detailProperty.setResourceNode(resourceNode);
+			detailProperty.metadataXML = metadataXML;
 		}
 		
 		return detailProperty;
