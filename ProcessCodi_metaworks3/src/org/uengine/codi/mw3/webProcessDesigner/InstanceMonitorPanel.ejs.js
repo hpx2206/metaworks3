@@ -133,7 +133,7 @@ org_uengine_codi_mw3_webProcessDesigner_InstanceMonitorPanel.prototype = {
 					click: function (event) {
 						var value = mw3.objects[objectId]; 
 						value.tempTracingTag = $(this).attr('tracingTag');
-						value.showActivityInfo();
+						//value.showActivityInfo();
 					}
 				});
 			}
