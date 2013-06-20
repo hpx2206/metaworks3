@@ -34,7 +34,8 @@ public class ProcessProperty extends MetadataProperty{
 	@Available(when = MetaworksContext.WHEN_VIEW)
 	@ServiceMethod(callByContent = true)
 	public Object modify() throws Exception {
-		String sourceCodeBase = CodiClassLoader.mySourceCodeBase("jwtest01");
+		String projectId = this.getProjectId();
+		String sourceCodeBase = CodiClassLoader.mySourceCodeBase(projectId);
 		
 		ResourceNode node = new ResourceNode();
 		node.setId(this.getValue());
