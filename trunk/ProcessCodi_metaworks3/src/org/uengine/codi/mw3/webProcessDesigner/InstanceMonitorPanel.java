@@ -1,17 +1,25 @@
 package org.uengine.codi.mw3.webProcessDesigner;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.kernel.Activity;
+import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.ProcessDefinition;
 import org.uengine.kernel.ProcessInstance;
 import org.uengine.kernel.viewer.DefaultActivityViewer;
 import org.uengine.processmanager.ProcessManagerRemote;
+import org.uengine.util.UEngineUtil;
 
 public class InstanceMonitorPanel {
 	CanvasDTO cell[];
@@ -86,8 +94,51 @@ public class InstanceMonitorPanel {
 		}
 		
 	}
+	
+	public void loadProcess(String path) throws Exception {
+		System.out.println("path = " + path);
+		File sourceCodeFile = new File(CodiClassLoader.getMyClassLoader().sourceCodeBase() + "/" + path);
+		
+		ByteArrayOutputStream bao = new ByteArrayOutputStream();
+		FileInputStream is = null;
+		try {
+			is = new FileInputStream(sourceCodeFile);
+			UEngineUtil.copyStream(is, bao);
+		
+			ProcessDefinition def = (ProcessDefinition) GlobalContext.deserialize(bao.toString("UTF-8"));
+			if( def.getExtendedAttributes() == null ) return;
+			
+			ArrayList<CanvasDTO> cellsList = (ArrayList<CanvasDTO>) def.getExtendedAttributes().get("cells");
+			DefaultActivityViewer dav = new DefaultActivityViewer();
+			if( cellsList != null){
+				CanvasDTO []cells = new CanvasDTO[cellsList.size()];
+				for(int i = 0; i < cellsList.size(); i++){
+					cells[i] = (CanvasDTO)cellsList.get(i);
+					if( cells[i] != null && cells[i].getJsonString() != null){
+						this.setGraphString(cells[i].getJsonString());
+					}
+				}
+				// canvas setting
+				this.setCell(cells);
+			}
+			
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally{
+			if(is != null){
+				try { is.close(); is = null; } catch (IOException e) {		e.printStackTrace();}
+			}
+			if(bao != null){
+				try { bao.close(); bao = null; } catch (IOException e) {		e.printStackTrace();}
+			}
+		}
+	}
+	
 	@ServiceMethod(callByContent=true, target="popup")
 	public Popup showActivityInfo() throws Exception{
+		if( instanceId == null ) return null;
 		Popup popup = new Popup(400,275);
 		TaskInfoPanel taskInfo = new TaskInfoPanel();
 		
