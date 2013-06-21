@@ -12,7 +12,10 @@ var org_uengine_codi_mw3_model_IWorkItem = function(objectId, className){
 	var doc = container.html();
 	
 	if(doc){
-		var regURL = new RegExp("(http|https|ftp|telnet|news|irc)://([-/.a-zA-Z0-9_~#%$?&=:200-377()]+)","gi");	
+		// Date: '13.06.21 
+		// Modifier : jwlee@uengine.org
+		// Description : 스크립트 정규 표현식에서 '&'를 '&amp;'로 수정
+		var regURL = new RegExp("(http|https|ftp|telnet|news|irc)://([-/.a-zA-Z0-9_~#%$?=&amp;:200-377()]+)","gi");	
 		
 		try{
 			container.html(doc.replace(regURL,"<a href='$1://$2' target='_blank' style='text-decoration:underline'>$1://$2</a>"));
