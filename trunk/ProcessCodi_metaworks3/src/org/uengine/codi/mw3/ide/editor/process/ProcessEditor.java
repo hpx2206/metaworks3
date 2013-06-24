@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.ide.editor.process;
 
+import org.metaworks.annotation.ServiceMethod;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.editor.Editor;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerWebContentPanel;
@@ -47,7 +48,9 @@ public class ProcessEditor extends Editor {
 		
 		return definitionString;
 	}
-	
+
+	@Override
+	@ServiceMethod(callByContent=true)
 	public Object save(){
 		try {
 			this.getProcessDesigner().saveMe(this);
