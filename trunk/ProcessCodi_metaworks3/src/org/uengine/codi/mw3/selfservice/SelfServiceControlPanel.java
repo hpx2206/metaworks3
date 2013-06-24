@@ -7,6 +7,7 @@ import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredToClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.dao.TransactionContext;
 import org.metaworks.metadata.FileProperty;
 import org.metaworks.metadata.FormProperty;
 import org.metaworks.metadata.ImageProperty;
@@ -14,7 +15,9 @@ import org.metaworks.metadata.MetadataProperty;
 import org.metaworks.metadata.MetadataXML;
 import org.metaworks.metadata.ProcessProperty;
 import org.metaworks.metadata.StringProperty;
+import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.mw3.CodiClassLoader;
+import org.uengine.codi.mw3.ide.Workspace;
 import org.uengine.codi.mw3.knowledge.WfNode;
 import org.uengine.codi.mw3.marketplace.App;
 import org.uengine.codi.mw3.marketplace.AppMapping;
@@ -131,6 +134,15 @@ public class SelfServiceControlPanel {
 		}
 
 		
+	Workspace workspace;
+		@AutowiredToClient
+		public Workspace getWorkspace() {
+			return workspace;
+		}
+		public void setWorkspace(Workspace workspace) {
+			this.workspace = workspace;
+		}
+		
 	public void load(Session session) throws Exception {
 
 		AppMapping appMp = new AppMapping();
@@ -141,8 +153,14 @@ public class SelfServiceControlPanel {
 		appList.getMetaworksContext().setWhen("filter");
 		appList.getMetaworksContext().setWhere("ssp");
 		
-		
 		this.setAppMapping(appList);
+		
+		Workspace workspace = new Workspace();
+		
+		while(appList.next())
+			workspace.addProject(TenantContext.getThreadLocalInstance().getTenantId(), appList.getAppName());	
+		
+		this.setWorkspace(workspace);
 	}
 	
 
