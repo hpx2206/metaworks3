@@ -14,7 +14,7 @@
 			<span class="ssesionLine"> | </span>
 			
 			<%if(value.metaworksContext.where == 'marketplace'){%>
-				<span class="ssesionLine"><a href="#" onClick="<%=methods.myVendor.caller()%>"><%=mw3.localize("$VendorProfile")%></a></span>
+				<span class="ssesionLine"><a href="#" onClick="<%=methods.myVendor.caller()%>">App 관리</a></span>				
 			<%}else{%>
 				<span class="ssesionLine"><a href="#" onClick="mw3.test(mw3.getAutowiredObject('org.uengine.codi.mw3.model.InstanceListPanel').__objectId, 'first', {guidedTour:true})" type="application/pdf"><%=mw3.localize("$Help")%></a></span>
 			<%}%>
