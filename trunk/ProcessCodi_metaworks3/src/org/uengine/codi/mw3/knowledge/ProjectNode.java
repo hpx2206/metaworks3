@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.mw3.model.IInstance;
 import org.uengine.codi.mw3.model.Instance;
-import org.uengine.codi.mw3.model.InstanceListPanel;
 import org.uengine.codi.mw3.model.Perspective;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.processmanager.ProcessManagerRemote;
@@ -100,6 +99,28 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 		dao.select();
 		
 		return dao;
+		
+		
+	}
+	
+	public IProjectNode findByNameForProject() throws Exception {
+		
+		StringBuffer sql = new StringBuffer();
+		
+		sql.append("SELECT knol.id, knol.name ");
+		sql.append("  FROM bpm_knol knol");
+		sql.append(" WHERE knol.type=?type AND knol.name=?name");
+		
+		IProjectNode dao  = (IProjectNode) Database.sql(IProjectNode.class, sql.toString());
+		
+		dao.setType(TYPE_PROJECT);
+		dao.setName(this.getName());
+		dao.select();
+		
+		if(dao.next())
+			return dao;
+		else
+			return null;
 		
 		
 	}

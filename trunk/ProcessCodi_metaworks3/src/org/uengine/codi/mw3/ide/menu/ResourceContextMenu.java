@@ -2,25 +2,37 @@ package org.uengine.codi.mw3.ide.menu;
 
 import java.io.File;
 
+import jsx3.gui.IFrame;
+
 import org.metaworks.MetaworksContext;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
+import org.metaworks.ToOpener;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.MenuItem;
+import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.widget.ModalPanel;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.ide.CloudTab;
 import org.uengine.codi.mw3.ide.ResourceNode;
+import org.uengine.codi.mw3.knowledge.ProjectInfo;
+import org.uengine.codi.mw3.knowledge.ProjectNode;
 import org.uengine.codi.mw3.knowledge.ProjectServer;
 import org.uengine.codi.mw3.knowledge.ProjectServers;
 import org.uengine.codi.mw3.marketplace.App;
+import org.uengine.codi.mw3.model.Popup;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 public class ResourceContextMenu extends CloudMenu {
 
 	@Autowired
 	public ProcessManagerRemote processManager;
+	
+	@AutowiredFromClient
+	transient public ProjectInfo projectInfo;
 	
 	public ResourceContextMenu(){
 		this(null);
@@ -82,23 +94,42 @@ public class ResourceContextMenu extends CloudMenu {
 	}
 	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
-	public Object deployee() throws Exception {
+	public Object[] deployee() throws Exception {
 		
+		String title = "";
+		String message = "";
+			
 		Object clipboard = session.getClipboard();
 		if(clipboard instanceof ResourceNode){
 			ResourceNode node = (ResourceNode)clipboard;			
 			
-			ProjectServers devServers = new ProjectServers(node.getProjectId(), "dev"); //prod
+			
+			ProjectNode projectNode = new ProjectNode();
+			projectNode.setName(node.getProjectId());
+			projectNode.copyFrom(projectNode.findByNameForProject());
+			
+			
+			ProjectInfo projectInfo = new ProjectInfo(projectNode.getId());
+			projectInfo.load();
+			
+			ProjectServers devServers = new ProjectServers(projectNode.getId(), "dev"); //prod
 			devServers.processManager = processManager;
+			
 			devServers.load();
+			
+			Popup popup = new Popup(300, 300);
+			popup.setName("배포중");
+			popup.setPanel("배포중.........");
 			
 			for(ProjectServer projectServer : devServers.getServerList()) {
 				
-				if(projectServer.getType().indexOf("WAS") > 0)
-					projectServer.deploy();
+				if(projectServer.getType().indexOf("WAS") > -1) {
+					projectServer.projectInfo = projectInfo;
+					projectServer.session = session;
+					projectServer.deploy(true);					
+				}
 			}
 		}	
-		
 		
 		ModalWindow modalWindow = new ModalWindow();
 		modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
@@ -106,9 +137,9 @@ public class ResourceContextMenu extends CloudMenu {
 		modalWindow.setHeight(150);
 		modalWindow.setTitle("$deployee.complete.title");
 		modalWindow.setPanel("배포가 완료 되었습니다.");//$deployee.complete.message		
-		modalWindow.getButtons().put("$Confirm", this);
+		modalWindow.getButtons().put("$Confirm", new ToOpener(this));
 		
-		return modalWindow;
+		return new Object[]{modalWindow, new Remover(this)};
 	}
 	
 	
