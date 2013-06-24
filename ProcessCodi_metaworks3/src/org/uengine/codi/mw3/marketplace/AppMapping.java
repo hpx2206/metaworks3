@@ -35,6 +35,7 @@ public class AppMapping extends Database<IAppMapping> implements IAppMapping {
 		public void setIsDeleted(boolean isDeleted) {
 			this.isDeleted = isDeleted;
 		}
+		
 	boolean selected;
 		public boolean isSelected() {
 			return selected;
@@ -42,6 +43,15 @@ public class AppMapping extends Database<IAppMapping> implements IAppMapping {
 		public void setSelected(boolean selected) {
 			this.selected = selected;
 		}
+	
+	String projectName;
+		public String getProjectName() {
+			return projectName;
+		}
+		public void setProjectName(String projectName) {
+			this.projectName = projectName;
+		}
+		
 	public IAppMapping findMe() throws Exception {
 
 		IAppMapping findApp = (IAppMapping) Database.sql(IAppMapping.class, "select * from appmapping where appid=?appId and comcode=?comCode");
@@ -62,6 +72,13 @@ public class AppMapping extends Database<IAppMapping> implements IAppMapping {
 		findApp.select();
 		
 		return findApp;
+	}
+	
+	public void findProject(String appId) throws Exception {
+		String projectName = null;
+		
+		
+		this.setProjectName(projectName);
 	}
 	
 	

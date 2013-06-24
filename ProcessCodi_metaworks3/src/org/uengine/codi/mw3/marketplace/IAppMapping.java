@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.marketplace;
 
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;
 import org.metaworks.annotation.NonLoadable;
@@ -9,6 +10,10 @@ import org.metaworks.annotation.Table;
 import org.metaworks.dao.IDAO;
 
 @Table(name="APPMAPPING")
+@Face(
+	      ejsPathMappingByContext={
+			"{where: 'mapList', face: 'dwr/metaworks/org/uengine/codi/mw3/marketplace/IAppMap.ejs'}"
+		  })
 public interface IAppMapping extends IDAO{
 	
 	@Id
@@ -26,6 +31,11 @@ public interface IAppMapping extends IDAO{
 	public boolean getIsDeleted();
 	public void setIsDeleted(boolean isDeleted);
 	
+	@NonSavable
+	@NonLoadable
+	public String getProjectName();
+	public void setProjectName(String projectName);
+	
 	@NonLoadable
 	@NonSavable
 	public boolean isSelected();
@@ -37,4 +47,7 @@ public interface IAppMapping extends IDAO{
 	@ServiceMethod(callByContent=true)
 	public IAppMapping findMyApps() throws Exception;
 	
+	@ServiceMethod(callByContent=true)
+	public void findProject(String appId) throws Exception;
+
 }

@@ -5,6 +5,7 @@ import org.metaworks.dao.Database;
 import org.metaworks.dao.MetaworksDAO;
 import org.metaworks.dao.TransactionContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.mw3.model.IInstance;
 import org.uengine.codi.mw3.model.Instance;
 import org.uengine.codi.mw3.model.InstanceListPanel;
@@ -55,7 +56,7 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 		
 		IProjectNode dao  = (IProjectNode)MetaworksDAO.createDAOImpl(TransactionContext.getThreadLocalInstance(), "select * from bpm_knol where type= ?type and companyId=?companyId order by name", IProjectNode.class);
 		dao.set("type", "project");
-		dao.set("companyId", session.getCompany().getComCode());
+		dao.set("companyId", TenantContext.getThreadLocalInstance().getTenantId());
 		dao.select();
 
 		return dao;
@@ -77,6 +78,25 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 		
 		dao.setType(TYPE_PROJECT);
 		dao.setCompanyId(companyId);
+		dao.select();
+		
+		return dao;
+		
+		
+	}
+	
+	public IProjectNode findById() throws Exception {
+		
+		StringBuffer sql = new StringBuffer();
+		
+		sql.append("SELECT knol.id, knol.name ");
+		sql.append("  FROM bpm_knol knol");
+		sql.append(" WHERE knol.type=?type AND knol.id=?Id");
+		
+		IProjectNode dao  = (IProjectNode) Database.sql(IProjectNode.class, sql.toString());
+		
+		dao.setType(TYPE_PROJECT);
+		dao.setId(this.getId());
 		dao.select();
 		
 		return dao;

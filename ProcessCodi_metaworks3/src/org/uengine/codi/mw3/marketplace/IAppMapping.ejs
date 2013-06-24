@@ -1,6 +1,9 @@
 
 <%
 
+console.log(value);
+console.log("appmapping");
+
 if(mw3.where == 'ssp'){
 %>
 
@@ -8,6 +11,10 @@ if(mw3.where == 'ssp'){
 	<li id="mp_menu_list_<%=objectId%>" class="mp_menu_list"><%=value.appName%></li>
 </ul>
 
+<%
+}else if(mw3.where == 'mapList'){
+
+%>
 <%
 }else{
 

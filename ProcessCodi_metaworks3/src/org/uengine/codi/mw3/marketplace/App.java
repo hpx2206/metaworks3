@@ -6,7 +6,6 @@ import java.util.Date;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Remover;
-import org.metaworks.ToOpener;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.component.SelectBox;
 import org.metaworks.dao.Database;
@@ -16,7 +15,6 @@ import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.ITool;
-import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.knowledge.IProjectNode;
 import org.uengine.codi.mw3.knowledge.IWfNode;
 import org.uengine.codi.mw3.knowledge.ProjectNode;
@@ -29,7 +27,6 @@ import org.uengine.codi.mw3.model.IUser;
 import org.uengine.codi.mw3.model.InstanceList;
 import org.uengine.codi.mw3.model.InstanceListPanel;
 import org.uengine.codi.mw3.model.InstanceViewContent;
-import org.uengine.codi.mw3.model.Main;
 import org.uengine.codi.mw3.model.ProcessMap;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.kernel.KeyedParameter;
@@ -237,7 +234,6 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 		public void setInstallCnt(int installCnt) {
 			this.installCnt = installCnt;
 		}
-		
 
 	@AutowiredFromClient
 	transient public Session session;
@@ -544,7 +540,7 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 		return new Object[] {modalWindow, new Remover(removeWindow, true)};
 	    
 	}
-	
+
 	@Override
 	public void onLoad() throws Exception {
 		if (MetaworksContext.WHEN_VIEW.equals(this.getMetaworksContext()
