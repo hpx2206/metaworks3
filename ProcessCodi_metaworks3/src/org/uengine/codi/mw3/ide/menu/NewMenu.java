@@ -31,19 +31,19 @@ public class NewMenu extends CloudMenu {
 		this.setResourceNode(resourceNode);
 		
 		this.setId("new");
-		this.setName("New");
+		this.setName("$resource.menu.new");
 		
 		//this.add(new MenuItem("newPackage", "Package"));
-		this.add(new MenuItem("newProcess", "Process"));
+		this.add(new MenuItem("newProcess", "$resource.menu.new.process"));
 		//this.add(new MenuItem("newRole", "Role"));
 		this.add(new MenuItem(MenuItem.TYPE_DIVIDER));
 		//this.add(new MenuItem("newClass", "Class"));
-		this.add(new MenuItem("newForm", "Form"));
-		this.add(new MenuItem("newFolder", "Folder"));
-		this.add(new MenuItem("newFile", "File"));
+		this.add(new MenuItem("newForm", "$resource.menu.new.form"));
+		this.add(new MenuItem("newFolder", "$resource.menu.new.folder"));
+		this.add(new MenuItem("newFile", "$resource.menu.new.file"));
 		this.add(new MenuItem(MenuItem.TYPE_DIVIDER));
 		//this.add(new MenuItem("newTerminal", "Terminal"));
-		//this.add(new MenuItem("newSQLClient", "SQL Client"));
+		//this.add(new MenuItem("newSQLClient", "SQL Client"));		
 
 	}
 	
