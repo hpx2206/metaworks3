@@ -338,7 +338,7 @@ public class InstanceListPanel implements ContextAware{
 		projectManager.load(session.getLastSelectedItem());
 		
 		ModalWindow modalWindow = new ModalWindow();
-		modalWindow.setTitle("Project Info");
+		modalWindow.setTitle("$ProjectInfo");
 		modalWindow.setWidth(800);
 		modalWindow.setHeight(500);
 		modalWindow.setPanel(projectManager);
