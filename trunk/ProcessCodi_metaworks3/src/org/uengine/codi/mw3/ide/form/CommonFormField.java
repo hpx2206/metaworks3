@@ -173,7 +173,7 @@ public class CommonFormField implements ContextAware, Cloneable {
 		
 		form.getFormFields().add(formField);			
 		
-		return form;		
+		return form;	
 	}
 	
 	//, mouseBinding="left"
@@ -236,6 +236,7 @@ public class CommonFormField implements ContextAware, Cloneable {
 	@Available(when={MetaworksContext.WHEN_EDIT}, where={"properties"})
 	public Object[] apply() {
 
+		/*
 		FormFieldProperties formFieldProperty = (FormFieldProperties)this.formFieldProperty;
 		formFieldProperty.setFormField(this);
 
@@ -251,6 +252,9 @@ public class CommonFormField implements ContextAware, Cloneable {
 		}
 
 		return new Object[]{form, formFieldProperty};
+		*/
+		
+		return null;
 	}	
 
 	@Override	
