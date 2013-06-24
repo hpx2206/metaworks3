@@ -2,6 +2,8 @@
 <span id="method_<%=objectId%>_initiate">
 <%
 if(value){
+	console.log(value);
+	
 	if(mw3.when == 'new' || mw3.when == 'edit'){
 %>
 	<div id="process">
@@ -30,8 +32,13 @@ if(value){
 				admin = session.employee.isAdmin;		
 				
 %>   	
-    <a style="display:block; margin:26px 0 0 14px" href="#" onClick="javascript:window.open('http://<%=value.comCode%>.<%=value.projectName%>.com:9090/uengine-web/')"><img alt="" src="images/processMap/testApp.PNG" width="144" height="144"></a>
-    <a href="#"><%=value.appName%></a>
+    <a style="display:block; margin:12px 0 0 4px" href="#" onClick="javascript:window.open('http://<%=value.comCode%>.<%=value.projectName%>.com:9090/uengine-web/')">
+    	<%=fields.logoFile.here({when: 'image', htmlAttr:{class : 'applogo'}})%>
+    </a>
+    
+    <a href="#">
+    	<%=value.appName%>
+    </a>
 	
 <%
 	}
