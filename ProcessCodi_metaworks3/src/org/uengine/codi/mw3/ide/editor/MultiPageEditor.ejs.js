@@ -19,9 +19,7 @@ var org_uengine_codi_mw3_ide_editor_MultiPageEditor = function(objectId, classNa
 	
 	//		'height': '100%',
 	//'position': 'relative',
-	this.objectDiv.css({
-		'padding-bottom': '35px'
-	}).addClass('mw3_layout');
+	this.objectDiv.addClass('mw3_layout');
 	
 	this.lastIndex = this.object.pagePanel.length;
 };
