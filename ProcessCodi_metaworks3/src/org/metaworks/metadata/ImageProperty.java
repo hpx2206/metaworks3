@@ -56,11 +56,10 @@ public class ImageProperty extends MetadataProperty{
 		
 		//파일 첨부일떄..
 		MetadataFile file = new MetadataFile();
-		file.setUploadedPath(this.getFile().getFilename());
+		file.setUploadedPath(this.getFile().getUploadedPath());
 		file.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 		file.setMimeType(ResourceNode.findNodeType(this.getFile().getFilename()));
 		file.setFileTransfer(this.getFile().getFileTransfer());
-		file.metadataXml = metadataXML;
 		
 		editProperty.setFile(file);
 		editProperty.setValue(file.getUploadedPath());
@@ -104,7 +103,6 @@ public class ImageProperty extends MetadataProperty{
 
 	@ServiceMethod(callByContent=true, bindingHidden=true, bindingFor="file", eventBinding={"uploaded"})
 	public void changeFile(){
-		
 		this.getFile().getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		setFilePreview(this.getFile());
 		

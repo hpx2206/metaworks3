@@ -65,7 +65,6 @@ public class FileProperty extends MetadataProperty {
 				file.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 				file.setMimeType(ResourceNode.findNodeType(this.getValue()));
 				file.setFileTransfer(this.getFile().getFileTransfer());
-				file.metadataXml = metadataXML;
 				
 				editProperty.setFile(file);
 				editProperty.setValue(file.getUploadedPath());

@@ -1,5 +1,6 @@
 package org.metaworks.metadata;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,10 +26,13 @@ import org.metaworks.annotation.NonEditable;
 import org.metaworks.annotation.Range;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.TypeSelector;
+import org.metaworks.dao.TransactionContext;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.codi.mw3.ide.Project;
 import org.uengine.codi.mw3.ide.ResourceNode;
+import org.uengine.codi.mw3.ide.Workspace;
 import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.model.ProcessMap;
 import org.uengine.codi.mw3.model.ProcessMapList;
@@ -63,6 +67,9 @@ public class MetadataProperty implements ContextAware, Cloneable {
 	@AutowiredFromClient
 	public MetadataXML metadataXML;
 
+	@AutowiredFromClient
+	public Workspace workspace;
+	
 	@AutowiredFromClient
 	public Session session;
 
@@ -174,11 +181,11 @@ public class MetadataProperty implements ContextAware, Cloneable {
 		}
 	
 	@XStreamOmitField
-	MetadataFile filePreview;
-		public MetadataFile getFilePreview() {
+	Object filePreview;
+		public Object getFilePreview() {
 			return filePreview;
 		}
-		public void setFilePreview(MetadataFile filePreview) {
+		public void setFilePreview(Object filePreview) {
 			this.filePreview = filePreview;
 		}
 
@@ -650,6 +657,21 @@ public class MetadataProperty implements ContextAware, Cloneable {
 	@ServiceMethod(callByContent = true, target=ServiceMethodContext.TARGET_AUTO)
 	public MetadataProperty showPropertyDetail() throws Exception {
 		
+		String sessionProjectId = (String)TransactionContext.getThreadLocalInstance().getRequest().getSession().getAttribute("projectId");
+		
+		if(sessionProjectId == null || !sessionProjectId.equals(this.getResourceNode().getProjectId())){
+			Project project = workspace.findProject(this.getProjectId());
+			
+			TransactionContext.getThreadLocalInstance().getRequest().getSession().setAttribute("projectSourcePath", project.getBuildPath().getSources().get(0).getPath());
+		}
+		
+		
+		String projectSourcePath = (String)TransactionContext.getThreadLocalInstance().getRequest().getSession().getAttribute("projectSourcePath");
+		
+		
+		 
+		
+		
 		MetadataProperty detailProperty = new MetadataProperty();
 		
 		detailProperty.setName(this.getName());
@@ -671,6 +693,7 @@ public class MetadataProperty implements ContextAware, Cloneable {
 			file.setMimeType(ResourceNode.findNodeType(this.getValue()));
 			
 			detailProperty.setFile(file);
+						
 		}else if(MetadataProperty.PROCESS_PROP.equals(this.getType())){
 			
 			InstanceMonitorPanel processInstanceMonitorPanel = new InstanceMonitorPanel();
@@ -679,37 +702,60 @@ public class MetadataProperty implements ContextAware, Cloneable {
 			
 		}else if(MetadataProperty.IMAGE_PROP.equals(this.getType())){
 			MetadataFile file = new MetadataFile();
+			file.setBaseDir(projectSourcePath);
+			file.setTypeDir("image");
 			file.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 			file.setUploadedPath(this.getValue());
 			file.setMimeType(ResourceNode.findNodeType(this.getValue()));
 			
-			MetadataFile copyFile = new MetadataFile();
-			copyFile = file;
 			
+			MetadataFile previewFile = new MetadataFile();
+			previewFile.setBaseDir(projectSourcePath);
+			previewFile.setTypeDir("image");
+			previewFile.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+			previewFile.setUploadedPath(this.getValue());
+			previewFile.setMimeType(ResourceNode.findNodeType(this.getValue()));
+
+			
+			/*
 			ResourceNode resourceNode = new ResourceNode();
 			resourceNode.setMetaworksContext(new MetaworksContext());
 			resourceNode.getMetaworksContext().setHow("resourcePicker");
 			resourceNode.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+			*/
 			
 			detailProperty.setFile(file);
-			detailProperty.setFilePreview(detailProperty.getFile());
-			detailProperty.setResourceNode(resourceNode);
-			detailProperty.metadataXML = metadataXML;
+			detailProperty.setFilePreview(previewFile);
+			//detailProperty.setResourceNode(resourceNode);
+			//detailProperty.metadataXML = metadataXML;
 		}else if(MetadataProperty.FORM_PROP.equals(this.getType())){
 			MetadataFile file = new MetadataFile();
+			file.setBaseDir(projectSourcePath);
+			file.setTypeDir("form");
 			file.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 			file.setUploadedPath(this.getValue());
 			file.setMimeType(ResourceNode.findNodeType(this.getValue()));
-			
 
+			String path = this.getProjectId() + File.separatorChar + "src" + File.separatorChar + file.getUploadedPath();
+			
+			Project project = workspace.findProject(this.getProjectId());
+			
+			
+			/*
 			ResourceNode resourceNode = new ResourceNode();
 			resourceNode.setMetaworksContext(new MetaworksContext());
 			resourceNode.getMetaworksContext().setHow("resourcePicker");
 			resourceNode.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+			*/
 			
+			
+			Object previewForm = Thread.currentThread().getContextClassLoader().loadClass(project.getBuildPath().makeFullClassName(path)).newInstance();
+					
 			detailProperty.setFile(file);
-			detailProperty.setResourceNode(resourceNode);
-			detailProperty.metadataXML = metadataXML;
+			detailProperty.setFilePreview(previewForm);
+			
+			//detailProperty.setResourceNode(resourceNode);
+			//detailProperty.metadataXML = metadataXML;
 		}
 		
 		return detailProperty;

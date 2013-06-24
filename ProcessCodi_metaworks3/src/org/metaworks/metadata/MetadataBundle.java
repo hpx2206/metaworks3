@@ -236,12 +236,16 @@ public class MetadataBundle {
 	}
 	
 	public static String getProjectBasePath(String projectId){
+		return getProjectBasePath(projectId, "root");
+	}
+	
+	public static String getProjectBasePath(String projectId, String tenantId){
 		String codebase = GlobalContext.getPropertyString("codebase", "codebase");
 		String projectBasePath = null;
 		if( projectId == null ){
-			projectBasePath = codebase + File.separatorChar + "root";
+			projectBasePath = codebase + File.separatorChar + tenantId;
 		}else{
-			projectBasePath = codebase + File.separatorChar + projectId+ File.separatorChar + "root";
+			projectBasePath = codebase + File.separatorChar + projectId+ File.separatorChar + tenantId;
 		}
 		
 		return projectBasePath;
