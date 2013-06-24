@@ -14,15 +14,8 @@ console.log(value);
 		if(value.appMapping){
 		
 %>
-	<div class="view_box4" id="hiddenReply" style="display: block; margin-top:15px;">
-		<div class="guide">
-			<span class="tl"></span>
-			<span class="tr"></span>
-		</div>
-		<div class="cont" style="padding:10px;">
-			<p class="title"><%=mw3.localize("$ActivityApps")%></p>
-		
-		<ul class="process_map2">		
+		<div style="position:absolute; top:45%; left:25px;"><img src="images/marketPlace/arrowLeft.png" /></div>
+		<ul class="process_map3" style="margin:20% auto 0px;  width:75%;">		
 						
 <%
 			for (var i=0; i<value.appMapping.length; i++){
@@ -37,15 +30,24 @@ console.log(value);
 				mw3.addBeanProperty(value.__objectId, '.appMapping[' + i + ']');
 			}
 %>
+		<li class="clear" style="display:block;width:100%; height:auto;">
+			<div style="width:200px; margin:10px auto;">
+				<span style="float:left"><img src="images/marketPlace/dot_c.png" /></span>
+				<span style="float:left"><img src="images/marketPlace/dot.png" /></span>
+				<span style="float:left"><img src="images/marketPlace/dot.png" /></span>
+				<span style="float:left"><img src="images/marketPlace/dot.png" /></span>
+				<span style="float:left"><img src="images/marketPlace/dot.png" /></span>
+			</div>
+		</li>
 		</ul>
-			<div class="clear"></div>		
-		</div>
-	
-		<div class="guide">
-			<span class="lb"></span>
-			<span class="rb"></span>
-		</div>
-	</div>
+		<div style="position:absolute; top:45%; right:25px;"><img src="images/marketPlace/arrowRight.png" /></div>
+		
+		
+		
+		
+		<div></div>
+			
+		
 
 <%
 		}

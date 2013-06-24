@@ -1,3 +1,4 @@
+<div style="position:absolute; top:0px;left:0px;"><img src="images/marketPlace/appListFrame.png" /></div>
 <span id="method_<%=objectId%>_initiate">
 <%
 if(value){
@@ -29,7 +30,7 @@ if(value){
 				admin = session.employee.isAdmin;		
 				
 %>   	
-    <a href="#" onClick="javascript:window.open('http://<%=value.comCode%>.<%=value.projectName%>.com:9090/uengine-web/')"><img alt="" src="images/processMap/iconDefault.png" width="40" height="40"></a>
+    <a style="display:block; margin:26px 0 0 14px" href="#" onClick="javascript:window.open('http://<%=value.comCode%>.<%=value.projectName%>.com:9090/uengine-web/')"><img alt="" src="images/processMap/testApp.PNG" width="144" height="144"></a>
     <a href="#"><%=value.appName%></a>
 	
 <%
