@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.ide;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import org.metaworks.metadata.MetadataBundle;
@@ -94,12 +95,14 @@ public class Workspace {
 		this.getProjects().add(tenantMain);
 	}
 	
-	public void addProject(String id){
-		String path = MetadataBundle.getProjectBasePath(id);
+	public void addProject(String tenantId, String projectId){
+		
+		String path = MetadataBundle.getProjectBasePath(projectId, tenantId);
+		
 		CodiFileUtil.mkdirs(path);
 		
 		Project project = new Project();
-		project.setId(id);
+		project.setId(projectId);
 		project.setPath(path);
 		project.load();
 		
