@@ -14,6 +14,7 @@ import org.uengine.codi.mw3.ide.form.Form;
 import org.uengine.codi.mw3.ide.form.FormFieldMenu;
 import org.uengine.codi.mw3.ide.form.FormPreview;
 import org.uengine.codi.mw3.ide.form.FormProperties;
+import org.uengine.codi.mw3.ide.form.Properties;
 
 public class FormEditor extends Editor {
 
@@ -25,11 +26,11 @@ public class FormEditor extends Editor {
 			this.form = form;
 		}
 		
-	FormProperties properties;
-		public FormProperties getProperties() {
+	Properties properties;
+		public Properties getProperties() {
 			return properties;
 		}
-		public void setProperties(FormProperties properties) {
+		public void setProperties(Properties properties) {
 			this.properties = properties;
 		}
 
@@ -90,8 +91,17 @@ public class FormEditor extends Editor {
 	}
 	
 	@Override
+	@ServiceMethod(callByContent=true)
 	public Object save() {		
 		this.setContent(form.generateJavaCode());
+		
+		try {
+			MetaworksRemoteService.getInstance().clearMetaworksType(this.getForm().getFullClassName());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		return super.save();
 	}
 	
