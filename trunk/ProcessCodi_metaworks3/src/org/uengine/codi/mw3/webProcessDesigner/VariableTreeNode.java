@@ -47,7 +47,8 @@ public class VariableTreeNode extends TreeNode {
 			node.setFolder(true);
 			node.setAlign(this.getAlign());
 			
-			String className =  typeIdAttr.substring(0, typeIdAttr.lastIndexOf(".")).replaceAll("/", ".");
+//			String className =  typeIdAttr.substring(0, typeIdAttr.lastIndexOf(".")).replaceAll("/", ".");
+			String className =  typeIdAttr;
 			node.setClassName(className);
 			this.add(node);
 				if( "complexType".equals(typeAttr)){

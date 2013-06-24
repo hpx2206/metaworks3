@@ -371,6 +371,7 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
     				case 'org.uengine.codi.mw3.ide.ResourceNode':
     					switch (dragObj.type) {
     					case 'java':
+    						console.log(dragObj);
     						var dragObjMetadata = mw3.getMetadata(dragObj.alias);
     						
     						canvas.drawLabel(element, dragObjMetadata.displayName);
@@ -383,6 +384,14 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 									variableType : 'complexType'
 							};
 	    		    		value.variableMap[dragObj.alias] = contentValue;
+	    		    		
+	    		    		var eleClassName = $(this).attr("_classname");
+	    		    		console.log(eleClassName);
+	    		    		if( eleClassName == 'org.uengine.kernel.InvocationActivity'){
+	    		    			var activityData = $(this).data('activity');
+	    		    			activityData.resourceClass = dragObj.alias;
+	    		    			$(this).data('activity', activityData);
+	    		    		}
 		    			
     						break;
     					default:

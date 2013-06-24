@@ -32,7 +32,8 @@ public class ClassResourceMethod implements Serializable{
 	public void makeMethodChoice() throws  Exception{
 		String rsc = this.getResourceClass();
 		if( rsc != null ){
-			Class c = Thread.currentThread().getContextClassLoader().loadClass(rsc.substring(0, rsc.lastIndexOf(".")).replaceAll("/", "."));
+//			Class c = Thread.currentThread().getContextClassLoader().loadClass(rsc.substring(0, rsc.lastIndexOf(".")).replaceAll("/", "."));
+			Class c = Thread.currentThread().getContextClassLoader().loadClass(rsc);
 	    	Method[] method = c.getDeclaredMethods();
 	    	SelectBox methodChoice = new SelectBox();
 			methodChoice.add("", "");

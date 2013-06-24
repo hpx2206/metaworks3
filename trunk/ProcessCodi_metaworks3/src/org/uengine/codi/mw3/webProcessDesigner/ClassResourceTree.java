@@ -46,7 +46,8 @@ public class ClassResourceTree extends Tree {
 		if( resourceClass == null ){
 			rootnode.setName("resource를 등록해주세요.");
 		}else{
-			String fullClassName =  resourceClass.substring(0, resourceClass.lastIndexOf(".")).replaceAll("/", ".") ;
+//			String fullClassName =  resourceClass.substring(0, resourceClass.lastIndexOf(".")).replaceAll("/", ".") ;
+			String fullClassName =  resourceClass;
 			String className = fullClassName.substring(fullClassName.lastIndexOf(".") + 1);
 			
 			rootnode.setId(className);
