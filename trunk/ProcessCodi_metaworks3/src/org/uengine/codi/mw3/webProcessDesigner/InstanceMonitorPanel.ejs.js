@@ -12,9 +12,8 @@ var org_uengine_codi_mw3_webProcessDesigner_InstanceMonitorPanel = function(obje
 	this.canvasDivObj = $('#canvasView_'+objectId);
 	
 	if(object){
-		if(mw3.importScript('scripts/opengraph/OpenGraph-0.1-SNAPSHOT.js', function(){mw3.getFaceHelper(objectId).load();})){
+		if(mw3.importScript('scripts/opengraph/OpenGraph-0.1-SNAPSHOT.js')){
 			mw3.importScript('scripts/jquery/jquery.contextMenu.js');
-			
 			mw3.importStyle('style/jquery/jquery.contextMenu.css');
 			mw3.importStyle('dwr/metaworks/org/uengine/codi/mw3/model/PureWebProcessDesigner.ejs.css');
 		}
