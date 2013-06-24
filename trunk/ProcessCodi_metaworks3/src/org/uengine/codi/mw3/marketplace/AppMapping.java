@@ -1,6 +1,8 @@
 package org.uengine.codi.mw3.marketplace;
 
 import org.metaworks.dao.Database;
+import org.metaworks.website.MetaworksFile;
+import org.uengine.cloud.saasfier.TenantContext;
 
 public class AppMapping extends Database<IAppMapping> implements IAppMapping {
 	
@@ -52,6 +54,14 @@ public class AppMapping extends Database<IAppMapping> implements IAppMapping {
 			this.projectName = projectName;
 		}
 		
+	MetaworksFile logoFile;
+		public MetaworksFile getLogoFile() {
+			return logoFile;
+		}
+		public void setLogoFile(MetaworksFile logoFile) {
+			this.logoFile = logoFile;
+		}
+		
 	public IAppMapping findMe() throws Exception {
 
 		IAppMapping findApp = (IAppMapping) Database.sql(IAppMapping.class, "select * from appmapping where appid=?appId and comcode=?comCode");
@@ -67,7 +77,7 @@ public class AppMapping extends Database<IAppMapping> implements IAppMapping {
 		
 		IAppMapping findApp = (IAppMapping) Database.sql(IAppMapping.class, "select * from appmapping where comcode=?comCode and isdeleted=?isDeleted");
 		
-		findApp.setComCode(this.getComCode());
+		findApp.setComCode(TenantContext.getThreadLocalInstance().getTenantId());
 		findApp.setIsDeleted(this.getIsDeleted());
 		findApp.select();
 		
