@@ -251,7 +251,7 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
 		
 	
 		if(name != null){
-			if(name.endsWith(".ejs") || name.endsWith(".ejs.js") || name.endsWith(".xml") || name.endsWith(".process") || name.endsWith(".process2") || name.endsWith(".sql")){
+			if(name.endsWith(".ejs") || name.endsWith(".ejs.js") || name.endsWith(".xml") || name.endsWith(".process") || name.endsWith(".process2") || name.endsWith(".sql") || name.endsWith(".wpd")){
 				
 				for(File file : sourcePath){
 					try {
