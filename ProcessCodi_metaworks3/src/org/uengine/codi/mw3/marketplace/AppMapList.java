@@ -38,6 +38,7 @@ public class AppMapList implements ContextAware {
 			appMap.setComCode(session.getCompany().getComCode());
 			appMap.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 			appMap.getMetaworksContext().setWhere("mapList");
+			appMap.setLogoFile(appList.getLogoFile());
 			
 			String projectId = appList.getProject().getId();
 			
