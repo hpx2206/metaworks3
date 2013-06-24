@@ -5,7 +5,7 @@ import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.NonLoadable;
 import org.metaworks.annotation.Range;
 import org.uengine.codi.ITool;
-import org.uengine.codi.mw3.marketplace.IApp;
+import org.uengine.codi.mw3.marketplace.AppMapping;
 
 @Face(
 	ejsPath="dwr/metaworks/genericfaces/FormFace.ejs",
@@ -27,6 +27,31 @@ public class ManagerApproval implements ITool  {
 			this.approval = approval;
 		}
 		
+	int appId;
+		public int getAppId() {
+			return appId;
+		}
+		public void setAppId(int appId) {
+			this.appId = appId;
+		}
+
+	String appName;
+		public String getAppName() {
+			return appName;
+		}
+	
+		public void setAppName(String appName) {
+			this.appName = appName;
+		}
+		
+	String comcode;
+		public String getComcode() {
+			return comcode;
+		}
+		public void setComcode(String comcode) {
+			this.comcode = comcode;
+		}
+		
 	@Override
 	public void onLoad() throws Exception {
 		// TODO Auto-generated method stub
@@ -34,7 +59,15 @@ public class ManagerApproval implements ITool  {
 
 	@Override
 	public void beforeComplete() throws Exception {
-		// TODO Auto-generated method stub
+		
+		AppMapping appMapping = new AppMapping();
+		
+		appMapping.setAppId(this.getAppId());
+		appMapping.setAppName(this.getAppName());
+		appMapping.setComCode(this.getComcode());
+		appMapping.setIsDeleted(false);
+		
+		appMapping.createDatabaseMe();
 	}
 
 	public void afterComplete() throws Exception {
