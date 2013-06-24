@@ -368,6 +368,10 @@ public class Login implements ContextAware {
 			mainPanel = pageNavigator.goPinterest();
 		}else if("ide".equals(lastVisitPage)){
 			mainPanel = pageNavigator.goIDE();
+		}else if("marketplace".equals(lastVisitPage)){
+			mainPanel = pageNavigator.goMarketplace();
+		}else if("selfservice".equals(lastVisitPage)){
+			mainPanel = pageNavigator.goSelfServicePortal();
 		}else{
 			String preferUX = session.getEmployee().getPreferUX();
 			if("sns".equals(preferUX) || "".equals(preferUX)){
