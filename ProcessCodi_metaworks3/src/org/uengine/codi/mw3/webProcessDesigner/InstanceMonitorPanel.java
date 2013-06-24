@@ -1,16 +1,14 @@
 package org.uengine.codi.mw3.webProcessDesigner;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.kernel.Activity;
@@ -97,12 +95,12 @@ public class InstanceMonitorPanel {
 	
 	public void loadProcess(String path) throws Exception {
 		System.out.println("path = " + path);
-		File sourceCodeFile = new File(CodiClassLoader.getMyClassLoader().sourceCodeBase() + "/" + path);
+		
 		
 		ByteArrayOutputStream bao = new ByteArrayOutputStream();
-		FileInputStream is = null;
+		InputStream is = null;
 		try {
-			is = new FileInputStream(sourceCodeFile);
+			is = Thread.currentThread().getContextClassLoader().getResourceAsStream(path);
 			UEngineUtil.copyStream(is, bao);
 		
 			ProcessDefinition def = (ProcessDefinition) GlobalContext.deserialize(bao.toString("UTF-8"));
