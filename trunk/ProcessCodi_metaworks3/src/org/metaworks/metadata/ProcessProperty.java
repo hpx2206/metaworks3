@@ -1,11 +1,16 @@
 package org.metaworks.metadata;
 
+import java.io.File;
+
 import org.metaworks.MetaworksContext;
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.CodiClassLoader;
+import org.uengine.codi.mw3.ide.Project;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.editor.process.ProcessEditor;
 import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitorPanel;
@@ -32,7 +37,6 @@ public class ProcessProperty extends MetadataProperty{
 			this.value = value;
 		}
 	InstanceMonitorPanel processInstanceMonitorPanel;
-	@Hidden
 		public InstanceMonitorPanel getProcessInstanceMonitorPanel() {
 			return processInstanceMonitorPanel;
 		}
@@ -42,10 +46,10 @@ public class ProcessProperty extends MetadataProperty{
 		}
 
 	@Available(when = MetaworksContext.WHEN_VIEW)
-	@ServiceMethod(callByContent = true)
+	@ServiceMethod(callByContent = true, target=ServiceMethodContext.TARGET_POPUP)
 	public Object modify() throws Exception {
 		String projectId = this.getProjectId();
-		String sourceCodeBase = CodiClassLoader.mySourceCodeBase(projectId);
+		String sourceCodeBase = CodiClassLoader.mySourceCodeBase(projectId) + "src" + File.separatorChar;
 		
 		ResourceNode node = new ResourceNode();
 		node.setId(this.getValue());
@@ -55,6 +59,21 @@ public class ProcessProperty extends MetadataProperty{
 		ProcessEditor processEditor = new ProcessEditor(node);
 		processEditor.load();
 		
-		return processEditor;
+		ModalWindow modalWindow = new ModalWindow(processEditor, 0, 0, "프로세스 편집");
+		
+		modalWindow.getButtons().put("$Save", "save");
+		modalWindow.getButtons().put("$Cancel", null);
+		modalWindow.getCallback().put("$Save", "changeFile");
+		
+		return modalWindow;
 	}		
+	
+	@ServiceMethod(callByContent=true)
+	public void changeFile() throws Exception {
+
+		InstanceMonitorPanel processInstanceMonitorPanel = new InstanceMonitorPanel();
+		processInstanceMonitorPanel.loadProcess(this.getValue());
+		this.setProcessInstanceMonitorPanel(processInstanceMonitorPanel);
+		
+	}
 }

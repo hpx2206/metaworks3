@@ -1,15 +1,20 @@
 package org.metaworks.metadata;
 
-import java.util.ArrayList;
+import java.io.File;
 
+import org.metaworks.MetaworksContext;
+import org.metaworks.Remover;
+import org.metaworks.ServiceMethodContext;
+import org.metaworks.ToOpener;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
-import org.uengine.codi.mw3.CodiClassLoader;
+import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.widget.ModalWindow;
+import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.ide.Project;
 import org.uengine.codi.mw3.ide.ResourceNode;
-import org.uengine.codi.mw3.ide.Workspace;
 import org.uengine.codi.mw3.ide.editor.form.FormEditor;
-import org.uengine.codi.util.CodiFileUtil;
+import org.uengine.codi.mw3.model.Main;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
@@ -34,33 +39,42 @@ public class FormProperty extends MetadataProperty{
 		}
 
 	@Override
+	@ServiceMethod(callByContent = true, target=ServiceMethodContext.TARGET_POPUP)
 	public Object modify() throws Exception {
-		String projectId = this.getProjectId();
-		String sourceCodeBase = CodiClassLoader.mySourceCodeBase(projectId);
+		
+		Project project = workspace.findProject(this.getProjectId());
 		
 		ResourceNode node = new ResourceNode();
-		node.setId(this.getValue());
+		node.setId(this.getProjectId() + File.separatorChar + "src" + File.separatorChar + this.getValue());
 		node.setName(this.getValue());
-		node.setPath(sourceCodeBase + this.getValue());
-		node.setProjectId(projectId);
-		
-		Workspace workspace = new Workspace();
-		ArrayList<Project> projects = new ArrayList<Project>();
-		
-		String codeBasePath = CodiClassLoader.mySourceCodeBase();
-		CodiFileUtil.mkdirs(codeBasePath);
-		Project tenantMain = new Project();
-		tenantMain.setId(projectId);
-		tenantMain.setPath(codeBasePath);
-		tenantMain.load();
-		projects.add(tenantMain);
-		workspace.setProjects(projects);
+		node.setPath(project.getBuildPath().getSources().get(0).getPath() + File.separatorChar + this.getValue());
+		node.setProjectId(this.getProjectId());
 		
 		FormEditor formEditor = new FormEditor(node);
 		formEditor.workspace = workspace;
 		formEditor.load();
 		
-		return formEditor;
+		ModalWindow modalWindow = new ModalWindow(formEditor, 0, 0, "폼 편집");
+		
+		modalWindow.getButtons().put("$Save", "save");
+		modalWindow.getButtons().put("$Cancel", null);
+		modalWindow.getCallback().put("$Save", "changeFile");
+		
+		return modalWindow;
+	}
+	
+	@ServiceMethod(callByContent=true)
+	public void changeFile() throws Exception {
+
+		String path = this.getProjectId() + File.separatorChar + "src" + File.separatorChar + file.getUploadedPath();
+		
+		Project project = workspace.findProject(this.getProjectId());
+		
+		Object previewForm = Thread.currentThread().getContextClassLoader().loadClass(project.getBuildPath().makeFullClassName(path)).newInstance();
+				
+		
+		setFilePreview(previewForm);
+		
 	}
 
 }
