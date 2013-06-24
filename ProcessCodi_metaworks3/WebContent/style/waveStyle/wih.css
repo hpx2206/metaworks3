@@ -180,6 +180,28 @@ legend {display:none;}
 
 
 
+.process_map3{overflow:hidden;padding:0; }
+.process_map3 li{display:inline;float:left; width:194px; height:194px; maring:15px;padding-bottom:25px;font-size:12px;text-align:center;list-style:none;  position:relative;  }
+.process_map3 li .editicon{position:absolute; right:2px; top:2px; width:16px; height:16px; cursor:pointer; background:url(../../images/processMap/wheel.png) no-repeat; display:none;}
+.process_map3 .sptitle{ position:absolute; left:35px; margin-top:-12px; background:#FFF; padding:5px; font-size:14px; font-weight:bold; color:#5DA0E8; width:auto;}
+.process_map3 .blue {background:url(../../images/processMap/newPrcessBgBlue.png) no-repeat;}
+.process_map3 .red {background:url(../../images/processMap/newPrcessBgRed.png) no-repeat;}
+.process_map3 .gray {background:url(../../images/processMap/newPrcessBgGray.png) no-repeat;}
+.process_map3 .green {background:url(../../images/processMap/newPrcessBgGreen.png) no-repeat;}
+.process_map3 .purple {background:url(../../images/processMap/newPrcessBgPurple.png) no-repeat;}
+.process_map3 .folder {background:url(../../images/processMap/folder2_64.png) no-repeat;}
+
+
+
+.process_map3 li a{color:#333;text-decoration:none; font-weight:bold; letter-spacing:-1;}
+.process_map3 li a:hover{text-decoration:underline}
+.process_map3 li img{display:block;margin:12px; margin-bottom:20px;border:none; line-height:66px;}
+
+
+
+
+
+
 
 .readmore{ cursor:pointer; margin-top:10px;  color:#5794D8; font-weight:bold;}
 .togglemode1{position:absolute; top:8px; right:7px; z-index:99;}
