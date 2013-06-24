@@ -1890,13 +1890,17 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				
 				//alert( dwr.util.toDescriptiveString(value, 5))
 				
+
+				var divId =  "#objDiv_" + objectId;
 				
 				// 2012-03-27 cjw destroy event
-    			if(this.objects[objectId] && this.getFaceHelper(objectId) && this.getFaceHelper(objectId).destroy){
-        			mw3.getFaceHelper(objectId).destroy();
+    			if(this.objects[objectId]){
+    				if(this.getFaceHelper(objectId) && this.getFaceHelper(objectId).destroy)
+    					mw3.getFaceHelper(objectId).destroy();
+    				else{
+    					$(divId).unbind();
+    				}
     			}
-        			
-				var divId =  "#objDiv_" + objectId;
 				
     			this._armObject(objectId, value); //let the methods and some special fields available
 				this.objects[objectId] = value; //change the cached value
@@ -3482,8 +3486,6 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				
     			var validationConditionExpression = validator.condition;    			
     			if(validationConditionExpression != null){
-    				console.log(validationConditionExpression);
-    				
     				with(object){
     					validationCondition = eval(validationConditionExpression);
     				}
@@ -4004,8 +4006,8 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 		   			 				if(which == 3){
 		   			 					document.oncontextmenu = function() { return false; };
 		   			 				}
-		   			 				
 			   						eval(this['mouseCommand' + e.which]);
+			   									   						
 		   			 				e.stopPropagation(); //stops to propagate to parent that means consumes the event here.
 		   			 			}
 		   			 		};
