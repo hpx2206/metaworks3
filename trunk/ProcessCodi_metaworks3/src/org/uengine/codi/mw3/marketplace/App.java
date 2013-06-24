@@ -17,6 +17,7 @@ import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.ITool;
 import org.uengine.codi.mw3.knowledge.IProjectNode;
 import org.uengine.codi.mw3.knowledge.IWfNode;
+import org.uengine.codi.mw3.knowledge.ProjectInfo;
 import org.uengine.codi.mw3.knowledge.ProjectNode;
 import org.uengine.codi.mw3.knowledge.WfNode;
 import org.uengine.codi.mw3.marketplace.category.Category;
@@ -534,7 +535,18 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 		modalWindow.setHeight(150);
 		
 		modalWindow.setTitle("앱취득 신청 완료");
-		modalWindow.setPanel("앱 취득 신청이 완료 되었습니다. 관리자 승인 후 이용이 가능합니다.");
+		
+		String panelMessage = "";
+		
+		ProjectInfo info = new ProjectInfo(String.valueOf(this.getAppId()));
+		info.load();
+		
+		String url = "http://" + session.getCompany().getComName() + "." + info.getDomainName() + ":9090/uengine-web"; 
+				
+		panelMessage = "앱 취득 신청이 완료 되었습니다. 관리자 승인 후 이용이 가능합니다.";		
+		panelMessage += "url: <a href='" + url + "'>" + url + "</a>";
+		
+		modalWindow.setPanel(panelMessage);
 		modalWindow.getButtons().put("$Confirm", this);
 		
 		return new Object[] {modalWindow, new Remover(removeWindow, true)};
