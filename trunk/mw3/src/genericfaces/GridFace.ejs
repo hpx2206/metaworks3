@@ -91,8 +91,13 @@
 <%
 				}
 			
-				var buttons = gridButtons.split(',');
-			
+				var buttons = [];
+				if(gridButtons.indexOf(',')>0){
+					buttons = gridButtons.split(',');
+				}else{
+					buttons.push(gridButtons);
+				}
+						
 				for(var i=0; i<buttons.length; i++){
 					for(var key in objectMetadata.serviceMethodContexts){
 	   		   			var serviceMethod = objectMetadata.serviceMethodContexts[key];
