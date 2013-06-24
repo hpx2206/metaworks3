@@ -16,7 +16,6 @@ import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.TreeNode;
 import org.metaworks.dao.TransactionContext;
-import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.metadata.MetadataProperty;
 import org.uengine.codi.mw3.ide.editor.Editor;
 import org.uengine.codi.mw3.ide.editor.form.FormEditor;
@@ -26,7 +25,6 @@ import org.uengine.codi.mw3.ide.menu.ResourceContextMenu;
 import org.uengine.codi.mw3.ide.view.Navigator;
 import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.model.Session;
-import org.uengine.util.StringUtils;
 
 @Face(
 		ejsPath = "dwr/metaworks/org/metaworks/component/TreeNode.ejs",
