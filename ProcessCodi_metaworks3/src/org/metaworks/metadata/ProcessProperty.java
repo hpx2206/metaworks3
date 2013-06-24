@@ -32,6 +32,7 @@ public class ProcessProperty extends MetadataProperty{
 			this.value = value;
 		}
 	InstanceMonitorPanel processInstanceMonitorPanel;
+	@Hidden
 		public InstanceMonitorPanel getProcessInstanceMonitorPanel() {
 			return processInstanceMonitorPanel;
 		}
