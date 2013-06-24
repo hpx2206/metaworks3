@@ -139,6 +139,7 @@ public class SelfServiceControlPanel {
 		
 		IAppMapping appList =appMp.findMyApps();
 		appList.getMetaworksContext().setWhen("filter");
+		appList.getMetaworksContext().setWhere("ssp");
 		
 		
 		this.setAppMapping(appList);
@@ -206,6 +207,7 @@ public class SelfServiceControlPanel {
 		}
 		
 		metadataXML.setProperties(this.metadataProperties);
+		this.getAppMapping().getMetaworksContext().setWhere("ssp");
 		this.setMetadataXml(metadataXML);
 	}
 	
