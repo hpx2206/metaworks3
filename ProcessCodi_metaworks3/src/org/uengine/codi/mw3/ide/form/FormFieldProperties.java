@@ -1,7 +1,6 @@
 package org.uengine.codi.mw3.ide.form;
 
 import org.metaworks.annotation.Face;
-import org.metaworks.annotation.ServiceMethod;
 
 @Face(options={"hideEditBtn"}, values={"true"})
 public class FormFieldProperties extends Properties {
@@ -20,10 +19,5 @@ public class FormFieldProperties extends Properties {
 	
 	public FormFieldProperties(CommonFormField formField){
 		this.setFormField(formField);
-	}
-	
-	@ServiceMethod(callByContent=true)
-	public void test(){
-		System.out.println("11");
 	}
 }
