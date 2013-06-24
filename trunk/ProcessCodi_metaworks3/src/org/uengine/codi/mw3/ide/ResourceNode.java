@@ -257,35 +257,21 @@ public class ResourceNode extends TreeNode implements ContextAware {
 		return editor;
 	}
 
-	@Available(where={"resource"})
-	@ServiceMethod(callByContent=true , target=ServiceMethodContext.TARGET_APPEND, mouseBinding="dblclick")
-	public Object[] popupAction(){
-
-		//		MetadataFile resourceFile = new MetadataFile();
-		//		
-		//		resourceFile.overrideUploadPathPrefix();
-		//		resourceFile.setFilename(this.getName());
-		//		resourceFile.setUploadedPath(this.getId());
-		//		resourceFile.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-		//		resourceFile.setMimeType(ResourceNode.findNodeType(this.getName()));
-		//		
-		//		metadataProperty.setFilePreview(resourceFile);
-		//		metadataProperty.setFile(resourceFile);
-		metadataProperty.setResourceNode(this);
-		//		hasPick = true;
-
-		//		metadataProperty.setType(type)
-
-		//픽업되는 순간  xml에 저장하고 load 해서 미리보기 
-		this.getMetaworksContext().setHow("resourcePicker");
-		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-		return new Object[]{new ToOpener(this), new Remover(new Popup())};
-	}
-
 	@Override
 	@ServiceMethod(payload={"id", "name", "path", "type", "folder", "projectId"}, target=ServiceMethodContext.TARGET_APPEND)
 	public Object action(){
-		return new ToAppend(new CloudWindow("editor"), this.beforeAction());
+		
+		if(this.getMetaworksContext() != null && "resource".equals(this.getMetaworksContext().getWhere())){
+			metadataProperty.setResourceNode(this);
+
+			//픽업되는 순간  xml에 저장하고 load 해서 미리보기 
+			this.getMetaworksContext().setHow("resourcePicker");
+			this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+			
+			return new Object[]{new ToOpener(this), new Remover(new Popup())};	
+		}else{
+			return new ToAppend(new CloudWindow("editor"), this.beforeAction());
+		}
 	}
 
 	@ServiceMethod(payload={"id", "name", "path", "folder", "projectId"}, mouseBinding="right", target=ServiceMethodContext.TARGET_POPUP)

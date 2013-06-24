@@ -36,7 +36,6 @@ public class MetadataServlet extends HttpServlet {
 		
 		//  TODO url을 통해서 projectId 를 안다고 가정
 		String projectId = null;
-		projectId = "uu";
 		
 		if(pathInfo.startsWith("/getMetadataFile")){
 			// 요청받은 정보를 가지고, 메타데이터 파일을 찾아서 stream 으로 내려준다.
@@ -87,6 +86,7 @@ public class MetadataServlet extends HttpServlet {
 			String metadataType = request.getParameter("type");
 			if( metadataType != null ){
 				// codebase/appId/root
+				projectId = request.getParameter("projectId");
 				String projectBasePath = MetadataBundle.getProjectBasePath(projectId);
 				// codebase/appId/tenentId
 				String tenentBasePath = CodiClassLoader.mySourceCodeBase();
