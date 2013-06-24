@@ -2215,8 +2215,8 @@ html, body {
 .fb_form_box{ margin:15px;padding:10px; background:#f3f7fb; border:1px solid #ccc; margin-bottom:15px; position:relative}
 .fb_form_box:hover{border:1px dotted #000;}
 .fb_form_box.current{border:1px solid #4286b9; background:#dbe8f2;}
-.hover_div{ position:absolute;bottom:5px; right:5px; z-index:999}
-.hover_div span img{margin-left:5px:}
+.hover_div{ position:absolute;bottom:5px; right:5px; z-index:999; display:none;}
+.hover_div span img{margin-left:5px; cursor:pointer;}
 .fb_desc{border: medium none ; 
 	padding: 0pt 4px 5px 0pt; 
 	line-height: 150%; 
@@ -2225,13 +2225,13 @@ html, body {
 	font-size: 95%; 
 	font-weight: bold; }
 	
-.fb_property input.text, .fb_property select.select, .fb_form_box input.text, .fb_form_box textarea.textarea, .fb_form_box select.select { 
-	border-style: solid; 
-	border-color: rgb(124, 124, 124) rgb(195, 195, 195) rgb(221, 221, 221); 
-	border-width: 1px; margin: 0pt;
-	background: rgb(255, 255, 255) url('images/input_bg.gif') repeat-x scroll center top;
+.fb_property input, .fb_property input.text, .fb_property select.select, .fb_form_box input.text, .fb_form_box textarea.textarea, .fb_form_box select.select { 
+	border-style: solid !important; 
+	border-color: rgb(124, 124, 124) rgb(195, 195, 195) rgb(221, 221, 221) !important; 
+	border-width: 1px !important; margin: 0pt;
+	background: rgb(255, 255, 255) url('images/input_bg.gif') repeat-x scroll center top !important;
 	font-size: 100%; 
-	color: rgb(51, 51, 51); 
+	color: rgb(51, 51, 51) !important;
 }
 .fb_form_box input.small{width:25%}
 .fb_form_box input.medium{width:50%}

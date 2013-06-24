@@ -18,8 +18,9 @@ import org.uengine.codi.mw3.model.Main;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
-@Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs",
-ejsPathMappingByContext={
+@Face(ejsPath = "dwr/metaworks/org/metaworks/metadata/MetadataProperty.ejs",
+		ejsPathMappingByContext={
+	"{where: 'ide', face: 'dwr/metaworks/org/metaworks/metadata/FormProperty.ejs'}",
 	"{where: 'ssp', face: 'dwr/metaworks/org/metaworks/metadata/FormProperty.ejs'}"
 })
 @XStreamAlias("MetadataProperty")

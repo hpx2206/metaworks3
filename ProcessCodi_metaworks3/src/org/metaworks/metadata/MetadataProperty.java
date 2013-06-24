@@ -45,8 +45,9 @@ import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamAsAttribute;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
 
-@Face(ejsPath = "dwr/metaworks/genericfaces/FormFace.ejs",
+@Face(ejsPath = "dwr/metaworks/org/metaworks/metadata/MetadataProperty.ejs",
 ejsPathMappingByContext = {
+		"{when: 'new', face: 'dwr/metaworks/org/metaworks/metadata/MetadataProperty.ejs'}",
 		"{when: 'view', face: 'dwr/metaworks/org/metaworks/metadata/MetadataProperty.ejs'}",
 		"{where: 'ssp', face: 'dwr/metaworks/org/metaworks/metadata/MetadataPropertyDetail.ejs'}",
 		"{how: 'tree', face: 'dwr/metaworks/genericfaces/TreeFace.ejs'}",
@@ -260,7 +261,7 @@ public class MetadataProperty implements ContextAware, Cloneable {
 	@Available(when = MetaworksContext.WHEN_NEW)
 	@ServiceMethod(callByContent = true)
 	public Object add() throws FileNotFoundException, IOException, Exception {
-
+		
 		MetadataProperty clone = null;
 		boolean isFile = false;
 		boolean isResource = false;
@@ -275,11 +276,12 @@ public class MetadataProperty implements ContextAware, Cloneable {
 					&& this.getResourceNode().getPath() != null)
 				isResource = true;
 
-			clone = (MetadataProperty) this.clone();
-			clone.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-			clone.getFile().getMetaworksContext()
-					.setWhen(MetaworksContext.WHEN_VIEW);
-			clone.setChange(true);
+			//clone = (MetadataProperty) this.clone();
+			this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+			this.getMetaworksContext().setWhere("");
+			this.getFile().getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+			
+			this.setChange(true);
 
 			// type별로 이미지/파일일때 value == path로
 			if (FILE_PROP.equals(this.getType())
@@ -289,18 +291,20 @@ public class MetadataProperty implements ContextAware, Cloneable {
 
 				if (isFile) {
 					this.getFile().upload();
-					clone.setValue(this.getFile().getFilename());
+					this.setValue(this.getFile().getFilename());
 				}
 
 				if (isResource) {
-					clone.setValue(this.getResourceNode().getName());
+					this.setValue(this.getResourceNode().getName());
 				}
 
 			} else if (STRING_PROP.equals(this.getType())) {
-				clone.setValue(this.getValue());
+				this.setValue(this.getValue());
 			}
 
-			metadataXML.getProperties().add(clone);
+			this.getFile().setFileTransfer(null);
+			
+			metadataXML.getProperties().add(this);
 			metadataXML.init();
 
 		} catch (CloneNotSupportedException e) {
@@ -457,7 +461,7 @@ public class MetadataProperty implements ContextAware, Cloneable {
 	}
 
 	@Hidden
-	@ServiceMethod(payload = "type", eventBinding = "change", bindingFor = "type", bindingHidden = true, target = ServiceMethodContext.TARGET_SELF)
+	@ServiceMethod(payload = {"type", "metaworksContext"}, eventBinding = "change", bindingFor = "type", bindingHidden = true, target = ServiceMethodContext.TARGET_SELF)
 	public Object selectType() throws Exception {
 
 		Class dstClass = null;
@@ -498,6 +502,9 @@ public class MetadataProperty implements ContextAware, Cloneable {
 		MetadataProperty metadataProperty = (MetadataProperty) dstInstance.getObject();
 		metadataProperty.setMetaworksContext(new MetaworksContext());
 		metadataProperty.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+		if( this.getMetaworksContext() != null ){
+			metadataProperty.getMetaworksContext().setWhere(this.getMetaworksContext().getWhere());
+		}
 
 		if (!STRING_PROP.equals(this.getType())) {
 

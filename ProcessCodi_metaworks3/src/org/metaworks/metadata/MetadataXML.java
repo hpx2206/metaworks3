@@ -14,6 +14,7 @@ import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
+import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.ide.ResourceNode;
 
 import com.thoughtworks.xstream.XStream;
@@ -170,11 +171,27 @@ public class MetadataXML implements ContextAware {
 		
 		for(MetadataProperty metadataProperty : metadata.getProperties()){
 			if(MetadataProperty.FILE_PROP.equals(metadataProperty.getType()) || MetadataProperty.IMAGE_PROP.equals(metadataProperty.getType())){
+//				MetadataFile file = new MetadataFile();
+//				file.setUploadedPath(metadataProperty.getValue());
+//				file.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+//				file.setMimeType(ResourceNode.findNodeType(metadataProperty.getValue()));
+//				metadataProperty.setFile(file);
+				String projectSourcePath = CodiClassLoader.mySourceCodeBase(resourceNode.getProjectId());
 				MetadataFile file = new MetadataFile();
+				file.setBaseDir(projectSourcePath);
+				file.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 				file.setUploadedPath(metadataProperty.getValue());
-				file.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 				file.setMimeType(ResourceNode.findNodeType(metadataProperty.getValue()));
+				
+				
+				MetadataFile previewFile = new MetadataFile();
+				previewFile.setBaseDir(projectSourcePath);
+				previewFile.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+				previewFile.setUploadedPath(metadataProperty.getValue());
+				previewFile.setMimeType(ResourceNode.findNodeType(metadataProperty.getValue()));
+				
 				metadataProperty.setFile(file);
+				metadataProperty.setFilePreview(previewFile);
 			}
 			metadataProperty.selectType();
 		}
