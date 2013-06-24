@@ -1,26 +1,45 @@
 <%
 if(mw3.where == 'ssp'){
 	if(mw3.when == 'show_detail' ) {
-	
-	console.log("image property");
-	console.log(value);
+		
 	%>
 		<span class="form_tit"><br /><br /><%=value.description%></span>
+		<!--
 		<div class="sp_form_block">
-			<div style="float:left; line-height: 210%;"><%=fields.checkResource.here()%></div><div><%=fields.resourceNode.here()%></div>
+			<div><%=fields.resourceNode.here()%></div>
+		</div>
+		-->
+		<div class="sp_form_block">
+			<%=fields.file.here()%>
 		</div>
 		<div class="sp_form_block">
-			<div style="float:left; line-height: 210%;"><%=fields.checkFile.here()%></div><%=fields.file.here()%>
-		</div>
-		<div class="sp_form_block">
-			<div class="sn_view_box"><div class="sn_view_arrow"><img src="images/marketPlace/sp_box_arrow.gif"  /></div><%=fields.filePreview.here({when:'image'})%></div>
+			<div class="sn_view_box">
+				<div class="sn_view_arrow"><img src="images/marketPlace/sp_box_arrow.gif" /></div>
+				
+				<%
+				
+				if(value.value.indexOf(value.file.uploadedPath)==0) {
+				
+				%>
+				<img src="images/waveStyle/doore.png" />
+				
+				<%
+				}else{
+				%>
+				<img src="images/waveStyle/1371673434745.png" />
+				
+				<%
+				}
+				%>
+				
+				<!--
+			<%=fields.filePreview.here({when:'image'})%>
+			-->
+			</div>
 		</div>
 		
 		<%
 		if(value.file.metaworksContext.when == 'edit') {
-		
-			console.log("image property file : " + value.file.metaworksContext.when );
-	console.log(value);
 		%>
 		
 			<div class="sp_form_block">
@@ -31,9 +50,12 @@ if(mw3.where == 'ssp'){
 		}else {
 		%>
 		
+		<!--
+		
 			<div class="sp_form_block">
 				<div id="sp_editBtn_<%=objectId%>" class="sp_position_right" onClick="<%=methods.edit.caller()%>"><%=mw3.localize('$Edit')%></div>
 			</div>
+		-->
 		
 		<%	
 		}

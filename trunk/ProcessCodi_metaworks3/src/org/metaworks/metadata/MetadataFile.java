@@ -25,10 +25,10 @@ public class MetadataFile extends AbstractMetaworksFile {
 	@Override
 	public String overrideUploadPathPrefix() {
 		
-			if(metadataXml != null && metadataProperty != null){
-				return metadataXml.getFilePath() + File.separatorChar + metadataProperty.getType() + File.separatorChar	;
-			}else if(metadataXml != null && metadataProperty == null){
+			if(metadataXml != null){
 				return metadataXml.getFilePath() + File.separatorChar;
+//			}else if(metadataXml != null && metadataProperty == null){
+//				return metadataXml.getFilePath() + File.separatorChar;
 			}else {
 				return CodiClassLoader.mySourceCodeBase();
 			}

@@ -49,8 +49,8 @@ public class StringProperty extends MetadataProperty{
 	}
 	
 	@Override
-	public Object save() throws FileNotFoundException, IOException, Exception {
+	public Object[] save() throws FileNotFoundException, IOException, Exception {
 		// TODO Auto-generated method stub
-		return super.save();
+		return new Object[]{ super.save() };
 	}
 }
