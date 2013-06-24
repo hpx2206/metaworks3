@@ -111,12 +111,12 @@ public abstract class AbstractMetaworksFile implements ContextAware {
 			this.auto = auto;
 		}
 		
-	@ServiceMethod(target="append", callByContent=true)
+	@ServiceMethod(callByContent=true, except="fileTransfer", target="append")
 	public Download download() throws FileNotFoundException, IOException, Exception{
 		return new Download(new FileTransfer(new String(this.getFilename().getBytes("UTF-8"),"ISO8859_1"), getMimeType(), new FileInputStream(overrideUploadPathPrefix() + "/" + this.getUploadedPath())));
 	}
 
-	@ServiceMethod(target=ServiceMethodContext.TARGET_NONE) //it doesn't cause refresh so that the recursive call of constructor of MetaworksFile javascript object never happened
+	@ServiceMethod(callByContent=true, except="fileTransfer", target=ServiceMethodContext.TARGET_NONE) //it doesn't cause refresh so that the recursive call of constructor of MetaworksFile javascript object never happened
 	public BufferedImage downloadImage() throws FileNotFoundException, IOException, Exception{
 		image = javax.imageio.ImageIO.read(new File(overrideUploadPathPrefix() + "/" + uploadedPath));
 		
@@ -153,7 +153,7 @@ public abstract class AbstractMetaworksFile implements ContextAware {
 		fileTransfer = null; //ensure to clear the data
 	}
 	
-	@ServiceMethod(payload={"deletedPath", "auto"})
+	@ServiceMethod(callByContent=true, except="fileTransfer", target=ServiceMethodContext.TARGET_SELF)
 	public void remove() throws FileNotFoundException, IOException, Exception{
 		if(getDeletedPath().length() == 0) 
 			throw new Exception("No file attached");

@@ -5,6 +5,7 @@ var org_metaworks_widget_ModalWindow = function(objectId, className) {
 
 	$('.mw3_layout').attr('fixed_size', true);
 	
+	this.openerId = mw3.recentOpenerObjectId[mw3.recentOpenerObjectId.length - 1];
 	this.object = mw3.objects[this.objectId];
 
 	if(this.object){
@@ -63,16 +64,33 @@ var org_metaworks_widget_ModalWindow = function(objectId, className) {
 					options['height'] = $(window).height() - 30;
 				}
 				
+				var openerId = this.openerId;
+				
 				var buttons = {};
 				for(var button in this.object.buttons){
 					var action = this.object.buttons[button];
 					
 					buttons[mw3.localize(button)] = function(){
 						if(action != null){
-							mw3.getFaceHelper(objectId).close();
 							
-							mw3.locateObject(action, null, 'body');
-							mw3.onLoadFaceHelperScript();
+							if(typeof action == 'object'){
+								mw3.locateObject(action, null, 'body');
+								mw3.onLoadFaceHelperScript();								
+							}else{
+								if(mw3.objects[objectId].panel)
+									mw3.call(mw3.objects[objectId].panel.__objectId, action, false, true);
+							}
+							
+							
+							if(mw3.objects[objectId].callback && mw3.objects[objectId].callback[button]){
+								
+								console.log(mw3.recentOpenerObjectId[mw3.recentOpenerObjectId.length - 1]);
+								
+								mw3.call(mw3.recentOpenerObjectId[mw3.recentOpenerObjectId.length - 1], mw3.objects[objectId].callback[button]);
+							}
+							
+							
+							mw3.getFaceHelper(objectId).close();
 						}
 					}
 				}
