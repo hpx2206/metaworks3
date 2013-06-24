@@ -999,7 +999,6 @@ img {
 
 #navigator .depth2 .fist_menu li span {
     display: inline-block;
-    padding-left: 30px;
 }
 #navigator .depth2 .fist_menu .navi_icon{
     padding-left: 10px;
@@ -2042,6 +2041,7 @@ html, body {
 
 .mp_menu_list{background:url('../../images/marketPlace/leftMenuListApp.png') no-repeat 3px 6px ;}
 
+.mp_menu_list0{background:url('../../images/marketPlace/leftMenuList00.png') no-repeat 3px 6px ;}
 .mp_menu_list1{background:url('../../images/marketPlace/leftMenuList01.png') no-repeat 3px 6px ;}
 .mp_menu_list2{background:url('../../images/marketPlace/leftMenuList02.png') no-repeat 3px 6px ;}
 .mp_menu_list3{background:url('../../images/marketPlace/leftMenuList03.png') no-repeat 3px 6px ;}
