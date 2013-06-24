@@ -9,7 +9,7 @@ if (value != null){
     var divClass = tabClass.split('.').join('_');
     
 %>
-<div class="boxtopleftTab"  style="display:none;>
+<div class="boxtopleftTab"  style="display:none;">
     <span class="boxtoprightTab">
 <%  
     for (var i=0; i<value.pagePanel.length; i++){
@@ -38,7 +38,7 @@ if (value != null){
 
 <div class="boxmiddleright">
     <div class="boxmiddleleft">
-        <div class="contentcontainer" style="position: relative">
+        <div class="contentcontainer" style="position: relative; margin:0px;overflow:hidden;">
 <%
     for (var i=0; i<value.pagePanel.length; i++){
 %>
@@ -55,7 +55,7 @@ if (value != null){
 </div>
 
 
-<div class="boxbottomleft"><span class="boxbottomright"></span></div>
+<div class="boxbottomleft"   style="display:none;"><span class="boxbottomright"></span></div>
 
 <%
 }
