@@ -24,7 +24,7 @@ public class NewProcess extends Templete {
 	public Session session;
 	
 	String name;
-		@Face(displayName="templete.process.name")
+		@Face(displayName="$templete.process.name")
 		public String getName() {
 			return name;
 		}

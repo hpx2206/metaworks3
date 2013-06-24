@@ -22,8 +22,8 @@ public class MetadataEditor extends MultiPageEditor{
 		metadataContentDesigner.load();
 		createPage(metadataContentDesigner, "designer");
 		
-		MetadataXmlEditor metadataXmlEditor = new MetadataXmlEditor(this.getResourceNode());
-		createPage(metadataXmlEditor, "xml");
+//		MetadataXmlEditor metadataXmlEditor = new MetadataXmlEditor(this.getResourceNode());
+//		createPage(metadataXmlEditor, "xml");
 		
 		
 	}

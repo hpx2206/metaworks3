@@ -153,6 +153,11 @@ public class MetadataXML implements ContextAware {
 		newMetadataProperty.setType(MetadataProperty.STRING_PROP);
 		newMetadataProperty = (MetadataProperty) newMetadataProperty.selectType();
 		
+		ResourceNode resourceNode = new ResourceNode(); 
+		resourceNode.setId(this.getFilePath());
+		newMetadataProperty.setResourceNode(resourceNode);
+		
+		
 	}
 	
 	public MetadataXML loadWithResourceNode(ResourceNode resourceNode) throws Exception{

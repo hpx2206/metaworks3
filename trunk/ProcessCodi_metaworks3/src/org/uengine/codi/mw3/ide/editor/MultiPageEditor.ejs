@@ -9,7 +9,7 @@ if (value != null){
     var divClass = tabClass.split('.').join('_');
     
 %>
-<div class="boxtopleftTab">
+<div class="boxtopleftTab"  style="display:none;>
     <span class="boxtoprightTab">
 <%  
     for (var i=0; i<value.pagePanel.length; i++){
@@ -26,7 +26,7 @@ if (value != null){
             className : value.__className
         };
 %>
-    <div id="top_<%=objectId%>_<%=i%>" class="<%=divClass%>" >
+    <div id="top_<%=objectId%>_<%=i%>" class="<%=divClass%>">
         <%=mw3.locateObject(tab, tab.__className, null)%>
     </div>
 <%          
