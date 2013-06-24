@@ -7,41 +7,25 @@ if(value) {
 	if(value.selectedType != null){
 		selectedType = value.selectedType.selected;
 	}
-	
 	if(mw3.where != 'ssp'){
 	
 %>
-
-<div class="inLineSpan" style="background:#F3F3F3; cursor:move;">
-	<div style="float:left;width:300px;">
-		<span>
-			<ul>
-				<li>
-					<span style="margin: 0px 3px 0px 0px;">
-						<img class="ide_icon" src="images/<%=value.type%>.png"/>
-					</span>
-					<span><%=mw3.localize("$Name")%>: </span>
-					<span style="margin: 0px 0px 0px 3px;"><%=value.name%></span>
-				</li>
-				<li style="margin: 10px 0px 0px 3px;"><%=mw3.localize("$Description")%></li>
-				<li><%=value.description%></li>
-			</ul>
-		</span>
-	</div>
-		<% 
-		if(value.file != null && value.file.mimeType != null && value.file.mimeType=='image'){ 
-		%>
-			<div style="width:200px;height:200px;float:left;margin: 0px 5px 0px 0px;"><%=fields.file.here({when: (value.file.mimeType.indexOf('image')==0)?'image':'view'})%></div>
-	<% } %>
-	
-	<div style="float:right;">
-		<span style="display:inline-block; cursor:pointer" onCLick="<%=methods.edit.caller()%>"><img src="images/waveStyle/form.png" title="edit"></span>
-		<span style="display:inline-block; cursor:pointer" onCLick="<%=methods.up.caller()%>"><img src="images/waveStyle/navigate-up.png" title="up"></span>
-		<span style="display:inline-block; cursor:pointer" onCLick="<%=methods.down.caller()%>"><img src="images/waveStyle/navigate-down.png" title="down"></span>
-		<span style="display:inline-block; cursor:pointer" onCLick="<%=methods.remove.caller()%>"><img src="images/waveStyle/loadFailed.gif" title="remove"></span>
-	</div>
-	<div class="clear"></div>
-</div>
+         <div class="fb_form_box">
+            <span style="margin: 0px 3px 0px 0px;">
+                <img class="ide_icon" src="images/<%=value.type%>.png"/>
+            </span>
+            <span><%=mw3.localize("$Name")%>: </span>
+            <span style="margin: 0px 0px 0px 3px;"><%=value.name%></span>
+            <div>
+                <li style="margin: 10px 0px 0px 3px;"><%=mw3.localize("$Description")%></li>
+                <li><%=value.description%></li>
+            </div>
+            <% 
+                if(value.file != null && value.file.mimeType != null && value.file.mimeType=='image'){ 
+                %>
+                    <div style="width:200px;height:200px;float:left;margin: 0px 5px 0px 0px;"><%=fields.file.here({when: (value.file.mimeType.indexOf('image')==0)?'image':'view'})%></div>
+            <% } %>
+        </div>
 
 <%
 	}
