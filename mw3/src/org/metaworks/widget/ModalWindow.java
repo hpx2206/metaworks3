@@ -31,6 +31,7 @@ public class ModalWindow implements ContextAware {
 	public ModalWindow(Object panel, int width, int height, String title) {
 		setMetaworksContext(new MetaworksContext());
 		setButtons(new HashMap<String, Object>());
+		setCallback(new HashMap<String, Object>());
 		setPanel(panel);
 		setWidth(width);
 		setHeight(height);		
@@ -110,4 +111,14 @@ public class ModalWindow implements ContextAware {
 		public void setButtons(Map<String, Object> buttons) {
 			this.buttons = buttons;
 		}
+		
+	Map<String, Object> callback;
+		@Hidden	
+		public Map<String, Object> getCallback() {
+			return callback;
+		}
+		public void setCallback(Map<String, Object> callback) {
+			this.callback = callback;
+		}
+	
 }

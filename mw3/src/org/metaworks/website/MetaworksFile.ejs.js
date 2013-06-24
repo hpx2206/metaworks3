@@ -21,27 +21,32 @@ var org_metaworks_website_MetaworksFile = function(objectId, className){
 		var imageDiv = $("#image_" + this.objectId);
 		
 		if(imageDiv.length > 0){
-			var image = object.downloadImage(false);
-			var width = 0;
-			var height = 0;
-			var parentwidth = $("#image_" + this.objectId).parent().width();
-
-			imageDiv.html('<img style=\"display:none;\" src=\'' + image + '\'>').attr("href","javascript:mw3.objects[" + objectId + "].download()");
 			
-			if(object.__descriptor){
-				width = object.__descriptor.getOptionValue('width');
-				height = object.__descriptor.getOptionValue('height');
+			try {
+				var image = object.downloadImage(false);
+				var width = 0;
+				var height = 0;
+				var parentwidth = $("#image_" + this.objectId).parent().width();
+	
+				imageDiv.html('<img style=\"display:none;\" src=\'' + image + '\'>').attr("href","javascript:mw3.objects[" + objectId + "].download()");
 				
-				$("#objDiv_" + this.objectId).css('width',width+'px').css('height',height+'px');
-			}
-			
-			imageDiv.find('img').load(function(){
-				if($(this).width() > parentwidth){
-					$(this).width("100%");
+				if(object.__descriptor){
+					width = object.__descriptor.getOptionValue('width');
+					height = object.__descriptor.getOptionValue('height');
+					
+					$("#objDiv_" + this.objectId).css('width',width+'px').css('height',height+'px');
 				}
 				
-				$(this).show();
-			});
+				imageDiv.find('img').load(function(){
+					if($(this).width() > parentwidth){
+						$(this).width("100%");
+					}
+					
+					$(this).show();
+				});
+			}catch(e){
+				
+			}
 		}	
 	}
 }
@@ -89,6 +94,8 @@ org_metaworks_website_MetaworksFile.prototype.addFileChangeListener = function(l
 };
 
 org_metaworks_website_MetaworksFile.prototype.showStatus = function(message){
+	console.log('metaworksfile : ' + message);
+	
 	if('upload DONE.' == message){
 		$("#objDiv_" + this.objectId).triggerHandler('uploaded');
 	}

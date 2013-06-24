@@ -153,7 +153,7 @@ var MetaworksService = function(className, object, svcNameAndMethodName, autowir
 			}
 		}
 		
-		if(typeof callback == 'function')
+		if(callback && typeof callback == 'function')
 			callback();
 		
 		if(mw3.afterCall)
@@ -642,11 +642,9 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 											}
 										}
 				        			}
-
-									
+				        			
+				        			mw3.serviceMethodBinding(objectId, object.__className);
 								}
-
-								
 							}
 						}
 		    		}
@@ -1219,7 +1217,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 						
 						//load the key or mouse bindings, context menu 
 						
-						
+						/*
 						var contextMenuMethods = [];
 						
 						var targetDivId = this._getObjectDivId(objectId);
@@ -1267,18 +1265,18 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				   					var keyBinding = methodContext.keyBinding[i];
 				   					
 				   					if(keyBinding.indexOf("@Global") > -1){
-				   						/*
-				   						 * 2013-03-25 cjw
-				   						 * global 일때 keyBinding 문제 해결 
-				   						 */ 
+				   						 //
+				   						 //2013-03-25 cjw
+				   						 //global 일때 keyBinding 문제 해결 
+				   						 // 
 				   						keyBinding = keyBinding.substr(0, keyBinding.length - "@Global".length);
 				   					
 				   						shortcut.remove(keyBinding);
 					   					shortcut.add(keyBinding, command);
 				   					}else{
-					   					shortcut.add(keyBinding, command/*function() {
+					   					shortcut.add(keyBinding, commandfunction() {
 					   						eval(command);
-					   					}*/,{
+					   					}//,{
 					   						target: targetDivId
 					   					});
 				   					}
@@ -1342,9 +1340,6 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				   					var mouseup = function(e){
    			 							if(mw3.dragging){
    			 								eval(this['dropCommand']);
-   			 								/*  
-   			 								 * after a single drop in the null 
-   			 								 */
    			 								//this['dropCommand'] = null;
    			 								mw3.dragging = false;
 	   			  	 						var objectId = mw3.dragObject['objectId'];
@@ -1447,7 +1442,6 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 							   
 							   
 							   // 상태에 따른 visible 처리
-							   /*
 								if(serviceMethodContext.when != mw3.WHEN_EVER){
 						   			if( (mw3.when && !((serviceMethodContext.when.indexOf(mw3.when + ',') != -1) || (serviceMethodContext.when.indexOf(',' + mw3.when) != -1) || (serviceMethodContext.when == mw3.when))) 
 						   					||
@@ -1456,7 +1450,6 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 						   			)
 						   				continue;
 								}
-								*/
 							   
 								
 							   var command = "mw3.call("+objectId+", '"+serviceMethodContext.methodName+"')";
@@ -1496,7 +1489,9 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 								   $('#' + targetDivId).attr('contextMenu', 'true');
 							   }
 						   }
-					   }		
+					   }	
+					   
+					   */
 					   
 					} catch(e) {
 						this.template_error(e, actualFace)
@@ -2511,7 +2506,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					objId = this.targetObjectId;
 				}
 				
-//				mw3.log('________call : ' + svcNameAndMethodName + ' ---> ' + new Date());
+				mw3.log('________call : ' + svcNameAndMethodName + '[' + objId + '] ---> ' + new Date());
 				
 				// 2012-04-14 cjw 재귀호출 막음
 				// 2012-04-18 이전 수정 버전 문제로 재수정 (undefined 일때 true 가 되여야함)
@@ -2550,6 +2545,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					
 					var objectMetadata = this.getMetadata(className);
 					var serviceMethodContext;
+					
 					
 					if(objectMetadata && objectMetadata.serviceMethodContextMap && objectMetadata.serviceMethodContextMap[svcNameAndMethodName]){
 						serviceMethodContext = objectMetadata.serviceMethodContextMap[svcNameAndMethodName];
@@ -2615,7 +2611,35 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 						return;
 					}
 
-					
+					var placeholder = null;
+					if(serviceMethodContext && serviceMethodContext.target!="none"){
+						var loader = serviceMethodContext.loader;
+						
+						
+						if(loader && serviceMethodContext.target=="popup" && loader[0].indexOf("java.lang.Object")==-1){
+
+	        				try{
+		        				mw3.popupDivId = 'popup_' + objId;
+		        				$('body').append("<div id='" + mw3.popupDivId + "' class='target_popup' style='z-index:10;position:absolute; top:0px; left:0px'></div>");
+		        				placeholder = mw3.locateObject({__className: loader[0]}, null, '#' + mw3.popupDivId).targetObjectId;
+
+								mw3.onLoadFaceHelperScript();
+	        				}catch(e){if(consol) console.log(e)}
+						}
+						
+						if(placeholder && this.getFaceHelper(placeholder) && this.getFaceHelper(placeholder).startLoading){
+							this.getFaceHelper(placeholder).startLoading(svcNameAndMethodName);
+						}else if(placeholder){
+							this.startLoading(placeholder, svcNameAndMethodName);
+						}
+						else if(this.getFaceHelper(objId) && this.getFaceHelper(objId).startLoading){
+							this.getFaceHelper(objId).startLoading(svcNameAndMethodName);
+						}else{
+							this.startLoading(objId, svcNameAndMethodName);
+						}
+						
+						
+					}
 
 
     				//alert("call.argument=" + dwr.util.toDescriptiveString(object, 5))
@@ -2707,35 +2731,6 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					returnValue = metaworksService.call();
 					
 					///// just after call, 
-					var placeholder = null;
-					if(serviceMethodContext && serviceMethodContext.target!="none"){
-						var loader = serviceMethodContext.loader;
-						
-						
-						if(loader && serviceMethodContext.target=="popup" && loader[0].indexOf("java.lang.Object")==-1){
-
-	        				try{
-		        				mw3.popupDivId = 'popup_' + objId;
-		        				$('body').append("<div id='" + mw3.popupDivId + "' class='target_popup' style='z-index:10;position:absolute; top:0px; left:0px'></div>");
-		        				placeholder = mw3.locateObject({__className: loader[0]}, null, '#' + mw3.popupDivId).targetObjectId;
-
-								mw3.onLoadFaceHelperScript();
-	        				}catch(e){if(consol) console.log(e)}
-						}
-						
-						if(placeholder && this.getFaceHelper(placeholder) && this.getFaceHelper(placeholder).startLoading){
-							this.getFaceHelper(placeholder).startLoading(svcNameAndMethodName);
-						}else if(placeholder){
-							this.startLoading(placeholder, svcNameAndMethodName);
-						}
-						else if(this.getFaceHelper(objId) && this.getFaceHelper(objId).startLoading){
-							this.getFaceHelper(objId).startLoading(svcNameAndMethodName);
-						}else{
-							this.startLoading(objId, svcNameAndMethodName);
-						}
-						
-						
-					}
 					//CollectGarbage();
 					
 					if(serviceMethodContext.target=="none"){
@@ -3863,7 +3858,233 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			}
 
 			
-			
+			Metaworks3.prototype.serviceMethodBinding = function(objectId, objectTypeName){
+				//load the key or mouse bindings, context menu 
+				var contextMenuMethods = [];
+				var object = mw3.objects[objectId];
+				var metadata = null;
+				
+				if(objectTypeName)
+					metadata = mw3.getMetadata(objectTypeName);
+				
+				var faceHelper = mw3.getFaceHelper(objectId);
+				
+				var targetDivId = mw3._getObjectDivId(objectId);
+				var theDiv = $('#' + targetDivId);
+				
+				if(theDiv[0] && metadata)
+			    for(var methodName in metadata.serviceMethodContextMap){
+			   		var methodContext = metadata.serviceMethodContextMap[methodName];
+			   		
+				    if(mw3.isHiddenMethodContext(methodContext) && !methodContext.bindingHidden)
+					   continue;
+
+				    // make call method
+		   			var command = "if(mw3.objects['"+ objectId +"']!=null) mw3.call("+objectId+", '"+methodName+"')";
+					if(methodContext.needToConfirm)
+					    command = "if (confirm(\'Are you sure to "+mw3.localize(methodContext.displayName)+" this?\'))" + command;
+					   
+				    if(methodContext.eventBinding && methodContext.eventBinding.length > 0){
+				    	for(var i=0; i<methodContext.eventBinding.length; i++){
+				    		var eventBinding = methodContext.eventBinding[i];
+				    		
+	   						for(var j=0; j<methodContext.bindingFor.length; j++){
+	   							var bindingFor = methodContext.bindingFor[j];
+	   							var bindingDivId;
+	   							
+	   							if('@this' == bindingFor){
+	   								bindingDivId = targetDiv;
+	   							}else if('@page' == bindingFor){
+	   								bindingDivId = 'document';
+	   							}else{
+	   								var bindingFieldId = mw3.getChildObjectId(objectId, bindingFor);
+	   								
+	   								bindingDivId = '#' + mw3._getObjectDivId(bindingFieldId);
+	   							}
+	   							
+	   							$(bindingDivId).bind(eventBinding, {command: command}, function(event){
+	   								eval(event.data.command);
+	   							});
+	   						}
+				    	}
+				    }
+				    
+		   			if(methodContext.keyBinding && methodContext.keyBinding.length > 0){
+		   				for(var i=0; i<methodContext.keyBinding.length; i++){
+		   					var keyBinding = methodContext.keyBinding[i];
+		   					
+		   					if(keyBinding.indexOf("@Global") > -1){
+		   						/*
+		   						 * 2013-03-25 cjw
+		   						 * global 일때 keyBinding 문제 해결 
+		   						 */ 
+		   						keyBinding = keyBinding.substr(0, keyBinding.length - "@Global".length);
+		   					
+		   						shortcut.remove(keyBinding);
+			   					shortcut.add(keyBinding, command);
+		   					}else{
+			   					shortcut.add(keyBinding, command/*function() {
+			   						eval(command);
+			   					}*/,{
+			   						target: targetDivId
+			   					});
+		   					}
+		   				}
+		   			}
+		   			
+		   			//mouse binding installation
+		   			if(methodContext.mouseBinding){
+		   				var which = 3;
+		   				if(methodContext.mouseBinding == "right")
+		   					which = 3;
+		   				else if(methodContext.mouseBinding == "left")
+		   					which = 1;
+
+		   				if(methodContext.mouseBinding == "drag" || methodContext.mouseBinding == "drag-enableDefault"){
+		   					if(faceHelper && faceHelper.draggable){
+		   						faceHelper.draggable(command);
+		   					}else{
+		   						theDiv[0]['dragCommand'] = command;
+			   					theDiv.draggable({
+				   				      appendTo: "body",
+				   				      helper: "clone",
+				   				      zIndex: 100,
+					   				  start: function(event, ui) {
+					   					var className = $(this).attr('className');
+					   					
+					   					$(".onDrop_" + className.split('.').join('_')).css("border-width", "1px").css("border-style", "dashed").css("border-color", "orange");
+					   					
+					   					eval(this['dragCommand']);
+					   			      },
+					   			      drag: function(event, ui) {
+					   			      },
+					   			      stop: function() {
+						   					var className = $(this).attr('className');
+						   					
+						   					$(".onDrop_" + className.split('.').join('_')).css("border-width", "").css("border-style", "").css("border-color", "");
+					   			      }
+				   				    });				   						
+		   					}
+		   				}//end of case 'drag start'
+		   				else if(methodContext.mouseBinding == "drop"){
+		   					theDiv[0]['dropCommand'] = command;
+		   					
+		   					theDiv.droppable({
+		   						drop: function(event, ui){
+		   							eval(this['dropCommand']);
+		   						},
+		   						
+		   						over: function(event, ui){
+		   							var className = ui.draggable.attr('classname');
+		   							var dropName = "onDrop_" + className.split('.').join('_');
+		   							
+		   							if($(this).hasClass(dropName)){
+		   								$(this).addClass('ui-state-active');
+		   							}
+		   							
+		   						},
+		   						
+		   						out : function(event, ui){
+		   							$(this).removeClass('ui-state-active');
+		   						}
+		   					});
+		   				}//end of case 'drop'
+		   				
+		   				//case of general mouse click
+		   				else{
+		   					theDiv[0]['mouseCommand' + which] = command;
+
+		   					var mouseup = function(e) {
+		   			 			
+		   			 			if(e.which == which){
+			   				    	mw3.mouseX = e.pageX;
+			   		    			mw3.mouseY = e.pageY;
+		   			 				
+			   		    			// click(mouse right) is contextmenu block
+		   			 				if(which == 3){
+		   			 					document.oncontextmenu = function() { return false; };
+		   			 				}
+		   			 				
+			   						eval(this['mouseCommand' + e.which]);
+		   			 				e.stopPropagation(); //stops to propagate to parent that means consumes the event here.
+		   			 			}
+		   			 		};
+		   			 		
+		   			 		$(theDiv[0]).bind('mouseup', mouseup);
+		   				}
+		   				
+		   				
+		   			} // end of mouse binding installation
+		   			
+		   			if(methodContext.inContextMenu){
+		   				contextMenuMethods[contextMenuMethods.length] = methodContext;
+		   			}
+
+			   }
+				
+				
+				
+			   
+			   //install context menu
+			   if(contextMenuMethods.length > 0){
+				   var menuItems = [];
+				   
+				   for(var i=0; i<contextMenuMethods.length; i++){							   
+					   var serviceMethodContext = contextMenuMethods[i];
+					   
+					   
+					   // 상태에 따른 visible 처리
+					   /*
+						if(serviceMethodContext.when != mw3.WHEN_EVER){
+				   			if( (mw3.when && !((serviceMethodContext.when.indexOf(mw3.when + ',') != -1) || (serviceMethodContext.when.indexOf(',' + mw3.when) != -1) || (serviceMethodContext.when == mw3.when))) 
+				   					||
+					   			(mw3.where && (serviceMethodContext.where!='wherever' && serviceMethodContext.where.indexOf(mw3.where) == -1) )
+					   				
+				   			)
+				   				continue;
+						}
+						*/
+					   
+						
+					   var command = "mw3.call("+objectId+", '"+serviceMethodContext.methodName+"')";
+				   		
+					   if(serviceMethodContext.needToConfirm)
+				   			command = "if (confirm(\'Are you sure to "+mw3.localize(serviceMethodContext.displayName)+" this?\'))" + command;
+				   		
+					   var menuItem = { 
+							   text: mw3.localize(serviceMethodContext.displayName) + (serviceMethodContext.keyBinding ? '(' + serviceMethodContext.keyBinding[0] + ')' : ''), 
+							   onclick: { fn: 
+								   function(){
+								   		eval(this._oOnclickAttributeValue.command);
+								   },
+								   command: command
+							   } 
+					   };
+					   
+					   menuItems[menuItems.length] = menuItem;
+				   }
+				   
+//				   theDiv.append("<div id='contextmenu_" + objectId + "'></div>");
+				   
+				   if(menuItems.length){
+					   if(typeof $('#' + targetDivId).attr('contextMenu') == 'undefined'){
+						   YAHOO.util.Event.onContentReady(targetDivId, function () {
+							   new YAHOO.widget.ContextMenu(
+									"_contextmenu_" + objectId,
+									{
+										zindex: 2000,
+										trigger: theDiv[0],
+										itemdata: menuItems,
+										lazyload: true
+									}
+								);
+						   });
+						   
+						   $('#' + targetDivId).attr('contextMenu', 'true');
+					   }
+				   }
+			   }		
+			}
 			
 			////// reference objects //////
 			
