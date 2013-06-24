@@ -60,6 +60,7 @@ org_metaworks_component_TreeNode.prototype = {
 	},
 	destroy : function() {
 		if(this.object != null){
+			this.objectDiv.unbind();
 			this.nodeDiv.unbind();
 			this.nodeDiv.children().children('span').unbind();
 		}

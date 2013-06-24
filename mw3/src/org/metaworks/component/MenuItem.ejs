@@ -3,9 +3,9 @@
 		if(value.type == 'menu_item'){ 
 %>
 
-<span><%=value.shortcut?value.shortcut:''%></span><u> </u><%=value.name%>
+	<span><%=value.shortcut?value.shortcut:''%></span><u> </u><%=mw3.localize(value.name)%>
 
-<%=fields.subMenu.here()%>
+	<%=fields.subMenu.here()%>
 
 <%
 		}

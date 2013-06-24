@@ -12,7 +12,7 @@ var org_metaworks_component_Menu = function(objectId, className){
 	//function
 	// function
 	this.destroy = function(){
-		$(this.objectDiv).unbind('hover').unbind('mousedown');	
+		this.objectDiv.unbind();	
 	};
 	
 	this.select = function(){
