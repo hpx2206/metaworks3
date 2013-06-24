@@ -159,4 +159,15 @@ var org_metaworks_component_Menu = function(objectId, className){
 		}
 			
 	}
+	
+	this.startLoading = function(){
+		
+	};
+	this.endLoading = function(){
+		
+	};
+	this.showStatus = function(){
+		
+	};
+
 };
