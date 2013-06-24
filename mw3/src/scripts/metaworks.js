@@ -625,7 +625,6 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 								mw3.afterLoadFaceHelper[i] = null;
 								mw3.objectIds_FaceMapping[face] = null;
 
-								
 								var object = mw3.objects[objectId];
 								if(object!=null && object.__className){
 									var metadata = mw3.getMetadata(object.__className);
@@ -643,6 +642,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 										}
 				        			}
 				        			
+				        			console.log(object.__className);
 				        			mw3.serviceMethodBinding(objectId, object.__className);
 								}
 							}
@@ -1003,6 +1003,9 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 						this.setHow(options['how']);
 					}
 					
+					if(targetDiv)
+						$(targetDiv).data('metaworksContext', {when:mw3.when, how:mw3.how, where:mw3.where});
+
 					if(!actualFace && options && options['ejsPath']){
 						metadata = this.getMetadata(objectTypeName);
 					
@@ -3481,6 +3484,28 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				return false;				
 			}
 			
+			Metaworks3.prototype.isHiddenMethodForDiv = function(div, methodContext){
+				if(methodContext.when != null && methodContext.when.indexOf('whenever|') == -1){
+					if(methodContext.when.indexOf(div.when + '|') == -1)
+						return true;						
+				}
+				
+				if(methodContext.where != null && methodContext.where.indexOf('wherever|') == -1){
+					if(methodContext.where.indexOf(div.where + '|') == -1)
+						return true;						
+				}
+
+				if(methodContext.how != null){
+					if(methodContext.how.indexOf(div.how + '|') == -1)
+						return true;						
+				}
+								
+				if(methodContext.when == '___hidden___')
+					return true;
+
+				return false;				
+			}
+			
 			Metaworks3.prototype.validationCondition = function (validator, object){
 				var validationCondition = true;
 				
@@ -3878,9 +3903,12 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			    for(var methodName in metadata.serviceMethodContextMap){
 			   		var methodContext = metadata.serviceMethodContextMap[methodName];
 			   		
-				    if(mw3.isHiddenMethodContext(methodContext) && !methodContext.bindingHidden)
+			   		console.log('try : ' + methodName);
+				    if(mw3.isHiddenMethodForDiv(theDiv.data('metaworksContext'), methodContext) && !methodContext.bindingHidden)
 					   continue;
 
+				    console.log('pass : ' + methodName);
+				    
 				    // make call method
 		   			var command = "if(mw3.objects['"+ objectId +"']!=null) mw3.call("+objectId+", '"+methodName+"')";
 					if(methodContext.needToConfirm)
@@ -3895,7 +3923,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 	   							var bindingDivId;
 	   							
 	   							if('@this' == bindingFor){
-	   								bindingDivId = targetDiv;
+	   								bindingDivId = '#' + targetDivId;
 	   							}else if('@page' == bindingFor){
 	   								bindingDivId = 'document';
 	   							}else{
@@ -3903,6 +3931,8 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 	   								
 	   								bindingDivId = '#' + mw3._getObjectDivId(bindingFieldId);
 	   							}
+	   							
+	   							console.log(bindingDivId);
 	   							
 	   							$(bindingDivId).bind(eventBinding, {command: command}, function(event){
 	   								eval(event.data.command);
