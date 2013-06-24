@@ -345,7 +345,6 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 		$(element).data('activity', activityData);
 	}
 	
-	/*
 	$(element).droppable({
 		greedy: true,		
 		tolerance: 'geom',
@@ -357,8 +356,6 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
     	},
 		    	
 		drop: function(event, ui){
-			console.log('drop');
-			
     		var customData = canvas.getCustomData(element);
     		if( customData == undefined || customData == null || customData == "" ){
     			customData = [];
@@ -366,6 +363,7 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
     		var shapeType = $(this).attr("_shape");
     		if( shapeType == 'GEOM' ){	
     			var dragObjId = ui.draggable.attr('objectId');
+    			
     			if(dragObjId){
     				var dragObj = mw3.getObject(dragObjId);
     				
@@ -373,21 +371,18 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
     				case 'org.uengine.codi.mw3.ide.ResourceNode':
     					switch (dragObj.type) {
     					case 'java':
-    						var nodeId = dragObj.id;
-    						var nodeName = dragObj.name;
-    						nodeName = nodeName.substring(0, nodeName.lastIndexOf('.'));
-						
-    						canvas.drawLabel(element, nodeName);
-	    		    		customData.push( {"customId": "" , "customName" : nodeName , "customType" : "class"});
+    						var dragObjMetadata = mw3.getMetadata(dragObj.alias);
+    						
+    						canvas.drawLabel(element, dragObjMetadata.displayName);
 	    		    		
 	    		    		var value = mw3.objects[objectId];
 	    		    		var contentValue = {
 									__className : 'org.uengine.codi.mw3.webProcessDesigner.PrcsVariable',
-									name : nodeName ,
-									typeId : nodeId ,
+									name : dragObjMetadata.displayName ,
+									typeId : dragObj.alias ,
 									variableType : 'complexType'
 							};
-	    		    		value.variableMap[nodeName] = contentValue;
+	    		    		value.variableMap[dragObj.alias] = contentValue;
 		    			
     						break;
     					default:
@@ -407,9 +402,10 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
     		}
 		}
 	});
-	*/
+	
 	
 	$(element).on({
+		/*
     	mouseup: function (event, ui) {
     		var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
     		var clipboardNode = session.clipboard;
@@ -555,7 +551,8 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
     		if(customData.length > 0){
     			canvas.setCustomData(element, customData);
     		}
-    	},
+    		
+    	},*/
     	dblclick: function (event) {
     		if(event.stopPropagation){
     			event.stopPropagation();
