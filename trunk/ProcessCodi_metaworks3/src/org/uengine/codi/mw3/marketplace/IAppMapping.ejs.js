@@ -1,4 +1,4 @@
-var org_uengine_codi_mw3_marketplace_IAppMapList = function(objectId, className){
+var org_uengine_codi_mw3_marketplace_IAppMapping = function(objectId, className){
 	this.objectId = objectId;
 	this.className = className;
 	this.objectDivId = mw3._getObjectDivId(this.objectId);
@@ -45,7 +45,7 @@ var org_uengine_codi_mw3_marketplace_IAppMapList = function(objectId, className)
 	});
 };
 
-org_uengine_codi_mw3_marketplace_IAppMapList.prototype = {
+org_uengine_codi_mw3_marketplace_IAppMapping.prototype = {
 	showStatus : function(status){
 	},
 	startLoading : function(status){
