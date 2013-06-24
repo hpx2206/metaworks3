@@ -45,7 +45,7 @@ public class FileProperty extends MetadataProperty {
 	
 	@Override
 	@ServiceMethod(callByContent=true)
-	public Object save() throws FileNotFoundException, IOException, Exception {
+	public Object[] save() throws FileNotFoundException, IOException, Exception {
 		
 		int index = metadataXML.properties.indexOf(this);
 
@@ -100,7 +100,7 @@ public class FileProperty extends MetadataProperty {
 		this.getMetaworksContext().setWhen("show_detail");
 		this.setFile(editProperty.getFile());
 
-		return this;
+		return new Object[]{this};
 	}
 
 }

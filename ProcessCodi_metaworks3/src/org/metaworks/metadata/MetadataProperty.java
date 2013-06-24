@@ -28,15 +28,12 @@ import org.metaworks.annotation.TypeSelector;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.ide.ResourceNode;
-import org.uengine.codi.mw3.ide.editor.process.ProcessEditor;
 import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.model.ProcessMap;
 import org.uengine.codi.mw3.model.ProcessMapList;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitorPanel;
-import org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerWebContentPanel;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 import com.thoughtworks.xstream.XStream;
@@ -375,7 +372,7 @@ public class MetadataProperty implements ContextAware, Cloneable {
 
 	@Available(when = MetaworksContext.WHEN_EDIT)
 	@ServiceMethod(callByContent = true)
-	public Object save() throws FileNotFoundException, IOException, Exception {
+	public Object[] save() throws FileNotFoundException, IOException, Exception {
 
 		int index = metadataXML.properties.indexOf(this);
 
@@ -424,7 +421,7 @@ public class MetadataProperty implements ContextAware, Cloneable {
 
 		editProperty.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 
-		return metadataXML;
+		return new Object[]{metadataXML};
 	}
 
 	@ServiceMethod(callByContent = true, when = MetaworksContext.WHEN_VIEW)
@@ -672,6 +669,7 @@ public class MetadataProperty implements ContextAware, Cloneable {
 			file.setUploadedPath(this.getValue());
 			file.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 			file.setMimeType(ResourceNode.findNodeType(this.getValue()));
+			
 			detailProperty.setFile(file);
 		}else if(MetadataProperty.PROCESS_PROP.equals(this.getType())){
 			
@@ -685,14 +683,16 @@ public class MetadataProperty implements ContextAware, Cloneable {
 			file.setUploadedPath(this.getValue());
 			file.setMimeType(ResourceNode.findNodeType(this.getValue()));
 			
-
+			MetadataFile copyFile = new MetadataFile();
+			copyFile = file;
+			
 			ResourceNode resourceNode = new ResourceNode();
 			resourceNode.setMetaworksContext(new MetaworksContext());
 			resourceNode.getMetaworksContext().setHow("resourcePicker");
 			resourceNode.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 			
 			detailProperty.setFile(file);
-			detailProperty.setFilePreview(file);
+			detailProperty.setFilePreview(detailProperty.getFile());
 			detailProperty.setResourceNode(resourceNode);
 			detailProperty.metadataXML = metadataXML;
 		}else if(MetadataProperty.FORM_PROP.equals(this.getType())){

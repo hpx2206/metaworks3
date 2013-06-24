@@ -3,9 +3,11 @@
 		if(mw3.how == 'inList'){
 %>
 
+<!--
 <div class="best_process">
 	<img src="images/marketPlace/icon_best.png" />
 </div>
+-->
 
 <dl class="mp_lst_type2">
 	<dt class="tit">
@@ -21,7 +23,7 @@
 	<dd class="disc">
 		<a href="#" onClick="<%=methods.detail.caller()%>">
 			<span>
-				<%=value.simpleOverview.substring(1,120)%>...
+				<%=value.simpleOverview.substring(0,30)%><%=value.simpleOverview.length > 30?'...':''%>
 			</span>
         </a>
 	</dd>
@@ -52,7 +54,7 @@
                     <div class="mp_sub_pic">
                     	<%=fields.logoFile.here({when:'image', htmlAttr:{style:'width: 100px; height: 100px'}})%>
                     </div>
-                    <div class="mp_sub_buybtn"><img  alt="" src="images/marketPlace/buyBtn.jpg"></div>
+                    <div class="mp_sub_buybtn"><img  alt="" src="images/marketPlace/buyBtn.jpg" onClick="<%=methods.addApp.caller()%>"></div>
 
                     <div class="mp_sub_rightBox">
                     	<dl class="mp_sub_dsc1">

@@ -154,8 +154,8 @@ public interface IApp extends IDAO{
 	public Object edit() throws Exception;
 	
 	@Hidden
-	@ServiceMethod(callByContent=true)
-	public void addApp()throws Exception;
+	@ServiceMethod(callByContent=true , target=ServiceMethodContext.TARGET_POPUP)
+	public Object[] addApp()throws Exception;
 
 	@Available(when={MetaworksContext.WHEN_NEW, MetaworksContext.WHEN_EDIT})
 	@ServiceMethod(callByContent=true)

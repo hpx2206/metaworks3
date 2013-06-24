@@ -5,23 +5,31 @@ import java.util.Date;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.Remover;
+import org.metaworks.ToOpener;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.component.SelectBox;
 import org.metaworks.dao.Database;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalPanel;
+import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.ITool;
+import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.knowledge.IProjectNode;
 import org.uengine.codi.mw3.knowledge.IWfNode;
 import org.uengine.codi.mw3.knowledge.ProjectNode;
 import org.uengine.codi.mw3.knowledge.WfNode;
 import org.uengine.codi.mw3.marketplace.category.Category;
 import org.uengine.codi.mw3.marketplace.category.ICategory;
+import org.uengine.codi.mw3.model.ContentWindow;
 import org.uengine.codi.mw3.model.ICompany;
 import org.uengine.codi.mw3.model.IUser;
+import org.uengine.codi.mw3.model.InstanceList;
+import org.uengine.codi.mw3.model.InstanceListPanel;
 import org.uengine.codi.mw3.model.InstanceViewContent;
+import org.uengine.codi.mw3.model.Main;
 import org.uengine.codi.mw3.model.ProcessMap;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.kernel.KeyedParameter;
@@ -246,6 +254,7 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 		StringBuffer sql = new StringBuffer();
 		sql.append("select * from app");
 		sql.append(" where isdeleted=?isdeleted");
+		sql.append(" 	and comcode=?comcode");
 		sql.append(" order by installCnt desc");
 		
 		IApp findListings = (IApp) Database.sql(IApp.class, sql.toString());
@@ -367,7 +376,7 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 		
 	}
 	
-	public Object detail() throws Exception {
+	public Object[] detail() throws Exception {
 		MarketplaceCenterPanel centerPenal = new MarketplaceCenterPanel();
 		try {
 			centerPenal.setAppDetail(new AppDetail(databaseMe()));
@@ -377,7 +386,22 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 			e.printStackTrace();
 		}
 		
-		return centerPenal;
+		
+		session.getEmployee().setPreferUX("sns");
+		session.setLastPerspecteType("topic");
+		session.setLastSelectedItem(this.getAppName());
+		
+		InstanceList instList = new InstanceList(session);
+		instList.load();
+		
+		InstanceListPanel instanceListPanel = new InstanceListPanel(session);
+		instanceListPanel.setInstanceList(instList);
+		
+		ContentWindow topicStreamWindow = new ContentWindow();
+		topicStreamWindow.setPanel(instanceListPanel);
+		
+		
+		return new Object[]{instanceListPanel, centerPenal};
 	}
 	
 	public Object edit() throws Exception {
@@ -457,26 +481,32 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 		return new ModalPanel(myVendor);
 	}
 	
-	public void addApp()throws Exception {
+	public Object[] addApp()throws Exception {
 		
 		App app = new App();
 		app.setAppId(this.getAppId());
 		app.setAppName(this.getAppName());
-		app.setComcode(this.getComcode());
+		app.setComcode(session.getCompany().getComCode());
 		app.setInstallCnt(this.getInstallCnt());
+		app.setAppId(this.getAppId());
+		app.setAppName(this.getAppName());
+		app.setSimpleOverview(this.getSimpleOverview());
+		app.setFullOverview(this.getFullOverview());
+		app.setPricing(this.getPricing());
+		app.setLogoFile(this.getLogoFile());
+		app.setCategory(this.getCategory());
 		
-		
-		AppInformation setAppInfo = new AppInformation();
-		
-		setAppInfo.getMetaworksContext().setWhen("view");
-		
-		setAppInfo.setAppId(this.getAppId());
-		setAppInfo.setAppName(this.getAppName());
-		setAppInfo.setSimpleOverview(this.getSimpleOverview());
-		setAppInfo.setFullOverview(this.getFullOverview());
-		setAppInfo.setPricing(this.getPricing());
-		setAppInfo.setLogoFile(this.getLogoFile());
-		setAppInfo.setCategory(this.getCategory());
+//		AppInformation setAppInfo = new AppInformation();
+//		
+//		setAppInfo.getMetaworksContext().setWhen("view");
+//		
+//		setAppInfo.setAppId(this.getAppId());
+//		setAppInfo.setAppName(this.getAppName());
+//		setAppInfo.setSimpleOverview(this.getSimpleOverview());
+//		setAppInfo.setFullOverview(this.getFullOverview());
+//		setAppInfo.setPricing(this.getPricing());
+//		setAppInfo.setLogoFile(this.getLogoFile());
+//		setAppInfo.setCategory(this.getCategory());
 		
 		String defId = "AppAcquisition.process";
 		
@@ -492,18 +522,37 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 	    
 	    // 프로세스 실행
 	    ResultPayload rp = new ResultPayload();
-	    rp.setProcessVariableChange(new KeyedParameter("requestAquisitionApp", setAppInfo));
+	    rp.setProcessVariableChange(new KeyedParameter("requestAquisitionApp", app));
 	    
 	    //무조건 compleate
 	    processManager.executeProcessByWorkitem(instId.toString(), rp);
 	    processManager.applyChanges();
 	    
+	    
+	    ModalWindow removeWindow = new ModalWindow();
+		removeWindow.setId("subscribe");
 		
+		ModalWindow modalWindow = new ModalWindow();
+		modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+		modalWindow.setWidth(300);
+		modalWindow.setHeight(150);
+		
+		modalWindow.setTitle("앱취득 신청 완료");
+		modalWindow.setPanel("앱 취득 신청이 완료 되었습니다. 관리자 승인 후 이용이 가능합니다.");
+		modalWindow.getButtons().put("$Confirm", this);
+		
+		return new Object[] {modalWindow, new Remover(removeWindow, true)};
+	    
 	}
+	
 	@Override
 	public void onLoad() throws Exception {
 		if (MetaworksContext.WHEN_VIEW.equals(this.getMetaworksContext()
 				.getWhen())) {
+			
+			if(this.getLogoFile() == null){
+				this.setLogoFile(new MetaworksFile());
+			}
 			if(this.getLogoFile().getMetaworksContext() == null){
 				this.getLogoFile().setMetaworksContext(new MetaworksContext());
 			}

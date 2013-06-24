@@ -5,11 +5,15 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.metaworks.MetaworksContext;
+import org.metaworks.Refresh;
+import org.metaworks.Remover;
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.NonEditable;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.editor.metadata.MetadataEditor;
 
@@ -28,6 +32,7 @@ public class ImageProperty extends MetadataProperty{
 	
 	
 	String value;
+		@Override
 		@Hidden
 		@Available(when=MetaworksContext.WHEN_VIEW)
 		@NonEditable(when={MetaworksContext.WHEN_EDIT})
@@ -39,7 +44,8 @@ public class ImageProperty extends MetadataProperty{
 		}
 		
 	@Override
-	public Object save() throws FileNotFoundException, IOException, Exception {
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
+	public Object[] save() throws FileNotFoundException, IOException, Exception {
 		int index = metadataXML.properties.indexOf(this);
 
 		MetadataProperty editProperty = metadataXML.properties.get(index);
@@ -62,15 +68,6 @@ public class ImageProperty extends MetadataProperty{
 		
 		//파일 첨부 끝
 		
-		
-//		if (checkFile) {
-//		
-//		}
-//
-//		if (checkResource) {
-//			editProperty.setValue(this.getResourceNode().getId());
-//		}
-
 		metadataXML.properties.remove(this);
 		metadataXML.properties.add(index, editProperty);
 		
@@ -87,8 +84,21 @@ public class ImageProperty extends MetadataProperty{
 		this.getMetaworksContext().setWhere("ssp");
 		this.getMetaworksContext().setWhen("show_detail");
 		this.setFile(editProperty.getFile());
+		
+		ModalWindow removeWindow = new ModalWindow();
+		removeWindow.setId("subscribe");
+		
+		ModalWindow modalWindow = new ModalWindow();
+		modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+		modalWindow.setWidth(450);
+		modalWindow.setHeight(200);
+		
+		modalWindow.setTitle("파일수정");
+		modalWindow.setPanel("이미지 파일이 변경되었습니다.");
+		modalWindow.getButtons().put("$Confirm", this);
+		
+		return new Object[] {modalWindow, new Remover(removeWindow, true), new Refresh(this)};
 
-		return this;
 	}
 
 

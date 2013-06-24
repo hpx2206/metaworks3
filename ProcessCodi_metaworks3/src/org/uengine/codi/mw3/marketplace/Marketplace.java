@@ -88,7 +88,7 @@ public class Marketplace {
 		topicStreamWindow.setPanel(instanceListPanel);
 		
 		Layout marketPlaceLayout =  new Layout();
-		marketPlaceLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, east__size:350");
+		marketPlaceLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, east__size:250");
 		marketPlaceLayout.setCenter(marketplaceWindow);
 		marketPlaceLayout.setEast(topicStreamWindow);
 		
