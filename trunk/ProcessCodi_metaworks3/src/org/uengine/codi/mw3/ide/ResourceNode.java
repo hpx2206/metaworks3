@@ -15,6 +15,8 @@ import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.TreeNode;
+import org.metaworks.dao.TransactionContext;
+import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.metadata.MetadataProperty;
 import org.uengine.codi.mw3.ide.editor.Editor;
 import org.uengine.codi.mw3.ide.editor.form.FormEditor;
@@ -78,12 +80,12 @@ public class ResourceNode extends TreeNode implements ContextAware {
 	}
 
 	String alias;
-	public String getAlias() {
-		return alias;
-	}
-	public void setAlias(String alias) {
-		this.alias = alias;
-	}
+		public String getAlias() {
+			return alias;
+		}
+		public void setAlias(String alias) {
+			this.alias = alias;
+		}
 
 	public ResourceNode(){
 		setMetaworksContext(new MetaworksContext());
@@ -329,13 +331,16 @@ public class ResourceNode extends TreeNode implements ContextAware {
 		return nodeType;
 	}
 
-	@ServiceMethod(payload={"id", "name", "path", "folder", "projectId"}, mouseBinding="drag")
-	public Object drag() {
-		session.setClipboard(this);
-
-		String alias = workspace.findProject(this.getProjectId()) .getBuildPath().makePackageName(this.getId());
-		this.setAlias(StringUtils.replace(alias, ".", "/") + this.getName());
-
-		return new Object[]{session};
+	@ServiceMethod(payload={"id", "name", "path", "folder", "projectId", "type"}, mouseBinding="drag")
+	public void drag() {
+		
+		Project project = workspace.findProject(this.getProjectId());
+		String 	projectSourcePath = project.getBuildPath().getSources().get(0).getPath(); 
+		
+		TransactionContext.getThreadLocalInstance().getRequest().getSession().setAttribute("projectSourcePath", projectSourcePath);
+		
+		String packageName = workspace.findProject(this.getProjectId()) .getBuildPath().makePackageName(this.getId());
+		String className = workspace.findProject(this.getProjectId()) .getBuildPath().makeClassName(this.getId());
+		this.setAlias(packageName + "." + className);
 	}
 }
