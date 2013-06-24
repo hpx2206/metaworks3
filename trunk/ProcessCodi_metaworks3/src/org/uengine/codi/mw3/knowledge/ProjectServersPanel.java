@@ -3,7 +3,7 @@ package org.uengine.codi.mw3.knowledge;
 import org.metaworks.annotation.Face;
 import org.uengine.processmanager.ProcessManagerRemote;
 
-@Face(ejsPath="dwr/metaworks/genericfaces/Tab.ejs")
+//@Face(ejsPath="dwr/metaworks/genericfaces/Tab.ejs")
 public class ProjectServersPanel {
 
 	public ProcessManagerRemote processManager;

@@ -7,6 +7,7 @@ import org.metaworks.annotation.Test;
 import org.metaworks.widget.layout.Layout;
 import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.knowledge.Knowledge;
+import org.uengine.codi.mw3.marketplace.AppMap;
 import org.uengine.codi.mw3.marketplace.Marketplace;
 import org.uengine.codi.mw3.model.Main;
 import org.uengine.codi.mw3.model.MainSNS;
@@ -127,6 +128,17 @@ public class PageNavigator{
 		selfService.load();
 		
 		return new MainPanel(selfService);
+		
+	}
+	
+	@ServiceMethod(callByContent=true, inContextMenu=true)
+	public MainPanel goAppMap() throws Exception {
+		
+		AppMap appMap = new AppMap();
+		appMap.session = session;
+		appMap.load();
+
+		return new MainPanel(appMap);
 		
 	}
 	

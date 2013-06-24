@@ -29,7 +29,8 @@ import org.uengine.codi.mw3.model.ICompany;
       ejsPathMappingByContext={
 		"{how: 'inList', face: 'dwr/metaworks/org/uengine/codi/mw3/marketplace/IApp.ejs'}",
 		"{how: 'detail', face: 'dwr/metaworks/org/uengine/codi/mw3/marketplace/IApp.ejs'}",
-		"{how: 'myVendor', face: 'dwr/metaworks/org/uengine/codi/mw3/marketplace/IApp.ejs'}"
+		"{how: 'myVendor', face: 'dwr/metaworks/org/uengine/codi/mw3/marketplace/IApp.ejs'}",
+		"{where: 'mapList', face: 'dwr/metaworks/org/uengine/codi/mw3/marketplace/IAppMap.ejs'}"
 	  },
       options={"fieldOrder"},
       values={"categories,attachProject,appName,simpleOverview,fullOverview,pricing,logoFile"})
@@ -164,4 +165,5 @@ public interface IApp extends IDAO{
 	@Available(when={MetaworksContext.WHEN_NEW, MetaworksContext.WHEN_EDIT})
 	@ServiceMethod
 	public Object cancel() throws Exception;
+	
 }

@@ -126,7 +126,8 @@ public class ProjectServer implements ITool, ContextAware {
 	String group;
 		@Face(displayName="$project.server.group")
 		@Range(options={"개발", "운영"}, values={"dev", "prod"})
-		@Available(when={MetaworksContext.WHEN_EDIT, MetaworksContext.WHEN_NEW})
+		//@Available(when={MetaworksContext.WHEN_EDIT, MetaworksContext.WHEN_NEW})
+		@Hidden
 		public String getGroup() {
 			return group;
 		}
@@ -303,7 +304,7 @@ public class ProjectServer implements ITool, ContextAware {
 	@Face(displayName="$project.server.start")
 	@ServiceMethod(callByContent=true)
 	public void start() throws Exception {
-		this.setStatus(SERVER_STATUS_RUNNING);
+		this.setStatus(SERVER_STATUS_STARTING);
 		this.getMetaworksContext().setWhen(this.getStatus());
 		
 		String targetUserId = GlobalContext.getPropertyString("vm.target.user");
@@ -346,7 +347,7 @@ public class ProjectServer implements ITool, ContextAware {
 	@Face(displayName="$project.server.deploy")
 	@ServiceMethod(callByContent=true)
 	public void deploy() throws Exception {
-		this.setStatus(SERVER_STATUS_DEPLOYING);
+		this.setStatus(SERVER_STATUS_STOPPED);
 		this.getMetaworksContext().setWhen(this.getStatus());	
 		
 		String host = GlobalContext.getPropertyString("vm.manager.ip");
@@ -435,7 +436,11 @@ public class ProjectServer implements ITool, ContextAware {
 	}
 	
 	public void status() throws Exception {
-		if(!"Not Allocated".equals(this.getIp())){
+		
+		if("DB".equals(this.getType())){
+			this.setStatus(SERVER_STATUS_RUNNING);
+			
+		}else 		if(!"Not Allocated".equals(this.getIp())){
 			String targetUserId = GlobalContext.getPropertyString("vm.target.user");
 			String targetPassword= GlobalContext.getPropertyString("vm.target.password");
 			
@@ -458,16 +463,22 @@ public class ProjectServer implements ITool, ContextAware {
 				this.setStatus(SERVER_STATUS_STOPPED);
 			}
 			
-			this.getMetaworksContext().setWhen(this.getStatus());
-			
 			if(jschServerBehaviour.getJschSession() != null)
 				jschServerBehaviour.getJschSession().disconnect();
 		}
+		
+		this.getMetaworksContext().setWhen(this.getStatus());
 	}
 	
+	@Hidden
+	@Face(displayName="통계")
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
 	public Object statistics(){
-		return new Popup(new IFrame("http://192.168.212.77:10086?admin?status"));
+		IFrame iframe = new IFrame("http://192.168.212.77:10086/admin?status");
+		iframe.setWidth("1000");
+		iframe.setHeight("630");
+		
+		return new Popup(980, 600, iframe);
 	}
 	
 	@Override

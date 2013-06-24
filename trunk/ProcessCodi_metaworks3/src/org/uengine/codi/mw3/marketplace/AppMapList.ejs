@@ -1,0 +1,53 @@
+<%
+
+console.log("app map list");
+
+console.log(value);
+
+	if(value){
+		var session = mw3.getAutowiredObject('org.uengine.codi.mw3.model.Session');
+		
+		var admin = false;
+		if(session && session.employee)
+			admin = session.employee.isAdmin;
+			
+		if(value.appMapping){
+		
+%>
+	<div class="view_box4" id="hiddenReply" style="display: block; margin-top:15px;">
+		<div class="guide">
+			<span class="tl"></span>
+			<span class="tr"></span>
+		</div>
+		<div class="cont" style="padding:10px;">
+			<p class="title"><%=mw3.localize("$ActivityApps")%></p>
+		
+		<ul class="process_map2">		
+						
+<%
+			for (var i=0; i<value.appMapping.length; i++){
+				if(typeof options == 'undefined') 
+					options = objectMetadata;
+			
+				options['index'] = i;
+				options['htmlTag'] =  'li';
+%>
+						<%=mw3.locateObject(value.appMapping[i], value.appMapping[i].__className, null, options)%>	
+<%
+				mw3.addBeanProperty(value.__objectId, '.appMapping[' + i + ']');
+			}
+%>
+		</ul>
+			<div class="clear"></div>		
+		</div>
+	
+		<div class="guide">
+			<span class="lb"></span>
+			<span class="rb"></span>
+		</div>
+	</div>
+
+<%
+		}
+	}
+%>	

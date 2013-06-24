@@ -87,8 +87,8 @@ public class ProjectServers implements ContextAware {
 					server.setName(deserializableServer.getName());
 					server.setIp(deserializableServer.getIp());
 					
-					if(!serverGroup.equals(deserializableServer.getGroup()))
-						break;
+					/*if(!serverGroup.equals(deserializableServer.getGroup()))
+						break;*/
 				}else{
 					break;
 				}
