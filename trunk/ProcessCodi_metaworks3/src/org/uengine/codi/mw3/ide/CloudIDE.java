@@ -164,6 +164,7 @@ public class CloudIDE {
 
 		this.setLayout(outerLayout);
 		
+		this.pageNavigator = new PageNavigator();
 	}
 	
 	public void load(Session session, String projectId){
