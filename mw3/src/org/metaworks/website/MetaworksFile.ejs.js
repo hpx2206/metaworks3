@@ -82,12 +82,17 @@ org_metaworks_website_MetaworksFile.prototype.setFilename = function(filename){
 		listner(object);
 	}
 	
-}	
+};
 
 org_metaworks_website_MetaworksFile.prototype.addFileChangeListener = function(listener){
 	this.fileChangeListeners[this.fileChangeListeners.length] = listener;
-}
+};
 
+org_metaworks_website_MetaworksFile.prototype.showStatus = function(message){
+	if('upload DONE.' == message){
+		$("#objDiv_" + this.objectId).triggerHandler('uploaded');
+	}
+};
 
 org_metaworks_website_MetaworksFile.prototype.reset = function(){
 	

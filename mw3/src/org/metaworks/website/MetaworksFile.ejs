@@ -6,11 +6,13 @@
 	<%=fields.fileTransfer.here()%>
 <%		
 		if(mw3.when == "image"){
+		console.log(value);
+		console.log("mw3.when for metaworksFile : " + mw3.when + value.__objectId );
 %>
 			<a target="_blink" id="image_<%=objectId%>">&nbsp;</a> 
 <%
 		}else{
-		
+		console.log("else:  " + value.__objectId );
 			if(mw3.when == mw3.WHEN_NEW || mw3.when == mw3.WHEN_EDIT){
 %>
 
