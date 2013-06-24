@@ -21,8 +21,6 @@ var org_metaworks_ToOpener = function(objectId, className){
 			
 			mw3.removeObject(this.objectId);
 			mw3.onLoadFaceHelperScript();
-			
-			'#' + mw3._getObjectDivId(openerId).triggerHandler('toOpener');
 		}
 	}
 };
