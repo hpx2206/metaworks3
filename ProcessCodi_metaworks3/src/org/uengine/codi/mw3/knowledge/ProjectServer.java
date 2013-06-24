@@ -5,6 +5,8 @@ import java.util.ArrayList;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.Refresh;
+import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Available;
@@ -14,13 +16,15 @@ import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;
 import org.metaworks.annotation.Range;
 import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.widget.IFrame;
+import org.metaworks.dwr.MetaworksRemoteService;
+import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.ITool;
 import org.uengine.codi.deltacloud.DeltaCloud;
 import org.uengine.codi.deltacloud.Image;
 import org.uengine.codi.hudson.HudsonJobApi;
 import org.uengine.codi.hudson.HudsonJobDDTO;
+import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.model.IInstance;
 import org.uengine.codi.mw3.model.Instance;
 import org.uengine.codi.mw3.model.Popup;
@@ -29,6 +33,7 @@ import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.project.VMHardwareProfileCombo;
 import org.uengine.codi.mw3.project.VMImageCombo;
 import org.uengine.codi.mw3.project.VMRealmCombo;
+import org.uengine.codi.mw3.widget.IFrame;
 import org.uengine.codi.vm.JschCommand;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.KeyedParameter;
@@ -347,6 +352,10 @@ public class ProjectServer implements ITool, ContextAware {
 	@Face(displayName="$project.server.deploy")
 	@ServiceMethod(callByContent=true)
 	public void deploy() throws Exception {
+		deploy(false);
+	}
+	
+	public void deploy(boolean showLog) throws Exception {
 		this.setStatus(SERVER_STATUS_STOPPED);
 		this.getMetaworksContext().setWhen(this.getStatus());	
 		
@@ -373,8 +382,16 @@ public class ProjectServer implements ITool, ContextAware {
 		long sleepTime = 5000;
 		long tryTime = 0;
 		
+		
 		jschServerBehaviour.runCommand(scriptCreateJob + " " + paramProjectName);
 		jschServerBehaviour.runCommand(scriptHudsonSetting + " " +paramProjectName + " " + paramIP + " " + "\"\\/ssw\\/data\\/jboss\\/standalone\\/deployments\"");
+
+		if(showLog){
+			ModalWindow modal = new ModalWindow(new IFrame("http://192.168.212.76:9090/hudson/job/"+ projectInfo.getProjectName()), 0, 0, "배포");
+			modal.setId("deploy");
+		
+			MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{modal});
+		}
 		
 		HudsonJobApi hudsonJobApi = new HudsonJobApi();
 
@@ -394,7 +411,10 @@ public class ProjectServer implements ITool, ContextAware {
 		
 		// build hudson
 		jschServerBehaviour.runCommand(scriptHudsonBuild + " " + paramProjectName);
-		
+
+		if(showLog)
+			MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new Refresh(new IFrame("http://192.168.212.76:9090/hudson/job/" + projectInfo.getProjectName() + "/" + nextBuilderNumber + "/console"))});
+
 		while(builderResult == null){
 			HudsonJobDDTO hudsonJobDDTO = hudsonJobApi.hudsonJobApiXmlParser(hudsonURL, projectInfo.getProjectName());
 			
@@ -411,9 +431,15 @@ public class ProjectServer implements ITool, ContextAware {
 			}
 		}
 		
+		if(showLog){
+			ModalWindow modal = new ModalWindow();
+			modal.setId("deploy");
+			
+			MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new Remover(modal)});
+		}
+		
 		if(jschServerBehaviour.getJschSession() != null)
 			jschServerBehaviour.getJschSession().disconnect();
-
 	}
 	
 	//@Available(when={SERVER_STATUS_STARTED, SERVER_STATUS_STOPPED, SERVER_STATUS_STARTING, SERVER_STATUS_STOPPING, SERVER_STATUS_DEPLOYING, SERVER_STATUS_RUNNING})
@@ -475,8 +501,8 @@ public class ProjectServer implements ITool, ContextAware {
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
 	public Object statistics(){
 		IFrame iframe = new IFrame("http://192.168.212.77:10086/admin?status");
-		iframe.setWidth("1000");
-		iframe.setHeight("630");
+//		iframe.setWidth("1000");
+//		iframe.setHeight("630");
 		
 		return new Popup(980, 600, iframe);
 	}

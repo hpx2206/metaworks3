@@ -6,6 +6,7 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Test;
 import org.metaworks.widget.layout.Layout;
 import org.uengine.codi.mw3.common.MainPanel;
+import org.uengine.codi.mw3.ide.CloudIDE;
 import org.uengine.codi.mw3.knowledge.Knowledge;
 import org.uengine.codi.mw3.marketplace.AppMap;
 import org.uengine.codi.mw3.marketplace.Marketplace;
@@ -40,11 +41,11 @@ public class PageNavigator{
 
 	@ServiceMethod(callByContent=true)
 	public MainPanel goIDE() throws Exception {
-		//CloudIDE cloudIDE = new CloudIDE();
-		//cloudIDE.load(session, "");
+		CloudIDE cloudIDE = new CloudIDE();
+		cloudIDE.load(session	);
 			
-		//return new MainPanel(cloudIDE);
-		return new MainPanel(new IDE(session));
+		return new MainPanel(cloudIDE);
+		//return new MainPanel(new IDE(session));
 	}
 	
 	@ServiceMethod(callByContent=true)
