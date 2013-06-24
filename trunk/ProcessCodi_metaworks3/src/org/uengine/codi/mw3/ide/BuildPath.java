@@ -90,4 +90,14 @@ public class BuildPath {
 		return className;
 	}
 	
+	public String makeFullClassName(String path){
+		String packageName = this.makePackageName(path);
+		String className = this.makeClassName(path);
+		
+		if(packageName != null)
+			return packageName + "." + className;
+		else
+			return className;
+	}
+	
 }

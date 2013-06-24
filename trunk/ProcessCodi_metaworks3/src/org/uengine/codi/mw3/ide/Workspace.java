@@ -27,9 +27,12 @@ public class Workspace {
 			this.projects = projects;
 		}
 
+	public Workspace(){
+		this.setProjects(new ArrayList<Project>());
+	}
+	
 	public void load(){
 		
-//		String projectId = MetadataBundle.getProjectId();
 		String tenantId = null;
 		if( TenantContext.getThreadLocalInstance() != null ){
 			tenantId = TenantContext.getThreadLocalInstance().getTenantId();
@@ -39,7 +42,10 @@ public class Workspace {
 		
 		this.setId(tenantId);
 		
-		ArrayList<Project> projects = new ArrayList<Project>();
+//		String projectId = MetadataBundle.getProjectId();
+
+		
+		
 		// TODO codi 관리자는 root가 보인다.
 		/*
 		// 앱의 루트 불러오기 - codebase + projectId + "root"
@@ -51,15 +57,6 @@ public class Workspace {
 		main.load();
 		projects.add(main);
 		*/
-		
-		// 앱의 테넌트 불러오기 - codebase + projectId + tenantId
-		String codeBasePath = CodiClassLoader.mySourceCodeBase();
-		CodiFileUtil.mkdirs(codeBasePath);
-		Project tenantMain = new Project();
-		tenantMain.setId(tenantId);
-		tenantMain.setPath(codeBasePath);
-		tenantMain.load();
-		projects.add(tenantMain);
 		
 		// 테넌트의 프로젝트 불러오기
 		try {
@@ -82,8 +79,31 @@ public class Workspace {
 			e.printStackTrace();
 		}
 		
+	}
+	
+	public void addTenant(){
 		
-		this.setProjects(projects);
+		// 앱의 테넌트 불러오기 - codebase + projectId + tenantId
+		String codeBasePath = CodiClassLoader.mySourceCodeBase();
+		CodiFileUtil.mkdirs(codeBasePath);
+		Project tenantMain = new Project();
+		tenantMain.setId(this.getId());
+		tenantMain.setPath(codeBasePath);
+		tenantMain.load();
+		
+		this.getProjects().add(tenantMain);
+	}
+	
+	public void addProject(String id){
+		String path = MetadataBundle.getProjectBasePath(id);
+		CodiFileUtil.mkdirs(path);
+		
+		Project project = new Project();
+		project.setId(id);
+		project.setPath(path);
+		project.load();
+		
+		this.getProjects().add(project);
 	}
 	
 	public Project findProject(String projectId){
