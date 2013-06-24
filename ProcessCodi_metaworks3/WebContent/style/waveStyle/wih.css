@@ -195,11 +195,7 @@ legend {display:none;}
 
 .process_map3 li a{color:#333;text-decoration:none; font-weight:bold; letter-spacing:-1;}
 .process_map3 li a:hover{text-decoration:underline}
-.process_map3 li img{display:block;margin:12px; margin-bottom:20px;border:none; line-height:66px;}
-
-
-
-
+.process_map3 li .applogo img{display:block;margin:12px; margin-bottom:20px;border:none; line-height:66px; width:144px; height:144px;}
 
 
 
