@@ -19,8 +19,9 @@ import org.uengine.codi.mw3.ide.editor.metadata.MetadataEditor;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
-@Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs",
-ejsPathMappingByContext={
+@Face(ejsPath = "dwr/metaworks/org/metaworks/metadata/MetadataProperty.ejs",
+		ejsPathMappingByContext={
+	"{where: 'ide', face: 'dwr/metaworks/org/metaworks/metadata/ImageProperty.ejs'}",
 	"{where: 'ssp', face: 'dwr/metaworks/org/metaworks/metadata/ImageProperty.ejs'}"
 })
 @XStreamAlias("MetadataProperty")

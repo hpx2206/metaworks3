@@ -25,4 +25,20 @@ var org_metaworks_metadata_StringProperty = function(objectId, className){
 		}, function(){			
 			$(this).css('cursor','auto');
 	});
+	
+	this.objectDivId = mw3._getObjectDivId(this.objectId);
+	this.objectDiv = $('#' + this.objectDivId);
+	this.objectDiv.find(".fb_form_box").click(function(){
+		$('.fb_form_box').css({'background':'#f3f7fb'});
+		$(this).css({'background':'#A8D0F9'});
+	});
+	
+	this.objectDiv.hover(
+		function(){
+			$(this).find('.hover_div').show();
+		},
+		function(){
+			$(this).find('.hover_div').hide();
+		}
+	);
 };

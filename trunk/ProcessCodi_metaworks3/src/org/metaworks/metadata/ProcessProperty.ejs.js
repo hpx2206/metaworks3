@@ -30,13 +30,4 @@ var org_metaworks_metadata_ProcessProperty = function(objectId, className){
 };
 
 org_metaworks_metadata_ProcessProperty.prototype = {
-	showStatus : function(status){
-		console.log('aaaa');
-	},
-	startLoading : function(status){
-		console.log('bbbb');
-	},
-	endLoading : function(status){
-		console.log('cccc');
-	}	
 };

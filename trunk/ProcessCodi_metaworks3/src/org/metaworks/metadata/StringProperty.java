@@ -10,10 +10,6 @@ import org.uengine.codi.mw3.ide.ResourceNode;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamOmitField;
 
-@Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs",
-ejsPathMappingByContext={
-	"{where: 'ssp', face: 'dwr/metaworks/org/metaworks/metadata/StringProperty.ejs'}"
-})
 @XStreamAlias("MetadataProperty")
 public class StringProperty extends MetadataProperty{
 
