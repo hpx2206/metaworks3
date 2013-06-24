@@ -14,7 +14,8 @@ var org_uengine_codi_mw3_marketplace_AppMapList = function(objectId, className){
 	
 	
    $('.process_map3').css({"margin-top":$('.contentcontainer').height()/2 - $('.process_map3').height()/2 + 30});	
-	
-	
+   
+   $('.process_map3 li').show("bounce", 500);
+  
 	
 };
