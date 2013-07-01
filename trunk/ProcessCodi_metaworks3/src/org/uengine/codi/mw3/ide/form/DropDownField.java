@@ -7,4 +7,10 @@ public class DropDownField extends MultipleChoiceField {
 		this.setFieldType("java.lang.String");
 		this.setEjsPath("dwr/metaworks/genericfaces/SelectBox.ejs");
 	}
+	
+	@Override
+	public void init(){
+		super.init();
+		this.getMetaworksContext().setHow("selectbox");
+	}
 }

@@ -169,7 +169,7 @@ public class CommonFormField implements ContextAware, Cloneable {
 		
 		formField.init();
 		formField.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-		formField.getMetaworksContext().setWhere("form");		
+		formField.getMetaworksContext().setWhere("form");
 		
 		form.getFormFields().add(formField);			
 		
@@ -236,15 +236,14 @@ public class CommonFormField implements ContextAware, Cloneable {
 	@Available(when={MetaworksContext.WHEN_EDIT}, where={"properties"})
 	public Object[] apply() {
 
-		/*
 		FormFieldProperties formFieldProperty = (FormFieldProperties)this.formFieldProperty;
 		formFieldProperty.setFormField(this);
 
 		int pos = form.formFields.indexOf(this);
 		if(pos > -1){
 			CommonFormField applyFormField = (CommonFormField)this.clone();
-
-			applyFormField.setMetaworksContext(new MetaworksContext());
+			
+			applyFormField.init();
 			applyFormField.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 			applyFormField.getMetaworksContext().setWhere("form");
 
@@ -252,9 +251,6 @@ public class CommonFormField implements ContextAware, Cloneable {
 		}
 
 		return new Object[]{form, formFieldProperty};
-		*/
-		
-		return null;
 	}	
 
 	@Override	
