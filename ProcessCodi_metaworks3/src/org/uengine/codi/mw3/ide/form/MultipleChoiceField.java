@@ -49,6 +49,12 @@ public class MultipleChoiceField extends CommonFormField {
 	}
 	
 	@Override
+	public void init(){
+		super.init();
+		this.getMetaworksContext().setHow("radiobutton");
+	}
+	
+	@Override
 	public CommonFormField make(WebFieldDescriptor fd)  {
 		
 		CommonFormField formField = super.make(fd);
@@ -105,8 +111,7 @@ public class MultipleChoiceField extends CommonFormField {
 			multipleChoiceField.setValues(valuesBuffer.toString());
 		}
 	}
-	
-	
+		
 	@ServiceMethod(callByContent=true)
 	@Available(when={MetaworksContext.WHEN_EDIT}, where={"properties"})
 	public Object[] apply() {
