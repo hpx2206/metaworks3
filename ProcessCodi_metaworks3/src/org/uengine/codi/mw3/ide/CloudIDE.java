@@ -1,21 +1,18 @@
 package org.uengine.codi.mw3.ide;
 
 import org.metaworks.MetaworksContext;
+import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
-import org.metaworks.ToAppend;
-import org.metaworks.ToOpener;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
 import org.metaworks.widget.layout.Layout;
 import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.admin.TopPanel;
-import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.ide.editor.Editor;
 import org.uengine.codi.mw3.ide.view.Navigator;
 import org.uengine.codi.mw3.model.Locale;
-import org.uengine.codi.mw3.model.Main;
 import org.uengine.codi.mw3.model.Session;
 
 public class CloudIDE {
@@ -298,8 +295,6 @@ public class CloudIDE {
 	public Object save() throws Exception{
 		editor.workspace = this.getWorkspace();
 		
-		Object[] objects = new Object[2];
-		
 		ModalWindow modalWindow = new ModalWindow();
 		modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 		modalWindow.setWidth(300);
@@ -307,12 +302,9 @@ public class CloudIDE {
 						
 		modalWindow.setTitle("$SaveCompleteTitle");
 		modalWindow.setPanel(localeManager.getString("$SaveCompleteMessage"));
-		modalWindow.getButtons().put("$Confirm", new ToOpener(this));
+		modalWindow.getButtons().put("$Confirm", new Refresh(editor.save()));		
 		
-		objects[0] = modalWindow;
-		objects[1] = new ToAppend(editor, editor.save());
-		
-		return objects;
+		return modalWindow;
 	}
 
 	@ServiceMethod(payload={"currentEditorId"}, keyBinding="Ctrl+W@Global", target=ServiceMethodContext.TARGET_NONE)

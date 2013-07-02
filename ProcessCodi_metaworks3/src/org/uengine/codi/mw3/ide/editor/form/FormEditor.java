@@ -135,22 +135,4 @@ public class FormEditor extends Editor {
 		return new ModalWindow(new FormPreview(o), 0, 0, "$Preview");
 		
 	}
-	
-	
-//	validation check
-	
-//	public boolean blankCheck() {
-//		
-//		for(CommonFormField formField : form.getFormFields()) {
-//			
-//			if(
-//					(formField.getId() == null || formField.getId().trim().length() == 0)
-//					|| (formField.getDisplayName() == null || formField.getDisplayName().trim().length() == 0)) 
-//			{
-//				return false;
-//			}
-//		}
-//		return true;
-//	}
-
 }
