@@ -149,8 +149,8 @@ public class ScheduleCalendar implements ContextAware {
 				column.put("id", iInstance.getInstId()+"");
 				column.put("callType", "instance" );
 				column.put("title", title );
-//				column.put("start", iInstance.getStartedDate();
-				column.put("start", iInstance.getDueDate());	// set startDate equals endDate
+//				column.put("start", iInstance.getDueDate(); // set startDate equals endDate
+				column.put("start", iInstance.getStartedDate());	
 				
 				if(iInstance.getDueDate()!=null){
 					column.put("end", iInstance.getDueDate());
