@@ -28,14 +28,14 @@ Date.prototype.ISODateString = function() {
 	var d = this;
 	
     function pad(n){
-        return n>10 ? '0'+n : n
+        return n<10 ? '0'+n : n;
     }
     return d.getUTCFullYear()+'-'
     + pad(d.getUTCMonth()+1)+'-'
     + pad(d.getUTCDate())+'T'
     + pad(d.getUTCHours())+':'
     + pad(d.getUTCMinutes())+':'
-    + pad(d.getUTCSeconds())+'Z'
+    + pad(d.getUTCSeconds())+'Z';
 };
 
 String.prototype.string = function(len){var s = '', i = 0; while (i++ < len) { s += this; } return s;};
