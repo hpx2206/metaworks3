@@ -6,11 +6,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
-import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.website.AbstractMetaworksFile;
-import org.uengine.codi.mw3.CodiClassLoader;
 
 
 @Face(ejsPath="org/metaworks/website/MetaworksFile.ejs", options={"hideText"}, values={"true"})

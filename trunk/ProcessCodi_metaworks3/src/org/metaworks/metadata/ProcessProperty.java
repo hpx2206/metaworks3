@@ -10,8 +10,8 @@ import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.CodiClassLoader;
-import org.uengine.codi.mw3.ide.Project;
 import org.uengine.codi.mw3.ide.ResourceNode;
+import org.uengine.codi.mw3.ide.editor.metadata.MetadataEditor;
 import org.uengine.codi.mw3.ide.editor.process.ProcessEditor;
 import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitorPanel;
 
@@ -61,7 +61,7 @@ public class ProcessProperty extends MetadataProperty{
 		ProcessEditor processEditor = new ProcessEditor(node);
 		processEditor.load();
 		
-		ModalWindow modalWindow = new ModalWindow(processEditor, 0, 0, "프로세스 편집");
+		ModalWindow modalWindow = new ModalWindow(processEditor, 0, 0, "$metadata.process.edit");
 		
 		modalWindow.getButtons().put("$Save", "save");
 		modalWindow.getButtons().put("$Cancel", null);
@@ -70,12 +70,48 @@ public class ProcessProperty extends MetadataProperty{
 		return modalWindow;
 	}		
 	
-	@ServiceMethod(callByContent=true)
+	@ServiceMethod(callByContent=true, bindingHidden=true, bindingFor="file", eventBinding={"uploaded"})
 	public void changeFile() throws Exception {
-
-		InstanceMonitorPanel processInstanceMonitorPanel = new InstanceMonitorPanel();
-		processInstanceMonitorPanel.loadProcess(this.getValue());
-		this.setProcessInstanceMonitorPanel(processInstanceMonitorPanel);
 		
+		//파일첨부 클릭 시 메타데이터 파일 바로 수정
+		if(this.getFile().getUploadedPath() != null){
+			
+			int index = metadataXML.properties.indexOf(this);
+			
+			String metadataFileName = "uengine.metadata";
+			String metadataFilePath = metadataXML.getFilePath() + File.separatorChar + metadataFileName;
+			
+			MetadataProperty editProperty = metadataXML.properties.get(index);
+			editProperty.setName(this.getName());
+			editProperty.setChange(true);
+			editProperty.setType(this.getType());
+			
+			
+			MetadataFile file = new MetadataFile();
+			file.setTypeDir(this.getType());
+			file.setUploadedPath(this.getFile().getUploadedPath());
+			file.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+			file.setMimeType(ResourceNode.findNodeType(this.getFile().getFilename()));
+			file.setFileTransfer(this.getFile().getFileTransfer());
+			
+			editProperty.setFile(file);
+			editProperty.setValue(file.getUploadedPath());
+			editProperty.getFile().getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+			
+			
+			MetadataEditor metadataEditor = new MetadataEditor();
+			metadataEditor.setResourceNode(new ResourceNode());
+			metadataEditor.getResourceNode().setPath(metadataFilePath);
+			metadataEditor.setContent(metadataXML.toXmlXStream());
+			metadataEditor.save();
+		
+		}else {
+			
+			InstanceMonitorPanel processInstanceMonitorPanel = new InstanceMonitorPanel();
+			processInstanceMonitorPanel.loadProcess(this.getValue());
+			this.setProcessInstanceMonitorPanel(processInstanceMonitorPanel);
+			setFilePreview(processInstanceMonitorPanel);
+			
+		}
 	}
 }
