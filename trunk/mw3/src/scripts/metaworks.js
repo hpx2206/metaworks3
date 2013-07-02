@@ -54,13 +54,17 @@ var MetaworksService = function(className, object, svcNameAndMethodName, autowir
 				
 				mw3.locateObject(result, null, '#' + mw3.popupDivId);
 				
+				$('#' + mw3._getObjectDivId(result.__objectId)).one('destroy', function(){
+					mw3.recentOpenerObjectId.pop();
+				});
+
 				// stick mode is auto close
 				if(serviceMethodContext.target == 'stick')
 					closeOutsideContainer(mw3.popupDivId);				
 				
 			}else if(serviceMethodContext.target=="opener" && mw3.recentOpenerObjectId.length > 0){
 				mw3.setObject(mw3.recentOpenerObjectId[mw3.recentOpenerObjectId.length - 1], result);
-				mw3.recentOpenerObjectId.pop();
+
 				
 			}else{ //case of target is "auto"
 				var results = result.length ? result: [result];
@@ -763,7 +767,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			
 			Metaworks3.prototype.getMetadata = function(objectTypeName){
 
-				if(!objectTypeName && objectTypeName.trim().length == 0) return;
+				if(!objectTypeName || objectTypeName == null || objectTypeName.trim().length == 0) return;
 				
 				if(objectTypeName.length > 2 && objectTypeName.substr(-2) == '[]'){			//if array of some object type, use ArrayFace with mapped class mapping for the object type.
 					return;
@@ -1900,9 +1904,6 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
     			if(this.objects[objectId]){
     				if(this.getFaceHelper(objectId) && this.getFaceHelper(objectId).destroy)
     					mw3.getFaceHelper(objectId).destroy();
-    				else{
-    					$(divId).unbind();
-    				}
     			}
 				
     			this._armObject(objectId, value); //let the methods and some special fields available
@@ -1958,7 +1959,6 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 	    			if(faceHelper && faceHelper.destroy)
 	    				faceHelper.destroy();
 					
-					
 					this.objects[objectId] = null;
 					this.faceHelpers[objectId] = null;
 					this.beanExpressions[objectId] = null;
@@ -1974,6 +1974,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				}
 				
 
+				$(divId).triggerHandler('destroy');
 				$(divId).remove();
 				$(infoDivId).remove();
 
@@ -2380,7 +2381,6 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
         			}else if(serviceMethodContext.target=="opener" && mw3.recentOpenerObjectId.length > 0){
         				
         				mw3.setObject(mw3.recentOpenerObjectId[mw3.recentOpenerObjectId.length - 1], result);
-        				mw3.recentOpenerObjectId.pop();
         				
         			}else{ //case of target is "auto"
         				var results = result.length ? result: [result];
@@ -3908,6 +3908,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					   continue;
 
 				    console.log('pass : ' + methodName);
+				    console.log(methodContext);
 				    
 				    // make call method
 		   			var command = "if(mw3.objects['"+ objectId +"']!=null) mw3.call("+objectId+", '"+methodName+"')";
@@ -3935,6 +3936,8 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 	   							console.log(bindingDivId);
 	   							
 	   							$(bindingDivId).bind(eventBinding, {command: command}, function(event){
+	   								console.log('bind');
+	   								console.log(this);
 	   								eval(event.data.command);
 	   							});
 	   						}
