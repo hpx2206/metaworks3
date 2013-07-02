@@ -86,13 +86,13 @@ var org_metaworks_widget_ModalWindow = function(objectId, className) {
 								
 								console.log(mw3.recentOpenerObjectId[mw3.recentOpenerObjectId.length - 1]);
 								
-								mw3.call(mw3.recentOpenerObjectId[mw3.recentOpenerObjectId.length - 1], mw3.objects[objectId].callback[button]);
+								mw3.call(mw3.recentOpenerObjectId[mw3.recentOpenerObjectId.length - 1], mw3.objects[objectId].callback[button], false, true);
 							}
 							
 							
 							mw3.getFaceHelper(objectId).close();
 						}
-					}
+					};
 				}
 				
 				options['buttons'] = buttons;
