@@ -675,10 +675,6 @@ public class MetadataProperty implements ContextAware, Cloneable {
 		
 		String projectSourcePath = (String)TransactionContext.getThreadLocalInstance().getRequest().getSession().getAttribute("projectSourcePath");
 		
-		
-		 
-		
-		
 		MetadataProperty detailProperty = new MetadataProperty();
 		
 		detailProperty.setName(this.getName());
@@ -705,12 +701,13 @@ public class MetadataProperty implements ContextAware, Cloneable {
 			
 			InstanceMonitorPanel processInstanceMonitorPanel = new InstanceMonitorPanel();
 			processInstanceMonitorPanel.loadProcess(this.getValue());
-			((ProcessProperty)detailProperty).setProcessInstanceMonitorPanel(processInstanceMonitorPanel);
+			((ProcessProperty)detailProperty).setFilePreview(processInstanceMonitorPanel);
+			detailProperty.getFile().setTypeDir(this.getType());
 			
 		}else if(MetadataProperty.IMAGE_PROP.equals(this.getType())){
 			MetadataFile file = new MetadataFile();
 			file.setBaseDir(projectSourcePath);
-			file.setTypeDir("image");
+			file.setTypeDir(this.getType());
 			file.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 			file.setUploadedPath(this.getValue());
 			file.setMimeType(ResourceNode.findNodeType(this.getValue()));

@@ -58,16 +58,15 @@ public class ImageProperty extends MetadataProperty{
 		//파일 첨부일떄..
 		MetadataFile file = new MetadataFile();
 		file.setUploadedPath(this.getFile().getUploadedPath());
-		file.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+		file.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		file.setMimeType(ResourceNode.findNodeType(this.getFile().getFilename()));
 		file.setFileTransfer(this.getFile().getFileTransfer());
 		
 		editProperty.setFile(file);
 		editProperty.setValue(file.getUploadedPath());
-		editProperty.getFile().getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+		editProperty.getFile().getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		
 		//파일 첨부 끝
-		
 		metadataXML.properties.remove(this);
 		metadataXML.properties.add(index, editProperty);
 		
@@ -89,7 +88,6 @@ public class ImageProperty extends MetadataProperty{
 		removeWindow.setId("subscribe");
 		
 		ModalWindow modalWindow = new ModalWindow();
-		modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 		modalWindow.setWidth(450);
 		modalWindow.setHeight(200);
 		
