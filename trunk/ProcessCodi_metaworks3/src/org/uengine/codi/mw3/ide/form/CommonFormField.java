@@ -407,8 +407,8 @@ public class CommonFormField implements ContextAware, Cloneable {
 			formField.setId(fd.getName());
 			formField.setDisplayName(fd.getDisplayName());
 			formField.setHide((Boolean)fd.getAttributes().get("is key"));
-
-			formField.setMetaworksContext(new MetaworksContext());
+			
+			formField.init();
 			formField.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 			formField.getMetaworksContext().setWhere("form");
 
