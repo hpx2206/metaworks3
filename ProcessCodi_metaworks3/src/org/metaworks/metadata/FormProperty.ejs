@@ -11,16 +11,11 @@ if(mw3.where == 'ssp'){
 		<%
 		if(value.file.metaworksContext.when == 'edit') {
 		
-		%>
-		
-			<div class="sp_form_block">
-				<div id="sp_saveBtn_<%=objectId%>" class="sp_position_right"><a id="wBtn" onClick="<%=methods.save.caller()%>"><span><%=mw3.localize('$Save')%></span></a></div>
-			</div>
-		
+		%>		
 		<%
 		}else {
 		%>
-		
+		dd
 			<div class="sp_form_block">
 				<div id="sp_editBtn_<%=objectId%>" style="line-height: 210%;" class="sp_position_right"><a id="wBtn" onClick="<%=methods.edit.caller()%>"><span>저장</span></a></div>
 			</div>
@@ -37,10 +32,6 @@ if(mw3.where == 'ssp'){
 		<div class="sp_form_block">
 			<div><a id="wBtn" onClick="<%=methods.modify.caller()%>"><span>편집</span></a></div>
 		</div>
-		<div class="sp_form_block">
-			<%=fields.file.here()%>
-		</div>
-
 <%
 
 	}else {
