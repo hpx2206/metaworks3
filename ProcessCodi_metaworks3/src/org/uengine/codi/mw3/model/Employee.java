@@ -10,6 +10,7 @@ import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ToOpener;
 import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -416,6 +417,8 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 					
 					this.setIsAdmin(true);
 					this.setApproved(true);
+					
+					this.createCodi();
 				}
 			}
 			
@@ -495,7 +498,6 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	public Object[] saveEmployeeInfo() throws Exception {	
 		
 		this.saveMe();
-		this.createCodi();
 		
 		if(session != null && session.getEmployee().getEmpCode().equals(getEmpCode())) {
 			session.setEmployee(findMe());
@@ -541,7 +543,8 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		
 		modalWindow.setTitle("$JoinCompleteTitle");
 		modalWindow.setPanel(localeManager.getString("$JoinCompleteMessage"));
-		modalWindow.getButtons().put("$Confirm", new ToOpener(new MainPanel(new Main(session))));
+		modalWindow.getButtons().put("$Confirm", null);
+		modalWindow.getCallback().put("$Confirm", "forward");
 		
 		return new Object[] {modalWindow, new Remover(removeWindow, true)};
 	}
@@ -707,5 +710,15 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	public Session drag() throws Exception {
 		session.setClipboard(this);
 		return session;
+	}
+	
+	@ServiceMethod(callByContent=true)
+	public Object forward() throws Exception {
+		Session session = new Session();
+		session.setEmployee(this);
+		session.fillSession();
+		session.setGuidedTour(true);
+		
+		return new ToOpener(new MainPanel(new Main(session)));		
 	}
 }
