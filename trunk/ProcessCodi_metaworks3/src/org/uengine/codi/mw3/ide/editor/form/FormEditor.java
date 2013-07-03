@@ -3,6 +3,7 @@ package org.uengine.codi.mw3.ide.editor.form;
 import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Face;
+import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.dwr.MetaworksRemoteService;
@@ -107,6 +108,7 @@ public class FormEditor extends Editor {
 	
 	@Face(displayName="$SaveAndPreview")
 	@ServiceMethod(payload={"resourceNode", "form"}, target=ServiceMethodContext.TARGET_POPUP)
+	@Hidden
 	public Object preview() throws Exception {
 		
 		Project project = workspace.findProject(this.getResourceNode().getProjectId());
