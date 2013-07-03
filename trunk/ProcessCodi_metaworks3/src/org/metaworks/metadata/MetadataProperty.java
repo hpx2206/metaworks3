@@ -33,6 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.ide.Project;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.Workspace;
+import org.uengine.codi.mw3.ide.editor.metadata.MetadataEditor;
 import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.model.ProcessMap;
 import org.uengine.codi.mw3.model.ProcessMapList;
@@ -386,51 +387,26 @@ public class MetadataProperty implements ContextAware, Cloneable {
 	public Object[] save() throws FileNotFoundException, IOException, Exception {
 
 		int index = metadataXML.properties.indexOf(this);
+		
+		String metadataFileName = "uengine.metadata";
+		String metadataFilePath = metadataXML.getFilePath() + File.separatorChar + metadataFileName;
 
 		MetadataProperty editProperty = metadataXML.properties.get(index);
 		editProperty.setName(this.getName());
 		editProperty.setChange(true);
 		editProperty.setType(this.getType());
-
-		boolean isFile = false;
-		boolean isResource = false;
-
-		if (this.getFile() != null && this.getFile().getFileTransfer() != null
-				&& this.getFile().getFileTransfer().getSize() > 0)
-			isFile = true;
-
-		if (this.getResourceNode() != null
-				&& this.getResourceNode().getId() != null
-				&& this.getResourceNode().getPath() != null)
-			isResource = true;
-
-		if (FILE_PROP.equals(this.getType())
-				|| IMAGE_PROP.equals(this.getType())
-				|| PROCESS_PROP.equals(this.getType())
-				|| FORM_PROP.equals(this.getType())) {
-
-			if (isFile) {
-				// file upload;
-				this.getFile().upload();
-
-				editProperty.setFile(this.getFile());
-				editProperty.setValue(this.getFile().getFilename());
-				editProperty.getFile().getMetaworksContext()
-						.setWhen(MetaworksContext.WHEN_VIEW);
-			}
-
-			if (isResource) {
-				editProperty.setValue(this.getResourceNode().getId());
-			}
-
-		} else if (STRING_PROP.equals(this.getType())) {
-			editProperty.setValue(value);
-		}
+		editProperty.setValue(this.getValue());
 
 		metadataXML.properties.remove(this);
 		metadataXML.properties.add(index, editProperty);
 
 		editProperty.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+		
+		MetadataEditor metadataEditor = new MetadataEditor();
+		metadataEditor.setResourceNode(new ResourceNode());
+		metadataEditor.getResourceNode().setPath(metadataFilePath);
+		metadataEditor.setContent(metadataXML.toXmlXStream());
+		metadataEditor.save();
 
 		return new Object[]{metadataXML};
 	}
@@ -760,6 +736,8 @@ public class MetadataProperty implements ContextAware, Cloneable {
 			
 			//detailProperty.setResourceNode(resourceNode);
 			//detailProperty.metadataXML = metadataXML;
+		}else if(MetadataProperty.STRING_PROP.equals(this.getType())){
+			detailProperty.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		}
 		
 		return detailProperty;

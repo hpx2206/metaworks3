@@ -3,7 +3,6 @@ package org.metaworks.metadata;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.uengine.codi.mw3.ide.ResourceNode;
 
@@ -38,15 +37,7 @@ public class StringProperty extends MetadataProperty{
 		}
 	
 	@Override
-	public Object edit() throws Exception {
-		this.getMetaworksContext().setWhen("edit");
-		// TODO Auto-generated method stub
-		return this;
-	}
-	
-	@Override
 	public Object[] save() throws FileNotFoundException, IOException, Exception {
-		// TODO Auto-generated method stub
 		return new Object[]{ super.save() };
 	}
 }
