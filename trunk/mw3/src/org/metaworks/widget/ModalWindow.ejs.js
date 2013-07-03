@@ -66,33 +66,25 @@ var org_metaworks_widget_ModalWindow = function(objectId, className) {
 				
 				var openerId = this.openerId;
 				
-				var buttons = {};
+				var buttons = [];
 				for(var button in this.object.buttons){
 					var action = this.object.buttons[button];
-					
-					buttons[mw3.localize(button)] = function(){
-						if(action != null){
-							
-							if(typeof action == 'object'){
-								mw3.locateObject(action, null, 'body');
-								mw3.onLoadFaceHelperScript();								
-							}else{
-								if(mw3.objects[objectId].panel)
-									mw3.call(mw3.objects[objectId].panel.__objectId, action, false, true);
-							}
-							
-							
-							if(mw3.objects[objectId].callback && mw3.objects[objectId].callback[button]){
-								
-								console.log(mw3.recentOpenerObjectId[mw3.recentOpenerObjectId.length - 1]);
-								
-								mw3.call(mw3.recentOpenerObjectId[mw3.recentOpenerObjectId.length - 1], mw3.objects[objectId].callback[button], false, true);
-							}
-							
-							
-							mw3.getFaceHelper(objectId).close();
+					buttons.push({text: mw3.localize(button), 'data.action':action, 'data.button':button, click: function(event){						
+						var action = $(event.currentTarget).attr('data.action')
+						var button = $(event.currentTarget).attr('data.button')
+						
+						if(action){					
+							if(mw3.objects[objectId].panel && mw3.objects[objectId].panel.__objectId)
+								mw3.call(mw3.objects[objectId].panel.__objectId, action, false, true);					
 						}
-					};
+						
+						if(button){
+							if(mw3.objects[objectId].callback && mw3.objects[objectId].callback[button])
+								mw3.call(mw3.recentOpenerObjectId[mw3.recentOpenerObjectId.length - 1], mw3.objects[objectId].callback[button]);
+						}
+							
+						mw3.getFaceHelper(objectId).close();
+					}});
 				}
 				
 				options['buttons'] = buttons;
