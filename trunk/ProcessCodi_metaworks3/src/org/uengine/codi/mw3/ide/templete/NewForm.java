@@ -67,7 +67,12 @@ public class NewForm extends Templete {
 			node.setType(targetNode.getType());
 			node.workspace = workspace;
 			
-			Editor editor = (Editor)node.beforeAction();			
+			Editor editor = null;
+			try {
+				editor = (Editor)node.beforeAction();
+			} catch (Exception e) {
+			}
+			
 			editor.save();
 			
 			return new Object[]{new Remover(new ModalWindow()), new ToAppend(targetNode, node), new ToAppend(new CloudWindow("editor"), editor)};
