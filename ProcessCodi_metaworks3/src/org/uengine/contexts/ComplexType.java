@@ -81,7 +81,11 @@ public class ComplexType implements Serializable, PropertyListable{
 			className = value.substring(1, value.lastIndexOf(".")).replace('/', '.');
 		}else{
 			//className = typeId.substring(1, typeId.lastIndexOf(".")).replace('/', '.');
-			className = typeId.substring(1, typeId.length() -1);
+			
+			if(typeId.lastIndexOf(".java") > -1)
+				className = typeId.substring(1, typeId.lastIndexOf(".")).replace('/', '.');
+			else
+				className = typeId.substring(1, typeId.length() -1);
 		}
 		
 		
