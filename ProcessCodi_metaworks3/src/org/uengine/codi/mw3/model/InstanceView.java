@@ -550,8 +550,8 @@ public class InstanceView {
 		
 		//setProcessInstanceMonitor(processInstanceMonitorPanel);
 		
-		modal.setPanel(processInstanceMonitorPanel);
-		
+		modal.setPanel(processInstanceMonitorPanel.getLay());
+
 		//loadDefault();
 		
 		return modal;
