@@ -315,7 +315,7 @@ public class ResourceNode extends TreeNode implements ContextAware {
 		return nodeType;
 	}
 
-	@ServiceMethod(payload={"id", "name", "path", "folder", "projectId", "type"}, mouseBinding="drag")
+	@ServiceMethod(payload={"id", "name", "path", "folder", "projectId", "type"}, mouseBinding="drag", target=ServiceMethodContext.TARGET_NONE)
 	public void drag() {
 		
 		Project project = workspace.findProject(this.getProjectId());
