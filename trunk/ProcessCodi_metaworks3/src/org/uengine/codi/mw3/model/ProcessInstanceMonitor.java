@@ -62,7 +62,7 @@ public class ProcessInstanceMonitor {
 		options.put("decorated", new Boolean(true));
 		options.put("show hidden activity", new Boolean(true));
 		options.put("ShowAllComplexActivities", new Boolean(true));
-		options.put("align", "center");
+		options.put("align", "right");
 
 		// options.setViewType(options.HORIZONTAL, options.HORIZONTAL);
 		// options.put("dontCollapseScopes", new Boolean(true));
