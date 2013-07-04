@@ -40,7 +40,7 @@ public class ProcessEditor extends Editor {
 		String definitionString = super.load();
 		
 		try {
-			this.getProcessDesigner().load(new String(definitionString.getBytes(), "UTF-8"));
+			this.getProcessDesigner().load(definitionString);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
