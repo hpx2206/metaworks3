@@ -213,7 +213,7 @@ public class ResourceFile implements ContextAware{
 				rf.setObjType(childAlias.substring(childAlias.lastIndexOf(".")+1));
 
 				//ignores other types except process if 'newInstance' mode
-				if(getMetaworksContext()!=null && (("appendProcessMap".equals(getMetaworksContext().getWhen()) || "newInstance".equals(getMetaworksContext().getWhen())) && !"process".equals(rf.getObjType())  && !"process2".equals(rf.getObjType()) ))
+				if(getMetaworksContext()!=null && (("appendProcessMap".equals(getMetaworksContext().getWhen()) || "newInstance".equals(getMetaworksContext().getWhen())) && !"process".equals(rf.getObjType()) && !"process2".equals(rf.getObjType()) && !"wpd".equals(rf.getObjType()) ))
 					continue;
 			}
 			
