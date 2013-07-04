@@ -646,7 +646,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 										}
 				        			}
 				        			
-				        			console.log(object.__className);
+				        			//console.log(object.__className);
 				        			mw3.serviceMethodBinding(objectId, object.__className);
 								}
 							}
@@ -3903,12 +3903,12 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			    for(var methodName in metadata.serviceMethodContextMap){
 			   		var methodContext = metadata.serviceMethodContextMap[methodName];
 			   		
-			   		console.log('try : ' + methodName);
+			   		//console.log('try : ' + methodName);
 				    if(mw3.isHiddenMethodForDiv(theDiv.data('metaworksContext'), methodContext) && !methodContext.bindingHidden)
 					   continue;
 
-				    console.log('pass : ' + methodName);
-				    console.log(methodContext);
+				    //console.log('pass : ' + methodName);
+				    //console.log(methodContext);
 				    
 				    // make call method
 		   			var command = "if(mw3.objects['"+ objectId +"']!=null) mw3.call("+objectId+", '"+methodName+"')";
@@ -3933,11 +3933,11 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 	   								bindingDivId = '#' + mw3._getObjectDivId(bindingFieldId);
 	   							}
 	   							
-	   							console.log(bindingDivId);
+	   							//console.log(bindingDivId);
 	   							
 	   							$(bindingDivId).bind(eventBinding, {command: command}, function(event){
-	   								console.log('bind');
-	   								console.log(this);
+	   								//console.log('bind');
+	   								//console.log(this);
 	   								eval(event.data.command);
 	   							});
 	   						}
@@ -4035,10 +4035,6 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			   				    	mw3.mouseX = e.pageX;
 			   		    			mw3.mouseY = e.pageY;
 		   			 				
-			   		    			// click(mouse right) is contextmenu block
-		   			 				if(which == 3){
-		   			 					document.oncontextmenu = function() { return false; };
-		   			 				}
 			   						eval(this['mouseCommand' + e.which]);
 			   									   						
 		   			 				e.stopPropagation(); //stops to propagate to parent that means consumes the event here.
