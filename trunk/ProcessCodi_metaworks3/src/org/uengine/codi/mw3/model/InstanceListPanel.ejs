@@ -5,9 +5,11 @@
 	var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
 	var isTopic = (mw3.how == "topic");
 	
+	var height = isTopic?136:68;
+	
 %>
 
-<div class="top" style="height: <%=isTopic?'136':'68'%>px; overflow:hidden; position: absolute; min-width: 0px; min-height: 0px; max-width: 10000px; max-height: 10000px;  left: 0px; right: 0px; top: 0px;">
+<div class="top" style="height: <%=height%>px; overflow:hidden; position: absolute; min-width: 0px; min-height: 0px; max-width: 10000px; max-height: 10000px;  left: 0px; right: 0px; top: 0px;">
 	
 	<%=isTopic?fields.topicFollowers.here():''%>
 	
@@ -62,7 +64,7 @@
 					%>  
                 		
 </div>
-<div class="bottom" style="top: <%=isTopic?'136':'68'%>px; overflow:auto; position: absolute; min-width: 0px; min-height: 0px; max-width: 10000px; max-height: 10000px;  left: 0px; right: 0px; bottom: 0px;">
+<div class="bottom" style="top: <%=height%>px; overflow:auto; position: absolute; min-width: 0px; min-height: 0px; max-width: 10000px; max-height: 10000px;  left: 0px; right: 0px; bottom: 0px;">
 
 
 				<%=value.instanceList ? fields.instanceList.here() : ""%>
