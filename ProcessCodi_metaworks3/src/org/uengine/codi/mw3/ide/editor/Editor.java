@@ -18,6 +18,7 @@ import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.Workspace;
 import org.uengine.codi.mw3.ide.editor.java.JavaParser;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.kernel.GlobalContext;
 
 public class Editor {
 	
@@ -120,8 +121,7 @@ public class Editor {
 			
 			//if(TYPE_FILE.equals(this.getType())){
 				File file = new File(this.getResourceNode().getPath());
-				if(file.exists()){
-					
+				if(file.exists()){					
 					try {
 						is = new FileInputStream(file);
 					} catch (Exception e) {
@@ -145,7 +145,7 @@ public class Editor {
 				
 			MetaworksUtil.copyStream(is, bao);
 			
-			this.setContent(bao.toString());
+			this.setContent(bao.toString(GlobalContext.ENCODING));
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
