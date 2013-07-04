@@ -9,6 +9,7 @@ import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.knowledge.IProjectNode;
 import org.uengine.codi.mw3.knowledge.ProjectNode;
 import org.uengine.codi.util.CodiFileUtil;
+import org.uengine.kernel.GlobalContext;
 
 public class Workspace {
 
@@ -37,49 +38,44 @@ public class Workspace {
 		String tenantId = null;
 		if( TenantContext.getThreadLocalInstance() != null ){
 			tenantId = TenantContext.getThreadLocalInstance().getTenantId();
+			this.setId(tenantId);
 		}
-		
-		if( tenantId == null )	tenantId = "uengine";
-		
-		this.setId(tenantId);
-		
-//		String projectId = MetadataBundle.getProjectId();
-
-		
 		
 		// TODO codi 관리자는 root가 보인다.
-		/*
 		// 앱의 루트 불러오기 - codebase + projectId + "root"
+		String projectId = MetadataBundle.getProjectId();
+		
 		String mainPath = MetadataBundle.getProjectBasePath(projectId);
 		CodiFileUtil.mkdirs(mainPath);
+		
 		Project main = new Project();
-		main.setId(projectId + File.separatorChar + "root" );
+		main.setId(projectId);
 		main.setPath(mainPath);
 		main.load();
-		projects.add(main);
-		*/
+		projects.add(main);		
 		
-		// 테넌트의 프로젝트 불러오기
-		try {
-			IProjectNode projectList = ProjectNode.completedProject(tenantId);
-			while(projectList.next()){
-				ProjectNode node = new ProjectNode();
-				node.copyFrom(projectList);
-				String path = MetadataBundle.getProjectBasePath(node.getName());
-				CodiFileUtil.mkdirs(path);
+		if("1".equals(GlobalContext.getPropertyString("project.use", "0"))){
+			// 테넌트의 프로젝트 불러오기
+			try {
+				IProjectNode projectList = ProjectNode.completedProject(tenantId);
+				while(projectList.next()){
+					ProjectNode node = new ProjectNode();
+					node.copyFrom(projectList);
+					String path = MetadataBundle.getProjectBasePath(node.getName());
+					CodiFileUtil.mkdirs(path);
+					
+					Project project = new Project();
+					project.setId(node.getName());
+					project.setPath(path);
+					project.load();
+					
+					projects.add(project);
+				}
 				
-				Project project = new Project();
-				project.setId(node.getName());
-				project.setPath(path);
-				project.load();
-				
-				projects.add(project);
-			}
-			
-		} catch (Exception e) {
-			e.printStackTrace();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}			
 		}
-		
 	}
 	
 	public void addTenant(){

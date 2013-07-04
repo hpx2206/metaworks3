@@ -43,8 +43,13 @@ public class Project {
 		
 	public void load(){
 		Source source = new Source();
-		source.setName("src");
-		source.setId(this.getId() + File.separatorChar + source.getName());
+		
+		// TODO: src
+		//source.setName("src");
+		//source.setId(this.getId() + File.separatorChar + source.getName());
+		
+		source.setName("");
+		source.setId(this.getId());
 		source.setPath(new File(this.getPath() + File.separatorChar + source.getName()).getAbsolutePath());
 		
 		ArrayList<Source> sources = new ArrayList<Source>();
