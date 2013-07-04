@@ -90,7 +90,7 @@ org_metaworks_component_TreeNode.prototype = {
 			      },
 			      zIndex: 100,
 				  start: function(event, ui) {
-					  eval(command);
+					  $(this).data('dragObj', eval(command));
 			      },
 			      drag: function() {
 			      },
