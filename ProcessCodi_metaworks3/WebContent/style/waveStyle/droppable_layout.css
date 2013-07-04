@@ -989,6 +989,11 @@ img {
 }
 #navigator .depth2 a {
     /*padding:0 5px;*/
+    display:block;
+    overflow:hidden;
+    white-space:nowrap;
+    text-overflow:ellipsis;
+    -o-text-overow: ellipsis;
 }
 #navigator .depth2 .fist_menu li{
     padding:1px 1px 2px 1px;    
@@ -1001,6 +1006,7 @@ img {
     display: inline-block;
 }
 #navigator .depth2 .fist_menu .navi_icon{
+	float:left;
     padding-left: 10px;
     position:relative;
     top:2px;
