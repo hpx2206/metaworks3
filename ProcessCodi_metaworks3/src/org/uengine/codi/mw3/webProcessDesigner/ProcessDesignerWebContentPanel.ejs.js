@@ -360,20 +360,17 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
     		if( customData == undefined || customData == null || customData == "" ){
     			customData = [];
     		}
+    		
     		var shapeType = $(this).attr("_shape");
     		if( shapeType == 'GEOM' ){	
-    			var dragObjId = ui.draggable.attr('objectId');
+    			var dragObj = ui.draggable.data('dragObj');
     			
-    			if(dragObjId){
-    				var dragObj = mw3.getObject(dragObjId);
-    				
+    			if(dragObj){
     				switch (dragObj.__className){
     				case 'org.uengine.codi.mw3.ide.ResourceNode':
     					switch (dragObj.type) {
     					case 'java':
-    						console.log(dragObj);
     						var dragObjMetadata = mw3.getMetadata(dragObj.alias);
-    						
     						canvas.drawLabel(element, dragObjMetadata.displayName);
 	    		    		
 	    		    		var value = mw3.objects[objectId];
@@ -383,16 +380,16 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 									typeId : dragObj.alias ,
 									variableType : 'complexType'
 							};
-	    		    		value.variableMap[dragObj.alias] = contentValue;
+	    		    		value.variableMap[dragObj.alias] = contentValue;	    		    			    		
+	    		    		customData.push( {"customId": "" , "customName" : dragObjMetadata.displayName , "customType" : "class"});
 	    		    		
 	    		    		var eleClassName = $(this).attr("_classname");
-	    		    		console.log(eleClassName);
 	    		    		if( eleClassName == 'org.uengine.kernel.InvocationActivity'){
 	    		    			var activityData = $(this).data('activity');
 	    		    			activityData.resourceClass = dragObj.alias;
 	    		    			$(this).data('activity', activityData);
 	    		    		}
-		    			
+	    		    		
     						break;
     					default:
     						break;
