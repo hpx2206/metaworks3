@@ -15,7 +15,7 @@ public class ProcessInstanceNavigator {
 //		rootInstance = instance.databaseMe();
 //		rootInstance.getMetaworksContext().setWhere("instanceNavigator");
 //		
-		subInstances = instance.sql("select * from bpm_procinst where rootInstId = ?rootInstId");
+		subInstances = instance.sql("select * from bpm_procinst where RootInstId = ?RootInstId and substring_index(DEFVERID, '.', -1)='process2'");
 		subInstances.setRootInstId(new Long(instanceId));
 		subInstances.select();
 		//subInstances.setInstId(rootInstance.getInstId());
