@@ -80,7 +80,8 @@ public class ComplexType implements Serializable, PropertyListable{
 //			System.out.println("value = " + value);
 			className = value.substring(1, value.lastIndexOf(".")).replace('/', '.');
 		}else{
-			className = typeId.substring(1, typeId.lastIndexOf(".")).replace('/', '.');
+			//className = typeId.substring(1, typeId.lastIndexOf(".")).replace('/', '.');
+			className = typeId.substring(1, typeId.length() -1);
 		}
 		
 		
