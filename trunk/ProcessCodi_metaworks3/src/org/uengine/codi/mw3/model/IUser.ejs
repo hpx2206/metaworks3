@@ -1,3 +1,4 @@
+
 <%	
 	if(value && value.userId){
 		var clickAction = '';
@@ -132,6 +133,7 @@
 			<div class="user_focus" style="background: url('<%=portrait%>'); background-size:cover;"  title="<%=value.name%>">	
 				<img id="user_picture_<%=objectId%>" src="<%=portrait%>" class="pic <%=(value.size=='small' ? ' small':'')%>">
 			</div>
+
 <%	
 			/* case by user */
 			if(mw3.when == 'contacts' || mw3.when == 'addContact' || mw3.when == 'addTopicFollower' || mw3.when == 'addInstanceFollower' || mw3.when == 'addEtcFollower' || mw3.when == 'addPicker'){
@@ -152,6 +154,13 @@
 			}
 %>		
 			<div style="clear:both"></div>
+<%	
+			if(mw3.when == 'followers'){
+%>
+			<div class="followers_name" title="<%=value.name%>"><%=value.name%></div>
+<%
+			}
+%>
 		</div>
 <%		 
 		}
