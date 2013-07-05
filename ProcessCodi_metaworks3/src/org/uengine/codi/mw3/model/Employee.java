@@ -8,6 +8,7 @@ import java.net.URL;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.ToOpener;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
@@ -505,12 +506,12 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 			return new Object[] {new Refresh(new EmployeeInfo(this)), new Refresh(session)};
 		}
 		
-		Session session = new Session();
-		session.setEmployee(this);
-		session.fillSession();
-		session.setGuidedTour(true);
-		
 		if(this.getIsAdmin() == false && !this.isApproved()){
+			Session session = new Session();
+			session.setEmployee(this);
+			session.fillSession();
+			session.setGuidedTour(true);
+			
 			CommentWorkItem newComment = new CommentWorkItem();
 			newComment.processManager = processManager;
 			newComment.session = session;
@@ -533,9 +534,6 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		tadpole.session = session;
 		tadpole.createUserAtTadpole(param.toString());
 		
-		ModalWindow removeWindow = new ModalWindow();
-		removeWindow.setId("subscribe");
-		
 		ModalWindow modalWindow = new ModalWindow();
 		modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 		modalWindow.setWidth(300);
@@ -546,7 +544,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		modalWindow.getButtons().put("$Confirm", null);
 		modalWindow.getCallback().put("$Confirm", "forward");
 		
-		return new Object[] {modalWindow, new Remover(removeWindow, true)};
+		return new Object[] {modalWindow, new Refresh(this)};
 	}
 	
 	public void checkRegistered() throws Exception {
@@ -712,13 +710,16 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		return session;
 	}
 	
-	@ServiceMethod(callByContent=true)
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object forward() throws Exception {
 		Session session = new Session();
 		session.setEmployee(this);
 		session.fillSession();
 		session.setGuidedTour(true);
 		
-		return new ToOpener(new MainPanel(new Main(session)));		
+		ModalWindow removeWindow = new ModalWindow();
+		removeWindow.setId("subscribe");
+		
+		return new Object[]{new Remover(removeWindow, true), new Remover(new ModalWindow()), new ToOpener(new MainPanel(new Main(session)))};		
 	}
 }
