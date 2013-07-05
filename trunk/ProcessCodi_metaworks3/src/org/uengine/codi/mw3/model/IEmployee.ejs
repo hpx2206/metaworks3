@@ -132,7 +132,7 @@ if(value){
 			 	
 				<div id="btnline">
 					<ul>	
-						<li><a id="wBtn" href="#" onClick="<%=methods.saveEmployeeInfo.caller()%>"><span>Finish!</span></a></li>
+						<li><a id="wBtn" href="#" onClick="<%=methods.saveEmployeeInfo.caller()%>"><span><%=mw3.localize('$Finish')%></span></a></li>
 					</ul>
 				</div>				
 		 	
@@ -177,7 +177,7 @@ if(value){
 			 	
 				<div id="btnline" style="padding-top:8px; border-top:1px solid #ccc;">
 					<ul>	
-						<li><a id="wBtn" href="#" onClick="<%=methods.saveEmployeeInfo.caller()%>"><span>Finish!</span></a></li>
+						<li><a id="wBtn" href="#" onClick="<%=methods.saveEmployeeInfo.caller()%>"><span><%=mw3.localize('$Finish')%></span></a></li>
 					</ul>
 				</div>			 	
 			<%
@@ -243,7 +243,7 @@ if(value){
 					<div class="infoSub"><span class="infoSubFirstSpan"><%=mw3.localize("$Language")%> : </span><span><%=fields.locale.here() %></span></div>
 					<div class="infoSub"><span class="infoSubFirstSpan"><%=mw3.localize("$PreferUX")%> : </span><span><%=fields.preferUX.here() %></span></div>
 					<div class="infoSub"><span class="infoSubFirstSpan"><%=mw3.localize("$PreferMob")%> : </span><span><%=fields.preferMob.here() %></span></div>
-					<div class="infoSub"><span class="infoSubFirstSpan"><%=mw3.localize("$Portrait")%> : </span><span><%=fields.imageFile.here() %>&nbsp;</span></div>
+					<div class="infoSub"><span class="infoSubFirstSpan"><%=mw3.localize("$Portrait")%> : </span><span><%=fields.imageFile.here() %></span></div>
 				</dd>
 
    			</dl>
