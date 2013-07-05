@@ -2,6 +2,7 @@ package org.uengine.codi.mw3.model;
 
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
+import org.metaworks.annotation.Hidden;
 
 @Face(ejsPath="genericfaces/Tab.ejs")
 public class UnifiedAddContactPanel {
@@ -13,6 +14,7 @@ public class UnifiedAddContactPanel {
 	}
 
 	AddLocalContactPanel localContact;
+		@Face(displayName="$LocalContact")
 		public AddLocalContactPanel getLocalContact() {
 			return localContact;
 		}
@@ -21,6 +23,7 @@ public class UnifiedAddContactPanel {
 		}
 
 	AddContactPanel facebookContact;
+		@Hidden
 		public AddContactPanel getFacebookContact() {
 			return facebookContact;
 		}
@@ -29,7 +32,7 @@ public class UnifiedAddContactPanel {
 		}
 		
 	Invitation inviteByEmail;
-
+		@Face(displayName="$InviteByEmail")
 		public Invitation getInviteByEmail() {
 			return inviteByEmail;
 		}
