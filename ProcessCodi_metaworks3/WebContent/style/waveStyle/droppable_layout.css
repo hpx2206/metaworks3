@@ -1144,6 +1144,7 @@ img {
     height: 23px;
     overflow: hidden;
     font: bold;
+    margin-right:0px !important;
 }
 #wBtn:hover span {
     background: url('../../images/waveStyle/Btn_bg.gif') right -23px;
