@@ -31,6 +31,8 @@ public class PortraitImageFile extends MetaworksFile {
 	public void upload() throws FileNotFoundException, IOException, Exception {
 		if (getFileTransfer() == null && getFileTransfer().getFilename() != null && getFileTransfer().getFilename().length() > 0)
 			throw new Exception("No file attached");
+		
+		if(getFileTransfer().getInputStream().available() == 0) return;		
 
 		String fileSystemPath = GlobalContext.getPropertyString("filesystem.path",".");
 		String portraitPath = fileSystemPath + "/portrait";
