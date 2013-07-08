@@ -169,7 +169,7 @@ org_uengine_codi_mw3_webProcessDesigner_MappingCanvas.prototype = {
 					
 					if( isView ){
 						var shapeElement = canvas.drawShape(
-		                    [(isLeft ? 5 : 295), ( $(this).offset().top - $('#'+canvasId).offset().top ) + item.offsetHeight / 2],
+		                    [(isLeft ? 5 : 275), ( $(this).offset().top - $('#'+canvasId).offset().top ) + item.offsetHeight / 2],
 		                    (isLeft ? new OG.From() : new OG.To()),
 		                    [5, 5],
 		                    {},
@@ -192,7 +192,7 @@ org_uengine_codi_mw3_webProcessDesigner_MappingCanvas.prototype = {
 						if (shapeElement) {
 							var parentNode = $('.item-fix[objectId='+ closedParentObjectId+']');
 							shapeElement = canvas.drawShape(
-									[(isLeft ? 5 : 295), ( parentNode.offset().top - $('#'+canvasId).offset().top ) + parentNode[0].offsetHeight / 2],
+									[(isLeft ? 5 : 275), ( parentNode.offset().top - $('#'+canvasId).offset().top ) + parentNode[0].offsetHeight / 2],
 									(isLeft ? new OG.From() : new OG.To()),
 									[5, 5],
 									{},
@@ -233,7 +233,7 @@ org_uengine_codi_mw3_webProcessDesigner_MappingCanvas.prototype = {
 		drawUnExtendedTerminal : function(shapeId , isLeft , parentElement){
 			var canvas = this.icanvas;
 			var shapeElement = canvas.drawShape(
-					[(isLeft ? 5 : 295), ($(parentElement).offset().top - $('#'+this.canvasId).offset().top ) + 4 ],
+					[(isLeft ? 5 : 275), ($(parentElement).offset().top - $('#'+this.canvasId).offset().top ) + 4 ],
 					(isLeft ? new OG.From() : new OG.To()),
 					[5, 5],
 					{},
