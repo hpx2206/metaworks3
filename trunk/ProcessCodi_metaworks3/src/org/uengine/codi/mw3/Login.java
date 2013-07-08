@@ -1,7 +1,6 @@
 package org.uengine.codi.mw3;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -349,7 +348,10 @@ public class Login implements ContextAware {
 	@Test(scenario="first", starter=true, instruction="Welcome! If you have account, sign in please... or sign up for your new account.", next="autowiredObject.org.uengine.codi.mw3.model.InstanceListPanel.newInstance()")
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)//, validate=true)
 	public Object[] login() throws Exception {
-//		goTadpoleLogin(userId, password);
+		
+		if("1".equals(GlobalContext.getPropertyString("tadpole.use", "0"))){
+			goTadpoleLogin(userId, password);
+		}
 		Session session = loginService();
 		
 		storeIntoServerSession(session);
@@ -360,26 +362,28 @@ public class Login implements ContextAware {
 		
 		MainPanel mainPanel;
 		PageNavigator pageNavigator = new PageNavigator();
-		pageNavigator.session = session;
-
-		if("knowledge".equals(lastVisitPage)){
-			mainPanel = pageNavigator.goKnowledge();
-		}else if("pinterest".equals(lastVisitPage)){
-			mainPanel = pageNavigator.goPinterest();
-		}else if("ide".equals(lastVisitPage)){
-			mainPanel = pageNavigator.goIDE();
-		}else if("marketplace".equals(lastVisitPage)){
-			mainPanel = pageNavigator.goMarketplace();
-		}else if("selfservice".equals(lastVisitPage)){
-			mainPanel = pageNavigator.goSelfServicePortal();
-		}else{
-			String preferUX = session.getEmployee().getPreferUX();
-			if("sns".equals(preferUX) || "".equals(preferUX)){
-				mainPanel = pageNavigator.goSns();
-			}else{
-				mainPanel = pageNavigator.goProcess();
-			}
-		}
+		pageNavigator.setSession(session);
+		
+		mainPanel = pageNavigator.goProcess();
+		
+//		if("knowledge".equals(lastVisitPage)){
+//			mainPanel = pageNavigator.goKnowledge();
+//		}else if("pinterest".equals(lastVisitPage)){
+//			mainPanel = pageNavigator.goPinterest();
+//		}else if("ide".equals(lastVisitPage)){
+//			mainPanel = pageNavigator.goIDE();
+//		}else if("marketplace".equals(lastVisitPage)){
+//			mainPanel = pageNavigator.goMarketplace();
+//		}else if("selfservice".equals(lastVisitPage)){
+//			mainPanel = pageNavigator.goSelfServicePortal();
+//		}else{
+//			String preferUX = session.getEmployee().getPreferUX();
+//			if("sns".equals(preferUX) || "".equals(preferUX)){
+//				mainPanel = pageNavigator.goSns();
+//			}else{
+//				mainPanel = pageNavigator.goProcess();
+//			}
+//		}
 		
 		if("1".equals(GlobalContext.getPropertyString("sso.use", "0"))){
 			//Request Token
