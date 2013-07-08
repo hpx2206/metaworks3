@@ -366,8 +366,9 @@ public class Login implements ContextAware {
 		
 		if("knowledge".equals(lastVisitPage) && "1".equals(GlobalContext.getPropertyString("knowledge.use", "0"))){
 			mainPanel = pageNavigator.goKnowledge();
-		}else if("pinterest".equals(lastVisitPage)){
+/*		}else if("pinterest".equals(lastVisitPage)){
 			mainPanel = pageNavigator.goPinterest();
+*/
 		}else if("ide".equals(lastVisitPage) && "1".equals(GlobalContext.getPropertyString("ide.use", "0"))){
 			mainPanel = pageNavigator.goIDE();
 		}else if("marketplace".equals(lastVisitPage) && "1".equals(GlobalContext.getPropertyString("marketplace.use", "0"))){
@@ -472,10 +473,15 @@ public class Login implements ContextAware {
 			httpSession.setAttribute("sourceCodeBase", mySourceCodeBase);
 		}
 		*/
-		// fire exist session 
+		
+		
+		// fire exist session
+		/*
 		if(SessionIdForEmployeeMapping.containsKey(userId)){
 			MetaworksRemoteService.pushTargetScript(Login.getSessionIdWithUserId(getUserId()), "mw3.getAutowiredObject('" + Session.class.getName() + "').__getFaceHelper().fire", new Object[]{"2"});
 		}
+		*/
+		fireServerSession(session);
 		
 		// manager sessionId
 		WebContext wctx = WebContextFactory.get();
