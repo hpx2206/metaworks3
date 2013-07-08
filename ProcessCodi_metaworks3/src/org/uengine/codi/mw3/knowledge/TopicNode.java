@@ -75,6 +75,15 @@ public class TopicNode extends Database<ITopicNode> implements ITopicNode {
 			this.companyId = companyId;
 		}
 		
+	String description;
+		public String getDescription() {
+			return description;
+		}
+		public void setDescription(String description) {
+			this.description = description;
+		}
+
+		
 	public static ITopicNode load(Session session) throws Exception {
 		
 		DAOUtil daoUtil = new DAOUtil();
