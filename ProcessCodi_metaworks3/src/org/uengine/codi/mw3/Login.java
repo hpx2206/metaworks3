@@ -364,26 +364,24 @@ public class Login implements ContextAware {
 		PageNavigator pageNavigator = new PageNavigator();
 		pageNavigator.setSession(session);
 		
-		mainPanel = pageNavigator.goProcess();
-		
-//		if("knowledge".equals(lastVisitPage)){
-//			mainPanel = pageNavigator.goKnowledge();
-//		}else if("pinterest".equals(lastVisitPage)){
-//			mainPanel = pageNavigator.goPinterest();
-//		}else if("ide".equals(lastVisitPage)){
-//			mainPanel = pageNavigator.goIDE();
-//		}else if("marketplace".equals(lastVisitPage)){
-//			mainPanel = pageNavigator.goMarketplace();
-//		}else if("selfservice".equals(lastVisitPage)){
-//			mainPanel = pageNavigator.goSelfServicePortal();
-//		}else{
-//			String preferUX = session.getEmployee().getPreferUX();
-//			if("sns".equals(preferUX) || "".equals(preferUX)){
-//				mainPanel = pageNavigator.goSns();
-//			}else{
-//				mainPanel = pageNavigator.goProcess();
-//			}
-//		}
+		if("knowledge".equals(lastVisitPage) && "1".equals(GlobalContext.getPropertyString("knowledge.use", "0"))){
+			mainPanel = pageNavigator.goKnowledge();
+		}else if("pinterest".equals(lastVisitPage)){
+			mainPanel = pageNavigator.goPinterest();
+		}else if("ide".equals(lastVisitPage) && "1".equals(GlobalContext.getPropertyString("ide.use", "0"))){
+			mainPanel = pageNavigator.goIDE();
+		}else if("marketplace".equals(lastVisitPage) && "1".equals(GlobalContext.getPropertyString("marketplace.use", "0"))){
+			mainPanel = pageNavigator.goMarketplace();
+		}else if("selfservice".equals(lastVisitPage) && "1".equals(GlobalContext.getPropertyString("selfservice.use", "0"))){
+			mainPanel = pageNavigator.goSelfServicePortal();
+		}else{
+			String preferUX = session.getEmployee().getPreferUX();
+			if("sns".equals(preferUX) || "".equals(preferUX)){
+				mainPanel = pageNavigator.goSns();
+			}else{
+				mainPanel = pageNavigator.goProcess();
+			}
+		}
 		
 		if("1".equals(GlobalContext.getPropertyString("sso.use", "0"))){
 			//Request Token
