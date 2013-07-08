@@ -30,7 +30,9 @@ public interface ITopicNode extends IDAO {
 	public String getCompanyId();
 	public void setCompanyId(String companyId);
 	
-	
+	public String getDescription();
+	public void setDescription(String description);
+
 	@ServiceMethod(callByContent=true)
 	public Object[] loadTopic() throws Exception;
 	
