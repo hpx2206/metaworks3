@@ -387,7 +387,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		
 		employee.getMetaworksContext().setHow("detail");
 		employee.getMetaworksContext().setWhen(WHEN_EDIT);
-		employee.getMetaworksContext().setWhere("inDetailView");
+		employee.getMetaworksContext().setWhere(this.getMetaworksContext().getWhere());
 
 		employee.setImageFile(new PortraitImageFile());
 		employee.getImageFile().getMetaworksContext().setWhen(WHEN_EDIT);
@@ -575,7 +575,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		employee.setMetaworksContext(getMetaworksContext());
 		employee.getMetaworksContext().setHow("detail");
 		employee.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-		employee.getMetaworksContext().setWhere("inDetailView");
+		employee.getMetaworksContext().setWhere("inDetailWindow");
 		
 		
 		return new ModalWindow(new EmployeeInfo(employee), 700, 400, employee.getEmpName());
@@ -707,7 +707,10 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	}	
 	
 	public Object[] logout() throws Exception{
-		return new Object[]{new Remover(new ModalWindow()), session.logout()};
+		if (this.getMetaworksContext().getWhere().equals("inDetailWindow"))
+			return new Object[]{new Remover(new ModalWindow()), session.logout()};
+		else
+			return new Object[]{new Remover(new Popup()), session.logout()};
 	}
 	@Override
 	public Session drag() throws Exception {
