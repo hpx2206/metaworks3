@@ -22,14 +22,28 @@ public class PageNavigator{
 
 	@AutowiredFromClient
 	public Session session;
-	
+		public Session getSession() {
+			return session;
+		}
+		public void setSession(Session session) {
+			this.session = session;
+		}
+
 	public PageNavigator() {		
 	}
 	
 	public PageNavigator(String pageName) {
-		setPageName(pageName);
+		this.setPageName(pageName);
 	}
 	
+	boolean admin;
+		public boolean isAdmin() {
+			return admin;
+		}
+		public void setAdmin(boolean admin) {
+			this.admin = admin;
+		}
+
 	String pageName;
 		@Hidden
 		public String getPageName() {
@@ -42,10 +56,10 @@ public class PageNavigator{
 	@ServiceMethod(callByContent=true)
 	public MainPanel goIDE() throws Exception {
 		CloudIDE cloudIDE = new CloudIDE();
-		cloudIDE.load(session	);
+		cloudIDE.load(session);
 			
 		return new MainPanel(cloudIDE);
-		//return new MainPanel(new IDE(session));
+//		return new MainPanel(new IDE(session));
 	}
 	
 	@ServiceMethod(callByContent=true)
@@ -54,7 +68,6 @@ public class PageNavigator{
 		session.getEmployee().setPreferUX(null);
 		session.setLastPerspecteType(null);
 
-		
 /*		String preferUX = session.getEmployee().getPreferUX();
 		if("sns".equals(preferUX)){
 			return goSns();
@@ -149,6 +162,5 @@ public class PageNavigator{
 	public MainPanel goKnowledge() throws Exception {
 		return new MainPanel(new Knowledge(session));
 	}
-	
 	
 }
