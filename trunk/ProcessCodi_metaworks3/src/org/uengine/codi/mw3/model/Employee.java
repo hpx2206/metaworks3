@@ -544,10 +544,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		modalWindow.getButtons().put("$Confirm", null);
 		modalWindow.getCallback().put("$Confirm", "forward");
 		
-		ModalWindow removeWindow = new ModalWindow();
-		removeWindow.setId("subscribe");
-		
-		return new Object[] {modalWindow, new Remover(removeWindow, true)};
+		return new Object[] {modalWindow, new Refresh(this)};
 	}
 	
 	public void checkRegistered() throws Exception {
