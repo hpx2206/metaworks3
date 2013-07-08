@@ -522,17 +522,22 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 			processManager.applyChanges();
 		}
 		
-		StringBuffer param = new StringBuffer();
 		
-		//parameter로 넘겨줘야 할 값 == comcode, userid, pw, name
-		param.append("?comcode=").append(this.getGlobalCom()).append("&");
-		param.append("userId=").append(this.getEmpCode()).append("&");
-		param.append("pw=").append(this.getPassword()).append("&");
-		param.append("userName=").append(this.getEmpName());
+		if("1".equals(GlobalContext.getPropertyString("tadpole.use", "0"))){
+			
+			StringBuffer param = new StringBuffer();
+			
+			//parameter로 넘겨줘야 할 값 == comcode, userid, pw, name
+			param.append("?comcode=").append(this.getGlobalCom()).append("&");
+			param.append("userId=").append(this.getEmpCode()).append("&");
+			param.append("pw=").append(this.getPassword()).append("&");
+			param.append("userName=").append(this.getEmpName());
+			
+			Tadpole tadpole = new Tadpole();
+			tadpole.session = session;
+			tadpole.createUserAtTadpole(param.toString());
+		}
 		
-		Tadpole tadpole = new Tadpole();
-		tadpole.session = session;
-		tadpole.createUserAtTadpole(param.toString());
 		
 		ModalWindow modalWindow = new ModalWindow();
 		modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
