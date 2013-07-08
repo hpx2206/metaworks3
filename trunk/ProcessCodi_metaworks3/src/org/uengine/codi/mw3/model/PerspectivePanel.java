@@ -1,6 +1,7 @@
 package org.uengine.codi.mw3.model;
 
 import org.uengine.codi.mw3.knowledge.ProjectPerspective;
+import org.uengine.kernel.GlobalContext;
 
 public class PerspectivePanel {
 
@@ -58,23 +59,19 @@ public class PerspectivePanel {
 			this.projectPerspective = projectPerspective;
 		}
 
-	//ProcessStatusPerspective processStatusPerspective;
-	//
-	//	public ProcessStatusPerspective getProcessStatusPerspective() {
-	//		return processStatusPerspective;
-	//	}
-	//
-	//	public void setProcessStatusPerspective(
-	//			ProcessStatusPerspective processStatusPerspective) {
-	//		this.processStatusPerspective = processStatusPerspective;
-	//	}
-	
-
-	//	StrategicPerspective strategicPerspective;
+//	ProcessStatusPerspective processStatusPerspective;
+//		public ProcessStatusPerspective getProcessStatusPerspective() {
+//			return processStatusPerspective;
+//		}
+//		public void setProcessStatusPerspective(
+//				ProcessStatusPerspective processStatusPerspective) {
+//			this.processStatusPerspective = processStatusPerspective;
+//		}
+//
+//	StrategicPerspective strategicPerspective;
 //		public StrategicPerspective getStrategicPerspective() {
 //			return strategicPerspective;
 //		}
-//	
 //		public void setStrategicPerspective(StrategicPerspective strategicPerspective) {
 //			this.strategicPerspective = strategicPerspective;
 //		}
@@ -93,26 +90,40 @@ public class PerspectivePanel {
 	}
 	
 	public PerspectivePanel(Session session) throws Exception {
+		
 		if(session != null){
-			personalPerspective = new PersonalPerspective();
-			personalPerspective.session = session;
-			personalPerspective.select();
-						
-			if(session.getEmployee().isApproved()){
-				topicPerspective = new TopicPerspective();
-				topicPerspective.session = session;
-				topicPerspective.select();
+			if("1".equals(GlobalContext.getPropertyString("sns.use", "0"))){
+				//개인별
+				personalPerspective = new PersonalPerspective();
+				personalPerspective.session = session;
+//				personalPerspective.select();
 				
-				organizationPerspectiveDept = new OrganizationPerspectiveDept();
-				organizationPerspectiveRole = new OrganizationPerspectiveRole();
-				processPerspective = new ProcessPerspective();
-				appPerspective = new OrganizationPerspectiveApp();
-				projectPerspective = new ProjectPerspective();
-				
+				if(session.getEmployee().isApproved()){
+					
+					//주제별
+					topicPerspective = new TopicPerspective();
+					topicPerspective.session = session;
+//					topicPerspective.select();
+					
+					//조직도
+					organizationPerspectiveDept = new OrganizationPerspectiveDept();
+					//역할
+					organizationPerspectiveRole = new OrganizationPerspectiveRole();
+					//프로세스별
+					processPerspective = new ProcessPerspective();
+					
+					//앱
+					if("1".equals(GlobalContext.getPropertyString("app.use", "0"))){
+						appPerspective = new OrganizationPerspectiveApp();
+					}
+					if("1".equals(GlobalContext.getPropertyString("project.use", "0"))){
+						//프로젝트
+						projectPerspective = new ProjectPerspective();
+						projectPerspective.select();
+					}
+				}
 			}
-			
 			//processStatusPerspective = new ProcessStatusPerspective();
-			
 			//strategicPerspective = new StrategicPerspective();
 		}
 	}

@@ -147,7 +147,10 @@
 			if( session && session.ux != 'pad'){
 %>			
 		<a class="<%= value.type=='memo'?'comment_btn_on':'comment_btn_off' %>" onclick="<%=methods.newMemo.caller()%>"><span id="method_<%=objectId%>_newMemo"><%=mw3.localize("$Memo")%></span></a>
+		<!-- 화상회의 -->
+		<!--
 		<a class="<%= value.type=='remoteConf'?'comment_btn_on':'comment_btn_off' %>" onclick="<%=methods.newRemoteConference.caller()%>"><span id="method_<%=objectId%>_newRemoteConference"><%=mw3.localize("$RemoteConference")%></span></a>
+		-->
 <%
 			}
 %>			
