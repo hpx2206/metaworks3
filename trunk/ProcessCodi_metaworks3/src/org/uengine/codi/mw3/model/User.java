@@ -506,7 +506,7 @@ public class User extends Database<IUser> implements IUser {
 		IEmployee dbMe = me.databaseMe();	
 		dbMe.getMetaworksContext().setWhen("view");		
 		dbMe.getMetaworksContext().setHow("detail");
-		dbMe.getMetaworksContext().setWhere("inDetailView");
+		dbMe.getMetaworksContext().setWhere("inDetailPopup");
 
 		infoWindow.setPanel(dbMe);		
 		
