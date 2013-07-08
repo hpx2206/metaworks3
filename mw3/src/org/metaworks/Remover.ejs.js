@@ -1,11 +1,14 @@
 var org_metaworks_Remover = function(objectId, className){
-	var object = mw3.objects[objectId];	
+	this.object = mw3.objects[objectId];	
+	
+	if(this.object == null)
+		return true;	
 	
 	var objKeys = [];
-	if(object.match)
-		objKeys.push(mw3._createObjectKey(object.target));
+	if(this.object.match)
+		objKeys.push(mw3._createObjectKey(this.object.target));
 	else
-		objKeys = mw3._createObjectKey(object.target, true);
+		objKeys = mw3._createObjectKey(this.object.target, true);
 	
 	if(objKeys && objKeys.length){
 		for(var i=0; i<objKeys.length; i++){			
@@ -15,7 +18,7 @@ var org_metaworks_Remover = function(objectId, className){
 				var faceHelper = mw3.getFaceHelper(mappedObjId);
 				
 				if(faceHelper && faceHelper.remover)
-					faceHelper.remover(object.target);
+					faceHelper.remover(this.object.target);
 				else	
 					mw3.removeObject(mappedObjId);
 				
