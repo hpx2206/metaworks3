@@ -9,17 +9,14 @@ import java.util.Map;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
-import org.metaworks.Refresh;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.dwr.MetaworksRemoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.model.CommentWorkItem;
 import org.uengine.codi.mw3.model.IInstance;
 import org.uengine.codi.mw3.model.IWorkItem;
 import org.uengine.codi.mw3.model.Instance;
-import org.uengine.codi.mw3.model.InstanceListPanel;
 import org.uengine.codi.mw3.model.InstanceList;
 import org.uengine.codi.mw3.model.InstanceViewContent;
 import org.uengine.codi.mw3.model.InstanceViewThreadPanel;
@@ -28,8 +25,6 @@ import org.uengine.codi.mw3.model.NewInstanceWindow;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.model.WorkItem;
 import org.uengine.webservices.worklist.DefaultWorkList;
-
-import com.efsol.util.StringUtils;
 
 public class ScheduleCalendar implements ContextAware {
 	@AutowiredFromClient
@@ -70,6 +65,7 @@ public class ScheduleCalendar implements ContextAware {
 		public void setSchdId(int schdId) {
 			this.schdId = schdId;
 		}
+		
 	String callType;
 		public String getCallType() {
 			return callType;
@@ -95,6 +91,7 @@ public class ScheduleCalendar implements ContextAware {
 		public void setSelDate(Date selDate) {
 			this.selDate = selDate;
 		}
+		
 	String showUserId;
 		@Hidden
 		public String getShowUserId() {
@@ -103,7 +100,23 @@ public class ScheduleCalendar implements ContextAware {
 		public void setShowUserId(String showUserId) {
 			this.showUserId = showUserId;
 		}
+		
+	Date endDate;
+		public Date getEndDate() {
+			return endDate;
+		}
+		public void setEndDate(Date endDate) {
+			this.endDate = endDate;
+		}
 	
+	boolean allDay;
+		public boolean isAllDay() {
+			return allDay;
+		}
+		public void setAllDay(boolean allDay) {
+			this.allDay = allDay;
+		}
+		
 	public void load() throws Exception {
 		String userId = session.getUser().getUserId();
 		loadByUserId(userId);
@@ -151,6 +164,12 @@ public class ScheduleCalendar implements ContextAware {
 				column.put("title", title );
 //				column.put("start", iInstance.getDueDate(); // set startDate equals endDate
 				column.put("start", iInstance.getStartedDate());	
+				if(iInstance.getExt1() != null && "false".equals(iInstance.getExt1())){
+					column.put("allDay", false);
+				}else{
+					column.put("allDay", true);
+				}
+				
 				
 				if(iInstance.getDueDate()!=null){
 					column.put("end", iInstance.getDueDate());
@@ -293,15 +312,24 @@ public class ScheduleCalendar implements ContextAware {
 		c.set ( c.MINUTE  , +59);
 		Date dueDate = c.getTime();
 		String title = "";
+		
 		if( getSelDate() != null ){
-			title = "[일정:" + new SimpleDateFormat("yyyy/MM/dd").format(getSelDate()) + "]" ;
+			if(allDay){
+				title = "[일정:" + new SimpleDateFormat("yyyy/MM/dd").format(getSelDate()) + "]" ;
+			}else{
+				title = "[일정:" + new SimpleDateFormat("yyyy/MM/dd aaa hh:mm ~ ").format(getSelDate()) + new SimpleDateFormat("aaa hh:mm").format(getEndDate()) + "]" ;
+			}
 		}
 
 		WorkItem newInstantiator = new CommentWorkItem();
 		newInstantiator.setWriter(session.getUser());		
 		newInstantiator.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
-		newInstantiator.setDueDate(dueDate);
+		newInstantiator.setDueDate(this.getEndDate());
+		newInstantiator.setStartDate(this.getSelDate());
 		newInstantiator.setTitle(title);
+		newInstantiator.setExt1(this.getViewMode());
+		newInstantiator.setExt2(String.valueOf(this.allDay));
+		newInstantiator.scheduleCalendar = this;
 		
 		if("sns".equals(session.getEmployee().getPreferUX()) ){
 			if( newInstancePanel != null ){
@@ -315,11 +343,17 @@ public class ScheduleCalendar implements ContextAware {
 			return null;
 		}else{
 			NewInstancePanel newInstancePanel =  new NewInstancePanel();
-			newInstancePanel.setDueDate(dueDate);
+			if(this.getEndDate() != null){
+				newInstancePanel.setDueDate(this.getEndDate());
+			}else{
+				newInstancePanel.setDueDate(dueDate);
+			}
 			newInstancePanel.session = session;
 			newInstancePanel.load(session);
 			
 			newInstancePanel.setNewInstantiator(newInstantiator);
+			
+			newInstantiator.newInstancePanel = newInstancePanel;
 			
 			return new Object[]{new NewInstanceWindow(newInstancePanel)};
 		}

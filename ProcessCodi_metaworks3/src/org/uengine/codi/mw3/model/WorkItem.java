@@ -9,12 +9,10 @@ import java.util.Iterator;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
-import org.metaworks.ServiceMethodContext;
 import org.metaworks.ToAppend;
 import org.metaworks.ToPrepend;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
-import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Test;
 import org.metaworks.dao.Database;
 import org.metaworks.dwr.MetaworksRemoteService;
@@ -25,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.CodiProcessDefinitionFactory;
 import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.admin.WebEditor;
+import org.uengine.codi.mw3.calendar.ScheduleCalendar;
 import org.uengine.codi.mw3.filter.AllSessionFilter;
 import org.uengine.codi.mw3.filter.OtherSessionFilter;
 import org.uengine.codi.mw3.knowledge.KnowledgeTool;
@@ -136,8 +135,10 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		
 		return find(getInstId().toString());
 	}
-
-
+	
+	@AutowiredFromClient
+	public ScheduleCalendar scheduleCalendar;
+	
 	Long instId;
 	@Hidden
 		public Long getInstId() {
@@ -743,7 +744,9 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				instanceRef.setInitComCd(session.getEmployee().getGlobalCom());		// 시작자의 회사
 				instanceRef.setStatus("Running");									// 처음 상태 Running
 				instanceRef.setDueDate(getDueDate());
-				instanceRef.setName(this.getTitle());	
+				instanceRef.setName(this.getTitle());
+				instanceRef.setStartedDate(this.getStartDate());
+				instanceRef.setExt1(newInstancePanel.newInstantiator.getExt2());
 				
 				afterInstantiation(instanceRef);				
 			}else{
@@ -829,8 +832,15 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				this.setTaskId(UniqueKeyGenerator.issueWorkItemKey(((ProcessManagerBean)processManager).getTransactionContext()));
 			
 			this.setWriter(writer);
-			this.setStartDate(Calendar.getInstance().getTime());
-			this.setEndDate(getStartDate());
+			if(this.scheduleCalendar != null){
+				//달력에서 일정 선택 하여 업무 추가시  date 설정(jisun)
+				this.setStartDate(this.getStartDate());
+				this.setDueDate(this.getDueDate());
+			}else {
+				//기존 date 추가 부분
+				this.setStartDate(Calendar.getInstance().getTime());
+				this.setEndDate(getStartDate());
+			}
 			this.setStatus(WORKITEM_STATUS_FEED);
 			this.setIsDeleted(false);			
 
