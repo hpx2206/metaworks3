@@ -1,11 +1,9 @@
 package org.uengine.codi.mw3.marketplace.model;
 
 import org.metaworks.annotation.Face;
-import org.metaworks.annotation.Hidden;
-import org.metaworks.annotation.NonLoadable;
 import org.metaworks.annotation.Range;
 import org.uengine.codi.ITool;
-import org.uengine.codi.mw3.marketplace.AppMapping;
+import org.uengine.codi.mw3.marketplace.App;
 
 @Face(
 	ejsPath="dwr/metaworks/genericfaces/FormFace.ejs",
@@ -59,15 +57,21 @@ public class ManagerApproval implements ITool  {
 
 	@Override
 	public void beforeComplete() throws Exception {
+//		
+//		AppMapping appMapping = new AppMapping();
+//		
+//		appMapping.setAppId(this.getAppId());
+//		appMapping.setAppName(this.getAppName());
+//		appMapping.setComCode(this.getComcode());
+//		appMapping.setIsDeleted(false);
+//		
+//		appMapping.createDatabaseMe();
+//		
 		
-		AppMapping appMapping = new AppMapping();
+		App app = new App();
 		
-		appMapping.setAppId(this.getAppId());
-		appMapping.setAppName(this.getAppName());
-		appMapping.setComCode(this.getComcode());
-		appMapping.setIsDeleted(false);
-		
-		appMapping.createDatabaseMe();
+		app.setAppId(this.getAppId());
+		app.databaseMe().setStatus(App.STATUS_PUBLISHED);
 	}
 
 	public void afterComplete() throws Exception {

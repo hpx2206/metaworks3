@@ -23,12 +23,11 @@ public class SuccessForm implements ITool{
 
 	@Override
 	public void beforeComplete() throws Exception {
-		// TODO Auto-generated method stub
 		
 		App app = new App();
 		
 		app.setAppId(this.getAppId());
-		app.databaseMe().setStatus(App.STATUS_APPROVED);
+		app.databaseMe().setStatus(App.STATUS_PUBLISHED);
 		
 	}
 
