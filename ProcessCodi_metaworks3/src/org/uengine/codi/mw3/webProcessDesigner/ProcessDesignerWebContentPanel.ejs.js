@@ -95,6 +95,7 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 		this.tracingTag = 0;
 		
 		this.divObj.css('height','100%');
+		this.divObj.parent().css('height','100%');
 		var canvasDivObj = $('#canvas_' + objectId);
 		
 //		if(canvasDivObj.length > 0){
