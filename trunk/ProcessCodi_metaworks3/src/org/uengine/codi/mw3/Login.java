@@ -381,7 +381,7 @@ public class Login implements ContextAware {
 			}
 		}
 		
-		if (Boolean.parseBoolean(GlobalContext.getPropertyString("sso.on"))) {
+		if("1".equals(GlobalContext.getPropertyString("sso.use", "0"))){
 			//Request Token
 			OAuthBasic oauth = new OAuthBasic();
 			oauth.requestToken();
@@ -395,8 +395,8 @@ public class Login implements ContextAware {
 			//user id, access token save to cubrid
 			OAuthDB oauthDB = new OAuthDB(); 
 			oauthDB.update(session.getUser().getUserId(), session.getAccessToken());
-		}		
-				
+		}
+		
 		return new Object[]{new Remover(new ModalWindow(), true), new Refresh(locale), new Refresh(mainPanel, false, true)};
 	}
 
