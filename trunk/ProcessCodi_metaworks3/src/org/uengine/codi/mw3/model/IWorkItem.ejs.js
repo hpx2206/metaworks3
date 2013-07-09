@@ -6,6 +6,9 @@ var org_uengine_codi_mw3_model_IWorkItem = function(objectId, className){
 	this.objectDiv = $('#' + this.objectDivId);
 	this.object = mw3.objects[this.objectId];
 	
+	if(this.object == null)
+		return true;	
+	
 	this.objectDiv.css('position', 'relative');
 
 	var container = this.objectDiv.find('.formcontexttitle span').eq(0);
