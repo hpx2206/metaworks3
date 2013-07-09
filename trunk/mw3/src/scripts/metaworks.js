@@ -7,7 +7,8 @@ var MetaworksService = function(className, object, svcNameAndMethodName, autowir
 	};
 	
 	this.__showResult = function(object, result, objId, svcNameAndMethodName, serviceMethodContext, placeholder, divId, callback ){
-		mw3.log('__showResult start : ' + svcNameAndMethodName);
+		var startTime = new Date().getTime();
+//		mw3.log('__showResult : [' + objId + ']' + svcNameAndMethodName + ' ---> ' + new Date().getTime());		
 		
 		mw3.requestMetadataBatch(result);
 		
@@ -163,7 +164,7 @@ var MetaworksService = function(className, object, svcNameAndMethodName, autowir
 		if(mw3.afterCall)
 			mw3.afterCall(svcNameAndMethodName, result);
 		
-		mw3.log('__showResult end : ' + svcNameAndMethodName);
+		//mw3.log('++showResult : [' + objId + ']' + svcNameAndMethodName + ' ---> ' + (new Date().getTime() - startTime));
 		
 		return result;
 	};
@@ -2268,7 +2269,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			
 			Metaworks3.prototype.__showResult = function(object, result, objId, svcNameAndMethodName, serviceMethodContext, placeholder, divId, callback ){
     							
-//				mw3.log('__showResult : ' + svcNameAndMethodName + ' ---> ' + new Date());
+//				mw3.log('__showResult : ' + svcNameAndMethodName + ' ---> ' + new Date().getTime());
 								
     			mw3.requestMetadataBatch(result);
     			
@@ -2513,7 +2514,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					objId = this.targetObjectId;
 				}
 				
-				mw3.log('________call : ' + svcNameAndMethodName + '[' + objId + '] ---> ' + new Date());
+//				mw3.log('________call : ' + svcNameAndMethodName + '[' + objId + '] ---> ' + new Date().getTime());
 				
 				// 2012-04-14 cjw 재귀호출 막음
 				// 2012-04-18 이전 수정 버전 문제로 재수정 (undefined 일때 true 가 되여야함)
