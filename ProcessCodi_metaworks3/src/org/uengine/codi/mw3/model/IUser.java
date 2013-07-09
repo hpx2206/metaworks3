@@ -1,7 +1,9 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
+import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;
@@ -62,10 +64,12 @@ public interface IUser extends IDAO{
 	
 	@ServiceMethod(callByContent=true, inContextMenu=true)
 	@Face(displayName="$RemoveFromFollowers")
+	@Available(when={"followers"})
 	public Object[] removeFollower() throws Exception;
 	
 	@ServiceMethod(callByContent=true, inContextMenu=true, target=TARGET_APPEND)
 	@Face(displayName="$RemoveFromContact")
+	@Available(when={"contacts"})
 	public Object[] removeContact() throws Exception;
 	
 	@ServiceMethod(target="popup", payload={"userId", "network", "name"})
@@ -87,16 +91,19 @@ public interface IUser extends IDAO{
 	public void drop();
 	
 	@ServiceMethod(inContextMenu=true, needToConfirm=true)
+	@Available(when={"followers"})
 	public Remover unsubscribe() throws Exception;
 
 	@ServiceMethod(inContextMenu=true, needToConfirm=true, target="none")
+	@Available(when={"admin"})
 	public void addAsAdmin() throws Exception;
 	
 	@ServiceMethod(payload={"userId"})
 	public int getBV(String empcode) throws Exception;
 
 	@ServiceMethod(callByContent=true, needToConfirm=true, inContextMenu=true)
-	@Face(displayName="$ApprovedSubscribe") 
+	@Face(displayName="$ApprovedSubscribe")
+	@Available(when={"admin"})
 	public void approvedSubscribe() throws Exception;
 
 }

@@ -234,15 +234,17 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		String errorMessage;
 		if (getEmpCode() != null) {
 			IEmployee emp = (IEmployee) findMe();
-			if (getPassword().equals(emp.getPassword())) {
-				emp = findMe();
-				
+			
+			if(emp.getIsDeleted().equals("1")) {
+				errorMessage = "<font color=blue>There's no such ID. Please subscribe.</font>";
+			} else if(getPassword().equals(emp.getPassword())) {
+				emp = findMe();				
 				// emp = databaseMe();
 
 				getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-				return emp;
-			} else {
-				errorMessage = "<font color=blue>Wrong User or Password! forgot?</font>";				
+				return emp;				
+			}	else {
+				errorMessage = "<font color=blue>Wrong User or Password! forgot?</font>";
 			}
 		} else {
 			errorMessage = "<font color=blue>There's no such ID. Please subscribe.</font>";
@@ -700,7 +702,11 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	
 	@Override
 	public Login unsubscribe() throws Exception {
-		deleteDatabaseMe();
+//		deleteDatabaseMe();		
+		Employee employee = new Employee();
+		employee.setEmpCode(this.empCode);
+		employee.databaseMe().setIsDeleted("1");		
+		
 		Login login = new Login();
 //		login.getMetaworksContext().setWhen("edit");
 		return login;
