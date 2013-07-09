@@ -104,15 +104,15 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		
 		StringBuffer sql = new StringBuffer();
 		
-		sql.append("select * from (");
+		//sql.append("select * from (");
 		sql.append("select *");
 		sql.append("  from bpm_worklist");
 		sql.append(" where rootInstId=?instId");
-		sql.append("   and isdeleted!=?isDeleted");
+		sql.append("   and isdeleted!=?isDeleted");		
 		sql.append("   and (type!=?type or type is null)");
 		sql.append(" order by taskId desc");
 		sql.append(" limit " + (count + 1));
-		sql.append(") worklist order by taskId ");
+		//sql.append(") worklist order by taskId ");
 		
 		IWorkItem workitem = (IWorkItem) Database.sql(IWorkItem.class, sql.toString());
 		
@@ -745,7 +745,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				instanceRef.setStatus("Running");									// 처음 상태 Running
 				instanceRef.setDueDate(getDueDate());
 				instanceRef.setName(this.getTitle());
-				instanceRef.setStartedDate(this.getStartDate());
+				//instanceRef.setStartedDate(this.getStartDate());
 				instanceRef.setExt1(newInstancePanel.newInstantiator.getExt2());
 				
 				afterInstantiation(instanceRef);				
@@ -832,15 +832,19 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				this.setTaskId(UniqueKeyGenerator.issueWorkItemKey(((ProcessManagerBean)processManager).getTransactionContext()));
 			
 			this.setWriter(writer);
+			//기존 date 추가 부분
+			this.setStartDate(Calendar.getInstance().getTime());
+			this.setEndDate(getStartDate());
+
+			/*
 			if(this.scheduleCalendar != null){
 				//달력에서 일정 선택 하여 업무 추가시  date 설정(jisun)
 				this.setStartDate(this.getStartDate());
 				this.setDueDate(this.getDueDate());
 			}else {
-				//기존 date 추가 부분
-				this.setStartDate(Calendar.getInstance().getTime());
-				this.setEndDate(getStartDate());
 			}
+			*/
+			
 			this.setStatus(WORKITEM_STATUS_FEED);
 			this.setIsDeleted(false);			
 

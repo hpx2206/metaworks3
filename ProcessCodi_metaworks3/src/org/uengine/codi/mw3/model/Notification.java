@@ -1,23 +1,12 @@
 package org.uengine.codi.mw3.model;
 
-import java.net.URL;
-import java.rmi.RemoteException;
 import java.util.Date;
-import java.util.List;
 
-import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
-import org.metaworks.dao.IDAO;
-import org.metaworks.dao.TransactionContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.kernel.UEngineException;
-import org.uengine.util.UEngineUtil;
-import org.uengine.webservices.emailserver.impl.EMailServerSoapBindingImpl;
-
-import com.restfb.DefaultFacebookClient;
-import com.restfb.FacebookClient;
+import org.uengine.processmanager.ProcessManagerRemote;
 
 public class Notification extends Database<INotification> implements INotification{
 
@@ -228,8 +217,11 @@ public class Notification extends Database<INotification> implements INotificati
 		instanceViewContent.session = session;
 		instanceViewContent.load(instance);
 		
-		instanceViewContent.instanceView.getInstanceViewThreadPanel().getThread().getMetaworksContext().setHow("instance");
-		instanceViewContent.instanceView.getInstanceViewThreadPanel().getNewItem().getMetaworksContext().setHow("instance");
+		InstanceViewThreadPanel instanceViewThreadPanel = (InstanceViewThreadPanel)instanceViewContent.instanceView.getInstanceViewThreadPanel();
+		instanceViewThreadPanel.load();
+		
+		instanceViewThreadPanel.getThread().getMetaworksContext().setHow("instance");
+		instanceViewThreadPanel.getNewItem().getMetaworksContext().setHow("instance");
 		
 		setConfirm(true);
 		//flushDatabaseMe();

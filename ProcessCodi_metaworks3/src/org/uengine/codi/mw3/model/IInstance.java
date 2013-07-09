@@ -25,7 +25,7 @@ import org.metaworks.widget.ModalWindow;
 @Table(name="bpm_procinst")
 public interface IInstance extends IDAO{
 
-	@ServiceMethod(callByContent=true)
+	@ServiceMethod
 	public Object detail() throws Exception;
 
 	@ServiceMethod(target="popup")
@@ -194,7 +194,10 @@ public interface IInstance extends IDAO{
 			)
 	public IUser getLastCmnt2User();
 	public void setLastCmnt2User(IUser lastCmnt2User);
-	
+
+	public String getExt1();
+	public void setExt1(String ext1);
+
 	/*
 	 * 2013-01-10 cjw
 	 * push client 의 보안 처리

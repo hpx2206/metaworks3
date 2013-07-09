@@ -1075,6 +1075,14 @@ public class Instance extends Database<IInstance> implements IInstance{
 			this.effort = effort;
 		}
 
+	String ext1;
+		public String getExt1() {
+			return ext1;
+		}
+		public void setExt1(String ext1) {
+			this.ext1 = ext1;
+		}
+
 	/*
 	 * 2013-01-10 cjw
 	 * push client 의 보안 처리

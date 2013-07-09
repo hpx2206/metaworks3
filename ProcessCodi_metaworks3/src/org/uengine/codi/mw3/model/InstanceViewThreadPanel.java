@@ -73,6 +73,16 @@ public class InstanceViewThreadPanel implements ContextAware {
 
 	}
 	
+	@ServiceMethod(payload={"instanceId"})
+	public void load(){
+		try {
+			this.load(this.getInstanceId());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public void load(String instanceId) throws Exception {
 		String how = null;
 		
@@ -85,8 +95,7 @@ public class InstanceViewThreadPanel implements ContextAware {
 		setInstanceId(instanceId);
 		
 		IWorkItem thread = (IWorkItem)MetaworksDAO.createDAOImpl(IWorkItem.class);
-		IWorkItem result = WorkItem.find(instanceId, LIST_CNT);
-		
+		IWorkItem result = WorkItem.find(instanceId, LIST_CNT);		
 		
 		boolean more = result.size() > 5;
 		while(result.next()){
@@ -104,6 +113,7 @@ public class InstanceViewThreadPanel implements ContextAware {
 			thread.moveToInsertRow();
 			thread.getImplementationObject().copyFrom(result);
 		}
+		
 		setThread(thread);
 		
 		CommentWorkItem newItem = new CommentWorkItem();
