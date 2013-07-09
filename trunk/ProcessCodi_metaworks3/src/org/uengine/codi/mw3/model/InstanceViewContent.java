@@ -13,9 +13,6 @@ public class InstanceViewContent extends ContentWindow {
 	
 	public Session session;
 
-	//ProcessManagerRemote processManager;	
-	//InstanceView instanceView;	
-
 	@Autowired
 	@Name
 	public InstanceView instanceView;			
@@ -48,6 +45,9 @@ public class InstanceViewContent extends ContentWindow {
 		instanceView.session = session;
 		instanceView.setMetaworksContext(getMetaworksContext());
 		instanceView.load(instance);
+		
+		this.setInstanceView(instanceView);
+		
 	}	
 
 }

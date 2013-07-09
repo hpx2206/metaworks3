@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import javax.sql.RowSet;
 
+import org.metaworks.Loader;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
@@ -30,6 +31,9 @@ public class InstanceView {
 
 	@AutowiredFromClient
 	public Locale localeManager;
+
+	@AutowiredFromClient(onDrop = true)
+	public IInstance dropInstance;
 
 	public InstanceView() {
 	}		
@@ -59,6 +63,7 @@ public class InstanceView {
 		setSecuopt(secuopt);
 		
 		inst.setMetaworksContext(getMetaworksContext());
+		
 		loadDefault(inst);
 		
 		if("1".equals(getSecuopt())){ //means secured conversation
@@ -92,8 +97,12 @@ public class InstanceView {
 			followers.beforeFirst();
 		}
 		
-		setInstanceViewThreadPanel(activityStream());
+		//setInstanceViewThreadPanel(activityStream());
 		
+		InstanceViewThreadPanel instanceViewThreadPanel = new InstanceViewThreadPanel();
+		instanceViewThreadPanel.setInstanceId(this.getInstanceId());
+		
+		setInstanceViewThreadPanel(new Loader(instanceViewThreadPanel, "load"));
 	}
 	
 	/*
@@ -135,7 +144,6 @@ public class InstanceView {
 	
 	
 	String status;
-	
 		public String getStatus() {
 			return status;
 		}
@@ -153,11 +161,9 @@ public class InstanceView {
 		}
 		
 	InstanceSecurityConfigurer instanceSecurityConfigurer;
-
 		public InstanceSecurityConfigurer getInstanceSecurityConfigurer() {
 			return instanceSecurityConfigurer;
 		}
-
 		public void setInstanceSecurityConfigurer(
 				InstanceSecurityConfigurer instanceSecurityConfigurer) {
 			this.instanceSecurityConfigurer = instanceSecurityConfigurer;
@@ -184,8 +190,6 @@ public class InstanceView {
 	public Session session;
 
 	protected void loadDefault(Instance inst) throws Exception{
-		ProcessInstance instance = processManager.getProcessInstance(getInstanceId());
-		
 		followers = new InstanceFollowers();
 		followers.setInstanceId(instanceId);
 		followers.load();
@@ -245,6 +249,7 @@ public class InstanceView {
 				}			
 			}	
 			*/
+			ProcessInstance instance = processManager.getProcessInstance(getInstanceId());
 			
 			eventTriggerPanel = new EventTriggerPanel(instance);
 		}
@@ -302,12 +307,11 @@ public class InstanceView {
 //			this.thread = thread;
 //		}	
 
-	InstanceViewThreadPanel instanceViewThreadPanel;
-		public InstanceViewThreadPanel getInstanceViewThreadPanel() {
+	Object instanceViewThreadPanel;
+		public Object getInstanceViewThreadPanel() {
 			return instanceViewThreadPanel;
 		}
-		public void setInstanceViewThreadPanel(
-				InstanceViewThreadPanel instanceViewThreadPanel) {
+		public void setInstanceViewThreadPanel(Object instanceViewThreadPanel) {
 			this.instanceViewThreadPanel = instanceViewThreadPanel;
 		}
 
@@ -319,33 +323,12 @@ public class InstanceView {
 //			this.threadPosting = threadPosting;
 //		}
 
-	public ProcessInstanceMonitorPanel processInstanceMonitor;
-			
-		public ProcessInstanceMonitorPanel getProcessInstanceMonitor() {
-			return processInstanceMonitor;
-		}
-	
-		public void setProcessInstanceMonitor(
-				ProcessInstanceMonitorPanel processInstanceMonitor) {
-			this.processInstanceMonitor = processInstanceMonitor;
-		}
-
 	EventTriggerPanel eventTriggerPanel;
-				
 		public EventTriggerPanel getEventTriggerPanel() {
 			return eventTriggerPanel;
 		}
-	
 		public void setEventTriggerPanel(EventTriggerPanel eventTrigger) {
 			this.eventTriggerPanel = eventTrigger;
-		}
-
-	ScheduleEditor scheduleEditor;
-		public ScheduleEditor getScheduleEditor() {
-			return scheduleEditor;
-		}
-		public void setScheduleEditor(ScheduleEditor scheduleEditor) {
-			this.scheduleEditor = scheduleEditor;
 		}
 		
 	InstanceFollowers followers;
@@ -355,7 +338,8 @@ public class InstanceView {
 		public void setFollowers(InstanceFollowers followers) {
 			this.followers = followers;
 		}
-		
+	
+	/*
 	CrowdSourcer crowdSourcer;			
 		public CrowdSourcer getCrowdSourcer() {
 			return crowdSourcer;
@@ -364,7 +348,8 @@ public class InstanceView {
 		public void setCrowdSourcer(CrowdSourcer crowdSourcer) {
 			this.crowdSourcer = crowdSourcer;
 		}
-
+	*/
+		
 	//TODO: Please remove this method after Fake
 	@ServiceMethod 
 	@Test(scenario="first", starter=true, instruction="댓글로 메모, 파일등을 입력할 수 있고 기타 동적인 업무를 추가할 수 있습니다. 여기서 기타활동을 클릭하십시오.", next="autowiredObject.org.uengine.codi.mw3.model.IProcessMap.initiate()")
@@ -662,8 +647,4 @@ public class InstanceView {
 		public void setMetaworksContext(MetaworksContext metaworksContext) {
 			this.metaworksContext = metaworksContext;
 		} 	
-		
-	
-	@AutowiredFromClient(onDrop = true)
-	public IInstance dropInstance;
 }
