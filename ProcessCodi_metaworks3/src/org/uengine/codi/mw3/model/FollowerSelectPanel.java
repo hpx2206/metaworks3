@@ -33,7 +33,7 @@ public class FollowerSelectPanel extends HorizontalSplitBox implements ContextAw
 		contactListPanel.setId(type);
 		contactListPanel.load(session.getUser().getUserId());
 		contactListPanel.getLocalContactList().getMetaworksContext().setWhen(type);		
-		contactListPanel.getSocialContactList().getMetaworksContext().setWhen(type);
+		//contactListPanel.getSocialContactList().getMetaworksContext().setWhen(type);
 				
 		FollowerSelectCommand followerSelectCommand = new FollowerSelectCommand();
 		followerSelectCommand.setFollowerType(type);

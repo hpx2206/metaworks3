@@ -6,7 +6,6 @@ import org.metaworks.Refresh;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.processmanager.ProcessManagerRemote;
 
 public class Notification extends Database<INotification> implements INotification{
 
@@ -217,11 +216,14 @@ public class Notification extends Database<INotification> implements INotificati
 		instanceViewContent.session = session;
 		instanceViewContent.load(instance);
 		
-		InstanceViewThreadPanel instanceViewThreadPanel = (InstanceViewThreadPanel)instanceViewContent.instanceView.getInstanceViewThreadPanel();
-		instanceViewThreadPanel.load();
-		
+		InstanceViewThreadPanel instanceViewThreadPanel = new InstanceViewThreadPanel();
+		instanceViewThreadPanel.session = session;
+		instanceViewThreadPanel.processManager = instanceViewContent.instanceView.processManager;
+		instanceViewThreadPanel.load(getInstId().toString());
 		instanceViewThreadPanel.getThread().getMetaworksContext().setHow("instance");
 		instanceViewThreadPanel.getNewItem().getMetaworksContext().setHow("instance");
+		
+		instanceViewContent.instanceView.setInstanceViewThreadPanel(instanceViewThreadPanel);
 		
 		setConfirm(true);
 		//flushDatabaseMe();
@@ -238,5 +240,5 @@ public class Notification extends Database<INotification> implements INotificati
 	
 	@Autowired
 	public InstanceViewContent instanceViewContent;
-
+	
 }
