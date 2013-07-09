@@ -137,7 +137,8 @@ public class ScheduleCalendar implements ContextAware {
 						" where inst.duedate is not null " +
 						" and inst.isdeleted != 1  "+
 						" and inst.instId = follower.instId "+
-						" and follower.endpoint in ( ?initep ) ";
+						" and follower.endpoint in ( ?initep )" +
+						" and inst.defverId = 'Unstructured.process'";
 		
 		IInstance iInstance = instance.sql(sql);
 		iInstance.setInitEp(userId);
@@ -163,20 +164,22 @@ public class ScheduleCalendar implements ContextAware {
 				column.put("callType", "instance" );
 				column.put("title", title );
 //				column.put("start", iInstance.getDueDate(); // set startDate equals endDate
-				column.put("start", iInstance.getStartedDate());	
+				column.put("start", iInstance.getDueDate());
+				
 				if(iInstance.getExt1() != null && "false".equals(iInstance.getExt1())){
 					column.put("allDay", false);
 				}else{
 					column.put("allDay", true);
 				}
-				
-				
+				/*
 				if(iInstance.getDueDate()!=null){
 					column.put("end", iInstance.getDueDate());
 				}
 				else{
 					column.put("end", iInstance.getFinishedDate());
 				}
+				*/
+				
 				if(empCode.equals(iInstance.getInitEp()))
 					column.put("color", "#348017");
 				else
@@ -218,12 +221,14 @@ public class ScheduleCalendar implements ContextAware {
 //				column.put("start", schedule.getStartDate());
 				column.put("start", schedule.getDueDate());	// 마지막 날만 보이도록 셋팅함
 				
+				/*
 				if(schedule.getEndDate()!=null){
 					column.put("end", schedule.getEndDate());
 				}
 				else{
 					column.put("end", schedule.getDueDate());
 				}
+				*/
 					
 				
 				if(empCode.equals(schedule.getEndpoint()))
@@ -306,26 +311,33 @@ public class ScheduleCalendar implements ContextAware {
 			// 다른 유저의 달력을 클릭하였을 경우 새로글쓰기를 막는다.
 			return null;
 		}
-		Calendar c = Calendar.getInstance ( );
-		c.setTime(getSelDate());
-		c.set ( c.HOUR_OF_DAY  , +23);
-		c.set ( c.MINUTE  , +59);
-		Date dueDate = c.getTime();
+		
 		String title = "";
 		
 		if( getSelDate() != null ){
 			if(allDay){
 				title = "[일정:" + new SimpleDateFormat("yyyy/MM/dd").format(getSelDate()) + "]" ;
+				
+				Calendar c = Calendar.getInstance ( );
+				c.setTime(getSelDate());
+				c.set ( c.HOUR_OF_DAY  , +23);
+				c.set ( c.MINUTE  , +59);
+				
+				this.setSelDate(c.getTime());			
+
 			}else{
-				title = "[일정:" + new SimpleDateFormat("yyyy/MM/dd aaa hh:mm ~ ").format(getSelDate()) + new SimpleDateFormat("aaa hh:mm").format(getEndDate()) + "]" ;
+				title = "[일정:" + new SimpleDateFormat("yyyy/MM/dd aaa hh:mm").format(getSelDate()) + "]" ;
+				//title = "[일정:" + new SimpleDateFormat("yyyy/MM/dd aaa hh:mm ~ ").format(getSelDate()) + new SimpleDateFormat("aaa hh:mm").format(getEndDate()) + "]" ;
+				
+				
 			}
 		}
 
 		WorkItem newInstantiator = new CommentWorkItem();
 		newInstantiator.setWriter(session.getUser());		
 		newInstantiator.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
-		newInstantiator.setDueDate(this.getEndDate());
-		newInstantiator.setStartDate(this.getSelDate());
+		newInstantiator.setDueDate(this.getSelDate());
+		//newInstantiator.setStartDate();
 		newInstantiator.setTitle(title);
 		newInstantiator.setExt1(this.getViewMode());
 		newInstantiator.setExt2(String.valueOf(this.allDay));
@@ -343,11 +355,15 @@ public class ScheduleCalendar implements ContextAware {
 			return null;
 		}else{
 			NewInstancePanel newInstancePanel =  new NewInstancePanel();
+			
+			newInstancePanel.setDueDate(this.getSelDate());
+			/*
 			if(this.getEndDate() != null){
 				newInstancePanel.setDueDate(this.getEndDate());
 			}else{
 				newInstancePanel.setDueDate(dueDate);
-			}
+			}*/
+			
 			newInstancePanel.session = session;
 			newInstancePanel.load(session);
 			
