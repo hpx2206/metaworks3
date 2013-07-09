@@ -508,9 +508,22 @@ public class ResourceFile implements ContextAware{
 					processMap.setCmTrgr(fullCommandPhrase.substring(0, commandCotentStarts));
 				}
 			}
-		}
-		if(name.endsWith(".process2")){
+		}else if(name.endsWith(".process2")){
 			name = name.substring(0, name.length() - 9);
+			
+			org.uengine.kernel.ProcessDefinition procDef = processManager.getProcessDefinition(getAlias());
+			String fullCommandPhrase = procDef.getDescription().getText();
+			
+			if(fullCommandPhrase!=null){
+				int commandCotentStarts = fullCommandPhrase.indexOf(':');
+				if(-1 < commandCotentStarts){
+					
+					processMap.setCmPhrase(fullCommandPhrase);
+					processMap.setCmTrgr(fullCommandPhrase.substring(0, commandCotentStarts));
+				}
+			}
+		}else if(name.endsWith(".wpd")){
+			name = name.substring(0, name.length() - 4);
 			
 			org.uengine.kernel.ProcessDefinition procDef = processManager.getProcessDefinition(getAlias());
 			String fullCommandPhrase = procDef.getDescription().getText();
