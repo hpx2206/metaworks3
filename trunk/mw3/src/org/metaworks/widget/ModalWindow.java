@@ -37,6 +37,7 @@ public class ModalWindow implements ContextAware {
 		setHeight(height);		
 		setTitle(title);
 		setOpen(true);
+		setResizable(true);
 	}
 	
 	MetaworksContext metaworksContext;
@@ -95,6 +96,15 @@ public class ModalWindow implements ContextAware {
 			this.height = height;
 		}
 	
+	boolean resizable;
+		@Hidden
+		public boolean isResizable() {
+			return resizable;
+		}
+		public void setResizable(boolean resizable) {
+			this.resizable = resizable;
+		}
+		
 	Object panel;
 		public Object getPanel() {
 			return panel;

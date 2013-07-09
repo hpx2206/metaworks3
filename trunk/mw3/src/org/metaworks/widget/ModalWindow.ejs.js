@@ -64,6 +64,8 @@ var org_metaworks_widget_ModalWindow = function(objectId, className) {
 					options['height'] = $(window).height() - 30;
 				}
 				
+				options['resizable'] = this.object.resizable;	
+				
 				var openerId = this.openerId;
 				
 				var buttons = [];
