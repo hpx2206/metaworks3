@@ -24,9 +24,12 @@
 .lst_type2 dd.tit{display:inline;float:left; margin-bottom:10px;margin-left:15px;}
 .lst_type2 dd.photo{display:inline;float:left;color:#fff;text-align:center}
 .lst_type2 dd.photo2{display:inline;float:left;color:#fff;text-align:center; margin:10px 0;}
-.lst_type2 .infoSub{font-size:11px !important; font-weight: normal; margin:3px 0px; height: 17px;}
+.lst_type2 .infoSub{font-size:11px !important; font-weight: bold;  margin:3px 0px;}
 .lst_type2 .infoSub span{display:inline-block;}
-.lst_type2 .infoSub span.infoSubFirstSpan{width:125px;}
+@media all and (max-width: 480px) {
+	.lst_type2 .infoSub span{display:block;}	
+	}
+.lst_type2 .infoSub span.infoSubFirstSpan{width:125px; margin-top:11px; color:#000 !important;}
 .lst_type2 dd{line-height:20px}
 .lst_type2 dd span{color:#808080; margin-right:15px;}
 .lst_type2 dd img{border:none}
