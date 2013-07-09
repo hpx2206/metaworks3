@@ -104,7 +104,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		
 		StringBuffer sql = new StringBuffer();
 		
-		//sql.append("select * from (");
+		sql.append("select * from (");
 		sql.append("select *");
 		sql.append("  from bpm_worklist");
 		sql.append(" where rootInstId=?instId");
@@ -112,7 +112,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		sql.append("   and (type!=?type or type is null)");
 		sql.append(" order by taskId desc");
 		sql.append(" limit " + (count + 1));
-		//sql.append(") worklist order by taskId ");
+		sql.append(") worklist order by taskId ");
 		
 		IWorkItem workitem = (IWorkItem) Database.sql(IWorkItem.class, sql.toString());
 		

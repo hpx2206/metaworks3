@@ -59,7 +59,9 @@ public class ProcessMapList implements ContextAware {
 			do{
 				ProcessMap processMap = new ProcessMap();
 				processMap.copyFrom(processMapList);
-				processMap.saveMe();
+				processMap.session = session;
+				processMap.syncToDatabaseMe();
+				processMap.flushDatabaseMe();
 				
 			} while (processMapList.next());
 		}
