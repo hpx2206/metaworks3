@@ -591,48 +591,50 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
 		
 		String sep = System.getProperty("os.name").toLowerCase().indexOf("win") >= 0 ? ";" : ":";
 		
-		
-		URLClassLoader classLoader = (URLClassLoader) CodiMetaworksRemoteService.class.getClassLoader();
-		URL urls[] = classLoader.getURLs();
-		StringBuffer sbClasspath = new StringBuffer();
-		for(URL url : urls){
-			String urlStr = url.getFile().toString();
-			sbClasspath.append(urlStr).append(sep);
-			//needed for javassist version of metaworks2
+		if( CodiMetaworksRemoteService.class.getClassLoader() instanceof URLClassLoader ){
+			
+			URLClassLoader classLoader = (URLClassLoader) CodiMetaworksRemoteService.class.getClassLoader();
+			URL urls[] = classLoader.getURLs();
+			StringBuffer sbClasspath = new StringBuffer();
+			for(URL url : urls){
+				String urlStr = url.getFile().toString();
+				sbClasspath.append(urlStr).append(sep);
+				//needed for javassist version of metaworks2
 //			try {
 //				ObjectType.classPool.insertClassPath(urlStr);
 //			} catch (NotFoundException e) {
 //				// TODO Auto-generated catch block
 //				e.printStackTrace();
 //			}
-			//end of needed for
-		}
-		
-		//Loads user-defined library files
-		File libFileBase = new File(sourceCodeBase + "__lib");
-		if(libFileBase.exists()){
-			File[] libFiles = libFileBase.listFiles();
-
-			for(File libFile : libFiles){
-				String absLibPath = libFile.getAbsolutePath();
-				sbClasspath.append(absLibPath).append(sep);
+				//end of needed for
+			}
+			
+			File libFileBase = new File(sourceCodeBase + "__lib");
+			if(libFileBase.exists()){
+				File[] libFiles = libFileBase.listFiles();
 				
-				//needed for javassist version of metaworks2
+				for(File libFile : libFiles){
+					String absLibPath = libFile.getAbsolutePath();
+					sbClasspath.append(absLibPath).append(sep);
+					
+					//needed for javassist version of metaworks2
 //				try {
 //					ObjectType.classPool.insertClassPath(absLibPath);  //may occur some library version collision. should be separated.
 //				} catch (NotFoundException e) {
 //					// TODO Auto-generated catch block
 //					e.printStackTrace();
 //				}
-				//end of needed for
+					//end of needed for
+				}
 			}
-		}
-
-		cl.setCompilerOptions(
-				new String[]{
+			
+			cl.setCompilerOptions(
+					new String[]{
 //						"-classpath", "/Users/jyjang/Documents/workspace/ProcessCodi_metaworks3/WebContent/WEB-INF/lib/metaworks3.jar:/Users/jyjang/Documents/workspace/ProcessCodi_metaworks3/WebContent/WEB-INF/lib/mongo-2.7.2.jar"		
-						"-classpath", sbClasspath.toString()
-				});
+							"-classpath", sbClasspath.toString()
+					});
+		}
+		//Loads user-defined library files
 		
 		
 		//ClassPool setting
