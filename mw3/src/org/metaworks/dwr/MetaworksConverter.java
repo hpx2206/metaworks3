@@ -1,4 +1,4 @@
-package org.metaworks.dwr;
+ package org.metaworks.dwr;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
@@ -36,8 +36,16 @@ public class MetaworksConverter extends BeanConverter{
     {
     	
     	try {
+    		
+/*    		System.out.println("--------------------------------------------------------");
+    		System.out.println("name : " + paramType.getName());
+    		System.out.println("interface : " + Modifier.isInterface(paramType.getModifiers()));
+    		System.out.println("abstract : " + Modifier.isAbstract(paramType.getModifiers()));
+*/    		
     		// TODO : Why is the value of the proxy object of Modifier.isAbstract true? need confirm
-		 	if(paramType == Object.class || (!Modifier.isInterface(paramType.getModifiers()) && Modifier.isAbstract(paramType.getModifiers()))){
+		 	if(true || !Modifier.isInterface(paramType.getModifiers()) && !Modifier.isAbstract(paramType.getModifiers())){
+		 		
+		 		//System.out.println("convert metaworks");
 		 		if("string".equals(data.getType())){
 		 			paramType = String.class;
 		 			
@@ -338,13 +346,11 @@ public class MetaworksConverter extends BeanConverter{
 							if(value==null){
 								nested = null;
 							}else if(value instanceof IDAO && ((IDAO) value).getImplementationObject()!=null){
-
-								if(Thread.currentThread().getStackTrace().length > 200){
-System.out.println(" nasted value's dao type is " + value.getClass());
-								}
-
-
-								
+//
+//								if(Thread.currentThread().getStackTrace().length > 200){
+//System.out.println(" nasted value's dao type is " + value.getClass());
+//								}
+//
 								nested = this.convertOutbound(value, outctx);
 							}else{
 				                nested = getConverterManager().convertOutbound(value, outctx);
