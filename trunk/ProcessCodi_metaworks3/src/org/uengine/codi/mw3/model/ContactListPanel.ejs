@@ -11,11 +11,18 @@
 		<div>
 			<%=fields.localContactList.here()%>
 		</div>
-
+		
+	<%
+		 if(value.socialContactList != null) {
+	%>
 		<h3><a href="#"><%=mw3.localize("$Facebook")%></a></h3>
 		<div>
 			<%=fields.socialContactList.here()%>
 		</div>
+	<%
+		}		
+	%>
+	
 	</div>
 	
 <%

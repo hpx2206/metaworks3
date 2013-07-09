@@ -8,6 +8,7 @@ import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Test;
+import org.uengine.kernel.GlobalContext;
 
 public class ContactListPanel implements ContextAware {
 
@@ -41,14 +42,15 @@ public class ContactListPanel implements ContextAware {
 		
 		setLocalContactList(localContactList);
 		
-		ContactList socialContactList = new ContactList();
-		socialContactList.getMetaworksContext().setHow(getMetaworksContext().getHow());
-		socialContactList.getMetaworksContext().setWhen(getMetaworksContext().getWhen());
-		socialContactList.getMetaworksContext().setWhere(ContactList.FACEBOOK);
-		socialContactList.load(userId, keyword);
-		
-		setSocialContactList(socialContactList);
-		
+		if("1".equals(GlobalContext.getPropertyString("facebook.use", "0"))){
+			ContactList socialContactList = new ContactList();
+			socialContactList.getMetaworksContext().setHow(getMetaworksContext().getHow());
+			socialContactList.getMetaworksContext().setWhen(getMetaworksContext().getWhen());
+			socialContactList.getMetaworksContext().setWhere(ContactList.FACEBOOK);
+			socialContactList.load(userId, keyword);
+			
+			setSocialContactList(socialContactList);
+		}		
 		
 //		if(localContactList.getContacts().size() + socialContactList.getContacts().size() == 0){
 //			invitation = new Invitation();

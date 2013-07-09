@@ -278,6 +278,7 @@ public class Login implements ContextAware {
 		
 		ModalWindow window = new ModalWindow(login, 560, 450, "Sign Up");
 		window.setId("subscribe");
+		window.setResizable(false);
 		
 		return window;
 	}
