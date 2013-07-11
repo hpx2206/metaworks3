@@ -96,14 +96,14 @@ public class PerspectivePanel {
 				//개인별
 				personalPerspective = new PersonalPerspective();
 				personalPerspective.session = session;
-//				personalPerspective.select();
+				personalPerspective.select();
 				
 				if(session.getEmployee().isApproved()){
 					
 					//주제별
 					topicPerspective = new TopicPerspective();
 					topicPerspective.session = session;
-//					topicPerspective.select();
+					topicPerspective.select();
 					
 					//조직도
 					organizationPerspectiveDept = new OrganizationPerspectiveDept();
@@ -119,7 +119,7 @@ public class PerspectivePanel {
 					if("1".equals(GlobalContext.getPropertyString("project.use", "0"))){
 						//프로젝트
 						projectPerspective = new ProjectPerspective();
-						projectPerspective.select();
+//						projectPerspective.select();
 					}
 				}
 			}

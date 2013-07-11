@@ -8,4 +8,4 @@ var org_uengine_codi_mw3_model_PersonalPerspective = function(objectId, classNam
 
 	if(this.object == null)
 		return true;	
-}
+};
