@@ -304,7 +304,7 @@
                     var offsetMiddle = offset.top + ($('#' + divId).height()/2- 11);
                     
                     var html;
-                    html = "<div id='loading_div_" + objId + "' style='position:absolute; z-index:9999999; top:"+offsetMiddle+"px; left:"+offsetRight+"px;'><a id='info_div_box' href='#' ><span><img src='dwr/metaworks/images/circleloading.gif'></span></a></div>";
+                    html = "<div id='loading_div_" + objId + "' style='position:absolute; z-index:9999999; top:"+offsetMiddle+"px; left:"+offsetRight+"px;'><div id='info_div_box' ><img src='dwr/metaworks/images/circleloading.gif'></div></div>";
                     
                     $('body').append(html);
                 };
@@ -318,11 +318,11 @@
                         var offsetMiddle = offset.top + ($('#' + divId).height()/2- 11);
                         
                         var html;
-                        html = "<div id='info_div_" + objId + "' style='position:absolute; z-index:9999999; top:"+offsetMiddle+"px; left:"+offsetRight+"px;'><a id='info_div_done_box' href='#' ><span>"+message+"</span></a></div>";
+                        html = "<div id='info_div_" + objId + "' style='position:absolute; z-index:9999999; top:"+offsetMiddle+"px; left:"+offsetRight+"px;'><div id='info_div_done_box'  >"+message+"</div></div>";
                         
                         $('body').append(html);
                         setTimeout(function(){
-                        	$('body>#info_div_' + objId).hide(500);
+                        	$('body>#info_div_' + objId).fadeOut(500);
                         	setTimeout(function(){$('body>#info_div_' + objId).remove();},500);	
                         	},2000);
                     }
