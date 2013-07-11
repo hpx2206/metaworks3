@@ -603,5 +603,5 @@ legend {display:none;}
       }
       
       
-.moreBtn5{display:block; width:200px; padding:8px; border:1px solid #A8D0F9;margin:0 auto; text-align:center;font-weight:bold;border-radius:10px;background:#E1EFFD;}
-.morePoint{width: 20px; height:20px; margin:10px auto; background:url("../../images/waveStyle/morePoint.png") no-repeat;}
+.moreBtn5{display:block; width:200px; margin:0 auto; text-align:center;font-weight:bold;}
+.morePoint{width: 10px; height:10px; margin:5px auto; background:url("../../images/waveStyle/morePoint.png") no-repeat;}
