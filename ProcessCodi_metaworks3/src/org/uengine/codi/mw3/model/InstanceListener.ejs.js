@@ -11,7 +11,7 @@ var org_uengine_codi_mw3_model_InstanceListener = function(objectId, className){
 		var value = this.object.applyItem;
 		
 		var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
-		if(session.lastPerspecteType == 'allICanSee' && (session.keyword == null || typeof session.keyword == 'undefined' && session.searchKeyword == '')){
+		if( (session.lastPerspecteType == 'allICanSee' || session.lastPerspecteType == 'all' || session.lastPerspecteType == 'inbox' ) && (session.keyword == null || typeof session.keyword == 'undefined' && session.searchKeyword == '')){
 			value.instanceViewThreadPanel = null;
 			
 			var preferUx = mw3.fn.getPreferUx();		
