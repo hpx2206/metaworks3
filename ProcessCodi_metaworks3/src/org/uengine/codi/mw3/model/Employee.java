@@ -235,7 +235,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		if (getEmpCode() != null) {
 			IEmployee emp = (IEmployee) findMe();
 			
-			if(emp.getIsDeleted().equals("1")) {
+			if(emp.getIsDeleted() != null && emp.getIsDeleted().equals("1")) {
 				errorMessage = "<font color=blue>There's no such ID. Please subscribe.</font>";
 			} else if(getPassword().equals(emp.getPassword())) {
 				emp = findMe();				
