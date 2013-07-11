@@ -52,18 +52,22 @@ var org_uengine_codi_mw3_model_IWorkItem_edit = function(objectId, className){
 			});
 		}, 1000);
 	}else if(value.type == 'comment'){
-		$("#post_" + this.objectId).bind("keydown", {instanceFirst: this.instanceFirst}, function(event){
-			if (event.keyCode == 13 && !event.shiftKey) {
-				if(  !event.data.instanceFirst ){
-					window.event.cancelBubble = true;
-					window.event.returnValue = false;
+		var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");		
+		console.log(session);
+		if( session.ux != 'phone' &&  session.ux != 'pad' ){
+			$("#post_" + this.objectId).bind("keydown", {instanceFirst: this.instanceFirst}, function(event){
+				if (event.keyCode == 13 && !event.shiftKey) {
+					if(  !event.data.instanceFirst ){
+						window.event.cancelBubble = true;
+						window.event.returnValue = false;
+					}
 				}
-			}
-		});
-		
-		$("#post_" + this.objectId).bind("keyup", {objectId: this.objectId}, function(event){
-			mw3.getFaceHelper(event.data.objectId).press();
-		});		
+			});
+			
+			$("#post_" + this.objectId).bind("keyup", {objectId: this.objectId}, function(event){
+				mw3.getFaceHelper(event.data.objectId).press();
+			});		
+		}
 	}
 	
 

@@ -40,6 +40,7 @@ public class NewFolder extends Templete {
 			node.setName(this.getName());
 			node.setId(targetNode.getId() + File.separatorChar + node.getName());
 			node.setPath(targetNode.getPath() + File.separatorChar + node.getName());
+			node.setProjectId(targetNode.getProjectId());
 			node.setType(TreeNode.TYPE_FOLDER);
 			node.setFolder(true);
 			
