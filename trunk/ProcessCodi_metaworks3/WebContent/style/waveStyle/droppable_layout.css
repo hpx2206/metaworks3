@@ -1099,10 +1099,6 @@ img {
 	-moz-border-radius: 5px;
 	border-radius: 5px;
 	padding:3px;
-	opacity: 0.5;
-    -moz-opacity: 0.5;
-    -khtml-opacity: 0.5;
-    filter:alpha(opacity=50);
 }
 
 #info_div_box span {
