@@ -271,12 +271,12 @@ public class Login implements ContextAware {
 //		
 //	}
 	
-	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP	)
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP	)
 	public Object popupSubscribe() throws Exception{
-		Login login = new Login();
-		login.setStatus("subscribe");
 		
-		ModalWindow window = new ModalWindow(login, 600, 380, "Sign Up");
+		this.setStatus("subscribe");
+		
+		ModalWindow window = new ModalWindow(this, 600, 380, "Sign Up");
 		window.setId("subscribe");
 		window.setResizable(false);
 		

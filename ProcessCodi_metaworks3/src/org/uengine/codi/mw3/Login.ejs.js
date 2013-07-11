@@ -95,8 +95,11 @@ org_uengine_codi_mw3_Login.prototype = {
 	keydown : function(e){
 		if(e.keyCode == 13){
 			window.event.returnValue = false;
-			
-			mw3.call(this.objectId, 'login');
+			if( this.object && this.object.status == 'subscribe'){
+				mw3.call(this.objectId, 'subscribe');
+			}else{
+				mw3.call(this.objectId, 'login');
+			}
 		}
 	},
 	getValue : function(){
