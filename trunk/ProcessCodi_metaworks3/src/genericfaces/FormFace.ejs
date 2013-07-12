@@ -1,5 +1,7 @@
 <%
 	if (value) {
+		var title = objectMetadata.getOptionValue('title', null);
+	
 		var methodVAlign = (objectMetadata.faceOptions ? (objectMetadata.faceOptions['methodVAlign']?objectMetadata.faceOptions['methodVAlign']:'bottom') : 'bottom');
 		var showViewBox = !(objectMetadata.faceOptions && objectMetadata.faceOptions['hideViewBox']);
 
@@ -104,6 +106,15 @@
 
 
 	<div <%=showViewBox?'class=\"form_table2\"':''%>> 
+<%
+		if(title){
+%>
+	<div>
+			<%=mw3.localize(title)%>
+	</div>
+<%
+		}
+%>		
 		<table style="width: 100%;" border="<%=showViewBox?'1':'0'%>" cellspacing="0" >	
 			<tbody>
 <%	
