@@ -12,7 +12,7 @@ import org.metaworks.dao.Database;
 import org.metaworks.dao.TransactionContext;
 import org.uengine.webservices.emailserver.impl.EMailServerSoapBindingImpl;
 
-@Face(displayName="$InviteYourFriend", options="hideLabels", values="true")
+@Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs", options={"title", "fieldOrder"}, values={"$InviteYourFriend", "title,name,email,guest"})
 public class Invitation implements ContextAware{
 	
 	MetaworksContext metaworksContext;
@@ -42,7 +42,7 @@ public class Invitation implements ContextAware{
 	}
 	
 	String email;
-	@Face(options="placeholder", values="$Email")
+	@Face(options={"hideLabel","placeholder"}, values={"true", "$Email"})
 		public String getEmail() {
 			return email;
 		}
@@ -52,7 +52,7 @@ public class Invitation implements ContextAware{
 		}
 
 	String name;
-	@Face(options="placeholder", values="$Name")
+	@Face(options={"hideLabel","placeholder"}, values={"true", "$Name"})
 		public String getName() {
 			return name;
 		}
@@ -60,16 +60,25 @@ public class Invitation implements ContextAware{
 		public void setName(String name) {
 			this.name = name;
 		}
-	
 		
+	boolean guest;
+		@Face(displayName="Guest 여부")
+		public boolean isGuest() {
+			return guest;
+		}
+		public void setGuest(boolean guest) {
+			this.guest = guest;
+		}
+
 	@AutowiredFromClient
 	public Session session;
+	
 	
 	@ServiceMethod(callByContent=true, target="popup")
 	@Face(displayName="$Invite")
 	public Object invite() throws Exception{
 		
-		IEmployee alreadyExistChecker = (IEmployee) Database.sql(IEmployee.class, "select * from emptable where email=?email");
+		IEmployee alreadyExistChecker = (IEmployee) Database.sql(IEmployee.class, "select * from emptable where empCode=?email");
 		alreadyExistChecker.setEmail(getEmail());
 		alreadyExistChecker.select();
 		
@@ -85,6 +94,7 @@ public class Invitation implements ContextAware{
 		newUser.setGlobalCom(session.getCompany().getComCode());
 		newUser.setLocale(session.getEmployee().getLocale());
 		newUser.setApproved(true);
+		newUser.setGuest(this.isGuest());
 		newUser.createDatabaseMe();
 		
 		

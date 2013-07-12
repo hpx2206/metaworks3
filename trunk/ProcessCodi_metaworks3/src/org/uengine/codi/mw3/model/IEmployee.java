@@ -152,6 +152,10 @@ public interface IEmployee extends IDAO {
 	public boolean isApproved();
 	public void setApproved(boolean approved);
 
+	public boolean isGuest();
+	public void setGuest(boolean guest);
+
+	
 	@NonLoadable
 	@NonSavable
 	@Hidden

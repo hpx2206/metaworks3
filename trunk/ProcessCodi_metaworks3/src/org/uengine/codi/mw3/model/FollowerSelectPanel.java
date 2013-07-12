@@ -18,7 +18,7 @@ public class FollowerSelectPanel extends HorizontalSplitBox implements ContextAw
 	}
 	public void load(Session session, String type) throws Exception{
 		
-		
+		/*
 		FollowerSelectTab followerSelectTab = new FollowerSelectTab(session);
 		
 		OrganizationTree deptTree = followerSelectTab.getDeptTree();
@@ -42,5 +42,6 @@ public class FollowerSelectPanel extends HorizontalSplitBox implements ContextAw
 		this.setBottom(followerSelectCommand);
 		this.setFixHeight(50);
 		this.setAlign(FollowerSelectPanel.ALIGN_BOTTOM);
+		*/
 	}
 }

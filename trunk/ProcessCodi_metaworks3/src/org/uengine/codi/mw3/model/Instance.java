@@ -528,7 +528,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 			instanceSql.append("and inst.status!=?instStatus ");
 			criteria.put("instStatus", "Stopped");
 			// secureopt
-			if(navigation.getEmployee().isApproved()){
+			if(navigation.getEmployee().isApproved() && !navigation.getEmployee().isGuest()){
 				instanceSql
 				.append(" and	exists ( ")
 				.append("			select 1 from bpm_procinst	 ")

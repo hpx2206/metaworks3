@@ -184,9 +184,15 @@ public class Main {
 			outerLayout.setName("center");
 			
 			setLayout(outerLayout);
+			setSession(session);
+			
 //			if( session.getEmployee().getIsAdmin() ){	// 관리자일 경우만 page flip 이 보임
+			
+			if(!session.getEmployee().isGuest()){
 				setPageNavigator(new PageNavigator("process"));
-				setSession(session);
+			}
+			
+			
 //			}
 		}
 

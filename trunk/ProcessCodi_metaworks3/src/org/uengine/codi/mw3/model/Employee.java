@@ -229,6 +229,14 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 			this.approved = approved;
 		}
 		
+	boolean guest;
+		public boolean isGuest() {
+			return guest;
+		}
+		public void setGuest(boolean guest) {
+			this.guest = guest;
+		}
+		
 	@Override
 	public IEmployee load() throws Exception {
 		String errorMessage;

@@ -66,12 +66,12 @@ public class Followers implements ContextAware {
 		users.set("instanceId", instanceId);
 		users.select();
 		
+		users.getMetaworksContext().setWhen(CONTEXT_WHERE_INFOLLOWERS);
+		setFollowers(users);
+
 		IDept dept = (IDept) Database.sql(IDept.class, "select distinct endpoint PARTCODE, rolename PARTNAME from bpm_rolemapping where rootinstid=?instanceId and assigntype = 2 ");
 		dept.set("instanceId", instanceId);
 		dept.select();
-		
-		users.getMetaworksContext().setWhen(CONTEXT_WHERE_INFOLLOWERS);
-		setFollowers(users);
 		
 		dept.getMetaworksContext().setHow(CONTEXT_WHERE_DEPTFOLLOWERS);
 		setDeptFollowers(dept);
@@ -100,11 +100,11 @@ public class Followers implements ContextAware {
 		}else if("etc".equals(this.getInstanceId())){
 			type = ADD_ETCFOLLOWERS;
 		}
-//		AddFollowerPanel panel = new AddFollowerPanel(session, getInstanceId(), type);
-		FollowerSelectPanel followerSelectPanel = new FollowerSelectPanel();
-		followerSelectPanel.load(session, type);
+		
+		FollowerSelectTab followerSelectTab = new FollowerSelectTab();
+		followerSelectTab.load(session, type);
 
-		popup.setPanel(followerSelectPanel);
+		popup.setPanel(followerSelectTab);
 //		popup.setName("AddFollowerPanel");
 		
 		return popup;		

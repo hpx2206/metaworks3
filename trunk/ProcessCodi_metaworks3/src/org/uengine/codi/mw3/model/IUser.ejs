@@ -1,5 +1,5 @@
 
-<%	
+<%
 	if(value && value.userId){
 		var clickAction = '';
 		
@@ -93,9 +93,16 @@
 				}
 %>				
 				<li><a id="wBtn" href="#" onClick="<%=methods.addContact.caller()%>"><span><%=mw3.localize("$AddFriend")%></span></a></li>						
-				<li><a id="wBtn" href="#" onClick="<%=methods.chat.caller()%>"><span><%=mw3.localize("$Chat")%></span></a></li>						
+				<li><a id="wBtn" href="#" onClick="<%=methods.chat.caller()%>"><span><%=mw3.localize("$Chat")%></span></a></li>
+				
+<%
+				if(value.approval && !value.guest){
+%>														
 				<li><a id="wBtn" href="#" onClick="<%=methods.showSchedule.caller()%>"><span><%=mw3.localize("$showSchedule")%></span></a></li>
 				<li><a id="wBtn" href="#" onClick="<%=methods.showWall.caller()%>"><span><%=mw3.localize("$ShowWall")%></span></a></li>
+<%
+				}
+%>								
 			</ul>
 		</div>
 <%
@@ -134,7 +141,7 @@
 				<img id="user_picture_<%=objectId%>" src="<%=portrait%>" class="pic <%=(value.size=='small' ? ' small':'')%>">
 				
 <%	
-			if(mw3.when == 'followers'){
+			if(mw3.when == 'followers' || mw3.when == 'topicFollowers'){
 %>
 				<div class="followers_name" title="<%=value.name%>"><%=value.name%></div>
 <%
