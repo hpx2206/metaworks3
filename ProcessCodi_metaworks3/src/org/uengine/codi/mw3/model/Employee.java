@@ -738,6 +738,9 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		session.setEmployee(this);
 		session.fillSession();
 		session.setGuidedTour(true);
+
+		Login login = new Login();
+		login.storeIntoServerSession(session);
 		
 		ModalWindow removeWindow = new ModalWindow();
 		removeWindow.setId("subscribe");
