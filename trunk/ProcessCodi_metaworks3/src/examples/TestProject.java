@@ -67,7 +67,8 @@ public class TestProject implements ContextAware {
 	@ServiceMethod(callByContent=true, except="content")
 	public void run(){
 		Login login = new Login();
-		login.setUserId(this.getUserId());
+		login.setUserId("CJW@kiat.or.kr");
+//		login.setUserId(this.getUserId());
 		login.setPassword("test");
 
 		Session session = new Session();
@@ -79,7 +80,8 @@ public class TestProject implements ContextAware {
 		}
 		
 		CloudIDE cloudIde = new CloudIDE();
-		cloudIde.load();
+		cloudIde.load(session);
+//		cloudIde.load(session, "");
 		
 		this.setContent(new MainPanel(cloudIde));
 	}
