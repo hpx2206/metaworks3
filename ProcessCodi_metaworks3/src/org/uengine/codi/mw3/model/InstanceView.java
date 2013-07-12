@@ -40,32 +40,47 @@ public class InstanceView {
 		
 	public void load(IInstance instance) throws Exception{
 
+		/*
+		 * DB 저장된 인스턴스 정보로 다시 읽어오기
+		 */
 		Instance inst = new Instance();	
 		inst.setInstId(instance.getInstId());
 		inst.copyFrom(inst.databaseMe());
-		String secuopt = inst.getSecuopt();
+		inst.setMetaworksContext(getMetaworksContext());
 		
-		//if(session!=null){
-			Notification notificationType = new Notification();
-			INotification notifictionsInSameInstance  = notificationType.sql("update bpm_noti set confirm=1 where instid = ?instid and userId=?userId");
-			notifictionsInSameInstance.setConfirm(true);
-			notifictionsInSameInstance.setInstId(inst.getInstId());
-			notifictionsInSameInstance.setUserId(session.getUser().getUserId());
-			notifictionsInSameInstance.update();
-		//}
-
 		if(inst.databaseMe().getIsDeleted()){
 			throw new Exception("Deleted Instance");
 		}
 
 		setInstanceId(instance.getInstId().toString());
-		setStatus(inst.databaseMe().getStatus());
-		setSecuopt(secuopt);
+		setStatus(inst.getStatus());
+		setSecuopt(inst.getSecuopt());
+
+		InstanceFollowers followers = new InstanceFollowers();
+		followers.setInstanceId(inst.getInstId().toString());
+		followers.load();
+
+		// InstanceView 기본 설정
+		this.loadDefault(inst);
 		
-		inst.setMetaworksContext(getMetaworksContext());
+		if(!this.verifyiCanSeePermissions()){
+			throw new Exception("$NotPermittedToSee");
+		}
 		
-		loadDefault(inst);
-		
+		this.setFollowers(followers);
+
+		/*
+		 * 인스턴스 읽음 표시
+		 */
+		Notification notificationType = new Notification();
+		INotification notifictionsInSameInstance  = notificationType.sql("update bpm_noti set confirm=1 where instid = ?instid and userId=?userId");
+		notifictionsInSameInstance.setConfirm(true);
+		notifictionsInSameInstance.setInstId(inst.getInstId());
+		notifictionsInSameInstance.setUserId(session.getUser().getUserId());
+		notifictionsInSameInstance.update();
+				
+		/*
+		 * TODO: 보안체크 부분 다른 부분에서 처리할 수 있도록
 		if("1".equals(getSecuopt())){ //means secured conversation
 			
 			IUser followers = getFollowers().getFollowers();
@@ -96,6 +111,7 @@ public class InstanceView {
 			
 			followers.beforeFirst();
 		}
+		*/
 		
 		//setInstanceViewThreadPanel(activityStream());
 		
@@ -190,10 +206,6 @@ public class InstanceView {
 	public Session session;
 
 	protected void loadDefault(Instance inst) throws Exception{
-		followers = new InstanceFollowers();
-		followers.setInstanceId(instanceId);
-		followers.load();
-		
 		newItem = new CommentWorkItem();
 		newItem.setInstId(new Long(getInstanceId()));
 		newItem.setTaskId(new Long(-1));
@@ -638,6 +650,40 @@ public class InstanceView {
 		}else{
 			throw new Exception("$OnlyFollowerCanSecuopt");
 		}
+	}
+	
+	public boolean verifyiCanSeePermissions() throws Exception {
+		
+		boolean iCanSee = true;
+		
+		if("1".equals(getSecuopt())){ //means secured conversation
+			iCanSee = false;
+			
+			IUser followers = getFollowers().getFollowers();
+			followers.beforeFirst();			
+			while(followers.next()){
+				if(session.getUser().getUserId().equals(followers.getUserId())){
+					iCanSee = true;
+					break;
+				}
+			}
+			
+			IDept deptFollower = getFollowers().getDeptFollowers();
+			if( deptFollower.getImplementationObject().getCachedRows() != null ){
+				deptFollower.beforeFirst();
+				while( deptFollower.next() ){
+					if(deptFollower.getPartCode().equals(session.getEmployee().getPartCode()) ){
+						iCanSee = true;
+						break;
+					}
+				}
+				deptFollower.beforeFirst();
+			}
+			
+			followers.beforeFirst();
+		}
+		
+		return iCanSee;
 	}
 	
 	transient MetaworksContext metaworksContext;

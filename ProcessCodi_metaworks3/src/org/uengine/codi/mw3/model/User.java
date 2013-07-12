@@ -252,21 +252,21 @@ public class User extends Database<IUser> implements IUser {
 			
 		}else if("addTopicFollower".equals(this.getMetaworksContext().getWhen())){
 			
-//			TopicMapping tm = new TopicMapping();
-//			tm.setTopicId(session.getLastSelectedItem());
-//			tm.setUserId(this.getUserId());
-//			
-//			if( !tm.findByUser().next() ){
-//				tm.setUserName(this.getName());
-//				tm.saveMe();
-//				tm.flushDatabaseMe();
-//			}
-//			
-//			TopicFollowers topicFollowers = new TopicFollowers();
-//			topicFollowers.session = session;
-//			topicFollowers.load();
-//			
-//			return new Object[]{new Refresh(topicFollowers)};
+			TopicMapping tm = new TopicMapping();
+			tm.setTopicId(session.getLastSelectedItem());
+			tm.setUserId(this.getUserId());
+			
+			if( !tm.findByUser().next() ){
+				tm.setUserName(this.getName());
+				tm.saveMe();
+				tm.flushDatabaseMe();
+			}
+			
+			TopicFollowers topicFollowers = new TopicFollowers();
+			topicFollowers.session = session;
+			topicFollowers.load();
+			
+			return new Object[]{new Refresh(topicFollowers)};
 //		}else if("addInstanceFollower".equals(this.getMetaworksContext().getWhen())){
 //			String instId = instanceFollowers.getInstanceId();
 //			
@@ -498,7 +498,7 @@ public class User extends Database<IUser> implements IUser {
 	
 //	@ServiceMethod(target="popup", payload={"userId", "network"})
 	public Popup info() throws Exception{
-		Popup infoWindow = new Popup(600, 300);
+		Popup infoWindow = new Popup(600, 425);
 		
 		Employee me = new Employee();
 		me.setEmpCode(getUserId());

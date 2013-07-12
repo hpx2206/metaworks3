@@ -13,20 +13,31 @@ public class FollowerSelectTab {
 			this.contactListPanel = contactListPanel;
 		}
 	
-	OrganizationTree deptTree;
+	OrganizationTreePanel deptTreePanel;
 		@Face(displayName="부서")
-		public OrganizationTree getDeptTree() {
-			return deptTree;
+		public OrganizationTreePanel getDeptTreePanel() {
+			return deptTreePanel;
 		}
-		public void setDeptTree(OrganizationTree deptTree) {
-			this.deptTree = deptTree;
+		public void setDeptTreePanel(OrganizationTreePanel deptTreePanel) {
+			this.deptTreePanel = deptTreePanel;
 		}
 	public FollowerSelectTab() throws Exception{
 		
 	}
-	public FollowerSelectTab(Session session) throws Exception{
-		deptTree = new OrganizationTree(session);
-		deptTree.setHiddenEmployee(true);
-		contactListPanel = new ContactListPanel();
+	public void load(Session session, String type) throws Exception {
+
+		ContactListPanel contactListPanel = new ContactListPanel();
+		contactListPanel.getMetaworksContext().setHow("follower");
+		contactListPanel.setId(type);
+		contactListPanel.load(session.getUser().getUserId());
+		contactListPanel.getLocalContactList().getMetaworksContext().setWhen(type);
+
+		this.setContactListPanel(contactListPanel);
+		
+		
+		OrganizationTreePanel deptTreePanel = new OrganizationTreePanel();
+		deptTreePanel.load(session, type);
+		
+		this.setDeptTreePanel(deptTreePanel);
 	}
 }

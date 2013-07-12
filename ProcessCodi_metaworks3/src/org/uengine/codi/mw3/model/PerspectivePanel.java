@@ -98,7 +98,7 @@ public class PerspectivePanel {
 				personalPerspective.session = session;
 				personalPerspective.select();
 				
-				if(session.getEmployee().isApproved()){
+				if(session.getEmployee().isApproved() && !session.getEmployee().isGuest()){
 					
 					//주제별
 					topicPerspective = new TopicPerspective();

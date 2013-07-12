@@ -774,8 +774,8 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				}	
 						
 				if(!existFollower){
-					org.uengine.kernel.RoleMapping newFollower = org.uengine.kernel.RoleMapping.create();
-					newFollower.setName("_follower_" + session.getUser().getUserId());
+					RoleMapping newFollower = RoleMapping.create();
+					newFollower.setName(Followers.CONTEXT_WHERE_INFOLLOWERS + session.getUser().getUserId());
 					newFollower.setEndpoint(session.getUser().getUserId());
 					
 					processManager.putRoleMapping(getInstId().toString(), newFollower);
@@ -789,8 +789,8 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 					for(String userId : initialFollowers){
 						
 						RoleMapping follower = RoleMapping.create();
-						follower.setEndpoint(userId);
-						follower.setName("fol_" + userId);
+						follower.setName(Followers.CONTEXT_WHERE_INFOLLOWERS + userId);
+						follower.setEndpoint(userId);						
 
 						processManager.putRoleMapping(this.getInstId().toString() , follower);
 					}
@@ -949,14 +949,14 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			// 팔로워들에게 알림처리
 			// 부서로 추가된 팔로워들의 userId 를 가져온다.
 			IDept deptFollower = instanceFollowers.getDeptFollowers();
-			HashMap<String, String> deptUserSessionList = new HashMap<String, String>();
+			HashMap<String, String> notiUsers = new HashMap<String, String>();
 			if(deptFollower != null){
 				deptFollower.beforeFirst();
 				while(deptFollower.next()){
 					HashMap<String, String> deptSessionList = Login.getSessionIdWithDept(deptFollower.getPartCode());
 					
 					if(deptSessionList != null)
-						deptUserSessionList.putAll(deptSessionList);
+						notiUsers.putAll(deptSessionList);
 				}
 			}
 			
@@ -969,14 +969,15 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 					if(session.getUser().getUserId().equals(followers.getUserId()))
 						continue;
 					
-					if(deptUserSessionList.containsKey(followers.getUserId().toUpperCase())){
-						deptUserSessionList.remove(followers.getUserId().toUpperCase());
+					notiUsers.put(followers.getUserId() , Login.getSessionIdWithUserId(followers.getUserId()));
+					if(notiUsers.containsKey(followers.getUserId().toUpperCase())){
+						notiUsers.remove(followers.getUserId().toUpperCase());
 					}
-					deptUserSessionList.put(followers.getUserId() , Login.getSessionIdWithUserId(followers.getUserId()) );
+					notiUsers.put(followers.getUserId() , Login.getSessionIdWithUserId(followers.getUserId()) );
 				}
 			}
 			// noti 저장
-			Iterator<String> iterator = deptUserSessionList.keySet().iterator();
+			Iterator<String> iterator = notiUsers.keySet().iterator();
 			while(iterator.hasNext()){
 				String followerUserId = (String)iterator.next();
 				Notification noti = new Notification();
@@ -995,12 +996,12 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			
 			// noti 발송
 			if(prevInstId == null){
-				MetaworksRemoteService.pushTargetScriptFiltered(new AllSessionFilter(deptUserSessionList),
+				MetaworksRemoteService.pushTargetScriptFiltered(new AllSessionFilter(notiUsers),
 						"if(mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar')!=null) mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar').__getFaceHelper().addMyschedule",
 						new Object[]{getTitle(), getInstId()+"", newInstancePanel.getDueDate()});
 			}
 			
-			MetaworksRemoteService.pushTargetScriptFiltered(new AllSessionFilter(deptUserSessionList),
+			MetaworksRemoteService.pushTargetScriptFiltered(new AllSessionFilter(notiUsers),
 					"mw3.getAutowiredObject('" + NotificationBadge.class.getName() + "').refresh",
 					new Object[]{});
 			
