@@ -537,3 +537,6 @@ INSERT INTO "emptable" ("empcode", "empname", "password", "isadmin", "jikname", 
 INSERT INTO "roletable" ("rolecode", "comcode", "descr", "isdeleted") VALUES ('paasManager', 'CloudManager', 'PaaS관리자', '0');
 
 INSERT INTO "roleusertable" ("rolecode", "empcode", "comcode") VALUES ('paasManager', 'paasManager', 'CloudManager');
+
+
+alter table emptable add guest int(1);
