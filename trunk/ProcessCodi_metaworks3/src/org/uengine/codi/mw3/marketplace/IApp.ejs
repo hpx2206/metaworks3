@@ -28,19 +28,6 @@
 			</span>
         </a>
 	</dd>
-	<dd class="price">
-<%
-			if(value.pricing == 0){
-%>	
-		<img src="images/marketPlace/icon_free.gif" />
-<%
-			}else{
-%>	
-		\<%=value.pricing%>
-<%
-			}
-%>	
-	</dd>
     <dd class="make_by">make by <%=value.company.comName%></dd>
 </dl>
 
@@ -60,23 +47,7 @@
                     <div class="mp_sub_rightBox">
                     	<dl class="mp_sub_dsc1">
                         	<dt><%=value.appName%></dt>
-                            <dd>
-                            	<span class="mp_sub_tit">Price : </span>
-                            	<span class="mp_sub_rst">
-<%
-			if(value.pricing == 0){
-%>	
-									<img src="images/marketPlace/icon_free.gif" />
-<%
-			}else{
-%>	
-									\<%=value.pricing%>
-<%
-			}
-%>	                            	
-                            	</span>
-                            </dd>
-                            <dd><span class="mp_sub_tit">bender : </span><span class="mp_sub_rst"><%=value.company.comName%></span></dd>
+                            <dd><span class="mp_sub_tit">vendor : </span><span class="mp_sub_rst"><%=value.company.comName%></span></dd>
                             <!--<dd><span class="mp_sub_tit">Staus :</span><span class="mp_sub_rst">4444444</span></dd>-->
                         </dl>                    
                     </div>
