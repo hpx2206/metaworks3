@@ -12,12 +12,12 @@ import org.metaworks.MetaworksContext;
 import org.metaworks.Remover;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Id;
-import org.metaworks.dao.DAOFactory;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.Login;
+import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitor;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 import com.efsol.util.StringUtils;
@@ -678,6 +678,14 @@ public class Instance extends Database<IInstance> implements IInstance{
 		return processInstanceMonitor;
 	}
 	
+	public InstanceMonitor webflowchart() throws Exception{
+		InstanceMonitor instanceMonitor = new InstanceMonitor();
+		instanceMonitor.processManager = processManager;
+		instanceMonitor.load(this.getInstId().toString());
+		
+		return instanceMonitor;
+	}
+	
 	@Autowired
 	public ProcessManagerRemote processManager;
 	
@@ -1215,6 +1223,21 @@ public class Instance extends Database<IInstance> implements IInstance{
 
 		IInstance instance = (IInstance) sql(Instance.class, sb.toString());
 		instance.setTopicId(topicId);
+		instance.select();
+		
+		return instance; 
+	}
+	
+	public static IInstance loadProcessFormRootInstId(String rootInstId) throws Exception {
+		StringBuffer sb = new StringBuffer();		
+		sb
+		.append("select *")
+		.append("  from bpm_procinst")
+		.append(" where RootInstId = ?RootInstId ")
+		.append("   and defVerId != 'Unstructured.process'");
+
+		IInstance instance = (IInstance) sql(Instance.class, sb.toString());
+		instance.setRootInstId(new Long(rootInstId));
 		instance.select();
 		
 		return instance; 

@@ -14,6 +14,7 @@ import org.metaworks.annotation.Table;
 import org.metaworks.annotation.Test;
 import org.metaworks.dao.IDAO;
 import org.metaworks.widget.ModalWindow;
+import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitor;
 
 @Face(
 		ejsPathMappingByContext=
@@ -37,6 +38,9 @@ public interface IInstance extends IDAO{
 	@ServiceMethod	
 	@Test(scenario="first", starter=true, instruction="$first.FlowChart", next="autowiredObject.org.uengine.codi.mw3.model.InstanceListPanel.switchToKnowledge()")
 	public ProcessInstanceMonitor flowchart() throws Exception;
+	
+	@ServiceMethod
+	public InstanceMonitor webflowchart() throws Exception;
 	
 	@Id
 	public Long getInstId();

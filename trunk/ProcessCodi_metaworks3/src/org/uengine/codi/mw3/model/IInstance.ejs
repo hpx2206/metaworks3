@@ -17,11 +17,19 @@ if(value){
 			lastCmnt2 = lastCmnt2.replaceAll(session.searchKeyword, '<b style=\"background:yellow\">' + session.searchKeyword + '</b>');
 	}
 	 
-	if(mw3.how=="instanceNavigator"){%>
+	if(mw3.how=="instanceNavigator"){
+%>
 	
-<div id="method_<%=objectId%>_flowchart" style="cursor:pointer" onclick="<%=methods.flowchart.caller()%>"><img src="images/waveStyle/i_workitem_i.png" border=0> <%=value.defName%></div>	
+<div id="method_<%=objectId%>_flowchart" style="cursor:pointer" onclick="<%=methods.flowchart.caller()%>"><img src="images/waveStyle/i_workitem_i.png" border=0> <%=value.defName%></div>
+		
+<%
+	}else if(mw3.how=="instanceNavigatorWeb"){
+%>
 	
-	<%
+<div id="method_<%=objectId%>_flowchart" style="cursor:pointer" onclick="<%=methods.webflowchart.caller()%>"><img src="images/waveStyle/i_workitem_i.png" border=0> <%=value.defName%></div>	
+	
+<%
+	
 	}else{
 			
 		var isChat = (value.defId == null && value.secuopt == '1');
