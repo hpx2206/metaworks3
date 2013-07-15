@@ -1422,7 +1422,14 @@ public class Instance extends Database<IInstance> implements IInstance{
 		InstanceEmployeePerformance bizVal = new InstanceEmployeePerformance();
 		
 		bizVal.setInstId(this.getInstId());
-		bizVal.deleteDatabaseMe();
+				
+		try {
+			// TODO: WorkItem 에 의한 Completed 시 insertBV 가 실행되지 않아 오류 발생함. 차후 처리 			
+			bizVal.deleteDatabaseMe();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 }
