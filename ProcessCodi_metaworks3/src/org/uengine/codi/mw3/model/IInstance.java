@@ -2,6 +2,7 @@ package org.uengine.codi.mw3.model;
 
 import java.util.Date;
 
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
@@ -20,8 +21,8 @@ import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitor;
 		ejsPathMappingByContext=
 	{
 		"{where: 'pinterest', face: 'dwr/metaworks/org/uengine/codi/mw3/model/IInstance_pinterest.ejs'}",
+		"{how: 'action', face: 'dwr/metaworks/org/uengine/codi/mw3/model/IInstance_action.ejs'}"
 	}		
-
 )
 @Table(name="bpm_procinst")
 public interface IInstance extends IDAO{
@@ -227,4 +228,25 @@ public interface IInstance extends IDAO{
 	public void split() throws Exception;
 	
 	public void fillFollower();
+	
+
+	/*
+	@ServiceMethod(payload={"instId"}, target=ServiceMethodContext.TARGET_POPUP)
+	public ModalWindow monitor() throws Exception;
+	
+	@ServiceMethod(payload={"instId", "initEp"}, target=ServiceMethodContext.TARGET_POPUP)
+	public Popup schedule() throws Exception;
+	
+	@ServiceMethod(payload={"instId"}, target=ServiceMethodContext.TARGET_POPUP)
+	public Popup newSubInstance() throws Exception;
+
+	@ServiceMethod(payload={"instId", "initEp"}, needToConfirm=true, target=ServiceMethodContext.TARGET_APPEND)
+	public Object[] remove() throws Exception;
+	
+	@ServiceMethod(payload={"instId", "secuopt"}, target=ServiceMethodContext.TARGET_SELF)
+	public void toggleSecurityConversation() throws Exception;
+	
+	@ServiceMethod(payload={"instId", "status"}, target=ServiceMethodContext.TARGET_SELF)
+	public void complete() throws Exception;
+	*/
 }

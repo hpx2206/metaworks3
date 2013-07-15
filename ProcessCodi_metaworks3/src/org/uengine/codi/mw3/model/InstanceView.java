@@ -35,6 +35,14 @@ public class InstanceView {
 	@AutowiredFromClient(onDrop = true)
 	public IInstance dropInstance;
 
+	InstanceTooltip instanceAction;
+		public InstanceTooltip getInstanceAction() {
+			return instanceAction;
+		}
+		public void setInstanceAction(InstanceTooltip instanceAction) {
+			this.instanceAction = instanceAction;
+		}
+
 	public InstanceView() {
 	}		
 		
@@ -51,7 +59,15 @@ public class InstanceView {
 		if(inst.databaseMe().getIsDeleted()){
 			throw new Exception("Deleted Instance");
 		}
-
+		
+		InstanceTooltip instanceTooltip = new InstanceTooltip();
+		instanceTooltip.getMetaworksContext().setHow("action");		
+		instanceTooltip.setInstanceId(instance.getInstId());
+		instanceTooltip.setStatus(inst.getStatus());
+		instanceTooltip.setSecuopt(inst.getSecuopt());
+		
+		this.setInstanceAction(instanceTooltip);
+		
 		setInstanceId(instance.getInstId().toString());
 		setStatus(inst.getStatus());
 		setSecuopt(inst.getSecuopt());
@@ -59,6 +75,8 @@ public class InstanceView {
 		InstanceFollowers followers = new InstanceFollowers();
 		followers.setInstanceId(inst.getInstId().toString());
 		followers.load();
+		
+		this.setFollowers(followers);
 
 		// InstanceView 기본 설정
 		this.loadDefault(inst);
@@ -67,8 +85,6 @@ public class InstanceView {
 			throw new Exception("$NotPermittedToSee");
 		}
 		
-		this.setFollowers(followers);
-
 		/*
 		 * 인스턴스 읽음 표시
 		 */
@@ -265,7 +281,6 @@ public class InstanceView {
 			
 			eventTriggerPanel = new EventTriggerPanel(instance);
 		}
-		
 		
 		instanceNameChanger = new InstanceNameChanger();
 		instanceNameChanger.setInstanceId(this.getInstanceId());
