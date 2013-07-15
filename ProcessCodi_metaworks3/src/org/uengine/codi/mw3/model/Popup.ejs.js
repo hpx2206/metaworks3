@@ -2,7 +2,7 @@ var org_uengine_codi_mw3_model_Popup = function(objectId, className) {
 	this.objectId = objectId;
 	this.className = className;
 	this.divId = "#objDiv_" + this.objectId;
-	this.divObj = $("#objDiv_" + this.objectId).parent();
+	this.divObj = $("#objDiv_" + this.objectId).closest('.target_popup');
 	
 	var modalWindow = $('.ui-dialog');
 	
