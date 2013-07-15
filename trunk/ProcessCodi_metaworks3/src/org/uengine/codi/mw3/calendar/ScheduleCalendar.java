@@ -137,8 +137,8 @@ public class ScheduleCalendar implements ContextAware {
 							"wl.ext8, wl.ext9, wl.ext10, wl.prttskid,  wl.grptaskid, wl.execscope, " +
 							"wl.savedate, wl.apr_type,  wl.abstract,  wl.type,  wl.content, wl.extfile, " +
 							"wl.prevver, wl.nextver,  wl.majorver, wl.minorver,  pi.name instnm , pi.status instancestatus " +
-						"from bpm_worklist wl, bpm_procinst pi " +
-						"where wl.instid = pi.instid and wl.endpoint='admin@nipa.or.kr' " +
+							"from bpm_worklist wl, bpm_procinst pi " +
+							"where wl.instid = pi.instid and wl.endpoint=?endpoint " +
 							"and pi.isdeleted != 1 and wl.duedate is not null";
 		IWorkItem workitems = schedule.sql(wsql);
 		workitems.setEndpoint(userId);
