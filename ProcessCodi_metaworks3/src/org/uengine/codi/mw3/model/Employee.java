@@ -710,14 +710,20 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	
 	@Override
 	public Login unsubscribe() throws Exception {
-//		deleteDatabaseMe();		
-		Employee employee = new Employee();
-		employee.setEmpCode(this.empCode);
-		employee.databaseMe().setIsDeleted("1");		
+//		deleteDatabaseMe();	
 		
-		Login login = new Login();
-//		login.getMetaworksContext().setWhen("edit");
-		return login;
+		if(session.getEmployee().getEmpCode().equals(this.getEmpCode()) || session.employee.getIsAdmin()) {
+			
+			Employee employee = new Employee();
+			employee.setEmpCode(this.empCode);		
+			employee.databaseMe().setIsDeleted("1");		
+			
+			Login login = new Login();
+//			login.getMetaworksContext().setWhen("edit");
+			return login;
+		}
+		else
+			throw new Exception("관리자나 본인이 아니면 탈퇴할 수 없습니다");		
 	}	
 	
 	public Object[] logout() throws Exception{
