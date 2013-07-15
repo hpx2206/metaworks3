@@ -122,6 +122,7 @@ public interface IWorkItem extends IDAO{
 						"generic",
 						"memo",
 						"ovryCmnt",
+						"replyCmnt",
 						"remoteConf"
 					}, 
 				classes = 		{ 
@@ -136,6 +137,7 @@ public interface IWorkItem extends IDAO{
 						GenericWorkItem.class,
 						MemoWorkItem.class,
 						OverlayCommentWorkItem.class,
+						ReplyOverlayCommentWorkItem.class,
 						RemoteConferenceWorkItem.class
 					} 
 		)
@@ -179,7 +181,7 @@ public interface IWorkItem extends IDAO{
 			databaseFields = {"prtTskId", "ext1", "ext2"}, 
 			objectFields = {"parentTaskId", "x", "y"},
 			objectIsNullWhenFirstDBFieldIsNull = true,
-			availableWhen = "type=='" + OverlayCommentWorkItem.TYPE + "'"		
+			availableWhen = {"type=='" + OverlayCommentWorkItem.TYPE + "'" , "type=='" + ReplyOverlayCommentWorkItem.TYPE + "'"}		
 		)
 		public OverlayCommentOption getOverlayCommentOption();
 		public void setOverlayCommentOption(OverlayCommentOption overlayCommentOption);

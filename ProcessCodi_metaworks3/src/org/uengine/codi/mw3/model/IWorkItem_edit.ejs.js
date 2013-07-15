@@ -53,7 +53,6 @@ var org_uengine_codi_mw3_model_IWorkItem_edit = function(objectId, className){
 		}, 1000);
 	}else if(value.type == 'comment'){
 		var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");		
-		console.log(session);
 		if( session.ux != 'phone' &&  session.ux != 'pad' ){
 			$("#post_" + this.objectId).bind("keydown", {instanceFirst: this.instanceFirst}, function(event){
 				if (event.keyCode == 13 && !event.shiftKey) {

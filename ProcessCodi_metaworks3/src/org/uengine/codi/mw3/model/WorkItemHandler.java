@@ -204,6 +204,23 @@ public class WorkItemHandler implements ContextAware{
 		public void setRootInstId(Long rootInstId) {
 			this.rootInstId = rootInstId;
 		}
+		
+	String replyFieldName;
+		@Hidden
+		public String getReplyFieldName() {
+			return replyFieldName;
+		}
+		public void setReplyFieldName(String replyFieldName) {
+			this.replyFieldName = replyFieldName;
+		}
+	String replyTitle;
+		@Hidden
+		public String getReplyTitle() {
+			return replyTitle;
+		}
+		public void setReplyTitle(String replyTitle) {
+			this.replyTitle = replyTitle;
+		}
 
 	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_EDIT)
 	public Object[] cancel() throws Exception{
@@ -434,7 +451,7 @@ public class WorkItemHandler implements ContextAware{
 	public InstanceViewContent instanceViewContent;
 	
 			
-	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_EDIT)
+	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_EDIT )
 	public void save() throws RemoteException, ClassNotFoundException, Exception{
 		
 		ResultPayload rp = new ResultPayload();
@@ -486,7 +503,25 @@ public class WorkItemHandler implements ContextAware{
 		
 		return instanceViewContent;
 	}
-	
+	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_EDIT , target=ServiceMethodContext.TARGET_NONE)
+	public ReplyOverlayCommentWorkItem comment() throws Exception{
+		
+		OverlayCommentOption overlayCommentOption = new OverlayCommentOption();
+		overlayCommentOption.setParentTaskId(getTaskId());
+		
+		ReplyOverlayCommentWorkItem replyOverlayCommentWorkItem = new ReplyOverlayCommentWorkItem();
+		replyOverlayCommentWorkItem.session = session;
+		replyOverlayCommentWorkItem.processManager = processManager;
+		replyOverlayCommentWorkItem.setOverlayCommentOption(overlayCommentOption);
+		replyOverlayCommentWorkItem.setInstId(new Long(getInstanceId()));
+		replyOverlayCommentWorkItem.setTitle(replyTitle);
+		replyOverlayCommentWorkItem.setExt1(replyFieldName);
+		replyOverlayCommentWorkItem.add();
+		
+		replyOverlayCommentWorkItem.getMetaworksContext().setWhen("edit");
+		
+		return replyOverlayCommentWorkItem;
+	}
 			
 	@Autowired
 	transient public ProcessManagerRemote processManager;
