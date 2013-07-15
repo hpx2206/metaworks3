@@ -93,8 +93,8 @@
 		
 		<div id="btnline" style="padding-top:8px; border-top:1px solid #ccc;">
 			<ul>	
-				<li><a id="wBtn" href="#" onClick="<%=methods.saveDeptInfo.caller()%>"><span>saveDeptInfo</span></a></li>	
-				
+				<li><a id="wBtn" href="#" onClick="<%=methods.saveDeptInfo.caller()%>"><span><% if(mw3.when == 'new') {%><%=mw3.localize('$saveDeptInfo')%><%}else{%><%=mw3.localize('$editDeptInfo')%><%}%></span></a>
+				</li>					
 			</ul>
 		</div>
 
