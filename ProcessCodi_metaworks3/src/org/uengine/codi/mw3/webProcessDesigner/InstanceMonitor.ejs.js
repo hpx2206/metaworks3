@@ -42,7 +42,8 @@ var org_uengine_codi_mw3_webProcessDesigner_InstanceMonitor = function(objectId,
         labelEditable   : false,
         groupDropable   : false,
         collapsible     : false,
-        enableHotKey    : false
+        enableHotKey    : false,
+        enableContextMenu : false
     });
 	
 	canvas.onDrawShape(function (event, shapeElement) {
