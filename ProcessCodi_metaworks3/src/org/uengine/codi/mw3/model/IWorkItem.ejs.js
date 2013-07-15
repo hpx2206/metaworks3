@@ -40,8 +40,10 @@ var org_uengine_codi_mw3_model_IWorkItem = function(objectId, className){
 	
 	if(contentLoad)
 		mw3.call(this.objectId, 'loadContents');
-	else
-		this.objectDiv.trigger('loaded.workitem_' + workItem.taskId);
+	else{
+		if(!this.object.more)
+			this.objectDiv.trigger('loaded.workitem_' + workItem.taskId);
+	}
 };
 
 org_uengine_codi_mw3_model_IWorkItem.prototype = {
