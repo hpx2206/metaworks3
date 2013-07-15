@@ -1,0 +1,23 @@
+<%
+    if( mw3.when == 'edit' ){
+%>
+        <table>
+            <tr>
+                <td>댓글 : </td>
+                <td><textarea class="post_<%=objectId%>" class="<%=value.type%>" _placeholder="<%=mw3.localize('$WhatYouThinkNow')%>" id="post_<%=objectId%>" value="<%=value.title ? value.title : ''%>" tabindex=1 rows="1" style="font-size:10pt !important; width:97%; height:18px; line-height:18px; -webkit-border-radius:3px; outline:none;  webkit-border-radius:3px; border:1px solid #ccd; none;"><%=value.title ? value.title : ''%></textarea></td>
+                <td>
+                    <img src="images/waveStyle/apply.png" onclick="<%= methods.saveReply.caller() %>" />
+                    <img src="images/waveStyle/delete.png" onclick="mw3.getFaceHelper('<%=objectId%>').deleteReply()" />
+                </td>
+            </tr>
+        </table>
+<%
+    }else if( mw3.when == 'view' ){
+%>
+        <%=fields.writer.here({when:'followers'})%>
+            title = <%=value.title%>
+<%
+    }
+%>
+
+ssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss

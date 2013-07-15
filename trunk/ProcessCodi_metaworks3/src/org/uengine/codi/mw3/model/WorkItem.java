@@ -78,13 +78,12 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		sql.append("  from bpm_worklist");
 		sql.append(" where rootInstId=?instId");
 		sql.append("   and isdeleted!=?isDeleted");
-		sql.append("   and type=?type");
+		sql.append("   and type in ('ovryCmnt' , 'replyCmnt') ");
 		sql.append(" order by taskId");
 		
 		IWorkItem workitem = (IWorkItem) Database.sql(IWorkItem.class, sql.toString());
 		
 		workitem.set("instId", instanceId);
-		workitem.set("type", "ovryCmnt");		
 		workitem.set("isDeleted",1);
 		
 		
@@ -109,7 +108,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		sql.append("  from bpm_worklist");
 		sql.append(" where rootInstId=?instId");
 		sql.append("   and isdeleted!=?isDeleted");		
-		sql.append("   and (type!=?type or type is null)");
+		sql.append("   and (type  not in ('ovryCmnt' , 'replyCmnt') or type is null)");
 		sql.append(" order by taskId desc");
 		sql.append(" limit " + (count + 1));
 		sql.append(") worklist order by taskId ");
@@ -117,7 +116,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		IWorkItem workitem = (IWorkItem) Database.sql(IWorkItem.class, sql.toString());
 		
 		workitem.set("instId", instanceId);
-		workitem.set("type", "ovryCmnt");		
 		workitem.set("isDeleted",1);
 		
 		
