@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Properties;
 
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
@@ -20,6 +21,21 @@ import org.uengine.processmanager.ProcessManagerRemote;
 import org.uengine.util.UEngineUtil;
 
 public class InstanceMonitor {
+	static Properties statusColors = new Properties();
+	static{
+		statusColors.setProperty(Activity.STATUS_READY, 	"#5F6061");
+		statusColors.setProperty(Activity.STATUS_COMPLETED, "#888888");
+		statusColors.setProperty(Activity.STATUS_RUNNING, 	"#027dbc");
+		statusColors.setProperty(Activity.STATUS_FAULT, 	"#ee2020");
+		statusColors.setProperty(Activity.STATUS_SKIPPED, 	"#2020aa");
+		statusColors.setProperty(Activity.STATUS_SUSPENDED, "#20cccc");
+		statusColors.setProperty(Activity.STATUS_TIMEOUT, 	"#aaaa20");
+		statusColors.setProperty(Activity.STATUS_RETRYING, 	"#ee2020");
+	}
+	public static String getStatusColor(String status){		
+		return statusColors.getProperty(status);
+	}
+	
 	CanvasDTO cell[];
 	public CanvasDTO[] getCell() {
 		return cell;
@@ -84,7 +100,7 @@ public class InstanceMonitor {
 					//				instance.getStatus(activity.getTracingTag());
 					status = instance.getStatus(tracingTag);
 					cells[i].setInstStatus(status);
-					cells[i].setBackgroundColor( dav.getStatusColor(status) );
+					cells[i].setBackgroundColor( getStatusColor(status) );
 				}
 			}
 			// canvas setting
