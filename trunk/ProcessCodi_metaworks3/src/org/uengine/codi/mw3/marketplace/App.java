@@ -5,19 +5,18 @@ import java.util.Date;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
-import org.metaworks.Remover;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.component.SelectBox;
 import org.metaworks.dao.Database;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalPanel;
-import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.ITool;
+import org.uengine.codi.mw3.admin.PageNavigator;
+import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.knowledge.IProjectNode;
 import org.uengine.codi.mw3.knowledge.IWfNode;
-import org.uengine.codi.mw3.knowledge.ProjectInfo;
 import org.uengine.codi.mw3.knowledge.ProjectNode;
 import org.uengine.codi.mw3.knowledge.WfNode;
 import org.uengine.codi.mw3.marketplace.category.Category;
@@ -252,7 +251,7 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 		sql.append("select * from app");
 		sql.append(" where isdeleted=?isdeleted");
 		sql.append(" 	and comcode=?comcode");
-		sql.append(" order by installCnt desc");
+		sql.append(" order by appid desc");
 		
 		IApp findListings = (IApp) Database.sql(IApp.class, sql.toString());
 		
@@ -480,83 +479,98 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 	
 	public Object[] addApp()throws Exception {
 		
-		App app = new App();
-		app.setAppId(this.getAppId());
-		app.setAppName(this.getAppName());
-		app.setComcode(session.getCompany().getComCode());
-		app.setInstallCnt(this.getInstallCnt());
-		app.setAppId(this.getAppId());
-		app.setAppName(this.getAppName());
-		app.setSimpleOverview(this.getSimpleOverview());
-		app.setFullOverview(this.getFullOverview());
-		app.setPricing(this.getPricing());
-		app.setLogoFile(this.getLogoFile());
-		app.setCategory(this.getCategory());
-		
-//		AppInformation setAppInfo = new AppInformation();
+//		App app = new App();
+//		app.setAppId(this.getAppId());
+//		app.setAppName(this.getAppName());
+//		app.setComcode(session.getCompany().getComCode());
+//		app.setInstallCnt(this.getInstallCnt());
+//		app.setAppId(this.getAppId());
+//		app.setAppName(this.getAppName());
+//		app.setSimpleOverview(this.getSimpleOverview());
+//		app.setFullOverview(this.getFullOverview());
+//		app.setPricing(this.getPricing());
+//		app.setLogoFile(this.getLogoFile());
+//		app.setCategory(this.getCategory());
 //		
-//		setAppInfo.getMetaworksContext().setWhen("view");
+////		AppInformation setAppInfo = new AppInformation();
+////		
+////		setAppInfo.getMetaworksContext().setWhen("view");
+////		
+////		setAppInfo.setAppId(this.getAppId());
+////		setAppInfo.setAppName(this.getAppName());
+////		setAppInfo.setSimpleOverview(this.getSimpleOverview());
+////		setAppInfo.setFullOverview(this.getFullOverview());
+////		setAppInfo.setPricing(this.getPricing());
+////		setAppInfo.setLogoFile(this.getLogoFile());
+////		setAppInfo.setCategory(this.getCategory());
 //		
-//		setAppInfo.setAppId(this.getAppId());
-//		setAppInfo.setAppName(this.getAppName());
-//		setAppInfo.setSimpleOverview(this.getSimpleOverview());
-//		setAppInfo.setFullOverview(this.getFullOverview());
-//		setAppInfo.setPricing(this.getPricing());
-//		setAppInfo.setLogoFile(this.getLogoFile());
-//		setAppInfo.setCategory(this.getCategory());
+//		String defId = "AppAcquisition.process";
+//		
+//		ProcessMap goProcess = new ProcessMap();
+//		goProcess.session = session;
+//		goProcess.processManager = processManager;
+//		goProcess.instanceView = instanceView;
+//		goProcess.setDefId(defId);
+//		
+//		
+//		// 프로세스 발행
+//	    Long instId = Long.valueOf(goProcess.initializeProcess());
+//	    
+//	    // 프로세스 실행
+//	    ResultPayload rp = new ResultPayload();
+//	    rp.setProcessVariableChange(new KeyedParameter("requestAquisitionApp", app));
+//	    
+//	    //무조건 compleate
+//	    processManager.executeProcessByWorkitem(instId.toString(), rp);
+//	    processManager.applyChanges();
+//	    
+//	    
+//	    ModalWindow removeWindow = new ModalWindow();
+//		removeWindow.setId("subscribe");
+//		
+//		ModalWindow modalWindow = new ModalWindow();
+//		modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+//		modalWindow.setWidth(300);
+//		modalWindow.setHeight(150);
+//		
+//		modalWindow.setTitle("앱취득 신청 완료");
+//		
+//		String panelMessage = "";
+//		
+//		ProjectInfo info = new ProjectInfo(String.valueOf(this.getAppId()));
+//		info.load();
+//		
+//		String url = "http://" + session.getCompany().getComName() + "." + info.getDomainName() + ":9090/uengine-web"; 
+//				
+//		panelMessage = "앱 취득 신청이 완료 되었습니다. 관리자 승인 후 이용이 가능합니다.";		
+//		panelMessage += "url: <a href='" + url + "'>" + url + "</a>";
+//		
+//		modalWindow.setPanel(panelMessage);
+//		modalWindow.getButtons().put("$Confirm", this);
+//		
+//		return new Object[] {modalWindow, new Remover(removeWindow, true)};
 		
-		String defId = "AppAcquisition.process";
 		
-		ProcessMap goProcess = new ProcessMap();
-		goProcess.session = session;
-		goProcess.processManager = processManager;
-		goProcess.instanceView = instanceView;
-		goProcess.setDefId(defId);
+		AppMapping appmapping = new AppMapping();
 		
+		appmapping.setAppId(this.getAppId());
+		appmapping.setAppName(this.getAppName());
+		appmapping.setComCode(session.getCompany().getComCode());
+		appmapping.setIsDeleted(false);
+
+		appmapping.createDatabaseMe();
+		appmapping.flushDatabaseMe();
 		
-		// 프로세스 발행
-	    Long instId = Long.valueOf(goProcess.initializeProcess());
-	    
-	    // 프로세스 실행
-	    ResultPayload rp = new ResultPayload();
-	    rp.setProcessVariableChange(new KeyedParameter("requestAquisitionApp", app));
-	    
-	    //무조건 compleate
-	    processManager.executeProcessByWorkitem(instId.toString(), rp);
-	    processManager.applyChanges();
-	    
-	    
-	    ModalWindow removeWindow = new ModalWindow();
-		removeWindow.setId("subscribe");
+		PageNavigator pageNavigator = new PageNavigator();
+		pageNavigator.setSession(session);
 		
-		ModalWindow modalWindow = new ModalWindow();
-		modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-		modalWindow.setWidth(300);
-		modalWindow.setHeight(150);
+		return new Object[]{new MainPanel(pageNavigator.goAppMap())};
 		
-		modalWindow.setTitle("앱취득 신청 완료");
-		
-		String panelMessage = "";
-		
-		ProjectInfo info = new ProjectInfo(String.valueOf(this.getAppId()));
-		info.load();
-		
-		String url = "http://" + session.getCompany().getComName() + "." + info.getDomainName() + ":9090/uengine-web"; 
-				
-		panelMessage = "앱 취득 신청이 완료 되었습니다. 관리자 승인 후 이용이 가능합니다.";		
-		panelMessage += "url: <a href='" + url + "'>" + url + "</a>";
-		
-		modalWindow.setPanel(panelMessage);
-		modalWindow.getButtons().put("$Confirm", this);
-		
-		return new Object[] {modalWindow, new Remover(removeWindow, true)};
-	    
 	}
 
 	@Override
 	public void onLoad() throws Exception {
-		if (MetaworksContext.WHEN_VIEW.equals(this.getMetaworksContext()
-				.getWhen())) {
+		if (MetaworksContext.WHEN_VIEW.equals(this.getMetaworksContext().getWhen())) {
 			
 			if(this.getLogoFile() == null){
 				this.setLogoFile(new MetaworksFile());
