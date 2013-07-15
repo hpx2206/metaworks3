@@ -10,4 +10,5 @@ var org_uengine_codi_mw3_webProcessDesigner_InstanceMonitorPanel = function(obje
 		return true;	
 
 	this.objectDiv.css({'position': 'relative', 'height': '100%'});
+	this.objectDiv.parent().css({'padding': '0px'});
 };
