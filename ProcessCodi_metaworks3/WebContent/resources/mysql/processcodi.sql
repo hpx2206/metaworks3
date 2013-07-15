@@ -760,5 +760,7 @@ CREATE TABLE oauth_token (
 	access_token VARCHAR(300) NOT NULL
 );
 
+alter table app add comname varchar(200);
+
 
 alter table emptable add guest int(1);
