@@ -1,6 +1,9 @@
 package org.uengine.codi.mw3.model;
 
+import java.math.BigInteger;
 import java.net.URL;
+import java.security.SecureRandom;
+import java.util.Properties;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
@@ -10,6 +13,7 @@ import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.TransactionContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.webservices.emailserver.impl.EMailServerSoapBindingImpl;
 
 @Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs", options={"title", "fieldOrder"}, values={"$InviteYourFriend", "title,name,email,guest"})
@@ -73,6 +77,15 @@ public class Invitation implements ContextAware{
 	@AutowiredFromClient
 	public Session session;
 	
+	@Autowired
+    public Locale locale;
+	
+	//randomPassword()생성
+	public String randomPassword(){
+	    SecureRandom random = new SecureRandom();
+	    return new BigInteger(40, random).toString(32);
+	}
+	
 	
 	@ServiceMethod(callByContent=true, target="popup")
 	@Face(displayName="$Invite")
@@ -85,17 +98,29 @@ public class Invitation implements ContextAware{
 		if(alreadyExistChecker.next()){
 			throw new Exception("$AlreadyExistingUser");
 		}
+				
+		String defaultUX = "wave";
+		String defaultMob = "auto";
 		
 		Employee newUser = new Employee();
 		newUser.setEmail(getEmail());
 		newUser.setEmpCode(getEmail());
 		newUser.setEmpName(getName());
-		newUser.setPassword("generated");
+		newUser.setPreferUX(defaultUX);
+		newUser.setPreferMob(defaultMob);
+		newUser.setPassword(randomPassword());
 		newUser.setGlobalCom(session.getCompany().getComCode());
 		newUser.setLocale(session.getEmployee().getLocale());
 		newUser.setApproved(true);
 		newUser.setGuest(this.isGuest());
 		newUser.createDatabaseMe();
+		
+		locale = new Locale(); 
+		Properties prop = locale.webMessageBundles.get(session.getEmployee().getLocale()); 
+		String EmailInviteMsgTitle = prop.getProperty("EmailInviteMsgTitle"); 
+		String EmailInviteMsg = prop.getProperty("EmailInviteMsg");
+		String EmailTempPw = prop.getProperty("EmailTempPw");
+		String EmailChangePw = prop.getProperty("EmailChangePw");
 		
 		
 		String requestedURL = TransactionContext.getThreadLocalInstance().getRequest().getRequestURL().toString(); 
@@ -109,17 +134,18 @@ public class Invitation implements ContextAware{
 		String url = protocol + "://" + host + (port == 80 ? "" : ":"+port) + TransactionContext.getThreadLocalInstance().getRequest().getContextPath();
 
 		try{
-			url = url + "?codi.id=" + getEmail() + "&codi.password=" + newUser.getPassword();
+		    url = url + "?codi.id=" + getEmail() + "&codi.password=" + newUser.getPassword();
 			
-			(new EMailServerSoapBindingImpl()).sendMail(
-				session.getEmployee().getEmail(), 
-				session.getUser().getName(),
-				getEmail(), 
-				"[ProcessCodi] You are invited by " + session.getUser().getName(), 
-				"<p><a href='" + url + "'>Connect to Process Codi to join with your team!</a>", 
-				null, 
-				null,
-				"UTF-8"
+			(new EMailServerSoapBindingImpl()).sendMail(session.getEmployee().getEmail(), 
+						session.getUser().getName(),
+						getEmail(), 
+						EmailInviteMsgTitle + session.getUser().getName(), 
+						"<p><a href='" + url + "'>"+EmailInviteMsg+"</a><br/>"
+						+EmailTempPw + newUser.getPassword()+"<br/>"
+						+EmailChangePw, 
+						null, 
+						null,
+						"UTF-8"
 			);
 		}catch(Exception e){
 			throw new Exception("$FailedToSendInvitationMail");
