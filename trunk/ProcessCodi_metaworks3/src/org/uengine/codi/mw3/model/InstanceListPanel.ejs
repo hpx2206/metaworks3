@@ -4,8 +4,14 @@
 		
 	var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
 	var isTopic = (mw3.how == "topic");
+	var isProject = (mw3.how == "project");
 	
-	var height = isTopic?136:68;
+	var height = 68;
+	if(isTopic) {
+		height = 115;
+	}else if(isProject){
+		height = 136;
+	}
 	
 %>
 
@@ -53,7 +59,7 @@
                 	</div> 
                 	
                 	<%
-                		if(isTopic){
+                		if(isProject){
 					%>  
 						 <div id="project_Info" class="toolbar" onclick="<%=methods.loadProjectInfo.caller()%>" style="text-align:center;line-height:20px;cursor:pointer">
 		                    Project info. ▼
