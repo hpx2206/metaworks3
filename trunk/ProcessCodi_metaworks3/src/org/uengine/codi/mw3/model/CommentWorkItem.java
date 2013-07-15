@@ -125,9 +125,6 @@ public class CommentWorkItem extends WorkItem{
 		return returnObjects;
 	}
 	
-	@Autowired
-	public InstanceViewContent instanceViewContent;
-
 	@Test(scenario="first", starter=true, instruction="$first.NewActivity", next="autowiredObject.org.uengine.codi.mw3.model.IProcessMap@IssueManagement.process.initiate()")
 	public Popup newActivity() throws Exception {
 		// TODO Auto-generated method stub

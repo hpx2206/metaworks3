@@ -6,18 +6,26 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import javax.sql.RowSet;
+
 import org.directwebremoting.Browser;
 import org.directwebremoting.ScriptSessions;
 import org.metaworks.MetaworksContext;
+import org.metaworks.Refresh;
 import org.metaworks.Remover;
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Id;
+import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.TransactionContext;
+import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.Login;
+import org.uengine.codi.mw3.filter.AllSessionFilter;
 import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitor;
+import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitorPanel;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 import com.efsol.util.StringUtils;
@@ -40,11 +48,13 @@ public class Instance extends Database<IInstance> implements IInstance{
 	
 	@AutowiredFromClient
 	public Session session;
-	
+
+	@AutowiredFromClient
+	public Locale localeManager;
+
 	public Instance(){
 		
-	}
-	
+	}	
 	static public IInstance load(Navigation navigation, int page, int count)
 			throws Exception {
 		
@@ -1241,5 +1251,178 @@ public class Instance extends Database<IInstance> implements IInstance{
 		instance.select();
 		
 		return instance; 
+	}
+	
+	public ModalWindow monitor() throws Exception{
+
+		InstanceMonitorPanel processInstanceMonitorPanel = new InstanceMonitorPanel();
+		processInstanceMonitorPanel.load(this.getInstId().toString(), session, processManager);
+		
+		return new ModalWindow(processInstanceMonitorPanel, 1024, 768, "Process Monitoring");
+	}
+	
+	public Popup schedule() throws Exception{
+		
+		IInstance instanceRef = databaseMe();
+		
+		if(!instanceRef.getInitEp().equals(session.getUser().getUserId())  && !(session.getEmployee()!=null && session.getEmployee().getIsAdmin())){
+			throw new Exception("$OnlyInitiatorCanSetDueDate");
+		}
+				
+		InstanceDueSetter ids = new InstanceDueSetter();
+		ids.setInstId(this.getInstId());
+		ids.setDueDate(instanceRef.getDueDate());
+		ids.setBenefit(instanceRef.getBVBenefit());
+		ids.setPenalty(instanceRef.getBVPenalty());
+		ids.setEffort(instanceRef.getEffort());
+		ids.setOnlyInitiatorCanComplete(instanceRef.isInitCmpl());
+		ids.setProgress(instanceRef.getProgress());
+		
+		if("sns".equals(session.getEmployee().getPreferUX()) ){
+			ids.getMetaworksContext().setHow("instanceList");
+			ids.getMetaworksContext().setWhere("sns");
+		}
+		ids.getMetaworksContext().setWhen("edit");
+		
+		return new Popup(400,300,ids);
+	}
+	
+	public Popup newSubInstance() throws Exception{
+		ProcessMapList processMapList = new ProcessMapList();
+		processMapList.load(session);
+		processMapList.setParentInstanceId(this.getInstId());
+		
+		Popup popup = new Popup();
+		popup.setPanel(processMapList);
+		
+		return popup;
+	}
+	
+	public Object[] remove() throws Exception{
+
+		IInstance instanceRef = databaseMe();
+		
+		if(!instanceRef.getInitEp().equals(session.getUser().getUserId())  && !(session.getEmployee()!=null && session.getEmployee().getIsAdmin())){
+			throw new Exception("$OnlyInitiatorCanDeleteTheInstance");
+		}
+		
+		processManager.stopProcessInstance(this.getInstId().toString());
+
+		databaseMe().setIsDeleted(true);
+		flushDatabaseMe();
+		
+		/* 내가 할일 카운트 다시 계산 */
+		TodoBadge todoBadge = new TodoBadge();
+		todoBadge.session = session;
+		todoBadge.refresh();
+
+		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new Refresh(todoBadge)});			
+		
+		if(!"sns".equals(session.getEmployee().getPreferUX())){
+			NewInstancePanel instancePanel = new NewInstancePanel();
+			instancePanel.load(session);
+			
+			return new Object[]{new Remover(this), new Refresh(new ContentWindow(instancePanel))};
+		}else{
+			return new Object[]{new Remover(this)};
+		}
+	}
+	
+	public void toggleSecurityConversation() throws Exception{
+		String secuopt = this.getSecuopt();
+		if (secuopt.charAt(0) != '0') {
+			databaseMe().setSecuopt("0");
+		} else {
+			databaseMe().setSecuopt("1");
+		}
+	}
+	
+	public void complete() throws Exception{
+
+		IInstance instanceRef = databaseMe();
+				
+		if(instanceRef.isInitCmpl() && !session.getUser().getUserId().equals(instanceRef.getInitEp())){
+			throw new Exception("$OnlyInitiatorCanComplete");
+		}
+		
+		String tobe = null;
+		String title = null;
+		
+		if(getStatus().equals("Completed")){
+			tobe = "Running";
+			title = localeManager.getResourceBundle().getProperty("CancleCompleted");
+		}else{
+			tobe = "Completed";
+			title = localeManager.getResourceBundle().getProperty("CompletedDate");
+		}
+			
+		// add comment schedule changed
+		CommentWorkItem workItem = new CommentWorkItem();
+		workItem.getMetaworksContext().setHow("changeSchedule");
+		workItem.session = session;
+		workItem.processManager = processManager;
+		
+		workItem.setInstId(this.getInstId());
+		workItem.setTitle(title);
+		workItem.add();
+		workItem.flushDatabaseMe();
+		
+		// instance update flush
+		instanceRef.setStatus(tobe);
+
+		//this.load(instanceRef);
+		//this.setStatus(tobe);
+
+		//MetaworksRemoteService.pushClientObjects(new Object[]{new InstanceListener(InstanceListener.COMMAND_REFRESH, instance)});
+		MetaworksRemoteService.pushClientObjectsFiltered(
+				new AllSessionFilter(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom())),
+				new Object[]{new InstanceListener(InstanceListener.COMMAND_REFRESH, instanceRef)});
+
+		/* 내가 할일 카운트 다시 계산 */
+		TodoBadge todoBadge = new TodoBadge();
+		todoBadge.session = session;
+		todoBadge.refresh();
+
+		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()),
+				new Object[]{new Refresh(todoBadge), new WorkItemListener(workItem)});			
+		
+		//inst_emp_perf 테이블에 성과정보 저장 insert
+		int businessValue = instanceRef.getBVBenefit() + instanceRef.getBVPenalty();
+		
+		if(tobe.equals("Running")){
+			deleteBV();
+		}else if (tobe.equals("Completed")){
+			insertBV(businessValue);
+		}
+	}
+	
+	private void insertBV(int businessValue) throws Exception{
+		IRoleMapping allFollower = RoleMapping.allFollower(this.getInstId());
+		RowSet rowset = allFollower.getImplementationObject().getRowSet();
+		
+		InstanceEmployeePerformance bizVal = new InstanceEmployeePerformance();
+		
+		if(allFollower.size() > 0){
+			int eachBV = businessValue/ allFollower.size();
+
+			
+			while(rowset.next()){
+				bizVal.setInstId(rowset.getLong("instId"));
+				bizVal.setEmpCode(rowset.getString("endPoint"));
+				bizVal.setBusinessValue(eachBV);
+				
+				bizVal.createDatabaseMe();
+			}
+
+		}
+		
+	}
+		
+	private void deleteBV() throws Exception{
+		InstanceEmployeePerformance bizVal = new InstanceEmployeePerformance();
+		
+		bizVal.setInstId(this.getInstId());
+		bizVal.deleteDatabaseMe();
+		
 	}
 }
