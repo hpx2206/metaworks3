@@ -13,6 +13,7 @@ import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.editor.metadata.MetadataEditor;
 import org.uengine.codi.mw3.ide.editor.process.ProcessEditor;
+import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitor;
 import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitorPanel;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
@@ -37,15 +38,14 @@ public class ProcessProperty extends MetadataProperty{
 		public void setValue(String value) {
 			this.value = value;
 		}
-	InstanceMonitorPanel processInstanceMonitorPanel;
+	InstanceMonitor processInstanceMonitor;
 	@Hidden
-		public InstanceMonitorPanel getProcessInstanceMonitorPanel() {
-			return processInstanceMonitorPanel;
-		}
-		public void setProcessInstanceMonitorPanel(
-				InstanceMonitorPanel processInstanceMonitorPanel) {
-			this.processInstanceMonitorPanel = processInstanceMonitorPanel;
-		}
+	public InstanceMonitor getProcessInstanceMonitor() {
+		return processInstanceMonitor;
+	}
+	public void setProcessInstanceMonitor(InstanceMonitor processInstanceMonitor) {
+		this.processInstanceMonitor = processInstanceMonitor;
+	}
 
 	@Available(when = MetaworksContext.WHEN_VIEW)
 	@ServiceMethod(callByContent = true, target=ServiceMethodContext.TARGET_POPUP)
@@ -107,10 +107,10 @@ public class ProcessProperty extends MetadataProperty{
 		
 		}else {
 			
-			InstanceMonitorPanel processInstanceMonitorPanel = new InstanceMonitorPanel();
-			processInstanceMonitorPanel.loadProcess(this.getValue());
-			this.setProcessInstanceMonitorPanel(processInstanceMonitorPanel);
-			setFilePreview(processInstanceMonitorPanel);
+			InstanceMonitor processInstanceMonitor = new InstanceMonitor();
+			processInstanceMonitor.loadProcess(this.getValue());
+			this.setProcessInstanceMonitor(processInstanceMonitor);
+			setFilePreview(processInstanceMonitor);
 			
 		}
 	}
