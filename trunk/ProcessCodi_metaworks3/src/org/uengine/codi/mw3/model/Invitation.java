@@ -16,7 +16,6 @@ import org.metaworks.dao.TransactionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.webservices.emailserver.impl.EMailServerSoapBindingImpl;
 
-@Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs", options={"title", "fieldOrder"}, values={"$InviteYourFriend", "title,name,email,guest"})
 public class Invitation implements ContextAware{
 	
 	MetaworksContext metaworksContext;

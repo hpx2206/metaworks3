@@ -15,28 +15,26 @@
                             <tbody>
                                 <tr height="25" valign="middle">
                                     <td bgcolor="white">
-                                            <input id="_mapped_input_for_719" value="" style="border:1px solid #ccd; none;background:transparent" placeholder="성함 ">
+                                            <%=fields.email.here()%>
                                        
                                         </td>
                                 </tr>
                                 <tr height="25" valign="middle">
                                     <td bgcolor="white">
-                                            <input id="_mapped_input_for_720" value="" style="border:1px solid #ccd; none;background:transparent" placeholder="이메일 ">
-                                       
+                                            <%=fields.name.here()%>                                       
                                         </td>
                                 </tr>
                                 <tr height="25" valign="middle">
                                     <td bgcolor="white">
-                                            Guest 여부 : <input name="" type="checkbox" value="" />
-                                       
-                                        </td>
+                                            Guest 여부 : <%=fields.guest.here()%>                                       
+                                    </td>
                                 </tr>
                             </tbody>
                         </table></td>
                 </tr>
                 <tr>
                     <td>
-                    	<div class="positionRight"><a id="wBtn" href="#" onclick=""><span>초대하기</span></a></div>
+                    	<div class="positionRight"><a id="wBtn" href="#" onclick="<%=methods.invite.caller()%>"><span>초대하기</span></a></div>
                     
                     </td>
                 </tr>
