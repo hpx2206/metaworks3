@@ -135,7 +135,7 @@
 										(value.file.mimeType.indexOf('ms')>0 || value.file.mimeType.indexOf('officedocument')>0 || 
 							 			 value.file.mimeType.indexOf('plain')>0 || value.file.mimeType.indexOf('rtf')>0 || value.file.mimeType.indexOf('pdf')>0) ){%>			
 									<span>
-										<a href="#" onClick="<%=methods.workItemPopup.caller()%>"><img src="images/waveStyle/newWindow.png" style="margin-top:2px;" title="Open new window"></a>
+										<a href="#" onClick="<%=methods.workItemPopup.caller()%>"> <img src="images/waveStyle/newWindow.png" style="position:relative; top:5px;" title="Open new window"></a>
 									</span>	
 									<%}%>			
 								<%}else if(value.type==null){%>
@@ -147,7 +147,7 @@
 											if(value.tool != 'formApprovalHandler'){
 										%>
 									<span>
-										<a href="#" onClick="<%=methods.workItemPopup.caller()%>"><img src="images/waveStyle/newWindow.png" style="margin-top:2px;" title="Open new window"></a>
+										<a href="#" onClick="<%=methods.workItemPopup.caller()%>"> <img src="images/waveStyle/newWindow.png" style="position:relative; top:5px;" title="Open new window"></a>
 									</span>				
 										<%
 											}
