@@ -126,7 +126,21 @@ public class ScheduleCalendar implements ContextAware {
 		ArrayList<Map<String, String>> arrListData = new ArrayList<Map<String, String>>();		
 		
 		WorkItem schedule = new WorkItem();
-		IWorkItem workitems = schedule.sql("select wl.*, pi.name instnm , pi.status instanceStatus from bpm_worklist wl, bpm_procinst pi where wl.instid = pi.instid and wl.endpoint=?endpoint and wl.type is null and pi.isdeleted != 1");
+//		IWorkItem workitems = schedule.sql("select wl.*, pi.name instnm , pi.status instanceStatus from bpm_worklist wl, bpm_procinst pi where wl.instid = pi.instid and wl.endpoint=?endpoint and wl.type is null and pi.isdeleted != 1");
+		//wl.duedate 호출 대신 pi의 duedate 호출(nipa반영:cjs)
+		String wsql ="select wl.taskid, wl.title, wl.description, wl.endpoint, wl.status, " +
+							"wl.priority, wl.startdate, wl.enddate, pi.duedate, wl.instid, wl.defid, " +
+							"wl.defname, wl.trctag, wl.tool, wl.parameter, wl.groupid, wl.groupname, " +
+							"wl.isurgent, wl.hasattachfile, wl.hascomment, wl.documentcategory, wl.isdeleted, " +
+							"wl.rootinstid, wl.dispatchoption, wl.dispatchparam1, wl.rolename, wl.resname, " +
+							"wl.refrolename, wl.ext1, wl.ext2, wl.ext3, wl.ext4, wl.ext5,  wl.ext6,  wl.ext7, " +
+							"wl.ext8, wl.ext9, wl.ext10, wl.prttskid,  wl.grptaskid, wl.execscope, " +
+							"wl.savedate, wl.apr_type,  wl.abstract,  wl.type,  wl.content, wl.extfile, " +
+							"wl.prevver, wl.nextver,  wl.majorver, wl.minorver,  pi.name instnm , pi.status instancestatus " +
+						"from bpm_worklist wl, bpm_procinst pi " +
+						"where wl.instid = pi.instid and wl.endpoint='admin@nipa.or.kr' " +
+							"and pi.isdeleted != 1 and wl.duedate is not null";
+		IWorkItem workitems = schedule.sql(wsql);
 		workitems.setEndpoint(userId);
 		workitems.select();
 		DataConvert(arrListData, workitems, userId);
@@ -139,6 +153,7 @@ public class ScheduleCalendar implements ContextAware {
 						" and inst.instId = follower.instId "+
 						" and follower.endpoint in ( ?initep )" +
 						" and inst.defverId = 'Unstructured.process'";
+		
 		
 		IInstance iInstance = instance.sql(sql);
 		iInstance.setInitEp(userId);

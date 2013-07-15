@@ -4,8 +4,10 @@ import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.AutowiredToClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
+import org.uengine.codi.mw3.calendar.ScheduleCalendar;
 
 
 public class ProcessMapList implements ContextAware {
@@ -20,6 +22,9 @@ public class ProcessMapList implements ContextAware {
 		
 		setProcessMapList(processMap);		
 	}
+	
+	@AutowiredToClient
+	ScheduleCalendar scheduleCalendar;
 	
 	String title;
 		

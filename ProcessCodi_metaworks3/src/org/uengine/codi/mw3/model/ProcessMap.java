@@ -354,6 +354,9 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 			((Instance)instanceRef).databaseMe().setSecuopt("" + newInstancePanel.getSecurityLevel().getSelected());
 			//((Instance)instanceRef).flushDatabaseMe();
 		}
+		if(newInstancePanel.dueDate != null){
+			((Instance)instanceRef).databaseMe().setDueDate(newInstancePanel.getDueDate());
+		}
 		((Instance)instanceRef).flushDatabaseMe();
 
 		instanceView.session = session;
