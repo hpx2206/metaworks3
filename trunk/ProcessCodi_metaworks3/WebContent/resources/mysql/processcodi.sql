@@ -759,3 +759,6 @@ CREATE TABLE oauth_token (
 	user_id VARCHAR(300) NOT NULL,
 	access_token VARCHAR(300) NOT NULL
 );
+
+
+alter table emptable add guest int(1);
