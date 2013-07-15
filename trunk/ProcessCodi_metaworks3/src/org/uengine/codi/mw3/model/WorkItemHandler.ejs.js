@@ -2,7 +2,7 @@ var org_uengine_codi_mw3_model_WorkItemHandler = function(objectId, className){
 	this.objectId = objectId;
 	this.className = className;
 	var object = mw3.objects[this.objectId];
-	
+	/*
 	if( object && object.parameters ){
 		for(var i = 0; i < object.parameters.length; i++){
 			
@@ -27,6 +27,7 @@ var org_uengine_codi_mw3_model_WorkItemHandler = function(objectId, className){
 			}
 		}
 	}
+	*/
 };
 	
 org_uengine_codi_mw3_model_WorkItemHandler.prototype = {
