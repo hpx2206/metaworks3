@@ -752,6 +752,10 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				instance.setInstId(this.getInstId());
 				
 				instanceRef = instance.databaseMe();
+				
+				if(this.getDueDate()!= null)
+					instanceRef.setDueDate(this.getDueDate());
+				
 						
 				// 덧글일 때 WorkItem 추가하는 사용자가 팔로워에 추가되어 있지 않다면 추가작업
 				instance.fillFollower();
@@ -1140,6 +1144,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 
 		
 		ProcessMapList processMapList = new ProcessMapList();
+		processMapList.scheduleCalendar = this.scheduleCalendar;
 		processMapList.load(session);
 		processMapList.setParentInstanceId(getInstId());
 		processMapList.setTitle(getTitle());
