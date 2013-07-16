@@ -2056,18 +2056,18 @@ html, body {
     border-radius: 0px; 
 }
 .tabs-min .ui-tabs-nav .ui-state-default { 
-    /* background: transparent; */ 
-    border: none; 
+    /* background: transparent; 
+    border: none; */ 
 }
 .tabs-min .ui-tabs-nav .ui-state-active { 
-    /* background: transparent url(../../images/waveStyle/uiTabsArrow.png) no-repeat bottom center; */ 
-    border: none; 
+    /* background: transparent url(../../images/waveStyle/uiTabsArrow.png) no-repeat bottom center; 
+    border: none; */ 
 }
 .tabs-min .ui-tabs-nav .ui-state-default a { 
     color: #c0c0c0; 
 }
 .tabs-min .ui-tabs-nav .ui-state-active a { 
-    color: #459e00; 
+    color: #363636; 
 }
 
 
