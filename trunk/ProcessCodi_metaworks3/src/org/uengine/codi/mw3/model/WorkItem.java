@@ -568,10 +568,12 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			iframe.setHeight("98%");
 			
 			result = iframe;
-		}else{
+		}else if(this.getType() == null){
 			this.workItemHandler = null;
 			detail();			
 			result = workItemHandler; 
+		}else{
+			throw new Exception("$CannotOpen");
 		}
 		
 		return new Popup(850, 600, result);//(result, 0, 0, getTitle());

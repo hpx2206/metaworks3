@@ -25,7 +25,6 @@ import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.filter.OtherSessionFilter;
 import org.uengine.contexts.ComplexType;
 import org.uengine.kernel.Activity;
-import org.uengine.kernel.ActivityReference;
 import org.uengine.kernel.HumanActivity;
 import org.uengine.kernel.KeyedParameter;
 import org.uengine.kernel.NeedArrangementToSerialize;
@@ -53,7 +52,7 @@ public class WorkItemHandler implements ContextAware{
 			humanActivity = (HumanActivity) instance.getProcessDefinition().getActivity(tracingTag);
 		}
 		
-		if(humanActivity.getParameters()!=null){
+		if(humanActivity != null && humanActivity.getParameters()!=null){
 			// load map for ITool
 			loadMapForITool((Map<String, Object>)makeMapForITool());
 			
