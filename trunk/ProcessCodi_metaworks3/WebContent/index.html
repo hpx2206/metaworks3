@@ -185,23 +185,6 @@
 		<!-- popup -->
  		<link rel="stylesheet" href="scripts/jquery/cluetip/jquery.cluetip.css" />
 		
-		<!-- popup -->
-<!-- 		<link rel="stylesheet" href="style/popup.css" /> -->
-		
-		
-		
-		
-				
-
-		<!--  for chart -->
-		
-
-				
-				
-		<!-- for process designer -->		
-<!-- 		
-		
- 	    
 	    <!-- for open presentation -->
 <!-- 	    
 	    <link rel="stylesheet" type="text/css" href="scripts/presentation/jmpressStyle.css" />
@@ -216,11 +199,6 @@
 		<script type='text/javascript' src='scripts/mxgraph/examples/editors/js/mxApplication.js'></script>
  -->
  		
-		<!-- date -->
-<!-- 		
-		
-		
- -->		
 		<!-- 
 		<script type='text/javascript' src='scripts/jdatejs/prototype.js'></script>				
 		 -->
@@ -300,13 +278,15 @@
                     var divId = mw3._getObjectDivId(objId);
                     var offset = $('#' + divId).offset();                    
                     
-                    var offsetRight = offset.left + $('#' + divId).width() - 20;                    
-                    var offsetMiddle = offset.top + ($('#' + divId).height()/2- 11);
-                    
-                    var html;
-                    html = "<div id='loading_div_" + objId + "' style='position:absolute; z-index:9999999; top:"+offsetMiddle+"px; left:"+offsetRight+"px;'><div id='info_div_box' ><img src='dwr/metaworks/images/circleloading.gif'></div></div>";
-                    
-                    $('body').append(html);
+                    if(offset){
+	                    var offsetRight = offset.left + $('#' + divId).width() - 20;                    
+	                    var offsetMiddle = offset.top + ($('#' + divId).height()/2- 11);
+	                    
+	                    var html;
+	                    html = "<div id='loading_div_" + objId + "' style='position:absolute; z-index:9999999; top:"+offsetMiddle+"px; left:"+offsetRight+"px;'><div id='info_div_box' ><img src='dwr/metaworks/images/circleloading.gif'></div></div>";
+	                    
+	                    $('body').append(html);
+                    }
                 };
                         
                 Metaworks3.prototype.showInfo = function(objId, message){
@@ -388,9 +368,12 @@
                     
                     return key;     
                 }
+ 				
+ 				/*
  				var metadataPage = new MetaworksObject({
                     __className : "org.metaworks.metadata.MetadataBundle"
                 }, 'body').loadProperty();
+ 				*/ 				
  				
  				var object = null;
  				var instanceId = request.getParameter("instanceId");
