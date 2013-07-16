@@ -10,7 +10,6 @@ import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Range;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.kernel.EJBProcessInstance;
 import org.uengine.kernel.ProcessInstance;
 import org.uengine.kernel.RoleMapping;
