@@ -281,11 +281,11 @@ public interface IWorkItem extends IDAO{
 		@ServiceMethod(callByContent = true, target=ServiceMethodContext.TARGET_APPEND)
 		public Object[] add() throws Exception;
 
-		@ServiceMethod(inContextMenu=true, needToConfirm=true, callByContent=true /*TODO: later add except*/)
+		@ServiceMethod(inContextMenu=true, when = WHEN_VIEW, needToConfirm=true, callByContent=true /*TODO: later add except*/)
 		@Face(displayName="$Delete")
 		public Object remove() throws Exception;
 
-		@ServiceMethod(inContextMenu=true, callByContent=true)
+		@ServiceMethod(inContextMenu=true, when = WHEN_VIEW, callByContent=true)
 		@Face(displayName="$Edit")
 		public void edit() throws Exception;
 
@@ -346,7 +346,7 @@ public interface IWorkItem extends IDAO{
 		public IWorkItem newRemoteConference() throws Exception;
 		
 		
-		@ServiceMethod(inContextMenu=true, payload={"instId", "taskId"}, target=ServiceMethodContext.TARGET_POPUP)
+		@ServiceMethod(inContextMenu=true, when = WHEN_VIEW, payload={"instId", "taskId"}, target=ServiceMethodContext.TARGET_POPUP)
 		@Face(displayName="$Comment")
 		public OverlayCommentWorkItem comment() throws Exception;
 		
