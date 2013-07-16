@@ -12,11 +12,11 @@ public class Contact extends Database<IContact> implements IContact{
 		IUser friend = new User();
 		
 		StringBuffer sb = new StringBuffer();
-		sb.append("select a.*, e.mood")
-		.append("  from contact a left outer join emptable e")
-		.append("    on a.friendid = e.empcode")
-		.append(" where a.userId=?userId")
-		.append("   and a.network=?network");
+		sb.append("select c.userId, c.friendId, ifnull(e.empname, c.friendName) friendName, e.mood")
+		.append("  from contact c left join emptable e")
+		.append("    on c.friendid = e.empcode")
+		.append(" where c.userId=?userId")
+		.append("   and c.network=?network");
 		
 		if(this.getFriend() != null && this.getFriend().getName() != null)
 			sb.append("   and a.friendName like ?friendName");
