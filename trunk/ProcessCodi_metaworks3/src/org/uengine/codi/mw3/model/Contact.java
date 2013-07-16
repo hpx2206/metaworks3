@@ -16,7 +16,8 @@ public class Contact extends Database<IContact> implements IContact{
 		.append("  from contact c left join emptable e")
 		.append("    on c.friendid = e.empcode")
 		.append(" where c.userId=?userId")
-		.append("   and c.network=?network");
+		.append("   and c.network=?network")
+		.append("   and e.isDeleted=?isDeleted");
 		
 		if(this.getFriend() != null && this.getFriend().getName() != null)
 			sb.append("   and a.friendName like ?friendName");
@@ -25,6 +26,7 @@ public class Contact extends Database<IContact> implements IContact{
 		contacts.setUserId(getUserId());		
 		contacts.set("friendName", this.getFriend().getName() + "%");
 		contacts.set("network", this.getFriend().getNetwork());
+		contacts.set("isDeleted", "0");
 		contacts.select();
 		contacts.setMetaworksContext(getMetaworksContext());
 		return contacts;
