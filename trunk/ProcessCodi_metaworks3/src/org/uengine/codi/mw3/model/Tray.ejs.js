@@ -16,10 +16,11 @@ var org_uengine_codi_mw3_model_Tray = function(objectId, className){
 
 };
 
-
 org_uengine_codi_mw3_model_Tray.prototype.addTray = function(title, instId, notify){
 	
-	if(instId){
+	 if(instId){
+		/*
+		 * 채팅 시: 트레이 바가 추가되고, 메시지 도착 음성 메시지 출력, 브라우저 화면 표시 기능 => 노티 뱃지에 업무 추가시 호출되도록 변경(이동)
 		if(typeof notify != 'undefined' && notify){
 			if(!mw3.windowFocus){
 				var prevTitle = document.title;
@@ -37,7 +38,7 @@ org_uengine_codi_mw3_model_Tray.prototype.addTray = function(title, instId, noti
 				},1000);
 				
 				
-				var notifyFile = 'sound/notify.wav';
+				var notifyFile = 'sound/noti_message.wav';
 				
 				if(mw3.browser.indexOf('MSIE') > -1){
 					var embed = document.createElement("embed"); 
@@ -64,7 +65,7 @@ org_uengine_codi_mw3_model_Tray.prototype.addTray = function(title, instId, noti
 				
 
 			}
-		}
+		}*/
 			
 		var tray = mw3.getObject(this.objectId);
 		tray.targetItem = {
