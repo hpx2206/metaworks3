@@ -1,8 +1,11 @@
 <%
 
 	var format = descriptor ? descriptor.getOptionValue('format', 'yy-mm-dd') : 'yy-mm-dd';
-	var convertValue = $.datepicker.formatDate( format, value );
-				
+	var convertValue = null;
+	
+	if(value && typeof value.__className == 'undefined')
+		convertValue = $.datepicker.formatDate( format, value );
+					
 	if(mw3.when == 'new' || mw3.when == 'edit'){
 %>	
 		<input type="text" id="<%=mw3.createInputId(objectId)%>" style="width:80px; color:#666;" when="<%=mw3.when%>" format="<%=format%>" readonly />
