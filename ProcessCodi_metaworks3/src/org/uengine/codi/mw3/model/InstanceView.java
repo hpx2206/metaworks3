@@ -389,7 +389,7 @@ public class InstanceView {
 		instance.setInstId(new Long(getInstanceId()));
 		 
 		if(!instance.databaseMe().getInitEp().equals(session.getUser().getUserId())  && !(session.getEmployee()!=null && session.getEmployee().getIsAdmin())){
-			throw new Exception("$OnlyInitiatorCanSetDueDate");
+			throw new Exception("$OnlyInitiatorCanSetInstanceInfo");
 		}
 
 		InstanceDueSetter ids = new InstanceDueSetter();

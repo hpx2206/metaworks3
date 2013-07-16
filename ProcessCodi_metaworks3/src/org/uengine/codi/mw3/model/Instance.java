@@ -13,10 +13,8 @@ import org.directwebremoting.ScriptSessions;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
-import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Id;
-import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.dwr.MetaworksRemoteService;
@@ -1266,7 +1264,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 		IInstance instanceRef = databaseMe();
 		
 		if(!instanceRef.getInitEp().equals(session.getUser().getUserId())  && !(session.getEmployee()!=null && session.getEmployee().getIsAdmin())){
-			throw new Exception("$OnlyInitiatorCanSetDueDate");
+			throw new Exception("$OnlyInitiatorCanSetInstanceInfo");
 		}
 				
 		InstanceDueSetter ids = new InstanceDueSetter();

@@ -121,6 +121,9 @@ public class InstanceDueSetter implements ContextAware{
 		if(getDueDate()==null){
 			instance.databaseMe().setDueDate(null);
 		}else{
+			if(!instance.databaseMe().getInitEp().equals(session.getEmployee().getEmpCode())){
+				throw new Exception("$OnlyInitiatorCanSetDueDate");
+			}
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(getDueDate());
 			cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DATE), 23, 59, 59);
