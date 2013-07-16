@@ -69,7 +69,7 @@ public class InstanceTooltip implements ContextAware {
 		return instance.monitor();
 	}
 	
-	@ServiceMethod(payload={"instanceId"}, target=ServiceMethodContext.TARGET_POPUP)
+	@ServiceMethod(payload={"instanceId"}, target=ServiceMethodContext.TARGET_POPUP, loader="auto")
 	public Popup schedule() throws Exception{
 		Instance instance = new Instance();
 		instance.processManager = processManager;
@@ -80,7 +80,7 @@ public class InstanceTooltip implements ContextAware {
 		return instance.schedule();
 	}
 	
-	@ServiceMethod(payload={"instanceId"}, target=ServiceMethodContext.TARGET_POPUP)
+	@ServiceMethod(payload={"instanceId"}, target=ServiceMethodContext.TARGET_POPUP, loader="auto")
 	public Popup newSubInstance() throws Exception{
 		Instance instance = new Instance();
 		instance.processManager = processManager;
