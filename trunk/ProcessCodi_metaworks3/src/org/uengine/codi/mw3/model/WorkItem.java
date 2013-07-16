@@ -840,15 +840,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			this.setStartDate(Calendar.getInstance().getTime());
 			this.setEndDate(getStartDate());
 
-			/*
-			if(this.scheduleCalendar != null){
-				//달력에서 일정 선택 하여 업무 추가시  date 설정(jisun)
-				this.setStartDate(this.getStartDate());
-				this.setDueDate(this.getDueDate());
-			}else {
-			}
-			*/
-			
 			this.setStatus(WORKITEM_STATUS_FEED);
 			this.setIsDeleted(false);			
 
