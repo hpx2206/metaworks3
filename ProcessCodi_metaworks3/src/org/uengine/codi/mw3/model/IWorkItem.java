@@ -308,7 +308,7 @@ public interface IWorkItem extends IDAO{
 		public boolean isContentLoaded();
 		public void setContentLoaded(boolean contentLoaded);
 
-		@Face(displayName="Open")
+		@Face(displayName="$Open")
 		@ServiceMethod(inContextMenu=true, when = WHEN_VIEW, callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 		public Popup workItemPopup() throws Exception;
 
@@ -346,7 +346,7 @@ public interface IWorkItem extends IDAO{
 		
 		
 		@ServiceMethod(inContextMenu=true, payload={"instId", "taskId"}, target=ServiceMethodContext.TARGET_POPUP)
-		@Face(displayName="Comment")
+		@Face(displayName="$Comment")
 		public OverlayCommentWorkItem comment() throws Exception;
 		
 		@ServiceMethod(payload={"instId", "taskId"}, target=ServiceMethodContext.TARGET_SELF)
