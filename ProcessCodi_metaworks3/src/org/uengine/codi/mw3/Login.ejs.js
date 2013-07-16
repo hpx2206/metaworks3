@@ -56,6 +56,8 @@ org_uengine_codi_mw3_Login.prototype = {
 		if(login.userId && login.password && login.rememberMe){
 			login.login();
 		}else{
+			mw3.getInputElement(this.objectId, "rememberMe").checked = true;
+			
 			var objectId = this.objectId;
 			
 			if(typeof FB == 'object'){
