@@ -191,7 +191,7 @@ if(value){
 	} else if(mw3.where == 'navigator'){
 	%>
 	
-	<a onClick="<%=methods.loadOrganization.caller() %>"class="iemployee"><%=value.empName %> (<%=(value.jikName ? value.jikName:"") %>)</a>
+	<a onClick="<%=methods.loadOrganization.caller() %>"class="iemployee"><%=value.empName %> <%=(value.jikName ? "(" + value.jikName + ")":"") %></a>
 	
 	<%
 	} else if(mw3.where == 'modifyEmployeeInfo') {

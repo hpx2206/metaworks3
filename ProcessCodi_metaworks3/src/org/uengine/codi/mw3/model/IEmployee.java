@@ -216,9 +216,9 @@ public interface IEmployee extends IDAO {
 	@ServiceMethod(payload={"email"}, target=ServiceMethodContext.TARGET_NONE)
 	public String checkId() throws Exception ;
 	
-	@ServiceMethod(needToConfirm=true, target=TARGET_TOP, inContextMenu=true)
+	@ServiceMethod(needToConfirm=true, inContextMenu=true)
 	@Face(displayName="$Unsubscribe")
-	public Login unsubscribe() throws Exception;
+	public Object[] unsubscribe() throws Exception;
 	
 	@ServiceMethod
 	public Object[] logout() throws Exception;

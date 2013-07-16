@@ -332,6 +332,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		sb.append("  FROM empTable a");
 		sb.append("  LEFT OUTER JOIN partTable b on a.partcode=b.partcode");
 		sb.append(" WHERE a.globalCom=?globalCom");
+		sb.append("   AND a.isDeleted=?isDeleted");
 		sb.append("   AND NOT EXISTS");
 		sb.append(" 	(SELECT partCode");
 		sb.append(" 	   FROM partTable c");
@@ -340,6 +341,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 				
 		IEmployee deptEmployee = sql(sb.toString());
 		deptEmployee.setGlobalCom(this.getGlobalCom());
+		deptEmployee.setIsDeleted("0");
 		deptEmployee.select();
 		deptEmployee.setMetaworksContext(this.getMetaworksContext());
 		
@@ -709,8 +711,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	}
 	
 	@Override
-	public Login unsubscribe() throws Exception {
-//		deleteDatabaseMe();	
+	public Object[] unsubscribe() throws Exception {
 		
 		if(session.getEmployee().getEmpCode().equals(this.getEmpCode()) || session.employee.getIsAdmin()) {
 			
@@ -718,9 +719,10 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 			employee.setEmpCode(this.empCode);		
 			employee.databaseMe().setIsDeleted("1");		
 			
-			Login login = new Login();
-//			login.getMetaworksContext().setWhen("edit");
-			return login;
+			if(session.getEmployee().getEmpCode().equals(this.getEmpCode()))
+				return new Object[]{session.logout()};
+			else
+				return new Object[]{new Remover(employee , true)};
 		}
 		else
 			throw new Exception("관리자나 본인이 아니면 탈퇴할 수 없습니다");		

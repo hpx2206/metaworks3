@@ -73,6 +73,8 @@ org_uengine_codi_mw3_model_IEmployee.prototype = {
 	showError : function(message, methodName){
 		if(methodName == 'checkEmpCode'){
 			$('#checkEmpCode_' + this.objectId).html(mw3.localize('$failCheckEmpCode'));
+		}else{
+			mw3.showError(this.objectId, message, methodName);
 		}
 	},
 	checkId : function(){
