@@ -93,6 +93,9 @@ legend {display:none;}
 .form_table2 table,
 .form_table2 button{font-size:12px}
 .form_table2 table{width:95%;border:0;border-top:2px solid #999; margin:0 auto;}
+.form_table2 table table{width:95%;border:0; margin:0 auto;}
+.form_table2 table table table{width:95%;border:0; margin:0 auto;}
+.form_table2 table table table table{width:95%;border:0; margin:0 auto;}
 .form_table2 caption{padding:8px 0;font-weight:bold;text-align:left}
 .form_table2 th{width:120px}
 .form_table2 th,
