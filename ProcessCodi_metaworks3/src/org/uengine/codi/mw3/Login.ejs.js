@@ -19,6 +19,9 @@ var org_uengine_codi_mw3_Login = function(objectId, className){
 	
 	if(this.object == null)
 		return true;	
+	
+	// 존재하는 팝업 제거
+	$("#" + mw3.popupDivId).remove();	
 
 	var lastVisitPage = getCookie("codi.lastVisit");
 	if(lastVisitPage) 
