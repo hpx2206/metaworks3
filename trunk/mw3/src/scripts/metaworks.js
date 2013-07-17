@@ -2803,12 +2803,8 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			Metaworks3.prototype.showValidation = function(objId, inputObjectId, isValid, message){
 				var infoDivId = "#"+this._getInfoDivId(objId);
 				
-				if(message.indexOf("$")==0){
-			   		message = mw3.localize(message);
-			   	}
-				
 				if(!isValid)
-					$(infoDivId).html("<center><font color=red> " + message + "</font></center>");
+					$(infoDivId).html("<center><font color=red> " + mw3.localize(message) + "</font></center>");
 				else
 					$(infoDivId).html("");
 			};
@@ -4022,7 +4018,9 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 		   					
 		   					theDiv.droppable({
 		   						drop: function(event, ui){
-		   							eval(this['dropCommand']);
+		   							$(this).removeClass('ui-state-active');
+		   							
+		   							eval(this['dropCommand']);		   							
 		   						},
 		   						
 		   						over: function(event, ui){
