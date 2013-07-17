@@ -29,7 +29,7 @@ public class OrganizationTree extends Tree {
 		rootNode.session = this.session;
 		
 		rootNode.setId(session.getCompany().getComCode());
-		rootNode.setName(session.getCompany().getComName());
+		rootNode.setName((session.getCompany().getComName()!=null)?session.getCompany().getComName():session.getCompany().getComCode());
 		rootNode.setRoot(true);
 		rootNode.setHiddenEmployee(this.isHiddenEmployee());
 		rootNode.setChild(rootNode.loadExpand());
