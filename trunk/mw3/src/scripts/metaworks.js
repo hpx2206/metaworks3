@@ -2803,6 +2803,10 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			Metaworks3.prototype.showValidation = function(objId, inputObjectId, isValid, message){
 				var infoDivId = "#"+this._getInfoDivId(objId);
 				
+				if(message.indexOf("$")==0){
+			   		message = mw3.localize(message);
+			   	}
+				
 				if(!isValid)
 					$(infoDivId).html("<center><font color=red> " + message + "</font></center>");
 				else
