@@ -9,4 +9,6 @@ var org_uengine_codi_mw3_model_PerspectivePanel = function(objectId, className){
 			
 	});
 	
+	$(this.divId).parent().css({"background-color":"#f2f3f4"});
+	
 };
