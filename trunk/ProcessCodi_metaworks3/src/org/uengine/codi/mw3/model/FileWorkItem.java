@@ -98,6 +98,9 @@ public class FileWorkItem extends WorkItem{
 			//this.setWorkItemVersionChooser(null);
 		}
 		
+		if(this.getWorkItemVersionChooser() != null)
+			this.getWorkItemVersionChooser().setTaskId(this.getTaskId());
+		
 		// 제목이 없으면 파일명을 제목으로
 		if(!UEngineUtil.isNotEmpty(getTitle())){
 			setTitle(getFile().getFileTransfer().getFilename());
@@ -116,6 +119,8 @@ public class FileWorkItem extends WorkItem{
 			preview.setTaskId(getTaskId());
 			preview.setMimeType(mimeType);
 			this.setPreview(preview);
+		}else{
+			this.setPreview(null);
 		}
 
 /*	
