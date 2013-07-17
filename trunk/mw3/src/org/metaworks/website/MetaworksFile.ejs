@@ -1,6 +1,6 @@
 <%
 	if(value){
-		var showText = descriptor && descriptor.getOptionValue('hideText', false);
+		var showText = !(descriptor && descriptor.getOptionValue('hideText', false));
 		if(showText)
 			showText = !objectMetadata.getOptionValue('hideText', false);
 
@@ -23,8 +23,6 @@
 	<span id="filebtndel_<%=objectId%>" style="display:none">
 		<a id="wBtn" href="#" onclick="mw3.getFaceHelper(<%=objectId%>).del(event)"><span>파일삭제</span></a>
 	</span>
-	<div class="clear"></div>
-	
 <%
 			if(showText){
 %>
@@ -46,6 +44,9 @@
 <%			
 				}
 			}
+%>
+	<div class="clear"></div>
+<%				
 		}
 	}
 %>
