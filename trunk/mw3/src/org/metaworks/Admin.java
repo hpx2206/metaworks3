@@ -26,7 +26,7 @@ public class Admin {
 			this.targetClassName = targetClassName;
 		}
 	
-	@ServiceMethod
+	@ServiceMethod(keyBinding="Ctrl+F5@Global")
 	public void refreshMetadata() throws Exception{
 		System.out.println("targetClassName : " + getTargetClassName());
 		
