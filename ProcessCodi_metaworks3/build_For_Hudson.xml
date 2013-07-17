@@ -9,7 +9,7 @@
         </fileset>
         <pathelement path="${build.dir}"/>
     </path>
-    <target name="build" description="Compile source tree java files">
+    <target name="build" description="Compile source tree java files" depends="clean">
         <mkdir dir="${build.dir}"/>
 		<copy todir="${build.dir}">
 			<fileset dir="${src.dir}">
