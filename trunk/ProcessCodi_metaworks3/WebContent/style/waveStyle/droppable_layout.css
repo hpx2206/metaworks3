@@ -2033,9 +2033,12 @@ html, body {
 .leftMenuPanel_ide .closed{background:url(../../images/waveStyle/bottomShadowClose.png) 100% 50% repeat-x !important;}
 .leftMenuTabInner_ide{padding:8px;}
 
-
+.processMonitoringLeft{width: 110px; overflow:hidden; position: absolute; min-width: 0px; min-height: 0px; max-width: 10000px; max-height: 10000px;  left: 0px; top: 0px;border-right:1px solid #ccc;height:100%; padding:5px;}
+.processMonitoringRight{left: 121px; overflow:auto; position: absolute; min-width: 0px; min-height: 0px; max-width: 10000px; max-height: 10000px; right: 0px; top:0px; bottom: 0px; background:#f9f9f9}
 @media all and (max-width: 480px) {
     .toolbar ul li span.toolbarIcon{display:none}
+    .processMonitoringLeft{border:none; height:80px;top:0px;}
+    .processMonitoringRight{top:81px;left:0px;border-top:1px solid #ccc;}
 }
 
 
