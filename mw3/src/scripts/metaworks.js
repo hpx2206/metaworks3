@@ -552,9 +552,12 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				
 				// load faceHelper
 				var faceHelperClass = this.loadedScripts[face];
-				if(!faceHelperClass)
-					return null;
-
+				
+				if(typeof faceHelperClass == 'undefined')
+					return false;
+				else if(faceHelperClass == null)
+					return true;
+				
 				var thereIsHelperClass = false;
 				try{
 					//console.debug('eval faceHelper [' + objectId + '] -> ' + face);					
@@ -575,7 +578,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 								if(this.objects[objectId]!=null)
 									this.objects[objectId]['__faceHelper'] = faceHelper;
 								
-								return faceHelper;
+								return true;
 							}
 						}catch(faceHelperLoadException){
 							//TODO:
@@ -630,11 +633,12 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 			    		objectIds = mw3.objectIds_FaceMapping[face];								    		
 						
 						for(var objectId in objectIds){
-							if(mw3.loadFaceHelper(objectId, face) != null){
+							if(mw3.loadFaceHelper(objectId, face)){
 								mw3.afterLoadFaceHelper[i] = null;
 								mw3.objectIds_FaceMapping[face] = null;
 
 								var object = mw3.objects[objectId];
+								
 								if(object!=null && object.__className){
 									var metadata = mw3.getMetadata(object.__className);
 									
@@ -1583,87 +1587,94 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				}
 				this.afterLoadFaceHelper[faceHelperIndex] = actualFace;
 				
-				// import script				
-				if(!mw3.importScript(url, initializingFaceHelper))
-					return false;
-				
-				var startPos = 0;
-
-				var faceHelper;
-				
-				if(byClassLoader){
-					
-					if(actualFace.indexOf('genericfaces') != -1){
-						startPos = 'dwr/metaworks/genericfaces/'.length;
+				// import script
+				if(typeof this.loadedScripts[url] == 'undefined'){
+					if(!mw3.importScript(url, initializingFaceHelper)){
+						mw3.loadedScripts[actualFace] = null;
 						
-					}else{
-						startPos = 'dwr/metaworks/'.length;
+						return;
 					}
 					
-					faceHelper = actualFace.substr(startPos, actualFace.lastIndexOf('.') - startPos).split('/').join('_');
-				}else
-					faceHelper = actualFace.substr(0, actualFace.lastIndexOf('.')).split('/').join('_');
-				
-				mw3.loadedScripts[actualFace] = faceHelper; //now the namespace may not cause any collision.
-				
-				return true;
-//				        },
-//				        error:function(){
-//				            if(onError) 
-//				            	onError();
-//				        }
-//				    });        
+					var startPos = 0;
 
+					var faceHelper;
+					
+					if(byClassLoader){
+						if(actualFace.indexOf('genericfaces') != -1){
+							startPos = 'dwr/metaworks/genericfaces/'.length;
+							
+						}else{
+							startPos = 'dwr/metaworks/'.length;
+						}
+						
+						faceHelper = actualFace.substr(startPos, actualFace.lastIndexOf('.') - startPos).split('/').join('_');
+					}else
+						faceHelper = actualFace.substr(0, actualFace.lastIndexOf('.')).split('/').join('_');
+					
+					mw3.loadedScripts[actualFace] = faceHelper; //now the namespace may not cause any collision.
+					
+//					return true;
+//					        },
+//					        error:function(){
+//					            if(onError) 
+//					            	onError();
+//					        }
+//					    });        
+
+
+				}
 			};
 			
 			Metaworks3.prototype.importScript = function(scriptUrl, afterLoadScript){
+
+				var result = false;
 				
 				if(!this.loadedScripts[scriptUrl]){
-				   var result = false;
-				   
 				   mw3.loadedScripts[scriptUrl] = scriptUrl;
-				   
+					 
 				   //TODO: asynchronous processing performance issues later on
 				   $.ajax({
 					   async:false,
 					   url: scriptUrl,
 					   type:'GET',
-					   success:function(){
-						   	result = true;
-							
-							// add script url
-							var head= document.getElementsByTagName('head')[0];
-							var script= document.createElement('script');
-							script.type= 'text/javascript';
-							script.src= scriptUrl;
-							head.appendChild(script);
-
-							//TODO: it is disabled since all the facehelper initialization is done by onLoadFaceHelperScript() explicitly for now.
-//							if(afterLoadScript){
-//								script.onload = afterLoadScript;
-//								
-//								script.onreadystatechange = function() { //for IE
-//									if (this.readyState == 'complete' || this.readyState == 'loaded') {
-//										
-//										afterLoadScript;
-//									}
-//								};
-//							}
-							
-							if(typeof afterLoadScript == 'function'){
-								script.onload = afterLoadScript;
+					   success:function(data, textStatus, jqXHR){
+						   if(data && data.length > 0){
+							   	result = true;
 								
-								script.onreadystatechange = function() { //for IE
-									if (this.readyState == 'complete' || this.readyState == 'loaded') {
-										
-										afterLoadScript;
+								// add script url
+								var head= document.getElementsByTagName('head')[0];
+								var script= document.createElement('script');
+								script.type= 'text/javascript';
+								script.src= scriptUrl;
+								head.appendChild(script);
+	
+								//TODO: it is disabled since all the facehelper initialization is done by onLoadFaceHelperScript() explicitly for now.
+	//							if(afterLoadScript){
+	//								script.onload = afterLoadScript;
+	//								
+	//								script.onreadystatechange = function() { //for IE
+	//									if (this.readyState == 'complete' || this.readyState == 'loaded') {
+	//										
+	//										afterLoadScript;
+	//									}
+	//								};
+	//							}
+								
+								if(typeof afterLoadScript == 'function'){
+									script.onload = afterLoadScript;
+									
+									script.onreadystatechange = function() { //for IE
+										if (this.readyState == 'complete' || this.readyState == 'loaded') {
+											
+											afterLoadScript;
+										}
 									}
 								}
-							}
+						   }
 					   },
 					   
+					   
 					   error:function(xhr){
-						
 						   //TODO: looks undesired validation or something is happening guessing by 
 						   //      the successful request is treated as an error. 
 						   //      It probably harmful to performance, so someday it should be fixed.
@@ -1675,9 +1686,9 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 						   //alert(e.message);
 					   }
 				   });
-				   
-				   return result;
 				}
+				
+				return result;
 			};
 			
 			Metaworks3.prototype.importStyle = function(url){
@@ -3903,7 +3914,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				if(theDiv[0] && metadata)
 			    for(var methodName in metadata.serviceMethodContextMap){
 			   		var methodContext = metadata.serviceMethodContextMap[methodName];
-			   		
+			   	
 			   		//console.log('try : ' + methodName);
 				    if(mw3.isHiddenMethodForDiv(theDiv.data('metaworksContext'), methodContext) && !methodContext.bindingHidden)
 					   continue;
