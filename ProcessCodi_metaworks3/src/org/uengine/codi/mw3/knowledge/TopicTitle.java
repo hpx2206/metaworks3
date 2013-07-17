@@ -16,14 +16,13 @@ import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.TransactionContext;
-import org.metaworks.example.ide.SourceCode;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.model.Session;
 
 @Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs",
 	  ejsPathMappingByContext=	{
 				"{how: 'html', face: 'dwr/metaworks/org/uengine/codi/mw3/knowledge/TopicTitle.ejs'}"
-})
+}, options={"fieldOrder"}, values={"topicTitle,url,topicSecuopt"})
 public class TopicTitle  implements ContextAware{
 	public TopicTitle(){
 		setMetaworksContext(new MetaworksContext());
