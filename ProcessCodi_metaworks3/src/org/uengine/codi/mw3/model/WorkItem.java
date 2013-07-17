@@ -715,12 +715,15 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 
 	public IInstance save() throws Exception {
 		
+		boolean newInstance = false;
 		IInstance instanceRef = null;		
 		
 		// 추가
 		if(WHEN_NEW.equals(getMetaworksContext().getWhen()) || this instanceof FileWorkItem){
 			// 인스턴스 발행
 			if(this.getInstId() == null){
+				newInstance = true;
+				
 				// 인스턴스 발행을 위한 ProcessMap 사용
 				ProcessMap processMap = new ProcessMap();
 				processMap.processManager = processManager;
@@ -801,29 +804,29 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				}
 			}
 			
-			// 마지막 워크아이템의 제목을 인스턴스의 적용
-			String lastCmnt = instanceRef.getLastCmnt();
-			// title 이 LASTCMT_LIMIT_SIZE 보다 크다면 사이즈를 조절함
-			String cmntTitle = this.getTitle();
-			if(cmntTitle.length() > LASTCMT_LIMIT_SIZE){
-				cmntTitle = getTitle().substring(0, LASTCMT_LIMIT_SIZE - 5) + "..." ;
-			}
-			if(lastCmnt == null){
-				if(instanceRef.getName() != getTitle()){
+			if(!newInstance){
+				//마지막 워크아이템의 제목을 인스턴스의 적용
+				String lastCmnt = instanceRef.getLastCmnt();
+				// title 이 LASTCMT_LIMIT_SIZE 보다 크다면 사이즈를 조절함
+				String cmntTitle = this.getTitle();
+				if(cmntTitle.length() > LASTCMT_LIMIT_SIZE){
+					cmntTitle = getTitle().substring(0, LASTCMT_LIMIT_SIZE - 5) + "..." ;
+				}
+				if(lastCmnt == null){
 					instanceRef.setLastCmnt(cmntTitle);
 					instanceRef.setLastCmntUser(session.getUser());
-				}
-			}else{
-				if(instanceRef.getLastCmnt2() == null){
-					instanceRef.setLastCmnt2(cmntTitle);
-					instanceRef.setLastCmnt2User(session.getUser());
-				}else {
-					instanceRef.setLastCmnt(instanceRef.getLastCmnt2());
-					instanceRef.setLastCmntUser(instanceRef.getLastCmnt2User());
-					
-					instanceRef.setLastCmnt2(cmntTitle);
-					instanceRef.setLastCmnt2User(session.getUser());
-				}
+				}else{
+					if(instanceRef.getLastCmnt2() == null){
+						instanceRef.setLastCmnt2(cmntTitle);
+						instanceRef.setLastCmnt2User(session.getUser());
+					}else {
+						instanceRef.setLastCmnt(instanceRef.getLastCmnt2());
+						instanceRef.setLastCmntUser(instanceRef.getLastCmnt2User());
+						
+						instanceRef.setLastCmnt2(cmntTitle);
+						instanceRef.setLastCmnt2User(session.getUser());
+					}
+				}				
 			}
 			
 			instanceRef.setCurrentUser(session.getUser());//may corrupt when the last actor is assigned from process execution.
