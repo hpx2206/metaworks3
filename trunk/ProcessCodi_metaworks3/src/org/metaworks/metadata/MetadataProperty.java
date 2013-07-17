@@ -668,10 +668,12 @@ public class MetadataProperty implements ContextAware, Cloneable {
 		if(MetadataProperty.FILE_PROP.equals(this.getType())){
 			MetadataFile file = new MetadataFile();
 			file.setUploadedPath(this.getValue());
-			file.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+			file.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 			file.setMimeType(ResourceNode.findNodeType(this.getValue()));
+			file.setTypeDir(this.getType());
 			
 			detailProperty.setFile(file);
+			detailProperty.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 						
 		}else if(MetadataProperty.PROCESS_PROP.equals(this.getType())){
 			
