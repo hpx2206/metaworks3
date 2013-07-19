@@ -796,10 +796,11 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 					for(String userId : initialFollowers){
 						
 						RoleMapping follower = RoleMapping.create();
-						follower.setName(Followers.CONTEXT_WHERE_INFOLLOWERS + userId);
+						follower.setName(org.uengine.codi.mw3.model.RoleMapping.ROLEMAPPING_FOLLOWER_ROLENAME_FREFIX + userId);
 						follower.setEndpoint(userId);						
 
 						processManager.putRoleMapping(this.getInstId().toString() , follower);
+						processManager.applyChanges();
 					}
 				}
 			}
@@ -928,7 +929,17 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 
 						returnObjects = new Object[]{new Refresh(memo, false, true)};
 					}else{
-						returnObjects = new Object[]{new Refresh(this, false, true)};	
+						
+						if("comment".equals(this.getType()) && ((CommentWorkItem)this).initialFollowers.size() > 0) {
+							
+							InstanceFollowers followers = new InstanceFollowers();
+							followers.setInstanceId(this.getInstId().toString());
+							followers.load();
+							
+							returnObjects = new Object[]{new Refresh(this, false, true), new Refresh(followers)};
+						}
+						else
+							returnObjects = new Object[]{new Refresh(this, false, true)};	
 					}
 				}else if(this instanceof GenericWorkItem){
 					returnObjects = new Object[]{new ToAppend(instanceViewThreadPanel, this)};
