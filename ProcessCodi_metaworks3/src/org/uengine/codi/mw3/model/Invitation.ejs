@@ -7,7 +7,7 @@
 <div class="view_box3" >
     <div class="guide"><span class="tl"></span><span class="tr"></span></div>
     <div class="cont" style="padding-bottom:3px;">
-        <p class="title">친구를 초대하세요</p>
+        <p class="title"><%=mw3.localize('$InviteYourFriend')%></p>
         <table width="100%" border="0" cellspacing="0" cellpadding="0">
             <tbody>
                 <tr>
@@ -26,7 +26,7 @@
                                 </tr>
                                 <tr height="25" valign="middle">
                                     <td bgcolor="white">
-                                            Guest 여부 : <%=fields.guest.here()%>                                       
+                                            <%=mw3.localize('$IsGuest')%> : <%=fields.guest.here()%>                                       
                                     </td>
                                 </tr>
                             </tbody>
@@ -34,7 +34,7 @@
                 </tr>
                 <tr>
                     <td>
-                    	<div class="positionRight"><a id="wBtn" href="#" onclick="<%=methods.invite.caller()%>"><span>초대하기</span></a></div>
+                    	<div class="positionRight"><a id="wBtn" href="#" onclick="<%=methods.invite.caller()%>"><span><%=mw3.localize('$FriendInvite')%></span></a></div>
                     
                     </td>
                 </tr>
