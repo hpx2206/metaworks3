@@ -930,7 +930,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 						returnObjects = new Object[]{new Refresh(memo, false, true)};
 					}else{
 						
-						if("comment".equals(this.getType()) && ((CommentWorkItem)this).initialFollowers.size() > 0) {
+						if("comment".equals(this.getType()) && ((CommentWorkItem)this).initialFollowers != null) {
 							
 							InstanceFollowers followers = new InstanceFollowers();
 							followers.setInstanceId(this.getInstId().toString());
