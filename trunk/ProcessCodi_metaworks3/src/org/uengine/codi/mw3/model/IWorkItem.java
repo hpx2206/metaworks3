@@ -278,7 +278,7 @@ public interface IWorkItem extends IDAO{
 		@ServiceMethod(when = WHEN_VIEW, callByContent=true, target=ServiceMethodContext.TARGET_SELF)
 		public void detail() throws Exception;
 
-		@ServiceMethod(callByContent = true, target=ServiceMethodContext.TARGET_APPEND)
+		@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 		public Object[] add() throws Exception;
 
 		@ServiceMethod(inContextMenu=true, when = WHEN_VIEW, needToConfirm=true, callByContent=true /*TODO: later add except*/)

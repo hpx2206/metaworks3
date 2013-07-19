@@ -2,6 +2,7 @@ package org.uengine.codi.mw3.model;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
@@ -15,6 +16,7 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.Login;
+import org.uengine.codi.mw3.filter.AllSessionFilter;
 import org.uengine.codi.mw3.filter.OtherSessionFilter;
 import org.uengine.processmanager.ProcessManagerRemote;
 
@@ -115,46 +117,58 @@ public class InstanceDueSetter implements ContextAware{
 	@Face(displayName="$Apply")
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 	public Object[] apply() throws Exception{
+		
 		Instance instance = new Instance();
 		instance.setInstId(getInstId());
 
-		if(getDueDate()==null){
-			instance.databaseMe().setDueDate(null);
-		}else{
-			if(!instance.databaseMe().getInitEp().equals(session.getEmployee().getEmpCode())){
-				throw new Exception("$OnlyInitiatorCanSetDueDate");
-			}
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(getDueDate());
-			cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DATE), 23, 59, 59);
-			cal.set(Calendar.MILLISECOND, 0);
-			
-			instance.databaseMe().setDueDate(cal.getTime());
+		IInstance instanceRef = instance.databaseMe();
+		
+		if(instanceRef.isInitCmpl() != isOnlyInitiatorCanComplete())
+			instanceRef.setInitCmpl(isOnlyInitiatorCanComplete());		// 시작자만 완료 가능
+		if(instanceRef.getBenefit() != getBenefit())
+			instanceRef.setBenefit(getBenefit());			// benefit
+		if(instanceRef.getPenalty() != getPenalty())
+			instanceRef.setPenalty(getPenalty());			// penalty
+		if(instanceRef.getEffort() != getEffort())
+			instanceRef.setEffort(getEffort());				// effort
+		
+		instanceRef.getMetaworksContext().setWhen("blinking");
+		
+		long databaseDueTime = 0;
+		long dueTime = 0;
+		
+		// 납기일 설정
+		if(instanceRef.getDueDate() != null){
+			databaseDueTime = instanceRef.getDueDate().getTime();
 		}
 		
-		instance.databaseMe().setInitCmpl(isOnlyInitiatorCanComplete());
-		instance.databaseMe().setProgress(getProgress());
-		
-		instance.databaseMe().setBVBenefit(getBenefit());
-		instance.databaseMe().setBVPenalty(getPenalty());
-		instance.databaseMe().setEffort(getEffort());
-		
-		instance.flushDatabaseMe();
-		
-		IInstance iInstance = instance.databaseMe();
-		iInstance.setMetaworksContext(getMetaworksContext());
-		iInstance.getMetaworksContext().setWhen("view");
-		
-		
 		if(getDueDate() != null){
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(getDueDate());
+			cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DATE), 23, 59, 00);
+			cal.set(Calendar.MILLISECOND, 0);
+			
+			dueTime = dueDate.getTime();
+		}
+		
+		
+		if(databaseDueTime != dueTime){
+			instanceRef.setDueDate(new Date(dueTime));
+			
 			//if schedule changed
 			CommentWorkItem workItem = new CommentWorkItem();
 			workItem.getMetaworksContext().setHow("changeSchedule");
 			workItem.session = session;
 			workItem.processManager = processManager;
 			
-			String title = localeManager.getResourceBundle().getProperty("ChangedDate");
-				   title += ": " + new SimpleDateFormat("yyyy/MM/dd").format(getDueDate());
+			String title = null;
+			
+			if(dueTime == 0){
+				title = localeManager.getString("$CancelDate");
+			}else{				
+				title = localeManager.getString("$ChangedDate");			
+				title += ": " + new SimpleDateFormat("yyyy/MM/dd").format(getDueDate());
+			}
 			
 			workItem.setInstId(getInstId());
 			workItem.setTitle(title);
@@ -165,7 +179,14 @@ public class InstanceDueSetter implements ContextAware{
 			//MetaworksRemoteService.pushOtherClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(iInstance), new WorkItemListener(workItem)});
 			MetaworksRemoteService.pushClientObjectsFiltered(
 					new OtherSessionFilter(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom()), session.getUser().getUserId().toUpperCase()),
-					new Object[]{new InstanceListener(iInstance), new WorkItemListener(workItem)});		
+					new Object[]{new WorkItemListener(workItem)});		
+		}
+		
+
+		if(instanceRef.getImplementationObject().isDirty()){
+			MetaworksRemoteService.pushClientObjectsFiltered(
+				new AllSessionFilter(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom())),
+				new Object[]{new InstanceListener(instanceRef)});		
 		}
 		
 		return new Object[]{new Remover(new Popup(), true)};

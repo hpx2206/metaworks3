@@ -395,8 +395,8 @@ public class InstanceView {
 		InstanceDueSetter ids = new InstanceDueSetter();
 		ids.setInstId(new Long(getInstanceId()));
 		ids.setDueDate(instance.databaseMe().getDueDate());
-		ids.setBenefit(instance.databaseMe().getBVBenefit());
-		ids.setPenalty(instance.databaseMe().getBVPenalty());
+		ids.setBenefit(instance.databaseMe().getBenefit());
+		ids.setPenalty(instance.databaseMe().getPenalty());
 		ids.setEffort(instance.databaseMe().getEffort());
 		ids.setOnlyInitiatorCanComplete(instance.databaseMe().isInitCmpl());
 		ids.setProgress(instance.databaseMe().getProgress());
@@ -504,7 +504,7 @@ public class InstanceView {
 		}
 		
 		//inst_emp_perf 테이블에 성과정보 저장 insert
-		int businessValue = instance.getBVBenefit() + instance.getBVPenalty();
+		int businessValue = instance.getBenefit() + instance.getPenalty();
 		
 		if(tobe.equals("Running")){
 			deleteBV();
