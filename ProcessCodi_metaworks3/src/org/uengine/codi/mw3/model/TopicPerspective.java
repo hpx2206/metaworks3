@@ -35,7 +35,7 @@ public class TopicPerspective extends Perspective {
 		topicTitle.setMetaworksContext(new MetaworksContext());
 		topicTitle.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 		topicTitle.session = session;
-		return new ModalWindow(topicTitle , 500, 200,  "토픽추가");
+		return new ModalWindow(topicTitle , 500, 200,  "$addTopic");
 	}
 		
 }
