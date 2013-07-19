@@ -1,7 +1,9 @@
 <%
 if(mw3.when == 'filter'){
 %>
-<img  class="navi_icon" alt="" src="images/processMap/iconDefault.png" width="13" height="13"/><a href="#" onClick="<%=methods.processListFilter.caller()%>"><%=value.name%></a>
+	<li>
+		<img  class="navi_icon" alt="" src="images/processMap/iconDefault.png" width="13" height="13"/><a href="#" onClick="<%=methods.processListFilter.caller()%>"><%=value.name%></a>
+	</li>
 <%
 }else{
 %>
@@ -52,8 +54,10 @@ if(mw3.when == 'filter'){
    	<div class="editicon" onclick="<%=methods.modify.caller()%>"></div>
 <%
 			}
-%>   	
+%>   
+<li>
     <a href="#" onClick="mw3.getFaceHelper('<%=objectId%>').whenClick()"><img alt="" src="images/processMap/iconDefault.png" width="40" height="40"></a>
+</li>
     <%
     	var proc_name = value.name;
 		var full_name = '';
