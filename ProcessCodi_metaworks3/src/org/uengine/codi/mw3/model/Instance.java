@@ -1356,10 +1356,10 @@ public class Instance extends Database<IInstance> implements IInstance{
 		
 		if(getStatus().equals("Completed")){
 			tobe = "Running";
-			title = localeManager.getResourceBundle().getProperty("CancleCompleted");
+			title = localeManager.getString("$CancleCompleted");
 		}else{
 			tobe = "Completed";
-			title = localeManager.getResourceBundle().getProperty("CompletedDate");
+			title = localeManager.getString("$CompletedDate");
 		}
 			
 		// add comment schedule changed
