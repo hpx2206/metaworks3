@@ -540,3 +540,4 @@ INSERT INTO "roleusertable" ("rolecode", "empcode", "comcode") VALUES ('paasMana
 
 
 alter table emptable add guest int(1);
+ALTER TABLE `bpm_procinst`  CHANGE COLUMN `BVBENEFIT` `BENEFIT` INT(6) NULL DEFAULT NULL AFTER `lastcmnt2`,  CHANGE COLUMN `BVPENALTY` `PENALTY` INT(6) NULL DEFAULT NULL AFTER `BENEFIT`;
