@@ -15,6 +15,9 @@
 		var maximize = objectMetadata.faceOptions && objectMetadata.faceOptions['maximize'];
 		var minimize = objectMetadata.faceOptions && objectMetadata.faceOptions['minimize'];
 		
+		var color = objectMetadata.getOptionValue('color', 'blue');
+		console.log('color : ' + color);
+		
 		var mobile;
 		
 		/*
@@ -87,6 +90,15 @@
             <div class="boxtopleftTab">
             	<span class="boxtoprightTab">            	
             		<div id="navigationTitle" class="tabCurrent mw3_window_title">
+            		
+            		
+<%
+		}else if(color == 'gray'){
+%>
+ <div class="boxtopleftTab">
+            	<span class="boxtoprightTab">            	
+            		<div id="navigationTitle" class="mw3_window_title">
+
 <%
 		}else{
 %>
