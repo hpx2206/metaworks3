@@ -22,7 +22,7 @@ import org.uengine.codi.mw3.model.Session;
 @Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs",
 	  ejsPathMappingByContext=	{
 				"{how: 'html', face: 'dwr/metaworks/org/uengine/codi/mw3/knowledge/TopicTitle.ejs'}"
-}, options={"fieldOrder"}, values={"topicTitle,url,topicSecuopt"})
+}, options={"fieldOrder"}, values={"topicTitle,topicSecuopt,url"})
 public class TopicTitle  implements ContextAware{
 	public TopicTitle(){
 		setMetaworksContext(new MetaworksContext());
