@@ -151,7 +151,7 @@ if(value){
 			   		<table><td><%value.lastCmntUser['size']='small';%><%=fields.lastCmntUser.here()%></td>
 			  		<td colspan=2 style="border:none; padding-right:10px;"><font color=204070><%=value.lastCmntUser.name%></font>&nbsp;&nbsp; <font color="gray" class="inctanceReply"><%=lastCmnt%></font></td></table>
 			 	</li>
-			   		<%if(value.name!=value.lastCmnt2 && value.lastCmnt2 != null){%>
+			   		<%if(value.lastCmnt2 && value.lastCmnt2 != null){%>
 					    <li>
 					    	<!--style="margin-left:38px;"-->
 					   		<table><td><%value.lastCmnt2User['size']='small';%><%=fields.lastCmnt2User.here()%></td>
