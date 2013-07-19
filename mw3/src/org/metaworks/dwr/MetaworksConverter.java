@@ -39,7 +39,9 @@ public class MetaworksConverter extends BeanConverter{
     		//System.out.println("--------------------------------------------------------");
     		//System.out.println("name : " + paramType.getName() + "-->" + IDAO.class.isAssignableFrom(paramType) + "," + Modifier.isInterface(paramType.getModifiers()) + "," + Modifier.isAbstract(paramType.getModifiers()));
     		
-    		// TODO : Why is the value of the proxy object of Modifier.isAbstract true? need confirm 
+    		// TODO : Why is the value of the proxy object of Modifier.isAbstract true? need confirm
+    		// TODO : confirm other case 
+    		//IDAO.class.isAssignableFrom(paramType) && !Modifier.isInterface(paramType.getModifiers()) && !Modifier.isAbstract(paramType.getModifiers()) || 
 		 	if(!IDAO.class.isAssignableFrom(paramType)){
 		 		
 		 		//System.out.println("convert metaworks");
