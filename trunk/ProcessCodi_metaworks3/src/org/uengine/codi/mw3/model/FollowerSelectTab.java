@@ -5,7 +5,7 @@ import org.metaworks.annotation.Face;
 @Face(ejsPath="genericfaces/Tab.ejs"  )
 public class FollowerSelectTab {
 	ContactListPanel contactListPanel;
-		@Face(displayName="친구")
+		@Face(displayName="$FollowerFriends")
 		public ContactListPanel getContactListPanel() {
 			return contactListPanel;
 		}
@@ -14,7 +14,7 @@ public class FollowerSelectTab {
 		}
 	
 	OrganizationTreePanel deptTreePanel;
-		@Face(displayName="부서")
+		@Face(displayName="$FollowerOrganization")
 		public OrganizationTreePanel getDeptTreePanel() {
 			return deptTreePanel;
 		}
