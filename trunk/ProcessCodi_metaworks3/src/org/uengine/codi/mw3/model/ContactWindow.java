@@ -4,8 +4,8 @@ import org.metaworks.annotation.Face;
 
 @Face(ejsPath="dwr/metaworks/genericfaces/Window.ejs", 
 	  displayName="$Contact",
-	  options={"hideLabels", "minimize"}, 
-      values={"true", "true"})
+	  options={"hideLabels", "minimize" , "color"}, 
+      values={"true", "true","gray"})
 
 public class ContactWindow {
 	public ContactWindow() {
