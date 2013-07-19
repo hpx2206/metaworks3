@@ -241,8 +241,8 @@ public class Instance extends Database<IInstance> implements IInstance{
 		//}
 		
 		stmt.append(" instanceList.* FROM ")
-		.append(" (SELECT distinct inst.*, task.startdate")
-		.append("  FROM bpm_procinst inst");
+		.append(" (SELECT distinct inst.*, task.startdate, knol.name as topicName ")
+		.append("  FROM bpm_procinst inst LEFT JOIN bpm_knol knol ON inst.topicId = knol.id ");
 				
 		stmt
 		.append("      ,(SELECT max(startdate) startdate, worklist.rootinstid")
@@ -1099,6 +1099,14 @@ public class Instance extends Database<IInstance> implements IInstance{
 			this.ext1 = ext1;
 		}
 
+	String topicName;
+		public String getTopicName() {
+			return topicName;
+		}
+		public void setTopicName(String topicName) {
+			this.topicName = topicName;
+		}
+		
 	/*
 	 * 2013-01-10 cjw
 	 * push client 의 보안 처리
