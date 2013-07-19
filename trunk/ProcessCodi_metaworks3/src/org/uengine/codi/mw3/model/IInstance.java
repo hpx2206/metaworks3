@@ -155,6 +155,10 @@ public interface IInstance extends IDAO{
 	public int getEffort();
 	public void setEffort(int effort);
 	
+	@NonSavable
+	public String getTopicName();
+	public void setTopicName(String topicName);
+	
 	@NonLoadable
 	@NonSavable
 	public InstanceViewThreadPanel getInstanceViewThreadPanel();

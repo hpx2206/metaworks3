@@ -3,7 +3,8 @@ if(value){
 	
 	var instanceTitle = value.name;
 	var lastCmnt = value.lastCmnt;
-	var lastCmnt2 = value.lastCmnt2; 
+	var lastCmnt2 = value.lastCmnt2;
+	var topicName = value.topicName;
 	 
 	var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
 	if(session && session.searchKeyword != null && session.searchKeyword.length > 0){
@@ -78,7 +79,11 @@ if(value){
 												<span class="type_process"></span><span class="instanceUnLock"></span>
 											<% }else if(isSecureProcess){ %>
 												<span class="type_process"></span><span class="instanceLock"></span>
-											<% } %>	
+											<% } %>
+											<% if(topicName != null){ %>
+												<span class="type_topic"></span>
+												<span class="instanceBtn"><%=topicName%></span>
+											<% }%>
 										</div>										
 										<div style="float:left; font-size:11px;  margin:3px 8px 3px 0;"><%=fields.startedDate.here({when: 'timeago'})%></div>
 										
