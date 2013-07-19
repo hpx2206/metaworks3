@@ -863,7 +863,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		// 수정
 		}else{
 //			this.copyFrom(databaseMe());
-			this.databaseMe();
+//			this.databaseMe();
 			this.syncToDatabaseMe();
 		}		
 		
@@ -1075,10 +1075,12 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			throw new Exception("$OnlyTheWriterCanEdit");
 		}
 		
+		/*
 		setDueDate(null);
 		setStartDate(null);
 		setEndDate(null);		
-	
+		*/
+		
 		getMetaworksContext().setWhen("edit");		
 	}
 
