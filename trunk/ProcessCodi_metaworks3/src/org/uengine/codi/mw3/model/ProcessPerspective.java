@@ -1,7 +1,5 @@
 package org.uengine.codi.mw3.model;
 
-import org.metaworks.MetaworksContext;
-import org.metaworks.annotation.ServiceMethod;
 
 public class ProcessPerspective extends Perspective{
 	
