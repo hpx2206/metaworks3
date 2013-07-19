@@ -108,8 +108,8 @@ if(value){
 											}
 										}%>
 										<%
-										if(value.bVBenefit != null && value.bVPenalty != null && value.effort != null){
-											var bv = value.bVBenefit + value.bVPenalty;
+										if(value.benefit != null && value.penalty != null && value.effort != null){
+											var bv = value.benefit + value.penalty;
 											if(value.effort != 0) {
 												var roi = Math.round(bv/value.effort);
 										%>

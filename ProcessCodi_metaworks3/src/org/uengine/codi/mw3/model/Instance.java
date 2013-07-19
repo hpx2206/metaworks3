@@ -1064,22 +1064,22 @@ public class Instance extends Database<IInstance> implements IInstance{
 			this.instanceDrag = instanceDrag;
 		}
 		
-	int bvBenefit;
+	int benefit;
 		@Override
-		public int getBVBenefit() {
-			return bvBenefit;
+		public int getBenefit() {
+			return benefit;
 		}
-		public void setBVBenefit(int benefit) {
-			this.bvBenefit = benefit;
+		public void setBenefit(int benefit) {
+			this.benefit = benefit;
 		}
 	
-	int bvPenalty;
+	int penalty;
 		@Override
-		public int getBVPenalty() {
-			return bvPenalty;
+		public int getPenalty() {
+			return penalty;
 		}
-		public void setBVPenalty(int penalty) {
-			this.bvPenalty = penalty;
+		public void setPenalty(int penalty) {
+			this.penalty = penalty;
 		}
 
 	int effort;
@@ -1278,8 +1278,8 @@ public class Instance extends Database<IInstance> implements IInstance{
 		InstanceDueSetter ids = new InstanceDueSetter();
 		ids.setInstId(this.getInstId());
 		ids.setDueDate(instanceRef.getDueDate());
-		ids.setBenefit(instanceRef.getBVBenefit());
-		ids.setPenalty(instanceRef.getBVPenalty());
+		ids.setBenefit(instanceRef.getBenefit());
+		ids.setPenalty(instanceRef.getPenalty());
 		ids.setEffort(instanceRef.getEffort());
 		ids.setOnlyInitiatorCanComplete(instanceRef.isInitCmpl());
 		ids.setProgress(instanceRef.getProgress());
@@ -1393,7 +1393,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 				new Object[]{new Refresh(todoBadge), new WorkItemListener(workItem)});			
 		
 		//inst_emp_perf 테이블에 성과정보 저장 insert
-		int businessValue = instanceRef.getBVBenefit() + instanceRef.getBVPenalty();
+		int businessValue = instanceRef.getBenefit() + instanceRef.getPenalty();
 		
 		if(tobe.equals("Running")){
 			deleteBV();

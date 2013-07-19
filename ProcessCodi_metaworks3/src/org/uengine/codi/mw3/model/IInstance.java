@@ -146,11 +146,11 @@ public interface IInstance extends IDAO{
 	public String getProgress();
 	public void setProgress(String progress);
 	
-	public int getBVBenefit();
-	public void setBVBenefit(int benefit);
+	public int getBenefit();
+	public void setBenefit(int benefit);
 	
-	public int getBVPenalty();
-	public void setBVPenalty(int penalty);
+	public int getPenalty();
+	public void setPenalty(int penalty);
 	
 	public int getEffort();
 	public void setEffort(int effort);

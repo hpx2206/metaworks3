@@ -50,9 +50,13 @@ public class Locale{
 	}
 	
 	public String getString(String key){
-		if(key.startsWith("$"))			
-			return resourceBundle.getProperty(key.substring(1));
-		else
+		if(key.startsWith("$")){
+			String messages = resourceBundle.getProperty(key.substring(1));
+			if(messages == null)
+				messages = key;
+			
+			return messages;
+		}else
 			return key;
 	}
 }
