@@ -12,6 +12,13 @@ var org_uengine_codi_mw3_admin_PageNavigator= function(objectId, className){
 	
 	$('#objDiv_' + objectId).addClass('pageflip');	
 	
+	$('#objDiv_' + objectId + ' area').one('click', {objectId: this.objectId}, function(event, ui){
+		$('#objDiv_' + event.data.objectId + ' area').unbind();
+		
+		// 존재하는 팝업 제거
+		$('.target_popup').remove();	
+	});
+	
 	//Page Flip on hover
 	$(".pageflip").hover(
 		function() {
