@@ -1,6 +1,5 @@
 package org.uengine.codi.mw3.model;
 
-import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.annotation.Available;
@@ -9,7 +8,6 @@ import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.IDAO;
-import org.metaworks.widget.ModalWindow;
 import org.metaworks.widget.Window;
 
 public interface IUser extends IDAO{
@@ -37,7 +35,7 @@ public interface IUser extends IDAO{
 //	public String getInstanceId() ;
 //	public void setInstanceId(String instanceId);
 	
-	@ServiceMethod(callByContent=true)
+	@ServiceMethod(callByContent=true, target=TARGET_APPEND)
 	public Refresh addContact() throws Exception;
 	
 	@ServiceMethod(callByContent=true, target=TARGET_APPEND)
