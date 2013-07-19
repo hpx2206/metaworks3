@@ -139,12 +139,12 @@ public class ScheduleCalendar implements ContextAware {
 							"wl.prevver, wl.nextver,  wl.majorver, wl.minorver,  pi.name instnm , pi.status instancestatus " +
 							"from bpm_worklist wl, bpm_procinst pi " +
 							"where wl.instid = pi.instid and wl.endpoint=?endpoint " +
-							"and pi.isdeleted != 1 and wl.duedate is not null";
+							"and pi.isdeleted != 1 and wl.duedate is not null and wl.defid is not null";
 		IWorkItem workitems = schedule.sql(wsql);
 		workitems.setEndpoint(userId);
 		workitems.select();
 		DataConvert(arrListData, workitems, userId);
-		
+	
 		Instance instance = new Instance();
 		String sql = 	" select distinct(inst.INSTID), inst.DEFVERID, inst.DEFID, inst.DEFNAME, inst.DEFPATH, inst.DEFMODDATE, inst.STARTEDDATE, inst.FINISHEDDATE, inst.DUEDATE, inst.STATUS, inst.INFO, inst.NAME, inst.ISDELETED, inst.ISADHOC, inst.ISARCHIVE, inst.ISSUBPROCESS, inst.ISEVENTHANDLER, inst.ROOTINSTID, inst.MAININSTID, inst.MAINDEFVERID, inst.MAINACTTRCTAG, inst.MAINEXECSCOPE, inst.ABSTRCPATH, inst.DONTRETURN, inst.MODDATE, inst.EXT1, inst.INITEP, inst.INITRSNM, inst.CURREP, inst.CURRRSNM, inst.STRATEGYID, inst.PREVCURREP, inst.PREVCURRRSNM, inst.STARCNT, inst.STARRSNM, inst.STARFLAG, inst.ABSTRACTINST, inst.CURRTRCTAG, inst.PREVTRCTAG, inst.INITCOMCD, inst.SECUOPT, inst.lastcmnt, inst.initcmpl "+ 
 						" from bpm_procinst inst , bpm_rolemapping follower "+
