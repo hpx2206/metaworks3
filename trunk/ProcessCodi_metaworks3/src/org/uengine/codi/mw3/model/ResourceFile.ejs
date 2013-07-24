@@ -33,7 +33,7 @@ if(value){
 <%
 			if(!value.deleted){
 %>
-	<a onclick="<%=methods.drillDown.caller()%>"><b><%=value.name%></b></a>
+	<a onclick="<%=methods.drillDown.caller()%>" style="margin-left:25px;"><b><%=value.name%></b></a>
 <%			}else{
 %>
 	<b><font color=gray><%=value.name%></font></b>
@@ -50,7 +50,7 @@ if(value){
 
 <span style="background:url(images/waveStyle/<%=icon%>) no-repeat 0px 0px; cursor:pointer;">
 <%			if(!value.isDeleted){%>
-	<a onclick="<%=methods.drillDown.caller()%>"><%=value.name%></a>
+	<a onclick="<%=methods.drillDown.caller()%>" style="margin-left:25px;"><%=value.name%></a>
 <%			}else{%>
 	<font color=gray>deleted >>> <%=value.name%></font>
 <%			}%>
@@ -67,26 +67,26 @@ if(value){
   
 %>
 	<span style="background:url(images/waveStyle/<%=icon%>) no-repeat 5px 0px; cursor:pointer;">
-		<a onclick="<%=methods.design.caller()%>"><%=value.name%></a>
+		<a onclick="<%=methods.design.caller()%>" style="margin-left:25px;"><%=value.name%></a>
 	</span>
 <%
   		}else if(mw3.where=="navigation"){
 %>
 	<span style="background:url(images/waveStyle/<%=icon%>) no-repeat 5px 0px;">
-		<a onclick="<%=methods.loadProcess.caller()%>"><%=value.name%></a>
+		<a onclick="<%=methods.loadProcess.caller()%>" style="margin-left:25px;"><%=value.name%></a>
 	</span>
 <%
   		}else if(mw3.when=="appendProcessMap"){
 %>
 	<span style="background:url(images/waveStyle/<%=icon%>) no-repeat 5px 0px;">
-		<a onclick="<%=methods.appendProcessMap.caller()%>"><%=value.name%></a>
+		<a onclick="<%=methods.appendProcessMap.caller()%>" style="margin-left:25px;"><%=value.name%></a>
 	</span>
 <%
   		}else{
   	  
 %>
 	<span style="background:url(images/waveStyle/<%=icon%>) no-repeat 5px 0px;">
-		<a onclick="<%=methods.initiate.caller()%>"><%=value.name%></a>
+		<a onclick="<%=methods.initiate.caller()%>" style="margin-left:25px;"><%=value.name%></a>
 	</span>
 <%
   		}

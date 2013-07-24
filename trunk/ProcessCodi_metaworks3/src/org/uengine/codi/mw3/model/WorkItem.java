@@ -78,7 +78,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		sql.append("  from bpm_worklist");
 		sql.append(" where rootInstId=?instId");
 		sql.append("   and isdeleted!=?isDeleted");
-		sql.append("   and type in ('ovryCmnt' , 'replyCmnt') ");
+		sql.append("   and type in ('ovryCmnt') ");
 		sql.append(" order by taskId");
 		
 		IWorkItem workitem = (IWorkItem) Database.sql(IWorkItem.class, sql.toString());
@@ -92,6 +92,27 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		//user.setEndpoint(login.getEmpCode());
 		//workitem.setWriter(user);
 		
+		workitem.select();
+		
+		return workitem;
+	}
+	
+	protected static IWorkItem findParentWorkItemByType(String taskId , String type) throws Exception{
+		
+		StringBuffer sql = new StringBuffer();
+				
+		sql.append("select *");
+		sql.append("  from bpm_worklist");
+		sql.append(" where prtTskId = ?prtTskId");
+		sql.append("   and isdeleted != ?isDeleted");
+		sql.append("   and type = ?type ");
+		sql.append(" order by taskId");
+		
+		IWorkItem workitem = (IWorkItem) Database.sql(IWorkItem.class, sql.toString());
+		
+		workitem.set("type", type);
+		workitem.set("prtTskId", taskId);
+		workitem.set("isDeleted", 1);
 		workitem.select();
 		
 		return workitem;
@@ -540,7 +561,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			
 			workItemHandler.load();
 		}
-		
+		this.contentLoaded = true;
 		
 		//setWorkItemHandler(workItemHandler);
 		
@@ -692,6 +713,14 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		}
 		
 		
+	Long prtTskId;
+		public Long getPrtTskId() {
+			return prtTskId;
+		}
+		public void setPrtTskId(Long prtTskId) {
+			this.prtTskId = prtTskId;
+		}
+
 	Long grpTaskId;
 		
 		public Long getGrpTaskId() {
@@ -1196,7 +1225,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		sql.append("  from bpm_worklist");
 		sql.append(" where rootInstId=?instId");
 		sql.append("   and taskId<=?taskId");
-		sql.append("   and (type!=?type or type is null)");
+		sql.append("   and (type  not in ('ovryCmnt' , 'replyCmnt') or type is null)");
 		sql.append("   and isdeleted!=?isDeleted");
 		
 		sql.append(" order by taskId");
@@ -1205,7 +1234,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		
 		workitem.set("instId", this.getInstId());
 		workitem.set("taskId", this.getTaskId());
-		workitem.set("type", "ovryCmnt");
 		workitem.set("isDeleted",1);
 		
 		//TODO: this expression should be work later instead of above.

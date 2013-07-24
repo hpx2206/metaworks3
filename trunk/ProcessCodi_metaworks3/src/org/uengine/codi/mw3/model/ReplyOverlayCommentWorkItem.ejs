@@ -1,5 +1,5 @@
 <%
-    if( mw3.when == 'edit' ){
+    if( value ){
 %>
         <table  border="0" cellspacing="0" cellpadding="0" style="width:100%; border:none;">
             <tr>
@@ -7,16 +7,18 @@
                 <td width="40" style="border:none; padding:5px 0 0 0"><%=fields.writer.here({when:'followers'})%></td>
                 <td style="border:none;padding:8px 0 0 0"> <%=value.title%></td>
                 <td width="40" style="border:none;padding:5px 0 0 0">
-                    <img src="images/waveStyle/apply.png" onclick="<%= methods.saveReply.caller() %>" />
-                    <img src="images/waveStyle/delete.png" onclick="mw3.getFaceHelper('<%=objectId%>').deleteReply()" />
+                <%
+                    var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
+                    var itIsMe = (session && session.user.userId == value.endpoint);
+                    if(itIsMe){
+                %>
+                    <img src="images/waveStyle/delete.png" onclick="<%=methods.remove.caller()%>" style="cursor:pointer;"/>
+                <%
+                    }
+                %>
                 </td>
             </tr>
         </table>
-<%
-    }else if( mw3.when == 'view' ){
-%>
-        <%=fields.writer.here({when:'followers'})%>
-            title = <%=value.title%>
 <%
     }
 %>

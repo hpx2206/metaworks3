@@ -1,9 +1,10 @@
 var org_uengine_codi_mw3_model_WorkItemHandler = function(objectId, className){
 	this.objectId = objectId;
 	this.className = className;
+	
 	var object = mw3.objects[this.objectId];
-	/*
-	if( object && object.parameters ){
+	// 댓글달기 버튼  
+	if( object && object.parameters){
 		for(var i = 0; i < object.parameters.length; i++){
 			
 			var valObject = object.parameters[i].valueObject;
@@ -19,15 +20,14 @@ var org_uengine_codi_mw3_model_WorkItemHandler = function(objectId, className){
 					if( valiableObjectId ){
 						var valiableObjectDivId = mw3._getObjectDivId(valiableObjectId);
 						var valiableObjectDiv = $('#' + valiableObjectDivId);
-						
-						var buttonHtml = '<a id="wBtn" href="#" onClick="mw3.getFaceHelper('+objectId+').callReply(\''+fieldName+'\' , \''+valiableObjectId+'\')"><span style="color:#000; margin-right:0px">댓글달기</span></a>';
+						valiableObjectDiv.find('input').css('float','left');
+						var buttonHtml = '<a id="wBtn" style="float:right" href="#" onClick="mw3.getFaceHelper('+objectId+').callReply(\''+fieldName+'\' , \''+valiableObjectId+'\')"><span style="color:#000; margin-right:0px">댓글달기</span></a>';
 						valiableObjectDiv.append(buttonHtml);
 					}
 				}
 			}
 		}
 	}
-	*/
 };
 	
 org_uengine_codi_mw3_model_WorkItemHandler.prototype = {
@@ -38,7 +38,6 @@ org_uengine_codi_mw3_model_WorkItemHandler.prototype = {
 				workItem.replyFieldName = propName ;
 				workItem.replyTitle = comment;
 				var replyObject = mw3.call(this.objectId, 'comment');
-				
 				var html = mw3.locateObject(replyObject, replyObject.__className);
 				
 				var valiableObjectDivId = mw3._getObjectDivId(valiableObjectId);

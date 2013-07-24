@@ -136,9 +136,23 @@ public class WorkItemHandler implements ContextAware{
 		setInstanceId(instanceId.toString());
 		setTracingTag(humanActivity.getTracingTag());
 		setTaskId(taskId);
+		
+		// 댓글이 있는지 찾는다.
+		if( taskId != -1 && taskId != 0){
+			WorkItem item = new WorkItem();
+			
+			workItem = item.findParentWorkItemByType(taskId+"" , "replyCmnt");
+		}
 	}
 	
-	
+	transient IWorkItem workItem;
+		public IWorkItem getWorkItem() {
+			return workItem;
+		}
+		public void setWorkItem(IWorkItem workItem) {
+			this.workItem = workItem;
+		}
+
 	transient protected HumanActivity humanActivity;
 //	@NonLoadable
 //	@NonSavable
@@ -515,10 +529,11 @@ public class WorkItemHandler implements ContextAware{
 		replyOverlayCommentWorkItem.setInstId(new Long(getInstanceId()));
 		replyOverlayCommentWorkItem.setTitle(replyTitle);
 		replyOverlayCommentWorkItem.setExt1(replyFieldName);
+		replyOverlayCommentWorkItem.setEndpoint(session.getUser().getUserId());
 		replyOverlayCommentWorkItem.add();
 		
 		replyOverlayCommentWorkItem.getMetaworksContext().setWhen("edit");
-		
+		replyOverlayCommentWorkItem.contentLoaded = true;
 		return replyOverlayCommentWorkItem;
 	}
 			

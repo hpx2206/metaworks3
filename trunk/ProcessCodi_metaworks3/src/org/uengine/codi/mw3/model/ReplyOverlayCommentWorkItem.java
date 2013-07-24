@@ -10,11 +10,4 @@ public class ReplyOverlayCommentWorkItem  extends OverlayCommentWorkItem{
 	public ReplyOverlayCommentWorkItem(){
 		setType(TYPE);
 	}
-	
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_SELF)		
-	public Object saveReply(){
-		
-		
-		return null;
-	}
 }
