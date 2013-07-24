@@ -8,10 +8,10 @@
 		<div class="workItem_tabs">
 			 <ul>
 				<li class="current">
-					<a href="#" onClick="<%=methods.viewAsPDF.caller()%>"><span>PDF로 보기</span></a>
+					<a href="#" onClick="<%=methods.viewAsPDF.caller()%>"><span><%=mw3.localize('$ViewAsPdf')%></span></a>
 				</li>	
 			 	<li style="<%=value.convertStatus==null?'display:none':''%>">
-			 		<a href="#" onClick="<%=methods.viewAsImages.caller()%>"><span>이미지로 보기</span></a>
+			 		<a href="#" onClick="<%=methods.viewAsImages.caller()%>"><span><%=mw3.localize('$ViewAsImage')%></span></a>
 			 	</li>
 			 </ul>
 		</div>
@@ -31,7 +31,7 @@
 			<br />
 			<br />
 			<li></li>
-			<li><b><i>미리보기 작업중</i></b></li>
+			<li><b><i><%=mw3.localize('$PreviewLoading')%></i></b></li>
 			<progress id="convertProgressBar"></progress>
 			<li></li>
 		</div>
