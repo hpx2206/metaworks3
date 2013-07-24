@@ -16,6 +16,6 @@ org_uengine_codi_mw3_model_InstanceViewThreadPanel.prototype = {
 		var threadDivId = mw3._getObjectDivId(threadId);
 		
 		var html = mw3.locateObject(target, null);
-		$('#' + threadDivId + ' .workitem_list').append(html);
+		$('#' + threadDivId + ' .workitem_list:eq(0)').append(html);
 	}
 };

@@ -64,6 +64,9 @@ public interface IWorkItem extends IDAO{
 
 		public int getMinorVer();
 		public void setMinorVer(int minorVer);
+		
+		public Long getPrtTskId();
+		public void setPrtTskId(Long prtTskId);
 
 		public Long getGrpTaskId();
 		public void setGrpTaskId(Long grpTaskId);
