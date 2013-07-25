@@ -72,7 +72,7 @@ org_metaworks_website_MetaworksFile.prototype.setFilename = function(filename){
 	object.filename = filename;
 	
 	if(filename == null){
-		filename = '선택된 파일이 없습니다';
+		filename = mw3.localize('$NoFileAttached');
 		$("#filebtnadd_" + this.objectId).css('display', 'block');
 		$("#filebtndel_" + this.objectId).css('display', 'none');
 	} else {
