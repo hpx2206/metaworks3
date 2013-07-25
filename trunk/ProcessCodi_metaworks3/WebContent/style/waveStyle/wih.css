@@ -609,6 +609,6 @@ legend {display:none;}
 .moreBtn5{display:block; width:200px; margin:0 auto; text-align:center;font-weight:bold;}
 .morePoint{width: 10px; height:10px; margin:5px auto; background:url("../../images/waveStyle/morePoint.png") no-repeat;}
 
-.topic_span{ padding:0 4px;-webkit-border-radius: 2px;
+.topic_span{ padding:0 4px 1px 20px;-webkit-border-radius: 2px;
       -moz-border-radius: 2px;
-      border-radius: 2px; background:#5a636b; color:#fff}
+      border-radius: 2px; background:url('../../images/waveStyle/i_topic_w.png') 0px -2px no-repeat #5a636b; color:#fff}

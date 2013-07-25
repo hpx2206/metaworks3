@@ -68,7 +68,7 @@ if(value){
 							<tr>
 								<td  style="border:none;"><a href="#"><b><font color=204070><%=value.initiator.name%></font>&nbsp;&nbsp;
 								
-									<font color=#5C5C5C><%=instanceTitle%><% if(topicName != null){ %> <span class="topic_span"> topic : <%=topicName%></span><% }%> </font></b></a>
+									<font color=#5C5C5C><%=instanceTitle%><% if(topicName != null){ %> <span class="topic_span"><%=topicName%></span><% }%> </font></b></a>
 									<div>
 										<div  class="instanceType">
 											<% if(isChat){ %>
@@ -81,7 +81,7 @@ if(value){
 												<span class="type_process"></span><span class="instanceLock"></span>
 											<% } %>
 											<% if(topicName != null){ %>
-												<span class="type_topic"></span>
+												<!--<span class="type_topic"></span>-->
 											<% }%>
 										</div>										
 										<div style="float:left; font-size:11px;  margin:3px 8px 3px 0;"><%=fields.startedDate.here({when: 'timeago'})%></div>
