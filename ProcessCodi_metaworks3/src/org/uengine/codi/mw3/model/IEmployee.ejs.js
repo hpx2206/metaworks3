@@ -1,12 +1,11 @@
 var org_uengine_codi_mw3_model_IEmployee = function(objectId, className){
-	var object = mw3.objects[objectId];	
-	
 	this.objectId = objectId;
 	this.className = className;
-
-	var theLoginHelper = this;
 	
-	var object = mw3.objects[this.objectId];
+	this.objectDivId = mw3._getObjectDivId(this.objectId);
+	this.objectDiv = $('#' + this.objectDivId);
+	
+	this.object = mw3.objects[this.objectId];
 	
 	/*
 	if(object && object.metaworksContext && object.metaworksContext.when == 'new'){
@@ -64,10 +63,16 @@ org_uengine_codi_mw3_model_IEmployee.prototype = {
 	showStatus : function(status){
 		var arrStatus = status.split(' ');
 		
+		if(arrStatus[0] == 'loadOrganization'){
+			$('#navigator .depth2 .fist_menu li').removeClass('selected_navi');
+			$('.idept').removeClass('selected_navi2');
+			$('.iemployee').removeClass('selected_navi2');
+			this.objectDiv.find('a:first').addClass('selected_navi2');
+		}
 		if(arrStatus[1] == 'DONE.'){
 			if(arrStatus[0] == 'checkEmpCode')
 				$('#checkEmpCode_' + this.objectId).html(mw3.localize('$sucessCheckEmpCode'));
-		}		
+		}
 		
 	},
 	showError : function(message, methodName){
