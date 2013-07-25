@@ -1020,6 +1020,11 @@ img {
     text-overflow:ellipsis;
     -o-text-overow: ellipsis;
 }
+.selected_navi2 {
+    background-color:#C9E2FC;
+    border:1px solid #A8D1FB;
+    -webkit-border-radius: 5px
+}
 #navigator .depth2 .fist_menu li{
     padding:1px 1px 2px 1px;    
     -moz-border-radius: 5px;

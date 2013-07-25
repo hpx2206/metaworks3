@@ -1,7 +1,10 @@
 var org_uengine_codi_mw3_model_OrganizationPerspectiveRole = function(objectId, className){
 	this.objectId = objectId;
 	this.className = className;
-	this.divId = mw3._getObjectDivId(this.objectId);	
+	this.divId = mw3._getObjectDivId(this.objectId);
+	
+	this.object = mw3.objects[this.objectId];
+	
 };
 
 org_uengine_codi_mw3_model_OrganizationPerspectiveRole.prototype = {
