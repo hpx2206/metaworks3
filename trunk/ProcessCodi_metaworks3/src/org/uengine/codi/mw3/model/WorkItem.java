@@ -771,7 +771,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				
 				instanceRef = instance.databaseMe();				
 				
-				instanceRef.setInitCmpl(true);										// 기본값 수정 시작자만 완료 가능하게
+				instanceRef.setInitCmpl(false);										// 기본값 수정 시작자만 완료 가능하게
 				instanceRef.setInitiator(session.getUser());						// 시작자는 실행한 사람
 				instanceRef.setInitComCd(session.getEmployee().getGlobalCom());		// 시작자의 회사
 				instanceRef.setStatus("Running");									// 처음 상태 Running
