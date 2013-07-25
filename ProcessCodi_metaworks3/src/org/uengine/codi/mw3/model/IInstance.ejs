@@ -41,7 +41,7 @@ if(value){
 	
 	%>
 	
-<table width="100%" border="0" cellspacing="0" cellpadding="0" class="instanceList tbl_type" <%=(value.status=='Completed') ? "style='background:#eeeeee;position:relative;'":""%> style="position:relative;">						
+<table width="100%" border="0" cellspacing="0" cellpadding="0" class="instanceList tbl_type" <%=(value.status=='Completed') ? "style='background:#f2f3f4;position:relative;'":""%> style="position:relative;">						
 	<tbody>
 	<tr class="q <%=value.firstDueTimeTerm ? (value.firstDueTimeTerm>=0 ? (value.firstDueTimeTerm>=3 ? "" : "plus" + value.firstDueTimeTerm ) : "minus" )  : "" %>" style="cursor:pointer;">
 		<td id="newInst"><div class="innerNewInst"></div></td>
@@ -68,7 +68,7 @@ if(value){
 							<tr>
 								<td  style="border:none;"><a href="#"><b><font color=204070><%=value.initiator.name%></font>&nbsp;&nbsp;
 								
-									<font color=#5C5C5C><%=instanceTitle%></font></b></a>
+									<font color=#5C5C5C><%=instanceTitle%><% if(topicName != null){ %> <span class="topic_span"> topic : <%=topicName%></span><% }%> </font></b></a>
 									<div>
 										<div  class="instanceType">
 											<% if(isChat){ %>
@@ -82,7 +82,6 @@ if(value){
 											<% } %>
 											<% if(topicName != null){ %>
 												<span class="type_topic"></span>
-												<span class="instanceBtn"><%=topicName%></span>
 											<% }%>
 										</div>										
 										<div style="float:left; font-size:11px;  margin:3px 8px 3px 0;"><%=fields.startedDate.here({when: 'timeago'})%></div>

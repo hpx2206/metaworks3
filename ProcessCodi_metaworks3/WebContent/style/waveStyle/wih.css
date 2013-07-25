@@ -608,3 +608,7 @@ legend {display:none;}
       
 .moreBtn5{display:block; width:200px; margin:0 auto; text-align:center;font-weight:bold;}
 .morePoint{width: 10px; height:10px; margin:5px auto; background:url("../../images/waveStyle/morePoint.png") no-repeat;}
+
+.topic_span{ padding:0 4px;-webkit-border-radius: 2px;
+      -moz-border-radius: 2px;
+      border-radius: 2px; background:#5a636b; color:#fff}
