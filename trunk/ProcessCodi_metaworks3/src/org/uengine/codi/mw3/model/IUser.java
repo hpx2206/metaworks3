@@ -90,6 +90,7 @@ public interface IUser extends IDAO{
 	
 	@ServiceMethod(inContextMenu=true, needToConfirm=true)
 	@Available(when={"followers"})
+	@Face(displayName="$Unsubscribe")
 	public Remover unsubscribe() throws Exception;
 
 	@ServiceMethod(inContextMenu=true, needToConfirm=true, target="none")

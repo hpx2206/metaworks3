@@ -218,6 +218,7 @@ public interface IEmployee extends IDAO {
 	
 	@ServiceMethod(needToConfirm=true, inContextMenu=true)
 	@Face(displayName="$Unsubscribe")
+	@Available(where={"inDetailWindow", "inDetailPopup"})
 	public Object[] unsubscribe() throws Exception;
 	
 	@ServiceMethod
