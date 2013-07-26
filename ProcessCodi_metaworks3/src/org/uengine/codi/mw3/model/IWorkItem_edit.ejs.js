@@ -108,7 +108,8 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype = {
 		}
 		var initialFollowers = [];
 		for(var idx in this.userAddCommands){
-			initialFollowers[initialFollowers.length] = idx;
+			if(this.userAddCommands[idx])
+				initialFollowers[initialFollowers.length] = idx;
 		}
 		
 		if(initialFollowers.length>0){
@@ -283,7 +284,7 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.press = function(){
 
     	var recommendDivId = "#commandRecommendDiv_" + this.objectId;
     	var processDivId 		= "commandProcessDiv_" + this.objectId;
-    	var followerDivId 	= "#commandFollowerDiv_" + this.objectId;
+    	var followerDivId 	= "commandFollowerDiv_" + this.objectId;
     	var dateDivId 			= "commandDateDiv_" + this.objectId;    	    	
     	var recommendFirst = true;
     	
@@ -412,7 +413,15 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.press = function(){
 				var contact = contactList.contacts[i];
 				
 				if(contact.friend && contact.friend.userId && contact.friend.name && text.indexOf(contact.friend.name) > -1 && !this.userAddCommands[contact.friend.userId] && !exisingFollowers[contact.friend.userId]){
-    				$(followerDivId).append("" + mw3.localize('$AddUserAsFollower') + ": \"<b>" + contact.friend.name + "</b>\"<br>");
+					var innerHtmlStr = 	"<div id=\"" + followerDivId + '_' + contact.friend.userId + "\" >";
+					innerHtmlStr		+=	"" + mw3.localize('$AddUserAsFollower') + ": <b>" + contact.friend.name + "</b>";
+					innerHtmlStr		+=	" | <a href=\"#\" onClick=\"mw3.getFaceHelper('" + this.objectId + "').hateFollower('" + followerDivId + "','" + contact.friend.userId + "');\" style=\"cursor:pointer;\">싫어요</a> ";
+					innerHtmlStr		+=	"</div>";
+					
+					$('#' + followerDivId).append(innerHtmlStr);
+					
+    				//$(followerDivId).append("" + mw3.localize('$AddUserAsFollower') + ": \"<b>" + contact.friend.name + "</b>\"<br>");
+					
     				this.userAddCommands[contact.friend.userId] = contact.friend.userId;
 				}
 			}
@@ -436,6 +445,12 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.removeDiv = function(divId){
 		this.commandActivityAppAlias = null;
 	}
 };
+org_uengine_codi_mw3_model_IWorkItem_edit.prototype.hateFollower = function(followerDivId, userId){
+	$('#'+followerDivId + '_' + userId).remove();
+	
+	this.userAddCommands[userId] = null;
+};
+
 /**
  * datejs.js using method
  * @url       http://www.firejune.com/1343
