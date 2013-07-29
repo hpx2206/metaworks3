@@ -253,6 +253,7 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 	    
 	    // Shape 이 Connect 되었을 때의 이벤트 리스너
 	    canvas.onConnectShape(function (event, edgeElement, fromElement, toElement) {
+	    	console.log('cccccccccccccccccccccccccccccc');
 			faceHelper.addEventEdge(objectId, canvas, edgeElement);
 	    });
 	    canvas.onDrawShape(function (event, shapeElement) {
@@ -663,10 +664,9 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 	var graphJson = this.icanvas.toJSON();
 	var ogObj = eval(graphJson.opengraph);
 	var ogArr = ogObj.cell;
-//	var cellsForDwr = [];
-	var activityList = new ArrayList();
-	var roleList = new ArrayList();
-	var transitionList = new ArrayList();
+	var activityList = [];
+	var roleList = [];
+	var transitionList = [];
 	for(var i=0; i<ogArr.length; i++){
 		var og = ogArr[i];
 		var cellForDwr = {};
@@ -719,7 +719,9 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 		
 		$id = $('#'+og['@id']);
 		var activity = $id.data('activity');
-		console.log(activity);
+		var activityIdx = 0;
+		var roleIdx = 0;
+		var transitionIdx = 0;
 		if( og['@shapeType'] != 'EDGE'){
 			cellForDwr['tracingTag'] = $id.attr('_tracingTag');
 			cellForDwr['classname'] = $id.attr('_classname');
@@ -728,10 +730,10 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 			if( activity ){
 				activity.activityView = cellForDwr;
 				if(classType == 'Activity'){
-					activityList.add(activity);
+					activityList[activityIdx++] = activity;
 	//				activityMap[og['@id']] = activity;
 				}else if(classType == 'Role'){
-					roleList.add(activity);
+					roleList[roleIdx++] = activity;
 	//				roleMap[og['@id']] = activity;
 	//				cellForDwr['roleName'] = activity.name;
 				}
@@ -739,21 +741,21 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 		}
 		if( og['@shapeType'] == 'EDGE'){
 			if( activity ){
+				transitionList[transitionIdx++] = activity;
 				activity.activityView = cellForDwr;
-				transitionList.add(activity);
 			}
 		}
 	}
 	
 	var object = mw3.objects[this.objectId];
-//	object.cell = cellsForDwr;
-//	object.graphString = JSON.stringify(graphJson);
-//	object.activityMap = activityMap;
-//	object.roleMap = roleMap;
-//	object.processDesignerContainer.activityList = activityList;
-//	object.processDesignerContainer.roleList = roleList;
-//	object.processDesignerContainer.transitionList = transitionList;
-	
+	var container = {
+			__className : 'org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerContainer',
+//			aa : 'sssss'
+			activityList : activityList,
+			roleList : roleList,
+			transitionList : transitionList,
+	};
+	object.processDesignerContainer = container;
 	return object;
 };
 

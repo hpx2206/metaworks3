@@ -21,7 +21,7 @@ import org.metaworks.inputter.ArrayObjectInput;
 import org.uengine.contexts.TextContext;
 import org.uengine.util.UEngineUtil;
 
-public class SubProcessActivity extends DefaultActivity {
+public class SubProcessActivity extends DefaultActivity implements IDrawDesigne {
   private static final long serialVersionUID = org.uengine.kernel.GlobalContext.SERIALIZATION_UID;
   
   protected final static String SUBPROCESS_INST_ID="instanceIdOfSubProcess"; 
@@ -1106,6 +1106,11 @@ public Map getActivityDetails(ProcessInstance inst, String locale)
     setSubprocessIds(instance, currSubProcessIds, SUBPROCESS_INST_ID);
     setSubprocessIds(instance, currSubProcessLabels, SUBPROCESS_INST_LABELS);
   }
+
+@Override
+public void drawInit() throws Exception {
+	// TODO Auto-generated method stub
+}
 
 
 }
