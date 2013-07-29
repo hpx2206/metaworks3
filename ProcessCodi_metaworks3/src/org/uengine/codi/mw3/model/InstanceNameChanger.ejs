@@ -1,5 +1,6 @@
 <%
 	if(value){
+		if(value.metaworksContext.when == mw3.WHEN_EDIT){
 %>
 	
 <div style="padding:10px;">
@@ -7,5 +8,12 @@
 </div>
 
 <%
+		}else {
+%>
+<div style="padding:10px;">
+	<div class="instanceName"><%=value.instanceName%></div>
+</div>
+<%
+		}
 	}
 %>	

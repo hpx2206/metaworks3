@@ -2,7 +2,6 @@ package org.uengine.codi.mw3.model;
 
 import java.util.Date;
 
-import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
