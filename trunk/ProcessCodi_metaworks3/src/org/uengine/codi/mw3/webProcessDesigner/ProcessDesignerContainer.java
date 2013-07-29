@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.uengine.kernel.Activity;
 import org.uengine.kernel.ProcessDefinition;
+import org.uengine.kernel.ProcessVariable;
 import org.uengine.kernel.Role;
 import org.uengine.kernel.graph.Transition;
 
@@ -30,7 +31,13 @@ public class ProcessDesignerContainer {
 		public void setRoleList(ArrayList<Role> roleList) {
 			this.roleList = roleList;
 		}
-		
+	ArrayList<ProcessVariable> variableList;
+		public ArrayList<ProcessVariable> getVariableList() {
+			return variableList;
+		}
+		public void setVariableList(ArrayList<ProcessVariable> variableList) {
+			this.variableList = variableList;
+		}
 	public ProcessDesignerContainer(){
 		activityList = new ArrayList<Activity>();
 		roleList = new ArrayList<Role>();
