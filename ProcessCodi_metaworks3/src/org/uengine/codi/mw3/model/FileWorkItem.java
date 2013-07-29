@@ -172,7 +172,7 @@ public class FileWorkItem extends WorkItem{
 		return returnObject;
 	}
 
-	@ServiceMethod(inContextMenu=true, callByContent=true, except="file")
+	@ServiceMethod(inContextMenu=true, when = WHEN_VIEW, callByContent=true, except="file")
 	public void edit() throws Exception {
 		setFile(new MetaworksFile());
 		
