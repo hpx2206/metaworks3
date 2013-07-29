@@ -647,6 +647,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 			getMetaworksContext().setHow("");
 			getMetaworksContext().setWhere("");
 			TransactionContext.getThreadLocalInstance().setSharedContext("codi_session", session);
+			instanceViewContent.setTitle(this.getName());
 			instanceViewContent.session = session;
 			instanceViewContent.setMetaworksContext(getMetaworksContext());
 			instanceViewContent.load(this);
