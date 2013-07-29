@@ -6,6 +6,7 @@ import org.directwebremoting.Browser;
 import org.directwebremoting.ScriptSessions;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
@@ -132,7 +133,7 @@ public class UnstructuredProcessInstanceStarter implements ContextAware {
 			for( int i = 0; i < returnObject.length; i++){
 				returnObject2[i] = returnObject[i];
 			}
-			returnObject2[returnObject.length] = instanceView;
+			returnObject2[returnObject.length] = new Refresh(instanceView);
 			returnObject2[returnObject.length + 1] = new Remover(new Popup());
 			return returnObject2;
 		}
