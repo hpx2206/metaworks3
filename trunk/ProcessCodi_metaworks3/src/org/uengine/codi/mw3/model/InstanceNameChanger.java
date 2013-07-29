@@ -1,5 +1,7 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.ContextAware;
+import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;
@@ -7,7 +9,19 @@ import org.metaworks.annotation.Range;
 import org.metaworks.annotation.ServiceMethod;
 
 
-public class InstanceNameChanger {
+public class InstanceNameChanger implements ContextAware{
+	
+	public InstanceNameChanger() {
+		this.setMetaworksContext(new MetaworksContext());
+	}
+	
+	public MetaworksContext metaworksContext;
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
+		}
 
 	String instanceName;
 		@Name
@@ -36,10 +50,7 @@ public class InstanceNameChanger {
 		instance.setInstId(new Long(instanceId));
 		instance.databaseMe().setName(getInstanceName());
 		
-		
 		return new Refresh(instance.databaseMe());
 	}
-	
-	
 	
 }

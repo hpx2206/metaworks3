@@ -1,6 +1,8 @@
 var org_uengine_codi_mw3_model_InstanceNameChanger = function(objectId, className){
 	this.objectId = objectId;
 	this.className = className;
+	this.objectDivId = mw3._getObjectDivId(this.objectId);
+	this.objectDiv = $('#' + this.objectDivId);
 	
 	var object = mw3.objects[this.objectId];
 	
@@ -20,13 +22,13 @@ var org_uengine_codi_mw3_model_InstanceNameChanger = function(objectId, classNam
 		var autoSizing = function(){
 			var h=$('#instanceName_' + objectId);
 			h.height(21).height(h[0].scrollHeight);//where 60 is minimum height of textarea
-			};  
+		};  
 		
 		$('#instanceName_' + this.objectId).live("keyup keydown", autoSizing);
 	
 		autoSizing();
 	}
-}
+};
 
 org_uengine_codi_mw3_model_InstanceNameChanger.prototype = {
 	getValue : function(){
@@ -42,5 +44,5 @@ org_uengine_codi_mw3_model_InstanceNameChanger.prototype = {
 			mw3.call(this.objectId, 'change');			
 		}
 	}
-}
+};
 
