@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Vector;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
@@ -26,7 +27,6 @@ import org.uengine.kernel.Activity;
 import org.uengine.kernel.Condition;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.HumanActivity;
-import org.uengine.kernel.IDrawDesigne;
 import org.uengine.kernel.ProcessDefinition;
 import org.uengine.kernel.ProcessVariable;
 import org.uengine.kernel.Role;
@@ -45,22 +45,16 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 		public void setMetaworksContext(MetaworksContext metaworksContext) {
 			this.metaworksContext = metaworksContext;
 		}
-	
-//	DefineTab defineTab;
-//		public DefineTab getDefineTab() {
-//			return defineTab;
-//		}
-//		public void setDefineTab(DefineTab defineTab) {
-//			this.defineTab = defineTab;
-//		}
+	ProcessDesignerContainer processDesignerContainer;
+		public ProcessDesignerContainer getProcessDesignerContainer() {
+			return processDesignerContainer;
+		}
+		public void setProcessDesignerContainer(
+				ProcessDesignerContainer processDesignerContainer) {
+			this.processDesignerContainer = processDesignerContainer;
+		}
 	public ProcessDesignerWebContentPanel() throws Exception{
-//		defineTab = new DefineTab();
-		
-		canvasMap = new HashMap<String, CanvasDTO>();
-		activityMap = new HashMap<String, Object>();
-		roleMap = new HashMap<String, Object>();
-		variableMap = new HashMap<String, Object>();
-		conditionMap = new HashMap<String, Condition>();
+		processDesignerContainer = new ProcessDesignerContainer();
 	}
 	
 	String alias;
@@ -96,7 +90,7 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 //		public void setPrcsVariables(PrcsVariable[] prcsVariables) {
 //			this.prcsVariables = prcsVariables;
 //		}
-
+		/*
 	HashMap<String, CanvasDTO> canvasMap;
 		public HashMap<String, CanvasDTO> getCanvasMap() {
 			return canvasMap;
@@ -203,7 +197,7 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 		public void setBasePath(String basePath) {
 			this.basePath = basePath;
 		}
-
+		/*
 	PropertiesWindow propertiesWindow;
 		public PropertiesWindow getPropertiesWindow() {
 			return propertiesWindow;
@@ -211,7 +205,16 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 		public void setPropertiesWindow(PropertiesWindow propertiesWindow) {
 			this.propertiesWindow = propertiesWindow;
 		}
+		*/
+	ProcessDefinition definition;
+		public ProcessDefinition getDefinition() {
+			return definition;
+		}
+		public void setDefinition(ProcessDefinition definition) {
+			this.definition = definition;
+		}
 		
+		/*
 	@ServiceMethod(payload="propertiesWindow", target="popup")
 	public PropertiesWindow showProperties() throws Exception{
 		Object activityObject = propertiesWindow.getPanel();
@@ -225,6 +228,7 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 		}
 		return this.getPropertiesWindow();
 	}
+		*/
 		
 	@ServiceMethod(callByContent=true, target="popup")
 	public ModalWindow doSave() throws Exception{
@@ -237,7 +241,7 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 	
 	@ServiceMethod(callByContent=true, target="popup")
 	public ModalWindow gateCondition() throws Exception{
-		
+		/*
 		ArrayList<Role>	 roleList = new ArrayList<Role>();
         Collection<Object> collRole = roleMap.values();
         Iterator<Object> iterRole = collRole.iterator();
@@ -269,6 +273,8 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 		conditionPanel.setConditionLabel(this.getTempElementName());
 		conditionPanel.load();
 		return new ModalWindow(conditionPanel , 800, 550,  "조건편집" );
+		 */
+		return null;
 	}
 //	@ServiceMethod(target="popup", callByContent=true)
 //	public Popup geomInfo() throws Exception{
@@ -316,9 +322,11 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 	public void saveMe(ProcessEditor processEditor) throws Exception{
 		String tempTitle = processEditor.getName();
 		String title = tempTitle.replace('.','@').split("@")[0];
+		ProcessDefinition def = processDesignerContainer.containerToDefinition(processDesignerContainer);
 		
-		ArrayList<CanvasDTO> cells = new ArrayList<CanvasDTO>();
-		ProcessDefinition def = new ProcessDefinition();
+		
+//		ArrayList<CanvasDTO> cells = new ArrayList<CanvasDTO>();
+//		ProcessDefinition def = new ProcessDefinition();
 		if( cell != null){
 			Role[] roles = new Role[1];
 					// default role
@@ -336,12 +344,12 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 			}
 			HashMap<String, CanvasDTO> canvasMap = new HashMap<String, CanvasDTO>();
 //			HashMap<String, Object> activityMap = new HashMap<String, Object>();
-			for(int i = 0; i < cell.length; i++){
-				CanvasDTO cv = cell[i];
-				cells.add(cv);
-				canvasMap.put(cv.getId(), cv);
-			}
-			setCanvasMap(canvasMap);
+//			for(int i = 0; i < cell.length; i++){
+//				CanvasDTO cv = cell[i];
+//				cells.add(cv);
+//				canvasMap.put(cv.getId(), cv);
+//			}
+//			setCanvasMap(canvasMap);
 			
 			Collection<CanvasDTO> ct = canvasMap.values();
             Iterator<CanvasDTO> iterator = ct.iterator();
@@ -352,79 +360,79 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 					// 엑티비티 생성
 					GeomShape geom = new GeomShape(cv);
 					geom.setPvs(pvs);
-					if(cv.getClassname() != null && "org.uengine.kernel.HumanActivity".equals(cv.getClassname()) ){
-						HumanActivity activity = (HumanActivity)activityMap.get(cv.getId());
-						activity = (HumanActivity)geom.makeProcVal(activity);
-						if( cv.getParent() != null ){
-							String groupId = geom.getParent();
-							CanvasDTO groupCanvas = getCanvasMap().get(groupId);
-							if( "OG.shape.HorizontalLaneShape".equals(groupCanvas.getShapeId()) 
-									|| "OG.shape.VerticalLaneShape".equals(groupCanvas.getShapeId())){
-								Role role = (Role)getRoleMap().get(groupId);
-								activity.setRole(role);
-							}
-						}else{
-							// 만약 휴먼엑티비티에  role 이 셋팅이 안되어 있다면 default role 로 initator 로 셋팅을 해준다.(서브프로세스의 role셋팅을 위하여)
-							activity.setRole(initiator);
-						}
+					if(cv.getActivityClass() != null && "org.uengine.kernel.HumanActivity".equals(cv.getActivityClass()) ){
+//						HumanActivity activity = (HumanActivity)activityMap.get(cv.getId());
+//						activity = (HumanActivity)geom.makeProcVal(activity);
+//						if( cv.getParent() != null ){
+//							String groupId = geom.getParent();
+//							CanvasDTO groupCanvas = getCanvasMap().get(groupId);
+//							if( "OG.shape.HorizontalLaneShape".equals(groupCanvas.getShapeId()) 
+//									|| "OG.shape.VerticalLaneShape".equals(groupCanvas.getShapeId())){
+//								Role role = (Role)getRoleMap().get(groupId);
+//								activity.setRole(role);
+//							}
+//						}else{
+//							// 만약 휴먼엑티비티에  role 이 셋팅이 안되어 있다면 default role 로 initator 로 셋팅을 해준다.(서브프로세스의 role셋팅을 위하여)
+//							activity.setRole(initiator);
+//						}
 					}
 				}else if( "GROUP".equalsIgnoreCase(cv.getShapeType()) ){
 					// 서브프로세스
-					if(cv.getClassname() != null && "org.uengine.kernel.SubProcessActivity".equals(cv.getClassname()) ){
-						SubProcessActivity activity = (SubProcessActivity)activityMap.get(cv.getId());
-						Role role = (Role)getRoleMap().get(cv.getParent());
-						
-						RoleParameterContext[] roleBindings = new RoleParameterContext[1];
-						roleBindings[0] = new RoleParameterContext();
-						roleBindings[0].setRole(role);
-						// 서브프로세스 안쪽의 role 은 무조건 initiator 로 통일 시킨다.
-						roleBindings[0].setArgument(initiator.getName());
-						activity.setRoleBindings(roleBindings);
+					if(cv.getActivityClass() != null && "org.uengine.kernel.SubProcessActivity".equals(cv.getActivityClass()) ){
+//						SubProcessActivity activity = (SubProcessActivity)activityMap.get(cv.getId());
+//						Role role = (Role)getRoleMap().get(cv.getParent());
+//						
+//						RoleParameterContext[] roleBindings = new RoleParameterContext[1];
+//						roleBindings[0] = new RoleParameterContext();
+//						roleBindings[0].setRole(role);
+//						// 서브프로세스 안쪽의 role 은 무조건 initiator 로 통일 시킨다.
+//						roleBindings[0].setArgument(initiator.getName());
+//						activity.setRoleBindings(roleBindings);
 					}
 					
 				}else if( "EDGE".equalsIgnoreCase(cv.getShapeType()) ){
-					String formStr = cv.getFrom();
-					String toStr = cv.getTo();
-					String fromId = formStr.substring(0, formStr.indexOf("_TERMINAL"));
-					String toId = toStr.substring(0, toStr.indexOf("_TERMINAL"));
-					Activity fromAct = (Activity)activityMap.get(fromId);
-					Activity toAct = (Activity)activityMap.get(toId);
-					if( fromAct != null && toAct != null){
-						// 트렌지션 생성
-						Transition ts = new Transition(fromAct.getTracingTag()  , toAct.getTracingTag() );
-						// 컨디션 생성
-						if( this.getConditionMap().containsKey(cv.getId())){
-							ts.setTransitionId(cv.getId());
-							ts.setCondition(this.getConditionMap().get(cv.getId()));
-						}
-						
-						def.addTransition(ts);
-					}
+//					String formStr = cv.getFrom();
+//					String toStr = cv.getTo();
+//					String fromId = formStr.substring(0, formStr.indexOf("_TERMINAL"));
+//					String toId = toStr.substring(0, toStr.indexOf("_TERMINAL"));
+//					Activity fromAct = (Activity)activityMap.get(fromId);
+//					Activity toAct = (Activity)activityMap.get(toId);
+//					if( fromAct != null && toAct != null){
+//						// 트렌지션 생성
+//						Transition ts = new Transition(fromAct.getTracingTag()  , toAct.getTracingTag() );
+//						// 컨디션 생성
+//						if( this.getConditionMap().containsKey(cv.getId())){
+//							ts.setTransitionId(cv.getId());
+//							ts.setCondition(this.getConditionMap().get(cv.getId()));
+//						}
+//						
+//						def.addTransition(ts);
+//					}
 				}
 			}
             
-			CanvasDTO jsonString = new CanvasDTO();
-			jsonString.setJsonString(graphString);
-			cells.add(jsonString);
+//			CanvasDTO jsonString = new CanvasDTO();
+//			jsonString.setJsonString(graphString);
+//			cells.add(jsonString);
 			 // def 에 Activity 셋팅
-			Collection<Object> coll = activityMap.values();
-	        Iterator<Object> iter = coll.iterator();
-	        while(iter.hasNext()){
-	        	Object act = iter.next();
-	        	if( act instanceof Activity){
-	        		def.addChildActivity((Activity)act);
-	        	}
-	        }
-	        // def 에 Role 셋팅
-	        Collection<Object> collRole = roleMap.values();
-	        Iterator<Object> iterRole = collRole.iterator();
-	        while(iterRole.hasNext()){
-	        	Object act = iterRole.next();
-	        	if( act instanceof Role){
-	        		def.addRole((Role)act);
-	        	}
-	        }
-			def.setExtendedAttribute( "cells", cells );
+//			Collection<Object> coll = activityMap.values();
+//	        Iterator<Object> iter = coll.iterator();
+//	        while(iter.hasNext()){
+//	        	Object act = iter.next();
+//	        	if( act instanceof Activity){
+//	        		def.addChildActivity((Activity)act);
+//	        	}
+//	        }
+//	        // def 에 Role 셋팅
+//	        Collection<Object> collRole = roleMap.values();
+//	        Iterator<Object> iterRole = collRole.iterator();
+//	        while(iterRole.hasNext()){
+//	        	Object act = iterRole.next();
+//	        	if( act instanceof Role){
+//	        		def.addRole((Role)act);
+//	        	}
+//	        }
+//			def.setExtendedAttribute( "cells", cells );
 			
 		}
 			def.setName(title);
@@ -445,7 +453,7 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 	
 	@ServiceMethod(callByContent=true)
 	public void save(String title, boolean temp) throws Exception{
-		
+		/*
 		ArrayList<CanvasDTO> cells = new ArrayList<CanvasDTO>();
 		ProcessDefinition def = new ProcessDefinition();
 		if( cell != null){
@@ -557,7 +565,7 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 	        		def.addRole((Role)act);
 	        	}
 	        }
-			def.setExtendedAttribute( "cells", cells );
+//			def.setExtendedAttribute( "cells", cells );
 			
 		}
 		if( temp ){
@@ -567,6 +575,7 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 			def.setName(title);
 			processManager.addProcessDefinition( title , 0, "description", false, GlobalContext.serialize(def, ProcessDefinition.class), "", "/"+title+".process2", title+".process2", "process2");
 		}
+		*/
 	}
 //	public Role[] makeRole()  throws Exception{
 //		ArrayList<org.uengine.codi.mw3.webProcessDesigner.Role> RoleList = defineTab.getRolePanel().getRoles();
@@ -575,6 +584,7 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 //		return roles;
 //	}
 	public ProcessVariable[] makeProcessValiable() throws Exception{
+		/*
 		Collection<Object> collVariable = variableMap.values();
 		ProcessVariable pvs[] = new ProcessVariable[collVariable.size()];
         Iterator<Object> iterVariable = collVariable.iterator();
@@ -604,6 +614,8 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 			i++;
         }
         return pvs;
+        */
+		return null;
 //		ArrayList<PrcsVariable> prcsValiable = defineTab.prcsValiablePanel.getPrcsValiables();
 //		if( prcsValiable != null && prcsValiable.size() > 0 ){
 //			pvs = new ProcessVariable[prcsValiable.size()];
@@ -637,8 +649,12 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 	
 	public void load(String definitionString) throws Exception {
 		ProcessDefinition def = (ProcessDefinition) GlobalContext.deserialize(definitionString);
+		this.processDesignerContainer.load(def);
 		
+		
+//		setDefinition(def);
 		// default role
+		/*
 		Role initiator = new Role();
 		initiator.setName("Initiator");
 		roleMap.put("Initiator" , initiator);
@@ -709,6 +725,7 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 				this.setCell(cells);
 			}
 		}
+		 */
 //		Role[] roles = def.getRoles();
 //		if( roles != null && roles.length != 0){
 ////			ArrayList<org.uengine.codi.mw3.webProcessDesigner.Role> role = defineTab.rolePanel.getRoles();
@@ -723,16 +740,17 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 //			// role setting
 ////			defineTab.rolePanel.setRoles(role);
 //		}
-
+		/*
 		ArrayList<Transition> tsList = def.getTransitions();
 		if( tsList != null && tsList.size()>0){
 			for(int i =0 ; i < tsList.size(); i++){
 				Transition ts = tsList.get(i);
 				if( ts.getCondition() != null ){
-					conditionMap.put(ts.getTransitionId(), ts.getCondition());
+//					conditionMap.put(ts.getTransitionId(), ts.getCondition());
 				}
 			}
 		}
+		*/
 	}
 	
 	public void loadOld() throws Exception{

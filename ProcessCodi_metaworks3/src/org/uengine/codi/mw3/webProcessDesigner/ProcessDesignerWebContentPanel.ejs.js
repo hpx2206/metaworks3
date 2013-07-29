@@ -67,7 +67,6 @@ var org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel = fun
 		mw3.importStyle('dwr/metaworks/org/uengine/codi/mw3/model/PureWebProcessDesigner.ejs.css');
 		
 		var faceHelper = this;
-		
 		faceHelper.load();
 	}
 	
@@ -151,10 +150,37 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 		                '_width'     : $(ui.draggable).attr('_width'),
 		                '_height'    : $(ui.draggable).attr('_height'),
 		                '_classname' : $(ui.draggable).attr('_classname'),
+		                '_viewclass' : $(ui.draggable).attr('_viewclass'),
 		                '_classType' : $(ui.draggable).attr('_classType')
 		            }, shape, element;
 	        	
 	            if (shapeInfo) {
+	            	var viewclass = shapeInfo._viewclass;
+	            	var activityclass = shapeInfo._classname;
+	            	if( typeof viewclass == 'undefined' ){
+	            		viewclass = "org.uengine.kernel.designer.web.ActivityView";
+	            	}
+	            	var pageX = event.pageX - $("#canvas_" + objectId)[0].offsetLeft + $("#canvas_" + objectId)[0].scrollLeft - $("#canvas_" + objectId).offsetParent().offset().left;
+	            	var pageY = event.pageY - $('#canvas_' + objectId)[0].offsetTop + $('#canvas_' + objectId)[0].scrollTop	- $('#canvas_' + objectId).offsetParent().offset().top;
+	            	var activityView = {
+							__className : viewclass,
+							x : pageX,
+							y : pageY,
+							shapeId : shapeInfo._shape_id,
+							shapeType : shapeInfo._shape_type,
+							classType : shapeInfo._classType,
+							activityClass : activityclass,
+							height : shapeInfo._height,
+							width : shapeInfo._width,
+							tracingTag : ++faceHelper.tracingTag
+					};
+	            	
+	            	var html = mw3.locateObject(activityView , activityView.____className);
+	            	canvasDivObj.append(html);
+	            	
+	            	mw3.onLoadFaceHelperScript();
+	            	
+	            	/*
 	                if (shapeInfo._shape_type === 'EDGE') {
 	                    shape = eval('new ' + shapeInfo._shape_id + '()');
 	                    element = canvas.drawShape(null, shape, null);
@@ -188,6 +214,7 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 	                    	}
 	                    }
 	                }
+	                */
 	                this.icanvas = canvas;
 	            }
 	        }
@@ -319,6 +346,7 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 			
 			
 		}
+		
 		this.icanvas.setCanvasSize([canvasWidth, canvasHeight]);		
 	},
 	findActivityData : function(tracingTag){
@@ -635,28 +663,13 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 	var graphJson = this.icanvas.toJSON();
 	var ogObj = eval(graphJson.opengraph);
 	var ogArr = ogObj.cell;
-	var cellsForDwr = [];
-	var activityMap = {};
-	var roleMap = {};
+//	var cellsForDwr = [];
+	var activityList = new ArrayList();
+	var roleList = new ArrayList();
+	var transitionList = new ArrayList();
 	for(var i=0; i<ogArr.length; i++){
 		var og = ogArr[i];
 		var cellForDwr = {};
-		
-		if( og['@shapeType'] != 'EDGE'){
-			$id = $('#'+og['@id']);
-			cellForDwr['tracingTag'] = $id.attr('_tracingTag');
-			cellForDwr['classname'] = $id.attr('_classname');
-			var classType = $id.attr('_classType');
-			cellForDwr['classType'] = classType;
-			var activity = $id.data('activity');
-			if(typeof activity != 'undefined' && classType == 'Activity'){
-				activityMap[og['@id']] = activity;
-			}else if(typeof activity != 'undefined' && classType == 'Role'){
-				roleMap[og['@id']] = activity;
-				cellForDwr['roleName'] = activity.name;
-			}
-		}
-		
 		for(var key in og){
 			// 추가로 필요한 정보 관리
 			if(key == '@id'){
@@ -702,14 +715,44 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 				cellForDwr['parent'] = og[key];
 			}
 		}
-		cellsForDwr[cellsForDwr.length] = cellForDwr;
+//		cellsForDwr[cellsForDwr.length] = cellForDwr;
+		
+		$id = $('#'+og['@id']);
+		var activity = $id.data('activity');
+		console.log(activity);
+		if( og['@shapeType'] != 'EDGE'){
+			cellForDwr['tracingTag'] = $id.attr('_tracingTag');
+			cellForDwr['classname'] = $id.attr('_classname');
+			var classType = $id.attr('_classType');
+			cellForDwr['classType'] = classType;
+			if( activity ){
+				activity.activityView = cellForDwr;
+				if(classType == 'Activity'){
+					activityList.add(activity);
+	//				activityMap[og['@id']] = activity;
+				}else if(classType == 'Role'){
+					roleList.add(activity);
+	//				roleMap[og['@id']] = activity;
+	//				cellForDwr['roleName'] = activity.name;
+				}
+			}
+		}
+		if( og['@shapeType'] == 'EDGE'){
+			if( activity ){
+				activity.activityView = cellForDwr;
+				transitionList.add(activity);
+			}
+		}
 	}
 	
 	var object = mw3.objects[this.objectId];
-	object.cell = cellsForDwr;
-	object.graphString = JSON.stringify(graphJson);
-	object.activityMap = activityMap;
-	object.roleMap = roleMap;
+//	object.cell = cellsForDwr;
+//	object.graphString = JSON.stringify(graphJson);
+//	object.activityMap = activityMap;
+//	object.roleMap = roleMap;
+//	object.processDesignerContainer.activityList = activityList;
+//	object.processDesignerContainer.roleList = roleList;
+//	object.processDesignerContainer.transitionList = transitionList;
 	
 	return object;
 };

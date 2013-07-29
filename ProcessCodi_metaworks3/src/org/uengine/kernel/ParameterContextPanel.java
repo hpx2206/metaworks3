@@ -2,9 +2,12 @@ package org.uengine.kernel;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.Refresh;
+import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.SelectBox;
+import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.webProcessDesigner.ConditionInput;
 import org.uengine.contexts.ComplexType;
 import org.uengine.contexts.TextContext;
@@ -33,6 +36,14 @@ public class ParameterContextPanel  implements ContextAware{
 		}
 		public void setConditionInput(ConditionInput conditionInput) {
 			this.conditionInput = conditionInput;
+		}
+		
+	HumanActivity humanActivity;
+		public HumanActivity getHumanActivity() {
+			return humanActivity;
+		}
+		public void setHumanActivity(HumanActivity humanActivity) {
+			this.humanActivity = humanActivity;
 		}
 		
 	public ParameterContextPanel(){
@@ -72,8 +83,9 @@ public class ParameterContextPanel  implements ContextAware{
 		setDataType(choice);
 	}
 	
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_OPENER)
-	public Object save() throws Exception{
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
+	public Object[] save() throws Exception{
+		ParameterContext[] contexts = new ParameterContext[1];
 		ParameterContext pmc = new ParameterContext();
 		
 		TextContext text = new TextContext();
@@ -83,6 +95,11 @@ public class ParameterContextPanel  implements ContextAware{
 		
 		pmc.setArgument(text);
 		pmc.setVariable(pv);
-		return pmc;
+		contexts[0] = pmc;
+		
+		HumanActivity humanActivity = this.getHumanActivity();
+		humanActivity.setParameters(contexts);
+		//  , new Refresh(humanActivity)
+		return new Object[]{new Remover(new ModalWindow() , true)};
 	}
 }
