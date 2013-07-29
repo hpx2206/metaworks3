@@ -25,6 +25,7 @@ public class MappingTree extends Tree{
 
 	@ServiceMethod(payload={"id", "align"} , target=ServiceMethodContext.TARGET_SELF)
 	public void init(){
+		/*
 		ArrayList<Role>	 roleList = new ArrayList<Role>();
         Collection<Object> collRole = wpdPanel.roleMap.values();
         Iterator<Object> iterRole = collRole.iterator();
@@ -81,6 +82,7 @@ public class MappingTree extends Tree{
 		this.setNode(rootnode);
 		
 		setPreLoaded(true);
+		*/
 	}
 	
 	@AutowiredFromClient

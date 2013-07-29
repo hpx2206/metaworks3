@@ -2,10 +2,15 @@ package org.uengine.codi.mw3.webProcessDesigner;
 
 import java.io.Serializable;
 
+import org.metaworks.annotation.Id;
 import org.uengine.kernel.Activity;
 
 public class CanvasDTO implements Serializable{
+		public static final String SHAPE_TASK = "OG.shape.bpmn.A_Task";
+	
+	
 		String id;
+			@Id
 			public String getId() {
 				return id;
 			}
@@ -139,13 +144,14 @@ public class CanvasDTO implements Serializable{
 				this.tracingTag = tracingTag;
 			}
 			
-		String classname;
-			public String getClassname() {
-				return classname;
+		String activityClass;
+			public String getActivityClass() {
+				return activityClass;
 			}
-			public void setClassname(String classname) {
-				this.classname = classname;
+			public void setActivityClass(String activityClass) {
+				this.activityClass = activityClass;
 			}
+			
 		String classType;
 			public String getClassType() {
 				return classType;
@@ -197,6 +203,7 @@ public class CanvasDTO implements Serializable{
 			public void setActivity(Activity activity) {
 				this.activity = activity;
 			}
+			
 		String tooltip;
 			public String getTooltip() {
 				return tooltip;

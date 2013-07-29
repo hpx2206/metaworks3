@@ -25,13 +25,6 @@ public class RoleSettingPanel implements ContextAware{
 	public void setMetaworksContext(MetaworksContext metaworksContext) {
 		this.metaworksContext = metaworksContext;
 	}
-	Role role;
-		public Role getRole() {
-			return role;
-		}
-		public void setRole(Role role) {
-			this.role = role;
-		}
 	String roleName;
 		public String getRoleName() {
 			return roleName;
@@ -70,21 +63,17 @@ public class RoleSettingPanel implements ContextAware{
 	public RoleSettingPanel(){
 		setRoleName(null);
 	}
-	public RoleSettingPanel(Role role){
-		setRole(role);
-		setRoleName(role.getName());
-	}
 	
 	public void load() throws Exception{
 		setMetaworksContext(new MetaworksContext());
 		getMetaworksContext().setWhen("edit");
 		loadRole();
 		loadGroup();
-		if( getRole().getRoleResolutionContext() != null ){
-			DefaultCompanyRoleResolutionContext context = (DefaultCompanyRoleResolutionContext)getRole().getRoleResolutionContext();
-			this.selectedRoleCode = context.getRoleId();
-			this.selectedGroupCode = context.getGroupId();
-		}
+//		if( getRole().getRoleResolutionContext() != null ){
+//			DefaultCompanyRoleResolutionContext context = (DefaultCompanyRoleResolutionContext)getRole().getRoleResolutionContext();
+//			this.selectedRoleCode = context.getRoleId();
+//			this.selectedGroupCode = context.getGroupId();
+//		}
 	}
 	public void loadRole() throws Exception{
 		
@@ -134,16 +123,16 @@ public class RoleSettingPanel implements ContextAware{
 	}
 	@ServiceMethod(callByContent=true)
 	public Object[] save() throws Exception{
-		ArrayList<Role> roles = rolePanel.getRoles();
-		for(int i=0; i<roles.size(); i++){
-			Role role = roles.get(i);
-			if( role.getName().equals(this.getRoleName())){
-				DefaultCompanyRoleResolutionContext context = new DefaultCompanyRoleResolutionContext();
-				context.setRoleId(this.getSelectedRoleCode());
-				context.setGroupId(this.getSelectedGroupCode());
-				role.setRoleResolutionContext(context);
-			}
-		}
+//		ArrayList<Role> roles = rolePanel.getRoles();
+//		for(int i=0; i<roles.size(); i++){
+//			Role role = roles.get(i);
+//			if( role.getName().equals(this.getRoleName())){
+//				DefaultCompanyRoleResolutionContext context = new DefaultCompanyRoleResolutionContext();
+//				context.setRoleId(this.getSelectedRoleCode());
+//				context.setGroupId(this.getSelectedGroupCode());
+//				role.setRoleResolutionContext(context);
+//			}
+//		}
 		
 		
 		return new Object[]{ new Remover(new ModalWindow())};
@@ -153,6 +142,6 @@ public class RoleSettingPanel implements ContextAware{
 		return new Remover(new ModalWindow());
 	}
 	
-	@AutowiredFromClient
-	public RolePanel rolePanel;
+//	@AutowiredFromClient
+//	public RolePanel rolePanel;
 }

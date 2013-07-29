@@ -14,7 +14,7 @@
 	            <img src="images/opengraph/vertical_lane.png" _classType="Role" _classname="org.uengine.kernel.Role" class="icon_shape" _shape_type="GROUP" _shape_id="OG.shape.VerticalLaneShape" _width="100" _height="200" title="vertical_lane"/>				
 	            
 	            <!-- HumanActivity -->
-	            <img src="images/opengraph/task.png" class="icon_shape" _classType="Activity" _classname="org.uengine.kernel.HumanActivity" _shape_type="GEOM" _shape_id="OG.shape.bpmn.A_Task" _width="70" _height="50" title="HumanActivity"/>
+	            <img src="images/opengraph/task.png" class="icon_shape" _classType="Activity" _classname="org.uengine.kernel.HumanActivity" _viewclass="org.uengine.kernel.designer.web.HumanActivityView" _shape_type="GEOM" _shape_id="OG.shape.bpmn.A_Task" _width="70" _height="50" title="HumanActivity"/>
 	             
 				<!-- 
 	            <img src="images/opengraph/link_start.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_Start_Link" _width="30" _height="30"/>
@@ -51,10 +51,13 @@
 			<dt class="leftMenuTab_ide">확장</dt>
 			<dl class="leftMenuTabInner_ide">
 				<!-- SubProcessActivity -->
-	            <img src="images/opengraph/subprocess.png" class="icon_shape" _classType="Activity" _classname="org.uengine.kernel.SubProcessActivity" _shape_type="GROUP" _shape_id="OG.shape.bpmn.A_Subprocess" _width="200" _height="150" alt="SubProcess"/>
+	            <img src="images/opengraph/subprocess.png" class="icon_shape" _classType="Activity" _classname="org.uengine.kernel.SubProcessActivity" _viewclass="org.uengine.kernel.designer.web.SubProcessActivityView" _shape_type="GROUP" _shape_id="OG.shape.bpmn.A_Subprocess" _width="200" _height="150" alt="SubProcess"/>
 				<!--
 	            <img src="images/opengraph/data_object.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.D_Data" _width="50" _height="50"/>
 	            -->
+	            <img src="images/opengraph/connector_start.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_Start_Connector" _width="30" _height="30" title="StartConnectorEventActivity"/>
+                <img src="images/opengraph/connector_end.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_End_Connector" _width="30" _height="30" title="EndConnectorEventActivity"/>
+                <img src="images/opengraph/valuechain.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.Value_Chain" _width="30" _height="30" title="valuechain"/>
 	         </dl>
 			<dt class="leftMenuTab_ide">제어</dt>
 			<dl class="leftMenuTabInner_ide">
@@ -102,5 +105,6 @@
 		-->
 	</div>
 	<div id="canvas_<%=objectId%>" style="height:100%; margin-left:90px; cursor: default; overflow:auto;  background:#F1FCF1; "></div>
+	<%= fields.processDesignerContainer.here() %>
 </div>
 
