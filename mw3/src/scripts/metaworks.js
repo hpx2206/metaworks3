@@ -1016,6 +1016,20 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 						this.setHow(options['how']);
 					}
 					
+					/*
+					 * TODO : matching ejs context and ejs.js context
+					if(object && object.metaworksContext){
+						if(!object.metaworksContext.when)
+							object.metaworksContext.when = this.when;
+						
+						if(!object.metaworksContext.where)
+							object.metaworksContext.where = this.where;
+						
+						if(!object.metaworksContext.how)
+							object.metaworksContext.how = this.how;
+					}
+					*/
+					
 					if(targetDiv)
 						$(targetDiv).data('metaworksContext', {when:mw3.when, how:mw3.how, where:mw3.where});
 
@@ -1665,7 +1679,6 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 									
 									script.onreadystatechange = function() { //for IE
 										if (this.readyState == 'complete' || this.readyState == 'loaded') {
-											
 											afterLoadScript;
 										}
 									}
@@ -1686,6 +1699,9 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 						   //alert(e.message);
 					   }
 				   });
+				}else{
+					if(typeof afterLoadScript == 'function')
+						afterLoadScript();
 				}
 				
 				return result;
