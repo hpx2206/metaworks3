@@ -51,7 +51,7 @@ $.ui.intersect = function(draggable, droppable, toleranceMode) {
 
 };
 
-var org_uengine_codi_mw3_webProcessDesigner_WpdContentPanel = function(objectId, className){
+var org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel = function(objectId, className){
 	// default setting
 	this.objectId = objectId;
 	this.className = className;
@@ -81,7 +81,7 @@ var org_uengine_codi_mw3_webProcessDesigner_WpdContentPanel = function(objectId,
 	});
 };
 
-org_uengine_codi_mw3_webProcessDesigner_WpdContentPanel.prototype = {
+org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype = {
 	load : function(){
 		var objectId = this.objectId;
 		var object = mw3.objects[this.objectId];
@@ -369,13 +369,13 @@ org_uengine_codi_mw3_webProcessDesigner_WpdContentPanel.prototype = {
 	}
 };
 
-//org_uengine_codi_mw3_webProcessDesigner_WpdContentPanel.prototype = {
+//org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype = {
 //		destroy : function(){
 //			$('#canvas_' + objectId).hide().appendTo('body');
 //			this.icanvas.clear();
 //		}
 //};
-org_uengine_codi_mw3_webProcessDesigner_WpdContentPanel.prototype.addEventGeom = function(objectId, canvas, element){
+org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.addEventGeom = function(objectId, canvas, element){
 	
 	var shape_id = $(element).attr("_shape_id");
 	if( typeof $(element).attr("_classname") != 'undefined' &&  typeof $(element).data("activity") == 'undefined' ){
@@ -642,7 +642,7 @@ org_uengine_codi_mw3_webProcessDesigner_WpdContentPanel.prototype.addEventGeom =
 	});
 };
 
-org_uengine_codi_mw3_webProcessDesigner_WpdContentPanel.prototype.addEventEdge = function(objectId, canvas, element){
+org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.addEventEdge = function(objectId, canvas, element){
 	$(element).unbind('dblclick').bind({
 		dblclick: function (event) {
 			var value = mw3.objects[objectId]; 
@@ -654,21 +654,21 @@ org_uengine_codi_mw3_webProcessDesigner_WpdContentPanel.prototype.addEventEdge =
 	});
 };
 // TODO delete test code 
-org_uengine_codi_mw3_webProcessDesigner_WpdContentPanel.prototype.showValiables = function(){
+org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.showValiables = function(){
 	alert( mw3.pcsValiable.toXML(mw3.pcsValiable.rootElement)  );
 };
-org_uengine_codi_mw3_webProcessDesigner_WpdContentPanel.prototype.clear = function(){
+org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.clear = function(){
 	this.icanvas.clear();
 };
 //TODO delete test code 
-org_uengine_codi_mw3_webProcessDesigner_WpdContentPanel.prototype.jsonobject = function(){
+org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.jsonobject = function(){
 //	var object = mw3.getObject(this.objectId);
 //	object.jsonObj = this.icanvas.toJSON();
 //	object.jsonObj = JSON.stringify(this.icanvas.toJSON());
 	alert(JSON.stringify(this.icanvas.toJSON() ));
 //	object.jsonObj = $.parseXML(this.icanvas.toXML());
 };
-org_uengine_codi_mw3_webProcessDesigner_WpdContentPanel.prototype.getValue = function(){
+org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.getValue = function(){
 	var graphJson = this.icanvas.toJSON();
 	var ogObj = eval(graphJson.opengraph);
 	var ogArr = ogObj.cell;
@@ -776,10 +776,10 @@ org_uengine_codi_mw3_webProcessDesigner_WpdContentPanel.prototype.getValue = fun
 };
 
 
-org_uengine_codi_mw3_webProcessDesigner_WpdContentPanel.prototype.startLoading = function(){
+org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.startLoading = function(){
 	this.divObj.trigger('startLoading');
 };
 
-org_uengine_codi_mw3_webProcessDesigner_WpdContentPanel.prototype.endLoading = function(){
+org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.endLoading = function(){
 	this.divObj.trigger('endLoading');
 };
