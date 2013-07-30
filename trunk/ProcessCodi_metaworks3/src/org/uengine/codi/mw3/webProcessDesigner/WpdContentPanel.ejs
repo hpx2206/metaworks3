@@ -57,7 +57,7 @@
 	            -->
 	            <img src="images/opengraph/connector_start.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_Start_Connector" _width="30" _height="30" title="StartConnectorEventActivity"/>
                 <img src="images/opengraph/connector_end.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_End_Connector" _width="30" _height="30" title="EndConnectorEventActivity"/>
-                <img src="images/opengraph/valuechain.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.Value_Chain" _width="30" _height="30" title="valuechain"/>
+                <img src="images/opengraph/valuechain.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.Value_Chain" _width="230" _height="100" title="valuechain"/>
 	         </dl>
 			<dt class="leftMenuTab_ide">제어</dt>
 			<dl class="leftMenuTabInner_ide">
@@ -106,5 +106,12 @@
 	</div>
 	<div id="canvas_<%=objectId%>" style="height:100%; margin-left:90px; cursor: default; overflow:auto;  background:#F1FCF1; "></div>
 	<%= fields.processDesignerContainer.here() %>
+	<%
+	   if( value.conferenceMode ){
+	%>
+	<%= fields.instanceListPanel.here() %>
+	<%
+       }
+    %>
 </div>
 

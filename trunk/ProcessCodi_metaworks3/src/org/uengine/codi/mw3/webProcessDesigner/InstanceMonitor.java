@@ -83,7 +83,7 @@ public class InstanceMonitor {
 		ProcessInstance instance = processManager.getProcessInstance(instanceId);
 		ProcessDefinition procDef = instance.getProcessDefinition();
 		if( procDef.getExtendedAttributes() == null ) return;
-
+		/*
 		ArrayList<CanvasDTO> cellsList = (ArrayList<CanvasDTO>) procDef.getExtendedAttributes().get("cells");
 		DefaultActivityViewer dav = new DefaultActivityViewer();
 		if( cellsList != null){
@@ -106,13 +106,14 @@ public class InstanceMonitor {
 			// canvas setting
 			this.setCell(cells);
 		}
+		 */
 
 	}
 
 	public void loadProcess(String path) throws Exception {
 		System.out.println("path = " + path);
 
-
+		/*
 		ByteArrayOutputStream bao = new ByteArrayOutputStream();
 		InputStream is = null;
 		try {
@@ -148,6 +149,7 @@ public class InstanceMonitor {
 				try { bao.close(); bao = null; } catch (IOException e) {		e.printStackTrace();}
 			}
 		}
+		*/
 	}
 
 	@ServiceMethod(callByContent=true, target="popup")

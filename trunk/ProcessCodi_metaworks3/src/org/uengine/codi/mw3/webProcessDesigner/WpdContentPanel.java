@@ -5,9 +5,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
@@ -19,22 +16,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.ide.editor.process.ProcessEditor;
 import org.uengine.codi.mw3.model.ContentWindow;
-import org.uengine.contexts.ComplexType;
-import org.uengine.contexts.TextContext;
-import org.uengine.kernel.Activity;
-import org.uengine.kernel.Condition;
+import org.uengine.codi.mw3.model.InstanceListPanel;
 import org.uengine.kernel.GlobalContext;
-import org.uengine.kernel.HumanActivity;
 import org.uengine.kernel.ProcessDefinition;
 import org.uengine.kernel.ProcessVariable;
-import org.uengine.kernel.Role;
-import org.uengine.kernel.RoleParameterContext;
-import org.uengine.kernel.SubProcessActivity;
-import org.uengine.kernel.graph.Transition;
 import org.uengine.processmanager.ProcessManagerRemote;
 import org.uengine.util.UEngineUtil;
 
-public class ProcessDesignerWebContentPanel extends ContentWindow implements ContextAware {
+public class WpdContentPanel extends ContentWindow implements ContextAware {
 	
 	MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
@@ -51,7 +40,14 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 				ProcessDesignerContainer processDesignerContainer) {
 			this.processDesignerContainer = processDesignerContainer;
 		}
-	public ProcessDesignerWebContentPanel() throws Exception{
+	boolean conferenceMode;
+		public boolean isConferenceMode() {
+			return conferenceMode;
+		}
+		public void setConferenceMode(boolean conferenceMode) {
+			this.conferenceMode = conferenceMode;
+		}
+	public WpdContentPanel() throws Exception{
 		processDesignerContainer = new ProcessDesignerContainer();
 	}
 	
@@ -325,6 +321,7 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 		
 //		ArrayList<CanvasDTO> cells = new ArrayList<CanvasDTO>();
 //		ProcessDefinition def = new ProcessDefinition();
+		/*
 		if( cell != null){
 			Role[] roles = new Role[1];
 					// default role
@@ -433,6 +430,7 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 //			def.setExtendedAttribute( "cells", cells );
 			
 		}
+		*/
 			def.setName(title);
 			FileOutputStream fos = null;
 			try{
@@ -645,7 +643,23 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 //		return null;
 	}
 	
+	InstanceListPanel instanceListPanel;
+		public InstanceListPanel getInstanceListPanel() {
+			return instanceListPanel;
+		}
+		public void setInstanceListPanel(InstanceListPanel instanceListPanel) {
+			this.instanceListPanel = instanceListPanel;
+		}
 	public void load(String definitionString) throws Exception {
+		if( isConferenceMode() ){
+			instanceListPanel = new InstanceListPanel();
+			instanceListPanel.setDefinitionId(this.getAlias());
+			Object[] returnObj = instanceListPanel.loadByDefId();
+			instanceListPanel = (InstanceListPanel)returnObj[1];
+		}else{
+			instanceListPanel = null;
+		}
+		
 		ProcessDefinition def = (ProcessDefinition) GlobalContext.deserialize(definitionString);
 		this.processDesignerContainer.load(def);
 		

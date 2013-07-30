@@ -51,7 +51,7 @@ $.ui.intersect = function(draggable, droppable, toleranceMode) {
 
 };
 
-var org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel = function(objectId, className){
+var org_uengine_codi_mw3_webProcessDesigner_WpdContentPanel = function(objectId, className){
 	// default setting
 	this.objectId = objectId;
 	this.className = className;
@@ -81,7 +81,7 @@ var org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel = fun
 	});
 };
 
-org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype = {
+org_uengine_codi_mw3_webProcessDesigner_WpdContentPanel.prototype = {
 	load : function(){
 		var objectId = this.objectId;
 		var object = mw3.objects[this.objectId];
@@ -253,7 +253,15 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 	    
 	    // Shape 이 Connect 되었을 때의 이벤트 리스너
 	    canvas.onConnectShape(function (event, edgeElement, fromElement, toElement) {
-	    	console.log('cccccccccccccccccccccccccccccc');
+	    	var fromTracingTag = $(fromElement).attr('_tracingTag');
+	    	var toTracingTag = $(toElement).attr('_tracingTag');
+	    	var transitionData = {
+	    			__className : 'org.uengine.kernel.graph.Transition', 
+	    			source : fromTracingTag,
+	    			target : toTracingTag
+	    	};
+	    	$(edgeElement).data('transition', transitionData);
+	    	
 			faceHelper.addEventEdge(objectId, canvas, edgeElement);
 	    });
 	    canvas.onDrawShape(function (event, shapeElement) {
@@ -361,13 +369,13 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 	}
 };
 
-//org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype = {
+//org_uengine_codi_mw3_webProcessDesigner_WpdContentPanel.prototype = {
 //		destroy : function(){
 //			$('#canvas_' + objectId).hide().appendTo('body');
 //			this.icanvas.clear();
 //		}
 //};
-org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype.addEventGeom = function(objectId, canvas, element){
+org_uengine_codi_mw3_webProcessDesigner_WpdContentPanel.prototype.addEventGeom = function(objectId, canvas, element){
 	
 	var shape_id = $(element).attr("_shape_id");
 	if( typeof $(element).attr("_classname") != 'undefined' &&  typeof $(element).data("activity") == 'undefined' ){
@@ -634,7 +642,7 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 	});
 };
 
-org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype.addEventEdge = function(objectId, canvas, element){
+org_uengine_codi_mw3_webProcessDesigner_WpdContentPanel.prototype.addEventEdge = function(objectId, canvas, element){
 	$(element).unbind('dblclick').bind({
 		dblclick: function (event) {
 			var value = mw3.objects[objectId]; 
@@ -646,27 +654,32 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 	});
 };
 // TODO delete test code 
-org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype.showValiables = function(){
+org_uengine_codi_mw3_webProcessDesigner_WpdContentPanel.prototype.showValiables = function(){
 	alert( mw3.pcsValiable.toXML(mw3.pcsValiable.rootElement)  );
 };
-org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype.clear = function(){
+org_uengine_codi_mw3_webProcessDesigner_WpdContentPanel.prototype.clear = function(){
 	this.icanvas.clear();
 };
 //TODO delete test code 
-org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype.jsonobject = function(){
+org_uengine_codi_mw3_webProcessDesigner_WpdContentPanel.prototype.jsonobject = function(){
 //	var object = mw3.getObject(this.objectId);
 //	object.jsonObj = this.icanvas.toJSON();
 //	object.jsonObj = JSON.stringify(this.icanvas.toJSON());
 	alert(JSON.stringify(this.icanvas.toJSON() ));
 //	object.jsonObj = $.parseXML(this.icanvas.toXML());
 };
-org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype.getValue = function(){
+org_uengine_codi_mw3_webProcessDesigner_WpdContentPanel.prototype.getValue = function(){
 	var graphJson = this.icanvas.toJSON();
 	var ogObj = eval(graphJson.opengraph);
 	var ogArr = ogObj.cell;
 	var activityList = [];
 	var roleList = [];
 	var transitionList = [];
+	
+	var activityIdx = 0;
+	var roleIdx = 0;
+	var transitionIdx = 0;
+	
 	for(var i=0; i<ogArr.length; i++){
 		var og = ogArr[i];
 		var cellForDwr = {};
@@ -714,14 +727,17 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 			if(key == '@parent'){
 				cellForDwr['parent'] = og[key];
 			}
+			if(key == '@value'){
+				cellForDwr['value'] = og[key];
+			}
+			if(key == '@style'){
+				cellForDwr['style'] = og[key];
+			}
 		}
 //		cellsForDwr[cellsForDwr.length] = cellForDwr;
 		
 		$id = $('#'+og['@id']);
 		var activity = $id.data('activity');
-		var activityIdx = 0;
-		var roleIdx = 0;
-		var transitionIdx = 0;
 		if( og['@shapeType'] != 'EDGE'){
 			cellForDwr['tracingTag'] = $id.attr('_tracingTag');
 			cellForDwr['classname'] = $id.attr('_classname');
@@ -740,9 +756,10 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 			}
 		}
 		if( og['@shapeType'] == 'EDGE'){
-			if( activity ){
-				transitionList[transitionIdx++] = activity;
-				activity.activityView = cellForDwr;
+			var transition = $id.data('transition');
+			if( transition ){
+				transitionList[transitionIdx++] = transition;
+				transition.transitionView = cellForDwr;
 			}
 		}
 	}
@@ -750,7 +767,6 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 	var object = mw3.objects[this.objectId];
 	var container = {
 			__className : 'org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerContainer',
-//			aa : 'sssss'
 			activityList : activityList,
 			roleList : roleList,
 			transitionList : transitionList,
@@ -760,10 +776,10 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 };
 
 
-org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype.startLoading = function(){
+org_uengine_codi_mw3_webProcessDesigner_WpdContentPanel.prototype.startLoading = function(){
 	this.divObj.trigger('startLoading');
 };
 
-org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype.endLoading = function(){
+org_uengine_codi_mw3_webProcessDesigner_WpdContentPanel.prototype.endLoading = function(){
 	this.divObj.trigger('endLoading');
 };

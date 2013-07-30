@@ -8,16 +8,15 @@ import org.uengine.codi.mw3.model.ContentWindow;
 public class ProcessDesignerWebWindow  extends ContentWindow{
 	
 	@Autowired
-	ProcessDesignerWebContentPanel processDesignerWebContentPanel;
+	WpdContentPanel wpdContentPanel;
+		public WpdContentPanel getWpdContentPanel() {
+			return wpdContentPanel;
+		}
+		public void setWpdContentPanel(WpdContentPanel wpdContentPanel) {
+			this.wpdContentPanel = wpdContentPanel;
+		}
+
 	@Autowired
-		public ProcessDesignerWebContentPanel getProcessDesignerWebContentPanel() {
-			return processDesignerWebContentPanel;
-		}
-	
-		public void setProcessDesignerWebContentPanel(
-				ProcessDesignerWebContentPanel processDesignerWebContentPanel) {
-			this.processDesignerWebContentPanel = processDesignerWebContentPanel;
-		}
 
 //	WebCanvasPanel WebCanvasPanel;
 //		public WebCanvasPanel getWebCanvasPanel() {
@@ -28,15 +27,15 @@ public class ProcessDesignerWebWindow  extends ContentWindow{
 //		}
 
 	public void load(String alias) throws Exception {
-		processDesignerWebContentPanel = new ProcessDesignerWebContentPanel();
-		processDesignerWebContentPanel.setAlias(alias);
-		processDesignerWebContentPanel.loadOld();
+		wpdContentPanel = new WpdContentPanel();
+		wpdContentPanel.setAlias(alias);
+		wpdContentPanel.loadOld();
 		
 //		WebCanvasPanel = new WebCanvasPanel();
 	}
 	
 	public void newProcess() throws Exception {
-		processDesignerWebContentPanel = new ProcessDesignerWebContentPanel();
+		wpdContentPanel = new WpdContentPanel();
 //		WebCanvasPanel = new WebCanvasPanel();
 	}
 }
