@@ -211,7 +211,7 @@
 							</tr>
 						<%}%>
 					<%}%>
-					<%if(value.type=='src'){%>
+					<%if(value.type == 'src' && (value.extFile==null || value.contentLoaded)){ console.log(value.sourceCode); %>
 					<tr>
 						<td>	
 							<div style="position:relative; height:350px;">					
