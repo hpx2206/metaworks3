@@ -21,7 +21,9 @@ var org_uengine_codi_mw3_model_InstanceNameChanger = function(objectId, classNam
 		
 		var autoSizing = function(){
 			var h=$('#instanceName_' + objectId);
-			h.height(21).height(h[0].scrollHeight);//where 60 is minimum height of textarea
+			
+			if(h.length > 0)
+				h.height(21).height(h[0].scrollHeight);//where 60 is minimum height of textarea
 		};  
 		
 		$('#instanceName_' + this.objectId).live("keyup keydown", autoSizing);
