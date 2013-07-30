@@ -14,8 +14,13 @@ var org_metaworks_example_ide_SourceCode = function(objectId, className){
 	this.loadRequestAssist = false;
 	this.lastCommandString = "";
 
-	if(this.object.id && this.object.id.indexOf('.') > -1)
+	if(this.object.id && this.object.id.indexOf('.') > -1){
 		this.language = this.object.id.substring(this.object.id.lastIndexOf('.')+1);
+		
+		if(this.language == 'js')
+			this.language = 'javascript';
+			
+	}
 };
 
 org_metaworks_example_ide_SourceCode.prototype = {
