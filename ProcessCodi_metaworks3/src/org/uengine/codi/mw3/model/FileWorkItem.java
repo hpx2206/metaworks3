@@ -245,7 +245,7 @@ public class FileWorkItem extends WorkItem{
 			
 			DocumentConverter converter = new OpenOfficeDocumentConverter(connection);
 			converter.convert(inputFile, outputFile);
-			
+
 			isConvert = true;
 		}finally{
 			connection.disconnect();
@@ -280,9 +280,8 @@ public class FileWorkItem extends WorkItem{
 			}
 		}
 		
-		
 		if(convert){
-			CodiStatusUtil statusUtil = new CodiStatusUtil(targetPath, convertType);
+			CodiStatusUtil statusUtil = new CodiStatusUtil(targetPath, this.getTaskId() + "_" +  convertType);
 			
 			if(!statusUtil.ready())
 				return false;
@@ -308,13 +307,31 @@ public class FileWorkItem extends WorkItem{
 				}else if(this.getTool().equals("application/pdf")){
 					System.out.println("pdf converting");
 					
+					FileInputStream is = null;
+					FileOutputStream os = null;
 					
-					try {
-						MetaworksFile.copyStream(new FileInputStream(srcFile.getAbsolutePath()), new FileOutputStream(convertedFilePath));
+					try {						
+						is = new FileInputStream(srcFile.getAbsolutePath());
+						os = new FileOutputStream(convertedFilePath);
+						
+						MetaworksFile.copyStream(is, os);
 						converted = true;
 					} catch (Exception e) {
 						e.printStackTrace();
 						return false;
+					} finally {
+						if(os != null)
+							try {
+								os.close();
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+						if(is != null)
+							try {
+								is.close();
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
 					}
 				}
 				
@@ -336,7 +353,7 @@ public class FileWorkItem extends WorkItem{
 					
 				}
 			}else if("image".equals(convertType)){
-				
+				/*
 				try {
 					int pageCount = getImageForPdf(convertedFilePath, convertedFilePath);
 										
@@ -355,6 +372,7 @@ public class FileWorkItem extends WorkItem{
 					e.printStackTrace();
 					return false;
 				}
+				*/
 			}
 		}
 		

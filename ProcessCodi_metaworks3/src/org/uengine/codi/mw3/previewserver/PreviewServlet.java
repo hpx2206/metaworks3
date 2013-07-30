@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.spring.SpringConnectionFactory;
+import org.metaworks.website.MetaworksFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 import org.uengine.codi.mw3.model.FileWorkItem;
@@ -69,7 +70,10 @@ public class PreviewServlet extends HttpServlet {
 
 		String fileSystemPath = GlobalContext.getPropertyString("filesystem.path",".");
 		String previewPath = fileSystemPath + "/preview";
-		String taskPath = previewPath + File.separatorChar + taskId.toString();
+		
+		String pathSequence = String.valueOf(taskId / 1000);
+		
+		String taskPath = previewPath + File.separatorChar + pathSequence;
 
 		File taskDirectory = new File(taskPath);
 		if(!taskDirectory.exists() || !taskDirectory.isDirectory())
@@ -78,7 +82,7 @@ public class PreviewServlet extends HttpServlet {
 		boolean converted = false;
 		boolean pass = false;
 
-		CodiStatusUtil statusUtil = new CodiStatusUtil(taskDirectory.getAbsolutePath(), previewType);
+		CodiStatusUtil statusUtil = new CodiStatusUtil(taskDirectory.getAbsolutePath(), taskId.toString() + "_" + previewType);
 		FileWorkItem workItem = new FileWorkItem();
 		workItem.setTaskId(taskId);
 
@@ -152,12 +156,11 @@ public class PreviewServlet extends HttpServlet {
 					response.addHeader("Content-Length", String.valueOf(convertedFile.length()));
 
 					os = response.getOutputStream();
-					UEngineUtil.copyStream(is, os);
+					MetaworksFile.copyStream(is, os);
 
 				} catch (Exception e) {
 					e.printStackTrace();
 				} finally {
-					os.close();
 					is.close();
 				}
 
