@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import org.metaworks.component.TreeNode;
 
-public class DefinitionNaivgatorNode extends TreeNode{
+public class ProcessDefinitionNode extends TreeNode{
 	
 	public ArrayList<TreeNode> loadExpand(){
 		
