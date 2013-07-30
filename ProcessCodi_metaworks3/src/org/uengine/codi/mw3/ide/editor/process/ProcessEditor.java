@@ -3,15 +3,15 @@ package org.uengine.codi.mw3.ide.editor.process;
 import org.metaworks.annotation.ServiceMethod;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.editor.Editor;
-import org.uengine.codi.mw3.webProcessDesigner.WpdContentPanel;
+import org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerContentPanel;
 
 public class ProcessEditor extends Editor {
 
-	WpdContentPanel processDesigner;
-		public WpdContentPanel getProcessDesigner() {
+	ProcessDesignerContentPanel processDesigner;
+		public ProcessDesignerContentPanel getProcessDesigner() {
 			return processDesigner;
 		}
-		public void setProcessDesigner(WpdContentPanel processDesigner) {
+		public void setProcessDesigner(ProcessDesignerContentPanel processDesigner) {
 			this.processDesigner = processDesigner;
 		}
 
@@ -25,10 +25,10 @@ public class ProcessEditor extends Editor {
 		this.setType("process");
 		
 		try {
-			WpdContentPanel wpdContentPanel = new WpdContentPanel();
-			wpdContentPanel.setAlias(this.getResourceNode().getPath());
-			wpdContentPanel.setConferenceMode(resourceNode.isConferenceMode());
-			this.setProcessDesigner(wpdContentPanel);
+			ProcessDesignerContentPanel processDesignerContentPanel = new ProcessDesignerContentPanel();
+			processDesignerContentPanel.setAlias(this.getResourceNode().getPath());
+			processDesignerContentPanel.setConferenceMode(resourceNode.isConferenceMode());
+			this.setProcessDesigner(processDesignerContentPanel);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
