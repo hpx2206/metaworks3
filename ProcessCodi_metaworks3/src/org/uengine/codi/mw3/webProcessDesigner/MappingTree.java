@@ -86,5 +86,5 @@ public class MappingTree extends Tree{
 	}
 	
 	@AutowiredFromClient
-	public ProcessDesignerWebContentPanel wpdPanel;
+	public WpdContentPanel wpdPanel;
 }

@@ -12,7 +12,7 @@
         for(var i in value.transitionList){
             var transition = value.transitionList[i];
            %>
-           <%=mw3.locateObject(transition.activityView , transition.activityView.__className)%>
+           <%=mw3.locateObject(transition.transitionView , transition.transitionView.__className)%>
            <%
            mw3.addBeanProperty(objectId, "[" + i + "]");
         }

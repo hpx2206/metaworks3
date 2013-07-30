@@ -3,7 +3,6 @@ package org.uengine.codi.mw3.webProcessDesigner;
 import java.io.Serializable;
 
 import org.metaworks.annotation.Id;
-import org.uengine.kernel.Activity;
 
 public class CanvasDTO implements Serializable{
 		public static final String SHAPE_TASK = "OG.shape.bpmn.A_Task";
@@ -128,88 +127,6 @@ public class CanvasDTO implements Serializable{
 			}
 			public void setData(String data) {
 				this.data = data;
-			}
-		String jsonString;
-			public String getJsonString() {
-				return jsonString;
-			}
-			public void setJsonString(String jsonString) {
-				this.jsonString = jsonString;
-			}
-		String tracingTag;
-			public String getTracingTag() {
-				return tracingTag;
-			}
-			public void setTracingTag(String tracingTag) {
-				this.tracingTag = tracingTag;
-			}
-			
-		String activityClass;
-			public String getActivityClass() {
-				return activityClass;
-			}
-			public void setActivityClass(String activityClass) {
-				this.activityClass = activityClass;
-			}
-			
-		String classType;
-			public String getClassType() {
-				return classType;
-			}
-			public void setClassType(String classType) {
-				this.classType = classType;
-			}
-		String roleName;
-			public String getRoleName() {
-				return roleName;
-			}
-			public void setRoleName(String roleName) {
-				this.roleName = roleName;
-			}
-		boolean drawByObject;
-			public boolean isDrawByObject() {
-				return drawByObject;
-			}
-			public void setDrawByObject(boolean drawByObject) {
-				this.drawByObject = drawByObject;
-			}
-		String viewType;
-			/* 특별하게 보이고 싶은 경우에 viewType을 셋팅하여 넘긴다*/
-			public String getViewType() {
-				return viewType;
-			}
-			public void setViewType(String viewType) {
-				this.viewType = viewType;
-			}
-		/*  viewer 부분에서  필요한 정보들 transient */
-		transient String instStatus;
-			public String getInstStatus() {
-				return instStatus;
-			}
-			public void setInstStatus(String instStatus) {
-				this.instStatus = instStatus;
-			}
-		transient String backgroundColor;
-			public String getBackgroundColor() {
-				return backgroundColor;
-			}
-			public void setBackgroundColor(String backgroundColor) {
-				this.backgroundColor = backgroundColor;
-			}
-		transient Activity activity;
-			public Activity getActivity() {
-				return activity;
-			}
-			public void setActivity(Activity activity) {
-				this.activity = activity;
-			}
-			
-		String tooltip;
-			public String getTooltip() {
-				return tooltip;
-			}
-			public void setTooltip(String tooltip) {
-				this.tooltip = tooltip;
 			}
 			
 }

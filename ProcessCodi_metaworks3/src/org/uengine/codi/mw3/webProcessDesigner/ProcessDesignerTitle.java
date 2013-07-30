@@ -34,13 +34,13 @@ public class ProcessDesignerTitle implements ContextAware{
 		
 	@ServiceMethod(callByContent=true)
 	public Object[] save() throws Exception{
-		processDesignerWebContentPanel.processManager = processManager;
-		processDesignerWebContentPanel.save( title, true );
+		wpdContentPanel.processManager = processManager;
+		wpdContentPanel.save( title, true );
 		return new Object[]{ new Remover(new ModalWindow())};
 	}
 	
 	@AutowiredFromClient
-	public ProcessDesignerWebContentPanel processDesignerWebContentPanel;
+	public WpdContentPanel wpdContentPanel;
 	
 	@Autowired
 	public ProcessManagerRemote processManager;

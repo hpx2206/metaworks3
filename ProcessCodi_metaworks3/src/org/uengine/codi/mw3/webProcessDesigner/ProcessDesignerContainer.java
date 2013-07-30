@@ -55,9 +55,16 @@ public class ProcessDesignerContainer {
 	
 	public ProcessDefinition containerToDefinition(ProcessDesignerContainer container){
 		ProcessDefinition def = new ProcessDefinition();
-		
-//		def.setRoles(roles);
-//		def.setChildActivities(ac);
+		if( activityList != null ){
+			for(Activity act : activityList){
+				def.addChildActivity(act);
+			}
+		}
+		if( transitionList != null ){
+			for(Transition ts : transitionList){
+				def.addTransition(ts);
+			}
+		}
 		
 		return def;
 	}
