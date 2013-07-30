@@ -145,7 +145,30 @@ public abstract class AbstractMetaworksFile implements ContextAware {
 		
 		new File(uploadPath).getParentFile().mkdirs();
 		
-		copyStream(fileTransfer.getInputStream(), new FileOutputStream(uploadPath));
+		InputStream is = null;
+		FileOutputStream os = null;
+		
+		try {						
+			is = this.getFileTransfer().getInputStream();
+			os = new FileOutputStream(uploadPath);
+			
+			MetaworksFile.copyStream(is, os);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(os != null)
+				try {
+					os.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			if(is != null)
+				try {
+					is.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+		};
 		
 		setUploadedPath(uploadFileName); //only when the file has been successfully uploaded, this value is set, that means your can download later
 		setMimeType(fileTransfer.getMimeType());
@@ -272,9 +295,6 @@ public abstract class AbstractMetaworksFile implements ContextAware {
 			
 		}catch(Exception e){
 			throw e;
-		}finally{
-			if (sourceInputStream != null) try { sourceInputStream.close(); } catch (Exception e) {}
-			if (targetOutputStream != null) try { targetOutputStream.close(); } catch (Exception e) {}
 		}
 		
 	}
