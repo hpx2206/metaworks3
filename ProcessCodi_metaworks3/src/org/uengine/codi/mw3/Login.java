@@ -55,6 +55,8 @@ public class Login implements ContextAware {
 	public Login(){
 		setMetaworksContext(new MetaworksContext());
 		getMetaworksContext().setWhen("edit");
+		
+		this.setUseSubscribe("1".equals(GlobalContext.getPropertyString("signup.use", "1")));
 	}
 	
 	MetaworksContext metaworksContext;
@@ -108,6 +110,14 @@ public class Login implements ContextAware {
 			this.isAdmin = isAdmin;
 		}
 		
+	boolean useSubscribe;
+		public boolean isUseSubscribe() {
+			return useSubscribe;
+		}
+		public void setUseSubscribe(boolean useSubscribe) {
+			this.useSubscribe = useSubscribe;
+		}
+
 	String defId;	
 		public String getDefId() {
 			return defId;
