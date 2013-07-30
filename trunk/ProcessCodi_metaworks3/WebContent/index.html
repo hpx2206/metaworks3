@@ -207,7 +207,33 @@
 		<script type="text/javascript" src="scripts/jquery/jqueryCycle/jquery.cycle2.carousel.js"></script> 
 	    <script type="text/javascript" src="scripts/jquery/jqueryCycle/jquery.cycle2.center.js"></script> 
 
+		<script src="scripts/ace-1.1.0/build/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+		<script src="scripts/ace-1.1.0/build/src-noconflict/ext-static_highlight.js"></script>
+		
  		<script type="text/javascript">
+ 			// no convert for face helper variable and start with '__' char variable
+ 			dwr.engine.serialize.convertObject = function(batch, directrefmap, otherrefmap, data, name, depth) {
+ 			      // treat objects as an associative arrays
+ 			      var reply = "Object_" + dwr.engine.serialize.getObjectClassName(data).replace(/:/g, "?") + ":{";
+ 			      var elementset = (data.constructor && data.constructor.$dwrClassMembers ? data.constructor.$dwrClassMembers : data);
+ 			      var element;
+ 			      for (element in elementset) {
+ 			        if (typeof data[element] != "function" && !dwr.engine._excludeObjectAttributes[element] && (element.indexOf('__') != 0 || element == '__className')) {
+ 			          batch.paramCount++;
+ 			          var childName = "c" + dwr.engine._batch.map.callCount + "-e" + batch.paramCount;
+ 			          dwr.engine.serialize.convert(batch, directrefmap, otherrefmap, data[element], childName, depth + 1);
+ 			          reply += encodeURIComponent(element) + ":reference:" + childName + ", ";
+ 			        }
+ 			      }
+
+ 			      if (reply.substring(reply.length - 2) == ", ") {
+ 			        reply = reply.substring(0, reply.length - 2);
+ 			      }
+ 			      reply += "}";
+
+ 			      return reply;
+ 			    };
+ 			    
 			/*
 			 * facebook app id
 			 *
