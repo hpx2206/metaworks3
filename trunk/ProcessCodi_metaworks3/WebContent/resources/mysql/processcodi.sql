@@ -1,4 +1,5 @@
 SET FOREIGN_KEY_CHECKS = 0;
+SET SQL_SAFE_UPDATES=0;
 
  
 SELECT @@FOREIGN_KEY_CHECKS;
@@ -626,11 +627,11 @@ alter TABLE `bpm_knol` add (
 	`refId` VARCHAR(20) NULL DEFAULT NULL,
 	`budget` INT(11) NULL DEFAULT NULL,
 	`effort` INT(11) NULL DEFAULT NULL,
-	`benefit` INT(11) NULL DEFAULT NULL,
+	`benfit` INT(11) NULL DEFAULT NULL,
 	`penalty` INT(11) NULL DEFAULT NULL,
 	`startdate` DATE NULL DEFAULT NULL,
 	`enddate` DATE NULL DEFAULT NULL
-)
+);
 
 alter table bpm_worklist add column EXT4 varchar(200);
 alter table bpm_worklist add column EXT5 varchar(200);
@@ -639,7 +640,6 @@ alter table bpm_worklist add column EXT7 varchar(200);
 alter table bpm_worklist add column EXT8 varchar(200);
 alter table bpm_worklist add column EXT9 varchar(200);
 alter table bpm_worklist add column EXT10 varchar(200);
-alter table bpm_procinst add column progress varchar(10);
 
 alter table BPM_TOPICMAPPING add column `ASSIGNTYPE` int(11) DEFAULT 0 ;
 
@@ -748,10 +748,10 @@ alter table bpm_knol add description varchar(1000);
 alter table app change vendorid comcode varchar(20);
 
 -- 2013.05.14 paasManager user 추가
-INSERT INTO `uengine`.`comtable` (`COMCODE`, `COMNAME`) VALUES ('CloudManager', 'cloud manager');
-INSERT INTO `uengine`.`emptable` (`empcode`, `EMPNAME`, `PASSWORD`, `ISADMIN`, `GLOBALCOM`, `ISDELETED`, `LOCALE`, `approved`) VALUES ('paasManager', 'paasManager', 'admin', '1', 'CloudManager', '0', 'ko', '1');
-INSERT INTO `uengine`.`roletable` (`ROLECODE`, `COMCODE`, `DESCR`, `ISDELETED`) VALUES ('paasManager', 'CloudManager', 'paasManager', '0');
-INSERT INTO `uengine`.`roleusertable` (`ROLECODE`, `EMPCODE`) VALUES ('paasManager', 'paasManager');
+INSERT INTO `comtable` (`COMCODE`, `COMNAME`) VALUES ('CloudManager', 'cloud manager');
+INSERT INTO `emptable` (`empcode`, `EMPNAME`, `PASSWORD`, `ISADMIN`, `GLOBALCOM`, `ISDELETED`, `LOCALE`, `approved`) VALUES ('paasManager', 'paasManager', 'admin', '1', 'CloudManager', '0', 'ko', '1');
+INSERT INTO `roletable` (`ROLECODE`, `COMCODE`, `DESCR`, `ISDELETED`) VALUES ('paasManager', 'CloudManager', 'paasManager', '0');
+INSERT INTO `roleusertable` (`ROLECODE`, `EMPCODE`) VALUES ('paasManager', 'paasManager');
 
 
 -- 2013.05.14
@@ -765,3 +765,5 @@ alter table app add comname varchar(200);
 
 alter table emptable add guest int(1);
 ALTER TABLE `bpm_procinst`  CHANGE COLUMN `BVBENEFIT` `BENEFIT` INT(6) NULL DEFAULT NULL AFTER `lastcmnt2`,  CHANGE COLUMN `BVPENALTY` `PENALTY` INT(6) NULL DEFAULT NULL AFTER `BENEFIT`;
+
+update emptable set guest = 0;
