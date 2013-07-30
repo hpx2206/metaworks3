@@ -92,35 +92,33 @@ public class PerspectivePanel {
 	public PerspectivePanel(Session session) throws Exception {
 		
 		if(session != null){
-			if("1".equals(GlobalContext.getPropertyString("sns.use", "0"))){
-				//개인별
-				personalPerspective = new PersonalPerspective();
-				personalPerspective.session = session;
-				personalPerspective.select();
+			//개인별
+			personalPerspective = new PersonalPerspective();
+			personalPerspective.session = session;
+			personalPerspective.select();
+			
+			if(session.getEmployee().isApproved() && !session.getEmployee().isGuest()){
 				
-				if(session.getEmployee().isApproved() && !session.getEmployee().isGuest()){
-					
-					//주제별
-					topicPerspective = new TopicPerspective();
-					topicPerspective.session = session;
-					topicPerspective.select();
-					
-					//조직도
-					organizationPerspectiveDept = new OrganizationPerspectiveDept();
-					//역할
-					organizationPerspectiveRole = new OrganizationPerspectiveRole();
-					//프로세스별
-					processPerspective = new ProcessPerspective();
-					
-					//앱
-					if("1".equals(GlobalContext.getPropertyString("app.use", "0"))){
-						appPerspective = new OrganizationPerspectiveApp();
-					}
-					if("1".equals(GlobalContext.getPropertyString("project.use", "0"))){
-						//프로젝트
-						projectPerspective = new ProjectPerspective();
+				//주제별
+				topicPerspective = new TopicPerspective();
+				topicPerspective.session = session;
+				topicPerspective.select();
+				
+				//조직도
+				organizationPerspectiveDept = new OrganizationPerspectiveDept();
+				//역할
+				organizationPerspectiveRole = new OrganizationPerspectiveRole();
+				//프로세스별
+				processPerspective = new ProcessPerspective();
+				
+				//앱
+				if("1".equals(GlobalContext.getPropertyString("app.use", "1"))){
+					appPerspective = new OrganizationPerspectiveApp();
+				}
+				if("1".equals(GlobalContext.getPropertyString("project.use", "1"))){
+					//프로젝트
+					projectPerspective = new ProjectPerspective();
 //						projectPerspective.select();
-					}
 				}
 			}
 			//processStatusPerspective = new ProcessStatusPerspective();
