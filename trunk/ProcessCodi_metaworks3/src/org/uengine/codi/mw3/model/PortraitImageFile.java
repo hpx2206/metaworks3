@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Hidden;
@@ -49,7 +50,30 @@ public class PortraitImageFile extends MetaworksFile {
 			thumnailNameFile.delete();
 		}
 		
-		copyStream(getFileTransfer().getInputStream(), new FileOutputStream(srcName));
+		InputStream is = null;
+		FileOutputStream os = null;
+		
+		try {						
+			is = this.getFileTransfer().getInputStream();
+			os = new FileOutputStream(srcName);
+			
+			MetaworksFile.copyStream(is, os);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if(os != null)
+				try {
+					os.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			if(is != null)
+				try {
+					is.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+		};
 		
 		setFileTransfer(null); // ensure to clear the data
 	}
