@@ -7,6 +7,17 @@ var org_uengine_codi_mw3_model_ReplyOverlayCommentWorkItem = function(objectId, 
 	
 	var object = mw3.objects[this.objectId];
 	
+	
+	objectDiv.hover(
+			function(){
+				$(this).find('.commentTable').css("background-color","#e9e9e9");
+				$(this).find('.deleteCommentIcon').show()
+			},
+			function(){
+				$(this).find('.commentTable').css("background-color","#fff");
+				$(this).find('.deleteCommentIcon').hide();
+			}
+		);
 	// WorkItemHandler.ejs.js 에서 검색으로 사용함
 //	objectDiv.attr("taskId",object.taskId);
 //	objectDiv.attr("parentTaskId",object.prtTskId);
