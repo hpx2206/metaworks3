@@ -88,8 +88,8 @@ public interface IWorkItem extends IDAO{
 		
 		@Hidden
 		@ORMapping(
-			databaseFields = { "content" },
-			objectFields = { "code" },
+			databaseFields = { "title", "content" },
+			objectFields = { "id", "code" },
 			objectIsNullWhenFirstDBFieldIsNull = true,
 			availableWhen= "type=='src'")
 		public SourceCode getSourceCode();
