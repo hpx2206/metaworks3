@@ -206,7 +206,7 @@
 	<bean id="Login" class="org.uengine.codi.mw3.Login"/>
 	<bean id="MainPanel" class="org.uengine.codi.mw3.common.MainPanel"/>
 	<bean id="Workflowy" class="org.uengine.codi.mw3.knowledge.Workflowy"/>
-	<bean id="MemoWorkItem" class="org.uengine.codi.mw3.model.MemoWorkItem"/>
+	<bean id="MemoWorkItem" class="org.uengine.codi.mw3.model.MemoWorkItem" scope="request"/>
 	<bean id="EMailReader" class="org.uengine.codi.cron.EMailReader"/>
 	
 	<bean id="UnstructuredProcessInstanceStarter" class="org.uengine.codi.mw3.model.UnstructuredProcessInstanceStarter"/>
