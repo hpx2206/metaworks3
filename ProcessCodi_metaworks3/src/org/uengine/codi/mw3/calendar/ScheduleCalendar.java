@@ -135,7 +135,7 @@ public class ScheduleCalendar implements ContextAware {
 							"wl.rootinstid, wl.dispatchoption, wl.dispatchparam1, wl.rolename, wl.resname, " +
 							"wl.refrolename, wl.ext1, wl.ext2, wl.ext3, wl.ext4, wl.ext5,  wl.ext6,  wl.ext7, " +
 							"wl.ext8, wl.ext9, wl.ext10, wl.prttskid,  wl.grptaskid, wl.execscope, " +
-							"wl.savedate, wl.apr_type,  wl.abstract,  wl.type,  wl.content, wl.extfile, " +
+							"wl.savedate, wl.abstract,  wl.type,  wl.content, wl.extfile, " +
 							"wl.prevver, wl.nextver,  wl.majorver, wl.minorver,  pi.name instnm , pi.status instancestatus " +
 							"from bpm_worklist wl, bpm_procinst pi " +
 							"where wl.instid = pi.instid and wl.endpoint=?endpoint " +
