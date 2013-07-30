@@ -54,7 +54,7 @@ public class Workspace {
 		main.load();
 		projects.add(main);		
 		
-		if("1".equals(GlobalContext.getPropertyString("project.use", "0"))){
+		if("1".equals(GlobalContext.getPropertyString("project.use", "1"))){
 			// 테넌트의 프로젝트 불러오기
 			try {
 				IProjectNode projectList = ProjectNode.completedProject(tenantId);

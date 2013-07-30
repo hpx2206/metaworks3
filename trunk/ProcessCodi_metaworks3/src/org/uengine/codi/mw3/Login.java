@@ -31,7 +31,6 @@ import org.metaworks.annotation.Test;
 import org.metaworks.annotation.Validator;
 import org.metaworks.annotation.ValidatorContext;
 import org.metaworks.dao.TransactionContext;
-import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.common.MainPanel;
@@ -350,7 +349,7 @@ public class Login implements ContextAware {
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)//, validate=true)
 	public Object[] login() throws Exception {
 		
-		if("1".equals(GlobalContext.getPropertyString("tadpole.use", "0"))){
+		if("1".equals(GlobalContext.getPropertyString("tadpole.use", "1"))){
 			goTadpoleLogin(userId, password);
 		}
 		Session session = loginService();
@@ -365,16 +364,16 @@ public class Login implements ContextAware {
 		PageNavigator pageNavigator = new PageNavigator();
 		pageNavigator.setSession(session);
 		
-		if("knowledge".equals(lastVisitPage) && "1".equals(GlobalContext.getPropertyString("knowledge.use", "0"))){
+		if("knowledge".equals(lastVisitPage) && "1".equals(GlobalContext.getPropertyString("knowledge.use", "1"))){
 			mainPanel = pageNavigator.goKnowledge();
 /*		}else if("pinterest".equals(lastVisitPage)){
 			mainPanel = pageNavigator.goPinterest();
 */
-		}else if("ide".equals(lastVisitPage) && "1".equals(GlobalContext.getPropertyString("ide.use", "0"))){
+		}else if("ide".equals(lastVisitPage) && "1".equals(GlobalContext.getPropertyString("ide.use", "1"))){
 			mainPanel = pageNavigator.goIDE();
-		}else if("marketplace".equals(lastVisitPage) && "1".equals(GlobalContext.getPropertyString("marketplace.use", "0"))){
+		}else if("marketplace".equals(lastVisitPage) && "1".equals(GlobalContext.getPropertyString("marketplace.use", "1"))){
 			mainPanel = pageNavigator.goMarketplace();
-		}else if("selfservice".equals(lastVisitPage) && "1".equals(GlobalContext.getPropertyString("selfservice.use", "0"))){
+		}else if("selfservice".equals(lastVisitPage) && "1".equals(GlobalContext.getPropertyString("selfservice.use", "1"))){
 			mainPanel = pageNavigator.goSelfServicePortal();
 		}else{
 			String preferUX = session.getEmployee().getPreferUX();
@@ -385,7 +384,7 @@ public class Login implements ContextAware {
 			}
 		}
 		
-		if("1".equals(GlobalContext.getPropertyString("sso.use", "0"))){
+		if("1".equals(GlobalContext.getPropertyString("sso.use", "1"))){
 			//Request Token
 			OAuthBasic oauth = new OAuthBasic();
 			oauth.requestToken();

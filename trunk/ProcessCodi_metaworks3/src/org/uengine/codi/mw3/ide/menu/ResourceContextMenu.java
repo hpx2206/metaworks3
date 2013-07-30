@@ -2,8 +2,6 @@ package org.uengine.codi.mw3.ide.menu;
 
 import java.io.File;
 
-import jsx3.gui.IFrame;
-
 import org.metaworks.MetaworksContext;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
@@ -11,11 +9,9 @@ import org.metaworks.ToOpener;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.MenuItem;
-import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.widget.ModalPanel;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.ide.CloudTab;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.knowledge.ProjectInfo;
