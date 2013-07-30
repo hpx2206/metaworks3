@@ -12,7 +12,7 @@ var org_uengine_codi_mw3_webProcessDesigner_LineShape = function(objectId, class
 	if( object != null && object.viewType != null && "blockView" == object.viewType ){
 		canvasObject = mw3.getAutowiredObject('org.uengine.codi.mw3.webProcessDesigner.InstanceMonitorPanel');
 	}else{
-		canvasObject = mw3.getAutowiredObject('org.uengine.codi.mw3.webProcessDesigner.WpdContentPanel');
+		canvasObject = mw3.getAutowiredObject('org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerContentPanel');
 	}
 	
 	var canvasObjectFaceHelper = mw3.getFaceHelper(canvasObject.__objectId);

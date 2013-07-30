@@ -23,7 +23,7 @@ import org.uengine.kernel.ProcessVariable;
 import org.uengine.processmanager.ProcessManagerRemote;
 import org.uengine.util.UEngineUtil;
 
-public class WpdContentPanel extends ContentWindow implements ContextAware {
+public class ProcessDesignerContentPanel extends ContentWindow implements ContextAware {
 	
 	MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
@@ -47,7 +47,7 @@ public class WpdContentPanel extends ContentWindow implements ContextAware {
 		public void setConferenceMode(boolean conferenceMode) {
 			this.conferenceMode = conferenceMode;
 		}
-	public WpdContentPanel() throws Exception{
+	public ProcessDesignerContentPanel() throws Exception{
 		processDesignerContainer = new ProcessDesignerContainer();
 	}
 	

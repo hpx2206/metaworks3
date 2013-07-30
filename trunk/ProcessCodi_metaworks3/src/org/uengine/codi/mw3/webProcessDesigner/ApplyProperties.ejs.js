@@ -7,7 +7,7 @@ var org_uengine_codi_mw3_webProcessDesigner_ApplyProperties = function(objectId,
 //	console.log('org_uengine_codi_mw3_webProcessDesigner_ApplyProperties');
 //	console.log($('#' + this.object.id));
 	
-	var canvasObject = mw3.getAutowiredObject('org.uengine.codi.mw3.webProcessDesigner.WpdContentPanel');
+	var canvasObject = mw3.getAutowiredObject('org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerContentPanel');
 	var canvasObjectFaceHelper = mw3.getFaceHelper(canvasObject.__objectId);
 	var canvas = canvasObjectFaceHelper.icanvas;
 //	console.log(this.object.content);

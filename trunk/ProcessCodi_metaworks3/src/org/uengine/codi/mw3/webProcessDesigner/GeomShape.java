@@ -98,7 +98,7 @@ public class GeomShape extends CanvasDTO {
 	public Activity makeProcVal(Activity activity) {
 		if("OG.shape.bpmn.A_Task".equals(this.getShapeId()) ){
 			if(this.getData() != null){
-				String data = WpdContentPanel.unescape(this.getData());
+				String data = ProcessDesignerContentPanel.unescape(this.getData());
 				JSONArray jsonArray = (JSONArray)JSONSerializer.toJSON(data);
 				if( jsonArray != null && jsonArray.size() > 0){
 					// 혹시 role 이 배열로 들어있을지 모르니, role 을 먼저 체크하는 loof를 돌린다
