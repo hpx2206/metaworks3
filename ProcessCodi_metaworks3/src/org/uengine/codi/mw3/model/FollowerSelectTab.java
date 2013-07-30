@@ -30,8 +30,11 @@ public class FollowerSelectTab {
 		contactListPanel.getMetaworksContext().setHow("follower");
 		contactListPanel.setId(type);
 		contactListPanel.load(session.getUser().getUserId());
-		contactListPanel.getLocalContactList().getMetaworksContext().setWhen(type);
-		contactListPanel.getSocialContactList().getMetaworksContext().setWhen(type);
+		
+		if(contactListPanel.getLocalContactList() != null)
+			contactListPanel.getLocalContactList().getMetaworksContext().setWhen(type);
+		if(contactListPanel.getSocialContactList() != null)
+			contactListPanel.getSocialContactList().getMetaworksContext().setWhen(type);
 
 		this.setContactListPanel(contactListPanel);
 		
