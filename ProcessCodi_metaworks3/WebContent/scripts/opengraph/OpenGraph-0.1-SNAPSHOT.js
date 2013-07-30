@@ -10392,6 +10392,9 @@ OG.shape.bpmn.A_Subprocess = function (label) {
 	OG.shape.bpmn.A_Subprocess.superclass.call(this, label);
 
 	this.SHAPE_ID = 'OG.shape.bpmn.A_Subprocess';
+	this.POPUP = true;
+    this.GROUP_COLLAPSIBLE = false;
+
 };
 OG.shape.bpmn.A_Subprocess.prototype = new OG.shape.GroupShape();
 OG.shape.bpmn.A_Subprocess.superclass = OG.shape.GroupShape;
@@ -10895,6 +10898,9 @@ OG.shape.bpmn.Value_Chain = function (label) {
 
 	this.SHAPE_ID = 'OG.shape.bpmn.Value_Chain';
 	this.label = label;
+	this.POPUP = true;
+    this.GROUP_COLLAPSIBLE = false;
+
 };
 OG.shape.bpmn.Value_Chain.prototype = new OG.shape.GeomShape();
 OG.shape.bpmn.Value_Chain.superclass = OG.shape.GeomShape;
@@ -15796,6 +15802,14 @@ OG.renderer.RaphaelRenderer.prototype.redrawShape = function (element, excludeEd
 			}
 			break;
 		}
+
+		//팝업이 필요한 shape 일 경우 리사이즈 시에 그려 준다
+                if(element.shape.POPUP){
+                    var me = this, collapseObj, clickHandle;
+
+                    collapseObj = this.drawPopupGuide(element);
+                }
+
 	}
 
 	// redrawShape event fire
@@ -16773,6 +16787,61 @@ OG.renderer.RaphaelRenderer.prototype.drawCollapseGuide = function (element) {
 	return null;
 };
 
+
+    /*
+     + 버튼 그리는 부분
+     auth : 민수환
+
+    */
+OG.renderer.RaphaelRenderer.prototype.drawPopupGuide = function (element) {
+	var me = this, rElement = this._getREleById(OG.Util.isElement(element) ? element.id : element),
+		geometry = rElement ? rElement.node.shape.geom : null,
+		envelope, _upperLeft, _bBoxRect, _rect, _rect1,
+		_size = me._CONFIG.COLLAPSE_SIZE,
+		_hSize = _size / 2;
+
+		_bBoxRect = this._getREleById(rElement.id + OG.Constants.COLLAPSE_BBOX_SUFFIX);
+		if (_bBoxRect) {
+			this._remove(_bBoxRect);
+		}
+		_rect1 = this._getREleById(rElement.id + OG.Constants.COLLAPSE_SUFFIX);
+		if (_rect1) {
+			this._remove(_rect1);
+		}
+
+		envelope = geometry.getBoundary();
+		_upperLeft = envelope.getLowerCenter();
+
+		// hidden box
+		_bBoxRect = this._PAPER.rect(envelope.getUpperLeft().x - _size, envelope.getUpperLeft().y - _size,
+			envelope.getWidth() + _size * 2, envelope.getHeight() + _size * 2);
+		_bBoxRect.attr(me._CONFIG.DEFAULT_STYLE.COLLAPSE_BBOX);
+		this._add(_bBoxRect, rElement.id + OG.Constants.COLLAPSE_BBOX_SUFFIX);
+
+
+         _rect1 = this._PAPER.path(
+    				"M" + (_upperLeft.x - 7.5) + " " + (_upperLeft.y - 15) +
+    					"h" + 15 + "v" + 15 + "h" + (-1 * 15) + "v" + (-1 * 15) +
+    					"m1 " + 7.5 + "h" + (15 - 2) + "M" +
+    					(_upperLeft.x - 7.5) + " " + (_upperLeft.y - 15) +
+    					"m" + 7.5 + " 1v" + (15 - 2)
+    	 );
+
+		_rect1.attr(me._CONFIG.DEFAULT_STYLE.COLLAPSE);
+		this._add(_rect1, rElement.id + OG.Constants.COLLAPSE_SUFFIX);
+
+		// layer 위치 조정
+		_bBoxRect.insertBefore(rElement);
+		_rect1.insertAfter(rElement);
+
+		return {
+			bBox    : _bBoxRect.node,
+			collapse: _rect1.node
+		};
+
+
+	return null;
+};
 /**
  * ID에 해당하는 Element 의 Collapse 가이드를 제거한다.
  *
@@ -18216,6 +18285,37 @@ OG.handler.EventHandler.prototype = {
 			});
 		}
 	},
+
+	enablePopUp: function (element) {
+    	    var me = this, collapseObj, clickHandle;
+
+            collapseObj = me._RENDERER.drawPopupGuide(element);
+
+           /* $(collapsedOjb.collapse).bind("click", function (event) {
+                        				    alert("click");
+                        				    });
+           */
+            clickHandle = function (_element, _collapsedOjb) {
+            	if (_collapsedOjb && _collapsedOjb.bBox && _collapsedOjb.collapse) {
+                				$(_collapsedOjb.collapse).bind("click", function (event) {
+                				    me._RENDERER.setScale(0.25);
+                				});
+
+                			}
+            };
+        	$(element).bind({
+                mouseover: function () {
+                      collapseObj = me._RENDERER.drawPopupGuide(this);
+                        if (collapseObj && collapseObj.bBox && collapseObj.collapse) {
+                            clickHandle(element, collapseObj);
+
+                        }
+                }
+
+            });
+        },
+
+
 
 	/**
 	 * Shape 엘리먼트의 이동 가능여부를 설정한다.
