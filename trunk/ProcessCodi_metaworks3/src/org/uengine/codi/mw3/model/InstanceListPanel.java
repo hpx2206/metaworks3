@@ -166,8 +166,15 @@ public class InstanceListPanel implements ContextAware{
 		public void setPreloaded(boolean preloaded) {
 			this.preloaded = preloaded;
 		}
+	String definitionId;
+		public String getDefinitionId() {
+			return definitionId;
+		}
+		public void setDefinitionId(String definitionId) {
+			this.definitionId = definitionId;
+		}
 
-		
+
 	@ServiceMethod
 	public Object[] load() throws Exception {
 		
@@ -176,6 +183,13 @@ public class InstanceListPanel implements ContextAware{
 		//this.instanceListPanel = (InstanceListPanel) personalPerspective.loadAllICanSee()[1];
 		
 		return personalPerspective.loadAllICanSee();
+	}
+	
+	@ServiceMethod
+	public Object[] loadByDefId() throws Exception {
+		PersonalPerspective personalPerspective = new PersonalPerspective();
+		personalPerspective.session = session;
+		return personalPerspective.loadInstanceListPanel("topic", definitionId);
 	}
 	
 	//@Hidden
