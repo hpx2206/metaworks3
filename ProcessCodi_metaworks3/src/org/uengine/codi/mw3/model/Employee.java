@@ -535,7 +535,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		}
 		
 		
-		if("1".equals(GlobalContext.getPropertyString("tadpole.use", "0"))){
+		if("1".equals(GlobalContext.getPropertyString("tadpole.use", "1"))){
 			
 			StringBuffer param = new StringBuffer();
 			

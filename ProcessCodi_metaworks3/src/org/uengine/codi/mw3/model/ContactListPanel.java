@@ -42,7 +42,7 @@ public class ContactListPanel implements ContextAware {
 		
 		setLocalContactList(localContactList);
 		
-		if("1".equals(GlobalContext.getPropertyString("facebook.use", "0"))){
+		if("1".equals(GlobalContext.getPropertyString("facebook.use", "1"))){
 			ContactList socialContactList = new ContactList();
 			socialContactList.getMetaworksContext().setHow(getMetaworksContext().getHow());
 			socialContactList.getMetaworksContext().setWhen(getMetaworksContext().getWhen());

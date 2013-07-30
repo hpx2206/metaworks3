@@ -24,7 +24,7 @@ public class TenantAwareFilter implements Filter{
 	public void doFilter(ServletRequest request, ServletResponse response,
 			FilterChain chain) throws IOException, ServletException {
 		
-		if("1".equals(GlobalContext.getPropertyString("multitenancy.use", "0"))){
+		if("1".equals(GlobalContext.getPropertyString("multitenancy.use", "1"))){
 			//request 의 url 의 동적 변경...가능할런지..		
 			HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 			String pathInfo = httpServletRequest.getPathInfo();

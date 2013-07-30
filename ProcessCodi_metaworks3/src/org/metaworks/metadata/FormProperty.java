@@ -2,19 +2,14 @@ package org.metaworks.metadata;
 
 import java.io.File;
 
-import org.metaworks.MetaworksContext;
-import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
-import org.metaworks.ToOpener;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
-import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.ide.Project;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.editor.form.FormEditor;
-import org.uengine.codi.mw3.model.Main;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
