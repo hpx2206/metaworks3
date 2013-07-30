@@ -62,6 +62,8 @@ public class MemoWorkItem extends WorkItem{
 				getMemo().setContents("...loading...");
 					
 			}
+			// TODO : ormapping 순서 문제로 this.content 값이 들어가 null 이 되는 현상 근본적 해결 필요			
+			this.setContent(this.getMemo().getContents());
 
 		}
 		
