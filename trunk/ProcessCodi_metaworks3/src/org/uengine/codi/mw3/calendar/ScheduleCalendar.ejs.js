@@ -2,21 +2,22 @@ var org_uengine_codi_mw3_calendar_ScheduleCalendar = function(objectId, classNam
 	
 	this.objectId = objectId;
 	this.className = className;
-	
-	var object = mw3.objects[objectId];
-	
-	if(object){
-		if(mw3.importScript('scripts/jquery/fullcalendar/fullcalendar.min.js', function(){mw3.getFaceHelper(objectId).load();})){
-			mw3.importStyle('scripts/jquery/fullcalendar/fullcalendar.css');
-		}else{
-			var faceHelper = this;
-			
-			faceHelper.load();
-		}
-	}
 };
 
 org_uengine_codi_mw3_calendar_ScheduleCalendar.prototype = {
+	loaded : function(){
+		var objectId = this.objectId;
+		var object = mw3.objects[objectId];
+		
+		if(object){
+			var facehelper = this;
+			
+			mw3.importStyle('scripts/jquery/fullcalendar/fullcalendar.css');
+			mw3.importScript('scripts/jquery/fullcalendar/fullcalendar.min.js', function(){
+				facehelper.load();
+			});
+		}
+	},
 	load : function(){
 		var object = mw3.objects[this.objectId];
 		var objectId = this.objectId;
