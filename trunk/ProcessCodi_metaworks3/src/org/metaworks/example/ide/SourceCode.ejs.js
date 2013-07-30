@@ -1,193 +1,119 @@
 var org_metaworks_example_ide_SourceCode = function(objectId, className){
 	this.objectId = objectId;
 	this.className = className;
+	this.object = mw3.objects[this.objectId];
+	this.divName = "objDiv_" + objectId;
+	this.objectDiv = $("#" + this.divName);
+	
+	if(this.object == null)
+		return true;
 
-	this.divName = "objDiv_" + objectId;	
-
-	$("#" + this.divName).css("width", "100%").css("height", '100%').css("overflow", "hidden");
-	$("#" + this.divName).addClass('mw3_editor').addClass('mw3_resize').attr('objectId', objectId);
+	this.objectDiv.css("width", "100%").css("height", '100%'); //.css("overflow", "hidden");
+	this.objectDiv.addClass('mw3_editor').addClass('mw3_resize').attr('objectId', objectId);
 
 	this.loadRequestAssist = false;
 	this.lastCommandString = "";
-	
-	if(mw3.importScript('scripts/ace/build/src/ace.js')){
-		mw3.importScript('scripts/ace/build/src/theme-eclipse.js');
-		mw3.importScript('scripts/ace/build/src/mode-javascript.js');
-		mw3.importScript('scripts/ace/build/src/mode-java.js', function(){mw3.getFaceHelper(objectId).load();});
-		
-	}else{
-		var faceHelper = this;
-		
-		faceHelper.load();
-	}
+
+	if(this.object.id && this.object.id.indexOf('.') > -1)
+		this.language = this.object.id.substring(this.object.id.lastIndexOf('.')+1);
 };
 
 org_metaworks_example_ide_SourceCode.prototype = {
-	load : function(){
-		var faceHelper = this;
-		var objectId = faceHelper.objectId;
-		var object = mw3.objects[objectId];
+	loaded : function(){
+		var objectId = this.objectId;
+		var language = this.language;
 		
-		faceHelper.editor = ace.edit(faceHelper.divName);
-		faceHelper.editor.setTheme("ace/theme/eclipse");
-	
-	    var JavaScriptMode = require("ace/mode/java").Mode;
-	    faceHelper.editor.getSession().setMode(new JavaScriptMode());
-	    
-	    faceHelper.editor.getSession().on('change', function(event){
-	    	try{
-	    		mw3.getFaceHelper(objectId).change(event);
-	    	}catch(e){    		
-	    	}
-	    });
-	      
-	    faceHelper.event = require("pilot/event");
-	    
-	    faceHelper.editor.setKeyboardHandler(    		   
-	    	{
-	    		handleKeyboard : function(data, hashId, key, keyCode, e) {
-	    			switch (e.keyCode) {
-	    				case 13 :    				
-			    			mw3.getFaceHelper(objectId).selectAssist(e);
-			    	    	
-			    	    	break;
-	    				case 32 :    	
-							if(e.ctrlKey){				
-								var command = faceHelper.getCommandString();
-								
-								mw3.mouseX = e.srcElement.offsetLeft + 4;
-								mw3.mouseY = e.srcElement.offsetTop + 18;
-								
-								faceHelper.lastCommandString = command;
-		    					faceHelper.assistType = 'requestAssist';
-		    					faceHelper.requestAssist(command);
-		    					
-		    					faceHelper.event.stopEvent(e);
+		if(language){
+			var url = 'scripts/ace-1.1.0/build/src-min-noconflict/mode-' + language + '.js';
+			
+			$.ajax({
+				async:false,
+				url: url,
+				type:'GET',
+				error:function(xhr){
+					language = 'java';
+				}
+			});
+		}else{
+			language = 'java';
+		}
+		
+		this.language = language;
+		   
+		mw3.getFaceHelper(objectId).load();
+			
+			//mw3.importScript('scripts/ace-1.1.0/build/src-noconflict/ace.js', function(){
+
+			//mw3.importScript('scripts/ace-1.1.0/src-min-noconflict/theme-eclipse.js', function(){
+			//	mw3.importScript('scripts/ace-1.1.0/src-min-noconflict/ace/ext/static_highlight', function(){
+/*					var url = null;
+					
+					if(language){
+						
+						
+						if(typeof mw3.loadedScripts[url] == 'undefined'){
+							if(!mw3.importScript(url)){
+								mw3.loadedScripts[url] = null;
+								url = null;
 							}
 							
-							break;		    	    	
-	    				case 190:
-	    					var command = faceHelper.getCommandString();
-	    					
-	    					command += '.';
-	    					
-	    					mw3.mouseX = e.srcElement.offsetLeft + 4;
-	    					mw3.mouseY = e.srcElement.offsetTop + 18;
-	    					
-	    					faceHelper.lastCommandString = command;
-	    					faceHelper.assistType = 'requestAssist';
-	    					faceHelper.requestAssist(command);
-	    					
-	    					break;
-	    					
-	    				case 79 : // ctrl + shift + o
-	    					if(e.ctrlKey && e.shiftKey){
-	    						var command = faceHelper.getCommandString();
-	    						
-	    						mw3.mouseX = e.srcElement.offsetLeft + 4;
-	    						mw3.mouseY = e.srcElement.offsetTop + 18;
-	
-	    						faceHelper.assistType = 'showOrganizeImports';
-	    						faceHelper.lastCommandString = command;
-	    						faceHelper.showOrganizeImports(command);
-	    						
-	    						faceHelper.stopEvent(e);
-	    					}
-			    	    default :
-			    	    	break;
-	    					
-			    	    
-	    			}
-	    		}
-	   	    }
-	    );
-	    
-	    
-		var canon = require("pilot/canon"); 
-		canon.addCommand({
-		    name: "gotoleft",
-		    bindKey: this.bindKey("Left", "Left|Ctrl-B"),
-		    exec: function(env, args, request) {
-		    	faceHelper.closeAssist();
-		    	
-		    	env.editor.navigateLeft(args.times);
-		    }
-		});
-		canon.addCommand({
-		    name: "gotoleft",
-		    bindKey: this.bindKey("Right", "Right|Ctrl-F"),
-		    exec: function(env, args, request) {
-		    	faceHelper.closeAssist();
-		    	
-		    	env.editor.navigateRight(args.times);
-		    }
-		});
-		canon.addCommand({
-		    name: "golineup",
-		    bindKey: this.bindKey("Up", "Up|Ctrl-P"),
-		    exec: function(env, args, request) {
-		    	var assist = mw3.getAutowiredObject('org.metaworks.example.ide.CodeAssist');
-				
-		    	if(assist != null)
-					mw3.getFaceHelper(assist.__objectId).up();
-				else  	
-					env.editor.navigateUp(args.times);
-		    }
-		});
-		canon.addCommand({
-		    name: "golinedown",
-		    bindKey: this.bindKey("Down", "Down|Ctrl-N"),
-		    exec: function(env, args, request) {
-		    	var assist = mw3.getAutowiredObject('org.metaworks.example.ide.CodeAssist');
-				
-				if(assist != null)
-					mw3.getFaceHelper(assist.__objectId).down();
-				else  	
-					env.editor.navigateDown(args.times);
-		    }
-		});
-		canon.addCommand({
-		    name: "esckey",
-		    bindKey: this.bindKey("Esc", "Esc"),
-		    exec: function(env, args, request) {
-		    	faceHelper.closeAssist();
-		    }
-		});
+						}else if(mw3.loadedScripts[url] == null)
+							url = null;
+					}
+					
+					if(!url){
+						mw3.getFaceHelper(objectId).language = 'java';
+						url = 'scripts/ace-1.1.0/src-min-noconflict/mode-java.js';
+					}
+					
+					mw3.importScript(url, function(){
+						
+					});*/
+			//	});
+			//});
+		//});
+	},
+	load : function(){
+		var objectId = this.objectId;
+		var object = this.object;
 		
-	/*	canon.addCommand({
-		    name: "run",
-		    bindKey: this.bindKey("F5", "F5"),
-		    exec: function(env, args, request) {
-		    }
-		});
-	*/
-		/*this.editor.addEventListener(
-			"keydown",
-	   		function(e) {
-				mw3.log('keydown : ' + objectId);
-				
-				//mw3.getFaceHelper(objectId).keydown(e);
-		    },
+		var pre = this.objectDiv.children('pre');
+		
+		if(pre.length > 0){	// readonly
+			pre.css('width', this.objectDiv.width() + 'px');
 			
-			false
-	    );*/
-	          
-	    
-    	if(object.code)
-    		faceHelper.editor.getSession().setValue(object.code);
-    	
-    	if(object.compileErrors){
-    		for(var i in object.compileErrors){
-    			var compileError = object.compileErrors[i];
+			$('<code>').addClass(this.language).text(object.code).appendTo(pre);
+			
+		    var highlighter = ace.require("ace/ext/static_highlight");
+		    var dom = ace.require("ace/lib/dom");
+		    
+		    function qsa(sel) {
+		        return [].slice.call(document.querySelectorAll(sel));
+		    }
 
-    			faceHelper.editor.getSession().setAnnotations([{ 
-                    row: compileError.line -1, 
-                    column: compileError.column -1, 
-                    text: compileError.message, 
-                    type: "error" 
-                  }]); 
-    		}
-    	}
+		    qsa("#objDiv_" + this.objectId + " code[class]").forEach(function(el) {
+		        var m = el.className.match(/language-(\w+)|(javascript)|(xml)|(java)/);
+
+		        if (!m) return
+		        
+		        var mode = "ace/mode/" + (m[0]);
+		        var theme = "ace/theme/xcode";
+		        var data = dom.getInnerText(el).trim();
+		        
+		        highlighter.render(data, mode, theme, 1, true, function (highlighted) {    
+		            dom.importCssString(highlighted.css, "ace_highlight");
+		            el.innerHTML = highlighted.html;
+		        });
+		    });
+		    
+		}else{	// editable
+			this.editor = ace.edit(this.divName);
+			this.editor.setTheme("ace/theme/textmate");
+			this.editor.getSession().setMode("ace/mode/" + this.language);
+			
+	    	if(object.code)
+	    		this.editor.getSession().setValue(object.code);
+		}
 	},
 	bindKey : function(win, mac) {
 	    return {
@@ -223,7 +149,7 @@ org_metaworks_example_ide_SourceCode.prototype = {
 		if('requestAssist' == serviceMethodName){			
 			this.loadRequestAssist = false;
 			
-			var assist = mw3.getAutowiredObject('org.metaworks.example.ide.CodeAssist')
+			var assist = mw3.getAutowiredObject('org.metaworks.example.ide.CodeAssist');
 			
 			if(assist != null){
 				if(this.assistType == 'requestAssist'){
@@ -253,7 +179,8 @@ org_metaworks_example_ide_SourceCode.prototype = {
 		if(object==null){
 			object = {code: [], className: this.className};
 		}else{
-			object.code = this.editor.getSession().getValue();	
+			if(this.editor)
+				object.code = this.editor.getSession().getValue();	
 		}
 		//object.code = this.editor.getSession().doc.getAllLines();
 		
