@@ -70,12 +70,19 @@ public class ResourceNode extends TreeNode implements ContextAware {
 	}
 
 	boolean hasPick;
-	public boolean isHasPick() {
-		return hasPick;
-	}
-	public void setHasPick(boolean hasPick) {
-		this.hasPick = hasPick;
-	}
+		public boolean isHasPick() {
+			return hasPick;
+		}
+		public void setHasPick(boolean hasPick) {
+			this.hasPick = hasPick;
+		}
+	boolean conferenceMode;
+		public boolean isConferenceMode() {
+			return conferenceMode;
+		}
+		public void setConferenceMode(boolean conferenceMode) {
+			this.conferenceMode = conferenceMode;
+		}
 
 	String alias;
 		public String getAlias() {
