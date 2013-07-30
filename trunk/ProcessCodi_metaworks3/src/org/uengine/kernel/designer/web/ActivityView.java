@@ -1,12 +1,89 @@
 package org.uengine.kernel.designer.web;
 
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.webProcessDesigner.CanvasDTO;
 import org.uengine.codi.mw3.webProcessDesigner.PropertiesWindow;
+import org.uengine.codi.mw3.webProcessDesigner.jms.ProcessViewerPanel;
+import org.uengine.kernel.Activity;
 import org.uengine.kernel.IDrawDesigne;
 
 public class ActivityView extends CanvasDTO{
-	
+	String tracingTag;
+		public String getTracingTag() {
+			return tracingTag;
+		}
+		public void setTracingTag(String tracingTag) {
+			this.tracingTag = tracingTag;
+		}
+		
+	String activityClass;
+		public String getActivityClass() {
+			return activityClass;
+		}
+		public void setActivityClass(String activityClass) {
+			this.activityClass = activityClass;
+		}
+		
+	String classType;
+		public String getClassType() {
+			return classType;
+		}
+		public void setClassType(String classType) {
+			this.classType = classType;
+		}
+	String roleName;
+		public String getRoleName() {
+			return roleName;
+		}
+		public void setRoleName(String roleName) {
+			this.roleName = roleName;
+		}
+	boolean drawByObject;
+		public boolean isDrawByObject() {
+			return drawByObject;
+		}
+		public void setDrawByObject(boolean drawByObject) {
+			this.drawByObject = drawByObject;
+		}
+	String viewType;
+		/* 특별하게 보이고 싶은 경우에 viewType을 셋팅하여 넘긴다*/
+		public String getViewType() {
+			return viewType;
+		}
+		public void setViewType(String viewType) {
+			this.viewType = viewType;
+		}
+	/*  viewer 부분에서  필요한 정보들 transient */
+	transient String instStatus;
+		public String getInstStatus() {
+			return instStatus;
+		}
+		public void setInstStatus(String instStatus) {
+			this.instStatus = instStatus;
+		}
+	transient String backgroundColor;
+		public String getBackgroundColor() {
+			return backgroundColor;
+		}
+		public void setBackgroundColor(String backgroundColor) {
+			this.backgroundColor = backgroundColor;
+		}
+	transient Activity activity;
+		public Activity getActivity() {
+			return activity;
+		}
+		public void setActivity(Activity activity) {
+			this.activity = activity;
+		}
+		
+	String tooltip;
+		public String getTooltip() {
+			return tooltip;
+		}
+		public void setTooltip(String tooltip) {
+			this.tooltip = tooltip;
+		}
 	transient PropertiesWindow propertiesWindow;
 		public PropertiesWindow getPropertiesWindow() {
 			return propertiesWindow;
@@ -28,5 +105,14 @@ public class ActivityView extends CanvasDTO{
 		}
 		return this.getPropertiesWindow();
 	}
+	
+	@ServiceMethod
+	public ModalWindow showDefinitionMonitor() throws Exception{
+		  
+		  ProcessViewerPanel processViewerPanel = new ProcessViewerPanel();
+		  ModalWindow modalWindow = new ModalWindow(processViewerPanel);
+		  
+		  return modalWindow;  
+	 }
 
 }
