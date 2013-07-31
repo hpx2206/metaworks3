@@ -3,7 +3,6 @@ package org.uengine.kernel.graph;
 import org.uengine.kernel.Activity;
 import org.uengine.kernel.Condition;
 import org.uengine.kernel.ProcessInstance;
-import org.uengine.kernel.designer.web.TransitionView;
 
 public class Transition implements java.io.Serializable {
 	private static final long serialVersionUID = org.uengine.kernel.GlobalContext.SERIALIZATION_UID;
@@ -73,14 +72,6 @@ public class Transition implements java.io.Serializable {
 	public void setTargetActivity(Activity targetActivity) {
 		this.targetActivity = targetActivity;
 	}
-	
-	TransitionView TransitionView;
-		public TransitionView getTransitionView() {
-			return TransitionView;
-		}
-		public void setTransitionView(TransitionView transitionView) {
-			TransitionView = transitionView;
-		}
 
 	public boolean isMet(ProcessInstance instance, String scope) throws Exception {
 		if (condition == null) {

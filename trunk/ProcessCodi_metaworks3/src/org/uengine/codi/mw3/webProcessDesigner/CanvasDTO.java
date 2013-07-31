@@ -2,14 +2,10 @@ package org.uengine.codi.mw3.webProcessDesigner;
 
 import java.io.Serializable;
 
-import org.metaworks.annotation.Id;
+import org.uengine.kernel.Activity;
 
 public class CanvasDTO implements Serializable{
-		public static final String SHAPE_TASK = "OG.shape.bpmn.A_Task";
-	
-	
 		String id;
-			@Id
 			public String getId() {
 				return id;
 			}
@@ -128,6 +124,42 @@ public class CanvasDTO implements Serializable{
 			public void setData(String data) {
 				this.data = data;
 			}
+		String jsonString;
+			public String getJsonString() {
+				return jsonString;
+			}
+			public void setJsonString(String jsonString) {
+				this.jsonString = jsonString;
+			}
+		String tracingTag;
+			public String getTracingTag() {
+				return tracingTag;
+			}
+			public void setTracingTag(String tracingTag) {
+				this.tracingTag = tracingTag;
+			}
+			
+		String classname;
+			public String getClassname() {
+				return classname;
+			}
+			public void setClassname(String classname) {
+				this.classname = classname;
+			}
+		String classType;
+			public String getClassType() {
+				return classType;
+			}
+			public void setClassType(String classType) {
+				this.classType = classType;
+			}
+		String roleName;
+			public String getRoleName() {
+				return roleName;
+			}
+			public void setRoleName(String roleName) {
+				this.roleName = roleName;
+			}
 		boolean drawByObject;
 			public boolean isDrawByObject() {
 				return drawByObject;
@@ -143,4 +175,34 @@ public class CanvasDTO implements Serializable{
 			public void setViewType(String viewType) {
 				this.viewType = viewType;
 			}
+		/*  viewer 부분에서  필요한 정보들 transient */
+		transient String instStatus;
+			public String getInstStatus() {
+				return instStatus;
+			}
+			public void setInstStatus(String instStatus) {
+				this.instStatus = instStatus;
+			}
+		transient String backgroundColor;
+			public String getBackgroundColor() {
+				return backgroundColor;
+			}
+			public void setBackgroundColor(String backgroundColor) {
+				this.backgroundColor = backgroundColor;
+			}
+		transient Activity activity;
+			public Activity getActivity() {
+				return activity;
+			}
+			public void setActivity(Activity activity) {
+				this.activity = activity;
+			}
+		String tooltip;
+			public String getTooltip() {
+				return tooltip;
+			}
+			public void setTooltip(String tooltip) {
+				this.tooltip = tooltip;
+			}
+			
 }

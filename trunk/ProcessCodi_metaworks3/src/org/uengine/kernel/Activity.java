@@ -24,9 +24,7 @@ import java.util.Vector;
 
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
-import org.uengine.codi.mw3.webProcessDesigner.ExtendAttribute;
 import org.uengine.contexts.TextContext;
-import org.uengine.kernel.designer.web.ActivityView;
 import org.uengine.kernel.graph.Transition;
 import org.uengine.processdesigner.ActivityDesigner;
 import org.uengine.processpublisher.graph.GraphActivity;
@@ -365,9 +363,6 @@ public abstract class Activity implements Validatable, java.io.Serializable, Clo
 	public Activity(){
 		setRetryLimit(0);
 		setRetryDelay(60);
-		
-		extendAttribute = new ExtendAttribute();
-		
 	}
 
 	public Activity(String activityName){	// for manual-coding
@@ -1461,15 +1456,6 @@ public abstract class Activity implements Validatable, java.io.Serializable, Clo
 		this.outgoingTransitions = outgoingTransitions;
 	}
 	
-	ActivityView activityView;
-		@Hidden
-		public ActivityView getActivityView() {
-			return activityView;
-		}
-		public void setActivityView(ActivityView activityView) {
-			this.activityView = activityView;
-		}
-		
 	public void addIncomingTransition(Transition incomingTransition) {
 		getIncomingTransitions().add(incomingTransition);
 	}
@@ -1523,13 +1509,5 @@ public abstract class Activity implements Validatable, java.io.Serializable, Clo
 		int tokenCount = Integer.parseInt(objTokenCount.toString());
 		return tokenCount;
 	}
-	
-	ExtendAttribute extendAttribute;
-		public ExtendAttribute getExtensionAttribute() {
-			return extendAttribute;
-		}
-		public void setExtensionAttribute(ExtendAttribute extendAttribute) {
-			this.extendAttribute = extendAttribute;
-		}
 	
 }
