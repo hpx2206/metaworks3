@@ -10436,8 +10436,6 @@ OG.shape.bpmn.A_Task = function (label) {
 
 	this.SHAPE_ID = 'OG.shape.bpmn.A_Task';
 	this.label = label;
-	this.POPUP = true;
-	this.GROUP_COLLAPSIBLE = false;
 };
 OG.shape.bpmn.A_Task.prototype = new OG.shape.GeomShape();
 OG.shape.bpmn.A_Task.superclass = OG.shape.GeomShape;
@@ -18300,7 +18298,7 @@ OG.handler.EventHandler.prototype = {
             clickHandle = function (_element, _collapsedOjb) {
             	if (_collapsedOjb && _collapsedOjb.bBox && _collapsedOjb.collapse) {
                 				$(_collapsedOjb.collapse).bind("click", function (event) {
-                				    me._RENDERER.setScale(0.25);
+                				    $(element).trigger('ele');
                 				});
 
                 			}
