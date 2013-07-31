@@ -24,7 +24,7 @@ import java.util.Vector;
 
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
-import org.uengine.codi.mw3.webProcessDesigner.jms.ExtendAttribute;
+import org.uengine.codi.mw3.webProcessDesigner.ExtendAttribute;
 import org.uengine.contexts.TextContext;
 import org.uengine.kernel.designer.web.ActivityView;
 import org.uengine.kernel.graph.Transition;

@@ -10436,6 +10436,8 @@ OG.shape.bpmn.A_Task = function (label) {
 
 	this.SHAPE_ID = 'OG.shape.bpmn.A_Task';
 	this.label = label;
+	this.POPUP = true;
+	this.GROUP_COLLAPSIBLE = false;
 };
 OG.shape.bpmn.A_Task.prototype = new OG.shape.GeomShape();
 OG.shape.bpmn.A_Task.superclass = OG.shape.GeomShape;
@@ -21649,6 +21651,10 @@ OG.graph.Canvas.prototype = {
 		if (this._CONFIG.GROUP_COLLAPSIBLE && element.shape.GROUP_COLLAPSIBLE) {
 			this._HANDLER.enableCollapse(element);
 		}
+
+		if(element.shape.POPUP){
+            this._HANDLER.enablePopUp(element);
+        }
 
 		return element;
 	},
