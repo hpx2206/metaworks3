@@ -45,7 +45,6 @@ public class WorkItemHandler implements ContextAware{
 		Long taskId = getTaskId();
 		String tracingTag = getTracingTag();
 		
-		
 		instance = processManager.getProcessInstance(instanceId.toString());
 
 		if(humanActivity==null && instanceId!=null && tracingTag!=null){
@@ -529,6 +528,7 @@ public class WorkItemHandler implements ContextAware{
 		replyOverlayCommentWorkItem.setInstId(new Long(getInstanceId()));
 		replyOverlayCommentWorkItem.setTitle(replyTitle);
 		replyOverlayCommentWorkItem.setExt1(replyFieldName);
+		replyOverlayCommentWorkItem.setPrtTskId(getTaskId());
 		replyOverlayCommentWorkItem.setEndpoint(session.getUser().getUserId());
 		replyOverlayCommentWorkItem.add();
 		

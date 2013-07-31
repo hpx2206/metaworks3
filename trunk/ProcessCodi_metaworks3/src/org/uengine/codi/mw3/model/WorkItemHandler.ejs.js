@@ -3,6 +3,7 @@ var org_uengine_codi_mw3_model_WorkItemHandler = function(objectId, className){
 	this.className = className;
 	
 	var object = mw3.objects[this.objectId];
+	
 	// 댓글달기 버튼  
 	if( object && object.parameters){
 		for(var i = 0; i < object.parameters.length; i++){

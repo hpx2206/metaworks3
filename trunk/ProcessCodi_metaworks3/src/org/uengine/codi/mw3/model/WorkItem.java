@@ -1091,7 +1091,9 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	}
 	
 	public Object remove() throws Exception{
-		
+		if( this.getWorkItemHandler() != null && this.getWorkItemHandler().getTracingTag() != null && !this.getWorkItemHandler().getTracingTag().equals(null) ){
+			throw new Exception("$CanNotDelete");
+		}
 		if(session.getUser().getUserId().equals(getWriter().getUserId()) || (session.getEmployee()!=null && session.getEmployee().getIsAdmin())){
 			deleteDatabaseMe();
 			return new Remover(this);
@@ -1111,6 +1113,9 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	}
 
 	public void edit() throws Exception{
+		if( this.getWorkItemHandler() != null && this.getWorkItemHandler().getTracingTag() != null && !this.getWorkItemHandler().getTracingTag().equals(null) ){
+			throw new Exception("$CanNotEdit");
+		}
 		if(!session.getUser().getUserId().equals(getWriter().getUserId())){
 			throw new Exception("$OnlyTheWriterCanEdit");
 		}
