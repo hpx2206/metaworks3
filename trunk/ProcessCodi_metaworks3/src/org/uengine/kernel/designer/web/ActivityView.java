@@ -3,8 +3,8 @@ package org.uengine.kernel.designer.web;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.webProcessDesigner.CanvasDTO;
+import org.uengine.codi.mw3.webProcessDesigner.ProcessViewerPanel;
 import org.uengine.codi.mw3.webProcessDesigner.PropertiesWindow;
-import org.uengine.codi.mw3.webProcessDesigner.jms.ProcessViewerPanel;
 import org.uengine.kernel.Activity;
 import org.uengine.kernel.IDrawDesigne;
 

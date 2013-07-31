@@ -1,4 +1,4 @@
-package org.uengine.codi.mw3.webProcessDesigner.jms;
+package org.uengine.codi.mw3.webProcessDesigner;
 
 public class ProcessView {
 	

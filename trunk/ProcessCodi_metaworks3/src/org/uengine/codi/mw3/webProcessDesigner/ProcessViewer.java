@@ -1,4 +1,4 @@
-package org.uengine.codi.mw3.webProcessDesigner.jms;
+package org.uengine.codi.mw3.webProcessDesigner;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.metaworks.common.MetaworksUtil;
-import org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerContainer;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.ProcessDefinition;
 

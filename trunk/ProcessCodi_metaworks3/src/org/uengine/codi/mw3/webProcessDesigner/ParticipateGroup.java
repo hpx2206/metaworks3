@@ -1,4 +1,4 @@
-package org.uengine.codi.mw3.webProcessDesigner.jms;
+package org.uengine.codi.mw3.webProcessDesigner;
 
 import org.uengine.codi.mw3.model.IDept;
 
