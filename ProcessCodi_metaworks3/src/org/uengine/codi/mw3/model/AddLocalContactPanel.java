@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
 
 public class AddLocalContactPanel {
@@ -30,6 +31,14 @@ public class AddLocalContactPanel {
 		employeeList.setEmployee(employee.findByDeptOther());
 		
 		setDeptEmployee(employeeList);				
+		
+		ContactSearchBox searchBox = new ContactSearchBox(); 
+		searchBox.setMetaworksContext(new MetaworksContext());
+		searchBox.getMetaworksContext().setWhere("addContact");
+		searchBox.setKeyUpSearch(true);
+		searchBox.setKeyEntetSearch(true);
+		
+		setContactSearchBox(searchBox);
 	}
 
 	DeptList deptList;
@@ -47,6 +56,14 @@ public class AddLocalContactPanel {
 		public void setDeptEmployee(EmployeeList deptEmployee) {
 			this.deptEmployee = deptEmployee;
 		}			
+
+	ContactSearchBox contactSearchBox;		
+		public ContactSearchBox getContactSearchBox() {
+			return contactSearchBox;
+		}
+		public void setContactSearchBox(ContactSearchBox contactSearchBox) {
+			this.contactSearchBox = contactSearchBox;
+		}
 
 	@AutowiredFromClient
 	public Session session;

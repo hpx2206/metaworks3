@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
@@ -21,8 +22,14 @@ public class ContactPanel {
 		
 		setContactListPanel(contactListPanel);
 		setUser(user);		
-		setSearchBox(new ContactSearchBox());
-		getSearchBox().setMetaworksContext(contactListPanel.getLocalContactList().getMetaworksContext());
+		
+		ContactSearchBox searchBox = new ContactSearchBox(); 
+		searchBox.setMetaworksContext(new MetaworksContext());
+		searchBox.getMetaworksContext().setWhere("contactList");
+		searchBox.setKeyUpSearch(true);
+		searchBox.setKeyEntetSearch(true);
+		
+		setSearchBox(searchBox);
 	}
 
 	IUser user;	
