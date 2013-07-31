@@ -128,7 +128,7 @@ public class ScheduleCalendar implements ContextAware {
 		WorkItem schedule = new WorkItem();
 //		IWorkItem workitems = schedule.sql("select wl.*, pi.name instnm , pi.status instanceStatus from bpm_worklist wl, bpm_procinst pi where wl.instid = pi.instid and wl.endpoint=?endpoint and wl.type is null and pi.isdeleted != 1");
 		//wl.duedate 호출 대신 pi의 duedate 호출(nipa반영:cjs)
-		String wsql ="select wl.taskid, wl.title, wl.description, wl.endpoint, wl.status, " +
+		/*String wsql ="select wl.taskid, wl.title, wl.description, wl.endpoint, wl.status, " +
 							"wl.priority, wl.startdate, wl.enddate, pi.duedate, wl.instid, wl.defid, " +
 							"wl.defname, wl.trctag, wl.tool, wl.parameter, wl.groupid, wl.groupname, " +
 							"wl.isurgent, wl.hasattachfile, wl.hascomment, wl.documentcategory, wl.isdeleted, " +
@@ -140,21 +140,31 @@ public class ScheduleCalendar implements ContextAware {
 							"from bpm_worklist wl, bpm_procinst pi " +
 							"where wl.instid = pi.instid and wl.endpoint=?endpoint " +
 							"and pi.isdeleted != 1 and wl.duedate is not null and wl.defid is not null";
+		
 		IWorkItem workitems = schedule.sql(wsql);
 		workitems.setEndpoint(userId);
 		workitems.select();
 		DataConvert(arrListData, workitems, userId);
-	
+		*/
+		
+		/*
 		Instance instance = new Instance();
+		String wsql ="select * from bpm_procinst where  defverid != 'Unstructured.process' and initep=?endpoint and isdeleted != 1";
+		IInstance iInstanceProcess = instance.sql(wsql);
+		iInstanceProcess.setInitEp(userId);
+		iInstanceProcess.select();
+		DataConvert(arrListData, iInstanceProcess, userId);
+		*/
+		
 		String sql = 	" select distinct(inst.INSTID), inst.DEFVERID, inst.DEFID, inst.DEFNAME, inst.DEFPATH, inst.DEFMODDATE, inst.STARTEDDATE, inst.FINISHEDDATE, inst.DUEDATE, inst.STATUS, inst.INFO, inst.NAME, inst.ISDELETED, inst.ISADHOC, inst.ISARCHIVE, inst.ISSUBPROCESS, inst.ISEVENTHANDLER, inst.ROOTINSTID, inst.MAININSTID, inst.MAINDEFVERID, inst.MAINACTTRCTAG, inst.MAINEXECSCOPE, inst.ABSTRCPATH, inst.DONTRETURN, inst.MODDATE, inst.EXT1, inst.INITEP, inst.INITRSNM, inst.CURREP, inst.CURRRSNM, inst.STRATEGYID, inst.PREVCURREP, inst.PREVCURRRSNM, inst.STARCNT, inst.STARRSNM, inst.STARFLAG, inst.ABSTRACTINST, inst.CURRTRCTAG, inst.PREVTRCTAG, inst.INITCOMCD, inst.SECUOPT, inst.lastcmnt, inst.initcmpl "+ 
 						" from bpm_procinst inst , bpm_rolemapping follower "+
 						" where inst.duedate is not null " +
 						" and inst.isdeleted != 1  "+
 						" and inst.instId = follower.instId "+
-						" and follower.endpoint in ( ?initep )" +
-						" and inst.defverId = 'Unstructured.process'";
+						" and follower.endpoint in ( ?initep )";
+						//" and inst.defverId = 'Unstructured.process'";
 		
-		
+		Instance instance = new Instance();
 		IInstance iInstance = instance.sql(sql);
 		iInstance.setInitEp(userId);
 		iInstance.select();
@@ -169,13 +179,10 @@ public class ScheduleCalendar implements ContextAware {
 		try {	
 			while(iInstance.next()){
 				column = new HashMap();
-				String title = " ";
-				title = iInstance.getName();
-				if(title == null || title.equals(" ") || title.equals("null")) title = "-";
-				boolean completed = "Completed".equals(iInstance.get("status"));
+				String title = iInstance.getName();
 				
 				column = new HashMap();
-				column.put("id", iInstance.getInstId()+"");
+				column.put("id", iInstance.getInstId().toString());
 				column.put("callType", "instance" );
 				column.put("title", title );
 //				column.put("start", iInstance.getDueDate(); // set startDate equals endDate
@@ -200,7 +207,7 @@ public class ScheduleCalendar implements ContextAware {
 				else
 					column.put("color", "#C48189");
 	
-				if(completed){
+				if("Completed".equals(iInstance.get("status"))){
 					column.put("color", "#808080");
 				}
 				arrListData.add(column);
@@ -217,17 +224,17 @@ public class ScheduleCalendar implements ContextAware {
 		try {				
 			while(schedule.next()){
 				String title = " ";
-				boolean completed = "Completed".equals(schedule.get("instanceStatus"));
+				boolean completed = "Completed".equals(schedule.get("status"));
 
 				if(!how.equals("small") && how != null)
-					title = schedule.getTitle();
+					title = (String)schedule.get("name");
 				
 				if(title == null || title.equals(" ") || title.equals("null")) title = "-";
 				
 				column = new HashMap();
 				column.put("id", schedule.getTaskId());
 				column.put("callType", "workitem" );
-				column.put("title", title + "-" + schedule.get("instnm") + (completed ? "(Completed)" : ""));
+				column.put("title", title + "-" + schedule.get("name") + (completed ? "(Completed)" : ""));
 				
 //				//조사 수행건은 완료예정일 기준으로 출력함.
 //				if("INVST".equals(schedule.getSchdTypeCombo().getSelected()))
