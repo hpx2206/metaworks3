@@ -41,6 +41,7 @@ public class ProcessViewWindow {
 		ProcessViewPanel processViewPanel = new ProcessViewPanel();
 		processViewPanel.setDefId(defId);
 		processViewPanel.setAlias(alias);
+		processViewPanel.setViewType("definitionView");
 		processViewPanel.load();
 		
 		centerInLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:5, north__size:50");

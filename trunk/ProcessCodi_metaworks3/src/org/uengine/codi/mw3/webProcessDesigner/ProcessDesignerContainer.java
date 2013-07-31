@@ -38,6 +38,13 @@ public class ProcessDesignerContainer {
 		public void setVariableList(ArrayList<ProcessVariable> variableList) {
 			this.variableList = variableList;
 		}
+	String viewType;
+		public String getViewType() {
+			return viewType;
+		}
+		public void setViewType(String viewType) {
+			this.viewType = viewType;
+		}
 	public ProcessDesignerContainer(){
 		activityList = new ArrayList<Activity>();
 		roleList = new ArrayList<Role>();
@@ -47,9 +54,14 @@ public class ProcessDesignerContainer {
 	public void load(ProcessDefinition def) throws Exception{
 
 		for (int l = 0; l < def.getChildActivities().size(); l++) {
-			activityList.add((Activity)def.getChildActivities().get(l));
+			Activity activity = (Activity)def.getChildActivities().get(l);
+			activity.getActivityView().setViewType(viewType);
+			activityList.add(activity);
 		}
 		transitionList = def.getTransitions();
+		for(Transition ts : transitionList){
+			ts.getTransitionView().setViewType(viewType);
+		}
 	}
 	
 	public ProcessDefinition containerToDefinition(ProcessDesignerContainer container){
