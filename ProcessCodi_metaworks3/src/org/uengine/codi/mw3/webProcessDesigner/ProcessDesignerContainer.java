@@ -50,7 +50,6 @@ public class ProcessDesignerContainer {
 			activityList.add((Activity)def.getChildActivities().get(l));
 		}
 		transitionList = def.getTransitions();
-//		def.getRoles();
 	}
 	
 	public ProcessDefinition containerToDefinition(ProcessDesignerContainer container){

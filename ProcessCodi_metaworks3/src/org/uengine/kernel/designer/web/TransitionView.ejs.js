@@ -8,7 +8,7 @@ var org_uengine_kernel_designer_web_TransitionView = function(objectId, classNam
 	if( object != null && object.viewType != null && "blockView" == object.viewType ){
 		canvasObject = mw3.getAutowiredObject('org.uengine.codi.mw3.webProcessDesigner.InstanceMonitorPanel');
 	}else{
-		canvasObject = mw3.getAutowiredObject('org.uengine.codi.mw3.webProcessDesigner.processDesignerContentPanel');
+		canvasObject = mw3.getAutowiredObject('org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerContentPanel');
 	}
 	var canvasObjectFaceHelper = mw3.getFaceHelper(canvasObject.__objectId);
 	this.canvas = canvasObjectFaceHelper.icanvas;

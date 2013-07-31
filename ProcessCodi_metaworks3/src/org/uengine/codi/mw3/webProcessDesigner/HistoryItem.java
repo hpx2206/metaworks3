@@ -30,6 +30,13 @@ public class HistoryItem implements ContextAware{
 		public void setDefName(String defName) {
 			this.defName = defName;
 		}
+	String alias;
+		public String getAlias() {
+			return alias;
+		}
+		public void setAlias(String alias) {
+			this.alias = alias;
+		}
 		
 	public HistoryItem(){
 		setMetaworksContext(new MetaworksContext());
