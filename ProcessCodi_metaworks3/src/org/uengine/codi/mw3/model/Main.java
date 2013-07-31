@@ -161,7 +161,8 @@ public class Main {
 			
 			//Since there's are too many input boxes there, it is removed.
 			if(session.getEmployee().isApproved()){
-				contactWindow.getContactPanel().setSearchBox(null);
+				//contactWindow.getContactPanel().setSearchBox(null);
+				contactWindow.getContactPanel().setUser(null);
 				westLayout.setSouth(contactWindow);
 			}
 			
