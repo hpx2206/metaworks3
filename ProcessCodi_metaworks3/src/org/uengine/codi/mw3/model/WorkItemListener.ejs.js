@@ -37,6 +37,34 @@ var org_uengine_codi_mw3_model_WorkItemListener = function(objectId, className){
 				var parentTaskId = value.overlayCommentOption.parentTaskId;
 				var parentWorkitemObject = mw3.getAutowiredObject("org.uengine.codi.mw3.model.WorkItem@"+parentTaskId);
 				$("#objDiv_" + parentWorkitemObject.__objectId ).append(html);	
+			}else if( type == "replyCmnt"){
+				if( value.prtTskId && !value.contentLoaded ){
+					var fieldName = value.ext1;
+					var parentWorkItem = mw3.getAutowiredObject("org.uengine.codi.mw3.model.WorkItemHandler@"+ value.prtTskId , true);
+					
+					if( parentWorkItem && parentWorkItem.parameters ){
+						for(var i = 0; i < parentWorkItem.parameters.length; i++){
+							
+							var valObject = parentWorkItem.parameters[i].valueObject;
+							var metadata = mw3.getMetadata(valObject.__className);
+							if(metadata.fieldDescriptors){
+								for (var j=0; j<metadata.fieldDescriptors.length; j++){
+									var fd = metadata.fieldDescriptors[j];
+									if(fieldName == fd.name){
+										var valiableObjectId = mw3.getChildObjectId(valObject.__objectId, fieldName);
+										if( valiableObjectId ){
+											var valiableObjectDivId = mw3._getObjectDivId(valiableObjectId);
+											var valiableObjectDiv = $('#' + valiableObjectDivId);
+											var html = mw3.locateObject(value, null);
+											valiableObjectDiv.append(html);
+										}
+									}
+									
+								}
+							}
+						}
+					}
+				}
 			}else{
 				instanceThreadObject.getFaceHelper().toAppend(value);
 			}
