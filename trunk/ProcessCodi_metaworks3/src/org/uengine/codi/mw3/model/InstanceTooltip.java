@@ -71,11 +71,18 @@ public class InstanceTooltip implements ContextAware {
 	
 	@ServiceMethod(payload={"instanceId"}, target=ServiceMethodContext.TARGET_POPUP, loader="auto")
 	public Popup schedule() throws Exception{
+		
 		Instance instance = new Instance();
 		instance.processManager = processManager;
 		instance.session = session;
 		instance.localeManager = localeManager;
 		instance.setInstId(this.getInstanceId());
+		
+		IInstance instanceRef = instance.databaseMe();
+		
+		if(!session.getUser().getUserId().equals(instanceRef.getInitEp())) {
+			throw new Exception("$OnlyTheWriterCanEdit");
+		}	
 		
 		return instance.schedule();
 	}
