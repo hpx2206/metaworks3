@@ -89,36 +89,53 @@
 	<!-- Cron Job -->
 	<!-- ============================================================= -->
 
-	<bean id="cronQuartzJob" class="org.springframework.scheduling.quartz.JobDetailBean">
-		<property name="jobClass" value="org.uengine.codi.cron.CodiCronJob"/>
-		<property name="jobDataAsMap">
-			<map>
-				<entry key="connectionFactory">
-					<ref local="springConnectionFactoryForMetaworks"/>
-				</entry>
-				<entry key="emailReader">
-					<ref local="EMailReader"/>
-				</entry>
-			</map>
-		</property>
-	</bean>
+
+<!-- 	<bean id="cronQuartzJob" class="org.springframework.scheduling.quartz.JobDetailBean"> -->
+<!-- 		<property name="jobClass" value="org.uengine.codi.cron.CodiCronJob"/> -->
+<!-- 		<property name="jobDataAsMap"> -->
+<!-- 			<map> -->
+<!-- 				<entry key="connectionFactory"> -->
+<!-- 					<ref local="springConnectionFactoryForMetaworks"/> -->
+<!-- 				</entry> -->
+<!-- 				<entry key="emailReader"> -->
+<!-- 					<ref local="EMailReader"/> -->
+<!-- 				</entry> -->
+<!-- 			</map> -->
+<!-- 		</property> -->
+<!-- 	</bean> -->
 		
 	<!-- bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
 		<property name="jobDetail" ref="cronQuartzJob"/>
 		<property name="cronExpression" value="0/1 * * * * ?"/>
 	</bean-->
 	
-	<bean id="simpleTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
-		<property name="jobDetail" ref="cronQuartzJob"/>
-		<property name="startDelay" value="60000"/>
-		<property name="repeatInterval" value="120000"/>
+<!-- 	<bean id="simpleTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean"> -->
+<!-- 		<property name="jobDetail" ref="cronQuartzJob"/> -->
+<!-- 		<property name="startDelay" value="60000"/> -->
+<!-- 		<property name="repeatInterval" value="120000"/> -->
+<!-- 	</bean> -->
+	
+	<bean id="waitJob" class="org.springframework.scheduling.quartz.JobDetailBean">
+		<property name="jobClass" value="org.uengine.codi.scheduler.WaitJob" />
+		<property name="jobDataAsMap">
+			<map>
+				<entry key="connectionFactory">
+					<ref local="springConnectionFactoryForMetaworks"/>
+				</entry>
+			</map>
+		</property>
 	</bean>
 	
+	<bean id="waitTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
+		<property name="jobDetail" ref="waitJob"/>
+		<property name="startDelay" value="5000"/>
+		<property name="repeatInterval" value="20000"/>
+	</bean>
 	
 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="triggers">
 			<list>
-				<ref bean="simpleTrigger"/>
+				<ref bean="waitTrigger"/>
 			</list>
 		</property>
 		<!-- property name="schedulerContextAsMap">
@@ -126,8 +143,8 @@
 		       <entry key="connectionFactory" value-ref="springConnectionFactoryForMetaworks" />
 		       <entry key="emailReader" value-ref="EMailReader" />
 		    </map>
-	    </property-->
-		<property name="quartzProperties">
+	    </property -->
+	<property name="quartzProperties">
 			<props>
 				<prop key="org.quartz.threadPool.class">org.quartz.simpl.SimpleThreadPool</prop>
     			<prop key="org.quartz.threadPool.threadCount">5</prop>
@@ -136,12 +153,17 @@
     			<prop key="org.quartz.jobStore.misfireThreshold">60000</prop>
 			</props>
 		</property>
-	</bean>
+ 	</bean>
 
+
+
+ 
 	<!-- ============================================================= -->
 	<!-- Process Codi Services -->
 	<!-- ============================================================= -->
 
+	<bean id="InstanceListPanel" class="org.uengine.codi.mw3.model.InstanceListPanel"/>
+	<bean id="ProcessMap" class="org.uengine.codi.mw3.model.ProcessMap"/>
 
 	<bean id="InstanceViewContent" class="org.uengine.codi.mw3.model.InstanceViewContent"/>	
 	<bean id="ClassDesignerContentPanel" class="org.uengine.codi.mw3.model.ClassDesignerContentPanel"/>
@@ -155,14 +177,14 @@
 	<bean id="CommentWorkItem" class="org.uengine.codi.mw3.model.CommentWorkItem" scope="request"/>
 	<bean id="SourceCodeWorkItem" class="org.uengine.codi.mw3.model.SourceCodeWorkItem" scope="request"/>
 	<bean id="WorkItemHandler" class="org.uengine.codi.mw3.model.WorkItemHandler"/>
-	<bean id="FormWorkItemHandler" class="org.uengine.codi.activitytypes.wih.FormWorkItemHandler"/>
+<!-- 	<bean id="FormWorkItemHandler" class="org.uengine.codi.activitytypes.wih.FormWorkItemHandler"/> -->
 	
 	<bean id="InstanceView" class="org.uengine.codi.mw3.model.InstanceView"/>
 	<bean id="Instance" class="org.uengine.codi.mw3.model.Instance"/>
 	
 	
 	<bean id="Contact" class="org.uengine.codi.mw3.model.Contact"/>
-	<bean id="FormDefinition" class="org.uengine.codi.mw3.admin.FormDefinition"/>
+<!-- 	<bean id="FormDefinition" class="org.uengine.codi.mw3.admin.FormDefinition"/> -->
 	<bean id="CrowdSourcer" class="org.uengine.codi.mw3.model.CrowdSourcer"/>	
 	<bean id="ProcessDesignerContentPanel" class="org.uengine.codi.mw3.model.ProcessDesignerContentPanel"/>
 	<!-- <bean id="ProcessInstanceMonitor" class="org.uengine.codi.mw3.model.ProcessInstanceMonitor"/>  -->
@@ -182,7 +204,7 @@
 	
 	
 		
-	<!-- bean id="MongoDB" class="org.uengine.codi.platform.MongoDB"/> -->
+		<!-- bean id="MongoDB" class="org.uengine.codi.platform.MongoDB"/> -->
 	<bean id="SMS" class="org.uengine.codi.platform.SMS"/>
 	<!-- bean id="FileSystem" class="org.uengine.codi.platform.FileSystem"/> -->
 	
@@ -191,10 +213,16 @@
 	<bean id="Login" class="org.uengine.codi.mw3.Login"/>
 	<bean id="MainPanel" class="org.uengine.codi.mw3.common.MainPanel"/>
 	<bean id="Workflowy" class="org.uengine.codi.mw3.knowledge.Workflowy"/>
-	<bean id="MemoWorkItem" class="org.uengine.codi.mw3.model.MemoWorkItem"/>
-	<bean id="EMailReader" class="org.uengine.codi.cron.EMailReader"/>
-	
+	<bean id="MemoWorkItem" class="org.uengine.codi.mw3.model.MemoWorkItem" scope="request"/>
+	<bean id="EMailReader" class="org.uengine.codi.cron.EMailReader" scope="request"/>
+		
 	<bean id="UnstructuredProcessInstanceStarter" class="org.uengine.codi.mw3.model.UnstructuredProcessInstanceStarter"/>
+	<!--  <bean id="ProcessDesignerWebContentPanel" class="org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerWebContentPanel"/>  -->
 	
+	
+	<bean id="PreviewServlet" class="org.uengine.codi.mw3.previewserver.PreviewServlet"/>
+	
+	<bean id="ProjectServer" class="org.uengine.codi.mw3.knowledge.ProjectServer"/>
+	<bean id="ProjectServers" class="org.uengine.codi.mw3.knowledge.ProjectServers"/>
 	
 </beans>
