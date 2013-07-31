@@ -55,13 +55,9 @@ public class ProcessDesignerContainer {
 
 		for (int l = 0; l < def.getChildActivities().size(); l++) {
 			Activity activity = (Activity)def.getChildActivities().get(l);
-			activity.getActivityView().setViewType(viewType);
 			activityList.add(activity);
 		}
 		transitionList = def.getTransitions();
-		for(Transition ts : transitionList){
-			ts.getTransitionView().setViewType(viewType);
-		}
 	}
 	
 	public ProcessDefinition containerToDefinition(ProcessDesignerContainer container){
