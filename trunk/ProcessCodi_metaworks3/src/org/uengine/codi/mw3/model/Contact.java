@@ -20,7 +20,7 @@ public class Contact extends Database<IContact> implements IContact{
 		.append("   and e.isDeleted=?isDeleted");
 		
 		if(this.getFriend() != null && this.getFriend().getName() != null)
-			sb.append("   and a.friendName like ?friendName");
+			sb.append("   and c.friendName like ?friendName");
 		
 		IContact contacts = sql(sb.toString());
 		contacts.setUserId(getUserId());		
