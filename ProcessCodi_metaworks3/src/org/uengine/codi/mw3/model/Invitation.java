@@ -108,6 +108,7 @@ public class Invitation implements ContextAware{
 		newUser.setPreferUX(defaultUX);
 		newUser.setPreferMob(defaultMob);
 		newUser.setPassword(randomPassword());
+		newUser.setIsDeleted("0");
 		newUser.setGlobalCom(session.getCompany().getComCode());
 		newUser.setLocale(session.getEmployee().getLocale());
 		newUser.setApproved(true);
@@ -160,6 +161,17 @@ public class Invitation implements ContextAware{
 		newUser_.setNetwork("local");
 		newContact.setFriendId(newUser.getEmpCode());
 		newContact.setFriend(newUser_);
+		newContact.createDatabaseMe();
+		
+		newContact = new Contact();
+		newContact.setUserId(newUser_.getUserId());
+		
+		IUser me_ = new User();
+		me_.setName(session.getUser().getName());
+		me_.setUserId(session.getUser().getUserId());
+		me_.setNetwork("local");
+		newContact.setFriendId(me_.getUserId());
+		newContact.setFriend(me_);
 		newContact.createDatabaseMe();
 		
 		ContactList cp = new ContactList();
