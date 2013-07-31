@@ -10,6 +10,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.net.ConnectException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 
@@ -230,7 +231,7 @@ public class FileWorkItem extends WorkItem{
 	}
 	
 	
-	public boolean convertPdf(String inputFilePath, String outputFilePath) throws FileNotFoundException, IOException, Exception {
+	public boolean convertPdf(String inputFilePath, String outputFilePath) throws FileNotFoundException, IOException, Exception, ConnectException {
 		
 		boolean isConvert = false;
 		
@@ -292,7 +293,7 @@ public class FileWorkItem extends WorkItem{
 				boolean converted = false;
 				
 				if(this.getTool().indexOf("ms") > 0 || this.getTool().indexOf("officedocument") > 0 ||
-				   this.getTool().indexOf("ms") > 0 || this.getTool().indexOf("officedocument") > 0 ||		
+				   this.getTool().indexOf("haansoft") > 0 ||		
 				   this.getTool().indexOf("plain") > 0 || this.getTool().indexOf("rtf") > 0){
 					
 					// converting office file with jod converter, open office
