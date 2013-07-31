@@ -260,6 +260,8 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				this.SCROLL_OPTION_N = "n";
 				this.scrollOption= this.SCROLL_OPTION_1;  //N...
 				
+				this.needToConfirmMessage = "Are you sure to %s this?";
+				
 				this.base = "";
 				
 				this.objects = {};
@@ -3830,14 +3832,33 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				return name + ' ' + ver;
 			}; 	
 			
-			Metaworks3.prototype.localize = function(original){
-				var message = original;
+			Metaworks3.prototype.localize = function(){
+				
+				var message = arguments[0];
+				
 				if(message != null && typeof message == 'string' && message.indexOf('$')==0 && this.getMessage){
 					message = message.substring(1);					
 					message = this.getMessage(message);
 				}
 				
-				return message;
+				if(arguments.length == 1)
+					return message;
+				
+				var ret_message='';				
+				var arr_message = message.split("%s");
+				
+				for(var i=0; i < arr_message.length; i++) {
+					ret_message += arr_message[i];
+					
+					var argument = arguments[i+1]; 					
+					if(argument != null && typeof argument == 'string' && argument.indexOf('$')==0 && this.getMessage) {
+						argument = argument.substring(1);
+						argument = this.getMessage(argument);
+					}											
+					ret_message += (argument == null) ? '' : argument;						
+			    }
+				
+				return ret_message;	
 			};
 			
 			Metaworks3.prototype.getMessage = function(message){
@@ -4110,7 +4131,10 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					   var command = "mw3.call("+objectId+", '"+serviceMethodContext.methodName+"')";
 				   		
 					   if(serviceMethodContext.needToConfirm)
-				   			command = "if (confirm(\'Are you sure to "+mw3.localize(serviceMethodContext.displayName)+" this?\'))" + command;
+//				   			command = "if (confirm(\'Are you sure to "+mw3.localize(serviceMethodContext.displayName)+" this?\'))" + command;
+						   	command = "if (confirm(\'"+mw3.localize(this.needToConfirmMessage, serviceMethodContext.displayName)+"\'))" + command;
+
+
 				   		
 					   var menuItem = { 
 							   text: mw3.localize(serviceMethodContext.displayName) + (serviceMethodContext.keyBinding ? '(' + serviceMethodContext.keyBinding[0] + ')' : ''), 
