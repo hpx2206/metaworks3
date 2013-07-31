@@ -26,7 +26,13 @@ public class ProcessViewer {
 		public void setAlias(String alias) {
 			this.alias = alias;
 		}
-		
+	String viewType;
+		public String getViewType() {
+			return viewType;
+		}
+		public void setViewType(String viewType) {
+			this.viewType = viewType;
+		}
 	public ProcessViewer(){
 		processDesignerContainer = new ProcessDesignerContainer();
 	}
@@ -61,6 +67,7 @@ public class ProcessViewer {
 			MetaworksUtil.copyStream(is, bao);
 			
 			ProcessDefinition def = (ProcessDefinition) GlobalContext.deserialize(bao.toString(GlobalContext.ENCODING));
+			this.processDesignerContainer.setViewType(viewType);
 			this.processDesignerContainer.load(def);
 
 		} catch (Exception e) {

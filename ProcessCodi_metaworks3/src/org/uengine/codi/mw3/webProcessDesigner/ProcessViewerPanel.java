@@ -31,27 +31,24 @@ public class ProcessViewerPanel implements ContextAware {
 		}
 	ProcessViewNaivgator	processViewNaivgator;
 		public ProcessViewNaivgator getDefinitionNaivgator() {
-			return processViewNaivgator;
+			return processViewNaivgator;	
 		}
 		public void setDefinitionNaivgator(ProcessViewNaivgator processViewNaivgator) {
 			this.processViewNaivgator = processViewNaivgator;
 		}
-	ProcessViewer processViewer;
-		public ProcessViewer getDefinitionMonitor() {
-			return processViewer;
+	ProcessViewPanel processViewPanel;
+		public ProcessViewPanel getProcessViewPanel() {
+			return processViewPanel;
 		}
-		public void setDefinitionMonitor(ProcessViewer processViewer) {
-			this.processViewer = processViewer;
+		public void setProcessViewPanel(ProcessViewPanel processViewPanel) {
+			this.processViewPanel = processViewPanel;
 		}
 		
-	@Autowired
-	ProcessViewPanel processViewPanel;
-	
 	public ProcessViewerPanel(){
 		metaworksContext = new MetaworksContext();
 	}
 	public void removeLink(){
-		this.definitionId = null;
+		this.definitionId = null; 
 	}
 	
 	public Object[] saveLink(){

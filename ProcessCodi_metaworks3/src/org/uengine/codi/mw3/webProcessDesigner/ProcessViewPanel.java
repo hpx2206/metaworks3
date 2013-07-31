@@ -5,7 +5,6 @@ import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
-import org.springframework.beans.factory.annotation.Autowired;
 
 public class ProcessViewPanel {
 		
@@ -23,14 +22,22 @@ public class ProcessViewPanel {
 		public void setAlias(String alias) {
 			this.alias = alias;
 		}
+	String viewType;
+		public String getViewType() {
+			return viewType;
+		}
+		public void setViewType(String viewType) {
+			this.viewType = viewType;
+		}
+		
 	ProcessViewer processViewer;
-		public ProcessViewer getDefinitionMonitor() {
+		public ProcessViewer getProcessViewer() {
 			return processViewer;
 		}
-		public void setDefinitionMonitor(ProcessViewer processViewer) {
+		public void setProcessViewer(ProcessViewer processViewer) {
 			this.processViewer = processViewer;
 		}
-
+		
 	@AutowiredFromClient
 	public ProcessNavigatorPanel processNavigatorPanel;
 	
@@ -51,18 +58,8 @@ public class ProcessViewPanel {
 		processViewer = new ProcessViewer();
 		processViewer.setDefId(defId);
 		processViewer.setAlias(alias);
+		processViewer.setViewType(viewType);
 		processViewer.load();
 	}
-	
-	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
-	public ModalWindow samplePopup(){
-		HistoryItem historyItem = new HistoryItem();
-		historyItem.getMetaworksContext().setWhen("edit");
-		ModalWindow window = new ModalWindow();
-		window.setPanel(historyItem);
-		
-		return window;
-	}
-	
 	
 }
