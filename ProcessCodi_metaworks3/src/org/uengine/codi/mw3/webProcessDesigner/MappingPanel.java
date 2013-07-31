@@ -156,5 +156,5 @@ public class MappingPanel implements ContextAware {
 	}
 	
 	@AutowiredFromClient
-	public ProcessDesignerContentPanel processDesignerContentPanel;
+	public ProcessDesignerWebContentPanel processDesignerWebContentPanel;
 }

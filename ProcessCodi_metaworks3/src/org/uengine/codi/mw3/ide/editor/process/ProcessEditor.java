@@ -3,15 +3,15 @@ package org.uengine.codi.mw3.ide.editor.process;
 import org.metaworks.annotation.ServiceMethod;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.editor.Editor;
-import org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerContentPanel;
+import org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerWebContentPanel;
 
 public class ProcessEditor extends Editor {
 
-	ProcessDesignerContentPanel processDesigner;
-		public ProcessDesignerContentPanel getProcessDesigner() {
+	ProcessDesignerWebContentPanel processDesigner;
+		public ProcessDesignerWebContentPanel getProcessDesigner() {
 			return processDesigner;
 		}
-		public void setProcessDesigner(ProcessDesignerContentPanel processDesigner) {
+		public void setProcessDesigner(ProcessDesignerWebContentPanel processDesigner) {
 			this.processDesigner = processDesigner;
 		}
 
@@ -25,9 +25,8 @@ public class ProcessEditor extends Editor {
 		this.setType("process");
 		
 		try {
-			ProcessDesignerContentPanel processDesignerContentPanel = new ProcessDesignerContentPanel();
+			ProcessDesignerWebContentPanel processDesignerContentPanel = new ProcessDesignerWebContentPanel();
 			processDesignerContentPanel.setAlias(this.getResourceNode().getPath());
-			processDesignerContentPanel.setConferenceMode(resourceNode.isConferenceMode());
 			this.setProcessDesigner(processDesignerContentPanel);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

@@ -2,25 +2,19 @@ var org_uengine_codi_mw3_webProcessDesigner_GeomShape = function(objectId, class
 	
 	this.objectId = objectId;
 	this.className = className;
-//	this.objectDivId = mw3._getObjectDivId(this.objectId);
-//	this.objectDiv = $('#' + this.objectDivId);
-	
+
 	var object = mw3.objects[this.objectId];
-	var element = null;
-	if( object != null ){
-		element = document.getElementById(object.id);
-	}
 	
-//	this.CanvasDiv = this.objectDiv.parentsUntil('.webDesigner').parent('.webDesigner');
+	var element = document.getElementById(object.id);
+	
 	var canvasObject;
 	if( object != null && object.viewType != null && "blockView" == object.viewType ){
 		canvasObject = mw3.getAutowiredObject('org.uengine.codi.mw3.webProcessDesigner.InstanceMonitorPanel');
 	}else{
-		canvasObject = mw3.getAutowiredObject('org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerContentPanel');
+		canvasObject = mw3.getAutowiredObject('org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerWebContentPanel');
 	}
 	
 	var canvasObjectFaceHelper = mw3.getFaceHelper(canvasObject.__objectId);
-//	var canvasObjectFaceHelper = mw3.getFaceHelper(this.CanvasDiv.__objectId);
 	var canvas = canvasObjectFaceHelper.icanvas;
 	
 	if( object && object.drawByObject){
@@ -45,7 +39,7 @@ var org_uengine_codi_mw3_webProcessDesigner_GeomShape = function(objectId, class
 	}
 	
 //	canvas.drawLabel(element, object.label);
-	if(object != null && object.data != null && object.data != undefined){
+	if(object.data != null && object.data != undefined){
 //		var customData = [];
 //		var jsonArray = eval(object.data);
 //		for(i in jsonArray){
