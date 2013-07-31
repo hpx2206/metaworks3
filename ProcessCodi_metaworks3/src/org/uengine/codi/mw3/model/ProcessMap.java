@@ -239,7 +239,7 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		
 		String title = null;		
 		if(newInstancePanel!=null && newInstancePanel.getNewInstantiator().getTitle()!=null)
-			title =  newInstancePanel.getNewInstantiator().getTitle();
+			title =  newInstancePanel.getNewInstantiator().getTitle() + (this.getName() != null ? "-" + this.getName() : "");
 		
 		Instance instanceRef = new Instance();
 		instanceRef.setInstId(new Long(instId));
@@ -369,9 +369,9 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 			return new Object[]{instanceListPanel, new Remover(new Popup())};
 		}else{
 			if(processMapList!=null && processMapList.getTitle()!=null){
-				instanceView.getInstanceView().getInstanceNameChanger().setInstanceName(processMapList.getTitle());
+				instanceView.getInstanceView().getInstanceNameChanger().setInstanceName(title);
 				instanceView.getInstanceView().getInstanceNameChanger().change();
-				instanceView.getInstanceView().setInstanceName(processMapList.getTitle());
+				instanceView.getInstanceView().setInstanceName(title);
 
 			}
 			
