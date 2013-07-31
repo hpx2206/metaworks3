@@ -10436,8 +10436,6 @@ OG.shape.bpmn.A_Task = function (label) {
 
 	this.SHAPE_ID = 'OG.shape.bpmn.A_Task';
 	this.label = label;
-	this.POPUP = true;
-	this.GROUP_COLLAPSIBLE = false;
 };
 OG.shape.bpmn.A_Task.prototype = new OG.shape.GeomShape();
 OG.shape.bpmn.A_Task.superclass = OG.shape.GeomShape;
