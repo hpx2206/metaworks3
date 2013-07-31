@@ -11,7 +11,13 @@ public class ProcessNavigatorPanel {
 		public void setDefId(String defId) {
 			this.defId = defId;
 		}
-		
+	String alias;
+		public String getAlias() {
+			return alias;
+		}
+		public void setAlias(String alias) {
+			this.alias = alias;
+		}
 	ArrayList<HistoryItem> historyList;
 		public ArrayList<HistoryItem> getHistoryList() {
 			return historyList;
@@ -21,18 +27,19 @@ public class ProcessNavigatorPanel {
 		}
 		
 	public void load() {
+		String definitionId = this.defId;
+		String[] defnitionArray = definitionId.replace('.','@').split("@");
+		
 		HistoryItem historyItem = new HistoryItem(); 
-		historyItem.setDefId("aa");
-		historyItem.setDefName("나나나");
+		historyItem.setDefId(definitionId);
+		historyItem.setDefName(defnitionArray[0]);
+		historyItem.setAlias(this.alias);
 		
 		historyList = new ArrayList<HistoryItem>();
 		historyList.add(historyItem);
 		
 	}
-	public void add(String defId, String defName) {
-		HistoryItem historyItem = new HistoryItem();
-		historyItem.setDefId(defId);
-		historyItem.setDefName(defName);
+	public void add(HistoryItem historyItem) {
 		historyList.add(historyItem);
 	}
 

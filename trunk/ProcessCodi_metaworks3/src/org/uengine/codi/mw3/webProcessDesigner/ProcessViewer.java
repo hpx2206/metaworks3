@@ -12,20 +12,24 @@ import org.uengine.kernel.ProcessDefinition;
 
 public class ProcessViewer {
 
-	String definitionId;
-		public String getDefinitionId() {
-			return definitionId;
+	String defId;
+		public String getDefId() {
+			return defId;
 		}
-		public void setDefinitionId(String definitionId) {
-			this.definitionId = definitionId;
+		public void setDefId(String defId) {
+			this.defId = defId;
 		}
-	String fullPath;
-		public String getFullPath() {
-			return fullPath;
+	String alias;
+		public String getAlias() {
+			return alias;
 		}
-		public void setFullPath(String fullPath) {
-			this.fullPath = fullPath;
+		public void setAlias(String alias) {
+			this.alias = alias;
 		}
+		
+	public ProcessViewer(){
+		processDesignerContainer = new ProcessDesignerContainer();
+	}
 		
 	ProcessDesignerContainer processDesignerContainer;
 		public ProcessDesignerContainer getProcessDesignerContainer() {
@@ -38,7 +42,6 @@ public class ProcessViewer {
 		
 	public void load(){
 		// TODO  fullPath 가 필요함
-		/*
 		InputStream is = null;
 		ByteArrayOutputStream bao = null;
 		
@@ -46,7 +49,7 @@ public class ProcessViewer {
 			bao = new ByteArrayOutputStream();
 			
 			//if(TYPE_FILE.equals(this.getType())){
-				File file = new File(fullPath);
+				File file = new File(getAlias());
 				if(file.exists()){					
 					try {
 						is = new FileInputStream(file);
@@ -84,7 +87,6 @@ public class ProcessViewer {
 				}
 			}
 		}
-		 */
 		
 	}
 }

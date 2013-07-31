@@ -11,7 +11,14 @@ public class ProcessViewWindow {
 		public void setDefId(String defId) {
 			this.defId = defId;
 		}
-
+	String alias;
+		public String getAlias() {
+			return alias;
+		}
+		public void setAlias(String alias) {
+			this.alias = alias;
+		}
+		
 	Layout layout;
 		public Layout getLayout() {
 			return layout;
@@ -28,10 +35,12 @@ public class ProcessViewWindow {
 		
 		ProcessNavigatorPanel processNavigatorPanel = new ProcessNavigatorPanel();
 		processNavigatorPanel.setDefId(defId);
+		processNavigatorPanel.setAlias(alias);
 		processNavigatorPanel.load();
 		
 		ProcessViewPanel processViewPanel = new ProcessViewPanel();
 		processViewPanel.setDefId(defId);
+		processViewPanel.setAlias(alias);
 		processViewPanel.load();
 		
 		centerInLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:5, north__size:50");
