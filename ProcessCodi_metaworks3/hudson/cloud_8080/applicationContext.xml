@@ -95,6 +95,7 @@
 	<!-- Cron Job -->
 	<!-- ============================================================= -->
 	<!-- Email Reader -->
+	<!-- 
 	<bean id="cronQuartzJob" class="org.springframework.scheduling.quartz.JobDetailBean">
 		<property name="jobClass" value="org.uengine.codi.cron.CodiCronJob"/>
 		<property name="jobDataAsMap">
@@ -108,7 +109,8 @@
 			</map>
 		</property>
 	</bean>
-	
+	 -->
+	 
 	<!-- Schedule Reader -->
 	<bean id="scheduleReader" class="org.springframework.scheduling.quartz.JobDetailBean">
     	<property name="jobClass" value="org.uengine.codi.cron.ScheduleReader"/>
@@ -141,12 +143,14 @@
 	 -->
 	 
 	<!-- Email Reader Trigger -->
+	<!-- 
 	<bean id="simpleTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
 		<property name="jobDetail" ref="cronQuartzJob"/>
 		<property name="startDelay" value="60000"/>
 		<property name="repeatInterval" value="120000"/>
 	</bean>
-	
+	 -->
+	 
 	<!-- Schedule Reader Trigger( 매일 오전 8시 일정 시그널링 ) -->
 	<bean id="scheduleTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
    		<property name="jobDetail" ref="scheduleReader"/>
@@ -163,7 +167,7 @@
 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="triggers">
 			<list>
-				<ref bean="simpleTrigger"/>
+				<!-- <ref bean="simpleTrigger"/>  -->
 	            <ref bean="scheduleTrigger"/>
 				<ref bean="waitTrigger"/>
 			</list>
@@ -240,7 +244,7 @@
 	<bean id="Login" class="org.uengine.codi.mw3.Login"/>
 	<bean id="MainPanel" class="org.uengine.codi.mw3.common.MainPanel"/>
 	<bean id="Workflowy" class="org.uengine.codi.mw3.knowledge.Workflowy"/>
-	<bean id="MemoWorkItem" class="org.uengine.codi.mw3.model.MemoWorkItem"/>
+	<bean id="MemoWorkItem" class="org.uengine.codi.mw3.model.MemoWorkItem" scope="request" />
 	<bean id="EMailReader" class="org.uengine.codi.cron.EMailReader"/>
 	
 	<bean id="UnstructuredProcessInstanceStarter" class="org.uengine.codi.mw3.model.UnstructuredProcessInstanceStarter"/>
