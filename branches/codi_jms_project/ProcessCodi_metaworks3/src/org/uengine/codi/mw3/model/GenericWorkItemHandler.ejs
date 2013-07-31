@@ -1,0 +1,13 @@
+<%=fields.tool.here()%>
+
+<%	if( value ){
+%>
+	<div id="btnline" style="padding-top:8px;">
+		<ul>
+			<li><a id="wBtn" class="wBtn" href="#" onClick="<%=methods.presentation.caller()%>"><span>학습창</span></a></li>	
+			<%if(value.status == 'NEW'){ %><li><a id="wBtn" class="wBtn" href="#" onClick="<%=methods.complete.caller()%>"><span><%=mw3.localize('$Complete')%></span></a></li><% } %>	
+		</ul>
+	</div>	
+<%
+	}
+%>

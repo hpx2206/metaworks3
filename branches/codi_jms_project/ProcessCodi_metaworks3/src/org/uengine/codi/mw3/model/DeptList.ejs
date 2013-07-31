@@ -1,0 +1,21 @@
+<%
+	if(value){
+%>
+		<ul <%=value.id=='/ROOT/'?'class=\"fist_menu\"':''%>>
+<%
+		for (var i=0; i<value.dept.length; i++){
+			if(typeof options == 'undefined') 
+				options = objectMetadata;
+		
+			options['index'] = i;
+			options['htmlTag'] =  'li';
+%>
+	<%=mw3.locateObject(value.dept[i], value.dept[i].__className, null, options)%>	
+<%
+			mw3.addBeanProperty(value.__objectId, '.dept[' + i + ']');
+		}
+%>
+		</ul>
+<%
+	}
+%>

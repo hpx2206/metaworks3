@@ -1,0 +1,10 @@
+<%
+    if( value ){
+        var list = value.historyList;
+        for( var i = 0; i < list.length; i++){
+%>
+             <%= list[i].defName %> ==>>> 
+<%
+        }
+    }
+%>
