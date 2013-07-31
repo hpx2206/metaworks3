@@ -721,7 +721,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 			employee.databaseMe().setIsDeleted("1");		
 			
 			if(session.getEmployee().getEmpCode().equals(this.getEmpCode()))
-				return new Object[]{session.logout()};
+				return new Object[]{session.logout(), new Remover(new ModalWindow())};
 			else
 				return new Object[]{new Remover(employee , true)};
 		}
