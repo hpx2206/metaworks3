@@ -242,6 +242,10 @@ public abstract class AbstractMetaworksFile implements ContextAware {
 				fileExt = ".ppt";
 			} else if(mimeType.indexOf("word") > -1){
 				fileExt = ".doc";
+			}else{
+				if(filename.lastIndexOf(".") != -1){
+					fileExt = filename.substring(filename.lastIndexOf("."));
+				}
 			}
 		} else if(mimeType.indexOf("officedocument") > -1){
 			if(mimeType.indexOf("sheet") > -1){
@@ -250,6 +254,10 @@ public abstract class AbstractMetaworksFile implements ContextAware {
 				fileExt = ".pptx";
 			} else if(mimeType.indexOf("word") > -1){
 				fileExt = ".docx";
+			}else{
+				if(filename.lastIndexOf(".") != -1){
+					fileExt = filename.substring(filename.lastIndexOf("."));
+				}
 			}
 		} else if(mimeType.indexOf("haansoft") > -1){
 			if(mimeType.indexOf("sheet") > -1){
@@ -260,6 +268,10 @@ public abstract class AbstractMetaworksFile implements ContextAware {
 				fileExt = ".docx";
 			} else if(mimeType.indexOf("hwp") > -1){
 				fileExt = ".hwp";
+			}else{
+				if(filename.lastIndexOf(".") != -1){
+					fileExt = filename.substring(filename.lastIndexOf("."));
+				}
 			}
 		} else {
 			if(filename.lastIndexOf(".") != -1){
