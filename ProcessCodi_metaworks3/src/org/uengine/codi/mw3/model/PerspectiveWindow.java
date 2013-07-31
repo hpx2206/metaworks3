@@ -4,8 +4,13 @@ import org.metaworks.annotation.Face;
 import org.metaworks.widget.Window;
 
 @Face(ejsPath="dwr/metaworks/genericfaces/Window.ejs",  
+//nipa, 데모 반영 위해서 관점/친구 영역 컬러 원복합니다.(회색->파랑색)
+/*
 options={"hideLabels", "minimize", "color"}, 
-values={"true", "true", "gray"})
+values={"true", "true","gray"})
+*/
+options={"hideLabels", "minimize"}, 
+values={"true", "true"})
 public class PerspectiveWindow extends Window {
 	
 	public PerspectiveWindow() throws Exception {
