@@ -300,6 +300,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		IEmployee findEmployee = (IEmployee) sql(sb.toString());
 		findEmployee.set("empName", "%" + getEmpName() + "%" );
 		findEmployee.select();
+		findEmployee.setMetaworksContext(this.getMetaworksContext());
 		
 		return findEmployee;
 	}
