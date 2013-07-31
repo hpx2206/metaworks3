@@ -96,8 +96,10 @@ public class User extends Database<IUser> implements IUser {
 		String type = "addPicker";
 		ContactPanel contactPanel = new ContactPanel(session.getUser());
 		contactPanel.getContactListPanel().setId(type);
-		contactPanel.getContactListPanel().getLocalContactList().getMetaworksContext().setWhen(type);		
-		contactPanel.getContactListPanel().getSocialContactList().getMetaworksContext().setWhen(type);
+		if(contactPanel.getContactListPanel().getLocalContactList() != null)
+			contactPanel.getContactListPanel().getLocalContactList().getMetaworksContext().setWhen(type);		
+		if(contactPanel.getContactListPanel().getSocialContactList() != null)
+			contactPanel.getContactListPanel().getSocialContactList().getMetaworksContext().setWhen(type);
 		contactPanel.getUser().getMetaworksContext().setWhen(type);
 		
 		/*AddFollowerPanel userPicker = new AddFollowerPanel( session , null , "addAskFollower" );
