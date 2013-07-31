@@ -148,7 +148,7 @@ public class InstanceDueSetter implements ContextAware{
 			cal.set(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DATE), 23, 59, 00);
 			cal.set(Calendar.MILLISECOND, 0);
 			
-			dueTime = dueDate.getTime();
+			dueTime = (cal.getTime()).getTime();
 		}
 		
 		
