@@ -22,16 +22,12 @@ org_uengine_kernel_designer_web_TransitionView.prototype = {
 			var object = mw3.objects[this.objectId];
 			var canvas = this.canvas;
 			var element = null;
-//			if( object != null ){
-//				element = document.getElementById(object.id);
-//			}
 			var initText = ( object.label == null || object.label == 'undefined' ) ? "" : object.label;
 			var shape = eval('new ' + object.shapeId + '(\''+initText +'\')');
 			var id = object.id;
 			var parent = object.parent;
 			var style = object.style;
 			if (object.shapeType === 'EDGE') {
-				console.log(object);
 				var fromTeminal = object.from;
 				var toTeminal = object.to;
 				var getShapeFromTerminal = function (terminal) {

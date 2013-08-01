@@ -22,9 +22,6 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
 			var object = mw3.objects[this.objectId];
 			var canvas = this.canvas;
 			var element = null;
-//			if( object != null ){
-//				element = document.getElementById(object.id);
-//			}
 			var initText = ( object.label == null || object.label == 'undefined' ) ? "" : object.label;
 			var shape = eval('new ' + object.shapeId + '(\''+initText +'\')');
 			var id = object.id;
