@@ -4,13 +4,8 @@ import org.metaworks.annotation.Face;
 
 @Face(ejsPath="dwr/metaworks/genericfaces/Window.ejs", 
 	  displayName="$Contact",
-	  //nipa, 데모 반영 위해서 관점/친구 영역 컬러 원복합니다.(회색->파랑색)
-	  /*
-	  options={"hideLabels", "minimize", "color"}, 
-      values={"true", "true","gray"})
-	  */
-	  options={"hideLabels", "minimize"}, 
-	  values={"true", "true"})
+	  options={"hideLabels", "minimize" , "color"}, 
+      values={"true", "true","blue"})
 
 public class ContactWindow {
 	public ContactWindow() {
