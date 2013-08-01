@@ -4,6 +4,6 @@ var org_uengine_codi_mw3_model_ContactList = function(objectId, className) {
 	
 	this.divId = '#objDiv_' + this.objectId;
 	
-	$(this.divId).parent().css({"background":"#f2f3f4"});
+	$(this.divId).parent().css({"background":"#5693d6"});
 }
 
