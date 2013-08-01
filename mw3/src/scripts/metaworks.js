@@ -3857,7 +3857,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					}											
 					ret_message += (argument == null) ? '' : argument;						
 			    }
-				
+			    
 				return ret_message;	
 			};
 			
@@ -3962,8 +3962,9 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				    // make call method
 		   			var command = "if(mw3.objects['"+ objectId +"']!=null) mw3.call("+objectId+", '"+methodName+"')";
 					if(methodContext.needToConfirm)
-					    command = "if (confirm(\'Are you sure to "+mw3.localize(methodContext.displayName)+" this?\'))" + command;
-					   
+//					    command = "if (confirm(\'Are you sure to "+mw3.localize(methodContext.displayName)+" this?\'))" + command;
+						command = "if (confirm(\'"+mw3.localize(mw3.needToConfirmMessage, methodContext.displayName)+"\'))" + command;
+					
 				    if(methodContext.eventBinding && methodContext.eventBinding.length > 0){
 				    	for(var i=0; i<methodContext.eventBinding.length; i++){
 				    		var eventBinding = methodContext.eventBinding[i];
@@ -4132,7 +4133,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				   		
 					   if(serviceMethodContext.needToConfirm)
 //				   			command = "if (confirm(\'Are you sure to "+mw3.localize(serviceMethodContext.displayName)+" this?\'))" + command;
-						   	command = "if (confirm(\'"+mw3.localize(this.needToConfirmMessage, serviceMethodContext.displayName)+"\'))" + command;
+						   	command = "if (confirm(\'"+mw3.localize(mw3.needToConfirmMessage, serviceMethodContext.displayName)+"\'))" + command;
 
 
 				   		
@@ -4297,9 +4298,9 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				this.methodContext = methodContext;
 			};
 
-			MethodRef.prototype.caller = function(){				
-				
-				return 'if(event && event.stopPropagation)	 event.stopPropagation(); else if(window.event) window.event.cancelBubble = true;'+(this.methodContext.needToConfirm ? 'if (confirm(\'Are you sure to ' + this.methodContext.displayName + ' this?\'))':'')  + 'mw3.getObject(' + this.objectId + ').' + this.methodContext.methodName + '()';
+			MethodRef.prototype.caller = function(){
+//				return 'if(event && event.stopPropagation)	 event.stopPropagation(); else if(window.event) window.event.cancelBubble = true;'+(this.methodContext.needToConfirm ? 'if (confirm(\'Are you sure to ' + this.methodContext.displayName + ' this?\'))':'')  + 'mw3.getObject(' + this.objectId + ').' + this.methodContext.methodName + '()';
+				return 'if(event && event.stopPropagation)	 event.stopPropagation(); else if(window.event) window.event.cancelBubble = true;'+(this.methodContext.needToConfirm ? 'if (confirm(\''+ mw3.localize(mw3.needToConfirmMessage, this.methodContext.displayName) + ' \'))':'')  + 'mw3.getObject(' + this.objectId + ').' + this.methodContext.methodName + '()';
 				//return 'window.event.stopPropagation();'+(this.methodContext.needToConfirm ? 'if (confirm(\'Are you sure to ' + this.methodContext.displayName + ' this?\'))':'')  + 'mw3.getObject(' + this.objectId + ').' + this.methodContext.methodName + '()';
 			};
 			
