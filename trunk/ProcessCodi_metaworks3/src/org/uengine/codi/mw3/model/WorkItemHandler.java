@@ -515,7 +515,7 @@ public class WorkItemHandler implements ContextAware{
 		
 		return instanceViewContent;
 	}
-	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_EDIT , target=ServiceMethodContext.TARGET_NONE)
+	@ServiceMethod(callByContent=true, when=MetaworksContext.WHEN_EDIT , target=ServiceMethodContext.TARGET_APPEND)
 	public ReplyOverlayCommentWorkItem comment() throws Exception{
 		
 		OverlayCommentOption overlayCommentOption = new OverlayCommentOption();
@@ -533,7 +533,6 @@ public class WorkItemHandler implements ContextAware{
 		replyOverlayCommentWorkItem.add();
 		
 		replyOverlayCommentWorkItem.getMetaworksContext().setWhen("edit");
-		replyOverlayCommentWorkItem.contentLoaded = true;
 		return replyOverlayCommentWorkItem;
 	}
 			
