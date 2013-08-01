@@ -1,16 +1,10 @@
 package org.uengine.codi.mw3.webProcessDesigner;
 
-import java.io.Serializable;
-
-import org.metaworks.FieldDescriptor;
 import org.metaworks.ServiceMethodContext;
-import org.metaworks.WebFieldDescriptor;
-import org.metaworks.WebObjectType;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.Tree;
 import org.metaworks.component.TreeNode;
-import org.metaworks.dwr.MetaworksRemoteService;
 
 public class ClassResourceTree extends Tree {
 	

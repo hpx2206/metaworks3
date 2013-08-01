@@ -57,13 +57,13 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessViewer.prototype = {
 		
 		
 		var minX = Number.MAX_VALUE, minY = Number.MAX_VALUE, maxX = Number.MIN_VALUE, maxY = Number.MIN_VALUE;
-		console.log('width = ' + canvasDivObj.width() );
-		console.log('heigt = ' + canvasDivObj.height() );
-		console.log('maxX = ' + maxX);
-		console.log('maxY = ' + maxY);
+//		console.log('width = ' + canvasDivObj.width() );
+//		console.log('heigt = ' + canvasDivObj.height() );
+//		console.log('maxX = ' + maxX);
+//		console.log('maxY = ' + maxY);
 		
 		var canvasWidth = 324;		// defualt
 	    var canvasHeight = 368;		// defualt
-	    this.icanvas.setCanvasSize([canvasWidth, canvasHeight]);
+	    this.icanvas.setCanvasSize([canvasDivObj.width(), canvasDivObj.height()]);
 	}
 };

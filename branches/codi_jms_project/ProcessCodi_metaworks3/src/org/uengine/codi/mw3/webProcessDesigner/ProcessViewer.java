@@ -47,29 +47,26 @@ public class ProcessViewer {
 		}
 		
 	public void load(){
-		// TODO  fullPath 가 필요함
 		InputStream is = null;
 		ByteArrayOutputStream bao = null;
 		
 		try {
 			bao = new ByteArrayOutputStream();
-			
-			//if(TYPE_FILE.equals(this.getType())){
+			if( getAlias() != null ){
 				File file = new File(getAlias());
 				if(file.exists()){					
 					try {
 						is = new FileInputStream(file);
+						MetaworksUtil.copyStream(is, bao);
+						
+						ProcessDefinition def = (ProcessDefinition) GlobalContext.deserialize(bao.toString(GlobalContext.ENCODING));
+						this.processDesignerContainer.setViewType(viewType);
+						this.processDesignerContainer.load(def);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}			
 				}
-				
-			MetaworksUtil.copyStream(is, bao);
-			
-			ProcessDefinition def = (ProcessDefinition) GlobalContext.deserialize(bao.toString(GlobalContext.ENCODING));
-			this.processDesignerContainer.setViewType(viewType);
-			this.processDesignerContainer.load(def);
-
+			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

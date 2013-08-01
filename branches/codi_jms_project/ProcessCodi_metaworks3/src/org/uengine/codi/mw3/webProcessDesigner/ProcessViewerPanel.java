@@ -5,7 +5,6 @@ import org.metaworks.MetaworksContext;
 import org.metaworks.Remover;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
-import org.springframework.beans.factory.annotation.Autowired;
 
 public class ProcessViewerPanel implements ContextAware {
 	MetaworksContext metaworksContext;
@@ -29,11 +28,19 @@ public class ProcessViewerPanel implements ContextAware {
 		public void setDefinitionName(String definitionName) {
 			this.definitionName = definitionName;
 		}
-	ProcessViewNaivgator	processViewNaivgator;
-		public ProcessViewNaivgator getDefinitionNaivgator() {
-			return processViewNaivgator;	
+	String alias;
+		public String getAlias() {
+			return alias;
 		}
-		public void setDefinitionNaivgator(ProcessViewNaivgator processViewNaivgator) {
+		public void setAlias(String alias) {
+			this.alias = alias;
+		}
+		
+	ProcessViewNaivgator	processViewNaivgator;
+		public ProcessViewNaivgator getProcessViewNaivgator() {
+			return processViewNaivgator;
+		}
+		public void setProcessViewNaivgator(ProcessViewNaivgator processViewNaivgator) {
 			this.processViewNaivgator = processViewNaivgator;
 		}
 	ProcessViewPanel processViewPanel;
@@ -47,10 +54,30 @@ public class ProcessViewerPanel implements ContextAware {
 	public ProcessViewerPanel(){
 		metaworksContext = new MetaworksContext();
 	}
+	
+	public void findDefnitionView(){
+		this.getMetaworksContext().setHow("find");
+		processViewNaivgator = new ProcessViewNaivgator();
+		processViewNaivgator.loadTree();
+		
+		processViewPanel = new ProcessViewPanel();
+		processViewPanel.load();
+	}
+	public void loadDefnitionView(){
+		this.getMetaworksContext().setHow("load");
+		processViewPanel = new ProcessViewPanel();
+		processViewPanel.setDefId(definitionId);
+		processViewPanel.setAlias(alias);
+		processViewPanel.setViewType("definitionView");
+		processViewPanel.load();
+		
+	}
+	@ServiceMethod()
 	public void removeLink(){
 		this.definitionId = null; 
 	}
 	
+	@ServiceMethod()
 	public Object[] saveLink(){
 		// TODO 
 		return null;
