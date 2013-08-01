@@ -755,7 +755,7 @@ img {
     border-bottom: #999 1px solid;
     border-left: #E4F1FE 1px solid;
     margin: 0px;
-    padding: 5px 5px 5px 15px;
+    padding: 7px 5px 5px 15px;
 }
 #contactsearchbox .inputleft {
     float: left;
@@ -777,7 +777,7 @@ img {
 #contactsearchbox ul li input {
     width: 100%;
     background: #ffffff;
-    height: 18px;
+    height: 17px;
     padding-top: 1px;
     border: none;
     border-top: 1px solid #8b9fbd;
@@ -1020,6 +1020,7 @@ img {
     white-space:nowrap;
     text-overflow:ellipsis;
     -o-text-overow: ellipsis;
+    color:#fff;
 }
 .selected_navi2 {
     background-color:#C9E2FC;
@@ -1031,7 +1032,27 @@ img {
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
 }
-#navigator .depth2 .fist_menu li.selected_navi{background:#C9E2FC;border:1px solid #A8D1FB}
+#navigator .depth2 .fist_menu li li{
+    padding:0;    
+    
+}
+#navigator .depth2 .fist_menu li li li{
+    padding:0;    
+    
+}
+#navigator .depth2 .fist_menu li li li li{
+    padding:0;    
+    
+}
+#navigator .depth2 .fist_menu li li li li li{
+    padding:0;    
+    
+}
+#navigator .depth2 .fist_menu li li li li li li{
+    padding:0;    
+    
+}
+#navigator .depth2 .fist_menu li.selected_navi{background:#000;border:1px solid #000}
 
 #navigator .depth2 .fist_menu li span {
     display: inline-block;
@@ -1049,8 +1070,8 @@ img {
     height: 25px;
     line-height: 25px;
     padding-left: 20px;
-    border-top: 1px solid #E5E5E5;
-    color: #7F7F7F;
+    border-top: 1px solid #94bae4;
+    color: #fff;
     background: url(../../images/waveStyle/navi_icon.png) 3px 5px no-repeat;
     cursor: pointer;
 }
