@@ -22,6 +22,9 @@
 				portrait = 'http://graph.facebook.com/' + value.userId + '/picture';			
 		}		
 		
+		var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
+		var itIsMe = (session.user.userId == value.userId);
+		
 		if(mw3.how == 'info'){			
 %>
 		<ul>
@@ -34,9 +37,6 @@
 					<dd class="tit">
 						<div id="popupInfoNameWih"><b><%=value.name%></b></div>
 						<%
-							var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
-							var itIsMe = (session.user.userId == value.userId);
-							
 							if(itIsMe){
 						%>
 						<div>
@@ -96,7 +96,7 @@
 				<li><a id="wBtn" href="#" onClick="<%=methods.chat.caller()%>"><span><%=mw3.localize("$Chat")%></span></a></li>
 				
 <%
-				if(value.approval && !value.guest){
+				if(session && session.employee && session.employee.approved && !session.employee.guest){
 %>														
 				<li><a id="wBtn" href="#" onClick="<%=methods.showSchedule.caller()%>"><span><%=mw3.localize("$showSchedule")%></span></a></li>
 				<li><a id="wBtn" href="#" onClick="<%=methods.showWall.caller()%>"><span><%=mw3.localize("$ShowWall")%></span></a></li>
