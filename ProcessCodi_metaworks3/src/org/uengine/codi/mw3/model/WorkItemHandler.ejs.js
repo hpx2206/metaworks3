@@ -38,12 +38,15 @@ org_uengine_codi_mw3_model_WorkItemHandler.prototype = {
 			if(comment){
 				workItem.replyFieldName = propName ;
 				workItem.replyTitle = comment;
+				workItem.comment();
+				/*
 				var replyObject = mw3.call(this.objectId, 'comment');
 				var html = mw3.locateObject(replyObject, replyObject.__className);
 				
 				var valiableObjectDivId = mw3._getObjectDivId(valiableObjectId);
 				var valiableObjectDiv = $('#' + valiableObjectDivId);
 				valiableObjectDiv.append(html);
+				*/
 			}				
 		}
 };
