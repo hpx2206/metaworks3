@@ -15807,7 +15807,7 @@ OG.renderer.RaphaelRenderer.prototype.redrawShape = function (element, excludeEd
                 if(element.shape.POPUP){
                     var me = this, collapseObj, clickHandle;
 
-                    collapseObj = this.drawPopupGuide(element);
+                    collapseObj = this.drawButton(element);
                 }
 
 	}
@@ -16793,7 +16793,7 @@ OG.renderer.RaphaelRenderer.prototype.drawCollapseGuide = function (element) {
      auth : 민수환
 
     */
-OG.renderer.RaphaelRenderer.prototype.drawPopupGuide = function (element) {
+OG.renderer.RaphaelRenderer.prototype.drawButton = function (element) {
 	var me = this, rElement = this._getREleById(OG.Util.isElement(element) ? element.id : element),
 		geometry = rElement ? rElement.node.shape.geom : null,
 		envelope, _upperLeft, _bBoxRect, _rect, _rect1,
@@ -18286,10 +18286,10 @@ OG.handler.EventHandler.prototype = {
 		}
 	},
 
-	enablePopUp: function (element) {
+	enableButton: function (element) {
     	    var me = this, collapseObj, clickHandle;
 
-            collapseObj = me._RENDERER.drawPopupGuide(element);
+            collapseObj = me._RENDERER.drawButton(element);
 
            /* $(collapsedOjb.collapse).bind("click", function (event) {
                         				    alert("click");
@@ -18298,14 +18298,14 @@ OG.handler.EventHandler.prototype = {
             clickHandle = function (_element, _collapsedOjb) {
             	if (_collapsedOjb && _collapsedOjb.bBox && _collapsedOjb.collapse) {
                 				$(_collapsedOjb.collapse).bind("click", function (event) {
-                				    $(element).trigger('ele');
+                                    $(_element).trigger("btnclick");
                 				});
 
                 			}
             };
         	$(element).bind({
                 mouseover: function () {
-                      collapseObj = me._RENDERER.drawPopupGuide(this);
+                      collapseObj = me._RENDERER.drawButton(this);
                         if (collapseObj && collapseObj.bBox && collapseObj.collapse) {
                             clickHandle(element, collapseObj);
 
@@ -21651,7 +21651,7 @@ OG.graph.Canvas.prototype = {
 		}
 
 		if(element.shape.POPUP){
-            this._HANDLER.enablePopUp(element);
+            this._HANDLER.enableButton(element);
         }
 
 		return element;
