@@ -11,14 +11,17 @@ var org_uengine_codi_mw3_model_OverlayCommentWorkItem = function(objectId, class
 			function(){$(this).css("z-index","100")}
 	)
 	
-	if(workItem.taskId==null){
+	if(workItem.metaworksContext && (workItem.metaworksContext.when == mw3.WHEN_NEW || workItem.metaworksContext.when == mw3.WHEN_EDIT)){
 	//	workItem.overlayCommentOption.x = mw3.mouseX - div.offset().left - 30; /*  (mw3.mouseX - div.offset().left - 30) / (div.parent().width()/100) = 백분율 좌표 */
 	//	workItem.overlayCommentOption.y = mw3.mouseY - div.offset().top - 34;
 		
-		workItem.overlayCommentOption.x = (mw3.mouseX - div.offset().left -22) / (div.width()/100);
-		workItem.overlayCommentOption.y = (mw3.mouseY - div.offset().top -34) / (div.height()/100);
+		if(workItem.taskId==null){
+			workItem.overlayCommentOption.x = (mw3.mouseX - div.offset().left -22) / (div.width()/100);
+			workItem.overlayCommentOption.y = (mw3.mouseY - div.offset().top -34) / (div.height()/100);
+		}		
 
-		var comment = prompt('Enter Comment : ');
+		var title = (workItem.metaworksContext.when == mw3.WHEN_EDIT) ? workItem.title :'';
+		var comment = prompt('Enter Comment : ', title);
 		
 		if(comment){
 			workItem.title = comment;
