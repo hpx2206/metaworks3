@@ -1032,26 +1032,7 @@ img {
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
 }
-#navigator .depth2 .fist_menu li li{
-    padding:0;    
-    
-}
-#navigator .depth2 .fist_menu li li li{
-    padding:0;    
-    
-}
-#navigator .depth2 .fist_menu li li li li{
-    padding:0;    
-    
-}
-#navigator .depth2 .fist_menu li li li li li{
-    padding:0;    
-    
-}
-#navigator .depth2 .fist_menu li li li li li li{
-    padding:0;    
-    
-}
+
 #navigator .depth2 .fist_menu li.selected_navi{background:#000;border:1px solid #000}
 
 #navigator .depth2 .fist_menu li span {
