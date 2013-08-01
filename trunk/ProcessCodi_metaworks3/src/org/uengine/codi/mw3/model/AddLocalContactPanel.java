@@ -32,13 +32,13 @@ public class AddLocalContactPanel {
 		
 		setDeptEmployee(employeeList);				
 		
-//		ContactSearchBox searchBox = new ContactSearchBox(); 
-//		searchBox.setMetaworksContext(new MetaworksContext());
-//		searchBox.getMetaworksContext().setWhere("addContact");
-//		searchBox.setKeyUpSearch(true);
-//		searchBox.setKeyEntetSearch(true);
-//		
-//		setContactSearchBox(searchBox);
+		ContactSearchBox searchBox = new ContactSearchBox(); 
+		searchBox.setMetaworksContext(new MetaworksContext());
+		searchBox.getMetaworksContext().setWhere("addContact");
+		searchBox.setKeyUpSearch(true);
+		searchBox.setKeyEntetSearch(true);
+		
+		setContactSearchBox(searchBox);
 	}
 
 	DeptList deptList;
@@ -57,13 +57,13 @@ public class AddLocalContactPanel {
 			this.deptEmployee = deptEmployee;
 		}			
 
-//	ContactSearchBox contactSearchBox;		
-//		public ContactSearchBox getContactSearchBox() {
-//			return contactSearchBox;
-//		}
-//		public void setContactSearchBox(ContactSearchBox contactSearchBox) {
-//			this.contactSearchBox = contactSearchBox;
-//		}
+	ContactSearchBox contactSearchBox;		
+		public ContactSearchBox getContactSearchBox() {
+			return contactSearchBox;
+		}
+		public void setContactSearchBox(ContactSearchBox contactSearchBox) {
+			this.contactSearchBox = contactSearchBox;
+		}
 
 	@AutowiredFromClient
 	public Session session;
