@@ -3,6 +3,7 @@ package org.uengine.codi.mw3.webProcessDesigner;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Remover;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
 
@@ -37,6 +38,9 @@ public class HistoryItem implements ContextAware{
 		public void setAlias(String alias) {
 			this.alias = alias;
 		}
+		
+	@AutowiredFromClient
+	public ProcessNavigatorPanel processNavigatorPanel;
 		
 	public HistoryItem(){
 		setMetaworksContext(new MetaworksContext());

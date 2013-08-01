@@ -1,10 +1,7 @@
 package org.uengine.codi.mw3.webProcessDesigner;
 
 import org.metaworks.Refresh;
-import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
-import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.widget.ModalWindow;
 
 public class ProcessViewPanel {
 		
@@ -37,9 +34,7 @@ public class ProcessViewPanel {
 		public void setProcessViewer(ProcessViewer processViewer) {
 			this.processViewer = processViewer;
 		}
-		
-	@AutowiredFromClient
-	public ProcessNavigatorPanel processNavigatorPanel;
+	
 	
 	// 자기 defId를 가지고 자신을 refresh 한다.
 	public Object[] refresh(String defId, String defName) {
@@ -61,5 +56,26 @@ public class ProcessViewPanel {
 		processViewer.setViewType(viewType);
 		processViewer.load();
 	}
+	@AutowiredFromClient
+	public ProcessNavigatorPanel processNavigatorPanel;
+	
+	
+	
+	// 임시 팝업 창
+	
+//	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
+//	public ModalWindow samplePopup(){
+//		
+//		HistoryItem historyItem = new HistoryItem();
+//		historyItem.setMetaworksContext(new MetaworksContext());
+//		historyItem.getMetaworksContext().setWhen("edit");
+//		historyItem.processNavigatorPanel = processNavigatorPanel;
+//		
+//		ModalWindow window = new ModalWindow();
+//		window.setPanel(historyItem);
+//		
+//		return window;
+//	}
+//	
 	
 }
