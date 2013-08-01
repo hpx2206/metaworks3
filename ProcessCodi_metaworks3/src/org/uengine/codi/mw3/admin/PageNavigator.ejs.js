@@ -40,6 +40,12 @@ var org_uengine_codi_mw3_admin_PageNavigator= function(objectId, className){
 					height: '42px'
 				}, 700);
 		});	
+	
+	//지식맵 활성화시 페이지 플립 이미지 변경	
+	if(this.object.sns && this.object.ide && this.object.knowlege) {
+		$('.msg_block').css({'background':'url(images/waveStyle/pageNavigation_SIK.png) no-repeat right top'});
+	} 
+
 	/*
 	$('.goProcess').hover(
 			function(){$('.msg_block').css("background","url(images/waveStyle/pageNavigation_Process.png)");},
@@ -55,7 +61,7 @@ var org_uengine_codi_mw3_admin_PageNavigator= function(objectId, className){
 	)
 	*/
 	
-}
+};
 
 org_uengine_codi_mw3_admin_PageNavigator.prototype = {
 	startLoading : function(){
@@ -75,4 +81,4 @@ org_uengine_codi_mw3_admin_PageNavigator.prototype = {
 	showStatus : function(){
 		
 	}
-}
+};

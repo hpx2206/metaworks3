@@ -16,6 +16,7 @@ import org.uengine.codi.mw3.model.PinterestMain;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.selfservice.SelfService;
 import org.uengine.codi.mw3.tadpole.Tadpole;
+import org.uengine.kernel.GlobalContext;
 import org.uengine.processmarket.Market;
 
 public class PageNavigator{
@@ -29,11 +30,18 @@ public class PageNavigator{
 			this.session = session;
 		}
 
-	public PageNavigator() {		
+	public PageNavigator() {
+		this.setSns("1".equals(GlobalContext.getPropertyString("sns.use", "1")));
+		this.setIde("1".equals(GlobalContext.getPropertyString("ide.use", "1")));
+		this.setKnowlege("1".equals(GlobalContext.getPropertyString("knowledge.use", "1")));
 	}
 	
 	public PageNavigator(String pageName) {
 		this.setPageName(pageName);
+		
+		this.setSns("1".equals(GlobalContext.getPropertyString("sns.use", "1")));
+		this.setIde("1".equals(GlobalContext.getPropertyString("ide.use", "1")));
+		this.setKnowlege("1".equals(GlobalContext.getPropertyString("knowledge.use", "1")));
 	}
 	
 	boolean admin;
@@ -42,6 +50,30 @@ public class PageNavigator{
 		}
 		public void setAdmin(boolean admin) {
 			this.admin = admin;
+		}
+
+	boolean sns;
+		public boolean isSns() {
+			return sns;
+		}
+		public void setSns(boolean sns) {
+			this.sns = sns;
+		}
+
+	boolean ide;
+		public boolean isIde() {
+			return ide;
+		}
+		public void setIde(boolean ide) {
+			this.ide = ide;
+		}
+
+	boolean knowlege;
+		public boolean isKnowlege() {
+			return knowlege;
+		}
+		public void setKnowlege(boolean knowlege) {
+			this.knowlege = knowlege;
 		}
 
 	String pageName;
