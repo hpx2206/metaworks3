@@ -740,7 +740,7 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ge
 		var activity = $id.data('activity');
 		if( og['@shapeType'] != 'EDGE'){
 			cellForDwr['tracingTag'] = $id.attr('_tracingTag');
-			cellForDwr['classname'] = $id.attr('_classname');
+			cellForDwr['activityClass'] = $id.attr('_classname');
 			var classType = $id.attr('_classType');
 			cellForDwr['classType'] = classType;
 			if( activity ){

@@ -11,19 +11,16 @@ public class ProcessAttributePanel {
 		public void setDefId(String defId) {
 			this.defId = defId;
 		}
-		
-	ExtendAttribute extendAttribute;
-		public ExtendAttribute getExtensionAttribute() {
-			return extendAttribute;
+	Documentation documentation;
+		public Documentation getDocumentation() {
+			return documentation;
 		}
-		public void setExtensionAttribute(ExtendAttribute extendAttribute) {
-			this.extendAttribute = extendAttribute;
+		public void setDocumentation(Documentation documentation) {
+			this.documentation = documentation;
 		}
-		
 	public void load() {
 		// TODO 하위 document를 읽는다.
 		ProcessAttributePanel processAttributePanel = new ProcessAttributePanel();
-		extendAttribute = new ExtendAttribute();
 	}
 	
 
