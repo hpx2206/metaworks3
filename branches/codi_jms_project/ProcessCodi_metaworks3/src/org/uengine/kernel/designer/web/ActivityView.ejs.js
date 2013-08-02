@@ -51,11 +51,12 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
             	$(element).attr("_classname", object.activityClass);
             	$(element).attr("_classType", object.classType);
             	$(element).attr("_tracingTag",object.tracingTag);
-            	if( typeof $(element).attr("_classname") != 'undefined' &&  typeof $(element).data("activity") == 'undefined' ){
+            	if( object.activity ){
+            		$(element).data('activity', object.activity);
+            	}else if( typeof $(element).attr("_classname") != 'undefined' &&  typeof $(element).data("activity") == 'undefined' ){
             		var activityData = {__className : $(element).attr("_classname"), tracingTag : $(element).attr("_tracingTag")};
             		$(element).data('activity', activityData);
             	}
-            	
             	$(element).on({
             		dblclick: function (event) {
             			if(event.stopPropagation){
@@ -74,11 +75,11 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
             					width : 860,
             					height : 600,
             					panel : $(this).data('activity'),
-            					metaworksContext : metaworksContext,
-            					id : $(this).attr('id')
+            					metaworksContext : metaworksContext
             			};
             			
             			object['propertiesWindow'] = propertiesWindow;
+            			object.id = $(this).attr('id');
             			object.showProperties();
             			
             		},
