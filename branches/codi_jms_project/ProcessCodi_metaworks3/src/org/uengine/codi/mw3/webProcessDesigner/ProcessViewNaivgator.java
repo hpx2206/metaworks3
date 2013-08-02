@@ -27,7 +27,6 @@ public class ProcessViewNaivgator {
 		rootnode.setLoaded(true);
 		rootnode.setExpanded(true);
 		
-		
 		Tree tree = new Tree();
 		tree.setNode(rootnode);
 		

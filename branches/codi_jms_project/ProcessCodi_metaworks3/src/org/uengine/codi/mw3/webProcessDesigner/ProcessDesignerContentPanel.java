@@ -640,6 +640,7 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 	}
 	public String load(String definitionString) throws Exception {
 		ProcessDefinition def = (ProcessDefinition) GlobalContext.deserialize(definitionString);
+		this.processDesignerContainer.setEditorId(alias);
 		this.processDesignerContainer.load(def);
 		
 		return def.getProcessDesignerInstanceId();

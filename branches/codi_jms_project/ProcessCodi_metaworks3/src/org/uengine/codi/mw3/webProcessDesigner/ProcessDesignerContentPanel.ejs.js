@@ -86,7 +86,6 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype = 
 		var objectId = this.objectId;
 		var object = mw3.objects[this.objectId];
 		var faceHelper = this;
-		
 		this.object = object;
 		
 		var canvas = null;
@@ -134,14 +133,14 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype = 
 	    });
 		
 	    // Shape drag & drop
-	    $(".icon_shape").draggable({
+	    $(".icon_shape_"+objectId).draggable({
 	        helper  : 'clone',
-	        appendTo: "#canvas_" + this.objectId
+	        appendTo: "#canvas_" + objectId
 	    });
 	    canvasDivObj.droppable({
 	    	
 	        drop: function (event, ui) {
-	        	if(!$(ui.draggable).hasClass('icon_shape'))
+	        	if(!$(ui.draggable).hasClass('icon_shape_'+objectId))
 	        		return true;
 	        	
 	        	var shapeInfo = {
@@ -172,7 +171,8 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype = 
 							activityClass : activityclass,
 							height : shapeInfo._height,
 							width : shapeInfo._width,
-							tracingTag : ++faceHelper.tracingTag
+							tracingTag : ++faceHelper.tracingTag,
+							editorId : object.alias
 					};
 	            	
 	            	var html = mw3.locateObject(activityView , activityView.____className);
@@ -741,6 +741,7 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ge
 		if( og['@shapeType'] != 'EDGE'){
 			cellForDwr['tracingTag'] = $id.attr('_tracingTag');
 			cellForDwr['activityClass'] = $id.attr('_classname');
+			cellForDwr['__className'] = $id.attr('_viewClass');
 			var classType = $id.attr('_classType');
 			cellForDwr['classType'] = classType;
 			if( activity ){

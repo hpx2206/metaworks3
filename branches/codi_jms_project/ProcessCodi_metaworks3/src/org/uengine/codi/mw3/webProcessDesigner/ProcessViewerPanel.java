@@ -35,7 +35,7 @@ public class ProcessViewerPanel implements ContextAware {
 		public void setAlias(String alias) {
 			this.alias = alias;
 		}
-		
+	
 	ProcessViewNaivgator	processViewNaivgator;
 		public ProcessViewNaivgator getProcessViewNaivgator() {
 			return processViewNaivgator;

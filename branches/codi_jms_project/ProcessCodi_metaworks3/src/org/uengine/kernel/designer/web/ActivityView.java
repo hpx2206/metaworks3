@@ -6,12 +6,13 @@ import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Hidden;
+import org.metaworks.annotation.Range;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.annotation.TypeSelector;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.webProcessDesigner.ActivityWindow;
 import org.uengine.codi.mw3.webProcessDesigner.CanvasDTO;
-import org.uengine.codi.mw3.webProcessDesigner.Documentation;
 import org.uengine.codi.mw3.webProcessDesigner.PropertiesWindow;
 import org.uengine.kernel.Activity;
 
@@ -32,6 +33,23 @@ public class ActivityView extends CanvasDTO  implements ContextAware{
 			this.tracingTag = tracingTag;
 		}
 		
+	String viewClass;
+	@Range(options = { "org.uengine.kernel.designer.web.SubProcessActivityView" }, 
+			values = {"SubProcessActivityView"})
+	@TypeSelector(
+			values = { 
+					"org.uengine.kernel.designer.web.SubProcessActivityView"			
+				}, 
+			classes = { 
+					SubProcessActivityView.class
+			}
+		)
+		public String getViewClass() {
+			return viewClass;
+		}
+		public void setViewClass(String viewClass) {
+			this.viewClass = viewClass;
+		}
 	String activityClass;
 		public String getActivityClass() {
 			return activityClass;

@@ -9,7 +9,13 @@ import org.uengine.kernel.Role;
 import org.uengine.kernel.graph.Transition;
 
 public class ProcessDesignerContainer {
-	
+	String editorId;
+		public String getEditorId() {
+			return editorId;
+		}
+		public void setEditorId(String editorId) {
+			this.editorId = editorId;
+		}
 	ArrayList<Activity> activityList;
 		public ArrayList<Activity> getActivityList() {
 			return activityList;
@@ -55,13 +61,17 @@ public class ProcessDesignerContainer {
 
 		for (int l = 0; l < def.getChildActivities().size(); l++) {
 			Activity activity = (Activity)def.getChildActivities().get(l);
-			activity.getActivityView().setViewType(viewType);
-			activity.getActivityView().setActivity(activity);
+			if( activity.getActivityView() != null ){
+				activity.getActivityView().setViewType(viewType);
+				activity.getActivityView().setEditorId(getEditorId());
+				activity.getActivityView().setActivity(activity);
+			}
 			activityList.add(activity);
 		}
 		transitionList = def.getTransitions();
 		for(Transition ts : transitionList){
 			ts.getTransitionView().setViewType(viewType);
+			ts.getTransitionView().setEditorId(getEditorId());
 			ts.getTransitionView().setTransition(ts);
 		}
 	}
