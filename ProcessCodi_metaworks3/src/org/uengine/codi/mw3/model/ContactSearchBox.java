@@ -44,14 +44,14 @@ public class ContactSearchBox extends SearchBox implements ContextAware{
 			
 			addLocalContactPanel.setDeptEmployee(employeeList);
 		
-//			ContactSearchBox searchBox = new ContactSearchBox(); 
-//			searchBox.setMetaworksContext(new MetaworksContext());
-//			searchBox.getMetaworksContext().setWhere("addContact");
-//			searchBox.setKeyUpSearch(true);
-//			searchBox.setKeyEntetSearch(true);
-//			searchBox.setKeyword(getKeyword());
-//			
-//			addLocalContactPanel.setContactSearchBox(searchBox);			
+			ContactSearchBox searchBox = new ContactSearchBox(); 
+			searchBox.setMetaworksContext(new MetaworksContext());
+			searchBox.getMetaworksContext().setWhere("addContact");
+			searchBox.setKeyUpSearch(true);
+			searchBox.setKeyEntetSearch(true);
+			searchBox.setKeyword(getKeyword());
+			
+			addLocalContactPanel.setContactSearchBox(searchBox);			
 			
 			return new Object[]{addLocalContactPanel};
 		}
