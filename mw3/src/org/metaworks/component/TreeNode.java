@@ -22,6 +22,7 @@ public class TreeNode {
 	public final static String TYPE_FILE_FORM		= "form";
 	public final static String TYPE_FILE_RULE 		= "rule";
 	public final static String TYPE_FILE_PROCESS 	= "process";
+	public final static String TYPE_FILE_VALUECHAIN 	= "valuechain";
 	public final static String TYPE_FILE_SERVER 		= "server";
 	public final static String TYPE_FILE_METADATA 	= "metadata";
 	public final static String TYPE_USER 				= "user";	
