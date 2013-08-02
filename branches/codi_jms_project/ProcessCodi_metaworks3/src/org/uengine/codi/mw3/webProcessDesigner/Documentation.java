@@ -1,11 +1,10 @@
 package org.uengine.codi.mw3.webProcessDesigner;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
-import org.metaworks.Remover;
-import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
@@ -13,6 +12,7 @@ import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.admin.WebEditor;
 import org.uengine.codi.mw3.model.MemoWorkItem;
+import org.uengine.contexts.TextContext;
 
 public class Documentation implements Serializable , ContextAware{
 	MetaworksContext metaworksContext;
@@ -22,7 +22,25 @@ public class Documentation implements Serializable , ContextAware{
 		public void setMetaworksContext(MetaworksContext metaworksContext) {
 			this.metaworksContext = metaworksContext;
 		}
-	
+		
+	ArrayList<Documentation> documentationList;
+	@Hidden
+		public ArrayList<Documentation> getDocumentationList() {
+			return documentationList;
+		}
+		public void setDocumentationList(ArrayList<Documentation> documentationList) {
+			this.documentationList = documentationList;
+		}
+	ArrayList<ParticipateGroup> participateGroupList;
+	@Hidden
+		public ArrayList<ParticipateGroup> getParticipateGroupList() {
+			return participateGroupList;
+		}
+		public void setParticipateGroupList(
+				ArrayList<ParticipateGroup> participateGroupList) {
+			this.participateGroupList = participateGroupList;
+		}
+		
 	MemoWorkItem memoWorkItem;
 	@Hidden	
 		public MemoWorkItem getMemoWorkItem() {
@@ -55,7 +73,7 @@ public class Documentation implements Serializable , ContextAware{
 	}
 	
 	String title;
-		@Face(displayName="제목")
+		@Face(displayName="$Subject")
 		public String getTitle() {
 			return title;
 		}
@@ -63,7 +81,7 @@ public class Documentation implements Serializable , ContextAware{
 			this.title = title;
 		}
 	WebEditor desc;
-		@Face(displayName="내용")
+		@Face(displayName="$Contents")
 		public WebEditor getDesc() {
 			return desc;
 		}
@@ -71,7 +89,7 @@ public class Documentation implements Serializable , ContextAware{
 			this.desc = desc;
 		}
 	String Url;
-		@Face(displayName="URL")
+		@Face(displayName="$URL")
 		public String getUrl() {
 			return Url;
 		}
@@ -80,7 +98,7 @@ public class Documentation implements Serializable , ContextAware{
 		}
 		
 	MetaworksFile attachfile1;
-		@Face(displayName="파일첨부1")
+		@Face(displayName="$attachfile1")
 		public MetaworksFile getAttachfile1() {
 			return attachfile1;
 		}
@@ -88,20 +106,22 @@ public class Documentation implements Serializable , ContextAware{
 			this.attachfile1 = attachfile1;
 		}
 	
-	@AutowiredFromClient
-	public ExtendAttribute extendAttribute;
 	
 	
-	@ServiceMethod(callByContent=true, when="edit")
-	public Object[] add(){
-		if(MetaworksContext.WHEN_EDIT.equals(this.getMetaworksContext().getWhen())){
-		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+	@ServiceMethod(callByContent=true)
+	public ModalWindow add(){
+		Documentation documentation = new Documentation();
+		documentation.setMetaworksContext(new MetaworksContext());
+		documentation.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		
-//		extendAttribute.participateGroupList.add(this);
-		extendAttribute.documentationList.add(this);
-		}
-		return new Object[]{new  Remover(new ModalWindow() , true) ,   extendAttribute};
+		ModalWindow modalWindow = new ModalWindow();
+		modalWindow.setPanel(documentation);
+		
+		return modalWindow;
 	}
+	
+	
+	
 
 
 	

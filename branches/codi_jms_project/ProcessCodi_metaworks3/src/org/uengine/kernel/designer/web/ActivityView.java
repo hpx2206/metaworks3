@@ -1,14 +1,28 @@
 package org.uengine.kernel.designer.web;
 
+import java.io.Serializable;
+
+import org.metaworks.ContextAware;
+import org.metaworks.MetaworksContext;
+import org.metaworks.ServiceMethodContext;
+import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
+import org.uengine.codi.mw3.webProcessDesigner.ActivityWindow;
 import org.uengine.codi.mw3.webProcessDesigner.CanvasDTO;
-import org.uengine.codi.mw3.webProcessDesigner.ProcessViewerPanel;
+import org.uengine.codi.mw3.webProcessDesigner.Documentation;
 import org.uengine.codi.mw3.webProcessDesigner.PropertiesWindow;
 import org.uengine.kernel.Activity;
-import org.uengine.kernel.IDrawDesigne;
 
-public class ActivityView extends CanvasDTO{
+public class ActivityView extends CanvasDTO  implements Serializable , ContextAware{
+	MetaworksContext metaworksContext;
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
+		}	
+	
 	String tracingTag;
 		public String getTracingTag() {
 			return tracingTag;
@@ -69,7 +83,9 @@ public class ActivityView extends CanvasDTO{
 		public void setTooltip(String tooltip) {
 			this.tooltip = tooltip;
 		}
+		
 	transient PropertiesWindow propertiesWindow;
+	@Hidden
 		public PropertiesWindow getPropertiesWindow() {
 			return propertiesWindow;
 		}
@@ -77,8 +93,9 @@ public class ActivityView extends CanvasDTO{
 			this.propertiesWindow = propertiesWindow;
 		}
 	
-	@ServiceMethod(payload={"propertiesWindow"}, target="popup")
-	public PropertiesWindow showProperties() throws Exception{
+		@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
+	public ModalWindow showProperties() throws Exception{
+		/*
 		Object activityObject = propertiesWindow.getPanel();
 		if( activityObject != null ){
 			Class paramClass = activityObject.getClass();
@@ -89,15 +106,32 @@ public class ActivityView extends CanvasDTO{
 			}
 		}
 		return this.getPropertiesWindow();
+		*/
+		ModalWindow popup = new ModalWindow();
+		
+		ActivityWindow activityWindow = new ActivityWindow();
+		activityWindow.setActivity((Activity)propertiesWindow.getPanel());
+		
+		Documentation documentation = new Documentation();
+		documentation.setMetaworksContext(new MetaworksContext());
+		documentation.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+		
+		activityWindow.setDocument(documentation);
+		
+		popup.setPanel(activityWindow);
+		popup.setWidth(700);
+		popup.setHeight(500);
+		
+		return popup;
 	}
 	
-	@ServiceMethod
-	public ModalWindow showDefinitionMonitor() throws Exception{
-		  
-		  ProcessViewerPanel processViewerPanel = new ProcessViewerPanel();
-		  ModalWindow modalWindow = new ModalWindow(processViewerPanel);
-		  
-		  return modalWindow;  
-	 }
+//	@ServiceMethod
+//	public ModalWindow showDefinitionMonitor() throws Exception{
+//		  
+//		  ProcessViewerPanel processViewerPanel = new ProcessViewerPanel();
+//		  ModalWindow modalWindow = new ModalWindow(processViewerPanel);
+//		  
+//		  return modalWindow;  
+//	 }
 
 }

@@ -22,6 +22,8 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.Vector;
 
+import org.metaworks.ContextAware;
+import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.uengine.codi.mw3.webProcessDesigner.ExtendAttribute;
@@ -45,7 +47,7 @@ import org.uengine.util.UEngineUtil;
  * @see org.uengine.kernel.ComplexActivity
  */
 @Face(ejsPath="genericfaces/ActivityFace.ejs", options={"fieldOrder"},values={"name,description"})
-public abstract class Activity implements Validatable, java.io.Serializable, Cloneable{
+public abstract class Activity implements Validatable, java.io.Serializable, Cloneable, ContextAware{
 	private static final long serialVersionUID = org.uengine.kernel.GlobalContext.SERIALIZATION_UID;
 	
 	final public static String ACTIVITY_DONE=		"activity done";
@@ -90,7 +92,13 @@ public abstract class Activity implements Validatable, java.io.Serializable, Clo
 	final public static String PVKEY_RETRY_CNT = "_retryCnt";
 
 	public static final String STATUS_RESERVED = "Reserved";
-
+	MetaworksContext metaworksContext;
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
+		}
 	/**
 	 * points parent activity (should be kind of ComplexActivity of this activity)
 	 */
@@ -367,7 +375,8 @@ public abstract class Activity implements Validatable, java.io.Serializable, Clo
 		setRetryDelay(60);
 		
 		extendAttribute = new ExtendAttribute();
-		
+		setMetaworksContext(new MetaworksContext());
+		getMetaworksContext().setWhen("edit");	
 	}
 
 	public Activity(String activityName){	// for manual-coding
@@ -1525,6 +1534,7 @@ public abstract class Activity implements Validatable, java.io.Serializable, Clo
 	}
 	
 	ExtendAttribute extendAttribute;
+		@Hidden
 		public ExtendAttribute getExtensionAttribute() {
 			return extendAttribute;
 		}
