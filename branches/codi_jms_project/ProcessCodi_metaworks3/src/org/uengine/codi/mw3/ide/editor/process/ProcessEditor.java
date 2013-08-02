@@ -27,7 +27,6 @@ public class ProcessEditor extends Editor {
 		try {
 			ProcessDesignerContentPanel processDesignerContentPanel = new ProcessDesignerContentPanel();
 			processDesignerContentPanel.setAlias(this.getResourceNode().getPath());
-			processDesignerContentPanel.setConferenceMode(resourceNode.isConferenceMode());
 			this.setProcessDesigner(processDesignerContentPanel);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

@@ -126,6 +126,7 @@ public class CloudIDE {
 		
 		CloudWindow editorWindow = new CloudWindow("editor");
 		
+		CloudInstanceWindow instanceWindow = new CloudInstanceWindow();
 		/*
 		ResourceNode resourceNode = new ResourceNode();
 		resourceNode.setProjectId("test0001");
@@ -149,9 +150,11 @@ public class CloudIDE {
 		centerLayout.setId("center");
 		centerLayout.setName("center");
 		centerLayout.setCenter(editorWindow);
+		centerLayout.setEast(instanceWindow);
+		
 		//centerLayout.setCenter(editorWindow);
 		//centerLayout.setSouth(etcWindow);
-		centerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, south__spacing_open:5, south__size:150");
+		centerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, south__spacing_open:5, east__size:250");
 		
 		Layout outerLayout = new Layout();
 		outerLayout.setWest(navigatorWindow);

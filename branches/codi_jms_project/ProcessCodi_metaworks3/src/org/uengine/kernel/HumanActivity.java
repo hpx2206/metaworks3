@@ -21,14 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletResponseWrapper;
 
-import org.metaworks.Remover;
-import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Hidden;
-import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.widget.ModalWindow;
-import org.uengine.codi.mw3.webProcessDesigner.ActivityWindow;
-import org.uengine.codi.mw3.webProcessDesigner.ApplyProperties;
-import org.uengine.codi.mw3.webProcessDesigner.Documentation;
 import org.uengine.codi.mw3.webProcessDesigner.PropertiesWindow;
 import org.uengine.contexts.TextContext;
 import org.uengine.persistence.dao.DAOFactory;
@@ -1288,26 +1281,5 @@ System.out.println("=========================== HARD-TO-FIND : HumanActivity.cre
 			}
 		}
 	}
-//	@ServiceMethod(callByContent=true, target="popup")
-//	@Hidden
-//	public ModalWindow showParameter() throws Exception{
-//		ModalWindow parameter = new ModalWindow();
-//		
-//		ParameterContextPanel parameterContextPanel = new ParameterContextPanel();
-//		parameterContextPanel.load();
-//		parameter.setPanel(parameterContextPanel);
-//		return parameter;
-//	}
 	
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
-	public Object[] apply(){
-		return new Object[]{new ApplyProperties(this.id, propertiesWindow.getPanel()), new Remover(new PropertiesWindow())};
-	}
-
-	
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
-	public Object[] cancel(){
-		return new Object[]{new Remover(new PropertiesWindow())};
-		
-	}
 }

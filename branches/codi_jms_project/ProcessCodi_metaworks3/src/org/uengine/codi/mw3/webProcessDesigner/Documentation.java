@@ -22,15 +22,6 @@ public class Documentation implements Serializable , ContextAware{
 		public void setMetaworksContext(MetaworksContext metaworksContext) {
 			this.metaworksContext = metaworksContext;
 		}
-		
-	ArrayList<Documentation> documentationList;
-	@Hidden
-		public ArrayList<Documentation> getDocumentationList() {
-			return documentationList;
-		}
-		public void setDocumentationList(ArrayList<Documentation> documentationList) {
-			this.documentationList = documentationList;
-		}
 	ArrayList<ParticipateGroup> participateGroupList;
 	@Hidden
 		public ArrayList<ParticipateGroup> getParticipateGroupList() {
@@ -105,25 +96,4 @@ public class Documentation implements Serializable , ContextAware{
 		public void setAttachfile1(MetaworksFile attachfile1) {
 			this.attachfile1 = attachfile1;
 		}
-	
-	
-	
-	@ServiceMethod(callByContent=true)
-	public ModalWindow add(){
-		Documentation documentation = new Documentation();
-		documentation.setMetaworksContext(new MetaworksContext());
-		documentation.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
-		
-		ModalWindow modalWindow = new ModalWindow();
-		modalWindow.setPanel(documentation);
-		
-		return modalWindow;
-	}
-	
-	
-	
-
-
-	
-	
 }

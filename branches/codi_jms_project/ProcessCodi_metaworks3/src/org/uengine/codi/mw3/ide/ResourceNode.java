@@ -24,6 +24,7 @@ import org.uengine.codi.mw3.ide.editor.process.ProcessEditor;
 import org.uengine.codi.mw3.ide.editor.valuechain.ValueChainEditor;
 import org.uengine.codi.mw3.ide.menu.ResourceContextMenu;
 import org.uengine.codi.mw3.ide.view.Navigator;
+import org.uengine.codi.mw3.model.InstanceViewThreadPanel;
 import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.model.Session;
 
@@ -76,13 +77,6 @@ public class ResourceNode extends TreeNode implements ContextAware {
 		}
 		public void setHasPick(boolean hasPick) {
 			this.hasPick = hasPick;
-		}
-	boolean conferenceMode;
-		public boolean isConferenceMode() {
-			return conferenceMode;
-		}
-		public void setConferenceMode(boolean conferenceMode) {
-			this.conferenceMode = conferenceMode;
 		}
 
 	String alias;
@@ -285,7 +279,13 @@ public class ResourceNode extends TreeNode implements ContextAware {
 			
 			return new Object[]{new ToOpener(this), new Remover(new Popup())};	
 		}else{
-			return new ToAppend(new CloudWindow("editor"), this.beforeAction());
+			InstanceViewThreadPanel instanceViewThreadPanel = new InstanceViewThreadPanel();
+			instanceViewThreadPanel.setInstanceId("1041");
+			
+			CloudInstanceWindow cloudInstanceWindow = new CloudInstanceWindow();
+			cloudInstanceWindow.setPanel(instanceViewThreadPanel);
+			
+			return new Object[]{new ToAppend(new CloudWindow("editor"), this.beforeAction()) , new Refresh(cloudInstanceWindow, true) };
 		}
 	}
 

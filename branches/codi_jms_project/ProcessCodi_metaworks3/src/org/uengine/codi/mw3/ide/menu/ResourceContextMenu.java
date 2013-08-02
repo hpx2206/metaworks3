@@ -45,7 +45,6 @@ public class ResourceContextMenu extends CloudMenu {
 		this.add(new SubMenuItem(new NewMenu(this.getResourceNode())));
 		this.add(new MenuItem("open", "$resource.menu.open"));
 		// TODO jms 작업을 위하여 메뉴 추가 추후 변경
-		this.add(new MenuItem("openWithConference", "회의모드열기"));
 		this.add(new MenuItem("openWithJMS", "jms View 보기"));
 		this.add(new MenuItem(MenuItem.TYPE_DIVIDER));
 		this.add(new MenuItem("copy", "$resource.menu.copy"));
@@ -70,17 +69,6 @@ public class ResourceContextMenu extends CloudMenu {
 		if(clipboard instanceof ResourceNode){
 			ResourceNode node = (ResourceNode)clipboard;
 			
-			return node.action();			
-		}else{
-			return null;
-		}
-	}
-	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
-	public Object openWithConference(){
-		Object clipboard = session.getClipboard();
-		if(clipboard instanceof ResourceNode){
-			ResourceNode node = (ResourceNode)clipboard;
-			node.setConferenceMode(true);
 			return node.action();			
 		}else{
 			return null;

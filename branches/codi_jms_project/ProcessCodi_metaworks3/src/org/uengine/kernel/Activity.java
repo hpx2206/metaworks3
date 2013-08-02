@@ -24,9 +24,15 @@ import java.util.Vector;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.Remover;
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
-import org.uengine.codi.mw3.webProcessDesigner.ExtendAttribute;
+import org.metaworks.annotation.Id;
+import org.metaworks.annotation.ServiceMethod;
+import org.uengine.codi.mw3.model.Popup;
+import org.uengine.codi.mw3.webProcessDesigner.ApplyProperties;
+import org.uengine.codi.mw3.webProcessDesigner.Documentation;
 import org.uengine.contexts.TextContext;
 import org.uengine.kernel.designer.web.ActivityView;
 import org.uengine.kernel.graph.Transition;
@@ -374,7 +380,10 @@ public abstract class Activity implements Validatable, java.io.Serializable, Clo
 		setRetryLimit(0);
 		setRetryDelay(60);
 		
-		extendAttribute = new ExtendAttribute();
+		documentation = new Documentation();
+		documentation.setMetaworksContext(new MetaworksContext());
+		documentation.getMetaworksContext().setWhen("edit");	
+		
 		setMetaworksContext(new MetaworksContext());
 		getMetaworksContext().setWhen("edit");	
 	}
@@ -1533,13 +1542,24 @@ public abstract class Activity implements Validatable, java.io.Serializable, Clo
 		return tokenCount;
 	}
 	
-	ExtendAttribute extendAttribute;
+	Documentation documentation;
 		@Hidden
-		public ExtendAttribute getExtensionAttribute() {
-			return extendAttribute;
+		public Documentation getDocumentation() {
+			return documentation;
 		}
-		public void setExtensionAttribute(ExtendAttribute extendAttribute) {
-			this.extendAttribute = extendAttribute;
+		public void setDocumentation(Documentation documentation) {
+			this.documentation = documentation;
 		}
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
+	public Object[] apply(){
+//		return new Object[]{new ApplyProperties(this.getTracingTag(), this), new Remover(new PropertiesWindow())};
+		return new Object[]{new ApplyProperties(this.getActivityView().getId(), this), new Remover(new Popup() , true)};
+	}
 	
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
+	public Object[] cancel(){
+//		return new Object[]{new Remover(new PropertiesWindow())};
+		return new Object[]{new Remover(new Popup() , true)};
+		
+	}
 }

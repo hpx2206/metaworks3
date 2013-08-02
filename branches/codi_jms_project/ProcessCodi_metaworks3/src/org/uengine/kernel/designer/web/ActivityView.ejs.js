@@ -81,6 +81,9 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
             			object['propertiesWindow'] = propertiesWindow;
             			object.showProperties();
             			
+            		},
+            		btnclick : function(event) {
+            			object.showDefinitionMonitor();
             		}
             	});
             }

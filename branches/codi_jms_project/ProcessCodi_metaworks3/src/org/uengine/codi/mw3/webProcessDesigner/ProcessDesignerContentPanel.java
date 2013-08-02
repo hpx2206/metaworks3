@@ -40,13 +40,6 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 				ProcessDesignerContainer processDesignerContainer) {
 			this.processDesignerContainer = processDesignerContainer;
 		}
-	boolean conferenceMode;
-		public boolean isConferenceMode() {
-			return conferenceMode;
-		}
-		public void setConferenceMode(boolean conferenceMode) {
-			this.conferenceMode = conferenceMode;
-		}
 	public ProcessDesignerContentPanel() throws Exception{
 		processDesignerContainer = new ProcessDesignerContainer();
 	}
@@ -651,15 +644,6 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 			this.instanceListPanel = instanceListPanel;
 		}
 	public void load(String definitionString) throws Exception {
-		if( isConferenceMode() ){
-			instanceListPanel = new InstanceListPanel();
-			instanceListPanel.setDefinitionId(this.getAlias());
-			Object[] returnObj = instanceListPanel.loadByDefId();
-			instanceListPanel = (InstanceListPanel)returnObj[1];
-		}else{
-			instanceListPanel = null;
-		}
-		
 		ProcessDefinition def = (ProcessDefinition) GlobalContext.deserialize(definitionString);
 		this.processDesignerContainer.load(def);
 		

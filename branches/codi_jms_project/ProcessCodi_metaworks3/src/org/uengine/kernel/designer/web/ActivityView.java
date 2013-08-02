@@ -8,13 +8,14 @@ import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
+import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.webProcessDesigner.ActivityWindow;
 import org.uengine.codi.mw3.webProcessDesigner.CanvasDTO;
 import org.uengine.codi.mw3.webProcessDesigner.Documentation;
 import org.uengine.codi.mw3.webProcessDesigner.PropertiesWindow;
 import org.uengine.kernel.Activity;
 
-public class ActivityView extends CanvasDTO  implements Serializable , ContextAware{
+public class ActivityView extends CanvasDTO  implements ContextAware{
 	MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
 			return metaworksContext;
@@ -94,7 +95,7 @@ public class ActivityView extends CanvasDTO  implements Serializable , ContextAw
 		}
 	
 		@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
-	public ModalWindow showProperties() throws Exception{
+	public Object showProperties() throws Exception{
 		/*
 		Object activityObject = propertiesWindow.getPanel();
 		if( activityObject != null ){
@@ -107,16 +108,14 @@ public class ActivityView extends CanvasDTO  implements Serializable , ContextAw
 		}
 		return this.getPropertiesWindow();
 		*/
-		ModalWindow popup = new ModalWindow();
+			
+//		ModalWindow popup = new ModalWindow();
+		Popup popup = new Popup();
 		
 		ActivityWindow activityWindow = new ActivityWindow();
-		activityWindow.setActivity((Activity)propertiesWindow.getPanel());
-		
-		Documentation documentation = new Documentation();
-		documentation.setMetaworksContext(new MetaworksContext());
-		documentation.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
-		
-		activityWindow.setDocument(documentation);
+		Activity activity = (Activity)propertiesWindow.getPanel();
+		activityWindow.getActivityPanel().setActivity(activity);
+		activityWindow.getActivityPanel().setDocument(activity.getDocumentation());
 		
 		popup.setPanel(activityWindow);
 		popup.setWidth(700);
@@ -125,13 +124,9 @@ public class ActivityView extends CanvasDTO  implements Serializable , ContextAw
 		return popup;
 	}
 	
-//	@ServiceMethod
-//	public ModalWindow showDefinitionMonitor() throws Exception{
-//		  
-//		  ProcessViewerPanel processViewerPanel = new ProcessViewerPanel();
-//		  ModalWindow modalWindow = new ModalWindow(processViewerPanel);
-//		  
-//		  return modalWindow;  
-//	 }
+	@ServiceMethod
+	public ModalWindow showDefinitionMonitor() throws Exception{
+		return null;
+	 }
 
 }

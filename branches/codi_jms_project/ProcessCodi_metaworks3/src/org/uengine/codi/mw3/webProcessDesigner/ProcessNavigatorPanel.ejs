@@ -4,7 +4,7 @@
         
         for( var i = 0; i < list.length; i++){
 %>
-		<a onClick="mw3.getFaceHelper(<%=objectId%>).clickNavigator('<%= list[i].defId %>', '<%= list[i].alias %>')" href="#">
+		<a onClick="mw3.getFaceHelper(<%=objectId%>).clickNavigator('<%= i %>')" href="#">
              <%= list[i].defName %> ==>>> 
         </a>
             
