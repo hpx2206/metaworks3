@@ -4,6 +4,7 @@ var org_uengine_kernel_designer_web_ActivityView = function(objectId, className)
 	this.className = className;
 	
 	var object = mw3.objects[this.objectId];
+	console.log(object);
 	var canvasObject;
 	if( object != null && object.viewType != null && "blockView" == object.viewType ){
 		canvasObject = mw3.getAutowiredObject('org.uengine.codi.mw3.webProcessDesigner.InstanceMonitorPanel');

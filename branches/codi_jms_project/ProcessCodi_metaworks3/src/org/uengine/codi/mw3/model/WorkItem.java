@@ -778,7 +778,9 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				instanceRef.setDueDate(getDueDate());
 				instanceRef.setName(this.getTitle());
 				//instanceRef.setStartedDate(this.getStartDate());
-				instanceRef.setExt1(newInstancePanel.newInstantiator.getExt2());
+				if( newInstancePanel != null ){
+					instanceRef.setExt1(newInstancePanel.newInstantiator.getExt2());
+				}
 				
 				afterInstantiation(instanceRef);				
 			}else{

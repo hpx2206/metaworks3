@@ -14,7 +14,14 @@ public class ProcessEditor extends Editor {
 		public void setProcessDesigner(ProcessDesignerContentPanel processDesigner) {
 			this.processDesigner = processDesigner;
 		}
-
+	String processDesignerInstanceId;
+		public String getProcessDesignerInstanceId() {
+			return processDesignerInstanceId;
+		}
+		public void setProcessDesignerInstanceId(String processDesignerInstanceId) {
+			this.processDesignerInstanceId = processDesignerInstanceId;
+		}
+		
 	public ProcessEditor(){
 		
 	}
@@ -39,7 +46,7 @@ public class ProcessEditor extends Editor {
 		String definitionString = super.load();
 		
 		try {
-			this.getProcessDesigner().load(definitionString);
+			processDesignerInstanceId = this.getProcessDesigner().load(definitionString);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

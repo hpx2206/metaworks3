@@ -20,9 +20,7 @@ var org_uengine_codi_mw3_webProcessDesigner_ApplyProperties = function(objectId,
 		canvas.drawLabel(element, contentValue.displayName.text);
 	}else if(contentValue && contentValue.__className=="org.uengine.kernel.HumanActivity"){
 		// TODO 엑티비티별로..??? 이름주기
-		var wfText = $(element).children('[id$=_LABEL]').text();
-		wfText = contentValue.description.text + wfText ;
-		canvas.drawLabel(element, wfText);
+		canvas.drawLabel(element, contentValue.description.text);
 	}
 	
 	$('#' + this.object.id).data('activity', contentValue);

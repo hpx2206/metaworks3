@@ -1117,7 +1117,13 @@ System.out.println("ProcessDefinition::addMessageListener.message = " + message)
 	
 	}
 
-	
+	String processDesignerInstanceId;
+		public String getProcessDesignerInstanceId() {
+			return processDesignerInstanceId;
+		}
+		public void setProcessDesignerInstanceId(String processDesignerInstanceId) {
+			this.processDesignerInstanceId = processDesignerInstanceId;
+		}
 
 }
 

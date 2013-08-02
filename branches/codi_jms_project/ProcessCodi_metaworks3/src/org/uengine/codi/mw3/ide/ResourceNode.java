@@ -86,7 +86,14 @@ public class ResourceNode extends TreeNode implements ContextAware {
 		public void setAlias(String alias) {
 			this.alias = alias;
 		}
-
+	String editorInstanceId;
+		public String getEditorInstanceId() {
+			return editorInstanceId;
+		}
+		public void setEditorInstanceId(String editorInstanceId) {
+			this.editorInstanceId = editorInstanceId;
+		}
+		
 	public ResourceNode(){
 		setMetaworksContext(new MetaworksContext());
 	}
@@ -279,13 +286,19 @@ public class ResourceNode extends TreeNode implements ContextAware {
 			
 			return new Object[]{new ToOpener(this), new Remover(new Popup())};	
 		}else{
+			Editor editor = this.beforeAction();
 			InstanceViewThreadPanel instanceViewThreadPanel = new InstanceViewThreadPanel();
-			instanceViewThreadPanel.setInstanceId("1041");
-			
+			if(  editor instanceof ProcessEditor ){
+				if( ((ProcessEditor)editor).getProcessDesignerInstanceId() != null ){
+					instanceViewThreadPanel.session = session;
+					instanceViewThreadPanel.setInstanceId(((ProcessEditor)editor).getProcessDesignerInstanceId());
+					instanceViewThreadPanel.load();
+				}
+			}
 			CloudInstanceWindow cloudInstanceWindow = new CloudInstanceWindow();
 			cloudInstanceWindow.setPanel(instanceViewThreadPanel);
 			
-			return new Object[]{new ToAppend(new CloudWindow("editor"), this.beforeAction()) , new Refresh(cloudInstanceWindow, true) };
+			return new Object[]{new ToAppend(new CloudWindow("editor"), editor) , new Refresh(cloudInstanceWindow, true) };
 		}
 	}
 

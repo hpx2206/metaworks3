@@ -55,21 +55,21 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 		this.alias = alias;
 	}
 	
-	CanvasDTO cell[];
-		public CanvasDTO[] getCell() {
-			return cell;
-		}
-		public void setCell(CanvasDTO[] cell) {
-			this.cell = cell;
-		}
-		
-	String graphString;
-		public String getGraphString() {
-			return graphString;
-		}
-		public void setGraphString(String graphString) {
-			this.graphString = graphString;
-		}
+//	CanvasDTO cell[];
+//		public CanvasDTO[] getCell() {
+//			return cell;
+//		}
+//		public void setCell(CanvasDTO[] cell) {
+//			this.cell = cell;
+//		}
+//		
+//	String graphString;
+//		public String getGraphString() {
+//			return graphString;
+//		}
+//		public void setGraphString(String graphString) {
+//			this.graphString = graphString;
+//		}
 //	PrcsVariable[] prcsVariables;
 //		public PrcsVariable[] getPrcsVariables() {
 //			return prcsVariables;
@@ -193,13 +193,13 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 			this.propertiesWindow = propertiesWindow;
 		}
 		*/
-	ProcessDefinition definition;
-		public ProcessDefinition getDefinition() {
-			return definition;
-		}
-		public void setDefinition(ProcessDefinition definition) {
-			this.definition = definition;
-		}
+//	ProcessDefinition definition;
+//		public ProcessDefinition getDefinition() {
+//			return definition;
+//		}
+//		public void setDefinition(ProcessDefinition definition) {
+//			this.definition = definition;
+//		}
 		
 		/*
 	@ServiceMethod(payload="propertiesWindow", target="popup")
@@ -425,6 +425,9 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 		}
 		*/
 			def.setName(title);
+			if( processEditor.getProcessDesignerInstanceId() != null ){
+				def.setProcessDesignerInstanceId(processEditor.getProcessDesignerInstanceId());
+			}
 			FileOutputStream fos = null;
 			try{
 				File file = new File(processEditor.getResourceNode().getPath());
@@ -635,18 +638,11 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 //		}
 //		return null;
 	}
-	
-	InstanceListPanel instanceListPanel;
-		public InstanceListPanel getInstanceListPanel() {
-			return instanceListPanel;
-		}
-		public void setInstanceListPanel(InstanceListPanel instanceListPanel) {
-			this.instanceListPanel = instanceListPanel;
-		}
-	public void load(String definitionString) throws Exception {
+	public String load(String definitionString) throws Exception {
 		ProcessDefinition def = (ProcessDefinition) GlobalContext.deserialize(definitionString);
 		this.processDesignerContainer.load(def);
 		
+		return def.getProcessDesignerInstanceId();
 		
 //		setDefinition(def);
 		// default role
