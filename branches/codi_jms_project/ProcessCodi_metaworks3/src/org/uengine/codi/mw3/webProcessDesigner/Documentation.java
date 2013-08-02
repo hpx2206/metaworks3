@@ -44,7 +44,59 @@ public class Documentation implements Serializable , ContextAware{
 		public void setAlias(String alias) {
 			this.alias = alias;
 		}
-		
+	
+	String departManagement;
+		@Face(displayName="$departManagement")
+		public String getDepartManagement() {
+			return departManagement;
+		}
+		public void setDepartManagement(String departManagement) {
+			this.departManagement = departManagement;
+		}
+
+	String description;
+		@Face(displayName="$description")
+		public String getDescription() {
+			return description;
+		}
+		public void setDescription(String description) {
+			this.description = description;
+		}
+	
+	String processMeasure;
+		@Face(displayName="$processMeasure")
+		public String getProcessMeasure() {
+			return processMeasure;
+		}
+		public void setProcessMeasure(String processMeasure) {
+			this.processMeasure = processMeasure;
+		}
+	String document;
+		@Face(displayName="$document")	
+		public String getDocument() {
+			return document;
+		}
+		public void setDocument(String document) {
+			this.document = document;
+		}
+	String Reference;
+		@Face(displayName="$Reference")
+		public String getReference() {
+			return Reference;
+		}
+		public void setReference(String reference) {
+			Reference = reference;
+		}
+	String regulation;
+		@Face(displayName="$regulation")
+		public String getRegulation() {
+			return regulation;
+		}
+		public void setRegulation(String regulation) {
+			this.regulation = regulation;
+		}
+
+	
 	public Documentation(){
 		setMetaworksContext(new MetaworksContext());
 //		setDesc(new WebEditor());
@@ -84,4 +136,21 @@ public class Documentation implements Serializable , ContextAware{
 //		public void setAttachfile1(MetaworksFile attachfile1) {
 //			this.attachfile1 = attachfile1;
 //		}
+//		MetaworksFile attachfile2;
+//		@Face(displayName="$attachfile2")
+//		public MetaworksFile getAttachfile2() {
+//			return attachfile2;
+//		}
+//		public void setAttachfile2(MetaworksFile attachfile2) {
+//			this.attachfile2 = attachfile2;
+//		}
+//		MetaworksFile attachfile3;
+//		@Face(displayName="$attachfile3")
+//		public MetaworksFile getAttachfile3() {
+//			return attachfile3;
+//		}
+//		public void setAttachfile1(MetaworksFile attachfile3) {
+//			this.attachfile3 = attachfile3;
+//		}
+		
 }
