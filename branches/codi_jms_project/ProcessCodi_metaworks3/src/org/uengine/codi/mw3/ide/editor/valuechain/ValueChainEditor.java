@@ -28,7 +28,6 @@ public class ValueChainEditor extends ProcessEditor{
 		try{
 			ValueChainDesignerContentPanel valueChainDesignerContentPanel = new ValueChainDesignerContentPanel();
 			valueChainDesignerContentPanel.setAlias(this.getResourceNode().getPath());
-			valueChainDesignerContentPanel.setConferenceMode(resourceNode.isConferenceMode());
 			this.setValueChainDesigner(valueChainDesignerContentPanel);
 		}catch(Exception e){
 			e.printStackTrace();
