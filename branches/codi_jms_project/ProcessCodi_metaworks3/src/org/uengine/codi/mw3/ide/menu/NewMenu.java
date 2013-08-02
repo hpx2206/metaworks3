@@ -17,6 +17,7 @@ import org.uengine.codi.mw3.ide.templete.NewFolder;
 import org.uengine.codi.mw3.ide.templete.NewForm;
 import org.uengine.codi.mw3.ide.templete.NewProcess;
 import org.uengine.codi.mw3.ide.templete.NewRule;
+import org.uengine.codi.mw3.ide.templete.NewValueChain;
 
 public class NewMenu extends CloudMenu {
 
@@ -35,6 +36,7 @@ public class NewMenu extends CloudMenu {
 		
 		//this.add(new MenuItem("newPackage", "Package"));
 		this.add(new MenuItem("newProcess", "$resource.menu.new.process"));
+		this.add(new MenuItem("newValueChain", "$resource.menu.new.valuechain"));
 		//this.add(new MenuItem("newRole", "Role"));
 		this.add(new MenuItem(MenuItem.TYPE_DIVIDER));
 		//this.add(new MenuItem("newClass", "Class"));
@@ -89,6 +91,14 @@ public class NewMenu extends CloudMenu {
 		NewProcess newProcess = new NewProcess();
 		
 		return new ModalWindow(newProcess, 300, 150, "$templete.process");
+	}
+	
+	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
+	public ModalWindow newValueChain(){
+		//TODO : newValueChain
+		NewValueChain newValueChain = new NewValueChain();
+		
+		return new ModalWindow(newValueChain, 300, 150, "$templete.valuechain");
 	}
 	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)

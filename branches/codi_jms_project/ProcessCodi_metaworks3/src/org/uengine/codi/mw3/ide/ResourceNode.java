@@ -21,6 +21,7 @@ import org.uengine.codi.mw3.ide.editor.Editor;
 import org.uengine.codi.mw3.ide.editor.form.FormEditor;
 import org.uengine.codi.mw3.ide.editor.metadata.MetadataEditor;
 import org.uengine.codi.mw3.ide.editor.process.ProcessEditor;
+import org.uengine.codi.mw3.ide.editor.valuechain.ValueChainEditor;
 import org.uengine.codi.mw3.ide.menu.ResourceContextMenu;
 import org.uengine.codi.mw3.ide.view.Navigator;
 import org.uengine.codi.mw3.model.Popup;
@@ -214,6 +215,13 @@ public class ResourceNode extends TreeNode implements ContextAware {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+			}else if(type.equals(TreeNode.TYPE_FILE_VALUECHAIN)){
+				editor = new ValueChainEditor(this);
+				try {
+					editor.load();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}else if(type.equals(TreeNode.TYPE_FILE_METADATA)){
 				editor = new MetadataEditor(this);
 				try {
@@ -307,6 +315,8 @@ public class ResourceNode extends TreeNode implements ContextAware {
 				nodeType = TreeNode.TYPE_FILE_FORM;
 			}else if(".wpd".equals(ext) || ".process2".equals(ext)){
 				nodeType = TreeNode.TYPE_FILE_PROCESS;
+			}else if(".wvcd".equals(ext)){
+				nodeType = TreeNode.TYPE_FILE_VALUECHAIN;
 			}else if(".rule".equals(ext)){
 				nodeType = TreeNode.TYPE_FILE_RULE;
 			}else if(".css".equals(ext)){

@@ -1,3 +1,21 @@
+<%
+if( mw3.how == 'valuechain'){
+%>
+<div style="_display:inline-block;width:100%; height:100%;">
+	<div class="leftMenuPanel_ide">
+		<dd>
+			<dt class="leftMenuTab_ide">기본</dt>
+			<dl class="leftMenuTabInner_ide">
+				<img src="images/opengraph/valuechain.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.Value_Chain" _width="230" _height="100" title="valuechain"/>
+			</dl>
+		</dd>
+	</div>
+	<div id="canvas_<%=objectId%>" style="height:100%; margin-left:90px; cursor: default; overflow:auto;  background:#F1FCF1; "></div>
+	<%= fields.processDesignerContainer.here() %>
+</div>
+<%
+}else{
+%>
 <div style="_display:inline-block;width:100%; height:100%;">
 	<div class="leftMenuPanel_ide">
 		<dd>
@@ -106,12 +124,7 @@
 	</div>
 	<div id="canvas_<%=objectId%>" style="height:100%; margin-left:90px; cursor: default; overflow:auto;  background:#F1FCF1; "></div>
 	<%= fields.processDesignerContainer.here() %>
-	<%
-	   if( value.conferenceMode ){
-	%>
-	<%= fields.instanceListPanel.here() %>
-	<%
-       }
-    %>
 </div>
-
+<%
+}
+%>
