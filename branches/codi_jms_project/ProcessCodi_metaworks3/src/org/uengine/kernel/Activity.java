@@ -26,11 +26,14 @@ import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 import org.uengine.codi.mw3.model.Popup;
+import org.uengine.codi.mw3.webProcessDesigner.ActivityPanel;
+import org.uengine.codi.mw3.webProcessDesigner.ActivityWindow;
 import org.uengine.codi.mw3.webProcessDesigner.ApplyProperties;
 import org.uengine.codi.mw3.webProcessDesigner.Documentation;
 import org.uengine.contexts.TextContext;
@@ -1550,8 +1553,18 @@ public abstract class Activity implements Validatable, java.io.Serializable, Clo
 		public void setDocumentation(Documentation documentation) {
 			this.documentation = documentation;
 		}
+	
+	@AutowiredFromClient
+	public ActivityPanel activityPanel;
+	/**
+	 * 나중에 apply 버튼은 ActivityWindow 로 빼야한다... 지금은 텝에 버튼이 보이질 않아서 임시로 달아놓음
+	 * @return
+	 */
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] apply(){
+		if( activityPanel != null ){
+			this.setDocumentation(activityPanel.getDocument());
+		}
 //		return new Object[]{new ApplyProperties(this.getTracingTag(), this), new Remover(new PropertiesWindow())};
 		return new Object[]{new ApplyProperties(this.getActivityView().getId(), this), new Remover(new Popup() , true)};
 	}
