@@ -1,8 +1,14 @@
 package org.uengine.codi.mw3.webProcessDesigner;
 
+import java.util.ArrayList;
+
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.Refresh;
 import org.metaworks.Remover;
+import org.metaworks.ServiceMethodContext;
+import org.metaworks.ToOpener;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
@@ -39,7 +45,7 @@ public class ProcessViewerPanel implements ContextAware {
 			this.alias = alias;
 		}
 	
-	ProcessViewNavigator	processViewNavigator;
+	ProcessViewNavigator processViewNavigator;
 		public ProcessViewNavigator getProcessViewNaivgator() {
 			return processViewNavigator;
 		}
@@ -72,12 +78,14 @@ public class ProcessViewerPanel implements ContextAware {
 		processViewPanel.load();
 	}
 	Workspace workspace;
-	public Workspace getWorkspace() {
-		return workspace;
-	}
-	public void setWorkspace(Workspace workspace) {
-		this.workspace = workspace;
-	}
+		public Workspace getWorkspace() {
+			return workspace;
+		}
+		public void setWorkspace(Workspace workspace) {
+			this.workspace = workspace;
+		}
+		
+		
 	public void loadDefnitionView(){
 		this.getMetaworksContext().setHow("load");
 		processViewPanel = new ProcessViewPanel();
@@ -93,14 +101,35 @@ public class ProcessViewerPanel implements ContextAware {
 	
 	@ServiceMethod(callByContent=true)
 	public Object[] saveLink(){
-		// TODO 
+		
 		return new Object[]{new Remover(new ModalWindow() , true) };
 	}
 	
-	@ServiceMethod(callByContent=true)
-	public Object[] openLink(){
-		processViewPanel.refresh(definitionId, definitionName);
+	@AutowiredFromClient
+	public ProcessNavigatorPanel processNavigatorPanel;
+	
+	@AutowiredFromClient
+	public ProcessAttributePanel processAttributePanel;
+	
+	@ServiceMethod(callByContent=true, target = ServiceMethodContext.TARGET_APPEND)
+	public Object[] openLink() throws Exception{
 		
-		return new Object[]{processViewPanel, new Remover(new ModalWindow() , true) };
+		HistoryItem historyItem = new HistoryItem();
+		historyItem.setDefId(processViewPanel.getDefId());
+		historyItem.setAlias(processViewPanel.getAlias());
+		
+		String definitionId = processViewPanel.getDefId();
+		String[] defnitionArray = definitionId.replace('.','@').split("@");
+		historyItem.setDefName(defnitionArray[0]);
+		
+		processNavigatorPanel.historyList.add(historyItem);
+		
+		processAttributePanel.setDefId(processViewPanel.getDefId());
+		processAttributePanel.load();
+		
+		processViewPanel.setDefId(processViewPanel.getDefId());
+		processViewPanel.load();
+		
+		return new Object[]{ new Remover(new ModalWindow(), true), new Refresh (processNavigatorPanel), new Refresh(processViewPanel), new Refresh (processAttributePanel) };
 	}
 }

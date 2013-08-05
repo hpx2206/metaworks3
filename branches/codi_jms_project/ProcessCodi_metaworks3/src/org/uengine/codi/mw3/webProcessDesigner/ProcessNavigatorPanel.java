@@ -51,38 +51,12 @@ public class ProcessNavigatorPanel {
 		HistoryItem historyItem = new HistoryItem(); 
 		historyItem.setDefId(definitionId);
 		historyItem.setDefName(defnitionArray[0]);
-		historyItem.setAlias("D:/codi/codebase\\codi\\root\\a.wpd");
+		historyItem.setAlias(this.alias);
 		
 		if(historyList == null) {
 			historyList = new ArrayList<HistoryItem>();
 		}
 		historyList.add(historyItem);
-		
-//		HistoryItem historyItem2 = new HistoryItem(); 
-//		historyItem2.setDefId("dd.wpd");
-//		historyItem2.setDefName("dd");
-//		historyItem2.setAlias("D:/codi/codebase\\codi\\root\\dd.wpd");
-//		historyList.add(historyItem2);
-//		
-//		HistoryItem historyItem3 = new HistoryItem(); 
-//		historyItem3.setDefId("qwe.wpd");
-//		historyItem3.setDefName("qwe");
-//		historyItem3.setAlias("D:/codi/codebase\\codi\\root\\qwe.wpd");
-//		historyList.add(historyItem3);
-//		
-//		// 아래부터는 Test 히스토리를 3개 둔다. 
-//		definitionId = "qwe.wpd";
-//		historyItem.setDefId(definitionId);
-//		historyItem.setDefName("qwe");
-//		historyItem.setAlias("D:/codi/codebase\\codi\\root\\qwe.wpd");
-//		historyList.add(historyItem);
-//		
-//
-//		definitionId = "dd.wpd";
-//		historyItem.setDefId("dd.wpd");
-//		historyItem.setDefName("dd");
-//		historyItem.setAlias("D:/codi/codebase\\codi\\root\\dd.wpd");
-//		historyList.add(historyItem);
 		
 		
 	}
@@ -98,16 +72,14 @@ public class ProcessNavigatorPanel {
 	@ServiceMethod(callByContent = true , target = ServiceMethodContext.TARGET_POPUP)
 	public Object[] changeViewPanel() throws Exception {
 		
+		if(processViewPanel == null)
+			processViewPanel = new ProcessViewPanel();
+		
 		processViewPanel.setDefId(defId);
 		processViewPanel.setAlias(alias);
 		
 		processViewPanel.load();
 		
-//		// 강제 테스트
-//		processViewPanel.setDefId(this.defId);
-//		processViewPanel.setAlias(alias);
-//		
-//		processViewPanel.load();
 	
 		return new Object[] { new Refresh(processViewPanel) };
 

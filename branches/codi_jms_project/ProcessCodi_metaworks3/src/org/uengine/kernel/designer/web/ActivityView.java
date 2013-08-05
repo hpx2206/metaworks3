@@ -1,7 +1,5 @@
 package org.uengine.kernel.designer.web;
 
-import java.io.Serializable;
-
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
