@@ -22,7 +22,6 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessViewer.prototype = {
 	load : function(){
 		var objectId = this.objectId;
 		var object = mw3.objects[this.objectId];
-		var faceHelper = this;
 		
 		this.object = object;
 		
@@ -52,10 +51,21 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessViewer.prototype = {
 	        enableHotKey    : false,
 	        enableContextMenu : false
 	    });
-		// scale 조절 50%
-		canvas._RENDERER.setScale(0.50);
 		// canvas size 조절
-	    this.icanvas.setCanvasSize([canvasDivObj.width() -10 , canvasDivObj.height()]);
+		var canvasWidth = canvasDivObj.width();
+		var canvasHeight = canvasDivObj.height();
+		var scaleSize = 0.50;
+		if( object.processDesignerSize ){
+			var tempSize = object.processDesignerSize.split(",");
+			var width = tempSize[0]*1;
+			var height = tempSize[1];
+			scaleSize = canvasWidth/width;
+			if( canvasHeight * scaleSize > height ){
+				
+			}
+		}
+		canvas._RENDERER.setScale(scaleSize);
+		this.icanvas.setCanvasSize([canvasWidth , canvasHeight]);
 	    
 	    
 	}

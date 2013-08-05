@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.ide.editor.process.ProcessEditor;
 import org.uengine.codi.mw3.model.ContentWindow;
-import org.uengine.codi.mw3.model.InstanceListPanel;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.ProcessDefinition;
 import org.uengine.kernel.ProcessVariable;
@@ -25,6 +24,19 @@ import org.uengine.util.UEngineUtil;
 
 public class ProcessDesignerContentPanel extends ContentWindow implements ContextAware {
 	
+	public ProcessDesignerContentPanel() throws Exception{
+		processDesignerContainer = new ProcessDesignerContainer();
+	}
+	
+	String alias;
+		@Id
+		@Hidden
+		public String getAlias() {
+			return alias;
+		}
+		public void setAlias(String alias) {
+			this.alias = alias;
+		}
 	MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
 			return metaworksContext;
@@ -40,20 +52,13 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 				ProcessDesignerContainer processDesignerContainer) {
 			this.processDesignerContainer = processDesignerContainer;
 		}
-	public ProcessDesignerContentPanel() throws Exception{
-		processDesignerContainer = new ProcessDesignerContainer();
-	}
-	
-	String alias;
-	@Id
-	@Hidden
-	public String getAlias() {
-		return alias;
-	}
-
-	public void setAlias(String alias) {
-		this.alias = alias;
-	}
+	String processDesignerSize;
+		public String getProcessDesignerSize() {
+			return processDesignerSize;
+		}
+		public void setProcessDesignerSize(String processDesignerSize) {
+			this.processDesignerSize = processDesignerSize;
+		}
 	
 //	CanvasDTO cell[];
 //		public CanvasDTO[] getCell() {
@@ -427,6 +432,9 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 			def.setName(title);
 			if( processEditor.getProcessDesignerInstanceId() != null ){
 				def.setProcessDesignerInstanceId(processEditor.getProcessDesignerInstanceId());
+			}
+			if( this.getProcessDesignerSize() != null ){
+				def.setProcessDesignerSize(processDesignerSize);
 			}
 			FileOutputStream fos = null;
 			try{

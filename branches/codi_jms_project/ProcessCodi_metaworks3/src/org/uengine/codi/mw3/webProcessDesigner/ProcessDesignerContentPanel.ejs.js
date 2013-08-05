@@ -131,7 +131,6 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype = 
 	        enableHotKey     : true,
 	        enableContextMenu: true
 	    });
-		
 	    // Shape drag & drop
 	    $(".icon_shape_"+objectId).draggable({
 	        helper  : 'clone',
@@ -772,6 +771,12 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ge
 			roleList : roleList,
 			transitionList : transitionList,
 	};
+	var canvasSize = this.icanvas.getCanvasSize();
+	var processDesignerSize = "";
+	if( canvasSize != null && canvasSize.length > 0){
+		processDesignerSize = canvasSize[0] + "," + canvasSize[1];
+	}
+	object.processDesignerSize = processDesignerSize;
 	object.processDesignerContainer = container;
 	return object;
 };

@@ -180,7 +180,7 @@ public class ProcessDefinitionNode extends TreeNode  implements ContextAware {
 	@Override
 	@ServiceMethod(payload={"id", "name", "path", "type", "folder", "projectId","defId","alias"},mouseBinding="left", target=ServiceMethodContext.TARGET_APPEND)
 	public Object action(){
-		if( alias != null ){
+		if( alias != null && !this.isFolder() && this.getType().equals(TreeNode.TYPE_FILE_PROCESS)){
 			processViewerPanel = new ProcessViewerPanel();
 			processViewerPanel.setDefinitionId(defId);
 			processViewerPanel.setAlias(alias);

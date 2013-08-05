@@ -33,9 +33,13 @@ public class ProcessViewer {
 		public void setViewType(String viewType) {
 			this.viewType = viewType;
 		}
-	public ProcessViewer(){
-		processDesignerContainer = new ProcessDesignerContainer();
-	}
+	String processDesignerSize;
+		public String getProcessDesignerSize() {
+			return processDesignerSize;
+		}
+		public void setProcessDesignerSize(String processDesignerSize) {
+			this.processDesignerSize = processDesignerSize;
+		}
 		
 	ProcessDesignerContainer processDesignerContainer;
 		public ProcessDesignerContainer getProcessDesignerContainer() {
@@ -45,6 +49,10 @@ public class ProcessViewer {
 				ProcessDesignerContainer processDesignerContainer) {
 			this.processDesignerContainer = processDesignerContainer;
 		}
+		
+	public ProcessViewer(){
+		processDesignerContainer = new ProcessDesignerContainer();
+	}
 		
 	public void load(){
 		InputStream is = null;
@@ -62,6 +70,8 @@ public class ProcessViewer {
 						ProcessDefinition def = (ProcessDefinition) GlobalContext.deserialize(bao.toString(GlobalContext.ENCODING));
 						this.processDesignerContainer.setViewType(viewType);
 						this.processDesignerContainer.load(def);
+						this.setProcessDesignerSize(def.getProcessDesignerSize());
+						
 					} catch (Exception e) {
 						e.printStackTrace();
 					}			
