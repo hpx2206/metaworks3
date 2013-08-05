@@ -78,6 +78,19 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
         		}
         	});
 			
+			if( object != null && object.viewType != null && "definitionView" == object.viewType ){
+					$(element).on({
+						click: function (event) {
+							var activity = $(this).data('activity');
+							
+							object.activity = activity;
+							console.log(object);
+							object.showActivityDocument();
+							
+            			}
+					});
+				}
+			
 				
 			/*
 			$(element).attr('title', object.tooltip);

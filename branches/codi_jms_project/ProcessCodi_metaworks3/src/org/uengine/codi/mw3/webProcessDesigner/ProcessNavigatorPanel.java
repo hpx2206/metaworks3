@@ -51,24 +51,24 @@ public class ProcessNavigatorPanel {
 		HistoryItem historyItem = new HistoryItem(); 
 		historyItem.setDefId(definitionId);
 		historyItem.setDefName(defnitionArray[0]);
-		historyItem.setAlias(historyItem.alias);
+		historyItem.setAlias("D:/codi/codebase\\codi\\root\\a.wpd");
 		
 		if(historyList == null) {
 			historyList = new ArrayList<HistoryItem>();
 		}
 		historyList.add(historyItem);
 		
-		HistoryItem historyItem2 = new HistoryItem(); 
-		historyItem2.setDefId("dd.wpd");
-		historyItem2.setDefName("dd");
-		historyItem2.setAlias("D:/codi/codebase\\codi\\root\\dd.wpd");
-		historyList.add(historyItem2);
-		
-		HistoryItem historyItem3 = new HistoryItem(); 
-		historyItem3.setDefId("qwe.wpd");
-		historyItem3.setDefName("qwe");
-		historyItem3.setAlias("D:/codi/codebase\\codi\\root\\qwe.wpd");
-		historyList.add(historyItem3);
+//		HistoryItem historyItem2 = new HistoryItem(); 
+//		historyItem2.setDefId("dd.wpd");
+//		historyItem2.setDefName("dd");
+//		historyItem2.setAlias("D:/codi/codebase\\codi\\root\\dd.wpd");
+//		historyList.add(historyItem2);
+//		
+//		HistoryItem historyItem3 = new HistoryItem(); 
+//		historyItem3.setDefId("qwe.wpd");
+//		historyItem3.setDefName("qwe");
+//		historyItem3.setAlias("D:/codi/codebase\\codi\\root\\qwe.wpd");
+//		historyList.add(historyItem3);
 //		
 //		// 아래부터는 Test 히스토리를 3개 둔다. 
 //		definitionId = "qwe.wpd";
