@@ -13,7 +13,7 @@ public class SubProcessActivityView extends ActivityView{
 	public ModalWindow showDefinitionMonitor() throws Exception{
 		SubProcessActivity activity = (SubProcessActivity)this.getActivity();
 		ProcessViewerPanel processViewerPanel = new ProcessViewerPanel();
-		if( activity != null && activity.getDefinitionId() != null ){
+		if( activity != null && activity.getDefinitionId() != null && !"".equals(activity.getDefinitionId())){
 			processViewerPanel.setDefinitionId(activity.getDefinitionId());
 			processViewerPanel.loadDefnitionView();
 		}else{

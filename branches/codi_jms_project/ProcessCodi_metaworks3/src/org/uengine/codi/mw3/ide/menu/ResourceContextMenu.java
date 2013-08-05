@@ -86,6 +86,7 @@ public class ResourceContextMenu extends CloudMenu {
 			defWindow.load();
 			
 			ModalWindow popup = new ModalWindow();
+			popup.setTitle("JMS View");
 			popup.setWidth(1000);
 			popup.setHeight(500);
 			popup.setPanel(defWindow);
