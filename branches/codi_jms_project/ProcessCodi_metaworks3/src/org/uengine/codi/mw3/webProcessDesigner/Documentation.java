@@ -10,6 +10,7 @@ import org.metaworks.annotation.Hidden;
 import org.metaworks.website.MetaworksFile;
 import org.uengine.codi.mw3.admin.WebEditor;
 
+@Face(displayName="문서정보", ejsPath="dwr/metaworks/genericfaces/FormFace.ejs", options={"fieldOrder"},values={"title,document,reference,url,departManagement,departManagement,regulation,attachfile1,attachfile2,attachfile3,description"})
 public class Documentation implements Serializable , ContextAware{
 	MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
@@ -18,15 +19,6 @@ public class Documentation implements Serializable , ContextAware{
 		public void setMetaworksContext(MetaworksContext metaworksContext) {
 			this.metaworksContext = metaworksContext;
 		}
-//	ArrayList<ParticipateGroup> participateGroupList;
-//	@Hidden
-//		public ArrayList<ParticipateGroup> getParticipateGroupList() {
-//			return participateGroupList;
-//		}
-//		public void setParticipateGroupList(
-//				ArrayList<ParticipateGroup> participateGroupList) {
-//			this.participateGroupList = participateGroupList;
-//		}
 		
 	String defId;
 		@Hidden
@@ -54,15 +46,14 @@ public class Documentation implements Serializable , ContextAware{
 			this.departManagement = departManagement;
 		}
 
-	String description;
-		@Face(displayName="$description")
-		public String getDescription() {
+	WebEditor description;
+	@Face(displayName="$description")
+		public WebEditor getDescription() {
 			return description;
 		}
-		public void setDescription(String description) {
+		public void setDescription(WebEditor description) {
 			this.description = description;
 		}
-	
 	String processMeasure;
 		@Face(displayName="$processMeasure")
 		public String getProcessMeasure() {
@@ -79,13 +70,13 @@ public class Documentation implements Serializable , ContextAware{
 		public void setDocument(String document) {
 			this.document = document;
 		}
-	String Reference;
+	String reference;
 		@Face(displayName="$Reference")
 		public String getReference() {
-			return Reference;
+			return reference;
 		}
 		public void setReference(String reference) {
-			Reference = reference;
+			reference = reference;
 		}
 	String regulation;
 		@Face(displayName="$regulation")
@@ -95,14 +86,6 @@ public class Documentation implements Serializable , ContextAware{
 		public void setRegulation(String regulation) {
 			this.regulation = regulation;
 		}
-
-	
-	public Documentation(){
-		setMetaworksContext(new MetaworksContext());
-//		setDesc(new WebEditor());
-//		setAttachfile1(new MetaworksFile());
-	}
-	
 	String title;
 		@Face(displayName="$Subject")
 		public String getTitle() {
@@ -111,46 +94,46 @@ public class Documentation implements Serializable , ContextAware{
 		public void setTitle(String title) {
 			this.title = title;
 		}
-//	WebEditor desc;
-//		@Face(displayName="$Contents")
-//		public WebEditor getDesc() {
-//			return desc;
-//		}
-//		public void setDesc(WebEditor desc) {
-//			this.desc = desc;
-//		}
-	String Url;
+	String url;
 		@Face(displayName="$URL")
 		public String getUrl() {
-			return Url;
+			return url;
 		}
 		public void setUrl(String url) {
-			Url = url;
+			url = url;
 		}
 		
-//	MetaworksFile attachfile1;
-//		@Face(displayName="$attachfile1")
-//		public MetaworksFile getAttachfile1() {
-//			return attachfile1;
-//		}
-//		public void setAttachfile1(MetaworksFile attachfile1) {
-//			this.attachfile1 = attachfile1;
-//		}
-//		MetaworksFile attachfile2;
-//		@Face(displayName="$attachfile2")
-//		public MetaworksFile getAttachfile2() {
-//			return attachfile2;
-//		}
-//		public void setAttachfile2(MetaworksFile attachfile2) {
-//			this.attachfile2 = attachfile2;
-//		}
-//		MetaworksFile attachfile3;
-//		@Face(displayName="$attachfile3")
-//		public MetaworksFile getAttachfile3() {
-//			return attachfile3;
-//		}
-//		public void setAttachfile1(MetaworksFile attachfile3) {
-//			this.attachfile3 = attachfile3;
-//		}
+	MetaworksFile attachfile1;
+		@Face(displayName="$attachfile1")
+		public MetaworksFile getAttachfile1() {
+			return attachfile1;
+		}
+		public void setAttachfile1(MetaworksFile attachfile1) {
+			this.attachfile1 = attachfile1;
+		}
+	MetaworksFile attachfile2;
+	@Face(displayName="$attac	hfile2")
+		public MetaworksFile getAttachfile2() {
+			return attachfile2;
+		}
+		public void setAttachfile2(MetaworksFile attachfile2) {
+			this.attachfile2 = attachfile2;
+		}
+	MetaworksFile attachfile3;
+		@Face(displayName="$attachfile3")
+		public MetaworksFile getAttachfile3() {
+			return attachfile3;
+		}
+		public void setAttachfile3(MetaworksFile attachfile3) {
+			this.attachfile3 = attachfile3;
+		}
+	public Documentation(){
+		setMetaworksContext(new MetaworksContext());
+		getMetaworksContext().setWhen("edit");
+		setDescription(new WebEditor());
+		setAttachfile1(new MetaworksFile());
+		setAttachfile2(new MetaworksFile());
+		setAttachfile3(new MetaworksFile());
+	}
 		
 }

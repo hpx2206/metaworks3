@@ -121,6 +121,10 @@ public class ProcessDefinitionNode extends TreeNode  implements ContextAware {
 			File childFile = new File(file.getAbsolutePath() + File.separatorChar + childFilePaths[i]);
 
 			if(!childFile.isDirectory()){
+				String type = ResourceNode.findNodeType(childFile.getName());
+				if(!type.equals(TreeNode.TYPE_FILE_PROCESS)){
+					continue;
+				}
 				ProcessDefinitionNode node = new ProcessDefinitionNode();
 				node.setProjectId(this.getProjectId());
 				node.setId(this.getId() + File.separatorChar + childFile.getName());
@@ -129,7 +133,7 @@ public class ProcessDefinitionNode extends TreeNode  implements ContextAware {
 				node.setPath(this.getPath() + File.separatorChar + childFile.getName());
 				node.setAlias(this.getPath() + File.separatorChar + childFile.getName());
 				node.setParentId(this.getId());
-				node.setType(ResourceNode.findNodeType(node.getName()));
+				node.setType(type);
 				node.setMetaworksContext(getMetaworksContext());
 				child.add(node);
 			}

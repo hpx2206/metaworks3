@@ -106,30 +106,25 @@ public class ProcessViewerPanel implements ContextAware {
 	}
 	
 	@AutowiredFromClient
-	public ProcessNavigatorPanel processNavigatorPanel;
-	
-	@AutowiredFromClient
-	public ProcessAttributePanel processAttributePanel;
+	public ProcessViewWindow processViewWindow; 
 	
 	@ServiceMethod(callByContent=true, target = ServiceMethodContext.TARGET_APPEND)
 	public Object[] openLink() throws Exception{
 		
-		HistoryItem historyItem = new HistoryItem();
-		historyItem.setDefId(processViewPanel.getDefId());
-		historyItem.setAlias(processViewPanel.getAlias());
-		
-		String definitionId = processViewPanel.getDefId();
-		String[] defnitionArray = definitionId.replace('.','@').split("@");
-		historyItem.setDefName(defnitionArray[0]);
-		
-		processNavigatorPanel.historyList.add(historyItem);
-		
-		processAttributePanel.setDefId(processViewPanel.getDefId());
-		processAttributePanel.load();
-		
-		processViewPanel.setDefId(processViewPanel.getDefId());
-		processViewPanel.load();
-		
-		return new Object[]{ new Remover(new ModalWindow(), true), new Refresh (processNavigatorPanel), new Refresh(processViewPanel), new Refresh (processAttributePanel) };
+		String alias = processViewPanel.getAlias();
+		String defId = processViewPanel.getDefId();
+		if( processViewWindow != null ){
+			HistoryItem historyItem = new HistoryItem();
+			historyItem.setDefId(defId);
+			historyItem.setAlias(alias);
+			
+			String[] defnitionArray = defId.replace('.','@').split("@");
+			historyItem.setDefName(defnitionArray[0]);
+			
+			processViewWindow.loadByProcess(historyItem);
+			return new Object[]{ new Remover(new ModalWindow(), true), new Refresh (processViewWindow)};
+		}else{
+			return null;
+		}
 	}
 }

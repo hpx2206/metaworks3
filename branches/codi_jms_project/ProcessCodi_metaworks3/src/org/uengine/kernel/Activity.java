@@ -7,6 +7,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -31,6 +32,7 @@ import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.website.MetaworksFile;
 import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.webProcessDesigner.ActivityPanel;
 import org.uengine.codi.mw3.webProcessDesigner.ActivityWindow;
@@ -1563,6 +1565,44 @@ public abstract class Activity implements Validatable, java.io.Serializable, Clo
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] apply(){
 		if( activityPanel != null ){
+			Documentation document = activityPanel.getDocument();
+			MetaworksFile file1 = document.getAttachfile1();
+			if (file1 != null && file1.getFileTransfer() != null
+					&& file1.getFileTransfer().getFilename() != null
+					&& !"".equals(file1.getFileTransfer().getFilename()) ){
+				try {
+					file1.upload();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}else{
+				file1.setFileTransfer(null);
+			}
+			MetaworksFile file2 = document.getAttachfile2();
+			if (file2 != null && file2.getFileTransfer() != null
+					&& file2.getFileTransfer().getFilename() != null
+					&& !"".equals(file2.getFileTransfer().getFilename()) ){
+				try {
+					file2.upload();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}else{
+				file2.setFileTransfer(null);
+			}
+			MetaworksFile file3 = document.getAttachfile3();
+			if (file3 != null && file3.getFileTransfer() != null
+					&& file3.getFileTransfer().getFilename() != null
+					&& !"".equals(file3.getFileTransfer().getFilename()) ){
+				try {
+					file3.upload();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}else{
+				file3.setFileTransfer(null);
+			}
+			
 			this.setDocumentation(activityPanel.getDocument());
 		}
 //		return new Object[]{new ApplyProperties(this.getTracingTag(), this), new Remover(new PropertiesWindow())};

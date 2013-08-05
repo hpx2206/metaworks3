@@ -46,17 +46,17 @@ public class ProcessViewNavigator {
 		this.alias = alias;
 	}
 	public void load(Workspace workspace){
-		ProcessDefinitionNode viewNaviNode = new ProcessDefinitionNode();
-		viewNaviNode.setId(workspace.getId());
-		viewNaviNode.setRoot(true);
-		viewNaviNode.setHidden(true);
+		ProcessDefinitionNode processDefinitionNode = new ProcessDefinitionNode();
+		processDefinitionNode.setId(workspace.getId());
+		processDefinitionNode.setRoot(true);
+		processDefinitionNode.setHidden(true);
 		
 		for(Project project: workspace.getProjects())
-			viewNaviNode.add(new ProcessDefinitionNode(project));
+			processDefinitionNode.add(new ProcessDefinitionNode(project));
 		
 		Tree tree = new Tree();
 		tree.setId(workspace.getId());
-		tree.setNode(viewNaviNode);
+		tree.setNode(processDefinitionNode);
 		
 		setProcessDefinitionTree(tree);
 			

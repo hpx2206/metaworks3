@@ -45,23 +45,4 @@ public class ProcessViewPanel {
 	@AutowiredFromClient
 	public ProcessNavigatorPanel processNavigatorPanel;
 	
-	
-	
-	// 임시 팝업 창
-	
-//	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
-//	public ModalWindow samplePopup(){
-//		
-//		HistoryItem historyItem = new HistoryItem();
-//		historyItem.setMetaworksContext(new MetaworksContext());
-//		historyItem.getMetaworksContext().setWhen("edit");
-//		historyItem.processNavigatorPanel = processNavigatorPanel;
-//		
-//		ModalWindow window = new ModalWindow();
-//		window.setPanel(historyItem);
-//		
-//		return window;
-//	}
-//	
-	
 }

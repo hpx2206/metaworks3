@@ -18,43 +18,58 @@ public class ProcessViewWindow {
 		public void setAlias(String alias) {
 			this.alias = alias;
 		}
+	ProcessNavigatorPanel processNavigatorPanel;
+		public ProcessNavigatorPanel getProcessNavigatorPanel() {
+			return processNavigatorPanel;
+		}
+		public void setProcessNavigatorPanel(ProcessNavigatorPanel processNavigatorPanel) {
+			this.processNavigatorPanel = processNavigatorPanel;
+		}
+	ProcessViewPanel processViewPanel;
+		public ProcessViewPanel getProcessViewPanel() {
+			return processViewPanel;
+		}
+		public void setProcessViewPanel(ProcessViewPanel processViewPanel) {
+			this.processViewPanel = processViewPanel;
+		}
+	ProcessAttributePanel processAttributePanel;
+		public ProcessAttributePanel getProcessAttributePanel() {
+			return processAttributePanel;
+		}
+		public void setProcessAttributePanel(ProcessAttributePanel processAttributePanel) {
+			this.processAttributePanel = processAttributePanel;
+		}
 		
-	Layout layout;
-		public Layout getLayout() {
-			return layout;
-		}
-		public void setLayout(Layout layout) {
-			this.layout = layout;
-		}
-
 	//DefinitionViewWindow의 Layout Setting
 	public void load() {
-
-		layout = new Layout();
-		Layout centerInLayout = new Layout();
-		
-		ProcessNavigatorPanel processNavigatorPanel = new ProcessNavigatorPanel();
+		processNavigatorPanel = new ProcessNavigatorPanel();
 		processNavigatorPanel.setDefId(defId);
 		processNavigatorPanel.setAlias(alias);
 		processNavigatorPanel.load();
 		
-		ProcessViewPanel processViewPanel = new ProcessViewPanel();
+		processViewPanel = new ProcessViewPanel();
 		processViewPanel.setDefId(defId);
 		processViewPanel.setAlias(alias);
 		processViewPanel.setViewType("definitionView");
 		processViewPanel.load();
 		
-		centerInLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:5, north__size:50");
-		centerInLayout.setNorth(processNavigatorPanel);
-		centerInLayout.setCenter(processViewPanel);
-		
-		layout.setCenter(centerInLayout);
-
-		ProcessAttributePanel processAttributePanel = new ProcessAttributePanel();
+		processAttributePanel = new ProcessAttributePanel();
 		processAttributePanel.setDefId(defId);
 		processAttributePanel.load();
-		layout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:5, east__size:500");
-		layout.setEast(processAttributePanel);
+	}
+	
+	public void loadByProcess(HistoryItem historyItem){
+		
+		processNavigatorPanel.historyList.add(historyItem);
+		
+		processAttributePanel.setDefId(historyItem.getDefId());
+		processAttributePanel.load();
+		
+		processViewPanel = new ProcessViewPanel();
+		processViewPanel.setDefId(historyItem.getDefId());
+		processViewPanel.setAlias(historyItem.getAlias());
+		processViewPanel.setViewType("definitionView");
+		processViewPanel.load();
 		
 	}
 

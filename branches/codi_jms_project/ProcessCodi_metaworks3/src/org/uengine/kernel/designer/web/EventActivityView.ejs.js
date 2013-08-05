@@ -1,4 +1,4 @@
-var org_uengine_kernel_designer_web_ActivityView = function(objectId, className){
+var org_uengine_kernel_designer_web_EventActivityView = function(objectId, className){
 	
 	this.objectId = objectId;
 	this.className = className;
@@ -19,7 +19,7 @@ var org_uengine_kernel_designer_web_ActivityView = function(objectId, className)
 	
 };
 
-org_uengine_kernel_designer_web_ActivityView.prototype = {
+org_uengine_kernel_designer_web_EventActivityView.prototype = {
 		loaded : function(){
 			var object = mw3.objects[this.objectId];
 			var canvas = this.canvas;

@@ -154,8 +154,13 @@ public class ActivityView extends CanvasDTO  implements ContextAware{
 
 	@ServiceMethod(callByContent = true)
 	public Object[] showActivityDocument() {
-		Documentation documentation = (Documentation)this.getActivity().getDocumentation();
-		processAttributePanel.setDocumentation(documentation);
-		return new Object[] { processAttributePanel };
+		if( processAttributePanel != null ){
+			
+			Documentation documentation = (Documentation)this.getActivity().getDocumentation();
+			processAttributePanel.setDocumentation(documentation);
+			return new Object[] { processAttributePanel };
+		}else{
+			return null;
+		}
 	}
 }
