@@ -9,6 +9,14 @@ import org.metaworks.annotation.ServiceMethod;
 
 public class ProcessNavigatorPanel {
 	
+	int index;
+		public int getIndex() {
+			return index;
+		}
+		public void setIndex(int index) {
+			this.index = index;
+		}
+
 	String defId;
 		public String getDefId() {
 			return defId;
@@ -42,7 +50,7 @@ public class ProcessNavigatorPanel {
 			this.historyList = historyList;
 		}
 			
-			
+		
 	public void load() {
 		
 		String definitionId = this.defId;
@@ -58,7 +66,6 @@ public class ProcessNavigatorPanel {
 		}
 		historyList.add(historyItem);
 		
-		
 	}
 	public void add(HistoryItem historyItem) {
 		historyList.add(historyItem);
@@ -66,6 +73,9 @@ public class ProcessNavigatorPanel {
 	
 	@AutowiredFromClient
 	public ProcessViewPanel processViewPanel;
+	
+	@AutowiredFromClient
+	public ProcessAttributePanel processAttributePanel;
 	
 	
 	// 이 부분에서 히스토리를 클릭했을 때 processViewPanel에서 미리보기 되는 작업까지 같이 해야한다.
@@ -77,11 +87,22 @@ public class ProcessNavigatorPanel {
 		
 		processViewPanel.setDefId(defId);
 		processViewPanel.setAlias(alias);
-		
 		processViewPanel.load();
 		
+		if(processAttributePanel == null)
+			processAttributePanel = new ProcessAttributePanel();
+		
+		processAttributePanel.setDefId(defId);
+		processAttributePanel.load();
+		
+		if(historyList.size() > 1 && (index < historyList.size())) {
+			
+			for(int i = index; i < historyList.size(); i++) {
+				historyList.remove(i + 1);
+			}
+		}
 	
-		return new Object[] { new Refresh(processViewPanel) };
+		return new Object[] { new Refresh(processViewPanel), new Refresh(processAttributePanel), new Refresh(this) };
 
 	}
 
