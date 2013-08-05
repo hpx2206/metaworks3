@@ -145,7 +145,7 @@ public class ProcessDefinitionNode extends TreeNode  implements ContextAware {
 			Workspace workspace = new Workspace();
 			workspace.load();
 
-			ProcessViewNaivgator navigator = new ProcessViewNaivgator();
+			ProcessViewNavigator navigator = new ProcessViewNavigator();
 
 			ProcessDefinitionNode definitionNode = new ProcessDefinitionNode();
 			definitionNode.setId(workspace.getId());
@@ -175,21 +175,16 @@ public class ProcessDefinitionNode extends TreeNode  implements ContextAware {
 			return popup;	
 	}
 	@Override
-	@ServiceMethod(payload={"id", "name", "path", "type", "folder", "projectId","defId","alias"}, target=ServiceMethodContext.TARGET_POPUP)
+	@ServiceMethod(payload={"id", "name", "path", "type", "folder", "projectId","defId","alias"}, target=ServiceMethodContext.TARGET_APPEND)
 	public Object action(){
-		
 		if( alias != null ){
 			processViewerPanel = new ProcessViewerPanel();
+			processViewerPanel.setDefinitionId(defId);
+			processViewerPanel.setAlias(alias);
 			processViewerPanel.loadDefnitionView();
-//			processViewPanel.setDefId(defId);
-//			processViewPanel.setAlias(alias);
-//			processViewPanel.load();
-			
-			
+			return new Object[] { new Refresh(processViewerPanel.processViewPanel) };
+		}else{
+			return null;
 		}
-		
-		return new Object[] { new Refresh(processViewPanel) };
-
-		
 	}
 }

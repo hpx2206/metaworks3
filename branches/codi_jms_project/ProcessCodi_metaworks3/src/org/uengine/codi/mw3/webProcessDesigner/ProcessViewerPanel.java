@@ -39,12 +39,12 @@ public class ProcessViewerPanel implements ContextAware {
 			this.alias = alias;
 		}
 	
-	ProcessViewNaivgator	processViewNaivgator;
-		public ProcessViewNaivgator getProcessViewNaivgator() {
-			return processViewNaivgator;
+	ProcessViewNavigator	processViewNavigator;
+		public ProcessViewNavigator getProcessViewNaivgator() {
+			return processViewNavigator;
 		}
-		public void setProcessViewNaivgator(ProcessViewNaivgator processViewNaivgator) {
-			this.processViewNaivgator = processViewNaivgator;
+		public void setProcessViewNaivgator(ProcessViewNavigator processViewNavigator) {
+			this.processViewNavigator = processViewNavigator;
 		}
 	ProcessViewPanel processViewPanel;
 		public ProcessViewPanel getProcessViewPanel() {
@@ -60,13 +60,13 @@ public class ProcessViewerPanel implements ContextAware {
 	
 	public void findDefnitionView(){
 		this.getMetaworksContext().setHow("find");
-		processViewNaivgator = new ProcessViewNaivgator();
-		processViewNaivgator.loadTree();
+		processViewNavigator = new ProcessViewNavigator();
+		processViewNavigator.loadTree();
 		Workspace workspace = new Workspace();
 		workspace.load();
 		this.setWorkspace(workspace);
 		
-		processViewNaivgator.load(workspace);
+		processViewNavigator.load(workspace);
 		
 		processViewPanel = new ProcessViewPanel();
 		processViewPanel.load();
@@ -85,10 +85,6 @@ public class ProcessViewerPanel implements ContextAware {
 		processViewPanel.setAlias(alias);
 		processViewPanel.setViewType("definitionView");
 		processViewPanel.load();
-		
-
-		
-		
 	}
 	@ServiceMethod(callByContent=true)
 	public void removeLink(){

@@ -8,7 +8,7 @@ import org.metaworks.component.TreeNode;
 import org.uengine.codi.mw3.ide.Project;
 import org.uengine.codi.mw3.ide.Workspace;
 
-public class ProcessViewNaivgator {
+public class ProcessViewNavigator {
 	
 	Tree processDefinitionTree;
 		public Tree getProcessDefinitionTree() {

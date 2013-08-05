@@ -75,7 +75,6 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
         			
         		},
         		btnclick : function(event) {
-        			console.log(object);
         			object.showDefinitionMonitor();
         		}
         	});
