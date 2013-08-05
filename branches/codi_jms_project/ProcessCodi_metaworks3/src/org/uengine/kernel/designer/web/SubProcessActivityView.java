@@ -16,6 +16,8 @@ public class SubProcessActivityView extends ActivityView{
 		if( activity != null && activity.getDefinitionId() != null && !"".equals(activity.getDefinitionId()) && activity.getAlias() != null){
 			processViewerPanel.setDefinitionId(activity.getDefinitionId());
 			processViewerPanel.setAlias(activity.getAlias());
+			processViewerPanel.setOpenerActivity(this.getActivity());
+			processViewerPanel.setOpenerActivityViewId(this.getId());
 			processViewerPanel.loadDefnitionView();
 		}else{
 			processViewerPanel.setOpenerActivity(this.getActivity());
