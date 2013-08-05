@@ -21,7 +21,14 @@ public class ApplyProperties {
 		public void setContent(Object content) {
 			this.content = content;
 		}
-
+	
+	String viewType;
+		public String getViewType() {
+			return viewType;
+		}
+		public void setViewType(String viewType) {
+			this.viewType = viewType;
+		}
 	public ApplyProperties(String id, Object content){
 		this.setId(id);
 		this.setContent(content);

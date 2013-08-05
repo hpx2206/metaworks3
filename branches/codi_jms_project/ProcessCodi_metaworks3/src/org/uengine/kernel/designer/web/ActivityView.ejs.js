@@ -75,6 +75,7 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
         			
         		},
         		btnclick : function(event) {
+        			object.id = $(this).attr('id');
         			object.showDefinitionMonitor();
         		}
         	});
@@ -87,6 +88,64 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
 				});
 			}
 			
+        	element = canvas.drawShape([
+        	                                 object.x, object.y 
+        	                                 ], 
+        	                                 shape, [parseInt(object.width, 10), parseInt(object.height, 10)] , OG.JSON.decode(unescape(style)), id, parent, false);
+        	
+        	// object.activityClass : Activity , object.__className : ActivityView
+        	$(element).attr("_classname", object.activityClass);
+        	$(element).attr("_viewClass", object.__className);
+        	$(element).attr("_classType", object.classType);
+        	$(element).attr("_tracingTag",object.tracingTag);
+        	if( object.activity ){
+        		$(element).data('activity', object.activity);
+        		// object.activity.activityView = null; 을 꼭 해주어야함.. activity가 activityView 를 들고있고, activityView가 activity를 들고있는 구조라서..
+        		object.activity.activityView = null;
+        	}else if( typeof $(element).attr("_classname") != 'undefined' &&  typeof $(element).data("activity") == 'undefined' ){
+        		var activityData = {__className : $(element).attr("_classname"), tracingTag : $(element).attr("_tracingTag")};
+        		$(element).data('activity', activityData);
+        	}
+        	$(element).on({
+        		dblclick: function (event) {
+        			if(event.stopPropagation){
+        				event.stopPropagation();
+        			}
+        			var divId = 'properties_' + this.objectId;
+        			$('body').append("<div id='" + divId + "'></div>");
+        			var metaworksContext = {
+        					__className : 'org.metaworks.MetaworksContext',
+        					when : 'edit'
+        			};
+        			
+        			var propertiesWindow = {
+        					__className : 'org.uengine.codi.mw3.webProcessDesigner.PropertiesWindow',
+        					open : true,
+        					width : 860,
+        					height : 600,
+        					panel : $(this).data('activity'),
+        					metaworksContext : metaworksContext
+        			};
+        			
+        			object['propertiesWindow'] = propertiesWindow;
+        			object.id = $(this).attr('id');
+        			object.showProperties();
+        			
+        		},
+        		btnclick : function(event) {
+        			object.showDefinitionMonitor();
+        		}
+        	});
+			
+			if( object != null && object.viewType != null && "definitionView" == object.viewType ){
+				$(element).on({
+					click: function (event) {
+						object.showActivityDocument();
+        			}
+				});
+			}
+			
+>>>>>>> .r3971
 				
 			/*
 			$(element).attr('title', object.tooltip);
