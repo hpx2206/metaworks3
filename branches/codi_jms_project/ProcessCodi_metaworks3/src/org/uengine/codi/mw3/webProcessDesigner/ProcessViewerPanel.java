@@ -3,8 +3,11 @@ package org.uengine.codi.mw3.webProcessDesigner;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Remover;
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
+import org.uengine.codi.mw3.ide.Workspace;
+import org.uengine.kernel.SubProcessActivity;
 
 public class ProcessViewerPanel implements ContextAware {
 	MetaworksContext metaworksContext;
@@ -59,9 +62,21 @@ public class ProcessViewerPanel implements ContextAware {
 		this.getMetaworksContext().setHow("find");
 		processViewNaivgator = new ProcessViewNaivgator();
 		processViewNaivgator.loadTree();
+		Workspace workspace = new Workspace();
+		workspace.load();
+		this.setWorkspace(workspace);
+		
+		processViewNaivgator.load(workspace);
 		
 		processViewPanel = new ProcessViewPanel();
 		processViewPanel.load();
+	}
+	Workspace workspace;
+	public Workspace getWorkspace() {
+		return workspace;
+	}
+	public void setWorkspace(Workspace workspace) {
+		this.workspace = workspace;
 	}
 	public void loadDefnitionView(){
 		this.getMetaworksContext().setHow("load");
@@ -71,19 +86,22 @@ public class ProcessViewerPanel implements ContextAware {
 		processViewPanel.setViewType("definitionView");
 		processViewPanel.load();
 		
+
+		
+		
 	}
-	@ServiceMethod()
+	@ServiceMethod(callByContent=true)
 	public void removeLink(){
 		this.definitionId = null; 
 	}
 	
-	@ServiceMethod()
+	@ServiceMethod(callByContent=true)
 	public Object[] saveLink(){
 		// TODO 
-		return null;
+		return new Object[]{new Remover(new ModalWindow() , true) };
 	}
 	
-	@ServiceMethod()
+	@ServiceMethod(callByContent=true)
 	public Object[] openLink(){
 		processViewPanel.refresh(definitionId, definitionName);
 		
