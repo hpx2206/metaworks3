@@ -115,7 +115,7 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 		}
 
 	/*
-	 * �섎━癒쇳듃�뺣낫瑜��뗮똿�섍린 �꾪븯���대떦 id瑜��꾩떆�곸쑝濡��ㅺ퀬�덈떎
+	 * 엘리먼트정보를 셋팅하기 위하여 해당 id를 임시적으로 들고있다
 	 */
 	String tempElementId;
 	@Hidden
@@ -207,7 +207,7 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 		Object activityObject = propertiesWindow.getPanel();
 		if( activityObject != null ){
 			Class paramClass = activityObject.getClass();
-			// �꾩옱 �대젅�ㅺ� IDrawDesigne �명꽣�섏씠�ㅻ� �곸냽 諛쏆븯�붿� �뺤씤
+			// 현재 클레스가 IDrawDesigne 인터페이스를 상속 받았는지 확인
 			boolean isDesigner = IDrawDesigne.class.isAssignableFrom(paramClass);
 			if( isDesigner ){
 				((IDrawDesigne)activityObject).drawInit();
@@ -223,7 +223,7 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 		dTitle.setMetaworksContext(new MetaworksContext());
 		dTitle.getMetaworksContext().setWhen("edit");
 		dTitle.setTitle(getProcessName());
-		return new ModalWindow(dTitle , 600, 200,  "�꾨줈�몄뒪紐��낅젰" );
+		return new ModalWindow(dTitle , 600, 200,  "프로세스명 입력" );
 	}
 	
 	@ServiceMethod(callByContent=true, target="popup")
@@ -259,7 +259,7 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 		conditionPanel.setConditionId(this.getTempElementId());
 		conditionPanel.setConditionLabel(this.getTempElementName());
 		conditionPanel.load();
-		return new ModalWindow(conditionPanel , 800, 550,  "議곌굔�몄쭛" );
+		return new ModalWindow(conditionPanel , 800, 550,  "조건편집" );
 		 */
 		return null;
 	}
@@ -287,7 +287,7 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 //		conditionPanel.setPrcsValiableList(defineTab.prcsValiablePanel.getPrcsValiables());
 //		conditionPanel.load();
 //		conditionPanel.getMetaworksContext().setWhen("edit");
-//		return new ModalWindow(conditionPanel , 800, 500,  "�곗씠�곕ℓ�� );
+//		return new ModalWindow(conditionPanel , 800, 500,  "데이터매핑" );
 //	}
 //	@ServiceMethod(callByContent=true)
 //	public PrcsVariablePanel addValiable() throws Exception{
@@ -297,7 +297,7 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 //		designerValiable.setName(tempElementName);
 //		designerValiable.setTypeId(tempElementTypeId);
 //		if( tempElementType != null && "wfNode".equals(tempElementType) ){
-//			designerValiable.getDataType().setSelected("knowledgelType");		// TODO �꾩떆 �뗮똿
+//			designerValiable.getDataType().setSelected("knowledgelType");		// TODO 임시 셋팅
 //		}else if( tempElementType != null && "class".equals(tempElementType) ){
 //			designerValiable.getDataType().setSelected("complexType");
 //		}
@@ -325,7 +325,7 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 			
 			def.setRoles(roles);
 			def.setChildActivities(ac);
-			// 蹂�닔�뺤쓽
+			// 변수정의
 			ProcessVariable pvs[] = makeProcessValiable();
 			if( pvs != null ){
 				def.setProcessVariables(pvs);
@@ -345,7 +345,7 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 				CanvasDTO cv = iterator.next();
 				
 				if( "GEOM".equalsIgnoreCase(cv.getShapeType()) ){
-					// �묓떚鍮꾪떚 �앹꽦
+					// 엑티비티 생성
 					GeomShape geom = new GeomShape(cv);
 					geom.setPvs(pvs);
 					if(cv.getActivityClass() != null && "org.uengine.kernel.HumanActivity".equals(cv.getActivityClass()) ){
@@ -360,12 +360,12 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 //								activity.setRole(role);
 //							}
 //						}else{
-//							// 留뚯빟 �대㉫�묓떚鍮꾪떚�� role ���뗮똿���덈릺���덈떎硫�default role 濡�initator 濡��뗮똿���댁���(�쒕툕�꾨줈�몄뒪��role�뗮똿���꾪븯��
+//							// 만약 휴먼엑티비티에  role 이 셋팅이 안되어 있다면 default role 로 initator 로 셋팅을 해준다.(서브프로세스의 role셋팅을 위하여)
 //							activity.setRole(initiator);
 //						}
 					}
 				}else if( "GROUP".equalsIgnoreCase(cv.getShapeType()) ){
-					// �쒕툕�꾨줈�몄뒪
+					// 서브프로세스
 					if(cv.getActivityClass() != null && "org.uengine.kernel.SubProcessActivity".equals(cv.getActivityClass()) ){
 //						SubProcessActivity activity = (SubProcessActivity)activityMap.get(cv.getId());
 //						Role role = (Role)getRoleMap().get(cv.getParent());
@@ -373,7 +373,7 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 //						RoleParameterContext[] roleBindings = new RoleParameterContext[1];
 //						roleBindings[0] = new RoleParameterContext();
 //						roleBindings[0].setRole(role);
-//						// �쒕툕�꾨줈�몄뒪 �덉そ��role ��臾댁“嫄�initiator 濡��듭씪 �쒗궓��
+//						// 서브프로세스 안쪽의 role 은 무조건 initiator 로 통일 시킨다.
 //						roleBindings[0].setArgument(initiator.getName());
 //						activity.setRoleBindings(roleBindings);
 					}
@@ -386,9 +386,9 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 //					Activity fromAct = (Activity)activityMap.get(fromId);
 //					Activity toAct = (Activity)activityMap.get(toId);
 //					if( fromAct != null && toAct != null){
-//						// �몃젋吏�뀡 �앹꽦
+//						// 트렌지션 생성
 //						Transition ts = new Transition(fromAct.getTracingTag()  , toAct.getTracingTag() );
-//						// 而⑤뵒���앹꽦
+//						// 컨디션 생성
 //						if( this.getConditionMap().containsKey(cv.getId())){
 //							ts.setTransitionId(cv.getId());
 //							ts.setCondition(this.getConditionMap().get(cv.getId()));
@@ -402,7 +402,7 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 //			CanvasDTO jsonString = new CanvasDTO();
 //			jsonString.setJsonString(graphString);
 //			cells.add(jsonString);
-			 // def ��Activity �뗮똿
+			 // def 에 Activity 셋팅
 //			Collection<Object> coll = activityMap.values();
 //	        Iterator<Object> iter = coll.iterator();
 //	        while(iter.hasNext()){
@@ -411,7 +411,7 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 //	        		def.addChildActivity((Activity)act);
 //	        	}
 //	        }
-//	        // def ��Role �뗮똿
+//	        // def 에 Role 셋팅
 //	        Collection<Object> collRole = roleMap.values();
 //	        Iterator<Object> iterRole = collRole.iterator();
 //	        while(iterRole.hasNext()){
@@ -458,7 +458,7 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 			
 			def.setRoles(roles);
 			def.setChildActivities(ac);
-			// 蹂�닔�뺤쓽
+			// 변수정의
 			ProcessVariable pvs[] = makeProcessValiable();
 			if( pvs != null ){
 				def.setProcessVariables(pvs);
@@ -478,7 +478,7 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 				CanvasDTO cv = iterator.next();
 				
 				if( "GEOM".equalsIgnoreCase(cv.getShapeType()) ){
-					// �묓떚鍮꾪떚 �앹꽦
+					// 엑티비티 생성
 					GeomShape geom = new GeomShape(cv);
 					geom.setPvs(pvs);
 					if(cv.getClassname() != null 
@@ -496,13 +496,13 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 								((HumanActivity)activity).setRole(role);
 							}
 						}else{
-							// 留뚯빟 �대㉫�묓떚鍮꾪떚�� role ���뗮똿���덈릺���덈떎硫�default role 濡�initator 濡��뗮똿���댁���(�쒕툕�꾨줈�몄뒪��role�뗮똿���꾪븯��
+							// 만약 휴먼엑티비티에  role 이 셋팅이 안되어 있다면 default role 로 initator 로 셋팅을 해준다.(서브프로세스의 role셋팅을 위하여)
 							((HumanActivity)activity).setRole(initiator);
 						}
 						activityMap.put(cv.getId(), activity);
 					}
 				}else if( "GROUP".equalsIgnoreCase(cv.getShapeType()) ){
-					// �쒕툕�꾨줈�몄뒪
+					// 서브프로세스
 					if(cv.getClassname() != null && "org.uengine.kernel.SubProcessActivity".equals(cv.getClassname()) ){
 						SubProcessActivity activity = (SubProcessActivity)activityMap.get(cv.getId());
 						Role role = (Role)getRoleMap().get(cv.getParent());
@@ -510,7 +510,7 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 						RoleParameterContext[] roleBindings = new RoleParameterContext[1];
 						roleBindings[0] = new RoleParameterContext();
 						roleBindings[0].setRole(role);
-						// �쒕툕�꾨줈�몄뒪 �덉そ��role ��臾댁“嫄�initiator 濡��듭씪 �쒗궓��
+						// 서브프로세스 안쪽의 role 은 무조건 initiator 로 통일 시킨다.
 						roleBindings[0].setArgument(initiator.getName());
 						activity.setRoleBindings(roleBindings);
 					}
@@ -523,9 +523,9 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 					Activity fromAct = (Activity)activityMap.get(fromId);
 					Activity toAct = (Activity)activityMap.get(toId);
 					if( fromAct != null && toAct != null){
-						// �몃젋吏�뀡 �앹꽦
+						// 트렌지션 생성
 						Transition ts = new Transition(fromAct.getTracingTag()  , toAct.getTracingTag() );
-						// 而⑤뵒���앹꽦
+						// 컨디션 생성
 						if( this.getConditionMap().containsKey(cv.getId())){
 							ts.setTransitionId(cv.getId());
 							ts.setCondition(this.getConditionMap().get(cv.getId()));
@@ -539,7 +539,7 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 			CanvasDTO jsonString = new CanvasDTO();
 			jsonString.setJsonString(graphString);
 			cells.add(jsonString);
-			 // def ��Activity �뗮똿
+			 // def 에 Activity 셋팅
 			Collection<Object> coll = activityMap.values();
 	        Iterator<Object> iter = coll.iterator();
 	        while(iter.hasNext()){
@@ -548,7 +548,7 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 	        		def.addChildActivity((Activity)act);
 	        	}
 	        }
-	        // def ��Role �뗮똿
+	        // def 에 Role 셋팅
 	        Collection<Object> collRole = roleMap.values();
 	        Iterator<Object> iterRole = collRole.iterator();
 	        while(iterRole.hasNext()){
@@ -640,7 +640,6 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 	}
 	public String load(String definitionString) throws Exception {
 		ProcessDefinition def = (ProcessDefinition) GlobalContext.deserialize(definitionString);
-		this.processDesignerContainer.setEditorId(alias);
 		this.processDesignerContainer.load(def);
 		
 		return def.getProcessDesignerInstanceId();
