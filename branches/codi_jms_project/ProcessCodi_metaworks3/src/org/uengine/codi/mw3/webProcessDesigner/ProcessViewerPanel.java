@@ -1,18 +1,15 @@
 package org.uengine.codi.mw3.webProcessDesigner;
 
-import java.util.ArrayList;
-
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
-import org.metaworks.ToOpener;
 import org.metaworks.annotation.AutowiredFromClient;
-import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.ide.Workspace;
+import org.uengine.kernel.Activity;
 import org.uengine.kernel.SubProcessActivity;
 
 public class ProcessViewerPanel implements ContextAware {
@@ -45,6 +42,20 @@ public class ProcessViewerPanel implements ContextAware {
 			this.alias = alias;
 		}
 	
+	Activity openerActivity;
+		public Activity getOpenerActivity() {
+			return openerActivity;
+		}
+		public void setOpenerActivity(Activity openerActivity) {
+			this.openerActivity = openerActivity;
+		}
+	String openerActivityViewId;
+		public String getOpenerActivityViewId() {
+			return openerActivityViewId;
+		}
+		public void setOpenerActivityViewId(String openerActivityViewId) {
+			this.openerActivityViewId = openerActivityViewId;
+		}
 	ProcessViewNavigator processViewNavigator;
 		public ProcessViewNavigator getProcessViewNaivgator() {
 			return processViewNavigator;
@@ -59,8 +70,18 @@ public class ProcessViewerPanel implements ContextAware {
 		public void setProcessViewPanel(ProcessViewPanel processViewPanel) {
 			this.processViewPanel = processViewPanel;
 		}
+	Workspace workspace;
+		public Workspace getWorkspace() {
+			return workspace;
+		}
+		public void setWorkspace(Workspace workspace) {
+			this.workspace = workspace;
+		}	
 		
-	public ProcessViewerPanel(){
+		@AutowiredFromClient
+	public ProcessViewWindow processViewWindow; 
+
+		public ProcessViewerPanel(){
 		metaworksContext = new MetaworksContext();
 	}
 	
@@ -77,14 +98,7 @@ public class ProcessViewerPanel implements ContextAware {
 		processViewPanel = new ProcessViewPanel();
 		processViewPanel.load();
 	}
-	Workspace workspace;
-		public Workspace getWorkspace() {
-			return workspace;
-		}
-		public void setWorkspace(Workspace workspace) {
-			this.workspace = workspace;
-		}
-		
+
 		
 	public void loadDefnitionView(){
 		this.getMetaworksContext().setHow("load");
@@ -94,19 +108,35 @@ public class ProcessViewerPanel implements ContextAware {
 		processViewPanel.setViewType("definitionView");
 		processViewPanel.load();
 	}
-	@ServiceMethod(callByContent=true)
-	public void removeLink(){
-		this.definitionId = null; 
-	}
-	
-	@ServiceMethod(callByContent=true)
-	public Object[] saveLink(){
 		
-		return new Object[]{new Remover(new ModalWindow() , true) };
+	
+	@ServiceMethod(callByContent=true , target=ServiceMethodContext.TARGET_APPEND)
+	public Object[] removeLink(){
+//			this.definitionId = null;
+//			this.alias = null;
+			Activity activity = this.getOpenerActivity();
+			((SubProcessActivity) activity).setDefinitionId(null);
+			((SubProcessActivity) activity).setAlias(null);
+			ApplyProperties applyProperties = new ApplyProperties(this.getOpenerActivityViewId(), activity);
+			applyProperties.setViewType("definitionView");
+			return new Object[]{applyProperties, new Remover(new ModalWindow() , true) };
+		}
+	
+	@ServiceMethod(callByContent=true , target=ServiceMethodContext.TARGET_APPEND)
+	public Object[] saveLink(){
+		String defId = processViewPanel.getDefId();
+		String alias = processViewPanel.getAlias();
+		Activity activity = this.getOpenerActivity();
+		if( activity instanceof SubProcessActivity){
+			((SubProcessActivity) activity).setDefinitionId(defId);
+			((SubProcessActivity) activity).setAlias(alias);
+		}
+		
+		ApplyProperties applyProperties = new ApplyProperties(this.getOpenerActivityViewId(), activity);
+		applyProperties.setViewType("definitionView");
+		return new Object[]{applyProperties, new Remover(new ModalWindow() , true) };
 	}
 	
-	@AutowiredFromClient
-	public ProcessViewWindow processViewWindow; 
 	
 	@ServiceMethod(callByContent=true, target = ServiceMethodContext.TARGET_APPEND)
 	public Object[] openLink() throws Exception{

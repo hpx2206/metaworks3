@@ -57,7 +57,16 @@ public class SubProcessActivity extends DefaultActivity implements IDrawDesigne 
       instanceId = string;
     }
   
-  String definitionId;
+  String alias;
+	  public String getAlias() {
+		return alias;
+	}
+	
+	public void setAlias(String alias) {
+		this.alias = alias;
+	}
+
+String definitionId;
     public String getDefinitionId() {
       return definitionId;
     }

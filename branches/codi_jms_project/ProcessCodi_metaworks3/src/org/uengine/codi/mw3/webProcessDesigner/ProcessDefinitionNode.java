@@ -80,7 +80,6 @@ public class ProcessDefinitionNode extends TreeNode  implements ContextAware {
 		
 		this.setPath(project.getPath());
 		this.setProjectId(project.getId());
-		
 		setMetaworksContext(new MetaworksContext());
 	}
 	public ArrayList<TreeNode> loadExpand(){
@@ -111,7 +110,7 @@ public class ProcessDefinitionNode extends TreeNode  implements ContextAware {
 				node.setType(TreeNode.TYPE_FOLDER);
 				node.setMetaworksContext(getMetaworksContext());
 				node.setFolder(true);
-
+				
 				child.add(node);
 			}
 		}
@@ -179,7 +178,7 @@ public class ProcessDefinitionNode extends TreeNode  implements ContextAware {
 			return popup;	
 	}
 	@Override
-	@ServiceMethod(payload={"id", "name", "path", "type", "folder", "projectId","defId","alias"}, target=ServiceMethodContext.TARGET_APPEND)
+	@ServiceMethod(payload={"id", "name", "path", "type", "folder", "projectId","defId","alias"},mouseBinding="left", target=ServiceMethodContext.TARGET_APPEND)
 	public Object action(){
 		if( alias != null ){
 			processViewerPanel = new ProcessViewerPanel();

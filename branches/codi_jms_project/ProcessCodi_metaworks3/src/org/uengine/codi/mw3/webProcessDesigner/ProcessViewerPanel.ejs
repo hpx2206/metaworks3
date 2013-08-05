@@ -17,7 +17,12 @@
 <%
         }else{
 %>
-            <%= fields.processViewPanel.here() %>
+                     <%= fields.processViewPanel.here() %>
+                        <div style="position:absolute; right:10px; bottom:10px; z-index:1000;">
+                <a id="wBtn" href="#" onClick="<%=methods.openLink.caller()%>"><span><%=mw3.localize("$Open")%></span></a>
+                <a id="wBtn" href="#" onClick="<%=methods.removeLink.caller()%>"><span><%=mw3.localize("$Remove")%></span></a>
+          
+            </div>
 <%
         }
 %>
