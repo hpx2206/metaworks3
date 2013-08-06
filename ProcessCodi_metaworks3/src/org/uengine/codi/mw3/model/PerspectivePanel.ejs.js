@@ -10,6 +10,7 @@ var org_uengine_codi_mw3_model_PerspectivePanel = function(objectId, className){
 		$(this).parent().addClass('selected_navi');
 	});
 	
-	$(this.divId).parent().css({"background-color":"#5693d6"});
+	$(this.divId).parent().css({"background-color":"#f3f3f3"});
+	//$(this.divId).parent().hover(function(){$(this).css({"overflow":"auto"})},function(){$(this).css({"overflow":"hidden"})})
 	
 };
