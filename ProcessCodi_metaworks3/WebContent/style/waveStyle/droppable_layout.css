@@ -609,7 +609,7 @@ img {
     background-repeat: no-repeat;
     position:relative;
 }
-.contact_list .user_focus{margin:5px;}
+.contact_list .user_focus{margin:7px;}
 .user .user_focus .followers_name{
 	position:absolute;
 	bottom:0px;

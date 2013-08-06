@@ -10,11 +10,7 @@ var org_uengine_codi_mw3_model_ContactPanel = function(objectId, className) {
 	if(this.object == null)
 		return true;
 	
-	this.objectDiv
-		.css({
-			position: 'relative',
-			height:   '100%'
-		});
+	
 	
 };
 
