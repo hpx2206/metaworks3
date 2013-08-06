@@ -8638,6 +8638,7 @@ OG.geometry.Geometry.prototype = {
 	reset: function () {
 		this.boundary = null;
 	}
+
 };
 OG.geometry.Geometry.prototype.constructor = OG.geometry.Geometry;
 /**
@@ -10423,9 +10424,7 @@ OG.shape.bpmn.A_Subprocess.prototype.createShape = function () {
 	this.geom = new OG.geometry.Rectangle([0, 0], 100, 100);
 	this.geom.style = new OG.geometry.Style({
 		'stroke': 'black',
-		'r'     : 6,
-        fill: '#FFFFFF-#000000',
-        'fill-opaicity': 1
+		'r'     : 6
 	});
 
 	return this.geom;
@@ -11889,9 +11888,7 @@ OG.shape.bpmn.E_Start.prototype.createShape = function () {
 
 	this.geom = new OG.geometry.Circle([50, 50], 50);
 	this.geom.style = new OG.geometry.Style({
-		'label-position': 'bottom',
-        fill: "r(0.5, 0.5)#FFFFFF-#0077FF",
-        "fill-opacity": 1
+		'label-position': 'bottom'
 	});
 
 	return this.geom;
@@ -18377,6 +18374,7 @@ OG.handler.EventHandler.prototype = {
         clickHandle = function (_element, _collapsedOjb) {
         	if (_collapsedOjb && _collapsedOjb.bBox && _collapsedOjb.collapse) {
             				$(_collapsedOjb.collapse).bind("click", function (event) {
+
             				    $(_element).trigger("btnclick");
             				});
 
@@ -19714,7 +19712,7 @@ OG.handler.EventHandler.prototype = {
 										'fillColor_select': {
 											name    : 'Select',
 											type    : 'select',
-											options : {'': '', 'white': 'white', 'gray': 'gray', 'blue': 'blue', 'red': 'red', 'yellow': 'yellow', 'orange': 'orange', 'green': 'green', 'black': 'black'},
+											options : {'': '', '#FFFFFF': 'white', 'gray': 'gray', 'blue': 'blue', 'red': 'red', 'yellow': 'yellow', 'orange': 'orange', 'green': 'green', 'black': 'black'},
 											selected: '',
 											events  : {
 												change: function (e) {
@@ -20657,15 +20655,6 @@ OG.handler.EventHandler.prototype = {
 		});
 	},
 
-	setLineColorSelectedShapeBySoo: function () {
-    	var me = this, lineColor;
-
-    	lineColor = "red";
-    	$(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_selected=true]").each(function (idx, item) {
-    			me._RENDERER.setShapeStyle(item, {"stroke": lineColor});
-    	});
-    },
-
 	/**
 	 * 메뉴 : 선택된 Shape 들의 Line Type 을 설정한다.
 	 *
@@ -20731,7 +20720,12 @@ OG.handler.EventHandler.prototype = {
 	setFillColorSelectedShape: function (fillColor) {
 		var me = this;
 		$(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_selected=true]").each(function (idx, item) {
-			me._RENDERER.setShapeStyle(item, {"fill": fillColor, "fill-opacity": 1});
+		    if(item.shape.SHAPE_ID == "OG.shape.bpmn.Value_Chain" || item.shape.SHAPE_ID == "OG.shape.bpmn.A_Subprocess"){
+              me._RENDERER.setShapeStyle(item, {"fill": "#FFFFFF-" + fillColor, "fill-opacity": 1});
+		    }else{
+		      me._RENDERER.setShapeStyle(item, {"fill": fillColor, "fill-opacity": 1});
+		    }
+
 		});
 	},
 
@@ -22027,7 +22021,7 @@ OG.graph.Canvas.prototype = {
 	 * @return {Number[]} Canvas Width, Height
 	 */
 	getCanvasSize: function () {
-		this._RENDERER.getCanvasSize();
+		return this._RENDERER.getCanvasSize();
 	},
 
 	/**
