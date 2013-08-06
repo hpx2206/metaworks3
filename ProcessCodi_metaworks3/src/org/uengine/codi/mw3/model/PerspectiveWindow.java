@@ -4,8 +4,8 @@ import org.metaworks.annotation.Face;
 import org.metaworks.widget.Window;
 
 @Face(ejsPath="dwr/metaworks/genericfaces/Window.ejs",  
-options={"hideLabels", "minimize", "color"}, 
-values={"true", "true", "blue"})
+options={"hideLabels", "minimize", "color", "hideTitleBar"}, 
+values={"true", "true", "blue", "true"})
 public class PerspectiveWindow extends Window {
 	
 	public PerspectiveWindow() throws Exception {
