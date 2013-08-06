@@ -1020,7 +1020,6 @@ img {
     white-space:nowrap;
     text-overflow:ellipsis;
     -o-text-overow: ellipsis;
-    color:#fff;
 }
 .selected_navi2 {
     background-color:#C9E2FC;
@@ -1049,7 +1048,7 @@ img {
     padding:0;    
     
 }
-#navigator .depth2 .fist_menu li.selected_navi{background:#000;border:1px solid #000}
+#navigator .depth2 .fist_menu li.selected_navi{background:#d9ebfd;border:1px solid #69b0f8}
 
 #navigator .depth2 .fist_menu li span {
     display: inline-block;
@@ -1067,8 +1066,7 @@ img {
     height: 25px;
     line-height: 25px;
     padding-left: 20px;
-    border-top: 1px solid #94bae4;
-    color: #fff;
+    border-top: 1px solid #ccc;
     background: url(../../images/waveStyle/navi_icon.png) 3px 5px no-repeat;
     cursor: pointer;
 }
