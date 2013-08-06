@@ -11,7 +11,7 @@
 		}
 		
 		var showLabel = !(objectMetadata.faceOptions && objectMetadata.faceOptions['hideLabels']);		
-		
+		var showTitleBar = !(objectMetadata.faceOptions && objectMetadata.faceOptions['hideTitleBar']);
 		var maximize = objectMetadata.faceOptions && objectMetadata.faceOptions['maximize'];
 		var minimize = objectMetadata.faceOptions && objectMetadata.faceOptions['minimize'];
 		
@@ -82,6 +82,11 @@
 	    </div>
 	    
 	    
+	    
+	    
+	    
+
+	    
 <%
 		if(mw3.how != null && mw3.how == 'ide'){
 %>
@@ -98,14 +103,12 @@
             		<div id="navigationTitle" class="mw3_window_title">
 
 <%
-		}else{
+		}else if(showTitleBar == true){
 %>
             <div class="boxtopleft">
             	<span class="boxtopright">
             		<div id="navigationTitle" class="mw3_window_title">
-<%		
-		}
-%>		
+	
 					<span>
 						<div>
 				            <%if(windowTitle){%>
@@ -126,11 +129,14 @@
 <%		
 			}
 %>	
-		    		</div>            		
 
+		    		</div>            		
+<%
+	}
+%>
 	
 <%
-			if(maximize){
+			if(maximize && showTitleBar == true){
 %>	
 				<% if(mobile){ %>
 					<div class="toggleback" onclick=""><span>back<span></div>
@@ -142,7 +148,7 @@
 %> 	           		
             		
 <%
-			if(minimize){
+			if(minimize && showTitleBar == true){
 %>            		
             	<% if(mobile){ %>
 					<div class="toggleback" onclick=""><span>back<span></div>
@@ -151,13 +157,18 @@
 				<% } %>	            		
 <%
 			}
-%>            		
+%>          
+<% 
+	if(showTitleBar == true){
+%>  		
             	</span>
             </div>		    		
 		
 			<div class="boxmiddleright">
 	            <div class="boxmiddleleft">
-		
+<%
+			}
+%> 		
 					    <div class="contentcontainer">
 <%							
 					
@@ -191,11 +202,17 @@
 			}
 		}
 %>
+<% 
+	if(showTitleBar == true){
+%> 
 						</div>
 				</div>
 	            
 	        </div>
 			<div class="boxbottomleft"><span class="boxbottomright"></span></div>
+<%		
+		}				   
+%>
 <%
      }
  %>
