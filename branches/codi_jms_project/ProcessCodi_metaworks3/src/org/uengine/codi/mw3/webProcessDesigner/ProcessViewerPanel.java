@@ -5,10 +5,17 @@ import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
+import org.metaworks.ToAppend;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
+import org.uengine.codi.mw3.ide.CloudInstanceWindow;
+import org.uengine.codi.mw3.ide.CloudWindow;
+import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.Workspace;
+import org.uengine.codi.mw3.ide.editor.Editor;
+import org.uengine.codi.mw3.ide.editor.process.ProcessEditor;
+import org.uengine.codi.mw3.model.InstanceViewThreadPanel;
 import org.uengine.kernel.Activity;
 import org.uengine.kernel.SubProcessActivity;
 
@@ -77,7 +84,13 @@ public class ProcessViewerPanel implements ContextAware {
 		public void setWorkspace(Workspace workspace) {
 			this.workspace = workspace;
 		}	
-		
+	String viewType;
+		public String getViewType() {
+			return viewType;
+		}
+		public void setViewType(String viewType) {
+			this.viewType = viewType;
+		}
 		@AutowiredFromClient
 	public ProcessViewWindow processViewWindow; 
 
@@ -105,20 +118,29 @@ public class ProcessViewerPanel implements ContextAware {
 		processViewPanel = new ProcessViewPanel();
 		processViewPanel.setDefId(definitionId);
 		processViewPanel.setAlias(alias);
-		processViewPanel.setViewType("definitionView");
+		processViewPanel.setViewType(this.getViewType());
+		processViewPanel.load();
+	}
+	
+	public void loadDefnitionEditor(){
+		this.getMetaworksContext().setHow("load");
+		processViewPanel = new ProcessViewPanel();
+		processViewPanel.setDefId(definitionId);
+		processViewPanel.setAlias(alias);
+		processViewPanel.setViewType(this.getViewType());
 		processViewPanel.load();
 	}
 		
 	
 	@ServiceMethod(callByContent=true , target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] removeLink(){
-//			this.definitionId = null;
-//			this.alias = null;
 			Activity activity = this.getOpenerActivity();
-			((SubProcessActivity) activity).setDefinitionId(null);
-			((SubProcessActivity) activity).setAlias(null);
+			if( activity instanceof SubProcessActivity){
+				((SubProcessActivity) activity).setDefinitionId(null);
+				((SubProcessActivity) activity).setAlias(null);
+			}
 			ApplyProperties applyProperties = new ApplyProperties(this.getOpenerActivityViewId(), activity);
-			applyProperties.setViewType("definitionView");
+			applyProperties.setViewType(this.getViewType());
 			return new Object[]{applyProperties, new Remover(new ModalWindow() , true) };
 		}
 	
@@ -133,28 +155,55 @@ public class ProcessViewerPanel implements ContextAware {
 		}
 		
 		ApplyProperties applyProperties = new ApplyProperties(this.getOpenerActivityViewId(), activity);
-		applyProperties.setViewType("definitionView");
+		applyProperties.setViewType(this.getViewType());
 		return new Object[]{applyProperties, new Remover(new ModalWindow() , true) };
 	}
 	
 	
 	@ServiceMethod(callByContent=true, target = ServiceMethodContext.TARGET_APPEND)
 	public Object[] openLink() throws Exception{
-		
 		String alias = processViewPanel.getAlias();
 		String defId = processViewPanel.getDefId();
-		if( processViewWindow != null ){
-			HistoryItem historyItem = new HistoryItem();
-			historyItem.setDefId(defId);
-			historyItem.setAlias(alias);
-			
-			String[] defnitionArray = defId.replace('.','@').split("@");
-			historyItem.setDefName(defnitionArray[0]);
-			
-			processViewWindow.loadByProcess(historyItem);
-			return new Object[]{ new Remover(new ModalWindow(), true), new Refresh (processViewWindow)};
+		if( "definitionView".equals(this.getViewType() )){
+			if( processViewWindow != null ){
+				HistoryItem historyItem = new HistoryItem();
+				historyItem.setDefId(defId);
+				historyItem.setAlias(alias);
+				
+				String[] defnitionArray = defId.replace('.','@').split("@");
+				historyItem.setDefName(defnitionArray[0]);
+				
+				processViewWindow.loadByProcess(historyItem);
+				return new Object[]{ new Remover(new ModalWindow(), true), new Refresh (processViewWindow)};
+			}else{
+				return null;
+			}
 		}else{
-			return null;
+			ResourceNode resourceNode = new ResourceNode();
+			resourceNode.setPath(alias);
+			resourceNode.setType(ResourceNode.TYPE_FILE_PROCESS);
+			resourceNode.setId(defId);
+			resourceNode.setName(defId);
+			Editor editor = new ProcessEditor(resourceNode);
+			try {
+				editor.load();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			/*
+			InstanceViewThreadPanel instanceViewThreadPanel = new InstanceViewThreadPanel();
+			if(  editor instanceof ProcessEditor ){
+				if( ((ProcessEditor)editor).getProcessDesignerInstanceId() != null ){
+					instanceViewThreadPanel.session = session;
+					instanceViewThreadPanel.setInstanceId(((ProcessEditor)editor).getProcessDesignerInstanceId());
+					instanceViewThreadPanel.load();
+				}
+			}
+			CloudInstanceWindow cloudInstanceWindow = new CloudInstanceWindow();
+			cloudInstanceWindow.setPanel(instanceViewThreadPanel);
+			*/
+			return new Object[]{new ToAppend(new CloudWindow("editor"), editor) , new Remover(new ModalWindow(), true) };
+//			return new Object[]{new ToAppend(new CloudWindow("editor"), editor) , new Refresh(cloudInstanceWindow, true) };
 		}
 	}
 }

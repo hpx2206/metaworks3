@@ -61,7 +61,7 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessViewer.prototype = {
 			var height = tempSize[1];
 			scaleSize = canvasWidth/width;
 			if( canvasHeight * scaleSize > height ){
-				
+				// TODO 너무 길었을때 height를 맞춰주는 작업
 			}
 		}
 		canvas._RENDERER.setScale(scaleSize);

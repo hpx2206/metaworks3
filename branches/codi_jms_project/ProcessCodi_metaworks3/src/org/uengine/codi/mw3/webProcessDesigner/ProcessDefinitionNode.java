@@ -184,6 +184,7 @@ public class ProcessDefinitionNode extends TreeNode  implements ContextAware {
 			processViewerPanel = new ProcessViewerPanel();
 			processViewerPanel.setDefinitionId(defId);
 			processViewerPanel.setAlias(alias);
+			processViewerPanel.setViewType("definitionEditor");
 			processViewerPanel.loadDefnitionView();
 			return new Object[] { new Refresh(processViewerPanel.processViewPanel) };
 		}else{

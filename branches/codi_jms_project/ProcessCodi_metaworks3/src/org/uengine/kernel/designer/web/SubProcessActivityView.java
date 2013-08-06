@@ -1,5 +1,6 @@
 package org.uengine.kernel.designer.web;
 
+import org.metaworks.MetaworksException;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
@@ -13,16 +14,32 @@ public class SubProcessActivityView extends ActivityView{
 	public ModalWindow showDefinitionMonitor() throws Exception{
 		SubProcessActivity activity = (SubProcessActivity)this.getActivity();
 		ProcessViewerPanel processViewerPanel = new ProcessViewerPanel();
-		if( activity != null && activity.getDefinitionId() != null && !"".equals(activity.getDefinitionId()) && activity.getAlias() != null){
-			processViewerPanel.setDefinitionId(activity.getDefinitionId());
-			processViewerPanel.setAlias(activity.getAlias());
-			processViewerPanel.setOpenerActivity(this.getActivity());
-			processViewerPanel.setOpenerActivityViewId(this.getId());
-			processViewerPanel.loadDefnitionView();
+		
+		if( "definitionView".equals(this.getViewType() )){
+			processViewerPanel.setViewType(this.getViewType());
+			if( activity == null || (activity != null && activity.getAlias() == null || "".equals(activity.getAlias()))){
+				throw new MetaworksException("서브 프로세스가 정의되어있지 않습니다.");
+			}
+			if( activity != null && activity.getDefinitionId() != null && !"".equals(activity.getDefinitionId()) && activity.getAlias() != null){
+				processViewerPanel.setDefinitionId(activity.getDefinitionId());
+				processViewerPanel.setAlias(activity.getAlias());
+				processViewerPanel.setOpenerActivity(this.getActivity());
+				processViewerPanel.setOpenerActivityViewId(this.getId());
+				processViewerPanel.loadDefnitionView();
+			}
 		}else{
-			processViewerPanel.setOpenerActivity(this.getActivity());
-			processViewerPanel.setOpenerActivityViewId(this.getId());
-			processViewerPanel.findDefnitionView();
+			processViewerPanel.setViewType("definitionEditor");
+			if( activity != null && activity.getDefinitionId() != null && !"".equals(activity.getDefinitionId()) && activity.getAlias() != null){
+				processViewerPanel.setDefinitionId(activity.getDefinitionId());
+				processViewerPanel.setAlias(activity.getAlias());
+				processViewerPanel.setOpenerActivity(this.getActivity());
+				processViewerPanel.setOpenerActivityViewId(this.getId());
+				processViewerPanel.loadDefnitionEditor();
+			}else{
+				processViewerPanel.setOpenerActivity(this.getActivity());
+				processViewerPanel.setOpenerActivityViewId(this.getId());
+				processViewerPanel.findDefnitionView();
+			}
 		}
 		
 		ModalWindow modalWindow = new ModalWindow(processViewerPanel);

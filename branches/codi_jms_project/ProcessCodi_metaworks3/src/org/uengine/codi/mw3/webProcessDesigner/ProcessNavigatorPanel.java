@@ -94,11 +94,10 @@ public class ProcessNavigatorPanel {
 		
 		processAttributePanel.setDefId(defId);
 		processAttributePanel.load();
-		
-		if(historyList.size() > 1 && (index < historyList.size())) {
-			
-			for(int i = index; i < historyList.size(); i++) {
-				historyList.remove(i + 1);
+		int size = historyList.size();
+		if(size > 0 && (size > index)) {
+			for(int i = size-1 ;  i >= index+1; i--) {
+				historyList.remove(i);
 			}
 		}
 	
