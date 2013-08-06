@@ -98,7 +98,7 @@ public class ProcessViewerPanel implements ContextAware {
 		metaworksContext = new MetaworksContext();
 	}
 	
-	public void findDefnitionView(){
+	public void findDefinitionView(){
 		this.getMetaworksContext().setHow("find");
 		processViewNavigator = new ProcessViewNavigator();
 		processViewNavigator.loadTree();
@@ -113,7 +113,7 @@ public class ProcessViewerPanel implements ContextAware {
 	}
 
 		
-	public void loadDefnitionView(){
+	public void loadDefinitionView(){
 		this.getMetaworksContext().setHow("load");
 		processViewPanel = new ProcessViewPanel();
 		processViewPanel.setDefId(definitionId);
@@ -122,7 +122,7 @@ public class ProcessViewerPanel implements ContextAware {
 		processViewPanel.load();
 	}
 	
-	public void loadDefnitionEditor(){
+	public void loadDefinitionEditor(){
 		this.getMetaworksContext().setHow("load");
 		processViewPanel = new ProcessViewPanel();
 		processViewPanel.setDefId(definitionId);

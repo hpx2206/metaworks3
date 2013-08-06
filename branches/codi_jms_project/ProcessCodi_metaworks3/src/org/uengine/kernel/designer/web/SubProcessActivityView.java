@@ -25,7 +25,7 @@ public class SubProcessActivityView extends ActivityView{
 				processViewerPanel.setAlias(activity.getAlias());
 				processViewerPanel.setOpenerActivity(this.getActivity());
 				processViewerPanel.setOpenerActivityViewId(this.getId());
-				processViewerPanel.loadDefnitionView();
+				processViewerPanel.loadDefinitionView();
 			}
 		}else{
 			processViewerPanel.setViewType("definitionEditor");
@@ -34,18 +34,18 @@ public class SubProcessActivityView extends ActivityView{
 				processViewerPanel.setAlias(activity.getAlias());
 				processViewerPanel.setOpenerActivity(this.getActivity());
 				processViewerPanel.setOpenerActivityViewId(this.getId());
-				processViewerPanel.loadDefnitionEditor();
+				processViewerPanel.loadDefinitionEditor();
 			}else{
 				processViewerPanel.setOpenerActivity(this.getActivity());
 				processViewerPanel.setOpenerActivityViewId(this.getId());
-				processViewerPanel.findDefnitionView();
+				processViewerPanel.findDefinitionView();
 			}
 		}
 		
 		ModalWindow modalWindow = new ModalWindow(processViewerPanel);
 		modalWindow.setWidth(700);
 		modalWindow.setHeight(500);
-		
+		modalWindow.setTitle("$SubProcessModify");
 		return modalWindow;  
 	 }
 }
