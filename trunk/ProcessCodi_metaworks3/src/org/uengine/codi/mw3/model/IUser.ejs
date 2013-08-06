@@ -141,7 +141,7 @@
 				<img id="user_picture_<%=objectId%>" src="<%=portrait%>" class="pic <%=(value.size=='small' ? ' small':'')%>">
 				
 <%	
-			if(mw3.when == 'followers' || mw3.when == 'topicFollowers'){
+			if(mw3.when == 'followers' || mw3.when == 'topicFollowers' || mw3.when == 'contacts' ){
 %>
 				<div class="followers_name" title="<%=value.name%>"><%=value.name%></div>
 <%
@@ -155,11 +155,11 @@
 			/* case by user */
 			if(mw3.when == 'contacts' || mw3.when == 'addContact' || mw3.when == 'addTopicFollower' || mw3.when == 'addInstanceFollower' || mw3.when == 'addEtcFollower' || mw3.when == 'addPicker'){
 %>
-			<div class="user_detail">
+			<!--div class="user_detail">
 				<span class="fontbold"><%=value.name%></span>
 				<span class="fontgray"><%=value.mood ? value.mood : ''%></span>
 				<!--<span class="fontgray"></span>-->
-			</div>
+			</div-->
 <%			
 			}else if(mw3.when == 'self'){
 %>
@@ -170,7 +170,7 @@
 <%			
 			}
 %>		
-			<div style="clear:both"></div>
+			<!--div style="clear:both"></div-->
 
 		</div>
 <%		 

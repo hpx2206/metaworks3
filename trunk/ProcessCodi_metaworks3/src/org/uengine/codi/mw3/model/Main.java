@@ -174,7 +174,7 @@ public class Main {
 			eastLayout.setName("east");
 			
 			Layout outerLayout = new Layout();
-			outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:5, north__size:52");
+			outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:0, north__size:52");
 			outerLayout.setNorth(processTopPanel);
 			
 			//Since there's already user portrait in the navigator for this full-fledged mode, the portrait is removed.
