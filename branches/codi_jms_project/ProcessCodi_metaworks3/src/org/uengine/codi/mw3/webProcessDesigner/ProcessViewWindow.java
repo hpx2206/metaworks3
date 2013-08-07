@@ -1,7 +1,5 @@
 package org.uengine.codi.mw3.webProcessDesigner;
 
-import org.metaworks.widget.layout.Layout;
-
 public class ProcessViewWindow {
 
 	String defId;
@@ -41,7 +39,7 @@ public class ProcessViewWindow {
 		}
 		
 	//DefinitionViewWindow의 Layout Setting
-	public void load() {
+	public void load() throws Exception{
 		processNavigatorPanel = new ProcessNavigatorPanel();
 		processNavigatorPanel.setDefId(defId);
 		processNavigatorPanel.setAlias(alias);
@@ -54,22 +52,28 @@ public class ProcessViewWindow {
 		processViewPanel.load();
 		
 		processAttributePanel = new ProcessAttributePanel();
+		processAttributePanel.setDocumentation(null);
 		processAttributePanel.setDefId(defId);
-		processAttributePanel.load();
+		if( processViewPanel.processViewer != null ){
+			processAttributePanel.load(processViewPanel.processViewer.getProcessDesignerContainer());
+		}
 	}
 	
-	public void loadByProcess(HistoryItem historyItem){
+	public void loadByProcess(HistoryItem historyItem) throws Exception{
 		
 		processNavigatorPanel.historyList.add(historyItem);
-		
-		processAttributePanel.setDefId(historyItem.getDefId());
-		processAttributePanel.load();
 		
 		processViewPanel = new ProcessViewPanel();
 		processViewPanel.setDefId(historyItem.getDefId());
 		processViewPanel.setAlias(historyItem.getAlias());
 		processViewPanel.setViewType("definitionView");
 		processViewPanel.load();
+		
+		processAttributePanel.setDocumentation(null);
+		processAttributePanel.setDefId(historyItem.getDefId());
+		if( processViewPanel.processViewer != null ){
+			processAttributePanel.load(processViewPanel.processViewer.getProcessDesignerContainer());
+		}
 		
 	}
 

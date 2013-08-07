@@ -50,7 +50,7 @@ public class NewProcess extends Templete {
 			ResourceNode targetNode = (ResourceNode)clipboard;
 			
 			ResourceNode node = new ResourceNode();
-			node.setName(this.getName() + ".wpd");
+			node.setName(this.getName() + ".process");
 			node.setId(targetNode.getId() + File.separatorChar + node.getName());
 			node.setPath(targetNode.getPath() + File.separatorChar + node.getName());
 			

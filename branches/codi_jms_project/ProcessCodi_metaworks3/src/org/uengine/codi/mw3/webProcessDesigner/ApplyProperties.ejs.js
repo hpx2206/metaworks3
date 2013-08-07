@@ -19,16 +19,14 @@ var org_uengine_codi_mw3_webProcessDesigner_ApplyProperties = function(objectId,
 	}
 	var canvasObjectFaceHelper = mw3.getFaceHelper(canvasObject.__objectId);
 	var canvas = canvasObjectFaceHelper.icanvas;
-//	console.log(this.object.content);
 	
 	var contentValue = this.object.content;
 	var element = document.getElementById(this.object.id);
-	
 	if(contentValue && contentValue.__className=="org.uengine.kernel.Role"){
 //		canvasObject.roleMap[this.object.id] = contentValue;
 		canvas.drawLabel(element, contentValue.displayName.text);
-	}else if(contentValue && contentValue.__className=="org.uengine.kernel.HumanActivity"){
-		// TODO 엑티비티별로..??? 이름주기
+//	}else if(contentValue && contentValue.__className=="org.uengine.kernel.HumanActivity"){
+	}else if(contentValue && contentValue.activityView && contentValue.activityView.classType == 'Activity'){
 		canvas.drawLabel(element, contentValue.description.text);
 	}
 	

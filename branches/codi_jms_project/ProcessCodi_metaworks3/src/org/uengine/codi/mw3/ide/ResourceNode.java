@@ -326,9 +326,9 @@ public class ResourceNode extends TreeNode implements ContextAware {
 				nodeType = TreeNode.TYPE_FILE_JS;
 			}else if(".form".equals(ext)){
 				nodeType = TreeNode.TYPE_FILE_FORM;
-			}else if(".wpd".equals(ext) || ".process2".equals(ext)){
+			}else if(".wpd".equals(ext) || ".process2".equals(ext) || ".process".equals(ext)){
 				nodeType = TreeNode.TYPE_FILE_PROCESS;
-			}else if(".wvcd".equals(ext)){
+			}else if(".valuechain".equals(ext)){
 				nodeType = TreeNode.TYPE_FILE_VALUECHAIN;
 			}else if(".rule".equals(ext)){
 				nodeType = TreeNode.TYPE_FILE_RULE;

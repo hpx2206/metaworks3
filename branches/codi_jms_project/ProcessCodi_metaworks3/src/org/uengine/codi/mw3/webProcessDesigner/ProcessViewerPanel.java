@@ -17,6 +17,7 @@ import org.uengine.codi.mw3.ide.editor.Editor;
 import org.uengine.codi.mw3.ide.editor.process.ProcessEditor;
 import org.uengine.codi.mw3.model.InstanceViewThreadPanel;
 import org.uengine.kernel.Activity;
+import org.uengine.kernel.EventActivity;
 import org.uengine.kernel.SubProcessActivity;
 
 public class ProcessViewerPanel implements ContextAware {
@@ -91,10 +92,11 @@ public class ProcessViewerPanel implements ContextAware {
 		public void setViewType(String viewType) {
 			this.viewType = viewType;
 		}
-		@AutowiredFromClient
+		
+	@AutowiredFromClient
 	public ProcessViewWindow processViewWindow; 
 
-		public ProcessViewerPanel(){
+	public ProcessViewerPanel(){
 		metaworksContext = new MetaworksContext();
 	}
 	
@@ -138,6 +140,9 @@ public class ProcessViewerPanel implements ContextAware {
 			if( activity instanceof SubProcessActivity){
 				((SubProcessActivity) activity).setDefinitionId(null);
 				((SubProcessActivity) activity).setAlias(null);
+			}else if(activity instanceof EventActivity){
+				((EventActivity) activity).setDefinitionId(null);
+				((EventActivity) activity).setAlias(null);
 			}
 			ApplyProperties applyProperties = new ApplyProperties(this.getOpenerActivityViewId(), activity);
 			applyProperties.setViewType(this.getViewType());
@@ -152,6 +157,9 @@ public class ProcessViewerPanel implements ContextAware {
 		if( activity instanceof SubProcessActivity){
 			((SubProcessActivity) activity).setDefinitionId(defId);
 			((SubProcessActivity) activity).setAlias(alias);
+		}else if(activity instanceof EventActivity){
+			((EventActivity) activity).setDefinitionId(defId);
+			((EventActivity) activity).setAlias(alias);
 		}
 		
 		ApplyProperties applyProperties = new ApplyProperties(this.getOpenerActivityViewId(), activity);
@@ -203,7 +211,7 @@ public class ProcessViewerPanel implements ContextAware {
 			cloudInstanceWindow.setPanel(instanceViewThreadPanel);
 			*/
 			return new Object[]{new ToAppend(new CloudWindow("editor"), editor) , new Remover(new ModalWindow(), true) };
-//			return new Object[]{new ToAppend(new CloudWindow("editor"), editor) , new Refresh(cloudInstanceWindow, true) };
+//			return new Object[]{new ToAppend(new CloudWindow("editor"), editor) , new Remover(new ModalWindow(), true) , new Refresh(cloudInstanceWindow, true) };
 		}
 	}
 }

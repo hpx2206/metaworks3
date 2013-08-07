@@ -75,7 +75,7 @@ public class ResourceContextMenu extends CloudMenu {
 		}
 	}
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
-	public Object openWithJMS(){
+	public Object openWithJMS() throws Exception{
 		Object clipboard = session.getClipboard();
 		if(clipboard instanceof ResourceNode){
 			ResourceNode node = (ResourceNode)clipboard;

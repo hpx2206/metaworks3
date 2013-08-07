@@ -1,13 +1,13 @@
+프로세스 네비게이터 : 
 <%
     if( value ){
         var list = value.historyList;
-        
         for( var i = 0; i < list.length; i++){
 %>
 		<a onClick="mw3.getFaceHelper(<%=objectId%>).clickNavigator('<%= i %>')" href="#">
-             <%= list[i].defName %> ==>>> 
+            <span><b><%= list[i].defName %></b></span> 
         </a>
-            
+         <img src="images/waveStyle/rightArrow.png" style="width: 15px; height: 15px;vertical-align: middle;"/>
 <%
         }
     }

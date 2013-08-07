@@ -45,7 +45,7 @@ public class SubProcessActivityView extends ActivityView{
 		ModalWindow modalWindow = new ModalWindow(processViewerPanel);
 		modalWindow.setWidth(700);
 		modalWindow.setHeight(500);
-		modalWindow.setTitle("$SubProcessModify");
+		modalWindow.setTitle("$SubProcessActivityEdit");
 		return modalWindow;  
 	 }
 }

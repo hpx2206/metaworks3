@@ -15,6 +15,7 @@ import org.metaworks.inputter.RadioInput;
 import org.metaworks.validator.NotNullValid;
 import org.metaworks.validator.Validator;
 import org.uengine.contexts.TextContext;
+import org.uengine.kernel.designer.web.RoleView;
 import org.uengine.processdesigner.inputters.RoleResolutionContextSelectorInput;
 import org.uengine.util.UEngineUtil;
 
@@ -249,9 +250,14 @@ public class Role implements java.io.Serializable, Cloneable, ContextAware {
 		public void setDontPersistResolutionResult(boolean dontPersistResolutionResult) {
 			this.dontPersistResolutionResult = dontPersistResolutionResult;
 		}
-	
-//added
-	
+	RoleView roleView;
+		@Hidden
+		public RoleView getRoleView() {
+			return roleView;
+		}
+		public void setRoleView(RoleView roleView) {
+			this.roleView = roleView;
+		}
 	public Role(){
 		setMetaworksContext(new MetaworksContext());
 	}

@@ -13,7 +13,7 @@ import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.ide.CloudWindow;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.Templete;
-import org.uengine.codi.mw3.ide.editor.process.ProcessEditor;
+import org.uengine.codi.mw3.ide.editor.valuechain.ValueChainEditor;
 import org.uengine.codi.mw3.model.Session;
 
 @Face(displayName="$templete.valuechain", ejsPath="dwr/metaworks/genericfaces/FormFace.ejs")
@@ -38,11 +38,11 @@ public class NewValueChain extends Templete {
 			ResourceNode targetNode = (ResourceNode)clipboard;
 			
 			ResourceNode node = new ResourceNode();
-			node.setName(this.getName() + ".wvcd");
+			node.setName(this.getName() + ".valuechain");
 			node.setId(targetNode.getId() + File.separatorChar + node.getName());
 			node.setPath(targetNode.getPath() + File.separatorChar + node.getName());
 			
-			ProcessEditor editor = new ProcessEditor(node);
+			ValueChainEditor editor = new ValueChainEditor(node);
 			editor.save();
 			
 			return new Object[]{new ToAppend(targetNode, node), new ToAppend(new CloudWindow("editor"), editor), new Remover(new ModalWindow())};

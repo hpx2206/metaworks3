@@ -49,30 +49,29 @@ public class SubProcessActivity extends DefaultActivity implements IDrawDesigne 
     setInstanceId("<%=Instance.Name%>");
   }
   
-  String instanceId;
-    public String getInstanceId() {
-      return instanceId;
-    }
-    public void setInstanceId(String string) {
-      instanceId = string;
-    }
+  	String instanceId;
+	    public String getInstanceId() {
+	      return instanceId;
+	    }
+	    public void setInstanceId(String string) {
+	      instanceId = string;
+	    }
   
-  String alias;
-	  public String getAlias() {
-		return alias;
-	}
-	
-	public void setAlias(String alias) {
-		this.alias = alias;
-	}
+	String alias;
+		public String getAlias() {
+			return alias;
+		}
+		public void setAlias(String alias) {
+			this.alias = alias;
+		}
 
-String definitionId;
-    public String getDefinitionId() {
-      return definitionId;
-    }
-    public void setDefinitionId(String l) {
-      definitionId = l;
-    }
+	String definitionId;
+	    public String getDefinitionId() {
+	      return definitionId;
+	    }
+	    public void setDefinitionId(String l) {
+	      definitionId = l;
+	    }
     
     //add ryu start
     ProcessDefinition definitionObject;

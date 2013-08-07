@@ -5,9 +5,7 @@ import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
-import org.metaworks.annotation.Range;
 import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.annotation.TypeSelector;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.webProcessDesigner.ActivityWindow;
@@ -16,9 +14,10 @@ import org.uengine.codi.mw3.webProcessDesigner.Documentation;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessAttributePanel;
 import org.uengine.codi.mw3.webProcessDesigner.PropertiesWindow;
 import org.uengine.kernel.Activity;
+import org.uengine.kernel.IDrawDesigne;
 
 public class ActivityView extends CanvasDTO  implements ContextAware{
-	MetaworksContext metaworksContext;
+	transient MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
 			return metaworksContext;
 		}
@@ -35,16 +34,6 @@ public class ActivityView extends CanvasDTO  implements ContextAware{
 		}
 		
 	String viewClass;
-	@Range(options = { "org.uengine.kernel.designer.web.SubProcessActivityView" }, 
-			values = {"SubProcessActivityView"})
-	@TypeSelector(
-			values = { 
-					"org.uengine.kernel.designer.web.SubProcessActivityView"			
-				}, 
-			classes = { 
-					SubProcessActivityView.class
-			}
-		)
 		public String getViewClass() {
 			return viewClass;
 		}
@@ -113,26 +102,20 @@ public class ActivityView extends CanvasDTO  implements ContextAware{
 			this.propertiesWindow = propertiesWindow;
 		}
 	
-		@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 	public Object showProperties() throws Exception{
-		/*
-		Object activityObject = propertiesWindow.getPanel();
-		if( activityObject != null ){
-			Class paramClass = activityObject.getClass();
-			// 현재 클레스가 IDrawDesigne 인터페이스를 상속 받았는지 확인
-			boolean isDesigner = IDrawDesigne.class.isAssignableFrom(paramClass);
-			if( isDesigner ){
-				((IDrawDesigne)activityObject).drawInit();
-			}
-		}
-		return this.getPropertiesWindow();
-		*/
-			
-//		ModalWindow popup = new ModalWindow();
 		Popup popup = new Popup();
 		
 		ActivityWindow activityWindow = new ActivityWindow();
 		Activity activity = (Activity)propertiesWindow.getPanel();
+		if( activity != null ){
+			Class paramClass = activity.getClass();
+			// 현재 클레스가 IDrawDesigne 인터페이스를 상속 받았는지 확인
+			boolean isDesigner = IDrawDesigne.class.isAssignableFrom(paramClass);
+			if( isDesigner ){
+				((IDrawDesigne)activity).drawInit();
+			}
+		}
 		activity.setActivityView(this);
 		activityWindow.getActivityPanel().setActivity(activity);
 		activityWindow.getActivityPanel().setDocument(activity.getDocumentation());
@@ -154,8 +137,11 @@ public class ActivityView extends CanvasDTO  implements ContextAware{
 	@ServiceMethod(callByContent = true)
 	public Object[] showActivityDocument() {
 		if( processAttributePanel != null ){
-			
 			Documentation documentation = (Documentation)this.getActivity().getDocumentation();
+			documentation.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+			documentation.getDescription().getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+			processAttributePanel.setDefId(null);
+			processAttributePanel.setFileList(null);
 			processAttributePanel.setDocumentation(documentation);
 			return new Object[] { processAttributePanel };
 		}else{

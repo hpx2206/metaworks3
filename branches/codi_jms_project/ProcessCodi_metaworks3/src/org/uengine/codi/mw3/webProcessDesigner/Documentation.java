@@ -10,7 +10,7 @@ import org.metaworks.annotation.Hidden;
 import org.metaworks.website.MetaworksFile;
 import org.uengine.codi.mw3.admin.WebEditor;
 
-@Face(displayName="문서정보", ejsPath="dwr/metaworks/genericfaces/FormFace.ejs", options={"fieldOrder"},values={"title,document,reference,url,departManagement,departManagement,regulation,attachfile1,attachfile2,attachfile3,description"})
+@Face(displayName="문서정보", ejsPath="dwr/metaworks/genericfaces/FormFace.ejs", options={"fieldOrder"},values={"title,document,reference,url,departManagement,regulation,attachfile1,attachfile2,attachfile3,description"})
 public class Documentation implements Serializable , ContextAware{
 	MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
@@ -70,14 +70,16 @@ public class Documentation implements Serializable , ContextAware{
 		public void setDocument(String document) {
 			this.document = document;
 		}
+
 	String reference;
-		@Face(displayName="$Reference")
+	@Face(displayName="$Reference")
 		public String getReference() {
 			return reference;
 		}
 		public void setReference(String reference) {
-			reference = reference;
+			this.reference = reference;
 		}
+
 	String regulation;
 		@Face(displayName="$regulation")
 		public String getRegulation() {
@@ -87,21 +89,23 @@ public class Documentation implements Serializable , ContextAware{
 			this.regulation = regulation;
 		}
 	String title;
-		@Face(displayName="$Subject")
+	@Face(displayName="$Subject")
 		public String getTitle() {
 			return title;
 		}
 		public void setTitle(String title) {
 			this.title = title;
 		}
+
 	String url;
-		@Face(displayName="$URL")
+	@Face(displayName="$URL")
 		public String getUrl() {
 			return url;
 		}
 		public void setUrl(String url) {
-			url = url;
+			this.url = url;
 		}
+
 		
 	MetaworksFile attachfile1;
 		@Face(displayName="$attachfile1")
@@ -112,7 +116,7 @@ public class Documentation implements Serializable , ContextAware{
 			this.attachfile1 = attachfile1;
 		}
 	MetaworksFile attachfile2;
-	@Face(displayName="$attac	hfile2")
+	@Face(displayName="$attachfile2")
 		public MetaworksFile getAttachfile2() {
 			return attachfile2;
 		}

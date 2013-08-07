@@ -92,8 +92,11 @@ public class ProcessNavigatorPanel {
 		if(processAttributePanel == null)
 			processAttributePanel = new ProcessAttributePanel();
 		
+		processAttributePanel.setDocumentation(null);
 		processAttributePanel.setDefId(defId);
-		processAttributePanel.load();
+		if( processViewPanel.processViewer != null ){
+			processAttributePanel.load(processViewPanel.processViewer.getProcessDesignerContainer());
+		}
 		int size = historyList.size();
 		if(size > 0 && (size > index)) {
 			for(int i = size-1 ;  i >= index+1; i--) {
