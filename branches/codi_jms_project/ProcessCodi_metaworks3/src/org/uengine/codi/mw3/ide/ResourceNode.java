@@ -234,41 +234,6 @@ public class ResourceNode extends TreeNode implements ContextAware {
 				editor = new Editor(this);
 			}
 		}
-		/*
-		if(!this.isFolder()){
-
-			String type = ResourceNode.findNodeType(this.getName());
-
-			if(type.equals(TreeNode.TYPE_FILE_JAVA)){
-				editor = new JavaCodeEditor(this.getId());
-			}else if(type.equals(TreeNode.TYPE_FILE_PROCESS)){
-				editor = new ProcessEditor(this.getId());
-				((ProcessEditor)editor).getProcessDesigner().setBasePath(jbPath.getBasePath());
-				try {
-					((ProcessEditor)editor).getProcessDesigner().load();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}else if(type.equals(TreeNode.TYPE_FILE_METADATA)){
-				editor = new MetadataEditor(this.getId());
-				editor.jbPath = jbPath;
-				try {
-					((MetadataEditor)editor).loadPage();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}else if(type.equals(TreeNode.TYPE_FILE_RULE)){
-				editor = new RuleEditor(this.getId());
-				try {
-					((RuleEditor)editor).load();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}else{
-				editor = new Editor(this.getId(), type);
-			}
-		}
-		 */
 
 		return editor;
 	}

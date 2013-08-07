@@ -5,6 +5,7 @@ import java.io.File;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
+import org.metaworks.ToAppend;
 import org.metaworks.ToOpener;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
@@ -13,7 +14,9 @@ import org.metaworks.widget.ModalPanel;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.ide.CloudTab;
+import org.uengine.codi.mw3.ide.CloudWindow;
 import org.uengine.codi.mw3.ide.ResourceNode;
+import org.uengine.codi.mw3.ide.editor.process.ProcessMergeEditor;
 import org.uengine.codi.mw3.knowledge.ProjectInfo;
 import org.uengine.codi.mw3.knowledge.ProjectNode;
 import org.uengine.codi.mw3.knowledge.ProjectServer;
@@ -46,6 +49,8 @@ public class ResourceContextMenu extends CloudMenu {
 		this.add(new MenuItem("open", "$resource.menu.open"));
 		// TODO jms 작업을 위하여 메뉴 추가 추후 변경
 		this.add(new MenuItem("openWithJMS", "jms View 보기"));
+		this.add(new MenuItem("processMerge", "프로세스 취합"));
+		
 		this.add(new MenuItem(MenuItem.TYPE_DIVIDER));
 		this.add(new MenuItem("copy", "$resource.menu.copy"));
 		this.add(new MenuItem("paste", "$resource.menu.paste"));
@@ -95,7 +100,21 @@ public class ResourceContextMenu extends CloudMenu {
 		}else{
 			return null;
 		}
-		
+	}
+	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
+	public Object processMerge() throws Exception{
+		Object clipboard = session.getClipboard();
+		if(clipboard instanceof ResourceNode){
+			ResourceNode node = (ResourceNode)clipboard;
+			ProcessMergeEditor processMergeEditor = new ProcessMergeEditor(node);
+			processMergeEditor.setId("프로세스 취합 위저드");
+			processMergeEditor.setName("프로세스 취합 위저드");
+			
+			return new ToAppend(new CloudWindow("editor"), processMergeEditor);
+			
+		}else{
+			return null;
+		}
 	}
 	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
