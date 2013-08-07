@@ -1,0 +1,12 @@
+<%
+	if(value){
+%>
+	<div class="depth1" onClick="<%=methods.select.caller()%>"><%=mw3.localize("$Contact")%></div>
+<%
+		if(value.selected){
+%>
+	<%=fields.contactPanel.here()%>
+<%
+		}
+	}
+%>
