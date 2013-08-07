@@ -446,7 +446,11 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.removeDiv = function(divId){
 	}
 };
 org_uengine_codi_mw3_model_IWorkItem_edit.prototype.hateFollower = function(followerDivId, userId){
-	$('#'+followerDivId + '_' + userId).remove();
+	
+	var id = userId.replace("@", "\\@");
+	id = id.replace(".", "\\.");
+	
+	$('#'+followerDivId + '_' + id).remove();
 	
 	this.userAddCommands[userId] = null;
 };
