@@ -3,6 +3,7 @@ package org.uengine.codi.mw3.model;
 
 import java.rmi.RemoteException;
 
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
 
 
@@ -21,6 +22,14 @@ public class Contact extends Database<IContact> implements IContact{
 		
 		if(this.getFriend() != null && this.getFriend().getName() != null)
 			sb.append("   and c.friendName like ?friendName");
+		
+		if(this.getMetaworksContext().getHow() != null && this.getMetaworksContext().getHow().equals("follower")) {
+			sb
+			.append(" and not exists")
+			.append(" (select distinct r.endpoint")
+			.append(" from bpm_rolemapping r")
+			.append(" where rootinstid='" +  session.getLastInstanceId() +"' and assigntype = 0 and r.endpoint = c.friendId)");
+		}		
 		
 		IContact contacts = sql(sb.toString());
 		contacts.setUserId(getUserId());		
@@ -97,6 +106,9 @@ public class Contact extends Database<IContact> implements IContact{
 		public void setUserId(String userId) {
 			this.userId = userId;
 		}		
+		
+	@AutowiredFromClient
+	public Session session;
 		
 	public User pickUp() throws RemoteException, Exception {
 		//User user = new User(); //this should have error - more than the @Id, the objectId is the closest one.

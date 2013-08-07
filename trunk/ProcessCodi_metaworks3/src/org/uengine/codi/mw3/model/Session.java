@@ -135,10 +135,19 @@ public class Session implements ContextAware{
 		public String getLastSelectedItem() {
 			return lastSelectedItem;
 		}
-	
 		public void setLastSelectedItem(String lastSelectedItem) {
 			this.lastSelectedItem = lastSelectedItem;
 		}
+		
+	String lastInstanceId;
+		@Hidden
+		public String getLastInstanceId() {
+			return lastInstanceId;
+		}
+		public void setLastInstanceId(String lastInstanceId) {
+			this.lastInstanceId = lastInstanceId;
+		}	
+		
 	String windowTitle;
 		@Hidden
 		public String getWindowTitle() {

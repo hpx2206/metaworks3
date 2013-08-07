@@ -31,6 +31,31 @@ public class ContactPanel {
 		
 		setSearchBox(searchBox);
 	}
+	
+	public ContactPanel(Session session, String type) throws Exception {
+		
+		ContactListPanel contactListPanel = new ContactListPanel();
+		contactListPanel.getMetaworksContext().setHow("follower");
+		contactListPanel.setId(type);
+		contactListPanel.session = session;
+		contactListPanel.load(session.getUser().getUserId());
+		
+		if(contactListPanel.getLocalContactList() != null)
+			contactListPanel.getLocalContactList().getMetaworksContext().setWhen(type);
+		if(contactListPanel.getSocialContactList() != null)
+			contactListPanel.getSocialContactList().getMetaworksContext().setWhen(type);
+
+		this.setContactListPanel(contactListPanel);
+		
+		ContactSearchBox searchBox = new ContactSearchBox(); 
+		searchBox.setMetaworksContext(new MetaworksContext());
+		searchBox.getMetaworksContext().setWhere(type);
+		searchBox.setKeyUpSearch(true);
+		searchBox.setKeyEntetSearch(true);
+//		searchBox.session = session;
+		
+		setSearchBox(searchBox);
+	}
 
 	IUser user;	
 		public IUser getUser() {
