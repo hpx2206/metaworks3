@@ -12,19 +12,38 @@ public class ContactSearchBox extends SearchBox implements ContextAware{
 
 	@ServiceMethod(callByContent=true)
 	public Object[] search() throws Exception{
-	
-		if (this.getMetaworksContext().getWhere().equals("contactList")) {
-			
-			String userId = session.getUser().getUserId();
+		
+		String where = this.getMetaworksContext().getWhere();
+
+		if (where.equals("contactList")) {
 			
 			ContactListPanel contactListPanel = new ContactListPanel();
 			contactListPanel.setMetaworksContext(new MetaworksContext());
 			contactListPanel.getMetaworksContext().setWhen("contacts");
 			contactListPanel.getMetaworksContext().setWhere(ContactList.LOCAL);
 			
-			contactListPanel.load(userId, getKeyword());
+			contactListPanel.load(session.getUser().getUserId(), getKeyword());
 							
 			return new Object[]{contactListPanel}; 
+		}
+		else if (where.equals(Followers.ADD_INSTANCEFOLLOWERS) || 
+					where.equals(Followers.ADD_TOPICFOLLOWERS) || 
+					where.equals(Followers.ADD_ETCFOLLOWERS)) 
+		{			
+			String type = this.getMetaworksContext().getWhere();
+						
+			ContactListPanel contactListPanel = new ContactListPanel();
+			contactListPanel.getMetaworksContext().setHow("follower");
+			contactListPanel.setId(type);
+			contactListPanel.session = session;
+			contactListPanel.load(session.getUser().getUserId(), getKeyword());
+			
+			if(contactListPanel.getLocalContactList() != null)
+				contactListPanel.getLocalContactList().getMetaworksContext().setWhen(type);
+			if(contactListPanel.getSocialContactList() != null)
+				contactListPanel.getSocialContactList().getMetaworksContext().setWhen(type);
+			
+			return new Object[]{contactListPanel};
 		}
 		else {
 		

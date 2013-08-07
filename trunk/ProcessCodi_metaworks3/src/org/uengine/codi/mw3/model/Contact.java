@@ -23,15 +23,28 @@ public class Contact extends Database<IContact> implements IContact{
 		if(this.getFriend() != null && this.getFriend().getName() != null)
 			sb.append("   and c.friendName like ?friendName");
 		
-		if(this.getMetaworksContext().getHow() != null && this.getMetaworksContext().getHow().equals("follower")) {
-			sb
-			.append(" and not exists")
-			.append(" (select distinct r.endpoint")
-			.append(" from bpm_rolemapping r")
-			.append(" where rootinstid='" +  session.getLastInstanceId() +"' and assigntype = 0 and r.endpoint = c.friendId)");
-		}		
+		if(this.getMetaworksContext().getHow() != null && this.getMetaworksContext().getHow().equals("follower")) {			
+
+			if(session.getLastInstanceId().equals("topic")) {
+					
+				sb
+				.append(" and not exists")
+				.append(" (select t.userid")
+				.append(" from bpm_topicmapping t")
+				.append(" where topicid='" + session.getLastSelectedItem() + "' and assigntype=0 and t.userid=c.friendId)");
+			
+			}else if(session.getLastInstanceId().equals("etc")) {	
+			}
+			else {
+				sb
+				.append(" and not exists")
+				.append(" (select distinct r.endpoint")
+				.append(" from bpm_rolemapping r")
+				.append(" where rootinstid='" + session.getLastInstanceId() +"' and assigntype = 0 and r.endpoint = c.friendId)");
+			}
+		}
 		
-		IContact contacts = sql(sb.toString());
+ 		IContact contacts = sql(sb.toString());
 		contacts.setUserId(getUserId());		
 		contacts.set("friendName", this.getFriend().getName() + "%");
 		contacts.set("network", this.getFriend().getNetwork());
