@@ -25,6 +25,7 @@ public class MergeProcess {
 			processViewer = new ProcessViewer();
 			processViewer.setAlias(selectedProcessAlias);
 			processViewer.setViewType("definitionView");
+			processViewer.getProcessDesignerContainer().setEditorId(selectedProcessAlias);
 			processViewer.load();
 		}
 	}

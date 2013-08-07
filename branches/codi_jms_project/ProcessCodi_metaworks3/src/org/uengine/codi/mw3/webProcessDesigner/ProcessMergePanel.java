@@ -29,9 +29,13 @@ public class ProcessMergePanel {
 	}
 	public void load(){
 		mergeOriginProcessPanel = new MergeOriginProcessPanel();
+		mergeOriginProcessPanel.setSelectedProcessAlias("D:/codi/codebase/codi/root/ccc.wpd");
+		mergeOriginProcessPanel.load();
 		
 		mergeImportProcessPanel = new MergeImportProcessPanel();
-		
+		mergeImportProcessPanel.setSelectedProcessAlias("D:/codi/codebase/codi/root/efe.process");
+		mergeImportProcessPanel.load();
+		 
 		// TODO
 		
 	}
