@@ -10,6 +10,7 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.TransactionContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.UEngineException;
 import org.uengine.webservices.emailserver.impl.EMailServerSoapBindingImpl;
 
@@ -169,7 +170,7 @@ public class Notification extends Database<INotification> implements INotificati
 								actorUserInfoDB.getEmail(), 
 								actorUserInfoDB.getEmpName(),
 								userInfoDB.getEmail(), 
-								"[ProcessCodi] " + instance.getName(), 
+								"[ProcessCodi] " + (instance.getName() == null ? GlobalContext.getLocalizedMessage("$AddFo") : instance.getName()), 
 								getActAbstract() + "<p><a href='" + url + "'>Connect to Process Codi for details.</a>", 
 								null, 
 								null,
