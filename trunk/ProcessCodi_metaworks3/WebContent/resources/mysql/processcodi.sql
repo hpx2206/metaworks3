@@ -767,3 +767,5 @@ alter table emptable add guest int(1);
 ALTER TABLE `bpm_procinst`  CHANGE COLUMN `BVBENEFIT` `BENEFIT` INT(6) NULL DEFAULT NULL AFTER `lastcmnt2`,  CHANGE COLUMN `BVPENALTY` `PENALTY` INT(6) NULL DEFAULT NULL AFTER `BENEFIT`;
 
 update emptable set guest = 0;
+
+alter table emptable add notiEmail int(1) default 0;
