@@ -26,7 +26,6 @@ import org.uengine.processmanager.ProcessManagerRemote;
 public class User extends Database<IUser> implements IUser {
 	
 	String name;
-	
 		public String getName() {
 			return name;
 		}
@@ -44,21 +43,17 @@ public class User extends Database<IUser> implements IUser {
 		}
 		
 	String network;
-		
 		public String getNetwork() {
 			return network;
 		}
-	
 		public void setNetwork(String network) {
 			this.network = network;
 		}
 		
 	String mood;
-
 		public String getMood() {
 			return mood;
 		}
-	
 		public void setMood(String mood) {
 			this.mood = mood;
 		}
@@ -342,6 +337,9 @@ public class User extends Database<IUser> implements IUser {
 			if(!postByMe){ //ignore myself
 				Notification noti = new Notification();
 				
+				noti.session = session;
+				noti.setActor(this);
+				
 				noti.setNotiId(System.currentTimeMillis()); //TODO: why generated is hard to use
 				noti.setUserId(getUserId());
 				noti.setActorId(session.getUser().getUserId());
@@ -351,9 +349,10 @@ public class User extends Database<IUser> implements IUser {
 				noti.setInstId(new Long(instId));
 				noti.setActAbstract(session.getUser().getName() + " added "  + getName()+ " to '" + instance.databaseMe().getName() + "'");
 	
-				noti.createDatabaseMe();
-				noti.flushDatabaseMe();
-			
+				//워크아이템에서 노티를 추가할때와 동일한 로직을 수행하도록 변경
+//				noti.createDatabaseMe();
+//				noti.flushDatabaseMe();
+				noti.add(instance);
 			
 				String followerSessionId = Login.getSessionIdWithUserId(getUserId());
 				
@@ -364,9 +363,9 @@ public class User extends Database<IUser> implements IUser {
 						@Override
 						public void run() {
 							//refresh notification badge
-							if(!postByMe)
+							if(!postByMe){
 								ScriptSessions.addFunctionCall("mw3.getAutowiredObject('" + NotificationBadge.class.getName() + "').refresh", new Object[]{});
-							
+							}
 						}
 						
 					});

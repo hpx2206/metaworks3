@@ -18,7 +18,6 @@ import org.metaworks.annotation.Validator;
 import org.metaworks.annotation.ValidatorContext;
 import org.metaworks.annotation.ValidatorSet;
 import org.metaworks.dao.IDAO;
-import org.uengine.codi.mw3.Login;
 
 @Table(name = "EMPTABLE")
 @Face(options={"fieldOrder"}, values={"email,empName,globalCom,password,confirmPassword"})
@@ -154,7 +153,9 @@ public interface IEmployee extends IDAO {
 
 	public boolean isGuest();
 	public void setGuest(boolean guest);
-
+	
+	public boolean isNotiEmail();
+	public void setNotiEmail(boolean notiEmail);
 	
 	@NonLoadable
 	@NonSavable

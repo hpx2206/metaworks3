@@ -29,13 +29,15 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	@AutowiredFromClient
 	public Locale localeManager;
 	
-/*	IUser user;	
+	/*
+	IUser user;	
 		public IUser getUser() {
 			return user;
 		}
 		public void setUser(IUser user) {
 			this.user = user;
-		}*/
+		}
+	*/
 
 	boolean validEmail;
 		public boolean isValidEmail() {
@@ -44,7 +46,6 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		public void setValidEmail(boolean validEmail) {
 			this.validEmail = validEmail;
 		}	
-
 
 	String empCode;
 		public String getEmpCode() {
@@ -87,131 +88,109 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 			this.partCode = partCode;
 		}
 	
+	String mood;
+		public String getMood() {
+			return mood;
+		}
+		public void setMood(String mood) {
+			this.mood = mood;
+		}
+		
+	String preferMob;
+		public String getPreferMob() {
+			return preferMob;
+		}
+		public void setPreferMob(String preferMob) {
+			this.preferMob = preferMob;
+		}
+
+	String preferUX;
+		public String getPreferUX() {
+			return preferUX;
+		}
+		public void setPreferUX(String preferUX) {
+			this.preferUX = preferUX;
+		}
+
 	String password;
-	String confirmPassword;	
-	boolean isAdmin;
-	String jikName;
-	// IDept dept;
-	// ICompany company;
+		public String getPassword() {
+			return password;
+		}
+		public void setPassword(String password) {
+			this.password = password;
+		}
+
+	String confirmPassword;
+		public String getConfirmPassword() {
+			return confirmPassword;
+		}
+		public void setConfirmPassword(String confirmPassword) {
+			this.confirmPassword = confirmPassword;
+		}
 	
+	boolean isAdmin;
+		public boolean getIsAdmin() {
+			return isAdmin;
+		}
+		public void setIsAdmin(boolean value) {
+			this.isAdmin = value;
+		}
+
+	String jikName;
+		public String getJikName() {
+			return jikName;
+		}
+		public void setJikName(String jikName) {
+			this.jikName = jikName;
+		}
 
 	transient String partName;
+		public String getPartName() {
+			return partName;
+		}
+		public void setPartName(String partName) {
+			this.partName = partName;
+		}
 
 	String globalCom;
+		public String getGlobalCom() {
+			return globalCom;
+		}
+		public void setGlobalCom(String globalCom) {
+			this.globalCom = globalCom;
+		}
+	
 	String isDeleted;
+		public String getIsDeleted() {
+			return this.isDeleted;
+		}
+		public void setIsDeleted(String deleted) {
+			this.isDeleted = deleted;
+		}
+
 	String mobileNo;
+		public String getMobileNo() {
+			return mobileNo;
+		}
+		public void setMobileNo(String mobileNo) {
+			this.mobileNo = mobileNo;
+		}
+
 	String email;
+		public String getEmail() {
+			return email;
+		}
+		public void setEmail(String email) {
+			this.email = email;
+		}
+
 	String locale;
-	String preferUX;
-	String preferMob;
-	String mood;
-	
-
-	public String getMood() {
-		return mood;
-	}
-	public void setMood(String mood) {
-		this.mood = mood;
-	}
-	
-	public String getPreferMob() {
-		return preferMob;
-	}
-	public void setPreferMob(String preferMob) {
-		this.preferMob = preferMob;
-	}
-	public String getPreferUX() {
-		return preferUX;
-	}
-	public void setPreferUX(String preferUX) {
-		this.preferUX = preferUX;
-	}
-
-	
-	public String getPassword() {
-		return password;
-	}
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public String getConfirmPassword() {
-		return confirmPassword;
-	}
-
-	public void setConfirmPassword(String confirmPassword) {
-		this.confirmPassword = confirmPassword;
-	}
-	
-
-
-	@Override
-	public boolean getIsAdmin() {
-		return isAdmin;
-	}
-
-	@Override
-	public void setIsAdmin(boolean value) {
-		this.isAdmin = value;
-	}
-
-	public String getJikName() {
-		return jikName;
-	}
-
-	public void setJikName(String jikName) {
-		this.jikName = jikName;
-	}
-
-	@Override
-	public String getPartName() {
-		return partName;
-	}
-
-	@Override
-	public void setPartName(String partName) {
-		this.partName = partName;
-	}
-
-	public String getGlobalCom() {
-		return globalCom;
-	}
-
-	public void setGlobalCom(String globalCom) {
-		this.globalCom = globalCom;
-	}
-
-	public String getIsDeleted() {
-		return this.isDeleted;
-	}
-
-	public void setIsDeleted(String deleted) {
-		this.isDeleted = deleted;
-	}
-
-	public String getMobileNo() {
-		return mobileNo;
-	}
-
-	public void setMobileNo(String mobileNo) {
-		this.mobileNo = mobileNo;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getLocale() {
-		return locale;
-	}
-
-	public void setLocale(String locale) {
-		this.locale = locale;
-	}
+		public String getLocale() {
+			return locale;
+		}
+		public void setLocale(String locale) {
+			this.locale = locale;
+		}
 
 	PortraitImageFile imageFile;		
 		public PortraitImageFile getImageFile() {
@@ -236,7 +215,15 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		public void setGuest(boolean guest) {
 			this.guest = guest;
 		}
-		
+	
+	boolean notiEmail;
+		public boolean isNotiEmail() {
+			return notiEmail;
+		}
+		public void setNotiEmail(boolean notiEmail) {
+			this.notiEmail = notiEmail;
+		}
+	
 	@Override
 	public IEmployee load() throws Exception {
 		String errorMessage;

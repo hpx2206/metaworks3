@@ -7,6 +7,7 @@ package org.uengine.codi.cron;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Properties;
+
 import javax.mail.Address;
 import javax.mail.FetchProfile;
 import javax.mail.Flags;
@@ -14,16 +15,10 @@ import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
-//import javax.mail.Multipart;
 import javax.mail.NoSuchProviderException;
 import javax.mail.Part;
 import javax.mail.Session;
 import javax.mail.Store;
-//import javax.mail.URLName;
-import javax.mail.internet.ContentType;
-//import javax.mail.internet.InternetAddress;
-//import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.ParseException;
 import javax.mail.search.FlagTerm;
 
 import org.metaworks.MetaworksContext;
@@ -35,7 +30,6 @@ import org.uengine.codi.mw3.model.ICompany;
 import org.uengine.codi.mw3.model.IEmployee;
 import org.uengine.codi.mw3.model.Invitation;
 import org.uengine.codi.mw3.model.MemoWorkItem;
-import org.uengine.codi.mw3.model.UnstructuredProcessInstanceStarter;
 import org.uengine.codi.mw3.model.User;
 
 public class EMailReader {
