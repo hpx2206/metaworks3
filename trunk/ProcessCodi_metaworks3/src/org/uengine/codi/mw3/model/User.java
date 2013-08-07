@@ -352,7 +352,7 @@ public class User extends Database<IUser> implements IUser {
 				//워크아이템에서 노티를 추가할때와 동일한 로직을 수행하도록 변경
 //				noti.createDatabaseMe();
 //				noti.flushDatabaseMe();
-				noti.add(instance);
+				noti.add(instance.databaseMe());
 			
 				String followerSessionId = Login.getSessionIdWithUserId(getUserId());
 				
