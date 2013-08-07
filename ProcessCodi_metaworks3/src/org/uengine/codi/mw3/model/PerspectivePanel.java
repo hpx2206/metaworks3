@@ -84,7 +84,15 @@ public class PerspectivePanel {
 		public void setTopicPerspective(TopicPerspective topicPerspective) {
 			this.topicPerspective = topicPerspective;
 		}
-	
+		
+	ContactPerspective contactPerspective;
+		public ContactPerspective getContactPerspective() {
+			return contactPerspective;
+		}
+		public void setContactPerspective(ContactPerspective contactPerspective) {
+			this.contactPerspective = contactPerspective;
+		}
+
 	public PerspectivePanel() throws Exception {
 		this(null);
 	}
@@ -106,10 +114,15 @@ public class PerspectivePanel {
 				
 				//조직도
 				organizationPerspectiveDept = new OrganizationPerspectiveDept();
+//				organizationPerspectiveDept.select();
+				
 				//역할
 				organizationPerspectiveRole = new OrganizationPerspectiveRole();
+//				organizationPerspectiveRole.select();
+				
 				//프로세스별
 				processPerspective = new ProcessPerspective();
+//				processPerspective.select();
 				
 				//앱
 				if("1".equals(GlobalContext.getPropertyString("app.use", "1"))){
@@ -120,6 +133,13 @@ public class PerspectivePanel {
 					projectPerspective = new ProjectPerspective();
 //						projectPerspective.select();
 				}
+				if("1".equals(GlobalContext.getPropertyString("contact.use", "1"))){
+					//친구
+					contactPerspective = new ContactPerspective();
+					contactPerspective.session = session;
+					contactPerspective.select();
+				}
+				
 			}
 			//processStatusPerspective = new ProcessStatusPerspective();
 			//strategicPerspective = new StrategicPerspective();
