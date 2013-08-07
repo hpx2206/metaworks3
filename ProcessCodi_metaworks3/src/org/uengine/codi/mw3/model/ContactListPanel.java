@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
@@ -38,6 +39,7 @@ public class ContactListPanel implements ContextAware {
 		localContactList.getMetaworksContext().setHow(getMetaworksContext().getHow());
 		localContactList.getMetaworksContext().setWhen(getMetaworksContext().getWhen());
 		localContactList.getMetaworksContext().setWhere(ContactList.LOCAL);
+		localContactList.session = session;
 		localContactList.load(userId, keyword);
 		
 		setLocalContactList(localContactList);
@@ -109,4 +111,7 @@ public class ContactListPanel implements ContextAware {
 		public void setCheckNodes(ArrayList<IUser> checkNodes) {
 			this.checkNodes = checkNodes;
 		}
+
+	@AutowiredFromClient
+	public Session session;
 }

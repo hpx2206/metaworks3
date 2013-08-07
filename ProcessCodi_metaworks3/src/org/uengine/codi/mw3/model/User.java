@@ -14,6 +14,7 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.TransactionContext;
+import org.metaworks.widget.ModalWindow;
 import org.metaworks.widget.Window;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.Login;
@@ -375,7 +376,11 @@ public class User extends Database<IUser> implements IUser {
 			}
 //			////// end
 			
-			return new Object[]{new Refresh(followers)};
+			ContactPanel contactPanel = new ContactPanel(session, Followers.ADD_INSTANCEFOLLOWERS);
+			
+			return new Object[]{new Refresh(contactPanel), new Refresh(followers)};
+			
+			
 			//TODO: restored by jjy. 
 			
 			//
@@ -556,17 +561,31 @@ public class User extends Database<IUser> implements IUser {
 	}
 
 	@Override
-	public Remover unsubscribe() throws Exception {
+	public Object[] unsubscribe() throws Exception {
 		
-		if(getUserId().equals(session.getUser().getUserId()) || session.getEmployee().getIsAdmin()){
-		
-			Employee employeeType = new Employee();
-			employeeType.setEmpCode(getUserId());
-			employeeType.deleteDatabaseMe();
+		if(getUserId().equals(session.getUser().getUserId()) || session.getEmployee().getIsAdmin()) {
 			
-			return new Remover(this);
-		}else
-			throw new Exception("$AdminOnly");
+			Employee employee = new Employee();
+			employee.setEmpCode(getUserId());		
+			employee.databaseMe().setIsDeleted("1");		
+			
+			if(getUserId().equals(session.getUser().getUserId()))
+				return new Object[]{session.logout(), new Remover(new ModalWindow())};
+			else
+				return new Object[]{new Remover(employee , true)};
+		}
+		else
+			throw new Exception("관리자나 본인이 아니면 탈퇴할 수 없습니다");		
+		
+//		if(getUserId().equals(session.getUser().getUserId()) || session.getEmployee().getIsAdmin()){
+//			
+//			Employee employeeType = new Employee();
+//			employeeType.setEmpCode(getUserId());
+//			employeeType.deleteDatabaseMe();
+//			
+//			return new Remover(this);
+//		}else
+//			throw new Exception("$AdminOnly");
 	}
 
 	@Override

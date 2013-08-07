@@ -4,6 +4,7 @@ import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
+import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;
 import org.metaworks.annotation.ServiceMethod;
@@ -91,7 +92,8 @@ public interface IUser extends IDAO{
 	@ServiceMethod(inContextMenu=true, needToConfirm=true)
 	@Available(when={"followers"})
 	@Face(displayName="$Unsubscribe")
-	public Remover unsubscribe() throws Exception;
+	@Hidden
+	public Object[] unsubscribe() throws Exception;
 
 	@ServiceMethod(inContextMenu=true, needToConfirm=true, target="none")
 	@Available(when={"admin"})

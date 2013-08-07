@@ -2,9 +2,9 @@ package org.uengine.codi.mw3.model;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
-import org.metaworks.annotation.ServiceMethod;
 
 public class ContactList implements ContextAware {
 	
@@ -24,6 +24,7 @@ public class ContactList implements ContextAware {
 		Contact contact = new Contact();
 		contact.setMetaworksContext(getMetaworksContext());
 		contact.setUserId(userId);
+		contact.session = session;
 		
 		IUser friend = new User();
 		friend.setName(friendName);
@@ -83,5 +84,7 @@ public class ContactList implements ContextAware {
 		public void setInvitation(Invitation invitation) {
 			this.invitation = invitation;
 		}
-
+		
+	@AutowiredFromClient
+	public Session session;
 }

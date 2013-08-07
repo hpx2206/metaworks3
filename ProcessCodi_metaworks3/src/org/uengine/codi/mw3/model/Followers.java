@@ -2,6 +2,7 @@ package org.uengine.codi.mw3.model;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.Refresh;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
@@ -87,7 +88,7 @@ public class Followers implements ContextAware {
 	
 	//, loader="auto", loadOnce=true
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
-	public Popup addFollowers() throws Exception{		
+	public Object[] addFollowers() throws Exception{		
 		Popup popup = new Popup(400,400);
 //		Popup popup = new ModalWindow();
 		popup.setWidth(400);
@@ -101,13 +102,15 @@ public class Followers implements ContextAware {
 			type = ADD_ETCFOLLOWERS;
 		}
 		
+		session.setLastInstanceId(this.getInstanceId());
+		
 		FollowerSelectTab followerSelectTab = new FollowerSelectTab();
 		followerSelectTab.load(session, type);
 
 		popup.setPanel(followerSelectTab);
 //		popup.setName("AddFollowerPanel");
 		
-		return popup;		
+		return new Object[]{new Refresh(session) , popup};		
 	}
 	
 	@ServiceMethod(inContextMenu=true, callByContent=true, target="popup", mouseBinding="drop")

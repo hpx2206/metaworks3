@@ -4,15 +4,16 @@ import org.metaworks.annotation.Face;
 
 @Face(ejsPath="genericfaces/Tab.ejs"  )
 public class FollowerSelectTab {
-	ContactListPanel contactListPanel;
+
+	ContactPanel contactPanel;
 		@Face(displayName="$FollowerFriends")
-		public ContactListPanel getContactListPanel() {
-			return contactListPanel;
+		public ContactPanel getContactPanel() {
+			return contactPanel;
 		}
-		public void setContactListPanel(ContactListPanel contactListPanel) {
-			this.contactListPanel = contactListPanel;
+		public void setContactPanel(ContactPanel contactPanel) {
+			this.contactPanel = contactPanel;
 		}
-	
+		
 	OrganizationTreePanel deptTreePanel;
 		@Face(displayName="$FollowerOrganization")
 		public OrganizationTreePanel getDeptTreePanel() {
@@ -25,19 +26,9 @@ public class FollowerSelectTab {
 		
 	}
 	public void load(Session session, String type) throws Exception {
-
-		ContactListPanel contactListPanel = new ContactListPanel();
-		contactListPanel.getMetaworksContext().setHow("follower");
-		contactListPanel.setId(type);
-		contactListPanel.load(session.getUser().getUserId());
-		
-		if(contactListPanel.getLocalContactList() != null)
-			contactListPanel.getLocalContactList().getMetaworksContext().setWhen(type);
-		if(contactListPanel.getSocialContactList() != null)
-			contactListPanel.getSocialContactList().getMetaworksContext().setWhen(type);
-
-		this.setContactListPanel(contactListPanel);
-		
+	
+		ContactPanel contactPanel = new ContactPanel(session, type);
+		this.setContactPanel(contactPanel);
 		
 		OrganizationTreePanel deptTreePanel = new OrganizationTreePanel();
 		deptTreePanel.load(session, type);
