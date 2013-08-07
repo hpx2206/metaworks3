@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.metaworks.annotation.Id;
 import org.metaworks.common.MetaworksUtil;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.ProcessDefinition;
@@ -20,6 +21,7 @@ public class ProcessViewer {
 			this.defId = defId;
 		}
 	String alias;
+		@Id
 		public String getAlias() {
 			return alias;
 		}
@@ -33,6 +35,10 @@ public class ProcessViewer {
 		public void setViewType(String viewType) {
 			this.viewType = viewType;
 		}
+		
+	/*
+	 * 1024,768 이런식으로 셋팅
+	 */
 	String processDesignerSize;
 		public String getProcessDesignerSize() {
 			return processDesignerSize;

@@ -20,7 +20,7 @@ public class ProcessMergeEditor  extends Editor{
 			this.processMergePanel = processMergePanel;
 		}
 	public ProcessMergeEditor(){
-				
+		processMergePanel = new ProcessMergePanel();
 	}
 	public ProcessMergeEditor(ResourceNode resourceNode){
 		super(resourceNode);

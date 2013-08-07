@@ -27,8 +27,12 @@ public class ProcessMergePanel {
 	public ProcessMergePanel(){
 		
 	}
-	
 	public void load(){
+		mergeOriginProcessPanel = new MergeOriginProcessPanel();
+		
+		mergeImportProcessPanel = new MergeImportProcessPanel();
+		
+		// TODO
 		
 	}
 }
