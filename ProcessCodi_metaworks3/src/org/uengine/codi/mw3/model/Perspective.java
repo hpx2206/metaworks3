@@ -109,7 +109,7 @@ public class Perspective {
 		session.setWindowTitle(title);
 
 		
-		SearchBox searchBox = new SearchBox();
+		InstanceSearchBox searchBox = new InstanceSearchBox();
 		searchBox.setKeyword(session.getSearchKeyword());
 		searchBox.setKeyUpSearch(true);
 		searchBox.setKeyEntetSearch(true);
