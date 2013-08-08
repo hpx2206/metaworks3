@@ -30,7 +30,13 @@
 	
 		<%=fields.contactListPanel.here()%>
 		<div style=" margin:5px;">
-			<a href="#" onclick="<%=methods.addContact.caller()%>"><img src="images/waveStyle/addUser2.png" /></a>	   
+<%
+		if (value.contactListPanel.metaworksContext.how == null || value.contactListPanel.metaworksContext.how != 'follower') {
+%>		
+			<a href="#" onclick="<%=methods.addContact.caller()%>"><img src="images/waveStyle/addUser2.png" /></a>
+<%
+		}
+%>
 		</div>
 <!--/div>
 
