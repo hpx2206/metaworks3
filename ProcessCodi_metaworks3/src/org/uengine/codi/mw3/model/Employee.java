@@ -223,7 +223,14 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		public void setMailNoti(boolean isMailNoti) {
 			this.isMailNoti = isMailNoti;
 		}
-		
+	
+	String inviteUser;
+		public String getInviteUser() {
+			return inviteUser;
+		}
+		public void setInviteUser(String inviteUser) {
+			this.inviteUser = inviteUser;
+		}
 	
 	@Override
 	public IEmployee load() throws Exception {

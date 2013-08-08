@@ -157,6 +157,10 @@ public interface IEmployee extends IDAO {
 	public boolean isMailNoti();
 	public void setMailNoti(boolean isMailNoti);
 	
+	@Hidden
+	public String getInviteUser();
+	public void setInviteUser(String inviteUser);
+	
 	@NonLoadable
 	@NonSavable
 	@Hidden
