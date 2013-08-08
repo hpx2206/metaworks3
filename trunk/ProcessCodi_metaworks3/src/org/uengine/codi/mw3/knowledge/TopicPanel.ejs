@@ -4,20 +4,26 @@
 %>
 	<ul>
 <%
-		for (var i=0; i<value.topicNode.length; i++){
-			if(typeof options == 'undefined') 
-				options = objectMetadata;
+			for (var i=0; i<value.topicNode.length; i++){
+				if(typeof options == 'undefined') 
+					options = objectMetadata;
+			
+				options['index'] = i;
+				options['htmlTag'] =  'li';
+%>
+		<%=mw3.locateObject(value.topicNode[i], value.topicNode[i].__className, null, options)%>	
+<%
+				mw3.addBeanProperty(value.__objectId, '.topicNode[' + i + ']');
+			}
+%>
+		</ul>
 		
-			options['index'] = i;
-			options['htmlTag'] =  'li';
-%>
-	<%=mw3.locateObject(value.topicNode[i], value.topicNode[i].__className, null, options)%>	
+			<%
+			if(!value.selectedMore) {
+			%>
+				<a onClick="<%=methods.moreView.caller()%>" href="#"><%=mw3.localize('$More')%></a>
 <%
-			mw3.addBeanProperty(value.__objectId, '.topicNode[' + i + ']');
-		}
-%>
-	</ul>	
-<%
+			}
 		}
 	}
 %>	

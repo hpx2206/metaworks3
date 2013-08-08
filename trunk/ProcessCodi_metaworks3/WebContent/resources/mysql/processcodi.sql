@@ -776,10 +776,19 @@ CREATE TABLE recentItem(
 	empcode VARCHAR(100) NOT NULL,
 	type  VARCHAR(10) NOT NULL,
 	item VARCHAR(100) NOT NULL,
-	updateDate DATE ,
+	updateDate datetime DEFAULT NULL,
 	PRIMARY KEY(empcode)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- notiEmail 컬럼명 수정
 alter table emptable drop notiEmail;
 alter table emptable add isMailNoti int(1) default 0;
+
+DROP TABLE recentItem;
+CREATE TABLE recentItem(
+	empcode VARCHAR(100) NOT NULL,
+	itemType  VARCHAR(10) NOT NULL,
+	itemId VARCHAR(100) NOT NULL,
+	updateDate datetime DEFAULT NULL,
+	PRIMARY KEY(empcode,itemType,itemId)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;

@@ -14,7 +14,9 @@ import org.uengine.codi.mw3.model.Instance;
 import org.uengine.codi.mw3.model.InstanceDrag;
 import org.uengine.codi.mw3.model.InstanceList;
 import org.uengine.codi.mw3.model.Perspective;
+import org.uengine.codi.mw3.model.RecentItem;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.kernel.GlobalContext;
 
 public class TopicNode extends Database<ITopicNode> implements ITopicNode {
 	 
@@ -90,12 +92,36 @@ public class TopicNode extends Database<ITopicNode> implements ITopicNode {
 		
 		StringBuffer sb = new StringBuffer();
 		sb.append("select * from bpm_knol knol");
+		sb.append(" left join recentItem item on item.itemId = knol.id and item.itemType=?type");
 		sb.append(" where knol.type = ?type");
 		sb.append(" and knol.companyId = ?companyId");
 		sb.append(" and ( knol.secuopt=0 OR (knol.secuopt=1 and ( exists (select topicid from BPM_TOPICMAPPING tp where tp.userid=?userid and knol.id=tp.topicid)  ");
 		sb.append(" 																	 or ?userid in ( select empcode from emptable where partcode in (  ");
 		sb.append(" 																	 						select userId from BPM_TOPICMAPPING where assigntype = 2 and topicID = knol.id )))))  ");
-		sb.append(" order by "  + daoUtil.replaceReservedKeyword("no"));
+		sb.append(" order by updateDate desc limit " + GlobalContext.getPropertyString("topic.more.count"));
+		
+		ITopicNode dao = (ITopicNode)MetaworksDAO.createDAOImpl(TransactionContext.getThreadLocalInstance(), sb.toString(), ITopicNode.class); 
+		dao.set("type", "topic");
+		dao.set("userid", session.getEmployee().getEmpCode());
+		dao.set("companyId", session.getCompany().getComCode());
+		dao.select();
+		
+		return dao; 
+	}
+	
+	public static ITopicNode moreView(Session session) throws Exception {
+		
+		DAOUtil daoUtil = new DAOUtil();
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append("select * from bpm_knol knol");
+		sb.append(" left join recentItem item on item.itemId = knol.id and item.itemType=?type");
+		sb.append(" where knol.type = ?type");
+		sb.append(" and knol.companyId = ?companyId");
+		sb.append(" and ( knol.secuopt=0 OR (knol.secuopt=1 and ( exists (select topicid from BPM_TOPICMAPPING tp where tp.userid=?userid and knol.id=tp.topicid)  ");
+		sb.append(" 																	 or ?userid in ( select empcode from emptable where partcode in (  ");
+		sb.append(" 																	 						select userId from BPM_TOPICMAPPING where assigntype = 2 and topicID = knol.id )))))  ");
+		sb.append(" order by updateDate desc");
 		
 		ITopicNode dao = (ITopicNode)MetaworksDAO.createDAOImpl(TransactionContext.getThreadLocalInstance(), sb.toString(), ITopicNode.class); 
 		dao.set("type", "topic");
@@ -114,8 +140,15 @@ public class TopicNode extends Database<ITopicNode> implements ITopicNode {
 			String title = "주제 : " + getName();
 			Object[] returnObject = Perspective.loadInstanceListPanel(session, "topic", getId(), title);
 			
+			// recentItem 에 create
+			RecentItem recentItem = new RecentItem();
+			
+			recentItem.session = session;
+			recentItem.setTopicNode(this);
+			recentItem.add();
+			
 			return returnObject;
-		}		
+		}
 	}
 	
 	
