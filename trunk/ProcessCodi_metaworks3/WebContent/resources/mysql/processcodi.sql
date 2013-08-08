@@ -792,3 +792,6 @@ CREATE TABLE recentItem(
 	updateDate datetime DEFAULT NULL,
 	PRIMARY KEY(empcode,itemType,itemId)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--emptable에 inviteUser(초대한 사람) 추가
+ALTER TABLE `emptable	ADD COLUMN `inviteUser` VARCHAR(100) NULL DEFAULT NULL;
