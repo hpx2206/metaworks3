@@ -11,6 +11,12 @@ var org_uengine_codi_mw3_knowledge_ITopicNode = function(objectId, className){
 	
 	this.showStatus = function(message){
 		if(window.console)
-			console.log('ITopicNode(' + this.objectId + ') : ' + message);
+			mw3.log('ITopicNode(' + this.objectId + ') : ' + message);
+		
+		var message_split = message.split(' ');
+
+		if(message_split[0] == 'loadTopic'){
+			this.objectDiv.parent().prepend(this.objectDiv);
+		}
 	};
 };
