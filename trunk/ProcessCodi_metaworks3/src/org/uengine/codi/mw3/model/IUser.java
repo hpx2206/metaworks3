@@ -63,7 +63,7 @@ public interface IUser extends IDAO{
 	
 	@ServiceMethod(callByContent=true, inContextMenu=true)
 	@Face(displayName="$RemoveFromFollowers")
-	@Available(when={"followers"})
+	@Available(when={"followers", "topicFollowers"})
 	public Object[] removeFollower() throws Exception;
 	
 	@ServiceMethod(callByContent=true, inContextMenu=true, target=TARGET_APPEND)

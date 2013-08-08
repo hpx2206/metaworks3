@@ -1113,11 +1113,14 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	}
 
 	public void edit() throws Exception{
-		if( this.getWorkItemHandler() != null && this.getWorkItemHandler().getTracingTag() != null && !this.getWorkItemHandler().getTracingTag().equals(null) ){
-			throw new Exception("$CanNotEdit");
-		}
-		if(!session.getUser().getUserId().equals(getWriter().getUserId())){
-			throw new Exception("$OnlyTheWriterCanEdit");
+		
+		if(!"file".equals(this.getType())) {
+			if( this.getWorkItemHandler() != null && this.getWorkItemHandler().getTracingTag() != null && !this.getWorkItemHandler().getTracingTag().equals(null) ){
+				throw new Exception("$CanNotEdit");
+			}
+			if(!session.getUser().getUserId().equals(getWriter().getUserId())){
+				throw new Exception("$OnlyTheWriterCanEdit");
+			}
 		}
 		
 		/*
