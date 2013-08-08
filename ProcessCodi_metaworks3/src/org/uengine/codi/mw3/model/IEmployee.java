@@ -154,8 +154,8 @@ public interface IEmployee extends IDAO {
 	public boolean isGuest();
 	public void setGuest(boolean guest);
 	
-	public boolean isNotiEmail();
-	public void setNotiEmail(boolean notiEmail);
+	public boolean isMailNoti();
+	public void setMailNoti(boolean isMailNoti);
 	
 	@NonLoadable
 	@NonSavable
