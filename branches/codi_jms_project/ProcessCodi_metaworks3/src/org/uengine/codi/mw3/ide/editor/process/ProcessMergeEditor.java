@@ -25,6 +25,8 @@ public class ProcessMergeEditor  extends Editor{
 		super(resourceNode);
 		this.setType("processMerge");
 		processMergePanel = new ProcessMergePanel();
+		processMergePanel.setSelectedProcessAlias(resourceNode.getPath());
 		processMergePanel.load();
+		
 	}
 }

@@ -9,13 +9,11 @@ import org.metaworks.ToAppend;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
-import org.uengine.codi.mw3.ide.CloudInstanceWindow;
 import org.uengine.codi.mw3.ide.CloudWindow;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.Workspace;
 import org.uengine.codi.mw3.ide.editor.Editor;
 import org.uengine.codi.mw3.ide.editor.process.ProcessEditor;
-import org.uengine.codi.mw3.model.InstanceViewThreadPanel;
 import org.uengine.kernel.Activity;
 import org.uengine.kernel.EventActivity;
 import org.uengine.kernel.SubProcessActivity;
@@ -114,7 +112,7 @@ public class ProcessViewerPanel implements ContextAware {
 		processViewPanel.load();
 	}
 
-		
+	
 	public void loadDefinitionView(){
 		this.getMetaworksContext().setHow("load");
 		processViewPanel = new ProcessViewPanel();

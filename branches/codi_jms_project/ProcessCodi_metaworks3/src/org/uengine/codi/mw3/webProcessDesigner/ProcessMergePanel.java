@@ -24,19 +24,27 @@ public class ProcessMergePanel {
 				MergeImportProcessPanel mergeImportProcessPanel) {
 			this.mergeImportProcessPanel = mergeImportProcessPanel;
 		}
+	MergeTopMenu mergeTopMenu;
+		public MergeTopMenu getMergeTopMenu() {
+			return mergeTopMenu;
+		}
+		public void setMergeTopMenu(MergeTopMenu mergeTopMenu) {
+			this.mergeTopMenu = mergeTopMenu;
+		}
 	public ProcessMergePanel(){
 		
 	}
 	public void load(){
 		mergeOriginProcessPanel = new MergeOriginProcessPanel();
-		mergeOriginProcessPanel.setSelectedProcessAlias("D:/codi/codebase/codi/root/ccc.wpd");
+		mergeOriginProcessPanel.setSelectedProcessAlias(this.selectedProcessAlias);
 		mergeOriginProcessPanel.load();
-		
+				
+		// import 부분은 따로 processMap을 부르기 때문에 Origin 부터 작업.
 		mergeImportProcessPanel = new MergeImportProcessPanel();
 		mergeImportProcessPanel.setSelectedProcessAlias("D:/codi/codebase/codi/root/efe.process");
 		mergeImportProcessPanel.load();
-		 
-		// TODO
 		
+		// TODO
 	}
+	
 }

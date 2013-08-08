@@ -8,7 +8,14 @@ public class MergeProcess {
 		public void setSelectedProcessAlias(String selectedProcessAlias) {
 			this.selectedProcessAlias = selectedProcessAlias;
 		}
-		
+	MergeTopMenu mergeTopMenu;
+		public MergeTopMenu getMergeTopMenu() {
+			return mergeTopMenu;
+		}
+	
+		public void setMergeTopMenu(MergeTopMenu mergeTopMenu) {
+			this.mergeTopMenu = mergeTopMenu;
+		}
 	ProcessViewer processViewer;
 		public ProcessViewer getProcessViewer() {
 			return processViewer;
