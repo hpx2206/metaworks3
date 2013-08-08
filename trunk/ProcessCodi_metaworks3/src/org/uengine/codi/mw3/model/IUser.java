@@ -1,10 +1,8 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.Refresh;
-import org.metaworks.Remover;
 import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
-import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;
 import org.metaworks.annotation.ServiceMethod;
@@ -90,10 +88,18 @@ public interface IUser extends IDAO{
 	public void drop();
 	
 	@ServiceMethod(inContextMenu=true, needToConfirm=true)
-	@Available(when={"followers"})
+//	@Available(when={"followers"})
 	@Face(displayName="$Unsubscribe")
-	@Hidden
-	public Object[] unsubscribe() throws Exception;
+//	@Hidden
+	public Object[] unsubscribe() throws Exception;	
+
+	@ServiceMethod(callByContent=true, inContextMenu=true)
+	@Face(displayName="$GuestToUser")
+	public void guestToUser() throws Exception;
+	
+	@ServiceMethod(callByContent=true, inContextMenu=true)
+	@Face(displayName="$UserToGuest")
+	public void userToGuest() throws Exception;
 
 	@ServiceMethod(inContextMenu=true, needToConfirm=true, target="none")
 	@Available(when={"admin"})

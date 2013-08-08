@@ -564,10 +564,15 @@ public class User extends Database<IUser> implements IUser {
 	@Override
 	public Object[] unsubscribe() throws Exception {
 		
-		if(getUserId().equals(session.getUser().getUserId()) || session.getEmployee().getIsAdmin()) {
+		IEmployee emp = new Employee();
+		emp.setEmpCode(getUserId());
+		Employee employee = (Employee)emp.findMe();	
+		
+		String inviteUser = employee.getInviteUser();
+		
+		if(getUserId().equals(session.getUser().getUserId()) || session.getEmployee().getIsAdmin() ||
+				(inviteUser != null && inviteUser.equals(session.getUser().getUserId()))) {
 			
-			Employee employee = new Employee();
-			employee.setEmpCode(getUserId());		
 			employee.databaseMe().setIsDeleted("1");		
 			
 			if(getUserId().equals(session.getUser().getUserId()))
@@ -576,17 +581,43 @@ public class User extends Database<IUser> implements IUser {
 				return new Object[]{new Remover(employee , true)};
 		}
 		else
-			throw new Exception("관리자나 본인이 아니면 탈퇴할 수 없습니다");		
+			throw new Exception("$OnlyTheAdminAndWriterAndInviteUserCanUnsubscribe");
+	}
+	
+	@Override
+	public void guestToUser() throws Exception {	
 		
-//		if(getUserId().equals(session.getUser().getUserId()) || session.getEmployee().getIsAdmin()){
-//			
-//			Employee employeeType = new Employee();
-//			employeeType.setEmpCode(getUserId());
-//			employeeType.deleteDatabaseMe();
-//			
-//			return new Remover(this);
-//		}else
-//			throw new Exception("$AdminOnly");
+		IEmployee emp = new Employee();
+		emp.setEmpCode(getUserId());
+		Employee employee = (Employee)emp.findMe();		
+		
+		String inviteUser = employee.getInviteUser();
+		
+		if((inviteUser != null && inviteUser.equals(session.getUser().getUserId()))
+				|| session.getEmployee().getIsAdmin()) {
+			
+			employee.databaseMe().setGuest(false);	
+			
+		}
+		else
+			throw new Exception("$OnlyTheAdminAndInviteUserCanEdit");
+	}
+	
+	@Override
+	public void userToGuest() throws Exception {
+		IEmployee emp = new Employee();
+		emp.setEmpCode(getUserId());
+		Employee employee = (Employee)emp.findMe();		
+		
+		String inviteUser = employee.getInviteUser();
+		
+		if((inviteUser != null && inviteUser.equals(session.getUser().getUserId()))
+				|| session.getEmployee().getIsAdmin()) {
+			
+			employee.databaseMe().setGuest(true);
+		}
+		else
+			throw new Exception("$OnlyTheAdminAndInviteUserCanEdit");
 	}
 
 	@Override
