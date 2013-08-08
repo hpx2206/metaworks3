@@ -5,6 +5,7 @@ import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Test;
 import org.metaworks.widget.layout.Layout;
+import org.uengine.codi.mw3.Collaboration.Collaboration;
 import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.ide.CloudIDE;
 import org.uengine.codi.mw3.knowledge.Knowledge;
@@ -168,4 +169,11 @@ public class PageNavigator{
 		return new MainPanel(new Knowledge(session));
 	}
 	
+	@ServiceMethod(callByContent=true)
+	public MainPanel goFavorite() throws Exception {
+		Collaboration collaboration = new Collaboration();
+		collaboration.load(session); 
+			
+		return new MainPanel(collaboration);
+	}
 }

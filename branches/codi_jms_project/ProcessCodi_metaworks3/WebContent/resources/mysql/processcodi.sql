@@ -767,3 +767,14 @@ alter table emptable add guest int(1);
 ALTER TABLE `bpm_procinst`  CHANGE COLUMN `BVBENEFIT` `BENEFIT` INT(6) NULL DEFAULT NULL AFTER `lastcmnt2`,  CHANGE COLUMN `BVPENALTY` `PENALTY` INT(6) NULL DEFAULT NULL AFTER `BENEFIT`;
 
 update emptable set guest = 0;
+
+
+-- 2013.08.07
+create table favoritefile (
+ userId varchar(200) not null,
+ username varchar(200),
+ fileId varchar(100) ,
+ fileName varchar(100) ,
+ filePath varchar(100) ,
+ MODDATE datetime
+);

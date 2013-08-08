@@ -6,6 +6,8 @@ import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.uengine.codi.mw3.Login;
+import org.uengine.codi.mw3.Collaboration.ValuechainPerspective;
+import org.uengine.codi.mw3.ide.Workspace;
 import org.uengine.codi.mw3.knowledge.WfPanel;
 
 public class Perspective {
@@ -35,11 +37,13 @@ public class Perspective {
 		setSelected(!isSelected()); // toggle
 		if (isSelected()) {
 			loadChildren();
+			
 		} else {
 			unloadChildren();
 		}
 		return new Object[] { this };
 	}
+
 
 	protected void loadChildren() throws Exception {
 		// TODO Override and load children when perspective selected
@@ -146,4 +150,7 @@ public class Perspective {
 	@AutowiredFromClient
 	public Session session;
 
+	public Object action(){
+		return null;
+	}
 }
