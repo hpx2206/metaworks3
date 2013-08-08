@@ -3,10 +3,12 @@
 	
 	
 %>
+
 <%
 		if(value.center){
 %>
 	<div class="pane ui-layout-center" layoutName="center">
+	<div class="show_west_btn"></div>
 			<%=fields.center.here()%>
 	</div>
 <%
@@ -15,8 +17,15 @@
 	
 <%
 		if(value.west && !mw3.isHidden(fields.west)){
+			if(true){
 %>
-	<div class="pane ui-layout-west" layoutName="west"><%=fields.west.here()%></div>
+	<div class="pane ui-layout-west" layoutName="west">
+<%
+			}
+%>	
+		<div class="hide_west_btn"></div>
+		<%=fields.west.here()%>
+	</div>
 <%
 		}
 %>

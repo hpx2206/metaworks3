@@ -2383,3 +2383,6 @@ select.select[class] {
 .fb_addForm li img{ position:relative; top:3px;  background:#069;}
 .fb_addForm li span { padding:5px;}
 .fb_addForm .add_f_text{ color:#fff; font-weight:bold}
+
+.hide_west_btn{position:absolute;top:42%; right:-17px;width:17px;height:114px; background:url(../../images/waveStyle/hide_left_btn.png); cursor:pointer;}
+.show_west_btn{position:absolute;top:42%; left:0px;width:17px;height:114px; background:url(../../images/waveStyle/show_left_btn.png); cursor:pointer; display:none;z-index:2}
