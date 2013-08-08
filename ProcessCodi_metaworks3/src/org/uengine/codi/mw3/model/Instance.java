@@ -1272,9 +1272,9 @@ public class Instance extends Database<IInstance> implements IInstance{
 		
 		IInstance instanceRef = databaseMe();
 		
-		if(!instanceRef.getInitEp().equals(session.getUser().getUserId())  && !(session.getEmployee()!=null && session.getEmployee().getIsAdmin())){
-			throw new Exception("$OnlyInitiatorCanSetInstanceInfo");
-		}
+//		if(!instanceRef.getInitEp().equals(session.getUser().getUserId())  && !(session.getEmployee()!=null && session.getEmployee().getIsAdmin())){
+//			throw new Exception("$OnlyInitiatorCanSetInstanceInfo");
+//		}
 				
 		InstanceDueSetter ids = new InstanceDueSetter();
 		ids.setInstId(this.getInstId());

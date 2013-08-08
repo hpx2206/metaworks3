@@ -78,12 +78,6 @@ public class InstanceTooltip implements ContextAware {
 		instance.localeManager = localeManager;
 		instance.setInstId(this.getInstanceId());
 		
-		IInstance instanceRef = instance.databaseMe();
-		
-		if(!session.getUser().getUserId().equals(instanceRef.getInitEp())) {
-			throw new Exception("$OnlyTheWriterCanEdit");
-		}	
-		
 		return instance.schedule();
 	}
 	
