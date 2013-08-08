@@ -1,20 +1,15 @@
-package org.uengine.codi.mw3.webProcessDesigner;
+package org.uengine.codi.mw3.ide.compare;
 
-public class MergeProcess {
+import org.uengine.codi.mw3.webProcessDesigner.ProcessViewer;
+
+
+public class CompareFile {
 	String selectedProcessAlias;
 		public String getSelectedProcessAlias() {
 			return selectedProcessAlias;
 		}
 		public void setSelectedProcessAlias(String selectedProcessAlias) {
 			this.selectedProcessAlias = selectedProcessAlias;
-		}
-	MergeTopMenu mergeTopMenu;
-		public MergeTopMenu getMergeTopMenu() {
-			return mergeTopMenu;
-		}
-	
-		public void setMergeTopMenu(MergeTopMenu mergeTopMenu) {
-			this.mergeTopMenu = mergeTopMenu;
 		}
 	ProcessViewer processViewer;
 		public ProcessViewer getProcessViewer() {
@@ -25,8 +20,10 @@ public class MergeProcess {
 		}
 		
 	public void load(){
+		
 		// TODO selectedProcessAlias 가 없으면 프로세스 선택화면이 뜬다.
 		if( selectedProcessAlias == null ){
+			
 			
 		}else{
 			processViewer = new ProcessViewer();

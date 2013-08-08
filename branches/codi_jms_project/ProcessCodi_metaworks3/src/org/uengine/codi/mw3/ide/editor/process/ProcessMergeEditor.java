@@ -1,8 +1,8 @@
 package org.uengine.codi.mw3.ide.editor.process;
 
 import org.uengine.codi.mw3.ide.ResourceNode;
+import org.uengine.codi.mw3.ide.compare.FileComparePanel;
 import org.uengine.codi.mw3.ide.editor.Editor;
-import org.uengine.codi.mw3.webProcessDesigner.ProcessMergePanel;
 
 public class ProcessMergeEditor  extends Editor{
 	String alias;
@@ -12,21 +12,21 @@ public class ProcessMergeEditor  extends Editor{
 		public void setAlias(String alias) {
 			this.alias = alias;
 		}
-	ProcessMergePanel processMergePanel;
-		public ProcessMergePanel getProcessMergePanel() {
-			return processMergePanel;
+	FileComparePanel fileComparePanel;
+		public FileComparePanel getFileComparePanel() {
+			return fileComparePanel;
 		}
-		public void setProcessMergePanel(ProcessMergePanel processMergePanel) {
-			this.processMergePanel = processMergePanel;
+		public void setFileComparePanel(FileComparePanel fileComparePanel) {
+			this.fileComparePanel = fileComparePanel;
 		}
 	public ProcessMergeEditor(){
 	}
 	public ProcessMergeEditor(ResourceNode resourceNode){
 		super(resourceNode);
-		this.setType("processMerge");
-		processMergePanel = new ProcessMergePanel();
-		processMergePanel.setSelectedProcessAlias(resourceNode.getPath());
-		processMergePanel.load();
+		this.setType("processCompare");
+		fileComparePanel = new FileComparePanel();
+		fileComparePanel.setSelectedProcessAlias(resourceNode.getPath());
+		fileComparePanel.load();
 		
 	}
 }

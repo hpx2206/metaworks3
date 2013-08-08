@@ -8,14 +8,13 @@ import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.Tree;
 import org.metaworks.component.TreeNode;
 import org.uengine.codi.mw3.ide.Project;
 import org.uengine.codi.mw3.ide.ResourceNode;
-import org.uengine.codi.mw3.ide.ResourceTree;
 import org.uengine.codi.mw3.ide.Workspace;
-import org.uengine.codi.mw3.ide.view.Navigator;
 import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.model.Session;
 
@@ -60,9 +59,6 @@ public class ProcessDefinitionNode extends TreeNode  implements ContextAware {
 	public final static String TYPE_PROJECT = "project";
 	@AutowiredFromClient
 	public Session session;
-
-	@AutowiredFromClient
-	public Workspace workspace;
 	
 	@AutowiredFromClient
 	public ProcessViewPanel processViewPanel;
@@ -71,8 +67,11 @@ public class ProcessDefinitionNode extends TreeNode  implements ContextAware {
 	
 	public ProcessDefinitionNode(){
 		setMetaworksContext(new MetaworksContext());
+		this.getMetaworksContext().setHow("tree");
 	}
 	public ProcessDefinitionNode(Project project){
+		this();
+		
 		this.setId(project.getId());
 		this.setName(project.getId());
 		this.setType(TYPE_PROJECT);
@@ -80,7 +79,6 @@ public class ProcessDefinitionNode extends TreeNode  implements ContextAware {
 		
 		this.setPath(project.getPath());
 		this.setProjectId(project.getId());
-		setMetaworksContext(new MetaworksContext());
 	}
 	public ArrayList<TreeNode> loadExpand(){
 		

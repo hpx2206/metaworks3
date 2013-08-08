@@ -52,7 +52,7 @@ org_uengine_kernel_designer_web_EventActivityView.prototype = {
         	if( object.activity ){
         		$(element).data('activity', object.activity);
         		// object.activity.activityView = null; 을 꼭 해주어야함.. activity가 activityView 를 들고있고, activityView가 activity를 들고있는 구조라서..
-        		object.activity.activityView = null;
+        		object.activity.activityView.activity = null;
         	}else if( typeof $(element).attr("_classname") != 'undefined' &&  typeof $(element).data("activity") == 'undefined' ){
         		var activityData = {__className : $(element).attr("_classname"), tracingTag : $(element).attr("_tracingTag")};
         		$(element).data('activity', activityData);

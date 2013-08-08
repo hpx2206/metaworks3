@@ -47,6 +47,7 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
         	                                 shape, [parseInt(object.width, 10), parseInt(object.height, 10)] , OG.JSON.decode(unescape(style)), id, parent, false);
         	if( object.activityClass != null && object.activityClass == 'org.uengine.kernel.SubProcessActivity' ){
         		canvas.setShapeStyle(element, {fill: '#FFFFFF-#000000'});
+//        		canvas.setShapeStyle(element, {fill: '#FFFFFF-#000000' , "stroke": 'red' , "stroke-width" : 5 });
         	}
         	
         	// object.activityClass : Activity , object.__className : ActivityView
@@ -57,7 +58,7 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
         	if( object.activity ){
         		$(element).data('activity', object.activity);
         		// object.activity.activityView = null; 을 꼭 해주어야함.. activity가 activityView 를 들고있고, activityView가 activity를 들고있는 구조라서..
-        		object.activity.activityView = null;
+        		object.activity.activityView.activity = null;
         	}else if( typeof $(element).attr("_classname") != 'undefined' &&  typeof $(element).data("activity") == 'undefined' ){
         		var activityData = {__className : $(element).attr("_classname"), tracingTag : $(element).attr("_tracingTag")};
         		$(element).data('activity', activityData);

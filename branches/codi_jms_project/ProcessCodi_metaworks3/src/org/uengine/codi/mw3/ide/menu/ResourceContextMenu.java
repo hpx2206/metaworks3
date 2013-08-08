@@ -49,7 +49,7 @@ public class ResourceContextMenu extends CloudMenu {
 		this.add(new MenuItem("open", "$resource.menu.open"));
 		// TODO jms 작업을 위하여 메뉴 추가 추후 변경
 		this.add(new MenuItem("openWithJMS", "jms View 보기"));
-		this.add(new MenuItem("processMerge", "프로세스 취합"));
+		this.add(new MenuItem("processMerge", "프로세스 비교"));
 		
 		this.add(new MenuItem(MenuItem.TYPE_DIVIDER));
 		this.add(new MenuItem("copy", "$resource.menu.copy"));
@@ -108,8 +108,8 @@ public class ResourceContextMenu extends CloudMenu {
 		if(clipboard instanceof ResourceNode){
 			ResourceNode node = (ResourceNode)clipboard;
 			ProcessMergeEditor processMergeEditor = new ProcessMergeEditor(node);
-			processMergeEditor.setId("프로세스 취합 위저드");
-			processMergeEditor.setName("프로세스 취합 위저드");
+			processMergeEditor.setId("프로세스 비교 위저드");
+			processMergeEditor.setName("프로세스 비교 위저드");
 			
 			return new ToAppend(new CloudWindow("editor"), processMergeEditor);
 			
