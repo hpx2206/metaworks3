@@ -2,7 +2,6 @@ package org.uengine.codi.mw3.Collaboration;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
-import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessViewWindow;
 
@@ -25,14 +24,13 @@ public class CollaborationContentPanel  implements ContextAware{
 		}
 
 	ProcessNameView processNameView;
-		public ProcessNameView getFavoriteNameChanger() {
+		public ProcessNameView getProcessNameView() {
 			return processNameView;
 		}
-	
-		public void setFavoriteNameChanger(ProcessNameView processNameView) {
+		public void setProcessNameView(ProcessNameView processNameView) {
 			this.processNameView = processNameView;
 		}
-
+		
 	public CollaborationContentPanel() throws Exception{
 		
 	}

@@ -1,6 +1,5 @@
 package org.uengine.codi.mw3.Collaboration;
 
-import org.metaworks.annotation.Face;
 
 import org.metaworks.widget.Window;
 import org.uengine.codi.mw3.model.Session;

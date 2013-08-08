@@ -3,7 +3,6 @@ package org.uengine.codi.mw3.Collaboration;
 import org.metaworks.annotation.AutowiredToClient;
 import org.metaworks.widget.layout.Layout;
 import org.uengine.codi.mw3.admin.PageNavigator;
-import org.uengine.codi.mw3.admin.TopPanel;
 import org.uengine.codi.mw3.ide.Workspace;
 import org.uengine.codi.mw3.model.ProcessTopPanel;
 import org.uengine.codi.mw3.model.Session;
