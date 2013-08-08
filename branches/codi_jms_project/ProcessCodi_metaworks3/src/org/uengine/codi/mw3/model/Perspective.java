@@ -6,7 +6,7 @@ import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.uengine.codi.mw3.Login;
-import org.uengine.codi.mw3.Collaboration.ValuechainPerspective;
+import org.uengine.codi.mw3.collaboration.ValuechainPerspective;
 import org.uengine.codi.mw3.ide.Workspace;
 import org.uengine.codi.mw3.knowledge.WfPanel;
 
