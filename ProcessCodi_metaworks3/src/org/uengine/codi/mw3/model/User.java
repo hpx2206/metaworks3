@@ -261,7 +261,9 @@ public class User extends Database<IUser> implements IUser {
 			topicFollowers.session = session;
 			topicFollowers.load();
 			
-			return new Object[]{new Refresh(topicFollowers)};
+			ContactPanel contactPanel = new ContactPanel(session, Followers.ADD_TOPICFOLLOWERS);
+			
+			return new Object[]{new Refresh(topicFollowers), new Refresh(contactPanel)};
 //		}else if("addInstanceFollower".equals(this.getMetaworksContext().getWhen())){
 //			String instId = instanceFollowers.getInstanceId();
 //			
