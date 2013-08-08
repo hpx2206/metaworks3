@@ -30,7 +30,6 @@ import org.metaworks.dao.TransactionContext;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.codi.mw3.Collaboration.ValuechainPerspective;
 import org.uengine.codi.mw3.ide.Project;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.Workspace;
@@ -230,14 +229,6 @@ public class MetadataProperty implements ContextAware, Cloneable {
 			this.resourceNode = resourceNode;
 		}
 		
-	@XStreamOmitField
-	ValuechainPerspective valuechainPerspective;
-		public ValuechainPerspective getValuechainPerspective() {
-			return valuechainPerspective;
-		}
-		public void setValuechainPerspective(ValuechainPerspective valuechainPerspective) {
-			this.valuechainPerspective = valuechainPerspective;
-		}
 
 	@XStreamOmitField
 	boolean checkFile;

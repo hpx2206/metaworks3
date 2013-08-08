@@ -27,14 +27,6 @@ public class Collaboration {
 	@AutowiredToClient
 	public Session session;
 		
-	Workspace workspace;
-		public Workspace getWorkspace() {
-			return workspace;
-		}
-		public void setWorkspace(Workspace workspace) {
-			this.workspace = workspace;
-		}	
-	
 	
 	public Collaboration() throws Exception{
 		
@@ -47,7 +39,6 @@ public class Collaboration {
 		
 		Workspace workspace = new Workspace();
 		workspace.load();
-		this.setWorkspace(workspace);
 		CollaborationPerspectiveWindow collaborationPerspectiveWindow = new CollaborationPerspectiveWindow(session);
 		collaborationPerspectiveWindow.setTitle("collaboration");
 		

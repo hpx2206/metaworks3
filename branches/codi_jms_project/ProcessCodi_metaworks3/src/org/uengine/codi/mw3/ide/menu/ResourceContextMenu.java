@@ -68,6 +68,7 @@ public class ResourceContextMenu extends CloudMenu {
 
 	}
 	
+
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
 	public Object open(){
 		Object clipboard = session.getClipboard();

@@ -36,14 +36,6 @@ public class CollaborationContentPanel  implements ContextAware{
 	}
 	
 	public CollaborationContentPanel(Session session) throws Exception{
-		// TODO Auto-generated constructor stub
-//				Object clipboard = session.getClipboard();
-//				ResourceNode node = (ResourceNode)clipboard;
-//				String defId = node.getName();
-//				ProcessViewWindow defWindow = new ProcessViewWindow();
-//				defWindow.setDefId(defId);
-//				defWindow.setAlias(node.getPath());
-//				defWindow.load();
 	}
 	
 }

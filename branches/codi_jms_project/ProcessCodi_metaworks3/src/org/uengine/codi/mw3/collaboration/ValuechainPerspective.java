@@ -2,26 +2,15 @@ package org.uengine.codi.mw3.collaboration;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
-import org.metaworks.Refresh;
-import org.metaworks.ServiceMethodContext;
-import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Id;
-import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.Tree;
-import org.metaworks.metadata.MetadataProperty;
 import org.uengine.codi.mw3.ide.Project;
 import org.uengine.codi.mw3.ide.Workspace;
-import org.uengine.codi.mw3.ide.menu.ResourceContextMenu;
 import org.uengine.codi.mw3.model.Perspective;
-import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessDefinitionNode;
 
 public class ValuechainPerspective extends Perspective  implements ContextAware {
-	@AutowiredFromClient
-	public MetadataProperty metadataProperty;
 
-	@AutowiredFromClient
-	public Session session;
 	
 	String projectId;
 		public String getProjectId() {
@@ -128,7 +117,7 @@ public class ValuechainPerspective extends Perspective  implements ContextAware 
 
 	@Override
 	protected void unloadChildren() throws Exception {
-		setProcessDefinitionTree(null);
+//		setProcessDefinitionTree(null);
 	}
 	
 	
