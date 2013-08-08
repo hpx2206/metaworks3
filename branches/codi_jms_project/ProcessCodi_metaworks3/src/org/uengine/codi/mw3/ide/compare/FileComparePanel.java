@@ -27,7 +27,7 @@ public class FileComparePanel {
 	public FileComparePanel(){
 		
 	}
-	public void load(){
+	public void load() throws Exception{
 		compareOriginFilePanel = new CompareOriginFilePanel();
 		compareOriginFilePanel.setSelectedProcessAlias("D:/codi/codebase/codi/root/originProcess2.process");
 		compareOriginFilePanel.load();

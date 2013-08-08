@@ -21,7 +21,7 @@ public class ProcessMergeEditor  extends Editor{
 		}
 	public ProcessMergeEditor(){
 	}
-	public ProcessMergeEditor(ResourceNode resourceNode){
+	public ProcessMergeEditor(ResourceNode resourceNode)  throws Exception{
 		super(resourceNode);
 		this.setType("processCompare");
 		fileComparePanel = new FileComparePanel();

@@ -30,9 +30,10 @@ public class CompareImportFilePanel {
 	public CompareImportFilePanel(){
 	}
 	
-	public void load(){
+	public void load() throws Exception{
 		compareFileNavigator = new CompareFileNavigator();
 		compareFileNavigator.setId(CompareImportFilePanel.FILE_LOCATION);
+		compareFileNavigator.loadUpload();
 		
 		compareImportFile = new CompareImportFile();
 		compareImportFile.setSelectedProcessAlias(selectedProcessAlias);

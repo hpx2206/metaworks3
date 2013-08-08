@@ -39,9 +39,10 @@ public class CompareOriginFilePanel {
 	public CompareOriginFilePanel(){
 	}
 	
-	public void load(){
+	public void load() throws Exception{
 		compareFileNavigator = new CompareFileNavigator();
 		compareFileNavigator.setId(CompareOriginFilePanel.FILE_LOCATION);
+		compareFileNavigator.load();
 		
 		compareOriginFile = new CompareOriginFile();
 		compareOriginFile.setSelectedProcessAlias(selectedProcessAlias);
@@ -83,11 +84,9 @@ public class CompareOriginFilePanel {
 				
 				ActivityView originActivityView = act.getActivityView();
 				
-				if( compareActivityView.getX().equals(originActivityView.getX()) 
-						&& compareActivityView.getY().equals(originActivityView.getY()) ){
+				
+				if( true ){
 					// TODO 프로퍼티 비교 - 프로퍼티 변경시 도형위에 펜 마크 표시
-				}else{
-					// TODO 일반 도형 위치 변경시 도형위에 특정 마크 표시
 					String style = "{\"stroke\":\"green\",\"stroke-width\":\"5\"}";
 					act.getActivityView().setStyle( ProcessDesignerContentPanel.escape(style));
 					activityList1.set(i, act);
