@@ -40,7 +40,7 @@ public class InstanceListPanel implements ContextAware{
 	public InstanceListPanel(Session session){		
 		setMetaworksContext(new MetaworksContext());
 		
-		SearchBox searchBox = new SearchBox();
+		InstanceSearchBox searchBox = new InstanceSearchBox();
 		searchBox.setKeyUpSearch(true);
 		searchBox.setKeyEntetSearch(true);
 		setSearchBox(searchBox);
