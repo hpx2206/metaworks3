@@ -1,4 +1,4 @@
-package org.uengine.codi.mw3.Collaboration;
+package org.uengine.codi.mw3.collaboration;
 
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;

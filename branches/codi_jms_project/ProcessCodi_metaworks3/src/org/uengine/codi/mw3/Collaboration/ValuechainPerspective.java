@@ -1,4 +1,4 @@
-package org.uengine.codi.mw3.Collaboration;
+package org.uengine.codi.mw3.collaboration;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
@@ -129,28 +129,6 @@ public class ValuechainPerspective extends Perspective  implements ContextAware 
 	@Override
 	protected void unloadChildren() throws Exception {
 		setProcessDefinitionTree(null);
-	}
-	
-	
-	
-
-
-	@Override
-	@ServiceMethod(payload={"id","name","path","type","folder","projectId"}, target=ServiceMethodContext.TARGET_APPEND)
-	public Object action() {
-		// TODO Auto-generated method stub
-		
-		if(this.getMetaworksContext() != null && "resource".equals(this.getMetaworksContext().getWhere())){
-			metadataProperty.setValuechainPerspective(this);
-		}
-		return super.action();
-	}
-	
-	@ServiceMethod(payload={"id", "name", "path", "folder", "projectId"}, mouseBinding="right", target=ServiceMethodContext.TARGET_POPUP)
-	public Object[] showContextMenu() {
-	session.setClipboard(this);
-//
-		return new Object[]{new Refresh(session), new ResourceContextMenu(this)};
 	}
 
 }

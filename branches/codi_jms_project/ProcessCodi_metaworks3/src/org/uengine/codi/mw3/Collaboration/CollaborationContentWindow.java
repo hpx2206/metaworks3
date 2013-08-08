@@ -1,4 +1,4 @@
-package org.uengine.codi.mw3.Collaboration;
+package org.uengine.codi.mw3.collaboration;
 
 import java.util.ArrayList;
 import java.util.List;

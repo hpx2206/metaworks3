@@ -1,4 +1,4 @@
-var org_uengine_codi_mw3_Collaboration_CollaborationPerspectivePanel = function(objectId, className){
+var org_uengine_codi_mw3_collaboration_CollaborationPerspectivePanel = function(objectId, className){
 	this.objectId = objectId;
 	this.className = className;	
 	this.divId = '#objDiv_' + this.objectId;

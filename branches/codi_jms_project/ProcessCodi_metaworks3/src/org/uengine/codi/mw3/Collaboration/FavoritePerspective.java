@@ -1,4 +1,4 @@
-package org.uengine.codi.mw3.Collaboration;
+package org.uengine.codi.mw3.collaboration;
 
 import org.uengine.codi.mw3.model.IProcessMap;
 import org.uengine.codi.mw3.model.Perspective;
