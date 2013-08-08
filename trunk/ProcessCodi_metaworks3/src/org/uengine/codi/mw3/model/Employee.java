@@ -216,13 +216,14 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 			this.guest = guest;
 		}
 	
-	boolean notiEmail;
-		public boolean isNotiEmail() {
-			return notiEmail;
+	boolean isMailNoti;
+		public boolean isMailNoti() {
+			return isMailNoti;
 		}
-		public void setNotiEmail(boolean notiEmail) {
-			this.notiEmail = notiEmail;
+		public void setMailNoti(boolean isMailNoti) {
+			this.isMailNoti = isMailNoti;
 		}
+		
 	
 	@Override
 	public IEmployee load() throws Exception {

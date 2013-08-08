@@ -769,3 +769,17 @@ ALTER TABLE `bpm_procinst`  CHANGE COLUMN `BVBENEFIT` `BENEFIT` INT(6) NULL DEFA
 update emptable set guest = 0;
 
 alter table emptable add notiEmail int(1) default 0;
+
+-- recentItem 테이블 설계: 주제, 친구 등 유저가 가장 최신에 클릭한 순으로 정렬하기 위해 만든 타임테이블
+-- empcode, type ={topic, friend, ...}, item ={topicId, empcode, ...}, updateDate
+CREATE TABLE recentItem(
+	empcode VARCHAR(100) NOT NULL,
+	type  VARCHAR(10) NOT NULL,
+	item VARCHAR(100) NOT NULL,
+	updateDate DATE ,
+	PRIMARY KEY(empcode)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- notiEmail 컬럼명 수정
+alter table emptable drop notiEmail;
+alter table emptable add isMailNoti int(1) default 0;

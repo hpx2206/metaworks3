@@ -122,7 +122,7 @@ public class Notification extends Database<INotification> implements INotificati
 		 * follower마다 Emptable에서 데이터를 읽어 오기 때문에 ...(actorUserInfo.databaseMe()) 차후 수정
 		 * 
 		 */
-		if(userInfo.databaseMe().isNotiEmail()){
+		if(userInfo.databaseMe().isMailNoti()){
 			final IEmployee userInfoDB = userInfoTemp;
 			
 			final Employee actorUserInfo = new Employee();
