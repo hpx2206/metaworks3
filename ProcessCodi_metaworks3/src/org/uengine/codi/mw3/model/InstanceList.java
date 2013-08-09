@@ -110,7 +110,9 @@ public class InstanceList implements ContextAware{
 			});
 		}
 		
-		IInstance instanceContents = Instance.load(navigation,	getPage()-1, PAGE_CNT);
+		int count = ("phone".equals(navigation.getMedia())?InstanceList.PAGE_CNT_MOBILE:InstanceList.PAGE_CNT);
+		
+		IInstance instanceContents = Instance.load(navigation,	getPage()-1, count);
 		if(getMetaworksContext()==null){
 			setMetaworksContext(new MetaworksContext());
 		}

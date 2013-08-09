@@ -3,9 +3,10 @@ package org.uengine.codi.mw3.model;
 import java.util.Hashtable;
 import java.util.Properties;
 import java.util.PropertyResourceBundle;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 import org.metaworks.annotation.ServiceMethod;
-
 	
 public class Locale{
 	
@@ -49,7 +50,7 @@ public class Locale{
 		resourceBundle = webMessageBundles.get(language);		
 	}
 	
-	public String getString(String... keys){
+	public String getString(String... keys) throws Exception {
 	
 		String message = keys[0];
 		
@@ -58,25 +59,31 @@ public class Locale{
 			message = (message == null) ? keys[0] : message;
 		}
 		
+		 Pattern p = Pattern.compile("%s");
+		 CharSequence cs = new StringBuffer(message);
+		 Matcher m = p.matcher(cs);
+		 int count = 0;
+		 while(m.find()) {
+			 count++;
+		 }	
+	
+		 if(count > 0 && count != keys.length - 1)
+				throw new Exception("$NotEqualToFormatCountAndArgumentCount");
+		
 		if(keys.length == 1)
-			return message;		
+			return message;	
 		
-		String ret_message = "";		
-		String arr_message[] = message.split("%s");
-		
-		for(int i=0; i < arr_message.length; i++) {
-			ret_message += arr_message[i];
-			
-			if (i+1 < keys.length) {
-				String key = keys[i+1]; 		
-				key = this.getString(key);
-//				if(key.startsWith("$")) {
-//					key = resourceBundle.getProperty(key.substring(1));					
-//					key = (key == null) ? keys[i+1] : key;
-//				}
-				ret_message += key;	
-			}													
-	    }
-		return ret_message;
+		StringBuffer sb = new StringBuffer();
+		count = 0;
+		m.reset();
+        while (m.find()) {
+        	String key = keys[1 + count++];
+			key = this.getString(key);
+        	
+            m.appendReplacement(sb, key);
+        }
+        m.appendTail(sb);
+        
+        return sb.toString();
 	}
 }

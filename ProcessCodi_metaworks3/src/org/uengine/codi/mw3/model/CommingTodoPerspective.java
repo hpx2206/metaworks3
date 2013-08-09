@@ -19,8 +19,7 @@ public class CommingTodoPerspective extends Perspective{
 	@Override
 	protected void loadChildren() throws Exception {
 		
-		session.setLastPerspecteType("inbox");
-		session.setLastSelectedItem("commingTodo");
+		session.setLastPerspecteType("commingTodo");
 			
 		IInstance instanceContents = Instance.load(new Navigation(session), 0, Integer.parseInt(GlobalContext.getPropertyString("commingtodo.list.count", "2")));
 		instanceContents.getMetaworksContext().setHow("commingTodo");
