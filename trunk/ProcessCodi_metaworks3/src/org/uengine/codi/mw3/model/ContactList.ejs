@@ -8,6 +8,13 @@
 	<ul>
 		<%=fields.contacts.here()%>
 	</ul>
+	<ul>
+		<li>
+			<% if(!value.selectedMore) { %>
+				<a onClick="<%=methods.moreView.caller()%>" href="#" style="display: inline-block"><%=mw3.localize('$More')%></a>
+			<% } %>
+		</li>
+	</ul>
 <%
 		}
 	}
