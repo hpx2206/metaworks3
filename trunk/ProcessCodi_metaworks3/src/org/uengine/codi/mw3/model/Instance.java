@@ -85,7 +85,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 			
 			StringBuffer appendedInstanceSql = new StringBuffer(instanceSql);
 			
-			if(	"inbox".equals(navigation.getPerspectiveType())) {				
+			if(	"inbox".equals(navigation.getPerspectiveType()) || "commingTodo".equals(navigation.getPerspectiveType())) {				
 				appendedInstanceSql.append("   AND (wl.title like ?keyword or inst.name like ?keyword)");
 				
 			}else{
@@ -137,13 +137,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 		else if ("MYSQL".equals(typeOfDBMS))*/
 		//if( count != 0 && page != 0 )
 		
-	
-		if(	"inbox".equals(navigation.getPerspectiveType()) && "commingTodo".equals(navigation.getPerspectiveValue())) {	
-			bottomList.append( " limit " + criteria.get("startIndex") + ", "+ (count));
-		}
-		else {
-			bottomList.append( " limit " + criteria.get("startIndex") + ", "+ ("phone".equals(navigation.getMedia())?InstanceList.PAGE_CNT_MOBILE:InstanceList.PAGE_CNT));
-		}
+		bottomList.append( " limit " + criteria.get("startIndex") + ", "+ count);
 		
 		//TODO delete printing
 		System.out.println("worklist sql:" + bottomList.toString());
@@ -284,7 +278,10 @@ public class Instance extends Database<IInstance> implements IInstance{
 			stmt.append(instanceSql);
 		}
 		
-		stmt.append(" ORDER BY task.startdate desc) instanceList ");
+		if("commingTodo".equals(navigation.getPerspectiveType()))
+			stmt.append(" ORDER BY inst.duedate) instanceList ");
+		else		
+			stmt.append(" ORDER BY task.startdate desc) instanceList ");
 	}
 	
 
@@ -294,7 +291,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 			StringBuffer instanceSql) {
 
 		if(	"inbox"
-				.equals(navigation.getPerspectiveType())) {
+				.equals(navigation.getPerspectiveType()) || "commingTodo".equals(navigation.getPerspectiveType())) {
 			
 			/*
 			taskSql.append("and (worklist.status=?taskStatus1 or worklist.status=?taskStatus2) ");
