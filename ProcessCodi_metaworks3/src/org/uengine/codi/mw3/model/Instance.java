@@ -136,7 +136,14 @@ public class Instance extends Database<IInstance> implements IInstance{
 			bottomList.append( " limit " + criteria.get("startIndex") + ", "+InstanceList.PAGE_CNT);
 		else if ("MYSQL".equals(typeOfDBMS))*/
 		//if( count != 0 && page != 0 )
+		
+	
+		if(	"inbox".equals(navigation.getPerspectiveType()) && "commingTodo".equals(navigation.getPerspectiveValue())) {	
+			bottomList.append( " limit " + criteria.get("startIndex") + ", "+ (count));
+		}
+		else {
 			bottomList.append( " limit " + criteria.get("startIndex") + ", "+ ("phone".equals(navigation.getMedia())?InstanceList.PAGE_CNT_MOBILE:InstanceList.PAGE_CNT));
+		}
 		
 		//TODO delete printing
 		System.out.println("worklist sql:" + bottomList.toString());
