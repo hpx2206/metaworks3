@@ -119,7 +119,7 @@ public class FileImporter{
 			if(compareFileNavigator != null){
 				compareFileNavigator.setUploaded(true);
 				
-				CompareImportFile	compareImportFile = new CompareImportFile();
+				CompareImportFile compareImportFile = new CompareImportFile();
 				try {
 					compareFileNavigator.setFileName(metaworksFile.getFilename());
 					compareFileNavigator.setUploadPath(metaworksFile.overrideUploadPathPrefix() + File.separatorChar + metaworksFile.getUploadedPath());
