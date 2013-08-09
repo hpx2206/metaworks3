@@ -1,26 +1,26 @@
 package org.uengine.codi.mw3.model;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import org.metaworks.Refresh;
+import org.metaworks.Remover;
+import org.metaworks.ServiceMethodContext;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.metadata.MetadataBundle;
 import org.metaworks.website.MetaworksFile;
-import org.uengine.codi.mw3.CodiClassLoader;
-import org.uengine.codi.platform.Console;
+import org.uengine.codi.mw3.ide.compare.CompareFileNavigator;
 
 public class FileImporter{
 
 	public FileImporter(){
-		file = new MetaworksFile();
+		metaworksFile = new MetaworksFile();
 	}
 	
 	String parentDirectory;
@@ -28,74 +28,122 @@ public class FileImporter{
 		public String getParentDirectory() {
 			return parentDirectory;
 		}
-	
 		public void setParentDirectory(String parentDirectory) {
 			this.parentDirectory = parentDirectory;
 		}
 
 
-	MetaworksFile file;
-	
+	MetaworksFile metaworksFile;
 		public MetaworksFile getFile() {
-			return file;
+			return metaworksFile;
 		}
-	
 		public void setFile(MetaworksFile file) {
-			this.file = file;
+			this.metaworksFile = file;
 		}
 		
-		
-	@ServiceMethod(callByContent=true)
-	public void upload() throws FileNotFoundException, IOException, Exception{
-		
-		String fileName = file.getFileTransfer().getFilename();
-		
-		if(fileName.endsWith(".prom") || fileName.endsWith(".zip")){
-			int BUFFER = 2048;
-			
-			BufferedOutputStream dest = null;
-	         InputStream fis =  file.getFileTransfer().getInputStream();
-	         ZipInputStream zis = new 
-	        		 ZipInputStream(new BufferedInputStream(fis));
-	         
-	         ZipEntry entry;
-	         while((entry = zis.getNextEntry()) != null) {
-	            Console.addLog("Extracting: " +entry);
-	            int count;
-	            byte data[] = new byte[BUFFER];
-	            // write the files to the disk
-	            
-	            File file = new File(CodiClassLoader.getMyClassLoader().sourceCodeBase() + "/" + entry.getName());
-	            file.getParentFile().mkdirs();
-	            
-	            FileOutputStream fos = new 
-	            		FileOutputStream(file);
-	            
-	            dest = new 
-	              BufferedOutputStream(fos, BUFFER);
-	            
-	            while ((count = zis.read(data, 0, BUFFER)) 
-	              != -1) {
-	               dest.write(data, 0, count);
-	            }
-	            
-	            dest.flush();
-	            dest.close();
-	         }
-	         
-	         return;
-		}
-		
-		file.upload();
-		
-		String resourceBase = CodiClassLoader.getMyClassLoader().sourceCodeBase();
+	@AutowiredFromClient(select="autowiredObject.id=='target'")
+	public CompareFileNavigator compareFileNavigator;
 
-		if(fileName.endsWith(".jar")){ //when user uploads user-defined library file.
-			CodiClassLoader.refreshClassLoader(null); 
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
+	public Object[] upload() throws IOException {
+		
+		// 확장자를 파싱하기 위한 스트링
+		String extension = null;
+		String[] parseExtension = null;
+		
+		String projectId = MetadataBundle.getProjectId();
+		String mainPath = MetadataBundle.getProjectBasePath(projectId);
+		
+		boolean flag = false;
+		if(metaworksFile != null && metaworksFile.getFileTransfer() != null && metaworksFile.getFileTransfer().getFilename() != null && !"".equals(metaworksFile.getFileTransfer().getFilename()) ){
+			try {
+				metaworksFile.upload();
+				
+				extension = metaworksFile.getFilename(); 
+				parseExtension = extension.replace('.', '@').split("@");
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}else{
+			metaworksFile.setFileTransfer(null);
+			return new Object[] { new Remover(new Popup(), true)};
 		}
 		
-		new File(file.getUploadedPath()).renameTo(new File(resourceBase + getParentDirectory() + "/" + fileName));
-		//file.getUploadedPath()
-	}
+		
+		if(parseExtension[1].equals("process")) {
+			if(compareFileNavigator != null){
+				compareFileNavigator.setUploaded(true);
+				try {
+					compareFileNavigator.setFileName(metaworksFile.getFilename());
+					compareFileNavigator.setUploadPath(mainPath);
+					compareFileNavigator.loadUpload();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			return new Object[] { new Remover(new Popup(), true) , new Refresh(compareFileNavigator)};
+			
+		} else if (parseExtension[1].equals("zip")){
+		
+			String zipPath = metaworksFile.getUploadedPath();
+			String destPath = mainPath + File.separatorChar + "temp";
+			try {
+				
+				ZipInputStream zis = new ZipInputStream(new FileInputStream(metaworksFile.overrideUploadPathPrefix() + File.separatorChar + zipPath));
+				ZipEntry ze = null;
+	//		    ze = zis.getNextEntry();
+			    
+			    byte[] buf = new byte[1024];
+			    while ((ze = zis.getNextEntry()) != null) {
+	//		    while(ze != null){
+			    	
+			    	int n;
+			    	String entryName = destPath  + File.separatorChar + ze.getName();
+			    	File file = new File(entryName);
+			    	
+			    	if (ze.isDirectory()){ 
+			    		file.mkdirs();
+			    	}
+//		    		ze = zis.getNextEntry();
+			    	else {	
+				    	FileOutputStream fos = new FileOutputStream(file);
+				    	while ((n = zis.read(buf, 0, 1024)) > -1) {
+				    		fos.write(buf, 0, n);
+		            }
+		
+			    	fos.close();
+		            zis.closeEntry();
+			    	}
 	
+		        } //while
+		
+		        zis.close();
+		        flag = true;
+		    } catch (Exception e) {
+		        e.printStackTrace();
+		    }
+			if( flag ){
+				if(compareFileNavigator != null){
+					compareFileNavigator.setUploaded(true);
+					try {
+						compareFileNavigator.setFileName(metaworksFile.getFilename());
+						compareFileNavigator.setUploadPath(destPath);
+						compareFileNavigator.loadUpload();
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
+			return new Object[] { new Remover(new Popup(), true) , new Refresh(compareFileNavigator)};
+		}
+		
+		else {
+			return null;
+		}
+		
+	}
+
 }

@@ -13,7 +13,7 @@ import org.uengine.kernel.designer.web.ActivityView;
 
 public class CompareOriginFilePanel {
 	
-	static final String FILE_LOCATION = "source";   
+	static final String FILE_LOCATION = "source"; 
 	
 	String selectedProcessAlias;
 		public String getSelectedProcessAlias() {

@@ -22,11 +22,28 @@ public class CompareFileNavigator {
 		public void setFileTree(Tree fileTree) {
 			this.fileTree = fileTree;
 		}
+	boolean uploaded;
+		public void setUploaded(boolean uploaded) {
+			this.uploaded = uploaded;
+		}
+		public CompareFileNavigator(){
+			
+		}
+	String fileName;
+		public String getFileName() {
+			return fileName;
+		}
+		public void setFileName(String fileName) {
+			this.fileName = fileName;
+		}
+	String uploadPath;
+		public String getUploadPath() {
+			return uploadPath;
+		}
+		public void setUploadPath(String uploadPath) {
+			this.uploadPath = uploadPath;
+		}
 		
-	public CompareFileNavigator(){
-		
-	}
-	
 	public void load() throws Exception{
 		
 		String projectId = MetadataBundle.getProjectId();
@@ -52,19 +69,16 @@ public class CompareFileNavigator {
 	
 	public void loadUpload() throws Exception{
 		
-		String projectId = MetadataBundle.getProjectId();
-		String mainPath = MetadataBundle.getProjectBasePath(projectId);
-		
 		CompareFileNode rootNode = new CompareFileNode();
-		rootNode.setId(projectId);
+		rootNode.setId(fileName);
 		rootNode.setRoot(true);
 		rootNode.setType(TreeNode.TYPE_FOLDER);
 		rootNode.setFolder(true);
 		rootNode.setTreeId(id);
-		if( isUploaded() ){
+		if( uploaded ){
 			// TODO zip 파일 푼 경로를 트리로 만들어서 뿌리기
-			rootNode.setName(projectId);
-			rootNode.setPath(mainPath);
+			rootNode.setName(fileName);
+			rootNode.setPath(uploadPath);
 			rootNode.setExpanded(true);
 			
 			rootNode.expand();
@@ -79,10 +93,5 @@ public class CompareFileNavigator {
 		tree.setId(id);
 		tree.setNode(rootNode);
 		setFileTree(tree);
-	}
-	
-	public boolean isUploaded(){
-		
-		return false;
 	}
 }
