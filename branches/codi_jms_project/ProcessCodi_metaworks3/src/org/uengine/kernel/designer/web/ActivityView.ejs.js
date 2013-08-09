@@ -7,7 +7,7 @@ var org_uengine_kernel_designer_web_ActivityView = function(objectId, className)
 	var canvasObject;
 	if( object != null && object.viewType != null && "blockView" == object.viewType ){
 		canvasObject = mw3.getAutowiredObject('org.uengine.codi.mw3.webProcessDesigner.InstanceMonitorPanel');
-	}else	if( object != null && object.viewType != null && ("definitionView" == object.viewType || "definitionEditor" == object.viewType)){
+	}else	if( object != null && object.viewType != null && ("definitionView" == object.viewType || "definitionEditor" == object.viewType  || "definitionDiff" == object.viewType)){
 		if( object.editorId ){
 			canvasObject = mw3.getAutowiredObject('org.uengine.codi.mw3.webProcessDesigner.ProcessViewer@'+object.editorId);
 		}else{
@@ -58,7 +58,7 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
         	if( object.activity ){
         		$(element).data('activity', object.activity);
         		// object.activity.activityView = null; 을 꼭 해주어야함.. activity가 activityView 를 들고있고, activityView가 activity를 들고있는 구조라서..
-        		object.activity.activityView.activity = null;
+        		object.activity.activityView = null;
         	}else if( typeof $(element).attr("_classname") != 'undefined' &&  typeof $(element).data("activity") == 'undefined' ){
         		var activityData = {__className : $(element).attr("_classname"), tracingTag : $(element).attr("_tracingTag")};
         		$(element).data('activity', activityData);
@@ -95,12 +95,19 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
         			object.showDefinitionMonitor();
         		}
         	});
-			
+			// jms 조회 화면
 			if( object != null && object.viewType != null && "definitionView" == object.viewType ){
 				$(element).unbind('dblclick').bind('dblclick' , function(event){
 				});
 				$(element).unbind('click').bind('click' , function(event){
 					object.showActivityDocument();
+				});
+			}
+			// 프로세스 비교
+			if( object != null && object.viewType != null && "definitionDiff" == object.viewType ){
+				$(element).unbind('dblclick').bind('dblclick' , function(event){
+				});
+				$(element).unbind('click').bind('click' , function(event){
 				});
 			}
 			

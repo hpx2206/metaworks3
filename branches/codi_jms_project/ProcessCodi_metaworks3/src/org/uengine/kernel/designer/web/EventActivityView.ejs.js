@@ -7,7 +7,7 @@ var org_uengine_kernel_designer_web_EventActivityView = function(objectId, class
 	var canvasObject;
 	if( object != null && object.viewType != null && "blockView" == object.viewType ){
 		canvasObject = mw3.getAutowiredObject('org.uengine.codi.mw3.webProcessDesigner.InstanceMonitorPanel');
-	}else	if( object != null && object.viewType != null && ("definitionView" == object.viewType || "definitionEditor" == object.viewType)){
+	}else	if( object != null && object.viewType != null && ("definitionView" == object.viewType || "definitionEditor" == object.viewType  || "definitionDiff" == object.viewType)){
 		if( object.editorId ){
 			canvasObject = mw3.getAutowiredObject('org.uengine.codi.mw3.webProcessDesigner.ProcessViewer@'+object.editorId);
 		}else{
@@ -52,7 +52,7 @@ org_uengine_kernel_designer_web_EventActivityView.prototype = {
         	if( object.activity ){
         		$(element).data('activity', object.activity);
         		// object.activity.activityView = null; 을 꼭 해주어야함.. activity가 activityView 를 들고있고, activityView가 activity를 들고있는 구조라서..
-        		object.activity.activityView.activity = null;
+        		object.activity.activityView = null;
         	}else if( typeof $(element).attr("_classname") != 'undefined' &&  typeof $(element).data("activity") == 'undefined' ){
         		var activityData = {__className : $(element).attr("_classname"), tracingTag : $(element).attr("_tracingTag")};
         		$(element).data('activity', activityData);

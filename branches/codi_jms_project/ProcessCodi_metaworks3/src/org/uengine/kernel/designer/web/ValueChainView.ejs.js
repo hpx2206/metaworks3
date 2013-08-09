@@ -7,7 +7,7 @@ var org_uengine_kernel_designer_web_ValueChainView = function(objectId, classNam
 	var canvasObject;
 	if( object != null && object.viewType != null && "blockView" == object.viewType ){
 		canvasObject = mw3.getAutowiredObject('org.uengine.codi.mw3.webProcessDesigner.InstanceMonitorPanel');
-	}else	if( object != null && object.viewType != null && ("definitionView" == object.viewType || "definitionEditor" == object.viewType)){
+	}else	if( object != null && object.viewType != null && ("definitionView" == object.viewType || "definitionEditor" == object.viewType  || "definitionDiff" == object.viewType)){
 		if( object.editorId ){
 			canvasObject = mw3.getAutowiredObject('org.uengine.codi.mw3.webProcessDesigner.ProcessViewer@'+object.editorId);
 		}else{
@@ -36,7 +36,6 @@ org_uengine_kernel_designer_web_ValueChainView.prototype = {
 			var parent = object.parent;
 			var style = object.style;
 			if (object.shapeType === 'EDGE') {
-				console.log(object);
 				var fromTeminal = object.from;
 				var toTeminal = object.to;
 				var getShapeFromTerminal = function (terminal) {

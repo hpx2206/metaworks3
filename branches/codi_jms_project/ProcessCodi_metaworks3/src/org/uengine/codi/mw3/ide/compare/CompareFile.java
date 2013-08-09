@@ -28,7 +28,7 @@ public class CompareFile {
 		}else{
 			processViewer = new ProcessViewer();
 			processViewer.setAlias(selectedProcessAlias);
-			processViewer.setViewType("definitionView");
+			processViewer.setViewType("definitionDiff");
 			processViewer.getProcessDesignerContainer().setEditorId(selectedProcessAlias);
 			processViewer.load();
 		}

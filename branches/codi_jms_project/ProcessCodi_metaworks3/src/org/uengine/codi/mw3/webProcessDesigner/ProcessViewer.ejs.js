@@ -51,6 +51,11 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessViewer.prototype = {
 	        enableHotKey    : false,
 	        enableContextMenu : false
 	    });
+		
+		console.log(object);
+		if( object != null && object.viewType != null && "definitionDiff" == object.viewType ){
+			
+		}
 		// canvas size 조절
 		var canvasWidth = canvasDivObj.width();
 		var canvasHeight = canvasDivObj.height();

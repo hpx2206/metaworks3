@@ -8,12 +8,12 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerContainer;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerContentPanel;
+import org.uengine.codi.mw3.webProcessDesigner.ProcessViewer;
 import org.uengine.kernel.Activity;
-import org.uengine.kernel.designer.web.ActivityView;
 
 public class CompareOriginFilePanel {
 	
-	static final String FILE_LOCATION = "source"; 
+	static final String FILE_LOCATION = "source";   
 	
 	String selectedProcessAlias;
 		public String getSelectedProcessAlias() {
@@ -54,17 +54,25 @@ public class CompareOriginFilePanel {
 	public CompareImportFile compareImportFile;
 	
 	@ServiceMethod(callByContent=true , target=ServiceMethodContext.TARGET_AUTO)
-	public Object[] processMerge(){
+	public Object[] processMerge() throws Exception{
 		
 		HashMap<String , Activity> activityMap1 = new HashMap<String , Activity>(); 
 		HashMap<String , Activity> activityMap2 = new HashMap<String , Activity>(); 
-		ProcessDesignerContainer designerContainer1 = compareOriginFile.getProcessViewer().getProcessDesignerContainer();
+		ProcessViewer originProcessViewer = compareOriginFile.getProcessViewer();
+		originProcessViewer.setProcessDesignerContainer(new ProcessDesignerContainer());
+		originProcessViewer.getProcessDesignerContainer().setEditorId(originProcessViewer.getAlias());
+		originProcessViewer.load();
+		ProcessDesignerContainer designerContainer1 = originProcessViewer.getProcessDesignerContainer();
 		ArrayList<Activity> activityList1 = designerContainer1.getActivityList();
 		for( Activity act : activityList1 ){
 			activityMap1.put(act.getTracingTag() , act);
 		}
 		
-		ProcessDesignerContainer designerContainer2 = compareImportFile.getProcessViewer().getProcessDesignerContainer();
+		ProcessViewer compareProcessViewer = compareImportFile.getProcessViewer();
+		compareProcessViewer.setProcessDesignerContainer(new ProcessDesignerContainer());
+		compareProcessViewer.getProcessDesignerContainer().setEditorId(compareProcessViewer.getAlias());
+		compareProcessViewer.load();
+		ProcessDesignerContainer designerContainer2 = compareProcessViewer.getProcessDesignerContainer();
 		ArrayList<Activity> activityList2 = designerContainer2.getActivityList();
 		for( Activity act : activityList2 ){
 			activityMap2.put(act.getTracingTag() , act);
@@ -80,12 +88,17 @@ public class CompareOriginFilePanel {
 			Activity act = activityList1.get(i);
 			if( activityMap2.containsKey(act.getTracingTag()) ){
 				Activity compareActivity = activityMap2.get(act.getTracingTag());
-				ActivityView compareActivityView = compareActivity.getActivityView();
+				boolean changeFlag = false;
+				if( act.getDescription() != null && compareActivity.getDescription() != null && act.getDescription().getText() != null
+					&&	!act.getDescription().getText().equals(compareActivity.getDescription().getText()) ){
+					changeFlag = true;
+				}
 				
-				ActivityView originActivityView = act.getActivityView();
+				if( !act.getDocumentation().equals(compareActivity.getDocumentation())){
+					changeFlag = true;
+				}
 				
-				
-				if( true ){
+				if( changeFlag ){
 					// TODO 프로퍼티 비교 - 프로퍼티 변경시 도형위에 펜 마크 표시
 					String style = "{\"stroke\":\"green\",\"stroke-width\":\"5\"}";
 					act.getActivityView().setStyle( ProcessDesignerContentPanel.escape(style));
@@ -109,8 +122,11 @@ public class CompareOriginFilePanel {
 				activityList2.set(i, act);
 			}
 		}
-		compareOriginFile.getProcessViewer().getProcessDesignerContainer().setActivityList(activityList1);
-		compareImportFile.getProcessViewer().getProcessDesignerContainer().setActivityList(activityList2);
+		designerContainer1.setActivityList(activityList1);
+		designerContainer2.setActivityList(activityList2);
+		
+		compareOriginFile.getProcessViewer().setProcessDesignerContainer(designerContainer1); 
+		compareImportFile.getProcessViewer().setProcessDesignerContainer(designerContainer2);
 		
 		return new Object[]{compareOriginFile, compareImportFile};
 	}
