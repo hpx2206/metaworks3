@@ -30,6 +30,9 @@ public class ScheduleCalendar implements ContextAware {
 	@AutowiredFromClient
 	public Session session;
 	
+	public static final String CALLTYPE_WORKITEM = "workitem";
+	public static final String CALLTYPE_INSTANCE = "instance";
+	
 	public ScheduleCalendar(){		
 		setMetaworksContext(new MetaworksContext());
 		getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
@@ -392,7 +395,7 @@ public class ScheduleCalendar implements ContextAware {
 			newInstancePanel.setNewInstantiator(newInstantiator);
 			
 			newInstantiator.newInstancePanel = newInstancePanel;
-			
+		
 			return new Object[]{new NewInstanceWindow(newInstancePanel)};
 		}
 	}
