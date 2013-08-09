@@ -93,6 +93,15 @@ public class PerspectivePanel {
 			this.contactPerspective = contactPerspective;
 		}
 
+	CommingTodoPerspective commingTodoPerspective;
+		public CommingTodoPerspective getCommingTodoPerspective() {
+			return commingTodoPerspective;
+		}
+		public void setCommingTodoPerspective(
+				CommingTodoPerspective commingTodoPerspective) {
+			this.commingTodoPerspective = commingTodoPerspective;
+		}
+		
 	public PerspectivePanel() throws Exception {
 		this(null);
 	}
@@ -140,6 +149,9 @@ public class PerspectivePanel {
 					contactPerspective.select();
 				}
 				
+				commingTodoPerspective = new CommingTodoPerspective();
+				commingTodoPerspective.session = session;
+				commingTodoPerspective.select();
 			}
 			//processStatusPerspective = new ProcessStatusPerspective();
 			//strategicPerspective = new StrategicPerspective();

@@ -57,8 +57,8 @@ public class Navigation {
 				e.printStackTrace();
 			}
 			
-			this.setPerspectiveType(session.lastPerspecteType);
-			this.setPerspectiveValue(session.lastSelectedItem);		
+			this.setPerspectiveType(session.getLastPerspecteType());
+			this.setPerspectiveValue(session.getLastSelectedItem());		
 			this.setKeyword(session.getSearchKeyword());
 			this.setEmployee(employee);
 			this.setMedia(session.getUx());
