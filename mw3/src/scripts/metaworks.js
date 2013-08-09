@@ -3057,8 +3057,12 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 							   if(test.value[fieldDescriptor.name]){
 								   enterValueContext = (enterValueContext ? enterValueContext + ", " : "") + fieldDescriptor.displayName + " : " + test.value[fieldDescriptor.name];
 								   
-								   value[fieldDescriptor.name] = test.value[fieldDescriptor.name];
-
+								   var childObjectId = this.getChildObjectId(objectId, fieldDescriptor.name);
+								   
+								   if(childObjectId)
+									   this.objects[this.getChildObjectId(objectId, fieldDescriptor.name)] = test.value[fieldDescriptor.name];
+								   else
+									   value[fieldDescriptor.name] = test.value[fieldDescriptor.name];								   
 							   }
 							   
 						   }
@@ -3885,16 +3889,17 @@ Metaworks3.prototype.localize = function(){
 		   			}
 
 			   }
-				
-				
-				
 			   
 			   //install context menu
-			   if(contextMenuMethods.length > 0){
+			   if(contextMenuMethods.length > 0){				   
 				   var menuItems = [];
 				   
 				   for(var i=0; i<contextMenuMethods.length; i++){							   
 					   var serviceMethodContext = contextMenuMethods[i];
+					   
+					   // context menu enable/disable 처리에 대한 faceHelper assist function 추가					   
+					   if(mw3.getFaceHelper(objectId) && mw3.getFaceHelper(objectId).ableContextMenu && !mw3.getFaceHelper(objectId).ableContextMenu(serviceMethodContext.methodName))
+						   continue;
 					   
 					   
 					   // 상태에 따른 visible 처리
