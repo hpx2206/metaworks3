@@ -49,14 +49,34 @@ public class Locale{
 		resourceBundle = webMessageBundles.get(language);		
 	}
 	
-	public String getString(String key){
-		if(key.startsWith("$")){
-			String messages = resourceBundle.getProperty(key.substring(1));
-			if(messages == null)
-				messages = key;
+	public String getString(String... keys){
+	
+		String message = keys[0];
+		
+		if(message.startsWith("$")){
+			message = resourceBundle.getProperty(message.substring(1));			
+			message = (message == null) ? keys[0] : message;
+		}
+		
+		if(keys.length == 1)
+			return message;		
+		
+		String ret_message = "";		
+		String arr_message[] = message.split("%s");
+		
+		for(int i=0; i < arr_message.length; i++) {
+			ret_message += arr_message[i];
 			
-			return messages;
-		}else
-			return key;
+			if (i+1 < keys.length) {
+				String key = keys[i+1]; 		
+				key = this.getString(key);
+//				if(key.startsWith("$")) {
+//					key = resourceBundle.getProperty(key.substring(1));					
+//					key = (key == null) ? keys[i+1] : key;
+//				}
+				ret_message += key;	
+			}													
+	    }
+		return ret_message;
 	}
 }
