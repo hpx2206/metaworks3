@@ -8,13 +8,10 @@
 	<ul>
 		<%=fields.contacts.here()%>
 	</ul>
-	<ul>
-		<li>
+	
 			<% if(!value.selectedMore) { %>
-				<a onClick="<%=methods.moreView.caller()%>" href="#" style="display: inline-block"><%=mw3.localize('$More')%></a>
+				<span class="west_more_btn" style="top:-20px;"><a onClick="<%=methods.moreView.caller()%>" href="#" style="display: inline-block"><%=mw3.localize('$More')%></a></span>
 			<% } %>
-		</li>
-	</ul>
 <%
 		}
 	}

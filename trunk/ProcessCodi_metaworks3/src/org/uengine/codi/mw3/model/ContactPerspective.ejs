@@ -1,11 +1,11 @@
 <%
 	if(value){
 %>
-	<div class="depth1" onClick="<%=methods.select.caller()%>"><%=mw3.localize("$Contact")%></div>
+	<div class="depth1"><span onClick="<%=methods.select.caller()%>"><%=mw3.localize("$Contact")%></span></div>
 <%
 		if(value.selected){
 %>
-	<%=fields.contactPanel.here()%>
+	<div style="position:relative"><%=fields.contactPanel.here()%></div>
 <%
 		}
 	}

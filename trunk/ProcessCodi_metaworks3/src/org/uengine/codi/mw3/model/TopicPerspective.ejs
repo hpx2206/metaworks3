@@ -1,13 +1,13 @@
 <%
 	if(value){
 %>
-	<div class="depth1" onClick="<%=methods.select.caller()%>"><%=mw3.localize("$Topic")%></div>
+	<div class="depth1"><span onClick="<%=methods.select.caller()%>"><%=mw3.localize("$Topic")%></span></div>
 <%
 		if(value.selected){
 %>
 	<div class="depth2">
 		<ul class="fist_menu">
-			<li style="padding:0px;"><%=fields.topicMap.here()%></li>
+			<li style="padding:0px; position:relative;"><%=fields.topicMap.here()%></li>
 		</ul>
 	</div>
 <%
