@@ -5,20 +5,21 @@ import java.rmi.RemoteException;
 
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
+import org.uengine.kernel.GlobalContext;
 
 
 public class Contact extends Database<IContact> implements IContact{
 
-	public IContact loadContacts() throws Exception{
+	public IContact loadContacts(boolean isSelected) throws Exception{
 		IUser friend = new User();
 		
 		StringBuffer sb = new StringBuffer();
 		sb.append("select c.userId, c.friendId, ifnull(e.empname, c.friendName) friendName, e.mood")
-		.append("  from contact c left join emptable e")
-		.append("    on c.friendid = e.empcode")
-		.append(" where c.userId=?userId")
-		.append("   and c.network=?network")
-		.append("   and e.isDeleted=?isDeleted");
+		  .append("  from contact c left join emptable e")
+		  .append("    on c.friendid = e.empcode")
+		  .append(" where c.userId=?userId")
+		  .append("   and c.network=?network")
+		  .append("   and e.isDeleted=?isDeleted");
 		
 		if(this.getFriend() != null && this.getFriend().getName() != null)
 			sb.append("   and c.friendName like ?friendName");
@@ -42,6 +43,10 @@ public class Contact extends Database<IContact> implements IContact{
 				.append(" from bpm_rolemapping r")
 				.append(" where rootinstid='" + session.getLastInstanceId() +"' and assigntype = 0 and r.endpoint = c.friendId)");
 			}
+		}
+		
+		if(!isSelected) {
+			sb.append("   limit " + GlobalContext.getPropertyString("contact.more.count"));
 		}
 		
  		IContact contacts = sql(sb.toString());

@@ -5,6 +5,7 @@ import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
+import org.metaworks.annotation.ServiceMethod;
 
 public class ContactList implements ContextAware {
 	
@@ -34,7 +35,7 @@ public class ContactList implements ContextAware {
 			friend.setNetwork(LOCAL);			
 			contact.setFriend(friend);
 			
-			setContacts(contact.loadContacts());
+			setContacts(contact.loadContacts(this.isSelectedMore()));
 			
 			if(getContacts().size()==0){
 				invitation = new Invitation();
@@ -45,8 +46,14 @@ public class ContactList implements ContextAware {
 			friend.setNetwork(FACEBOOK);
 			contact.setFriend(friend);
 			
-			setContacts(contact.loadContacts());
+			setContacts(contact.loadContacts(this.isSelectedMore()));
 		}
+	}
+	
+	@ServiceMethod
+	public void moreView() throws Exception {
+		this.setSelectedMore(true);
+		load(session.getEmployee().getEmpCode());
 	}
 
 	String id;
@@ -76,13 +83,19 @@ public class ContactList implements ContextAware {
 		}		
 	
 	Invitation invitation;
-
 		public Invitation getInvitation() {
 			return invitation;
 		}
-	
 		public void setInvitation(Invitation invitation) {
 			this.invitation = invitation;
+		}
+		
+	boolean isSelectedMore;
+		public boolean isSelectedMore() {
+			return isSelectedMore;
+		}
+		public void setSelectedMore(boolean isSelectedMore) {
+			this.isSelectedMore = isSelectedMore;
 		}
 		
 	@AutowiredFromClient
