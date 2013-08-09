@@ -1,8 +1,6 @@
 var org_metaworks_widget_layout_Layout = function(objectId, className){
-
 	this.objectId = objectId;
 	this.className = className;
-	
 	this.divId = '#objDiv_' + objectId;
 	this.div = $(this.divId);	
 	
@@ -13,9 +11,7 @@ var org_metaworks_widget_layout_Layout = function(objectId, className){
 		
 		this.size = this.div.children().length;
 		this.hidden = 0;
-		
-		//this.change = false;
-		
+				
 		this.div.addClass('mw3_layout').attr('objectId', objectId);
 		
 		this.list = {};	
@@ -73,8 +69,14 @@ var org_metaworks_widget_layout_Layout = function(objectId, className){
 		});
 
 		faceHelper.load();
+		
+		//인스턴스 리스트 영역에 좌측 hide버튼 감추기
+		var isInstanceList = ((object.west.__className).indexOf('InstanceListWindow') > 0 ? true : false);
+		if(isInstanceList){
+			this.div.parent().find($('.hide_west_btn')).removeClass();
+		}
 	}
-}
+};
 
 org_metaworks_widget_layout_Layout.prototype.load = function(){
 	
@@ -95,12 +97,12 @@ org_metaworks_widget_layout_Layout.prototype.load = function(){
 		options['center__onresize'] = 'mw3.getFaceHelper(\''+this.objectId+'\').resizeChild()';
 	
 	this.layout = this.div.layout(options);
-}
+};
 
 org_metaworks_widget_layout_Layout.prototype.destroy = function(){
 	if(this.layout)
 		this.layout.destroy();
-}
+};
 
 org_metaworks_widget_layout_Layout.prototype.show = function(target){
 	
@@ -137,7 +139,7 @@ org_metaworks_widget_layout_Layout.prototype.show = function(target){
 	
 	this.resize();
 	
-}
+};
 
 org_metaworks_widget_layout_Layout.prototype.hide = function(target){
 	
@@ -188,7 +190,7 @@ org_metaworks_widget_layout_Layout.prototype.hide = function(target){
 		this.resize();	
 	}*/
 	
-}
+};
 
 org_metaworks_widget_layout_Layout.prototype.maximize = function(target){
 	
@@ -236,7 +238,7 @@ org_metaworks_widget_layout_Layout.prototype.maximize = function(target){
 	
 	
 	
-}
+};
 
 org_metaworks_widget_layout_Layout.prototype.resume = function(){
 	
@@ -265,7 +267,7 @@ org_metaworks_widget_layout_Layout.prototype.resume = function(){
 	}
 	
 	
-}
+};
 
 org_metaworks_widget_layout_Layout.prototype.resize = function(){
 	
@@ -330,7 +332,7 @@ org_metaworks_widget_layout_Layout.prototype.resize = function(){
 		this.resizeChild();
 		
 	}
-}
+};
 
 org_metaworks_widget_layout_Layout.prototype.resizeChild = function(){
 	this.div.find('.mw3_layout, .mw3_resize').each(function(index, value){
@@ -342,4 +344,4 @@ org_metaworks_widget_layout_Layout.prototype.resizeChild = function(){
 		}
 			
 	});
-}
+};
