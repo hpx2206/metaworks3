@@ -2386,3 +2386,5 @@ select.select[class] {
 
 .hide_west_btn{position:absolute;top:42%; right:-17px;width:17px;height:114px; background:url(../../images/waveStyle/hide_left_btn.png); cursor:pointer;}
 .show_west_btn{position:absolute;top:42%; left:0px;width:17px;height:114px; background:url(../../images/waveStyle/show_left_btn.png); cursor:pointer; display:none;z-index:2}
+.west_more_btn{position:absolute; right:10px; top:-24px; font-size:11px; display:none;}
+.west_more_btn a {color:#5896db !important;}
