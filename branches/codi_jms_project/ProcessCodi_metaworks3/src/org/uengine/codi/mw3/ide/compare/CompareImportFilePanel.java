@@ -56,7 +56,7 @@ public class CompareImportFilePanel {
 	}
 	
 	
-	@ServiceMethod(inContextMenu=true, target=ServiceMethodContext.TARGET_POPUP)
+	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
 	public Popup importFile() throws Exception{
 		
 		String projectId = MetadataBundle.getProjectId();

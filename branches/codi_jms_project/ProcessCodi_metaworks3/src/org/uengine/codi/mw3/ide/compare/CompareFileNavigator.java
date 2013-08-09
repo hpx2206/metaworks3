@@ -1,9 +1,12 @@
 package org.uengine.codi.mw3.ide.compare;
 
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Id;
 import org.metaworks.component.Tree;
 import org.metaworks.component.TreeNode;
 import org.metaworks.metadata.MetadataBundle;
+import org.uengine.codi.mw3.ide.ResourceNode;
+import org.uengine.codi.mw3.model.FileImporter;
 
 public class CompareFileNavigator {
 	
@@ -43,7 +46,15 @@ public class CompareFileNavigator {
 		public void setUploadPath(String uploadPath) {
 			this.uploadPath = uploadPath;
 		}
-		
+	String uploadType;
+		public String getUploadType() {
+			return uploadType;
+		}
+		public void setUploadType(String uploadType) {
+			this.uploadType = uploadType;
+		}
+	@AutowiredFromClient
+	public FileImporter fileImporter; 
 	public void load() throws Exception{
 		
 		String projectId = MetadataBundle.getProjectId();
@@ -69,29 +80,64 @@ public class CompareFileNavigator {
 	
 	public void loadUpload() throws Exception{
 		
-		CompareFileNode rootNode = new CompareFileNode();
-		rootNode.setId(fileName);
-		rootNode.setRoot(true);
-		rootNode.setType(TreeNode.TYPE_FOLDER);
-		rootNode.setFolder(true);
-		rootNode.setTreeId(id);
-		if( uploaded ){
-			// TODO zip 파일 푼 경로를 트리로 만들어서 뿌리기
-			rootNode.setName(fileName);
-			rootNode.setPath(uploadPath);
-			rootNode.setExpanded(true);
+		if (uploaded && (uploadType.equals(".process"))) {
+			CompareFileNode rootNode;
+			if( this.getFileTree() != null && this.getFileTree().getNode() != null ){
+				rootNode = (CompareFileNode) this.getFileTree().getNode();
+			}else{
+				rootNode = new CompareFileNode();
+			}
 			
-			rootNode.expand();
-		}else{
-			rootNode.setName("파일을 등록해주세요");
+			rootNode.setId(fileName);
+			rootNode.setRoot(true);
+			rootNode.setType(TreeNode.TYPE_FOLDER);
+			rootNode.setFolder(true);
+			rootNode.setTreeId(id);
+			
+			rootNode.setName("업로드된 파일");
 			rootNode.setPath(null);
-			rootNode.setExpanded(false);
+			rootNode.setExpanded(true);
+			rootNode.setLoaded(true);
+			// process
+			CompareFileNode childNode = new CompareFileNode();
+			childNode.setName(fileName);
+			childNode.setPath(uploadPath);
+			childNode.setType(ResourceNode.TYPE_FILE_PROCESS);
+			childNode.setFolder(false);
+			childNode.setTreeId(id);
+			rootNode.add(childNode);
 			
+			Tree tree = new Tree();
+			tree.setId(id);
+			tree.setNode(rootNode);
+			setFileTree(tree);
+		}else{
+			CompareFileNode rootNode = new CompareFileNode();
+			rootNode.setId(fileName);
+			rootNode.setRoot(true);
+			rootNode.setType(TreeNode.TYPE_FOLDER);
+			rootNode.setFolder(true);
+			rootNode.setTreeId(id);
+			
+			if( uploaded && (uploadType.equals(".zip"))){
+				// TODO zip 파일 푼 경로를 트리로 만들어서 뿌리기
+				rootNode.setName(fileName);
+				rootNode.setPath(uploadPath);
+				rootNode.setExpanded(true);
+				
+				rootNode.expand();
+				
+			}else{
+				rootNode.setName("파일을 등록해주세요");
+				rootNode.setPath(null);
+				rootNode.setExpanded(false);
+				
+			}
+			
+			Tree tree = new Tree();
+			tree.setId(id);
+			tree.setNode(rootNode);
+			setFileTree(tree);
 		}
-		
-		Tree tree = new Tree();
-		tree.setId(id);
-		tree.setNode(rootNode);
-		setFileTree(tree);
 	}
 }

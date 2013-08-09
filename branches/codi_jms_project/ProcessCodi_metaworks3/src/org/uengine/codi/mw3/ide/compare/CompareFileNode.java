@@ -24,50 +24,56 @@ public class CompareFileNode extends TreeNode{
 	public Object expand() throws Exception {
 		
 		ArrayList<TreeNode> child = new ArrayList<TreeNode>();
-
-		File file = new File(this.getPath());
-		String[] childFilePaths = file.list();
-
-		// folder
-		for(int i=0; i<childFilePaths.length; i++){
-			File childFile = new File(file.getAbsolutePath() + File.separatorChar + childFilePaths[i]);
-
-			if(childFile.isDirectory()){
-				CompareFileNode node = new CompareFileNode();
-				node.setId(this.getId() + File.separatorChar + childFile.getName());				
-				node.setName(childFile.getName());
-				node.setPath(this.getPath() + File.separatorChar + childFile.getName());
-				node.setParentId(this.getId());
-				node.setType(TreeNode.TYPE_FOLDER);
-				node.setFolder(true);
-				node.setTreeId(this.getTreeId());
-
-				child.add(node);
+		if( this.getPath() != null ){
+			File file = new File(this.getPath());
+			String[] childFilePaths = file.list();
+	
+			// folder
+			for(int i=0; i<childFilePaths.length; i++){
+				File childFile = new File(file.getAbsolutePath() + File.separatorChar + childFilePaths[i]);
+	
+				if(childFile.isDirectory()){
+					CompareFileNode node = new CompareFileNode();
+					node.setId(this.getId() + File.separatorChar + childFile.getName());				
+					node.setName(childFile.getName());
+					node.setPath(this.getPath() + File.separatorChar + childFile.getName());
+					node.setParentId(this.getId());
+					node.setType(TreeNode.TYPE_FOLDER);
+					node.setFolder(true);
+					node.setTreeId(this.getTreeId());
+	
+					child.add(node);
+				}
 			}
-		}
-
-		// file
-		for(int i=0; i<childFilePaths.length; i++){
-			File childFile = new File(file.getAbsolutePath() + File.separatorChar + childFilePaths[i]);
-
-			if(!childFile.isDirectory()){
-				CompareFileNode node = new CompareFileNode();
-				node.setId(this.getId() + File.separatorChar + childFile.getName());
-				node.setName(childFile.getName());
-				node.setPath(this.getPath() + File.separatorChar + childFile.getName());
-				node.setParentId(this.getId());
-				node.setType(ResourceNode.findNodeType(node.getName()));
-				node.setTreeId(this.getTreeId());
-				child.add(node);
+	
+			// file
+			for(int i=0; i<childFilePaths.length; i++){
+				File childFile = new File(file.getAbsolutePath() + File.separatorChar + childFilePaths[i]);
+	
+				if(!childFile.isDirectory()){
+					CompareFileNode node = new CompareFileNode();
+					node.setId(this.getId() + File.separatorChar + childFile.getName());
+					node.setName(childFile.getName());
+					node.setPath(this.getPath() + File.separatorChar + childFile.getName());
+					node.setParentId(this.getId());
+					node.setType(ResourceNode.findNodeType(node.getName()));
+					node.setTreeId(this.getTreeId());
+					child.add(node);
+				}
 			}
+	
+			this.setChild(child);
+	
+			return this;
+		}else{
+			return null;
 		}
-
-		this.setChild(child);
-
-		return this;
 	}
 	@AutowiredFromClient
 	public CompareOriginFile compareOriginFile;
+	
+	@AutowiredFromClient
+	public CompareImportFile compareImportFile;
 	
 	@Override
 	@ServiceMethod(payload={"id", "name", "path", "type", "folder", "treeId"}, target=ServiceMethodContext.TARGET_AUTO)
@@ -80,6 +86,15 @@ public class CompareFileNode extends TreeNode{
 				return new Object[]{compareOriginFile};
 			}
 		}
+		if(CompareImportFilePanel.FILE_LOCATION.equals(this.getTreeId())) {
+			if( compareImportFile != null){
+				compareImportFile.setSelectedProcessAlias(this.getPath());
+				compareImportFile.load();
+				
+				return new Object[]{compareImportFile};
+			}
+		}
+		
 		return null;
 	}
 }
