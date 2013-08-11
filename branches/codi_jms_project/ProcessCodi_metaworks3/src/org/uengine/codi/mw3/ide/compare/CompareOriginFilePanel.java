@@ -5,7 +5,9 @@ import java.util.HashMap;
 
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.widget.Choice;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerContainer;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerContentPanel;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessViewer;
@@ -36,10 +38,27 @@ public class CompareOriginFilePanel {
 		public void setCompareOriginFile(CompareOriginFile compareOriginFile) {
 			this.compareOriginFile = compareOriginFile;
 		}
+	Choice nodeSearch;
+		@Face(ejsPath="dwr/metaworks/org/metaworks/widget/ChoiceCombo.ejs")
+		public Choice getNodeSearch() {
+			return nodeSearch;
+		}
+		public void setNodeSearch(Choice nodeSearch) {
+			this.nodeSearch = nodeSearch;
+		}
+	
 	public CompareOriginFilePanel(){
 	}
 	
 	public void load() throws Exception{
+		
+		Choice nodeSearch = new Choice();
+		nodeSearch.add("Origin Process", "0");
+		nodeSearch.add("Import Process", "1");
+		nodeSearch.setSelected("0");
+		
+		setNodeSearch(nodeSearch);
+		
 		compareFileNavigator = new CompareFileNavigator();
 		compareFileNavigator.setId(CompareOriginFilePanel.FILE_LOCATION);
 		compareFileNavigator.load();
