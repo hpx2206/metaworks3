@@ -2,9 +2,11 @@ package org.uengine.codi.mw3.ide.compare;
 
 import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.metadata.MetadataBundle;
 import org.metaworks.website.MetaworksFile;
+import org.metaworks.widget.Choice;
 import org.uengine.codi.mw3.model.FileImporter;
 import org.uengine.codi.mw3.model.Popup;
 
@@ -42,10 +44,28 @@ public class CompareImportFilePanel {
 		public void setMetaworksFile(MetaworksFile metaworksFile) {
 			this.metaworksFile = metaworksFile;
 		}
+		
+	Choice nodeSearch;
+		@Face(ejsPath="dwr/metaworks/org/metaworks/widget/ChoiceCombo.ejs")
+		public Choice getNodeSearch() {
+			return nodeSearch;
+		}
+		public void setNodeSearch(Choice nodeSearch) {
+			this.nodeSearch = nodeSearch;
+		}
+		
 	public CompareImportFilePanel(){
 	}
 	
 	public void load() throws Exception{
+		
+		Choice nodeSearch = new Choice();
+		nodeSearch.add("Import Process","0");
+		nodeSearch.add("Origin Process","0");
+		nodeSearch.setSelected("1");
+		
+		setNodeSearch(nodeSearch);
+		
 		compareFileNavigator = new CompareFileNavigator();
 		compareFileNavigator.setId(CompareImportFilePanel.FILE_LOCATION);
 		compareFileNavigator.loadUpload();

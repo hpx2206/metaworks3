@@ -18,7 +18,7 @@ public class CompareFileNode extends TreeNode{
 		public void setPath(String path) {
 			this.path = path;
 		}
-	
+		
 	@Override
 	@ServiceMethod(callByContent=true, except="child", target=ServiceMethodContext.TARGET_SELF)
 	public Object expand() throws Exception {
@@ -81,6 +81,7 @@ public class CompareFileNode extends TreeNode{
 		if( CompareOriginFilePanel.FILE_LOCATION.equals(this.getTreeId())){
 			if( compareOriginFile != null){
 				compareOriginFile.setSelectedProcessAlias(this.getPath());
+				compareOriginFile.setOriginFileName(this.getName());
 				compareOriginFile.load();
 				
 				return new Object[]{compareOriginFile};
@@ -89,6 +90,7 @@ public class CompareFileNode extends TreeNode{
 		if(CompareImportFilePanel.FILE_LOCATION.equals(this.getTreeId())) {
 			if( compareImportFile != null){
 				compareImportFile.setSelectedProcessAlias(this.getPath());
+				compareImportFile.setImportFileName(this.getName());
 				compareImportFile.load();
 				
 				return new Object[]{compareImportFile};
