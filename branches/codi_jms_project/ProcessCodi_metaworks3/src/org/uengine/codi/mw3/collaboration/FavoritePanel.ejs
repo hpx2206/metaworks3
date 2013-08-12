@@ -1,0 +1,24 @@
+<%
+	if(value) {
+		if(value.favoriteFile){
+%>
+	<ul>
+	
+<%
+	for(var i=0; i<value.favoriteFile.length; i++){
+		if(typeof options =='undefined')
+			options = objectMetadata;
+			options['index'] = i;
+			options['htmlTag'] =  'li';
+%>	
+	<%=mw3.locateObject(value.favoriteFile[i], value.favoriteFile[i].__className, null, options)%>	
+<%
+			mw3.addBeanProperty(value.__objectId, '.favoriteFile[' + i + ']');
+		}
+%>
+	</ul>	
+<%
+		}
+	}
+%>	
+	
