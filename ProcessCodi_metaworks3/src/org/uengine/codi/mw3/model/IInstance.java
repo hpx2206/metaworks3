@@ -20,7 +20,7 @@ import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitor;
 		ejsPathMappingByContext=
 	{
 		"{where: 'pinterest', face: 'dwr/metaworks/org/uengine/codi/mw3/model/IInstance_pinterest.ejs'}",
-		"{how: 'commingTodo', face: 'dwr/metaworks/org/uengine/codi/mw3/model/IInstance_commingTodo.ejs'}",
+		"{how: '" + Perspective.TYPE_COMMINGTODO + "', face: 'dwr/metaworks/org/uengine/codi/mw3/model/IInstance_commingTodo.ejs'}",
 		"{how: 'action', face: 'dwr/metaworks/org/uengine/codi/mw3/model/IInstance_action.ejs'}"
 	}		
 )
