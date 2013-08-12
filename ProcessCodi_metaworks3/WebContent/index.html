@@ -250,6 +250,7 @@
  		
 			mw3.usingTemplateEngine = 'jQote';
 			mw3.needToConfirmMessage = '$confirm.message';
+							
 			//mw3.optimizeObjectMemory = true;
 			
 			
@@ -364,6 +365,41 @@
 							bgPath : mw3.base + '/images/',
 						    content : "<b>" + mw3.localize(message) + "</b>"
 					});
+		 		}
+		 		
+		 		mw3.localize = function(){		 		
+		 			var message = arguments[0];
+					
+					if(message != null && typeof message == 'string' && message.indexOf('$')==0 && this.getMessage){
+						message = message.substring(1);					
+						message = this.getMessage(message);
+					}
+					
+					if(message != null && message.match(/%s/g) != null) {
+						
+						if (message.match(/%s/g).length != arguments.length - 1) {
+							throw new Error(mw3.localize('$NotEqualToFormatCountAndArgumentCount'));
+						}
+					}
+					
+					if(arguments.length == 1)
+						return message;
+					
+					var pattern = /%s/g;
+					var matchArray;
+
+					var str = " ";			
+							
+					var cnt = 0;
+					while((matchArray = pattern.exec(message)) != null){		        	
+						var argument = arguments[1+ cnt++];
+						argument = this.localize(argument);
+						
+						message = message.replace("%s", argument);
+					}
+					
+					console.log(message);
+					return message;
 		 		}
 		 		
 		 		mw3.getMessage = function(key, defaultValue){
