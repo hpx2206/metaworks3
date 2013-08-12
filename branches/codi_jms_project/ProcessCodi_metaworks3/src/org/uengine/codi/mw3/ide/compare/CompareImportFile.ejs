@@ -3,7 +3,14 @@
 		var processName = value.fileName;
 %>
 	<div id="openmind_btn">
-		 <span><b><%= processName %></b></span> 	
+
+	<%	
+		if(processName != null) {
+	%>
+		 <span><b><%= processName %></b></span>
+	<%	
+		}
+	%> 	
 	</div>
 <%
 }
