@@ -53,20 +53,39 @@ public class CompareFileNavigator {
 		public void setUploadType(String uploadType) {
 			this.uploadType = uploadType;
 		}
+	String selectType;
+		public String getSelectType() {
+			return selectType;
+		}
+		public void setSelectType(String selectType) {
+			this.selectType = selectType;
+		}
+	//	CompareFileNavigator compareFileNavigator;
+//		public CompareFileNavigator getCompareFileNavigator() {
+//			return compareFileNavigator;
+//		}
+//		public void setCompareFileNavigator(CompareFileNavigator compareFileNavigator) {
+//			this.compareFileNavigator = compareFileNavigator;
+//		}
 	@AutowiredFromClient
 	public FileImporter fileImporter; 
+	
 	public void load() throws Exception{
-		
 		String projectId = MetadataBundle.getProjectId();
-		String mainPath = MetadataBundle.getProjectBasePath(projectId);
-		
 		CompareFileNode rootNode = new CompareFileNode();
 		rootNode.setId(projectId);
 		rootNode.setRoot(true);
 		rootNode.setType(TreeNode.TYPE_FOLDER);
-		rootNode.setName(projectId);
+		if(CompareImportFilePanel.PRESENT_PROCESS.equals(this.getSelectType())) {
+			rootNode.setName("업로드 된 폴더");
+			rootNode.setPath(getUploadPath());
+			
+		} else if(CompareImportFilePanel.ORIGIN_PROCESS.equals(this.getSelectType())) {
+			rootNode.setName(projectId);
+			rootNode.setPath(getUploadPath());
+			
+		}
 		rootNode.setFolder(true);
-		rootNode.setPath(mainPath);
 		rootNode.setExpanded(true);
 		rootNode.setTreeId(id);
 		
