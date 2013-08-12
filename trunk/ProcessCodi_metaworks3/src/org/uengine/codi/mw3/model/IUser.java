@@ -29,6 +29,13 @@ public interface IUser extends IDAO{
 
 	public boolean isUserChecked();
 	public void setUserChecked(boolean userChecked);
+	
+	public boolean isGuest();
+	public void setGuest(boolean guest);
+	
+	public String getInviteUser();
+	public void setInviteUser(String inviteUser);	
+	
 //	@NonLoadable
 //	@NonSavable
 //	public String getInstanceId() ;
@@ -87,19 +94,19 @@ public interface IUser extends IDAO{
 	@ServiceMethod(mouseBinding="drop")
 	public void drop();
 	
-	@ServiceMethod(inContextMenu=true, needToConfirm=true)
+	@ServiceMethod(callByContent=true, inContextMenu=true, needToConfirm=true)
 //	@Available(when={"followers"})
 	@Face(displayName="$Unsubscribe")
 //	@Hidden
 	public Object[] unsubscribe() throws Exception;	
 
-	@ServiceMethod(callByContent=true, inContextMenu=true)
+	@ServiceMethod(callByContent=true, inContextMenu=true, target=TARGET_SELF)
 	@Face(displayName="$GuestToUser")
-	public void guestToUser() throws Exception;
+	public Object guestToUser() throws Exception;
 	
-	@ServiceMethod(callByContent=true, inContextMenu=true)
+	@ServiceMethod(callByContent=true, inContextMenu=true, target=TARGET_SELF)
 	@Face(displayName="$UserToGuest")
-	public void userToGuest() throws Exception;
+	public Object userToGuest() throws Exception;
 
 	@ServiceMethod(inContextMenu=true, needToConfirm=true, target="none")
 	@Available(when={"admin"})

@@ -9,6 +9,9 @@ import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.knowledge.WfPanel;
 
 public class Perspective {
+	
+	public final static String TYPE_COMMINGTODO = "commingTodo";
+	
 	String label;
 
 	@Id

@@ -63,7 +63,7 @@ public class Followers implements ContextAware {
 	public void load() throws Exception{
 		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 		
-		IUser users = (IUser) Database.sql(IUser.class, "select distinct a.endpoint userId, a.resname name, b.network from bpm_rolemapping a left join contact b on a.endpoint=b.friendId  where rootinstid=?instanceId and assigntype = 0 ");
+		IUser users = (IUser) Database.sql(IUser.class, "select distinct a.endpoint userId, a.resname name, b.network, e.guest, e.inviteUser from bpm_rolemapping a left join contact b on a.endpoint=b.friendId left join emptable e on a.endpoint=e.empcode where rootinstid=?instanceId and assigntype = 0 ");
 		users.set("instanceId", instanceId);
 		users.select();
 		

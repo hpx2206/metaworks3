@@ -65,7 +65,23 @@ public class User extends Database<IUser> implements IUser {
 		public void setUserChecked(boolean userChecked) {
 			this.userChecked = userChecked;
 		}
+	
+	boolean guest;
+		public boolean isGuest() {
+			return guest;
+		}
+		public void setGuest(boolean guest) {
+			this.guest = guest;
+		}
 		
+	String inviteUser;		
+		public String getInviteUser() {
+			return inviteUser;
+		}
+		public void setInviteUser(String inviteUser) {
+			this.inviteUser = inviteUser;
+		}
+
 	int businessValue;
 		public int getBusinessValue() {
 			return businessValue;
@@ -81,7 +97,7 @@ public class User extends Database<IUser> implements IUser {
 		public void setTodoCount(int todoCount) {
 			this.todoCount = todoCount;
 		}
-
+	
 	@AutowiredFromClient
 	public Session session;
 
@@ -585,7 +601,7 @@ public class User extends Database<IUser> implements IUser {
 	}
 	
 	@Override
-	public void guestToUser() throws Exception {	
+	public Object guestToUser() throws Exception {	
 		
 		IEmployee emp = new Employee();
 		emp.setEmpCode(getUserId());
@@ -596,15 +612,18 @@ public class User extends Database<IUser> implements IUser {
 		if((inviteUser != null && inviteUser.equals(session.getUser().getUserId()))
 				|| session.getEmployee().getIsAdmin()) {
 			
-			employee.databaseMe().setGuest(false);	
-			
+			employee.databaseMe().setGuest(false);
+			this.setGuest(false);
 		}
 		else
 			throw new Exception("$OnlyTheAdminAndInviteUserCanEdit");
+		
+//		return new Refresh(this);
+		return this;
 	}
 	
 	@Override
-	public void userToGuest() throws Exception {
+	public Object userToGuest() throws Exception {
 		IEmployee emp = new Employee();
 		emp.setEmpCode(getUserId());
 		Employee employee = (Employee)emp.findMe();		
@@ -615,9 +634,13 @@ public class User extends Database<IUser> implements IUser {
 				|| session.getEmployee().getIsAdmin()) {
 			
 			employee.databaseMe().setGuest(true);
+			this.setGuest(true);
 		}
 		else
 			throw new Exception("$OnlyTheAdminAndInviteUserCanEdit");
+		
+//		return new Refresh(this);
+		return this;
 	}
 
 	@Override
@@ -695,5 +718,4 @@ public class User extends Database<IUser> implements IUser {
 		employee.setEmpCode(this.getUserId());
 		employee.databaseMe().setApproved(true);
 	}
-	
 }

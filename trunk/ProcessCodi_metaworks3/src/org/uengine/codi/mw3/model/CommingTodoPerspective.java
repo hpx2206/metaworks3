@@ -4,8 +4,6 @@ import org.uengine.kernel.GlobalContext;
 
 public class CommingTodoPerspective extends Perspective{
 	
-	public final static String TYPE_COMMINGTODO = "commingTodo";
-	
 	IInstance instance;	
 		public IInstance getInstance() {
 			return instance;
@@ -21,10 +19,10 @@ public class CommingTodoPerspective extends Perspective{
 	@Override
 	protected void loadChildren() throws Exception {
 		
-		session.setLastPerspecteType("commingTodo");
+		session.setLastPerspecteType(Perspective.TYPE_COMMINGTODO);
 			
 		IInstance instanceContents = Instance.load(new Navigation(session), 0, Integer.parseInt(GlobalContext.getPropertyString("commingtodo.list.count", "2")));
-		instanceContents.getMetaworksContext().setHow("commingTodo");
+		instanceContents.getMetaworksContext().setHow(Perspective.TYPE_COMMINGTODO);
 		this.setInstance(instanceContents);	
 	}
 }
