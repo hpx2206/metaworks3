@@ -9,6 +9,8 @@ import org.uengine.kernel.GlobalContext;
 
 
 public class Contact extends Database<IContact> implements IContact{
+	
+	public final static String DEFAULT_TOPIC_COUNT = "9";
 
 	public IContact loadContacts(boolean isSelected) throws Exception{
 		IUser friend = new User();
@@ -46,7 +48,7 @@ public class Contact extends Database<IContact> implements IContact{
 		}
 		
 		if(!isSelected) {
-			sb.append("   limit " + GlobalContext.getPropertyString("contact.more.count"));
+			sb.append("   limit " + GlobalContext.getPropertyString("topic.more.count", DEFAULT_TOPIC_COUNT));
 		}
 		
  		IContact contacts = sql(sb.toString());

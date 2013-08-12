@@ -13,10 +13,13 @@ var org_uengine_codi_mw3_knowledge_ITopicNode = function(objectId, className){
 		if(window.console)
 			mw3.log('ITopicNode(' + this.objectId + ') : ' + message);
 		
+		/**
+		 * 주제 클릭시, 클릭된 주제가 맨 상단에 올라오도록 하는 처리
 		var message_split = message.split(' ');
 
 		if(message_split[0] == 'loadTopic'){
 			this.objectDiv.parent().prepend(this.objectDiv);
 		}
+		*/
 	};
 };

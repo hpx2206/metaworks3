@@ -1,6 +1,7 @@
 package org.uengine.codi.mw3.model;
 
 import org.metaworks.ServiceMethodContext;
+import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.NonLoadable;
@@ -40,16 +41,19 @@ public interface IRole extends IDAO {
 	@ServiceMethod(target="self", payload={"roleCode", "selected" ,"descr"})
 	public void drillDown() throws Exception;
 
+	@Face(displayName="$role.Subscribe")
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP, inContextMenu=true, needToConfirm=true)
 	public Object subscribe() throws Exception;
 	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP, inContextMenu=true, needToConfirm=true)
-//	@Face(displayName="Unsubscribe")
+	@Face(displayName="$Remove")
 	public Object[] removeMe() throws Exception;
 
+	@Face(displayName="$Edit")
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP, inContextMenu=true)
 	public Popup editPopup() throws Exception;
 
+	@Face(displayName="$Save")
 	@ServiceMethod(callByContent=true, except={"employeeList"}, target=ServiceMethodContext.TARGET_POPUP)
 	public Object[] saveMe() throws Exception;
 	
