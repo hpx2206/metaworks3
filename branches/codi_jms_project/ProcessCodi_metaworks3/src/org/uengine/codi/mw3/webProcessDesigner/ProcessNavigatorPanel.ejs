@@ -2,6 +2,7 @@
 <%
     if( value ){
         var list = value.historyList;
+        if ( list != null){
         for( var i = 0; i < list.length; i++){
 %>
 		<a onClick="mw3.getFaceHelper(<%=objectId%>).clickNavigator('<%= i %>')" href="#">
@@ -10,5 +11,6 @@
          <img src="images/waveStyle/rightArrow.png" style="width: 15px; height: 15px;vertical-align: middle;"/>
 <%
         }
+    }
     }
 %>

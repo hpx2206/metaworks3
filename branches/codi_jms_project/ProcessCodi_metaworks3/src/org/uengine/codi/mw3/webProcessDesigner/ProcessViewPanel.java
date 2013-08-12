@@ -1,6 +1,7 @@
 package org.uengine.codi.mw3.webProcessDesigner;
 
 import org.metaworks.annotation.AutowiredFromClient;
+import org.uengine.util.UEngineUtil;
 
 public class ProcessViewPanel {
 		
@@ -33,13 +34,16 @@ public class ProcessViewPanel {
 		public void setProcessViewer(ProcessViewer processViewer) {
 			this.processViewer = processViewer;
 		}
-	
-	public void load(){
+	public ProcessViewPanel(){
 		processViewer = new ProcessViewer();
-		processViewer.setDefId(defId);
-		processViewer.setAlias(alias);
-		processViewer.setViewType(viewType);
-		processViewer.load();
+	}
+	public void load(){
+		if(UEngineUtil.isNotEmpty(alias)  && UEngineUtil.isNotEmpty(defId)){
+			processViewer.setDefId(defId);
+			processViewer.setAlias(alias);
+			processViewer.setViewType(viewType);
+			processViewer.load();
+		}
 	}
 	@AutowiredFromClient
 	public ProcessNavigatorPanel processNavigatorPanel;

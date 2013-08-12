@@ -1,5 +1,9 @@
 package org.uengine.codi.mw3.webProcessDesigner;
 
+import org.metaworks.annotation.AutowiredFromClient;
+import org.uengine.codi.mw3.collaboration.ProcessNameView;
+import org.uengine.codi.mw3.model.Session;
+
 public class ProcessViewWindow {
 
 	String defId;
@@ -15,6 +19,14 @@ public class ProcessViewWindow {
 		}
 		public void setAlias(String alias) {
 			this.alias = alias;
+		}
+		
+	String path;
+		public String getPath() {
+			return path;
+		}
+		public void setPath(String path) {
+			this.path = path;
 		}
 	ProcessNavigatorPanel processNavigatorPanel;
 		public ProcessNavigatorPanel getProcessNavigatorPanel() {
@@ -37,25 +49,50 @@ public class ProcessViewWindow {
 		public void setProcessAttributePanel(ProcessAttributePanel processAttributePanel) {
 			this.processAttributePanel = processAttributePanel;
 		}
+
+	ProcessNameView processNameView;
+		public ProcessNameView getProcessNameView() {
+			return processNameView;
+		}
+		public void setProcessNameView(ProcessNameView processNameView) {
+			this.processNameView = processNameView;
+		}	
+		
+	public ProcessViewWindow() throws Exception{
+		processNavigatorPanel = new ProcessNavigatorPanel();
+		processViewPanel = new ProcessViewPanel();
+		processAttributePanel = new ProcessAttributePanel();
+		processNameView = new ProcessNameView();
+	}
+	
+	@AutowiredFromClient
+	transient public Session session;
 		
 	//DefinitionViewWindow의 Layout Setting
 	public void load() throws Exception{
-		processNavigatorPanel = new ProcessNavigatorPanel();
-		processNavigatorPanel.setDefId(defId);
-		processNavigatorPanel.setAlias(alias);
-		processNavigatorPanel.load();
-		
-		processViewPanel = new ProcessViewPanel();
-		processViewPanel.setDefId(defId);
-		processViewPanel.setAlias(alias);
-		processViewPanel.setViewType("definitionView");
-		processViewPanel.load();
-		
-		processAttributePanel = new ProcessAttributePanel();
-		processAttributePanel.setDocumentation(null);
-		processAttributePanel.setDefId(defId);
-		if( processViewPanel.processViewer != null ){
-			processAttributePanel.load(processViewPanel.processViewer.getProcessDesignerContainer());
+		if( alias != null){
+			processNameView.setFileId(defId);
+			processNameView.session = session;
+			processNameView.load();
+
+			processNavigatorPanel.setDefId(defId);
+			processNavigatorPanel.setAlias(alias);
+			processNavigatorPanel.load();
+			
+			
+			processViewPanel.setDefId(defId);
+			processViewPanel.setAlias(alias);
+			processViewPanel.setViewType("definitionView");
+			processViewPanel.load();
+			
+			
+			processAttributePanel.setDocumentation(null);
+			processAttributePanel.setDefId(defId);
+			
+			
+			if( processViewPanel.processViewer != null ){
+				processAttributePanel.load(processViewPanel.processViewer.getProcessDesignerContainer());
+			}
 		}
 	}
 	

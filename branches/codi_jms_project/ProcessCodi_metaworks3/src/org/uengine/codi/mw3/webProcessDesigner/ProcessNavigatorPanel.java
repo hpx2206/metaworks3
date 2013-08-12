@@ -6,6 +6,8 @@ import org.metaworks.Refresh;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
+import org.uengine.codi.mw3.collaboration.ProcessNameView;
+import org.uengine.util.UEngineUtil;
 
 public class ProcessNavigatorPanel {
 	
@@ -49,23 +51,30 @@ public class ProcessNavigatorPanel {
 		public void setHistoryList(ArrayList<HistoryItem> historyList) {
 			this.historyList = historyList;
 		}
-			
+	ProcessNameView processNameView;
+		public ProcessNameView getProcessNameView() {
+			return processNameView;
+		}
+		public void setProcessNameView(ProcessNameView processNameView) {
+			this.processNameView = processNameView;
+		}	
+				
 		
 	public void load() {
-		
-		String definitionId = this.defId;
-		String[] defnitionArray = definitionId.replace('.','@').split("@");
-		
-		HistoryItem historyItem = new HistoryItem(); 
-		historyItem.setDefId(definitionId);
-		historyItem.setDefName(defnitionArray[0]);
-		historyItem.setAlias(this.alias);
-		
-		if(historyList == null) {
-			historyList = new ArrayList<HistoryItem>();
+		if(UEngineUtil.isNotEmpty(alias)  && UEngineUtil.isNotEmpty(defId)){
+			String definitionId = this.defId;
+			String[] defnitionArray = definitionId.replace('.','@').split("@");
+			
+			HistoryItem historyItem = new HistoryItem(); 
+			historyItem.setDefId(definitionId);
+			historyItem.setDefName(defnitionArray[0]);
+			historyItem.setAlias(this.alias);
+			
+			if(historyList == null) {
+				historyList = new ArrayList<HistoryItem>();
+			}
+			historyList.add(historyItem);
 		}
-		historyList.add(historyItem);
-		
 	}
 	public void add(HistoryItem historyItem) {
 		historyList.add(historyItem);
