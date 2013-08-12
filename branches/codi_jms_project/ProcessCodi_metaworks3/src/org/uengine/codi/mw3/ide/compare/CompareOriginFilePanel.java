@@ -5,9 +5,7 @@ import java.util.HashMap;
 
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
-import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.widget.Choice;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerContainer;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerContentPanel;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessViewer;
@@ -15,7 +13,7 @@ import org.uengine.kernel.Activity;
 
 public class CompareOriginFilePanel {
 	
-	static final String FILE_LOCATION = "source";   
+	public static final String FILE_LOCATION = "source";   
 	
 	String selectedProcessAlias;
 		public String getSelectedProcessAlias() {
@@ -38,27 +36,10 @@ public class CompareOriginFilePanel {
 		public void setCompareOriginFile(CompareOriginFile compareOriginFile) {
 			this.compareOriginFile = compareOriginFile;
 		}
-	Choice nodeSearch;
-		@Face(ejsPath="dwr/metaworks/org/metaworks/widget/ChoiceCombo.ejs")
-		public Choice getNodeSearch() {
-			return nodeSearch;
-		}
-		public void setNodeSearch(Choice nodeSearch) {
-			this.nodeSearch = nodeSearch;
-		}
-	
 	public CompareOriginFilePanel(){
 	}
 	
 	public void load() throws Exception{
-		
-		Choice nodeSearch = new Choice();
-		nodeSearch.add("Origin Process", "0");
-		nodeSearch.add("Import Process", "1");
-		nodeSearch.setSelected("0");
-		
-		setNodeSearch(nodeSearch);
-		
 		compareFileNavigator = new CompareFileNavigator();
 		compareFileNavigator.setId(CompareOriginFilePanel.FILE_LOCATION);
 		compareFileNavigator.load();
@@ -79,7 +60,7 @@ public class CompareOriginFilePanel {
 		HashMap<String , Activity> activityMap2 = new HashMap<String , Activity>(); 
 		ProcessViewer originProcessViewer = compareOriginFile.getProcessViewer();
 		originProcessViewer.setProcessDesignerContainer(new ProcessDesignerContainer());
-		originProcessViewer.getProcessDesignerContainer().setEditorId(originProcessViewer.getAlias());
+		originProcessViewer.getProcessDesignerContainer().setEditorId(originProcessViewer.getEditorId());
 		originProcessViewer.load();
 		ProcessDesignerContainer designerContainer1 = originProcessViewer.getProcessDesignerContainer();
 		ArrayList<Activity> activityList1 = designerContainer1.getActivityList();
@@ -89,7 +70,7 @@ public class CompareOriginFilePanel {
 		
 		ProcessViewer compareProcessViewer = compareImportFile.getProcessViewer();
 		compareProcessViewer.setProcessDesignerContainer(new ProcessDesignerContainer());
-		compareProcessViewer.getProcessDesignerContainer().setEditorId(compareProcessViewer.getAlias());
+		compareProcessViewer.getProcessDesignerContainer().setEditorId(compareProcessViewer.getEditorId());
 		compareProcessViewer.load();
 		ProcessDesignerContainer designerContainer2 = compareProcessViewer.getProcessDesignerContainer();
 		ArrayList<Activity> activityList2 = designerContainer2.getActivityList();
