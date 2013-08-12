@@ -1,7 +1,9 @@
 package org.uengine.codi.mw3.model;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.zip.ZipEntry;
@@ -18,6 +20,8 @@ import org.metaworks.metadata.MetadataBundle;
 import org.metaworks.website.MetaworksFile;
 import org.uengine.codi.mw3.ide.compare.CompareFileNavigator;
 import org.uengine.codi.mw3.ide.compare.CompareImportFile;
+import org.uengine.codi.mw3.ide.compare.CompareImportFilePanel;
+import org.uengine.codi.mw3.ide.compare.FileComparePanel;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessViewer;
 
 public class FileImporter{
@@ -45,6 +49,12 @@ public class FileImporter{
 	
 	@AutowiredFromClient(select="autowiredObject.id=='target'")
 	public CompareFileNavigator compareFileNavigator;
+	
+	@AutowiredFromClient
+	public CompareImportFilePanel compareImportFilePanel;
+	
+	@AutowiredFromClient
+	public FileComparePanel fileComparePanel;
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] upload() throws IOException {
@@ -122,11 +132,11 @@ public class FileImporter{
 				CompareImportFile compareImportFile = new CompareImportFile();
 				try {
 					compareFileNavigator.setFileName(metaworksFile.getFilename());
-					compareFileNavigator.setUploadPath(metaworksFile.overrideUploadPathPrefix() + File.separatorChar + metaworksFile.getUploadedPath());
+					compareFileNavigator.setUploadPath(fileComparePanel.getFileUploadPath());
 					compareFileNavigator.loadUpload();
 					
 					
-					compareImportFile.setSelectedProcessAlias(metaworksFile.overrideUploadPathPrefix() + File.separatorChar + metaworksFile.getUploadedPath());
+					compareImportFile.setSelectedProcessAlias(fileComparePanel.getFileUploadPath() + File.separatorChar + metaworksFile.getUploadedPath());
 					compareImportFile.setFileName(metaworksFile.getFilename());
 					compareImportFile.load();
 					
@@ -168,44 +178,50 @@ public class FileImporter{
 		} else if (fileName.endsWith(".zip")){
 
 			compareFileNavigator.setUploadType(".zip");
-			String destPath = mainPath + File.separatorChar + "temp";
+			String destPath = fileComparePanel.getFileUploadPath();
+			
+			FileInputStream fis = null;
+		    ZipInputStream zipIs = null;
+		    ZipEntry zEntry = null;
 			
 			try {
-				ZipInputStream zis = new ZipInputStream(new FileInputStream(metaworksFile.overrideUploadPathPrefix() + File.separatorChar + metaworksFile.getUploadedPath()));
-				ZipEntry entry = null;
-			    byte[] buf = new byte[1024];
-			    while ((entry = zis.getNextEntry()) != null) {
-			    	
-			    	int n;
-			    	String entryName = destPath  + File.separatorChar + entry.getName();
-			    	File file = new File(entryName);
-			    	
-			    	if (entry.isDirectory()){ 
-			    		file.mkdirs();
-			    	}
-			    	else {	
-				    	FileOutputStream fos = new FileOutputStream(file);
-				    	while ((n = zis.read(buf, 0, 1024)) > -1) {
-				    		fos.write(buf, 0, n);
-		            }
-		
-			    	fos.close();
-		            zis.closeEntry();
-			    	}
-	
+				fis = new FileInputStream(metaworksFile.overrideUploadPathPrefix() + File.separatorChar + metaworksFile.getUploadedPath());
+				zipIs = new ZipInputStream(new BufferedInputStream(fis));
+				
+				while((zEntry = zipIs.getNextEntry()) != null) {
+					try{
+						byte[] tmp = new byte[4*1024];
+						FileOutputStream fos = null;
+						File file = new File(destPath + File.separator +  zEntry.getName());
+						//create all folder needed to store in correct relative path.
+						file.getParentFile().mkdirs();
+						
+						fos = new FileOutputStream(file);
+						int size = 0;
+						while((size = zipIs.read(tmp)) != -1) {
+							fos.write(tmp, 0, size);
+						}
+						
+						fos.flush();
+						fos.close();
+					} catch(Exception e) {
+						
+					}
 		        } //while
-		
-		        zis.close();
-		        flag = true;
-		    } catch (Exception e) {
+				zipIs.close();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+		    } catch (IOException e) {
 		        e.printStackTrace();
 		    }
+			
+			flag = true;
 			if( flag ){
 				if(compareFileNavigator != null){
 					compareFileNavigator.setUploaded(true);
 					try {
 						compareFileNavigator.setFileName(metaworksFile.getFilename());
-						compareFileNavigator.setUploadPath(metaworksFile.overrideUploadPathPrefix() + File.separatorChar + metaworksFile.getUploadedPath());
+						compareFileNavigator.setUploadPath(fileComparePanel.getFileUploadPath());
 						compareFileNavigator.loadUpload();
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
@@ -228,4 +244,3 @@ public class FileImporter{
 	}
 
 }
-
