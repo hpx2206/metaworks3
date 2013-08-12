@@ -2,6 +2,12 @@ var org_uengine_codi_mw3_calendar_ScheduleCalendar = function(objectId, classNam
 	
 	this.objectId = objectId;
 	this.className = className;
+	
+	
+	this.COLOR_EVENT_SELF 		= "#348017";
+	this.COLOR_EVENT_ANOTHER 	= "#C48189";
+	this.COLOR_EVENT_COMPLETE 	= "#808080";
+	
 };
 
 org_uengine_codi_mw3_calendar_ScheduleCalendar.prototype = {
@@ -117,7 +123,26 @@ org_uengine_codi_mw3_calendar_ScheduleCalendar.prototype.eventClick = function(s
 	object.linkScheduleEvent();
 };
 
-org_uengine_codi_mw3_calendar_ScheduleCalendar.prototype.addMyschedule = function(title, instId, dueDate){
+org_uengine_codi_mw3_calendar_ScheduleCalendar.prototype.addEvent = function(event){
+	
+	this.removeEvent(event.id);
+	
+	var calendar = $('#scheduleCalendar_' + this.objectId);
+
+	var session = mw3.getAutowiredObject('org.uengine.codi.mw3.model.Session');
+	if(event.complete){
+		event.color = this.EVENT_COLOR_COMPLETE;
+		
+		if(event.userId == session.user.userId)
+			event.color = this.EVENT_COLOR_SELF;
+		else
+			event.color = this.EVENT_COLOR_ANOTHER;
+	}
+	calendar.fullCalendar( 'renderEvent', event );
+};
+
+/*
+org_uengine_codi_mw3_calendar_ScheduleCalendar.prototype.addEvent = function(title, instId, startDate, endDate){
 	var calendar = $('#scheduleCalendar_' + this.objectId);
 	var object = mw3.objects[this.objectId];
 	var myEvent = {
@@ -126,11 +151,18 @@ org_uengine_codi_mw3_calendar_ScheduleCalendar.prototype.addMyschedule = functio
 			  allDay: object.allDay,
 			  callType: 'instance',
 			  color: '#0000cd',
-			  start: object.selDate,
-			  end: dueDate
+			  start: object.startDate,
+			  end: object.endDate
 			};
 	calendar.fullCalendar( 'renderEvent', myEvent );
 };
+*/
+
+org_uengine_codi_mw3_calendar_ScheduleCalendar.prototype.removeEvent = function(event){
+	var calendar = $('#scheduleCalendar_' + this.objectId);
+	calendar.fullCalendar( 'removeEvents', event.id );
+};
+
 org_uengine_codi_mw3_calendar_ScheduleCalendar.prototype.resize = function(){
 	var calendar = $('#scheduleCalendar_' + this.objectId);
 	calendar.fullCalendar('render');	
