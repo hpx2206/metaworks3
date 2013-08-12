@@ -19,7 +19,9 @@ import org.uengine.codi.mw3.model.Session;
 import org.uengine.kernel.GlobalContext;
 
 public class TopicNode extends Database<ITopicNode> implements ITopicNode {
-	 
+	
+	public final static String DEFAULT_CONTACT_COUNT = "5";
+	
 	@AutowiredFromClient
 	public PageNavigator pageNavigator; 
 	
@@ -98,7 +100,7 @@ public class TopicNode extends Database<ITopicNode> implements ITopicNode {
 		sb.append(" and ( knol.secuopt=0 OR (knol.secuopt=1 and ( exists (select topicid from BPM_TOPICMAPPING tp where tp.userid=?userid and knol.id=tp.topicid)  ");
 		sb.append(" 																	 or ?userid in ( select empcode from emptable where partcode in (  ");
 		sb.append(" 																	 						select userId from BPM_TOPICMAPPING where assigntype = 2 and topicID = knol.id )))))  ");
-		sb.append(" order by updateDate desc limit " + GlobalContext.getPropertyString("topic.more.count"));
+		sb.append(" order by updateDate desc limit " + GlobalContext.getPropertyString("topic.more.count", DEFAULT_CONTACT_COUNT));
 		
 		ITopicNode dao = (ITopicNode)MetaworksDAO.createDAOImpl(TransactionContext.getThreadLocalInstance(), sb.toString(), ITopicNode.class); 
 		dao.set("type", "topic");

@@ -19,13 +19,13 @@
 		
 		<div class="lst_type2" style="height:190px; padding-top:20px">
 			<div class="infoSub"><span class="infoSubFirstSpan" style="width:90px"><%=mw3.localize("$RoleCode")%> :</span><span><%=fields.roleCode.here((mw3.when=='edit'?{when:'view'}:{})) %></span></div>		
-			<div class="infoSub"><span class="infoSubFirstSpan" style="width:90px"><%=mw3.localize("$Descr")%> :</span><span><%=fields.descr.here()%></span></div>	
+			<div class="infoSub"><span class="infoSubFirstSpan" style="width:90px"><%=mw3.localize("$RoleDesc")%> :</span><span><%=fields.descr.here()%></span></div>	
 		</div>
 		
 		
 		<div id="btnline" style="padding-top:8px; border-top:1px solid #ccc;">
 			<ul>	
-				<li><a id="wBtn" href="#" onClick="<%=methods.saveMe.caller()%>"><span>saveMe</span></a></li>	
+				<li><a id="wBtn" href="#" onClick="<%=methods.saveMe.caller()%>"><span><%=mw3.localize("$Save")%></span></a></li>	
 				
 			</ul>
 		</div>
