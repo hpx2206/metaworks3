@@ -2,16 +2,31 @@ package org.uengine.codi.mw3.collaboration;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Id;
 import org.metaworks.component.Tree;
 import org.uengine.codi.mw3.ide.Project;
 import org.uengine.codi.mw3.ide.Workspace;
 import org.uengine.codi.mw3.model.Perspective;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessDefinitionNode;
+import org.uengine.codi.mw3.webProcessDesigner.ProcessViewerPanel;
 
 public class ValuechainPerspective extends Perspective  implements ContextAware {
 
-	
+	String alias;
+		public String getAlias() {
+			return alias;
+		}
+		public void setAlias(String alias) {
+			this.alias = alias;
+		}
+	String defId;
+		public String getDefId() {
+			return defId;
+		}
+		public void setDefId(String defId) {
+			this.defId = defId;
+		}	
 	String projectId;
 		public String getProjectId() {
 			return projectId;
@@ -75,6 +90,7 @@ public class ValuechainPerspective extends Perspective  implements ContextAware 
 		public void setProcessDefinitionTree(Tree processDefinitionTree) {
 			this.processDefinitionTree = processDefinitionTree;
 		}
+	
 		
 	MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
@@ -89,50 +105,55 @@ public class ValuechainPerspective extends Perspective  implements ContextAware 
 	public ValuechainPerspective() {
 		setLabel("Valuechain");
 	}
-
+	@AutowiredFromClient
+	public ProcessViewerPanel processViewerPanel;
+	
 	@Override
 	public void loadChildren() throws Exception {
-
+		String treeId = "valuechain";
 		Workspace workspace = new Workspace();
 		workspace.load();
-
+	
 		// TODO Auto-generated method stub
 		ProcessDefinitionNode processDefinitionNode = new ProcessDefinitionNode();
 		processDefinitionNode.setId(workspace.getId());
 		processDefinitionNode.setRoot(true);
 		processDefinitionNode.setHidden(true);
-
+		processDefinitionNode.setTreeId(treeId);
+		
+		
 		for (Project project : workspace.getProjects()){
-			processDefinitionNode.getMetaworksContext().setWhere("resource");
-			processDefinitionNode.add(new ProcessDefinitionNode(project));
+			ProcessDefinitionNode node = new ProcessDefinitionNode(project);
+			node.setTreeId(treeId);
+	
+			processDefinitionNode.add(node);
 		
 		}
 		Tree tree = new Tree();
-		tree.setId(workspace.getId());
+		tree.setId(treeId);
 		tree.setNode(processDefinitionNode);
 
 		setProcessDefinitionTree(tree);
 
 	}
 
-	@Override
-	protected void unloadChildren() throws Exception {
-//		setProcessDefinitionTree(null);
-	}
-	
-	
-	
+	@AutowiredFromClient
+	ProcessNameView processNameView;
 
 
-//	@Override
-//	@ServiceMethod(inContextMenu=true)
+//	@ServiceMethod(inContextMenu=true,mouseBinding="right",target=ServiceMethodContext.TARGET_APPEND)
 //	public Object action() {
 //		// TODO Auto-generated method stub
 //		
 //		if(this.getMetaworksContext() != null && "resource".equals(this.getMetaworksContext().getWhere())){
-//			metadataProperty.setValuechainPerspective(this);
+//
+//			processViewerPanel = new ProcessViewerPanel();
+//			processViewerPanel.setDefinitionId(defId);
+//			processViewerPanel.setAlias(alias);
+//			processViewerPanel.setViewType("definitionEditor");
+//			processViewerPanel.loadDefinitionView();
 //		}
-//		return super.action();
+//		return new Object[] {new Refresh(processNameView)};
 //	}
 //	
 

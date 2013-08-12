@@ -8,14 +8,10 @@ import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
-import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.component.Tree;
 import org.metaworks.component.TreeNode;
 import org.uengine.codi.mw3.ide.Project;
 import org.uengine.codi.mw3.ide.ResourceNode;
-import org.uengine.codi.mw3.ide.Workspace;
-import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.model.Session;
 
 public class ProcessDefinitionNode extends TreeNode  implements ContextAware {
@@ -65,6 +61,7 @@ public class ProcessDefinitionNode extends TreeNode  implements ContextAware {
 	@AutowiredFromClient
 	public ProcessViewerPanel processViewerPanel;
 	
+	
 	public ProcessDefinitionNode(){
 		setMetaworksContext(new MetaworksContext());
 		this.getMetaworksContext().setHow("tree");
@@ -86,7 +83,7 @@ public class ProcessDefinitionNode extends TreeNode  implements ContextAware {
 	}
 	@Override
 	@ServiceMethod(callByContent=true, except="child", target=ServiceMethodContext.TARGET_SELF)
-	public Object expand(){
+	public Object expand() throws Exception{
 		ArrayList<TreeNode> child = new ArrayList<TreeNode>();
 
 		File file = new File(this.getPath());
@@ -108,6 +105,7 @@ public class ProcessDefinitionNode extends TreeNode  implements ContextAware {
 				node.setType(TreeNode.TYPE_FOLDER);
 				node.setMetaworksContext(getMetaworksContext());
 				node.setFolder(true);
+				node.setTreeId(this.getTreeId());
 				
 				child.add(node);
 			}
@@ -132,6 +130,7 @@ public class ProcessDefinitionNode extends TreeNode  implements ContextAware {
 				node.setParentId(this.getId());
 				node.setType(type);
 				node.setMetaworksContext(getMetaworksContext());
+				node.setTreeId(this.getTreeId());
 				child.add(node);
 			}
 		}
@@ -140,44 +139,18 @@ public class ProcessDefinitionNode extends TreeNode  implements ContextAware {
 
 		return this;
 	}
-	@ServiceMethod(callByContent=true, except="child", target=ServiceMethodContext.TARGET_POPUP)
-	public Object findResource(){
-		
-			Workspace workspace = new Workspace();
-			workspace.load();
-
-			ProcessViewNavigator navigator = new ProcessViewNavigator();
-
-			ProcessDefinitionNode definitionNode = new ProcessDefinitionNode();
-			definitionNode.setId(workspace.getId());
-			definitionNode.setRoot(true);
-			definitionNode.setHidden(true);
-			definitionNode.setMetaworksContext(new MetaworksContext());
-			definitionNode.getMetaworksContext().setHow("tree");
-
-			for(Project project : workspace.getProjects()){
-				ResourceNode node = new ResourceNode(project);
-				node.getMetaworksContext().setWhere("resource");
-				definitionNode.add(node);
-			}
-
-			Tree tree = new Tree();
-			
-			tree.setId(workspace.getId());
-			tree.setNode(definitionNode);
-
-			navigator.setProcessDefinitionTree(tree);
-			navigator.setId("popupTree");
-
-			Popup popup = new Popup();
-			popup.setPanel(navigator);
-			
-			
-			return popup;	
-	}
 	@Override
-	@ServiceMethod(payload={"id", "name", "path", "type", "folder", "projectId","defId","alias"},mouseBinding="left", target=ServiceMethodContext.TARGET_APPEND)
-	public Object action(){
+	@ServiceMethod(payload={"id", "name", "path", "type", "folder", "projectId","defId","alias","treeId"},target=ServiceMethodContext.TARGET_APPEND)
+	public Object action() throws Exception{
+		if( this.getTreeId() != null && this.getTreeId().equals("valuechain")){
+			ProcessViewWindow processViewWindow = new ProcessViewWindow();
+			processViewWindow.setAlias(alias);
+			processViewWindow.setDefId(defId);
+			processViewWindow.setPath(path);
+			processViewWindow.session = session;
+			processViewWindow.load();
+			return new Object[] { new Refresh(processViewWindow) };
+		}
 		if( alias != null && !this.isFolder() && this.getType().equals(TreeNode.TYPE_FILE_PROCESS)){
 			processViewerPanel = new ProcessViewerPanel();
 			processViewerPanel.setDefinitionId(defId);

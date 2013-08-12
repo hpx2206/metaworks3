@@ -3,6 +3,7 @@ package org.uengine.codi.mw3.collaboration;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.codi.mw3.webProcessDesigner.ProcessViewPanel;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessViewWindow;
 
 public class CollaborationContentPanel  implements ContextAware{
@@ -14,13 +15,12 @@ public class CollaborationContentPanel  implements ContextAware{
 			this.metaworksContext = metaworksContext;
 		}
 	
-	ProcessViewWindow processViewWindow;
-		public ProcessViewWindow getProcessViewWindow() {
-			return processViewWindow;
+	ProcessViewPanel processViewPanel;
+		public ProcessViewPanel getProcessViewPanel() {
+			return processViewPanel;
 		}
-	
-		public void setProcessViewWindow(ProcessViewWindow processViewWindow) {
-			this.processViewWindow = processViewWindow;
+		public void setProcessViewPanel(ProcessViewPanel processViewPanel) {
+			this.processViewPanel = processViewPanel;
 		}
 
 	ProcessNameView processNameView;
@@ -32,10 +32,8 @@ public class CollaborationContentPanel  implements ContextAware{
 		}
 		
 	public CollaborationContentPanel() throws Exception{
+		setMetaworksContext(new MetaworksContext());
 		
-	}
-	
-	public CollaborationContentPanel(Session session) throws Exception{
 	}
 	
 }

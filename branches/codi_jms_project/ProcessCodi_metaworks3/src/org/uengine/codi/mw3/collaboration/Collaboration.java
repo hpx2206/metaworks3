@@ -1,11 +1,14 @@
 package org.uengine.codi.mw3.collaboration;
 
 import org.metaworks.annotation.AutowiredToClient;
+import org.metaworks.annotation.Hidden;
 import org.metaworks.widget.layout.Layout;
 import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.ide.Workspace;
 import org.uengine.codi.mw3.model.ProcessTopPanel;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.codi.mw3.webProcessDesigner.ProcessDefinitionNode;
+import org.uengine.codi.mw3.webProcessDesigner.ProcessViewWindow;
 
 public class Collaboration {
 	Layout layout;
@@ -23,6 +26,16 @@ public class Collaboration {
 		public void setPageNavigator(PageNavigator pageNavigator) {
 			this.pageNavigator = pageNavigator;
 		}		
+
+	ProcessDefinitionNode node;
+		@Hidden
+		@AutowiredToClient
+		public ProcessDefinitionNode getNode() {
+			return node;
+		}
+		public void setNode(ProcessDefinitionNode node) {
+			this.node = node;
+		}
 
 	@AutowiredToClient
 	public Session session;
@@ -43,7 +56,7 @@ public class Collaboration {
 		collaborationPerspectiveWindow.setTitle("collaboration");
 		
 		
-		CollaborationContentWindow collaborationContentWindow = new CollaborationContentWindow(session);
+		CollaborationContentWindow collaborationContentWindow = createNewInstancePanel();
 		ProcessTopPanel processTopPanel = new ProcessTopPanel(session);
 		processTopPanel.setPageType("collaboration");
 		
@@ -65,4 +78,16 @@ public class Collaboration {
 		this.setLayout(outerLayout);
 		this.pageNavigator = new PageNavigator();
 	}
+	private CollaborationContentWindow createNewInstancePanel() throws Exception {
+		// TODO Auto-generated method stub
+		CollaborationContentWindow  collaborationContentWindow = new CollaborationContentWindow();
+
+		ProcessViewWindow processViewWindow = new ProcessViewWindow();
+		processViewWindow.load();
+		
+		collaborationContentWindow.setPanel(processViewWindow);
+		
+		return collaborationContentWindow;
+	}
+	
 }

@@ -170,7 +170,7 @@ public class PageNavigator{
 	}
 	
 	@ServiceMethod(callByContent=true)
-	public MainPanel goFavorite() throws Exception {
+	public MainPanel goCollaboration() throws Exception {
 		Collaboration collaboration = new Collaboration();
 		collaboration.load(session); 
 			

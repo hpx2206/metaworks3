@@ -147,8 +147,4 @@ public class Perspective {
 
 	@AutowiredFromClient
 	public Session session;
-
-	public Object action(){
-		return null;
-	}
 }

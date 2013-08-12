@@ -1,14 +1,18 @@
 <%
-	if(value != null && typeof value != 'undefined'){
+	if(value){
 %>
 <div class="depth1" onClick="<%=methods.select.caller() %>" ><%=mw3.localize("Favorite")%></div>
-<%if(value.selected){%>
+<%
+ 	if(value.selected){ 
+%>
 	<div class="depth2">
-		<%=fields.processMapList.here()%>
+		<ul class="fist_menu">
+			<li><%= fields.favoritePanel.here() %></li>
+		</ul>
 	</div>
 <%}else{%>
 <%}%>
-
 <%
+
 	}
 %>
