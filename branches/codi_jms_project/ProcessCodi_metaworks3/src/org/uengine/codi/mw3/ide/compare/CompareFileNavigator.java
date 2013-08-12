@@ -1,12 +1,10 @@
 package org.uengine.codi.mw3.ide.compare;
 
-import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Id;
 import org.metaworks.component.Tree;
 import org.metaworks.component.TreeNode;
 import org.metaworks.metadata.MetadataBundle;
 import org.uengine.codi.mw3.ide.ResourceNode;
-import org.uengine.codi.mw3.model.FileImporter;
 
 public class CompareFileNavigator {
 	
@@ -60,30 +58,21 @@ public class CompareFileNavigator {
 		public void setSelectType(String selectType) {
 			this.selectType = selectType;
 		}
-	//	CompareFileNavigator compareFileNavigator;
-//		public CompareFileNavigator getCompareFileNavigator() {
-//			return compareFileNavigator;
-//		}
-//		public void setCompareFileNavigator(CompareFileNavigator compareFileNavigator) {
-//			this.compareFileNavigator = compareFileNavigator;
-//		}
-	@AutowiredFromClient
-	public FileImporter fileImporter; 
 	
 	public void load() throws Exception{
 		String projectId = MetadataBundle.getProjectId();
+		String mainPath = MetadataBundle.getProjectBasePath(projectId);
+		
 		CompareFileNode rootNode = new CompareFileNode();
 		rootNode.setId(projectId);
 		rootNode.setRoot(true);
 		rootNode.setType(TreeNode.TYPE_FOLDER);
-		if(CompareImportFilePanel.PRESENT_PROCESS.equals(this.getSelectType())) {
+		if(CompareNavigator.UPLOAD_PATH.equals(this.getSelectType())) {
 			rootNode.setName("업로드 된 폴더");
 			rootNode.setPath(getUploadPath());
-			
-		} else if(CompareImportFilePanel.ORIGIN_PROCESS.equals(this.getSelectType())) {
+		} else {
 			rootNode.setName(projectId);
-			rootNode.setPath(getUploadPath());
-			
+			rootNode.setPath(mainPath);
 		}
 		rootNode.setFolder(true);
 		rootNode.setExpanded(true);

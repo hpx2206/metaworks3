@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.ide.compare;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -22,13 +23,6 @@ public class CompareOriginFilePanel {
 		public void setSelectedProcessAlias(String selectedProcessAlias) {
 			this.selectedProcessAlias = selectedProcessAlias;
 		}
-	CompareFileNavigator compareFileNavigator; 
-		public CompareFileNavigator getCompareFileNavigator() {
-			return compareFileNavigator;
-		}
-		public void setCompareFileNavigator(CompareFileNavigator compareFileNavigator) {
-			this.compareFileNavigator = compareFileNavigator;
-		}
 	CompareOriginFile compareOriginFile;
 		public CompareOriginFile getCompareOriginFile() {
 			return compareOriginFile;
@@ -40,13 +34,14 @@ public class CompareOriginFilePanel {
 	}
 	
 	public void load() throws Exception{
-		compareFileNavigator = new CompareFileNavigator();
-		compareFileNavigator.setId(CompareOriginFilePanel.FILE_LOCATION);
-		compareFileNavigator.load();
 		
 		compareOriginFile = new CompareOriginFile();
-		compareOriginFile.setSelectedProcessAlias(selectedProcessAlias);
-		compareOriginFile.load();
+		if( selectedProcessAlias != null ){
+			File file = new File(selectedProcessAlias);
+			compareOriginFile.setSelectedProcessAlias(selectedProcessAlias);
+			compareOriginFile.setFileName(file.getName());
+			compareOriginFile.load();
+		}
 		
 	}
 	

@@ -18,7 +18,15 @@ public class CompareFileNode extends TreeNode{
 		public void setPath(String path) {
 			this.path = path;
 		}
+	String parentName;
+		public String getParentName() {
+			return parentName;
+		}
+		public void setParentName(String parentName) {
+			this.parentName = parentName;
+		}
 		
+	
 	@Override
 	@ServiceMethod(callByContent=true, except="child", target=ServiceMethodContext.TARGET_SELF)
 	public Object expand() throws Exception {
@@ -38,6 +46,7 @@ public class CompareFileNode extends TreeNode{
 					node.setName(childFile.getName());
 					node.setPath(this.getPath() + File.separatorChar + childFile.getName());
 					node.setParentId(this.getId());
+					node.setParentName(this.getName());
 					node.setType(TreeNode.TYPE_FOLDER);
 					node.setFolder(true);
 					node.setTreeId(this.getTreeId());
@@ -69,32 +78,30 @@ public class CompareFileNode extends TreeNode{
 			return null;
 		}
 	}
-	@AutowiredFromClient
-	public CompareOriginFile compareOriginFile;
 	
-	@AutowiredFromClient
-	public CompareImportFile compareImportFile;
+	public Object loadChild(){
+		
+		return null;
+	}
 	
 	@Override
 	@ServiceMethod(payload={"id", "name", "path", "type", "folder", "treeId"}, target=ServiceMethodContext.TARGET_AUTO)
 	public Object[] action(){
 		if( CompareOriginFilePanel.FILE_LOCATION.equals(this.getTreeId())){
-			if( compareOriginFile != null){
-				compareOriginFile.setSelectedProcessAlias(this.getPath());
-				compareOriginFile.setFileName(this.getName());
-				compareOriginFile.load();
-				
-				return new Object[]{compareOriginFile};
-			}
+			CompareOriginFile compareOriginFile = new CompareOriginFile();
+			compareOriginFile.setSelectedProcessAlias(this.getPath());
+			compareOriginFile.setFileName(this.getName());
+			compareOriginFile.load();
+			
+			return new Object[]{compareOriginFile};
 		}
 		if(CompareImportFilePanel.FILE_LOCATION.equals(this.getTreeId())) {
-			if( compareImportFile != null){
-				compareImportFile.setSelectedProcessAlias(this.getPath());
-				compareImportFile.setFileName(this.getName());
-				compareImportFile.load();
-				
-				return new Object[]{compareImportFile};
-			}
+			CompareImportFile compareImportFile = new CompareImportFile();
+			compareImportFile.setSelectedProcessAlias(this.getPath());
+			compareImportFile.setFileName(this.getName());
+			compareImportFile.load();
+			
+			return new Object[]{compareImportFile};
 		}
 		
 		return null;

@@ -1,4 +1,4 @@
-var org_uengine_codi_mw3_ide_compare_CompareImportFilePanel = function(objectId, className){
+var org_uengine_codi_mw3_ide_compare_CompareNavigator = function(objectId, className){
 	this.objectId = objectId;
 	this.className = className;	
 	this.divId = 'objDiv_' + this.objectId;

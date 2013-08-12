@@ -6,8 +6,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
+import net.sf.jazzlib.ZipEntry;
+import net.sf.jazzlib.ZipInputStream;
 
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
@@ -21,8 +21,11 @@ import org.metaworks.website.MetaworksFile;
 import org.uengine.codi.mw3.ide.compare.CompareFileNavigator;
 import org.uengine.codi.mw3.ide.compare.CompareImportFile;
 import org.uengine.codi.mw3.ide.compare.CompareImportFilePanel;
+import org.uengine.codi.mw3.ide.compare.CompareNavigator;
 import org.uengine.codi.mw3.ide.compare.FileComparePanel;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessViewer;
+import org.uengine.kernel.GlobalContext;
+import org.uengine.util.UEngineUtil;
 
 public class FileImporter{
 
@@ -44,6 +47,14 @@ public class FileImporter{
 		public void setFile(MetaworksFile file) {
 			this.metaworksFile = file;
 		}
+		
+	String fileUploadPath;
+		public String getFileUploadPath() {
+			return fileUploadPath;
+		}
+		public void setFileUploadPath(String fileUploadPath) {
+			this.fileUploadPath = fileUploadPath;
+		}
 	@AutowiredToClient
 	public ProcessViewer processViewer;
 	
@@ -52,9 +63,6 @@ public class FileImporter{
 	
 	@AutowiredFromClient
 	public CompareImportFilePanel compareImportFilePanel;
-	
-	@AutowiredFromClient
-	public FileComparePanel fileComparePanel;
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] upload() throws IOException {
@@ -124,6 +132,16 @@ public class FileImporter{
 //	//file.getUploadedPath()
 //	}
 //
+		if( this.getFileUploadPath() == null ){
+			String fileSystemPath = GlobalContext.getPropertyString("filesystem.path", "filesystem.path");
+			String uploadedDirectory = fileSystemPath + CompareNavigator.UPLOAD_PATH;
+			File directory = new File(uploadedDirectory);
+			if(!directory.isDirectory()) {
+				directory.mkdirs();
+			}
+			this.setFileUploadPath(uploadedDirectory);
+		}
+		
 		if(fileName.endsWith(".process")) {
 			compareFileNavigator.setUploadType(".process");
 			if(compareFileNavigator != null){
@@ -131,12 +149,15 @@ public class FileImporter{
 				
 				CompareImportFile compareImportFile = new CompareImportFile();
 				try {
+					File inFile = new File(metaworksFile.overrideUploadPathPrefix() + File.separatorChar + metaworksFile.getUploadedPath());
+					File outFile = new File(this.getFileUploadPath() + File.separatorChar +metaworksFile.getFilename()); 
+					UEngineUtil.copyToFile(inFile, outFile);
+					
 					compareFileNavigator.setFileName(metaworksFile.getFilename());
-					compareFileNavigator.setUploadPath(fileComparePanel.getFileUploadPath());
+					compareFileNavigator.setUploadPath(this.getFileUploadPath());
 					compareFileNavigator.loadUpload();
 					
-					
-					compareImportFile.setSelectedProcessAlias(fileComparePanel.getFileUploadPath() + File.separatorChar + metaworksFile.getUploadedPath());
+					compareImportFile.setSelectedProcessAlias(outFile.getPath());
 					compareImportFile.setFileName(metaworksFile.getFilename());
 					compareImportFile.load();
 					
@@ -178,7 +199,7 @@ public class FileImporter{
 		} else if (fileName.endsWith(".zip")){
 
 			compareFileNavigator.setUploadType(".zip");
-			String destPath = fileComparePanel.getFileUploadPath();
+			String destPath = this.getFileUploadPath();
 			
 			FileInputStream fis = null;
 		    ZipInputStream zipIs = null;
@@ -209,19 +230,19 @@ public class FileImporter{
 					}
 		        } //while
 				zipIs.close();
+				flag = true;
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 		    } catch (IOException e) {
 		        e.printStackTrace();
 		    }
 			
-			flag = true;
 			if( flag ){
 				if(compareFileNavigator != null){
 					compareFileNavigator.setUploaded(true);
 					try {
 						compareFileNavigator.setFileName(metaworksFile.getFilename());
-						compareFileNavigator.setUploadPath(fileComparePanel.getFileUploadPath());
+						compareFileNavigator.setUploadPath(this.getFileUploadPath());
 						compareFileNavigator.loadUpload();
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
