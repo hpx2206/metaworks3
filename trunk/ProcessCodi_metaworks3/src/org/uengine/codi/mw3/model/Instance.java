@@ -21,6 +21,7 @@ import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.Login;
+import org.uengine.codi.mw3.calendar.ScheduleCalendarEvent;
 import org.uengine.codi.mw3.filter.AllSessionFilter;
 import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitor;
 import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitorPanel;
@@ -1333,6 +1334,13 @@ public class Instance extends Database<IInstance> implements IInstance{
 		if(!"sns".equals(session.getEmployee().getPreferUX())){
 			NewInstancePanel instancePanel = new NewInstancePanel();
 			instancePanel.load(session);
+
+			ScheduleCalendarEvent scEvent = new ScheduleCalendarEvent();
+			scEvent.setId(instanceRef.getInstId().toString());
+			
+			MetaworksRemoteService.pushTargetScript(Login.getSessionIdWithUserId(session.getUser().getUserId()),
+					"if(mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar')!=null) mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar').__getFaceHelper().removeEvent",
+					new Object[]{scEvent}); //new Object[]{instanceRef.getInstId().toString()});
 			
 			return new Object[]{new Remover(this), new Refresh(new ContentWindow(instancePanel))};
 		}else{
