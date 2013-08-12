@@ -19,16 +19,16 @@ public class ActivityWindow  {
 		activityPanel = new ActivityPanel();
 	}
 	
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
-	public Object[] apply(){
-		activityPanel.getActivity().setDocumentation(activityPanel.getDocument());
-		return new Object[]{new ApplyProperties(activityPanel.getActivity().getTracingTag() , activityPanel.getActivity()), new Remover(new ModalWindow())};
-	}
-
-	
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
-	public Object[] cancel(){
-		return new Object[]{new Remover(new ModalWindow())};
-		
-	}
+//	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
+//	public Object[] apply(){
+//		activityPanel.getActivity().setDocumentation(activityPanel.getDocument());
+//		return new Object[]{new ApplyProperties(activityPanel.getActivity().getTracingTag() , activityPanel.getActivity()), new Remover(new ModalWindow())};
+//	}
+//
+//	
+//	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
+//	public Object[] cancel(){
+//		return new Object[]{new Remover(new ModalWindow())};
+//		
+//	}
 }

@@ -36,25 +36,38 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessViewer.prototype = {
 	    var canvas = new OG.Canvas('canvas_' + objectId);
 		this.icanvas = canvas;	
 		
-		canvas.initConfig({
-	        selectable      : false,
-	        dragSelectable  : false,
-	        movable         : false,
-	        resizable       : false,
-	        connectable     : false,
-	        selfConnectable : false,
-	        connectCloneable: false,
-	        connectRequired : false,
-	        labelEditable   : false,
-	        groupDropable   : false,
-	        collapsible     : false,
-	        enableHotKey    : false,
-	        enableContextMenu : false
-	    });
-		
-		console.log(object);
-		if( object != null && object.viewType != null && "definitionDiff" == object.viewType ){
-			
+		if( object != null && object.viewType != null && "definitionDiffEdit" == object.viewType ){
+			canvas.initConfig({
+				selectable      : true,
+				dragSelectable  : true,
+				movable         : true,
+				resizable       : true,
+				connectable     : true,
+				selfConnectable : false,
+				connectCloneable: false,
+				connectRequired : true,
+				labelEditable   : true,
+				groupDropable   : true,
+				collapsible     : true,
+				enableHotKey    : false,
+				enableContextMenu : true
+			});
+		}else{
+			canvas.initConfig({
+				selectable      : false,
+				dragSelectable  : false,
+				movable         : false,
+				resizable       : false,
+				connectable     : false,
+				selfConnectable : false,
+				connectCloneable: false,
+				connectRequired : false,
+				labelEditable   : false,
+				groupDropable   : false,
+				collapsible     : false,
+				enableHotKey    : false,
+				enableContextMenu : false
+			});
 		}
 		// canvas size 조절
 		var canvasWidth = canvasDivObj.width();

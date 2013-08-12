@@ -20,8 +20,15 @@ public class ProcessViewer {
 		public void setDefId(String defId) {
 			this.defId = defId;
 		}
-	String alias;
+	String editorId;
 		@Id
+		public String getEditorId() {
+			return editorId;
+		}
+		public void setEditorId(String editorId) {
+			this.editorId = editorId;
+		}
+	String alias;
 		public String getAlias() {
 			return alias;
 		}
@@ -61,6 +68,9 @@ public class ProcessViewer {
 	}
 		
 	public void load(){
+		if( editorId == null && getAlias() != null ){
+			editorId = getAlias();
+		}
 		InputStream is = null;
 		ByteArrayOutputStream bao = null;
 		
@@ -75,6 +85,7 @@ public class ProcessViewer {
 						
 						ProcessDefinition def = (ProcessDefinition) GlobalContext.deserialize(bao.toString(GlobalContext.ENCODING));
 						this.processDesignerContainer.setViewType(viewType);
+						this.processDesignerContainer.setEditorId(editorId);
 						this.processDesignerContainer.load(def);
 						this.setProcessDesignerSize(def.getProcessDesignerSize());
 						

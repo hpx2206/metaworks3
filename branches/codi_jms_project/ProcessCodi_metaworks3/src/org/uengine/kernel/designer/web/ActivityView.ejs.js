@@ -7,7 +7,7 @@ var org_uengine_kernel_designer_web_ActivityView = function(objectId, className)
 	var canvasObject;
 	if( object != null && object.viewType != null && "blockView" == object.viewType ){
 		canvasObject = mw3.getAutowiredObject('org.uengine.codi.mw3.webProcessDesigner.InstanceMonitorPanel');
-	}else	if( object != null && object.viewType != null && ("definitionView" == object.viewType || "definitionEditor" == object.viewType  || "definitionDiff" == object.viewType)){
+	}else	if( object != null && object.viewType != null && ("definitionView" == object.viewType || "definitionEditor" == object.viewType  || "definitionDiffEdit" == object.viewType  || "definitionDiffView" == object.viewType)){
 		if( object.editorId ){
 			canvasObject = mw3.getAutowiredObject('org.uengine.codi.mw3.webProcessDesigner.ProcessViewer@'+object.editorId);
 		}else{
@@ -104,13 +104,28 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
 				});
 			}
 			// 프로세스 비교
-			if( object != null && object.viewType != null && "definitionDiff" == object.viewType ){
-				$(element).unbind('dblclick').bind('dblclick' , function(event){
-				});
-				$(element).unbind('click').bind('click' , function(event){
-				});
+			if( object != null && object.viewType != null && "definitionDiffView" == object.viewType ){
+				var eleId = $(element).attr('id');
+				$.contextMenu({
+					selector: '#' + eleId,
+					build   : function ($trigger, e) {
+						return {
+							items: {
+								'copyRightToLeft'     : {
+									name: 'copyRightToLeft', callback: function () {
+										object.copyRightToLeft();
+									}
+								},
+								'sep1'       : '---------',
+								'compare'     : {
+									name: 'compare', callback: function () {
+									}
+								}
+							}
+						};
+					}
+			    });
 			}
-			
 				
 			/*
 			$(element).attr('title', object.tooltip);

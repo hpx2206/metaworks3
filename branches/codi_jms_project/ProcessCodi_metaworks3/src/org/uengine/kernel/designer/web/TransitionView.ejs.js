@@ -7,7 +7,7 @@ var org_uengine_kernel_designer_web_TransitionView = function(objectId, classNam
 	var canvasObject;
 	if( object != null && object.viewType != null && "blockView" == object.viewType ){
 		canvasObject = mw3.getAutowiredObject('org.uengine.codi.mw3.webProcessDesigner.InstanceMonitorPanel');
-	}else	if( object != null && object.viewType != null && ("definitionView" == object.viewType || "definitionEditor" == object.viewType  || "definitionDiff" == object.viewType)){
+	}else	if( object != null && object.viewType != null && ("definitionView" == object.viewType || "definitionEditor" == object.viewType  || "definitionDiffEdit" == object.viewType  || "definitionDiffView" == object.viewType)){
 		if( object.editorId ){
 			canvasObject = mw3.getAutowiredObject('org.uengine.codi.mw3.webProcessDesigner.ProcessViewer@'+object.editorId);
 		}else{

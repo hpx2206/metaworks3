@@ -3,6 +3,7 @@ package org.uengine.codi.mw3.ide.compare;
 import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.component.SelectBox;
 import org.metaworks.metadata.MetadataBundle;
 import org.metaworks.website.MetaworksFile;
 import org.uengine.codi.mw3.model.FileImporter;
@@ -42,10 +43,21 @@ public class CompareImportFilePanel {
 		public void setMetaworksFile(MetaworksFile metaworksFile) {
 			this.metaworksFile = metaworksFile;
 		}
+	SelectBox nodeSelect;
+		public SelectBox getNodeSelect() {
+			return nodeSelect;
+		}
+		public void setNodeSelect(SelectBox nodeSelect) {
+			this.nodeSelect = nodeSelect;
+		}
 	public CompareImportFilePanel(){
 	}
 	
 	public void load() throws Exception{
+		nodeSelect = new SelectBox();
+		nodeSelect.add("1", "1");
+		nodeSelect.add("2", "2");
+		
 		compareFileNavigator = new CompareFileNavigator();
 		compareFileNavigator.setId(CompareImportFilePanel.FILE_LOCATION);
 		compareFileNavigator.loadUpload();

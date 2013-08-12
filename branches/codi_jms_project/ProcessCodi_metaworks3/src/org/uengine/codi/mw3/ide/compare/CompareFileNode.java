@@ -81,7 +81,7 @@ public class CompareFileNode extends TreeNode{
 		if( CompareOriginFilePanel.FILE_LOCATION.equals(this.getTreeId())){
 			if( compareOriginFile != null){
 				compareOriginFile.setSelectedProcessAlias(this.getPath());
-				compareOriginFile.setOriginFileName(this.getName());
+				compareOriginFile.setFileName(this.getName());
 				compareOriginFile.load();
 				
 				return new Object[]{compareOriginFile};
@@ -90,7 +90,7 @@ public class CompareFileNode extends TreeNode{
 		if(CompareImportFilePanel.FILE_LOCATION.equals(this.getTreeId())) {
 			if( compareImportFile != null){
 				compareImportFile.setSelectedProcessAlias(this.getPath());
-				compareImportFile.setImportFileName(this.getName());
+				compareImportFile.setFileName(this.getName());
 				compareImportFile.load();
 				
 				return new Object[]{compareImportFile};

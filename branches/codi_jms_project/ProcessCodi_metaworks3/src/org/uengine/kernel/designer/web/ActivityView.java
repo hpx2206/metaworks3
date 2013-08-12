@@ -7,6 +7,7 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
+import org.uengine.codi.mw3.ide.compare.CompareOriginFilePanel;
 import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.webProcessDesigner.ActivityWindow;
 import org.uengine.codi.mw3.webProcessDesigner.CanvasDTO;
@@ -117,6 +118,12 @@ public class ActivityView extends CanvasDTO  implements ContextAware{
 			}
 		}
 		activity.setActivityView(this);
+		
+		if( "definitionDiffView".equals(this.getViewType()) ){
+			activity.getMetaworksContext().setWhen("view");
+			activity.getDocumentation().getMetaworksContext().setWhen("view");
+		}
+		
 		activityWindow.getActivityPanel().setActivity(activity);
 		activityWindow.getActivityPanel().setDocument(activity.getDocumentation());
 		popup.setPanel(activityWindow);
@@ -147,5 +154,13 @@ public class ActivityView extends CanvasDTO  implements ContextAware{
 		}else{
 			return null;
 		}
+	}
+	@ServiceMethod(callByContent = true , target=ServiceMethodContext.TARGET_APPEND)
+	public Object[] copyRightToLeft() {
+		Long ID_PREFIX = Math.round(Math.random() * 10000);
+		this.setId("OG_" + ID_PREFIX + "_0");
+		this.setEditorId(CompareOriginFilePanel.FILE_LOCATION);
+		this.setViewType("definitionDiffEdit");
+		return new Object[]{this} ;
 	}
 }

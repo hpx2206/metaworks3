@@ -127,7 +127,7 @@ public class FileImporter{
 					
 					
 					compareImportFile.setSelectedProcessAlias(metaworksFile.overrideUploadPathPrefix() + File.separatorChar + metaworksFile.getUploadedPath());
-					compareImportFile.setImportFileName(metaworksFile.getFilename());
+					compareImportFile.setFileName(metaworksFile.getFilename());
 					compareImportFile.load();
 					
 					return new Object[] { new Remover(new Popup(), true) , new Refresh(compareFileNavigator), new Refresh(compareImportFile)};
