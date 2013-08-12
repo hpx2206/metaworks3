@@ -24,6 +24,7 @@ import org.uengine.codi.CodiProcessDefinitionFactory;
 import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.admin.WebEditor;
 import org.uengine.codi.mw3.calendar.ScheduleCalendar;
+import org.uengine.codi.mw3.calendar.ScheduleCalendarEvent;
 import org.uengine.codi.mw3.filter.AllSessionFilter;
 import org.uengine.codi.mw3.filter.OtherSessionFilter;
 import org.uengine.codi.mw3.knowledge.KnowledgeTool;
@@ -892,6 +893,11 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			
 		// 수정
 		}else{
+			Instance instance = new Instance();
+			instance.setInstId(this.getInstId());
+			
+			instanceRef = instance.databaseMe();
+			
 //			this.copyFrom(databaseMe());
 //			this.databaseMe();
 			this.syncToDatabaseMe();
@@ -966,9 +972,9 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 							followers.load();
 							
 							returnObjects = new Object[]{new Refresh(this, false, true), new Refresh(followers)};
-						}
+					/*	}
 						else
-							returnObjects = new Object[]{new Refresh(this, false, true)};	
+							returnObjects = new Object[]{new Refresh(this, false, true)*/};	
 					}
 				}else if(this instanceof GenericWorkItem){
 					returnObjects = new Object[]{new ToAppend(instanceViewThreadPanel, this)};
@@ -1033,11 +1039,24 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			}
 			
 			// noti 발송
-			if(prevInstId == null){
+			if(prevInstId == null && this.getDueDate() != null){
+			/*	ScheduleCalendarEvent scEvent = new ScheduleCalendarEvent();
+				scEvent.setTitle(this.getTitle());
+				scEvent.setId(this.getInstId().toString());
+				scEvent.setStart(this.getDueDate());
+				scEvent.setEnd(this.getDueDate());
+				scEvent.setAllDay(true);
+				scEvent.setCallType(ScheduleCalendar.CALLTYPE_INSTANCE);
+				scEvent.setComplete(Instance.INSTNACE_STATUS_COMPLETED.equals(this.getStatus()));
+				
 				MetaworksRemoteService.pushTargetScriptFiltered(new AllSessionFilter(notiUsers),
-						"if(mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar')!=null) mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar').__getFaceHelper().addMyschedule",
-						new Object[]{getTitle(), getInstId()+"", newInstancePanel.getDueDate()});
-			}
+						"if(mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar')!=null) mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar').__getFaceHelper().addEvent",
+						new Object[]{scEvent}); //getTitle(), getInstId()+"", newInstancePanel.getDueDate()});
+				
+				MetaworksRemoteService.pushTargetScript(Login.getSessionIdWithUserId(session.getUser().getUserId()),
+						"if(mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar')!=null) mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar').__getFaceHelper().addEvent",
+						new Object[]{scEvent}); //instanceRef.getName(), instanceRef.getInstId().toString(), instanceRef.getDueDate() });
+*/			}
 			
 			MetaworksRemoteService.pushTargetScriptFiltered(new AllSessionFilter(notiUsers),
 					"mw3.getAutowiredObject('" + NotificationBadge.class.getName() + "').refresh",
@@ -1065,12 +1084,41 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 					new Object[]{new WorkItemListener(copyOfThis)});	
 		}		
 		
-		if(this.getDueDate() != null || this.scheduleCalendar != null){
-			MetaworksRemoteService.pushTargetScript(Login.getSessionIdWithUserId(session.getUser().getUserId()),
-					"if(mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar')!=null) mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar').__getFaceHelper().addMyschedule",
-					new Object[]{instanceRef.getName(), instanceRef.getInstId().toString(), this.getDueDate() });
+		
+		
+		ScheduleCalendarEvent scEvent = new ScheduleCalendarEvent();
+		scEvent.setTitle(instanceRef.getName());
+		scEvent.setId(instanceRef.getInstId().toString());
+		scEvent.setStart(instanceRef.getDueDate());
+		scEvent.setEnd(instanceRef.getDueDate());
+		scEvent.setAllDay(true);
+		scEvent.setCallType(ScheduleCalendar.CALLTYPE_INSTANCE);
+		scEvent.setComplete(Instance.INSTNACE_STATUS_COMPLETED.equals(instanceRef.getStatus()));
+		
+		MetaworksRemoteService.pushTargetScript(Login.getSessionIdWithUserId(session.getUser().getUserId()),
+				"if(mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar')!=null) mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar').__getFaceHelper().addEvent",
+				new Object[]{scEvent}); //instanceRef.getName(), instanceRef.getInstId().toString(), instanceRef.getDueDate() });
+		
+		
+		
+		
+		/*
+		if(this.getDueDate() != null){
+			ScheduleCalendarEvent scEvent = new ScheduleCalendarEvent();
+			scEvent.setTitle(instanceRef.getName());
+			scEvent.setId(this.getInstId().toString());
+			scEvent.setStart(this.getDueDate());
+			scEvent.setEnd(this.getDueDate());
+			scEvent.setAllDay(true);
+			scEvent.setCallType(ScheduleCalendar.CALLTYPE_INSTANCE);
+			scEvent.setComplete(Instance.INSTNACE_STATUS_COMPLETED.equals(this.getStatus()));
 			
+			MetaworksRemoteService.pushTargetScript(Login.getSessionIdWithUserId(session.getUser().getUserId()),
+					"if(mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar')!=null) mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar').__getFaceHelper().addEvent",
+					new Object[]{scEvent}); //instanceRef.getName(), instanceRef.getInstId().toString(), instanceRef.getDueDate() });
 		}
+		*/
+		
 		
 		return returnObjects;
 	}
