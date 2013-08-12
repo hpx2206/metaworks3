@@ -4,6 +4,8 @@ import org.uengine.kernel.GlobalContext;
 
 public class CommingTodoPerspective extends Perspective{
 	
+	public final static String TYPE_COMMINGTODO = "commingTodo";
+	
 	IInstance instance;	
 		public IInstance getInstance() {
 			return instance;
