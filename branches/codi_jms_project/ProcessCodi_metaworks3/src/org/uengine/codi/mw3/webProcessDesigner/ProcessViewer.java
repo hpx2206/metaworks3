@@ -53,7 +53,13 @@ public class ProcessViewer {
 		public void setProcessDesignerSize(String processDesignerSize) {
 			this.processDesignerSize = processDesignerSize;
 		}
-		
+	String processDesignerInstanceId;
+		public String getProcessDesignerInstanceId() {
+			return processDesignerInstanceId;
+		}
+		public void setProcessDesignerInstanceId(String processDesignerInstanceId) {
+			this.processDesignerInstanceId = processDesignerInstanceId;
+		}	
 	ProcessDesignerContainer processDesignerContainer;
 		public ProcessDesignerContainer getProcessDesignerContainer() {
 			return processDesignerContainer;
@@ -78,7 +84,7 @@ public class ProcessViewer {
 			bao = new ByteArrayOutputStream();
 			if( getAlias() != null ){
 				File file = new File(getAlias());
-				if(file.exists()){					
+				if(file.exists() && !file.isDirectory()){					
 					try {
 						is = new FileInputStream(file);
 						MetaworksUtil.copyStream(is, bao);
@@ -89,6 +95,7 @@ public class ProcessViewer {
 						this.processDesignerContainer.init();
 						this.processDesignerContainer.load(def);
 						this.setProcessDesignerSize(def.getProcessDesignerSize());
+						this.setProcessDesignerInstanceId(def.getProcessDesignerInstanceId());
 						
 					} catch (Exception e) {
 						e.printStackTrace();

@@ -70,7 +70,9 @@ public class CompareNavigator {
 		
 		importFileNavigator = new CompareFileNavigator();
 		importFileNavigator.setId(CompareImportFilePanel.FILE_LOCATION);
-		importFileNavigator.loadUpload();
+		importFileNavigator.setSelectType(CompareNavigator.UPLOAD_PATH);
+		importFileNavigator.setUploadPath(uploadedDirectory);
+		importFileNavigator.load();
 	}
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)

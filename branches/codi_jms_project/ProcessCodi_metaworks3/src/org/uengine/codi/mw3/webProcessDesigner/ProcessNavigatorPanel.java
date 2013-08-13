@@ -6,7 +6,7 @@ import org.metaworks.Refresh;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
-import org.uengine.codi.mw3.collaboration.ProcessNameView;
+//import org.uengine.codi.mw3.collaboration.ProcessNameView;
 import org.uengine.util.UEngineUtil;
 
 public class ProcessNavigatorPanel {
@@ -51,13 +51,13 @@ public class ProcessNavigatorPanel {
 		public void setHistoryList(ArrayList<HistoryItem> historyList) {
 			this.historyList = historyList;
 		}
-	ProcessNameView processNameView;
-		public ProcessNameView getProcessNameView() {
-			return processNameView;
-		}
-		public void setProcessNameView(ProcessNameView processNameView) {
-			this.processNameView = processNameView;
-		}	
+//	ProcessNameView processNameView;
+//		public ProcessNameView getProcessNameView() {
+//			return processNameView;
+//		}
+//		public void setProcessNameView(ProcessNameView processNameView) {
+//			this.processNameView = processNameView;
+//		}	
 				
 		
 	public void load() {

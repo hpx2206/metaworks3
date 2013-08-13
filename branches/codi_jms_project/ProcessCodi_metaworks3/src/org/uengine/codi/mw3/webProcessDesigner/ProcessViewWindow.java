@@ -1,7 +1,7 @@
 package org.uengine.codi.mw3.webProcessDesigner;
 
 import org.metaworks.annotation.AutowiredFromClient;
-import org.uengine.codi.mw3.collaboration.ProcessNameView;
+//import org.uengine.codi.mw3.collaboration.ProcessNameView;
 import org.uengine.codi.mw3.model.Session;
 
 public class ProcessViewWindow {
@@ -50,19 +50,19 @@ public class ProcessViewWindow {
 			this.processAttributePanel = processAttributePanel;
 		}
 
-	ProcessNameView processNameView;
-		public ProcessNameView getProcessNameView() {
-			return processNameView;
-		}
-		public void setProcessNameView(ProcessNameView processNameView) {
-			this.processNameView = processNameView;
-		}	
+//	ProcessNameView processNameView;
+//		public ProcessNameView getProcessNameView() {
+//			return processNameView;
+//		}
+//		public void setProcessNameView(ProcessNameView processNameView) {
+//			this.processNameView = processNameView;
+//		}	
 		
 	public ProcessViewWindow() throws Exception{
 		processNavigatorPanel = new ProcessNavigatorPanel();
 		processViewPanel = new ProcessViewPanel();
 		processAttributePanel = new ProcessAttributePanel();
-		processNameView = new ProcessNameView();
+//		processNameView = new ProcessNameView();
 	}
 	
 	@AutowiredFromClient
@@ -71,9 +71,9 @@ public class ProcessViewWindow {
 	//DefinitionViewWindow의 Layout Setting
 	public void load() throws Exception{
 		if( alias != null){
-			processNameView.setFileId(defId);
-			processNameView.session = session;
-			processNameView.load();
+//			processNameView.setFileId(defId);
+//			processNameView.session = session;
+//			processNameView.load();
 
 			processNavigatorPanel.setDefId(defId);
 			processNavigatorPanel.setAlias(alias);

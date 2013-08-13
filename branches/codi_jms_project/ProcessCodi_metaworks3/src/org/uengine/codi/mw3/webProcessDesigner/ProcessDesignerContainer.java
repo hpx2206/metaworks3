@@ -70,6 +70,7 @@ public class ProcessDesignerContainer {
 		activityList = new ArrayList<Activity>();
 		roleList = new ArrayList<Role>();
 		transitionList = new ArrayList<Transition>();
+		valueChainList = new ArrayList<ValueChain>();
 	}
 	
 	public void loadValueChain(ValueChainDefinition def) throws Exception{

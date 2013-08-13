@@ -1,5 +1,8 @@
 package org.uengine.codi.mw3.ide.compare;
 
+import org.uengine.codi.mw3.ide.editor.process.ProcessEditor;
+import org.uengine.codi.mw3.ide.editor.process.ProcessMergeEditor;
+
 public class FileComparePanel {
 	String selectedProcessAlias;
 		public String getSelectedProcessAlias() {
@@ -46,5 +49,9 @@ public class FileComparePanel {
 		compareImportFilePanel = new CompareImportFilePanel();
 		compareImportFilePanel.load();
 		
+	}
+	
+	public void saveMe(ProcessMergeEditor processMergeEditor) throws Exception{
+		compareOriginFilePanel.getCompareOriginFile().save(processMergeEditor);
 	}
 }

@@ -1,6 +1,5 @@
 package org.uengine.codi.mw3.ide.compare;
 
-import java.io.File;
 
 public class CompareImportFilePanel {
 	
@@ -28,9 +27,7 @@ public class CompareImportFilePanel {
 	public void load() throws Exception{
 		compareImportFile = new CompareImportFile();
 		if( selectedProcessAlias != null ){
-			File file = new File(selectedProcessAlias);
 			compareImportFile.setSelectedProcessAlias(selectedProcessAlias);
-			compareImportFile.setFileName(file.getName());
 			compareImportFile.load();
 		}
 		

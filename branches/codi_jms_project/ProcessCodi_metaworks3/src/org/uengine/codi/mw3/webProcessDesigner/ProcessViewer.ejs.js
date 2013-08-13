@@ -84,7 +84,8 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessViewer.prototype = {
 		}
 		canvas._RENDERER.setScale(scaleSize);
 		this.icanvas.setCanvasSize([canvasWidth , canvasHeight]);
-	    
-	    
+	},
+	getValue : function(){
+		// TODO processDesignercontainerPanel 에 있는 getValue부분을 활욜할수 있는지.. 없으면 복사해서 붙여넣기
 	}
 };

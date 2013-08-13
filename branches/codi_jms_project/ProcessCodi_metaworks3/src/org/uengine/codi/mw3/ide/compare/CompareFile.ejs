@@ -1,9 +1,30 @@
 <% 
 	if(value) {
-		var processName = value.fileName;
 %>
-	<div id="openmind_btn">
-		 <span><b><%= processName %></b></span> 	
+	<div id="openmind_btn" style="line-height:21px;">
+		 <span><b>
+		 <%
+		  if( value.fileName ){
+		 %>
+		      <%= value.fileName %>
+		 <%
+		 }else{
+		 %>
+		      &nbsp; 
+		 <%
+		 }
+		 %>     
+		  </b></span> 	
+		  <%
+		      if( value.editorId == 'source' ){
+		  %>
+		          <div style="float:right; text-align:center ; vertical-align:middle;">
+                     <a id="wBtn" href="#" onClick="<%= methods.processMerge.caller()%>"><span>파일비교</span></a>
+                     <a id="wBtn" href="#" onClick="<%= methods.save.caller()%>"><span>저장</span></a>
+                </div>
+		  <%
+		      }
+		  %>
 	</div>
 <%
 }

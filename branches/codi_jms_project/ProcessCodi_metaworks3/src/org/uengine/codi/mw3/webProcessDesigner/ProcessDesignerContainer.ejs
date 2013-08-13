@@ -1,11 +1,12 @@
 <%
+    var beanPropertyIdx = 0;
     if( value && value.activityList ){
         for(var i in value.activityList){
             var activity = value.activityList[i];
            %>
            <%=mw3.locateObject(activity.activityView , activity.activityView.__className)%>
            <%
-           mw3.addBeanProperty(objectId, "[" + i + "]");
+           mw3.addBeanProperty(objectId, "[" + beanPropertyIdx++ + "]");
         }
     }
     if( value && value.valueChainList ){
@@ -14,7 +15,7 @@
            %>
            <%=mw3.locateObject(valueChain.valueChainView , valueChain.valueChainView.__className)%>
            <%
-           mw3.addBeanProperty(objectId, "[" + i + "]");
+           mw3.addBeanProperty(objectId, "[" + beanPropertyIdx++ + "]");
         }
     }
     if( value && value.transitionList ){
@@ -23,7 +24,7 @@
            %>
            <%=mw3.locateObject(transition.transitionView , transition.transitionView.__className)%>
            <%
-           mw3.addBeanProperty(objectId, "[" + i + "]");
+           mw3.addBeanProperty(objectId, "[" + beanPropertyIdx++ + "]");
         }
     }
 %>
