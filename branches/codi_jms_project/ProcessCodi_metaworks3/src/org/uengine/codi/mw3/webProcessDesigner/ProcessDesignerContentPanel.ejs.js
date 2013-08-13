@@ -674,10 +674,12 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ge
 	var activityList = [];
 	var roleList = [];
 	var transitionList = [];
+	var valueChainList = [];
 	
 	var activityIdx = 0;
 	var roleIdx = 0;
 	var transitionIdx = 0;
+	var valueChainIdx = 0;
 	
 	for(var i=0; i<ogArr.length; i++){
 		var og = ogArr[i];
@@ -736,13 +738,16 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ge
 //		cellsForDwr[cellsForDwr.length] = cellForDwr;
 		
 		$id = $('#'+og['@id']);
-		var activity = $id.data('activity');
 		if( og['@shapeType'] != 'EDGE'){
 			cellForDwr['tracingTag'] = $id.attr('_tracingTag');
 			cellForDwr['activityClass'] = $id.attr('_classname');
 			cellForDwr['__className'] = $id.attr('_viewClass');
 			var classType = $id.attr('_classType');
+			console.log('111');
+			console.log(classType);
 			cellForDwr['classType'] = classType;
+			//set Activity, Role
+			var activity = $id.data('activity');
 			if( activity ){
 				activity.activityView = cellForDwr;
 				if(classType == 'Activity'){
@@ -754,6 +759,15 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ge
 	//				cellForDwr['roleName'] = activity.name;
 				}
 			}
+			
+			//set ValueChain
+			var valuechain = $id.data('valuechain');
+			if(valuechain){
+				valuechain.valueChainView = cellForDwr;
+				if(classType == 'ValueChain'){
+					valueChainList[valueChainIdx++] = valuechain;
+				}
+			}
 		}
 		if( og['@shapeType'] == 'EDGE'){
 			var transition = $id.data('transition');
@@ -763,13 +777,13 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ge
 			}
 		}
 	}
-	
 	var object = mw3.objects[this.objectId];
 	var container = {
 			__className : 'org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerContainer',
 			activityList : activityList,
 			roleList : roleList,
 			transitionList : transitionList,
+			valueChainList : valueChainList
 	};
 	var canvasSize = this.icanvas.getCanvasSize();
 	var processDesignerSize = "";

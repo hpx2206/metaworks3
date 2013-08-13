@@ -6,7 +6,11 @@ import org.uengine.kernel.Activity;
 import org.uengine.kernel.ProcessDefinition;
 import org.uengine.kernel.ProcessVariable;
 import org.uengine.kernel.Role;
+import org.uengine.kernel.ValueChain;
+import org.uengine.kernel.ValueChainDefinition;
 import org.uengine.kernel.graph.Transition;
+
+import com.google.api.gbase.client.GmPublishingPriority.Value;
 
 public class ProcessDesignerContainer {
 	String editorId;
@@ -22,6 +26,13 @@ public class ProcessDesignerContainer {
 		}
 		public void setActivityList(ArrayList<Activity> activityList) {
 			this.activityList = activityList;
+		}
+	ArrayList<ValueChain> valueChainList;
+		public ArrayList<ValueChain> getValueChainList() {
+			return valueChainList;
+		}
+		public void setValueChainList(ArrayList<ValueChain> valueChainList) {
+			this.valueChainList = valueChainList;
 		}
 	ArrayList<Transition> transitionList;
 		public ArrayList<Transition> getTransitionList() {
@@ -57,6 +68,27 @@ public class ProcessDesignerContainer {
 		transitionList = new ArrayList<Transition>();
 	}
 	
+	public void loadValueChain(ValueChainDefinition def) throws Exception{
+		if(valueChainList == null){
+			valueChainList = new ArrayList<ValueChain>();
+		}
+		for (int l = 0; l < def.getChildValueChains().size(); l++) {
+			ValueChain valueChain = (ValueChain)def.getChildValueChains().get(l);
+			if( valueChain.getValueChainView() != null ){
+				valueChain.getValueChainView().setViewType(viewType);
+				valueChain.getValueChainView().setEditorId(getEditorId());
+				valueChain.getValueChainView().setValueChain(valueChain);
+			}
+			valueChainList.add(valueChain);
+		}
+		transitionList = def.getTransitions();
+		for(Transition ts : transitionList){
+			ts.getTransitionView().setViewType(viewType);
+			ts.getTransitionView().setEditorId(getEditorId());
+			ts.getTransitionView().setTransition(ts);
+		}
+	}
+	
 	public void load(ProcessDefinition def) throws Exception{
 
 		for (int l = 0; l < def.getChildActivities().size(); l++) {
@@ -89,6 +121,21 @@ public class ProcessDesignerContainer {
 			}
 		}
 		
+		return def;
+	}
+	
+	public ValueChainDefinition containerToValueChainDefinition(ProcessDesignerContainer container){
+		ValueChainDefinition def = new ValueChainDefinition();
+		if( valueChainList != null ){
+			for(ValueChain valueChain : valueChainList){
+				def.addChildValueChain(valueChain);
+			}
+		}
+		if( transitionList != null ){
+			for(Transition ts : transitionList){
+				def.addTransition(ts);
+			}
+		}
 		return def;
 	}
 }
