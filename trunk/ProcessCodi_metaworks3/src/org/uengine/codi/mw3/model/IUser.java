@@ -94,19 +94,18 @@ public interface IUser extends IDAO{
 	@ServiceMethod(mouseBinding="drop")
 	public void drop();
 	
-	@ServiceMethod(callByContent=true, inContextMenu=true, needToConfirm=true)
+	@ServiceMethod(callByContent=true, needToConfirm=true)
 //	@Available(when={"followers"})
 	@Face(displayName="$Unsubscribe")
-//	@Hidden
 	public Object[] unsubscribe() throws Exception;	
 
-	@ServiceMethod(callByContent=true, inContextMenu=true, target=TARGET_SELF)
+	@ServiceMethod(callByContent=true)
 	@Face(displayName="$GuestToUser")
-	public Object guestToUser() throws Exception;
+	public void guestToUser() throws Exception;
 	
-	@ServiceMethod(callByContent=true, inContextMenu=true, target=TARGET_SELF)
+	@ServiceMethod(callByContent=true)
 	@Face(displayName="$UserToGuest")
-	public Object userToGuest() throws Exception;
+	public void userToGuest() throws Exception;
 
 	@ServiceMethod(inContextMenu=true, needToConfirm=true, target="none")
 	@Available(when={"admin"})
