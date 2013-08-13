@@ -2,6 +2,8 @@ package org.uengine.codi.mw3.webProcessDesigner;
 
 import org.metaworks.component.Tree;
 import org.metaworks.component.TreeNode;
+import org.uengine.codi.mw3.ide.Project;
+import org.uengine.codi.mw3.ide.Workspace;
 
 public class ValueChainViewNavigator {
 
@@ -13,28 +15,21 @@ public class ValueChainViewNavigator {
 			this.processDefinitionTree = processDefinitionTree;
 		}
 
-	public void load(){
+	public void load(Workspace workspace){
+		ProcessDefinitionNode processDefinitionNode = new ProcessDefinitionNode();
+		processDefinitionNode.setId(workspace.getId());
+		processDefinitionNode.setRoot(true);
+		processDefinitionNode.setHidden(true);
 		
-	}
-	
-	public void loadTree(){
-		
-		ProcessDefinitionNode rootNode = new ProcessDefinitionNode();
-		rootNode.setRoot(true);
-		rootNode.setId("DefinitionList");
-		rootNode.setTreeId("DefinitionList");
-		rootNode.setName("DefinitionList");
-		rootNode.setType(TreeNode.TYPE_FOLDER);
-		rootNode.setFolder(true);
-		rootNode.setLoaded(true);
-		rootNode.setExpanded(true);
-		
+		for(Project project: workspace.getProjects())
+			processDefinitionNode.add(new ProcessDefinitionNode(project));
 		
 		Tree tree = new Tree();
-		tree.setNode(rootNode);
+		tree.setId(workspace.getId());
+		tree.setNode(processDefinitionNode);
 		
 		setProcessDefinitionTree(tree);
-		
+			
 	}
-	
+
 }

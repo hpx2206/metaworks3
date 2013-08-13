@@ -2,10 +2,11 @@ package org.uengine.codi.mw3.ide.editor.valuechain;
 
 import org.metaworks.annotation.ServiceMethod;
 import org.uengine.codi.mw3.ide.ResourceNode;
+import org.uengine.codi.mw3.ide.editor.Editor;
 import org.uengine.codi.mw3.ide.editor.process.ProcessEditor;
 import org.uengine.codi.mw3.webProcessDesigner.ValueChainDesignerContentPanel;
 
-public class ValueChainEditor extends ProcessEditor{
+public class ValueChainEditor extends Editor{
 
 	ValueChainDesignerContentPanel valueChainDesigner;
 		public ValueChainDesignerContentPanel getValueChainDesigner() {
@@ -14,7 +15,14 @@ public class ValueChainEditor extends ProcessEditor{
 		public void setValueChainDesigner(ValueChainDesignerContentPanel valueChainDesigner) {
 			this.valueChainDesigner = valueChainDesigner;
 		}
-
+	
+	String processDesignerInstanceId;
+		public String getProcessDesignerInstanceId() {
+			return processDesignerInstanceId;
+		}
+		public void setProcessDesignerInstanceId(String processDesignerInstanceId) {
+			this.processDesignerInstanceId = processDesignerInstanceId;
+		}
 		
 	public ValueChainEditor(){
 		
@@ -39,7 +47,7 @@ public class ValueChainEditor extends ProcessEditor{
 		String definitionString = super.load();
 		
 		try {
-			this.getValueChainDesigner().load(definitionString);
+			processDesignerInstanceId = this.getValueChainDesigner().load(definitionString);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

@@ -5,6 +5,7 @@ import org.metaworks.MetaworksContext;
 import org.metaworks.Remover;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
+import org.uengine.codi.mw3.ide.Workspace;
 
 public class ValueChainViewerPanel implements ContextAware{
 
@@ -51,6 +52,13 @@ public class ValueChainViewerPanel implements ContextAware{
 		public void setValueChainViewPanel(ValueChainViewPanel valueChainViewPanel) {
 			this.valueChainViewPanel = valueChainViewPanel;
 		}
+	Workspace workspace;
+		public Workspace getWorkspace() {
+			return workspace;
+		}
+		public void setWorkspace(Workspace workspace) {
+			this.workspace = workspace;
+		}
 		
 	public ValueChainViewerPanel(){
 		metaworksContext = new MetaworksContext();
@@ -59,7 +67,11 @@ public class ValueChainViewerPanel implements ContextAware{
 	public void findDefnitionView(){
 		this.getMetaworksContext().setHow("find");
 		valueChainViewNaivgator = new ValueChainViewNavigator();
-		valueChainViewNaivgator.loadTree();
+		Workspace workspace = new Workspace();
+		workspace.load();
+		this.setWorkspace(workspace);
+		
+		valueChainViewNaivgator.load(workspace);
 		
 		valueChainViewPanel = new ValueChainViewPanel();
 		valueChainViewPanel.load();
