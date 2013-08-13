@@ -18,6 +18,8 @@ import org.uengine.processmanager.ProcessManagerRemote;
 
 public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 	
+	public final static String PROCESS = "process";
+	
 	public ProcessMap(){
 		setIconFile(new MetaworksFile());		
 		setIconColor(new ProcessMapColor("배경선택"));
@@ -93,7 +95,6 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		}
 		
 	RoleMappingPanel roleMappingPanel;
-		
 		public RoleMappingPanel getRoleMappingPanel() {
 			return roleMappingPanel;
 		}
@@ -102,7 +103,6 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		}
 
 	String cmPhrase;
-		
 		public String getCmPhrase() {
 			return cmPhrase;
 		}
@@ -232,6 +232,7 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		processManager.executeProcess(instId);
 		processManager.applyChanges();
 	}
+	
 	public Object[] initiate() throws Exception{
 //		InstanceViewContent instanceView// = new InstanceViewContent();
 		
@@ -386,7 +387,7 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 		
 		Perspective perspective = new Perspective();
 		
-		return perspective.loadInstanceListPanel(session, "process", this.getDefId());
+		return perspective.loadInstanceListPanel(session, PROCESS, this.getDefId());
 	}
 		
 }
