@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.calendar.ScheduleCalendar;
 import org.uengine.codi.mw3.knowledge.ProjectManager;
 import org.uengine.codi.mw3.knowledge.WfPanel;
+import org.uengine.kernel.GlobalContext;
 import org.uengine.processmanager.ProcessManagerRemote;
 @Face(
 		ejsPathMappingByContext=
@@ -81,6 +82,10 @@ public class InstanceListPanel implements ContextAware{
 			
 			this.setPreloaded(true);
 		}
+		
+		if("1".equals(GlobalContext.getPropertyString("knowledge.use", "1"))){
+			this.setUseKnowledge(true);
+		}
 	}
 	
 	public void topicFollowersLoad() throws Exception{
@@ -139,8 +144,6 @@ public class InstanceListPanel implements ContextAware{
 		public void setNewInstantiator(WorkItem newInstantiator) {
 			this.newInstantiator = newInstantiator;
 		}	*/
-	
-
 
 	WfPanel knowledge;
 		public WfPanel getKnowledge() {
@@ -158,7 +161,6 @@ public class InstanceListPanel implements ContextAware{
 			this.topicFollowers = topicFollowers;
 		}
 
-
 	boolean preloaded;
 		public boolean isPreloaded() {
 			return preloaded;
@@ -166,12 +168,21 @@ public class InstanceListPanel implements ContextAware{
 		public void setPreloaded(boolean preloaded) {
 			this.preloaded = preloaded;
 		}
+		
 	String definitionId;
 		public String getDefinitionId() {
 			return definitionId;
 		}
 		public void setDefinitionId(String definitionId) {
 			this.definitionId = definitionId;
+		}
+		
+	boolean useKnowledge;	
+		public boolean isUseKnowledge() {
+			return useKnowledge;
+		}
+		public void setUseKnowledge(boolean useKnowledge) {
+			this.useKnowledge = useKnowledge;
 		}
 
 
