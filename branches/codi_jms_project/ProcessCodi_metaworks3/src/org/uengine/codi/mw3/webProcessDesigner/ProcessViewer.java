@@ -86,6 +86,7 @@ public class ProcessViewer {
 						ProcessDefinition def = (ProcessDefinition) GlobalContext.deserialize(bao.toString(GlobalContext.ENCODING));
 						this.processDesignerContainer.setViewType(viewType);
 						this.processDesignerContainer.setEditorId(editorId);
+						this.processDesignerContainer.init();
 						this.processDesignerContainer.load(def);
 						this.setProcessDesignerSize(def.getProcessDesignerSize());
 						

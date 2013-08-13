@@ -63,6 +63,10 @@ public class ProcessDesignerContainer {
 			this.viewType = viewType;
 		}
 	public ProcessDesignerContainer(){
+		this.init();
+	}
+	
+	public void init(){
 		activityList = new ArrayList<Activity>();
 		roleList = new ArrayList<Role>();
 		transitionList = new ArrayList<Transition>();
