@@ -61,5 +61,15 @@ org_uengine_codi_mw3_model_IUser.prototype = {
 			mw3.getFaceHelper(this.windowObjectId).endLoading();
 		else
 			mw3.showInfo(this.objectId, message);
+	},
+	ableContextMenu: function(methodName) {
+		
+		if(methodName == 'removeContact') {
+			var object = mw3.objects[this.objectId];
+			if(object.metaworksContext.how != null && object.metaworksContext.how=='info')
+				return false;
+			else
+				return true;
+		}
 	}
 };

@@ -204,6 +204,7 @@ public class Main {
 	private ContentWindow createNewInstancePanel(Session session)
 			throws Exception {
 		ContentWindow contentWindow = new ContentWindow();
+		contentWindow.setTitle("$New");
 		NewInstancePanel instancePanel = new NewInstancePanel();
 		instancePanel.session = session;
 		instancePanel.load(session);
