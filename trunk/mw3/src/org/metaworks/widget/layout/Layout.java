@@ -92,5 +92,12 @@ public class Layout implements ContextAware {
 		public void setMetaworksContext(MetaworksContext metaworksContext) {
 			this.metaworksContext = metaworksContext;
 		}
-		
+	
+	boolean useHideBar;
+		public boolean isUseHideBar() {
+			return useHideBar;
+		}
+		public void setUseHideBar(boolean useHideBar) {
+			this.useHideBar = useHideBar;
+		}
 }

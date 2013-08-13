@@ -70,10 +70,11 @@ var org_metaworks_widget_layout_Layout = function(objectId, className){
 
 		faceHelper.load();
 		
-		//인스턴스 리스트 영역에 좌측 hide버튼 감추기
-		var isInstanceList = ((object.west.__className).indexOf('InstanceListWindow') > 0 ? true : false);
-		if(isInstanceList){
-			this.div.parent().find($('.hide_west_btn')).removeClass();
+		if(!object.useHideBar){
+			if(object.center.panel){
+				$('#objDiv_' + objectId).find('.hide_west_btn').removeClass();
+				$('#objDiv_' + objectId).find('.show_west_btn').removeClass();
+			}
 		}
 	}
 };
