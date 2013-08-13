@@ -24,8 +24,6 @@ public class ProcessTopPanel {
 		IUser loginUser = new User();
 		loginUser.setUserId(session.getUser().getUserId());
 		loginUser.setName(session.getUser().getName());
-		loginUser.setGuest(session.employee.isGuest());
-		loginUser.setInviteUser(session.employee.getInviteUser());
 		
 		setLoginUser(loginUser);
 		

@@ -65,23 +65,7 @@ public class User extends Database<IUser> implements IUser {
 		public void setUserChecked(boolean userChecked) {
 			this.userChecked = userChecked;
 		}
-	
-	boolean guest;
-		public boolean isGuest() {
-			return guest;
-		}
-		public void setGuest(boolean guest) {
-			this.guest = guest;
-		}
 		
-	String inviteUser;		
-		public String getInviteUser() {
-			return inviteUser;
-		}
-		public void setInviteUser(String inviteUser) {
-			this.inviteUser = inviteUser;
-		}
-
 	int businessValue;
 		public int getBusinessValue() {
 			return businessValue;
@@ -97,7 +81,23 @@ public class User extends Database<IUser> implements IUser {
 		public void setTodoCount(int todoCount) {
 			this.todoCount = todoCount;
 		}
-	
+		
+	boolean guest;
+		public boolean isGuest() {
+			return guest;
+		}
+		public void setGuest(boolean guest) {
+			this.guest = guest;
+		}
+		
+	String inviteUser;
+		public String getInviteUser() {
+			return inviteUser;
+		}
+		public void setInviteUser(String inviteUser) {
+			this.inviteUser = inviteUser;
+		}
+
 	@AutowiredFromClient
 	public Session session;
 
@@ -191,6 +191,8 @@ public class User extends Database<IUser> implements IUser {
 			employee.setEmpCode(getUserId());
 			setMood(employee.databaseMe().getMood());
 			setName(employee.databaseMe().getEmpName());
+			setGuest(employee.databaseMe().isGuest());
+			setInviteUser(employee.databaseMe().getInviteUser());			
 			
 			//선택된 유저의 business value를 보인다.
 			int myBV = getBV(getUserId());
@@ -205,7 +207,7 @@ public class User extends Database<IUser> implements IUser {
 		//	e.printStackTrace();
 		}
 		
-		Popup popup = new Popup(400,275);
+		Popup popup = new Popup(400, 275);
 		popup.setName("Info");
 		popup.setPanel(this);
 
@@ -601,7 +603,7 @@ public class User extends Database<IUser> implements IUser {
 	}
 	
 	@Override
-	public Object guestToUser() throws Exception {	
+	public void guestToUser() throws Exception {	
 		
 		IEmployee emp = new Employee();
 		emp.setEmpCode(getUserId());
@@ -613,17 +615,14 @@ public class User extends Database<IUser> implements IUser {
 				|| session.getEmployee().getIsAdmin()) {
 			
 			employee.databaseMe().setGuest(false);
-			this.setGuest(false);
+			this.setGuest(employee.databaseMe().isGuest());
 		}
 		else
 			throw new Exception("$OnlyTheAdminAndInviteUserCanEdit");
-		
-//		return new Refresh(this);
-		return this;
 	}
 	
 	@Override
-	public Object userToGuest() throws Exception {
+	public void userToGuest() throws Exception {
 		IEmployee emp = new Employee();
 		emp.setEmpCode(getUserId());
 		Employee employee = (Employee)emp.findMe();		
@@ -634,13 +633,10 @@ public class User extends Database<IUser> implements IUser {
 				|| session.getEmployee().getIsAdmin()) {
 			
 			employee.databaseMe().setGuest(true);
-			this.setGuest(true);
+			this.setGuest(employee.databaseMe().isGuest());
 		}
 		else
 			throw new Exception("$OnlyTheAdminAndInviteUserCanEdit");
-		
-//		return new Refresh(this);
-		return this;
 	}
 
 	@Override

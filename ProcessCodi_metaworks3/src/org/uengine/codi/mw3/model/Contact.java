@@ -18,7 +18,7 @@ public class Contact extends Database<IContact> implements IContact{
 		IUser friend = new User();
 		
 		StringBuffer sb = new StringBuffer();
-		sb.append("select c.userId, c.friendId, ifnull(e.empname, c.friendName) friendName, e.mood, e.guest, e.inviteUser")
+		sb.append("select c.userId, c.friendId, ifnull(e.empname, c.friendName) friendName, e.mood")
 		  .append("  from contact c left join emptable e")
 		  .append("    on c.friendid = e.empcode")
 		  .append(" where c.userId=?userId")

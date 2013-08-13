@@ -61,35 +61,5 @@ org_uengine_codi_mw3_model_IUser.prototype = {
 			mw3.getFaceHelper(this.windowObjectId).endLoading();
 		else
 			mw3.showInfo(this.objectId, message);
-	},
-	
-	ableContextMenu : function(methodName){
-		
-		var user = mw3.objects[this.objectId];
-		var session = mw3.getAutowiredObject('org.uengine.codi.mw3.model.Session');
-		var login_userId = session.user.userId;
-		
-		console.log(session);
-		
-		if(methodName == 'unsubscribe') {				
-			//admin or me or inviteuser
-			if (session.employee.isAdmin || user.userId==login_userId ||
-					(user.inviteUser != null&&user.inviteUser==login_userId))
-				return true;
-		}		
-		else if(methodName == 'guestToUser') {
-			//admin or inviteuser
-			if(user.guest==true &&
-					(session.employee.isAdmin || (user.inviteUser != null&&user.inviteUser==login_userId)))
-				return true;
-		}
-		else if(methodName == 'userToGuest') {
-			//admin or inviteuser
-			if(user.guest==false &&
-					(session.employee.isAdmin || (user.inviteUser != null&&user.inviteUser==login_userId)))
-				return true;
-		}
-		   
-		  return false;
 	}
 };
