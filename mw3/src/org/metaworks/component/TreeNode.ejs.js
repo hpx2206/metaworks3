@@ -83,13 +83,15 @@ org_metaworks_component_TreeNode.prototype = {
 	},
 	
 	draggable : function(command){
-		this.objectDiv.draggable({
+		this.objectDiv.find('.item-fix:first').draggable({
 			      appendTo: "body",
 			      helper: function( event ) {
-			          return $('<div>').addClass('filemgr-tree').append($(this).children(':first').clone());
+			          return $('<div>').addClass('filemgr-tree').append($(this).clone());
 			      },
 			      zIndex: 100,
 				  start: function(event, ui) {
+					  console.log(command);
+					  
 					  $(this).data('dragObj', eval(command));
 			      },
 			      drag: function() {
