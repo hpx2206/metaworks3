@@ -68,13 +68,13 @@ public class PerspectivePanel {
 //			this.processStatusPerspective = processStatusPerspective;
 //		}
 //
-//	StrategicPerspective strategicPerspective;
-//		public StrategicPerspective getStrategicPerspective() {
-//			return strategicPerspective;
-//		}
-//		public void setStrategicPerspective(StrategicPerspective strategicPerspective) {
-//			this.strategicPerspective = strategicPerspective;
-//		}
+	StrategicPerspective strategicPerspective;
+		public StrategicPerspective getStrategicPerspective() {
+			return strategicPerspective;
+		}
+		public void setStrategicPerspective(StrategicPerspective strategicPerspective) {
+			this.strategicPerspective = strategicPerspective;
+		}
 		
 	TopicPerspective topicPerspective;
 		public TopicPerspective getTopicPerspective() {
@@ -154,7 +154,10 @@ public class PerspectivePanel {
 				commingTodoPerspective.select();
 			}
 			//processStatusPerspective = new ProcessStatusPerspective();
-			//strategicPerspective = new StrategicPerspective();
+			//지식맵
+			if("1".equals(GlobalContext.getPropertyString("knowledge.use", "1"))){
+				strategicPerspective = new StrategicPerspective();
+			}
 		}
 	}
 }
