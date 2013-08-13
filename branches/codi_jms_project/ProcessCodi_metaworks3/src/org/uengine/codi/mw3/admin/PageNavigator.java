@@ -5,7 +5,6 @@ import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Test;
 import org.metaworks.widget.layout.Layout;
-import org.uengine.codi.mw3.collaboration.Collaboration;
 import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.ide.CloudIDE;
 import org.uengine.codi.mw3.knowledge.Knowledge;
@@ -16,6 +15,7 @@ import org.uengine.codi.mw3.model.MainLMS;
 import org.uengine.codi.mw3.model.MainSNS;
 import org.uengine.codi.mw3.model.PinterestMain;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.codi.mw3.processexplorer.ProcessExplorer;
 import org.uengine.codi.mw3.selfservice.SelfService;
 import org.uengine.codi.mw3.tadpole.Tadpole;
 import org.uengine.processmarket.Market;
@@ -170,10 +170,10 @@ public class PageNavigator{
 	}
 	
 	@ServiceMethod(callByContent=true)
-	public MainPanel goCollaboration() throws Exception {
-		Collaboration collaboration = new Collaboration();
-		collaboration.load(session); 
+	public MainPanel goProcessExplorer() throws Exception {
+		ProcessExplorer processExplorer = new ProcessExplorer();
+		processExplorer.load(session); 
 			
-		return new MainPanel(collaboration);
+		return new MainPanel(processExplorer);
 	}
 }

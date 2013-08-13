@@ -1,4 +1,4 @@
-프로세스 네비게이터 : 
+<div style="padding:5px;">프로세스 네비게이터 : </div>
 <%
     if( value ){
         var list = value.historyList;
@@ -6,9 +6,21 @@
         for( var i = 0; i < list.length; i++){
 %>
 		<a onClick="mw3.getFaceHelper(<%=objectId%>).clickNavigator('<%= i %>')" href="#">
-            <span><b><%= list[i].defName %></b></span> 
+<% if (i == 0){ %>
+         	<img src="images/NavigatorStep<%=i+1%>.png" style="width: 150px; height: 60px;"/>
+            <div style="position:absolute; margin-left:30px; margin-top:-40px; z-index:999;"><font size=3>Step<%=i+1%>.   <%= list[i].defName %></font></div> 
+<% }else if(i == 1){ %>
+         	<img src="images/NavigatorStep2.png" style="width: 150px; height: 60px;"/>
+            <div style="position:absolute; margin-left:190px; margin-top:-40px; z-index:999;"><font size=3>Step<%=i+1%>.   <%= list[i].defName %></font></div> 
+<% }else if(i == 2){ %>
+         	<img src="images/NavigatorStep3.png" style="width: 150px; height: 60px;"/>
+            <div style="position:absolute; margin-left:350px; margin-top:-40px; z-index:999;"><font size=3>Step<%=i+1%>.   <%= list[i].defName %></font></div> 
+<% }else{ %>
+         	<img src="images/NavigatorStep4.png" style="width: 150px; height: 60px;"/>
+            <div style="position:absolute; margin-left:500px; margin-top:-40px; z-index:999;"><font size=3>Step<%=i+1%>.   <%= list[i].defName %></font></div> 
+<% } %>            
         </a>
-         <img src="images/waveStyle/rightArrow.png" style="width: 15px; height: 15px;vertical-align: middle;"/>
+    
 <%
         }
     }
