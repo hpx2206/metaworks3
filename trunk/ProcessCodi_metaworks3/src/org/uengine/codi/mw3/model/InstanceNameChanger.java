@@ -3,10 +3,15 @@ package org.uengine.codi.mw3.model;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;
 import org.metaworks.annotation.Range;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.dwr.MetaworksRemoteService;
+import org.uengine.codi.mw3.Login;
+import org.uengine.codi.mw3.calendar.ScheduleCalendar;
+import org.uengine.codi.mw3.calendar.ScheduleCalendarEvent;
 
 
 public class InstanceNameChanger implements ContextAware{
@@ -23,6 +28,9 @@ public class InstanceNameChanger implements ContextAware{
 			this.metaworksContext = metaworksContext;
 		}
 
+	@AutowiredFromClient
+	public Session session;
+	
 	String instanceName;
 		@Name
 		@Range(size=30)
@@ -48,7 +56,22 @@ public class InstanceNameChanger implements ContextAware{
 	public Refresh change() throws Exception{
 		Instance instance = new Instance();
 		instance.setInstId(new Long(instanceId));
-		instance.databaseMe().setName(getInstanceName());
+		
+		IInstance instanceRef = instance.databaseMe();
+		instanceRef.setName(getInstanceName());
+		
+		ScheduleCalendarEvent scEvent = new ScheduleCalendarEvent();
+		scEvent.setTitle(instanceRef.getName());
+		scEvent.setId(instanceRef.getInstId().toString());
+		scEvent.setStart(instanceRef.getDueDate());
+		scEvent.setEnd(instanceRef.getDueDate());
+		scEvent.setAllDay(true);
+		scEvent.setCallType(ScheduleCalendar.CALLTYPE_INSTANCE);
+		scEvent.setComplete(Instance.INSTNACE_STATUS_COMPLETED.equals(instanceRef.getStatus()));
+		
+		MetaworksRemoteService.pushTargetScript(Login.getSessionIdWithUserId(session.getUser().getUserId()),
+				"if(mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar')!=null) mw3.getAutowiredObject('org.uengine.codi.mw3.calendar.ScheduleCalendar').__getFaceHelper().addEvent",
+				new Object[]{scEvent});
 		
 		return new Refresh(instance.databaseMe());
 	}
