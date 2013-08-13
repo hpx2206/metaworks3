@@ -142,10 +142,8 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
  					mw3.dragObject = null;
  					mw3.dragging = false;
  					
-					
-
- 					
- 					$("#__dragGuide").hide();
+ 					if($("#__dragGuide").length > 0)
+ 						$("#__dragGuide").hide();
 
 			    };
 			    
@@ -593,11 +591,12 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 		                    
 		                    errorHandler:function(errorString, exception) {
 		                        //alert(errorString);
+		                    	throw new Error(exception.javaClassName + ": " + exception.message);
+		                    	
 		  						//document.getElementById(this.dwrErrorDiv).innerHTML = errorString;
 		                    } 
 			    		}
 					);
-					 
 				}
 				
 				var objectMetadata = this.metaworksMetadata[objectTypeName];
@@ -1625,9 +1624,9 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 									metadata.faceOptions['htmlClass'] : ""
 							)
 						);
+
 				
 				if(metadata){
-					
 					if(metadata.onDropTypes){
 						for(var typeName in metadata.onDropTypes){
 							elementClass = elementClass + " onDrop_"+typeName.split('.').join('_');
@@ -1635,8 +1634,6 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					}
 					
 				}
-								
-				elementClass = (elementClass ? " class='" + elementClass + "'": "");
 				
 				var elementSubTag = "";
 				
@@ -1651,6 +1648,9 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				// 2013-07-31 DOM 생성방법 수정 및 DOM 객체에 name 설정 추가
 				var locateObjectDOM = $('<div>');
 				var mainDOM = $('<' + elementTag + '>').attr({'id': divId, 'className': className, 'objectId': objectId});
+				
+				if(elementClass)
+					mainDOM.addClass(elementClass);
 				
 				if(options && options['name'])
 					mainDOM.attr('name', options['name']);
@@ -2339,9 +2339,14 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				var sync = (arguments.length > 3 ? arguments[3] : false);
 				// 2012-11-25 cjw add callback function
 				var callback = (arguments.length > 4 ? arguments[4] : null);
-
+				// 2012-11-25 cjw add callback function
+				var test = (arguments.length > 5 ? arguments[5] : null);
+				
 //				if(typeof objId == 'number'){ //check if number
 	
+				if(test){
+					var object = mw3.objects[objId];
+				}else{
 					var objectFromUI = this.getObjectFromUI(objId);
 					
 					if(objectFromUI.__faceHelper && getAgain){				
@@ -2349,6 +2354,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					}else{
 						var object = objectFromUI;
 					}
+				}
 //				}else{
 //				object = objId; //TODO: readability is bad.
 //			}
@@ -2408,8 +2414,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 									
 									object = objectForCall;
 									
-								}else
-								
+								}else								
 									object = this._createKeyObject(object); //default option
 							}else{
 								
@@ -3059,12 +3064,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 							   if(test.value[fieldDescriptor.name]){
 								   enterValueContext = (enterValueContext ? enterValueContext + ", " : "") + fieldDescriptor.displayName + " : " + test.value[fieldDescriptor.name];
 								   
-								   var childObjectId = this.getChildObjectId(objectId, fieldDescriptor.name);
-								   
-								   if(childObjectId)
-									   this.objects[this.getChildObjectId(objectId, fieldDescriptor.name)] = test.value[fieldDescriptor.name];
-								   else
-									   value[fieldDescriptor.name] = test.value[fieldDescriptor.name];								   
+								   value[fieldDescriptor.name] = test.value[fieldDescriptor.name];								   
 							   }
 							   
 						   }
@@ -3091,7 +3091,7 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					   }else{
 						   
 
-						   returnValue = this.call(value.__objectId, test.methodName, true, true); //sync call
+						   returnValue = this.call(value.__objectId, test.methodName, true, true, null, true); //sync call
 					   }
 					   
 					   
@@ -3670,8 +3670,10 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 
 			    throw new Error("Unable to copy obj! Its type isn't supported.");
 			};
-			
+						
 			if(!Metaworks) alert('Metaworks DWR service looks not available. Metaworks will not work');
+			if(!$().jquery) alert('JQuery library not installed. Metaworks will not work');
+			
 			var mw3 = new Metaworks3('template_caption', 'dwr_caption', Metaworks);
 			
 			mw3.windowFocus = true;
