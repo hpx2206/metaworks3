@@ -23,6 +23,11 @@ import org.uengine.kernel.GlobalContext;
 public class TopicNode extends Database<ITopicNode> implements ITopicNode {
 	
 	public final static String DEFAULT_CONTACT_COUNT = "5";
+	public final static String KNOWLEGE = "knowlege";
+	public final static String TOPIC = "topic";
+	public final static String HTML = "html";
+	public final static int MODIFY_POPUP_HEIGHT = 250;
+	public final static int MODIFY_POPUP_WIDTH = 500;
 	
 	@AutowiredFromClient
 	public PageNavigator pageNavigator; 
@@ -138,11 +143,11 @@ public class TopicNode extends Database<ITopicNode> implements ITopicNode {
 	
 	public Object[] loadTopic() throws Exception{
 		
-		if(pageNavigator != null && "knowlege".equals(pageNavigator.getPageName())){
+		if(pageNavigator != null && KNOWLEGE.equals(pageNavigator.getPageName())){
 			return new Object[]{new BrainstormPanel(this.getId())};
 		}else{
 			String title = "주제 : " + getName();
-			Object[] returnObject = Perspective.loadInstanceListPanel(session, "topic", getId(), title);
+			Object[] returnObject = Perspective.loadInstanceListPanel(session, TOPIC, getId(), title);
 			
 			// recentItem 에 create
 			RecentItem recentItem = new RecentItem();
@@ -175,21 +180,20 @@ public class TopicNode extends Database<ITopicNode> implements ITopicNode {
 			updateNode.update();
 			
 		} else {
-			throw new Exception("관리자나 초기토픽생성자만 수정가능합니다.");
+			throw new Exception("$OnlyEditAdmin");
 		}
 		return new Object[]{new Remover(this)};
 	}
 	
 
 	public ModalWindow modify() throws Exception {
-		System.out.println("modify");	
 		TopicTitle topicTitle = new TopicTitle();
 		topicTitle.setTopicId(this.getId());
 		topicTitle.setTopicTitle(this.getName());
 		topicTitle.setMetaworksContext(new MetaworksContext());
 		topicTitle.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		topicTitle.session = session;
-		return new ModalWindow(topicTitle , 500, 250,  "토픽수정");
+		return new ModalWindow(topicTitle, MODIFY_POPUP_WIDTH, MODIFY_POPUP_HEIGHT, "$EditTopic");
 
 	}
 	
@@ -197,12 +201,12 @@ public class TopicNode extends Database<ITopicNode> implements ITopicNode {
 		TopicTitle topicTitle = new TopicTitle();
 		topicTitle.setTopicId(this.getId());
 		topicTitle.setTopicTitle(this.getName());
-		topicTitle.getMetaworksContext().setHow("html");
+		topicTitle.getMetaworksContext().setHow(HTML);
 		topicTitle.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 		
 		topicTitle.makeHtml();
 				
-		return new ModalWindow(topicTitle, 500, 250,  "토픽수정");
+		return new ModalWindow(topicTitle, MODIFY_POPUP_WIDTH, MODIFY_POPUP_HEIGHT, "$ExportHtml");
 	}
 	
 	public void addUser() throws Exception {
