@@ -155,7 +155,7 @@ public class Main {
 			InstanceListWindow instanceListWindow = new InstanceListWindow(session);
 			
 			westLayout.setCenter(perspectiveWindow);
-			
+			westLayout.setUseHideBar(true);
 			westLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, south__spacing_open:5, south__size:'50%'");
 			westLayout.setName("west");
 			
@@ -172,6 +172,7 @@ public class Main {
 			eastLayout.setCenter(contentWindow);
 			eastLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, south__spacing_open:5, west__spacing_open:5, west__size:'40%'");
 			eastLayout.setName("east");
+			eastLayout.setUseHideBar(false);
 			
 			Layout outerLayout = new Layout();
 			outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:1, north__size:52, west__size: 160");
@@ -183,6 +184,7 @@ public class Main {
 			outerLayout.setWest(westLayout);
 			outerLayout.setCenter(eastLayout);		
 			outerLayout.setName("center");
+			outerLayout.setUseHideBar(false);
 			
 			setLayout(outerLayout);
 			setSession(session);
