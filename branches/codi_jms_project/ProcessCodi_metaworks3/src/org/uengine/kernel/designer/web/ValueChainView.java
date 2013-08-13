@@ -3,16 +3,11 @@ package org.uengine.kernel.designer.web;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
-import org.uengine.codi.mw3.model.Popup;
-import org.uengine.codi.mw3.webProcessDesigner.ActivityWindow;
-import org.uengine.codi.mw3.webProcessDesigner.ProcessViewerPanel;
 import org.uengine.codi.mw3.webProcessDesigner.ValueChainViewerPanel;
-import org.uengine.kernel.Activity;
 import org.uengine.kernel.ValueChain;
 
 public class ValueChainView extends ActivityView{
-
-	ValueChain valueChain;
+	transient ValueChain valueChain;
 		public ValueChain getValueChain() {
 			return valueChain;
 		}

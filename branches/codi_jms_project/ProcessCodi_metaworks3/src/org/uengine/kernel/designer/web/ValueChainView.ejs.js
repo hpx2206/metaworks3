@@ -35,40 +35,27 @@ org_uengine_kernel_designer_web_ValueChainView.prototype = {
 			var id = object.id;
 			var parent = object.parent;
 			var style = object.style;
-			if (object.shapeType === 'EDGE') {
-				var fromTeminal = object.from;
-				var toTeminal = object.to;
-				var getShapeFromTerminal = function (terminal) {
-					var terminalId = OG.Util.isElement(terminal) ? terminal.id : terminal;
-					if (terminalId) {
-						return canvas.getRenderer().getElementById(terminalId.substring(0, terminalId.indexOf(OG.Constants.TERMINAL_SUFFIX.GROUP)));
-					} else {
-						return null;
-					}
-				};
-				var fromElement = getShapeFromTerminal(fromTeminal);
-				var toElement = getShapeFromTerminal(toTeminal);
-				element = canvas.connect(fromElement, toElement);
-            } else {
-            	element = canvas.drawShape([
-            	                                 object.x, object.y 
-            	                                 ], 
-            	                                 shape, [parseInt(object.width, 10), parseInt(object.height, 10)] , OG.JSON.decode(unescape(style)), id, parent, false);
-            	
-            	$(element).attr("_classname", object.activityClass);
-            	$(element).attr("_classType", object.classType);
-            	$(element).attr("_tracingTag",object.tracingTag);
-            	if( typeof $(element).attr("_classname") != 'undefined' &&  typeof $(element).data("activity") == 'undefined' ){
-            		var activityData = {__className : $(element).attr("_classname"), tracingTag : $(element).attr("_tracingTag")};
-            		$(element).data('activity', activityData);
-            	}
-            	
-            	$(element).on({
-            		btnclick : function(event) {
-            			object.showDefinitionMonitor();
-            		}
-            	});
-            }
+        	element = canvas.drawShape([
+        	                                 object.x, object.y 
+        	                                 ], 
+        	                                 shape, [parseInt(object.width, 10), parseInt(object.height, 10)] , OG.JSON.decode(unescape(style)), id, parent, false);
+        	
+        	$(element).attr("_classname", object.activityClass);
+        	$(element).attr("_viewClass", object.__className);
+        	$(element).attr("_classType", object.classType);
+        	$(element).attr("_tracingTag",object.tracingTag);
+        	if( object.valuechain ){
+        		$(element).data('valuechain',object.valuechain);
+        	}else if( typeof $(element).attr("_classname") != 'undefined' &&  typeof $(element).data("activity") == 'undefined' ){
+        		var activityData = {__className : $(element).attr("_classname"), tracingTag : $(element).attr("_tracingTag")};
+        		$(element).data('valuechain', activityData);
+        	}
+        	
+        	$(element).on({
+        		btnclick : function(event) {
+        			object.showDefinitionMonitor();
+        		}
+        	});
 			
 				
 			/*
