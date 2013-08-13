@@ -18,9 +18,12 @@ public class Contact extends Database<IContact> implements IContact{
 		IUser friend = new User();
 		
 		StringBuffer sb = new StringBuffer();
-		sb.append("select c.userId, c.friendId, ifnull(e.empname, c.friendName) friendName, e.mood")
-		  .append("  from contact c left join emptable e")
-		  .append("    on c.friendid = e.empcode")
+		sb.append("select c.userId, c.friendId, ifnull(e.empname, c.friendName) friendName, e.mood, item.updatedate")
+		  .append("  from contact c ")
+		  .append("  	left join emptable e")
+		  .append("    		on c.friendid = e.empcode")
+		  .append("  	left join recentItem item ")
+		  .append("    		on item.itemId = e.empcode and item.itemType=?itemType")
 		  .append(" where c.userId=?userId")
 		  .append("   and c.network=?network")
 		  .append("   and e.isDeleted=?isDeleted");
@@ -43,6 +46,8 @@ public class Contact extends Database<IContact> implements IContact{
 			}
 		}
 		
+		sb.append(" order by updatedate desc ");
+		
 		if(!isSelected) {
 			sb.append("   limit " + GlobalContext.getPropertyString("contact.more.count", DEFAULT_TOPIC_COUNT));
 		}
@@ -51,6 +56,7 @@ public class Contact extends Database<IContact> implements IContact{
 		contacts.setUserId(getUserId());		
 		contacts.set("friendName", this.getFriend().getName() + "%");
 		contacts.set("network", this.getFriend().getNetwork());
+		contacts.set("itemType", User.FRIEND);
 		contacts.set("isDeleted", "0");
 		contacts.select();
 		contacts.setMetaworksContext(getMetaworksContext());

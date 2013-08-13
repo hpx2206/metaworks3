@@ -25,6 +25,8 @@ import org.uengine.processmanager.ProcessManagerRemote;
 
 public class User extends Database<IUser> implements IUser {
 	
+	final static public String FRIEND = "friend";
+	
 	String name;
 		public String getName() {
 			return name;
@@ -203,6 +205,16 @@ public class User extends Database<IUser> implements IUser {
 			setTodoCount(todoCount);
 			
 			setNetwork("local");
+			
+			//선택한 유저 recentItem에 add
+			RecentItem recentItem = new RecentItem();
+			recentItem.setEmpCode(session.getEmployee().getEmpCode());
+			recentItem.setItemId(this.getUserId());
+			recentItem.setItemType(FRIEND);
+			recentItem.setUpdateDate(Calendar.getInstance().getTime());
+			
+			recentItem.add();
+			
 		}catch(Exception e){
 		//	e.printStackTrace();
 		}
