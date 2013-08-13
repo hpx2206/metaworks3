@@ -3,11 +3,9 @@ package org.uengine.codi.mw3.model;
 import java.util.Date;
 
 import org.metaworks.annotation.Id;
-import org.metaworks.annotation.ORMapping;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Table;
 import org.metaworks.dao.IDAO;
-import org.uengine.codi.mw3.knowledge.TopicNode;
 
 @Table(name="recentItem")
 public interface IRecentItem extends IDAO{
@@ -19,11 +17,11 @@ public interface IRecentItem extends IDAO{
 	public Date getUpdateDate();
 	public void setUpdateDate(Date updateDate);
 	
-	@ORMapping(
-		databaseFields = { "itemType", "itemId" },
-		objectFields = { "type", "id" })
-	public TopicNode getTopicNode();
-	public void setTopicNode(TopicNode topicNode);
+	public String getItemType();
+	public void setItemType(String itemType);
+
+	public String getItemId();
+	public void setItemId(String itemId);
 	
 	@ServiceMethod
 	public void add() throws Exception;

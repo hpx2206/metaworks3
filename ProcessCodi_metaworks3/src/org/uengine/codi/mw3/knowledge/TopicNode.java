@@ -1,5 +1,7 @@
 package org.uengine.codi.mw3.knowledge;
 
+import java.util.Calendar;
+
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
@@ -144,9 +146,12 @@ public class TopicNode extends Database<ITopicNode> implements ITopicNode {
 			
 			// recentItem 에 create
 			RecentItem recentItem = new RecentItem();
-			
 			recentItem.session = session;
-			recentItem.setTopicNode(this);
+			recentItem.setEmpCode(session.getEmployee().getEmpCode());
+			recentItem.setItemId(this.getId());
+			recentItem.setItemType(this.getType());
+			recentItem.setUpdateDate(Calendar.getInstance().getTime());
+			
 			recentItem.add();
 			
 			return returnObject;

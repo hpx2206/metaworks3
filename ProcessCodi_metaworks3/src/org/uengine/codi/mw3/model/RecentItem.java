@@ -1,11 +1,9 @@
 package org.uengine.codi.mw3.model;
 
-import java.util.Calendar;
 import java.util.Date;
 
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
-import org.uengine.codi.mw3.knowledge.TopicNode;
 
 public class RecentItem extends Database<IRecentItem> implements IRecentItem{
 	
@@ -20,15 +18,23 @@ public class RecentItem extends Database<IRecentItem> implements IRecentItem{
 		public void setEmpCode(String empCode) {
 			this.empCode = empCode;
 		}
-		
-	TopicNode topicNode;
-		public TopicNode getTopicNode() {
-			return topicNode;
+
+	String itemType;
+		public String getItemType() {
+			return itemType;
 		}
-		public void setTopicNode(TopicNode topicNode) {
-			this.topicNode = topicNode;
+		public void setItemType(String itemType) {
+			this.itemType = itemType;
 		}
 
+	String itemId;
+		public String getItemId() {
+			return itemId;
+		}
+		public void setItemId(String itemId) {
+			this.itemId = itemId;
+		}
+		
 	Date updateDate;
 		public Date getUpdateDate() {
 			return updateDate;
@@ -41,9 +47,6 @@ public class RecentItem extends Database<IRecentItem> implements IRecentItem{
 	public Session session;
 	
 	public void add() throws Exception {
-		
-		this.setEmpCode(session.getEmployee().getEmpCode());
-		this.setUpdateDate(Calendar.getInstance().getTime());
 		
 		IRecentItem findMe = this.findMe();
 		
@@ -62,10 +65,10 @@ public class RecentItem extends Database<IRecentItem> implements IRecentItem{
 		
 		IRecentItem updateMe = (IRecentItem) Database.sql(IRecentItem.class, sql.toString());
 		
-		updateMe.setEmpCode(session.getEmployee().getEmpCode());
+		updateMe.setEmpCode(this.getEmpCode());
 		updateMe.setUpdateDate(this.getUpdateDate());
-		updateMe.set("itemType", this.getTopicNode().getType());
-		updateMe.set("itemId", this.getTopicNode().getId());
+		updateMe.setItemId(this.getItemId());
+		updateMe.setItemType(this.getItemType());
 		updateMe.update();
 		
 		return updateMe;
@@ -79,9 +82,9 @@ public class RecentItem extends Database<IRecentItem> implements IRecentItem{
 		
 		IRecentItem findMe = (IRecentItem) Database.sql(IRecentItem.class, sql.toString());
 		
-		findMe.setEmpCode(session.getEmployee().getEmpCode());
-		findMe.set("itemType", this.getTopicNode().getType());
-		findMe.set("itemId", this.getTopicNode().getId());
+		findMe.setEmpCode(this.getEmpCode());
+		findMe.setItemId(this.getItemId());
+		findMe.setItemType(this.getItemType());
 		findMe.select();
 		
 		if(findMe.next())
