@@ -218,12 +218,15 @@ public interface IInstance extends IDAO{
 	public void setFollowers(InstanceFollowers followers);
 	
 	@ServiceMethod(inContextMenu=true, callByContent=true, keyBinding="Ctrl+X")
+	@Face(displayName="$Cut")
 	public Session cut();
 	
 	@ServiceMethod(inContextMenu=true, callByContent=true, needToConfirm=true, target="popup"/*, mouseBinding="drop"*/, keyBinding="Ctrl+V")
+	@Face(displayName="$Paste")
 	public Object[] paste() throws Exception;
 	
 	@ServiceMethod(inContextMenu=true, callByContent=true)
+	@Face(displayName="$AddTrayBar")
 	public Object[] addTrayBar() throws Exception;
 
 	@ServiceMethod(inContextMenu=true, callByContent=true, needToConfirm=true)

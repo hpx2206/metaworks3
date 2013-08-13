@@ -19,7 +19,7 @@ public class ContactSearchBox extends SearchBox implements ContextAware{
 			
 			ContactListPanel contactListPanel = new ContactListPanel();
 			contactListPanel.setMetaworksContext(new MetaworksContext());
-			contactListPanel.getMetaworksContext().setWhen("contacts");
+			contactListPanel.getMetaworksContext().setWhen(ContactListPanel.CONTACT);
 			contactListPanel.getMetaworksContext().setWhere(ContactList.LOCAL);
 			
 			contactListPanel.load(session.getUser().getUserId(), getKeyword());
