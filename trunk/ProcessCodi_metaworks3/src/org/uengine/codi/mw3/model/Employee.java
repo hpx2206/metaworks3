@@ -216,14 +216,15 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 			this.guest = guest;
 		}
 	
-	boolean isMailNoti;
+		
+	boolean mailNoti;
 		public boolean isMailNoti() {
-			return isMailNoti;
+			return mailNoti;
 		}
-		public void setMailNoti(boolean isMailNoti) {
-			this.isMailNoti = isMailNoti;
+		public void setMailNoti(boolean mailNoti) {
+			this.mailNoti = mailNoti;
 		}
-	
+		
 	String inviteUser;
 		public String getInviteUser() {
 			return inviteUser;

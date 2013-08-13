@@ -10,6 +10,7 @@ import org.metaworks.annotation.ServiceMethod;
 public class ContactList implements ContextAware {
 	
 	public static final String LOCAL = "local";
+	public static final String FOLLOWER = "follower";
 	public static final String FACEBOOK = "fb";
 	
 	public ContactList(){
@@ -34,6 +35,9 @@ public class ContactList implements ContextAware {
 		if(LOCAL.equals(this.getMetaworksContext().getWhere())){
 			friend.setNetwork(LOCAL);			
 			contact.setFriend(friend);
+			if(FOLLOWER.equals(this.getMetaworksContext().getHow())){
+				this.setSelectedMore(true);
+			}
 			
 			setContacts(contact.loadContacts(this.isSelectedMore()));
 			
@@ -90,12 +94,12 @@ public class ContactList implements ContextAware {
 			this.invitation = invitation;
 		}
 		
-	boolean isSelectedMore;
+	boolean selectedMore;
 		public boolean isSelectedMore() {
-			return isSelectedMore;
+			return selectedMore;
 		}
-		public void setSelectedMore(boolean isSelectedMore) {
-			this.isSelectedMore = isSelectedMore;
+		public void setSelectedMore(boolean selectedMore) {
+			this.selectedMore = selectedMore;
 		}
 		
 	@AutowiredFromClient

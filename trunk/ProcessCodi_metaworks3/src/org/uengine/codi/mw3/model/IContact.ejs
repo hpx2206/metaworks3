@@ -3,8 +3,9 @@
 %>	
 	<li>	
 		<%=fields.friend.here()%>
-		
-		<!--div style="clear:left;"></div-->
+		<% if(value.metaworksContext.how == 'follower'){ %>
+		<div style="clear:left;"></div>
+		<% } %>
 <%
 		if(mw3.where && mw3.where =='roleUserPicker') {
 %>

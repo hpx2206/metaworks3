@@ -11,6 +11,8 @@ import org.uengine.kernel.GlobalContext;
 public class Contact extends Database<IContact> implements IContact{
 	
 	public final static String DEFAULT_TOPIC_COUNT = "9";
+	public final static String TOPIC = "topic";
+	public final static String ETC = "etc";
 
 	public IContact loadContacts(boolean isSelected) throws Exception{
 		IUser friend = new User();
@@ -27,28 +29,22 @@ public class Contact extends Database<IContact> implements IContact{
 			sb.append("   and c.friendName like ?friendName");
 		
 		if(this.getMetaworksContext().getHow() != null && this.getMetaworksContext().getHow().equals("follower")) {			
-
-			if(session.getLastInstanceId().equals("topic")) {
-					
-				sb
-				.append(" and not exists")
-				.append(" (select t.userid")
-				.append(" from bpm_topicmapping t")
-				.append(" where topicid='" + session.getLastSelectedItem() + "' and assigntype=0 and t.userid=c.friendId)");
-			
-			}else if(session.getLastInstanceId().equals("etc")) {	
-			}
-			else {
-				sb
-				.append(" and not exists")
-				.append(" (select distinct r.endpoint")
-				.append(" from bpm_rolemapping r")
-				.append(" where rootinstid='" + session.getLastInstanceId() +"' and assigntype = 0 and r.endpoint = c.friendId)");
+			if(TOPIC.equals(session.getLastInstanceId())) {
+				sb.append(" and not exists")
+				  .append(" (select t.userid")
+				  .append(" from bpm_topicmapping t")
+				  .append(" where topicid='" + session.getLastSelectedItem() + "' and assigntype=0 and t.userid=c.friendId)");
+			}else if(ETC.equals(session.getLastInstanceId())) {
+			}else {
+				sb.append(" and not exists")
+				  .append(" (select distinct r.endpoint")
+				  .append(" from bpm_rolemapping r")
+				  .append(" where rootinstid='" + session.getLastInstanceId() +"' and assigntype = 0 and r.endpoint = c.friendId)");
 			}
 		}
 		
 		if(!isSelected) {
-			sb.append("   limit " + GlobalContext.getPropertyString("topic.more.count", DEFAULT_TOPIC_COUNT));
+			sb.append("   limit " + GlobalContext.getPropertyString("contact.more.count", DEFAULT_TOPIC_COUNT));
 		}
 		
  		IContact contacts = sql(sb.toString());

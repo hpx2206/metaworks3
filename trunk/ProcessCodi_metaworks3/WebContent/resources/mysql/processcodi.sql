@@ -795,3 +795,5 @@ CREATE TABLE recentItem(
 
 -- emptable에 inviteUser(초대한 사람) 추가
 ALTER TABLE `emptable`	ADD COLUMN `inviteUser` VARCHAR(100) NULL DEFAULT NULL;
+
+alter table emptable change isMailNoti mailNoti int(1) default 1;
