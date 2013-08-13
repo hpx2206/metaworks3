@@ -153,13 +153,16 @@
 
 <%	
 			/* case by user */
+			/*
 			if(mw3.when == 'contacts' || mw3.when == 'addContact' || mw3.when == 'addTopicFollower' || mw3.when == 'addInstanceFollower' || mw3.when == 'addEtcFollower' || mw3.when == 'addPicker'){
+			*/
+			if(mw3.when == 'addInstanceFollower'){
 %>
-			<!--div class="user_detail">
+			<div class="user_detail">
 				<span class="fontbold"><%=value.name%></span>
 				<span class="fontgray"><%=value.mood ? value.mood : ''%></span>
 				<!--<span class="fontgray"></span>-->
-			</div-->
+			</div>
 <%			
 			}else if(mw3.when == 'self'){
 %>
