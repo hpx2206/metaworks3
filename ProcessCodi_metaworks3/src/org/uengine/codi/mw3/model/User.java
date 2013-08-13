@@ -25,13 +25,12 @@ import org.uengine.processmanager.ProcessManagerRemote;
 
 public class User extends Database<IUser> implements IUser {
 	
-	final static public String FRIEND = "friend";
+	public final static String FRIEND = "friend";
 	
 	String name;
 		public String getName() {
 			return name;
 		}
-	
 		public void setName(String name) {
 			this.name = name;
 		}
