@@ -47,8 +47,9 @@ public class SearchBox {
 //		
 //		return new Object[]{instanceList};
 		
-		session.setSearchKeyword(getKeyword());
+//		session.setSearchKeyword(getKeyword());
+//		return Perspective.loadInstanceListPanel(session, session.getLastPerspecteType(), session.getLastSelectedItem());
 		
-		return Perspective.loadInstanceListPanel(session, session.getLastPerspecteType(), session.getLastSelectedItem());
+		return null;
 	}	
 }

@@ -3,6 +3,11 @@ package org.uengine.codi.mw3.model;
 public class InstanceSearchBox extends SearchBox {
 
 	public InstanceSearchBox() {
-		super();
+	}	
+	
+	@Override
+	public Object[] search() throws Exception {
+		session.setSearchKeyword(getKeyword());
+		return Perspective.loadInstanceListPanel(session, session.getLastPerspecteType(), session.getLastSelectedItem());
 	}
 }
