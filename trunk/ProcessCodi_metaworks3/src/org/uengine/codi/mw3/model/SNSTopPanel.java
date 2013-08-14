@@ -18,7 +18,7 @@ public class SNSTopPanel {
 		
 		setLoginUser(session.getUser());
 
-		SearchBox searchBox = new SearchBox();
+		InstanceSearchBox searchBox = new InstanceSearchBox();
 		searchBox.setKeyUpSearch(true);
 		searchBox.setKeyEntetSearch(true);
 		setSearchBox(searchBox);
