@@ -5,16 +5,12 @@ import java.util.ArrayList;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
-import org.metaworks.Refresh;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.component.Tree;
 import org.metaworks.component.TreeNode;
 import org.uengine.codi.mw3.ide.Project;
 import org.uengine.codi.mw3.ide.ResourceNode;
-import org.uengine.codi.mw3.ide.Workspace;
-import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.model.Session;
 
 public class MajorProcessDefinitionNode extends TreeNode  implements ContextAware {
@@ -60,9 +56,10 @@ public class MajorProcessDefinitionNode extends TreeNode  implements ContextAwar
 	public Session session;
 	
 	@AutowiredFromClient
-	public ValueChainViewPanel valueChainViewPanel;
+	public MajorProcessListPanel majorProcessListPanel;
 	@AutowiredFromClient
-	public ValueChainViewerPanel valueChainViewerPanel;
+	public ValueChainNavigatorPanel valueChainViewNavigator;
+	
 	
 	public MajorProcessDefinitionNode(){
 		setMetaworksContext(new MetaworksContext());
@@ -85,7 +82,7 @@ public class MajorProcessDefinitionNode extends TreeNode  implements ContextAwar
 	}
 	@Override
 	@ServiceMethod(callByContent=true, except="child", target=ServiceMethodContext.TARGET_SELF)
-	public Object expand(){
+	public Object expand() throws Exception{
 		ArrayList<TreeNode> child = new ArrayList<TreeNode>();
 	
 		File file = new File(this.getPath());
@@ -96,7 +93,7 @@ public class MajorProcessDefinitionNode extends TreeNode  implements ContextAwar
 			File childFile = new File(file.getAbsolutePath() + File.separatorChar + childFilePaths[i]);
 	
 			if(childFile.isDirectory()){
-				ProcessDefinitionNode node = new ProcessDefinitionNode();
+				MajorProcessDefinitionNode node = new MajorProcessDefinitionNode();
 				node.setProjectId(this.getProjectId());
 				node.setId(this.getId() + File.separatorChar + childFile.getName());				
 				node.setName(childFile.getName());
@@ -107,6 +104,7 @@ public class MajorProcessDefinitionNode extends TreeNode  implements ContextAwar
 				node.setType(TreeNode.TYPE_FOLDER);
 				node.setMetaworksContext(getMetaworksContext());
 				node.setFolder(true);
+				node.setTreeId(this.getTreeId());
 				
 				child.add(node);
 			}
@@ -121,7 +119,7 @@ public class MajorProcessDefinitionNode extends TreeNode  implements ContextAwar
 				if(!type.equals(TreeNode.TYPE_FILE_PROCESS)){
 					continue;
 				}
-				ProcessDefinitionNode node = new ProcessDefinitionNode();
+				MajorProcessDefinitionNode node = new MajorProcessDefinitionNode();
 				node.setProjectId(this.getProjectId());
 				node.setId(this.getId() + File.separatorChar + childFile.getName());
 				node.setName(childFile.getName());
@@ -131,6 +129,7 @@ public class MajorProcessDefinitionNode extends TreeNode  implements ContextAwar
 				node.setParentId(this.getId());
 				node.setType(type);
 				node.setMetaworksContext(getMetaworksContext());
+				node.setTreeId(this.getTreeId());
 				child.add(node);
 			}
 		}
@@ -139,51 +138,12 @@ public class MajorProcessDefinitionNode extends TreeNode  implements ContextAwar
 	
 		return this;
 	}
-	@ServiceMethod(callByContent=true, except="child", target=ServiceMethodContext.TARGET_POPUP)
-	public Object findResource(){
-		
-			Workspace workspace = new Workspace();
-			workspace.load();
-	
-			ProcessViewNavigator navigator = new ProcessViewNavigator();
-	
-			ProcessDefinitionNode definitionNode = new ProcessDefinitionNode();
-			definitionNode.setId(workspace.getId());
-			definitionNode.setRoot(true);
-			definitionNode.setHidden(true);
-			definitionNode.setMetaworksContext(new MetaworksContext());
-			definitionNode.getMetaworksContext().setHow("tree");
-	
-			for(Project project : workspace.getProjects()){
-				ResourceNode node = new ResourceNode(project);
-				node.getMetaworksContext().setWhere("resource");
-				definitionNode.add(node);
-			}
-	
-			Tree tree = new Tree();
-			
-			tree.setId(workspace.getId());
-			tree.setNode(definitionNode);
-	
-			navigator.setProcessDefinitionTree(tree);
-			navigator.setId("popupTree");
-	
-			Popup popup = new Popup();
-			popup.setPanel(navigator);
-			
-			
-			return popup;	
-	}
 	@Override
-	@ServiceMethod(payload={"id", "name", "path", "type", "folder", "projectId","defId","alias"},mouseBinding="left", target=ServiceMethodContext.TARGET_APPEND)
-	public Object action(){
-		if( alias != null && !this.isFolder() && this.getType().equals(TreeNode.TYPE_FILE_PROCESS)){
-			valueChainViewerPanel = new ValueChainViewerPanel();
-			valueChainViewerPanel.setDefinitionId(defId);
-			valueChainViewerPanel.setAlias(alias);
-			return new Object[] { new Refresh(valueChainViewerPanel.valueChainViewPanel) };
-		}else{
-			return null;
+	@ServiceMethod(payload={"id", "name", "path", "type", "folder", "projectId","defId","alias","treeId"},target=ServiceMethodContext.TARGET_APPEND)
+	public Object action() throws Exception{
+		if(majorProcessListPanel!=null){
+			System.out.println("===============>>>>>>>>>>>>>");
 		}
+		return null;
 	}
 }

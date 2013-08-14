@@ -4,7 +4,6 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.component.Tree;
-import org.metaworks.component.TreeNode;
 import org.uengine.codi.mw3.ide.Project;
 import org.uengine.codi.mw3.ide.Workspace;
 

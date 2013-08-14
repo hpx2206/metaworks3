@@ -2,9 +2,7 @@ package org.uengine.codi.mw3.webProcessDesigner;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
-import org.metaworks.Remover;
 import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.ide.Workspace;
 
 public class ValueChainViewerPanel implements ContextAware{
@@ -38,20 +36,23 @@ public class ValueChainViewerPanel implements ContextAware{
 			this.alias = alias;
 		}
 		
-	ValueChainViewNavigator	valueChainViewNaivgator;
-		public ValueChainViewNavigator getValueChainViewNaivgator() {
-			return valueChainViewNaivgator;
+	ValueChainNavigatorPanel valueChainNavigatorPanel;
+		public ValueChainNavigatorPanel getValueChainNavigatorPanel() {
+			return valueChainNavigatorPanel;
 		}
-		public void setValueChainViewNaivgator(ValueChainViewNavigator valueChainViewNaivgator) {
-			this.valueChainViewNaivgator = valueChainViewNaivgator;
+		public void setValueChainNavigatorPanel(
+				ValueChainNavigatorPanel valueChainNavigatorPanel) {
+			this.valueChainNavigatorPanel = valueChainNavigatorPanel;
 		}
-	ValueChainViewPanel valueChainViewPanel;
-		public ValueChainViewPanel getValueChainViewPanel() {
-			return valueChainViewPanel;
+		
+	MajorProcessListPanel majorProcessListPanel;
+		public MajorProcessListPanel getMajorProcessListPanel() {
+			return majorProcessListPanel;
 		}
-		public void setValueChainViewPanel(ValueChainViewPanel valueChainViewPanel) {
-			this.valueChainViewPanel = valueChainViewPanel;
+		public void setMajorProcessListPanel(MajorProcessListPanel majorProcessListPanel) {
+			this.majorProcessListPanel = majorProcessListPanel;
 		}
+		
 	Workspace workspace;
 		public Workspace getWorkspace() {
 			return workspace;
@@ -66,24 +67,26 @@ public class ValueChainViewerPanel implements ContextAware{
 	
 	public void findDefnitionView(){
 		this.getMetaworksContext().setHow("find");
-		valueChainViewNaivgator = new ValueChainViewNavigator();
+		valueChainNavigatorPanel = new ValueChainNavigatorPanel();
 		Workspace workspace = new Workspace();
 		workspace.load();
 		this.setWorkspace(workspace);
 		
-		valueChainViewNaivgator.load(workspace);
+		valueChainNavigatorPanel.load(workspace);
 		
-		valueChainViewPanel = new ValueChainViewPanel();
-		valueChainViewPanel.load();
+		majorProcessListPanel = new MajorProcessListPanel();
+		majorProcessListPanel.setDefId(definitionId);
+		majorProcessListPanel.setAlias(alias);
+		majorProcessListPanel.setViewType("definitionView");
+		majorProcessListPanel.load();
 	}
 	public void loadDefnitionView(){
 		this.getMetaworksContext().setHow("load");
-		valueChainViewPanel = new ValueChainViewPanel();
-		valueChainViewPanel.setDefId(definitionId);
-		valueChainViewPanel.setAlias(alias);
-		valueChainViewPanel.setViewType("definitionView");
-		valueChainViewPanel.load();
-		
+		majorProcessListPanel = new MajorProcessListPanel();
+		majorProcessListPanel.setDefId(definitionId);
+		majorProcessListPanel.setAlias(alias);
+		majorProcessListPanel.setViewType("definitionView");
+		majorProcessListPanel.load();
 	}
 	@ServiceMethod()
 	public void removeLink(){
