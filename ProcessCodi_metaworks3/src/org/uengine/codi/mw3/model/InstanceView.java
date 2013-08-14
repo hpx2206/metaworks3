@@ -286,6 +286,7 @@ public class InstanceView {
 		instanceNameChanger.setInstanceId(this.getInstanceId());
 		instanceNameChanger.setInstanceName(this.getInstanceName());
 		if(session!= null && session.getEmployee().getEmpCode().equals(inst.getInitEp())){
+			instanceNameChanger.session = session;
 			instanceNameChanger.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		}
 		
