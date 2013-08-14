@@ -174,12 +174,15 @@ public class InstanceDueSetter implements ContextAware{
 			workItem.setTitle(title);
 			workItem.add();
 
-			MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new ToAppend(workItem, workItem)});
+			MetaworksRemoteService.pushTargetClientObjects(
+					Login.getSessionIdWithUserId(session.getUser().getUserId()),
+					new Object[]{new ToAppend(new InstanceViewThreadPanel(), workItem)});
 			
+			//상대에게 실시간으로 워크아이템 푸쉬 해주는건데.. 워크아이템 에서 작업을 해주기떄문에 필요 없음.
 			//MetaworksRemoteService.pushOtherClientObjects(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Object[]{new InstanceListener(iInstance), new WorkItemListener(workItem)});
-			MetaworksRemoteService.pushClientObjectsFiltered(
+			/*MetaworksRemoteService.pushClientObjectsFiltered(
 					new OtherSessionFilter(Login.getSessionIdWithCompany(session.getEmployee().getGlobalCom()), session.getUser().getUserId().toUpperCase()),
-					new Object[]{new WorkItemListener(workItem)});		
+					new Object[]{new WorkItemListener(workItem)});	*/	
 		}
 		
 
