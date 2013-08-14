@@ -1,8 +1,12 @@
 package org.uengine.kernel.designer.web;
 
+import java.util.ArrayList;
+
 import org.metaworks.ServiceMethodContext;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
+import org.uengine.codi.mw3.webProcessDesigner.MajorProcessItem;
 import org.uengine.codi.mw3.webProcessDesigner.ValueChainViewerPanel;
 import org.uengine.kernel.ValueChain;
 
@@ -15,15 +19,23 @@ public class ValueChainView extends ActivityView{
 			this.valueChain = valueChain;
 		}
 		
+	@AutowiredFromClient
+	public ValueChainViewerPanel valueChainViewerPanel;
+		
 	@Override
 	@ServiceMethod(callByContent=true , target=ServiceMethodContext.TARGET_POPUP)
 	public ModalWindow showDefinitionMonitor() throws Exception{
 		ValueChain valueChain = this.getValueChain();
-		ValueChainViewerPanel valueChainViewerPanel = new ValueChainViewerPanel();
+		
+		if(valueChainViewerPanel == null)
+			valueChainViewerPanel = new ValueChainViewerPanel();
+		
 		if( valueChain != null && valueChain.getDefinitionId() != null ){
 			valueChainViewerPanel.setDefinitionId(valueChain.getDefinitionId());
+			valueChainViewerPanel.setValueChain(valueChain);
 			valueChainViewerPanel.loadDefnitionView();
 		}else{
+			valueChainViewerPanel.setValueChain(valueChain);
 			valueChainViewerPanel.findDefnitionView();
 		}
 		

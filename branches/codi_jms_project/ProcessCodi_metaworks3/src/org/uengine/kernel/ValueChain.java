@@ -1,8 +1,11 @@
 package org.uengine.kernel;
 
+import java.util.ArrayList;
+
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Hidden;
 import org.uengine.codi.mw3.webProcessDesigner.CanvasDTO;
+import org.uengine.codi.mw3.webProcessDesigner.MajorProcessItem;
 import org.uengine.kernel.designer.web.ValueChainView;
 
 public class ValueChain extends CanvasDTO{
@@ -18,6 +21,7 @@ public class ValueChain extends CanvasDTO{
 	public ValueChain() {
 		setMetaworksContext(new MetaworksContext());
 		getMetaworksContext().setWhen("edit");
+		this.majorProcessItems = new ArrayList<MajorProcessItem>();
 	}
 		
 	String definitionId;
@@ -46,4 +50,12 @@ public class ValueChain extends CanvasDTO{
 			this.valueChainView = valueChainView;
 		}
 	
+	ArrayList<MajorProcessItem> majorProcessItems;
+	@Hidden
+		public ArrayList<MajorProcessItem> getMajorProcessItems() {
+			return majorProcessItems;
+		}
+		public void setMajorProcessItems(ArrayList<MajorProcessItem> majorProcessItems) {
+			this.majorProcessItems = majorProcessItems;
+		}
 }
