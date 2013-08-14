@@ -1,3 +1,14 @@
+// 2013-08-15 add view mode for ace editor 
+ace.view = function(el){
+    var editor = ace.edit(el);
+
+    editor.setReadOnly(true);
+    editor.renderer.setHighlightGutterLine(false);
+    $(editor.renderer.$cursorLayer.element).remove();
+
+    return editor;
+};
+            
 var org_metaworks_example_ide_SourceCode = function(objectId, className){
 	this.objectId = objectId;
 	this.className = className;
@@ -8,6 +19,9 @@ var org_metaworks_example_ide_SourceCode = function(objectId, className){
 	if(this.object == null)
 		return true;
 
+	this.when = this.objectDiv.text();
+	this.objectDiv.text('');
+	
 	this.objectDiv.css("width", "100%").css("height", '100%'); //.css("overflow", "hidden");
 	this.objectDiv.addClass('mw3_editor').addClass('mw3_resize').attr('objectId', objectId);
 
@@ -20,7 +34,7 @@ var org_metaworks_example_ide_SourceCode = function(objectId, className){
 		if(this.language == 'js')
 			this.language = 'javascript';
 			
-	}
+	}	
 };
 
 org_metaworks_example_ide_SourceCode.prototype = {
@@ -82,43 +96,21 @@ org_metaworks_example_ide_SourceCode.prototype = {
 		var objectId = this.objectId;
 		var object = this.object;
 		
+		console.log(this.when);
+		
 		var pre = this.objectDiv.children('pre');
 		
-		if(pre.length > 0){	// readonly
-			pre.css('width', this.objectDiv.width() + 'px');
-			
-			$('<code>').addClass(this.language).text(object.code).appendTo(pre);
-			
-		    var highlighter = ace.require("ace/ext/static_highlight");
-		    var dom = ace.require("ace/lib/dom");
-		    
-		    function qsa(sel) {
-		        return [].slice.call(document.querySelectorAll(sel));
-		    }
+		if(this.when == mw3.WHEN_NEW || this.when == mw3.WHEN_EDIT)	// editable
+			this.editor = ace.edit(this.divName);		    
+		else														// readonly
+			this.editor = ace.view(this.divName);
+		
+		this.editor.setTheme("ace/theme/textmate");
+		this.editor.getSession().setMode("ace/mode/" + this.language);		
+		
+    	if(object.code)
+    		this.editor.getSession().setValue(object.code);
 
-		    qsa("#objDiv_" + this.objectId + " code[class]").forEach(function(el) {
-		        var m = el.className.match(/language-(\w+)|(javascript)|(xml)|(java)/);
-
-		        if (!m) return
-		        
-		        var mode = "ace/mode/" + (m[0]);
-		        var theme = "ace/theme/xcode";
-		        var data = dom.getInnerText(el).trim();
-		        
-		        highlighter.render(data, mode, theme, 1, true, function (highlighted) {    
-		            dom.importCssString(highlighted.css, "ace_highlight");
-		            el.innerHTML = highlighted.html;
-		        });
-		    });
-		    
-		}else{	// editable
-			this.editor = ace.edit(this.divName);
-			this.editor.setTheme("ace/theme/textmate");
-			this.editor.getSession().setMode("ace/mode/" + this.language);
-			
-	    	if(object.code)
-	    		this.editor.getSession().setValue(object.code);
-		}
 	},
 	bindKey : function(win, mac) {
 	    return {
@@ -481,4 +473,4 @@ org_metaworks_example_ide_SourceCode.prototype = {
 		this.editor.resize();	
 	}	
 		
-} 
+};
