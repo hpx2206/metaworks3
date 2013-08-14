@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.Refresh;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
@@ -142,8 +143,13 @@ public class MajorProcessDefinitionNode extends TreeNode  implements ContextAwar
 	@ServiceMethod(payload={"id", "name", "path", "type", "folder", "projectId","defId","alias","treeId"},target=ServiceMethodContext.TARGET_APPEND)
 	public Object action() throws Exception{
 		if(majorProcessListPanel!=null){
-			System.out.println("===============>>>>>>>>>>>>>");
+			MajorProcessItem item = new MajorProcessItem();
+			item.setAlias(alias);
+			item.setDefId(defId);
+			majorProcessListPanel.addMajorProcessItem(item);
+			return new Object[] { new Refresh(majorProcessListPanel) };
+		}else{
+			return null;
 		}
-		return null;
 	}
 }

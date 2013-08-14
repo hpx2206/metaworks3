@@ -4,6 +4,7 @@ import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.ServiceMethod;
 import org.uengine.codi.mw3.ide.Workspace;
+import org.uengine.kernel.ValueChain;
 
 public class ValueChainViewerPanel implements ContextAware{
 
@@ -45,6 +46,14 @@ public class ValueChainViewerPanel implements ContextAware{
 			this.valueChainNavigatorPanel = valueChainNavigatorPanel;
 		}
 		
+	ValueChain valueChain;
+		public ValueChain getValueChain() {
+			return valueChain;
+		}
+		public void setValueChain(ValueChain valueChain) {
+			this.valueChain = valueChain;
+		}
+	
 	MajorProcessListPanel majorProcessListPanel;
 		public MajorProcessListPanel getMajorProcessListPanel() {
 			return majorProcessListPanel;
@@ -78,6 +87,7 @@ public class ValueChainViewerPanel implements ContextAware{
 		majorProcessListPanel.setDefId(definitionId);
 		majorProcessListPanel.setAlias(alias);
 		majorProcessListPanel.setViewType("definitionView");
+		majorProcessListPanel.setValueChain(valueChain);
 		majorProcessListPanel.load();
 	}
 	public void loadDefnitionView(){
@@ -86,6 +96,7 @@ public class ValueChainViewerPanel implements ContextAware{
 		majorProcessListPanel.setDefId(definitionId);
 		majorProcessListPanel.setAlias(alias);
 		majorProcessListPanel.setViewType("definitionView");
+		majorProcessListPanel.setValueChain(valueChain);
 		majorProcessListPanel.load();
 	}
 	@ServiceMethod()
@@ -102,9 +113,7 @@ public class ValueChainViewerPanel implements ContextAware{
 	@ServiceMethod()
 	public Object[] openLink(){
 		//processViewPanel.refresh(definitionId, definitionName);
-		
 		//return new Object[]{processViewPanel, new Remover(new ModalWindow() , true) };
 		return null;
-	}
-	
+	}	
 }

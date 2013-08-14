@@ -2,9 +2,16 @@ package org.uengine.codi.mw3.webProcessDesigner;
 
 import java.util.ArrayList;
 
+import org.metaworks.Refresh;
 import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.ServiceMethod;
+import org.uengine.codi.mw3.model.Session;
+import org.uengine.kernel.ValueChain;
 
 public class MajorProcessListPanel {
+	
+	@AutowiredFromClient
+	public Session session;
 	
 	@AutowiredFromClient
 	public ValueChainNavigatorPanel valueChainNavigatorPanel;
@@ -39,8 +46,33 @@ public class MajorProcessListPanel {
 			this.majorProcessItems = majorProcessItems;
 		}
 		
+		public void addMajorProcessItem(MajorProcessItem item){
+			this.majorProcessItems.add(item);
+		}
+	
+	@AutowiredFromClient
+	ValueChain valueChain;
+		public ValueChain getValueChain() {
+			return valueChain;
+		}
+		public void setValueChain(ValueChain valueChain) {
+			this.valueChain = valueChain;
+		}
+	
+	public MajorProcessListPanel() {
+		
+	}
+		
 	public void load(){
-		//TODO : value chain view panel load
+		if(valueChain != null && valueChain.getMajorProcessItems() != null){
+			majorProcessItems = (ArrayList<MajorProcessItem>) valueChain.getMajorProcessItems().clone();
+		}
+	}
+	
+	@ServiceMethod(callByContent=true)
+	public Object[] save(){
+		valueChain.setMajorProcessItems(majorProcessItems);
+		return null;
 	}
 	
 }
