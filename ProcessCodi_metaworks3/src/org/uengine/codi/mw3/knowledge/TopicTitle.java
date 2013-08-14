@@ -141,6 +141,17 @@ public class TopicTitle  implements ContextAware{
 	@Available(when={MetaworksContext.WHEN_NEW})
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] save() throws Exception{
+		if(this.getTopicTitle().equals("")){
+			throw new Exception("토픽주제를 입력해주세요");
+		}
+		
+		ITopicNode topicNodeList = TopicNode.moreView(session);
+		while(topicNodeList.next()){
+			if(this.getTopicTitle().equals(topicNodeList.getName())){
+				throw new Exception("토픽주제가 중복 됩니다.");
+			}
+		}
+		
 		this.saveMe();
 		
 		TopicNode topicNode = new TopicNode();
