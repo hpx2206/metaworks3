@@ -68,8 +68,7 @@ org_uengine_codi_mw3_model_IUser.prototype = {
 			var object = mw3.objects[this.objectId];
 			if(object.metaworksContext.how != null && object.metaworksContext.how=='info')
 				return false;
-			else
-				return true;
 		}
+		return true;
 	}
 };
