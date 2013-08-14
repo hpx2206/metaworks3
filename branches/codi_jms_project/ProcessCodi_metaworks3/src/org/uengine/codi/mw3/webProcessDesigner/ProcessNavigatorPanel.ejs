@@ -1,28 +1,33 @@
 <div style="padding:5px;">프로세스 네비게이터 : </div>
 <%
+
     if( value ){
         var list = value.historyList;
+        var i,j;
         if ( list != null){
-        for( var i = 0; i < list.length; i++){
-%>
-		<a onClick="mw3.getFaceHelper(<%=objectId%>).clickNavigator('<%= i %>')" href="#">
-<% if (i == 0){ %>
-         	<img src="images/NavigatorStep<%=i+1%>.png" style="width: 150px; height: 60px;"/>
-            <div style="position:absolute; margin-left:30px; margin-top:-40px; z-index:999;"><font size=3>Step<%=i+1%>.   <%= list[i].defName %></font></div> 
-<% }else if(i == 1){ %>
-         	<img src="images/NavigatorStep2.png" style="width: 150px; height: 60px;"/>
-            <div style="position:absolute; margin-left:190px; margin-top:-40px; z-index:999;"><font size=3>Step<%=i+1%>.   <%= list[i].defName %></font></div> 
-<% }else if(i == 2){ %>
-         	<img src="images/NavigatorStep3.png" style="width: 150px; height: 60px;"/>
-            <div style="position:absolute; margin-left:350px; margin-top:-40px; z-index:999;"><font size=3>Step<%=i+1%>.   <%= list[i].defName %></font></div> 
-<% }else{ %>
-         	<img src="images/NavigatorStep4.png" style="width: 150px; height: 60px;"/>
-            <div style="position:absolute; margin-left:500px; margin-top:-40px; z-index:999;"><font size=3>Step<%=i+1%>.   <%= list[i].defName %></font></div> 
-<% } %>            
-        </a>
+        for( i = 0, j = 0; i < list.length; i++, j+=140){
+        
+  %>      	
+
+<% if(i >= 5 ){  %>
+			<a onClick="mw3.getFaceHelper(<%=objectId%>).clickNavigator('<%= i-1 %>')" href="#">
+         	<img src="images/NavigatorStep<%=i+1-5%>.png" style="width: 170px; height: 60px; position:absolute; z-index:<%=i+2%>; margin-left: <%= j-700 %>px;"/>
+            <div style="position:absolute; margin-left:<%= j+35-700 %>px; margin-top:20px; z-index:<%=i+2%>;"><font size=3>Step<%=i+1-1%>. &nbsp;&nbsp;<%= list[i-1].defName %></font></div> 
+            </a>
+			<a onClick="mw3.getFaceHelper(<%=objectId%>).clickNavigator('<%= i %>')" href="#">
+         	<img src="images/NavigatorStep<%=i+1-4%>.png" style="width: 170px; height: 60px; position:absolute; z-index:<%=i+2%>; margin-left: <%= j-560 %>px;"/>
+            <div style="position:absolute; margin-left:<%= j+35-560 %>px; margin-top:20px; z-index:<%=i+2%>;"><font size=3>Step<%=i+1%>. &nbsp;&nbsp;<%= list[i].defName %></font></div> 
+ 		  </a>
+<%}else{ %>
+			<a onClick="mw3.getFaceHelper(<%=objectId%>).clickNavigator('<%= i %>')" href="#">
+         	<img src="images/NavigatorStep<%=i+1%>.png" style="width: 170px; height: 60px; position:absolute; z-index:<%=i+1%>; margin-left: <%= j %>px;"/>
+            <div style="position:absolute; margin-left:<%= j+35 %>px; margin-top:20px; z-index:<%=i+2%>;"><font size=3>Step<%=i+1%>. &nbsp;&nbsp;<%= list[i].defName %></font></div> 
+ 		  </a>
+ <% } %>        	
+      
     
 <%
-        }
+    	}
     }
     }
 %>
