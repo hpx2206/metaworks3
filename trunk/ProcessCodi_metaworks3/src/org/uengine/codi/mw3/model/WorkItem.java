@@ -972,9 +972,9 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 							followers.load();
 							
 							returnObjects = new Object[]{new Refresh(this, false, true), new Refresh(followers)};
-					/*	}
+						}
 						else
-							returnObjects = new Object[]{new Refresh(this, false, true)*/};	
+							returnObjects = new Object[]{new Refresh(this, false, true)};	
 					}
 				}else if(this instanceof GenericWorkItem){
 					returnObjects = new Object[]{new ToAppend(instanceViewThreadPanel, this)};

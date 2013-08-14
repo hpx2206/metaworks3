@@ -1,17 +1,10 @@
 package com.defaultcompany.organization;
 
-import java.util.List;
-
 import org.uengine.codi.mw3.model.Employee;
 import org.uengine.codi.mw3.model.IEmployee;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.ProcessInstance;
 import org.uengine.kernel.RoleMapping;
-import org.uengine.kernel.UEngineException;
-
-import com.restfb.DefaultFacebookClient;
-import com.restfb.FacebookClient;
-import com.restfb.types.User;
 
 public class DefaultCompanyRoleMapping extends RoleMapping{
 	
