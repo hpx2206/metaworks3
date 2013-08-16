@@ -605,9 +605,10 @@ legend {display:none;}
               background-position:100% -42px;
       }
       
-      
-.moreBtn5{display:block; width:200px; margin:0 auto; text-align:center;font-weight:bold;}
-.morePoint{width: 10px; height:10px; margin:5px auto; background:url("../../images/waveStyle/morePoint.png") no-repeat;}
+#moreWorkDiv{ text-align:center; margin:15px;}
+.moreBtn5{display:inline-block; margin:0 20px;; text-align:center;font-weight:bold;}
+.morePointL{display:inline-block;width: 100px; height:10px;  background:url("../../images/waveStyle/morePointL.png") no-repeat;}
+.morePointR{display:inline-block;width: 100px; height:10px;  background:url("../../images/waveStyle/morePointR.png") no-repeat;}
 
 .topic_span{ padding:0 6px 1px 18px;-webkit-border-radius: 9px;
       -moz-border-radius: 9px;
