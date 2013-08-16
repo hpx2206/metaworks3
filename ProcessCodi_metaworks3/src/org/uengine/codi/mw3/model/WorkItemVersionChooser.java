@@ -89,29 +89,32 @@ public class WorkItemVersionChooser implements ORMappingListener{
 		
 		try {
 			
+			if(this.getGrpTaskId() != null){ 
 			
-			workitem = (IWorkItem) Database.sql(IWorkItem.class, "select * from bpm_worklist where instid=?instId and grptaskid=?grpTaskId order by taskid desc, majorver desc");
-			
-			workitem.set("instId", getInstId());
-			workitem.set("grpTaskId", getGrpTaskId());
-			
-			workitem.select();
-			
-			versionSelector = new SelectBox();
-			
-			if(workitem.size() > 0){
-				while(workitem.next()){
-					String version = String.valueOf(workitem.getMajorVer()+ "." + workitem.getMinorVer());
-					versionSelector.add(version, version);
-					taskIdsPerVersion.add(workitem.getTaskId());
-
-					if(workitem.getTaskId().equals(getTaskId())){
-						versionSelector.setSelected(version);
+				//workitem = (IWorkItem) Database.sql(IWorkItem.class, "select * from bpm_worklist where instid=?instId and grptaskid=?grpTaskId order by taskid desc, majorver desc");
+				//workitem.set("instId", getInstId());
+				workitem = (IWorkItem) Database.sql(IWorkItem.class, "select * from bpm_worklist where grptaskid=?grpTaskId order by taskid desc, majorver desc");				
+				workitem.set("grpTaskId", getGrpTaskId());
+				
+				workitem.select();
+				
+				versionSelector = new SelectBox();
+				
+				if(workitem.size() > 0){
+					while(workitem.next()){
+						String version = String.valueOf(workitem.getMajorVer()+ "." + workitem.getMinorVer());
+						versionSelector.add(version, version);
+						taskIdsPerVersion.add(workitem.getTaskId());
+	
+						if(workitem.getTaskId().equals(getTaskId())){
+							versionSelector.setSelected(version);
+						}
 					}
 				}
-			}
-			if( selectedVersion != null){
-				versionSelector.setSelectedValue(selectedVersion);
+				if( selectedVersion != null){
+					versionSelector.setSelectedValue(selectedVersion);
+				}
+				
 			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
