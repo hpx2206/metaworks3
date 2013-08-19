@@ -4258,7 +4258,7 @@ var MetaworksService = function(className, object, svcNameAndMethodName, autowir
 			}else if(serviceMethodContext.target=="self"){
 				mw3.setObject(objId, result);
 				
-			}else if(serviceMethodContext.target=="popup" || serviceMethodContext.target=="stick"){
+			}else if(serviceMethodContext.target=="popup" || serviceMethodContext.target=="stick" || serviceMethodContext.target=="popupOverPopup"){
 				//store the recently added object Id for recent opener
 				mw3.recentOpenerObjectId.push(objId);
 				
@@ -4269,7 +4269,18 @@ var MetaworksService = function(className, object, svcNameAndMethodName, autowir
 				if(placeholder)
 					mw3.removeObject(placeholder);
 				
-				$('body').append("<div id='" + mw3.popupDivId + "' class='target_" + serviceMethodContext.target + "' style='z-index:10;position:absolute; top:" + mw3.mouseY + "px; left:" + mw3.mouseX + "px'></div>");
+				var zIndex = 10;
+				if( serviceMethodContext.target=="popupOverPopup" ){
+					var modalWindow = $('.ui-dialog');
+					if(modalWindow.length > 0){
+						zIndex = $(modalWindow[modalWindow.length-1]).css('z-index');
+						zIndex = String(Number(zIndex)+1);
+					}else{
+						zIndex = 101;
+					}		
+				}
+				
+				$('body').append("<div id='" + mw3.popupDivId + "' class='target_" + serviceMethodContext.target + "' style='z-index:"+zIndex+";position:absolute; top:" + mw3.mouseY + "px; left:" + mw3.mouseX + "px'></div>");
 				
 				mw3.locateObject(result, null, '#' + mw3.popupDivId);
 				
