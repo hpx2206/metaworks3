@@ -50,9 +50,6 @@ public class ValueChainDesignerContentPanel extends ProcessDesignerContentPanel{
 		if( valueChainEditor.getProcessDesignerInstanceId() != null ){
 			def.setProcessDesignerInstanceId(valueChainEditor.getProcessDesignerInstanceId());
 		}
-		if( this.getProcessDesignerSize() != null ){
-			def.setProcessDesignerSize(processDesignerSize);
-		}
 		FileOutputStream fos = null;
 		try{
 			File file = new File(valueChainEditor.getResourceNode().getPath());

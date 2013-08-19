@@ -60,7 +60,7 @@ public class MajorProcessListPanel {
 		}
 	
 	public MajorProcessListPanel() {
-		
+		majorProcessItems = new ArrayList<ProcessDefinitionHolder>();
 	}
 		
 	public void load(){

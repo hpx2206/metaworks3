@@ -1124,12 +1124,5 @@ System.out.println("ProcessDefinition::addMessageListener.message = " + message)
 		public void setProcessDesignerInstanceId(String processDesignerInstanceId) {
 			this.processDesignerInstanceId = processDesignerInstanceId;
 		}
-	String processDesignerSize;
-		public String getProcessDesignerSize() {
-			return processDesignerSize;
-		}
-		public void setProcessDesignerSize(String processDesignerSize) {
-			this.processDesignerSize = processDesignerSize;
-		}
 }
 

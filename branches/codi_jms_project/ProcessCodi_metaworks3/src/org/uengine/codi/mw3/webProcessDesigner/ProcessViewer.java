@@ -42,17 +42,6 @@ public class ProcessViewer {
 		public void setViewType(String viewType) {
 			this.viewType = viewType;
 		}
-		
-	/*
-	 * 1024,768 이런식으로 셋팅
-	 */
-	String processDesignerSize;
-		public String getProcessDesignerSize() {
-			return processDesignerSize;
-		}
-		public void setProcessDesignerSize(String processDesignerSize) {
-			this.processDesignerSize = processDesignerSize;
-		}
 	String processDesignerInstanceId;
 		public String getProcessDesignerInstanceId() {
 			return processDesignerInstanceId;
@@ -68,7 +57,20 @@ public class ProcessViewer {
 				ProcessDesignerContainer processDesignerContainer) {
 			this.processDesignerContainer = processDesignerContainer;
 		}
-		
+	int designerMaxX;
+		public int getDesignerMaxX() {
+			return designerMaxX;
+		}
+		public void setDesignerMaxX(int designerMaxX) {
+			this.designerMaxX = designerMaxX;
+		}
+	int designerMaxY;
+		public int getDesignerMaxY() {
+			return designerMaxY;
+		}
+		public void setDesignerMaxY(int designerMaxY) {
+			this.designerMaxY = designerMaxY;
+		}
 	public ProcessViewer(){
 		processDesignerContainer = new ProcessDesignerContainer();
 	}
@@ -94,9 +96,10 @@ public class ProcessViewer {
 						this.processDesignerContainer.setEditorId(editorId);
 						this.processDesignerContainer.init();
 						this.processDesignerContainer.load(def);
-						this.setProcessDesignerSize(def.getProcessDesignerSize());
 						this.setProcessDesignerInstanceId(def.getProcessDesignerInstanceId());
 						
+						this.setDesignerMaxX(processDesignerContainer.getMaxX());
+						this.setDesignerMaxY(processDesignerContainer.getMaxY());
 					} catch (Exception e) {
 						e.printStackTrace();
 					}			

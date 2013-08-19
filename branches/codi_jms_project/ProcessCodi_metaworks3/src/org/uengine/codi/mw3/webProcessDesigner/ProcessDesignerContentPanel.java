@@ -52,13 +52,6 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 				ProcessDesignerContainer processDesignerContainer) {
 			this.processDesignerContainer = processDesignerContainer;
 		}
-	String processDesignerSize;
-		public String getProcessDesignerSize() {
-			return processDesignerSize;
-		}
-		public void setProcessDesignerSize(String processDesignerSize) {
-			this.processDesignerSize = processDesignerSize;
-		}
 	
 //	CanvasDTO cell[];
 //		public CanvasDTO[] getCell() {
@@ -432,9 +425,6 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 			def.setName(title);
 			if( processEditor.getProcessDesignerInstanceId() != null ){
 				def.setProcessDesignerInstanceId(processEditor.getProcessDesignerInstanceId());
-			}
-			if( this.getProcessDesignerSize() != null ){
-				def.setProcessDesignerSize(processDesignerSize);
 			}
 			FileOutputStream fos = null;
 			try{

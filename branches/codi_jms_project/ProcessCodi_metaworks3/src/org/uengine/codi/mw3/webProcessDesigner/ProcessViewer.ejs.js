@@ -73,16 +73,22 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessViewer.prototype = {
 		var canvasWidth = canvasDivObj.width();
 		var canvasHeight = canvasDivObj.height();
 		var scaleSize = 0.50;
-		if( object.processDesignerSize ){
-			var tempSize = object.processDesignerSize.split(",");
-			var width = tempSize[0]*1;
-			var height = tempSize[1];
-			scaleSize = canvasWidth/width;
-			if( canvasHeight * scaleSize > height ){
-				// TODO 너무 길었을때 height를 맞춰주는 작업
-			}
+		var xScale = 1;
+		var yScale = 1;
+		var designerMaxX = object.designerMaxX;
+		var designerMaxY = object.designerMaxY;
+		// designerMaxX 가 현재 켄버스보다 작으면 스케일 적용 안함
+		if( designerMaxY > canvasHeight){
+			yScale = canvasHeight / designerMaxY;
+		}else if( designerMaxX > canvasWidth){
+			xScale = canvasWidth / designerMaxX;
 		}
-		canvas._RENDERER.setScale(scaleSize);
+		
+		if( xScale != 1 && yScale != 1){
+			scaleSize = xScale > yScale ? xScale : yScale;
+			canvas._RENDERER.setScale(scaleSize);
+		}
+			
 		this.icanvas.setCanvasSize([canvasWidth , canvasHeight]);
 	},
 	getValue : function(){
