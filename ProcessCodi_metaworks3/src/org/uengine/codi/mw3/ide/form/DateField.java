@@ -33,8 +33,10 @@ public class DateField extends CommonFormField {
 		
 		CommonFormField formField = super.make(fd);
 		
-		formField.setOptions(makeValueString((String)fd.getOptions()[0]));
-		formField.setValues(makeValueString((String)fd.getValues()[0]));
+		if(fd.getOptions() != null){
+			formField.setOptions(makeValueString((String)fd.getOptions()[0]));
+			formField.setValues(makeValueString((String)fd.getValues()[0]));
+		}
 		
 		return formField;		
 	}

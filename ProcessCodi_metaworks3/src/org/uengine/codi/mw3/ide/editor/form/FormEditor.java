@@ -72,7 +72,10 @@ public class FormEditor extends Editor {
 			e.printStackTrace();
 		}
 
-		form.load();		
+		
+		if(this.getContent() != null)
+			form.load();
+		
 		this.setForm(form);
 		
 //		this.setProperties(new FormFieldProperties());

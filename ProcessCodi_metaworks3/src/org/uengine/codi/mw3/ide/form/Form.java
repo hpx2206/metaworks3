@@ -193,6 +193,7 @@ public class Form implements ContextAware {
 		
 		constructorBuffer.append("	public " + this.getId() + "() { \n");
 		
+		if(formFields != null)
 		for(int i = 0; i < formFields.size(); i++) {
 			
 			CommonFormField field = formFields.get(i);
