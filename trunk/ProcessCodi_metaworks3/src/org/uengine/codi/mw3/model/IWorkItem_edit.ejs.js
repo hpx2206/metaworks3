@@ -17,16 +17,18 @@ var org_uengine_codi_mw3_model_IWorkItem_edit = function(objectId, className){
 	if($("#post_" + this.objectId).focus()){
 
 		var obj = $("#post_" + this.objectId)[0];
-		var pos = obj.textLength;
-		
-		if ( obj.setSelectionRange ) { 
-			obj.focus(); 
-			obj.setSelectionRange(pos,pos); 
-		} else if ( obj.createTextRange ) { 
-			var c = obj.createTextRange(); 
-			c.move("character",pos); 
-			c.select(); 
-		} 
+		if(obj){
+			var pos = obj.textLength;
+			
+			if ( obj.setSelectionRange ) { 
+				obj.focus(); 
+				obj.setSelectionRange(pos,pos); 
+			} else if ( obj.createTextRange ) { 
+				var c = obj.createTextRange(); 
+				c.move("character",pos); 
+				c.select(); 
+			}
+		}
 	}
 	
 	//$("#post_" + this.objectId).keydown()
