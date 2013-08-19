@@ -14,6 +14,8 @@ import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Test;
+import org.metaworks.dao.MetaworksDAO;
+import org.metaworks.dao.TransactionContext;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,14 +53,30 @@ public class InstanceView {
 		/*
 		 * DB 저장된 인스턴스 정보로 다시 읽어오기
 		 */
-		Instance inst = new Instance();	
-		inst.setInstId(instance.getInstId());
-		inst.copyFrom(inst.databaseMe());
-		inst.setMetaworksContext(getMetaworksContext());
 		
-		if(inst.databaseMe().getIsDeleted()){
+		// 2013-08-19 performance tuning
+		StringBuffer sb = new StringBuffer();
+		sb.append("SELECT instid, name, defid, status, secuopt");
+		sb.append("  FROM bpm_procinst");
+		sb.append(" WHERE instid = ?instid");
+		
+		IInstance dao = (IInstance)MetaworksDAO.createDAOImpl(TransactionContext.getThreadLocalInstance(), sb.toString(), IInstance.class);
+		dao.setInstId(instance.getInstId());
+		dao.select();		
+		
+		if(!dao.next()){
+			throw new Exception("not exists instance");
+		}
+		
+		Instance inst = null;
+		inst = new Instance();	
+		inst.copyFrom(dao);
+
+		if(inst.getIsDeleted()){
 			throw new Exception("Deleted Instance");
 		}
+		
+		inst.setMetaworksContext(getMetaworksContext());
 		
 		InstanceTooltip instanceTooltip = new InstanceTooltip();
 		instanceTooltip.getMetaworksContext().setHow("action");		
@@ -68,16 +86,17 @@ public class InstanceView {
 		
 		this.setInstanceAction(instanceTooltip);
 		
+		setInstanceName(inst.getName());
 		setInstanceId(instance.getInstId().toString());
 		setStatus(inst.getStatus());
 		setSecuopt(inst.getSecuopt());
-
+		
 		InstanceFollowers followers = new InstanceFollowers();
 		followers.setInstanceId(inst.getInstId().toString());
 		followers.load();
 		
 		this.setFollowers(followers);
-
+		
 		// InstanceView 기본 설정
 		this.loadDefault(inst);
 		
@@ -85,16 +104,19 @@ public class InstanceView {
 			throw new Exception("$NotPermittedToSee");
 		}
 		
+		
 		/*
 		 * 인스턴스 읽음 표시
 		 */
+		/*
 		Notification notificationType = new Notification();
 		INotification notifictionsInSameInstance  = notificationType.sql("update bpm_noti set confirm=1 where instid = ?instid and userId=?userId");
 		notifictionsInSameInstance.setConfirm(true);
 		notifictionsInSameInstance.setInstId(inst.getInstId());
 		notifictionsInSameInstance.setUserId(session.getUser().getUserId());
 		notifictionsInSameInstance.update();
-				
+		*/
+		
 		/*
 		 * TODO: 보안체크 부분 다른 부분에서 처리할 수 있도록
 		if("1".equals(getSecuopt())){ //means secured conversation
@@ -240,8 +262,6 @@ public class InstanceView {
 		//flowChart.setInstanceId(instanceId);
 		//setProcessInstanceMonitor(flowChart);
 		
-		setInstanceName(inst.getName());
-		
 		if(inst.getDefId() == null){
 			/*
 			crowdSourcer = new CrowdSourcer();
@@ -277,9 +297,8 @@ public class InstanceView {
 				}			
 			}	
 			*/
-			ProcessInstance instance = processManager.getProcessInstance(getInstanceId());
-			
-			eventTriggerPanel = new EventTriggerPanel(instance);
+			//ProcessInstance instance = processManager.getProcessInstance(getInstanceId());			
+			//eventTriggerPanel = new EventTriggerPanel(instance);
 		}
 		
 		instanceNameChanger = new InstanceNameChanger();
@@ -291,7 +310,7 @@ public class InstanceView {
 		}
 		
 		setInstanceSecurityConfigurer(new InstanceSecurityConfigurer());
-		getInstanceSecurityConfigurer().setInstanceId(instanceId);
+		getInstanceSecurityConfigurer().setInstanceId(inst.getInstId().toString());
 
 	}
 	
