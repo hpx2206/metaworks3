@@ -65,13 +65,15 @@ public class InstanceListPanel implements ContextAware{
 		}*/
 		
 		if(session!=null){
-			try{
-				newInstancePanel = new NewInstancePanel();			
-				newInstancePanel.load(session);
-			}catch(Exception e){
-				e.printStackTrace();
+			if("sns".equals(session.getEmployee().getPreferUX())){
+				try{
+					newInstancePanel = new NewInstancePanel();			
+					newInstancePanel.load(session);
+				}catch(Exception e){
+					e.printStackTrace();
+				}
 			}
-				
+			
 			if("sns".equals(session.getEmployee().getPreferUX())){
 				this.getMetaworksContext().setWhere("sns");
 			}
