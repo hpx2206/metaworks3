@@ -27,7 +27,7 @@ import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitor;
 @Table(name="bpm_procinst")
 public interface IInstance extends IDAO{
 
-	@ServiceMethod(callByContent=true)
+	@ServiceMethod
 	public Object detail() throws Exception;
 
 	@ServiceMethod(target="popup")
