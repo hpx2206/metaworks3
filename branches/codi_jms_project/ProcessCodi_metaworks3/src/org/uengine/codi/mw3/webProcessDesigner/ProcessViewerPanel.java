@@ -137,9 +137,7 @@ public class ProcessViewerPanel implements ContextAware {
 			Activity activity = this.getOpenerActivity();
 			if( activity instanceof SubProcessActivity){
 				((SubProcessActivity) activity).setDefinitionId(null);
-				((SubProcessActivity) activity).setAlias(null);			}else if(activity instanceof EventActivity){
-				((EventActivity) activity).setDefinitionId(null);
-				((EventActivity) activity).setAlias(null);
+				((SubProcessActivity) activity).setAlias(null);			
 
 			}else if(activity instanceof EventActivity){
 				((EventActivity) activity).setDefinitionId(null);

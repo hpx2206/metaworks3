@@ -140,7 +140,7 @@ public class ProcessDefinitionNode extends TreeNode  implements ContextAware {
 		return this;
 	}
 	@Override
-	@ServiceMethod(payload={"id", "name", "path", "type", "folder", "projectId","defId","alias","treeId"},target=ServiceMethodContext.TARGET_APPEND)
+	@ServiceMethod(payload={"id", "name", "path", "type", "folder", "projectId","defId","alias","treeId"},mouseBinding="left",target=ServiceMethodContext.TARGET_APPEND)
 	public Object action() throws Exception{
 		if( this.getTreeId() != null && this.getTreeId().equals("valuechain")){
 			ProcessViewWindow processViewWindow = new ProcessViewWindow();
