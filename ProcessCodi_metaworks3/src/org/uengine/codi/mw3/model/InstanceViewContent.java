@@ -40,7 +40,7 @@ public class InstanceViewContent extends ContentWindow {
 	}
 	
 	public void load(IInstance instance) throws Exception{
-		this.setInstanceName(instance.getName());
+		//this.setInstanceName(instance.getName());
 		
 		instanceView.session = session;
 		instanceView.setMetaworksContext(getMetaworksContext());
