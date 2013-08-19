@@ -38,15 +38,15 @@ public class MajorProcessListPanel {
 			this.viewType = viewType;
 		}
 		
-	ArrayList<MajorProcessItem> majorProcessItems;
-		public ArrayList<MajorProcessItem> getMajorProcessItems() {
+	ArrayList<ProcessDefinitionHolder> majorProcessItems;
+		public ArrayList<ProcessDefinitionHolder> getMajorProcessItems() {
 			return majorProcessItems;
 		}
-		public void setMajorProcessItems(ArrayList<MajorProcessItem> majorProcessItems) {
+		public void setMajorProcessItems(ArrayList<ProcessDefinitionHolder> majorProcessItems) {
 			this.majorProcessItems = majorProcessItems;
 		}
 		
-		public void addMajorProcessItem(MajorProcessItem item){
+		public void addMajorProcessItem(ProcessDefinitionHolder item){
 			this.majorProcessItems.add(item);
 		}
 	
@@ -65,7 +65,7 @@ public class MajorProcessListPanel {
 		
 	public void load(){
 		if(valueChain != null && valueChain.getMajorProcessItems() != null){
-			majorProcessItems = (ArrayList<MajorProcessItem>) valueChain.getMajorProcessItems().clone();
+			majorProcessItems = (ArrayList<ProcessDefinitionHolder>) valueChain.getMajorProcessItems().clone();
 		}
 	}
 	

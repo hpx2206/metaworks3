@@ -143,9 +143,8 @@ public class MajorProcessDefinitionNode extends TreeNode  implements ContextAwar
 	@ServiceMethod(payload={"id", "name", "path", "type", "folder", "projectId","defId","alias","treeId"},target=ServiceMethodContext.TARGET_APPEND)
 	public Object action() throws Exception{
 		if(majorProcessListPanel!=null){
-			MajorProcessItem item = new MajorProcessItem();
-			item.setAlias(alias);
-			item.setDefId(defId);
+			ProcessDefinitionHolder item = new ProcessDefinitionHolder();
+			item.setProcessDefinitionAlias(alias);
 			majorProcessListPanel.addMajorProcessItem(item);
 			return new Object[] { new Refresh(majorProcessListPanel) };
 		}else{

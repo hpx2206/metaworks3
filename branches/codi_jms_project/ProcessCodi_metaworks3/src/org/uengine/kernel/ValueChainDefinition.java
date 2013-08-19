@@ -10,6 +10,8 @@ import org.uengine.kernel.graph.Transition;
 public class ValueChainDefinition implements Serializable{
 	private static final long serialVersionUID = org.uengine.kernel.GlobalContext.SERIALIZATION_UID;
 
+	/* when : edit, view, tree */
+	
 	transient Hashtable<String, ValueChain> wholeChildValueChains;
 
 	String name;

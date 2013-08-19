@@ -6,7 +6,7 @@ import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
-import org.uengine.codi.mw3.webProcessDesigner.MajorProcessItem;
+import org.uengine.codi.mw3.webProcessDesigner.ProcessDefinitionHolder;
 import org.uengine.codi.mw3.webProcessDesigner.ValueChainViewerPanel;
 import org.uengine.kernel.ValueChain;
 
