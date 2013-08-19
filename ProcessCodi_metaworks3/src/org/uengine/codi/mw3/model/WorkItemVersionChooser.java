@@ -89,8 +89,10 @@ public class WorkItemVersionChooser implements ORMappingListener{
 		
 		try {
 			
+			// TODO : 임시 성능 튜닝 최종적으로는 아래 부분이 빠져야함
 			if(this.getGrpTaskId() != null){ 
 			
+				
 				//workitem = (IWorkItem) Database.sql(IWorkItem.class, "select * from bpm_worklist where instid=?instId and grptaskid=?grpTaskId order by taskid desc, majorver desc");
 				//workitem.set("instId", getInstId());
 				workitem = (IWorkItem) Database.sql(IWorkItem.class, "select * from bpm_worklist where grptaskid=?grpTaskId order by taskid desc, majorver desc");				
