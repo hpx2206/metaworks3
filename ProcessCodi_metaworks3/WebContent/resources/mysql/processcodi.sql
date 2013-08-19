@@ -797,3 +797,7 @@ CREATE TABLE recentItem(
 ALTER TABLE `emptable`	ADD COLUMN `inviteUser` VARCHAR(100) NULL DEFAULT NULL;
 
 alter table emptable change isMailNoti mailNoti int(1) default 1;
+
+-- 2013-08-19 인스턴스 목록 성능 개선
+ALTER TABLE `bpm_rolemapping` ADD INDEX `RootInstId` (`ROOTINSTID`)
+ALTER TABLE `bpm_topicmapping` ADD INDEX `TopicId` (`TOPICID`)
