@@ -57,7 +57,7 @@ public class ScheduleReader extends QuartzJobBean{
 		try {
 			
 			//workitem 생성
-			CommentWorkItem workItem = new CommentWorkItem();
+//			CommentWorkItem workItem = new CommentWorkItem();
 			
 			IInstance instList = (IInstance) Database.sql(IInstance.class, "select * from bpm_procinst where DATE_FORMAT(duedate,'%Y-%m-%d') = CURRENT_DATE");
 			instList.select();
@@ -89,6 +89,8 @@ public class ScheduleReader extends QuartzJobBean{
 					
 					localeManager.setLanguage(emp.getLocale());
 					localeManager.load();
+					
+					CommentWorkItem workItem = new CommentWorkItem();
 					
 					workItem.setInstId(instRow.getLong("INSTID"));
 					workItem.setEndpoint(emp.getEmpCode());
