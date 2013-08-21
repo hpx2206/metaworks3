@@ -2,12 +2,19 @@ package org.uengine.codi.mw3.webProcessDesigner;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.Remover;
+import org.metaworks.ServiceMethodContext;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
-import org.uengine.codi.mw3.ide.Workspace;
+import org.metaworks.widget.ModalWindow;
+import org.uengine.codi.mw3.model.Popup;
+import org.uengine.codi.mw3.model.Session;
 import org.uengine.kernel.ValueChain;
 
 public class ValueChainViewerPanel implements ContextAware{
-
+	@AutowiredFromClient
+	public Session session;
+	
 	MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
 			return metaworksContext;
@@ -15,28 +22,27 @@ public class ValueChainViewerPanel implements ContextAware{
 		public void setMetaworksContext(MetaworksContext metaworksContext) {
 			this.metaworksContext = metaworksContext;
 		}
-	String definitionId;
-		public String getDefinitionId() {
-			return definitionId;
+	String valueChainName;
+		public String getValueChainName() {
+			return valueChainName;
 		}
-		public void setDefinitionId(String definitionId) {
-			this.definitionId = definitionId;
+		public void setValueChainName(String valueChainName) {
+			this.valueChainName = valueChainName;
 		}
-	String definitionName;
-		public String getDefinitionName() {
-			return definitionName;
+	ValueChain openerValueChain;
+		public ValueChain getOpenerValueChain() {
+			return openerValueChain;
 		}
-		public void setDefinitionName(String definitionName) {
-			this.definitionName = definitionName;
+		public void setOpenerValueChain(ValueChain openerValueChain) {
+			this.openerValueChain = openerValueChain;
 		}
-	String alias;
-		public String getAlias() {
-			return alias;
+	String openerValueChainViewId;
+		public String getOpenerValueChainViewId() {
+			return openerValueChainViewId;
 		}
-		public void setAlias(String alias) {
-			this.alias = alias;
+		public void setOpenerValueChainViewId(String openerValueChainViewId) {
+			this.openerValueChainViewId = openerValueChainViewId;
 		}
-		
 	ValueChainNavigatorPanel valueChainNavigatorPanel;
 		public ValueChainNavigatorPanel getValueChainNavigatorPanel() {
 			return valueChainNavigatorPanel;
@@ -45,72 +51,38 @@ public class ValueChainViewerPanel implements ContextAware{
 				ValueChainNavigatorPanel valueChainNavigatorPanel) {
 			this.valueChainNavigatorPanel = valueChainNavigatorPanel;
 		}
-		
-	ValueChain valueChain;
-		public ValueChain getValueChain() {
-			return valueChain;
+	String viewType;
+		public String getViewType() {
+			return viewType;
 		}
-		public void setValueChain(ValueChain valueChain) {
-			this.valueChain = valueChain;
-		}
-	
-	MajorProcessListPanel majorProcessListPanel;
-		public MajorProcessListPanel getMajorProcessListPanel() {
-			return majorProcessListPanel;
-		}
-		public void setMajorProcessListPanel(MajorProcessListPanel majorProcessListPanel) {
-			this.majorProcessListPanel = majorProcessListPanel;
-		}
-		
-	Workspace workspace;
-		public Workspace getWorkspace() {
-			return workspace;
-		}
-		public void setWorkspace(Workspace workspace) {
-			this.workspace = workspace;
-		}
-		
+		public void setViewType(String viewType) {
+			this.viewType = viewType;
+		}	
 	public ValueChainViewerPanel(){
 		metaworksContext = new MetaworksContext();
 	}
 	
-	public void findDefnitionView(){
-		this.getMetaworksContext().setHow("find");
+	public void load(){
 		valueChainNavigatorPanel = new ValueChainNavigatorPanel();
-		Workspace workspace = new Workspace();
-		workspace.load();
-		this.setWorkspace(workspace);
-		
-		valueChainNavigatorPanel.load(workspace);
-		
-		majorProcessListPanel = new MajorProcessListPanel();
-		majorProcessListPanel.setDefId(definitionId);
-		majorProcessListPanel.setAlias(alias);
-		majorProcessListPanel.setViewType("definitionView");
-		majorProcessListPanel.setValueChain(valueChain);
-		majorProcessListPanel.load();
+		valueChainNavigatorPanel.setValueChainName(valueChainName);
+		valueChainNavigatorPanel.setValueChain(openerValueChain);
+		valueChainNavigatorPanel.load();
 	}
-	public void loadDefnitionView(){
-		this.getMetaworksContext().setHow("load");
-		majorProcessListPanel = new MajorProcessListPanel();
-		majorProcessListPanel.setDefId(definitionId);
-		majorProcessListPanel.setAlias(alias);
-		majorProcessListPanel.setViewType("definitionView");
-		majorProcessListPanel.setValueChain(valueChain);
-		majorProcessListPanel.load();
-	}
-	@ServiceMethod()
+	
+	@ServiceMethod(callByContent=true , target=ServiceMethodContext.TARGET_APPEND)
 	public void removeLink(){
-		this.definitionId = null; 
 	}
 	
-	@ServiceMethod()
+	@ServiceMethod(callByContent=true , target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] saveLink(){
-		// TODO 
-		return null;
+		ValueChain valueChain = this.getOpenerValueChain();
+		valueChain.setMajorProcessDefinitionNode((MajorProcessDefinitionNode) valueChainNavigatorPanel.getMajorProcessDefinitionTree().getNode());
+		
+		ApplyProperties applyProperties = new ApplyProperties(this.getOpenerValueChainViewId(), valueChain);
+		return new Object[]{applyProperties, new Remover(new Popup() , true) };
 	}
 	
-	@ServiceMethod()
+	@ServiceMethod(callByContent=true, target = ServiceMethodContext.TARGET_APPEND)
 	public Object[] openLink(){
 		//processViewPanel.refresh(definitionId, definitionName);
 		//return new Object[]{processViewPanel, new Remover(new ModalWindow() , true) };

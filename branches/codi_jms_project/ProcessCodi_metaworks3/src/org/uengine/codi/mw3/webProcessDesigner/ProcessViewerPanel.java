@@ -1,24 +1,33 @@
 package org.uengine.codi.mw3.webProcessDesigner;
 
+import java.io.File;
+
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.MetaworksException;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.ToAppend;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.component.TreeNode;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.ide.CloudWindow;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.Workspace;
 import org.uengine.codi.mw3.ide.editor.Editor;
 import org.uengine.codi.mw3.ide.editor.process.ProcessEditor;
+import org.uengine.codi.mw3.model.Session;
 import org.uengine.kernel.Activity;
 import org.uengine.kernel.EventActivity;
+import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.SubProcessActivity;
 
 public class ProcessViewerPanel implements ContextAware {
+	@AutowiredFromClient
+	public Session session;
+	
 	MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
 			return metaworksContext;
@@ -111,7 +120,20 @@ public class ProcessViewerPanel implements ContextAware {
 		processViewPanel = new ProcessViewPanel();
 		processViewPanel.load();
 	}
-
+	
+	public void findValuechainView(){
+		this.getMetaworksContext().setHow("valueChainFind");
+		processViewNavigator = new ProcessViewNavigator();
+		processViewNavigator.loadTree();
+		Workspace workspace = new Workspace();
+		workspace.load();
+		this.setWorkspace(workspace);
+		
+		processViewNavigator.load(workspace);
+		
+		processViewPanel = new ProcessViewPanel();
+		processViewPanel.load();
+	}
 	
 	public void loadDefinitionView(){
 		this.getMetaworksContext().setHow("load");
@@ -122,15 +144,14 @@ public class ProcessViewerPanel implements ContextAware {
 		processViewPanel.load();
 	}
 	
-	public void loadDefinitionEditor(){
-		this.getMetaworksContext().setHow("load");
+	public void loadValuechainView(){
+		this.getMetaworksContext().setHow("valueChainLoad");
 		processViewPanel = new ProcessViewPanel();
 		processViewPanel.setDefId(definitionId);
 		processViewPanel.setAlias(alias);
 		processViewPanel.setViewType(this.getViewType());
 		processViewPanel.load();
 	}
-		
 	
 	@ServiceMethod(callByContent=true , target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] removeLink(){
@@ -166,6 +187,40 @@ public class ProcessViewerPanel implements ContextAware {
 		return new Object[]{applyProperties, new Remover(new ModalWindow() , true) };
 	}
 	
+	@ServiceMethod(callByContent=true , target=ServiceMethodContext.TARGET_APPEND)
+	public Object[] saveValueChain() throws Exception{
+		String defId = processViewPanel.getDefId();
+		String alias = processViewPanel.getAlias();
+		if( defId != null && alias != null ){
+			Object clipboard = session.getClipboard();
+			if(clipboard instanceof MajorProcessDefinitionNode){
+				MajorProcessDefinitionNode targetNode = (MajorProcessDefinitionNode)clipboard;
+				targetNode.setExpanded(true);
+				if(targetNode.getChild() != null){
+					// 중복 프로세스 체크
+					for(int i=0; i < targetNode.getChild().size(); i++){
+						MajorProcessDefinitionNode childNode = (MajorProcessDefinitionNode) targetNode.getChild().get(i);
+						if( defId.equals(childNode.getName()) ){
+							throw new MetaworksException("same process remain!!");
+						}
+					}
+				}
+				
+				MajorProcessDefinitionNode node = new MajorProcessDefinitionNode();
+				node.setName(defId);
+				node.setId(targetNode.getId() + File.separatorChar + node.getName());
+				node.setPath(alias);
+				node.setType(TreeNode.TYPE_FILE_PROCESS);
+				node.setFolder(false);
+				
+				return new Object[]{new Remover(new ModalWindow() , true), new ToAppend(targetNode, node)};
+			}else{
+				throw new MetaworksException("save error");
+			}
+		}
+		
+		return new Object[]{new Remover(new ModalWindow() , true)};
+	}
 	
 	@ServiceMethod(callByContent=true, target = ServiceMethodContext.TARGET_APPEND)
 	public Object[] openLink() throws Exception{
@@ -187,7 +242,9 @@ public class ProcessViewerPanel implements ContextAware {
 			}
 		}else{
 			ResourceNode resourceNode = new ResourceNode();
-			resourceNode.setPath(alias);
+			String codebase = GlobalContext.getPropertyString("codebase", "codebase");
+			resourceNode.setAlias(alias);
+			resourceNode.setPath(codebase + File.separatorChar + alias);
 			resourceNode.setType(ResourceNode.TYPE_FILE_PROCESS);
 			resourceNode.setId(defId);
 			resourceNode.setName(defId);
@@ -198,6 +255,7 @@ public class ProcessViewerPanel implements ContextAware {
 				e.printStackTrace();
 			}
 			/*
+			 * TODO 인스턴스 연결
 			InstanceViewThreadPanel instanceViewThreadPanel = new InstanceViewThreadPanel();
 			if(  editor instanceof ProcessEditor ){
 				if( ((ProcessEditor)editor).getProcessDesignerInstanceId() != null ){
@@ -212,5 +270,10 @@ public class ProcessViewerPanel implements ContextAware {
 			return new Object[]{new ToAppend(new CloudWindow("editor"), editor) , new Remover(new ModalWindow(), true) };
 //			return new Object[]{new ToAppend(new CloudWindow("editor"), editor) , new Remover(new ModalWindow(), true) , new Refresh(cloudInstanceWindow, true) };
 		}
+	}
+	
+	@ServiceMethod(target = ServiceMethodContext.TARGET_APPEND)
+	public Object closeModalPopup() throws Exception{
+		return new Remover(new ModalWindow() , true);
 	}
 }

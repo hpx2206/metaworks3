@@ -15,6 +15,11 @@ public class SubProcessActivityView extends ActivityView{
 		SubProcessActivity activity = (SubProcessActivity)this.getActivity();
 		ProcessViewerPanel processViewerPanel = new ProcessViewerPanel();
 		
+		ModalWindow modalWindow = new ModalWindow();
+		modalWindow.setWidth(700);
+		modalWindow.setHeight(500);
+		modalWindow.setId(this.getId());
+		
 		if( "definitionView".equals(this.getViewType() )){
 			processViewerPanel.setViewType(this.getViewType());
 			if( activity == null || (activity != null && activity.getAlias() == null || "".equals(activity.getAlias()))){
@@ -24,28 +29,27 @@ public class SubProcessActivityView extends ActivityView{
 				processViewerPanel.setDefinitionId(activity.getDefinitionId());
 				processViewerPanel.setAlias(activity.getAlias());
 				processViewerPanel.setOpenerActivity(this.getActivity());
-				processViewerPanel.setOpenerActivityViewId(this.getId());
+				processViewerPanel.setOpenerActivityViewId(this.getId());	
 				processViewerPanel.loadDefinitionView();
+				modalWindow.setTitle(activity.getDefinitionId());
 			}
 		}else{
 			processViewerPanel.setViewType("definitionEditor");
+			
 			if( activity != null && activity.getDefinitionId() != null && !"".equals(activity.getDefinitionId()) && activity.getAlias() != null){
 				processViewerPanel.setDefinitionId(activity.getDefinitionId());
 				processViewerPanel.setAlias(activity.getAlias());
 				processViewerPanel.setOpenerActivity(this.getActivity());
 				processViewerPanel.setOpenerActivityViewId(this.getId());
-				processViewerPanel.loadDefinitionEditor();
+				processViewerPanel.loadDefinitionView();
 			}else{
 				processViewerPanel.setOpenerActivity(this.getActivity());
 				processViewerPanel.setOpenerActivityViewId(this.getId());
 				processViewerPanel.findDefinitionView();
 			}
+			modalWindow.setTitle("$SubProcessActivityEdit");
 		}
-		
-		ModalWindow modalWindow = new ModalWindow(processViewerPanel);
-		modalWindow.setWidth(700);
-		modalWindow.setHeight(500);
-		modalWindow.setTitle("$SubProcessActivityEdit");
+		modalWindow.setPanel(processViewerPanel);
 		return modalWindow;  
 	 }
 }

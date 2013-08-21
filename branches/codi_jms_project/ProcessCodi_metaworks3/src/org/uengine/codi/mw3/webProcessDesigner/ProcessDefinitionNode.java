@@ -75,6 +75,7 @@ public class ProcessDefinitionNode extends TreeNode  implements ContextAware {
 		this.setFolder(true);
 		
 		this.setPath(project.getPath());
+		this.setAlias(project.getId() + File.separatorChar + "root");
 		this.setProjectId(project.getId());
 	}
 	public ArrayList<TreeNode> loadExpand(){
@@ -100,7 +101,7 @@ public class ProcessDefinitionNode extends TreeNode  implements ContextAware {
 				node.setName(childFile.getName());
 				node.setDefId(childFile.getName());
 				node.setPath(this.getPath() + File.separatorChar + childFile.getName());
-				node.setAlias(this.getPath() + File.separatorChar + childFile.getName());
+				node.setAlias(this.getAlias() + File.separatorChar + childFile.getName());
 				node.setParentId(this.getId());
 				node.setType(TreeNode.TYPE_FOLDER);
 				node.setMetaworksContext(getMetaworksContext());
@@ -126,7 +127,7 @@ public class ProcessDefinitionNode extends TreeNode  implements ContextAware {
 				node.setName(childFile.getName());
 				node.setDefId(childFile.getName());
 				node.setPath(this.getPath() + File.separatorChar + childFile.getName());
-				node.setAlias(this.getPath() + File.separatorChar + childFile.getName());
+				node.setAlias(this.getAlias() + File.separatorChar + childFile.getName());
 				node.setParentId(this.getId());
 				node.setType(type);
 				node.setMetaworksContext(getMetaworksContext());
@@ -144,7 +145,7 @@ public class ProcessDefinitionNode extends TreeNode  implements ContextAware {
 	public Object action() throws Exception{
 		if( this.getTreeId() != null && this.getTreeId().equals("valuechain")){
 			ProcessViewWindow processViewWindow = new ProcessViewWindow();
-			processViewWindow.setAlias(alias);
+			processViewWindow.setAlias(this.getAlias());
 			processViewWindow.setDefId(defId);
 			processViewWindow.setPath(path);
 			processViewWindow.session = session;
@@ -154,7 +155,7 @@ public class ProcessDefinitionNode extends TreeNode  implements ContextAware {
 		if( alias != null && !this.isFolder() && this.getType().equals(TreeNode.TYPE_FILE_PROCESS)){
 			processViewerPanel = new ProcessViewerPanel();
 			processViewerPanel.setDefinitionId(defId);
-			processViewerPanel.setAlias(alias);
+			processViewerPanel.setAlias(this.getAlias());
 			processViewerPanel.setViewType("definitionEditor");
 			processViewerPanel.loadDefinitionView();
 			return new Object[] { new Refresh(processViewerPanel.processViewPanel) };

@@ -56,54 +56,13 @@ public class ValueChainDefinition implements Serializable{
 		}
 		
 	public synchronized void addChildValueChain(ValueChain valueChain){
-		addChildValueChain(valueChain, true);
+		this.childValueChains.add(valueChain);
 	}
 	
 	public ValueChainDefinition() {
 		//When you Need Class Like ActivityRepository Then Make it
 		childValueChains = new Vector<ValueChain>();
 		transitions = new ArrayList<Transition>();
-	}
-	
-	public synchronized void addChildValueChain(ValueChain valueChain, boolean autoTagging){
-		if(autoTagging){
-			autoTag(valueChain);
-		}
-		
-		this.childValueChains.add(valueChain);
-		
-		registerValueChain(valueChain, autoTagging);
-	}
-	
-	protected void autoTag(ValueChain valueChain){
-		if(valueChain.getTracingTag() == null){
-			valueChain.setTracingTag(""+getNextValueChainSequence());
-		}
-	}
-		
-	protected boolean registerValueChain(ValueChain valueChain, boolean autoTagging){
-		return registerValueChain(valueChain, autoTagging, false);
-	}
-
-	protected boolean registerValueChain(ValueChain valueChain, boolean autoTagging, boolean checkCollision) {
-		
-		if(wholeChildValueChains==null) wholeChildValueChains = new Hashtable<String, ValueChain>();
-		
-		String tracingTagOfValueChain = valueChain.getTracingTag();
-		if(tracingTagOfValueChain == null){
-			if(autoTagging){
-				valueChain.setTracingTag(""+getNextValueChainSequence());
-			}else
-				throw new RuntimeException(new UEngineException("This definition is corrupt. One of child activity's tracingtag is null."));
-		}
-		
-		if(checkCollision && wholeChildValueChains.containsKey(valueChain.getTracingTag())){
-			return false;
-		}
-		
-		wholeChildValueChains.put(valueChain.getTracingTag(), valueChain);
-		
-		return false;
 	}
 	
 	//FIXME : Copied Code from ProcessDefinition
@@ -113,14 +72,5 @@ public class ValueChainDefinition implements Serializable{
 		}
 		public void setProcessDesignerInstanceId(String processDesignerInstanceId) {
 			this.processDesignerInstanceId = processDesignerInstanceId;
-		}
-	
-	//FIXME : Copied Code from ProcessDefinition
-	String processDesignerSize;
-		public String getProcessDesignerSize() {
-			return processDesignerSize;
-		}
-		public void setProcessDesignerSize(String processDesignerSize) {
-			this.processDesignerSize = processDesignerSize;
 		}
 }

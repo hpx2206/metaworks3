@@ -1,13 +1,12 @@
 package org.uengine.kernel.designer.web;
 
-import java.util.ArrayList;
-
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.widget.ModalWindow;
-import org.uengine.codi.mw3.webProcessDesigner.ProcessDefinitionHolder;
+import org.uengine.codi.mw3.model.Popup;
+import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.webProcessDesigner.ValueChainViewerPanel;
+import org.uengine.contexts.TextContext;
 import org.uengine.kernel.ValueChain;
 
 public class ValueChainView extends ActivityView{
@@ -20,34 +19,27 @@ public class ValueChainView extends ActivityView{
 		}
 		
 	@AutowiredFromClient
-	public ValueChainViewerPanel valueChainViewerPanel;
+	transient public Session session;
 		
-	@Override
 	@ServiceMethod(callByContent=true , target=ServiceMethodContext.TARGET_POPUP)
-	public ModalWindow showDefinitionMonitor() throws Exception{
+	public Popup showValueChainMonitor() throws Exception{
 		ValueChain valueChain = this.getValueChain();
+		TextContext name = new TextContext();
+		name.setText(this.getLabel());
+		valueChain.setName(name);
+		String valueChainName = (valueChain.getName() != null && valueChain.getName().toString() != null) ? valueChain.getName().toString() : "valuechain"; 
 		
-		if(valueChainViewerPanel == null)
-			valueChainViewerPanel = new ValueChainViewerPanel();
+		ValueChainViewerPanel valueChainViewerPanel = new ValueChainViewerPanel();
+		valueChainViewerPanel.setOpenerValueChain(valueChain);
+		valueChainViewerPanel.setOpenerValueChainViewId(this.getId());
+		valueChainViewerPanel.setValueChainName(valueChainName);
+		valueChainViewerPanel.session = session;
+		valueChainViewerPanel.load();
 		
-		if( valueChain != null && valueChain.getDefinitionId() != null ){
-			valueChainViewerPanel.setDefinitionId(valueChain.getDefinitionId());
-			valueChainViewerPanel.setValueChain(valueChain);
-			valueChainViewerPanel.loadDefnitionView();
-		}else{
-			valueChainViewerPanel.setValueChain(valueChain);
-			valueChainViewerPanel.findDefnitionView();
-		}
-		
-		ModalWindow modalWindow = new ModalWindow(valueChainViewerPanel);
-		modalWindow.setWidth(700);
-		modalWindow.setHeight(500);
+		Popup modalWindow = new Popup(valueChainViewerPanel);
+		modalWindow.setWidth(300);
+		modalWindow.setHeight(350);
 		
 		return modalWindow;  
 	 }
-	
-	@Override
-	public Object showProperties() throws Exception{
-		return null;
-	}
 }

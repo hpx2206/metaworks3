@@ -1,15 +1,9 @@
 package org.uengine.codi.mw3.webProcessDesigner;
 
-import java.util.ArrayList;
-
 import org.uengine.contexts.TextContext;
 
 public class ProcessDefinitionHolder { 
 	
-	/*
-	 * ChildProcessDefinition, 
-	 * +ProcessDeifinitionFolder
-	 **/
 	String processDefinitionAlias;
 		public String getProcessDefinitionAlias() {
 			return processDefinitionAlias;
@@ -17,15 +11,13 @@ public class ProcessDefinitionHolder {
 		public void setProcessDefinitionAlias(String processDefinitionAlias) {
 			this.processDefinitionAlias = processDefinitionAlias;
 		}
-		
-	ArrayList<ProcessDefinitionHolder> childs;
-		public ArrayList<ProcessDefinitionHolder> getChilds() {
-			return childs;
+	String childType;
+		public String getChildType() {
+			return childType;
 		}
-		public void setChilds(ArrayList<ProcessDefinitionHolder> childs) {
-			this.childs = childs;
+		public void setChildType(String childType) {
+			this.childType = childType;
 		}
-
 	TextContext name;
 		public TextContext getName() {
 			return name;

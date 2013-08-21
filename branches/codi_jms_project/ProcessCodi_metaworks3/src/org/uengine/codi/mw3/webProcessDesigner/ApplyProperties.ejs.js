@@ -4,8 +4,6 @@ var org_uengine_codi_mw3_webProcessDesigner_ApplyProperties = function(objectId,
 	
 	this.object = mw3.objects[this.objectId];
 	var object = this.object;
-//	console.log('org_uengine_codi_mw3_webProcessDesigner_ApplyProperties');
-//	console.log($('#' + this.object.id));
 	
 	var canvasObject;
 	if( object != null && object.viewType != null && "blockView" == object.viewType ){
@@ -29,13 +27,14 @@ var org_uengine_codi_mw3_webProcessDesigner_ApplyProperties = function(objectId,
 	var contentValue = this.object.content;
 	var element = document.getElementById(this.object.id);
 	if(contentValue && contentValue.__className=="org.uengine.kernel.Role"){
-//		canvasObject.roleMap[this.object.id] = contentValue;
 		canvas.drawLabel(element, contentValue.displayName.text);
-//	}else if(contentValue && contentValue.__className=="org.uengine.kernel.HumanActivity"){
-	}else if(contentValue && contentValue.activityView && contentValue.activityView.classType == 'Activity'){
+	}else if(contentValue && contentValue.__className=="org.uengine.kernel.ValueChain"){
+		$('#' + this.object.id).data('valuechain', contentValue);
+	}else{
+		// activity
 		canvas.drawLabel(element, contentValue.description.text);
+		$('#' + this.object.id).data('activity', contentValue);
 	}
 	
-	$('#' + this.object.id).data('activity', contentValue);
 	$('#' + this.object.id).trigger('apply');
 };

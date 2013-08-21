@@ -2,13 +2,15 @@ package org.uengine.kernel;
 
 import java.util.ArrayList;
 
+import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Hidden;
-import org.uengine.codi.mw3.webProcessDesigner.CanvasDTO;
+import org.uengine.codi.mw3.webProcessDesigner.MajorProcessDefinitionNode;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessDefinitionHolder;
+import org.uengine.contexts.TextContext;
 import org.uengine.kernel.designer.web.ValueChainView;
 
-public class ValueChain extends CanvasDTO{
+public class ValueChain implements ContextAware, java.io.Serializable{
 
 	MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
@@ -17,30 +19,21 @@ public class ValueChain extends CanvasDTO{
 		public void setMetaworksContext(MetaworksContext metaworksContext) {
 			this.metaworksContext = metaworksContext;
 		}
+	String valueChainId;
+		public String getValueChainId() {
+			return valueChainId;
+		}
+		public void setValueChainId(String valueChainId) {
+			this.valueChainId = valueChainId;
+		}
+	TextContext name;
+		public TextContext getName() {
+			return name;
+		}
+		public void setName(TextContext name) {
+			this.name = name;
+		}
 		
-	public ValueChain() {
-		setMetaworksContext(new MetaworksContext());
-		getMetaworksContext().setWhen("edit");
-		this.majorProcessItems = new ArrayList<ProcessDefinitionHolder>();
-	}
-		
-	String definitionId;
-		public String getDefinitionId() {
-			return definitionId;
-		}
-		public void setDefinitionId(String l) {
-			definitionId = l;
-		}
-		
-	String tracingTag;
-	@Hidden
-		public String getTracingTag() {
-			return tracingTag;
-		}
-		public void setTracingTag(String tracingTag) {
-			this.tracingTag = tracingTag;
-		}
-
 	ValueChainView valueChainView;
 	@Hidden
 		public ValueChainView getValueChainView() {
@@ -49,13 +42,17 @@ public class ValueChain extends CanvasDTO{
 		public void setValueChainView(ValueChainView valueChainView) {
 			this.valueChainView = valueChainView;
 		}
-	
-	ArrayList<ProcessDefinitionHolder> majorProcessItems;
-	@Hidden
-		public ArrayList<ProcessDefinitionHolder> getMajorProcessItems() {
-			return majorProcessItems;
+	MajorProcessDefinitionNode majorProcessDefinitionNode;
+		public MajorProcessDefinitionNode getMajorProcessDefinitionNode() {
+			return majorProcessDefinitionNode;
 		}
-		public void setMajorProcessItems(ArrayList<ProcessDefinitionHolder> majorProcessItems) {
-			this.majorProcessItems = majorProcessItems;
+		public void setMajorProcessDefinitionNode(
+				MajorProcessDefinitionNode majorProcessDefinitionNode) {
+			this.majorProcessDefinitionNode = majorProcessDefinitionNode;
 		}
+
+	public ValueChain() {
+		setMetaworksContext(new MetaworksContext());
+		getMetaworksContext().setWhen("edit");
+	}
 }

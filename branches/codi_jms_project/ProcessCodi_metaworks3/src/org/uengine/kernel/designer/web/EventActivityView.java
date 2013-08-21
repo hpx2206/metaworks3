@@ -36,7 +36,7 @@ public class EventActivityView extends ActivityView{
 					processViewerPanel.setAlias(activity.getAlias());
 					processViewerPanel.setOpenerActivity(this.getActivity());
 					processViewerPanel.setOpenerActivityViewId(this.getId());
-					processViewerPanel.loadDefinitionEditor();
+					processViewerPanel.loadDefinitionView();
 				}else{
 					processViewerPanel.setOpenerActivity(this.getActivity());
 					processViewerPanel.setOpenerActivityViewId(this.getId());

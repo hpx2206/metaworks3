@@ -743,8 +743,6 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ge
 			cellForDwr['activityClass'] = $id.attr('_classname');
 			cellForDwr['__className'] = $id.attr('_viewClass');
 			var classType = $id.attr('_classType');
-			console.log('111');
-			console.log(classType);
 			cellForDwr['classType'] = classType;
 			//set Activity, Role
 			var activity = $id.data('activity');

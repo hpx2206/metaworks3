@@ -43,17 +43,19 @@ org_uengine_kernel_designer_web_ValueChainView.prototype = {
         	$(element).attr("_classname", object.activityClass);
         	$(element).attr("_viewClass", object.__className);
         	$(element).attr("_classType", object.classType);
-        	$(element).attr("_tracingTag",object.tracingTag);
-        	if( object.valuechain ){
-        		$(element).data('valuechain',object.valuechain);
-        	}else if( typeof $(element).attr("_classname") != 'undefined' &&  typeof $(element).data("activity") == 'undefined' ){
-        		var activityData = {__className : $(element).attr("_classname"), tracingTag : $(element).attr("_tracingTag")};
+        	if( object.valueChain ){
+        		$(element).data('valuechain',object.valueChain);
+        	}else if( typeof $(element).attr("_classname") != 'undefined' &&  typeof $(element).data("valuechain") == 'undefined' ){
+        		var activityData = {__className : $(element).attr("_classname")};
         		$(element).data('valuechain', activityData);
         	}
         	
         	$(element).on({
         		btnclick : function(event) {
-        			object.showDefinitionMonitor();
+        			object.id = $(this).attr('id');
+        			object.valueChain = $(this).data('valuechain');
+//        			object.valueChain.name = this.textContent;
+        			object.showValueChainMonitor();
         		}
         	});
 			

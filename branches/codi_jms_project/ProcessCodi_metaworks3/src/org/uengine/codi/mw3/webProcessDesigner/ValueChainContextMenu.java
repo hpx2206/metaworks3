@@ -1,0 +1,73 @@
+package org.uengine.codi.mw3.webProcessDesigner;
+
+import org.metaworks.Remover;
+import org.metaworks.ServiceMethodContext;
+import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.component.Menu;
+import org.metaworks.component.MenuItem;
+import org.metaworks.widget.ModalWindow;
+import org.uengine.codi.mw3.ide.templete.NewFolder;
+import org.uengine.codi.mw3.model.Session;
+
+public class ValueChainContextMenu extends Menu {
+	
+	@AutowiredFromClient
+	public Session session;
+	
+	MajorProcessDefinitionNode majorProcessDefinitionNode;
+		public MajorProcessDefinitionNode getMajorProcessDefinitionNode() {
+			return majorProcessDefinitionNode;
+		}
+		public void setMajorProcessDefinitionNode(
+				MajorProcessDefinitionNode majorProcessDefinitionNode) {
+			this.majorProcessDefinitionNode = majorProcessDefinitionNode;
+		}
+	public ValueChainContextMenu(){
+		this(null);
+	}
+	public ValueChainContextMenu(MajorProcessDefinitionNode majorProcessDefinitionNode){
+		this.setMajorProcessDefinitionNode(majorProcessDefinitionNode);
+		
+		this.setId("ValueChainContext");
+		this.setName("ValueChainContext");
+		this.setContext(true);
+		
+		this.add(new MenuItem("newFolder", "$resource.menu.new.folder"));
+		this.add(new MenuItem("selectProcess", "$resource.menu.selectProcess"));
+		
+		this.add(new MenuItem(MenuItem.TYPE_DIVIDER));
+		this.add(new MenuItem("remove", "$resource.menu.remove"));
+		this.add(new MenuItem("rename", "$resource.menu.rename"));
+	}
+	
+	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
+	public Object selectProcess(){
+		Object clipboard = session.getClipboard();
+		if(clipboard instanceof MajorProcessDefinitionNode){
+			MajorProcessDefinitionNode node = (MajorProcessDefinitionNode)clipboard;
+			
+			return node.selectProcess();			
+		}else{
+			return null;
+		}
+	}
+	
+	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
+	public Object[] remove(){
+		Object clipboard = session.getClipboard();
+		if(clipboard instanceof MajorProcessDefinitionNode){
+			MajorProcessDefinitionNode node = (MajorProcessDefinitionNode)clipboard;
+			return new Object[]{ new Remover(node)};
+		}
+		return null;
+	}
+	
+	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
+	public ModalWindow newFolder(){
+		NewFolder newFolder = new NewFolder();
+		
+		return new ModalWindow(newFolder, 300, 150, "New Folder");
+	}
+
+}

@@ -1,6 +1,5 @@
 package org.uengine.codi.mw3.webProcessDesigner;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import org.metaworks.ContextAware;
@@ -10,11 +9,13 @@ import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.TreeNode;
-import org.uengine.codi.mw3.ide.Project;
-import org.uengine.codi.mw3.ide.ResourceNode;
+import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.model.Session;
 
 public class MajorProcessDefinitionNode extends TreeNode  implements ContextAware {
+	@AutowiredFromClient
+	transient public Session session;
+	
 	String alias;
 		public String getAlias() {
 			return alias;
@@ -29,13 +30,6 @@ public class MajorProcessDefinitionNode extends TreeNode  implements ContextAwar
 		public void setMetaworksContext(MetaworksContext metaworksContext) {
 			this.metaworksContext = metaworksContext;
 		}		
-	String projectId;
-		public String getProjectId() {
-			return projectId;
-		}
-		public void setProjectId(String projectId) {
-			this.projectId = projectId;
-		}
 	
 	String path;
 		public String getPath() {
@@ -52,31 +46,11 @@ public class MajorProcessDefinitionNode extends TreeNode  implements ContextAwar
 			this.defId = defId;
 		}
 			
-	public final static String TYPE_PROJECT = "project";
-	@AutowiredFromClient
-	public Session session;
-	
-	@AutowiredFromClient
-	public MajorProcessListPanel majorProcessListPanel;
-	@AutowiredFromClient
-	public ValueChainNavigatorPanel valueChainViewNavigator;
-	
-	
 	public MajorProcessDefinitionNode(){
 		setMetaworksContext(new MetaworksContext());
 		this.getMetaworksContext().setHow("tree");
 	}
-	public MajorProcessDefinitionNode(Project project){
-		this();
-		
-		this.setId(project.getId());
-		this.setName(project.getId());
-		this.setType(TYPE_PROJECT);
-		this.setFolder(true);
-		
-		this.setPath(project.getPath());
-		this.setProjectId(project.getId());
-	}
+	
 	public ArrayList<TreeNode> loadExpand(){
 		
 		return null;
@@ -84,71 +58,47 @@ public class MajorProcessDefinitionNode extends TreeNode  implements ContextAwar
 	@Override
 	@ServiceMethod(callByContent=true, except="child", target=ServiceMethodContext.TARGET_SELF)
 	public Object expand() throws Exception{
-		ArrayList<TreeNode> child = new ArrayList<TreeNode>();
+//		ArrayList<TreeNode> child = new ArrayList<TreeNode>();
 	
-		File file = new File(this.getPath());
-		String[] childFilePaths = file.list();
 	
-		// folder
-		for(int i=0; i<childFilePaths.length; i++){
-			File childFile = new File(file.getAbsolutePath() + File.separatorChar + childFilePaths[i]);
-	
-			if(childFile.isDirectory()){
-				MajorProcessDefinitionNode node = new MajorProcessDefinitionNode();
-				node.setProjectId(this.getProjectId());
-				node.setId(this.getId() + File.separatorChar + childFile.getName());				
-				node.setName(childFile.getName());
-				node.setDefId(childFile.getName());
-				node.setPath(this.getPath() + File.separatorChar + childFile.getName());
-				node.setAlias(this.getPath() + File.separatorChar + childFile.getName());
-				node.setParentId(this.getId());
-				node.setType(TreeNode.TYPE_FOLDER);
-				node.setMetaworksContext(getMetaworksContext());
-				node.setFolder(true);
-				node.setTreeId(this.getTreeId());
-				
-				child.add(node);
-			}
-		}
-	
-		// file
-		for(int i=0; i<childFilePaths.length; i++){
-			File childFile = new File(file.getAbsolutePath() + File.separatorChar + childFilePaths[i]);
-	
-			if(!childFile.isDirectory()){
-				String type = ResourceNode.findNodeType(childFile.getName());
-				if(!type.equals(TreeNode.TYPE_FILE_PROCESS)){
-					continue;
-				}
-				MajorProcessDefinitionNode node = new MajorProcessDefinitionNode();
-				node.setProjectId(this.getProjectId());
-				node.setId(this.getId() + File.separatorChar + childFile.getName());
-				node.setName(childFile.getName());
-				node.setDefId(childFile.getName());
-				node.setPath(this.getPath() + File.separatorChar + childFile.getName());
-				node.setAlias(this.getPath() + File.separatorChar + childFile.getName());
-				node.setParentId(this.getId());
-				node.setType(type);
-				node.setMetaworksContext(getMetaworksContext());
-				node.setTreeId(this.getTreeId());
-				child.add(node);
-			}
-		}
-	
-		this.setChild(child);
+//		this.setChild(child);
 	
 		return this;
 	}
+	@ServiceMethod(payload={"id", "name", "path", "type", "folder", "defId","alias","treeId"},target=ServiceMethodContext.TARGET_POPUP)
+	public Object selectProcess() {
+		ProcessViewerPanel processViewerPanel = new ProcessViewerPanel();
+		processViewerPanel.findValuechainView();
+		
+		ModalWindow modalWindow = new ModalWindow(processViewerPanel);
+		modalWindow.setWidth(700);
+		modalWindow.setHeight(500);
+		modalWindow.setTitle("$ValueChainEdit");
+		
+		return modalWindow;
+	}
 	@Override
-	@ServiceMethod(payload={"id", "name", "path", "type", "folder", "projectId","defId","alias","treeId"},target=ServiceMethodContext.TARGET_APPEND)
+	@ServiceMethod(payload={"id", "name", "path", "type", "folder", "defId","alias","treeId"},target=ServiceMethodContext.TARGET_APPEND)
 	public Object action() throws Exception{
-		if(majorProcessListPanel!=null){
-			ProcessDefinitionHolder item = new ProcessDefinitionHolder();
-			item.setProcessDefinitionAlias(alias);
-			majorProcessListPanel.addMajorProcessItem(item);
-			return new Object[] { new Refresh(majorProcessListPanel) };
-		}else{
-			return null;
+		if( TreeNode.TYPE_FILE_PROCESS.equals(this.getType())){
+			ProcessViewerPanel processViewerPanel = new ProcessViewerPanel();
+			processViewerPanel.setDefinitionId(this.getName());
+			processViewerPanel.setAlias(this.getPath());
+			processViewerPanel.setViewType("definitionView");
+			processViewerPanel.loadValuechainView();
+			
+			ModalWindow modalWindow = new ModalWindow(processViewerPanel);
+			modalWindow.setWidth(700);
+			modalWindow.setHeight(500);
+			modalWindow.setId(this.getPath());
+			modalWindow.setTitle(this.getName());
+			return modalWindow;
 		}
+		return null;
+	}
+	@ServiceMethod(payload={"id", "name", "path", "folder" , "child"}, mouseBinding="right", target=ServiceMethodContext.TARGET_POPUP_OVER_POPUP)
+	public Object[] showContextMenu() {
+		session.setClipboard(this);
+		return new Object[]{new Refresh(session), new ValueChainContextMenu(this)};
 	}
 }
