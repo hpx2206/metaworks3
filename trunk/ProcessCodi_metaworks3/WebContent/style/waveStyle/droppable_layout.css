@@ -808,7 +808,7 @@ img {
 }
 #searchbox .inputcenter {
     float: left;
-    width: 100%;
+    width: 99%;
 }
 #searchbox .inputright {
     float: left;
@@ -817,7 +817,7 @@ img {
     margin-left: -22px
 }
 #searchbox ul li input {
-    width: 100%;
+    width: 98%;
     background: #ffffff;
     height: 17px;
     padding-top: 1px;
