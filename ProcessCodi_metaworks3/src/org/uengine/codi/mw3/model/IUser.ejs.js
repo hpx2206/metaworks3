@@ -14,6 +14,11 @@ var org_uengine_codi_mw3_model_IUser = function(objectId, className){
 	}
 
 	if(user.metaworksContext && user.metaworksContext.when=='contacts'){
+		$('#objDiv_' + this.objectId).parent().parent().css({'float':'left'});	
+	}
+
+	
+	if(user.metaworksContext && user.metaworksContext.when=='contacts'){
 		
 		
 		var msg=$('#objDiv_' + objectId).find('.fontgray').text();

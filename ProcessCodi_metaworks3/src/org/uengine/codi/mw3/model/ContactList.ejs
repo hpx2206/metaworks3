@@ -5,9 +5,7 @@
 			%><%=fields.invitation.here()%><%
 		}else{
 %>
-	<ul>
 		<%=fields.contacts.here()%>
-	</ul>
 	
 			<% if(!value.selectedMore) { %>
 				<span class="west_more_btn" style="top:-20px;"><a onClick="<%=methods.moreView.caller()%>" href="#" style="display: inline-block"><%=mw3.localize('$More')%></a></span>
