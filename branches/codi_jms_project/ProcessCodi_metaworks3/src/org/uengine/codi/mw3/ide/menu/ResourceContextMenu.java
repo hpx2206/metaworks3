@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.ide.CloudTab;
 import org.uengine.codi.mw3.ide.CloudWindow;
 import org.uengine.codi.mw3.ide.ResourceNode;
+import org.uengine.codi.mw3.ide.dictionary.DictionaryManagement;
 import org.uengine.codi.mw3.ide.editor.process.ProcessMergeEditor;
 import org.uengine.codi.mw3.knowledge.ProjectInfo;
 import org.uengine.codi.mw3.knowledge.ProjectNode;
@@ -47,9 +48,9 @@ public class ResourceContextMenu extends CloudMenu {
 		
 		this.add(new SubMenuItem(new NewMenu(this.getResourceNode())));
 		this.add(new MenuItem("open", "$resource.menu.open"));
-		// TODO jms 작업을 위하여 메뉴 추가 추후 변경
-		this.add(new MenuItem("openWithJMS", "jms View 보기"));
-		this.add(new MenuItem("processMerge", "프로세스 비교"));
+		// TODO jms 작업을 위하여 메뉴 추가 추후 변경 (사전으로 교체)
+		this.add(new MenuItem("dictionary", "$dictionary"));
+		this.add(new MenuItem("processMerge", "$processMergeCompare"));
 		
 		this.add(new MenuItem(MenuItem.TYPE_DIVIDER));
 		this.add(new MenuItem("copy", "$resource.menu.copy"));
@@ -81,23 +82,15 @@ public class ResourceContextMenu extends CloudMenu {
 		}
 	}
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
-	public Object openWithJMS() throws Exception{
+	public Object dictionary() throws Exception{
 		Object clipboard = session.getClipboard();
 		if(clipboard instanceof ResourceNode){
 			ResourceNode node = (ResourceNode)clipboard;
-			String defId = node.getName();
-			ProcessViewWindow defWindow = new ProcessViewWindow();
-			defWindow.setDefId(defId);
-			defWindow.setAlias(node.getPath());
-			defWindow.load();
 			
-			ModalWindow popup = new ModalWindow();
-			popup.setTitle("JMS View");
-			popup.setWidth(1000);
-			popup.setHeight(500);
-			popup.setPanel(defWindow);
+			DictionaryManagement dictionaryManagement = new DictionaryManagement();
+			dictionaryManagement.load();
 			
-			return popup;
+			return new ToAppend(new CloudWindow("editor"), dictionaryManagement);
 		}else{
 			return null;
 		}
@@ -108,8 +101,8 @@ public class ResourceContextMenu extends CloudMenu {
 		if(clipboard instanceof ResourceNode){
 			ResourceNode node = (ResourceNode)clipboard;
 			ProcessMergeEditor processMergeEditor = new ProcessMergeEditor(node);
-			processMergeEditor.setId("프로세스 비교 위저드");
-			processMergeEditor.setName("프로세스 비교 위저드");
+			processMergeEditor.setId("$processMergeCompare");
+			processMergeEditor.setName("$processMergeCompare");
 			
 			return new ToAppend(new CloudWindow("editor"), processMergeEditor);
 			
