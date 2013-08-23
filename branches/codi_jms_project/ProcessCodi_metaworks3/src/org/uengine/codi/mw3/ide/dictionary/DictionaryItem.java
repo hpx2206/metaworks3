@@ -1,16 +1,11 @@
 package org.uengine.codi.mw3.ide.dictionary;
 
-import org.metaworks.MetaworksContext;
-import org.metaworks.Refresh;
-import org.metaworks.Remover;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.MetaworksDAO;
 import org.metaworks.dao.TransactionContext;
 import org.uengine.codi.mw3.knowledge.ITopicNode;
-import org.uengine.codi.mw3.knowledge.TopicTitle;
-import org.uengine.codi.mw3.model.Popup;
 
 public class DictionaryItem extends Database<IDictionaryItem> implements IDictionaryItem{
 	
@@ -96,28 +91,6 @@ public class DictionaryItem extends Database<IDictionaryItem> implements IDictio
 		
 	}
 	
-	
-//	public IDictionaryItem load() throws Exception {
-//		StringBuffer sb = new StringBuffer();
-//		sb.append("select * from dictionary dic");
-//		sb.append(" where dic.dicId =?dicId");
-//		sb.append(" and dic.dicType =?dicType");
-//		sb.append(" and dic.dicName =?dicName");
-//		sb.append(" and dic.dicDescription =?dicDescription");
-//		sb.append(" and dic.dicLinked =?dicLinked");
-//		
-//		IDictionaryItem dao = (IDictionaryItem)MetaworksDAO.createDAOImpl(TransactionContext.getThreadLocalInstance(), sb.toString(), IDictionaryItem.class); 
-//		dao.set("dicId", DIC_ID);
-//		dao.set("dicType", this.getDicType());
-//		dao.set("dicName", this.getDicName());
-//		dao.set("dicDiscription", this.getDicDescription());
-//		dao.set("dicLinked", this.getDicLinked());
-//		dao.select();
-//		
-//		return dao; 
-//		
-//	}
-	
 	public IDictionaryItem load(String dicType) throws Exception{
 		StringBuffer sb = new StringBuffer();
 		sb.append("select * ");
@@ -136,17 +109,25 @@ public class DictionaryItem extends Database<IDictionaryItem> implements IDictio
 	}
 	
 	public void modify() throws Exception {
-//		StringBuffer sb = new StringBuffer();
-//		sb.append("update dictionary ");
-//		sb.append(" where dicType=?dicType");
-//		sb.append(" order by dicName desc");
+		StringBuffer sb = new StringBuffer();
+		sb.append("update dictionary ");
+		sb.append(" set dicType=?dicType");
+		sb.append(" and dicName=?dicName");
+		sb.append(" and dicDescription=?dicDescription");
+		sb.append(" where dicId=?dicId");
+		
+		IDictionaryItem iDictionaryItem = (IDictionaryItem) sql(IDictionaryItem.class, sb.toString());
+		iDictionaryItem.set("dicId", this.dicId);
+		iDictionaryItem.set("dicType", this.getDicType());
+		iDictionaryItem.set("dicName", this.getDicName());
+		iDictionaryItem.set("dicDescription", this.getDicDescription());
+		iDictionaryItem.update();
 	}
 	
 	public void delete() throws Exception {
 		this.deleteDatabaseMe();
 		
 	}
-	
 
 	
 }
