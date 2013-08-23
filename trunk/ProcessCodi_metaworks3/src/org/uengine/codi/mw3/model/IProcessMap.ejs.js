@@ -4,7 +4,7 @@ var org_uengine_codi_mw3_model_IProcessMap = function(objectId, className){
 	this.divId = 'objDiv_' + this.objectId;
 	
 	this.obj = $('#' + this.divId);
-	this.obj.css('padding', '1px 1px 2px 1px');
+	//this.obj.css('padding', '1px 1px 2px 1px');
 	
 	this.windowObjectId = this.obj.closest('.mw3_window').attr('objectId');
 	
