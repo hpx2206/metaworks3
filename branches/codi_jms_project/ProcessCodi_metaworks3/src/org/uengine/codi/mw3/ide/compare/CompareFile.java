@@ -1,8 +1,6 @@
 package org.uengine.codi.mw3.ide.compare;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -21,8 +19,6 @@ import org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerContainer;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerContentPanel;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessViewer;
 import org.uengine.kernel.Activity;
-import org.uengine.kernel.GlobalContext;
-import org.uengine.kernel.ProcessDefinition;
 import org.uengine.util.UEngineUtil;
 
 

@@ -1,6 +1,5 @@
 package org.uengine.codi.mw3.ide.compare;
 
-import org.uengine.codi.mw3.ide.editor.process.ProcessEditor;
 import org.uengine.codi.mw3.ide.editor.process.ProcessMergeEditor;
 
 public class FileComparePanel {
