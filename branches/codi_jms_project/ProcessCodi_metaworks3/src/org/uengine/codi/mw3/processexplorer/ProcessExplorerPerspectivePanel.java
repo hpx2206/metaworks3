@@ -2,6 +2,7 @@ package org.uengine.codi.mw3.processexplorer;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.uengine.codi.mw3.model.DocumentPerspective;
 import org.uengine.codi.mw3.model.Session;
 
 public class ProcessExplorerPerspectivePanel  implements ContextAware {
@@ -31,12 +32,16 @@ public class ProcessExplorerPerspectivePanel  implements ContextAware {
 			this.favoritePerspective = favoritePerspective;
 		}
 
-	
-
-
+	DocumentPerspective documentPerspective;
+		public DocumentPerspective getDocumentPerspective() {
+			return documentPerspective;
+		}
+		public void setDocumentPerspective(DocumentPerspective documentPerspective) {
+			this.documentPerspective = documentPerspective;
+		}
+		
 	public ProcessExplorerPerspectivePanel() throws Exception {
 		this(null);
-		setMetaworksContext(new MetaworksContext());
 	}
 	
 	public ProcessExplorerPerspectivePanel(Session session) throws Exception{
@@ -48,6 +53,13 @@ public class ProcessExplorerPerspectivePanel  implements ContextAware {
 			favoritePerspective.session = session;
 			favoritePerspective.select();		
 			
+			documentPerspective = new DocumentPerspective();
+			documentPerspective.session = session;
+			
+			setMetaworksContext(new MetaworksContext());
+			this.getMetaworksContext().setHow("explorer");
+			documentPerspective.setMetaworksContext(this.getMetaworksContext());
+			documentPerspective.select();
 	}
 	
 }

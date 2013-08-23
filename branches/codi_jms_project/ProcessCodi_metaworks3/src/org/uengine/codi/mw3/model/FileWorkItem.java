@@ -56,7 +56,13 @@ public class FileWorkItem extends WorkItem{
 		public void setVersionUpOption(String versionUpOption) {
 			this.versionUpOption = versionUpOption;
 		}
-
+	DocumentNode documentNode;
+		public DocumentNode getDocumentNode() {
+			return documentNode;
+		}
+		public void setDocumentNode(DocumentNode documentNode) {
+			this.documentNode = documentNode;
+		}
 	@Override
 	@Hidden(on=false) //overrides the annotation
 	public MetaworksFile getFile() {
@@ -113,7 +119,11 @@ public class FileWorkItem extends WorkItem{
 		this.setContent(this.getFile().getUploadedPath());
 		this.setTool(this.getFile().getMimeType());
 		this.setExtFile(this.getFile().getFilename());
-		
+		documentNode = new DocumentNode();
+		documentNode.setUrl(this.getContent());
+		documentNode.setThumbnail(this.getExtFile());
+		documentNode.setConntype(this.getTool());
+
 		String mimeType = getFile().getMimeType();
 		if(mimeType != null && mimeType.indexOf("image") != 0){
 			Preview preview = new Preview();

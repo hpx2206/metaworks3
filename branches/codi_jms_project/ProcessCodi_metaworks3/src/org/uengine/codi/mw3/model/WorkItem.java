@@ -472,12 +472,22 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			this.ext10 = ext10;
 		}
 
+		
 	boolean more;
 		public boolean isMore() {
 			return more;
 		}	
 		public void setMore(boolean more) {
 			this.more = more;
+		}
+
+	public DocumentDrag documentDrag;	
+		public DocumentDrag getDocumentDrag() {
+			return documentDrag;
+		}
+	
+		public void setDocumentDrag(DocumentDrag documentDrag) {
+			this.documentDrag = documentDrag;
 		}
 
 	public void like() throws Exception{
@@ -712,7 +722,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			this.minorVer = minorVer;
 		}
 		
-		
+
 	Long prtTskId;
 		public Long getPrtTskId() {
 			return prtTskId;
@@ -1259,4 +1269,5 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	
 	@Autowired
 	public InstanceViewContent instanceViewContent;
+
 }

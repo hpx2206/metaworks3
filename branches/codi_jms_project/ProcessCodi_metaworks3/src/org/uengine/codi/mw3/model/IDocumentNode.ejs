@@ -1,0 +1,42 @@
+<%
+	if(value){
+	
+%>
+	<%
+		if( mw3.how == 'perspectivePanel' ){
+	%>
+		<li>
+	 		<img class="navi_icon" src="images/folder.png" />
+	 		<a onClick="<%=methods.loadDocument.caller()%>" href="#">
+	 			<%=value.name%>
+	 		</a>
+	 	</li>
+	<%	
+		}else if( mw3.how == 'explorer' ){
+				var nodeStatus = "opened";
+				if(!value.close)
+					nodeStatus = "closed";
+			if(mw3.when == 'onlyView'){
+%>
+			<div id="wfnode_<%=objectId%>" class="wfNode" style="margin:3px 0; position:relative">
+				<table border="0" cellspacing="0" cellpadding="0" width="100%">
+					<tr>
+						<td class="<%=nodeStatus%>"  onclick="<%=value.close?methods.expand.caller():methods.collapse.caller()%>">
+							<span>aa</span>
+						</td>
+						<td>
+							<span class="wfNodeText" style="width:100%;">
+							<%=value.name%>
+<%			
+		}
+%>				
+						</td>
+					</tr>
+				</table>
+			</div>
+	<%	
+	}
+	%>
+<%	
+	}
+%>

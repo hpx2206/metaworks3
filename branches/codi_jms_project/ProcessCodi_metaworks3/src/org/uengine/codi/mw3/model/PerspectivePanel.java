@@ -1,9 +1,18 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.ContextAware;
+import org.metaworks.MetaworksContext;
 import org.uengine.codi.mw3.knowledge.ProjectPerspective;
 import org.uengine.kernel.GlobalContext;
 
-public class PerspectivePanel {
+public class PerspectivePanel  implements ContextAware {
+	MetaworksContext metaworksContext;
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
+		}		
 
 	PersonalPerspective personalPerspective;
 		public PersonalPerspective getPersonalPerspective() {
@@ -58,7 +67,6 @@ public class PerspectivePanel {
 		public void setProjectPerspective(ProjectPerspective projectPerspective) {
 			this.projectPerspective = projectPerspective;
 		}
-
 //	ProcessStatusPerspective processStatusPerspective;
 //		public ProcessStatusPerspective getProcessStatusPerspective() {
 //			return processStatusPerspective;
@@ -76,6 +84,15 @@ public class PerspectivePanel {
 //			this.strategicPerspective = strategicPerspective;
 //		}
 		
+	DocumentPerspective documentPerspective; 	
+		public DocumentPerspective getDocumentPerspective() {
+			return documentPerspective;
+		}
+	
+		public void setDocumentPerspective(DocumentPerspective documentPerspective) {
+			this.documentPerspective = documentPerspective;
+		}
+
 	TopicPerspective topicPerspective;
 		public TopicPerspective getTopicPerspective() {
 			return topicPerspective;
@@ -110,6 +127,12 @@ public class PerspectivePanel {
 				organizationPerspectiveRole = new OrganizationPerspectiveRole();
 				//프로세스별
 				processPerspective = new ProcessPerspective();
+				
+				//문서
+				documentPerspective = new DocumentPerspective();
+				setMetaworksContext(new MetaworksContext());
+				this.getMetaworksContext().setHow("perspectivePanel");
+				documentPerspective.setMetaworksContext(this.getMetaworksContext());
 				
 				//앱
 				if("1".equals(GlobalContext.getPropertyString("app.use", "1"))){
