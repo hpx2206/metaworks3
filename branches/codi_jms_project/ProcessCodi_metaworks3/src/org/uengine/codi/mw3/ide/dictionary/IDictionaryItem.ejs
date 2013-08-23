@@ -1,0 +1,19 @@
+<% 
+if(value && value.dicId != null){
+%>
+    
+    <div>
+        <%=fields.dicType.here()%>
+        <%=fields.dicName.here()%>
+        <%=fields.dicDescription.here()%>
+        <%=fields.dicLinked.here()%>
+    </div>
+    
+    <div>
+            <a id="wBtn" href="#" onClick="<%=methods.modify.caller()%>"<span>수정</span></a>
+            <a id="wBtn" href="#" onClick="<%=methods.delete.caller()%>"<span>삭제</span></a>
+    </div>
+
+<%
+}
+%>
