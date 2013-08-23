@@ -238,7 +238,9 @@ legend {display:none;}
     text-decoration: none;
     line-height: 20px;
     cursor: pointer;
-    overflow: hidden
+    overflow: hidden;
+    font-size:14px;
+    margin-right:5px;
 }
 #wih_button a .comment_select{ width:16px; height:13px; position:absolute; bottom:-38px;background: url('../../images/waveStyle/i_comment_selector.png') no-repeat; }
 #wih_button .comment_btn_on {
