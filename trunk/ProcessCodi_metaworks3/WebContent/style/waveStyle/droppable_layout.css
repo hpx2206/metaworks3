@@ -2388,3 +2388,23 @@ select.select[class] {
 .show_west_btn{position:absolute;top:42%; left:0px;width:17px;height:114px; background:url(../../images/waveStyle/show_left_btn.png); cursor:pointer; display:none;z-index:2}
 .west_more_btn{position:absolute; right:10px; top:-24px; font-size:11px; display:none;}
 .west_more_btn a {color:#5896db !important;}
+
+.file_upload {
+	height:100%;
+	overflow:hidden;
+	position:absolute;
+	right:0;
+	top:0;
+	width:100%
+}
+.file_input {
+	bottom:0;
+	cursor:inherit;
+	font-size:1000px !important;
+	height:300px;
+	margin:0;
+	opacity:0;
+	padding:0;
+	position:absolute;
+	right:0
+}
