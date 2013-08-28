@@ -28,6 +28,7 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.TypeSelector;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.dwr.MetaworksRemoteService;
+import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.ide.Project;
@@ -76,7 +77,11 @@ public class MetadataProperty implements ContextAware, Cloneable {
 	public Session session;
 
 	public MetadataProperty() {
-		setFile(new MetadataFile());
+		String projectSourcePath = (String)TransactionContext.getThreadLocalInstance().getRequest().getSession().getAttribute("projectSourcePath");
+		MetadataFile file = new MetadataFile();
+		file.setBaseDir(projectSourcePath);
+		
+		setFile(file);
 		setMetaworksContext(new MetaworksContext());
 
 	}
@@ -106,6 +111,9 @@ public class MetadataProperty implements ContextAware, Cloneable {
 		}
 		public void setType(String type) {
 			this.type = type;
+			if( this.getFile() != null ){
+				this.getFile().setTypeDir(type);
+			}
 		}
 		
 	@XStreamOmitField
@@ -289,6 +297,8 @@ public class MetadataProperty implements ContextAware, Cloneable {
 					|| IMAGE_PROP.equals(this.getType())
 					|| PROCESS_PROP.equals(this.getType())
 					|| FORM_PROP.equals(this.getType())) {
+				
+				String projectSourcePath = (String)TransactionContext.getThreadLocalInstance().getRequest().getSession().getAttribute("projectSourcePath");
 
 				if (isFile) {
 					this.getFile().upload();
@@ -298,13 +308,13 @@ public class MetadataProperty implements ContextAware, Cloneable {
 				if (isResource) {
 					this.setValue(this.getResourceNode().getName());
 				}
-
+				
 			} else if (STRING_PROP.equals(this.getType())) {
 				this.setValue(this.getValue());
 			}
 
 			this.getFile().setFileTransfer(null);
-			
+			this.setFilePreview(null);
 			metadataXML.getProperties().add(this);
 			metadataXML.init();
 
@@ -718,7 +728,7 @@ public class MetadataProperty implements ContextAware, Cloneable {
 			file.setUploadedPath(this.getValue());
 			file.setMimeType(ResourceNode.findNodeType(this.getValue()));
 
-			String path = this.getProjectId() + File.separatorChar + "src" + File.separatorChar + file.getUploadedPath();
+			String path = this.getProjectId() + File.separatorChar + file.getTypeDir() + File.separatorChar + file.getUploadedPath();
 			
 			Project project = workspace.findProject(this.getProjectId());
 			

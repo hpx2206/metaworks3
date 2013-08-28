@@ -12,7 +12,7 @@ import org.metaworks.website.AbstractMetaworksFile;
 import org.metaworks.website.MetaworksFile;
 
 
-@Face(ejsPath="org/metaworks/website/MetaworksFile.ejs", options={"hideText"}, values={"true"})
+@Face(ejsPath="org/metaworks/website/MetaworksFile.ejs")
 public class MetadataFile extends AbstractMetaworksFile {
 	
 	public MetadataFile() {
