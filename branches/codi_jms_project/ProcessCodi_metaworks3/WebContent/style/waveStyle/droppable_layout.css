@@ -2364,3 +2364,5 @@ select.select[class] {
 .fb_addForm .add_f_text{ color:#fff; font-weight:bold}
 
 .ProcessNameView{margin-right:10px;}
+.ProcessExplorerContentProperty .form_table2{padding:0px !important;}
+.ProcessExplorerContentProperty .activityInfo{ padding:5px 20px; border-bottom:1px solid #ccc;background: url(../../images/waveStyle/navi_icon.png) 3px 5px no-repeat #f3f3f3;}
