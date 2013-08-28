@@ -335,4 +335,9 @@ public class ResourceNode extends TreeNode implements ContextAware {
 		} catch (Exception e) {
 		}
 	}
+	
+	@ServiceMethod
+	public void deleteResourcePicker(){
+		this.setId(null);
+	}
 }
