@@ -53,6 +53,9 @@ public class FormEditor extends Editor {
 	
 	@Override
 	public String load() {
+		
+		super.load();
+		
 		Project project = workspace.findProject(this.getResourceNode().getProjectId());
 		
 		//CodiClassLoader.refreshSourcePath(project.getBuildPath().getSources().get(0).getPath());
@@ -71,10 +74,11 @@ public class FormEditor extends Editor {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 		
 		if(this.getContent() != null)
 			form.load();
+		else
+			form.init();
 		
 		this.setForm(form);
 		

@@ -244,6 +244,8 @@ public class CommonFormField implements ContextAware, Cloneable {
 			CommonFormField applyFormField = (CommonFormField)this.clone();
 			
 			applyFormField.init();
+			applyFormField.setHide(this.getHide());
+			applyFormField.setFieldSize(this.getFieldSize());
 			applyFormField.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 			applyFormField.getMetaworksContext().setWhere("form");
 
@@ -403,12 +405,14 @@ public class CommonFormField implements ContextAware, Cloneable {
 
 		try {
 			formField = (CommonFormField)this.clone();
+			formField.init();
 			formField.setFieldId(form.makeFormFieldId());
 			formField.setId(fd.getName());
 			formField.setDisplayName(fd.getDisplayName());
-			formField.setHide((Boolean)fd.getAttributes().get("is key"));
 			
-			formField.init();
+			if(fd.getAttributes().get("hidden") != null)
+				formField.setHide((Boolean)fd.getAttributes().get("hidden"));
+			
 			formField.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 			formField.getMetaworksContext().setWhere("form");
 
