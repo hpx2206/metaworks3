@@ -77,11 +77,14 @@ public class Form implements ContextAware {
 		return fullClassName;
 	}
 	
-	public void load() {
+	public void init() {
 		this.setFormFields(new ArrayList<CommonFormField>());
 		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 		this.getMetaworksContext().setWhere("form");
-		
+	}
+	
+	public void load() {
+		this.init();
 		try {
 			this.formLoad();
 		}catch(Exception ex) {
