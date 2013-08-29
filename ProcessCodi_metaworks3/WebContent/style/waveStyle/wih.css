@@ -229,6 +229,8 @@ legend {display:none;}
     margin-left:65px;    
 	position:relative;
 	z-index:99;
+	height:25px;
+	overflow:hidden;
 }
 #wih_button a {
 	margin-top: 5px;
