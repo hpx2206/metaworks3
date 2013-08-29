@@ -141,10 +141,8 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype = 
 	    canvasDivObj.droppable({
 	    	
 	        drop: function (event, ui) {
-	        	console.log('start 1!! ');
-//	        	if(!$(ui.draggable).hasClass('icon_shape_'+objectId))
-//	        		return true;
-	        	console.log($(ui.draggable).attr('_classname'));
+	        	if(!$(ui.draggable).hasClass('icon_shape_'+objectId))
+	        		return true;
 	        	var shapeInfo = {
 		                '_shape_type': $(ui.draggable).attr('_shape_type'),
 		                '_shape_id'  : $(ui.draggable).attr('_shape_id'),
