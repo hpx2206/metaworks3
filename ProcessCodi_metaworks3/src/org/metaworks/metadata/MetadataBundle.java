@@ -150,7 +150,7 @@ public class MetadataBundle {
 								// for 문을 돌면서 해당 경로에 데이터가 없다면 데이터를 요청하고, remote 를  true로 준다.
 								String value = metadataProperty.getValue();
 								if( !"string".equalsIgnoreCase(metadataProperty.getType())){
-									File checkFile = new File(metadataPath+value);
+									File checkFile = new File(metadataPath+ File.separatorChar + value);
 									if( !checkFile.exists() ){
 										if( !checkFile.getParentFile().exists() ){
 											checkFile.getParentFile().mkdirs();

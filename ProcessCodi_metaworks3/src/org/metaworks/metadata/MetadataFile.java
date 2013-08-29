@@ -49,7 +49,6 @@ public class MetadataFile extends AbstractMetaworksFile {
 		String prefix = overrideUploadPathPrefix();
 		String filePath = this.getTypeDir() + File.separatorChar +  this.getFileTransfer().getFilename();
 		String uploadPath = prefix + File.separatorChar + filePath;
-		
 		new File(uploadPath).getParentFile().mkdirs();
 		
 		InputStream is = null;

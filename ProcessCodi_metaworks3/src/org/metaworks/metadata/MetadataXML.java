@@ -166,7 +166,7 @@ public class MetadataXML implements ContextAware {
 		if( metadata == null ){
 			metadata = new MetadataXML();
 		}
-		metadata.setFilePath(resourceNode.getId());
+		metadata.setFilePath(resourceNode.getPath());
 		
 		
 		for(MetadataProperty metadataProperty : metadata.getProperties()){
