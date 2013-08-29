@@ -64,6 +64,8 @@ var org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel = functi
 		mw3.importScript('scripts/opengraph/OpenGraph-0.1-SNAPSHOT.js');
 		mw3.importScript('scripts/jquery/jquery.contextMenu.js');
 		mw3.importStyle('style/jquery/jquery.contextMenu.css');
+		mw3.importScript('scripts/jquery/jquery-tooltip.js');
+		mw3.importStyle('style/jquery/jquery-tooltip.css');
 		mw3.importStyle('dwr/metaworks/org/uengine/codi/mw3/model/PureWebProcessDesigner.ejs.css');
 		
 		var faceHelper = this;
@@ -139,9 +141,10 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype = 
 	    canvasDivObj.droppable({
 	    	
 	        drop: function (event, ui) {
-	        	if(!$(ui.draggable).hasClass('icon_shape_'+objectId))
-	        		return true;
-	        	
+	        	console.log('start 1!! ');
+//	        	if(!$(ui.draggable).hasClass('icon_shape_'+objectId))
+//	        		return true;
+	        	console.log($(ui.draggable).attr('_classname'));
 	        	var shapeInfo = {
 		                '_shape_type': $(ui.draggable).attr('_shape_type'),
 		                '_shape_id'  : $(ui.draggable).attr('_shape_id'),
