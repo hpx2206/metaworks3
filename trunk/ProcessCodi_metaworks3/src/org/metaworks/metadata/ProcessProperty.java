@@ -77,34 +77,33 @@ public class ProcessProperty extends MetadataProperty{
 		if(this.getFile().getUploadedPath() != null){
 			
 			int index = metadataXML.properties.indexOf(this);
-			
-			String metadataFileName = "uengine.metadata";
-			String metadataFilePath = metadataXML.getFilePath() + File.separatorChar + metadataFileName;
-			
-			MetadataProperty editProperty = metadataXML.properties.get(index);
-			editProperty.setName(this.getName());
-			editProperty.setChange(true);
-			editProperty.setType(this.getType());
-			
-			
-			MetadataFile file = new MetadataFile();
-			file.setTypeDir(this.getType());
-			file.setUploadedPath(this.getFile().getUploadedPath());
-			file.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
-			file.setMimeType(ResourceNode.findNodeType(this.getFile().getFilename()));
-			file.setFileTransfer(this.getFile().getFileTransfer());
-			
-			editProperty.setFile(file);
-			editProperty.setValue(file.getUploadedPath());
-			editProperty.getFile().getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
-			
-			
-			MetadataEditor metadataEditor = new MetadataEditor();
-			metadataEditor.setResourceNode(new ResourceNode());
-			metadataEditor.getResourceNode().setPath(metadataFilePath);
-			metadataEditor.setContent(metadataXML.toXmlXStream());
-			metadataEditor.save();
-		
+			if( index > 0 ){
+				String metadataFilePath = metadataXML.getFilePath() ;
+				
+				MetadataProperty editProperty = metadataXML.properties.get(index);
+				editProperty.setName(this.getName());
+				editProperty.setChange(true);
+				editProperty.setType(this.getType());
+				
+				
+				MetadataFile file = new MetadataFile();
+				file.setTypeDir(this.getType());
+				file.setUploadedPath(this.getFile().getUploadedPath());
+				file.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+				file.setMimeType(ResourceNode.findNodeType(this.getFile().getFilename()));
+				file.setFileTransfer(this.getFile().getFileTransfer());
+				
+				editProperty.setFile(file);
+				editProperty.setValue(file.getUploadedPath());
+				editProperty.getFile().getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+				
+				
+				MetadataEditor metadataEditor = new MetadataEditor();
+				metadataEditor.setResourceNode(new ResourceNode());
+				metadataEditor.getResourceNode().setPath(metadataFilePath);
+				metadataEditor.setContent(metadataXML.toXmlXStream());
+				metadataEditor.save();
+			}
 		}else {
 			
 			InstanceMonitor processInstanceMonitor = new InstanceMonitor();

@@ -4,7 +4,6 @@ var org_metaworks_metadata_ImageProperty = function(objectId, className){
 	
 	this.object = mw3.objects[this.objectId];
 	
-	
 	this.accordionList = $("#sp_accordion_list_" + this.objectId);
 	
 	this.accordionList.click(function(){

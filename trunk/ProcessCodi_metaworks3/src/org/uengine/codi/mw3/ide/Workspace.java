@@ -61,7 +61,12 @@ public class Workspace {
 				while(projectList.next()){
 					ProjectNode node = new ProjectNode();
 					node.copyFrom(projectList);
-					String path = MetadataBundle.getProjectBasePath(node.getName());
+					String path;
+					if( tenantId != null ){
+						path = MetadataBundle.getProjectBasePath(node.getName() , tenantId);
+					}else{
+						path = MetadataBundle.getProjectBasePath(node.getName());
+					}
 					CodiFileUtil.mkdirs(path);
 					
 					Project project = new Project();

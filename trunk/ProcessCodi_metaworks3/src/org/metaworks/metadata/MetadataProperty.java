@@ -77,13 +77,8 @@ public class MetadataProperty implements ContextAware, Cloneable {
 	public Session session;
 
 	public MetadataProperty() {
-		String projectSourcePath = (String)TransactionContext.getThreadLocalInstance().getRequest().getSession().getAttribute("projectSourcePath");
-		MetadataFile file = new MetadataFile();
-		file.setBaseDir(projectSourcePath);
-		
-		setFile(file);
+		setFile(new MetadataFile());
 		setMetaworksContext(new MetaworksContext());
-
 	}
 
 	@XStreamOmitField
@@ -298,10 +293,10 @@ public class MetadataProperty implements ContextAware, Cloneable {
 					|| PROCESS_PROP.equals(this.getType())
 					|| FORM_PROP.equals(this.getType())) {
 				
-				String projectSourcePath = (String)TransactionContext.getThreadLocalInstance().getRequest().getSession().getAttribute("projectSourcePath");
-
 				if (isFile) {
 					this.getFile().upload();
+					this.setValue(this.getFile().getFilename());
+				}else if(this.getFile()!=null && this.getFile().getFilename() != null){
 					this.setValue(this.getFile().getFilename());
 				}
 
@@ -494,11 +489,17 @@ public class MetadataProperty implements ContextAware, Cloneable {
 
 		if (!STRING_PROP.equals(this.getType())) {
 
+			
 			ResourceNode resourceNode = new ResourceNode();
 			resourceNode.setMetaworksContext(new MetaworksContext());
 			resourceNode.getMetaworksContext().setHow("resourcePicker");
-
 			metadataProperty.setResourceNode(resourceNode);
+			
+			if( this.metadataXML != null && this.metadataXML.getFilePath() != null ){
+				String metadataXMLPath = this.metadataXML.getFilePath();
+				String FileUploadPath = metadataXMLPath.substring(0 , metadataXMLPath.indexOf("uengine.metadata"));
+				metadataProperty.getFile().setBaseDir(FileUploadPath);
+			}
 		}
 
 		return metadataProperty;
