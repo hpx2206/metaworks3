@@ -135,7 +135,7 @@ public class TopicMapping extends Database<ITopicMapping> implements ITopicMappi
 	
 	public ITopicMapping findByUser() throws Exception {
 		StringBuffer selectbf = new StringBuffer();
-		selectbf.append("select * from BPM_TOPICMAPPING ");
+		selectbf.append("select * from bpm_topicmapping ");
 		selectbf.append(" where topicid = ?topicid");
 		selectbf.append(" and userid = ?userid");
 		
@@ -148,7 +148,7 @@ public class TopicMapping extends Database<ITopicMapping> implements ITopicMappi
 	}
 	
 	public IUser findUser() throws Exception {
-		IUser users = (IUser) Database.sql(IUser.class, "select  userId, userName name from BPM_TOPICMAPPING  where topicId=?topicId and assigntype=?assigntype ");
+		IUser users = (IUser) Database.sql(IUser.class, "select  userId, userName name from bpm_topicmapping  where topicId=?topicId and assigntype=?assigntype ");
 		
 		users.set("topicId", this.getTopicId() );
 		users.set("assigntype", 0);
@@ -157,7 +157,7 @@ public class TopicMapping extends Database<ITopicMapping> implements ITopicMappi
 		return users;
 	}
 	public IDept findDept() throws Exception {
-		IDept dept = (IDept) Database.sql(IDept.class, "select  userId as PARTCODE , userName as  PARTNAME  from BPM_TOPICMAPPING  where topicId=?topicId and assigntype=?assigntype ");
+		IDept dept = (IDept) Database.sql(IDept.class, "select  userId as PARTCODE , userName as  PARTNAME  from bpm_topicmapping  where topicId=?topicId and assigntype=?assigntype ");
 		
 		dept.set("topicId", this.getTopicId() );
 		dept.set("assigntype", 2);
