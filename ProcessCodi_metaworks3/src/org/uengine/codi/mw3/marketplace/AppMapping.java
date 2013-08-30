@@ -37,7 +37,7 @@ public class AppMapping extends Database<IAppMapping> implements IAppMapping {
 		public void setIsDeleted(boolean isDeleted) {
 			this.isDeleted = isDeleted;
 		}
-		
+
 	boolean selected;
 		public boolean isSelected() {
 			return selected;
@@ -78,7 +78,7 @@ public class AppMapping extends Database<IAppMapping> implements IAppMapping {
 	
 	public IAppMapping findMyApps() throws Exception {
 		
-		IAppMapping findApp = (IAppMapping) Database.sql(IAppMapping.class, "select * from appmapping where comcode=?comCode and isdeleted=?isDeleted");
+		IAppMapping findApp = (IAppMapping) Database.sql(IAppMapping.class, "select appmapping.appId, appmapping.comcode, appmapping.appname, appmapping.isdeleted, bpm_knol.name projectName from appmapping appmapping, app, bpm_knol where appmapping.appId = app.appId and app.projectId = bpm_knol.id and appmapping.comcode=?comCode and appmapping.isdeleted=?isdeleted");
 		
 		findApp.setComCode(this.getComCode());
 		findApp.setIsDeleted(this.getIsDeleted());
