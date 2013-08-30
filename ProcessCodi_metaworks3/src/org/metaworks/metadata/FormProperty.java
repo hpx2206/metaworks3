@@ -62,7 +62,7 @@ public class FormProperty extends MetadataProperty{
 	@ServiceMethod(callByContent=true)
 	public void changeFile() throws Exception {
 
-		String path = this.getProjectId() + File.separatorChar + "src" + File.separatorChar + file.getUploadedPath();
+		String path = this.getProjectId() + File.separatorChar + file.getUploadedPath();
 		
 		Project project = workspace.findProject(this.getProjectId());
 		
