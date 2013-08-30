@@ -3,6 +3,8 @@
 
 if(mw3.where == 'ssp'){
 	if(mw3.when == 'show_detail' ) {
+	console.log('1***');
+	console.log(value.file.mimeType);
 	%>
 		<span class="form_tit"><br /><br /><%=value.description%></span>
 		<div class="sp_form_block">
@@ -10,11 +12,13 @@ if(mw3.where == 'ssp'){
 		</div>
 		
 		<div class="sp_form_block">
-			<div class="sn_view_box"><div class="sn_view_arrow"><img src="images/marketPlace/sp_box_arrow.gif"  /></div><%=fields.file.here({when: (value.file.mimeType.indexOf('image')==0)?'image':'view' })%></div>
+			<div class="sn_view_box"><div class="sn_view_arrow"><img src="images/marketPlace/sp_box_arrow.gif"  /></div><%=fields.file.here({when: (value.file.mimeType!=null && value.file.mimeType.indexOf('image')==0)?'image':'view' })%></div>
 			<div id="sp_editBtn_<%=objectId%>" class="sp_position_right"><a id="wBtn" onClick="<%=methods.edit.caller()%>"><span><%=mw3.localize('$Edit')%></span></a></div>
 		</div>
 	<%
 	}else if(mw3.when == 'edit') {
+	console.log('2***');
+	console.log(value.file.mimeType);
 	%>
 		<span class="form_tit"><br /><br /><%=value.description%></span>
 		<div class="sp_form_block">
@@ -87,6 +91,9 @@ if(mw3.where == 'ssp'){
                 </div>
                 <% 
                     if(value.file != null && value.file.mimeType != null && value.file.mimeType=='image'){ 
+                    
+                    	console.log('3***');
+	console.log(value.file.mimeType);
                     %>
                         <div style="float:left;margin: 0px 5px 0px 0px;"><%=fields.file.here({when: (value.file.mimeType.indexOf('image')==0)?'image':'view'})%></div>
                 <% } %>
