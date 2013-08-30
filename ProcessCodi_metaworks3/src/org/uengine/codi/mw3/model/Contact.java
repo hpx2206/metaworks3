@@ -23,7 +23,7 @@ public class Contact extends Database<IContact> implements IContact{
 		  .append("  	left join emptable e")
 		  .append("    		on c.friendid = e.empcode")
 		  .append("  	left join recentItem item ")
-		  .append("    		on item.itemId = e.empcode and item.itemType=?itemType")
+		  .append("    		on item.itemId = e.empcode and item.empcode = c.userId and item.itemType=?itemType")
 		  .append(" where c.userId=?userId")
 		  .append("   and c.network=?network")
 		  .append("   and e.isDeleted=?isDeleted");
