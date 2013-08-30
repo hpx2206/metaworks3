@@ -104,7 +104,7 @@ public class ResourceContextMenu extends CloudMenu {
 		}
 	}
 	
-	@ServiceMethod(target=ServiceMethodContext.TARGET_APPEND)
+	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
 	public Object manageMetadata() throws Exception {
 
 		Object clipboard = session.getClipboard();

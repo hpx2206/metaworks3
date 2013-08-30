@@ -264,19 +264,23 @@ public class ResourceNode extends TreeNode implements ContextAware {
 		return editor;
 	}
 
-	@Override
-	@ServiceMethod(payload={"id", "name", "path", "type", "folder", "projectId"}, target=ServiceMethodContext.TARGET_APPEND)
-	public Object action(){
-		
+	private void changeProject(){
 		String currentProjectId = (String)TransactionContext.getThreadLocalInstance().getRequest().getSession().getAttribute("currentProjectId");
 		
-		if(!this.getProjectId().equals(currentProjectId)){
+		if(!this.getProjectId().equals(currentProjectId) && workspace != null){
 			Project project = workspace.findProject(this.getProjectId());
 			
 			project.changeProject("root");
 			
 			TransactionContext.getThreadLocalInstance().getRequest().getSession().setAttribute("currentProjectId", this.getProjectId());
 		}
+	}
+	
+	@Override
+	@ServiceMethod(payload={"id", "name", "path", "type", "folder", "projectId"}, target=ServiceMethodContext.TARGET_APPEND)
+	public Object action(){
+			
+		this.changeProject();
 		
 		if(this.getMetaworksContext() != null && "resource".equals(this.getMetaworksContext().getWhere())){
 			metadataProperty.setResourceNode(this);
@@ -295,6 +299,8 @@ public class ResourceNode extends TreeNode implements ContextAware {
 	public Object[] showContextMenu() {
 		session.setClipboard(this);
 
+		this.changeProject();
+		
 		return new Object[]{new Refresh(session), new ResourceContextMenu(this)};
 	}
 
