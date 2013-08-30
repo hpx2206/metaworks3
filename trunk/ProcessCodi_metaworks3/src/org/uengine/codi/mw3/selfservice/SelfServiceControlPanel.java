@@ -8,7 +8,6 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.AutowiredToClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.dao.TransactionContext;
 import org.metaworks.metadata.FileProperty;
 import org.metaworks.metadata.FormProperty;
 import org.metaworks.metadata.ImageProperty;
@@ -16,15 +15,11 @@ import org.metaworks.metadata.MetadataProperty;
 import org.metaworks.metadata.MetadataXML;
 import org.metaworks.metadata.ProcessProperty;
 import org.metaworks.metadata.StringProperty;
-import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.ide.Project;
 import org.uengine.codi.mw3.ide.Workspace;
-import org.uengine.codi.mw3.knowledge.WfNode;
-import org.uengine.codi.mw3.marketplace.App;
 import org.uengine.codi.mw3.marketplace.AppMapping;
 import org.uengine.codi.mw3.marketplace.IAppMapping;
 import org.uengine.codi.mw3.model.Session;
-import org.uengine.kernel.GlobalContext;
 
 
 /**
@@ -172,30 +167,14 @@ public class SelfServiceControlPanel {
 	@ServiceMethod(callByContent=true)
 	public void selectedApp() throws Exception {
 		
-		App app = new App();
-		app.setAppId(this.getAppId());
+		AppMapping appMapping = new AppMapping();
+		appMapping.setAppId(this.getAppId());
+		appMapping.setComCode(session.getCompany().getComCode());
 		
-		String projectId = app.databaseMe().getProject().getId();
-		
-		WfNode project = new WfNode();
-		project.setId(projectId);
-		
-		String projectName = project.databaseMe().getName();
-		
-		String coderoot = GlobalContext.getPropertyString("codebase", "codebase/");
-		
-		if(!coderoot.endsWith("/")) coderoot=coderoot+"/";
-		
-		String sourceCodeBase = coderoot + projectName;
-		String projectBase = sourceCodeBase + File.separatorChar + session.getCompany().getComCode();
-		
-		String projectSourcePath = sourceCodeBase + File.separatorChar + "root," + sourceCodeBase + File.separatorChar + session.getCompany().getComCode();
-		TransactionContext.getThreadLocalInstance().getRequest().getSession().setAttribute("projectSourcePath", projectSourcePath);
-		CodiClassLoader classLoader = (CodiClassLoader)Thread.currentThread().getContextClassLoader(); 
-		classLoader.addSourcePath(projectSourcePath);
-		
+		Project project = this.getWorkspace().findProject(appMapping.findMe().getProjectName());
+		project.changeProject(session.getCompany().getComCode());
+				
 		MetadataXML metadataXML = new MetadataXML();
-		
 		try {
 			metadataXML = metadataXML.loadWithInputstream(Thread.currentThread().getContextClassLoader().getResourceAsStream(Project.METADATA_FILENAME));
 		} catch (Exception e) {
@@ -206,7 +185,7 @@ public class SelfServiceControlPanel {
 		if(metadataXML == null)
 			metadataXML = new MetadataXML();
 		
-		metadataXML.setFilePath(projectBase);
+		metadataXML.setFilePath(project.getPath() + File.separatorChar + Project.METADATA_FILENAME);
 		
 		this.metadataProperties = new ArrayList<MetadataProperty>();
 		this.fileProperties = new ArrayList<FileProperty>();
@@ -217,7 +196,7 @@ public class SelfServiceControlPanel {
 		
 		for(MetadataProperty metadataProperty : metadataXML.getProperties()){
 			metadataProperty = (MetadataProperty) metadataProperty.selectType();
-			metadataProperty.setProjectId(projectName);
+			metadataProperty.setProjectId(project.getName());
 			metadataProperty.setMetaworksContext(new MetaworksContext());
 			metadataProperty.getMetaworksContext().setWhere("ssp");
 			
