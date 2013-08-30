@@ -101,7 +101,7 @@ public class TopicNode extends Database<ITopicNode> implements ITopicNode {
 		
 		StringBuffer sb = new StringBuffer();
 		sb.append("select * from bpm_knol knol");
-		sb.append(" left join recentItem item on item.itemId = knol.id and item.itemType=?type");
+		sb.append(" left join recentItem item on item.itemId = knol.id and item.empcode = ?userid and item.itemType=?type");
 		sb.append(" where knol.type = ?type");
 		sb.append(" and knol.companyId = ?companyId");
 		sb.append(" and ( knol.secuopt=0 OR (knol.secuopt=1 and ( exists (select topicid from BPM_TOPICMAPPING tp where tp.userid=?userid and knol.id=tp.topicid)  ");
@@ -124,7 +124,7 @@ public class TopicNode extends Database<ITopicNode> implements ITopicNode {
 		
 		StringBuffer sb = new StringBuffer();
 		sb.append("select * from bpm_knol knol");
-		sb.append(" left join recentItem item on item.itemId = knol.id and item.itemType=?type");
+		sb.append(" left join recentItem item on item.itemId = knol.id and item.empcode = ?userid and item.itemType=?type");
 		sb.append(" where knol.type = ?type");
 		sb.append(" and knol.companyId = ?companyId");
 		sb.append(" and ( knol.secuopt=0 OR (knol.secuopt=1 and ( exists (select topicid from BPM_TOPICMAPPING tp where tp.userid=?userid and knol.id=tp.topicid)  ");
