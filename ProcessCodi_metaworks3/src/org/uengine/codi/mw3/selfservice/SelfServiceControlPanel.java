@@ -157,8 +157,9 @@ public class SelfServiceControlPanel {
 		
 		Workspace workspace = new Workspace();
 		
-		while(appList.next())
-			workspace.addProject(session.getCompany().getComCode(), "sample3", appList.getAppName());	
+		while(appList.next()) {			
+			workspace.addProject(session.getCompany().getComCode(), appList.getProjectName(), appList.getAppName());
+		}
 		
 		this.setWorkspace(workspace);
 	}
@@ -196,7 +197,7 @@ public class SelfServiceControlPanel {
 		
 		for(MetadataProperty metadataProperty : metadataXML.getProperties()){
 			metadataProperty = (MetadataProperty) metadataProperty.selectType();
-			metadataProperty.setProjectId(project.getName());
+			metadataProperty.setProjectId(project.getId());
 			metadataProperty.setMetaworksContext(new MetaworksContext());
 			metadataProperty.getMetaworksContext().setWhere("ssp");
 			
