@@ -13,6 +13,7 @@ import org.metaworks.widget.ModalPanel;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.ide.CloudTab;
+import org.uengine.codi.mw3.ide.Project;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.knowledge.ProjectInfo;
 import org.uengine.codi.mw3.knowledge.ProjectNode;
@@ -31,7 +32,7 @@ public class ResourceContextMenu extends CloudMenu {
 	transient public ProjectInfo projectInfo;
 	
 	public ResourceContextMenu(){
-		this(null);
+		
 	}
 	
 	public ResourceContextMenu(ResourceNode resourceNode){
@@ -43,17 +44,31 @@ public class ResourceContextMenu extends CloudMenu {
 		
 		this.add(new SubMenuItem(new NewMenu(this.getResourceNode())));
 		this.add(new MenuItem("open", "$resource.menu.open"));
-		this.add(new MenuItem(MenuItem.TYPE_DIVIDER));
-		this.add(new MenuItem("copy", "$resource.menu.copy"));
-		this.add(new MenuItem("paste", "$resource.menu.paste"));
-		this.add(new MenuItem("remove", "$resource.menu.remove"));
-		this.add(new MenuItem("move", "$resource.menu.move"));
-		this.add(new MenuItem("rename", "$resource.menu.rename"));
-		this.add(new MenuItem("deployee", "$resource.menu.deployee"));
-		this.add(new MenuItem("registerApp", "$resource.menu.registerApp"));
-						
 		
-/*		this.add(new MenuItem(MenuItem.TYPE_DIVIDER));
+		if(!ResourceNode.TYPE_PROJECT.equals(resourceNode.getType())){ 
+			this.add(new MenuItem(MenuItem.TYPE_DIVIDER));
+			this.add(new MenuItem("copy", "$resource.menu.copy"));
+		}else{
+			this.add(new MenuItem(MenuItem.TYPE_DIVIDER));
+		}
+		
+		this.add(new MenuItem("paste", "$resource.menu.paste"));
+		
+		if(!ResourceNode.TYPE_PROJECT.equals(resourceNode.getType())){
+			this.add(new MenuItem("remove", "$resource.menu.remove"));
+			this.add(new MenuItem("move", "$resource.menu.move"));
+			this.add(new MenuItem("rename", "$resource.menu.rename"));
+		}else{
+			this.add(new MenuItem(MenuItem.TYPE_DIVIDER));			
+			this.add(new MenuItem("manageMetadata", "$resource.menu.manageMetadata"));
+			this.add(new MenuItem(MenuItem.TYPE_DIVIDER));
+			this.add(new MenuItem("deployee", "$resource.menu.deployee"));
+			this.add(new MenuItem("registerApp", "$resource.menu.registerApp"));
+		}
+		
+
+		
+		/*
 		this.add(new SubMenuItem(new TeamMenu()));
 		this.add(new MenuItem(MenuItem.TYPE_DIVIDER));
 		this.add(new MenuItem("showProperties", "Properties"));*/
@@ -88,6 +103,31 @@ public class ResourceContextMenu extends CloudMenu {
 			return null;
 		}
 	}
+	
+	@ServiceMethod(target=ServiceMethodContext.TARGET_APPEND)
+	public Object manageMetadata() throws Exception {
+
+		Object clipboard = session.getClipboard();
+		if(clipboard instanceof ResourceNode){
+			ResourceNode node = (ResourceNode)clipboard;
+			
+			ResourceNode metadataFileNode = new ResourceNode();
+			metadataFileNode.setProjectId(node.getProjectId());
+			metadataFileNode.setId(node.getId() + File.separatorChar + Project.METADATA_FILENAME);
+			metadataFileNode.setName(Project.METADATA_FILENAME);
+			metadataFileNode.setPath(node.getPath() + File.separatorChar + metadataFileNode.getName());
+			metadataFileNode.setParentId(node.getId());
+			metadataFileNode.setType(ResourceNode.findNodeType(metadataFileNode.getName()));
+			metadataFileNode.setMetaworksContext(node.getMetaworksContext());
+			
+			return metadataFileNode.action();
+			
+		}		
+		
+		return null;
+		//return new ModalWindow(new ModalPanel(app), 0, 0, "$resource.menu.registerApp");
+	}
+	
 	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
 	public Object[] deployee() throws Exception {
