@@ -47,7 +47,7 @@ public class DefaultCompanyRoleResolutionContext extends RoleResolutionContext {
 				if ( getGroupId() != null  && !"".equals(getGroupId())){
 					roleUser = ConnectiveDAO.createDAOImpl(
 							instance.getProcessTransactionContext(), 
-							"select R.EMPCODE from EMPTABLE E, PARTTABLE P, ROLEUSERTABLE R where E.ISDELETED='0' and P.PARTCODE = ?groupCode and E.PARTCODE=P.PARTCODE and R.ROLECODE = ?roleCode and R.EMPCODE = E.EMPCODE ",
+							"select R.EMPCODE from emptable E, PARTTABLE P, ROLEUSERTABLE R where E.ISDELETED='0' and P.PARTCODE = ?groupCode and E.PARTCODE=P.PARTCODE and R.ROLECODE = ?roleCode and R.EMPCODE = E.EMPCODE ",
 							IDAO.class
 					);
 					
@@ -57,7 +57,7 @@ public class DefaultCompanyRoleResolutionContext extends RoleResolutionContext {
 				} else if ( getReferenceRole() != null && getReferenceRole().getMapping(instance) != null ) {
 					roleUser = ConnectiveDAO.createDAOImpl(
 							instance.getProcessTransactionContext(), 
-							"select R.EMPCODE from EMPTABLE E, (select PARTCODE, EMPCODE from EMPTABLE where EMPCODE= ?empCode) T, ROLEUSERTABLE R where E.ISDELETED='0' and E.PARTCODE =  T.PARTCODE and R.ROLECODE = ?roleCode and R.EMPCODE = E.EMPCODE ",
+							"select R.EMPCODE from emptable E, (select PARTCODE, EMPCODE from emptable where EMPCODE= ?empCode) T, ROLEUSERTABLE R where E.ISDELETED='0' and E.PARTCODE =  T.PARTCODE and R.ROLECODE = ?roleCode and R.EMPCODE = E.EMPCODE ",
 							IDAO.class
 					);
 					
@@ -68,7 +68,7 @@ public class DefaultCompanyRoleResolutionContext extends RoleResolutionContext {
 					roleUser = ConnectiveDAO.createDAOImpl(
 							instance.getProcessTransactionContext(), 
 							" SELECT RU.EMPCODE FROM ROLEUSERTABLE RU " +
-							" 	INNER JOIN EMPTABLE EMP ON EMP.EMPCODE = RU.EMPCODE" +
+							" 	INNER JOIN emptable EMP ON EMP.EMPCODE = RU.EMPCODE" +
 							"		AND EMP.ISDELETED='0' " +
 							" WHERE ROLECODE = ?roleCode",
 							IDAO.class
@@ -81,7 +81,7 @@ public class DefaultCompanyRoleResolutionContext extends RoleResolutionContext {
 				if ( getGroupId() != null ){
 					roleUser = ConnectiveDAO.createDAOImpl(
 							instance.getProcessTransactionContext(), 
-							"select EMPCODE from EMPTABLE where ISDELETED='0' and PARTCODE =  ?PARTCODE ",
+							"select EMPCODE from emptable where ISDELETED='0' and PARTCODE =  ?PARTCODE ",
 							IDAO.class
 					);
 					
@@ -90,7 +90,7 @@ public class DefaultCompanyRoleResolutionContext extends RoleResolutionContext {
 				} else if ( getReferenceRole() != null && getReferenceRole().getMapping(instance) != null ) {
 					roleUser = ConnectiveDAO.createDAOImpl(
 							instance.getProcessTransactionContext(), 
-							"select E.EMPCODE from EMPTABLE E, (select PARTCODE, EMPCODE from EMPTABLE where EMPCODE= ?empCode) T where E.ISDELETED='0' and E.PARTCODE =  T.PARTCODE",
+							"select E.EMPCODE from emptable E, (select PARTCODE, EMPCODE from emptable where EMPCODE= ?empCode) T where E.ISDELETED='0' and E.PARTCODE =  T.PARTCODE",
 							IDAO.class
 					);
 					
