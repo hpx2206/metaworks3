@@ -77,7 +77,7 @@ public class AppMapping extends Database<IAppMapping> implements IAppMapping {
 		
 		IAppMapping findApp = (IAppMapping) Database.sql(IAppMapping.class, "select * from appmapping where comcode=?comCode and isdeleted=?isDeleted");
 		
-		findApp.setComCode(TenantContext.getThreadLocalInstance().getTenantId());
+		findApp.setComCode(this.getComCode());
 		findApp.setIsDeleted(this.getIsDeleted());
 		findApp.select();
 		
