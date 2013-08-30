@@ -19,7 +19,7 @@ import org.metaworks.annotation.ValidatorContext;
 import org.metaworks.annotation.ValidatorSet;
 import org.metaworks.dao.IDAO;
 
-@Table(name = "EMPTABLE")
+@Table(name = "emptable")
 @Face(options={"fieldOrder"}, values={"email,empName,globalCom,password,confirmPassword"})
 public interface IEmployee extends IDAO {
 
