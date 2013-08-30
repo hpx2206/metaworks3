@@ -609,7 +609,7 @@ public class WaitActivity extends ReceiveActivity{
 		ProcessInstanceDAO piDAO = null;
 		try{
 			
-			String sql = "SELECT INSTID FROM BPM_PROCINST WHERE MAININSTID =?MAININSTID AND DONTRETURN='0'";
+			String sql = "SELECT INSTID FROM bpm_procinst WHERE MAININSTID =?MAININSTID AND DONTRETURN='0'";
 			piDAO = piDAOF.createDAOImpl(sql);
 			piDAO.setMainInstId(new Long(instance.getInstanceId()));
 			piDAO.select();
