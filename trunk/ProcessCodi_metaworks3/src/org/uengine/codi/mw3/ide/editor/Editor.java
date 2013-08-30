@@ -80,7 +80,15 @@ public class Editor {
 		public void setLoaded(boolean loaded) {
 			this.loaded = loaded;
 		}
-			
+		
+	boolean useClassLoader;
+		public boolean isUseClassLoader() {
+			return useClassLoader;
+		}
+		public void setUseClassLoader(boolean useClassLoader) {
+			this.useClassLoader = useClassLoader;
+		}
+		
 	public Editor(){
 		
 	}
@@ -119,6 +127,13 @@ public class Editor {
 		try {
 			bao = new ByteArrayOutputStream();
 			
+			if(this.isUseClassLoader()){
+				try {					
+					is = Thread.currentThread().getContextClassLoader().getResourceAsStream(this.getId().substring(this.getResourceNode().getProjectId().length()+1));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}else{
 			//if(TYPE_FILE.equals(this.getType())){
 				File file = new File(this.getResourceNode().getPath());
 				if(file.exists()){					
@@ -128,6 +143,7 @@ public class Editor {
 						e.printStackTrace();
 					}			
 				}
+			}
 			/*
 			}else{
 				
