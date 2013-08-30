@@ -41,7 +41,7 @@ public class FormProperty extends MetadataProperty{
 		Project project = workspace.findProject(this.getProjectId());
 		
 		ResourceNode node = new ResourceNode();
-		node.setId(this.getProjectId() + File.separatorChar + "src" + File.separatorChar + this.getValue());
+		node.setId(this.getProjectId() + File.separatorChar + this.getValue());
 		node.setName(this.getValue());
 		node.setPath(project.getBuildPath().getSources().get(0).getPath() + File.separatorChar + this.getValue());
 		node.setProjectId(this.getProjectId());
