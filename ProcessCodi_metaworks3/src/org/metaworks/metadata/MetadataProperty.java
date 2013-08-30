@@ -651,15 +651,6 @@ public class MetadataProperty implements ContextAware, Cloneable {
 	@ServiceMethod(callByContent = true, target=ServiceMethodContext.TARGET_AUTO)
 	public MetadataProperty showPropertyDetail() throws Exception {
 		
-		String sessionProjectId = (String)TransactionContext.getThreadLocalInstance().getRequest().getSession().getAttribute("projectId");
-		
-		if(sessionProjectId == null || !sessionProjectId.equals(this.getResourceNode().getProjectId())){
-			Project project = workspace.findProject(this.getProjectId());
-			
-			TransactionContext.getThreadLocalInstance().getRequest().getSession().setAttribute("projectSourcePath", project.getBuildPath().getSources().get(0).getPath());
-		}
-		
-		
 		String projectSourcePath = (String)TransactionContext.getThreadLocalInstance().getRequest().getSession().getAttribute("projectSourcePath");
 		
 		MetadataProperty detailProperty = new MetadataProperty();
@@ -724,12 +715,11 @@ public class MetadataProperty implements ContextAware, Cloneable {
 		}else if(MetadataProperty.FORM_PROP.equals(this.getType())){
 			MetadataFile file = new MetadataFile();
 			file.setBaseDir(projectSourcePath);
-			file.setTypeDir("form");
 			file.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 			file.setUploadedPath(this.getValue());
 			file.setMimeType(ResourceNode.findNodeType(this.getValue()));
 
-			String path = this.getProjectId() + File.separatorChar + file.getTypeDir() + File.separatorChar + file.getUploadedPath();
+			String path = this.getProjectId() + File.separatorChar + file.getUploadedPath();
 			
 			Project project = workspace.findProject(this.getProjectId());
 			
