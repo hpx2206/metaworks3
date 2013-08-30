@@ -64,13 +64,16 @@ public class AppMapping extends Database<IAppMapping> implements IAppMapping {
 		
 	public IAppMapping findMe() throws Exception {
 
-		IAppMapping findApp = (IAppMapping) Database.sql(IAppMapping.class, "select * from appmapping where appid=?appId and comcode=?comCode");
+		IAppMapping findApp = (IAppMapping) Database.sql(IAppMapping.class, "select appmapping.appId, appmapping.comcode, appmapping.appname, appmapping.isdeleted, bpm_knol.name projectName from appmapping appmapping, app, bpm_knol where appmapping.appId = app.appId and app.projectId = bpm_knol.id and appmapping.appid=?appId and appmapping.comcode=?comCode");
 		
 		findApp.setAppId(this.getAppId());
 		findApp.setComCode(this.getComCode());
 		findApp.select();
 		
-		return findApp;
+		if(findApp.next())
+			return findApp;
+		else
+			return null;
 	}
 	
 	public IAppMapping findMyApps() throws Exception {
@@ -86,7 +89,6 @@ public class AppMapping extends Database<IAppMapping> implements IAppMapping {
 	
 	public void findProject(String appId) throws Exception {
 		String projectName = null;
-		
 		
 		this.setProjectName(projectName);
 	}

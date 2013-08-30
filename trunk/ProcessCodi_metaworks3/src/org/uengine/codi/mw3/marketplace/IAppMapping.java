@@ -31,7 +31,6 @@ public interface IAppMapping extends IDAO{
 	public void setIsDeleted(boolean isDeleted);
 	
 	@NonSavable
-	@NonLoadable
 	public String getProjectName();
 	public void setProjectName(String projectName);
 	
