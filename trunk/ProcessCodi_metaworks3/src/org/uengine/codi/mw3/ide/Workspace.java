@@ -96,19 +96,26 @@ public class Workspace {
 		this.getProjects().add(tenantMain);
 	}
 	
-	public void addProject(String tenantId, String projectId){
 		
-		String path = MetadataBundle.getProjectBasePath(projectId, tenantId);
+	public void addProject(String tenantId, String id){
+		addProject(tenantId, id, id);
+	}
+	
+	public void addProject(String tenantId, String id, String name){
+		String path = MetadataBundle.getProjectBasePath(id, tenantId);
 		
 		CodiFileUtil.mkdirs(path);
 		
 		Project project = new Project();
-		project.setId(projectId);
+		project.setId(id);
+		project.setName(name);
 		project.setPath(path);
 		project.load();
 		
 		this.getProjects().add(project);
+		
 	}
+
 	
 	public Project findProject(String projectId){
 		for(Project project : this.getProjects()){
