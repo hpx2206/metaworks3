@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import org.metaworks.MetaworksContext;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.AutowiredToClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
@@ -15,14 +16,15 @@ import org.metaworks.metadata.MetadataProperty;
 import org.metaworks.metadata.MetadataXML;
 import org.metaworks.metadata.ProcessProperty;
 import org.metaworks.metadata.StringProperty;
-import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.mw3.CodiClassLoader;
+import org.uengine.codi.mw3.ide.Project;
 import org.uengine.codi.mw3.ide.Workspace;
 import org.uengine.codi.mw3.knowledge.WfNode;
 import org.uengine.codi.mw3.marketplace.App;
 import org.uengine.codi.mw3.marketplace.AppMapping;
 import org.uengine.codi.mw3.marketplace.IAppMapping;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.kernel.GlobalContext;
 
 
 /**
@@ -143,6 +145,9 @@ public class SelfServiceControlPanel {
 			this.workspace = workspace;
 		}
 		
+	@AutowiredFromClient
+	public Session session;
+		
 	public void load(Session session) throws Exception {
 
 		AppMapping appMp = new AppMapping();
@@ -158,7 +163,7 @@ public class SelfServiceControlPanel {
 		Workspace workspace = new Workspace();
 		
 		while(appList.next())
-			workspace.addProject(TenantContext.getThreadLocalInstance().getTenantId(), appList.getProjectName(), appList.getAppName());	
+			workspace.addProject(session.getCompany().getComCode(), "sample3", appList.getAppName());	
 		
 		this.setWorkspace(workspace);
 	}
@@ -177,15 +182,22 @@ public class SelfServiceControlPanel {
 		
 		String projectName = project.databaseMe().getName();
 		
-		// load metadata
-		String sourceCodeBase = CodiClassLoader.mySourceCodeBase(projectName);
-		String metadataFileName = "uengine.metadata";
-		String metadataFilePath = sourceCodeBase + File.separatorChar + metadataFileName;
+		String coderoot = GlobalContext.getPropertyString("codebase", "codebase/");
+		
+		if(!coderoot.endsWith("/")) coderoot=coderoot+"/";
+		
+		String sourceCodeBase = coderoot + projectName;
+		String projectBase = sourceCodeBase + File.separatorChar + session.getCompany().getComCode();
+		
+		String projectSourcePath = sourceCodeBase + File.separatorChar + "root," + sourceCodeBase + File.separatorChar + session.getCompany().getComCode();
+		TransactionContext.getThreadLocalInstance().getRequest().getSession().setAttribute("projectSourcePath", projectSourcePath);
+		CodiClassLoader classLoader = (CodiClassLoader)Thread.currentThread().getContextClassLoader(); 
+		classLoader.addSourcePath(projectSourcePath);
 		
 		MetadataXML metadataXML = new MetadataXML();
 		
 		try {
-			metadataXML = metadataXML.loadWithPath(metadataFilePath);
+			metadataXML = metadataXML.loadWithInputstream(Thread.currentThread().getContextClassLoader().getResourceAsStream(Project.METADATA_FILENAME));
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -194,7 +206,7 @@ public class SelfServiceControlPanel {
 		if(metadataXML == null)
 			metadataXML = new MetadataXML();
 		
-		metadataXML.setFilePath(sourceCodeBase);
+		metadataXML.setFilePath(projectBase);
 		
 		this.metadataProperties = new ArrayList<MetadataProperty>();
 		this.fileProperties = new ArrayList<FileProperty>();
