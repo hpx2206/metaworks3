@@ -157,12 +157,12 @@ public class WaitJob implements StatefulJob {
             sql.append("	SCHEDULE_TABLE.INSTID, "); 
             sql.append("	SCHEDULE_TABLE.TRCTAG, "); 
             sql.append("	SCHEDULE_TABLE.STARTDATE, "); 
-            sql.append("	BPM_PROCINST.STATUS, "); 
-            sql.append("	BPM_PROCINST.ISDELETED "); 
-            sql.append("FROM SCHEDULE_TABLE JOIN BPM_PROCINST ON SCHEDULE_TABLE.INSTID = BPM_PROCINST.INSTID "); 
+            sql.append("	bpm_procinst.STATUS, "); 
+            sql.append("	bpm_procinst.ISDELETED "); 
+            sql.append("FROM SCHEDULE_TABLE JOIN bpm_procinst ON SCHEDULE_TABLE.INSTID = bpm_procinst.INSTID "); 
             sql.append("WHERE "); 
-            sql.append("	BPM_PROCINST.ISDELETED = 0 "); 
-            sql.append("	AND BPM_PROCINST.STATUS = 'Running' ");
+            sql.append("	bpm_procinst.ISDELETED = 0 "); 
+            sql.append("	AND bpm_procinst.STATUS = 'Running' ");
             
             rs = stmt.executeQuery(sql.toString());
             
