@@ -117,20 +117,29 @@ public class PerspectivePanel {
 			if(session.getEmployee().isApproved() && !session.getEmployee().isGuest()){
 				
 				//주제별
-				topicPerspective = new TopicPerspective();
-				topicPerspective.session = session;
-				topicPerspective.select();
+				if("1".equals(GlobalContext.getPropertyString("topic.use", "1"))){
+					topicPerspective = new TopicPerspective();
+					topicPerspective.session = session;
+					topicPerspective.select();
+				}
 				
 				//조직도
-				organizationPerspectiveDept = new OrganizationPerspectiveDept();
+				if("1".equals(GlobalContext.getPropertyString("organization.use", "1"))){
+					organizationPerspectiveDept = new OrganizationPerspectiveDept();
+				}
+				
 //				organizationPerspectiveDept.select();
 				
 				//역할
-				organizationPerspectiveRole = new OrganizationPerspectiveRole();
+				if("1".equals(GlobalContext.getPropertyString("role.use", "1"))){
+					organizationPerspectiveRole = new OrganizationPerspectiveRole();
+				}
 //				organizationPerspectiveRole.select();
 				
 				//프로세스별
-				processPerspective = new ProcessPerspective();
+				if("1".equals(GlobalContext.getPropertyString("process.use", "1"))){
+					processPerspective = new ProcessPerspective();
+				}
 //				processPerspective.select();
 				
 				//앱
