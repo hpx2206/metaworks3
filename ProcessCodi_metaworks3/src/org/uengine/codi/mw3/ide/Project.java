@@ -4,6 +4,9 @@ import java.io.File;
 import java.util.ArrayList;
 
 import org.metaworks.annotation.Id;
+import org.metaworks.dao.TransactionContext;
+import org.uengine.codi.mw3.CodiClassLoader;
+import org.uengine.kernel.GlobalContext;
 
 public class Project {
 
@@ -81,4 +84,17 @@ public class Project {
 		
 	}
 	
+	public void changeProject(String tenantId){
+		
+		String coderoot = GlobalContext.getPropertyString("codebase", "codebase/");
+		
+		if(!coderoot.endsWith("/")) coderoot=coderoot+"/";
+		
+		String sourceCodeBase = coderoot + this.getId();
+
+		String projectSourcePath = sourceCodeBase + File.separatorChar + "root," + sourceCodeBase + File.separatorChar + tenantId;
+		TransactionContext.getThreadLocalInstance().getRequest().getSession().setAttribute("projectSourcePath", projectSourcePath);
+		CodiClassLoader classLoader = (CodiClassLoader)Thread.currentThread().getContextClassLoader(); 
+		classLoader.addSourcePath(projectSourcePath);
+	}
 }
