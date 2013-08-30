@@ -327,9 +327,9 @@ public class ResourceNode extends TreeNode implements ContextAware {
 		
 		try {
 			Project project = workspace.findProject(this.getProjectId());
-			String 	projectSourcePath = project.getBuildPath().getSources().get(0).getPath(); 
 			
-			TransactionContext.getThreadLocalInstance().getRequest().getSession().setAttribute("projectSourcePath", projectSourcePath);
+			//String 	projectSourcePath = project.getBuildPath().getSources().get(0).getPath(); 			
+			//TransactionContext.getThreadLocalInstance().getRequest().getSession().setAttribute("projectSourcePath", projectSourcePath);
 			
 			this.setAlias(project.getBuildPath().makeFullClassName(this.getId()));;
 		} catch (Exception e) {
