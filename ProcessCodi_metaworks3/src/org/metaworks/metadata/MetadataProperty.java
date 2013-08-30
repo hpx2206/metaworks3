@@ -297,7 +297,7 @@ public class MetadataProperty implements ContextAware, Cloneable {
 					this.getFile().upload();
 					this.setValue(this.getFile().getFilename());
 				}else if(this.getFile()!=null && this.getFile().getFilename() != null){
-					this.setValue(this.getFile().getFilename());
+					this.setValue(this.getFile().getUploadedPath());
 				}
 
 				if (isResource) {
@@ -694,12 +694,10 @@ public class MetadataProperty implements ContextAware, Cloneable {
 			
 			
 			MetadataFile previewFile = new MetadataFile();
-			previewFile.setBaseDir(projectSourcePath);
-			previewFile.setTypeDir("image");
 			previewFile.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 			previewFile.setUploadedPath(this.getValue());
 			previewFile.setMimeType(ResourceNode.findNodeType(this.getValue()));
-
+			previewFile.setUseClassLoader(true);
 			
 			/*
 			ResourceNode resourceNode = new ResourceNode();
