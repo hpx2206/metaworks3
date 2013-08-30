@@ -115,7 +115,7 @@ public class CloudIDE {
 	public void load(Session session){
 		// make workspace
 		Workspace workspace = new Workspace();
-		workspace.load();
+		workspace.load(session);
 		this.setWorkspace(workspace);
 		
 		Navigator navigator = new Navigator();		

@@ -1,13 +1,12 @@
 package org.uengine.codi.mw3.ide;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import org.metaworks.metadata.MetadataBundle;
-import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.knowledge.IProjectNode;
 import org.uengine.codi.mw3.knowledge.ProjectNode;
+import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.util.CodiFileUtil;
 import org.uengine.kernel.GlobalContext;
 
@@ -33,19 +32,24 @@ public class Workspace {
 		this.setProjects(new ArrayList<Project>());
 	}
 	
-	public void load(){
+	public void load(Session session){
 		
-		String tenantId = null;
-		if( TenantContext.getThreadLocalInstance() != null ){
+		String tenantId = session.getCompany().getComCode();
+		
+		/* 2013-08-30 cjw
+		 * 태넌트 필터 사용안함
+		 * 
+		 * if( TenantContext.getThreadLocalInstance() != null ){
 			tenantId = TenantContext.getThreadLocalInstance().getTenantId();
 			this.setId(tenantId);
 		}
+		*/		
 		
 		// TODO codi 관리자는 root가 보인다.
 		// 앱의 루트 불러오기 - codebase + projectId + "root"
 		String projectId = MetadataBundle.getProjectId();
 		
-		String mainPath = MetadataBundle.getProjectBasePath(projectId);
+		String mainPath = MetadataBundle.getProjectBasePath(projectId, tenantId);
 		CodiFileUtil.mkdirs(mainPath);
 		
 		Project main = new Project();
@@ -61,12 +65,8 @@ public class Workspace {
 				while(projectList.next()){
 					ProjectNode node = new ProjectNode();
 					node.copyFrom(projectList);
-					String path;
-					if( tenantId != null ){
-						path = MetadataBundle.getProjectBasePath(node.getName() , tenantId);
-					}else{
-						path = MetadataBundle.getProjectBasePath(node.getName());
-					}
+					String path = MetadataBundle.getProjectBasePath(node.getName());
+					
 					CodiFileUtil.mkdirs(path);
 					
 					Project project = new Project();
@@ -80,6 +80,10 @@ public class Workspace {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}			
+		}
+		
+		for(Project project : projects){
+			System.out.println(project.getPath());
 		}
 	}
 	
