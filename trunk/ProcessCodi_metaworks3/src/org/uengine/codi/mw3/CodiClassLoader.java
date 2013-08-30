@@ -251,7 +251,7 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
 		
 	
 		if(name != null){
-			if(name.endsWith(".ejs") || name.endsWith(".ejs.js") || name.endsWith(".xml") || name.endsWith(".process") || name.endsWith(".process2") || name.endsWith(".sql") || name.endsWith(".wpd")){
+			if(name.endsWith(".ejs") || name.endsWith(".ejs.js") || name.endsWith(".xml") || name.endsWith(".process") || name.endsWith(".process2") || name.endsWith(".sql") || name.endsWith(".wpd") || name.endsWith("metadata")){
 				
 				for(File file : sourcePath){
 					try {
@@ -679,16 +679,20 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
 
 			for(File file : this.defaultSourcePath){
 				sourcePath.add(file);
-				
-				if(!file.getAbsoluteFile().equals(path)){
-					add = true;
-				}
 			}
 
-			if(add){
+			if(true){
 				fileManager = null;
 				
-				sourcePath.add(0, new File(path));
+				String[] paths;
+				
+				if(path.indexOf(",") > -1)
+					paths = path.split(",");
+				else
+					paths = new String[]{path};
+				
+				for (String addPath : paths)
+					sourcePath.add(0, new File(addPath));
 				
 				this.setSourcePath(sourcePath.toArray(new File[sourcePath.size()]));
 			}				

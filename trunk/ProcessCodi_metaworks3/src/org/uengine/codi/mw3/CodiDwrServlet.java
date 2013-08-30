@@ -2,30 +2,11 @@ package org.uengine.codi.mw3;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.security.AccessControlException;
-import java.security.AccessController;
-import java.security.Permission;
-import java.security.PrivilegedAction;
-import java.security.ProtectionDomain;
 import java.util.HashMap;
-
-import javassist.CannotCompileException;
-import javassist.ClassPool;
-import javassist.CtClass;
-import javassist.CtConstructor;
-import javassist.CtMethod;
-import javassist.NotFoundException;
-import javassist.expr.ExprEditor;
-import javassist.expr.MethodCall;
-import javassist.util.HotSwapper;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -33,22 +14,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.codehaus.commons.compiler.jdk.JavaSourceClassLoader;
-import org.directwebremoting.WebContext;
-import org.directwebremoting.WebContextFactory;
-import org.metaworks.ObjectType;
-import org.metaworks.dao.TransactionContext;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.dwr.TransactionalDwrServlet;
-import org.metaworks.metadata.MetadataBundle;
 import org.uengine.cloud.saasfier.TenantContext;
-import org.uengine.codi.mw3.model.ResourceFile;
 import org.uengine.codi.platform.Console;
 import org.uengine.codi.platform.SecurityContext;
 import org.uengine.kernel.GlobalContext;
-
-
-
 
 public class CodiDwrServlet extends TransactionalDwrServlet{
 
@@ -295,14 +266,18 @@ public class CodiDwrServlet extends TransactionalDwrServlet{
 			
 			String sourceCodeBase = CodiClassLoader.mySourceCodeBase();
 			CodiClassLoader clForSession = CodiClassLoader.createClassLoader(sourceCodeBase);
+			
+			/*
 			if( TenantContext.getThreadLocalInstance() != null )
 				tenantId = TenantContext.getThreadLocalInstance().getTenantId();
 			
 			session.setAttribute("tenantId", tenantId);
+			*/
 			
-			if(projectSourcePath != null)
+			if(projectSourcePath != null){
 				clForSession.addSourcePath(projectSourcePath);
-				
+			}
+			
 			CodiClassLoader.codiClassLoader = clForSession;
 			
 			Thread.currentThread().setContextClassLoader(clForSession);
