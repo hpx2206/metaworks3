@@ -153,13 +153,13 @@ public class WaitJob implements StatefulJob {
             stmt = conn.createStatement(); 
             StringBuilder sql = new StringBuilder();
             sql.append("SELECT "); 
-            sql.append("	SCHEDULE_TABLE.SCHE_IDX, "); 
-            sql.append("	SCHEDULE_TABLE.INSTID, "); 
-            sql.append("	SCHEDULE_TABLE.TRCTAG, "); 
-            sql.append("	SCHEDULE_TABLE.STARTDATE, "); 
+            sql.append("	schedule_table.SCHE_IDX, "); 
+            sql.append("	schedule_table.INSTID, "); 
+            sql.append("	schedule_table.TRCTAG, "); 
+            sql.append("	schedule_table.STARTDATE, "); 
             sql.append("	bpm_procinst.STATUS, "); 
             sql.append("	bpm_procinst.ISDELETED "); 
-            sql.append("FROM SCHEDULE_TABLE JOIN bpm_procinst ON SCHEDULE_TABLE.INSTID = bpm_procinst.INSTID "); 
+            sql.append("FROM schedule_table JOIN bpm_procinst ON schedule_table.INSTID = bpm_procinst.INSTID "); 
             sql.append("WHERE "); 
             sql.append("	bpm_procinst.ISDELETED = 0 "); 
             sql.append("	AND bpm_procinst.STATUS = 'Running' ");
@@ -217,7 +217,7 @@ public class WaitJob implements StatefulJob {
             stmt = conn.createStatement();
             
             StringBuilder sql = new StringBuilder();
-            sql.append(" DELETE FROM SCHEDULE_TABLE WHERE SCHE_IDX=").append(idx);
+            sql.append(" DELETE FROM schedule_table WHERE SCHE_IDX=").append(idx);
             
             stmt.executeUpdate(sql.toString());
             
