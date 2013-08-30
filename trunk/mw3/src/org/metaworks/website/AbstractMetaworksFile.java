@@ -111,6 +111,14 @@ public abstract class AbstractMetaworksFile implements ContextAware {
 			this.auto = auto;
 		}
 		
+	boolean useClassLoader;
+		public boolean isUseClassLoader() {
+			return useClassLoader;
+		}
+		public void setUseClassLoader(boolean useClassLoader) {
+			this.useClassLoader = useClassLoader;
+		}
+		
 	@ServiceMethod(callByContent=true, except="fileTransfer", target="append")
 	public Download download() throws FileNotFoundException, IOException, Exception{
 		return new Download(new FileTransfer(new String(this.getFilename().getBytes("UTF-8"),"ISO8859_1"), getMimeType(), new FileInputStream(overrideUploadPathPrefix() + "/" + this.getUploadedPath())));
@@ -118,7 +126,11 @@ public abstract class AbstractMetaworksFile implements ContextAware {
 
 	@ServiceMethod(callByContent=true, except="fileTransfer", target=ServiceMethodContext.TARGET_NONE) //it doesn't cause refresh so that the recursive call of constructor of MetaworksFile javascript object never happened
 	public BufferedImage downloadImage() throws FileNotFoundException, IOException, Exception{
-		image = javax.imageio.ImageIO.read(new File(overrideUploadPathPrefix() + "/" + uploadedPath));
+		
+		if(useClassLoader)
+			image = javax.imageio.ImageIO.read(Thread.currentThread().getContextClassLoader().getResourceAsStream(this.getUploadedPath()));
+		else
+			image = javax.imageio.ImageIO.read(new File(overrideUploadPathPrefix() + "/" + uploadedPath));
 		
 		return image;
 	}
