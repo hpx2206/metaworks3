@@ -5,7 +5,7 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Table;
 import org.metaworks.dao.IDAO;
 
-@Table(name="BPM_TOPICMAPPING")
+@Table(name="bpm_topicmapping")
 public interface ITopicMapping extends IDAO {
 	 
 	
