@@ -7,6 +7,8 @@ import org.metaworks.annotation.Id;
 
 public class Project {
 
+	public final static String METADATA_FILENAME = "uengine.metadata";
+	
 	String id;
 		@Id
 		public String getId() {
@@ -73,6 +75,10 @@ public class Project {
 		buildPath.setDefaultBuildOutputPath(buildOutputPath);
 		
 		this.setBuildPath(buildPath);
+		
+		
+		//source.getPath()
+		
 	}
 	
 }

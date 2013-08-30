@@ -164,7 +164,7 @@ public class ResourceNode extends TreeNode implements ContextAware {
 
 		// make workspace
 		Workspace workspace = new Workspace();
-		workspace.load();
+		workspace.load(session);
 
 		Navigator navigator = new Navigator();
 
@@ -281,7 +281,7 @@ public class ResourceNode extends TreeNode implements ContextAware {
 		}
 	}
 
-	@ServiceMethod(payload={"id", "name", "path", "folder", "projectId"}, mouseBinding="right", target=ServiceMethodContext.TARGET_POPUP)
+	@ServiceMethod(payload={"id", "name", "path", "folder", "projectId", "type"}, mouseBinding="right", target=ServiceMethodContext.TARGET_POPUP)
 	public Object[] showContextMenu() {
 		session.setClipboard(this);
 
