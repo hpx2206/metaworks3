@@ -158,7 +158,7 @@ public class SelfServiceControlPanel {
 		Workspace workspace = new Workspace();
 		
 		while(appList.next())
-			workspace.addProject(TenantContext.getThreadLocalInstance().getTenantId(), appList.getAppName());	
+			workspace.addProject(TenantContext.getThreadLocalInstance().getTenantId(), appList.getProjectName(), appList.getAppName());	
 		
 		this.setWorkspace(workspace);
 	}
