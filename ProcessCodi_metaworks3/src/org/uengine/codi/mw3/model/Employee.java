@@ -262,9 +262,9 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		Employee employee = new Employee();
 		
 		StringBuffer sb = new StringBuffer();
-		sb.append("select EMPTABLE.*, PARTTABLE.PARTNAME from ");
-		sb.append("EMPTABLE LEFT OUTER JOIN PARTTABLE on EMPTABLE.partcode=PARTTABLE.partcode ");
-		sb.append("where EMPTABLE.EMPCODE=?empCode ");
+		sb.append("select emptable.*, PARTTABLE.PARTNAME from ");
+		sb.append("emptable LEFT OUTER JOIN PARTTABLE on emptable.partcode=PARTTABLE.partcode ");
+		sb.append("where emptable.EMPCODE=?empCode ");
 		
 		IEmployee findEmployee = (IEmployee) sql(sb.toString());
 		findEmployee.set("empCode", getEmpCode());
@@ -289,9 +289,9 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	public IEmployee findMeByEmpName() throws Exception {
 		
 		StringBuffer sb = new StringBuffer();
-		sb.append("select EMPTABLE.*, PARTTABLE.PARTNAME from ");
-		sb.append("EMPTABLE LEFT OUTER JOIN PARTTABLE on EMPTABLE.partcode=PARTTABLE.partcode ");
-		sb.append("where EMPTABLE.EMPNAME like ?empName ");
+		sb.append("select emptable.*, PARTTABLE.PARTNAME from ");
+		sb.append("emptable LEFT OUTER JOIN PARTTABLE on emptable.partcode=PARTTABLE.partcode ");
+		sb.append("where emptable.EMPNAME like ?empName ");
 		
 		IEmployee findEmployee = (IEmployee) sql(sb.toString());
 		findEmployee.set("empName", "%" + getEmpName() + "%" );
@@ -303,14 +303,14 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	@Override
 	public IEmployee findByDept(Dept dept) throws Exception {
 		StringBuffer sb = new StringBuffer();
-		sb.append("select EMPTABLE.*, PARTTABLE.PARTNAME from ");
-		sb.append("EMPTABLE LEFT OUTER JOIN PARTTABLE on EMPTABLE.partcode=PARTTABLE.partcode ");
+		sb.append("select emptable.*, PARTTABLE.PARTNAME from ");
+		sb.append("emptable LEFT OUTER JOIN PARTTABLE on emptable.partcode=PARTTABLE.partcode ");
 		if (dept.getPartCode() != null) {
-			sb.append("where EMPTABLE.partcode=?partCode ");
+			sb.append("where emptable.partcode=?partCode ");
 		} else {
-			sb.append("where EMPTABLE.partcode is null ");
+			sb.append("where emptable.partcode is null ");
 		}
-		sb.append("and EMPTABLE.globalcom=?globalCom ");
+		sb.append("and emptable.globalcom=?globalCom ");
 		IEmployee deptEmployee = sql(sb.toString());
 		if (dept.getPartCode() != null) {
 			deptEmployee.setPartCode(dept.getPartCode());
@@ -326,7 +326,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 	public IEmployee findByDeptOther() throws Exception {
 		StringBuffer sb = new StringBuffer();
 		sb.append("SELECT a.*, b.PARTNAME");
-		sb.append("  FROM empTable a");
+		sb.append("  FROM emptable a");
 		sb.append("  LEFT OUTER JOIN partTable b on a.partcode=b.partcode");
 		sb.append(" WHERE a.globalCom=?globalCom");
 		sb.append("   AND a.isDeleted=?isDeleted");
@@ -351,7 +351,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		
 		StringBuffer sb = new StringBuffer();
 		sb.append("SELECT a.*");
-		sb.append("  FROM empTable a, roleUserTable b");
+		sb.append("  FROM emptable a, roleUserTable b");
 		sb.append(" WHERE a.empCode = b.empCode");
 		sb.append("   AND a.isDeleted=?isDeleted");
 		sb.append("   AND b.roleCode=?roleCode");
