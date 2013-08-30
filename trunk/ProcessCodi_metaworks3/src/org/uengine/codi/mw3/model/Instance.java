@@ -81,13 +81,12 @@ public class Instance extends Database<IInstance> implements IInstance{
 		StringBuffer stmt = new StringBuffer();		
 
 		String searchKeyword = navigation.getKeyword();
-		if(searchKeyword != null && !searchKeyword.isEmpty()) {
+		if(searchKeyword != null && !searchKeyword.isEmpty() && !Perspective.TYPE_COMMINGTODO.equals(navigation.getPerspectiveType())) {
 			//stmt.append("(");
 			
 			StringBuffer appendedInstanceSql = new StringBuffer(instanceSql);
 			
-			if(	"inbox".equals(navigation.getPerspectiveType()) || 
-					Perspective.TYPE_COMMINGTODO.equals(navigation.getPerspectiveType())) {				
+			if(	"inbox".equals(navigation.getPerspectiveType())) {				
 				appendedInstanceSql.append("   AND (wl.title like ?keyword or inst.name like ?keyword)");
 				
 			}else{
@@ -280,9 +279,10 @@ public class Instance extends Database<IInstance> implements IInstance{
 			stmt.append(instanceSql);
 		}
 		
-		if(Perspective.TYPE_COMMINGTODO.equals(navigation.getPerspectiveType()))
+		if(Perspective.TYPE_COMMINGTODO.equals(navigation.getPerspectiveType())){
+			stmt.append(" 	AND inst.duedate > now()");
 			stmt.append(" ORDER BY inst.duedate) instanceList ");
-		else		
+		}else		
 			stmt.append(" ORDER BY task.startdate desc) instanceList ");
 	}
 	
