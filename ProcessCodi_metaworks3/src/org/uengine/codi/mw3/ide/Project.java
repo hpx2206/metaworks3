@@ -16,6 +16,14 @@ public class Project {
 			this.id = id;
 		}
 	
+	String name;
+		public String getName() {
+			return name;
+		}
+		public void setName(String name) {
+			this.name = name;
+		}
+
 	String path;
 		public String getPath() {
 			return path;
