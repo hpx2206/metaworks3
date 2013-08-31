@@ -1529,7 +1529,6 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 						clsNames = [value.__className];
 					}
 					
-					
 					var id = "";					
 					var ids = [];
 					
@@ -1561,7 +1560,9 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 							returnValues[j++] = clsNames[i];  													
 					}
 					
-					if(arguments.length>1){
+					
+					
+					if(arguments.length>1){						
 						return returnValues;
 					}else
 						return returnValues[0];
@@ -1601,10 +1602,14 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 					this.objectId_KeyMapping[objKey] = objectId;
 				*/
 				
-				var objKeys = this._createObjectKey(value, true);
-				if(objKeys && objKeys.length){
-					for(var i=0; i<objKeys.length; i++){
-						this.objectId_KeyMapping[objKeys[i]] = objectId;
+				
+				if(value && !(value instanceof Array) && typeof value == 'object'){
+					var objKeys = this._createObjectKey(value, true);
+					
+					if(objKeys && objKeys.length){
+						for(var i=0; i<objKeys.length; i++){
+							this.objectId_KeyMapping[objKeys[i]] = objectId;
+						}
 					}
 				}
 				
@@ -1741,12 +1746,15 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				 * 2013/01/18 jinwon
 				 * super class 까지
 				 */
-				var objKeys = this._createObjectKey(value, true);
-				if(objKeys && objKeys.length){
-					for(var i=0; i<objKeys.length; i++){
-						this.objectId_KeyMapping[objKeys[i]] = objectId;
+				if(value && !(value instanceof Array) && typeof value == 'object'){
+					var objKeys = this._createObjectKey(value, true);
+					if(objKeys && objKeys.length){
+						for(var i=0; i<objKeys.length; i++){
+							this.objectId_KeyMapping[objKeys[i]] = objectId;
+						}
 					}
 				}
+			
 				/*
 				var objKey = this._createObjectKey(value);
 				if(objKey!=null){
@@ -1826,8 +1834,10 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 
 					var obj = this.objects[beanPath.valueObjectId];
 
-					var objKey = this._createObjectKey(obj);
-					this.objectId_KeyMapping[objKey] = null;
+					if(obj && !(obj instanceof Array) && typeof obj == 'object'){
+						var objKey = this._createObjectKey(obj);
+						this.objectId_KeyMapping[objKey] = null;
+					}
 					
 					// 2012-04-16 chlid destroy call
 					var faceHelper = this.getFaceHelper(beanPath.valueObjectId);
