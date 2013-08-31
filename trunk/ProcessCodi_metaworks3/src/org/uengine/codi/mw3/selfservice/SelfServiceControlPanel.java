@@ -122,7 +122,6 @@ public class SelfServiceControlPanel {
 		}
 	
 	MetadataXML metadataXml;
-		@AutowiredToClient
 		public MetadataXML getMetadataXml() {
 			return metadataXml;
 		}
@@ -218,8 +217,12 @@ public class SelfServiceControlPanel {
 			}
 		}
 		
-		metadataXML.setProperties(this.metadataProperties);
+		metadataXML.setProperties(this.metadataProperties);		
 		this.getAppMapping().getMetaworksContext().setWhere("ssp");
+		
+		metadataXML.setMetaworksContext(new MetaworksContext());
+		metadataXML.getMetaworksContext().setHow("selfservice");
+		
 		this.setMetadataXml(metadataXML);
 	}
 	
