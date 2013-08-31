@@ -248,10 +248,9 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
 				sourcePath.add(file);				
 		}
 		
-		
-	
+				
 		if(name != null){
-			if(name.endsWith(".ejs") || name.endsWith(".ejs.js") || name.endsWith(".xml") || name.endsWith(".process") || name.endsWith(".process2") || name.endsWith(".sql") || name.endsWith(".wpd") || name.endsWith("metadata")){
+			//if(name.endsWith(".ejs") || name.endsWith(".ejs.js") || name.endsWith(".xml") || name.endsWith(".process") || name.endsWith(".process2") || name.endsWith(".sql") || name.endsWith(".wpd") || name.endsWith("metadata")){
 				
 				for(File file : sourcePath){
 					try {
@@ -262,7 +261,7 @@ public class CodiClassLoader extends AbstractJavaSourceClassLoader {
 					} catch (FileNotFoundException e) {
 					}				
 				}
-			}
+			//}
 		}
 		
 		return super.getResourceAsStream(name);
