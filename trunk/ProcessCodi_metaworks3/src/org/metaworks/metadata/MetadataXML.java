@@ -54,6 +54,7 @@ public class MetadataXML implements ContextAware {
 		public void setCompany(String company) {
 			this.company = company;
 		}
+		
 	String type;
 		@Hidden
 		public String getType() {
@@ -62,6 +63,7 @@ public class MetadataXML implements ContextAware {
 		public void setType(String type) {
 			this.type = type;
 		}
+		
 	String typeName;
 		@Hidden
 		public String getTypeName() {
@@ -70,16 +72,17 @@ public class MetadataXML implements ContextAware {
 		public void setTypeName(String typeName) {
 			this.typeName = typeName;
 		}
+		
 	ArrayList<MetadataProperty> properties;
 		public ArrayList<MetadataProperty> getProperties() {
-			int index;
+/*			int index;
 			if( properties != null ){
 				for(index=0; index < properties.size(); index++){
 					properties.get(index).setIndex(index);
 				}
 			}else{
 				properties = new ArrayList<MetadataProperty>();
-			}
+			}*/
 			return properties;
 		}
 		public void setProperties(ArrayList<MetadataProperty> properties) {
@@ -87,14 +90,14 @@ public class MetadataXML implements ContextAware {
 		}
 	
 	@XStreamOmitField
-	MetadataProperty newMetadataProperty;
-		public MetadataProperty getNewMetadataProperty() {
-			return newMetadataProperty;
+	MetadataPropertyInfo metadataPropertyInfo;
+		public MetadataPropertyInfo getMetadataPropertyInfo() {
+			return metadataPropertyInfo;
 		}
-		public void setNewMetadataProperty(MetadataProperty newMetadataProperty) {
-			this.newMetadataProperty = newMetadataProperty;
+		public void setMetadataPropertyInfo(MetadataPropertyInfo metadataPropertyInfo) {
+			this.metadataPropertyInfo = metadataPropertyInfo;
 		}
-
+	
 	public MetadataXML loadWithPath(String filePath){
 		MetadataXML metadata = null;
 		FileInputStream fin = null;
@@ -146,19 +149,23 @@ public class MetadataXML implements ContextAware {
 	protected void init() throws Exception {
 		this.setMetaworksContext(new MetaworksContext());
 		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-		
-		newMetadataProperty = new MetadataProperty();
+
+		ResourceNode resourceNode = new ResourceNode(); 
+		resourceNode.setId(this.getFilePath());
+
+		MetadataProperty newMetadataProperty = new MetadataProperty();
 		newMetadataProperty.metaworksContext = new MetaworksContext();
 		newMetadataProperty.metaworksContext.setWhen(MetaworksContext.WHEN_NEW);
 		newMetadataProperty.metaworksContext.setWhere("ide");
 		newMetadataProperty.setType(MetadataProperty.STRING_PROP);
 		newMetadataProperty = (MetadataProperty) newMetadataProperty.selectType();
-		
-		ResourceNode resourceNode = new ResourceNode(); 
-		resourceNode.setId(this.getFilePath());
 		newMetadataProperty.setResourceNode(resourceNode);
 		
+		MetadataPropertyInfo metadataPropertyInfo = new MetadataPropertyInfo();
+		metadataPropertyInfo.setNewMetadataProperty(newMetadataProperty);
+
 		
+		this.setMetadataPropertyInfo(metadataPropertyInfo);
 	}
 	
 	public MetadataXML loadWithResourceNode(ResourceNode resourceNode) throws Exception{
