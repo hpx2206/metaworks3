@@ -1,11 +1,14 @@
 <select>
 
 <%
-	
-
 	var processDesigner = mw3.getAutowiredObject('org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerWebContentPanel');
 
 	if(processDesigner && processDesigner.roleMap){
+		var savedKeyValue; 
+		if(value && value.name){
+			savedKeyValue = mw3.getObjectKeyValue(value);
+		}
+		
 		for(var mapId in processDesigner.roleMap){
 			var role = processDesigner.roleMap[mapId];
 			
@@ -13,8 +16,16 @@
 			var nameValue = mw3.getObjectNameValue(role);
 			
 			if(keyValue && nameValue){
+				var option = '';
+				
+				if(savedKeyValue){
+					if(keyValue == savedKeyValue){
+						option = 'selected';
+					}
+				}
+								
 %>
-	<option value="<%=keyValue%>"> [Role]<%=mw3.localize(nameValue)%>
+	<option value="<%=keyValue%>" <%=option%>> [Role]<%=mw3.localize(nameValue)%>
 <%			
 			}
 		}
