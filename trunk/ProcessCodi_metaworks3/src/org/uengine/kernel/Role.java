@@ -11,6 +11,8 @@ import org.metaworks.MetaworksContext;
 import org.metaworks.Type;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
+import org.metaworks.annotation.Id;
+import org.metaworks.annotation.Name;
 import org.metaworks.inputter.RadioInput;
 import org.metaworks.validator.NotNullValid;
 import org.metaworks.validator.Validator;
@@ -147,6 +149,7 @@ public class Role implements java.io.Serializable, Cloneable, ContextAware {
 		}
 
 	private java.lang.String name;
+	@Id
 	@Face(displayName="역할 이름")
 		public String getName() {
 			return name;
@@ -225,6 +228,7 @@ public class Role implements java.io.Serializable, Cloneable, ContextAware {
 		
 	private TextContext displayName = TextContext.createInstance();
 	@Face(displayName="역할 설명")
+	@Name
 		public TextContext getDisplayName() {
 			if(displayName==null){
 				displayName = TextContext.createInstance();
