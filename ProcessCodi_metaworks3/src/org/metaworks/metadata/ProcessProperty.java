@@ -9,12 +9,11 @@ import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
-import org.uengine.codi.mw3.CodiClassLoader;
+import org.uengine.codi.mw3.ide.Project;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.editor.metadata.MetadataEditor;
 import org.uengine.codi.mw3.ide.editor.process.ProcessEditor;
 import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitor;
-import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitorPanel;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 
@@ -50,15 +49,17 @@ public class ProcessProperty extends MetadataProperty{
 	@Available(when = MetaworksContext.WHEN_VIEW)
 	@ServiceMethod(callByContent = true, target=ServiceMethodContext.TARGET_POPUP)
 	public Object modify() throws Exception {
-		String projectId = this.getProjectId();
-		String sourceCodeBase = CodiClassLoader.mySourceCodeBase(projectId) + "src" + File.separatorChar;
 		
+		Project project = workspace.findProject(this.getProjectId());
+
 		ResourceNode node = new ResourceNode();
-		node.setId(this.getValue());
+		node.setId(this.getProjectId() + File.separatorChar + this.getValue());
 		node.setName(this.getValue());
-		node.setPath(sourceCodeBase + this.getValue());
-		
+		node.setPath(project.getBuildPath().getSources().get(0).getPath() + File.separatorChar + this.getValue());
+		node.setProjectId(this.getProjectId());
+
 		ProcessEditor processEditor = new ProcessEditor(node);
+		processEditor.setUseClassLoader(true);
 		processEditor.load();
 		
 		ModalWindow modalWindow = new ModalWindow(processEditor, 0, 0, "$metadata.process.edit");
