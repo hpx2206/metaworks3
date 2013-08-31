@@ -444,8 +444,7 @@ public class MetadataProperty implements ContextAware, Cloneable {
 
 		int index = metadataXML.properties.indexOf(this);
 
-		String metadataFileName = "uengine.metadata";
-		String metadataFilePath = metadataXML.getFilePath() + File.separatorChar + metadataFileName;
+		String metadataFilePath = metadataXML.getFilePath();
 
 		MetadataProperty editProperty = metadataXML.properties.get(index);
 		editProperty.setName(this.getName());
