@@ -357,37 +357,40 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
     	},
 		    	
 		drop: function(event, ui){
+	    	var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
+	 		var clipboardNode = session.clipboard;
+	 		
     		var customData = canvas.getCustomData(element);
     		if( customData == undefined || customData == null || customData == "" ){
     			customData = [];
     		}
     		
     		var shapeType = $(this).attr("_shape");
-    		if( shapeType == 'GEOM' ){	
-    			var dragObj = ui.draggable.data('dragObj');
+    		if( shapeType == 'GEOM' ){
+    			console.log(clipboardNode);
     			
-    			if(dragObj){
-    				switch (dragObj.__className){
+    			if(clipboardNode){
+    				switch (clipboardNode.__className){
     				case 'org.uengine.codi.mw3.ide.ResourceNode':
-    					switch (dragObj.type) {
+    					switch (clipboardNode.type) {
     					case 'java':
-    						var dragObjMetadata = mw3.getMetadata(dragObj.alias);
+    						var dragObjMetadata = mw3.getMetadata(clipboardNode.alias);
     						canvas.drawLabel(element, dragObjMetadata.displayName);
 	    		    		
 	    		    		var value = mw3.objects[objectId];
 	    		    		var contentValue = {
 									__className : 'org.uengine.codi.mw3.webProcessDesigner.PrcsVariable',
 									name : dragObjMetadata.displayName ,
-									typeId : dragObj.alias ,
+									typeId : clipboardNode.alias ,
 									variableType : 'complexType'
 							};
-	    		    		value.variableMap[dragObj.alias] = contentValue;	    		    			    		
+	    		    		value.variableMap[clipboardNode.alias] = contentValue;	    		    			    		
 	    		    		customData.push( {"customId": "" , "customName" : dragObjMetadata.displayName , "customType" : "class"});
 	    		    		
 	    		    		var eleClassName = $(this).attr("_classname");
 	    		    		if( eleClassName == 'org.uengine.kernel.InvocationActivity'){
 	    		    			var activityData = $(this).data('activity');
-	    		    			activityData.resourceClass = dragObj.alias;
+	    		    			activityData.resourceClass = clipboardNode.alias;
 	    		    			$(this).data('activity', activityData);
 	    		    		}
 	    		    		
