@@ -6,6 +6,10 @@ import org.metaworks.component.MenuItem;
 
 public class SubMenuItem extends MenuItem {
 
+	public SubMenuItem(){
+		
+	}
+	
 	public SubMenuItem(Menu menu){
 		menu.setSub(true);
 		

@@ -21,10 +21,13 @@ import org.uengine.codi.mw3.knowledge.ProjectServer;
 import org.uengine.codi.mw3.knowledge.ProjectServers;
 import org.uengine.codi.mw3.marketplace.App;
 import org.uengine.codi.mw3.model.Popup;
+import org.uengine.codi.mw3.model.Session;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 public class ResourceContextMenu extends CloudMenu {
 
+	public final static String WHEN_COPY = "copy";
+	
 	@Autowired
 	public ProcessManagerRemote processManager;
 	
@@ -35,7 +38,7 @@ public class ResourceContextMenu extends CloudMenu {
 		
 	}
 	
-	public ResourceContextMenu(ResourceNode resourceNode){
+	public ResourceContextMenu(ResourceNode resourceNode, Session session){		
 		this.setResourceNode(resourceNode);
 		
 		this.setId("ResourceContext");
@@ -43,21 +46,28 @@ public class ResourceContextMenu extends CloudMenu {
 		this.setContext(true);
 		
 		this.add(new SubMenuItem(new NewMenu(this.getResourceNode())));
-		this.add(new MenuItem("open", "$resource.menu.open"));
+		//this.add(new MenuItem("open", "$resource.menu.open"));
 		
 		if(!ResourceNode.TYPE_PROJECT.equals(resourceNode.getType())){ 
 			this.add(new MenuItem(MenuItem.TYPE_DIVIDER));
 			this.add(new MenuItem("copy", "$resource.menu.copy"));
-		}else{
-			this.add(new MenuItem(MenuItem.TYPE_DIVIDER));
 		}
 		
-		this.add(new MenuItem("paste", "$resource.menu.paste"));
+		if(session.getClipboard() != null){
+			Object clipboard = session.getClipboard();
+			
+			if(clipboard instanceof ResourceNode){
+				ResourceNode copyNode = (ResourceNode)clipboard;
+				
+				if(WHEN_COPY.equals(copyNode.getMetaworksContext().getWhen()))
+					this.add(new MenuItem("paste", "$resource.menu.paste"));
+			}
+		}
 		
 		if(!ResourceNode.TYPE_PROJECT.equals(resourceNode.getType())){
 			this.add(new MenuItem("remove", "$resource.menu.remove"));
-			this.add(new MenuItem("move", "$resource.menu.move"));
-			this.add(new MenuItem("rename", "$resource.menu.rename"));
+			//this.add(new MenuItem("move", "$resource.menu.move"));
+			//this.add(new MenuItem("rename", "$resource.menu.rename"));
 		}else{
 			this.add(new MenuItem(MenuItem.TYPE_DIVIDER));			
 			this.add(new MenuItem("manageMetadata", "$resource.menu.manageMetadata"));
@@ -65,17 +75,9 @@ public class ResourceContextMenu extends CloudMenu {
 			this.add(new MenuItem("deployee", "$resource.menu.deployee"));
 			this.add(new MenuItem("registerApp", "$resource.menu.registerApp"));
 		}
-		
-
-		
-		/*
-		this.add(new SubMenuItem(new TeamMenu()));
-		this.add(new MenuItem(MenuItem.TYPE_DIVIDER));
-		this.add(new MenuItem("showProperties", "Properties"));*/
-
 	}
 	
-	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 	public Object open(){
 		Object clipboard = session.getClipboard();
 		if(clipboard instanceof ResourceNode){
@@ -87,7 +89,23 @@ public class ResourceContextMenu extends CloudMenu {
 		}
 	}
 	
-	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
+	@ServiceMethod(callByContent=true)
+	public Object copy(){
+		this.getResourceNode().getMetaworksContext().setWhen(WHEN_COPY);
+		
+		session.setClipboard(this.getResourceNode());
+		
+		return session;
+	}
+	
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
+	public Object[] paste(){
+		this.getResourceNode().session = session;
+		
+		return this.getResourceNode().drop();
+	}
+	
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 	public Object[] remove(){
 		Object clipboard = session.getClipboard();
 		if(clipboard instanceof ResourceNode){
@@ -104,7 +122,7 @@ public class ResourceContextMenu extends CloudMenu {
 		}
 	}
 	
-	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 	public Object manageMetadata() throws Exception {
 
 		Object clipboard = session.getClipboard();
@@ -129,7 +147,7 @@ public class ResourceContextMenu extends CloudMenu {
 	}
 	
 	
-	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 	public Object[] deployee() throws Exception {
 		
 		String title = "";
@@ -179,7 +197,7 @@ public class ResourceContextMenu extends CloudMenu {
 	}
 	
 	
-	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 	public Object registerApp() throws Exception {
 
 		App app = new App();
