@@ -4,12 +4,12 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.metaworks.annotation.Name;
 import org.uengine.kernel.Activity;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.ProcessDefinition;
 import org.uengine.kernel.ProcessInstance;
 import org.uengine.processdesigner.ProcessDesigner;
-import org.uengine.util.UEngineUtil;
 
 /**
  * This class holds descriptive string in multi-lingual support. 
@@ -36,6 +36,7 @@ public class TextContext implements Serializable{
 	}
 	
 	String text;
+		@Name
 		public String getText() {
 			if(!GlobalContext.isDesignTime()){
 				String defaultLocale = GlobalContext.getDefaultLocale();
