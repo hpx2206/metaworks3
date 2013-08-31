@@ -195,25 +195,27 @@ public class SelfServiceControlPanel {
 		this.stringProperties = new ArrayList<StringProperty>();
 		this.processProperties = new ArrayList<ProcessProperty>();
 		
-		for(MetadataProperty metadataProperty : metadataXML.getProperties()){
-			metadataProperty = (MetadataProperty) metadataProperty.selectType();
-			metadataProperty.setProjectId(project.getId());
-			metadataProperty.setMetaworksContext(new MetaworksContext());
-			metadataProperty.getMetaworksContext().setWhere("ssp");
-			
-			if(MetadataProperty.FILE_PROP.equals(metadataProperty.getType())){
-				this.fileProperties.add((FileProperty) metadataProperty);
-			}else if(MetadataProperty.FORM_PROP.equals(metadataProperty.getType())){
-				this.formProperties.add((FormProperty) metadataProperty);
-			}else if(MetadataProperty.IMAGE_PROP.equals(metadataProperty.getType())){
-				this.imageProperties.add((ImageProperty) metadataProperty);
-			}else if(MetadataProperty.PROCESS_PROP.equals(metadataProperty.getType())){
-				this.processProperties.add((ProcessProperty) metadataProperty);
-			}else if(MetadataProperty.STRING_PROP.equals(metadataProperty.getType())){
-				this.stringProperties.add((StringProperty) metadataProperty);
+		if(metadataXML.getProperties() != null){
+			for(MetadataProperty metadataProperty : metadataXML.getProperties()){
+				metadataProperty = (MetadataProperty) metadataProperty.selectType();
+				metadataProperty.setProjectId(project.getId());
+				metadataProperty.setMetaworksContext(new MetaworksContext());
+				metadataProperty.getMetaworksContext().setWhere("ssp");
+				
+				if(MetadataProperty.FILE_PROP.equals(metadataProperty.getType())){
+					this.fileProperties.add((FileProperty) metadataProperty);
+				}else if(MetadataProperty.FORM_PROP.equals(metadataProperty.getType())){
+					this.formProperties.add((FormProperty) metadataProperty);
+				}else if(MetadataProperty.IMAGE_PROP.equals(metadataProperty.getType())){
+					this.imageProperties.add((ImageProperty) metadataProperty);
+				}else if(MetadataProperty.PROCESS_PROP.equals(metadataProperty.getType())){
+					this.processProperties.add((ProcessProperty) metadataProperty);
+				}else if(MetadataProperty.STRING_PROP.equals(metadataProperty.getType())){
+					this.stringProperties.add((StringProperty) metadataProperty);
+				}
+				
+				this.metadataProperties.add(metadataProperty.getIndex(), metadataProperty);
 			}
-			
-			this.metadataProperties.add(metadataProperty.getIndex(), metadataProperty);
 		}
 		
 		metadataXML.setProperties(this.metadataProperties);
