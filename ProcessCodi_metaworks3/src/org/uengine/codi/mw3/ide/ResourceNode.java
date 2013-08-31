@@ -265,15 +265,9 @@ public class ResourceNode extends TreeNode implements ContextAware {
 	}
 
 	private void changeProject(){
-		String currentProjectId = (String)TransactionContext.getThreadLocalInstance().getRequest().getSession().getAttribute("currentIdeProjectId");
+		Project project = workspace.findProject(this.getProjectId());
 		
-		if(!this.getProjectId().equals(currentProjectId) && workspace != null){
-			Project project = workspace.findProject(this.getProjectId());
-			
-			project.changeProject("root");
-			
-			TransactionContext.getThreadLocalInstance().getRequest().getSession().setAttribute("currentIdeProjectId", this.getProjectId());
-		}
+		project.changeProject("root");
 	}
 	
 	@Override
