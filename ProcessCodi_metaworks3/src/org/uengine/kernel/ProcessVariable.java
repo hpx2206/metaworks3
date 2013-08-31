@@ -10,6 +10,7 @@ import javax.xml.namespace.QName;
 
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
+import org.metaworks.annotation.Id;
 import org.uengine.contexts.DatabaseSynchronizationOption;
 import org.uengine.contexts.TextContext;
 
@@ -17,11 +18,11 @@ import org.uengine.contexts.TextContext;
  * @author Jinyoung Jang
  */
 
-@Face(ejsPath="genericfaces/ActivityFace.ejs", options={"fieldOrder"},values={"name,displayName"})
 public class ProcessVariable implements java.io.Serializable, NeedArrangementToSerialize, Cloneable{
 	private static final long serialVersionUID = org.uengine.kernel.GlobalContext.SERIALIZATION_UID;
 	
 	String name;
+	@Id
 	@Face(displayName="변수 이름")
 		public String getName() {
 			return name;
