@@ -81,10 +81,6 @@ public class Workspace {
 				e.printStackTrace();
 			}			
 		}
-		
-		for(Project project : projects){
-			System.out.println(project.getPath());
-		}
 	}
 	
 	public void addTenant(){

@@ -11,7 +11,6 @@ import org.metaworks.ServiceMethodContext;
 import org.metaworks.ToAppend;
 import org.metaworks.ToOpener;
 import org.metaworks.annotation.AutowiredFromClient;
-import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.TreeNode;
@@ -291,59 +290,90 @@ public class ResourceNode extends TreeNode implements ContextAware {
 
 	@ServiceMethod(payload={"id", "name", "path", "folder", "projectId", "type"}, mouseBinding="right", target=ServiceMethodContext.TARGET_POPUP)
 	public Object[] showContextMenu() {
-		session.setClipboard(this);
-
 		this.changeProject();
 		
-		return new Object[]{new Refresh(session), new ResourceContextMenu(this)};
+		return new Object[]{new ResourceContextMenu(this, session)};
 	}
 
 	public static String findNodeType(String name){
 		String nodeType = TreeNode.TYPE_FILE_TEXT;
 
-		int pos = name.lastIndexOf('.');
-		if(pos > -1){
-			String ext = name.substring(pos);
-
-			if(".html".equals(ext)){
-				nodeType = TreeNode.TYPE_FILE_HTML;
-			}else if(".java".equals(ext)){
-				nodeType = TreeNode.TYPE_FILE_JAVA;
-			}else if(".ejs".equals(ext)){
-				nodeType = TreeNode.TYPE_FILE_EJS;
-			}else if(".js".equals(ext)){
-				nodeType = TreeNode.TYPE_FILE_JS;
-			}else if(".form".equals(ext)){
-				nodeType = TreeNode.TYPE_FILE_FORM;
-			}else if(".wpd".equals(ext) || ".process2".equals(ext)){
-				nodeType = TreeNode.TYPE_FILE_PROCESS;
-			}else if(".rule".equals(ext)){
-				nodeType = TreeNode.TYPE_FILE_RULE;
-			}else if(".css".equals(ext)){
-				nodeType = TreeNode.TYPE_FILE_CSS;
-			}else if(".jepg".equals(ext) || ".jpg".equals(ext) || ".gif".equals(ext) || ".png".equals(ext)){
-				nodeType = TreeNode.TYPE_FILE_IMAGE;
-			}else if(".metadata".equals(ext)){
-				nodeType = TreeNode.TYPE_FILE_METADATA;
+		if(name != null){
+			int pos = name.lastIndexOf('.');
+			if(pos > -1){
+				String ext = name.substring(pos);
+	
+				if(".html".equals(ext)){
+					nodeType = TreeNode.TYPE_FILE_HTML;
+				}else if(".java".equals(ext)){
+					nodeType = TreeNode.TYPE_FILE_JAVA;
+				}else if(".ejs".equals(ext)){
+					nodeType = TreeNode.TYPE_FILE_EJS;
+				}else if(".js".equals(ext)){
+					nodeType = TreeNode.TYPE_FILE_JS;
+				}else if(".form".equals(ext)){
+					nodeType = TreeNode.TYPE_FILE_FORM;
+				}else if(".wpd".equals(ext) || ".process2".equals(ext)){
+					nodeType = TreeNode.TYPE_FILE_PROCESS;
+				}else if(".rule".equals(ext)){
+					nodeType = TreeNode.TYPE_FILE_RULE;
+				}else if(".css".equals(ext)){
+					nodeType = TreeNode.TYPE_FILE_CSS;
+				}else if(".jepg".equals(ext) || ".jpg".equals(ext) || ".gif".equals(ext) || ".png".equals(ext)){
+					nodeType = TreeNode.TYPE_FILE_IMAGE;
+				}else if(".metadata".equals(ext)){
+					nodeType = TreeNode.TYPE_FILE_METADATA;
+				}	
 			}
-
 		}
 
 		return nodeType;
 	}
 
-	@ServiceMethod(payload={"id", "name", "path", "type", "folder", "projectId"}, mouseBinding="drag", target=ServiceMethodContext.TARGET_NONE)
-	public void drag() {
+	@ServiceMethod(payload={"id", "name", "path", "type", "folder", "projectId"}, mouseBinding="drag")
+	public Object drag() {
+		System.out.println("drag : " + this.getId());
 		
-		try {
-			Project project = workspace.findProject(this.getProjectId());
+		Project project = workspace.findProject(this.getProjectId());
+
+		this.setAlias(project.getBuildPath().makeFullClassName(this.getId()));;
+		
+		session.setClipboard(this);
+		
+		return session;
+	}
+	
+	@ServiceMethod(callByContent=true, mouseBinding="drop", target=ServiceMethodContext.TARGET_APPEND)
+	public Object[] drop(){
+		
+		if(this.isFolder()){
+			Object clipboard = session.getClipboard();
 			
-			//String 	projectSourcePath = project.getBuildPath().getSources().get(0).getPath(); 			
-			//TransactionContext.getThreadLocalInstance().getRequest().getSession().setAttribute("projectSourcePath", projectSourcePath);
-			
-			this.setAlias(project.getBuildPath().makeFullClassName(this.getId()));;
-		} catch (Exception e) {
+			if(clipboard instanceof ResourceNode){
+				ResourceNode resourceNode = (ResourceNode)clipboard;
+				
+				if(!ResourceNode.TYPE_PROJECT.equals(resourceNode.getType())){
+					File file = new File(resourceNode.getPath());
+					
+					if(file.exists()){
+						File dstFile = new File(this.getPath() + File.separatorChar + resourceNode.getName());
+						
+						file.renameTo(dstFile);
+					}
+					
+					try {
+						this.setExpanded(true);
+						
+						return new Object[]{new Refresh(this.expand()), new Remover(resourceNode)};
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			}
 		}
+		
+		return null;
 	}
 	
 	@ServiceMethod
