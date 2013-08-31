@@ -77,7 +77,17 @@ if(mw3.where == 'ssp'){
       <div id="btnline" style="border-top:1px solid #E3E8F2; padding-top:8px; padding-bottom:8px;">
       <ul>
           <li>
-              <a id="wBtn" href="#" onclick="<%=methods.add.caller()%>"><span>추가</span></a>
+              <%
+		if(value.metaworksContext.when == 'edit') {
+%>	          
+              <a id="wBtn" href="#" onclick="<%=methods.edit.caller()%>"><span>저장</span></a>
+<%
+		}else{
+%>
+			  <a id="wBtn" href="#" onclick="<%=methods.add.caller()%>"><span>추가</span></a>
+<%		
+		}
+%>	 
           </li>
       </ul>
   </div>
