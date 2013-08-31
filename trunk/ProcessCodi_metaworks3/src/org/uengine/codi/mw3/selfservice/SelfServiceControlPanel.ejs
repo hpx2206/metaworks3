@@ -1,5 +1,3 @@
-<%=fields.metadataXml.here()%>
-
 <div class="mp_wrap">
     <div class="mp_left">
 		<div>
@@ -21,17 +19,17 @@
                 <div id="sp_accordion" class="sp_accordion" style="height: 100%">
                     <h3><%=mw3.localize('$ssp.look.feel')%><%if(value.appName){%><span onClick="mw3.getFaceHelper(<%=objectId%>).add('looknfeel');" style="width:16px; height:16px; top:5px; position:absolute;margin-left:5px;background-image:url(images/waveStyle/add.png)"><%}%></span></h3>
                     <div>
-                    	<%=fields.fileProperties.here()%>
-                    	<%=fields.imageProperties.here()%>
-                    	<%=fields.stringProperties.here()%>
+                    	<%=fields.filePropertyPanel.here()%>                    	
+                    	<%=fields.imagePropertyPanel.here()%>
+                    	<%=fields.stringPropertyPanel.here()%>
                     </div>
                     <h3><%=mw3.localize('$ssp.process')%><%if(value.appName){%><span onClick="mw3.getFaceHelper(<%=objectId%>).add('process');" style="width:16px; height:16px; top:5px; position:absolute;margin-left:5px;background-image:url(images/waveStyle/add.png)"></span><%}%></h3>
                     <div>
-                    	<%=fields.processProperties.here()%>
+                    	<%=fields.processPropertyPanel.here()%>
                     </div>
                     <h3><%=mw3.localize('$ssp.form')%><%if(value.appName){%><span onClick="mw3.getFaceHelper(<%=objectId%>).add('form');" style="width:16px; height:16px; top:5px; position:absolute;margin-left:5px;background-image:url(images/waveStyle/add.png)"></span><%}%></h3>
                     <div>                       
-                    	<%=fields.formProperties.here()%>
+                    	<%=fields.formPropertyPanel.here()%>
                     </div>
                     <h3><%=mw3.localize('$ssp.organization')%></h3>
                     <div>
