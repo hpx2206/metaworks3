@@ -463,7 +463,79 @@ public class MetadataProperty implements ContextAware, Cloneable {
 		metadataEditor.setContent(metadataXML.toXmlXStream());
 		metadataEditor.save();
 
-		return new Object[]{metadataXML};
+		if(MetadataProperty.FILE_PROP.equals(this.getType())){
+			
+			ArrayList<FileProperty> fileProperties = new ArrayList<FileProperty>();
+			
+			for(MetadataProperty property : metadataXML.getProperties()){
+				if(MetadataProperty.FILE_PROP.equals(property.getType())) {					
+					fileProperties.add((FileProperty)property);
+				}
+			}
+			
+			FilePropertyPanel panel = new FilePropertyPanel(fileProperties);
+			
+			return new Object[]{panel};	
+			
+		}else if(MetadataProperty.IMAGE_PROP.equals(this.getType())) {
+			
+			ArrayList<ImageProperty> imageProperties = new ArrayList<ImageProperty>();
+			
+			for(MetadataProperty property : metadataXML.getProperties()){
+				if(MetadataProperty.IMAGE_PROP.equals(property.getType())) {					
+					imageProperties.add((ImageProperty)property);
+				}
+			}
+			
+			ImagePropertyPanel panel = new ImagePropertyPanel(imageProperties);
+			
+			return new Object[]{panel};	
+			
+		}else if(MetadataProperty.PROCESS_PROP.equals(this.getType())) {
+			
+			ArrayList<ProcessProperty> processProperties = new ArrayList<ProcessProperty>();
+			
+			for(MetadataProperty property : metadataXML.getProperties()){
+				if(MetadataProperty.PROCESS_PROP.equals(property.getType())) {					
+					processProperties.add((ProcessProperty)property);
+				}
+			}
+			
+			ProcessPropertyPanel panel = new ProcessPropertyPanel(processProperties);
+			
+			return new Object[]{panel};	
+			
+		}else if(MetadataProperty.STRING_PROP.equals(this.getType())) {
+			
+			ArrayList<StringProperty> stringProperties = new ArrayList<StringProperty>();
+			
+			for(MetadataProperty property : metadataXML.getProperties()){
+				if(MetadataProperty.STRING_PROP.equals(property.getType())) {					
+					stringProperties.add((StringProperty)property);
+				}
+			}
+			
+			StringPropertyPanel panel = new StringPropertyPanel(stringProperties);
+			
+			return new Object[]{panel};	
+			
+		}else if(MetadataProperty.FORM_PROP.equals(this.getType())) {
+			
+			ArrayList<FormProperty> formProperties = new ArrayList<FormProperty>();
+			
+			for(MetadataProperty property : metadataXML.getProperties()){
+				if(MetadataProperty.FORM_PROP.equals(property.getType())) {					
+					formProperties.add((FormProperty)property);
+				}
+			}
+			
+			FormPropertyPanel panel = new FormPropertyPanel(formProperties);
+			
+			return new Object[]{panel};
+		}		
+		
+		return null;
+//		return new Object[]{metadataXML};
 	}
 
 	@ServiceMethod(callByContent = true, when = MetaworksContext.WHEN_VIEW)
