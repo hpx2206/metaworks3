@@ -104,6 +104,7 @@ public class AssignActivity extends DefaultActivity{
 	
 	public AssignActivity(){
 		this(null,null);
+		this.setAssignStyle(SIMPLE_STYLE);
 	}
 	
 	private String generateJavaCode(String scriptSmt){
