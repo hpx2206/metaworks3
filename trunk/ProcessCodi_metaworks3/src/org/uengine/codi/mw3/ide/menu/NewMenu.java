@@ -41,7 +41,7 @@ public class NewMenu extends CloudMenu {
 		this.add(new MenuItem("newForm", "$resource.menu.new.form"));
 		this.add(new MenuItem("newFolder", "$resource.menu.new.folder"));
 		this.add(new MenuItem("newFile", "$resource.menu.new.file"));
-		this.add(new MenuItem(MenuItem.TYPE_DIVIDER));
+		//this.add(new MenuItem(MenuItem.TYPE_DIVIDER));
 		//this.add(new MenuItem("newTerminal", "Terminal"));
 		//this.add(new MenuItem("newSQLClient", "SQL Client"));		
 
