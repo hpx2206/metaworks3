@@ -9,12 +9,17 @@ import org.metaworks.annotation.AutowiredToClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.metadata.FileProperty;
+import org.metaworks.metadata.FilePropertyPanel;
 import org.metaworks.metadata.FormProperty;
+import org.metaworks.metadata.FormPropertyPanel;
 import org.metaworks.metadata.ImageProperty;
+import org.metaworks.metadata.ImagePropertyPanel;
 import org.metaworks.metadata.MetadataProperty;
 import org.metaworks.metadata.MetadataXML;
 import org.metaworks.metadata.ProcessProperty;
+import org.metaworks.metadata.ProcessPropertyPanel;
 import org.metaworks.metadata.StringProperty;
+import org.metaworks.metadata.StringPropertyPanel;
 import org.uengine.codi.mw3.ide.Project;
 import org.uengine.codi.mw3.ide.Workspace;
 import org.uengine.codi.mw3.marketplace.AppMapping;
@@ -56,47 +61,48 @@ public class SelfServiceControlPanel {
 		public void setMetadataProperties(ArrayList<MetadataProperty> metadataProperties) {
 			this.metadataProperties = metadataProperties;
 		}
-	
-	ArrayList<FileProperty> fileProperties;
-		public ArrayList<FileProperty> getFileProperties() {
-			return fileProperties;
+		
+	FilePropertyPanel filePropertyPanel;	
+		public FilePropertyPanel getFilePropertyPanel() {
+			return filePropertyPanel;
 		}
-		public void setFileProperties(ArrayList<FileProperty> fileProperties) {
-			this.fileProperties = fileProperties;
+		public void setFilePropertyPanel(FilePropertyPanel filePropertyPanel) {
+			this.filePropertyPanel = filePropertyPanel;
 		}
-	
-	ArrayList<FormProperty> formProperties;
-		public ArrayList<FormProperty> getFormProperties() {
-			return formProperties;
+		
+	ImagePropertyPanel imagePropertyPanel;
+		public ImagePropertyPanel getImagePropertyPanel() {
+			return imagePropertyPanel;
 		}
-		public void setFormProperties(ArrayList<FormProperty> formProperties) {
-			this.formProperties = formProperties;
+		public void setImagePropertyPanel(ImagePropertyPanel imagePropertyPanel) {
+			this.imagePropertyPanel = imagePropertyPanel;
 		}
-
-	ArrayList<StringProperty> stringProperties;
-		public ArrayList<StringProperty> getStringProperties() {
-			return stringProperties;
+		
+	ProcessPropertyPanel processPropertyPanel;	
+		public ProcessPropertyPanel getProcessPropertyPanel() {
+			return processPropertyPanel;
 		}
-		public void setStringProperties(ArrayList<StringProperty> stringProperties) {
-			this.stringProperties = stringProperties;
-		}
-	
-	ArrayList<ProcessProperty> processProperties;
-		public ArrayList<ProcessProperty> getProcessProperties() {
-			return processProperties;
-		}
-		public void setProcessProperties(ArrayList<ProcessProperty> processProperties) {
-			this.processProperties = processProperties;
+		public void setProcessPropertyPanel(ProcessPropertyPanel processPropertyPanel) {
+			this.processPropertyPanel = processPropertyPanel;
 		}
 
-	ArrayList<ImageProperty> imageProperties;
-		public ArrayList<ImageProperty> getImageProperties() {
-			return imageProperties;
+	StringPropertyPanel stringPropertyPanel;
+		public StringPropertyPanel getStringPropertyPanel() {
+			return stringPropertyPanel;
 		}
-		public void setImageProperties(ArrayList<ImageProperty> imageProperties) {
-			this.imageProperties = imageProperties;
+		public void setStringPropertyPanel(StringPropertyPanel stringPropertyPanel) {
+			this.stringPropertyPanel = stringPropertyPanel;
 		}
-
+		
+	FormPropertyPanel formPropertyPanel;	
+		public FormPropertyPanel getFormPropertyPanel() {
+			return formPropertyPanel;
+		}
+		public void setFormPropertyPanel(FormPropertyPanel formPropertyPanel) {
+			this.formPropertyPanel = formPropertyPanel;
+		}
+	
+		
 	MetadataProperty metadataProperty;
 		public MetadataProperty getMetadataProperty() {
 			return metadataProperty;
@@ -187,41 +193,59 @@ public class SelfServiceControlPanel {
 		
 		metadataXML.setFilePath(project.getPath() + File.separatorChar + Project.METADATA_FILENAME);
 		
-		this.metadataProperties = new ArrayList<MetadataProperty>();
-		this.fileProperties = new ArrayList<FileProperty>();
-		this.formProperties = new ArrayList<FormProperty>();
-		this.imageProperties = new ArrayList<ImageProperty>();
-		this.stringProperties = new ArrayList<StringProperty>();
-		this.processProperties = new ArrayList<ProcessProperty>();
+		this.metadataProperties = new ArrayList<MetadataProperty>();	
 		
-		if(metadataXML.getProperties() != null){
-			for(MetadataProperty metadataProperty : metadataXML.getProperties()){
-				metadataProperty = (MetadataProperty) metadataProperty.selectType();
-				metadataProperty.setProjectId(project.getId());
-				metadataProperty.setMetaworksContext(new MetaworksContext());
-				metadataProperty.getMetaworksContext().setWhere("ssp");
-				
-				if(MetadataProperty.FILE_PROP.equals(metadataProperty.getType())){
-					this.fileProperties.add((FileProperty) metadataProperty);
-				}else if(MetadataProperty.FORM_PROP.equals(metadataProperty.getType())){
-					this.formProperties.add((FormProperty) metadataProperty);
-				}else if(MetadataProperty.IMAGE_PROP.equals(metadataProperty.getType())){
-					this.imageProperties.add((ImageProperty) metadataProperty);
-				}else if(MetadataProperty.PROCESS_PROP.equals(metadataProperty.getType())){
-					this.processProperties.add((ProcessProperty) metadataProperty);
-				}else if(MetadataProperty.STRING_PROP.equals(metadataProperty.getType())){
-					this.stringProperties.add((StringProperty) metadataProperty);
-				}
-				
-				this.metadataProperties.add(metadataProperty.getIndex(), metadataProperty);
+		ArrayList<FileProperty> fileProperties = new ArrayList<FileProperty>();
+		ArrayList<ImageProperty> imageProperties = new ArrayList<ImageProperty>();
+		ArrayList<ProcessProperty> processProperties = new ArrayList<ProcessProperty>();
+		ArrayList<StringProperty> stringProperties = new ArrayList<StringProperty>();
+		ArrayList<FormProperty> formProperties = new ArrayList<FormProperty>();
+		
+		for(MetadataProperty metadataProperty : metadataXML.getProperties()){
+			metadataProperty = (MetadataProperty) metadataProperty.selectType();
+			metadataProperty.setProjectId(project.getId());
+			metadataProperty.setMetaworksContext(new MetaworksContext());
+			metadataProperty.getMetaworksContext().setWhere("ssp");
+			
+			if(MetadataProperty.FILE_PROP.equals(metadataProperty.getType())){
+				fileProperties.add((FileProperty) metadataProperty);
+			}else if(MetadataProperty.FORM_PROP.equals(metadataProperty.getType())){
+				formProperties.add((FormProperty) metadataProperty);
+			}else if(MetadataProperty.IMAGE_PROP.equals(metadataProperty.getType())){
+				imageProperties.add((ImageProperty) metadataProperty);
+			}else if(MetadataProperty.PROCESS_PROP.equals(metadataProperty.getType())){
+				processProperties.add((ProcessProperty) metadataProperty);
+			}else if(MetadataProperty.STRING_PROP.equals(metadataProperty.getType())) {
+				stringProperties.add((StringProperty) metadataProperty);
 			}
+			
+			this.metadataProperties.add(metadataProperty.getIndex(), metadataProperty);
 		}
 		
-		metadataXML.setProperties(this.metadataProperties);		
+		metadataXML.setProperties(this.metadataProperties);
 		this.getAppMapping().getMetaworksContext().setWhere("ssp");
 		
 		metadataXML.setMetaworksContext(new MetaworksContext());
 		metadataXML.getMetaworksContext().setHow("selfservice");
+	
+		this.setMetadataXml(metadataXML);		
+		
+		
+		//add panel		
+		FilePropertyPanel filePanel = new FilePropertyPanel(fileProperties);
+		this.setFilePropertyPanel(filePanel);
+		
+		ImagePropertyPanel imagePanel = new ImagePropertyPanel(imageProperties);
+		this.setImagePropertyPanel(imagePanel);
+
+		ProcessPropertyPanel processPanel = new ProcessPropertyPanel(processProperties);
+		this.setProcessPropertyPanel(processPanel);
+		
+		StringPropertyPanel stringPanel = new StringPropertyPanel(stringProperties);
+		this.setStringPropertyPanel(stringPanel);
+		
+		FormPropertyPanel formPanel = new FormPropertyPanel(formProperties);
+		this.setFormPropertyPanel(formPanel);		
 		
 		this.setMetadataXml(metadataXML);
 	}
