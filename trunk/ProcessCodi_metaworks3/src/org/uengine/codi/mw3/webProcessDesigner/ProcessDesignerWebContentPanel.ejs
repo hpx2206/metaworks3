@@ -3,8 +3,8 @@
 		<dd>
 			<dt class="leftMenuTab_ide">기본</dt>
 			<dl class="leftMenuTabInner_ide">
+				<img src="images/opengraph/event_start.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_Start" _classType="Activity"  _classname="org.uengine.kernel.EmptyActivity" _width="30" _height="30" title="Start"/>
 				<!--
-				<img src="images/opengraph/event_start.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_Start" _width="30" _height="30" title="Start"/>
 	            <img src="images/opengraph/event_intermediate.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_Intermediate" _width="30" _height="30"/>	            
 	            <img src="images/opengraph/event_end.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_End" _width="30" _height="30" title="End"/>
 	            -->
@@ -15,9 +15,7 @@
 	            
 	            <!-- HumanActivity -->
 	            <img src="images/opengraph/task.png" class="icon_shape" _classType="Activity" _classname="org.uengine.kernel.HumanActivity" _shape_type="GEOM" _shape_id="OG.shape.bpmn.A_Task" _width="70" _height="50" title="HumanActivity"/>
-	             	             
-	            <img src="images/opengraph/rule_start.png" class="icon_shape" _shape_type="GEOM" _classType="Activity" _classname="org.uengine.kernel.AssignActivity" _shape_id="OG.shape.bpmn.E_Start_Rule" _width="30" _height="30"/>
-	            
+	             <img src="images/opengraph/rule_start.png" class="icon_shape"  _classType="Activity" _shape_type="GEOM" _classname="org.uengine.kernel.AssignActivity" _shape_id="OG.shape.bpmn.E_Start_Rule" _width="30" _height="30"/>
 				<!-- 
 	            <img src="images/opengraph/link_start.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_Start_Link" _width="30" _height="30"/>
 	            <img src="images/opengraph/link_intermediate.png" class="icon_shape" _shape_type="GEOM" _shape_id="OG.shape.bpmn.E_Intermediate_Link" _width="30" _height="30"/>
@@ -104,5 +102,13 @@
 		-->
 	</div>
 	<div id="canvas_<%=objectId%>" style="height:100%; margin-left:90px; cursor: default; overflow:auto;  background:#F1FCF1; "></div>
+	
+</div>
+<div  style="width:100%; height:14%; border-top:1px solid #B4B3B5;">
+
+        <ul>
+        <%=fields.defineTab.here()%>
+        </ul>
+            
 </div>
 

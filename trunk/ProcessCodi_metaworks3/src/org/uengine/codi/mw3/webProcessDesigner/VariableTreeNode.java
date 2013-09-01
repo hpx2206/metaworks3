@@ -33,7 +33,7 @@ public class VariableTreeNode extends TreeNode {
 			String nameAttr = prcsValiable.getName();
 			// TODO 처음에 로딩할 필요가 없다면 아래 루프 부분은 클릭시 작동하는걸로 뺀다. 
 			String typeIdAttr = prcsValiable.getTypeId();
-			String typeAttr = prcsValiable.getVariableType();
+			String typeAttr = prcsValiable.getVariableType().getSelected();
 			if( typeAttr == null ) continue;
 			
 			VariableTreeNode node = new VariableTreeNode();

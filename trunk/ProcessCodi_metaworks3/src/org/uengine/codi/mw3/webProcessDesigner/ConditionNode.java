@@ -106,7 +106,7 @@ public class ConditionNode  implements Cloneable, ContextAware{
 				String nameAttr = prcsValiable.getName();
 				choice.add(nameAttr, nameAttr);
 				String typeIdAttr = prcsValiable.getTypeId();
-				String typeAttr = prcsValiable.getVariableType();
+				String typeAttr = prcsValiable.getVariableType().getSelected();
 				if( "complexType".equals(typeAttr)){
 //					WebObjectType wot = MetaworksRemoteService.getInstance().getMetaworksType( typeIdAttr.substring(0, typeIdAttr.lastIndexOf(".")).replaceAll("/", ".") ); 
 					WebObjectType wot = MetaworksRemoteService.getInstance().getMetaworksType( typeIdAttr ); 

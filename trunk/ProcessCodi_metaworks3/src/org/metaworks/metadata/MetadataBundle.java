@@ -59,9 +59,20 @@ public class MetadataBundle {
 	
 	@ServiceMethod
 	public void loadProperty() throws Exception{
+		
+//		Thread.currentThread().getContextClassLoader().getResourceAsStream("image/logo.jpg");
+//		Thread.currentThread().getContextClassLoader().getResourceAsStream("process/test.wpd");
+//		Thread.currentThread().getContextClassLoader().loadClass("form.TestForm");
+//		Thread.currentThread().getContextClassLoader().getResourceAsStream("uengine.metadata");
+		
+		
 		String projectId = getProjectId();
 		String sourceCodeBase = CodiClassLoader.mySourceCodeBase();
-		String projectBasePath = getProjectBasePath(projectId);
+		String tenantId = "root";
+		if(TenantContext.getThreadLocalInstance()!=null && TenantContext.getThreadLocalInstance().getTenantId()!=null){
+			tenantId = TenantContext.getThreadLocalInstance().getTenantId();
+		}
+		String projectBasePath = getProjectBasePath(projectId, tenantId);
 		
 		// 앱의 루트 경로 생성 
 		// 1. 해당 앱의 메인 경로에 있는 uengine.metadata 파일을 찾는다.
@@ -77,7 +88,7 @@ public class MetadataBundle {
 				metadataFile.getParentFile().mkdirs();
 			}
 //			metadataFile.createNewFile();
-			metadataFile = getPropertyRemote(projectId, metadataFile);
+			metadataFile = getPropertyRemote(projectId, tenantId ,metadataFile);
 //		}
 		MetadataXML metadataXML = new MetadataXML();
 		Properties props = new Properties();
@@ -108,8 +119,14 @@ public class MetadataBundle {
 			for( MetadataProperty metadataProperty : properties){
 				String key = metadataProperty.getName();
 				String value = metadataProperty.getValue();
+//				if( !"String".equals(metadataProperty.getType()) ){
+//					value = metadataProperty.getType()+ File.separatorChar +value;
+//				}
+				if( "form".equals(metadataProperty.getType())){
+//					value = metadataProperty.getType()+ "." +value;
+				}
 				if( "image".equals(metadataProperty.getType())){
-					value = "metadata" + value + "?type=" + metadataProperty.getType();
+					value = "metadata" + File.separatorChar + value + "?type=" + metadataProperty.getType();
 				}
 				// TODO others
 				props.put(key, value);
@@ -120,7 +137,7 @@ public class MetadataBundle {
 	 * 앱에서 메인서버의 프로젝트로 메타데이터 파일 및 리소스를 요청
 	 * 관점 : 앱에서 서블릿을 통하여 호출
 	 */
-	private File getPropertyRemote(String projectId, File metadataFile){
+	private File getPropertyRemote(String projectId, String tenantId, File metadataFile){
 		// 코디 서버로 요청 '/metadata' 서블릿을 통하여 요청함
 		String codiServerUrl = GlobalContext.getPropertyString("metadataUrl", "http://localhost:8080/uengine-web/");
 		String requestUrl = "metadata/getMetadataFile";
@@ -128,6 +145,7 @@ public class MetadataBundle {
 		GetMethod getMethod = new GetMethod(codiServerUrl + requestUrl);
 		getMethod.setQueryString(new NameValuePair[] { 
 				new NameValuePair("projectId", projectId) ,
+				new NameValuePair("tenantId", tenantId) ,
 				new NameValuePair("metadataFileName", metadataFile.getName()) 
 		});
 		
@@ -145,21 +163,35 @@ public class MetadataBundle {
 						
 						ArrayList<MetadataProperty> properties =  metadataXML.getProperties();
 						if( properties != null ){
-							String metadataPath = getProjectBasePath(projectId);
+							String metadataPath;
+							if( tenantId != null){
+								metadataPath = MetadataBundle.getProjectBasePath(projectId , tenantId);
+							}else{
+								metadataPath = MetadataBundle.getProjectBasePath(projectId);
+							}
 							for( MetadataProperty metadataProperty : properties){
 								// for 문을 돌면서 해당 경로에 데이터가 없다면 데이터를 요청하고, remote 를  true로 준다.
 								String value = metadataProperty.getValue();
 								if( !"string".equalsIgnoreCase(metadataProperty.getType())){
-									File checkFile = new File(metadataPath+ File.separatorChar + value);
-									if( !checkFile.exists() ){
+									String filePath = null;
+//									if( "image".equalsIgnoreCase(metadataProperty.getType()) ){
+//										filePath = metadataPath+ File.separatorChar + metadataProperty.getType() + File.separatorChar + value;
+//									}else{
+										filePath = metadataPath + File.separatorChar + value;
+//									}
+									
+									File checkFile = new File(filePath);
+//									if( !checkFile.exists() ){
 										if( !checkFile.getParentFile().exists() ){
 											checkFile.getParentFile().mkdirs();
 										}
 										// 파일이 없다면 메인서버에서 리소스를 가져온다.
-										makeFileFromRemote(projectId , value , metadataPath+value);
+//										String requsetPath =  metadataProperty.getType() + File.separatorChar + value;
+//										String fileFullPath =  metadataPath+ File.separatorChar + requsetPath;
+										makeFileFromRemote(projectId , tenantId, value , filePath);
 										// 원격에서 가져왔다는걸 명시해준다.
 	//									metadataProperty.setRemote(true);
-									}
+//									}
 								}
 							}
 						}
@@ -187,13 +219,14 @@ public class MetadataBundle {
 	 * 로컬의 메인 바로 아래에 있는 메타데이터 파일을 읽어서 프로퍼티로 생성을 해 놓는다.
 	 * 관점 : 앱에서 호출
 	 */
-	private void makeFileFromRemote( String projectId, String requsetPath, String fileFullPath) throws Exception{
+	private void makeFileFromRemote( String projectId, String tenantId, String requsetPath, String fileFullPath) throws Exception{
 		String codiServerUrl = GlobalContext.getPropertyString("metadataUrl", "http://localhost:8080/uengine-web/");
 		String requestUrl = "metadata/getMetadataFile";
 		HttpClient httpClient = new HttpClient();
 		GetMethod getMethod = new GetMethod(codiServerUrl + requestUrl);
 		getMethod.setQueryString(new NameValuePair[] { 
 				new NameValuePair("projectId", projectId) ,
+				new NameValuePair("tenantId", tenantId) ,
 				new NameValuePair("metadataFileName", requsetPath) 
 		});
 		
