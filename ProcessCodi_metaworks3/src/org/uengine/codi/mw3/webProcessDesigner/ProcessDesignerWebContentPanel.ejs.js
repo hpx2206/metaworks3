@@ -207,11 +207,16 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 	 			customData.push( {"customId": clipboardNode.id , "customName" : clipboardNode.name , "customType" : "wfNode"});
 	 			canvas.setCustomData(knolElement, customData);
 	 			var value = mw3.objects[objectId];
+	 			var variableType = {
+	    				__className : 'org.metaworks.component.SelectBox',
+	    				selected : 'wfNode',
+	    				selectedText : 'wfNode'
+	    		};
 	    		var contentValue = {
 						__className : 'org.uengine.codi.mw3.webProcessDesigner.PrcsVariable',
 						name : clipboardNode.name ,
 						typeId : clipboardNode.id ,
-						variableType : 'wfNode'
+						variableType : variableType
 				};
 	    		value.variableMap[clipboardNode.name] = contentValue;
 	 			
@@ -378,11 +383,16 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
     						canvas.drawLabel(element, dragObjMetadata.displayName);
 	    		    		
 	    		    		var value = mw3.objects[objectId];
+	    		    		var variableType = {
+	    		    				__className : 'org.metaworks.component.SelectBox',
+	    		    				selected : 'complexType',
+	    		    				selectedText : 'complexType'
+	    		    		};
 	    		    		var contentValue = {
 									__className : 'org.uengine.codi.mw3.webProcessDesigner.PrcsVariable',
 									name : dragObjMetadata.displayName ,
 									typeId : clipboardNode.alias ,
-									variableType : 'complexType'
+									variableType : variableType
 							};
 	    		    		value.variableMap[clipboardNode.alias] = contentValue;	    		    			    		
 	    		    		customData.push( {"customId": "" , "customName" : dragObjMetadata.displayName , "customType" : "class"});
@@ -594,7 +604,8 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 			};
 			
 			
-			var object = mw3.getObject(objectId);
+//			var object = mw3.getObject(objectId);
+			var object = mw3.objects[objectId]; 
 			object['propertiesWindow'] = propertiesWindow;
 			object.showProperties();
 			//var metadata = mw3.getMetadata(object.__className);				
@@ -612,7 +623,6 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 	$(element).unbind('dblclick').bind({
 		dblclick: function (event) {
 			var value = mw3.objects[objectId]; 
-			
 			value.tempElementId = $(this).attr('id');
 			value.tempElementName = $(this).children('[id$=_LABEL]').text();
 			value.gateCondition();
@@ -708,11 +718,20 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerWebContentPanel.prototype
 		cellsForDwr[cellsForDwr.length] = cellForDwr;
 	}
 	
+	var variableMap = {};
+	var prcsVariablePanel = mw3.getAutowiredObject('org.uengine.codi.mw3.webProcessDesigner.PrcsVariablePanel');
+	if( prcsVariablePanel != null ){
+		for( var j=0; j < prcsVariablePanel.prcsValiables.length; j++){
+			variableMap[prcsVariablePanel.prcsValiables[j].name] = prcsVariablePanel.prcsValiables[j]; 
+		}
+	}
+	
 	var object = mw3.objects[this.objectId];
 	object.cell = cellsForDwr;
 	object.graphString = JSON.stringify(graphJson);
 	object.activityMap = activityMap;
 	object.roleMap = roleMap;
+	object.variableMap = variableMap;
 	
 	return object;
 };

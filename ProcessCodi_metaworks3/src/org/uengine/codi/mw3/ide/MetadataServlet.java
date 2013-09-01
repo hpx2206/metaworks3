@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.metaworks.metadata.MetadataBundle;
+import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.mw3.CodiClassLoader;
 
 public class MetadataServlet extends HttpServlet {
@@ -36,18 +37,23 @@ public class MetadataServlet extends HttpServlet {
 		
 		//  TODO url을 통해서 projectId 를 안다고 가정
 		String projectId = null;
-		
+		String tenantId = null;
 		if(pathInfo.startsWith("/getMetadataFile")){
 			// 요청받은 정보를 가지고, 메타데이터 파일을 찾아서 stream 으로 내려준다.
 			projectId = request.getParameter("projectId");
+			tenantId = request.getParameter("tenantId");
 			String metadataFileName = request.getParameter("metadataFileName");
-			String projectBasePath = MetadataBundle.getProjectBasePath(projectId);
+			String projectBasePath;
+			if( tenantId != null){
+				projectBasePath = MetadataBundle.getProjectBasePath(projectId , tenantId);
+			}else{
+				projectBasePath = MetadataBundle.getProjectBasePath(projectId);
+			}
 				
 			String filePath = projectBasePath + File.separatorChar + metadataFileName;
 			File file = new File(filePath);
 			if( !file.exists() ){
 				// 해당 프로젝트에 파일이 존재하지 않는 경우 최상위를 확인한다.
-				projectId = "codi";
 				filePath = MetadataBundle.getProjectBasePath(projectId) + File.separatorChar + metadataFileName;
 				file = new File(filePath);
 				if( !file.exists() ){
@@ -86,8 +92,14 @@ public class MetadataServlet extends HttpServlet {
 			String metadataType = request.getParameter("type");
 			if( metadataType != null ){
 				// codebase/appId/root
-				projectId = request.getParameter("projectId");
-				String projectBasePath = MetadataBundle.getProjectBasePath(projectId);
+				projectId = MetadataBundle.getProjectId();
+				tenantId = TenantContext.getThreadLocalInstance().getTenantId();
+				String projectBasePath;
+				if( tenantId != null){
+					projectBasePath = MetadataBundle.getProjectBasePath(projectId , tenantId);
+				}else{
+					projectBasePath = MetadataBundle.getProjectBasePath(projectId);
+				}
 				// codebase/appId/tenentId
 				String tenentBasePath = CodiClassLoader.mySourceCodeBase();
 				if( "image".equalsIgnoreCase(metadataType)){

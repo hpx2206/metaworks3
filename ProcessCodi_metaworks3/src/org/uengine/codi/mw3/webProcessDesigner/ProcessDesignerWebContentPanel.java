@@ -12,6 +12,7 @@ import java.util.Iterator;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
@@ -46,15 +47,15 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 			this.metaworksContext = metaworksContext;
 		}
 	
-//	DefineTab defineTab;
-//		public DefineTab getDefineTab() {
-//			return defineTab;
-//		}
-//		public void setDefineTab(DefineTab defineTab) {
-//			this.defineTab = defineTab;
-//		}
+	DefineTab defineTab;
+		public DefineTab getDefineTab() {
+			return defineTab;
+		}
+		public void setDefineTab(DefineTab defineTab) {
+			this.defineTab = defineTab;
+		}
 	public ProcessDesignerWebContentPanel() throws Exception{
-//		defineTab = new DefineTab();
+		defineTab = new DefineTab();
 		
 		canvasMap = new HashMap<String, CanvasDTO>();
 		activityMap = new HashMap<String, Object>();
@@ -246,6 +247,17 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
         	roleList.add((Role)act);
         }
         
+        // TODO 나중에 제거
+        ArrayList<PrcsVariable> prcsValiable = defineTab.getPrcsValiablePanel().getPrcsValiables();
+        if( prcsValiable != null ){
+        	for(int i=0; i < prcsValiable.size(); i++ ){
+        		PrcsVariable PrcsVariable = prcsValiable.get(i);
+        		variableMap.put(PrcsVariable.getName(), PrcsVariable);
+        	}
+        }
+        
+        
+        
         ArrayList<PrcsVariable> variableList = new ArrayList<PrcsVariable>();
         Collection<Object> collVariable = variableMap.values();
         Iterator<Object> iterVariable = collVariable.iterator();
@@ -304,13 +316,13 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 //		designerValiable.setName(tempElementName);
 //		designerValiable.setTypeId(tempElementTypeId);
 //		if( tempElementType != null && "wfNode".equals(tempElementType) ){
-//			designerValiable.getDataType().setSelected("knowledgelType");		// TODO 임시 셋팅
+//			designerValiable.setVariableType().setSelected("knowledgelType");		// TODO 임시 셋팅
 //		}else if( tempElementType != null && "class".equals(tempElementType) ){
-//			designerValiable.getDataType().setSelected("complexType");
+//			designerValiable.setVariableType().setSelected("complexType");
 //		}
 //		prcsValiable.add(designerValiable);
 //		defineTab.prcsValiablePanel.setPrcsValiables(prcsValiable);
-//		
+		
 //		return defineTab.prcsValiablePanel;
 //	}
 	public void saveMe(ProcessEditor processEditor) throws Exception{
@@ -574,7 +586,19 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 //		
 //		return roles;
 //	}
+	
 	public ProcessVariable[] makeProcessValiable() throws Exception{
+		
+		// TODO 나중에 제거
+        ArrayList<PrcsVariable> prcsValiable = defineTab.getPrcsValiablePanel().getPrcsValiables();
+        if( prcsValiable != null ){
+        	for(int i=0; i < prcsValiable.size(); i++ ){
+        		PrcsVariable PrcsVariable = prcsValiable.get(i);
+        		variableMap.put(PrcsVariable.getName(), PrcsVariable);
+        	}
+        }
+        // TODO 여기까지 제거
+        
 		Collection<Object> collVariable = variableMap.values();
 		ProcessVariable pvs[] = new ProcessVariable[collVariable.size()];
         Iterator<Object> iterVariable = collVariable.iterator();
@@ -583,8 +607,8 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
         	PrcsVariable prcsv = (PrcsVariable)iterVariable.next();
 			String nameAttr = prcsv.getName();
 			String typeIdAttr = prcsv.getTypeId();
-			String typeAttr = prcsv.getVariableType();
-			
+			String typeAttr = prcsv.getVariableType().getSelected();
+			System.out.println("typeAttr = " + typeAttr);
 			TextContext text = new TextContext();
 			text.setText(nameAttr);
 
@@ -597,7 +621,7 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 				
 				pv.setType(complexType.getClass());
 				pv.setDefaultValue(complexType);
-			}else if("string".equals(typeAttr)){
+			}else if("text".equals(typeAttr)){
 				pv.setType(String.class);
 			}
 			pvs[i] = pv;
@@ -649,16 +673,19 @@ public class ProcessDesignerWebContentPanel extends ContentWindow implements Con
 				ProcessVariable pv = pvs[i];
 				PrcsVariable designerValiable = new PrcsVariable();
 				designerValiable.setName(pv.getName());
-				if( pv.getDefaultValue() instanceof ComplexType ){
+				if( pv.getType() != null && pv.getType().isInstance(ComplexType.class) ){
 					ComplexType v = (ComplexType)pv.getDefaultValue();
-					designerValiable.setVariableType("complexType");
+					designerValiable.getVariableType().setSelected("complexType");
 					designerValiable.setTypeId(v.getTypeId().replace("[", "").replace("]", ""));
-				}else if( pv.getDefaultValue() instanceof String ){
-					designerValiable.setVariableType("string");
-				}else if( pv.getDefaultValue() instanceof Number ){
+				}else if( pv.getType() != null && pv.getType().isInstance(String.class) ){
+					designerValiable.getVariableType().setSelected("text");
+				}else if( pv.getType() != null && pv.getType().isInstance(Number.class) ){
 				}// TODO others
 				
 				variableMap.put(pv.getName(), designerValiable);
+				
+				// TODO 추후 삭제
+				defineTab.getPrcsValiablePanel().getPrcsValiables().add(designerValiable);
 			}
 		}
 		
