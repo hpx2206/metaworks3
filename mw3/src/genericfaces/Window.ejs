@@ -101,6 +101,17 @@
  <div class="boxtopleftTab">
             	<span class="boxtoprightTab">            	
             		<div id="navigationTitle" class="mw3_window_title">
+            		
+            		<span>
+						<div>
+				            <%if(windowTitle){%>
+				    			<%=mw3.localize(windowTitle)%>
+				    		<%}else{%>
+								<%=mw3.localize(objectName)%>
+				    		<%}%>
+		    			</div>
+		    		</span>
+		    		
 
 <%
 		}else if(showTitleBar == true){
