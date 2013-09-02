@@ -23,7 +23,6 @@ import org.uengine.codi.mw3.knowledge.ProjectServer;
 import org.uengine.codi.mw3.knowledge.ProjectServers;
 import org.uengine.codi.mw3.marketplace.App;
 import org.uengine.codi.mw3.model.Popup;
-import org.uengine.codi.mw3.webProcessDesigner.ProcessViewWindow;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 public class ResourceContextMenu extends CloudMenu {
@@ -47,8 +46,6 @@ public class ResourceContextMenu extends CloudMenu {
 		
 		this.add(new SubMenuItem(new NewMenu(this.getResourceNode())));
 		this.add(new MenuItem("open", "$resource.menu.open"));
-		// TODO jms 작업을 위하여 메뉴 추가 추후 변경 (사전으로 교체)
-		this.add(new MenuItem("dictionary", "$dictionary"));
 		this.add(new MenuItem("processMerge", "$processMergeCompare"));
 		
 		this.add(new MenuItem(MenuItem.TYPE_DIVIDER));
