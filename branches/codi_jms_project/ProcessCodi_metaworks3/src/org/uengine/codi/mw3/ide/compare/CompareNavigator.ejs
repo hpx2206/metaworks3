@@ -1,7 +1,7 @@
 
-<div style="float:left;_display:inline-block;width:49%; height:250px; margin-left:5px; margin-right:2px; border : 1px;">
-    <div id="openmind_btn" style="height:30px;">
-        <table>
+<div style="float:left;_display:inline-block;width:50%; height:250px; border-right: 1px solid #999;  border-bottom: 1px solid #999;">
+    <div class="compareTitle" ">
+        <table  border="0" cellspacing="0" cellpadding="0">
             <tr>
                 <td width="15"><img src="images/waveStyle/navi_icon.png"></td>
                 <td ><b> 기준 프로세스 목록  </b></td>
@@ -12,16 +12,18 @@
     
     <%= fields.originFileNavigator.here() %>
 </div>
-<div style="float:left;_display:inline-block;width:49%; height:250px; margin-left:5px; margin-right:2px; border : 1px;">
-    <div id="openmind_btn">
-        <div style="float:right;">
-             <a id="wBtn" href="#" onClick="<%=methods.importFile.caller()%>"><span> UpLoad </span></a>
-        </div>
-        <table>
+<div style="float:left;_display:inline-block;width:50%; height:250px; margin-right:-1px;  border-bottom: 1px solid #999;">
+    <div class="compareTitle" >
+        
+        <table width="100%"  border="0" cellspacing="0" cellpadding="0">
             <tr>
                 <td width="15"><img src="images/waveStyle/navi_icon.png"></td>
-                <td ><b> 폴더선택 </b></td>
+                <td width="80"><b> 폴더선택 </b></td>
                 <td><%=fields.nodeSelect.here({when:'edit'})%></td>
+                <td><div style="float:right;">
+                	<a id="wBtn" href="#" onClick="<%=methods.importFile.caller()%>"><span> UpLoad </span></a>
+                </div>
+                </td>
             </tr>
         </table>
         
