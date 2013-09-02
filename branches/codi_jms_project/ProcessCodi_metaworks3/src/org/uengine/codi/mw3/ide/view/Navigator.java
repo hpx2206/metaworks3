@@ -1,17 +1,19 @@
 package org.uengine.codi.mw3.ide.view;
 
-import java.util.ArrayList;
-
-import org.metaworks.annotation.Face;
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;
+import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.ide.Project;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.ResourceTree;
 import org.uengine.codi.mw3.ide.Workspace;
+import org.uengine.codi.mw3.ide.libraries.PerspectiveRole;
+import org.uengine.codi.mw3.ide.libraries.SearchResultPanel;
+import org.uengine.codi.mw3.model.SearchBox;
 
-@Face(displayName="$Navigator", ejsPath="dwr/metaworks/genericfaces/CleanObjectFace.ejs")
 public class Navigator {
 
 	String id;
@@ -51,10 +53,28 @@ public class Navigator {
 			this.resourceTree = resourceTree;
 		}
 		
+	PerspectiveRole	perspectiveRole;
+		public PerspectiveRole getPerspectiveRole() {
+			return perspectiveRole;
+		}
+		public void setPerspectiveRole(PerspectiveRole perspectiveRole) {
+			this.perspectiveRole = perspectiveRole;
+		}
+		
+	SearchBox searchBox;
+		public SearchBox getSearchBox() {
+			return searchBox;
+		}
+		public void setSearchBox(SearchBox searchBox) {
+			this.searchBox = searchBox;
+		}
+		
 	public Navigator(){
 		this.setId("navigator");
 		this.setType(this.getId());
-		this.setName("$Navigator");		
+		this.setName("$Navigator");
+		this.perspectiveRole = new PerspectiveRole();
+		this.searchBox = new SearchBox();
 	}
 	
 	public void load(Workspace workspace){
@@ -87,5 +107,20 @@ public class Navigator {
 		resourceTree.setNode(projectNode);
 
 		this.setResourceTree(resourceTree);		
+		
+	}
+	
+	@ServiceMethod(keyBinding="enter", target=ServiceMethodContext.TARGET_POPUP)
+	public ModalWindow search() throws Exception {
+		SearchResultPanel searchResultPanel = new SearchResultPanel();
+		searchResultPanel.load();
+		
+		ModalWindow modalWindow = new ModalWindow();
+		modalWindow.setWidth(800);
+		modalWindow.setHeight(600);
+		modalWindow.setTitle("Process List");
+		modalWindow.setPanel(searchResultPanel);
+		
+		return modalWindow;
 	}
 }
