@@ -14,13 +14,13 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.TreeNode;
-import org.metaworks.dao.TransactionContext;
 import org.metaworks.metadata.MetadataProperty;
 import org.uengine.codi.mw3.ide.editor.Editor;
 import org.uengine.codi.mw3.ide.editor.form.FormEditor;
 import org.uengine.codi.mw3.ide.editor.metadata.MetadataEditor;
 import org.uengine.codi.mw3.ide.editor.process.ProcessEditor;
 import org.uengine.codi.mw3.ide.editor.valuechain.ValueChainEditor;
+import org.uengine.codi.mw3.ide.libraries.ProcessNode;
 import org.uengine.codi.mw3.ide.menu.ResourceContextMenu;
 import org.uengine.codi.mw3.ide.view.Navigator;
 import org.uengine.codi.mw3.model.InstanceViewThreadPanel;
@@ -35,6 +35,9 @@ import org.uengine.codi.mw3.model.Session;
 		})
 public class ResourceNode extends TreeNode implements ContextAware {
 
+	public final static String TYPE_ACTIVITY = "activity";
+	public final static String TYPE_ROLE = "role";
+	
 	@AutowiredFromClient
 	public Session session;
 
@@ -44,32 +47,29 @@ public class ResourceNode extends TreeNode implements ContextAware {
 	@AutowiredFromClient
 	public MetadataProperty metadataProperty;
 
-	public final static String TYPE_PROJECT 			= "project";
+	public final static String TYPE_PROJECT	= "project";
 
 	MetaworksContext metaworksContext;
-	public MetaworksContext getMetaworksContext() {
-		return metaworksContext;
-	}
-	public void setMetaworksContext(MetaworksContext metaworksContext) {
-		this.metaworksContext = metaworksContext;
-	}
-
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
+		}
 	String projectId;
-	public String getProjectId() {
-		return projectId;
-	}
-	public void setProjectId(String projectId) {
-		this.projectId = projectId;
-	}
-
+		public String getProjectId() {
+			return projectId;
+		}
+		public void setProjectId(String projectId) {
+			this.projectId = projectId;
+		}
 	String path;
-	public String getPath() {
-		return path;
-	}
-	public void setPath(String path) {
-		this.path = path;
-	}
-
+		public String getPath() {
+			return path;
+		}
+		public void setPath(String path) {
+			this.path = path;
+		}
 	boolean hasPick;
 		public boolean isHasPick() {
 			return hasPick;
@@ -77,7 +77,6 @@ public class ResourceNode extends TreeNode implements ContextAware {
 		public void setHasPick(boolean hasPick) {
 			this.hasPick = hasPick;
 		}
-
 	String alias;
 		public String getAlias() {
 			return alias;
@@ -142,16 +141,36 @@ public class ResourceNode extends TreeNode implements ContextAware {
 		for(int i=0; i<childFilePaths.length; i++){
 			File childFile = new File(file.getAbsolutePath() + File.separatorChar + childFilePaths[i]);
 
+			// 디렉토리가 아닌 파일이지만 프로세스 타입이면 프로세스 노드를 만들어서 붙여야 한다.
 			if(!childFile.isDirectory()){
-				ResourceNode node = new ResourceNode();
-				node.setProjectId(this.getProjectId());
-				node.setId(this.getId() + File.separatorChar + childFile.getName());
-				node.setName(childFile.getName());
-				node.setPath(this.getPath() + File.separatorChar + childFile.getName());
-				node.setParentId(this.getId());
-				node.setType(findNodeType(node.getName()));
-				node.setMetaworksContext(getMetaworksContext());
-				child.add(node);
+				String type = ResourceNode.findNodeType(childFile.getAbsolutePath());
+				
+				if(type.equals(TreeNode.TYPE_FILE_PROCESS)){
+					
+					ProcessNode processNode= new ProcessNode();
+					processNode.setProjectId(this.getProjectId());
+					processNode.setId(this.getId() + File.separatorChar + childFile.getName());
+					processNode.setName(childFile.getName());
+					processNode.setPath(this.getPath() + File.separatorChar + childFile.getName());
+					processNode.setParentId(this.getId());
+					processNode.setType(TreeNode.TYPE_FILE_PROCESS);
+					processNode.setMetaworksContext(getMetaworksContext());
+					processNode.setFolder(true);
+					
+					child.add(processNode);
+				
+				} else {
+					ResourceNode node = new ResourceNode();
+					node.setProjectId(this.getProjectId());
+					node.setId(this.getId() + File.separatorChar + childFile.getName());
+					node.setName(childFile.getName());
+					node.setPath(this.getPath() + File.separatorChar + childFile.getName());
+					node.setParentId(this.getId());
+					node.setType(findNodeType(node.getName()));
+					node.setMetaworksContext(getMetaworksContext());
+					child.add(node);
+				
+				}
 			}
 		}
 
@@ -198,7 +217,7 @@ public class ResourceNode extends TreeNode implements ContextAware {
 	public Editor beforeAction(){
 
 		Editor editor = null;
-
+		
 		if(!this.isFolder()){
 			String type = ResourceNode.findNodeType(this.getName());
 
@@ -308,15 +327,17 @@ public class ResourceNode extends TreeNode implements ContextAware {
 
 		return nodeType;
 	}
-
-	@ServiceMethod(payload={"id", "name", "path", "folder", "projectId", "type"}, mouseBinding="drag", target=ServiceMethodContext.TARGET_NONE)
-	public void drag() {
-		
-		Project project = workspace.findProject(this.getProjectId());
-		String 	projectSourcePath = project.getBuildPath().getSources().get(0).getPath(); 
-		
-		TransactionContext.getThreadLocalInstance().getRequest().getSession().setAttribute("projectSourcePath", projectSourcePath);
-		
-		this.setAlias(project.getBuildPath().makeFullClassName(this.getId()));;
-	}
+	
+// TreeNode drag 임시 주석처리입니다. 
+	
+//	@ServiceMethod(payload={"id", "name", "path", "folder", "projectId", "type"}, mouseBinding="drag", target=ServiceMethodContext.TARGET_NONE)
+//	public void drag() {
+//		
+//		Project project = workspace.findProject(this.getProjectId());
+//		String 	projectSourcePath = project.getBuildPath().getSources().get(0).getPath(); 
+//		
+//		TransactionContext.getThreadLocalInstance().getRequest().getSession().setAttribute("projectSourcePath", projectSourcePath);
+//		
+//		this.setAlias(project.getBuildPath().makeFullClassName(this.getId()));;
+//	}
 }
