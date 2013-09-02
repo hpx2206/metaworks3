@@ -1,5 +1,8 @@
 package org.uengine.codi.mw3.model;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
@@ -12,7 +15,6 @@ import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
-import org.uengine.codi.mw3.knowledge.WfNode;
 
 public class DocumentTitle implements ContextAware{
 	
@@ -38,11 +40,10 @@ public class DocumentTitle implements ContextAware{
 		public void setId(String id) {
 			this.id = id;
 		}
-	@Face(displayName="$DocumentFolderName")
+		
 	String name;
-		@Available(when={MetaworksContext.WHEN_NEW, MetaworksContext.WHEN_EDIT,"SubFolder"})
 		public String getName() {
-			return name;
+				return name;
 		}
 		public void setName(String name) {
 			this.name = name;
@@ -55,7 +56,20 @@ public class DocumentTitle implements ContextAware{
 		public void setParentId(String parentId) {
 			this.parentId = parentId;
 		}
-
+	String description;
+		public String getDescription() {
+			return description;
+		}
+		public void setDescription(String description) {
+			this.description = description;
+		}
+	Date startDate;
+		public Date getStartDate() {
+			return startDate;
+		}
+		public void setStartDate(Date startDate) {
+			this.startDate = startDate;
+		}		
 	boolean documentSecuopt;		
 		@Hidden
 		@Face(displayName="$DocumentSecuopt")
@@ -66,93 +80,92 @@ public class DocumentTitle implements ContextAware{
 			this.documentSecuopt = documentSecuopt;
 		}
 
-	public void saveMe() throws Exception{
-		WfNode wfNode = new WfNode();
+	public void saveMain() throws Exception{
 		DocumentNode node = new DocumentNode();
-			wfNode.setName(this.getName());
-			wfNode.setType("doc");
-			wfNode.setSecuopt(documentSecuopt ? "1" : "0");
-			
-			if("SubFolder".equals(this.getMetaworksContext().getWhen())){
-				wfNode.setParentId(this.getId());	
-				wfNode.setAuthorId(session.getUser().getUserId());		
-				wfNode.setCompanyId(session.getCompany().getComCode());
-				wfNode.createMe();
-				
-				node = new DocumentNode();
-				node.setId(wfNode.getId());
-				node.setParentId(this.getId());	
-				node.setUserId(session.getUser().getUserId());
-				node.setUserName(session.getUser().getName());
-				node.getMetaworksContext().setWhen(this.getMetaworksContext().getWhen());
-				
-				node.saveMe();
-				
-				
-				this.setId(wfNode.getId());
-			}else if(MetaworksContext.WHEN_NEW.equals(this.getMetaworksContext().getWhen())){
-				wfNode.setParentId("Main");	
-				wfNode.setAuthorId(session.getUser().getUserId());		
-				wfNode.setCompanyId(session.getCompany().getComCode());
-				wfNode.createMe();
-				
-				node = new DocumentNode();
-				node.setId(wfNode.getId());
-				node.setParentId("Main");	
-				node.setUserId(session.getUser().getUserId());
-				node.setUserName(session.getUser().getName());
-				node.getMetaworksContext().setWhen(this.getMetaworksContext().getWhen());
-				
-				node.saveMe();
-			
-				this.setId(wfNode.getId());
-		}else{
-			wfNode.setId(this.getId());
-			wfNode.copyFrom(wfNode.databaseMe());
-			wfNode.setName(this.getName());
-			wfNode.saveMe();
+		node.setName(this.getName());
+		node.setId(node.getId());
+		node.setDescription(this.getDescription());
+		node.setType(DocumentNode.TYPE_DOC);
+		node.setSecuopt(documentSecuopt ? "1" : "0");
+		node.setStartDate(Calendar.getInstance().getTime());		
+		node.setParentId("Main");	
+		node.setAuthorId(session.getUser().getUserId());		
+		node.setCompanyId(session.getCompany().getComCode());
+		node.getMetaworksContext().setWhen(this.getMetaworksContext().getWhen());
+		node.createMe();
+	}
+	DocumentNode node;
+		public DocumentNode getNode() {
+			return node;
 		}
+		public void setNode(DocumentNode node) {
+			this.node = node;
+		}
+	public void saveSub() throws Exception{
+		DocumentNode node = new DocumentNode();
+		node.setId(node.getId());
+		node.setName(this.getName());
+		node.setDescription(this.getDescription());
+		node.setType(DocumentNode.TYPE_DOC);
+		node.setSecuopt(documentSecuopt ? "1" : "0");
+		node.setStartDate(Calendar.getInstance().getTime());
+		node.setParentId(this.getId());	
+		node.setAuthorId(session.getUser().getUserId());		
+		node.setCompanyId(session.getCompany().getComCode());
+		node.getMetaworksContext().setWhen(this.getMetaworksContext().getWhen());
+		node.createMe();
 		
+		
+		this.setId(node.getId());
+//}else{
+//	wfNode.setId(this.getId());
+//	wfNode.copyFrom(wfNode.databaseMe());
+//	wfNode.setName(this.getName());
+//	wfNode.saveMe();
+////}
 	}
 	
 	@Face(displayName="$Save")
+	@Available(when={MetaworksContext.WHEN_NEW})
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] save() throws Exception{
 		
-		if("SubFolder".equals(this.getMetaworksContext().getWhen())){
-			this.saveMe();
-		
+		if(MetaworksContext.WHEN_NEW.equals(this.getMetaworksContext().getWhen()) && 
+				"sub".equals(this.getMetaworksContext().getHow())){
+			
+			this.saveSub();
 			DocumentNode documentNode = new DocumentNode();
 			documentNode.setId(this.getId());
-			documentNode.setName(this.getName());
-			documentNode.setParentId(this.getId());	
-		
-		return new Object[]{new ToAppend(new DocumentPanel(), documentNode), new Refresh(this)};
+			
+			return new Object[]{new ToAppend(new DocumentPanel(), documentNode), new Refresh(this), new Remover(new ModalWindow())};
 		}else if(MetaworksContext.WHEN_NEW.equals(this.getMetaworksContext().getWhen())){
-			this.saveMe();
 			
+			this.saveMain();
 			DocumentNode documentNode = new DocumentNode();
 			documentNode.setId(this.getId());
-			documentNode.setName(this.getName());
-			documentNode.setParentId("Main");	
 			
-		return new Object[]{new ToAppend(new DocumentPanel(), documentNode), new Refresh(this)};
-
-	}
+			return new Object[]{new ToAppend(new DocumentPanel(), documentNode), new Refresh(this), new Remover(new ModalWindow())};
+		}else if(MetaworksContext.WHEN_EDIT.equals(this.getMetaworksContext().getWhen())){
+			
+			this.modify();
+			DocumentNode documentNode = new DocumentNode();
+			return new Object[]{new Remover(new ModalWindow()), new Refresh(documentNode)};
+		}
+		
 		return null;
 	}
-	@Face(displayName="$Modify")
-	@Available(when={MetaworksContext.WHEN_EDIT})
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
-	public Object[] modify() throws Exception{
+	
+	
+	public void modify() throws Exception{
 		
-		this.saveMe();
-		
-		DocumentNode documentNode = new DocumentNode();
-		documentNode.setId(this.getId());
-		documentNode.setName(this.getName());
-		
-		return new Object[]{new Refresh(documentNode), new Remover(new ModalWindow())};
+		DocumentNode node = new DocumentNode();
+		node.setId(this.getId());
+		node.setName(this.getName());
+		node.setDescription(this.getDescription());
+		node.setParentId(this.getParentId());
+		node.setType(DocumentNode.TYPE_DOC);
+		node.setSecuopt(documentSecuopt ? "1" : "0");
+		node.saveMe();
 	}
 	
 }

@@ -1,9 +1,9 @@
 package org.uengine.codi.mw3.processexplorer;
 
-import java.util.Date;
 
-import org.metaworks.ServiceMethodContext;
-import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.MetaworksContext;
+import org.uengine.codi.mw3.model.DocumentNode;
+import org.uengine.codi.mw3.model.IDocumentNode;
 
 public class DocumentFilePanel {
 	
@@ -14,8 +14,6 @@ public class DocumentFilePanel {
 		public void setId(String id) {
 			this.id = id;
 		}
-		
-	
 	String name;
 		public String getName() {
 			return name;
@@ -23,23 +21,21 @@ public class DocumentFilePanel {
 		public void setName(String name) {
 			this.name = name;
 		}	
-
-	Date endDate;
-		public Date getEndDate() {
-			return endDate;
+	String parentId;
+		public String getParentId() {
+			return parentId;
 		}
-		public void setEndDate(Date endDate) {
-			this.endDate = endDate;
+		public void setParentId(String parentId) {
+			this.parentId = parentId;
 		}
-
-	String type;
-		public String getType() {
-			return type;
+	IDocumentNode documentNode;
+		public IDocumentNode getDocumentNode() {
+			return documentNode;
 		}
-		public void setType(String type) {
-			this.type = type;
-		}
-	
+		public void setDocumentNode(IDocumentNode documentNode) {
+			this.documentNode = documentNode;
+		}	
+		
 	DocumentFileViewPanel documentFileViewPanel;
 		public DocumentFileViewPanel getDocumentFileViewPanel() {
 			return documentFileViewPanel;
@@ -47,24 +43,25 @@ public class DocumentFilePanel {
 		public void setDocumentFileViewPanel(DocumentFileViewPanel documentFileViewPanel) {
 			this.documentFileViewPanel = documentFileViewPanel;
 		}
-	
-//	@AutowiredFromClient
-//	public DocumentNavigatorPanel documentNavigatorPanel;
-	
-	public void load(){
 		
-	}
-	
-	//다운로드
-	@ServiceMethod(callByContent=true)
-	public Object[] fileDownload() throws Exception{
-		
-		return null;
+	public void loadFolderView() throws Exception{
+			
+			IDocumentNode documentNode =  DocumentNode.findFile(parentId);	
+			setDocumentNode(documentNode);
+			
+		}
+
+	public void load(String parentId) throws Exception{
+		IDocumentNode documentNode =  new DocumentNode();
+		documentNode.setMetaworksContext(new MetaworksContext());
+		documentNode.getMetaworksContext().setHow("fileView");
+		documentNode.loadExplorerView(parentId);
+		setDocumentNode(documentNode);
 	}
 	
 	//상세보기
-	@ServiceMethod(callByContent=true, target = ServiceMethodContext.TARGET_APPEND)
-	public Object[] fileDetailView() throws Exception{
-		return null;
+	public void fileDetailView() throws Exception{
+		
+		
 	}
 }

@@ -1,4 +1,13 @@
-<%=fields.name.here()%>
- <div>
-        <a id="wBtn" href="#" onClick="<%=methods.save.caller()%>"<span>저장</span></a>
- </div>
+<%
+ 	if(value){
+%>
+	폴더명: <%=fields.name.here()%>
+	설명: <%=fields.description.here()%>
+	 <div>
+        <a id="wBtn" href="#" onClick="<%=methods.save.caller()%>"><span>저장</span></a>
+ 	</div>
+ <%
+ }
+ %>
+ 
+ 

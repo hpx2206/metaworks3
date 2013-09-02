@@ -2,10 +2,12 @@ package org.uengine.codi.mw3.processexplorer;
 
 import java.util.Date;
 
-import org.metaworks.annotation.AutowiredFromClient;
-import org.uengine.codi.mw3.model.IUser;
+import org.metaworks.annotation.ServiceMethod;
+import org.uengine.codi.mw3.model.DocumentNode;
+import org.uengine.codi.mw3.model.IDocumentNode;
 
 public class DocumentFileViewPanel {
+	
 	String id;
 		public String getId() {
 			return id;
@@ -13,20 +15,13 @@ public class DocumentFileViewPanel {
 		public void setId(String id) {
 			this.id = id;
 		}
-	String title;
-		public String getTitle() {
-			return title;
+	String parentId;			
+		public String getParentId() {
+			return parentId;
 		}
-		public void setTitle(String title) {
-			this.title = title;
+		public void setParentId(String parentId) {
+			this.parentId = parentId;
 		}		
-	IUser writer;
-		public IUser getWriter() {
-			return writer;
-		}
-		public void setWriter(IUser writer) {
-			this.writer = writer;
-		}	
 	String name;
 		public String getName() {
 			return name;
@@ -42,7 +37,13 @@ public class DocumentFileViewPanel {
 		public void setCreatedDate(Date createdDate) {
 			CreatedDate = createdDate;
 		}
-	
+	IDocumentNode documentNode;
+		public IDocumentNode getDocumentNode() {
+			return documentNode;
+		}
+		public void setDocumentNode(IDocumentNode documentNode) {
+			this.documentNode = documentNode;
+		}	
 	Date ModifiedDate;
 		public Date getModifiedDate() {
 			return ModifiedDate;
@@ -67,9 +68,10 @@ public class DocumentFileViewPanel {
 			this.description = description;
 		}	
 		
-	
-	public void load(){
-		
+	@ServiceMethod(callByContent=true)
+	public void load() throws Exception{
+		IDocumentNode documentNode =  DocumentNode.findDetail(this.getId());	
+		setDocumentNode(documentNode);
 	}
 	
 }

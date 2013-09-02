@@ -1,6 +1,7 @@
 package org.uengine.codi.mw3.model;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
@@ -13,7 +14,11 @@ import org.metaworks.annotation.ORMapping;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Table;
 import org.metaworks.dao.IDAO;
+import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
+import org.uengine.codi.mw3.processexplorer.DocumentFilePanel;
+import org.uengine.codi.mw3.processexplorer.DocumentFileViewPanel;
+import org.uengine.codi.mw3.processexplorer.DocumentFolderPanel;
 
 @Table(name="bpm_knol")
 public interface IDocumentNode extends IDAO {
@@ -43,12 +48,18 @@ public interface IDocumentNode extends IDAO {
 	
 	public String getThumbnail();
 	public void setThumbnail(String thumbnail);
-
+	
 	public String getConntype();
 	public void setConntype(String conntype);
 	
 	public String getUrl();
 	public void setUrl(String url);
+	
+	public Date getStartDate();
+	public void setStartDate(Date startDate);
+	
+	public Date getEndDate();
+	public void setEndDate(Date endDate);
 	
 	@Hidden
 	public String getParentId();
@@ -71,7 +82,7 @@ public interface IDocumentNode extends IDAO {
 	@Hidden
 	public boolean isClose();
 	public void setClose(boolean close);
-	
+
 	@NonLoadable
 	@NonSavable
 	@Hidden
@@ -80,6 +91,37 @@ public interface IDocumentNode extends IDAO {
 	@Hidden
 	public String getVisType();
 	public void setVisType(String visType);
+	
+	public int getNo();
+	public void setNo(int no);
+	
+	@NonLoadable
+	@NonSavable
+	public ArrayList<DocumentNode> getFolderList();
+	public void setFolderList(ArrayList<DocumentNode> folderList);
+	
+	@NonLoadable
+	@NonSavable
+	public ArrayList<DocumentNode> getFileList();
+	public void setFileList(ArrayList<DocumentNode> fileList);
+
+	@Hidden
+	@NonLoadable
+	@NonSavable
+	public DocumentFolderPanel getDocumentFolderPanel();
+	public void setDocumentFolderPanel(DocumentFolderPanel documentFolderPanel);
+	
+	@Hidden
+	@NonLoadable
+	@NonSavable
+	public DocumentFilePanel getDocumentFilePanel();
+	public void setDocumentFilePanel(DocumentFilePanel documentFilePanel) ;
+	
+	@Hidden
+	@NonLoadable
+	@NonSavable
+	public DocumentFileViewPanel getDocumentFileViewPanel();
+	public void setDocumentFileViewPanel(DocumentFileViewPanel documentFileViewPanel);
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] loadDocument() throws Exception;
@@ -92,7 +134,7 @@ public interface IDocumentNode extends IDAO {
 	@Face(displayName="$Edit")
 	public ModalWindow modify() throws Exception;
 	
-	@ServiceMethod(inContextMenu=true, callByContent=true, target="popup")
+	@ServiceMethod(inContextMenu=true, target="popup")
 	@Face(displayName="$addSubDocument")
 	public ModalWindow addSubFolder() throws Exception;
 	
@@ -111,6 +153,32 @@ public interface IDocumentNode extends IDAO {
 	@ServiceMethod(callByContent=true, except={"childNode"}, target=TARGET_SELF)
 	public IDocumentNode loadDocumentList() throws Exception;
 	
+	@ServiceMethod(callByContent=true, except={"childNode"}, target=TARGET_APPEND)
+	public Object[] loadExplorerDocument() throws Exception;
+	
 	@ServiceMethod(callByContent=true, except={"childNode"}, target=TARGET_SELF)
 	public ArrayList<DocumentNode> loadChildren() throws Exception;
+	
+	@ServiceMethod(callByContent=true, except={"childNode"},target=TARGET_APPEND)
+	public ArrayList<DocumentNode> loadExplorerView(String parentId) throws Exception;
+	
+	@ServiceMethod(callByContent=true,target=ServiceMethodContext.TARGET_APPEND)
+	public Object[] loadDetailView() throws Exception;
+
+	@ServiceMethod(callByContent=true,target=ServiceMethodContext.TARGET_SELF)
+	public Object[] loadFolderView() throws Exception;
+	
+	@ORMapping(
+			databaseFields = {"url", "thumbnail", "conntype"}, 
+			objectFields = {"uploadedPath", "filename", "mimeType"},
+			objectIsNullWhenFirstDBFieldIsNull = true,
+			availableWhen = "type=='file'"	
+			)
+	public MetaworksFile getFile();
+	public void setFile(MetaworksFile file);
+	
+	
+	public void saveMe() throws Exception;
+	
+	public void createMe() throws Exception;
 }

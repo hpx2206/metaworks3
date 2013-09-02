@@ -1,29 +1,35 @@
 package org.uengine.codi.mw3.model;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
-import org.metaworks.ToAppend;
 import org.metaworks.annotation.AutowiredFromClient;
-import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
+import org.metaworks.annotation.Hidden;
 import org.metaworks.dao.DAOUtil;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.MetaworksDAO;
 import org.metaworks.dao.TransactionContext;
+import org.metaworks.dao.UniqueKeyGenerator;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.admin.PageNavigator;
-import org.uengine.codi.mw3.knowledge.WfNode;
+import org.uengine.codi.mw3.processexplorer.DocumentFilePanel;
+import org.uengine.codi.mw3.processexplorer.DocumentFileViewPanel;
+import org.uengine.codi.mw3.processexplorer.DocumentFolderPanel;
+import org.uengine.codi.mw3.processexplorer.DocumentViewWindow;
+import org.uengine.codi.mw3.processexplorer.ProcessExplorerContentWindow;
 
 public class DocumentNode extends Database<IDocumentNode> implements IDocumentNode{
 	@AutowiredFromClient
 	transient public Session session;
 	
-	public final static String TYPE = "doc";
-	public final static int DEPTH = 2;
+	public final static String TYPE_DOC = "doc";
+	public final static String TYPE_FILE = "file";
+	public final static int DEPTH = 1;
 
 	String id;
 		public String getId() {
@@ -116,35 +122,27 @@ public class DocumentNode extends Database<IDocumentNode> implements IDocumentNo
 			this.description = description;
 		}
 
-	String userId;
-		public String getUserId() {
-			return userId;
-		}
-		public void setUserId(String userId) {
-			this.userId = userId;
-		}
-	
-	String userName;
-		public String getUserName() {
-			return userName;
-		}
-		public void setUserName(String userName) {
-			this.userName = userName;
-		}
-		
-	String folderId;
-		public String getFolderId() {
-			return folderId;
-		}
-		public void setFolderId(String folderId) {
-			this.folderId = folderId;
-		}
 	ArrayList<DocumentNode> childNode;
 		public ArrayList<DocumentNode> getChildNode() {
 			return childNode;
 		}
 		public void setChildNode(ArrayList<DocumentNode> childNode) {
 			this.childNode = childNode;
+		}
+
+	ArrayList<DocumentNode> folderList;
+		public ArrayList<DocumentNode> getFolderList() {
+			return folderList;
+		}
+		public void setFolderList(ArrayList<DocumentNode> folderList) {
+			this.folderList = folderList;
+		}
+	ArrayList<DocumentNode> fileList;
+		public ArrayList<DocumentNode> getFileList() {
+			return fileList;
+		}
+		public void setFileList(ArrayList<DocumentNode> fileList) {
+			this.fileList = fileList;
 		}
 
 	boolean first;
@@ -162,6 +160,23 @@ public class DocumentNode extends Database<IDocumentNode> implements IDocumentNo
 		public void setClose(boolean close) {
 			this.close = close;
 		}	
+		
+	Date startDate;
+		public Date getStartDate() {
+			return startDate;
+		}
+		public void setStartDate(Date startDate) {
+			this.startDate = startDate;
+		}
+	
+	Date endDate;
+		public Date getEndDate() {
+			return endDate;
+		}
+		public void setEndDate(Date endDate) {
+			this.endDate = endDate;
+		}
+	
 	String visType;
 		public String getVisType() {
 			return visType;
@@ -169,8 +184,36 @@ public class DocumentNode extends Database<IDocumentNode> implements IDocumentNo
 		public void setVisType(String visType) {
 			this.visType = visType;
 		}
-		@AutowiredFromClient
+	int no;
+		public int getNo() {
+			return no;
+		}
+		public void setNo(int no) {
+			this.no = no;
+		}
+	String fileIcon;
+		public String getFileIcon() {
+			return fileIcon;
+		}
+		public void setFileIcon(String fileIcon) {
+			this.fileIcon = fileIcon;
+		}
+
+	@AutowiredFromClient
 	public PageNavigator pageNavigator; 
+	
+	@AutowiredFromClient
+	public DocumentViewWindow documentViewWindow;
+	
+	boolean documentSecuopt;		
+		@Hidden
+		@Face(displayName="$DocumentSecuopt")
+		public boolean isDocumentSecuopt() {
+			return documentSecuopt;
+		}
+		public void setDocumentSecuopt(boolean documentSecuopt) {
+			this.documentSecuopt = documentSecuopt;
+		}		
 		
 	MetaworksFile file;
 		public MetaworksFile getFile() {
@@ -178,7 +221,29 @@ public class DocumentNode extends Database<IDocumentNode> implements IDocumentNo
 		}
 		public void setFile(MetaworksFile file) {
 			this.file = file;
-		}	
+		}
+	DocumentFolderPanel documentFolderPanel;
+		public DocumentFolderPanel getDocumentFolderPanel() {
+			return documentFolderPanel;
+		}
+		public void setDocumentFolderPanel(DocumentFolderPanel documentFolderPanel) {
+			this.documentFolderPanel = documentFolderPanel;
+		}
+	DocumentFilePanel documentFilePanel;
+		public DocumentFilePanel getDocumentFilePanel() {
+			return documentFilePanel;
+		}
+		public void setDocumentFilePanel(DocumentFilePanel documentFilePanel) {
+			this.documentFilePanel = documentFilePanel;
+		}
+	DocumentFileViewPanel documentFileViewPanel;	
+		public DocumentFileViewPanel getDocumentFileViewPanel() {
+			return documentFileViewPanel;
+		}
+		public void setDocumentFileViewPanel(DocumentFileViewPanel documentFileViewPanel) {
+			this.documentFileViewPanel = documentFileViewPanel;
+		}
+	
 	public DocumentNode(){
 		setChildNode(new ArrayList<DocumentNode>());
 		setFile(new MetaworksFile()); 
@@ -199,16 +264,84 @@ public class DocumentNode extends Database<IDocumentNode> implements IDocumentNo
 		
 		
 		IDocumentNode dao = (IDocumentNode)MetaworksDAO.createDAOImpl(TransactionContext.getThreadLocalInstance(),sb.toString(),IDocumentNode.class);
-		dao.set("type", TYPE);
+		dao.set("type", TYPE_DOC);
 		dao.set("parentid", "Main");
 		dao.select();
 		
 		return dao;
 	}
 	
+	//
+	public static IDocumentNode findFile(String parentId) throws Exception{
+		
+		
+		StringBuffer sql = new StringBuffer();
+		
+		sql.append("select * ");
+		sql.append(" from bpm_knol");
+		sql.append(" where type=?type");
+		sql.append(" and parentId=?parentId");
+		
+		IDocumentNode node = (IDocumentNode) sql(DocumentNode.class,sql.toString());
+		
+		node.set("type", TYPE_FILE);
+		node.set("parentId",parentId);
+		node.select();
+		
+		return node;
+	}
+	
+	public static IDocumentNode findDetail(String id) throws Exception{
+		StringBuffer sql = new StringBuffer();
+		
+		sql.append("select * ");
+		sql.append(" from bpm_knol");
+		sql.append(" where type=?type");
+		sql.append(" and id=?id");
+		
+		IDocumentNode node = (IDocumentNode) sql(DocumentNode.class,sql.toString());
+		
+		node.set("type", TYPE_FILE);
+		node.set("id",id);
+		node.select();
+		
+		return node;
+		
+	}
+	
+	public static IDocumentNode findFolder(String parentId) throws Exception{
+		
+		StringBuffer sql = new StringBuffer();
+		
+		sql.append("select * ");
+		sql.append(" from bpm_knol");
+		sql.append(" where type=?type");
+		sql.append(" and parentId=?parentId");
+		
+		IDocumentNode node = (IDocumentNode) sql(DocumentNode.class,sql.toString());
+		
+		node.set("type", TYPE_DOC);
+		node.set("parentId",parentId);
+		node.select();
+		
+		return node;
+	}
 	public ArrayList<DocumentNode> loadChildren() throws Exception{
 		childNode = new ArrayList<DocumentNode>();
-		IDocumentNode parentNode = loadDocumentList();
+		
+		DAOUtil daoUtil = new DAOUtil();
+		StringBuffer sb = new StringBuffer();
+		sb.append("select * from bpm_knol");
+		sb.append(" where parentId=?parentId");
+		sb.append(" and type=?type");
+		sb.append(" order by " +daoUtil.replaceReservedKeyword("no"));
+		
+		IDocumentNode parentNode = (IDocumentNode) sql(IDocumentNode.class,sb.toString());
+		
+		parentNode.set("parentId", this.getId());
+		parentNode.set("type",TYPE_DOC);
+		parentNode.select();
+		
 		if(parentNode.size() > 0){
 			while(parentNode.next()){
 				
@@ -218,7 +351,6 @@ public class DocumentNode extends Database<IDocumentNode> implements IDocumentNo
 				documentNode.setChildNode(new ArrayList<DocumentNode>());
 
 				documentNode.setMetaworksContext(this.getMetaworksContext());
-				
 				documentNode.setLoadDepth(this.getLoadDepth());
 				documentNode.setClose(true);
 				documentNode.setFirst(this.isFirst());
@@ -232,15 +364,105 @@ public class DocumentNode extends Database<IDocumentNode> implements IDocumentNo
 		}
 		return childNode;
 	}
-	public void expand() throws Exception{
-		this.setLoadDepth(2);
-		this.setChildNode(loadChildren());
+	
+	public ArrayList<DocumentNode> loadExplorerView(String parentId) throws Exception{
+		folderList = new ArrayList<DocumentNode>();
+		fileList = new ArrayList<DocumentNode>();
+		StringBuffer sb = new StringBuffer();
+		if("fileView".equals(this.getMetaworksContext().getHow())){
+			sb.append("select * ");
+			sb.append(" from bpm_knol");
+			sb.append(" where type=?type");
+			sb.append(" and parentId=?parentId");
+			
+			IDocumentNode node = (IDocumentNode) sql(DocumentNode.class,sb.toString());
+			
+			node.set("type", TYPE_FILE);
+			node.set("parentId",parentId);
+			node.select();
+			
+			if(node.size() >0){
+				while(node.next()){
+					DocumentNode documentNode = new DocumentNode();
+					
+					documentNode.copyFrom(node);
+					documentNode.setFileList(new ArrayList<DocumentNode>());
+					
+					documentNode.setMetaworksContext(this.getMetaworksContext());
+				documentNode.fileIconType(node.getConntype());
+					fileList.add(documentNode);
+				}
+			}
+			
+			
+//			return new Object[]{ new Refresh(documentListWindow) };
+			return fileList;
 		
-		setClose(false);
+		}else if("folderView".equals(this.getMetaworksContext().getHow())){
+			sb.append("select * ");
+			sb.append(" from bpm_knol");
+			sb.append(" where type=?type");
+			sb.append(" and parentId=?parentId");
+			
+			IDocumentNode node = (IDocumentNode) sql(DocumentNode.class,sb.toString());
+			
+			node.set("type", TYPE_DOC);
+			node.set("parentId",parentId);
+			node.select();
+			
+			if(node.size()>0){
+				while(node.next()){
+					DocumentNode documentNode = new DocumentNode();
+					
+					documentNode.copyFrom(node);
+					documentNode.setFolderList(new ArrayList<DocumentNode>());
+					
+					documentNode.setMetaworksContext(this.getMetaworksContext());
+					folderList.add(documentNode);
+				}
+			}
+			return folderList;
+		}
+		
+		
+		return null;
 	}
 	
-	public void collapse() throws Exception{
+	public String fileIconType(String mimeType){
+		
+		if(mimeType.indexOf("pdf") > -1){
+			fileIcon = "Icon_pdf.png";
+		}else if(mimeType.indexOf("ms") > -1){
+			if(mimeType.indexOf("excel") > -1){
+				fileIcon = "Icon_excel.png";
+			}else if(mimeType.indexOf("powerpoint") > -1){
+				fileIcon = "Icon_ppt.png";
+			}else if(mimeType.indexOf("word") > -1){
+				fileIcon = "Icon_doc.png";
+			}
+		}else if(mimeType.indexOf("haansoft") > -1){
+				fileIcon = "Icon_haansoft.png";
+		}else if(mimeType.indexOf("text") > -1){
+				fileIcon = "Icon_text.png";
+		}else if(mimeType.indexOf("image") > -1){
+				fileIcon = "Icon_image.png";
+		}else{
+				fileIcon = "Icon_etc.png";
+		}
+		return fileIcon;
+	}
+	
+	public void expand() throws Exception{
+		this.setLoadDepth(1);
+		this.setChildNode(loadChildren());
+		
 		setClose(true);
+	}
+	
+	
+	
+	public void collapse() throws Exception{
+		setClose(false);
 	}
 	
 	public void load() throws Exception {
@@ -262,14 +484,54 @@ public class DocumentNode extends Database<IDocumentNode> implements IDocumentNo
 	
 	public Object[] loadDocument() throws Exception {
 		DocumentListWindow documentListWindow = new DocumentListWindow();
-		documentListWindow.load(this.getId());
+		documentListWindow.setParentId(this.getId());
+		documentListWindow.load();
 		return new Object[]{ new Refresh(documentListWindow) };
 	}
-
 	
 	@Override
+	public Object[] loadExplorerDocument() throws Exception{
+		DocumentViewWindow documentWindow = new DocumentViewWindow();
+		documentWindow.session = session;
+		documentWindow.setId(this.getId());
+		documentWindow.setName(this.getName());
+		documentWindow.setTempId(this.getId());
+		documentWindow.setParentId(this.getParentId());
+		documentWindow.load();
+		
+		ProcessExplorerContentWindow processExplorerContentWindow = new ProcessExplorerContentWindow();
+		processExplorerContentWindow.setPanel(documentWindow);
+		return new Object[]{new Refresh(processExplorerContentWindow)};
+	}
+	
+	@Override
+	public Object[] loadFolderView() throws Exception{
+		documentFolderPanel = new DocumentFolderPanel();
+		documentFilePanel = new DocumentFilePanel();
+		
+		
+		
+		
+		return new Object[]{new Refresh(documentFolderPanel), new Refresh(documentFilePanel)};
+	}
+	
+	
+	@Override
+	public Object[] loadDetailView() throws Exception{
+		DocumentFileViewPanel documentFileViewPanel = new DocumentFileViewPanel();
+		documentFileViewPanel.setId(this.getId());
+		documentFileViewPanel.load();
+		
+		DocumentFolderPanel documentFolderPanel = new DocumentFolderPanel();
+		documentFolderPanel.setParentId(this.getParentId());
+		documentFolderPanel.load(this.getParentId());
+		
+		
+		return new Object[]{new Refresh(documentFolderPanel), new Refresh(documentFilePanel)};
+		
+	}
+	@Override
 	public Object[] remove() throws Exception {
-		// TODO Auto-generated method stub
 
 		StringBuffer sb = new StringBuffer();
 		sb.append("update bpm_knol");
@@ -287,26 +549,34 @@ public class DocumentNode extends Database<IDocumentNode> implements IDocumentNo
 
 	@Override
 	public ModalWindow modify() throws Exception {
-		// TODO Auto-generated method stub
 		DocumentTitle documentTitle = new DocumentTitle();
 		documentTitle.setId(this.getId());
 		documentTitle.setName(this.getName());
-		documentTitle.setMetaworksContext(new MetaworksContext());
+		documentTitle.setDescription(this.getDescription());
+		documentTitle.setParentId(this.getParentId());
 		documentTitle.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		documentTitle.session = session;
 		return new ModalWindow(documentTitle, 500,250, "문서제목수정");
 	}
 	
-	public IDocumentNode saveMe() throws Exception {
-		// TODO Auto-generated method stub
-		WfNode node = new WfNode();
-		node.setId(this.getId());
-		node.copyFrom(node.databaseMe());
-		
-		
-		
-		return createDatabaseMe();
+	public void saveMe() throws Exception {
+		syncToDatabaseMe();
+		flushDatabaseMe();
 	}
+	
+	public String makeId() throws Exception {
+		return String.valueOf(UniqueKeyGenerator.issueKey("bpm_knol", TransactionContext.getThreadLocalInstance()));
+	}
+	
+	public void createMe() throws Exception {
+		String nodeId = this.makeId();
+		
+		setId(nodeId);
+
+		createDatabaseMe();
+		flushDatabaseMe();
+	}
+	
 	@Override
 	public Object[] drop() throws Exception {
 		Object clipboard = session.getClipboard();
@@ -314,39 +584,40 @@ public class DocumentNode extends Database<IDocumentNode> implements IDocumentNo
 			
 			DocumentDrag documentInClipboard = (DocumentDrag) clipboard;
 			
+			DocumentNode node = new DocumentNode();
 			WorkItem workitem = new WorkItem();
 			workitem.setTaskId(new Long(documentInClipboard.getTaskId()));
+			node.setId(node.getId());
+			node.setName(documentInClipboard.getExtFile());
+			node.setType(TYPE_FILE);
+			node.setNo(0);
+			node.setSecuopt(documentSecuopt ? "1" : "0");
+			node.setParentId(this.getId());
+			node.setUrl(documentInClipboard.getContent());
+			node.setThumbnail(documentInClipboard.getExtFile());
+			node.setConntype(documentInClipboard.getTool());
+			node.setStartDate(documentInClipboard.getStartDate());
+			node.setEndDate(documentInClipboard.getEndDate());
+			node.setAuthorId(session.getUser().getUserId());		
+			node.setCompanyId(session.getCompany().getComCode());
 			
-			WfNode wfNode = new WfNode();
-			wfNode.setUrl(this.getUrl());
-			wfNode.setThumbnail(this.getThumbnail());
-			wfNode.setConnType(this.getConntype());
-			wfNode.createMe();
+			node.createMe();
 			
-			
-			
-			
-			workitem.databaseMe();
-			workitem.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-			
-			
-			
-			workitem.flushDatabaseMe();
-			IWorkItem item = workitem.databaseMe();
-			return new Object[]{new Refresh(item)};
+			return new Object[]{new Refresh(node)};
 		}
 		
 		return null;
 	}
 	
-	//하위폴더
 	@Override
 	public ModalWindow addSubFolder() throws Exception {
-		DocumentTitle documentTitle = new DocumentTitle();
-		documentTitle.setMetaworksContext(new MetaworksContext());
-		documentTitle.getMetaworksContext().setWhen("SubFolder");
-		documentTitle.session = session;
-		return new ModalWindow(documentTitle , 500, 200,  "$addSubDocument");
+		DocumentTitle documentSubTitle = new DocumentTitle();
+		documentSubTitle.setId(this.getId());
+		documentSubTitle.getMetaworksContext().setHow("sub");
+		documentSubTitle.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+		documentSubTitle.session = session;
+		
+		return new ModalWindow(documentSubTitle , 500, 200,  "$addSubDocument");
 	}
 
 	

@@ -19,7 +19,7 @@ public class KnowlegeNode extends WfNode {
 		sb.append("  FROM bpm_knol");
 		sb.append(" WHERE parentId=?parentId");
 		sb.append("   AND type=?type");
-		sb.append("	ORDER BY " + daoUtil.replaceReservedKeyword("no"));
+		sb.append("	 ORDER BY " + daoUtil.replaceReservedKeyword("no"));
 		
 		IWfNode findNode = (IWfNode) sql(IWfNode.class,	sb.toString());
 		

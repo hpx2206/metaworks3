@@ -5,12 +5,23 @@
 	<%
 		if( mw3.how == 'perspectivePanel' ){
 	%>
-		<li>
-	 		<img class="navi_icon" src="images/folder.png" />
-	 		<a onClick="<%=methods.loadDocument.caller()%>" href="#">
-	 			<%=value.name%>
-	 		</a>
-	 	</li>
+				<table border="0" cellspacing="0" cellpadding="0">
+					<tr>
+						<td class="<%=nodeStatus%>"  onclick="<%=value.close?methods.collapse.caller():methods.expand.caller()%>">
+							<span><img class="navi_icon" src="images/folder.png" /></span>	
+						</td>
+						<td>
+								<a onClick="<%=methods.loadDocument.caller()%>" href="#">
+									<%=value.name%><br>
+								</a>
+						</td>
+					</tr>
+					<tr>
+						<Td></td>
+						<td>&nbsp;<%=fields.childNode.here()%>	</td>
+					</tr>
+				</table>
+					
 	<%	
 		}else if( mw3.how == 'explorer' ){
 				var nodeStatus = "opened";
@@ -18,25 +29,98 @@
 					nodeStatus = "closed";
 			if(mw3.when == 'onlyView'){
 %>
-			<div id="wfnode_<%=objectId%>" class="wfNode" style="margin:3px 0; position:relative">
-				<table border="0" cellspacing="0" cellpadding="0" width="100%">
+				<table border="0" cellspacing="0" cellpadding="0">
 					<tr>
-						<td class="<%=nodeStatus%>"  onclick="<%=value.close?methods.expand.caller():methods.collapse.caller()%>">
-							<span>aa</span>
+						<td class="<%=nodeStatus%>"  onclick="<%=value.close?methods.collapse.caller():methods.expand.caller()%>">
+							<span>||</span>
 						</td>
 						<td>
-							<span class="wfNodeText" style="width:100%;">
+							<a onClick="<%=methods.loadExplorerDocument.caller()%>" href="#">
 							<%=value.name%>
-<%			
-		}
-%>				
+							</a>
 						</td>
 					</tr>
+					<tr>	
+						<Td></td>
+						<td>
+							&nbsp;&nbsp;&nbsp;&nbsp;<%=fields.childNode.here()%>
+						</td>
+					</tr>	
+					</tr>
+
+<%
+	}
+%>							
+
 				</table>
 			</div>
+				
 	<%	
-	}
+	}else if(mw3.how == 'fileView'){
+		if(value){
 	%>
+		<%= fields.fileList.here()%>
+				
+			
+			<div style="width:auto; margin-left:20px;">
+				<font size=2>
+					<img src="images/<%=value.fileIcon%>" /><b><a href="#" onClick="<%=methods.loadDetailView.caller()%>"><%=value.name%></a></b><br>
+				</font>
+				<%=value.startDate%><%=fields.file.here()%> 
+			</div>
+			<hr style="color:black; filter:progid:DXimageTransform.Microsoft.Shadow(direction=135,color=#006400,strength=3)">
+
+
+	
+				
+					
+		
+	<%}
+	}else if(mw3.how == 'folderView'){
+		if(value){
+		var list = value.folderList;
+
+		for(var i = 0; i< list.length; i++){
+	 %>	
+	 	<%= fields.folderList.here()%>
+			<span style="width:200px">		
+				<span style="width:auto; float:left;">
+					<a href="#" onClick="<%=methods.loadFolderView.caller()%>"><img src="images/Document_folder.png" /></a>
+				</span>	
+				<br>
+				<span style="width:auto;">
+					<b><%=list[i].name%></b>
+				</span>
+				<br>
+					<span style="width:auto;">
+					<%=list[i].authorId%>
+				</span>
+				<br>
+					<span style="width:auto;">
+					<%=list[i].description%>
+				</span>				
+				<br>
+					<span style="width:auto;">
+					<%=list[i].startDate%>
+				</span>				
+			<span>	
+	
+<%
+	 		}
+	 
+	
+	 	}
+	}	
+	%>		
+
+		
+	
+	
+	
+	
+	
+	
+	
 <%	
 	}
 %>
