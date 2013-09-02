@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.ide.CloudTab;
 import org.uengine.codi.mw3.ide.CloudWindow;
 import org.uengine.codi.mw3.ide.ResourceNode;
-import org.uengine.codi.mw3.ide.dictionary.DictionaryManagement;
 import org.uengine.codi.mw3.ide.editor.process.ProcessMergeEditor;
 import org.uengine.codi.mw3.knowledge.ProjectInfo;
 import org.uengine.codi.mw3.knowledge.ProjectNode;
@@ -77,20 +76,6 @@ public class ResourceContextMenu extends CloudMenu {
 			ResourceNode node = (ResourceNode)clipboard;
 			
 			return node.action();			
-		}else{
-			return null;
-		}
-	}
-	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
-	public Object dictionary() throws Exception{
-		Object clipboard = session.getClipboard();
-		if(clipboard instanceof ResourceNode){
-			ResourceNode node = (ResourceNode)clipboard;
-			
-			DictionaryManagement dictionaryManagement = new DictionaryManagement();
-			dictionaryManagement.load();
-			
-			return new ToAppend(new CloudWindow("editor"), dictionaryManagement);
 		}else{
 			return null;
 		}
