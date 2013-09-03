@@ -133,6 +133,9 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype = 
 	        enableHotKey     : true,
 	        enableContextMenu: true
 	    });
+		
+		canvas.setCurrentCanvas(canvas);
+		
 	    // Shape drag & drop
 	    $(".icon_shape_"+objectId).draggable({
 	        helper  : 'clone',
@@ -248,7 +251,76 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype = 
         		// 그리고 난 후의 엘리먼트에 이벤트 등록
         		faceHelper.addEventGeom(objectId, canvas, knolElement);
 	 			session.clipboard = null;
-	 		}		
+	 			
+	 		}else if(clipboardNode & clipboardNode.__className=="org.uengine.codi.mw3.ide.libraries.LibraryRole"){
+	 			var shapeWidth = "300";
+	 			var shapeHeight = "100";
+            	var roleclass = "org.uengine.kernel.Role";
+            	var	viewclass = "org.uengine.kernel.designer.web.RoleView";
+            	var pageX = event.pageX - $("#canvas_" + objectId)[0].offsetLeft + $("#canvas_" + objectId)[0].scrollLeft - $("#canvas_" + objectId).offsetParent().offset().left;
+            	var pageY = event.pageY - $('#canvas_' + objectId)[0].offsetTop + $('#canvas_' + objectId)[0].scrollTop	- $('#canvas_' + objectId).offsetParent().offset().top;
+            	var metaworksContext = {
+            		__className : "org.metaworks.MetaworksContext",
+            		when : "edit"
+            	};
+            	
+            	var role = {
+            			__className : roleclass,
+            			name : clipboardNode.name,
+            			metaworksContext : metaworksContext
+            	};
+            	
+            	var roleView = {
+						__className : viewclass,
+						x : pageX,
+						y : pageY,
+						shapeId : "OG.shape.HorizontalLaneShape",
+						shapeType : "GROUP",
+						classType : "Role",
+						roleClass : roleclass,
+						height : shapeHeight,
+						width : shapeWidth,
+						editorId : object.alias,
+						role : role
+				};
+            	
+            	var html = mw3.locateObject(roleView , roleView.____className);
+            	canvasDivObj.append(html);
+            	
+            	mw3.onLoadFaceHelperScript();
+            	
+	 			session.clipboard = null;
+	 			
+	 		}else if(clipboardNode && clipboardNode.__className=="org.uengine.codi.mw3.ide.libraries.ActivityNode"){
+	 			var shapeWidth = "70";
+	 			var shapeHeight = "50";
+	 			console.log(clipboardNode.activity);
+            	var activityclass = clipboardNode.activity.__className;
+            	var	viewclass = "org.uengine.kernel.designer.web.HumanActivityView";
+            	var pageX = event.pageX - $("#canvas_" + objectId)[0].offsetLeft + $("#canvas_" + objectId)[0].scrollLeft - $("#canvas_" + objectId).offsetParent().offset().left;
+            	var pageY = event.pageY - $('#canvas_' + objectId)[0].offsetTop + $('#canvas_' + objectId)[0].scrollTop	- $('#canvas_' + objectId).offsetParent().offset().top;
+            	
+            	var activityView = {
+						__className : viewclass,
+						x : pageX,
+						y : pageY,
+						shapeId : "OG.shape.bpmn.A_Task",
+						shapeType : "GEOM",
+						classType : "Activity",
+						activityClass : activityclass,
+						height : shapeHeight,
+						width : shapeWidth,
+						editorId : object.alias,
+						activity : clipboardNode.activity
+				};
+            	
+            	var html = mw3.locateObject(activityView , activityView.____className);
+            	canvasDivObj.append(html);
+            	
+            	mw3.onLoadFaceHelperScript();
+            	
+	 			session.clipboard = null;
+	 		}
 	    });
 	    
 	    // Shape 이 Connect 되었을 때의 이벤트 리스너
