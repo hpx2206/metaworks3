@@ -34,6 +34,7 @@ import org.uengine.kernel.RoleMapping;
 import org.uengine.persistence.dao.UniqueKeyGenerator;
 import org.uengine.processmanager.ProcessManagerBean;
 import org.uengine.processmanager.ProcessManagerRemote;
+import org.uengine.search.solr.SolrData;
 import org.uengine.webservices.worklist.DefaultWorkList;
 
 
@@ -472,7 +473,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			this.ext10 = ext10;
 		}
 
-		
 	boolean more;
 		public boolean isMore() {
 			return more;
@@ -722,7 +722,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			this.minorVer = minorVer;
 		}
 		
-
+		
 	Long prtTskId;
 		public Long getPrtTskId() {
 			return prtTskId;
@@ -901,6 +901,9 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			}
 			
 			this.createDatabaseMe();
+			
+			SolrData data = new SolrData();
+			data.insertText( this.getTaskId()+"", "task" ,getTitle());
 			
 		// 수정
 		}else{
@@ -1269,5 +1272,4 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	
 	@Autowired
 	public InstanceViewContent instanceViewContent;
-
 }

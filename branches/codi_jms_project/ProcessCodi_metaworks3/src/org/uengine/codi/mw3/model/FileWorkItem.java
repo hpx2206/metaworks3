@@ -27,6 +27,7 @@ import org.metaworks.website.MetaworksFile;
 import org.uengine.codi.util.CodiStatusUtil;
 import org.uengine.persistence.dao.UniqueKeyGenerator;
 import org.uengine.processmanager.ProcessManagerBean;
+import org.uengine.search.solr.SolrData;
 import org.uengine.util.UEngineUtil;
 
 import com.artofsolving.jodconverter.DocumentConverter;
@@ -105,7 +106,6 @@ public class FileWorkItem extends WorkItem{
 		if(!UEngineUtil.isNotEmpty(getTitle())){
 			setTitle(getFile().getFileTransfer().getFilename());
 		}
-		
 		// 파일 업로드
 		getFile().upload();
 		
