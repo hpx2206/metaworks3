@@ -14198,6 +14198,7 @@ OG.renderer.IRenderer.prototype.constructor = OG.renderer.IRenderer;
 OG.renderer.RaphaelRenderer = function (container, containerSize, backgroundColor, backgroundImage, config) {
 	OG.renderer.RaphaelRenderer.superclass.call(this, arguments);
 
+	this._CANVAS = null;
 	this._CONFIG = config;
 	this._PAPER = new Raphael(container, containerSize ? containerSize[0] : null, containerSize ? containerSize[1] : null);
 
@@ -14261,6 +14262,10 @@ OG.renderer.RaphaelRenderer.prototype._add = function (rElement, id, nodeType, s
 	this._ELE_MAP.put(rElement.id, rElement);
 
 	return rElement;
+};
+
+OG.renderer.RaphaelRenderer.prototype.setCanvas = function (canvas) {
+	this._CANVAS = canvas;
 };
 
 /**
@@ -17187,14 +17192,15 @@ OG.renderer.RaphaelRenderer.prototype.drawButton = function (element) {
 		_bBoxRect.attr(me._CONFIG.DEFAULT_STYLE.COLLAPSE_BBOX);
 		this._add(_bBoxRect, rElement.id + OG.Constants.COLLAPSE_BBOX_SUFFIX);
 
-        _rect1 = this._PAPER.path(
-            "M" + (_lowerCenter.x - 7.5) + " " + (_lowerCenter.y - 15) +
-            "h" + 15 + "v" + 15 + "h" + (-15) + "v" + (-15) +
-            "m1 " + 7.5 + "h" + (15 - 2) + "M" +
-            (_lowerCenter.x - 7.5) + " " + (_lowerCenter.y - 15) +
-            "m" + 7.5 + " 1v" + (15 - 2)
-        );
-
+        if(element.shape.SHAPE_ID == "OG.shape.bpmn.Value_Chain" || element.shape.SHAPE_ID == "OG.shape.bpmn.A_Subprocess"){
+                _rect1 = this._PAPER.path(
+                    "M" + (_lowerCenter.x - 7.5) + " " + (_lowerCenter.y - 15) +
+                    "h" + 15 + "v" + 15 + "h" + (-15) + "v" + (-15) +
+                    "m1 " + 7.5 + "h" + (15 - 2) + "M" +
+                    (_lowerCenter.x - 7.5) + " " + (_lowerCenter.y - 15) +
+                    "m" + 7.5 + " 1v" + (15 - 2)
+                );
+    	}
         _rect1.attr({
             "stroke" : element.shape.geom.style.map.stroke,
             "stroke-width" : 2,
@@ -17203,12 +17209,13 @@ OG.renderer.RaphaelRenderer.prototype.drawButton = function (element) {
             cursor: "pointer",
             "shape-rendering": "crispEdges"
         })
-
+//        _rect1.attr(me._CONFIG.DEFAULT_STYLE.BUTTON);
 		this._add(_rect1, rElement.id + OG.Constants.COLLAPSE_SUFFIX);
 
 		// layer 위치 조정
 		_bBoxRect.insertBefore(rElement);
 		_rect1.insertAfter(rElement);
+
 
         return {
 			bBox    : _bBoxRect.node,
@@ -19669,14 +19676,14 @@ OG.handler.EventHandler.prototype = {
                         }
 
                         // redraw guide
-                        me._RENDERER.removeGuide(element);
-                        guide = me._RENDERER.drawGuide(element);
-
-                        $(this).data("start", {x: eventOffset.x, y: eventOffset.y});
-                        $(this).data("offset", {
-                            x: eventOffset.x - me._num(me._RENDERER.getAttr(guide.bBox, "x")),
-                            y: eventOffset.y - me._num(me._RENDERER.getAttr(guide.bBox, "y"))
-                        });
+//                        me._RENDERER.removeGuide(element);
+//                        guide = me._RENDERER.drawGuide(element);
+//
+//                        $(this).data("start", {x: eventOffset.x, y: eventOffset.y});
+//                        $(this).data("offset", {
+//                            x: eventOffset.x - me._num(me._RENDERER.getAttr(guide.bBox, "x")),
+//                            y: eventOffset.y - me._num(me._RENDERER.getAttr(guide.bBox, "y"))
+//                        });
 
                         $(root).data("bBoxArray", me._getMoveTargets());
                         me._RENDERER.removeRubberBand(me._RENDERER.getRootElement());
@@ -19699,16 +19706,16 @@ OG.handler.EventHandler.prototype = {
                         me._RENDERER.removeAllTerminal();
 					},
 					stop : function (event) {
-					    console.log(canvas);
 					    var eventOffset = me._getOffset(event), shape, newElement,
 					    bBoxArray = $(root).data("bBoxArray");
                         shape = new OG.shape.bpmn.A_Task();
-                        newElement = canvas.drawShape([eventOffset.x, eventOffset.y], shape, [70, 50]);
-                        canvas.connect(element, newElement);
+                        newElement = me._RENDERER._CANVAS.drawShape([eventOffset.x, eventOffset.y], shape, [70, 50]);
+                        me._RENDERER._CANVAS.connect(element, newElement);
                         $.each(bBoxArray, function (k, item) {
                             me._RENDERER.remove(item.box);
                         });
                         $(root).removeData("bBoxArray");
+                        me._RENDERER.removeGuide(element);
 					}
 				});
                 $(guide.task).bind({
@@ -19720,8 +19727,9 @@ OG.handler.EventHandler.prototype = {
                         shape = new OG.shape.bpmn.A_Task(),
                         envelope = element.shape.geom.getBoundary();
 
-                        newElement = canvas.drawShape([envelope.getUpperRight().x + 150, envelope.getCentroid().y], shape, [70, 50]);
-                        canvas.connect(element, newElement);
+                        newElement = me._RENDERER._CANVAS.drawShape([envelope.getUpperRight().x + 150, envelope.getCentroid().y], shape, [70, 50]);
+                        me._RENDERER._CANVAS.connect(element, newElement);
+                        me._RENDERER.removeGuide(element);
 					},
 					mouseout : function (event) {
 
@@ -19729,7 +19737,7 @@ OG.handler.EventHandler.prototype = {
 				});
                 $(guide.end).draggable({
 					start: function (event) {
-                        var eventOffset = me._getOffset(event), guide;
+						var eventOffset = me._getOffset(event), guide;
 
                         // 선택되지 않은 Shape 을 drag 시 다른 모든 Shape 은 deselect 처리
                         if (me._RENDERER.getElementById(element.id + OG.Constants.GUIDE_SUFFIX.GUIDE) === null) {
@@ -19742,21 +19750,21 @@ OG.handler.EventHandler.prototype = {
                         }
 
                         // redraw guide
-                        me._RENDERER.removeGuide(element);
-                        guide = me._RENDERER.drawGuide(element);
-
-                        $(this).data("start", {x: eventOffset.x, y: eventOffset.y});
-                        $(this).data("offset", {
-                            x: eventOffset.x - me._num(me._RENDERER.getAttr(guide.bBox, "x")),
-                            y: eventOffset.y - me._num(me._RENDERER.getAttr(guide.bBox, "y"))
-                        });
+//                        me._RENDERER.removeGuide(element);
+//                        guide = me._RENDERER.drawGuide(element);
+//
+//                        $(this).data("start", {x: eventOffset.x, y: eventOffset.y});
+//                        $(this).data("offset", {
+//                            x: eventOffset.x - me._num(me._RENDERER.getAttr(guide.bBox, "x")),
+//                            y: eventOffset.y - me._num(me._RENDERER.getAttr(guide.bBox, "y"))
+//                        });
 
                         $(root).data("bBoxArray", me._getMoveTargets());
                         me._RENDERER.removeRubberBand(me._RENDERER.getRootElement());
                         me._RENDERER.removeAllTerminal();
 					},
 					drag : function (event) {
-                        var eventOffset = me._getOffset(event),
+						var eventOffset = me._getOffset(event),
 						start = $(this).data("start"),
 						bBoxArray = $(root).data("bBoxArray"),
 						dx = me._grid(eventOffset.x - element.shape.geom.getBoundary().getCentroid().x),
@@ -19772,15 +19780,16 @@ OG.handler.EventHandler.prototype = {
                         me._RENDERER.removeAllTerminal();
 					},
 					stop : function (event) {
-					    var eventOffset = me._getOffset(event), shape, newElement,
+						var eventOffset = me._getOffset(event), shape, newElement,
 					    bBoxArray = $(root).data("bBoxArray");
                         shape = new OG.shape.bpmn.E_End();
-                        newElement = canvas.drawShape([eventOffset.x, eventOffset.y], shape, [30, 30]);
-                        canvas.connect(element, newElement);
+                        newElement = me._RENDERER._CANVAS.drawShape([eventOffset.x, eventOffset.y], shape, [30, 30]);
+                        me._RENDERER._CANVAS.connect(element, newElement);
                         $.each(bBoxArray, function (k, item) {
                             me._RENDERER.remove(item.box);
                         });
                         $(root).removeData("bBoxArray");
+                        me._RENDERER.removeGuide(element);
 					}
 				});
                 $(guide.end).bind({
@@ -19792,8 +19801,9 @@ OG.handler.EventHandler.prototype = {
                         shape = new OG.shape.bpmn.E_End(),
                         envelope = element.shape.geom.getBoundary();
 
-                        newElement = canvas.drawShape([envelope.getUpperRight().x + 150, envelope.getCentroid().y], shape, [30, 30]);
-                        canvas.connect(element, newElement);
+                        newElement = me._RENDERER._CANVAS.drawShape([envelope.getUpperRight().x + 150, envelope.getCentroid().y], shape, [30, 30]);
+                        me._RENDERER._CANVAS.connect(element, newElement);
+                        me._RENDERER.removeGuide(element);
 					},
 					mouseout : function (event) {
 
@@ -22372,6 +22382,10 @@ OG.graph.Canvas.prototype = {
 	 *
 	 * @param {Object} config JSON 포맷의 configuration
 	 */
+	setCurrentCanvas: function (canvas){
+		this._RENDERER.setCanvas(canvas);
+	},
+	
 	initConfig: function (config) {
 		if (config) {
 			this._CONFIG.SELECTABLE = config.selectable === undefined ? this._CONFIG.SELECTABLE : config.selectable;
