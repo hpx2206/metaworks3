@@ -80,26 +80,17 @@ public class ProcessNavigatorPanel {
 		historyList.add(historyItem);
 	}
 	
-	@AutowiredFromClient
-	public ProcessViewPanel processViewPanel;
-	
-	@AutowiredFromClient
-	public ProcessAttributePanel processAttributePanel;
-	
-	
 	// 이 부분에서 히스토리를 클릭했을 때 processViewPanel에서 미리보기 되는 작업까지 같이 해야한다.
 	@ServiceMethod(callByContent = true , target = ServiceMethodContext.TARGET_POPUP)
 	public Object[] changeViewPanel() throws Exception {
 		
-		if(processViewPanel == null)
-			processViewPanel = new ProcessViewPanel();
+		ProcessViewPanel processViewPanel = new ProcessViewPanel();
 		
 		processViewPanel.setDefId(defId);
 		processViewPanel.setAlias(alias);
 		processViewPanel.load();
 		
-		if(processAttributePanel == null)
-			processAttributePanel = new ProcessAttributePanel();
+		ProcessAttributePanel processAttributePanel = new ProcessAttributePanel();
 		
 		processAttributePanel.setDocumentation(null);
 		processAttributePanel.setDefId(defId);
