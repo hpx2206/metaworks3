@@ -8,7 +8,7 @@
 				<div class="<%=nodeStatus%>"  onclick="<%=value.close?methods.collapse.caller():methods.expand.caller()%>">
 					<img class="navi_icon" src="images/folder.png" />	
 					<a onClick="<%=methods.loadDocument.caller()%>" href="#">
-						<%=value.name%><br>
+						<%=value.name%>
 					</a>
 				</div>
 				<div>
@@ -23,31 +23,25 @@
 					nodeStatus = "closed";
 			if(mw3.when == 'onlyView'){
 %>
-				<table border="0" cellspacing="0" cellpadding="0">
-					<tr>
-						<td class="<%=nodeStatus%>"  onclick="<%=value.close?methods.collapse.caller():methods.expand.caller()%>">
-							<span>||</span>
-						</td>
-						<td>
-							<a onClick="<%=methods.loadExplorerDocument.caller()%>" href="#">
-							<%=value.name%>
-							</a>
-						</td>
-					</tr>
-					<tr>	
-						<Td></td>
-						<td>
-							&nbsp;&nbsp;&nbsp;&nbsp;<%=fields.childNode.here()%>
-						</td>
-					</tr>	
-					</tr>
+				
+				<div class="<%=nodeStatus%>"  onclick="<%=value.close?methods.collapse.caller():methods.expand.caller()%>">
+					<img class="navi_icon" src="images/folder.png" />	
+					<a onClick="<%=methods.loadExplorerDocument.caller()%>" href="#">
+						<%=value.name%>
+					</a>
+				</div>
+				<div>
+						<span><%=fields.childNode.here()%></span>
+				</div>
+				
+				
+				
 
 <%
 	}
 %>							
 
-				</table>
-			</div>
+				
 				
 	<%	
 	}else if(mw3.how == 'fileView'){
