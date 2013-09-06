@@ -144,6 +144,8 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype = 
 	    canvasDivObj.droppable({
 	    	
 	        drop: function (event, ui) {
+	        	faceHelper.canvasDropEvent(objectId , canvas , canvasDivObj);
+	        	
 	        	if(!$(ui.draggable).hasClass('icon_shape_'+objectId))
 	        		return true;
 	        	var shapeInfo = {
@@ -222,107 +224,6 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype = 
 	            }
 	        }
 	    });
-	    canvasDivObj.mouseup(function(){
-	    	var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
-	 		var clipboardNode = session.clipboard;
-	 		// 지식노드를 캔버스에 떨구었을때 
-	 		if(clipboardNode && clipboardNode.__className=="org.uengine.codi.mw3.knowledge.WfNode"){
-	 			var newNodeWidth = 70 ;
-	 			var newNodeHeight = 50 ;
-	 			var knolElement = canvas.drawShape([
-	                 event.pageX - $('#canvas_' + objectId)[0].offsetLeft + $('#canvas_' + objectId)[0].scrollLeft	- $('#canvas_' + objectId).offsetParent().offset().left,
-	                 event.pageY - $('#canvas_' + objectId)[0].offsetTop + $('#canvas_' + objectId)[0].scrollTop	- $('#canvas_' + objectId).offsetParent().offset().top ],
-	                 new OG.shape.bpmn.A_Task(clipboardNode.name) , [parseInt(newNodeWidth, 10), parseInt(newNodeHeight, 10)]);
-	 			var customData = [];
-	 			customData.push( {"customId": clipboardNode.id , "customName" : clipboardNode.name , "customType" : "wfNode"});
-	 			canvas.setCustomData(knolElement, customData);
-	 			var value = mw3.objects[objectId];
-	    		var contentValue = {
-						__className : 'org.uengine.codi.mw3.webProcessDesigner.PrcsVariable',
-						name : clipboardNode.name ,
-						typeId : clipboardNode.id ,
-						variableType : 'wfNode'
-				};
-	    		value.variableMap[clipboardNode.name] = contentValue;
-	 			
-	 			$(knolElement).attr("_classname", "org.uengine.codi.activitytypes.KnowledgeActivity");
-        		$(knolElement).attr("_classType", "Activity");
-        		$(knolElement).attr("_tracingTag",++faceHelper.tracingTag);
-        		// 그리고 난 후의 엘리먼트에 이벤트 등록
-        		faceHelper.addEventGeom(objectId, canvas, knolElement);
-	 			session.clipboard = null;
-	 			
-	 		}else if(clipboardNode & clipboardNode.__className=="org.uengine.codi.mw3.ide.libraries.LibraryRole"){
-	 			var shapeWidth = "300";
-	 			var shapeHeight = "100";
-            	var roleclass = "org.uengine.kernel.Role";
-            	var	viewclass = "org.uengine.kernel.designer.web.RoleView";
-            	var pageX = event.pageX - $("#canvas_" + objectId)[0].offsetLeft + $("#canvas_" + objectId)[0].scrollLeft - $("#canvas_" + objectId).offsetParent().offset().left;
-            	var pageY = event.pageY - $('#canvas_' + objectId)[0].offsetTop + $('#canvas_' + objectId)[0].scrollTop	- $('#canvas_' + objectId).offsetParent().offset().top;
-            	var metaworksContext = {
-            		__className : "org.metaworks.MetaworksContext",
-            		when : "edit"
-            	};
-            	
-            	var role = {
-            			__className : roleclass,
-            			name : clipboardNode.name,
-            			metaworksContext : metaworksContext
-            	};
-            	
-            	var roleView = {
-						__className : viewclass,
-						x : pageX,
-						y : pageY,
-						shapeId : "OG.shape.HorizontalLaneShape",
-						shapeType : "GROUP",
-						classType : "Role",
-						roleClass : roleclass,
-						height : shapeHeight,
-						width : shapeWidth,
-						editorId : object.alias,
-						role : role
-				};
-            	
-            	var html = mw3.locateObject(roleView , roleView.____className);
-            	canvasDivObj.append(html);
-            	
-            	mw3.onLoadFaceHelperScript();
-            	
-	 			session.clipboard = null;
-	 			
-	 		}else if(clipboardNode && clipboardNode.__className=="org.uengine.codi.mw3.ide.libraries.ActivityNode"){
-	 			var shapeWidth = "70";
-	 			var shapeHeight = "50";
-	 			console.log(clipboardNode.activity);
-            	var activityclass = clipboardNode.activity.__className;
-            	var	viewclass = "org.uengine.kernel.designer.web.HumanActivityView";
-            	var pageX = event.pageX - $("#canvas_" + objectId)[0].offsetLeft + $("#canvas_" + objectId)[0].scrollLeft - $("#canvas_" + objectId).offsetParent().offset().left;
-            	var pageY = event.pageY - $('#canvas_' + objectId)[0].offsetTop + $('#canvas_' + objectId)[0].scrollTop	- $('#canvas_' + objectId).offsetParent().offset().top;
-            	
-            	var activityView = {
-						__className : viewclass,
-						x : pageX,
-						y : pageY,
-						shapeId : "OG.shape.bpmn.A_Task",
-						shapeType : "GEOM",
-						classType : "Activity",
-						activityClass : activityclass,
-						height : shapeHeight,
-						width : shapeWidth,
-						editorId : object.alias,
-						activity : clipboardNode.activity
-				};
-            	
-            	var html = mw3.locateObject(activityView , activityView.____className);
-            	canvasDivObj.append(html);
-            	
-            	mw3.onLoadFaceHelperScript();
-            	
-	 			session.clipboard = null;
-	 		}
-	    });
-	    
 	    // Shape 이 Connect 되었을 때의 이벤트 리스너
 	    canvas.onConnectShape(function (event, edgeElement, fromElement, toElement) {
 	    	var fromTracingTag = $(fromElement).attr('_tracingTag');
@@ -724,6 +625,106 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ad
 			value.gateCondition();
 		}
 	});
+};
+org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.canvasDropEvent = function(objectId , canvas , canvasDivObj){
+	var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
+	var clipboardNode = session.clipboard;
+	var object = mw3.objects[objectId];
+	// 지식노드를 캔버스에 떨구었을때 
+	if(clipboardNode && clipboardNode.__className=="org.uengine.codi.mw3.knowledge.WfNode"){
+		var newNodeWidth = 70 ;
+		var newNodeHeight = 50 ;
+		var knolElement = canvas.drawShape([
+         event.pageX - $('#canvas_' + objectId)[0].offsetLeft + $('#canvas_' + objectId)[0].scrollLeft	- $('#canvas_' + objectId).offsetParent().offset().left,
+         event.pageY - $('#canvas_' + objectId)[0].offsetTop + $('#canvas_' + objectId)[0].scrollTop	- $('#canvas_' + objectId).offsetParent().offset().top ],
+         new OG.shape.bpmn.A_Task(clipboardNode.name) , [parseInt(newNodeWidth, 10), parseInt(newNodeHeight, 10)]);
+		var customData = [];
+		customData.push( {"customId": clipboardNode.id , "customName" : clipboardNode.name , "customType" : "wfNode"});
+		canvas.setCustomData(knolElement, customData);
+		
+		var contentValue = {
+				__className : 'org.uengine.codi.mw3.webProcessDesigner.PrcsVariable',
+				name : clipboardNode.name ,
+				typeId : clipboardNode.id ,
+				variableType : 'wfNode'
+		};
+		object.variableMap[clipboardNode.name] = contentValue;
+			
+		$(knolElement).attr("_classname", "org.uengine.codi.activitytypes.KnowledgeActivity");
+		$(knolElement).attr("_classType", "Activity");
+		$(knolElement).attr("_tracingTag",++faceHelper.tracingTag);
+		// 그리고 난 후의 엘리먼트에 이벤트 등록
+		faceHelper.addEventGeom(objectId, canvas, knolElement);
+		session.clipboard = null;
+		
+	}else if(clipboardNode && clipboardNode.__className=="org.uengine.codi.mw3.ide.libraries.LibraryRole"){
+		var shapeWidth = "300";
+		var shapeHeight = "100";
+		var roleclass = "org.uengine.kernel.Role";
+		var	viewclass = "org.uengine.kernel.designer.web.RoleView";
+		var pageX = event.pageX - $("#canvas_" + objectId)[0].offsetLeft + $("#canvas_" + objectId)[0].scrollLeft - $("#canvas_" + objectId).offsetParent().offset().left;
+		var pageY = event.pageY - $('#canvas_' + objectId)[0].offsetTop + $('#canvas_' + objectId)[0].scrollTop	- $('#canvas_' + objectId).offsetParent().offset().top;
+		var metaworksContext = {
+			__className : "org.metaworks.MetaworksContext",
+			when : "edit"
+		};
+		
+		var role = {
+				__className : roleclass,
+				name : clipboardNode.name,
+				metaworksContext : metaworksContext
+		};
+		
+		var roleView = {
+				__className : viewclass,
+				x : pageX,
+				y : pageY,
+				shapeId : "OG.shape.HorizontalLaneShape",
+				shapeType : "GROUP",
+				classType : "Role",
+				roleClass : roleclass,
+				height : shapeHeight,
+				width : shapeWidth,
+				editorId : object.alias,
+				role : role
+		};
+		
+		var html = mw3.locateObject(roleView , roleView.____className);
+		canvasDivObj.append(html);
+		
+		mw3.onLoadFaceHelperScript();
+	
+		session.clipboard = null;
+		
+	}else if(clipboardNode && clipboardNode.__className=="org.uengine.codi.mw3.ide.libraries.ActivityNode"){
+		var shapeWidth = "70";
+		var shapeHeight = "50";
+		var activityclass = clipboardNode.activity.__className;
+		var	viewclass = "org.uengine.kernel.designer.web.HumanActivityView";
+		var pageX = event.pageX - $("#canvas_" + objectId)[0].offsetLeft + $("#canvas_" + objectId)[0].scrollLeft - $("#canvas_" + objectId).offsetParent().offset().left;
+		var pageY = event.pageY - $('#canvas_' + objectId)[0].offsetTop + $('#canvas_' + objectId)[0].scrollTop	- $('#canvas_' + objectId).offsetParent().offset().top;
+		
+		var activityView = {
+				__className : viewclass,
+				x : pageX,
+				y : pageY,
+				shapeId : "OG.shape.bpmn.A_Task",
+				shapeType : "GEOM",
+				classType : "Activity",
+				activityClass : activityclass,
+				height : shapeHeight,
+				width : shapeWidth,
+				editorId : object.alias,
+				activity : clipboardNode.activity
+		};
+		
+		var html = mw3.locateObject(activityView , activityView.____className);
+		canvasDivObj.append(html);
+		
+		mw3.onLoadFaceHelperScript();
+	
+		session.clipboard = null;
+	}
 };
 // TODO delete test code 
 org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.showValiables = function(){
