@@ -194,6 +194,12 @@ if(value){
 	<a onClick="<%=methods.loadOrganization.caller() %>"class="iemployee"><%=value.empName %> <%=(value.jikName ? "(" + value.jikName + ")":"") %></a>
 	
 	<%
+	} else if(mw3.where == 'navigatorIDE'){
+	%>
+	
+	<span class="iemployee"><%=value.empName %> <%=(value.jikName ? "(" + value.jikName + ")":"") %></span>
+	
+	<%
 	} else if(mw3.where == 'modifyEmployeeInfo') {
 	%>
 	<%
