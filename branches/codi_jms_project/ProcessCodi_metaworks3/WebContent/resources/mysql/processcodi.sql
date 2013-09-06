@@ -778,3 +778,6 @@ create table favoritefile (
  filePath varchar(100) ,
  MODDATE datetime
 );
+
+--2013.09.06s - 폴더ID추가 
+alter table bpm_worklist add column folderId varchar(100);
