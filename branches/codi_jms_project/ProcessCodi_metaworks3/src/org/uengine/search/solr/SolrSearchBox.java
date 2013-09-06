@@ -14,11 +14,11 @@ public class SolrSearchBox extends SearchBox {
 	
 	static SolrServer solrServer;
 	
-	SolrFileItem solrFileItem;
-		public SolrFileItem getSolrFileItem() {
+	SolrWorkItem solrFileItem;
+		public SolrWorkItem getSolrFileItem() {
 			return solrFileItem;
 		}
-		public void setSolrFileItem(SolrFileItem solrFileItem) {
+		public void setSolrFileItem(SolrWorkItem solrFileItem) {
 			this.solrFileItem = solrFileItem;
 		}
 

@@ -25,6 +25,7 @@ import org.uengine.codi.mw3.filter.AllSessionFilter;
 import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitor;
 import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitorPanel;
 import org.uengine.processmanager.ProcessManagerRemote;
+import org.uengine.search.solr.SolrSearch;
 
 import com.efsol.util.StringUtils;
 
@@ -85,14 +86,22 @@ public class Instance extends Database<IInstance> implements IInstance{
 			
 			StringBuffer appendedInstanceSql = new StringBuffer(instanceSql);
 			
-			if(	"inbox".equals(navigation.getPerspectiveType())) {				
-				appendedInstanceSql.append("   AND (wl.title like ?keyword or inst.name like ?keyword)");
-				
-			}else{
-				appendedInstanceSql.append(" AND (exists (select 1 from bpm_worklist wl where inst.INSTID = wl.instid and title like ?keyword) or inst.name like ?keyword)  ");
+//			if(	"inbox".equals(navigation.getPerspectiveType())) {				
+//				appendedInstanceSql.append("   AND (wl.title like ?keyword or inst.name like ?keyword)");
+//				
+//			}else{
+//				appendedInstanceSql.append(" AND (exists (select 1 from bpm_worklist wl where inst.INSTID = wl.instid and title like ?keyword) or inst.name like ?keyword)  ");
+//			}
+//			
+//			criteria.put("keyword", "%" + searchKeyword + "%");			
+
+			SolrSearch solrSearch = new SolrSearch();
+			solrSearch.setKeyword(searchKeyword);
+			String instanceStr = solrSearch.searchInstance();
+			if( instanceStr != null ){
+				appendedInstanceSql.append("   AND inst.INSTID in (" + instanceStr + ") ");
+//				criteria.put("instanceStr", "(" + instanceStr + ")" );
 			}
-			
-			criteria.put("keyword", "%" + searchKeyword + "%");			
 			
 			createSQLPhase2(navigation, criteria, stmt, worklistSql, appendedInstanceSql);
 

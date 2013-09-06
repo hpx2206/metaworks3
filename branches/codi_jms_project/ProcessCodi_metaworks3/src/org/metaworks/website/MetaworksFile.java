@@ -29,16 +29,5 @@ public class MetaworksFile extends AbstractMetaworksFile{
 	public String renameUploadFileWithMimeType(String filename, String mimeType) {
 		// TODO Auto-generated method stub
 		return UEngineUtil.getCalendarDir() + "/" + super.renameUploadFileWithMimeType(filename, mimeType);
-	}
-	
-	@Override
-	public void upload() throws FileNotFoundException, IOException, Exception{
-		
-		super.upload();
-		
-		// 검색엔진에 데이타 넣기
-		SolrData data = new SolrData();
-		data.insertFile(this);
-	}
-
+	}	
 }

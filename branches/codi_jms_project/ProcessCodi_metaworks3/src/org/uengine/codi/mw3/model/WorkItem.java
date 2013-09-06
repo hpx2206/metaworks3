@@ -498,16 +498,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		public void setMore(boolean more) {
 			this.more = more;
 		}
-
-	InstanceList instanceList;
-		public InstanceList getInstanceList() {
-			return instanceList;
-		}
-	
-		public void setInstanceList(InstanceList instanceList) {
-			this.instanceList = instanceList;
-		}
-		
 	
 	public DocumentDrag documentDrag;	
 		public DocumentDrag getDocumentDrag() {
@@ -1004,9 +994,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			
 			this.createDatabaseMe();
 			
-			SolrData data = new SolrData();
-			data.insertText( this.getTaskId()+"", "task" ,getTitle());
-			
 		// 수정
 		}else{
 //			this.copyFrom(databaseMe());
@@ -1015,6 +1002,11 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		}		
 		
 		this.flushDatabaseMe();
+		
+		SolrData SolrData = new SolrData();
+		Instance inst = new Instance();
+		inst.copyFrom(instanceRef);
+		SolrData.insertWorkItem(this , inst);
 		
 		return instanceRef;
 	}

@@ -113,7 +113,8 @@ public class Editor {
 	
 	@ServiceMethod(payload={"resourceNode"}, target=ServiceMethodContext.TARGET_NONE)
 	public String load() {
-		return Editor.loadByPath(this.getResourceNode().getPath());
+		this.setContent(Editor.loadByPath(this.getResourceNode().getPath()));
+		return this.getContent();
 	}
 	
 	public static String loadByPath(String path) {
