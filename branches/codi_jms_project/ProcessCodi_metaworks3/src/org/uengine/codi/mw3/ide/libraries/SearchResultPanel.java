@@ -1,19 +1,15 @@
 package org.uengine.codi.mw3.ide.libraries;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.component.TreeNode;
-import org.metaworks.metadata.MetadataBundle;
-import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.webProcessDesigner.Documentation;
+import org.uengine.codi.mw3.webProcessDesigner.ProcessAttributePanel;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessViewPanel;
 import org.uengine.contexts.TextContext;
 import org.uengine.kernel.HumanActivity;
 import org.uengine.kernel.Role;
-import org.uengine.kernel.designer.web.ActivityView;
 
 public class SearchResultPanel {
 	
@@ -24,26 +20,26 @@ public class SearchResultPanel {
 		public void setIndex(int index) {
 			this.index = index;
 		}
-	ArrayList<ProcessNode> processNodeList;
-		public ArrayList<ProcessNode> getProcessNodeList() {
-			return processNodeList;
+	ArrayList<LibraryActivity> activityList;
+		public ArrayList<LibraryActivity> getActivityList() {
+			return activityList;
 		}
-		public void setProcessNodeList(ArrayList<ProcessNode> processNodeList) {
-			this.processNodeList = processNodeList;
+		public void setActivityList(ArrayList<LibraryActivity> activityList) {
+			this.activityList = activityList;
 		}
-	ArrayList<HumanActivity> humanActivityList;
-		public ArrayList<HumanActivity> getHumanActivityList() {
-			return humanActivityList;
-		}
-		public void setHumanActivityList(ArrayList<HumanActivity> humanActivityList) {
-			this.humanActivityList = humanActivityList;
-		}
-	ArrayList<Role> roleList;
-		public ArrayList<Role> getRoleList() {
+	ArrayList<LibraryRole> roleList;
+		public ArrayList<LibraryRole> getRoleList() {
 			return roleList;
 		}
-		public void setRoleList(ArrayList<Role> roleList) {
+		public void setRoleList(ArrayList<LibraryRole> roleList) {
 			this.roleList = roleList;
+		}
+	ArrayList<LibraryProcess> processList;
+		public ArrayList<LibraryProcess> getProcessList() {
+			return processList;
+		}
+		public void setProcessList(ArrayList<LibraryProcess> processList) {
+			this.processList = processList;
 		}
 	MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
@@ -59,92 +55,58 @@ public class SearchResultPanel {
 		public void setProcessViewPanel(ProcessViewPanel processViewPanel) {
 			this.processViewPanel = processViewPanel;
 		}
-		
+	ProcessAttributePanel processAttributePanel;
+		public ProcessAttributePanel getProcessAttributePanel() {
+			return processAttributePanel;
+		}
+		public void setProcessAttributePanel(ProcessAttributePanel processAttributePanel) {
+			this.processAttributePanel = processAttributePanel;
+		}
+	//emberjs example member
+//	EmberjsExample emberjsExample;
+//		public EmberjsExample getEmberjsExample() {
+//			return emberjsExample;
+//		}
+//		public void setEmberjsExample(EmberjsExample emberjsExample) {
+//			this.emberjsExample = emberjsExample;
+//		}
 	@ServiceMethod
 	public void load() throws Exception {
 		
 		// 임시로 휴먼 액티비티 생성
-		humanActivityList = new ArrayList<HumanActivity>();
-		TextContext textContext = new TextContext();
-		textContext.setText("임시 액티비티 설명 및 이름");
+		LibraryActivity libraryActivity = new LibraryActivity();
+		libraryActivity.load();
 		
-		Documentation documentation = new Documentation();
-		documentation.setAlias("D:/codi/codebase/codi/root/GG.process");
-		documentation.setDefId("defId");
-		documentation.setDocument("임시 문서");
-		documentation.setTitle("임시 문서 제목");
-		
-		
-		
-		HumanActivity humanActivity = new HumanActivity();
-		humanActivity.setId(Integer.toString(index));
-		humanActivity.setName(textContext);
-		humanActivity.setDescription(textContext);
-		humanActivity.setDocumentation(documentation);
-		
-		humanActivityList.add(humanActivity);
+		activityList = new ArrayList<LibraryActivity>();
+		activityList.add(libraryActivity);
 		
 		
 		// 임시로 롤 생성
-		roleList = new ArrayList<Role>();
-		Role role = new Role();
-		role.setName("임시 롤 이름");
-		role.setDisplayName(textContext);
-		role.setMetaworksContext(getMetaworksContext());
+		LibraryRole libraryRole = new LibraryRole();
+		libraryRole.load();
 		
-		roleList.add(role);
+		roleList = new ArrayList<LibraryRole>();
+		roleList.add(libraryRole);
 		
 		
-		String projectId = MetadataBundle.getProjectId();		
-		String mainPath = MetadataBundle.getProjectBasePath(projectId);
+		// 임시로 프로세스 생성
+		LibraryProcess libraryProcess = new LibraryProcess();
+		libraryProcess.load();
 		
+		processList = new ArrayList<LibraryProcess>();
+		processList.add(libraryProcess);
+		
+		// 프로세스 어트리뷰트 생성
+		processAttributePanel = new ProcessAttributePanel();
+		processAttributePanel.setDocumentation(activityList.get(0).getHumanActivity().getDocumentation());
+		
+		
+		// 프로세스 뷰 패널 생성
 		processViewPanel = new ProcessViewPanel();
-		processNodeList = new ArrayList<ProcessNode>();
-	
 		
-		File file = new File(mainPath);
-		String[] childFilePaths = file.list();
-		
-		for(int i=0; i<childFilePaths.length; i++){
-			
-			// 여기부터 view
-			File childFile = new File(file.getAbsolutePath() + File.separatorChar + childFilePaths[i]);
-			
-			if(!childFile.isDirectory()){
-				String type = ResourceNode.findNodeType(childFile.getAbsolutePath());
-			
-				// 디렉토리가 아니고 프로세스면.
-				if(type.equals(TreeNode.TYPE_FILE_PROCESS)){
-					ProcessNode processNode = new ProcessNode();
-					processNode.setId("codi/root");
-					processNode.setName(childFile.getName());
-					processNode.setPath(childFile.getPath());
-					processNode.setParentId(childFile.getParent());
-					processNode.setType(TreeNode.TYPE_FILE_PROCESS);
-					processNode.setMetaworksContext(getMetaworksContext());
-					
-					processNodeList.add(processNode);
-				}
-				
-			}
-		}
+		//emberjsExample
+//		emberjsExample = new EmberjsExample();
+//		emberjsExample.load();
 	}
 	
-	@ServiceMethod(callByContent = true)
-	public Object showProcess() {
-		processViewPanel.setAlias(processNodeList.get(index).getPath());
-		processViewPanel.setDefId(processNodeList.get(index).getId());
-		processViewPanel.setViewType("definitionView");
-		processViewPanel.load();
-		
-		return processViewPanel;
-	}
-	
-	public Object showActivity() {
-		return null;
-	}
-	
-	public Object showRole() {
-		return null;
-	}
 }

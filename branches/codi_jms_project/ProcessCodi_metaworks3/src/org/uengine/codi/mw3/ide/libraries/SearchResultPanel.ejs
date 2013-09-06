@@ -2,66 +2,49 @@
 
 <%
 if(value) {
-    var processList = value.processNodeList;
-    var humanActivityList = value.humanActivityList;
+    var activityList = value.activityList;
     var roleList = value.roleList;
     
-console.log(value);
 %>
 <div style="height:500px; width:350px; float:left">
         <div>
-         <B>프로세스</B> 
+            <B>프로세스</B> 
             <div style="margin-left:5em">
-                <% 
-                for(var i = 0; i < processList.length; i++) {
-                %>
-                    <a onClick="mw3.getFaceHelper(<%=objectId%>).clickProcess('<%= i %>')" href="#" >
-                        <%=processList[i].name%><br>
-                    </a>
-                <%
-                }
-                %>
+                <%=fields.processList.here()%>
             </div>
         </div>
         
         <div>
-        <B>액티비티</B>
-            
-            
+            <B>액티비티</B>
             <div style="margin-left:3em">
-            <% 
-                for(var i = 0; i < humanActivityList.length; i++) {
-                %>
-                    <a onClick="mw3.getFaceHelper(<%=objectId%>).clickActivity('<%= i %>')" href="#" >
-                        <%=humanActivityList[i].name.text%><br>
-                    </a>
-                <%
-                }
-                %>
+                <%=fields.activityList.here()%>
             </div>
         </div>
+        
         <div>
-        <B>역할</B>
+            <B>역할</B>
             <div style="margin-left:3em">
-             <% 
-                for(var i = 0; i < roleList.length; i++) {
-                %>
-                    <a onClick="mw3.getFaceHelper(<%=objectId%>).clickRole('<%= i %>')" href="#" >
-                        <%=roleList[i].name%><br>
-                    </a>
-                <%
-                }
-                %>
+                <%=fields.roleList.here()%>
             </div>
         </div>
 </div>
-<div style="height:500px; width:350px; float:left">
-        <div style="padding:right">    
-        <B>미리보기</B>
-            <%=fields.processViewPanel.here()%>
-        </div>
-    
 
+<div style="height:400px; width:250px; float:left; padding:right;">
+            <B>속성</B>
+            <%=fields.processAttributePanel.here()%>
+            
+            
+</div>
+
+<div style="height:400px; width:250px; float:left; padding:right;">
+            <B>미리보기</B>
+            <%=fields.processViewPanel.here()%>
+</div>
+
+
+<div style="height:400px; width:200px; float:left; padding:right;">
+            <B>ember.js 예제</B>
+            <%=fields.emberjsExample.here()%>
 </div>
 <%
 }

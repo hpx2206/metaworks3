@@ -19,32 +19,34 @@ public class PerspectiveRole extends Perspective {
 		setLabel("Role");
 	}
 	
-	ArrayList<LibraryRole> libraryRoleList;
-		public ArrayList<LibraryRole> getLibraryRoleList() {
-			return libraryRoleList;
+	ArrayList<OrganizationRole> organizationRoleList;
+		public ArrayList<OrganizationRole> getOrganizationRoleList() {
+			return organizationRoleList;
 		}
-		public void setLibraryRoleList(ArrayList<LibraryRole> libraryRoleList) {
-			this.libraryRoleList = libraryRoleList;
+	
+		public void setOrganizationRoleList(
+				ArrayList<OrganizationRole> organizationRoleList) {
+			this.organizationRoleList = organizationRoleList;
 		}
 
 	@Override
 	protected void loadChildren() throws Exception {
-		libraryRoleList = new ArrayList<LibraryRole>();
+		organizationRoleList = new ArrayList<OrganizationRole>();
 		Role role = new Role();
 		role.getMetaworksContext().setWhere("navigatorIDE");
 		role.setComCode(session.getEmployee().getGlobalCom());
 		IRole iRole = role.findByGlobalCom();
 		while(iRole.next()){
-			LibraryRole libraryRole = new LibraryRole();
-			libraryRole.copyFrom(iRole);
-			libraryRoleList.add(libraryRole);
+			OrganizationRole organizationRole = new OrganizationRole();
+			organizationRole.copyFrom(iRole);
+			organizationRoleList.add(organizationRole);
 		}
 		
 	}
 
 	@Override
 	protected void unloadChildren() throws Exception {
-		libraryRoleList = null;
+		organizationRoleList = null;
 	}
 	
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)

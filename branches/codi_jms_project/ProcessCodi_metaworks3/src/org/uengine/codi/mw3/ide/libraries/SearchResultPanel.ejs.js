@@ -1,26 +1,20 @@
 var org_uengine_codi_mw3_ide_libraries_SearchResultPanel = function(objectId, className){
-	
+	// default setting
 	this.objectId = objectId;
 	this.className = className;
+	this.divId = mw3._getObjectDivId(this.objectId);
+	this.divObj = $('#' + this.divId);
 	
-};
-
-org_uengine_codi_mw3_ide_libraries_SearchResultPanel.prototype = {
-	clickProcess : function(index){
-		var object = mw3.objects[this.objectId];
-		object.index = index;
-		object.showProcess();
-	},
+	var object = mw3.objects[this.objectId];
 	
-	clickActivity : function(index) {
-		var object = mw3.objects[this.objectId];
-		object.index = index;
-		object.showActivity();
-	},
-	
-	clickRole : function(index) {
-		var object = mw3.objects[this.objectId];
-		object.index = index;
-		object.showRole();
+	if(object){
+		mw3.importScript('scripts/emberjs/ember-1.0.0.js');
+		mw3.importScript('scripts/emberjs/handlebars-1.0.0.js');
+		mw3.importScript('scripts/emberjs/jquery-1.9.1.js');
+		
+		mw3.importStyle('style/emberjs/normalize.css');
+		mw3.importStyle('style/emberjs/style.css');
+		var faceHelper = this;
+		faceHelper.load();
 	}
 };
