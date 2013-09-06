@@ -17,7 +17,6 @@ import org.metaworks.dao.IDAO;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.processexplorer.DocumentFilePanel;
-import org.uengine.codi.mw3.processexplorer.DocumentFileViewPanel;
 import org.uengine.codi.mw3.processexplorer.DocumentFolderPanel;
 
 @Table(name="bpm_knol")
@@ -117,14 +116,6 @@ public interface IDocumentNode extends IDAO {
 	public DocumentFilePanel getDocumentFilePanel();
 	public void setDocumentFilePanel(DocumentFilePanel documentFilePanel) ;
 	
-	@Hidden
-	@NonLoadable
-	@NonSavable
-	public DocumentFileViewPanel getDocumentFileViewPanel();
-	public void setDocumentFileViewPanel(DocumentFileViewPanel documentFileViewPanel);
-	
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
-	public Object[] loadDocument() throws Exception;
 	
 	@ServiceMethod(inContextMenu=true, callByContent=true)
 	@Face(displayName="$Remove")
@@ -154,6 +145,9 @@ public interface IDocumentNode extends IDAO {
 	public IDocumentNode loadDocumentList() throws Exception;
 	
 	@ServiceMethod(callByContent=true, except={"childNode"}, target=TARGET_APPEND)
+	public  IDocumentNode findDetail(String id) throws Exception;
+	
+	@ServiceMethod(callByContent=true, except={"childNode"}, target=TARGET_APPEND)
 	public Object[] loadExplorerDocument() throws Exception;
 	
 	@ServiceMethod(callByContent=true, except={"childNode"}, target=TARGET_SELF)
@@ -165,8 +159,12 @@ public interface IDocumentNode extends IDAO {
 	@ServiceMethod(callByContent=true,target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] loadDetailView() throws Exception;
 
-	@ServiceMethod(callByContent=true,target=ServiceMethodContext.TARGET_SELF)
+	@ServiceMethod(callByContent=true,target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] loadFolderView() throws Exception;
+	
+	@ServiceMethod(callByContent=true)
+	public Object[] loadDocument() throws Exception;
+	
 	
 	@ORMapping(
 			databaseFields = {"url", "thumbnail", "conntype"}, 

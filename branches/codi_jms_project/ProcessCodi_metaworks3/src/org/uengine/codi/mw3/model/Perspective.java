@@ -60,6 +60,46 @@ public class Perspective {
 			String selectedItem) throws Exception {
 		return loadInstanceListPanel(session, perspectiveType, selectedItem, null);
 	}
+	
+	public static Object[] loadDocumentListPanel(Session session, String perspectiveType,
+			String selectedItem, String title) throws Exception{
+		
+		if( title == null && perspectiveType != null && perspectiveType.equals("document")){
+			title = session.getWindowTitle();
+		}else if( title == null ){
+			title = "$perspective." + perspectiveType;
+		}
+		
+//		DocumentList documentList = new DocumentList(session);
+//		documentList.setFolderId(selectedItem);
+//		documentList.load();
+		InstanceList instList = new InstanceList(session);
+		instList.setFolderId(selectedItem);
+		instList.loadDocument();
+		
+		InstanceListPanel instListPanel = new InstanceListPanel(session);
+		instListPanel.setInstanceList(instList);
+		instListPanel.session = session;
+		
+		instListPanel.getSearchBox().setKeyword(session.getSearchKeyword());
+		if( title == null && perspectiveType != null && perspectiveType.equals("document")){
+			title = session.getWindowTitle();
+		}else if( title == null ){
+			title = "$perspective." + perspectiveType;
+		}
+		
+//		if("document".equals(perspectiveType)){
+//			instListPanel.documentFollowersLoad();
+//		}
+		instListPanel.setTitle(title);
+		session.setWindowTitle(title);
+		
+//		DocumentListWindow documentListWindow = new DocumentListWindow(session);
+//		documentListWindow.setPanel(documentPanel);
+		return new Object[]{session, instListPanel};
+	}
+	
+	
 	public static Object[] loadInstanceListPanel(Session session, String perspectiveType,
 			String selectedItem, String title) throws Exception {
 		

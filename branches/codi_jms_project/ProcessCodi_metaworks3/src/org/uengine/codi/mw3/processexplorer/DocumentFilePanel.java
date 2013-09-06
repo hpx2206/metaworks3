@@ -1,12 +1,21 @@
 package org.uengine.codi.mw3.processexplorer;
 
 
+import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.uengine.codi.mw3.model.DocumentNode;
 import org.uengine.codi.mw3.model.IDocumentNode;
 
-public class DocumentFilePanel {
+public class DocumentFilePanel implements ContextAware{
 	
+	MetaworksContext metaworksContext;
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
+		}
+		
 	String id;
 		public String getId() {
 			return id;
@@ -28,6 +37,14 @@ public class DocumentFilePanel {
 		public void setParentId(String parentId) {
 			this.parentId = parentId;
 		}
+	String conntype;
+		public String getConntype() {
+			return conntype;
+		}
+		public void setConntype(String conntype) {
+			this.conntype = conntype;
+		}	
+		
 	IDocumentNode documentNode;
 		public IDocumentNode getDocumentNode() {
 			return documentNode;
@@ -36,18 +53,11 @@ public class DocumentFilePanel {
 			this.documentNode = documentNode;
 		}	
 		
-	DocumentFileViewPanel documentFileViewPanel;
-		public DocumentFileViewPanel getDocumentFileViewPanel() {
-			return documentFileViewPanel;
-		}
-		public void setDocumentFileViewPanel(DocumentFileViewPanel documentFileViewPanel) {
-			this.documentFileViewPanel = documentFileViewPanel;
-		}
 		
-	public void loadFolderView() throws Exception{
-			
-			IDocumentNode documentNode =  DocumentNode.findFile(parentId);	
-			setDocumentNode(documentNode);
+	public void loadDetailView() throws Exception{
+		IDocumentNode documentNode =  new DocumentNode();
+		documentNode.findDetail(this.getId());
+		setDocumentNode(documentNode);
 			
 		}
 

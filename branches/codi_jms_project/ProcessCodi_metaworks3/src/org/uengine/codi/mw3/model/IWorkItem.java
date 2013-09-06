@@ -45,7 +45,7 @@ public interface IWorkItem extends IDAO{
 		public final static String WORKITEM_TYPE_MEMO		 = "memo";
 		
 		public final static String WORKITEM_TYPE_REMOTECONF	 = "remoteConf";
-				
+		public final static String WORKITEM_TYPE_DOCUMENTLIST = "documentlist";		
 		
 		public final static int TITLE_LIMIT_SIZE             = 2900;
 		public final static int LASTCMT_LIMIT_SIZE             = 200;
@@ -77,6 +77,9 @@ public interface IWorkItem extends IDAO{
 	
 		public String getTitle();
 		public void setTitle(String title);
+		
+		public String getFolderId();
+		public void setFolderId(String folderId);
 		
 		@Hidden
 		public String getContent();
@@ -295,7 +298,9 @@ public interface IWorkItem extends IDAO{
 		@ServiceMethod(inContextMenu=true, when = WHEN_VIEW, callByContent=true)
 		@Face(displayName="$Edit")
 		public void edit() throws Exception;
-
+		
+		@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
+		public Object[] documentView() throws Exception;
 		
 		@ServiceMethod(callByContent = true, target=ServiceMethodContext.TARGET_SELF)
 		public void loadContents() throws Exception;
@@ -314,7 +319,15 @@ public interface IWorkItem extends IDAO{
 		@Hidden		
 		public boolean isContentLoaded();
 		public void setContentLoaded(boolean contentLoaded);
-
+		
+		@NonSavable
+		public String getFolderName();
+		public void setFolderName(String folderName);
+		
+		@NonSavable
+		public String getFileIcon();
+		public void setFileIcon(String fileIcon);
+		
 		@Face(displayName="$Open")
 		@ServiceMethod(inContextMenu=true, when = WHEN_VIEW, callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 		@Hidden

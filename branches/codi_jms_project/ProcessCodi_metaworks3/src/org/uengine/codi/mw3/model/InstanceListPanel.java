@@ -77,6 +77,9 @@ public class InstanceListPanel implements ContextAware{
 			if("topic".equals(session.getLastPerspecteType()))
 				this.getMetaworksContext().setHow("topic");
 			
+			if("document".equals(session.getLastPerspecteType()))
+				this.getMetaworksContext().setHow("document");
+			
 			instanceList = new InstanceList(session);
 			
 			this.setPreloaded(true);
@@ -89,6 +92,7 @@ public class InstanceListPanel implements ContextAware{
 		topicFollowers.load();
 	}
 
+	
 	MetaworksContext metaworksContext;
 		
 		public MetaworksContext getMetaworksContext() {
@@ -157,7 +161,6 @@ public class InstanceListPanel implements ContextAware{
 		public void setTopicFollowers(TopicFollowers topicFollowers) {
 			this.topicFollowers = topicFollowers;
 		}
-
 
 	boolean preloaded;
 		public boolean isPreloaded() {

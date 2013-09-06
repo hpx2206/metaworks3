@@ -24,7 +24,24 @@ public class InstanceViewContent extends ContentWindow {
 			this.instanceView = instanceView;
 		}
 	
-		
+	DocumentViewer documentViewer;
+		public DocumentViewer getDocumentViewer() {
+			return documentViewer;
+		}
+	
+		public void setDocumentViewer(DocumentViewer documentViewer) {
+			this.documentViewer = documentViewer;
+		}
+
+	String folderId;
+		public String getFolderId() {
+			return folderId;
+		}
+	
+		public void setFolderId(String folderId) {
+			this.folderId = folderId;
+		}
+
 	String instanceName;
 	@Name
 	@Hidden
@@ -50,4 +67,15 @@ public class InstanceViewContent extends ContentWindow {
 		
 	}	
 
+	public void loadDocument() throws Exception{
+		documentViewer = new DocumentViewer();
+		documentViewer.setFolderId(getFolderId());
+		documentViewer.session = session;
+		documentViewer.setMetaworksContext(getMetaworksContext());
+		documentViewer.loadDocument();
+		
+		this.setDocumentViewer(documentViewer);
+		
+		
+	}
 }

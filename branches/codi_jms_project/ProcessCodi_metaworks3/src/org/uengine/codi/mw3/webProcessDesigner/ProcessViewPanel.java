@@ -43,9 +43,11 @@ public class ProcessViewPanel {
 	}
 	public void load(){
 		if(UEngineUtil.isNotEmpty(alias)  && UEngineUtil.isNotEmpty(defId)){
-			String codebase = GlobalContext.getPropertyString("codebase", "codebase");
+//			String codebase = GlobalContext.getPropertyString("codebase", "codebase");
+//			String codebase = GlobalContext.getPropertyString("codebase", "codebase");
 			processViewer.setDefId(defId);
-			processViewer.setAlias(codebase + File.separatorChar + alias);
+			processViewer.setAlias(alias);
+//			processViewer.setAlias(codebase + File.separatorChar + alias);
 			processViewer.setViewType(viewType);
 			processViewer.load();
 		}

@@ -71,7 +71,7 @@ public class ProcessDefinitionNode extends TreeNode  implements ContextAware {
 		
 		this.setId(project.getId());
 		this.setName(project.getId());
-		this.setType(TYPE_PROJECT);
+		this.setType(TreeNode.TYPE_FOLDER);
 		this.setFolder(true);
 		
 		this.setPath(project.getPath());
@@ -89,53 +89,58 @@ public class ProcessDefinitionNode extends TreeNode  implements ContextAware {
 
 		File file = new File(this.getPath());
 		String[] childFilePaths = file.list();
-
-		// folder
-		for(int i=0; i<childFilePaths.length; i++){
-			File childFile = new File(file.getAbsolutePath() + File.separatorChar + childFilePaths[i]);
-
-			if(childFile.isDirectory()){
-				ProcessDefinitionNode node = new ProcessDefinitionNode();
-				node.setProjectId(this.getProjectId());
-				node.setId(this.getId() + File.separatorChar + childFile.getName());				
-				node.setName(childFile.getName());
-				node.setDefId(childFile.getName());
-				node.setPath(this.getPath() + File.separatorChar + childFile.getName());
-				node.setAlias(this.getAlias() + File.separatorChar + childFile.getName());
-				node.setParentId(this.getId());
-				node.setType(TreeNode.TYPE_FOLDER);
-				node.setMetaworksContext(getMetaworksContext());
-				node.setFolder(true);
-				node.setTreeId(this.getTreeId());
-				
-				child.add(node);
-			}
-		}
-
-		// file
-		for(int i=0; i<childFilePaths.length; i++){
-			File childFile = new File(file.getAbsolutePath() + File.separatorChar + childFilePaths[i]);
-
-			if(!childFile.isDirectory()){
-				String type = ResourceNode.findNodeType(childFile.getName());
-				if(!type.equals(TreeNode.TYPE_FILE_PROCESS)){
-					continue;
+		
+			// folder
+			for(int i=0; i<childFilePaths.length; i++){
+				File childFile = new File(file.getAbsolutePath() + File.separatorChar + childFilePaths[i]);
+	
+				if(childFile.isDirectory()){
+					ProcessDefinitionNode node = new ProcessDefinitionNode();
+					node.setProjectId(this.getProjectId());
+					node.setId(this.getId() + File.separatorChar + childFile.getName());				
+					node.setName(childFile.getName());
+					node.setDefId(childFile.getName());
+					node.setPath(this.getPath() + File.separatorChar + childFile.getName());
+					node.setAlias(childFile.getName());
+//					node.setPath(this.getPath() + File.separatorChar + childFile.getName());
+//					node.setAlias(this.getAlias() + File.separatorChar + childFile.getName());
+					node.setParentId(this.getId());
+					node.setType(TreeNode.TYPE_FOLDER);
+					node.setMetaworksContext(getMetaworksContext());
+					node.setFolder(true);
+					node.setTreeId(this.getTreeId());
+					
+					child.add(node);
 				}
-				ProcessDefinitionNode node = new ProcessDefinitionNode();
-				node.setProjectId(this.getProjectId());
-				node.setId(this.getId() + File.separatorChar + childFile.getName());
-				node.setName(childFile.getName());
-				node.setDefId(childFile.getName());
-				node.setPath(this.getPath() + File.separatorChar + childFile.getName());
-				node.setAlias(this.getAlias() + File.separatorChar + childFile.getName());
-				node.setParentId(this.getId());
-				node.setType(type);
-				node.setMetaworksContext(getMetaworksContext());
-				node.setTreeId(this.getTreeId());
-				child.add(node);
 			}
-		}
-
+	
+			// file
+			for(int i=0; i<childFilePaths.length; i++){
+				File childFile = new File(file.getAbsolutePath() + File.separatorChar + childFilePaths[i]);
+	
+				if(!childFile.isDirectory()){
+					String type = ResourceNode.findNodeType(childFile.getName());
+					if(!type.equals(TreeNode.TYPE_FILE_PROCESS)){
+						continue;
+					}
+					ProcessDefinitionNode node = new ProcessDefinitionNode();
+					node.setProjectId(this.getProjectId());
+					node.setId(this.getId() + File.separatorChar + childFile.getName());
+					node.setName(childFile.getName());
+					node.setDefId(childFile.getName());
+					node.setPath(this.getPath() + File.separatorChar + childFile.getName());
+					node.setAlias(childFile.getName());
+//					node.setPath(this.getPath() + File.separatorChar + childFile.getName());
+//					node.setAlias(this.getAlias() + File.separatorChar + childFile.getName());
+					node.setParentId(this.getId());
+					node.setType(type);
+					node.setMetaworksContext(getMetaworksContext());
+					node.setTreeId(this.getTreeId());
+					child.add(node);
+				}
+			}
+		
+	
 		this.setChild(child);
 
 		return this;
@@ -146,9 +151,10 @@ public class ProcessDefinitionNode extends TreeNode  implements ContextAware {
 		if( this.getTreeId() != null && this.getTreeId().equals("valuechain")){
 			ProcessViewWindow processViewWindow = new ProcessViewWindow();
 			processViewWindow.setAlias(this.getAlias());
-			processViewWindow.setDefId(defId);
+			processViewWindow.setDefId("");
 			processViewWindow.setPath(path);
 			processViewWindow.session = session;
+			
 			processViewWindow.load();
 			return new Object[] { new Refresh(processViewWindow) };
 		}

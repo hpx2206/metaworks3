@@ -5,22 +5,16 @@
 	<%
 		if( mw3.how == 'perspectivePanel' ){
 	%>
-				<table border="0" cellspacing="0" cellpadding="0">
-					<tr>
-						<td class="<%=nodeStatus%>"  onclick="<%=value.close?methods.collapse.caller():methods.expand.caller()%>">
+				<div class="<%=nodeStatus%>"  onclick="<%=value.close?methods.collapse.caller():methods.expand.caller()%>">
 							<span><img class="navi_icon" src="images/folder.png" /></span>	
-						</td>
-						<td>
 								<a onClick="<%=methods.loadDocument.caller()%>" href="#">
 									<%=value.name%><br>
 								</a>
-						</td>
-					</tr>
-					<tr>
-						<Td></td>
-						<td>&nbsp;<%=fields.childNode.here()%>	</td>
-					</tr>
-				</table>
+				</div>
+				<div>
+						<span>&nbsp;&nbsp;&nbsp;<%=fields.childNode.here()%></span>
+				</div>
+
 					
 	<%	
 		}else if( mw3.how == 'explorer' ){
@@ -78,9 +72,7 @@
 	<%}
 	}else if(mw3.how == 'folderView'){
 		if(value){
-		var list = value.folderList;
 
-		for(var i = 0; i< list.length; i++){
 	 %>	
 	 	<%= fields.folderList.here()%>
 			<span style="width:200px">		
@@ -89,29 +81,36 @@
 				</span>	
 				<br>
 				<span style="width:auto;">
-					<b><%=list[i].name%></b>
+					<b><%=value.name%></b>
 				</span>
 				<br>
 					<span style="width:auto;">
-					<%=list[i].authorId%>
+					<%=value.authorId%>
 				</span>
 				<br>
 					<span style="width:auto;">
-					<%=list[i].description%>
+					<%=value.description%>
 				</span>				
 				<br>
 					<span style="width:auto;">
-					<%=list[i].startDate%>
+					<%=value.startDate%>
 				</span>				
 			<span>	
 	
 <%
-	 		}
 	 
 	
 	 	}
-	}	
+	}else if(mw3.how = 'DetailView'){
 	%>		
+		<img src="images/<%=value.fileIcon%>" />
+		
+		<b>파일명: <%=value.name%></b><br>
+		제작자: <%=value.authorId%><br>
+		종류: <%=value.conntype%><br>
+		작성일: <%=value.startDate%><br>
+		Description: <%=value.url%><br>
+		다운로드: <%=fields.file.here()%> 
 
 		
 	
@@ -122,5 +121,6 @@
 	
 	
 <%	
+	}
 	}
 %>

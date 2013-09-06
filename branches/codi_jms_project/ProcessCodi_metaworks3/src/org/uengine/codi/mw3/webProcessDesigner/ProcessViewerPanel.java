@@ -199,14 +199,14 @@ public class ProcessViewerPanel implements ContextAware {
 				if(targetNode.getChild() != null){
 					// 중복 프로세스 체크
 					for(int i=0; i < targetNode.getChild().size(); i++){
-						MajorProcessDefinitionNode childNode = (MajorProcessDefinitionNode) targetNode.getChild().get(i);
+						MinorProcessDefinitionNode childNode = (MinorProcessDefinitionNode) targetNode.getChild().get(i);
 						if( defId.equals(childNode.getName()) ){
 							throw new MetaworksException("same process remain!!");
 						}
 					}
 				}
 				
-				MajorProcessDefinitionNode node = new MajorProcessDefinitionNode();
+				MinorProcessDefinitionNode node = new MinorProcessDefinitionNode();
 				node.setName(defId);
 				node.setId(targetNode.getId() + File.separatorChar + node.getName());
 				node.setPath(alias);

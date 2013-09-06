@@ -177,10 +177,34 @@
 							</div>
 						</td>
 					</tr>
-					<%if(value.type=='file'){%>
+					<%if(value.type=='file' && mw3.how == 'documentlist'){
+							var folderName = value.folderName;
+					%>
+					
+					
+					
+					<img src="images/<%=value.fileIcon%>" />
+					<font color=#5C5C5C style="line-height:19px;">
+						<a href="#" onClick="<%=methods.documentView.caller()%>"><%=value.title%>
+						
+						<% if(folderName != null){ %> 
+					<span class="topic_span"><%=folderName%></span></a>
+					
+					
+					
+					
+					
+					<%} 
+					 } %>
+					<%if(value.type=='file' && mw3.how == 'contextfileview'){%>
 					<tr>
 						<td>
 							<div style="width: 15px;margin: 0 auto;"><%=fields.documentDrag.here()%></div>
+							<% if(folderName != null){ %> 
+							<span class="topic_span"><%=folderName%></span>
+							<%}%>
+							
+							
 							<%if(value.workItemVersionChooser!=null){%>
 							<%=fields.workItemVersionChooser.here()%>
 						<%}%>

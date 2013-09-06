@@ -1,12 +1,10 @@
 package org.uengine.kernel;
 
-import java.util.ArrayList;
-
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Hidden;
 import org.uengine.codi.mw3.webProcessDesigner.MajorProcessDefinitionNode;
-import org.uengine.codi.mw3.webProcessDesigner.ProcessDefinitionHolder;
+import org.uengine.codi.mw3.webProcessDesigner.MinorProcessDefinitionNode;
 import org.uengine.contexts.TextContext;
 import org.uengine.kernel.designer.web.ValueChainView;
 
@@ -50,7 +48,15 @@ public class ValueChain implements ContextAware, java.io.Serializable{
 				MajorProcessDefinitionNode majorProcessDefinitionNode) {
 			this.majorProcessDefinitionNode = majorProcessDefinitionNode;
 		}
-
+	
+	MinorProcessDefinitionNode MinorProcessDefinitionNode;	
+		public MinorProcessDefinitionNode getMinorProcessDefinitionNode() {
+			return MinorProcessDefinitionNode;
+		}
+		public void setMinorProcessDefinitionNode(
+				MinorProcessDefinitionNode minorProcessDefinitionNode) {
+			MinorProcessDefinitionNode = minorProcessDefinitionNode;
+		}
 	public ValueChain() {
 		setMetaworksContext(new MetaworksContext());
 		getMetaworksContext().setWhen("edit");

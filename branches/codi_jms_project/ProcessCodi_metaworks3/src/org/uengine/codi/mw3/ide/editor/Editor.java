@@ -113,21 +113,25 @@ public class Editor {
 	
 	@ServiceMethod(payload={"resourceNode"}, target=ServiceMethodContext.TARGET_NONE)
 	public String load() {
+		return Editor.loadByPath(this.getResourceNode().getPath());
+	}
+	
+	public static String loadByPath(String path) {
 		InputStream is = null;
 		ByteArrayOutputStream bao = null;
-		
+		String contents = null;
 		try {
 			bao = new ByteArrayOutputStream();
 			
 			//if(TYPE_FILE.equals(this.getType())){
-				File file = new File(this.getResourceNode().getPath());
-				if(file.exists()){					
-					try {
-						is = new FileInputStream(file);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}			
-				}
+			File file = new File(path);
+			if(file.exists()){					
+				try {
+					is = new FileInputStream(file);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}			
+			}
 			/*
 			}else{
 				
@@ -141,12 +145,12 @@ public class Editor {
 					e.printStackTrace();
 				}
 			}
-			*/
-				
+			 */
+			
 			MetaworksUtil.copyStream(is, bao);
 			
-			this.setContent(bao.toString(GlobalContext.ENCODING));
-
+			contents = bao.toString(GlobalContext.ENCODING);
+			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -160,7 +164,7 @@ public class Editor {
 					e.printStackTrace();
 				}
 			}
-				
+			
 			if(bao != null){
 				try {
 					bao.close();
@@ -173,7 +177,7 @@ public class Editor {
 			
 		}
 		
-		return this.getContent();
+		return contents;
 	}
 	
 	@ServiceMethod(payload={"resourceNode"})

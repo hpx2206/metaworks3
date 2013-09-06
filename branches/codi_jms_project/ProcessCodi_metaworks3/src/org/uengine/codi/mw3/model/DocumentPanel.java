@@ -6,12 +6,6 @@ import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
-import org.metaworks.annotation.Hidden;
-import org.metaworks.annotation.ServiceMethod;
-import org.uengine.codi.mw3.knowledge.IWfNode;
-import org.uengine.codi.mw3.knowledge.KnowlegeNode;
-import org.uengine.codi.mw3.knowledge.WfNode;
-import org.uengine.codi.mw3.knowledge.WfPanel;
 import org.uengine.codi.mw3.processexplorer.DocumentViewWindow;
 
 @Face(
@@ -21,7 +15,7 @@ import org.uengine.codi.mw3.processexplorer.DocumentViewWindow;
 		"{how: 'perspectivePanel', face: 'dwr/metaworks/org/uengine/codi/mw3/model/DocumentPanel.ejs'}",
 	})
 public class DocumentPanel implements ContextAware {
-	
+
 	
 	MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {

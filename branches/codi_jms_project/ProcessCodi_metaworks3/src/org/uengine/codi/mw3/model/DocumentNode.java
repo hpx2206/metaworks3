@@ -18,7 +18,6 @@ import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.processexplorer.DocumentFilePanel;
-import org.uengine.codi.mw3.processexplorer.DocumentFileViewPanel;
 import org.uengine.codi.mw3.processexplorer.DocumentFolderPanel;
 import org.uengine.codi.mw3.processexplorer.DocumentViewWindow;
 import org.uengine.codi.mw3.processexplorer.ProcessExplorerContentWindow;
@@ -236,14 +235,6 @@ public class DocumentNode extends Database<IDocumentNode> implements IDocumentNo
 		public void setDocumentFilePanel(DocumentFilePanel documentFilePanel) {
 			this.documentFilePanel = documentFilePanel;
 		}
-	DocumentFileViewPanel documentFileViewPanel;	
-		public DocumentFileViewPanel getDocumentFileViewPanel() {
-			return documentFileViewPanel;
-		}
-		public void setDocumentFileViewPanel(DocumentFileViewPanel documentFileViewPanel) {
-			this.documentFileViewPanel = documentFileViewPanel;
-		}
-	
 	public DocumentNode(){
 		setChildNode(new ArrayList<DocumentNode>());
 		setFile(new MetaworksFile()); 
@@ -291,7 +282,7 @@ public class DocumentNode extends Database<IDocumentNode> implements IDocumentNo
 		return node;
 	}
 	
-	public static IDocumentNode findDetail(String id) throws Exception{
+	public  IDocumentNode findDetail(String id) throws Exception{
 		StringBuffer sql = new StringBuffer();
 		
 		sql.append("select * ");
@@ -427,7 +418,6 @@ public class DocumentNode extends Database<IDocumentNode> implements IDocumentNo
 		
 		return null;
 	}
-	
 	public String fileIconType(String mimeType){
 		
 		if(mimeType.indexOf("pdf") > -1){
@@ -483,15 +473,28 @@ public class DocumentNode extends Database<IDocumentNode> implements IDocumentNo
 	}
 	
 	public Object[] loadDocument() throws Exception {
-		DocumentListWindow documentListWindow = new DocumentListWindow();
-		documentListWindow.setParentId(this.getId());
-		documentListWindow.load();
-		return new Object[]{ new Refresh(documentListWindow) };
+		String title = "문서명: " + this.getName();
+		Object[] returnObject = Perspective.loadDocumentListPanel(session, "document", getId(), title);
+		
+		return returnObject;
+//		DocumentList documentList = new DocumentList(session);
+//		documentList.setFolderId(getId());
+//		documentList.load();
+//		
+//		DocumentListPanel documentPanel = new DocumentListPanel(session);
+//		documentPanel.setDocumentList(documentList);
+//		documentPanel.session = session;
+//		
+//		DocumentListWindow documentListWindow = new DocumentListWindow();
+//		documentListWindow.setPanel(documentPanel);
+//		
+//		return new Object[]{new Refresh(documentListWindow)};
 	}
 	
 	@Override
 	public Object[] loadExplorerDocument() throws Exception{
 		DocumentViewWindow documentWindow = new DocumentViewWindow();
+		
 		documentWindow.session = session;
 		documentWindow.setId(this.getId());
 		documentWindow.setName(this.getName());
@@ -506,28 +509,30 @@ public class DocumentNode extends Database<IDocumentNode> implements IDocumentNo
 	
 	@Override
 	public Object[] loadFolderView() throws Exception{
-		documentFolderPanel = new DocumentFolderPanel();
-		documentFilePanel = new DocumentFilePanel();
+		DocumentFilePanel documentFilePanel = new DocumentFilePanel();
+		documentFilePanel.setMetaworksContext(new MetaworksContext());
+		documentFilePanel.getMetaworksContext().setHow("DetailView");
+		documentFilePanel.setId(this.getId());
+		documentFilePanel.loadDetailView();
 		
 		
-		
-		
-		return new Object[]{new Refresh(documentFolderPanel), new Refresh(documentFilePanel)};
+		return new Object[]{ new Refresh(documentFilePanel)};
 	}
 	
 	
 	@Override
 	public Object[] loadDetailView() throws Exception{
-		DocumentFileViewPanel documentFileViewPanel = new DocumentFileViewPanel();
-		documentFileViewPanel.setId(this.getId());
-		documentFileViewPanel.load();
 		
-		DocumentFolderPanel documentFolderPanel = new DocumentFolderPanel();
-		documentFolderPanel.setParentId(this.getParentId());
-		documentFolderPanel.load(this.getParentId());
+		DocumentFilePanel documentFilePanel = new DocumentFilePanel();
+		documentFilePanel.setMetaworksContext(new MetaworksContext());
+		documentFilePanel.getMetaworksContext().setHow("DetailView");
+		documentFilePanel.setId(this.getId());
+		documentFilePanel.setConntype(this.getConntype());
+		documentFilePanel.loadDetailView();
 		
 		
-		return new Object[]{new Refresh(documentFolderPanel), new Refresh(documentFilePanel)};
+		
+		return new Object[]{new Refresh(documentFilePanel)};
 		
 	}
 	@Override
@@ -584,26 +589,28 @@ public class DocumentNode extends Database<IDocumentNode> implements IDocumentNo
 			
 			DocumentDrag documentInClipboard = (DocumentDrag) clipboard;
 			
-			DocumentNode node = new DocumentNode();
+//			DocumentNode node = new DocumentNode();
 			WorkItem workitem = new WorkItem();
 			workitem.setTaskId(new Long(documentInClipboard.getTaskId()));
-			node.setId(node.getId());
-			node.setName(documentInClipboard.getExtFile());
-			node.setType(TYPE_FILE);
-			node.setNo(0);
-			node.setSecuopt(documentSecuopt ? "1" : "0");
-			node.setParentId(this.getId());
-			node.setUrl(documentInClipboard.getContent());
-			node.setThumbnail(documentInClipboard.getExtFile());
-			node.setConntype(documentInClipboard.getTool());
-			node.setStartDate(documentInClipboard.getStartDate());
-			node.setEndDate(documentInClipboard.getEndDate());
-			node.setAuthorId(session.getUser().getUserId());		
-			node.setCompanyId(session.getCompany().getComCode());
+			workitem.databaseMe().setFolderId(this.getId());
+			workitem.flushDatabaseMe();
+//			node.setId(node.getId());
+//			node.setName(documentInClipboard.getExtFile());
+//			node.setType(TYPE_FILE);
+//			node.setNo(0);
+//			node.setSecuopt(documentSecuopt ? "1" : "0");
+//			node.setParentId(this.getId());
+//			node.setUrl(documentInClipboard.getContent());
+//			node.setThumbnail(documentInClipboard.getExtFile());
+//			node.setConntype(documentInClipboard.getTool());
+//			node.setStartDate(documentInClipboard.getStartDate());
+//			node.setEndDate(documentInClipboard.getEndDate());
+//			node.setAuthorId(session.getUser().getUserId());		
+//			node.setCompanyId(session.getCompany().getComCode());
 			
-			node.createMe();
+//			node.createMe();
 			
-			return new Object[]{new Refresh(node)};
+			return new Object[]{new Refresh(this)};
 		}
 		
 		return null;

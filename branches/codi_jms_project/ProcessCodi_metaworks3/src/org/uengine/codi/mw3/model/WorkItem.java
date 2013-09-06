@@ -210,7 +210,25 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		public void setTaskId(Long taskId) {
 			this.taskId = taskId;
 		}
-		
+	
+	String folderId;
+		public String getFolderId() {
+			return folderId;
+		}
+	
+		public void setFolderId(String folderId) {
+			this.folderId = folderId;
+		}
+	
+	String fileIcon;
+		public String getFileIcon() {
+			return fileIcon;
+		}
+	
+		public void setFileIcon(String fileIcon) {
+			this.fileIcon = fileIcon;
+		}
+
 	String trcTag;
 		public String getTrcTag() {
 			return trcTag;
@@ -481,6 +499,16 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			this.more = more;
 		}
 
+	InstanceList instanceList;
+		public InstanceList getInstanceList() {
+			return instanceList;
+		}
+	
+		public void setInstanceList(InstanceList instanceList) {
+			this.instanceList = instanceList;
+		}
+		
+	
 	public DocumentDrag documentDrag;	
 		public DocumentDrag getDocumentDrag() {
 			return documentDrag;
@@ -493,7 +521,72 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	public void like() throws Exception{
 		
 	}
+	public static IWorkItem load(Navigation navigation, int page, int count) throws Exception{
+		return null;
 		
+	}
+	
+	public static IWorkItem findDocument(String folderId) throws Exception{
+		
+		
+		StringBuffer sql = new StringBuffer();
+		
+		sql.append("select knol.name as folderName, worklist.* from bpm_knol knol, bpm_worklist worklist");
+		sql.append(" where worklist.folderId=?folderId");
+		sql.append(" and knol.id=?folderId");
+		
+		IWorkItem workitem = (IWorkItem) Database.sql(IWorkItem.class, sql.toString());
+		
+		workitem.set("folderId", folderId);
+		workitem.select();
+		if(workitem.size() >0){
+			while(workitem.next()){
+				WorkItem work = new WorkItem();
+				work.copyFrom(workitem);
+				work.fileIconType(workitem.getTool());
+				work.getMetaworksContext().setHow("documentlist");
+			}
+		}
+		return workitem;
+		
+	}
+	
+	public static IWorkItem findDocumentByFolderId(String id) throws Exception{
+		StringBuffer sql = new StringBuffer();
+		sql.append("select * from bpm_worklist");
+		sql.append(" where folderId=?folderId");
+		
+		IWorkItem workitem = (IWorkItem) sql(IWorkItem.class, sql.toString());
+		
+		workitem.set("folderId",id);
+		workitem.select();
+		
+		return workitem;
+	}
+	public String fileIconType(String mimeType){
+		if(mimeType.indexOf("pdf") > -1){
+			fileIcon = "Icon_pdf.png";
+		}else if(mimeType.indexOf("ms") > -1){
+			if(mimeType.indexOf("excel") > -1){
+				fileIcon = "Icon_excel.png";
+			}else if(mimeType.indexOf("powerpoint") > -1){
+				fileIcon = "Icon_ppt.png";
+			}else if(mimeType.indexOf("word") > -1){
+				fileIcon = "Icon_doc.png";
+			}
+		}else if(mimeType.indexOf("haansoft") > -1){
+				fileIcon = "Icon_haansoft.png";
+		}else if(mimeType.indexOf("text") > -1){
+				fileIcon = "Icon_text.png";
+		}else if(mimeType.indexOf("image") > -1){
+				fileIcon = "Icon_image.png";
+		}else{
+				fileIcon = "Icon_etc.png";
+		}
+		return fileIcon;
+	}
+	
+	
 	public void detail() throws Exception{
 
 		IWorkItem workItem = databaseMe();
@@ -629,7 +722,8 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		wi.setInstId(getInstId());
 		wi.setEndpoint(session.getUser().getUserId());
 		wi.setWriter(getWriter());
-		wi.setMetaworksContext(this.getMetaworksContext());
+		wi.getMetaworksContext().setHow("contextfileview");
+//		wi.setMetaworksContext(this.getMetaworksContext());
 	}
 		
 	@Override
@@ -722,7 +816,15 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			this.minorVer = minorVer;
 		}
 		
-		
+	String folderName;
+		public String getFolderName() {
+			return folderName;
+		}
+	
+		public void setFolderName(String folderName) {
+			this.folderName = folderName;
+		}
+
 	Long prtTskId;
 		public Long getPrtTskId() {
 			return prtTskId;
@@ -1263,6 +1365,19 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		return workitem;
 		
 	}
+	@AutowiredFromClient
+	public DocumentViewer documentViewer;
+
+	@Override
+	public Object[] documentView() throws Exception{
+		documentViewer = new DocumentViewer();
+		documentViewer.setTitle(this.getExtFile());
+		documentViewer.setFolderId(this.getFolderId());
+		documentViewer.session = session;
+		documentViewer.loadDocument();
+	
+		return new Object[]{new Refresh(documentViewer)};
+	}
 	
 	@AutowiredFromClient
 	public Session session;
@@ -1272,4 +1387,5 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	
 	@Autowired
 	public InstanceViewContent instanceViewContent;
+
 }

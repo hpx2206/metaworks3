@@ -85,26 +85,29 @@ public class ProcessViewer {
 		try {
 			bao = new ByteArrayOutputStream();
 			if( getAlias() != null ){
-				File file = new File(getAlias());
-				if(file.exists() && !file.isDirectory()){					
+//				File file = new File(getAlias());
+//				if(file.exists() && !file.isDirectory()){					
 					try {
-						is = new FileInputStream(file);
-						MetaworksUtil.copyStream(is, bao);
-						
-						ProcessDefinition def = (ProcessDefinition) GlobalContext.deserialize(bao.toString(GlobalContext.ENCODING));
-						this.processDesignerContainer.setViewType(viewType);
-						this.processDesignerContainer.setEditorId(editorId);
-						this.processDesignerContainer.init();
-						this.processDesignerContainer.load(def);
-						this.setProcessDesignerInstanceId(def.getProcessDesignerInstanceId());
-						
-						this.setDesignerMaxX(processDesignerContainer.getMaxX());
-						this.setDesignerMaxY(processDesignerContainer.getMaxY());
+//						is = new FileInputStream(file);
+						is = Thread.currentThread().getContextClassLoader().getResourceAsStream(getAlias());
+						if( is != null ){
+							MetaworksUtil.copyStream(is, bao);
+							
+							ProcessDefinition def = (ProcessDefinition) GlobalContext.deserialize(bao.toString(GlobalContext.ENCODING));
+							this.processDesignerContainer.setViewType(viewType);
+							this.processDesignerContainer.setEditorId(editorId);
+							this.processDesignerContainer.init();
+							this.processDesignerContainer.load(def);
+							this.setProcessDesignerInstanceId(def.getProcessDesignerInstanceId());
+							
+							this.setDesignerMaxX(processDesignerContainer.getMaxX());
+							this.setDesignerMaxY(processDesignerContainer.getMaxY());
+						}
 					} catch (Exception e) {
 						e.printStackTrace();
 					}			
 				}
-			}
+//			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

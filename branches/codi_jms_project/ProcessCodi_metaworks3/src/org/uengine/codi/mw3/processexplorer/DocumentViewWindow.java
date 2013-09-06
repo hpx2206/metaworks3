@@ -1,7 +1,6 @@
 package org.uengine.codi.mw3.processexplorer;
 
 import org.metaworks.annotation.AutowiredFromClient;
-import org.uengine.codi.mw3.model.ContentWindow;
 import org.uengine.codi.mw3.model.Session;
 
 public class DocumentViewWindow {
