@@ -6,14 +6,14 @@
 		if( mw3.how == 'perspectivePanel' ){
 	%>
 				<div class="<%=nodeStatus%>"  onclick="<%=value.close?methods.collapse.caller():methods.expand.caller()%>">
-					<img class="navi_icon" src="images/folder.png" />	
+					<img class="navi_icon" src="images/waveStyle/i_project.png" />	
 					<a onClick="<%=methods.loadDocument.caller()%>" href="#">
 						<%=value.name%>
 					</a>
 				</div>
-				<div>
+				<ul>
 						<span style="margin-left:10px;"><%=fields.childNode.here()%></span>
-				</div>
+				</ul>
 
 					
 	<%	
@@ -25,7 +25,7 @@
 %>
 				
 				<div class="<%=nodeStatus%>"  onclick="<%=value.close?methods.collapse.caller():methods.expand.caller()%>">
-					<img class="navi_icon" src="images/folder.png" />	
+					<img class="navi_icon" src="images/waveStyle/i_project.png" />	
 					<a onClick="<%=methods.loadExplorerDocument.caller()%>" href="#">
 						<%=value.name%>
 					</a>
