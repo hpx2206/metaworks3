@@ -10,7 +10,7 @@ import org.uengine.codi.mw3.ide.Project;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.ResourceTree;
 import org.uengine.codi.mw3.ide.Workspace;
-import org.uengine.codi.mw3.ide.libraries.PerspectiveRole;
+import org.uengine.codi.mw3.ide.libraries.RolePerspective;
 import org.uengine.codi.mw3.ide.libraries.SearchResultPanel;
 import org.uengine.codi.mw3.model.SearchBox;
 
@@ -53,14 +53,14 @@ public class Navigator {
 			this.resourceTree = resourceTree;
 		}
 		
-	PerspectiveRole	perspectiveRole;
-		public PerspectiveRole getPerspectiveRole() {
-			return perspectiveRole;
+	RolePerspective	rolePerspective;
+		public RolePerspective getRolePerspective() {
+			return rolePerspective;
 		}
-		public void setPerspectiveRole(PerspectiveRole perspectiveRole) {
-			this.perspectiveRole = perspectiveRole;
+		public void setRolePerspective(RolePerspective rolePerspective) {
+			this.rolePerspective = rolePerspective;
 		}
-		
+
 	SearchBox searchBox;
 		public SearchBox getSearchBox() {
 			return searchBox;
@@ -73,7 +73,7 @@ public class Navigator {
 		this.setId("navigator");
 		this.setType(this.getId());
 		this.setName("$Navigator");
-		this.perspectiveRole = new PerspectiveRole();
+		this.rolePerspective = new RolePerspective();
 		this.searchBox = new SearchBox();
 	}
 	
