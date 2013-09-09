@@ -49,18 +49,6 @@ public class RolePerspective extends Perspective {
 		organizationRoleList = null;
 	}
 	
-	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
-	public Popup addRole() {
-		IRole role = (IRole) new Role();
-		role.getMetaworksContext().setWhere("admin");
-		role.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
-		
-		Popup popup = new Popup();
-		popup.setPanel(role);
-		
-		return popup;
-	}
-	
 	@AutowiredFromClient
 	public Session session;
 	
