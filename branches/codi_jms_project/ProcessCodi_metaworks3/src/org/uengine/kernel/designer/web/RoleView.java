@@ -5,6 +5,7 @@ import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
+import org.uengine.codi.mw3.ide.libraries.OrganizationRole;
 import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.webProcessDesigner.CanvasDTO;
 import org.uengine.codi.mw3.webProcessDesigner.PropertiesWindow;
@@ -33,12 +34,14 @@ public class RoleView extends CanvasDTO implements ContextAware {
 		public void setPropertiesWindow(PropertiesWindow propertiesWindow) {
 			this.propertiesWindow = propertiesWindow;
 		}
+		
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 	public Object showProperties() throws Exception{
 		Popup popup = new Popup();
-		
 		Role role = (Role)propertiesWindow.getPanel();
+		role.setMetaworksContext(propertiesWindow.getMetaworksContext());
 		role.setRoleView(this);
+		
 		popup.setPanel(role);
 		popup.setWidth(700);
 		popup.setHeight(500);
