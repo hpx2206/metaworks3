@@ -11,6 +11,5 @@ var org_uengine_codi_mw3_processexplorer_DocumentViewWindow = function(objectId,
 		
 	});
 
-	$(this.divId).parent().css({"background-color":"#f2f3f4"});
 	
 };

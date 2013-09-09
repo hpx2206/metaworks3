@@ -49,15 +49,23 @@
 	%>
 		<%= fields.fileList.here()%>
 				
-			
-			<div style="width:auto; margin-left:20px;">
-				<font size=2>
-					<img src="images/<%=value.fileIcon%>" /><b><a href="#" onClick="<%=methods.loadDetailView.caller()%>"><%=value.name%></a></b><br>
-				</font>
-				<%=value.startDate%><%=fields.file.here()%> 
-			</div>
-			<hr style="color:black; filter:progid:DXimageTransform.Microsoft.Shadow(direction=135,color=#006400,strength=3)">
-
+			<span class="documentFileList">
+				<div class="fixed_img_row2">
+					<ul>				
+						<li>
+							<a href="#" onClick="<%=methods.loadDetailView.caller()%>">
+								<span class="thumb" >
+									<img src="images/<%=value.fileIcon%>" />
+								</span>
+								<strong><%=value.name%></strong>
+							</a>							
+							<p><%=value.startDate%></p>
+							<p><%=fields.file.here()%> </p>
+						</li>
+					</ul>
+				</div>	
+				
+			</span>
 
 	
 				
@@ -69,28 +77,23 @@
 
 	 %>	
 	 	<%= fields.folderList.here()%>
-			<span style="width:200px">		
-				<span style="width:auto; float:left;">
-					<a href="#" onClick="<%=methods.loadFolderView.caller()%>"><img src="images/Document_folder.png" /></a>
-				</span>	
-				<br>
-				<span style="width:auto;">
-					<b><%=value.name%></b>
-				</span>
-				<br>
-					<span style="width:auto;">
-					<%=value.authorId%>
-				</span>
-				<br>
-					<span style="width:auto;">
-					<%=value.description%>
-				</span>				
-				<br>
-					<span style="width:auto;">
-					<%=value.startDate%>
-				</span>				
-			<span>	
-	
+			<span class="documentFolderList">	
+				<div class="fixed_img_row2">
+					<ul>				
+						<li>
+							<a href="#" onClick="<%=methods.loadFolderView.caller()%>">
+								<span class="thumb" >
+									<img  alt="" src="images/Document_folder.png">
+								</span>
+								<strong><%=value.name%></strong>
+							</a>
+							<p><%=value.authorId%></p>
+							<p><%=value.description%></p>
+							<p><%=value.startDate%></p>
+						</li>
+					</ul>
+				</div>				
+			</span>
 <%
 	 
 	

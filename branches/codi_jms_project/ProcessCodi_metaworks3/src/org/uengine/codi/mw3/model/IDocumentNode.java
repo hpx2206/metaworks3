@@ -20,6 +20,7 @@ import org.uengine.codi.mw3.processexplorer.DocumentFilePanel;
 import org.uengine.codi.mw3.processexplorer.DocumentFolderPanel;
 
 @Table(name="bpm_knol")
+@Face(ejsPathForArray="dwr/metaworks/genericfaces/ListFace.ejs")
 public interface IDocumentNode extends IDAO {
 
 	@Id

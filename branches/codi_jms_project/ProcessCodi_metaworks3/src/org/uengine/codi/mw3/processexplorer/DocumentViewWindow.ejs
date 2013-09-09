@@ -1,7 +1,17 @@
 <div id="navigator">
 
 	<%=fields.documentNavigatorPanel.here() %>
-	<%=fields.documentFolderPanel.here() %>
-	<div style=" width:100%; height:4px; margin-top:20px; margin-bottom:20px; background:white;"></div>
-	<%=fields.documentFilePanel.here() %>
+	<div class="documentFolderPanel">
+		<div class="documentFolderPanel_inner_box">
+			<%=fields.documentFolderPanel.here() %>
+			<div class="clear"></div>
+		</div>
+	</div>
+	
+	<div class="documentFilePanel">
+		<div class="documentFilePanel_inner_box">
+			<%=fields.documentFilePanel.here() %>
+			<div class="clear"></div>
+		</div>
+	</div>
 </div>	
