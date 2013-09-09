@@ -7,7 +7,9 @@ import org.metaworks.annotation.Face;
 	  options={"hideLabels", "maximize"},
 	  values={"true", "true"})
 public class NewInstanceWindow extends ContentWindow {
-	
+	public NewInstanceWindow(){
+		
+	}
 	public NewInstanceWindow(Object panel){
 		super(panel);
 	}

@@ -19,8 +19,8 @@ import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.processexplorer.DocumentFilePanel;
 import org.uengine.codi.mw3.processexplorer.DocumentFolderPanel;
+import org.uengine.codi.mw3.processexplorer.DocumentNavigatorPanel;
 import org.uengine.codi.mw3.processexplorer.DocumentViewWindow;
-import org.uengine.codi.mw3.processexplorer.ProcessExplorerContentWindow;
 
 public class DocumentNode extends Database<IDocumentNode> implements IDocumentNode{
 	@AutowiredFromClient
@@ -136,11 +136,11 @@ public class DocumentNode extends Database<IDocumentNode> implements IDocumentNo
 		public void setFolderList(ArrayList<DocumentNode> folderList) {
 			this.folderList = folderList;
 		}
-	ArrayList<DocumentNode> fileList;
-		public ArrayList<DocumentNode> getFileList() {
+	ArrayList<WorkItem> fileList;
+		public ArrayList<WorkItem> getFileList() {
 			return fileList;
 		}
-		public void setFileList(ArrayList<DocumentNode> fileList) {
+		public void setFileList(ArrayList<WorkItem> fileList) {
 			this.fileList = fileList;
 		}
 
@@ -235,6 +235,16 @@ public class DocumentNode extends Database<IDocumentNode> implements IDocumentNo
 		public void setDocumentFilePanel(DocumentFilePanel documentFilePanel) {
 			this.documentFilePanel = documentFilePanel;
 		}
+		
+	DocumentNavigatorPanel documentNavigatorPanel;
+		public DocumentNavigatorPanel getDocumentNavigatorPanel() {
+			return documentNavigatorPanel;
+		}
+		public void setDocumentNavigatorPanel(
+				DocumentNavigatorPanel documentNavigatorPanel) {
+			this.documentNavigatorPanel = documentNavigatorPanel;
+		}
+		
 	public DocumentNode(){
 		setChildNode(new ArrayList<DocumentNode>());
 		setFile(new MetaworksFile()); 
@@ -280,24 +290,6 @@ public class DocumentNode extends Database<IDocumentNode> implements IDocumentNo
 		node.select();
 		
 		return node;
-	}
-	
-	public  IDocumentNode findDetail(String id) throws Exception{
-		StringBuffer sql = new StringBuffer();
-		
-		sql.append("select * ");
-		sql.append(" from bpm_knol");
-		sql.append(" where type=?type");
-		sql.append(" and id=?id");
-		
-		IDocumentNode node = (IDocumentNode) sql(DocumentNode.class,sql.toString());
-		
-		node.set("type", TYPE_FILE);
-		node.set("id",id);
-		node.select();
-		
-		return node;
-		
 	}
 	
 	public static IDocumentNode findFolder(String parentId) throws Exception{
@@ -356,90 +348,65 @@ public class DocumentNode extends Database<IDocumentNode> implements IDocumentNo
 		return childNode;
 	}
 	
-	public ArrayList<DocumentNode> loadExplorerView(String parentId) throws Exception{
-		folderList = new ArrayList<DocumentNode>();
-		fileList = new ArrayList<DocumentNode>();
+	@Override
+	public ArrayList<WorkItem> loadFileView(String id) throws Exception{
+		fileList = new ArrayList<WorkItem>();
 		StringBuffer sb = new StringBuffer();
-		if("fileView".equals(this.getMetaworksContext().getHow())){
-			sb.append("select * ");
-			sb.append(" from bpm_knol");
-			sb.append(" where type=?type");
-			sb.append(" and parentId=?parentId");
+			sb.append("select *,tool as fileIcon");
+			sb.append(" from bpm_worklist");
+			sb.append(" where folderId=?id");
 			
-			IDocumentNode node = (IDocumentNode) sql(DocumentNode.class,sb.toString());
+			IWorkItem workitem = (IWorkItem) sql(WorkItem.class,sb.toString());
 			
-			node.set("type", TYPE_FILE);
-			node.set("parentId",parentId);
-			node.select();
+			workitem.set("id",id);
+			workitem.select();
 			
-			if(node.size() >0){
-				while(node.next()){
-					DocumentNode documentNode = new DocumentNode();
+			if(workitem.size() >0){
+				while(workitem.next()){
+					WorkItem work = new WorkItem();
 					
-					documentNode.copyFrom(node);
-					documentNode.setFileList(new ArrayList<DocumentNode>());
+					work.copyFrom(workitem);
 					
-					documentNode.setMetaworksContext(this.getMetaworksContext());
-				documentNode.fileIconType(node.getConntype());
-					fileList.add(documentNode);
+					work.getMetaworksContext().setHow("fileView");
+//					work.fileIconType(workitem.getTool());
+					fileList.add(work);
 				}
 			}
 			
 			
 //			return new Object[]{ new Refresh(documentListWindow) };
 			return fileList;
-		
-		}else if("folderView".equals(this.getMetaworksContext().getHow())){
-			sb.append("select * ");
-			sb.append(" from bpm_knol");
-			sb.append(" where type=?type");
-			sb.append(" and parentId=?parentId");
-			
-			IDocumentNode node = (IDocumentNode) sql(DocumentNode.class,sb.toString());
-			
-			node.set("type", TYPE_DOC);
-			node.set("parentId",parentId);
-			node.select();
-			
-			if(node.size()>0){
-				while(node.next()){
-					DocumentNode documentNode = new DocumentNode();
-					
-					documentNode.copyFrom(node);
-					documentNode.setFolderList(new ArrayList<DocumentNode>());
-					
-					documentNode.setMetaworksContext(this.getMetaworksContext());
-					folderList.add(documentNode);
-				}
-			}
-			return folderList;
-		}
-		
-		
-		return null;
+	
 	}
-	public String fileIconType(String mimeType){
+	
+	@Override
+	public ArrayList<DocumentNode> loadFolderView(String id) throws Exception{
+		folderList = new ArrayList<DocumentNode>();
 		
-		if(mimeType.indexOf("pdf") > -1){
-			fileIcon = "Icon_pdf.png";
-		}else if(mimeType.indexOf("ms") > -1){
-			if(mimeType.indexOf("excel") > -1){
-				fileIcon = "Icon_excel.png";
-			}else if(mimeType.indexOf("powerpoint") > -1){
-				fileIcon = "Icon_ppt.png";
-			}else if(mimeType.indexOf("word") > -1){
-				fileIcon = "Icon_doc.png";
+		StringBuffer sb = new StringBuffer();
+		sb.append("select * ");
+		sb.append(" from bpm_knol");
+		sb.append(" where type=?type");
+		sb.append(" and parentId=?parentId");
+		
+		IDocumentNode node = (IDocumentNode) sql(DocumentNode.class,sb.toString());
+		
+		node.set("type", TYPE_DOC);
+		node.set("parentId",id);
+		node.select();
+		
+		if(node.size()>0){
+			while(node.next()){
+				DocumentNode documentNode = new DocumentNode();
+				
+				documentNode.copyFrom(node);
+				documentNode.setFolderList(new ArrayList<DocumentNode>());
+				
+				documentNode.setMetaworksContext(this.getMetaworksContext());
+				folderList.add(documentNode);
 			}
-		}else if(mimeType.indexOf("haansoft") > -1){
-				fileIcon = "Icon_haansoft.png";
-		}else if(mimeType.indexOf("text") > -1){
-				fileIcon = "Icon_text.png";
-		}else if(mimeType.indexOf("image") > -1){
-				fileIcon = "Icon_image.png";
-		}else{
-				fileIcon = "Icon_etc.png";
 		}
-		return fileIcon;
+		return folderList;
 	}
 	
 	public void expand() throws Exception{
@@ -477,64 +444,35 @@ public class DocumentNode extends Database<IDocumentNode> implements IDocumentNo
 		Object[] returnObject = Perspective.loadDocumentListPanel(session, "document", getId(), title);
 		
 		return returnObject;
-//		DocumentList documentList = new DocumentList(session);
-//		documentList.setFolderId(getId());
-//		documentList.load();
-//		
-//		DocumentListPanel documentPanel = new DocumentListPanel(session);
-//		documentPanel.setDocumentList(documentList);
-//		documentPanel.session = session;
-//		
-//		DocumentListWindow documentListWindow = new DocumentListWindow();
-//		documentListWindow.setPanel(documentPanel);
-//		
-//		return new Object[]{new Refresh(documentListWindow)};
+
 	}
 	
 	@Override
 	public Object[] loadExplorerDocument() throws Exception{
-		DocumentViewWindow documentWindow = new DocumentViewWindow();
 		
-		documentWindow.session = session;
-		documentWindow.setId(this.getId());
-		documentWindow.setName(this.getName());
-		documentWindow.setTempId(this.getId());
-		documentWindow.setParentId(this.getParentId());
-		documentWindow.load();
+		String title = "문서명: " + this.getName();
+		Object[] returnObject = Perspective.loadDocumentListPanel(session, "explorer", getId(), title);
 		
-		ProcessExplorerContentWindow processExplorerContentWindow = new ProcessExplorerContentWindow();
-		processExplorerContentWindow.setPanel(documentWindow);
-		return new Object[]{new Refresh(processExplorerContentWindow)};
+		return returnObject;
+		
+		
+		
 	}
+	
+	
 	
 	@Override
 	public Object[] loadFolderView() throws Exception{
 		DocumentFilePanel documentFilePanel = new DocumentFilePanel();
 		documentFilePanel.setMetaworksContext(new MetaworksContext());
-		documentFilePanel.getMetaworksContext().setHow("DetailView");
-		documentFilePanel.setId(this.getId());
-		documentFilePanel.loadDetailView();
+		documentFilePanel.loadDetailView(this.getId());
 		
 		
-		return new Object[]{ new Refresh(documentFilePanel)};
+//		documentNavigatorPanel.documentList.add(this);
+		return new Object[]{ new Refresh(documentFilePanel), new Refresh(documentNavigatorPanel)};
 	}
 	
 	
-	@Override
-	public Object[] loadDetailView() throws Exception{
-		
-		DocumentFilePanel documentFilePanel = new DocumentFilePanel();
-		documentFilePanel.setMetaworksContext(new MetaworksContext());
-		documentFilePanel.getMetaworksContext().setHow("DetailView");
-		documentFilePanel.setId(this.getId());
-		documentFilePanel.setConntype(this.getConntype());
-		documentFilePanel.loadDetailView();
-		
-		
-		
-		return new Object[]{new Refresh(documentFilePanel)};
-		
-	}
 	@Override
 	public Object[] remove() throws Exception {
 
@@ -589,28 +527,14 @@ public class DocumentNode extends Database<IDocumentNode> implements IDocumentNo
 			
 			DocumentDrag documentInClipboard = (DocumentDrag) clipboard;
 			
-//			DocumentNode node = new DocumentNode();
 			WorkItem workitem = new WorkItem();
 			workitem.setTaskId(new Long(documentInClipboard.getTaskId()));
 			workitem.databaseMe().setFolderId(this.getId());
+			workitem.databaseMe().setFolderName(this.getName());
 			workitem.flushDatabaseMe();
-//			node.setId(node.getId());
-//			node.setName(documentInClipboard.getExtFile());
-//			node.setType(TYPE_FILE);
-//			node.setNo(0);
-//			node.setSecuopt(documentSecuopt ? "1" : "0");
-//			node.setParentId(this.getId());
-//			node.setUrl(documentInClipboard.getContent());
-//			node.setThumbnail(documentInClipboard.getExtFile());
-//			node.setConntype(documentInClipboard.getTool());
-//			node.setStartDate(documentInClipboard.getStartDate());
-//			node.setEndDate(documentInClipboard.getEndDate());
-//			node.setAuthorId(session.getUser().getUserId());		
-//			node.setCompanyId(session.getCompany().getComCode());
-			
-//			node.createMe();
-			
-			return new Object[]{new Refresh(this)};
+			InstanceViewThreadPanel instView = new InstanceViewThreadPanel();
+			instView.load();
+			return new Object[]{new Refresh(instView)};
 		}
 		
 		return null;

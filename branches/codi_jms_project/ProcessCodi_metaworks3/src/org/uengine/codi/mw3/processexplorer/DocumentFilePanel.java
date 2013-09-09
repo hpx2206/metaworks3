@@ -5,6 +5,8 @@ import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.uengine.codi.mw3.model.DocumentNode;
 import org.uengine.codi.mw3.model.IDocumentNode;
+import org.uengine.codi.mw3.model.IWorkItem;
+import org.uengine.codi.mw3.model.WorkItem;
 
 public class DocumentFilePanel implements ContextAware{
 	
@@ -53,19 +55,23 @@ public class DocumentFilePanel implements ContextAware{
 			this.documentNode = documentNode;
 		}	
 		
-		
-	public void loadDetailView() throws Exception{
+	
+	public void loadDetailView(String id) throws Exception{
 		IDocumentNode documentNode =  new DocumentNode();
-		documentNode.findDetail(this.getId());
+		documentNode.setMetaworksContext(new MetaworksContext());
+		documentNode.getMetaworksContext().setHow("fileList");		
+		documentNode.loadFileView(id);
 		setDocumentNode(documentNode);
 			
 		}
 
-	public void load(String parentId) throws Exception{
+	public void load(String id) throws Exception{
+		
+		
 		IDocumentNode documentNode =  new DocumentNode();
 		documentNode.setMetaworksContext(new MetaworksContext());
-		documentNode.getMetaworksContext().setHow("fileView");
-		documentNode.loadExplorerView(parentId);
+		documentNode.getMetaworksContext().setHow("fileList");
+		documentNode.loadFileView(id);
 		setDocumentNode(documentNode);
 	}
 	

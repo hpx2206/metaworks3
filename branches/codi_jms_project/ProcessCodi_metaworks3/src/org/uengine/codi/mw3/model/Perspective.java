@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Id;
@@ -7,6 +8,8 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.knowledge.WfPanel;
+import org.uengine.codi.mw3.processexplorer.DocumentViewWindow;
+import org.uengine.codi.mw3.processexplorer.ProcessExploreWindow;
 
 public class Perspective {
 	String label;
@@ -75,28 +78,41 @@ public class Perspective {
 //		documentList.load();
 		InstanceList instList = new InstanceList(session);
 		instList.setFolderId(selectedItem);
-		instList.loadDocument();
+		instList.setMetaworksContext(new MetaworksContext());
 		
-		InstanceListPanel instListPanel = new InstanceListPanel(session);
-		instListPanel.setInstanceList(instList);
-		instListPanel.session = session;
-		
-		instListPanel.getSearchBox().setKeyword(session.getSearchKeyword());
-		if( title == null && perspectiveType != null && perspectiveType.equals("document")){
-			title = session.getWindowTitle();
-		}else if( title == null ){
-			title = "$perspective." + perspectiveType;
+		if(perspectiveType.equals("document")){
+			instList.getMetaworksContext().setHow("document");
+			instList.loadDocument();
+			
+			InstanceListPanel instListPanel = new InstanceListPanel(session);
+			instListPanel.setInstanceList(instList);
+			instListPanel.session = session;
+			
+			instListPanel.getSearchBox().setKeyword(session.getSearchKeyword());
+			if( title == null && perspectiveType != null && perspectiveType.equals("document")){
+				title = session.getWindowTitle();
+			}else if( title == null ){
+				title = "$perspective." + perspectiveType;
+			}
+			instListPanel.setTitle(title);
+			session.setWindowTitle(title);
+			
+			return new Object[]{session, instListPanel};
+		}else if(perspectiveType.equals("explorer")){
+			instList.getMetaworksContext().setHow("explorer");
+			instList.loadDocument();
+			
+			DocumentViewWindow documentWindow = new DocumentViewWindow();
+			documentWindow.session = session;
+			documentWindow.setId(selectedItem);
+			documentWindow.setName(title);
+			documentWindow.load();
+			
+			ProcessExploreWindow ProcessExploreWindow = new ProcessExploreWindow();
+			ProcessExploreWindow.setPanel(documentWindow);
+			return new Object[]{new Refresh(ProcessExploreWindow)};
 		}
-		
-//		if("document".equals(perspectiveType)){
-//			instListPanel.documentFollowersLoad();
-//		}
-		instListPanel.setTitle(title);
-		session.setWindowTitle(title);
-		
-//		DocumentListWindow documentListWindow = new DocumentListWindow(session);
-//		documentListWindow.setPanel(documentPanel);
-		return new Object[]{session, instListPanel};
+		return null;
 	}
 	
 	

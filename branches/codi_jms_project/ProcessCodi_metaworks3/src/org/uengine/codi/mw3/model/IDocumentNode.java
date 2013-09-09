@@ -102,8 +102,8 @@ public interface IDocumentNode extends IDAO {
 	
 	@NonLoadable
 	@NonSavable
-	public ArrayList<DocumentNode> getFileList();
-	public void setFileList(ArrayList<DocumentNode> fileList);
+	public ArrayList<WorkItem> getFileList();
+	public void setFileList(ArrayList<WorkItem> fileList);
 
 	@Hidden
 	@NonLoadable
@@ -146,19 +146,13 @@ public interface IDocumentNode extends IDAO {
 	public IDocumentNode loadDocumentList() throws Exception;
 	
 	@ServiceMethod(callByContent=true, except={"childNode"}, target=TARGET_APPEND)
-	public  IDocumentNode findDetail(String id) throws Exception;
-	
-	@ServiceMethod(callByContent=true, except={"childNode"}, target=TARGET_APPEND)
 	public Object[] loadExplorerDocument() throws Exception;
 	
 	@ServiceMethod(callByContent=true, except={"childNode"}, target=TARGET_SELF)
 	public ArrayList<DocumentNode> loadChildren() throws Exception;
 	
-	@ServiceMethod(callByContent=true, except={"childNode"},target=TARGET_APPEND)
-	public ArrayList<DocumentNode> loadExplorerView(String parentId) throws Exception;
+	public ArrayList<WorkItem> loadFileView(String id) throws Exception;
 	
-	@ServiceMethod(callByContent=true,target=ServiceMethodContext.TARGET_APPEND)
-	public Object[] loadDetailView() throws Exception;
 
 	@ServiceMethod(callByContent=true,target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] loadFolderView() throws Exception;
@@ -166,6 +160,8 @@ public interface IDocumentNode extends IDAO {
 	@ServiceMethod(callByContent=true)
 	public Object[] loadDocument() throws Exception;
 	
+	@ServiceMethod(callByContent=true, except={"childNode"},target=TARGET_APPEND)
+	public ArrayList<DocumentNode> loadFolderView(String id) throws Exception;
 	
 	@ORMapping(
 			databaseFields = {"url", "thumbnail", "conntype"}, 

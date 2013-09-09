@@ -55,11 +55,11 @@ public class DocumentFolderPanel {
 		documentNode.loadFolderView();
 		
 	}
-	public void load(String parentId) throws Exception {
+	public void load(String id) throws Exception {
 		IDocumentNode documentNode = new DocumentNode();
 		documentNode.setMetaworksContext(new MetaworksContext());
 		documentNode.getMetaworksContext().setHow("folderView");
-		documentNode.loadExplorerView(parentId);
+		documentNode.loadFolderView(id);
 		setDocumentNode(documentNode);
 	}
 	

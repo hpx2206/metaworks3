@@ -8,6 +8,7 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.codi.mw3.webProcessDesigner.ProcessNavigatorPanel;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessViewWindow;
 
 public class FavoriteFile extends Database<IFavoriteFile> implements IFavoriteFile {
@@ -145,10 +146,19 @@ public class FavoriteFile extends Database<IFavoriteFile> implements IFavoriteFi
 		return favoriteFile;
 		
 	}
+	ProcessNavigatorPanel processNavigatorPanel;
+		public ProcessNavigatorPanel getProcessNavigatorPanel() {
+			return processNavigatorPanel;
+		}
+		public void setProcessNavigatorPanel(ProcessNavigatorPanel processNavigatorPanel) {
+			this.processNavigatorPanel = processNavigatorPanel;
+		}
+	
 	@Override
 	@ServiceMethod(callByContent=true,target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] loadFile() throws Exception {
 		// TODO Auto-generated method stub
+		
 		processViewWindow = new ProcessViewWindow();
 		processViewWindow.setAlias(this.getFileName());
 		processViewWindow.setDefId(this.getFileId());

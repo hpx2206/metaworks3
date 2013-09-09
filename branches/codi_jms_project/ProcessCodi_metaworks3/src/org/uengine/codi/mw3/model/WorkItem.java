@@ -28,6 +28,7 @@ import org.uengine.codi.mw3.filter.AllSessionFilter;
 import org.uengine.codi.mw3.filter.OtherSessionFilter;
 import org.uengine.codi.mw3.knowledge.KnowledgeTool;
 import org.uengine.codi.mw3.knowledge.WfNode;
+import org.uengine.codi.mw3.processexplorer.ViewContentWindow;
 import org.uengine.kernel.HumanActivity;
 import org.uengine.kernel.ProcessInstance;
 import org.uengine.kernel.RoleMapping;
@@ -41,6 +42,7 @@ import org.uengine.webservices.worklist.DefaultWorkList;
 public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	
 	public WorkItem(){
+		setFile(new MetaworksFile()); 
 		this.getMetaworksContext().setWhen(WHEN_NEW);
 	}
 	
@@ -174,6 +176,15 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		}
 		public void setRootInstId(Long rootInstId) {
 			this.rootInstId = rootInstId;
+		}
+
+	boolean isAddedDocument;	
+		public boolean isAddedDocument() {
+			return isAddedDocument;
+		}
+	
+		public void setAddedDocument(boolean isAddedDocument) {
+			this.isAddedDocument = isAddedDocument;
 		}
 
 	IUser writer;
@@ -521,9 +532,9 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		
 		StringBuffer sql = new StringBuffer();
 		
-		sql.append("select knol.name as folderName, worklist.* from bpm_knol knol, bpm_worklist worklist");
-		sql.append(" where worklist.folderId=?folderId");
-		sql.append(" and knol.id=?folderId");
+		sql.append("select *, tool as fileIcon from bpm_worklist");
+		sql.append(" where folderId=?folderId");
+
 		
 		IWorkItem workitem = (IWorkItem) Database.sql(IWorkItem.class, sql.toString());
 		
@@ -533,17 +544,55 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			while(workitem.next()){
 				WorkItem work = new WorkItem();
 				work.copyFrom(workitem);
-				work.fileIconType(workitem.getTool());
+//				work.fileIconType(workitem.getTool());
 				work.getMetaworksContext().setHow("documentlist");
+//				workitem.moveToInsertRow();
+//				System.out.println(workitem.getFileIcon());
 			}
 		}
 		return workitem;
 		
 	}
-	
-	public static IWorkItem findDocumentByFolderId(String id) throws Exception{
+	public static IWorkItem findDocumentByFolderId(Long id) throws Exception{
 		StringBuffer sql = new StringBuffer();
 		sql.append("select * from bpm_worklist");
+		sql.append(" where taskid=?taskid");
+		
+		IWorkItem workitem = (IWorkItem) sql(IWorkItem.class, sql.toString());
+		
+		workitem.set("taskid",id);
+		workitem.select();
+		
+		return workitem;
+	}
+	
+	//ejs로 대체
+//	public String fileIconType(String mimeType){
+//		if(mimeType.indexOf("pdf") > -1){
+//			fileIcon = "Icon_pdf.png";
+//		}else if(mimeType.indexOf("ms") > -1){
+//			if(mimeType.indexOf("excel") > -1){
+//				fileIcon = "Icon_excel.png";
+//			}else if(mimeType.indexOf("powerpoint") > -1){
+//				fileIcon = "Icon_ppt.png";
+//			}else if(mimeType.indexOf("word") > -1){
+//				fileIcon = "Icon_doc.png";
+//			}
+//		}else if(mimeType.indexOf("haansoft") > -1){
+//				fileIcon = "Icon_haansoft.png";
+//		}else if(mimeType.indexOf("text") > -1){
+//				fileIcon = "Icon_text.png";
+//		}else if(mimeType.indexOf("image") > -1){
+//				fileIcon = "Icon_image.png";
+//		}else{
+//				fileIcon = "Icon_etc.png";
+//		}
+//		return fileIcon;
+//	}
+	
+	public IWorkItem loadFileView(String id) throws Exception{
+		StringBuffer sql = new StringBuffer();
+		sql.append("select * ,tool as fileIcon from bpm_worklist");
 		sql.append(" where folderId=?folderId");
 		
 		IWorkItem workitem = (IWorkItem) sql(IWorkItem.class, sql.toString());
@@ -551,31 +600,17 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		workitem.set("folderId",id);
 		workitem.select();
 		
-		return workitem;
-	}
-	public String fileIconType(String mimeType){
-		if(mimeType.indexOf("pdf") > -1){
-			fileIcon = "Icon_pdf.png";
-		}else if(mimeType.indexOf("ms") > -1){
-			if(mimeType.indexOf("excel") > -1){
-				fileIcon = "Icon_excel.png";
-			}else if(mimeType.indexOf("powerpoint") > -1){
-				fileIcon = "Icon_ppt.png";
-			}else if(mimeType.indexOf("word") > -1){
-				fileIcon = "Icon_doc.png";
+		if(workitem.size() >0){
+			while(workitem.next()){
+				WorkItem work = new WorkItem();
+				work.copyFrom(workitem);
+				work.getMetaworksContext().setHow("fileView");
 			}
-		}else if(mimeType.indexOf("haansoft") > -1){
-				fileIcon = "Icon_haansoft.png";
-		}else if(mimeType.indexOf("text") > -1){
-				fileIcon = "Icon_text.png";
-		}else if(mimeType.indexOf("image") > -1){
-				fileIcon = "Icon_image.png";
-		}else{
-				fileIcon = "Icon_etc.png";
-		}
-		return fileIcon;
+		}	
+		return workitem;
+		
+		
 	}
-	
 	
 	public void detail() throws Exception{
 
@@ -712,8 +747,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		wi.setInstId(getInstId());
 		wi.setEndpoint(session.getUser().getUserId());
 		wi.setWriter(getWriter());
-		wi.getMetaworksContext().setHow("contextfileview");
-//		wi.setMetaworksContext(this.getMetaworksContext());
+		wi.setMetaworksContext(this.getMetaworksContext());
 	}
 		
 	@Override
@@ -1360,16 +1394,31 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	@AutowiredFromClient
 	public DocumentViewer documentViewer;
 
+	
 	@Override
 	public Object[] documentView() throws Exception{
-		documentViewer = new DocumentViewer();
-		documentViewer.setTitle(this.getExtFile());
-		documentViewer.setFolderId(this.getFolderId());
-		documentViewer.session = session;
-		documentViewer.loadDocument();
-	
-		return new Object[]{new Refresh(documentViewer)};
+		if("fileView".equals(this.getMetaworksContext().getHow())){
+			ViewContentWindow view = new ViewContentWindow();
+			view.setTaskId(this.getTaskId());
+			view.session = session;
+			view.loadFile();
+			
+			return new Object[]{new Refresh(view)};
+		}else if("documentlist".equals(this.getMetaworksContext().getHow())){
+			documentViewer = new DocumentViewer();
+	//		documentViewer.setTitle(this.getExtFile());
+			documentViewer.setTaskId(this.getTaskId());
+			documentViewer.session = session;
+			documentViewer.loadDocument();
+		
+			return new Object[]{new Refresh(documentViewer)};
+		}
+		
+		return null;
 	}
+	
+	
+	
 	
 	@AutowiredFromClient
 	public Session session;

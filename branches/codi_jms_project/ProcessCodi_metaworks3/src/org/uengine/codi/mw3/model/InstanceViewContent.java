@@ -24,23 +24,23 @@ public class InstanceViewContent extends ContentWindow {
 			this.instanceView = instanceView;
 		}
 	
-	DocumentViewer documentViewer;
-		public DocumentViewer getDocumentViewer() {
-			return documentViewer;
-		}
-	
-		public void setDocumentViewer(DocumentViewer documentViewer) {
-			this.documentViewer = documentViewer;
-		}
+//	DocumentViewer documentViewer;
+//		public DocumentViewer getDocumentViewer() {
+//			return documentViewer;
+//		}
+//	
+//		public void setDocumentViewer(DocumentViewer documentViewer) {
+//			this.documentViewer = documentViewer;
+//		}
 
-	String folderId;
-		public String getFolderId() {
-			return folderId;
+	Long taskId;
+		public Long getTaskId() {
+			return taskId;
+		}
+		public void setTaskId(Long taskId) {
+			this.taskId = taskId;
 		}
 	
-		public void setFolderId(String folderId) {
-			this.folderId = folderId;
-		}
 
 	String instanceName;
 	@Name
@@ -68,13 +68,13 @@ public class InstanceViewContent extends ContentWindow {
 	}	
 
 	public void loadDocument() throws Exception{
-		documentViewer = new DocumentViewer();
-		documentViewer.setFolderId(getFolderId());
-		documentViewer.session = session;
-		documentViewer.setMetaworksContext(getMetaworksContext());
-		documentViewer.loadDocument();
+		instanceView = new InstanceView();
+		instanceView.setTaskId(getTaskId());
+		instanceView.session = session;
+		instanceView.setMetaworksContext(getMetaworksContext());
+		instanceView.loadDocument();
 		
-		this.setDocumentViewer(documentViewer);
+		this.setInstanceView(instanceView);
 		
 		
 	}

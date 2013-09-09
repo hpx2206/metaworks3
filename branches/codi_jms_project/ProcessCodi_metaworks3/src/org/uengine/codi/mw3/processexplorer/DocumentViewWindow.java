@@ -71,17 +71,15 @@ public class DocumentViewWindow {
 		
 		if(id != null){
 			documentNavigatorPanel.setId(this.getId());
-			documentNavigatorPanel.setParentid(this.getParentId());
 			documentNavigatorPanel.setName(this.getName());
 			documentNavigatorPanel.load();
 			
 			documentFolderPanel.setId(this.getId());
 			documentFolderPanel.setParentId(this.getParentId());
-			documentFolderPanel.load(documentFolderPanel.getParentId());
+			documentFolderPanel.load(this.getId());
 			
 			documentFilePanel.setId(this.getId());
-			documentFilePanel.setParentId(this.getTempId());
-			documentFilePanel.load(documentFilePanel.getParentId());
+			documentFilePanel.load(this.getId());
 		}
 		
 	}

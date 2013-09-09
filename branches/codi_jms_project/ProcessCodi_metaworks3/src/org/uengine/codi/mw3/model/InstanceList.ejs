@@ -1,10 +1,10 @@
 <%if (value!=null){%>
 
-<%if (mw3.how = 'document'){ %>
+<%if (mw3.how == 'document'){ %>
 <%=fields.workItem.here()%>
-<% }%>
+<% }else{%>
 <%=fields.instances.here()%>
-
+<%}%>
 <%=fields.moreInstanceList.here()%>
 
 <%

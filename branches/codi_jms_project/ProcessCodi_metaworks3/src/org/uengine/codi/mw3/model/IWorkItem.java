@@ -315,6 +315,10 @@ public interface IWorkItem extends IDAO{
 		public WorkItemHandler getWorkItemHandler();
 		public void setWorkItemHandler(WorkItemHandler workItemHandler);
 		
+		@NonSavable
+		public boolean isAddedDocument();
+		public void setAddedDocument(boolean isAddedDocument);
+		
 		@NonLoadable
 		@NonSavable
 		@Hidden		
@@ -322,12 +326,12 @@ public interface IWorkItem extends IDAO{
 		public void setContentLoaded(boolean contentLoaded);
 		
 		@NonSavable
+		public String getFileIcon();
+		public void setFileIcon(String fileIcon);
+		
 		public String getFolderName();
 		public void setFolderName(String folderName);
 		
-		@NonSavable
-		public String getFileIcon();
-		public void setFileIcon(String fileIcon);
 		
 		@Face(displayName="$Open")
 		@ServiceMethod(inContextMenu=true, when = WHEN_VIEW, callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
@@ -373,5 +377,8 @@ public interface IWorkItem extends IDAO{
 		
 		@ServiceMethod(payload={"instId", "taskId"}, target=ServiceMethodContext.TARGET_SELF)
 		public Object moreView() throws Exception;
+	
+		@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
+		public IWorkItem  loadFileView(String id)  throws Exception;
 }
 

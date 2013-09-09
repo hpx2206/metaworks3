@@ -9,14 +9,13 @@ import org.metaworks.annotation.ServiceMethod;
 
 public class DocumentContentView   implements ContextAware {
 
-	String id;
+	Long taskId;
 		@Id
-		public String getId() {
-			return id;
+		public Long getTaskId() {
+			return taskId;
 		}
-	
-		public void setId(String id) {
-			this.id = id;
+		public void setTaskId(Long taskId) {
+			this.taskId = taskId;
 		}
 		
 	MetaworksContext metaworksContext;
@@ -39,18 +38,18 @@ public class DocumentContentView   implements ContextAware {
 		setMetaworksContext(new MetaworksContext());
 	}
 	
-	@ServiceMethod(payload={"id"})
+	@ServiceMethod(payload={"taskid"})
 	public void load() {
 		try {
-			this.load(this.getId());
+			this.load(this.getTaskId());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}	
 	}
 	
-	public void load(String id) throws Exception{
-		setId(id);
+	public void load(Long id) throws Exception{
+		setTaskId(id);
 		
 		IWorkItem workitem = WorkItem.findDocumentByFolderId(id);
 		setWorkitem(workitem);

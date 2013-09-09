@@ -56,12 +56,13 @@ public class ProcessExplorer {
 		processExplorerPerspectiveWindow.setTitle("ProcessExplorer");
 		
 		
-		ProcessExplorerContentWindow processExplorerContentWindow = new ProcessExplorerContentWindow();
-		
+		ProcessExploreWindow processExplorerWindow = new ProcessExploreWindow();
+		ViewContentWindow viewContentWindow = new ViewContentWindow();
+		viewContentWindow.load();
 		ProcessViewWindow processViewWindow = new ProcessViewWindow();
 		processViewWindow.load();
 		
-		processExplorerContentWindow.setPanel(processViewWindow);
+		processExplorerWindow.setPanel(processViewWindow);
 		
 		ProcessTopPanel processTopPanel = new ProcessTopPanel(session);
 		processTopPanel.setPageType("ProcessExplorer");
@@ -69,13 +70,14 @@ public class ProcessExplorer {
 		Layout centerLayout = new Layout();
 		centerLayout.setId("center");
 		centerLayout.setName("center");
-		centerLayout.setCenter(processExplorerContentWindow);
-		centerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, south__spacing_open:5, west__size:250");
+		centerLayout.setEast(viewContentWindow);
+		centerLayout.setCenter(processExplorerWindow);
+		centerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0,south__spacing_open:2, east__spacing_open:2, east__size:350");
 		
 		Layout outerLayout = new Layout();
 
 		
-		outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:5, east__spacing_open:5, west__size:250, north__size:52");
+		outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:2, east__spacing_open:2, west__size:250, north__size:52");
 		outerLayout.setWest(processExplorerPerspectiveWindow);
 		outerLayout.setName("center");
 		outerLayout.setCenter(centerLayout);

@@ -39,7 +39,7 @@ public class DocumentNavigatorPanel {
 			this.name = name;
 		}		
 
-	ArrayList<DocumentNode> documentList;
+	public ArrayList<DocumentNode> documentList;
 		public ArrayList<DocumentNode> getDocumentList() {
 			return documentList;
 		}
@@ -50,9 +50,9 @@ public class DocumentNavigatorPanel {
 
 		
 	public void load(){
-		if(UEngineUtil.isNotEmpty(id) && UEngineUtil.isNotEmpty(parentid)){
-			String id = this.id;
-			String name = this.name;
+		if(UEngineUtil.isNotEmpty(id)){
+			String id = this.getId();
+			String name = this.getName();
 			String[] documentArray = name.replace('.','@').split("@");
 			
 			DocumentNode node = new DocumentNode();

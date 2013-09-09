@@ -42,13 +42,13 @@ public class ProcessViewWindow {
 		public void setProcessViewPanel(ProcessViewPanel processViewPanel) {
 			this.processViewPanel = processViewPanel;
 		}
-	ProcessAttributePanel processAttributePanel;
-		public ProcessAttributePanel getProcessAttributePanel() {
-			return processAttributePanel;
-		}
-		public void setProcessAttributePanel(ProcessAttributePanel processAttributePanel) {
-			this.processAttributePanel = processAttributePanel;
-		}
+//	ProcessAttributePanel processAttributePanel;
+//		public ProcessAttributePanel getProcessAttributePanel() {
+//			return processAttributePanel;
+//		}
+//		public void setProcessAttributePanel(ProcessAttributePanel processAttributePanel) {
+//			this.processAttributePanel = processAttributePanel;
+//		}
 
 	ProcessNameView processNameView;
 		public ProcessNameView getProcessNameView() {
@@ -61,7 +61,7 @@ public class ProcessViewWindow {
 	public ProcessViewWindow() throws Exception{
 		processNavigatorPanel = new ProcessNavigatorPanel();
 		processViewPanel = new ProcessViewPanel();
-		processAttributePanel = new ProcessAttributePanel();
+//		processAttributePanel = new ProcessAttributePanel();
 		processNameView = new ProcessNameView();
 	}
 	
@@ -86,13 +86,13 @@ public class ProcessViewWindow {
 			processViewPanel.load();
 			
 			
-			processAttributePanel.setDocumentation(null);
-			processAttributePanel.setDefId(defId);
-			
-			
-			if( processViewPanel.processViewer != null ){
-				processAttributePanel.load(processViewPanel.processViewer.getProcessDesignerContainer());
-			}
+//			processAttributePanel.setDocumentation(null);
+//			processAttributePanel.setDefId(defId);
+//			
+//			
+//			if( processViewPanel.processViewer != null ){
+//				processAttributePanel.load(processViewPanel.processViewer.getProcessDesignerContainer());
+//			}
 		}
 	}
 	
@@ -106,11 +106,11 @@ public class ProcessViewWindow {
 		processViewPanel.setViewType("definitionView");
 		processViewPanel.load();
 		
-		processAttributePanel.setDocumentation(null);
-		processAttributePanel.setDefId(historyItem.getDefId());
-		if( processViewPanel.processViewer != null ){
-			processAttributePanel.load(processViewPanel.processViewer.getProcessDesignerContainer());
-		}
+//		processAttributePanel.setDocumentation(null);
+//		processAttributePanel.setDefId(historyItem.getDefId());
+//		if( processViewPanel.processViewer != null ){
+//			processAttributePanel.load(processViewPanel.processViewer.getProcessDesignerContainer());
+//		}
 		
 	}
 

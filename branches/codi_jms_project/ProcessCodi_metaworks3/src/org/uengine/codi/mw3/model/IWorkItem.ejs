@@ -109,6 +109,43 @@
 	
 
 <% } %>
+
+		<%
+			if(mw3.how == 'fileView'){
+			var fileIcon = value.fileIcon;
+									
+					if(fileIcon.indexOf("pdf") > -1){
+						fileIcon = "Icon_pdf.png";
+					}else if(fileIcon.indexOf("ms") > -1){
+							if(fileIcon.indexOf("excel") > -1){
+								fileIcon = "Icon_excel.png";
+							}else if(fileIcon.indexOf("powerpoint") > -1){
+								fileIcon = "Icon_ppt.png";
+							}else if(fileIcon.indexOf("word") > -1){
+								fileIcon = "Icon_doc.png";
+							}
+					}else if(fileIcon.indexOf("haansoft") > -1){
+								fileIcon = "Icon_haansoft.png";
+					}else if(fileIcon.indexOf("text") > -1){
+							fileIcon = "Icon_text.png";
+					}else if(fileIcon.indexOf("image") > -1){
+							fileIcon = "Icon_image.png";
+					}else{
+							fileIcon = "Icon_etc.png";
+					}				
+		%>
+			<div style="width:auto; margin-left:20px;">
+				<font size=2>
+					<img src="images/<%=fileIcon%>" />
+					<b><a href="#" onClick="<%=methods.documentView.caller()%>"><%=value.title%></b><br>
+				</font>
+				<%=value.startDate%><%=fields.file.here()%> 
+			</div>
+
+
+	<% 
+	 }else{ %>
+
 		<div class="cont" style="padding:5px 10px; margin:0px;">	
 			<table id="tableHidtoryContent_1" width="100%" border="0" cellspacing="0" cellpadding="0">
 				<tbody>
@@ -177,44 +214,65 @@
 							</div>
 						</td>
 					</tr>
-					<%if(value.type=='file' && mw3.how == 'documentlist'){
-							var folderName = value.folderName;
-					%>
-					
-					
-					
-					<img src="images/<%=value.fileIcon%>" />
-					<font color=#5C5C5C style="line-height:19px;">
-						<a href="#" onClick="<%=methods.documentView.caller()%>"><%=value.title%>
+					<%if(value.type=='file'){
+						if( mw3.how == 'documentlist'){
+								var folderName = value.folderName;
+								var fileIcon = value.fileIcon;
+									
+									if(fileIcon.indexOf("pdf") > -1){
+										fileIcon = "Icon_pdf.png";
+									}else if(fileIcon.indexOf("ms") > -1){
+											if(fileIcon.indexOf("excel") > -1){
+												fileIcon = "Icon_excel.png";
+											}else if(fileIcon.indexOf("powerpoint") > -1){
+												fileIcon = "Icon_ppt.png";
+											}else if(fileIcon.indexOf("word") > -1){
+												fileIcon = "Icon_doc.png";
+											}
+									}else if(fileIcon.indexOf("haansoft") > -1){
+												fileIcon = "Icon_haansoft.png";
+									}else if(fileIcon.indexOf("text") > -1){
+											fileIcon = "Icon_text.png";
+									}else if(fileIcon.indexOf("image") > -1){
+											fileIcon = "Icon_image.png";
+									}else{
+											fileIcon = "Icon_etc.png";
+									}				
 						
-						<% if(folderName != null){ %> 
-					<span class="topic_span"><%=folderName%></span></a>
-					
-					
-					
-					
-					
-					<%} 
-					 } %>
-					<%if(value.type=='file' && mw3.how == 'contextfileview'){%>
-					<tr>
-						<td>
-							<div style="width: 15px;margin: 0 auto;"><%=fields.documentDrag.here()%></div>
-							<% if(folderName != null){ %> 
-							<span class="topic_span"><%=folderName%></span>
-							<%}%>
+				%>						
+						<img src="images/<%=fileIcon%>" />
+						<font color=#5C5C5C style="line-height:19px;">
+							<a href="#" onClick="<%=methods.documentView.caller()%>"><%=value.title%>
 							
-							
-							<%if(value.workItemVersionChooser!=null){%>
-							<%=fields.workItemVersionChooser.here()%>
-						<%}%>
-						<%if(value.preview!=null && value.file.mimeType.indexOf('image')!=0){%>
-			                <%=fields.preview.here()%>
-						<%}%>
-							<%=fields.file.here({when: (value.file.mimeType.indexOf('image')==0)?'image':'view' })%>
-						</td>
-					</tr>
-					<%}%>
+						<% 
+							if(folderName != null){ 
+						%> 
+								<span class="topic_span"><%=folderName%></span></a>
+						<%
+							}
+					 	}else{ 
+							var folderName = value.folderName;					
+						%>
+							<tr>
+								<td>
+									<div style="width: 15px;margin: 0 auto;"><%=fields.documentDrag.here()%></div>
+										<% if(folderName != null){ %> 
+								<span class="topic_span"><%=folderName%></span>
+								<%}else{ %>
+								<span class="topic_span">문서미분류 상태입니다</span>
+									<%}%>
+									<%if(value.workItemVersionChooser!=null){%>
+									<%=fields.workItemVersionChooser.here()%>
+								<%} %>
+								<%if(value.preview!=null && value.file.mimeType.indexOf('image')!=0){%>
+					                <%=fields.preview.here()%>
+								<%}%>
+									<%=fields.file.here({when: (value.file.mimeType.indexOf('image')==0)?'image':'view' })%>
+								</td>
+							</tr>
+					<%	}
+						}
+					%>
 					<%if(value.type=='memo'){%>
 					<tr>
 						<td>
@@ -272,7 +330,8 @@
 						</td>
 					</tr>
 					
-					<%}%>
+					<%}
+					}%>
 			</table>
 		</div>		
 		<div class="guide">

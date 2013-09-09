@@ -70,7 +70,7 @@ public class DocumentFileViewPanel {
 		
 	@ServiceMethod(callByContent=true)
 	public void load() throws Exception{
-		IDocumentNode documentNode =  DocumentNode.findDetail(this.getId());	
+//		IDocumentNode documentNode =  DocumentNode.findDetail(this.getId());	
 		setDocumentNode(documentNode);
 	}
 	

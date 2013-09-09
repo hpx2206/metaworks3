@@ -98,26 +98,13 @@
 	 
 	
 	 	}
-	}else if(mw3.how = 'DetailView'){
-	%>		
-		<img src="images/<%=value.fileIcon%>" />
-		
-		<b>파일명: <%=value.name%></b><br>
-		제작자: <%=value.authorId%><br>
-		종류: <%=value.conntype%><br>
-		작성일: <%=value.startDate%><br>
-		Description: <%=value.url%><br>
-		다운로드: <%=fields.file.here()%> 
+	 }else if(mw3.how == 'fileList'){
+	 	
+		%>
+		<%= fields.fileList.here()%>
 
-		
-	
-	
-	
-	
-	
-	
-	
-<%	
-	}
+
+	<%
+	 }
 	}
 %>

@@ -221,6 +221,21 @@ public class InstanceView {
 	@AutowiredFromClient
 	public Session session;
 
+	Long taskId;
+		public Long getTaskId() {
+			return taskId;
+		}
+		public void setTaskId(Long taskId) {
+			this.taskId = taskId;
+		}
+
+	DocumentContentView documentContentView;
+		public DocumentContentView getDocumentContentView() {
+			return documentContentView;
+		}
+		public void setDocumentContentView(DocumentContentView documentContentView) {
+			this.documentContentView = documentContentView;
+		}
 	protected void loadDefault(Instance inst) throws Exception{
 		newItem = new CommentWorkItem();
 		newItem.setInstId(new Long(getInstanceId()));
@@ -293,6 +308,14 @@ public class InstanceView {
 		getInstanceSecurityConfigurer().setInstanceId(instanceId);
 
 	}
+	
+	public void loadDocument() throws Exception {
+		documentContentView = new DocumentContentView();
+		documentContentView.setTaskId(this.getTaskId());
+		documentContentView.load();
+		
+		
+	} 
 	
 	ArrayList<FacebookFeedback> externalFeedback;
 		public ArrayList<FacebookFeedback> getExternalFeedback() {
@@ -708,5 +731,5 @@ public class InstanceView {
 		}
 		public void setMetaworksContext(MetaworksContext metaworksContext) {
 			this.metaworksContext = metaworksContext;
-		} 	
+		}
 }
