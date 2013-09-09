@@ -185,6 +185,9 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype = 
 	            	
 	            	mw3.onLoadFaceHelperScript();
 	            	
+	            	this.icanvas = canvas;
+	            	
+	            } 
 	            	/*
 	                if (shapeInfo._shape_type === 'EDGE') {
 	                    shape = eval('new ' + shapeInfo._shape_id + '()');
@@ -220,8 +223,8 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype = 
 	                    }
 	                }
 	                */
-	                this.icanvas = canvas;
-	            }
+	                
+	         
 	        }
 	    });
 	    // Shape 이 Connect 되었을 때의 이벤트 리스너
@@ -657,7 +660,7 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ca
 		faceHelper.addEventGeom(objectId, canvas, knolElement);
 		session.clipboard = null;
 		
-	}else if(clipboardNode && clipboardNode.__className=="org.uengine.codi.mw3.ide.libraries.LibraryRole"){
+	}else if(clipboardNode && clipboardNode.__className=="org.uengine.codi.mw3.ide.libraries.OrganizationRole"){
 		var shapeWidth = "300";
 		var shapeHeight = "100";
 		var roleclass = "org.uengine.kernel.Role";
