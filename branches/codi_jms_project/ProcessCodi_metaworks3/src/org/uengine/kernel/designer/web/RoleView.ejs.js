@@ -32,7 +32,7 @@ org_uengine_kernel_designer_web_RoleView.prototype = {
 			var element = null;
 			var initText;
 			if( object.role ){
-				initText = ( object.activity.description != null && object.activity.description.text != null ) ? object.activity.description.text :  "";
+				initText = ( object.role.descr != null && object.role.descr.text != null ) ? object.role.descr.text :  "";
 			}else{
 				initText = ( object.label == null || object.label == 'undefined' ) ? "" :  unescape(object.label);
 			}
@@ -50,7 +50,8 @@ org_uengine_kernel_designer_web_RoleView.prototype = {
         	$(element).attr("_classname", object.activityClass);
         	$(element).attr("_viewClass", object.__className);
         	$(element).attr("_classType", object.classType);
-        	$(element).attr("_tracingTag",object.tracingTag);
+        	$(element).attr("_tracingTag", object.tracingTag);
+        	
         	if( object.role ){
         		$(element).data('activity', object.role);
         		// object.activity.activityView = null; 을 꼭 해주어야함.. activity가 activityView 를 들고있고, activityView가 activity를 들고있는 구조라서..
