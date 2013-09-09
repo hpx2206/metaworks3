@@ -1,10 +1,6 @@
 package org.uengine.codi.mw3.webProcessDesigner;
 
-import java.io.File;
-
 import org.metaworks.annotation.AutowiredFromClient;
-import org.metaworks.metadata.MetadataBundle;
-import org.uengine.kernel.GlobalContext;
 import org.uengine.util.UEngineUtil;
 
 public class ProcessViewPanel {
@@ -31,7 +27,7 @@ public class ProcessViewPanel {
 			this.viewType = viewType;
 		}
 		
-	public ProcessViewer processViewer;
+	ProcessViewer processViewer;
 		public ProcessViewer getProcessViewer() {
 			return processViewer;
 		}
@@ -43,8 +39,6 @@ public class ProcessViewPanel {
 	}
 	public void load(){
 		if(UEngineUtil.isNotEmpty(alias)  && UEngineUtil.isNotEmpty(defId)){
-//			String codebase = GlobalContext.getPropertyString("codebase", "codebase");
-//			String codebase = GlobalContext.getPropertyString("codebase", "codebase");
 			processViewer.setDefId(defId);
 			processViewer.setAlias(alias);
 //			processViewer.setAlias(codebase + File.separatorChar + alias);
