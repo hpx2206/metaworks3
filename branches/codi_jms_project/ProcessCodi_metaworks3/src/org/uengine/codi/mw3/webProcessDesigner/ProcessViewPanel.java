@@ -27,7 +27,7 @@ public class ProcessViewPanel {
 			this.viewType = viewType;
 		}
 		
-	ProcessViewer processViewer;
+	public ProcessViewer processViewer;
 		public ProcessViewer getProcessViewer() {
 			return processViewer;
 		}
