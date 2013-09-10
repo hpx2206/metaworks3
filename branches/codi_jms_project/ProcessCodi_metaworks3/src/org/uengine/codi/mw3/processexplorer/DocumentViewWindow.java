@@ -74,11 +74,9 @@ public class DocumentViewWindow {
 			documentNavigatorPanel.setName(this.getName());
 			documentNavigatorPanel.load();
 			
-			documentFolderPanel.setId(this.getId());
 			documentFolderPanel.setParentId(this.getParentId());
 			documentFolderPanel.load(this.getId());
 			
-			documentFilePanel.setId(this.getId());
 			documentFilePanel.load(this.getId());
 		}
 		

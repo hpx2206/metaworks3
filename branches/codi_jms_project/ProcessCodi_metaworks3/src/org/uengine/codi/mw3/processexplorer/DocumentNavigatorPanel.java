@@ -2,6 +2,7 @@ package org.uengine.codi.mw3.processexplorer;
 
 import java.util.ArrayList;
 
+import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.ServiceMethod;
 import org.uengine.codi.mw3.model.DocumentNode;
 import org.uengine.util.UEngineUtil;
@@ -24,13 +25,6 @@ public class DocumentNavigatorPanel {
 		public void setId(String id) {
 			this.id = id;
 		}	
-	String parentid;
-		public String getParentid() {
-			return parentid;
-		}
-		public void setParentid(String parentid) {
-			this.parentid = parentid;
-		}	
 	String name;
 		public String getName() {
 			return name;
@@ -38,7 +32,7 @@ public class DocumentNavigatorPanel {
 		public void setName(String name) {
 			this.name = name;
 		}		
-
+	
 	public ArrayList<DocumentNode> documentList;
 		public ArrayList<DocumentNode> getDocumentList() {
 			return documentList;
@@ -47,21 +41,33 @@ public class DocumentNavigatorPanel {
 		public void setDocumentList(ArrayList<DocumentNode> documentList) {
 			this.documentList = documentList;
 		}
-
 		
+	DocumentNode node;
+		public DocumentNode getNode() {
+			return node;
+		}
+	
+		public void setNode(DocumentNode node) {
+			this.node = node;
+		}
+
+	public DocumentNavigatorPanel(){
+	}
+	
 	public void load(){
 		if(UEngineUtil.isNotEmpty(id)){
 			String id = this.getId();
 			String name = this.getName();
-			String[] documentArray = name.replace('.','@').split("@");
 			
 			DocumentNode node = new DocumentNode();
 			node.setId(id);
-			node.setName(documentArray[0]);
+			node.setName(name);
 			
 			if(documentList == null){
 				documentList = new ArrayList<DocumentNode>();
 			}
+			node.setMetaworksContext(new MetaworksContext());
+			node.getMetaworksContext().setHow("Navigator");
 			documentList.add(node);
 			
 		}

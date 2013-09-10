@@ -3,18 +3,7 @@
 </div>
 
 <div class="documentNavigation">
-<%
-    if( value ){
-        var list = value.documentList;
-        for( var i = 0; i < list.length; i++){
-%>
-	<style> a:hover{ text-decoration:underline; } </style>
-		<a onClick="mw3.getFaceHelper(<%=objectId%>).clickNavigator('<%= i %>')" href="#">
-            <span><%= list[i].name %></span> 
-        </a>
-        &nbsp;<b>></b>&nbsp;
-<%
-        }
-    }
-%>
+		<%=fields.documentList.here()%>
 </div>
+
+

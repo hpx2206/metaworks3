@@ -1,8 +1,10 @@
 package org.uengine.codi.mw3.webProcessDesigner;
 
+import org.metaworks.Refresh;
 import org.metaworks.annotation.AutowiredFromClient;
-import org.uengine.codi.mw3.processexplorer.ProcessNameView;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.codi.mw3.processexplorer.ProcessExploreWindow;
+import org.uengine.codi.mw3.processexplorer.ProcessNameView;
 
 public class ProcessViewWindow {
 
@@ -113,5 +115,20 @@ public class ProcessViewWindow {
 //		}
 		
 	}
-
+	public  Object[] loadFile(Session session, String fileId, String fileName,String filePath,String title) throws Exception{
+		
+		title = session.getWindowTitle();
+		session.setWindowTitle(title);
+		setAlias(fileName);
+		setDefId(fileId);
+		setPath(filePath);
+		this.session = session;
+		load();
+		
+		ProcessExploreWindow processExploreWindow = new ProcessExploreWindow();
+		processExploreWindow.setPanel(this);
+	
+		return new Object[]{new Refresh(processExploreWindow)};
+		
+	}
 }

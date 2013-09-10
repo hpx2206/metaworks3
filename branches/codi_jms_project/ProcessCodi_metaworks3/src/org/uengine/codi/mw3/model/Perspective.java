@@ -108,9 +108,9 @@ public class Perspective {
 			documentWindow.setName(title);
 			documentWindow.load();
 			
-			ProcessExploreWindow ProcessExploreWindow = new ProcessExploreWindow();
-			ProcessExploreWindow.setPanel(documentWindow);
-			return new Object[]{new Refresh(ProcessExploreWindow)};
+			ProcessExploreWindow processExploreWindow = new ProcessExploreWindow();
+			processExploreWindow.setPanel(documentWindow);
+			return new Object[]{new Refresh(processExploreWindow)};
 		}
 		return null;
 	}

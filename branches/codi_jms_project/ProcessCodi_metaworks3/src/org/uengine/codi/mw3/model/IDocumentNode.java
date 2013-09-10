@@ -105,19 +105,6 @@ public interface IDocumentNode extends IDAO {
 	public ArrayList<WorkItem> getFileList();
 	public void setFileList(ArrayList<WorkItem> fileList);
 
-	@Hidden
-	@NonLoadable
-	@NonSavable
-	public DocumentFolderPanel getDocumentFolderPanel();
-	public void setDocumentFolderPanel(DocumentFolderPanel documentFolderPanel);
-	
-	@Hidden
-	@NonLoadable
-	@NonSavable
-	public DocumentFilePanel getDocumentFilePanel();
-	public void setDocumentFilePanel(DocumentFilePanel documentFilePanel) ;
-	
-	
 	@ServiceMethod(inContextMenu=true, callByContent=true)
 	@Face(displayName="$Remove")
 	public Object[] remove() throws Exception;
@@ -151,17 +138,11 @@ public interface IDocumentNode extends IDAO {
 	@ServiceMethod(callByContent=true, except={"childNode"}, target=TARGET_SELF)
 	public ArrayList<DocumentNode> loadChildren() throws Exception;
 	
-	public ArrayList<WorkItem> loadFileView(String id) throws Exception;
-	
-
 	@ServiceMethod(callByContent=true,target=ServiceMethodContext.TARGET_APPEND)
-	public Object[] loadFolderView() throws Exception;
+	public Object[] openFolderView() throws Exception;
 	
 	@ServiceMethod(callByContent=true)
 	public Object[] loadDocument() throws Exception;
-	
-	@ServiceMethod(callByContent=true, except={"childNode"},target=TARGET_APPEND)
-	public ArrayList<DocumentNode> loadFolderView(String id) throws Exception;
 	
 	@ORMapping(
 			databaseFields = {"url", "thumbnail", "conntype"}, 

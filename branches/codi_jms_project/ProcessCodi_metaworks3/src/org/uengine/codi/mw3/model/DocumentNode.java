@@ -16,16 +16,16 @@ import org.metaworks.dao.TransactionContext;
 import org.metaworks.dao.UniqueKeyGenerator;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
-import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.processexplorer.DocumentFilePanel;
-import org.uengine.codi.mw3.processexplorer.DocumentFolderPanel;
 import org.uengine.codi.mw3.processexplorer.DocumentNavigatorPanel;
 import org.uengine.codi.mw3.processexplorer.DocumentViewWindow;
 
 public class DocumentNode extends Database<IDocumentNode> implements IDocumentNode{
 	@AutowiredFromClient
 	transient public Session session;
-	
+	@AutowiredFromClient
+	public DocumentNavigatorPanel documentNavigatorPanel;
+
 	public final static String TYPE_DOC = "doc";
 	public final static String TYPE_FILE = "file";
 	public final static int DEPTH = 1;
@@ -197,12 +197,6 @@ public class DocumentNode extends Database<IDocumentNode> implements IDocumentNo
 		public void setFileIcon(String fileIcon) {
 			this.fileIcon = fileIcon;
 		}
-
-	@AutowiredFromClient
-	public PageNavigator pageNavigator; 
-	
-	@AutowiredFromClient
-	public DocumentViewWindow documentViewWindow;
 	
 	boolean documentSecuopt;		
 		@Hidden
@@ -220,29 +214,6 @@ public class DocumentNode extends Database<IDocumentNode> implements IDocumentNo
 		}
 		public void setFile(MetaworksFile file) {
 			this.file = file;
-		}
-	DocumentFolderPanel documentFolderPanel;
-		public DocumentFolderPanel getDocumentFolderPanel() {
-			return documentFolderPanel;
-		}
-		public void setDocumentFolderPanel(DocumentFolderPanel documentFolderPanel) {
-			this.documentFolderPanel = documentFolderPanel;
-		}
-	DocumentFilePanel documentFilePanel;
-		public DocumentFilePanel getDocumentFilePanel() {
-			return documentFilePanel;
-		}
-		public void setDocumentFilePanel(DocumentFilePanel documentFilePanel) {
-			this.documentFilePanel = documentFilePanel;
-		}
-		
-	DocumentNavigatorPanel documentNavigatorPanel;
-		public DocumentNavigatorPanel getDocumentNavigatorPanel() {
-			return documentNavigatorPanel;
-		}
-		public void setDocumentNavigatorPanel(
-				DocumentNavigatorPanel documentNavigatorPanel) {
-			this.documentNavigatorPanel = documentNavigatorPanel;
 		}
 		
 	public DocumentNode(){
@@ -348,7 +319,6 @@ public class DocumentNode extends Database<IDocumentNode> implements IDocumentNo
 		return childNode;
 	}
 	
-	@Override
 	public ArrayList<WorkItem> loadFileView(String id) throws Exception{
 		fileList = new ArrayList<WorkItem>();
 		StringBuffer sb = new StringBuffer();
@@ -379,7 +349,6 @@ public class DocumentNode extends Database<IDocumentNode> implements IDocumentNo
 	
 	}
 	
-	@Override
 	public ArrayList<DocumentNode> loadFolderView(String id) throws Exception{
 		folderList = new ArrayList<DocumentNode>();
 		
@@ -462,14 +431,20 @@ public class DocumentNode extends Database<IDocumentNode> implements IDocumentNo
 	
 	
 	@Override
-	public Object[] loadFolderView() throws Exception{
+	public Object[] openFolderView() throws Exception{
+		
 		DocumentFilePanel documentFilePanel = new DocumentFilePanel();
 		documentFilePanel.setMetaworksContext(new MetaworksContext());
 		documentFilePanel.loadDetailView(this.getId());
 		
+		DocumentNode node = new DocumentNode();
+		node.setName(this.getName());
+		node.setMetaworksContext(new MetaworksContext());
+		node.getMetaworksContext().setHow("Navigator");
+		documentNavigatorPanel.documentList.add(node);
 		
-//		documentNavigatorPanel.documentList.add(this);
-		return new Object[]{ new Refresh(documentFilePanel), new Refresh(documentNavigatorPanel)};
+		
+		return new Object[]{new Refresh(documentFilePanel), new Refresh(documentNavigatorPanel)};
 	}
 	
 	

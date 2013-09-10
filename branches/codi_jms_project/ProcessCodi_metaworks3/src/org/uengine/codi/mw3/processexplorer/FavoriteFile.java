@@ -2,7 +2,6 @@ package org.uengine.codi.mw3.processexplorer;
 
 import java.util.Date;
 
-import org.metaworks.Refresh;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
@@ -155,16 +154,12 @@ public class FavoriteFile extends Database<IFavoriteFile> implements IFavoriteFi
 		}
 	
 	@Override
-	@ServiceMethod(callByContent=true,target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] loadFile() throws Exception {
-		// TODO Auto-generated method stub
-		
+
+		String title = this.getFileName();
 		processViewWindow = new ProcessViewWindow();
-		processViewWindow.setAlias(this.getFileName());
-		processViewWindow.setDefId(this.getFileId());
-		processViewWindow.setPath(this.getFilePath());
-		processViewWindow.session = session;
-		processViewWindow.load();
-		return new Object[]{new  Refresh(processViewWindow) };
+		Object[] returnObject = processViewWindow.loadFile(session,getFileId(),getFileName(),getFilePath(),title);
+		
+		return returnObject;
 	}
 }

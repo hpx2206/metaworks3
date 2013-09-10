@@ -72,7 +72,7 @@ public class ProcessExplorer {
 		centerLayout.setName("center");
 		centerLayout.setEast(viewContentWindow);
 		centerLayout.setCenter(processExplorerWindow);
-		centerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0,south__spacing_open:2, east__spacing_open:2, east__size:350");
+		centerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0,south__spacing_open:2, east__spacing_open:2, east__size:450");
 		
 		Layout outerLayout = new Layout();
 

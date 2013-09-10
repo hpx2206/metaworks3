@@ -5,8 +5,6 @@ import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.uengine.codi.mw3.model.DocumentNode;
 import org.uengine.codi.mw3.model.IDocumentNode;
-import org.uengine.codi.mw3.model.IWorkItem;
-import org.uengine.codi.mw3.model.WorkItem;
 
 public class DocumentFilePanel implements ContextAware{
 	
@@ -57,7 +55,7 @@ public class DocumentFilePanel implements ContextAware{
 		
 	
 	public void loadDetailView(String id) throws Exception{
-		IDocumentNode documentNode =  new DocumentNode();
+		DocumentNode documentNode =  new DocumentNode();
 		documentNode.setMetaworksContext(new MetaworksContext());
 		documentNode.getMetaworksContext().setHow("fileList");		
 		documentNode.loadFileView(id);
@@ -68,7 +66,7 @@ public class DocumentFilePanel implements ContextAware{
 	public void load(String id) throws Exception{
 		
 		
-		IDocumentNode documentNode =  new DocumentNode();
+		DocumentNode documentNode =  new DocumentNode();
 		documentNode.setMetaworksContext(new MetaworksContext());
 		documentNode.getMetaworksContext().setHow("fileList");
 		documentNode.loadFileView(id);

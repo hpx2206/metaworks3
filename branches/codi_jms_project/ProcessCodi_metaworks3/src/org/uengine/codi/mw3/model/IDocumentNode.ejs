@@ -76,12 +76,11 @@
 		if(value){
 
 	 %>	
-	 	<%= fields.folderList.here()%>
 			<span class="documentFolderList">	
 				<div class="fixed_img_row2">
 					<ul>				
 						<li>
-							<a href="#" onClick="<%=methods.loadFolderView.caller()%>">
+							<a href="#" onClick="<%=methods.openFolderView.caller()%>">
 								<span class="thumb" >
 									<img  alt="" src="images/Document_folder.png">
 								</span>
@@ -105,6 +104,16 @@
 
 
 	<%
-	 }
+	 }else if(mw3.how == 'Navigator'){
+%>	
+	<style> a:hover{ text-decoration:underline; } </style>
+		<a onClick="" href="#">
+            <span><%=value.name %>l</span> 
+        </a>
+        &nbsp;<b>></b>&nbsp;
+	
+	 
+<%
+		}	 
 	}
 %>

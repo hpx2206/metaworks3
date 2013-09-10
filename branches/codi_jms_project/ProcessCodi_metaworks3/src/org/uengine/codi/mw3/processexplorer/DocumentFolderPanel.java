@@ -1,6 +1,8 @@
 package org.uengine.codi.mw3.processexplorer;
 
 
+import java.util.ArrayList;
+
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.ServiceMethod;
 import org.uengine.codi.mw3.model.DocumentNode;
@@ -29,14 +31,13 @@ public class DocumentFolderPanel {
 			this.parentId = parentId;
 		}
 
-	IDocumentNode documentNode;
-		public IDocumentNode getDocumentNode() {
-			return documentNode;
+	ArrayList<DocumentNode> documentList;
+		public ArrayList<DocumentNode> getDocumentList() {
+			return documentList;
 		}
-		public void setDocumentNode(IDocumentNode documentNode) {
-			this.documentNode = documentNode;
-		}		
-		
+		public void setDocumentList(ArrayList<DocumentNode> documentList) {
+			this.documentList = documentList;
+		}
 	DocumentNavigatorPanel documentNavigatorPanel;
 		public DocumentNavigatorPanel getDocumentNavigatorPanel() {
 			return documentNavigatorPanel;
@@ -45,6 +46,10 @@ public class DocumentFolderPanel {
 				DocumentNavigatorPanel documentNavigatorPanel) {
 			this.documentNavigatorPanel = documentNavigatorPanel;
 		}
+		
+	public DocumentFolderPanel(){
+		documentList = new ArrayList<DocumentNode>();
+	}
 	
 	@ServiceMethod(callByContent=true)
 	public void openFolder() throws Exception{
@@ -52,15 +57,14 @@ public class DocumentFolderPanel {
 		documentNode.setMetaworksContext(new MetaworksContext());
 		documentNode.getMetaworksContext().setHow("fileView");
 		documentNode.setId(this.getId());
-		documentNode.loadFolderView();
+		documentNode.openFolderView();
 		
 	}
 	public void load(String id) throws Exception {
-		IDocumentNode documentNode = new DocumentNode();
+		DocumentNode documentNode = new DocumentNode();
 		documentNode.setMetaworksContext(new MetaworksContext());
 		documentNode.getMetaworksContext().setHow("folderView");
-		documentNode.loadFolderView(id);
-		setDocumentNode(documentNode);
+		documentList = documentNode.loadFolderView(id);
 	}
 	
 	
