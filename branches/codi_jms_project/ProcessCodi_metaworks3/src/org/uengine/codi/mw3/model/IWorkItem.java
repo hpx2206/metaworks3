@@ -378,7 +378,5 @@ public interface IWorkItem extends IDAO{
 		@ServiceMethod(payload={"instId", "taskId"}, target=ServiceMethodContext.TARGET_SELF)
 		public Object moreView() throws Exception;
 	
-		@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
-		public IWorkItem  loadFileView(String id)  throws Exception;
 }
 

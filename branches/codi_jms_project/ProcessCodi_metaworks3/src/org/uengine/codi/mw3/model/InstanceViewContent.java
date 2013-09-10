@@ -24,24 +24,6 @@ public class InstanceViewContent extends ContentWindow {
 			this.instanceView = instanceView;
 		}
 	
-//	DocumentViewer documentViewer;
-//		public DocumentViewer getDocumentViewer() {
-//			return documentViewer;
-//		}
-//	
-//		public void setDocumentViewer(DocumentViewer documentViewer) {
-//			this.documentViewer = documentViewer;
-//		}
-
-	Long taskId;
-		public Long getTaskId() {
-			return taskId;
-		}
-		public void setTaskId(Long taskId) {
-			this.taskId = taskId;
-		}
-	
-
 	String instanceName;
 	@Name
 	@Hidden
@@ -67,15 +49,4 @@ public class InstanceViewContent extends ContentWindow {
 		
 	}	
 
-	public void loadDocument() throws Exception{
-		instanceView = new InstanceView();
-		instanceView.setTaskId(getTaskId());
-		instanceView.session = session;
-		instanceView.setMetaworksContext(getMetaworksContext());
-		instanceView.loadDocument();
-		
-		this.setInstanceView(instanceView);
-		
-		
-	}
 }

@@ -590,27 +590,8 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 //		return fileIcon;
 //	}
 	
-	public IWorkItem loadFileView(String id) throws Exception{
-		StringBuffer sql = new StringBuffer();
-		sql.append("select * ,tool as fileIcon from bpm_worklist");
-		sql.append(" where folderId=?folderId");
-		
-		IWorkItem workitem = (IWorkItem) sql(IWorkItem.class, sql.toString());
-		
-		workitem.set("folderId",id);
-		workitem.select();
-		
-		if(workitem.size() >0){
-			while(workitem.next()){
-				WorkItem work = new WorkItem();
-				work.copyFrom(workitem);
-				work.getMetaworksContext().setHow("fileView");
-			}
-		}	
-		return workitem;
 		
 		
-	}
 	
 	public void detail() throws Exception{
 
