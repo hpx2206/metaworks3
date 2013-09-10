@@ -6,8 +6,8 @@ import org.metaworks.annotation.ServiceMethod;
 import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.webProcessDesigner.ValueChainViewerPanel;
-import org.uengine.contexts.TextContext;
 import org.uengine.kernel.ValueChain;
+import org.uengine.util.UEngineUtil;
 
 public class ValueChainView extends ActivityView{
 	transient ValueChain valueChain;
@@ -24,10 +24,8 @@ public class ValueChainView extends ActivityView{
 	@ServiceMethod(callByContent=true , target=ServiceMethodContext.TARGET_POPUP)
 	public Popup showValueChainMonitor() throws Exception{
 		ValueChain valueChain = this.getValueChain();
-		TextContext name = new TextContext();
-		name.setText(this.getLabel());
-		valueChain.setName(name);
-		String valueChainName = (valueChain.getName() != null && valueChain.getName().toString() != null) ? valueChain.getName().toString() : "valuechain"; 
+		
+		String valueChainName = UEngineUtil.isNotEmpty(valueChain.getName() != null ? valueChain.getName().getText() : "") ? valueChain.getName().getText() : "valuechain"; 
 		
 		ValueChainViewerPanel valueChainViewerPanel = new ValueChainViewerPanel();
 		valueChainViewerPanel.setOpenerValueChain(valueChain);

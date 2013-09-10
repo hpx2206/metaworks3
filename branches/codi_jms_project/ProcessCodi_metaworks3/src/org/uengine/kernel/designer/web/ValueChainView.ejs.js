@@ -52,9 +52,14 @@ org_uengine_kernel_designer_web_ValueChainView.prototype = {
         	
         	$(element).on({
         		btnclick : function(event) {
+        			console.log(this.textContent);
+        			var name = {
+        					__className : 'org.uengine.contexts.TextContext',
+        					text : this.textContent
+        			};
         			object.id = $(this).attr('id');
         			object.valueChain = $(this).data('valuechain');
-//        			object.valueChain.name = this.textContent;
+        			object.valueChain.name = name;
         			object.showValueChainMonitor();
         		}
         	});

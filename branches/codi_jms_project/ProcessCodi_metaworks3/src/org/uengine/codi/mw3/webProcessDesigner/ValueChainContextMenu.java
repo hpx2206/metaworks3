@@ -6,6 +6,7 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.Menu;
 import org.metaworks.component.MenuItem;
+import org.metaworks.component.TreeNode;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.ide.templete.NewFolder;
 import org.uengine.codi.mw3.model.Session;
@@ -15,26 +16,18 @@ public class ValueChainContextMenu extends Menu {
 	@AutowiredFromClient
 	public Session session;
 	
-	MajorProcessDefinitionNode majorProcessDefinitionNode;
-		public MajorProcessDefinitionNode getMajorProcessDefinitionNode() {
-			return majorProcessDefinitionNode;
-		}
-		public void setMajorProcessDefinitionNode(
-				MajorProcessDefinitionNode majorProcessDefinitionNode) {
-			this.majorProcessDefinitionNode = majorProcessDefinitionNode;
-		}
 	public ValueChainContextMenu(){
-		this(null);
 	}
-	public ValueChainContextMenu(MajorProcessDefinitionNode majorProcessDefinitionNode){
-		this.setMajorProcessDefinitionNode(majorProcessDefinitionNode);
+	public ValueChainContextMenu(TreeNode treeNode){
 		
-		this.setId("ValueChainContext");
+		this.setId(treeNode.getId() + "ValueChainContext");
 		this.setName("ValueChainContext");
 		this.setContext(true);
 		
-		this.add(new MenuItem("newFolder", "$resource.menu.new.folder"));
-		this.add(new MenuItem("selectProcess", "$resource.menu.selectProcess"));
+		if( treeNode instanceof MajorProcessDefinitionNode){
+			this.add(new MenuItem("newFolder", "$resource.menu.new.folder"));
+			this.add(new MenuItem("selectProcess", "$resource.menu.selectProcess"));
+		}
 		
 		this.add(new MenuItem(MenuItem.TYPE_DIVIDER));
 		this.add(new MenuItem("remove", "$resource.menu.remove"));
@@ -58,7 +51,10 @@ public class ValueChainContextMenu extends Menu {
 		Object clipboard = session.getClipboard();
 		if(clipboard instanceof MajorProcessDefinitionNode){
 			MajorProcessDefinitionNode node = (MajorProcessDefinitionNode)clipboard;
-			return new Object[]{ new Remover(node)};
+			return new Object[]{ new Remover(node, true)};
+		}else if(clipboard instanceof MinorProcessDefinitionNode){
+			MinorProcessDefinitionNode node = (MinorProcessDefinitionNode)clipboard;
+			return new Object[]{ new Remover(node, true)};
 		}
 		return null;
 	}
