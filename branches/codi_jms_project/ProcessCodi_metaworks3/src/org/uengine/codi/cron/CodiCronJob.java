@@ -21,8 +21,8 @@ public class CodiCronJob extends QuartzJobBean{
 	SpringConnectionFactory connectionFactory;
 	
 
-	@Autowired
-	EMailReader emailReader;
+/*	@Autowired
+	EMailReader emailReader;*/
 	
 	@Override
 	protected void executeInternal(JobExecutionContext arg0)
@@ -34,7 +34,7 @@ public class CodiCronJob extends QuartzJobBean{
 		tx.setAutoCloseConnection(true);
 
 		connectionFactory = (SpringConnectionFactory) arg0.getJobDetail().getJobDataMap().get("connectionFactory");
-		emailReader = (EMailReader) arg0.getJobDetail().getJobDataMap().get("emailReader");
+//		emailReader = (EMailReader) arg0.getJobDetail().getJobDataMap().get("emailReader");
 		
 		MetaworksUEngineSpringConnectionAdapter connectionAdapter = new MetaworksUEngineSpringConnectionAdapter();
 
