@@ -110,8 +110,8 @@
 		</property>
 	</bean>
 	 -->
-	 
-	<!-- Schedule Reader -->
+<!-- 	 
+	Schedule Reader
 	<bean id="scheduleReader" class="org.springframework.scheduling.quartz.JobDetailBean">
     	<property name="jobClass" value="org.uengine.codi.cron.ScheduleReader"/>
     	<property name="jobDataAsMap">
@@ -123,7 +123,7 @@
 		</property>
 	</bean>
 	
-	<!-- Wait Activity -->
+	Wait Activity
 	<bean id="waitJob" class="org.springframework.scheduling.quartz.JobDetailBean">
 		<property name="jobClass" value="org.uengine.codi.scheduler.WaitJob" />
 		<property name="jobDataAsMap">
@@ -135,29 +135,29 @@
 		</property>
 	</bean>
 	
-	<!-- 
+	
 	<bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
 		<property name="jobDetail" ref="cronQuartzJob"/>
 		<property name="cronExpression" value="0/1 * * * * ?"/>
 	</bean>
-	 -->
+	
 	 
-	<!-- Email Reader Trigger -->
-	<!-- 
+	Email Reader Trigger
+	
 	<bean id="simpleTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
 		<property name="jobDetail" ref="cronQuartzJob"/>
 		<property name="startDelay" value="60000"/>
 		<property name="repeatInterval" value="120000"/>
 	</bean>
-	 -->
+	
 	 
-	<!-- Schedule Reader Trigger( 매일 오전 8시 일정 시그널링 ) -->
+	Schedule Reader Trigger( 매일 오전 8시 일정 시그널링 )
 	<bean id="scheduleTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
    		<property name="jobDetail" ref="scheduleReader"/>
     	 <property name="cronExpression" value="0 0 8 * * ?"/>
 	</bean>
 	
-	<!-- Wait Activity Trigger -->
+	Wait Activity Trigger
 	<bean id="waitTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerBean">
 		<property name="jobDetail" ref="waitJob"/>
 		<property name="startDelay" value="60000"/>
@@ -167,19 +167,19 @@
 	<bean class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
 		<property name="triggers">
 			<list>
-				<!-- <ref bean="simpleTrigger"/>  -->
+				<ref bean="simpleTrigger"/> 
 	            <ref bean="scheduleTrigger"/>
 				<ref bean="waitTrigger"/>
 			</list>
 		</property>
-		<!-- 
+		
 		<property name="schedulerContextAsMap">
 		    <map>
 		       <entry key="connectionFactory" value-ref="springConnectionFactoryForMetaworks" />
 		       <entry key="emailReader" value-ref="EMailReader" />
 		    </map>
 	    </property>
-	     -->
+	    
 		<property name="quartzProperties">
 			<props>
 				<prop key="org.quartz.threadPool.class">org.quartz.simpl.SimpleThreadPool</prop>
@@ -190,7 +190,7 @@
 			</props>
 		</property>
 	</bean>
-	
+	 -->
 	
 	<!-- ============================================================= -->
 	<!-- Process Codi Services -->
