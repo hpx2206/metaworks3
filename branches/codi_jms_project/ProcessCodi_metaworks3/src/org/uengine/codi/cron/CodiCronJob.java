@@ -50,9 +50,9 @@ public class CodiCronJob extends QuartzJobBean{
 		try{
 			//TODO: e-mail 읽어서 인스턴스 발행하기
 			
-			emailReader.memoWorkItem.processManager = processManager;
+			/*emailReader.memoWorkItem.processManager = processManager;
 			emailReader.memoWorkItem.instanceViewContent.instanceView.processManager = processManager;
-			emailReader.read();
+			emailReader.read();*/
 			
 			//TODO: 대표 SNS 계정 접속하여 담벼락에 올라온 사항 인스턴스 발행하기
 			//TODO: 대표 그룹 계정 (위의 SNS계정과 아마 API가 동일할 것)에 접속하여 담벼락 긁어오기
