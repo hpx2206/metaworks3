@@ -86,10 +86,10 @@ public class EMailReader {
     }
 
     
-   /* @Autowired
-    MemoWorkItem memoWorkItem;*/
+    @Autowired
+    MemoWorkItem memoWorkItem;
 
-   /* public void read() throws Exception{
+    public void read() throws Exception{
         
     		Properties props = System.getProperties();
     		props.setProperty("mail.store.protocol", "imaps");
@@ -238,7 +238,7 @@ public class EMailReader {
     		
 
     	
-    }*/
+    }
     
 }
 
