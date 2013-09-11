@@ -86,11 +86,6 @@ public class MajorProcessDefinitionNode extends TreeNode  implements ContextAwar
 		
 	}
 	
-	public ArrayList<TreeNode> loadExpand(){
-		
-		return null;
-	}
-	
 	@ServiceMethod(payload={"id", "name", "path", "type", "folder", "defId","alias","treeId"},target=ServiceMethodContext.TARGET_POPUP)
 	public Object selectProcess() {
 		ProcessViewerPanel processViewerPanel = new ProcessViewerPanel();
@@ -135,19 +130,32 @@ public class MajorProcessDefinitionNode extends TreeNode  implements ContextAwar
 		return null;
 		}
 	}
-	@ServiceMethod(payload={"id", "name", "path", "folder" , "child"}, mouseBinding="right", target=ServiceMethodContext.TARGET_POPUP_OVER_POPUP)
+	@ServiceMethod(payload={"id", "name", "path", "folder" , "child", "metaworksContext"}, mouseBinding="right", target=ServiceMethodContext.TARGET_POPUP_OVER_POPUP)
 	public Object[] showContextMenu() {
-		session.setClipboard(this);
-		return new Object[]{new Refresh(session), new ValueChainContextMenu(this)};
+		
+		if("explorer".equals(this.getMetaworksContext().getHow())) {
+			return null;
+		
+		} else {
+			session.setClipboard(this);
+			return new Object[]{new Refresh(session), new ValueChainContextMenu(this)};
+		}
 	}
 	
 	public void injectionMetaworksContext(MetaworksContext context , ArrayList<TreeNode> childNodes){
 		if( childNodes != null ){
 			for(int i=0; i < childNodes.size();i++){
-				MajorProcessDefinitionNode node = (MajorProcessDefinitionNode)childNodes.get(i);
-				node.setMetaworksContext(context);
-				if( node.getChild() != null && node.getChild().size() > 0 ){
-					injectionMetaworksContext(context, node.getChild() );
+				if(childNodes.get(i) instanceof MajorProcessDefinitionNode) {
+					MajorProcessDefinitionNode node = (MajorProcessDefinitionNode)childNodes.get(i);
+					node.setMetaworksContext(context);
+					
+					if( node.getChild() != null && node.getChild().size() > 0 ){
+						injectionMetaworksContext(context, node.getChild() );
+					}
+					
+				} else {
+					MinorProcessDefinitionNode node = (MinorProcessDefinitionNode)childNodes.get(i);
+					node.setMetaworksContext(context);
 				}
 			}
 		}
