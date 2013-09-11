@@ -269,6 +269,11 @@ public interface IWorkItem extends IDAO{
 		public void setExt10(String ext10);
 
 		
+		@NonSavable
+		@NonLoadable
+		public boolean isUseBBB();
+		public void setUseBBB(boolean useBBB);
+		
 		@Hidden
 		@NonSavable
 		@NonLoadable
