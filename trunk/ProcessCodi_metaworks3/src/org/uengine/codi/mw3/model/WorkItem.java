@@ -29,6 +29,7 @@ import org.uengine.codi.mw3.filter.AllSessionFilter;
 import org.uengine.codi.mw3.filter.OtherSessionFilter;
 import org.uengine.codi.mw3.knowledge.KnowledgeTool;
 import org.uengine.codi.mw3.knowledge.WfNode;
+import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.HumanActivity;
 import org.uengine.kernel.ProcessInstance;
 import org.uengine.kernel.RoleMapping;
@@ -42,6 +43,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	
 	public WorkItem(){
 		this.getMetaworksContext().setWhen(WHEN_NEW);
+		this.setUseBBB("1".equals(GlobalContext.getPropertyString("bbb.use", "1")));
 	}
 	
 	protected static IWorkItem find(String instanceId) throws Exception{
@@ -570,7 +572,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		//return workItemHandler;
 	}
 	
-	@Override
+	
 	public void loadContents() throws Exception {
 		//only lazy loading needed workitems will use this method
 		typedDatabaseMe().loadContents();
@@ -623,25 +625,25 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		wi.setMetaworksContext(this.getMetaworksContext());
 	}
 		
-	@Override
+	
 	public IWorkItem newSchedule() {
 		return new ScheduleWorkItem();
 	}
 
-	@Override
+	
 	public IWorkItem newImage() {
 		// TODO Auto-generated method stub
 		return new ImageWorkItem();
 	}
 
-	@Override
+	
 	public IWorkItem newMovie() {
 		// TODO Auto-generated method stub
 		return new MovieWorkItem();
 	}
 
 
-	@Override
+	
 	public IWorkItem newComment() throws Exception {
 		CommentWorkItem wi = new CommentWorkItem();
 		formatWorkItem(wi);
@@ -649,7 +651,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		return wi;
 	}
 	
-	@Override
+	
 	public IWorkItem newMemo() throws Exception {
 		MemoWorkItem wi = new MemoWorkItem();
 		formatWorkItem(wi);
@@ -657,7 +659,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		return wi;
 	}
 	
-	@Override
+	
 	public IWorkItem newRemoteConference() throws Exception {
 		RemoteConferenceWorkItem wi = new RemoteConferenceWorkItem();
 		formatWorkItem(wi);
@@ -665,7 +667,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		return wi;
 	}
 	
-	@Override
+	
 	public IWorkItem newFile() throws Exception {
 		FileWorkItem wi = new FileWorkItem();
 		formatWorkItem(wi);
@@ -673,7 +675,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		return wi;
 	}
 	
-	@Override
+	
 	public IWorkItem newSourceCode() throws Exception {
 		SourceCodeWorkItem wi = new SourceCodeWorkItem();
 		formatWorkItem(wi);
@@ -708,7 +710,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		public int getMinorVer() {
 			return minorVer;
 		}
-	
 		public void setMinorVer(int minorVer) {
 			this.minorVer = minorVer;
 		}
@@ -723,24 +724,28 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		}
 
 	Long grpTaskId;
-		
 		public Long getGrpTaskId() {
 			return grpTaskId;
 		}
-	
 		public void setGrpTaskId(Long grpTaskId) {
 			this.grpTaskId = grpTaskId;
 		}
 
 		
 	boolean isDeleted;	
-		
 		public boolean getIsDeleted() {
 			return isDeleted;
 		}
-	
 		public void setIsDeleted(boolean isDeleted) {
 			this.isDeleted = isDeleted;
+		}
+	
+	boolean useBBB;
+		public boolean isUseBBB() {
+			return useBBB;
+		}
+		public void setUseBBB(boolean useBBB) {
+			this.useBBB = useBBB;
 		}
 
 	public IInstance save() throws Exception {
@@ -1123,7 +1128,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		return returnObjects;
 	}
 	
-	@Override
+	
 	@Test(scenario="first", starter=true, instruction="$Write", next="newActivity()")
 	public Object[] add() throws Exception {
 		Object[] returnObjects = null;
@@ -1226,7 +1231,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		}
 	}
 
-	@Override
+	
 	public Popup newActivity() throws Exception {
 //		NewInstancePanel newSubInstancePanel = new NewInstancePanel();
 //		newSubInstancePanel.setParentInstanceId(getInstId().toString());
@@ -1250,7 +1255,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	}
 	
 
-	@Override
+	
 	public OverlayCommentWorkItem comment() throws Exception {
 		
 		OverlayCommentOption overlayCommentOption = new OverlayCommentOption();

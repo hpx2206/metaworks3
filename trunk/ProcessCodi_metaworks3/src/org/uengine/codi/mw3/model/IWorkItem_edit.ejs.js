@@ -348,7 +348,7 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.press = function(){
     							innerHtmlStr		+=	" " + mw3.localize('$AddWithProcess') + ": \"<b>" ;
     							innerHtmlStr		+=	"<span id=\"processDivSpan\">" + processName + "</span>" ;
     							innerHtmlStr		+=	"</b>\"";
-    							innerHtmlStr		+=	" | <a href=\"#\" onClick=\"mw3.getFaceHelper('"+this.objectId+"').removeDiv('"+processDivId+"')\" style=\"cursor:pointer;\">싫어요</a> ";
+    							innerHtmlStr		+=	" | <a href=\"#\" onClick=\"mw3.getFaceHelper('"+this.objectId+"').removeDiv('"+processDivId+"')\" style=\"cursor:pointer;\">" + mw3.localize("$NO") + "</a> ";
     							innerHtmlStr		+=	"<br>";
     							innerHtmlStr		+=	"</div>";
     							
@@ -376,7 +376,7 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.press = function(){
 		        	  innerHtmlStr		+=	" " + mw3.localize('$AddDate') + ": \"<b>" ;
 		        	  innerHtmlStr		+=	"<span id=\"dateDivSpan\">" + date.toString(Date.CultureInfo.formatPatterns.fullDateTime) + "</span>" ;
 		        	  innerHtmlStr		+=	"</b>\"";
-		        	  innerHtmlStr		+=	" | <a href=\"#\" onClick=\"mw3.getFaceHelper('"+this.objectId+"').removeDiv('"+dateDivId+"')\" style=\"cursor:pointer;\">싫어요</a> ";
+		        	  innerHtmlStr		+=	" | <a href=\"#\" onClick=\"mw3.getFaceHelper('"+this.objectId+"').removeDiv('"+dateDivId+"')\" style=\"cursor:pointer;\">" + mw3.localize("$NO") + "</a> ";
 		        	  innerHtmlStr		+=	"<br>";
 		        	  innerHtmlStr		+=	"</div>";
 		        	  
@@ -417,7 +417,7 @@ org_uengine_codi_mw3_model_IWorkItem_edit.prototype.press = function(){
 				if(contact.friend && contact.friend.userId && contact.friend.name && text.indexOf(contact.friend.name) > -1 && !this.userAddCommands[contact.friend.userId] && !exisingFollowers[contact.friend.userId]){
 					var innerHtmlStr = 	"<div id=\"" + followerDivId + '_' + contact.friend.userId + "\" >";
 					innerHtmlStr		+=	"" + mw3.localize('$AddUserAsFollower') + ": <b>" + contact.friend.name + "</b>";
-					innerHtmlStr		+=	" | <a href=\"#\" onClick=\"mw3.getFaceHelper('" + this.objectId + "').hateFollower('" + followerDivId + "','" + contact.friend.userId + "');\" style=\"cursor:pointer;\">싫어요</a> ";
+					innerHtmlStr		+=	" | <a href=\"#\" onClick=\"mw3.getFaceHelper('" + this.objectId + "').hateFollower('" + followerDivId + "','" + contact.friend.userId + "');\" style=\"cursor:pointer;\">" + mw3.localize("$NO") + "</a> ";
 					innerHtmlStr		+=	"</div>";
 					
 					$('#' + followerDivId).append(innerHtmlStr);

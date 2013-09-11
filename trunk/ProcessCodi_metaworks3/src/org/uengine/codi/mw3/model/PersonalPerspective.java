@@ -75,7 +75,6 @@ public class PersonalPerspective extends Perspective {
 		if("sns".equals(session.getEmployee().getPreferUX()) ){
 			//js 호출부분
 			Browser.withSession(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Runnable(){
-				@Override
 				public void run() {
 					ScriptSessions.addFunctionCall("if(mw3.getAutowiredObject('org.uengine.codi.mw3.model.MuiltiViewTab')!=null) mw3.getAutowiredObject('org.uengine.codi.mw3.model.MuiltiViewTab').__getFaceHelper().selectTab", new Object[]{"2" });
 				}
