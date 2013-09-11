@@ -18,8 +18,17 @@ public class FavoritePanel {
 		}
 	
 	public void load() throws Exception {
-		IFavoriteFile favoriteFile = FavoriteFile.loadList(session);
+//		IFavoriteFile favoriteFile = FavoriteFile.loadList(session);
+//		setFavoriteFile(favoriteFile);
+//		
+		
+		FavoriteFile fFile = new FavoriteFile();
+		fFile.session = session;
+		
+		favoriteFile = fFile.loadList();
 		setFavoriteFile(favoriteFile);
+		
+		
 	}
 	
 	

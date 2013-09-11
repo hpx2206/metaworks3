@@ -2,12 +2,9 @@ package org.uengine.codi.mw3.processexplorer;
 
 import java.util.Date;
 
-import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
-import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
 import org.uengine.codi.mw3.model.Session;
-import org.uengine.codi.mw3.webProcessDesigner.ProcessNavigatorPanel;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessViewWindow;
 
 public class FavoriteFile extends Database<IFavoriteFile> implements IFavoriteFile {
@@ -61,29 +58,10 @@ public class FavoriteFile extends Database<IFavoriteFile> implements IFavoriteFi
 		}
 		
 	@AutowiredFromClient
-	public Session session;
+	transient public Session session;
 	
-	@AutowiredFromClient
-	public ProcessViewWindow processViewWindow;
-	
-	ProcessNavigatorPanel processNavigatorPanel;
-		public ProcessNavigatorPanel getProcessNavigatorPanel() {
-			return processNavigatorPanel;
-		}
-		public void setProcessNavigatorPanel(ProcessNavigatorPanel processNavigatorPanel) {
-			this.processNavigatorPanel = processNavigatorPanel;
-		}
-
-	ProcessNameView processNameView;
-		public ProcessNameView getProcessNameView() {
-			return processNameView;
-		}
-		public void setProcessNameView(ProcessNameView processNameView) {
-			this.processNameView = processNameView;
-		}
 	
 	@Override
-	@ServiceMethod(callByContent=true)
 	public IFavoriteFile addFavoriteFile() throws Exception {
 		// TODO Auto-generated method stub
 		IFavoriteFile iFavoriteFile = this.loadByProcess();
@@ -104,7 +82,7 @@ public class FavoriteFile extends Database<IFavoriteFile> implements IFavoriteFi
 		sb.append(" where userId=?userId");
 		sb.append(" and fileId=?fileId");
 		
-		IFavoriteFile favoriteFile = (IFavoriteFile) sql(FavoriteFile.class, sb.toString());
+		IFavoriteFile favoriteFile = (IFavoriteFile) sql(IFavoriteFile.class, sb.toString());
 		
 		favoriteFile.set("userId", this.getUserId());
 		favoriteFile.set("fileId", this.getFileId());
@@ -114,13 +92,13 @@ public class FavoriteFile extends Database<IFavoriteFile> implements IFavoriteFi
 		return favoriteFile;
 	}
 	
-	public static IFavoriteFile loadList(Session session) throws Exception {
+	public  IFavoriteFile loadList() throws Exception {
 		StringBuffer sb = new StringBuffer();
 		sb.append("select *");
 		sb.append(" from favoritefile");
 		sb.append(" where userId=?userId");
 		
-		IFavoriteFile favoriteFile = (IFavoriteFile) sql(FavoriteFile.class, sb.toString());
+		IFavoriteFile favoriteFile = (IFavoriteFile) sql(IFavoriteFile.class, sb.toString());
 		favoriteFile.set("userId", session.getEmployee().getEmpCode());
 		favoriteFile.select();
 		
@@ -135,30 +113,21 @@ public class FavoriteFile extends Database<IFavoriteFile> implements IFavoriteFi
 		sb.append(" from favoritefile");
 		sb.append(" where userId=?userId");
 		sb.append(" and fileId=?fileId");
-//		sb.append("update favoritefile");
-//		sb.append(" set ")
-		
-		IFavoriteFile favoriteFile = (IFavoriteFile) sql(FavoriteFile.class, sb.toString());
+		IFavoriteFile favoriteFile = (IFavoriteFile) sql(IFavoriteFile.class, sb.toString());
 		
 		favoriteFile.set("userId", this.getUserId());
 		favoriteFile.set("fileId", this.getFileId());
 		
 		
 		favoriteFile.update();
-		
-
-//		return new Object[]{new Refresh(new FavoritePanel())};
-		
-		//		deleteDatabaseMe();
 		return favoriteFile;
-		
 	}
 	
 	@Override
 	public Object[] loadFile() throws Exception {
 
 		String title = this.getFileName();
-		processViewWindow = new ProcessViewWindow();
+		ProcessViewWindow processViewWindow = new ProcessViewWindow();
 		Object[] returnObject = processViewWindow.loadFile(session,getFileId(),getFileName(),getFilePath(),title);
 		
 		return returnObject;

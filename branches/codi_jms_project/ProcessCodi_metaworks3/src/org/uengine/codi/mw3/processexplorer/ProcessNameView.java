@@ -52,20 +52,6 @@ public class ProcessNameView{
 
 	}
 	
-	String userId;
-	public String getUserId() {
-		return userId;
-	}
-	public void setUserId(String userId) {
-		this.userId = userId;
-	}
-	public String getFileName() {
-		return fileName;
-	}
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
-	}
-	String fileName;
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)	
 	public Object[] add() throws Exception{

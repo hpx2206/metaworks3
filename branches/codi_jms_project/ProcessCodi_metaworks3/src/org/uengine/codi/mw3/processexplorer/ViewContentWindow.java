@@ -59,7 +59,9 @@ public class ViewContentWindow extends ContentWindow {
 		public void setProcessViewPanel(ProcessViewPanel processViewPanel) {
 			this.processViewPanel = processViewPanel;
 		}
+		
 	IWorkItem workitem;
+		@Hidden
 		public IWorkItem getWorkitem() {
 			return workitem;
 		}

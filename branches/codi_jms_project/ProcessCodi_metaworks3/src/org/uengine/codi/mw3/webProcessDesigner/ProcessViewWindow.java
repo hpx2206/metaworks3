@@ -45,13 +45,6 @@ public class ProcessViewWindow {
 		public void setProcessViewPanel(ProcessViewPanel processViewPanel) {
 			this.processViewPanel = processViewPanel;
 		}
-//	ProcessAttributePanel processAttributePanel;
-//		public ProcessAttributePanel getProcessAttributePanel() {
-//			return processAttributePanel;
-//		}
-//		public void setProcessAttributePanel(ProcessAttributePanel processAttributePanel) {
-//			this.processAttributePanel = processAttributePanel;
-//		}
 
 	ProcessNameView processNameView;
 		public ProcessNameView getProcessNameView() {
@@ -64,7 +57,6 @@ public class ProcessViewWindow {
 	public ProcessViewWindow() throws Exception{
 		processNavigatorPanel = new ProcessNavigatorPanel();
 		processViewPanel = new ProcessViewPanel();
-//		processAttributePanel = new ProcessAttributePanel();
 		processNameView = new ProcessNameView();
 	}
 	
@@ -74,17 +66,18 @@ public class ProcessViewWindow {
 	//DefinitionViewWindow의 Layout Setting
 	public void load() throws Exception{
 		if( alias != null){
-			processNameView.setFileId(defId);
+			processNameView.setFileId(this.getDefId());
+			processNameView.setAlias(this.getAlias());
 			processNameView.session = session;
 			processNameView.load();
 
-			processNavigatorPanel.setDefId(defId);
-			processNavigatorPanel.setAlias(alias);
+			processNavigatorPanel.setDefId(this.getDefId());
+			processNavigatorPanel.setAlias(this.getAlias());
 			processNavigatorPanel.load();
 			
 			
-			processViewPanel.setDefId(defId);
-			processViewPanel.setAlias(alias);
+			processViewPanel.setDefId(this.getDefId());
+			processViewPanel.setAlias(this.getAlias());
 			processViewPanel.setViewType("definitionView");
 			processViewPanel.load();
 			

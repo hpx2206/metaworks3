@@ -1,4 +1,74 @@
+		<%
+			if(mw3.how == 'fileView'){
+			var fileIcon = value.fileIcon;
+									
+					if(fileIcon.indexOf("pdf") > -1){
+						fileIcon = "Icon_pdf.png";
+					}else if(fileIcon.indexOf("ms") > -1){
+							if(fileIcon.indexOf("excel") > -1){
+								fileIcon = "Icon_excel.png";
+							}else if(fileIcon.indexOf("powerpoint") > -1){
+								fileIcon = "Icon_ppt.png";
+							}else if(fileIcon.indexOf("word") > -1){
+								fileIcon = "Icon_doc.png";
+							}
+					}else if(fileIcon.indexOf("haansoft") > -1){
+								fileIcon = "Icon_haansoft.png";
+					}else if(fileIcon.indexOf("text") > -1){
+							fileIcon = "Icon_text.png";
+					}else if(fileIcon.indexOf("image") > -1){
+							fileIcon = "Icon_image.png";
+					}else{
+							fileIcon = "Icon_etc.png";
+					}				
+		%>
+			<div style="width:auto; margin-left:20px;">
+				<font size=2>
+					<img src="images/<%=fileIcon%>" />
+					<b><a href="#" onClick="<%=methods.documentView.caller()%>"><%=value.title%></b><br>
+				</font>
+				<%=value.startDate%><%=fields.file.here()%> 
+			</div>
+
+ 
+	<% 
+	 }else if (mw3.how == 'documentlist'){ 
+					var folderName = value.folderName;
+					var fileIcon = value.fileIcon;
+						
+						if(fileIcon.indexOf("pdf") > -1){
+							fileIcon = "Icon_pdf.png";
+						}else if(fileIcon.indexOf("ms") > -1){
+								if(fileIcon.indexOf("excel") > -1){
+									fileIcon = "Icon_excel.png";
+								}else if(fileIcon.indexOf("powerpoint") > -1){
+									fileIcon = "Icon_ppt.png";
+								}else if(fileIcon.indexOf("word") > -1){
+									fileIcon = "Icon_doc.png";
+								}
+						}else if(fileIcon.indexOf("haansoft") > -1){
+									fileIcon = "Icon_haansoft.png";
+						}else if(fileIcon.indexOf("text") > -1){
+								fileIcon = "Icon_text.png";
+						}else if(fileIcon.indexOf("image") > -1){
+								fileIcon = "Icon_image.png";
+						}else{
+								fileIcon = "Icon_etc.png";
+						}				
+						
+	%>						
+			<img src="images/<%=fileIcon%>" />
+			<font color=#5C5C5C style="line-height:19px;">
+				<a href="#" onClick="<%=methods.documentView.caller()%>"><%=value.title%><br>
+				<%=value.startDate%>
+							
+<% 
+			if(folderName != null){ 
+%> 
+			<span class="topic_span"><%=folderName%></span></a>
 <%
+			}
+	}else {
 	if(value){
 	
 		if(value.more){
@@ -110,41 +180,7 @@
 
 <% } %>
 
-		<%
-			if(mw3.how == 'fileView'){
-			var fileIcon = value.fileIcon;
-									
-					if(fileIcon.indexOf("pdf") > -1){
-						fileIcon = "Icon_pdf.png";
-					}else if(fileIcon.indexOf("ms") > -1){
-							if(fileIcon.indexOf("excel") > -1){
-								fileIcon = "Icon_excel.png";
-							}else if(fileIcon.indexOf("powerpoint") > -1){
-								fileIcon = "Icon_ppt.png";
-							}else if(fileIcon.indexOf("word") > -1){
-								fileIcon = "Icon_doc.png";
-							}
-					}else if(fileIcon.indexOf("haansoft") > -1){
-								fileIcon = "Icon_haansoft.png";
-					}else if(fileIcon.indexOf("text") > -1){
-							fileIcon = "Icon_text.png";
-					}else if(fileIcon.indexOf("image") > -1){
-							fileIcon = "Icon_image.png";
-					}else{
-							fileIcon = "Icon_etc.png";
-					}				
-		%>
-			<div style="width:auto; margin-left:20px;">
-				<font size=2>
-					<img src="images/<%=fileIcon%>" />
-					<b><a href="#" onClick="<%=methods.documentView.caller()%>"><%=value.title%></b><br>
-				</font>
-				<%=value.startDate%><%=fields.file.here()%> 
-			</div>
 
-
-	<% 
-	 }else{ %>
 
 		<div class="cont" style="padding:5px 10px; margin:0px;">	
 			<table id="tableHidtoryContent_1" width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -215,42 +251,7 @@
 						</td>
 					</tr>
 					<%if(value.type=='file'){
-						if( mw3.how == 'documentlist'){
-								var folderName = value.folderName;
-								var fileIcon = value.fileIcon;
-									
-									if(fileIcon.indexOf("pdf") > -1){
-										fileIcon = "Icon_pdf.png";
-									}else if(fileIcon.indexOf("ms") > -1){
-											if(fileIcon.indexOf("excel") > -1){
-												fileIcon = "Icon_excel.png";
-											}else if(fileIcon.indexOf("powerpoint") > -1){
-												fileIcon = "Icon_ppt.png";
-											}else if(fileIcon.indexOf("word") > -1){
-												fileIcon = "Icon_doc.png";
-											}
-									}else if(fileIcon.indexOf("haansoft") > -1){
-												fileIcon = "Icon_haansoft.png";
-									}else if(fileIcon.indexOf("text") > -1){
-											fileIcon = "Icon_text.png";
-									}else if(fileIcon.indexOf("image") > -1){
-											fileIcon = "Icon_image.png";
-									}else{
-											fileIcon = "Icon_etc.png";
-									}				
 						
-				%>						
-						<img src="images/<%=fileIcon%>" />
-						<font color=#5C5C5C style="line-height:19px;">
-							<a href="#" onClick="<%=methods.documentView.caller()%>"><%=value.title%>
-							
-						<% 
-							if(folderName != null){ 
-						%> 
-								<span class="topic_span"><%=folderName%></span></a>
-						<%
-							}
-					 	}else{ 
 							var folderName = value.folderName;					
 						%>
 							<tr>
@@ -361,7 +362,8 @@
 	
 	
 <%
+	
 	}
 	}
-	}
+
 %>
