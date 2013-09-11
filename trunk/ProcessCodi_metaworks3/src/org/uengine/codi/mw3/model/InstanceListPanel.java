@@ -79,6 +79,8 @@ public class InstanceListPanel implements ContextAware{
 			}
 			if("topic".equals(session.getLastPerspecteType()))
 				this.getMetaworksContext().setHow("topic");
+			if("project".equals(session.getLastPerspecteType()))
+				this.getMetaworksContext().setHow("project");
 			
 			instanceList = new InstanceList(session);
 			
