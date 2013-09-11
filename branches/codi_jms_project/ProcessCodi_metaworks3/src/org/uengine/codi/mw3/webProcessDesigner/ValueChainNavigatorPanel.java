@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.webProcessDesigner;
 
+import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.component.Tree;
@@ -7,7 +8,7 @@ import org.metaworks.component.TreeNode;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.kernel.ValueChain;
 
-public class ValueChainNavigatorPanel {
+public class ValueChainNavigatorPanel implements ContextAware {
 
 	public ValueChainNavigatorPanel() {
 		setMetaworksContext(new MetaworksContext());
