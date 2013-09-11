@@ -1,13 +1,10 @@
 package org.uengine.codi.mw3.processexplorer;
 
 import org.metaworks.annotation.AutowiredToClient;
-import org.metaworks.annotation.Hidden;
 import org.metaworks.widget.layout.Layout;
 import org.uengine.codi.mw3.admin.PageNavigator;
-import org.uengine.codi.mw3.ide.Workspace;
 import org.uengine.codi.mw3.model.ProcessTopPanel;
 import org.uengine.codi.mw3.model.Session;
-import org.uengine.codi.mw3.webProcessDesigner.ProcessDefinitionNode;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessViewWindow;
 
 public class ProcessExplorer {
@@ -27,28 +24,14 @@ public class ProcessExplorer {
 			this.pageNavigator = pageNavigator;
 		}		
 
-	ProcessDefinitionNode node;
-		@Hidden
-		@AutowiredToClient
-		public ProcessDefinitionNode getNode() {
-			return node;
-		}
-		public void setNode(ProcessDefinitionNode node) {
-			this.node = node;
-		}
-
 	@AutowiredToClient
 	public Session session;
 		
-	
 	public ProcessExplorer() throws Exception{
 		
 	}
 	
-	
 	public void load(Session session) throws Exception{
-		Workspace workspace = new Workspace();
-		workspace.load();
 		ProcessExplorerPerspectiveWindow processExplorerPerspectiveWindow = new ProcessExplorerPerspectiveWindow(session);
 		processExplorerPerspectiveWindow.setTitle("ProcessExplorer");
 		

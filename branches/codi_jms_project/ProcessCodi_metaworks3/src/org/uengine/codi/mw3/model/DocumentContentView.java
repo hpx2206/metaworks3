@@ -1,16 +1,16 @@
 package org.uengine.codi.mw3.model;
 
-import org.metaworks.ContextAware;
-import org.metaworks.MetaworksContext;
+import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 
 
 
-public class DocumentContentView   implements ContextAware {
+public class DocumentContentView  {
 
 	Long taskId;
 		@Id
+		@Hidden
 		public Long getTaskId() {
 			return taskId;
 		}
@@ -18,14 +18,8 @@ public class DocumentContentView   implements ContextAware {
 			this.taskId = taskId;
 		}
 		
-	MetaworksContext metaworksContext;
-		public MetaworksContext getMetaworksContext() {
-			return metaworksContext;
-		}
-		public void setMetaworksContext(MetaworksContext metaworksContext) {
-			this.metaworksContext = metaworksContext;
-		}
 	IWorkItem workitem;
+		
 		public IWorkItem getWorkitem() {
 			return workitem;
 		}
@@ -35,7 +29,6 @@ public class DocumentContentView   implements ContextAware {
 		}
 
 	public DocumentContentView(){
-		setMetaworksContext(new MetaworksContext());
 	}
 	
 	@ServiceMethod(payload={"taskid"})
@@ -49,7 +42,6 @@ public class DocumentContentView   implements ContextAware {
 	}
 	
 	public void load(Long id) throws Exception{
-		setTaskId(id);
 		
 		IWorkItem workitem = WorkItem.findDocumentByFolderId(id);
 		setWorkitem(workitem);

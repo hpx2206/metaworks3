@@ -46,15 +46,6 @@ public interface IDocumentNode extends IDAO {
 	public String getDescription();
 	public void setDescription(String description);
 	
-	public String getThumbnail();
-	public void setThumbnail(String thumbnail);
-	
-	public String getConntype();
-	public void setConntype(String conntype);
-	
-	public String getUrl();
-	public void setUrl(String url);
-	
 	public Date getStartDate();
 	public void setStartDate(Date startDate);
 	

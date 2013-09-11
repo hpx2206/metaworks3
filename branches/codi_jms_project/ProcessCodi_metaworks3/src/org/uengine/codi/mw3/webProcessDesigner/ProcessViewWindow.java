@@ -5,6 +5,7 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.processexplorer.ProcessExploreWindow;
 import org.uengine.codi.mw3.processexplorer.ProcessNameView;
+import org.uengine.codi.mw3.processexplorer.ViewContentWindow;
 
 public class ProcessViewWindow {
 
@@ -128,7 +129,10 @@ public class ProcessViewWindow {
 		ProcessExploreWindow processExploreWindow = new ProcessExploreWindow();
 		processExploreWindow.setPanel(this);
 	
-		return new Object[]{new Refresh(processExploreWindow)};
+		ViewContentWindow viewContentWindow = new ViewContentWindow();
+		viewContentWindow.setPanel(null);
+		
+		return new Object[]{new Refresh(processExploreWindow), new Refresh(viewContentWindow)};
 		
 	}
 }

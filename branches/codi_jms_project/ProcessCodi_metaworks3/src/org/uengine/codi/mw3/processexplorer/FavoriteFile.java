@@ -66,6 +66,14 @@ public class FavoriteFile extends Database<IFavoriteFile> implements IFavoriteFi
 	@AutowiredFromClient
 	public ProcessViewWindow processViewWindow;
 	
+	ProcessNavigatorPanel processNavigatorPanel;
+		public ProcessNavigatorPanel getProcessNavigatorPanel() {
+			return processNavigatorPanel;
+		}
+		public void setProcessNavigatorPanel(ProcessNavigatorPanel processNavigatorPanel) {
+			this.processNavigatorPanel = processNavigatorPanel;
+		}
+
 	ProcessNameView processNameView;
 		public ProcessNameView getProcessNameView() {
 			return processNameView;
@@ -98,28 +106,28 @@ public class FavoriteFile extends Database<IFavoriteFile> implements IFavoriteFi
 		
 		IFavoriteFile favoriteFile = (IFavoriteFile) sql(FavoriteFile.class, sb.toString());
 		
-		favoriteFile.set("userId", userId);
-		favoriteFile.set("fileId", fileId);
+		favoriteFile.set("userId", this.getUserId());
+		favoriteFile.set("fileId", this.getFileId());
 		
 		favoriteFile.select();
 		
 		return favoriteFile;
 	}
+	
 	public static IFavoriteFile loadList(Session session) throws Exception {
-		// TODO Auto-generated method stub
-		
-//		DAOUtil daoutil = new DAOUtil();
 		StringBuffer sb = new StringBuffer();
 		sb.append("select *");
 		sb.append(" from favoritefile");
+		sb.append(" where userId=?userId");
 		
 		IFavoriteFile favoriteFile = (IFavoriteFile) sql(FavoriteFile.class, sb.toString());
+		favoriteFile.set("userId", session.getEmployee().getEmpCode());
 		favoriteFile.select();
 		
 		return favoriteFile;
 	}
+	
 	@Override
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public IFavoriteFile removeFavoriteFile() throws Exception {
 		// TODO Auto-generated method stub
 		StringBuffer sb = new StringBuffer();
@@ -145,13 +153,6 @@ public class FavoriteFile extends Database<IFavoriteFile> implements IFavoriteFi
 		return favoriteFile;
 		
 	}
-	ProcessNavigatorPanel processNavigatorPanel;
-		public ProcessNavigatorPanel getProcessNavigatorPanel() {
-			return processNavigatorPanel;
-		}
-		public void setProcessNavigatorPanel(ProcessNavigatorPanel processNavigatorPanel) {
-			this.processNavigatorPanel = processNavigatorPanel;
-		}
 	
 	@Override
 	public Object[] loadFile() throws Exception {

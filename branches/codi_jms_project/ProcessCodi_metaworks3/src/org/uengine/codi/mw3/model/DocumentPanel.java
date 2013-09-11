@@ -39,35 +39,17 @@ public class DocumentPanel implements ContextAware {
 			this.documentNode = documentNode;
 		}
 
-	DocumentViewWindow documentViewWindow;	 
-		public DocumentViewWindow getDocumentViewWindow() {
-			return documentViewWindow;
-		}
-		public void setDocumentViewWindow(DocumentViewWindow documentViewWindow) {
-			this.documentViewWindow = documentViewWindow;
-		}
-
 	
 	public void load() throws Exception{
 
 		DocumentNode Node = new DocumentNode();
 		Node.session = session;
-		Node.setId(session.getCompany().getComCode());
+//		Node.setId(session.getCompany().getComCode());
+		Node.setCompanyId(session.getCompany().getComCode());
 		
 		documentNode = Node.loadDocumentList();
 		documentNode.setMetaworksContext(this.getMetaworksContext());
 		documentNode.getMetaworksContext().setWhen("onlyView");
 		setDocumentNode(documentNode);
 	}
-//	@Override
-//	public WfNode makeNewNode(){
-//		WfNode node = new KnowlegeNode();
-//		node.session = session;
-//		node.setType(this.getId());
-//		if(session != null)
-//			node.setAuthorId(session.getUser().getUserId());
-//		
-//		return node;
-//		
-//	}
 }

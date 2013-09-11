@@ -18,7 +18,7 @@ import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.ValueChain;
 import org.uengine.kernel.ValueChainDefinition;
 
-public class ValuechainPerspective extends Perspective implements ContextAware {
+public class ValuechainPerspective extends Perspective  implements ContextAware {
 
 	ArrayList<Tree> valueChainTreeList;
 		public ArrayList<Tree> getValueChainTreeList() {
@@ -27,6 +27,7 @@ public class ValuechainPerspective extends Perspective implements ContextAware {
 		public void setValueChainTreeList(ArrayList<Tree> valueChainTreeList) {
 			this.valueChainTreeList = valueChainTreeList;
 		}
+		
 	MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
 			return metaworksContext;
@@ -34,23 +35,24 @@ public class ValuechainPerspective extends Perspective implements ContextAware {
 		public void setMetaworksContext(MetaworksContext metaworksContext) {
 			this.metaworksContext = metaworksContext;
 		}
-	boolean	isLodead;
-		public boolean isLodead() {
-			return isLodead;
+		
+	boolean	isLoaded;
+		public boolean isLoaded() {
+			return isLoaded;
 		}
-		public void setLodead(boolean isLodead) {
-			this.isLodead = isLodead;
+		public void setLoaded(boolean isLoaded) {
+			this.isLoaded = isLoaded;
 		}
 		
 	public ValuechainPerspective() {
 		setLabel("Valuechain");
 		valueChainTreeList = new ArrayList<Tree>();
-		setLodead(false);
+		setLoaded(false);
 	}
 	@Override
 	public void loadChildren() throws Exception {
 		
-		if(!isLodead()) {
+		if(!isLoaded()) {
 			Workspace workspace = new Workspace();
 			workspace.load();
 			
@@ -58,7 +60,7 @@ public class ValuechainPerspective extends Perspective implements ContextAware {
 				File file = new File(project.getPath());
 				findChildValueChain(file);
 			}
-			setLodead(true);
+			setLoaded(true);
 		}
 	}
 	
