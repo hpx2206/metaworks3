@@ -1,10 +1,12 @@
 package org.uengine.codi.mw3.calendar;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import org.metaworks.ContextAware;
@@ -24,6 +26,7 @@ import org.uengine.codi.mw3.model.NewInstancePanel;
 import org.uengine.codi.mw3.model.NewInstanceWindow;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.model.WorkItem;
+import org.uengine.kernel.GlobalContext;
 import org.uengine.webservices.worklist.DefaultWorkList;
 
 public class ScheduleCalendar implements ContextAware {
@@ -338,24 +341,24 @@ public class ScheduleCalendar implements ContextAware {
 		}
 		
 		String title = "";
+		DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.SHORT, new Locale(session.getEmployee().getLocale()));
+		
+		if(!allDay)
+			dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, new Locale(session.getEmployee().getLocale()));
+
+		String date = dateFormat.format(getSelDate());
+		SimpleDateFormat sf = (SimpleDateFormat) dateFormat;
+		String pattern = sf.toLocalizedPattern();
 		
 		if( getSelDate() != null ){
-			if(allDay){
-				title = "[일정:" + new SimpleDateFormat("yyyy/MM/dd").format(getSelDate()) + "]" ;
-				
-				Calendar c = Calendar.getInstance ( );
-				c.setTime(getSelDate());
-				c.set ( c.HOUR_OF_DAY  , +23);
-				c.set ( c.MINUTE  , +59);
-				
-				this.setSelDate(c.getTime());			
-
-			}else{
-				title = "[일정:" + new SimpleDateFormat("yyyy/MM/dd aaa hh:mm").format(getSelDate()) + "]" ;
-				//title = "[일정:" + new SimpleDateFormat("yyyy/MM/dd aaa hh:mm ~ ").format(getSelDate()) + new SimpleDateFormat("aaa hh:mm").format(getEndDate()) + "]" ;
-				
-				
-			}
+			title = "[" + date + "]";
+			
+			Calendar c = Calendar.getInstance ( );
+			c.setTime(getSelDate());
+			c.set ( c.HOUR_OF_DAY  , +23);
+			c.set ( c.MINUTE  , +59);
+			
+			this.setSelDate(c.getTime());			
 		}
 
 		WorkItem newInstantiator = new CommentWorkItem();

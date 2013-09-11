@@ -109,13 +109,16 @@ public class PerspectivePanel {
 	public PerspectivePanel(Session session) throws Exception {
 		
 		if(session != null){
+			
 			//개인별
-			personalPerspective = new PersonalPerspective();
-			personalPerspective.session = session;
-			personalPerspective.select();
+			if("1".equals(GlobalContext.getPropertyString("personal.use", "1"))){
+				personalPerspective = new PersonalPerspective();
+				personalPerspective.session = session;
+				personalPerspective.select();
+			}
 			
 			if(session.getEmployee().isApproved() && !session.getEmployee().isGuest()){
-				
+
 				//주제별
 				if("1".equals(GlobalContext.getPropertyString("topic.use", "1"))){
 					topicPerspective = new TopicPerspective();
@@ -126,21 +129,20 @@ public class PerspectivePanel {
 				//조직도
 				if("1".equals(GlobalContext.getPropertyString("organization.use", "1"))){
 					organizationPerspectiveDept = new OrganizationPerspectiveDept();
+//					organizationPerspectiveDept.select();
 				}
-				
-//				organizationPerspectiveDept.select();
 				
 				//역할
 				if("1".equals(GlobalContext.getPropertyString("role.use", "1"))){
 					organizationPerspectiveRole = new OrganizationPerspectiveRole();
+//					organizationPerspectiveRole.select();
 				}
-//				organizationPerspectiveRole.select();
 				
 				//프로세스별
 				if("1".equals(GlobalContext.getPropertyString("process.use", "1"))){
 					processPerspective = new ProcessPerspective();
+//					processPerspective.select();
 				}
-//				processPerspective.select();
 				
 				//앱
 				if("1".equals(GlobalContext.getPropertyString("app.use", "1"))){
@@ -149,7 +151,7 @@ public class PerspectivePanel {
 				if("1".equals(GlobalContext.getPropertyString("project.use", "1"))){
 					//프로젝트
 					projectPerspective = new ProjectPerspective();
-//						projectPerspective.select();
+//					projectPerspective.select();
 				}
 				if("1".equals(GlobalContext.getPropertyString("contact.use", "1"))){
 					//친구
@@ -164,7 +166,7 @@ public class PerspectivePanel {
 			}
 			//processStatusPerspective = new ProcessStatusPerspective();
 			//지식맵
-			if("1".equals(GlobalContext.getPropertyString("knowledge.use", "1"))){
+			if("1".equals(GlobalContext.getPropertyString("perspective.knowledge.use", "1"))){
 				strategicPerspective = new StrategicPerspective();
 			}
 		}
