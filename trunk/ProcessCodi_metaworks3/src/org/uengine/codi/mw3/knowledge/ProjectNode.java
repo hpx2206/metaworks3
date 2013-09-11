@@ -17,10 +17,8 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 	
 	public final static String TYPE_PROJECT = "project";
 	
-	String type ="project";
-	
 	public ProjectNode(){
-		this.setType(this.type);
+		this.setType(TYPE_PROJECT);
 	}
 	
 	public Object[] loadTopic() throws Exception {
@@ -31,7 +29,7 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 		}else{
 			
 			String title = "프로젝트: " + getName();
-			Object[] returnObject = Perspective.loadInstanceListPanel(session, "topic", getId(), title);
+			Object[] returnObject = Perspective.loadInstanceListPanel(session, TYPE_PROJECT, getId(), title);
 			
 			return returnObject;
 		}
@@ -54,7 +52,7 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 //		dao.select();
 		
 		IProjectNode dao  = (IProjectNode)MetaworksDAO.createDAOImpl(TransactionContext.getThreadLocalInstance(), "select * from bpm_knol where type= ?type and companyId=?companyId order by name", IProjectNode.class);
-		dao.set("type", "project");
+		dao.set("type", TYPE_PROJECT);
 		
 		// TODO: modify multi tenancy
 		dao.set("companyId", session.getCompany().getComCode());
