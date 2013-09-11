@@ -45,21 +45,21 @@ public class ProcessExplorerPerspectivePanel  implements ContextAware {
 	}
 	
 	public ProcessExplorerPerspectivePanel(Session session) throws Exception{
-			valuechainPerspective = new ValuechainPerspective();
-			valuechainPerspective.session = session;
-			valuechainPerspective.select();
-			
-			favoritePerspective = new FavoritePerspective();
-			favoritePerspective.session = session;
-			favoritePerspective.select();		
-			
-			documentPerspective = new DocumentPerspective();
-			documentPerspective.session = session;
-			
-			setMetaworksContext(new MetaworksContext());
-			this.getMetaworksContext().setHow("explorer");
-			documentPerspective.setMetaworksContext(this.getMetaworksContext());
-			documentPerspective.select();
+		valuechainPerspective = new ValuechainPerspective();
+		valuechainPerspective.session = session;
+		valuechainPerspective.select();
+		
+		favoritePerspective = new FavoritePerspective();
+		favoritePerspective.session = session;
+		favoritePerspective.select();		
+		
+		setMetaworksContext(new MetaworksContext());
+		this.getMetaworksContext().setHow("explorer");
+		
+		documentPerspective = new DocumentPerspective();
+		documentPerspective.session = session;		
+		documentPerspective.setMetaworksContext(this.getMetaworksContext());
+		documentPerspective.select();
 	}
 	
 }
