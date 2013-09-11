@@ -13,11 +13,12 @@ import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.Workspace;
 import org.uengine.codi.mw3.ide.editor.Editor;
 import org.uengine.codi.mw3.model.Perspective;
+import org.uengine.codi.mw3.webProcessDesigner.MajorProcessDefinitionNode;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.ValueChain;
 import org.uengine.kernel.ValueChainDefinition;
 
-public class ValuechainPerspective extends Perspective  implements ContextAware {
+public class ValuechainPerspective extends Perspective implements ContextAware {
 
 	ArrayList<Tree> valueChainTreeList;
 		public ArrayList<Tree> getValueChainTreeList() {
@@ -33,17 +34,31 @@ public class ValuechainPerspective extends Perspective  implements ContextAware 
 		public void setMetaworksContext(MetaworksContext metaworksContext) {
 			this.metaworksContext = metaworksContext;
 		}
+	boolean	isLodead;
+		public boolean isLodead() {
+			return isLodead;
+		}
+		public void setLodead(boolean isLodead) {
+			this.isLodead = isLodead;
+		}
+		
 	public ValuechainPerspective() {
 		setLabel("Valuechain");
 		valueChainTreeList = new ArrayList<Tree>();
+		setLodead(false);
 	}
 	@Override
 	public void loadChildren() throws Exception {
-		Workspace workspace = new Workspace();
-		workspace.load();
-		for(Project project: workspace.getProjects()){
-			File file = new File(project.getPath());
-			findChildValueChain(file);
+		
+		if(!isLodead()) {
+			Workspace workspace = new Workspace();
+			workspace.load();
+			
+			for(Project project: workspace.getProjects()){
+				File file = new File(project.getPath());
+				findChildValueChain(file);
+			}
+			setLodead(true);
 		}
 	}
 	
@@ -64,7 +79,12 @@ public class ValuechainPerspective extends Perspective  implements ContextAware 
 			for(int i=0; i < valueChainList.size(); i++){
 				ValueChain valueChain = valueChainList.get(i);
 				if( valueChain.getMajorProcessDefinitionNode() != null ){
-					rootNode.add(valueChain.getMajorProcessDefinitionNode());
+					this.setMetaworksContext(new MetaworksContext());
+					this.getMetaworksContext().setHow("explorer");
+				    MajorProcessDefinitionNode node = valueChain.getMajorProcessDefinitionNode();
+				    node.setMetaworksContext(this.getMetaworksContext());
+				    node.injectionMetaworksContext(this.getMetaworksContext(), node.getChild());
+				    rootNode.add(node);
 				}
 			}
 		}
