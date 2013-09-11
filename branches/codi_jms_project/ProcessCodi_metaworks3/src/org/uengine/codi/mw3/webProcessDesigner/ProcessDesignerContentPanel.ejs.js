@@ -828,10 +828,15 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ge
 				if(classType == 'Activity'){
 					activityList[activityIdx++] = activity;
 	//				activityMap[og['@id']] = activity;
-				}else if(classType == 'Role'){
-					roleList[roleIdx++] = activity;
-	//				roleMap[og['@id']] = activity;
-	//				cellForDwr['roleName'] = activity.name;
+				}
+			}
+			
+			//set Role
+			var role = $id.data('role');
+			if(role){
+				role.roleView = cellForDwr;
+				if(classType == 'Role'){
+					roleList[roleIdx++] = role;
 				}
 			}
 			

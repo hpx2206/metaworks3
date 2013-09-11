@@ -120,6 +120,17 @@ public class ProcessDesignerContainer {
 			ts.getTransitionView().setEditorId(getEditorId());
 			ts.getTransitionView().setTransition(ts);
 		}
+		Role[] roles = def.getRoles();
+		if( roles != null && roles.length > 0){
+			for(Role role : roles){
+				if( role.getRoleView() != null){
+					role.getRoleView().setViewType(viewType);
+					role.getRoleView().setEditorId(getEditorId());
+					role.getRoleView().setRole(role);
+					roleList.add(role);
+				}
+			}
+		}
 	}
 	
 	public ProcessDefinition containerToDefinition(ProcessDesignerContainer container){
@@ -127,6 +138,17 @@ public class ProcessDesignerContainer {
 		if( activityList != null ){
 			for(Activity act : activityList){
 				def.addChildActivity(act);
+			}
+		}
+		if( roleList != null ){
+			Role[] roles = new Role[1];
+			// default role
+			Role initiator = new Role();
+			initiator.setName("Initiator");
+			roles[0] = initiator;
+			def.setRoles(roles);
+			for(Role role : roleList){
+				def.addRole(role);
 			}
 		}
 		if( transitionList != null ){

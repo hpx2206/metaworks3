@@ -32,7 +32,7 @@ org_uengine_kernel_designer_web_RoleView.prototype = {
 			var element = null;
 			var initText;
 			if( object.role ){
-				initText = ( object.role.descr != null && object.role.descr.text != null ) ? object.role.descr.text :  "";
+				initText = ( object.role.displayName != null && object.role.displayName.text != null ) ? object.role.displayName.text :  "";
 			}else{
 				initText = ( object.label == null || object.label == 'undefined' ) ? "" :  unescape(object.label);
 			}
@@ -50,15 +50,14 @@ org_uengine_kernel_designer_web_RoleView.prototype = {
         	$(element).attr("_classname", object.activityClass);
         	$(element).attr("_viewClass", object.__className);
         	$(element).attr("_classType", object.classType);
-        	$(element).attr("_tracingTag", object.tracingTag);
         	
         	if( object.role ){
-        		$(element).data('activity', object.role);
+        		$(element).data('role', object.role);
         		// object.activity.activityView = null; 을 꼭 해주어야함.. activity가 activityView 를 들고있고, activityView가 activity를 들고있는 구조라서..
         		object.role.roleView = null;
-        	}else if( typeof $(element).attr("_classname") != 'undefined' &&  typeof $(element).data("activity") == 'undefined' ){
-        		var activityData = {__className : $(element).attr("_classname"), tracingTag : $(element).attr("_tracingTag")};
-        		$(element).data('activity', activityData);
+        	}else if( typeof $(element).attr("_classname") != 'undefined' &&  typeof $(element).data("role") == 'undefined' ){
+        		var activityData = {__className : $(element).attr("_classname")};
+        		$(element).data('role', activityData);
         	}
         	$(element).on({
         		dblclick: function (event) {
@@ -77,7 +76,7 @@ org_uengine_kernel_designer_web_RoleView.prototype = {
         					open : true,
         					width : 860,
         					height : 600,
-        					panel : $(this).data('activity'),
+        					panel : $(this).data('role'),
         					metaworksContext : metaworksContext
         			};
         			

@@ -33,14 +33,7 @@ public class ActivityView extends CanvasDTO  implements ContextAware{
 		public void setTracingTag(String tracingTag) {
 			this.tracingTag = tracingTag;
 		}
-		
-	String viewClass;
-		public String getViewClass() {
-			return viewClass;
-		}
-		public void setViewClass(String viewClass) {
-			this.viewClass = viewClass;
-		}
+	
 	String activityClass;
 		public String getActivityClass() {
 			return activityClass;
@@ -48,14 +41,7 @@ public class ActivityView extends CanvasDTO  implements ContextAware{
 		public void setActivityClass(String activityClass) {
 			this.activityClass = activityClass;
 		}
-		
-	String classType;
-		public String getClassType() {
-			return classType;
-		}
-		public void setClassType(String classType) {
-			this.classType = classType;
-		}
+	
 	String roleName;
 		public String getRoleName() {
 			return roleName;

@@ -150,4 +150,18 @@ public class CanvasDTO implements Serializable{
 			public void setEditorId(String editorId) {
 				this.editorId = editorId;
 			}
+		String classType;
+			public String getClassType() {
+				return classType;
+			}
+			public void setClassType(String classType) {
+				this.classType = classType;
+			}
+		String viewClass;
+			public String getViewClass() {
+				return viewClass;
+			}
+			public void setViewClass(String viewClass) {
+				this.viewClass = viewClass;
+			}
 }

@@ -8,12 +8,17 @@ import java.io.ObjectOutputStream;
 import org.metaworks.ContextAware;
 import org.metaworks.FieldDescriptor;
 import org.metaworks.MetaworksContext;
+import org.metaworks.Remover;
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.Type;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
+import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.inputter.RadioInput;
 import org.metaworks.validator.NotNullValid;
 import org.metaworks.validator.Validator;
+import org.uengine.codi.mw3.model.Popup;
+import org.uengine.codi.mw3.webProcessDesigner.ApplyProperties;
 import org.uengine.contexts.TextContext;
 import org.uengine.kernel.designer.web.RoleView;
 import org.uengine.processdesigner.inputters.RoleResolutionContextSelectorInput;
@@ -422,4 +427,19 @@ public class Role implements java.io.Serializable, Cloneable, ContextAware {
 		}
 	}
 
+	/**
+	 * 나중에 apply 버튼은 ActivityWindow 로 빼야한다... 지금은 텝에 버튼이 보이질 않아서 임시로 달아놓음
+	 * @return
+	 */
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
+	public Object[] apply(){
+		return new Object[]{new ApplyProperties(this.getRoleView().getId() , this), new Remover(new Popup() , true) };
+	}
+
+	
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
+	public Object[] cancel(){
+		return new Object[]{new Remover(new Popup() , true)};
+		
+	}
 }
