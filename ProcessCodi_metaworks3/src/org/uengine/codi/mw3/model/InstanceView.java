@@ -85,7 +85,7 @@ public class InstanceView {
 		
 		this.setInstanceAction(instanceTooltip);
 		
-		setInstanceName(instance.getName());
+		setInstanceName(instance.getName()==null?inst.getName() : instance.getName());
 		setInstanceId(instance.getInstId().toString());
 		setStatus(inst.getStatus());
 		setSecuopt(inst.getSecuopt());
