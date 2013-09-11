@@ -209,7 +209,6 @@ public class Instance extends Database<IInstance> implements IInstance{
 	public Object[] addTrayBar() throws Exception{
 		Browser.withSession(Login.getSessionIdWithUserId(session.getUser().getUserId()), new Runnable(){
 			InstanceView instanceView = ((InstanceViewContent)detail()).getInstanceView();
-			@Override
 			public void run() {
 				ScriptSessions.addFunctionCall("mw3.getAutowiredObject('org.uengine.codi.mw3.model.Tray').__getFaceHelper().addTray", new Object[]{instanceView.getInstanceName(), getInstId()+""});
 			}
@@ -577,7 +576,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 //			.append("		OR (inst.secuopt=3 and ( exists (select topicId from BPM_TOPICMAPPING tm where tm.userId=?endpoint and inst.topicId=tm.topicId) ")
 //			.append(" 																	 or ?endpoint in ( select empcode from emptable where partcode in (  ")
 //			.append(" 																	 						select userId from BPM_TOPICMAPPING where assigntype = 2 and topicId = inst.topicId )))))  ");
-		}else if("topic".equals(navigation.getPerspectiveType())) {
+		}else if("topic".equals(navigation.getPerspectiveType()) || "project".equals(navigation.getPerspectiveType())) {
 			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
 			criteria.put("instIsdelete", "1");
 			instanceSql.append("and inst.status!=?instStatus ");
@@ -803,7 +802,6 @@ public class Instance extends Database<IInstance> implements IInstance{
 		}
 
 	Date dueDate;
-		@Override
 		public Date getDueDate() {
 			return dueDate;
 		}
@@ -836,153 +834,123 @@ public class Instance extends Database<IInstance> implements IInstance{
 		}
 
 	String info;
-		@Override
 		public String getInfo() {
 			return this.info;
 		}
-		@Override
 		public void setInfo(String info) {
 			this.info = info;
 		}
 
 	String name;
-		@Override
 		public String getName() {
 			return this.name;
 		}
-		@Override
 		public void setName(String name) {
 			this.name = name;
 			
 		}
 
 	boolean isDeleted;
-		@Override
 		public boolean getIsDeleted() {
 			return this.isDeleted;
 		}
-		@Override
 		public void setIsDeleted(boolean isDeleted) {
 			this.isDeleted = isDeleted;
 		}
 
 	boolean isAdhoc;
-		@Override
 		public boolean getIsAdhoc() {
 			return this.isAdhoc;
 		}
-		@Override
 		public void setIsAdhoc(boolean isAdhoc) {
 			this.isAdhoc = isAdhoc;
 		}
 
 	boolean isSubProcess;
-		@Override
 		public boolean getIsSubProcess() {
 			return this.isSubProcess;
 		}
-		@Override
 		public void setIsSubProcess(boolean isSubProcess) {
 			this.isSubProcess = isSubProcess;
 		}
 
 	Long rootInstId;
-		@Override
 		public Long getRootInstId() {
 			return this.rootInstId;
 		}
-		@Override
 		public void setRootInstId(Long rootInstId) {
 			this.rootInstId = rootInstId;
 		}
 
 	Long mainInstId;
-		@Override
 		public Long getMainInstId() {
 			return this.mainInstId;
 		}
-		@Override
 		public void setMainInstId(Long mainInstId) {
 			this.mainInstId = mainInstId;
 		}
 
 	String mainActTrcTag;
-		@Override
 		public String getMainActTrcTag() {
 			return this.mainActTrcTag;
 		}
-		@Override
 		public void setMainActTrcTag(String mainActTrcTag) {
 			this.mainActTrcTag = mainActTrcTag;
 		}
 
 	String mainExecScope;
-		@Override
 		public String getMainExecScope() {
 			return this.mainExecScope;
 		}
-		@Override
 		public void setMainExecScope(String mainExecScope) {
 			this.mainExecScope = mainExecScope;
 			
 		}
 
 	Long mainDefVerId;
-		@Override
 		public Long getMainDefVerId() {
 			return this.mainDefVerId;
 		}
-		@Override
 		public void setMainDefVerId(Long mainDefVerId) {
 			this.mainDefVerId = mainDefVerId;
 		}
 
 	boolean isArchive;
-		@Override
 		public boolean getIsArchive() {
 			return this.isArchive;
 		}
-		@Override
 		public void setIsArchive(boolean isArchive) {
 			this.isArchive = isArchive;
 		}
 
 	String absTrcPath;
-		@Override
 		public String getAbsTrcPath() {
 			return this.absTrcPath;
 		}
-		@Override
 		public void setAbsTrcPath(String absTrcPath) {
 			this.absTrcPath = absTrcPath;
 		}
 
 	boolean dontReturn;	
-		@Override
 		public boolean getDontReturn() {
 			return this.dontReturn;
 		}
-		@Override
 		public void setDontReturn(boolean dontReturn) {
 			this.dontReturn = dontReturn;
 		}
 
 	Number strategyId;
-		@Override
 		public Number getStrategyId() {
 			return this.strategyId;
 		}
-		@Override
 		public void setStrategyId(Number strategyId) {
 			this.strategyId = strategyId;
 		}
 
 	String initEp;
-		@Override
 		public String getInitEp() {
 			return this.initEp;
 		}
-		@Override
 		public void setInitEp(String initEp) {
 			this.initEp = initEp;
 		}
@@ -1004,11 +972,9 @@ public class Instance extends Database<IInstance> implements IInstance{
 		}
 
 	String secuopt;
-		@Override
 		public String getSecuopt() {
 			return secuopt;
 		}
-		@Override
 		public void setSecuopt(String secuopt) {
 			this.secuopt = secuopt;
 		}
@@ -1072,7 +1038,6 @@ public class Instance extends Database<IInstance> implements IInstance{
 		}
 		
 	int benefit;
-		@Override
 		public int getBenefit() {
 			return benefit;
 		}
@@ -1081,7 +1046,6 @@ public class Instance extends Database<IInstance> implements IInstance{
 		}
 	
 	int penalty;
-		@Override
 		public int getPenalty() {
 			return penalty;
 		}
@@ -1090,7 +1054,6 @@ public class Instance extends Database<IInstance> implements IInstance{
 		}
 
 	int effort;
-		@Override
 		public int getEffort() {
 			return effort;
 		}
@@ -1126,7 +1089,6 @@ public class Instance extends Database<IInstance> implements IInstance{
 			this.followers = followers;
 		}
 
-	@Override
 	public void split() throws Exception {
 		Long root = new Long(-1);
 		databaseMe().setMainInstId(root);
