@@ -22,7 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.filter.AllSessionFilter;
 import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitorPanel;
-import org.uengine.kernel.ProcessInstance;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 
@@ -86,7 +85,7 @@ public class InstanceView {
 		
 		this.setInstanceAction(instanceTooltip);
 		
-		setInstanceName(inst.getName());
+		setInstanceName(instance.getName());
 		setInstanceId(instance.getInstId().toString());
 		setStatus(inst.getStatus());
 		setSecuopt(inst.getSecuopt());
