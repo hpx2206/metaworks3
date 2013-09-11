@@ -18,7 +18,7 @@ public class Contact extends Database<IContact> implements IContact{
 		IUser friend = new User();
 		
 		StringBuffer sb = new StringBuffer();
-		sb.append("select c.userId, c.friendId, ifnull(e.empname, c.friendName) friendName, e.mood, item.updatedate")
+		sb.append("select distinct c.userId, c.friendId, ifnull(e.empname, c.friendName) friendName, e.mood, item.updatedate")
 		  .append("  from contact c ")
 		  .append("  	left join emptable e")
 		  .append("    		on c.friendid = e.empcode")
@@ -101,7 +101,6 @@ public class Contact extends Database<IContact> implements IContact{
 	}
 
 	String friendId;
-		@Override
 		public String getFriendId() {
 			return friendId;
 		}
@@ -110,7 +109,6 @@ public class Contact extends Database<IContact> implements IContact{
 		}
 
 	IUser friend;
-		@Override
 		public IUser getFriend() {
 			return friend;
 		}
@@ -120,7 +118,6 @@ public class Contact extends Database<IContact> implements IContact{
 		}
 			
 	String userId;
-		@Override
 		public String getUserId() {
 			return userId;
 		}
@@ -142,7 +139,6 @@ public class Contact extends Database<IContact> implements IContact{
 		return user;
 	}
 
-	@Override
 	public User roleUserPickUp() throws RemoteException, Exception {
 		User user = new User(); //this should have error - more than the @Id, the objectId is the closest one.
 		user.copyFrom(this.getFriend());
