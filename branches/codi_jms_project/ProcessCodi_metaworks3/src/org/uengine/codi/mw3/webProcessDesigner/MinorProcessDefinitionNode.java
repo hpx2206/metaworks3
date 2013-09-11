@@ -50,10 +50,26 @@ public class MinorProcessDefinitionNode extends TreeNode implements ContextAware
 		public void setParentNode(MajorProcessDefinitionNode parentNode) {
 			this.parentNode = parentNode;
 		}
-		@Override
-		@ServiceMethod(payload={"id", "name", "path", "type", "folder", "defId","alias","treeId"},target=ServiceMethodContext.TARGET_POPUP)
-		public Object action() throws Exception {
+		
+	public MinorProcessDefinitionNode() {
+		setMetaworksContext(new MetaworksContext());
+	}
+	
+	@Override
+	@ServiceMethod(payload={"id", "name", "path", "type", "folder", "defId","alias","treeId", "metaworksContext"},target=ServiceMethodContext.TARGET_APPEND)
+	public Object action() throws Exception {
+		if("explorer".equals(this.getMetaworksContext().getHow())) {
 			
+			ProcessViewWindow processViewWindow = new ProcessViewWindow();
+			processViewWindow.setAlias(this.getPath());
+			processViewWindow.setDefId(this.getName());
+//			processViewWindow.setPath(this.getPath());
+			processViewWindow.session = session;
+			processViewWindow.load();
+			
+			return new Refresh(processViewWindow);
+			
+		} else if("viewer".equals(this.getMetaworksContext().getHow())){
 			ProcessViewerPanel processViewerPanel = new ProcessViewerPanel();
 			processViewerPanel.setAlias(this.getPath());
 			processViewerPanel.setDefinitionId(this.getName());
@@ -66,12 +82,21 @@ public class MinorProcessDefinitionNode extends TreeNode implements ContextAware
 			modalWindow.setTitle("view Process");
 			
 			return modalWindow;
-		}		
-	@ServiceMethod(payload={"id", "name", "path", "folder" , "child"}, mouseBinding="right", target=ServiceMethodContext.TARGET_POPUP_OVER_POPUP)
+			
+		} else {
+			return null;
+		}
+		
+	}		
+	@ServiceMethod(payload={"id", "name", "path", "folder" , "child", "metaworksContext"}, mouseBinding="right", target=ServiceMethodContext.TARGET_POPUP_OVER_POPUP)
 	public Object[] showContextMenu() {
-		session.setClipboard(this);
-		return new Object[]{new Refresh(session), new ValueChainContextMenu(this)};
+		if("explorer".equals(this.getMetaworksContext().getHow())) {
+			return null;
+			
+		} else {
+			session.setClipboard(this);
+			return new Object[]{new Refresh(session), new ValueChainContextMenu(this)};
+		}
 	}
-		
-		
+	
 }
