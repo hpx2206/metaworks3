@@ -47,14 +47,10 @@ public class ProcessExplorer {
 	
 	
 	public void load(Session session) throws Exception{
-			//TODO
-		
-		
 		Workspace workspace = new Workspace();
 		workspace.load();
 		ProcessExplorerPerspectiveWindow processExplorerPerspectiveWindow = new ProcessExplorerPerspectiveWindow(session);
 		processExplorerPerspectiveWindow.setTitle("ProcessExplorer");
-		
 		
 		ProcessExploreWindow processExplorerWindow = new ProcessExploreWindow();
 		ViewContentWindow viewContentWindow = new ViewContentWindow();
