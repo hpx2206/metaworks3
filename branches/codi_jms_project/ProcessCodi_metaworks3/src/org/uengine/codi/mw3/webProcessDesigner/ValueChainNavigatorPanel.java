@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.webProcessDesigner;
 
+import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.component.Tree;
 import org.metaworks.component.TreeNode;
@@ -8,6 +9,17 @@ import org.uengine.kernel.ValueChain;
 
 public class ValueChainNavigatorPanel {
 
+	public ValueChainNavigatorPanel() {
+		setMetaworksContext(new MetaworksContext());
+	}
+	
+	MetaworksContext metaworksContext;
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
+		}
 	Tree majorProcessDefinitionTree;
 		public Tree getMajorProcessDefinitionTree() {
 			return majorProcessDefinitionTree;
@@ -34,10 +46,22 @@ public class ValueChainNavigatorPanel {
 	public Session session;
 
 	public void load(){
+		
+		this.getMetaworksContext().setHow("viewer");
 		MajorProcessDefinitionNode majorProcessDefinitionNode;
 		
 		if( valueChain != null && valueChain.getMajorProcessDefinitionNode() != null ){
 			majorProcessDefinitionNode = valueChain.getMajorProcessDefinitionNode();
+			for(int i = 0; i < majorProcessDefinitionNode.getChild().size(); i++) {
+				if(majorProcessDefinitionNode.getChild().get(i) instanceof MajorProcessDefinitionNode) {
+					MajorProcessDefinitionNode node = (MajorProcessDefinitionNode)majorProcessDefinitionNode.getChild().get(i);
+					node.setMetaworksContext(this.getMetaworksContext());
+					
+				} else {
+					MinorProcessDefinitionNode node = (MinorProcessDefinitionNode)majorProcessDefinitionNode.getChild().get(i);
+					node.setMetaworksContext(this.getMetaworksContext());
+				}
+			}
 			majorProcessDefinitionNode.setName(valueChainName);
 			majorProcessDefinitionNode.setExpanded(true);
 		}else{
