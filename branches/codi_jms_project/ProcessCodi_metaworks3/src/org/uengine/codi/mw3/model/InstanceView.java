@@ -228,14 +228,6 @@ public class InstanceView {
 		public void setTaskId(Long taskId) {
 			this.taskId = taskId;
 		}
-
-	DocumentContentView documentContentView;
-		public DocumentContentView getDocumentContentView() {
-			return documentContentView;
-		}
-		public void setDocumentContentView(DocumentContentView documentContentView) {
-			this.documentContentView = documentContentView;
-		}
 	protected void loadDefault(Instance inst) throws Exception{
 		newItem = new CommentWorkItem();
 		newItem.setInstId(new Long(getInstanceId()));
@@ -309,14 +301,50 @@ public class InstanceView {
 
 	}
 	
-	public void loadDocument() throws Exception {
-		documentContentView = new DocumentContentView();
+	public void loadDocument() throws Exception{
+		
+		Instance inst = new Instance();
+		inst.setInstId(this.getRootInstId());
+		inst.copyFrom(inst.databaseMe());
+		inst.setMetaworksContext(getMetaworksContext());
+		
+		InstanceTooltip instanceTooltip = new InstanceTooltip();
+		instanceTooltip.getMetaworksContext().setHow("action");		
+		instanceTooltip.setInstanceId(this.getRootInstId());
+		instanceTooltip.setStatus(inst.getStatus());
+		instanceTooltip.setSecuopt(inst.getSecuopt());
+		this.setInstanceAction(instanceTooltip);
+		
+		
+		setInstanceId(this.getRootInstId().toString());
+		setStatus(inst.getStatus());
+		setSecuopt(inst.getSecuopt());
+		
+		InstanceFollowers followers = new InstanceFollowers();
+		followers.setInstanceId(inst.getInstId().toString());
+		followers.load();
+		
+		this.setFollowers(followers);
+		
+//		documentContentView = new DocumentContentView();
+//		documentContentView.setTaskId(this.getTaskId());
+//		documentContentView.setInstId(this.getRootInstId());
+//		documentContentView.load();
+//		
+		
+		DocumentContentView documentContentView = new DocumentContentView();
+		documentContentView.setInstanceId(this.getInstanceId());
 		documentContentView.setTaskId(this.getTaskId());
-		documentContentView.load();
-		
-		
-	} 
+		setDocumentContentView(new Loader(documentContentView, "load"));
+	}
 	
+	Long rootInstId;
+		public Long getRootInstId() {
+			return rootInstId;
+		}
+		public void setRootInstId(Long rootInstId) {
+			this.rootInstId = rootInstId;
+		}
 	ArrayList<FacebookFeedback> externalFeedback;
 		public ArrayList<FacebookFeedback> getExternalFeedback() {
 			return externalFeedback;
@@ -367,7 +395,15 @@ public class InstanceView {
 		public void setInstanceViewThreadPanel(Object instanceViewThreadPanel) {
 			this.instanceViewThreadPanel = instanceViewThreadPanel;
 		}
-
+	Object documentContentView;
+		public Object getDocumentContentView() {
+			return documentContentView;
+		}
+		public void setDocumentContentView(Object documentContentView) {
+			this.documentContentView = documentContentView;
+		}
+	
+	
 //	IWorkItem threadPosting;
 //		public IWorkItem getThreadPosting() {
 //			return threadPosting;
@@ -375,6 +411,7 @@ public class InstanceView {
 //		public void setThreadPosting(IWorkItem threadPosting) {
 //			this.threadPosting = threadPosting;
 //		}
+
 
 	EventTriggerPanel eventTriggerPanel;
 		public EventTriggerPanel getEventTriggerPanel() {

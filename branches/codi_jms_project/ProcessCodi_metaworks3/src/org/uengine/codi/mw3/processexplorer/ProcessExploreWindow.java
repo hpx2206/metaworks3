@@ -3,13 +3,13 @@ package org.uengine.codi.mw3.processexplorer;
 
 
 import org.metaworks.annotation.Face;
-import org.uengine.codi.mw3.model.ContentWindow;
+import org.metaworks.widget.Window;
 
 @Face(ejsPath="genericfaces/Window.ejs",
 displayName="ProcessExploreWindow",
 options={"hideLabels", "maximize"}, 
 values={"true", "true"})
-public class ProcessExploreWindow extends ContentWindow{
+public class ProcessExploreWindow extends Window{
 	public ProcessExploreWindow(){
 		super();
 	}

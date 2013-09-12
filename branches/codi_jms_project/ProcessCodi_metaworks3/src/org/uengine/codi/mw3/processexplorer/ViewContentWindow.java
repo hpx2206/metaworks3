@@ -4,15 +4,13 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.uengine.codi.mw3.model.ContentWindow;
-import org.uengine.codi.mw3.model.IWorkItem;
 import org.uengine.codi.mw3.model.Session;
-import org.uengine.codi.mw3.model.WorkItem;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessAttributePanel;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessViewPanel;
 
 @Face(ejsPath="genericfaces/Window.ejs",
 displayName="ViewContentWindow",
-options={"hideLabels", "maximize"}, 
+options={"hideLabels", "minimize"}, 
 values={"true", "true"})
 public class ViewContentWindow extends ContentWindow {
 	String defId;
@@ -60,15 +58,6 @@ public class ViewContentWindow extends ContentWindow {
 			this.processViewPanel = processViewPanel;
 		}
 		
-	IWorkItem workitem;
-		@Hidden
-		public IWorkItem getWorkitem() {
-			return workitem;
-		}
-	
-		public void setWorkitem(IWorkItem workitem) {
-			this.workitem = workitem;
-		}	
 		
 	public ViewContentWindow(){
 		processAttributePanel = new ProcessAttributePanel();
@@ -85,9 +74,4 @@ public class ViewContentWindow extends ContentWindow {
 		}
 	}
 	
-	public void loadFile() throws Exception{
-		
-		IWorkItem workitem = WorkItem.findDocumentByFolderId(this.getTaskId());
-		setWorkitem(workitem);
-	}
 }

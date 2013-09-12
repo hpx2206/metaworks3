@@ -308,6 +308,14 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				WorkItemVersionChooser workItemVersionChooser) {
 			this.workItemVersionChooser = workItemVersionChooser;
 		}
+	InstanceViewContent instanceViewContent;
+		public InstanceViewContent getInstanceViewContent() {
+			return instanceViewContent;
+		}
+	
+		public void setInstanceViewContent(InstanceViewContent instanceViewContent) {
+			this.instanceViewContent = instanceViewContent;
+		}	
 		
 	Preview preview;
 		public Preview getPreview() {
@@ -552,18 +560,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		}
 		return workitem;
 		
-	}
-	public static IWorkItem findDocumentByFolderId(Long id) throws Exception{
-		StringBuffer sql = new StringBuffer();
-		sql.append("select * from bpm_worklist");
-		sql.append(" where taskid=?taskid");
-		
-		IWorkItem workitem = (IWorkItem) sql(IWorkItem.class, sql.toString());
-		
-		workitem.set("taskid",id);
-		workitem.select();
-		
-		return workitem;
 	}
 	
 	//ejs로 대체
@@ -1341,6 +1337,23 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		
 		return overlayCommentWorkItem; 
 	}
+	public static IWorkItem findDocumentBytaskId(Long taskId) throws Exception{
+		
+		StringBuffer sql = new StringBuffer();
+		
+		sql.append("select *");
+		sql.append("  from bpm_worklist");
+		sql.append(" where taskId=?taskId");
+		sql.append("   and isdeleted!=?isDeleted");
+		
+		IWorkItem workitem = (IWorkItem) Database.sql(IWorkItem.class, sql.toString());
+	
+		workitem.set("taskId", taskId);
+		workitem.set("isDeleted",1);
+		workitem.select();
+		
+		return workitem;
+	}
 	
 	public Object moreView() throws Exception {
 		StringBuffer sql = new StringBuffer();
@@ -1372,30 +1385,20 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		return workitem;
 		
 	}
-	@AutowiredFromClient
-	public DocumentViewer documentViewer;
 
 	
 	@Override
 	public Object[] documentView() throws Exception{
-		if("fileView".equals(this.getMetaworksContext().getHow())){
-			ViewContentWindow view = new ViewContentWindow();
-			view.setTaskId(this.getTaskId());
-			view.session = session;
-			view.loadFile();
+		
+			instanceViewContent = new InstanceViewContent();
+			instanceViewContent.setTitle(this.getTitle());
+			instanceViewContent.setTaskId(this.getTaskId());
+			instanceViewContent.setRootInstId(this.getRootInstId());
+			instanceViewContent.session = session;
+			instanceViewContent.loadDocument();
 			
-			return new Object[]{new Refresh(view)};
-		}else if("documentlist".equals(this.getMetaworksContext().getHow())){
-			documentViewer = new DocumentViewer();
-	//		documentViewer.setTitle(this.getExtFile());
-			documentViewer.setTaskId(this.getTaskId());
-			documentViewer.session = session;
-			documentViewer.loadDocument();
+			return new Object[]{new Refresh(instanceViewContent)};
 		
-			return new Object[]{new Refresh(documentViewer)};
-		}
-		
-		return null;
 	}
 	
 	
@@ -1407,7 +1410,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	@Autowired
 	public ProcessManagerRemote processManager;
 	
-	@Autowired
-	public InstanceViewContent instanceViewContent;
+
 
 }

@@ -225,42 +225,7 @@ public class DocumentNode extends Database<IDocumentNode> implements IDocumentNo
 	}
 	
 	//
-	public static IDocumentNode findFile(String parentId) throws Exception{
-		
-		
-		StringBuffer sql = new StringBuffer();
-		
-		sql.append("select * ");
-		sql.append(" from bpm_knol");
-		sql.append(" where type=?type");
-		sql.append(" and parentId=?parentId");
-		
-		IDocumentNode node = (IDocumentNode) sql(DocumentNode.class,sql.toString());
-		
-		node.set("type", TYPE_FILE);
-		node.set("parentId",parentId);
-		node.select();
-		
-		return node;
-	}
 	
-	public static IDocumentNode findFolder(String parentId) throws Exception{
-		
-		StringBuffer sql = new StringBuffer();
-		
-		sql.append("select * ");
-		sql.append(" from bpm_knol");
-		sql.append(" where type=?type");
-		sql.append(" and parentId=?parentId");
-		
-		IDocumentNode node = (IDocumentNode) sql(DocumentNode.class,sql.toString());
-		
-		node.set("type", TYPE_DOC);
-		node.set("parentId",parentId);
-		node.select();
-		
-		return node;
-	}
 	public ArrayList<DocumentNode> loadChildren() throws Exception{
 		childNode = new ArrayList<DocumentNode>();
 		
