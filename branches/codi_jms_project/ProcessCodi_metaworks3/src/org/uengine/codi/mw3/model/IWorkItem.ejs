@@ -22,13 +22,23 @@
 							fileIcon = "Icon_etc.png";
 					}				
 		%>
-			<div style="width:auto; margin-left:20px;">
-				<font size=2>
-					<img src="images/<%=fileIcon%>" />
-					<b><a href="#" onClick="<%=methods.documentView.caller()%>"><%=value.title%></b><br>
-				</font>
-				<%=value.startDate%><%=fields.file.here()%> 
-			</div>
+				<span class="documentFileList">
+					<div class="fixed_img_row2">
+						<ul>				
+							<li>
+								<a href="#" onClick="<%=methods.documentView.caller()%>">
+									<span class="thumb" >
+										<img src="images/<%=fileIcon%>" />
+									</span>
+									<strong><a href="#" ><%=value.title%></strong>
+								</a>							
+								<p><%=value.startDate%></p>
+								<p style="margin-top:5px;"><%=fields.file.here()%> </p>
+							</li>
+						</ul>
+					</div>	
+				</span>
+				
 
  
 	<% 
@@ -57,17 +67,50 @@
 						}				
 						
 	%>						
-			<img src="images/<%=fileIcon%>" />
-			<font color=#5C5C5C style="line-height:19px;">
-				<a href="#" onClick="<%=methods.documentView.caller()%>"><%=value.title%><br>
-				<%=value.startDate%>
-							
-<% 
-			if(folderName != null){ 
-%> 
-			<span class="topic_span"><%=folderName%></span></a>
+			
+			<table width="100%" border="0" cellspacing="0" cellpadding="0" class="instanceList tbl_type" style="position:relative;" onClick="<%=methods.documentView.caller()%>">
+			    <tbody>
+			        <tr class="q " style="cursor:pointer;">
+				        <td id="newInst"><div class="innerNewInst"></div></td>
+			            <td class="first_td" valign="top">
+			            	<img src="images/<%=fileIcon%>" width="33" height="33"/>
+			            </td>
+			            <td><ul class="lst_type">
+			                    <li class="trigger">
+			                        <div class="instanceTitle">
+			                            <table width="100%" cellspacing="0" cellpadding="0">
+			                                <tbody>
+			                                    <tr>
+			                                        <td style="border:none;"><a href="#" ><b><font color="204070">test1</font>&nbsp;&nbsp;<font color="#5C5C5C" style="line-height:19px;"><%=value.title%> 			                                        
+			                                        <% 
+														if(folderName != null){ 
+													%> 													
+														<span class="topic_span"> <%=folderName%></span> 
+													<% 
+														}
+													%>													
+													</font></b></a>
+			                                            <div>
+			                                                <div class="instanceType"><!--span class="type_ping"></span--><span class="instanceUnLock"></span><!--<span class="type_topic"></span>--></div>
+			                                                <div style="float:left; font-size:11px;  margin:3px 8px 3px 0;">
+			                                                    <abbr class="timeago" title="2013-07-19"><%=value.startDate%></abbr>
+			                                                </div>
+			                                                <div style="clear:both"></div>
+			                                            </div></td>
+			                                    </tr>
+			                                </tbody>
+			                            </table>
+			                            <div></div>
+			                        </div>
+			                    </li>
+			                </ul></td>
+			        </tr>
+			    </tbody>
+			</table>
+
+
 <%
-			}
+			
 	}else {
 	if(value){
 	
