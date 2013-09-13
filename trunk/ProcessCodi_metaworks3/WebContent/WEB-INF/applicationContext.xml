@@ -151,6 +151,7 @@
 	<bean id="MemoWorkItem" class="org.uengine.codi.mw3.model.MemoWorkItem"/>
 	<bean id="EMailReader" class="org.uengine.codi.cron.EMailReader"/>
 	
+	<bean id="ProcessGanttChart" class="org.uengine.codi.gantt.ProcessGanttChart"/>
 	<bean id="UnstructuredProcessInstanceStarter" class="org.uengine.codi.mw3.model.UnstructuredProcessInstanceStarter"/>
 	
 	
