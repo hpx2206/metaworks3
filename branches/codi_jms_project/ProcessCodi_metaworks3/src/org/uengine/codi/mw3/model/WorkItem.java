@@ -1355,6 +1355,48 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		return workitem;
 	}
 	
+	public static IWorkItem findDocumentMoveUp(Long taskId, String InstId) throws Exception{
+		
+		StringBuffer sql = new StringBuffer();
+		
+		sql.append("select *");
+		sql.append(" from bpm_worklist");
+		sql.append(" where rootinstId=?instId");
+		sql.append(" and taskId<=?taskId");
+		sql.append(" and isdeleted!=?isDeleted");
+		sql.append(" and type = 'file'");
+		
+		IWorkItem workitem = (IWorkItem) sql(IWorkItem.class, sql.toString());
+		
+		workitem.set("instId", InstId);
+		workitem.set("taskId", taskId);
+		workitem.set("isDeleted",1);
+		workitem.select();
+		
+		return workitem;
+		
+	}
+	public static IWorkItem findDocumentMoveDown(Long taskId, String InstId) throws Exception{
+		
+		StringBuffer sql = new StringBuffer();
+		
+		sql.append("select *");
+		sql.append(" from bpm_worklist");
+		sql.append(" where rootinstId=?instId");
+		sql.append(" and taskId>=?taskId");
+		sql.append(" and isdeleted!=?isDeleted");
+		sql.append(" and type = 'file'");
+		
+		IWorkItem workitem = (IWorkItem) sql(IWorkItem.class, sql.toString());
+		
+		workitem.set("instId", InstId);
+		workitem.set("taskId", taskId);
+		workitem.set("isDeleted",1);
+		workitem.select();
+		
+		return workitem;
+		
+	}	
 	public Object moreView() throws Exception {
 		StringBuffer sql = new StringBuffer();
 		

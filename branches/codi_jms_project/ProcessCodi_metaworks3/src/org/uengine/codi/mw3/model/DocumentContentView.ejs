@@ -1,5 +1,21 @@
-<% if(value) { %>
-
-	<%=fields.thread.here()%>	
+<% if(value) { 
+	if(value.more){
+%>
+	<div id="moreWorkDiv">
+		<div class="morePoint"></div>
+		<a class="moreBtn5"  href="#" onClick="<%=methods.moveUp.caller()%>"><%=mw3.localize("$more")%></div>
+		<div class="morePoint"></div>
+	</div>
+<% } %>	
+	<%=fields.thread.here()%>
+	
+<% if(value.more){ %>	
+	<div id="moreWorkDiv">
+		<div class="morePoint"></div>
+		<a class="moreBtn5"  href="#" onClick="<%=methods.moveDown.caller()%>"><%=mw3.localize("$more")%></div>
+		<div class="morePoint"></div>
+	</div>
+<% } %>
+	
 	<%=fields.workitem.here()%>
 <% } %>

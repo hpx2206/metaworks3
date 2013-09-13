@@ -33,7 +33,7 @@ public class ProcessExplorer {
 	
 	public void load(Session session) throws Exception{
 		ProcessExplorerPerspectiveWindow processExplorerPerspectiveWindow = new ProcessExplorerPerspectiveWindow(session);
-		processExplorerPerspectiveWindow.setTitle("ProcessExplorer");
+		processExplorerPerspectiveWindow.setTitle("$ProcessExplorer");
 		
 		ProcessExploreWindow processExplorerWindow = new ProcessExploreWindow();
 		ViewContentWindow viewContentWindow = new ViewContentWindow();
@@ -51,7 +51,7 @@ public class ProcessExplorer {
 		centerLayout.setName("center");
 		centerLayout.setEast(viewContentWindow);
 		centerLayout.setCenter(processExplorerWindow);
-		centerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0,south__spacing_open:2, east__spacing_open:2, east__size:450");
+		centerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0,south__spacing_open:2, east__spacing_open:2, east__size:350");
 		
 		Layout outerLayout = new Layout();
 

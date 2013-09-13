@@ -27,7 +27,7 @@ public class DocumentPerspective extends Perspective  implements ContextAware {
 		}
 		
 	public DocumentPerspective(){
-		setLabel("Document");
+		setLabel("$Document");
 	}
 
 	@Override

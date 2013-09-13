@@ -110,35 +110,35 @@ public class DocumentContentView  implements ContextAware {
 	@ServiceMethod(callByContent=true)
 	public void load(String instId) throws Exception{
 		
-		IWorkItem thread = (IWorkItem)MetaworksDAO.createDAOImpl(IWorkItem.class);
-		IWorkItem result =WorkItem.find(instId,LIST_CNT);
-//		IWorkItem workitem = WorkItem.findDocumentBytaskId(this.getTaskId());
-//		
-		boolean more = result.size() > 1;
+		setInstanceId(instId);
+		IWorkItem item = WorkItem.findDocumentBytaskId(this.getTaskId());
 		
-		while(result.next()){
-			thread.moveToInsertRow();
-			thread.getImplementationObject().copyFrom(result);
-			
-			if(more)
-				thread.setMore(more);
-			
-			more = false;
-		}
-		result = WorkItem.findComment(instId);
-		while(result.next()){
-			thread.moveToInsertRow();
-			thread.getImplementationObject().copyFrom(result);
-		}
 		
-		setThread(thread);
-//		setThread(workitem);
+		setThread(item);
+		
 		CommentWorkItem newItem = new CommentWorkItem();
 		newItem.setInstId(new Long(getInstanceId()));
 		newItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 		newItem.setWriter(session.getUser());
-
+		setMore(false);
 		setWorkitem(newItem);
+	}
+	
+	@ServiceMethod(callByContent=true)
+	public void moveUp() throws Exception{
+		IWorkItem item = WorkItem.findDocumentMoveUp(this.getTaskId(), this.getInstanceId());
+		
+		setThread(item);
+		setMore(true);
+		
+	}
+	
+	@ServiceMethod(callByContent=true)
+	public void moveDown() throws Exception{
+		IWorkItem item = WorkItem.findDocumentMoveDown(this.getTaskId(), this.getInstanceId());
+		
+		setThread(item);
+		setMore(true);
 	}
 	
 	@ServiceMethod(callByContent = true)
