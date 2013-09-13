@@ -25,6 +25,7 @@ import org.uengine.codi.mw3.calendar.ScheduleCalendarEvent;
 import org.uengine.codi.mw3.filter.AllSessionFilter;
 import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitor;
 import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitorPanel;
+import org.uengine.codi.mw3.widget.IFrame;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 import com.efsol.util.StringUtils;
@@ -1234,6 +1235,14 @@ public class Instance extends Database<IInstance> implements IInstance{
 		processInstanceMonitorPanel.load(this.getInstId().toString(), session, processManager);
 		
 		return new ModalWindow(processInstanceMonitorPanel, 1024, 768, "Process Monitoring");
+	}
+	
+	public ModalWindow ganttChart() throws Exception{
+		
+		
+		IFrame iframe = new IFrame("ganttChart.html?instanceId=" + this.getInstId().toString());
+		
+		return new ModalWindow(iframe, 1024, 768, "Process Gantt Chart");
 	}
 	
 	public Popup schedule() throws Exception{
