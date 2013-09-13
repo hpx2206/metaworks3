@@ -268,7 +268,11 @@ public class ProcessGanttChart {
 			if (itr != null) {
 				while (itr.hasNext()) {
 					Activity prevActvity = (Activity) itr.next();
-					taskData.setFrom(prevActvity.getTracingTag());
+					if(taskData.getUid().startsWith(SUBPREFIX)){
+						taskData.setFrom(SUBPREFIX + prevActvity.getTracingTag());
+					}else{
+						taskData.setFrom(prevActvity.getTracingTag());
+					}
 				}
 			} else {
 				taskData.setFrom("");
