@@ -465,11 +465,13 @@ public class Login implements ContextAware {
 		 * add tenant process
 		 */
 		String userId = session.getUser().getUserId().toUpperCase();
-//		String tenantId = session.getEmployee().getGlobalCom();
+		String tenantId = session.getCompany().getComCode();
 		
 		//setting the userId into session attribute;
 		HttpSession httpSession = TransactionContext.getThreadLocalInstance().getRequest().getSession();
 		httpSession.setAttribute("userId", userId);
+		httpSession.setAttribute("tenantId", tenantId);
+		
 		/*
 		httpSession.setAttribute("tenantId", tenantId);
 		
@@ -526,7 +528,7 @@ public class Login implements ContextAware {
 				else
 					mapping = new HashMap<String, String>();
 				
-				System.out.println("LOGIN : " + sessionId);
+				//System.out.println("LOGIN : " + sessionId);
 				mapping.put(userId, sessionId);
 				SessionIdForCompanyMapping.put(globalCom, mapping);
 				
