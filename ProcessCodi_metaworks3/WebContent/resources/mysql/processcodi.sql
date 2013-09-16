@@ -801,3 +801,9 @@ alter table emptable change isMailNoti mailNoti int(1) default 1;
 -- 2013-08-19 인스턴스 목록 성능 개선
 ALTER TABLE `bpm_rolemapping` ADD INDEX `RootInstId` (`ROOTINSTID`)
 ALTER TABLE `bpm_topicmapping` ADD INDEX `TopicId` (`TOPICID`)
+
+
+-- 2013-09-12 jinwon
+-- crowdsourcing
+ALTER TABLE `bpm_procinst`  ADD COLUMN `crowdSourcing` INT(1) NULL DEFAULT '0' AFTER `EXT10`;
+ALTER TABLE `bpm_procinst`  ADD COLUMN `csFacebook` VARCHAR(50) NULL AFTER `crowdSourcing`;
