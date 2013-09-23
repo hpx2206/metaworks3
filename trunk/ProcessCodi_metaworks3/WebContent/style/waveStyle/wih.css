@@ -527,10 +527,10 @@ legend {display:none;}
 
 
 .intaglio {
-    -moz-box-shadow: inset  4px 4px 4px #bcbcbc;
-	-webkit-box-shadow: inset  4px 4px 4px #bcbcbc;
-	box-shadow: inset  4px 4px 4px #bcbcbc;	
-
+    -moz-box-shadow: inset  4px 4px 4px #b1b5bd;
+	-webkit-box-shadow: inset  4px 4px 4px #b1b5bd;
+	box-shadow: inset  4px 4px 4px #b1b5bd;	
+	background-image:none;
 }
 
 
