@@ -527,9 +527,9 @@ legend {display:none;}
 
 
 .intaglio {
-    -moz-box-shadow: inset  4px 4px 4px #b1b5bd;
-	-webkit-box-shadow: inset  4px 4px 4px #b1b5bd;
-	box-shadow: inset  4px 4px 4px #b1b5bd;	
+    -moz-box-shadow: inset 2px 2px 3px #B1B5BD;
+	-webkit-box-shadow: inset 2px 2px 3px #B1B5BD;
+	box-shadow: inset 2px 2px 3px #B1B5BD;	
 	background-image:none;
 }
 
