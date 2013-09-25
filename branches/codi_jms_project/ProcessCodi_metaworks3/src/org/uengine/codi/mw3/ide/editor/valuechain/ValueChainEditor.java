@@ -35,6 +35,7 @@ public class ValueChainEditor extends Editor{
 		
 		try{
 			ValueChainDesignerContentPanel valueChainDesignerContentPanel = new ValueChainDesignerContentPanel();
+			valueChainDesignerContentPanel.session = resourceNode.session;
 			valueChainDesignerContentPanel.setAlias(this.getResourceNode().getPath());
 			this.setValueChainDesigner(valueChainDesignerContentPanel);
 		}catch(Exception e){

@@ -33,6 +33,7 @@ public class ProcessEditor extends Editor {
 		
 		try {
 			ProcessDesignerContentPanel processDesignerContentPanel = new ProcessDesignerContentPanel();
+			processDesignerContentPanel.session = resourceNode.session;
 			processDesignerContentPanel.setAlias(this.getResourceNode().getPath());
 			this.setProcessDesigner(processDesignerContentPanel);
 		} catch (Exception e) {
