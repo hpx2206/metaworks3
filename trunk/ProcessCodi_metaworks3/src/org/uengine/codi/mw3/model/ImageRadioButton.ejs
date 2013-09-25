@@ -1,0 +1,14 @@
+<%
+if(value){
+	
+	for(var i in value.optionValues){
+%>
+
+		<input type="radio" name="img_radio_<%=objectId%>" value="<%=value.optionValues[i]%>" >
+			<%=mw3.localize(value.optionNames[i])%>
+		<br/>
+<%
+	}
+}
+%>
+</select>
