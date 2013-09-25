@@ -308,14 +308,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				WorkItemVersionChooser workItemVersionChooser) {
 			this.workItemVersionChooser = workItemVersionChooser;
 		}
-	InstanceViewContent instanceViewContent;
-		public InstanceViewContent getInstanceViewContent() {
-			return instanceViewContent;
-		}
-	
-		public void setInstanceViewContent(InstanceViewContent instanceViewContent) {
-			this.instanceViewContent = instanceViewContent;
-		}	
 		
 	Preview preview;
 		public Preview getPreview() {
@@ -1452,6 +1444,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	@Autowired
 	public ProcessManagerRemote processManager;
 	
-
+	@Autowired
+	public InstanceViewContent instanceViewContent;
 
 }

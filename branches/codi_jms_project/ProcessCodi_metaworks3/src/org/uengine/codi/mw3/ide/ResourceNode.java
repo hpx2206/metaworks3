@@ -328,16 +328,11 @@ public class ResourceNode extends TreeNode implements ContextAware {
 		return nodeType;
 	}
 	
-// TreeNode drag 임시 주석처리입니다. 
-	
-//	@ServiceMethod(payload={"id", "name", "path", "folder", "projectId", "type"}, mouseBinding="drag", target=ServiceMethodContext.TARGET_NONE)
-//	public void drag() {
-//		
-//		Project project = workspace.findProject(this.getProjectId());
-//		String 	projectSourcePath = project.getBuildPath().getSources().get(0).getPath(); 
-//		
-//		TransactionContext.getThreadLocalInstance().getRequest().getSession().setAttribute("projectSourcePath", projectSourcePath);
-//		
-//		this.setAlias(project.getBuildPath().makeFullClassName(this.getId()));;
-//	}
+	@ServiceMethod(payload={"id", "name", "path", "type", "folder", "projectId"}, mouseBinding="drag")
+	public Object drag() {
+		Project project = workspace.findProject(this.getProjectId());
+		this.setAlias(project.getBuildPath().makeFullClassName(this.getId()));;
+		session.setClipboard(this);
+		return session;
+	}
 }
