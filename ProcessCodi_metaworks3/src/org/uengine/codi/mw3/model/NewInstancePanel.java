@@ -34,7 +34,7 @@ public class NewInstancePanel implements ContextAware {
 		}
 		
 	Choice securityLevel;
-		@Face(ejsPath="dwr/metaworks/org/uengine/codi/mw3/model/ImageRadioButton.ejs")
+		@Face(ejsPath="dwr/metaworks/org/uengine/codi/mw3/model/SecurityLevelRadioButton.ejs")
 		public Choice getSecurityLevel() {
 			return securityLevel;
 		}
