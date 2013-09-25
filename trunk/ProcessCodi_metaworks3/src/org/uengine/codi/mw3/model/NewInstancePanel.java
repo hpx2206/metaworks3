@@ -31,9 +31,10 @@ public class NewInstancePanel implements ContextAware {
 	
 		public void setNewInstantiator(WorkItem newInstantiator) {
 			this.newInstantiator = newInstantiator;
-		}		
+		}
+		
 	Choice securityLevel;
-		@Face(ejsPath="dwr/metaworks/org/metaworks/widget/ChoiceCombo.ejs")
+		@Face(ejsPath="dwr/metaworks/org/uengine/codi/mw3/model/ChoiceRadioPanel.ejs")
 		public Choice getSecurityLevel() {
 			return securityLevel;
 		}
@@ -41,7 +42,6 @@ public class NewInstancePanel implements ContextAware {
 			this.securityLevel = securityLevel;
 		}
 
-		
 	InstanceBackground instanceBackground; 
 		public InstanceBackground getInstanceBackground() {
 			return instanceBackground;
