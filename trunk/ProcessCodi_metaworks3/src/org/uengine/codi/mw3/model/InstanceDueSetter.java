@@ -6,6 +6,7 @@ import java.util.Date;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.ToAppend;
@@ -17,7 +18,6 @@ import org.metaworks.dwr.MetaworksRemoteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.filter.AllSessionFilter;
-import org.uengine.codi.mw3.filter.OtherSessionFilter;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 @Face(displayName="$InstanceDueSetter", ejsPath="dwr/metaworks/genericfaces/FormFace.ejs"
@@ -192,7 +192,14 @@ public class InstanceDueSetter implements ContextAware{
 				new Object[]{new InstanceListener(instanceRef)});		
 		}
 		
-		return new Object[]{new Remover(new Popup(), true)};
+		//todobadge count real-time
+		instance.flushDatabaseMe();
+		
+		TodoBadge todoBadge = new TodoBadge();
+		todoBadge.session = session;
+		todoBadge.refresh();
+		
+		return new Object[]{new Remover(new Popup(), true), new Refresh(todoBadge)};
 	}
 
 	

@@ -113,7 +113,6 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		}
 		
 	String authorId;
-			
 		public String getAuthorId() {
 			return authorId;
 		}
@@ -123,7 +122,6 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		
 	@XStreamOmitField
 	IUser author;
-
 		public IUser getAuthor() {
 			return author;
 		}
@@ -202,6 +200,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		public void setUrl(String url) {
 			this.url = url;
 		}
+		
 	String thumbnail;
 		public String getThumbnail() {
 			return thumbnail;
@@ -227,7 +226,6 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		public void setThumbnailNext(String thumbnailNext) {
 			this.thumbnailNext = thumbnailNext;
 		}
-
 
 	@XStreamOmitField
 	WfNode dragNode;
@@ -430,6 +428,26 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		}
 	}
 	
+	public IWfNode findMe() throws Exception {
+		
+		StringBuffer sb = new StringBuffer();
+		sb.append("SELECT *");
+		sb.append("  FROM bpm_knol");
+		sb.append(" WHERE Id=?Id");
+		sb.append(" ORDER BY no");
+		
+		IWfNode findNode = (IWfNode) sql(IWfNode.class,	sb.toString());
+		
+		findNode.setId(this.getId());
+		findNode.select();
+
+		if(findNode.next())
+			return findNode;
+		else
+			return null;
+
+	}
+	
 	public void load() throws Exception {		
 		load(this.getId());
 	}
@@ -441,6 +459,13 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 //		this.copyFrom(thisNode.databaseMe());
 		
 		setId(nodeId);
+		
+		IWfNode thisNode = this.findMe();
+		
+		if(thisNode != null){
+			setName(thisNode.getName());
+			setType(thisNode.getType());
+		}
 		
 		if(this.getLoadDepth() < LOAD_DEPTH){
 			if(this.getLoadDepth() > -1)
@@ -1355,7 +1380,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 			
 			Instance instanceRef = new Instance();
 			instanceRef.setInstId(instId);
-			instanceRef.databaseMe().setStatus("Running");
+			instanceRef.databaseMe().setStatus(Instance.INSTNACE_STATUS_RUNNING);
 
 			save();
 			

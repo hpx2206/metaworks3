@@ -172,6 +172,10 @@ public class User extends Database<IUser> implements IUser {
 	
 	@Override
 	public Popup detail() throws Exception {
+		
+		int with = 435;
+		int height = 275;
+		
 		System.out.println("when : " + getMetaworksContext().getWhen());
 		
 		this.getMetaworksContext().setHow("info");
@@ -218,7 +222,7 @@ public class User extends Database<IUser> implements IUser {
 		//	e.printStackTrace();
 		}
 		
-		Popup popup = new Popup(400, 275);
+		Popup popup = new Popup(with, height);
 		popup.setName("Info");
 		popup.setPanel(this);
 
@@ -703,7 +707,7 @@ public class User extends Database<IUser> implements IUser {
 		String sql = "select sum(businessvalue) totalBV from inst_emp_perf where empcode=?empCode";
 		
 		IInstanceEmployeePerformance getBV = (IInstanceEmployeePerformance) Database.sql(IInstanceEmployeePerformance.class, sql);
-		getBV.set("empCode", empCode);
+		getBV.setEmpCode(empCode);
 		getBV.select();
 		
 		RowSet rowset = getBV.getImplementationObject().getRowSet();

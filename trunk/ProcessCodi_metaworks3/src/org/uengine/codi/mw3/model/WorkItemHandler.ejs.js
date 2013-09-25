@@ -22,7 +22,7 @@ var org_uengine_codi_mw3_model_WorkItemHandler = function(objectId, className){
 						var valiableObjectDivId = mw3._getObjectDivId(valiableObjectId);
 						var valiableObjectDiv = $('#' + valiableObjectDivId);
 						valiableObjectDiv.find('input').css('float','left');
-						var buttonHtml = '<a id="wBtn" style="float:right" href="#" onClick="mw3.getFaceHelper('+objectId+').callReply(\''+fieldName+'\' , \''+valiableObjectId+'\')"><span style="color:#000; margin-right:0px">댓글달기</span></a>';
+						var buttonHtml = '<a id="wBtn" style="float:right" href="#" onClick="mw3.getFaceHelper('+objectId+').callReply(\''+fieldName+'\' , \''+valiableObjectId+'\')"><span style="color:#000; margin-right:0px"> ' + mw3.localize('$AddComment') + ' </span></a>';
 						valiableObjectDiv.append(buttonHtml);
 					}
 				}
