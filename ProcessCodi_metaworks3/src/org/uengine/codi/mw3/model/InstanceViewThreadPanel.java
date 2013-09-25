@@ -193,7 +193,7 @@ public class InstanceViewThreadPanel implements ContextAware {
 
 			genericWI.setGenericWorkItemHandler(genericWIH);
 			genericWI.setInstId(new Long(getInstanceId()));
-			genericWI.setTitle(draggedNode.getName());
+//			genericWI.setTitle(draggedNode.getName());	//title duplicate
 			
 			// TODO attach thread 
 			return genericWI.add();

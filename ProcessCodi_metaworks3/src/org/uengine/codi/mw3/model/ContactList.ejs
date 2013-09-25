@@ -1,7 +1,7 @@
 <%
 	if(value){
-	
-		if(value.invitation){
+
+		if(value.invitation && value.id != 'contacts_local'){
 			%><%=fields.invitation.here()%><%
 		}else{
 %>

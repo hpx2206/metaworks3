@@ -35,6 +35,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 	public final static String INSTNACE_STATUS_STOPPED		= "Stopped";
 	public final static String INSTNACE_STATUS_FAILED		= "Failed";
 	public final static String INSTNACE_STATUS_COMPLETED	= "Completed";
+	public final static String INSTNACE_STATUS_RUNNING 		= "Running";
 	
 	public static final String TASK_DIRECT_APPEND_SQL_KEY = "task.";
 	public static final String INSTANCE_DIRECT_APPEND_SQL_KEY = "inst.";
@@ -309,7 +310,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 			taskSql
 			.append("      , bpm_worklist wl")
 			.append("           INNER JOIN bpm_rolemapping rm")
-			.append("                   ON WL.INSTID=rm.INSTID")
+			.append("                   ON WL.INSTID=rm.rootinstid")
 			.append("                  AND rm.endpoint=?endpoint");
 			
 			instanceSql
@@ -1268,7 +1269,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 		}
 		ids.getMetaworksContext().setWhen("edit");
 		
-		return new Popup(400,300,ids);
+		return new Popup(400,340,ids);
 	}
 	
 	public Popup newSubInstance() throws Exception{

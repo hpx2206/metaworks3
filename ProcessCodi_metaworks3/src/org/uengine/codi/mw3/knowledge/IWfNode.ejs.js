@@ -83,6 +83,7 @@ var org_uengine_codi_mw3_knowledge_IWfNode = function(objectId, className) {
 
 			}
 			
+			/**  지식맵 드래그가 안되서 기능 막아놓습니다 수정:최지선(cjs)
 			$('#objDiv_' + objectId).bind('dragstart', 
 				function(e){
 					e.preventDefault();
@@ -99,6 +100,7 @@ var org_uengine_codi_mw3_knowledge_IWfNode = function(objectId, className) {
 					}
 				);
 
+			*/
 			
 			$('#wfnode_' + objectId).hover(
 				// mouse in
