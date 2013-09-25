@@ -16,6 +16,8 @@ import org.uengine.codi.mw3.webProcessDesigner.ProcessAttributePanel;
 import org.uengine.codi.mw3.webProcessDesigner.PropertiesWindow;
 import org.uengine.kernel.Activity;
 import org.uengine.kernel.IDrawDesigne;
+import org.uengine.kernel.ParameterContext;
+import org.uengine.kernel.ReceiveActivity;
 
 public class ActivityView extends CanvasDTO  implements ContextAware{
 	transient MetaworksContext metaworksContext;
@@ -34,21 +36,6 @@ public class ActivityView extends CanvasDTO  implements ContextAware{
 			this.tracingTag = tracingTag;
 		}
 	
-	String activityClass;
-		public String getActivityClass() {
-			return activityClass;
-		}
-		public void setActivityClass(String activityClass) {
-			this.activityClass = activityClass;
-		}
-	
-	String roleName;
-		public String getRoleName() {
-			return roleName;
-		}
-		public void setRoleName(String roleName) {
-			this.roleName = roleName;
-		}
 	/*  viewer 부분에서  필요한 정보들 transient */
 	transient String instStatus;
 		public String getInstStatus() {
@@ -102,12 +89,34 @@ public class ActivityView extends CanvasDTO  implements ContextAware{
 			if( isDesigner ){
 				((IDrawDesigne)activity).drawInit();
 			}
+			
+			boolean isReceiveActivity = ReceiveActivity.class.isAssignableFrom(paramClass);
+			if( isReceiveActivity ){
+				ParameterContext context = new ParameterContext();
+				context.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+				
+				ParameterContext[] contexts = ((ReceiveActivity)activity).getParameters();
+				if( contexts != null && contexts.length > 0){
+					
+				}else{
+					contexts = new ParameterContext[1];
+					contexts[0] = context;
+				}
+				((ReceiveActivity)activity).setParameters(contexts);
+				System.out.println("33333333");
+			}
+			
 		}
 		activity.setActivityView(this);
 		
 		if( "definitionDiffView".equals(this.getViewType()) ){
-			activity.getMetaworksContext().setWhen("view");
-			activity.getDocumentation().getMetaworksContext().setWhen("view");
+			activity.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+			activity.getDocumentation().getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+		}else{
+			activity.setMetaworksContext(new MetaworksContext());
+			activity.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+			activity.getDocumentation().setMetaworksContext(new MetaworksContext());
+			activity.getDocumentation().getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		}
 		
 		activityWindow.getActivityPanel().setActivity(activity);
@@ -131,7 +140,9 @@ public class ActivityView extends CanvasDTO  implements ContextAware{
 	public Object[] showActivityDocument() {
 		if( processAttributePanel != null ){
 			Documentation documentation = (Documentation)this.getActivity().getDocumentation();
+			documentation.setMetaworksContext(new MetaworksContext());
 			documentation.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+			documentation.getDescription().setMetaworksContext(new MetaworksContext());
 			documentation.getDescription().getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 			processAttributePanel.setDefId(null);
 			processAttributePanel.setFileList(null);

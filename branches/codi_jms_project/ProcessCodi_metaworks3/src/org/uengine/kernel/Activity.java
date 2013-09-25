@@ -103,7 +103,7 @@ public abstract class Activity implements Validatable, java.io.Serializable, Clo
 	final public static String PVKEY_RETRY_CNT = "_retryCnt";
 
 	public static final String STATUS_RESERVED = "Reserved";
-	MetaworksContext metaworksContext;
+	transient MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
 			return metaworksContext;
 		}

@@ -8,6 +8,7 @@ import org.metaworks.component.Menu;
 import org.metaworks.component.MenuItem;
 import org.metaworks.component.TreeNode;
 import org.metaworks.widget.ModalWindow;
+import org.uengine.codi.mw3.ide.templete.FileRenamer;
 import org.uengine.codi.mw3.ide.templete.NewFolder;
 import org.uengine.codi.mw3.model.Session;
 
@@ -64,6 +65,13 @@ public class ValueChainContextMenu extends Menu {
 		NewFolder newFolder = new NewFolder();
 		
 		return new ModalWindow(newFolder, 300, 150, "New Folder");
+	}
+	
+	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
+	public ModalWindow rename(){
+		FileRenamer fileRenamer = new FileRenamer();
+		
+		return new ModalWindow(fileRenamer, 300, 150, "Rename..");
 	}
 
 }

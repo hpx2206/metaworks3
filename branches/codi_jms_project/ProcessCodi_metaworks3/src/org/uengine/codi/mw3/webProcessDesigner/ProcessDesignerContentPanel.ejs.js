@@ -5,7 +5,6 @@ $.ui.intersect = function(draggable, droppable, toleranceMode) {
 		y1 = (draggable.positionAbs || draggable.position.absolute).top, y2 = y1 + draggable.helperProportions.height;
 	var l = droppable.offset.left, r = l + droppable.proportions.width,
 		t = droppable.offset.top, b = t + droppable.proportions.height;
-
 	switch (toleranceMode) {
 		case 'fit':
 			return (l <= x1 && x2 <= r
@@ -64,8 +63,8 @@ var org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel = functi
 		mw3.importScript('scripts/opengraph/OpenGraph-0.1-SNAPSHOT.js');
 		mw3.importScript('scripts/jquery/jquery.contextMenu.js');
 		mw3.importStyle('style/jquery/jquery.contextMenu.css');
-//		mw3.importScript('scripts/jquery/jquery-tooltip.js');
-//		mw3.importStyle('style/jquery/jquery-tooltip.css');
+		mw3.importScript('scripts/jquery/jquery-tooltip.js');
+		mw3.importStyle('style/jquery/jquery-tooltip.css');
 		mw3.importStyle('dwr/metaworks/org/uengine/codi/mw3/model/PureWebProcessDesigner.ejs.css');
 		
 		var faceHelper = this;
@@ -135,7 +134,6 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype = 
 	    });
 		
 		canvas.setCurrentCanvas(canvas);
-		
 	    // Shape drag & drop
 	    $(".icon_shape_"+objectId).draggable({
 	        helper  : 'clone',
@@ -237,7 +235,6 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype = 
 	    			target : toTracingTag
 	    	};
 	    	$(edgeElement).data('transition', transitionData);
-	    	
 			faceHelper.addEventEdge(objectId, canvas, edgeElement);
 	    });
 	    canvas.onDrawShape(function (event, shapeElement) {
@@ -358,7 +355,6 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ad
 		var activityData = {__className : $(element).attr("_classname"), tracingTag : $(element).attr("_tracingTag")};
 		$(element).data('activity', activityData);
 	}
-	
 	$(element).droppable({
 		greedy: true,		
 		tolerance: 'geom',
@@ -737,12 +733,17 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.cl
 	this.icanvas.clear();
 };
 //TODO delete test code 
-org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.jsonobject = function(){
-//	var object = mw3.getObject(this.objectId);
-//	object.jsonObj = this.icanvas.toJSON();
-//	object.jsonObj = JSON.stringify(this.icanvas.toJSON());
-	alert(JSON.stringify(this.icanvas.toJSON() ));
-//	object.jsonObj = $.parseXML(this.icanvas.toXML());
+org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.findSwimlane = function(parentId){
+	var $parentId = $('#'+parentId);
+	if( $parentId ){
+		var classType = $parentId.attr('_classType');
+		if( classType == 'Role'){
+			return parentId;
+		}else{
+			return this.findSwimlane();
+		}
+	}
+	return null;
 };
 org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.getValue = function(){
 	var graphJson = this.icanvas.toJSON();
@@ -814,20 +815,28 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ge
 		}
 //		cellsForDwr[cellsForDwr.length] = cellForDwr;
 		
-		$id = $('#'+og['@id']);
+		var $id = $('#'+og['@id']);
 		if( og['@shapeType'] != 'EDGE'){
 			cellForDwr['tracingTag'] = $id.attr('_tracingTag');
-			cellForDwr['activityClass'] = $id.attr('_classname');
 			cellForDwr['__className'] = $id.attr('_viewClass');
+			var classname = $id.attr('_classname');
 			var classType = $id.attr('_classType');
+			cellForDwr['activityClass'] = classname;
 			cellForDwr['classType'] = classType;
 			//set Activity, Role
 			var activity = $id.data('activity');
 			if( activity ){
 				activity.activityView = cellForDwr;
 				if(classType == 'Activity'){
+					// TODO 저장하는 시점에.. 휴먼엑티비티이고, parent가 없다면... 경고창을 띄워도 괜찮을듯하다.
+					if( classname == 'org.uengine.kernel.HumanActivity' && cellForDwr.parent){
+						var parentRoleId = this.findSwimlane(cellForDwr.parent);
+						if( parentRoleId != null ){
+							var role = $('#'+parentRoleId).data('role');
+							activity.role = role;
+						}
+					}
 					activityList[activityIdx++] = activity;
-	//				activityMap[og['@id']] = activity;
 				}
 			}
 			

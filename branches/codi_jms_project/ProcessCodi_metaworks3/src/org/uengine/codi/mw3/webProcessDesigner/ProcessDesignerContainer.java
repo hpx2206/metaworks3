@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.apache.velocity.runtime.directive.Parse;
 import org.uengine.kernel.Activity;
+import org.uengine.kernel.HumanActivity;
 import org.uengine.kernel.ProcessDefinition;
 import org.uengine.kernel.ProcessVariable;
 import org.uengine.kernel.Role;
@@ -86,6 +87,8 @@ public class ProcessDesignerContainer {
 		roleList = new ArrayList<Role>();
 		transitionList = new ArrayList<Transition>();
 		valueChainList = new ArrayList<ValueChain>();
+		
+		variableList = new ArrayList<ProcessVariable>();
 	}
 	
 	public void load(ProcessDefinition def) throws Exception{
@@ -135,18 +138,18 @@ public class ProcessDesignerContainer {
 	
 	public ProcessDefinition containerToDefinition(ProcessDesignerContainer container){
 		ProcessDefinition def = new ProcessDefinition();
+		Role[] roles = new Role[1];
+		// default role
+		Role initiator = new Role();
+		initiator.setName("Initiator");
+		roles[0] = initiator;
+		def.setRoles(roles);
 		if( activityList != null ){
 			for(Activity act : activityList){
 				def.addChildActivity(act);
 			}
 		}
 		if( roleList != null ){
-			Role[] roles = new Role[1];
-			// default role
-			Role initiator = new Role();
-			initiator.setName("Initiator");
-			roles[0] = initiator;
-			def.setRoles(roles);
 			for(Role role : roleList){
 				def.addRole(role);
 			}

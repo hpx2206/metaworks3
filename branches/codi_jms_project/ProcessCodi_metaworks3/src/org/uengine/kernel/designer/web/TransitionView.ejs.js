@@ -30,7 +30,6 @@ org_uengine_kernel_designer_web_TransitionView.prototype = {
 			var object = mw3.objects[this.objectId];
 			var canvas = this.canvas;
 			var initText = ( object.label == null || object.label == 'undefined' ) ? "" : unescape(object.label);
-			var parent = object.parent;
 			var style = object.style;
 			var fromTeminal = object.from;
 			var toTeminal = object.to;
@@ -44,11 +43,11 @@ org_uengine_kernel_designer_web_TransitionView.prototype = {
 			};
 			var fromElement = getShapeFromTerminal(fromTeminal);
 			var toElement = getShapeFromTerminal(toTeminal);
-			element = canvas.connect(fromElement, toElement);
-			$(element).on({
-        		dblclick: function (event) {
-        			
-        		}
-			});
+			element = canvas.connect(fromElement, toElement , OG.JSON.decode(unescape(style)) , initText);
+			
+			if( object.transition ){
+				$(element).data('transition', object.transition);
+				object.transition.transitionView = null;
+			}
 		}
 };

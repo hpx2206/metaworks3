@@ -30,6 +30,7 @@ var org_uengine_codi_mw3_webProcessDesigner_ApplyProperties = function(objectId,
 		canvas.drawLabel(element, contentValue.displayName.text);
 		$('#' + this.object.id).data('role', contentValue);
 	}else if(contentValue && contentValue.__className=="org.uengine.kernel.ValueChain"){
+		canvas.drawLabel(element, contentValue.name.text);
 		$('#' + this.object.id).data('valuechain', contentValue);
 	}else{
 		// activity

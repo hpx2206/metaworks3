@@ -11,7 +11,7 @@ import org.uengine.codi.mw3.webProcessDesigner.MappingTree;
 
 public class InvocationContext implements ContextAware ,Serializable{
 	
-	MetaworksContext metaworksContext;
+	transient MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
 			return metaworksContext;
 		}

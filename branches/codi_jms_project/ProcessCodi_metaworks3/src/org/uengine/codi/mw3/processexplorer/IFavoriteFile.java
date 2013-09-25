@@ -9,8 +9,6 @@ import org.metaworks.dao.IDAO;
 
 public interface IFavoriteFile extends IDAO {
 
-
-	@Id
 	public String getUserId();
 	public void setUserId(String userId);
 	

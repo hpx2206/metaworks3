@@ -1,13 +1,17 @@
 package org.uengine.kernel;
 
+import java.util.Date;
+
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
-import org.metaworks.Refresh;
+import org.metaworks.MetaworksException;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
+import org.metaworks.ToAppend;
+import org.metaworks.ToOpener;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.SelectBox;
-import org.metaworks.widget.ModalWindow;
+import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.webProcessDesigner.ConditionInput;
 import org.uengine.contexts.ComplexType;
 import org.uengine.contexts.TextContext;
@@ -38,14 +42,6 @@ public class ParameterContextPanel  implements ContextAware{
 			this.conditionInput = conditionInput;
 		}
 		
-	HumanActivity humanActivity;
-		public HumanActivity getHumanActivity() {
-			return humanActivity;
-		}
-		public void setHumanActivity(HumanActivity humanActivity) {
-			this.humanActivity = humanActivity;
-		}
-		
 	public ParameterContextPanel(){
 		this.setMetaworksContext(new MetaworksContext());
 		this.getMetaworksContext().setWhen("edit");
@@ -68,38 +64,51 @@ public class ParameterContextPanel  implements ContextAware{
 	
 	public void makeDataTypeChoice() throws Exception{
 		SelectBox choice = new SelectBox();
+		// name , value
 		choice.setId("expression");
 		choice.add("선택", "");
 		choice.add("Text", "text");
 		choice.add("Number", "number");
 		choice.add("Date", "date");
 		choice.add("Yes or No", "Yes or No");
-//		choice.add("File", "File");
-//		choice.add("Activity Selection", "Activity Selection");
-//		choice.add("Knowledge Type" ,"knowledgelType");
-//		choice.add("Process Variable" ,"variable");
-		choice.add("Complex Type" ,"complexType");
-		choice.add("Html Form" ,"htmlType" );
+		choice.add("ComplexType" ,"complexType");
 		setDataType(choice);
 	}
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] save() throws Exception{
-		ParameterContext[] contexts = new ParameterContext[1];
-		ParameterContext pmc = new ParameterContext();
-		
+		ParameterContext contexts = new ParameterContext();
 		TextContext text = new TextContext();
+		String selectedText = this.getDataType().getSelectedText();
+		ConditionInput expVal = this.getConditionInput();
+		Class selectedType = null;
+		if( selectedText != null && ( selectedText.equalsIgnoreCase("Text") || selectedText.equalsIgnoreCase("Number")) ){
+			text.setText(expVal.getExpressionText());
+			if( selectedText.equalsIgnoreCase("Text") ){
+				selectedType = String.class;
+			}else{
+				selectedType = Number.class;
+			}
+		}else if( selectedText != null && selectedText.equalsIgnoreCase("Yes or No") ){
+			selectedText = expVal.getYesNo();
+			selectedType = String.class;
+		}else if( selectedText != null && selectedText.equalsIgnoreCase("Date") ){
+			selectedText = expVal.getExpressionDate().toString();
+			selectedType = Date.class;
+		}else if( selectedText != null && selectedText.equalsIgnoreCase("ComplexType") ){
+			selectedType = ComplexType.class;
+			selectedText = "";
+		}else{
+			throw new MetaworksException("타입을 선택하셔야 합니다.");
+		}
+		
 		
 		ProcessVariable pv = new ProcessVariable();
-		pv.setType(ComplexType.class);
+		pv.setType(selectedType);
 		
-		pmc.setArgument(text);
-		pmc.setVariable(pv);
-		contexts[0] = pmc;
+		contexts.setArgument(text);
+		contexts.setVariable(pv);
 		
-		HumanActivity humanActivity = this.getHumanActivity();
-		humanActivity.setParameters(contexts);
-		//  , new Refresh(humanActivity)
-		return new Object[]{new Remover(new ModalWindow() , true)};
+		return new Object[]{new Remover(new Popup() , true) , new ToAppend(new ParameterContext() ,contexts)};
 	}
 }

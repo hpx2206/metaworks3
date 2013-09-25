@@ -8,6 +8,8 @@ import java.io.FileOutputStream;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.ServiceMethodContext;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
@@ -16,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.ide.editor.process.ProcessEditor;
 import org.uengine.codi.mw3.model.ContentWindow;
+import org.uengine.codi.mw3.model.Session;
+import org.uengine.codi.mw3.processexplorer.ProcessNameView;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.ProcessDefinition;
 import org.uengine.kernel.ProcessVariable;
@@ -26,6 +30,7 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 	
 	public ProcessDesignerContentPanel() throws Exception{
 		processDesignerContainer = new ProcessDesignerContainer();
+		processNameView = new ProcessNameView();
 	}
 	
 	String alias;
@@ -182,6 +187,14 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 		public void setBasePath(String basePath) {
 			this.basePath = basePath;
 		}
+		
+	ProcessNameView processNameView;
+		public ProcessNameView getProcessNameView() {
+			return processNameView;
+		}
+		public void setProcessNameView(ProcessNameView processNameView) {
+			this.processNameView = processNameView;
+		}	
 		/*
 	PropertiesWindow propertiesWindow;
 		public PropertiesWindow getPropertiesWindow() {
@@ -226,6 +239,8 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 	
 	@ServiceMethod(callByContent=true, target="popup")
 	public ModalWindow gateCondition() throws Exception{
+		
+		
 		/*
 		ArrayList<Role>	 roleList = new ArrayList<Role>();
         Collection<Object> collRole = roleMap.values();
@@ -287,23 +302,7 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 //		conditionPanel.getMetaworksContext().setWhen("edit");
 //		return new ModalWindow(conditionPanel , 800, 500,  "데이터매핑" );
 //	}
-//	@ServiceMethod(callByContent=true)
-//	public PrcsVariablePanel addValiable() throws Exception{
-//		ArrayList<PrcsVariable> prcsValiable = defineTab.prcsValiablePanel.getPrcsValiables();
-//		PrcsVariable designerValiable = new PrcsVariable();
-//		designerValiable.load();
-//		designerValiable.setName(tempElementName);
-//		designerValiable.setTypeId(tempElementTypeId);
-//		if( tempElementType != null && "wfNode".equals(tempElementType) ){
-//			designerValiable.getDataType().setSelected("knowledgelType");		// TODO 임시 셋팅
-//		}else if( tempElementType != null && "class".equals(tempElementType) ){
-//			designerValiable.getDataType().setSelected("complexType");
-//		}
-//		prcsValiable.add(designerValiable);
-//		defineTab.prcsValiablePanel.setPrcsValiables(prcsValiable);
-//		
-//		return defineTab.prcsValiablePanel;
-//	}
+	
 	public void saveMe(ProcessEditor processEditor) throws Exception{
 		String tempTitle = processEditor.getName();
 		String title = tempTitle.replace('.','@').split("@")[0];
@@ -641,6 +640,12 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 		this.processDesignerContainer.setEditorId(alias);
 		this.processDesignerContainer.load(def);
 		
+		processNameView.setFileId(alias);
+		processNameView.setAlias(def.getName().getText());
+		
+		processNameView.session = session;
+		processNameView.load();
+		
 		return def.getProcessDesignerInstanceId();
 		
 //		setDefinition(def);
@@ -847,5 +852,8 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 	}
 	@Autowired
 	public ProcessManagerRemote processManager;
+	
+	@AutowiredFromClient
+	transient public Session session;
 	
 }

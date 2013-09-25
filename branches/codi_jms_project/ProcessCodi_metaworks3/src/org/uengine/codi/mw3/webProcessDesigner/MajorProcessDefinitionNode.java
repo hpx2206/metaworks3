@@ -30,7 +30,7 @@ public class MajorProcessDefinitionNode extends TreeNode  implements ContextAwar
 		public void setAlias(String alias) {
 			this.alias = alias;
 		}
-	MetaworksContext metaworksContext;
+	transient MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
 			return metaworksContext;
 		}
@@ -130,10 +130,10 @@ public class MajorProcessDefinitionNode extends TreeNode  implements ContextAwar
 		return null;
 		}
 	}
-	@ServiceMethod(payload={"id", "name", "path", "folder" , "child", "metaworksContext"}, mouseBinding="right", target=ServiceMethodContext.TARGET_POPUP_OVER_POPUP)
+	@ServiceMethod(callByContent=true, mouseBinding="right", target=ServiceMethodContext.TARGET_POPUP_OVER_POPUP)
 	public Object[] showContextMenu() {
 		
-		if("explorer".equals(this.getMetaworksContext().getHow())) {
+		if(this.getMetaworksContext() != null  && "explorer".equals(this.getMetaworksContext().getHow())) {
 			return null;
 		
 		} else {

@@ -66,10 +66,6 @@ public class ProcessViewWindow {
 	//DefinitionViewWindow의 Layout Setting
 	public void load() throws Exception{
 		if( alias != null){
-			processNameView.setFileId(this.getDefId());
-			processNameView.setAlias(this.getAlias());
-			processNameView.session = session;
-			processNameView.load();
 
 			processNavigatorPanel.setDefId(this.getDefId());
 			processNavigatorPanel.setAlias(this.getAlias());
@@ -81,6 +77,15 @@ public class ProcessViewWindow {
 			processViewPanel.setViewType("definitionView");
 			processViewPanel.load();
 			
+			processNameView.setFileId(this.getDefId());
+			if( processViewPanel != null && processViewPanel.getProcessViewer() != null){
+				processNameView.setAlias(processViewPanel.getProcessViewer().getTitle());
+			}else{
+				processNameView.setAlias(this.getAlias());
+			}
+			
+			processNameView.session = session;
+			processNameView.load();
 			
 //			processAttributePanel.setDocumentation(null);
 //			processAttributePanel.setDefId(defId);
@@ -111,16 +116,15 @@ public class ProcessViewWindow {
 	}
 	public  Object[] loadFile(Session session, String fileId, String fileName,String filePath,String title) throws Exception{
 		
-		title = session.getWindowTitle();
-		session.setWindowTitle(title);
-		setAlias(fileName);
-		setDefId(fileId);
-		setPath(filePath);
+		this.setAlias(fileName);
+		this.setDefId(fileId);
+		this.setPath(filePath);
 		this.session = session;
-		load();
+		this.load();
 		
 		ProcessExploreWindow processExploreWindow = new ProcessExploreWindow();
 		processExploreWindow.setPanel(this);
+		processExploreWindow.setTitle(title);
 	
 		ViewContentWindow viewContentWindow = new ViewContentWindow();
 		viewContentWindow.setPanel(null);

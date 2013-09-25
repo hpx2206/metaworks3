@@ -2,10 +2,15 @@ package org.uengine.kernel;
 
 import java.io.Serializable;
 
+import org.metaworks.ContextAware;
 import org.metaworks.FieldDescriptor;
+import org.metaworks.MetaworksContext;
 import org.metaworks.ObjectType;
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.Type;
+import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.inputter.RadioInput;
+import org.uengine.codi.mw3.model.Popup;
 import org.uengine.contexts.TextContext;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.processdesigner.mapper.Transformer;
@@ -14,8 +19,7 @@ import org.uengine.processdesigner.mapper.TransformerMapping;
 /**
  * @author Jinyoung Jang
  */
-public class ParameterContext implements Serializable{
-	
+public class ParameterContext implements Serializable , ContextAware{
 	
 	private static final long serialVersionUID = org.uengine.kernel.GlobalContext.SERIALIZATION_UID;
 	
@@ -40,6 +44,17 @@ public class ParameterContext implements Serializable{
 			}
 		));
 	}
+	
+	public ParameterContext(){
+		this.setMetaworksContext(new MetaworksContext());
+	}
+	transient MetaworksContext metaworksContext;
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
+		}
 	
 	TextContext argument = TextContext.createInstance();
 		public TextContext getArgument() {
@@ -84,5 +99,21 @@ public class ParameterContext implements Serializable{
 		public void setTransformerMapping(TransformerMapping transformerMapping) {
 			this.transformerMapping = transformerMapping;
 		}	
+	
+	@ServiceMethod(when=MetaworksContext.WHEN_NEW , target=ServiceMethodContext.TARGET_POPUP)
+	public Object addVariable() throws Exception{
+		Popup popup = new Popup();
 		
+		ParameterContextPanel panel = new ParameterContextPanel();
+		panel.load();
+		
+		popup.setPanel(panel);
+		popup.setWidth(300);
+		popup.setHeight(300);
+		return popup;
+	}
+	@ServiceMethod(when=MetaworksContext.WHEN_VIEW)
+	public void editVariable(){
+		
+	}
 }

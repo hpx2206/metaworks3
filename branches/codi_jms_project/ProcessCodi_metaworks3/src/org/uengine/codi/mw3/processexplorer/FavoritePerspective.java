@@ -13,14 +13,11 @@ public class FavoritePerspective  extends Perspective {
 		}
 	
 	public FavoritePerspective(){
-			setLabel("Favorite");
-			
-		}
+		setLabel("Favorite");
+		favoritePanel = new FavoritePanel();
+	}
 	@Override
 	protected void loadChildren() throws Exception {
-		// TODO Auto-generated method stub
-		
-		favoritePanel = new FavoritePanel();
 		favoritePanel.session = session;
 		favoritePanel.load();
 	}

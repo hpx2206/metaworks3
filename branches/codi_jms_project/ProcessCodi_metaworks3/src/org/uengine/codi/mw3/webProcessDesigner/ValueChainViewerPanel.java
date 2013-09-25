@@ -9,6 +9,7 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.contexts.TextContext;
 import org.uengine.kernel.ValueChain;
 
 public class ValueChainViewerPanel implements ContextAware{
@@ -76,7 +77,11 @@ public class ValueChainViewerPanel implements ContextAware{
 	@ServiceMethod(callByContent=true , target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] saveLink(){
 		ValueChain valueChain = this.getOpenerValueChain();
-		valueChain.setMajorProcessDefinitionNode((MajorProcessDefinitionNode) valueChainNavigatorPanel.getMajorProcessDefinitionTree().getNode());
+		MajorProcessDefinitionNode node = (MajorProcessDefinitionNode) valueChainNavigatorPanel.getMajorProcessDefinitionTree().getNode();
+		valueChain.setMajorProcessDefinitionNode(node);
+		TextContext name = new TextContext();
+		name.setText(node.getName());
+		valueChain.setName(name);
 		
 		ApplyProperties applyProperties = new ApplyProperties(this.getOpenerValueChainViewId(), valueChain);
 		return new Object[]{applyProperties, new Remover(new Popup() , true) };

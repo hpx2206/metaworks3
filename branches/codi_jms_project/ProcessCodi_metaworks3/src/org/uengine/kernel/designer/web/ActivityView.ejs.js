@@ -1,3 +1,4 @@
+
 var org_uengine_kernel_designer_web_ActivityView = function(objectId, className){
 	
 	this.objectId = objectId;
@@ -36,7 +37,12 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
 			}else{
 				initText = ( object.label == null || object.label == 'undefined' ) ? "" :  unescape(object.label);
 			}
-			var shape = eval('new ' + object.shapeId + '(\''+initText +'\')');
+			var shape = null;
+			if( initText && initText != "" && initText != null){
+				shape = eval('new ' + object.shapeId + '(\''+initText +'\')');
+			}else{
+				shape = eval('new ' + object.shapeId + '()');
+			}
 			var id = object.id;
 			var parent = object.parent;
 			var style = object.style;
@@ -95,6 +101,64 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
         			object.showDefinitionMonitor();
         		}
         	});
+        	$(element).droppable({
+        		greedy: true,		
+        		tolerance: 'geom',
+            	over: function(event, ui){
+            		console.log('over');
+            	},
+            	out: function(event, ui){
+            		console.log('out');
+            	},
+        		drop: function(event, ui){
+        			var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
+        	 		var clipboardNode = session.clipboard;
+        			if(clipboardNode){
+        				switch (clipboardNode.__className){
+        				case 'org.uengine.codi.mw3.ide.ResourceNode':
+        					switch (clipboardNode.type) {
+        					case 'java':
+        						var dragObjMetadata = mw3.getMetadata(clipboardNode.alias);
+        						canvas.drawLabel(element, dragObjMetadata.displayName);
+    	    		    		
+    	    		    		var complexType = {
+    	    		    				__className : 'org.uengine.contexts.ComplexType',
+    	    		    				typeId : '[' + clipboardNode.alias + ']'
+    	    		    		};
+    	    		    		var variable = {
+    									__className : 'org.uengine.kernel.ProcessVariable',
+    									name : dragObjMetadata.displayName ,
+    									type : complexType.class,
+    									defaultValue : complexType
+    							};
+    	    		    		
+    	    		    		var parameterContexts = [{
+    	    		    			__className : 'org.uengine.kernel.ParameterContext',
+    	    		    			variable : variable
+    	    		    			
+    	    		    		}];
+    	    		    		object.activity.parameters = parameterContexts;
+    	    		    		
+    	    		    		var eleClassName = $(this).attr("_classname");
+    	    		    		if( eleClassName == 'org.uengine.kernel.InvocationActivity'){
+    	    		    			var activityData = $(this).data('activity');
+    	    		    			activityData.resourceClass = clipboardNode.alias;
+    	    		    			$(this).data('activity', activityData);
+    	    		    		}
+    	    		    		
+        						break;
+        					default:
+        						break;
+        					} 
+        					
+        					break;
+        				default:
+        					break;
+        				
+        				}
+        			}
+        		}
+        	});
 			// jms 조회 화면
 			if( object != null && object.viewType != null && "definitionView" == object.viewType ){
 				$(element).unbind('dblclick').bind('dblclick' , function(event){
@@ -126,14 +190,5 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
 					}
 			    });
 			}
-				
-			/*
-			$(element).attr('title', object.tooltip);
-			$(element).hover(function(event, ui) {
-				  $('body').append('<div id=\"shape_tooltip\" style=\"z-index: 1000; position: absolute; width: 200px; height: 30px; background-color: lightgray; text-align: center; padding: 15px 0px 0px; top: ' + event.pageY + 'px; left: ' + event.pageX + 'px\">' + object.tooltip + '</div>');
-			}, function(){
-				$('#shape_tooltip').remove();
-			});
-			*/
 		}
 };

@@ -8,6 +8,7 @@ import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.ide.editor.valuechain.ValueChainEditor;
+import org.uengine.contexts.TextContext;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.ProcessDefinition;
 import org.uengine.kernel.ValueChainDefinition;
@@ -38,6 +39,12 @@ public class ValueChainDesignerContentPanel extends ProcessDesignerContentPanel{
 		this.processDesignerContainer.setEditorId(alias);
 		this.processDesignerContainer.loadValueChain(def);
 		
+		processNameView.setFileId(alias);
+		processNameView.setAlias(def.getName().getText());
+		
+		processNameView.session = session;
+		processNameView.load();
+		
 		return def.getProcessDesignerInstanceId();
 	}
 		
@@ -45,8 +52,10 @@ public class ValueChainDesignerContentPanel extends ProcessDesignerContentPanel{
 		String tempTitle = valueChainEditor.getName();
 		String title = tempTitle.replace('.','@').split("@")[0];
 		ValueChainDefinition def = processDesignerContainer.containerToValueChainDefinition(processDesignerContainer);
-	
-		def.setName(title);
+		
+		TextContext text = new TextContext();
+		text.setText(title);
+		def.setName(text);
 		if( valueChainEditor.getProcessDesignerInstanceId() != null ){
 			def.setProcessDesignerInstanceId(valueChainEditor.getProcessDesignerInstanceId());
 		}

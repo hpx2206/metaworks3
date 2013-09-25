@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import org.uengine.contexts.TextContext;
 import org.uengine.kernel.graph.Transition;
 
 public class ValueChainDefinition implements Serializable{
@@ -14,11 +15,11 @@ public class ValueChainDefinition implements Serializable{
 	
 	transient Hashtable<String, ValueChain> wholeChildValueChains;
 
-	String name;
-		public String getName() {
+	TextContext name;
+		public TextContext getName() {
 			return name;
 		}
-		public void setName(String name) {
+		public void setName(TextContext name) {
 			this.name = name;
 		}
 

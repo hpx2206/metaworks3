@@ -14,6 +14,7 @@ import org.uengine.codi.mw3.ide.Workspace;
 import org.uengine.codi.mw3.ide.editor.Editor;
 import org.uengine.codi.mw3.model.Perspective;
 import org.uengine.codi.mw3.webProcessDesigner.MajorProcessDefinitionNode;
+import org.uengine.contexts.TextContext;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.ValueChain;
 import org.uengine.kernel.ValueChainDefinition;
@@ -70,7 +71,8 @@ public class ValuechainPerspective extends Perspective  implements ContextAware 
 		
 		TreeNode rootNode = new TreeNode();
 		rootNode.setId(childFile.getPath() + "Node");
-		rootNode.setName(def.getName());
+		TextContext text= def.getName();
+		rootNode.setName(text.getText());
 		rootNode.setRoot(true);
 		rootNode.setExpanded(true);
 		rootNode.setType(TreeNode.TYPE_FILE_VALUECHAIN);

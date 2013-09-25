@@ -35,6 +35,13 @@ public class ProcessViewer {
 		public void setAlias(String alias) {
 			this.alias = alias;
 		}
+	String title;
+		public String getTitle() {
+			return title;
+		}
+		public void setTitle(String title) {
+			this.title = title;
+		}
 	String viewType;
 		public String getViewType() {
 			return viewType;
@@ -99,6 +106,7 @@ public class ProcessViewer {
 							this.processDesignerContainer.init();
 							this.processDesignerContainer.load(def);
 							this.setProcessDesignerInstanceId(def.getProcessDesignerInstanceId());
+							this.setTitle(def.getName().getText());
 							
 							this.setDesignerMaxX(processDesignerContainer.getMaxX());
 							this.setDesignerMaxY(processDesignerContainer.getMaxY());

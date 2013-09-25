@@ -30,7 +30,7 @@ org_uengine_kernel_designer_web_ValueChainView.prototype = {
 			var object = mw3.objects[this.objectId];
 			var canvas = this.canvas;
 			var element = null;
-			var initText = ( object.label == null || object.label == 'undefined' ) ? "" : object.label;
+			var initText = ( object.label == null || object.label == 'undefined' ) ? "valuechain" : unescape(object.label);
 			var shape = eval('new ' + object.shapeId + '(\''+initText +'\')');
 			var id = object.id;
 			var parent = object.parent;
@@ -50,9 +50,7 @@ org_uengine_kernel_designer_web_ValueChainView.prototype = {
         		$(element).data('valuechain', activityData);
         	}
         	
-        	$(element).on({
-        		btnclick : function(event) {
-        			console.log(this.textContent);
+        	$(element).unbind('dblclick').bind('dblclick' , function(event){
         			var name = {
         					__className : 'org.uengine.contexts.TextContext',
         					text : this.textContent
@@ -61,7 +59,6 @@ org_uengine_kernel_designer_web_ValueChainView.prototype = {
         			object.valueChain = $(this).data('valuechain');
         			object.valueChain.name = name;
         			object.showValueChainMonitor();
-        		}
         	});
 			
 				

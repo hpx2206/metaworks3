@@ -8,8 +8,12 @@ import java.io.Serializable;
 
 import javax.xml.namespace.QName;
 
+import org.metaworks.ContextAware;
+import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
+import org.metaworks.annotation.Id;
+import org.metaworks.annotation.ServiceMethod;
 import org.uengine.contexts.DatabaseSynchronizationOption;
 import org.uengine.contexts.TextContext;
 
@@ -18,10 +22,18 @@ import org.uengine.contexts.TextContext;
  */
 
 @Face(ejsPath="genericfaces/ActivityFace.ejs", options={"fieldOrder"},values={"name,displayName"})
-public class ProcessVariable implements java.io.Serializable, NeedArrangementToSerialize, Cloneable{
+public class ProcessVariable implements java.io.Serializable, NeedArrangementToSerialize, Cloneable, ContextAware{
 	private static final long serialVersionUID = org.uengine.kernel.GlobalContext.SERIALIZATION_UID;
 	
+	transient MetaworksContext metaworksContext;
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
+		}
 	String name;
+	@Id
 	@Face(displayName="변수 이름")
 		public String getName() {
 			return name;
@@ -171,7 +183,10 @@ public class ProcessVariable implements java.io.Serializable, NeedArrangementToS
 	public ProcessVariable(Object[] settings){
 		org.uengine.util.UEngineUtil.initializeProperties(this, settings);
 	}
-	public ProcessVariable(){}
+	public ProcessVariable(){
+		this.setMetaworksContext(new MetaworksContext());
+		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+	}
 
 	//review: The return object of this method is only for scripting users to indicate certain process variable
 	public static ProcessVariable forName(String varName){	
@@ -347,62 +362,4 @@ System.out.println("ProcessVariable:: converting from String to Integer");
 		}
 	}
 
-
 }
-
-/*
-class ScriptingInputterForProcessVariable extends ScriptInput{
-	
-	private static final long serialVersionUID = GlobalContext.SERIALIZATION_UID;
-	
-	ProcessDesigner pd;
-	ProcessInstance instance;
-	Class type;
-	Object value;
-	
-	public void setType(Class type){
-		this.type = type;
-	}
-			
-	public ScriptingInputterForProcessVariable(ProcessDesigner pd){
-		super(pd);
-		this.pd = pd;
-	}
-	
-	protected org.apache.bsf.BSFManager createBSFManager() throws Exception{
-		ProcessDefinition definition =(ProcessDefinition)pd.getProcessDefinitionDesigner().getActivity();
-		instance = ProcessInstance.create(definition, "test instance", null);
-				
-		org.apache.bsf.BSFManager manager = super.createBSFManager();
-		manager.declareBean("instance", instance, ProcessInstance.class);
-		manager.declareBean("definition", new ScriptActivity(), Activity.class);
-		manager.declareBean("value", value, Object.class);
-				
-		return manager;
-	}	
-			
-	public void testScript() {
-		
-		Type dialogTable = new Type(
-			"Please enter a test value:",
-			new FieldDescriptor[]{
-				new FieldDescriptor("TestValue", "Test Value")
-			}
-		);
-		
-		FieldDescriptor testValueFd = dialogTable.getFieldDescriptor("TestValue");
-		testValueFd.setType(type);
-		
-		InputDialog inputDialog = new InputDialog(dialogTable);
-		inputDialog.show();
-				
-		value = inputDialog.getInputForm().getInstance().getFieldValueObject("TestValue");
-		
-		super.testScript();
-//		ValidationContext vc = instance.getValidationContext();
-//		if(vc.size()>0)
-//			reportError(vc.toString());
-	}
-
-}
-*/

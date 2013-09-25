@@ -10,7 +10,7 @@ import org.uengine.kernel.designer.web.ValueChainView;
 
 public class ValueChain implements ContextAware, java.io.Serializable{
 
-	MetaworksContext metaworksContext;
+	transient MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
 			return metaworksContext;
 		}

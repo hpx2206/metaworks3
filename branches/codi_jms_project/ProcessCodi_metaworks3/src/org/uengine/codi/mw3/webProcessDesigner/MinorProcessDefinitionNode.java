@@ -14,7 +14,7 @@ public class MinorProcessDefinitionNode extends TreeNode implements ContextAware
 	@AutowiredFromClient
 	transient public Session session;
 	
-	MetaworksContext metaworksContext;
+	transient MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
 			return metaworksContext;
 		}

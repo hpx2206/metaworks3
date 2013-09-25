@@ -164,4 +164,11 @@ public class CanvasDTO implements Serializable{
 			public void setViewClass(String viewClass) {
 				this.viewClass = viewClass;
 			}
+		String activityClass;
+			public String getActivityClass() {
+				return activityClass;
+			}
+			public void setActivityClass(String activityClass) {
+				this.activityClass = activityClass;
+			}
 }

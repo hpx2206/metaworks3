@@ -77,7 +77,7 @@ public class SolrSearch {
 			if( i ==0 ){
 				makedKeyword += "*" + str[i] + "*";
 			}else{
-				makedKeyword += "or text:*" + str[i] + "*";
+				makedKeyword += " or text:*" + str[i] + "*";
 			}
 		}
 //		if(this.getTopicId() != null){

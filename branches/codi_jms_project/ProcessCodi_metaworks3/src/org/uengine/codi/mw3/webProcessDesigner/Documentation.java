@@ -11,7 +11,7 @@ import org.uengine.codi.mw3.admin.WebEditor;
 
 @Face(displayName="문서정보", ejsPath="dwr/metaworks/genericfaces/FormFace.ejs", options={"fieldOrder"},values={"title,document,reference,url,departManagement,regulation,attachfile1,attachfile2,attachfile3,description"})
 public class Documentation implements Serializable , ContextAware{
-	MetaworksContext metaworksContext;
+	transient MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
 			return metaworksContext;
 		}
