@@ -3,6 +3,30 @@ var org_uengine_codi_mw3_processexplorer_ProcessNameView = function(objectId, cl
 	this.className = className;
 	var object = mw3.objects[this.objectId];
 	
+	if(object){
+		this.instanceName = object.instanceName;
+		
+		$('#processName_' + this.objectId).bind('focus', function(){
+			$(this).css("border","solid 1px #ccc");
+		});
+		
+		$('#processName_' + this.objectId).bind('blur', function(){
+			mw3.getFaceHelper(objectId).change();
+			$(this).css("border","none");
+	
+		});
+		
+		var autoSizing = function(){
+			var h=$('#processName_' + objectId);
+			
+			if(h.length > 0)
+				h.height(21).height(h[0].scrollHeight);//where 60 is minimum height of textarea
+		};  
+		
+		$('#processName_' + this.objectId).live("keyup keydown", autoSizing);
+	
+		autoSizing();
+	}
 	
 	var favoriteAdded = object.favoriteAdded;
 	
@@ -28,9 +52,20 @@ var org_uengine_codi_mw3_processexplorer_ProcessNameView = function(objectId, cl
 			$(this).attr("src","images/checkbox_off.png");	
 		}
 	});
-			
+};
+
+org_uengine_codi_mw3_processexplorer_ProcessNameView.prototype = {
+	getValue : function(){
+		var object = mw3.objects[this.objectId];
 		
+		if(object)
+			object.instanceName = $('#processName_' + this.objectId).val();
+	},
+	change : function(){
+		var instanceName = $('#processName_' + this.objectId).val();
 		
-		
-		
+		if(this.instanceName != instanceName){
+			mw3.call(this.objectId, 'change');			
+		}
+	}
 };

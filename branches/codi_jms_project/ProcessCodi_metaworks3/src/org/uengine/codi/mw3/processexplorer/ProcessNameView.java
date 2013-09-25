@@ -2,6 +2,8 @@ package org.uengine.codi.mw3.processexplorer;
 
 import java.util.Date;
 
+import org.metaworks.ContextAware;
+import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.ToAppend;
@@ -10,7 +12,14 @@ import org.metaworks.annotation.ServiceMethod;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessViewWindow;
 
-public class ProcessNameView{
+public class ProcessNameView implements ContextAware{
+	MetaworksContext metaworksContext;
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
+		}
 	String alias;
 		public String getAlias() {
 			return alias;
@@ -39,15 +48,7 @@ public class ProcessNameView{
 		public void setFavoriteAdded(boolean favoriteAdded) {
 			this.favoriteAdded = favoriteAdded;
 		}
-	
-	ProcessExplorerPerspectiveWindow processExplorerPerspectiveWindow;
-		public ProcessExplorerPerspectiveWindow getProcessExplorerPerspectiveWindow() {
-			return processExplorerPerspectiveWindow;
-		}
-		public void setProcessExplorerPerspectiveWindow(
-				ProcessExplorerPerspectiveWindow processExplorerPerspectiveWindow) {
-			this.processExplorerPerspectiveWindow = processExplorerPerspectiveWindow;
-		}
+		
 	public ProcessNameView() throws Exception{
 
 	}
@@ -96,6 +97,10 @@ public class ProcessNameView{
 		return new Object[]{new Refresh(favoritePanel)};
 	}
 	
-	
+	@ServiceMethod(callByContent=true, keyBinding="enter", target=ServiceMethodContext.TARGET_POPUP)
+	public Object[] change() throws Exception{
+		
+		return null;
+	}
 	
 }

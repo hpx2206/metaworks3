@@ -642,7 +642,9 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 		
 		processNameView.setFileId(alias);
 		processNameView.setAlias(def.getName().getText());
-		
+		processNameView.setMetaworksContext(new MetaworksContext());
+		processNameView.getMetaworksContext().setHow("nameChange");
+
 		processNameView.session = session;
 		processNameView.load();
 		

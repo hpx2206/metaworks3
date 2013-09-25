@@ -41,6 +41,8 @@ public class ValueChainDesignerContentPanel extends ProcessDesignerContentPanel{
 		
 		processNameView.setFileId(alias);
 		processNameView.setAlias(def.getName().getText());
+		processNameView.setMetaworksContext(new MetaworksContext());
+		processNameView.getMetaworksContext().setHow("nameChange");
 		
 		processNameView.session = session;
 		processNameView.load();
