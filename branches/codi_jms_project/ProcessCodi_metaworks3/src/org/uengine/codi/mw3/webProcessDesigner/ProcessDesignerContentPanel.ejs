@@ -11,11 +11,17 @@ if( mw3.how == 'valuechain'){
 			</dl>
 		</dd>
 	</div>
-	<div style="background:#dfe6ed; border-bottom:1px solid #bfcddb; padding:8px;">
-        <%= fields.processNameView.here() %>
+	<div style="height: 100%; margin-left: 90px; cursor: default; overflow: auto; background-color: rgb(241, 252, 241); outline: none; position: relative; left: 0px; top: 0px; background-position: initial initial; background-repeat: initial initial;">
+        <div class="windowSubTitle">
+        	<span class="ProcessNameView">
+        		<%= fields.processNameView.here() %>
+        	</span>
+        </div>
+        <div id="canvas_<%=objectId%>" style=" cursor: default; overflow:auto;  background:#F1FCF1; ">
+			<%= fields.processDesignerContainer.here() %>
+		</div>
     </div>
-	<div id="canvas_<%=objectId%>" style="height:100%; margin-left:90px; cursor: default; overflow:auto;  background:#F1FCF1; "></div>
-	<%= fields.processDesignerContainer.here() %>
+	
 </div>
 <%
 }else{
