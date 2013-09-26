@@ -40,13 +40,7 @@
 %>	
 	<%=fields.processMapPanel.here()%>
 <br><br>
-	<table>
-		<tr>
-			<td width="15"><img src="images/waveStyle/navi_icon.png"></td>
-			<td class="closed"><b><%=mw3.localize("$OpenLevel")%>&nbsp; : &nbsp;</b></td>
-			<td><%=fields.securityLevel.here({when:'edit'})%></td>
-		</tr>
-	</table>
+	<div><%=fields.securityLevel.here({when:'edit'})%></div>
 <%		
 		}
 	}
