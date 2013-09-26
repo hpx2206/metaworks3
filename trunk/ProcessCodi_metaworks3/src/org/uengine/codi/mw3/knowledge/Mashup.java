@@ -2,26 +2,30 @@ package org.uengine.codi.mw3.knowledge;
 
 import org.metaworks.annotation.AutowiredToClient;
 import org.metaworks.annotation.Face;
-import org.metaworks.annotation.Hidden;
+import org.uengine.kernel.GlobalContext;
 
 @Face(ejsPath="genericfaces/Tab.ejs",
 options={"hideLabels", "tabsBottom"},
 values={"true", "true"})
-
 public class Mashup {
 	
-	
 	public Mashup(){
-		setMashupGoogleImage(new MashupGoogleImage());
-		setMashupLMS(new MashupLMS());
-		setMashupKMS(new MashupKMS());
-		setMashupVideo(new MashupVideo());
-		setMashupSlideshare(new MashupSlideshare());
-		setMashupWiki(new MashupWiki());
+		if("1".equals(GlobalContext.getPropertyString("mashup.img.use", "1")))
+			setMashupGoogleImage(new MashupGoogleImage());
+		if("1".equals(GlobalContext.getPropertyString("mashup.lms.use", "1")))
+			setMashupLMS(new MashupLMS());
+		if("1".equals(GlobalContext.getPropertyString("mashup.kms.use", "1")))
+			setMashupKMS(new MashupKMS());
+		if("1".equals(GlobalContext.getPropertyString("mashup.video.use", "1")))
+			setMashupVideo(new MashupVideo());
+		if("1".equals(GlobalContext.getPropertyString("mashup.slide.use", "1")))
+			setMashupSlideshare(new MashupSlideshare());
+		if("1".equals(GlobalContext.getPropertyString("mashup.wiki.use", "1")))
+			setMashupWiki(new MashupWiki());
 	}
 
 	MashupGoogleImage mashupGoogleImage;
-		@Face(displayName="이미지")
+		@Face(displayName="$Image")
 		@AutowiredToClient
 		public MashupGoogleImage getMashupGoogleImage() {
 			return mashupGoogleImage;
@@ -31,7 +35,7 @@ public class Mashup {
 		}
 		
 	MashupWiki mashupWiki;
-	@Face(displayName="위키피디아")
+	@Face(displayName="$Wiki")
 		public MashupWiki getMashupWiki() {
 			return mashupWiki;
 		}
@@ -40,7 +44,7 @@ public class Mashup {
 		}
 
 	MashupLMS mashupLMS;
-	@Face(displayName="학습 콘텐츠")
+	@Face(displayName="$Contents")
 		public MashupLMS getMashupLMS() {
 			return mashupLMS;
 		}
@@ -49,7 +53,7 @@ public class Mashup {
 		}
 
 	MashupKMS mashupKMS;
-	@Face(displayName="지식맵")
+	@Face(displayName="$Knolegemap")
 	@AutowiredToClient
 		public MashupKMS getMashupKMS() {
 			return mashupKMS;
@@ -60,7 +64,7 @@ public class Mashup {
 		}
 		
 	MashupVideo mashupVideo;
-	@Face(displayName="유튜브")
+	@Face(displayName="$Youtube")
 	@AutowiredToClient
 		public MashupVideo getMashupVideo() {
 			return mashupVideo;
@@ -71,7 +75,7 @@ public class Mashup {
 		}
 	
 	MashupSlideshare mashupSlideshare;
-	@Face(displayName="슬라이드")
+	@Face(displayName="$Slide")
 	@AutowiredToClient
 		public MashupSlideshare getMashupSlideshare() {
 			return mashupSlideshare;
