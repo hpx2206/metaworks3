@@ -1462,16 +1462,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 			
 			instance.set("topicId", folderId);
 			instance.select();
-			if(instance.size() >0){
-				while(instance.next()){
-					Instance inst = new Instance();
-					inst.copyFrom(instance);
-//					work.fileIconType(workitem.getTool());
-					inst.getMetaworksContext().setHow("documentlist");
-//					workitem.moveToInsertRow();
-//					System.out.println(workitem.getFileIcon());
-				}
-			}
+
 			return instance;
 			
 	}

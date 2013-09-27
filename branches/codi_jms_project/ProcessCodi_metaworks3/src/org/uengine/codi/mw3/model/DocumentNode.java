@@ -406,6 +406,10 @@ public class DocumentNode extends Database<IDocumentNode> implements IDocumentNo
 				workitem.setTaskId(new Long(documentInClipboard.getTaskId()));
 				workitem.databaseMe().setFolderId(this.getId());
 				workitem.databaseMe().setFolderName(this.getName());
+				
+				Instance inst = new Instance();
+				inst.setInstId(new Long(documentInClipboard.getInstId()));
+				inst.databaseMe().setTopicId(this.getId());
 //				this.syncToDatabaseMe();
 				workitem.flushDatabaseMe();
 			}
