@@ -43,6 +43,7 @@ public class MinorProcessDefinitionNode extends TreeNode implements ContextAware
 		public void setAlias(String alias) {
 			this.alias = alias;
 		}
+
 	transient MajorProcessDefinitionNode parentNode;	
 		public MajorProcessDefinitionNode getParentNode() {
 			return parentNode;
@@ -88,9 +89,9 @@ public class MinorProcessDefinitionNode extends TreeNode implements ContextAware
 		}
 		
 	}		
-	@ServiceMethod(payload={"id", "name", "path", "folder" , "child", "metaworksContext"}, mouseBinding="right", target=ServiceMethodContext.TARGET_POPUP_OVER_POPUP)
+	@ServiceMethod(callByContent=true, mouseBinding="right", target=ServiceMethodContext.TARGET_POPUP_OVER_POPUP)
 	public Object[] showContextMenu() {
-		if("explorer".equals(this.getMetaworksContext().getHow())) {
+		if(this.getMetaworksContext() != null && "explorer".equals(this.getMetaworksContext().getHow())) {
 			return null;
 			
 		} else {

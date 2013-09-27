@@ -24,16 +24,6 @@ public class ValueChainDesignerContentPanel extends ProcessDesignerContentPanel{
 	}
 	
 	@Override
-	@ServiceMethod(callByContent=true, target="popup")
-	public ModalWindow doSave() throws Exception{
-		ProcessDesignerTitle dTitle = new ProcessDesignerTitle();
-		dTitle.setMetaworksContext(new MetaworksContext());
-		dTitle.getMetaworksContext().setWhen("edit");
-		dTitle.setTitle(getProcessName());
-		return new ModalWindow(dTitle , 600, 200,  "가치사슬명 입력" );
-	}
-	
-	@Override
 	public String load(String definitionString) throws Exception{
 		ValueChainDefinition def = (ValueChainDefinition) GlobalContext.deserialize(definitionString);
 		this.processDesignerContainer.setEditorId(alias);
@@ -41,22 +31,15 @@ public class ValueChainDesignerContentPanel extends ProcessDesignerContentPanel{
 		
 		processNameView.setFileId(alias);
 		processNameView.setAlias(def.getName().getText());
-		processNameView.setMetaworksContext(new MetaworksContext());
-		processNameView.getMetaworksContext().setHow("nameChange");
-		
-		processNameView.session = session;
-		processNameView.load();
 		
 		return def.getProcessDesignerInstanceId();
 	}
 		
 	public void saveMe(ValueChainEditor valueChainEditor) throws Exception{
-		String tempTitle = valueChainEditor.getName();
-		String title = tempTitle.replace('.','@').split("@")[0];
 		ValueChainDefinition def = processDesignerContainer.containerToValueChainDefinition(processDesignerContainer);
 		
 		TextContext text = new TextContext();
-		text.setText(title);
+		text.setText(this.getProcessName());
 		def.setName(text);
 		if( valueChainEditor.getProcessDesignerInstanceId() != null ){
 			def.setProcessDesignerInstanceId(valueChainEditor.getProcessDesignerInstanceId());

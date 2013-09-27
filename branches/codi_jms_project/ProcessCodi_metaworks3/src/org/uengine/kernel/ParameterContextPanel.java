@@ -1,20 +1,12 @@
 package org.uengine.kernel;
 
-import java.util.Date;
+import java.util.ArrayList;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
-import org.metaworks.MetaworksException;
-import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
-import org.metaworks.ToAppend;
-import org.metaworks.ToOpener;
+import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.component.SelectBox;
-import org.uengine.codi.mw3.model.Popup;
-import org.uengine.codi.mw3.webProcessDesigner.ConditionInput;
-import org.uengine.contexts.ComplexType;
-import org.uengine.contexts.TextContext;
 
 public class ParameterContextPanel  implements ContextAware{
 	
@@ -25,90 +17,72 @@ public class ParameterContextPanel  implements ContextAware{
 		public void setMetaworksContext(MetaworksContext metaworksContext) {
 			this.metaworksContext = metaworksContext;
 		}
-	
-	SelectBox dataType;
-		public SelectBox getDataType() {
-			return dataType;
+	ArrayList<ProcessVariable> wholeVariableList;
+		public ArrayList<ProcessVariable> getWholeVariableList() {
+			return wholeVariableList;
 		}
-		public void setDataType(SelectBox dataType) {
-			this.dataType = dataType;
+		public void setWholeVariableList(ArrayList<ProcessVariable> wholeVariableList) {
+			this.wholeVariableList = wholeVariableList;
 		}
 		
-	ConditionInput conditionInput;
-		public ConditionInput getConditionInput() {
-			return conditionInput;
+	ArrayList<ProcessVariable> activityVariableList;
+		public ArrayList<ProcessVariable> getActivityVariableList() {
+			return activityVariableList;
 		}
-		public void setConditionInput(ConditionInput conditionInput) {
-			this.conditionInput = conditionInput;
+		public void setActivityVariableList(
+				ArrayList<ProcessVariable> activityVariableList) {
+			this.activityVariableList = activityVariableList;
 		}
 		
 	public ParameterContextPanel(){
 		this.setMetaworksContext(new MetaworksContext());
 		this.getMetaworksContext().setWhen("edit");
-		dataType = new SelectBox();
-		conditionInput = new ConditionInput();
-		conditionInput.init();
 	}
 	
 	public void load() throws Exception{
-		this.makeDataTypeChoice();
+		if( wholeVariableList == null ){
+			wholeVariableList = new ArrayList<ProcessVariable>();
+		}
+		if( activityVariableList == null ){
+			activityVariableList = new ArrayList<ProcessVariable>();
+			
+			ProcessVariable val2 = new ProcessVariable();
+			val2.setName("3333");
+			val2.setDisplayName("3333");
+			
+			ProcessVariable val3 = new ProcessVariable();
+			val3.setName("4444");
+			val3.setDisplayName("4444");
+			
+			activityVariableList.add(val2);
+			activityVariableList.add(val3);
+		}
 		
-//		ParameterContext[] pc = this.getParameters();
-//		if( pc == null || pc.length == 0 ){
-//			pc = new ParameterContext[1];
-//			ParameterContext pcx = new ParameterContext();
-//			pc[0] = pcx;
-//		}
+		ProcessVariable val1 = new ProcessVariable();
+		val1.setName("2222");
+		val1.setDisplayName("2222");
 		
-	}
-	
-	public void makeDataTypeChoice() throws Exception{
-		SelectBox choice = new SelectBox();
-		// name , value
-		choice.setId("expression");
-		choice.add("선택", "");
-		choice.add("Text", "text");
-		choice.add("Number", "number");
-		choice.add("Date", "date");
-		choice.add("Yes or No", "Yes or No");
-		choice.add("ComplexType" ,"complexType");
-		setDataType(choice);
+		wholeVariableList.add(val1);
 	}
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
+	public Object[] addWholeVariable() throws Exception{
+		return null;
+	}
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
+	public Object[] removeWholeVariable() throws Exception{
+		return null;
+	}
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
+	public Object[] addActivityVariable() throws Exception{
+		return null;
+	}
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
+	public Object[] removeActivityVariable() throws Exception{
+		return null;
+	}
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] save() throws Exception{
-		ParameterContext contexts = new ParameterContext();
-		TextContext text = new TextContext();
-		String selectedText = this.getDataType().getSelectedText();
-		ConditionInput expVal = this.getConditionInput();
-		Class selectedType = null;
-		if( selectedText != null && ( selectedText.equalsIgnoreCase("Text") || selectedText.equalsIgnoreCase("Number")) ){
-			text.setText(expVal.getExpressionText());
-			if( selectedText.equalsIgnoreCase("Text") ){
-				selectedType = String.class;
-			}else{
-				selectedType = Number.class;
-			}
-		}else if( selectedText != null && selectedText.equalsIgnoreCase("Yes or No") ){
-			selectedText = expVal.getYesNo();
-			selectedType = String.class;
-		}else if( selectedText != null && selectedText.equalsIgnoreCase("Date") ){
-			selectedText = expVal.getExpressionDate().toString();
-			selectedType = Date.class;
-		}else if( selectedText != null && selectedText.equalsIgnoreCase("ComplexType") ){
-			selectedType = ComplexType.class;
-			selectedText = "";
-		}else{
-			throw new MetaworksException("타입을 선택하셔야 합니다.");
-		}
-		
-		
-		ProcessVariable pv = new ProcessVariable();
-		pv.setType(selectedType);
-		
-		contexts.setArgument(text);
-		contexts.setVariable(pv);
-		
-		return new Object[]{new Remover(new Popup() , true) , new ToAppend(new ParameterContext() ,contexts)};
+		return null;
 	}
 }

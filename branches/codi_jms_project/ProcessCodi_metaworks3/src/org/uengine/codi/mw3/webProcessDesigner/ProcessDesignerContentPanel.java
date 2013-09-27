@@ -20,6 +20,7 @@ import org.uengine.codi.mw3.ide.editor.process.ProcessEditor;
 import org.uengine.codi.mw3.model.ContentWindow;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.processexplorer.ProcessNameView;
+import org.uengine.contexts.TextContext;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.ProcessDefinition;
 import org.uengine.kernel.ProcessVariable;
@@ -31,6 +32,8 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 	public ProcessDesignerContentPanel() throws Exception{
 		processDesignerContainer = new ProcessDesignerContainer();
 		processNameView = new ProcessNameView();
+		processNameView.setMetaworksContext(new MetaworksContext());
+		processNameView.getMetaworksContext().setHow("nameChange");
 	}
 	
 	String alias;
@@ -228,14 +231,14 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 	}
 		*/
 		
-	@ServiceMethod(callByContent=true, target="popup")
-	public ModalWindow doSave() throws Exception{
-		ProcessDesignerTitle dTitle = new ProcessDesignerTitle();
-		dTitle.setMetaworksContext(new MetaworksContext());
-		dTitle.getMetaworksContext().setWhen("edit");
-		dTitle.setTitle(getProcessName());
-		return new ModalWindow(dTitle , 600, 200,  "프로세스명 입력" );
-	}
+//	@ServiceMethod(callByContent=true, target="popup")
+//	public ModalWindow doSave() throws Exception{
+//		ProcessDesignerTitle dTitle = new ProcessDesignerTitle();
+//		dTitle.setMetaworksContext(new MetaworksContext());
+//		dTitle.getMetaworksContext().setWhen("edit");
+//		dTitle.setTitle(getProcessName());
+//		return new ModalWindow(dTitle , 600, 200,  "프로세스명 입력" );
+//	}
 	
 	@ServiceMethod(callByContent=true, target="popup")
 	public ModalWindow gateCondition() throws Exception{
@@ -304,8 +307,6 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 //	}
 	
 	public void saveMe(ProcessEditor processEditor) throws Exception{
-		String tempTitle = processEditor.getName();
-		String title = tempTitle.replace('.','@').split("@")[0];
 		ProcessDefinition def = processDesignerContainer.containerToDefinition(processDesignerContainer);
 		
 		
@@ -421,7 +422,9 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 			
 		}
 		*/
-			def.setName(title);
+			TextContext text = new TextContext();
+			text.setText(this.getProcessName());
+			def.setName(text);
 			if( processEditor.getProcessDesignerInstanceId() != null ){
 				def.setProcessDesignerInstanceId(processEditor.getProcessDesignerInstanceId());
 			}
@@ -642,11 +645,6 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 		
 		processNameView.setFileId(alias);
 		processNameView.setAlias(def.getName().getText());
-		processNameView.setMetaworksContext(new MetaworksContext());
-		processNameView.getMetaworksContext().setHow("nameChange");
-
-		processNameView.session = session;
-		processNameView.load();
 		
 		return def.getProcessDesignerInstanceId();
 		

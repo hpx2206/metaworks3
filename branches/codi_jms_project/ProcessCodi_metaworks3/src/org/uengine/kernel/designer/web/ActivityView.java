@@ -1,5 +1,7 @@
 package org.uengine.kernel.designer.web;
 
+import java.util.ArrayList;
+
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
@@ -17,6 +19,8 @@ import org.uengine.codi.mw3.webProcessDesigner.PropertiesWindow;
 import org.uengine.kernel.Activity;
 import org.uengine.kernel.IDrawDesigne;
 import org.uengine.kernel.ParameterContext;
+import org.uengine.kernel.ParameterContextPanel;
+import org.uengine.kernel.ProcessVariable;
 import org.uengine.kernel.ReceiveActivity;
 
 public class ActivityView extends CanvasDTO  implements ContextAware{
@@ -75,7 +79,15 @@ public class ActivityView extends CanvasDTO  implements ContextAware{
 		public void setPropertiesWindow(PropertiesWindow propertiesWindow) {
 			this.propertiesWindow = propertiesWindow;
 		}
-	
+	transient ArrayList<ProcessVariable> variableList;
+	@Hidden
+		public ArrayList<ProcessVariable> getVariableList() {
+			return variableList;
+		}
+		public void setVariableList(ArrayList<ProcessVariable> variableList) {
+			this.variableList = variableList;
+		}
+		
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 	public Object showProperties() throws Exception{
 		Popup popup = new Popup();
@@ -92,18 +104,17 @@ public class ActivityView extends CanvasDTO  implements ContextAware{
 			
 			boolean isReceiveActivity = ReceiveActivity.class.isAssignableFrom(paramClass);
 			if( isReceiveActivity ){
-				ParameterContext context = new ParameterContext();
-				context.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
-				
-				ParameterContext[] contexts = ((ReceiveActivity)activity).getParameters();
-				if( contexts != null && contexts.length > 0){
-					
-				}else{
-					contexts = new ParameterContext[1];
-					contexts[0] = context;
-				}
-				((ReceiveActivity)activity).setParameters(contexts);
-				System.out.println("33333333");
+//				ParameterContext context = new ParameterContext();
+//				context.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+//				
+//				ParameterContext[] contexts = ((ReceiveActivity)activity).getParameters();
+//				if( contexts != null && contexts.length > 0){
+//					
+//				}else{
+//					contexts = new ParameterContext[1];
+//					contexts[0] = context;
+//				}
+//				((ReceiveActivity)activity).setParameters(contexts);
 			}
 			
 		}
@@ -118,9 +129,14 @@ public class ActivityView extends CanvasDTO  implements ContextAware{
 			activity.getDocumentation().setMetaworksContext(new MetaworksContext());
 			activity.getDocumentation().getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		}
+		// 변수설정
+		ParameterContextPanel parameterContextPanel = new ParameterContextPanel();
+		parameterContextPanel.setWholeVariableList(variableList);
+		parameterContextPanel.load();
 		
 		activityWindow.getActivityPanel().setActivity(activity);
 		activityWindow.getActivityPanel().setDocument(activity.getDocumentation());
+		activityWindow.getActivityPanel().setParameterContextPanel(parameterContextPanel);
 		popup.setPanel(activityWindow);
 		popup.setWidth(700);
 		popup.setHeight(500);

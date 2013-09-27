@@ -97,10 +97,4 @@ public class ProcessNameView implements ContextAware{
 		return new Object[]{new Refresh(favoritePanel)};
 	}
 	
-	@ServiceMethod(callByContent=true, keyBinding="enter", target=ServiceMethodContext.TARGET_POPUP)
-	public Object[] change() throws Exception{
-		
-		return null;
-	}
-	
 }

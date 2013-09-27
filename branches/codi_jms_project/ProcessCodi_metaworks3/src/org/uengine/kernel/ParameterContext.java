@@ -99,21 +99,4 @@ public class ParameterContext implements Serializable , ContextAware{
 		public void setTransformerMapping(TransformerMapping transformerMapping) {
 			this.transformerMapping = transformerMapping;
 		}	
-	
-	@ServiceMethod(when=MetaworksContext.WHEN_NEW , target=ServiceMethodContext.TARGET_POPUP)
-	public Object addVariable() throws Exception{
-		Popup popup = new Popup();
-		
-		ParameterContextPanel panel = new ParameterContextPanel();
-		panel.load();
-		
-		popup.setPanel(panel);
-		popup.setWidth(300);
-		popup.setHeight(300);
-		return popup;
-	}
-	@ServiceMethod(when=MetaworksContext.WHEN_VIEW)
-	public void editVariable(){
-		
-	}
 }

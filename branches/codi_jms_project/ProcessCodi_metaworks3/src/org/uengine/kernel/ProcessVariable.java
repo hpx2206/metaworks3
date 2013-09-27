@@ -1,5 +1,6 @@
 package org.uengine.kernel;
 
+import java.beans.PropertyChangeEvent;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
@@ -21,7 +22,6 @@ import org.uengine.contexts.TextContext;
  * @author Jinyoung Jang
  */
 
-@Face(ejsPath="genericfaces/ActivityFace.ejs", options={"fieldOrder"},values={"name,displayName"})
 public class ProcessVariable implements java.io.Serializable, NeedArrangementToSerialize, Cloneable, ContextAware{
 	private static final long serialVersionUID = org.uengine.kernel.GlobalContext.SERIALIZATION_UID;
 	
@@ -55,6 +55,15 @@ public class ProcessVariable implements java.io.Serializable, NeedArrangementToS
 		}	
 		public void setDisplayName(TextContext value){
 			displayName = value;
+		}
+		public void setDisplayName(String value) {
+			if(getName()==null){
+				TextContext textCtx = new TextContext();
+				textCtx.setText(value);
+				setDisplayName(textCtx);		
+			}
+			
+			getDisplayName().setText(value);
 		}
 	
 	Class type;  	

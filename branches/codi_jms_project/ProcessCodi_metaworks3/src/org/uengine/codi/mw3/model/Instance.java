@@ -98,10 +98,10 @@ public class Instance extends Database<IInstance> implements IInstance{
 			SolrSearch solrSearch = new SolrSearch();
 			solrSearch.setKeyword(searchKeyword);
 			String instanceStr = solrSearch.searchInstance();
-			if( instanceStr != null ){
+			//if( instanceStr != null ){
 				appendedInstanceSql.append("   AND inst.INSTID in (" + instanceStr + ") ");
 //				criteria.put("instanceStr", "(" + instanceStr + ")" );
-			}
+			//}
 			
 			createSQLPhase2(navigation, criteria, stmt, worklistSql, appendedInstanceSql);
 

@@ -13,6 +13,7 @@ import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.ide.Templete;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.webProcessDesigner.MajorProcessDefinitionNode;
+import org.uengine.codi.mw3.webProcessDesigner.MinorProcessDefinitionNode;
 
 @Face(displayName="Rename...", ejsPath="dwr/metaworks/genericfaces/FormFace.ejs")
 public class FileRenamer extends Templete {
@@ -35,6 +36,14 @@ public class FileRenamer extends Templete {
 		if(clipboard instanceof MajorProcessDefinitionNode){
 			if( this.getName() != null && !"".equals(this.getName().trim())){
 				MajorProcessDefinitionNode targetNode = (MajorProcessDefinitionNode)clipboard;
+				targetNode.setName(this.getName());
+				return new Object[]{new Remover(new ModalWindow()), new Refresh(targetNode)};
+			}else{
+				return new Object[]{new Remover(new ModalWindow())};
+			}
+		}else if(clipboard instanceof MinorProcessDefinitionNode){
+			if( this.getName() != null && !"".equals(this.getName().trim())){
+				MinorProcessDefinitionNode targetNode = (MinorProcessDefinitionNode)clipboard;
 				targetNode.setName(this.getName());
 				return new Object[]{new Remover(new ModalWindow()), new Refresh(targetNode)};
 			}else{

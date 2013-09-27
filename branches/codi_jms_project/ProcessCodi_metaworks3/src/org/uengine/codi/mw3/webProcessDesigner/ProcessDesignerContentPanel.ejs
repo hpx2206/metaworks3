@@ -131,18 +131,17 @@ if( mw3.how == 'valuechain'){
 	            <img src="images/opengraph/group.png" class="icon_shape icon_shape_<%=objectId%>" _classType="Activity" _classname="org.uengine.kernel.InvocationActivity" _shape_type="GEOM" _shape_id="OG.shape.bpmn.M_Group" _width="50" _height="50" title="InvocationActivity"/>	            
 	         </dl>
 		</dd>
-            
-            
-        <!--
-		<div>
-				<div style="padding-left:5px;"><a id="wBtn" href="#" onClick="<%=methods.doSave.caller()%>"><span><%=mw3.localize("$save")%></span></a></div>
-				<div style="margin-bottom:3px;"><a id="wBtn" href="#" onClick="mw3.getFaceHelper('<%=objectId%>').clear()"><span>clear</span></a></div>
-				<li><a id="wBtn" href="#" onClick="mw3.getFaceHelper('<%=objectId%>').jsonobject()"><span>json데이터확인</span></a></li>
-		</div>	
-		-->
 	</div>
-	<div id="canvas_<%=objectId%>" style="height:100%; margin-left:90px; cursor: default; overflow:auto;  background:#F1FCF1; "></div>
-	<%= fields.processDesignerContainer.here() %>
+	<div style="height: 100%; margin-left: 90px; cursor: default; overflow: auto; background-color: rgb(241, 252, 241); outline: none; position: relative; left: 0px; top: 0px; background-position: initial initial; background-repeat: initial initial;">
+        <div class="windowSubTitle">
+            <span class="ProcessNameView">
+                <%= fields.processNameView.here() %>
+            </span>
+        </div>
+        <div id="canvas_<%=objectId%>" style=" cursor: default; overflow:auto;  background:#F1FCF1; ">
+            <%= fields.processDesignerContainer.here() %>
+        </div>
+    </div>
 </div>
 <%
 }

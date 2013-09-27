@@ -21,6 +21,7 @@ var org_uengine_kernel_designer_web_ActivityView = function(objectId, className)
 			canvasObject = mw3.getAutowiredObject('org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerContentPanel');
 		}
 	}
+	this.canvasObjectId = canvasObject.__objectId;
 	var canvasObjectFaceHelper = mw3.getFaceHelper(canvasObject.__objectId);
 	this.canvas = canvasObjectFaceHelper.icanvas;
 	
@@ -29,6 +30,7 @@ var org_uengine_kernel_designer_web_ActivityView = function(objectId, className)
 org_uengine_kernel_designer_web_ActivityView.prototype = {
 		loaded : function(){
 			var object = mw3.objects[this.objectId];
+			var canvasObjectId = this.canvasObjectId;
 			var canvas = this.canvas;
 			var element = null;
 			var initText;
@@ -92,6 +94,13 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
         			
         			object['propertiesWindow'] = propertiesWindow;
         			object.id = $(this).attr('id');
+        			
+        			var canvasObject = mw3.objects[canvasObjectId];
+        			if( canvasObject.processDesignerContainer){
+        				object.variableList = canvasObject.processDesignerContainer.variableList;
+        				console.log(object.variableList);
+        			}
+        			
         			object.showProperties();
         			
         		},

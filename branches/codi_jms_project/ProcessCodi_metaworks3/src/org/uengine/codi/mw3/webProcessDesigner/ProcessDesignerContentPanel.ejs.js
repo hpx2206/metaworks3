@@ -67,6 +67,9 @@ var org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel = functi
 		mw3.importStyle('style/jquery/jquery-tooltip.css');
 		mw3.importStyle('dwr/metaworks/org/uengine/codi/mw3/model/PureWebProcessDesigner.ejs.css');
 		
+		mw3.importScript('scripts/jquery.jqGrid-4.3.1/jquery.jqGrid.js');
+		mw3.importStyle('scripts/jquery.jqGrid-4.3.1/css/ui.jqgrid.css');
+		
 		var faceHelper = this;
 		faceHelper.load();
 	}
@@ -875,6 +878,9 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ge
 			valueChainList : valueChainList
 	};
 	object.processDesignerContainer = container;
+	if( object.processNameView ){
+		object.processName = $('#processName_' + object.processNameView.__objectId).val();
+	}
 	return object;
 };
 
