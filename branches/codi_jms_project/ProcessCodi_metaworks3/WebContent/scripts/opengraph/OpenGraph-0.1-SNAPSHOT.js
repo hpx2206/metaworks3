@@ -6909,7 +6909,7 @@ OG.common.CurveUtil = {
 
 	/**
 	 * 주어진 좌표 Array (좌표1, 콘트롤포인트1, 콘트롤포인트2, 좌표2 ...) 에 대해 Cubic Bezier Curve 좌표를 계산하는 함수를 반환한다.
-	 * Array 갯수는 3 * K + 1 이어야 한다.
+	 * Array 갯수는 3 * K + 1 이어야 한다. 3
 	 * 예) 좌표1, 콘트롤포인트1, 콘트롤포인트2, 좌표2, 콘트롤포인트1, 콘트롤포인트2, 좌표3 ...
 	 *
 	 * @example
@@ -8818,8 +8818,8 @@ OG.geometry.Curve = function (controlPoints) {
 	this.vertices = [];
 	for (t = 0; t <= cmRomSpline.maxT; t += 0.1) {
 		this.vertices.push(new OG.geometry.Coordinate(
-			OG.Util.round(cmRomSpline.getX(t)),
-			OG.Util.round(cmRomSpline.getY(t))
+			cmRomSpline.getX(t),
+			cmRomSpline.getY(t)
 		));
 	}
 
@@ -10473,12 +10473,15 @@ OG.shape.bpmn.A_Task = function (label) {
 
 	this.SHAPE_ID = 'OG.shape.bpmn.A_Task';
 	this.label = label;
+	this.CONNECTABLE = true;
+	this.GROUP_COLLAPSIBLE = false;
 	//this.HaveButton = true;
 	this.LoopType = "None";
 	this.TaskType = "None";
+	this.Events = [];
 };
-OG.shape.bpmn.A_Task.prototype = new OG.shape.GeomShape();
-OG.shape.bpmn.A_Task.superclass = OG.shape.GeomShape;
+OG.shape.bpmn.A_Task.prototype = new OG.shape.GroupShape();
+OG.shape.bpmn.A_Task.superclass = OG.shape.GroupShape;
 OG.shape.bpmn.A_Task.prototype.constructor = OG.shape.bpmn.A_Task;
 OG.A_Task = OG.shape.bpmn.A_Task;
 
@@ -10495,8 +10498,8 @@ OG.shape.bpmn.A_Task.prototype.createShape = function () {
 
 	this.geom = new OG.geometry.Rectangle([0, 0], 100, 100);
 	this.geom.style = new OG.geometry.Style({
-		"r": 5,
-		"stroke-width" : 1.5,
+		"r": 10,
+		"stroke-width" : 2,
 		"stroke" : "#03689A",
 		fill: '#FFFFFF-#03689A',
         'fill-opaicity': 0.1
@@ -10513,31 +10516,31 @@ OG.shape.bpmn.A_Task.prototype.createTerminal = function(){
     var envelope = this.geom.getBoundary();
 
     return [
-    		new OG.Terminal(envelope.getCentroid(), OG.Constants.TERMINAL_TYPE.C, OG.Constants.TERMINAL_TYPE.INOUT),
-    		new OG.Terminal(envelope.getRightCenter(), OG.Constants.TERMINAL_TYPE.E, OG.Constants.TERMINAL_TYPE.INOUT),
-    		new OG.Terminal(envelope.getLeftCenter(), OG.Constants.TERMINAL_TYPE.W, OG.Constants.TERMINAL_TYPE.INOUT),
-    		new OG.Terminal(envelope.getLowerCenter(), OG.Constants.TERMINAL_TYPE.S, OG.Constants.TERMINAL_TYPE.INOUT),
-    		new OG.Terminal(envelope.getUpperCenter(), OG.Constants.TERMINAL_TYPE.N, OG.Constants.TERMINAL_TYPE.INOUT),
-            new OG.Terminal(envelope.getUpperLeft(), OG.Constants.TERMINAL_TYPE.N, OG.Constants.TERMINAL_TYPE.INOUT),
-            new OG.Terminal(envelope.getUpperRight(), OG.Constants.TERMINAL_TYPE.N, OG.Constants.TERMINAL_TYPE.INOUT),
-			new OG.Terminal(envelope.getLowerLeft(), OG.Constants.TERMINAL_TYPE.N, OG.Constants.TERMINAL_TYPE.INOUT),
-			new OG.Terminal(envelope.getLowerRight(), OG.Constants.TERMINAL_TYPE.N, OG.Constants.TERMINAL_TYPE.INOUT),
-			new OG.Terminal(new OG.geometry.Coordinate((((envelope.getUpperCenter().x - envelope.getUpperLeft().x) / 3) * 1) + envelope.getUpperLeft().x, envelope.getUpperLeft().y), OG.Constants.TERMINAL_TYPE.N, OG.Constants.TERMINAL_TYPE.INOUT),
-			new OG.Terminal(new OG.geometry.Coordinate((((envelope.getUpperCenter().x - envelope.getUpperLeft().x) / 3) * 2) + envelope.getUpperLeft().x, envelope.getUpperLeft().y), OG.Constants.TERMINAL_TYPE.N, OG.Constants.TERMINAL_TYPE.INOUT),
-			new OG.Terminal(new OG.geometry.Coordinate((((envelope.getUpperRight().x - envelope.getUpperCenter().x) / 3) * 1) + envelope.getUpperCenter().x, envelope.getUpperLeft().y), OG.Constants.TERMINAL_TYPE.N, OG.Constants.TERMINAL_TYPE.INOUT),
-			new OG.Terminal(new OG.geometry.Coordinate((((envelope.getUpperRight().x - envelope.getUpperCenter().x) / 3) * 2) + envelope.getUpperCenter().x, envelope.getUpperLeft().y), OG.Constants.TERMINAL_TYPE.N, OG.Constants.TERMINAL_TYPE.INOUT),
-			new OG.Terminal(new OG.geometry.Coordinate((((envelope.getLowerCenter().x - envelope.getLowerLeft().x) / 3) * 1) + envelope.getLowerLeft().x, envelope.getLowerLeft().y), OG.Constants.TERMINAL_TYPE.N, OG.Constants.TERMINAL_TYPE.INOUT),
-			new OG.Terminal(new OG.geometry.Coordinate((((envelope.getLowerCenter().x - envelope.getLowerLeft().x) / 3) * 2) + envelope.getLowerLeft().x, envelope.getLowerLeft().y), OG.Constants.TERMINAL_TYPE.N, OG.Constants.TERMINAL_TYPE.INOUT),
-            new OG.Terminal(new OG.geometry.Coordinate((((envelope.getLowerRight().x - envelope.getLowerCenter().x) / 3) * 1) + envelope.getLowerCenter().x, envelope.getLowerLeft().y), OG.Constants.TERMINAL_TYPE.N, OG.Constants.TERMINAL_TYPE.INOUT),
-            new OG.Terminal(new OG.geometry.Coordinate((((envelope.getLowerRight().x - envelope.getLowerCenter().x) / 3) * 2) + envelope.getLowerCenter().x, envelope.getLowerLeft().y), OG.Constants.TERMINAL_TYPE.N, OG.Constants.TERMINAL_TYPE.INOUT),
-            new OG.Terminal(new OG.geometry.Coordinate( envelope.getUpperLeft().x, (((envelope.getLeftCenter().y - envelope.getUpperLeft().y) / 3) * 1) + envelope.getUpperLeft().y), OG.Constants.TERMINAL_TYPE.N, OG.Constants.TERMINAL_TYPE.INOUT),
-            new OG.Terminal(new OG.geometry.Coordinate( envelope.getUpperLeft().x, (((envelope.getLeftCenter().y - envelope.getUpperLeft().y) / 3) * 2) + envelope.getUpperLeft().y), OG.Constants.TERMINAL_TYPE.N, OG.Constants.TERMINAL_TYPE.INOUT),
-            new OG.Terminal(new OG.geometry.Coordinate( envelope.getUpperLeft().x, (((envelope.getLowerRight().y - envelope.getLeftCenter().y) / 3) * 1) + envelope.getLeftCenter().y), OG.Constants.TERMINAL_TYPE.N, OG.Constants.TERMINAL_TYPE.INOUT),
-            new OG.Terminal(new OG.geometry.Coordinate( envelope.getUpperLeft().x, (((envelope.getLowerRight().y - envelope.getLeftCenter().y) / 3) * 2) + envelope.getLeftCenter().y), OG.Constants.TERMINAL_TYPE.N, OG.Constants.TERMINAL_TYPE.INOUT),
-            new OG.Terminal(new OG.geometry.Coordinate( envelope.getUpperRight().x, (((envelope.getRightCenter().y - envelope.getUpperRight().y) / 3) * 1) + envelope.getUpperRight().y), OG.Constants.TERMINAL_TYPE.N, OG.Constants.TERMINAL_TYPE.INOUT),
-            new OG.Terminal(new OG.geometry.Coordinate( envelope.getUpperRight().x, (((envelope.getRightCenter().y - envelope.getUpperRight().y) / 3) * 2) + envelope.getUpperRight().y), OG.Constants.TERMINAL_TYPE.N, OG.Constants.TERMINAL_TYPE.INOUT),
-            new OG.Terminal(new OG.geometry.Coordinate( envelope.getUpperRight().x, (((envelope.getLowerRight().y - envelope.getRightCenter().y) / 3) * 1) + envelope.getRightCenter().y), OG.Constants.TERMINAL_TYPE.N, OG.Constants.TERMINAL_TYPE.INOUT),
-            new OG.Terminal(new OG.geometry.Coordinate( envelope.getUpperRight().x, (((envelope.getLowerRight().y - envelope.getRightCenter().y) / 3) * 2) + envelope.getRightCenter().y), OG.Constants.TERMINAL_TYPE.N, OG.Constants.TERMINAL_TYPE.INOUT)
+		new OG.Terminal(envelope.getCentroid(), OG.Constants.TERMINAL_TYPE.C, OG.Constants.TERMINAL_TYPE.INOUT),
+		new OG.Terminal(envelope.getRightCenter(), OG.Constants.TERMINAL_TYPE.E, OG.Constants.TERMINAL_TYPE.INOUT),
+		new OG.Terminal(envelope.getLeftCenter(), OG.Constants.TERMINAL_TYPE.W, OG.Constants.TERMINAL_TYPE.INOUT),
+		new OG.Terminal(envelope.getLowerCenter(), OG.Constants.TERMINAL_TYPE.S, OG.Constants.TERMINAL_TYPE.INOUT),
+		new OG.Terminal(envelope.getUpperCenter(), OG.Constants.TERMINAL_TYPE.N, OG.Constants.TERMINAL_TYPE.INOUT),
+		new OG.Terminal(envelope.getUpperLeft(), OG.Constants.TERMINAL_TYPE.N, OG.Constants.TERMINAL_TYPE.INOUT),
+		new OG.Terminal(envelope.getUpperRight(), OG.Constants.TERMINAL_TYPE.N, OG.Constants.TERMINAL_TYPE.INOUT),
+		new OG.Terminal(envelope.getLowerLeft(), OG.Constants.TERMINAL_TYPE.S, OG.Constants.TERMINAL_TYPE.INOUT),
+		new OG.Terminal(envelope.getLowerRight(), OG.Constants.TERMINAL_TYPE.S, OG.Constants.TERMINAL_TYPE.INOUT),
+		new OG.Terminal(new OG.geometry.Coordinate((((envelope.getUpperCenter().x - envelope.getUpperLeft().x) / 3) * 1) + envelope.getUpperLeft().x, envelope.getUpperLeft().y), OG.Constants.TERMINAL_TYPE.N, OG.Constants.TERMINAL_TYPE.INOUT),
+		new OG.Terminal(new OG.geometry.Coordinate((((envelope.getUpperCenter().x - envelope.getUpperLeft().x) / 3) * 2) + envelope.getUpperLeft().x, envelope.getUpperLeft().y), OG.Constants.TERMINAL_TYPE.N, OG.Constants.TERMINAL_TYPE.INOUT),
+		new OG.Terminal(new OG.geometry.Coordinate((((envelope.getUpperRight().x - envelope.getUpperCenter().x) / 3) * 1) + envelope.getUpperCenter().x, envelope.getUpperLeft().y), OG.Constants.TERMINAL_TYPE.N, OG.Constants.TERMINAL_TYPE.INOUT),
+		new OG.Terminal(new OG.geometry.Coordinate((((envelope.getUpperRight().x - envelope.getUpperCenter().x) / 3) * 2) + envelope.getUpperCenter().x, envelope.getUpperLeft().y), OG.Constants.TERMINAL_TYPE.N, OG.Constants.TERMINAL_TYPE.INOUT),
+		new OG.Terminal(new OG.geometry.Coordinate((((envelope.getLowerCenter().x - envelope.getLowerLeft().x) / 3) * 1) + envelope.getLowerLeft().x, envelope.getLowerLeft().y), OG.Constants.TERMINAL_TYPE.S, OG.Constants.TERMINAL_TYPE.INOUT),
+		new OG.Terminal(new OG.geometry.Coordinate((((envelope.getLowerCenter().x - envelope.getLowerLeft().x) / 3) * 2) + envelope.getLowerLeft().x, envelope.getLowerLeft().y), OG.Constants.TERMINAL_TYPE.S, OG.Constants.TERMINAL_TYPE.INOUT),
+		new OG.Terminal(new OG.geometry.Coordinate((((envelope.getLowerRight().x - envelope.getLowerCenter().x) / 3) * 1) + envelope.getLowerCenter().x, envelope.getLowerLeft().y), OG.Constants.TERMINAL_TYPE.S, OG.Constants.TERMINAL_TYPE.INOUT),
+		new OG.Terminal(new OG.geometry.Coordinate((((envelope.getLowerRight().x - envelope.getLowerCenter().x) / 3) * 2) + envelope.getLowerCenter().x, envelope.getLowerLeft().y), OG.Constants.TERMINAL_TYPE.S, OG.Constants.TERMINAL_TYPE.INOUT),
+		new OG.Terminal(new OG.geometry.Coordinate( envelope.getUpperLeft().x, (((envelope.getLeftCenter().y - envelope.getUpperLeft().y) / 3) * 1) + envelope.getUpperLeft().y), OG.Constants.TERMINAL_TYPE.W, OG.Constants.TERMINAL_TYPE.INOUT),
+		new OG.Terminal(new OG.geometry.Coordinate( envelope.getUpperLeft().x, (((envelope.getLeftCenter().y - envelope.getUpperLeft().y) / 3) * 2) + envelope.getUpperLeft().y), OG.Constants.TERMINAL_TYPE.W, OG.Constants.TERMINAL_TYPE.INOUT),
+		new OG.Terminal(new OG.geometry.Coordinate( envelope.getUpperLeft().x, (((envelope.getLowerRight().y - envelope.getLeftCenter().y) / 3) * 1) + envelope.getLeftCenter().y), OG.Constants.TERMINAL_TYPE.W, OG.Constants.TERMINAL_TYPE.INOUT),
+		new OG.Terminal(new OG.geometry.Coordinate( envelope.getUpperLeft().x, (((envelope.getLowerRight().y - envelope.getLeftCenter().y) / 3) * 2) + envelope.getLeftCenter().y), OG.Constants.TERMINAL_TYPE.W, OG.Constants.TERMINAL_TYPE.INOUT),
+		new OG.Terminal(new OG.geometry.Coordinate( envelope.getUpperRight().x, (((envelope.getRightCenter().y - envelope.getUpperRight().y) / 3) * 1) + envelope.getUpperRight().y), OG.Constants.TERMINAL_TYPE.E, OG.Constants.TERMINAL_TYPE.INOUT),
+		new OG.Terminal(new OG.geometry.Coordinate( envelope.getUpperRight().x, (((envelope.getRightCenter().y - envelope.getUpperRight().y) / 3) * 2) + envelope.getUpperRight().y), OG.Constants.TERMINAL_TYPE.E, OG.Constants.TERMINAL_TYPE.INOUT),
+		new OG.Terminal(new OG.geometry.Coordinate( envelope.getUpperRight().x, (((envelope.getLowerRight().y - envelope.getRightCenter().y) / 3) * 1) + envelope.getRightCenter().y), OG.Constants.TERMINAL_TYPE.E, OG.Constants.TERMINAL_TYPE.INOUT),
+		new OG.Terminal(new OG.geometry.Coordinate( envelope.getUpperRight().x, (((envelope.getLowerRight().y - envelope.getRightCenter().y) / 3) * 2) + envelope.getRightCenter().y), OG.Constants.TERMINAL_TYPE.E, OG.Constants.TERMINAL_TYPE.INOUT)
     ];
 }
 
@@ -10569,17 +10572,14 @@ OG.Signal = OG.shape.bpmn.Signal;
  * @override
  */
 OG.shape.bpmn.Signal.prototype.createShape = function () {
-	var geom1, geom2, geomCollection = [];
+    var geom1, geom2, geom3, geomCollection = [];
     	if (this.geom) {
     		return this.geom;
     	}
 
     	geom1 = new OG.geometry.Circle([50, 50], 50);
-    	geom1.style = new OG.geometry.Style({
-    		"stroke-width": 1
-    	});
-
-        geom2 = new OG.Polygon([
+    	geom2 = new OG.geometry.Circle([50, 50], 40);
+        geom3 = new OG.Polygon([
     		[15, 75],
     		[50, 10],
     		[85, 75]
@@ -10587,53 +10587,18 @@ OG.shape.bpmn.Signal.prototype.createShape = function () {
 
     	geomCollection.push(geom1);
     	geomCollection.push(geom2);
+    	geomCollection.push(geom3);
 
     	this.geom = new OG.geometry.GeometryCollection(geomCollection);
     	this.geom.style = new OG.geometry.Style({
-    		'label-position': 'bottom'
+    		'label-position': 'bottom',
+    		"stroke-width": 1.5,
+     		"stroke" : "#969149",
+     		fill: "white",
+     		"fill-opacity": 1
     	});
 
     	return this.geom;
-};
-
-OG.shape.bpmn.addTask = function (label) {
-	OG.shape.bpmn.addTask.superclass.call(this);
-
-	this.SHAPE_ID = 'OG.shape.bpmn.addTask';
-	this.label = label;
-};
-OG.shape.bpmn.addTask.prototype = new OG.shape.GeomShape();
-OG.shape.bpmn.addTask.superclass = OG.shape.GeomShape;
-OG.shape.bpmn.addTask.prototype.constructor = OG.shape.bpmn.addTask;
-OG.addTask = OG.shape.bpmn.addTask;
-
-/**
- * 드로잉할 Shape 을 생성하여 반환한다.
- *
- * @return {OG.geometry.Geometry} Shape 정보
- * @override
- */
-OG.shape.bpmn.addTask.prototype.createShape = function () {
-    var geom1, geom2, geomCollection = [];
-	if (this.geom) {
-		return this.geom;
-	}
-
-	geom1 = new OG.geometry.Rectangle([0, 0], 100, 100);
-	geom1.style = new OG.geometry.Style({
-		"r": 6
-	});
-
-    geom2 = new OG.geometry.Circle([50, 100], 20);
-
-    geomCollection.push(geom1);
-    geomCollection.push(geom2);
-
-    this.geom = new OG.geometry.GeometryCollection(geomCollection);
-    this.geom.style = new OG.geometry.Style({
-    	'label-position': 'bottom'
-    });
-	return this.geom;
 };
 
 OG.shape.bpmn.ParallelMultiple = function (label) {
@@ -10660,11 +10625,8 @@ OG.shape.bpmn.ParallelMultiple.prototype.createShape = function () {
         	}
 
         	geom1 = new OG.geometry.Circle([50, 50], 50);
-        	geom1.style = new OG.geometry.Style({
-        		"stroke-width": 1
-        	});
-
-            geom2 = new OG.Polygon([
+        	geom2 = new OG.geometry.Circle([50, 50], 40);
+            geom3 = new OG.Polygon([
         		[20, 40],
         		[20, 60],
         		[40, 60],
@@ -10681,10 +10643,15 @@ OG.shape.bpmn.ParallelMultiple.prototype.createShape = function () {
 
         	geomCollection.push(geom1);
         	geomCollection.push(geom2);
+        	geomCollection.push(geom3);
 
         	this.geom = new OG.geometry.GeometryCollection(geomCollection);
         	this.geom.style = new OG.geometry.Style({
-        		'label-position': 'bottom'
+        		'label-position': 'bottom',
+        		"stroke-width": 1.5,
+         		"stroke" : "#969149",
+         		fill: "white",
+         		"fill-opacity": 1
         	});
 
         	return this.geom;
@@ -11584,13 +11551,17 @@ OG.shape.bpmn.E_Intermediate_Compensation.prototype.createShape = function () {
 	]);
 
 	geomCollection.push(new OG.geometry.Circle([50, 50], 50));
-	geomCollection.push(new OG.geometry.Circle([50, 50], 42));
+	geomCollection.push(new OG.geometry.Circle([50, 50], 40));
 	geomCollection.push(geom1);
 	geomCollection.push(geom2);
 
 	this.geom = new OG.geometry.GeometryCollection(geomCollection);
 	this.geom.style = new OG.geometry.Style({
-		'label-position': 'bottom'
+		'label-position': 'bottom',
+		"stroke" : "#969149",
+		"stroke-width" : 1.5,
+		fill : "white",
+		"fill-opacity" : 1
 	});
 
 	return this.geom;
@@ -11641,7 +11612,11 @@ OG.shape.bpmn.E_Intermediate_Error.prototype.createShape = function () {
 
 	this.geom = new OG.geometry.GeometryCollection(geomCollection);
 	this.geom.style = new OG.geometry.Style({
-		'label-position': 'bottom'
+		'label-position': 'bottom',
+		"stroke" : "#969149",
+		"stroke-width" : 1.5,
+		fill : "white",
+		"fill-opacity" : 1
 	});
 
 	return this.geom;
@@ -11908,7 +11883,11 @@ OG.shape.bpmn.E_Intermediate_Message.prototype.createShape = function () {
 
 	this.geom = new OG.geometry.GeometryCollection(geomCollection);
 	this.geom.style = new OG.geometry.Style({
-		'label-position': 'bottom'
+		'label-position': 'bottom',
+		"stroke" : "#969149",
+		"stroke-width" : 1.5,
+		fill : "white",
+		"fill-opacity" : 1
 	});
 
 	return this.geom;
@@ -11947,31 +11926,76 @@ OG.shape.bpmn.E_Intermediate_Multiple.prototype.createShape = function () {
 	}
 
 	geom1 = new OG.geometry.Polygon([
-		[50, 15],
-		[39, 33],
-		[20, 33],
-		[29, 50],
-		[19, 67],
-		[40, 67],
-		[50, 85],
-		[60, 68],
-		[80, 68],
-		[70, 50],
-		[79, 33],
-		[60, 33]
+		[20, 50],
+		[50, 20],
+		[80, 50],
+		[65, 75],
+		[35, 75]
 	]);
 
 	geomCollection.push(new OG.geometry.Circle([50, 50], 50));
-	geomCollection.push(new OG.geometry.Circle([50, 50], 42));
+	geomCollection.push(new OG.geometry.Circle([50, 50], 40));
 	geomCollection.push(geom1);
 
 	this.geom = new OG.geometry.GeometryCollection(geomCollection);
 	this.geom.style = new OG.geometry.Style({
-		'label-position': 'bottom'
+		'label-position': 'bottom',
+		"stroke" : "#969149",
+		"stroke-width" : 1.5,
+		fill : "white",
+		"fill-opacity" : 1
 	});
 
 	return this.geom;
 };
+
+
+OG.shape.bpmn.E_Intermediate_Escalation = function (label) {
+	OG.shape.bpmn.E_Intermediate_Escalation.superclass.call(this);
+
+	this.SHAPE_ID = 'OG.shape.bpmn.E_Intermediate_Escalation';
+	this.label = label;
+};
+OG.shape.bpmn.E_Intermediate_Escalation.prototype = new OG.shape.GeomShape();
+OG.shape.bpmn.E_Intermediate_Escalation.superclass = OG.shape.GeomShape;
+OG.shape.bpmn.E_Intermediate_Escalation.prototype.constructor = OG.shape.bpmn.E_Intermediate_Escalation;
+OG.E_Intermediate_Escalation = OG.shape.bpmn.E_Intermediate_Escalation;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.bpmn.E_Intermediate_Escalation.prototype.createShape = function () {
+	var geom1, geomCollection = [];
+	if (this.geom) {
+		return this.geom;
+	}
+
+	geom1 = new OG.geometry.Polygon([
+		[20, 80],
+		[50, 20],
+		[80, 80],
+		[50, 50]
+	]);
+
+	geomCollection.push(new OG.geometry.Circle([50, 50], 50));
+	geomCollection.push(new OG.geometry.Circle([50, 50], 40));
+	geomCollection.push(geom1);
+
+	this.geom = new OG.geometry.GeometryCollection(geomCollection);
+	this.geom.style = new OG.geometry.Style({
+		'label-position': 'bottom',
+        "stroke" : "#969149",
+		"stroke-width" : 1.5,
+		fill : "white",
+		"fill-opacity" : 1
+	});
+
+	return this.geom;
+};
+
 /**
  * BPMN : Rule Intermediate Event Shape
  *
@@ -12017,7 +12041,11 @@ OG.shape.bpmn.E_Intermediate_Rule.prototype.createShape = function () {
 
 	this.geom = new OG.geometry.GeometryCollection(geomCollection);
 	this.geom.style = new OG.geometry.Style({
-		'label-position': 'bottom'
+		'label-position': 'bottom',
+		"stroke" : "#969149",
+		"stroke-width" : 1.5,
+		fill : "white",
+		"fill-opacity" : 1
 	});
 
 	return this.geom;
@@ -12074,7 +12102,11 @@ OG.shape.bpmn.E_Intermediate_Timer.prototype.createShape = function () {
 
 	this.geom = new OG.geometry.GeometryCollection(geomCollection);
 	this.geom.style = new OG.geometry.Style({
-		'label-position': 'bottom'
+		'label-position': 'bottom',
+		"stroke" : "#969149",
+		"stroke-width" : 1.5,
+		fill : "white",
+		"fill-opacity" : 1
 	});
 
 	return this.geom;
@@ -14792,7 +14824,11 @@ OG.renderer.RaphaelRenderer.prototype.drawShape = function (position, shape, siz
         elements = me.getElementsByBBox(element.shape.geom.getBoundary());
         for(i=0; i<elements.length; i++){
             if(element.id != elements[i].id){
-                element.appendChild(elements[i]);
+                if($(elements[i]).parent().get(0).shape){
+                }
+                else{
+                    element.appendChild(elements[i]);
+                }
             }
         }
     });
@@ -15752,7 +15788,6 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 			edge = new OG.PolyLine(points);
 		}
 	}
-
 	// draw hidden edge
 	this._drawGeometry(group.node, edge, me._CONFIG.DEFAULT_STYLE.EDGE_HIDDEN);
 	// draw Edge
@@ -16038,7 +16073,7 @@ OG.renderer.RaphaelRenderer.prototype.redrawShape = function (element, excludeEd
 
     root = me.getRootGroup();
     eleArray.push(element);
-    me.addToGroup(root, eleArray);
+   // me.addToGroup(root, eleArray);
 
 	redrawChildConnectedEdge = function (_collapseRootElement, _element) {
 
@@ -16157,17 +16192,9 @@ OG.renderer.RaphaelRenderer.prototype.redrawShape = function (element, excludeEd
             this.drawLoopType(element);
             this.drawTaskType(element);
         }
+
 	}
 
-    $(me.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_shape=GROUP]").each(function (index, ele) {
-        var elements, i;
-                elements = me.getElementsByBBox(ele.shape.geom.getBoundary());
-                for(i=0; i<elements.length; i++){
-                    if(ele.id != elements[i].id){
-                        ele.appendChild(elements[i]);
-                    }
-                }
-    });
 	// redrawShape event fire
 	$(this._PAPER.canvas).trigger('redrawShape', [element]);
 
@@ -18824,7 +18851,7 @@ OG.handler.EventHandler.prototype = {
 	 * @param {Boolean} isMovable 가능여부
 	 */
 	setMovable: function (element, isMovable) {
-		var me = this, root = me._RENDERER.getRootGroup();
+		var me = this, eleArray = [], root = me._RENDERER.getRootGroup();
 
 		if (!element) {
 			return;
@@ -18889,6 +18916,9 @@ OG.handler.EventHandler.prototype = {
 					$(this).css({"position": "", "left": "", "top": ""});
 					eleArray = me._moveElements(bBoxArray, dx, dy);
 
+                    eleArray.push(element);
+                    me._RENDERER.addToGroup(root, eleArray);
+
 					// group target 이 있는 경우 grouping 처리
 					if (groupTarget && OG.Util.isElement(groupTarget)) {
 						// grouping
@@ -18906,9 +18936,22 @@ OG.handler.EventHandler.prototype = {
 						me._RENDERER.remove(groupTarget.id + OG.Constants.DROP_OVER_BBOX_SUFFIX);
 						$(root).removeData("groupTarget");
 					} else {
-                        me._RENDERER.removeGuide(element);
+                        $(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_shape=GROUP]").each(function (index, ele) {
+                            var elements, i;
+                            elements = me._RENDERER.getElementsByBBox(ele.shape.geom.getBoundary());
+                            for(i=0; i<elements.length; i++){
+                                if(ele.id != elements[i].id){
+                                    if($(elements[i]).parent().get(0).shape){
+                                    }
+                                    else{
+                                        ele.appendChild(elements[i]);
+                                    }
+                                }
+                            }
+                        });
 					}
 
+                    me._RENDERER.removeGuide(element);
 					$(root).removeData("bBoxArray");
 				}
 			});
@@ -18938,28 +18981,28 @@ OG.handler.EventHandler.prototype = {
 		if (isResizable === true) {
 			if ($(element).attr("_shape") === OG.Constants.SHAPE_TYPE.EDGE) {
 				// resize handle
-				$(guide.from).draggable({
-					start: function (event) {
-						var isBezier, vertices, _style = {},
-							toTerminalId = $(element).attr("_to"), toShape, toTerminal, edge;
+                $(guide.from).draggable({
+                    start: function (event) {
+                        var isBezier, vertices, _style = {},
+                        toTerminalId = $(element).attr("_to"), toShape, toTerminal, edge;
 
-						_style = OG.Util.apply(_style, me._CONFIG.DEFAULT_STYLE.EDGE_SHADOW, element.shape.geom.style.map);
-						isBezier = _style["edge-type"].toLowerCase() === OG.Constants.EDGE_TYPE.BEZIER;
+                        _style = OG.Util.apply(_style, me._CONFIG.DEFAULT_STYLE.EDGE_SHADOW, element.shape.geom.style.map);
+                        isBezier = _style["edge-type"].toLowerCase() === OG.Constants.EDGE_TYPE.BEZIER;
 
-						vertices = isBezier ? element.shape.geom.getControlPoints() : element.shape.geom.getVertices();
-						edge = me._RENDERER.drawEdge(isBezier ? new OG.BezierCurve(vertices) : new OG.PolyLine(vertices), _style);
+                        vertices = isBezier ? element.shape.geom.getControlPoints() : element.shape.geom.getVertices();
+                        edge = me._RENDERER.drawEdge(isBezier ? new OG.BezierCurve(vertices) : new OG.PolyLine(vertices), _style);
 
-						toTerminal = [vertices[vertices.length - 1].x, vertices[vertices.length - 1].y];
+                        toTerminal = [vertices[vertices.length - 1].x, vertices[vertices.length - 1].y];
 
-						if (toTerminalId) {
-							toShape = me._getShapeFromTerminal(toTerminalId);
-							me._RENDERER.drawTerminal(toShape);
-							toTerminal = me._RENDERER.getElementById(toTerminalId);
-						}
+                        if (toTerminalId) {
+                            toShape = me._getShapeFromTerminal(toTerminalId);
+                            me._RENDERER.drawTerminal(toShape);
+                            toTerminal = me._RENDERER.getElementById(toTerminalId);
+                        }
 
-						$(root).data("to_terminal", toTerminal);
-						$(root).data("edge", edge);
-						$(root).data("dragged_guide", "from");
+                        $(root).data("to_terminal", toTerminal);
+                        $(root).data("edge", edge);
+                        $(root).data("dragged_guide", "from");
 
 						me._RENDERER.removeRubberBand(me._RENDERER.getRootElement());
 						$(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_selected=true]").each(function (n, selectedItem) {
@@ -19648,7 +19691,7 @@ OG.handler.EventHandler.prototype = {
 						}
 					}
 				});
-
+				
                 $(guide.task).draggable({
 					start: function (event) {
                         var eventOffset = me._getOffset(event), guide;
@@ -19696,7 +19739,7 @@ OG.handler.EventHandler.prototype = {
 					stop : function (event) {
 					    var eventOffset = me._getOffset(event), shape, newElement,
 					    bBoxArray = $(root).data("bBoxArray");
-                        shape = new OG.shape.bpmn.A_Task("A_Task");
+                        shape = new OG.shape.bpmn.A_Task();
                         newElement = me._RENDERER._CANVAS.drawShape([eventOffset.x, eventOffset.y], shape, [70, 50]);
                         me._RENDERER._CANVAS.connect(element, newElement);
                         $.each(bBoxArray, function (k, item) {
@@ -19767,7 +19810,7 @@ OG.handler.EventHandler.prototype = {
 					stop : function (event) {
 					    var eventOffset = me._getOffset(event), shape, newElement,
 					    bBoxArray = $(root).data("bBoxArray");
-                        shape = new OG.shape.bpmn.E_End("E_End");
+                        shape = new OG.shape.bpmn.E_End();
                         newElement = me._RENDERER._CANVAS.drawShape([eventOffset.x, eventOffset.y], shape, [30, 30]);
                         me._RENDERER._CANVAS.connect(element, newElement);
                         $.each(bBoxArray, function (k, item) {
@@ -19831,6 +19874,7 @@ OG.handler.EventHandler.prototype = {
 		if (isSelectable === true) {
 			// 마우스 클릭하여 선택 처리
 			$(element).bind("click", function (event) {
+			    event.stopPropagation
 				var guide;
 				$(me._RENDERER.getContainer()).focus();
 
@@ -21123,6 +21167,111 @@ OG.handler.EventHandler.prototype = {
                         			}
                         		}
                             }
+                        },
+                        'sep10'       : '---------',
+                        'addEvent'  : {
+                            name : 'addEvent',
+                        	items: {
+                        		'Message': {
+                        			name  : 'Message',
+                        			type  : 'radio',
+                        			radio : 'addEvent',
+                        			value : 'Message',
+                        			events: {
+                        				change: function (e) {
+                        					me.setAddEventSelectedShape(e.target.value);
+                        				}
+                        			}
+                        		},
+                        		'Timer'   : {
+                        			name  : 'Timer',
+                        			type  : 'radio',
+                        			radio : 'addEvent',
+                        			value : 'Timer',
+                        			events: {
+                        				change: function (e) {
+                        					me.setAddEventSelectedShape(e.target.value);
+                        				}
+                        			}
+                        		},
+                        		'Error'  : {
+                        		    name  : 'Error',
+                        			type  : 'radio',
+                        			radio : 'addEvent',
+                        			value : 'Error',
+                        			events: {
+                        				change: function (e) {
+                        					me.setAddEventSelectedShape(e.target.value);
+                        				}
+                        			}
+                        		},
+                                'Compensate'  : {
+                        			name  : 'Compensate',
+                        			type  : 'radio',
+                        			radio : 'addEvent',
+                        			value : "Compensate",
+                        		    events: {
+                        				change: function (e) {
+                        					me.setAddEventSelectedShape(e.target.value);
+                        				}
+                        			}
+                        		},
+                                'Conditional'  : {
+                        			name  : 'Conditional',
+                        			type  : 'radio',
+                        			radio : 'addEvent',
+                        			value : "Conditional",
+                        		    events: {
+                        				change: function (e) {
+                        					me.setAddEventSelectedShape(e.target.value);
+                        				}
+                        			}
+                        		},
+                                'Signal'  : {
+                        			name  : 'Signal',
+                        			type  : 'radio',
+                        			radio : 'addEvent',
+                        			value : "Signal",
+                        		    events: {
+                        				change: function (e) {
+                        					me.setAddEventSelectedShape(e.target.value);
+                        				}
+                        			}
+                        		},
+                                'Multiple'  : {
+                        			name  : 'Multiple',
+                        			type  : 'radio',
+                        			radio : 'addEvent',
+                        			value : "Multiple",
+                        		    events: {
+                        				change: function (e) {
+                        					me.setAddEventSelectedShape(e.target.value);
+                        				}
+                        			}
+                        		},
+                                'Parallel Multiple'  : {
+                        			name  : 'Parallel Multiple',
+                        			type  : 'radio',
+                        			radio : 'addEvent',
+                        			value : "Parallel Multiple",
+                        		    events: {
+                        				change: function (e) {
+                        					me.setAddEventSelectedShape(e.target.value);
+                        				}
+                        			}
+                        		},
+                                'Escalation'  : {
+                        			name  : 'Escalation',
+                        			type  : 'radio',
+                        			radio : 'addEvent',
+                        			value : "Escalation",
+                        		    events: {
+                        				change: function (e) {
+                        					me.setAddEventSelectedShape(e.target.value);
+                        				}
+                        			}
+                        		}
+                            }
                         }
                     }
 				};
@@ -21399,6 +21548,62 @@ OG.handler.EventHandler.prototype = {
 		});
 	},
 
+	setAddEventSelectedShape: function(value){
+        var me = this;
+        var newElement, shape, boundary;
+        switch(value){
+            case "Message":
+                shape = new OG.shape.bpmn.E_Intermediate_Message();
+                break;
+            case "Timer":
+                shape = new OG.shape.bpmn.E_Intermediate_Timer();
+                break;
+            case "Error":
+                shape = new OG.shape.bpmn.E_Intermediate_Error();
+                break;
+            case "Compensate":
+                shape = new OG.shape.bpmn.E_Intermediate_Compensation();
+                break;
+            case "Conditional":
+                shape = new OG.shape.bpmn.E_Intermediate_Rule();
+                break;
+            case "Signal":
+                shape = new OG.shape.bpmn.Signal();
+                break;
+            case "Multiple":
+                shape = new OG.shape.bpmn.E_Intermediate_Multiple();
+                break;
+            case "Parallel Multiple":
+                shape = new OG.shape.bpmn.ParallelMultiple();
+                break;
+            case "Escalation":
+                shape = new OG.shape.bpmn.E_Intermediate_Escalation();
+                break;
+        }
+
+        $(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_selected=true]").each(function (idx, item) {
+
+            boundary = item.shape.geom.getBoundary();
+            item.shape.Events.push(value);
+            //아래 위 라인에는 5개씩 양 옆라인에는 3개씩
+            if(item.shape.Events.length < 6){
+                newElement = me._RENDERER._CANVAS.drawShape([boundary.getLowerLeft().x + (((boundary.getLowerRight().x - boundary.getLowerLeft().x) / 6) * (item.shape.Events.length)), boundary.getLowerCenter().y], shape, [30, 30]);
+            }
+            else if(item.shape.Events.length < 9){
+                newElement = me._RENDERER._CANVAS.drawShape([boundary.getLowerRight().x, boundary.getLowerRight().y - (((boundary.getLowerRight().y - boundary.getUpperRight().y) / 4) * (item.shape.Events.length - 5))], shape, [30, 30]);
+            }
+            else if(item.shape.Events.length < 14){
+                newElement = me._RENDERER._CANVAS.drawShape([boundary.getUpperRight().x - (((boundary.getUpperRight().x - boundary.getUpperLeft().x) / 6) * (item.shape.Events.length - 8)), boundary.getUpperCenter().y], shape, [30, 30]);
+            }
+            else if(item.shape.Events.length < 17){
+                newElement = me._RENDERER._CANVAS.drawShape([boundary.getUpperLeft().x, boundary.getUpperLeft().y - (((boundary.getUpperLeft().y - boundary.getLowerLeft().y) / 4) * (item.shape.Events.length - 13))], shape, [30, 30]);
+            }
+
+            item.appendChild(newElement);
+		});
+
+
+    },
 
     setTaskTypeSelectedShape: function (taskType) {
 		var me = this;
@@ -22305,7 +22510,7 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor, backgroun
 			TEXT          : { stroke: "none", "text-anchor": "middle" },
 			HTML          : { "label-position": "bottom", "text-anchor": "middle", "vertical-align": "top" },
 			IMAGE         : { "label-position": "bottom", "text-anchor": "middle", "vertical-align": "top" },
-			EDGE          : { stroke: "black", fill: "none", "fill-opacity": 0, "stroke-width": 1, "stroke-opacity": 1, "edge-type": "plain", "edge-direction": "c c", "arrow-start": "none", "arrow-end": "classic-wide-long", "stroke-dasharray": "", "label-position": "center" },
+			EDGE          : { stroke: "black", fill: "none", "fill-opacity": 0, "stroke-width": 1.5, "stroke-opacity": 1, "edge-type": "plain", "edge-direction": "c c", "arrow-start": "none", "arrow-end": "classic-wide-long", "stroke-dasharray": "", "label-position": "center", "stroke-linejoin" : "round" },
 			EDGE_SHADOW   : { stroke: "#00FF00", fill: "none", "fill-opacity": 0, "stroke-width": 1, "stroke-opacity": 1, "arrow-start": "none", "arrow-end": "none", "stroke-dasharray": "- ", "edge-type": "plain" },
 			EDGE_HIDDEN   : { stroke: "white", fill: "none", "fill-opacity": 0, "stroke-width": 10, "stroke-opacity": 0 },
 			GROUP         : { stroke: "black", fill: "white", "fill-opacity": 0, "label-position": "bottom", "text-anchor": "middle", "vertical-align": "top" },
@@ -22333,7 +22538,7 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor, backgroun
 			LABEL_EDITOR  : { position: "absolute", overflow: "visible", resize: "none", "text-align": "center", display: "block", padding: 0 },
 			COLLAPSE      : { stroke: "black", fill: "white", "fill-opacity": 0, cursor: "pointer", "shape-rendering": "crispEdges" },
 			COLLAPSE_BBOX : { stroke: "none", fill: "white", "fill-opacity": 0 },
-			BUTTON      : { stroke: "#9FD7FF", fill: "white", "fill-opacity": 0, cursor: "pointer", "shape-rendering": "crispEdges" }
+			BUTTON        : { stroke: "#9FD7FF", fill: "white", "fill-opacity": 0, cursor: "pointer", "shape-rendering": "crispEdges" }
 		}
 	};
 
