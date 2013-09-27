@@ -79,18 +79,6 @@ public class InstanceViewContent extends ContentWindow {
 		
 	}	
 	
-	public void loadDocument() throws Exception{
-//		instanceView.session = session;
-		instanceView = new InstanceView();
-		instanceView.setMetaworksContext(new MetaworksContext());
-		instanceView.getMetaworksContext().setHow("loadDocument");
-		instanceView.session = session;
-		instanceView.setTaskId(this.getTaskId());
-		instanceView.setRootInstId(this.getRootInstId());
-		instanceView.loadDocument();
-		
-		this.setInstanceView(instanceView);
-		
-	}
+
 
 }

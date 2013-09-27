@@ -28,7 +28,6 @@ import org.uengine.codi.mw3.filter.AllSessionFilter;
 import org.uengine.codi.mw3.filter.OtherSessionFilter;
 import org.uengine.codi.mw3.knowledge.KnowledgeTool;
 import org.uengine.codi.mw3.knowledge.WfNode;
-import org.uengine.codi.mw3.processexplorer.ViewContentWindow;
 import org.uengine.kernel.HumanActivity;
 import org.uengine.kernel.ProcessInstance;
 import org.uengine.kernel.RoleMapping;
@@ -527,32 +526,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		
 	}
 	
-	public static IWorkItem findDocument(String folderId) throws Exception{
-		
-		
-		StringBuffer sql = new StringBuffer();
-		
-		sql.append("select *, tool as fileIcon from bpm_worklist");
-		sql.append(" where folderId=?folderId");
-
-		
-		IWorkItem workitem = (IWorkItem) Database.sql(IWorkItem.class, sql.toString());
-		
-		workitem.set("folderId", folderId);
-		workitem.select();
-		if(workitem.size() >0){
-			while(workitem.next()){
-				WorkItem work = new WorkItem();
-				work.copyFrom(workitem);
-//				work.fileIconType(workitem.getTool());
-				work.getMetaworksContext().setHow("documentlist");
-//				workitem.moveToInsertRow();
-//				System.out.println(workitem.getFileIcon());
-			}
-		}
-		return workitem;
-		
-	}
 	
 	//ejs로 대체
 //	public String fileIconType(String mimeType){
@@ -873,7 +846,15 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				// 기본 정보 설정  
 				Instance instance = new Instance();
 				instance.setInstId(this.getInstId());
-				
+				instance.setTopicId(session.getLastSelectedItem());
+				instance.setInitEp(session.getUser().getName());
+				instance.setStatus("Running");
+				if(this.getType().equals("file")){
+					instance.databaseMe().setName(this.getExtFile());
+				}else{
+					instance.databaseMe().setName(this.getTitle());
+				}
+				Instance.loadDocument(instance.getTopicId());
 				instanceRef = instance.databaseMe();				
 				
 				instanceRef.setInitCmpl(false);										// 기본값 수정 시작자만 완료 가능하게
@@ -881,7 +862,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				instanceRef.setInitComCd(session.getEmployee().getGlobalCom());		// 시작자의 회사
 				instanceRef.setStatus("Running");									// 처음 상태 Running
 				instanceRef.setDueDate(getDueDate());
-				instanceRef.setName(this.getTitle());
 				//instanceRef.setStartedDate(this.getStartDate());
 				if( newInstancePanel != null ){
 					instanceRef.setExt1(newInstancePanel.newInstantiator.getExt2());
@@ -979,10 +959,10 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			//기존 date 추가 부분
 			this.setStartDate(Calendar.getInstance().getTime());
 			this.setEndDate(getStartDate());
-
+			this.setFolderId(session.getLastSelectedItem());
+			this.setFolderName(session.getWindowTitle().substring(4));
 			this.setStatus(WORKITEM_STATUS_FEED);
 			this.setIsDeleted(false);			
-
 			if(this.getRootInstId() == null)
 				this.setRootInstId(this.getInstId());
 			
@@ -1347,48 +1327,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		return workitem;
 	}
 	
-	public static IWorkItem findDocumentMoveUp(Long taskId, String InstId) throws Exception{
-		
-		StringBuffer sql = new StringBuffer();
-		
-		sql.append("select *");
-		sql.append(" from bpm_worklist");
-		sql.append(" where rootinstId=?instId");
-		sql.append(" and taskId<=?taskId");
-		sql.append(" and isdeleted!=?isDeleted");
-		sql.append(" and type = 'file'");
-		
-		IWorkItem workitem = (IWorkItem) sql(IWorkItem.class, sql.toString());
-		
-		workitem.set("instId", InstId);
-		workitem.set("taskId", taskId);
-		workitem.set("isDeleted",1);
-		workitem.select();
-		
-		return workitem;
-		
-	}
-	public static IWorkItem findDocumentMoveDown(Long taskId, String InstId) throws Exception{
-		
-		StringBuffer sql = new StringBuffer();
-		
-		sql.append("select *");
-		sql.append(" from bpm_worklist");
-		sql.append(" where rootinstId=?instId");
-		sql.append(" and taskId>=?taskId");
-		sql.append(" and isdeleted!=?isDeleted");
-		sql.append(" and type = 'file'");
-		
-		IWorkItem workitem = (IWorkItem) sql(IWorkItem.class, sql.toString());
-		
-		workitem.set("instId", InstId);
-		workitem.set("taskId", taskId);
-		workitem.set("isDeleted",1);
-		workitem.select();
-		
-		return workitem;
-		
-	}	
 	public Object moreView() throws Exception {
 		StringBuffer sql = new StringBuffer();
 		
@@ -1420,23 +1358,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		
 	}
 
-	
-	@Override
-	public Object[] documentView() throws Exception{
-		
-			instanceViewContent = new InstanceViewContent();
-			instanceViewContent.setTitle(this.getTitle());
-			instanceViewContent.setTaskId(this.getTaskId());
-			instanceViewContent.setRootInstId(this.getRootInstId());
-			instanceViewContent.session = session;
-			instanceViewContent.loadDocument();
-			
-			return new Object[]{new Refresh(instanceViewContent)};
-		
-	}
-	
-	
-	
 	
 	@AutowiredFromClient
 	public Session session;

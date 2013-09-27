@@ -1448,4 +1448,31 @@ public class Instance extends Database<IInstance> implements IInstance{
 		}
 		
 	}
+	public static IInstance loadDocument(String folderId) throws Exception {
+		// TODO Auto-generated method stub
+			
+			StringBuffer sql = new StringBuffer();
+			
+
+			sql.append("select *,knol.name as topicname");
+			sql.append(" from bpm_procinst proc, bpm_knol knol where proc.topicId=?topicId");
+			sql.append(" and knol.id=?topicId");
+			sql.append(" order by proc.InstId desc");
+			IInstance instance = (IInstance) Database.sql(IInstance.class, sql.toString());
+			
+			instance.set("topicId", folderId);
+			instance.select();
+			if(instance.size() >0){
+				while(instance.next()){
+					Instance inst = new Instance();
+					inst.copyFrom(instance);
+//					work.fileIconType(workitem.getTool());
+					inst.getMetaworksContext().setHow("documentlist");
+//					workitem.moveToInsertRow();
+//					System.out.println(workitem.getFileIcon());
+				}
+			}
+			return instance;
+			
+	}
 }

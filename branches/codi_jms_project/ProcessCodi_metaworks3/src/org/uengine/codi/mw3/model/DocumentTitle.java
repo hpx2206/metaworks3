@@ -2,6 +2,8 @@ package org.uengine.codi.mw3.model;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
@@ -14,8 +16,16 @@ import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.dao.DAOFactory;
+import org.metaworks.dao.KeyGeneratorDAO;
+import org.metaworks.dao.TransactionContext;
 import org.metaworks.widget.ModalWindow;
+import org.uengine.codi.mw3.knowledge.TopicMapping;
 
+
+
+@Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs",
+			options={"fieldOrder"}, values={"name,description"})
 public class DocumentTitle implements ContextAware{
 	
 	@AutowiredFromClient
@@ -42,6 +52,7 @@ public class DocumentTitle implements ContextAware{
 		}
 		
 	String name;
+		@Face(displayName="$name")
 		public String getName() {
 				return name;
 		}
@@ -57,6 +68,7 @@ public class DocumentTitle implements ContextAware{
 			this.parentId = parentId;
 		}
 	String description;
+		@Face(displayName="$description")
 		public String getDescription() {
 			return description;
 		}
@@ -93,6 +105,25 @@ public class DocumentTitle implements ContextAware{
 		node.setCompanyId(session.getCompany().getComCode());
 		node.getMetaworksContext().setWhen(this.getMetaworksContext().getWhen());
 		node.createMe();
+		
+		TopicMapping tm = new TopicMapping();
+		tm.setTopicId(node.getId());
+		tm.setUserId(session.getUser().getUserId());
+		tm.setUserName(session.getUser().getName());
+		tm.setAssigntype(0);
+		
+		Map options = new HashMap();
+		options.put("useTableNameHeader", "false");
+		options.put("onlySequenceTable", "true");
+		KeyGeneratorDAO kg = DAOFactory.getInstance(TransactionContext.getThreadLocalInstance()).createKeyGenerator("bpm_topicmapping", options);
+		kg.select();
+		kg.next();
+		
+		Number number = kg.getKeyNumber();
+		
+		tm.setTopicMappingId(number.longValue());
+		tm.createDatabaseMe();
+		
 	}
 	DocumentNode node;
 		public DocumentNode getNode() {
@@ -117,12 +148,25 @@ public class DocumentTitle implements ContextAware{
 		
 		
 		this.setId(node.getId());
-//}else{
-//	wfNode.setId(this.getId());
-//	wfNode.copyFrom(wfNode.databaseMe());
-//	wfNode.setName(this.getName());
-//	wfNode.saveMe();
-////}
+		
+		
+		TopicMapping tm = new TopicMapping();
+		tm.setTopicId(node.getId());
+		tm.setUserId(session.getUser().getUserId());
+		tm.setUserName(session.getUser().getName());
+		tm.setAssigntype(0);
+		
+		Map options = new HashMap();
+		options.put("useTableNameHeader", "false");
+		options.put("onlySequenceTable", "true");
+		KeyGeneratorDAO kg = DAOFactory.getInstance(TransactionContext.getThreadLocalInstance()).createKeyGenerator("bpm_topicmapping", options);
+		kg.select();
+		kg.next();
+		
+		Number number = kg.getKeyNumber();
+		
+		tm.setTopicMappingId(number.longValue());
+		tm.createDatabaseMe();
 	}
 	
 	@Face(displayName="$Save")
@@ -145,27 +189,25 @@ public class DocumentTitle implements ContextAware{
 			documentNode.setId(this.getId());
 			
 			return new Object[]{new ToAppend(new DocumentPanel(), documentNode), new Refresh(this), new Remover(new ModalWindow())};
-		}else if(MetaworksContext.WHEN_EDIT.equals(this.getMetaworksContext().getWhen())){
-			
-			this.modify();
-			DocumentNode documentNode = new DocumentNode();
-			return new Object[]{new Remover(new ModalWindow()), new Refresh(documentNode)};
 		}
 		
 		return null;
 	}
-	
-	
-	public void modify() throws Exception{
-		
+	@Face(displayName="$Save")
+	@Available(when={MetaworksContext.WHEN_EDIT})
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
+	public Object[] modify() throws Exception{
 		DocumentNode node = new DocumentNode();
 		node.setId(this.getId());
 		node.setName(this.getName());
 		node.setDescription(this.getDescription());
+		node.setAuthorId(session.getUser().getUserId());
+		node.setCompanyId(session.getCompany().getComCode());
 		node.setParentId(this.getParentId());
 		node.setType(DocumentNode.TYPE_DOC);
 		node.setSecuopt(documentSecuopt ? "1" : "0");
 		node.saveMe();
+		return new Object[]{ new Refresh(node), new Remover(new ModalWindow())};
 	}
 	
 }

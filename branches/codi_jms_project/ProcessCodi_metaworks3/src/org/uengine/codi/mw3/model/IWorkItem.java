@@ -109,12 +109,13 @@ public interface IWorkItem extends IDAO{
 		public GenericWorkItemHandler getGenericWorkItemHandler();
 		public void setGenericWorkItemHandler(
 				GenericWorkItemHandler genericWorkItemHandler);
-
+		
 		@ORMapping(
-			objectFields={"taskId","content","extFile","tool","startDate","endDate"},
-			databaseFields={"taskId","content","extFile","tool","startDate","endDate"})
+			objectFields={"taskId","instId","content","extFile","tool","startDate","endDate"},
+			databaseFields={"taskId","instId","content","extFile","tool","startDate","endDate"})
 		public DocumentDrag getDocumentDrag();
 		public void setDocumentDrag(DocumentDrag documentDrag);
+		
 		@Hidden
 		@Range(
 				options={"WorkItem", "Comment",	"Image",	"Movie",	"Source Code", 	"File", "Schedule", "Postings", "ovryCmnt"}, 
@@ -300,8 +301,6 @@ public interface IWorkItem extends IDAO{
 		@Face(displayName="$Edit")
 		public void edit() throws Exception;
 		
-		@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
-		public Object[] documentView() throws Exception;
 		
 		@ServiceMethod(callByContent = true, target=ServiceMethodContext.TARGET_SELF)
 		public void loadContents() throws Exception;

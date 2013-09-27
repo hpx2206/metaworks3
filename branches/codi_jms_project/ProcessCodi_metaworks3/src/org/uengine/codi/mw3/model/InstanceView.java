@@ -201,6 +201,14 @@ public class InstanceView {
 			this.instanceSecurityConfigurer = instanceSecurityConfigurer;
 		}
 
+	String folderId;
+		public String getFolderId() {
+			return folderId;
+		}
+		public void setFolderId(String folderId) {
+			this.folderId = folderId;
+		}
+
 	String instanceName;
 		@Name
 		public String getInstanceName() {
@@ -299,43 +307,6 @@ public class InstanceView {
 		setInstanceSecurityConfigurer(new InstanceSecurityConfigurer());
 		getInstanceSecurityConfigurer().setInstanceId(instanceId);
 
-	}
-	
-	public void loadDocument() throws Exception{
-		
-		Instance inst = new Instance();
-		inst.setInstId(this.getRootInstId());
-		inst.copyFrom(inst.databaseMe());
-		inst.setMetaworksContext(getMetaworksContext());
-		
-		InstanceTooltip instanceTooltip = new InstanceTooltip();
-		instanceTooltip.getMetaworksContext().setHow("action");		
-		instanceTooltip.setInstanceId(this.getRootInstId());
-		instanceTooltip.setStatus(inst.getStatus());
-		instanceTooltip.setSecuopt(inst.getSecuopt());
-		this.setInstanceAction(instanceTooltip);
-		
-		
-		setInstanceId(this.getRootInstId().toString());
-		setStatus(inst.getStatus());
-		setSecuopt(inst.getSecuopt());
-		
-		InstanceFollowers followers = new InstanceFollowers();
-		followers.setInstanceId(inst.getInstId().toString());
-		followers.load();
-		
-		this.setFollowers(followers);
-		
-//		documentContentView = new DocumentContentView();
-//		documentContentView.setTaskId(this.getTaskId());
-//		documentContentView.setInstId(this.getRootInstId());
-//		documentContentView.load();
-//		
-		
-		DocumentContentView documentContentView = new DocumentContentView();
-		documentContentView.setInstanceId(this.getInstanceId());
-		documentContentView.setTaskId(this.getTaskId());
-		setDocumentContentView(new Loader(documentContentView, "load"));
 	}
 	
 	Long rootInstId;

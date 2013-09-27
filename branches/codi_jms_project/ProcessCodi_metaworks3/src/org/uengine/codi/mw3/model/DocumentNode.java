@@ -16,16 +16,17 @@ import org.metaworks.dao.TransactionContext;
 import org.metaworks.dao.UniqueKeyGenerator;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
-import org.uengine.codi.mw3.processexplorer.DocumentFilePanel;
-import org.uengine.codi.mw3.processexplorer.DocumentNavigatorPanel;
-import org.uengine.codi.mw3.processexplorer.DocumentViewWindow;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.processmanager.ProcessManagerRemote;
 
 public class DocumentNode extends Database<IDocumentNode> implements IDocumentNode{
 	@AutowiredFromClient
 	transient public Session session;
-	@AutowiredFromClient
-	public DocumentNavigatorPanel documentNavigatorPanel;
-
+	
+	
+	@Autowired
+	public ProcessManagerRemote processManager;
+	
 	public final static String TYPE_DOC = "doc";
 	public final static String TYPE_FILE = "file";
 	public final static int DEPTH = 1;
@@ -265,65 +266,6 @@ public class DocumentNode extends Database<IDocumentNode> implements IDocumentNo
 		return childNode;
 	}
 	
-	public ArrayList<WorkItem> loadFileView(String id) throws Exception{
-		fileList = new ArrayList<WorkItem>();
-		StringBuffer sb = new StringBuffer();
-			sb.append("select *,tool as fileIcon");
-			sb.append(" from bpm_worklist");
-			sb.append(" where folderId=?id");
-			
-			IWorkItem workitem = (IWorkItem) sql(WorkItem.class,sb.toString());
-			
-			workitem.set("id",id);
-			workitem.select();
-			
-			if(workitem.size() >0){
-				while(workitem.next()){
-					WorkItem work = new WorkItem();
-					
-					work.copyFrom(workitem);
-					
-					work.getMetaworksContext().setHow("fileView");
-//					work.fileIconType(workitem.getTool());
-					fileList.add(work);
-				}
-			}
-			
-			
-//			return new Object[]{ new Refresh(documentListWindow) };
-			return fileList;
-	
-	}
-	
-	public ArrayList<DocumentNode> loadFolderView(String id) throws Exception{
-		folderList = new ArrayList<DocumentNode>();
-		
-		StringBuffer sb = new StringBuffer();
-		sb.append("select * ");
-		sb.append(" from bpm_knol");
-		sb.append(" where type=?type");
-		sb.append(" and parentId=?parentId");
-		
-		IDocumentNode node = (IDocumentNode) sql(DocumentNode.class,sb.toString());
-		
-		node.set("type", TYPE_DOC);
-		node.set("parentId",id);
-		node.select();
-		
-		if(node.size()>0){
-			while(node.next()){
-				DocumentNode documentNode = new DocumentNode();
-				
-				documentNode.copyFrom(node);
-				documentNode.setFolderList(new ArrayList<DocumentNode>());
-				
-				documentNode.setMetaworksContext(this.getMetaworksContext());
-				folderList.add(documentNode);
-			}
-		}
-		return folderList;
-	}
-	
 	public void expand() throws Exception{
 		this.setLoadDepth(1);
 		this.setChildNode(loadChildren());
@@ -376,22 +318,6 @@ public class DocumentNode extends Database<IDocumentNode> implements IDocumentNo
 	
 	
 	
-	@Override
-	public Object[] openFolderView() throws Exception{
-		
-		DocumentFilePanel documentFilePanel = new DocumentFilePanel();
-		documentFilePanel.setMetaworksContext(new MetaworksContext());
-		documentFilePanel.loadDetailView(this.getId());
-		
-		DocumentNode node = new DocumentNode();
-		node.setName(this.getName());
-		node.setMetaworksContext(new MetaworksContext());
-		node.getMetaworksContext().setHow("Navigator");
-		documentNavigatorPanel.documentList.add(node);
-		
-		
-		return new Object[]{new Refresh(documentFilePanel), new Refresh(documentNavigatorPanel)};
-	}
 	
 	
 	@Override
@@ -445,22 +371,73 @@ public class DocumentNode extends Database<IDocumentNode> implements IDocumentNo
 	public Object[] drop() throws Exception {
 		Object clipboard = session.getClipboard();
 		if(clipboard instanceof DocumentDrag){
-			
+				
 			DocumentDrag documentInClipboard = (DocumentDrag) clipboard;
 			
-			WorkItem workitem = new WorkItem();
-			workitem.setTaskId(new Long(documentInClipboard.getTaskId()));
-			workitem.databaseMe().setFolderId(this.getId());
-			workitem.databaseMe().setFolderName(this.getName());
-			workitem.flushDatabaseMe();
+			int size = (Integer) searchInstance(documentInClipboard.getTaskId());
+			if(size == 1){
+				WorkItem workitem = new WorkItem();
+				workitem.processManager = processManager;
+				workitem.setType("file");
+				workitem.session = session;
+				
+				IInstance instanceRef = workitem.save();
+				workitem.databaseMe().setTitle(documentInClipboard.getExtFile());
+				workitem.databaseMe().setFolderId(this.getId());
+				workitem.databaseMe().setFolderName(this.getName());
+				workitem.databaseMe().setTool(documentInClipboard.getTool());
+				workitem.databaseMe().setContent(documentInClipboard.getContent());
+				workitem.databaseMe().setExtFile(documentInClipboard.getExtFile());
+				workitem.databaseMe().setGrpTaskId(documentInClipboard.getTaskId());
+				Instance inst = new Instance();
+				inst.copyFrom(instanceRef);
+				inst.databaseMe().setTopicId(this.getId());
+				inst.databaseMe().setName(documentInClipboard.getExtFile());
+				
+				
+				workitem.setTaskId(new Long(documentInClipboard.getTaskId()));
+				workitem.databaseMe().setFolderId(this.getId());
+				workitem.databaseMe().setFolderName(this.getName());
+				workitem.flushDatabaseMe();
+				inst.flushDatabaseMe();
+			}else{
+				//수정
+				WorkItem workitem = new WorkItem();
+				workitem.setTaskId(new Long(documentInClipboard.getTaskId()));
+				workitem.databaseMe().setFolderId(this.getId());
+				workitem.databaseMe().setFolderName(this.getName());
+//				this.syncToDatabaseMe();
+				workitem.flushDatabaseMe();
+			}
+			
+			
 			InstanceViewThreadPanel instView = new InstanceViewThreadPanel();
-			instView.load();
-			return new Object[]{new Refresh(instView)};
+			instView.session = session;
+			instView.load(documentInClipboard.getInstId()+"");
+			
+			InstanceListPanel instListPanel = new InstanceListPanel();
+			instListPanel.session = session;
+			instListPanel.load();
+			return new Object[]{new Refresh(instView), new Refresh(instListPanel)};
 		}
 		
 		return null;
 	}
 	
+	public Object searchInstance(Long taskId) throws Exception{
+		StringBuffer sb = new StringBuffer();
+		sb.append("Select * from bpm_worklist");
+		sb.append(" where taskId=?taskId");
+		sb.append(" and foldername is null");
+		
+		IWorkItem dao = (IWorkItem) sql(IWorkItem.class, sb.toString());
+		
+		dao.set("taskId", taskId);
+		dao.select();
+		int size = dao.size();
+		return size;
+		
+	}
 	@Override
 	public ModalWindow addSubFolder() throws Exception {
 		DocumentTitle documentSubTitle = new DocumentTitle();
@@ -471,6 +448,7 @@ public class DocumentNode extends Database<IDocumentNode> implements IDocumentNo
 		
 		return new ModalWindow(documentSubTitle , 500, 200,  "$addSubDocument");
 	}
+	
 
 	
 }

@@ -16,8 +16,6 @@ import org.metaworks.annotation.Table;
 import org.metaworks.dao.IDAO;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
-import org.uengine.codi.mw3.processexplorer.DocumentFilePanel;
-import org.uengine.codi.mw3.processexplorer.DocumentFolderPanel;
 
 @Table(name="bpm_knol")
 @Face(ejsPathForArray="dwr/metaworks/genericfaces/ListFace.ejs")
@@ -86,16 +84,6 @@ public interface IDocumentNode extends IDAO {
 	public int getNo();
 	public void setNo(int no);
 	
-	@NonLoadable
-	@NonSavable
-	public ArrayList<DocumentNode> getFolderList();
-	public void setFolderList(ArrayList<DocumentNode> folderList);
-	
-	@NonLoadable
-	@NonSavable
-	public ArrayList<WorkItem> getFileList();
-	public void setFileList(ArrayList<WorkItem> fileList);
-
 	@ServiceMethod(inContextMenu=true, callByContent=true)
 	@Face(displayName="$Remove")
 	public Object[] remove() throws Exception;
@@ -123,26 +111,14 @@ public interface IDocumentNode extends IDAO {
 	@ServiceMethod(callByContent=true, except={"childNode"}, target=TARGET_SELF)
 	public IDocumentNode loadDocumentList() throws Exception;
 	
-	@ServiceMethod(callByContent=true, except={"childNode"}, target=TARGET_APPEND)
+	@ServiceMethod(callByContent=true)
 	public Object[] loadExplorerDocument() throws Exception;
 	
 	@ServiceMethod(callByContent=true, except={"childNode"}, target=TARGET_SELF)
 	public ArrayList<DocumentNode> loadChildren() throws Exception;
 	
-	@ServiceMethod(callByContent=true,target=ServiceMethodContext.TARGET_APPEND)
-	public Object[] openFolderView() throws Exception;
-	
 	@ServiceMethod(callByContent=true)
 	public Object[] loadDocument() throws Exception;
-	
-	@ORMapping(
-			databaseFields = {"url", "thumbnail", "conntype"}, 
-			objectFields = {"uploadedPath", "filename", "mimeType"},
-			objectIsNullWhenFirstDBFieldIsNull = true,
-			availableWhen = "type=='file'"	
-			)
-	public MetaworksFile getFile();
-	public void setFile(MetaworksFile file);
 	
 	
 	public void saveMe() throws Exception;

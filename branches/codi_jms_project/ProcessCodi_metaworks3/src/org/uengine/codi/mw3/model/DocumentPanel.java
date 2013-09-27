@@ -6,7 +6,6 @@ import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
-import org.uengine.codi.mw3.processexplorer.DocumentViewWindow;
 
 @Face(
 		ejsPathMappingByContext=

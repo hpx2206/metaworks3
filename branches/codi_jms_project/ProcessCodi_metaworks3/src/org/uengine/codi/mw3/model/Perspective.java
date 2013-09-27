@@ -8,7 +8,6 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.uengine.codi.mw3.Login;
 import org.uengine.codi.mw3.knowledge.WfPanel;
-import org.uengine.codi.mw3.processexplorer.DocumentViewWindow;
 import org.uengine.codi.mw3.processexplorer.ProcessExploreWindow;
 
 public class Perspective {
@@ -67,19 +66,10 @@ public class Perspective {
 	public static Object[] loadDocumentListPanel(Session session, String perspectiveType,
 			String selectedItem, String title) throws Exception{
 		
-		if( title == null && perspectiveType != null && perspectiveType.equals("document")){
-			title = session.getWindowTitle();
-		}else if( title == null ){
-			title = "$perspective." + perspectiveType;
-		}
-		
-//		DocumentList documentList = new DocumentList(session);
-//		documentList.setFolderId(selectedItem);
-//		documentList.load();
 		InstanceList instList = new InstanceList(session);
 		instList.setFolderId(selectedItem);
 		instList.setMetaworksContext(new MetaworksContext());
-		
+		savePerspectiveToSession(session, perspectiveType, selectedItem);
 		if(perspectiveType.equals("document")){
 			instList.getMetaworksContext().setHow("document");
 			instList.loadDocument();
@@ -87,7 +77,9 @@ public class Perspective {
 			InstanceListPanel instListPanel = new InstanceListPanel(session);
 			instListPanel.setInstanceList(instList);
 			instListPanel.session = session;
+			instListPanel.documentFollowerLoad();
 			
+			 
 			instListPanel.getSearchBox().setKeyword(session.getSearchKeyword());
 			if( title == null && perspectiveType != null && perspectiveType.equals("document")){
 				title = session.getWindowTitle();
@@ -97,23 +89,65 @@ public class Perspective {
 			instListPanel.setTitle(title);
 			session.setWindowTitle(title);
 			
+			SearchBox searchBox = new SearchBox();
+			searchBox.setKeyword(session.getSearchKeyword());
+			searchBox.setKeyUpSearch(true);
+			searchBox.setKeyEntetSearch(true);
+				
+			final Object[] returnObject;
+			
+			returnObject = new Object[]{new Refresh(searchBox)};
+			
+			MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getEmployee().getEmpCode()), returnObject);
+			
+			
 			return new Object[]{session, instListPanel};
 		}else if(perspectiveType.equals("explorer")){
+			
+			
+			
 			instList.getMetaworksContext().setHow("explorer");
 			instList.loadDocument();
 			
-			DocumentViewWindow documentWindow = new DocumentViewWindow();
-			documentWindow.session = session;
-			documentWindow.setId(selectedItem);
-			documentWindow.setName(title);
-			documentWindow.load();
+			InstanceListPanel instListPanel = new InstanceListPanel(session);
+			instListPanel.setInstanceList(instList);
+			instListPanel.session = session;
+			instListPanel.documentFollowerLoad();
+			
+			 
+			instListPanel.getSearchBox().setKeyword(session.getSearchKeyword());
+			if( title == null && perspectiveType != null && perspectiveType.equals("explorer")){
+				title = session.getWindowTitle();
+			}else if( title == null ){
+				title = "$perspective." + perspectiveType;
+			}
+			instListPanel.setTitle(title);
+			session.setWindowTitle(title);
+			
+			SearchBox searchBox = new SearchBox();
+			searchBox.setKeyword(session.getSearchKeyword());
+			searchBox.setKeyUpSearch(true);
+			searchBox.setKeyEntetSearch(true);
+				
+			final Object[] returnObject;
+			
+			returnObject = new Object[]{new Refresh(searchBox)};
+			
+			MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getEmployee().getEmpCode()), returnObject);
 			
 			ProcessExploreWindow processExploreWindow = new ProcessExploreWindow();
-			processExploreWindow.setPanel(documentWindow);
-			return new Object[]{new Refresh(processExploreWindow)};
+			processExploreWindow.setPanel(instListPanel);
+			return new Object[]{session, processExploreWindow};
+			
+//			return new Object[]{session, instListPanel};
+			
+			
+			
+			
 		}
 		return null;
 	}
+	
 	
 	
 	public static Object[] loadInstanceListPanel(Session session, String perspectiveType,

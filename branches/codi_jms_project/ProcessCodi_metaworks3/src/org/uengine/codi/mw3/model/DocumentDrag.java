@@ -3,6 +3,7 @@ package org.uengine.codi.mw3.model;
 import java.util.Date;
 
 import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 
@@ -16,6 +17,13 @@ public class DocumentDrag {
 		public void setTaskId(Long taskId) {
 			this.taskId = taskId;
 		}
+	Long instId;
+			public Long getInstId() {
+				return instId;
+			}
+			public void setInstId(Long instId) {
+				this.instId = instId;
+			}
 	String content;
 		public String getContent() {
 			return content;
@@ -53,7 +61,7 @@ public class DocumentDrag {
 		public void setEndDate(Date endDate) {
 			this.endDate = endDate;
 		}	
-	
+
 	@ServiceMethod(callByContent=true,mouseBinding="drag")
 		public Session cut(){
 			session.setClipboard(this);

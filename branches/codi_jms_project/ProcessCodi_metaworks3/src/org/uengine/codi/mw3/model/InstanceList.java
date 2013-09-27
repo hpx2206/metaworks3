@@ -117,7 +117,12 @@ public class InstanceList implements ContextAware{
 	public void more() throws Exception {
 		load(this.getNavigation());
 	}
-
+	
+	@ServiceMethod(callByContent = true, except = { "workitem" })
+	public void moreDocument() throws Exception{
+		loadDocument(this.getNavigation());
+	}
+	
 	public InstanceList load() throws Exception {
 		return load(this.getNavigation());
 	}
@@ -159,10 +164,14 @@ public class InstanceList implements ContextAware{
 		return loadDocument(this.getNavigation());
 	}
 	public InstanceList loadDocument(Navigation navigation) throws Exception{
-		IWorkItem workitem = WorkItem.findDocument(getFolderId());
-
+		IInstance instance = Instance.loadDocument(getFolderId());
 		
-		setWorkItem(workitem);
+
+		setInstances(instance);
+//		setWorkItem(workitem);
+		setMoreInstanceList(new InstanceList());
+		getMoreInstanceList().setNavigation(navigation);
+		getMoreInstanceList().setPage(getPage()+1);
 		return this;
 	}
 

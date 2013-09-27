@@ -1,11 +1,6 @@
 <%if (value!=null){%>
 
-<%if (mw3.how == 'document'){ %>
-<%=fields.workItem.here()%>
-<% }else{%>
-<%=fields.instances.here()%>
-<%}%>
-<%=fields.moreInstanceList.here()%>
+		<%=fields.instances.here()%>
 
 <%
 
@@ -14,7 +9,10 @@ if(value.moreInstanceList==null){
 
 <div id="moreListBtn" onclick="<%=methods.more.caller()%>"><%=mw3.localize("$more")%></div>
 
-
+<%=fields.moreInstanceList.here()%>
 <%}
+%>
 
+
+<%
 }%>

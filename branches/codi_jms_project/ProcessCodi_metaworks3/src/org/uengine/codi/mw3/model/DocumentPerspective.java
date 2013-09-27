@@ -5,7 +5,6 @@ import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
-import org.uengine.codi.mw3.knowledge.TopicTitle;
 
 public class DocumentPerspective extends Perspective  implements ContextAware {
 	
@@ -27,7 +26,7 @@ public class DocumentPerspective extends Perspective  implements ContextAware {
 		}
 		
 	public DocumentPerspective(){
-		setLabel("$Document");
+		setLabel("document");
 	}
 
 	@Override
