@@ -23,7 +23,6 @@ public class DocumentNode extends Database<IDocumentNode> implements IDocumentNo
 	@AutowiredFromClient
 	transient public Session session;
 	
-	
 	@Autowired
 	public ProcessManagerRemote processManager;
 	
@@ -109,21 +108,6 @@ public class DocumentNode extends Database<IDocumentNode> implements IDocumentNo
 			this.childNode = childNode;
 		}
 
-	ArrayList<DocumentNode> folderList;
-		public ArrayList<DocumentNode> getFolderList() {
-			return folderList;
-		}
-		public void setFolderList(ArrayList<DocumentNode> folderList) {
-			this.folderList = folderList;
-		}
-	ArrayList<WorkItem> fileList;
-		public ArrayList<WorkItem> getFileList() {
-			return fileList;
-		}
-		public void setFileList(ArrayList<WorkItem> fileList) {
-			this.fileList = fileList;
-		}
-
 	boolean first;
 		public boolean isFirst() {
 			return first;
@@ -148,35 +132,6 @@ public class DocumentNode extends Database<IDocumentNode> implements IDocumentNo
 			this.startDate = startDate;
 		}
 	
-	Date endDate;
-		public Date getEndDate() {
-			return endDate;
-		}
-		public void setEndDate(Date endDate) {
-			this.endDate = endDate;
-		}
-	
-	String visType;
-		public String getVisType() {
-			return visType;
-		}
-		public void setVisType(String visType) {
-			this.visType = visType;
-		}
-	int no;
-		public int getNo() {
-			return no;
-		}
-		public void setNo(int no) {
-			this.no = no;
-		}
-	String fileIcon;
-		public String getFileIcon() {
-			return fileIcon;
-		}
-		public void setFileIcon(String fileIcon) {
-			this.fileIcon = fileIcon;
-		}
 	
 	boolean documentSecuopt;		
 		@Hidden
@@ -188,17 +143,8 @@ public class DocumentNode extends Database<IDocumentNode> implements IDocumentNo
 			this.documentSecuopt = documentSecuopt;
 		}		
 		
-	MetaworksFile file;
-		public MetaworksFile getFile() {
-			return file;
-		}
-		public void setFile(MetaworksFile file) {
-			this.file = file;
-		}
-		
 	public DocumentNode(){
 		setChildNode(new ArrayList<DocumentNode>());
-		setFile(new MetaworksFile()); 
 		getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 	}
 	

@@ -47,8 +47,6 @@ public interface IDocumentNode extends IDAO {
 	public Date getStartDate();
 	public void setStartDate(Date startDate);
 	
-	public Date getEndDate();
-	public void setEndDate(Date endDate);
 	
 	@Hidden
 	public String getParentId();
@@ -77,12 +75,6 @@ public interface IDocumentNode extends IDAO {
 	@Hidden
 	public boolean isFirst();
 	public void setFirst(boolean first);
-	@Hidden
-	public String getVisType();
-	public void setVisType(String visType);
-	
-	public int getNo();
-	public void setNo(int no);
 	
 	@ServiceMethod(inContextMenu=true, callByContent=true)
 	@Face(displayName="$Remove")

@@ -42,6 +42,7 @@ public class DocumentTitle implements ContextAware{
 		public void setMetaworksContext(MetaworksContext metaworksContext) {
 			this.metaworksContext = metaworksContext;
 		}
+		
 	String id;
 		@Hidden
 		public String getId() {
@@ -58,7 +59,8 @@ public class DocumentTitle implements ContextAware{
 		}
 		public void setName(String name) {
 			this.name = name;
-		}		
+		}	
+		
 	String parentId;
 		@Hidden
 		public String getParentId() {
@@ -67,6 +69,7 @@ public class DocumentTitle implements ContextAware{
 		public void setParentId(String parentId) {
 			this.parentId = parentId;
 		}
+		
 	String description;
 		@Face(displayName="$description")
 		public String getDescription() {
@@ -75,13 +78,15 @@ public class DocumentTitle implements ContextAware{
 		public void setDescription(String description) {
 			this.description = description;
 		}
+		
 	Date startDate;
 		public Date getStartDate() {
 			return startDate;
 		}
 		public void setStartDate(Date startDate) {
 			this.startDate = startDate;
-		}		
+		}	
+		
 	boolean documentSecuopt;		
 		@Hidden
 		@Face(displayName="$DocumentSecuopt")

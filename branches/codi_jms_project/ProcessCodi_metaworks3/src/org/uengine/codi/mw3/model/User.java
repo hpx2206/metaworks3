@@ -230,6 +230,9 @@ public class User extends Database<IUser> implements IUser {
 	public TopicFollowers topicFollowers;
 	
 	@AutowiredFromClient
+	public DocumentFollowers documentFollowers;
+	
+	@AutowiredFromClient
 	public InstanceFollowers instanceFollowers;
 	
 	@AutowiredFromClient
@@ -265,8 +268,6 @@ public class User extends Database<IUser> implements IUser {
 			return new Object[]{new Refresh(documentFollowers)};
 		
 		}else if("addTopicFollower".equals(this.getMetaworksContext().getWhen())){
-		
-			
 			TopicMapping tm = new TopicMapping();
 			tm.setTopicId(session.getLastSelectedItem());
 			tm.setUserId(this.getUserId());
@@ -425,6 +426,26 @@ public class User extends Database<IUser> implements IUser {
 				topicFollowers.load();
 				
 				return new Object[]{new Refresh(topicFollowers)};
+			}else{
+				throw new Exception("삭제 실패");
+			}
+			
+		}else if("documentFollowers".equals(this.getMetaworksContext().getWhen())){
+			TopicMapping tm = new TopicMapping();
+			tm.setTopicId(session.getLastSelectedItem());
+			tm.setUserId(this.getUserId());
+			
+			ITopicMapping rs = tm.findByUser();
+			if(rs.next()){
+				tm.setTopicMappingId(rs.getTopicMappingId());
+				tm.remove();
+				
+				DocumentFollowers documentFollowers = new DocumentFollowers();
+				documentFollowers.session = session;
+				documentFollowers.load();
+				
+				return new Object[]{new Refresh(documentFollowers)};
+
 			}else{
 				throw new Exception("삭제 실패");
 			}
