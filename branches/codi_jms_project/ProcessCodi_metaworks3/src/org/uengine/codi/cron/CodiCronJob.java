@@ -17,17 +17,17 @@ import org.uengine.processmanager.ProcessManagerRemote;
 public class CodiCronJob extends QuartzJobBean{
 	
 	
-	@Autowired
-	SpringConnectionFactory connectionFactory;
+	//@Autowired
+	//SpringConnectionFactory connectionFactory;
 	
 
-	@Autowired
-	EMailReader emailReader;
+	//@Autowired
+	//EMailReader emailReader;
 	
 	@Override
 	protected void executeInternal(JobExecutionContext arg0)
 			throws JobExecutionException {
-
+		/*
         TransactionContext tx = new TransactionContext(); //once a TransactionContext is created, it would be cached by ThreadLocal.set, so, we need to remove this after the request processing. 
         
 		tx.setManagedTransaction(false);
@@ -82,6 +82,7 @@ public class CodiCronJob extends QuartzJobBean{
 				e.printStackTrace();
 			}
 		}
+		*/
 	}
 	
 	
