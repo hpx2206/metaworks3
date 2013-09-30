@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -21,7 +22,7 @@ import org.metaworks.annotation.Id;
 import org.metaworks.annotation.NonEditable;
 import org.metaworks.annotation.ServiceMethod;
 
-public abstract class AbstractMetaworksFile implements ContextAware {
+public abstract class AbstractMetaworksFile implements ContextAware, Serializable {
 	
 	public AbstractMetaworksFile() {
 		setMetaworksContext(new MetaworksContext());
