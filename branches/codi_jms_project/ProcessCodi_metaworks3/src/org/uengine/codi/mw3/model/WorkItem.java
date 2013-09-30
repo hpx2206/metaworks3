@@ -945,7 +945,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 					}
 				}				
 			}
-			
+			// TODO instanceRefer 로 인스턴스 발행
 			instanceRef.setCurrentUser(session.getUser());//may corrupt when the last actor is assigned from process execution.
 								
 			IUser writer = new User();
@@ -960,11 +960,16 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			this.setStartDate(Calendar.getInstance().getTime());
 			this.setEndDate(getStartDate());
 			this.setFolderId(session.getLastSelectedItem());
-			this.setFolderName(session.getWindowTitle().substring(4));
+			this.setFolderName(session.getWindowTitle() != null && session.getWindowTitle().length()>4  
+					? session.getWindowTitle().substring(4) : "" );
 			this.setStatus(WORKITEM_STATUS_FEED);
 			this.setIsDeleted(false);			
 			if(this.getRootInstId() == null)
 				this.setRootInstId(this.getInstId());
+			
+			// TODO if instanceRefer.instanceID 가 있으면
+			// workiem에 넣어주기...
+			// 
 			
 			// 덧글 상태일때 덧글이 길면 메모로 변경해주는 기능
 			if(this instanceof CommentWorkItem){
