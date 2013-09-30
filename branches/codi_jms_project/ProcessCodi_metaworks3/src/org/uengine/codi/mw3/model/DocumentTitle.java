@@ -53,7 +53,7 @@ public class DocumentTitle implements ContextAware{
 		}
 		
 	String name;
-		@Face(displayName="$name")
+		@Face(displayName="$Name")
 		public String getName() {
 				return name;
 		}
