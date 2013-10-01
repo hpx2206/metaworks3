@@ -10449,11 +10449,11 @@ OG.shape.bpmn.A_Subprocess.prototype.createShape = function () {
 
 	this.geom = new OG.geometry.Rectangle([0, 0], 100, 100);
 	this.geom.style = new OG.geometry.Style({
-		'stroke': 'black',
+		'stroke': '#62a716',
 		"stroke-width" : 1.5,
 		'r'     : 6,
-        fill: '#FFFFFF-#000000',
-        'fill-opaicity': 0.1
+        fill: '#FFFFFF-#62a716',
+        'fill-opaicity': 1
 	});
 
 	return this.geom;
@@ -14726,7 +14726,6 @@ OG.renderer.RaphaelRenderer.prototype.drawShape = function (position, shape, siz
 		height = size ? size[1] : 100,
 		groupNode, geometry, text, image, html,
 		me = this;
-
 	if (shape instanceof OG.shape.GeomShape) {
 		geometry = shape.createShape();
 
@@ -14832,7 +14831,9 @@ OG.renderer.RaphaelRenderer.prototype.drawShape = function (position, shape, siz
             }
         }
     });
-
+    if($(shape).attr('auto_draw') == 'yes'){
+        $(groupNode).attr('auto_draw', 'yes');
+    }
 	// drawShape event fire
 	$(this._PAPER.canvas).trigger('drawShape', [groupNode]);
 	return groupNode;
@@ -19740,6 +19741,7 @@ OG.handler.EventHandler.prototype = {
 					    var eventOffset = me._getOffset(event), shape, newElement,
 					    bBoxArray = $(root).data("bBoxArray");
                         shape = new OG.shape.bpmn.A_Task();
+                        $(shape).attr('auto_draw', 'yes');
                         newElement = me._RENDERER._CANVAS.drawShape([eventOffset.x, eventOffset.y], shape, [70, 50]);
                         me._RENDERER._CANVAS.connect(element, newElement);
                         $.each(bBoxArray, function (k, item) {
@@ -19756,6 +19758,7 @@ OG.handler.EventHandler.prototype = {
 					    var newElement,
                         shape = new OG.shape.bpmn.A_Task(),
                         envelope = element.shape.geom.getBoundary();
+					    $(shape).attr('auto_draw', 'yes');
                         newElement = me._RENDERER._CANVAS.drawShape([envelope.getCentroid().x + 100, envelope.getCentroid().y], shape, [70, 50]);
                         me._RENDERER._CANVAS.connect(element, newElement);
 					},
