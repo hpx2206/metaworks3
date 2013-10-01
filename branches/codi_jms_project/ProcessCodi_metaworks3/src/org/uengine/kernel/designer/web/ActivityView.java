@@ -70,7 +70,21 @@ public class ActivityView extends CanvasDTO  implements ContextAware{
 		public void setTooltip(String tooltip) {
 			this.tooltip = tooltip;
 		}
-		
+	transient Object element;
+		public Object getElement() {
+			return element;
+		}
+		public void setElement(Object element) {
+			this.element = element;
+		}
+	transient	boolean drawByCanvas;
+		public boolean isDrawByCanvas() {
+			return drawByCanvas;
+		}
+		public void setDrawByCanvas(boolean drawByCanvas) {
+			this.drawByCanvas = drawByCanvas;
+		}
+
 	transient PropertiesWindow propertiesWindow;
 	@Hidden
 		public PropertiesWindow getPropertiesWindow() {

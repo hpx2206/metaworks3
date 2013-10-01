@@ -371,7 +371,7 @@ public class SubProcessActivity extends DefaultActivity implements IDrawDesigne 
 
       thePI.execute();
     }
-    System.out.println("fdafds");
+    
     if(isRunAndForget()){
       fireComplete(instance);
     }

@@ -512,8 +512,7 @@ System.out.println("=========================== HARD-TO-FIND : HumanActivity.cre
 				RoleMapping currentLogin = null;
 				try{
 					if( instance.isSubProcess() ){
-						System.out.println("33333");
-						currentLogin = instance.getMainProcessInstance().getRoleMapping("Initiator");
+						currentLogin = instance.getRootProcessInstance().getRoleMapping("Initiator");
 					}else{
 						currentLogin = (RoleMapping)instance.getProcessTransactionContext().getProcessManager().getGenericContext().get(GENERICCONTEXT_CURR_LOGGED_ROLEMAPPING);
 					}

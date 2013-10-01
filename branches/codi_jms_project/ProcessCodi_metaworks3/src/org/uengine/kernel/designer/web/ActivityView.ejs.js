@@ -30,46 +30,59 @@ var org_uengine_kernel_designer_web_ActivityView = function(objectId, className)
 org_uengine_kernel_designer_web_ActivityView.prototype = {
 		loaded : function(){
 			var object = mw3.objects[this.objectId];
-			var canvasObjectId = this.canvasObjectId;
-			var canvas = this.canvas;
 			var element = null;
-			var initText;
-			if( object.activity ){
-				initText = ( object.activity.description != null && object.activity.description.text != null ) ? object.activity.description.text :  "";
-			}else{
-				initText = ( object.label == null || object.label == 'undefined' ) ? "" :  unescape(object.label);
-			}
-			var shape = null;
-			if( initText && initText != "" && initText != null){
-				shape = eval('new ' + object.shapeId + '(\''+initText +'\')');
-			}else{
-				shape = eval('new ' + object.shapeId + '()');
-			}
-			var id = object.id;
-			var parent = object.parent;
-			var style = object.style;
 			
-        	element = canvas.drawShape([
-        	                                 object.x, object.y 
-        	                                 ], 
-        	                                 shape, [parseInt(object.width, 10), parseInt(object.height, 10)] , OG.JSON.decode(unescape(style)), id, parent, false);
-        	
-        	// object.activityClass : Activity , object.__className : ActivityView
-        	$(element).attr("_classname", object.activityClass);
-        	$(element).attr("_viewClass", object.__className);
-        	$(element).attr("_classType", object.classType);
-        	$(element).attr("_tracingTag",object.tracingTag);
-        	if( object.activity ){
-        		$(element).data('activity', object.activity);
-        		// object.activity.activityView = null; 을 꼭 해주어야함.. activity가 activityView 를 들고있고, activityView가 activity를 들고있는 구조라서..
-        		object.activity.activityView = null;
-        	}else if( typeof $(element).attr("_classname") != 'undefined' &&  typeof $(element).data("activity") == 'undefined' ){
-        		var activityData = {__className : $(element).attr("_classname"), tracingTag : $(element).attr("_tracingTag")};
+			if( object && !object.drawByCanvas){
+				var canvasObjectId = this.canvasObjectId;
+				var canvas = this.canvas;
+				var initText;
+				if( object.activity ){
+					initText = ( object.activity.description != null && object.activity.description.text != null ) ? object.activity.description.text :  "";
+				}else{
+					initText = ( object.label == null || object.label == 'undefined' ) ? "" :  unescape(object.label);
+				}
+				var shape = null;
+				if( initText && initText != "" && initText != null){
+					shape = eval('new ' + object.shapeId + '(\''+initText +'\')');
+				}else{
+					shape = eval('new ' + object.shapeId + '()');
+				}
+				var id = object.id;
+				var parent = object.parent;
+				var style = object.style;
+	
+				element = canvas.drawShape([
+	        	                                 object.x, object.y 
+	        	                                 ], 
+	        	                                 shape, [parseInt(object.width, 10), parseInt(object.height, 10)] , OG.JSON.decode(unescape(style)), id, parent, false);
+	        	
+	        	// object.activityClass : Activity , object.__className : ActivityView
+	        	$(element).attr("_classname", object.activityClass);
+	        	$(element).attr("_viewClass", object.__className);
+	        	$(element).attr("_classType", object.classType);
+	        	$(element).attr("_tracingTag",object.tracingTag);
+	        	if( object.activity ){
+	        		$(element).data('activity', object.activity);
+	        		// object.activity.activityView = null; 을 꼭 해주어야함.. activity가 activityView 를 들고있고, activityView가 activity를 들고있는 구조라서..
+	        		object.activity.activityView = null;
+	        	}else if( typeof $(element).attr("_classname") != 'undefined' &&  typeof $(element).data("activity") == 'undefined' ){
+	        		var activityData = {__className : $(element).attr("_classname"), tracingTag : $(element).attr("_tracingTag")};
+	        		$(element).data('activity', activityData);
+	        	}
+	        	
+			}else{
+				element = object.element;
+				console.log(element);
+				
+				var activityData = {__className : $(element).attr("_classname"), tracingTag : $(element).attr("_tracingTag")};
         		$(element).data('activity', activityData);
-        	}
+				
+				object.element = null;
+			}
+        	
         	$(element).unbind('dblclick');
         	$(element).on({
-        		dblclick: function (event) {
+        		dblclick: function (event) {	
         			if(event.stopPropagation){
         				event.stopPropagation();
         			}

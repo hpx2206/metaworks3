@@ -146,7 +146,6 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype = 
 	    	
 	        drop: function (event, ui) {
 	        	faceHelper.canvasDropEvent(objectId , canvas , canvasDivObj);
-	        	
 	        	if(!$(ui.draggable).hasClass('icon_shape_'+objectId))
 	        		return true;
 	        	var shapeInfo = {
@@ -157,9 +156,9 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype = 
 		                '_classname' : $(ui.draggable).attr('_classname'),
 		                '_viewclass' : $(ui.draggable).attr('_viewclass'),
 		                '_classType' : $(ui.draggable).attr('_classType')
-		            }, shape, element;
-	        	
-	            if (shapeInfo) {
+	            }, shape, element;
+
+	        	if (shapeInfo) {
 	            	var viewclass = shapeInfo._viewclass;
 	            	var activityclass = shapeInfo._classname;
 	            	if( typeof viewclass == 'undefined' ){
@@ -224,9 +223,9 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype = 
 	                    }
 	                }
 	                */
-	                
+	        }  
 	         
-	        }
+	        
 	    });
 	    // Shape 이 Connect 되었을 때의 이벤트 리스너
 	    canvas.onConnectShape(function (event, edgeElement, fromElement, toElement) {
@@ -261,9 +260,35 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype = 
 //	    	$(edgeElement).data('transition', transitionData);
 //			faceHelper.addEventEdge(objectId, canvas, edgeElement);
 	    });
+	    
 	    canvas.onDrawShape(function (event, shapeElement) {
 	    	// TODO 여기서 Shape 객체를 바로 만드려고 하였으나 연결정보는 가지고 있지 않다.
-	    });
+	    	
+	    	
+	    	
+	    	
+	    	if($(shapeElement).attr('auto_draw') && $(shapeElement).attr('auto_draw') == 'yes'){
+		    	$(shapeElement).attr('_shape_type', 'GEOM');
+		    	$(shapeElement).attr('_width', '70');
+		    	$(shapeElement).attr('_height', '50');
+		    	$(shapeElement).attr('_classname', 'org.uengine.kernel.HumanActivity');
+		    	$(shapeElement).attr('_viewclass', 'org.uengine.kernel.designer.web.HumanActivityView');
+		    	$(shapeElement).attr('_classType', 'Activity');
+		    	$(shapeElement).attr('_tracingTag', ++faceHelper.tracingTag);
+		    	
+		    	var activityView = {
+						__className : $(shapeElement).attr('_viewclass'),
+						element : shapeElement,
+						drawByCanvas : true
+		    	};
+		    	
+		    	var html = mw3.locateObject(activityView , activityView.____className);
+	        	canvasDivObj.append(html);
+	        	
+	        	mw3.onLoadFaceHelperScript();
+	    	}
+	    	
+            });
 	    canvas.onRemoveShape(function (shapeElement) {
 //	    	console.log($(shapeElement));
 	    });
