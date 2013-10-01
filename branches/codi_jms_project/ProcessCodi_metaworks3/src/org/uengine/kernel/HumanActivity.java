@@ -507,13 +507,16 @@ System.out.println("=========================== HARD-TO-FIND : HumanActivity.cre
 			ActivityReference actRef = getProcessDefinition().getInitiatorHumanActivityReference(instance.getProcessTransactionContext());
 			boolean thisIsInitiationActivity = (actRef.getActivity() == this);
 			//
-	
 			//if the activity is initiator, put the role mapping with the login user.
 			if(thisIsInitiationActivity && getProcessDefinition().isInitiateByFirstWorkitem()){
 				RoleMapping currentLogin = null;
 				try{
-					currentLogin = (RoleMapping)instance.getProcessTransactionContext().getProcessManager().getGenericContext().get(GENERICCONTEXT_CURR_LOGGED_ROLEMAPPING);
-					
+					if( instance.isSubProcess() ){
+						System.out.println("33333");
+						currentLogin = instance.getMainProcessInstance().getRoleMapping("Initiator");
+					}else{
+						currentLogin = (RoleMapping)instance.getProcessTransactionContext().getProcessManager().getGenericContext().get(GENERICCONTEXT_CURR_LOGGED_ROLEMAPPING);
+					}
 				}catch(Exception e){	
 				}
 				
