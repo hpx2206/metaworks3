@@ -10,7 +10,6 @@ public class Transition implements java.io.Serializable {
 	
 	private String source;
 	private String target;
-	private String transitionId;
 
 	private Condition condition;
 	
@@ -41,13 +40,6 @@ public class Transition implements java.io.Serializable {
 
 	public void setTarget(String target) {
 		this.target = target;
-	}
-	
-	public String getTransitionId() {
-		return transitionId;
-	}
-	public void setTransitionId(String transitionId) {
-		this.transitionId = transitionId;
 	}
 
 	public Condition getCondition() {

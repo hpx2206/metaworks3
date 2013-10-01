@@ -2,9 +2,13 @@ package org.uengine.codi.mw3.webProcessDesigner;
 
 import java.util.ArrayList;
 
+import org.metaworks.MetaworksContext;
+import org.uengine.contexts.ComplexType;
 import org.uengine.kernel.Activity;
+import org.uengine.kernel.ParameterContext;
 import org.uengine.kernel.ProcessDefinition;
 import org.uengine.kernel.ProcessVariable;
+import org.uengine.kernel.ReceiveActivity;
 import org.uengine.kernel.Role;
 import org.uengine.kernel.ValueChain;
 import org.uengine.kernel.ValueChainDefinition;
@@ -111,6 +115,7 @@ public class ProcessDesignerContainer {
 		int tagCnt = 0;
 		for (int l = 0; l < def.getChildActivities().size(); l++) {
 			Activity activity = (Activity)def.getChildActivities().get(l);
+			activity = this.ignoreVariableType(activity);
 			ActivityView view = activity.getActivityView();
 			if( view != null ){
 				view.setViewType(viewType);
@@ -181,6 +186,15 @@ public class ProcessDesignerContainer {
 			}
 		}
 		
+		if( processVariablePanel.getVariableList() != null ){
+			ArrayList<ProcessVariable> pvList = processVariablePanel.getVariableList();
+			ProcessVariable pvs[] = new ProcessVariable[pvList.size()];
+			for(int i=0; i < pvList.size(); i++){
+				pvs[i] = pvList.get(i);
+			}
+			def.setProcessVariables(pvs);
+		}
+		
 		return def;
 	}
 	
@@ -234,5 +248,24 @@ public class ProcessDesignerContainer {
 			}
 		}
 		return def;
+	}
+	
+	public Activity ignoreVariableType(Activity activity){
+		Class paramClass = activity.getClass();
+		boolean isReceiveActivity = ReceiveActivity.class.isAssignableFrom(paramClass);
+		if( isReceiveActivity ){
+			ParameterContext[] contexts = ((ReceiveActivity)activity).getParameters();
+			if( contexts != null && contexts.length > 0){
+				for(int i=0; i < contexts.length; i++){
+					ProcessVariable processVariable = contexts[i].getVariable();
+					processVariable.setType(null);
+					if( processVariable.getDefaultValue() != null && processVariable.getDefaultValue() instanceof ComplexType ){
+						ComplexType complexType = (ComplexType)processVariable.getDefaultValue();
+						complexType.setDesignerMode(true);
+					}
+				}
+			}
+		}
+		return activity;
 	}
 }

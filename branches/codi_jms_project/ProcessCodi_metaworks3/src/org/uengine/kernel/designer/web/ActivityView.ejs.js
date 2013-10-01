@@ -53,10 +53,6 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
         	                                 object.x, object.y 
         	                                 ], 
         	                                 shape, [parseInt(object.width, 10), parseInt(object.height, 10)] , OG.JSON.decode(unescape(style)), id, parent, false);
-        	if( object.activityClass != null && object.activityClass == 'org.uengine.kernel.SubProcessActivity' ){
-        		canvas.setShapeStyle(element, {fill: '#FFFFFF-#000000'});
-//        		canvas.setShapeStyle(element, {fill: '#FFFFFF-#000000' , "stroke": 'red' , "stroke-width" : 5 });
-        	}
         	
         	// object.activityClass : Activity , object.__className : ActivityView
         	$(element).attr("_classname", object.activityClass);
@@ -150,6 +146,11 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
     	    		    		// 엑티비티에 파라미터 추가
     	    		    		if( object.activity ){
     	    		    			object.activity.parameters = parameterContexts;
+    	    		    			var text = {
+	    		    					__className : 'org.uengine.contexts.TextContext',
+	    		    					text : dragObjMetadata.displayName
+    	    		    			};
+    	    		    			object.activity.description = text;
     	    		    		}
     	    		    		
     	    		    		// 전체 변수 리스트에 추가
