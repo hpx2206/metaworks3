@@ -1,20 +1,28 @@
 package org.uengine.kernel;
 
-import java.beans.PropertyChangeEvent;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import javax.xml.namespace.QName;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.Refresh;
+import org.metaworks.Remover;
+import org.metaworks.ServiceMethodContext;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
+import org.metaworks.annotation.Range;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.widget.ModalWindow;
+import org.uengine.codi.mw3.webProcessDesigner.ProcessVariablePanel;
+import org.uengine.contexts.ComplexType;
 import org.uengine.contexts.DatabaseSynchronizationOption;
 import org.uengine.contexts.TextContext;
 
@@ -66,7 +74,8 @@ public class ProcessVariable implements java.io.Serializable, NeedArrangementToS
 			getDisplayName().setText(value);
 		}
 	
-	Class type;  	
+	Class type; 
+		@Hidden
 		public Class getType(){
 			if(type==null){
 				if(getXmlBindingClassName()!=null){
@@ -84,7 +93,17 @@ public class ProcessVariable implements java.io.Serializable, NeedArrangementToS
 		public void setType(Class type){
 			this.type = type;
 		}
-
+		
+	String typeInputter;
+		@Range(options={"Text", "Complex"}, values={"java.lang.String", "org.uengine.contexts.ComplexType"})
+		public String getTypeInputter() {
+			return typeInputter;
+		}
+		public void setTypeInputter(String typeInputter) {
+			this.typeInputter = typeInputter;
+		}
+	
+		
 	Role openRole;
 	@Hidden
 		public Role getOpenRole() {
@@ -164,7 +183,6 @@ public class ProcessVariable implements java.io.Serializable, NeedArrangementToS
 		}
 
 	Object defaultValue = null;
-	@Hidden
 		public Object getDefaultValue() {
 			return defaultValue;
 		}
@@ -370,5 +388,45 @@ System.out.println("ProcessVariable:: converting from String to Integer");
 			throw new RuntimeException(e);
 		}
 	}
+	
+	@AutowiredFromClient
+	transient public ParameterContextPanel parameterContextPanel;
+	
+	@AutowiredFromClient
+	transient public ProcessVariablePanel processVariablePanel;
+	
+	@ServiceMethod(callByContent=true , target=ServiceMethodContext.TARGET_APPEND)
+	public Object[] saveVariable() throws Exception{
+		if( processVariablePanel != null ){
+			this.getMetaworksContext().setHow("");
+			this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+			ArrayList<ProcessVariable> valList =  processVariablePanel.getVariableList();
+			valList.add(this);
+			processVariablePanel.setVariableList(valList);
+		}
+		if( parameterContextPanel != null ){
+			this.getMetaworksContext().setHow("list");
+			this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+			ArrayList<ProcessVariable> wholeValList =  parameterContextPanel.getWholeVariableList();
+			wholeValList.add(this);
+			parameterContextPanel.setWholeVariableList(wholeValList);
+		}
+		
+		return new Object[]{new Remover(new ModalWindow() , true) , new Refresh(processVariablePanel) , new Refresh(parameterContextPanel)};
+	}
+
+	@ServiceMethod(callByContent=true)
+    public void changeType() throws Exception{		
+		if( "org.uengine.contexts.ComplexType".equals(this.getTypeInputter())){
+			ComplexType complexType = new ComplexType();
+			complexType.setDesignerMode(true);
+			this.setDefaultValue(complexType);
+		}else{
+			if( this.getTypeInputter() == null ){
+				this.setTypeInputter("java.lang.String");
+			}
+			this.setDefaultValue(Class.forName(this.getTypeInputter()).newInstance());
+		}
+    }
 
 }

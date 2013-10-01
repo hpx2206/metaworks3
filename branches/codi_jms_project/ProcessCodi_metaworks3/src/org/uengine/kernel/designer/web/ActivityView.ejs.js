@@ -71,6 +71,7 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
         		var activityData = {__className : $(element).attr("_classname"), tracingTag : $(element).attr("_tracingTag")};
         		$(element).data('activity', activityData);
         	}
+        	$(element).unbind('dblclick');
         	$(element).on({
         		dblclick: function (event) {
         			if(event.stopPropagation){
@@ -95,10 +96,9 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
         			object['propertiesWindow'] = propertiesWindow;
         			object.id = $(this).attr('id');
         			
-        			var canvasObject = mw3.objects[canvasObjectId];
-        			if( canvasObject.processDesignerContainer){
-        				object.variableList = canvasObject.processDesignerContainer.variableList;
-        				console.log(object.variableList);
+    				var processVariablePanel = mw3.getAutowiredObject('org.uengine.codi.mw3.webProcessDesigner.ProcessVariablePanel');
+    				if( processVariablePanel ){
+        				object.wholeVariableList = processVariablePanel.variableList;
         			}
         			
         			object.showProperties();
@@ -127,17 +127,18 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
         				case 'org.uengine.codi.mw3.ide.ResourceNode':
         					switch (clipboardNode.type) {
         					case 'java':
+        						
         						var dragObjMetadata = mw3.getMetadata(clipboardNode.alias);
         						canvas.drawLabel(element, dragObjMetadata.displayName);
     	    		    		
     	    		    		var complexType = {
     	    		    				__className : 'org.uengine.contexts.ComplexType',
+    	    		    				designerMode : true,
     	    		    				typeId : '[' + clipboardNode.alias + ']'
     	    		    		};
     	    		    		var variable = {
     									__className : 'org.uengine.kernel.ProcessVariable',
     									name : dragObjMetadata.displayName ,
-    									type : complexType.class,
     									defaultValue : complexType
     							};
     	    		    		
@@ -146,7 +147,17 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
     	    		    			variable : variable
     	    		    			
     	    		    		}];
-    	    		    		object.activity.parameters = parameterContexts;
+    	    		    		// 엑티비티에 파라미터 추가
+    	    		    		if( object.activity ){
+    	    		    			object.activity.parameters = parameterContexts;
+    	    		    		}
+    	    		    		
+    	    		    		// 전체 변수 리스트에 추가
+    	    		    		var processVariablePanel = mw3.getAutowiredObject('org.uengine.codi.mw3.webProcessDesigner.ProcessVariablePanel');
+    	    		    		if( processVariablePanel ){
+    	    		    			processVariablePanel.addedProcessVariable = variable;
+    	    		    			processVariablePanel.addVariable();
+    	            			}
     	    		    		
     	    		    		var eleClassName = $(this).attr("_classname");
     	    		    		if( eleClassName == 'org.uengine.kernel.InvocationActivity'){
@@ -166,6 +177,7 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
         				
         				}
         			}
+        			session.clipboard = null;
         		}
         	});
 			// jms 조회 화면

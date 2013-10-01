@@ -8,12 +8,10 @@ import java.io.FileOutputStream;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
-import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.ide.editor.process.ProcessEditor;
@@ -60,111 +58,6 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 				ProcessDesignerContainer processDesignerContainer) {
 			this.processDesignerContainer = processDesignerContainer;
 		}
-	
-//	CanvasDTO cell[];
-//		public CanvasDTO[] getCell() {
-//			return cell;
-//		}
-//		public void setCell(CanvasDTO[] cell) {
-//			this.cell = cell;
-//		}
-//		
-//	String graphString;
-//		public String getGraphString() {
-//			return graphString;
-//		}
-//		public void setGraphString(String graphString) {
-//			this.graphString = graphString;
-//		}
-//	PrcsVariable[] prcsVariables;
-//		public PrcsVariable[] getPrcsVariables() {
-//			return prcsVariables;
-//		}
-//		public void setPrcsVariables(PrcsVariable[] prcsVariables) {
-//			this.prcsVariables = prcsVariables;
-//		}
-		/*
-	HashMap<String, CanvasDTO> canvasMap;
-		public HashMap<String, CanvasDTO> getCanvasMap() {
-			return canvasMap;
-		}
-		public void setCanvasMap(HashMap<String, CanvasDTO> canvasMap) {
-			this.canvasMap = canvasMap;
-		}
-	HashMap<String, Object> activityMap;	
-		public HashMap<String, Object> getActivityMap() {
-			return activityMap;
-		}
-		public void setActivityMap(HashMap<String, Object> activityMap) {
-			this.activityMap = activityMap;
-		}
-	HashMap<String, Object> roleMap;
-		public HashMap<String, Object> getRoleMap() {
-			return roleMap;
-		}
-		public void setRoleMap(HashMap<String, Object> roleMap) {
-			this.roleMap = roleMap;
-		}
-	HashMap<String, Object> variableMap;
-		public HashMap<String, Object> getVariableMap() {
-			return variableMap;
-		}
-		public void setVariableMap(HashMap<String, Object> variableMap) {
-			this.variableMap = variableMap;
-		}
-	HashMap<String, Condition> conditionMap;
-		public HashMap<String, Condition> getConditionMap() {
-			return conditionMap;
-		}
-		public void setConditionMap(HashMap<String, Condition> conditionMap) {
-			this.conditionMap = conditionMap;
-		}
-
-	/*
-	 * 엘리먼트정보를 셋팅하기 위하여 해당 id를 임시적으로 들고있다
-	 */
-	String tempElementId;
-	@Hidden
-		public String getTempElementId() {
-			return tempElementId;
-		}
-		public void setTempElementId(String tempElementId) {
-			this.tempElementId = tempElementId;
-		}
-	
-	String tempElementName;
-		@Hidden
-		public String getTempElementName() {
-			return tempElementName;
-		}
-		public void setTempElementName(String tempElementName) {
-			this.tempElementName = tempElementName;
-		}
-	String tempElementType;
-		@Hidden
-		public String getTempElementType() {
-			return tempElementType;
-		}
-		public void setTempElementType(String tempElementType) {
-			this.tempElementType = tempElementType;
-		}
-	String tempElementTypeId;
-		@Hidden
-		public String getTempElementTypeId() {
-			return tempElementTypeId;
-		}
-		public void setTempElementTypeId(String tempElementTypeId) {
-			this.tempElementTypeId = tempElementTypeId;
-		}
-
-	String tempElementData;
-	@Hidden
-		public String getTempElementData() {
-			return tempElementData;
-		}
-		public void setTempElementData(String tempElementData) {
-			this.tempElementData = tempElementData;
-		}
 
 	String processName;
 		@Hidden
@@ -173,13 +66,6 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 		}
 		public void setProcessName(String processName) {
 			this.processName = processName;
-		}
-	String lastTracingTag;
-		public String getLastTracingTag() {
-			return lastTracingTag;
-		}
-		public void setLastTracingTag(String lastTracingTag) {
-			this.lastTracingTag = lastTracingTag;
 		}
 		
 	String basePath;
@@ -198,113 +84,6 @@ public class ProcessDesignerContentPanel extends ContentWindow implements Contex
 		public void setProcessNameView(ProcessNameView processNameView) {
 			this.processNameView = processNameView;
 		}	
-		/*
-	PropertiesWindow propertiesWindow;
-		public PropertiesWindow getPropertiesWindow() {
-			return propertiesWindow;
-		}
-		public void setPropertiesWindow(PropertiesWindow propertiesWindow) {
-			this.propertiesWindow = propertiesWindow;
-		}
-		*/
-//	ProcessDefinition definition;
-//		public ProcessDefinition getDefinition() {
-//			return definition;
-//		}
-//		public void setDefinition(ProcessDefinition definition) {
-//			this.definition = definition;
-//		}
-		
-		/*
-	@ServiceMethod(payload="propertiesWindow", target="popup")
-	public PropertiesWindow showProperties() throws Exception{
-		Object activityObject = propertiesWindow.getPanel();
-		if( activityObject != null ){
-			Class paramClass = activityObject.getClass();
-			// 현재 클레스가 IDrawDesigne 인터페이스를 상속 받았는지 확인
-			boolean isDesigner = IDrawDesigne.class.isAssignableFrom(paramClass);
-			if( isDesigner ){
-				((IDrawDesigne)activityObject).drawInit();
-			}
-		}
-		return this.getPropertiesWindow();
-	}
-		*/
-		
-//	@ServiceMethod(callByContent=true, target="popup")
-//	public ModalWindow doSave() throws Exception{
-//		ProcessDesignerTitle dTitle = new ProcessDesignerTitle();
-//		dTitle.setMetaworksContext(new MetaworksContext());
-//		dTitle.getMetaworksContext().setWhen("edit");
-//		dTitle.setTitle(getProcessName());
-//		return new ModalWindow(dTitle , 600, 200,  "프로세스명 입력" );
-//	}
-	
-	@ServiceMethod(callByContent=true, target="popup")
-	public ModalWindow gateCondition() throws Exception{
-		
-		
-		/*
-		ArrayList<Role>	 roleList = new ArrayList<Role>();
-        Collection<Object> collRole = roleMap.values();
-        Iterator<Object> iterRole = collRole.iterator();
-        while(iterRole.hasNext()){
-        	Object act = iterRole.next();
-        	roleList.add((Role)act);
-        }
-        
-        ArrayList<PrcsVariable> variableList = new ArrayList<PrcsVariable>();
-        Collection<Object> collVariable = variableMap.values();
-        Iterator<Object> iterVariable = collVariable.iterator();
-        while(iterVariable.hasNext()){
-        	Object act = iterVariable.next();
-        	variableList.add((PrcsVariable)act);
-        }
-        
-		ConditionPanel conditionPanel = new ConditionPanel();
-		conditionPanel.setMetaworksContext(new MetaworksContext());
-		conditionPanel.getMetaworksContext().setWhen("edit");
-		if( this.getConditionMap() != null ){
-			Condition condition = conditionMap.get(this.getTempElementId());
-			conditionPanel.setCondition(condition);
-		}
-		
-		conditionPanel.setRoleList(roleList);
-		conditionPanel.setPrcsValiableList(variableList);
-		
-		conditionPanel.setConditionId(this.getTempElementId());
-		conditionPanel.setConditionLabel(this.getTempElementName());
-		conditionPanel.load();
-		return new ModalWindow(conditionPanel , 800, 550,  "조건편집" );
-		 */
-		return null;
-	}
-//	@ServiceMethod(target="popup", callByContent=true)
-//	public Popup geomInfo() throws Exception{
-//		if( this.getTempElementId() != null){
-//			Popup infoWindow = new Popup();
-//			if( this.getCanvasMap() == null || (this.getCanvasMap() != null && getCanvasMap().get(this.getTempElementId()) == null ) ){
-//				save("temp" , false );
-//			}
-//			GeomShape geomShape = new GeomShape(getCanvasMap().get(this.getTempElementId()));
-//			geomShape.viewActivityInfo((Activity)this.getActivityMap().get(this.getTempElementId()));
-//			infoWindow.setPanel(geomShape);
-//			return infoWindow;
-//		}else{
-//			return null;
-//		}
-//	}
-//	@ServiceMethod(callByContent=true, target="popup")
-//	public ModalWindow dataMapping() throws Exception{
-//		MappingPanel conditionPanel = new MappingPanel();
-//		conditionPanel.setElementId(this.getTempElementId());
-//		conditionPanel.setMapperData(this.getTempElementData());
-//		conditionPanel.setRoleList(defineTab.rolePanel.getRoles());
-//		conditionPanel.setPrcsValiableList(defineTab.prcsValiablePanel.getPrcsValiables());
-//		conditionPanel.load();
-//		conditionPanel.getMetaworksContext().setWhen("edit");
-//		return new ModalWindow(conditionPanel , 800, 500,  "데이터매핑" );
-//	}
 	
 	public void saveMe(ProcessEditor processEditor) throws Exception{
 		ProcessDefinition def = processDesignerContainer.containerToDefinition(processDesignerContainer);

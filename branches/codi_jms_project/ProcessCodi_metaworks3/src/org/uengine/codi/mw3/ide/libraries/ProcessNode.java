@@ -126,7 +126,7 @@ public class ProcessNode extends TreeNode{
 			this.setActivityNode(activityNode);
 			this.add(activityNode);
 		}
-		ArrayList<Role> roleList = container.getRoleList();
+		ArrayList<Role> roleList = container.getRolePanel().getRoleList();
 		for(int rCount = 0; rCount < roleList.size(); rCount++) {
 			RoleNode roleNode = new RoleNode();
 			Role role = roleList.get(rCount);

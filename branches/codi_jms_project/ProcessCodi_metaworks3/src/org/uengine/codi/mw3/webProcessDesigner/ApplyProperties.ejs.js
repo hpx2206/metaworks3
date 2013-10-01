@@ -4,7 +4,7 @@ var org_uengine_codi_mw3_webProcessDesigner_ApplyProperties = function(objectId,
 	
 	this.object = mw3.objects[this.objectId];
 	var object = this.object;
-	
+//	mw3.removeObject(objectId);	이렇게 지우는게 맞는건지 헷갈림
 	var canvasObject;
 	if( object != null && object.viewType != null && "blockView" == object.viewType ){
 		canvasObject = mw3.getAutowiredObject('org.uengine.codi.mw3.webProcessDesigner.InstanceMonitorPanel');

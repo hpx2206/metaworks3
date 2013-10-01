@@ -28,6 +28,7 @@ var org_uengine_kernel_designer_web_RoleView = function(objectId, className){
 org_uengine_kernel_designer_web_RoleView.prototype = {
 		loaded : function(){
 			var object = mw3.objects[this.objectId];
+			var objectId = this.objectId;
 			var canvas = this.canvas;
 			var element = null;
 			var initText;
@@ -59,12 +60,13 @@ org_uengine_kernel_designer_web_RoleView.prototype = {
         		var activityData = {__className : $(element).attr("_classname")};
         		$(element).data('role', activityData);
         	}
+        	$(element).unbind('dblclick');
         	$(element).on({
         		dblclick: function (event) {
         			if(event.stopPropagation){
         				event.stopPropagation();
         			}
-        			var divId = 'properties_' + this.objectId;
+        			var divId = 'properties_' + objectId;
         			$('body').append("<div id='" + divId + "'></div>");
         			var metaworksContext = {
         					__className : 'org.metaworks.MetaworksContext',

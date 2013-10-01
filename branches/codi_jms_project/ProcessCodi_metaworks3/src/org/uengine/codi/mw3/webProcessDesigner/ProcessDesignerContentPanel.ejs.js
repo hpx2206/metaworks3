@@ -230,15 +230,36 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype = 
 	    });
 	    // Shape 이 Connect 되었을 때의 이벤트 리스너
 	    canvas.onConnectShape(function (event, edgeElement, fromElement, toElement) {
-	    	var fromTracingTag = $(fromElement).attr('_tracingTag');
-	    	var toTracingTag = $(toElement).attr('_tracingTag');
-	    	var transitionData = {
-	    			__className : 'org.uengine.kernel.graph.Transition', 
-	    			source : fromTracingTag,
-	    			target : toTracingTag
-	    	};
-	    	$(edgeElement).data('transition', transitionData);
-			faceHelper.addEventEdge(objectId, canvas, edgeElement);
+	    	var connected = false;
+	    	var fromElementId = $(fromElement).attr('id');
+			var toElementId = $(toElement).attr('id');
+			var connectedText = fromElementId +'_'+ toElementId;
+			var fromFlag = $(fromElement).attr('_conneted'+fromElementId);
+			var toflag = $(toElement).attr('_conneted'+toElementId);
+			if( fromFlag == connectedText && toflag == connectedText ){
+				connected = true;
+			}
+			
+	    	if( $(edgeElement).data('transition') == undefined && !connected ){
+	    		var transitionView = {
+						__className : 'org.uengine.kernel.designer.web.TransitionView',
+						drawByCanvas : true,
+						element : edgeElement
+	    		};
+	    		var html = mw3.locateObject(transitionView , transitionView.____className);
+            	canvasDivObj.append(html);
+            	
+            	mw3.onLoadFaceHelperScript();
+	    	}
+//	    	var fromTracingTag = $(fromElement).attr('_tracingTag');
+//	    	var toTracingTag = $(toElement).attr('_tracingTag');
+//	    	var transitionData = {
+//	    			__className : 'org.uengine.kernel.graph.Transition', 
+//	    			source : fromTracingTag,
+//	    			target : toTracingTag
+//	    	};
+//	    	$(edgeElement).data('transition', transitionData);
+//			faceHelper.addEventEdge(objectId, canvas, edgeElement);
 	    });
 	    canvas.onDrawShape(function (event, shapeElement) {
 	    	// TODO 여기서 Shape 객체를 바로 만드려고 하였으나 연결정보는 가지고 있지 않다.
@@ -281,6 +302,16 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype = 
 	    var canvasWidth = 1024;		// defualt
 	    var canvasHeight = 768;		// defualt
 	    
+	    if( object != null ){
+	    	this.tracingTag = object.processDesignerContainer.lastTracingTag;
+	    	var maxX = object.processDesignerContainer.maxX;
+	    	var maxY = object.processDesignerContainer.maxY;
+	    	if( maxX && maxY ){
+	    		if( maxX > canvasWidth ) canvasWidth = maxX + 30;
+	    		if( maxY > canvasHeight ) canvasHeight = maxY + 30;
+	    	}
+	    }
+	    /*
 	    // load 에서 데이터가 넘어왔을 경우 데이터를 셋팅하여 그림
 		if( object != null && object.graphString != null ){
 			var canvassizeObject = this.icanvas.loadJSON($.parseJSON(object.graphString));
@@ -331,6 +362,7 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype = 
 			
 			
 		}
+		*/
 		
 		this.icanvas.setCanvasSize([canvasWidth, canvasHeight]);		
 	},
@@ -351,6 +383,7 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype = 
 //			this.icanvas.clear();
 //		}
 //};
+/*
 org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.addEventGeom = function(objectId, canvas, element){
 	
 	var shape_id = $(element).attr("_shape_id");
@@ -571,17 +604,12 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ad
     			canvas.setCustomData(element, customData);
     		}
     		
-    	},*/
+    	},
     	dblclick: function (event) {
     		if(event.stopPropagation){
     			event.stopPropagation();
     		}
     		
-    		/*
-    		var value = mw3.getOobject(objectId);
-			value.tempElementId = $(this).attr('id');
-			value.geomInfo();
-			*/
     		var divId = 'properties_' + objectId;
 			$('body').append("<div id='" + divId + "'></div>");
 			var metaworksContext = {
@@ -616,18 +644,20 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ad
 //		alert('11');
 	});
 };
-
+*/
+/*
 org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.addEventEdge = function(objectId, canvas, element){
-	$(element).unbind('dblclick').bind({
-		dblclick: function (event) {
-			var value = mw3.objects[objectId]; 
-			
-			value.tempElementId = $(this).attr('id');
-			value.tempElementName = $(this).children('[id$=_LABEL]').text();
-			value.gateCondition();
-		}
-	});
+//	$(element).unbind('dblclick').bind({
+//		dblclick: function (event) {
+//			var value = mw3.objects[objectId]; 
+//			console.log($(this).data('transition'));
+//			value.tempElementId = $(this).attr('id');
+//			value.tempElementName = $(this).children('[id$=_LABEL]').text();
+//			value.gateCondition();
+//		}
+//	});
 };
+*/
 org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.canvasDropEvent = function(objectId , canvas , canvasDivObj){
 	var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
 	var clipboardNode = session.clipboard;
@@ -657,7 +687,6 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ca
 		$(knolElement).attr("_tracingTag",++faceHelper.tracingTag);
 		// 그리고 난 후의 엘리먼트에 이벤트 등록
 		faceHelper.addEventGeom(objectId, canvas, knolElement);
-		session.clipboard = null;
 		
 	}else if(clipboardNode && clipboardNode.__className=="org.uengine.codi.mw3.ide.libraries.OrganizationRole"){
 		var shapeWidth = "300";
@@ -696,8 +725,6 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ca
 		
 		mw3.onLoadFaceHelperScript();
 	
-		session.clipboard = null;
-		
 	}else if(clipboardNode && clipboardNode.__className=="org.uengine.codi.mw3.ide.libraries.ActivityNode"){
 		var shapeWidth = "70";
 		var shapeHeight = "50";
@@ -724,9 +751,8 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ca
 		canvasDivObj.append(html);
 		
 		mw3.onLoadFaceHelperScript();
-	
-		session.clipboard = null;
 	}
+	session.clipboard = null;
 };
 // TODO delete test code 
 org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.showValiables = function(){
@@ -870,12 +896,13 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ge
 		}
 	}
 	var object = mw3.objects[this.objectId];
+	
 	var container = {
 			__className : 'org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerContainer',
 			activityList : activityList,
-			roleList : roleList,
 			transitionList : transitionList,
-			valueChainList : valueChainList
+			valueChainList : valueChainList,
+			roleList : roleList
 	};
 	object.processDesignerContainer = container;
 	if( object.processNameView ){

@@ -11,6 +11,7 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.kernel.ProcessVariable;
 import org.uengine.kernel.Role;
 import org.uengine.kernel.And;
 import org.uengine.kernel.Condition;
@@ -43,14 +44,6 @@ public class ConditionPanel  implements ContextAware{
 		public void setConditionId(String conditionId) {
 			this.conditionId = conditionId;
 		}
-
-//	public ArrayList<ConditionNode>	 conditionNodes;
-//		public ArrayList<ConditionNode> getConditionNodes() {
-//			return conditionNodes;
-//		}
-//		public void setConditionNodes(ArrayList<ConditionNode> conditionNodes) {
-//			this.conditionNodes = conditionNodes;
-//		}
 	public ArrayList<Role>	 roleList;
 		public ArrayList<Role> getRoleList() {
 			return roleList;
@@ -58,13 +51,13 @@ public class ConditionPanel  implements ContextAware{
 		public void setRoleList(ArrayList<Role> roleList) {
 			this.roleList = roleList;
 		}
-	public ArrayList<PrcsVariable>	 prcsValiableList;
-		public ArrayList<PrcsVariable> getPrcsValiableList() {
-			return prcsValiableList;
+	public ArrayList<ProcessVariable> variableList;
+		public ArrayList<ProcessVariable> getVariableList() {
+			return variableList;
 		}
-		public void setPrcsValiableList(ArrayList<PrcsVariable> prcsValiableList) {
-			this.prcsValiableList = prcsValiableList;
-		}
+		public void setVariableList(ArrayList<ProcessVariable> variableList) {
+			this.variableList = variableList;
+		}	
 		
 	ConditionTree conditionTree;	
 		public ConditionTree getConditionTree() {
@@ -107,7 +100,7 @@ public class ConditionPanel  implements ContextAware{
 		treeNode.setId("rootNode");
 		treeNode.setName("[Or]만족조건");
 		treeNode.setRoleList(roleList);
-		treeNode.setPrcsValiableList(prcsValiableList);
+		treeNode.setVariableList(variableList);
 		
 		if( condition != null ){
 			makeChildTreeNode(treeNode , condition); 
@@ -132,7 +125,7 @@ public class ConditionPanel  implements ContextAware{
 				treeNode.setParentNode(rootNode);
 				treeNode.setParentId( rootNode.getId() );
 				treeNode.setRoleList(roleList);
-				treeNode.setPrcsValiableList(prcsValiableList);
+				treeNode.setVariableList(variableList);
 				treeNode.conditionInit();
 				
 				ConditionNode conditionNode = makeConditionNode(treeNode , condi);

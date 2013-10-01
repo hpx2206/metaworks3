@@ -2,9 +2,7 @@ package org.uengine.codi.mw3.webProcessDesigner;
 
 import java.util.ArrayList;
 
-import org.apache.velocity.runtime.directive.Parse;
 import org.uengine.kernel.Activity;
-import org.uengine.kernel.HumanActivity;
 import org.uengine.kernel.ProcessDefinition;
 import org.uengine.kernel.ProcessVariable;
 import org.uengine.kernel.Role;
@@ -50,19 +48,34 @@ public class ProcessDesignerContainer {
 		public void setRoleList(ArrayList<Role> roleList) {
 			this.roleList = roleList;
 		}
-	ArrayList<ProcessVariable> variableList;
-		public ArrayList<ProcessVariable> getVariableList() {
-			return variableList;
+	RolePanel	rolePanel;
+		public RolePanel getRolePanel() {
+			return rolePanel;
 		}
-		public void setVariableList(ArrayList<ProcessVariable> variableList) {
-			this.variableList = variableList;
+		public void setRolePanel(RolePanel rolePanel) {
+			this.rolePanel = rolePanel;
 		}
+	ProcessVariablePanel processVariablePanel;
+		public ProcessVariablePanel getProcessVariablePanel() {
+			return processVariablePanel;
+		}
+		public void setProcessVariablePanel(ProcessVariablePanel processVariablePanel) {
+			this.processVariablePanel = processVariablePanel;
+		}
+	
 	String viewType;
 		public String getViewType() {
 			return viewType;
 		}
 		public void setViewType(String viewType) {
 			this.viewType = viewType;
+		}
+	String lastTracingTag;
+		public String getLastTracingTag() {
+			return lastTracingTag;
+		}
+		public void setLastTracingTag(String lastTracingTag) {
+			this.lastTracingTag = lastTracingTag;
 		}
 	int maxX;
 		public int getMaxX() {
@@ -84,16 +97,18 @@ public class ProcessDesignerContainer {
 	
 	public void init(){
 		activityList = new ArrayList<Activity>();
-		roleList = new ArrayList<Role>();
 		transitionList = new ArrayList<Transition>();
 		valueChainList = new ArrayList<ValueChain>();
+		roleList = new ArrayList<Role>();
 		
-		variableList = new ArrayList<ProcessVariable>();
+		rolePanel = new RolePanel();
+		processVariablePanel = new ProcessVariablePanel();
 	}
 	
 	public void load(ProcessDefinition def) throws Exception{
 		int maxX = 0;
 		int maxY = 0;
+		int tagCnt = 0;
 		for (int l = 0; l < def.getChildActivities().size(); l++) {
 			Activity activity = (Activity)def.getChildActivities().get(l);
 			ActivityView view = activity.getActivityView();
@@ -113,8 +128,13 @@ public class ProcessDesignerContainer {
 					maxY = viewY + viewHeight;
 				}
 			}
+			if( Integer.parseInt(activity.getTracingTag()) > tagCnt )
+				tagCnt = Integer.parseInt(activity.getTracingTag());
+			
 			activityList.add(activity);
 		}
+		lastTracingTag = String.valueOf(tagCnt + 1);
+		
 		this.setMaxX(maxX);
 		this.setMaxY(maxY);
 		transitionList = def.getTransitions();
@@ -131,6 +151,7 @@ public class ProcessDesignerContainer {
 					role.getRoleView().setEditorId(getEditorId());
 					role.getRoleView().setRole(role);
 					roleList.add(role);
+					rolePanel.getRoleList().add(role);	// rolePanel 은 화면상에 롤 변수를 담아 놓기 위한 변수
 				}
 			}
 		}

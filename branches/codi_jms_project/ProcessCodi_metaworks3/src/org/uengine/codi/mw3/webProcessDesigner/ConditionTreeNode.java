@@ -11,6 +11,7 @@ import org.metaworks.ToAppend;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
+import org.uengine.kernel.ProcessVariable;
 import org.uengine.kernel.Role;
 
 @Face(
@@ -151,18 +152,18 @@ public class ConditionTreeNode  implements ContextAware{
 		public void setRoleList(ArrayList<Role> roleList) {
 			this.roleList = roleList;
 		}
-	public ArrayList<PrcsVariable>	 prcsValiableList;
-		public ArrayList<PrcsVariable> getPrcsValiableList() {
-			return prcsValiableList;
+	public ArrayList<ProcessVariable> variableList;
+		public ArrayList<ProcessVariable> getVariableList() {
+			return variableList;
 		}
-		public void setPrcsValiableList(ArrayList<PrcsVariable> prcsValiableList) {
-			this.prcsValiableList = prcsValiableList;
+		public void setVariableList(ArrayList<ProcessVariable> variableList) {
+			this.variableList = variableList;
 		}
 		
 	public void conditionInit() throws Exception{
 		ConditionNode conditionNode = new ConditionNode();
 		conditionNode.setRoleList(getRoleList());
-		conditionNode.setPrcsValiableList(getPrcsValiableList());
+		conditionNode.setVariableList(getVariableList());
 		conditionNode.init();
 		
 		setConditionNode(conditionNode);
@@ -174,7 +175,7 @@ public class ConditionTreeNode  implements ContextAware{
 		node.setId(idByTime.toString());
 		node.setParentNode(this);
 		node.setParentId(this.getId());
-		node.setPrcsValiableList(this.getPrcsValiableList());
+		node.setVariableList(getVariableList());
 		node.setRoleList(this.getRoleList());
 		node.conditionInit();
 		node.setType("page_white_text");	// TODO 아이콘 관련이기때문에.. 추후 변경
@@ -229,7 +230,7 @@ public class ConditionTreeNode  implements ContextAware{
 		ConditionTreeNodeView conditionTreeNode = new ConditionTreeNodeView();
 		conditionTreeNode.setId("expression");
 		conditionTreeNode.setRoleList(getRoleList());
-		conditionTreeNode.setPrcsValiableList(getPrcsValiableList());
+		conditionTreeNode.setVariableList(getVariableList());
 		conditionTreeNode.setConditionNode(getConditionNode());
 		conditionTreeNode.getConditionNode().getMetaworksContext().setHow("edit");
 		ConditionExPressionPanel conditionExPressionPanel = new ConditionExPressionPanel();

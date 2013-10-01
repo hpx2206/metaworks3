@@ -9,20 +9,21 @@
            mw3.addBeanProperty(objectId, "[" + beanPropertyIdx++ + "]");
         }
     }
-    if( value && value.roleList ){
-        for(var i in value.roleList){
-            var role = value.roleList[i];
-           %>
-           <%=mw3.locateObject(role.roleView , role.roleView.__className)%>
-           <%
-           mw3.addBeanProperty(objectId, "[" + beanPropertyIdx++ + "]");
-        }
-    }
     if( value && value.valueChainList ){
         for(var i in value.valueChainList){
             var valueChain = value.valueChainList[i];
            %>
            <%=mw3.locateObject(valueChain.valueChainView , valueChain.valueChainView.__className)%>
+           <%
+           mw3.addBeanProperty(objectId, "[" + beanPropertyIdx++ + "]");
+        }
+    }
+    if( value && value.roleList ){
+        var beanPropertyIdx = 0;
+        for(var i in value.roleList){
+            var role = value.roleList[i];
+           %>
+           <%=mw3.locateObject(role.roleView , role.roleView.__className)%>
            <%
            mw3.addBeanProperty(objectId, "[" + beanPropertyIdx++ + "]");
         }
@@ -37,3 +38,5 @@
         }
     }
 %>
+<%= fields.rolePanel.here() %>
+<%= fields.processVariablePanel.here() %>

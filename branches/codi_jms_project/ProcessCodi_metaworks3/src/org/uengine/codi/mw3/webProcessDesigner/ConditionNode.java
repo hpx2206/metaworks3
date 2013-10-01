@@ -13,6 +13,8 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.SelectBox;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.contexts.ComplexType;
+import org.uengine.kernel.ProcessVariable;
 import org.uengine.kernel.Role;
 
 //@Face(ejsPath="dwr/metaworks/genericfaces/GridFace.ejs")
@@ -78,13 +80,13 @@ public class ConditionNode  implements Cloneable, ContextAware{
 		public void setRoleList(ArrayList<Role> roleList) {
 			this.roleList = roleList;
 		}	
-	public ArrayList<PrcsVariable>	 prcsValiableList;
-		public ArrayList<PrcsVariable> getPrcsValiableList() {
-			return prcsValiableList;
+	public ArrayList<ProcessVariable> variableList;
+		public ArrayList<ProcessVariable> getVariableList() {
+			return variableList;
 		}
-		public void setPrcsValiableList(ArrayList<PrcsVariable> prcsValiableList) {
-			this.prcsValiableList = prcsValiableList;
-		}	
+		public void setVariableList(ArrayList<ProcessVariable> variableList) {
+			this.variableList = variableList;
+		}
 		
 	public ConditionNode(){
 		setMetaworksContext(new MetaworksContext());
@@ -100,29 +102,34 @@ public class ConditionNode  implements Cloneable, ContextAware{
 				choice.add("[ROLE]"+role.getName(), role.getName());
 			}
 		}
-		if( this.getPrcsValiableList() != null){
-			for(int i = 0; i < prcsValiableList.size(); i++){
-				PrcsVariable prcsValiable = prcsValiableList.get(i);
-				String nameAttr = prcsValiable.getName();
+		if( this.getVariableList() != null){
+			for(int i = 0; i < variableList.size(); i++){
+				ProcessVariable processVariable = variableList.get(i);
+				String nameAttr = processVariable.getName();
 				choice.add(nameAttr, nameAttr);
-				String typeIdAttr = prcsValiable.getTypeId();
-				String typeAttr = prcsValiable.getVariableType();
-				if( "complexType".equals(typeAttr)){
+//				String typeAttr = processVariable.getDefaultValue();
+				Object typeAttr = processVariable.getDefaultValue();
+				if( typeAttr instanceof ComplexType){
 //					WebObjectType wot = MetaworksRemoteService.getInstance().getMetaworksType( typeIdAttr.substring(0, typeIdAttr.lastIndexOf(".")).replaceAll("/", ".") ); 
-					WebObjectType wot = MetaworksRemoteService.getInstance().getMetaworksType( typeIdAttr ); 
-					WebFieldDescriptor wfields[] = wot.getFieldDescriptors();
-					FieldDescriptor fields[] = wot.metaworks2Type().getFieldDescriptors();
-					for(int j=0; j<fields.length; j++){
-						WebFieldDescriptor wfd = wfields[j];
+					ComplexType complexType = (ComplexType)typeAttr;
+					String typeIdAttr = complexType.getTypeId();
+					if( typeIdAttr != null && !"".equals(typeIdAttr) ){
+						String formName = typeIdAttr.substring(1, typeIdAttr.length() -1); 
+						WebObjectType wot = MetaworksRemoteService.getInstance().getMetaworksType( formName ); 
+						WebFieldDescriptor wfields[] = wot.getFieldDescriptors();
+						FieldDescriptor fields[] = wot.metaworks2Type().getFieldDescriptors();
+						for(int j=0; j<fields.length; j++){
+							WebFieldDescriptor wfd = wfields[j];
 //						FieldDescriptor fd = fields[i];
-						choice.add("["+nameAttr+"]"+wfd.getName(), nameAttr + "." + wfd.getName());
-						if( wfd.getClassName().startsWith("org.uengine.codi.mw3")){
-							WebObjectType wot2 = MetaworksRemoteService.getInstance().getMetaworksType(wfd.getClassName() ); 
-							WebFieldDescriptor wfields2[] = wot2.getFieldDescriptors();
-							FieldDescriptor fields2[] = wot2.metaworks2Type().getFieldDescriptors();
-							for(int k=0; k<fields2.length; k++){
-								WebFieldDescriptor wfd2 = wfields2[k];
-								choice.add("["+nameAttr+"]"+wfd.getName()+ "." + wfd2.getName(), nameAttr + "." + wfd.getName() + "." + wfd2.getName());
+							choice.add("["+nameAttr+"]"+wfd.getName(), nameAttr + "." + wfd.getName());
+							if( wfd.getClassName().startsWith("org.uengine.codi.mw3")){
+								WebObjectType wot2 = MetaworksRemoteService.getInstance().getMetaworksType(wfd.getClassName() ); 
+								WebFieldDescriptor wfields2[] = wot2.getFieldDescriptors();
+								FieldDescriptor fields2[] = wot2.metaworks2Type().getFieldDescriptors();
+								for(int k=0; k<fields2.length; k++){
+									WebFieldDescriptor wfd2 = wfields2[k];
+									choice.add("["+nameAttr+"]"+wfd.getName()+ "." + wfd2.getName(), nameAttr + "." + wfd.getName() + "." + wfd2.getName());
+								}
 							}
 						}
 					}

@@ -7,6 +7,8 @@ import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.widget.ModalWindow;
+import org.uengine.contexts.ComplexType;
 
 public class ParameterContextPanel  implements ContextAware{
 	
@@ -45,29 +47,25 @@ public class ParameterContextPanel  implements ContextAware{
 		}
 		if( activityVariableList == null ){
 			activityVariableList = new ArrayList<ProcessVariable>();
-			
-			ProcessVariable val2 = new ProcessVariable();
-			val2.setName("3333");
-			val2.setDisplayName("3333");
-			
-			ProcessVariable val3 = new ProcessVariable();
-			val3.setName("4444");
-			val3.setDisplayName("4444");
-			
-			activityVariableList.add(val2);
-			activityVariableList.add(val3);
 		}
-		
-		ProcessVariable val1 = new ProcessVariable();
-		val1.setName("2222");
-		val1.setDisplayName("2222");
-		
-		wholeVariableList.add(val1);
 	}
 	
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 	public Object[] addWholeVariable() throws Exception{
-		return null;
+		
+		ProcessVariable newVariable = new ProcessVariable();
+		newVariable.setMetaworksContext(new MetaworksContext());
+		newVariable.getMetaworksContext().setHow("setting");
+		newVariable.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+		newVariable.changeType();
+		
+		ModalWindow popup = new ModalWindow();
+		popup.setWidth(500);
+		popup.setHeight(500);
+		popup.setTitle("변수추가");
+		popup.setPanel(newVariable);
+		
+		return new Object[]{popup};
 	}
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] removeWholeVariable() throws Exception{
