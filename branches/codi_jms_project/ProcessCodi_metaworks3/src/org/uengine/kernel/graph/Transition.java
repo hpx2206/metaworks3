@@ -66,12 +66,19 @@ public class Transition implements java.io.Serializable {
 		this.targetActivity = targetActivity;
 	}
 	
-	TransitionView TransitionView;
+	TransitionView transitionView;
 		public TransitionView getTransitionView() {
-			return TransitionView;
+			return transitionView;
 		}
 		public void setTransitionView(TransitionView transitionView) {
-			TransitionView = transitionView;
+			this.transitionView = transitionView;
+		}
+	String transitionName;
+		public String getTransitionName() {
+			return transitionName;
+		}
+		public void setTransitionName(String transitionName) {
+			this.transitionName = transitionName;
 		}
 
 	public boolean isMet(ProcessInstance instance, String scope) throws Exception {

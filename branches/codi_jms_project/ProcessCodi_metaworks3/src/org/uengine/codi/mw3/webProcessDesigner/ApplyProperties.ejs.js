@@ -32,6 +32,9 @@ var org_uengine_codi_mw3_webProcessDesigner_ApplyProperties = function(objectId,
 	}else if(contentValue && contentValue.__className=="org.uengine.kernel.ValueChain"){
 		canvas.drawLabel(element, contentValue.name.text);
 		$('#' + this.object.id).data('valuechain', contentValue);
+	}else if(contentValue && contentValue.__className=="org.uengine.kernel.graph.Transition"){
+		canvas.drawLabel(element, contentValue.transitionName);
+		$('#' + this.object.id).data('transition', contentValue);
 	}else{
 		// activity
 		canvas.drawLabel(element, contentValue.description.text);

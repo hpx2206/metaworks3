@@ -94,7 +94,7 @@ public class MappingPanel implements ContextAware {
 		VariableTreeNode leftVariableTreeNode = new VariableTreeNode();
 		leftVariableTreeNode.setId("leftVariables");
 		leftVariableTreeNode.setType(TreeNode.TYPE_FOLDER);
-		leftVariableTreeNode.load(this.getPrcsValiableList());
+//		leftVariableTreeNode.load(this.getPrcsValiableList());
 		
 		TreeNode leftRootnode = new TreeNode();
 		leftRootnode.setRoot(true);
@@ -125,7 +125,7 @@ public class MappingPanel implements ContextAware {
 		VariableTreeNode rightVariableTreeNode = new VariableTreeNode();
 		rightVariableTreeNode.setId("rightVariables");
 		rightVariableTreeNode.setType(TreeNode.TYPE_FOLDER);
-		rightVariableTreeNode.load(this.getPrcsValiableList());
+//		rightVariableTreeNode.load(this.getPrcsValiableList());
 		
 		TreeNode rightRootnode = new TreeNode();
 		rightRootnode.setRoot(true);

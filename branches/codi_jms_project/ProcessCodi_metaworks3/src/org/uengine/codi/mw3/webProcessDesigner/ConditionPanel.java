@@ -9,6 +9,7 @@ import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.component.TreeNode;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.kernel.ProcessVariable;
@@ -18,6 +19,8 @@ import org.uengine.kernel.Condition;
 import org.uengine.kernel.Evaluate;
 import org.uengine.kernel.Or;
 import org.uengine.kernel.Otherwise;
+import org.uengine.kernel.designer.web.TransitionView;
+import org.uengine.kernel.graph.Transition;
 
 public class ConditionPanel  implements ContextAware{
 	
@@ -74,12 +77,12 @@ public class ConditionPanel  implements ContextAware{
 				ConditionExPressionPanel conditionExPressionPanel) {
 			this.conditionExPressionPanel = conditionExPressionPanel;
 		}
-	Condition condition;	
-		public Condition getCondition() {
-			return condition;
+	Transition transition;
+		public Transition getTransition() {
+			return transition;
 		}
-		public void setCondition(Condition condition) {
-			this.condition = condition;
+		public void setTransition(Transition transition) {
+			this.transition = transition;
 		}
 	public ConditionPanel() throws Exception{
 			this("");
@@ -98,12 +101,13 @@ public class ConditionPanel  implements ContextAware{
 		treeNode.setRoot(true);
 		treeNode.setExpanded(true);
 		treeNode.setId("rootNode");
-		treeNode.setName("[Or]만족조건");
+		treeNode.setName("조건");
 		treeNode.setRoleList(roleList);
 		treeNode.setVariableList(variableList);
+		treeNode.setType(TreeNode.TYPE_FOLDER);
 		
-		if( condition != null ){
-			makeChildTreeNode(treeNode , condition); 
+		if( this.getTransition().getCondition() != null ){
+			makeChildTreeNode(treeNode , this.getTransition().getCondition()); 
 		}
 		conditionTree.setNode(treeNode);
 			
@@ -119,32 +123,42 @@ public class ConditionPanel  implements ContextAware{
 		if( condis != null){
 			for( int i=0; i< condis.length; i++){
 				Condition condi = condis[i];
+				String nodeName = condi.getDescription() != null ? condi.getDescription().getText() : "";
 				ConditionTreeNode treeNode = new ConditionTreeNode();
-				Long idByTime = new Date().getTime();
+				Long idByTime = Math.round(Math.random() * 100000);
 				treeNode.setId(idByTime.toString());
 				treeNode.setParentNode(rootNode);
 				treeNode.setParentId( rootNode.getId() );
 				treeNode.setRoleList(roleList);
 				treeNode.setVariableList(variableList);
-				treeNode.conditionInit();
 				
-				ConditionNode conditionNode = makeConditionNode(treeNode , condi);
-				
-				String nodeName = condi.getDescription() != null ? condi.getDescription().getText() : "";
-				String nodeType = "";
-				if( condi instanceof Or ){
-					nodeType = ConditionTreeNode.CONDITION_OR;
-				}else if( condi instanceof And ){
-					nodeType = ConditionTreeNode.CONDITION_AND;
-				}else if( condi instanceof Otherwise ){
-					nodeType = ConditionTreeNode.CONDITION_OTHERWISE;
+				if( nodeName.equals(ConditionTreeNode.CONDITION_AND) || nodeName.equals(ConditionTreeNode.CONDITION_OR)){
+					treeNode.setName(nodeName);
+					treeNode.setConditionType(nodeName);
+					treeNode.setFolder(true);
+					treeNode.setExpanded(true);
+					treeNode.setType(TreeNode.TYPE_FOLDER);
+					
+					makeChildTreeNode(treeNode, condi);
+				}else{
+					treeNode.conditionInit();
+					
+					ConditionNode conditionNode = makeConditionNode(treeNode , condi);
+					
+					String nodeType = "";
+					if( condi instanceof Or ){
+						nodeType = ConditionTreeNode.CONDITION_OR;
+					}else if( condi instanceof And ){
+						nodeType = ConditionTreeNode.CONDITION_AND;
+					}else if( condi instanceof Otherwise ){
+						nodeType = ConditionTreeNode.CONDITION_OTHERWISE;
+					}
+					conditionNode.setConditionType(nodeType);
+					treeNode.setType("page_white_text");
+					treeNode.setName(nodeName);
+					conditionNode.setParentTreeNode(treeNode);
+					treeNode.setConditionNode(conditionNode);
 				}
-				conditionNode.setConditionType(nodeType);
-				treeNode.setType("page_white_text");
-//				treeNode.setType(nodeType);
-				treeNode.setName(nodeName);
-				conditionNode.setParentTreeNode(treeNode);
-				treeNode.setConditionNode(conditionNode);
 				rootNode.add(treeNode);
 			}
 		}
@@ -208,29 +222,16 @@ public class ConditionPanel  implements ContextAware{
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] saveCondition() throws Exception{
-		LineShape lineShape = new LineShape();
-		lineShape.setId(this.getConditionId());
-		lineShape.setLabel(this.getConditionLabel());
-		
+		TransitionView transitionView = new TransitionView();
 		ConditionTreeNode rootNode = conditionTree.getNode();
-		Condition condition = lineShape.makeCondition(rootNode);
-		lineShape.setLineCondition(condition);
+		Condition condition = transitionView.makeCondition(rootNode);
 		
-		return new Object[]{ new Remover(new ModalWindow()), lineShape};
+		this.getTransition().setCondition(condition);
+		this.getTransition().setTransitionName(this.getConditionLabel());
+		
+		return new Object[]{ new ApplyProperties(this.getConditionId() , transition) , new Remover(new ModalWindow(), true)};
 	}
 	
-//	@ServiceMethod(callByContent=true)
-//	public Object[] addConditionNode() throws Exception{
-//		ConditionNode newNode = new ConditionNode();
-//		int index = conditionNodes.size();
-//		newNode.setIdx(index + 1);
-//		newNode.setRoleList(getRoleList());
-//		newNode.setPrcsValiableList(getPrcsValiableList());
-//		newNode.init();
-//		conditionNodes.add(index , newNode);
-//		return new Object[]{conditionNodes};
-//	}
-
 	@AutowiredFromClient
 	public Session session;
 }

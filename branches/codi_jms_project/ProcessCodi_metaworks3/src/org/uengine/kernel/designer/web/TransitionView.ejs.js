@@ -27,6 +27,7 @@ var org_uengine_kernel_designer_web_TransitionView = function(objectId, classNam
 
 org_uengine_kernel_designer_web_TransitionView.prototype = {
 		loaded : function(){
+			var objectId = this.objectId;
 			var object = mw3.objects[this.objectId];
 			var element;
 			var canvas = this.canvas;
@@ -71,8 +72,8 @@ org_uengine_kernel_designer_web_TransitionView.prototype = {
 				$(element).data('transition', transitionData);
 				object.transition = transitionData;
 				object.element = null;
-				object.id = $(element).attr('id');
 			}
+			object.id = $(element).attr('id');
 			
 			$(element).unbind('dblclick');
         	$(element).on({
@@ -80,6 +81,7 @@ org_uengine_kernel_designer_web_TransitionView.prototype = {
         			if(event.stopPropagation){
         				event.stopPropagation();
         			}
+        			object.transition = $(this).data('transition');
         			object.gateCondition();
         		}
         	});

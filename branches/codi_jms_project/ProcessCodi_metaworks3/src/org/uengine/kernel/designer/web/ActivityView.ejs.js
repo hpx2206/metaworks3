@@ -31,10 +31,8 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
 		loaded : function(){
 			var object = mw3.objects[this.objectId];
 			var element = null;
-			
+			var canvas = this.canvas;
 			if( object && !object.drawByCanvas){
-				var canvasObjectId = this.canvasObjectId;
-				var canvas = this.canvas;
 				var initText;
 				if( object.activity ){
 					initText = ( object.activity.description != null && object.activity.description.text != null ) ? object.activity.description.text :  "";
@@ -156,7 +154,12 @@ org_uengine_kernel_designer_web_ActivityView.prototype = {
     	    		    			variable : variable
     	    		    			
     	    		    		}];
+    	    		    		
+    	    		    		object.id = $(this).attr('id');
+    	            			object.activity = $(this).data('activity');
     	    		    		// 엑티비티에 파라미터 추가
+    	    		    		console.log(object.activity);
+    	    		    		console.log(parameterContexts);
     	    		    		if( object.activity ){
     	    		    			object.activity.parameters = parameterContexts;
     	    		    			var text = {

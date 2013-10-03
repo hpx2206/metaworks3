@@ -1,23 +1,10 @@
 package org.uengine.kernel;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Vector;
 
-import org.metaworks.Type;
 import org.uengine.codi.mw3.webProcessDesigner.MappingCanvas;
 import org.uengine.codi.mw3.webProcessDesigner.MappingTree;
-import org.uengine.contexts.HtmlFormContext;
 import org.uengine.contexts.MappingContext;
-import org.uengine.processdesigner.ProcessDesigner;
-import org.uengine.processdesigner.mapper.Transformer;
 import org.uengine.util.UEngineUtil;
 
 public class MappingActivity extends DefaultActivity implements IDrawDesigne {
@@ -79,17 +66,15 @@ public class MappingActivity extends DefaultActivity implements IDrawDesigne {
 						value = instance.getBeanProperty(srcVariableName); // varA
 					}else{
 						String [] wholePartPath = srcVariableName.replace('.','@').split("@");
-						// wholePartPath.length >= 3 이 되는 이유는 안쪽에 객체의 값을 참조하려고 하는 부분이기때문에 따로 값을 가져와야함
-						if( wholePartPath.length >= 3 ){
-							String rootObjectName = wholePartPath[0] + "." + wholePartPath[1];
+						// wholePartPath.length >= 1 이 되는 이유는 안쪽에 객체의 값을 참조하려고 하는 부분이기때문에 따로 값을 가져와야함
+						if( wholePartPath.length == 2 ){
+							String rootObjectName = wholePartPath[1];
 							// 이걸 바로 호출
-							Object rootObject = instance.getBeanProperty(rootObjectName);
+							Object rootObject = instance.getBeanProperty(wholePartPath[0]);
 							if( rootObject != null ){
-								value = UEngineUtil.getBeanProperty(rootObject, wholePartPath[2]);
+								value = UEngineUtil.getBeanProperty(rootObject, rootObjectName);
 							}
-							for(int j = 3; j < wholePartPath.length ; j++){
-								value = UEngineUtil.getBeanProperty(value, wholePartPath[j]);
-							}
+						}else if( wholePartPath.length > 2 ){
 						}else{
 							value = instance.getBeanProperty(srcVariableName); // varA
 						}

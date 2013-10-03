@@ -3,9 +3,10 @@
         <%=fields.name.here()%>
         <%=fields.displayName.here()%>
         <%=fields.defaultValue.here()%>
-    <% }%>
-    
-    <% if(mw3.how == 'setting'){ %>
+    <% }else if(mw3.how == 'setting'){ %>
         <%=include("dwr/metaworks/genericfaces/FormFace.ejs")%>
+    <% }else{%>
+        <%=fields.name.here()%>
+        <%=fields.displayName.here()%>
     <% }%>
 <% }%>

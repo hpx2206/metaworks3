@@ -160,6 +160,14 @@ public class ProcessDesignerContainer {
 				}
 			}
 		}
+		
+		ArrayList<ProcessVariable> pvList = processVariablePanel.getVariableList();
+		ProcessVariable[] processVariables = def.getProcessVariables();
+		for(int i=0; i < processVariables.length; i++){
+			ProcessVariable processVariable = processVariables[i];
+			pvList.add(this.ignoreVariableType(processVariable));
+		}
+		processVariablePanel.setVariableList(pvList);
 	}
 	
 	public ProcessDefinition containerToDefinition(ProcessDesignerContainer container){
@@ -172,7 +180,7 @@ public class ProcessDesignerContainer {
 		def.setRoles(roles);
 		if( activityList != null ){
 			for(Activity act : activityList){
-				def.addChildActivity(act);
+				def.addChildActivity(this.fillVariableType(act));
 			}
 		}
 		if( roleList != null ){
@@ -190,7 +198,7 @@ public class ProcessDesignerContainer {
 			ArrayList<ProcessVariable> pvList = processVariablePanel.getVariableList();
 			ProcessVariable pvs[] = new ProcessVariable[pvList.size()];
 			for(int i=0; i < pvList.size(); i++){
-				pvs[i] = pvList.get(i);
+				pvs[i] = this.fillVariableType(pvList.get(i));
 			}
 			def.setProcessVariables(pvs);
 		}
@@ -257,15 +265,44 @@ public class ProcessDesignerContainer {
 			ParameterContext[] contexts = ((ReceiveActivity)activity).getParameters();
 			if( contexts != null && contexts.length > 0){
 				for(int i=0; i < contexts.length; i++){
-					ProcessVariable processVariable = contexts[i].getVariable();
-					processVariable.setType(null);
-					if( processVariable.getDefaultValue() != null && processVariable.getDefaultValue() instanceof ComplexType ){
-						ComplexType complexType = (ComplexType)processVariable.getDefaultValue();
-						complexType.setDesignerMode(true);
-					}
+					this.ignoreVariableType(contexts[i].getVariable());
 				}
 			}
 		}
 		return activity;
+	}
+	
+	public ProcessVariable ignoreVariableType(ProcessVariable processVariable){
+		processVariable.setType(null);
+		if( processVariable.getDefaultValue() != null && processVariable.getDefaultValue() instanceof ComplexType ){
+			ComplexType complexType = (ComplexType)processVariable.getDefaultValue();
+			complexType.setDesignerMode(true);
+		}
+		
+		return processVariable;
+	}
+	
+	public Activity fillVariableType(Activity activity){
+		Class paramClass = activity.getClass();
+		boolean isReceiveActivity = ReceiveActivity.class.isAssignableFrom(paramClass);
+		if( isReceiveActivity ){
+			ParameterContext[] contexts = ((ReceiveActivity)activity).getParameters();
+			if( contexts != null && contexts.length > 0){
+				for(int i=0; i < contexts.length; i++){
+					contexts[i].setVariable(this.fillVariableType(contexts[i].getVariable()));
+				}
+			}
+			((ReceiveActivity)activity).setParameters(contexts);
+		}
+		return activity;
+	}
+	
+	public ProcessVariable fillVariableType(ProcessVariable processVariable){
+		if( processVariable.getDefaultValue() != null && processVariable.getDefaultValue() instanceof ComplexType ){
+			processVariable.setType(ComplexType.class);
+		}else if(processVariable.getDefaultValue() != null){
+			processVariable.setType(String.class);
+		}
+		return processVariable;
 	}
 }

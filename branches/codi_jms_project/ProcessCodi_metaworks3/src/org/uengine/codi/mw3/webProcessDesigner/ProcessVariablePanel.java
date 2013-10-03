@@ -35,7 +35,9 @@ public class ProcessVariablePanel {
 			addedProcessVariable.setMetaworksContext(new MetaworksContext());
 			addedProcessVariable.getMetaworksContext().setHow("list");
 			addedProcessVariable.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-			this.getVariableList().add(addedProcessVariable);
+			if( !this.getVariableList().contains(addedProcessVariable)){
+				this.getVariableList().add(addedProcessVariable);
+			}
 		}
 	}
 }

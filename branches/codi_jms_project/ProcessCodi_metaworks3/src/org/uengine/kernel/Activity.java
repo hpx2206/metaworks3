@@ -435,6 +435,7 @@ public abstract class Activity implements Validatable, java.io.Serializable, Clo
 	 * returns the process definition of this (child) activity.
 	 * @return
 	 */
+	@Hidden
 	public ProcessDefinition getProcessDefinition(){
 		Activity root = getRootActivity();
 		if(root instanceof ProcessDefinition)

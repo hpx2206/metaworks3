@@ -263,10 +263,6 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype = 
 	    
 	    canvas.onDrawShape(function (event, shapeElement) {
 	    	// TODO 여기서 Shape 객체를 바로 만드려고 하였으나 연결정보는 가지고 있지 않다.
-	    	
-	    	
-	    	
-	    	
 	    	if($(shapeElement).attr('auto_draw') && $(shapeElement).attr('auto_draw') == 'yes'){
 		    	$(shapeElement).attr('_shape_type', 'GEOM');
 		    	$(shapeElement).attr('_width', '70');
@@ -287,8 +283,7 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype = 
 	        	
 	        	mw3.onLoadFaceHelperScript();
 	    	}
-	    	
-            });
+        });
 	    canvas.onRemoveShape(function (shapeElement) {
 //	    	console.log($(shapeElement));
 	    });
@@ -922,12 +917,15 @@ org_uengine_codi_mw3_webProcessDesigner_ProcessDesignerContentPanel.prototype.ge
 	}
 	var object = mw3.objects[this.objectId];
 	
+	var processVariablePanel = mw3.getAutowiredObject('org.uengine.codi.mw3.webProcessDesigner.ProcessVariablePanel');
+	
 	var container = {
 			__className : 'org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerContainer',
 			activityList : activityList,
 			transitionList : transitionList,
 			valueChainList : valueChainList,
-			roleList : roleList
+			roleList : roleList,
+			processVariablePanel : processVariablePanel
 	};
 	object.processDesignerContainer = container;
 	if( object.processNameView ){
