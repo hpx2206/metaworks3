@@ -1,10 +1,12 @@
 package org.uengine.codi.mw3.admin;
 
+import java.io.Serializable;
+
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Hidden;
 
-public class WebEditor implements ContextAware {
+public class WebEditor implements ContextAware,Serializable {
 
 	public WebEditor() {
 		this("");
@@ -25,7 +27,7 @@ public class WebEditor implements ContextAware {
 			this.contents = contents;
 		}
 
-	MetaworksContext metaworksContext;
+	transient MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
 			return metaworksContext;
 		}

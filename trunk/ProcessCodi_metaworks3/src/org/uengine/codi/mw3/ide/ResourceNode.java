@@ -14,14 +14,16 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.TreeNode;
-import org.metaworks.dao.TransactionContext;
 import org.metaworks.metadata.MetadataProperty;
 import org.uengine.codi.mw3.ide.editor.Editor;
 import org.uengine.codi.mw3.ide.editor.form.FormEditor;
 import org.uengine.codi.mw3.ide.editor.metadata.MetadataEditor;
 import org.uengine.codi.mw3.ide.editor.process.ProcessEditor;
+import org.uengine.codi.mw3.ide.editor.valuechain.ValueChainEditor;
+import org.uengine.codi.mw3.ide.libraries.ProcessNode;
 import org.uengine.codi.mw3.ide.menu.ResourceContextMenu;
 import org.uengine.codi.mw3.ide.view.Navigator;
+import org.uengine.codi.mw3.model.InstanceViewThreadPanel;
 import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.model.Session;
 
@@ -33,6 +35,10 @@ import org.uengine.codi.mw3.model.Session;
 		})
 public class ResourceNode extends TreeNode implements ContextAware {
 
+	public final static String TYPE_ACTIVITY 	= "activity";
+	public final static String TYPE_ROLE 		= "role";
+	public final static String TYPE_PROJECT	= "project";
+	
 	@AutowiredFromClient
 	public Session session;
 
@@ -42,32 +48,28 @@ public class ResourceNode extends TreeNode implements ContextAware {
 	@AutowiredFromClient
 	public MetadataProperty metadataProperty;
 
-	public final static String TYPE_PROJECT 			= "project";
 
 	MetaworksContext metaworksContext;
-	public MetaworksContext getMetaworksContext() {
-		return metaworksContext;
-	}
-	public void setMetaworksContext(MetaworksContext metaworksContext) {
-		this.metaworksContext = metaworksContext;
-	}
-
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
+		}
 	String projectId;
-	public String getProjectId() {
-		return projectId;
-	}
-	public void setProjectId(String projectId) {
-		this.projectId = projectId;
-	}
-
+		public String getProjectId() {
+			return projectId;
+		}
+		public void setProjectId(String projectId) {
+			this.projectId = projectId;
+		}
 	String path;
-	public String getPath() {
-		return path;
-	}
-	public void setPath(String path) {
-		this.path = path;
-	}
-
+		public String getPath() {
+			return path;
+		}
+		public void setPath(String path) {
+			this.path = path;
+		}
 	boolean hasPick;
 		public boolean isHasPick() {
 			return hasPick;
@@ -90,7 +92,14 @@ public class ResourceNode extends TreeNode implements ContextAware {
 		public void setAlias(String alias) {
 			this.alias = alias;
 		}
-
+	String editorInstanceId;
+		public String getEditorInstanceId() {
+			return editorInstanceId;
+		}
+		public void setEditorInstanceId(String editorInstanceId) {
+			this.editorInstanceId = editorInstanceId;
+		}
+		
 	public ResourceNode(){
 		setMetaworksContext(new MetaworksContext());
 	}
@@ -140,16 +149,36 @@ public class ResourceNode extends TreeNode implements ContextAware {
 		for(int i=0; i<childFilePaths.length; i++){
 			File childFile = new File(file.getAbsolutePath() + File.separatorChar + childFilePaths[i]);
 
+			// 디렉토리가 아닌 파일이지만 프로세스 타입이면 프로세스 노드를 만들어서 붙여야 한다.
 			if(!childFile.isDirectory()){
-				ResourceNode node = new ResourceNode();
-				node.setProjectId(this.getProjectId());
-				node.setId(this.getId() + File.separatorChar + childFile.getName());
-				node.setName(childFile.getName());
-				node.setPath(this.getPath() + File.separatorChar + childFile.getName());
-				node.setParentId(this.getId());
-				node.setType(findNodeType(node.getName()));
-				node.setMetaworksContext(getMetaworksContext());
-				child.add(node);
+				String type = ResourceNode.findNodeType(childFile.getAbsolutePath());
+				
+				if(type.equals(TreeNode.TYPE_FILE_PROCESS)){
+					
+					ProcessNode processNode= new ProcessNode();
+					processNode.setProjectId(this.getProjectId());
+					processNode.setId(this.getId() + File.separatorChar + childFile.getName());
+					processNode.setName(childFile.getName());
+					processNode.setPath(this.getPath() + File.separatorChar + childFile.getName());
+					processNode.setParentId(this.getId());
+					processNode.setType(TreeNode.TYPE_FILE_PROCESS);
+					processNode.setMetaworksContext(getMetaworksContext());
+					processNode.setFolder(true);
+					
+					child.add(processNode);
+				
+				} else {
+					ResourceNode node = new ResourceNode();
+					node.setProjectId(this.getProjectId());
+					node.setId(this.getId() + File.separatorChar + childFile.getName());
+					node.setName(childFile.getName());
+					node.setPath(this.getPath() + File.separatorChar + childFile.getName());
+					node.setParentId(this.getId());
+					node.setType(findNodeType(node.getName()));
+					node.setMetaworksContext(getMetaworksContext());
+					child.add(node);
+				
+				}
 			}
 		}
 
@@ -196,7 +225,7 @@ public class ResourceNode extends TreeNode implements ContextAware {
 	public Editor beforeAction(){
 
 		Editor editor = null;
-
+		
 		if(!this.isFolder()){
 			String type = ResourceNode.findNodeType(this.getName());
 
@@ -213,6 +242,13 @@ public class ResourceNode extends TreeNode implements ContextAware {
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
+			}else if(type.equals(TreeNode.TYPE_FILE_VALUECHAIN)){
+				editor = new ValueChainEditor(this);
+				try {
+					editor.load();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}else if(type.equals(TreeNode.TYPE_FILE_METADATA)){
 				editor = new MetadataEditor(this);
 				try {
@@ -224,41 +260,6 @@ public class ResourceNode extends TreeNode implements ContextAware {
 				editor = new Editor(this);
 			}
 		}
-		/*
-		if(!this.isFolder()){
-
-			String type = ResourceNode.findNodeType(this.getName());
-
-			if(type.equals(TreeNode.TYPE_FILE_JAVA)){
-				editor = new JavaCodeEditor(this.getId());
-			}else if(type.equals(TreeNode.TYPE_FILE_PROCESS)){
-				editor = new ProcessEditor(this.getId());
-				((ProcessEditor)editor).getProcessDesigner().setBasePath(jbPath.getBasePath());
-				try {
-					((ProcessEditor)editor).getProcessDesigner().load();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}else if(type.equals(TreeNode.TYPE_FILE_METADATA)){
-				editor = new MetadataEditor(this.getId());
-				editor.jbPath = jbPath;
-				try {
-					((MetadataEditor)editor).loadPage();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}else if(type.equals(TreeNode.TYPE_FILE_RULE)){
-				editor = new RuleEditor(this.getId());
-				try {
-					((RuleEditor)editor).load();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}else{
-				editor = new Editor(this.getId(), type);
-			}
-		}
-		 */
 
 		return editor;
 	}
@@ -284,46 +285,59 @@ public class ResourceNode extends TreeNode implements ContextAware {
 			
 			return new Object[]{new ToOpener(this), new Remover(new Popup())};	
 		}else{
-			return new ToAppend(new CloudWindow("editor"), this.beforeAction());
+			Editor editor = this.beforeAction();
+			InstanceViewThreadPanel instanceViewThreadPanel = new InstanceViewThreadPanel();
+			if(  editor instanceof ProcessEditor ){
+				if( ((ProcessEditor)editor).getProcessDesignerInstanceId() != null ){
+					instanceViewThreadPanel.session = session;
+					instanceViewThreadPanel.setInstanceId(((ProcessEditor)editor).getProcessDesignerInstanceId());
+					instanceViewThreadPanel.load();
+				}
+			}
+			CloudInstanceWindow cloudInstanceWindow = new CloudInstanceWindow();
+			cloudInstanceWindow.setPanel(instanceViewThreadPanel);
+			
+			return new Object[]{new ToAppend(new CloudWindow("editor"), editor) , new Refresh(cloudInstanceWindow, true) };
 		}
 	}
 
 	@ServiceMethod(payload={"id", "name", "path", "folder", "projectId", "type"}, mouseBinding="right", target=ServiceMethodContext.TARGET_POPUP)
 	public Object[] showContextMenu() {
+		session.setClipboard(this);
 		this.changeProject();
 		
-		return new Object[]{new ResourceContextMenu(this, session)};
+		return new Object[]{new ResourceContextMenu(this, session) , new Refresh(session)};
 	}
 
 	public static String findNodeType(String name){
 		String nodeType = TreeNode.TYPE_FILE_TEXT;
 
-		if(name != null){
-			int pos = name.lastIndexOf('.');
-			if(pos > -1){
-				String ext = name.substring(pos);
-	
-				if(".html".equals(ext)){
-					nodeType = TreeNode.TYPE_FILE_HTML;
-				}else if(".java".equals(ext)){
-					nodeType = TreeNode.TYPE_FILE_JAVA;
-				}else if(".ejs".equals(ext)){
-					nodeType = TreeNode.TYPE_FILE_EJS;
-				}else if(".js".equals(ext)){
-					nodeType = TreeNode.TYPE_FILE_JS;
-				}else if(".form".equals(ext)){
-					nodeType = TreeNode.TYPE_FILE_FORM;
-				}else if(".wpd".equals(ext) || ".process2".equals(ext)){
-					nodeType = TreeNode.TYPE_FILE_PROCESS;
-				}else if(".rule".equals(ext)){
-					nodeType = TreeNode.TYPE_FILE_RULE;
-				}else if(".css".equals(ext)){
-					nodeType = TreeNode.TYPE_FILE_CSS;
-				}else if(".jepg".equals(ext) || ".jpg".equals(ext) || ".gif".equals(ext) || ".png".equals(ext)){
-					nodeType = TreeNode.TYPE_FILE_IMAGE;
-				}else if(".metadata".equals(ext)){
-					nodeType = TreeNode.TYPE_FILE_METADATA;
-				}	
+		int pos = name.lastIndexOf('.');
+		if(pos > -1){
+			String ext = name.substring(pos);
+
+			if(".html".equals(ext)){
+				nodeType = TreeNode.TYPE_FILE_HTML;
+			}else if(".java".equals(ext)){
+				nodeType = TreeNode.TYPE_FILE_JAVA;
+			}else if(".ejs".equals(ext)){
+				nodeType = TreeNode.TYPE_FILE_EJS;
+			}else if(".js".equals(ext)){
+				nodeType = TreeNode.TYPE_FILE_JS;
+			}else if(".form".equals(ext)){
+				nodeType = TreeNode.TYPE_FILE_FORM;
+			}else if(".wpd".equals(ext) || ".process2".equals(ext) || ".process".equals(ext)){
+				nodeType = TreeNode.TYPE_FILE_PROCESS;
+			}else if(".valuechain".equals(ext)){
+				nodeType = TreeNode.TYPE_FILE_VALUECHAIN;
+			}else if(".rule".equals(ext)){
+				nodeType = TreeNode.TYPE_FILE_RULE;
+			}else if(".css".equals(ext)){
+				nodeType = TreeNode.TYPE_FILE_CSS;
+			}else if(".jepg".equals(ext) || ".jpg".equals(ext) || ".gif".equals(ext) || ".png".equals(ext)){
+				nodeType = TreeNode.TYPE_FILE_IMAGE;
+			}else if(".metadata".equals(ext)){
+				nodeType = TreeNode.TYPE_FILE_METADATA;
 			}
 		}
 
@@ -342,6 +356,7 @@ public class ResourceNode extends TreeNode implements ContextAware {
 		
 		return session;
 	}
+	
 	
 	@ServiceMethod(callByContent=true, mouseBinding="drop", target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] drop(){

@@ -11,9 +11,11 @@ import org.uengine.codi.mw3.knowledge.Knowledge;
 import org.uengine.codi.mw3.marketplace.AppMap;
 import org.uengine.codi.mw3.marketplace.Marketplace;
 import org.uengine.codi.mw3.model.Main;
+import org.uengine.codi.mw3.model.MainLMS;
 import org.uengine.codi.mw3.model.MainSNS;
 import org.uengine.codi.mw3.model.PinterestMain;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.codi.mw3.processexplorer.ProcessExplorer;
 import org.uengine.codi.mw3.selfservice.SelfService;
 import org.uengine.codi.mw3.tadpole.Tadpole;
 import org.uengine.kernel.GlobalContext;
@@ -117,6 +119,10 @@ public class PageNavigator{
 			return new MainPanel(new Main(session));
 		//}
 	}
+	@ServiceMethod(callByContent=true)
+	public MainPanel goLMS() throws Exception {
+		return new MainPanel(new MainLMS(session));
+	}
 	
 	@ServiceMethod(callByContent=true)
 	public MainPanel goSns() throws Exception {
@@ -205,4 +211,11 @@ public class PageNavigator{
 		return new MainPanel(new Knowledge(session));
 	}
 	
+	@ServiceMethod(callByContent=true)
+	public MainPanel goProcessExplorer() throws Exception {
+		ProcessExplorer processExplorer = new ProcessExplorer();
+		processExplorer.load(session); 
+			
+		return new MainPanel(processExplorer);
+	}
 }

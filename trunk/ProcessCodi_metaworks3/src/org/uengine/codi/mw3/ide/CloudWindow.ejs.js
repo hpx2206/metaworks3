@@ -87,7 +87,6 @@ org_uengine_codi_mw3_ide_CloudWindow.prototype = {
 	
 	select : function(id){
 		$('.' + this.divClass).removeClass('focus');		
-		
 		$('#top_' + id).siblings().removeClass('selected').end().addClass('selected').addClass('focus');
 		$('#bottom_' + id).siblings().hide().end().show();
 	},
