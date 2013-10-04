@@ -1,0 +1,16 @@
+<%
+	if(value){
+%>
+<div class="depth1" onClick="<%=methods.select.caller() %>" ><%=mw3.localize("Favorite")%></div>
+<%
+ 	if(value.selected){ 
+%>
+	<div class="depth2">		
+		<%= fields.favoritePanel.here() %>
+	</div>
+<%}else{%>
+<%}%>
+<%
+
+	}
+%>
