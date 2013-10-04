@@ -3,13 +3,19 @@
  */
 package org.metaworks.dao;
 
+import java.util.Map;
+
 /**
  * @author Jinyoung Jang
  */
 public class UniqueKeyGenerator {
 
 	public static Long issueKey(String forWhat, ConnectionFactory cf) throws Exception{
-		KeyGeneratorDAO kg = DAOFactory.getInstance(cf).createKeyGenerator(forWhat, null);
+		return issueKey(forWhat, null, cf);
+	}
+	
+	public static Long issueKey(String forWhat, Map options, ConnectionFactory cf) throws Exception{
+		KeyGeneratorDAO kg = DAOFactory.getInstance(cf).createKeyGenerator(forWhat, options);
 		kg.select();
 		kg.next();
 				
