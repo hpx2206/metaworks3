@@ -77,8 +77,15 @@ public class AppMapping extends Database<IAppMapping> implements IAppMapping {
 	}
 	
 	public IAppMapping findMyApps() throws Exception {
+		StringBuffer sql = new StringBuffer();
+		sql.append("select appmapping.appId, appmapping.comcode, appmapping.appname, appmapping.isdeleted, bpm_knol.name projectName ")
+		   .append(" from appmapping appmapping, app, bpm_knol ")
+		   .append(" where appmapping.appId = app.appId ")
+		   .append("	and app.projectId = bpm_knol.id ")
+		   .append("	and appmapping.comcode=?comCode ")
+		   .append("	and appmapping.isdeleted=?isdeleted");
 		
-		IAppMapping findApp = (IAppMapping) Database.sql(IAppMapping.class, "select appmapping.appId, appmapping.comcode, appmapping.appname, appmapping.isdeleted, bpm_knol.name projectName from appmapping appmapping, app, bpm_knol where appmapping.appId = app.appId and app.projectId = bpm_knol.id and appmapping.comcode=?comCode and appmapping.isdeleted=?isdeleted");
+		IAppMapping findApp = (IAppMapping) Database.sql(IAppMapping.class, sql.toString());
 		
 		findApp.setComCode(this.getComCode());
 		findApp.setIsDeleted(this.getIsDeleted());
@@ -95,3 +102,4 @@ public class AppMapping extends Database<IAppMapping> implements IAppMapping {
 	
 	
 }
+

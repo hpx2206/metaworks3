@@ -88,22 +88,22 @@ public class TopicMapping extends Database<ITopicMapping> implements ITopicMappi
 		node.setId(this.getTopicId());
 		node.copyFrom(node.databaseMe());
 		
-		if(node.getType().equals("project")){
-			String host = GlobalContext.getPropertyString("vm.manager.ip");
-			String userId = GlobalContext.getPropertyString("vm.manager.user");
-			String passwd = GlobalContext.getPropertyString("vm.manager.password");
-
-			JschCommand jschServerBehaviour = new JschCommand();
-			jschServerBehaviour.sessionLogin(host, userId, passwd);
-			
-			Employee employee = new Employee();
-			employee.setEmpCode(this.getUserId());
-			employee.copyFrom(employee.findMe());			
-			
-			//SVN 유저 추가
-			String command = GlobalContext.getPropertyString("vm.svn.createUser") + " \"" +  node.getName() + "\" \"" + employee.getEmpCode() + "\" \"" + employee.getPassword() + "\"";
-			jschServerBehaviour.runCommand(command);
-		}
+//		if(node.getType().equals("project")){
+//			String host = GlobalContext.getPropertyString("vm.manager.ip");
+//			String userId = GlobalContext.getPropertyString("vm.manager.user");
+//			String passwd = GlobalContext.getPropertyString("vm.manager.password");
+//
+//			JschCommand jschServerBehaviour = new JschCommand();
+//			jschServerBehaviour.sessionLogin(host, userId, passwd);
+//			
+//			Employee employee = new Employee();
+//			employee.setEmpCode(this.getUserId());
+//			employee.copyFrom(employee.findMe());			
+//			
+//			//SVN 유저 추가
+//			String command = GlobalContext.getPropertyString("vm.svn.createUser") + " \"" +  node.getName() + "\" \"" + employee.getEmpCode() + "\" \"" + employee.getPassword() + "\"";
+//			jschServerBehaviour.runCommand(command);
+//		}
 				
 		/*
 		 * 

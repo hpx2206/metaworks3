@@ -80,6 +80,7 @@ public class ProcessMapList implements ContextAware {
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP, callByContent=true)
 	public ModalWindow append() {
 		AddProcessMapPanel addProcessMapPanel = new AddProcessMapPanel();
+		addProcessMapPanel.session = session;
 		addProcessMapPanel.load();
 
 		ModalWindow modalWindow = new ModalWindow(addProcessMapPanel, 800, 600, "프로세스 맵 등록");

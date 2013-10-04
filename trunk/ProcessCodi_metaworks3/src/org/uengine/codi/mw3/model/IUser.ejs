@@ -22,8 +22,11 @@
 				portrait = 'http://graph.facebook.com/' + value.userId + '/picture';			
 		}		
 		
-		var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
-		var itIsMe = (session.user.userId == value.userId);
+		var session = mw3.getAutowiredObject('org.uengine.codi.mw3.model.Session');
+		var itIsMe = false;
+		if( session && session.user ){
+			itIsMe = (session.user.userId == value.userId);
+		}
 		
 		if(mw3.how == 'info'){			
 %>
