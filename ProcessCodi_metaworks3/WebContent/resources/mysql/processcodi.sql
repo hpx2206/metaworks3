@@ -122,7 +122,7 @@ CREATE TABLE `bpm_procvar` (
   `FILECONTENT` text,
   `HTMLFILEPATH` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`VARID`)
-) ENGINE=InnoDB AUTO_INCREMENT=499 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -156,7 +156,7 @@ CREATE TABLE `bpm_rolemapping` (
   `GROUPID` varchar(30) DEFAULT NULL,
   `ISREFERENCER` int(1) DEFAULT '0',
   PRIMARY KEY (`ROLEMAPPINGID`)
-) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=utf8;
+)  ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -244,7 +244,7 @@ CREATE TABLE `bpm_worklist` (
   KEY `FK33852DAFE10386FC` (`ENDPOINT`),
   KEY `FK33852DAF63959984` (`INSTID`),
   KEY `FK33852DAF78EB68E6` (`ROOTINSTID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+)  ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -487,7 +487,9 @@ INSERT INTO `roleusertable` VALUES ('1401720840','1401720840'),('DepartmentReade
 /*!40000 ALTER TABLE `roleusertable` ENABLE KEYS */;
 UNLOCK TABLES;
 
-
+DROP TABLE IF EXISTS `bpm_knol`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `bpm_knol` (
 	`id` VARCHAR(20) NOT NULL,
 	`name` VARCHAR(500) NULL DEFAULT NULL,
@@ -496,8 +498,12 @@ CREATE TABLE `bpm_knol` (
 	`no` INT(11) NULL DEFAULT NULL,
 	PRIMARY KEY (`id`),
 	INDEX `parentId` (`parentId`, `no`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+
+DROP TABLE IF EXISTS `processmap`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `processmap` (
 	`mapId` VARCHAR(100) NOT NULL DEFAULT '',
 	
@@ -507,7 +513,7 @@ CREATE TABLE `processmap` (
 	`color` VARCHAR(10) NULL DEFAULT NULL,
 	`no` INT(11) NULL DEFAULT NULL,
 	PRIMARY KEY (`mapId`)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 alter table bpm_knol add column authorid varchar(100);
 
@@ -519,17 +525,20 @@ alter table bpm_knol add column type char(10);
 
  alter table contact add column network char(10);
  
- 	create table bpm_noti(
-		notiId long,
-		userId char(100),
-		actorId char(100),
-		instId int,
-		actAbstract varchar(300),
-		taskId int,
-		type int,
-		inputdate timestamp,
-		confirm int
-	);
+DROP TABLE IF EXISTS `bpm_noti`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+create table bpm_noti(
+	notiId long,
+	userId char(100),
+	actorId char(100),
+	instId int,
+	actAbstract varchar(300),
+	taskId int,
+	type int,
+	inputdate timestamp,
+	confirm int
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 	
 	 -- 3000자 이상의 content 가 입력되면 전체 본문을 파일로 저장할 위치를 받아놓음
@@ -561,8 +570,16 @@ alter table bpm_knol add column type char(10);
 	 alter table bpm_procinst add column assignee varchar(100);
 	 
 	 
-	 
-	 create table bpm_roledef(roledefid varchar(100), defId varchar(50), roleName char(20), mappedUserId varchar(50), comCode varchar(50));
+	 DROP TABLE IF EXISTS `bpm_roledef`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+	 create table bpm_roledef(
+	 	roledefid varchar(100),
+	 	defId varchar(50),
+	 	roleName char(20),
+	 	mappedUserId varchar(50),
+	 	comCode varchar(50)
+	 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 	 drop table processmap;
 	 
@@ -580,7 +597,7 @@ alter table bpm_knol add column type char(10);
 	 	cmtrgr varchar(20),
 
 		PRIMARY KEY (`mapId`)
-	);
+	) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 	 
 	 alter table bpm_procinst add column initcmpl int(1);
 	 
@@ -668,12 +685,15 @@ alter table bpm_procinst add BVBENEFIT int(6);
 alter table bpm_procinst add BVPENALTY int(6);
 alter table bpm_procinst add EFFORT int(6);
 
+DROP TABLE IF EXISTS `INST_EMP_PERF`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 create table INST_EMP_PERF (
 	INSTID int(11) NOT NULL,
 	EMPCODE varchar(20) NOT NULL,
 	BUSINESSVALUE int(10),
 	PRIMARY KEY (INSTID, EMPCODE)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 -- 2013.02.14
@@ -694,7 +714,9 @@ insert into emptable (empcode, empname, globalcom, locale, approved) values('pro
 
 alter table INST_EMP_PERF modify column EMPCODE varchar(100);
 
-
+DROP TABLE IF EXISTS `APP`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 -- 2013.03.12
 create table APP(
 	APPID int(11) NOT NULL,
@@ -715,10 +737,13 @@ create table APP(
 	INSTALLCNT int(11) DEFAULT 0,
 	ISDELETED int(11) DEFAULT false,
 	PRIMARY KEY(APPID)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 -- 2013.03.19
+DROP TABLE IF EXISTS `APPMAPPING`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 create table APPMAPPING(
 	APPID int(11) NOT NULL,
 	COMCODE  varchar(20) NOT NULL,
@@ -726,7 +751,7 @@ create table APPMAPPING(
 	ISDELETED int(11) DEFAULT false,
 	PRIMARY KEY(APPID, COMCODE),
 	FOREIGN KEY (APPID) REFERENCES APP (APPID)
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 -- 2013.03.27
@@ -755,10 +780,13 @@ INSERT INTO `roleusertable` (`ROLECODE`, `EMPCODE`) VALUES ('paasManager', 'paas
 
 
 -- 2013.05.14
+DROP TABLE IF EXISTS `oauth_token`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE oauth_token (
 	user_id VARCHAR(300) NOT NULL,
 	access_token VARCHAR(300) NOT NULL
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 alter table app add comname varchar(200);
 
@@ -772,26 +800,31 @@ alter table emptable add notiEmail int(1) default 0;
 
 -- recentItem 테이블 설계: 주제, 친구 등 유저가 가장 최신에 클릭한 순으로 정렬하기 위해 만든 타임테이블
 -- empcode, type ={topic, friend, ...}, item ={topicId, empcode, ...}, updateDate
+DROP TABLE IF EXISTS `recentItem`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE recentItem(
 	empcode VARCHAR(100) NOT NULL,
 	type  VARCHAR(10) NOT NULL,
 	item VARCHAR(100) NOT NULL,
 	updateDate datetime DEFAULT NULL,
 	PRIMARY KEY(empcode)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- notiEmail 컬럼명 수정
 alter table emptable drop notiEmail;
 alter table emptable add isMailNoti int(1) default 0;
 
-DROP TABLE recentItem;
+DROP TABLE IF EXISTS `recentItem`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
 CREATE TABLE recentItem(
 	empcode VARCHAR(100) NOT NULL,
 	itemType  VARCHAR(10) NOT NULL,
 	itemId VARCHAR(100) NOT NULL,
 	updateDate datetime DEFAULT NULL,
 	PRIMARY KEY(empcode,itemType,itemId)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- emptable에 inviteUser(초대한 사람) 추가
 ALTER TABLE `emptable`	ADD COLUMN `inviteUser` VARCHAR(100) NULL DEFAULT NULL;

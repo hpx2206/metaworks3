@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import org.metaworks.MetaworksContext;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.metadata.MetadataProperty;
 import org.metaworks.metadata.MetadataXML;
@@ -30,6 +31,9 @@ public class AddProcessMapPanel {
 			this.metadataTree = metadataTree;
 		}
 		
+	@AutowiredFromClient
+	public Session session;
+		
 	public void load(){
 		ResourceFile processDefinitions = new ResourceFile();
 		
@@ -39,6 +43,7 @@ public class AddProcessMapPanel {
 		processDefinitions.setFolder(true);
 		processDefinitions.setAlias("");
 		processDefinitions.setName("/");
+		processDefinitions.session = session;
 		processDefinitions.drillDown();
 		
 		this.setProcessDefinitions(processDefinitions);
