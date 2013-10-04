@@ -1,8 +1,6 @@
 package org.uengine.codi.mw3.webProcessDesigner;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
@@ -10,6 +8,7 @@ import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.Tree;
 import org.metaworks.component.TreeNode;
+import org.uengine.kernel.ProcessVariable;
 import org.uengine.kernel.Role;
 
 public class MappingTree extends Tree{
@@ -25,20 +24,8 @@ public class MappingTree extends Tree{
 
 	@ServiceMethod(payload={"id", "align"} , target=ServiceMethodContext.TARGET_SELF)
 	public void init(){
-		ArrayList<Role>	 roleList = new ArrayList<Role>();
-        Collection<Object> collRole = wpdPanel.roleMap.values();
-        Iterator<Object> iterRole = collRole.iterator();
-        while(iterRole.hasNext()){
-        	Object act = iterRole.next();
-        	roleList.add((Role)act);
-        }
-        ArrayList<PrcsVariable>	 variableList = new ArrayList<PrcsVariable>();
-        Collection<Object> collVariable = wpdPanel.variableMap.values();
-        Iterator<Object> iterVariable = collVariable.iterator();
-        while(iterVariable.hasNext()){
-        	Object act = iterVariable.next();
-        	variableList.add((PrcsVariable)act);
-        }
+		ArrayList<Role>	 roleList = rolePanel.getRoleList();
+        ArrayList<ProcessVariable> variableList = processVariablePanel.getVariableList();
         
 		String treeId = this.getId();
 		RoleTreeNode roleNode = new RoleTreeNode();
@@ -84,5 +71,10 @@ public class MappingTree extends Tree{
 	}
 	
 	@AutowiredFromClient
-	public ProcessDesignerWebContentPanel wpdPanel;
+	transient public RolePanel rolePanel;
+	
+	@AutowiredFromClient
+	transient public ProcessVariablePanel processVariablePanel;
+	
+	
 }

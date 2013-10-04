@@ -7,7 +7,7 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
 
 public class PropertiesWindow extends ModalWindow {
-
+	
 	String id;
 		@Hidden
 		public String getId() {

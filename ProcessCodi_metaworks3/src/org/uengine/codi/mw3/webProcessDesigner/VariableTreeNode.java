@@ -11,6 +11,8 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.component.Tree;
 import org.metaworks.component.TreeNode;
 import org.metaworks.dwr.MetaworksRemoteService;
+import org.uengine.contexts.ComplexType;
+import org.uengine.kernel.ProcessVariable;
 
 public class VariableTreeNode extends TreeNode {
 	
@@ -23,17 +25,17 @@ public class VariableTreeNode extends TreeNode {
 		}
 	
 	
-	public void load(ArrayList<PrcsVariable> prcsValiableList){
+	public void load(ArrayList<ProcessVariable> prcsValiableList){
 		this.setName("variable");
 		this.setLoaded(true);
 		this.setExpanded(true);
 		
 		for(int i = 0; i < prcsValiableList.size(); i++){
-			PrcsVariable prcsValiable = prcsValiableList.get(i);
-			String nameAttr = prcsValiable.getName();
+			ProcessVariable processVariable = prcsValiableList.get(i);
+			String nameAttr = processVariable.getName();
 			// TODO 처음에 로딩할 필요가 없다면 아래 루프 부분은 클릭시 작동하는걸로 뺀다. 
-			String typeIdAttr = prcsValiable.getTypeId();
-			String typeAttr = prcsValiable.getVariableType().getSelected();
+//			String typeIdAttr = prcsValiable.getTypeId();
+			Object typeAttr = processVariable.getDefaultValue();
 			if( typeAttr == null ) continue;
 			
 			VariableTreeNode node = new VariableTreeNode();
@@ -47,18 +49,20 @@ public class VariableTreeNode extends TreeNode {
 			node.setFolder(true);
 			node.setAlign(this.getAlign());
 			
-//			String className =  typeIdAttr.substring(0, typeIdAttr.lastIndexOf(".")).replaceAll("/", ".");
-			String className =  typeIdAttr;
-			node.setClassName(className);
-			this.add(node);
-				if( "complexType".equals(typeAttr)){
-					try {
-						node.setChild(loadExpand(node));
-					} catch (Exception e) {
-						e.printStackTrace();
+			if( typeAttr instanceof ComplexType){
+				try {
+					ComplexType complexType = (ComplexType)typeAttr;
+					String typeIdAttr = complexType.getTypeId();
+					if( typeIdAttr != null && !"".equals(typeIdAttr) ){
+						String formName = typeIdAttr.substring(1, typeIdAttr.length() -1); 
+						node.setClassName(formName);
 					}
+					node.setChild(loadExpand(node));
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
-				
+			}
+			this.add(node);
 		}
 	}
 	public ArrayList<TreeNode> loadExpand(VariableTreeNode node) throws Exception{
