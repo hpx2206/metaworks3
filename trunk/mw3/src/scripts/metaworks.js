@@ -3185,19 +3185,26 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				}
 				
 
+				var when = mw3.when;
+				
 				mw3.setWhen(mw3.WHEN_EDIT);
 				
 				var object = this.getObject(objectId);
-				if(!object.metaworksContext)
-					object.metaworksContext = {}
 				
-				object.metaworksContext['when'] = mw3.WHEN_EDIT;
+				if('java.lang.String' != objectTypeName){
+					if(!object.metaworksContext)
+						object.metaworksContext = {}
+				
+					object.metaworksContext['when'] = mw3.WHEN_EDIT;
+				}
 	 			
 				mw3.showObjectWithObjectId(
 						objectId,
 						objectTypeName,
 						"#objDiv_" + objectId
 				);
+				
+				mw3.setWhen(when);
 				
 				//TODO: its kind of dummy.
 				//mw3.loadFaceHelper(objectId);
@@ -3287,6 +3294,21 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 						return (fd.attributes['available.how'][this.how]==null);
 					} 
 
+					if(fd.attributes['available.condition'] && object){
+						for(var key in fd.attributes['available.condition']){
+							var condition = fd.attributes['available.condition'][key]; 
+							var validateCondition = true;
+			    			if(condition != null){
+			    				with(object)
+			    					validateCondition = !eval(condition);
+			    			}			
+			    			
+			    			if(!validateCondition)
+			    				return validateCondition;
+						}
+						
+						return true;
+					}					
 					
 					if(fd.attributes['hidden'] || this.when == '___hidden___') 
 						return true;
