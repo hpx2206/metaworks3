@@ -43,9 +43,10 @@ public interface IWorkItem extends IDAO{
 		public final static String WORKITEM_STATUS_DELEGATED= "DELEGATED"; 
 	
 		public final static String WORKITEM_TYPE_MEMO		 = "memo";
+		public final static String WORKITEM_TYPE_FILE		 = "file";
 		
 		public final static String WORKITEM_TYPE_REMOTECONF	 = "remoteConf";
-				
+		public final static String WORKITEM_TYPE_DOCUMENTLIST = "documentList";		
 		
 		public final static int TITLE_LIMIT_SIZE             = 2900;
 		public final static int LASTCMT_LIMIT_SIZE             = 200;
@@ -78,6 +79,9 @@ public interface IWorkItem extends IDAO{
 		public String getTitle();
 		public void setTitle(String title);
 		
+		public String getFolderId();
+		public void setFolderId(String folderId);
+		
 		@Hidden
 		public String getContent();
 		public void setContent(String content);
@@ -105,8 +109,13 @@ public interface IWorkItem extends IDAO{
 		public GenericWorkItemHandler getGenericWorkItemHandler();
 		public void setGenericWorkItemHandler(
 				GenericWorkItemHandler genericWorkItemHandler);
-
-
+		
+		@ORMapping(
+			objectFields={"taskId","instId","content","extFile","tool","startDate","endDate"},
+			databaseFields={"taskId","instId","content","extFile","tool","startDate","endDate"})
+		public DocumentDrag getDocumentDrag();
+		public void setDocumentDrag(DocumentDrag documentDrag);
+		
 		@Hidden
 		@Range(
 				options={"WorkItem", "Comment",	"Image",	"Movie",	"Source Code", 	"File", "Schedule", "Postings", "ovryCmnt"}, 
@@ -296,7 +305,7 @@ public interface IWorkItem extends IDAO{
 		@ServiceMethod(inContextMenu=true, when = WHEN_VIEW, callByContent=true)
 		@Face(displayName="$Edit")
 		public void edit() throws Exception;
-
+		
 		
 		@ServiceMethod(callByContent = true, target=ServiceMethodContext.TARGET_SELF)
 		public void loadContents() throws Exception;
@@ -315,7 +324,11 @@ public interface IWorkItem extends IDAO{
 		@Hidden		
 		public boolean isContentLoaded();
 		public void setContentLoaded(boolean contentLoaded);
-
+		
+		public String getFolderName();
+		public void setFolderName(String folderName);
+		
+		
 		@Face(displayName="$Open")
 		@ServiceMethod(inContextMenu=true, when = WHEN_VIEW, callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
 		@Hidden
@@ -360,5 +373,6 @@ public interface IWorkItem extends IDAO{
 		
 		@ServiceMethod(payload={"instId", "taskId"}, target=ServiceMethodContext.TARGET_SELF)
 		public Object moreView() throws Exception;
+	
 }
 

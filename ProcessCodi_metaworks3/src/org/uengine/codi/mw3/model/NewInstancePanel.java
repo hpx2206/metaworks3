@@ -160,6 +160,25 @@ public class NewInstancePanel implements ContextAware {
 				}
 			}
 			
+		}else if("document".equals(session.getLastPerspecteType())){
+			StringBuffer sb = new StringBuffer();
+			sb.append("select * from bpm_knol knol");
+			sb.append(" where 	knol.type = ?type");
+			sb.append(" and 		knol.id = ?topicId ");
+			
+			ITopicNode dao = (ITopicNode)MetaworksDAO.createDAOImpl(TransactionContext.getThreadLocalInstance(), sb.toString(), ITopicNode.class); 
+			dao.set("type", "doc");
+			dao.set("topicId", session.getLastSelectedItem());
+			dao.select();
+			if( dao.next() ){
+				if( dao.getSecuopt() != null && dao.getSecuopt().equals("1") ){	// 비공개토픽
+					securityLevel.add("$Privacy.Topic","3");
+					securityLevel.setSelected("3");
+				}else{	// 공개 토픽
+					securityLevel.setSelected("0");
+				}
+			}
+			
 		}else{
 			securityLevel.setSelected("0");
 		}

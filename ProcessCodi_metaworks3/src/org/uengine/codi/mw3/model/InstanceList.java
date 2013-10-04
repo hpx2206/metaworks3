@@ -11,6 +11,7 @@ import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 import org.uengine.codi.mw3.Login;
 
+
 @Face(
 		ejsPathMappingByContext=
 	{
@@ -82,6 +83,29 @@ public class InstanceList implements ContextAware{
 	public Session session;
 	
 
+	String folderId;
+		public String getFolderId() {
+			return folderId;
+		}
+		public void setFolderId(String folderId) {
+			this.folderId = folderId;
+		}
+	String folderName;
+		public String getFolderName() {
+			return folderName;
+		}
+	
+		public void setFolderName(String folderName) {
+			this.folderName = folderName;
+		}
+
+	IWorkItem workItem;
+		public IWorkItem getWorkItem() {
+			return workItem;
+		}
+		public void setWorkItem(IWorkItem workItem) {
+			this.workItem = workItem;
+		}
 //	@ServiceMethod(callByContent = true, except = { "instances",
 //			"moreInstanceList" })
 //	public void search() throws Exception {
@@ -93,7 +117,12 @@ public class InstanceList implements ContextAware{
 	public void more() throws Exception {
 		load(this.getNavigation());
 	}
-
+	
+	@ServiceMethod(callByContent = true, except = { "workitem" })
+	public void moreDocument() throws Exception{
+		loadDocument(this.getNavigation());
+	}
+	
 	public InstanceList load() throws Exception {
 		return load(this.getNavigation());
 	}
@@ -133,6 +162,20 @@ public class InstanceList implements ContextAware{
 		return this;
 	}
 
+	public InstanceList loadDocument() throws Exception{
+		return loadDocument(this.getNavigation());
+	}
+	public InstanceList loadDocument(Navigation navigation) throws Exception{
+		IInstance instance = Instance.loadDocument(getFolderId());
+		
+
+		setInstances(instance);
+//		setWorkItem(workitem);
+		setMoreInstanceList(new InstanceList());
+		getMoreInstanceList().setNavigation(navigation);
+		getMoreInstanceList().setPage(getPage()+1);
+		return this;
+	}
 
 //	private int findPerspectiveTypeCode(String typeString) {
 //		if(typeString == null) {

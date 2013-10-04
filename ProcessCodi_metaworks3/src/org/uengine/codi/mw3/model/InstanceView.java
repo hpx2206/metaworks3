@@ -222,6 +222,14 @@ public class InstanceView {
 			this.instanceSecurityConfigurer = instanceSecurityConfigurer;
 		}
 
+	String folderId;
+		public String getFolderId() {
+			return folderId;
+		}
+		public void setFolderId(String folderId) {
+			this.folderId = folderId;
+		}
+
 	String instanceName;
 		@Name
 		public String getInstanceName() {
@@ -242,6 +250,13 @@ public class InstanceView {
 	@AutowiredFromClient
 	public Session session;
 
+	Long taskId;
+		public Long getTaskId() {
+			return taskId;
+		}
+		public void setTaskId(Long taskId) {
+			this.taskId = taskId;
+		}
 	protected void loadDefault(Instance inst) throws Exception{
 		newItem = new CommentWorkItem();
 		newItem.setInstId(new Long(getInstanceId()));
@@ -313,6 +328,13 @@ public class InstanceView {
 
 	}
 	
+	Long rootInstId;
+		public Long getRootInstId() {
+			return rootInstId;
+		}
+		public void setRootInstId(Long rootInstId) {
+			this.rootInstId = rootInstId;
+		}
 	ArrayList<FacebookFeedback> externalFeedback;
 		public ArrayList<FacebookFeedback> getExternalFeedback() {
 			return externalFeedback;
@@ -363,7 +385,15 @@ public class InstanceView {
 		public void setInstanceViewThreadPanel(Object instanceViewThreadPanel) {
 			this.instanceViewThreadPanel = instanceViewThreadPanel;
 		}
-
+	Object documentContentView;
+		public Object getDocumentContentView() {
+			return documentContentView;
+		}
+		public void setDocumentContentView(Object documentContentView) {
+			this.documentContentView = documentContentView;
+		}
+	
+	
 //	IWorkItem threadPosting;
 //		public IWorkItem getThreadPosting() {
 //			return threadPosting;
@@ -371,6 +401,7 @@ public class InstanceView {
 //		public void setThreadPosting(IWorkItem threadPosting) {
 //			this.threadPosting = threadPosting;
 //		}
+
 
 	EventTriggerPanel eventTriggerPanel;
 		public EventTriggerPanel getEventTriggerPanel() {
@@ -727,5 +758,5 @@ public class InstanceView {
 		}
 		public void setMetaworksContext(MetaworksContext metaworksContext) {
 			this.metaworksContext = metaworksContext;
-		} 	
+		}
 }
