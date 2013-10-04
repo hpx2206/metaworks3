@@ -36,6 +36,7 @@ import org.uengine.kernel.RoleMapping;
 import org.uengine.persistence.dao.UniqueKeyGenerator;
 import org.uengine.processmanager.ProcessManagerBean;
 import org.uengine.processmanager.ProcessManagerRemote;
+import org.uengine.search.solr.SolrData;
 import org.uengine.webservices.worklist.DefaultWorkList;
 
 
@@ -177,7 +178,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		public void setRootInstId(Long rootInstId) {
 			this.rootInstId = rootInstId;
 		}
-
 	IUser writer;
 		public IUser getWriter() {
 			return writer;
@@ -212,7 +212,16 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		public void setTaskId(Long taskId) {
 			this.taskId = taskId;
 		}
-		
+	
+	String folderId;
+		public String getFolderId() {
+			return folderId;
+		}
+	
+		public void setFolderId(String folderId) {
+			this.folderId = folderId;
+		}
+	
 	String trcTag;
 		public String getTrcTag() {
 			return trcTag;
@@ -482,11 +491,20 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		public void setMore(boolean more) {
 			this.more = more;
 		}
+	
+	public DocumentDrag documentDrag;	
+		public DocumentDrag getDocumentDrag() {
+			return documentDrag;
+		}
+	
+		public void setDocumentDrag(DocumentDrag documentDrag) {
+			this.documentDrag = documentDrag;
+		}
 
 	public void like() throws Exception{
 		
 	}
-		
+	
 	public void detail() throws Exception{
 
 		IWorkItem workItem = databaseMe();
@@ -714,7 +732,15 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			this.minorVer = minorVer;
 		}
 		
-		
+	String folderName;
+		public String getFolderName() {
+			return folderName;
+		}
+	
+		public void setFolderName(String folderName) {
+			this.folderName = folderName;
+		}
+
 	Long prtTskId;
 		public Long getPrtTskId() {
 			return prtTskId;
@@ -774,7 +800,15 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				// 기본 정보 설정  
 				Instance instance = new Instance();
 				instance.setInstId(this.getInstId());
-				
+				instance.setTopicId(session.getLastSelectedItem());
+				instance.setInitEp(session.getUser().getName());
+				instance.setStatus("Running");
+				if(this.getType().equals("file")){
+					instance.databaseMe().setName(this.getExtFile());
+				}else{
+					instance.databaseMe().setName(this.getTitle());
+				}
+				Instance.loadDocument(instance.getTopicId());
 				instanceRef = instance.databaseMe();				
 				
 				instanceRef.setInitCmpl(false);										// 기본값 수정 시작자만 완료 가능하게
@@ -782,9 +816,10 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				instanceRef.setInitComCd(session.getEmployee().getGlobalCom());		// 시작자의 회사
 				instanceRef.setStatus("Running");									// 처음 상태 Running
 				instanceRef.setDueDate(getDueDate());
-				instanceRef.setName(this.getTitle());
 				//instanceRef.setStartedDate(this.getStartDate());
-				instanceRef.setExt1(newInstancePanel.newInstantiator.getExt2());
+				if( newInstancePanel != null ){
+					instanceRef.setExt1(newInstancePanel.newInstantiator.getExt2());
+				}
 				
 				afterInstantiation(instanceRef);				
 			}else{
@@ -864,7 +899,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 					}
 				}				
 			}
-			
 			instanceRef.setCurrentUser(session.getUser());//may corrupt when the last actor is assigned from process execution.
 								
 			IUser writer = new User();
@@ -878,12 +912,17 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			//기존 date 추가 부분
 			this.setStartDate(Calendar.getInstance().getTime());
 			this.setEndDate(getStartDate());
-
+			this.setFolderId(session.getLastSelectedItem());
+			this.setFolderName(session.getWindowTitle() != null && session.getWindowTitle().length()>4  
+					? session.getWindowTitle().substring(4) : "" );
 			this.setStatus(WORKITEM_STATUS_FEED);
 			this.setIsDeleted(false);			
-
 			if(this.getRootInstId() == null)
 				this.setRootInstId(this.getInstId());
+			
+			// TODO if instanceRefer.instanceID 가 있으면
+			// workiem에 넣어주기...
+			// 
 			
 			// 덧글 상태일때 덧글이 길면 메모로 변경해주는 기능
 			if(this instanceof CommentWorkItem){
@@ -909,6 +948,11 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		}		
 		
 		this.flushDatabaseMe();
+		
+		SolrData SolrData = new SolrData();
+		Instance inst = new Instance();
+		inst.copyFrom(instanceRef);
+		SolrData.insertWorkItem(this , inst);
 		
 		return instanceRef;
 	}
@@ -1278,6 +1322,23 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		
 		return overlayCommentWorkItem; 
 	}
+	public static IWorkItem findDocumentBytaskId(Long taskId) throws Exception{
+		
+		StringBuffer sql = new StringBuffer();
+		
+		sql.append("select *");
+		sql.append("  from bpm_worklist");
+		sql.append(" where taskId=?taskId");
+		sql.append("   and isdeleted!=?isDeleted");
+		
+		IWorkItem workitem = (IWorkItem) Database.sql(IWorkItem.class, sql.toString());
+	
+		workitem.set("taskId", taskId);
+		workitem.set("isDeleted",1);
+		workitem.select();
+		
+		return workitem;
+	}
 	
 	public Object moreView() throws Exception {
 		StringBuffer sql = new StringBuffer();
@@ -1309,6 +1370,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 		return workitem;
 		
 	}
+
 	
 	@AutowiredFromClient
 	public Session session;
@@ -1318,4 +1380,5 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 	
 	@Autowired
 	public InstanceViewContent instanceViewContent;
+
 }

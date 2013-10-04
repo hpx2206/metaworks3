@@ -96,7 +96,6 @@ public class InstanceViewThreadPanel implements ContextAware {
 		
 		IWorkItem thread = (IWorkItem)MetaworksDAO.createDAOImpl(IWorkItem.class);
 		IWorkItem result = WorkItem.find(instanceId, LIST_CNT);		
-		
 		boolean more = result.size() > 5;
 		while(result.next()){
 			thread.moveToInsertRow();

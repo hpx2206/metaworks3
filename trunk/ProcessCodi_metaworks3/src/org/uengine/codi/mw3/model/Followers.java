@@ -19,6 +19,7 @@ public class Followers implements ContextAware {
 	
 	static final String ADD_INSTANCEFOLLOWERS = "addInstanceFollower";
 	static final String ADD_TOPICFOLLOWERS = "addTopicFollower";
+	static final String ADD_DOCUMENTFOLLOWERS = "addDocumentFollower";
 	static final String ADD_ETCFOLLOWERS = "addEtcFollower";
 
 	String instanceId;
@@ -98,6 +99,8 @@ public class Followers implements ContextAware {
 		String type = ADD_INSTANCEFOLLOWERS;
 		if("topic".equals(this.getInstanceId())){
 			type = ADD_TOPICFOLLOWERS;
+		}else if("document".equals(this.getInstanceId())){
+			type = ADD_DOCUMENTFOLLOWERS;
 		}else if("etc".equals(this.getInstanceId())){
 			type = ADD_ETCFOLLOWERS;
 		}
@@ -134,6 +137,12 @@ public class Followers implements ContextAware {
 				addFollower.setInstanceId(getInstanceId());
 				newFollowUser.topicFollowers = addFollower;
 				newFollowUser.getMetaworksContext().setWhen("addTopicFollower");
+			}else if("document".equals(this.getInstanceId())){
+				DocumentFollowers documentFollower = new DocumentFollowers();
+				documentFollower.setInstanceId(getInstanceId());
+				newFollowUser.documentFollowers = documentFollower;
+//				newFollowUser.setName(session.getUser().getName());
+				newFollowUser.getMetaworksContext().setWhen("addDocumentFollower");
 			}else{
 				InstanceFollowers addFollower = new InstanceFollowers();
 				addFollower.setInstanceId(getInstanceId());

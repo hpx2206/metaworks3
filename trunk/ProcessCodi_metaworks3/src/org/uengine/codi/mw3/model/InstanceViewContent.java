@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.model;
 
+import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Name;
@@ -24,7 +25,6 @@ public class InstanceViewContent extends ContentWindow {
 			this.instanceView = instanceView;
 		}
 	
-		
 	String instanceName;
 	@Name
 	@Hidden
@@ -33,6 +33,35 @@ public class InstanceViewContent extends ContentWindow {
 		}
 		public void setInstanceName(String instanceName) {
 			this.instanceName = instanceName;
+		}
+
+	Long taskId;
+		@Hidden
+		public Long getTaskId() {
+			return taskId;
+		}
+	
+		public void setTaskId(Long taskId) {
+			this.taskId = taskId;
+		}
+
+	String title;
+		public String getTitle() {
+			return title;
+		}
+	
+		public void setTitle(String title) {
+			this.title = title;
+		}
+
+	Long rootInstId;
+		@Hidden
+		public Long getRootInstId() {
+			return rootInstId;
+		}
+	
+		public void setRootInstId(Long rootInstId) {
+			this.rootInstId = rootInstId;
 		}
 
 	public InstanceViewContent(){
@@ -49,5 +78,7 @@ public class InstanceViewContent extends ContentWindow {
 		this.setInstanceView(instanceView);
 		
 	}	
+	
+
 
 }

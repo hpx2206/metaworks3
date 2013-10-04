@@ -27,6 +27,7 @@ import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitor;
 import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitorPanel;
 import org.uengine.codi.mw3.widget.IFrame;
 import org.uengine.processmanager.ProcessManagerRemote;
+import org.uengine.search.solr.SolrSearch;
 
 import com.efsol.util.StringUtils;
 
@@ -96,6 +97,14 @@ public class Instance extends Database<IInstance> implements IInstance{
 			}
 			
 			criteria.put("keyword", "%" + searchKeyword + "%");			
+
+//			SolrSearch solrSearch = new SolrSearch();
+//			solrSearch.setKeyword(searchKeyword);
+//			String instanceStr = solrSearch.searchInstance();
+//			//if( instanceStr != null ){
+//				appendedInstanceSql.append("   AND inst.INSTID in (" + instanceStr + ") ");
+////				criteria.put("instanceStr", "(" + instanceStr + ")" );
+//			//}
 			
 			createSQLPhase2(navigation, criteria, stmt, worklistSql, appendedInstanceSql);
 
@@ -1423,5 +1432,23 @@ public class Instance extends Database<IInstance> implements IInstance{
 			e.printStackTrace();
 		}
 		
+	}
+	public static IInstance loadDocument(String folderId) throws Exception {
+		// TODO Auto-generated method stub
+			
+			StringBuffer sql = new StringBuffer();
+			
+
+			sql.append("select *,knol.name as topicname");
+			sql.append(" from bpm_procinst proc, bpm_knol knol where proc.topicId=?topicId");
+			sql.append(" and knol.id=?topicId");
+			sql.append(" order by proc.InstId desc");
+			IInstance instance = (IInstance) Database.sql(IInstance.class, sql.toString());
+			
+			instance.set("topicId", folderId);
+			instance.select();
+
+			return instance;
+			
 	}
 }

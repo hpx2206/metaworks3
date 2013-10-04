@@ -63,7 +63,8 @@ public class RuleDefinition implements ContextAware {
 		
 		String definitionString = GlobalContext.serialize(createProcessDefinition(), ProcessDefinition.class);
 		
-		ruleDefinitionInfo.defId = processManager.addProcessDefinition(ruleDefinitionInfo.name, 0, ruleDefinitionInfo.description, false, definitionString, ruleDefinitionInfo.parentFolder, ruleDefinitionInfo.defId, "rule_dt", ruleDefinitionInfo.name, null);
+//		ruleDefinitionInfo.defId = processManager.addProcessDefinition(ruleDefinitionInfo.name, 0, ruleDefinitionInfo.description, false, definitionString, ruleDefinitionInfo.parentFolder, ruleDefinitionInfo.defId, "rule_dt", ruleDefinitionInfo.name, null);
+		processManager.addProcessDefinition("rule_dt", 0, "rule_dt", false, definitionString, "rule_dt", "rule_dt", "rule_dt", "rule_dt", null);
 		
 		return ruleDefinitionInfo;
 

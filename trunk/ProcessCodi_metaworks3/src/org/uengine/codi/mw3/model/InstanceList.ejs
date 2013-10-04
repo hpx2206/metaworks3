@@ -1,8 +1,6 @@
 <%if (value!=null){%>
 
-<%=fields.instances.here()%>
-
-<%=fields.moreInstanceList.here()%>
+		<%=fields.instances.here()%>
 
 <%
 
@@ -14,7 +12,10 @@ if(value.moreInstanceList==null){
 		<a class="moreBtn5" href="#" onClick="<%=methods.more.caller()%>"><%=mw3.localize("$more")%></a>
 		<div class="morePointR"></div>
 	</div>
-
+<%=fields.moreInstanceList.here()%>
 <%}
+%>
 
+
+<%
 }%>

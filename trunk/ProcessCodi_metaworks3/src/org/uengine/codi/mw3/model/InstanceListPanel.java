@@ -82,6 +82,12 @@ public class InstanceListPanel implements ContextAware{
 			if("project".equals(session.getLastPerspecteType()))
 				this.getMetaworksContext().setHow("project");
 			
+			if("document".equals(session.getLastPerspecteType()))
+				this.getMetaworksContext().setHow("document");
+			
+			if("explorer".equals(session.getLastPerspecteType()))
+				this.getMetaworksContext().setHow("explorer");		
+			
 			instanceList = new InstanceList(session);
 			
 			this.setPreloaded(true);
@@ -98,6 +104,12 @@ public class InstanceListPanel implements ContextAware{
 		topicFollowers.load();
 	}
 
+	public void documentFollowerLoad() throws Exception{
+		documentFollowers = new DocumentFollowers();
+		documentFollowers.session = session;
+		documentFollowers.load();
+	}
+	
 	MetaworksContext metaworksContext;
 		
 		public MetaworksContext getMetaworksContext() {
@@ -148,6 +160,13 @@ public class InstanceListPanel implements ContextAware{
 		public void setNewInstantiator(WorkItem newInstantiator) {
 			this.newInstantiator = newInstantiator;
 		}	*/
+	DocumentFollowers documentFollowers;
+		public DocumentFollowers getDocumentFollowers() {
+			return documentFollowers;
+		}
+		public void setDocumentFollowers(DocumentFollowers documentFollowers) {
+			this.documentFollowers = documentFollowers;
+		}
 
 	WfPanel knowledge;
 		public WfPanel getKnowledge() {
