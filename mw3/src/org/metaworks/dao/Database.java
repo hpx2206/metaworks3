@@ -362,8 +362,15 @@ public class Database<T extends IDAO> implements IDAO, Serializable, Cloneable{
 					
 			if(gv!=null) {			
 				if(gv.generator() != null || !gv.generator().equals("")) {
-					genKey = UniqueKeyGenerator.issueKey(webObjectType.metaworks2Type().getName(), TransactionContext.getThreadLocalInstance());
-					objInst.setFieldValue(webObjectType.metaworks2Type().getKeyFieldDescriptor().getName(), genKey);
+					Map options = new HashMap();
+					options.put("onlySequenceTable", true);
+					
+					genKey = UniqueKeyGenerator.issueKey(webObjectType.metaworks2Type().getName(), options, TransactionContext.getThreadLocalInstance());
+					
+					if("java.lang.String".equals(webObjectType.metaworks2Type().getKeyFieldDescriptor().getClassType().getName()))
+						objInst.setFieldValue(webObjectType.metaworks2Type().getKeyFieldDescriptor().getName(), genKey.toString());
+					else
+						objInst.setFieldValue(webObjectType.metaworks2Type().getKeyFieldDescriptor().getName(), genKey);
 				}
 			}
 		}
@@ -526,12 +533,16 @@ public class Database<T extends IDAO> implements IDAO, Serializable, Cloneable{
 	
 	
 	public T auto() throws Exception{
+		return auto(null);
+	}
+	
+	public T auto(String sql) throws Exception{
 		Class classType = getClass();
 		WebObjectType webObjectType = MetaworksRemoteService.getInstance().getMetaworksType(classType.getName());
 		
 		IDAO dao = (IDAO) MetaworksDAO.createDAOImpl(
 			TransactionContext.getThreadLocalInstance(), 
-			null, 
+			sql, 
 			webObjectType.iDAOClass() != null ? webObjectType.iDAOClass() : IDAO.class
 		);
 		
