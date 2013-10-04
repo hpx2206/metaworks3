@@ -68,6 +68,7 @@ public class ReceiveActivity extends DefaultActivity implements MessageListener{
 		}
 
 	ParameterContext[] parameters;
+	@Hidden
 		public ParameterContext[] getParameters() {
 			return parameters;
 		}
@@ -76,6 +77,7 @@ public class ReceiveActivity extends DefaultActivity implements MessageListener{
 		}
 
 	Role fromRole;
+	@Hidden
 		public Role getFromRole() {
 			return fromRole;
 		}

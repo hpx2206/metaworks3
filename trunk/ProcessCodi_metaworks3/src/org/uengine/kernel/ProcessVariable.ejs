@@ -1,55 +1,12 @@
-<select>
-
-<%
-	var processDesigner = mw3.getAutowiredObject('org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerWebContentPanel');
-
-	var savedKeyValue; 
-	if(value && value.name){
-		savedKeyValue = mw3.getObjectKeyValue(value);
-	}
-	if(processDesigner && processDesigner.roleMap){
-		
-		for(var mapId in processDesigner.roleMap){
-			var role = processDesigner.roleMap[mapId];
-			
-			var keyValue = mw3.getObjectKeyValue(role);
-			var nameValue = mw3.getObjectNameValue(role);
-			
-			if(keyValue && nameValue){
-				var option = '';
-				
-				if(savedKeyValue){
-					if(keyValue == savedKeyValue){
-						option = 'selected';
-					}
-				}
-								
-%>
-	<option value="<%=keyValue%>" <%=option%>> [Role]<%=mw3.localize(nameValue)%>
-<%			
-			}
-		}
-	}
-	if(processDesigner && processDesigner.variableMap){
-        for(var mapId in processDesigner.variableMap){
-            var variable = processDesigner.variableMap[mapId];
-            var keyValue = mw3.getObjectKeyValue(variable);
-            var nameValue = mw3.getObjectNameValue(variable);
-            if(keyValue && nameValue){
-            
-                var option = '';
-                    
-                if(savedKeyValue){
-                    if(keyValue == savedKeyValue){
-                        option = 'selected';
-                    }
-                }
-%>
-    <option value="<%=keyValue%>" <%=option%>> <%=mw3.localize(nameValue)%>
-<%          
-            }
-        }
-    }
-%>
-
-</select>
+<% if(value){ %>
+    <% if(mw3.how == 'list'){ %>
+        <%=fields.name.here()%>
+        <%=fields.displayName.here()%>
+        <%=fields.defaultValue.here()%>
+    <% }else if(mw3.how == 'setting'){ %>
+        <%=include("dwr/metaworks/genericfaces/FormFace.ejs")%>
+    <% }else{%>
+        <%=fields.name.here()%>
+        <%=fields.displayName.here()%>
+    <% }%>
+<% }%>

@@ -7,10 +7,8 @@
 package org.uengine.kernel;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
@@ -49,21 +47,29 @@ public class SubProcessActivity extends DefaultActivity implements IDrawDesigne 
     setInstanceId("<%=Instance.Name%>");
   }
   
-  String instanceId;
-    public String getInstanceId() {
-      return instanceId;
-    }
-    public void setInstanceId(String string) {
-      instanceId = string;
-    }
+  	String instanceId;
+	    public String getInstanceId() {
+	      return instanceId;
+	    }
+	    public void setInstanceId(String string) {
+	      instanceId = string;
+	    }
   
-  String definitionId;
-    public String getDefinitionId() {
-      return definitionId;
-    }
-    public void setDefinitionId(String l) {
-      definitionId = l;
-    }
+	String alias;
+		public String getAlias() {
+			return alias;
+		}
+		public void setAlias(String alias) {
+			this.alias = alias;
+		}
+
+	String definitionId;
+	    public String getDefinitionId() {
+	      return definitionId;
+	    }
+	    public void setDefinitionId(String l) {
+	      definitionId = l;
+	    }
     
     //add ryu start
     ProcessDefinition definitionObject;
@@ -303,7 +309,7 @@ public class SubProcessActivity extends DefaultActivity implements IDrawDesigne 
 	  instance.addDebugInfo("[SubProcessActivity] Splitting multiple instances with Role: ", getForEachRole());
       
       RoleMapping roleMapping = getForEachRole().getMapping(instance);
-      if(roleMapping==null) throw new UEngineException("Mapping for the 'forEachRole'(" + getForEachRole().getDisplayName() + ") is not set yet. \nselect * from bpm_rolemapping where instanceid=" + instance.getInstanceId() + " and rolename='" + getForEachRole() + "' ");
+  if(roleMapping==null) throw new UEngineException("Mapping for the 'forEachRole'(" + getForEachRole().getDisplayName() + ") is not set yet. \nselect * from bpm_rolemapping where instanceid=" + instance.getInstanceId() + " and rolename='" + getForEachRole() + "' ");
 
       instance.addDebugInfo("  the mappings are: ", roleMapping);
       
@@ -484,7 +490,6 @@ public class SubProcessActivity extends DefaultActivity implements IDrawDesigne 
     if(!isConnectedMultipleSubProcesses)
     for(int i=0; i<subprocessInstances.size(); i++){
       ProcessInstance thePI = ((ProcessInstance)subprocessInstances.elementAt(i));
-
       thePI.execute();
     }
     
@@ -566,7 +571,7 @@ public class SubProcessActivity extends DefaultActivity implements IDrawDesigne 
 
   protected void applyVariableBindings(ProcessInstance instance, Vector spIds, Map subProcesses, Map options) throws Exception{
 
-  
+  /*
     for(int i=0; i<variableBindings.length; i++){
       ParameterContext vb = variableBindings[i];
       if(vb.getVariable()==null || 
@@ -618,7 +623,7 @@ public class SubProcessActivity extends DefaultActivity implements IDrawDesigne 
           throw richException;
         }
       }
-    }
+    }*/
   }
   
   protected void afterComplete(ProcessInstance instance) throws Exception {

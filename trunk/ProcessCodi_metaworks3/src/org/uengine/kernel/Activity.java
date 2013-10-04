@@ -7,6 +7,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -22,9 +23,23 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.Vector;
 
+import org.metaworks.ContextAware;
+import org.metaworks.MetaworksContext;
+import org.metaworks.Remover;
+import org.metaworks.ServiceMethodContext;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
+import org.metaworks.annotation.Id;
+import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.website.MetaworksFile;
+import org.uengine.codi.mw3.model.Popup;
+import org.uengine.codi.mw3.webProcessDesigner.ActivityPanel;
+import org.uengine.codi.mw3.webProcessDesigner.ActivityWindow;
+import org.uengine.codi.mw3.webProcessDesigner.ApplyProperties;
+import org.uengine.codi.mw3.webProcessDesigner.Documentation;
 import org.uengine.contexts.TextContext;
+import org.uengine.kernel.designer.web.ActivityView;
 import org.uengine.kernel.graph.Transition;
 import org.uengine.processdesigner.ActivityDesigner;
 import org.uengine.processpublisher.graph.GraphActivity;
@@ -43,7 +58,7 @@ import org.uengine.util.UEngineUtil;
  * @see org.uengine.kernel.ComplexActivity
  */
 @Face(ejsPath="genericfaces/ActivityFace.ejs", options={"fieldOrder"},values={"name,description"})
-public abstract class Activity implements Validatable, java.io.Serializable, Cloneable{
+public abstract class Activity implements Validatable, java.io.Serializable, Cloneable, ContextAware{
 	private static final long serialVersionUID = org.uengine.kernel.GlobalContext.SERIALIZATION_UID;
 	
 	final public static String ACTIVITY_DONE=		"activity done";
@@ -88,7 +103,13 @@ public abstract class Activity implements Validatable, java.io.Serializable, Clo
 	final public static String PVKEY_RETRY_CNT = "_retryCnt";
 
 	public static final String STATUS_RESERVED = "Reserved";
-
+	transient MetaworksContext metaworksContext;
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
+		}
 	/**
 	 * points parent activity (should be kind of ComplexActivity of this activity)
 	 */
@@ -363,6 +384,13 @@ public abstract class Activity implements Validatable, java.io.Serializable, Clo
 	public Activity(){
 		setRetryLimit(0);
 		setRetryDelay(60);
+		
+		documentation = new Documentation();
+		documentation.setMetaworksContext(new MetaworksContext());
+		documentation.getMetaworksContext().setWhen("edit");	
+		
+		setMetaworksContext(new MetaworksContext());
+		getMetaworksContext().setWhen("edit");	
 	}
 
 	public Activity(String activityName){	// for manual-coding
@@ -407,6 +435,7 @@ public abstract class Activity implements Validatable, java.io.Serializable, Clo
 	 * returns the process definition of this (child) activity.
 	 * @return
 	 */
+	@Hidden
 	public ProcessDefinition getProcessDefinition(){
 		Activity root = getRootActivity();
 		if(root instanceof ProcessDefinition)
@@ -1456,6 +1485,15 @@ public abstract class Activity implements Validatable, java.io.Serializable, Clo
 		this.outgoingTransitions = outgoingTransitions;
 	}
 	
+	ActivityView activityView;
+		@Hidden
+		public ActivityView getActivityView() {
+			return activityView;
+		}
+		public void setActivityView(ActivityView activityView) {
+			this.activityView = activityView;
+		}
+		
 	public void addIncomingTransition(Transition incomingTransition) {
 		getIncomingTransitions().add(incomingTransition);
 	}
@@ -1510,4 +1548,72 @@ public abstract class Activity implements Validatable, java.io.Serializable, Clo
 		return tokenCount;
 	}
 	
+	Documentation documentation;
+		@Hidden
+		public Documentation getDocumentation() {
+			return documentation;
+		}
+		public void setDocumentation(Documentation documentation) {
+			this.documentation = documentation;
+		}
+	
+	@AutowiredFromClient
+	public ActivityPanel activityPanel;
+	/**
+	 * 나중에 apply 버튼은 ActivityWindow 로 빼야한다... 지금은 텝에 버튼이 보이질 않아서 임시로 달아놓음
+	 * @return
+	 */
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
+	public Object[] apply(){
+		if( activityPanel != null ){
+			Documentation document = activityPanel.getDocument();
+			MetaworksFile file1 = document.getAttachfile1();
+			if (file1 != null && file1.getFileTransfer() != null
+					&& file1.getFileTransfer().getFilename() != null
+					&& !"".equals(file1.getFileTransfer().getFilename()) ){
+				try {
+					file1.upload();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}else{
+				file1.setFileTransfer(null);
+			}
+			MetaworksFile file2 = document.getAttachfile2();
+			if (file2 != null && file2.getFileTransfer() != null
+					&& file2.getFileTransfer().getFilename() != null
+					&& !"".equals(file2.getFileTransfer().getFilename()) ){
+				try {
+					file2.upload();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}else{
+				file2.setFileTransfer(null);
+			}
+			MetaworksFile file3 = document.getAttachfile3();
+			if (file3 != null && file3.getFileTransfer() != null
+					&& file3.getFileTransfer().getFilename() != null
+					&& !"".equals(file3.getFileTransfer().getFilename()) ){
+				try {
+					file3.upload();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}else{
+				file3.setFileTransfer(null);
+			}
+			
+			this.setDocumentation(activityPanel.getDocument());
+		}
+//		return new Object[]{new ApplyProperties(this.getTracingTag(), this), new Remover(new PropertiesWindow())};
+		return new Object[]{new ApplyProperties(this.getActivityView().getId(), this), new Remover(new Popup() , true)};
+	}
+	
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
+	public Object[] cancel(){
+//		return new Object[]{new Remover(new PropertiesWindow())};
+		return new Object[]{new Remover(new Popup() , true)};
+		
+	}
 }
