@@ -9,4 +9,5 @@ public @interface Available {
 	String[] where() default {};
 	String[] how() default {};
 	String[] media() default {};
+	String[] condition() default {};
 }
