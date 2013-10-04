@@ -11,6 +11,8 @@ import org.metaworks.ToAppend;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.component.TreeNode;
+import org.uengine.kernel.ProcessVariable;
 import org.uengine.kernel.Role;
 
 @Face(
@@ -21,6 +23,8 @@ public class ConditionTreeNode  implements ContextAware{
 	public final static String CONDITION_AND				= "And";
 	public final static String CONDITION_OR				= "Or";
 	public final static String CONDITION_OTHERWISE	= "Otherwise";
+	public final static String CONDITION_EXPRESSION	= "Expression";
+	public final static String CONDITION_DEFAULT_EXPRESSION	= "make expression and save";
 	
 	MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
@@ -118,17 +122,6 @@ public class ConditionTreeNode  implements ContextAware{
 			this.child = child;
 		}
 		
-	public ConditionTreeNode() {
-		this.setMetaworksContext(new MetaworksContext());
-		ArrayList<ConditionTreeNode> child = new ArrayList<ConditionTreeNode>();
-		
-		this.setChild(child);
-	}
-	public void add(ConditionTreeNode node) {
-		node.setParentId(this.getId());
-		this.getChild().add(node);
-	}
-	
 	String expression;
 		public String getExpression() {
 			return expression;
@@ -136,7 +129,13 @@ public class ConditionTreeNode  implements ContextAware{
 		public void setExpression(String expression) {
 			this.expression = expression;
 		}
-
+	String conditionType;
+		public String getConditionType() {
+			return conditionType;
+		}
+		public void setConditionType(String conditionType) {
+			this.conditionType = conditionType;
+		}
 	ConditionNode conditionNode;
 		public ConditionNode getConditionNode() {
 			return conditionNode;
@@ -151,18 +150,28 @@ public class ConditionTreeNode  implements ContextAware{
 		public void setRoleList(ArrayList<Role> roleList) {
 			this.roleList = roleList;
 		}
-	public ArrayList<PrcsVariable>	 prcsValiableList;
-		public ArrayList<PrcsVariable> getPrcsValiableList() {
-			return prcsValiableList;
+	public ArrayList<ProcessVariable> variableList;
+		public ArrayList<ProcessVariable> getVariableList() {
+			return variableList;
 		}
-		public void setPrcsValiableList(ArrayList<PrcsVariable> prcsValiableList) {
-			this.prcsValiableList = prcsValiableList;
+		public void setVariableList(ArrayList<ProcessVariable> variableList) {
+			this.variableList = variableList;
 		}
+	public ConditionTreeNode() {
+		this.setMetaworksContext(new MetaworksContext());
+		ArrayList<ConditionTreeNode> child = new ArrayList<ConditionTreeNode>();
+		
+		this.setChild(child);
+	}
+	public void add(ConditionTreeNode node) {
+		node.setParentId(this.getId());
+		this.getChild().add(node);
+	}
 		
 	public void conditionInit() throws Exception{
 		ConditionNode conditionNode = new ConditionNode();
 		conditionNode.setRoleList(getRoleList());
-		conditionNode.setPrcsValiableList(getPrcsValiableList());
+		conditionNode.setVariableList(getVariableList());
 		conditionNode.init();
 		
 		setConditionNode(conditionNode);
@@ -174,9 +183,8 @@ public class ConditionTreeNode  implements ContextAware{
 		node.setId(idByTime.toString());
 		node.setParentNode(this);
 		node.setParentId(this.getId());
-		node.setPrcsValiableList(this.getPrcsValiableList());
+		node.setVariableList(this.getVariableList());
 		node.setRoleList(this.getRoleList());
-		node.conditionInit();
 		node.setType("page_white_text");	// TODO 아이콘 관련이기때문에.. 추후 변경
 		return node;
 	}
@@ -185,8 +193,10 @@ public class ConditionTreeNode  implements ContextAware{
 	public Object newAND() throws Exception{
 		ConditionTreeNode node = this.makeConditionNode();
 		node.setName(CONDITION_AND);
-		node.getConditionNode().setConditionType(CONDITION_AND);
-		node.getConditionNode().setParentTreeNode(node);
+		node.setConditionType(CONDITION_AND);
+		node.setFolder(true);
+		node.setExpanded(true);
+		node.setType(TreeNode.TYPE_FOLDER);
 		return new ToAppend(this , node);
 	}
 	
@@ -194,18 +204,35 @@ public class ConditionTreeNode  implements ContextAware{
 	public Object newOR() throws Exception{
 		ConditionTreeNode node = this.makeConditionNode();
 		node.setName(CONDITION_OR);
-		node.getConditionNode().setConditionType(CONDITION_OR);
-		node.getConditionNode().setParentTreeNode(node);
+		node.setConditionType(CONDITION_OR);
+		node.setFolder(true);
+		node.setExpanded(true);
+		node.setType(TreeNode.TYPE_FOLDER);
 		return new ToAppend(this , node);
 	}
 	
 	@ServiceMethod(inContextMenu=true, callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object newOtherwise() throws Exception{
+		ConditionTreeNode node = this.makeConditionNode();
+		node.setName(CONDITION_OTHERWISE);
+		node.setConditionType(CONDITION_OTHERWISE);
+		node.setType("page_white_text");
+		return new ToAppend(this , node);
+	}
+	
+	@ServiceMethod(inContextMenu=true, callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
+	public Object[] newExpression() throws Exception{
+		if( this.getConditionType() == null ){
+			return null;
+		}else{
 			ConditionTreeNode node = this.makeConditionNode();
-			node.setName(CONDITION_OTHERWISE);
-			node.getConditionNode().setConditionType(CONDITION_OTHERWISE);
+			node.setName(CONDITION_DEFAULT_EXPRESSION);
+			node.setConditionType(CONDITION_EXPRESSION);
+			node.conditionInit();
+			node.getConditionNode().setConditionType(this.getConditionType());
 			node.getConditionNode().setParentTreeNode(node);
-			return new ToAppend(this , node);
+			return new Object[]{new ToAppend(this , node) , new Refresh(node.action())};
+		}
 	}
 	
 	@ServiceMethod(inContextMenu=true, payload={"id","parentNode"})
@@ -229,7 +256,7 @@ public class ConditionTreeNode  implements ContextAware{
 		ConditionTreeNodeView conditionTreeNode = new ConditionTreeNodeView();
 		conditionTreeNode.setId("expression");
 		conditionTreeNode.setRoleList(getRoleList());
-		conditionTreeNode.setPrcsValiableList(getPrcsValiableList());
+		conditionTreeNode.setVariableList(getVariableList());
 		conditionTreeNode.setConditionNode(getConditionNode());
 		conditionTreeNode.getConditionNode().getMetaworksContext().setHow("edit");
 		ConditionExPressionPanel conditionExPressionPanel = new ConditionExPressionPanel();
@@ -238,4 +265,8 @@ public class ConditionTreeNode  implements ContextAware{
 		return conditionExPressionPanel;
 	}
 	
+	@ServiceMethod(target=ServiceMethodContext.TARGET_APPEND)
+	public Object expand() throws Exception { 
+		return null;
+	}
 }

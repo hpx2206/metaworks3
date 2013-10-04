@@ -43,13 +43,6 @@ public class MappingPanel implements ContextAware {
 		public void setRoleList(ArrayList<Role> roleList) {
 			this.roleList = roleList;
 		}
-	public ArrayList<PrcsVariable>	 prcsValiableList;
-		public ArrayList<PrcsVariable> getPrcsValiableList() {
-			return prcsValiableList;
-		}
-		public void setPrcsValiableList(ArrayList<PrcsVariable> prcsValiableList) {
-			this.prcsValiableList = prcsValiableList;
-		}
 	Tree leftTree;	
 		public Tree getLeftTree() {
 			return leftTree;
@@ -94,7 +87,7 @@ public class MappingPanel implements ContextAware {
 		VariableTreeNode leftVariableTreeNode = new VariableTreeNode();
 		leftVariableTreeNode.setId("leftVariables");
 		leftVariableTreeNode.setType(TreeNode.TYPE_FOLDER);
-		leftVariableTreeNode.load(this.getPrcsValiableList());
+//		leftVariableTreeNode.load(this.getPrcsValiableList());
 		
 		TreeNode leftRootnode = new TreeNode();
 		leftRootnode.setRoot(true);
@@ -125,7 +118,7 @@ public class MappingPanel implements ContextAware {
 		VariableTreeNode rightVariableTreeNode = new VariableTreeNode();
 		rightVariableTreeNode.setId("rightVariables");
 		rightVariableTreeNode.setType(TreeNode.TYPE_FOLDER);
-		rightVariableTreeNode.load(this.getPrcsValiableList());
+//		rightVariableTreeNode.load(this.getPrcsValiableList());
 		
 		TreeNode rightRootnode = new TreeNode();
 		rightRootnode.setRoot(true);
@@ -148,13 +141,9 @@ public class MappingPanel implements ContextAware {
 	
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] doSaveMapper() throws Exception{
-		GeomShape geomShape = new GeomShape();
-		geomShape.setId(elementId);
-		geomShape.setData(mapperData);
-//		System.out.println(mapperData);
-		return new Object[]{ new Remover(new ModalWindow()), geomShape};
+		return null;
 	}
 	
 	@AutowiredFromClient
-	public ProcessDesignerWebContentPanel processDesignerWebContentPanel;
+	public ProcessDesignerContentPanel processDesignerContentPanel;
 }
