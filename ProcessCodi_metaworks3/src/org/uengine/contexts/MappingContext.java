@@ -8,8 +8,6 @@ import org.uengine.codi.mw3.webProcessDesigner.MappingTree;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.ParameterContext;
 
-import com.webdeninteractive.xbotts.Mapping.maptool.MapToolDataModel;
-
 public class MappingContext implements Serializable{
 	private static final long serialVersionUID = GlobalContext.SERIALIZATION_UID;
 
