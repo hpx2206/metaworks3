@@ -1,15 +1,26 @@
-		<table>
-			<tr height="30">
-				<td width=100><span style="float:left;"></span></td>
-				<td><span style="float:left;"><%=fields.dataType.here()%></span></td>
-			</tr>
-			<tr height="30">
-				<td></td>
-				<td>
-					<span style="float:left;"><%=fields.conditionInput.here()%></span>
-				</td>
-			</tr>
-		</table>
-		<div>
-			<div style="float:right;"><a id="wBtn" href="#" onClick="<%=methods.save.caller()%>"><span>저장</span></a></div>
-		</div>
+<% if(value){ %>
+    
+    <div style="width:100%">
+        === 전체변수 ===
+        <table>
+            <tr>
+                <th><span>변수 이름</span></th>
+                <th><span>변수 설명</span></th>
+            </tr>
+        </table>
+        <%= fields.wholeVariableList.here()%>
+        <div style="margin-top:5px;">
+            <a id="wBtn" href="#" onClick="<%=methods.addWholeVariable.caller()%>"><span style="color:#000; margin-right:0px">변수추가</span></a>
+        </div>
+        <div style="clear:both"></div>
+        === 프로세스 변수 ===
+        <table>
+            <tr>
+                <th><span>변수 이름</span></th>
+                <th><span>변수 설명</span></th>
+            </tr>
+        </table>
+        <%= fields.activityVariableList.here()%>
+        <div style="clear:both"></div>
+    </div>
+<% }%>

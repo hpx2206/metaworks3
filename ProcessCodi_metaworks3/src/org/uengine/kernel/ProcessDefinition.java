@@ -818,7 +818,7 @@ System.out.println("ProcessDefinition::addMessageListener.message = " + message)
 		super.onEvent(command, instance, payload);
 	}
 
-	protected void returnToMainProcess(ProcessInstance instance) throws Exception{
+	public void returnToMainProcess(ProcessInstance instance) throws Exception{
 		returnToMainProcess(instance, false);
 	}
 	
@@ -1117,7 +1117,12 @@ System.out.println("ProcessDefinition::addMessageListener.message = " + message)
 	
 	}
 
-	
-
+	String processDesignerInstanceId;
+		public String getProcessDesignerInstanceId() {
+			return processDesignerInstanceId;
+		}
+		public void setProcessDesignerInstanceId(String processDesignerInstanceId) {
+			this.processDesignerInstanceId = processDesignerInstanceId;
+		}
 }
 

@@ -4,19 +4,27 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 
 import org.metaworks.ContextAware;
 import org.metaworks.FieldDescriptor;
 import org.metaworks.MetaworksContext;
+import org.metaworks.Refresh;
+import org.metaworks.Remover;
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.Type;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
-import org.metaworks.annotation.Id;
-import org.metaworks.annotation.Name;
+import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.inputter.RadioInput;
 import org.metaworks.validator.NotNullValid;
 import org.metaworks.validator.Validator;
+import org.uengine.codi.mw3.model.Popup;
+import org.uengine.codi.mw3.webProcessDesigner.ApplyProperties;
+import org.uengine.codi.mw3.webProcessDesigner.RolePanel;
 import org.uengine.contexts.TextContext;
+import org.uengine.kernel.designer.web.RoleView;
 import org.uengine.processdesigner.inputters.RoleResolutionContextSelectorInput;
 import org.uengine.util.UEngineUtil;
 
@@ -149,7 +157,6 @@ public class Role implements java.io.Serializable, Cloneable, ContextAware {
 		}
 
 	private java.lang.String name;
-	@Id
 	@Face(displayName="역할 이름")
 		public String getName() {
 			return name;
@@ -228,7 +235,6 @@ public class Role implements java.io.Serializable, Cloneable, ContextAware {
 		
 	private TextContext displayName = TextContext.createInstance();
 	@Face(displayName="역할 설명")
-	@Name
 		public TextContext getDisplayName() {
 			if(displayName==null){
 				displayName = TextContext.createInstance();
@@ -253,9 +259,14 @@ public class Role implements java.io.Serializable, Cloneable, ContextAware {
 		public void setDontPersistResolutionResult(boolean dontPersistResolutionResult) {
 			this.dontPersistResolutionResult = dontPersistResolutionResult;
 		}
-	
-//added
-	
+	RoleView roleView;
+		@Hidden
+		public RoleView getRoleView() {
+			return roleView;
+		}
+		public void setRoleView(RoleView roleView) {
+			this.roleView = roleView;
+		}
 	public Role(){
 		setMetaworksContext(new MetaworksContext());
 	}
@@ -420,4 +431,32 @@ public class Role implements java.io.Serializable, Cloneable, ContextAware {
 		}
 	}
 
+	@AutowiredFromClient
+	public RolePanel rolePanel;
+	/**
+	 * 나중에 apply 버튼은 ActivityWindow 로 빼야한다... 지금은 텝에 버튼이 보이질 않아서 임시로 달아놓음
+	 * @return
+	 */
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
+	public Object[] apply(){
+		if( rolePanel != null ){
+			ArrayList<Role> roles = rolePanel.getRoleList();
+			for(int i=0; i < roles.size() ; i++){ 
+				if( roles.get(i).equals(this) ){
+					roles.remove(i);
+				}
+			}
+			roles.add(this);
+			rolePanel.setRoleList(roles);
+		}
+		
+		return new Object[]{new ApplyProperties(this.getRoleView().getId() , this), new Remover(new Popup() , true) , new Refresh(rolePanel) };
+	}
+
+	
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
+	public Object[] cancel(){
+		return new Object[]{new Remover(new Popup() , true)};
+		
+	}
 }

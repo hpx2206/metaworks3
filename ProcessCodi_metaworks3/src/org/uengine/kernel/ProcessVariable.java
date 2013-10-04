@@ -5,12 +5,24 @@ import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 
 import javax.xml.namespace.QName;
 
+import org.metaworks.ContextAware;
+import org.metaworks.MetaworksContext;
+import org.metaworks.Refresh;
+import org.metaworks.Remover;
+import org.metaworks.ServiceMethodContext;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.Id;
+import org.metaworks.annotation.Range;
+import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.widget.ModalWindow;
+import org.uengine.codi.mw3.webProcessDesigner.ProcessVariablePanel;
+import org.uengine.contexts.ComplexType;
 import org.uengine.contexts.DatabaseSynchronizationOption;
 import org.uengine.contexts.TextContext;
 
@@ -18,9 +30,16 @@ import org.uengine.contexts.TextContext;
  * @author Jinyoung Jang
  */
 
-public class ProcessVariable implements java.io.Serializable, NeedArrangementToSerialize, Cloneable{
+public class ProcessVariable implements java.io.Serializable, NeedArrangementToSerialize, Cloneable, ContextAware{
 	private static final long serialVersionUID = org.uengine.kernel.GlobalContext.SERIALIZATION_UID;
 	
+	transient MetaworksContext metaworksContext;
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
+		}
 	String name;
 	@Id
 	@Face(displayName="변수 이름")
@@ -45,8 +64,18 @@ public class ProcessVariable implements java.io.Serializable, NeedArrangementToS
 		public void setDisplayName(TextContext value){
 			displayName = value;
 		}
+		public void setDisplayName(String value) {
+			if(getName()==null){
+				TextContext textCtx = new TextContext();
+				textCtx.setText(value);
+				setDisplayName(textCtx);		
+			}
+			
+			getDisplayName().setText(value);
+		}
 	
-	Class type;  	
+	Class type; 
+		@Hidden
 		public Class getType(){
 			if(type==null){
 				if(getXmlBindingClassName()!=null){
@@ -64,7 +93,17 @@ public class ProcessVariable implements java.io.Serializable, NeedArrangementToS
 		public void setType(Class type){
 			this.type = type;
 		}
-
+		
+	String typeInputter;
+		@Range(options={"Text", "Complex"}, values={"java.lang.String", "org.uengine.contexts.ComplexType"})
+		public String getTypeInputter() {
+			return typeInputter;
+		}
+		public void setTypeInputter(String typeInputter) {
+			this.typeInputter = typeInputter;
+		}
+	
+		
 	Role openRole;
 	@Hidden
 		public Role getOpenRole() {
@@ -144,7 +183,6 @@ public class ProcessVariable implements java.io.Serializable, NeedArrangementToS
 		}
 
 	Object defaultValue = null;
-	@Hidden
 		public Object getDefaultValue() {
 			return defaultValue;
 		}
@@ -172,7 +210,10 @@ public class ProcessVariable implements java.io.Serializable, NeedArrangementToS
 	public ProcessVariable(Object[] settings){
 		org.uengine.util.UEngineUtil.initializeProperties(this, settings);
 	}
-	public ProcessVariable(){}
+	public ProcessVariable(){
+		this.setMetaworksContext(new MetaworksContext());
+		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+	}
 
 	//review: The return object of this method is only for scripting users to indicate certain process variable
 	public static ProcessVariable forName(String varName){	
@@ -347,63 +388,45 @@ System.out.println("ProcessVariable:: converting from String to Integer");
 			throw new RuntimeException(e);
 		}
 	}
-
-
-}
-
-/*
-class ScriptingInputterForProcessVariable extends ScriptInput{
 	
-	private static final long serialVersionUID = GlobalContext.SERIALIZATION_UID;
+	@AutowiredFromClient
+	transient public ParameterContextPanel parameterContextPanel;
 	
-	ProcessDesigner pd;
-	ProcessInstance instance;
-	Class type;
-	Object value;
+	@AutowiredFromClient
+	transient public ProcessVariablePanel processVariablePanel;
 	
-	public void setType(Class type){
-		this.type = type;
-	}
-			
-	public ScriptingInputterForProcessVariable(ProcessDesigner pd){
-		super(pd);
-		this.pd = pd;
-	}
-	
-	protected org.apache.bsf.BSFManager createBSFManager() throws Exception{
-		ProcessDefinition definition =(ProcessDefinition)pd.getProcessDefinitionDesigner().getActivity();
-		instance = ProcessInstance.create(definition, "test instance", null);
-				
-		org.apache.bsf.BSFManager manager = super.createBSFManager();
-		manager.declareBean("instance", instance, ProcessInstance.class);
-		manager.declareBean("definition", new ScriptActivity(), Activity.class);
-		manager.declareBean("value", value, Object.class);
-				
-		return manager;
-	}	
-			
-	public void testScript() {
+	@ServiceMethod(callByContent=true , target=ServiceMethodContext.TARGET_APPEND)
+	public Object[] saveVariable() throws Exception{
+		if( processVariablePanel != null ){
+			this.getMetaworksContext().setHow("");
+			this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+			ArrayList<ProcessVariable> valList =  processVariablePanel.getVariableList();
+			valList.add(this);
+			processVariablePanel.setVariableList(valList);
+		}
+		if( parameterContextPanel != null ){
+			this.getMetaworksContext().setHow("list");
+			this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+			ArrayList<ProcessVariable> wholeValList =  parameterContextPanel.getWholeVariableList();
+			wholeValList.add(this);
+			parameterContextPanel.setWholeVariableList(wholeValList);
+		}
 		
-		Type dialogTable = new Type(
-			"Please enter a test value:",
-			new FieldDescriptor[]{
-				new FieldDescriptor("TestValue", "Test Value")
+		return new Object[]{new Remover(new ModalWindow() , true) , new Refresh(processVariablePanel) , new Refresh(parameterContextPanel)};
+	}
+
+	@ServiceMethod(callByContent=true)
+    public void changeType() throws Exception{		
+		if( "org.uengine.contexts.ComplexType".equals(this.getTypeInputter())){
+			ComplexType complexType = new ComplexType();
+			complexType.setDesignerMode(true);
+			this.setDefaultValue(complexType);
+		}else{
+			if( this.getTypeInputter() == null ){
+				this.setTypeInputter("java.lang.String");
 			}
-		);
-		
-		FieldDescriptor testValueFd = dialogTable.getFieldDescriptor("TestValue");
-		testValueFd.setType(type);
-		
-		InputDialog inputDialog = new InputDialog(dialogTable);
-		inputDialog.show();
-				
-		value = inputDialog.getInputForm().getInstance().getFieldValueObject("TestValue");
-		
-		super.testScript();
-//		ValidationContext vc = instance.getValidationContext();
-//		if(vc.size()>0)
-//			reportError(vc.toString());
-	}
+			this.setDefaultValue(Class.forName(this.getTypeInputter()).newInstance());
+		}
+    }
 
 }
-*/
