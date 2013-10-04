@@ -275,7 +275,7 @@ public class WebObjectType{
 		if(getFaceComponentPath()==null)
 			setFaceComponentPath("dwr/metaworks/genericfaces/ObjectFace.ejs");
 		
-		System.out.println("Metaworks mapped face file : " +  getFaceComponentPath() + " to class: " + getName());
+		//System.out.println("Metaworks mapped face file : " +  getFaceComponentPath() + " to class: " + getName());
 
 
 		//set the table name if specified in the annotation.
@@ -486,6 +486,18 @@ public class WebObjectType{
 					
 					fd.setAttribute("available.media", medias);
 				}
+				
+				if(available.condition().length > 0){
+					Map conditions = new HashMap();
+					int conditionSeq=0;
+					
+					for(String condition : available.condition()){
+						conditions.put(conditionSeq, condition);
+						conditionSeq++;
+					}
+					
+					fd.setAttribute("available.condition", conditions);
+				}				
 			}
 
 			
