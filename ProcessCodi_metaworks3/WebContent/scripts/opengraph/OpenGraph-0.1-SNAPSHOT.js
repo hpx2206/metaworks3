@@ -2525,8 +2525,8 @@ paper.foreignObject('<div>test</div>', 100, 100, 50, 50);
         return out;
     };
 
-    paperproto.image = function (src, x, y, w, h) {
-        var out = R._engine.image(this, src || "about:blank", x || 0, y || 0, w || 0, h || 0);
+    paperproto.image = function (src, x, y, w, h, title) {
+        var out = R._engine.image(this, src || "about:blank", x || 0, y || 0, w || 0, h || 0, title);
         this.__set__ && this.__set__.push(out);
         return out;
     };
@@ -3850,9 +3850,10 @@ window.Raphael.svg && function (R) {
             SVG = element.paper,
             s = o.style,
             el = R._g.doc.getElementById(id);
+
         if (!el) {
             gradient = Str(gradient).replace(R._radial_gradient, function (all, _fx, _fy) {
-                type = "radial";
+                //type = "radial";
                 if (_fx && _fy) {
                     fx = toFloat(_fx);
                     fy = toFloat(_fy);
@@ -3866,7 +3867,8 @@ window.Raphael.svg && function (R) {
             });
             gradient = gradient.split(/\s*\-\s*/);
             if (type == "linear") {
-                var angle = gradient.shift();
+                var angle = 0;
+
                 angle = -toFloat(angle);
                 if (isNaN(angle)) {
                     return null;
@@ -3889,7 +3891,6 @@ window.Raphael.svg && function (R) {
                 return null;
             }
             id = id.replace(/[\(\)\s,\xb0#]/g, "_");
-
             if (element.gradient && id != element.gradient.id) {
                 SVG.defs.removeChild(element.gradient);
                 delete element.gradient;
@@ -4308,7 +4309,7 @@ window.Raphael.svg && function (R) {
                             !R.is(attrs["fill-opacity"], "undefined") &&
                                 R.is(params["fill-opacity"], "undefined") &&
                                 $(node, {"fill-opacity": attrs["fill-opacity"]});
-                        } else if ((o.type == "circle" || o.type == "ellipse" || Str(value).charAt() != "r") && addGradientFill(o, value)) {
+                        } else if ((o.type == "circle" || o.type == "ellipse" || o.type == "path" || Str(value).charAt() != "r") && addGradientFill(o, value)) {
                             if ("opacity" in attrs || "fill-opacity" in attrs) {
                                 var gradient = R._g.doc.getElementById(node.getAttribute("fill").replace(/^url\(#|\)$/g, E));
                                 if (gradient) {
@@ -4351,6 +4352,7 @@ window.Raphael.svg && function (R) {
 					case "shape-rendering":
 						node.setAttribute(att, value);
 						break;
+
                     default:
                         att == "font-size" && (value = toInt(value, 10) + "px");
                         var cssrule = att.replace(/(\-.)/g, function (w) {
@@ -4453,6 +4455,15 @@ window.Raphael.svg && function (R) {
             path: pathString
         });
         return p;
+    };
+
+    elproto.setTooltip = function(title){
+        if (this.removed) {
+            return this;
+        }
+
+        this.node.setAttribute('tooltip', 'enable');
+        this.node.setAttribute('title', title);
     };
 
     elproto.rotate = function (deg, cx, cy) {
@@ -4766,9 +4777,9 @@ window.Raphael.svg && function (R) {
         $(el, res.attrs);
         return res;
     };
-    R._engine.image = function (svg, src, x, y, w, h) {
+    R._engine.image = function (svg, src, x, y, w, h, title) {
         var el = $("image");
-        $(el, {x: x, y: y, width: w, height: h, preserveAspectRatio: "none"});
+        $(el, {x: x, y: y, width: w, height: h, preserveAspectRatio: "none", title: title});
         el.setAttributeNS(xlink, "href", src);
         svg.canvas && svg.canvas.appendChild(el);
         var res = new Element(el, svg);
@@ -4850,9 +4861,9 @@ window.Raphael.svg && function (R) {
     };
     R._engine.create = function () {
         var con = R._getContainer.apply(0, arguments),
-            container = con && con.container,
+			container = con && con.container,
             x = con.x,
-            y = con.y,
+			y = con.y,
             width = con.width,
             height = con.height;
         if (!container) {
@@ -5224,6 +5235,7 @@ window.Raphael.vml && function (R) {
             params["stroke-miterlimit"] != null ||
             params["stroke-linejoin"] != null ||
             params["stroke-linecap"] != null) {
+
             var fill = node.getElementsByTagName(fillString),
                 newfill = false;
             fill = fill && fill[0];
@@ -5708,19 +5720,19 @@ window.Raphael.vml && function (R) {
         return this;
     };
     elproto.blur = function (size) {
-        var s = this.node.runtimeStyle,
-            f = s.filter;
-        f = f.replace(blurregexp, E);
-        if (+size !== 0) {
-            this.attrs.blur = size;
-            s.filter = f + S + ms + ".Blur(pixelradius=" + (+size || 1.5) + ")";
-            s.margin = R.format("-{0}px 0 0 -{0}px", round(+size || 1.5));
-        } else {
-            s.filter = f;
-            s.margin = 0;
-            delete this.attrs.blur;
-        }
-    };
+              var s = this.node.runtimeStyle,
+                  f = s.filter;
+              f = f.replace(blurregexp, E);
+              if (+size !== 0) {
+                  this.attrs.blur = size;
+                  s.filter = f + S + ms + ".Blur(pixelradius=" + (+size || 1.5) + ")";
+                  s.margin = R.format("-{0}px 0 0 -{0}px", round(+size || 1.5));
+              } else {
+                  s.filter = f;
+                  s.margin = 0;
+                  delete this.attrs.blur;
+              }
+          };
 
 	// 추가(for group 기능)
 	R._engine.group = function (vml, x, y) {
@@ -6171,6 +6183,18 @@ OG.common.Constants = {
 	 */
 	COLLAPSE_SUFFIX     : "_COLLAPSE",
 	COLLAPSE_BBOX_SUFFIX: "_COLLAPSE_BBOX",
+
+    /**
+     * LoopType 용 가이드 ID의 suffix 정의
+     */
+    LOOPTYPE_SUFFIX : "_LOOPTYPE",
+    LOOPTYPE_BBOX_SUFFIX : "_LOOPTYPE_BBOX",
+
+    /**
+     * TaskType 용 가이드 ID의 suffix 정의
+     */
+    TASKTYPE_SUFFIX : "_TASKTYPE",
+    TASKTYPE_BBOX_SUFFIX : "_TASKTYPE_BBOX",
 
 	/**
 	 * Shape Move & Resize 시 이동 간격
@@ -6885,7 +6909,7 @@ OG.common.CurveUtil = {
 
 	/**
 	 * 주어진 좌표 Array (좌표1, 콘트롤포인트1, 콘트롤포인트2, 좌표2 ...) 에 대해 Cubic Bezier Curve 좌표를 계산하는 함수를 반환한다.
-	 * Array 갯수는 3 * K + 1 이어야 한다.
+	 * Array 갯수는 3 * K + 1 이어야 한다. 3
 	 * 예) 좌표1, 콘트롤포인트1, 콘트롤포인트2, 좌표2, 콘트롤포인트1, 콘트롤포인트2, 좌표3 ...
 	 *
 	 * @example
@@ -8635,6 +8659,7 @@ OG.geometry.Geometry.prototype = {
 	reset: function () {
 		this.boundary = null;
 	}
+
 };
 OG.geometry.Geometry.prototype.constructor = OG.geometry.Geometry;
 /**
@@ -8793,8 +8818,8 @@ OG.geometry.Curve = function (controlPoints) {
 	this.vertices = [];
 	for (t = 0; t <= cmRomSpline.maxT; t += 0.1) {
 		this.vertices.push(new OG.geometry.Coordinate(
-			OG.Util.round(cmRomSpline.getX(t)),
-			OG.Util.round(cmRomSpline.getY(t))
+			cmRomSpline.getX(t),
+			cmRomSpline.getY(t)
 		));
 	}
 
@@ -9743,6 +9768,7 @@ OG.shape.IShape = function () {
 	 */
 	this.LABEL_EDITABLE = true;
 };
+
 OG.shape.IShape.prototype = {
 	/**
 	 * Shape 간의 연결을 위한 Terminal 을 반환한다.
@@ -9783,6 +9809,8 @@ OG.shape.IShape.prototype = {
 	 */
 	clone: function () {
 		throw new OG.NotImplementedException("OG.shape.IShape.clone");
+	},
+	addEve : function(){
 	}
 };
 OG.shape.IShape.prototype.constructor = OG.shape.IShape;
@@ -10186,8 +10214,10 @@ OG.shape.GroupShape.prototype.createShape = function () {
 		return this.geom;
 	}
 
+
 	this.geom = new OG.geometry.Rectangle([0, 0], 100, 100);
 	this.geom.style = new OG.geometry.Style({
+	    'fill' : 'red',
 		'stroke': 'none'
 	});
 
@@ -10220,6 +10250,7 @@ OG.shape.HorizontalLaneShape = function (label) {
 	OG.shape.HorizontalLaneShape.superclass.call(this, label);
 
 	this.SHAPE_ID = 'OG.shape.HorizontalLaneShape';
+
 };
 OG.shape.HorizontalLaneShape.prototype = new OG.shape.GroupShape();
 OG.shape.HorizontalLaneShape.superclass = OG.shape.GroupShape;
@@ -10240,10 +10271,12 @@ OG.shape.HorizontalLaneShape.prototype.createShape = function () {
 	this.geom = new OG.geometry.Rectangle([0, 0], 100, 100);
 	this.geom.style = new OG.geometry.Style({
 		'label-direction': 'vertical',
-		'vertical-align' : 'top'
+		'vertical-align' : 'top',
+		fill: 'none'
+
 	});
 
-	return this.geom;
+    return this.geom;
 };
 /**
  * ForeignObject HTML Shape
@@ -10373,7 +10406,8 @@ OG.shape.VerticalLaneShape.prototype.createShape = function () {
 	this.geom = new OG.geometry.Rectangle([0, 0], 100, 100);
 	this.geom.style = new OG.geometry.Style({
 		'label-direction': 'horizontal',
-		'vertical-align' : 'top'
+		'vertical-align' : 'top',
+		fill: 'none'
 	});
 
 	return this.geom;
@@ -10392,9 +10426,8 @@ OG.shape.bpmn.A_Subprocess = function (label) {
 	OG.shape.bpmn.A_Subprocess.superclass.call(this, label);
 
 	this.SHAPE_ID = 'OG.shape.bpmn.A_Subprocess';
-	this.POPUP = true;
-    this.GROUP_COLLAPSIBLE = false;
-
+	this.GROUP_COLLAPSIBLE = false;
+	this.HaveButton = true;
 };
 OG.shape.bpmn.A_Subprocess.prototype = new OG.shape.GroupShape();
 OG.shape.bpmn.A_Subprocess.superclass = OG.shape.GroupShape;
@@ -10411,12 +10444,16 @@ OG.shape.bpmn.A_Subprocess.prototype.createShape = function () {
 	if (this.geom) {
 		return this.geom;
 	}
-	this.CONNECTABLE = true;
+    this.CONNECTABLE = true;
+
 
 	this.geom = new OG.geometry.Rectangle([0, 0], 100, 100);
 	this.geom.style = new OG.geometry.Style({
-		'stroke': 'black',
-		"r"     : 6
+		'stroke': '#62a716',
+		"stroke-width" : 1.5,
+		'r'     : 6,
+        fill: '#FFFFFF-#62a716',
+        'fill-opaicity': 1
 	});
 
 	return this.geom;
@@ -10436,9 +10473,15 @@ OG.shape.bpmn.A_Task = function (label) {
 
 	this.SHAPE_ID = 'OG.shape.bpmn.A_Task';
 	this.label = label;
+	this.CONNECTABLE = true;
+	this.GROUP_COLLAPSIBLE = false;
+	//this.HaveButton = true;
+	this.LoopType = "None";
+	this.TaskType = "None";
+	this.Events = [];
 };
-OG.shape.bpmn.A_Task.prototype = new OG.shape.GeomShape();
-OG.shape.bpmn.A_Task.superclass = OG.shape.GeomShape;
+OG.shape.bpmn.A_Task.prototype = new OG.shape.GroupShape();
+OG.shape.bpmn.A_Task.superclass = OG.shape.GroupShape;
 OG.shape.bpmn.A_Task.prototype.constructor = OG.shape.bpmn.A_Task;
 OG.A_Task = OG.shape.bpmn.A_Task;
 
@@ -10455,11 +10498,165 @@ OG.shape.bpmn.A_Task.prototype.createShape = function () {
 
 	this.geom = new OG.geometry.Rectangle([0, 0], 100, 100);
 	this.geom.style = new OG.geometry.Style({
-		"r": 6
+		"r": 10,
+		"stroke-width" : 2,
+		"stroke" : "#03689A",
+		fill: '#FFFFFF-#03689A',
+        'fill-opaicity': 0.1
 	});
 
 	return this.geom;
 };
+
+OG.shape.bpmn.A_Task.prototype.createTerminal = function(){
+    if (!this.geom) {
+    		return [];
+    	}
+
+    var envelope = this.geom.getBoundary();
+
+    return [
+		new OG.Terminal(envelope.getCentroid(), OG.Constants.TERMINAL_TYPE.C, OG.Constants.TERMINAL_TYPE.INOUT),
+		new OG.Terminal(envelope.getRightCenter(), OG.Constants.TERMINAL_TYPE.E, OG.Constants.TERMINAL_TYPE.INOUT),
+		new OG.Terminal(envelope.getLeftCenter(), OG.Constants.TERMINAL_TYPE.W, OG.Constants.TERMINAL_TYPE.INOUT),
+		new OG.Terminal(envelope.getLowerCenter(), OG.Constants.TERMINAL_TYPE.S, OG.Constants.TERMINAL_TYPE.INOUT),
+		new OG.Terminal(envelope.getUpperCenter(), OG.Constants.TERMINAL_TYPE.N, OG.Constants.TERMINAL_TYPE.INOUT),
+		new OG.Terminal(envelope.getUpperLeft(), OG.Constants.TERMINAL_TYPE.N, OG.Constants.TERMINAL_TYPE.INOUT),
+		new OG.Terminal(envelope.getUpperRight(), OG.Constants.TERMINAL_TYPE.N, OG.Constants.TERMINAL_TYPE.INOUT),
+		new OG.Terminal(envelope.getLowerLeft(), OG.Constants.TERMINAL_TYPE.S, OG.Constants.TERMINAL_TYPE.INOUT),
+		new OG.Terminal(envelope.getLowerRight(), OG.Constants.TERMINAL_TYPE.S, OG.Constants.TERMINAL_TYPE.INOUT),
+		new OG.Terminal(new OG.geometry.Coordinate((((envelope.getUpperCenter().x - envelope.getUpperLeft().x) / 3) * 1) + envelope.getUpperLeft().x, envelope.getUpperLeft().y), OG.Constants.TERMINAL_TYPE.N, OG.Constants.TERMINAL_TYPE.INOUT),
+		new OG.Terminal(new OG.geometry.Coordinate((((envelope.getUpperCenter().x - envelope.getUpperLeft().x) / 3) * 2) + envelope.getUpperLeft().x, envelope.getUpperLeft().y), OG.Constants.TERMINAL_TYPE.N, OG.Constants.TERMINAL_TYPE.INOUT),
+		new OG.Terminal(new OG.geometry.Coordinate((((envelope.getUpperRight().x - envelope.getUpperCenter().x) / 3) * 1) + envelope.getUpperCenter().x, envelope.getUpperLeft().y), OG.Constants.TERMINAL_TYPE.N, OG.Constants.TERMINAL_TYPE.INOUT),
+		new OG.Terminal(new OG.geometry.Coordinate((((envelope.getUpperRight().x - envelope.getUpperCenter().x) / 3) * 2) + envelope.getUpperCenter().x, envelope.getUpperLeft().y), OG.Constants.TERMINAL_TYPE.N, OG.Constants.TERMINAL_TYPE.INOUT),
+		new OG.Terminal(new OG.geometry.Coordinate((((envelope.getLowerCenter().x - envelope.getLowerLeft().x) / 3) * 1) + envelope.getLowerLeft().x, envelope.getLowerLeft().y), OG.Constants.TERMINAL_TYPE.S, OG.Constants.TERMINAL_TYPE.INOUT),
+		new OG.Terminal(new OG.geometry.Coordinate((((envelope.getLowerCenter().x - envelope.getLowerLeft().x) / 3) * 2) + envelope.getLowerLeft().x, envelope.getLowerLeft().y), OG.Constants.TERMINAL_TYPE.S, OG.Constants.TERMINAL_TYPE.INOUT),
+		new OG.Terminal(new OG.geometry.Coordinate((((envelope.getLowerRight().x - envelope.getLowerCenter().x) / 3) * 1) + envelope.getLowerCenter().x, envelope.getLowerLeft().y), OG.Constants.TERMINAL_TYPE.S, OG.Constants.TERMINAL_TYPE.INOUT),
+		new OG.Terminal(new OG.geometry.Coordinate((((envelope.getLowerRight().x - envelope.getLowerCenter().x) / 3) * 2) + envelope.getLowerCenter().x, envelope.getLowerLeft().y), OG.Constants.TERMINAL_TYPE.S, OG.Constants.TERMINAL_TYPE.INOUT),
+		new OG.Terminal(new OG.geometry.Coordinate( envelope.getUpperLeft().x, (((envelope.getLeftCenter().y - envelope.getUpperLeft().y) / 3) * 1) + envelope.getUpperLeft().y), OG.Constants.TERMINAL_TYPE.W, OG.Constants.TERMINAL_TYPE.INOUT),
+		new OG.Terminal(new OG.geometry.Coordinate( envelope.getUpperLeft().x, (((envelope.getLeftCenter().y - envelope.getUpperLeft().y) / 3) * 2) + envelope.getUpperLeft().y), OG.Constants.TERMINAL_TYPE.W, OG.Constants.TERMINAL_TYPE.INOUT),
+		new OG.Terminal(new OG.geometry.Coordinate( envelope.getUpperLeft().x, (((envelope.getLowerRight().y - envelope.getLeftCenter().y) / 3) * 1) + envelope.getLeftCenter().y), OG.Constants.TERMINAL_TYPE.W, OG.Constants.TERMINAL_TYPE.INOUT),
+		new OG.Terminal(new OG.geometry.Coordinate( envelope.getUpperLeft().x, (((envelope.getLowerRight().y - envelope.getLeftCenter().y) / 3) * 2) + envelope.getLeftCenter().y), OG.Constants.TERMINAL_TYPE.W, OG.Constants.TERMINAL_TYPE.INOUT),
+		new OG.Terminal(new OG.geometry.Coordinate( envelope.getUpperRight().x, (((envelope.getRightCenter().y - envelope.getUpperRight().y) / 3) * 1) + envelope.getUpperRight().y), OG.Constants.TERMINAL_TYPE.E, OG.Constants.TERMINAL_TYPE.INOUT),
+		new OG.Terminal(new OG.geometry.Coordinate( envelope.getUpperRight().x, (((envelope.getRightCenter().y - envelope.getUpperRight().y) / 3) * 2) + envelope.getUpperRight().y), OG.Constants.TERMINAL_TYPE.E, OG.Constants.TERMINAL_TYPE.INOUT),
+		new OG.Terminal(new OG.geometry.Coordinate( envelope.getUpperRight().x, (((envelope.getLowerRight().y - envelope.getRightCenter().y) / 3) * 1) + envelope.getRightCenter().y), OG.Constants.TERMINAL_TYPE.E, OG.Constants.TERMINAL_TYPE.INOUT),
+		new OG.Terminal(new OG.geometry.Coordinate( envelope.getUpperRight().x, (((envelope.getLowerRight().y - envelope.getRightCenter().y) / 3) * 2) + envelope.getRightCenter().y), OG.Constants.TERMINAL_TYPE.E, OG.Constants.TERMINAL_TYPE.INOUT)
+    ];
+}
+
+/**
+ * BPMN : Task Activity Shape
+ *
+ * @class
+ * @extends OG.shape.GeomShape
+ * @requires OG.common.*, OG.geometry.*
+ *
+ * @param {String} label 라벨 [Optional]
+ * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
+ */
+OG.shape.bpmn.Signal = function (label) {
+	OG.shape.bpmn.Signal.superclass.call(this);
+
+	this.SHAPE_ID = 'OG.shape.bpmn.Signal';
+	this.label = label;
+};
+OG.shape.bpmn.Signal.prototype = new OG.shape.GeomShape();
+OG.shape.bpmn.Signal.superclass = OG.shape.GeomShape;
+OG.shape.bpmn.Signal.prototype.constructor = OG.shape.bpmn.Signal;
+OG.Signal = OG.shape.bpmn.Signal;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.bpmn.Signal.prototype.createShape = function () {
+    var geom1, geom2, geom3, geomCollection = [];
+    	if (this.geom) {
+    		return this.geom;
+    	}
+
+    	geom1 = new OG.geometry.Circle([50, 50], 50);
+    	geom2 = new OG.geometry.Circle([50, 50], 40);
+        geom3 = new OG.Polygon([
+    		[15, 75],
+    		[50, 10],
+    		[85, 75]
+    	]);
+
+    	geomCollection.push(geom1);
+    	geomCollection.push(geom2);
+    	geomCollection.push(geom3);
+
+    	this.geom = new OG.geometry.GeometryCollection(geomCollection);
+    	this.geom.style = new OG.geometry.Style({
+    		'label-position': 'bottom',
+    		"stroke-width": 1.5,
+     		"stroke" : "#969149",
+     		fill: "white",
+     		"fill-opacity": 1
+    	});
+
+    	return this.geom;
+};
+
+OG.shape.bpmn.ParallelMultiple = function (label) {
+	OG.shape.bpmn.ParallelMultiple.superclass.call(this);
+
+	this.SHAPE_ID = 'OG.shape.bpmn.ParallelMultiple';
+	this.label = label;
+};
+OG.shape.bpmn.ParallelMultiple.prototype = new OG.shape.GeomShape();
+OG.shape.bpmn.ParallelMultiple.superclass = OG.shape.GeomShape;
+OG.shape.bpmn.ParallelMultiple.prototype.constructor = OG.shape.bpmn.ParallelMultiple;
+OG.ParallelMultiple = OG.shape.bpmn.ParallelMultiple;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.bpmn.ParallelMultiple.prototype.createShape = function () {
+	var geom1, geom2, geomCollection = [];
+        	if (this.geom) {
+        		return this.geom;
+        	}
+
+        	geom1 = new OG.geometry.Circle([50, 50], 50);
+        	geom2 = new OG.geometry.Circle([50, 50], 40);
+            geom3 = new OG.Polygon([
+        		[20, 40],
+        		[20, 60],
+        		[40, 60],
+        		[40, 80],
+        		[60, 80],
+        		[60, 60],
+        		[80, 60],
+        		[80, 40],
+        		[60, 40],
+        		[60, 20],
+        		[40, 20],
+        		[40, 40]
+        	]);
+
+        	geomCollection.push(geom1);
+        	geomCollection.push(geom2);
+        	geomCollection.push(geom3);
+
+        	this.geom = new OG.geometry.GeometryCollection(geomCollection);
+        	this.geom.style = new OG.geometry.Style({
+        		'label-position': 'bottom',
+        		"stroke-width": 1.5,
+         		"stroke" : "#969149",
+         		fill: "white",
+         		"fill-opacity": 1
+        	});
+
+        	return this.geom;
+};
+
 /**
  * BPMN : Annotation Association Connector Shape
  *
@@ -10813,8 +11010,11 @@ OG.shape.bpmn.E_End.prototype.createShape = function () {
 
 	this.geom = new OG.geometry.Circle([50, 50], 50);
 	this.geom.style = new OG.geometry.Style({
+		"stroke" : "#AA0000",
 		"stroke-width"  : 3,
-		'label-position': 'bottom'
+		'label-position': 'bottom',
+		fill : "#FFFFFF - #FF0000",
+		"fill-opacity" : 0.1
 	});
 
 	return this.geom;
@@ -10842,18 +11042,16 @@ OG.shape.bpmn.E_End.prototype.createTerminal = function () {
 	];
 };
 
+OG.shape.bpmn.E_End2 = function (label) {
+	OG.shape.bpmn.E_End2.superclass.call(this);
 
-
-OG.shape.bpmn.E_End_Connector = function (label) {
-	OG.shape.bpmn.E_End_Connector.superclass.call(this);
-
-	this.SHAPE_ID = 'OG.shape.bpmn.E_End_Connector';
+	this.SHAPE_ID = 'OG.shape.bpmn.E_End2';
 	this.label = label;
 };
-OG.shape.bpmn.E_End_Connector.prototype = new OG.shape.GeomShape();
-OG.shape.bpmn.E_End_Connector.superclass = OG.shape.GeomShape;
-OG.shape.bpmn.E_End_Connector.prototype.constructor = OG.shape.bpmn.E_End_Connector;
-OG.E_End_Connector = OG.shape.bpmn.E_End_Connector;
+OG.shape.bpmn.E_End2.prototype = new OG.shape.GeomShape();
+OG.shape.bpmn.E_End2.superclass = OG.shape.GeomShape;
+OG.shape.bpmn.E_End2.prototype.constructor = OG.shape.bpmn.E_End2;
+OG.E_End = OG.shape.bpmn.E_End2;
 
 /**
  * 드로잉할 Shape 을 생성하여 반환한다.
@@ -10861,80 +11059,34 @@ OG.E_End_Connector = OG.shape.bpmn.E_End_Connector;
  * @return {OG.geometry.Geometry} Shape 정보
  * @override
  */
-OG.shape.bpmn.E_End_Connector.prototype.createShape = function () {
-	var geom1, geomCollection = [];
-    	if (this.geom) {
-    		return this.geom;
-    	}
 
-    	geom1 = new OG.geometry.Polygon([
-    		[20, 34],
-    		[20, 65],
-    		[60, 65],
-    		[60, 80],
-    		[85, 50],
-    		[60, 20],
-    		[60, 34]
-    	]);
-    	geom1.style = new OG.geometry.Style({
-    		"fill"        : "black",
-    		"fill-opacity": 1
-    	});
-        geomCollection.push(new OG.geometry.Circle([50, 50], 50));
-        geomCollection.push(new OG.geometry.Circle([50, 50], 42));
-    	geomCollection.push(geom1);
-
-    	this.geom = new OG.geometry.GeometryCollection(geomCollection);
-    	this.geom.style = new OG.geometry.Style({
-    		'label-position': 'bottom'
-    	});
-
-    	return this.geom;
-};
-
-
-OG.shape.bpmn.Value_Chain = function (label) {
-	OG.shape.bpmn.Value_Chain.superclass.call(this);
-
-	this.SHAPE_ID = 'OG.shape.bpmn.Value_Chain';
-	this.label = label;
-	this.POPUP = true;
-    this.GROUP_COLLAPSIBLE = false;
+OG.shape.bpmn.E_End2.prototype.createShape = function () {
 
 };
-OG.shape.bpmn.Value_Chain.prototype = new OG.shape.GeomShape();
-OG.shape.bpmn.Value_Chain.superclass = OG.shape.GeomShape;
-OG.shape.bpmn.Value_Chain.prototype.constructor = OG.shape.bpmn.Value_Chain;
-OG.Value_Chain = OG.shape.bpmn.Value_Chain;
+
+
 
 /**
- * 드로잉할 Shape 을 생성하여 반환한다.
+ * Shape 간의 연결을 위한 Terminal 을 반환한다.
  *
- * @return {OG.geometry.Geometry} Shape 정보
+ * @return {OG.Terminal[]} Terminal
  * @override
  */
-OG.shape.bpmn.Value_Chain.prototype.createShape = function () {
-	if (this.geom) {
-		return this.geom;
+OG.shape.bpmn.E_End2.prototype.createTerminal = function () {
+	if (!this.geom) {
+		return [];
 	}
 
-	this.geom = new OG.geometry.Polygon([
-		[0, 0],
-		[20, 50],
-		[0, 100],
-		[80, 100],
-		[100, 50],
-        [80, 0]
-	]);
+	var envelope = this.geom.getBoundary();
 
-	this.geom.style = new OG.geometry.Style({
-		'label-position': 'bottom'
-	});
-
-	return this.geom;
+	return [
+		new OG.Terminal(envelope.getCentroid(), OG.Constants.TERMINAL_TYPE.C, OG.Constants.TERMINAL_TYPE.IN),
+		new OG.Terminal(envelope.getRightCenter(), OG.Constants.TERMINAL_TYPE.E, OG.Constants.TERMINAL_TYPE.IN),
+		new OG.Terminal(envelope.getLeftCenter(), OG.Constants.TERMINAL_TYPE.W, OG.Constants.TERMINAL_TYPE.IN),
+		new OG.Terminal(envelope.getLowerCenter(), OG.Constants.TERMINAL_TYPE.S, OG.Constants.TERMINAL_TYPE.IN),
+		new OG.Terminal(envelope.getUpperCenter(), OG.Constants.TERMINAL_TYPE.N, OG.Constants.TERMINAL_TYPE.IN)
+	];
 };
-
-
 
 
 /**
@@ -11103,14 +11255,18 @@ OG.shape.bpmn.E_End_Error.prototype.createShape = function () {
 		"stroke-width": 3
 	});
 
-	geom2 = new OG.geometry.PolyLine([
+	geom2 = new OG.geometry.Polygon([
 		[20, 75],
 		[40, 40],
 		[60, 60],
-		[80, 20]
+		[80, 20],
+		[67, 80],
+		[44, 57]
 	]);
 	geom2.style = new OG.geometry.Style({
-		"stroke-width": 2
+    //    "stroke-width": 1
+		"fill"        : "black",
+        "fill-opacity": 1
 	});
 
 	geomCollection.push(geom1);
@@ -11151,32 +11307,28 @@ OG.E_End_Link = OG.shape.bpmn.E_End_Link;
  * @override
  */
 OG.shape.bpmn.E_End_Link.prototype.createShape = function () {
-	var geom1, geom2, geomCollection = [];
+	var geom1, geomCollection = [];
 	if (this.geom) {
 		return this.geom;
 	}
 
-	geom1 = new OG.geometry.Circle([50, 50], 50);
-	geom1.style = new OG.geometry.Style({
-		"stroke-width": 3
-	});
-
-	geom2 = new OG.geometry.Polygon([
-		[20, 40],
-		[20, 60],
-		[60, 60],
+	geom1 = new OG.geometry.Polygon([
+		[20, 35],
+		[20, 65],
+		[60, 65],
 		[60, 80],
 		[85, 50],
 		[60, 20],
-		[60, 40]
+		[60, 35]
 	]);
-	geom2.style = new OG.geometry.Style({
+	geom1.style = new OG.geometry.Style({
 		"fill"        : "black",
 		"fill-opacity": 1
 	});
 
+	geomCollection.push(new OG.geometry.Circle([50, 50], 50));
+	geomCollection.push(new OG.geometry.Circle([50, 50], 42));
 	geomCollection.push(geom1);
-	geomCollection.push(geom2);
 
 	this.geom = new OG.geometry.GeometryCollection(geomCollection);
 	this.geom.style = new OG.geometry.Style({
@@ -11399,13 +11551,17 @@ OG.shape.bpmn.E_Intermediate_Compensation.prototype.createShape = function () {
 	]);
 
 	geomCollection.push(new OG.geometry.Circle([50, 50], 50));
-	geomCollection.push(new OG.geometry.Circle([50, 50], 42));
+	geomCollection.push(new OG.geometry.Circle([50, 50], 40));
 	geomCollection.push(geom1);
 	geomCollection.push(geom2);
 
 	this.geom = new OG.geometry.GeometryCollection(geomCollection);
 	this.geom.style = new OG.geometry.Style({
-		'label-position': 'bottom'
+		'label-position': 'bottom',
+		"stroke" : "#969149",
+		"stroke-width" : 1.5,
+		fill : "white",
+		"fill-opacity" : 1
 	});
 
 	return this.geom;
@@ -11456,7 +11612,11 @@ OG.shape.bpmn.E_Intermediate_Error.prototype.createShape = function () {
 
 	this.geom = new OG.geometry.GeometryCollection(geomCollection);
 	this.geom.style = new OG.geometry.Style({
-		'label-position': 'bottom'
+		'label-position': 'bottom',
+		"stroke" : "#969149",
+		"stroke-width" : 1.5,
+		fill : "white",
+		"fill-opacity" : 1
 	});
 
 	return this.geom;
@@ -11489,19 +11649,119 @@ OG.E_Intermediate_Link = OG.shape.bpmn.E_Intermediate_Link;
  * @override
  */
 OG.shape.bpmn.E_Intermediate_Link.prototype.createShape = function () {
+
+	if (this.geom) {
+		return this.geom;
+	}
+    this.geom = new OG.geometry.Polygon([
+		[0, 0],
+		[80, 0],
+		[100, 50],
+		[80, 100],
+		[0, 100],
+        [20, 50]
+	]);
+
+	return this.geom;
+};
+
+/**
+ * BPMN : Link Intermediate Event Shape
+ *
+ * @class
+ * @extends OG.shape.GeomShape
+ * @requires OG.common.*, OG.geometry.*
+ *
+ * @param {String} label 라벨 [Optional]
+ * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
+ */
+OG.shape.bpmn.Value_Chain = function (label) {
+	OG.shape.bpmn.Value_Chain.superclass.call(this);
+
+	this.SHAPE_ID = 'OG.shape.bpmn.Value_Chain';
+	this.label = label;
+	this.HaveButton = true;
+	this.LoopType = "None";
+
+};
+OG.shape.bpmn.Value_Chain.prototype = new OG.shape.GeomShape();
+OG.shape.bpmn.Value_Chain.superclass = OG.shape.GeomShape;
+OG.shape.bpmn.Value_Chain.prototype.constructor = OG.shape.bpmn.Value_Chain;
+OG.Value_Chain = OG.shape.bpmn.Value_Chain;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.bpmn.Value_Chain.prototype.createShape = function () {
+	if (this.geom) {
+		return this.geom;
+	}
+
+	this.geom = new OG.geometry.Polygon([
+		[0, 0],
+		[20, 50],
+		[0, 100],
+		[80, 100],
+		[100, 50],
+        [80, 0]
+	]);
+
+	this.geom.style = new OG.geometry.Style({
+        fill: "#FFFFFF-#9FD7FF",
+        "fill-opacity": 1,
+        "stroke": '#9FD7FF'
+	});
+
+	return this.geom;
+};
+
+
+
+/**
+ * BPMN : Link Start Event Shape
+ *
+ * @class
+ * @extends OG.shape.GeomShape
+ * @requires OG.common.*, OG.geometry.*
+ *
+ * @param {String} label 라벨 [Optional]
+ * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
+ */
+OG.shape.bpmn.E_Start_Connector = function (label) {
+	OG.shape.bpmn.E_Start_Connector.superclass.call(this);
+
+	this.SHAPE_ID = 'OG.shape.bpmn.E_Start_Connector';
+	this.label = label;
+
+};
+OG.shape.bpmn.E_Start_Connector.prototype = new OG.shape.GeomShape();
+OG.shape.bpmn.E_Start_Connector.superclass = OG.shape.GeomShape;
+OG.shape.bpmn.E_Start_Connector.prototype.constructor = OG.shape.bpmn.E_Start_Connector;
+OG.E_Start_Connector = OG.shape.bpmn.E_Start_Connector;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.bpmn.E_Start_Connector.prototype.createShape = function () {
 	var geom1, geomCollection = [];
 	if (this.geom) {
 		return this.geom;
 	}
 
 	geom1 = new OG.geometry.Polygon([
-		[20, 40],
-		[20, 60],
-		[60, 60],
-		[60, 80],
-		[85, 50],
-		[60, 20],
-		[60, 40]
+		[20, 34],
+        [20, 65],
+        [60, 65],
+        [60, 80],
+        [85, 50],
+        [60, 20],
+        [60, 34]
 	]);
 
 	geomCollection.push(new OG.geometry.Circle([50, 50], 50));
@@ -11515,6 +11775,65 @@ OG.shape.bpmn.E_Intermediate_Link.prototype.createShape = function () {
 
 	return this.geom;
 };
+
+/**
+ * BPMN : Link End Event Shape
+ *
+ * @class
+ * @extends OG.shape.GeomShape
+ * @requires OG.common.*, OG.geometry.*
+ *
+ * @param {String} label 라벨 [Optional]
+ * @author <a href="mailto:hrkenshin@gmail.com">Seungbaek Lee</a>
+ */
+OG.shape.bpmn.E_End_Connector = function (label) {
+	OG.shape.bpmn.E_End_Connector.superclass.call(this);
+
+	this.SHAPE_ID = 'OG.shape.bpmn.E_End_Connector';
+	this.label = label;
+};
+OG.shape.bpmn.E_End_Connector.prototype = new OG.shape.GeomShape();
+OG.shape.bpmn.E_End_Connector.superclass = OG.shape.GeomShape;
+OG.shape.bpmn.E_End_Connector.prototype.constructor = OG.shape.bpmn.E_End_Connector;
+OG.E_End_Connector = OG.shape.bpmn.E_End_Connector;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.bpmn.E_End_Connector.prototype.createShape = function () {
+	var geom1, geomCollection = [];
+	if (this.geom) {
+		return this.geom;
+	}
+
+	geom1 = new OG.geometry.Polygon([
+		[20, 34],
+                [20, 65],
+                [60, 65],
+                [60, 80],
+                [85, 50],
+                [60, 20],
+                [60, 34]
+	]);
+	geom1.style = new OG.geometry.Style({
+		"fill"        : "black",
+		"fill-opacity": 1
+	});
+    geomCollection.push(new OG.geometry.Circle([50, 50], 50));
+    geomCollection.push(new OG.geometry.Circle([50, 50], 42));
+	geomCollection.push(geom1);
+
+	this.geom = new OG.geometry.GeometryCollection(geomCollection);
+	this.geom.style = new OG.geometry.Style({
+		'label-position': 'bottom'
+	});
+
+	return this.geom;
+};
+
 /**
  * BPMN : Message Intermediate Event Shape
  *
@@ -11564,7 +11883,11 @@ OG.shape.bpmn.E_Intermediate_Message.prototype.createShape = function () {
 
 	this.geom = new OG.geometry.GeometryCollection(geomCollection);
 	this.geom.style = new OG.geometry.Style({
-		'label-position': 'bottom'
+		'label-position': 'bottom',
+		"stroke" : "#969149",
+		"stroke-width" : 1.5,
+		fill : "white",
+		"fill-opacity" : 1
 	});
 
 	return this.geom;
@@ -11603,31 +11926,76 @@ OG.shape.bpmn.E_Intermediate_Multiple.prototype.createShape = function () {
 	}
 
 	geom1 = new OG.geometry.Polygon([
-		[50, 15],
-		[39, 33],
-		[20, 33],
-		[29, 50],
-		[19, 67],
-		[40, 67],
-		[50, 85],
-		[60, 68],
-		[80, 68],
-		[70, 50],
-		[79, 33],
-		[60, 33]
+		[20, 50],
+		[50, 20],
+		[80, 50],
+		[65, 75],
+		[35, 75]
 	]);
 
 	geomCollection.push(new OG.geometry.Circle([50, 50], 50));
-	geomCollection.push(new OG.geometry.Circle([50, 50], 42));
+	geomCollection.push(new OG.geometry.Circle([50, 50], 40));
 	geomCollection.push(geom1);
 
 	this.geom = new OG.geometry.GeometryCollection(geomCollection);
 	this.geom.style = new OG.geometry.Style({
-		'label-position': 'bottom'
+		'label-position': 'bottom',
+		"stroke" : "#969149",
+		"stroke-width" : 1.5,
+		fill : "white",
+		"fill-opacity" : 1
 	});
 
 	return this.geom;
 };
+
+
+OG.shape.bpmn.E_Intermediate_Escalation = function (label) {
+	OG.shape.bpmn.E_Intermediate_Escalation.superclass.call(this);
+
+	this.SHAPE_ID = 'OG.shape.bpmn.E_Intermediate_Escalation';
+	this.label = label;
+};
+OG.shape.bpmn.E_Intermediate_Escalation.prototype = new OG.shape.GeomShape();
+OG.shape.bpmn.E_Intermediate_Escalation.superclass = OG.shape.GeomShape;
+OG.shape.bpmn.E_Intermediate_Escalation.prototype.constructor = OG.shape.bpmn.E_Intermediate_Escalation;
+OG.E_Intermediate_Escalation = OG.shape.bpmn.E_Intermediate_Escalation;
+
+/**
+ * 드로잉할 Shape 을 생성하여 반환한다.
+ *
+ * @return {OG.geometry.Geometry} Shape 정보
+ * @override
+ */
+OG.shape.bpmn.E_Intermediate_Escalation.prototype.createShape = function () {
+	var geom1, geomCollection = [];
+	if (this.geom) {
+		return this.geom;
+	}
+
+	geom1 = new OG.geometry.Polygon([
+		[20, 80],
+		[50, 20],
+		[80, 80],
+		[50, 50]
+	]);
+
+	geomCollection.push(new OG.geometry.Circle([50, 50], 50));
+	geomCollection.push(new OG.geometry.Circle([50, 50], 40));
+	geomCollection.push(geom1);
+
+	this.geom = new OG.geometry.GeometryCollection(geomCollection);
+	this.geom.style = new OG.geometry.Style({
+		'label-position': 'bottom',
+        "stroke" : "#969149",
+		"stroke-width" : 1.5,
+		fill : "white",
+		"fill-opacity" : 1
+	});
+
+	return this.geom;
+};
+
 /**
  * BPMN : Rule Intermediate Event Shape
  *
@@ -11673,7 +12041,11 @@ OG.shape.bpmn.E_Intermediate_Rule.prototype.createShape = function () {
 
 	this.geom = new OG.geometry.GeometryCollection(geomCollection);
 	this.geom.style = new OG.geometry.Style({
-		'label-position': 'bottom'
+		'label-position': 'bottom',
+		"stroke" : "#969149",
+		"stroke-width" : 1.5,
+		fill : "white",
+		"fill-opacity" : 1
 	});
 
 	return this.geom;
@@ -11730,7 +12102,11 @@ OG.shape.bpmn.E_Intermediate_Timer.prototype.createShape = function () {
 
 	this.geom = new OG.geometry.GeometryCollection(geomCollection);
 	this.geom.style = new OG.geometry.Style({
-		'label-position': 'bottom'
+		'label-position': 'bottom',
+		"stroke" : "#969149",
+		"stroke-width" : 1.5,
+		fill : "white",
+		"fill-opacity" : 1
 	});
 
 	return this.geom;
@@ -11796,55 +12172,6 @@ OG.shape.bpmn.E_Start.prototype.createTerminal = function () {
 		new OG.Terminal(envelope.getUpperCenter(), OG.Constants.TERMINAL_TYPE.N, OG.Constants.TERMINAL_TYPE.OUT)
 	];
 };
-
-
-OG.shape.bpmn.E_Start_Connector = function (label) {
-	OG.shape.bpmn.E_Start_Connector.superclass.call(this);
-
-	this.SHAPE_ID = 'OG.shape.bpmn.E_Start_Connector';
-	this.label = label;
-};
-OG.shape.bpmn.E_Start_Connector.prototype = new OG.shape.GeomShape();
-OG.shape.bpmn.E_Start_Connector.superclass = OG.shape.GeomShape;
-OG.shape.bpmn.E_Start_Connector.prototype.constructor = OG.shape.bpmn.E_Start_Connector;
-OG.E_Start_Connector = OG.shape.bpmn.E_Start_Connector;
-
-/**
- * 드로잉할 Shape 을 생성하여 반환한다.
- *
- * @return {OG.geometry.Geometry} Shape 정보
- * @override
- */
-OG.shape.bpmn.E_Start_Connector.prototype.createShape = function () {
-	var geom1, geomCollection = [];
-    	if (this.geom) {
-    		return this.geom;
-    	}
-
-    	geom1 = new OG.geometry.Polygon([
-    		[20, 34],
-            [20, 65],
-            [60, 65],
-            [60, 80],
-            [85, 50],
-            [60, 20],
-            [60, 34]
-    	]);
-
-    	geomCollection.push(new OG.geometry.Circle([50, 50], 50));
-    	geomCollection.push(new OG.geometry.Circle([50, 50], 42));
-    	geomCollection.push(geom1);
-
-    	this.geom = new OG.geometry.GeometryCollection(geomCollection);
-    	this.geom.style = new OG.geometry.Style({
-    		'label-position': 'bottom'
-    	});
-
-    	return this.geom;
-};
-
-
-
 /**
  * BPMN : Link Start Event Shape
  *
@@ -11873,28 +12200,26 @@ OG.E_Start_Link = OG.shape.bpmn.E_Start_Link;
  * @override
  */
 OG.shape.bpmn.E_Start_Link.prototype.createShape = function () {
-	var geom1, geom2, geomCollection = [];
+	var geom1, geomCollection = [];
 	if (this.geom) {
 		return this.geom;
 	}
 
-	geom1 = new OG.geometry.Circle([50, 50], 50);
-	geom1.style = new OG.geometry.Style({
-		"stroke-width": 1
-	});
-
-	geom2 = new OG.geometry.Polygon([
-		[20, 40],
-		[20, 60],
-		[60, 60],
+	geom1 = new OG.geometry.Polygon([
+		[20, 35],
+		[20, 65],
+		[60, 65],
 		[60, 80],
 		[85, 50],
 		[60, 20],
-		[60, 40]
+		[60, 35]
 	]);
 
+
+
+	geomCollection.push(new OG.geometry.Circle([50, 50], 50));
+	geomCollection.push(new OG.geometry.Circle([50, 50], 42));
 	geomCollection.push(geom1);
-	geomCollection.push(geom2);
 
 	this.geom = new OG.geometry.GeometryCollection(geomCollection);
 	this.geom.style = new OG.geometry.Style({
@@ -12172,7 +12497,7 @@ OG.shape.bpmn.E_Terminate.prototype.createShape = function () {
 
 	geom2 = new OG.geometry.Circle([50, 50], 30);
 	geom2.style = new OG.geometry.Style({
-		"fill"        : "black",
+		"fill"        : "blue",
 		"fill-opacity": 1
 	});
 
@@ -12892,7 +13217,23 @@ OG.renderer.IRenderer.prototype = {
 
 		return toTerminal;
 	},
+    /*
+	_createTerminal: function(element, line){
+        var terminal, distance, intersectPoints;
+        intersectPoints = element.shape.geom.intersectToLine(line);
 
+        for (i = 0; i < intersectPoints.length; i++) {
+			distance = intersectPoints[i].distance(isFrom ? to : from);
+			if (distance < minDistance) {
+				minDistance = distance;
+				position = [intersectPoints[i].x, intersectPoints[i].y];
+				direction = "c";
+			}
+		}
+
+	    return terminal;
+	},
+    */
 	/**
 	 * 터미널로부터 부모 Shape element 를 찾아 반환한다.
 	 *
@@ -13538,13 +13879,27 @@ OG.renderer.IRenderer.prototype = {
 					collapsedUpperLeft, me._CONFIG.COLLAPSE_SIZE * 3, me._CONFIG.COLLAPSE_SIZE * 2);
 			}
 		}
-
 		switch (edgeType) {
 		case OG.Constants.EDGE_TYPE.PLAIN:
 		case OG.Constants.EDGE_TYPE.BEZIER:
-			terminal = isFrom ? this._findFromTerminal(element, from, to) : this._findToTerminal(element, from, to);
+		/*
+            intersectPoints = element.shape.geom.intersectToLine([from, to]);
+            position = isFrom ? from : to;
+			//direction = "c";
+			for (i = 0; i < intersectPoints.length; i++) {
+				distance = intersectPoints[i].distance(isFrom ? to : from);
+				if (distance < minDistance) {
+					minDistance = distance;
+					position = [intersectPoints[i].x, intersectPoints[i].y];
+					//direction = "c";
+				}
+			}
+*/
+
+            terminal = isFrom ? this._findFromTerminal(element, from, to) : this._findToTerminal(element, from, to);
 			position = [terminal.terminal.position.x, terminal.terminal.position.y];
 			direction = terminal.terminal.direction.toLowerCase();
+
 
 			if (collapsedGeom) {
 				switch (terminal.terminal.direction) {
@@ -13892,6 +14247,7 @@ OG.renderer.IRenderer.prototype.constructor = OG.renderer.IRenderer;
 OG.renderer.RaphaelRenderer = function (container, containerSize, backgroundColor, backgroundImage, config) {
 	OG.renderer.RaphaelRenderer.superclass.call(this, arguments);
 
+    this._CANVAS = null;
 	this._CONFIG = config;
 	this._PAPER = new Raphael(container, containerSize ? containerSize[0] : null, containerSize ? containerSize[1] : null);
 
@@ -13955,6 +14311,10 @@ OG.renderer.RaphaelRenderer.prototype._add = function (rElement, id, nodeType, s
 	this._ELE_MAP.put(rElement.id, rElement);
 
 	return rElement;
+};
+
+OG.renderer.RaphaelRenderer.prototype.setCanvas = function (canvas) {
+	this._CANVAS = canvas;
 };
 
 /**
@@ -14055,7 +14415,6 @@ OG.renderer.RaphaelRenderer.prototype._drawGeometry = function (groupElement, ge
 	}
 
 	geometry.style.map = _style;
-
 	// 타입에 따라 드로잉
 	switch (geometry.TYPE) {
 	case OG.Constants.GEOM_TYPE.POINT:
@@ -14365,8 +14724,8 @@ OG.renderer.RaphaelRenderer.prototype._drawLabel = function (position, text, siz
 OG.renderer.RaphaelRenderer.prototype.drawShape = function (position, shape, size, style, id) {
 	var width = size ? size[0] : 100,
 		height = size ? size[1] : 100,
-		groupNode, geometry, text, image, html;
-
+		groupNode, geometry, text, image, html,
+		me = this;
 	if (shape instanceof OG.shape.GeomShape) {
 		geometry = shape.createShape();
 
@@ -14459,9 +14818,24 @@ OG.renderer.RaphaelRenderer.prototype.drawShape = function (position, shape, siz
 		}
 	}
 
+    $(me.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_shape=GROUP]").each(function (index, element) {
+        var elements, i;
+        elements = me.getElementsByBBox(element.shape.geom.getBoundary());
+        for(i=0; i<elements.length; i++){
+            if(element.id != elements[i].id){
+                if($(elements[i]).parent().get(0).shape){
+                }
+                else{
+                    element.appendChild(elements[i]);
+                }
+            }
+        }
+    });
+    if($(shape).attr('auto_draw') == 'yes'){
+        $(groupNode).attr('auto_draw', 'yes');
+    }
 	// drawShape event fire
 	$(this._PAPER.canvas).trigger('drawShape', [groupNode]);
-
 	return groupNode;
 };
 
@@ -14931,7 +15305,7 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 			if (edge_direction[0] === "c" || edge_direction[1] === "c") {
 				edge_direction = this._adjustEdgeDirection(edge_direction[0], edge_direction[1], [from.x, from.y], [to.x, to.y]).split(" ");
 			}
-
+            points = [from, to];
 			if (edge_direction[0] === "e") {
 				switch (edge_direction[1]) {
 				case "e":
@@ -15415,10 +15789,8 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
 			edge = new OG.PolyLine(points);
 		}
 	}
-
 	// draw hidden edge
 	this._drawGeometry(group.node, edge, me._CONFIG.DEFAULT_STYLE.EDGE_HIDDEN);
-
 	// draw Edge
 	this._drawGeometry(group.node, edge, _style);
 	group.node.geom = edge;
@@ -15448,7 +15820,7 @@ OG.renderer.RaphaelRenderer.prototype.drawEdge = function (line, style, id, isSe
  * @override
  */
 OG.renderer.RaphaelRenderer.prototype.drawGroup = function (geometry, style, id) {
-	var me = this, group, geomElement, _style = {}, childNodes, i, boundary, titleLine, _tempStyle = {};
+	var me = this, group, geomElement, _style = {}, childNodes, i, boundary, titleLine, group_hidden, _tempStyle = {};
 
 	OG.Util.apply(_style, (style instanceof OG.geometry.Style) ? style.map : style || {});
 
@@ -15487,13 +15859,16 @@ OG.renderer.RaphaelRenderer.prototype.drawGroup = function (geometry, style, id)
 				[boundary.getUpperLeft().x + 20, boundary.getUpperLeft().y],
 				[boundary.getLowerLeft().x + 20, boundary.getLowerLeft().y]
 			);
+			group_hidden = new OG.geometry.Rectangle(boundary.getUpperLeft(), 20, (boundary.getLowerLeft().y - boundary.getUpperLeft().y));
 		} else {
 			titleLine = new OG.geometry.Line(
 				[boundary.getUpperLeft().x, boundary.getUpperLeft().y + 20],
 				[boundary.getUpperRight().x, boundary.getUpperRight().y + 20]
 			);
+			group_hidden = new OG.geometry.Rectangle(boundary.getUpperLeft(), (boundary.getUpperRight().x - boundary.getUpperLeft().x), 20);
 		}
 		this._drawGeometry(group.node, titleLine, _style);
+		this._drawGeometry(group.node, group_hidden, me._CONFIG.DEFAULT_STYLE.GROUP_HIDDEN);
 	}
 
 	// 위치조정
@@ -15694,14 +16069,19 @@ OG.renderer.RaphaelRenderer.prototype.drawEdgeLabel = function (shapeElement, te
  * @override
  */
 OG.renderer.RaphaelRenderer.prototype.redrawShape = function (element, excludeEdgeId) {
-	var me = this, envelope, center, width, height, upperLeft,
+	var me = this, envelope, center, width, height, upperLeft, root, eleArray = [],
 		redrawChildConnectedEdge;
 
+    root = me.getRootGroup();
+    eleArray.push(element);
+   // me.addToGroup(root, eleArray);
+
 	redrawChildConnectedEdge = function (_collapseRootElement, _element) {
+
 		var edgeIdArray, fromEdge, toEdge, _childNodes = _element.childNodes, otherShape, i, j, isNeedToRedraw;
 		for (i = _childNodes.length - 1; i >= 0; i--) {
 			if ($(_childNodes[i]).attr("_type") === OG.Constants.NODE_TYPE.SHAPE) {
-				redrawChildConnectedEdge(_collapseRootElement, _childNodes[i]);
+                redrawChildConnectedEdge(_collapseRootElement, _childNodes[i]);
 
 				isNeedToRedraw = false;
 				edgeIdArray = $(_childNodes[i]).attr("_fromedge");
@@ -15803,12 +16183,16 @@ OG.renderer.RaphaelRenderer.prototype.redrawShape = function (element, excludeEd
 			break;
 		}
 
-		//팝업이 필요한 shape 일 경우 리사이즈 시에 그려 준다
-                if(element.shape.POPUP){
-                    var me = this, collapseObj, clickHandle;
+		//버튼이 필요한 shape 일 경우 리사이즈 시에 그려 준다
+        if(element.shape.HaveButton){
+            var me = this, collapseObj, clickHandle;
+            collapseObj = this.drawButton(element);
+        }
 
-                    collapseObj = this.drawPopupGuide(element);
-                }
+        if(element.shape.SHAPE_ID == "OG.shape.bpmn.A_Task"){ // LoopType 에 따라서 도형을 그리기 위해서
+            this.drawLoopType(element);
+            this.drawTaskType(element);
+        }
 
 	}
 
@@ -16012,6 +16396,7 @@ OG.renderer.RaphaelRenderer.prototype.redrawConnectedEdge = function (element, e
  * @override
  */
 OG.renderer.RaphaelRenderer.prototype.connect = function (from, to, edge, style, label) {
+	
 	var me = this, _style = {}, fromShape, toShape, intersectionInfo, fromXY, toXY,
 		orgFromXY, orgToXY, fromDrct, toDrct, orgFromDrct, orgToDrct, isSelf, beforeEvent,
 		addAttrValues = function (element, name, value) {
@@ -16063,7 +16448,7 @@ OG.renderer.RaphaelRenderer.prototype.connect = function (from, to, edge, style,
 	orgToXY = toXY;
 	orgFromDrct = fromDrct;
 	orgToDrct = toDrct;
-
+	
 	// direction 이 c 인 경우에 대한 처리(센터 연결)
 	if (fromShape && fromDrct === "c") {
 		intersectionInfo = this.intersectionEdge(_style["edge-type"], fromShape, orgFromXY, orgToXY, true);
@@ -16075,15 +16460,14 @@ OG.renderer.RaphaelRenderer.prototype.connect = function (from, to, edge, style,
 		toXY = intersectionInfo.position;
 		toDrct = intersectionInfo.direction;
 	}
-
+	
 	isSelf = fromShape && toShape && fromShape.id === toShape.id;
 	if (isSelf) {
 		fromXY = toXY = fromShape.shape.geom.getBoundary().getRightCenter();
 	}
-
 	// 라인 드로잉
 	edge = this.drawEdge(new OG.Line(fromXY, toXY),
-		OG.Util.apply(_style, {"edge-direction": fromDrct + " " + toDrct}), edge ? edge.id : null, isSelf);
+		OG.Util.apply(_style, {"edge-direction": fromDrct + " " + toDrct, "edge-type": "plain"}), edge ? edge.id : null, isSelf);
 
 	// Draw Label
 	this.drawLabel(edge, label);
@@ -16249,7 +16633,7 @@ OG.renderer.RaphaelRenderer.prototype.drawGuide = function (element) {
 		group, guide,
 		_bBoxRect,
 		_upperLeft, _upperRight, _lowerLeft, _lowerRight, _leftCenter, _upperCenter, _rightCenter, _lowerCenter,
-		_ulRect, _urRect, _llRect, _lrRect, _lcRect, _ucRect, _rcRect, _lwcRect,
+		_ulRect, _urRect, _llRect, _lrRect, _lcRect, _ucRect, _rcRect, _lwcRect, task, end,
 		_size = me._CONFIG.GUIDE_RECT_SIZE, _hSize = OG.Util.round(_size / 2);
 
 	if (rElement && geometry) {
@@ -16316,6 +16700,23 @@ OG.renderer.RaphaelRenderer.prototype.drawGuide = function (element) {
 			_rcRect = this._PAPER.rect(_rightCenter.x - _hSize, _rightCenter.y - _hSize, _size, _size);
 			_lwcRect = this._PAPER.rect(_lowerCenter.x - _hSize, _lowerCenter.y - _hSize, _size, _size);
 
+            if(element.shape.SHAPE_ID == "OG.shape.bpmn.A_Task"){
+            task = this._PAPER.image("images/opengraph/guide_task.png", _upperRight.x + 10, _upperRight.y, 15, 15);
+            end = this._PAPER.image("images/opengraph/guide_end.png", _upperRight.x + 10, _upperRight.y + 20, 15, 15);
+            task.attr({
+                cursor : "pointer"
+            });
+            end.attr({
+                cursor : "pointer"
+            });
+
+            task.setTooltip('task - Click or Drag');
+            end.setTooltip('end event - Click or Drag');
+
+            group.appendChild(task);
+            group.appendChild(end);
+            }
+
 			_bBoxRect.attr(me._CONFIG.DEFAULT_STYLE.GUIDE_BBOX);
 			_ulRect.attr(me._CONFIG.DEFAULT_STYLE.GUIDE_UL);
 			_urRect.attr(me._CONFIG.DEFAULT_STYLE.GUIDE_UR);
@@ -16336,6 +16737,7 @@ OG.renderer.RaphaelRenderer.prototype.drawGuide = function (element) {
 			group.appendChild(_rcRect);
 			group.appendChild(_lwcRect);
 
+
 			this._add(group, rElement.id + OG.Constants.GUIDE_SUFFIX.GUIDE);
 			this._add(_bBoxRect, rElement.id + OG.Constants.GUIDE_SUFFIX.BBOX);
 			this._add(_ulRect, rElement.id + OG.Constants.GUIDE_SUFFIX.UL);
@@ -16347,19 +16749,38 @@ OG.renderer.RaphaelRenderer.prototype.drawGuide = function (element) {
 			this._add(_rcRect, rElement.id + OG.Constants.GUIDE_SUFFIX.RC);
 			this._add(_lwcRect, rElement.id + OG.Constants.GUIDE_SUFFIX.LWC);
 
-			// guide 정의
-			guide = {
-				bBox : _bBoxRect.node,
-				group: group.node,
-				ul   : _ulRect.node,
-				ur   : _urRect.node,
-				ll   : _llRect.node,
-				lr   : _lrRect.node,
-				lc   : _lcRect.node,
-				uc   : _ucRect.node,
-				rc   : _rcRect.node,
-				lwc  : _lwcRect.node
-			};
+            if(element.shape.SHAPE_ID == "OG.shape.bpmn.A_Task"){
+			    // guide 정의
+                guide = {
+                    bBox : _bBoxRect.node,
+                    group: group.node,
+                    ul   : _ulRect.node,
+                    ur   : _urRect.node,
+                    ll   : _llRect.node,
+                    lr   : _lrRect.node,
+                    lc   : _lcRect.node,
+                    uc   : _ucRect.node,
+                    rc   : _rcRect.node,
+                    lwc  : _lwcRect.node,
+                    task : task.node,
+                    end  : end.node
+                };
+			}
+			else
+			{
+                guide = {
+                    bBox : _bBoxRect.node,
+                    group: group.node,
+                    ul   : _ulRect.node,
+                    ur   : _urRect.node,
+                    ll   : _llRect.node,
+                    lr   : _lrRect.node,
+                    lc   : _lcRect.node,
+                    uc   : _ucRect.node,
+                    rc   : _rcRect.node,
+                    lwc  : _lwcRect.node
+                };
+			}
 
 			// layer 위치 조정
 			_bBoxRect.insertBefore(rElement);
@@ -16732,7 +17153,7 @@ OG.renderer.RaphaelRenderer.prototype.removeAllTerminal = function () {
 OG.renderer.RaphaelRenderer.prototype.drawCollapseGuide = function (element) {
 	var me = this, rElement = this._getREleById(OG.Util.isElement(element) ? element.id : element),
 		geometry = rElement ? rElement.node.shape.geom : null,
-		envelope, _upperLeft, _bBoxRect, _rect,
+		envelope, _upperLeft, _bBoxRect, _rect, _rect1,
 		_size = me._CONFIG.COLLAPSE_SIZE,
 		_hSize = _size / 2;
 
@@ -16787,13 +17208,12 @@ OG.renderer.RaphaelRenderer.prototype.drawCollapseGuide = function (element) {
 	return null;
 };
 
-
     /*
      + 버튼 그리는 부분
      auth : 민수환
 
     */
-OG.renderer.RaphaelRenderer.prototype.drawPopupGuide = function (element) {
+OG.renderer.RaphaelRenderer.prototype.drawButton = function (element) {
 	var me = this, rElement = this._getREleById(OG.Util.isElement(element) ? element.id : element),
 		geometry = rElement ? rElement.node.shape.geom : null,
 		envelope, _upperLeft, _bBoxRect, _rect, _rect1,
@@ -16810,31 +17230,37 @@ OG.renderer.RaphaelRenderer.prototype.drawPopupGuide = function (element) {
 		}
 
 		envelope = geometry.getBoundary();
-		_upperLeft = envelope.getLowerCenter();
-
+		_lowerCenter = envelope.getLowerCenter();
 		// hidden box
 		_bBoxRect = this._PAPER.rect(envelope.getUpperLeft().x - _size, envelope.getUpperLeft().y - _size,
 			envelope.getWidth() + _size * 2, envelope.getHeight() + _size * 2);
 		_bBoxRect.attr(me._CONFIG.DEFAULT_STYLE.COLLAPSE_BBOX);
 		this._add(_bBoxRect, rElement.id + OG.Constants.COLLAPSE_BBOX_SUFFIX);
 
+        _rect1 = this._PAPER.path(
+            "M" + (_lowerCenter.x - 7.5) + " " + (_lowerCenter.y - 15) +
+            "h" + 15 + "v" + 15 + "h" + (-15) + "v" + (-15) +
+            "m1 " + 7.5 + "h" + (15 - 2) + "M" +
+            (_lowerCenter.x - 7.5) + " " + (_lowerCenter.y - 15) +
+            "m" + 7.5 + " 1v" + (15 - 2)
+        );
 
-         _rect1 = this._PAPER.path(
-    				"M" + (_upperLeft.x - 7.5) + " " + (_upperLeft.y - 15) +
-    					"h" + 15 + "v" + 15 + "h" + (-1 * 15) + "v" + (-1 * 15) +
-    					"m1 " + 7.5 + "h" + (15 - 2) + "M" +
-    					(_upperLeft.x - 7.5) + " " + (_upperLeft.y - 15) +
-    					"m" + 7.5 + " 1v" + (15 - 2)
-    	 );
+        _rect1.attr({
+            "stroke" : element.shape.geom.style.map.stroke,
+            "stroke-width" : 2,
+            fill: "white",
+            "fill-opacity": 0,
+            cursor: "pointer",
+            "shape-rendering": "crispEdges"
+        })
 
-		_rect1.attr(me._CONFIG.DEFAULT_STYLE.COLLAPSE);
 		this._add(_rect1, rElement.id + OG.Constants.COLLAPSE_SUFFIX);
 
 		// layer 위치 조정
 		_bBoxRect.insertBefore(rElement);
 		_rect1.insertAfter(rElement);
 
-		return {
+        return {
 			bBox    : _bBoxRect.node,
 			collapse: _rect1.node
 		};
@@ -16842,6 +17268,112 @@ OG.renderer.RaphaelRenderer.prototype.drawPopupGuide = function (element) {
 
 	return null;
 };
+
+//Loop Type 드로우
+
+OG.renderer.RaphaelRenderer.prototype.drawLoopType = function (element) {
+	var me = this, rElement = this._getREleById(OG.Util.isElement(element) ? element.id : element),
+		geometry = rElement ? rElement.node.shape.geom : null,
+		envelope, _upperLeft, _bBoxRect, _rect, _rect1,
+		_size = me._CONFIG.COLLAPSE_SIZE,
+		_hSize = _size / 2;
+
+		_rect1 = this._getREleById(rElement.id + OG.Constants.LOOPTYPE_SUFFIX);
+		if (_rect1) {
+			this._remove(_rect1);
+		}
+
+		envelope = geometry.getBoundary();
+		_lowerCenter = envelope.getLowerCenter();
+
+        switch(element.shape.LoopType){
+        case "Standard":
+            _rect1 = this._PAPER.path(
+                "M" + (_lowerCenter.x - 15) + " " + (_lowerCenter.y - 15) +
+                "v" + 15 +  "M" + (_lowerCenter.x - 10) + " " + (_lowerCenter.y - 15) +
+                "v" + 15 +  "M" + (_lowerCenter.x - 5) + " " + (_lowerCenter.y - 15) + "v" + 15
+            );
+            break;
+
+        case "MIParallel":
+            _rect1 = this._PAPER.path(
+                "M" + (_lowerCenter.x - 15) + " " + (_lowerCenter.y - 15) +
+                "v" + 15 +  "M" + (_lowerCenter.x - 10) + " " + (_lowerCenter.y - 15) +
+                "v" + 15 +  "M" + (_lowerCenter.x - 5) + " " + (_lowerCenter.y - 15) + "v" + 15
+            );
+            break;
+
+        case "MISequential":
+            _rect1 = this._PAPER.path(
+                "M" + (_lowerCenter.x - 20) + " " + (_lowerCenter.y - 15) +
+                "h" + 15 +  "M" + (_lowerCenter.x - 20) + " " + (_lowerCenter.y - 10) +
+                "h" + 15 +  "M" + (_lowerCenter.x - 20) + " " + (_lowerCenter.y - 5) + "h" + 15
+            );
+            break;
+
+        }
+        if(element.shape.LoopType != "None"){
+            this._add(_rect1, rElement.id + OG.Constants.LOOPTYPE_SUFFIX);
+            _rect1.insertAfter(rElement);
+            rElement.appendChild(_rect1);
+        }
+	return null;
+};
+
+//TaskType 드로우
+
+OG.renderer.RaphaelRenderer.prototype.drawTaskType = function (element) {
+	var me = this, rElement = this._getREleById(OG.Util.isElement(element) ? element.id : element),
+		geometry = rElement ? rElement.node.shape.geom : null,
+		envelope, _upperLeft, _bBoxRect, _rect, _rect1,
+		_size = me._CONFIG.COLLAPSE_SIZE,
+		_hSize = _size / 2;
+
+		_rect1 = this._getREleById(rElement.id + OG.Constants.TASKTYPE_SUFFIX);
+		if (_rect1) {
+			this._remove(_rect1);
+		}
+
+		envelope = geometry.getBoundary();
+		_upperLeft = envelope.getUpperLeft();
+
+        switch(element.shape.TaskType){
+        case "User":
+            _rect1 = this._PAPER.image("images/opengraph/User.png", _upperLeft.x + 5, _upperLeft.y + 5, 20, 20);
+            break;
+
+        case "Send":
+            _rect1 = this._PAPER.image("images/opengraph/Send.png", _upperLeft.x + 5, _upperLeft.y + 5, 20, 20);
+            break;
+
+        case "Receive":
+            _rect1 = this._PAPER.image("images/opengraph/Receive.png", _upperLeft.x + 5, _upperLeft.y + 5, 20, 20);
+            break;
+        case "Manual":
+            _rect1 = this._PAPER.image("images/opengraph/Manual.png", _upperLeft.x + 5, _upperLeft.y + 5, 20, 20);
+            break;
+
+        case "Service":
+            _rect1 = this._PAPER.image("images/opengraph/Service.png", _upperLeft.x + 5, _upperLeft.y + 5, 20, 20);
+            break;
+        case "BusinessRule":
+            _rect1 = this._PAPER.image("images/opengraph/BusinessRule.png", _upperLeft.x + 5, _upperLeft.y + 5, 20, 20);
+            break;
+
+        case "Script":
+            _rect1 = this._PAPER.image("images/opengraph/Script.png", _upperLeft.x + 5, _upperLeft.y + 5, 20, 20);
+            break;
+
+        }
+
+        if(element.shape.TaskType != "None"){
+            this._add(_rect1, rElement.id + OG.Constants.TASKTYPE_SUFFIX);
+            _rect1.insertAfter(rElement);
+            rElement.appendChild(_rect1);
+        }
+	return null;
+};
+
 /**
  * ID에 해당하는 Element 의 Collapse 가이드를 제거한다.
  *
@@ -17141,7 +17673,6 @@ OG.renderer.RaphaelRenderer.prototype.removeShape = function (element) {
 	this.removeCollapseGuide(rElement.node);
 
 	removedElement = OG.Util.clone(rElement.node);
-
 	this.remove(rElement.node);
 
 	// removeShape event fire
@@ -17814,7 +18345,6 @@ OG.handler.EventHandler.prototype = {
 							to = vertices[vertices.length - 1];
 							return new OG.geometry.Coordinate(OG.Util.round((from.x + to.x) / 2), OG.Util.round((from.y + to.y) / 2));
 						} else {
-
 							// Edge Shape 인 경우 라인의 중간 지점 찾기
 							vertices = element.shape.geom.getVertices();
 							lineLength = element.shape.geom.getLength();
@@ -17984,6 +18514,9 @@ OG.handler.EventHandler.prototype = {
 						});
 					}
 				}
+				if(event.stopPropagation){
+                    event.stopPropagation();
+                }
 			}
 		});
 	},
@@ -18036,6 +18569,7 @@ OG.handler.EventHandler.prototype = {
 										var fromTerminal = $(root).data("from_terminal"),
 											fromShape = fromTerminal && OG.Util.isElement(fromTerminal) ? me._getShapeFromTerminal(fromTerminal) : null,
 											isSelf = element && fromShape && element.id === fromShape.id;
+
 
 										if ((($(root).data("dragged_guide") === "to" && item.terminal.inout.indexOf(OG.Constants.TERMINAL_TYPE.IN) >= 0) ||
 											($(root).data("dragged_guide") === "from" && item.terminal.inout.indexOf(OG.Constants.TERMINAL_TYPE.OUT) >= 0) ||
@@ -18164,9 +18698,9 @@ OG.handler.EventHandler.prototype = {
 											&& (!isSelf || me._isSelfConnectable(element.shape))) {
 											// connect
 											edge = me._RENDERER.connect(fromTerminal, toTerminal, edge);
+
 											if (edge) {
 												guide = me._RENDERER.drawGuide(edge);
-
 												if (edge && guide) {
 													// enable event
 													me.setClickSelectable(edge, me._isSelectable(edge.shape));
@@ -18200,7 +18734,7 @@ OG.handler.EventHandler.prototype = {
 					}
 				}
 			},
-			mouseout : function (event) {
+			mouseout : function (event) {;
 				if ($(element).attr("_shape") !== OG.Constants.SHAPE_TYPE.EDGE && $(root).data("edge")) {
 					me._RENDERER.remove(element.id + OG.Constants.DROP_OVER_BBOX_SUFFIX);
 					$(root).removeData("edge_terminal");
@@ -18215,6 +18749,7 @@ OG.handler.EventHandler.prototype = {
 	 * @param {Element} element Shape Element
 	 */
 	enableDragAndDropGroup: function (element) {
+
 		var me = this, root = me._RENDERER.getRootGroup(), isSelf;
 		if (element && $(element).attr("_shape") === OG.Constants.SHAPE_TYPE.GROUP) {
 			$(element).bind({
@@ -18254,7 +18789,7 @@ OG.handler.EventHandler.prototype = {
 		var me = this, collapseObj, clickHandle;
 
 		clickHandle = function (_element, _collapsedOjb) {
-			if (_collapsedOjb && _collapsedOjb.bBox && _collapsedOjb.collapse) {
+				if (_collapsedOjb && _collapsedOjb.bBox && _collapsedOjb.collapse) {
 				$(_collapsedOjb.collapse).bind("click", function (event) {
 					if (_element.shape.isCollapsed === true) {
 						me._RENDERER.expand(_element);
@@ -18285,37 +18820,30 @@ OG.handler.EventHandler.prototype = {
 			});
 		}
 	},
+       /*
+       + 버튼을 만들어 버튼을 누를 경우 팝업이 뜬다.
+       auth :  민수환
 
-	enablePopUp: function (element) {
-    	    var me = this, collapseObj, clickHandle;
-
-            collapseObj = me._RENDERER.drawPopupGuide(element);
-
-           /* $(collapsedOjb.collapse).bind("click", function (event) {
-                        				    alert("click");
-                        				    });
-           */
-            clickHandle = function (_element, _collapsedOjb) {
-            	if (_collapsedOjb && _collapsedOjb.bBox && _collapsedOjb.collapse) {
-                				$(_collapsedOjb.collapse).bind("click", function (event) {
-                				    me._RENDERER.setScale(0.25);
-                				});
-
-                			}
-            };
-        	$(element).bind({
-                mouseover: function () {
-                      collapseObj = me._RENDERER.drawPopupGuide(this);
-                        if (collapseObj && collapseObj.bBox && collapseObj.collapse) {
-                            clickHandle(element, collapseObj);
-
-                        }
-                }
-
-            });
-        },
-
-
+       */
+	enableButton: function (element) {
+	    var me = this, collapseObj, clickHandle;
+        collapseObj = me._RENDERER.drawButton(element);
+        clickHandle = function (_element, _collapsedOjb) {
+        	if (_collapsedOjb && _collapsedOjb.bBox && _collapsedOjb.collapse) {
+            				$(_collapsedOjb.collapse).bind("click", function (event) {
+            				    $(_element).trigger("btnclick");
+            				});
+            			}
+        };
+    	$(element).bind({
+            mouseover: function () {
+                  collapseObj = me._RENDERER.drawButton(this);
+                    if (collapseObj && collapseObj.bBox && collapseObj.collapse) {
+                        clickHandle(element, collapseObj);
+                    }
+            }
+        });
+    },
 
 	/**
 	 * Shape 엘리먼트의 이동 가능여부를 설정한다.
@@ -18324,7 +18852,7 @@ OG.handler.EventHandler.prototype = {
 	 * @param {Boolean} isMovable 가능여부
 	 */
 	setMovable: function (element, isMovable) {
-		var me = this, root = me._RENDERER.getRootGroup();
+		var me = this, eleArray = [], root = me._RENDERER.getRootGroup();
 
 		if (!element) {
 			return;
@@ -18389,6 +18917,9 @@ OG.handler.EventHandler.prototype = {
 					$(this).css({"position": "", "left": "", "top": ""});
 					eleArray = me._moveElements(bBoxArray, dx, dy);
 
+                    eleArray.push(element);
+                    me._RENDERER.addToGroup(root, eleArray);
+
 					// group target 이 있는 경우 grouping 처리
 					if (groupTarget && OG.Util.isElement(groupTarget)) {
 						// grouping
@@ -18406,19 +18937,22 @@ OG.handler.EventHandler.prototype = {
 						me._RENDERER.remove(groupTarget.id + OG.Constants.DROP_OVER_BBOX_SUFFIX);
 						$(root).removeData("groupTarget");
 					} else {
-						// ungrouping
-						me._RENDERER.addToGroup(root, eleArray);
-
-						// guide
-						$.each(eleArray, function (k, item) {
-							me._RENDERER.removeGuide(item);
-							guide = me._RENDERER.drawGuide(item);
-							// enable event
-							me.setResizable(item, guide, me._isResizable(item.shape));
-							me._RENDERER.toFront(guide.group);
-						});
+                        $(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_shape=GROUP]").each(function (index, ele) {
+                            var elements, i;
+                            elements = me._RENDERER.getElementsByBBox(ele.shape.geom.getBoundary());
+                            for(i=0; i<elements.length; i++){
+                                if(ele.id != elements[i].id){
+                                    if($(elements[i]).parent().get(0).shape){
+                                    }
+                                    else{
+                                        ele.appendChild(elements[i]);
+                                    }
+                                }
+                            }
+                        });
 					}
 
+                    me._RENDERER.removeGuide(element);
 					$(root).removeData("bBoxArray");
 				}
 			});
@@ -18448,28 +18982,28 @@ OG.handler.EventHandler.prototype = {
 		if (isResizable === true) {
 			if ($(element).attr("_shape") === OG.Constants.SHAPE_TYPE.EDGE) {
 				// resize handle
-				$(guide.from).draggable({
-					start: function (event) {
-						var isBezier, vertices, _style = {},
-							toTerminalId = $(element).attr("_to"), toShape, toTerminal, edge;
+                $(guide.from).draggable({
+                    start: function (event) {
+                        var isBezier, vertices, _style = {},
+                        toTerminalId = $(element).attr("_to"), toShape, toTerminal, edge;
 
-						_style = OG.Util.apply(_style, me._CONFIG.DEFAULT_STYLE.EDGE_SHADOW, element.shape.geom.style.map);
-						isBezier = _style["edge-type"].toLowerCase() === OG.Constants.EDGE_TYPE.BEZIER;
+                        _style = OG.Util.apply(_style, me._CONFIG.DEFAULT_STYLE.EDGE_SHADOW, element.shape.geom.style.map);
+                        isBezier = _style["edge-type"].toLowerCase() === OG.Constants.EDGE_TYPE.BEZIER;
 
-						vertices = isBezier ? element.shape.geom.getControlPoints() : element.shape.geom.getVertices();
-						edge = me._RENDERER.drawEdge(isBezier ? new OG.BezierCurve(vertices) : new OG.PolyLine(vertices), _style);
+                        vertices = isBezier ? element.shape.geom.getControlPoints() : element.shape.geom.getVertices();
+                        edge = me._RENDERER.drawEdge(isBezier ? new OG.BezierCurve(vertices) : new OG.PolyLine(vertices), _style);
 
-						toTerminal = [vertices[vertices.length - 1].x, vertices[vertices.length - 1].y];
+                        toTerminal = [vertices[vertices.length - 1].x, vertices[vertices.length - 1].y];
 
-						if (toTerminalId) {
-							toShape = me._getShapeFromTerminal(toTerminalId);
-							me._RENDERER.drawTerminal(toShape);
-							toTerminal = me._RENDERER.getElementById(toTerminalId);
-						}
+                        if (toTerminalId) {
+                            toShape = me._getShapeFromTerminal(toTerminalId);
+                            me._RENDERER.drawTerminal(toShape);
+                            toTerminal = me._RENDERER.getElementById(toTerminalId);
+                        }
 
-						$(root).data("to_terminal", toTerminal);
-						$(root).data("edge", edge);
-						$(root).data("dragged_guide", "from");
+                        $(root).data("to_terminal", toTerminal);
+                        $(root).data("edge", edge);
+                        $(root).data("dragged_guide", "from");
 
 						me._RENDERER.removeRubberBand(me._RENDERER.getRootElement());
 						$(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_selected=true]").each(function (n, selectedItem) {
@@ -18792,7 +19326,7 @@ OG.handler.EventHandler.prototype = {
 								dx = me._CONFIG.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getWidth();
 							}
 							me._RENDERER.resize(element, [0, 0, 0, me._grid(dx)]);
-							me._RENDERER.drawGuide(element);
+							me._RENDERER.removeGuide(element);
 						}
 					}
 				});
@@ -18835,7 +19369,7 @@ OG.handler.EventHandler.prototype = {
 								dy = me._CONFIG.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getHeight();
 							}
 							me._RENDERER.resize(element, [0, me._grid(dy), 0, 0]);
-							me._RENDERER.drawGuide(element);
+							me._RENDERER.removeGuide(element);
 						}
 					}
 				});
@@ -18892,7 +19426,7 @@ OG.handler.EventHandler.prototype = {
 								dy = me._CONFIG.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getHeight();
 							}
 							me._RENDERER.resize(element, [0, me._grid(dy), 0, me._grid(dx)]);
-							me._RENDERER.drawGuide(element);
+							me._RENDERER.removeGuide(element);
 						}
 						me._RENDERER.removeAllTerminal();
 					}
@@ -18936,7 +19470,7 @@ OG.handler.EventHandler.prototype = {
 								dx = me._CONFIG.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getWidth();
 							}
 							me._RENDERER.resize(element, [0, 0, me._grid(dx), 0]);
-							me._RENDERER.drawGuide(element);
+							me._RENDERER.removeGuide(element);
 						}
 					}
 				});
@@ -18994,7 +19528,7 @@ OG.handler.EventHandler.prototype = {
 								dy = me._CONFIG.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getHeight();
 							}
 							me._RENDERER.resize(element, [0, me._grid(dy), me._grid(dx), 0]);
-							me._RENDERER.drawGuide(element);
+							me._RENDERER.removeGuide(element);
 						}
 					}
 				});
@@ -19038,7 +19572,7 @@ OG.handler.EventHandler.prototype = {
 								dy = me._CONFIG.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getHeight();
 							}
 							me._RENDERER.resize(element, [me._grid(dy), 0, 0, 0]);
-							me._RENDERER.drawGuide(element);
+							me._RENDERER.removeGuide(element);
 						}
 					}
 				});
@@ -19096,7 +19630,7 @@ OG.handler.EventHandler.prototype = {
 								dy = me._CONFIG.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getHeight();
 							}
 							me._RENDERER.resize(element, [me._grid(dy), 0, me._grid(dx), 0]);
-							me._RENDERER.drawGuide(element);
+							me._RENDERER.removeGuide(element);
 						}
 					}
 				});
@@ -19154,10 +19688,162 @@ OG.handler.EventHandler.prototype = {
 								dy = me._CONFIG.GUIDE_MIN_SIZE - element.shape.geom.getBoundary().getHeight();
 							}
 							me._RENDERER.resize(element, [me._grid(dy), 0, 0, me._grid(dx)]);
-							me._RENDERER.drawGuide(element);
+							me._RENDERER.removeGuide(element);
 						}
 					}
 				});
+				
+                $(guide.task).draggable({
+					start: function (event) {
+                        var eventOffset = me._getOffset(event), guide;
+
+                        // 선택되지 않은 Shape 을 drag 시 다른 모든 Shape 은 deselect 처리
+                        if (me._RENDERER.getElementById(element.id + OG.Constants.GUIDE_SUFFIX.GUIDE) === null) {
+                            $(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_selected=true]").each(function (index, item) {
+                                if (OG.Util.isElement(item) && item.id) {
+                                    me._RENDERER.removeGuide(item);
+                                }
+                            });
+                            me._RENDERER.removeAllTerminal();
+                        }
+
+//                        // redraw guide
+//                        me._RENDERER.removeGuide(element);
+//                        guide = me._RENDERER.drawGuide(element);
+//
+//                        $(this).data("start", {x: eventOffset.x, y: eventOffset.y});
+//                        $(this).data("offset", {
+//                            x: eventOffset.x - me._num(me._RENDERER.getAttr(guide.bBox, "x")),
+//                            y: eventOffset.y - me._num(me._RENDERER.getAttr(guide.bBox, "y"))
+//                        });
+
+                        $(root).data("bBoxArray", me._getMoveTargets());
+                        me._RENDERER.removeRubberBand(me._RENDERER.getRootElement());
+                        me._RENDERER.removeAllTerminal();
+					},
+					drag : function (event) {
+                        var eventOffset = me._getOffset(event),
+						start = $(this).data("start"),
+						bBoxArray = $(root).data("bBoxArray"),
+						dx = me._grid(eventOffset.x - element.shape.geom.getBoundary().getCentroid().x),
+						dy = me._grid(eventOffset.y - element.shape.geom.getBoundary().getCentroid().y);
+
+					// Canvas 영역을 벗어나서 드래그되는 경우 Canvas 확장
+                        me._autoExtend(eventOffset.x, eventOffset.y);
+
+                        $(this).css({"position": "", "left": "", "top": ""});
+                        $.each(bBoxArray, function (k, item) {
+                            me._RENDERER.setAttr(item.box, {transform: "t" + dx + "," + dy});
+                        });
+                        me._RENDERER.removeAllTerminal();
+					},
+					stop : function (event) {
+					    var eventOffset = me._getOffset(event), shape, newElement,
+					    bBoxArray = $(root).data("bBoxArray");
+                        shape = new OG.shape.bpmn.A_Task();
+                        $(shape).attr('auto_draw', 'yes');
+                        newElement = me._RENDERER._CANVAS.drawShape([eventOffset.x, eventOffset.y], shape, [70, 50]);
+                        me._RENDERER._CANVAS.connect(element, newElement);
+                        $.each(bBoxArray, function (k, item) {
+                            me._RENDERER.remove(item.box);
+                        });
+                        $(root).removeData("bBoxArray");
+					}
+				});
+                $(guide.task).bind({
+					mouseover: function (event) {
+                        $(element).trigger('abcd');
+					},
+					click : function (event) {
+					    var newElement,
+                        shape = new OG.shape.bpmn.A_Task(),
+                        envelope = element.shape.geom.getBoundary();
+					    $(shape).attr('auto_draw', 'yes');
+                        newElement = me._RENDERER._CANVAS.drawShape([envelope.getCentroid().x + 100, envelope.getCentroid().y], shape, [70, 50]);
+                        me._RENDERER._CANVAS.connect(element, newElement);
+					},
+					mouseout : function (event) {
+
+					}
+				});
+                $(guide.end).draggable({
+					start: function (event) {
+                        var eventOffset = me._getOffset(event), guide;
+
+                        // 선택되지 않은 Shape 을 drag 시 다른 모든 Shape 은 deselect 처리
+                        if (me._RENDERER.getElementById(element.id + OG.Constants.GUIDE_SUFFIX.GUIDE) === null) {
+                            $(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_selected=true]").each(function (index, item) {
+                                if (OG.Util.isElement(item) && item.id) {
+                                    me._RENDERER.removeGuide(item);
+                                }
+                            });
+                            me._RENDERER.removeAllTerminal();
+                        }
+
+                        // redraw guide
+//                        me._RENDERER.removeGuide(element);
+//                        guide = me._RENDERER.drawGuide(element);
+//
+//                        $(this).data("start", {x: eventOffset.x, y: eventOffset.y});
+//                        $(this).data("offset", {
+//                            x: eventOffset.x - me._num(me._RENDERER.getAttr(guide.bBox, "x")),
+//                            y: eventOffset.y - me._num(me._RENDERER.getAttr(guide.bBox, "y"))
+//                        });
+
+                        $(root).data("bBoxArray", me._getMoveTargets());
+                        me._RENDERER.removeRubberBand(me._RENDERER.getRootElement());
+                        me._RENDERER.removeAllTerminal();
+					},
+					drag : function (event) {
+                        var eventOffset = me._getOffset(event),
+						start = $(this).data("start"),
+						bBoxArray = $(root).data("bBoxArray"),
+						dx = me._grid(eventOffset.x - element.shape.geom.getBoundary().getCentroid().x),
+						dy = me._grid(eventOffset.y - element.shape.geom.getBoundary().getCentroid().y);
+
+					// Canvas 영역을 벗어나서 드래그되는 경우 Canvas 확장
+                        me._autoExtend(eventOffset.x, eventOffset.y);
+
+                        $(this).css({"position": "", "left": "", "top": ""});
+                        $.each(bBoxArray, function (k, item) {
+                            me._RENDERER.setAttr(item.box, {transform: "t" + dx + "," + dy});
+                        });
+                        me._RENDERER.removeAllTerminal();
+					},
+					stop : function (event) {
+					    var eventOffset = me._getOffset(event), shape, newElement,
+					    bBoxArray = $(root).data("bBoxArray");
+                        shape = new OG.shape.bpmn.E_End();
+                        newElement = me._RENDERER._CANVAS.drawShape([eventOffset.x, eventOffset.y], shape, [30, 30]);
+                        me._RENDERER._CANVAS.connect(element, newElement);
+                        $.each(bBoxArray, function (k, item) {
+                            me._RENDERER.remove(item.box);
+                        });
+                        $(root).removeData("bBoxArray");
+					}
+				});
+                $(guide.end).bind({
+					mouseover: function (event) {
+
+					},
+					click : function (event) {
+					    var newElement,
+                        shape = new OG.shape.bpmn.E_End(),
+                        envelope = element.shape.geom.getBoundary();
+
+                        newElement = me._RENDERER._CANVAS.drawShape([envelope.getUpperRight().x + 50, envelope.getCentroid().y], shape, [30, 30]);
+                        me._RENDERER._CANVAS.connect(element, newElement);
+					},
+					mouseout : function (event) {
+
+					}
+				});
+
+                // add tooltip for guide activity icon
+                for(var item in guide){
+                    if($(guide[item]).attr('tooltip') == 'enable')
+                        $(guide[item]).tooltip();
+                }
 			}
 		} else {
 			if ($(element).attr("_shape") === OG.Constants.SHAPE_TYPE.EDGE) {
@@ -19191,8 +19877,8 @@ OG.handler.EventHandler.prototype = {
 		if (isSelectable === true) {
 			// 마우스 클릭하여 선택 처리
 			$(element).bind("click", function (event) {
+			    event.stopPropagation
 				var guide;
-
 				$(me._RENDERER.getContainer()).focus();
 
 				if (element.shape) {
@@ -19220,7 +19906,6 @@ OG.handler.EventHandler.prototype = {
 							}
 						}
 					}
-
 					return false;
 				}
 			});
@@ -19229,8 +19914,9 @@ OG.handler.EventHandler.prototype = {
 			if (me._CONFIG.ENABLE_CONTEXTMENU) {
 				$(element).bind("contextmenu", function (event) {
 					var guide;
+
 					if (element.shape) {
-						if ($(element).attr("_selected") !== "true") {
+						if ($(element).attr("_selected") === "true") {
 							$(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_selected=true]").each(function (index, item) {
 								if (item.id) {
 									me._RENDERER.removeGuide(item);
@@ -19248,7 +19934,6 @@ OG.handler.EventHandler.prototype = {
 								}
 							}
 						}
-
 						return true;
 					}
 				});
@@ -19460,6 +20145,7 @@ OG.handler.EventHandler.prototype = {
 	 */
 	enableRootContextMenu: function () {
 		var me = this;
+
 		$.contextMenu({
 			selector: '#' + me._RENDERER.getRootElement().id,
 			build   : function ($trigger, e) {
@@ -19559,6 +20245,7 @@ OG.handler.EventHandler.prototype = {
 	 */
 	enableShapeContextMenu: function () {
 		var me = this;
+
 		$.contextMenu({
 			selector: '#' + me._RENDERER.getRootElement().id + ' [_type=SHAPE]',
 			build   : function ($trigger, e) {
@@ -19637,7 +20324,7 @@ OG.handler.EventHandler.prototype = {
 										'fillColor_select': {
 											name    : 'Select',
 											type    : 'select',
-											options : {'': '', 'white': 'white', 'gray': 'gray', 'blue': 'blue', 'red': 'red', 'yellow': 'yellow', 'orange': 'orange', 'green': 'green', 'black': 'black'},
+											options : {'': '', '#FFFFFF': 'white', 'gray': 'gray', 'blue': 'blue', 'red': 'red', 'yellow': 'yellow', 'orange': 'orange', 'green': 'green', 'black': 'black'},
 											selected: '',
 											events  : {
 												change: function (e) {
@@ -20339,10 +21026,259 @@ OG.handler.EventHandler.prototype = {
 									}
 								}
 							}
-						}
-					}
+						},
+						'sep8'       : '---------',
+                        'Loop Type'  : {
+                            name : 'Loop Type',
+                        	items: {
+                        		'LoopType_standard': {
+                        			name  : 'Standard',
+                        			type  : 'radio',
+                        			radio : 'LoopType',
+                        			value : 'Standard',
+                        			events: {
+                        				change: function (e) {
+                        					me.setLoopTypeSelectedShape(e.target.value);
+                        				}
+                        			}
+                        		},
+                        		'LoopType_MIParallel'   : {
+                        			name  : 'MIParallel',
+                        			type  : 'radio',
+                        			radio : 'LoopType',
+                        			value : 'MIParallel',
+                        			events: {
+                        				change: function (e) {
+                        					me.setLoopTypeSelectedShape(e.target.value);
+                        				}
+                        			}
+                        		},
+                        		'LoopType_MISequential'  : {
+                        		    name  : 'MISequential',
+                        			type  : 'radio',
+                        			radio : 'LoopType',
+                        			value : 'MISequential',
+                        			events: {
+                        				change: function (e) {
+                        					me.setLoopTypeSelectedShape(e.target.value);
+                        				}
+                        			}
+                        		},
+                                'LoopType_None'  : {
+                        			name  : 'None',
+                        			type  : 'radio',
+                        			radio : 'LoopType',
+                        			value : "None",
+                        		    events: {
+                        				change: function (e) {
+                        					me.setLoopTypeSelectedShape(e.target.value);
+                        				}
+                        			}
+                        		}
+                            }
+                        },
+                        'sep9'       : '---------',
+                        'Task Type'  : {
+                            name : 'Task Type',
+                        	items: {
+                        		'TaskType_User': {
+                        			name  : 'User',
+                        			type  : 'radio',
+                        			radio : 'TaskType',
+                        			value : 'User',
+                        			events: {
+                        				change: function (e) {
+                        					me.setTaskTypeSelectedShape(e.target.value);
+                        				}
+                        			}
+                        		},
+                        		'TaskType_Send'   : {
+                        			name  : 'Send',
+                        			type  : 'radio',
+                        			radio : 'TaskType',
+                        			value : 'Send',
+                        			events: {
+                        				change: function (e) {
+                        					me.setTaskTypeSelectedShape(e.target.value);
+                        				}
+                        			}
+                        		},
+                                'TaskType_Receive': {
+                        			name  : 'Receive',
+                        			type  : 'radio',
+                        			radio : 'TaskType',
+                        			value : 'Receive',
+                        			events: {
+                        				change: function (e) {
+                        					me.setTaskTypeSelectedShape(e.target.value);
+                        				}
+                        			}
+                        		},
+                        		'TaskType_Manual'   : {
+                        			name  : 'Manual',
+                        			type  : 'radio',
+                        			radio : 'TaskType',
+                        			value : 'Manual',
+                        			events: {
+                        				change: function (e) {
+                        					me.setTaskTypeSelectedShape(e.target.value);
+                        				}
+                        			}
+                        		},
+                                'TaskType_Service': {
+                        			name  : 'Service',
+                        			type  : 'radio',
+                        			radio : 'TaskType',
+                        			value : 'Service',
+                        			events: {
+                        				change: function (e) {
+                        					me.setTaskTypeSelectedShape(e.target.value);
+                        				}
+                        			}
+                        		},
+                        		'TaskType_BusinessRule'   : {
+                        			name  : 'BusinessRule',
+                        			type  : 'radio',
+                        			radio : 'TaskType',
+                        			value : 'BusinessRule',
+                        			events: {
+                        				change: function (e) {
+                        					me.setTaskTypeSelectedShape(e.target.value);
+                        				}
+                        			}
+                        		},
+                                'TaskType_Script': {
+                        			name  : 'Script',
+                        			type  : 'radio',
+                        			radio : 'TaskType',
+                        			value : 'Script',
+                        			events: {
+                        				change: function (e) {
+                        					me.setTaskTypeSelectedShape(e.target.value);
+                        				}
+                        			}
+                        		},
+                        		'TaskType_None'   : {
+                        			name  : 'None',
+                        			type  : 'radio',
+                        			radio : 'TaskType',
+                        			value : 'None',
+                        			events: {
+                        				change: function (e) {
+                        					me.setTaskTypeSelectedShape(e.target.value);
+                        				}
+                        			}
+                        		}
+                            }
+                        },
+                        'sep10'       : '---------',
+                        'addEvent'  : {
+                            name : 'addEvent',
+                        	items: {
+                        		'Message': {
+                        			name  : 'Message',
+                        			type  : 'radio',
+                        			radio : 'addEvent',
+                        			value : 'Message',
+                        			events: {
+                        				change: function (e) {
+                        					me.setAddEventSelectedShape(e.target.value);
+                        				}
+                        			}
+                        		},
+                        		'Timer'   : {
+                        			name  : 'Timer',
+                        			type  : 'radio',
+                        			radio : 'addEvent',
+                        			value : 'Timer',
+                        			events: {
+                        				change: function (e) {
+                        					me.setAddEventSelectedShape(e.target.value);
+                        				}
+                        			}
+                        		},
+                        		'Error'  : {
+                        		    name  : 'Error',
+                        			type  : 'radio',
+                        			radio : 'addEvent',
+                        			value : 'Error',
+                        			events: {
+                        				change: function (e) {
+                        					me.setAddEventSelectedShape(e.target.value);
+                        				}
+                        			}
+                        		},
+                                'Compensate'  : {
+                        			name  : 'Compensate',
+                        			type  : 'radio',
+                        			radio : 'addEvent',
+                        			value : "Compensate",
+                        		    events: {
+                        				change: function (e) {
+                        					me.setAddEventSelectedShape(e.target.value);
+                        				}
+                        			}
+                        		},
+                                'Conditional'  : {
+                        			name  : 'Conditional',
+                        			type  : 'radio',
+                        			radio : 'addEvent',
+                        			value : "Conditional",
+                        		    events: {
+                        				change: function (e) {
+                        					me.setAddEventSelectedShape(e.target.value);
+                        				}
+                        			}
+                        		},
+                                'Signal'  : {
+                        			name  : 'Signal',
+                        			type  : 'radio',
+                        			radio : 'addEvent',
+                        			value : "Signal",
+                        		    events: {
+                        				change: function (e) {
+                        					me.setAddEventSelectedShape(e.target.value);
+                        				}
+                        			}
+                        		},
+                                'Multiple'  : {
+                        			name  : 'Multiple',
+                        			type  : 'radio',
+                        			radio : 'addEvent',
+                        			value : "Multiple",
+                        		    events: {
+                        				change: function (e) {
+                        					me.setAddEventSelectedShape(e.target.value);
+                        				}
+                        			}
+                        		},
+                                'Parallel Multiple'  : {
+                        			name  : 'Parallel Multiple',
+                        			type  : 'radio',
+                        			radio : 'addEvent',
+                        			value : "Parallel Multiple",
+                        		    events: {
+                        				change: function (e) {
+                        					me.setAddEventSelectedShape(e.target.value);
+                        				}
+                        			}
+                        		},
+                                'Escalation'  : {
+                        			name  : 'Escalation',
+                        			type  : 'radio',
+                        			radio : 'addEvent',
+                        			value : "Escalation",
+                        		    events: {
+                        				change: function (e) {
+                        					me.setAddEventSelectedShape(e.target.value);
+                        				}
+                        			}
+                        		}
+                            }
+                        }
+                    }
 				};
-			}
+            }
 		});
 	},
 
@@ -20600,6 +21536,100 @@ OG.handler.EventHandler.prototype = {
 		});
 	},
 
+    /**
+	 * 메뉴 : 선택된 Shape 들의 Line Type 을 설정한다.
+	 *
+	 * @param {String} lineType ['straight' | 'plain' | 'bezier']
+	 */
+	setLoopTypeSelectedShape: function (loopType) {
+		var me = this;
+		$(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_selected=true]").each(function (idx, item) {
+            if(item.shape.SHAPE_ID == "OG.shape.bpmn.A_Task"){
+                item.shape.LoopType = loopType;
+                me._RENDERER.redrawShape(item);
+            }
+		});
+	},
+
+	setAddEventSelectedShape: function(value){
+        var me = this;
+        var newElement, shape, boundary;
+        switch(value){
+            case "Message":
+                shape = new OG.shape.bpmn.E_Intermediate_Message();
+                break;
+            case "Timer":
+                shape = new OG.shape.bpmn.E_Intermediate_Timer();
+                break;
+            case "Error":
+                shape = new OG.shape.bpmn.E_Intermediate_Error();
+                break;
+            case "Compensate":
+                shape = new OG.shape.bpmn.E_Intermediate_Compensation();
+                break;
+            case "Conditional":
+                shape = new OG.shape.bpmn.E_Intermediate_Rule();
+                break;
+            case "Signal":
+                shape = new OG.shape.bpmn.Signal();
+                break;
+            case "Multiple":
+                shape = new OG.shape.bpmn.E_Intermediate_Multiple();
+                break;
+            case "Parallel Multiple":
+                shape = new OG.shape.bpmn.ParallelMultiple();
+                break;
+            case "Escalation":
+                shape = new OG.shape.bpmn.E_Intermediate_Escalation();
+                break;
+        }
+
+        $(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_selected=true]").each(function (idx, item) {
+
+            boundary = item.shape.geom.getBoundary();
+            item.shape.Events.push(value);
+            //아래 위 라인에는 5개씩 양 옆라인에는 3개씩
+            if(item.shape.Events.length < 6){
+                newElement = me._RENDERER._CANVAS.drawShape([boundary.getLowerLeft().x + (((boundary.getLowerRight().x - boundary.getLowerLeft().x) / 6) * (item.shape.Events.length)), boundary.getLowerCenter().y], shape, [30, 30]);
+            }
+            else if(item.shape.Events.length < 9){
+                newElement = me._RENDERER._CANVAS.drawShape([boundary.getLowerRight().x, boundary.getLowerRight().y - (((boundary.getLowerRight().y - boundary.getUpperRight().y) / 4) * (item.shape.Events.length - 5))], shape, [30, 30]);
+            }
+            else if(item.shape.Events.length < 14){
+                newElement = me._RENDERER._CANVAS.drawShape([boundary.getUpperRight().x - (((boundary.getUpperRight().x - boundary.getUpperLeft().x) / 6) * (item.shape.Events.length - 8)), boundary.getUpperCenter().y], shape, [30, 30]);
+            }
+            else if(item.shape.Events.length < 17){
+                newElement = me._RENDERER._CANVAS.drawShape([boundary.getUpperLeft().x, boundary.getUpperLeft().y - (((boundary.getUpperLeft().y - boundary.getLowerLeft().y) / 4) * (item.shape.Events.length - 13))], shape, [30, 30]);
+            }
+
+            item.appendChild(newElement);
+		});
+
+
+    },
+
+    setTaskTypeSelectedShape: function (taskType) {
+		var me = this;
+		$(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_selected=true]").each(function (idx, item) {
+            if(item.shape.SHAPE_ID == "OG.shape.bpmn.A_Task"){
+                item.shape.TaskType = taskType;
+                me._RENDERER.redrawShape(item);
+            }
+		});
+	},
+
+    /*
+    setCollapseSelectedShape: function (collapse) {
+		var me = this;
+		$(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_selected=true]").each(function (idx, item) {
+            if(item.shape.SHAPE_ID == "OG.shape.bpmn.A_Task" || item.shape.SHAPE_ID == "OG.shape.bpmn.Value_Chain"){
+                item.shape.HaveButton = collapse;
+                me._RENDERER.redrawShape(item);
+            }
+		});
+	},
+    */
+
 	/**
 	 * 메뉴 : 선택된 Shape 들의 Line Style 을 설정한다.
 	 *
@@ -20644,7 +21674,12 @@ OG.handler.EventHandler.prototype = {
 	setFillColorSelectedShape: function (fillColor) {
 		var me = this;
 		$(me._RENDERER.getRootElement()).find("[_type=" + OG.Constants.NODE_TYPE.SHAPE + "][_selected=true]").each(function (idx, item) {
-			me._RENDERER.setShapeStyle(item, {"fill": fillColor, "fill-opacity": 1});
+		    if(item.shape.SHAPE_ID == "OG.shape.bpmn.Value_Chain" || item.shape.SHAPE_ID == "OG.shape.bpmn.A_Subprocess"){
+              me._RENDERER.setShapeStyle(item, {"fill": "#FFFFFF-" + fillColor, "fill-opacity": 1});
+		    }else{
+		      me._RENDERER.setShapeStyle(item, {"fill": fillColor, "fill-opacity": 1});
+		    }
+
 		});
 	},
 
@@ -21437,7 +22472,7 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor, backgroun
 		/**
 		 * Shape Move & Resize 시 이동 간격
 		 */
-		MOVE_SNAP_SIZE: 5,
+		MOVE_SNAP_SIZE: 1,
 
 		/**
 		 * 터미널 cross 사이즈
@@ -21474,37 +22509,39 @@ OG.graph.Canvas = function (container, containerSize, backgroundColor, backgroun
 		 */
 		DEFAULT_STYLE: {
 			SHAPE         : { cursor: "default" },
-			GEOM          : { stroke: "gray", fill: "white", "fill-opacity": 0, "label-position": "center" },
+			GEOM          : { stroke: "black", fill: "white", "fill-opacity": 0, "label-position": "center"  },
 			TEXT          : { stroke: "none", "text-anchor": "middle" },
 			HTML          : { "label-position": "bottom", "text-anchor": "middle", "vertical-align": "top" },
 			IMAGE         : { "label-position": "bottom", "text-anchor": "middle", "vertical-align": "top" },
-			EDGE          : { stroke: "gray", fill: "none", "fill-opacity": 0, "stroke-width": 1, "stroke-opacity": 1, "edge-type": "plain", "edge-direction": "c c", "arrow-start": "none", "arrow-end": "classic-wide-long", "stroke-dasharray": "", "label-position": "center" },
-			EDGE_SHADOW   : { stroke: "#00FF00", fill: "none", "fill-opacity": 0, "stroke-width": 1, "stroke-opacity": 1, "arrow-start": "none", "arrow-end": "none", "stroke-dasharray": "- " },
-			EDGE_HIDDEN   : { stroke: "white", fill: "none", "fill-opacity": 0, "stroke-width": 5, "stroke-opacity": 0 },
-			GROUP         : { stroke: "none", fill: "white", "fill-opacity": 0, "label-position": "bottom", "text-anchor": "middle", "vertical-align": "top" },
+			EDGE          : { stroke: "black", fill: "none", "fill-opacity": 0, "stroke-width": 1.5, "stroke-opacity": 1, "edge-type": "plain", "edge-direction": "c c", "arrow-start": "none", "arrow-end": "classic-wide-long", "stroke-dasharray": "", "label-position": "center", "stroke-linejoin" : "round" },
+			EDGE_SHADOW   : { stroke: "#00FF00", fill: "none", "fill-opacity": 0, "stroke-width": 1, "stroke-opacity": 1, "arrow-start": "none", "arrow-end": "none", "stroke-dasharray": "- ", "edge-type": "plain" },
+			EDGE_HIDDEN   : { stroke: "white", fill: "none", "fill-opacity": 0, "stroke-width": 10, "stroke-opacity": 0 },
+			GROUP         : { stroke: "black", fill: "white", "fill-opacity": 0, "label-position": "bottom", "text-anchor": "middle", "vertical-align": "top" },
+			GROUP_HIDDEN  : { stroke: "black", fill: "white", "fill-opacity" :0 , "stroke-opacity": 0 ,cursor: "move" },
 			GUIDE_BBOX    : { stroke: "#00FF00", fill: "none", "stroke-dasharray": "- ", "shape-rendering": "crispEdges" },
-			GUIDE_UL      : { stroke: "gray", fill: "#00FF00", cursor: "nwse-resize", "shape-rendering": "crispEdges" },
-			GUIDE_UR      : { stroke: "gray", fill: "#00FF00", cursor: "nesw-resize", "shape-rendering": "crispEdges" },
-			GUIDE_LL      : { stroke: "gray", fill: "#00FF00", cursor: "nesw-resize", "shape-rendering": "crispEdges" },
-			GUIDE_LR      : { stroke: "gray", fill: "#00FF00", cursor: "nwse-resize", "shape-rendering": "crispEdges" },
-			GUIDE_LC      : { stroke: "gray", fill: "#00FF00", cursor: "ew-resize", "shape-rendering": "crispEdges" },
-			GUIDE_UC      : { stroke: "gray", fill: "#00FF00", cursor: "ns-resize", "shape-rendering": "crispEdges" },
-			GUIDE_RC      : { stroke: "gray", fill: "#00FF00", cursor: "ew-resize", "shape-rendering": "crispEdges" },
-			GUIDE_LWC     : { stroke: "gray", fill: "#00FF00", cursor: "ns-resize", "shape-rendering": "crispEdges" },
-			GUIDE_FROM    : { stroke: "gray", fill: "#00FF00", cursor: "move", "shape-rendering": "crispEdges" },
-			GUIDE_TO      : { stroke: "gray", fill: "#00FF00", cursor: "move", "shape-rendering": "crispEdges" },
-			GUIDE_CTL_H   : { stroke: "gray", fill: "#00FF00", cursor: "ew-resize", "shape-rendering": "crispEdges" },
-			GUIDE_CTL_V   : { stroke: "gray", fill: "#00FF00", cursor: "ns-resize", "shape-rendering": "crispEdges" },
-			GUIDE_SHADOW  : { stroke: "gray", fill: "none", "stroke-dasharray": "- ", "shape-rendering": "crispEdges" },
+			GUIDE_UL      : { stroke: "#03689a", fill: "#03689a", "fill-opacity" :0.5, cursor: "nwse-resize", "shape-rendering": "crispEdges" },
+			GUIDE_UR      : { stroke: "#03689a", fill: "#03689a", "fill-opacity" :0.5, cursor: "nesw-resize", "shape-rendering": "crispEdges" },
+			GUIDE_LL      : { stroke: "#03689a", fill: "#03689a", "fill-opacity" :0.5, cursor: "nesw-resize", "shape-rendering": "crispEdges" },
+			GUIDE_LR      : { stroke: "#03689a", fill: "#03689a", "fill-opacity" :0.5, cursor: "nwse-resize", "shape-rendering": "crispEdges" },
+			GUIDE_LC      : { stroke: "#03689a", fill: "#03689a", "fill-opacity" :0.5, cursor: "ew-resize", "shape-rendering": "crispEdges" },
+			GUIDE_UC      : { stroke: "black", fill: "#03689a", "fill-opacity" :0.5, cursor: "ns-resize", "shape-rendering": "crispEdges" },
+			GUIDE_RC      : { stroke: "black", fill: "#03689a", "fill-opacity" :0.5, cursor: "ew-resize", "shape-rendering": "crispEdges" },
+			GUIDE_LWC     : { stroke: "black", fill: "#03689a", "fill-opacity" :0.5, cursor: "ns-resize", "shape-rendering": "crispEdges" },
+			GUIDE_FROM    : { stroke: "black", fill: "#00FF00", cursor: "move", "shape-rendering": "crispEdges" },
+			GUIDE_TO      : { stroke: "black", fill: "#00FF00", cursor: "move", "shape-rendering": "crispEdges" },
+			GUIDE_CTL_H   : { stroke: "black", fill: "#00FF00", cursor: "ew-resize", "shape-rendering": "crispEdges" },
+			GUIDE_CTL_V   : { stroke: "black", fill: "#00FF00", cursor: "ns-resize", "shape-rendering": "crispEdges" },
+			GUIDE_SHADOW  : { stroke: "black", fill: "none", "stroke-dasharray": "- ", "shape-rendering": "crispEdges" },
 			RUBBER_BAND   : { stroke: "#0000FF", opacity: 0.2, fill: "#0077FF" },
-			TERMINAL      : { stroke: "#808080", "stroke-width": 1, fill: "r(0.5, 0.5)#FFFFFF-#808080", "fill-opacity": 0.5, cursor: "pointer" },
+			TERMINAL      : { stroke: "#03689A", "stroke-width": 0.5, fill: "r(0.5, 0.5)#FFFFFF-#03689A", "fill-opacity": 0.1, cursor: "pointer" },
 			TERMINAL_OVER : { stroke: "#0077FF", "stroke-width": 4, fill: "r(0.5, 0.5)#FFFFFF-#0077FF", "fill-opacity": 1, cursor: "pointer" },
 			TERMINAL_BBOX : { stroke: "none", fill: "white", "fill-opacity": 0 },
 			DROP_OVER_BBOX: { stroke: "#0077FF", fill: "none", opacity: 0.6, "shape-rendering": "crispEdges" },
-			LABEL         : { "font-size": 12, "font-color": "gray" },
+			LABEL         : { "font-size": 12, "font-color": "black" },
 			LABEL_EDITOR  : { position: "absolute", overflow: "visible", resize: "none", "text-align": "center", display: "block", padding: 0 },
 			COLLAPSE      : { stroke: "black", fill: "white", "fill-opacity": 0, cursor: "pointer", "shape-rendering": "crispEdges" },
-			COLLAPSE_BBOX : { stroke: "none", fill: "white", "fill-opacity": 0 }
+			COLLAPSE_BBOX : { stroke: "none", fill: "white", "fill-opacity": 0 },
+			BUTTON        : { stroke: "#9FD7FF", fill: "white", "fill-opacity": 0, cursor: "pointer", "shape-rendering": "crispEdges" }
 		}
 	};
 
@@ -21536,6 +22573,10 @@ OG.graph.Canvas.prototype = {
 	 *
 	 * @param {Object} config JSON 포맷의 configuration
 	 */
+	 setCurrentCanvas: function (canvas) {
+	    this._RENDERER.setCanvas(canvas);
+	 },
+
 	initConfig: function (config) {
 		if (config) {
 			this._CONFIG.SELECTABLE = config.selectable === undefined ? this._CONFIG.SELECTABLE : config.selectable;
@@ -21551,6 +22592,20 @@ OG.graph.Canvas.prototype = {
 			this._CONFIG.GROUP_COLLAPSIBLE = config.collapsible === undefined ? this._CONFIG.GROUP_COLLAPSIBLE : config.collapsible;
 			this._CONFIG.ENABLE_HOTKEY = config.enableHotKey === undefined ? this._CONFIG.ENABLE_HOTKEY : config.enableHotKey;
 			this._CONFIG.ENABLE_CONTEXTMENU = config.enableContextMenu === undefined ? this._CONFIG.ENABLE_CONTEXTMENU : config.enableContextMenu;
+
+//            this._CONFIG.SELECTABLE = false;
+//			this._CONFIG.DRAG_SELECTABLE = false;
+//			this._CONFIG.MOVABLE = false;
+//			this._CONFIG.RESIZABLE = false;
+//			this._CONFIG.CONNECTABLE = false;
+//			this._CONFIG.SELF_CONNECTABLE =false;
+//			this._CONFIG.CONNECT_CLONEABLE = false;
+//			this._CONFIG.CONNECT_REQUIRED = false;
+//			this._CONFIG.LABEL_EDITABLE = false;
+//			this._CONFIG.GROUP_DROPABLE = false;
+//			this._CONFIG.GROUP_COLLAPSIBLE = false;
+//			this._CONFIG.ENABLE_HOTKEY = false;
+//			this._CONFIG.ENABLE_CONTEXTMENU = false;
 		}
 
 		this._HANDLER.setDragSelectable(this._CONFIG.SELECTABLE && this._CONFIG.DRAG_SELECTABLE);
@@ -21645,14 +22700,13 @@ OG.graph.Canvas.prototype = {
 		if (this._CONFIG.GROUP_DROPABLE && element.shape.GROUP_DROPABLE) {
 			this._HANDLER.enableDragAndDropGroup(element);
 		}
-
+        if(element.shape.HaveButton){   // + 버튼을 만들기 위해서
+            this._HANDLER.enableButton(element);
+        }
 		if (this._CONFIG.GROUP_COLLAPSIBLE && element.shape.GROUP_COLLAPSIBLE) {
 			this._HANDLER.enableCollapse(element);
 		}
 
-		if(element.shape.POPUP){
-            this._HANDLER.enablePopUp(element);
-        }
 
 		return element;
 	},
@@ -21734,12 +22788,11 @@ OG.graph.Canvas.prototype = {
 
 		if (edge) {
 			guide = this._RENDERER.drawGuide(edge);
-
-			if (edge && guide) {
+			if (edge) {
 				// enable event
-				this._HANDLER.setClickSelectable(edge, edge.shape.SELECTABLE);
-				this._HANDLER.setMovable(edge, edge.shape.SELECTABLE && edge.shape.MOVABLE);
-				this._HANDLER.setResizable(edge, guide, edge.shape.SELECTABLE && edge.shape.RESIZABLE);
+				this._HANDLER.setClickSelectable(edge, this._CONFIG.SELECTABLE);
+				this._HANDLER.setMovable(edge, this._CONFIG.SELECTABLE && edge.shape.MOVABLE);
+				this._HANDLER.setResizable(edge, guide, this._CONFIG.SELECTABLE && edge.shape.RESIZABLE);
 				if (edge.shape.LABEL_EDITABLE) {
 					this._HANDLER.enableEditLabel(edge);
 				}
@@ -22348,6 +23401,12 @@ OG.graph.Canvas.prototype = {
 				if (item.data) {
 					cell['@data'] = escape(OG.JSON.encode(item.data));
 				}
+                if (shape.LoopType) {
+					cell['@loopType'] = shape.LoopType;
+				}
+                if (shape.TaskType) {
+					cell['@taskType'] = shape.TaskType;
+				}
 
 				jsonObj.opengraph.cell.push(cell);
 
@@ -22387,7 +23446,7 @@ OG.graph.Canvas.prototype = {
 		var canvasWidth, canvasHeight, rootGroup,
 			minX = Number.MAX_VALUE, minY = Number.MAX_VALUE, maxX = Number.MIN_VALUE, maxY = Number.MIN_VALUE,
 			i, cell, shape, id, parent, shapeType, shapeId, x, y, width, height, style, geom, from, to,
-			fromEdge, toEdge, label, fromLabel, toLabel, angle, value, data, element;
+			fromEdge, toEdge, label, fromLabel, toLabel, angle, value, data, element, loopType, taskType;
 
 		this._RENDERER.clear();
 
@@ -22424,6 +23483,8 @@ OG.graph.Canvas.prototype = {
 				angle = cell[i]['@angle'];
 				value = cell[i]['@value'];
 				data = cell[i]['@data'];
+				loopType = cell[i]['@loopType'];
+				taskType = cell[i]['@taskType'];
 
 				label = label ? unescape(label) : label;
 
@@ -22440,6 +23501,10 @@ OG.graph.Canvas.prototype = {
 						shape.label = label;
 					}
 					element = this.drawShape([x, y], shape, [width, height], OG.JSON.decode(style), id, parent, false);
+					if(element.shape.SHAPE_ID == "OG.shape.bpmn.A_Task"){
+					    element.shape.LoopType = loopType;
+					    element.shape.TaskType = taskType;
+					}
 					break;
 				case OG.Constants.SHAPE_TYPE.EDGE:
 					shape = eval('new ' + shapeId + '(' + value + ')');

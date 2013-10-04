@@ -861,3 +861,19 @@ LOCK TABLES `category` WRITE;
 INSERT INTO `category` VALUES (0,'재무/회계',-1,NULL,0),(1,'인사/급여',-1,NULL,0),(2,'영업 관리',-1,NULL,0),(3,'생산 관리',-1,NULL,0),(4,'설비 관리',-1,NULL,0),(5,'구매 관리',-1,NULL,0),(6,'수출입 관리',-1,NULL,0),(7,'재고 관리',-1,NULL,0),(8,'품질 관리',-1,NULL,0),(9,'기술 정보 관리',-1,NULL,0);
 /*!40000 ALTER TABLE `category` ENABLE KEYS */;
 UNLOCK TABLES;
+update emptable set guest = 0;
+
+
+-- 2013.08.07
+create table favoritefile (
+ userId varchar(200) not null,
+ username varchar(200),
+ fileId varchar(100) ,
+ fileName varchar(100) ,
+ filePath varchar(100) ,
+ MODDATE datetime
+);
+
+--2013.09.06s - 폴더ID, NAME추가 
+alter table bpm_worklist add column folderId varchar(100);
+alter table bpm_worklist add column folderName varchar(100);
