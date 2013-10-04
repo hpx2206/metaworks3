@@ -41,14 +41,15 @@ public class DocumentPanel implements ContextAware {
 	
 	public void load() throws Exception{
 
-		DocumentNode Node = new DocumentNode();
-		Node.session = session;
+		DocumentNode node = new DocumentNode();
+		node.session = session;
 //		Node.setId(session.getCompany().getComCode());
-		Node.setCompanyId(session.getCompany().getComCode());
+		node.setCompanyId(session.getCompany().getComCode());
 		
-		documentNode = Node.loadDocumentList();
+		documentNode = node.loadDocumentList();
 		documentNode.setMetaworksContext(this.getMetaworksContext());
 		documentNode.getMetaworksContext().setWhen("onlyView");
 		setDocumentNode(documentNode);
 	}
+	
 }

@@ -848,7 +848,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				instance.setInstId(this.getInstId());
 				instance.setTopicId(session.getLastSelectedItem());
 				instance.setInitEp(session.getUser().getName());
-				instance.setStatus("Running");
 				if(this.getType().equals("file")){
 					instance.databaseMe().setName(this.getExtFile());
 				}else{
@@ -875,9 +874,7 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 				instanceRef = instance.databaseMe();
 				
 				if(this.getDueDate()!= null)
-					instanceRef.setDueDate(this.getDueDate());
-				
-						
+					instanceRef.setDueDate(this.getDueDate());		
 				// 덧글일 때 WorkItem 추가하는 사용자가 팔로워에 추가되어 있지 않다면 추가작업
 				instance.fillFollower();
 
@@ -945,7 +942,6 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 					}
 				}				
 			}
-			// TODO instanceRefer 로 인스턴스 발행
 			instanceRef.setCurrentUser(session.getUser());//may corrupt when the last actor is assigned from process execution.
 								
 			IUser writer = new User();
@@ -959,19 +955,20 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			//기존 date 추가 부분
 			this.setStartDate(Calendar.getInstance().getTime());
 			this.setEndDate(getStartDate());
-			this.setFolderId(session.getLastSelectedItem());
-			this.setFolderName(session.getWindowTitle() != null && session.getWindowTitle().length()>4  
-					? session.getWindowTitle().substring(4) : "" );
+			
+			if(this.getTool() != null){
+				this.setFolderId(session.getLastSelectedItem());
+	//			this.setFolderName(session.getWindowTitle() != null && session.getWindowTitle().length()>4  
+	//					? session.getWindowTitle().substring(4) : FileWorkItem.UNLABELED );
+				this.setFolderName(FileWorkItem.UNLABELED);
+			}
 			this.setStatus(WORKITEM_STATUS_FEED);
 			this.setIsDeleted(false);			
+			if(MetaworksContext.WHEN_EDIT.equals(this.getMetaworksContext().getWhen()))
+				this.setGrpTaskId(this.getTaskId());
+				
 			if(this.getRootInstId() == null)
-				this.setRootInstId(this.getInstId());
-			
-			// TODO if instanceRefer.instanceID 가 있으면
-			// workiem에 넣어주기...
-			// 
-			
-			// 덧글 상태일때 덧글이 길면 메모로 변경해주는 기능
+				this.setRootInstId(this.getInstId());			// 덧글 상태일때 덧글이 길면 메모로 변경해주는 기능
 			if(this instanceof CommentWorkItem){
 				if(this.getTitle().length() > TITLE_LIMIT_SIZE){
 					this.setType(WORKITEM_TYPE_MEMO);

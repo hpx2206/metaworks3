@@ -166,7 +166,7 @@ public class NewInstancePanel implements ContextAware {
 			sb.append(" where 	knol.type = ?type");
 			sb.append(" and 		knol.id = ?topicId ");
 			
-			ITopicNode dao = (ITopicNode)MetaworksDAO.createDAOImpl(TransactionContext.getThreadLocalInstance(), sb.toString(), ITopicNode.class); 
+			IDocumentNode dao = (IDocumentNode)MetaworksDAO.createDAOImpl(TransactionContext.getThreadLocalInstance(), sb.toString(), IDocumentNode.class); 
 			dao.set("type", "doc");
 			dao.set("topicId", session.getLastSelectedItem());
 			dao.select();

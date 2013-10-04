@@ -70,16 +70,24 @@ public class Perspective {
 		instList.setFolderId(selectedItem);
 		instList.setMetaworksContext(new MetaworksContext());
 		savePerspectiveToSession(session, perspectiveType, selectedItem);
+
+		InstanceListPanel instListPanel = new InstanceListPanel(session);
+		instListPanel.setInstanceList(instList);
+		instListPanel.session = session;
+		instListPanel.documentFollowerLoad();
+
+		SearchBox searchBox = new SearchBox();
+		searchBox.setKeyword(session.getSearchKeyword());
+		searchBox.setKeyUpSearch(true);
+		searchBox.setKeyEntetSearch(true);
+			
+		final Object[] returnObject;
+		
+		returnObject = new Object[]{new Refresh(searchBox)};
+
 		if(perspectiveType.equals("document")){
-			instList.getMetaworksContext().setHow("document");
 			instList.loadDocument();
 			
-			InstanceListPanel instListPanel = new InstanceListPanel(session);
-			instListPanel.setInstanceList(instList);
-			instListPanel.session = session;
-			instListPanel.documentFollowerLoad();
-			
-			 
 			instListPanel.getSearchBox().setKeyword(session.getSearchKeyword());
 			if( title == null && perspectiveType != null && perspectiveType.equals("document")){
 				title = session.getWindowTitle();
@@ -89,31 +97,27 @@ public class Perspective {
 			instListPanel.setTitle(title);
 			session.setWindowTitle(title);
 			
-			SearchBox searchBox = new SearchBox();
-			searchBox.setKeyword(session.getSearchKeyword());
-			searchBox.setKeyUpSearch(true);
-			searchBox.setKeyEntetSearch(true);
-				
-			final Object[] returnObject;
+			MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getEmployee().getEmpCode()), returnObject);
 			
-			returnObject = new Object[]{new Refresh(searchBox)};
+			return new Object[]{session, instListPanel};
+		}else if(perspectiveType.equals("unlabeled")){
+			instList.loadUnLabeledDocument();
+			instListPanel.getSearchBox().setKeyword(session.getSearchKeyword());
+			if( title == null && perspectiveType != null && perspectiveType.equals("document")){
+				title = session.getWindowTitle();
+			}else if( title == null ){
+				title = "$perspective." + perspectiveType;
+			}
+			
+			
+			instListPanel.setTitle(title);
+			session.setWindowTitle(title);
 			
 			MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getEmployee().getEmpCode()), returnObject);
 			
-			
 			return new Object[]{session, instListPanel};
 		}else if(perspectiveType.equals("explorer")){
-			
-			
-			
-			instList.getMetaworksContext().setHow("explorer");
 			instList.loadDocument();
-			
-			InstanceListPanel instListPanel = new InstanceListPanel(session);
-			instListPanel.setInstanceList(instList);
-			instListPanel.session = session;
-			instListPanel.documentFollowerLoad();
-			
 			 
 			instListPanel.getSearchBox().setKeyword(session.getSearchKeyword());
 			if( title == null && perspectiveType != null && perspectiveType.equals("explorer")){
@@ -124,25 +128,11 @@ public class Perspective {
 			instListPanel.setTitle(title);
 			session.setWindowTitle(title);
 			
-			SearchBox searchBox = new SearchBox();
-			searchBox.setKeyword(session.getSearchKeyword());
-			searchBox.setKeyUpSearch(true);
-			searchBox.setKeyEntetSearch(true);
-				
-			final Object[] returnObject;
-			
-			returnObject = new Object[]{new Refresh(searchBox)};
-			
 			MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getEmployee().getEmpCode()), returnObject);
 			
 			ProcessExploreWindow processExploreWindow = new ProcessExploreWindow();
 			processExploreWindow.setPanel(instListPanel);
 			return new Object[]{session, processExploreWindow};
-			
-//			return new Object[]{session, instListPanel};
-			
-			
-			
 			
 		}
 		return null;

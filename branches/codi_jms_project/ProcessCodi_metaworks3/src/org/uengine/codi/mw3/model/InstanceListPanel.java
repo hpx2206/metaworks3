@@ -82,6 +82,8 @@ public class InstanceListPanel implements ContextAware{
 			
 			if("explorer".equals(session.getLastPerspecteType()))
 				this.getMetaworksContext().setHow("explorer");		
+			if("unlabeled".equals(session.getLastPerspecteType()))
+				this.getMetaworksContext().setHow("unlabeled");
 			
 			instanceList = new InstanceList(session);
 			

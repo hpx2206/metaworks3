@@ -244,7 +244,12 @@ public class DocumentNode extends Database<IDocumentNode> implements IDocumentNo
 	
 	public Object[] loadDocument() throws Exception {
 		String title = "문서명: " + this.getName();
-		Object[] returnObject = Perspective.loadDocumentListPanel(session, "document", getId(), title);
+		Object[] returnObject = null;
+		if("UnLabeledDocument".equals(this.getDescription())){
+			returnObject = Perspective.loadDocumentListPanel(session, "unlabeled", getId(), title);
+		}else{
+			returnObject = Perspective.loadDocumentListPanel(session, "document", getId(), title);
+		}
 		
 		return returnObject;
 
@@ -255,7 +260,6 @@ public class DocumentNode extends Database<IDocumentNode> implements IDocumentNo
 		
 		String title = "문서명: " + this.getName();
 		Object[] returnObject = Perspective.loadDocumentListPanel(session, "explorer", getId(), title);
-		
 		return returnObject;
 		
 		

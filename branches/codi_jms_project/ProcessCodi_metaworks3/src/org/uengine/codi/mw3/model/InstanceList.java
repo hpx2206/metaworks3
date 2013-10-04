@@ -166,13 +166,19 @@ public class InstanceList implements ContextAware{
 	public InstanceList loadDocument(Navigation navigation) throws Exception{
 		IInstance instance = Instance.loadDocument(getFolderId());
 		
-
 		setInstances(instance);
-//		setWorkItem(workitem);
 		setMoreInstanceList(new InstanceList());
 		getMoreInstanceList().setNavigation(navigation);
 		getMoreInstanceList().setPage(getPage()+1);
 		return this;
+	}
+
+	public void loadUnLabeledDocument() throws Exception {
+		IInstance instance = Instance.loadUnlabeledDocument();
+		setInstances(instance);
+		setMoreInstanceList(new InstanceList());
+		getMoreInstanceList().setNavigation(navigation);
+		getMoreInstanceList().setPage(getPage()+1);
 	}
 
 //	private int findPerspectiveTypeCode(String typeString) {

@@ -612,3 +612,7 @@ legend {display:none;}
 .topic_span{ padding:0 6px 1px 18px;-webkit-border-radius: 9px;
       -moz-border-radius: 9px;
       border-radius: 9px; background:url('../../images/waveStyle/i_topic_w.png') 0px -2px no-repeat #d9ebfd; border:1px solid #76b7f8; white-space:nowrap;}
+
+.document_span{ padding:0 10px 1px 18px;-webkit-border-radius:8px;
+      -moz-border-radius: 8px;
+      border-radius: 8px; background:url('../../images/waveStyle/wihdocument.png') -1px -2px no-repeat #f5f5f5; border:1px solid #76b7f8; white-space:nowrap;}

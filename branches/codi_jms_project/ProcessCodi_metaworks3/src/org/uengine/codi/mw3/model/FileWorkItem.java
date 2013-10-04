@@ -13,10 +13,10 @@ import java.io.RandomAccessFile;
 import java.net.ConnectException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.util.Calendar;
 
 import javax.imageio.ImageIO;
 
-import org.metaworks.MetaworksContext;
 import org.metaworks.MetaworksException;
 import org.metaworks.Refresh;
 import org.metaworks.annotation.Hidden;
@@ -39,6 +39,7 @@ import com.sun.pdfview.PDFPage;
 
 public class FileWorkItem extends WorkItem{
 	
+	final static String UNLABELED = "미분류문서";
 	
 	public FileWorkItem(){
 		setType("file");
@@ -163,15 +164,41 @@ public class FileWorkItem extends WorkItem{
 			
 		}
 */
+
 		
-		// WorkItem 추가
+		int size = (Integer) searchDocument();
+		if(size == 0){
+		//미분류문서추가
+			DocumentNode node= new DocumentNode();
+			node.setName("미분류문서");
+			node.setDescription("UnLabeledDocument");
+			node.setType(DocumentNode.TYPE_DOC);
+			node.setStartDate(Calendar.getInstance().getTime());
+			node.setSecuopt("0");
+			node.setParentId("Main");	
+			node.setAuthorId(session.getUser().getUserId());		
+			node.setCompanyId(session.getCompany().getComCode());
+			node.getMetaworksContext().setWhen(this.getMetaworksContext().getWhen());
+			node.createMe();
+		}
+		
 		Object[] returnObject = super.add();
-		
  		this.setWorkItemVersionChooser(this.databaseMe().getWorkItemVersionChooser());
 		
 		return returnObject;
 	}
-
+	
+	public Object searchDocument() throws Exception{
+		StringBuffer sb = new StringBuffer();
+		sb.append("select * from bpm_knol where description=?description");
+		
+		IDocumentNode dao = (IDocumentNode)sql(IDocumentNode.class, sb.toString());
+		
+		dao.set("description", "UnLabeledDocument");
+		dao.select();
+		int size = dao.size();
+		return size;
+	}
 	@ServiceMethod(inContextMenu=true, when = WHEN_VIEW, callByContent=true, except="file")
 	public void edit() throws Exception {
 		setFile(new MetaworksFile());
