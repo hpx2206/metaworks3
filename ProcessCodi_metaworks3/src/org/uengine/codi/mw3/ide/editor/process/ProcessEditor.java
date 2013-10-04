@@ -3,18 +3,25 @@ package org.uengine.codi.mw3.ide.editor.process;
 import org.metaworks.annotation.ServiceMethod;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.editor.Editor;
-import org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerWebContentPanel;
+import org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerContentPanel;
 
 public class ProcessEditor extends Editor {
 
-	ProcessDesignerWebContentPanel processDesigner;
-		public ProcessDesignerWebContentPanel getProcessDesigner() {
+	ProcessDesignerContentPanel processDesigner;
+		public ProcessDesignerContentPanel getProcessDesigner() {
 			return processDesigner;
 		}
-		public void setProcessDesigner(ProcessDesignerWebContentPanel processDesigner) {
+		public void setProcessDesigner(ProcessDesignerContentPanel processDesigner) {
 			this.processDesigner = processDesigner;
 		}
-
+	String processDesignerInstanceId;
+		public String getProcessDesignerInstanceId() {
+			return processDesignerInstanceId;
+		}
+		public void setProcessDesignerInstanceId(String processDesignerInstanceId) {
+			this.processDesignerInstanceId = processDesignerInstanceId;
+		}
+		
 	public ProcessEditor(){
 		
 	}
@@ -25,7 +32,8 @@ public class ProcessEditor extends Editor {
 		this.setType("process");
 		
 		try {
-			ProcessDesignerWebContentPanel processDesignerContentPanel = new ProcessDesignerWebContentPanel();
+			ProcessDesignerContentPanel processDesignerContentPanel = new ProcessDesignerContentPanel();
+			processDesignerContentPanel.session = resourceNode.session;
 			processDesignerContentPanel.setAlias(this.getResourceNode().getPath());
 			this.setProcessDesigner(processDesignerContentPanel);
 		} catch (Exception e) {
@@ -39,7 +47,7 @@ public class ProcessEditor extends Editor {
 		String definitionString = super.load();
 		
 		try {
-			this.getProcessDesigner().load(definitionString);
+			processDesignerInstanceId = this.getProcessDesigner().load(definitionString);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

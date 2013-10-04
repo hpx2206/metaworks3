@@ -144,20 +144,6 @@ public class Editor {
 					}			
 				}
 			}
-			/*
-			}else{
-				
-				CloudClassLoader ccl = new CloudClassLoader(jbPath.getLibraryPath(), jbPath.getDefaultBuildOutputPath());
-				ccl.load();
-				System.out.println("change : " + ccl.getSourceResourceName(this.getFilename()));
-				
-				try {
-					is = ccl.getCl().getResourceAsStream(ccl.getSourceResourceName(this.getFilename()));
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-			*/
 				
 			MetaworksUtil.copyStream(is, bao);
 			
@@ -190,6 +176,55 @@ public class Editor {
 		}
 		
 		return this.getContent();
+	}
+	
+	public static String loadByPath(String path) {
+		InputStream is = null;
+		ByteArrayOutputStream bao = null;
+		String contents = null;
+		try {
+			bao = new ByteArrayOutputStream();
+			
+			//if(TYPE_FILE.equals(this.getType())){
+			File file = new File(path);
+			if(file.exists()){					
+				try {
+					is = new FileInputStream(file);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}			
+			}
+			MetaworksUtil.copyStream(is, bao);
+			
+			contents = bao.toString(GlobalContext.ENCODING);
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			if(is != null){
+				try {
+					is.close();
+					is = null;
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+			if(bao != null){
+				try {
+					bao.close();
+					bao = null;
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+		}
+		
+		return contents;
 	}
 	
 	@ServiceMethod(payload={"resourceNode"})
