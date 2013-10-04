@@ -1736,7 +1736,10 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
     				if(this.getFaceHelper(objectId) && this.getFaceHelper(objectId).destroy)
     					mw3.getFaceHelper(objectId).destroy();
     			}
-				
+
+    			// 2013-10-02 cjw unbind
+    			$(divId).unbind();
+    			
     			this._armObject(objectId, value); //let the methods and some special fields available
 				this.objects[objectId] = value; //change the cached value
 				this.faceHelpers[objectId] = null;
