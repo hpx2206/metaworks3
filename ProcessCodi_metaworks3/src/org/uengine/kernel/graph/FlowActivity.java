@@ -8,7 +8,6 @@ import java.util.List;
 import org.uengine.kernel.Activity;
 import org.uengine.kernel.ActivityReference;
 import org.uengine.kernel.ComplexActivity;
-import org.uengine.kernel.HumanActivity;
 import org.uengine.kernel.ProcessInstance;
 import org.uengine.kernel.UEngineException;
 import org.uengine.processmanager.ProcessTransactionContext;
@@ -105,12 +104,15 @@ public class FlowActivity extends ComplexActivity {
 				// boolean stillRunning = false;
 				Activity currentActivity = (Activity) payload;
 				List<Activity> possibleNextActivities = currentActivity.getPossibleNextActivities(instance, "");
-
+				
 				if (possibleNextActivities.size() == 0) {
 					// fireComplete(instance);
 					 setStatus(instance, STATUS_COMPLETED);
 					 // change the status to be completed 
 					 //after the completion of all the activities
+					 if (instance != null && instance.isSubProcess()) {
+						instance.getProcessDefinition().returnToMainProcess(instance);
+					 }
 				}
 
 				// register token before queueActivity()
