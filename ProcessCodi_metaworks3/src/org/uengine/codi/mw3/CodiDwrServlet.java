@@ -16,6 +16,7 @@ import javax.servlet.http.HttpSession;
 
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.dwr.TransactionalDwrServlet;
+import org.metaworks.metadata.MetadataBundle;
 import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.platform.Console;
 import org.uengine.codi.platform.SecurityContext;
@@ -264,7 +265,13 @@ public class CodiDwrServlet extends TransactionalDwrServlet{
 			String tenantId = (String) session.getAttribute("tenantId");
 			String projectSourcePath = (String) session.getAttribute("projectSourcePath");
 			
-			String sourceCodeBase = CodiClassLoader.mySourceCodeBase();
+			String sourceCodeBase;
+			if("1".equals(GlobalContext.getPropertyString("multitenancy.use", "1"))){
+				sourceCodeBase = CodiClassLoader.mySourceCodeBase();
+			}else{
+				String projectId = MetadataBundle.getProjectId();
+				sourceCodeBase = CodiClassLoader.mySourceCodeBase(projectId,tenantId);
+			}
 			CodiClassLoader clForSession = CodiClassLoader.createClassLoader(sourceCodeBase);
 			
 			/*
