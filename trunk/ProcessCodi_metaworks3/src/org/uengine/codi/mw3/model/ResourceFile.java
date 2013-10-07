@@ -18,16 +18,14 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.website.Download;
-import org.metaworks.widget.IFrame;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.CodiProcessDefinitionFactory;
 import org.uengine.codi.mw3.CodiClassLoader;
 import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.admin.ResourcePanel;
-import org.uengine.codi.mw3.knowledge.WfNode;
+import org.uengine.codi.mw3.ide.Workspace;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerWebWindow;
 import org.uengine.codi.platform.Console;
 import org.uengine.kernel.RoleMapping;
@@ -178,8 +176,10 @@ public class ResourceFile implements ContextAware{
 			return;
 		}	
 		
-		String resourceBase = CodiClassLoader.getMyClassLoader().sourceCodeBase() + "/";
-		
+		Workspace workspace = new Workspace();
+		workspace.load(session);
+		String resourceBase = workspace.getProjects().get(0).getPath() + "/";
+		// TODO workspace.getProjects().get(0) 이 부분을  loop 를 돌려서 프로젝트까지 보이도록 해야함
 		File file = new File(resourceBase + getAlias());
 		
 		if(file.getName().startsWith("__") && !file.exists()){
