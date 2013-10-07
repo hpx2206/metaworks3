@@ -1,0 +1,24 @@
+<div>
+	<span>Select at item to open:</span>
+	
+	<%=fields.keyword.here({when: 'edit'})%>
+	
+	<span style="margin-top:10px;display:block">Matching items:</span>
+	
+	<div>
+		<select name="items_<%=objectId%>" id="items_<%=objectId%>" size="15" style="width: 100%" multiple="multiple">
+		</select>
+	</div>
+	
+	<input type="text" class="item_info" style="margin-top:10px;width: 100%; background:#e9e9e9;border:1px solid #CCD" readonly="readonly"/>
+</div>
+
+<div>
+	<div class="positionRight" style="margin:15px 0 0 0">
+		<%=methods.open.here()%>
+		<%=methods.cancel.here()%>
+	</div>
+	<div class="clear"></div>
+</div>
+
+

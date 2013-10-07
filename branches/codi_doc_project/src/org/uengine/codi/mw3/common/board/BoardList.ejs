@@ -1,0 +1,49 @@
+<%
+	if(value){
+		if(value.boardList){
+%>
+<div style="width:95%; margin:0 auto; overflow:auto" class="form_table">
+	<table cellspacing="0" border="1"  style="width:100%;">
+		<tbody>
+<%
+		for (var i=0; i<value.boardList.length; i++){
+			if(typeof options == 'undefined') 
+				options = objectMetadata;
+		
+			options['index'] = i;
+			options['htmlTag'] =  'tr';
+%>
+	<%=mw3.locateObject(value.boardList[i], value.boardList[i].__className, null, options)%>	
+<%
+			mw3.addBeanProperty(value.__objectId, '.boardList[' + i + ']');
+		}
+		
+		if(value.boardList.length == 0) {
+%>		
+			<div class="clear"></div>
+			<div class="searchResulte">	목록이 존재하지 않습니다.</div>
+<%
+		}
+%>
+		</tbody>
+	</table>
+</div>
+<%
+		}else{
+			var searchBox = mw3.getAutowiredObject('org.forx.model.common.board.BoardSearchBox');
+			
+			if(searchBox && searchBox.keyword && searchBox.keyword.length > 0){
+%>
+	<div class="clear"></div>
+	<div class="searchResulte">검색 결과가 존재하지 않습니다.</div>
+<%										
+			}else{
+%>
+<div class="clear"></div>
+	<div class="searchResulte">	<%=mw3.how=='firstsearch'?'먼저 검색을 하셔야 합니다.':'목록이 존재하지 않습니다.'%></div>
+
+<%
+			}
+		}
+	}
+%>	

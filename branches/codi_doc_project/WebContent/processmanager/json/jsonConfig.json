@@ -1,0 +1,5 @@
+{ identifier : 'id', label : 'name', items: [
+	{id : "-1", name : "ProcessDefinition", obj :"folder", type : "root", children : [
+		{id : "temp", name : "tempChildrenForItem", type : "temp"}
+	]}
+] }
