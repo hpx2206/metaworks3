@@ -1,0 +1,26 @@
+
+<b><%=value.fieldName%></b><br>
+<%
+	var context = (mw3.when=="instance-mode" ? 'edit' : 'view');
+
+//mw3.debug(context);
+
+	if("java.lang.String"==(value.type)){
+
+		%><%=fields.valueString.here({when: context})%><%	
+
+	}else if("java.util.Date"==(value.type)){
+
+		%><%=fields.valueDate.here({when: context})%><%	
+
+	}else if("org.metaworks.example.ide.SourceCode"==(value.type)){
+
+		%><%=fields.valueSourceCode.here({when: context})%><%	
+
+	}else if("org.metaworks.website.MetaworksFile"==(value.type)){
+
+		%><%=fields.valueFile.here({when: context})%><%	
+
+	}
+
+%>

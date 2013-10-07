@@ -1,0 +1,21 @@
+<%
+	if(value){
+%>	
+		<%=fields.friend.here()%>
+		<% if(value.metaworksContext.how == 'follower'){ %>
+		<div style="clear:left;"></div>
+		<% } %>
+<%
+		if(mw3.where && mw3.where =='roleUserPicker') {
+%>
+		<%=methods.roleUserPickUp.here()%>
+<%
+		} else {
+%>
+		<%=methods.pickUp.here()%>
+<%
+		}
+%>
+<%
+	}
+%>

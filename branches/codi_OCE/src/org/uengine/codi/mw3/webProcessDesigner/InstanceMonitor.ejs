@@ -1,0 +1,34 @@
+<%
+	if(value){
+%>
+	
+<div style="_display:inline-block;width:100%; height:100%;">
+    <div id="canvasView_<%=objectId %>" class="webDesigner" style="width:100%; height:100%; cursor: default; overflow:auto;  background:#F1FCF1; "></div>
+    <%
+    var cells = value.cell;
+    for (var i=0; i<cells.length; i++){
+        if( cells[i].drawByObject && cells[i].shapeType != 'EDGE' ){
+        objectTypeName = cells[i].__className;
+        %>  
+        <%=mw3.locateObject(cells[i], objectTypeName)%>
+        <%
+        mw3.addBeanProperty(objectId, "[" + i + "]");
+        }
+    }
+    %>
+    <%
+    for (var i=0; i<cells.length; i++){
+        if( cells[i].drawByObject && cells[i].shapeType == 'EDGE' ){
+        objectTypeName = cells[i].__className;
+        %>  
+        <%=mw3.locateObject(cells[i], objectTypeName)%>
+        <%
+        mw3.addBeanProperty(objectId, "[" + i + "]");
+        }
+    }
+    %>
+</div>
+
+<%
+	}
+%>	
