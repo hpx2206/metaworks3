@@ -3275,7 +3275,6 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				if(this.when == "__design"){
 					return !fd.attributes['resource']; 
 				}
-				
 				if(fd.attributes){
 					if(fd.attributes['hidden.when']){
 						return (fd.attributes['hidden.when'] == this.when);
@@ -3869,7 +3868,6 @@ var Metaworks3 = function(errorDiv, dwr_caption, mwProxy){
 				   				      zIndex: 100,
 					   				  start: function(event, ui) {
 					   					var className = $(this).attr('className');
-					   					
 					   					$(".onDrop_" + className.split('.').join('_')).css("border-width", "1px").css("border-style", "dashed").css("border-color", "orange");
 					   					
 					   					eval(this['dragCommand']);
@@ -4377,14 +4375,29 @@ var MetaworksService = function(className, object, svcNameAndMethodName, autowir
 				if(placeholder)
 					mw3.removeObject(placeholder);
 				
-				if(serviceMethodContext.target == 'popup')
-					mw3.showPopop(objId, serviceMethodContext, result);
-				else
-					mw3.showStick(objId, serviceMethodContext, result);
-								
+				var zIndex = 10;
+				if( serviceMethodContext.target=="popupOverPopup" ){
+					var modalWindow = $('.ui-dialog');
+					if(modalWindow.length > 0){
+						zIndex = $(modalWindow[modalWindow.length-1]).css('z-index');
+						zIndex = String(Number(zIndex)+1);
+					}else{
+						zIndex = 101;
+					}		
+				}
+				
+				$('body').append("<div id='" + mw3.popupDivId + "' class='target_" + serviceMethodContext.target + "' style='z-index:"+zIndex+";position:absolute; top:" + mw3.mouseY + "px; left:" + mw3.mouseX + "px'></div>");
+				
+				mw3.locateObject(result, null, '#' + mw3.popupDivId);
+				
 				$('#' + mw3._getObjectDivId(result.__objectId)).one('destroy', function(){
 					mw3.recentOpenerObjectId.pop();
 				});
+
+				// stick mode is auto close
+				if(serviceMethodContext.target == 'stick')
+					closeOutsideContainer(mw3.popupDivId);	
+				
 			}else if(serviceMethodContext.target=="opener" && mw3.recentOpenerObjectId.length > 0){
 				mw3.setObject(mw3.recentOpenerObjectId[mw3.recentOpenerObjectId.length - 1], result);
 
