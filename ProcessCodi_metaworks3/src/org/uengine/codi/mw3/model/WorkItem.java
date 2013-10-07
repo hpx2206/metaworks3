@@ -912,9 +912,10 @@ public class WorkItem extends Database<IWorkItem> implements IWorkItem{
 			//기존 date 추가 부분
 			this.setStartDate(Calendar.getInstance().getTime());
 			this.setEndDate(getStartDate());
-			this.setFolderId(session.getLastSelectedItem());
-			this.setFolderName(session.getWindowTitle() != null && session.getWindowTitle().length()>4  
-					? session.getWindowTitle().substring(4) : "" );
+			
+//			this.setFolderId(session.getLastSelectedItem());
+//			this.setFolderName(session.getWindowTitle() != null && session.getWindowTitle().length()>4  
+//					? session.getWindowTitle().substring(4) : "" );
 			this.setStatus(WORKITEM_STATUS_FEED);
 			this.setIsDeleted(false);			
 			if(this.getRootInstId() == null)
