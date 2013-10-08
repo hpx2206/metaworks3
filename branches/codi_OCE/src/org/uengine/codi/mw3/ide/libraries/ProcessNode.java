@@ -81,13 +81,19 @@ public class ProcessNode extends ResourceNode{
 	@Override
 	@ServiceMethod(payload={"id", "name", "path", "type", "folder", "projectId"}, target=ServiceMethodContext.TARGET_APPEND)
 	public Object action(){
-		ResourceNode resourceNode = new ResourceNode();
-		resourceNode.setId(this.getId());
-		resourceNode.setName(this.getName());
-		resourceNode.setType(this.getType());
-		resourceNode.setPath(this.getPath());
+//		ResourceNode resourceNode = new ResourceNode();
+//		resourceNode.setId(this.getId());
+//		resourceNode.setName(this.getName());
+//		resourceNode.setType(this.getType());
+//		resourceNode.setPath(this.getPath());
 		
-		Editor editor = new ProcessEditor(resourceNode);
+		ProcessNode processNode = new ProcessNode();
+		processNode.setId(this.getId());
+		processNode.setName(this.getName());
+		processNode.setType(this.getType());
+		processNode.setPath(this.getPath());
+		
+		Editor editor = new ProcessEditor(processNode);
 		try {
 			editor.load();
 		} catch (Exception e) {
