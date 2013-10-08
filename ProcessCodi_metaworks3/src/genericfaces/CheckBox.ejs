@@ -23,20 +23,22 @@
 <% 
 		}
 	}else{
-	if(value != null){ 
 %>
-	<input type="hidden" id="checkedList" value="<%=value%>" />
+	   <input type="hidden" id="checkedList" value="<%=value%>" />
 <%	
-		for(var i=0; i<descriptor.options.length; i++){
-				
-			for(var j=0; j<checkedList.length; j++) {
-				if(checkedList[j] == descriptor.values[i]) {
+    		for(var i=0; i<descriptor.options.length; i++){
+    			var inputOption = '';
+    			for(var j=0; j<checkedList.length; j++) {
+    				if(checkedList[j] == descriptor.values[i]) {
+    				    inputOption = 'checked=\"checked\"';
+    				}
+    			}
 	%>
-						<%=mw3.localize(descriptor.options[i])%>
+    			<input type="checkbox" name="checkBox_<%=objectId%>"
+                            value="<%=mw3.localize(descriptor.values[i])%>"
+                            <%=inputOption%> disabled="disabled" > <%=mw3.localize(descriptor.options[i])%> </input>
+                <div style="clear:both"></div>
 	<%
-				}
-			}
-		}
-	}
-}
+    		}
+    }
 %>
