@@ -33,18 +33,21 @@ public class OcePageNavigator extends PageNavigator {
 		}
 
 	public OcePageNavigator() {
-		this.setSns("1".equals(GlobalContext.getPropertyString("sns.use", "1")));
-		this.setIde("1".equals(GlobalContext.getPropertyString("ide.use", "1")));
+
+		this.setOce("1".equals(GlobalContext.getPropertyString("oce.use", "1")));
+//		this.setSns("1".equals(GlobalContext.getPropertyString("sns.use", "1")));
+//		this.setIde("1".equals(GlobalContext.getPropertyString("ide.use", "1")));
 //		this.setKnowlege("1".equals(GlobalContext.getPropertyString("knowledge.use", "1")));
 		this.setProject("1".equals(GlobalContext.getPropertyString("project.use", "1")));
 	}
 	
 	public OcePageNavigator(String pageName) {
 		this.setPageName(pageName);
-		
-		this.setSns("1".equals(GlobalContext.getPropertyString("sns.use", "1")));
-		this.setIde("1".equals(GlobalContext.getPropertyString("ide.use", "1")));
-		//this.setKnowlege("1".equals(GlobalContext.getPropertyString("knowledge.use", "1")));
+
+		this.setOce("1".equals(GlobalContext.getPropertyString("oce.use", "1")));
+//		this.setSns("1".equals(GlobalContext.getPropertyString("sns.use", "1")));
+//		this.setIde("1".equals(GlobalContext.getPropertyString("ide.use", "1")));
+//		this.setKnowlege("1".equals(GlobalContext.getPropertyString("knowledge.use", "1")));
 		this.setProject("1".equals(GlobalContext.getPropertyString("project.use", "1")));
 	}
 	
