@@ -370,15 +370,15 @@ public class Login implements ContextAware {
 		locale.setLanguage(session.getEmployee().getLocale());
 		locale.load();
 		
-		MainPanel mainPanel;
+		MainPanel mainPanel=null;/*
 		PageNavigator pageNavigator = new PageNavigator();
 		pageNavigator.setSession(session);
 		
 		if("knowledge".equals(lastVisitPage) && "1".equals(GlobalContext.getPropertyString("knowledge.use", "1"))){
 			mainPanel = pageNavigator.goKnowledge();
-/*		}else if("pinterest".equals(lastVisitPage)){
+		}else if("pinterest".equals(lastVisitPage)){
 			mainPanel = pageNavigator.goPinterest();
-*/
+
 		}else if("ide".equals(lastVisitPage) && "1".equals(GlobalContext.getPropertyString("ide.use", "1"))){
 			mainPanel = pageNavigator.goIDE();
 		}else if("marketplace".equals(lastVisitPage) && "1".equals(GlobalContext.getPropertyString("marketplace.use", "1"))){
@@ -393,6 +393,55 @@ public class Login implements ContextAware {
 				mainPanel = pageNavigator.goProcess();
 			}
 		}
+*/		
+		PageNavigator pageNavigator = null;
+		String pageNavigatorPropertyName="";
+		String className = null;
+		
+		if("1".equals(GlobalContext.getPropertyString("oce.use", "1"))){
+			pageNavigatorPropertyName = "oce.pagenavigator.class";
+		}
+		else{
+			pageNavigatorPropertyName = "codi.pagenavigator.class";
+		}
+		
+		className = GlobalContext.getPropertyString(pageNavigatorPropertyName);
+		
+		Class c = Thread.currentThread().getContextClassLoader().loadClass(GlobalContext.getPropertyString(pageNavigatorPropertyName));
+		Object object = c.newInstance();
+		
+		if(object instanceof PageNavigator){
+			pageNavigator = (PageNavigator)object;
+		}
+		else{
+			throw new Exception("pageNavigator가 잘못 지정되었습니다. uengine.properties의 pagenavigatorClassName을 수정해주세요.");
+		}
+		
+		pageNavigator.setSession(session);
+		if("knowledge".equals(lastVisitPage) && "1".equals(GlobalContext.getPropertyString("knowledge.use", "1"))){
+			mainPanel = pageNavigator.goKnowledge();
+		}else if("pinterest".equals(lastVisitPage)){
+			mainPanel = pageNavigator.goPinterest();
+
+		}else if("ide".equals(lastVisitPage) && "1".equals(GlobalContext.getPropertyString("ide.use", "1"))){
+			mainPanel = pageNavigator.goIDE();
+		}else if("marketplace".equals(lastVisitPage) && "1".equals(GlobalContext.getPropertyString("marketplace.use", "1"))){
+			mainPanel = pageNavigator.goMarketplace();
+		}else if("selfservice".equals(lastVisitPage) && "1".equals(GlobalContext.getPropertyString("selfservice.use", "1"))){
+			mainPanel = pageNavigator.goSelfServicePortal();
+		}else{
+			String preferUX = session.getEmployee().getPreferUX();
+			if("sns".equals(preferUX) || "".equals(preferUX)){
+				mainPanel = pageNavigator.goSns();
+			}else{
+				mainPanel = pageNavigator.goProcess();
+			}
+		}
+		
+		
+		
+		
+		
 		
 		if("1".equals(GlobalContext.getPropertyString("sso.use", "1"))){
 			//Request Token
