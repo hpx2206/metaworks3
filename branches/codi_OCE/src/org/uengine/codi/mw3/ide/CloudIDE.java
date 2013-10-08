@@ -8,7 +8,7 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
 import org.metaworks.widget.layout.Layout;
-import org.uengine.codi.mw3.admin.PageNavigator;
+import org.uengine.codi.mw3.admin.OcePageNavigator;
 import org.uengine.codi.mw3.admin.TopPanel;
 import org.uengine.codi.mw3.ide.editor.Editor;
 import org.uengine.codi.mw3.ide.view.Navigator;
@@ -104,11 +104,11 @@ public class CloudIDE {
 			this.currentEditorId = currentEditorId;
 		}
 
-	PageNavigator pageNavigator;
-		public PageNavigator getPageNavigator() {
+	OcePageNavigator pageNavigator;
+		public OcePageNavigator getPageNavigator() {
 			return pageNavigator;
 		}
-		public void setPageNavigator(PageNavigator pageNavigator) {
+		public void setPageNavigator(OcePageNavigator pageNavigator) {
 			this.pageNavigator = pageNavigator;
 		}		
 		
@@ -164,7 +164,7 @@ public class CloudIDE {
 
 		this.setLayout(outerLayout);
 		
-		this.pageNavigator = new PageNavigator();
+		this.pageNavigator = new OcePageNavigator();
 	}
 	
 	public void load(Session session, String projectId){
