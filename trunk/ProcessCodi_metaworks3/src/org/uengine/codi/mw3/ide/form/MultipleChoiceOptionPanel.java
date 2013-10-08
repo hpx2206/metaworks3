@@ -3,7 +3,6 @@ package org.uengine.codi.mw3.ide.form;
 import java.util.ArrayList;
 
 import org.metaworks.annotation.Face;
-import org.metaworks.annotation.Id;
 
 @Face(ejsPath="dwr/metaworks/org/uengine/codi/mw3/ide/form/MultipleChoiceOptionPanel.ejs")
 public class MultipleChoiceOptionPanel {
