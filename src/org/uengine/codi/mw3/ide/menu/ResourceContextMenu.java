@@ -17,7 +17,9 @@ import org.uengine.codi.mw3.ide.CloudTab;
 import org.uengine.codi.mw3.ide.Project;
 import org.uengine.codi.mw3.ide.CloudWindow;
 import org.uengine.codi.mw3.ide.ResourceNode;
+import org.uengine.codi.mw3.ide.Workspace;
 import org.uengine.codi.mw3.ide.editor.process.ProcessMergeEditor;
+import org.uengine.codi.mw3.ide.libraries.ProcessNode;
 import org.uengine.codi.mw3.knowledge.ProjectInfo;
 import org.uengine.codi.mw3.knowledge.ProjectNode;
 import org.uengine.codi.mw3.knowledge.ProjectServer;
@@ -37,6 +39,9 @@ public class ResourceContextMenu extends CloudMenu {
 	@AutowiredFromClient
 	transient public ProjectInfo projectInfo;
 	
+	@AutowiredFromClient
+	public Workspace workspace;
+	
 	public ResourceContextMenu(){
 		
 	}
@@ -49,7 +54,14 @@ public class ResourceContextMenu extends CloudMenu {
 		this.setContext(true);
 		
 		this.add(new SubMenuItem(new NewMenu(this.getResourceNode())));
-		this.add(new MenuItem("open", "$resource.menu.open"));
+		if( this.getResourceNode() != null  && this.getResourceNode() instanceof ProcessNode){
+			this.add(new SubMenuItem(new OpenMenu((ProcessNode)this.getResourceNode())));
+			
+		}else{
+			this.add(new SubMenuItem(new OpenMenu(this.getResourceNode())));
+			
+		}
+//		this.add(new MenuItem("open", "$resource.menu.open"));
 		//this.add(new MenuItem("processMerge", "$processMergeCompare"));
 		
 		if(!ResourceNode.TYPE_PROJECT.equals(resourceNode.getType())){ 
@@ -90,17 +102,16 @@ public class ResourceContextMenu extends CloudMenu {
 		}
 	}
 	
-	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
-	public Object open(){
-		Object clipboard = session.getClipboard();
-		if(clipboard instanceof ResourceNode){
-			ResourceNode node = (ResourceNode)clipboard;
-			
-			return node.action();			
-		}else{
-			return null;
-		}
-	}
+//	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
+//	public Object open(){
+//		Object clipboard = session.getClipboard();
+//		if(clipboard instanceof ResourceNode){
+//			ResourceNode node = (ResourceNode)clipboard;
+//			return node.action();			
+//		}else{
+//			return null;
+//		}
+//	}
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
 	public Object processMerge() throws Exception{
 		Object clipboard = session.getClipboard();
