@@ -3,7 +3,7 @@ package org.uengine.codi.mw3.selfservice;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.layout.Layout;
-import org.uengine.codi.mw3.admin.PageNavigator;
+import org.uengine.codi.mw3.admin.OcePageNavigator;
 import org.uengine.codi.mw3.admin.TopPanel;
 import org.uengine.codi.mw3.model.Session;
 
@@ -36,11 +36,11 @@ public class SelfService {
 			this.layout = layout;
 		}
 		
-	PageNavigator pageNavigator;
-		public PageNavigator getPageNavigator() {
+		OcePageNavigator pageNavigator;
+		public OcePageNavigator getPageNavigator() {
 			return pageNavigator;
 		}
-		public void setPageNavigator(PageNavigator pageNavigator) {
+		public void setPageNavigator(OcePageNavigator pageNavigator) {
 			this.pageNavigator = pageNavigator;
 		}		
 
@@ -61,7 +61,7 @@ public class SelfService {
 
 		this.setLayout(outerLayout);
 		
-		pageNavigator = new PageNavigator();
+		pageNavigator = new OcePageNavigator();
 		
 	}
 
