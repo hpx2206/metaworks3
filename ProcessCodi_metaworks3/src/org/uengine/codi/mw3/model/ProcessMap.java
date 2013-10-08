@@ -9,11 +9,13 @@ import org.metaworks.dao.DAOUtil;
 import org.metaworks.dao.Database;
 import org.metaworks.website.MetaworksFile;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.codi.CodiProcessDefinitionFactory;
 import org.uengine.codi.mw3.knowledge.KnowledgeTool;
 import org.uengine.codi.mw3.knowledge.WfNode;
 import org.uengine.kernel.EJBProcessInstance;
 import org.uengine.kernel.ProcessInstance;
 import org.uengine.kernel.RoleMapping;
+import org.uengine.processmanager.ProcessManagerBean;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
@@ -212,6 +214,11 @@ public class ProcessMap extends Database<IProcessMap> implements IProcessMap {
 	
 
 	public String initializeProcess() throws Exception {
+		
+		// 프로세스 케쉬 초기화
+		ProcessManagerBean pmb = (ProcessManagerBean)processManager;
+		CodiProcessDefinitionFactory.getInstance(pmb.getTransactionContext()).removeFromCache(this.getDefId());
+				
 		// process 초기화 (instId 생성)
 		String instId = processManager.initializeProcess(this.getDefId());
 
