@@ -43,21 +43,25 @@ var org_uengine_codi_mw3_admin_PageNavigator= function(objectId, className){
 	
 	var session = mw3.getAutowiredObject('org.uengine.codi.mw3.model.Session');
 	
-	//지식맵 활성화시 페이지 플립 이미지 변경	
-	if(this.object.sns) {
-		if(this.object.ide){
-			if(this.object.knowlege){
-				$('.msg_block').css({'background':'url(images/waveStyle/pageNavigation_SIK.png) no-repeat right top'});
+	if(this.object.oce){
+		$('.msg_block').css({'background':'url(images/waveStyle/pageNavigation_admin01.png) no-repeat right top'});
+	}else{
+		//지식맵 활성화시 페이지 플립 이미지 변경	
+		if(this.object.sns) {
+			if(this.object.ide){
+				if(this.object.knowlege){
+					$('.msg_block').css({'background':'url(images/waveStyle/pageNavigation_SIK.png) no-repeat right top'});
+				}else{
+					$('.msg_block').css({'background':'url(images/waveStyle/pageNavigation_SI.png) no-repeat right top'});
+				}
 			}else{
-				$('.msg_block').css({'background':'url(images/waveStyle/pageNavigation_SI.png) no-repeat right top'});
+				if(this.object.knowlege){
+					$('.msg_block').css({'background':'url(images/waveStyle/pageNavigation_SK.png) no-repeat right top'});
+				}
 			}
-		}else{
-			if(this.object.knowlege){
-				$('.msg_block').css({'background':'url(images/waveStyle/pageNavigation_SK.png) no-repeat right top'});
-			}
+		}else {
+			$('.msg_block').css({'background':'url(images/waveStyle/pageNavigation4.png) no-repeat right top'});
 		}
-	}else {
-		$('.msg_block').css({'background':'url(images/waveStyle/pageNavigation4.png) no-repeat right top'});
 	}
 	
 	/*
