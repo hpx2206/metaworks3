@@ -79,7 +79,7 @@ public class JavaCodeEditor extends Editor {
 			 * if(!error.) error.setType(JavaCodeError.TYPE_WARNING);
 			 */
 
-			errorList.add(error);
+//			errorList.add(error);
 		}
 
 		/*

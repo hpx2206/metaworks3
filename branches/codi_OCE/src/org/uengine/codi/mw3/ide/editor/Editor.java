@@ -17,6 +17,7 @@ import org.metaworks.common.MetaworksUtil;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.Workspace;
 import org.uengine.codi.mw3.ide.editor.java.JavaParser;
+import org.uengine.codi.mw3.ide.libraries.ProcessNode;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.kernel.GlobalContext;
 
@@ -39,6 +40,15 @@ public class Editor {
 			this.resourceNode = resourceNode;
 		}		
 
+	ProcessNode processNode;
+		@Hidden
+		public ProcessNode getProcessNode() {
+			return processNode;
+		}
+		public void setProcessNode(ProcessNode processNode) {
+			this.processNode = processNode;
+		}
+	
 	String id;
 		@Id
 		public String getId() {
@@ -47,7 +57,7 @@ public class Editor {
 		public void setId(String id) {
 			this.id = id;
 		}
-		
+
 	String name;
 		@Name
 		public String getName() {
@@ -101,6 +111,13 @@ public class Editor {
 		this.setType(resourceNode.getType());
 	}
 	
+	public Editor(ProcessNode processNode){
+		this.setProcessNode(processNode);
+		this.setId(processNode.getId());
+		this.setName(processNode.getName());
+		this.setType(processNode.getType());
+	}
+	
 	public Editor(String id){
 		this(id, null);
 	}
@@ -119,7 +136,8 @@ public class Editor {
 		}		
 	}
 	
-	@ServiceMethod(payload={"resourceNode"}, target=ServiceMethodContext.TARGET_NONE)
+	
+	@ServiceMethod(payload={"resourceNode", "processNode" , "type"}, target=ServiceMethodContext.TARGET_NONE)
 	public String load() {
 		InputStream is = null;
 		ByteArrayOutputStream bao = null;
@@ -128,14 +146,22 @@ public class Editor {
 			bao = new ByteArrayOutputStream();
 			
 			if(this.isUseClassLoader()){
-				try {					
-					is = Thread.currentThread().getContextClassLoader().getResourceAsStream(this.getId().substring(this.getResourceNode().getProjectId().length()+1));
+				try {				
+					if("metadata".equals(this.getType())){
+						is = Thread.currentThread().getContextClassLoader().getResourceAsStream(this.getId().substring(this.getProcessNode().getProjectId().length()+1));
+					}else{
+						is = Thread.currentThread().getContextClassLoader().getResourceAsStream(this.getId().substring(this.getResourceNode().getProjectId().length()+1));
+					}	
 				} catch (Exception e) {
 					e.printStackTrace();
-				}
+			}
 			}else{
-			//if(TYPE_FILE.equals(this.getType())){
-				File file = new File(this.getResourceNode().getPath());
+				File file = null;
+				if(ResourceNode.TYPE_FILE_PROCESS.equals(this.getType())){
+					file = new File(this.getProcessNode().getPath());
+				}else{
+					file = new File(this.getResourceNode().getPath());
+				}
 				if(file.exists()){					
 					try {
 						is = new FileInputStream(file);

@@ -14,6 +14,7 @@ import org.uengine.codi.mw3.ide.CloudWindow;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.editor.Editor;
 import org.uengine.codi.mw3.ide.editor.process.ProcessEditor;
+import org.uengine.codi.mw3.ide.menu.ResourceContextMenu;
 import org.uengine.codi.mw3.model.InstanceViewThreadPanel;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerContainer;
@@ -22,7 +23,7 @@ import org.uengine.kernel.Activity;
 import org.uengine.kernel.Role;
 
 
-public class ProcessNode extends TreeNode{
+public class ProcessNode extends ResourceNode{
 	
 	String parentName;
 		public String getParentName() {
@@ -69,6 +70,13 @@ public class ProcessNode extends TreeNode{
 		
 	@AutowiredFromClient
 	public Session session;
+	
+	@Override
+	@ServiceMethod(payload={"id", "name", "path", "folder", "projectId", "type"}, mouseBinding="right", target=ServiceMethodContext.TARGET_POPUP)
+	public Object[] showContextMenu() {
+		session.setClipboard(this);
+		return new Object[]{new ResourceContextMenu(this, session) , new Refresh(session)};
+	}
 		
 	@Override
 	@ServiceMethod(payload={"id", "name", "path", "type", "folder", "projectId"}, target=ServiceMethodContext.TARGET_APPEND)
