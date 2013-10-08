@@ -75,7 +75,9 @@ public class MultipleChoiceField extends CommonFormField {
 				choiceOptions.add(mc);
 			}
 			
-			((MultipleChoiceField)formField).getMultipleChoiceOptionPanel().setChoiceOptions(choiceOptions);
+			MultipleChoiceOptionPanel multipleChoiceOptionPanel = new MultipleChoiceOptionPanel();
+			multipleChoiceOptionPanel.setChoiceOptions(choiceOptions);
+			((MultipleChoiceField)formField).setMultipleChoiceOptionPanel(multipleChoiceOptionPanel);
 			
 			this.setOptionsAndValues((MultipleChoiceField)formField, choiceOptions);	
 		}		
