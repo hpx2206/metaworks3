@@ -16,7 +16,9 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.common.MetaworksUtil;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.Workspace;
+import org.uengine.codi.mw3.ide.editor.java.JavaCodeEditor;
 import org.uengine.codi.mw3.ide.editor.java.JavaParser;
+import org.uengine.codi.mw3.ide.editor.metadata.MetadataXmlEditor;
 import org.uengine.codi.mw3.ide.libraries.ProcessNode;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.kernel.GlobalContext;
@@ -147,21 +149,28 @@ public class Editor {
 			
 			if(this.isUseClassLoader()){
 				try {				
-					if("metadata".equals(this.getType())){
-						is = Thread.currentThread().getContextClassLoader().getResourceAsStream(this.getId().substring(this.getProcessNode().getProjectId().length()+1));
-					}else{
+					if( this instanceof JavaCodeEditor ){
 						is = Thread.currentThread().getContextClassLoader().getResourceAsStream(this.getId().substring(this.getResourceNode().getProjectId().length()+1));
-					}	
+					}else if( this instanceof MetadataXmlEditor){
+						is = Thread.currentThread().getContextClassLoader().getResourceAsStream(this.getId().substring(this.getResourceNode().getProjectId().length()+1));
+					}else{
+						is = Thread.currentThread().getContextClassLoader().getResourceAsStream(this.getId().substring(this.getProcessNode().getProjectId().length()+1));
+					}
 				} catch (Exception e) {
 					e.printStackTrace();
 			}
 			}else{
 				File file = null;
-				if(ResourceNode.TYPE_FILE_PROCESS.equals(this.getType())){
-					file = new File(this.getProcessNode().getPath());
-				}else{
+				if( this instanceof JavaCodeEditor ){
 					file = new File(this.getResourceNode().getPath());
+				}else if( this instanceof MetadataXmlEditor){
+					file = new File(this.getResourceNode().getPath());
+				}else{
+					file = new File(this.getProcessNode().getPath());
 				}
+//				if(ResourceNode.TYPE_FILE_PROCESS.equals(this.getType())){
+//				}else{
+//				}
 				if(file.exists()){					
 					try {
 						is = new FileInputStream(file);
