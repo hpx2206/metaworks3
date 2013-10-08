@@ -8,7 +8,8 @@ import org.metaworks.dao.TransactionContext;
 import org.metaworks.widget.Window;
 import org.metaworks.widget.layout.Layout;
 import org.uengine.codi.mw3.admin.OcePageNavigator;
-import org.uengine.codi.mw3.admin.PageNavigator;
+import org.uengine.oce.dashboard.DashboardPanel;
+import org.uengine.oce.dashboard.DashboardWindow;
 
 public class OceMain {
 
@@ -134,7 +135,7 @@ public class OceMain {
 			outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:5, north__size:52, west__size:" + ("asana".equals(preferUX) ? "700" : "400"));
 			outerLayout.setNorth(processTopPanel);			
 			outerLayout.setWest(createInstanceListWindow(session));
-			outerLayout.setCenter(createNewInstancePanel(session));	
+			outerLayout.setCenter(createDashboardWindow(session));	
 			outerLayout.setName("center");
 			
 			setLayout(outerLayout);
@@ -147,68 +148,43 @@ public class OceMain {
 		
 			Layout westLayout = new Layout();
 			
-//			ContactWindow contactWindow = new ContactWindow(session.getUser());
-			
 			PerspectiveWindow perspectiveWindow = new PerspectiveWindow(session);
 			
-			ContentWindow contentWindow = createNewInstancePanel(session);
+			DashboardWindow dashboardWindow = createDashboardWindow(session);
 			
-			InstanceListWindow instanceListWindow = new InstanceListWindow(session);
 			
 			westLayout.setCenter(perspectiveWindow);
 			westLayout.setUseHideBar(true);
 			westLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, south__spacing_open:5, south__size:'50%'");
-			westLayout.setName("west");
-			
-			//Since there's are too many input boxes there, it is removed.
-//			if(session.getEmployee().isApproved()){
-//				contactWindow.getContactPanel().setSearchBox(null);
-//				contactWindow.getContactPanel().setUser(null);
-//				westLayout.setSouth(contactWindow);
-//			}
-			
-			Layout eastLayout = new Layout();
-			eastLayout.setCenter(instanceListWindow);
-			
-			eastLayout.setNorth(contentWindow);
-			eastLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, North__spacing_open:5, north__size:190");
-			eastLayout.setName("east");
-			eastLayout.setUseHideBar(false);
-			
+
 			Layout outerLayout = new Layout();
 			outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:1, north__size:52, west__size: 160");
 			outerLayout.setNorth(processTopPanel);
 			
-			//Since there's already user portrait in the navigator for this full-fledged mode, the portrait is removed.
-			//processTopPanel.setLoginUser(null);
-			
-			outerLayout.setWest(westLayout);
-			outerLayout.setCenter(eastLayout);		
+outerLayout.setWest(westLayout);
+			outerLayout.setCenter(dashboardWindow);		
 			outerLayout.setName("center");
 			outerLayout.setUseHideBar(false);
 			
 			setLayout(outerLayout);
 			setSession(session);
-			
-//			if( session.getEmployee().getIsAdmin() ){	// 관리자일 경우만 page flip 이 보임
-			
+	
 			if(!session.getEmployee().isGuest()){
 				setPageNavigator(new OcePageNavigator("process"));
 			}
-			
-			
-//			}
+
 		}
 
 	}
 
-	private ContentWindow createNewInstancePanel(Session session)
+	private DashboardWindow createDashboardWindow(Session session)
 			throws Exception {
-		ContentWindow contentWindow = new ContentWindow();
-		contentWindow.setTitle("$New");
-		NewInstancePanel instancePanel = new NewInstancePanel();
-		instancePanel.session = session;
-		instancePanel.load(session);
+		DashboardWindow dashboardwindow = new DashboardWindow();
+		dashboardwindow.setTitle("Home");
+		
+		DashboardPanel dashboardPanel = new DashboardPanel();
+		dashboardPanel.session = session;
+		dashboardPanel.load(session);
 //		contentWindow.setPanel(instancePanel);
 		
 //		Grid grid = new Grid();
@@ -216,9 +192,9 @@ public class OceMain {
 		//grid.set
 		
 		
-		contentWindow.setPanel(instancePanel);
+		dashboardwindow.setPanel(dashboardPanel);
 //		contentWindow.setPanel(new IFrame("http://www.naver.com"));
-		return contentWindow;
+		return dashboardwindow;
 	}
 
 	static public Window createInstanceListWindow(Session session) throws Exception {

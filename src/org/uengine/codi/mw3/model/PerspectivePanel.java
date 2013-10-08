@@ -2,9 +2,11 @@ package org.uengine.codi.mw3.model;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.ServiceMethod;
+import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.knowledge.ProjectPerspective;
 import org.uengine.kernel.GlobalContext;
-import org.uengine.oce.OcePerspectivePanel;
 
 public class PerspectivePanel  implements ContextAware {
 	MetaworksContext metaworksContext;
@@ -121,27 +123,23 @@ public class PerspectivePanel  implements ContextAware {
 			this.commingTodoPerspective = commingTodoPerspective;
 		}
 		
-	OcePerspectivePanel ocePerspectivePanel;
-		public OcePerspectivePanel getOcePerspectivePanel() {
-			return ocePerspectivePanel;
-		}
-		public void setOcePerspectivePanel(OcePerspectivePanel ocePerspectivePanel) {
-			this.ocePerspectivePanel = ocePerspectivePanel;
-		}
+	@AutowiredFromClient
+	public Session session;
 		
 	public PerspectivePanel() throws Exception {
 		this(null);
 	}
 	
+	@ServiceMethod
+	public MainPanel loadOce() throws Exception{
+
+		return new MainPanel(new OceMain(session));
+	}
+	
 	public PerspectivePanel(Session session) throws Exception {
-		
 		if(session != null){
-			
-			if("1".equals(GlobalContext.getPropertyString("oce.use", "1"))){
-				//OCE
-				ocePerspectivePanel = new OcePerspectivePanel(session);
-				
-			}else{
+			if("0".equals(GlobalContext.getPropertyString("oce.use", "1"))){
+						
 				//개인별
 				if("1".equals(GlobalContext.getPropertyString("personal.use", "1"))){
 					personalPerspective = new PersonalPerspective();
@@ -161,19 +159,19 @@ public class PerspectivePanel  implements ContextAware {
 					//조직도
 					if("1".equals(GlobalContext.getPropertyString("organization.use", "1"))){
 						organizationPerspectiveDept = new OrganizationPerspectiveDept();
-//						organizationPerspectiveDept.select();
+	//					organizationPerspectiveDept.select();
 					}
 					
 					//역할
 					if("1".equals(GlobalContext.getPropertyString("role.use", "1"))){
 						organizationPerspectiveRole = new OrganizationPerspectiveRole();
-//						organizationPerspectiveRole.select();
+	//					organizationPerspectiveRole.select();
 					}
 					
 					//프로세스별
 					if("1".equals(GlobalContext.getPropertyString("process.use", "1"))){
 						processPerspective = new ProcessPerspective();
-//						processPerspective.select();
+	//					processPerspective.select();
 					}
 					
 					//문서
@@ -182,25 +180,12 @@ public class PerspectivePanel  implements ContextAware {
 					this.getMetaworksContext().setHow("perspectivePanel");
 					documentPerspective.setMetaworksContext(this.getMetaworksContext());
 					
-					//앱
-					if("1".equals(GlobalContext.getPropertyString("app.use", "1"))){
-						appPerspective = new OrganizationPerspectiveApp();
-						appPerspective.session = session;
-						appPerspective.select();
-					}
-					//프로젝트
-					if("1".equals(GlobalContext.getPropertyString("project.use", "1"))){
-						projectPerspective = new ProjectPerspective();
-						projectPerspective.session = session;
-						projectPerspective.select();
-					}
-					//친구
 					if("1".equals(GlobalContext.getPropertyString("contact.use", "1"))){
+						//친구
 						contactPerspective = new ContactPerspective();
 						contactPerspective.session = session;
 						contactPerspective.select();
 					}
-					//다가오는 일정
 					if("1".equals(GlobalContext.getPropertyString("commingTodo.use", "1"))){
 						commingTodoPerspective = new CommingTodoPerspective();
 						commingTodoPerspective.session = session;
@@ -212,7 +197,25 @@ public class PerspectivePanel  implements ContextAware {
 				if("1".equals(GlobalContext.getPropertyString("perspective.knowledge.use", "1"))){
 					strategicPerspective = new StrategicPerspective();
 				}
+			
+			}//oce
+			else{
+			
 			}
-		}
+			//앱
+			if("1".equals(GlobalContext.getPropertyString("app.use", "1"))){
+				appPerspective = new OrganizationPerspectiveApp();
+				appPerspective.session = session;
+				appPerspective.select();
+			}
+			if("1".equals(GlobalContext.getPropertyString("project.use", "1"))){
+				//프로젝트
+				projectPerspective = new ProjectPerspective();
+				projectPerspective.session = session;
+				projectPerspective.select();
+			}
+		
+		}//session
+		
 	}
 }
