@@ -407,7 +407,7 @@ public class Login implements ContextAware {
 		
 		className = GlobalContext.getPropertyString(pageNavigatorPropertyName);
 		
-		Class c = Thread.currentThread().getContextClassLoader().loadClass(GlobalContext.getPropertyString(pageNavigatorPropertyName));
+		Class c = Thread.currentThread().getContextClassLoader().loadClass(GlobalContext.getPropertyString(pageNavigatorPropertyName, "org.uengine.codi.mw3.admin.PageNavigator"));
 		Object object = c.newInstance();
 		
 		if(object instanceof PageNavigator){
