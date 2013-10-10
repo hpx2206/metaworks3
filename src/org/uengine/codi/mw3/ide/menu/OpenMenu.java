@@ -47,12 +47,12 @@ public class OpenMenu extends CloudMenu{
 		this.setResourceNode(resourceNode);
 		
 		this.setId("new");
-		this.setName("openWith");
+		this.setName("$resource.menu.open");
 		
 		this.add(new MenuItem("openWithUI","UI"));
 //		this.add(new MenuItem("openWithJava","OpenWithJava"));
 //		this.add(new MenuItem("openWithXML","OpenWithXML"));
-		this.add(new MenuItem("code","Code"));
+		this.add(new MenuItem("code","$resource.menu.code"));
 		
 	}
 	

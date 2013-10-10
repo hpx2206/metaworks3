@@ -102,16 +102,16 @@ public class ResourceContextMenu extends CloudMenu {
 		}
 	}
 	
-//	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
-//	public Object open(){
-//		Object clipboard = session.getClipboard();
-//		if(clipboard instanceof ResourceNode){
-//			ResourceNode node = (ResourceNode)clipboard;
-//			return node.action();			
-//		}else{
-//			return null;
-//		}
-//	}
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_POPUP)
+	public Object open(){
+		Object clipboard = session.getClipboard();
+		if(clipboard instanceof ResourceNode){
+			ResourceNode node = (ResourceNode)clipboard;
+			return node.action();			
+		}else{
+			return null;
+		}
+	}
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
 	public Object processMerge() throws Exception{
 		Object clipboard = session.getClipboard();

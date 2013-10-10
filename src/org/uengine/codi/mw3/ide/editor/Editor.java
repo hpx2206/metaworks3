@@ -19,6 +19,7 @@ import org.uengine.codi.mw3.ide.Workspace;
 import org.uengine.codi.mw3.ide.editor.java.JavaCodeEditor;
 import org.uengine.codi.mw3.ide.editor.java.JavaParser;
 import org.uengine.codi.mw3.ide.editor.metadata.MetadataXmlEditor;
+import org.uengine.codi.mw3.ide.editor.valuechain.ValueChainEditor;
 import org.uengine.codi.mw3.ide.libraries.ProcessNode;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.kernel.GlobalContext;
@@ -26,6 +27,8 @@ import org.uengine.kernel.GlobalContext;
 public class Editor {
 	
 	public final static String TYPE_JAVA = "java";
+	public final static String TYPE_PROCESS = "process";
+	public final static String TYPE_METADATA = "metadata";
 	
 	@AutowiredFromClient
 	public Session session;
@@ -149,9 +152,7 @@ public class Editor {
 			
 			if(this.isUseClassLoader()){
 				try {				
-					if( this instanceof JavaCodeEditor ){
-						is = Thread.currentThread().getContextClassLoader().getResourceAsStream(this.getId().substring(this.getResourceNode().getProjectId().length()+1));
-					}else if( this instanceof MetadataXmlEditor){
+					if( this instanceof JavaCodeEditor || this instanceof MetadataXmlEditor){
 						is = Thread.currentThread().getContextClassLoader().getResourceAsStream(this.getId().substring(this.getResourceNode().getProjectId().length()+1));
 					}else{
 						is = Thread.currentThread().getContextClassLoader().getResourceAsStream(this.getId().substring(this.getProcessNode().getProjectId().length()+1));
@@ -161,9 +162,7 @@ public class Editor {
 			}
 			}else{
 				File file = null;
-				if( this instanceof JavaCodeEditor ){
-					file = new File(this.getResourceNode().getPath());
-				}else if( this instanceof MetadataXmlEditor){
+				if( this instanceof JavaCodeEditor || this instanceof MetadataXmlEditor){
 					file = new File(this.getResourceNode().getPath());
 				}else{
 					file = new File(this.getProcessNode().getPath());
