@@ -6,6 +6,7 @@ import java.util.List;
 import org.metaworks.Refresh;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.component.TreeNode;
 import org.metaworks.dwr.MetaworksRemoteService;
 import org.metaworks.widget.Window;
 import org.uengine.codi.mw3.CodiClassLoader;
@@ -23,7 +24,7 @@ public class JavaCodeEditor extends Editor {
 	public JavaCodeEditor(ResourceNode resourceNode) {
 		super(resourceNode);
 
-		this.setType(Editor.TYPE_JAVA);
+		this.setType(TreeNode.TYPE_FILE_JAVA);
 	}
 
 	@ServiceMethod(payload = { "name", "filename", "content", "resourceNode" }, mouseBinding = "right", target = ServiceMethodContext.TARGET_STICK)
