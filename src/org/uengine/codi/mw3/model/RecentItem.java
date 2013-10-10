@@ -43,17 +43,24 @@ public class RecentItem extends Database<IRecentItem> implements IRecentItem{
 			this.updateDate = updateDate;
 		}
 		
-	@AutowiredFromClient
-	public Session session;
-	
+	int clickedCount;
+		public int getClickedCount() {
+			return clickedCount;
+		}
+		public void setClickedCount(int clickedCount) {
+			this.clickedCount = clickedCount;
+		}
+		
 	public void add() throws Exception {
 		
 		IRecentItem findMe = this.findMe();
 		
 		if(findMe == null){
+			this.setClickedCount(1);
 			createDatabaseMe();
 			flushDatabaseMe();
 		}else {
+			this.setClickedCount(findMe.getClickedCount() + 1);
 			updateDate();
 		}
 		
@@ -61,7 +68,7 @@ public class RecentItem extends Database<IRecentItem> implements IRecentItem{
 	
 	public IRecentItem updateDate() throws Exception{
 		StringBuffer sql = new StringBuffer();
-		sql.append("update recentItem set updateDate=?updateDate where empcode=?empCode and itemType=?itemType and itemId=?itemId");
+		sql.append("update recentItem set updateDate=?updateDate, clickedCount=?clickedCount where empcode=?empCode and itemType=?itemType and itemId=?itemId");
 		
 		IRecentItem updateMe = (IRecentItem) Database.sql(IRecentItem.class, sql.toString());
 		
@@ -69,6 +76,7 @@ public class RecentItem extends Database<IRecentItem> implements IRecentItem{
 		updateMe.setUpdateDate(this.getUpdateDate());
 		updateMe.setItemId(this.getItemId());
 		updateMe.setItemType(this.getItemType());
+		updateMe.setClickedCount(this.getClickedCount());
 		updateMe.update();
 		
 		return updateMe;

@@ -5,7 +5,6 @@ import org.metaworks.annotation.Id;
 import org.metaworks.annotation.Name;
 import org.metaworks.annotation.NonLoadable;
 import org.metaworks.annotation.NonSavable;
-import org.metaworks.annotation.ORMapping;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Table;
 import org.metaworks.dao.IDAO;
@@ -44,6 +43,14 @@ public interface IAppMapping extends IDAO{
 	public boolean isSelected();
 	public void setSelected(boolean selected);
 	
+	@NonSavable
+	public String getType();
+	public void setType(String type);
+	
+	@NonSavable
+	public String getEmpCode();
+	public void setEmpCode(String empCode);
+	
 	@ServiceMethod(callByContent=true)
 	public IAppMapping findMe() throws Exception;
 	
@@ -52,5 +59,8 @@ public interface IAppMapping extends IDAO{
 	
 	@ServiceMethod(callByContent=true)
 	public void findProject(String appId) throws Exception;
+	
+	@ServiceMethod(callByContent=true)
+	public void clickAppList() throws Exception;
 
 }
