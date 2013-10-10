@@ -7,16 +7,13 @@ if(value){
 <%=mw3.localize("$MyApps")%>
 </div>
 
-<div>
 <span><a id="wBtn" onClick="<%=methods.showAll.caller()%>" href="#"><%=mw3.localize("$MyApps.more")%></a></span>
 <span><a id="wBtn" onClick="<%=methods.addApp.caller()%>" href="#"><%=mw3.localize("$MyApps.acquisition")%></a></span>
-</div>
 
-<div>
+
 <ul class="process_map2">
 	<%=fields.myAppsList.here()%>
 </ul>
-</div>
 
 <%
 }
