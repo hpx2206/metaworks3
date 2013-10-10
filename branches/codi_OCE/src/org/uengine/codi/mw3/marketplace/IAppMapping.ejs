@@ -11,12 +11,21 @@
 
 %>
 <%
+	}else if(mw3.where == 'oce_home'){
+%>
+	
+	<li onClick="mw3.getFaceHelper(<%=objectId%>).clickAppList();">
+		<img  class="navi_icon" alt="" src="images/processMap/iconDefault.png" width="40" height="40"/>
+		<a href="#"> <%=value.appName%></a>
+	</li>
+<%
 	}else{
 
 %>
-
-	<img class="navi_icon" alt="" src="images/processMap/iconDefault.png" width="13" height="13"/><a href="#" onClick="javascript:window.open('http://kiat.security.com:9090/uengine-web/')"><%=value.appName%></a>
+	
+	<img class="navi_icon" alt="" src="images/processMap/iconDefault.png" width="13" height="13"/><a href="#" onClick="mw3.getFaceHelper(<%=objectId%>).clickAppList();"><%=value.appName%></a>
 
 <%
 	}
 %>
+

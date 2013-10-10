@@ -29,6 +29,13 @@ public class MyVendor {
 			
 		}
 
+	MetaworksContext metaworksContext;
+		public MetaworksContext getMetaworksContext() {
+			return metaworksContext;
+		}
+		public void setMetaworksContext(MetaworksContext metaworksContext) {
+			this.metaworksContext = metaworksContext;
+		}
 		
 	public void load(Session session) throws Exception{
 		

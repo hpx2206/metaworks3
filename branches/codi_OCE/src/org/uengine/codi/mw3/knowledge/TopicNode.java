@@ -151,7 +151,6 @@ public class TopicNode extends Database<ITopicNode> implements ITopicNode {
 			
 			// recentItem 에 create
 			RecentItem recentItem = new RecentItem();
-			recentItem.session = session;
 			recentItem.setEmpCode(session.getEmployee().getEmpCode());
 			recentItem.setItemId(this.getId());
 			recentItem.setItemType(this.getType());

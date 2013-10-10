@@ -12,6 +12,8 @@ import org.uengine.oce.dashboard.DashboardPanel;
 import org.uengine.oce.dashboard.DashboardWindow;
 
 public class OceMain {
+	
+	public static final String WHERE_HOME = "oce_home";
 
 	public OceMain(){
 		
@@ -161,7 +163,7 @@ public class OceMain {
 			outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:1, north__size:52, west__size: 160");
 			outerLayout.setNorth(processTopPanel);
 			
-outerLayout.setWest(westLayout);
+			outerLayout.setWest(westLayout);
 			outerLayout.setCenter(dashboardWindow);		
 			outerLayout.setName("center");
 			outerLayout.setUseHideBar(false);

@@ -28,6 +28,14 @@ public class DashboardPanel {
  * MyApp
  * MyProject
 */		
+	MyAppPanel myAppPanel;
+		public MyAppPanel getMyAppPanel() {
+			return myAppPanel;
+		}
+		public void setMyAppPanel(MyAppPanel myAppPanel) {
+			this.myAppPanel = myAppPanel;
+		}
+
 	MyServicePanel myServicePanel;
 		public MyServicePanel getMyServicePanel() {
 			return myServicePanel;
@@ -59,6 +67,11 @@ public class DashboardPanel {
 	
 	public DashboardPanel load(Session session) throws Exception{		
 		setMetaworksContext(new MetaworksContext());
+		
+		myAppPanel = new MyAppPanel();
+		myAppPanel.session = session;
+		myAppPanel.load();
+		
 		myServicePanel = new MyServicePanel(session);
 		projectPanel = new ProjectPanel();
 		//projectPanel.load();

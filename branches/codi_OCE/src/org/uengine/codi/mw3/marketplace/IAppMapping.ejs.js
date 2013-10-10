@@ -6,6 +6,8 @@ var org_uengine_codi_mw3_marketplace_IAppMapping = function(objectId, className)
 	
 	this.object = mw3.objects[this.objectId];
 	
+	this.session = mw3.getAutowiredObject('org.uengine.codi.mw3.model.Session');
+	
 	if(this.object == null)
 		return true;
 	
@@ -51,6 +53,15 @@ org_uengine_codi_mw3_marketplace_IAppMapping.prototype = {
 	startLoading : function(status){
 	},
 	endLoading : function(status){
+	},
+	clickAppList : function(){
+		window.open('http://kiat.security.com:9090/uengine-web/');
+		
+		this.object.empCode = this.session.employee.empCode;
+		
+		//자주 찾는 앱 등록
+		this.object.clickAppList();
+		
 	}
 };
 

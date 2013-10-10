@@ -1,10 +1,18 @@
 package org.uengine.codi.mw3.marketplace;
 
+import java.util.Calendar;
+
 import org.metaworks.dao.Database;
 import org.metaworks.website.MetaworksFile;
-import org.uengine.cloud.saasfier.TenantContext;
+import org.uengine.codi.mw3.model.RecentItem;
 
 public class AppMapping extends Database<IAppMapping> implements IAppMapping {
+	
+	private final static String APPMAPPING_TYPE = "app";
+	
+	public AppMapping() {
+		this.setType(APPMAPPING_TYPE);
+	}
 	
 	int appId;
 		public int getAppId() {
@@ -53,13 +61,29 @@ public class AppMapping extends Database<IAppMapping> implements IAppMapping {
 		public void setProjectName(String projectName) {
 			this.projectName = projectName;
 		}
-		
+
 	MetaworksFile logoFile;
 		public MetaworksFile getLogoFile() {
 			return logoFile;
 		}
 		public void setLogoFile(MetaworksFile logoFile) {
 			this.logoFile = logoFile;
+		}
+	
+	String type;
+		public String getType() {
+			return type;
+		}
+		public void setType(String type) {
+			this.type = type;
+		}
+		
+	String empCode;
+		public String getEmpCode() {
+			return empCode;
+		}
+		public void setEmpCode(String empCode) {
+			this.empCode = empCode;
 		}
 		
 	public IAppMapping findMe() throws Exception {
@@ -77,13 +101,18 @@ public class AppMapping extends Database<IAppMapping> implements IAppMapping {
 	}
 	
 	public IAppMapping findMyApps() throws Exception {
+		return findMyApps(0);
+	}
+	
+	public IAppMapping findMyApps(int limitCount) throws Exception {
 		StringBuffer sql = new StringBuffer();
-		sql.append("select appmapping.appId, appmapping.comcode, appmapping.appname, appmapping.isdeleted, bpm_knol.name projectName ")
-		   .append(" from appmapping appmapping, app, bpm_knol ")
-		   .append(" where appmapping.appId = app.appId ")
-		   .append("	and app.projectId = bpm_knol.id ")
+		sql.append("select appmapping.appId, appmapping.comcode, appmapping.appname, appmapping.isdeleted, bpm_knol.name projectName, item.* ")
+		   .append(" from appmapping, bpm_knol,  ")
+		   .append(" 	(select app.appId, app.projectId, recentItem.empcode, recentItem.updateDate, recentItem.clickedCount from app left join recentItem on app.appid=recentItem.itemId) item")
+		   .append(" where appmapping.appId = item.appId ")
+		   .append("	and item.projectId = bpm_knol.id ")
 		   .append("	and appmapping.comcode=?comCode ")
-		   .append("	and appmapping.isdeleted=?isdeleted");
+		   .append("	and appmapping.isdeleted=?isdeleted order by item.clickedCount desc " + ((limitCount==0)? " " : "limit " + limitCount));
 		
 		IAppMapping findApp = (IAppMapping) Database.sql(IAppMapping.class, sql.toString());
 		
@@ -100,6 +129,17 @@ public class AppMapping extends Database<IAppMapping> implements IAppMapping {
 		this.setProjectName(projectName);
 	}
 	
+	public void clickAppList() throws Exception {
+		
+		RecentItem recentItem = new RecentItem();
+		recentItem.setEmpCode(this.getEmpCode());
+		recentItem.setItemId(String.valueOf(this.getAppId()));
+		recentItem.setItemType(APPMAPPING_TYPE);
+		recentItem.setUpdateDate(Calendar.getInstance().getTime());
+		
+		recentItem.add();
+		
+	}
 	
 }
 

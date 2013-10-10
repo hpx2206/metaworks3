@@ -877,3 +877,5 @@ create table favoritefile (
 --2013.09.06s - 폴더ID, NAME추가 
 alter table bpm_worklist add column folderId varchar(100);
 alter table bpm_worklist add column folderName varchar(100);
+
+alter table recentitem add column clickedCount varchar(4);
