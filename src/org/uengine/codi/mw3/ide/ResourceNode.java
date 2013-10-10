@@ -265,9 +265,11 @@ public class ResourceNode extends TreeNode implements ContextAware {
 	}
 
 	private void changeProject(){
-		Project project = workspace.findProject(this.getProjectId());
-		
-		project.changeProject("root");
+		if( workspace != null ){
+			Project project = workspace.findProject(this.getProjectId());
+			
+			project.changeProject("root");
+		}
 	}
 	
 	@Override
