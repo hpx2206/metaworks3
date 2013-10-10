@@ -27,8 +27,6 @@ import org.uengine.kernel.GlobalContext;
 public class Editor {
 	
 	public final static String TYPE_JAVA = "java";
-	public final static String TYPE_PROCESS = "process";
-	public final static String TYPE_METADATA = "metadata";
 	
 	@AutowiredFromClient
 	public Session session;
@@ -152,7 +150,7 @@ public class Editor {
 			
 			if(this.isUseClassLoader()){
 				try {				
-					if( this instanceof JavaCodeEditor || this instanceof MetadataXmlEditor){
+					if( this instanceof JavaCodeEditor || this instanceof MetadataXmlEditor || this instanceof ValueChainEditor){
 						is = Thread.currentThread().getContextClassLoader().getResourceAsStream(this.getId().substring(this.getResourceNode().getProjectId().length()+1));
 					}else{
 						is = Thread.currentThread().getContextClassLoader().getResourceAsStream(this.getId().substring(this.getProcessNode().getProjectId().length()+1));
@@ -162,7 +160,7 @@ public class Editor {
 			}
 			}else{
 				File file = null;
-				if( this instanceof JavaCodeEditor || this instanceof MetadataXmlEditor){
+				if( this instanceof JavaCodeEditor || this instanceof MetadataXmlEditor || this instanceof ValueChainEditor){
 					file = new File(this.getResourceNode().getPath());
 				}else{
 					file = new File(this.getProcessNode().getPath());

@@ -1,6 +1,7 @@
 package org.uengine.codi.mw3.ide.editor.valuechain;
 
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.component.TreeNode;
 import org.uengine.codi.mw3.ide.ResourceNode;
 import org.uengine.codi.mw3.ide.editor.Editor;
 import org.uengine.codi.mw3.webProcessDesigner.ValueChainDesignerContentPanel;
@@ -30,7 +31,7 @@ public class ValueChainEditor extends Editor{
 	public ValueChainEditor(ResourceNode resourceNode){
 		super(resourceNode);
 		
-		this.setType("valuechain");
+		this.setType(TreeNode.TYPE_FILE_VALUECHAIN);
 		
 		try{
 			ValueChainDesignerContentPanel valueChainDesignerContentPanel = new ValueChainDesignerContentPanel();
