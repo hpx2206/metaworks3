@@ -11,7 +11,7 @@ public class ProcessXmlEditor extends Editor{
 	
 	public ProcessXmlEditor(ProcessNode processNode){
 		super(processNode);
-		this.setType("process");
+		this.setType(Editor.TYPE_PROCESS);
 	}
 	
 	public Object save(){

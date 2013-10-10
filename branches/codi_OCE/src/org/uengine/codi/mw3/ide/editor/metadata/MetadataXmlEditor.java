@@ -10,7 +10,7 @@ public class MetadataXmlEditor extends Editor {
 	}
 	public MetadataXmlEditor(ResourceNode resourceNode){
 		super(resourceNode);
-		this.setType("metadata");
+		this.setType(Editor.TYPE_METADATA);
 	}
 	
 	public Object save(){
