@@ -15,24 +15,20 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
-import org.metaworks.annotation.ORMapping;
 import org.metaworks.annotation.ServiceMethod;
-import org.metaworks.component.SelectBox;
-import org.metaworks.dao.AbstractGenericDAO;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.cloud.saasfier.TenantContext;
-import org.uengine.codi.mw3.marketplace.IApp;
-import org.uengine.codi.mw3.marketplace.IAppMapping;
-import org.uengine.codi.mw3.marketplace.category.ICategory;
-import org.uengine.codi.mw3.model.ICompany;
+import org.uengine.codi.mw3.admin.OcePageNavigator;
+import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.model.InstanceListPanel;
 import org.uengine.codi.mw3.model.InstanceViewContent;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.vm.JschCommand;
 import org.uengine.kernel.GlobalContext;
+import org.uengine.oce.dashboard.DashboardPanel;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 
@@ -50,6 +46,10 @@ public class ProjectTitle implements ContextAware {
 			this.metaworksContext = metaworksContext;
 		}
 	
+	@AutowiredFromClient
+	public PageNavigator pageNavigator; 
+			
+			
 	String topicId;
 		@Hidden
 		public String getTopicId() {
@@ -221,6 +221,14 @@ public class ProjectTitle implements ContextAware {
 		returnObject[returnObj.length ] = new ToAppend(new ProjectPanel(), projectNode);
 		returnObject[returnObj.length + 1] = new Remover(new ModalWindow(), true);
 		
+		
+		if(pageNavigator instanceof OcePageNavigator && "process".equals(pageNavigator.getPageName())){
+			DashboardPanel dashboardPanel = new DashboardPanel();
+			dashboardPanel.load(session);
+			returnObject[returnObj.length + 2] = new Refresh(dashboardPanel);
+			
+		}
+		
 		return returnObject;
 		
 	}
@@ -239,6 +247,7 @@ public class ProjectTitle implements ContextAware {
 				wfNode.setCompanyId(session.getCompany().getComCode());
 				
 			wfNode.setDescription(this.getTopicDescription());
+			wfNode.setStartDate(new Date());
 			wfNode.setLogoFile(this.getLogoFile());
 			wfNode.createMe();
 			
