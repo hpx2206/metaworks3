@@ -199,6 +199,8 @@ public class Perspective {
 		}
 		if("topic".equals(perspectiveType)){
 			instListPanel.topicFollowersLoad();
+		}else if("project".equals(perspectiveType)){
+			instListPanel.topicFollowersLoad();
 		}
 		instListPanel.setTitle(title);
 		session.setWindowTitle(title);

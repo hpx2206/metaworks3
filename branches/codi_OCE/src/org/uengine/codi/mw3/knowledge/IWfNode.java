@@ -19,6 +19,7 @@ import org.metaworks.annotation.Table;
 import org.metaworks.annotation.Test;
 import org.metaworks.annotation.TypeSelector;
 import org.metaworks.dao.IDAO;
+import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.model.ContentWindow;
 import org.uengine.codi.mw3.model.IInstance;
@@ -218,6 +219,14 @@ public interface IWfNode extends IDAO {
 	@Hidden
 	public String getDescription();
 	public void setDescription(String description);
+	
+	@Face(displayName="로고파일")
+	@ORMapping(
+		databaseFields={"URL", "THUMBNAIL"}, 
+		objectFields={"uploadedPath", "filename"}
+	)	
+	public MetaworksFile getLogoFile();
+	public void setLogoFile(MetaworksFile logoFile);
 	
 	
 	/*******************************************

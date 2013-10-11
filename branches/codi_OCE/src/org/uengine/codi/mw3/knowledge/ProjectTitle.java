@@ -1,9 +1,9 @@
 package org.uengine.codi.mw3.knowledge;
 
 import java.net.URL;
+import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.sql.RowSet;
 
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
@@ -15,11 +15,19 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Available;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
+import org.metaworks.annotation.ORMapping;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.component.SelectBox;
+import org.metaworks.dao.AbstractGenericDAO;
 import org.metaworks.dao.TransactionContext;
+import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.codi.mw3.model.Employee;
+import org.uengine.cloud.saasfier.TenantContext;
+import org.uengine.codi.mw3.marketplace.IApp;
+import org.uengine.codi.mw3.marketplace.IAppMapping;
+import org.uengine.codi.mw3.marketplace.category.ICategory;
+import org.uengine.codi.mw3.model.ICompany;
 import org.uengine.codi.mw3.model.InstanceListPanel;
 import org.uengine.codi.mw3.model.InstanceViewContent;
 import org.uengine.codi.mw3.model.Session;
@@ -28,7 +36,7 @@ import org.uengine.kernel.GlobalContext;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 
-@Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs",
+@Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs", options={"fieldOrder"},values={"topicTitle,topicDescription,logoFile"} ,
 ejsPathMappingByContext=	{
 			"{how: 'html', face: 'dwr/metaworks/org/uengine/codi/mw3/model/ProjectTitle.ejs'}"
 })
@@ -70,7 +78,14 @@ public class ProjectTitle implements ContextAware {
 		public void setTopicDescription(String topicDescription) {
 			this.topicDescription = topicDescription;
 		}
-		
+	MetaworksFile logoFile;
+		public MetaworksFile getLogoFile() {
+			return logoFile;
+		}
+		public void setLogoFile(MetaworksFile logoFile) {
+			this.logoFile = logoFile;
+		}
+
 	String embeddedHtml;
 		@Face(displayName="$topicEmbeddedHtml")
 		@Available(how={"html"})
@@ -86,6 +101,11 @@ public class ProjectTitle implements ContextAware {
 	@Available(when={MetaworksContext.WHEN_NEW})
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] save() throws Exception{
+
+		if(this.getLogoFile().getFileTransfer() != null &&
+		   this.getLogoFile().getFilename() != null && 
+		   this.getLogoFile().getFilename().length() > 0)			
+			this.getLogoFile().upload();
 
 		
 		this.saveMe();
@@ -213,8 +233,13 @@ public class ProjectTitle implements ContextAware {
 			wfNode.setType("project");
 			wfNode.setParentId(session.getCompany().getComCode());	
 			wfNode.setAuthorId(session.getUser().getUserId());		
-			wfNode.setCompanyId(session.getCompany().getComCode());
+			if(TenantContext.getThreadLocalInstance().getTenantId() != null)
+				wfNode.setCompanyId(TenantContext.getThreadLocalInstance().getTenantId());
+			else
+				wfNode.setCompanyId(session.getCompany().getComCode());
+				
 			wfNode.setDescription(this.getTopicDescription());
+			wfNode.setLogoFile(this.getLogoFile());
 			wfNode.createMe();
 			
 			TopicMapping tm = new TopicMapping();
@@ -262,6 +287,7 @@ public class ProjectTitle implements ContextAware {
 			String embeddedHtml = "<div style='padding:15px;border:1px solid #D7D7D7; font-size:14px; font-weight:bold;margin-bottom:10px;'>&lt;iframe id=\"portlet\" src=\"" + defaultUrl + "\" style=\"width: 500px; height: 500px; border-width:1px; border-color:red; border-style:solid;\"></iframe></div>";
 			
 			this.setEmbeddedHtml(embeddedHtml);
+			
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -276,5 +302,6 @@ public class ProjectTitle implements ContextAware {
 	
 	@AutowiredFromClient
 	transient public Session session;
+	
 
 }

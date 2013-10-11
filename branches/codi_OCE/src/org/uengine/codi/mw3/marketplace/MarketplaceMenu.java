@@ -16,6 +16,7 @@ public class MarketplaceMenu {
 	@ServiceMethod(target=ServiceMethodContext.TARGET_POPUP)
 	public Object registerApp() throws Exception {
 		App app = new App();
+		app.session = session;
 		app.load();
 		app.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 		
