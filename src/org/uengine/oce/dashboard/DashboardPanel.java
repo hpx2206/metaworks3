@@ -3,7 +3,6 @@ package org.uengine.oce.dashboard;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.uengine.codi.mw3.admin.OcePageNavigator;
-import org.uengine.codi.mw3.knowledge.ProjectPanel;
 import org.uengine.codi.mw3.model.Session;
 
 public class DashboardPanel {
@@ -23,17 +22,29 @@ public class DashboardPanel {
 		public void setMetaworksContext(MetaworksContext metaworksContext) {
 			this.metaworksContext = metaworksContext;
 		}
-/*
- * News
- * MyApp
- * MyProject
-*/		
+	
+	OcePageNavigator pageNavigator;
+		public OcePageNavigator getPageNavigator() {
+			return pageNavigator;
+		}
+		public void setPageNavigator(OcePageNavigator pageNavigator) {
+			this.pageNavigator = pageNavigator;
+		}
+
 	MyAppPanel myAppPanel;
 		public MyAppPanel getMyAppPanel() {
 			return myAppPanel;
 		}
 		public void setMyAppPanel(MyAppPanel myAppPanel) {
 			this.myAppPanel = myAppPanel;
+		}
+
+	MyProjectPanel projectPanel;
+		public MyProjectPanel getProjectPanel() {
+			return projectPanel;
+		}
+		public void setProjectPanel(MyProjectPanel projectPanel) {
+			this.projectPanel = projectPanel;
 		}
 
 	MyServicePanel myServicePanel;
@@ -43,39 +54,31 @@ public class DashboardPanel {
 		public void setMyServicePanel(MyServicePanel myServicePanel) {
 			this.myServicePanel = myServicePanel;
 		}
-
-	ProjectPanel projectPanel;
-		public ProjectPanel getProjectPanel() {
-			return projectPanel;
-		}
-		public void setProjectPanel(ProjectPanel projectPanel) {
-			this.projectPanel = projectPanel;
-		}
 		
-
-	OcePageNavigator pageNavigator;
-		public OcePageNavigator getPageNavigator() {
-			return pageNavigator;
-		}
-		public void setPageNavigator(OcePageNavigator pageNavigator) {
-			this.pageNavigator = pageNavigator;
-		}
-
+	
+	
 	public	DashboardPanel(){
 		
 	}
 	
 	public DashboardPanel load(Session session) throws Exception{		
 		setMetaworksContext(new MetaworksContext());
-		
+
+		//MyApp
 		myAppPanel = new MyAppPanel();
 		myAppPanel.session = session;
 		myAppPanel.load();
 		
-		myServicePanel = new MyServicePanel(session);
-		projectPanel = new ProjectPanel();
-		//projectPanel.load();
-		//projectPanel.loadList();
+
+		//MyProject
+		projectPanel = new MyProjectPanel();
+		projectPanel.session = session;
+		projectPanel.load();
+
+		//MyService
+		setMyServicePanel(new MyServicePanel(session));
+		
+
 		return this;
 	}
 
