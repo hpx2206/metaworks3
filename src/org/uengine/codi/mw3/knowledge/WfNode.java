@@ -17,6 +17,7 @@ import org.metaworks.dao.Database;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.dao.UniqueKeyGenerator;
 import org.metaworks.example.ide.SourceCode;
+import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.model.ContentWindow;
@@ -55,7 +56,15 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 	@Autowired
 	ProcessManagerRemote connectionFactory;
 
-	
+	@XStreamOmitField
+	MetaworksFile logoFile;
+		public MetaworksFile getLogoFile() {
+			return logoFile;
+		}
+		public void setLogoFile(MetaworksFile logoFile) {
+			this.logoFile = logoFile;
+		}
+
 	@XStreamAsAttribute
 	String id;
 		public String getId() {

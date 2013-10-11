@@ -29,6 +29,7 @@ import org.uengine.codi.mw3.model.InstanceListPanel;
 import org.uengine.codi.mw3.model.InstanceViewContent;
 import org.uengine.codi.mw3.model.ProcessMap;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.KeyedParameter;
 import org.uengine.kernel.ResultPayload;
 import org.uengine.persistence.dao.UniqueKeyGenerator;
@@ -355,8 +356,13 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 				categories.add(categoryName, categoryId);
 			}
 		}
-		
-		IProjectNode projectList = ProjectNode.completedProject(TenantContext.getThreadLocalInstance().getTenantId());		
+		String tenantId;
+		if(TenantContext.getThreadLocalInstance()!=null && TenantContext.getThreadLocalInstance().getTenantId()!=null){
+			tenantId = TenantContext.getThreadLocalInstance().getTenantId();
+		}else{
+			tenantId = session.getCompany().getComCode();
+		}
+		IProjectNode projectList = ProjectNode.completedProject(tenantId);		
 		if(projectList.size() > 0) {
 			while(projectList.next()){
 				String projectId = projectList.getId();

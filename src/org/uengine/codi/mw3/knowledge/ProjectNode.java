@@ -54,8 +54,14 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 		IProjectNode dao  = (IProjectNode)MetaworksDAO.createDAOImpl(TransactionContext.getThreadLocalInstance(), "select * from bpm_knol where type= ?type and companyId=?companyId order by name", IProjectNode.class);
 		dao.set("type", TYPE_PROJECT);
 		
-		// TODO: modify multi tenancy
-		dao.set("companyId", session.getCompany().getComCode());
+		String tenantId;
+		if(TenantContext.getThreadLocalInstance()!=null && TenantContext.getThreadLocalInstance().getTenantId()!=null){
+			tenantId = TenantContext.getThreadLocalInstance().getTenantId();
+		}else{
+			tenantId = session.getCompany().getComCode();
+		}
+		
+		dao.set("companyId", tenantId);
 		dao.select();
 
 		return dao;
