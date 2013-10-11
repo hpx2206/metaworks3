@@ -16709,11 +16709,9 @@ OG.renderer.RaphaelRenderer.prototype.drawGuide = function (element) {
             end.attr({
                 cursor : "pointer"
             });
-			
-			if(task.setTooltip){
-	            task.setTooltip('task - Click or Drag');
-	            end.setTooltip('end event - Click or Drag');
-			}
+		
+            task.setTooltip('task - Click or Drag');
+            end.setTooltip('end event - Click or Drag');
 			
             group.appendChild(task);
             group.appendChild(end);
@@ -19844,7 +19842,8 @@ OG.handler.EventHandler.prototype = {
                 // add tooltip for guide activity icon
                 for(var item in guide){
                     if($(guide[item]).attr('tooltip') == 'enable')
-                        $(guide[item]).tooltip();
+                    	if($(guide[item]).tooltip)
+                        	$(guide[item]).tooltip();
                 }
 			}
 		} else {
