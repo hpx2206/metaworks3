@@ -1,15 +1,18 @@
 package org.uengine.codi.mw3.knowledge;
 
+import org.metaworks.Refresh;
 import org.metaworks.Remover;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.MetaworksDAO;
 import org.metaworks.dao.TransactionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.cloud.saasfier.TenantContext;
+import org.uengine.codi.mw3.admin.OcePageNavigator;
 import org.uengine.codi.mw3.model.IInstance;
 import org.uengine.codi.mw3.model.Instance;
 import org.uengine.codi.mw3.model.Perspective;
 import org.uengine.codi.mw3.model.Session;
+import org.uengine.oce.dashboard.DashboardPanel;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 
@@ -24,15 +27,25 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 	public Object[] loadTopic() throws Exception {
 		// TODO Auto-generated method stub
 
-		if(pageNavigator != null && "knowlege".equals(pageNavigator.getPageName())){
+		/*if(pageNavigator != null && "knowlege".equals(pageNavigator.getPageName())){
 			return new Object[]{new BrainstormPanel(this.getId())};
-		}else{
+		}else{*/
+		
+//		RecentItem recentItem = new RecentItem();
+//		recentItem.setEmpCode(session.getEmployee().getEmpCode());
+//		recentItem.setItemId(String.valueOf(this.getAppId()));
+//		recentItem.setItemType(APPMAPPING_TYPE);
+//		recentItem.setUpdateDate(Calendar.getInstance().getTime());
+//		
+//		recentItem.add();
+	
+			
 			
 			String title = "프로젝트: " + getName();
 			Object[] returnObject = Perspective.loadInstanceListPanel(session, TYPE_PROJECT, getId(), title);
 			
 			return returnObject;
-		}
+		//}
 	}
 
 	public static IProjectNode load(Session session) throws Exception {
@@ -51,7 +64,7 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 //		dao.set("companyId", session.getCompany().getComCode());
 //		dao.select();
 		
-		IProjectNode dao  = (IProjectNode)MetaworksDAO.createDAOImpl(TransactionContext.getThreadLocalInstance(), "select * from bpm_knol where type= ?type and companyId=?companyId order by name", IProjectNode.class);
+		IProjectNode dao  = (IProjectNode)MetaworksDAO.createDAOImpl(TransactionContext.getThreadLocalInstance(), "select * from bpm_knol where type= ?type and companyId=?companyId order by startdate", IProjectNode.class);
 		dao.set("type", TYPE_PROJECT);
 		
 		String tenantId;
@@ -165,6 +178,13 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 		} else {
 			throw new Exception("관리자나 초기토픽생성자만 수정가능합니다.");
 		}
+		
+		if(pageNavigator instanceof OcePageNavigator && "process".equals(pageNavigator.getPageName())){
+			DashboardPanel dashboardPanel = new DashboardPanel();
+			dashboardPanel.load(session);
+			return new Object[]{new Remover(this),new Refresh(dashboardPanel)};
+		}
+		
 		return new Object[]{new Remover(this)};
 	}
 	
