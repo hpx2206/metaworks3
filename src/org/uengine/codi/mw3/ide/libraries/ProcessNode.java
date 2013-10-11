@@ -27,7 +27,7 @@ import org.uengine.kernel.Role;
 
 
 @Face(
-		ejsPath = "dwr/metaworks/org.uengine/codi/mw3/ide/libraries/ProcessNode.ejs",
+		ejsPath = "dwr/metaworks/org/uengine/codi/mw3/ide/libraries/ProcessNode.ejs",
 		ejsPathMappingByContext = {
 				"{how:	'tree', face: 'dwr/metaworks/org/uengine/codi/mw3/ide/libraries/ProcessNode.ejs'}",
 				"{how:	'resourcePicker', face: 'dwr/metaworks/org/metaworks/metadata/ResourceNodePicker.ejs'}"
