@@ -2,17 +2,24 @@ package org.uengine.codi.mw3.knowledge;
 
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
+import org.metaworks.ServiceMethodContext;
+import org.metaworks.ToAppend;
+import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.MetaworksDAO;
 import org.metaworks.dao.TransactionContext;
+import org.metaworks.widget.Window;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.mw3.admin.OcePageNavigator;
 import org.uengine.codi.mw3.model.IInstance;
 import org.uengine.codi.mw3.model.Instance;
+import org.uengine.codi.mw3.model.OceMain;
 import org.uengine.codi.mw3.model.Perspective;
+import org.uengine.codi.mw3.model.PerspectivePanel;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.oce.dashboard.DashboardPanel;
+import org.uengine.oce.dashboard.DashboardWindow;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 
@@ -24,6 +31,7 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 		this.setType(TYPE_PROJECT);
 	}
 	
+	@ServiceMethod(callByContent = true, target = ServiceMethodContext.TARGET_APPEND)
 	public Object[] loadTopic() throws Exception {
 		// TODO Auto-generated method stub
 
@@ -32,10 +40,10 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 		}else{*/
 	
 			
-			String title = "프로젝트: " + getName();
-			Object[] returnObject = Perspective.loadInstanceListPanel(session, TYPE_PROJECT, getId(), title);
-			
-			return returnObject;
+			/*String title = "프로젝트: " + getName();
+			Object[] returnObject = Perspective.loadInstanceListPanel(session, TYPE_PROJECT, getId(), title);*/
+			Window window = OceMain.createInstanceListWindow(session);
+			return new Object[]{new ToAppend(new DashboardWindow(),window)};
 		//}
 	}
 
