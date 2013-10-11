@@ -188,9 +188,6 @@ public class SelfServiceControlPanel {
 			e.printStackTrace();
 		}
 
-		if(metadataXML == null)
-			metadataXML = new MetadataXML();
-		
 		metadataXML.setFilePath(project.getPath() + File.separatorChar + Project.METADATA_FILENAME);
 		
 		this.metadataProperties = new ArrayList<MetadataProperty>();	
@@ -228,9 +225,6 @@ public class SelfServiceControlPanel {
 		metadataXML.setMetaworksContext(new MetaworksContext());
 		metadataXML.getMetaworksContext().setHow("selfservice");
 	
-		this.setMetadataXml(metadataXML);		
-		
-		
 		//add panel		
 		FilePropertyPanel filePanel = new FilePropertyPanel(fileProperties);
 		this.setFilePropertyPanel(filePanel);
