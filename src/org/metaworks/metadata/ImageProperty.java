@@ -70,13 +70,9 @@ public class ImageProperty extends MetadataProperty{
 		metadataXML.properties.remove(this);
 		metadataXML.properties.add(index, editProperty);
 		
-		String metadataFileName = "uengine.metadata";
-		String metadataFilePath = metadataXML.getFilePath() + File.separatorChar + metadataFileName;
-		
-		
 		MetadataEditor metadataEditor = new MetadataEditor();
 		metadataEditor.setResourceNode(new ResourceNode());
-		metadataEditor.getResourceNode().setPath(metadataFilePath);
+		metadataEditor.getResourceNode().setPath(metadataXML.getFilePath());
 		metadataEditor.setContent(metadataXML.toXmlXStream());
 		metadataEditor.save();
 		
@@ -102,6 +98,7 @@ public class ImageProperty extends MetadataProperty{
 
 	@ServiceMethod(callByContent=true, bindingHidden=true, bindingFor="file", eventBinding={"uploaded"})
 	public void changeFile(){
+		// TODO 여기를 안타서.. 셀프 서비스 포탈에서 이미지가 변경이 안됨
 		this.getFile().getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		setFilePreview(this.getFile());
 		
