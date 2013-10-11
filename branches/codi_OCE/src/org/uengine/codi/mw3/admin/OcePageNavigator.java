@@ -156,6 +156,7 @@ public class OcePageNavigator extends PageNavigator {
 		
 		Marketplace marketplace = new Marketplace();
 		marketplace.session = session;
+		marketplace.setPageNavigator(new OcePageNavigator());
 		marketplace.load();
 		
 		return new MainPanel(marketplace);
@@ -190,6 +191,7 @@ public class OcePageNavigator extends PageNavigator {
 		
 		SelfService selfService = new SelfService();
 		selfService.session = session;
+		selfService.setPageNavigator(new OcePageNavigator());
 		selfService.load();
 		
 		return new MainPanel(selfService);
