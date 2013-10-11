@@ -30,16 +30,7 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 		/*if(pageNavigator != null && "knowlege".equals(pageNavigator.getPageName())){
 			return new Object[]{new BrainstormPanel(this.getId())};
 		}else{*/
-		
-//		RecentItem recentItem = new RecentItem();
-//		recentItem.setEmpCode(session.getEmployee().getEmpCode());
-//		recentItem.setItemId(String.valueOf(this.getAppId()));
-//		recentItem.setItemType(APPMAPPING_TYPE);
-//		recentItem.setUpdateDate(Calendar.getInstance().getTime());
-//		
-//		recentItem.add();
 	
-			
 			
 			String title = "프로젝트: " + getName();
 			Object[] returnObject = Perspective.loadInstanceListPanel(session, TYPE_PROJECT, getId(), title);
