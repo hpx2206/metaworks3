@@ -1,7 +1,6 @@
 package org.uengine.oce.dashboard;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 import org.metaworks.MetaworksContext;
 import org.metaworks.ServiceMethodContext;
@@ -13,10 +12,7 @@ import org.uengine.codi.mw3.marketplace.App;
 import org.uengine.codi.mw3.marketplace.AppMapping;
 import org.uengine.codi.mw3.marketplace.IAppMapping;
 import org.uengine.codi.mw3.marketplace.MyVendor;
-import org.uengine.codi.mw3.model.Company;
-import org.uengine.codi.mw3.model.ICompany;
 import org.uengine.codi.mw3.model.OceMain;
-import org.uengine.codi.mw3.model.RecentItem;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.kernel.GlobalContext;
 
