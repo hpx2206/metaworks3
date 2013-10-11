@@ -180,13 +180,16 @@ public class Form implements ContextAware {
 			}
 		}
 	}
-	
+
 	public String generateJavaCode() { 
 	
 		StringBuffer sb = new StringBuffer();
 		StringBuffer importBuffer = new StringBuffer();
 		StringBuffer methodBuffer = new StringBuffer();
 		StringBuffer constructorBuffer 	= new StringBuffer();
+		StringBuffer initiateVariable = null;
+		StringBuffer userVariable = null;
+		
 		ArrayList<String> importList = new ArrayList<String>();
 		ArrayList<String> constructorList = new ArrayList<String>();
 		String classFaceOrderStr = "";
@@ -200,7 +203,7 @@ public class Form implements ContextAware {
 		for(int i = 0; i < formFields.size(); i++) {
 			
 			CommonFormField field = formFields.get(i);
-		
+			
 			String importStr = "";
 			String constructortStr = "";
 			
@@ -227,7 +230,23 @@ public class Form implements ContextAware {
 			if(!constructorList.contains(constructortStr)){
 				constructorList.add(constructortStr);
 			}
+			if(field.getFieldType().equals("org.metaworks.metadata.MetadataFile")){
+				importBuffer.append("import org.uengine.kernel.GlobalContext;\n");
+				importBuffer.append("import org.uengine.util.UEngineUtil;\n");
+				initiateVariable = new StringBuffer();
+				String fileSystemPath = "\"filesystem.path\"";
+				initiateVariable.append("    if(this." +field.getId()+  " == null){\n");
+				initiateVariable.append("          MetadataFile newFile"+field.getId()+" = new MetadataFile();\n");
+				initiateVariable.append("          String baseDir = GlobalContext.getPropertyString("+fileSystemPath+") + "+"\"/\""+";\n");
+				initiateVariable.append("          newFile"+field.getId()+".setBaseDir(baseDir + UEngineUtil.getCalendarDir());\n");
+				initiateVariable.append("       }\n\n");
+			}
 			
+			if(field.getFieldType().equals("org.uengine.codi.mw3.model.User") || field.getFieldType().equals("org.uengine.codi.mw3.model.IUser")){
+//				userVariable = new StringBuffer();
+//				 IUser user = new User();
+//				 user.setUserId(this.getUser2().getUserId());
+			}
 			
 			methodBuffer.append(field.generateVariableCode());
 			methodBuffer.append(field.generateAnnotationCode());
@@ -239,10 +258,20 @@ public class Form implements ContextAware {
 		}
 		constructorBuffer.append("	}\n\n");
 		
+		
+		
 		methodBuffer
 		.append("	@Override\n")
-		.append("	public void onLoad() throws Exception {\n")
-		.append("	}\n\n");
+		.append("	public void onLoad() throws Exception {\n");
+
+		if( initiateVariable != null ){
+			methodBuffer.append(initiateVariable);
+		}
+		
+		if( userVariable != null){
+			methodBuffer.append(userVariable);
+		}
+		methodBuffer.append("	}\n\n");
 		
 		methodBuffer
 		.append("	@Override\n")

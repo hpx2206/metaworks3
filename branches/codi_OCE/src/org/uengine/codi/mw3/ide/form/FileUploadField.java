@@ -12,7 +12,7 @@ public class FileUploadField extends CommonFormField {
 
 	public FileUploadField() {
 		this.setName("FileUploadField");
-		this.setFieldType("org.metaworks.website.MetaworksFile");
+		this.setFieldType("org.metaworks.metadata.MetadataFile");
 		this.setDefine(true);
 //		this.setEjsPath("dwr/metaworks/genericfaces/MetaworksFile.ejs");
 	}
