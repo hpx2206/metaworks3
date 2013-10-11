@@ -98,8 +98,6 @@ public class PageNavigator{
 			this.oce = oce;
 		}
 	
-	
-
 	String pageName;
 		@Hidden
 		public String getPageName() {
@@ -112,6 +110,7 @@ public class PageNavigator{
 	@ServiceMethod(callByContent=true)
 	public MainPanel goIDE() throws Exception {
 		CloudIDE cloudIDE = new CloudIDE();
+		cloudIDE.setPageNavigator(new PageNavigator());
 		cloudIDE.load(session);
 			
 		return new MainPanel(cloudIDE);
@@ -165,6 +164,7 @@ public class PageNavigator{
 		
 		Marketplace marketplace = new Marketplace();
 		marketplace.session = session;
+		marketplace.setPageNavigator(new PageNavigator());
 		marketplace.load();
 		
 		return new MainPanel(marketplace);
@@ -196,8 +196,8 @@ public class PageNavigator{
 	@ServiceMethod(callByContent=true, inContextMenu=true)
 	public MainPanel goSelfServicePortal() throws Exception {
 		
-		
 		SelfService selfService = new SelfService();
+		selfService.setPageNavigator(new PageNavigator());
 		selfService.session = session;
 		selfService.load();
 		

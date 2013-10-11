@@ -138,84 +138,64 @@ public class PerspectivePanel  implements ContextAware {
 	
 	public PerspectivePanel(Session session) throws Exception {
 		if(session != null){
-			if("0".equals(GlobalContext.getPropertyString("oce.use", "1"))){
-						
-				//개인별
-				if("1".equals(GlobalContext.getPropertyString("personal.use", "1"))){
-					personalPerspective = new PersonalPerspective();
-					personalPerspective.session = session;
-					personalPerspective.select();
+			//개인별
+			if("1".equals(GlobalContext.getPropertyString("personal.use", "1"))){
+				personalPerspective = new PersonalPerspective();
+				personalPerspective.session = session;
+				personalPerspective.select();
+			}
+			
+			if(session.getEmployee().isApproved() && !session.getEmployee().isGuest()){
+				//주제별
+				if("1".equals(GlobalContext.getPropertyString("topic.use", "1"))){
+					topicPerspective = new TopicPerspective();
+					topicPerspective.session = session;
+					topicPerspective.select();
 				}
 				
-				if(session.getEmployee().isApproved() && !session.getEmployee().isGuest()){
-	
-					//주제별
-					if("1".equals(GlobalContext.getPropertyString("topic.use", "1"))){
-						topicPerspective = new TopicPerspective();
-						topicPerspective.session = session;
-						topicPerspective.select();
-					}
-					
-					//조직도
-					if("1".equals(GlobalContext.getPropertyString("organization.use", "1"))){
-						organizationPerspectiveDept = new OrganizationPerspectiveDept();
-	//					organizationPerspectiveDept.select();
-					}
-					
-					//역할
-					if("1".equals(GlobalContext.getPropertyString("role.use", "1"))){
-						organizationPerspectiveRole = new OrganizationPerspectiveRole();
-	//					organizationPerspectiveRole.select();
-					}
-					
-					//프로세스별
-					if("1".equals(GlobalContext.getPropertyString("process.use", "1"))){
-						processPerspective = new ProcessPerspective();
-	//					processPerspective.select();
-					}
-					
-					//문서
-					documentPerspective = new DocumentPerspective();
-					setMetaworksContext(new MetaworksContext());
-					this.getMetaworksContext().setHow("perspectivePanel");
-					documentPerspective.setMetaworksContext(this.getMetaworksContext());
-					
-					if("1".equals(GlobalContext.getPropertyString("contact.use", "1"))){
-						//친구
-						contactPerspective = new ContactPerspective();
-						contactPerspective.session = session;
-						contactPerspective.select();
-					}
-					if("1".equals(GlobalContext.getPropertyString("commingTodo.use", "1"))){
-						commingTodoPerspective = new CommingTodoPerspective();
-						commingTodoPerspective.session = session;
-						commingTodoPerspective.select();
-					}
+				//조직도
+				if("1".equals(GlobalContext.getPropertyString("organization.use", "1"))){
+					organizationPerspectiveDept = new OrganizationPerspectiveDept();
+//					organizationPerspectiveDept.session = session;
+//					organizationPerspectiveDept.select();
 				}
-				//processStatusPerspective = new ProcessStatusPerspective();
-				//지식맵
-				if("1".equals(GlobalContext.getPropertyString("perspective.knowledge.use", "1"))){
-					strategicPerspective = new StrategicPerspective();
+				
+				//역할
+				if("1".equals(GlobalContext.getPropertyString("role.use", "1"))){
+					organizationPerspectiveRole = new OrganizationPerspectiveRole();
+					organizationPerspectiveRole.session = session;
+					organizationPerspectiveRole.select();
 				}
-			
-			}//oce
-			else{
-			
+				
+				//프로세스별
+				if("1".equals(GlobalContext.getPropertyString("process.use", "1"))){
+					processPerspective = new ProcessPerspective();
+//					processPerspective.select();
+				}
+				
+				//문서
+				documentPerspective = new DocumentPerspective();
+				setMetaworksContext(new MetaworksContext());
+				this.getMetaworksContext().setHow("perspectivePanel");
+				documentPerspective.setMetaworksContext(this.getMetaworksContext());
+				
+				//친구
+				if("1".equals(GlobalContext.getPropertyString("contact.use", "1"))){
+					contactPerspective = new ContactPerspective();
+					contactPerspective.session = session;
+					contactPerspective.select();
+				}
+				if("1".equals(GlobalContext.getPropertyString("commingTodo.use", "1"))){
+					commingTodoPerspective = new CommingTodoPerspective();
+					commingTodoPerspective.session = session;
+					commingTodoPerspective.select();
+				}
 			}
-			//앱
-			if("1".equals(GlobalContext.getPropertyString("app.use", "1"))){
-				appPerspective = new OrganizationPerspectiveApp();
-				appPerspective.session = session;
-				appPerspective.select();
+			//processStatusPerspective = new ProcessStatusPerspective();
+			//지식맵
+			if("1".equals(GlobalContext.getPropertyString("perspective.knowledge.use", "1"))){
+				strategicPerspective = new StrategicPerspective();
 			}
-			if("1".equals(GlobalContext.getPropertyString("project.use", "1"))){
-				//프로젝트
-				projectPerspective = new ProjectPerspective();
-				projectPerspective.session = session;
-				projectPerspective.select();
-			}
-		
 		}//session
-		
 	}
 }

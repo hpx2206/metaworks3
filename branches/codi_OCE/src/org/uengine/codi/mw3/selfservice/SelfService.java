@@ -37,13 +37,13 @@ public class SelfService {
 			this.layout = layout;
 		}
 		
-		PageNavigator pageNavigator;
+	PageNavigator pageNavigator;
 		public PageNavigator getPageNavigator() {
 			return pageNavigator;
 		}
 		public void setPageNavigator(PageNavigator pageNavigator) {
 			this.pageNavigator = pageNavigator;
-		}		
+		}
 
 		
 	@ServiceMethod
@@ -61,8 +61,6 @@ public class SelfService {
 		outerLayout.setNorth(new TopPanel(session));
 
 		this.setLayout(outerLayout);
-		
-		pageNavigator = new OcePageNavigator();
 		
 	}
 

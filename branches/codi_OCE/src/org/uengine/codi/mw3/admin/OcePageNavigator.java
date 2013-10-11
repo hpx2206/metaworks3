@@ -10,7 +10,6 @@ import org.uengine.codi.mw3.ide.CloudIDE;
 import org.uengine.codi.mw3.knowledge.Knowledge;
 import org.uengine.codi.mw3.marketplace.AppMap;
 import org.uengine.codi.mw3.marketplace.Marketplace;
-import org.uengine.codi.mw3.model.Main;
 import org.uengine.codi.mw3.model.MainLMS;
 import org.uengine.codi.mw3.model.MainSNS;
 import org.uengine.codi.mw3.model.OceMain;
@@ -103,6 +102,7 @@ public class OcePageNavigator extends PageNavigator {
 	@ServiceMethod(callByContent=true)
 	public MainPanel goIDE() throws Exception {
 		CloudIDE cloudIDE = new CloudIDE();
+		cloudIDE.setPageNavigator(new OcePageNavigator());
 		cloudIDE.load(session);
 			
 		return new MainPanel(cloudIDE);
@@ -190,6 +190,7 @@ public class OcePageNavigator extends PageNavigator {
 		
 		
 		SelfService selfService = new SelfService();
+		selfService.setPageNavigator(new OcePageNavigator());
 		selfService.session = session;
 		selfService.setPageNavigator(new OcePageNavigator());
 		selfService.load();

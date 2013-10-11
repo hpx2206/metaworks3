@@ -407,7 +407,7 @@ public class Login implements ContextAware {
 		
 		className = GlobalContext.getPropertyString(pageNavigatorPropertyName);
 		
-		Class c = Thread.currentThread().getContextClassLoader().loadClass(GlobalContext.getPropertyString(pageNavigatorPropertyName, "org.uengine.codi.mw3.admin.PageNavigator"));
+		Class c = Thread.currentThread().getContextClassLoader().loadClass(GlobalContext.getPropertyString(pageNavigatorPropertyName));
 		Object object = c.newInstance();
 		
 		if(object instanceof PageNavigator){
@@ -422,7 +422,6 @@ public class Login implements ContextAware {
 			mainPanel = pageNavigator.goKnowledge();
 		}else if("pinterest".equals(lastVisitPage)){
 			mainPanel = pageNavigator.goPinterest();
-
 		}else if("ide".equals(lastVisitPage) && "1".equals(GlobalContext.getPropertyString("ide.use", "1"))){
 			mainPanel = pageNavigator.goIDE();
 		}else if("marketplace".equals(lastVisitPage) && "1".equals(GlobalContext.getPropertyString("marketplace.use", "1"))){
@@ -437,11 +436,6 @@ public class Login implements ContextAware {
 				mainPanel = pageNavigator.goProcess();
 			}
 		}
-		
-		
-		
-		
-		
 		
 		if("1".equals(GlobalContext.getPropertyString("sso.use", "1"))){
 			//Request Token

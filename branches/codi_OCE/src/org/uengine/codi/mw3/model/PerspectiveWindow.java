@@ -2,6 +2,8 @@ package org.uengine.codi.mw3.model;
 
 import org.metaworks.annotation.Face;
 import org.metaworks.widget.Window;
+import org.uengine.kernel.GlobalContext;
+import org.uengine.oce.OcePerspectivePanel;
 
 @Face(ejsPath="dwr/metaworks/genericfaces/Window.ejs",  
 options={"hideLabels", "minimize", "color", "hideTitleBar"}, 
@@ -13,9 +15,12 @@ public class PerspectiveWindow extends Window {
 	}
 	
 	public PerspectiveWindow(Session session) throws Exception {
-		setPanel(new PerspectivePanel(session));
-		// title 을 '관점' 으로 셋팅해줌..
-		setTitle("$Navigation");
+		if("1".equals(GlobalContext.getPropertyString("oce.use", "1"))){
+			setPanel(new OcePerspectivePanel(session));
+		}else{
+			setPanel(new PerspectivePanel(session));
+		}
+		
 	}
 
 }

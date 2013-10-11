@@ -5,7 +5,6 @@ import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.layout.Layout;
-import org.uengine.codi.mw3.admin.OcePageNavigator;
 import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.model.ContentWindow;
 import org.uengine.codi.mw3.model.InstanceList;
@@ -99,8 +98,6 @@ public class Marketplace {
 		mainLayout.setCenter(marketPlaceLayout);
 		
 		this.setLayout(mainLayout);
-		
-		pageNavigator = new OcePageNavigator();
 		
 	}
 	

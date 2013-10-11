@@ -55,8 +55,6 @@ public class DashboardPanel {
 			this.myServicePanel = myServicePanel;
 		}
 		
-	
-	
 	public	DashboardPanel(){
 		
 	}
