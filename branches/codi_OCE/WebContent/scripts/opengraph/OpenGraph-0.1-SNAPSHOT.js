@@ -16709,10 +16709,12 @@ OG.renderer.RaphaelRenderer.prototype.drawGuide = function (element) {
             end.attr({
                 cursor : "pointer"
             });
-
-            task.setTooltip('task - Click or Drag');
-            end.setTooltip('end event - Click or Drag');
-
+			
+			if(task.setTooltip){
+	            task.setTooltip('task - Click or Drag');
+	            end.setTooltip('end event - Click or Drag');
+			}
+			
             group.appendChild(task);
             group.appendChild(end);
             }
