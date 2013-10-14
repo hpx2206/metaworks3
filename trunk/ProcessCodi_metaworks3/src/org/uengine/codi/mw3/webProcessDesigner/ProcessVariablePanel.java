@@ -4,10 +4,20 @@ import java.util.ArrayList;
 
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.Hidden;
+import org.metaworks.annotation.Id;
 import org.metaworks.annotation.ServiceMethod;
 import org.uengine.kernel.ProcessVariable;
 
 public class ProcessVariablePanel {
+	
+	String editorId;
+	@Id
+		public String getEditorId() {
+			return editorId;
+		}
+		public void setEditorId(String editorId) {
+			this.editorId = editorId;
+		}
 
 	ArrayList<ProcessVariable> variableList;
 		public ArrayList<ProcessVariable> getVariableList() {
