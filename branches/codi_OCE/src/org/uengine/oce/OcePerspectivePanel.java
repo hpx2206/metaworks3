@@ -1,7 +1,11 @@
 package org.uengine.oce;
 
 import org.metaworks.MetaworksContext;
+import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.ServiceMethod;
+import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.knowledge.ProjectPerspective;
+import org.uengine.codi.mw3.model.OceMain;
 import org.uengine.codi.mw3.model.OrganizationPerspectiveApp;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.kernel.GlobalContext;
@@ -55,6 +59,17 @@ public class OcePerspectivePanel {
 		}//session
 		
 	}
+	
+	@AutowiredFromClient
+	public Session session;
+		
+	
+	@ServiceMethod
+	public MainPanel loadOce() throws Exception{
+
+		return new MainPanel(new OceMain(session));
+	}
+	
 	
 }
 
