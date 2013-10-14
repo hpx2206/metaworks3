@@ -5,6 +5,7 @@ if(value){
 	var lastCmnt = value.lastCmnt;
 	var lastCmnt2 = value.lastCmnt2;
 	var topicName = value.topicName;
+	var isDashboard = (mw3.how == "dashboard");
 	 
 	var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
 	if(session && session.searchKeyword != null && session.searchKeyword.length > 0){
@@ -147,20 +148,24 @@ if(value){
 			    
 			    if(value.instanceViewThreadPanel && value.instanceViewThreadPanel.instanceId) {%>			     
 			    <% }else if(value.lastCmnt != null){%>
-			    <% if(value.currentUser && value.currentUser.userId){%>
-			    <!-- && (value.initiator.userId!=value.currentUser.userId || value.name!=value.lastCmnt)-->
 			    
-			    <li>
-			    	<!--style="margin-left:38px;"-->
-			   		<table><td><%value.lastCmntUser['size']='small';%><%=fields.lastCmntUser.here()%></td>
-			  		<td colspan=2 style="border:none; padding-right:10px;"><font color=204070><%=value.lastCmntUser.name%></font>&nbsp;&nbsp; <font color="gray" class="inctanceReply"><%=lastCmnt%></font></td></table>
-			 	</li>
+				    <% if(value.currentUser && value.currentUser.userId){%>
+				    <!-- && (value.initiator.userId!=value.currentUser.userId || value.name!=value.lastCmnt)-->
+				    
+				    <li>
+				    	<!--style="margin-left:38px;"-->
+				   		<table><td><%value.lastCmntUser['size']='small';%><%=fields.lastCmntUser.here()%></td>
+				  		<td colspan=2 style="border:none; padding-right:10px;"><font color=204070><%=value.lastCmntUser.name%></font>&nbsp;&nbsp; <font color="gray" class="inctanceReply"><%=lastCmnt%></font></td></table>
+				 	</li>
+			   		
+			   		<% if(!isDashboard){%>
 			   		<%if(value.lastCmnt2 && value.lastCmnt2 != null){%>
 					    <li>
 					    	<!--style="margin-left:38px;"-->
 					   		<table><td><%value.lastCmnt2User['size']='small';%><%=fields.lastCmnt2User.here()%></td>
 					  		<td colspan=2 style="border:none; padding-right:10px;"><font color=204070><%=value.lastCmnt2User.name%></font>&nbsp;&nbsp; <font color="gray" class="inctanceReply"><%=lastCmnt2%></font></td></table>
 					 	</li>
+					<%}%>
 			   		<%}%>
 			    <%}%>
 			    <%}%>
