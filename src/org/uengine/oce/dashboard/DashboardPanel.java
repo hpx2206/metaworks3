@@ -3,6 +3,8 @@ package org.uengine.oce.dashboard;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.uengine.codi.mw3.admin.OcePageNavigator;
+import org.uengine.codi.mw3.model.InstanceListPanel;
+import org.uengine.codi.mw3.model.PersonalPerspective;
 import org.uengine.codi.mw3.model.Session;
 
 public class DashboardPanel {
@@ -30,7 +32,15 @@ public class DashboardPanel {
 		public void setPageNavigator(OcePageNavigator pageNavigator) {
 			this.pageNavigator = pageNavigator;
 		}
-
+		
+	InstanceListPanel instanceListPanel;
+		public InstanceListPanel getInstanceListPanel() {
+			return instanceListPanel;
+		}
+		public void setInstanceListPanel(InstanceListPanel instanceListPanel) {
+			this.instanceListPanel = instanceListPanel;
+		}
+	
 	MyAppPanel myAppPanel;
 		public MyAppPanel getMyAppPanel() {
 			return myAppPanel;
@@ -62,6 +72,9 @@ public class DashboardPanel {
 	public DashboardPanel load(Session session) throws Exception{		
 		setMetaworksContext(new MetaworksContext());
 
+		//InstanceListPanel
+		instanceListPanel = createInstanceListPanel();
+		
 		//MyApp
 		myAppPanel = new MyAppPanel();
 		myAppPanel.session = session;
@@ -80,5 +93,25 @@ public class DashboardPanel {
 		return this;
 	}
 
+	public InstanceListPanel createInstanceListPanel() throws Exception{
+		InstanceListPanel instanceListPanel;
+		
+		if("asana".equals(session.getEmployee().getPreferUX())){
+		
+			instanceListPanel = new InstanceListPanel(session);
+			instanceListPanel.session = session;
+			instanceListPanel.switchToKnowledge();
+			return instanceListPanel;
+			
+		}else{
+			PersonalPerspective personalPerspective = new PersonalPerspective();
+			personalPerspective.session = session;
+			instanceListPanel = (InstanceListPanel) personalPerspective.loadAllICanSee()[1];
 	
+			instanceListPanel.session = session;
+			instanceListPanel.setMetaworksContext(new MetaworksContext());
+			instanceListPanel.getMetaworksContext().setWhere(MetaworksContext.WHERE_EVER);
+			return instanceListPanel;
+		}
+	}
 }
