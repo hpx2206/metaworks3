@@ -67,14 +67,18 @@ public class MappingActivity extends DefaultActivity implements IDrawDesigne {
 					}else{
 						String [] wholePartPath = srcVariableName.replace('.','@').split("@");
 						// wholePartPath.length >= 1 이 되는 이유는 안쪽에 객체의 값을 참조하려고 하는 부분이기때문에 따로 값을 가져와야함
-						if( wholePartPath.length == 2 ){
-							String rootObjectName = wholePartPath[1];
+						if( wholePartPath.length >= 2 ){
+							String rootObjectName = wholePartPath[1] ;
+							if( wholePartPath.length > 2 ){
+								for(int j = 2 ; j < wholePartPath.length; j++){
+									rootObjectName += "."+ wholePartPath[j];
+								}
+							}
 							// 이걸 바로 호출
 							Object rootObject = instance.getBeanProperty(wholePartPath[0]);
 							if( rootObject != null ){
 								value = UEngineUtil.getBeanProperty(rootObject, rootObjectName);
 							}
-						}else if( wholePartPath.length > 2 ){
 						}else{
 							value = instance.getBeanProperty(srcVariableName); // varA
 						}
