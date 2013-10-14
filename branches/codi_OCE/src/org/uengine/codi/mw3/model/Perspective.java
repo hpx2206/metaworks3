@@ -201,10 +201,9 @@ public class Perspective {
 		}else if( title == null ){
 			title = "$perspective." + perspectiveType;
 		}
-		if("topic".equals(perspectiveType)){
+		if("topic".equals(perspectiveType) || "project".equals(perspectiveType)){
 			instListPanel.topicFollowersLoad();
-		}else if("project".equals(perspectiveType)){
-			instListPanel.topicFollowersLoad();
+			instListPanel.projectInfoLoad();
 		}
 		instListPanel.setTitle(title);
 		session.setWindowTitle(title);
