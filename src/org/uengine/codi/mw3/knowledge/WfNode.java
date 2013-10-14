@@ -210,6 +210,14 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 			this.url = url;
 		}
 		
+	String ex1;
+		public String getEx1() {
+			return ex1;
+		}
+		public void setEx1(String ex1) {
+			this.ex1 = ex1;
+		}
+
 	String thumbnail;
 		public String getThumbnail() {
 			return thumbnail;
