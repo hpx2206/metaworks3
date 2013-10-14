@@ -2,12 +2,17 @@ package org.uengine.kernel.designer.web;
 
 import org.metaworks.MetaworksException;
 import org.metaworks.ServiceMethodContext;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.widget.ModalWindow;
+import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessViewerPanel;
 import org.uengine.kernel.SubProcessActivity;
 
 public class SubProcessActivityView extends ActivityView{
+	
+	@AutowiredFromClient
+	public Session session;
 	
 	@Override
 	@ServiceMethod(callByContent=true , target=ServiceMethodContext.TARGET_POPUP)
@@ -45,6 +50,7 @@ public class SubProcessActivityView extends ActivityView{
 			}else{
 				processViewerPanel.setOpenerActivity(this.getActivity());
 				processViewerPanel.setOpenerActivityViewId(this.getId());
+				processViewerPanel.session = session;
 				processViewerPanel.findDefinitionView();
 			}
 			modalWindow.setTitle("$SubProcessActivityEdit");
