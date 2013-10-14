@@ -9,6 +9,7 @@ import java.util.Map;
 import org.metaworks.ContextAware;
 import org.metaworks.FieldDescriptor;
 import org.metaworks.MetaworksContext;
+import org.metaworks.MetaworksException;
 import org.metaworks.ObjectInstance;
 import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
@@ -39,6 +40,7 @@ import org.uengine.codi.mw3.model.ProcessMap;
 import org.uengine.codi.mw3.model.ProcessMapList;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitor;
+import org.uengine.codi.mw3.webProcessDesigner.ProcessViewPanel;
 import org.uengine.processmanager.ProcessManagerRemote;
 
 import com.thoughtworks.xstream.XStream;
@@ -268,7 +270,12 @@ public class MetadataProperty implements ContextAware, Cloneable {
 		MetadataProperty clone = null;
 		boolean isFile = false;
 		boolean isResource = false;
-
+		if( this.getName() == null || "".equals(this.getName()) ){
+			throw new MetaworksException("name is empty!! please fill property name. ");
+		}
+		if( metadataXML.getProperties().contains(this) ){
+			throw new MetaworksException("already exist name!! please change the property name");
+		}
 		try {
 
 			if (this.getFile().getFileTransfer() != null
@@ -309,6 +316,7 @@ public class MetadataProperty implements ContextAware, Cloneable {
 
 			this.getFile().setFileTransfer(null);
 			this.setFilePreview(null);
+			
 			metadataXML.getProperties().add(this);
 			metadataXML.init();
 
@@ -363,7 +371,6 @@ public class MetadataProperty implements ContextAware, Cloneable {
 
 		for (FieldDescriptor fd : dstWOT.metaworks2Type().getFieldDescriptors()) {
 			if (fd.getAttribute("ormapping") == null){
-				System.out.println(fd.getName());
 				dstInstance.setFieldValue(fd.getName(), srcInstance.getFieldValue(fd.getName()));
 			}
 		}
@@ -375,7 +382,6 @@ public class MetadataProperty implements ContextAware, Cloneable {
 		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		this.setName(this.getName());
 		this.getFile().getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
-		this.setFile(this.getFile());
 
 		int index = metadataXML.properties.indexOf(this);
 		
@@ -384,15 +390,6 @@ public class MetadataProperty implements ContextAware, Cloneable {
 		
 		MetadataProperty editProperty = (MetadataProperty) dstInstance.getObject();
 		editProperty.getFile().setFileTransfer(null);
-		
-		MetadataFile resourceFile = new MetadataFile();
-						
-		resourceFile.setBaseDir(editProperty.getFile().getBaseDir());
-		resourceFile.setFilename(editProperty.getFile().getFilename());
-		resourceFile.setUploadedPath(this.getFile().getUploadedPath());
-		resourceFile.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
-		resourceFile.setMimeType(ResourceNode.findNodeType(resourceFile.getFilename()));
-		resourceFile.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		
 		boolean isFile = false;
 		boolean isResource = false;
@@ -405,6 +402,18 @@ public class MetadataProperty implements ContextAware, Cloneable {
 				&& this.getResourceNode().getPath() != null)
 			isResource = true;
 			
+		
+		if( this.getFile()!=null && this.getFile().getFilename() != null && !"".equals(this.getFile().getFilename()) ){
+			MetadataFile resourceFile = new MetadataFile();
+			resourceFile.setBaseDir(editProperty.getFile().getBaseDir());
+			resourceFile.setFilename(editProperty.getFile().getFilename());
+			resourceFile.setUploadedPath(this.getFile().getUploadedPath());
+	//		resourceFile.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+			resourceFile.setMimeType(ResourceNode.findNodeType(resourceFile.getFilename()));
+			resourceFile.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+			
+			editProperty.setFile(resourceFile);
+		}
 		// type별로 이미지/파일일때 value == path로
 		if (FILE_PROP.equals(this.getType())
 				|| IMAGE_PROP.equals(this.getType())
@@ -425,7 +434,6 @@ public class MetadataProperty implements ContextAware, Cloneable {
 			editProperty.setValue(this.getValue());
 		}
 		
-		editProperty.setFile(resourceFile);
 		editProperty.setFilePreview(null);
 		editProperty.setMetaworksContext(metadataXML.properties.get(index).getMetaworksContext());
 		
@@ -615,13 +623,16 @@ public class MetadataProperty implements ContextAware, Cloneable {
 			ResourceNode resourceNode = new ResourceNode();
 			resourceNode.setMetaworksContext(new MetaworksContext());
 			resourceNode.getMetaworksContext().setHow("resourcePicker");
-			metadataProperty.setResourceNode(resourceNode);
 
 			if( this.metadataXML != null && this.metadataXML.getFilePath() != null ){
 				String metadataXMLPath = this.metadataXML.getFilePath();
 				String FileUploadPath = metadataXMLPath.substring(0 , metadataXMLPath.indexOf("uengine.metadata"));
 				metadataProperty.getFile().setBaseDir(FileUploadPath);
+				
+				resourceNode.setProjectId(this.metadataXML.getProjectId());
 			}
+			
+			metadataProperty.setResourceNode(resourceNode);
 		}
 
 		return metadataProperty;
@@ -801,9 +812,13 @@ public class MetadataProperty implements ContextAware, Cloneable {
 
 		}else if(MetadataProperty.PROCESS_PROP.equals(this.getType())){
 
-			InstanceMonitor processInstanceMonitor = new InstanceMonitor();
-			processInstanceMonitor.loadProcess(this.getValue());
-			((ProcessProperty)detailProperty).setFilePreview(processInstanceMonitor);
+			ProcessViewPanel processViewPanel = new ProcessViewPanel();
+			processViewPanel.setDefId(this.getValue());
+			processViewPanel.setAlias(this.getValue());
+			processViewPanel.setViewType("definitionView");
+			processViewPanel.load();
+			
+			((ProcessProperty)detailProperty).setFilePreview(processViewPanel);
 			detailProperty.getFile().setTypeDir(this.getType());
 
 		}else if(MetadataProperty.IMAGE_PROP.equals(this.getType())){
@@ -882,8 +897,14 @@ public class MetadataProperty implements ContextAware, Cloneable {
 		metadataProperty.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
 		metadataProperty.getMetaworksContext().setWhere("ide");
 		
-		if("image".equals(metadataProperty.getType()) && metadataProperty.getFile() != null)
+		String type = metadataProperty.getType();
+		if(IMAGE_PROP.equals(type) && metadataProperty.getFile() != null)
 			metadataProperty.getFile().setTypeDir("image");
+		
+		if(FORM_PROP.equals(type) || PROCESS_PROP.equals(type)){
+			metadataProperty.getResourceNode().setId(this.getProjectId() + "/" + this.getValue());
+			metadataProperty.getResourceNode().setName(this.getValue());
+		}
 		
 		MetadataPropertyInfo metadataPropertyInfo = new MetadataPropertyInfo();
 		metadataPropertyInfo.setNewMetadataProperty(metadataProperty);

@@ -3,6 +3,7 @@ package org.uengine.codi.mw3.webProcessDesigner;
 import java.util.ArrayList;
 
 import org.metaworks.MetaworksContext;
+import org.metaworks.annotation.Id;
 import org.uengine.contexts.ComplexType;
 import org.uengine.kernel.Activity;
 import org.uengine.kernel.ParameterContext;
@@ -18,6 +19,7 @@ import org.uengine.kernel.graph.Transition;
 
 public class ProcessDesignerContainer {
 	String editorId;
+	@Id
 		public String getEditorId() {
 			return editorId;
 		}
@@ -107,9 +109,14 @@ public class ProcessDesignerContainer {
 		
 		rolePanel = new RolePanel();
 		processVariablePanel = new ProcessVariablePanel();
+		
 	}
 	
 	public void load(ProcessDefinition def) throws Exception{
+		
+		rolePanel.setEditorId(editorId);
+		processVariablePanel.setEditorId(editorId);
+		
 		int maxX = 0;
 		int maxY = 0;
 		int tagCnt = 0;

@@ -204,9 +204,11 @@ public class ResourceNode extends TreeNode implements ContextAware {
 		workspaceNode.getMetaworksContext().setHow("tree");
 
 		for(Project project : workspace.getProjects()){
-			ResourceNode node = new ResourceNode(project);
-			node.getMetaworksContext().setWhere("resource");
-			workspaceNode.add(node);
+			if( this.getProjectId() != null && this.getProjectId().equals(project.getId()) ){
+				ResourceNode node = new ResourceNode(project);
+				node.getMetaworksContext().setWhere("resource");
+				workspaceNode.add(node);
+			}
 		}
 
 		ResourceTree resourceTree = new ResourceTree();

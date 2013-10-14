@@ -6,6 +6,7 @@ import org.directwebremoting.io.FileTransfer;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.Refresh;
+import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
@@ -14,11 +15,22 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.website.Download;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.website.OpenBrowser;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.model.ContactPanel;
 import org.uengine.codi.mw3.model.Followers;
+import org.uengine.codi.mw3.model.Instance;
+import org.uengine.codi.mw3.model.InstanceListPanel;
+import org.uengine.codi.mw3.model.InstanceViewContent;
+import org.uengine.codi.mw3.model.Popup;
+import org.uengine.codi.mw3.model.ProcessMap;
+import org.uengine.codi.mw3.model.RoleMappingPanel;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.model.TopicFollowers;
+import org.uengine.codi.mw3.project.oce.ProjectCreate;
 import org.uengine.kernel.GlobalContext;
+import org.uengine.kernel.KeyedParameter;
+import org.uengine.kernel.ResultPayload;
+import org.uengine.processmanager.ProcessManagerRemote;
 
 @Face(options={"fieldOrder", "methodOrder"}, values={"projectName,domainName,svn,description", "downloadEclipse,downloadVirtualMachine,downloadSandbox"})
 public class ProjectInfo  implements ContextAware {
@@ -295,9 +307,56 @@ public class ProjectInfo  implements ContextAware {
 	
 	@Face(displayName="개발환경요청")
 	@ServiceMethod(target=ServiceMethodContext.TARGET_APPEND)
-	public void require(){
+	public Object[] require() throws Exception{
+		
+		String defId = "oceProjectRequset.process";
+		
+		ProcessMap processMap = new ProcessMap();
+		processMap.processManager = processManager;
+		processMap.session = session;
+		processMap.instanceView = instanceViewContent;
+		processMap.setDefId(defId);
+		
+		String instId = processMap.initializeProcess();
+				
+		ProjectCreate projectCreate = new ProjectCreate();
+		projectCreate.setName(this.getProjectName());
+		projectCreate.setProjectId(this.getProjectId());
+		
+		ResultPayload rp = new ResultPayload();
+		rp.setProcessVariableChange(new KeyedParameter("ProjectCreate", projectCreate));
+		
+		RoleMappingPanel roleMappingPanel = new RoleMappingPanel(processManager, processMap.getDefId(), session);
+		roleMappingPanel.putRoleMappings(processManager, instId);
+		
+		processManager.executeProcessByWorkitem(instId.toString(), rp);
+		processManager.applyChanges();
+		
+		Instance instance = new Instance();
+		instance.setInstId(new Long(instId));
+		instance.databaseMe().setTopicId(this.getProjectId());
+		instance.databaseMe().setName(instance.getDefName() + " : " + this.getProjectName());
+		instance.flushDatabaseMe();
+		
+		instanceViewContent.session = session;
+		instanceViewContent.load(instance);
+		
+		InstanceListPanel instanceListPanel = new InstanceListPanel(session); //should return instanceListPanel not the instanceList only since there're one or more instanceList object in the client-side
+		instanceListPanel.getInstanceList().load();
+
+		if("sns".equals(session.getEmployee().getPreferUX())){
+			return new Object[]{instanceListPanel, new Remover(new Popup())};
+		}else{
+			return new Object[]{new Remover(new Popup() , true), instanceListPanel, instanceViewContent};
+		}
 		
 	}
+	
+	@Autowired
+	public ProcessManagerRemote processManager;
+	
+	@Autowired
+	public InstanceViewContent instanceViewContent;
 	
 	@AutowiredFromClient
 	public Session session;
