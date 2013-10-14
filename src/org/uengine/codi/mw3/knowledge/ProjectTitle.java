@@ -2,6 +2,7 @@ package org.uengine.codi.mw3.knowledge;
 
 import java.net.URL;
 import java.util.Date;
+import java.util.HashMap;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -19,22 +20,21 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.mw3.admin.OcePageNavigator;
 import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.model.InstanceListPanel;
-import org.uengine.codi.mw3.model.InstanceViewContent;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.vm.JschCommand;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.oce.dashboard.DashboardPanel;
-import org.uengine.processmanager.ProcessManagerRemote;
+
+import com.thoughtworks.xstream.XStream;
 
 
-@Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs", options={"fieldOrder"},values={"topicTitle,topicDescription,logoFile"} ,
+@Face(ejsPath="", options={"fieldOrder"},values={"topicTitle,topicDescription,radio"} ,
 ejsPathMappingByContext=	{
-			"{how: 'html', face: 'dwr/metaworks/org/uengine/codi/mw3/model/ProjectTitle.ejs'}"
+			"{how: 'html', face: 'dwr/metaworks/org/uengine/codi/mw3/model/ProjectTitle_HTML.ejs'}"
 })
 public class ProjectTitle implements ContextAware {
 	
@@ -79,11 +79,67 @@ public class ProjectTitle implements ContextAware {
 			this.topicDescription = topicDescription;
 		}
 	MetaworksFile logoFile;
+		@Face(displayName="LogoFile")
 		public MetaworksFile getLogoFile() {
 			return logoFile;
 		}
 		public void setLogoFile(MetaworksFile logoFile) {
 			this.logoFile = logoFile;
+		}
+
+	MetaworksFile sqlFile;
+		@Face(displayName="sqlFile")
+		public MetaworksFile getSqlFile() {
+			return sqlFile;
+		}
+		public void setSqlFile(MetaworksFile sqlFile) {
+			this.sqlFile = sqlFile;
+		}
+
+	MetaworksFile 	warFile;
+		@Face(displayName="WarFile")
+		public MetaworksFile getWarFile() {
+			return warFile;
+		}
+		public void setWarFile(MetaworksFile warFile) {
+			this.warFile = warFile;
+		}
+
+	String fileType;
+		public String getFileType() {
+			return fileType;
+		}
+		public void setFileType(String fileType) {
+			this.fileType = fileType;
+		}
+
+	String type;
+		@Hidden
+		public String getType() {
+			return type;
+		}
+		public void setType(String type) {
+			this.type = type;
+		}
+
+	String code;
+		public String getCode() {
+			return code;
+		}
+		public void setCode(String code) {
+			this.code = code;
+		}
+	
+	
+
+	String radio;
+		@Available(when={MetaworksContext.WHEN_NEW, MetaworksContext.WHEN_EDIT})
+		@Face(displayName="$ProjectDescription", ejsPath="dwr/metaworks/genericfaces/RadioButton.ejs", options={"WAR","SVN Logo"}, values={"1","2"})
+		public String getRadio() {
+			return radio;
+		}
+		public void setRadio(String radio) {
+			this.radio = radio;
 		}
 
 	String embeddedHtml;
@@ -102,11 +158,21 @@ public class ProjectTitle implements ContextAware {
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] save() throws Exception{
 
-		if(this.getLogoFile().getFileTransfer() != null &&
-		   this.getLogoFile().getFilename() != null && 
-		   this.getLogoFile().getFilename().length() > 0)			
-			this.getLogoFile().upload();
+		if("war".equals(this.getFileType())){
+			if(this.getWarFile().getFileTransfer() != null && this.getWarFile().getFilename() != null && 
+					this.getWarFile().getFilename().length() >0)
+				this.getWarFile().upload();
+			if(this.getSqlFile().getFileTransfer() != null && this.getSqlFile().getFilename() != null && 
+					this.getSqlFile().getFilename().length() >0)
+				this.getSqlFile().upload();
 
+		}else if("svn".equals(this.getFileType())){
+			if(this.getLogoFile().getFileTransfer() != null &&
+					   this.getLogoFile().getFilename() != null && 
+					   this.getLogoFile().getFilename().length() > 0)			
+						this.getLogoFile().upload();
+		}
+			
 		
 		this.saveMe();
 		
@@ -122,72 +188,6 @@ public class ProjectTitle implements ContextAware {
 		
 		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 		this.getMetaworksContext().setHow("html");	
-	
-
-		//String title = "프로젝트: " + this.getTopicTitle();
-		
-		/*
-		String defId = "CreateProject.process";
-		
-		ProcessMap processMap = new ProcessMap();
-		processMap.processManager = processManager;
-		processMap.session = session;
-		processMap.instanceView = instanceViewContent;
-		processMap.setDefId(defId);
-		
-		String instId = processMap.initializeProcess();
-				
-		ProjectCreate projectCreate = new ProjectCreate();
-		projectCreate.setName(this.getTopicTitle());
-		projectCreate.setDescription(this.getTopicDescription());
-		projectCreate.setProjectId(session.getLastSelectedItem());
-		
-		ResultPayload rp = new ResultPayload();
-		rp.setProcessVariableChange(new KeyedParameter("ProjectCreate", projectCreate));
-		
-		RoleMappingPanel roleMappingPanel = new RoleMappingPanel(processManager, processMap.getDefId(), session);
-		roleMappingPanel.putRoleMappings(processManager, instId);
-		
-		processManager.executeProcessByWorkitem(instId.toString(), rp);
-		processManager.applyChanges();
-		
-		Instance instance = new Instance();
-		
-		instance.setInstId(new Long(instId));
-		instance.databaseMe().setTopicId(this.getTopicId());
-		instance.databaseMe().setName(instance.getDefName() + " : " + this.getTopicTitle());
-		instance.flushDatabaseMe();
-	
-		IWfNode wfNode = (IWfNode)Database.sql(IWfNode.class, 
-				"update bpm_knol set linkedInstId= ?InstId where id = ?id");
-		wfNode.set("InstId", instId);
-		wfNode.set("id", this.getTopicId());
-		wfNode.update();
-		
-		
-		String title = "프로젝트: " + this.getTopicTitle();
-		Object[] returnObj = Perspective.loadInstanceListPanel(session, "topic", this.getTopicId(), title);	 //session, InstanceListPanel	
-		Object[] returnObject = new Object[ returnObj.length + 3];	
-		
-		for (int i = 0; i < returnObj.length; i++) {
-			if( returnObj[i] instanceof InstanceListPanel){
-				returnObject[i] = new Refresh(returnObj[i]);
-			}else{
-				returnObject[i] = new Refresh(returnObj[i]);
-			}			
-		}
-	
-		InstanceView instanceView = instanceViewContent.instanceView;
-		instanceView.session = session;		
-
-		instanceView.load(instance);
-		
-		returnObject[returnObj.length] = new Refresh(instanceViewContent);
-		returnObject[returnObj.length + 1] = new ToAppend(new ProjectPanel(), projectNode);
-		returnObject[returnObj.length + 2] = new Remover(new ModalWindow(), true);
-		*/
-		
-		
 
 		String host = GlobalContext.getPropertyString("vm.manager.ip");
 		String userId = GlobalContext.getPropertyString("vm.manager.user");
@@ -248,7 +248,37 @@ public class ProjectTitle implements ContextAware {
 				
 			wfNode.setDescription(this.getTopicDescription());
 			wfNode.setStartDate(new Date());
-			wfNode.setLogoFile(this.getLogoFile());
+			
+			if("war".equals(this.getFileType())){
+				XStream xstream = new XStream();
+				HashMap<String , String>  map = new HashMap<String , String>();
+				map.put("ProjectInfo",wfNode.getDescription());
+				map.put("sqlFile_Url",this.getSqlFile().getUploadedPath());
+				map.put("warFile_Url",this.getWarFile().getUploadedPath());
+				map.put("sqlFile_Thumbnail", this.getSqlFile().getFilename());
+				map.put("warFile_Thumbnail", this.getWarFile().getFilename());
+				String xstreamStr = xstream.toXML(map);
+				System.out.println(xstreamStr);
+				
+				
+				Object obj = xstream.fromXML(xstreamStr);
+				if( obj instanceof HashMap){
+					System.out.println("HashMap ------   ");
+				}
+//				xstream.setMode(XStream.NO_REFERENCES);
+//				xstream.alias("warFile",this.getClass());
+////				code = this.getWarFile().toString();
+//				wfNode.setEx1(xmlCode);
+//				
+				wfNode.setEx1(GlobalContext.serialize(obj, Object.class));
+				wfNode.setVisType("war");
+		
+			
+			}else if("svn".equals(this.getFileType())){
+				wfNode.setLogoFile(this.getLogoFile());
+				
+				wfNode.setVisType("svn");
+			}
 			wfNode.createMe();
 			
 			TopicMapping tm = new TopicMapping();
@@ -302,12 +332,7 @@ public class ProjectTitle implements ContextAware {
 		}
 	}
 	
-	
-//	@Autowired
-//	public ProcessManagerRemote processManager;
-	
-//	@Autowired
-//	public InstanceViewContent instanceViewContent;
+
 	
 	@AutowiredFromClient
 	transient public Session session;
