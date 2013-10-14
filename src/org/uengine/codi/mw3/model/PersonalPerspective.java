@@ -57,6 +57,10 @@ public class PersonalPerspective extends Perspective {
 	public Object[] loadStopped() throws Exception{
 		return loadInstanceListPanel("stopped", null);
 	}
+	@ServiceMethod
+	public Object[] loadDashboard() throws Exception{
+		return loadInstanceListPanel("dashboard", null);
+	}
 	
 	//기존 calendar
 	/*@ServiceMethod
