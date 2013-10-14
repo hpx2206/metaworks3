@@ -21,7 +21,12 @@ if(mw3.where == 'ssp'){
 }else if(mw3.where == 'ide'){
 %>
     <label class="fb_box_desc" id="">이름</label>
-    <div class=""><%= fields.name.here()%>
+    <div class="">
+        <% if(value.metaworksContext.when == 'edit') { %>            
+                      <%= fields.name.here({when:'view'})%>
+        <% }else{ %>
+                      <%= fields.name.here()%>
+        <% } %>
     </div>
     <label class="fb_box_desc" id="">값</label>
     <div class=""><%= fields.value.here()%>

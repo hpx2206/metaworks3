@@ -303,11 +303,11 @@ public class ProjectTitle implements ContextAware {
 	}
 	
 	
-	@Autowired
-	public ProcessManagerRemote processManager;
+//	@Autowired
+//	public ProcessManagerRemote processManager;
 	
-	@Autowired
-	public InstanceViewContent instanceViewContent;
+//	@Autowired
+//	public InstanceViewContent instanceViewContent;
 	
 	@AutowiredFromClient
 	transient public Session session;

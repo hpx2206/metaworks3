@@ -50,8 +50,9 @@ public class ProcessViewNavigator {
 		processDefinitionNode.setRoot(true);
 		processDefinitionNode.setHidden(true);
 		
-		for(Project project: workspace.getProjects())
+		for(Project project: workspace.getProjects()){
 			processDefinitionNode.add(new ProcessDefinitionNode(project));
+		}
 		
 		Tree tree = new Tree();
 		tree.setId(workspace.getId());

@@ -52,11 +52,14 @@ public class Workspace {
 		String mainPath = MetadataBundle.getProjectBasePath(projectId, tenantId);
 		CodiFileUtil.mkdirs(mainPath);
 		
-		Project main = new Project();
-		main.setId(projectId);
-		main.setPath(mainPath);
-		main.load();
-		projects.add(main);		
+		if(!"1".equals(GlobalContext.getPropertyString("oce.use", "1"))){
+			// OCE 모드에서 codi제거
+			Project main = new Project();
+			main.setId(projectId);
+			main.setPath(mainPath);
+			main.load();
+			projects.add(main);		
+		}
 		
 		if("1".equals(GlobalContext.getPropertyString("project.use", "1"))){
 			// 테넌트의 프로젝트 불러오기

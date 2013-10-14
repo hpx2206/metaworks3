@@ -8,7 +8,6 @@ import org.metaworks.Remover;
 import org.metaworks.ServiceMethodContext;
 import org.metaworks.ToAppend;
 import org.metaworks.ToOpener;
-import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
 import org.uengine.codi.mw3.ide.CloudInstanceWindow;
@@ -19,7 +18,6 @@ import org.uengine.codi.mw3.ide.editor.process.ProcessEditor;
 import org.uengine.codi.mw3.ide.menu.ResourceContextMenu;
 import org.uengine.codi.mw3.model.InstanceViewThreadPanel;
 import org.uengine.codi.mw3.model.Popup;
-import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerContainer;
 import org.uengine.codi.mw3.webProcessDesigner.ProcessDesignerContentPanel;
 import org.uengine.kernel.Activity;
@@ -77,9 +75,6 @@ public class ProcessNode extends ResourceNode{
 			this.metaworksContext = metaworksContext;
 		}
 		
-	@AutowiredFromClient
-	public Session session;
-	
 	@Override
 	@ServiceMethod(payload={"id", "name", "path", "folder", "projectId", "type"}, mouseBinding="right", target=ServiceMethodContext.TARGET_POPUP)
 	public Object[] showContextMenu() {
@@ -105,6 +100,7 @@ public class ProcessNode extends ResourceNode{
 			processNode.setName(this.getName());
 			processNode.setType(this.getType());
 			processNode.setPath(this.getPath());
+			processNode.setProjectId(this.getProjectId());
 			
 			Editor editor = new ProcessEditor(processNode);
 			try {
