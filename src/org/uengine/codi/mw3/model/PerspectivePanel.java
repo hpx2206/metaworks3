@@ -130,12 +130,6 @@ public class PerspectivePanel  implements ContextAware {
 		this(null);
 	}
 	
-	@ServiceMethod
-	public MainPanel loadOce() throws Exception{
-
-		return new MainPanel(new OceMain(session));
-	}
-	
 	public PerspectivePanel(Session session) throws Exception {
 		if(session != null){
 			//개인별
