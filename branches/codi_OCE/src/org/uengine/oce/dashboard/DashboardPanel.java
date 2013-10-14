@@ -96,22 +96,17 @@ public class DashboardPanel {
 	public InstanceListPanel createInstanceListPanel() throws Exception{
 		InstanceListPanel instanceListPanel;
 		
-		if("asana".equals(session.getEmployee().getPreferUX())){
-		
-			instanceListPanel = new InstanceListPanel(session);
-			instanceListPanel.session = session;
-			instanceListPanel.switchToKnowledge();
-			return instanceListPanel;
-			
-		}else{
-			PersonalPerspective personalPerspective = new PersonalPerspective();
-			personalPerspective.session = session;
-			instanceListPanel = (InstanceListPanel) personalPerspective.loadAllICanSee()[1];
 	
-			instanceListPanel.session = session;
-			instanceListPanel.setMetaworksContext(new MetaworksContext());
-			instanceListPanel.getMetaworksContext().setWhere(MetaworksContext.WHERE_EVER);
-			return instanceListPanel;
-		}
+		PersonalPerspective personalPerspective = new PersonalPerspective();
+		personalPerspective.session = session;
+//		instanceListPanel = (InstanceListPanel) personalPerspective.loadAllICanSee()[1];
+		instanceListPanel = (InstanceListPanel) personalPerspective.loadDashboard()[1];
+
+		instanceListPanel.session = session;
+		instanceListPanel.setMetaworksContext(new MetaworksContext());
+		instanceListPanel.getMetaworksContext().setWhere(MetaworksContext.WHERE_EVER);
+		instanceListPanel.getMetaworksContext().setHow("dashboard");
+		return instanceListPanel;
+		
 	}
 }

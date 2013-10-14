@@ -185,6 +185,10 @@ public class Perspective {
 		
 		savePerspectiveToSession(session, perspectiveType, selectedItem);
 		InstanceList instList = new InstanceList(session);
+		if("dashboard".equals(perspectiveType)){
+			instList.setMetaworksContext(new MetaworksContext());
+			instList.getMetaworksContext().setHow("dashboard");
+		}
 		instList.load();
 
 		InstanceListPanel instListPanel = new InstanceListPanel(session);

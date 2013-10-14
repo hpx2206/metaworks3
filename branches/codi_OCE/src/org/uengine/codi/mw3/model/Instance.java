@@ -546,7 +546,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 			.append("			and ( 	( assigntype = 0 and rm.endpoint = ?endpoint ) 	 ")
 			.append("					or ( assigntype = 2 and rm.endpoint = ?partcode ) ) ");
 
-		}else if("allICanSee".equals(navigation.getPerspectiveType())) {
+		}else if("allICanSee".equals(navigation.getPerspectiveType()) || "dashboard".equals(navigation.getPerspectiveType()) ) {
 			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
 			criteria.put("instIsdelete", "1");
 			instanceSql.append("and inst.status!=?instStatus ");

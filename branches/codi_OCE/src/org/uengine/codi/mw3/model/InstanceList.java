@@ -23,6 +23,7 @@ public class InstanceList implements ContextAware{
 
 	final static int PAGE_CNT = 15;
 	final static int PAGE_CNT_MOBILE = 5;
+	final static int PAGE_CNT_DASHBOARD = 4;
 	
 	public InstanceList(){
 		this(null);
@@ -138,9 +139,12 @@ public class InstanceList implements ContextAware{
 				
 			});
 		}
-		
-		int count = ("phone".equals(navigation.getMedia())?InstanceList.PAGE_CNT_MOBILE:InstanceList.PAGE_CNT);
-		
+		int count;
+		if(getMetaworksContext()!=null  && "dashboard".equals(getMetaworksContext().getHow())){
+			count = ("phone".equals(navigation.getMedia())?InstanceList.PAGE_CNT_MOBILE:InstanceList.PAGE_CNT_DASHBOARD);
+		}else{
+			count = ("phone".equals(navigation.getMedia())?InstanceList.PAGE_CNT_MOBILE:InstanceList.PAGE_CNT);
+		}
 		IInstance instanceContents = Instance.load(navigation,	getPage()-1, count);
 		if(getMetaworksContext()==null){
 			setMetaworksContext(new MetaworksContext());
