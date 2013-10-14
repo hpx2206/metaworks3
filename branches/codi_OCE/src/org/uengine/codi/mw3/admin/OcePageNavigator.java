@@ -10,6 +10,7 @@ import org.uengine.codi.mw3.ide.CloudIDE;
 import org.uengine.codi.mw3.knowledge.Knowledge;
 import org.uengine.codi.mw3.marketplace.AppMap;
 import org.uengine.codi.mw3.marketplace.Marketplace;
+import org.uengine.codi.mw3.model.Main;
 import org.uengine.codi.mw3.model.MainLMS;
 import org.uengine.codi.mw3.model.MainSNS;
 import org.uengine.codi.mw3.model.OceMain;
@@ -32,11 +33,7 @@ public class OcePageNavigator extends PageNavigator {
 		}
 
 	public OcePageNavigator() {
-
 		this.setOce("1".equals(GlobalContext.getPropertyString("oce.use", "1")));
-//		this.setSns("1".equals(GlobalContext.getPropertyString("sns.use", "1")));
-//		this.setIde("1".equals(GlobalContext.getPropertyString("ide.use", "1")));
-//		this.setKnowlege("1".equals(GlobalContext.getPropertyString("knowledge.use", "1")));
 		this.setProject("1".equals(GlobalContext.getPropertyString("project.use", "1")));
 	}
 	
@@ -44,9 +41,6 @@ public class OcePageNavigator extends PageNavigator {
 		this.setPageName(pageName);
 
 		this.setOce("1".equals(GlobalContext.getPropertyString("oce.use", "1")));
-//		this.setSns("1".equals(GlobalContext.getPropertyString("sns.use", "1")));
-//		this.setIde("1".equals(GlobalContext.getPropertyString("ide.use", "1")));
-//		this.setKnowlege("1".equals(GlobalContext.getPropertyString("knowledge.use", "1")));
 		this.setProject("1".equals(GlobalContext.getPropertyString("project.use", "1")));
 	}
 	
@@ -182,7 +176,8 @@ public class OcePageNavigator extends PageNavigator {
 //		
 //		return new MainPanel(nkia);
 		System.out.println("paasManager" + session.getAccessToken());
-		return new MainPanel(new RemoteNewPage(session, "IaaS Admin", "http://192.168.212.52/kiat_sso.jsp?access_token=" + session.getAccessToken() + "&user_id=" + session.getUser().getUserId())); //paasManager
+//		return new MainPanel(new RemoteNewPage(session, "IaaS Admin", "http://192.168.212.52/kiat_sso.jsp?access_token=" + session.getAccessToken() + "&user_id=" + session.getUser().getUserId())); //paasManager
+		return new MainPanel(new Main(session)); //paasManager
 	}
 	
 	@ServiceMethod(callByContent=true, inContextMenu=true)

@@ -33,21 +33,17 @@ public class PageNavigator{
 		}
 
 	public PageNavigator() {
-		this.setOce("0".equals(GlobalContext.getPropertyString("oce.use", "0")));
 		this.setSns("1".equals(GlobalContext.getPropertyString("sns.use", "1")));
 		this.setIde("1".equals(GlobalContext.getPropertyString("ide.use", "1")));
 		this.setKnowlege("1".equals(GlobalContext.getPropertyString("knowledge.use", "1")));
-		this.setProject("1".equals(GlobalContext.getPropertyString("project.use", "1")));
 	}
 	
 	public PageNavigator(String pageName) {
 		this.setPageName(pageName);
 
-		this.setOce("0".equals(GlobalContext.getPropertyString("oce.use", "0")));
 		this.setSns("1".equals(GlobalContext.getPropertyString("sns.use", "1")));
 		this.setIde("1".equals(GlobalContext.getPropertyString("ide.use", "1")));
 		this.setKnowlege("1".equals(GlobalContext.getPropertyString("knowledge.use", "1")));
-		this.setProject("1".equals(GlobalContext.getPropertyString("project.use", "1")));
 	}
 	
 	boolean admin;
@@ -82,14 +78,6 @@ public class PageNavigator{
 			this.knowlege = knowlege;
 		}
 		
-	boolean project;
-		public boolean isProject() {
-			return project;
-		}
-		public void setProject(boolean project) {
-			this.project = project;
-		}
-	
 	boolean oce;
 		public boolean isOce() {
 			return oce;
