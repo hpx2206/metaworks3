@@ -5,27 +5,25 @@
 	var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");
 	var isTopic = (mw3.how == "topic");
 	var isProject = (mw3.how == "project");
-	var isDashboard = (mw3.how == "dashboard");
 	
 	var height = 0;
 	if(isTopic) {
 		height = 115;
 	}else if(isProject){
-		height = 86;
-	}else if(isDashboard){
-		height = 0;
-	}else{
+		height = 500;
+	}else {
 		height = 68;
 	}
 	
 %>
 
-
 <% if(!isDashboard){%>
 <div class="top" style="height: <%=height%>px; overflow:hidden; position: absolute; min-width: 0px; min-height: 0px; max-width: 10000px; max-height: 10000px;  left: 0px; right: 0px; top: 0px;">
 	
 	<%=isTopic?fields.topicFollowers.here():''%>
-
+	<%=isProject?fields.topicFollowers.here():''%>
+	<%=isProject?fields.projectInfo.here():''%>
+	<!--
 		            <div id="searchbox">
 		                <div class="searchboxline">
 		                	<div class="searchboxline2">
@@ -63,24 +61,10 @@
 	                     	<% } %>
 	                        <li onclick="<%=methods.switchToScheduleCalendar.caller()%>" <%=value.scheduleCalendar ? "class='toolbar_current'" : ""%>><span class="toolbarIcon"><img src="images/waveStyle/i_gantt.png" border="0"></span><span><%=mw3.localize("$Calendar")%></span></li>
 	                    </ul>
-                	</div> 
-                	
-                	<%
-                		if(isProject){
-					%>  
-						 <div id="project_Info" class="toolbar" onclick="<%=methods.loadProjectInfo.caller()%>" style="text-align:center;line-height:20px;cursor:pointer">
-		                    Project info. ▼
-	                	</div> 
-	                	
-	                	
-
-					<%
-						}
-					%>  
-
+                	</div>
+                	 -->
 <% }%>
-	
-                		
+                	
 </div>
 <div class="bottom" style="top: <%=height%>px; position: absolute; min-width: 0px; min-height: 0px; max-width: 10000px; max-height: 10000px;  left: 0px; right: 0px; bottom: 0px;">
 
