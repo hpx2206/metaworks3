@@ -20,6 +20,7 @@ public class ContactList implements ContextAware {
 	public void load(String userId) throws Exception{
 		load(userId, null);
 	}
+	
 	public void load(String userId, String friendName) throws Exception{
 		setId(getMetaworksContext().getWhen() + "_" + getMetaworksContext().getWhere());
 		

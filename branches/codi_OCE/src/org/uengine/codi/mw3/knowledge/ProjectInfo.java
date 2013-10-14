@@ -5,15 +5,22 @@ import java.io.FileInputStream;
 import org.directwebremoting.io.FileTransfer;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
+import org.metaworks.Refresh;
 import org.metaworks.ServiceMethodContext;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.website.Download;
+import org.metaworks.website.MetaworksFile;
 import org.metaworks.website.OpenBrowser;
+import org.uengine.codi.mw3.model.ContactPanel;
+import org.uengine.codi.mw3.model.Followers;
+import org.uengine.codi.mw3.model.Session;
+import org.uengine.codi.mw3.model.TopicFollowers;
 import org.uengine.kernel.GlobalContext;
 
-@Face(ejsPath="dwr/metaworks/genericfaces/FormFace.ejs", options={"fieldOrder", "methodOrder"}, values={"projectName,domainName,svn,description", "downloadEclipse,downloadVirtualMachine,downloadSandbox"})
+@Face(options={"fieldOrder", "methodOrder"}, values={"projectName,domainName,svn,description", "downloadEclipse,downloadVirtualMachine,downloadSandbox"})
 public class ProjectInfo  implements ContextAware {
 		
 	MetaworksContext metaworksContext;
@@ -67,7 +74,16 @@ public class ProjectInfo  implements ContextAware {
 		}
 		public void setDescription(String description) {
 			this.description = description;
-		}		
+		}
+		
+	MetaworksFile logoFile;
+		@Face(displayName="로고파일")
+		public MetaworksFile getLogoFile() {
+			return logoFile;
+		}
+		public void setLogoFile(MetaworksFile logoFile) {
+			this.logoFile = logoFile;
+		}	
 	/*
 	@Hidden
 	String os;
@@ -163,7 +179,6 @@ public class ProjectInfo  implements ContextAware {
 	}
 	
 	public void load() {
-		
 		WfNode wfNode = new WfNode();
 		wfNode.setId(this.getProjectId());
 		
@@ -181,7 +196,7 @@ public class ProjectInfo  implements ContextAware {
 			this.domainName = this.getProjectName() + ".com";			
 			this.svn = GlobalContext.getPropertyString("vm.manager.url") + "/" + this.getProjectName(); 
 			this.description = wfNode.getDescription();
-			
+			this.logoFile = wfNode.getLogoFile();
 			
 			/*
 			Serializable serial = null;
@@ -210,14 +225,14 @@ public class ProjectInfo  implements ContextAware {
 		return new Download(new FileTransfer(new String("sandbox_final.ova".getBytes("UTF-8"),"ISO8859_1"), null,  new FileInputStream(sendboxPath)));		
 	}
 	
-	@Face(displayName="$projet.download.eclipseforegovframe")
-	@ServiceMethod(target=ServiceMethodContext.TARGET_APPEND)
-	public Download downloadEclipse() throws Exception{
-		String fileSystemPath = GlobalContext.getPropertyString("filesystem.path",".");
-		String sendboxPath = fileSystemPath + "/resource/govFramEclpse64.zip";
-		
-		return new Download(new FileTransfer(new String("govFramEclpse64.zip".getBytes("UTF-8"),"ISO8859_1"), null,  new FileInputStream(sendboxPath)));		
-	}
+//	@Face(displayName="$projet.download.eclipseforegovframe")
+//	@ServiceMethod(target=ServiceMethodContext.TARGET_APPEND)
+//	public Download downloadEclipse() throws Exception{
+//		String fileSystemPath = GlobalContext.getPropertyString("filesystem.path",".");
+//		String sendboxPath = fileSystemPath + "/resource/govFramEclpse64.zip";
+//		
+//		return new Download(new FileTransfer(new String("govFramEclpse64.zip".getBytes("UTF-8"),"ISO8859_1"), null,  new FileInputStream(sendboxPath)));		
+//	}
 	
 	@Face(displayName="$projet.download.virtualmachine")
 	@ServiceMethod(target=ServiceMethodContext.TARGET_APPEND)
@@ -227,4 +242,63 @@ public class ProjectInfo  implements ContextAware {
 		
 		return new OpenBrowser(url);        
 	}
+	
+	@Face(displayName="release")
+	@ServiceMethod(target=ServiceMethodContext.TARGET_APPEND)
+	public void releaseProject(){
+		
+	}
+	
+	@Face(displayName="허드슨")
+	@ServiceMethod(target=ServiceMethodContext.TARGET_APPEND)
+	public void hudson(){
+		
+	}
+	
+	@Face(displayName="권한관리")
+	@ServiceMethod(target=ServiceMethodContext.TARGET_APPEND)
+	public void committer(){
+		
+	}
+	
+	@Face(displayName="서버관리")
+	@ServiceMethod(target=ServiceMethodContext.TARGET_APPEND)
+	public void server(){
+		
+	}
+	
+	@Face(displayName="참여")
+	@ServiceMethod(target=ServiceMethodContext.TARGET_APPEND)
+	public Object[] participation() throws Exception{
+		TopicMapping tm = new TopicMapping();
+		tm.setTopicId(session.getLastSelectedItem());
+		tm.setUserId(session.getUser().getUserId());
+		
+		if( !tm.findByUser().next() ){
+			tm.setUserName(session.getUser().getName());
+			tm.saveMe();
+			tm.flushDatabaseMe();
+		}
+		
+		TopicFollowers topicFollowers = new TopicFollowers();
+		topicFollowers.session = session;
+		topicFollowers.load();
+		
+		return new Object[] {new Refresh(topicFollowers)};
+	}
+	
+	@Face(displayName="정보변경")
+	@ServiceMethod(target=ServiceMethodContext.TARGET_APPEND)
+	public void manageProject(){
+		
+	}
+	
+	@Face(displayName="개발환경요청")
+	@ServiceMethod(target=ServiceMethodContext.TARGET_APPEND)
+	public void require(){
+		
+	}
+	
+	@AutowiredFromClient
+	public Session session;
 }
