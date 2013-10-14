@@ -879,3 +879,5 @@ alter table bpm_worklist add column folderId varchar(100);
 alter table bpm_worklist add column folderName varchar(100);
 
 alter table recentitem add column clickedCount varchar(4);
+
+alter table bpm_knol add column ex1 varchar(1000);
