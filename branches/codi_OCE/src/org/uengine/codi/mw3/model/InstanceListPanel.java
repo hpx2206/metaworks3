@@ -14,6 +14,7 @@ import org.uengine.codi.mw3.knowledge.ProjectInfo;
 import org.uengine.codi.mw3.knowledge.ProjectManager;
 import org.uengine.codi.mw3.knowledge.WfPanel;
 import org.uengine.kernel.GlobalContext;
+import org.uengine.oce.dashboard.DashboardWindow;
 import org.uengine.processmanager.ProcessManagerRemote;
 @Face(
 		ejsPathMappingByContext=
@@ -218,6 +219,21 @@ public class InstanceListPanel implements ContextAware{
 		//this.instanceListPanel = (InstanceListPanel) personalPerspective.loadAllICanSee()[1];
 		
 		return personalPerspective.loadAllICanSee();
+	}
+	
+	@ServiceMethod
+	public Object[] loadOnDashboard() throws Exception {
+	
+		PersonalPerspective personalPerspective = new PersonalPerspective();
+		personalPerspective.session = session;
+		
+		Object[] returnObject = personalPerspective.loadAllICanSee();
+		
+		DashboardWindow window = new DashboardWindow();
+		window.setPanel(returnObject[1]);
+		window.setTitle(title);
+		
+		return new Object[]{window , session};
 	}
 	
 	@ServiceMethod
