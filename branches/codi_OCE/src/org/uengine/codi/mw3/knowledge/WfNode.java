@@ -94,7 +94,6 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 
 	@XStreamAsAttribute
 	String visType;
-
 		public String getVisType() {
 			return visType;
 		}
@@ -210,12 +209,12 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 			this.url = url;
 		}
 		
-	String ex1;
-		public String getEx1() {
-			return ex1;
+	String ext;
+		public String getExt() {
+			return ext;
 		}
-		public void setEx1(String ex1) {
-			this.ex1 = ex1;
+		public void setExt(String ext) {
+			this.ext = ext;
 		}
 
 	String thumbnail;

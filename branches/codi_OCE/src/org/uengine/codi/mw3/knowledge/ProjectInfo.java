@@ -1,6 +1,7 @@
-package org.uengine.codi.mw3.knowledge;
 
+package org.uengine.codi.mw3.knowledge;
 import java.io.FileInputStream;
+import java.util.Map;
 
 import org.directwebremoting.io.FileTransfer;
 import org.metaworks.ContextAware;
@@ -15,9 +16,8 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.website.Download;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.website.OpenBrowser;
+import org.metaworks.widget.ModalWindow;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.uengine.codi.mw3.model.ContactPanel;
-import org.uengine.codi.mw3.model.Followers;
 import org.uengine.codi.mw3.model.Instance;
 import org.uengine.codi.mw3.model.InstanceListPanel;
 import org.uengine.codi.mw3.model.InstanceViewContent;
@@ -26,9 +26,11 @@ import org.uengine.codi.mw3.model.ProcessMap;
 import org.uengine.codi.mw3.model.RoleMappingPanel;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.model.TopicFollowers;
-import org.uengine.codi.mw3.project.oce.ProjectCreate;
+import org.uengine.codi.mw3.project.ProjectCreate;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.processmanager.ProcessManagerRemote;
+
+import com.thoughtworks.xstream.XStream;
 
 @Face(options = { "fieldOrder", "methodOrder" }, values = {
 		"projectName,domainName,svn,description",
@@ -46,161 +48,188 @@ public class ProjectInfo implements ContextAware {
 	}
 
 	String projectId;
-
-	@Hidden
-	public String getProjectId() {
-		return projectId;
-	}
-
-	public void setProjectId(String projectId) {
-		this.projectId = projectId;
-	}
-
+		@Hidden
+		public String getProjectId() {
+			return projectId;
+		}
+		public void setProjectId(String projectId) {
+			this.projectId = projectId;
+		}
+	
 	String projectName;
-
-	@Face(displayName = "$project.name")
-	public String getProjectName() {
-		return projectName;
-	}
-
-	public void setProjectName(String projectName) {
-		this.projectName = projectName;
-	}
-
+		@Face(displayName="$project.name")
+		public String getProjectName() {
+			return projectName;
+		}
+		public void setProjectName(String projectName) {
+			this.projectName = projectName;
+		}
+		
 	String domainName;
-
-	@Face(displayName = "$project.domain")
-	public String getDomainName() {
-		return domainName;
-	}
-
-	public void setDomainName(String domainName) {
-		this.domainName = domainName;
-	}
+		@Face(displayName="$project.domain")
+		public String getDomainName() {
+			return domainName; 
+		}
+		public void setDomainName(String domainName) {
+			this.domainName = domainName;
+		}
 
 	String svn;
-
-	@Face(displayName = "$project.svn")
-	public String getSvn() {
-		return svn;
-	}
-
-	public void setSvn(String svn) {
-		this.svn = svn;
-	}
-
+		@Face(displayName="$project.svn")
+		public String getSvn() {
+			return svn;
+		}
+		public void setSvn(String svn) {
+			this.svn = svn;
+		}
+			
 	String description;
-
-	@Face(displayName = "$project.description")
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
+		@Face(displayName="$project.description")
+		public String getDescription() {
+			return description;
+		}
+		public void setDescription(String description) {
+			this.description = description;
+		}
+		
 	MetaworksFile logoFile;
-
-	@Face(displayName = "로고파일")
-	public MetaworksFile getLogoFile() {
-		return logoFile;
-	}
-
-	public void setLogoFile(MetaworksFile logoFile) {
-		this.logoFile = logoFile;
-	}
-
+		@Face(displayName="로고파일")
+		public MetaworksFile getLogoFile() {
+			return logoFile;
+		}
+		public void setLogoFile(MetaworksFile logoFile) {
+			this.logoFile = logoFile;
+		}	
 	/*
-	 * @Hidden String os; public String getOs() { return os; } public void
-	 * setOs(String os) { this.os = os; }
-	 * 
-	 * @Hidden String db; public String getDb() { return db; } public void
-	 * setDb(String db) { this.db = db; }
-	 * 
-	 * @Hidden String was; public String getWas() { return was; } public void
-	 * setWas(String was) { this.was = was; }
-	 * 
-	 * @Hidden String vm; public String getVm() { return vm; } public void
-	 * setVm(String vm) { this.vm = vm; }
-	 */
-
-	/*
-	 * @Hidden String ci; public String getCi() { return ci; } public void
-	 * setCi(String ci) { this.ci = ci; }
-	 */
-
-	/*
-	 * @Face(displayName="@Hudson") String hudson; public String getHudson() {
-	 * return hudson; } public void setHudson(String hudson) { this.hudson =
-	 * hudson; }
-	 * 
-	 * @Face(displayName="@TemplateName") String templateName; public String
-	 * getTemplateName() { return templateName; } public void
-	 * setTemplateName(String templateName) { this.templateName = templateName;
-	 * }
-	 * 
-	 * @Face(displayName="$Ip") String ip; public String getIp() { return ip; }
-	 * public void setIp(String ip) { this.ip = ip; }
-	 * 
-	 * @Hidden String vmDouwnUrl; public String getVmDouwnUrl() { return
-	 * vmDouwnUrl; } public void setVmDouwnUrl(String vmDouwnUrl) {
-	 * this.vmDouwnUrl = vmDouwnUrl; }
-	 */
-
-	public ProjectInfo() {
+	@Hidden
+	String os;
+		public String getOs() {
+			return os;
+		}
+		public void setOs(String os) {
+			this.os = os;
+		}
+		
+	@Hidden
+	String db;
+		public String getDb() {
+			return db;
+		}
+		public void setDb(String db) {
+			this.db = db;
+		}
+			
+	@Hidden
+	String was;
+		public String getWas() {
+			return was;
+		}
+		public void setWas(String was) {
+			this.was = was;
+		}
+		
+	@Hidden
+	String vm;
+		public String getVm() {
+			return vm;
+		}
+		public void setVm(String vm) {
+			this.vm = vm;
+		}*/
+		
+	/*@Hidden
+	String ci;
+		public String getCi() {
+			return ci;
+		}
+		public void setCi(String ci) {
+			this.ci = ci;
+		}*/
+	
+	/*@Face(displayName="@Hudson")
+	String hudson;
+		public String getHudson() {
+			return hudson;
+		}
+		public void setHudson(String hudson) {
+			this.hudson = hudson;
+		}
+	
+	@Face(displayName="@TemplateName")
+	String templateName;
+		public String getTemplateName() {
+			return templateName;
+		}
+		public void setTemplateName(String templateName) {
+			this.templateName = templateName;
+		}
+		
+	@Face(displayName="$Ip")
+	String ip;
+		public String getIp() {
+			return ip;
+		}
+		public void setIp(String ip) {
+			this.ip = ip;
+		}
+	
+	@Hidden
+	String vmDouwnUrl;
+		public String getVmDouwnUrl() {
+			return vmDouwnUrl;
+		}
+		public void setVmDouwnUrl(String vmDouwnUrl) {
+			this.vmDouwnUrl = vmDouwnUrl;
+		}*/
+		
+	
+	public ProjectInfo(){
 		this(null);
 	}
-
-	public ProjectInfo(String projectId) {
+	
+	public ProjectInfo(String projectId){
 		this.setProjectId(projectId);
-
+		
 		this.setMetaworksContext(new MetaworksContext());
 		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 	}
-
+	
 	public void load() {
 		WfNode wfNode = new WfNode();
 		wfNode.setId(this.getProjectId());
-
+		
 		try {
 			wfNode.copyFrom(wfNode.databaseMe());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-		/*
-		 * if(wfNode.getLinkedInstId() != null){ String linkedId =
-		 * String.valueOf(wfNode.getLinkedInstId());
-		 */
-
-		this.projectName = wfNode.getName();
-		this.domainName = this.getProjectName() + ".com";
-		this.svn = GlobalContext.getPropertyString("vm.manager.url") + "/"
-				+ this.getProjectName();
-		this.description = wfNode.getDescription();
-		this.logoFile = wfNode.getLogoFile();
-
-		/*
-		 * Serializable serial = null; serial =
-		 * processManager.getProcessVariable(linkedId, "", "VMRequest");
-		 * if(serial instanceof VMRequest) { VMRequest vmRequest =
-		 * (VMRequest)serial; this.templateName =
-		 * vmRequest.getVmImageCombo().getSelectedText(); }
-		 * 
-		 * this.ip =
-		 * (String)(Serializable)processManager.getProcessVariable(linkedId, "",
-		 * "vm_ip");
-		 * 
-		 * this.svn = "svn://" +
-		 * GlobalContext.getPropertyString("vm.manager.ip") + "/" +
-		 * this.projectName;
-		 * 
-		 * 
-		 * this.hudson = GlobalContext.getPropertyString("vm.hudson.url");
-		 */
-		// }
+		
+/*		if(wfNode.getLinkedInstId() != null){
+			String linkedId = String.valueOf(wfNode.getLinkedInstId());*/
+			
+			this.projectName = wfNode.getName();
+			this.domainName = this.getProjectName() + ".com";			
+			this.svn = GlobalContext.getPropertyString("vm.manager.url") + "/" + this.getProjectName(); 
+			this.description = wfNode.getDescription();
+			this.logoFile = wfNode.getLogoFile();
+			
+			/*
+			Serializable serial = null;
+			serial = processManager.getProcessVariable(linkedId, "", "VMRequest");
+			if(serial instanceof VMRequest) {
+				VMRequest vmRequest = (VMRequest)serial;
+				this.templateName = vmRequest.getVmImageCombo().getSelectedText();
+			}
+			
+			this.ip = (String)(Serializable)processManager.getProcessVariable(linkedId, "", "vm_ip");
+			
+			this.svn = "svn://" + GlobalContext.getPropertyString("vm.manager.ip") + "/" + this.projectName;
+			
+			
+			this.hudson = GlobalContext.getPropertyString("vm.hudson.url");
+			*/
+		//}
 	}
 
 	@Face(displayName = "$projet.download.sandboxfordeveloper")
@@ -279,11 +308,43 @@ public class ProjectInfo implements ContextAware {
 
 		return new Object[] { new Refresh(topicFollowers) };
 	}
-
-	@Face(displayName = "정보변경")
-	@ServiceMethod(target = ServiceMethodContext.TARGET_APPEND)
-	public void manageProject() {
-
+	
+	@Face(displayName="정보변경")
+	@ServiceMethod(callByContent = true, target=ServiceMethodContext.TARGET_APPEND)
+	public ModalWindow manageProject() throws Exception{
+		
+		ProjectTitle projectTitle = new ProjectTitle();
+		projectTitle.setMetaworksContext(new MetaworksContext());
+		projectTitle.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+		projectTitle.session = session;
+		WfNode wfNode = new WfNode();
+		wfNode.setId(session.getLastSelectedItem());
+		wfNode.copyFrom(wfNode.databaseMe());
+		projectTitle.setTopicId(this.getProjectId());
+		projectTitle.setTopicTitle(this.getProjectName());
+		projectTitle.setParentId(session.getCompany().getComCode());
+		projectTitle.setFileType(wfNode.getVisType());
+		projectTitle.setTopicDescription(this.getDescription());
+		projectTitle.setLogoFile(this.getLogoFile());
+		
+		XStream xstream = new XStream();
+		if(wfNode.getExt() != null){
+			Object xstreamStr =  xstream.fromXML(wfNode.getExt());
+	//		Object[] fileList = (Object[])GlobalContext.deserialize(wfNode.getEx1(), Object.class);
+			Object sqlFile = null;
+			Object warFile = null;
+			if(xstreamStr != null){
+				Map<String, Object> list = (Map<String,Object>) xstreamStr;
+			
+				warFile = list.get("warFile_Url");
+				sqlFile = list.get("sqlFile_Url");
+			}
+				System.out.println(warFile);
+				System.out.println(sqlFile);
+			projectTitle.setWarFile((MetaworksFile) warFile);
+			projectTitle.setSqlFile((MetaworksFile) sqlFile);
+		}
+		return new ModalWindow(projectTitle, 500, 400, "정보변경");
 	}
 	
 	@Face(displayName="개발환경요청")

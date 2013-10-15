@@ -197,8 +197,8 @@ public interface IWfNode extends IDAO {
 	public void setPenalty(int penalty);
 	
 	@Hidden
-	public String getEx1();
-	public void setEx1(String ex1);
+	public String getExt();
+	public void setExt(String ext);
 		
 	@Hidden
 	public Date getStartDate();
