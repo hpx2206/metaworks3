@@ -1,0 +1,191 @@
+<%
+	if(value){
+		/*		
+		value.writer = mw3.getAutowiredObject('org.uengine.codi.mw3.model.Session').user;
+		value.writer.metaworksContext.when = 'workitem';
+		*/
+%>
+
+
+<div class="view_box2" style="<%= (mw3.how == 'sns' && value.taskId > -2 ? 'background:#C9E2FC; margin:0px;padding-bottom:5px;' : '')%>" >
+	<!--
+		div class="guide">
+		<span class="tl"></span>
+		<span class="tr"></span>
+	</div
+	div class="cont"
+	-->
+<%
+		if(mw3.when == 'new'){
+			var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");		
+			if( session && session.ux != 'phone'){
+		
+			if( session && session.employee.preferUX != 'sns'){
+%>			
+	<div id="wih_button">		
+		<a class="<%= value.type=='comment'?'comment_btn_on':'comment_btn_off' %>" onclick="<%=methods.newComment.caller()%>"><span><%=mw3.localize("$Write")%></span><div class="comment_select"></div></a>
+<%
+			if( session && session.ux != 'pad'){
+%>			
+		<a class="<%= value.type=='memo'?'memo_btn_on':'memo_btn_off' %>" onclick="<%=methods.newMemo.caller()%>"><span id="method_<%=objectId%>_newMemo"><%=mw3.localize("$Memo")%><div class="comment_select"></div></span></a>
+		
+		<!-- 회상회의 -->
+		<% if(value.useBBB){ %>
+		<a class="<%= value.type=='remoteConf'?'comment_btn_on':'comment_btn_off' %>" onclick="<%=methods.newRemoteConference.caller()%>"><span id="method_<%=objectId%>_newRemoteConference"><%=mw3.localize("$RemoteConference")%><div class="comment_select"></div></span></a>
+		<% }%>
+<%
+			}
+%>			
+		<a class="<%= value.type=='file'?'file_btn_on':'file_btn_off' %>" onclick="<%=methods.newFile.caller()%>"><span id="method_<%=objectId%>_newFile"><%=mw3.localize("$File")%></span><div class="comment_select"></div></a>
+		<a class="<%= value.type=='src'?'code_btn_on':'code_btn_off' %>" onclick="<%=methods.newSourceCode.caller()%>"><span id="method_<%=objectId%>_newSourceCode"><%=mw3.localize("$SourceCode")%><div class="comment_select"></div></span></a>
+		
+<%		
+			if(session && session.employee && session.employee.approved && !session.employee.guest){
+%>
+		<a class="<%= value.type=='etc'?'etc_btn_on':'etc_btn_off' %>" onclick="<%=methods.newActivity.caller()%>"><span id="method_<%=objectId%>_newActivity"><%=mw3.localize("$etc")%><div class="comment_select"></div></span></a>
+<%
+			}		
+		}
+		}
+%>			
+		
+	</div>
+	
+<%
+		}
+%>			 
+ 	<table width="100%" border="0" cellspacing="0" cellpadding="0" style="position:relative; z-index:98">
+<%		
+		if(value.type == "comment"){
+%>
+		<tr>
+			<td width="55">
+				<div style="margin-left:12px; width:55px"><%=fields.writer.here({when:'view'})%></div>
+			</td>
+		
+			<td style=" padding:10px 0;">			
+				<div id="commandDiv_<%=objectId%>"> 
+					<textarea class="wih_comment_input post_<%=objectId%>" class="<%=value.type%>" _placeholder="<%=mw3.localize('$WhatYouThinkNow')%>" id="post_<%=objectId%>" value="<%=value.title ? value.title : ''%>" tabindex=1 rows="1"><%=value.title ? value.title : ''%></textarea>
+					<div id="commandRecommendDiv_<%=objectId%>"></div>
+					<div id="commandFollowerDiv_<%=objectId%>"></div>
+				</div>				
+			</td>
+			
+			<td width=50 align="center">		
+				<a id="wBtn" href="#" onClick="mw3.getFaceHelper('<%=objectId%>').sendComment()">
+					<span id="method_<%=objectId%>_add"><%=mw3.localize((mw3.when == 'new')?'$Post':'$Edit')%></span>
+				</a>
+			</td>
+		</tr> 
+<%		
+		}else if(value.type == "src"){
+%>
+
+		<tr>
+			<td width="50" height="25" style="color:#8D98AF; padding-left:15px;"> 
+				<%=mw3.localize("$Title")%> 
+			</td>
+						
+			<td style=" padding:10px 20px 0px 10px;"> 
+				<input id="post_<%=objectId%>" class="wih_comment_input <%=value.type%>" value="<%=value.title ? value.title : ''%>" style="width:99%;-webkit-border-radius:3px;  border:1px solid #ccc">
+			</td>			
+			
+		</tr>
+		<tr>
+			<td colspan="2">
+				<div style="padding:15px;">
+					<div style="position:relative; height:300px; border:1px solid #ccc;">
+						<%=fields.sourceCode.here()%>
+					</div>
+				</div>
+			</td>
+		</tr>				
+		<tr>
+			<td height="30" colspan="2" style="padding-left:15px;">
+				<a id="wBtn" href="#" onClick="<%=methods.compile.caller()%>"><span><%=mw3.localize("$Compile")%></span></a>
+				<a id="wBtn" href="#" onClick="<%=methods.add.caller()%>"><span><%=mw3.localize((mw3.when == 'new')?'$Post':'$Edit')%></span></a>
+			</td>
+		</tr>
+<%		
+		}else if(value.type == "memo"){
+%>
+
+		<tr>
+			<td width="50" height="25" style="color:#8D98AF; padding-left:15px;"> 
+				Title : 
+			</td>			
+			<td style=" padding:10px 20px 0px 10px;"> 
+				<input id="post_<%=objectId%>" class="wih_comment_input <%=value.type%>" value="<%=value.title ? value.title : ''%>"  style="width:99%;-webkit-border-radius:3px;  border:1px solid #ccc">
+			</td>			
+		</tr>
+		<tr>
+			<td colspan="2">
+				<div style="padding:15px;">
+						<%=fields.memo.here({when:'edit'})%>
+				</div>
+			</td>
+		</tr>				
+		<tr>
+			<td height="30" colspan="2" style="padding-left:15px;">
+				<a id="wBtn" href="#" onClick="<%=methods.add.caller()%>"><span><%=mw3.localize((mw3.when == 'new')?'$Post':'$Edit')%></span></a>
+			</td>
+		</tr>
+<%		
+		}else if(value.type == "file"){
+%>
+		<tr>
+			<td width="50" height="25" style="color:#8D98AF; padding-left:15px;"> 
+				Title : 
+			</td>
+			<td style=" padding:10px 20px 0px 10px;" colspan="2"> 
+				<input id="post_<%=objectId%>" class=" wih_comment_input <%=value.type%>" value="<%=value.title ? value.title:''%>" style="width:99%;-webkit-border-radius:3px; border:1px solid #ccc">
+			</td>			
+			
+		</tr>			
+		<tr>
+			<td width="50" height="30" style=" padding:10px 15px 0px 10px;">
+				<%if (value.taskId != null){%>
+					<%=fields.versionUpOption.here()%>
+				<%}%>
+			</td>
+			<td style=" padding:10px 15px 0px 10px;">
+				<%=fields.file.here()%>
+			</td>
+			<td style=" padding:10px 0px 0px 10px;">
+				<div style="float:right; margin-right:15px;"><a id="wBtn" href="#" onClick="<%=methods.add.caller()%>"><span id="method_<%=objectId%>_add"><%=mw3.localize((mw3.when == 'new')?'$Post':'$Edit')%></span></a></div>
+			</td>
+		</tr>
+<%		
+		}else if(value.type == "remoteConf"){
+%>
+		<tr>
+			<td width="50" height="25" style="color:#8D98AF; padding-left:15px;"> 
+				Title : 
+			</td>
+			<td style=" 10px 20px 0px 10px;"> 
+				<input id="post_<%=objectId%>" class=" wih_comment_input <%=value.type%>" value="<%=value.title ? value.title:''%>" style="width:99%;-webkit-border-radius:3px; border:1px solid #ccc">
+			</td>			
+			<td height="30" colspan="2" style="padding-left:15px;">
+				<a id="wBtn" href="#" onClick="<%=methods.add.caller()%>"><span id="method_<%=objectId%>_add"><%=mw3.localize((mw3.when == 'new')?'$Post':'$Edit')%></span></a>
+			</td>
+			
+		</tr>			
+<%		
+		}
+%>
+	</table>
+	<!--/div-->
+	
+
+	<!--div class="guide">
+		<span class="lb"></span>
+		<span class="rb"></span>
+	</div-->
+	
+
+	
+</div>
+
+<%
+	}
+%>
