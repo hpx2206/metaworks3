@@ -619,6 +619,12 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		createDatabaseMe();
 		flushDatabaseMe();
 	}
+	
+	public void createMe(String id) throws Exception {
+		setId(id);
+		createDatabaseMe();
+		flushDatabaseMe();
+	}
 
 	public void saveMe() throws Exception {
 		syncToDatabaseMe();
