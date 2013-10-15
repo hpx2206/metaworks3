@@ -1,5 +1,6 @@
 
 package org.uengine.codi.mw3.knowledge;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -24,12 +25,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.codi.mw3.model.Instance;
 import org.uengine.codi.mw3.model.InstanceListPanel;
 import org.uengine.codi.mw3.model.InstanceViewContent;
+import org.uengine.codi.mw3.model.Locale;
 import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.model.ProcessMap;
 import org.uengine.codi.mw3.model.RoleMappingPanel;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.model.TopicFollowers;
 import org.uengine.codi.mw3.project.ProjectCreate;
+import org.uengine.codi.mw3.project.oce.KtProjectServers;
 import org.uengine.codi.vm.JschCommand;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.processmanager.ProcessManagerRemote;
@@ -351,7 +354,7 @@ public class ProjectInfo implements ContextAware {
 
 	@Face(displayName = "release")
 	@ServiceMethod(target = ServiceMethodContext.TARGET_APPEND)
-	public void releaseProject() throws Exception{
+	public Object releaseProject() throws Exception{
 		WfNode wfNode = new WfNode();
 		wfNode.setId(session.getLastSelectedItem());
 		wfNode.copyFrom(wfNode.databaseMe());
@@ -370,7 +373,6 @@ public class ProjectInfo implements ContextAware {
 				sqlPath = list.get("sqlFile_Path");
 			}
 		}
-		
 		if ("war".equals(wfNode.getVisType())) {
 			ProcessBuilder pb = new ProcessBuilder(
 					"cmd",
@@ -378,9 +380,9 @@ public class ProjectInfo implements ContextAware {
 					"ant -buildfile C:\\test.xml -Dip="
 							+ ip
 							+ " -Dwar="
-							+ "D:\\eclipse\\fileSystem\\" + warPath
+							+ GlobalContext.getPropertyString("codebase", "codebase")+ File.separatorChar + warPath
 							+ " -Dsql="
-							+ "D:\\eclipse\\fileSystem\\" + sqlPath
+							+ GlobalContext.getPropertyString("codebase", "codebase") + File.separatorChar + sqlPath
 							+ " -Dpw="
 							+ "root"
 							+ " -lib C:\\Users\\uEngine");
@@ -409,6 +411,17 @@ public class ProjectInfo implements ContextAware {
 			}
 			CreateDatabase createDatabase = new CreateDatabase();
 			createDatabase.create("root", ip, "root", "cloud", sqlPath.toString());
+			
+			ModalWindow modalWindow = new ModalWindow();
+			modalWindow.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
+			modalWindow.setWidth(300);
+			modalWindow.setHeight(150);
+							
+			modalWindow.setTitle("$SaveCompleteTitle");
+			modalWindow.setPanel(localeManager.getString("반영되었습니다."));
+			modalWindow.getButtons().put("$Confirm", "");		
+			
+			return modalWindow;
 		}
 		else if("sns".equals(wfNode.getVisType())){
 			String host = GlobalContext.getPropertyString("vm.manager.ip");
@@ -422,8 +435,12 @@ public class ProjectInfo implements ContextAware {
 			//Hudson Build
 //			command = GlobalContext.getPropertyString("vm.hudson.build") + " " + wfNode.getName();
 //			jschServerBehaviour.runCommand(command);
-			
 		}
+		return null;
+	}
+	@ServiceMethod
+	public void Confirm() {
+		
 	}
 
 	@Face(displayName = "허드슨")
@@ -439,17 +456,20 @@ public class ProjectInfo implements ContextAware {
 	}
 
 	@Face(displayName = "서버관리")
-	@ServiceMethod(callByContent=true, target = ServiceMethodContext.TARGET_APPEND)
+	@ServiceMethod(payload={"projectName"}, target = ServiceMethodContext.TARGET_APPEND)
 	public Object[] server() throws Exception {
 		
 		ModalWindow modal = new ModalWindow();
 		
-		ProjectServers ProjectServers = new ProjectServers();
-//		ProjectServers.loadOceServer(this.getProjectName());
+//		String ip = "14.63.225.192";
+		String ip = "14.63.225.215";
+		
+		KtProjectServers ProjectServers = new KtProjectServers();
+		ProjectServers.loadOceServer(this.getProjectName() , ip);
 		
 		modal.setPanel(ProjectServers);
 		modal.setWidth(600);
-		modal.setHeight(500);
+		modal.setHeight(400);
 		modal.setTitle("서버관리");
 		
 		return new Object[]{modal};
@@ -574,4 +594,7 @@ public class ProjectInfo implements ContextAware {
 
 	@AutowiredFromClient
 	public Session session;
+	
+	@AutowiredFromClient
+	public Locale localeManager;
 }

@@ -79,7 +79,7 @@ public class InstanceListPanel implements ContextAware{
 			}
 			
 			if("sns".equals(session.getEmployee().getPreferUX())){
-				this.getMetaworksContext().setWhere("sns");
+				this.getMetaworksContext().setWhere("oce");
 			}
 			if("topic".equals(session.getLastPerspecteType()))
 				this.getMetaworksContext().setHow("topic");

@@ -71,9 +71,6 @@ public class OcePerspectivePanel extends Perspective{
 	@ServiceMethod
 	public Object[] loadAllICanSee() throws Exception{
 		
-		
-		session.getEmployee().setPreferUX("sns");
-		
 		Object[] returnObject = loadInstanceListPanel(session , "allICanSee", "oce");
 		
 		String title = GlobalContext.getPropertyString("$All");
@@ -82,7 +79,7 @@ public class OcePerspectivePanel extends Perspective{
 		window.setPanel(returnObject);
 		window.setTitle(title);
 
-		return new Object[]{window , session};
+		return new Object[]{session , window};
 	}
 }
 

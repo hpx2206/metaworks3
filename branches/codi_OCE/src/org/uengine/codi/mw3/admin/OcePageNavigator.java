@@ -106,7 +106,7 @@ public class OcePageNavigator extends PageNavigator {
 	@ServiceMethod(callByContent=true)
 	public MainPanel goProcess() throws Exception {
 		
-		session.getEmployee().setPreferUX(null);
+//		session.getEmployee().setPreferUX(null);
 		session.setLastPerspecteType(null);
 
 /*		String preferUX = session.getEmployee().getPreferUX();
