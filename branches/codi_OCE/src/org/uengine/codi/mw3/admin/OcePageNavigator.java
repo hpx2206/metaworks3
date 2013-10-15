@@ -187,7 +187,6 @@ public class OcePageNavigator extends PageNavigator {
 		SelfService selfService = new SelfService();
 		selfService.setPageNavigator(new OcePageNavigator());
 		selfService.session = session;
-		selfService.setPageNavigator(new OcePageNavigator());
 		selfService.load();
 		
 		return new MainPanel(selfService);
