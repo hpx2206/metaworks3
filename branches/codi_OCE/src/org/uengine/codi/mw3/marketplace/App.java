@@ -6,6 +6,7 @@ import java.util.Date;
 import org.metaworks.ContextAware;
 import org.metaworks.MetaworksContext;
 import org.metaworks.annotation.AutowiredFromClient;
+import org.metaworks.annotation.Hidden;
 import org.metaworks.component.SelectBox;
 import org.metaworks.dao.Database;
 import org.metaworks.website.MetaworksFile;
@@ -18,6 +19,7 @@ import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.knowledge.IProjectNode;
 import org.uengine.codi.mw3.knowledge.IWfNode;
 import org.uengine.codi.mw3.knowledge.ProjectNode;
+import org.uengine.codi.mw3.knowledge.TopicMapping;
 import org.uengine.codi.mw3.knowledge.WfNode;
 import org.uengine.codi.mw3.marketplace.category.Category;
 import org.uengine.codi.mw3.marketplace.category.ICategory;
@@ -47,7 +49,14 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 	public App() throws Exception{
 		
 	}
-	
+	String topicId;
+		@Hidden
+		public String getTopicId() {
+			return topicId;
+		}
+		public void setTopicId(String topicId) {
+			this.topicId = topicId;
+		}
 	int appId;
 		public int getAppId() {
 			return appId;
@@ -343,7 +352,6 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 	}
 	
 	public void load() throws Exception {
-
 		SelectBox categories = new SelectBox();
 		SelectBox attachProject = new SelectBox();
 		
@@ -433,7 +441,7 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 			IWfNode project = new WfNode();
 			project.setId(this.getAttachProject().getSelected());
 
-			setAppId(UniqueKeyGenerator.issueWorkItemKey(((ProcessManagerBean) processManager).getTransactionContext()).intValue());
+			setAppId( UniqueKeyGenerator.issueWorkItemKey(((ProcessManagerBean) processManager).getTransactionContext()).intValue());
 			setCreateDate(Calendar.getInstance().getTime());
 			setComcode(session.getCompany().getComCode());
 			setComName(session.getCompany().getComName());
@@ -442,7 +450,42 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 			this.setStatus(STATUS_REQUEST);
 			
 			createDatabaseMe();
+
+			WfNode wfNode = new WfNode();
 			
+			if(MetaworksContext.WHEN_NEW.equals(this.getMetaworksContext().getWhen())){
+				wfNode.setName(this.getAppName());
+				wfNode.setType("app");
+				wfNode.setParentId(session.getCompany().getComCode());	
+				wfNode.setAuthorId(session.getUser().getUserId());		
+				if(TenantContext.getThreadLocalInstance().getTenantId() != null)
+					wfNode.setCompanyId(TenantContext.getThreadLocalInstance().getTenantId());
+				else
+					wfNode.setCompanyId(session.getCompany().getComCode());
+					
+				wfNode.setDescription(this.getSimpleOverview());
+				wfNode.setStartDate(new Date());
+				wfNode.setLogoFile(this.getLogoFile());
+				wfNode.createMe(String.valueOf(this.getAppId()));
+				
+				TopicMapping tm = new TopicMapping();
+				tm.setTopicId(String.valueOf(this.getAppId()));
+				tm.setUserId(session.getUser().getUserId());
+				tm.setUserName(session.getUser().getName());
+				tm.getMetaworksContext().setWhen(this.getMetaworksContext().getWhen());
+				
+				tm.saveMe();
+				tm.flushDatabaseMe();
+				
+				this.setTopicId(wfNode.getId());
+			}else{
+				wfNode.setId(this.getTopicId());
+				
+				wfNode.copyFrom(wfNode.databaseMe());
+				
+				wfNode.setName(this.getAppName());
+				wfNode.saveMe();
+			}
 
 			// 앱 등록일 경우 프로세스 발행
 			String defId = "AppRegister.process";
@@ -463,6 +506,15 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 			// 무조건 compleate
 			processManager.executeProcessByWorkitem(instId.toString(), rp);
 			processManager.applyChanges();
+			
+//			TopicMapping tm = new TopicMapping();
+//			tm.setTopicId(String.valueOf(String.valueOf(this.getAppId())));
+//			tm.setUserId(session.getUser().getUserId());
+//			tm.setUserName(session.getUser().getName());
+//			tm.getMetaworksContext().setWhen(this.getMetaworksContext().getWhen());
+//			
+//			tm.saveMe();
+			
 		}else{
 			syncToDatabaseMe();
 		}

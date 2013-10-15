@@ -2,9 +2,15 @@ package org.uengine.codi.mw3.marketplace;
 
 import java.util.Calendar;
 
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
 import org.metaworks.website.MetaworksFile;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.codi.mw3.model.Perspective;
 import org.uengine.codi.mw3.model.RecentItem;
+import org.uengine.codi.mw3.model.Session;
+import org.uengine.oce.dashboard.DashboardWindow;
+import org.uengine.processmanager.ProcessManagerRemote;
 
 public class AppMapping extends Database<IAppMapping> implements IAppMapping {
 	
@@ -85,6 +91,7 @@ public class AppMapping extends Database<IAppMapping> implements IAppMapping {
 		public void setEmpCode(String empCode) {
 			this.empCode = empCode;
 		}
+
 		
 	public IAppMapping findMe() throws Exception {
 
@@ -129,7 +136,7 @@ public class AppMapping extends Database<IAppMapping> implements IAppMapping {
 		this.setProjectName(projectName);
 	}
 	
-	public void clickAppList() throws Exception {
+	public Object[] clickAppList() throws Exception {
 		
 		RecentItem recentItem = new RecentItem();
 		recentItem.setEmpCode(this.getEmpCode());
@@ -139,7 +146,23 @@ public class AppMapping extends Database<IAppMapping> implements IAppMapping {
 		
 		recentItem.add();
 		
+		
+		String title = "앱 : " + getAppName();
+		Object[] returnObject = Perspective.loadInstanceListPanel(session, "app", String.valueOf(getAppId()), title);
+		session.setLastPerspecteType("app");
+		session.setLastSelectedItem(String.valueOf(getAppId()));
+		
+
+		DashboardWindow window = new DashboardWindow();
+		window.setPanel(returnObject[1]);
+		window.setTitle(title);
+		
+		return new Object[]{window , session};
+		
 	}
+	
+	@AutowiredFromClient
+	public Session session;
 	
 }
 

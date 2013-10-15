@@ -61,6 +61,6 @@ public interface IAppMapping extends IDAO{
 	public void findProject(String appId) throws Exception;
 	
 	@ServiceMethod(callByContent=true)
-	public void clickAppList() throws Exception;
+	public Object[] clickAppList() throws Exception;
 
 }

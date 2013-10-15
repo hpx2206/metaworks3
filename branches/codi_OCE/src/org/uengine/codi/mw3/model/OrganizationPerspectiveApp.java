@@ -45,39 +45,40 @@ public class OrganizationPerspectiveApp extends Perspective{
 	@ServiceMethod(callByContent=true)
 	public void openApp() throws Exception {
 		
-		App app = new App();
-		app.setAppId(this.getAppList().getAppId());
+//		App app = new App();
+//		app.setAppId(this.getAppList().getAppId());
+//		
+//		String url = app.findMe().getUrl();
+//		
+//        String os = System.getProperty("os.name");
+//        Runtime runtime = Runtime.getRuntime();
+// 
+//        try {
+//        	
+//        	// Block for Windows Platform
+//        	if (os.startsWith("Windows")) {
+//        		
+//        		String cmd = "rundll32 url.dll,FileProtocolHandler " + url;
+//        		Process p = runtime.exec(cmd);
+//        	}
+//        	
+//        	// Block for Mac OS
+//        	else if (os.startsWith("Mac OS")) {
+//        		
+//        		Class fileMgr = Class.forName("com.apple.eio.FileManager");
+//        		Method openURL = fileMgr.getDeclaredMethod("openURL", new Class[] { String.class });
+//
+//        		openURL.invoke(null, new Object[] { url });
+//        		
+//        	}
+//        	
+//        } catch (Exception x) {
+//        	
+//        	System.err.println("Exception occurd while invoking Browser!");
+//        	x.printStackTrace();
+//        	
+//        }
 		
-		String url = app.findMe().getUrl();
-		
-        String os = System.getProperty("os.name");
-        Runtime runtime = Runtime.getRuntime();
- 
-        try {
-        	
-        	// Block for Windows Platform
-        	if (os.startsWith("Windows")) {
-        		
-        		String cmd = "rundll32 url.dll,FileProtocolHandler " + url;
-        		Process p = runtime.exec(cmd);
-        	}
-        	
-        	// Block for Mac OS
-        	else if (os.startsWith("Mac OS")) {
-        		
-        		Class fileMgr = Class.forName("com.apple.eio.FileManager");
-        		Method openURL = fileMgr.getDeclaredMethod("openURL", new Class[] { String.class });
-
-        		openURL.invoke(null, new Object[] { url });
-        		
-        	}
-        	
-        } catch (Exception x) {
-        	
-        	System.err.println("Exception occurd while invoking Browser!");
-        	x.printStackTrace();
-        	
-        }
 		
 		
 	}
