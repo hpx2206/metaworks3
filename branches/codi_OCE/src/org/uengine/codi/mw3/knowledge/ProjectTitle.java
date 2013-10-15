@@ -32,7 +32,7 @@ import org.uengine.oce.dashboard.DashboardPanel;
 import com.thoughtworks.xstream.XStream;
 
 
-@Face(ejsPath="", options={"fieldOrder"},values={"topicTitle,topicDescription,radio"} ,
+@Face(ejsPath="", options={"fieldOrder"},values={"topicTitle,topicDescription,logoFile,radio,warFile,sqlFile"} ,
 ejsPathMappingByContext=	{
 			"{how: 'html', face: 'dwr/metaworks/org/uengine/codi/mw3/model/ProjectTitle_HTML.ejs'}"
 })
@@ -165,7 +165,11 @@ public class ProjectTitle implements ContextAware {
 			if(this.getSqlFile().getFileTransfer() != null && this.getSqlFile().getFilename() != null && 
 					this.getSqlFile().getFilename().length() >0)
 				this.getSqlFile().upload();
-
+			if(this.getLogoFile().getFileTransfer() != null &&
+					   this.getLogoFile().getFilename() != null && 
+					   this.getLogoFile().getFilename().length() > 0)			
+						this.getLogoFile().upload();
+			
 		}else if("svn".equals(this.getFileType())){
 			if(this.getLogoFile().getFileTransfer() != null &&
 					   this.getLogoFile().getFilename() != null && 
@@ -271,6 +275,7 @@ public class ProjectTitle implements ContextAware {
 //				wfNode.setEx1(xmlCode);
 //				
 				wfNode.setEx1(GlobalContext.serialize(obj, Object.class));
+				wfNode.setLogoFile(this.getLogoFile());
 				wfNode.setVisType("war");
 		
 			
