@@ -68,29 +68,6 @@ public class ProjectServers implements ContextAware {
 		this.setServerGroup(serverGroup);
 	}
 	
-	public void loadOceServer(String projectName){
-		ArrayList<ProjectServer> serverList = new ArrayList<ProjectServer>();
-		
-		
-		ProjectServer server = new ProjectServer();
-		try {
-			// TODO	
-			server.setType("DB");
-			server.setName(projectName);
-			server.setIp("14.63.225.215");
-			server.setStatus(ProjectServer.SERVER_STATUS_RUNNING);
-			server.setMetaworksContext(new MetaworksContext());
-			server.getMetaworksContext().setHow(MetaworksContext.HOW_IN_LIST);
-			server.getMetaworksContext().setWhen(ProjectServer.SERVER_STATUS_RUNNING);
-			server.status();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		serverList.add(server);
-		
-		this.setServerList(serverList.toArray(new ProjectServer[serverList.size()]));
-	}
 	public void load(){
 		
 		try {
