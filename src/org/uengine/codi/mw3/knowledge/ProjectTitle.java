@@ -232,12 +232,6 @@ public class ProjectTitle implements ContextAware {
 		returnObject[returnObj.length + 1] = new Remover(new ModalWindow(), true);
 		
 		
-		if(pageNavigator instanceof OcePageNavigator && "process".equals(pageNavigator.getPageName())){
-			DashboardPanel dashboardPanel = new DashboardPanel();
-			dashboardPanel.load(session);
-			returnObject[returnObj.length + 2] = new Refresh(dashboardPanel);
-			
-		}
 		
 		return returnObject;
 		
