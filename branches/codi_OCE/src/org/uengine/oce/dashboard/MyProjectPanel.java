@@ -25,7 +25,7 @@ public class MyProjectPanel {
 		projectTitle.setLogoFile(new MetaworksFile());
 		projectTitle.setWarFile(new MetaworksFile());
 		projectTitle.setSqlFile(new MetaworksFile());
-		return new ModalWindow(projectTitle , 500, 300, "$CreateProject");
+		return new ModalWindow(projectTitle , 500, 480, "$CreateProject");
 	}
 	
 	
