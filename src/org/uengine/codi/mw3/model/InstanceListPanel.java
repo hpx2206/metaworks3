@@ -13,6 +13,7 @@ import org.uengine.codi.mw3.calendar.ScheduleCalendar;
 import org.uengine.codi.mw3.knowledge.ProjectInfo;
 import org.uengine.codi.mw3.knowledge.ProjectManager;
 import org.uengine.codi.mw3.knowledge.WfPanel;
+import org.uengine.codi.mw3.marketplace.AppInformation;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.oce.dashboard.DashboardWindow;
 import org.uengine.processmanager.ProcessManagerRemote;
@@ -89,6 +90,9 @@ public class InstanceListPanel implements ContextAware{
 			
 			if("explorer".equals(session.getLastPerspecteType()))
 				this.getMetaworksContext().setHow("explorer");		
+			
+			if("app".equals(session.getLastPerspecteType()))
+				this.getMetaworksContext().setHow("app");
 			
 			instanceList = new InstanceList(session);
 			
@@ -375,8 +379,6 @@ public class InstanceListPanel implements ContextAware{
 		return window;
 	}
 	
-
-	
 	ProjectInfo projectInfo;
 		public ProjectInfo getProjectInfo() {
 			return projectInfo;
@@ -384,7 +386,6 @@ public class InstanceListPanel implements ContextAware{
 		public void setProjectInfo(ProjectInfo projectInfo) {
 			this.projectInfo = projectInfo;
 		}
-	
 	
 	public void projectInfoLoad() throws Exception {
 		projectInfo = new ProjectInfo(session.getLastSelectedItem());
@@ -409,5 +410,16 @@ public class InstanceListPanel implements ContextAware{
 		return modalWindow;
 	}
 	
+	AppInformation appInformation;
+		public AppInformation getAppInformation() {
+			return appInformation;
+		}
+		public void setAppInformation(AppInformation appInformation) {
+			this.appInformation = appInformation;
+		}
 	
+	public void appInfoLoad() throws Exception {
+		appInformation = new AppInformation(Integer.parseInt(session.getLastSelectedItem()));
+		appInformation.load();
+	}
 }
