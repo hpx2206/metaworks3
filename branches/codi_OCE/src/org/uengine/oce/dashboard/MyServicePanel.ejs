@@ -1,0 +1,33 @@
+<%
+if(value){
+%>
+
+<div>
+<%=mw3.localize("$MyServices")%>
+</div>
+
+		<ul class="process_map2" style="border: none;"> 
+		<a href="#">
+			<li onClick="<%=methods.goSelfServicePortal.caller()%>">
+					 <img  class="navi_icon" alt="" src="images/processMap/iconDefault.png" width="40" height="40"/>
+					 <%=mw3.localize("$SelfServicePortal")%>
+			</li>
+				</a>
+				<a href="#">
+			<li onClick="<%=methods.goIDE.caller()%>">
+					 <img  class="navi_icon" alt="" src="images/processMap/iconDefault.png" width="40" height="40"/>
+					 <%=mw3.localize("$IDE")%>
+			</li>
+				</a>
+				<a href="#">
+			<li onClick="<%=methods.goMarketplace.caller()%>">
+					 <img  class="navi_icon" alt="" src="images/processMap/iconDefault.png" width="40" height="40"/>
+					 <%=mw3.localize("$MarketPlace")%>
+			</li>
+				</a>
+		</ul>
+		
+		
+<%
+}
+%>
