@@ -1,0 +1,18 @@
+<%
+	if(value == null && typeof value == 'undefined')
+		return;
+		
+		
+		console.log("instacelistPanel_oce.ejs");
+		console.log(value);
+%>
+
+
+
+
+	<%=value.newInstantiator ? fields.newInstantiator.here() : ""%>
+
+	<div class="bottom" style="top: 68px; position: "absolute;" min-width: 0px; min-height: 0px; max-width: 10000px; max-height: 10000px;  left: 0px; right: 0px; bottom: 0px;">
+	<%=value.instanceList ? fields.instanceList.here() : ""%>
+	</div>
+		

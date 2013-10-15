@@ -131,34 +131,25 @@ public class CommentWorkItem extends WorkItem{
 	}
 
 	String activityAppAlias;
-
 		public String getActivityAppAlias() {
 			return activityAppAlias;
 		}
-	
 		public void setActivityAppAlias(String activityAppAlias) {
 			this.activityAppAlias = activityAppAlias;
 		}
 		
-		
 	ArrayList<String> initialFollowers;
-
 		public ArrayList<String> getInitialFollowers() {
 			return initialFollowers;
 		}
-	
 		public void setInitialFollowers(ArrayList<String> initialFollowers) {
 			this.initialFollowers = initialFollowers;
 		}
-
-
 		
 	ArrayList<ParameterValue> parameters;
-	
 		public ArrayList<ParameterValue> getParameters() {
 			return parameters;
 		}
-	
 		public void setParameters(ArrayList<ParameterValue> parameters) {
 			this.parameters = parameters;
 		} 

@@ -1,16 +1,17 @@
 package org.uengine.oce;
 
 import org.metaworks.MetaworksContext;
-import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.knowledge.ProjectPerspective;
 import org.uengine.codi.mw3.model.OceMain;
 import org.uengine.codi.mw3.model.OrganizationPerspectiveApp;
+import org.uengine.codi.mw3.model.Perspective;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.kernel.GlobalContext;
+import org.uengine.oce.dashboard.DashboardWindow;
 
-public class OcePerspectivePanel {
+public class OcePerspectivePanel extends Perspective{
 	
 	MetaworksContext metaworksContext;
 		public MetaworksContext getMetaworksContext() {
@@ -60,10 +61,6 @@ public class OcePerspectivePanel {
 		
 	}
 	
-	@AutowiredFromClient
-	public Session session;
-		
-	
 	@ServiceMethod
 	public MainPanel loadOce() throws Exception{
 
@@ -71,5 +68,21 @@ public class OcePerspectivePanel {
 	}
 	
 	
+	@ServiceMethod
+	public Object[] loadAllICanSee() throws Exception{
+		
+		
+		session.getEmployee().setPreferUX("sns");
+		
+		Object[] returnObject = loadInstanceListPanel(session , "allICanSee", "oce");
+		
+		String title = GlobalContext.getPropertyString("$All");
+		
+		DashboardWindow window = new DashboardWindow();
+		window.setPanel(returnObject);
+		window.setTitle(title);
+
+		return new Object[]{window , session};
+	}
 }
 

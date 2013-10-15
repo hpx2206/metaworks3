@@ -586,8 +586,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		employee.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 		employee.getMetaworksContext().setWhere("inDetailWindow");
 		
-		
-		return new ModalWindow(new EmployeeInfo(employee), 700, 400, employee.getEmpName());
+		return new ModalWindow(new EmployeeInfo(employee), 700, 462, employee.getEmpName());
 	}
 	
 	@Override
@@ -752,4 +751,5 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		
 		return new Object[]{new Remover(removeWindow, true), new Remover(new ModalWindow()), new ToOpener(new MainPanel(new Main(session)))};		
 	}
+	
 }

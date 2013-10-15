@@ -15,25 +15,21 @@ public class Perspective {
 	public final static String TYPE_COMMINGTODO = "commingTodo";
 	
 	String label;
-
-	@Id
-	public String getLabel() {
-		return label;
-	}
-
-	public void setLabel(String label) {
-		this.label = label;
-	}
+		@Id
+		public String getLabel() {
+			return label;
+		}
+		public void setLabel(String label) {
+			this.label = label;
+		}
 
 	boolean selected;
-
-	public boolean isSelected() {
-		return selected;
-	}
-
-	public void setSelected(boolean selected) {
-		this.selected = selected;
-	}
+		public boolean isSelected() {
+			return selected;
+		}
+		public void setSelected(boolean selected) {
+			this.selected = selected;
+		}
 
 	@ServiceMethod(callByContent = true, payload = { "selected" })
 	public Object[] select() throws Exception {
@@ -184,16 +180,26 @@ public class Perspective {
 			
 		
 		savePerspectiveToSession(session, perspectiveType, selectedItem);
+		
+		//원컬럼 새로쓰기
+		CommentWorkItem newInstItem = new CommentWorkItem();
+		newInstItem.setWriter(session.getUser());		
+		
 		InstanceList instList = new InstanceList(session);
-		if("dashboard".equals(perspectiveType)){
-			instList.setMetaworksContext(new MetaworksContext());
-			instList.getMetaworksContext().setHow("dashboard");
-		}
+		
+		instList.setMetaworksContext(new MetaworksContext());
+		instList.getMetaworksContext().setHow(perspectiveType);
+		instList.getMetaworksContext().setWhere(selectedItem);
 		instList.load();
-
+		
 		InstanceListPanel instListPanel = new InstanceListPanel(session);
-		instListPanel.setInstanceList(instList);
 		instListPanel.session = session;
+		instListPanel.setNewInstantiator(newInstItem);
+		instListPanel.setInstanceList(instList);
+		instListPanel.setMetaworksContext(new MetaworksContext());
+		instListPanel.getMetaworksContext().setHow(perspectiveType);
+		instListPanel.getMetaworksContext().setWhere(selectedItem);
+
 		// set search Keyword to searchBox
 		instListPanel.getSearchBox().setKeyword(session.getSearchKeyword());
 		if( title == null && perspectiveType != null && perspectiveType.equals("topic")){
@@ -222,23 +228,26 @@ public class Perspective {
 			
 		final Object[] returnObject;
 		
-		if("sns".equals(session.getEmployee().getPreferUX())){
-			WfPanel wfPanel = new WfPanel();
-			
-			if("topic".equals(perspectiveType)){
-				wfPanel.session = session;
-				wfPanel.load(selectedItem);
-			}else{			
-				wfPanel.session = session;
-				wfPanel.load(session.getCompany().getComCode());
-			}
-			
-			returnObject = new Object[]{new Refresh(searchBox), new Refresh(wfPanel), new Refresh(new FollowerPanel("instance"))};
-		}else
-			returnObject = new Object[]{new Refresh(searchBox)};
+//		if("sns".equals(session.getEmployee().getPreferUX())){
+//			WfPanel wfPanel = new WfPanel();
+//			
+//			if("topic".equals(perspectiveType)){
+//				wfPanel.session = session;
+//				wfPanel.load(selectedItem);
+//			}else{			
+//				wfPanel.session = session;
+//				wfPanel.load(session.getCompany().getComCode());
+//			}
+//			
+//			returnObject = new Object[]{new Refresh(searchBox), new Refresh(wfPanel), new Refresh(new FollowerPanel("instance"))};
+//		}else
+//			returnObject = new Object[]{new Refresh(searchBox)};
+//		
+//		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getEmployee().getEmpCode()), returnObject);
 		
-		MetaworksRemoteService.pushTargetClientObjects(Login.getSessionIdWithUserId(session.getEmployee().getEmpCode()), returnObject);
-		
+		if("oce".equals(selectedItem)){
+			return new Object[] {instListPanel};
+		}
 		return new Object[] {session, instListPanel};
 	}
 

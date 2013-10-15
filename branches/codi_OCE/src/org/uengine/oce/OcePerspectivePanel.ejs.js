@@ -13,4 +13,11 @@ var org_uengine_oce_OcePerspectivePanel = function(objectId, className){
 				$(this).css({"overflow":"hidden"});
 			}
 	);
+	
+	
+	$('#navigator .depth2 a').click(function(){
+		$('#navigator .depth2 .fist_menu li').removeClass('selected_navi');
+		$(this).parent().addClass('selected_navi');
+	});
+	
 };

@@ -32,6 +32,7 @@ import org.metaworks.annotation.Validator;
 import org.metaworks.annotation.ValidatorContext;
 import org.metaworks.dao.TransactionContext;
 import org.metaworks.widget.ModalWindow;
+import org.uengine.codi.mw3.admin.OcePageNavigator;
 import org.uengine.codi.mw3.admin.PageNavigator;
 import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.model.Employee;
@@ -418,22 +419,26 @@ public class Login implements ContextAware {
 		}
 		
 		pageNavigator.setSession(session);
-		if("knowledge".equals(lastVisitPage) && "1".equals(GlobalContext.getPropertyString("knowledge.use", "1"))){
-			mainPanel = pageNavigator.goKnowledge();
-		}else if("pinterest".equals(lastVisitPage)){
-			mainPanel = pageNavigator.goPinterest();
-		}else if("ide".equals(lastVisitPage) && "1".equals(GlobalContext.getPropertyString("ide.use", "1"))){
-			mainPanel = pageNavigator.goIDE();
-		}else if("marketplace".equals(lastVisitPage) && "1".equals(GlobalContext.getPropertyString("marketplace.use", "1"))){
-			mainPanel = pageNavigator.goMarketplace();
-		}else if("selfservice".equals(lastVisitPage) && "1".equals(GlobalContext.getPropertyString("selfservice.use", "1"))){
-			mainPanel = pageNavigator.goSelfServicePortal();
-		}else{
-			String preferUX = session.getEmployee().getPreferUX();
-			if("sns".equals(preferUX) || "".equals(preferUX)){
-				mainPanel = pageNavigator.goSns();
+		if("1".equals(GlobalContext.getPropertyString("oce.use", "1"))){
+			mainPanel = pageNavigator.goProcess();
+		}else {
+			if("knowledge".equals(lastVisitPage) && "1".equals(GlobalContext.getPropertyString("knowledge.use", "1"))){
+				mainPanel = pageNavigator.goKnowledge();
+			}else if("pinterest".equals(lastVisitPage)){
+				mainPanel = pageNavigator.goPinterest();
+			}else if("ide".equals(lastVisitPage) && "1".equals(GlobalContext.getPropertyString("ide.use", "1"))){
+				mainPanel = pageNavigator.goIDE();
+			}else if("marketplace".equals(lastVisitPage) && "1".equals(GlobalContext.getPropertyString("marketplace.use", "1"))){
+				mainPanel = pageNavigator.goMarketplace();
+			}else if("selfservice".equals(lastVisitPage) && "1".equals(GlobalContext.getPropertyString("selfservice.use", "1"))){
+				mainPanel = pageNavigator.goSelfServicePortal();
 			}else{
-				mainPanel = pageNavigator.goProcess();
+				String preferUX = session.getEmployee().getPreferUX();
+				if("sns".equals(preferUX) || "".equals(preferUX)){
+					mainPanel = pageNavigator.goSns();
+				}else{
+					mainPanel = pageNavigator.goProcess();
+				}
 			}
 		}
 		
