@@ -224,13 +224,13 @@ public interface IWfNode extends IDAO {
 	public String getDescription();
 	public void setDescription(String description);
 	
-	@Face(displayName="로고파일")
-	@ORMapping(
-		databaseFields={"URL", "THUMBNAIL"}, 
-		objectFields={"uploadedPath", "filename"}
-	)	
-	public MetaworksFile getLogoFile();
-	public void setLogoFile(MetaworksFile logoFile);
+//	@Face(displayName="로고파일")
+//	@ORMapping(
+//		databaseFields={"URL", "THUMBNAIL"}, 
+//		objectFields={"uploadedPath", "filename"}
+//	)	
+//	public MetaworksFile getLogoFile();
+//	public void setLogoFile(MetaworksFile logoFile);
 	
 	
 	/*******************************************

@@ -12,40 +12,38 @@ var org_uengine_codi_mw3_knowledge_ProjectTitle = function(objectId, className){
 //	
 	var sqlFileDivId = mw3._getObjectDivId(object.sqlFile.__objectId);
 	$('#' + sqlFileDivId ).parentsUntil('tr').parent().hide();
-//	$('#' + sqlFileDivId ).hide();
 //	
 	var warFileDivId = mw3._getObjectDivId(object.warFile.__objectId);
-//	$('#' + warFileDivId ).hide();
 	$('#' + warFileDivId ).parentsUntil('tr').parent().hide();
-	
-//	$('#warFile_'+this.objectId).hide();
-//	$('#sqlFile_'+this.objectId).hide();
-//	$('#svn_'+this.objectId).hide();
+	if(object.metaworksContext.when == mw3.WHEN_EDIT){
+		$("input[type=radio]:radio[value='1']").attr("checked",true);
+		var value = mw3.objects[objectId];
+		value.fileType = "war";
+		$('#' + sqlFileDivId ).parentsUntil('tr').parent().show();
+		$('#' + warFileDivId ).parentsUntil('tr').parent().show();
+		
+	}else if(object.metaworksContext.when == mw3.WHEN_NEW){
+		$("input[type=radio]:radio[value='2']").attr("checked",true);
+		var value = mw3.objects[objectId];
+		value.fileType = "svn";
+		$('#' + sqlFileDivId ).parentsUntil('tr').parent().hide();
+		$('#' + warFileDivId ).parentsUntil('tr').parent().hide();
+	}
 	
 	$('input[type=radio]').click(function(){
 		var value = mw3.objects[objectId];
 		var check = $(this).val();
 		if(check == '1'){
 			value.fileType = "war";
-//			value.call();
-//			$('#warFile_'+objectId).show();
-//			$('#sqlFile_'+objectId).show();
-//			$('#svn_'+objectId).show();
 			$('#' + sqlFileDivId ).parentsUntil('tr').parent().show();
 			$('#' + warFileDivId ).parentsUntil('tr').parent().show();
-//			$('#' + sqlFileDivId ).show();
-//			$('#' + warFileDivId ).show();
 		}else if(check == '2'){
 			value.fileType = "svn";
-//			$('#' + sqlFileDivId ).hide();
-//			$('#' + warFileDivId ).hide();
 			$('#' + sqlFileDivId ).parentsUntil('tr').parent().hide();
 			$('#' + warFileDivId ).parentsUntil('tr').parent().hide();
-//			value.call();
-//			$('#warFile_'+objectId).hide();
-//			$('#sqlFile_'+objectId).hide();
-//			$('#svn_'+objectId).show();	
 		}
+		
+		
 			
 	
 	})

@@ -56,7 +56,7 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 	@Autowired
 	ProcessManagerRemote connectionFactory;
 
-	@XStreamOmitField
+//	@XStreamOmitField
 	MetaworksFile logoFile;
 		public MetaworksFile getLogoFile() {
 			return logoFile;
