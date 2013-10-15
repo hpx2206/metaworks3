@@ -728,7 +728,7 @@ public class Employee extends Database<IEmployee> implements IEmployee {
 		if (this.getMetaworksContext().getWhere().equals("inDetailWindow"))
 			return new Object[]{new Remover(new ModalWindow()), session.logout()};
 		else
-			return new Object[]{new Remover(new Popup()), session.logout()};
+			return new Object[]{session.logout()};
 	}
 	@Override
 	public Session drag() throws Exception {
