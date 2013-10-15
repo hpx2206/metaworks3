@@ -9,6 +9,7 @@ import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.annotation.Table;
 import org.metaworks.dao.IDAO;
 import org.metaworks.website.MetaworksFile;
+import org.uengine.codi.mw3.model.Session;
 
 @Table(name="APPMAPPING")
 @Face(ejsPathMappingByContext={"{where: 'mapList', face: 'dwr/metaworks/org/uengine/codi/mw3/marketplace/IAppMap.ejs'}"})

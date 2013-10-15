@@ -392,7 +392,7 @@ public class InstanceListPanel implements ContextAware{
 		projectInfo.load();
 	}
 	
-	
+	@Face(displayName = "등록")
 	@ServiceMethod(target="popup", callByContent=true)
 	public Object loadProjectInfo() throws Exception {
 		
