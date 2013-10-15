@@ -43,7 +43,7 @@ public class MyAppPanel {
 		
 		myapps.setComCode(session.getCompany().getComCode());
 		myapps.setIsDeleted(false);
-		
+		myapps.session = session;
 		IAppMapping getAppsList = myapps.findMyApps(MYAPPS_LIMINTCOUNT);
 		
 		while(getAppsList.next()){
