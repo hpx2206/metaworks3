@@ -97,84 +97,35 @@ public class OceMain {
 	
 	public OceMain(Session session) throws Exception {
 		
-		//
-		String preferUX = session.getEmployee().getPreferUX();
-		String preferMob = session.getEmployee().getPreferMob();
-
-		boolean pad = isPad();
-		boolean phone = isPhone();
-		boolean isMobile = pad || phone;
-		
-
-		if(isMobile && (preferMob==null || "auto".equals(preferMob)) ){
-			preferMob = (pad ? "pad" : "phone");
-			
-		}
-		
 		ProcessTopPanel processTopPanel = new ProcessTopPanel(session);
 		processTopPanel.setPageType("process");
-		if("phone".equals(preferMob) || "tw".equals(preferUX)){
-			session.setUx("phone");
-			
-			Layout outerLayout = new Layout();
-			outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:5, north__size:52");
-			outerLayout.setNorth(processTopPanel);
-			
-			Window instanceListWindow = createInstanceListWindow(session);
-			
-			outerLayout.setCenter(instanceListWindow);	
-			outerLayout.setName("center");
-			
-			setLayout(outerLayout);
-			
-			if(!isMobile)
-				setPageNavigator(new OcePageNavigator("process"));	
-			
-		}else if("pad".equals(preferMob) || "fb".equals(preferUX)  || "asana".equals(preferUX)){
-			session.setUx("pad");
-			
-			Layout outerLayout = new Layout();
-			outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:5, north__size:52, west__size:" + ("asana".equals(preferUX) ? "700" : "400"));
-			outerLayout.setNorth(processTopPanel);			
-			outerLayout.setWest(createInstanceListWindow(session));
-			outerLayout.setCenter(createDashboardWindow(session));	
-			outerLayout.setName("center");
-			
-			setLayout(outerLayout);
-
-			if(!isMobile)
-				setPageNavigator(new OcePageNavigator("process"));	
-
-		}else{
 
 		
-			Layout westLayout = new Layout();
-			
-			PerspectiveWindow perspectiveWindow = new PerspectiveWindow(session);
-			
-			DashboardWindow dashboardWindow = createDashboardWindow(session);
-			
-			
-			westLayout.setCenter(perspectiveWindow);
-			westLayout.setUseHideBar(true);
-			westLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, south__spacing_open:5, south__size:'50%'");
-
-			Layout outerLayout = new Layout();
-			outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:1, north__size:52, west__size: 160");
-			outerLayout.setNorth(processTopPanel);
-			
-			outerLayout.setWest(westLayout);
-			outerLayout.setCenter(dashboardWindow);		
-			outerLayout.setName("center");
-			outerLayout.setUseHideBar(false);
-			
-			setLayout(outerLayout);
-			setSession(session);
-	
-			if(!session.getEmployee().isGuest()){
-				setPageNavigator(new OcePageNavigator("process"));
-			}
-
+		Layout westLayout = new Layout();
+		
+		PerspectiveWindow perspectiveWindow = new PerspectiveWindow(session);
+		
+		DashboardWindow dashboardWindow = createDashboardWindow(session);
+		
+		
+		westLayout.setCenter(perspectiveWindow);
+		westLayout.setUseHideBar(true);
+		westLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, south__spacing_open:5, south__size:'50%'");
+		
+		Layout outerLayout = new Layout();
+		outerLayout.setOptions("togglerLength_open:0, spacing_open:0, spacing_closed:0, west__spacing_open:1, north__size:52, west__size: 160");
+		outerLayout.setNorth(processTopPanel);
+		
+		outerLayout.setWest(westLayout);
+		outerLayout.setCenter(dashboardWindow);		
+		outerLayout.setName("center");
+		outerLayout.setUseHideBar(false);
+		
+		setLayout(outerLayout);
+		setSession(session);
+		
+		if(!session.getEmployee().isGuest()){
+			setPageNavigator(new OcePageNavigator("process"));
 		}
 
 	}

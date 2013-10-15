@@ -209,7 +209,13 @@ if(value){
 	<%
 	} else if(mw3.where == 'inSession') {
 	%>
-	<a onClick="<%=methods.showDetail.caller() %>" ><b><%=value.empName %></b> (<%=value.empCode %>)</a>
+	<!--
+	<a onClick="<%=methods.showDetail.caller() %>" >
+	-->
+		<b><%=value.empName %></b> (<%=value.empCode %>)
+	<!--
+	</a>
+	-->
 	<%
 	} else if(mw3.where == 'inSessionInfo') {
 	%>
@@ -259,8 +265,10 @@ if(value){
 
 	<div id="btnline" style="padding-top:8px; border-top:1px solid #ccc;">
 		<ul>	
+			<!--
 			<li><a id="wBtn" href="#" onClick="<%=methods.logout.caller()%>" tabIndex="-1"><span><%=mw3.localize("$Logout")%></span></a></li>	
 			<li><a id="wBtn" href="#" onClick="<%=methods.unsubscribe.caller()%>" tabIndex="-1"><span><%=mw3.localize("$Unsubscribe")%></span></a></li>	
+			-->
 			<% if(mw3.when == 'view') {%>
 			<li><a id="wBtn" href="#" onClick="<%=methods.editEmployeeInfo.caller()%>" tabIndex="-1"><span><%=mw3.localize("$Edit")%></span></a></li>	
 			<% }else if(mw3.when == 'edit') {%>
@@ -294,8 +302,15 @@ if(value){
 	<%
 	} else if(mw3.where == 'addTopic') {
 	%>
+	
 	<a onClick="<%=methods.addTopicUser.caller() %>" class="iemployee" ><%=fields.empName.here() %>(<%=value.empCode %>)</a>
 	
+	<%
+	} else if(mw3.where == 'user_menu_option') {
+	
+	%>
+		<%=methods.showDetail.here() %>
+		<%=methods.logout.here() %>
 	<%
 	} else {
 	%>

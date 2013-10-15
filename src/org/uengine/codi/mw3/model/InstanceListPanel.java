@@ -22,6 +22,7 @@ import org.uengine.processmanager.ProcessManagerRemote;
 	{
 		"{where: 'pinterest', face: 'dwr/metaworks/org/uengine/codi/mw3/model/InstanceListPanel_pinterest.ejs'}",
 		"{where: 'sns', face: 'dwr/metaworks/org/uengine/codi/mw3/model/InstanceListPanel_sns.ejs'}",
+		"{where: 'oce', face: 'dwr/metaworks/org/uengine/oce/InstanceListPanel_oce.ejs'}",
 	}		
 
 )
@@ -94,6 +95,10 @@ public class InstanceListPanel implements ContextAware{
 			if("app".equals(session.getLastPerspecteType()))
 				this.getMetaworksContext().setHow("app");
 			
+			newInstantiator = new CommentWorkItem();
+			newInstantiator.setWriter(session.getUser());
+			newInstantiator.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
+			
 			instanceList = new InstanceList(session);
 			
 			this.setPreloaded(true);
@@ -159,13 +164,14 @@ public class InstanceListPanel implements ContextAware{
 			this.newInstancePanel = newInstancePanel;
 		}
 	
-/*	WorkItem newInstantiator;
+	WorkItem newInstantiator;
 		public WorkItem getNewInstantiator() {
 			return newInstantiator;
 		}
 		public void setNewInstantiator(WorkItem newInstantiator) {
 			this.newInstantiator = newInstantiator;
-		}	*/
+		}
+
 	DocumentFollowers documentFollowers;
 		public DocumentFollowers getDocumentFollowers() {
 			return documentFollowers;
@@ -419,7 +425,7 @@ public class InstanceListPanel implements ContextAware{
 		}
 	
 	public void appInfoLoad() throws Exception {
-		appInformation = new AppInformation(Integer.parseInt(session.getLastSelectedItem()));
-		appInformation.load();
+//		appInformation = new AppInformation(Integer.parseInt(session.getLastSelectedItem()));
+//		appInformation.load();
 	}
 }

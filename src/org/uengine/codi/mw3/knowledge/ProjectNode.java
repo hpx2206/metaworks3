@@ -28,24 +28,16 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 	
 	@ServiceMethod(callByContent = true)
 	public Object[] loadTopic() throws Exception {
-		// TODO Auto-generated method stub
-
-		/*if(pageNavigator != null && "knowlege".equals(pageNavigator.getPageName())){
-			return new Object[]{new BrainstormPanel(this.getId())};
-		}else{*/
-	
-			
-			String title = "프로젝트: " + getName();
-			Object[] returnObject = Perspective.loadInstanceListPanel(session, TYPE_PROJECT, getId(), title);
-			session.setLastPerspecteType(TYPE_PROJECT);
-			session.setLastSelectedItem(this.getId());
-
-			DashboardWindow window = new DashboardWindow();
-			window.setPanel(returnObject[1]);
-			window.setTitle(title);
-			
-			return new Object[]{window , session};
-		//}
+		String title = "프로젝트: " + getName();
+		Object[] returnObject = Perspective.loadInstanceListPanel(session, TYPE_PROJECT, getId(), title);
+		session.setLastPerspecteType(TYPE_PROJECT);
+		session.setLastSelectedItem(this.getId());
+		
+		DashboardWindow window = new DashboardWindow();
+		window.setPanel(returnObject[1]);
+		window.setTitle(title);
+		
+		return new Object[]{window , session};
 	}
 
 	public static IProjectNode load(Session session) throws Exception {
