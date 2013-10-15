@@ -234,15 +234,16 @@ public class InstanceListPanel implements ContextAware{
 	@ServiceMethod
 	public Object[] loadOnDashboard() throws Exception {
 	
-		PersonalPerspective personalPerspective = new PersonalPerspective();
-		personalPerspective.session = session;
+		session.getEmployee().setPreferUX("sns");
 		
-		Object[] returnObject = personalPerspective.loadAllICanSee();
+		Object[] returnObject = Perspective.loadInstanceListPanel(session , "allICanSee", "oce");
+		
+		String title = GlobalContext.getPropertyString("$All");
 		
 		DashboardWindow window = new DashboardWindow();
-		window.setPanel(returnObject[1]);
+		window.setPanel(returnObject);
 		window.setTitle(title);
-		
+
 		return new Object[]{window , session};
 	}
 	
