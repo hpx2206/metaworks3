@@ -1,5 +1,6 @@
 package org.uengine.codi.mw3.knowledge;
 
+import java.io.File;
 import java.net.URL;
 import java.util.Date;
 import java.util.HashMap;
@@ -18,6 +19,7 @@ import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.TransactionContext;
+import org.metaworks.metadata.MetadataFile;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.cloud.saasfier.TenantContext;
@@ -87,21 +89,21 @@ public class ProjectTitle implements ContextAware {
 			this.logoFile = logoFile;
 		}
 
-	MetaworksFile sqlFile;
+	MetadataFile sqlFile;
 		@Face(displayName="sqlFile")
-		public MetaworksFile getSqlFile() {
+		public MetadataFile getSqlFile() {
 			return sqlFile;
 		}
-		public void setSqlFile(MetaworksFile sqlFile) {
+		public void setSqlFile(MetadataFile sqlFile) {
 			this.sqlFile = sqlFile;
 		}
 
-	MetaworksFile 	warFile;
+	MetadataFile 	warFile;
 		@Face(displayName="WarFile")
-		public MetaworksFile getWarFile() {
+		public MetadataFile getWarFile() {
 			return warFile;
 		}
-		public void setWarFile(MetaworksFile warFile) {
+		public void setWarFile(MetadataFile warFile) {
 			this.warFile = warFile;
 		}
 
@@ -196,7 +198,20 @@ public class ProjectTitle implements ContextAware {
 		if("war".equals(this.getFileType())){
 			if(this.getWarFile().getFileTransfer() != null && this.getWarFile().getFilename() != null && 
 					this.getWarFile().getFilename().length() >0)
-				
+					
+					if(getWarFileCheck() != null){
+						if(getWarFileCheck() == true){
+//							this.getWarFile().upload();
+							String codebase = GlobalContext.getPropertyString("codebase", "codebase");
+							MetadataFile resourceFile = new MetadataFile();
+							resourceFile.setBaseDir(codebase + File.separatorChar + this.getTopicTitle());
+							resourceFile.setFilename(this.getWarFile().getFilename());
+							resourceFile.setUploadedPath(this.getWarFile().getUploadedPath());
+							resourceFile.setMimeType(this.getWarFile().getMimeType());
+							setWarFile(resourceFile);
+							
+						}
+					}
 				if(getWarFileCheck() != null){
 					if(getWarFileCheck() == true){
 						this.getWarFile().upload();
@@ -207,7 +222,14 @@ public class ProjectTitle implements ContextAware {
 
 				if(getSqlFileCheck() != null){
 					if(getSqlFileCheck() == true){
-						this.getSqlFile().upload();
+//						this.getSqlFile().upload();
+						String codebase = GlobalContext.getPropertyString("codebase", "codebase");
+						MetadataFile resourceFile = new MetadataFile();
+						resourceFile.setBaseDir(codebase + File.separatorChar + this.getTopicTitle());
+						resourceFile.setFilename(this.getSqlFile().getFilename());
+						resourceFile.setUploadedPath(this.getSqlFile().getUploadedPath());
+						resourceFile.setMimeType(this.getSqlFile().getMimeType());
+						setSqlFile(resourceFile);
 					}
 				}
 			if(this.getLogoFile().getFileTransfer() != null &&
@@ -281,7 +303,6 @@ public class ProjectTitle implements ContextAware {
 		returnObject[returnObj.length + 1] = new Remover(new ModalWindow(), true);
 		
 		return returnObject;
-		
 	}
 	
 	public void saveMe() throws Exception {
@@ -307,6 +328,13 @@ public class ProjectTitle implements ContextAware {
 				map.put("logoFile", this.getLogoFile());
 				map.put("sqlFile",this.getSqlFile());
 				map.put("warFile",this.getWarFile());
+				
+//				String codebase = GlobalContext.getPropertyString("codebase", "codebase");
+//				this.getWarFile().setUploadedPath(codebase + File.separatorChar + wfNode.getName());
+//				this.getSqlFile().setUploadedPath(codebase + File.separatorChar + wfNode.getName());
+				
+				
+//				codebase + File.separatorChar + wfNode.getName())
 				map.put("logoFile_Url",this.getLogoFile().getUploadedPath());
 				map.put("warFile_Path", this.getWarFile().getUploadedPath());
 				map.put("sqlFile_Path", this.getSqlFile().getUploadedPath());
@@ -401,6 +429,9 @@ public class ProjectTitle implements ContextAware {
 		wfNode.setCompanyId(session.getCompany().getComCode());
 //		wfNode.setLogoFile(this.getLogoFile());
 		
+//		MetadataFile file = new MetadataFile();
+//		file.setBaseDir()
+		
 		if("war".equals(this.getFileType())){
 			XStream xstream = new XStream();
 			HashMap<String , Object>  map = new HashMap<String , Object>();
@@ -433,6 +464,7 @@ public class ProjectTitle implements ContextAware {
 		wfNode.saveMe();
 		
 		ProjectInfo projectInfo = new ProjectInfo(this.getTopicId());
+		projectInfo.setLogoFile(this.getLogoFile());
 		projectInfo.load();
 		return new Object[]{new Refresh(projectInfo), new Remover(new ModalWindow())};
 	}

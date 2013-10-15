@@ -5,6 +5,7 @@ import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.metadata.MetadataFile;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.widget.ModalWindow;
 import org.uengine.codi.mw3.knowledge.IProjectNode;
@@ -23,8 +24,8 @@ public class MyProjectPanel {
 		projectTitle.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 		projectTitle.session = session;
 		projectTitle.setLogoFile(new MetaworksFile());
-		projectTitle.setWarFile(new MetaworksFile());
-		projectTitle.setSqlFile(new MetaworksFile());
+		projectTitle.setWarFile(new MetadataFile());
+		projectTitle.setSqlFile(new MetadataFile());
 		return new ModalWindow(projectTitle , 500, 480, "$CreateProject");
 	}
 	
