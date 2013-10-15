@@ -15,6 +15,7 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.Face;
 import org.metaworks.annotation.Hidden;
 import org.metaworks.annotation.ServiceMethod;
+import org.metaworks.metadata.MetadataFile;
 import org.metaworks.website.Download;
 import org.metaworks.website.MetaworksFile;
 import org.metaworks.website.OpenBrowser;
@@ -118,7 +119,23 @@ public class ProjectInfo implements ContextAware {
 		public void setLogoFile(MetaworksFile logoFile) {
 			this.logoFile = logoFile;
 		}	
-		
+	MetadataFile sqlFile;
+		@Face(displayName="sqlFile")
+		public MetadataFile getSqlFile() {
+			return sqlFile;
+		}
+		public void setSqlFile(MetadataFile sqlFile) {
+			this.sqlFile = sqlFile;
+		}
+
+	MetadataFile 	warFile;
+		@Face(displayName="WarFile")
+		public MetadataFile getWarFile() {
+			return warFile;
+		}
+		public void setWarFile(MetadataFile warFile) {
+			this.warFile = warFile;
+		}	
 	String type;
 		public String getType() {
 			return type;
@@ -244,7 +261,7 @@ public class ProjectInfo implements ContextAware {
 /*		if(wfNode.getLinkedInstId() != null){
 			String linkedId = String.valueOf(wfNode.getLinkedInstId());*/
 			
-			Object logo = null;
+//			Object logo = null;
 			this.projectName = wfNode.getName();
 			this.domainName = this.getProjectName() + ".com";			
 			setType(wfNode.getVisType());
@@ -253,26 +270,33 @@ public class ProjectInfo implements ContextAware {
 				setType("svn");
 				this.hudson = GlobalContext.getPropertyString("vm.hudson.url") + "/job/" + this.getProjectName();
 			}else if("war".equals(this.getType())){
-				
+				Object logo = null;
 				Object warUrl = null;
 				Object sqlUrl = null;
+				Object warFile = null;
+				Object sqlFile = null;
 				XStream xstream = new XStream();
 				if(wfNode.getExt() != null){
 					Object xstreamStr =  xstream.fromXML(wfNode.getExt());
 					if(xstreamStr != null){
 						Map<String, Object> list = (Map<String,Object>) xstreamStr;
 					
-						warUrl = list.get("warFile_Url");
-						sqlUrl = list.get("sqlFile_Url");
+						warUrl = list.get("warFile_Thumbnail");
+						sqlUrl = list.get("sqlFile_Thumbnail");
 						logo = list.get("logoFile");
+						warFile = list.get("warFile");
+						sqlFile = list.get("sqlFile");
 					}
 				}
 						this.war = (String) warUrl;
 						this.sql = (String) sqlUrl;
+						this.logoFile = (MetaworksFile) logo;
+						this.warFile = (MetadataFile) warFile;
+						this.sqlFile = (MetadataFile) sqlFile;
 						setType("war");
 			}
 			this.description = wfNode.getDescription();
-			this.logoFile = (MetaworksFile) logo;
+//			this.logoFile = (MetaworksFile) logo;
 			
 			/*
 			Serializable serial = null;
@@ -421,7 +445,7 @@ public class ProjectInfo implements ContextAware {
 		ModalWindow modal = new ModalWindow();
 		
 		ProjectServers ProjectServers = new ProjectServers();
-		ProjectServers.loadOceServer(this.getProjectName());
+//		ProjectServers.loadOceServer(this.getProjectName());
 		
 		modal.setPanel(ProjectServers);
 		modal.setWidth(600);
@@ -487,8 +511,8 @@ public class ProjectInfo implements ContextAware {
 				System.out.println(sqlFile);
 				
 			projectTitle.setLogoFile((MetaworksFile) logoFile);	
-			projectTitle.setWarFile((MetaworksFile) warFile);
-			projectTitle.setSqlFile((MetaworksFile) sqlFile);
+			projectTitle.setWarFile((MetadataFile) warFile);
+			projectTitle.setSqlFile((MetadataFile) sqlFile);
 		}
 		return new ModalWindow(projectTitle, 500, 400, "정보변경");
 	}
