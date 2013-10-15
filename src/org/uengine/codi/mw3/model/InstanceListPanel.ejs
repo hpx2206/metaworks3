@@ -27,15 +27,20 @@
 	
 	<span><a id="wBtn" onClick="<%=methods.loadOnDashboard.caller()%>" href="#"><%=mw3.localize("$MyNews.more")%></a></span>
 	
-	
+	<div class="bottom" style="top: <%=height%>px; position: static; min-width: 0px; min-height: 0px; max-width: 10000px; max-height: 10000px;  left: 0px; right: 0px; bottom: 0px;">
+
+
+				<%=value.instanceList ? fields.instanceList.here() : ""%>
+				<%=value.scheduleCalendar ? fields.scheduleCalendar.here() : ""%>
+				<%=value.knowledge ? fields.knowledge.here() : ""%>
+
+	</div>
 <% }else{%>
 	<div class="top" style="height: <%=height%>px; overflow:hidden; position: absolute; min-width: 0px; min-height: 0px; max-width: 10000px; max-height: 10000px;  left: 0px; right: 0px; top: 0px;">
 	
-	<% if(isProject){%>
 		<%=isTopic?fields.topicFollowers.here():''%>
 		<%=isProject?fields.topicFollowers.here():''%>
 		<%=isProject?fields.projectInfo.here():''%>
-	<% }else{%>
 		            <div id="searchbox">
 		                <div class="searchboxline">
 		                	<div class="searchboxline2">
@@ -74,32 +79,16 @@
 	                        <li onclick="<%=methods.switchToScheduleCalendar.caller()%>" <%=value.scheduleCalendar ? "class='toolbar_current'" : ""%>><span class="toolbarIcon"><img src="images/waveStyle/i_gantt.png" border="0"></span><span><%=mw3.localize("$Calendar")%></span></li>
 	                    </ul>
                 	</div> 
-		<%
-		} 
-		%>
 		
-<!--		
-                	<%
-                		if(isProject){
-					%>  
-						 <div id="project_Info" class="toolbar" onclick="<%=methods.loadProjectInfo.caller()%>" style="text-align:center;line-height:20px;cursor:pointer">
-		                    Project info. ▼
-	                	</div> 
-	                	
-	                	
 
-					<%
-						}
-					%>  
--->
-<% }%>
                 	
-</div>
-<div class="bottom" style="top: <%=height%>px; position: static; min-width: 0px; min-height: 0px; max-width: 10000px; max-height: 10000px;  left: 0px; right: 0px; bottom: 0px;">
+	</div>
+	<div class="bottom" style="top: <%=height%>px; position: absolute; min-width: 0px; min-height: 0px; max-width: 10000px; max-height: 10000px;  left: 0px; right: 0px; bottom: 0px;">
 
 
 				<%=value.instanceList ? fields.instanceList.here() : ""%>
 				<%=value.scheduleCalendar ? fields.scheduleCalendar.here() : ""%>
 				<%=value.knowledge ? fields.knowledge.here() : ""%>
 
-</div>
+	</div>
+<% }%>
