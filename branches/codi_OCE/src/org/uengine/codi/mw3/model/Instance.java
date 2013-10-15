@@ -709,7 +709,7 @@ public class Instance extends Database<IInstance> implements IInstance{
 //			.append("		OR (inst.secuopt=3 and ( exists (select topicId from BPM_TOPICMAPPING tm where tm.userId=?endpoint and inst.topicId=tm.topicId) ")
 //			.append(" 																	 or ?endpoint in ( select empcode from emptable where partcode in (  ")
 //			.append(" 																	 						select userId from BPM_TOPICMAPPING where assigntype = 2 and topicId = inst.topicId )))))  ");
-		}else if("topic".equals(navigation.getPerspectiveType()) || "project".equals(navigation.getPerspectiveType())) {
+		}else if("topic".equals(navigation.getPerspectiveType()) || "project".equals(navigation.getPerspectiveType()) || "app".equals(navigation.getPerspectiveType())) {
 			instanceSql.append("and inst.isdeleted!=?instIsdelete ");
 			criteria.put("instIsdelete", "1");
 			instanceSql.append("and inst.status!=?instStatus ");
