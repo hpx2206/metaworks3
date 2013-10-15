@@ -119,9 +119,10 @@ public class NewInstancePanel implements ContextAware {
 		}
 		
 		if("sns".equals(session.getEmployee().getPreferUX())){
-			getMetaworksContext().setHow("sns");
-			
-			newInstantiator.getMetaworksContext().setHow("sns");			
+			if("oce".equals(session.getUx())){
+				getMetaworksContext().setHow("sns");
+				newInstantiator.getMetaworksContext().setHow("sns");			
+			}
 		}
 		
 		Choice securityLevel = new Choice();

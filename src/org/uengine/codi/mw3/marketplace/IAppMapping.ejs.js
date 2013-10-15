@@ -45,6 +45,12 @@ var org_uengine_codi_mw3_marketplace_IAppMapping = function(objectId, className)
 		mw3.call(selfServiceControlPanel.__objectId, 'selectedApp');
 		
 	});
+	
+	$('#navigator .depth2 a').click(function(){
+		$('#navigator .depth2 .fist_menu li').removeClass('selected_navi');
+		$(this).parent().addClass('selected_navi');
+	});
+	
 };
 
 org_uengine_codi_mw3_marketplace_IAppMapping.prototype = {
