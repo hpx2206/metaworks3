@@ -151,9 +151,15 @@ public class ProjectTitle implements ContextAware {
 		public void setEmbeddedHtml(String embeddedHtml) {
 			this.embeddedHtml = embeddedHtml;
 		}
-	
-	
-	@Face(displayName="$Create")
+	String parentId;
+		public String getParentId() {
+			return parentId;
+		}
+		public void setParentId(String parentId) {
+			this.parentId = parentId;
+		}
+
+		@Face(displayName="$Create")
 	@Available(when={MetaworksContext.WHEN_NEW})
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] save() throws Exception{
@@ -255,10 +261,10 @@ public class ProjectTitle implements ContextAware {
 			
 			if("war".equals(this.getFileType())){
 				XStream xstream = new XStream();
-				HashMap<String , String>  map = new HashMap<String , String>();
+				HashMap<String , Object>  map = new HashMap<String , Object>();
 				map.put("ProjectInfo",wfNode.getDescription());
-				map.put("sqlFile_Url",this.getSqlFile().getUploadedPath());
-				map.put("warFile_Url",this.getWarFile().getUploadedPath());
+				map.put("sqlFile_Url",this.getSqlFile());
+				map.put("warFile_Url",this.getWarFile());
 				map.put("sqlFile_Thumbnail", this.getSqlFile().getFilename());
 				map.put("warFile_Thumbnail", this.getWarFile().getFilename());
 				String xstreamStr = xstream.toXML(map);
@@ -274,7 +280,7 @@ public class ProjectTitle implements ContextAware {
 ////				code = this.getWarFile().toString();
 //				wfNode.setEx1(xmlCode);
 //				
-				wfNode.setEx1(GlobalContext.serialize(obj, Object.class));
+				wfNode.setExt(GlobalContext.serialize(obj, Object.class));
 				wfNode.setLogoFile(this.getLogoFile());
 				wfNode.setVisType("war");
 		
@@ -337,7 +343,53 @@ public class ProjectTitle implements ContextAware {
 		}
 	}
 	
-
+	@Available(when={MetaworksContext.WHEN_EDIT})
+	@Face(displayName="$Save")
+	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
+	public Object[] modify() throws Exception{
+		WfNode wfNode = new WfNode();
+		wfNode.setId(this.getTopicId());
+		wfNode.setParentId(this.getParentId());
+		wfNode.setName(this.getTopicTitle());
+		wfNode.setType("project");
+		wfNode.setDescription(this.getTopicDescription());
+		wfNode.setAuthorId(session.getUser().getUserId());
+		wfNode.setCompanyId(session.getCompany().getComCode());
+		wfNode.setLogoFile(this.getLogoFile());
+		
+		if("war".equals(this.getFileType())){
+			XStream xstream = new XStream();
+			HashMap<String , Object>  map = new HashMap<String , Object>();
+			map.put("ProjectInfo",wfNode.getDescription());
+			map.put("sqlFile_Url",this.getSqlFile());
+			map.put("warFile_Url",this.getWarFile());
+			map.put("sqlFile_Thumbnail", this.getSqlFile().getFilename());
+			map.put("warFile_Thumbnail", this.getWarFile().getFilename());
+			String xstreamStr = xstream.toXML(map);
+			System.out.println(xstreamStr);
+			
+			
+			Object obj = xstream.fromXML(xstreamStr);
+			if( obj instanceof HashMap){
+				System.out.println("HashMap ------   ");
+			}
+//			xstream.setMode(XStream.NO_REFERENCES);
+//			xstream.alias("warFile",this.getClass());
+////			code = this.getWarFile().toString();
+//			wfNode.setEx1(xmlCode);
+//			
+			wfNode.setExt(GlobalContext.serialize(obj, Object.class));
+			wfNode.setLogoFile(this.getLogoFile());
+			wfNode.setVisType("war");
+		}else{
+			wfNode.setVisType("svn");
+		}
+		wfNode.saveMe();
+		
+		ProjectInfo projectInfo = new ProjectInfo(this.getTopicId());
+		projectInfo.load();
+		return new Object[]{new Refresh(projectInfo), new Remover(new ModalWindow())};
+	}
 	
 	@AutowiredFromClient
 	transient public Session session;
