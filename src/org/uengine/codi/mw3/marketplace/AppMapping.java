@@ -139,14 +139,7 @@ public class AppMapping extends Database<IAppMapping> implements IAppMapping {
 	
 	public Object[] clickAppList() throws Exception {
 		
-		RecentItem recentItem = new RecentItem();
-		recentItem.setEmpCode(this.getEmpCode());
-		recentItem.setItemId(String.valueOf(this.getAppId()));
-		recentItem.setItemType(APPMAPPING_TYPE);
-		recentItem.setUpdateDate(Calendar.getInstance().getTime());
-		
-		recentItem.add();
-		
+		updateFavoriteApp();
 		
 		String title = "앱 : " + getAppName();
 		Object[] returnObject = Perspective.loadInstanceListPanel(session, "app", String.valueOf(getAppId()), title);
@@ -160,6 +153,16 @@ public class AppMapping extends Database<IAppMapping> implements IAppMapping {
 		
 		return new Object[]{window , session};
 		
+	}
+	
+	public void updateFavoriteApp() throws Exception {
+		RecentItem recentItem = new RecentItem();
+		recentItem.setEmpCode(this.getEmpCode());
+		recentItem.setItemId(String.valueOf(this.getAppId()));
+		recentItem.setItemType(APPMAPPING_TYPE);
+		recentItem.setUpdateDate(Calendar.getInstance().getTime());
+		
+		recentItem.add();
 	}
 	
 	@AutowiredFromClient

@@ -56,7 +56,7 @@ public class MyAppPanel {
 			app.setIsDeleted(getAppsList.getIsDeleted());
 			
 			app.setMetaworksContext(new MetaworksContext());
-			app.getMetaworksContext().setWhere(OceMain.WHERE_HOME);
+			app.getMetaworksContext().setWhere(OceMain.WHERE_DASHBOARD);
 
 			myAppsList.add(app);
 			

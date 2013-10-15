@@ -55,11 +55,18 @@ org_uengine_codi_mw3_marketplace_IAppMapping.prototype = {
 	endLoading : function(status){
 	},
 	clickAppList : function(){
-		//window.open('http://kiat.security.com:9090/uengine-web/');
 		this.object.empCode = this.session.employee.empCode;
 		
 		//자주 찾는 앱 등록
 		this.object.clickAppList();
+		
+	},
+	openAppBrowser : function(){
+		window.open('http://kiat.security.com:9090/uengine-web/');
+		this.object.empCode = this.session.employee.empCode;
+		
+		//자주 찾는 앱 등록
+		this.object.updateFavoriteApp();
 		
 	}
 };
