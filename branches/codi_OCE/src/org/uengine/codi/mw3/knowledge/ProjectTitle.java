@@ -193,20 +193,18 @@ public class ProjectTitle implements ContextAware {
 					setSqlFileCheck(true);
 				}
 			}
-			
-			
 		if("war".equals(this.getFileType())){
 			if(this.getWarFile().getFileTransfer() != null && this.getWarFile().getFilename() != null && 
 					this.getWarFile().getFilename().length() >0)
-					
-					if(getWarFileCheck() != null){
-						if(getWarFileCheck() == true){
-							this.getWarFile().upload();
-						}
+				
+				if(getWarFileCheck() != null){
+					if(getWarFileCheck() == true){
+						this.getWarFile().upload();
 					}
+				}
 			if(this.getSqlFile().getFileTransfer() != null && this.getSqlFile().getFilename() != null && 
 					this.getSqlFile().getFilename().length() >0)
-				
+
 				if(getSqlFileCheck() != null){
 					if(getSqlFileCheck() == true){
 						this.getSqlFile().upload();
@@ -240,25 +238,35 @@ public class ProjectTitle implements ContextAware {
 		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 		this.getMetaworksContext().setHow("html");	
 
-		String host = GlobalContext.getPropertyString("vm.manager.ip");
-		String userId = GlobalContext.getPropertyString("vm.manager.user");
-		String passwd = GlobalContext.getPropertyString("vm.manager.password");
-
-		JschCommand jschServerBehaviour = new JschCommand();
-		jschServerBehaviour.sessionLogin(host, userId, passwd);
-		
-		// create SVN
-		String command = GlobalContext.getPropertyString("vm.svn.createProject") + " \"" + projectNode.getName()+ "\"";
-		jschServerBehaviour.runCommand(command);
-		
-		// setting SVN
-		command = GlobalContext.getPropertyString("vm.svn.setting") + " \"" +  projectNode.getName() + "\"";
-		jschServerBehaviour.runCommand(command);
-		
-		//SVN 유저 추가
-		command = GlobalContext.getPropertyString("vm.svn.createUser") + " \"" +  projectNode.getName() + "\" \"" + session.getEmployee().getEmpCode() + "\" \"" + session.getEmployee().getPassword() + "\"";
-		jschServerBehaviour.runCommand(command);
-
+		if("svn".equals(this.getFileType())){
+			String host = GlobalContext.getPropertyString("vm.manager.ip");
+			String userId = GlobalContext.getPropertyString("vm.manager.user");
+			String passwd = GlobalContext.getPropertyString("vm.manager.password");
+	
+			JschCommand jschServerBehaviour = new JschCommand();
+			jschServerBehaviour.sessionLogin(host, userId, passwd);
+			
+			// create SVN
+			String command = GlobalContext.getPropertyString("vm.svn.createProject") + " \"" + projectNode.getName()+ "\"";
+			jschServerBehaviour.runCommand(command);
+			
+			// setting SVN
+			command = GlobalContext.getPropertyString("vm.svn.setting") + " \"" +  projectNode.getName() + "\"";
+			jschServerBehaviour.runCommand(command);
+			
+			//SVN 유저 추가
+			command = GlobalContext.getPropertyString("vm.svn.createUser") + " \"" +  projectNode.getName() + "\" \"" + session.getEmployee().getEmpCode() + "\" \"" + session.getEmployee().getPassword() + "\"";
+			jschServerBehaviour.runCommand(command);
+	
+			//Create & Restart Hudson
+			command = GlobalContext.getPropertyString("vm.hudson.createJob") + " " + projectNode.getName();
+			jschServerBehaviour.runCommand(command);
+			
+			//Setting Hudson
+			command = GlobalContext.getPropertyString("vm.hudson.setting") + " " + projectNode.getName() + " 14.63.225.215";
+			jschServerBehaviour.runCommand(command);
+			
+		}	
 		
 		Object[] returnObj = projectNode.loadTopic();
 		Object[] returnObject = new Object[ returnObj.length + 3];
@@ -271,8 +279,6 @@ public class ProjectTitle implements ContextAware {
 		}
 		returnObject[returnObj.length ] = new ToAppend(new ProjectPanel(), projectNode);
 		returnObject[returnObj.length + 1] = new Remover(new ModalWindow(), true);
-		
-		
 		
 		return returnObject;
 		
@@ -302,8 +308,8 @@ public class ProjectTitle implements ContextAware {
 				map.put("sqlFile",this.getSqlFile());
 				map.put("warFile",this.getWarFile());
 				map.put("logoFile_Url",this.getLogoFile().getUploadedPath());
-				map.put("warFile_Url", this.getWarFile().getUploadedPath());
-				map.put("sqlFile_Url", this.getSqlFile().getUploadedPath());
+				map.put("warFile_Path", this.getWarFile().getUploadedPath());
+				map.put("sqlFile_Path", this.getSqlFile().getUploadedPath());
 				map.put("sqlFile_Thumbnail", this.getSqlFile().getFilename());
 				map.put("warFile_Thumbnail", this.getWarFile().getFilename());
 				map.put("logoFile_Thumbnail", this.getLogoFile().getFilename());
@@ -323,11 +329,9 @@ public class ProjectTitle implements ContextAware {
 				wfNode.setExt(GlobalContext.serialize(obj, Object.class));
 //				wfNode.setLogoFile(this.getLogoFile());
 				wfNode.setVisType("war");
-		
 			
 			}else if("svn".equals(this.getFileType())){
 //				wfNode.setLogoFile(this.getLogoFile());
-				
 				wfNode.setVisType("svn");
 			}
 			wfNode.createMe();
@@ -407,8 +411,6 @@ public class ProjectTitle implements ContextAware {
 			map.put("sqlFile_Thumbnail", this.getSqlFile().getFilename());
 			map.put("warFile_Thumbnail", this.getWarFile().getFilename());
 			map.put("logoFile_Thumbnail", this.getLogoFile().getFilename());
-			
-			
 			String xstreamStr = xstream.toXML(map);
 			System.out.println(xstreamStr);
 			
