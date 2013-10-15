@@ -425,7 +425,7 @@ public class InstanceListPanel implements ContextAware{
 		}
 	
 	public void appInfoLoad() throws Exception {
-//		appInformation = new AppInformation(Integer.parseInt(session.getLastSelectedItem()));
-//		appInformation.load();
+		appInformation = new AppInformation(Integer.parseInt(session.getLastSelectedItem()));
+		appInformation.load();
 	}
 }

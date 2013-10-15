@@ -34,7 +34,7 @@ public class MyAppPanel {
 		}
 
 	@AutowiredFromClient
-	Session session;
+	public Session session;
 		
 	@ServiceMethod(target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] load() throws Exception {
@@ -81,10 +81,11 @@ public class MyAppPanel {
 	public Object addApp() throws Exception {
 		
 		App app = new App();
+		app.session = session;
 		app.load();
 		app.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 		
-		return new ModalWindow(new ModalPanel(app), 0, 0, GlobalContext.getLocalizedMessage("$MyApps.add"));
+		return new ModalWindow(new ModalPanel(app), 900, 530, GlobalContext.getLocalizedMessage("$MyApps.add"));
 	}
 	
 	
