@@ -22,8 +22,6 @@ import org.uengine.processmanager.ProcessManagerRemote;
 
 
 public class ProjectNode extends TopicNode implements IProjectNode {
-//	@AutowiredFromClient
-//	public Session session;
 	
 	public final static String TYPE_PROJECT = "project";
 	
@@ -33,7 +31,7 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 	
 	@ServiceMethod(callByContent = true)
 	public Object[] loadTopic() throws Exception {
-		
+
 		session.setLastPerspecteType(TYPE_PROJECT);
 		session.setLastSelectedItem(this.getId());
 		
@@ -184,10 +182,7 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 		if(pageNavigator instanceof OcePageNavigator && "process".equals(pageNavigator.getPageName()) && "dashboard".equals(this.session.getLastPerspecteType())){
 			DashboardPanel dashboardPanel = new DashboardPanel();
 			dashboardPanel.load(session);
-//			return new Object[]{new Refresh(dashboardPanel), new PerspectiveWindow(session)};
-//			return new Object[]{new Remover(this), new Refresh(dashboardPanel)};
 			return new Object[]{new MainPanel(new OceMain(session))};
-
 		}
 		
 		return new Object[]{new Remover(this)};
@@ -195,6 +190,6 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 	
 	@Autowired
 	public ProcessManagerRemote processManager;
-
+	
 	
 }
