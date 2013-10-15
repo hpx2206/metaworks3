@@ -1,7 +1,7 @@
 package org.uengine.codi.mw3.knowledge;
 
-import org.metaworks.Refresh;
 import org.metaworks.Remover;
+import org.metaworks.ServiceMethodContext;
 import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
@@ -10,8 +10,10 @@ import org.metaworks.dao.TransactionContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.mw3.admin.OcePageNavigator;
+import org.uengine.codi.mw3.common.MainPanel;
 import org.uengine.codi.mw3.model.IInstance;
 import org.uengine.codi.mw3.model.Instance;
+import org.uengine.codi.mw3.model.OceMain;
 import org.uengine.codi.mw3.model.Perspective;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.oce.dashboard.DashboardPanel;
@@ -138,7 +140,7 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 		
 		
 	}
-	
+	@ServiceMethod(callByContent = true, target = ServiceMethodContext.TARGET_APPEND)
 	public Object[] remove() throws Exception {
 		
 		if( session.getUser().getUserId().equalsIgnoreCase(getAuthorId()) || session.getEmployee().getIsAdmin()) {
@@ -174,10 +176,13 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 			throw new Exception("관리자나 초기토픽생성자만 수정가능합니다.");
 		}
 		
-		if(pageNavigator instanceof OcePageNavigator && "process".equals(pageNavigator.getPageName())){
+		if(pageNavigator instanceof OcePageNavigator && "process".equals(pageNavigator.getPageName()) && "dashboard".equals(this.session.getLastPerspecteType())){
 			DashboardPanel dashboardPanel = new DashboardPanel();
 			dashboardPanel.load(session);
-			return new Object[]{new Remover(this),new Refresh(dashboardPanel)};
+//			return new Object[]{new Refresh(dashboardPanel), new PerspectiveWindow(session)};
+//			return new Object[]{new Remover(this), new Refresh(dashboardPanel)};
+			return new Object[]{new MainPanel(new OceMain(session))};
+
 		}
 		
 		return new Object[]{new Remover(this)};
