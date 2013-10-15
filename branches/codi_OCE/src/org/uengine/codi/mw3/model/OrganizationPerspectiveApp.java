@@ -30,10 +30,10 @@ public class OrganizationPerspectiveApp extends Perspective{
 		AppMapping appMp = new AppMapping();
 		appMp.setComCode(session.getCompany().getComCode());
 		appMp.setIsDeleted(false);
+		appMp.session = session;
 		
 		IAppMapping addedApps =appMp.findMyApps();
 		addedApps.getMetaworksContext().setWhen("filter");
-		
 		setAppList(addedApps);
 		
 	}

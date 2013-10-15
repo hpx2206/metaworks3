@@ -45,6 +45,7 @@
 	<%=isTopic?fields.topicFollowers.here():''%>
 	<%=isProject?fields.topicFollowers.here():''%>
 	<%=isProject?fields.projectInfo.here():''%>
+	<%=methods.loadProjectInfo.here()%>
 		            <div id="searchbox">
 		                <div class="searchboxline">
 		                	<div class="searchboxline2">
@@ -85,7 +86,8 @@
 		                    </ul>
 	                	</div>
                 	<% }%>
-
+				
+					
                 	
 </div>
 <div class="bottom" style="top: <%=height%>px; position: absolute; min-width: 0px; min-height: 0px; max-width: 10000px; max-height: 10000px;  left: 0px; right: 0px; bottom: 0px;">
