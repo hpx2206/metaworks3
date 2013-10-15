@@ -19,7 +19,7 @@ public class AppMapList implements ContextAware {
 
 		AppMapping appMap = new AppMapping();
 		appMap.setComCode(session.getCompany().getComCode());
-		
+		appMap.session = session;
 		IAppMapping appMapList = appMap.findMyApps();
 		appMapping = new ArrayList<AppMapping>();
 		

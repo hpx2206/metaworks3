@@ -117,13 +117,11 @@ public class AppMapping extends Database<IAppMapping> implements IAppMapping {
 		   .append(" from appmapping, bpm_knol,  ")
 		   .append(" 	(select app.appId, app.projectId, recentItem.empcode, recentItem.updateDate, recentItem.clickedCount from app left join recentItem on app.appid=recentItem.itemId) item")
 		   .append(" where appmapping.appId = item.appId ")
-		   .append("    and item.empcode=?empcode ")
 		   .append("	and item.projectId = bpm_knol.id ")
 		   .append("	and appmapping.comcode=?comCode ")
 		   .append("	and appmapping.isdeleted=?isdeleted order by item.clickedCount desc " + ((limitCount==0)? " " : "limit " + limitCount));
 		
 		IAppMapping findApp = (IAppMapping) Database.sql(IAppMapping.class, sql.toString());
-		findApp.set("empcode", session.getEmployee().getEmpCode());
 		findApp.setComCode(this.getComCode());
 		findApp.setIsDeleted(this.getIsDeleted());
 		findApp.select();
@@ -151,7 +149,7 @@ public class AppMapping extends Database<IAppMapping> implements IAppMapping {
 		window.setPanel(returnObject[1]);
 		window.setTitle(title);
 		
-		return new Object[]{window , session};
+		return new Object[]{session , window};
 		
 	}
 	
