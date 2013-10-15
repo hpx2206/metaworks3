@@ -33,9 +33,6 @@ import org.uengine.processmanager.ProcessManagerRemote;
 
 import com.thoughtworks.xstream.XStream;
 
-@Face(options = { "fieldOrder", "methodOrder" }, values = {
-		"projectName,domainName,svn,description",
-		"downloadEclipse,downloadVirtualMachine,downloadSandbox" })
 public class ProjectInfo implements ContextAware {
 
 	MetaworksContext metaworksContext;
@@ -84,6 +81,24 @@ public class ProjectInfo implements ContextAware {
 			this.svn = svn;
 		}
 			
+	String war;
+		@Face(displayName="$project.war")
+		public String getWar() {
+			return war;
+		}
+	
+		public void setWar(String war) {
+			this.war = war;
+		}
+	String sql;
+		public String getSql() {
+			return sql;
+		}
+	
+		public void setSql(String sql) {
+			this.sql = sql;
+		}
+
 	String description;
 		@Face(displayName="$project.description")
 		public String getDescription() {
@@ -101,6 +116,16 @@ public class ProjectInfo implements ContextAware {
 		public void setLogoFile(MetaworksFile logoFile) {
 			this.logoFile = logoFile;
 		}	
+		
+	String type;
+		public String getType() {
+			return type;
+		}
+		
+		public void setType(String type) {
+			this.type = type;
+		}
+	
 	/*
 	@Hidden
 	String os;
@@ -184,13 +209,14 @@ public class ProjectInfo implements ContextAware {
 		}*/
 		
 	
+
 	public ProjectInfo(){
 		this(null);
 	}
 	
 	public ProjectInfo(String projectId){
 		this.setProjectId(projectId);
-		
+		this.setLogoFile(new MetaworksFile());
 		this.setMetaworksContext(new MetaworksContext());
 		this.getMetaworksContext().setWhen(MetaworksContext.WHEN_VIEW);
 	}
@@ -209,11 +235,34 @@ public class ProjectInfo implements ContextAware {
 /*		if(wfNode.getLinkedInstId() != null){
 			String linkedId = String.valueOf(wfNode.getLinkedInstId());*/
 			
+			Object logo = null;
 			this.projectName = wfNode.getName();
 			this.domainName = this.getProjectName() + ".com";			
-			this.svn = GlobalContext.getPropertyString("vm.manager.url") + "/" + this.getProjectName(); 
+			setType(wfNode.getVisType());
+			if("svn".equals(this.getType())){
+				this.svn = GlobalContext.getPropertyString("vm.manager.url") + "/" + this.getProjectName(); 
+				setType("svn");
+			}else if("war".equals(this.getType())){
+				
+				Object warUrl = null;
+				Object sqlUrl = null;
+				XStream xstream = new XStream();
+				if(wfNode.getExt() != null){
+					Object xstreamStr =  xstream.fromXML(wfNode.getExt());
+					if(xstreamStr != null){
+						Map<String, Object> list = (Map<String,Object>) xstreamStr;
+					
+						warUrl = list.get("warFile_Url");
+						sqlUrl = list.get("sqlFile_Url");
+						logo = list.get("logoFile");
+					}
+				}
+						this.war = (String) warUrl;
+						this.sql = (String) sqlUrl;
+						setType("war");
+			}
 			this.description = wfNode.getDescription();
-			this.logoFile = wfNode.getLogoFile();
+			this.logoFile = (MetaworksFile) logo;
 			
 			/*
 			Serializable serial = null;
@@ -319,40 +368,44 @@ public class ProjectInfo implements ContextAware {
 		topicFollowers.load();
 
 		return new Object[] { new Refresh(topicFollowers) };
-	}
-	
-	@Face(displayName="정보변경")
-	@ServiceMethod(callByContent = true, target=ServiceMethodContext.TARGET_APPEND)
-	public ModalWindow manageProject() throws Exception{
+		}
 		
-		ProjectTitle projectTitle = new ProjectTitle();
-		projectTitle.setMetaworksContext(new MetaworksContext());
-		projectTitle.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
-		projectTitle.session = session;
-		WfNode wfNode = new WfNode();
-		wfNode.setId(session.getLastSelectedItem());
-		wfNode.copyFrom(wfNode.databaseMe());
-		projectTitle.setTopicId(this.getProjectId());
-		projectTitle.setTopicTitle(this.getProjectName());
-		projectTitle.setParentId(session.getCompany().getComCode());
-		projectTitle.setFileType(wfNode.getVisType());
-		projectTitle.setTopicDescription(this.getDescription());
-		projectTitle.setLogoFile(this.getLogoFile());
-		
-		XStream xstream = new XStream();
-		if(wfNode.getExt() != null){
-			Object xstreamStr =  xstream.fromXML(wfNode.getExt());
-	//		Object[] fileList = (Object[])GlobalContext.deserialize(wfNode.getEx1(), Object.class);
-			Object sqlFile = null;
-			Object warFile = null;
-			if(xstreamStr != null){
-				Map<String, Object> list = (Map<String,Object>) xstreamStr;
+		@Face(displayName="정보변경")
+		@ServiceMethod(callByContent = true, target=ServiceMethodContext.TARGET_APPEND)
+		public ModalWindow manageProject() throws Exception{
 			
-				warFile = list.get("warFile_Url");
-				sqlFile = list.get("sqlFile_Url");
+			ProjectTitle projectTitle = new ProjectTitle();
+			projectTitle.setMetaworksContext(new MetaworksContext());
+			projectTitle.getMetaworksContext().setWhen(MetaworksContext.WHEN_EDIT);
+			projectTitle.session = session;
+			WfNode wfNode = new WfNode();
+			wfNode.setId(session.getLastSelectedItem());
+			wfNode.copyFrom(wfNode.databaseMe());
+			projectTitle.setTopicId(this.getProjectId());
+			projectTitle.setTopicTitle(this.getProjectName());
+			projectTitle.setParentId(session.getCompany().getComCode());
+			projectTitle.setFileType(wfNode.getVisType());
+			projectTitle.setTopicDescription(this.getDescription());
+//			projectTitle.setLogoFile(wfNode.getLogoFile());
+			
+			XStream xstream = new XStream();
+			if(wfNode.getExt() != null){
+				Object xstreamStr =  xstream.fromXML(wfNode.getExt());
+		//		Object[] fileList = (Object[])GlobalContext.deserialize(wfNode.getEx1(), Object.class);
+				Object sqlFile = null;
+				Object warFile = null;
+				Object logoFile = null;
+				if(xstreamStr != null){
+					Map<String, Object> list = (Map<String,Object>) xstreamStr;
+				
+					warFile = list.get("warFile");
+					sqlFile = list.get("sqlFile");
+					logoFile = list.get("logoFile");
 			}
 				System.out.println(warFile);
 				System.out.println(sqlFile);
+				
+			projectTitle.setLogoFile((MetaworksFile) logoFile);	
 			projectTitle.setWarFile((MetaworksFile) warFile);
 			projectTitle.setSqlFile((MetaworksFile) sqlFile);
 		}

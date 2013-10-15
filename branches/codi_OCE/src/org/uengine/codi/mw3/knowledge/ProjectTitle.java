@@ -263,10 +263,15 @@ public class ProjectTitle implements ContextAware {
 				XStream xstream = new XStream();
 				HashMap<String , Object>  map = new HashMap<String , Object>();
 				map.put("ProjectInfo",wfNode.getDescription());
-				map.put("sqlFile_Url",this.getSqlFile());
-				map.put("warFile_Url",this.getWarFile());
+				map.put("logoFile", this.getLogoFile());
+				map.put("sqlFile",this.getSqlFile());
+				map.put("warFile",this.getWarFile());
+				map.put("logoFile_Url",this.getLogoFile().getUploadedPath());
+				map.put("warFile_Url", this.getWarFile().getUploadedPath());
+				map.put("sqlFile_Url", this.getSqlFile().getUploadedPath());
 				map.put("sqlFile_Thumbnail", this.getSqlFile().getFilename());
 				map.put("warFile_Thumbnail", this.getWarFile().getFilename());
+				map.put("logoFile_Thumbnail", this.getLogoFile().getFilename());
 				String xstreamStr = xstream.toXML(map);
 				System.out.println(xstreamStr);
 				
@@ -281,12 +286,12 @@ public class ProjectTitle implements ContextAware {
 //				wfNode.setEx1(xmlCode);
 //				
 				wfNode.setExt(GlobalContext.serialize(obj, Object.class));
-				wfNode.setLogoFile(this.getLogoFile());
+//				wfNode.setLogoFile(this.getLogoFile());
 				wfNode.setVisType("war");
 		
 			
 			}else if("svn".equals(this.getFileType())){
-				wfNode.setLogoFile(this.getLogoFile());
+//				wfNode.setLogoFile(this.getLogoFile());
 				
 				wfNode.setVisType("svn");
 			}
@@ -355,16 +360,20 @@ public class ProjectTitle implements ContextAware {
 		wfNode.setDescription(this.getTopicDescription());
 		wfNode.setAuthorId(session.getUser().getUserId());
 		wfNode.setCompanyId(session.getCompany().getComCode());
-		wfNode.setLogoFile(this.getLogoFile());
+//		wfNode.setLogoFile(this.getLogoFile());
 		
 		if("war".equals(this.getFileType())){
 			XStream xstream = new XStream();
 			HashMap<String , Object>  map = new HashMap<String , Object>();
 			map.put("ProjectInfo",wfNode.getDescription());
+			map.put("logoFile", this.getLogoFile());
 			map.put("sqlFile_Url",this.getSqlFile());
 			map.put("warFile_Url",this.getWarFile());
 			map.put("sqlFile_Thumbnail", this.getSqlFile().getFilename());
 			map.put("warFile_Thumbnail", this.getWarFile().getFilename());
+			map.put("logoFile_Thumbnail", this.getLogoFile().getFilename());
+			
+			
 			String xstreamStr = xstream.toXML(map);
 			System.out.println(xstreamStr);
 			
@@ -379,7 +388,7 @@ public class ProjectTitle implements ContextAware {
 //			wfNode.setEx1(xmlCode);
 //			
 			wfNode.setExt(GlobalContext.serialize(obj, Object.class));
-			wfNode.setLogoFile(this.getLogoFile());
+//			wfNode.setLogoFile(this.getLogoFile());
 			wfNode.setVisType("war");
 		}else{
 			wfNode.setVisType("svn");

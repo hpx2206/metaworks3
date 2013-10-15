@@ -2,6 +2,7 @@ package org.uengine.codi.mw3.knowledge;
 
 import org.metaworks.Refresh;
 import org.metaworks.Remover;
+import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.annotation.ServiceMethod;
 import org.metaworks.dao.Database;
 import org.metaworks.dao.MetaworksDAO;
@@ -19,6 +20,8 @@ import org.uengine.processmanager.ProcessManagerRemote;
 
 
 public class ProjectNode extends TopicNode implements IProjectNode {
+	@AutowiredFromClient
+	public Session session;
 	
 	public final static String TYPE_PROJECT = "project";
 	
@@ -30,14 +33,14 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 	public Object[] loadTopic() throws Exception {
 		String title = "프로젝트: " + getName();
 		Object[] returnObject = Perspective.loadInstanceListPanel(session, TYPE_PROJECT, getId(), title);
-		session.setLastPerspecteType(TYPE_PROJECT);
-		session.setLastSelectedItem(this.getId());
+//		session.setLastPerspecteType(TYPE_PROJECT);
+//		session.setLastSelectedItem(this.getId());
 		
 		DashboardWindow window = new DashboardWindow();
 		window.setPanel(returnObject[1]);
 		window.setTitle(title);
 		
-		return new Object[]{window , session};
+		return new Object[]{session , window};
 	}
 
 	public static IProjectNode load(Session session) throws Exception {
@@ -182,6 +185,6 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 	
 	@Autowired
 	public ProcessManagerRemote processManager;
-	
+
 	
 }
