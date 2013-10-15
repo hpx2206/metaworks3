@@ -3,7 +3,7 @@ if(value){
 %>
 
 		<ul class="process_map2" style="border: none;"> 
-			<input type="button" value="프로젝트 생성" onClick="<%=methods.addProject.caller()%>"></input>
+			<a id="wBtn" href="#" onClick="<%=methods.addProject.caller()%>"><span><%=mw3.localize('$CreateProject')%></span></a><div class="clear"></div><br>
 			<%=fields.projectNode.here() %>
 		</ul>
 <%
