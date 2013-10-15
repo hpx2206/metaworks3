@@ -71,7 +71,7 @@ public class DashboardPanel {
 	
 	public DashboardPanel load(Session session) throws Exception{		
 		setMetaworksContext(new MetaworksContext());
-
+		this.setSession(session);
 		//InstanceListPanel
 		instanceListPanel = createInstanceListPanel();
 		
