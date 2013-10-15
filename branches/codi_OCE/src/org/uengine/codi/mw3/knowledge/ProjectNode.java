@@ -22,8 +22,8 @@ import org.uengine.processmanager.ProcessManagerRemote;
 
 
 public class ProjectNode extends TopicNode implements IProjectNode {
-	@AutowiredFromClient
-	public Session session;
+//	@AutowiredFromClient
+//	public Session session;
 	
 	public final static String TYPE_PROJECT = "project";
 	
@@ -33,16 +33,21 @@ public class ProjectNode extends TopicNode implements IProjectNode {
 	
 	@ServiceMethod(callByContent = true)
 	public Object[] loadTopic() throws Exception {
+		
+		session.setLastPerspecteType(TYPE_PROJECT);
+		session.setLastSelectedItem(this.getId());
+		
+		Perspective perspective = new Perspective();
+		perspective.session = session;
+		Object[] returnObject =  perspective.loadInstanceListPanel(TYPE_PROJECT, getId());
 		String title = "프로젝트: " + getName();
-		Object[] returnObject = Perspective.loadInstanceListPanel(session, TYPE_PROJECT, getId(), title);
-//		session.setLastPerspecteType(TYPE_PROJECT);
-//		session.setLastSelectedItem(this.getId());
+//		Object[] returnObject = Perspective.loadInstanceListPanel(session, TYPE_PROJECT, getId(), title);
 		
 		DashboardWindow window = new DashboardWindow();
 		window.setPanel(returnObject[1]);
 		window.setTitle(title);
 		
-		return new Object[]{session , window};
+		return new Object[]{session , window };
 	}
 
 	public static IProjectNode load(Session session) throws Exception {
