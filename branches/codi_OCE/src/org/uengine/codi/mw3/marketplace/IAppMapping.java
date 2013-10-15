@@ -63,5 +63,8 @@ public interface IAppMapping extends IDAO{
 	
 	@ServiceMethod(callByContent=true)
 	public Object[] clickAppList() throws Exception;
+	
+	@ServiceMethod(callByContent=true)
+	public void updateFavoriteApp() throws Exception;
 
 }
