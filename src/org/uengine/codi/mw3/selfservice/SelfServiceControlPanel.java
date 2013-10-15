@@ -151,6 +151,7 @@ public class SelfServiceControlPanel {
 	public void load(Session session) throws Exception {
 
 		AppMapping appMp = new AppMapping();
+		appMp.session = session;
 		appMp.setComCode(session.getCompany().getComCode());
 		appMp.setIsDeleted(false);
 		
