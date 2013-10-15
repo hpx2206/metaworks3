@@ -27,13 +27,6 @@ public class MyServicePanel {
 			
 	}
 	
-	@ServiceMethod(callByContent=true)
-	public MainPanel goProcess() throws Exception {
-
-		return new MainPanel(new OceMain(session));
-
-	}
-	
 	@ServiceMethod(callByContent=true, inContextMenu=true)
 	public MainPanel goSelfServicePortal() throws Exception {
 		
