@@ -130,7 +130,21 @@ public class ProjectTitle implements ContextAware {
 			this.code = code;
 		}
 	
+	Boolean sqlFileCheck;
+		public Boolean getSqlFileCheck() {
+			return sqlFileCheck;
+		}
+		public void setSqlFileCheck(Boolean sqlFileCheck) {
+			this.sqlFileCheck = sqlFileCheck;
+		}
 	
+	Boolean warFileCheck;
+		public Boolean getWarFileCheck() {
+			return warFileCheck;
+		}
+		public void setWarFileCheck(Boolean warFileCheck) {
+			this.warFileCheck = warFileCheck;
+		}
 
 	String radio;
 		@Available(when={MetaworksContext.WHEN_NEW, MetaworksContext.WHEN_EDIT})
@@ -163,14 +177,41 @@ public class ProjectTitle implements ContextAware {
 	@Available(when={MetaworksContext.WHEN_NEW})
 	@ServiceMethod(callByContent=true, target=ServiceMethodContext.TARGET_APPEND)
 	public Object[] save() throws Exception{
-
+			String warFileType = this.getWarFile().getFilename();
+			String sqlFileType = this.getSqlFile().getFilename();
+			int warPos = warFileType.lastIndexOf('.');
+			if( warPos >-1){
+				String ext = warFileType.substring(warPos);
+				if(".war".equals(ext)){
+					setWarFileCheck(true);
+				}
+			}
+			int sqlPos = sqlFileType.lastIndexOf('.');
+			if( sqlPos >-1){
+				String ext = sqlFileType.substring(sqlPos);
+				if(".sql".equals(ext)){
+					setSqlFileCheck(true);
+				}
+			}
+			
+			
 		if("war".equals(this.getFileType())){
 			if(this.getWarFile().getFileTransfer() != null && this.getWarFile().getFilename() != null && 
 					this.getWarFile().getFilename().length() >0)
-				this.getWarFile().upload();
+					
+					if(getWarFileCheck() != null){
+						if(getWarFileCheck() == true){
+							this.getWarFile().upload();
+						}
+					}
 			if(this.getSqlFile().getFileTransfer() != null && this.getSqlFile().getFilename() != null && 
 					this.getSqlFile().getFilename().length() >0)
-				this.getSqlFile().upload();
+				
+				if(getSqlFileCheck() != null){
+					if(getSqlFileCheck() == true){
+						this.getSqlFile().upload();
+					}
+				}
 			if(this.getLogoFile().getFileTransfer() != null &&
 					   this.getLogoFile().getFilename() != null && 
 					   this.getLogoFile().getFilename().length() > 0)			
