@@ -1,7 +1,8 @@
 
 package org.uengine.codi.mw3.knowledge;
 import java.io.FileInputStream;
-import java.util.ArrayList;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Map;
 
 import org.directwebremoting.io.FileTransfer;
@@ -28,6 +29,7 @@ import org.uengine.codi.mw3.model.RoleMappingPanel;
 import org.uengine.codi.mw3.model.Session;
 import org.uengine.codi.mw3.model.TopicFollowers;
 import org.uengine.codi.mw3.project.ProjectCreate;
+import org.uengine.codi.vm.JschCommand;
 import org.uengine.kernel.GlobalContext;
 import org.uengine.processmanager.ProcessManagerRemote;
 
@@ -124,6 +126,13 @@ public class ProjectInfo implements ContextAware {
 		
 		public void setType(String type) {
 			this.type = type;
+		}
+	String hudson;
+		public String getHudson() {
+			return hudson;
+		}
+		public void setHudson(String hudson) {
+			this.hudson = hudson;
 		}
 	
 	/*
@@ -242,6 +251,7 @@ public class ProjectInfo implements ContextAware {
 			if("svn".equals(this.getType())){
 				this.svn = GlobalContext.getPropertyString("vm.manager.url") + "/" + this.getProjectName(); 
 				setType("svn");
+				this.hudson = GlobalContext.getPropertyString("vm.hudson.url") + "/job/" + this.getProjectName();
 			}else if("war".equals(this.getType())){
 				
 				Object warUrl = null;
@@ -317,8 +327,79 @@ public class ProjectInfo implements ContextAware {
 
 	@Face(displayName = "release")
 	@ServiceMethod(target = ServiceMethodContext.TARGET_APPEND)
-	public void releaseProject() {
+	public void releaseProject() throws Exception{
+		WfNode wfNode = new WfNode();
+		wfNode.setId(session.getLastSelectedItem());
+		wfNode.copyFrom(wfNode.databaseMe());
+		this.projectName = wfNode.getName();
+		Object sqlPath = null;
+		Object warPath = null;
+		String ip = "14.63.225.215";
 
+		XStream xstream = new XStream();
+		if (wfNode.getExt() != null) {
+			Object xstreamStr = xstream.fromXML(wfNode.getExt());
+			if (xstreamStr != null) {
+				Map<String, Object> list = (Map<String, Object>) xstreamStr;
+
+				warPath = list.get("warFile_Path");
+				sqlPath = list.get("sqlFile_Path");
+			}
+		}
+		
+		if ("war".equals(wfNode.getVisType())) {
+			ProcessBuilder pb = new ProcessBuilder(
+					"cmd",
+					"/c",
+					"ant -buildfile C:\\test.xml -Dip="
+							+ ip
+							+ " -Dwar="
+							+ "D:\\eclipse\\fileSystem\\" + warPath
+							+ " -Dsql="
+							+ "D:\\eclipse\\fileSystem\\" + sqlPath
+							+ " -Dpw="
+							+ "root"
+							+ " -lib C:\\Users\\uEngine");
+			pb.redirectErrorStream(true);
+			Process p = null;
+			try {
+				p = pb.start();
+				
+				InputStreamReader isr = null;
+				isr = new InputStreamReader(p.getInputStream(), "euc-kr");
+				int ch = 0;
+				StringBuffer sb = new StringBuffer();
+				try {
+					while ((ch = isr.read()) > -1) {
+						sb.append((char) ch);
+						if ((char) ch == '\n') {
+							System.out.println(sb.toString());
+							sb = new StringBuffer();
+						}
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			CreateDatabase createDatabase = new CreateDatabase();
+			createDatabase.create("root", ip, "root", "cloud", sqlPath.toString());
+		}
+		else if("sns".equals(wfNode.getVisType())){
+			String host = GlobalContext.getPropertyString("vm.manager.ip");
+			String userId = GlobalContext.getPropertyString("vm.manager.user");
+			String passwd = GlobalContext.getPropertyString("vm.manager.password");
+			String command;
+			
+			JschCommand jschServerBehaviour = new JschCommand();
+			jschServerBehaviour.sessionLogin(host, userId, passwd);
+			
+			//Hudson Build
+//			command = GlobalContext.getPropertyString("vm.hudson.build") + " " + wfNode.getName();
+//			jschServerBehaviour.runCommand(command);
+			
+		}
 	}
 
 	@Face(displayName = "허드슨")
