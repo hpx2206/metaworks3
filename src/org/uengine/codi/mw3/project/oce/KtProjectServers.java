@@ -61,26 +61,42 @@ public class KtProjectServers implements ContextAware{
 		this.setServerGroup(serverGroup);
 	}
 	
-	public void loadOceServer(String projectName){
+	public void loadOceServer(String projectName, String ip){
 		ArrayList<KtProjectServer> serverList = new ArrayList<KtProjectServer>();
 		
-		
+		// TODO	
 		KtProjectServer server = new KtProjectServer();
 		try {
-			// TODO	
 			server.setType("DB");
 			server.setName(projectName);
-			server.setIp("14.63.225.215");
+			server.setIp(ip);
 			server.setStatus(ProjectServer.SERVER_STATUS_RUNNING);
 			server.setMetaworksContext(new MetaworksContext());
 			server.getMetaworksContext().setHow(MetaworksContext.HOW_IN_LIST);
 			server.getMetaworksContext().setWhen(ProjectServer.SERVER_STATUS_RUNNING);
 			server.status();
+			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		serverList.add(server);
+		
+		KtProjectServer server1 = new KtProjectServer();
+		try {
+			server1.setType("WAS");
+			server1.setName(projectName);
+			server1.setIp(ip);
+			server1.setMetaworksContext(new MetaworksContext());
+			server1.getMetaworksContext().setHow(MetaworksContext.HOW_IN_LIST);
+			server1.getMetaworksContext().setWhen(ProjectServer.SERVER_STATUS_RUNNING);
+			server1.status();
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		serverList.add(server1);
 		
 		this.setServerList(serverList.toArray(new KtProjectServer[serverList.size()]));
 	}

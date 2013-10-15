@@ -196,9 +196,9 @@ public class Perspective {
 		instListPanel.session = session;
 		instListPanel.setNewInstancePanel(newInstancePanel);
 		instListPanel.setInstanceList(instList);
-		instListPanel.setMetaworksContext(new MetaworksContext());
-		instListPanel.getMetaworksContext().setHow(perspectiveType);
-		instListPanel.getMetaworksContext().setWhere(selectedItem);
+//		instListPanel.setMetaworksContext(new MetaworksContext());
+//		instListPanel.getMetaworksContext().setHow(perspectiveType);
+//		instListPanel.getMetaworksContext().setWhere(selectedItem);
 
 		// set search Keyword to searchBox
 		instListPanel.getSearchBox().setKeyword(session.getSearchKeyword());

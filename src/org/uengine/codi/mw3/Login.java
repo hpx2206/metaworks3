@@ -400,6 +400,7 @@ public class Login implements ContextAware {
 		
 		if("1".equals(GlobalContext.getPropertyString("oce.use", "1"))){
 			pageNavigatorPropertyName = "oce.pagenavigator.class";
+			session.getEmployee().setPreferUX("sns");
 		}
 		else{
 			pageNavigatorPropertyName = "codi.pagenavigator.class";
