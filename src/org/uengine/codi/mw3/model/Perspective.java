@@ -52,7 +52,7 @@ public class Perspective {
 		// TODO Override and unload children when perspective deselected
 	}
 
-	protected Object[] loadInstanceListPanel(String perspectiveType,
+	public Object[] loadInstanceListPanel(String perspectiveType,
 			String selectedItem) throws Exception {
 		return loadInstanceListPanel(session, perspectiveType, selectedItem);
 	}
