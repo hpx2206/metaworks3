@@ -27,7 +27,6 @@ import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitor;
 import org.uengine.codi.mw3.webProcessDesigner.InstanceMonitorPanel;
 import org.uengine.codi.mw3.widget.IFrame;
 import org.uengine.processmanager.ProcessManagerRemote;
-import org.uengine.search.solr.SolrSearch;
 
 import com.efsol.util.StringUtils;
 

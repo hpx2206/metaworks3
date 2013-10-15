@@ -95,9 +95,6 @@ public class InstanceListPanel implements ContextAware{
 			if("app".equals(session.getLastPerspecteType()))
 				this.getMetaworksContext().setHow("app");
 			
-			newInstantiator = new CommentWorkItem();
-			newInstantiator.setWriter(session.getUser());
-			newInstantiator.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 			
 			instanceList = new InstanceList(session);
 			
