@@ -1,6 +1,7 @@
 
 package org.uengine.codi.mw3.knowledge;
 import java.io.FileInputStream;
+import java.util.ArrayList;
 import java.util.Map;
 
 import org.directwebremoting.io.FileTransfer;
@@ -284,9 +285,20 @@ public class ProjectInfo implements ContextAware {
 	}
 
 	@Face(displayName = "서버관리")
-	@ServiceMethod(target = ServiceMethodContext.TARGET_APPEND)
-	public void server() {
-
+	@ServiceMethod(callByContent=true, target = ServiceMethodContext.TARGET_APPEND)
+	public Object[] server() throws Exception {
+		
+		ModalWindow modal = new ModalWindow();
+		
+		ProjectServers ProjectServers = new ProjectServers();
+		ProjectServers.loadOceServer(this.getProjectName());
+		
+		modal.setPanel(ProjectServers);
+		modal.setWidth(600);
+		modal.setHeight(500);
+		modal.setTitle("서버관리");
+		
+		return new Object[]{modal};
 	}
 
 	@Face(displayName = "참여")
@@ -379,7 +391,7 @@ public class ProjectInfo implements ContextAware {
 		Instance instance = new Instance();
 		instance.setInstId(new Long(instId));
 		instance.databaseMe().setTopicId(this.getProjectId());
-		instance.databaseMe().setName(instance.getDefName() + " : " + this.getProjectName());
+		instance.databaseMe().setName("개발환경요청" + " : " + this.getProjectName());
 		instance.flushDatabaseMe();
 		
 		instanceViewContent.session = session;
