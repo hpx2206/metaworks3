@@ -20,7 +20,7 @@
 			var session = mw3.getAutowiredObject("org.uengine.codi.mw3.model.Session");		
 			if( session && session.ux != 'phone'){
 		
-			if( session && session.employee.preferUX != 'sns'){
+			if( (session && session.employee.preferUX != 'sns') || session.ux == 'oce'){
 %>			
 	<div id="wih_button">		
 		<a class="<%= value.type=='comment'?'comment_btn_on':'comment_btn_off' %>" onclick="<%=methods.newComment.caller()%>"><span><%=mw3.localize("$Write")%></span><div class="comment_select"></div></a>

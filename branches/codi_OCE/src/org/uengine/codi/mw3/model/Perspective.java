@@ -181,8 +181,13 @@ public class Perspective {
 		
 		savePerspectiveToSession(session, perspectiveType, selectedItem);
 		
+		
+		NewInstancePanel newInstancePanel =  new NewInstancePanel();
+		newInstancePanel.load(session);
 		//원컬럼 새로쓰기
 		CommentWorkItem newInstItem = new CommentWorkItem();
+		newInstItem.setMetaworksContext(new MetaworksContext());
+		newInstItem.getMetaworksContext().setWhen(MetaworksContext.WHEN_NEW);
 		newInstItem.setWriter(session.getUser());		
 		
 		InstanceList instList = new InstanceList(session);
@@ -194,7 +199,7 @@ public class Perspective {
 		
 		InstanceListPanel instListPanel = new InstanceListPanel(session);
 		instListPanel.session = session;
-		instListPanel.setNewInstantiator(newInstItem);
+		instListPanel.setNewInstancePanel(newInstancePanel);
 		instListPanel.setInstanceList(instList);
 		instListPanel.setMetaworksContext(new MetaworksContext());
 		instListPanel.getMetaworksContext().setHow(perspectiveType);
