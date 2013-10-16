@@ -26,6 +26,7 @@ import org.uengine.codi.mw3.model.Instance;
 import org.uengine.codi.mw3.model.InstanceListPanel;
 import org.uengine.codi.mw3.model.InstanceViewContent;
 import org.uengine.codi.mw3.model.Locale;
+import org.uengine.codi.mw3.model.NewInstancePanel;
 import org.uengine.codi.mw3.model.Popup;
 import org.uengine.codi.mw3.model.ProcessMap;
 import org.uengine.codi.mw3.model.RoleMappingPanel;
@@ -542,7 +543,6 @@ public class ProjectInfo implements ContextAware {
 	public Object[] require() throws Exception{
 		
 		String defId = "oceProjectRequset.process";
-//		String defId = "projectProcess/oceProjectRequset.process";
 		
 		ProcessMap processMap = new ProcessMap();
 		processMap.processManager = processManager;
@@ -576,11 +576,19 @@ public class ProjectInfo implements ContextAware {
 		instanceViewContent.session = session;
 		instanceViewContent.load(instance);
 		
+		NewInstancePanel newInstancePanel =  new NewInstancePanel();
+		newInstancePanel.session = session;
+		newInstancePanel.load(session);
+		
 		InstanceListPanel instanceListPanel = new InstanceListPanel(session); //should return instanceListPanel not the instanceList only since there're one or more instanceList object in the client-side
+		instanceListPanel.session = session;
+		instanceListPanel.setNewInstancePanel(newInstancePanel);
 		instanceListPanel.getInstanceList().load();
+		instanceListPanel.projectInfoLoad();
+		instanceListPanel.topicFollowersLoad();
 
 		if("sns".equals(session.getEmployee().getPreferUX())){
-			return new Object[]{instanceListPanel, new Remover(new Popup())};
+			return new Object[]{new Refresh(instanceListPanel)};
 		}else{
 			return new Object[]{new Remover(new Popup() , true), instanceListPanel, instanceViewContent};
 		}
