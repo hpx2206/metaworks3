@@ -31,7 +31,6 @@ import org.uengine.codi.mw3.model.InstanceListPanel;
 import org.uengine.codi.mw3.model.InstanceViewContent;
 import org.uengine.codi.mw3.model.ProcessMap;
 import org.uengine.codi.mw3.model.Session;
-import org.uengine.kernel.GlobalContext;
 import org.uengine.kernel.KeyedParameter;
 import org.uengine.kernel.ResultPayload;
 import org.uengine.persistence.dao.UniqueKeyGenerator;
@@ -611,6 +610,7 @@ public class App extends Database<IApp> implements IApp, ITool, ContextAware {
 		
 		AppMapping appmapping = new AppMapping();
 		
+		appmapping.session = session;
 		appmapping.setAppId(this.getAppId());
 		appmapping.setAppName(this.getAppName());
 		appmapping.setComCode(session.getCompany().getComCode());
