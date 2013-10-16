@@ -107,6 +107,14 @@ public interface IWfNode extends IDAO {
 	public void setParentId(String parentId);
 	
 	@Hidden
+	public boolean getIsReleased();
+	public void setIsReleased(boolean flag);
+	
+	@Hidden
+	public boolean getIsDistributed();
+	public void setIsDistributed(boolean flag);
+	
+	@Hidden
 	public int getNo();
 	public void setNo(int no);
 

@@ -6,6 +6,7 @@ import org.metaworks.annotation.AutowiredFromClient;
 import org.metaworks.dao.Database;
 import org.metaworks.website.MetaworksFile;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.uengine.cloud.saasfier.TenantContext;
 import org.uengine.codi.mw3.model.Perspective;
 import org.uengine.codi.mw3.model.RecentItem;
 import org.uengine.codi.mw3.model.Session;
@@ -91,7 +92,13 @@ public class AppMapping extends Database<IAppMapping> implements IAppMapping {
 		public void setEmpCode(String empCode) {
 			this.empCode = empCode;
 		}
-
+	String url;
+		public String getUrl() {
+			return url;
+		}
+		public void setUrl(String url) {
+			this.url = url;
+		}
 		
 	public IAppMapping findMe() throws Exception {
 

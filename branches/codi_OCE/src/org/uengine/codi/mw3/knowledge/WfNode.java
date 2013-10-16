@@ -376,6 +376,25 @@ public class WfNode extends Database<IWfNode> implements IWfNode {
 		public void setDescription(String description) {
 			this.description = description;
 		}
+	
+	@XStreamOmitField
+	boolean isReleased;
+		public boolean getIsReleased() {
+			return isReleased;
+		}
+		public void setIsReleased(boolean isReleased) {
+			this.isReleased = isReleased;
+		}
+	
+	
+	@XStreamOmitField
+	boolean isDistributed;
+		public boolean getIsDistributed() {
+			return isDistributed;
+		}
+		public void setIsDistributed(boolean isDistribued) {
+			this.isDistributed = isDistribued;
+		}
 		
 	public WfNode() {
 		setChildNode(new ArrayList<WfNode>());
