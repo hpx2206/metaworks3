@@ -15,21 +15,19 @@ var org_uengine_codi_mw3_knowledge_ProjectTitle = function(objectId, className){
 //	
 	var warFileDivId = mw3._getObjectDivId(object.warFile.__objectId);
 	$('#' + warFileDivId ).parentsUntil('tr').parent().hide();
-	if(object.metaworksContext.when == mw3.WHEN_EDIT){
-		$("input[type=radio]:radio[value='1']").attr("checked",true);
+	if(object.metaworksContext.when == mw3.WHEN_NEW){
+		$("input[type=radio]:radio[value='2']").attr("checked",true);
+		var value = mw3.objects[objectId];
+		value.fileType = "none";
+//		$('#' + sqlFileDivId ).parentsUntil('tr').parent().show();
+//		$('#' + warFileDivId ).parentsUntil('tr').parent().show();
+		
+	}else{
 		var value = mw3.objects[objectId];
 		value.fileType = "war";
 		$('#' + sqlFileDivId ).parentsUntil('tr').parent().show();
 		$('#' + warFileDivId ).parentsUntil('tr').parent().show();
-		
-	}else if(object.metaworksContext.when == mw3.WHEN_NEW){
-		$("input[type=radio]:radio[value='2']").attr("checked",true);
-		var value = mw3.objects[objectId];
-		value.fileType = "svn";
-		$('#' + sqlFileDivId ).parentsUntil('tr').parent().hide();
-		$('#' + warFileDivId ).parentsUntil('tr').parent().hide();
 	}
-	
 	$('input[type=radio]').click(function(){
 		var value = mw3.objects[objectId];
 		var check = $(this).val();
@@ -38,9 +36,9 @@ var org_uengine_codi_mw3_knowledge_ProjectTitle = function(objectId, className){
 			$('#' + sqlFileDivId ).parentsUntil('tr').parent().show();
 			$('#' + warFileDivId ).parentsUntil('tr').parent().show();
 		}else if(check == '2'){
-			value.fileType = "svn";
 			$('#' + sqlFileDivId ).parentsUntil('tr').parent().hide();
 			$('#' + warFileDivId ).parentsUntil('tr').parent().hide();
+		
 		}
 		
 		
